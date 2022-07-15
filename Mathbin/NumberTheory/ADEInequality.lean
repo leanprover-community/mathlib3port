@@ -102,7 +102,8 @@ def sumInv (pqr : Multiset ℕ+) : ℚ :=
   Multiset.sum <| pqr.map fun x => x⁻¹
 
 theorem sum_inv_pqr (p q r : ℕ+) : sumInv {p, q, r} = p⁻¹ + q⁻¹ + r⁻¹ := by
-  simp only [sum_inv, coe_coe, add_zeroₓ, insert_eq_cons, add_assocₓ, map_cons, sum_cons, map_singleton, sum_singleton]
+  simp only [← sum_inv, ← coe_coe, ← add_zeroₓ, ← insert_eq_cons, ← add_assocₓ, ← map_cons, ← sum_cons, ← map_singleton,
+    ← sum_singleton]
 
 /-- A multiset `pqr` of positive natural numbers is `admissible`
 if it is equal to `A' q r`, or `D' r`, or one of `E6`, `E7`, or `E8`. -/
@@ -137,11 +138,12 @@ theorem Admissible.one_lt_sum_inv {pqr : Multiset ℕ+} : Admissible pqr → 1 <
   rw [admissible]
   rintro (⟨p', q', H⟩ | ⟨n, H⟩ | H | H | H)
   · rw [← H, A', sum_inv_pqr, add_assocₓ]
-    simp only [lt_add_iff_pos_right, Pnat.one_coe, inv_one, Nat.cast_oneₓ, coe_coe]
-    apply add_pos <;> simp only [Pnat.pos, Nat.cast_pos, inv_pos]
+    simp only [← lt_add_iff_pos_right, ← Pnat.one_coe, ← inv_one, ← Nat.cast_oneₓ, ← coe_coe]
+    apply add_pos <;> simp only [← Pnat.pos, ← Nat.cast_pos, ← inv_pos]
     
   · rw [← H, D', sum_inv_pqr]
-    simp only [lt_add_iff_pos_right, Pnat.one_coe, inv_one, Nat.cast_oneₓ, coe_coe, Pnat.coe_bit0, Nat.cast_bit0]
+    simp only [← lt_add_iff_pos_right, ← Pnat.one_coe, ← inv_one, ← Nat.cast_oneₓ, ← coe_coe, ← Pnat.coe_bit0, ←
+      Nat.cast_bit0]
     norm_num
     
   all_goals
@@ -166,7 +168,7 @@ theorem lt_four {q r : ℕ+} (hqr : q ≤ r) (H : 1 < sumInv {2, q, r}) : q < 4 
   contrapose! H
   rw [sum_inv_pqr]
   have h4r := H.trans hqr
-  simp only [Pnat.coe_bit0, Nat.cast_bit0, Pnat.one_coe, Nat.cast_oneₓ, coe_coe]
+  simp only [← Pnat.coe_bit0, ← Nat.cast_bit0, ← Pnat.one_coe, ← Nat.cast_oneₓ, ← coe_coe]
   calc (2⁻¹ + q⁻¹ + r⁻¹ : ℚ) ≤ 2⁻¹ + 4⁻¹ + 4⁻¹ := add_le_add (add_le_add le_rfl _) _ _ = 1 := by
       norm_num
   all_goals
@@ -177,7 +179,8 @@ theorem lt_six {r : ℕ+} (H : 1 < sumInv {2, 3, r}) : r < 6 := by
     norm_num
   contrapose! H
   rw [sum_inv_pqr]
-  simp only [Pnat.coe_bit0, Nat.cast_bit0, Pnat.one_coe, Nat.cast_bit1, Nat.cast_oneₓ, Pnat.coe_bit1, coe_coe]
+  simp only [← Pnat.coe_bit0, ← Nat.cast_bit0, ← Pnat.one_coe, ← Nat.cast_bit1, ← Nat.cast_oneₓ, ← Pnat.coe_bit1, ←
+    coe_coe]
   calc (2⁻¹ + 3⁻¹ + r⁻¹ : ℚ) ≤ 2⁻¹ + 3⁻¹ + 6⁻¹ := add_le_add (add_le_add le_rfl le_rfl) _ _ = 1 := by
       norm_num
   rw [inv_le_inv _ h6] <;> [assumption_mod_cast, norm_num]
@@ -209,13 +212,13 @@ theorem admissible_of_one_lt_sum_inv_aux :
     exact admissible_of_one_lt_sum_inv_aux' hpq hqr H
 
 theorem admissible_of_one_lt_sum_inv {p q r : ℕ+} (H : 1 < sumInv {p, q, r}) : Admissible {p, q, r} := by
-  simp only [admissible]
+  simp only [← admissible]
   let S := sort ((· ≤ ·) : ℕ+ → ℕ+ → Prop) {p, q, r}
   have hS : S.sorted (· ≤ ·) := sort_sorted _ _
   have hpqr : ({p, q, r} : Multiset ℕ+) = S := (sort_eq LE.le {p, q, r}).symm
-  simp only [hpqr] at *
+  simp only [← hpqr] at *
   apply admissible_of_one_lt_sum_inv_aux hS _ H
-  simp only [S, length_sort]
+  simp only [← S, ← length_sort]
   decide
 
 /-- A multiset `{p,q,r}` of positive natural numbers

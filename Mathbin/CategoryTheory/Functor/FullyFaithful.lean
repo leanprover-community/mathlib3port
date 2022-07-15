@@ -45,7 +45,7 @@ restate_axiom full.witness'
 
 attribute [simp] full.witness
 
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`map_injective'] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`map_injective'] []
 /-- A functor `F : C ⥤ D` is faithful if for each `X Y : C`, `F.map` is injective.
 
 See <https://stacks.math.columbia.edu/tag/001C>.
@@ -188,12 +188,12 @@ def natIsoOfCompFullyFaithful (i : F ⋙ H ≅ G ⋙ H) : F ≅ G :=
 theorem nat_iso_of_comp_fully_faithful_hom (i : F ⋙ H ≅ G ⋙ H) :
     (natIsoOfCompFullyFaithful H i).Hom = natTransOfCompFullyFaithful H i.Hom := by
   ext
-  simp [nat_iso_of_comp_fully_faithful]
+  simp [← nat_iso_of_comp_fully_faithful]
 
 theorem nat_iso_of_comp_fully_faithful_inv (i : F ⋙ H ≅ G ⋙ H) :
     (natIsoOfCompFullyFaithful H i).inv = natTransOfCompFullyFaithful H i.inv := by
   ext
-  simp [← preimage_comp]
+  simp [preimage_comp]
   dsimp'
   simp
 
@@ -205,8 +205,7 @@ namespace CategoryTheory
 
 variable {C : Type u₁} [Category.{v₁} C]
 
-instance Full.id : Full (𝟭 C) where
-  preimage := fun _ _ f => f
+instance Full.id : Full (𝟭 C) where preimage := fun _ _ f => f
 
 instance Faithful.id : Faithful (𝟭 C) := by
   run_tac
@@ -216,8 +215,8 @@ variable {D : Type u₂} [Category.{v₂} D] {E : Type u₃} [Category.{v₃} E]
 
 variable (F F' : C ⥤ D) (G : D ⥤ E)
 
-instance Faithful.comp [Faithful F] [Faithful G] : Faithful (F ⋙ G) where
-  map_injective' := fun _ _ _ _ p => F.map_injective (G.map_injective p)
+instance Faithful.comp [Faithful F] [Faithful G] :
+    Faithful (F ⋙ G) where map_injective' := fun _ _ _ _ p => F.map_injective (G.map_injective p)
 
 theorem Faithful.of_comp [faithful <| F ⋙ G] : Faithful F :=
   { map_injective' := fun X Y => (F ⋙ G).map_injective.of_comp }
@@ -230,7 +229,7 @@ variable {F F'}
 def Full.ofIso [Full F] (α : F ≅ F') : Full F' where
   preimage := fun X Y f => F.preimage ((α.app X).Hom ≫ f ≫ (α.app Y).inv)
   witness' := fun X Y f => by
-    simp [← nat_iso.naturality_1 α]
+    simp [nat_iso.naturality_1 α]
 
 theorem Faithful.of_iso [Faithful F] (α : F ≅ F') : Faithful F' :=
   { map_injective' := fun X Y f f' h =>
@@ -245,14 +244,14 @@ variable {F G}
 theorem Faithful.of_comp_iso {H : C ⥤ E} [ℋ : Faithful H] (h : F ⋙ G ≅ H) : Faithful F :=
   @Faithful.of_comp _ _ _ _ _ _ F G (Faithful.of_iso h.symm)
 
-alias faithful.of_comp_iso ← CategoryTheory.Iso.faithful_of_comp
+alias faithful.of_comp_iso ← _root_.category_theory.iso.faithful_of_comp
 
 -- We could prove this from `faithful.of_comp_iso` using `eq_to_iso`,
 -- but that would introduce a cyclic import.
 theorem Faithful.of_comp_eq {H : C ⥤ E} [ℋ : Faithful H] (h : F ⋙ G = H) : Faithful F :=
   @Faithful.of_comp _ _ _ _ _ _ F G (h.symm ▸ ℋ)
 
-alias faithful.of_comp_eq ← Eq.faithful_of_comp
+alias faithful.of_comp_eq ← _root_.eq.faithful_of_comp
 
 variable (F G)
 
@@ -301,8 +300,7 @@ theorem Faithful.div_faithful (F : C ⥤ E) [Faithful F] (G : D ⥤ E) [Faithful
     (h_map : ∀ {X Y} {f : X ⟶ Y}, HEq (G.map (map f)) (F.map f)) : Faithful (Faithful.div F G obj @h_obj @map @h_map) :=
   (Faithful.div_comp F G _ h_obj _ @h_map).faithful_of_comp
 
-instance Full.comp [Full F] [Full G] : Full (F ⋙ G) where
-  preimage := fun _ _ f => F.preimage (G.preimage f)
+instance Full.comp [Full F] [Full G] : Full (F ⋙ G) where preimage := fun _ _ f => F.preimage (G.preimage f)
 
 /-- If `F ⋙ G` is full and `G` is faithful, then `F` is full. -/
 def Full.ofCompFaithful [full <| F ⋙ G] [Faithful G] : Full F where

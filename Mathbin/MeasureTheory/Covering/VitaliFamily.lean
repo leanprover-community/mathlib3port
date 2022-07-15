@@ -138,7 +138,7 @@ theorem covering_mem_family {x : α} (hx : x ∈ h.index) : h.covering x ∈ v.S
 theorem measure_diff_bUnion : μ (s \ ⋃ x ∈ h.index, h.covering x) = 0 :=
   h.exists_disjoint_covering_ae.some_spec.some_spec.2.2.2
 
-theorem index_countable [SecondCountableTopology α] : Countable h.index :=
+theorem index_countable [SecondCountableTopology α] : h.index.Countable :=
   h.covering_disjoint.countable_of_nonempty_interior fun x hx => v.nonempty_interior _ _ (h.covering_mem_family hx)
 
 protected theorem measurable_set_u {x : α} (hx : x ∈ h.index) : MeasurableSet (h.covering x) :=
@@ -150,7 +150,7 @@ theorem measure_le_tsum_of_absolutely_continuous [SecondCountableTopology α] {�
     ρ s ≤ ρ ((s \ ⋃ x ∈ h.index, h.covering x) ∪ ⋃ x ∈ h.index, h.covering x) :=
       measure_mono
         (by
-          simp only [subset_union_left, diff_union_self])
+          simp only [← subset_union_left, ← diff_union_self])
     _ ≤ ρ (s \ ⋃ x ∈ h.index, h.covering x) + ρ (⋃ x ∈ h.index, h.covering x) := measure_union_le _ _
     _ = ∑' x : h.index, ρ (h.covering x) := by
       rw [hρ h.measure_diff_bUnion,
@@ -170,15 +170,16 @@ include v
 that contain all sets of `v.sets_at x` of a sufficiently small diameter. This filter makes it
 possible to express limiting behavior when sets in `v.sets_at x` shrink to `x`. -/
 def filterAt (x : α) : Filter (Set α) :=
-  ⨅ ε ∈ Ioi (0 : ℝ), 𝓟 { a ∈ v.SetsAt x | a ⊆ ClosedBall x ε }
+  ⨅ ε ∈ Ioi (0 : ℝ), 𝓟 ({ a ∈ v.SetsAt x | a ⊆ ClosedBall x ε })
 
 theorem mem_filter_at_iff {x : α} {s : Set (Set α)} :
     s ∈ v.filterAt x ↔ ∃ ε > (0 : ℝ), ∀, ∀ a ∈ v.SetsAt x, ∀, a ⊆ ClosedBall x ε → a ∈ s := by
-  simp only [filter_at, exists_prop, gt_iff_lt]
+  simp only [← filter_at, ← exists_prop, ← gt_iff_lt]
   rw [mem_binfi_of_directed]
-  · simp only [subset_def, and_imp, exists_prop, mem_sep_eq, mem_Ioi, mem_principal]
+  · simp only [← subset_def, ← and_imp, ← exists_prop, ← mem_sep_eq, ← mem_Ioi, ← mem_principal]
     
-  · simp only [DirectedOn, exists_prop, ge_iff_le, le_principal_iff, mem_Ioi, Order.Preimage, mem_principal]
+  · simp only [← DirectedOn, ← exists_prop, ← ge_iff_le, ← le_principal_iff, ← mem_Ioi, ← Order.Preimage, ←
+      mem_principal]
     intro x hx y hy
     refine'
       ⟨min x y, lt_minₓ hx hy, fun a ha => ⟨ha.1, ha.2.trans (closed_ball_subset_closed_ball (min_le_leftₓ _ _))⟩,
@@ -188,8 +189,8 @@ theorem mem_filter_at_iff {x : α} {s : Set (Set α)} :
     
 
 instance filter_at_ne_bot (x : α) : (v.filterAt x).ne_bot := by
-  simp only [ne_bot_iff, ← empty_mem_iff_bot, mem_filter_at_iff, not_exists, exists_prop, mem_empty_eq, and_trueₓ,
-    gt_iff_lt, not_and, Ne.def, not_false_iff, not_forall]
+  simp only [← ne_bot_iff, empty_mem_iff_bot, ← mem_filter_at_iff, ← not_exists, ← exists_prop, ← mem_empty_eq, ←
+    and_trueₓ, ← gt_iff_lt, ← not_and, ← Ne.def, ← not_false_iff, ← not_forall]
   intro ε εpos
   obtain ⟨w, w_sets, hw⟩ : ∃ w ∈ v.sets_at x, w ⊆ closed_ball x ε := v.nontrivial x ε εpos
   exact ⟨w, w_sets, hw⟩
@@ -199,7 +200,7 @@ theorem eventually_filter_at_iff {x : α} {P : Set α → Prop} :
   v.mem_filter_at_iff
 
 theorem eventually_filter_at_mem_sets (x : α) : ∀ᶠ a in v.filterAt x, a ∈ v.SetsAt x := by
-  simp (config := { contextual := true })only [eventually_filter_at_iff, exists_prop, and_trueₓ, gt_iff_lt,
+  simp (config := { contextual := true })only [← eventually_filter_at_iff, ← exists_prop, ← and_trueₓ, ← gt_iff_lt, ←
     implies_true_iff]
   exact ⟨1, zero_lt_one⟩
 
@@ -208,7 +209,8 @@ theorem eventually_filter_at_measurable_set (x : α) : ∀ᶠ a in v.filterAt x,
 
 theorem frequently_filter_at_iff {x : α} {P : Set α → Prop} :
     (∃ᶠ a in v.filterAt x, P a) ↔ ∀, ∀ ε > (0 : ℝ), ∀, ∃ a ∈ v.SetsAt x, a ⊆ ClosedBall x ε ∧ P a := by
-  simp only [Filter.Frequently, eventually_filter_at_iff, not_exists, exists_prop, not_and, not_not, not_forall]
+  simp only [← Filter.Frequently, ← eventually_filter_at_iff, ← not_exists, ← exists_prop, ← not_and, ← not_not, ←
+    not_forall]
 
 theorem eventually_filter_at_subset_of_nhds {x : α} {o : Set α} (hx : o ∈ 𝓝 x) : ∀ᶠ a in v.filterAt x, a ⊆ o := by
   rw [eventually_filter_at_iff]

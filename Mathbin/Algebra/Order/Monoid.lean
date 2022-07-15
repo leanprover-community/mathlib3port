@@ -49,8 +49,7 @@ section OrderedInstances
 
 @[to_additive]
 instance OrderedCommMonoid.to_covariant_class_left (M : Type _) [OrderedCommMonoid M] :
-    CovariantClass M M (· * ·) (· ≤ ·) where
-  elim := fun a b c bc => OrderedCommMonoid.mul_le_mul_left _ _ bc a
+    CovariantClass M M (· * ·) (· ≤ ·) where elim := fun a b c bc => OrderedCommMonoid.mul_le_mul_left _ _ bc a
 
 /- This instance can be proven with `by apply_instance`.  However, `with_bot ℕ` does not
 pick up a `covariant_class M M (function.swap (*)) (≤)` instance without it (see PR #7940). -/
@@ -60,30 +59,21 @@ instance OrderedCommMonoid.to_covariant_class_right (M : Type _) [OrderedCommMon
   covariant_swap_mul_le_of_covariant_mul_le M
 
 /- This is not an instance, to avoid creating a loop in the type-class system: in a
-`left_cancel_semigroup` with a `partial_order`, assuming `covariant_class M M (*) (≤)`
-implies `covariant_class M M (*) (<)` . -/
+`left_cancel_semigroup` with a `partial_order`, assuming `covariant_class M M (*) (≤)` implies
+`covariant_class M M (*) (<)`, see `left_cancel_semigroup.covariant_mul_lt_of_covariant_mul_le`. -/
 @[to_additive]
 theorem Mul.to_covariant_class_left (M : Type _) [Mul M] [PartialOrderₓ M] [CovariantClass M M (· * ·) (· < ·)] :
     CovariantClass M M (· * ·) (· ≤ ·) :=
-  { elim := fun a b c bc => by
-      rcases eq_or_lt_of_le bc with (rfl | bc)
-      · exact rfl.le
-        
-      · exact (mul_lt_mul_left' bc a).le
-         }
+  ⟨covariant_le_of_covariant_lt _ _ _ CovariantClass.elim⟩
 
 /- This is not an instance, to avoid creating a loop in the type-class system: in a
 `right_cancel_semigroup` with a `partial_order`, assuming `covariant_class M M (swap (*)) (<)`
-implies `covariant_class M M (swap (*)) (≤)` . -/
+implies `covariant_class M M (swap (*)) (≤)`, see
+`right_cancel_semigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le`. -/
 @[to_additive]
 theorem Mul.to_covariant_class_right (M : Type _) [Mul M] [PartialOrderₓ M]
     [CovariantClass M M (swap (· * ·)) (· < ·)] : CovariantClass M M (swap (· * ·)) (· ≤ ·) :=
-  { elim := fun a b c bc => by
-      rcases eq_or_lt_of_le bc with (rfl | bc)
-      · exact rfl.le
-        
-      · exact (mul_lt_mul_right' bc a).le
-         }
+  ⟨covariant_le_of_covariant_lt _ _ _ CovariantClass.elim⟩
 
 end OrderedInstances
 
@@ -228,11 +218,11 @@ instance [Monoidₓ α] [LinearOrderₓ α] : LinearOrderₓ αˣ :=
 
 @[simp, norm_cast, to_additive]
 theorem max_coe [Monoidₓ α] [LinearOrderₓ α] {a b : αˣ} : (↑(max a b) : α) = max a b := by
-  by_cases' b ≤ a <;> simp [max_def, h]
+  by_cases' b ≤ a <;> simp [← max_def, ← h]
 
 @[simp, norm_cast, to_additive]
 theorem min_coe [Monoidₓ α] [LinearOrderₓ α] {a b : αˣ} : (↑(min a b) : α) = min a b := by
-  by_cases' a ≤ b <;> simp [min_def, h]
+  by_cases' a ≤ b <;> simp [← min_def, ← h]
 
 end Units
 
@@ -249,11 +239,14 @@ instance [PartialOrderₓ α] : PartialOrderₓ (WithZero α) :=
 instance [Preorderₓ α] : OrderBot (WithZero α) :=
   WithBot.orderBot
 
-theorem zero_le [PartialOrderₓ α] (a : WithZero α) : 0 ≤ a :=
-  OrderBot.bot_le a
+theorem zero_le [Preorderₓ α] (a : WithZero α) : 0 ≤ a :=
+  bot_le
 
 theorem zero_lt_coe [Preorderₓ α] (a : α) : (0 : WithZero α) < a :=
   WithBot.bot_lt_coe a
+
+theorem zero_eq_bot [Preorderₓ α] : (0 : WithZero α) = ⊥ :=
+  rfl
 
 @[simp, norm_cast]
 theorem coe_lt_coe [Preorderₓ α] {a b : α} : (a : WithZero α) < b ↔ a < b :=
@@ -269,42 +262,59 @@ instance [Lattice α] : Lattice (WithZero α) :=
 instance [LinearOrderₓ α] : LinearOrderₓ (WithZero α) :=
   WithBot.linearOrder
 
-theorem mul_le_mul_left {α : Type u} [Mul α] [Preorderₓ α] [CovariantClass α α (· * ·) (· ≤ ·)] :
-    ∀ a b : WithZero α, a ≤ b → ∀ c : WithZero α, c * a ≤ c * b := by
-  rintro (_ | a) (_ | b) h (_ | c) <;>
-    try
-      exact fun f hf => Option.noConfusion hf
-  · exact False.elim (not_lt_of_le h (WithZero.zero_lt_coe a))
+instance covariant_class_mul_le {α : Type u} [Mul α] [Preorderₓ α] [CovariantClass α α (· * ·) (· ≤ ·)] :
+    CovariantClass (WithZero α) (WithZero α) (· * ·) (· ≤ ·) := by
+  refine' ⟨fun a b c hbc => _⟩
+  induction a using WithZero.recZeroCoe
+  · exact zero_le _
     
-  · simp_rw [some_eq_coe]  at h⊢
-    norm_cast  at h⊢
-    exact CovariantClass.elim _ h
+  induction b using WithZero.recZeroCoe
+  · exact zero_le _
     
+  rcases WithBot.coe_le_iff.1 hbc with ⟨c, rfl, hbc'⟩
+  rw [← coe_mul, ← coe_mul, coe_le_coe]
+  exact mul_le_mul_left' hbc' a
 
-theorem lt_of_mul_lt_mul_left {α : Type u} [Mul α] [PartialOrderₓ α] [ContravariantClass α α (· * ·) (· < ·)] :
-    ∀ a b c : WithZero α, a * b < a * c → b < c := by
-  rintro (_ | a) (_ | b) (_ | c) h <;>
-    try
-      exact False.elim (lt_irreflₓ _ h)
-  · exact WithZero.zero_lt_coe c
-    
-  · exact False.elim (not_le_of_lt h (WithZero.zero_le _))
-    
-  · simp_rw [some_eq_coe]  at h⊢
-    norm_cast  at h⊢
-    apply lt_of_mul_lt_mul_left' h
-    
+instance contravariant_class_mul_lt {α : Type u} [Mul α] [PartialOrderₓ α] [ContravariantClass α α (· * ·) (· < ·)] :
+    ContravariantClass (WithZero α) (WithZero α) (· * ·) (· < ·) := by
+  refine' ⟨fun a b c h => _⟩
+  have := ((zero_le _).trans_lt h).ne'
+  lift a to α using left_ne_zero_of_mul this
+  lift c to α using right_ne_zero_of_mul this
+  induction b using WithZero.recZeroCoe
+  exacts[zero_lt_coe _, coe_lt_coe.mpr (lt_of_mul_lt_mul_left' <| coe_lt_coe.mp h)]
 
 @[simp]
 theorem le_max_iff [LinearOrderₓ α] {a b c : α} : (a : WithZero α) ≤ max b c ↔ a ≤ max b c := by
-  simp only [WithZero.coe_le_coe, le_max_iff]
+  simp only [← WithZero.coe_le_coe, ← le_max_iff]
 
 @[simp]
 theorem min_le_iff [LinearOrderₓ α] {a b c : α} : min (a : WithZero α) b ≤ c ↔ min a b ≤ c := by
-  simp only [WithZero.coe_le_coe, min_le_iff]
+  simp only [← WithZero.coe_le_coe, ← min_le_iff]
 
 instance [OrderedCommMonoid α] : OrderedCommMonoid (WithZero α) :=
-  { WithZero.commMonoidWithZero, WithZero.partialOrder with mul_le_mul_left := WithZero.mul_le_mul_left }
+  { WithZero.commMonoidWithZero, WithZero.partialOrder with mul_le_mul_left := fun _ _ => mul_le_mul_left' }
+
+protected theorem covariant_class_add_le [AddZeroClassₓ α] [Preorderₓ α] [CovariantClass α α (· + ·) (· ≤ ·)]
+    (h : ∀ a : α, 0 ≤ a) : CovariantClass (WithZero α) (WithZero α) (· + ·) (· ≤ ·) := by
+  refine' ⟨fun a b c hbc => _⟩
+  induction a using WithZero.recZeroCoe
+  · rwa [zero_addₓ, zero_addₓ]
+    
+  induction b using WithZero.recZeroCoe
+  · rw [add_zeroₓ]
+    induction c using WithZero.recZeroCoe
+    · rw [add_zeroₓ]
+      exact le_rfl
+      
+    · rw [← coe_add, coe_le_coe]
+      exact le_add_of_nonneg_right (h _)
+      
+    
+  · rcases WithBot.coe_le_iff.1 hbc with ⟨c, rfl, hbc'⟩
+    rw [← coe_add, ← coe_add, coe_le_coe]
+    exact add_le_add_left hbc' a
+    
 
 /-- If `0` is the least element in `α`, then `with_zero α` is an `ordered_add_comm_monoid`.
 See note [reducible non-instances].
@@ -318,30 +328,9 @@ elements are ≤ 1 and then 1 is the top element.
 -/
 @[reducible]
 protected def orderedAddCommMonoid [OrderedAddCommMonoid α] (zero_le : ∀ a : α, 0 ≤ a) :
-    OrderedAddCommMonoid (WithZero α) := by
-  suffices
-  refine' { WithZero.partialOrder, WithZero.addCommMonoid with add_le_add_left := this, .. }
-  · intro a b h c ca h₂
-    cases' b with b
-    · rw [le_antisymmₓ h bot_le] at h₂
-      exact ⟨_, h₂, le_rfl⟩
-      
-    cases' a with a
-    · change c + 0 = some ca at h₂
-      simp at h₂
-      simp [h₂]
-      exact
-        ⟨_, rfl, by
-          simpa using add_le_add_left (zero_le b) _⟩
-      
-    · simp at h
-      cases' c with c <;> change some _ = _ at h₂ <;> simp [-add_commₓ] at h₂ <;> subst ca <;> refine' ⟨_, rfl, _⟩
-      · exact h
-        
-      · exact add_le_add_left h _
-        
-      
-    
+    OrderedAddCommMonoid (WithZero α) :=
+  { WithZero.partialOrder, WithZero.addCommMonoid with
+    add_le_add_left := @add_le_add_left _ _ _ (WithZero.covariant_class_add_le zero_le).. }
 
 end WithZero
 
@@ -410,6 +399,14 @@ theorem self_le_mul_left (a b : α) : a ≤ b * a :=
   le_mul_self
 
 @[to_additive]
+theorem le_of_mul_le_left : a * b ≤ c → a ≤ c :=
+  le_self_mul.trans
+
+@[to_additive]
+theorem le_of_mul_le_right : a * b ≤ c → b ≤ c :=
+  le_mul_self.trans
+
+@[to_additive]
 theorem le_iff_exists_mul : a ≤ b ↔ ∃ c, b = a * c :=
   ⟨exists_mul_of_le, by
     rintro ⟨c, rfl⟩
@@ -417,13 +414,13 @@ theorem le_iff_exists_mul : a ≤ b ↔ ∃ c, b = a * c :=
 
 @[to_additive]
 theorem le_iff_exists_mul' : a ≤ b ↔ ∃ c, b = c * a := by
-  simpa only [mul_comm _ a] using le_iff_exists_mul
+  simpa only [← mul_comm _ a] using le_iff_exists_mul
 
 @[simp, to_additive zero_le]
 theorem one_le (a : α) : 1 ≤ a :=
   le_iff_exists_mul.mpr ⟨a, (one_mulₓ _).symm⟩
 
-@[simp, to_additive]
+@[to_additive]
 theorem bot_eq_one : (⊥ : α) = 1 :=
   le_antisymmₓ bot_le (one_le ⊥)
 
@@ -444,11 +441,11 @@ theorem eq_one_or_one_lt : a = 1 ∨ 1 < a :=
   (one_le a).eq_or_lt.imp_left Eq.symm
 
 @[to_additive]
-theorem exists_pos_mul_of_lt (h : a < b) : ∃ c > 1, a * c = b := by
+theorem exists_one_lt_mul_of_lt (h : a < b) : ∃ (c : _)(hc : 1 < c), a * c = b := by
   obtain ⟨c, hc⟩ := le_iff_exists_mul.1 h.le
   refine' ⟨c, one_lt_iff_ne_one.2 _, hc.symm⟩
   rintro rfl
-  simpa [hc, lt_irreflₓ] using h
+  simpa [← hc, ← lt_irreflₓ] using h
 
 @[to_additive]
 theorem le_mul_left (h : a ≤ c) : a ≤ b * c :=
@@ -541,18 +538,18 @@ instance WithZero.canonicallyLinearOrderedAddMonoid (α : Type _) [CanonicallyLi
 @[to_additive]
 theorem min_mul_distrib (a b c : α) : min a (b * c) = min a (min a b * min a c) := by
   cases' le_totalₓ a b with hb hb
-  · simp [hb, le_mul_right]
+  · simp [← hb, ← le_mul_right]
     
   · cases' le_totalₓ a c with hc hc
-    · simp [hc, le_mul_left]
+    · simp [← hc, ← le_mul_left]
       
-    · simp [hb, hc]
+    · simp [← hb, ← hc]
       
     
 
 @[to_additive]
 theorem min_mul_distrib' (a b c : α) : min (a * b) c = min (min a c * min b c) c := by
-  simpa [min_commₓ _ c] using min_mul_distrib c a b
+  simpa [← min_commₓ _ c] using min_mul_distrib c a b
 
 @[simp, to_additive]
 theorem one_min (a : α) : min 1 a = 1 :=
@@ -561,6 +558,11 @@ theorem one_min (a : α) : min 1 a = 1 :=
 @[simp, to_additive]
 theorem min_one (a : α) : min a 1 = 1 :=
   min_eq_rightₓ (one_le a)
+
+/-- In a linearly ordered monoid, we are happy for `bot_eq_one` to be a `@[simp]` lemma. -/
+@[simp, to_additive "In a linearly ordered monoid, we are happy for `bot_eq_zero` to be a `@[simp]` lemma"]
+theorem bot_eq_one' : (⊥ : α) = 1 :=
+  bot_eq_one
 
 end CanonicallyLinearOrderedMonoid
 
@@ -591,8 +593,8 @@ theorem OrderedCancelCommMonoid.lt_of_mul_lt_mul_left : ∀ a b c : α, a * b < 
 
 @[to_additive]
 instance OrderedCancelCommMonoid.to_contravariant_class_left (M : Type _) [OrderedCancelCommMonoid M] :
-    ContravariantClass M M (· * ·) (· < ·) where
-  elim := fun a b c => OrderedCancelCommMonoid.lt_of_mul_lt_mul_left _ _ _
+    ContravariantClass M M (· * ·)
+      (· < ·) where elim := fun a b c => OrderedCancelCommMonoid.lt_of_mul_lt_mul_left _ _ _
 
 /- This instance can be proven with `by apply_instance`.  However, by analogy with the
 instance `ordered_cancel_comm_monoid.to_covariant_class_right` above, I imagine that without
@@ -617,7 +619,7 @@ def Function.Injective.orderedCancelCommMonoid {β : Type _} [One β] [Mul β] [
     (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
     (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : OrderedCancelCommMonoid β :=
   { hf.LeftCancelSemigroup f mul, hf.OrderedCommMonoid f one mul npow with
-    le_of_mul_le_mul_left := fun bc : f (a * b) ≤ f (a * c) =>
+    le_of_mul_le_mul_left := fun a b c bc : f (a * b) ≤ f (a * c) =>
       (mul_le_mul_iff_left (f a)).mp
         (by
           rwa [← mul, ← mul]) }
@@ -631,7 +633,7 @@ end OrderedCancelCommMonoid
 @[to_additive]
 theorem fn_min_mul_fn_max {β} [LinearOrderₓ α] [CommSemigroupₓ β] (f : α → β) (n m : α) :
     f (min n m) * f (max n m) = f n * f m := by
-  cases' le_totalₓ n m with h h <;> simp [h, mul_comm]
+  cases' le_totalₓ n m with h h <;> simp [← h, ← mul_comm]
 
 @[to_additive]
 theorem min_mul_max [LinearOrderₓ α] [CommSemigroupₓ α] (n m : α) : min n m * max n m = n * m :=
@@ -848,8 +850,8 @@ instance [OrderedCommMonoid α] : OrderedCommMonoid αᵒᵈ :=
 
 @[to_additive OrderedCancelAddCommMonoid.to_contravariant_class]
 instance OrderedCancelCommMonoid.to_contravariant_class [OrderedCancelCommMonoid α] :
-    ContravariantClass αᵒᵈ αᵒᵈ Mul.mul LE.le where
-  elim := fun a b c bc => OrderedCancelCommMonoid.le_of_mul_le_mul_left a c b (dual_le.mp bc)
+    ContravariantClass αᵒᵈ αᵒᵈ Mul.mul
+      LE.le where elim := fun a b c bc => OrderedCancelCommMonoid.le_of_mul_le_mul_left a c b (dual_le.mp bc)
 
 @[to_additive]
 instance [OrderedCancelCommMonoid α] : OrderedCancelCommMonoid αᵒᵈ :=
@@ -965,7 +967,7 @@ theorem add_top (a : WithTop α) : a + ⊤ = ⊤ := by
 
 @[simp]
 theorem add_eq_top : a + b = ⊤ ↔ a = ⊤ ∨ b = ⊤ := by
-  cases a <;> cases b <;> simp [none_eq_top, some_eq_coe, ← WithTop.coe_add, ← WithZero.coe_add]
+  cases a <;> cases b <;> simp [← none_eq_top, ← some_eq_coe, WithTop.coe_add, WithZero.coe_add]
 
 theorem add_ne_top : a + b ≠ ⊤ ↔ a ≠ ⊤ ∧ b ≠ ⊤ :=
   add_eq_top.Not.trans not_or_distrib
@@ -975,87 +977,81 @@ theorem add_lt_top [PartialOrderₓ α] {a b : WithTop α} : a + b < ⊤ ↔ a <
 
 theorem add_eq_coe : ∀ {a b : WithTop α} {c : α}, a + b = c ↔ ∃ a' b' : α, ↑a' = a ∧ ↑b' = b ∧ a' + b' = c
   | none, b, c => by
-    simp [none_eq_top]
+    simp [← none_eq_top]
   | some a, none, c => by
-    simp [none_eq_top]
+    simp [← none_eq_top]
   | some a, some b, c => by
-    simp only [some_eq_coe, ← coe_add, coe_eq_coe, exists_and_distrib_left, exists_eq_left]
+    simp only [← some_eq_coe, coe_add, ← coe_eq_coe, ← exists_and_distrib_left, ← exists_eq_left]
 
 @[simp]
 theorem add_coe_eq_top_iff {x : WithTop α} {y : α} : x + y = ⊤ ↔ x = ⊤ := by
-  induction x using WithTop.recTopCoe <;> simp [← coe_add, -WithZero.coe_add]
+  induction x using WithTop.recTopCoe <;> simp [coe_add, -WithZero.coe_add]
 
 @[simp]
 theorem coe_add_eq_top_iff {y : WithTop α} : ↑x + y = ⊤ ↔ y = ⊤ := by
-  induction y using WithTop.recTopCoe <;> simp [← coe_add, -WithZero.coe_add]
+  induction y using WithTop.recTopCoe <;> simp [coe_add, -WithZero.coe_add]
 
-variable [Preorderₓ α]
-
-instance covariant_class_add_le [CovariantClass α α (· + ·) (· ≤ ·)] :
+instance covariant_class_add_le [LE α] [CovariantClass α α (· + ·) (· ≤ ·)] :
     CovariantClass (WithTop α) (WithTop α) (· + ·) (· ≤ ·) :=
   ⟨fun a b c h => by
     cases a <;>
       cases c <;>
         try
           exact le_top
-    cases b
-    · exact (not_top_le_coe _ h).elim
-      
-    · exact some_le_some.2 (add_le_add_left (some_le_some.1 h) _)
-      ⟩
+    rcases le_coe_iff.1 h with ⟨b, rfl, h'⟩
+    exact coe_le_coe.2 (add_le_add_left (coe_le_coe.1 h) _)⟩
 
-instance covariant_class_swap_add_le [CovariantClass α α (swap (· + ·)) (· ≤ ·)] :
+instance covariant_class_swap_add_le [LE α] [CovariantClass α α (swap (· + ·)) (· ≤ ·)] :
     CovariantClass (WithTop α) (WithTop α) (swap (· + ·)) (· ≤ ·) :=
   ⟨fun a b c h => by
     cases a <;>
       cases c <;>
         try
           exact le_top
-    cases b
-    · exact (not_top_le_coe _ h).elim
-      
-    · exact some_le_some.2 (add_le_add_right (some_le_some.1 h) _)
-      ⟩
+    rcases le_coe_iff.1 h with ⟨b, rfl, h'⟩
+    exact coe_le_coe.2 (add_le_add_right (coe_le_coe.1 h) _)⟩
 
-instance contravariant_class_add_lt [ContravariantClass α α (· + ·) (· < ·)] :
+instance contravariant_class_add_lt [LT α] [ContravariantClass α α (· + ·) (· < ·)] :
     ContravariantClass (WithTop α) (WithTop α) (· + ·) (· < ·) :=
   ⟨fun a b c h => by
-    cases a <;>
-      cases b <;>
-        try
-          exact (not_top_lt h).elim
-    cases c
+    induction a using WithTop.recTopCoe
+    · exact (not_none_lt _ h).elim
+      
+    induction b using WithTop.recTopCoe
+    · exact (not_none_lt _ h).elim
+      
+    induction c using WithTop.recTopCoe
     · exact coe_lt_top _
       
-    · exact some_lt_some.2 (lt_of_add_lt_add_left <| some_lt_some.1 h)
+    · exact coe_lt_coe.2 (lt_of_add_lt_add_left <| coe_lt_coe.1 h)
       ⟩
 
-instance contravariant_class_swap_add_lt [ContravariantClass α α (swap (· + ·)) (· < ·)] :
+instance contravariant_class_swap_add_lt [LT α] [ContravariantClass α α (swap (· + ·)) (· < ·)] :
     ContravariantClass (WithTop α) (WithTop α) (swap (· + ·)) (· < ·) :=
   ⟨fun a b c h => by
     cases a <;>
       cases b <;>
         try
-          exact (not_top_lt h).elim
+          exact (not_none_lt _ h).elim
     cases c
     · exact coe_lt_top _
       
-    · exact some_lt_some.2 (lt_of_add_lt_add_right <| some_lt_some.1 h)
+    · exact coe_lt_coe.2 (lt_of_add_lt_add_right <| coe_lt_coe.1 h)
       ⟩
 
-protected theorem le_of_add_le_add_left [ContravariantClass α α (· + ·) (· ≤ ·)] (ha : a ≠ ⊤) (h : a + b ≤ a + c) :
-    b ≤ c := by
+protected theorem le_of_add_le_add_left [LE α] [ContravariantClass α α (· + ·) (· ≤ ·)] (ha : a ≠ ⊤)
+    (h : a + b ≤ a + c) : b ≤ c := by
   lift a to α using ha
-  cases c <;>
-    try
-      exact le_top
-  cases b
-  exact (not_top_le_coe _ h).elim
-  simp only [some_eq_coe, ← coe_add, coe_le_coe] at h
-  rw [some_le_some]
+  induction c using WithTop.recTopCoe
+  · exact le_top
+    
+  induction b using WithTop.recTopCoe
+  · exact (not_top_le_coe _ h).elim
+    
+  simp only [coe_add, ← coe_le_coe] at h⊢
   exact le_of_add_le_add_left h
 
-protected theorem le_of_add_le_add_right [ContravariantClass α α (swap (· + ·)) (· ≤ ·)] (ha : a ≠ ⊤)
+protected theorem le_of_add_le_add_right [LE α] [ContravariantClass α α (swap (· + ·)) (· ≤ ·)] (ha : a ≠ ⊤)
     (h : b + a ≤ c + a) : b ≤ c := by
   lift a to α using ha
   cases c
@@ -1064,49 +1060,50 @@ protected theorem le_of_add_le_add_right [ContravariantClass α α (swap (· + �
   cases b
   · exact (not_top_le_coe _ h).elim
     
-  · exact some_le_some.2 (le_of_add_le_add_right <| some_le_some.1 h)
+  · exact coe_le_coe.2 (le_of_add_le_add_right <| coe_le_coe.1 h)
     
 
-protected theorem add_lt_add_left [CovariantClass α α (· + ·) (· < ·)] (ha : a ≠ ⊤) (h : b < c) : a + b < a + c := by
+protected theorem add_lt_add_left [LT α] [CovariantClass α α (· + ·) (· < ·)] (ha : a ≠ ⊤) (h : b < c) :
+    a + b < a + c := by
   lift a to α using ha
-  lift b to α using (h.trans_le le_top).Ne
+  rcases lt_iff_exists_coe.1 h with ⟨b, rfl, h'⟩
   cases c
   · exact coe_lt_top _
     
-  · exact some_lt_some.2 (add_lt_add_left (some_lt_some.1 h) _)
+  · exact coe_lt_coe.2 (add_lt_add_left (coe_lt_coe.1 h) _)
     
 
-protected theorem add_lt_add_right [CovariantClass α α (swap (· + ·)) (· < ·)] (ha : a ≠ ⊤) (h : b < c) :
+protected theorem add_lt_add_right [LT α] [CovariantClass α α (swap (· + ·)) (· < ·)] (ha : a ≠ ⊤) (h : b < c) :
     b + a < c + a := by
   lift a to α using ha
-  lift b to α using (h.trans_le le_top).Ne
+  rcases lt_iff_exists_coe.1 h with ⟨b, rfl, h'⟩
   cases c
   · exact coe_lt_top _
     
-  · exact some_lt_some.2 (add_lt_add_right (some_lt_some.1 h) _)
+  · exact coe_lt_coe.2 (add_lt_add_right (coe_lt_coe.1 h) _)
     
 
-protected theorem add_le_add_iff_left [CovariantClass α α (· + ·) (· ≤ ·)] [ContravariantClass α α (· + ·) (· ≤ ·)]
-    (ha : a ≠ ⊤) : a + b ≤ a + c ↔ b ≤ c :=
+protected theorem add_le_add_iff_left [LE α] [CovariantClass α α (· + ·) (· ≤ ·)]
+    [ContravariantClass α α (· + ·) (· ≤ ·)] (ha : a ≠ ⊤) : a + b ≤ a + c ↔ b ≤ c :=
   ⟨WithTop.le_of_add_le_add_left ha, fun h => add_le_add_left h a⟩
 
-protected theorem add_le_add_iff_right [CovariantClass α α (swap (· + ·)) (· ≤ ·)]
+protected theorem add_le_add_iff_right [LE α] [CovariantClass α α (swap (· + ·)) (· ≤ ·)]
     [ContravariantClass α α (swap (· + ·)) (· ≤ ·)] (ha : a ≠ ⊤) : b + a ≤ c + a ↔ b ≤ c :=
   ⟨WithTop.le_of_add_le_add_right ha, fun h => add_le_add_right h a⟩
 
-protected theorem add_lt_add_iff_left [CovariantClass α α (· + ·) (· < ·)] [ContravariantClass α α (· + ·) (· < ·)]
-    (ha : a ≠ ⊤) : a + b < a + c ↔ b < c :=
+protected theorem add_lt_add_iff_left [LT α] [CovariantClass α α (· + ·) (· < ·)]
+    [ContravariantClass α α (· + ·) (· < ·)] (ha : a ≠ ⊤) : a + b < a + c ↔ b < c :=
   ⟨lt_of_add_lt_add_left, WithTop.add_lt_add_left ha⟩
 
-protected theorem add_lt_add_iff_right [CovariantClass α α (swap (· + ·)) (· < ·)]
+protected theorem add_lt_add_iff_right [LT α] [CovariantClass α α (swap (· + ·)) (· < ·)]
     [ContravariantClass α α (swap (· + ·)) (· < ·)] (ha : a ≠ ⊤) : b + a < c + a ↔ b < c :=
   ⟨lt_of_add_lt_add_right, WithTop.add_lt_add_right ha⟩
 
-protected theorem add_lt_add_of_le_of_lt [CovariantClass α α (· + ·) (· < ·)]
+protected theorem add_lt_add_of_le_of_lt [Preorderₓ α] [CovariantClass α α (· + ·) (· < ·)]
     [CovariantClass α α (swap (· + ·)) (· ≤ ·)] (ha : a ≠ ⊤) (hab : a ≤ b) (hcd : c < d) : a + c < b + d :=
   (WithTop.add_lt_add_left ha hcd).trans_le <| add_le_add_right hab _
 
-protected theorem add_lt_add_of_lt_of_le [CovariantClass α α (· + ·) (· ≤ ·)]
+protected theorem add_lt_add_of_lt_of_le [Preorderₓ α] [CovariantClass α α (· + ·) (· ≤ ·)]
     [CovariantClass α α (swap (· + ·)) (· < ·)] (hc : c ≠ ⊤) (hab : a < b) (hcd : c ≤ d) : a + c < b + d :=
   (WithTop.add_lt_add_right hc hab).trans_le <| add_le_add_left hcd _
 
@@ -1119,7 +1116,7 @@ instance [AddSemigroupₓ α] : AddSemigroupₓ (WithTop α) :=
           refine' WithTop.recTopCoe _ _ <;>
             try
               intro <;>
-        simp [← WithTop.coe_add, add_assocₓ] }
+        simp [WithTop.coe_add, ← add_assocₓ] }
 
 instance [AddCommSemigroupₓ α] : AddCommSemigroupₓ (WithTop α) :=
   { WithTop.addSemigroup with
@@ -1128,7 +1125,7 @@ instance [AddCommSemigroupₓ α] : AddCommSemigroupₓ (WithTop α) :=
           refine' WithTop.recTopCoe _ _ <;>
             try
               intro <;>
-        simp [← WithTop.coe_add, add_commₓ] }
+        simp [WithTop.coe_add, ← add_commₓ] }
 
 instance [AddZeroClassₓ α] : AddZeroClassₓ (WithTop α) :=
   { WithTop.hasZero, WithTop.hasAdd with
@@ -1157,13 +1154,13 @@ instance [OrderedAddCommMonoid α] : OrderedAddCommMonoid (WithTop α) :=
   { WithTop.partialOrder, WithTop.addCommMonoid with
     add_le_add_left := by
       rintro a b h (_ | c)
-      · simp [none_eq_top]
+      · simp [← none_eq_top]
         
       rcases b with (_ | b)
-      · simp [none_eq_top]
+      · simp [← none_eq_top]
         
       rcases le_coe_iff.1 h with ⟨a, rfl, h⟩
-      simp only [some_eq_coe, ← coe_add, coe_le_coe] at h⊢
+      simp only [← some_eq_coe, coe_add, ← coe_le_coe] at h⊢
       exact add_le_add_left h c }
 
 instance [LinearOrderedAddCommMonoid α] : LinearOrderedAddCommMonoidWithTop (WithTop α) :=
@@ -1229,7 +1226,7 @@ protected def _root_.add_hom.with_top_map {M N : Type _} [Add M] [Add N] (f : Ad
     | x, ⊤ => by
       rw [add_top, map_top, add_top]
     | (x : M), (y : M) => by
-      simp only [← coe_add, map_coe, map_add]
+      simp only [coe_add, ← map_coe, ← map_add]
 
 /-- A version of `with_top.map` for `add_monoid_hom`s. -/
 @[simps (config := { fullyApplied := false })]

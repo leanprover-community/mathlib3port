@@ -186,8 +186,7 @@ variable [Monoidₓ S] [DistribMulAction S W] [SmulCommClass R S W]
 
 variable [HasContinuousConstSmul S W]
 
-instance : HasScalar S (P →A[R] W) where
-  smul := fun t f => { t • (f : P →ᵃ[R] W) with cont := f.Continuous.const_smul t }
+instance : HasSmul S (P →A[R] W) where smul := fun t f => { t • (f : P →ᵃ[R] W) with cont := f.Continuous.const_smul t }
 
 @[norm_cast, simp]
 theorem coe_smul (t : S) (f : P →A[R] W) : ⇑(t • f) = t • f :=
@@ -196,8 +195,8 @@ theorem coe_smul (t : S) (f : P →A[R] W) : ⇑(t • f) = t • f :=
 theorem smul_apply (t : S) (f : P →A[R] W) (x : P) : (t • f) x = t • f x :=
   rfl
 
-instance [DistribMulAction Sᵐᵒᵖ W] [IsCentralScalar S W] : IsCentralScalar S (P →A[R] W) where
-  op_smul_eq_smul := fun t f => ext fun _ => op_smul_eq_smul _ _
+instance [DistribMulAction Sᵐᵒᵖ W] [IsCentralScalar S W] :
+    IsCentralScalar S (P →A[R] W) where op_smul_eq_smul := fun t f => ext fun _ => op_smul_eq_smul _ _
 
 instance : MulAction S (P →A[R] W) :=
   Function.Injective.mulAction _ coe_injective coe_smul
@@ -206,8 +205,10 @@ end MulAction
 
 variable [TopologicalAddGroup W]
 
-instance : Add (P →A[R] W) where
-  add := fun f g => { (f : P →ᵃ[R] W) + (g : P →ᵃ[R] W) with cont := f.Continuous.add g.Continuous }
+instance :
+    Add
+      (P →A[R]
+        W) where add := fun f g => { (f : P →ᵃ[R] W) + (g : P →ᵃ[R] W) with cont := f.Continuous.add g.Continuous }
 
 @[norm_cast, simp]
 theorem coe_add (f g : P →A[R] W) : ⇑(f + g) = f + g :=
@@ -216,8 +217,10 @@ theorem coe_add (f g : P →A[R] W) : ⇑(f + g) = f + g :=
 theorem add_apply (f g : P →A[R] W) (x : P) : (f + g) x = f x + g x :=
   rfl
 
-instance : Sub (P →A[R] W) where
-  sub := fun f g => { (f : P →ᵃ[R] W) - (g : P →ᵃ[R] W) with cont := f.Continuous.sub g.Continuous }
+instance :
+    Sub
+      (P →A[R]
+        W) where sub := fun f g => { (f : P →ᵃ[R] W) - (g : P →ᵃ[R] W) with cont := f.Continuous.sub g.Continuous }
 
 @[norm_cast, simp]
 theorem coe_sub (f g : P →A[R] W) : ⇑(f - g) = f - g :=
@@ -226,8 +229,7 @@ theorem coe_sub (f g : P →A[R] W) : ⇑(f - g) = f - g :=
 theorem sub_apply (f g : P →A[R] W) (x : P) : (f - g) x = f x - g x :=
   rfl
 
-instance : Neg (P →A[R] W) where
-  neg := fun f => { -(f : P →ᵃ[R] W) with cont := f.Continuous.neg }
+instance : Neg (P →A[R] W) where neg := fun f => { -(f : P →ᵃ[R] W) with cont := f.Continuous.neg }
 
 @[norm_cast, simp]
 theorem coe_neg (f : P →A[R] W) : ⇑(-f) = -f :=

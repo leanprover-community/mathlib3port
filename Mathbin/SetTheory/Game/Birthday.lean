@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 -/
 import Mathbin.SetTheory.Game.Ordinal
-import Mathbin.SetTheory.Ordinal.Arithmetic
 
 /-!
 # Birthdays of games
@@ -27,6 +26,8 @@ prove the basic properties about these.
 universe u
 
 open Ordinal
+
+open Pgame
 
 namespace Pgame
 
@@ -75,7 +76,7 @@ theorem lt_birthday_iff {x : Pgame} {o : Ordinal} :
       
     
 
-theorem Relabelling.birthday_congr : ∀ {x y : Pgame.{u}}, Relabelling x y → birthday x = birthday y
+theorem Relabelling.birthday_congr : ∀ {x y : Pgame.{u}}, x ≡r y → birthday x = birthday y
   | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩, ⟨L, R, hL, hR⟩ => by
     rw [birthday, birthday]
     congr 1
@@ -84,7 +85,7 @@ theorem Relabelling.birthday_congr : ∀ {x y : Pgame.{u}}, Relabelling x y → 
       ext i
       constructor
     · rintro ⟨j, rfl⟩
-      exact ⟨L j, (relabelling.birthday_congr (hL j)).symm⟩
+      exact ⟨L j, (hL j).birthday_congr.symm⟩
       
     · rintro ⟨j, rfl⟩
       refine' ⟨L.symm j, relabelling.birthday_congr _⟩
@@ -97,7 +98,7 @@ theorem Relabelling.birthday_congr : ∀ {x y : Pgame.{u}}, Relabelling x y → 
       rw [R.symm_apply_apply]
       
     · rintro ⟨j, rfl⟩
-      exact ⟨R.symm j, relabelling.birthday_congr (hR j)⟩
+      exact ⟨R.symm j, (hR j).birthday_congr⟩
       
 
 @[simp]
@@ -114,7 +115,7 @@ theorem birthday_eq_zero (x : Pgame) : birthday x = 0 ↔ IsEmpty x.LeftMoves �
 
 @[simp]
 theorem birthday_zero : birthday 0 = 0 := by
-  simp [Pempty.is_empty]
+  simp [← Pempty.is_empty]
 
 @[simp]
 theorem birthday_one : birthday 1 = 1 := by
@@ -136,7 +137,7 @@ theorem neg_birthday : ∀ x : Pgame, (-x).birthday = x.birthday
 theorem to_pgame_birthday (o : Ordinal) : o.toPgame.birthday = o := by
   induction' o using Ordinal.induction with o IH
   rw [to_pgame_def, Pgame.birthday]
-  simp only [lsub_empty, max_zero_right]
+  simp only [← lsub_empty, ← max_zero_right]
   nth_rw 0[← lsub_typein o]
   congr with x
   exact IH _ (typein_lt_self x)
@@ -147,7 +148,7 @@ theorem le_birthday : ∀ x : Pgame, x ≤ x.birthday.toPgame
       ⟨fun i =>
         Or.inl
           ⟨toLeftMovesToPgame ⟨_, birthday_move_left_lt i⟩, by
-            simp [le_birthday (xL i)]⟩,
+            simp [← le_birthday (xL i)]⟩,
         isEmptyElim⟩
 
 theorem neg_birthday_le (x : Pgame) : -x.birthday.toPgame ≤ x := by

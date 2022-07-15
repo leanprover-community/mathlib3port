@@ -43,10 +43,11 @@ theorem min_fac_aux_to_nat {fuel : ℕ} {n k : PosNum} (h : Nat.sqrt n < fuel + 
     rwa [zero_addₓ, Nat.sqrt_lt] at h
     
   rw [← mul_to_nat]
-  simp only [cast_lt, dvd_to_nat, ite_cast]
+  simp only [← cast_lt, ← dvd_to_nat, ← ite_cast]
   congr 2
   rw [ih] <;> [congr, convert Nat.lt_succ_of_ltₓ h using 1] <;>
-    simp only [_root_.bit1, _root_.bit0, cast_bit1, cast_succ, Nat.succ_eq_add_one, add_assocₓ, add_left_commₓ]
+    simp only [← _root_.bit1, ← _root_.bit0, ← cast_bit1, ← cast_succ, ← Nat.succ_eq_add_one, ← add_assocₓ, ←
+      add_left_commₓ]
 
 /-- Returns the smallest prime factor of `n ≠ 1`. -/
 def minFac : PosNum → PosNum
@@ -66,7 +67,7 @@ theorem min_fac_to_nat (n : PosNum) : (minFac n : ℕ) = Nat.minFac n := by
     rw [min_fac_aux_to_nat]
     · rfl
       
-    simp only [cast_one, cast_bit1]
+    simp only [← cast_one, ← cast_bit1]
     rw [Nat.sqrt_lt]
     convert
       lt_add_of_pos_right _

@@ -41,7 +41,7 @@ open Filter
 /-- Class `has_continuous_smul M X` says that the scalar multiplication `(•) : M → X → X`
 is continuous in both arguments. We use the same class for all kinds of multiplicative actions,
 including (semi)modules and algebras. -/
-class HasContinuousSmul (M X : Type _) [HasScalar M X] [TopologicalSpace M] [TopologicalSpace X] : Prop where
+class HasContinuousSmul (M X : Type _) [HasSmul M X] [TopologicalSpace M] [TopologicalSpace X] : Prop where
   continuous_smul : Continuous fun p : M × X => p.1 • p.2
 
 export HasContinuousSmul (continuous_smul)
@@ -60,13 +60,14 @@ section Main
 
 variable {M X Y α : Type _} [TopologicalSpace M] [TopologicalSpace X] [TopologicalSpace Y]
 
-section HasScalar
+section HasSmul
 
-variable [HasScalar M X] [HasContinuousSmul M X]
+variable [HasSmul M X] [HasContinuousSmul M X]
 
 @[to_additive]
-instance (priority := 100) HasContinuousSmul.has_continuous_const_smul : HasContinuousConstSmul M X where
-  continuous_const_smul := fun _ => continuous_smul.comp (continuous_const.prod_mk continuous_id)
+instance (priority := 100) HasContinuousSmul.has_continuous_const_smul :
+    HasContinuousConstSmul M
+      X where continuous_const_smul := fun _ => continuous_smul.comp (continuous_const.prod_mk continuous_id)
 
 @[to_additive]
 theorem Filter.Tendsto.smul {f : α → M} {g : α → X} {l : Filter α} {c : M} {a : X} (hf : Tendsto f l (𝓝 c))
@@ -98,38 +99,38 @@ theorem Continuous.smul (hf : Continuous f) (hg : Continuous g) : Continuous fun
   continuous_smul.comp (hf.prod_mk hg)
 
 /-- If a scalar is central, then its right action is continuous when its left action is. -/
-instance HasContinuousSmul.op [HasScalar Mᵐᵒᵖ X] [IsCentralScalar M X] : HasContinuousSmul Mᵐᵒᵖ X :=
+instance HasContinuousSmul.op [HasSmul Mᵐᵒᵖ X] [IsCentralScalar M X] : HasContinuousSmul Mᵐᵒᵖ X :=
   ⟨by
     suffices Continuous fun p : M × X => MulOpposite.op p.fst • p.snd from
       this.comp (MulOpposite.continuous_unop.prod_map continuous_id)
-    simpa only [op_smul_eq_smul] using (continuous_smul : Continuous fun p : M × X => _)⟩
+    simpa only [← op_smul_eq_smul] using (continuous_smul : Continuous fun p : M × X => _)⟩
 
 @[to_additive]
 instance MulOpposite.has_continuous_smul : HasContinuousSmul M Xᵐᵒᵖ :=
   ⟨MulOpposite.continuous_op.comp <| continuous_smul.comp <| continuous_id.prod_map MulOpposite.continuous_unop⟩
 
-end HasScalar
+end HasSmul
 
 section Monoidₓ
 
 variable [Monoidₓ M] [MulAction M X] [HasContinuousSmul M X]
 
 @[to_additive]
-instance Units.has_continuous_smul : HasContinuousSmul Mˣ X where
-  continuous_smul :=
+instance Units.has_continuous_smul :
+    HasContinuousSmul Mˣ
+      X where continuous_smul :=
     show Continuous ((fun p : M × X => p.fst • p.snd) ∘ fun p : Mˣ × X => (p.1, p.2)) from
       continuous_smul.comp ((Units.continuous_coe.comp continuous_fst).prod_mk continuous_snd)
 
 end Monoidₓ
 
 @[to_additive]
-instance [HasScalar M X] [HasScalar M Y] [HasContinuousSmul M X] [HasContinuousSmul M Y] :
-    HasContinuousSmul M (X × Y) :=
+instance [HasSmul M X] [HasSmul M Y] [HasContinuousSmul M X] [HasContinuousSmul M Y] : HasContinuousSmul M (X × Y) :=
   ⟨(continuous_fst.smul (continuous_fst.comp continuous_snd)).prod_mk
       (continuous_fst.smul (continuous_snd.comp continuous_snd))⟩
 
 @[to_additive]
-instance {ι : Type _} {γ : ι → Type _} [∀ i, TopologicalSpace (γ i)] [∀ i, HasScalar M (γ i)]
+instance {ι : Type _} {γ : ι → Type _} [∀ i, TopologicalSpace (γ i)] [∀ i, HasSmul M (γ i)]
     [∀ i, HasContinuousSmul M (γ i)] : HasContinuousSmul M (∀ i, γ i) :=
   ⟨continuous_pi fun i =>
       (continuous_fst.smul continuous_snd).comp <| continuous_fst.prod_mk ((continuous_apply i).comp continuous_snd)⟩
@@ -138,7 +139,7 @@ end Main
 
 section LatticeOps
 
-variable {ι : Sort _} {M X : Type _} [TopologicalSpace M] [HasScalar M X]
+variable {ι : Sort _} {M X : Type _} [TopologicalSpace M] [HasSmul M X]
 
 @[to_additive]
 theorem has_continuous_smul_Inf {ts : Set (TopologicalSpace X)} (h : ∀, ∀ t ∈ ts, ∀, @HasContinuousSmul M X _ _ t) :

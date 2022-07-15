@@ -16,6 +16,8 @@ In this file we provide `subsingleton`, `unique`, `decidable_eq`, and `is_empty`
 
 universe u v
 
+open Function
+
 namespace Plift
 
 variable {α : Sort u} {β : Sort v}
@@ -32,13 +34,32 @@ instance [DecidableEq α] : DecidableEq (Plift α) :=
 instance [IsEmpty α] : IsEmpty (Plift α) :=
   Equivₓ.plift.isEmpty
 
+theorem up_injective : Injective (@up α) :=
+  Equivₓ.plift.symm.Injective
+
+theorem up_surjective : Surjective (@up α) :=
+  Equivₓ.plift.symm.Surjective
+
+theorem up_bijective : Bijective (@up α) :=
+  Equivₓ.plift.symm.Bijective
+
+@[simp]
+theorem up_inj {x y : α} : up x = up y ↔ x = y :=
+  up_injective.eq_iff
+
+theorem down_surjective : Surjective (@down α) :=
+  Equivₓ.plift.Surjective
+
+theorem down_bijective : Bijective (@down α) :=
+  Equivₓ.plift.Bijective
+
 @[simp]
 theorem forall {p : Plift α → Prop} : (∀ x, p x) ↔ ∀ x : α, p (Plift.up x) :=
-  Equivₓ.plift.forall_congr_left'
+  up_surjective.forall
 
 @[simp]
 theorem exists {p : Plift α → Prop} : (∃ x, p x) ↔ ∃ x : α, p (Plift.up x) :=
-  Equivₓ.plift.exists_congr_left
+  up_surjective.exists
 
 end Plift
 
@@ -58,13 +79,32 @@ instance [DecidableEq α] : DecidableEq (ULift α) :=
 instance [IsEmpty α] : IsEmpty (ULift α) :=
   Equivₓ.ulift.isEmpty
 
+theorem up_injective : Injective (@up α) :=
+  Equivₓ.ulift.symm.Injective
+
+theorem up_surjective : Surjective (@up α) :=
+  Equivₓ.ulift.symm.Surjective
+
+theorem up_bijective : Bijective (@up α) :=
+  Equivₓ.ulift.symm.Bijective
+
+@[simp]
+theorem up_inj {x y : α} : up x = up y ↔ x = y :=
+  up_injective.eq_iff
+
+theorem down_surjective : Surjective (@down α) :=
+  Equivₓ.ulift.Surjective
+
+theorem down_bijective : Bijective (@down α) :=
+  Equivₓ.ulift.Bijective
+
 @[simp]
 theorem forall {p : ULift α → Prop} : (∀ x, p x) ↔ ∀ x : α, p (ULift.up x) :=
-  Equivₓ.ulift.forall_congr_left'
+  up_surjective.forall
 
 @[simp]
 theorem exists {p : ULift α → Prop} : (∃ x, p x) ↔ ∃ x : α, p (ULift.up x) :=
-  Equivₓ.ulift.exists_congr_left
+  up_surjective.exists
 
 end ULift
 

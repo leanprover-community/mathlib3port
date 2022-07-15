@@ -30,10 +30,10 @@ open Complex
 
 theorem selfAdjoint.exp_i_smul_unitary {a : A} (ha : a ∈ selfAdjoint A) : exp ℂ (I • a) ∈ unitary A := by
   rw [unitary.mem_iff, star_exp]
-  simp only [star_smul, IsROrC.star_def, self_adjoint.mem_iff.mp ha, conj_I, neg_smul]
+  simp only [← star_smul, ← IsROrC.star_def, ← self_adjoint.mem_iff.mp ha, ← conj_I, ← neg_smul]
   rw [← @exp_add_of_commute ℂ A _ _ _ _ _ _ (Commute.refl (I • a)).neg_left]
   rw [← @exp_add_of_commute ℂ A _ _ _ _ _ _ (Commute.refl (I • a)).neg_right]
-  simpa only [add_right_negₓ, add_left_negₓ, and_selfₓ] using (exp_zero : exp ℂ (0 : A) = 1)
+  simpa only [← add_right_negₓ, ← add_left_negₓ, ← and_selfₓ] using (exp_zero : exp ℂ (0 : A) = 1)
 
 /-- The map from the selfadjoint real subspace to the unitary group. This map only makes sense
 over ℂ. -/
@@ -48,8 +48,8 @@ theorem Commute.exp_unitary_add {a b : selfAdjoint A} (h : Commute (a : A) (b : 
   ext
   have hcomm : Commute (I • (a : A)) (I • (b : A))
   calc _ = _ := by
-      simp only [h.eq, Algebra.smul_mul_assoc, Algebra.mul_smul_comm]
-  simpa only [exp_unitary_coe, AddSubgroup.coe_add, smul_add] using exp_add_of_commute hcomm
+      simp only [← h.eq, ← Algebra.smul_mul_assoc, ← Algebra.mul_smul_comm]
+  simpa only [← exp_unitary_coe, ← AddSubgroup.coe_add, ← smul_add] using exp_add_of_commute hcomm
 
 theorem Commute.exp_unitary {a b : selfAdjoint A} (h : Commute (a : A) (b : A)) :
     Commute (expUnitary a) (expUnitary b) :=

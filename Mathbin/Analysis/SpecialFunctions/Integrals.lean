@@ -50,15 +50,15 @@ variable {f : ℝ → ℝ} {μ ν : Measureₓ ℝ} [IsLocallyFiniteMeasure μ] 
 theorem interval_integrable_pow : IntervalIntegrable (fun x => x ^ n) μ a b :=
   (continuous_pow n).IntervalIntegrable a b
 
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
 theorem interval_integrable_zpow {n : ℤ}
-    (h : 0 ≤ n ∨ (0 : ℝ) ∉ "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)") :
+    (h : 0 ≤ n ∨ (0 : ℝ) ∉ "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)") :
     IntervalIntegrable (fun x => x ^ n) μ a b :=
   ((continuous_on_id.zpow₀ n) fun x hx => h.symm.imp (ne_of_mem_of_not_mem hx) id).IntervalIntegrable
 
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
 theorem interval_integrable_rpow {r : ℝ}
-    (h : 0 ≤ r ∨ (0 : ℝ) ∉ "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)") :
+    (h : 0 ≤ r ∨ (0 : ℝ) ∉ "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)") :
     IntervalIntegrable (fun x => x ^ r) μ a b :=
   (continuous_on_id.rpow_const fun x hx => h.symm.imp (ne_of_mem_of_not_mem hx) id).IntervalIntegrable
 
@@ -72,7 +72,8 @@ theorem interval_integrable_rpow' {r : ℝ} (h : -1 < r) : IntervalIntegrable (f
     have hderiv : ∀, ∀ x ∈ Ioo 0 c, ∀, HasDerivAt (fun x : ℝ => x ^ (r + 1) / (r + 1)) (x ^ r) x := by
       intro x hx
       convert (Real.has_deriv_at_rpow_const (Or.inl hx.1.ne')).div_const (r + 1)
-      field_simp [(by
+      field_simp [←
+        (by
           linarith : r + 1 ≠ 0)]
       ring
     apply integrable_on_deriv_of_nonneg hc _ hderiv
@@ -102,11 +103,18 @@ theorem interval_integrable_rpow' {r : ℝ} (h : -1 < r) : IntervalIntegrable (f
         (by
           linarith : 0 ≤ -c)] at
       hx
-    simp only [Pi.smul_apply, Algebra.id.smul_eq_mul, log_neg_eq_log, mul_comm, rpow_def_of_pos hx.1,
+    simp only [← Pi.smul_apply, ← Algebra.id.smul_eq_mul, ← log_neg_eq_log, ← mul_comm, ← rpow_def_of_pos hx.1, ←
       rpow_def_of_neg
         (by
           linarith [hx.1] : -x < 0)]
     
+
+theorem interval_integrable_cpow {r : ℂ} (ha : 0 < a) (hb : 0 < b) :
+    IntervalIntegrable (fun x : ℝ => (x : ℂ) ^ r) volume a b := by
+  refine' (complex.continuous_of_real.continuous_on.cpow_const _).IntervalIntegrable
+  intro c hc
+  left
+  exact_mod_cast lt_of_lt_of_leₓ (lt_minₓ ha hb) hc.left
 
 @[simp]
 theorem interval_integrable_id : IntervalIntegrable (fun x => x) μ a b :=
@@ -124,46 +132,46 @@ theorem IntervalIntegrable.const_mul (h : IntervalIntegrable f ν a b) : Interva
 @[simp]
 theorem IntervalIntegrable.mul_const (h : IntervalIntegrable f ν a b) : IntervalIntegrable (fun x => f x * c) ν a b :=
   by
-  simp only [mul_comm, interval_integrable.const_mul c h]
+  simp only [← mul_comm, ← interval_integrable.const_mul c h]
 
 @[simp]
 theorem IntervalIntegrable.div (h : IntervalIntegrable f ν a b) : IntervalIntegrable (fun x => f x / c) ν a b :=
   IntervalIntegrable.mul_const c⁻¹ h
 
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
 theorem interval_integrable_one_div
-    (h : ∀ x : ℝ, x ∈ "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)" → f x ≠ 0)
-    (hf : ContinuousOn f "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)") :
+    (h : ∀ x : ℝ, x ∈ "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)" → f x ≠ 0)
+    (hf : ContinuousOn f "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)") :
     IntervalIntegrable (fun x => 1 / f x) μ a b :=
   (continuous_on_const.div hf h).IntervalIntegrable
 
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
 @[simp]
 theorem interval_integrable_inv
-    (h : ∀ x : ℝ, x ∈ "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)" → f x ≠ 0)
-    (hf : ContinuousOn f "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)") :
+    (h : ∀ x : ℝ, x ∈ "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)" → f x ≠ 0)
+    (hf : ContinuousOn f "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)") :
     IntervalIntegrable (fun x => (f x)⁻¹) μ a b := by
-  simpa only [one_div] using interval_integrable_one_div h hf
+  simpa only [← one_div] using interval_integrable_one_div h hf
 
 @[simp]
 theorem interval_integrable_exp : IntervalIntegrable exp μ a b :=
   continuous_exp.IntervalIntegrable a b
 
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
 @[simp]
 theorem IntervalIntegrable.log
-    (hf : ContinuousOn f "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)")
-    (h : ∀ x : ℝ, x ∈ "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)" → f x ≠ 0) :
+    (hf : ContinuousOn f "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)")
+    (h : ∀ x : ℝ, x ∈ "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)" → f x ≠ 0) :
     IntervalIntegrable (fun x => log (f x)) μ a b :=
   (ContinuousOn.log hf h).IntervalIntegrable
 
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
 @[simp]
 theorem interval_integrable_log
-    (h : (0 : ℝ) ∉ "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)") :
+    (h : (0 : ℝ) ∉ "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)") :
     IntervalIntegrable log μ a b :=
   (IntervalIntegrable.log continuous_on_id) fun x hx => ne_of_mem_of_not_mem hx h
 
@@ -184,7 +192,7 @@ theorem interval_integrable_one_div_one_add_sq : IntervalIntegrable (fun x : ℝ
 
 @[simp]
 theorem interval_integrable_inv_one_add_sq : IntervalIntegrable (fun x : ℝ => (1 + x ^ 2)⁻¹) μ a b := by
-  simpa only [one_div] using interval_integrable_one_div_one_add_sq
+  simpa only [← one_div] using interval_integrable_one_div_one_add_sq
 
 /-! ### Integrals of the form `c * ∫ x in a..b, f (c * x + d)` -/
 
@@ -240,10 +248,10 @@ open intervalIntegral
 /-! ### Integrals of simple functions -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
 theorem integral_rpow {r : ℝ}
-    (h : -1 < r ∨ r ≠ -1 ∧ (0 : ℝ) ∉ "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)") :
+    (h : -1 < r ∨ r ≠ -1 ∧ (0 : ℝ) ∉ "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)") :
     (∫ x in a..b, x ^ r) = (b ^ (r + 1) - a ^ (r + 1)) / (r + 1) := by
   rw [sub_div]
   have hderiv : ∀ x : ℝ, x ≠ 0 → HasDerivAt (fun x : ℝ => x ^ (r + 1) / (r + 1)) (x ^ r) x := by
@@ -297,7 +305,7 @@ theorem integral_rpow {r : ℝ}
     
   · have hderiv' :
       ∀ x : ℝ,
-        x ∈ "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)" →
+        x ∈ "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)" →
           HasDerivAt (fun x : ℝ => x ^ (r + 1) / (r + 1)) (x ^ r) x :=
       by
       intro x hx
@@ -306,13 +314,32 @@ theorem integral_rpow {r : ℝ}
     exact integral_eq_sub_of_has_deriv_at hderiv' (interval_integrable_rpow (Or.inr h.2))
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
+theorem integral_cpow {r : ℂ} (ha : 0 < a) (hb : 0 < b) (hr : r ≠ -1) :
+    (∫ x : ℝ in a..b, (x : ℂ) ^ r) = (b ^ (r + 1) - a ^ (r + 1)) / (r + 1) := by
+  suffices ∀, ∀ x ∈ Set.Interval a b, ∀, HasDerivAt (fun x : ℝ => (x : ℂ) ^ (r + 1) / (r + 1)) (x ^ r) x by
+    rw [sub_div]
+    exact integral_eq_sub_of_has_deriv_at this (interval_integrable_cpow ha hb)
+  intro x hx
+  suffices HasDerivAt (fun z : ℂ => z ^ (r + 1) / (r + 1)) (x ^ r) x by
+    simpa using HasDerivAt.comp x this complex.of_real_clm.has_deriv_at
+  have hx' : 0 < (x : ℂ).re ∨ (x : ℂ).im ≠ 0 := by
+    left
+    norm_cast
+    calc 0 < min a b := lt_minₓ ha hb _ ≤ x := hx.left
+  convert ((has_deriv_at_id (x : ℂ)).cpow_const hx').div_const (r + 1)
+  simp only [← id.def, ← add_sub_cancel, ← mul_oneₓ]
+  rw [mul_comm, mul_div_cancel]
+  contrapose! hr
+  rwa [add_eq_zero_iff_eq_neg] at hr
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
 theorem integral_zpow {n : ℤ}
-    (h : 0 ≤ n ∨ n ≠ -1 ∧ (0 : ℝ) ∉ "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)") :
+    (h : 0 ≤ n ∨ n ≠ -1 ∧ (0 : ℝ) ∉ "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)") :
     (∫ x in a..b, x ^ n) = (b ^ (n + 1) - a ^ (n + 1)) / (n + 1) := by
   replace h :
-    -1 < (n : ℝ) ∨ (n : ℝ) ≠ -1 ∧ (0 : ℝ) ∉ "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)"
+    -1 < (n : ℝ) ∨
+      (n : ℝ) ≠ -1 ∧ (0 : ℝ) ∉ "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)"
   · exact_mod_cast h
     
   exact_mod_cast integral_rpow h
@@ -327,19 +354,19 @@ theorem integral_pow_abs_sub_interval_oc : (∫ x in Ι a b, abs (x - a) ^ n) = 
   cases' le_or_ltₓ a b with hab hab
   · calc (∫ x in Ι a b, abs (x - a) ^ n) = ∫ x in a..b, abs (x - a) ^ n := by
         rw [interval_oc_of_le hab, ← integral_of_le hab]_ = ∫ x in 0 ..b - a, x ^ n := by
-        simp only [integral_comp_sub_right fun x => abs x ^ n, sub_self]
+        simp only [← integral_comp_sub_right fun x => abs x ^ n, ← sub_self]
         refine' integral_congr fun x hx => congr_arg2ₓ Pow.pow (abs_of_nonneg <| _) rfl
         rw [interval_of_le (sub_nonneg.2 hab)] at hx
         exact hx.1_ = abs (b - a) ^ (n + 1) / (n + 1) := by
-        simp [abs_of_nonneg (sub_nonneg.2 hab)]
+        simp [← abs_of_nonneg (sub_nonneg.2 hab)]
     
   · calc (∫ x in Ι a b, abs (x - a) ^ n) = ∫ x in b..a, abs (x - a) ^ n := by
         rw [interval_oc_of_lt hab, ← integral_of_le hab.le]_ = ∫ x in b - a..0, -x ^ n := by
-        simp only [integral_comp_sub_right fun x => abs x ^ n, sub_self]
+        simp only [← integral_comp_sub_right fun x => abs x ^ n, ← sub_self]
         refine' integral_congr fun x hx => congr_arg2ₓ Pow.pow (abs_of_nonpos <| _) rfl
         rw [interval_of_le (sub_nonpos.2 hab.le)] at hx
         exact hx.2_ = abs (b - a) ^ (n + 1) / (n + 1) := by
-        simp [integral_comp_neg fun x => x ^ n, abs_of_neg (sub_neg.2 hab)]
+        simp [← integral_comp_neg fun x => x ^ n, ← abs_of_neg (sub_neg.2 hab)]
     
 
 @[simp]
@@ -348,14 +375,14 @@ theorem integral_id : (∫ x in a..b, x) = (b ^ 2 - a ^ 2) / 2 := by
 
 @[simp]
 theorem integral_one : (∫ x in a..b, (1 : ℝ)) = b - a := by
-  simp only [mul_oneₓ, smul_eq_mul, integral_const]
+  simp only [← mul_oneₓ, ← smul_eq_mul, ← integral_const]
 
 theorem integral_const_on_unit_interval : (∫ x in a..a + 1, b) = b := by
   simp
 
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
 @[simp]
-theorem integral_inv (h : (0 : ℝ) ∉ "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)") :
+theorem integral_inv (h : (0 : ℝ) ∉ "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)") :
     (∫ x in a..b, x⁻¹) = log (b / a) := by
   have h' := fun x hx => ne_of_mem_of_not_mem hx h
   rw
@@ -371,20 +398,20 @@ theorem integral_inv_of_pos (ha : 0 < a) (hb : 0 < b) : (∫ x in a..b, x⁻¹) 
 theorem integral_inv_of_neg (ha : a < 0) (hb : b < 0) : (∫ x in a..b, x⁻¹) = log (b / a) :=
   integral_inv <| not_mem_interval_of_gt ha hb
 
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
-theorem integral_one_div (h : (0 : ℝ) ∉ "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)") :
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
+theorem integral_one_div (h : (0 : ℝ) ∉ "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)") :
     (∫ x : ℝ in a..b, 1 / x) = log (b / a) := by
-  simp only [one_div, integral_inv h]
+  simp only [← one_div, ← integral_inv h]
 
 theorem integral_one_div_of_pos (ha : 0 < a) (hb : 0 < b) : (∫ x : ℝ in a..b, 1 / x) = log (b / a) := by
-  simp only [one_div, integral_inv_of_pos ha hb]
+  simp only [← one_div, ← integral_inv_of_pos ha hb]
 
 theorem integral_one_div_of_neg (ha : a < 0) (hb : b < 0) : (∫ x : ℝ in a..b, 1 / x) = log (b / a) := by
-  simp only [one_div, integral_inv_of_neg ha hb]
+  simp only [← one_div, ← integral_inv_of_neg ha hb]
 
 @[simp]
 theorem integral_exp : (∫ x in a..b, exp x) = exp b - exp a := by
-  rw [integral_deriv_eq_sub'] <;> norm_num [continuous_on_exp]
+  rw [integral_deriv_eq_sub'] <;> norm_num [← continuous_on_exp]
 
 theorem integral_exp_mul_complex {c : ℂ} (hc : c ≠ 0) :
     (∫ x in a..b, Complex.exp (c * x)) = (Complex.exp (c * b) - Complex.exp (c * a)) / c := by
@@ -392,7 +419,7 @@ theorem integral_exp_mul_complex {c : ℂ} (hc : c ≠ 0) :
     intro x
     conv => congr skip rw [← mul_div_cancel (Complex.exp (c * x)) hc]
     convert ((Complex.has_deriv_at_exp _).comp x _).div_const c using 1
-    simpa only [Complex.of_real_clm_apply, Complex.of_real_one, one_mulₓ, mul_oneₓ, mul_comm] using
+    simpa only [← Complex.of_real_clm_apply, ← Complex.of_real_one, ← one_mulₓ, ← mul_oneₓ, ← mul_comm] using
       complex.of_real_clm.has_deriv_at.mul_const c
   rw [integral_deriv_eq_sub' _ (funext fun x => (D x).deriv) fun x hx => (D x).DifferentiableAt]
   · ring_nf
@@ -401,9 +428,9 @@ theorem integral_exp_mul_complex {c : ℂ} (hc : c ≠ 0) :
     continuity
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
 @[simp]
-theorem integral_log (h : (0 : ℝ) ∉ "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)") :
+theorem integral_log (h : (0 : ℝ) ∉ "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)") :
     (∫ x in a..b, log x) = b * log b - a * log a - b + a := by
   obtain ⟨h', heq⟩ := fun x hx => ne_of_mem_of_not_mem hx h, fun x hx => mul_inv_cancel (h' x hx)
   convert
@@ -411,7 +438,7 @@ theorem integral_log (h : (0 : ℝ) ∉ "././Mathport/Syntax/Translate/Basic.lea
         (continuous_on_inv₀.mono <| subset_compl_singleton_iff.mpr h).IntervalIntegrable
         continuous_on_const.interval_integrable using
       1 <;>
-    simp [integral_congr HEq, mul_comm, ← sub_add]
+    simp [← integral_congr HEq, ← mul_comm, sub_add]
 
 @[simp]
 theorem integral_log_of_pos (ha : 0 < a) (hb : 0 < b) : (∫ x in a..b, log x) = b * log b - a * log a - b + a :=
@@ -423,20 +450,20 @@ theorem integral_log_of_neg (ha : a < 0) (hb : b < 0) : (∫ x in a..b, log x) =
 
 @[simp]
 theorem integral_sin : (∫ x in a..b, sin x) = cos a - cos b := by
-  rw [integral_deriv_eq_sub' fun x => -cos x] <;> norm_num [continuous_on_sin]
+  rw [integral_deriv_eq_sub' fun x => -cos x] <;> norm_num [← continuous_on_sin]
 
 @[simp]
 theorem integral_cos : (∫ x in a..b, cos x) = sin b - sin a := by
-  rw [integral_deriv_eq_sub'] <;> norm_num [continuous_on_cos]
+  rw [integral_deriv_eq_sub'] <;> norm_num [← continuous_on_cos]
 
 theorem integral_cos_sq_sub_sin_sq : (∫ x in a..b, cos x ^ 2 - sin x ^ 2) = sin b * cos b - sin a * cos a := by
-  simpa only [sq, sub_eq_add_neg, neg_mul_eq_mul_neg] using
+  simpa only [← sq, ← sub_eq_add_neg, ← neg_mul_eq_mul_neg] using
     integral_deriv_mul_eq_sub (fun x hx => has_deriv_at_sin x) (fun x hx => has_deriv_at_cos x)
       continuous_on_cos.interval_integrable continuous_on_sin.neg.interval_integrable
 
 @[simp]
 theorem integral_inv_one_add_sq : (∫ x : ℝ in a..b, (1 + x ^ 2)⁻¹) = arctan b - arctan a := by
-  simp only [← one_div]
+  simp only [one_div]
   refine' integral_deriv_eq_sub' _ _ _ (continuous_const.div _ fun x => _).ContinuousOn
   · norm_num
     
@@ -448,12 +475,12 @@ theorem integral_inv_one_add_sq : (∫ x : ℝ in a..b, (1 + x ^ 2)⁻¹) = arct
     
 
 theorem integral_one_div_one_add_sq : (∫ x : ℝ in a..b, 1 / (1 + x ^ 2)) = arctan b - arctan a := by
-  simp only [one_div, integral_inv_one_add_sq]
+  simp only [← one_div, ← integral_inv_one_add_sq]
 
 /-! ### Integral of `sin x ^ n` -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
 theorem integral_sin_pow_aux :
     (∫ x in a..b, sin x ^ (n + 2)) =
       (sin a ^ (n + 1) * cos a - sin b ^ (n + 1) * cos b + (n + 1) * ∫ x in a..b, sin x ^ n) -
@@ -462,19 +489,20 @@ theorem integral_sin_pow_aux :
   let C := sin a ^ (n + 1) * cos a - sin b ^ (n + 1) * cos b
   have h : ∀ α β γ : ℝ, α * (β * α * γ) = β * (α * α * γ) := fun α β γ => by
     ring
-  have hu : ∀, ∀ x ∈ _, ∀, HasDerivAt (fun y => sin y ^ (n + 1)) ((n + 1) * cos x * sin x ^ n) x := fun x hx => by
-    simpa only [mul_right_commₓ] using (has_deriv_at_sin x).pow
+  have hu : ∀, ∀ x ∈ _, ∀, HasDerivAt (fun y => sin y ^ (n + 1 : ℕ)) ((n + 1 : ℕ) * cos x * sin x ^ n) x := fun x hx =>
+    by
+    simpa only [← mul_right_commₓ] using (has_deriv_at_sin x).pow
   have hv :
     ∀,
-      ∀ x ∈ "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)",
+      ∀ x ∈ "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)",
         ∀, HasDerivAt (-cos) (sin x) x :=
     fun x hx => by
-    simpa only [neg_negₓ] using (has_deriv_at_cos x).neg
+    simpa only [← neg_negₓ] using (has_deriv_at_cos x).neg
   have H := integral_mul_deriv_eq_deriv_mul hu hv _ _
   calc (∫ x in a..b, sin x ^ (n + 2)) = ∫ x in a..b, sin x ^ (n + 1) * sin x := by
-      simp only [pow_succ'ₓ]_ = C + (n + 1) * ∫ x in a..b, cos x ^ 2 * sin x ^ n := by
-      simp [H, h, sq]_ = C + (n + 1) * ∫ x in a..b, sin x ^ n - sin x ^ (n + 2) := by
-      simp [cos_sq', sub_mul, ← pow_addₓ,
+      simp only [← pow_succ'ₓ]_ = C + (n + 1) * ∫ x in a..b, cos x ^ 2 * sin x ^ n := by
+      simp [← H, ← h, ← sq]_ = C + (n + 1) * ∫ x in a..b, sin x ^ n - sin x ^ (n + 2) := by
+      simp [← cos_sq', ← sub_mul, pow_addₓ, ←
         add_commₓ]_ = (C + (n + 1) * ∫ x in a..b, sin x ^ n) - (n + 1) * ∫ x in a..b, sin x ^ (n + 2) :=
       by
       rw [integral_sub, mul_sub, add_sub_assoc] <;> apply Continuous.interval_integrable <;> continuity
@@ -495,7 +523,7 @@ theorem integral_sin_pow :
 
 @[simp]
 theorem integral_sin_sq : (∫ x in a..b, sin x ^ 2) = (sin a * cos a - sin b * cos b + b - a) / 2 := by
-  field_simp [integral_sin_pow, add_sub_assoc]
+  field_simp [← integral_sin_pow, ← add_sub_assoc]
 
 theorem integral_sin_pow_odd : (∫ x in 0 ..π, sin x ^ (2 * n + 1)) = 2 * ∏ i in range n, (2 * i + 2) / (2 * i + 3) := by
   induction' n with k ih
@@ -515,11 +543,11 @@ theorem integral_sin_pow_even : (∫ x in 0 ..π, sin x ^ (2 * n)) = π * ∏ i 
 
 theorem integral_sin_pow_pos : 0 < ∫ x in 0 ..π, sin x ^ n := by
   rcases even_or_odd' n with ⟨k, rfl | rfl⟩ <;>
-    simp only [integral_sin_pow_even, integral_sin_pow_odd] <;>
+    simp only [← integral_sin_pow_even, ← integral_sin_pow_odd] <;>
       refine'
           mul_pos
             (by
-              norm_num [pi_pos])
+              norm_num [← pi_pos])
             (prod_pos fun n hn => div_pos _ _) <;>
         norm_cast <;> linarith
 
@@ -533,7 +561,7 @@ theorem integral_sin_pow_antitone : Antitone fun n : ℕ => ∫ x in 0 ..π, sin
 /-! ### Integral of `cos x ^ n` -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
 theorem integral_cos_pow_aux :
     (∫ x in a..b, cos x ^ (n + 2)) =
       (cos b ^ (n + 1) * sin b - cos a ^ (n + 1) * sin a + (n + 1) * ∫ x in a..b, cos x ^ n) -
@@ -542,16 +570,18 @@ theorem integral_cos_pow_aux :
   let C := cos b ^ (n + 1) * sin b - cos a ^ (n + 1) * sin a
   have h : ∀ α β γ : ℝ, α * (β * α * γ) = β * (α * α * γ) := fun α β γ => by
     ring
-  have hu : ∀, ∀ x ∈ _, ∀, HasDerivAt (fun y => cos y ^ (n + 1)) (-(n + 1) * sin x * cos x ^ n) x := fun x hx => by
-    simpa only [mul_right_commₓ, neg_mul, mul_neg] using (has_deriv_at_cos x).pow
+  have hu : ∀, ∀ x ∈ _, ∀, HasDerivAt (fun y => cos y ^ (n + 1)) (-(n + 1 : ℕ) * sin x * cos x ^ n) x := fun x hx => by
+    simpa only [← mul_right_commₓ, ← neg_mul, ← mul_neg] using (has_deriv_at_cos x).pow
   have hv :
-    ∀, ∀ x ∈ "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)", ∀, HasDerivAt sin (cos x) x :=
+    ∀,
+      ∀ x ∈ "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)",
+        ∀, HasDerivAt sin (cos x) x :=
     fun x hx => has_deriv_at_sin x
   have H := integral_mul_deriv_eq_deriv_mul hu hv _ _
   calc (∫ x in a..b, cos x ^ (n + 2)) = ∫ x in a..b, cos x ^ (n + 1) * cos x := by
-      simp only [pow_succ'ₓ]_ = C + (n + 1) * ∫ x in a..b, sin x ^ 2 * cos x ^ n := by
-      simp [H, h, sq, -neg_add_rev]_ = C + (n + 1) * ∫ x in a..b, cos x ^ n - cos x ^ (n + 2) := by
-      simp [sin_sq, sub_mul, ← pow_addₓ,
+      simp only [← pow_succ'ₓ]_ = C + (n + 1) * ∫ x in a..b, sin x ^ 2 * cos x ^ n := by
+      simp [← H, ← h, ← sq, -neg_add_rev]_ = C + (n + 1) * ∫ x in a..b, cos x ^ n - cos x ^ (n + 2) := by
+      simp [← sin_sq, ← sub_mul, pow_addₓ, ←
         add_commₓ]_ = (C + (n + 1) * ∫ x in a..b, cos x ^ n) - (n + 1) * ∫ x in a..b, cos x ^ (n + 2) :=
       by
       rw [integral_sub, mul_sub, add_sub_assoc] <;> apply Continuous.interval_integrable <;> continuity
@@ -572,7 +602,7 @@ theorem integral_cos_pow :
 
 @[simp]
 theorem integral_cos_sq : (∫ x in a..b, cos x ^ 2) = (cos b * sin b - cos a * sin a + b - a) / 2 := by
-  field_simp [integral_cos_pow, add_sub_assoc]
+  field_simp [← integral_cos_pow, ← add_sub_assoc]
 
 /-! ### Integral of `sin x ^ m * cos x ^ n` -/
 
@@ -584,7 +614,7 @@ theorem integral_sin_pow_mul_cos_pow_odd (m n : ℕ) :
     continuity
   calc
     (∫ x in a..b, sin x ^ m * cos x ^ (2 * n + 1)) = ∫ x in a..b, sin x ^ m * (1 - sin x ^ 2) ^ n * cos x := by
-      simp only [pow_succ'ₓ, ← mul_assoc, pow_mulₓ, cos_sq']
+      simp only [← pow_succ'ₓ, mul_assoc, ← pow_mulₓ, ← cos_sq']
     _ = ∫ u in sin a..sin b, u ^ m * (1 - u ^ 2) ^ n :=
       integral_comp_mul_deriv (fun x hx => has_deriv_at_sin x) continuous_on_cos hc
     
@@ -612,7 +642,7 @@ theorem integral_sin_pow_odd_mul_cos_pow (m n : ℕ) :
     (∫ x in a..b, sin x ^ (2 * m + 1) * cos x ^ n) = -∫ x in b..a, sin x ^ (2 * m + 1) * cos x ^ n := by
       rw [integral_symm]
     _ = ∫ x in b..a, (1 - cos x ^ 2) ^ m * -sin x * cos x ^ n := by
-      simp [pow_succ'ₓ, pow_mulₓ, sin_sq]
+      simp [← pow_succ'ₓ, ← pow_mulₓ, ← sin_sq]
     _ = ∫ x in b..a, cos x ^ n * (1 - cos x ^ 2) ^ m * -sin x := by
       congr
       ext
@@ -639,7 +669,7 @@ theorem integral_sin_pow_even_mul_cos_pow_even (m n : ℕ) :
     (∫ x in a..b, sin x ^ (2 * m) * cos x ^ (2 * n)) =
       ∫ x in a..b, ((1 - cos (2 * x)) / 2) ^ m * ((1 + cos (2 * x)) / 2) ^ n :=
   by
-  field_simp [pow_mulₓ, sin_sq, cos_sq, ← sub_sub,
+  field_simp [← pow_mulₓ, ← sin_sq, ← cos_sq, sub_sub, ←
     (by
       ring : (2 : ℝ) - 1 = 1)]
 
@@ -657,6 +687,6 @@ theorem integral_sin_sq_mul_cos_sq :
     ring
   have h4 : ∀ d : ℝ, 2 * (2 * d) = 4 * d := fun d => by
     ring
-  simp [h1, h2.interval_integrable, integral_comp_mul_left fun x => cos x ^ 2, h3, h4]
+  simp [← h1, ← h2.interval_integrable, ← integral_comp_mul_left fun x => cos x ^ 2, ← h3, ← h4]
   ring
 

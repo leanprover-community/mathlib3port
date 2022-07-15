@@ -41,8 +41,8 @@ class ReflectsIsomorphisms (F : C ⥤ D) : Prop where
 theorem is_iso_of_reflects_iso {A B : C} (f : A ⟶ B) (F : C ⥤ D) [IsIso (F.map f)] [ReflectsIsomorphisms F] : IsIso f :=
   ReflectsIsomorphisms.reflects F f
 
-instance (priority := 100) of_full_and_faithful (F : C ⥤ D) [Full F] [Faithful F] : ReflectsIsomorphisms F where
-  reflects := fun X Y f i =>
+instance (priority := 100) of_full_and_faithful (F : C ⥤ D) [Full F] [Faithful F] :
+    ReflectsIsomorphisms F where reflects := fun X Y f i =>
     ⟨⟨F.preimage (inv (F.map f)),
         ⟨F.map_injective
             (by
@@ -52,7 +52,7 @@ instance (priority := 100) of_full_and_faithful (F : C ⥤ D) [Full F] [Faithful
               simp )⟩⟩⟩
 
 instance (F : C ⥤ D) (G : D ⥤ E) [ReflectsIsomorphisms F] [ReflectsIsomorphisms G] : ReflectsIsomorphisms (F ⋙ G) :=
-  ⟨fun hf : IsIso (G.map _) => by
+  ⟨fun _ _ f hf : IsIso (G.map _) => by
     skip
     have := is_iso_of_reflects_iso (F.map f) G
     exact is_iso_of_reflects_iso f F⟩

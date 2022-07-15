@@ -85,7 +85,7 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
     rwa [mem_ball, dist_eq_norm, sub_zero]
   have : ∃ (n : ℕ)(x : _), x ∈ Interior (Closure (f '' ball 0 n)) :=
     nonempty_interior_of_Union_of_closed (fun n => is_closed_closure) A
-  simp only [mem_interior_iff_mem_nhds, Metric.mem_nhds_iff] at this
+  simp only [← mem_interior_iff_mem_nhds, ← Metric.mem_nhds_iff] at this
   rcases this with ⟨n, a, ε, ⟨εpos, H⟩⟩
   rcases NormedField.exists_one_lt_norm 𝕜 with ⟨c, hc⟩
   refine' ⟨(ε / 2)⁻¹ * ∥c∥ * 2 * n, _, fun y => _⟩
@@ -103,7 +103,7 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
     
   · by_cases' hy : y = 0
     · use 0
-      simp [hy]
+      simp [← hy]
       
     · rcases rescale_to_shell hc (half_pos εpos) hy with ⟨d, hd, ydlt, leyd, dinv⟩
       let δ := ∥d∥ * ∥y∥ / 4
@@ -112,7 +112,7 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
           (by
             norm_num)
       have : a + d • y ∈ ball a ε := by
-        simp [dist_eq_norm, lt_of_le_of_ltₓ ydlt.le (half_lt_self εpos)]
+        simp [← dist_eq_norm, ← lt_of_le_of_ltₓ ydlt.le (half_lt_self εpos)]
       rcases Metric.mem_closure_iff.1 (H this) _ δpos with ⟨z₁, z₁im, h₁⟩
       rcases(mem_image _ _ _).1 z₁im with ⟨x₁, hx₁, xz₁⟩
       rw [← xz₁] at h₁
@@ -129,7 +129,7 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
         calc
           ∥f x - d • y∥ = ∥f x₁ - (a + d • y) - (f x₂ - a)∥ := by
             congr 1
-            simp only [x, f.map_sub]
+            simp only [← x, ← f.map_sub]
             abel
           _ ≤ ∥f x₁ - (a + d • y)∥ + ∥f x₂ - a∥ := norm_sub_le _ _
           _ ≤ δ + δ := by
@@ -155,11 +155,11 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
             rw [inv_nonneg]
             exact norm_nonneg _
           _ = ∥d∥⁻¹ * ∥d∥ * ∥y∥ / 2 := by
-            simp only [δ]
+            simp only [← δ]
             ring
           _ = ∥y∥ / 2 := by
             rw [inv_mul_cancel, one_mulₓ]
-            simp [norm_eq_zero, hd]
+            simp [← norm_eq_zero, ← hd]
           _ = 1 / 2 * ∥y∥ := by
             ring
           
@@ -206,7 +206,7 @@ theorem exists_preimage_norm_le (surj : Surjective f) : ∃ C > 0, ∀ y, ∃ x,
   have hnle : ∀ n : ℕ, ∥(h^[n]) y∥ ≤ (1 / 2) ^ n * ∥y∥ := by
     intro n
     induction' n with n IH
-    · simp only [one_div, Nat.nat_zero_eq_zero, one_mulₓ, iterate_zero_apply, pow_zeroₓ]
+    · simp only [← one_div, ← Nat.nat_zero_eq_zero, ← one_mulₓ, ← iterate_zero_apply, ← pow_zeroₓ]
       
     · rw [iterate_succ']
       apply le_transₓ (hle _) _
@@ -246,17 +246,17 @@ theorem exists_preimage_norm_le (surj : Surjective f) : ∃ C > 0, ∀ y, ∃ x,
   have fsumeq : ∀ n : ℕ, f (∑ i in Finset.range n, u i) = y - (h^[n]) y := by
     intro n
     induction' n with n IH
-    · simp [f.map_zero]
+    · simp [← f.map_zero]
       
     · rw [sum_range_succ, f.map_add, IH, iterate_succ', sub_add]
       
   have : tendsto (fun n => ∑ i in Finset.range n, u i) at_top (𝓝 x) := su.has_sum.tendsto_sum_nat
   have L₁ : tendsto (fun n => f (∑ i in Finset.range n, u i)) at_top (𝓝 (f x)) := (f.continuous.tendsto _).comp this
-  simp only [fsumeq] at L₁
+  simp only [← fsumeq] at L₁
   have L₂ : tendsto (fun n => y - (h^[n]) y) at_top (𝓝 (y - 0)) := by
     refine' tendsto_const_nhds.sub _
     rw [tendsto_iff_norm_tendsto_zero]
-    simp only [sub_zero]
+    simp only [← sub_zero]
     refine' squeeze_zero (fun _ => norm_nonneg _) hnle _
     rw [← zero_mul ∥y∥]
     refine' (tendsto_pow_at_top_nhds_0_of_lt_1 _ _).mul tendsto_const_nhds <;> norm_num
@@ -415,7 +415,7 @@ noncomputable def coprodSubtypeLEquivOfIsCompl (f : E →L[𝕜] F) {G : Submodu
         exact h.disjoint
         )
     (by
-      simp only [range_coprod, h.sup_eq_top, Submodule.range_subtypeL])
+      simp only [← range_coprod, ← h.sup_eq_top, ← Submodule.range_subtypeL])
 
 theorem range_eq_map_coprod_subtypeL_equiv_of_is_compl (f : E →L[𝕜] F) {G : Submodule 𝕜 F} (h : IsCompl f.range G)
     [CompleteSpace G] (hker : f.ker = ⊥) :

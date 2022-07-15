@@ -38,18 +38,18 @@ noncomputable def integralNormalization (f : R[X]) : R[X] :=
 
 @[simp]
 theorem integral_normalization_zero : integralNormalization (0 : R[X]) = 0 := by
-  simp [integral_normalization]
+  simp [← integral_normalization]
 
 theorem integral_normalization_coeff {f : R[X]} {i : ℕ} :
     (integralNormalization f).coeff i =
       if f.degree = i then 1 else coeff f i * f.leadingCoeff ^ (f.natDegree - 1 - i) :=
   by
   have : f.coeff i = 0 → f.degree ≠ i := fun hc hd => coeff_ne_zero_of_eq_degree hd hc
-  simp (config := { contextual := true })[integral_normalization, coeff_monomial, this, mem_support_iff]
+  simp (config := { contextual := true })[← integral_normalization, ← coeff_monomial, ← this, ← mem_support_iff]
 
 theorem integral_normalization_support {f : R[X]} : (integralNormalization f).support ⊆ f.support := by
   intro
-  simp (config := { contextual := true })[integral_normalization, coeff_monomial, mem_support_iff]
+  simp (config := { contextual := true })[← integral_normalization, ← coeff_monomial, ← mem_support_iff]
 
 theorem integral_normalization_coeff_degree {f : R[X]} {i : ℕ} (hi : f.degree = i) :
     (integralNormalization f).coeff i = 1 := by
@@ -81,13 +81,13 @@ variable [Ringₓ R] [IsDomain R]
 @[simp]
 theorem support_integral_normalization {f : R[X]} : (integralNormalization f).support = f.support := by
   by_cases' hf : f = 0
-  · simp [hf]
+  · simp [← hf]
     
   ext i
   refine' ⟨fun h => integral_normalization_support h, _⟩
-  simp only [integral_normalization_coeff, mem_support_iff]
+  simp only [← integral_normalization_coeff, ← mem_support_iff]
   intro hfi
-  split_ifs with hi <;> simp [hfi, hi, pow_ne_zero _ (leading_coeff_ne_zero.mpr hf)]
+  split_ifs with hi <;> simp [← hfi, ← hi, ← pow_ne_zero _ (leading_coeff_ne_zero.mpr hf)]
 
 end IsDomain
 
@@ -104,11 +104,11 @@ theorem integral_normalization_eval₂_eq_zero {p : R[X]} (f : R →+* S) {z : S
         p.support.attach.Sum fun i => f (coeff (integralNormalization p) i.1 * p.leadingCoeff ^ i.1) * z ^ i.1 :=
       by
       rw [eval₂, sum_def, support_integral_normalization]
-      simp only [mul_comm z, mul_powₓ, mul_assoc, RingHom.map_pow, RingHom.map_mul]
+      simp only [← mul_comm z, ← mul_powₓ, ← mul_assoc, ← RingHom.map_pow, ← RingHom.map_mul]
       exact finset.sum_attach.symm
     _ = p.support.attach.Sum fun i => f (coeff p i.1 * p.leadingCoeff ^ (natDegree p - 1)) * z ^ i.1 := by
       by_cases' hp : p = 0
-      · simp [hp]
+      · simp [← hp]
         
       have one_le_deg : 1 ≤ nat_degree p := Nat.succ_le_of_ltₓ (nat_degree_pos_of_eval₂_root hp f hz inj)
       congr with i

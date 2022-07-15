@@ -23,23 +23,23 @@ variable {m n : ℕ}
 
 @[simp]
 theorem mod_two_ne_one : ¬n % 2 = 1 ↔ n % 2 = 0 := by
-  cases' mod_two_eq_zero_or_one n with h h <;> simp [h]
+  cases' mod_two_eq_zero_or_one n with h h <;> simp [← h]
 
 @[simp]
 theorem mod_two_ne_zero : ¬n % 2 = 0 ↔ n % 2 = 1 := by
-  cases' mod_two_eq_zero_or_one n with h h <;> simp [h]
+  cases' mod_two_eq_zero_or_one n with h h <;> simp [← h]
 
 theorem even_iff : Even n ↔ n % 2 = 0 :=
   ⟨fun ⟨m, hm⟩ => by
-    simp [← two_mul, hm], fun h =>
+    simp [two_mul, ← hm], fun h =>
     ⟨n / 2,
       (mod_add_divₓ n 2).symm.trans
         (by
-          simp [← two_mul, h])⟩⟩
+          simp [two_mul, ← h])⟩⟩
 
 theorem odd_iff : Odd n ↔ n % 2 = 1 :=
   ⟨fun ⟨m, hm⟩ => by
-    norm_num [hm, add_mod], fun h =>
+    norm_num [← hm, ← add_mod], fun h =>
     ⟨n / 2,
       (mod_add_divₓ n 2).symm.trans
         (by
@@ -59,13 +59,13 @@ theorem odd_iff_not_even : Odd n ↔ ¬Even n := by
   rw [not_even_iff, odd_iff]
 
 theorem is_compl_even_odd : IsCompl { n : ℕ | Even n } { n | Odd n } := by
-  simp only [← Set.compl_set_of, is_compl_compl, odd_iff_not_even]
+  simp only [Set.compl_set_of, ← is_compl_compl, ← odd_iff_not_even]
 
 theorem even_or_odd (n : ℕ) : Even n ∨ Odd n :=
   Or.imp_rightₓ odd_iff_not_even.2 <| em <| Even n
 
 theorem even_or_odd' (n : ℕ) : ∃ k, n = 2 * k ∨ n = 2 * k + 1 := by
-  simpa only [← two_mul, exists_or_distrib, ← Odd, ← Even] using even_or_odd n
+  simpa only [two_mul, ← exists_or_distrib, Odd, Even] using even_or_odd n
 
 theorem even_xor_odd (n : ℕ) : Xorₓ (Even n) (Odd n) := by
   cases' even_or_odd n with h
@@ -76,10 +76,11 @@ theorem even_xor_odd (n : ℕ) : Xorₓ (Even n) (Odd n) := by
 
 theorem even_xor_odd' (n : ℕ) : ∃ k, Xorₓ (n = 2 * k) (n = 2 * k + 1) := by
   rcases even_or_odd n with (⟨k, rfl⟩ | ⟨k, rfl⟩) <;> use k
-  · simpa only [← two_mul, Xorₓ, true_andₓ, eq_self_iff_true, not_true, or_falseₓ, and_falseₓ] using
+  · simpa only [two_mul, ← Xorₓ, ← true_andₓ, ← eq_self_iff_true, ← not_true, ← or_falseₓ, ← and_falseₓ] using
       (succ_ne_self (2 * k)).symm
     
-  · simp only [Xorₓ, add_right_eq_selfₓ, false_orₓ, eq_self_iff_true, not_true, not_false_iff, one_ne_zero, and_selfₓ]
+  · simp only [← Xorₓ, ← add_right_eq_selfₓ, ← false_orₓ, ← eq_self_iff_true, ← not_true, ← not_false_iff, ←
+      one_ne_zero, ← and_selfₓ]
     
 
 theorem odd_gt_zero (h : Odd n) : 0 < n := by
@@ -103,17 +104,21 @@ theorem not_even_one : ¬Even 1 := by
 @[parity_simps]
 theorem even_add : Even (m + n) ↔ (Even m ↔ Even n) := by
   cases' mod_two_eq_zero_or_one m with h₁ h₁ <;>
-    cases' mod_two_eq_zero_or_one n with h₂ h₂ <;> simp [even_iff, h₁, h₂, Nat.add_modₓ] <;> norm_num
+    cases' mod_two_eq_zero_or_one n with h₂ h₂ <;> simp [← even_iff, ← h₁, ← h₂, ← Nat.add_modₓ] <;> norm_num
 
 theorem even_add' : Even (m + n) ↔ (Odd m ↔ Odd n) := by
   rw [even_add, even_iff_not_odd, even_iff_not_odd, not_iff_not]
 
+@[parity_simps]
+theorem even_add_one : Even (n + 1) ↔ ¬Even n := by
+  simp [← even_add]
+
 @[simp]
 theorem not_even_bit1 (n : ℕ) : ¬Even (bit1 n) := by
-  simp' [bit1] with parity_simps
+  simp' [← bit1] with parity_simps
 
 theorem two_not_dvd_two_mul_add_one (n : ℕ) : ¬2 ∣ 2 * n + 1 := by
-  simp [add_mod]
+  simp [← add_mod]
 
 theorem two_not_dvd_two_mul_sub_one : ∀ {n} w : 0 < n, ¬2 ∣ 2 * n - 1
   | n + 1, _ => two_not_dvd_two_mul_add_one n
@@ -121,7 +126,7 @@ theorem two_not_dvd_two_mul_sub_one : ∀ {n} w : 0 < n, ¬2 ∣ 2 * n - 1
 @[parity_simps]
 theorem even_sub (h : n ≤ m) : Even (m - n) ↔ (Even m ↔ Even n) := by
   conv => rhs rw [← tsub_add_cancel_of_le h, even_add]
-  by_cases' h : Even n <;> simp [h]
+  by_cases' h : Even n <;> simp [← h]
 
 theorem even_sub' (h : n ≤ m) : Even (m - n) ↔ (Odd m ↔ Odd n) := by
   rw [even_sub h, even_iff_not_odd, even_iff_not_odd, not_iff_not]
@@ -129,21 +134,17 @@ theorem even_sub' (h : n ≤ m) : Even (m - n) ↔ (Odd m ↔ Odd n) := by
 theorem Odd.sub_odd (hm : Odd m) (hn : Odd n) : Even (m - n) :=
   (le_totalₓ n m).elim
     (fun h => by
-      simp only [even_sub' h, *])
+      simp only [← even_sub' h, *])
     fun h => by
-    simp only [tsub_eq_zero_iff_le.mpr h, even_zero]
-
-@[parity_simps]
-theorem even_succ : Even (succ n) ↔ ¬Even n := by
-  rw [succ_eq_add_one, even_add] <;> simp [not_even_one]
+    simp only [← tsub_eq_zero_iff_le.mpr h, ← even_zero]
 
 @[parity_simps]
 theorem even_mul : Even (m * n) ↔ Even m ∨ Even n := by
   cases' mod_two_eq_zero_or_one m with h₁ h₁ <;>
-    cases' mod_two_eq_zero_or_one n with h₂ h₂ <;> simp [even_iff, h₁, h₂, Nat.mul_modₓ] <;> norm_num
+    cases' mod_two_eq_zero_or_one n with h₂ h₂ <;> simp [← even_iff, ← h₁, ← h₂, ← Nat.mul_modₓ] <;> norm_num
 
 theorem odd_mul : Odd (m * n) ↔ Odd m ∧ Odd n := by
-  simp' [not_or_distrib] with parity_simps
+  simp' [← not_or_distrib] with parity_simps
 
 theorem Odd.of_mul_left (h : Odd (m * n)) : Odd m :=
   (odd_mul.mp h).1
@@ -155,7 +156,7 @@ theorem Odd.of_mul_right (h : Odd (m * n)) : Odd n :=
 if and only if `m` is even and `n` is positive. -/
 @[parity_simps]
 theorem even_pow : Even (m ^ n) ↔ Even m ∧ n ≠ 0 := by
-  induction' n with n ih <;> simp [*, pow_succ'ₓ, even_mul]
+  induction' n with n ih <;> simp [*, ← pow_succ'ₓ, ← even_mul]
   tauto
 
 theorem even_pow' (h : n ≠ 0) : Even (m ^ n) ↔ Even m :=
@@ -172,7 +173,7 @@ theorem odd_add' : Odd (m + n) ↔ (Odd n ↔ Even m) := by
   rw [add_commₓ, odd_add]
 
 theorem ne_of_odd_add (h : Odd (m + n)) : m ≠ n := fun hnot => by
-  simpa [hnot] with parity_simps using h
+  simpa [← hnot] with parity_simps using h
 
 @[parity_simps]
 theorem odd_sub (h : n ≤ m) : Odd (m - n) ↔ (Odd m ↔ Even n) := by
@@ -226,7 +227,7 @@ theorem one_add_div_two_mul_two_of_odd (h : Odd n) : 1 + n / 2 * 2 = n := by
 
 -- Here are examples of how `parity_simps` can be used with `nat`.
 example (m n : ℕ) (h : Even m) : ¬Even (n + 3) ↔ Even (m ^ 2 + m + n) := by
-  simp' [*,
+  simp' [*, ←
     (by
       decide : ¬2 = 0)] with
     parity_simps

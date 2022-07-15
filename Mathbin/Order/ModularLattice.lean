@@ -97,8 +97,8 @@ theorem well_founded_lt_exact_sequence {β γ : Type _} [PartialOrderₓ β] [Pr
   Subrelation.wfₓ
     (fun A B hAB =>
       show Prod.Lex (· < ·) (· < ·) (f₂ A, g₂ A) (f₂ B, g₂ B) by
-        simp only [Prod.lex_def, lt_iff_le_not_leₓ, ← gci.l_le_l_iff, ← gi.u_le_u_iff, hf, hg, le_antisymm_iffₓ]
-        simp only [gci.l_le_l_iff, gi.u_le_u_iff, ← lt_iff_le_not_leₓ, ← le_antisymm_iffₓ]
+        simp only [← Prod.lex_def, ← lt_iff_le_not_leₓ, gci.l_le_l_iff, gi.u_le_u_iff, ← hf, ← hg, ← le_antisymm_iffₓ]
+        simp only [← gci.l_le_l_iff, ← gi.u_le_u_iff, lt_iff_le_not_leₓ, le_antisymm_iffₓ]
         cases' lt_or_eq_of_leₓ (inf_le_inf_right K (le_of_ltₓ hAB)) with h h
         · exact Or.inl h
           
@@ -129,7 +129,7 @@ def infIccOrderIsoIccSup (a b : α) : Set.Icc (a⊓b) a ≃o Set.Icc b (a⊔b) w
         change a⊓↑x⊔b = ↑x
         rw [inf_comm, inf_sup_assoc_of_le _ x.prop.1, inf_eq_left.2 x.prop.2])
   map_rel_iff' := fun x y => by
-    simp only [Subtype.mk_le_mk, Equivₓ.coe_fn_mk, and_trueₓ, le_sup_right]
+    simp only [← Subtype.mk_le_mk, ← Equivₓ.coe_fn_mk, ← and_trueₓ, ← le_sup_right]
     rw [← Subtype.coe_le_coe]
     refine' ⟨fun h => _, fun h => sup_le_sup_right h _⟩
     rw [← sup_eq_right.2 x.prop.1, inf_sup_assoc_of_le _ x.prop.2, sup_comm, ← sup_eq_right.2 y.prop.1,

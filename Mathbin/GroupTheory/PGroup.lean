@@ -6,8 +6,8 @@ Authors: Chris Hughes, Thomas Browning
 import Mathbin.Data.Zmod.Basic
 import Mathbin.GroupTheory.Index
 import Mathbin.GroupTheory.GroupAction.ConjAct
+import Mathbin.GroupTheory.GroupAction.Quotient
 import Mathbin.GroupTheory.Perm.Cycle.Type
-import Mathbin.GroupTheory.QuotientGroup
 
 /-!
 # p-groups
@@ -103,7 +103,7 @@ theorem card_orbit (a : α) [Fintype (Orbit G a)] : ∃ n : ℕ, card (Orbit G a
 
 variable (α) [Fintype α] [Fintype (FixedPoints G α)]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `G` is a `p`-group acting on a finite set `α`, then the number of fixed points
   of the action is congruent mod `p` to the cardinality of `α` -/
 theorem card_modeq_card_fixed_points : card α ≡ card (FixedPoints G α) [MOD p] := by
@@ -118,7 +118,7 @@ theorem card_modeq_card_fixed_points : card α ≡ card (FixedPoints G α) [MOD 
   rw [← Zmod.eq_iff_modeq_nat p, Nat.cast_sum, Nat.cast_sum]
   have key : ∀ x, card { y // (Quotientₓ.mk' y : Quotientₓ (orbit_rel G α)) = Quotientₓ.mk' x } = card (orbit G x) :=
     fun x => by
-    simp only [Quotientₓ.eq'] <;> congr
+    simp only [← Quotientₓ.eq'] <;> congr
   refine'
     Eq.symm
       (Finset.sum_bij_ne_zero (fun a _ _ => Quotientₓ.mk' a.1) (fun _ _ _ => Finset.mem_univ _)
@@ -132,7 +132,7 @@ theorem card_modeq_card_fixed_points : card α ≡ card (FixedPoints G α) [MOD 
         (lt_of_not_geₓ
           (mt (pow_dvd_pow p)
             (by
-              rwa [pow_oneₓ, ← hk, ← Nat.modeq_zero_iff_dvd, ← Zmod.eq_iff_modeq_nat, ← key]))))
+              rwa [pow_oneₓ, ← hk, ← Nat.modeq_zero_iff_dvd, ← Zmod.eq_iff_modeq_nat, ← key, Nat.cast_zeroₓ]))))
   exact
     ⟨⟨b,
         mem_fixed_points_iff_card_orbit_eq_one.2 <| by
@@ -163,7 +163,7 @@ theorem exists_fixed_point_of_prime_dvd_card_of_fixed_point (hpα : p ∣ card �
       (by
         simp_rw [hab])⟩
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem center_nontrivial [Nontrivial G] [Fintype G] : Nontrivial (Subgroup.center G) := by
   classical
   have := (hG.of_equiv ConjAct.toConjAct).exists_fixed_point_of_prime_dvd_card_of_fixed_point G
@@ -178,7 +178,7 @@ theorem center_nontrivial [Nontrivial G] [Fintype G] : Nontrivial (Subgroup.cent
     exact Fintype.one_lt_card.ne' hn
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem bot_lt_center [Nontrivial G] [Fintype G] : ⊥ < Subgroup.center G := by
   have := center_nontrivial hG
   classical
@@ -272,7 +272,7 @@ theorem disjoint_of_ne (p₁ p₂ : ℕ) [hp₁ : Fact p₁.Prime] [hp₂ : Fact
     rw [← associated_iff_eq] at this⊢
     exact
       Associated.of_pow_associated_of_prime (nat.prime_iff.mp hp₁.elim) (nat.prime_iff.mp hp₂.elim) (Ne.bot_lt h) this
-  simpa [this] using hn₁
+  simpa [← this] using hn₁
 
 end IsPGroup
 

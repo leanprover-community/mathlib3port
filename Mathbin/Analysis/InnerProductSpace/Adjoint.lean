@@ -69,7 +69,7 @@ theorem adjoint_aux_apply (A : E →L[𝕜] F) (x : F) :
   rfl
 
 theorem adjoint_aux_inner_left (A : E →L[𝕜] F) (x : E) (y : F) : ⟪adjointAux A y, x⟫ = ⟪y, A x⟫ := by
-  simp only [adjoint_aux_apply, to_dual_symm_apply, to_sesq_form_apply_coe, coe_comp', innerSL_apply_coe]
+  simp only [← adjoint_aux_apply, ← to_dual_symm_apply, ← to_sesq_form_apply_coe, ← coe_comp', ← innerSL_apply_coe]
 
 theorem adjoint_aux_inner_right (A : E →L[𝕜] F) (x : E) (y : F) : ⟪x, adjointAux A y⟫ = ⟪A x, y⟫ := by
   rw [← inner_conj_sym, adjoint_aux_inner_left, inner_conj_sym]
@@ -121,7 +121,7 @@ in reverse order. -/
 theorem adjoint_comp (A : F →L[𝕜] G) (B : E →L[𝕜] F) : (A ∘L B)† = B† ∘L A† := by
   ext v
   refine' ext_inner_left 𝕜 fun w => _
-  simp only [adjoint_inner_right, ContinuousLinearMap.coe_comp', Function.comp_app]
+  simp only [← adjoint_inner_right, ← ContinuousLinearMap.coe_comp', ← Function.comp_app]
 
 theorem apply_norm_sq_eq_inner_adjoint_left (A : E →L[𝕜] E) (x : E) : ∥A x∥ ^ 2 = re ⟪(A† * A) x, x⟫ := by
   have h : ⟪(A† * A) x, x⟫ = ⟪A x, A x⟫ := by
@@ -150,7 +150,7 @@ theorem eq_adjoint_iff (A : E →L[𝕜] F) (B : F →L[𝕜] E) : A = B† ↔ 
   ext x
   exact
     ext_inner_right 𝕜 fun y => by
-      simp only [adjoint_inner_left, h x y]
+      simp only [← adjoint_inner_left, ← h x y]
 
 /-- `E →L[𝕜] E` is a star algebra with the adjoint as the star operation. -/
 instance : HasStar (E →L[𝕜] E) :=
@@ -202,7 +202,7 @@ variable [CompleteSpace E'] [CompleteSpace F']
 theorem is_adjoint_pair_inner (A : E' →L[ℝ] F') :
     LinearMap.IsAdjointPair (sesqFormOfInner : E' →ₗ[ℝ] E' →ₗ[ℝ] ℝ) (sesqFormOfInner : F' →ₗ[ℝ] F' →ₗ[ℝ] ℝ) A (A†) :=
   fun x y => by
-  simp only [sesq_form_of_inner_apply_apply, adjoint_inner_left, to_linear_map_eq_coe, coe_coe]
+  simp only [← sesq_form_of_inner_apply_apply, ← adjoint_inner_left, ← to_linear_map_eq_coe, ← coe_coe]
 
 end Real
 
@@ -250,7 +250,7 @@ in reverse order. -/
 theorem adjoint_comp (A : F →ₗ[𝕜] G) (B : E →ₗ[𝕜] F) : (A ∘ₗ B).adjoint = B.adjoint ∘ₗ A.adjoint := by
   ext v
   refine' ext_inner_left 𝕜 fun w => _
-  simp only [adjoint_inner_right, LinearMap.coe_comp, Function.comp_app]
+  simp only [← adjoint_inner_right, ← LinearMap.coe_comp, ← Function.comp_app]
 
 /-- The adjoint is unique: a map `A` is the adjoint of `B` iff it satisfies `⟪A x, y⟫ = ⟪x, B y⟫`
 for all `x` and `y`. -/
@@ -261,7 +261,7 @@ theorem eq_adjoint_iff (A : E →ₗ[𝕜] F) (B : F →ₗ[𝕜] E) : A = B.adj
   ext x
   exact
     ext_inner_right 𝕜 fun y => by
-      simp only [adjoint_inner_left, h x y]
+      simp only [← adjoint_inner_left, ← h x y]
 
 /-- The adjoint is unique: a map `A` is the adjoint of `B` iff it satisfies `⟪A x, y⟫ = ⟪x, B y⟫`
 for all basis vectors `x` and `y`. -/
@@ -273,7 +273,7 @@ theorem eq_adjoint_iff_basis {ι₁ : Type _} {ι₂ : Type _} (b₁ : Basis ι�
   refine' Basis.ext b₁ fun i₁ => _
   exact
     ext_inner_right_basis b₂ fun i₂ => by
-      simp only [adjoint_inner_left, h i₁ i₂]
+      simp only [← adjoint_inner_left, ← h i₁ i₂]
 
 theorem eq_adjoint_iff_basis_left {ι : Type _} (b : Basis ι 𝕜 E) (A : E →ₗ[𝕜] F) (B : F →ₗ[𝕜] E) :
     A = B.adjoint ↔ ∀ i y, ⟪A (b i), y⟫ = ⟪b i, B y⟫ := by
@@ -282,7 +282,7 @@ theorem eq_adjoint_iff_basis_left {ι : Type _} (b : Basis ι 𝕜 E) (A : E →
       rw [h, adjoint_inner_left], fun h => Basis.ext b fun i => _⟩
   exact
     ext_inner_right 𝕜 fun y => by
-      simp only [h i, adjoint_inner_left]
+      simp only [← h i, ← adjoint_inner_left]
 
 theorem eq_adjoint_iff_basis_right {ι : Type _} (b : Basis ι 𝕜 F) (A : E →ₗ[𝕜] F) (B : F →ₗ[𝕜] E) :
     A = B.adjoint ↔ ∀ i x, ⟪A x, b i⟫ = ⟪x, B (b i)⟫ := by
@@ -292,7 +292,7 @@ theorem eq_adjoint_iff_basis_right {ι : Type _} (b : Basis ι 𝕜 F) (A : E �
   ext x
   refine'
     ext_inner_right_basis b fun i => by
-      simp only [h i, adjoint_inner_left]
+      simp only [← h i, ← adjoint_inner_left]
 
 theorem is_self_adjoint_iff_eq_adjoint (A : E →ₗ[𝕜] E) : IsSelfAdjoint A ↔ A = A.adjoint := by
   rw [is_self_adjoint, ← LinearMap.eq_adjoint_iff]
@@ -326,23 +326,23 @@ variable [FiniteDimensional ℝ E'] [FiniteDimensional ℝ F']
 theorem is_adjoint_pair_inner (A : E' →ₗ[ℝ] F') :
     IsAdjointPair (sesqFormOfInner : E' →ₗ[ℝ] E' →ₗ[ℝ] ℝ) (sesqFormOfInner : F' →ₗ[ℝ] F' →ₗ[ℝ] ℝ) A A.adjoint :=
   fun x y => by
-  simp only [sesq_form_of_inner_apply_apply, adjoint_inner_left]
+  simp only [← sesq_form_of_inner_apply_apply, ← adjoint_inner_left]
 
 end Real
 
 /-- The Gram operator T†T is self-adjoint. -/
 theorem is_self_adjoint_adjoint_mul_self (T : E →ₗ[𝕜] E) : IsSelfAdjoint (T.adjoint * T) := fun x y => by
-  simp only [LinearMap.mul_apply, LinearMap.adjoint_inner_left, LinearMap.adjoint_inner_right]
+  simp only [← LinearMap.mul_apply, ← LinearMap.adjoint_inner_left, ← LinearMap.adjoint_inner_right]
 
 /-- The Gram operator T†T is a positive operator. -/
 theorem re_inner_adjoint_mul_self_nonneg (T : E →ₗ[𝕜] E) (x : E) : 0 ≤ IsROrC.re ⟪x, (T.adjoint * T) x⟫ := by
-  simp only [LinearMap.mul_apply, LinearMap.adjoint_inner_right, inner_self_eq_norm_sq_to_K]
+  simp only [← LinearMap.mul_apply, ← LinearMap.adjoint_inner_right, ← inner_self_eq_norm_sq_to_K]
   norm_cast
   exact sq_nonneg _
 
 @[simp]
 theorem im_inner_adjoint_mul_self_eq_zero (T : E →ₗ[𝕜] E) (x : E) : IsROrC.im ⟪x, LinearMap.adjoint T (T x)⟫ = 0 := by
-  simp only [LinearMap.mul_apply, LinearMap.adjoint_inner_right, inner_self_eq_norm_sq_to_K]
+  simp only [← LinearMap.mul_apply, ← LinearMap.adjoint_inner_right, ← inner_self_eq_norm_sq_to_K]
   norm_cast
 
 end LinearMap
@@ -360,7 +360,7 @@ theorem conj_transpose_eq_adjoint (A : Matrix m n 𝕜) :
   rw [@LinearMap.eq_adjoint_iff _ (EuclideanSpace 𝕜 m) (EuclideanSpace 𝕜 n)]
   intro x y
   convert dot_product_assoc (conj ∘ (id x : m → 𝕜)) y A using 1
-  simp [dot_product, mul_vec, RingHom.map_sum, ← star_ring_end_apply, mul_comm]
+  simp [← dot_product, ← mul_vec, ← RingHom.map_sum, star_ring_end_apply, ← mul_comm]
 
 end Matrix
 

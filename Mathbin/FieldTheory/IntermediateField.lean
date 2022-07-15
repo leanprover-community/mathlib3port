@@ -229,6 +229,9 @@ protected theorem coe_pow (x : S) (n : ℕ) : (↑(x ^ n) : L) = ↑x ^ n :=
 
 end InheritedLemmas
 
+theorem coe_nat_mem (n : ℕ) : (n : L) ∈ S := by
+  simpa using coe_int_mem S n
+
 end IntermediateField
 
 /-- Turn a subalgebra closed under inverses into an intermediate field -/
@@ -258,7 +261,7 @@ namespace IntermediateField
 instance toField : Field S :=
   S.toSubfield.toField
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp, norm_cast]
 theorem coe_sum {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∑ i, f i) : L) = ∑ i, (f i : L) := by
   classical
@@ -268,7 +271,7 @@ theorem coe_sum {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∑ i, f i) : L
   · rw [Finset.sum_insert hi, AddMemClass.coe_add, H, Finset.sum_insert hi]
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp, norm_cast]
 theorem coe_prod {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∏ i, f i) : L) = ∏ i, (f i : L) := by
   classical
@@ -281,21 +284,21 @@ theorem coe_prod {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∏ i, f i) : 
 /-! `intermediate_field`s inherit structure from their `subalgebra` coercions. -/
 
 
-instance module' {R} [Semiringₓ R] [HasScalar R K] [Module R L] [IsScalarTower R K L] : Module R S :=
+instance module' {R} [Semiringₓ R] [HasSmul R K] [Module R L] [IsScalarTower R K L] : Module R S :=
   S.toSubalgebra.module'
 
 instance module : Module K S :=
   S.toSubalgebra.Module
 
-instance is_scalar_tower {R} [Semiringₓ R] [HasScalar R K] [Module R L] [IsScalarTower R K L] : IsScalarTower R K S :=
+instance is_scalar_tower {R} [Semiringₓ R] [HasSmul R K] [Module R L] [IsScalarTower R K L] : IsScalarTower R K S :=
   S.toSubalgebra.IsScalarTower
 
 @[simp]
-theorem coe_smul {R} [Semiringₓ R] [HasScalar R K] [Module R L] [IsScalarTower R K L] (r : R) (x : S) :
+theorem coe_smul {R} [Semiringₓ R] [HasSmul R K] [Module R L] [IsScalarTower R K L] (r : R) (x : S) :
     ↑(r • x) = (r • x : L) :=
   rfl
 
-instance algebra' {K'} [CommSemiringₓ K'] [HasScalar K' K] [Algebra K' L] [IsScalarTower K' K L] : Algebra K' S :=
+instance algebra' {K'} [CommSemiringₓ K'] [HasSmul K' K] [Algebra K' L] [IsScalarTower K' K L] : Algebra K' S :=
   S.toSubalgebra.algebra'
 
 instance algebra : Algebra K S :=
@@ -334,9 +337,20 @@ theorem map_map {K L₁ L₂ L₃ : Type _} [Field K] [Field L₁] [Algebra K L�
 /-- Given an equivalence `e : L ≃ₐ[K] L'` of `K`-field extensions and an intermediate
 field `E` of `L/K`, `intermediate_field_equiv_map e E` is the induced equivalence
 between `E` and `E.map e` -/
-@[simps]
 def intermediateFieldMap (e : L ≃ₐ[K] L') (E : IntermediateField K L) : E ≃ₐ[K] E.map e.toAlgHom :=
   e.subalgebraMap E.toSubalgebra
+
+/- We manually add these two simp lemmas because `@[simps]` before `intermediate_field_map`
+  led to a timeout. -/
+@[simp]
+theorem intermediate_field_map_apply_coe (e : L ≃ₐ[K] L') (E : IntermediateField K L) (a : E) :
+    ↑(intermediateFieldMap e E a) = e a :=
+  rfl
+
+@[simp]
+theorem intermediate_field_map_symm_apply_coe (e : L ≃ₐ[K] L') (E : IntermediateField K L) (a : E.map e.toAlgHom) :
+    ↑((intermediateFieldMap e E).symm a) = e.symm a :=
+  rfl
 
 /-- The embedding from an intermediate field of `L / K` to `L`. -/
 def val : S →ₐ[K] L :=
@@ -358,7 +372,7 @@ theorem aeval_coe {R : Type _} [CommRingₓ R] [Algebra R K] [Algebra R L] [IsSc
   refine' Polynomial.induction_on' P (fun f g hf hg => _) fun n r => _
   · rw [aeval_add, aeval_add, AddMemClass.coe_add, hf, hg]
     
-  · simp only [MulMemClass.coe_mul, aeval_monomial, SubmonoidClass.coe_pow, mul_eq_mul_right_iff]
+  · simp only [← MulMemClass.coe_mul, ← aeval_monomial, ← SubmonoidClass.coe_pow, ← mul_eq_mul_right_iff]
     left
     rfl
     
@@ -376,6 +390,28 @@ theorem coe_is_integral_iff {R : Type _} [CommRingₓ R] [Algebra R K] [Algebra 
     refine' ⟨P, hPmo, _⟩
     rw [← aeval_def, aeval_coe, aeval_def, hProot, AddSubmonoidClass.coe_zero]
     
+
+/-- The map `E → F` when `E` is an intermediate field contained in the intermediate field `F`.
+
+This is the intermediate field version of `subalgebra.inclusion`. -/
+def inclusion {E F : IntermediateField K L} (hEF : E ≤ F) : E →ₐ[K] F :=
+  Subalgebra.inclusion hEF
+
+theorem inclusion_injective {E F : IntermediateField K L} (hEF : E ≤ F) : Function.Injective (inclusion hEF) :=
+  Subalgebra.inclusion_injective hEF
+
+@[simp]
+theorem inclusion_self {E : IntermediateField K L} : inclusion (le_reflₓ E) = AlgHom.id K E :=
+  Subalgebra.inclusion_self
+
+@[simp]
+theorem inclusion_inclusion {E F G : IntermediateField K L} (hEF : E ≤ F) (hFG : F ≤ G) (x : E) :
+    inclusion hFG (inclusion hEF x) = inclusion (le_transₓ hEF hFG) x :=
+  Subalgebra.inclusion_inclusion hEF hFG x
+
+@[simp]
+theorem coe_inclusion {E F : IntermediateField K L} (hEF : E ≤ F) (e : E) : (inclusion hEF e : L) = e :=
+  rfl
 
 variable {S}
 
@@ -413,11 +449,11 @@ def lift1 {F : IntermediateField K L} (E : IntermediateField K F) : Intermediate
 def lift2 {F : IntermediateField K L} (E : IntermediateField F L) : IntermediateField K L where
   Carrier := E.Carrier
   zero_mem' := zero_mem E
-  add_mem' := fun hx : x ∈ E => add_mem hx
-  neg_mem' := fun hx : x ∈ E => neg_mem hx
+  add_mem' := fun x y hx : x ∈ E => add_mem hx
+  neg_mem' := fun x hx : x ∈ E => neg_mem hx
   one_mem' := one_mem E
-  mul_mem' := fun hx : x ∈ E => mul_mem hx
-  inv_mem' := fun hx : x ∈ E => inv_mem hx
+  mul_mem' := fun x y hx : x ∈ E => mul_mem hx
+  inv_mem' := fun x hx : x ∈ E => inv_mem hx
   algebra_map_mem' := fun x => algebra_map_mem E (algebraMap K F x)
 
 instance hasLift1 {F : IntermediateField K L} : HasLiftT (IntermediateField K F) (IntermediateField K L) :=

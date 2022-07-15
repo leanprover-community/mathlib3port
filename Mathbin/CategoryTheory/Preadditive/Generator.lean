@@ -28,50 +28,50 @@ theorem Preadditive.is_separating_iff (𝒢 : Set C) :
   ⟨fun h𝒢 X Y f hf =>
     h𝒢 _ _
       (by
-        simpa only [limits.comp_zero] using hf),
+        simpa only [← limits.comp_zero] using hf),
     fun h𝒢 X Y f g hfg =>
     sub_eq_zero.1 <|
       h𝒢 _
         (by
-          simpa only [preadditive.comp_sub, sub_eq_zero] using hfg)⟩
+          simpa only [← preadditive.comp_sub, ← sub_eq_zero] using hfg)⟩
 
 theorem Preadditive.is_coseparating_iff (𝒢 : Set C) :
     IsCoseparating 𝒢 ↔ ∀ ⦃X Y : C⦄ f : X ⟶ Y, (∀, ∀ G ∈ 𝒢, ∀ h : Y ⟶ G, f ≫ h = 0) → f = 0 :=
   ⟨fun h𝒢 X Y f hf =>
     h𝒢 _ _
       (by
-        simpa only [limits.zero_comp] using hf),
+        simpa only [← limits.zero_comp] using hf),
     fun h𝒢 X Y f g hfg =>
     sub_eq_zero.1 <|
       h𝒢 _
         (by
-          simpa only [preadditive.sub_comp, sub_eq_zero] using hfg)⟩
+          simpa only [← preadditive.sub_comp, ← sub_eq_zero] using hfg)⟩
 
 theorem Preadditive.is_separator_iff (G : C) :
     IsSeparator G ↔ ∀ ⦃X Y : C⦄ f : X ⟶ Y, (∀ h : G ⟶ X, h ≫ f = 0) → f = 0 :=
   ⟨fun hG X Y f hf =>
     hG.def _ _
       (by
-        simpa only [limits.comp_zero] using hf),
+        simpa only [← limits.comp_zero] using hf),
     fun hG =>
     (is_separator_def _).2 fun X Y f g hfg =>
       sub_eq_zero.1 <|
         hG _
           (by
-            simpa only [preadditive.comp_sub, sub_eq_zero] using hfg)⟩
+            simpa only [← preadditive.comp_sub, ← sub_eq_zero] using hfg)⟩
 
 theorem Preadditive.is_coseparator_iff (G : C) :
     IsCoseparator G ↔ ∀ ⦃X Y : C⦄ f : X ⟶ Y, (∀ h : Y ⟶ G, f ≫ h = 0) → f = 0 :=
   ⟨fun hG X Y f hf =>
     hG.def _ _
       (by
-        simpa only [limits.zero_comp] using hf),
+        simpa only [← limits.zero_comp] using hf),
     fun hG =>
     (is_coseparator_def _).2 fun X Y f g hfg =>
       sub_eq_zero.1 <|
         hG _
           (by
-            simpa only [preadditive.sub_comp, sub_eq_zero] using hfg)⟩
+            simpa only [← preadditive.sub_comp, ← sub_eq_zero] using hfg)⟩
 
 theorem is_separator_iff_faithful_preadditive_coyoneda (G : C) :
     IsSeparator G ↔ Faithful (preadditiveCoyoneda.obj (op G)) := by

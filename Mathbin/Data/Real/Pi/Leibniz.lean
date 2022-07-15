@@ -51,15 +51,15 @@ theorem tendsto_sum_pi_div_four :
       (((tendsto_rpow_div_mul_add (-1) 2 1 two_ne_zero.symm).neg.const_add 1).add tendsto_inv_at_top_zero).comp
         tendsto_coe_nat_at_top_at_top
     · ext k
-      simp only [Nnreal.coe_nat_cast, Function.comp_app, Nnreal.coe_rpow]
+      simp only [← Nnreal.coe_nat_cast, ← Function.comp_app, ← Nnreal.coe_rpow]
       rw [← rpow_mul (Nat.cast_nonneg k) (-1 / (2 * (k : ℝ) + 1)) (2 * (k : ℝ) + 1),
-        @div_mul_cancel _ _ _ (2 * (k : ℝ) + 1)
+        @div_mul_cancel _ _ (2 * (k : ℝ) + 1) _
           (by
             norm_cast
-            simp only [Nat.succ_ne_zero, not_false_iff]),
+            simp only [← Nat.succ_ne_zero, ← not_false_iff]),
         rpow_neg_one k, sub_eq_add_neg]
       
-    · simp only [add_zeroₓ, add_right_negₓ]
+    · simp only [← add_zeroₓ, ← add_right_negₓ]
       
   -- (2) We convert the limit in our goal to an inequality
   refine' squeeze_zero_norm _ H
@@ -67,18 +67,18 @@ theorem tendsto_sum_pi_div_four :
   -- Since `k` is now fixed, we henceforth denote `u k` as `U`
   let U := u k
   -- (3) We introduce an auxiliary function `f`
-  let b := fun x => -(1 : ℝ) ^ i * x ^ (2 * i + 1) / (2 * i + 1)
+  let b := fun i : ℕ x => -(1 : ℝ) ^ i * x ^ (2 * i + 1) / (2 * i + 1)
   let f := fun x => arctan x - ∑ i in Finset.range k, b i x
   suffices f_bound : |f 1 - f 0| ≤ (1 : ℝ) - U + U ^ (2 * (k : ℝ) + 1)
   · rw [← norm_neg]
     convert f_bound
-    simp only [f]
-    simp [b]
+    simp only [← f]
+    simp [← b]
     
   -- We show that `U` is indeed in [0,1]
   have hU1 : (U : ℝ) ≤ 1 := by
     by_cases' hk : k = 0
-    · simpa only [U, hk] using zero_rpow_le_one _
+    · simp [← u, ← U, ← hk]
       
     · exact
         rpow_le_one_of_one_le_of_nonpos
@@ -101,13 +101,13 @@ theorem tendsto_sum_pi_div_four :
       convert
         HasDerivAt.const_mul ((-1 : ℝ) ^ i / (2 * i + 1)) (@HasDerivAt.pow _ _ _ _ _ (2 * i + 1) (has_deriv_at_id x))
       · ext y
-        simp only [b, id.def]
+        simp only [← b, ← id.def]
         ring
         
-      · simp only [Nat.add_succ_sub_one, add_zeroₓ, mul_oneₓ, id.def, Nat.cast_bit0, Nat.cast_addₓ, Nat.cast_oneₓ,
-          Nat.cast_mulₓ]
+      · simp only [← Nat.add_succ_sub_one, ← add_zeroₓ, ← mul_oneₓ, ← id.def, ← Nat.cast_bit0, ← Nat.cast_addₓ, ←
+          Nat.cast_oneₓ, ← Nat.cast_mulₓ]
         rw [← mul_assoc,
-          @div_mul_cancel _ _ _ (2 * (i : ℝ) + 1)
+          @div_mul_cancel _ _ (2 * (i : ℝ) + 1) _
             (by
               norm_cast
               linarith),
@@ -116,7 +116,7 @@ theorem tendsto_sum_pi_div_four :
         
     convert (has_deriv_at_arctan x).sub (HasDerivAt.sum has_deriv_at_b)
     have g_sum := @geom_sum_eq _ _ (-(x ^ 2)) ((neg_nonpos.mpr (sq_nonneg x)).trans_lt zero_lt_one).Ne k
-    simp only [f'] at g_sum⊢
+    simp only [← f'] at g_sum⊢
     rw [g_sum, ← neg_add' (x ^ 2) 1, add_commₓ (x ^ 2) 1, sub_eq_add_neg, neg_div', neg_div_neg_eq]
     ring
   have hderiv1 : ∀, ∀ x ∈ Icc (U : ℝ) 1, ∀, HasDerivWithinAt f (f' x) (Icc (U : ℝ) 1) x := fun x hx =>

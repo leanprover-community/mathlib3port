@@ -152,12 +152,12 @@ def adF : B × B → FreeLieAlgebra R (Generators B) :=
 private theorem ad_E_of_eq_eq_zero (i : B) (h : A i i = 2) : adE R A ⟨i, i⟩ = 0 := by
   have h' : (-2 : ℤ).toNat = 0 := by
     rfl
-  simp [ad_E, h, h']
+  simp [← ad_E, ← h, ← h']
 
 private theorem ad_F_of_eq_eq_zero (i : B) (h : A i i = 2) : adF R A ⟨i, i⟩ = 0 := by
   have h' : (-2 : ℤ).toNat = 0 := by
     rfl
-  simp [ad_F, h, h']
+  simp [← ad_F, ← h, ← h']
 
 /-- The union of all the relations as a subset of the free Lie algebra. -/
 def ToSet : Set (FreeLieAlgebra R (Generators B)) :=
@@ -172,13 +172,14 @@ end Relations
 
 end CartanMatrix
 
--- ././Mathport/Syntax/Translate/Basic.lean:978:9: unsupported derive handler lie_algebra R
+-- ./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler lie_algebra R
 /-- The Lie algebra corresponding to a Cartan matrix.
 
 Note that it is defined for any matrix of integers. Its value for non-Cartan matrices should be
 regarded as junk. -/
 def Matrix.ToLieAlgebra :=
-  FreeLieAlgebra R _ ⧸ CartanMatrix.Relations.toIdeal R A deriving Inhabited, LieRing, [anonymous]
+  FreeLieAlgebra R _ ⧸ CartanMatrix.Relations.toIdeal R A deriving Inhabited, LieRing,
+  «./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler lie_algebra R»
 
 namespace CartanMatrix
 

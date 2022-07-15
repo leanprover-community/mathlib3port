@@ -49,10 +49,10 @@ section Continuity
 
 variable [TopologicalSpace X] [TopologicalSpace R]
 
-instance [HasScalar α R] [HasContinuousConstSmul α R] : HasContinuousConstSmul α (Matrix m n R) :=
+instance [HasSmul α R] [HasContinuousConstSmul α R] : HasContinuousConstSmul α (Matrix m n R) :=
   Pi.has_continuous_const_smul
 
-instance [TopologicalSpace α] [HasScalar α R] [HasContinuousSmul α R] : HasContinuousSmul α (Matrix m n R) :=
+instance [TopologicalSpace α] [HasSmul α R] [HasContinuousSmul α R] : HasContinuousSmul α (Matrix m n R) :=
   Pi.has_continuous_smul
 
 instance [Add R] [HasContinuousAdd R] : HasContinuousAdd (Matrix m n R) :=
@@ -121,11 +121,9 @@ instance [Fintype n] [Mul R] [AddCommMonoidₓ R] [HasContinuousAdd R] [HasConti
     HasContinuousMul (Matrix n n R) :=
   ⟨continuous_fst.matrix_mul continuous_snd⟩
 
-instance [Fintype n] [NonUnitalNonAssocSemiringₓ R] [TopologicalSemiring R] : TopologicalSemiring (Matrix n n R) :=
-  {  }
+instance [Fintype n] [NonUnitalNonAssocSemiringₓ R] [TopologicalSemiring R] : TopologicalSemiring (Matrix n n R) where
 
-instance [Fintype n] [NonUnitalNonAssocRing R] [TopologicalRing R] : TopologicalRing (Matrix n n R) :=
-  {  }
+instance [Fintype n] [NonUnitalNonAssocRing R] [TopologicalRing R] : TopologicalRing (Matrix n n R) where
 
 @[continuity]
 theorem Continuous.matrix_vec_mul_vec [Mul R] [HasContinuousMul R] {A : X → m → R} {B : X → n → R} (hA : Continuous A)
@@ -226,7 +224,7 @@ theorem Continuous.matrix_block_diag {A : X → Matrix (m × p) (n × p) R} (hA 
 theorem Continuous.matrix_block_diagonal' [Zero R] [DecidableEq l] {A : X → ∀ i, Matrix (m' i) (n' i) R}
     (hA : Continuous A) : Continuous fun x => blockDiagonal'ₓ (A x) :=
   continuous_matrix fun ⟨i₁, i₂⟩ ⟨j₁, j₂⟩ => by
-    dsimp' only [block_diagonal']
+    dsimp' only [← block_diagonal']
     split_ifs
     · subst h
       exact ((continuous_apply i₁).comp hA).matrix_elem i₂ j₂

@@ -77,7 +77,7 @@ unsafe def library_note_attr : user_attribute where
 Example: ``mk_reflected_definition `foo 17`` constructs the definition
 declaration corresponding to `def foo : ℕ := 17`
 -/
-unsafe def mk_reflected_definition (decl_name : Name) {type} [reflected type] (body : type) [reflected body] :
+unsafe def mk_reflected_definition (decl_name : Name) {type} [reflected _ type] (body : type) [reflected _ body] :
     declaration :=
   mk_definition decl_name (reflect type).collect_univ_params (reflect type) (reflect body)
 

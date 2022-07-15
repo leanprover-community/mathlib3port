@@ -83,7 +83,7 @@ def dgoToHomologicalComplex :
           X.d i ≫
             X.xEqToHom
               (show i + (1 : ℤ) • b = j by
-                simp [h])
+                simp [← h])
         else 0,
       shape' := fun i j w => by
         dsimp'  at w
@@ -93,7 +93,7 @@ def dgoToHomologicalComplex :
         substs hij hjk
         have : X.d i ≫ X.d _ = _ := (congr_fun X.d_squared i : _)
         reassoc! this
-        simp [this] }
+        simp [← this] }
   map := fun X Y f =>
     { f := f.f,
       comm' := fun i j h => by
@@ -101,7 +101,7 @@ def dgoToHomologicalComplex :
         subst h
         have : f.f i ≫ Y.d i = X.d i ≫ f.f (i + 1 • b) := (congr_fun f.comm i).symm
         reassoc! this
-        simp only [category.comp_id, eq_to_hom_refl, dif_pos rfl, this, category.assoc, eq_to_hom_f'] }
+        simp only [← category.comp_id, ← eq_to_hom_refl, ← dif_pos rfl, ← this, ← category.assoc, ← eq_to_hom_f'] }
 
 /-- The functor from homological complexes to differential graded objects.
 -/

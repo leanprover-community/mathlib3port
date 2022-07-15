@@ -44,7 +44,7 @@ theorem IsSimpleModule.nontrivial [IsSimpleModule R M] : Nontrivial M :=
       have h : (⊥ : Submodule R M) ≠ ⊤ := bot_ne_top
       contrapose! h
       ext
-      simp [Submodule.mem_bot, Submodule.mem_top, h x]⟩⟩
+      simp [← Submodule.mem_bot, ← Submodule.mem_top, ← h x]⟩⟩
 
 variable {R} {M} {m : Submodule R M} {N : Type _} [AddCommGroupₓ N] [Module R N]
 
@@ -77,9 +77,9 @@ theorem Sup_simples_eq_top : sup { m : Submodule R M | IsSimpleModule R m } = �
   simp_rw [is_simple_module_iff_is_atom]
   exact Sup_atoms_eq_top
 
-instance is_semisimple_submodule {m : Submodule R M} : IsSemisimpleModule R m :=
+instance is_semisimple_submodule {m : Submodule R M} : IsSemisimpleModule R m := by
   have f : Submodule R m ≃o Set.Iic m := Submodule.MapSubtype.relIso m
-  f.is_complemented_iff.2 IsModularLattice.is_complemented_Iic
+  exact f.is_complemented_iff.2 IsModularLattice.is_complemented_Iic
 
 end IsSemisimpleModule
 
@@ -134,7 +134,7 @@ noncomputable instance _root_.module.End.division_ring [DecidableEq (Module.End 
         have h := exists_pair_ne M
         contrapose! h
         intro x y
-        simp_rw [ext_iff, one_apply, zero_apply]  at h
+        simp_rw [ext_iff, one_apply, zero_apply] at h
         rw [← h x, h y]⟩,
     mul_inv_cancel := by
       intro a a0

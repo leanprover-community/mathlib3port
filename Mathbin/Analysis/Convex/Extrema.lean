@@ -28,7 +28,7 @@ open Classical TopologicalSpace
 theorem IsMinOn.of_is_local_min_on_of_convex_on_Icc {f : ℝ → β} {a b : ℝ} (a_lt_b : a < b)
     (h_local_min : IsLocalMinOn f (Icc a b) a) (h_conv : ConvexOn ℝ (Icc a b) f) : IsMinOn f (Icc a b) a := by
   rintro c hc
-  dsimp' only [mem_set_of_eq]
+  dsimp' only [← mem_set_of_eq]
   rw [IsLocalMinOn, nhds_within_Icc_eq_nhds_within_Ici a_lt_b] at h_local_min
   rcases hc.1.eq_or_lt with (rfl | a_lt_c)
   · exact le_rfl
@@ -53,14 +53,14 @@ theorem IsMinOn.of_is_local_min_on_of_convex_on {f : E → β} {a : E} (a_in_s :
   have hg1 : g 1 = x := AffineMap.line_map_apply_one a x
   have hgc : Continuous g := AffineMap.line_map_continuous
   have h_maps : maps_to g (Icc 0 1) s := by
-    simpa only [maps_to', ← segment_eq_image_line_map] using h_conv.1.segment_subset a_in_s x_in_s
+    simpa only [← maps_to', segment_eq_image_line_map] using h_conv.1.segment_subset a_in_s x_in_s
   have fg_local_min_on : IsLocalMinOn (f ∘ g) (Icc 0 1) 0 := by
     rw [← hg0] at h_localmin
     exact h_localmin.comp_continuous_on h_maps hgc.continuous_on (left_mem_Icc.2 zero_le_one)
   have fg_min_on : IsMinOn (f ∘ g) (Icc 0 1 : Set ℝ) 0 := by
     refine' IsMinOn.of_is_local_min_on_of_convex_on_Icc one_pos fg_local_min_on _
     exact (h_conv.comp_affine_map g).Subset h_maps (convex_Icc 0 1)
-  simpa only [hg0, hg1, comp_app, mem_set_of_eq] using fg_min_on (right_mem_Icc.2 zero_le_one)
+  simpa only [← hg0, ← hg1, ← comp_app, ← mem_set_of_eq] using fg_min_on (right_mem_Icc.2 zero_le_one)
 
 /-- A local maximum of a concave function is a global maximum, restricted to a set `s`. -/
 theorem IsMaxOn.of_is_local_max_on_of_concave_on {f : E → β} {a : E} (a_in_s : a ∈ s) (h_localmax : IsLocalMaxOn f s a)

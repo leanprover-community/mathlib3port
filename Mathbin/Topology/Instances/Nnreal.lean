@@ -109,10 +109,10 @@ theorem tendsto_real_to_nnreal {f : Filter α} {m : α → ℝ} {x : ℝ} (h : T
     Tendsto (fun a => Real.toNnreal (m a)) f (𝓝 (Real.toNnreal x)) :=
   (continuous_real_to_nnreal.Tendsto _).comp h
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (a «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (a «expr ≠ » 0)
 theorem nhds_zero : 𝓝 (0 : ℝ≥0 ) = ⨅ (a) (_ : a ≠ 0), 𝓟 (iio a) :=
   nhds_bot_order.trans <| by
-    simp [bot_lt_iff_ne_bot]
+    simp [← bot_lt_iff_ne_bot]
 
 theorem nhds_zero_basis : (𝓝 (0 : ℝ≥0 )).HasBasis (fun a : ℝ≥0 => 0 < a) fun a => iio a :=
   nhds_bot_basis
@@ -124,14 +124,15 @@ instance : HasContinuousSub ℝ≥0 :=
 instance : HasContinuousInv₀ ℝ≥0 :=
   ⟨fun x hx => tendsto_coe.1 <| (Real.tendsto_inv <| Nnreal.coe_ne_zero.2 hx).comp continuous_coe.ContinuousAt⟩
 
-instance : HasContinuousSmul ℝ≥0 ℝ where
-  continuous_smul :=
+instance :
+    HasContinuousSmul ℝ≥0
+      ℝ where continuous_smul :=
     Continuous.comp Real.continuous_mul <|
       Continuous.prod_mk (Continuous.comp continuous_subtype_val continuous_fst) continuous_snd
 
 @[norm_cast]
 theorem has_sum_coe {f : α → ℝ≥0 } {r : ℝ≥0 } : HasSum (fun a => (f a : ℝ)) (r : ℝ) ↔ HasSum f r := by
-  simp only [HasSum, coe_sum.symm, tendsto_coe]
+  simp only [← HasSum, ← coe_sum.symm, ← tendsto_coe]
 
 theorem has_sum_real_to_nnreal_of_nonneg {f : α → ℝ} (hf_nonneg : ∀ n, 0 ≤ f n) (hf : Summable f) :
     HasSum (fun n => Real.toNnreal (f n)) (Real.toNnreal (∑' n, f n)) := by
@@ -149,7 +150,7 @@ theorem summable_coe {f : α → ℝ≥0 } : (Summable fun a => (f a : ℝ)) ↔
 theorem summable_coe_of_nonneg {f : α → ℝ} (hf₁ : ∀ n, 0 ≤ f n) :
     (@Summable ℝ≥0 _ _ _ fun n => ⟨f n, hf₁ n⟩) ↔ Summable f := by
   lift f to α → ℝ≥0 using hf₁ with f rfl hf₁
-  simp only [summable_coe, Subtype.coe_eta]
+  simp only [← summable_coe, ← Subtype.coe_eta]
 
 open Classical
 
@@ -157,7 +158,7 @@ open Classical
 theorem coe_tsum {f : α → ℝ≥0 } : ↑(∑' a, f a) = ∑' a, (f a : ℝ) :=
   if hf : Summable f then Eq.symm <| (has_sum_coe.2 <| hf.HasSum).tsum_eq
   else by
-    simp [tsum, hf, mt summable_coe.1 hf]
+    simp [← tsum, ← hf, ← mt summable_coe.1 hf]
 
 theorem coe_tsum_of_nonneg {f : α → ℝ} (hf₁ : ∀ n, 0 ≤ f n) :
     (⟨∑' n, f n, tsum_nonneg hf₁⟩ : ℝ≥0 ) = (∑' n, ⟨f n, hf₁ n⟩ : ℝ≥0 ) := by
@@ -166,11 +167,11 @@ theorem coe_tsum_of_nonneg {f : α → ℝ} (hf₁ : ∀ n, 0 ≤ f n) :
 
 theorem tsum_mul_left (a : ℝ≥0 ) (f : α → ℝ≥0 ) : (∑' x, a * f x) = a * ∑' x, f x :=
   Nnreal.eq <| by
-    simp only [coe_tsum, Nnreal.coe_mul, tsum_mul_left]
+    simp only [← coe_tsum, ← Nnreal.coe_mul, ← tsum_mul_left]
 
 theorem tsum_mul_right (f : α → ℝ≥0 ) (a : ℝ≥0 ) : (∑' x, f x * a) = (∑' x, f x) * a :=
   Nnreal.eq <| by
-    simp only [coe_tsum, Nnreal.coe_mul, tsum_mul_right]
+    simp only [← coe_tsum, ← Nnreal.coe_mul, ← tsum_mul_right]
 
 theorem summable_comp_injective {β : Type _} {f : α → ℝ≥0 } (hf : Summable f) {i : β → α} (hi : Function.Injective i) :
     Summable (f ∘ i) :=
@@ -185,7 +186,7 @@ theorem summable_nat_add_iff {f : ℕ → ℝ≥0 } (k : ℕ) : (Summable fun i 
 
 theorem has_sum_nat_add_iff {f : ℕ → ℝ≥0 } (k : ℕ) {a : ℝ≥0 } :
     HasSum (fun n => f (n + k)) a ↔ HasSum f (a + ∑ i in range k, f i) := by
-  simp [← has_sum_coe, coe_sum, Nnreal.coe_add, ← has_sum_nat_add_iff k]
+  simp [has_sum_coe, ← coe_sum, ← Nnreal.coe_add, has_sum_nat_add_iff k]
 
 theorem sum_add_tsum_nat_add {f : ℕ → ℝ≥0 } (k : ℕ) (hf : Summable f) :
     (∑' i, f i) = (∑ i in range k, f i) + ∑' i, f (i + k) := by

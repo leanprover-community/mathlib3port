@@ -167,7 +167,7 @@ variable [∀ i, Module R (β i)] [∀ i, Module R (β₁ i)] [∀ i, Module R (
 theorem map_range_smul (f : ∀ i, β₁ i → β₂ i) (hf : ∀ i, f i 0 = 0) (r : R) (hf' : ∀ i x, f i (r • x) = r • f i x)
     (g : Π₀ i, β₁ i) : mapRange f hf (r • g) = r • mapRange f hf g := by
   ext
-  simp only [map_range_apply f, coe_smul, Pi.smul_apply, hf']
+  simp only [← map_range_apply f, ← coe_smul, ← Pi.smul_apply, ← hf']
 
 /-- `dfinsupp.map_range` as an `linear_map`. -/
 @[simps apply]
@@ -189,7 +189,7 @@ include dec_ι
 theorem sum_map_range_index.linear_map [∀ i : ι x : β₁ i, Decidable (x ≠ 0)] [∀ i : ι x : β₂ i, Decidable (x ≠ 0)]
     {f : ∀ i, β₁ i →ₗ[R] β₂ i} {h : ∀ i, β₂ i →ₗ[R] N} {l : Π₀ i, β₁ i} :
     Dfinsupp.lsum ℕ h (mapRange.linearMap f l) = Dfinsupp.lsum ℕ (fun i => (h i).comp (f i)) l := by
-  simpa [Dfinsupp.sum_add_hom_apply] using
+  simpa [← Dfinsupp.sum_add_hom_apply] using
     @sum_map_range_index ι N _ _ _ _ _ _ _ _ (fun i => f i)
       (fun i => by
         simp )
@@ -279,9 +279,9 @@ theorem bsupr_eq_range_dfinsupp_lsum (p : ι → Prop) [DecidablePred p] (S : ι
     refine' dfinsupp_sum_add_hom_mem _ _ _ fun i hi => _
     refine' mem_supr_of_mem i _
     by_cases' hp : p i
-    · simp [hp]
+    · simp [← hp]
       
-    · simp [hp]
+    · simp [← hp]
       
     
 
@@ -304,7 +304,7 @@ open BigOperators
 
 omit dec_ι
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mem_supr_finset_iff_exists_sum {s : Finset ι} (p : ι → Submodule R N) (a : N) :
     (a ∈ ⨆ i ∈ s, p i) ↔ ∃ μ : ∀ i, p i, (∑ i in s, (μ i : N)) = a := by
   classical
@@ -339,7 +339,7 @@ theorem mem_supr_finset_iff_exists_sum {s : Finset ι} (p : ι → Submodule R N
       · exact hi
         
       
-    simp only [Dfinsupp.sum]
+    simp only [← Dfinsupp.sum]
     rw [Finset.sum_subset support_mk_subset, ← hμ]
     exact Finset.sum_congr rfl fun x hx => congr_arg coe <| mk_of_mem hx
     · intro x _ hx
@@ -380,10 +380,10 @@ theorem independent_of_dfinsupp_lsum_injective (p : ι → Submodule R N)
   rw [independent_iff_forall_dfinsupp]
   intro i x v hv
   replace hv : lsum ℕ (fun i => (p i).Subtype) (erase i v) = lsum ℕ (fun i => (p i).Subtype) (single i x)
-  · simpa only [lsum_single] using hv
+  · simpa only [← lsum_single] using hv
     
   have := dfinsupp.ext_iff.mp (h hv) i
-  simpa [eq_comm] using this
+  simpa [← eq_comm] using this
 
 /- If `dfinsupp.sum_add_hom` applied with `add_submonoid.subtype` is injective then the additive
 submonoids are independent. -/
@@ -465,12 +465,13 @@ theorem independent_iff_dfinsupp_sum_add_hom_injective (p : ι → AddSubgroup N
 
 omit dec_ι
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If a family of submodules is `independent`, then a choice of nonzero vector from each submodule
-forms a linearly independent family. -/
-theorem Independent.linear_independent [NoZeroSmulDivisors R N] (p : ι → Submodule R N)
-    (hp : CompleteLattice.Independent p) {v : ι → N} (hv : ∀ i, v i ∈ p i) (hv' : ∀ i, v i ≠ 0) :
-    LinearIndependent R v := by
+forms a linearly independent family.
+
+See also `complete_lattice.independent.linear_independent'`. -/
+theorem Independent.linear_independent [NoZeroSmulDivisors R N] (p : ι → Submodule R N) (hp : Independent p) {v : ι → N}
+    (hv : ∀ i, v i ∈ p i) (hv' : ∀ i, v i ≠ 0) : LinearIndependent R v := by
   classical
   rw [linear_independent_iff]
   intro l hl
@@ -481,7 +482,12 @@ theorem Independent.linear_independent [NoZeroSmulDivisors R N] (p : ι → Subm
   ext i
   apply smul_left_injective R (hv' i)
   have : l i • v i = a i := rfl
-  simp [this, ha]
+  simp [← this, ← ha]
+
+theorem independent_iff_linear_independent_of_ne_zero [NoZeroSmulDivisors R N] {v : ι → N} (h_ne_zero : ∀ i, v i ≠ 0) :
+    (Independent fun i => R∙v i) ↔ LinearIndependent R v :=
+  ⟨fun hv => hv.LinearIndependent _ (fun i => Submodule.mem_span_singleton_self <| v i) h_ne_zero, fun hv =>
+    hv.independent_span_singleton⟩
 
 end Ringₓ
 

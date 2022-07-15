@@ -61,8 +61,7 @@ instance : Inhabited SemiNormedGroupₓ :=
 instance ofUnique (V : Type u) [SemiNormedGroup V] [i : Unique V] : Unique (SemiNormedGroupₓ.of V) :=
   i
 
-instance : Limits.HasZeroMorphisms.{u, u + 1} SemiNormedGroupₓ :=
-  {  }
+instance : Limits.HasZeroMorphisms.{u, u + 1} SemiNormedGroupₓ where
 
 @[simp]
 theorem zero_apply {V W : SemiNormedGroupₓ} (x : V) : (0 : V ⟶ W) x = 0 :=
@@ -72,7 +71,7 @@ theorem is_zero_of_subsingleton (V : SemiNormedGroupₓ) [Subsingleton V] : Limi
   refine' ⟨fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩⟩
   · ext
     have : x = 0 := Subsingleton.elimₓ _ _
-    simp only [this, NormedGroupHom.map_zero]
+    simp only [← this, ← map_zero]
     
   · ext
     apply Subsingleton.elimₓ
@@ -83,7 +82,7 @@ instance has_zero_object : Limits.HasZeroObject SemiNormedGroupₓ.{u} :=
 
 theorem iso_isometry_of_norm_noninc {V W : SemiNormedGroupₓ} (i : V ≅ W) (h1 : i.hom.NormNoninc)
     (h2 : i.inv.NormNoninc) : Isometry i.hom := by
-  apply NormedGroupHom.isometry_of_norm
+  apply AddMonoidHomClass.isometry_of_norm
   intro v
   apply le_antisymmₓ (h1 v)
   calc ∥v∥ = ∥i.inv (i.hom v)∥ := by
@@ -143,8 +142,7 @@ def mkIso {M N : SemiNormedGroupₓ} (f : M ≅ N) (i : f.hom.NormNoninc) (i' : 
     apply Subtype.eq
     exact f.inv_hom_id
 
-instance : HasForget₂ SemiNormedGroup₁ SemiNormedGroupₓ where
-  forget₂ := { obj := fun X => X, map := fun X Y f => f.1 }
+instance : HasForget₂ SemiNormedGroup₁ SemiNormedGroupₓ where forget₂ := { obj := fun X => X, map := fun X Y f => f.1 }
 
 @[simp]
 theorem coe_of (V : Type u) [SemiNormedGroup V] : (SemiNormedGroup₁.of V : Type u) = V :=
@@ -177,7 +175,7 @@ instance : Limits.HasZeroMorphisms.{u, u + 1} SemiNormedGroup₁ where
     rfl
   zero_comp' := fun X Y Z f => by
     ext
-    simp [coe_fn_coe_base']
+    simp [← coe_fn_coe_base']
 
 @[simp]
 theorem zero_apply {V W : SemiNormedGroup₁} (x : V) : (0 : V ⟶ W) x = 0 :=
@@ -187,8 +185,8 @@ theorem is_zero_of_subsingleton (V : SemiNormedGroup₁) [Subsingleton V] : Limi
   refine' ⟨fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩⟩
   · ext
     have : x = 0 := Subsingleton.elimₓ _ _
-    simp only [this, NormedGroupHom.map_zero]
-    apply f.1.map_zero
+    simp only [← this, ← map_zero]
+    exact map_zero f.1
     
   · ext
     apply Subsingleton.elimₓ
@@ -198,7 +196,8 @@ instance has_zero_object : Limits.HasZeroObject SemiNormedGroup₁.{u} :=
   ⟨⟨of PUnit, is_zero_of_subsingleton _⟩⟩
 
 theorem iso_isometry {V W : SemiNormedGroup₁} (i : V ≅ W) : Isometry i.hom := by
-  apply NormedGroupHom.isometry_of_norm
+  change Isometry (i.hom : V →+ W)
+  refine' AddMonoidHomClass.isometry_of_norm i.hom _
   intro v
   apply le_antisymmₓ (i.hom.2 v)
   calc ∥v∥ = ∥i.inv (i.hom v)∥ := by

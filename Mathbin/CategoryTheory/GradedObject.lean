@@ -73,17 +73,17 @@ pulling back along two propositionally equal functions.
 -/
 @[simps]
 def comapEq {β γ : Type w} {f g : β → γ} (h : f = g) : comap (fun _ => C) f ≅ comap (fun _ => C) g where
-  Hom :=
+  hom :=
     { app := fun X b =>
         eqToHom
           (by
-            dsimp' [comap]
+            dsimp' [← comap]
             subst h) }
   inv :=
     { app := fun X b =>
         eqToHom
           (by
-            dsimp' [comap]
+            dsimp' [← comap]
             subst h) }
 
 theorem comap_eq_symm {β γ : Type w} {f g : β → γ} (h : f = g) : comapEq C h.symm = (comapEq C h).symm := by
@@ -145,7 +145,7 @@ instance hasShift {β : Type _} [AddCommGroupₓ β] (s : β) : HasShift (Graded
           comapEq C
             (by
               ext
-              simp [add_zsmul, add_commₓ]),
+              simp [← add_zsmul, ← add_commₓ]),
       left_unitality := by
         introv
         ext
@@ -172,8 +172,8 @@ theorem shift_functor_map_apply {β : Type _} [AddCommGroupₓ β] (s : β) {X Y
     (t : β) (n : ℤ) : (shiftFunctor (GradedObjectWithShift s C) n).map f t = f (t + n • s) :=
   rfl
 
-instance hasZeroMorphisms [HasZeroMorphisms C] (β : Type w) : HasZeroMorphisms.{max w v} (GradedObject β C) where
-  HasZero := fun X Y => { zero := fun b => 0 }
+instance hasZeroMorphisms [HasZeroMorphisms C] (β : Type w) :
+    HasZeroMorphisms.{max w v} (GradedObject β C) where HasZero := fun X Y => { zero := fun b => 0 }
 
 @[simp]
 theorem zero_apply [HasZeroMorphisms C] (β : Type w) (X Y : GradedObject β C) (b : β) : (0 : X ⟶ Y) b = 0 :=
@@ -200,7 +200,7 @@ variable (β : Type)
 
 variable (C : Type u) [Category.{v} C]
 
-variable [HasCoproducts C]
+variable [HasCoproducts.{0} C]
 
 section
 
@@ -209,24 +209,25 @@ attribute [local tidy] tactic.discrete_cases
 /-- The total object of a graded object is the coproduct of the graded components.
 -/
 noncomputable def total : GradedObject β C ⥤ C where
-  obj := fun X => ∐ fun i : ULift.{v} β => X i.down
-  map := fun X Y f => Limits.Sigma.map fun i => f i.down
+  obj := fun X => ∐ fun i : β => X i
+  map := fun X Y f => Limits.Sigma.map fun i => f i
 
 end
 
 variable [HasZeroMorphisms C]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The `total` functor taking a graded object to the coproduct of its graded components is faithful.
 To prove this, we need to know that the coprojections into the coproduct are monomorphisms,
 which follows from the fact we have zero morphisms and decidable equality for the grading.
 -/
-instance : Faithful (total β C) where
-  map_injective' := fun X Y f g w => by
+instance :
+    Faithful (total β C) where map_injective' := fun X Y f g w => by
     classical
     ext i
-    replace w := sigma.ι (fun i : ULift.{v} β => X i.down) ⟨i⟩ ≫= w
+    replace w := sigma.ι (fun i : β => X i) i ≫= w
     erw [colimit.ι_map, colimit.ι_map] at w
+    simp at *
     exact mono.right_cancellation _ _ w
 
 end GradedObject
@@ -237,13 +238,11 @@ noncomputable section
 
 variable (β : Type)
 
-variable (C : Type (u + 1)) [LargeCategory C] [ConcreteCategory C] [HasCoproducts C] [HasZeroMorphisms C]
+variable (C : Type (u + 1)) [LargeCategory C] [ConcreteCategory C] [HasCoproducts.{0} C] [HasZeroMorphisms C]
 
-instance : ConcreteCategory (GradedObject β C) where
-  forget := total β C ⋙ forget C
+instance : ConcreteCategory (GradedObject β C) where forget := total β C ⋙ forget C
 
-instance : HasForget₂ (GradedObject β C) C where
-  forget₂ := total β C
+instance : HasForget₂ (GradedObject β C) C where forget₂ := total β C
 
 end GradedObject
 

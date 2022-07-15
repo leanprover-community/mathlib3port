@@ -45,8 +45,8 @@ def Liftp {α : Typevec n} (p : ∀ i, α i → Prop) (x : F α) : Prop :=
 /-- relational lifting over multivariate functors -/
 def Liftr {α : Typevec n} (r : ∀ {i}, α i → α i → Prop) (x y : F α) : Prop :=
   ∃ u : F fun i => { p : α i × α i // r p.fst p.snd },
-    (fun t : { p : α i × α i // r p.fst p.snd } => t.val.fst) <$$> u = x ∧
-      (fun t : { p : α i × α i // r p.fst p.snd } => t.val.snd) <$$> u = y
+    (fun i t : { p : α i × α i // r p.fst p.snd } => t.val.fst) <$$> u = x ∧
+      (fun i t : { p : α i × α i // r p.fst p.snd } => t.val.snd) <$$> u = y
 
 /-- given `x : F α` and a projection `i` of type vector `α`, `supp x i` is the set
 of `α.i` contained in `x` -/
@@ -108,7 +108,7 @@ theorem exists_iff_exists_of_mono {p : F α → Prop} {q : F β → Prop} (f : �
   · apply (h₁ u).mp h₂
     
   · apply (h₁ _).mpr _
-    simp only [Mvfunctor.map_map, h₀, IsLawfulMvfunctor.id_map, h₂]
+    simp only [← Mvfunctor.map_map, ← h₀, ← IsLawfulMvfunctor.id_map, ← h₂]
     
 
 variable {F}
@@ -116,7 +116,7 @@ variable {F}
 theorem liftp_def (x : F α) : Liftp' p x ↔ ∃ u : F (Subtype_ p), subtypeVal p <$$> u = x :=
   exists_iff_exists_of_mono F _ _ (to_subtype_of_subtype p)
     (by
-      simp [Mvfunctor.map_map])
+      simp [← Mvfunctor.map_map])
 
 theorem liftr_def (x y : F α) :
     Liftr' r x y ↔
@@ -124,7 +124,7 @@ theorem liftr_def (x y : F α) :
         (Typevec.Prod.fst ⊚ subtypeVal r) <$$> u = x ∧ (Typevec.Prod.snd ⊚ subtypeVal r) <$$> u = y :=
   exists_iff_exists_of_mono _ _ _ (to_subtype'_of_subtype' r)
     (by
-      simp only [map_map, comp_assoc, subtype_val_to_subtype'] <;> simp [comp])
+      simp only [← map_map, ← comp_assoc, ← subtype_val_to_subtype'] <;> simp [← comp])
 
 end Liftp'
 
@@ -156,7 +156,7 @@ private def f :
     ⟨x.val,
       cast
         (by
-          simp only [pred_last] <;> erw [const_iff_true])
+          simp only [← pred_last] <;> erw [const_iff_true])
         x.property⟩
   | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
 
@@ -168,13 +168,13 @@ private def g :
     ⟨x.val,
       cast
         (by
-          simp only [pred_last] <;> erw [const_iff_true])
+          simp only [← pred_last] <;> erw [const_iff_true])
         x.property⟩
   | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
 
 theorem liftp_last_pred_iff {β} (p : β → Prop) (x : F (α ::: β)) : Liftp' (predLast' _ p) x ↔ Liftp (PredLast _ p) x :=
   by
-  dsimp' only [liftp, liftp']
+  dsimp' only [← liftp, ← liftp']
   apply exists_iff_exists_of_mono F (f _ n α) (g _ n α)
   · clear x _inst_2 _inst_1 F
     ext i ⟨x, _⟩
@@ -197,7 +197,7 @@ private def f :
     ⟨x.val,
       cast
         (by
-          simp only [rel_last] <;> erw [repeat_eq_iff_eq])
+          simp only [← rel_last] <;> erw [repeat_eq_iff_eq])
         x.property⟩
   | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
 
@@ -209,12 +209,12 @@ private def g :
     ⟨x.val,
       cast
         (by
-          simp only [rel_last] <;> erw [repeat_eq_iff_eq])
+          simp only [← rel_last] <;> erw [repeat_eq_iff_eq])
         x.property⟩
   | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
 
 theorem liftr_last_rel_iff (x y : F (α ::: β)) : Liftr' (relLast' _ rr) x y ↔ Liftr (RelLast _ rr) x y := by
-  dsimp' only [liftr, liftr']
+  dsimp' only [← liftr, ← liftr']
   apply exists_iff_exists_of_mono F (f rr _ _) (g rr _ _)
   · clear x y _inst_2 _inst_1 F
     ext i ⟨x, _⟩ : 2

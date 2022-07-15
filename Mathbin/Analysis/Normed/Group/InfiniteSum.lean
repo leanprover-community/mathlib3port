@@ -39,7 +39,7 @@ theorem cauchy_seq_finset_iff_vanishing_norm {f : ι → E} :
       ∀, ∀ ε > (0 : ℝ), ∀, ∃ s : Finset ι, ∀ t, Disjoint t s → ∥∑ i in t, f i∥ < ε :=
   by
   rw [cauchy_seq_finset_iff_vanishing, nhds_basis_ball.forall_iff]
-  · simp only [ball_zero_eq, Set.mem_set_of_eq]
+  · simp only [← ball_zero_eq, ← Set.mem_set_of_eq]
     
   · rintro s t hst ⟨s', hs'⟩
     exact ⟨s', fun t' ht' => hst <| hs' _ ht'⟩
@@ -56,7 +56,7 @@ theorem cauchy_seq_finset_of_norm_bounded_eventually {f : ι → E} {g : ι → 
   refine' ⟨s ∪ h.to_finset, fun t ht => _⟩
   have : ∀, ∀ i ∈ t, ∀, ∥f i∥ ≤ g i := by
     intro i hi
-    simp only [disjoint_left, mem_union, not_or_distrib, h.mem_to_finset, Set.mem_compl_iff, not_not] at ht
+    simp only [← disjoint_left, ← mem_union, ← not_or_distrib, ← h.mem_to_finset, ← Set.mem_compl_iff, ← not_not] at ht
     exact (ht hi).2
   calc ∥∑ i in t, f i∥ ≤ ∑ i in t, g i := norm_sum_le_of_le _ this _ ≤ ∥∑ i in t, g i∥ := le_abs_self _ _ < ε :=
       hs _ (ht.mono_right le_sup_left)
@@ -125,7 +125,7 @@ do not assume that `∑' i, f i` is summable, and it might not be the case if `�
 space. -/
 theorem tsum_of_nnnorm_bounded {f : ι → E} {g : ι → ℝ≥0 } {a : ℝ≥0 } (hg : HasSum g a) (h : ∀ i, ∥f i∥₊ ≤ g i) :
     ∥∑' i : ι, f i∥₊ ≤ a := by
-  simp only [← Nnreal.coe_le_coe, ← Nnreal.has_sum_coe, coe_nnnorm] at *
+  simp only [Nnreal.coe_le_coe, Nnreal.has_sum_coe, ← coe_nnnorm] at *
   exact tsum_of_norm_bounded hg h
 
 /-- If `∑' i, ∥f i∥₊` is summable, then `∥∑' i, f i∥₊ ≤ ∑' i, ∥f i∥₊`. Note that

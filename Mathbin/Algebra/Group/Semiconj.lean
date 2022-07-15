@@ -29,6 +29,8 @@ operations (`pow_right`, field inverse etc) are in the files that define corresp
 
 universe u v
 
+variable {G : Type _}
+
 /-- `x` is semiconjugate to `y` by `a`, if `a * x = y * a`. -/
 @[to_additive AddSemiconjBy "`x` is additive semiconjugate to `y` by `a` if `a + x = y + a`"]
 def SemiconjBy {M : Type u} [Mul M] (a x y : M) : Prop :=
@@ -144,9 +146,24 @@ theorem pow_right {a x y : M} (h : SemiconjBy a x y) (n : ℕ) : SemiconjBy a (x
 
 end Monoidₓ
 
+section DivisionMonoid
+
+variable [DivisionMonoid G] {a x y : G}
+
+@[simp, to_additive]
+theorem inv_inv_symm_iff : SemiconjBy a⁻¹ x⁻¹ y⁻¹ ↔ SemiconjBy a y x :=
+  inv_involutive.Injective.eq_iff.symm.trans <| by
+    simp_rw [mul_inv_rev, inv_invₓ, eq_comm, SemiconjBy]
+
+@[to_additive]
+theorem inv_inv_symm : SemiconjBy a x y → SemiconjBy a⁻¹ y⁻¹ x⁻¹ :=
+  inv_inv_symm_iff.2
+
+end DivisionMonoid
+
 section Groupₓ
 
-variable {G : Type u} [Groupₓ G] {a x y : G}
+variable [Groupₓ G] {a x y : G}
 
 @[simp, to_additive]
 theorem inv_right_iff : SemiconjBy a x⁻¹ y⁻¹ ↔ SemiconjBy a x y :=
@@ -163,15 +180,6 @@ theorem inv_symm_left_iff : SemiconjBy a⁻¹ y x ↔ SemiconjBy a x y :=
 @[to_additive]
 theorem inv_symm_left : SemiconjBy a x y → SemiconjBy a⁻¹ y x :=
   inv_symm_left_iff.2
-
-@[to_additive]
-theorem inv_inv_symm (h : SemiconjBy a x y) : SemiconjBy a⁻¹ y⁻¹ x⁻¹ :=
-  h.inv_right.inv_symm_left
-
--- this is not a simp lemma because it can be deduced from other simp lemmas
-@[to_additive]
-theorem inv_inv_symm_iff : SemiconjBy a⁻¹ y⁻¹ x⁻¹ ↔ SemiconjBy a x y :=
-  inv_right_iff.trans inv_symm_left_iff
 
 /-- `a` semiconjugates `x` to `a * x * a⁻¹`. -/
 @[to_additive "`a` semiconjugates `x` to `a + x + -a`."]

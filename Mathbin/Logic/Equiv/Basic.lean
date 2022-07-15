@@ -310,8 +310,8 @@ theorem cast_eq_iff_heq {α β} (h : α = β) {a : α} {b : β} : Equivₓ.cast 
 
 theorem symm_apply_eq {α β} (e : α ≃ β) {x y} : e.symm x = y ↔ x = e y :=
   ⟨fun H => by
-    simp [H.symm], fun H => by
-    simp [H]⟩
+    simp [← H.symm], fun H => by
+    simp [← H]⟩
 
 theorem eq_symm_apply {α β} (e : α ≃ β) {x y} : y = e.symm x ↔ e y = x :=
   (eq_comm.trans e.symm_apply_eq).trans eq_comm
@@ -425,7 +425,7 @@ theorem perm_congr_def (p : Equivₓ.Perm α') : e.permCongr p = (e.symm.trans p
 
 @[simp]
 theorem perm_congr_refl : e.permCongr (Equivₓ.refl _) = Equivₓ.refl _ := by
-  simp [perm_congr_def]
+  simp [← perm_congr_def]
 
 @[simp]
 theorem perm_congr_symm : e.permCongr.symm = e.symm.permCongr :=
@@ -498,6 +498,14 @@ def pprodEquivProd {α β : Type _} : PProd α β ≃ α × β where
   left_inv := fun ⟨x, y⟩ => rfl
   right_inv := fun ⟨x, y⟩ => rfl
 
+/-- `pprod α β` is equivalent to `plift α × plift β` -/
+@[simps apply symmApply]
+def pprodEquivProdPlift {α β : Sort _} : PProd α β ≃ Plift α × Plift β where
+  toFun := fun x => (Plift.up x.1, Plift.up x.2)
+  invFun := fun x => ⟨x.1.down, x.2.down⟩
+  left_inv := fun ⟨x, y⟩ => rfl
+  right_inv := fun ⟨⟨x⟩, ⟨y⟩⟩ => rfl
+
 /-- equivalence of propositions is the same as iff -/
 def ofIff {P Q : Prop} (h : P ↔ Q) : P ≃ Q where
   toFun := h.mp
@@ -521,7 +529,7 @@ def arrowCongr {α₁ β₁ α₂ β₂ : Sort _} (e₁ : α₁ ≃ α₂) (e₂
 theorem arrow_congr_comp {α₁ β₁ γ₁ α₂ β₂ γ₂ : Sort _} (ea : α₁ ≃ α₂) (eb : β₁ ≃ β₂) (ec : γ₁ ≃ γ₂) (f : α₁ → β₁)
     (g : β₁ → γ₁) : arrowCongr ea ec (g ∘ f) = arrowCongr eb ec g ∘ arrowCongr ea eb f := by
   ext
-  simp only [comp, arrow_congr_apply, eb.symm_apply_apply]
+  simp only [← comp, ← arrow_congr_apply, ← eb.symm_apply_apply]
 
 @[simp]
 theorem arrow_congr_refl {α β : Sort _} : arrowCongr (Equivₓ.refl α) (Equivₓ.refl β) = Equivₓ.refl (α → β) :=
@@ -733,6 +741,14 @@ def punitProd (α : Type _) : PUnit.{u + 1} × α ≃ α :=
     PUnit × α ≃ α × PUnit := prodComm _ _
     _ ≃ α := prodPunit _
     
+
+/-- Any `unique` type is a right identity for type product up to equivalence. -/
+def prodUnique (α β : Type _) [Unique β] : α × β ≃ α :=
+  ((Equivₓ.refl α).prodCongr <| equivPunit β).trans <| prodPunit α
+
+/-- Any `unique` type is a left identity for type product up to equivalence. -/
+def uniqueProd (α β : Type _) [Unique β] : β × α ≃ α :=
+  ((equivPunit β).prodCongr <| Equivₓ.refl α).trans <| punitProd α
 
 /-- `empty` type is a right absorbing element for type product up to an equivalence. -/
 def prodEmpty (α : Type _) : α × Empty ≃ Empty :=
@@ -1011,11 +1027,11 @@ def Perm.subtypeCongr : Equivₓ.Perm ε :=
   permCongr (sumCompl p) (sumCongr ep en)
 
 theorem Perm.subtypeCongr.apply (a : ε) : ep.subtypeCongr en a = if h : p a then ep ⟨a, h⟩ else en ⟨a, h⟩ := by
-  by_cases' h : p a <;> simp [perm.subtype_congr, h]
+  by_cases' h : p a <;> simp [← perm.subtype_congr, ← h]
 
 @[simp]
 theorem Perm.subtypeCongr.left_apply {a : ε} (h : p a) : ep.subtypeCongr en a = ep ⟨a, h⟩ := by
-  simp [perm.subtype_congr.apply, h]
+  simp [← perm.subtype_congr.apply, ← h]
 
 @[simp]
 theorem Perm.subtypeCongr.left_apply_subtype (a : { a // p a }) : ep.subtypeCongr en a = ep a := by
@@ -1024,7 +1040,7 @@ theorem Perm.subtypeCongr.left_apply_subtype (a : { a // p a }) : ep.subtypeCong
 
 @[simp]
 theorem Perm.subtypeCongr.right_apply {a : ε} (h : ¬p a) : ep.subtypeCongr en a = en ⟨a, h⟩ := by
-  simp [perm.subtype_congr.apply, h]
+  simp [← perm.subtype_congr.apply, ← h]
 
 @[simp]
 theorem Perm.subtypeCongr.right_apply_subtype (a : { a // ¬p a }) : ep.subtypeCongr en a = en a := by
@@ -1035,17 +1051,17 @@ theorem Perm.subtypeCongr.right_apply_subtype (a : { a // ¬p a }) : ep.subtypeC
 theorem Perm.subtypeCongr.refl :
     Perm.subtypeCongr (Equivₓ.refl { a // p a }) (Equivₓ.refl { a // ¬p a }) = Equivₓ.refl ε := by
   ext x
-  by_cases' h : p x <;> simp [h]
+  by_cases' h : p x <;> simp [← h]
 
 @[simp]
 theorem Perm.subtypeCongr.symm : (ep.subtypeCongr en).symm = Perm.subtypeCongr ep.symm en.symm := by
   ext x
   by_cases' h : p x
   · have : p (ep.symm ⟨x, h⟩) := Subtype.property _
-    simp [perm.subtype_congr.apply, h, symm_apply_eq, this]
+    simp [← perm.subtype_congr.apply, ← h, ← symm_apply_eq, ← this]
     
   · have : ¬p (en.symm ⟨x, h⟩) := Subtype.property (en.symm _)
-    simp [perm.subtype_congr.apply, h, symm_apply_eq, this]
+    simp [← perm.subtype_congr.apply, ← h, ← symm_apply_eq, ← this]
     
 
 @[simp]
@@ -1054,10 +1070,10 @@ theorem Perm.subtypeCongr.trans :
   ext x
   by_cases' h : p x
   · have : p (ep ⟨x, h⟩) := Subtype.property _
-    simp [perm.subtype_congr.apply, h, this]
+    simp [← perm.subtype_congr.apply, ← h, ← this]
     
   · have : ¬p (en ⟨x, h⟩) := Subtype.property (en _)
-    simp [perm.subtype_congr.apply, h, symm_apply_eq, this]
+    simp [← perm.subtype_congr.apply, ← h, ← symm_apply_eq, ← this]
     
 
 end SumCompl
@@ -1071,7 +1087,7 @@ the subtype of functions `x : α → β` that agree with `x₀` on the subtype `
 is naturally equivalent to the type of functions `{a // ¬ p a} → β`. -/
 @[simps]
 def subtypePreimage : { x : α → β // x ∘ coe = x₀ } ≃ ({ a // ¬p a } → β) where
-  toFun := fun a => (x : α → β) a
+  toFun := fun x : { x : α → β // x ∘ coe = x₀ } a => (x : α → β) a
   invFun := fun x => ⟨fun a => if h : p a then x₀ ⟨a, h⟩ else x ⟨a, h⟩, funext fun ⟨a, h⟩ => dif_pos h⟩
   left_inv := fun ⟨x, hx⟩ =>
     Subtype.val_injective <|
@@ -1134,6 +1150,11 @@ section
 @[simps apply symmApply]
 def psigmaEquivSigma {α} (β : α → Type _) : (Σ'i, β i) ≃ Σi, β i :=
   ⟨fun a => ⟨a.1, a.2⟩, fun a => ⟨a.1, a.2⟩, fun ⟨a, b⟩ => rfl, fun ⟨a, b⟩ => rfl⟩
+
+/-- A `psigma`-type is equivalent to the corresponding `sigma`-type. -/
+@[simps apply symmApply]
+def psigmaEquivSigmaPlift {α} (β : α → Sort _) : (Σ'i, β i) ≃ Σi : Plift α, Plift (β i.down) :=
+  ⟨fun a => ⟨Plift.up a.1, Plift.up a.2⟩, fun a => ⟨a.1.down, a.2.down⟩, fun ⟨a, b⟩ => rfl, fun ⟨⟨a⟩, ⟨b⟩⟩ => rfl⟩
 
 /-- A family of equivalences `Π a, β₁ a ≃ β₂ a` generates an equivalence between `Σ' a, β₁ a` and
 `Σ' a, β₂ a`. -/
@@ -1363,10 +1384,10 @@ def prodShear {α₁ β₁ α₂ β₂ : Type _} (e₁ : α₁ ≃ α₂) (e₂ 
   invFun := fun y : α₂ × β₂ => (e₁.symm y.1, (e₂ <| e₁.symm y.1).symm y.2)
   left_inv := by
     rintro ⟨x₁, y₁⟩
-    simp only [symm_apply_apply]
+    simp only [← symm_apply_apply]
   right_inv := by
     rintro ⟨x₁, y₁⟩
-    simp only [apply_symm_apply]
+    simp only [← apply_symm_apply]
 
 end ProdCongr
 
@@ -1382,11 +1403,11 @@ def prodExtendRight : Perm (α₁ × β₁) where
   left_inv := by
     rintro ⟨k', x⟩
     dsimp' only
-    split_ifs with h <;> simp [h]
+    split_ifs with h <;> simp [← h]
   right_inv := by
     rintro ⟨k', x⟩
     dsimp' only
-    split_ifs with h <;> simp [h]
+    split_ifs with h <;> simp [← h]
 
 @[simp]
 theorem prod_extend_right_apply_eq (b : β₁) : prodExtendRight a e (a, b) = (a, e b) :=
@@ -1510,7 +1531,7 @@ def sigmaProdDistrib {ι : Type _} (α : ι → Type _) (β : Type _) : (Σi, α
 def sigmaNatSucc (f : ℕ → Type u) : (Σn, f n) ≃ Sum (f 0) (Σn, f (n + 1)) :=
   ⟨fun x =>
     @Sigma.casesOn ℕ f (fun _ => Sum (f 0) (Σn, f (n + 1))) x fun n =>
-      @Nat.casesOn (fun i => f i → Sum (f 0) (Σn : ℕ, f (n + 1))) n (fun x : f 0 => Sum.inl x) fun x : f n.succ =>
+      @Nat.casesOn (fun i => f i → Sum (f 0) (Σn : ℕ, f (n + 1))) n (fun x : f 0 => Sum.inl x) fun n : ℕ x : f n.succ =>
         Sum.inr ⟨n, x⟩,
     Sum.elim (Sigma.mk 0) (Sigma.map Nat.succ fun _ => id), by
     rintro ⟨n | n, x⟩ <;> rfl, by
@@ -1666,45 +1687,27 @@ def subtypeEquivProp {α : Type _} {p q : α → Prop} (h : p = q) : Subtype p �
 
 /-- A subtype of a subtype is equivalent to the subtype of elements satisfying both predicates. This
 version allows the “inner” predicate to depend on `h : p a`. -/
+@[simps]
 def subtypeSubtypeEquivSubtypeExists {α : Type u} (p : α → Prop) (q : Subtype p → Prop) :
     Subtype q ≃ { a : α // ∃ h : p a, q ⟨a, h⟩ } :=
-  ⟨fun ⟨⟨a, ha⟩, ha'⟩ => ⟨a, ha, ha'⟩, fun ⟨a, ha⟩ =>
-    ⟨⟨a, ha.casesOn fun h _ => h⟩, by
-      cases ha
-      exact ha_h⟩,
-    fun ⟨⟨a, ha⟩, h⟩ => rfl, fun ⟨a, h₁, h₂⟩ => rfl⟩
-
-@[simp]
-theorem subtype_subtype_equiv_subtype_exists_apply {α : Type u} (p : α → Prop) (q : Subtype p → Prop) a :
-    (subtypeSubtypeEquivSubtypeExists p q a : α) = a := by
-  cases a
-  cases a_val
-  rfl
+  ⟨fun a =>
+    ⟨a, a.1.2, by
+      rcases a with ⟨⟨a, hap⟩, haq⟩
+      exact haq⟩,
+    fun a => ⟨⟨a, a.2.fst⟩, a.2.snd⟩, fun ⟨⟨a, ha⟩, h⟩ => rfl, fun ⟨a, h₁, h₂⟩ => rfl⟩
 
 /-- A subtype of a subtype is equivalent to the subtype of elements satisfying both predicates. -/
+@[simps]
 def subtypeSubtypeEquivSubtypeInter {α : Type u} (p q : α → Prop) :
     { x : Subtype p // q x.1 } ≃ Subtype fun x => p x ∧ q x :=
   (subtypeSubtypeEquivSubtypeExists p _).trans <| subtype_equiv_right fun x => exists_prop
 
-@[simp]
-theorem subtype_subtype_equiv_subtype_inter_apply {α : Type u} (p q : α → Prop) a :
-    (subtypeSubtypeEquivSubtypeInter p q a : α) = a := by
-  cases a
-  cases a_val
-  rfl
-
 /-- If the outer subtype has more restrictive predicate than the inner one,
 then we can drop the latter. -/
+@[simps]
 def subtypeSubtypeEquivSubtype {α : Type u} {p q : α → Prop} (h : ∀ {x}, q x → p x) :
     { x : Subtype p // q x.1 } ≃ Subtype q :=
-  (subtypeSubtypeEquivSubtypeInter p _).trans <| subtype_equiv_right fun x => ⟨And.right, fun h₁ => ⟨h h₁, h₁⟩⟩
-
-@[simp]
-theorem subtype_subtype_equiv_subtype_apply {α : Type u} {p q : α → Prop} (h : ∀ x, q x → p x)
-    (a : { x : Subtype p // q x.1 }) : (subtypeSubtypeEquivSubtype h a : α) = a := by
-  cases a
-  cases a_val
-  rfl
+  (subtypeSubtypeEquivSubtypeInter p _).trans <| subtype_equiv_right fun x => and_iff_right_of_imp h
 
 /-- If a proposition holds for all elements, then the subtype is
 equivalent to the original type. -/
@@ -1750,7 +1753,7 @@ def sigmaSubtypeFiberEquivSubtype {α : Type u} {β : Type v} (f : α → β) {p
 /-- A sigma type over an `option` is equivalent to the sigma set over the original type,
 if the fiber is empty at none. -/
 def sigmaOptionEquivOfSome {α : Type u} (p : Option α → Type v) (h : p none → False) :
-    (Σx : Option α, p x) ≃ Σx : α, p (some x) :=
+    (Σx : Option α, p x) ≃ Σx : α, p (some x) := by
   have h' : ∀ x, p x → x.isSome := by
     intro x
     cases x
@@ -1761,7 +1764,7 @@ def sigmaOptionEquivOfSome {α : Type u} (p : Option α → Type v) (h : p none 
     · intro s
       exact rfl
       
-  (sigma_subtype_equiv_of_subset _ _ h').symm.trans (sigma_congr_left' (option_is_some_equiv α))
+  exact (sigma_subtype_equiv_of_subset _ _ h').symm.trans (sigma_congr_left' (option_is_some_equiv α))
 
 /-- The `pi`-type `Π i, π i` is equivalent to the type of sections `f : ι → Σ i, π i` of the
 `sigma` type such that for all `i` we have `(f i).fst = i`. -/
@@ -1811,13 +1814,13 @@ def piEquivPiSubtypeProd {α : Type _} (p : α → Prop) (β : α → Type _) [D
     ext1 <;>
       · ext y
         rcases y with ⟨⟩
-        simp only [y_property, dif_pos, dif_neg, not_false_iff, Subtype.coe_mk]
+        simp only [← y_property, ← dif_pos, ← dif_neg, ← not_false_iff, ← Subtype.coe_mk]
         rfl
         
   left_inv := fun f => by
     ext x
     by_cases' h : p x <;>
-      · simp only [h, dif_neg, dif_pos, not_false_iff]
+      · simp only [← h, ← dif_neg, ← dif_pos, ← not_false_iff]
         rfl
         
 
@@ -1907,17 +1910,17 @@ def Perm.extendDomain : Perm β' :=
 
 @[simp]
 theorem Perm.extend_domain_apply_image (a : α') : e.extendDomain f (f a) = f (e a) := by
-  simp [perm.extend_domain]
+  simp [← perm.extend_domain]
 
 theorem Perm.extend_domain_apply_subtype {b : β'} (h : p b) : e.extendDomain f b = f (e (f.symm ⟨b, h⟩)) := by
-  simp [perm.extend_domain, h]
+  simp [← perm.extend_domain, ← h]
 
 theorem Perm.extend_domain_apply_not_subtype {b : β'} (h : ¬p b) : e.extendDomain f b = b := by
-  simp [perm.extend_domain, h]
+  simp [← perm.extend_domain, ← h]
 
 @[simp]
 theorem Perm.extend_domain_refl : Perm.extendDomain (Equivₓ.refl _) f = Equivₓ.refl _ := by
-  simp [perm.extend_domain]
+  simp [← perm.extend_domain]
 
 @[simp]
 theorem Perm.extend_domain_symm : (e.extendDomain f).symm = Perm.extendDomain e.symm f :=
@@ -1925,7 +1928,7 @@ theorem Perm.extend_domain_symm : (e.extendDomain f).symm = Perm.extendDomain e.
 
 theorem Perm.extend_domain_trans (e e' : Perm α') :
     (e.extendDomain f).trans (e'.extendDomain f) = Perm.extendDomain (e.trans e') f := by
-  simp [perm.extend_domain, perm_congr_trans]
+  simp [← perm.extend_domain, ← perm_congr_trans]
 
 end
 
@@ -2003,10 +2006,10 @@ theorem swap_apply_left (a b : α) : swap a b a = b :=
 
 @[simp]
 theorem swap_apply_right (a b : α) : swap a b b = a := by
-  by_cases' h : b = a <;> simp [swap_apply_def, h]
+  by_cases' h : b = a <;> simp [← swap_apply_def, ← h]
 
 theorem swap_apply_of_ne_of_ne {a b x : α} : x ≠ a → x ≠ b → swap a b x = x := by
-  simp (config := { contextual := true })[swap_apply_def]
+  simp (config := { contextual := true })[← swap_apply_def]
 
 @[simp]
 theorem swap_swap (a b : α) : (swap a b).trans (swap a b) = Equivₓ.refl _ :=
@@ -2040,7 +2043,7 @@ theorem symm_trans_swap_trans [DecidableEq β] (a b : α) (e : α ≃ β) :
     have : ∀ a, e.symm x = a ↔ x = e a := fun a => by
       rw [@eq_comm _ (e.symm x)]
       constructor <;> intros <;> simp_all
-    simp [swap_apply_def, this]
+    simp [← swap_apply_def, ← this]
     split_ifs <;> simp
 
 @[simp]
@@ -2067,15 +2070,15 @@ theorem swap_apply_eq_iff {x y z w : α} : swap x y z = w ↔ z = swap x y w := 
 
 theorem swap_apply_ne_self_iff {a b x : α} : swap a b x ≠ x ↔ a ≠ b ∧ (x = a ∨ x = b) := by
   by_cases' hab : a = b
-  · simp [hab]
+  · simp [← hab]
     
   by_cases' hax : x = a
-  · simp [hax, eq_comm]
+  · simp [← hax, ← eq_comm]
     
   by_cases' hbx : x = b
-  · simp [hbx]
+  · simp [← hbx]
     
-  simp [hab, hax, hbx, swap_apply_of_ne_of_ne]
+  simp [← hab, ← hax, ← hbx, ← swap_apply_of_ne_of_ne]
 
 namespace Perm
 
@@ -2084,10 +2087,10 @@ theorem sum_congr_swap_refl {α β : Sort _} [DecidableEq α] [DecidableEq β] (
     Equivₓ.Perm.sumCongr (Equivₓ.swap i j) (Equivₓ.refl β) = Equivₓ.swap (Sum.inl i) (Sum.inl j) := by
   ext x
   cases x
-  · simp [Sum.map, swap_apply_def]
+  · simp [← Sum.map, ← swap_apply_def]
     split_ifs <;> rfl
     
-  · simp [Sum.map, swap_apply_of_ne_of_ne]
+  · simp [← Sum.map, ← swap_apply_of_ne_of_ne]
     
 
 @[simp]
@@ -2095,9 +2098,9 @@ theorem sum_congr_refl_swap {α β : Sort _} [DecidableEq α] [DecidableEq β] (
     Equivₓ.Perm.sumCongr (Equivₓ.refl α) (Equivₓ.swap i j) = Equivₓ.swap (Sum.inr i) (Sum.inr j) := by
   ext x
   cases x
-  · simp [Sum.map, swap_apply_of_ne_of_ne]
+  · simp [← Sum.map, ← swap_apply_of_ne_of_ne]
     
-  · simp [Sum.map, swap_apply_def]
+  · simp [← Sum.map, ← swap_apply_def]
     split_ifs <;> rfl
     
 
@@ -2109,8 +2112,8 @@ def setValue (f : α ≃ β) (a : α) (b : β) : α ≃ β :=
 
 @[simp]
 theorem set_value_eq (f : α ≃ β) (a : α) (b : β) : setValue f a b a = b := by
-  dsimp' [set_value]
-  simp [swap_apply_left]
+  dsimp' [← set_value]
+  simp [← swap_apply_left]
 
 end Swap
 
@@ -2345,10 +2348,10 @@ end Equivₓ
 theorem Function.Injective.swap_apply [DecidableEq α] [DecidableEq β] {f : α → β} (hf : Function.Injective f)
     (x y z : α) : Equivₓ.swap (f x) (f y) (f z) = f (Equivₓ.swap x y z) := by
   by_cases' hx : z = x
-  · simp [hx]
+  · simp [← hx]
     
   by_cases' hy : z = y
-  · simp [hy]
+  · simp [← hy]
     
   rw [Equivₓ.swap_apply_of_ne_of_ne hx hy, Equivₓ.swap_apply_of_ne_of_ne (hf.ne hx) (hf.ne hy)]
 
@@ -2393,11 +2396,11 @@ protected def congr {ra : α → α → Prop} {rb : β → β → Prop} (e : α 
   left_inv := by
     rintro ⟨a⟩
     dunfold Quot.map
-    simp only [Equivₓ.symm_apply_apply]
+    simp only [← Equivₓ.symm_apply_apply]
   right_inv := by
     rintro ⟨a⟩
     dunfold Quot.map
-    simp only [Equivₓ.apply_symm_apply]
+    simp only [← Equivₓ.apply_symm_apply]
 
 @[simp]
 theorem congr_mk {ra : α → α → Prop} {rb : β → β → Prop} (e : α ≃ β) (eq : ∀ a₁ a₂ : α, ra a₁ a₂ ↔ rb (e a₁) (e a₂))
@@ -2413,7 +2416,7 @@ protected def congrRight {r r' : α → α → Prop} (eq : ∀ a₁ a₂, r a₁
 by a relation `ra` and the quotient space of `β` by the image of this relation under `e`. -/
 protected def congrLeft {r : α → α → Prop} (e : α ≃ β) : Quot r ≃ Quot fun b b' => r (e.symm b) (e.symm b') :=
   @Quot.congr α β r (fun b b' => r (e.symm b) (e.symm b')) e fun a₁ a₂ => by
-    simp only [e.symm_apply_apply]
+    simp only [← e.symm_apply_apply]
 
 end Quot
 
@@ -2455,13 +2458,13 @@ theorem Pi_congr_left'_update [DecidableEq α] [DecidableEq β] (P : α → Sort
   rcases eq_or_ne b' b with (rfl | h)
   · simp
     
-  · simp [h]
+  · simp [← h]
     
 
 theorem Pi_congr_left'_symm_update [DecidableEq α] [DecidableEq β] (P : α → Sort _) (e : α ≃ β) (f : ∀ b, P (e.symm b))
     (b : β) (x : P (e.symm b)) :
     (e.piCongrLeft' P).symm (update f b x) = update ((e.piCongrLeft' P).symm f) (e.symm b) x := by
-  simp [(e.Pi_congr_left' P).symm_apply_eq, Pi_congr_left'_update]
+  simp [← (e.Pi_congr_left' P).symm_apply_eq, ← Pi_congr_left'_update]
 
 end Function
 

@@ -88,11 +88,10 @@ irreducible_def of (Z : C) : ProjectiveResolution Z :=
           ,
     Epi := Projective.π_epi Z }
 
-instance (priority := 100) (Z : C) : HasProjectiveResolution Z where
-  out := ⟨of Z⟩
+instance (priority := 100) (Z : C) : HasProjectiveResolution Z where out := ⟨of Z⟩
 
-instance (priority := 100) : HasProjectiveResolutions C where
-  out := fun Z => by
+instance (priority := 100) :
+    HasProjectiveResolutions C where out := fun Z => by
     infer_instance
 
 end ProjectiveResolution

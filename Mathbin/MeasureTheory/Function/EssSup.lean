@@ -61,10 +61,10 @@ variable [ConditionallyCompleteLinearOrder β]
 
 theorem ess_sup_eq_Inf {m : MeasurableSpace α} (μ : Measureₓ α) (f : α → β) :
     essSup f μ = inf { a | μ { x | a < f x } = 0 } := by
-  dsimp' [essSup, limsup, Limsup]
+  dsimp' [← essSup, ← limsup, ← Limsup]
   congr
   ext a
-  simp [eventually_map, ae_iff]
+  simp [← eventually_map, ← ae_iff]
 
 end ConditionallyCompleteLinearOrder
 
@@ -77,7 +77,7 @@ theorem ess_sup_measure_zero {m : MeasurableSpace α} {f : α → β} : essSup f
   le_bot_iff.mp
     (Inf_le
       (by
-        simp [Set.mem_set_of_eq, eventually_le, ae_iff]))
+        simp [← Set.mem_set_of_eq, ← eventually_le, ← ae_iff]))
 
 @[simp]
 theorem ess_inf_measure_zero {m : MeasurableSpace α} {f : α → β} : essInf f (0 : Measureₓ α) = ⊤ :=
@@ -89,15 +89,15 @@ theorem ess_sup_mono_ae {f g : α → β} (hfg : f ≤ᵐ[μ] g) : essSup f μ �
 theorem ess_inf_mono_ae {f g : α → β} (hfg : f ≤ᵐ[μ] g) : essInf f μ ≤ essInf g μ :=
   liminf_le_liminf hfg
 
-theorem ess_sup_const (c : β) (hμ : μ ≠ 0) : essSup (fun x : α => c) μ = c :=
+theorem ess_sup_const (c : β) (hμ : μ ≠ 0) : essSup (fun x : α => c) μ = c := by
   have hμ_ne_bot : μ.ae.ne_bot := by
     rwa [ne_bot_iff, Ne.def, ae_eq_bot]
-  limsup_const c
+  exact limsup_const c
 
 theorem ess_sup_le_of_ae_le {f : α → β} (c : β) (hf : f ≤ᵐ[μ] fun _ => c) : essSup f μ ≤ c := by
   refine' (ess_sup_mono_ae hf).trans _
   by_cases' hμ : μ = 0
-  · simp [hμ]
+  · simp [← hμ]
     
   · rwa [ess_sup_const]
     
@@ -148,7 +148,7 @@ theorem ess_sup_smul_measure {f : α → β} {c : ℝ≥0∞} (hc : c ≠ 0) : e
     
   ext1
   simp_rw [mem_ae_iff]
-  simp [hc]
+  simp [← hc]
 
 section TopologicalSpace
 
@@ -272,9 +272,9 @@ theorem ess_sup_indicator_eq_ess_sup_restrict [Zero β] {s : Set α} {f : α →
     exact ⟨hxf_nonneg hxs, hxs_imp_c hxs⟩
   refine' h_restrict_le.mono fun x hxc => _
   by_cases' hxs : x ∈ s
-  · simpa [hxs] using hxc hxs
+  · simpa [← hxs] using hxc hxs
     
-  · simpa [hxs] using hc
+  · simpa [← hxs] using hc
     
 
 end CompleteLinearOrder

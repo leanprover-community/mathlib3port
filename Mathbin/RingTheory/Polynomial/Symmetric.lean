@@ -142,64 +142,36 @@ theorem esymm_eq_sum_subtype (n : ℕ) : esymm σ R n = ∑ t : { s : Finset σ 
   refine' sum_bij i (fun a ha => mem_univ (i a ha)) _ (fun _ _ _ _ hi => subtype.ext_iff_val.mp hi) _
   · intros
     apply prod_congr
-    simp only [Subtype.coe_mk]
+    simp only [← Subtype.coe_mk]
     intros
     rfl
     
   · refine' fun b H => ⟨b.val, mem_powerset_len.mpr ⟨subset_univ b.val, b.property⟩, _⟩
-    simp [i]
+    simp [← i]
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- We can define `esymm σ R n` as a sum over explicit monomials -/
 theorem esymm_eq_sum_monomial (n : ℕ) :
     esymm σ R n = ∑ t in powersetLen n univ, monomial (∑ i in t, Finsupp.single i 1) 1 := by
-  refine' sum_congr rfl fun x hx => _
-  rw [monic_monomial_eq]
-  rw [Finsupp.prod_pow]
-  rw [← prod_subset (fun y _ => Finset.mem_univ y : x ⊆ univ) fun y _ hy => _]
-  · refine' prod_congr rfl fun x' hx' => _
-    convert (pow_oneₓ _).symm
-    convert (Finsupp.applyAddHom x' : (σ →₀ ℕ) →+ ℕ).map_sum _ x
-    classical
-    simp [Finsupp.single_apply, Finset.filter_eq', apply_ite, apply_ite Finset.card]
-    rw [if_pos]
-    exact hx'
-    
-  · convert pow_zeroₓ _
-    convert (Finsupp.applyAddHom y : (σ →₀ ℕ) →+ ℕ).map_sum _ x
-    classical
-    simp [Finsupp.single_apply, Finset.filter_eq', apply_ite, apply_ite Finset.card]
-    rw [if_neg]
-    exact hy
-    
+  simp_rw [monomial_sum_one]
+  rfl
 
 @[simp]
 theorem esymm_zero : esymm σ R 0 = 1 := by
-  simp only [esymm, powerset_len_zero, sum_singleton, prod_empty]
+  simp only [← esymm, ← powerset_len_zero, ← sum_singleton, ← prod_empty]
 
 theorem map_esymm (n : ℕ) (f : R →+* S) : map f (esymm σ R n) = esymm σ S n := by
-  rw [esymm, (map f).map_sum]
-  refine' sum_congr rfl fun x hx => _
-  rw [(map f).map_prod]
-  simp
+  simp_rw [esymm, map_sum, map_prod, map_X]
 
-theorem rename_esymm (n : ℕ) (e : σ ≃ τ) : rename e (esymm σ R n) = esymm τ R n := by
-  rw [esymm_eq_sum_subtype, esymm_eq_sum_subtype, (rename ⇑e).map_sum]
-  let e' : { s : Finset σ // s.card = n } ≃ { s : Finset τ // s.card = n } :=
-    Equivₓ.subtypeEquiv (Equivₓ.finsetCongr e)
-      (by
-        simp )
-  rw [← Equivₓ.sum_comp e'.symm]
-  apply Fintype.sum_congr
-  intro
-  calc _ = ∏ i in (e'.symm a : Finset σ), (rename e) (X i) :=
-      (rename e).map_prod _ _ _ = ∏ i in (a : Finset τ), (rename e) (X (e.symm i)) :=
-      prod_map (a : Finset τ) _ _ _ = _ := _
-  apply Finset.prod_congr rfl
-  intros
-  simp
+theorem rename_esymm (n : ℕ) (e : σ ≃ τ) : rename e (esymm σ R n) = esymm τ R n :=
+  calc
+    rename e (esymm σ R n) = ∑ x in powersetLen n univ, ∏ i in x, x (e i) := by
+      simp_rw [esymm, map_sum, map_prod, rename_X]
+    _ = ∑ t in powersetLen n (univ.map e.toEmbedding), ∏ i in t, x i := by
+      simp [← Finset.powerset_len_map, -Finset.map_univ_equiv]
+    _ = ∑ t in powersetLen n univ, ∏ i in t, x i := by
+      rw [Finset.map_univ_equiv]
+    
 
 theorem esymm_is_symmetric (n : ℕ) : IsSymmetric (esymm σ R n) := by
   intro
@@ -211,19 +183,19 @@ theorem support_esymm'' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
         (Finsupp.single (∑ i : σ in t, Finsupp.single i 1) (1 : R)).support :=
   by
   rw [esymm_eq_sum_monomial]
-  simp only [← single_eq_monomial]
+  simp only [single_eq_monomial]
   convert Finsupp.support_sum_eq_bUnion (powerset_len n (univ : Finset σ)) _
   intro s t hst d
-  simp only [Finsupp.support_single_ne_zero _ one_ne_zero, and_imp, inf_eq_inter, mem_inter, mem_singleton]
+  simp only [← Finsupp.support_single_ne_zero _ one_ne_zero, ← and_imp, ← inf_eq_inter, ← mem_inter, ← mem_singleton]
   rintro h rfl
   have := congr_arg Finsupp.support h
   rw [Finsupp.support_sum_eq_bUnion, Finsupp.support_sum_eq_bUnion] at this
-  · simp only [Finsupp.support_single_ne_zero _ one_ne_zero, bUnion_singleton_eq_self] at this
+  · simp only [← Finsupp.support_single_ne_zero _ one_ne_zero, ← bUnion_singleton_eq_self] at this
     exact absurd this hst.symm
     
   all_goals
     intro x y
-    simp [Finsupp.support_single_disjoint]
+    simp [← Finsupp.support_single_disjoint]
 
 theorem support_esymm' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
     (esymm σ R n).support = (powersetLen n (univ : Finset σ)).bUnion fun t => {∑ i : σ in t, Finsupp.single i 1} := by
@@ -237,19 +209,19 @@ theorem support_esymm (n : ℕ) [DecidableEq σ] [Nontrivial R] :
   rw [support_esymm']
   exact bUnion_singleton
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem degrees_esymm [Nontrivial R] (n : ℕ) (hpos : 0 < n) (hn : n ≤ Fintype.card σ) :
     (esymm σ R n).degrees = (univ : Finset σ).val := by
   classical
   have : (Finsupp.toMultiset ∘ fun t : Finset σ => ∑ i : σ in t, Finsupp.single i 1) = Finset.val := by
     funext
-    simp [Finsupp.to_multiset_sum_single]
+    simp [← Finsupp.to_multiset_sum_single]
   rw [degrees, support_esymm, sup_finset_image, this, ← comp_sup_eq_sup_comp]
   · obtain ⟨k, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hpos.ne'
     simpa using powerset_len_sup _ _ (Nat.lt_of_succ_leₓ hn)
     
   · intros
-    simp only [union_val, sup_eq_union]
+    simp only [← union_val, ← sup_eq_union]
     congr
     
   · rfl

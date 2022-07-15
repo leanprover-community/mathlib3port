@@ -40,7 +40,7 @@ theorem homology_ext {L M N K : ModuleCat R} {f : L ⟶ M} {g : M ⟶ N} (w : f 
   refine' cokernel_funext fun n => _
   -- Gosh it would be nice if `equiv_rw` could directly use an isomorphism, or an enriched `≃`.
   equiv_rw(kernel_subobject_iso g ≪≫ ModuleCat.kernelIsoKer g).toLinearEquiv.toEquiv  at n
-  convert w n <;> simp [to_kernel_subobject]
+  convert w n <;> simp [← to_kernel_subobject]
 
 /-- Bundle an element `C.X i` such that `C.d_from i x = 0` as a term of `C.cycles i`. -/
 abbrev toCycles {C : HomologicalComplex (ModuleCat.{u} R) c} {i : ι} (x : LinearMap.ker (C.dFrom i)) : C.cycles i :=
@@ -59,7 +59,7 @@ theorem cycles_map_to_cycles (f : C ⟶ D) {i : ι} (x : LinearMap.ker (C.dFrom 
     (cyclesMap f i) (toCycles x) =
       toCycles
         ⟨f.f i x.1, by
-          simp [x.2]⟩ :=
+          simp [← x.2]⟩ :=
   by
   ext
   simp
@@ -81,14 +81,14 @@ example (f g : C ⟶ D) (h : Homotopy f g) (i : ι) :
   -- To check that two morphisms out of a homology group agree, it suffices to check on cycles:
   ext
   dsimp'
-  simp only [homology.π_map_apply]
+  simp only [← homology.π_map_apply]
   -- To check that two elements are equal mod boundaries, it suffices to exhibit a boundary:
   ext1
   swap
   exact (toPrev i h.hom) x.1
   -- Moreover, to check that two cycles are equal, it suffices to check their underlying elements:
   ext1
-  simp [h.comm i, x.2] <;> abel
+  simp [← h.comm i, ← x.2] <;> abel
 
 end ModuleCat
 

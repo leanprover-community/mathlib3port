@@ -72,9 +72,9 @@ theorem IsCompact.has_extreme_point (hscomp : IsCompact s) (hsnemp : s.Nonempty)
     obtain ⟨l, hl⟩ := geometric_hahn_banach_point_point hyx
     obtain ⟨z, hzt, hz⟩ :=
       (compact_of_is_closed_subset hscomp htclos hst.1).exists_forall_ge ⟨x, hxt⟩ l.continuous.continuous_on
-    have h : IsExposed ℝ t { z ∈ t | ∀, ∀ w ∈ t, ∀, l w ≤ l z } := fun h => ⟨l, rfl⟩
+    have h : IsExposed ℝ t ({ z ∈ t | ∀, ∀ w ∈ t, ∀, l w ≤ l z }) := fun h => ⟨l, rfl⟩
     rw [←
-      hBmin { z ∈ t | ∀, ∀ w ∈ t, ∀, l w ≤ l z } ⟨⟨z, hzt, hz⟩, h.is_closed htclos, hst.trans h.is_extreme⟩
+      hBmin ({ z ∈ t | ∀, ∀ w ∈ t, ∀, l w ≤ l z }) ⟨⟨z, hzt, hz⟩, h.is_closed htclos, hst.trans h.is_extreme⟩
         (t.sep_subset _)] at
       hyB
     exact hl.not_le (hyB.2 x hxt)
@@ -102,7 +102,7 @@ theorem closure_convex_hull_extreme_points (hscomp : IsCompact s) (hAconv : Conv
   by_contra hs
   obtain ⟨x, hxA, hxt⟩ := not_subset.1 hs
   obtain ⟨l, r, hlr, hrx⟩ := geometric_hahn_banach_closed_point (convex_convex_hull _ _).closure is_closed_closure hxt
-  have h : IsExposed ℝ s { y ∈ s | ∀, ∀ z ∈ s, ∀, l z ≤ l y } := fun _ => ⟨l, rfl⟩
+  have h : IsExposed ℝ s ({ y ∈ s | ∀, ∀ z ∈ s, ∀, l z ≤ l y }) := fun _ => ⟨l, rfl⟩
   obtain ⟨z, hzA, hz⟩ := hscomp.exists_forall_ge ⟨x, hxA⟩ l.continuous.continuous_on
   obtain ⟨y, hy⟩ := (h.is_compact hscomp).has_extreme_point ⟨z, hzA, hz⟩
   linarith [hlr _ (subset_closure <| subset_convex_hull _ _ <| h.is_extreme.extreme_points_subset_extreme_points hy),

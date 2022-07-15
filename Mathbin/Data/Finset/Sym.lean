@@ -66,9 +66,9 @@ theorem sym2_eq_empty : s.Sym2 = ∅ ↔ s = ∅ := by
 theorem sym2_nonempty : s.Sym2.Nonempty ↔ s.Nonempty := by
   rw [Finset.sym2, nonempty.image_iff, nonempty_product, and_selfₓ]
 
-alias sym2_nonempty ↔ _ Finset.Nonempty.sym2
+alias sym2_nonempty ↔ _ nonempty.sym2
 
-attribute [protected] Finset.Nonempty.sym2
+attribute [protected] nonempty.sym2
 
 @[simp]
 theorem sym2_univ [Fintype α] : (univ : Finset α).Sym2 = univ :=
@@ -167,9 +167,9 @@ theorem sym_eq_empty : s.Sym n = ∅ ↔ n ≠ 0 ∧ s = ∅ := by
 theorem sym_nonempty : (s.Sym n).Nonempty ↔ n = 0 ∨ s.Nonempty := by
   simp_rw [nonempty_iff_ne_empty, Ne.def, sym_eq_empty, not_and_distrib, not_ne_iff]
 
-alias sym2_nonempty ↔ _ Finset.Nonempty.sym2
+alias sym2_nonempty ↔ _ nonempty.sym2
 
-attribute [protected] Finset.Nonempty.sym2
+attribute [protected] nonempty.sym2
 
 @[simp]
 theorem sym_univ [Fintype α] (n : ℕ) : (univ : Finset α).Sym n = univ :=
@@ -182,7 +182,7 @@ theorem sym_mono (h : s ⊆ t) (n : ℕ) : s.Sym n ⊆ t.Sym n := fun m hm =>
 @[simp]
 theorem sym_inter (s t : Finset α) (n : ℕ) : (s ∩ t).Sym n = s.Sym n ∩ t.Sym n := by
   ext m
-  simp only [mem_inter, mem_sym_iff, imp_and_distrib, forall_and_distrib]
+  simp only [← mem_inter, ← mem_sym_iff, ← imp_and_distrib, ← forall_and_distrib]
 
 @[simp]
 theorem sym_union (s t : Finset α) (n : ℕ) : s.Sym n ∪ t.Sym n ⊆ (s ∪ t).Sym n :=

@@ -44,7 +44,7 @@ theorem cardinal_mk_lift_le_mul :
   by_cases' hf : f.1 = 0
   · convert Set.fintypeEmpty
     apply Set.eq_empty_iff_forall_not_mem.2 fun x hx => _
-    simp only [Set.mem_preimage, Set.mem_singleton_iff] at hx
+    simp only [← Set.mem_preimage, ← Set.mem_singleton_iff] at hx
     apply_fun ULift.down  at hx
     rw [hf] at hx
     exact (Classical.some_spec x.1.2).1 hx
@@ -57,14 +57,14 @@ theorem cardinal_mk_lift_le_mul :
           simp_rw [← key']
           exact (Classical.some_spec x.1.1.2).2)⟩
   apply Fintype.ofInjective h fun _ _ H => _
-  simp only [Subtype.val_eq_coe, Subtype.mk_eq_mk] at H
+  simp only [← Subtype.val_eq_coe, ← Subtype.mk_eq_mk] at H
   exact Subtype.ext (ULift.down_injective (Subtype.ext H))
 
 theorem cardinal_mk_lift_le_max :
     Cardinal.lift.{u, v} (# { x : A // IsAlgebraic R x }) ≤ max (Cardinal.lift.{v, u} (# R)) ℵ₀ :=
   (cardinal_mk_lift_le_mul R A).trans <|
     (mul_le_mul_right' (lift_le.2 cardinal_mk_le_max) _).trans <| by
-      simp [le_totalₓ]
+      simp [← le_totalₓ]
 
 theorem cardinal_mk_lift_le_of_infinite [Infinite R] :
     Cardinal.lift.{u, v} (# { x : A // IsAlgebraic R x }) ≤ Cardinal.lift.{v, u} (# R) :=

@@ -211,8 +211,7 @@ theorem is_supported_of {p} {s : Set α} : IsSupported (of p) s ↔ p ∈ s :=
       norm_cast
       
     · use -1
-      rw [RingHom.map_neg, RingHom.map_one]
-      norm_cast
+      rw [RingHom.map_neg, RingHom.map_one, Int.cast_neg, Int.cast_oneₓ]
       
     · rintro _ ⟨z, hzs, rfl⟩ _ _
       use 0

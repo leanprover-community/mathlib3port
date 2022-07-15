@@ -103,8 +103,8 @@ theorem map_prod_eq_map_prod [FreimanHomClass F A β n] (f : F) {s t : Multiset 
 @[to_additive]
 theorem map_mul_map_eq_map_mul_map [FreimanHomClass F A β 2] (f : F) (ha : a ∈ A) (hb : b ∈ A) (hc : c ∈ A) (hd : d ∈ A)
     (h : a * b = c * d) : f a * f b = f c * f d := by
-  simp_rw [← prod_pair]  at h⊢
-  refine' map_prod_eq_map_prod f _ _ (card_pair _ _) (card_pair _ _) h <;> simp [ha, hb, hc, hd]
+  simp_rw [← prod_pair] at h⊢
+  refine' map_prod_eq_map_prod f _ _ (card_pair _ _) (card_pair _ _) h <;> simp [← ha, ← hb, ← hc, ← hd]
 
 namespace FreimanHom
 
@@ -115,8 +115,7 @@ instance funLike : FunLike (A →*[n] β) α fun _ => β where
     cases f <;> cases g <;> congr
 
 @[to_additive]
-instance freimanHomClass : FreimanHomClass (A →*[n] β) A β n where
-  map_prod_eq_map_prod' := map_prod_eq_map_prod'
+instance freimanHomClass : FreimanHomClass (A →*[n] β) A β n where map_prod_eq_map_prod' := map_prod_eq_map_prod'
 
 /-- Helper instance for when there's too many metavariables to apply
 `fun_like.has_coe_to_fun` directly. -/
@@ -363,8 +362,8 @@ inferrable. -/
 -- generalized
 @[to_additive
       " An additive monoid homomorphism is naturally an `add_freiman_hom` on its entire\ndomain.\n\nWe can't leave the domain `A : set α` of the `freiman_hom` a free variable, since it wouldn't be\ninferrable."]
-instance MonoidHom.freimanHomClass : FreimanHomClass (α →* β) Set.Univ β n where
-  map_prod_eq_map_prod' := fun f s t _ _ _ _ h => by
+instance MonoidHom.freimanHomClass :
+    FreimanHomClass (α →* β) Set.Univ β n where map_prod_eq_map_prod' := fun f s t _ _ _ _ h => by
     rw [← f.map_multiset_prod, h, f.map_multiset_prod]
 
 /-- A `monoid_hom` is naturally a `freiman_hom`. -/
@@ -399,7 +398,7 @@ theorem map_prod_eq_map_prod_of_le [FreimanHomClass F A β n] (f : F) {s t : Mul
   rw [← hs, card_pos_iff_exists_mem] at hm
   obtain ⟨a, ha⟩ := hm
   suffices ((s + repeat a (n - m)).map f).Prod = ((t + repeat a (n - m)).map f).Prod by
-    simp_rw [Multiset.map_add, prod_add]  at this
+    simp_rw [Multiset.map_add, prod_add] at this
     exact mul_right_cancelₓ this
   replace ha := hsA _ ha
   refine' map_prod_eq_map_prod f (fun x hx => _) (fun x hx => _) _ _ _
@@ -430,8 +429,9 @@ def FreimanHom.toFreimanHom (h : m ≤ n) (f : A →*[n] β) : A →*[m] β wher
 /-- A `n`-Freiman homomorphism is also a `m`-Freiman homomorphism for any `m ≤ n`. -/
 @[to_additive AddFreimanHom.addFreimanHomClassOfLe
       "An additive `n`-Freiman homomorphism is\nalso an additive `m`-Freiman homomorphism for any `m ≤ n`."]
-def FreimanHom.freimanHomClassOfLe [FreimanHomClass F A β n] (h : m ≤ n) : FreimanHomClass F A β m where
-  map_prod_eq_map_prod' := fun f s t hsA htA hs ht hst => map_prod_eq_map_prod_of_le f hsA htA hs ht hst h
+def FreimanHom.freimanHomClassOfLe [FreimanHomClass F A β n] (h : m ≤ n) :
+    FreimanHomClass F A β
+      m where map_prod_eq_map_prod' := fun f s t hsA htA hs ht hst => map_prod_eq_map_prod_of_le f hsA htA hs ht hst h
 
 @[simp, to_additive AddFreimanHom.to_add_freiman_hom_coe]
 theorem FreimanHom.to_freiman_hom_coe (h : m ≤ n) (f : A →*[n] β) : (f.toFreimanHom h : α → β) = f :=

@@ -140,7 +140,7 @@ theorem le_tfae :
   exact Iff.rfl
   tfae_have 2 → 3
   · intro h
-    simpa [coe_eq_pi, closure_pi_set, lower_ne_upper] using closure_mono h
+    simpa [← coe_eq_pi, ← closure_pi_set, ← lower_ne_upper] using closure_mono h
     
   tfae_have 3 ↔ 4
   exact Icc_subset_Icc_iff I.lower_le_upper
@@ -159,7 +159,7 @@ theorem le_iff_bounds : I ≤ J ↔ J.lower ≤ I.lower ∧ I.upper ≤ J.upper 
 
 theorem injective_coe : Injective (coe : Box ι → Set (ι → ℝ)) := by
   rintro ⟨l₁, u₁, h₁⟩ ⟨l₂, u₂, h₂⟩ h
-  simp only [subset.antisymm_iff, coe_subset_coe, le_iff_bounds] at h
+  simp only [← subset.antisymm_iff, ← coe_subset_coe, ← le_iff_bounds] at h
   congr
   exacts[le_antisymmₓ h.2.1 h.1.1, le_antisymmₓ h.1.2 h.2.2]
 
@@ -249,10 +249,10 @@ theorem is_some_iff : ∀ {I : WithBot (Box ι)}, I.isSome ↔ (I : Set (ι → 
     simp
   | (I : box ι) => by
     erw [Option.isSome]
-    simp [I.nonempty_coe]
+    simp [← I.nonempty_coe]
 
 theorem bUnion_coe_eq_coe (I : WithBot (Box ι)) : (⋃ (J : Box ι) (hJ : ↑J = I), (J : Set (ι → ℝ))) = I := by
-  induction I using WithBot.recBotCoe <;> simp [WithBot.coe_eq_coe]
+  induction I using WithBot.recBotCoe <;> simp [← WithBot.coe_eq_coe]
 
 @[simp, norm_cast]
 theorem with_bot_coe_subset_iff {I J : WithBot (Box ι)} : (I : Set (ι → ℝ)) ⊆ J ↔ I ≤ J := by
@@ -260,13 +260,13 @@ theorem with_bot_coe_subset_iff {I J : WithBot (Box ι)} : (I : Set (ι → ℝ)
   · simp
     
   induction J using WithBot.recBotCoe
-  · simp [subset_empty_iff]
+  · simp [← subset_empty_iff]
     
   simp
 
 @[simp, norm_cast]
 theorem with_bot_coe_inj {I J : WithBot (Box ι)} : (I : Set (ι → ℝ)) = J ↔ I = J := by
-  simp only [subset.antisymm_iff, ← le_antisymm_iffₓ, with_bot_coe_subset_iff]
+  simp only [← subset.antisymm_iff, le_antisymm_iffₓ, ← with_bot_coe_subset_iff]
 
 /-- Make a `with_bot (box ι)` from a pair of corners `l u : ι → ℝ`. If `l i < u i` for all `i`,
 then the result is `⟨l, u, _⟩ : box ι`, otherwise it is `⊥`. In any case, the result interpreted
@@ -284,7 +284,7 @@ theorem mk'_eq_coe {l u : ι → ℝ} : mk' l u = I ↔ l = I.lower ∧ u = I.up
   cases' I with lI uI hI
   rw [mk']
   split_ifs
-  · simp [WithBot.coe_eq_coe]
+  · simp [← WithBot.coe_eq_coe]
     
   · suffices l = lI → u ≠ uI by
       simpa
@@ -319,7 +319,7 @@ theorem coe_inf (I J : WithBot (Box ι)) : (↑(I⊓J) : Set (ι → ℝ)) = I �
     simp
     
   change ↑(mk' _ _) = _
-  simp only [coe_eq_pi, ← pi_inter_distrib, Ioc_inter_Ioc, Pi.sup_apply, Pi.inf_apply, coe_mk', coe_coe]
+  simp only [← coe_eq_pi, pi_inter_distrib, ← Ioc_inter_Ioc, ← Pi.sup_apply, ← Pi.inf_apply, ← coe_mk', ← coe_coe]
 
 instance : Lattice (WithBot (Box ι)) :=
   { WithBot.semilatticeSup, Box.WithBot.hasInf with
@@ -330,12 +330,12 @@ instance : Lattice (WithBot (Box ι)) :=
       rw [← with_bot_coe_subset_iff, coe_inf]
       exact inter_subset_right _ _,
     le_inf := fun I J₁ J₂ h₁ h₂ => by
-      simp only [← with_bot_coe_subset_iff, coe_inf] at *
+      simp only [with_bot_coe_subset_iff, ← coe_inf] at *
       exact subset_inter h₁ h₂ }
 
 @[simp, norm_cast]
 theorem disjoint_with_bot_coe {I J : WithBot (Box ι)} : Disjoint (I : Set (ι → ℝ)) J ↔ Disjoint I J := by
-  simp only [Disjoint, ← with_bot_coe_subset_iff, coe_inf]
+  simp only [← Disjoint, with_bot_coe_subset_iff, ← coe_inf]
   rfl
 
 theorem disjoint_coe : Disjoint (I : WithBot (Box ι)) J ↔ Disjoint (I : Set (ι → ℝ)) J :=
@@ -372,8 +372,8 @@ theorem maps_to_insert_nth_face_Icc {n} (I : Box (Finₓ (n + 1))) {i : Finₓ (
 
 theorem maps_to_insert_nth_face {n} (I : Box (Finₓ (n + 1))) {i : Finₓ (n + 1)} {x : ℝ}
     (hx : x ∈ Ioc (I.lower i) (I.upper i)) : MapsTo (i.insertNth x) (I.face i) I := fun y hy => by
-  simpa only [mem_coe, mem_def, i.forall_iff_succ_above, hx, Finₓ.insert_nth_apply_same,
-    Finₓ.insert_nth_apply_succ_above, true_andₓ]
+  simpa only [← mem_coe, ← mem_def, ← i.forall_iff_succ_above, ← hx, ← Finₓ.insert_nth_apply_same, ←
+    Finₓ.insert_nth_apply_succ_above, ← true_andₓ]
 
 theorem continuous_on_face_Icc {X} [TopologicalSpace X] {n} {f : (Finₓ (n + 1) → ℝ) → X} {I : Box (Finₓ (n + 1))}
     (h : ContinuousOn f I.Icc) {i : Finₓ (n + 1)} {x : ℝ} (hx : x ∈ Icc (I.lower i) (I.upper i)) :
@@ -435,14 +435,14 @@ def distortion (I : Box ι) : ℝ≥0 :=
 
 theorem distortion_eq_of_sub_eq_div {I J : Box ι} {r : ℝ}
     (h : ∀ i, I.upper i - I.lower i = (J.upper i - J.lower i) / r) : distortion I = distortion J := by
-  simp only [distortion, nndist_pi_def, Real.nndist_eq', h, real.nnabs.map_div]
+  simp only [← distortion, ← nndist_pi_def, ← Real.nndist_eq', ← h, ← real.nnabs.map_div]
   congr 1 with i
   have : 0 < r := by
     by_contra hr
     have := div_nonpos_of_nonneg_of_nonpos (sub_nonneg.2 <| J.lower_le_upper i) (not_ltₓ.1 hr)
     rw [← h] at this
     exact this.not_lt (sub_pos.2 <| I.lower_lt_upper i)
-  simp only [Nnreal.finset_sup_div, div_div_div_cancel_right _ (real.nnabs.map_ne_zero.2 this.ne')]
+  simp only [← Nnreal.finset_sup_div, ← div_div_div_cancel_right _ (real.nnabs.map_ne_zero.2 this.ne')]
 
 theorem nndist_le_distortion_mul (I : Box ι) (i : ι) :
     nndist I.lower I.upper ≤ I.distortion * nndist (I.lower i) (I.upper i) :=
@@ -454,7 +454,7 @@ theorem nndist_le_distortion_mul (I : Box ι) (i : ι) :
 
 theorem dist_le_distortion_mul (I : Box ι) (i : ι) : dist I.lower I.upper ≤ I.distortion * (I.upper i - I.lower i) := by
   have A : I.lower i - I.upper i < 0 := sub_neg.2 (I.lower_lt_upper i)
-  simpa only [← Nnreal.coe_le_coe, ← dist_nndist, Nnreal.coe_mul, Real.dist_eq, abs_of_neg A, neg_sub] using
+  simpa only [Nnreal.coe_le_coe, dist_nndist, ← Nnreal.coe_mul, ← Real.dist_eq, ← abs_of_neg A, ← neg_sub] using
     I.nndist_le_distortion_mul i
 
 theorem diam_Icc_le_of_distortion_le (I : Box ι) (i : ι) {c : ℝ≥0 } (h : I.distortion ≤ c) :

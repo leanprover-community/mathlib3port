@@ -61,7 +61,7 @@ theorem Term.realize_quotient_mk {β : Type _} (t : L.Term β) (x : β → M) :
   induction' t with _ _ _ _ ih
   · rfl
     
-  · simp only [ih, fun_map_quotient_mk, term.realize]
+  · simp only [← ih, ← fun_map_quotient_mk, ← term.realize]
     
 
 end Language

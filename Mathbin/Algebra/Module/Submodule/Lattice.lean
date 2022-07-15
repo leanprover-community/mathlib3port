@@ -30,7 +30,7 @@ section AddCommMonoidₓ
 
 variable [Semiringₓ R] [Semiringₓ S] [AddCommMonoidₓ M] [Module R M] [Module S M]
 
-variable [HasScalar S R] [IsScalarTower S R M]
+variable [HasSmul S R] [IsScalarTower S R M]
 
 variable {p q : Submodule R M}
 
@@ -69,7 +69,7 @@ end
 
 @[simp]
 theorem restrict_scalars_eq_bot_iff {p : Submodule R M} : restrictScalars S p = ⊥ ↔ p = ⊥ := by
-  simp [SetLike.ext_iff]
+  simp [← SetLike.ext_iff]
 
 instance uniqueBot : Unique (⊥ : Submodule R M) :=
   ⟨inferInstance, fun x => Subtype.ext <| (mem_bot R).1 x.Mem⟩
@@ -77,7 +77,7 @@ instance uniqueBot : Unique (⊥ : Submodule R M) :=
 instance : OrderBot (Submodule R M) where
   bot := ⊥
   bot_le := fun p x => by
-    simp (config := { contextual := true })[zero_mem]
+    simp (config := { contextual := true })[← zero_mem]
 
 protected theorem eq_bot_iff (p : Submodule R M) : p = ⊥ ↔ ∀, ∀ x ∈ p, ∀, x = (0 : M) :=
   ⟨fun h => h.symm ▸ fun x hx => (mem_bot R).mp hx, fun h => eq_bot_iff.mpr fun x hx => (mem_bot R).mpr (h x hx)⟩
@@ -153,7 +153,7 @@ end
 
 @[simp]
 theorem restrict_scalars_eq_top_iff {p : Submodule R M} : restrictScalars S p = ⊤ ↔ p = ⊤ := by
-  simp [SetLike.ext_iff]
+  simp [← SetLike.ext_iff]
 
 instance : OrderTop (Submodule R M) where
   top := ⊤
@@ -189,11 +189,11 @@ instance : HasInfₓ (Submodule R M) :=
   ⟨fun S =>
     { Carrier := ⋂ s ∈ S, (s : Set M),
       zero_mem' := by
-        simp [zero_mem],
+        simp [← zero_mem],
       add_mem' := by
-        simp (config := { contextual := true })[add_mem],
+        simp (config := { contextual := true })[← add_mem],
       smul_mem' := by
-        simp (config := { contextual := true })[smul_mem] }⟩
+        simp (config := { contextual := true })[← smul_mem] }⟩
 
 private theorem Inf_le' {S : Set (Submodule R M)} {p} : p ∈ S → inf S ≤ p :=
   Set.bInter_subset_of_mem
@@ -205,11 +205,11 @@ instance : HasInf (Submodule R M) :=
   ⟨fun p q =>
     { Carrier := p ∩ q,
       zero_mem' := by
-        simp [zero_mem],
+        simp [← zero_mem],
       add_mem' := by
-        simp (config := { contextual := true })[add_mem],
+        simp (config := { contextual := true })[← add_mem],
       smul_mem' := by
-        simp (config := { contextual := true })[smul_mem] }⟩
+        simp (config := { contextual := true })[← smul_mem] }⟩
 
 instance : CompleteLattice (Submodule R M) :=
   { Submodule.orderTop, Submodule.orderBot, SetLike.partialOrder with sup := fun a b => inf { x | a ≤ x ∧ b ≤ x },
@@ -255,7 +255,7 @@ theorem mem_infi {ι} (p : ι → Submodule R M) {x} : (x ∈ ⨅ i, p i) ↔ �
 
 @[simp]
 theorem mem_finset_inf {ι} {s : Finset ι} {p : ι → Submodule R M} {x : M} : x ∈ s.inf p ↔ ∀, ∀ i ∈ s, ∀, x ∈ p i := by
-  simp only [← SetLike.mem_coe, finset_inf_coe, Set.mem_Inter]
+  simp only [SetLike.mem_coe, ← finset_inf_coe, ← Set.mem_Inter]
 
 theorem mem_sup_left {S T : Submodule R M} : ∀ {x : M}, x ∈ S → x ∈ S⊔T :=
   show S ≤ S⊔T from le_sup_left

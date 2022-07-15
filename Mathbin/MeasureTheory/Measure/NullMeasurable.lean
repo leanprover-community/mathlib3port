@@ -82,7 +82,7 @@ instance [h : Subsingleton α] : Subsingleton (NullMeasurableSpace α μ) :=
 instance : MeasurableSpace (NullMeasurableSpace α μ) where
   MeasurableSet' := fun s => ∃ t, MeasurableSet t ∧ s =ᵐ[μ] t
   measurable_set_empty := ⟨∅, MeasurableSet.empty, ae_eq_refl _⟩
-  measurable_set_compl := fun s ⟨t, htm, hts⟩ => ⟨tᶜ, htm.Compl, hts.Compl⟩
+  measurable_set_compl := fun s ⟨t, htm, hts⟩ => ⟨tᶜ, htm.compl, hts.compl⟩
   measurable_set_Union := fun s hs => by
     choose t htm hts using hs
     exact ⟨⋃ i, t i, MeasurableSet.Union htm, EventuallyEq.countable_Union hts⟩
@@ -114,7 +114,7 @@ theorem of_null (h : μ s = 0) : NullMeasurableSet s μ :=
   ⟨∅, MeasurableSet.empty, ae_eq_empty.2 h⟩
 
 theorem compl (h : NullMeasurableSet s μ) : NullMeasurableSet (sᶜ) μ :=
-  h.Compl
+  h.compl
 
 theorem of_compl (h : NullMeasurableSet (sᶜ) μ) : NullMeasurableSet s μ :=
   h.of_compl
@@ -139,11 +139,11 @@ protected theorem bUnion_decode₂ [Encodable ι] ⦃f : ι → Set α⦄ (h : �
     NullMeasurableSet (⋃ b ∈ Encodable.decode₂ ι n, f b) μ :=
   MeasurableSet.bUnion_decode₂ h n
 
-protected theorem bUnion {f : ι → Set α} {s : Set ι} (hs : Countable s) (h : ∀, ∀ b ∈ s, ∀, NullMeasurableSet (f b) μ) :
+protected theorem bUnion {f : ι → Set α} {s : Set ι} (hs : s.Countable) (h : ∀, ∀ b ∈ s, ∀, NullMeasurableSet (f b) μ) :
     NullMeasurableSet (⋃ b ∈ s, f b) μ :=
   MeasurableSet.bUnion hs h
 
-protected theorem sUnion {s : Set (Set α)} (hs : Countable s) (h : ∀, ∀ t ∈ s, ∀, NullMeasurableSet t μ) :
+protected theorem sUnion {s : Set (Set α)} (hs : s.Countable) (h : ∀, ∀ t ∈ s, ∀, NullMeasurableSet t μ) :
     NullMeasurableSet (⋃₀s) μ := by
   rw [sUnion_eq_bUnion]
   exact MeasurableSet.bUnion hs h
@@ -159,11 +159,11 @@ protected theorem Inter [Encodable ι] {f : ι → Set α} (h : ∀ i, NullMeasu
     NullMeasurableSet (⋂ i, f i) μ :=
   MeasurableSet.Inter h
 
-protected theorem bInter {f : β → Set α} {s : Set β} (hs : Countable s) (h : ∀, ∀ b ∈ s, ∀, NullMeasurableSet (f b) μ) :
+protected theorem bInter {f : β → Set α} {s : Set β} (hs : s.Countable) (h : ∀, ∀ b ∈ s, ∀, NullMeasurableSet (f b) μ) :
     NullMeasurableSet (⋂ b ∈ s, f b) μ :=
   MeasurableSet.bInter hs h
 
-protected theorem sInter {s : Set (Set α)} (hs : Countable s) (h : ∀, ∀ t ∈ s, ∀, NullMeasurableSet t μ) :
+protected theorem sInter {s : Set (Set α)} (hs : s.Countable) (h : ∀, ∀ t ∈ s, ∀, NullMeasurableSet t μ) :
     NullMeasurableSet (⋂₀ s) μ :=
   MeasurableSet.sInter hs h
 
@@ -205,7 +205,7 @@ protected theorem insert [MeasurableSingletonClass (NullMeasurableSpace α μ)] 
     NullMeasurableSet (insert a s) μ :=
   hs.insert a
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊇ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊇ » s)
 theorem exists_measurable_superset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _)(_ : t ⊇ s), MeasurableSet t ∧ t =ᵐ[μ] s := by
   rcases h with ⟨t, htm, hst⟩
@@ -213,8 +213,8 @@ theorem exists_measurable_superset_ae_eq (h : NullMeasurableSet s μ) :
   · exact diff_subset_iff.1 (subset_to_measurable _ _)
     
   · have : to_measurable μ (s \ t) =ᵐ[μ] (∅ : Set α) := by
-      simp [ae_le_set.1 hst.le]
-    simpa only [union_empty] using hst.symm.union this
+      simp [← ae_le_set.1 hst.le]
+    simpa only [← union_empty] using hst.symm.union this
     
 
 theorem to_measurable_ae_eq (h : NullMeasurableSet s μ) : ToMeasurable μ s =ᵐ[μ] s := by
@@ -222,12 +222,12 @@ theorem to_measurable_ae_eq (h : NullMeasurableSet s μ) : ToMeasurable μ s =�
   exact h.exists_measurable_superset_ae_eq.some_spec.snd.2
 
 theorem compl_to_measurable_compl_ae_eq (h : NullMeasurableSet s μ) : ToMeasurable μ (sᶜ)ᶜ =ᵐ[μ] s := by
-  simpa only [compl_compl] using h.compl.to_measurable_ae_eq.compl
+  simpa only [← compl_compl] using h.compl.to_measurable_ae_eq.compl
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem exists_measurable_subset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _)(_ : t ⊆ s), MeasurableSet t ∧ t =ᵐ[μ] s :=
-  ⟨ToMeasurable μ (sᶜ)ᶜ, compl_subset_comm.2 <| subset_to_measurable _ _, (measurable_set_to_measurable _ _).Compl,
+  ⟨ToMeasurable μ (sᶜ)ᶜ, compl_subset_comm.2 <| subset_to_measurable _ _, (measurable_set_to_measurable _ _).compl,
     h.compl_to_measurable_compl_ae_eq⟩
 
 end NullMeasurableSet
@@ -249,7 +249,7 @@ theorem exists_subordinate_pairwise_disjoint [Encodable ι] {s : ι → Set α} 
 theorem measure_Union {m0 : MeasurableSpace α} {μ : Measure α} [Encodable ι] {f : ι → Set α}
     (hn : Pairwise (Disjoint on f)) (h : ∀ i, MeasurableSet (f i)) : μ (⋃ i, f i) = ∑' i, μ (f i) := by
   rw [measure_eq_extend (MeasurableSet.Union h), extend_Union MeasurableSet.empty _ MeasurableSet.Union _ hn h]
-  · simp [measure_eq_extend, h]
+  · simp [← measure_eq_extend, ← h]
     
   · exact μ.empty
     
@@ -419,7 +419,7 @@ def completion {_ : MeasurableSpace α} (μ : Measure α) : @MeasureTheory.Measu
   trimmed := by
     refine' le_antisymmₓ (fun s => _) (outer_measure.le_trim _)
     rw [outer_measure.trim_eq_infi]
-    simp only [to_outer_measure_apply]
+    simp only [← to_outer_measure_apply]
     refine' (infi₂_mono _).trans_eq (measure_eq_infi _).symm
     exact fun t ht => infi_mono' fun h => ⟨h.NullMeasurableSet, le_rfl⟩
 

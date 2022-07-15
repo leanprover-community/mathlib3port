@@ -46,7 +46,7 @@ theorem ConvexOn.map_center_mass_le (hf : ConvexOn 𝕜 s f) (h₀ : ∀, ∀ i 
   have hmem' : ∀, ∀ i ∈ t, ∀, (p i, (f ∘ p) i) ∈ { p : E × β | p.1 ∈ s ∧ f p.1 ≤ p.2 } := fun i hi =>
     ⟨hmem i hi, le_rfl⟩
   convert (hf.convex_epigraph.center_mass_mem h₀ h₁ hmem').2 <;>
-    simp only [center_mass, Function.comp, Prod.smul_fst, Prod.fst_sum, Prod.smul_snd, Prod.snd_sum]
+    simp only [← center_mass, ← Function.comp, ← Prod.smul_fst, ← Prod.fst_sum, ← Prod.smul_snd, ← Prod.snd_sum]
 
 /-- Concave **Jensen's inequality**, `finset.center_mass` version. -/
 theorem ConcaveOn.le_map_center_mass (hf : ConcaveOn 𝕜 s f) (h₀ : ∀, ∀ i ∈ t, ∀, 0 ≤ w i) (h₁ : 0 < ∑ i in t, w i)
@@ -56,7 +56,7 @@ theorem ConcaveOn.le_map_center_mass (hf : ConcaveOn 𝕜 s f) (h₀ : ∀, ∀ 
 /-- Convex **Jensen's inequality**, `finset.sum` version. -/
 theorem ConvexOn.map_sum_le (hf : ConvexOn 𝕜 s f) (h₀ : ∀, ∀ i ∈ t, ∀, 0 ≤ w i) (h₁ : (∑ i in t, w i) = 1)
     (hmem : ∀, ∀ i ∈ t, ∀, p i ∈ s) : f (∑ i in t, w i • p i) ≤ ∑ i in t, w i • f (p i) := by
-  simpa only [center_mass, h₁, inv_one, one_smul] using hf.map_center_mass_le h₀ (h₁.symm ▸ zero_lt_one) hmem
+  simpa only [← center_mass, ← h₁, ← inv_one, ← one_smul] using hf.map_center_mass_le h₀ (h₁.symm ▸ zero_lt_one) hmem
 
 /-- Concave **Jensen's inequality**, `finset.sum` version. -/
 theorem ConcaveOn.le_map_sum (hf : ConcaveOn 𝕜 s f) (h₀ : ∀, ∀ i ∈ t, ∀, 0 ≤ w i) (h₁ : (∑ i in t, w i) = 1)

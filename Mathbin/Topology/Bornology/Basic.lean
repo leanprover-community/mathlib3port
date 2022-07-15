@@ -41,8 +41,8 @@ open Set Filter
 
 variable {ι α β : Type _}
 
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`cobounded] []
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`le_cofinite] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`cobounded] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`le_cofinite] []
 /-- A **bornology** on a type `α` is a filter of cobounded sets which contains the cofinite filter.
 Such spaces are equivalently specified by their bounded sets, see `bornology.of_bounded`
 and `bornology.ext_iff_is_bounded`-/
@@ -51,7 +51,7 @@ class Bornology (α : Type _) where
   cobounded : Filter α
   le_cofinite : cobounded ≤ cofinite
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B)
 /-- A constructor for bornologies by specifying the bounded sets,
 and showing that they satisfy the appropriate conditions. -/
 @[simps]
@@ -64,7 +64,7 @@ def Bornology.ofBounded {α : Type _} (B : Set (Set α)) (empty_mem : ∅ ∈ B)
         rwa [← compl_univ] at empty_mem,
       sets_of_superset := fun x y hx hy => subset_mem (xᶜ) hx (yᶜ) (compl_subset_compl.mpr hy),
       inter_sets := fun x y hx hy => by
-        simpa [compl_inter] using union_mem (xᶜ) hx (yᶜ) hy }
+        simpa [← compl_inter] using union_mem (xᶜ) hx (yᶜ) hy }
   le_cofinite := by
     rw [le_cofinite_iff_compl_singleton_mem]
     intro x
@@ -72,7 +72,7 @@ def Bornology.ofBounded {α : Type _} (B : Set (Set α)) (empty_mem : ∅ ∈ B)
     rw [compl_compl]
     exact singleton_mem x
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B)
 /-- A constructor for bornologies by specifying the bounded sets,
 and showing that they satisfy the appropriate conditions. -/
 @[simps]
@@ -113,9 +113,9 @@ theorem is_bounded_compl_iff : IsBounded (sᶜ) ↔ IsCobounded s := by
 theorem is_cobounded_compl_iff : IsCobounded (sᶜ) ↔ IsBounded s :=
   Iff.rfl
 
-alias is_bounded_compl_iff ↔ Bornology.IsBounded.of_compl Bornology.IsCobounded.compl
+alias is_bounded_compl_iff ↔ is_bounded.of_compl is_cobounded.compl
 
-alias is_cobounded_compl_iff ↔ Bornology.IsCobounded.of_compl Bornology.IsBounded.compl
+alias is_cobounded_compl_iff ↔ is_cobounded.of_compl is_bounded.compl
 
 @[simp]
 theorem is_bounded_empty : IsBounded (∅ : Set α) := by
@@ -140,7 +140,7 @@ theorem IsCobounded.inter (hs : IsCobounded s) (ht : IsCobounded t) : IsCobounde
 
 @[simp]
 theorem is_bounded_union : IsBounded (s ∪ t) ↔ IsBounded s ∧ IsBounded t := by
-  simp only [← is_cobounded_compl_iff, compl_union, is_cobounded_inter]
+  simp only [is_cobounded_compl_iff, ← compl_union, ← is_cobounded_inter]
 
 theorem IsBounded.union (hs : IsBounded s) (ht : IsBounded t) : IsBounded (s ∪ t) :=
   is_bounded_union.2 ⟨hs, ht⟩
@@ -172,7 +172,7 @@ theorem ext_iff' {t t' : Bornology α} : t = t' ↔ ∀ s, (@cobounded α t).Set
 theorem ext_iff_is_bounded {t t' : Bornology α} : t = t' ↔ ∀ s, @IsBounded α t s ↔ @IsBounded α t' s :=
   ⟨fun h s => h ▸ Iff.rfl, fun h => by
     ext
-    simpa only [is_bounded_def, compl_compl] using h (sᶜ)⟩
+    simpa only [← is_bounded_def, ← compl_compl] using h (sᶜ)⟩
 
 variable {s : Set α}
 
@@ -204,7 +204,7 @@ theorem is_cobounded_sInter {S : Set (Set α)} (hs : S.Finite) : IsCobounded (�
 
 theorem is_bounded_bUnion {s : Set ι} {f : ι → Set α} (hs : s.Finite) :
     IsBounded (⋃ i ∈ s, f i) ↔ ∀, ∀ i ∈ s, ∀, IsBounded (f i) := by
-  simp only [← is_cobounded_compl_iff, compl_Union, is_cobounded_bInter hs]
+  simp only [is_cobounded_compl_iff, ← compl_Union, ← is_cobounded_bInter hs]
 
 theorem is_bounded_bUnion_finset (s : Finset ι) {f : ι → Set α} :
     IsBounded (⋃ i ∈ s, f i) ↔ ∀, ∀ i ∈ s, ∀, IsBounded (f i) :=

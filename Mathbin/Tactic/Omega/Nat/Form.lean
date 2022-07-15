@@ -92,12 +92,12 @@ def freshIndex : Preform → Nat
 theorem holds_constant {v w : Nat → Nat} :
     ∀ p : Preform, (∀, ∀ x < p.freshIndex, ∀, v x = w x) → (p.Holds v ↔ p.Holds w)
   | t =* s, h1 => by
-    simp only [holds]
+    simp only [← holds]
     apply pred_mono_2 <;> apply preterm.val_constant <;> intro x h2 <;> apply h1 _ (lt_of_lt_of_leₓ h2 _)
     apply le_max_leftₓ
     apply le_max_rightₓ
   | t ≤* s, h1 => by
-    simp only [holds]
+    simp only [← holds]
     apply pred_mono_2 <;> apply preterm.val_constant <;> intro x h2 <;> apply h1 _ (lt_of_lt_of_leₓ h2 _)
     apply le_max_leftₓ
     apply le_max_rightₓ
@@ -105,12 +105,12 @@ theorem holds_constant {v w : Nat → Nat} :
     apply not_iff_not_of_iff
     apply holds_constant p h1
   | p ∨* q, h1 => by
-    simp only [holds]
+    simp only [← holds]
     apply pred_mono_2' <;> apply holds_constant <;> intro x h2 <;> apply h1 _ (lt_of_lt_of_leₓ h2 _)
     apply le_max_leftₓ
     apply le_max_rightₓ
   | p ∧* q, h1 => by
-    simp only [holds]
+    simp only [← holds]
     apply pred_mono_2' <;> apply holds_constant <;> intro x h2 <;> apply h1 _ (lt_of_lt_of_leₓ h2 _)
     apply le_max_leftₓ
     apply le_max_rightₓ
@@ -167,12 +167,12 @@ theorem univ_close_of_valid {p : Preform} : ∀ {m : Nat} {v : Nat → Nat}, p.v
   | m + 1, v, h1 => fun i => univ_close_of_valid h1
 
 theorem valid_of_unsat_not {p : Preform} : (¬* p).Unsat → p.valid := by
-  simp only [preform.sat, preform.unsat, preform.valid, preform.holds]
+  simp only [← preform.sat, ← preform.unsat, ← preform.valid, ← preform.holds]
   rw [not_exists_not]
   intro h
   assumption
 
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic for setting up proof by induction over preforms. -/
 unsafe def preform.induce (t : tactic Unit := tactic.skip) : tactic Unit :=
   sorry

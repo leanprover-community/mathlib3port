@@ -69,7 +69,7 @@ theorem IsSubring.inter {S₁ S₂ : Set R} (hS₁ : IsSubring S₁) (hS₂ : Is
   { IsAddSubgroup.inter hS₁.to_is_add_subgroup hS₂.to_is_add_subgroup,
     IsSubmonoid.inter hS₁.to_is_submonoid hS₂.to_is_submonoid with }
 
-theorem IsSubring.Inter {ι : Sort _} {S : ι → Set R} (h : ∀ y : ι, IsSubring (S y)) : IsSubring (Set.Interₓ S) :=
+theorem IsSubring.Inter {ι : Sort _} {S : ι → Set R} (h : ∀ y : ι, IsSubring (S y)) : IsSubring (Set.Inter S) :=
   { IsAddSubgroup.Inter fun i => (h i).to_is_add_subgroup, IsSubmonoid.Inter fun i => (h i).to_is_submonoid with }
 
 theorem is_subring_Union_of_directed {ι : Type _} [hι : Nonempty ι] {s : ι → Set R} (h : ∀ i, IsSubring (s i))
@@ -102,7 +102,7 @@ theorem exists_list_of_mem_closure {a : R} (h : a ∈ Closure s) :
           match L2, List.mem_mapₓ.1 h2 with
           | _, ⟨L3, h3, rfl⟩ => List.forall_mem_consₓ.2 ⟨Or.inr rfl, h1 L3 h3⟩,
           by
-          simp only [List.map_mapₓ, (· ∘ ·), List.prod_cons, neg_one_mul] <;>
+          simp only [← List.map_mapₓ, ← (· ∘ ·), ← List.prod_cons, ← neg_one_mul] <;>
             exact
               List.recOn L1 neg_zero.symm fun hd tl ih => by
                 rw [List.map_cons, List.sum_cons, ih, List.map_cons, List.sum_cons, neg_add]⟩)
@@ -215,7 +215,7 @@ theorem image_closure {S : Type _} [Ringₓ S] (f : R →+* S) (s : Set R) : f '
         apply closure.is_subring.to_is_submonoid.one_mem
         
       · rw [f.map_mul]
-        apply closure.is_subring.to_is_submonoid.mul_mem <;> solve_by_elim [subset_closure, Set.mem_image_of_mem]
+        apply closure.is_subring.to_is_submonoid.mul_mem <;> solve_by_elim [← subset_closure, ← Set.mem_image_of_mem]
         
       · rw [f.map_add]
         apply closure.is_subring.to_is_add_submonoid.add_mem

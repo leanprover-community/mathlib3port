@@ -177,7 +177,7 @@ def NatTrans.mapHomotopyCategory {F G : V ⥤ W} [F.Additive] [G.Additive] (α :
   app := fun C => (HomotopyCategory.quotient W c).map ((NatTrans.mapHomologicalComplex α c).app C.as)
   naturality' := fun C D f => by
     dsimp'
-    simp only [← functor.map_comp]
+    simp only [functor.map_comp]
     congr 1
     ext
     dsimp'

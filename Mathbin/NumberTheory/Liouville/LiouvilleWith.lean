@@ -59,7 +59,7 @@ theorem liouville_with_one (x : ℝ) : LiouvilleWith 1 x := by
   refine' ⟨⌊x * n⌋ + 1, this.ne, _⟩
   rw [abs_sub_comm, abs_of_pos (sub_pos.2 this), rpow_one, sub_lt_iff_lt_add', add_div_eq_mul_add_div _ _ hn'.ne',
     div_lt_div_right hn']
-  simpa [bit0, ← add_assocₓ] using (Int.floor_le (x * n)).trans_lt (lt_add_one _)
+  simpa [← bit0, add_assocₓ] using (Int.floor_le (x * n)).trans_lt (lt_add_one _)
 
 namespace LiouvilleWith
 
@@ -91,7 +91,7 @@ theorem frequently_lt_rpow_neg (h : LiouvilleWith p x) (hlt : q < p) :
     ∃ᶠ n : ℕ in at_top, ∃ m : ℤ, x ≠ m / n ∧ abs (x - m / n) < n ^ -q := by
   rcases h.exists_pos with ⟨C, hC₀, hC⟩
   have : ∀ᶠ n : ℕ in at_top, C < n ^ (p - q) := by
-    simpa only [(· ∘ ·), neg_sub, one_div] using
+    simpa only [← (· ∘ ·), ← neg_sub, ← one_div] using
       ((tendsto_rpow_at_top (sub_pos.2 hlt)).comp tendsto_coe_nat_at_top_at_top).Eventually (eventually_gt_at_top C)
   refine' (this.and_frequently hC).mono _
   rintro n ⟨hnC, hn, m, hne, hlt⟩
@@ -105,13 +105,13 @@ theorem mul_rat (h : LiouvilleWith p x) (hr : r ≠ 0) : LiouvilleWith p (x * r)
   refine' ⟨r.denom ^ p * (abs r * C), (tendsto_id.nsmul_at_top r.pos).Frequently (hC.mono _)⟩
   rintro n ⟨hn, m, hne, hlt⟩
   have A : (↑(r.num * m) : ℝ) / ↑(r.denom • id n) = m / n * r := by
-    simp [← div_mul_div_comm, ← r.cast_def, mul_comm]
+    simp [div_mul_div_comm, r.cast_def, ← mul_comm]
   refine' ⟨r.num * m, _, _⟩
   · rw [A]
-    simp [hne, hr]
+    simp [← hne, ← hr]
     
   · rw [A, ← sub_mul, abs_mul]
-    simp only [smul_eq_mul, id.def, Nat.cast_mulₓ]
+    simp only [← smul_eq_mul, ← id.def, ← Nat.cast_mulₓ]
     refine' (mul_lt_mul_of_pos_right hlt <| abs_pos.2 <| Rat.cast_ne_zero.2 hr).trans_le _
     rw [mul_rpow, mul_div_mul_left, mul_comm, mul_div_assoc]
     exacts[(rpow_pos_of_pos (Nat.cast_pos.2 r.pos) _).ne', Nat.cast_nonneg _, Nat.cast_nonneg _]
@@ -121,7 +121,8 @@ theorem mul_rat (h : LiouvilleWith p x) (hr : r ≠ 0) : LiouvilleWith p (x * r)
 `x` satisfies the same condition. -/
 theorem mul_rat_iff (hr : r ≠ 0) : LiouvilleWith p (x * r) ↔ LiouvilleWith p x :=
   ⟨fun h => by
-    simpa only [mul_assoc, ← Rat.cast_mul, mul_inv_cancel hr, Rat.cast_one, mul_oneₓ] using h.mul_rat (inv_ne_zero hr),
+    simpa only [← mul_assoc, Rat.cast_mul, ← mul_inv_cancel hr, ← Rat.cast_one, ← mul_oneₓ] using
+      h.mul_rat (inv_ne_zero hr),
     fun h => h.mul_rat hr⟩
 
 /-- The product `r * x`, `r : ℚ`, `r ≠ 0`, is a Liouville number with exponent `p` if and only if
@@ -164,14 +165,14 @@ theorem add_rat (h : LiouvilleWith p x) (r : ℚ) : LiouvilleWith p (x + r) := b
   have hr : (0 : ℝ) < r.denom := Nat.cast_pos.2 r.pos
   have hn' : (n : ℝ) ≠ 0 := Nat.cast_ne_zero.2 (zero_lt_one.trans_le hn).ne'
   have : (↑(r.denom * m + r.num * n : ℤ) / ↑(r.denom • id n) : ℝ) = m / n + r := by
-    simp [add_div, hr.ne', mul_div_mul_left, mul_div_mul_right, hn', ← Rat.cast_def]
+    simp [← add_div, ← hr.ne', ← mul_div_mul_left, ← mul_div_mul_right, ← hn', Rat.cast_def]
   refine' ⟨r.denom * m + r.num * n, _⟩
   rw [this, add_sub_add_right_eq_sub]
   refine'
     ⟨by
       simpa, hlt.trans_le (le_of_eqₓ _)⟩
   have : (r.denom ^ p : ℝ) ≠ 0 := (rpow_pos_of_pos hr _).ne'
-  simp [mul_rpow, Nat.cast_nonneg, mul_div_mul_left, this]
+  simp [← mul_rpow, ← Nat.cast_nonneg, ← mul_div_mul_left, ← this]
 
 @[simp]
 theorem add_rat_iff : LiouvilleWith p (x + r) ↔ LiouvilleWith p x :=
@@ -218,7 +219,7 @@ protected theorem neg (h : LiouvilleWith p x) : LiouvilleWith p (-x) := by
   refine' ⟨C, hC.mono _⟩
   rintro n ⟨m, hne, hlt⟩
   use -m
-  simp [neg_div, abs_sub_comm _ x, *]
+  simp [← neg_div, ← abs_sub_comm _ x, *]
 
 @[simp]
 theorem neg_iff : LiouvilleWith p (-x) ↔ LiouvilleWith p x :=
@@ -247,21 +248,21 @@ theorem sub_nat (h : LiouvilleWith p x) (n : ℕ) : LiouvilleWith p (x - n) :=
 
 @[simp]
 theorem rat_sub_iff : LiouvilleWith p (r - x) ↔ LiouvilleWith p x := by
-  simp [sub_eq_add_neg]
+  simp [← sub_eq_add_neg]
 
 theorem rat_sub (h : LiouvilleWith p x) (r : ℚ) : LiouvilleWith p (r - x) :=
   rat_sub_iff.2 h
 
 @[simp]
 theorem int_sub_iff : LiouvilleWith p (m - x) ↔ LiouvilleWith p x := by
-  simp [sub_eq_add_neg]
+  simp [← sub_eq_add_neg]
 
 theorem int_sub (h : LiouvilleWith p x) (m : ℤ) : LiouvilleWith p (m - x) :=
   int_sub_iff.2 h
 
 @[simp]
 theorem nat_sub_iff : LiouvilleWith p (n - x) ↔ LiouvilleWith p x := by
-  simp [sub_eq_add_neg]
+  simp [← sub_eq_add_neg]
 
 theorem nat_sub (h : LiouvilleWith p x) (n : ℕ) : LiouvilleWith p (n - x) :=
   nat_sub_iff.2 h
@@ -288,7 +289,7 @@ protected theorem irrational (h : LiouvilleWith p x) (hp : 1 < p) : Irrational x
     rw [Rat.cast_zero, Int.cast_zeroₓ]
     
   · refine' (h.mul_rat (inv_ne_zero h0)).ne_cast_int hp 1 _
-    simp [Rat.cast_ne_zero.2 h0]
+    simp [← Rat.cast_ne_zero.2 h0]
     
 
 end LiouvilleWith
@@ -302,7 +303,7 @@ exists a numerator `a` such that `x ≠ a / b` and `|x - a / b| < 1 / b ^ n`. -/
 theorem frequently_exists_num (hx : Liouville x) (n : ℕ) :
     ∃ᶠ b : ℕ in at_top, ∃ a : ℤ, x ≠ a / b ∧ abs (x - a / b) < 1 / b ^ n := by
   refine' not_not.1 fun H => _
-  simp only [Liouville, not_forall, not_exists, not_frequently, not_and, not_ltₓ, eventually_at_top] at H
+  simp only [← Liouville, ← not_forall, ← not_exists, ← not_frequently, ← not_and, ← not_ltₓ, ← eventually_at_top] at H
   rcases H with ⟨N, hN⟩
   have : ∀, ∀ b > (1 : ℕ), ∀, ∀ᶠ m : ℕ in at_top, ∀ a : ℤ, (1 / b ^ m : ℝ) ≤ abs (x - a / b) := by
     intro b hb
@@ -310,7 +311,7 @@ theorem frequently_exists_num (hx : Liouville x) (n : ℕ) :
     replace hb : (1 : ℝ) < b := Nat.one_lt_cast.2 hb
     have hb0 : (0 : ℝ) < b := zero_lt_one.trans hb
     have H : tendsto (fun m => 1 / b ^ m : ℕ → ℝ) at_top (𝓝 0) := by
-      simp only [one_div]
+      simp only [← one_div]
       exact tendsto_inv_at_top_zero.comp (tendsto_pow_at_top_at_top_of_one_lt hb)
     refine' (H.eventually (hx.irrational.eventually_forall_le_dist_cast_div b)).mono _
     exact fun m hm a => hm a
@@ -350,5 +351,5 @@ theorem forall_liouville_with_iff {x : ℝ} : (∀ p, LiouvilleWith p x) ↔ Lio
   exact
     ⟨a, b, by
       exact_mod_cast hb, hne, by
-      simpa [rpow_neg] using hlt⟩
+      simpa [← rpow_neg] using hlt⟩
 

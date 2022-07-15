@@ -118,15 +118,15 @@ def conj [Groupₓ G] : G →* MulAut G where
   toFun := fun g =>
     { toFun := fun h => g * h * g⁻¹, invFun := fun h => g⁻¹ * h * g,
       left_inv := fun _ => by
-        simp [mul_assoc],
+        simp [← mul_assoc],
       right_inv := fun _ => by
-        simp [mul_assoc],
+        simp [← mul_assoc],
       map_mul' := by
-        simp [mul_assoc] }
+        simp [← mul_assoc] }
   map_mul' := fun _ _ => by
-    ext <;> simp [mul_assoc]
+    ext <;> simp [← mul_assoc]
   map_one' := by
-    ext <;> simp [mul_assoc]
+    ext <;> simp [← mul_assoc]
 
 @[simp]
 theorem conj_apply [Groupₓ G] (g h : G) : conj g h = g * h * g⁻¹ :=
@@ -228,13 +228,13 @@ def conj [AddGroupₓ G] : G →+ Additive (AddAut G) where
       { toFun := fun h => g + h + -g,-- this definition is chosen to match `mul_aut.conj`
         invFun := fun h => -g + h + g,
         left_inv := fun _ => by
-          simp [add_assocₓ],
+          simp [← add_assocₓ],
         right_inv := fun _ => by
-          simp [add_assocₓ],
+          simp [← add_assocₓ],
         map_add' := by
-          simp [add_assocₓ] }
+          simp [← add_assocₓ] }
   map_add' := fun _ _ => by
-    apply additive.to_mul.injective <;> ext <;> simp [add_assocₓ]
+    apply additive.to_mul.injective <;> ext <;> simp [← add_assocₓ]
   map_zero' := by
     ext <;> simpa
 

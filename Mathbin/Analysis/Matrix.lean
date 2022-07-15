@@ -68,16 +68,16 @@ protected def semiNormedGroup : SemiNormedGroup (Matrix m n α) :=
 attribute [local instance] Matrix.semiNormedGroup
 
 theorem norm_le_iff {r : ℝ} (hr : 0 ≤ r) {A : Matrix m n α} : ∥A∥ ≤ r ↔ ∀ i j, ∥A i j∥ ≤ r := by
-  simp [pi_norm_le_iff hr]
+  simp [← pi_norm_le_iff hr]
 
 theorem nnnorm_le_iff {r : ℝ≥0 } {A : Matrix m n α} : ∥A∥₊ ≤ r ↔ ∀ i j, ∥A i j∥₊ ≤ r := by
-  simp [pi_nnnorm_le_iff]
+  simp [← pi_nnnorm_le_iff]
 
 theorem norm_lt_iff {r : ℝ} (hr : 0 < r) {A : Matrix m n α} : ∥A∥ < r ↔ ∀ i j, ∥A i j∥ < r := by
-  simp [pi_norm_lt_iff hr]
+  simp [← pi_norm_lt_iff hr]
 
 theorem nnnorm_lt_iff {r : ℝ≥0 } (hr : 0 < r) {A : Matrix m n α} : ∥A∥₊ < r ↔ ∀ i j, ∥A i j∥₊ < r := by
-  simp [pi_nnnorm_lt_iff hr]
+  simp [← pi_nnnorm_lt_iff hr]
 
 theorem norm_entry_le_entrywise_sup_norm (A : Matrix m n α) {i : m} {j : n} : ∥A i j∥ ≤ ∥A∥ :=
   (norm_le_pi_norm (A i) j).trans (norm_le_pi_norm A i)
@@ -115,7 +115,7 @@ instance [StarAddMonoid α] [NormedStarGroup α] : NormedStarGroup (Matrix m m �
 
 @[simp]
 theorem nnnorm_col (v : m → α) : ∥colₓ v∥₊ = ∥v∥₊ := by
-  simp [Pi.nnnorm_def]
+  simp [← Pi.nnnorm_def]
 
 @[simp]
 theorem norm_col (v : m → α) : ∥colₓ v∥ = ∥v∥ :=
@@ -123,7 +123,7 @@ theorem norm_col (v : m → α) : ∥colₓ v∥ = ∥v∥ :=
 
 @[simp]
 theorem nnnorm_row (v : n → α) : ∥rowₓ v∥₊ = ∥v∥₊ := by
-  simp [Pi.nnnorm_def]
+  simp [← Pi.nnnorm_def]
 
 @[simp]
 theorem norm_row (v : n → α) : ∥rowₓ v∥ = ∥v∥ :=
@@ -235,12 +235,12 @@ theorem linfty_op_norm_col (v : m → α) : ∥colₓ v∥ = ∥v∥ :=
 
 @[simp]
 theorem linfty_op_nnnorm_row (v : n → α) : ∥rowₓ v∥₊ = ∑ i, ∥v i∥₊ := by
-  simp [linfty_op_nnnorm_def]
+  simp [← linfty_op_nnnorm_def]
 
 @[simp]
 theorem linfty_op_norm_row (v : n → α) : ∥rowₓ v∥ = ∑ i, ∥v i∥ :=
   (congr_arg coe <| linfty_op_nnnorm_row v).trans <| by
-    simp [Nnreal.coe_sum]
+    simp [← Nnreal.coe_sum]
 
 @[simp]
 theorem linfty_op_nnnorm_diagonal [DecidableEq m] (v : m → α) : ∥diagonalₓ v∥₊ = ∥v∥₊ := by
@@ -262,7 +262,7 @@ section NonUnitalSemiNormedRing
 
 variable [NonUnitalSemiNormedRing α]
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (k j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (k j)
 theorem linfty_op_nnnorm_mul (A : Matrix l m α) (B : Matrix m n α) : ∥A ⬝ B∥₊ ≤ ∥A∥₊ * ∥B∥₊ := by
   simp_rw [linfty_op_nnnorm_def, Matrix.mul_apply]
   calc
@@ -303,8 +303,7 @@ protected def linftyOpNonUnitalSemiNormedRing [NonUnitalSemiNormedRing α] : Non
 /-- The `L₁-L∞` norm preserves one on non-empty matrices. Note this is safe as an instance, as it
 carries no data. -/
 instance linfty_op_norm_one_class [SemiNormedRing α] [NormOneClass α] [DecidableEq n] [Nonempty n] :
-    NormOneClass (Matrix n n α) where
-  norm_one := (linfty_op_norm_diagonal _).trans norm_one
+    NormOneClass (Matrix n n α) where norm_one := (linfty_op_norm_diagonal _).trans norm_one
 
 /-- Seminormed ring instance (using sup norm of L1 norm) for matrices over a semi normed ring.  Not
 declared as an instance because there are several natural choices for defining the norm of a
@@ -376,14 +375,14 @@ section SemiNormedGroup
 
 variable [SemiNormedGroup α] [SemiNormedGroup β]
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 theorem frobenius_nnnorm_def (A : Matrix m n α) : ∥A∥₊ = (∑ (i) (j), ∥A i j∥₊ ^ (2 : ℝ)) ^ (1 / 2 : ℝ) := by
   simp_rw [PiLp.nnnorm_eq, ← Nnreal.rpow_mul, div_mul_cancel (1 : ℝ) two_ne_zero, Nnreal.rpow_one]
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 theorem frobenius_norm_def (A : Matrix m n α) : ∥A∥ = (∑ (i) (j), ∥A i j∥ ^ (2 : ℝ)) ^ (1 / 2 : ℝ) :=
   (congr_arg coe (frobenius_nnnorm_def A)).trans <| by
-    simp [Nnreal.coe_sum]
+    simp [← Nnreal.coe_sum]
 
 @[simp]
 theorem frobenius_nnnorm_map_eq (A : Matrix m n α) (f : α → β) (hf : ∀ a, ∥f a∥₊ = ∥a∥₊) : ∥A.map f∥₊ = ∥A∥₊ := by
@@ -472,8 +471,8 @@ theorem frobenius_nnnorm_mul (A : Matrix l m α) (B : Matrix m n α) : ∥A ⬝ 
   have :=
     @nnnorm_inner_le_nnnorm α _ _ _ ((PiLp.equiv 2 fun i => α).symm fun j => star (A i j))
       ((PiLp.equiv 2 fun i => α).symm fun k => B k j)
-  simpa only [PiLp.equiv_symm_apply, PiLp.inner_apply, IsROrC.inner_apply, star_ring_end_apply, Pi.nnnorm_def,
-    PiLp.nnnorm_eq, star_star, nnnorm_star] using this
+  simpa only [← PiLp.equiv_symm_apply, ← PiLp.inner_apply, ← IsROrC.inner_apply, ← star_ring_end_apply, ← Pi.nnnorm_def,
+    ← PiLp.nnnorm_eq, ← star_star, ← nnnorm_star] using this
 
 theorem frobenius_norm_mul (A : Matrix l m α) (B : Matrix m n α) : ∥A ⬝ B∥ ≤ ∥A∥ * ∥B∥ :=
   frobenius_nnnorm_mul A B

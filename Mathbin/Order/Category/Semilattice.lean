@@ -66,8 +66,8 @@ instance : ConcreteCategory SemilatticeSupCat where
   forget := { obj := SemilatticeSupCat.X, map := fun X Y => coeFn }
   forget_faithful := ⟨fun X Y => FunLike.coe_injective⟩
 
-instance hasForgetToPartialOrder : HasForget₂ SemilatticeSupCat PartialOrderₓₓ where
-  forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y f => f }
+instance hasForgetToPartialOrder :
+    HasForget₂ SemilatticeSupCat PartialOrderₓₓ where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y f => f }
 
 @[simp]
 theorem coe_forget_to_PartialOrder (X : SemilatticeSupCat) : ↥((forget₂ SemilatticeSupCat PartialOrderₓₓ).obj X) = ↥X :=
@@ -105,8 +105,8 @@ instance : ConcreteCategory SemilatticeInfCat where
   forget := { obj := SemilatticeInfCat.X, map := fun X Y => coeFn }
   forget_faithful := ⟨fun X Y => FunLike.coe_injective⟩
 
-instance hasForgetToPartialOrder : HasForget₂ SemilatticeInfCat PartialOrderₓₓ where
-  forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y f => f }
+instance hasForgetToPartialOrder :
+    HasForget₂ SemilatticeInfCat PartialOrderₓₓ where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y f => f }
 
 @[simp]
 theorem coe_forget_to_PartialOrder (X : SemilatticeInfCat) : ↥((forget₂ SemilatticeInfCat PartialOrderₓₓ).obj X) = ↥X :=

@@ -52,9 +52,9 @@ commute with finite limits.
 
 open Function
 
-universe v v₁ u u₁ u₂
-
 -- declare the `v`'s first; see `category_theory.category` for an explanation
+universe w v v₁ u u₁ u₂
+
 namespace CategoryTheory
 
 variable (C : Type u) [Category.{v} C]
@@ -87,8 +87,7 @@ instance (priority := 100) is_filtered_or_empty_of_semilattice_sup (α : Type u)
       ext⟩
 
 instance (priority := 100) is_filtered_of_semilattice_sup_nonempty (α : Type u) [SemilatticeSup α] [Nonempty α] :
-    IsFiltered α :=
-  {  }
+    IsFiltered α where
 
 instance (priority := 100) is_filtered_or_empty_of_directed_le (α : Type u) [Preorderₓ α] [IsDirected α (· ≤ ·)] :
     IsFilteredOrEmpty α where
@@ -100,8 +99,7 @@ instance (priority := 100) is_filtered_or_empty_of_directed_le (α : Type u) [Pr
       simp ⟩
 
 instance (priority := 100) is_filtered_of_directed_le_nonempty (α : Type u) [Preorderₓ α] [IsDirected α (· ≤ ·)]
-    [Nonempty α] : IsFiltered α :=
-  {  }
+    [Nonempty α] : IsFiltered α where
 
 -- Sanity checks
 example (α : Type u) [SemilatticeSup α] [OrderBot α] : IsFiltered α := by
@@ -157,7 +155,7 @@ theorem coeq_condition {j j' : C} (f f' : j ⟶ j') : f ≫ coeqHom f f' = f' �
 
 open CategoryTheory.Limits
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Any finite collection of objects in a filtered category has an object "to the right".
 -/
 theorem sup_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempty (X ⟶ S) := by
@@ -179,7 +177,7 @@ theorem sup_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempt
 
 variable (O : Finset C) (H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y))
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given any `finset` of objects `{X, ...}` and
 indexed collection of `finset`s of morphisms `{f, ...}` in `C`,
 there exists an object `S`, with a morphism `T X : X ⟶ S` from each `X`,
@@ -209,7 +207,7 @@ theorem sup_exists :
       · rw
           [@w' _ _ mX mY f'
             (by
-              simpa [hf ∘ Eq.symm] using mf')]
+              simpa [← hf ∘ Eq.symm] using mf')]
         
       
     · rw [@w' _ _ mX' mY' f' _]
@@ -241,7 +239,7 @@ theorem to_sup_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
 
 variable {J : Type v} [SmallCategory J] [FinCategory J]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If we have `is_filtered C`, then for any functor `F : J ⥤ C` with `fin_category J`,
 there exists a cocone over `F`.
 -/
@@ -265,9 +263,10 @@ theorem cocone_nonempty (F : J ⥤ C) : Nonempty (Cocone F) := by
           _⟩⟩⟩
   intro j j' g
   dsimp'
-  simp only [category.comp_id]
+  simp only [← category.comp_id]
   apply w
-  simp only [Finset.mem_univ, Finset.mem_bUnion, exists_and_distrib_left, exists_prop_of_true, Finset.mem_image]
+  simp only [← Finset.mem_univ, ← Finset.mem_bUnion, ← exists_and_distrib_left, ← exists_prop_of_true, ←
+    Finset.mem_image]
   exact
     ⟨j, rfl, j', g, by
       simp ⟩
@@ -340,16 +339,16 @@ noncomputable def coeq₃Hom {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : j₂ ⟶ 
       coeqHom (coeqHom f g ≫ leftToMax (coeq f g) (coeq g h)) (coeqHom g h ≫ rightToMax (coeq f g) (coeq g h))
 
 theorem coeq₃_condition₁ {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : f ≫ coeq₃Hom f g h = g ≫ coeq₃Hom f g h := by
-  dsimp' [coeq₃_hom]
+  dsimp' [← coeq₃_hom]
   slice_lhs 1 2 => rw [coeq_condition f g]
-  simp only [category.assoc]
+  simp only [← category.assoc]
 
 theorem coeq₃_condition₂ {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : g ≫ coeq₃Hom f g h = h ≫ coeq₃Hom f g h := by
-  dsimp' [coeq₃_hom]
+  dsimp' [← coeq₃_hom]
   slice_lhs 2 4 => rw [← category.assoc, coeq_condition _ _]
   slice_rhs 2 4 => rw [← category.assoc, coeq_condition _ _]
   slice_lhs 1 3 => rw [← category.assoc, coeq_condition _ _]
-  simp only [category.assoc]
+  simp only [← category.assoc]
 
 theorem coeq₃_condition₃ {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : f ≫ coeq₃Hom f g h = h ≫ coeq₃Hom f g h :=
   Eq.trans (coeq₃_condition₁ f g h) (coeq₃_condition₂ f g h)
@@ -382,11 +381,11 @@ theorem bowtie {j₁ j₂ k₁ k₂ : C} (f₁ : j₁ ⟶ k₁) (g₁ : j₁ ⟶
   fconstructor
   · slice_lhs 1 3 => rw [← category.assoc, coeq_condition]
     slice_lhs 3 5 => rw [← category.assoc, coeq_condition]
-    simp only [category.assoc]
+    simp only [← category.assoc]
     
   · slice_lhs 3 5 => rw [← category.assoc, coeq_condition]
     slice_lhs 1 3 => rw [← category.assoc, coeq_condition]
-    simp only [category.assoc]
+    simp only [← category.assoc]
     
 
 /-- Given a "tulip" of morphisms
@@ -424,15 +423,15 @@ theorem tulip {j₁ j₂ j₃ k₁ k₂ l : C} (f₁ : j₁ ⟶ k₁) (f₂ : j�
   fconstructor
   slice_lhs 1 3 => rw [← category.assoc, coeq_condition]
   slice_lhs 3 6 => rw [← category.assoc, coeq₃_condition₁]
-  simp only [category.assoc]
+  simp only [← category.assoc]
   fconstructor
   slice_lhs 3 6 => rw [← category.assoc, coeq₃_condition₁]
   slice_lhs 1 3 => rw [← category.assoc, coeq_condition]
   slice_rhs 3 6 => rw [← category.assoc, ← coeq₃_condition₂]
-  simp only [category.assoc]
+  simp only [← category.assoc]
   slice_rhs 3 6 => rw [← category.assoc, coeq₃_condition₂]
   slice_rhs 1 3 => rw [← category.assoc, ← coeq_condition]
-  simp only [category.assoc]
+  simp only [← category.assoc]
 
 end SpecialShapes
 
@@ -466,8 +465,7 @@ instance (priority := 100) is_cofiltered_or_empty_of_semilattice_inf (α : Type 
       ext⟩
 
 instance (priority := 100) is_cofiltered_of_semilattice_inf_nonempty (α : Type u) [SemilatticeInf α] [Nonempty α] :
-    IsCofiltered α :=
-  {  }
+    IsCofiltered α where
 
 instance (priority := 100) is_cofiltered_or_empty_of_directed_ge (α : Type u) [Preorderₓ α] [IsDirected α (· ≥ ·)] :
     IsCofilteredOrEmpty α where
@@ -479,8 +477,7 @@ instance (priority := 100) is_cofiltered_or_empty_of_directed_ge (α : Type u) [
       simp ⟩
 
 instance (priority := 100) is_cofiltered_of_directed_ge_nonempty (α : Type u) [Preorderₓ α] [IsDirected α (· ≥ ·)]
-    [Nonempty α] : IsCofiltered α :=
-  {  }
+    [Nonempty α] : IsCofiltered α where
 
 -- Sanity checks
 example (α : Type u) [SemilatticeInf α] [OrderBot α] : IsCofiltered α := by
@@ -536,7 +533,7 @@ theorem eq_condition {j j' : C} (f f' : j ⟶ j') : eqHom f f' ≫ f = eqHom f f
 
 open CategoryTheory.Limits
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Any finite collection of objects in a cofiltered category has an object "to the left".
 -/
 theorem inf_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempty (S ⟶ X) := by
@@ -558,7 +555,7 @@ theorem inf_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempt
 
 variable (O : Finset C) (H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y))
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given any `finset` of objects `{X, ...}` and
 indexed collection of `finset`s of morphisms `{f, ...}` in `C`,
 there exists an object `S`, with a morphism `T X : S ⟶ X` from each `X`,
@@ -588,7 +585,7 @@ theorem inf_exists :
       · rw
           [@w' _ _ mX mY f'
             (by
-              simpa [hf ∘ Eq.symm] using mf')]
+              simpa [← hf ∘ Eq.symm] using mf')]
         
       
     · rw [@w' _ _ mX' mY' f' _]
@@ -618,9 +615,9 @@ theorem inf_to_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
     (mf : (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H) : infTo O H mX ≫ f = infTo O H mY :=
   (inf_exists O H).some_spec.some_spec mX mY mf
 
-variable {J : Type v} [SmallCategory J] [FinCategory J]
+variable {J : Type w} [SmallCategory J] [FinCategory J]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If we have `is_cofiltered C`, then for any functor `F : J ⥤ C` with `fin_category J`,
 there exists a cone over `F`.
 -/
@@ -644,10 +641,11 @@ theorem cone_nonempty (F : J ⥤ C) : Nonempty (Cone F) := by
           _⟩⟩⟩
   intro j j' g
   dsimp'
-  simp only [category.id_comp]
+  simp only [← category.id_comp]
   symm
   apply w
-  simp only [Finset.mem_univ, Finset.mem_bUnion, exists_and_distrib_left, exists_prop_of_true, Finset.mem_image]
+  simp only [← Finset.mem_univ, ← Finset.mem_bUnion, ← exists_and_distrib_left, ← exists_prop_of_true, ←
+    Finset.mem_image]
   exact
     ⟨j, rfl, j', g, by
       simp ⟩

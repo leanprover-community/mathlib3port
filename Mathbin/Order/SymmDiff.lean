@@ -42,6 +42,8 @@ boolean ring, generalized boolean algebra, boolean algebra, symmetric difference
 -/
 
 
+open Function
+
 /-- The symmetric difference operator on a type with `⊔` and `\` is `(A \ B) ⊔ (B \ A)`. -/
 def symmDiff {α : Type _} [HasSup α] [HasSdiff α] (A B : α) : α :=
   A \ B⊔B \ A
@@ -58,12 +60,16 @@ theorem symm_diff_def {α : Type _} [HasSup α] [HasSdiff α] (A B : α) : A ∆
 theorem symm_diff_eq_xor (p q : Prop) : p ∆ q = Xorₓ p q :=
   rfl
 
+@[simp]
+theorem Bool.symm_diff_eq_bxor : ∀ p q : Bool, p ∆ q = bxor p q := by
+  decide
+
 section GeneralizedBooleanAlgebra
 
 variable {α : Type _} [GeneralizedBooleanAlgebra α] (a b c d : α)
 
 theorem symm_diff_comm : a ∆ b = b ∆ a := by
-  simp only [(· ∆ ·), sup_comm]
+  simp only [← (· ∆ ·), ← sup_comm]
 
 instance symm_diff_is_comm : IsCommutative α (· ∆ ·) :=
   ⟨symm_diff_comm⟩
@@ -81,7 +87,7 @@ theorem bot_symm_diff : ⊥ ∆ a = a := by
   rw [symm_diff_comm, symm_diff_bot]
 
 theorem symm_diff_eq_sup_sdiff_inf : a ∆ b = (a⊔b) \ (a⊓b) := by
-  simp [sup_sdiff, sdiff_inf, sup_comm, (· ∆ ·)]
+  simp [← sup_sdiff, ← sdiff_inf, ← sup_comm, ← (· ∆ ·)]
 
 @[simp]
 theorem sup_sdiff_symm_diff : (a⊔b) \ a ∆ b = a⊓b :=
@@ -105,7 +111,7 @@ theorem inf_symm_diff_distrib_right : a ∆ b⊓c = (a⊓c) ∆ (b⊓c) := by
   simp_rw [@inf_comm _ _ _ c, inf_symm_diff_distrib_left]
 
 theorem sdiff_symm_diff : c \ a ∆ b = c⊓a⊓b⊔c \ a⊓c \ b := by
-  simp only [(· ∆ ·), sdiff_sdiff_sup_sdiff']
+  simp only [← (· ∆ ·), ← sdiff_sdiff_sup_sdiff']
 
 theorem sdiff_symm_diff' : c \ a ∆ b = c⊓a⊓b⊔c \ (a⊔b) := by
   rw [sdiff_symm_diff, sdiff_sup, sup_comm]
@@ -123,7 +129,7 @@ theorem symm_diff_sdiff_right : a ∆ b \ b = a \ b := by
 
 @[simp]
 theorem sdiff_symm_diff_self : a \ a ∆ b = a⊓b := by
-  simp [sdiff_symm_diff]
+  simp [← sdiff_symm_diff]
 
 theorem symm_diff_eq_iff_sdiff_eq {a b c : α} (ha : a ≤ c) : a ∆ b = c ↔ c \ a = b := by
   constructor <;> intro h
@@ -152,6 +158,16 @@ theorem symm_diff_eq_sup : a ∆ b = a⊔b ↔ Disjoint a b := by
   · exact h.symm_diff_eq_sup
     
 
+@[simp]
+theorem le_symm_diff_iff_left : a ≤ a ∆ b ↔ Disjoint a b := by
+  refine' ⟨fun h => _, fun h => h.symm_diff_eq_sup.symm ▸ le_sup_left⟩
+  rw [symm_diff_eq_sup_sdiff_inf] at h
+  exact (le_sdiff_iff.1 <| inf_le_of_left_le h).le
+
+@[simp]
+theorem le_symm_diff_iff_right : b ≤ a ∆ b ↔ Disjoint a b := by
+  rw [symm_diff_comm, le_symm_diff_iff_left, Disjoint.comm]
+
 theorem symm_diff_symm_diff_left : a ∆ b ∆ c = a \ (b⊔c)⊔b \ (a⊔c)⊔c \ (a⊔b)⊔a⊓b⊓c :=
   calc
     a ∆ b ∆ c = a ∆ b \ c⊔c \ a ∆ b := symm_diff_def _ _
@@ -170,6 +186,19 @@ theorem symm_diff_symm_diff_right : a ∆ (b ∆ c) = a \ (b⊔c)⊔b \ (a⊔c)�
       ac_rfl
     
 
+@[simp]
+theorem symm_diff_symm_diff_inf : a ∆ b ∆ (a⊓b) = a⊔b := by
+  rw [symm_diff_eq_iff_sdiff_eq (symm_diff_le_sup _ _), sup_sdiff_symm_diff]
+
+@[simp]
+theorem inf_symm_diff_symm_diff : (a⊓b) ∆ (a ∆ b) = a⊔b := by
+  rw [symm_diff_comm, symm_diff_symm_diff_inf]
+
+theorem symm_diff_triangle : a ∆ c ≤ a ∆ b⊔b ∆ c := by
+  refine' (sup_le_sup (sdiff_triangle a b c) <| sdiff_triangle _ b _).trans_eq _
+  rw [@sup_comm _ _ (c \ b), sup_sup_sup_comm]
+  rfl
+
 theorem symm_diff_assoc : a ∆ b ∆ c = a ∆ (b ∆ c) := by
   rw [symm_diff_symm_diff_left, symm_diff_symm_diff_right]
 
@@ -186,25 +215,44 @@ theorem symm_diff_symm_diff_symm_diff_comm : a ∆ b ∆ (c ∆ d) = a ∆ c ∆
   simp_rw [symm_diff_assoc, symm_diff_left_comm]
 
 @[simp]
-theorem symm_diff_symm_diff_self : a ∆ (a ∆ b) = b := by
+theorem symm_diff_symm_diff_cancel_left : a ∆ (a ∆ b) = b := by
+  simp [symm_diff_assoc]
+
+@[simp]
+theorem symm_diff_symm_diff_cancel_right : b ∆ a ∆ a = b := by
   simp [← symm_diff_assoc]
 
 @[simp]
 theorem symm_diff_symm_diff_self' : a ∆ b ∆ a = b := by
-  rw [symm_diff_comm, ← symm_diff_assoc, symm_diff_self, bot_symm_diff]
+  rw [symm_diff_comm, symm_diff_symm_diff_cancel_left]
+
+theorem symm_diff_left_involutive (a : α) : Involutive (· ∆ a) :=
+  symm_diff_symm_diff_cancel_right _
+
+theorem symm_diff_right_involutive (a : α) : Involutive ((· ∆ ·) a) :=
+  symm_diff_symm_diff_cancel_left _
+
+theorem symm_diff_left_injective (a : α) : Injective (· ∆ a) :=
+  (symm_diff_left_involutive _).Injective
+
+theorem symm_diff_right_injective (a : α) : Injective ((· ∆ ·) a) :=
+  (symm_diff_right_involutive _).Injective
+
+theorem symm_diff_left_surjective (a : α) : Surjective (· ∆ a) :=
+  (symm_diff_left_involutive _).Surjective
+
+theorem symm_diff_right_surjective (a : α) : Surjective ((· ∆ ·) a) :=
+  (symm_diff_right_involutive _).Surjective
+
+variable {a b c}
 
 @[simp]
-theorem symm_diff_right_inj : a ∆ b = a ∆ c ↔ b = c := by
-  constructor <;> intro h
-  · have H1 := congr_arg ((· ∆ ·) a) h
-    rwa [symm_diff_symm_diff_self, symm_diff_symm_diff_self] at H1
-    
-  · rw [h]
-    
+theorem symm_diff_left_inj : a ∆ b = c ∆ b ↔ a = c :=
+  (symm_diff_left_injective _).eq_iff
 
 @[simp]
-theorem symm_diff_left_inj : a ∆ b = c ∆ b ↔ a = c := by
-  rw [symm_diff_comm a b, symm_diff_comm c b, symm_diff_right_inj]
+theorem symm_diff_right_inj : a ∆ b = a ∆ c ↔ b = c :=
+  (symm_diff_right_injective _).eq_iff
 
 @[simp]
 theorem symm_diff_eq_left : a ∆ b = a ↔ b = ⊥ :=
@@ -228,16 +276,6 @@ theorem symm_diff_eq_bot : a ∆ b = ⊥ ↔ a = b :=
       rw [symm_diff_right_inj, eq_comm]
     
 
-@[simp]
-theorem symm_diff_symm_diff_inf : a ∆ b ∆ (a⊓b) = a⊔b := by
-  rw [symm_diff_eq_iff_sdiff_eq (symm_diff_le_sup _ _), sup_sdiff_symm_diff]
-
-@[simp]
-theorem inf_symm_diff_symm_diff : (a⊓b) ∆ (a ∆ b) = a⊔b := by
-  rw [symm_diff_comm, symm_diff_symm_diff_inf]
-
-variable {a b c}
-
 protected theorem Disjoint.symm_diff_left (ha : Disjoint a c) (hb : Disjoint b c) : Disjoint (a ∆ b) c := by
   rw [symm_diff_eq_sup_sdiff_inf]
   exact (ha.sup_left hb).disjoint_sdiff_left
@@ -252,18 +290,18 @@ section BooleanAlgebra
 variable {α : Type _} [BooleanAlgebra α] (a b c : α)
 
 theorem symm_diff_eq : a ∆ b = a⊓bᶜ⊔b⊓aᶜ := by
-  simp only [(· ∆ ·), sdiff_eq]
+  simp only [← (· ∆ ·), ← sdiff_eq]
 
 @[simp]
 theorem symm_diff_top : a ∆ ⊤ = aᶜ := by
-  simp [symm_diff_eq]
+  simp [← symm_diff_eq]
 
 @[simp]
 theorem top_symm_diff : ⊤ ∆ a = aᶜ := by
   rw [symm_diff_comm, symm_diff_top]
 
 theorem compl_symm_diff : (a ∆ b)ᶜ = a⊓b⊔aᶜ⊓bᶜ := by
-  simp only [← top_sdiff, sdiff_symm_diff, top_inf_eq]
+  simp only [top_sdiff, ← sdiff_symm_diff, ← top_inf_eq]
 
 theorem symm_diff_eq_top_iff : a ∆ b = ⊤ ↔ IsCompl a b := by
   rw [symm_diff_eq_iff_sdiff_eq le_top, top_sdiff, compl_eq_iff_is_compl]
@@ -273,7 +311,7 @@ theorem IsCompl.symm_diff_eq_top (h : IsCompl a b) : a ∆ b = ⊤ :=
 
 @[simp]
 theorem compl_symm_diff_self : aᶜ ∆ a = ⊤ := by
-  simp only [symm_diff_eq, compl_compl, inf_idem, compl_sup_eq_top]
+  simp only [← symm_diff_eq, ← compl_compl, ← inf_idem, ← compl_sup_eq_top]
 
 @[simp]
 theorem symm_diff_compl_self : a ∆ aᶜ = ⊤ := by

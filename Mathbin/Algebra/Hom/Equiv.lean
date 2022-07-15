@@ -370,13 +370,13 @@ protected theorem congr_fun {f g : MulEquiv M N} (h : f = g) (x : M) : f x = g x
 
 /-- The `mul_equiv` between two monoids with a unique element. -/
 @[to_additive "The `add_equiv` between two add_monoids with a unique element."]
-def mulEquivOfUniqueOfUnique {M N} [Unique M] [Unique N] [Mul M] [Mul N] : M ≃* N :=
+def mulEquivOfUnique {M N} [Unique M] [Unique N] [Mul M] [Mul N] : M ≃* N :=
   { Equivₓ.equivOfUnique M N with map_mul' := fun _ _ => Subsingleton.elimₓ _ _ }
 
 /-- There is a unique monoid homomorphism between two monoids with a unique element. -/
 @[to_additive "There is a unique additive monoid homomorphism between two additive monoids with\na unique element."]
 instance {M N} [Unique M] [Unique N] [Mul M] [Mul N] : Unique (M ≃* N) where
-  default := mulEquivOfUniqueOfUnique
+  default := mulEquivOfUnique
   uniq := fun _ => ext fun x => Subsingleton.elimₓ _ _
 
 /-!
@@ -399,10 +399,15 @@ theorem map_ne_one_iff {M N} [MulOneClassₓ M] [MulOneClassₓ N] (h : M ≃* N
   MulEquivClass.map_ne_one_iff h
 
 /-- A bijective `semigroup` homomorphism is an isomorphism -/
-@[to_additive "A bijective `add_semigroup` homomorphism is an isomorphism"]
+@[to_additive "A bijective `add_semigroup` homomorphism is an isomorphism", simps apply]
 noncomputable def ofBijective {M N F} [Mul M] [Mul N] [MulHomClass F M N] (f : F) (hf : Function.Bijective f) :
     M ≃* N :=
   { Equivₓ.ofBijective f hf with map_mul' := map_mul f }
+
+@[simp]
+theorem of_bijective_apply_symm_apply {M N} [MulOneClassₓ M] [MulOneClassₓ N] {n : N} (f : M →* N)
+    (hf : Function.Bijective f) : f ((Equivₓ.ofBijective f hf).symm n) = n :=
+  (MulEquiv.ofBijective f hf).apply_symm_apply n
 
 /-- Extract the forward direction of a multiplicative equivalence
 as a multiplication-preserving function.
@@ -663,9 +668,9 @@ protected def divLeft (a : G) : G ≃ G where
   toFun := fun b => a / b
   invFun := fun b => b⁻¹ * a
   left_inv := fun b => by
-    simp [div_eq_mul_inv]
+    simp [← div_eq_mul_inv]
   right_inv := fun b => by
-    simp [div_eq_mul_inv]
+    simp [← div_eq_mul_inv]
 
 @[to_additive]
 theorem div_left_eq_inv_trans_mul_left (a : G) : Equivₓ.divLeft a = (Equivₓ.inv G).trans (Equivₓ.mulLeft a) :=
@@ -677,9 +682,9 @@ protected def divRight (a : G) : G ≃ G where
   toFun := fun b => b / a
   invFun := fun b => b * a
   left_inv := fun b => by
-    simp [div_eq_mul_inv]
+    simp [← div_eq_mul_inv]
   right_inv := fun b => by
-    simp [div_eq_mul_inv]
+    simp [← div_eq_mul_inv]
 
 @[to_additive]
 theorem div_right_eq_mul_right_inv (a : G) : Equivₓ.divRight a = Equivₓ.mulRight a⁻¹ :=

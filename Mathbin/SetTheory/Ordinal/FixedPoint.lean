@@ -162,7 +162,7 @@ theorem deriv_family_fp {i} (H : IsNormal (f i)) (o : Ordinal.{max u v}) : f i (
   · intro o l IH
     rw [deriv_family_limit _ l, IsNormal.bsup.{max u v, u, max u v} H (fun a _ => deriv_family f a) l.1]
     refine' eq_of_forall_ge_iff fun c => _
-    simp (config := { contextual := true })only [bsup_le_iff, IH]
+    simp (config := { contextual := true })only [← bsup_le_iff, ← IH]
     
 
 theorem le_iff_deriv_family (H : ∀ i, IsNormal (f i)) {a} : (∀ i, f i a ≤ a) ↔ ∃ o, derivFamily f o = a :=
@@ -188,7 +188,7 @@ theorem le_iff_deriv_family (H : ∀ i, IsNormal (f i)) {a} : (∀ i, f i a ≤ 
         let ⟨o', h, hl⟩ := h
         IH o' h (le_of_not_leₓ hl)
       ,
-    fun i => e ▸ le_of_eqₓ (deriv_family_fp (H i) _)⟩
+    fun ⟨o, e⟩ i => e ▸ le_of_eqₓ (deriv_family_fp (H i) _)⟩
 
 theorem fp_iff_deriv_family (H : ∀ i, IsNormal (f i)) {a} : (∀ i, f i a = a) ↔ ∃ o, derivFamily f o = a :=
   Iff.trans ⟨fun h i => le_of_eqₓ (h i), fun h i => (H i).le_iff_eq.1 (h i)⟩ (le_iff_deriv_family H)
@@ -258,7 +258,7 @@ theorem nfp_bfamily_le_apply (ho : o ≠ 0) (H : ∀ i hi, IsNormal (f i hi)) {a
   rw [← not_iff_not]
   push_neg
   convert apply_lt_nfp_bfamily ho H
-  simp only [not_leₓ]
+  simp only [← not_leₓ]
 
 theorem nfp_bfamily_le_fp (H : ∀ i hi, Monotone (f i hi)) {a b} (ab : a ≤ b) (h : ∀ i hi, f i hi b ≤ b) :
     nfpBfamily o f a ≤ b :=
@@ -282,7 +282,7 @@ theorem apply_le_nfp_bfamily (ho : o ≠ 0) (H : ∀ i hi, IsNormal (f i hi)) {a
 theorem nfp_bfamily_eq_self {a} (h : ∀ i hi, f i hi a = a) : nfpBfamily o f a = a :=
   nfp_family_eq_self fun _ => h _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i hi)
 /-- A generalization of the fixed point lemma for normal functions: any family of normal functions
     has an unbounded set of common fixed points. -/
 theorem fp_bfamily_unbounded (H : ∀ i hi, IsNormal (f i hi)) :
@@ -326,7 +326,7 @@ theorem fp_iff_deriv_bfamily (H : ∀ i hi, IsNormal (f i hi)) {a} :
   rw [← (H i hi).le_iff_eq]
   exact h i hi
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i hi)
 theorem deriv_bfamily_eq_enum_ord (H : ∀ i hi, IsNormal (f i hi)) :
     derivBfamily o f = enumOrd (⋂ (i) (hi), Function.FixedPoints (f i hi)) := by
   rw [← eq_enum_ord _ (fp_bfamily_unbounded H)]
@@ -408,7 +408,7 @@ theorem IsNormal.nfp_fp {f} (H : IsNormal f) : ∀ a, f (nfp f a) = nfp f a :=
 
 theorem IsNormal.apply_le_nfp {f} (H : IsNormal f) {a b} : f b ≤ nfp f a ↔ b ≤ nfp f a :=
   ⟨le_transₓ (H.self_le _), fun h => by
-    simpa only [H.nfp_fp] using H.le_iff.2 h⟩
+    simpa only [← H.nfp_fp] using H.le_iff.2 h⟩
 
 theorem nfp_eq_self {f : Ordinal → Ordinal} {a} (h : f a = a) : nfp f a = a :=
   nfp_family_eq_self fun _ => h
@@ -443,7 +443,7 @@ theorem deriv_is_normal f : IsNormal (deriv f) :=
 theorem deriv_id_of_nfp_id {f : Ordinal → Ordinal} (h : nfp f = id) : deriv f = id :=
   ((deriv_is_normal _).eq_iff_zero_and_succ IsNormal.refl).2
     (by
-      simp [h])
+      simp [← h])
 
 theorem IsNormal.deriv_fp {f} (H : IsNormal f) : ∀ o, f (deriv f o) = deriv f o :=
   @deriv_family_fp Unit (fun _ => f) Unit.star H
@@ -463,7 +463,7 @@ theorem deriv_eq_enum_ord (H : IsNormal f) : deriv f = enumOrd (Function.FixedPo
 theorem deriv_eq_id_of_nfp_eq_id {f : Ordinal → Ordinal} (h : nfp f = id) : deriv f = id :=
   (IsNormal.eq_iff_zero_and_succ (deriv_is_normal _) IsNormal.refl).2
     (by
-      simp [h])
+      simp [← h])
 
 end
 

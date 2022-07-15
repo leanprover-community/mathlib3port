@@ -40,7 +40,7 @@ unsafe def pi_instance_derive_field : tactic Unit := do
         let xs ← (List.iota expl_arity).mmap fun _ => intro1
         let x ← intro1
         applyc field
-        (xs fun h => try <| () <$ (apply (h x) <|> apply h) <|> refine (pquote.1 (Set.Image (· <| %%ₓx) (%%ₓh)))) <|>
+        (xs fun h => try <| () <$ (apply (h x) <|> apply h) <|> refine (pquote.1 (Set.image (· <| %%ₓx) (%%ₓh)))) <|>
             fail "args"
         return ()
 

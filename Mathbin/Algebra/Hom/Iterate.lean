@@ -168,7 +168,7 @@ theorem mul_right_iterate : (· * a)^[n] = (· * a ^ n) :=
 
 @[to_additive]
 theorem mul_right_iterate_apply_one : ((· * a)^[n]) 1 = a ^ n := by
-  simp [mul_right_iterate]
+  simp [← mul_right_iterate]
 
 end Monoidₓ
 

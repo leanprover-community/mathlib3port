@@ -141,7 +141,7 @@ theorem eq_iff {x y z w : α} : ⟦(x, y)⟧ = ⟦(z, w)⟧ ↔ x = z ∧ y = w 
 theorem mk_eq_mk_iff {p q : α × α} : ⟦p⟧ = ⟦q⟧ ↔ p = q ∨ p = q.swap := by
   cases p
   cases q
-  simp only [eq_iff, Prod.mk.inj_iff, Prod.swap_prod_mk]
+  simp only [← eq_iff, ← Prod.mk.inj_iff, ← Prod.swap_prod_mk]
 
 /-- The universal property of `sym2`; symmetric functions of two arguments are equivalent to
 functions from `sym2`. Note that when `β` is `Prop`, it can sometimes be more convenient to use
@@ -198,7 +198,7 @@ theorem map.injective {f : α → β} (hinj : Injective f) : Injective (map f) :
   cases' z' with x' y'
   repeat'
     rw [map_pair_eq, eq_iff]
-  rintro (h | h) <;> simp [hinj h.1, hinj h.2]
+  rintro (h | h) <;> simp [← hinj h.1, ← hinj h.2]
 
 section Membership
 
@@ -270,7 +270,7 @@ theorem mem_and_mem_iff {x y : α} {z : Sym2 α} (hne : x ≠ y) : x ∈ z ∧ y
     rintro ⟨rfl | rfl, rfl | rfl⟩ <;>
       try
           trivial <;>
-        simp only [Sym2.eq_swap]
+        simp only [← Sym2.eq_swap]
     
   · rintro rfl
     simp
@@ -288,9 +288,9 @@ protected theorem ext (z z' : Sym2 α) (h : ∀ x, x ∈ z ↔ x ∈ z') : z = z
   have hy := h y
   have hx' := h x'
   have hy' := h y'
-  simp only [mem_iff, eq_self_iff_true, or_trueₓ, iff_trueₓ, true_orₓ, true_iffₓ] at hx hy hx' hy'
+  simp only [← mem_iff, ← eq_self_iff_true, ← or_trueₓ, ← iff_trueₓ, ← true_orₓ, ← true_iffₓ] at hx hy hx' hy'
   cases hx <;> cases hy <;> cases hx' <;> cases hy' <;> subst_vars
-  simp only [Sym2.eq_swap]
+  simp only [← Sym2.eq_swap]
 
 instance Mem.decidable [DecidableEq α] (x : α) (z : Sym2 α) : Decidable (x ∈ z) :=
   Quotientₓ.recOnSubsingleton z fun ⟨y₁, y₂⟩ => decidableOfIff' _ mem_iff
@@ -300,7 +300,7 @@ end Membership
 @[simp]
 theorem mem_map {f : α → β} {b : β} {z : Sym2 α} : b ∈ Sym2.map f z ↔ ∃ a, a ∈ z ∧ f a = b := by
   induction' z using Sym2.ind with x y
-  simp only [map, Quotientₓ.map_mk, Prod.map_mkₓ, mem_iff]
+  simp only [← map, ← Quotientₓ.map_mk, ← Prod.map_mkₓ, ← mem_iff]
   constructor
   · rintro (rfl | rfl)
     · exact
@@ -318,12 +318,12 @@ theorem mem_map {f : α → β} {b : β} {z : Sym2 α} : b ∈ Sym2.map f z ↔ 
 @[congr]
 theorem map_congr {f g : α → β} {s : Sym2 α} (h : ∀, ∀ x ∈ s, ∀, f x = g x) : map f s = map g s := by
   ext y
-  simp only [mem_map]
+  simp only [← mem_map]
   constructor <;>
     · rintro ⟨w, hw, rfl⟩
       exact
         ⟨w, hw, by
-          simp [hw, h]⟩
+          simp [← hw, ← h]⟩
       
 
 /-- Note: `sym2.map_id` will not simplify `sym2.map id z` due to `sym2.map_congr`. -/
@@ -424,7 +424,7 @@ theorem to_rel_prop (s : Set (Sym2 α)) (x y : α) : ToRel s x y ↔ ⟦(x, y)�
   Iff.rfl
 
 theorem to_rel_symmetric (s : Set (Sym2 α)) : Symmetric (ToRel s) := fun x y => by
-  simp [eq_swap]
+  simp [← eq_swap]
 
 theorem to_rel_from_rel (sym : Symmetric r) : ToRel (FromRel Sym) = r :=
   rfl
@@ -446,7 +446,7 @@ private def from_vector : Vector α 2 → α × α
 
 private theorem perm_card_two_iff {a₁ b₁ a₂ b₂ : α} : [a₁, b₁].Perm [a₂, b₂] ↔ a₁ = a₂ ∧ b₁ = b₂ ∨ a₁ = b₂ ∧ b₁ = a₂ :=
   { mp := by
-      simp [← Multiset.coe_eq_coe, ← Multiset.cons_coe, Multiset.cons_eq_cons] <;> tidy,
+      simp [Multiset.coe_eq_coe, Multiset.cons_coe, ← Multiset.cons_eq_cons] <;> tidy,
     mpr := by
       intro h
       cases h <;> rw [h.1, h.2]
@@ -540,8 +540,8 @@ def relBool [DecidableEq α] (x y : α × α) : Bool :=
 theorem rel_bool_spec [DecidableEq α] (x y : α × α) : ↥(relBool x y) ↔ Rel α x y := by
   cases' x with x₁ x₂
   cases' y with y₁ y₂
-  dsimp' [rel_bool]
-  split_ifs <;> simp only [false_iffₓ, Bool.coe_sort_ff, Bool.of_to_bool_iff]
+  dsimp' [← rel_bool]
+  split_ifs <;> simp only [← false_iffₓ, ← Bool.coe_sort_ff, ← Bool.of_to_bool_iff]
   rotate_left 2
   · contrapose! h
     cases h <;> cc
@@ -587,17 +587,17 @@ def Mem.other' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : α :=
       cases' y with y₁ y₂
       cases' mem_iff.mp hy with hy' <;>
         subst a <;>
-          dsimp' [rel_bool]  at h' <;>
+          dsimp' [← rel_bool]  at h' <;>
             split_ifs  at h' <;>
               try
                   rw [Bool.of_to_bool_iff] at h'
                   subst x₁
                   subst x₂ <;>
-                dsimp' [pair_other]
-      simp only [Ne.symm h_1, if_true, eq_self_iff_true, if_false]
+                dsimp' [← pair_other]
+      simp only [← Ne.symm h_1, ← if_true, ← eq_self_iff_true, ← if_false]
       exfalso
       exact Bool.not_ff h'
-      simp only [h_1, if_true, eq_self_iff_true, if_false]
+      simp only [← h_1, ← if_true, ← eq_self_iff_true, ← if_false]
       exfalso
       exact Bool.not_ff h')
     z h
@@ -607,9 +607,9 @@ theorem other_spec' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : ⟦(
   induction z
   cases' z with x y
   have h' := mem_iff.mp h
-  dsimp' [mem.other', Quot.rec, pair_other]
+  dsimp' [← mem.other', ← Quot.rec, ← pair_other]
   cases h' <;> subst a
-  · simp only [if_true, eq_self_iff_true]
+  · simp only [← if_true, ← eq_self_iff_true]
     rfl
     
   · split_ifs
@@ -631,17 +631,17 @@ theorem other_mem' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : h.oth
 theorem other_invol' [DecidableEq α] {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : ha.other' ∈ z) : hb.other' = a := by
   induction z
   cases' z with x y
-  dsimp' [mem.other', Quot.rec, pair_other]  at hb
-  split_ifs  at hb <;> dsimp' [mem.other', Quot.rec, pair_other]
-  simp only [h, if_true, eq_self_iff_true]
+  dsimp' [← mem.other', ← Quot.rec, ← pair_other]  at hb
+  split_ifs  at hb <;> dsimp' [← mem.other', ← Quot.rec, ← pair_other]
+  simp only [← h, ← if_true, ← eq_self_iff_true]
   split_ifs
   assumption
   rfl
-  simp only [h, if_false, if_true, eq_self_iff_true]
+  simp only [← h, ← if_false, ← if_true, ← eq_self_iff_true]
   exact ((mem_iff.mp ha).resolve_left h).symm
   rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem other_invol {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : ha.other ∈ z) : hb.other = a := by
   classical
   rw [other_eq_other'] at hb⊢
@@ -653,7 +653,7 @@ theorem filter_image_quotient_mk_is_diag [DecidableEq α] (s : Finset α) :
   ext z
   induction z using Quotientₓ.induction_on
   rcases z with ⟨x, y⟩
-  simp only [mem_image, mem_diag, exists_prop, mem_filter, Prod.exists, mem_product]
+  simp only [← mem_image, ← mem_diag, ← exists_prop, ← mem_filter, ← Prod.exists, ← mem_product]
   constructor
   · rintro ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
     rw [← h, Sym2.mk_is_diag_iff] at hab
@@ -669,7 +669,7 @@ theorem filter_image_quotient_mk_not_is_diag [DecidableEq α] (s : Finset α) :
   ext z
   induction z using Quotientₓ.induction_on
   rcases z with ⟨x, y⟩
-  simp only [mem_image, mem_off_diag, exists_prop, mem_filter, Prod.exists, mem_product]
+  simp only [← mem_image, ← mem_off_diag, ← exists_prop, ← mem_filter, ← Prod.exists, ← mem_product]
   constructor
   · rintro ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
     rw [← h, Sym2.mk_is_diag_iff] at hab

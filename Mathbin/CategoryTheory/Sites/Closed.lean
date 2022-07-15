@@ -182,7 +182,7 @@ theorem classifier_is_sheaf : Presieve.IsSheaf J₁ (Functor.closedSieves J₁) 
   refine' ⟨_, _⟩
   · rintro x ⟨M, hM⟩ ⟨N, hN⟩ hM₂ hN₂
     ext
-    dsimp' only [Subtype.coe_mk]
+    dsimp' only [← Subtype.coe_mk]
     rw [← J₁.covers_iff_mem_of_closed hM, ← J₁.covers_iff_mem_of_closed hN]
     have q : ∀ ⦃Z : C⦄ g : Z ⟶ X hg : S g, M.pullback g = N.pullback g := by
       intro Z g hg

@@ -37,7 +37,7 @@ theorem coe_mul {G : Type _} [Mul G] [TopologicalSpace G] [ChartedSpace H' G] [H
 @[simp, to_additive]
 theorem mul_comp {G : Type _} [Mul G] [TopologicalSpace G] [ChartedSpace H' G] [HasSmoothMul I' G]
     (f g : C^∞⟮I'', N'; I', G⟯) (h : C^∞⟮I, N; I'', N'⟯) : (f * g).comp h = f.comp h * g.comp h := by
-  ext <;> simp only [ContMdiffMap.comp_apply, coe_mul, Pi.mul_apply]
+  ext <;> simp only [← ContMdiffMap.comp_apply, ← coe_mul, ← Pi.mul_apply]
 
 @[to_additive]
 instance hasOne {G : Type _} [Monoidₓ G] [TopologicalSpace G] [ChartedSpace H' G] : One C^∞⟮I, N; I', G⟯ :=
@@ -168,7 +168,7 @@ field `𝕜` inherit a vector space structure.
 -/
 
 
-instance hasScalar {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V] : HasScalar 𝕜 C^∞⟮I, N; 𝓘(𝕜, V), V⟯ :=
+instance hasSmul {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V] : HasSmul 𝕜 C^∞⟮I, N; 𝓘(𝕜, V), V⟯ :=
   ⟨fun r f => ⟨r • f, smooth_const.smul f.Smooth⟩⟩
 
 @[simp]
@@ -244,7 +244,7 @@ If `V` is a module over `𝕜`, then we show that the space of smooth functions 
 is naturally a vector space over the ring of smooth functions from `N` to `𝕜`. -/
 
 
-instance hasScalar' {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V] : HasScalar C^∞⟮I, N; 𝕜⟯ C^∞⟮I, N; 𝓘(𝕜, V), V⟯ :=
+instance hasSmul' {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V] : HasSmul C^∞⟮I, N; 𝕜⟯ C^∞⟮I, N; 𝓘(𝕜, V), V⟯ :=
   ⟨fun f g => ⟨fun x => f x • g x, Smooth.smul f.2 g.2⟩⟩
 
 @[simp]

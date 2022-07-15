@@ -25,7 +25,7 @@ theorem integral_sin_pow_div_tendsto_one :
           (by
             norm_num)
           pi_pos.le
-      simp [this]
+      simp [← this]
       
     calc
       ((∫ x in 0 ..π, sin x ^ (2 * n.succ + 1)) / ∫ x in 0 ..π, sin x ^ (2 * n.succ)) ≥
@@ -82,7 +82,7 @@ theorem tendsto_prod_pi_div_two :
     · simp_rw
         [mul_inv_cancel_left₀
           (show π / 2 ≠ 0 by
-            norm_num [pi_ne_zero])]
+            norm_num [← pi_ne_zero])]
       
     · rw [mul_oneₓ]
       

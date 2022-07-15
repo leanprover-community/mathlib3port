@@ -198,7 +198,7 @@ theorem Integrable.with_densityᵥ_trim_absolutely_continuous {m m0 : Measurable
   refine' vector_measure.absolutely_continuous.mk fun j hj₁ hj₂ => _
   rw [measure.to_ennreal_vector_measure_apply_measurable hj₁, trim_measurable_set_eq hm hj₁] at hj₂
   rw [vector_measure.trim_measurable_set_eq hm hj₁, with_densityᵥ_apply hfi (hm _ hj₁)]
-  simp only [measure.restrict_eq_zero.mpr hj₂, integral_zero_measure]
+  simp only [← measure.restrict_eq_zero.mpr hj₂, ← integral_zero_measure]
 
 end SignedMeasure
 

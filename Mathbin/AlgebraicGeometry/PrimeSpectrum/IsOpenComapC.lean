@@ -33,7 +33,7 @@ def ImageOfDf f : Set (PrimeSpectrum R) :=
   { p : PrimeSpectrum R | ∃ i : ℕ, coeff f i ∉ p.asIdeal }
 
 theorem is_open_image_of_Df : IsOpen (ImageOfDf f) := by
-  rw [image_of_Df, set_of_exists fun x : PrimeSpectrum R => coeff f i ∉ x.val]
+  rw [image_of_Df, set_of_exists fun i x : PrimeSpectrum R => coeff f i ∉ x.val]
   exact is_open_Union fun i => is_open_basic_open
 
 /-- If a point of `Spec R[x]` is not contained in the vanishing set of `f`, then its image in

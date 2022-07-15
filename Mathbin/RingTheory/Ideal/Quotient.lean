@@ -69,7 +69,11 @@ instance hasMul (I : Ideal R) : Mul (R ⧸ I) :=
         convert F⟩
 
 instance commRing (I : Ideal R) : CommRingₓ (R ⧸ I) :=
-  { Submodule.Quotient.addCommGroup I with mul := (· * ·), one := 1,
+  { Submodule.Quotient.addCommGroup I with mul := (· * ·), one := 1, natCast := fun n => Submodule.Quotient.mk n,
+    nat_cast_zero := by
+      simp [← Nat.castₓ],
+    nat_cast_succ := by
+      simp [← Nat.castₓ] <;> rfl,
     mul_assoc := fun a b c =>
       (Quotientₓ.induction_on₃' a b c) fun a b c => congr_arg Submodule.Quotient.mk (mul_assoc a b c),
     mul_comm := fun a b => (Quotientₓ.induction_on₂' a b) fun a b => congr_arg Submodule.Quotient.mk (mul_comm a b),
@@ -127,7 +131,7 @@ theorem mk_surjective : Function.Surjective (mk I) := fun y => Quotientₓ.induc
 `s ⊆ R` is a subset, then `q⁻¹(q(s)) = ⋃ᵢ(i + s)`, the union running over all `i ∈ I`. -/
 theorem quotient_ring_saturate (I : Ideal R) (s : Set R) : mk I ⁻¹' (mk I '' s) = ⋃ x : I, (fun y => x.1 + y) '' s := by
   ext x
-  simp only [mem_preimage, mem_image, mem_Union, Ideal.Quotient.eq]
+  simp only [← mem_preimage, ← mem_image, ← mem_Union, ← Ideal.Quotient.eq]
   exact
     ⟨fun ⟨a, a_in, h⟩ =>
       ⟨⟨_, I.neg_mem h⟩, a, a_in, by
@@ -145,7 +149,7 @@ instance is_domain (I : Ideal R) [hI : I.IsPrime] : IsDomain (R ⧸ I) :=
 theorem is_domain_iff_prime (I : Ideal R) : IsDomain (R ⧸ I) ↔ I.IsPrime :=
   ⟨fun ⟨h1, h2⟩ =>
     ⟨zero_ne_one_iff.1 <| @zero_ne_one _ _ ⟨h2⟩, fun x y h => by
-      simp only [← eq_zero_iff_mem, (mk I).map_mul] at h⊢
+      simp only [eq_zero_iff_mem, ← (mk I).map_mul] at h⊢
       exact h1 h⟩,
     fun h => by
     skip
@@ -171,7 +175,7 @@ See note [reducible non-instances]. -/
 protected noncomputable def field (I : Ideal R) [hI : I.IsMaximal] : Field (R ⧸ I) :=
   { Quotient.commRing I, Quotient.is_domain I with
     inv := fun a => if ha : a = 0 then 0 else Classical.some (exists_inv ha),
-    mul_inv_cancel := fun ha : a ≠ 0 =>
+    mul_inv_cancel := fun a ha : a ≠ 0 =>
       show a * dite _ _ _ = _ by
         rw [dif_neg ha] <;> exact Classical.some_spec (exists_inv ha),
     inv_zero := dif_pos rfl }
@@ -192,7 +196,9 @@ theorem maximal_of_is_field (I : Ideal R) (hqf : IsField (R ⧸ I)) : I.IsMaxima
 
 /-- The quotient of a ring by an ideal is a field iff the ideal is maximal. -/
 theorem maximal_ideal_iff_is_field_quotient (I : Ideal R) : I.IsMaximal ↔ IsField (R ⧸ I) :=
-  ⟨fun h => @Field.to_is_field (R ⧸ I) (@Ideal.Quotient.field _ _ I h), fun h => maximal_of_is_field I h⟩
+  ⟨fun h => by
+    let this := @quotient.field _ _ I h
+    exact Field.to_is_field _, maximal_of_is_field _⟩
 
 variable [CommRingₓ S]
 
@@ -261,7 +267,7 @@ instance modulePi : Module (R ⧸ I) ((ι → R) ⧸ I.pi ι) where
   mul_smul := by
     rintro ⟨a⟩ ⟨b⟩ ⟨c⟩
     change Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
-    simp only [(· • ·)]
+    simp only [← (· • ·)]
     congr with i
     exact mul_assoc a b (c i)
   smul_add := by
@@ -289,7 +295,7 @@ instance modulePi : Module (R ⧸ I) ((ι → R) ⧸ I.pi ι) where
 noncomputable def piQuotEquiv : ((ι → R) ⧸ I.pi ι) ≃ₗ[R ⧸ I] ι → R ⧸ I where
   toFun := fun x =>
     (Quotientₓ.liftOn' x fun f i => Ideal.Quotient.mk I (f i)) fun a b hab =>
-      funext fun i => (Submodule.Quotient.eq' _).2 (hab i)
+      funext fun i => (Submodule.Quotient.eq' _).2 (QuotientAddGroup.left_rel_apply.mp hab i)
   map_add' := by
     rintro ⟨_⟩ ⟨_⟩
     rfl
@@ -307,14 +313,14 @@ noncomputable def piQuotEquiv : ((ι → R) ⧸ I.pi ι) ≃ₗ[R ⧸ I] ι → 
     simp_rw [← hr]
     convert Quotientₓ.out_eq' _
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `f : R^n → R^m` is an `R`-linear map and `I ⊆ R` is an ideal, then the image of `I^n` is
     contained in `I^m`. -/
 theorem map_pi {ι} [Fintype ι] {ι' : Type w} (x : ι → R) (hi : ∀ i, x i ∈ I) (f : (ι → R) →ₗ[R] ι' → R) (i : ι') :
     f x i ∈ I := by
   classical
   rw [pi_eq_sum_univ x]
-  simp only [Finset.sum_apply, smul_eq_mul, LinearMap.map_sum, Pi.smul_apply, LinearMap.map_smul]
+  simp only [← Finset.sum_apply, ← smul_eq_mul, ← LinearMap.map_sum, ← Pi.smul_apply, ← LinearMap.map_smul]
   exact I.sum_mem fun j hj => I.mul_mem_right _ (hi j)
 
 end Pi
@@ -323,7 +329,7 @@ section ChineseRemainder
 
 variable {ι : Type v}
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem exists_sub_one_mem_and_mem (s : Finset ι) {f : ι → Ideal R}
     (hf : ∀, ∀ i ∈ s, ∀, ∀, ∀ j ∈ s, ∀, i ≠ j → f i⊔f j = ⊤) (i : ι) (his : i ∈ s) :
     ∃ r : R, r - 1 ∈ f i ∧ ∀, ∀ j ∈ s, ∀, j ≠ i → r ∈ f j := by

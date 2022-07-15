@@ -35,7 +35,7 @@ namespace HasFiniteInter
 instance : Inhabited (HasFiniteInter ({Set.Univ} : Set (Set α))) :=
   ⟨⟨by
       tauto, fun _ h1 _ h2 => by
-      simp [Set.mem_singleton_iff.1 h1, Set.mem_singleton_iff.1 h2]⟩⟩
+      simp [← Set.mem_singleton_iff.1 h1, ← Set.mem_singleton_iff.1 h2]⟩⟩
 
 /-- The smallest set of sets containing `S` which is closed under finite intersections. -/
 inductive FiniteInterClosure : Set (Set α)
@@ -50,11 +50,11 @@ def finiteInterClosureHasFiniteInter : HasFiniteInter (FiniteInterClosure S) whe
 
 variable {S}
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem finite_inter_mem (cond : HasFiniteInter S) (F : Finset (Set α)) : ↑F ⊆ S → ⋂₀ (↑F : Set (Set α)) ∈ S := by
   classical
   refine' Finset.induction_on F (fun _ => _) _
-  · simp [cond.univ_mem]
+  · simp [← cond.univ_mem]
     
   · intro a s h1 h2 h3
     suffices a ∩ ⋂₀ ↑s ∈ S by
@@ -62,7 +62,7 @@ theorem finite_inter_mem (cond : HasFiniteInter S) (F : Finset (Set α)) : ↑F 
     exact cond.inter_mem (h3 (Finset.mem_insert_self a s)) (h2 fun x hx => h3 <| Finset.mem_insert_of_mem hx)
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (P «expr ∈ » finite_inter_closure (insert A S))
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (P «expr ∈ » finite_inter_closure (insert A S))
 theorem finite_inter_closure_insert {A : Set α} (cond : HasFiniteInter S) P (_ : P ∈ FiniteInterClosure (insert A S)) :
     P ∈ S ∨ ∃ Q ∈ S, P = A ∩ Q := by
   induction' H with S h T1 T2 _ _ h1 h2
@@ -83,12 +83,12 @@ theorem finite_inter_closure_insert {A : Set α} (cond : HasFiniteInter S) P (_ 
     · exact
         Or.inr
           ⟨T1 ∩ R, cond.inter_mem h hR, by
-            simp only [← Set.inter_assoc, Set.inter_comm _ A]⟩
+            simp only [Set.inter_assoc, ← Set.inter_comm _ A]⟩
       
     · exact
         Or.inr
           ⟨Q ∩ T2, cond.inter_mem hQ i, by
-            simp only [Set.inter_assoc]⟩
+            simp only [← Set.inter_assoc]⟩
       
     · exact
         Or.inr

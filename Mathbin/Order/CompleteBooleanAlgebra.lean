@@ -73,46 +73,54 @@ theorem inf_Sup_eq : a⊓sup s = ⨆ b ∈ s, a⊓b :=
   (Frame.inf_Sup_le_supr_inf _ _).antisymm supr_inf_le_inf_Sup
 
 theorem Sup_inf_eq : sup s⊓b = ⨆ a ∈ s, a⊓b := by
-  simpa only [inf_comm] using @inf_Sup_eq α _ s b
+  simpa only [← inf_comm] using @inf_Sup_eq α _ s b
 
 theorem supr_inf_eq (f : ι → α) (a : α) : (⨆ i, f i)⊓a = ⨆ i, f i⊓a := by
   rw [supr, Sup_inf_eq, supr_range]
 
 theorem inf_supr_eq (a : α) (f : ι → α) : (a⊓⨆ i, f i) = ⨆ i, a⊓f i := by
-  simpa only [inf_comm] using supr_inf_eq f a
+  simpa only [← inf_comm] using supr_inf_eq f a
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 theorem bsupr_inf_eq {f : ∀ i, κ i → α} (a : α) : (⨆ (i) (j), f i j)⊓a = ⨆ (i) (j), f i j⊓a := by
-  simp only [supr_inf_eq]
+  simp only [← supr_inf_eq]
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 theorem inf_bsupr_eq {f : ∀ i, κ i → α} (a : α) : (a⊓⨆ (i) (j), f i j) = ⨆ (i) (j), a⊓f i j := by
-  simp only [inf_supr_eq]
+  simp only [← inf_supr_eq]
 
 theorem supr_inf_supr {ι ι' : Type _} {f : ι → α} {g : ι' → α} : ((⨆ i, f i)⊓⨆ j, g j) = ⨆ i : ι × ι', f i.1⊓g i.2 := by
-  simp only [inf_supr_eq, supr_inf_eq, supr_prod]
+  simp only [← inf_supr_eq, ← supr_inf_eq, ← supr_prod]
 
 theorem bsupr_inf_bsupr {ι ι' : Type _} {f : ι → α} {g : ι' → α} {s : Set ι} {t : Set ι'} :
     ((⨆ i ∈ s, f i)⊓⨆ j ∈ t, g j) = ⨆ p ∈ s ×ˢ t, f (p : ι × ι').1⊓g p.2 := by
-  simp only [supr_subtype', supr_inf_supr]
+  simp only [← supr_subtype', ← supr_inf_supr]
   exact (Equivₓ.surjective _).supr_congr (Equivₓ.Set.prod s t).symm fun x => rfl
 
 theorem Sup_inf_Sup : sup s⊓sup t = ⨆ p ∈ s ×ˢ t, (p : α × α).1⊓p.2 := by
-  simp only [Sup_eq_supr, bsupr_inf_bsupr]
+  simp only [← Sup_eq_supr, ← bsupr_inf_bsupr]
 
 theorem supr_disjoint_iff {f : ι → α} : Disjoint (⨆ i, f i) a ↔ ∀ i, Disjoint (f i) a := by
-  simp only [disjoint_iff, supr_inf_eq, supr_eq_bot]
+  simp only [← disjoint_iff, ← supr_inf_eq, ← supr_eq_bot]
 
 theorem disjoint_supr_iff {f : ι → α} : Disjoint a (⨆ i, f i) ↔ ∀ i, Disjoint a (f i) := by
-  simpa only [Disjoint.comm] using supr_disjoint_iff
+  simpa only [← Disjoint.comm] using supr_disjoint_iff
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+theorem supr₂_disjoint_iff {f : ∀ i, κ i → α} : Disjoint (⨆ (i) (j), f i j) a ↔ ∀ i j, Disjoint (f i j) a := by
+  simp_rw [supr_disjoint_iff]
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+theorem disjoint_supr₂_iff {f : ∀ i, κ i → α} : Disjoint a (⨆ (i) (j), f i j) ↔ ∀ i j, Disjoint a (f i j) := by
+  simp_rw [disjoint_supr_iff]
 
 theorem Sup_disjoint_iff {s : Set α} : Disjoint (sup s) a ↔ ∀, ∀ b ∈ s, ∀, Disjoint b a := by
-  simp only [disjoint_iff, Sup_inf_eq, supr_eq_bot]
+  simp only [← disjoint_iff, ← Sup_inf_eq, ← supr_eq_bot]
 
 theorem disjoint_Sup_iff {s : Set α} : Disjoint a (sup s) ↔ ∀, ∀ b ∈ s, ∀, Disjoint a b := by
-  simpa only [Disjoint.comm] using Sup_disjoint_iff
+  simpa only [← Disjoint.comm] using Sup_disjoint_iff
 
 theorem supr_inf_of_monotone {ι : Type _} [Preorderₓ ι] [IsDirected ι (· ≤ ·)] {f g : ι → α} (hf : Monotone f)
     (hg : Monotone g) : (⨆ i, f i⊓g i) = (⨆ i, f i)⊓⨆ i, g i := by
@@ -129,7 +137,7 @@ theorem supr_inf_of_antitone {ι : Type _} [Preorderₓ ι] [IsDirected ι (swap
 instance Pi.frame {ι : Type _} {π : ι → Type _} [∀ i, Frame (π i)] : Frame (∀ i, π i) :=
   { Pi.completeLattice with
     inf_Sup_le_supr_inf := fun a s i => by
-      simp only [CompleteLattice.supₓ, Sup_apply, supr_apply, Pi.inf_apply, inf_supr_eq, ← supr_subtype''] }
+      simp only [← CompleteLattice.supₓ, ← Sup_apply, ← supr_apply, ← Pi.inf_apply, ← inf_supr_eq, supr_subtype''] }
 
 end Frame
 
@@ -152,13 +160,13 @@ theorem infi_sup_eq (f : ι → α) (a : α) : (⨅ i, f i)⊔a = ⨅ i, f i⊔a
 theorem sup_infi_eq (a : α) (f : ι → α) : (a⊔⨅ i, f i) = ⨅ i, a⊔f i :=
   @inf_supr_eq αᵒᵈ _ _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 theorem binfi_sup_eq {f : ∀ i, κ i → α} (a : α) : (⨅ (i) (j), f i j)⊔a = ⨅ (i) (j), f i j⊔a :=
   @bsupr_inf_eq αᵒᵈ _ _ _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 theorem sup_binfi_eq {f : ∀ i, κ i → α} (a : α) : (a⊔⨅ (i) (j), f i j) = ⨅ (i) (j), a⊔f i j :=
   @inf_bsupr_eq αᵒᵈ _ _ _ _ _
 
@@ -183,7 +191,7 @@ theorem infi_sup_of_antitone {ι : Type _} [Preorderₓ ι] [IsDirected ι (· �
 instance Pi.coframe {ι : Type _} {π : ι → Type _} [∀ i, Coframe (π i)] : Coframe (∀ i, π i) :=
   { Pi.completeLattice with inf := inf,
     infi_sup_le_sup_Inf := fun a s i => by
-      simp only [← sup_infi_eq, Inf_apply, ← infi_subtype'', infi_apply, Pi.sup_apply] }
+      simp only [sup_infi_eq, ← Inf_apply, infi_subtype'', ← infi_apply, ← Pi.sup_apply] }
 
 end Coframe
 
@@ -217,10 +225,10 @@ instance Prop.completeBooleanAlgebra : CompleteBooleanAlgebra Prop :=
   { Prop.booleanAlgebra, Prop.completeLattice with
     infi_sup_le_sup_Inf := fun p s =>
       Iff.mp <| by
-        simp only [forall_or_distrib_left, CompleteLattice.infₓ, infi_Prop_eq, sup_Prop_eq],
+        simp only [← forall_or_distrib_left, ← CompleteLattice.infₓ, ← infi_Prop_eq, ← sup_Prop_eq],
     inf_Sup_le_supr_inf := fun p s =>
       Iff.mp <| by
-        simp only [CompleteLattice.supₓ, exists_and_distrib_left, inf_Prop_eq, supr_Prop_eq] }
+        simp only [← CompleteLattice.supₓ, ← exists_and_distrib_left, ← inf_Prop_eq, ← supr_Prop_eq] }
 
 section CompleteBooleanAlgebra
 
@@ -233,13 +241,13 @@ theorem compl_infi : infi fᶜ = ⨆ i, f iᶜ :=
 theorem compl_supr : supr fᶜ = ⨅ i, f iᶜ :=
   compl_injective
     (by
-      simp [compl_infi])
+      simp [← compl_infi])
 
 theorem compl_Inf : inf sᶜ = ⨆ i ∈ s, iᶜ := by
-  simp only [Inf_eq_infi, compl_infi]
+  simp only [← Inf_eq_infi, ← compl_infi]
 
 theorem compl_Sup : sup sᶜ = ⨅ i ∈ s, iᶜ := by
-  simp only [Sup_eq_supr, compl_supr]
+  simp only [← Sup_eq_supr, ← compl_supr]
 
 theorem compl_Inf' : inf sᶜ = sup (compl '' s) :=
   compl_Inf.trans Sup_image.symm

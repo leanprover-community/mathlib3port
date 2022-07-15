@@ -76,7 +76,7 @@ theorem mem_antidiagonal_tuple {n : ℕ} {k : ℕ} {x : Finₓ k → ℕ} : x �
   · cases n
     · simp
       
-    · simp [eq_comm]
+    · simp [← eq_comm]
       
     
   · refine' Finₓ.consInduction (fun x₀ x => _) x
@@ -97,7 +97,7 @@ theorem nodup_antidiagonal_tuple (k n : ℕ) : List.Nodupₓ (antidiagonalTuple 
   · cases n
     · simp
       
-    · simp [eq_comm]
+    · simp [← eq_comm]
       
     
   simp_rw [antidiagonal_tuple, List.nodup_bind]
@@ -154,8 +154,8 @@ theorem antidiagonal_tuple_pairwise_pi_lex : ∀ k n, (antidiagonalTuple k n).Pa
   | k + 1, n => by
     simp_rw [antidiagonal_tuple, List.pairwise_bind, List.pairwise_map, List.mem_mapₓ, forall_exists_index, and_imp,
       forall_apply_eq_imp_iff₂]
-    simp only [mem_antidiagonal, Prod.forall, and_imp, forall_apply_eq_imp_iff₂]
-    simp only [Finₓ.pi_lex_lt_cons_cons, eq_self_iff_true, true_andₓ, lt_self_iff_false, false_orₓ]
+    simp only [← mem_antidiagonal, ← Prod.forall, ← and_imp, ← forall_apply_eq_imp_iff₂]
+    simp only [← Finₓ.pi_lex_lt_cons_cons, ← eq_self_iff_true, ← true_andₓ, ← lt_self_iff_false, ← false_orₓ]
     refine' ⟨fun _ _ _ => antidiagonal_tuple_pairwise_pi_lex k _, _⟩
     induction n
     · rw [antidiagonal_zero]

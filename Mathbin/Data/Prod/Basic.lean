@@ -79,11 +79,11 @@ theorem mk.inj_iff {a₁ a₂ : α} {b₁ b₂ : β} : (a₁, b₁) = (a₂, b�
 
 theorem mk.inj_left {α β : Type _} (a : α) : Function.Injective (Prod.mk a : β → α × β) := by
   intro b₁ b₂ h
-  simpa only [true_andₓ, Prod.mk.inj_iff, eq_self_iff_true] using h
+  simpa only [← true_andₓ, ← Prod.mk.inj_iff, ← eq_self_iff_true] using h
 
 theorem mk.inj_right {α β : Type _} (b : β) : Function.Injective (fun a => Prod.mk a b : α → α × β) := by
   intro b₁ b₂ h
-  · simpa only [and_trueₓ, eq_self_iff_true, mk.inj_iff] using h
+  · simpa only [← and_trueₓ, ← eq_self_iff_true, ← mk.inj_iff] using h
     
 
 theorem ext_iff {p q : α × β} : p = q ↔ p.1 = q.1 ∧ p.2 = q.2 := by
@@ -231,14 +231,32 @@ instance is_total_right {r : α → α → Prop} {s : β → β → Prop} [IsTri
 
 end Prod
 
-open Function
+open Prod
 
-theorem Function.Injective.prod_map {f : α → γ} {g : β → δ} (hf : Injective f) (hg : Injective g) :
-    Injective (Prod.map f g) := fun x y h => Prod.extₓ (hf (Prod.ext_iff.1 h).1) (hg <| (Prod.ext_iff.1 h).2)
+namespace Function
 
-theorem Function.Surjective.prod_map {f : α → γ} {g : β → δ} (hf : Surjective f) (hg : Surjective g) :
-    Surjective (Prod.map f g) := fun p =>
+variable {f : α → γ} {g : β → δ} {f₁ : α → β} {g₁ : γ → δ} {f₂ : β → α} {g₂ : δ → γ}
+
+theorem Injective.prod_map (hf : Injective f) (hg : Injective g) : Injective (map f g) := fun x y h =>
+  extₓ (hf (ext_iff.1 h).1) (hg <| (ext_iff.1 h).2)
+
+theorem Surjective.prod_map (hf : Surjective f) (hg : Surjective g) : Surjective (map f g) := fun p =>
   let ⟨x, hx⟩ := hf p.1
   let ⟨y, hy⟩ := hg p.2
   ⟨(x, y), Prod.extₓ hx hy⟩
+
+theorem Bijective.prod_map (hf : Bijective f) (hg : Bijective g) : Bijective (map f g) :=
+  ⟨hf.1.prod_map hg.1, hf.2.prod_map hg.2⟩
+
+theorem LeftInverse.prod_map (hf : LeftInverse f₁ f₂) (hg : LeftInverse g₁ g₂) : LeftInverse (map f₁ g₁) (map f₂ g₂) :=
+  fun a => by
+  rw [Prod.map_mapₓ, hf.comp_eq_id, hg.comp_eq_id, map_id, id]
+
+theorem RightInverse.prod_map : RightInverse f₁ f₂ → RightInverse g₁ g₂ → RightInverse (map f₁ g₁) (map f₂ g₂) :=
+  left_inverse.prod_map
+
+theorem Involutive.prod_map {f : α → α} {g : β → β} : Involutive f → Involutive g → Involutive (map f g) :=
+  left_inverse.prod_map
+
+end Function
 

@@ -171,7 +171,7 @@ theorem card_pow_degree_anti_archimedean {x y z : Fq[X]} {a : ℤ} (hxy : cardPo
   rw [card_pow_degree_nonzero _ hxz', card_pow_degree_nonzero _ hxy', card_pow_degree_nonzero _ hyz']
   have : (1 : ℤ) ≤ Fintype.card Fq := by
     exact_mod_cast (@Fintype.one_lt_card Fq _ _).le
-  simp only [Int.cast_pow, Int.cast_coe_nat, le_max_iff]
+  simp only [← Int.cast_pow, ← Int.cast_coe_nat, ← le_max_iff]
   refine' Or.imp (pow_le_pow this) (pow_le_pow this) _
   rw [nat_degree_le_iff_degree_le, nat_degree_le_iff_degree_le, ← le_max_iff, ← degree_eq_nat_degree hxy', ←
     degree_eq_nat_degree hyz']

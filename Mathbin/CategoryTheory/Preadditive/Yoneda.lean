@@ -87,17 +87,13 @@ def preadditiveCoyoneda : Cᵒᵖ ⥤ C ⥤ AddCommGroupₓₓ.{v} where
     ext
     simp
 
-instance additive_yoneda_obj (X : C) : Functor.Additive (preadditiveYonedaObj X) :=
-  {  }
+instance additive_yoneda_obj (X : C) : Functor.Additive (preadditiveYonedaObj X) where
 
-instance additive_yoneda_obj' (X : C) : Functor.Additive (preadditiveYoneda.obj X) :=
-  {  }
+instance additive_yoneda_obj' (X : C) : Functor.Additive (preadditiveYoneda.obj X) where
 
-instance additive_coyoneda_obj (X : Cᵒᵖ) : Functor.Additive (preadditiveCoyonedaObj X) :=
-  {  }
+instance additive_coyoneda_obj (X : Cᵒᵖ) : Functor.Additive (preadditiveCoyonedaObj X) where
 
-instance additive_coyoneda_obj' (X : Cᵒᵖ) : Functor.Additive (preadditiveCoyoneda.obj X) :=
-  {  }
+instance additive_coyoneda_obj' (X : Cᵒᵖ) : Functor.Additive (preadditiveCoyoneda.obj X) where
 
 /-- Composing the preadditive yoneda embedding with the forgetful functor yields the regular
 Yoneda embedding.

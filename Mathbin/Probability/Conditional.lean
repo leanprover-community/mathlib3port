@@ -91,11 +91,11 @@ section Bayes
 
 @[simp]
 theorem cond_empty : μ[|∅] = 0 := by
-  simp [cond]
+  simp [← cond]
 
 @[simp]
 theorem cond_univ [IsProbabilityMeasure μ] : μ[|Set.Univ] = μ := by
-  simp [cond, measure_univ, measure.restrict_univ]
+  simp [← cond, ← measure_univ, ← measure.restrict_univ]
 
 /-- The axiomatic definition of conditional probability derived from a measure-theoretic one. -/
 theorem cond_apply (hms : MeasurableSet s) (t : Set α) : μ[t|s] = (μ s)⁻¹ * μ (s ∩ t) := by
@@ -110,7 +110,7 @@ theorem inter_pos_of_cond_ne_zero (hms : MeasurableSet s) (hcst : μ[t|s] ≠ 0)
   · exact (μ s)⁻¹
     
   convert hcst
-  simp [hms, Set.inter_comm]
+  simp [← hms, ← Set.inter_comm]
 
 theorem cond_pos_of_inter_ne_zero [IsFiniteMeasure μ] (hms : MeasurableSet s) (hci : μ (s ∩ t) ≠ 0) : 0 < (μ[|s]) t :=
   by
@@ -122,7 +122,7 @@ theorem cond_cond_eq_cond_inter' (hms : MeasurableSet s) (hmt : MeasurableSet t)
     μ[|s][|t] = μ[|s ∩ t] := by
   have hcs : μ s ≠ 0 := (μ.to_outer_measure.pos_of_subset_ne_zero (Set.inter_subset_left _ _) hci).ne'
   ext u
-  simp [*, hms.inter hmt, cond_apply, ← mul_assoc, ← Set.inter_assoc, Ennreal.mul_inv, mul_comm, ← mul_assoc,
+  simp [*, ← hms.inter hmt, ← cond_apply, mul_assoc, Set.inter_assoc, ← Ennreal.mul_inv, ← mul_comm, mul_assoc, ←
     Ennreal.inv_mul_cancel]
 
 /-- Conditioning first on `s` and then on `t` results in the same measure as conditioning
@@ -149,7 +149,7 @@ theorem cond_add_cond_compl_eq [IsFiniteMeasure μ] (hms : MeasurableSet s) (hcs
 theorem cond_eq_inv_mul_cond_mul [IsFiniteMeasure μ] (hms : MeasurableSet s) (hmt : MeasurableSet t) :
     μ[t|s] = (μ s)⁻¹ * μ[s|t] * μ t := by
   by_cases' ht : μ t = 0
-  · simp [cond, ht, measure.restrict_apply hmt, Or.inr (measure_inter_null_of_null_left s ht)]
+  · simp [← cond, ← ht, ← measure.restrict_apply hmt, ← Or.inr (measure_inter_null_of_null_left s ht)]
     
   · rw [mul_assoc, cond_mul_eq_inter μ hmt ht s, Set.inter_comm, cond_apply _ hms]
     

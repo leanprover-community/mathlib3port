@@ -61,7 +61,7 @@ theorem continuous_thickened_indicator_aux {δ : ℝ} (δ_pos : 0 < δ) (E : Set
       rfl]
   apply (@Ennreal.continuous_nnreal_sub 1).comp
   apply (Ennreal.continuous_div_const (Ennreal.ofReal δ) _).comp continuous_inf_edist
-  norm_num [δ_pos]
+  norm_num [← δ_pos]
 
 theorem thickened_indicator_aux_le_one (δ : ℝ) (E : Set α) (x : α) : thickenedIndicatorAux δ E x ≤ 1 := by
   apply @tsub_le_self _ _ _ _ (1 : ℝ≥0∞)
@@ -74,7 +74,7 @@ theorem thickened_indicator_aux_closure_eq (δ : ℝ) (E : Set α) :
   simp_rw [thickenedIndicatorAux, inf_edist_closure]
 
 theorem thickened_indicator_aux_one (δ : ℝ) (E : Set α) {x : α} (x_in_E : x ∈ E) : thickenedIndicatorAux δ E x = 1 := by
-  simp [thickenedIndicatorAux, inf_edist_zero_of_mem x_in_E, tsub_zero]
+  simp [← thickenedIndicatorAux, ← inf_edist_zero_of_mem x_in_E, ← tsub_zero]
 
 theorem thickened_indicator_aux_one_of_mem_closure (δ : ℝ) (E : Set α) {x : α} (x_mem : x ∈ Closure E) :
     thickenedIndicatorAux δ E x = 1 := by
@@ -97,9 +97,9 @@ theorem indicator_le_thickened_indicator_aux (δ : ℝ) (E : Set α) :
     (E.indicator fun _ => (1 : ℝ≥0∞)) ≤ thickenedIndicatorAux δ E := by
   intro a
   by_cases' a ∈ E
-  · simp only [h, indicator_of_mem, thickened_indicator_aux_one δ E h, le_reflₓ]
+  · simp only [← h, ← indicator_of_mem, ← thickened_indicator_aux_one δ E h, ← le_reflₓ]
     
-  · simp only [h, indicator_of_not_mem, not_false_iff, zero_le]
+  · simp only [← h, ← indicator_of_not_mem, ← not_false_iff, ← zero_le]
     
 
 theorem thickened_indicator_aux_subset (δ : ℝ) {E₁ E₂ : Set α} (subset : E₁ ⊆ E₂) :
@@ -122,12 +122,12 @@ theorem thickened_indicator_aux_tendsto_indicator_closure {δseq : ℕ → ℝ} 
   · simp_rw [thickened_indicator_aux_one_of_mem_closure _ E x_mem_closure]
     rw
       [show (indicator (Closure E) fun _ => (1 : ℝ≥0∞)) x = 1 by
-        simp only [x_mem_closure, indicator_of_mem]]
+        simp only [← x_mem_closure, ← indicator_of_mem]]
     exact tendsto_const_nhds
     
   · rw
       [show (Closure E).indicator (fun _ => (1 : ℝ≥0∞)) x = 0 by
-        simp only [x_mem_closure, indicator_of_not_mem, not_false_iff]]
+        simp only [← x_mem_closure, ← indicator_of_not_mem, ← not_false_iff]]
     rw [mem_closure_iff_inf_edist_zero] at x_mem_closure
     obtain ⟨ε, ⟨ε_pos, ε_le⟩⟩ : ∃ ε : ℝ, 0 < ε ∧ Ennreal.ofReal ε ≤ inf_edist x E := by
       by_cases' dist_infty : inf_edist x E = ∞
@@ -139,7 +139,7 @@ theorem thickened_indicator_aux_tendsto_indicator_closure {δseq : ℕ → ℝ} 
         
     rw [Metric.tendsto_nhds] at δseq_lim
     specialize δseq_lim ε ε_pos
-    simp only [dist_zero_right, Real.norm_eq_abs, eventually_at_top, ge_iff_le] at δseq_lim
+    simp only [← dist_zero_right, ← Real.norm_eq_abs, ← eventually_at_top, ← ge_iff_le] at δseq_lim
     rcases δseq_lim with ⟨N, hN⟩
     apply @tendsto_at_top_of_eventually_const _ _ _ _ _ _ _ N
     intro n n_large
@@ -200,9 +200,9 @@ theorem indicator_le_thickened_indicator {δ : ℝ} (δ_pos : 0 < δ) (E : Set �
     (E.indicator fun _ => (1 : ℝ≥0 )) ≤ thickenedIndicator δ_pos E := by
   intro a
   by_cases' a ∈ E
-  · simp only [h, indicator_of_mem, thickened_indicator_one δ_pos E h, le_reflₓ]
+  · simp only [← h, ← indicator_of_mem, ← thickened_indicator_one δ_pos E h, ← le_reflₓ]
     
-  · simp only [h, indicator_of_not_mem, not_false_iff, zero_le]
+  · simp only [← h, ← indicator_of_not_mem, ← not_false_iff, ← zero_le]
     
 
 theorem thickened_indicator_mono {δ₁ δ₂ : ℝ} (δ₁_pos : 0 < δ₁) (δ₂_pos : 0 < δ₂) (hle : δ₁ ≤ δ₂) (E : Set α) :
@@ -234,7 +234,7 @@ theorem thickened_indicator_tendsto_indicator_closure {δseq : ℕ → ℝ} (δs
     [show indicator (Closure E) (fun x => (1 : ℝ≥0 )) x = (indicator (Closure E) (fun x => (1 : ℝ≥0∞)) x).toNnreal by
       refine' (congr_fun (comp_indicator_const 1 Ennreal.toNnreal zero_to_nnreal) x).symm]
   refine' tendsto.comp (tendsto_to_nnreal _) (key x)
-  by_cases' x_mem : x ∈ Closure E <;> simp [x_mem]
+  by_cases' x_mem : x ∈ Closure E <;> simp [← x_mem]
 
 end thickenedIndicator
 

@@ -68,7 +68,7 @@ theorem is_open_singleton_iff : IsOpen ({a} : Set Ordinal) ↔ ¬IsLimit a := by
       
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem is_open_iff : IsOpen s ↔ ∀, ∀ o ∈ s, ∀, IsLimit o → ∃ a < o, Set.Ioo a o ⊆ s := by
   classical
   refine' ⟨_, fun h => _⟩
@@ -138,7 +138,7 @@ theorem mem_closure_iff_sup :
         ⟨PUnit, by
           infer_instance, fun _ => a, fun _ => has, sup_const a⟩
       
-    · have H := fun hba : b < a => h _ (@is_open_Ioo _ _ _ _ b (a + 1)) ⟨hba, lt_succ a⟩
+    · have H := fun b hba : b < a => h _ (@is_open_Ioo _ _ _ _ b (a + 1)) ⟨hba, lt_succ a⟩
       let f : a.out.α → Ordinal := fun i => Classical.some (H (typein (· < ·) i) (typein_lt_self i))
       have hf : ∀ i, f i ∈ Set.Ioo (typein (· < ·) i) (a + 1) ∩ s := fun i => Classical.some_spec (H _ _)
       rcases eq_zero_or_pos a with (rfl | ha₀)
@@ -223,7 +223,7 @@ theorem is_closed_iff_bsup :
     
 
 theorem is_limit_of_mem_frontier (ha : a ∈ Frontier s) : IsLimit a := by
-  simp only [frontier_eq_closure_inter_closure, Set.mem_inter_iff, mem_closure_iff] at ha
+  simp only [← frontier_eq_closure_inter_closure, ← Set.mem_inter_iff, ← mem_closure_iff] at ha
   by_contra h
   rw [← is_open_singleton_iff] at h
   rcases ha.1 _ h rfl with ⟨b, hb, hb'⟩
@@ -254,7 +254,7 @@ theorem is_normal_iff_strict_mono_and_continuous (f : Ordinal.{u} → Ordinal.{u
     exact ⟨_, out_nonempty_iff_ne_zero.2 ho.1, typein (· < ·), fun i => h _ (typein_lt_self i), sup_typein_limit ho.2⟩
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (b «expr < » a)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (b «expr < » a)
 theorem enum_ord_is_normal_iff_is_closed (hs : s.Unbounded (· < ·)) : IsNormal (enumOrd s) ↔ IsClosed s := by
   have Hs := enum_ord_strict_mono hs
   refine'

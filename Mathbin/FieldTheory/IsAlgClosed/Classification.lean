@@ -55,9 +55,9 @@ theorem cardinal_mk_le_sigma_polynomial : # L ≤ # (Σp : R[X], { x : L // x �
     intro h
     simp only at h
     refine' (Subtype.heq_iff_coe_eq _).1 h.2
-    simp only [h.1, iff_selfₓ, forall_true_iff]
+    simp only [← h.1, ← iff_selfₓ, ← forall_true_iff]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The cardinality of an algebraic extension is at most the maximum of the cardinality
 of the base ring or `ℵ₀` -/
 theorem cardinal_mk_le_max : # L ≤ max (# R) ℵ₀ :=
@@ -71,13 +71,13 @@ theorem cardinal_mk_le_max : # L ≤ max (# R) ℵ₀ :=
           (by
             rw [lt_aleph_0_iff_finite]
             classical
-            simp only [← @Multiset.mem_to_finset _ _ _ (p.map (algebraMap R L)).roots]
+            simp only [@Multiset.mem_to_finset _ _ _ (p.map (algebraMap R L)).roots]
             exact Set.finite_mem_finset _)
     _ = # R[X] * ℵ₀ := sum_const' _ _
     _ ≤ max (max (# R[X]) ℵ₀) ℵ₀ := mul_le_max _ _
     _ ≤ max (max (max (# R) ℵ₀) ℵ₀) ℵ₀ := max_le_max (max_le_max Polynomial.cardinal_mk_le_max le_rfl) le_rfl
     _ = max (# R) ℵ₀ := by
-      simp only [max_assocₓ, max_commₓ ℵ₀, max_left_commₓ ℵ₀, max_selfₓ]
+      simp only [← max_assocₓ, ← max_commₓ ℵ₀, ← max_left_commₓ ℵ₀, ← max_selfₓ]
     
 
 end Algebra.IsAlgebraic
@@ -153,7 +153,7 @@ theorem cardinal_le_max_transcendence_basis (hv : IsTranscendenceBasis R v) : # 
       rw [Cardinal.eq.2 ⟨hv.1.aevalEquiv.toEquiv⟩]
     _ ≤ max (max (max (# R) (# ι)) ℵ₀) ℵ₀ := max_le_max MvPolynomial.cardinal_mk_le_max le_rfl
     _ = _ := by
-      simp [max_assocₓ]
+      simp [← max_assocₓ]
     
 
 /-- If `K` is an uncountable algebraically closed field, then its

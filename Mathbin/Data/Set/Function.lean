@@ -61,13 +61,13 @@ theorem range_restrict (f : α → β) (s : Set α) : Set.Range (s.restrict f) =
 theorem image_restrict (f : α → β) (s t : Set α) : s.restrict f '' (coe ⁻¹' t) = f '' (t ∩ s) := by
   rw [restrict, image_comp, image_preimage_eq_inter_range, Subtype.range_coe]
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (a «expr ∉ » s)
 @[simp]
 theorem restrict_dite {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀, ∀ a ∈ s, ∀, β) (g : ∀ a _ : a ∉ s, β) :
     (s.restrict fun a => if h : a ∈ s then f a h else g a h) = fun a => f a a.2 :=
   funext fun a => dif_pos a.2
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (a «expr ∉ » s)
 @[simp]
 theorem restrict_dite_compl {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀, ∀ a ∈ s, ∀, β) (g : ∀ a _ : a ∉ s, β) :
     (sᶜ.restrict fun a => if h : a ∈ s then f a h else g a h) = fun a => g a a.2 :=
@@ -102,7 +102,7 @@ theorem restrict_extend_compl_range (f : α → β) (g : α → γ) (g' : β →
     Range fᶜ.restrict (extendₓ f g g') = g' ∘ coe := by
   convert restrict_dite_compl _ _
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem range_extend_subset (f : α → β) (g : α → γ) (g' : β → γ) : Range (extendₓ f g g') ⊆ Range g ∪ g' '' Range fᶜ :=
   by
   classical
@@ -135,9 +135,9 @@ variable {s s₁ s₂ : Set α} {t t₁ t₂ : Set β} {p : Set γ} {f f₁ f₂
 
 @[simp]
 theorem injective_cod_restrict (h : ∀ x, f x ∈ t) : Injective (codRestrict f t h) ↔ Injective f := by
-  simp only [injective, Subtype.ext_iff, coe_cod_restrict_apply]
+  simp only [← injective, ← Subtype.ext_iff, ← coe_cod_restrict_apply]
 
-alias injective_cod_restrict ↔ _ Function.Injective.cod_restrict
+alias injective_cod_restrict ↔ _ _root_.function.injective.cod_restrict
 
 /-! ### Equality on a set -/
 
@@ -264,7 +264,7 @@ theorem MapsTo.coe_restrict_apply (h : MapsTo f s t) (x : s) : (h.restrict f s t
   rfl
 
 theorem maps_to_iff_exists_map_subtype : MapsTo f s t ↔ ∃ g : s → t, ∀ x : s, f x = g x :=
-  ⟨fun h => ⟨h.restrict f s t, fun _ => rfl⟩, fun x hx => by
+  ⟨fun h => ⟨h.restrict f s t, fun _ => rfl⟩, fun ⟨g, hg⟩ x hx => by
     erw [hg ⟨x, hx⟩]
     apply Subtype.coe_prop⟩
 
@@ -303,7 +303,7 @@ theorem MapsTo.iterate_restrict {f : α → α} {s : Set α} (h : MapsTo f s s) 
   induction' n with n ihn generalizing x
   · rfl
     
-  · simp [Nat.iterate, ihn]
+  · simp [← Nat.iterate, ← ihn]
     
 
 theorem MapsTo.mono (hf : MapsTo f s₁ t₁) (hs : s₂ ⊆ s₁) (ht : t₁ ⊆ t₂) : MapsTo f s₂ t₂ := fun x hx => ht (hf <| hs hx)
@@ -413,7 +413,7 @@ theorem injective_iff_inj_on_univ : Injective f ↔ InjOn f Univ :=
 
 theorem inj_on_of_injective (h : Injective f) (s : Set α) : InjOn f s := fun x hx y hy hxy => h hxy
 
-alias inj_on_of_injective ← Function.Injective.inj_on
+alias inj_on_of_injective ← _root_.function.injective.inj_on
 
 theorem InjOn.comp (hg : InjOn g t) (hf : InjOn f s) (h : MapsTo f s t) : InjOn (g ∘ f) s := fun x hx y hy heq =>
   hf hx hy <| hg (h hx) (h hy) HEq
@@ -421,7 +421,7 @@ theorem InjOn.comp (hg : InjOn g t) (hf : InjOn f s) (h : MapsTo f s t) : InjOn 
 theorem inj_on_iff_injective : InjOn f s ↔ Injective (s.restrict f) :=
   ⟨fun H a b h => Subtype.eq <| H a.2 b.2 h, fun H a as b bs h => congr_arg Subtype.val <| @H ⟨a, as⟩ ⟨b, bs⟩ h⟩
 
-alias inj_on_iff_injective ↔ Set.InjOn.injective _
+alias inj_on_iff_injective ↔ inj_on.injective _
 
 theorem inj_on_preimage {B : Set (Set β)} (hB : B ⊆ 𝒫 Range f) : InjOn (Preimage f) B := fun s hs t ht hst =>
   (preimage_eq_preimage' (hB hs) (hB ht)).1 hst
@@ -455,7 +455,8 @@ theorem SurjOn.subset_range (h : SurjOn f s t) : t ⊆ Range f :=
 
 theorem surj_on_iff_exists_map_subtype :
     SurjOn f s t ↔ ∃ (t' : Set β)(g : s → t'), t ⊆ t' ∧ Surjective g ∧ ∀ x : s, f x = g x :=
-  ⟨fun h => ⟨_, (maps_to_image f s).restrict f s _, h, surjective_maps_to_image_restrict _ _, fun _ => rfl⟩, fun y hy =>
+  ⟨fun h => ⟨_, (maps_to_image f s).restrict f s _, h, surjective_maps_to_image_restrict _ _, fun _ => rfl⟩,
+    fun ⟨t', g, htt', hg, hfg⟩ y hy =>
     let ⟨x, hx⟩ := hg ⟨y, htt' hy⟩
     ⟨x, x.2, by
       rw [hfg, hx, Subtype.coe_mk]⟩⟩
@@ -499,7 +500,7 @@ theorem SurjOn.comp (hg : SurjOn g t p) (hf : SurjOn f s t) : SurjOn (g ∘ f) s
   Subset.trans hg <| Subset.trans (image_subset g hf) <| image_comp g f s ▸ Subset.refl _
 
 theorem surjective_iff_surj_on_univ : Surjective f ↔ SurjOn f Univ Univ := by
-  simp [surjective, surj_on, subset_def]
+  simp [← surjective, ← surj_on, ← subset_def]
 
 theorem surj_on_iff_surjective : SurjOn f s Univ ↔ Surjective (s.restrict f) :=
   ⟨fun H b =>
@@ -801,7 +802,7 @@ theorem SurjOn.bij_on_subset [Nonempty α] (h : SurjOn f s t) : BijOn f (invFunO
   rintro _ ⟨y, hy, rfl⟩
   rwa [h.right_inv_on_inv_fun_on hy]
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (s' «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (s' «expr ⊆ » s)
 theorem surj_on_iff_exists_bij_on_subset : SurjOn f s t ↔ ∃ (s' : _)(_ : s' ⊆ s), BijOn f s' t := by
   constructor
   · rcases eq_empty_or_nonempty t with (rfl | ht)
@@ -820,9 +821,9 @@ theorem preimage_inv_fun_of_mem [n : Nonempty α] {f : α → β} (hf : Injectiv
     (h : Classical.choice n ∈ s) : invFun f ⁻¹' s = f '' s ∪ Range fᶜ := by
   ext x
   rcases em (x ∈ range f) with (⟨a, rfl⟩ | hx)
-  · simp [left_inverse_inv_fun hf _, hf.mem_set_image]
+  · simp [← left_inverse_inv_fun hf _, ← hf.mem_set_image]
     
-  · simp [mem_preimage, inv_fun_neg hx, h, hx]
+  · simp [← mem_preimage, ← inv_fun_neg hx, ← h, ← hx]
     
 
 theorem preimage_inv_fun_of_not_mem [n : Nonempty α] {f : α → β} (hf : Injective f) {s : Set α}
@@ -832,7 +833,7 @@ theorem preimage_inv_fun_of_not_mem [n : Nonempty α] {f : α → β} (hf : Inje
   · rw [mem_preimage, left_inverse_inv_fun hf, hf.mem_set_image]
     
   · have : x ∉ f '' s := fun h' => hx (image_subset_range _ _ h')
-    simp only [mem_preimage, inv_fun_neg hx, h, this]
+    simp only [← mem_preimage, ← inv_fun_neg hx, ← h, ← this]
     
 
 end Set
@@ -864,16 +865,16 @@ variable {δ : α → Sort y} (s : Set α) (f g : ∀ i, δ i)
 @[simp]
 theorem piecewise_empty [∀ i : α, Decidable (i ∈ (∅ : Set α))] : piecewise ∅ f g = g := by
   ext i
-  simp [piecewise]
+  simp [← piecewise]
 
 @[simp]
 theorem piecewise_univ [∀ i : α, Decidable (i ∈ (Set.Univ : Set α))] : piecewise Set.Univ f g = f := by
   ext i
-  simp [piecewise]
+  simp [← piecewise]
 
 @[simp]
 theorem piecewise_insert_self {j : α} [∀ i, Decidable (i ∈ insert j s)] : (insert j s).piecewise f g j = f j := by
-  simp [piecewise]
+  simp [← piecewise]
 
 variable [∀ j, Decidable (j ∈ s)]
 
@@ -882,13 +883,13 @@ instance Compl.decidableMem (j : α) : Decidable (j ∈ sᶜ) :=
 
 theorem piecewise_insert [DecidableEq α] (j : α) [∀ i, Decidable (i ∈ insert j s)] :
     (insert j s).piecewise f g = Function.update (s.piecewise f g) j (f j) := by
-  simp [piecewise]
+  simp [← piecewise]
   ext i
   by_cases' h : i = j
   · rw [h]
     simp
     
-  · by_cases' h' : i ∈ s <;> simp [h, h']
+  · by_cases' h' : i ∈ s <;> simp [← h, ← h']
     
 
 @[simp]
@@ -906,14 +907,14 @@ theorem piecewise_singleton (x : α) [∀ y, Decidable (y ∈ ({x} : Set α))] [
   · subst y
     simp
     
-  · simp [hy]
+  · simp [← hy]
     
 
 theorem piecewise_eq_on (f g : α → β) : EqOn (s.piecewise f g) f s := fun _ => piecewise_eq_of_mem _ _ _
 
 theorem piecewise_eq_on_compl (f g : α → β) : EqOn (s.piecewise f g) g (sᶜ) := fun _ => piecewise_eq_of_not_mem _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem piecewise_le {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g : ∀ i, δ i}
     (h₁ : ∀, ∀ i ∈ s, ∀, f₁ i ≤ g i) (h₂ : ∀ i _ : i ∉ s, f₂ i ≤ g i) : s.piecewise f₁ f₂ ≤ g := fun i =>
   if h : i ∈ s then by
@@ -921,12 +922,12 @@ theorem piecewise_le {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set �
   else by
     simp [*]
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem le_piecewise {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g : ∀ i, δ i}
     (h₁ : ∀, ∀ i ∈ s, ∀, g i ≤ f₁ i) (h₂ : ∀ i _ : i ∉ s, g i ≤ f₂ i) : g ≤ s.piecewise f₁ f₂ :=
   @piecewise_le α (fun i => (δ i)ᵒᵈ) _ s _ _ _ _ h₁ h₂
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem piecewise_le_piecewise {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)]
     {f₁ f₂ g₁ g₂ : ∀ i, δ i} (h₁ : ∀, ∀ i ∈ s, ∀, f₁ i ≤ g₁ i) (h₂ : ∀ i _ : i ∉ s, f₂ i ≤ g₂ i) :
     s.piecewise f₁ f₂ ≤ s.piecewise g₁ g₂ := by
@@ -935,15 +936,15 @@ theorem piecewise_le_piecewise {δ : α → Type _} [∀ i, Preorderₓ (δ i)] 
 @[simp]
 theorem piecewise_insert_of_ne {i j : α} (h : i ≠ j) [∀ i, Decidable (i ∈ insert j s)] :
     (insert j s).piecewise f g i = s.piecewise f g i := by
-  simp [piecewise, h]
+  simp [← piecewise, ← h]
 
 @[simp]
 theorem piecewise_compl [∀ i, Decidable (i ∈ sᶜ)] : sᶜ.piecewise f g = s.piecewise g f :=
   funext fun x =>
     if hx : x ∈ s then by
-      simp [hx]
+      simp [← hx]
     else by
-      simp [hx]
+      simp [← hx]
 
 @[simp]
 theorem piecewise_range_comp {ι : Sort _} (f : ι → α) [∀ j, Decidable (j ∈ Range f)] (g₁ g₂ : α → β) :
@@ -958,13 +959,13 @@ theorem MapsTo.piecewise_ite {s s₁ s₂ : Set α} {t t₁ t₂ : Set β} {f₁
     (piecewise_eq_on_compl s f₁ f₂).symm.mono (inter_subset_right _ _)]
 
 theorem eq_on_piecewise {f f' g : α → β} {t} : EqOn (s.piecewise f f') g t ↔ EqOn f g (t ∩ s) ∧ EqOn f' g (t ∩ sᶜ) := by
-  simp only [eq_on, ← forall_and_distrib]
+  simp only [← eq_on, forall_and_distrib]
   refine' forall_congrₓ fun a => _
   by_cases' a ∈ s <;> simp [*]
 
 theorem EqOn.piecewise_ite' {f f' g : α → β} {t t'} (h : EqOn f g (t ∩ s)) (h' : EqOn f' g (t' ∩ sᶜ)) :
     EqOn (s.piecewise f f') g (s.ite t t') := by
-  simp [eq_on_piecewise, *]
+  simp [← eq_on_piecewise, *]
 
 theorem EqOn.piecewise_ite {f f' g : α → β} {t t'} (h : EqOn f g t) (h' : EqOn f' g t') :
     EqOn (s.piecewise f f') g (s.ite t t') :=
@@ -972,17 +973,17 @@ theorem EqOn.piecewise_ite {f f' g : α → β} {t t'} (h : EqOn f g t) (h' : Eq
 
 theorem piecewise_preimage (f g : α → β) t : s.piecewise f g ⁻¹' t = s.ite (f ⁻¹' t) (g ⁻¹' t) :=
   ext fun x => by
-    by_cases' x ∈ s <;> simp [*, Set.Ite]
+    by_cases' x ∈ s <;> simp [*, ← Set.Ite]
 
 theorem apply_piecewise {δ' : α → Sort _} (h : ∀ i, δ i → δ' i) {x : α} :
     h x (s.piecewise f g x) = s.piecewise (fun x => h x (f x)) (fun x => h x (g x)) x := by
-  by_cases' hx : x ∈ s <;> simp [hx]
+  by_cases' hx : x ∈ s <;> simp [← hx]
 
 theorem apply_piecewise₂ {δ' δ'' : α → Sort _} (f' g' : ∀ i, δ' i) (h : ∀ i, δ i → δ' i → δ'' i) {x : α} :
     h x (s.piecewise f g x) (s.piecewise f' g' x) =
       s.piecewise (fun x => h x (f x) (f' x)) (fun x => h x (g x) (g' x)) x :=
   by
-  by_cases' hx : x ∈ s <;> simp [hx]
+  by_cases' hx : x ∈ s <;> simp [← hx]
 
 theorem piecewise_op {δ' : α → Sort _} (h : ∀ i, δ i → δ' i) :
     (s.piecewise (fun x => h x (f x)) fun x => h x (g x)) = fun x => h x (s.piecewise f g x) :=
@@ -996,18 +997,18 @@ theorem piecewise_op₂ {δ' δ'' : α → Sort _} (f' g' : ∀ i, δ' i) (h : �
 @[simp]
 theorem piecewise_same : s.piecewise f f = f := by
   ext x
-  by_cases' hx : x ∈ s <;> simp [hx]
+  by_cases' hx : x ∈ s <;> simp [← hx]
 
 theorem range_piecewise (f g : α → β) : Range (s.piecewise f g) = f '' s ∪ g '' sᶜ := by
   ext y
   constructor
   · rintro ⟨x, rfl⟩
-    by_cases' h : x ∈ s <;> [left, right] <;> use x <;> simp [h]
+    by_cases' h : x ∈ s <;> [left, right] <;> use x <;> simp [← h]
     
   · rintro (⟨x, hx, rfl⟩ | ⟨x, hx, rfl⟩) <;> use x <;> simp_all
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (y «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y «expr ∉ » s)
 theorem injective_piecewise_iff {f g : α → β} :
     Injective (s.piecewise f g) ↔ InjOn f s ∧ InjOn g (sᶜ) ∧ ∀, ∀ x ∈ s, ∀ y _ : y ∉ s, f x ≠ g y := by
   rw [injective_iff_inj_on_univ, ← union_compl_self s, inj_on_union (@disjoint_compl_right _ s _),
@@ -1018,13 +1019,13 @@ theorem injective_piecewise_iff {f g : α → β} :
 theorem piecewise_mem_pi {δ : α → Type _} {t : Set α} {t' : ∀ i, Set (δ i)} {f g} (hf : f ∈ Pi t t')
     (hg : g ∈ Pi t t') : s.piecewise f g ∈ Pi t t' := by
   intro i ht
-  by_cases' hs : i ∈ s <;> simp [hf i ht, hg i ht, hs]
+  by_cases' hs : i ∈ s <;> simp [← hf i ht, ← hg i ht, ← hs]
 
 @[simp]
 theorem pi_piecewise {ι : Type _} {α : ι → Type _} (s s' : Set ι) (t t' : ∀ i, Set (α i)) [∀ x, Decidable (x ∈ s')] :
     Pi s (s'.piecewise t t') = Pi (s ∩ s') t ∩ Pi (s \ s') t' := by
   ext x
-  simp only [mem_pi, mem_inter_eq, ← forall_and_distrib]
+  simp only [← mem_pi, ← mem_inter_eq, forall_and_distrib]
   refine' forall_congrₓ fun i => _
   by_cases' hi : i ∈ s' <;> simp [*]
 
@@ -1098,7 +1099,7 @@ theorem surj_on_range (h : Semiconj f fa fb) (ha : Surjective fa) : SurjOn fb (R
 
 theorem inj_on_image (h : Semiconj f fa fb) (ha : InjOn fa s) (hf : InjOn f (fa '' s)) : InjOn fb (f '' s) := by
   rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩ H
-  simp only [← h.eq] at H
+  simp only [h.eq] at H
   exact congr_arg f (ha hx hy <| hf (mem_image_of_mem fa hx) (mem_image_of_mem fa hy) H)
 
 theorem inj_on_range (h : Semiconj f fa fb) (ha : Injective fa) (hf : InjOn f (Range fa)) : InjOn fb (Range f) := by
@@ -1114,7 +1115,7 @@ theorem bij_on_range (h : Semiconj f fa fb) (ha : Bijective fa) (hf : Injective 
 
 theorem maps_to_preimage (h : Semiconj f fa fb) {s t : Set β} (hb : MapsTo fb s t) : MapsTo fa (f ⁻¹' s) (f ⁻¹' t) :=
   fun x hx => by
-  simp only [mem_preimage, h x, hb hx]
+  simp only [← mem_preimage, ← h x, ← hb hx]
 
 theorem inj_on_preimage (h : Semiconj f fa fb) {s : Set β} (hb : InjOn fb s) (hf : InjOn f (f ⁻¹' s)) :
     InjOn fa (f ⁻¹' s) := by

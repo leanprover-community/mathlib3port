@@ -186,9 +186,9 @@ theorem recF_eq_of_Wequiv {α : Type u} (u : F α → α) (x y : q.p.W) : Wequiv
   intro h
   induction h
   case qpf.Wequiv.ind a f f' h ih =>
-    simp only [recF_eq', Pfunctor.map_eq, Function.comp, ih]
+    simp only [← recF_eq', ← Pfunctor.map_eq, ← Function.comp, ← ih]
   case qpf.Wequiv.abs a f a' f' h =>
-    simp only [recF_eq', abs_map, h]
+    simp only [← recF_eq', ← abs_map, ← h]
   case qpf.Wequiv.trans x y z e₁ e₂ ih₁ ih₂ =>
     exact Eq.trans ih₁ ih₂
 
@@ -275,7 +275,7 @@ theorem Fix.ind_aux (a : q.p.A) (f : q.p.B a → q.p.W) : Fix.mk (abs ⟨a, fun 
     apply Quot.sound
     apply Wequiv.abs'
     rw [Pfunctor.W.dest_mk, abs_map, abs_repr, ← abs_map, Pfunctor.map_eq]
-    conv => rhs simp only [Wrepr, recF_eq, Pfunctor.W.dest_mk, abs_repr]
+    conv => rhs simp only [← Wrepr, ← recF_eq, ← Pfunctor.W.dest_mk, ← abs_repr]
     rfl
   rw [this]
   apply Quot.sound
@@ -290,7 +290,7 @@ theorem Fix.ind_rec {α : Type u} (g₁ g₂ : Fix F → α)
   rw [← fix.ind_aux a f]
   apply h
   rw [← abs_map, ← abs_map, Pfunctor.map_eq, Pfunctor.map_eq]
-  dsimp' [Function.comp]
+  dsimp' [← Function.comp]
   congr with x
   apply ih
 
@@ -406,7 +406,7 @@ private theorem cofix.bisim_aux (r : Cofix F → Cofix F → Prop) (h' : ∀ x, 
     have h₁ : ∀ u v : q.P.M, Mcongr u v → Quot.mk r' u = Quot.mk r' v := by
       intro u v cuv
       apply Quot.sound
-      dsimp' [r']
+      dsimp' [← r']
       rw [Quot.sound cuv]
       apply h'
     let f : Quot r → Quot r' :=
@@ -491,19 +491,19 @@ include q₂ q₁
 def comp : Qpf (Functor.Comp F₂ F₁) where
   p := Pfunctor.comp q₂.p q₁.p
   abs := fun α => by
-    dsimp' [Functor.Comp]
+    dsimp' [← Functor.Comp]
     intro p
     exact abs ⟨p.1.1, fun x => abs ⟨p.1.2 x, fun y => p.2 ⟨x, y⟩⟩⟩
   repr := fun α => by
-    dsimp' [Functor.Comp]
+    dsimp' [← Functor.Comp]
     intro y
     refine' ⟨⟨(reprₓ y).1, fun u => (reprₓ ((reprₓ y).2 u)).1⟩, _⟩
-    dsimp' [Pfunctor.comp]
+    dsimp' [← Pfunctor.comp]
     intro x
     exact (reprₓ ((reprₓ y).2 x.1)).snd x.2
   abs_repr := fun α => by
     abstract 
-      dsimp' [Functor.Comp]
+      dsimp' [← Functor.Comp]
       intro x
       conv => rhs rw [← abs_repr x]
       cases' h : reprₓ x with a f
@@ -514,7 +514,7 @@ def comp : Qpf (Functor.Comp F₂ F₁) where
       rw [← h', abs_repr]
   abs_map := fun α β f => by
     abstract 
-      dsimp' [Functor.Comp, Pfunctor.comp]
+      dsimp' [← Functor.Comp, ← Pfunctor.comp]
       intro p
       cases' p with a g
       dsimp'
@@ -526,8 +526,8 @@ def comp : Qpf (Functor.Comp F₂ F₁) where
       apply abs_map
       congr
       rw [Pfunctor.map_eq]
-      dsimp' [Function.comp]
-      simp [abs_map]
+      dsimp' [← Function.comp]
+      simp [← abs_map]
       constructor
       rfl
       ext x
@@ -558,11 +558,11 @@ elements `x y : F α` are in the same equivalence class if
 def quotientQpf (FG_abs_repr : ∀ {α} x : G α, FG_abs (FG_repr x) = x)
     (FG_abs_map : ∀ {α β} f : α → β x : F α, FG_abs (f <$> x) = f <$> FG_abs x) : Qpf G where
   p := q.p
-  abs := fun p => FG_abs (abs p)
-  repr := fun x => repr (FG_repr x)
-  abs_repr := fun x => by
+  abs := fun {α} p => FG_abs (abs p)
+  repr := fun {α} x => repr (FG_repr x)
+  abs_repr := fun {α} x => by
     rw [abs_repr, FG_abs_repr]
-  abs_map := fun f x => by
+  abs_map := fun {α β} f x => by
     rw [abs_map, FG_abs_map]
 
 end Qpf
@@ -699,17 +699,17 @@ theorem supp_preservation_iff_liftp_preservation : q.SuppPreservation ↔ q.Lift
   · rintro α p ⟨a, f⟩
     have h' := h
     rw [supp_preservation_iff_uniform] at h'
-    dsimp' only [supp_preservation, supp]  at h
+    dsimp' only [← supp_preservation, ← supp]  at h
     rwa [liftp_iff_of_is_uniform, supp_eq_of_is_uniform, Pfunctor.liftp_iff'] <;>
       try
         assumption
-    · simp only [image_univ, mem_range, exists_imp_distrib]
+    · simp only [← image_univ, ← mem_range, ← exists_imp_distrib]
       constructor <;> intros <;> subst_vars <;> solve_by_elim
       
     
   · rintro α ⟨a, f⟩
-    simp only [liftp_preservation] at h
-    simp only [supp, h]
+    simp only [← liftp_preservation] at h
+    simp only [← supp, ← h]
     
 
 theorem liftp_preservation_iff_uniform : q.LiftpPreservation ↔ q.IsUniform := by

@@ -61,8 +61,8 @@ variable (F) [NondiscreteNormedField 𝕜] [NormedGroup F] [NormedSpace 𝕜 F] 
 
 theorem Pullback.continuous_total_space_mk [∀ x, TopologicalSpace (E x)] [TopologicalVectorBundle 𝕜 F E] {f : B' → B}
     {x : B'} : Continuous (@totalSpaceMk _ (f *ᵖ E) x) := by
-  simp only [continuous_iff_le_induced, Pullback.TotalSpace.topologicalSpace, induced_compose, induced_inf,
-    Function.comp, total_space_mk, total_space.proj, induced_const, top_inf_eq, pullbackTopology]
+  simp only [← continuous_iff_le_induced, ← Pullback.TotalSpace.topologicalSpace, ← induced_compose, ← induced_inf, ←
+    Function.comp, ← total_space_mk, ← total_space.proj, ← induced_const, ← top_inf_eq, ← pullbackTopology]
   exact le_of_eqₓ (TopologicalVectorBundle.total_space_mk_inducing 𝕜 F E (f x)).induced
 
 variable {E 𝕜 F} {K : Type _} [ContinuousMapClass K B' B]
@@ -76,16 +76,16 @@ def TopologicalVectorBundle.Trivialization.pullback (e : Trivialization 𝕜 F E
   BaseSet := f ⁻¹' e.BaseSet
   Target := (f ⁻¹' e.BaseSet) ×ˢ (Univ : Set F)
   map_source' := fun x h => by
-    simp_rw [e.source_eq, mem_preimage, pullback.proj_lift]  at h
+    simp_rw [e.source_eq, mem_preimage, pullback.proj_lift] at h
     simp_rw [prod_mk_mem_set_prod_eq, mem_univ, and_trueₓ, mem_preimage, h]
   map_target' := fun y h => by
     rw [mem_prod, mem_preimage] at h
     simp_rw [e.source_eq, mem_preimage, pullback.proj_lift, h.1]
   left_inv' := fun x h => by
-    simp_rw [mem_preimage, e.mem_source, pullback.proj_lift]  at h
+    simp_rw [mem_preimage, e.mem_source, pullback.proj_lift] at h
     simp_rw [pullback.lift, e.symm_apply_apply_mk h, total_space.eta]
   right_inv' := fun x h => by
-    simp_rw [mem_prod, mem_preimage, mem_univ, and_trueₓ]  at h
+    simp_rw [mem_prod, mem_preimage, mem_univ, and_trueₓ] at h
     simp_rw [total_space.proj_mk, pullback.lift_mk, e.apply_mk_symm h, Prod.mk.eta]
   open_source := by
     simp_rw [e.source_eq, ← preimage_comp]
@@ -99,7 +99,7 @@ def TopologicalVectorBundle.Trivialization.pullback (e : Trivialization 𝕜 F E
     dsimp' only
     simp_rw [(inducing_pullback_total_space_embedding E f).continuous_on_iff, Function.comp,
       pullback_total_space_embedding, total_space.proj_mk]
-    dsimp' only [total_space.proj_mk]
+    dsimp' only [← total_space.proj_mk]
     refine'
       continuous_on_fst.prod
         (e.continuous_on_symm.comp ((map_continuous f).prod_map continuous_id).ContinuousOn subset.rfl)

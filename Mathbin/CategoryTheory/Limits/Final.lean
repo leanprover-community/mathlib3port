@@ -90,11 +90,11 @@ class Initial (F : C ⥤ D) : Prop where
 
 attribute [instance] initial.out
 
-instance final_op_of_initial (F : C ⥤ D) [Initial F] : Final F.op where
-  out := fun d => is_connected_of_equivalent (costructuredArrowOpEquivalence F (unop d))
+instance final_op_of_initial (F : C ⥤ D) [Initial F] :
+    Final F.op where out := fun d => is_connected_of_equivalent (costructuredArrowOpEquivalence F (unop d))
 
-instance initial_op_of_final (F : C ⥤ D) [Final F] : Initial F.op where
-  out := fun d => is_connected_of_equivalent (structuredArrowOpEquivalence F (unop d))
+instance initial_op_of_final (F : C ⥤ D) [Final F] :
+    Initial F.op where out := fun d => is_connected_of_equivalent (structuredArrowOpEquivalence F (unop d))
 
 theorem final_of_initial_op (F : C ⥤ D) [Initial F.op] : Final F :=
   { out := fun d =>
@@ -295,7 +295,7 @@ instance (priority := 100) comp_has_colimit [HasColimit G] : HasColimit (F ⋙ G
 
 theorem colimit_pre_is_iso_aux {t : Cocone G} (P : IsColimit t) :
     ((isColimitWhiskerEquiv F _).symm P).desc (t.whisker F) = 𝟙 t.x := by
-  dsimp' [is_colimit_whisker_equiv]
+  dsimp' [← is_colimit_whisker_equiv]
   apply P.hom_ext
   intro j
   dsimp'
@@ -554,7 +554,7 @@ instance (priority := 100) comp_has_limit [HasLimit G] : HasLimit (F ⋙ G) :=
 
 theorem limit_pre_is_iso_aux {t : Cone G} (P : IsLimit t) :
     ((isLimitWhiskerEquiv F _).symm P).lift (t.whisker F) = 𝟙 t.x := by
-  dsimp' [is_limit_whisker_equiv]
+  dsimp' [← is_limit_whisker_equiv]
   apply P.hom_ext
   intro j
   simp

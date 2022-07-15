@@ -43,8 +43,8 @@ def sectionsSubmonoid (F : J ⥤ Mon.{max v u}) : Submonoid (∀ j, F.obj j) whe
   one_mem' := fun j j' f => by
     simp
   mul_mem' := fun a b ah bh j j' f => by
-    simp only [forget_map_eq_coe, functor.comp_map, MonoidHom.map_mul, Pi.mul_apply]
-    dsimp' [functor.sections]  at ah bh
+    simp only [← forget_map_eq_coe, ← functor.comp_map, ← MonoidHom.map_mul, ← Pi.mul_apply]
+    dsimp' [← functor.sections]  at ah bh
     rw [ah f, bh f]
 
 @[to_additive]
@@ -86,8 +86,10 @@ open HasLimits
 
 /-- The category of monoids has all limits. -/
 @[to_additive "The category of additive monoids has all limits."]
-instance has_limits_of_size : HasLimitsOfSize.{v} Mon.{max v u} where
-  HasLimitsOfShape := fun J 𝒥 =>
+instance has_limits_of_size :
+    HasLimitsOfSize.{v}
+      Mon.{max v
+          u} where HasLimitsOfShape := fun J 𝒥 =>
     { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } }
 
 @[to_additive]
@@ -99,8 +101,11 @@ instance has_limits : HasLimits Mon.{u} :=
 This means the underlying type of a limit can be computed as a limit in the category of types. -/
 @[to_additive
       "The forgetful functor from additive monoids to types preserves all limits.\n\nThis means the underlying type of a limit can be computed as a limit in the category of types."]
-instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v} (forget Mon.{max v u}) where
-  PreservesLimitsOfShape := fun J 𝒥 =>
+instance forgetPreservesLimitsOfSize :
+    PreservesLimitsOfSize.{v}
+      (forget
+        Mon.{max v
+            u}) where PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F) (types.limit_cone_is_limit (F ⋙ forget _)) }
 
@@ -158,8 +163,11 @@ def limitConeIsLimit (F : J ⥤ CommMon.{max v u}) : IsLimit (limitCone F) :=
 
 /-- The category of commutative monoids has all limits. -/
 @[to_additive "The category of commutative monoids has all limits."]
-instance has_limits_of_size : HasLimitsOfSize.{v, v} CommMon.{max v u} where
-  HasLimitsOfShape := fun J 𝒥 => { HasLimit := fun F => has_limit_of_created F (forget₂ CommMon Mon.{max v u}) }
+instance has_limits_of_size :
+    HasLimitsOfSize.{v, v}
+      CommMon.{max v
+          u} where HasLimitsOfShape := fun J 𝒥 =>
+    { HasLimit := fun F => has_limit_of_created F (forget₂ CommMon Mon.{max v u}) }
 
 @[to_additive]
 instance has_limits : HasLimits CommMon.{u} :=
@@ -170,8 +178,9 @@ instance has_limits : HasLimits CommMon.{u} :=
 This means the underlying type of a limit can be computed as a limit in the category of monoids. -/
 @[to_additive AddCommMon.forget₂AddMonPreservesLimits
       "The forgetful functor from additive\ncommutative monoids to additive monoids preserves all limits.\n\nThis means the underlying type of a limit can be computed as a limit in the category of additive\nmonoids."]
-instance forget₂MonPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget₂ CommMon Mon.{max v u}) where
-  PreservesLimitsOfShape := fun J 𝒥 =>
+instance forget₂MonPreservesLimitsOfSize :
+    PreservesLimitsOfSize.{v, v}
+      (forget₂ CommMon Mon.{max v u}) where PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F => by
         infer_instance }
 
@@ -184,8 +193,11 @@ instance forget₂MonPreservesLimits : PreservesLimits (forget₂ CommMon Mon.{u
 This means the underlying type of a limit can be computed as a limit in the category of types. -/
 @[to_additive
       "The forgetful functor from additive commutative monoids to types preserves all\nlimits.\n\nThis means the underlying type of a limit can be computed as a limit in the category of types."]
-instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget CommMon.{max v u}) where
-  PreservesLimitsOfShape := fun J 𝒥 =>
+instance forgetPreservesLimitsOfSize :
+    PreservesLimitsOfSize.{v, v}
+      (forget
+        CommMon.{max v
+            u}) where PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F => limits.comp_preserves_limit (forget₂ CommMon Mon) (forget Mon) }
 
 @[to_additive]

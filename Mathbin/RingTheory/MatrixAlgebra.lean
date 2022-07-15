@@ -45,13 +45,13 @@ as an `R`-linear map in the second tensor factor.
 def toFunRightLinear (a : A) : Matrix n n R →ₗ[R] Matrix n n A where
   toFun := toFun R A n a
   map_add' := fun x y => by
-    dsimp' only [to_fun]
+    dsimp' only [← to_fun]
     ext
-    simp [mul_addₓ]
+    simp [← mul_addₓ]
   map_smul' := fun r x => by
-    dsimp' only [to_fun]
+    dsimp' only [← to_fun]
     ext
-    simp only [Pi.smul_apply, RingHom.map_mul, Algebra.id.smul_eq_mul]
+    simp only [← Pi.smul_apply, ← RingHom.map_mul, ← Algebra.id.smul_eq_mul]
     dsimp'
     rw [Algebra.smul_def r, ← _root_.mul_assoc, ← _root_.mul_assoc, Algebra.commutes]
 
@@ -63,10 +63,10 @@ def toFunBilinear : A →ₗ[R] Matrix n n R →ₗ[R] Matrix n n A where
   toFun := toFunRightLinear R A n
   map_add' := fun x y => by
     ext
-    simp [to_fun_right_linear, to_fun, add_mulₓ]
+    simp [← to_fun_right_linear, ← to_fun, ← add_mulₓ]
   map_smul' := fun r x => by
     ext
-    simp [to_fun_right_linear, to_fun]
+    simp [← to_fun_right_linear, ← to_fun]
 
 /-- (Implementation detail).
 The function underlying `(A ⊗[R] matrix n n R) →ₐ[R] matrix n n A`,
@@ -94,14 +94,14 @@ def toFunAlgHom : A ⊗[R] Matrix n n R →ₐ[R] Matrix n n A :=
     (by
       intros
       ext
-      simp only [to_fun_linear, to_fun_bilinear, to_fun_right_linear, to_fun, Matrix.one_apply,
-        algebra_map_matrix_apply, lift.tmul, LinearMap.coe_mk]
+      simp only [← to_fun_linear, ← to_fun_bilinear, ← to_fun_right_linear, ← to_fun, ← Matrix.one_apply, ←
+        algebra_map_matrix_apply, ← lift.tmul, ← LinearMap.coe_mk]
       split_ifs <;> simp )
 
 @[simp]
 theorem to_fun_alg_hom_apply (a : A) (m : Matrix n n R) :
     toFunAlgHom R A n (a ⊗ₜ m) = fun i j => a * algebraMap R A (m i j) := by
-  simp [to_fun_alg_hom, alg_hom_of_linear_map_tensor_product, to_fun_linear]
+  simp [← to_fun_alg_hom, ← alg_hom_of_linear_map_tensor_product, ← to_fun_linear]
   rfl
 
 /-- (Implementation detail.)
@@ -114,28 +114,28 @@ def invFun (M : Matrix n n A) : A ⊗[R] Matrix n n R :=
 
 @[simp]
 theorem inv_fun_zero : invFun R A n 0 = 0 := by
-  simp [inv_fun]
+  simp [← inv_fun]
 
 @[simp]
 theorem inv_fun_add (M N : Matrix n n A) : invFun R A n (M + N) = invFun R A n M + invFun R A n N := by
-  simp [inv_fun, add_tmul, Finset.sum_add_distrib]
+  simp [← inv_fun, ← add_tmul, ← Finset.sum_add_distrib]
 
 @[simp]
 theorem inv_fun_smul (a : A) (M : Matrix n n A) : (invFun R A n fun i j => a * M i j) = a ⊗ₜ 1 * invFun R A n M := by
-  simp [inv_fun, Finset.mul_sum]
+  simp [← inv_fun, ← Finset.mul_sum]
 
 @[simp]
 theorem inv_fun_algebra_map (M : Matrix n n R) : (invFun R A n fun i j => algebraMap R A (M i j)) = 1 ⊗ₜ M := by
-  dsimp' [inv_fun]
-  simp only [Algebra.algebra_map_eq_smul_one, smul_tmul, ← tmul_sum, mul_boole]
+  dsimp' [← inv_fun]
+  simp only [← Algebra.algebra_map_eq_smul_one, ← smul_tmul, tmul_sum, ← mul_boole]
   congr
   conv_rhs => rw [matrix_eq_sum_std_basis M]
   convert Finset.sum_product
   simp
 
 theorem right_inv (M : Matrix n n A) : (toFunAlgHom R A n) (invFun R A n M) = M := by
-  simp only [inv_fun, AlgHom.map_sum, std_basis_matrix, apply_ite ⇑(algebraMap R A), mul_boole, to_fun_alg_hom_apply,
-    RingHom.map_zero, RingHom.map_one]
+  simp only [← inv_fun, ← AlgHom.map_sum, ← std_basis_matrix, ← apply_ite ⇑(algebraMap R A), ← mul_boole, ←
+    to_fun_alg_hom_apply, ← RingHom.map_zero, ← RingHom.map_one]
   convert Finset.sum_product
   apply matrix_eq_sum_std_basis
 
@@ -147,7 +147,7 @@ theorem left_inv (M : A ⊗[R] Matrix n n R) : invFun R A n (toFunAlgHom R A n M
     simp
     
   · intro x y hx hy
-    simp [AlgHom.map_sum, hx, hy]
+    simp [← AlgHom.map_sum, ← hx, ← hy]
     
 
 /-- (Implementation detail)
@@ -181,11 +181,11 @@ theorem matrix_equiv_tensor_apply_std_basis (i j : n) (x : A) :
     matrixEquivTensor R A n (stdBasisMatrix i j x) = x ⊗ₜ stdBasisMatrix i j 1 := by
   have t : ∀ p : n × n, i = p.1 ∧ j = p.2 ↔ p = (i, j) := by
     tidy
-  simp [ite_tmul, t, std_basis_matrix]
+  simp [← ite_tmul, ← t, ← std_basis_matrix]
 
 @[simp]
 theorem matrix_equiv_tensor_apply_symm (a : A) (M : Matrix n n R) :
     (matrixEquivTensor R A n).symm (a ⊗ₜ M) = fun i j => a * algebraMap R A (M i j) := by
-  simp [matrixEquivTensor, to_fun_alg_hom, alg_hom_of_linear_map_tensor_product, to_fun_linear]
+  simp [← matrixEquivTensor, ← to_fun_alg_hom, ← alg_hom_of_linear_map_tensor_product, ← to_fun_linear]
   rfl
 

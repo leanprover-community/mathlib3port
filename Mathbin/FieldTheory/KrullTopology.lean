@@ -223,12 +223,8 @@ theorem krull_topology_t2 {K L : Type _} [Field K] [Field L] [Algebra K L] (h_in
       refine'
         ⟨LeftCoset f W, LeftCoset g W,
           ⟨hW_open.left_coset f, hW_open.left_coset g, ⟨1, hW_1, mul_oneₓ _⟩, ⟨1, hW_1, mul_oneₓ _⟩, _⟩⟩
-      by_contra h_nonempty
-      change LeftCoset f W ∩ LeftCoset g W ≠ ∅ at h_nonempty
-      rw [Set.ne_empty_iff_nonempty] at h_nonempty
-      rcases h_nonempty with ⟨σ, ⟨⟨w1, hw1, hfw1⟩, ⟨w2, hw2, hgw2⟩⟩⟩
-      rw [← hgw2] at hfw1
-      rename' hfw1 => h
+      rintro σ ⟨⟨w1, hw1, h⟩, w2, hw2, hgw2⟩
+      rw [← hgw2] at h
       rw [eq_inv_mul_iff_mul_eq.symm, ← mul_assoc, mul_inv_eq_iff_eq_mul.symm] at h
       have h_in_H : w1 * w2⁻¹ ∈ H := H.mul_mem (hWH hw1) (H.inv_mem (hWH hw2))
       rw [h] at h_in_H
@@ -260,7 +256,7 @@ theorem krull_topology_totally_disconnected {K L : Type _} [Field K] [Field L] [
       ⟨1, E.fixing_subgroup.one_mem', by
         simp ⟩,
       _⟩
-  simp only [mem_left_coset_iff, SetLike.mem_coe, IntermediateField.mem_fixing_subgroup_iff, not_forall]
+  simp only [← mem_left_coset_iff, ← SetLike.mem_coe, ← IntermediateField.mem_fixing_subgroup_iff, ← not_forall]
   exact ⟨x, IntermediateField.mem_adjoin_simple_self K x, hx⟩
 
 end TotallyDisconnected

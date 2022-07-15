@@ -56,7 +56,7 @@ unsafe def insert_explode {γ} : expr → tactic (List (html (action γ)))
 
 /-- Render a subexpression as a list of html elements.
 -/
-unsafe def view {γ} (tooltip_component : Tc subexpr (action γ)) (click_address : Option Expr.Address)
+unsafe def view {γ} (tooltip_component : tc subexpr (action γ)) (click_address : Option Expr.Address)
     (select_address : Option Expr.Address) : subexpr → sf → tactic (List (html (action γ)))
   | ⟨ce, current_address⟩, sf.tag_expr ea e m => do
     let new_address := current_address ++ ea
@@ -101,17 +101,17 @@ unsafe def view {γ} (tooltip_component : Tc subexpr (action γ)) (click_address
     pure [h "span" attrs inner]
 
 /-- Make an interactive expression. -/
-unsafe def mk {γ} (tooltip : Tc subexpr γ) : Tc expr γ :=
+unsafe def mk {γ} (tooltip : tc subexpr γ) : tc expr γ :=
   let tooltip_comp :=
     (component.with_should_update fun x y : tactic_state × expr × Expr.Address => x.2.2 ≠ y.2.2) <|
       component.map_action action.on_tooltip_action tooltip
-  (component.filter_map_action fun a : Sum γ widget.effect => Sum.casesOn a some fun _ => none) <|
-    (component.with_effects fun a : Sum γ widget.effect =>
+  (component.filter_map_action fun _ a : Sum γ widget.effect => Sum.casesOn a some fun _ => none) <|
+    (component.with_effects fun _ a : Sum γ widget.effect =>
         match a with
         | Sum.inl g => []
         | Sum.inr s => [s]) <|
       tc.mk_simple (action γ) (Option subexpr × Option subexpr) (fun e => pure <| (none, none))
-        (fun act =>
+        (fun e ⟨ca, sa⟩ act =>
           pure <|
             match act with
             | action.on_mouse_enter ⟨e, ea⟩ => ((ca, some (e, ea)), none)
@@ -129,7 +129,7 @@ unsafe def mk {γ} (tooltip : Tc subexpr γ) : Tc expr γ :=
         pure <| [h "span" [className "expr", key e, on_mouse_leave fun _ => action.on_mouse_leave_all] <| v]
 
 /-- Render the implicit arguments for an expression in fancy, little pills. -/
-unsafe def implicit_arg_list (tooltip : Tc subexpr Empty) (e : expr) : tactic <| html Empty := do
+unsafe def implicit_arg_list (tooltip : tc subexpr Empty) (e : expr) : tactic <| html Empty := do
   let fn ← mk tooltip <| expr.get_app_fn e
   let args ← List.mmapₓ (mk tooltip) <| expr.get_app_args e
   pure <|
@@ -139,7 +139,7 @@ unsafe def implicit_arg_list (tooltip : Tc subexpr Empty) (e : expr) : tactic <|
 
 /-- Component for the type tooltip.
 -/
-unsafe def type_tooltip : Tc subexpr Empty :=
+unsafe def type_tooltip : tc subexpr Empty :=
   tc.stateless fun ⟨e, ea⟩ => do
     let y ← tactic.infer_type e
     let y_comp ← mk type_tooltip y
@@ -148,7 +148,7 @@ unsafe def type_tooltip : Tc subexpr Empty :=
 
 /-- Component that shows a type.
 -/
-unsafe def show_type_component : Tc expr Empty :=
+unsafe def show_type_component : tc expr Empty :=
   tc.stateless fun x => do
     let y ← infer_type x
     let y_comp ← mk type_tooltip <| y
@@ -156,7 +156,7 @@ unsafe def show_type_component : Tc expr Empty :=
 
 /-- Component that shows a constant.
 -/
-unsafe def show_constant_component : Tc expr Empty :=
+unsafe def show_constant_component : tc expr Empty :=
   tc.stateless fun x => do
     let y_comp ← mk type_tooltip x
     pure y_comp

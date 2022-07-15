@@ -87,7 +87,7 @@ theorem is_sheaf_for_bind (P : Cᵒᵖ ⥤ Type v) (U : Sieve X) (B : ∀ ⦃Y�
       simp
       
     · have : s _ _ = _ := (ht hf _ hm).symm
-      simp only [assoc] at this
+      simp only [← assoc] at this
       rw [this]
       simp
       
@@ -128,16 +128,16 @@ theorem is_sheaf_for_trans (P : Cᵒᵖ ⥤ Type v) (R S : Sieve X) (hR : Presie
     apply (hS (R.downward_closed hf _)).IsSeparatedFor
     
   · intro Y f hf
-    have : sieve.pullback f (bind R fun hf : R k => pullback k S) = R.pullback f := by
+    have : sieve.pullback f (bind R fun T k : T ⟶ X hf : R k => pullback k S) = R.pullback f := by
       ext Z g
       constructor
       · rintro ⟨W, k, l, hl, _, comm⟩
         rw [pullback_apply, ← comm]
-        simp [hl]
+        simp [← hl]
         
       · intro a
         refine' ⟨Z, 𝟙 Z, _, a, _⟩
-        simp [hf]
+        simp [← hf]
         
     rw [this]
     apply hR' hf

@@ -45,9 +45,9 @@ section SemiNormedRing
 
 variable [SemiNormedRing 𝕜]
 
-section HasScalar
+section HasSmul
 
-variable (𝕜) [HasScalar 𝕜 E]
+variable (𝕜) [HasSmul 𝕜 E]
 
 /-- A set `A` absorbs another set `B` if `B` is contained in all scalings of `A` by elements of
 sufficiently large norm. -/
@@ -81,12 +81,12 @@ theorem Absorbs.union (hu : Absorbs 𝕜 s u) (hv : Absorbs 𝕜 s v) : Absorbs 
 theorem absorbs_union : Absorbs 𝕜 s (u ∪ v) ↔ Absorbs 𝕜 s u ∧ Absorbs 𝕜 s v :=
   ⟨fun h => ⟨h.mono_right <| subset_union_left _ _, h.mono_right <| subset_union_right _ _⟩, fun h => h.1.union h.2⟩
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem absorbs_Union_finset {s : Set E} {t : Finset ι} {f : ι → Set E} :
     Absorbs 𝕜 s (⋃ i ∈ t, f i) ↔ ∀, ∀ i ∈ t, ∀, Absorbs 𝕜 s (f i) := by
   classical
   induction' t using Finset.induction_on with i t ht hi
-  · simp only [Finset.not_mem_empty, Set.Union_false, Set.Union_empty, absorbs_empty, forall_false_left,
+  · simp only [← Finset.not_mem_empty, ← Set.Union_false, ← Set.Union_empty, ← absorbs_empty, ← forall_false_left, ←
       implies_true_iff]
     
   rw [Finset.set_bUnion_insert, absorbs_union, hi]
@@ -101,7 +101,7 @@ theorem absorbs_Union_finset {s : Set E} {t : Finset ι} {f : ι → Set E} :
 theorem Set.Finite.absorbs_Union {s : Set E} {t : Set ι} {f : ι → Set E} (hi : t.Finite) :
     Absorbs 𝕜 s (⋃ (i : ι) (hy : i ∈ t), f i) ↔ ∀, ∀ i ∈ t, ∀, Absorbs 𝕜 s (f i) := by
   lift t to Finset ι using hi
-  simp only [Finset.mem_coe]
+  simp only [← Finset.mem_coe]
   exact absorbs_Union_finset
 
 variable (𝕜)
@@ -140,8 +140,10 @@ def Balanced (A : Set E) :=
 
 variable {𝕜}
 
-theorem balanced_mem {s : Set E} (hs : Balanced 𝕜 s) {x : E} (hx : x ∈ s) {a : 𝕜} (ha : ∥a∥ ≤ 1) : a • x ∈ s :=
-  mem_of_subset_of_mem (hs a ha) (smul_mem_smul_set hx)
+theorem balanced_iff_smul_mem : Balanced 𝕜 s ↔ ∀ ⦃a : 𝕜⦄, ∥a∥ ≤ 1 → ∀ ⦃x : E⦄, x ∈ s → a • x ∈ s :=
+  forall₂_congrₓ fun a ha => smul_set_subset_iff
+
+alias balanced_iff_smul_mem ↔ Balanced.smul_mem _
 
 theorem balanced_univ : Balanced 𝕜 (Univ : Set E) := fun a ha => subset_univ _
 
@@ -154,7 +156,7 @@ theorem Balanced.inter (hA : Balanced 𝕜 A) (hB : Balanced 𝕜 B) : Balanced 
   rintro a ha _ ⟨x, ⟨hx₁, hx₂⟩, rfl⟩
   exact ⟨hA _ ha ⟨_, hx₁, rfl⟩, hB _ ha ⟨_, hx₂, rfl⟩⟩
 
-end HasScalar
+end HasSmul
 
 section AddCommMonoidₓ
 
@@ -172,8 +174,7 @@ theorem Balanced.add (hA₁ : Balanced 𝕜 A) (hA₂ : Balanced 𝕜 B) : Balan
   rw [smul_add]
   exact add_mem_add (hA₁ _ ha ⟨_, hx, rfl⟩) (hA₂ _ ha ⟨_, hy, rfl⟩)
 
-theorem zero_singleton_balanced : Balanced 𝕜 ({0} : Set E) := fun a ha => by
-  simp only [smul_set_singleton, smul_zero]
+theorem balanced_zero : Balanced 𝕜 (0 : Set E) := fun a ha => (smul_zero _).Subset
 
 end AddCommMonoidₓ
 

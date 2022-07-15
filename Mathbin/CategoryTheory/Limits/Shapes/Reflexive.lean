@@ -37,13 +37,13 @@ variable {D : Type u₂} [Category.{v₂} D]
 
 variable {A B : C} {f g : A ⟶ B}
 
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`common_section] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`common_section] []
 /-- The pair `f g : A ⟶ B` is reflexive if there is a morphism `B ⟶ A` which is a section for both.
 -/
 class IsReflexivePair (f g : A ⟶ B) : Prop where
   common_section : ∃ s : B ⟶ A, s ≫ f = 𝟙 B ∧ s ≫ g = 𝟙 B
 
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`common_retraction] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`common_retraction] []
 /-- The pair `f g : A ⟶ B` is coreflexive if there is a morphism `B ⟶ A` which is a retraction for both.
 -/
 class IsCoreflexivePair (f g : A ⟶ B) : Prop where
@@ -132,14 +132,12 @@ theorem has_equalizer_of_common_retraction [HasCoreflexiveEqualizers C] {A B : C
 
 /-- If `C` has coequalizers, then it has reflexive coequalizers. -/
 instance (priority := 100) has_reflexive_coequalizers_of_has_coequalizers [HasCoequalizers C] :
-    HasReflexiveCoequalizers C where
-  has_coeq := fun A B f g i => by
+    HasReflexiveCoequalizers C where has_coeq := fun A B f g i => by
     infer_instance
 
 /-- If `C` has equalizers, then it has coreflexive equalizers. -/
 instance (priority := 100) has_coreflexive_equalizers_of_has_equalizers [HasEqualizers C] :
-    HasCoreflexiveEqualizers C where
-  has_eq := fun A B f g i => by
+    HasCoreflexiveEqualizers C where has_eq := fun A B f g i => by
     infer_instance
 
 end Limits

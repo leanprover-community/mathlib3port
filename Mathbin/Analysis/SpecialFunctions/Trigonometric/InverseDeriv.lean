@@ -40,7 +40,7 @@ theorem deriv_arcsin_aux {x : ℝ} (h₁ : x ≠ -1) (h₂ : x ≠ 1) :
       sqrt_pos.2
         (by
           nlinarith [h₁, h₂])
-    simp only [← cos_arcsin h₁.le h₂.le, one_div] at this⊢
+    simp only [cos_arcsin h₁.le h₂.le, ← one_div] at this⊢
     exact
       ⟨sin_local_homeomorph.has_strict_deriv_at_symm ⟨h₁, h₂⟩ this.ne' (has_strict_deriv_at_sin _),
         sin_local_homeomorph.cont_diff_at_symm_deriv this.ne' ⟨h₁, h₂⟩ (has_deriv_at_sin _) cont_diff_sin.cont_diff_at⟩
@@ -67,7 +67,7 @@ theorem has_deriv_within_at_arcsin_Ici {x : ℝ} (h : x ≠ -1) :
     HasDerivWithinAt arcsin (1 / sqrt (1 - x ^ 2)) (Ici x) x := by
   rcases em (x = 1) with (rfl | h')
   · convert (has_deriv_within_at_const _ _ (π / 2)).congr _ _ <;>
-      simp (config := { contextual := true })[arcsin_of_one_le]
+      simp (config := { contextual := true })[← arcsin_of_one_le]
     
   · exact (has_deriv_at_arcsin h h').HasDerivWithinAt
     
@@ -76,7 +76,7 @@ theorem has_deriv_within_at_arcsin_Iic {x : ℝ} (h : x ≠ 1) : HasDerivWithinA
   by
   rcases em (x = -1) with (rfl | h')
   · convert (has_deriv_within_at_const _ _ (-(π / 2))).congr _ _ <;>
-      simp (config := { contextual := true })[arcsin_of_le_neg_one]
+      simp (config := { contextual := true })[← arcsin_of_le_neg_one]
     
   · exact (has_deriv_at_arcsin h' h).HasDerivWithinAt
     
@@ -96,7 +96,7 @@ theorem differentiable_within_at_arcsin_Iic {x : ℝ} : DifferentiableWithinAt �
   refine' ⟨fun h => _, fun h => (has_deriv_within_at_arcsin_Iic h).DifferentiableWithinAt⟩
   rw [← neg_negₓ x, ← image_neg_Ici] at h
   have := (h.comp (-x) differentiable_within_at_id.neg (maps_to_image _ _)).neg
-  simpa [(· ∘ ·), differentiable_within_at_arcsin_Ici] using this
+  simpa [← (· ∘ ·), ← differentiable_within_at_arcsin_Ici] using this
 
 theorem differentiable_at_arcsin {x : ℝ} : DifferentiableAt ℝ arcsin x ↔ x ≠ -1 ∧ x ≠ 1 :=
   ⟨fun h =>
@@ -111,7 +111,7 @@ theorem deriv_arcsin : deriv arcsin = fun x => 1 / sqrt (1 - x ^ 2) := by
   · exact (has_deriv_at_arcsin h.1 h.2).deriv
     
   · rw [deriv_zero_of_not_differentiable_at (mt differentiable_at_arcsin.1 h)]
-    simp only [not_and_distrib, Ne.def, not_not] at h
+    simp only [← not_and_distrib, ← Ne.def, ← not_not] at h
     rcases h with (rfl | rfl) <;> simp
     
 
@@ -164,7 +164,7 @@ theorem differentiable_at_arccos {x : ℝ} : DifferentiableAt ℝ arccos x ↔ x
 theorem deriv_arccos : deriv arccos = fun x => -(1 / sqrt (1 - x ^ 2)) :=
   funext fun x =>
     (deriv_const_sub _).trans <| by
-      simp only [deriv_arcsin]
+      simp only [← deriv_arcsin]
 
 theorem differentiable_on_arccos : DifferentiableOn ℝ arccos ({-1, 1}ᶜ) :=
   differentiable_on_arcsin.const_sub _
@@ -174,7 +174,7 @@ theorem cont_diff_on_arccos {n : WithTop ℕ} : ContDiffOn ℝ n arccos ({-1, 1}
 
 theorem cont_diff_at_arccos_iff {x : ℝ} {n : WithTop ℕ} : ContDiffAt ℝ n arccos x ↔ n = 0 ∨ x ≠ -1 ∧ x ≠ 1 := by
   refine' Iff.trans ⟨fun h => _, fun h => _⟩ cont_diff_at_arcsin_iff <;>
-    simpa [arccos] using (@cont_diff_at_const _ _ _ _ _ _ _ _ _ _ (π / 2)).sub h
+    simpa [← arccos] using (@cont_diff_at_const _ _ _ _ _ _ _ _ _ _ (π / 2)).sub h
 
 end Arccos
 

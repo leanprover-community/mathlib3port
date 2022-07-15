@@ -34,7 +34,7 @@ universe v v₂ u u₂
 
 variable {C : Type u} [Category.{v} C]
 
-variable {D : Type u₂} [Category.{v} D]
+variable {D : Type u₂} [Category.{v₂} D]
 
 variable (G : C ⥤ D)
 
@@ -112,13 +112,13 @@ def IsSplitCoequalizer.isCoequalizer {Z : C} {h : Y ⟶ Z} (t : IsSplitCoequaliz
     ⟨t.rightSection ≫ s.π, by
       dsimp'
       rw [← t.left_section_top_assoc, s.condition, t.left_section_bottom_assoc], fun m hm => by
-      simp [← hm]⟩
+      simp [hm]⟩
 
 end
 
 variable (f g)
 
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`splittable] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`splittable] []
 /-- The pair `f,g` is a split pair if there is a `h : Y ⟶ Z` so that `f, g, h` forms a split coequalizer
 in `C`.
 -/
@@ -146,8 +146,9 @@ noncomputable def HasSplitCoequalizer.isSplitCoequalizer [HasSplitCoequalizer f 
   Classical.choice (HasSplitCoequalizer.splittable f g).some_spec.some_spec
 
 /-- If `f, g` is split, then `G f, G g` is split. -/
-instance map_is_split_pair [HasSplitCoequalizer f g] : HasSplitCoequalizer (G.map f) (G.map g) where
-  splittable := ⟨_, _, ⟨IsSplitCoequalizer.map (HasSplitCoequalizer.isSplitCoequalizer f g) _⟩⟩
+instance map_is_split_pair [HasSplitCoequalizer f g] :
+    HasSplitCoequalizer (G.map f)
+      (G.map g) where splittable := ⟨_, _, ⟨IsSplitCoequalizer.map (HasSplitCoequalizer.isSplitCoequalizer f g) _⟩⟩
 
 namespace Limits
 

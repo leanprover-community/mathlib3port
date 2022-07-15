@@ -60,7 +60,7 @@ variable (p : SeminormFamily 𝕜 E ι)
 
 theorem basis_sets_iff {U : Set E} : U ∈ p.basis_sets ↔ ∃ (i : Finset ι)(r : _)(hr : 0 < r), U = Ball (i.sup p) 0 r :=
   by
-  simp only [basis_sets, mem_Union, mem_singleton_iff]
+  simp only [← basis_sets, ← mem_Union, ← mem_singleton_iff]
 
 theorem basis_sets_mem (i : Finset ι) {r : ℝ} (hr : 0 < r) : (i.sup p).ball 0 r ∈ p.basis_sets :=
   (basis_sets_iff _).mpr ⟨i, _, hr, rfl⟩
@@ -75,7 +75,7 @@ theorem basis_sets_nonempty [Nonempty ι] : p.basis_sets.Nonempty := by
   refine' set.nonempty_def.mpr ⟨(p i).ball 0 1, _⟩
   exact p.basis_sets_singleton_mem i zero_lt_one
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem basis_sets_intersect (U V : Set E) (hU : U ∈ p.basis_sets) (hV : V ∈ p.basis_sets) :
     ∃ (z : Set E)(H : z ∈ p.basis_sets), z ⊆ U ∩ V := by
   classical
@@ -144,8 +144,8 @@ theorem basis_sets_smul_left (x : 𝕜) (U : Set E) (hU : U ∈ p.basis_sets) :
     exact ⟨p.basis_sets_mem s (div_pos hr (norm_pos_iff.mpr h)), subset.rfl⟩
     
   refine' ⟨(s.sup p).ball 0 r, p.basis_sets_mem s hr, _⟩
-  simp only [not_ne_iff.mp h, subset_def, mem_ball_zero, hr, mem_univ, map_zero, implies_true_iff,
-    preimage_const_of_mem, zero_smul]
+  simp only [← not_ne_iff.mp h, ← subset_def, ← mem_ball_zero, ← hr, ← mem_univ, ← map_zero, ← implies_true_iff, ←
+    preimage_const_of_mem, ← zero_smul]
 
 /-- The `module_filter_basis` induced by the filter basis `seminorm_basis_zero`. -/
 protected def moduleFilterBasis : ModuleFilterBasis 𝕜 E where
@@ -192,7 +192,7 @@ def IsBounded (p : ι → Seminorm 𝕜 E) (q : ι' → Seminorm 𝕜 F) (f : E 
 
 theorem is_bounded_const (ι' : Type _) [Nonempty ι'] {p : ι → Seminorm 𝕜 E} {q : Seminorm 𝕜 F} (f : E →ₗ[𝕜] F) :
     IsBounded p (fun _ : ι' => q) f ↔ ∃ (s : Finset ι)(C : ℝ≥0 ), C ≠ 0 ∧ q.comp f ≤ C • s.sup p := by
-  simp only [is_bounded, forall_const]
+  simp only [← is_bounded, ← forall_const]
 
 theorem const_is_bounded (ι : Type _) [Nonempty ι] {p : Seminorm 𝕜 E} {q : ι' → Seminorm 𝕜 F} (f : E →ₗ[𝕜] F) :
     IsBounded (fun _ : ι => p) q f ↔ ∀ i, ∃ C : ℝ≥0 , C ≠ 0 ∧ (q i).comp f ≤ C • p := by
@@ -201,9 +201,9 @@ theorem const_is_bounded (ι : Type _) [Nonempty ι] {p : Seminorm 𝕜 E} {q : 
     exact ⟨C, hC, le_transₓ h (smul_le_smul (Finset.sup_le fun _ _ => le_rfl) le_rfl)⟩
     
   use {Classical.arbitrary ι}
-  simp only [h, Finset.sup_singleton]
+  simp only [← h, ← Finset.sup_singleton]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem is_bounded_sup {p : ι → Seminorm 𝕜 E} {q : ι' → Seminorm 𝕜 F} {f : E →ₗ[𝕜] F} (hf : IsBounded p q f)
     (s' : Finset ι') : ∃ (C : ℝ≥0 )(s : Finset ι), 0 < C ∧ (s'.sup q).comp f ≤ C • s.sup p := by
   classical
@@ -324,7 +324,7 @@ theorem Bornology.is_vonN_bounded_iff_finset_seminorm_bounded {s : Set E} :
   rw [p.has_basis.is_vonN_bounded_basis_iff]
   constructor
   · intro h I
-    simp only [id.def] at h
+    simp only [← id.def] at h
     specialize h ((I.sup p).ball 0 1) (p.basis_sets_mem I zero_lt_one)
     rcases h with ⟨r, hr, h⟩
     cases' NormedField.exists_lt_norm 𝕜 r with a ha
@@ -339,7 +339,7 @@ theorem Bornology.is_vonN_bounded_iff_finset_seminorm_bounded {s : Set E} :
   rcases p.basis_sets_iff.mp hs' with ⟨I, r, hr, hs'⟩
   rw [id.def, hs']
   rcases h I with ⟨r', hr', h'⟩
-  simp_rw [← (I.sup p).mem_ball_zero]  at h'
+  simp_rw [← (I.sup p).mem_ball_zero] at h'
   refine' Absorbs.mono_right _ h'
   exact (Finset.sup I p).ball_zero_absorbs_ball_zero hr
 
@@ -359,10 +359,10 @@ theorem Bornology.is_vonN_bounded_iff_seminorm_bounded {s : Set E} :
       exact lt_of_lt_of_leₓ (hr i) (Finset.le_sup' r hi)
     refine' ⟨I.sup' hI r, h', fun x hx => finset_sup_apply_lt h' fun i hi => _⟩
     refine' lt_of_lt_of_leₓ (h i x hx) _
-    simp only [Finset.le_sup'_iff, exists_prop]
+    simp only [← Finset.le_sup'_iff, ← exists_prop]
     exact ⟨i, hi, (Eq.refl _).le⟩
     
-  simp only [finset.not_nonempty_iff_eq_empty.mp hI, Finset.sup_empty, coe_bot, Pi.zero_apply, exists_prop]
+  simp only [← finset.not_nonempty_iff_eq_empty.mp hI, ← Finset.sup_empty, ← coe_bot, ← Pi.zero_apply, ← exists_prop]
   exact ⟨1, zero_lt_one, fun _ _ => zero_lt_one⟩
 
 end NondiscreteNormedField
@@ -423,8 +423,8 @@ theorem SeminormFamily.to_locally_convex_space (p : SeminormFamily 𝕜 E ι) [W
     exact FilterBasis.has_basis _
     
   · intro s hs
-    change s ∈ Set.Unionₓ _ at hs
-    simp_rw [Set.mem_Union, Set.mem_singleton_iff]  at hs
+    change s ∈ Set.Union _ at hs
+    simp_rw [Set.mem_Union, Set.mem_singleton_iff] at hs
     rcases hs with ⟨I, r, hr, rfl⟩
     exact convex_ball _ _ _
     

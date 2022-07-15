@@ -87,7 +87,7 @@ theorem convex_hull_inter_convex_hull (hs : s ∈ K.Faces) (ht : t ∈ K.Faces) 
   (K.inter_subset_convex_hull hs ht).antisymm <|
     subset_inter (convex_hull_mono <| Set.inter_subset_left _ _) <| convex_hull_mono <| Set.inter_subset_right _ _
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The conclusion is the usual meaning of "glue nicely" in textbooks. It turns out to be quite
 unusable, as it's about faces as sets in space rather than simplices. Further,  additional structure
 on `𝕜` means the only choice of `u` is `s ∩ t` (but it's hard to prove). -/
@@ -106,8 +106,8 @@ theorem disjoint_or_exists_inter_eq_convex_hull (hs : s ∈ K.Faces) (ht : t ∈
   · rw [coe_inter, convex_hull_inter_convex_hull hs ht]
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (s t «expr ∈ » faces)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (s t «expr ∈ » faces)
 /-- Construct a simplicial complex by removing the empty face for you. -/
 @[simps]
 def ofErase (faces : Set (Finset E)) (indep : ∀, ∀ s ∈ faces, ∀, AffineIndependent 𝕜 (coe : (s : Set E) → E))
@@ -148,7 +148,7 @@ theorem vertices_eq : K.Vertices = ⋃ k ∈ K.Faces, (k : Set E) := by
 theorem vertices_subset_space : K.Vertices ⊆ K.Space :=
   vertices_eq.Subset.trans <| Union₂_mono fun x hx => subset_convex_hull 𝕜 x
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem vertex_mem_convex_hull_iff (hx : x ∈ K.Vertices) (hs : s ∈ K.Faces) : x ∈ convexHull 𝕜 (s : Set E) ↔ x ∈ s := by
   refine' ⟨fun h => _, fun h => subset_convex_hull _ _ h⟩
   classical

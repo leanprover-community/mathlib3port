@@ -17,7 +17,7 @@ presheaves.
 -/
 
 
-universe v u
+universe w v u
 
 open CategoryTheory
 
@@ -37,7 +37,7 @@ namespace AlgebraicGeometry
 
 /-- A `PresheafedSpace C` is a topological space equipped with a presheaf of `C`s. -/
 structure PresheafedSpace where
-  Carrier : Top
+  Carrier : Top.{w}
   Presheaf : carrier.Presheaf C
 
 variable {C}
@@ -46,11 +46,10 @@ namespace PresheafedSpace
 
 attribute [protected] presheaf
 
-instance coeCarrier : Coe (PresheafedSpace C) Top where
-  coe := fun X => X.Carrier
+instance coeCarrier : Coe (PresheafedSpace.{w, v, u} C) Top.{w} where coe := fun X => X.Carrier
 
 @[simp]
-theorem as_coe (X : PresheafedSpace C) : X.Carrier = (X : Top.{v}) :=
+theorem as_coe (X : PresheafedSpace.{w, v, u} C) : X.Carrier = (X : Top.{w}) :=
   rfl
 
 @[simp]
@@ -71,8 +70,8 @@ instance [Inhabited C] : Inhabited (PresheafedSpace C) :=
 /-- A morphism between presheafed spaces `X` and `Y` consists of a continuous map
     `f` between the underlying topological spaces, and a (notice contravariant!) map
     from the presheaf on `Y` to the pushforward of the presheaf on `X` via `f`. -/
-structure Hom (X Y : PresheafedSpace C) where
-  base : (X : Top.{v}) ⟶ (Y : Top.{v})
+structure Hom (X Y : PresheafedSpace.{w, v, u} C) where
+  base : (X : Top.{w}) ⟶ (Y : Top.{w})
   c : Y.Presheaf ⟶ base _* X.Presheaf
 
 @[ext]
@@ -88,7 +87,7 @@ theorem ext {X Y : PresheafedSpace C} (α β : Hom X Y) (w : α.base = β.base)
     α = β := by
   cases α
   cases β
-  dsimp' [presheaf.pushforward_obj]  at *
+  dsimp' [← presheaf.pushforward_obj]  at *
   tidy
 
 -- TODO including `injections` would make tidy work earlier.
@@ -99,8 +98,8 @@ theorem hext {X Y : PresheafedSpace C} (α β : Hom X Y) (w : α.base = β.base)
   exacts[w, h]
 
 /-- The identity morphism of a `PresheafedSpace`. -/
-def id (X : PresheafedSpace C) : Hom X X where
-  base := 𝟙 (X : Top.{v})
+def id (X : PresheafedSpace.{w, v, u} C) : Hom X X where
+  base := 𝟙 (X : Top.{w})
   c := eqToHom (Presheaf.Pushforward.id_eq X.Presheaf).symm
 
 instance homInhabited (X : PresheafedSpace C) : Inhabited (Hom X X) :=
@@ -125,7 +124,7 @@ attribute [local simp] id comp
     from the presheaf on the target to the pushforward of the presheaf on the source. -/
 /- The proofs below can be done by `tidy`, but it is too slow,
    and we don't have a tactic caching mechanism. -/
-instance categoryOfPresheafedSpaces : Category (PresheafedSpace C) where
+instance categoryOfPresheafedSpaces : Category (PresheafedSpace.{v, v, u} C) where
   Hom := Hom
   id := id
   comp := fun X Y Z f g => comp f g
@@ -133,7 +132,7 @@ instance categoryOfPresheafedSpaces : Category (PresheafedSpace C) where
     ext1
     · rw [comp_c]
       erw [eq_to_hom_map]
-      simp only [eq_to_hom_refl, assoc, whisker_right_id']
+      simp only [← eq_to_hom_refl, ← assoc, ← whisker_right_id']
       erw [comp_id, comp_id]
       
     apply id_comp
@@ -141,9 +140,9 @@ instance categoryOfPresheafedSpaces : Category (PresheafedSpace C) where
     ext1
     · rw [comp_c]
       erw [congr_hom (presheaf.id_pushforward _) f.c]
-      simp only [comp_id, functor.id_map, eq_to_hom_refl, assoc, whisker_right_id']
+      simp only [← comp_id, ← functor.id_map, ← eq_to_hom_refl, ← assoc, ← whisker_right_id']
       erw [eq_to_hom_trans_assoc]
-      simp only [id_comp, eq_to_hom_refl]
+      simp only [← id_comp, ← eq_to_hom_refl]
       erw [comp_id]
       
     apply comp_id
@@ -151,7 +150,7 @@ instance categoryOfPresheafedSpaces : Category (PresheafedSpace C) where
     ext1
     repeat'
       rw [comp_c]
-    simp only [eq_to_hom_refl, assoc, functor.map_comp, whisker_right_id']
+    simp only [← eq_to_hom_refl, ← assoc, ← functor.map_comp, ← whisker_right_id']
     erw [comp_id]
     congr
     rfl
@@ -163,14 +162,15 @@ variable {C}
 attribute [local simp] eq_to_hom_map
 
 @[simp]
-theorem id_base (X : PresheafedSpace C) : (𝟙 X : X ⟶ X).base = 𝟙 (X : Top.{v}) :=
+theorem id_base (X : PresheafedSpace.{v, v, u} C) : (𝟙 X : X ⟶ X).base = 𝟙 (X : Top.{v}) :=
   rfl
 
-theorem id_c (X : PresheafedSpace C) : (𝟙 X : X ⟶ X).c = eqToHom (Presheaf.Pushforward.id_eq X.Presheaf).symm :=
+theorem id_c (X : PresheafedSpace.{v, v, u} C) :
+    (𝟙 X : X ⟶ X).c = eqToHom (Presheaf.Pushforward.id_eq X.Presheaf).symm :=
   rfl
 
 @[simp]
-theorem id_c_app (X : PresheafedSpace C) U :
+theorem id_c_app (X : PresheafedSpace.{v, v, u} C) U :
     (𝟙 X : X ⟶ X).c.app U =
       X.Presheaf.map
         (eqToHom
@@ -181,18 +181,18 @@ theorem id_c_app (X : PresheafedSpace C) U :
   by
   induction U using Opposite.rec
   cases U
-  simp only [id_c]
+  simp only [← id_c]
   dsimp'
   simp
 
 @[simp]
-theorem comp_base {X Y Z : PresheafedSpace C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).base = f.base ≫ g.base :=
+theorem comp_base {X Y Z : PresheafedSpace.{v, v, u} C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).base = f.base ≫ g.base :=
   rfl
 
-instance (X Y : PresheafedSpace C) : CoeFun (X ⟶ Y) fun _ => X → Y :=
+instance (X Y : PresheafedSpace.{v, v, u} C) : CoeFun (X ⟶ Y) fun _ => X → Y :=
   ⟨fun f => f.base⟩
 
-theorem coe_to_fun_eq {X Y : PresheafedSpace C} (f : X ⟶ Y) : (f : X → Y) = f.base :=
+theorem coe_to_fun_eq {X Y : PresheafedSpace.{v, v, u} C} (f : X ⟶ Y) : (f : X → Y) = f.base :=
   rfl
 
 /-- Sometimes rewriting with `comp_c_app` doesn't work because of dependent type issues.
@@ -201,11 +201,11 @@ The lemma `comp_c_app_assoc` is also better suited for rewrites in the opposite 
 -- The `reassoc` attribute was added despite the LHS not being a composition of two homs,
 -- for the reasons explained in the docstring.
 @[reassoc, simp]
-theorem comp_c_app {X Y Z : PresheafedSpace C} (α : X ⟶ Y) (β : Y ⟶ Z) U :
+theorem comp_c_app {X Y Z : PresheafedSpace.{v, v, u} C} (α : X ⟶ Y) (β : Y ⟶ Z) U :
     (α ≫ β).c.app U = β.c.app U ≫ α.c.app (op ((Opens.map β.base).obj (unop U))) :=
   rfl
 
-theorem congr_app {X Y : PresheafedSpace C} {α β : X ⟶ Y} (h : α = β) U :
+theorem congr_app {X Y : PresheafedSpace.{v, v, u} C} {α β : X ⟶ Y} (h : α = β) U :
     α.c.app U =
       β.c.app U ≫
         X.Presheaf.map
@@ -223,7 +223,7 @@ variable (C)
 
 /-- The forgetful functor from `PresheafedSpace` to `Top`. -/
 @[simps]
-def forget : PresheafedSpace C ⥤ Top where
+def forget : PresheafedSpace.{v, v, u} C ⥤ Top where
   obj := fun X => (X : Top.{v})
   map := fun X Y f => f.base
 
@@ -231,7 +231,7 @@ end
 
 section Iso
 
-variable {X Y : PresheafedSpace C}
+variable {X Y : PresheafedSpace.{v, v, u} C}
 
 /-- An isomorphism of PresheafedSpaces is a homeomorphism of the underlying space, and a
 natural transformation between the sheaves.
@@ -250,8 +250,8 @@ def isoOfComponents (H : X.1 ≅ Y.1) (α : H.Hom _* X.2 ≅ Y.2) : X ≅ Y wher
   inv_hom_id' := by
     ext x
     induction x using Opposite.rec
-    simp only [comp_c_app, whisker_right_app, presheaf.to_pushforward_of_iso_app, nat_trans.comp_app, eq_to_hom_app,
-      id_c_app, category.assoc]
+    simp only [← comp_c_app, ← whisker_right_app, ← presheaf.to_pushforward_of_iso_app, ← nat_trans.comp_app, ←
+      eq_to_hom_app, ← id_c_app, ← category.assoc]
     erw [← α.hom.naturality]
     have := nat_trans.congr_app α.inv_hom_id (op x)
     cases x
@@ -273,12 +273,12 @@ def sheafIsoOfIso (H : X ≅ Y) : Y.2 ≅ H.Hom.base _* X.2 where
   hom_inv_id' := by
     ext U
     have := congr_app H.inv_hom_id U
-    simp only [comp_c_app, id_c_app, eq_to_hom_map, eq_to_hom_trans] at this
+    simp only [← comp_c_app, ← id_c_app, ← eq_to_hom_map, ← eq_to_hom_trans] at this
     generalize_proofs h  at this
     simpa using congr_arg (fun f => f ≫ eq_to_hom h.symm) this
   inv_hom_id' := by
     ext U
-    simp only [presheaf.pushforward_to_of_iso_app, nat_trans.comp_app, category.assoc, nat_trans.id_app,
+    simp only [← presheaf.pushforward_to_of_iso_app, ← nat_trans.comp_app, ← category.assoc, ← nat_trans.id_app, ←
       H.hom.c.naturality]
     have := congr_app H.hom_inv_id ((opens.map H.hom.base).op.obj U)
     generalize_proofs h  at this
@@ -306,14 +306,16 @@ section Restrict
 /-- The restriction of a presheafed space along an open embedding into the space.
 -/
 @[simps]
-def restrict {U : Top} (X : PresheafedSpace C) {f : U ⟶ (X : Top.{v})} (h : OpenEmbedding f) : PresheafedSpace C where
+def restrict {U : Top} (X : PresheafedSpace.{v, v, u} C) {f : U ⟶ (X : Top.{v})} (h : OpenEmbedding f) :
+    PresheafedSpace C where
   Carrier := U
   Presheaf := h.IsOpenMap.Functor.op ⋙ X.Presheaf
 
 /-- The map from the restriction of a presheafed space.
 -/
 @[simps]
-def ofRestrict {U : Top} (X : PresheafedSpace C) {f : U ⟶ (X : Top.{v})} (h : OpenEmbedding f) : X.restrict h ⟶ X where
+def ofRestrict {U : Top} (X : PresheafedSpace.{v, v, u} C) {f : U ⟶ (X : Top.{v})} (h : OpenEmbedding f) :
+    X.restrict h ⟶ X where
   base := f
   c :=
     { app := fun V => X.Presheaf.map (h.IsOpenMap.Adjunction.counit.app V.unop).op,
@@ -331,19 +333,21 @@ instance of_restrict_mono {U : Top} (X : PresheafedSpace C) (f : U ⟶ X.1) (hf 
   · induction V using Opposite.rec
     have hV : (opens.map (X.of_restrict hf).base).obj (hf.is_open_map.functor.obj V) = V := by
       cases V
-      simp [opens.map, Set.preimage_image_eq _ hf.inj]
+      simp [← opens.map, ← Set.preimage_image_eq _ hf.inj]
     have : is_iso (hf.is_open_map.adjunction.counit.app (unop (op (hf.is_open_map.functor.obj V)))) :=
       (nat_iso.is_iso_app_of_is_iso (whisker_left hf.is_open_map.functor hf.is_open_map.adjunction.counit) V : _)
     have := PresheafedSpace.congr_app Eq (op (hf.is_open_map.functor.obj V))
-    simp only [PresheafedSpace.comp_c_app, PresheafedSpace.of_restrict_c_app, category.assoc, cancel_epi] at this
+    simp only [← PresheafedSpace.comp_c_app, ← PresheafedSpace.of_restrict_c_app, ← category.assoc, ← cancel_epi] at
+      this
     have h : _ ≫ _ = _ ≫ _ ≫ _ := congr_arg (fun f => (X.restrict hf).Presheaf.map (eq_to_hom hV).op ≫ f) this
     erw [g₁.c.naturality, g₂.c.naturality_assoc] at h
-    simp only [presheaf.pushforward_obj_map, eq_to_hom_op, category.assoc, eq_to_hom_map, eq_to_hom_trans] at h
+    simp only [← presheaf.pushforward_obj_map, ← eq_to_hom_op, ← category.assoc, ← eq_to_hom_map, ← eq_to_hom_trans] at
+      h
     rw [← is_iso.comp_inv_eq] at h
     simpa using h
     
   · have := congr_arg PresheafedSpace.hom.base Eq
-    simp only [PresheafedSpace.comp_base, PresheafedSpace.of_restrict_base] at this
+    simp only [← PresheafedSpace.comp_base, ← PresheafedSpace.of_restrict_base] at this
     rw [cancel_mono] at this
     exact this
     
@@ -411,14 +415,14 @@ end Restrict
 /-- The global sections, notated Gamma.
 -/
 @[simps]
-def Γ : (PresheafedSpace C)ᵒᵖ ⥤ C where
+def Γ : (PresheafedSpace.{v, v, u} C)ᵒᵖ ⥤ C where
   obj := fun X => (unop X).Presheaf.obj (op ⊤)
   map := fun X Y f => f.unop.c.app (op ⊤)
 
 theorem Γ_obj_op (X : PresheafedSpace C) : Γ.obj (op X) = X.Presheaf.obj (op ⊤) :=
   rfl
 
-theorem Γ_map_op {X Y : PresheafedSpace C} (f : X ⟶ Y) : Γ.map f.op = f.c.app (op ⊤) :=
+theorem Γ_map_op {X Y : PresheafedSpace.{v, v, u} C} (f : X ⟶ Y) : Γ.map f.op = f.c.app (op ⊤) :=
   rfl
 
 end PresheafedSpace
@@ -439,7 +443,7 @@ namespace Functor
 
 /-- We can apply a functor `F : C ⥤ D` to the values of the presheaf in any `PresheafedSpace C`,
     giving a functor `PresheafedSpace C ⥤ PresheafedSpace D` -/
-def mapPresheaf (F : C ⥤ D) : PresheafedSpace C ⥤ PresheafedSpace D where
+def mapPresheaf (F : C ⥤ D) : PresheafedSpace.{v, v, u} C ⥤ PresheafedSpace.{v, v, u} D where
   obj := fun X => { Carrier := X.Carrier, Presheaf := X.Presheaf ⋙ F }
   map := fun X Y f => { base := f.base, c := whiskerRight f.c F }
 
@@ -453,11 +457,12 @@ theorem map_presheaf_obj_presheaf (F : C ⥤ D) (X : PresheafedSpace C) :
   rfl
 
 @[simp]
-theorem map_presheaf_map_f (F : C ⥤ D) {X Y : PresheafedSpace C} (f : X ⟶ Y) : (F.mapPresheaf.map f).base = f.base :=
+theorem map_presheaf_map_f (F : C ⥤ D) {X Y : PresheafedSpace.{v, v, u} C} (f : X ⟶ Y) :
+    (F.mapPresheaf.map f).base = f.base :=
   rfl
 
 @[simp]
-theorem map_presheaf_map_c (F : C ⥤ D) {X Y : PresheafedSpace C} (f : X ⟶ Y) :
+theorem map_presheaf_map_c (F : C ⥤ D) {X Y : PresheafedSpace.{v, v, u} C} (f : X ⟶ Y) :
     (F.mapPresheaf.map f).c = whiskerRight f.c F :=
   rfl
 
@@ -467,8 +472,10 @@ namespace NatTrans
 
 /-- A natural transformation induces a natural transformation between the `map_presheaf` functors.
 -/
-def onPresheaf {F G : C ⥤ D} (α : F ⟶ G) : G.mapPresheaf ⟶ F.mapPresheaf where
-  app := fun X => { base := 𝟙 _, c := whiskerLeft X.Presheaf α ≫ eqToHom (Presheaf.Pushforward.id_eq _).symm }
+def onPresheaf {F G : C ⥤ D} (α : F ⟶ G) :
+    G.mapPresheaf ⟶
+      F.mapPresheaf where app := fun X =>
+    { base := 𝟙 _, c := whiskerLeft X.Presheaf α ≫ eqToHom (Presheaf.Pushforward.id_eq _).symm }
 
 -- TODO Assemble the last two constructions into a functor
 --   `(C ⥤ D) ⥤ (PresheafedSpace C ⥤ PresheafedSpace D)`

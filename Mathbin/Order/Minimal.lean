@@ -154,7 +154,7 @@ theorem IsGreatest.maximals_eq (h : IsGreatest s a) : Maximals (· ≤ ·) s = {
 
 theorem IsAntichain.max_lower_set_of (hs : IsAntichain (· ≤ ·) s) : Maximals (· ≤ ·) { x | ∃ y ∈ s, x ≤ y } = s := by
   ext x
-  simp only [Maximals, exists_prop, mem_set_of_eq, forall_exists_index, and_imp, sep_set_of]
+  simp only [← Maximals, ← exists_prop, ← mem_set_of_eq, ← forall_exists_index, ← and_imp, ← sep_set_of]
   refine'
     ⟨fun h => Exists.elim h.1 fun y hy => (h.2 _ hy.1 rfl.le hy.2).symm.subst hy.1, fun h =>
       ⟨⟨x, h, rfl.le⟩, fun b y hy hby hxy => _⟩⟩

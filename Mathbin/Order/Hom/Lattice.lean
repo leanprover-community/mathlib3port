@@ -164,14 +164,14 @@ instance (priority := 100) OrderIsoClass.toSupHomClass [SemilatticeSup α] [Semi
     SupHomClass F α β :=
   ⟨fun f a b =>
     eq_of_forall_ge_iff fun c => by
-      simp only [← le_map_inv_iff, sup_le_iff]⟩
+      simp only [le_map_inv_iff, ← sup_le_iff]⟩
 
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toInfHomClass [SemilatticeInf α] [SemilatticeInf β] [OrderIsoClass F α β] :
     InfHomClass F α β :=
   ⟨fun f a b =>
     eq_of_forall_le_iff fun c => by
-      simp only [← map_inv_le_iff, le_inf_iff]⟩
+      simp only [map_inv_le_iff, ← le_inf_iff]⟩
 
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toSupBotHomClass [SemilatticeSup α] [OrderBot α] [SemilatticeSup β]
@@ -963,9 +963,9 @@ def toLatticeHomClass : LatticeHomClass F α β :=
          }
 
 /-- Reinterpret an order homomorphism to a linear order as a `lattice_hom`. -/
-def toLatticeHom (f : F) : LatticeHom α β :=
+def toLatticeHom (f : F) : LatticeHom α β := by
   have : LatticeHomClass F α β := OrderHomClass.toLatticeHomClass α β
-  f
+  exact f
 
 @[simp]
 theorem coe_to_lattice_hom (f : F) : ⇑(toLatticeHom α β f) = f :=

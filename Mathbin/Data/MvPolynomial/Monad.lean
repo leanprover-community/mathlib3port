@@ -149,7 +149,7 @@ variable (f : σ → MvPolynomial τ R)
 
 @[simp]
 theorem bind₁_C_right (f : σ → MvPolynomial τ R) x : bind₁ f (c x) = c x := by
-  simp [bind₁, algebra_map_eq]
+  simp [← bind₁, ← algebra_map_eq]
 
 @[simp]
 theorem bind₂_C_right (f : R →+* MvPolynomial σ S) (r : R) : bind₂ f (c r) = f r :=
@@ -165,7 +165,7 @@ theorem bind₂_comp_C (f : R →+* MvPolynomial σ S) : (bind₂ f).comp c = f 
 
 @[simp]
 theorem join₂_map (f : R →+* MvPolynomial σ S) (φ : MvPolynomial σ R) : join₂ (map f φ) = bind₂ f φ := by
-  simp only [join₂, bind₂, eval₂_hom_map_hom, RingHom.id_comp]
+  simp only [← join₂, ← bind₂, ← eval₂_hom_map_hom, ← RingHom.id_comp]
 
 @[simp]
 theorem join₂_comp_map (f : R →+* MvPolynomial σ S) : join₂.comp (map f) = bind₂ f :=
@@ -188,7 +188,7 @@ theorem bind₂_id : bind₂ (RingHom.id (MvPolynomial σ R)) = join₂ :=
 
 theorem bind₁_bind₁ {υ : Type _} (f : σ → MvPolynomial τ R) (g : τ → MvPolynomial υ R) (φ : MvPolynomial σ R) :
     (bind₁ g) (bind₁ f φ) = bind₁ (fun i => bind₁ g (f i)) φ := by
-  simp [bind₁, ← comp_aeval]
+  simp [← bind₁, comp_aeval]
 
 theorem bind₁_comp_bind₁ {υ : Type _} (f : σ → MvPolynomial τ R) (g : τ → MvPolynomial υ R) :
     (bind₁ g).comp (bind₁ f) = bind₁ fun i => bind₁ g (f i) := by
@@ -214,9 +214,9 @@ theorem rename_bind₁ {υ : Type _} (f : σ → MvPolynomial τ R) (g : τ → 
 
 theorem map_bind₂ (f : R →+* MvPolynomial σ S) (g : S →+* T) (φ : MvPolynomial σ R) :
     map g (bind₂ f φ) = bind₂ ((map g).comp f) φ := by
-  simp only [bind₂, eval₂_comp_right, coe_eval₂_hom, eval₂_map]
+  simp only [← bind₂, ← eval₂_comp_right, ← coe_eval₂_hom, ← eval₂_map]
   congr 1 with : 1
-  simp only [Function.comp_app, map_X]
+  simp only [← Function.comp_app, ← map_X]
 
 theorem bind₁_comp_rename {υ : Type _} (f : τ → MvPolynomial υ R) (g : σ → τ) :
     (bind₁ f).comp (rename g) = bind₁ (f ∘ g) := by
@@ -229,7 +229,7 @@ theorem bind₁_rename {υ : Type _} (f : τ → MvPolynomial υ R) (g : σ → 
 
 theorem bind₂_map (f : S →+* MvPolynomial σ T) (g : R →+* S) (φ : MvPolynomial σ R) :
     bind₂ f (map g φ) = bind₂ (f.comp g) φ := by
-  simp [bind₂]
+  simp [← bind₂]
 
 @[simp]
 theorem map_comp_C (f : R →+* S) : (map f).comp (c : R →+* MvPolynomial σ R) = c.comp f := by
@@ -281,12 +281,13 @@ theorem eval₂_hom_C_left (f : σ → MvPolynomial τ R) : eval₂Hom c f = bin
 
 theorem bind₁_monomial (f : σ → MvPolynomial τ R) (d : σ →₀ ℕ) (r : R) :
     bind₁ f (monomial d r) = c r * ∏ i in d.support, f i ^ d i := by
-  simp only [monomial_eq, AlgHom.map_mul, bind₁_C_right, Finsupp.prod, AlgHom.map_prod, AlgHom.map_pow, bind₁_X_right]
+  simp only [← monomial_eq, ← AlgHom.map_mul, ← bind₁_C_right, ← Finsupp.prod, ← AlgHom.map_prod, ← AlgHom.map_pow, ←
+    bind₁_X_right]
 
 theorem bind₂_monomial (f : R →+* MvPolynomial σ S) (d : σ →₀ ℕ) (r : R) :
     bind₂ f (monomial d r) = f r * monomial d 1 := by
-  simp only [monomial_eq, RingHom.map_mul, bind₂_C_right, Finsupp.prod, RingHom.map_prod, RingHom.map_pow,
-    bind₂_X_right, C_1, one_mulₓ]
+  simp only [← monomial_eq, ← RingHom.map_mul, ← bind₂_C_right, ← Finsupp.prod, ← RingHom.map_prod, ← RingHom.map_pow, ←
+    bind₂_X_right, ← C_1, ← one_mulₓ]
 
 @[simp]
 theorem bind₂_monomial_one (f : R →+* MvPolynomial σ S) (d : σ →₀ ℕ) : bind₂ f (monomial d 1) = monomial d 1 := by
@@ -299,15 +300,15 @@ instance monad : Monadₓ fun σ => MvPolynomial σ R where
 
 instance is_lawful_functor : IsLawfulFunctor fun σ => MvPolynomial σ R where
   id_map := by
-    intros <;> simp [(· <$> ·)]
+    intros <;> simp [← (· <$> ·)]
   comp_map := by
-    intros <;> simp [(· <$> ·)]
+    intros <;> simp [← (· <$> ·)]
 
 instance is_lawful_monad : IsLawfulMonad fun σ => MvPolynomial σ R where
   pure_bind := by
-    intros <;> simp [pure, bind]
+    intros <;> simp [← pure, ← bind]
   bind_assoc := by
-    intros <;> simp [bind, ← bind₁_comp_bind₁]
+    intros <;> simp [← bind, bind₁_comp_bind₁]
 
 /-
 Possible TODO for the future:

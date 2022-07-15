@@ -77,11 +77,9 @@ def forgetToCat : Groupoid.{v, u} ⥤ Cat.{v, u} where
   obj := fun C => Cat.of C
   map := fun C D => id
 
-instance forgetToCatFull : Full forgetToCat where
-  Preimage := fun C D => id
+instance forgetToCatFull : Full forgetToCat where Preimage := fun C D => id
 
-instance forget_to_Cat_faithful : Faithful forgetToCat :=
-  {  }
+instance forget_to_Cat_faithful : Faithful forgetToCat where
 
 /-- Convert arrows in the category of groupoids to functors,
 which sometimes helps in applying simp lemmas -/
@@ -106,7 +104,7 @@ def piLimitFanIsLimit ⦃J : Type u⦄ (F : J → Groupoidₓ.{u, u}) : Limits.I
     (by
       intros
       dunfold pi_limit_fan
-      simp [hom_to_functor])
+      simp [← hom_to_functor])
     (by
       intro s m w
       apply functor.pi_ext
@@ -125,7 +123,7 @@ noncomputable def piIsoPi (J : Type u) (f : J → Groupoidₓ.{u, u}) : @of (∀
 @[simp]
 theorem pi_iso_pi_hom_π (J : Type u) (f : J → Groupoidₓ.{u, u}) (j : J) :
     (piIsoPi J f).Hom ≫ Limits.Pi.π f j = CategoryTheory.pi.eval _ j := by
-  simp [pi_iso_pi]
+  simp [← pi_iso_pi]
   rfl
 
 end Products

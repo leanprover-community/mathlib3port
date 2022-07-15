@@ -48,8 +48,8 @@ namespace MvPolynomial
 
 section CharP
 
-instance [CharP R p] : CharP (MvPolynomial σ R) p where
-  cast_eq_zero_iff := fun n => by
+instance [CharP R p] :
+    CharP (MvPolynomial σ R) p where cast_eq_zero_iff := fun n => by
     rw [← C_eq_coe_nat, ← C_0, C_inj, CharP.cast_eq_zero_iff R p]
 
 end CharP
@@ -90,7 +90,8 @@ theorem mem_restrict_degree (p : MvPolynomial σ R) (n : ℕ) :
 
 theorem mem_restrict_degree_iff_sup (p : MvPolynomial σ R) (n : ℕ) :
     p ∈ restrictDegree σ R n ↔ ∀ i, p.degrees.count i ≤ n := by
-  simp only [mem_restrict_degree, degrees, Multiset.count_finset_sup, Finsupp.count_to_multiset, Finset.sup_le_iff]
+  simp only [← mem_restrict_degree, ← degrees, ← Multiset.count_finset_sup, ← Finsupp.count_to_multiset, ←
+    Finset.sup_le_iff]
   exact ⟨fun h n s hs => h s hs n, fun h s hs n => h n s hs⟩
 
 variable (σ R)

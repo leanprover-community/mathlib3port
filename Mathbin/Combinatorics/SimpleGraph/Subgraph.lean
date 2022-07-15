@@ -172,7 +172,7 @@ theorem mem_verts_if_mem_edge {G' : Subgraph G} {e : Sym2 V} {v : V} (he : e ∈
     v ∈ G'.Verts := by
   refine' Quotientₓ.ind (fun e he hv => _) e he hv
   cases' e with v w
-  simp only [mem_edge_set] at he
+  simp only [← mem_edge_set] at he
   cases' sym2.mem_iff.mp hv with h h <;> subst h
   · exact G'.edge_vert he
     
@@ -381,7 +381,7 @@ def map {x y : Subgraph G} (h : x ≤ y) : x.coe →g y.coe where
   map_rel' := fun v w hvw => h.2 hvw
 
 theorem map.injective {x y : Subgraph G} (h : x ≤ y) : Function.Injective (map h) := fun v w h => by
-  simp only [map, RelHom.coe_fn_mk, Subtype.mk_eq_mk] at h
+  simp only [← map, ← RelHom.coe_fn_mk, ← Subtype.mk_eq_mk] at h
   exact Subtype.ext h
 
 /-- There is an induced injective homomorphism of a subgraph of `G` into `G`. -/
@@ -433,7 +433,7 @@ instance coeFiniteAt {G' : Subgraph G} (v : G'.Verts) [Fintype (G'.NeighborSet v
 theorem IsSpanning.card_verts [Fintype V] {G' : Subgraph G} [Fintype G'.Verts] (h : G'.IsSpanning) :
     G'.Verts.toFinset.card = Fintype.card V := by
   rw [is_spanning_iff] at h
-  simpa [h]
+  simpa [← h]
 
 /-- The degree of a vertex in a subgraph. It's zero for vertices outside the subgraph. -/
 def degree (G' : Subgraph G) (v : V) [Fintype (G'.NeighborSet v)] : ℕ :=
@@ -467,7 +467,7 @@ theorem degree_spanning_coe {G' : G.Subgraph} (v : V) [Fintype (G'.NeighborSet v
 theorem degree_eq_one_iff_unique_adj {G' : Subgraph G} {v : V} [Fintype (G'.NeighborSet v)] :
     G'.degree v = 1 ↔ ∃! w : V, G'.Adj v w := by
   rw [← finset_card_neighbor_set_eq_degree, Finset.card_eq_one, Finset.singleton_iff_unique_mem]
-  simp only [Set.mem_to_finset, mem_neighbor_set]
+  simp only [← Set.mem_to_finset, ← mem_neighbor_set]
 
 /-! ## Edge deletion -/
 
@@ -482,7 +482,7 @@ def deleteEdges (G' : G.Subgraph) (s : Set (Sym2 V)) : G.Subgraph where
   adj_sub := fun a b h' => G'.adj_sub h'.1
   edge_vert := fun a b h' => G'.edge_vert h'.1
   symm := fun a b => by
-    simp [G'.adj_comm, Sym2.eq_swap]
+    simp [← G'.adj_comm, ← Sym2.eq_swap]
 
 section DeleteEdges
 
@@ -499,7 +499,7 @@ theorem delete_edges_adj (v w : V) : (G'.deleteEdges s).Adj v w ↔ G'.Adj v w �
 @[simp]
 theorem delete_edges_delete_edges (s s' : Set (Sym2 V)) : (G'.deleteEdges s).deleteEdges s' = G'.deleteEdges (s ∪ s') :=
   by
-  ext <;> simp [and_assoc, not_or_distrib]
+  ext <;> simp [← and_assoc, ← not_or_distrib]
 
 @[simp]
 theorem delete_edges_empty_eq : G'.deleteEdges ∅ = G' := by
@@ -513,16 +513,16 @@ theorem delete_edges_spanning_coe_eq : G'.spanningCoe.deleteEdges s = (G'.delete
 theorem delete_edges_coe_eq (s : Set (Sym2 G'.Verts)) :
     G'.coe.deleteEdges s = (G'.deleteEdges (Sym2.map coe '' s)).coe := by
   ext ⟨v, hv⟩ ⟨w, hw⟩
-  simp only [SimpleGraph.delete_edges_adj, coe_adj, Subtype.coe_mk, delete_edges_adj, Set.mem_image, not_exists,
-    not_and, And.congr_right_iff]
+  simp only [← SimpleGraph.delete_edges_adj, ← coe_adj, ← Subtype.coe_mk, ← delete_edges_adj, ← Set.mem_image, ←
+    not_exists, ← not_and, ← And.congr_right_iff]
   intro h
   constructor
   · intro hs
     refine' Sym2.ind _
     rintro ⟨v', hv'⟩ ⟨w', hw'⟩
-    simp only [Sym2.map_pair_eq, Subtype.coe_mk, Quotientₓ.eq]
+    simp only [← Sym2.map_pair_eq, ← Subtype.coe_mk, ← Quotientₓ.eq]
     contrapose!
-    rintro (_ | _) <;> simpa [Sym2.eq_swap]
+    rintro (_ | _) <;> simpa [← Sym2.eq_swap]
     
   · intro h' hs
     exact h' _ hs rfl
@@ -536,16 +536,17 @@ theorem delete_edges_le : G'.deleteEdges s ≤ G' := by
   constructor <;> simp (config := { contextual := true })
 
 theorem delete_edges_le_of_le {s s' : Set (Sym2 V)} (h : s ⊆ s') : G'.deleteEdges s' ≤ G'.deleteEdges s := by
-  constructor <;> simp (config := { contextual := true })only [delete_edges_verts, delete_edges_adj, true_andₓ, and_imp]
+  constructor <;>
+    simp (config := { contextual := true })only [← delete_edges_verts, ← delete_edges_adj, ← true_andₓ, ← and_imp]
   exact fun v w hvw hs' hs => hs' (h hs)
 
 @[simp]
 theorem delete_edges_inter_edge_set_left_eq : G'.deleteEdges (G'.EdgeSet ∩ s) = G'.deleteEdges s := by
-  ext <;> simp (config := { contextual := true })[imp_false]
+  ext <;> simp (config := { contextual := true })[← imp_false]
 
 @[simp]
 theorem delete_edges_inter_edge_set_right_eq : G'.deleteEdges (s ∩ G'.EdgeSet) = G'.deleteEdges s := by
-  ext <;> simp (config := { contextual := true })[imp_false]
+  ext <;> simp (config := { contextual := true })[← imp_false]
 
 theorem coe_delete_edges_le : (G'.deleteEdges s).coe ≤ (G'.coe : SimpleGraph G'.Verts) := fun v w => by
   simp (config := { contextual := true })

@@ -44,17 +44,13 @@ attribute [simp] monoidal_linear.tensor_smul monoidal_linear.smul_tensor
 
 variable [MonoidalLinear R C]
 
-instance tensor_left_linear (X : C) : (tensorLeft X).Linear R :=
-  {  }
+instance tensor_left_linear (X : C) : (tensorLeft X).Linear R where
 
-instance tensor_right_linear (X : C) : (tensorRight X).Linear R :=
-  {  }
+instance tensor_right_linear (X : C) : (tensorRight X).Linear R where
 
-instance tensoring_left_linear (X : C) : ((tensoringLeft C).obj X).Linear R :=
-  {  }
+instance tensoring_left_linear (X : C) : ((tensoringLeft C).obj X).Linear R where
 
-instance tensoring_right_linear (X : C) : ((tensoringRight C).obj X).Linear R :=
-  {  }
+instance tensoring_right_linear (X : C) : ((tensoringRight C).obj X).Linear R where
 
 end CategoryTheory
 

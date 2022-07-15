@@ -5,7 +5,6 @@ Authors: Rémy Degenne
 -/
 import Mathbin.Algebra.BigOperators.Intervals
 import Mathbin.MeasureTheory.Measure.MeasureSpace
-import Mathbin.MeasureTheory.PiSystem
 
 /-!
 # Independence of sets of sets and measure spaces (σ-algebras)
@@ -27,9 +26,9 @@ import Mathbin.MeasureTheory.PiSystem
 
 ## Main statements
 
-* TODO: `Indep_of_Indep_sets`: if π-systems are independent as sets of sets, then the
+* `Indep_sets.Indep`: if π-systems are independent as sets of sets, then the
 measurable space structures they generate are independent.
-* `indep_of_indep_sets`: variant with two π-systems.
+* `indep_sets.indep`: variant with two π-systems.
 
 ## Implementation notes
 
@@ -233,20 +232,20 @@ theorem IndepSets.indep_sets {α ι} {s : ι → Set (Set α)} [MeasurableSpace 
   have hf_m : ∀ x : ι, x ∈ {i, j} → ite (x = i) t₁ t₂ ∈ s x := by
     intro x hx
     cases' finset.mem_insert.mp hx with hx hx
-    · simp [hx, ht₁]
+    · simp [← hx, ← ht₁]
       
-    · simp [finset.mem_singleton.mp hx, hij.symm, ht₂]
+    · simp [← finset.mem_singleton.mp hx, ← hij.symm, ← ht₂]
       
   have h1 : t₁ = ite (i = i) t₁ t₂ := by
-    simp only [if_true, eq_self_iff_true]
+    simp only [← if_true, ← eq_self_iff_true]
   have h2 : t₂ = ite (j = i) t₁ t₂ := by
-    simp only [hij.symm, if_false]
+    simp only [← hij.symm, ← if_false]
   have h_inter : (⋂ (t : ι) (H : t ∈ ({i, j} : Finset ι)), ite (t = i) t₁ t₂) = ite (i = i) t₁ t₂ ∩ ite (j = i) t₁ t₂ :=
     by
-    simp only [Finset.set_bInter_singleton, Finset.set_bInter_insert]
+    simp only [← Finset.set_bInter_singleton, ← Finset.set_bInter_insert]
   have h_prod :
     (∏ t : ι in ({i, j} : Finset ι), μ (ite (t = i) t₁ t₂)) = μ (ite (i = i) t₁ t₂) * μ (ite (j = i) t₁ t₂) := by
-    simp only [hij, Finset.prod_singleton, Finset.prod_insert, not_false_iff, Finset.mem_singleton]
+    simp only [← hij, ← Finset.prod_singleton, ← Finset.prod_insert, ← not_false_iff, ← Finset.mem_singleton]
   rw [h1]
   nth_rw 1[h2]
   nth_rw 3[h2]
@@ -323,6 +322,138 @@ theorem IndepSetsₓ.indep {α} {m1 m2 : MeasurableSpace α} {m : MeasurableSpac
   rw [measure.restrict_apply ht1, measure.smul_apply, smul_eq_mul, mul_comm]
   exact indep_sets.indep_aux h2 hp2 hpm2 hyp ht ht2
 
+variable {α ι : Type _} {m0 : MeasurableSpace α} {μ : Measureₓ α}
+
+theorem IndepSets.pi_Union_Inter_singleton {π : ι → Set (Set α)} {a : ι} {S : Finset ι} (hp_ind : IndepSets π μ)
+    (haS : a ∉ S) : IndepSetsₓ (PiUnionInter π {S}) (π a) μ := by
+  rintro t1 t2 ⟨s, hs_mem, ft1, hft1_mem, ht1_eq⟩ ht2_mem_pia
+  rw [Set.mem_singleton_iff] at hs_mem
+  subst hs_mem
+  let f := fun n => ite (n = a) t2 (ite (n ∈ s) (ft1 n) Set.Univ)
+  have h_f_mem : ∀, ∀ n ∈ insert a s, ∀, f n ∈ π n := by
+    intro n hn_mem_insert
+    simp_rw [f]
+    cases' finset.mem_insert.mp hn_mem_insert with hn_mem hn_mem
+    · simp [← hn_mem, ← ht2_mem_pia]
+      
+    · have hn_ne_a : n ≠ a := by
+        rintro rfl
+        exact haS hn_mem
+      simp [← hn_ne_a, ← hn_mem, ← hft1_mem n hn_mem]
+      
+  have h_f_mem_pi : ∀, ∀ n ∈ s, ∀, f n ∈ π n := fun x hxS =>
+    h_f_mem x
+      (by
+        simp [← hxS])
+  have h_t1 : t1 = ⋂ n ∈ s, f n := by
+    suffices h_forall : ∀, ∀ n ∈ s, ∀, f n = ft1 n
+    · rw [ht1_eq]
+      congr with n x
+      congr with hns y
+      simp only [← (h_forall n hns).symm]
+      
+    intro n hnS
+    have hn_ne_a : n ≠ a := by
+      rintro rfl
+      exact haS hnS
+    simp_rw [f, if_pos hnS, if_neg hn_ne_a]
+  have h_μ_t1 : μ t1 = ∏ n in s, μ (f n) := by
+    rw [h_t1, ← hp_ind s h_f_mem_pi]
+  have h_t2 : t2 = f a := by
+    simp_rw [f]
+    simp
+  have h_μ_inter : μ (t1 ∩ t2) = ∏ n in insert a s, μ (f n) := by
+    have h_t1_inter_t2 : t1 ∩ t2 = ⋂ n ∈ insert a s, f n := by
+      rw [h_t1, h_t2, Finset.set_bInter_insert, Set.inter_comm]
+    rw [h_t1_inter_t2, ← hp_ind (insert a s) h_f_mem]
+  rw [h_μ_inter, Finset.prod_insert haS, h_t2, mul_comm, h_μ_t1]
+
+/-- Auxiliary lemma for `Indep_sets.Indep`. -/
+theorem IndepSets.Indep_aux [IsProbabilityMeasure μ] (m : ι → MeasurableSpace α) (h_le : ∀ i, m i ≤ m0)
+    (π : ι → Set (Set α)) (h_pi : ∀ n, IsPiSystem (π n)) (hp_univ : ∀ i, Set.Univ ∈ π i)
+    (h_generate : ∀ i, m i = generateFrom (π i)) (h_ind : IndepSets π μ) : Indep m μ := by
+  refine'
+    Finset.induction
+      (by
+        simp [← measure_univ])
+      _
+  intro a S ha_notin_S h_rec f hf_m
+  have hf_m_S : ∀, ∀ x ∈ S, ∀, measurable_set[m x] (f x) := fun x hx =>
+    hf_m x
+      (by
+        simp [← hx])
+  rw [Finset.set_bInter_insert, Finset.prod_insert ha_notin_S, ← h_rec hf_m_S]
+  let p := PiUnionInter π {S}
+  set m_p := generate_from p with hS_eq_generate
+  have h_indep : indep m_p (m a) μ := by
+    have hp : IsPiSystem p := is_pi_system_pi_Union_Inter π h_pi {S} (sup_closed_singleton S)
+    have h_le' : ∀ i, generate_from (π i) ≤ m0 := fun i => (h_generate i).symm.trans_le (h_le i)
+    have hm_p : m_p ≤ m0 := generate_from_pi_Union_Inter_le π h_le' {S}
+    exact
+      indep_sets.indep hm_p (h_le a) hp (h_pi a) hS_eq_generate (h_generate a)
+        (h_ind.pi_Union_Inter_singleton ha_notin_S)
+  refine' h_indep.symm (f a) (⋂ n ∈ S, f n) (hf_m a (Finset.mem_insert_self a S)) _
+  have h_le_p : ∀, ∀ i ∈ S, ∀, m i ≤ m_p := by
+    intro n hn
+    rw [hS_eq_generate, h_generate n]
+    exact le_generate_from_pi_Union_Inter {S} hp_univ (Set.mem_singleton _) hn
+  have h_S_f : ∀, ∀ i ∈ S, ∀, measurable_set[m_p] (f i) := fun i hi => (h_le_p i hi) (f i) (hf_m_S i hi)
+  exact S.measurable_set_bInter h_S_f
+
+/-- The measurable space structures generated by independent pi-systems are independent. -/
+theorem IndepSets.Indep [IsProbabilityMeasure μ] (m : ι → MeasurableSpace α) (h_le : ∀ i, m i ≤ m0)
+    (π : ι → Set (Set α)) (h_pi : ∀ n, IsPiSystem (π n)) (h_generate : ∀ i, m i = generateFrom (π i))
+    (h_ind : IndepSets π μ) : Indep m μ := by
+  -- We want to apply `Indep_sets.Indep_aux`, but `π i` does not contain `univ`, hence we replace
+  -- `π` with a new augmented pi-system `π'`, and prove all hypotheses for that pi-system.
+  let π' := fun i => insert Set.Univ (π i)
+  have h_subset : ∀ i, π i ⊆ π' i := fun i => Set.subset_insert _ _
+  have h_pi' : ∀ n, IsPiSystem (π' n) := fun n => (h_pi n).insert_univ
+  have h_univ' : ∀ i, Set.Univ ∈ π' i := fun i => Set.mem_insert _ _
+  have h_gen' : ∀ i, m i = generate_from (π' i) := by
+    intro i
+    rw [h_generate i, generate_from_insert_univ (π i)]
+  have h_ind' : Indep_sets π' μ := by
+    intro S f hfπ'
+    let S' := Finset.filter (fun i => f i ≠ Set.Univ) S
+    have h_mem : ∀, ∀ i ∈ S', ∀, f i ∈ π i := by
+      intro i hi
+      simp_rw [S', Finset.mem_filter] at hi
+      cases hfπ' i hi.1
+      · exact absurd h hi.2
+        
+      · exact h
+        
+    have h_left : (⋂ i ∈ S, f i) = ⋂ i ∈ S', f i := by
+      ext1 x
+      simp only [← Set.mem_Inter, ← Finset.mem_filter, ← Ne.def, ← and_imp]
+      constructor
+      · exact fun h i hiS hif => h i hiS
+        
+      · intro h i hiS
+        by_cases' hfi_univ : f i = Set.Univ
+        · rw [hfi_univ]
+          exact Set.mem_univ _
+          
+        · exact h i hiS hfi_univ
+          
+        
+    have h_right : (∏ i in S, μ (f i)) = ∏ i in S', μ (f i) := by
+      rw [← Finset.prod_filter_mul_prod_filter_not S fun i => f i ≠ Set.Univ]
+      simp only [← Ne.def, ← Finset.filter_congr_decidable, ← not_not]
+      suffices (∏ x in Finset.filter (fun x => f x = Set.Univ) S, μ (f x)) = 1 by
+        rw [this, mul_oneₓ]
+      calc
+        (∏ x in Finset.filter (fun x => f x = Set.Univ) S, μ (f x)) =
+            ∏ x in Finset.filter (fun x => f x = Set.Univ) S, μ Set.Univ :=
+          Finset.prod_congr rfl fun x hx => by
+            rw [Finset.mem_filter] at hx
+            rw [hx.2]_ = ∏ x in Finset.filter (fun x => f x = Set.Univ) S, 1 :=
+          Finset.prod_congr rfl fun _ _ => measure_univ _ = 1 := Finset.prod_const_one
+    rw [h_left, h_right]
+    exact h_ind S' h_mem
+  exact Indep_sets.Indep_aux m h_le π' h_pi' h_univ' h_gen' h_ind'
+
 end FromPiSystemsToMeasurableSpaces
 
 section IndepSet
@@ -368,7 +499,52 @@ end IndepSet
 
 section IndepFun
 
-variable {α β β' γ γ' : Type _} {mα : MeasurableSpace α} {μ : Measureₓ α}
+/-! ### Independence of random variables
+
+-/
+
+
+variable {α β β' γ γ' : Type _} {mα : MeasurableSpace α} {μ : Measureₓ α} {f : α → β} {g : α → β'}
+
+theorem indep_fun_iff_measure_inter_preimage_eq_mul {mβ : MeasurableSpace β} {mβ' : MeasurableSpace β'}
+    [IsProbabilityMeasure μ] (hf : Measurable f) (hg : Measurable g) :
+    IndepFunₓ f g μ ↔ ∀ s t, MeasurableSet s → MeasurableSet t → μ (f ⁻¹' s ∩ g ⁻¹' t) = μ (f ⁻¹' s) * μ (g ⁻¹' t) := by
+  let Sf := { t1 | ∃ s, MeasurableSet s ∧ f ⁻¹' s = t1 }
+  let Sg := { t1 | ∃ t, MeasurableSet t ∧ g ⁻¹' t = t1 }
+  suffices indep_fun f g μ ↔ indep_sets Sf Sg μ by
+    refine' this.trans _
+    simp_rw [indep_sets, Sf, Sg, Set.mem_set_of_eq]
+    constructor <;> intro h
+    · exact fun s t hs ht => h (f ⁻¹' s) (g ⁻¹' t) ⟨s, hs, rfl⟩ ⟨t, ht, rfl⟩
+      
+    · rintro t1 t2 ⟨s, hs, rfl⟩ ⟨t, ht, rfl⟩
+      exact h s t hs ht
+      
+  have hSf_pi : IsPiSystem Sf := by
+    rintro s ⟨s', hs', rfl⟩ t ⟨t', ht', rfl⟩ hst_nonempty
+    exact ⟨s' ∩ t', hs'.inter ht', rfl⟩
+  have hSg_pi : IsPiSystem Sg := by
+    rintro s ⟨s', hs', rfl⟩ t ⟨t', ht', rfl⟩ hst_nonempty
+    exact ⟨s' ∩ t', hs'.inter ht', rfl⟩
+  have hSf_gen : mβ.comap f = generate_from Sf := mβ.comap_eq_generate_from f
+  have hSg_gen : mβ'.comap g = generate_from Sg := mβ'.comap_eq_generate_from g
+  rw [indep_fun]
+  constructor <;> intro h
+  · rw [hSf_gen, hSg_gen] at h
+    exact indep.indep_sets h
+    
+  · exact indep_sets.indep hf.comap_le hg.comap_le hSf_pi hSg_pi hSf_gen hSg_gen h
+    
+
+theorem indep_fun_iff_indep_set_preimage {mβ : MeasurableSpace β} {mβ' : MeasurableSpace β'} [IsProbabilityMeasure μ]
+    (hf : Measurable f) (hg : Measurable g) :
+    IndepFunₓ f g μ ↔ ∀ s t, MeasurableSet s → MeasurableSet t → IndepSetₓ (f ⁻¹' s) (g ⁻¹' t) μ := by
+  refine' (indep_fun_iff_measure_inter_preimage_eq_mul hf hg).trans _
+  constructor <;> intro h s t hs ht <;> specialize h s t hs ht
+  · rwa [indep_set_iff_measure_inter_eq_mul (hf hs) (hg ht) μ]
+    
+  · rwa [← indep_set_iff_measure_inter_eq_mul (hf hs) (hg ht) μ]
+    
 
 theorem IndepFunₓ.ae_eq {mβ : MeasurableSpace β} {f g f' g' : α → β} (hfg : IndepFunₓ f g μ) (hf : f =ᵐ[μ] f')
     (hg : g =ᵐ[μ] g') : IndepFunₓ f' g' μ := by
@@ -379,8 +555,8 @@ theorem IndepFunₓ.ae_eq {mβ : MeasurableSpace β} {f g f' g' : α → β} (hf
   exact hfg _ _ ⟨_, hA, rfl⟩ ⟨_, hB, rfl⟩
 
 theorem IndepFunₓ.comp {mβ : MeasurableSpace β} {mβ' : MeasurableSpace β'} {mγ : MeasurableSpace γ}
-    {mγ' : MeasurableSpace γ'} {f : α → β} {g : α → β'} {φ : β → γ} {ψ : β' → γ'} (hfg : IndepFunₓ f g μ)
-    (hφ : Measurable φ) (hψ : Measurable ψ) : IndepFunₓ (φ ∘ f) (ψ ∘ g) μ := by
+    {mγ' : MeasurableSpace γ'} {φ : β → γ} {ψ : β' → γ'} (hfg : IndepFunₓ f g μ) (hφ : Measurable φ)
+    (hψ : Measurable ψ) : IndepFunₓ (φ ∘ f) (ψ ∘ g) μ := by
   rintro _ _ ⟨A, hA, rfl⟩ ⟨B, hB, rfl⟩
   apply hfg
   · exact ⟨φ ⁻¹' A, hφ hA, set.preimage_comp.symm⟩

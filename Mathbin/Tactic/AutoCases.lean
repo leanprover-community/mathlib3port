@@ -69,7 +69,7 @@ unsafe def auto_cases_at (hyp : expr) : tactic Stringₓ := do
       return s! "{atac } {pp}"
     | none => fail "hypothesis type unsupported"
 
--- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `results
+-- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `results
 /-- Applies `cases` or `induction` on certain hypotheses. -/
 @[hint_tactic]
 unsafe def auto_cases : tactic Stringₓ := do

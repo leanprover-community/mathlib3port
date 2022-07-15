@@ -30,7 +30,7 @@ variable {R S : Type _} (M : Type _) {a b : R} {s : S}
 
 /-- An `M`-regular element is an element `c` such that multiplication on the left by `c` is an
 injective map `M → M`. -/
-def IsSmulRegular [HasScalar R M] (c : R) :=
+def IsSmulRegular [HasSmul R M] (c : R) :=
   Function.Injective ((· • ·) c : M → M)
 
 theorem IsLeftRegular.is_smul_regular [Mul R] {c : R} (h : IsLeftRegular c) : IsSmulRegular R c :=
@@ -51,9 +51,9 @@ namespace IsSmulRegular
 
 variable {M}
 
-section HasScalar
+section HasSmul
 
-variable [HasScalar R M] [HasScalar R S] [HasScalar S M] [IsScalarTower R S M]
+variable [HasSmul R M] [HasSmul R S] [HasSmul S M] [IsScalarTower R S M]
 
 /-- The product of `M`-regular elements is `M`-regular. -/
 theorem smul (ra : IsSmulRegular M a) (rs : IsSmulRegular M s) : IsSmulRegular M (a • s) := fun a b ab =>
@@ -103,7 +103,7 @@ theorem mul_and_mul_iff [Mul R] [IsScalarTower R R M] :
     exact ⟨ha.mul hb, hb.mul ha⟩
     
 
-end HasScalar
+end HasSmul
 
 section Monoidₓ
 
@@ -128,7 +128,7 @@ theorem of_mul_eq_one (h : a * b = 1) : IsSmulRegular M b :=
 /-- Any power of an `M`-regular element is `M`-regular. -/
 theorem pow (n : ℕ) (ra : IsSmulRegular M a) : IsSmulRegular M (a ^ n) := by
   induction' n with n hn
-  · simp only [one, pow_zeroₓ]
+  · simp only [← one, ← pow_zeroₓ]
     
   · rw [pow_succₓ]
     exact (ra.smul_iff (a ^ n)).mpr hn
@@ -144,7 +144,7 @@ end Monoidₓ
 
 section MonoidSmul
 
-variable [Monoidₓ S] [HasScalar R M] [HasScalar R S] [MulAction S M] [IsScalarTower R S M]
+variable [Monoidₓ S] [HasSmul R M] [HasSmul R S] [MulAction S M] [IsScalarTower R S M]
 
 /-- An element of `S` admitting a left inverse in `R` is `M`-regular. -/
 theorem of_smul_eq_one (h : a • s = 1) : IsSmulRegular M s :=
@@ -190,7 +190,7 @@ end MonoidWithZeroₓ
 
 section CommSemigroupₓ
 
-variable [CommSemigroupₓ R] [HasScalar R M] [IsScalarTower R R M]
+variable [CommSemigroupₓ R] [HasSmul R M] [IsScalarTower R R M]
 
 /-- A product is `M`-regular if and only if the factors are. -/
 theorem mul_iff : IsSmulRegular M (a * b) ↔ IsSmulRegular M a ∧ IsSmulRegular M b := by
@@ -213,7 +213,7 @@ variable {G : Type _} [Groupₓ G]
 of the inverse given by groups, since there is no `left_cancel_smul` typeclass. -/
 theorem is_smul_regular_of_group [MulAction G R] (g : G) : IsSmulRegular R g := by
   intro x y h
-  convert congr_arg ((· • ·) g⁻¹) h using 1 <;> simp [← smul_assoc]
+  convert congr_arg ((· • ·) g⁻¹) h using 1 <;> simp [smul_assoc]
 
 end Groupₓ
 

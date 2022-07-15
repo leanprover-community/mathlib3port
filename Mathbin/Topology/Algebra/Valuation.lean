@@ -35,7 +35,7 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgrou
   { inter := by
       rintro γ₀ γ₁
       use min γ₀ γ₁
-      simp [Valuation.ltAddSubgroup] <;> tauto,
+      simp [← Valuation.ltAddSubgroup] <;> tauto,
     mul := by
       rintro γ
       cases' exists_square_le γ with γ₀ h
@@ -52,7 +52,7 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgrou
         rw [Valuation.map_mul, Hx, zero_mul]
         exact Units.zero_lt γ
         
-      · simp only [image_subset_iff, set_of_subset_set_of, preimage_set_of_eq, Valuation.map_mul]
+      · simp only [← image_subset_iff, ← set_of_subset_set_of, ← preimage_set_of_eq, ← Valuation.map_mul]
         use γx⁻¹ * γ
         rintro y (vy_lt : v y < ↑(γx⁻¹ * γ))
         change (v (x * y) : Γ₀) < γ
@@ -113,7 +113,7 @@ variable (R Γ₀) [_i : Valued R Γ₀]
 include _i
 
 theorem has_basis_nhds_zero : (𝓝 (0 : R)).HasBasis (fun _ => True) fun γ : Γ₀ˣ => { x | v x < (γ : Γ₀) } := by
-  simp [Filter.has_basis_iff, is_topological_valuation]
+  simp [← Filter.has_basis_iff, ← is_topological_valuation]
 
 theorem has_basis_uniformity : (𝓤 R).HasBasis (fun _ => True) fun γ : Γ₀ˣ => { p : R × R | v (p.2 - p.1) < (γ : Γ₀) } :=
   by
@@ -126,11 +126,11 @@ theorem to_uniform_space_eq : to_uniform_space = @TopologicalAddGroup.toUniformS
 variable {R Γ₀}
 
 theorem mem_nhds {s : Set R} {x : R} : s ∈ 𝓝 x ↔ ∃ γ : Γ₀ˣ, { y | (v (y - x) : Γ₀) < γ } ⊆ s := by
-  simp only [← nhds_translation_add_neg x, ← sub_eq_add_neg, preimage_set_of_eq, exists_true_left,
+  simp only [nhds_translation_add_neg x, sub_eq_add_neg, ← preimage_set_of_eq, ← exists_true_left, ←
     ((has_basis_nhds_zero R Γ₀).comap fun y => y - x).mem_iff]
 
 theorem mem_nhds_zero {s : Set R} : s ∈ 𝓝 (0 : R) ↔ ∃ γ : Γ₀ˣ, { x | v x < (γ : Γ₀) } ⊆ s := by
-  simp only [mem_nhds, sub_zero]
+  simp only [← mem_nhds, ← sub_zero]
 
 theorem loc_const {x : R} (h : (v x : Γ₀) ≠ 0) : { y : R | v y = v x } ∈ 𝓝 x := by
   rw [mem_nhds]
@@ -143,7 +143,7 @@ theorem loc_const {x : R} (h : (v x : Γ₀) ≠ 0) : { y : R | v y = v x } ∈ 
 instance (priority := 100) : TopologicalRing R :=
   (to_uniform_space_eq R Γ₀).symm ▸ v.subgroups_basis.toRingFilterBasis.is_topological_ring
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » M)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » M)
 theorem cauchy_iff {F : Filter R} :
     Cauchy F ↔ F.ne_bot ∧ ∀ γ : Γ₀ˣ, ∃ M ∈ F, ∀ x y _ : x ∈ M _ : y ∈ M, (v (y - x) : Γ₀) < γ := by
   rw [to_uniform_space_eq, AddGroupFilterBasis.cauchy_iff]

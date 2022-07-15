@@ -111,7 +111,7 @@ def reindexAlgEquiv (e : m ≃ n) : Matrix m m R ≃ₐ[R] Matrix n n R :=
   { reindexLinearEquiv R R e e with toFun := reindex e e,
     map_mul' := fun a b => (reindex_linear_equiv_mul R R e e e a b).symm,
     commutes' := fun r => by
-      simp [algebraMap, Algebra.toRingHom, minor_smul] }
+      simp [← algebraMap, ← Algebra.toRingHom, ← minor_smul] }
 
 @[simp]
 theorem reindex_alg_equiv_apply (e : m ≃ n) (M : Matrix m m R) : reindexAlgEquiv R e M = reindex e e M :=

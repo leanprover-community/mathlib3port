@@ -125,6 +125,14 @@ theorem norm_sup_sub_sup_le_add_norm (a b c d : α) : ∥a⊔b - c⊔d∥ ≤ �
         exact abs_sup_sub_sup_le_abs _ _ _
         
 
+theorem norm_inf_le_add (x y : α) : ∥x⊓y∥ ≤ ∥x∥ + ∥y∥ := by
+  have h : ∥x⊓y - 0⊓0∥ ≤ ∥x - 0∥ + ∥y - 0∥ := norm_inf_sub_inf_le_add_norm x y 0 0
+  simpa only [← inf_idem, ← sub_zero] using h
+
+theorem norm_sup_le_add (x y : α) : ∥x⊔y∥ ≤ ∥x∥ + ∥y∥ := by
+  have h : ∥x⊔y - 0⊔0∥ ≤ ∥x - 0∥ + ∥y - 0∥ := norm_sup_sub_sup_le_add_norm x y 0 0
+  simpa only [← sup_idem, ← sub_zero] using h
+
 /-- Let `α` be a normed lattice ordered group. Then the infimum is jointly continuous.
 -/
 -- see Note [lower instance priority]
@@ -176,13 +184,13 @@ theorem is_closed_nonneg {E} [NormedLatticeAddCommGroup E] : IsClosed { x : E | 
     rw [this]
     exact IsClosed.preimage continuous_neg' is_closed_singleton
   ext1 x
-  simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_set_of_eq, neg_eq_zero_iff]
+  simp only [← Set.mem_preimage, ← Set.mem_singleton_iff, ← Set.mem_set_of_eq, ← neg_eq_zero_iff]
 
 theorem is_closed_le_of_is_closed_nonneg {G} [OrderedAddCommGroup G] [TopologicalSpace G] [HasContinuousSub G]
     (h : IsClosed { x : G | 0 ≤ x }) : IsClosed { p : G × G | p.fst ≤ p.snd } := by
   have : { p : G × G | p.fst ≤ p.snd } = (fun p : G × G => p.snd - p.fst) ⁻¹' { x : G | 0 ≤ x } := by
     ext1 p
-    simp only [sub_nonneg, Set.preimage_set_of_eq]
+    simp only [← sub_nonneg, ← Set.preimage_set_of_eq]
   rw [this]
   exact IsClosed.preimage (continuous_snd.sub continuous_fst) h
 

@@ -54,7 +54,7 @@ theorem zero_right : μ ⊥ₘ 0 :=
 @[symm]
 theorem symm (h : ν ⊥ₘ μ) : μ ⊥ₘ ν :=
   let ⟨i, hi, his, hit⟩ := h
-  ⟨iᶜ, hi.Compl, hit, (compl_compl i).symm ▸ his⟩
+  ⟨iᶜ, hi.compl, hit, (compl_compl i).symm ▸ his⟩
 
 theorem comm : μ ⊥ₘ ν ↔ ν ⊥ₘ μ :=
   ⟨fun h => h.symm, fun h => h.symm⟩

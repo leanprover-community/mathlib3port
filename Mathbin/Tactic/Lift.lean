@@ -68,6 +68,11 @@ instance PiSubtype.canLift' (ι : Sort _) (α : Sort _) [ne : Nonempty α] (p : 
     CanLift (Subtype p → α) (ι → α) :=
   PiSubtype.canLift ι (fun _ => α) p
 
+instance Subtype.canLift {α : Sort _} (p : α → Prop) : CanLift α { x // p x } where
+  coe := coe
+  cond := p
+  prf := fun a ha => ⟨⟨a, ha⟩, rfl⟩
+
 namespace Tactic
 
 /-- Construct the proof of `cond x` in the lift tactic.
@@ -153,7 +158,7 @@ unsafe def lift (p : pexpr) (t : pexpr) (h : Option pexpr) (n : List Name) : tac
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ?»
 /-- Parses an optional token "using" followed by a trailing `pexpr`. -/
 unsafe def using_texpr :=
   «expr ?» (tk "using" *> texpr)

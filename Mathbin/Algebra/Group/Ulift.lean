@@ -3,6 +3,7 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
+import Mathbin.Data.Int.Cast.Defs
 import Mathbin.Algebra.Hom.Equiv
 
 /-!
@@ -78,17 +79,21 @@ instance mulOneClass [MulOneClassₓ α] : MulOneClassₓ (ULift α) :=
 instance mulZeroOneClass [MulZeroOneClassₓ α] : MulZeroOneClassₓ (ULift α) :=
   (Equivₓ.ulift.Injective.MulZeroOneClass _ rfl rfl) fun x y => rfl
 
-@[to_additive HasVadd]
-instance hasScalar {β : Type _} [HasScalar α β] : HasScalar α (ULift β) :=
+@[to_additive]
+instance hasSmul {β : Type _} [HasSmul α β] : HasSmul α (ULift β) :=
   ⟨fun n x => up (n • x.down)⟩
 
-@[to_additive HasScalar, to_additive_reorder 1]
+@[to_additive HasSmul, to_additive_reorder 1]
 instance hasPow {β : Type _} [Pow α β] : Pow (ULift α) β :=
   ⟨fun x n => up (x.down ^ n)⟩
 
 @[to_additive]
 instance monoid [Monoidₓ α] : Monoidₓ (ULift α) :=
   Equivₓ.ulift.Injective.Monoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
+
+instance addMonoidWithOne [AddMonoidWithOneₓ α] : AddMonoidWithOneₓ (ULift α) :=
+  { ULift.hasOne, ULift.addMonoid with natCast := fun n => ⟨n⟩, nat_cast_zero := congr_arg ULift.up Nat.cast_zeroₓ,
+    nat_cast_succ := fun n => congr_arg ULift.up (Nat.cast_succₓ _) }
 
 @[to_additive]
 instance commMonoid [CommMonoidₓ α] : CommMonoidₓ (ULift α) :=
@@ -108,6 +113,11 @@ instance divInvMonoid [DivInvMonoidₓ α] : DivInvMonoidₓ (ULift α) :=
 @[to_additive]
 instance group [Groupₓ α] : Groupₓ (ULift α) :=
   Equivₓ.ulift.Injective.Group _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
+
+instance addGroupWithOne [AddGroupWithOneₓ α] : AddGroupWithOneₓ (ULift α) :=
+  { ULift.addMonoidWithOne, ULift.addGroup with intCast := fun n => ⟨n⟩,
+    int_cast_of_nat := fun n => congr_arg ULift.up (Int.cast_of_nat _),
+    int_cast_neg_succ_of_nat := fun n => congr_arg ULift.up (Int.cast_neg_succ_of_nat _) }
 
 @[to_additive]
 instance commGroup [CommGroupₓ α] : CommGroupₓ (ULift α) :=

@@ -127,7 +127,7 @@ theorem nnnorm_map (x : E) : ∥f x∥₊ = ∥x∥₊ :=
   Nnreal.eq <| f.norm_map x
 
 protected theorem isometry : Isometry f :=
-  f.toLinearMap.toAddMonoidHom.isometry_of_norm f.norm_map
+  AddMonoidHomClass.isometry_of_norm _ (norm_map _)
 
 @[simp]
 theorem is_complete_image_iff {s : Set E} : IsComplete (f '' s) ↔ IsComplete s :=
@@ -168,6 +168,9 @@ protected theorem antilipschitz : AntilipschitzWith 1 f :=
 @[continuity]
 protected theorem continuous : Continuous f :=
   f.Isometry.Continuous
+
+instance : ContinuousSemilinearMapClass (E →ₛₗᵢ[σ₁₂] E₂) σ₁₂ E E₂ :=
+  { LinearIsometry.addMonoidHomClass with map_smulₛₗ := fun f => f.map_smulₛₗ, map_continuous := fun f => f.Continuous }
 
 theorem ediam_image (s : Set E) : Emetric.diam (f '' s) = Emetric.diam s :=
   f.Isometry.ediam_image s
@@ -385,7 +388,7 @@ protected theorem congr_fun {f g : E ≃ₛₗᵢ[σ₁₂] E₂} (h : f = g) (x
 def ofBounds (e : E ≃ₛₗ[σ₁₂] E₂) (h₁ : ∀ x, ∥e x∥ ≤ ∥x∥) (h₂ : ∀ y, ∥e.symm y∥ ≤ ∥y∥) : E ≃ₛₗᵢ[σ₁₂] E₂ :=
   ⟨e, fun x =>
     le_antisymmₓ (h₁ x) <| by
-      simpa only [e.symm_apply_apply] using h₂ (e x)⟩
+      simpa only [← e.symm_apply_apply] using h₂ (e x)⟩
 
 @[simp]
 theorem norm_map (x : E) : ∥e x∥ = ∥x∥ :=
@@ -780,7 +783,7 @@ def prodAssoc [Module R E₂] [Module R E₃] : (E × E₂) × E₃ ≃ₗᵢ[R]
       simp ,
     norm_map' := by
       rintro ⟨⟨e, f⟩, g⟩
-      simp only [LinearEquiv.coe_mk, Equivₓ.prod_assoc_apply, Prod.norm_def, max_assocₓ] }
+      simp only [← LinearEquiv.coe_mk, ← Equivₓ.prod_assoc_apply, ← Prod.norm_def, ← max_assocₓ] }
 
 @[simp]
 theorem coe_prod_assoc [Module R E₂] [Module R E₃] :

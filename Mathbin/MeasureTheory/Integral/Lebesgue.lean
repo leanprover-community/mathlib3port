@@ -91,7 +91,7 @@ def ofIsEmpty [IsEmpty α] : α →ₛ β where
   toFun := isEmptyElim
   measurable_set_fiber' := fun x => Subsingleton.measurable_set
   finite_range' := by
-    simp [range_eq_empty]
+    simp [← range_eq_empty]
 
 /-- Range of a simple function `α →ₛ β` as a `finset β`. -/
 protected def range (f : α →ₛ β) : Finset β :=
@@ -113,10 +113,10 @@ theorem mem_range_of_measure_ne_zero {f : α →ₛ β} {x : β} {μ : Measure �
   mem_range.2 ⟨a, ha⟩
 
 theorem forall_range_iff {f : α →ₛ β} {p : β → Prop} : (∀, ∀ y ∈ f.range, ∀, p y) ↔ ∀ x, p (f x) := by
-  simp only [mem_range, Set.forall_range_iff]
+  simp only [← mem_range, ← Set.forall_range_iff]
 
 theorem exists_range_iff {f : α →ₛ β} {p : β → Prop} : (∃ y ∈ f.range, p y) ↔ ∃ x, p (f x) := by
-  simpa only [mem_range, exists_prop] using Set.exists_range_iff
+  simpa only [← mem_range, ← exists_prop] using Set.exists_range_iff
 
 theorem preimage_eq_empty_iff (f : α →ₛ β) (b : β) : f ⁻¹' {b} = ∅ ↔ b ∉ f.range :=
   preimage_singleton_eq_empty.trans <| not_congr mem_range.symm
@@ -195,7 +195,7 @@ theorem piecewise_apply {s : Set α} (hs : MeasurableSet s) (f g : α →ₛ β)
 theorem piecewise_compl {s : Set α} (hs : MeasurableSet (sᶜ)) (f g : α →ₛ β) :
     piecewise (sᶜ) hs f g = piecewise s hs.of_compl g f :=
   coe_injective <| by
-    simp [hs]
+    simp [← hs]
 
 @[simp]
 theorem piecewise_univ (f g : α →ₛ β) : piecewise Univ MeasurableSet.univ f g = f :=
@@ -213,8 +213,8 @@ theorem support_indicator [Zero β] {s : Set α} (hs : MeasurableSet s) (f : α 
 
 theorem range_indicator {s : Set α} (hs : MeasurableSet s) (hs_nonempty : s.Nonempty) (hs_ne_univ : s ≠ univ)
     (x y : β) : (piecewise s hs (const α x) (const α y)).range = {x, y} := by
-  simp only [← Finset.coe_inj, coe_range, coe_piecewise, range_piecewise, coe_const, Finset.coe_insert,
-    Finset.coe_singleton, hs_nonempty.image_const, (nonempty_compl.2 hs_ne_univ).image_const, singleton_union]
+  simp only [Finset.coe_inj, ← coe_range, ← coe_piecewise, ← range_piecewise, ← coe_const, ← Finset.coe_insert, ←
+    Finset.coe_singleton, ← hs_nonempty.image_const, ← (nonempty_compl.2 hs_ne_univ).image_const, ← singleton_union]
 
 theorem measurable_bind [MeasurableSpace γ] (f : α →ₛ β) (g : β → α → γ) (hg : ∀ b, Measurable (g b)) :
     Measurable fun a => g (f a) a := fun s hs => (f.measurable_set_cut fun a b => g b a ∈ s) fun b => hg b hs
@@ -248,7 +248,7 @@ theorem coe_map (g : β → γ) (f : α →ₛ β) : (f.map g : α → γ) = g �
 @[simp]
 theorem range_map [DecidableEq γ] (g : β → γ) (f : α →ₛ β) : (f.map g).range = f.range.Image g :=
   Finset.coe_injective <| by
-    simp only [coe_range, coe_map, Finset.coe_image, range_comp]
+    simp only [← coe_range, ← coe_map, ← Finset.coe_image, ← range_comp]
 
 @[simp]
 theorem map_const (g : β → γ) (b : β) : (const α b).map g = const α (g b) :=
@@ -256,8 +256,8 @@ theorem map_const (g : β → γ) (b : β) : (const α b).map g = const α (g b)
 
 theorem map_preimage (f : α →ₛ β) (g : β → γ) (s : Set γ) : f.map g ⁻¹' s = f ⁻¹' ↑(f.range.filter fun b => g b ∈ s) :=
   by
-  simp only [coe_range, sep_mem_eq, Set.mem_range, Function.comp_app, coe_map, Finset.coe_filter, ← mem_preimage,
-    inter_comm, preimage_inter_range]
+  simp only [← coe_range, ← sep_mem_eq, ← Set.mem_range, ← Function.comp_app, ← coe_map, ← Finset.coe_filter,
+    mem_preimage, ← inter_comm, ← preimage_inter_range]
   apply preimage_comp
 
 theorem map_preimage_singleton (f : α →ₛ β) (g : β → γ) (c : γ) :
@@ -277,7 +277,7 @@ theorem coe_comp [MeasurableSpace β] (f : β →ₛ γ) {g : α → β} (hgm : 
 theorem range_comp_subset_range [MeasurableSpace β] (f : β →ₛ γ) {g : α → β} (hgm : Measurable g) :
     (f.comp g hgm).range ⊆ f.range :=
   Finset.coe_subset.1 <| by
-    simp only [coe_range, coe_comp, Set.range_comp_subset_range]
+    simp only [← coe_range, ← coe_comp, ← Set.range_comp_subset_range]
 
 /-- Extend a `simple_func` along a measurable embedding: `f₁.extend g hg f₂` is the function
 `F : β →ₛ γ` such that `F ∘ g = f₁` and `F y = f₂ y` whenever `y ∉ range g`. -/
@@ -418,7 +418,7 @@ theorem inf_apply [HasInf β] (f g : α →ₛ β) (a : α) : (f⊓g) a = f a⊓
 @[simp, to_additive]
 theorem range_one [Nonempty α] [One β] : (1 : α →ₛ β).range = {1} :=
   Finset.ext fun x => by
-    simp [eq_comm]
+    simp [← eq_comm]
 
 @[simp]
 theorem range_eq_empty_of_is_empty {β} [hα : IsEmpty α] (f : α →ₛ β) : f.range = ∅ := by
@@ -451,14 +451,14 @@ theorem map_mul [Mul β] [Mul γ] {g : β → γ} (hg : ∀ x y, g (x * y) = g x
 
 variable {K : Type _}
 
-instance [HasScalar K β] : HasScalar K (α →ₛ β) :=
+instance [HasSmul K β] : HasSmul K (α →ₛ β) :=
   ⟨fun k f => f.map ((· • ·) k)⟩
 
 @[simp]
-theorem coe_smul [HasScalar K β] (c : K) (f : α →ₛ β) : ⇑(c • f) = c • f :=
+theorem coe_smul [HasSmul K β] (c : K) (f : α →ₛ β) : ⇑(c • f) = c • f :=
   rfl
 
-theorem smul_apply [HasScalar K β] (k : K) (f : α →ₛ β) (a : α) : (k • f) a = k • f a :=
+theorem smul_apply [HasSmul K β] (k : K) (f : α →ₛ β) (a : α) : (k • f) a = k • f a :=
   rfl
 
 instance hasNatPow [Monoidₓ β] : Pow (α →ₛ β) ℕ :=
@@ -521,7 +521,7 @@ instance [CommGroupₓ β] : CommGroupₓ (α →ₛ β) :=
 instance [Semiringₓ K] [AddCommMonoidₓ β] [Module K β] : Module K (α →ₛ β) :=
   Function.Injective.module K ⟨fun f => show α → β from f, coe_zero, coe_add⟩ coe_injective coe_smul
 
-theorem smul_eq_map [HasScalar K β] (k : K) (f : α →ₛ β) : k • f = f.map ((· • ·) k) :=
+theorem smul_eq_map [HasSmul K β] (k : K) (f : α →ₛ β) : k • f = f.map ((· • ·) k) :=
   rfl
 
 instance [Preorderₓ β] : Preorderₓ (α →ₛ β) :=
@@ -577,19 +577,19 @@ theorem coe_restrict (f : α →ₛ β) {s : Set α} (hs : MeasurableSet s) : �
 
 @[simp]
 theorem restrict_univ (f : α →ₛ β) : restrict f Univ = f := by
-  simp [restrict]
+  simp [← restrict]
 
 @[simp]
 theorem restrict_empty (f : α →ₛ β) : restrict f ∅ = 0 := by
-  simp [restrict]
+  simp [← restrict]
 
 theorem map_restrict_of_zero [Zero γ] {g : β → γ} (hg : g 0 = 0) (f : α →ₛ β) (s : Set α) :
     (f.restrict s).map g = (f.map g).restrict s :=
   ext fun x =>
     if hs : MeasurableSet s then by
-      simp [hs, Set.indicator_comp_of_zero hg]
+      simp [← hs, ← Set.indicator_comp_of_zero hg]
     else by
-      simp [restrict_of_not_measurable hs, hg]
+      simp [← restrict_of_not_measurable hs, ← hg]
 
 theorem map_coe_ennreal_restrict (f : α →ₛ ℝ≥0 ) (s : Set α) :
     (f.restrict s).map (coe : ℝ≥0 → ℝ≥0∞) = (f.map coe).restrict s :=
@@ -600,11 +600,11 @@ theorem map_coe_nnreal_restrict (f : α →ₛ ℝ≥0 ) (s : Set α) :
   map_restrict_of_zero Nnreal.coe_zero _ _
 
 theorem restrict_apply (f : α →ₛ β) {s : Set α} (hs : MeasurableSet s) a : restrict f s a = indicatorₓ s f a := by
-  simp only [f.coe_restrict hs]
+  simp only [← f.coe_restrict hs]
 
 theorem restrict_preimage (f : α →ₛ β) {s : Set α} (hs : MeasurableSet s) {t : Set β} (ht : (0 : β) ∉ t) :
     restrict f s ⁻¹' t = s ∩ f ⁻¹' t := by
-  simp [hs, indicator_preimage_of_not_mem _ _ ht, inter_comm]
+  simp [← hs, ← indicator_preimage_of_not_mem _ _ ht, ← inter_comm]
 
 theorem restrict_preimage_singleton (f : α →ₛ β) {s : Set α} (hs : MeasurableSet s) {r : β} (hr : r ≠ 0) :
     restrict f s ⁻¹' {r} = s ∩ f ⁻¹' {r} :=
@@ -617,7 +617,7 @@ theorem mem_restrict_range {r : β} {s : Set α} {f : α →ₛ β} (hs : Measur
 theorem mem_image_of_mem_range_restrict {r : β} {s : Set α} {f : α →ₛ β} (hr : r ∈ (restrict f s).range) (h0 : r ≠ 0) :
     r ∈ f '' s :=
   if hs : MeasurableSet s then by
-    simpa [mem_restrict_range hs, h0] using hr
+    simpa [← mem_restrict_range hs, ← h0] using hr
   else by
     rw [restrict_of_not_measurable hs] at hr
     exact (h0 <| eq_zero_of_mem_range_zero hr).elim
@@ -625,9 +625,9 @@ theorem mem_image_of_mem_range_restrict {r : β} {s : Set α} {f : α →ₛ β}
 @[mono]
 theorem restrict_mono [Preorderₓ β] (s : Set α) {f g : α →ₛ β} (H : f ≤ g) : f.restrict s ≤ g.restrict s :=
   if hs : MeasurableSet s then fun x => by
-    simp only [coe_restrict _ hs, indicator_le_indicator (H x)]
+    simp only [← coe_restrict _ hs, ← indicator_le_indicator (H x)]
   else by
-    simp only [restrict_of_not_measurable hs, le_reflₓ]
+    simp only [← restrict_of_not_measurable hs, ← le_reflₓ]
 
 end Restrict
 
@@ -646,7 +646,7 @@ def approx (i : ℕ → β) (f : α → β) (n : ℕ) : α →ₛ β :=
 theorem approx_apply [TopologicalSpace β] [OrderClosedTopology β] [MeasurableSpace β] [OpensMeasurableSpace β]
     {i : ℕ → β} {f : α → β} {n : ℕ} (a : α) (hf : Measurable f) :
     (approx i f n : α →ₛ β) a = (Finset.range n).sup fun k => if i k ≤ f a then i k else 0 := by
-  dsimp' only [approx]
+  dsimp' only [← approx]
   rw [finset_sup_apply]
   congr
   funext k
@@ -697,11 +697,11 @@ def eapprox : (α → ℝ≥0∞) → ℕ → α →ₛ ℝ≥0∞ :=
   approx ennrealRatEmbed
 
 theorem eapprox_lt_top (f : α → ℝ≥0∞) (n : ℕ) (a : α) : eapprox f n a < ∞ := by
-  simp only [eapprox, approx, finset_sup_apply, Finset.sup_lt_iff, WithTop.zero_lt_top, Finset.mem_range,
-    Ennreal.bot_eq_zero, restrict]
+  simp only [← eapprox, ← approx, ← finset_sup_apply, ← Finset.sup_lt_iff, ← WithTop.zero_lt_top, ← Finset.mem_range, ←
+    Ennreal.bot_eq_zero, ← restrict]
   intro b hb
   split_ifs
-  · simp only [coe_zero, coe_piecewise, piecewise_eq_indicator, coe_const]
+  · simp only [← coe_zero, ← coe_piecewise, ← piecewise_eq_indicator, ← coe_const]
     calc { a : α | ennreal_rat_embed b ≤ f a }.indicator (fun x => ennreal_rat_embed b) a ≤ ennreal_rat_embed b :=
         indicator_le_self _ _ a _ < ⊤ := Ennreal.coe_lt_top
     
@@ -737,7 +737,7 @@ def eapproxDiff (f : α → ℝ≥0∞) : ∀ n : ℕ, α →ₛ ℝ≥0
 theorem sum_eapprox_diff (f : α → ℝ≥0∞) (n : ℕ) (a : α) :
     (∑ k in Finset.range (n + 1), (eapproxDiff f k a : ℝ≥0∞)) = eapprox f n a := by
   induction' n with n IH
-  · simp only [Nat.nat_zero_eq_zero, Finset.sum_singleton, Finset.range_one]
+  · simp only [← Nat.nat_zero_eq_zero, ← Finset.sum_singleton, ← Finset.range_one]
     rfl
     
   · rw [Finset.sum_range_succ, Nat.succ_eq_add_one, IH, eapprox_diff, coe_map, Function.comp_app, coe_sub, Pi.sub_apply,
@@ -765,7 +765,7 @@ def lintegral {m : MeasurableSpace α} (f : α →ₛ ℝ≥0∞) (μ : Measure 
 theorem lintegral_eq_of_subset (f : α →ₛ ℝ≥0∞) {s : Finset ℝ≥0∞} (hs : ∀ x, f x ≠ 0 → μ (f ⁻¹' {f x}) ≠ 0 → f x ∈ s) :
     f.lintegral μ = ∑ x in s, x * μ (f ⁻¹' {x}) := by
   refine' Finset.sum_bij_ne_zero (fun r _ _ => r) _ _ _ _
-  · simpa only [forall_range_iff, mul_ne_zero_iff, and_imp]
+  · simpa only [← forall_range_iff, ← mul_ne_zero_iff, ← and_imp]
     
   · intros
     assumption
@@ -785,7 +785,7 @@ theorem lintegral_eq_of_subset' (f : α →ₛ ℝ≥0∞) {s : Finset ℝ≥0�
 
 /-- Calculate the integral of `(g ∘ f)`, where `g : β → ℝ≥0∞` and `f : α →ₛ β`.  -/
 theorem map_lintegral (g : β → ℝ≥0∞) (f : α →ₛ β) : (f.map g).lintegral μ = ∑ x in f.range, g x * μ (f ⁻¹' {x}) := by
-  simp only [lintegral, range_map]
+  simp only [← lintegral, ← range_map]
   refine' Finset.sum_image' _ fun b hb => _
   rcases mem_range.1 hb with ⟨a, rfl⟩
   rw [map_preimage_singleton, ← f.sum_measure_preimage_singleton, Finset.mul_sum]
@@ -793,7 +793,7 @@ theorem map_lintegral (g : β → ℝ≥0∞) (f : α →ₛ β) : (f.map g).lin
   · congr
     
   · intro x
-    simp only [Finset.mem_filter]
+    simp only [← Finset.mem_filter]
     rintro ⟨_, h⟩
     rw [h]
     
@@ -822,9 +822,9 @@ def lintegralₗ {m : MeasurableSpace α} : (α →ₛ ℝ≥0∞) →ₗ[ℝ≥
   toFun := fun f =>
     { toFun := lintegral f,
       map_add' := by
-        simp [lintegral, mul_addₓ, Finset.sum_add_distrib],
+        simp [← lintegral, ← mul_addₓ, ← Finset.sum_add_distrib],
       map_smul' := fun c μ => by
-        simp [lintegral, mul_left_commₓ _ c, Finset.mul_sum] }
+        simp [← lintegral, ← mul_left_commₓ _ c, ← Finset.mul_sum] }
   map_add' := fun f g => LinearMap.ext fun μ => add_lintegral f g
   map_smul' := fun c f => LinearMap.ext fun μ => const_mul_lintegral f c
 
@@ -844,7 +844,7 @@ theorem lintegral_zero [MeasurableSpace α] (f : α →ₛ ℝ≥0∞) : f.linte
 
 theorem lintegral_sum {m : MeasurableSpace α} {ι} (f : α →ₛ ℝ≥0∞) (μ : ι → Measure α) :
     f.lintegral (Measure.sum μ) = ∑' i, f.lintegral (μ i) := by
-  simp only [lintegral, measure.sum_apply, f.measurable_set_preimage, ← Finset.tsum_subtype, ← Ennreal.tsum_mul_left]
+  simp only [← lintegral, ← measure.sum_apply, ← f.measurable_set_preimage, Finset.tsum_subtype, Ennreal.tsum_mul_left]
   apply Ennreal.tsum_comm
 
 theorem restrict_lintegral (f : α →ₛ ℝ≥0∞) {s : Set α} (hs : MeasurableSet s) :
@@ -853,7 +853,7 @@ theorem restrict_lintegral (f : α →ₛ ℝ≥0∞) {s : Set α} (hs : Measura
     (restrict f s).lintegral μ = ∑ r in f.range, r * μ (restrict f s ⁻¹' {r}) :=
       (lintegral_eq_of_subset _) fun x hx =>
         if hxs : x ∈ s then fun _ => by
-          simp only [f.restrict_apply hs, indicator_of_mem hxs, mem_range_self]
+          simp only [← f.restrict_apply hs, ← indicator_of_mem hxs, ← mem_range_self]
         else
           False.elim <|
             hx <| by
@@ -862,14 +862,14 @@ theorem restrict_lintegral (f : α →ₛ ℝ≥0∞) {s : Set α} (hs : Measura
       Finset.sum_congr rfl <|
         forall_range_iff.2 fun b =>
           if hb : f b = 0 then by
-            simp only [hb, zero_mul]
+            simp only [← hb, ← zero_mul]
           else by
             rw [restrict_preimage_singleton _ hs hb, inter_comm]
     
 
 theorem lintegral_restrict {m : MeasurableSpace α} (f : α →ₛ ℝ≥0∞) (s : Set α) (μ : Measure α) :
     f.lintegral (μ.restrict s) = ∑ y in f.range, y * μ (f ⁻¹' {y} ∩ s) := by
-  simp only [lintegral, measure.restrict_apply, f.measurable_set_preimage]
+  simp only [← lintegral, ← measure.restrict_apply, ← f.measurable_set_preimage]
 
 theorem restrict_lintegral_eq_lintegral_restrict (f : α →ₛ ℝ≥0∞) {s : Set α} (hs : MeasurableSet s) :
     (restrict f s).lintegral μ = f.lintegral (μ.restrict s) := by
@@ -878,9 +878,9 @@ theorem restrict_lintegral_eq_lintegral_restrict (f : α →ₛ ℝ≥0∞) {s :
 theorem const_lintegral (c : ℝ≥0∞) : (const α c).lintegral μ = c * μ Univ := by
   rw [lintegral]
   cases is_empty_or_nonempty α
-  · simp [μ.eq_zero_of_is_empty]
+  · simp [← μ.eq_zero_of_is_empty]
     
-  · simp [preimage_const_of_mem]
+  · simp [← preimage_const_of_mem]
     
 
 theorem const_lintegral_restrict (c : ℝ≥0∞) (s : Set α) : (const α c).lintegral (μ.restrict s) = c * μ s := by
@@ -916,9 +916,9 @@ theorem lintegral_mono {f g : α →ₛ ℝ≥0∞} (hfg : f ≤ g) (hμν : μ 
 /-- `simple_func.lintegral` depends only on the measures of `f ⁻¹' {y}`. -/
 theorem lintegral_eq_of_measure_preimage [MeasurableSpace β] {f : α →ₛ ℝ≥0∞} {g : β →ₛ ℝ≥0∞} {ν : Measure β}
     (H : ∀ y, μ (f ⁻¹' {y}) = ν (g ⁻¹' {y})) : f.lintegral μ = g.lintegral ν := by
-  simp only [lintegral, ← H]
+  simp only [← lintegral, H]
   apply lintegral_eq_of_subset
-  simp only [H]
+  simp only [← H]
   intros
   exact mem_range_of_measure_ne_zero ‹_›
 
@@ -928,12 +928,12 @@ theorem lintegral_congr {f g : α →ₛ ℝ≥0∞} (h : f =ᵐ[μ] g) : f.lint
     measure_congr <|
       eventually.set_eq <|
         h.mono fun x hx => by
-          simp [hx]
+          simp [← hx]
 
 theorem lintegral_map' {β} [MeasurableSpace β] {μ' : Measure β} (f : α →ₛ ℝ≥0∞) (g : β →ₛ ℝ≥0∞) (m' : α → β)
     (eq : ∀ a, f a = g (m' a)) (h : ∀ s, MeasurableSet s → μ' s = μ (m' ⁻¹' s)) : f.lintegral μ = g.lintegral μ' :=
   lintegral_eq_of_measure_preimage fun y => by
-    simp only [preimage, Eq]
+    simp only [← preimage, ← Eq]
     exact (h (g ⁻¹' {y}) (g.measurable_set_preimage _)).symm
 
 theorem lintegral_map {β} [MeasurableSpace β] (g : β →ₛ ℝ≥0∞) {f : α → β} (hf : Measurable f) :
@@ -949,8 +949,8 @@ open Finset Function
 theorem support_eq [MeasurableSpace α] [Zero β] (f : α →ₛ β) :
     Support f = ⋃ y ∈ f.range.filter fun y => y ≠ 0, f ⁻¹' {y} :=
   Set.ext fun x => by
-    simp only [mem_support, Set.mem_preimage, mem_filter, mem_range_self, true_andₓ, exists_prop, mem_Union,
-      Set.mem_range, mem_singleton_iff, exists_eq_right']
+    simp only [← mem_support, ← Set.mem_preimage, ← mem_filter, ← mem_range_self, ← true_andₓ, ← exists_prop, ←
+      mem_Union, ← Set.mem_range, ← mem_singleton_iff, ← exists_eq_right']
 
 variable {m : MeasurableSpace α} [Zero β] [Zero γ] {μ : Measure α} {f : α →ₛ β}
 
@@ -966,11 +966,11 @@ protected def FinMeasSupp {m : MeasurableSpace α} (f : α →ₛ β) (μ : Meas
 theorem fin_meas_supp_iff_support : f.FinMeasSupp μ ↔ μ (Support f) < ∞ :=
   Iff.rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (y «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y «expr ≠ » 0)
 theorem fin_meas_supp_iff : f.FinMeasSupp μ ↔ ∀ y _ : y ≠ 0, μ (f ⁻¹' {y}) < ∞ := by
   constructor
   · refine' fun h y hy => lt_of_le_of_ltₓ (measure_mono _) h
-    exact fun H : f x = 0 => hy <| H ▸ Eq.symm hx
+    exact fun x hx H : f x = 0 => hy <| H ▸ Eq.symm hx
     
   · intro H
     rw [fin_meas_supp_iff_support, support_eq]
@@ -1016,8 +1016,8 @@ protected theorem mul {β} [MonoidWithZeroₓ β] {f g : α →ₛ β} (hf : f.F
 theorem lintegral_lt_top {f : α →ₛ ℝ≥0∞} (hm : f.FinMeasSupp μ) (hf : ∀ᵐ a ∂μ, f a ≠ ∞) : f.lintegral μ < ∞ := by
   refine' sum_lt_top fun a ha => _
   rcases eq_or_ne a ∞ with (rfl | ha)
-  · simp only [ae_iff, Ne.def, not_not] at hf
-    simp [Set.Preimage, hf]
+  · simp only [← ae_iff, ← Ne.def, ← not_not] at hf
+    simp [← Set.Preimage, ← hf]
     
   · by_cases' ha0 : a = 0
     · subst a
@@ -1060,14 +1060,14 @@ protected theorem induction {α γ} [MeasurableSpace α] [AddMonoidₓ γ] {P : 
     rw [Finset.coe_empty, diff_eq_empty, range_subset_singleton] at hf
     convert h_ind 0 MeasurableSet.univ
     ext x
-    simp [hf]
+    simp [← hf]
     
   · intro x s hxs ih f hf
     have mx := f.measurable_set_preimage {x}
     let g := simple_func.piecewise (f ⁻¹' {x}) mx 0 f
     have Pg : P g := by
       apply ih
-      simp only [g, simple_func.coe_piecewise, range_piecewise]
+      simp only [← g, ← simple_func.coe_piecewise, ← range_piecewise]
       rw [image_compl_preimage, union_diff_distrib, diff_diff_comm, hf, Finset.coe_insert, insert_diff_self_of_not_mem,
         diff_eq_empty.mpr, Set.empty_union]
       · rw [Set.image_subset_iff]
@@ -1078,10 +1078,10 @@ protected theorem induction {α γ} [MeasurableSpace α] [AddMonoidₓ γ] {P : 
         
     convert h_add _ Pg (h_ind x mx)
     · ext1 y
-      by_cases' hy : y ∈ f ⁻¹' {x} <;> [simpa [hy] , simp [hy]]
+      by_cases' hy : y ∈ f ⁻¹' {x} <;> [simpa [← hy] , simp [← hy]]
       
     rintro y
-    by_cases' hy : y ∈ f ⁻¹' {x} <;> simp [hy]
+    by_cases' hy : y ∈ f ⁻¹' {x} <;> simp [← hy]
     
 
 end SimpleFunc
@@ -1102,16 +1102,16 @@ irreducible_def lintegral {m : MeasurableSpace α} (μ : Measure α) (f : α →
 
 
 -- mathport name: «expr∫⁻ , ∂ »
-notation3 "∫⁻ " (...) ", " r:(scoped f => f) " ∂" μ => lintegral μ r
+notation3"∫⁻ "(...)", "r:(scoped f => f)" ∂"μ => lintegral μ r
 
 -- mathport name: «expr∫⁻ , »
-notation3 "∫⁻ " (...) ", " r:(scoped f => lintegral volume f) => r
+notation3"∫⁻ "(...)", "r:(scoped f => lintegral volume f) => r
 
 -- mathport name: «expr∫⁻ in , ∂ »
-notation3 "∫⁻ " (...) " in " s ", " r:(scoped f => f) " ∂" μ => lintegral (Measure.restrict μ s) r
+notation3"∫⁻ "(...)" in "s", "r:(scoped f => f)" ∂"μ => lintegral (Measure.restrict μ s) r
 
 -- mathport name: «expr∫⁻ in , »
-notation3 "∫⁻ " (...) " in " s ", " r:(scoped f => lintegral Measure.restrict volume s f) => r
+notation3"∫⁻ "(...)" in "s", "r:(scoped f => lintegral Measure.restrict volume s f) => r
 
 theorem SimpleFunc.lintegral_eq_lintegral {m : MeasurableSpace α} (f : α →ₛ ℝ≥0∞) (μ : Measure α) :
     (∫⁻ a, f a ∂μ) = f.lintegral μ := by
@@ -1176,7 +1176,7 @@ theorem set_lintegral_const_lt_top [IsFiniteMeasure μ] (s : Set α) {c : ℝ≥
   exact Ennreal.mul_lt_top hc (measure_ne_top (μ.restrict s) univ)
 
 theorem lintegral_const_lt_top [IsFiniteMeasure μ] {c : ℝ≥0∞} (hc : c ≠ ∞) : (∫⁻ a, c ∂μ) < ∞ := by
-  simpa only [measure.restrict_univ] using set_lintegral_const_lt_top univ hc
+  simpa only [← measure.restrict_univ] using set_lintegral_const_lt_top univ hc
 
 section
 
@@ -1192,7 +1192,7 @@ theorem exists_measurable_le_lintegral_eq (f : α → ℝ≥0∞) :
   rcases exists_seq_strict_mono_tendsto' h₀.bot_lt with ⟨L, hL_mono, hLf, hL_tendsto⟩
   have : ∀ n, ∃ g : α → ℝ≥0∞, Measurable g ∧ g ≤ f ∧ L n < ∫⁻ a, g a ∂μ := by
     intro n
-    simpa only [← supr_lintegral_measurable_le_eq_lintegral f, lt_supr_iff, exists_prop] using (hLf n).2
+    simpa only [supr_lintegral_measurable_le_eq_lintegral f, ← lt_supr_iff, ← exists_prop] using (hLf n).2
   choose g hgm hgf hLg
   refine' ⟨fun x => ⨆ n, g n x, measurable_supr hgm, fun x => supr_le fun n => hgf n x, le_antisymmₓ _ _⟩
   · refine' le_of_tendsto' hL_tendsto fun n => (hLg n).le.trans <| lintegral_mono fun x => _
@@ -1221,11 +1221,12 @@ theorem lintegral_eq_nnreal {m : MeasurableSpace α} (f : α → ℝ≥0∞) (μ
     obtain ⟨n, hn⟩ : ∃ n : ℕ, b < n * μ (φ ⁻¹' {∞})
     exact exists_nat_mul_gt h_meas (ne_of_ltₓ hb)
     use (const α (n : ℝ≥0 )).restrict (φ ⁻¹' {∞})
-    simp only [lt_supr_iff, exists_prop, coe_restrict, φ.measurable_set_preimage, coe_const, Ennreal.coe_indicator,
-      map_coe_ennreal_restrict, simple_func.map_const, Ennreal.coe_nat, restrict_const_lintegral]
+    simp only [← lt_supr_iff, ← exists_prop, ← coe_restrict, ← φ.measurable_set_preimage, ← coe_const, ←
+      Ennreal.coe_indicator, ← map_coe_ennreal_restrict, ← simple_func.map_const, ← Ennreal.coe_nat, ←
+      restrict_const_lintegral]
     refine' ⟨indicator_le fun x hx => le_transₓ _ (hφ _), hn⟩
-    simp only [mem_preimage, mem_singleton_iff] at hx
-    simp only [hx, le_top]
+    simp only [← mem_preimage, ← mem_singleton_iff] at hx
+    simp only [← hx, ← le_top]
     
 
 theorem exists_simple_func_forall_lintegral_sub_lt_of_pos {f : α → ℝ≥0∞} (h : (∫⁻ x, f x ∂μ) ≠ ∞) {ε : ℝ≥0∞}
@@ -1235,36 +1236,36 @@ theorem exists_simple_func_forall_lintegral_sub_lt_of_pos {f : α → ℝ≥0∞
   rw [lintegral_eq_nnreal] at h
   have := Ennreal.lt_add_right h hε
   erw [Ennreal.bsupr_add] at this <;> [skip, exact ⟨0, fun x => zero_le _⟩]
-  simp_rw [lt_supr_iff, supr_lt_iff, supr_le_iff]  at this
+  simp_rw [lt_supr_iff, supr_lt_iff, supr_le_iff] at this
   rcases this with ⟨φ, hle : ∀ x, ↑(φ x) ≤ f x, b, hbφ, hb⟩
   refine' ⟨φ, hle, fun ψ hψ => _⟩
   have : (map coe φ).lintegral μ ≠ ∞ := ne_top_of_le_ne_top h (le_supr₂ φ hle)
   rw [← Ennreal.add_lt_add_iff_left this, ← add_lintegral, ← map_add @Ennreal.coe_add]
   refine' (hb _ fun x => le_transₓ _ (max_leₓ (hle x) (hψ x))).trans_lt hbφ
   norm_cast
-  simp only [add_apply, sub_apply, add_tsub_eq_max]
+  simp only [← add_apply, ← sub_apply, ← add_tsub_eq_max]
 
 theorem supr_lintegral_le {ι : Sort _} (f : ι → α → ℝ≥0∞) : (⨆ i, ∫⁻ a, f i a ∂μ) ≤ ∫⁻ a, ⨆ i, f i a ∂μ := by
-  simp only [← supr_apply]
+  simp only [supr_apply]
   exact (monotone_lintegral μ).le_map_supr
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 theorem supr₂_lintegral_le {ι : Sort _} {ι' : ι → Sort _} (f : ∀ i, ι' i → α → ℝ≥0∞) :
     (⨆ (i) (j), ∫⁻ a, f i j a ∂μ) ≤ ∫⁻ a, ⨆ (i) (j), f i j a ∂μ := by
   convert (monotone_lintegral μ).le_map_supr₂ f
   ext1 a
-  simp only [supr_apply]
+  simp only [← supr_apply]
 
 theorem le_infi_lintegral {ι : Sort _} (f : ι → α → ℝ≥0∞) : (∫⁻ a, ⨅ i, f i a ∂μ) ≤ ⨅ i, ∫⁻ a, f i a ∂μ := by
-  simp only [← infi_apply]
+  simp only [infi_apply]
   exact (monotone_lintegral μ).map_infi_le
 
 theorem le_infi₂_lintegral {ι : Sort _} {ι' : ι → Sort _} (f : ∀ i, ι' i → α → ℝ≥0∞) :
     (∫⁻ a, ⨅ (i) (h : ι' i), f i h a ∂μ) ≤ ⨅ (i) (h : ι' i), ∫⁻ a, f i h a ∂μ := by
   convert (monotone_lintegral μ).map_infi₂_le f
   ext1 a
-  simp only [infi_apply]
+  simp only [← infi_apply]
 
 theorem lintegral_mono_ae {f g : α → ℝ≥0∞} (h : ∀ᵐ a ∂μ, f a ≤ g a) : (∫⁻ a, f a ∂μ) ≤ ∫⁻ a, g a ∂μ := by
   rcases exists_measurable_superset_of_null h with ⟨t, hts, ht, ht0⟩
@@ -1272,11 +1273,11 @@ theorem lintegral_mono_ae {f g : α → ℝ≥0∞} (h : ∀ᵐ a ∂μ, f a ≤
   rw [lintegral, lintegral]
   refine' supr_le fun s => supr_le fun hfs => le_supr_of_le (s.restrict (tᶜ)) <| le_supr_of_le _ _
   · intro a
-    by_cases' a ∈ t <;> simp [h, restrict_apply, ht.compl]
+    by_cases' a ∈ t <;> simp [← h, ← restrict_apply, ← ht.compl]
     exact le_transₓ (hfs a) (by_contradiction fun hnfg => h (hts hnfg))
     
   · refine' le_of_eqₓ (simple_func.lintegral_congr <| this.mono fun a hnt => _)
-    by_cases' hat : a ∈ t <;> simp [hat, ht.compl]
+    by_cases' hat : a ∈ t <;> simp [← hat, ← ht.compl]
     exact (hnt hat).elim
     
 
@@ -1292,7 +1293,7 @@ theorem lintegral_congr_ae {f g : α → ℝ≥0∞} (h : f =ᵐ[μ] g) : (∫�
   le_antisymmₓ (lintegral_mono_ae <| h.le) (lintegral_mono_ae <| h.symm.le)
 
 theorem lintegral_congr {f g : α → ℝ≥0∞} (h : ∀ a, f a = g a) : (∫⁻ a, f a ∂μ) = ∫⁻ a, g a ∂μ := by
-  simp only [h]
+  simp only [← h]
 
 theorem set_lintegral_congr {f : α → ℝ≥0∞} {s t : Set α} (h : s =ᵐ[μ] t) : (∫⁻ x in s, f x ∂μ) = ∫⁻ x in t, f x ∂μ := by
   rw [measure.restrict_congr_set h]
@@ -1303,7 +1304,7 @@ theorem set_lintegral_congr_fun {f g : α → ℝ≥0∞} {s : Set α} (hs : Mea
   rw [eventually_eq]
   rwa [ae_restrict_iff' hs]
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:95:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([1]) }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:92:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([1]) }
 /-- Monotone convergence theorem -- sometimes called Beppo-Levi convergence.
 
 See `lintegral_supr_directed` for a more general form. -/
@@ -1327,7 +1328,7 @@ theorem lintegral_supr {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, Measurable (
     rw [← inter_Union, ← inter_univ (map c rs ⁻¹' {p})]
     refine' Set.ext fun x => and_congr_right fun hx => (true_iffₓ _).2 _
     by_cases' p_eq : p = 0
-    · simp [p_eq]
+    · simp [← p_eq]
       
     simp at hx
     subst hx
@@ -1340,7 +1341,7 @@ theorem lintegral_supr {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, Measurable (
     have : (rs.map c) x < ⨆ n : ℕ, f n x := by
       refine' lt_of_lt_of_leₓ (Ennreal.coe_lt_coe.2 _) (hsf x)
       suffices : r * s x < 1 * s x
-      simpa [rs]
+      simpa [← rs]
       exact mul_lt_mul_of_pos_right ha (pos_iff_ne_zero.2 this)
     rcases lt_supr_iff.1 this with ⟨i, hi⟩
     exact mem_Union.2 ⟨i, le_of_ltₓ hi⟩
@@ -1355,7 +1356,7 @@ theorem lintegral_supr {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, Measurable (
       rw [← const_mul_lintegral, eq_rs,
         simple_func.lintegral]_ = ∑ r in (rs.map c).range, r * μ (⋃ n, rs.map c ⁻¹' {r} ∩ { a | r ≤ f n a }) :=
       by
-      simp only [(Eq _).symm]_ = ∑ r in (rs.map c).range, ⨆ n, r * μ (rs.map c ⁻¹' {r} ∩ { a | r ≤ f n a }) :=
+      simp only [← (Eq _).symm]_ = ∑ r in (rs.map c).range, ⨆ n, r * μ (rs.map c ⁻¹' {r} ∩ { a | r ≤ f n a }) :=
       (Finset.sum_congr rfl) fun x hx => by
         rw [measure_Union_eq_supr (directed_of_sup <| mono x),
           Ennreal.mul_supr]_ = ⨆ n, ∑ r in (rs.map c).range, r * μ (rs.map c ⁻¹' {r} ∩ { a | r ≤ f n a }) :=
@@ -1377,8 +1378,8 @@ theorem lintegral_supr {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, Measurable (
       refine' supr_mono fun n => _
       rw [← simple_func.lintegral_eq_lintegral]
       refine' lintegral_mono fun a => _
-      simp only [map_apply] at h_meas
-      simp only [coe_map, restrict_apply _ (h_meas _), (· ∘ ·)]
+      simp only [← map_apply] at h_meas
+      simp only [← coe_map, ← restrict_apply _ (h_meas _), ← (· ∘ ·)]
       exact indicator_apply_le id
 
 /-- Monotone convergence theorem -- sometimes called Beppo-Levi convergence. Version with
@@ -1393,7 +1394,7 @@ theorem lintegral_supr' {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, AeMeasurabl
     by_cases' hx : x ∈ AeSeqSet hf p
     · exact aeSeq.prop_of_mem_ae_seq_set hf hx hnm
       
-    · simp only [aeSeq, hx, if_false]
+    · simp only [← aeSeq, ← hx, ← if_false]
       exact le_rfl
       
   rw [lintegral_congr_ae (aeSeq.supr hf hp).symm]
@@ -1442,7 +1443,7 @@ theorem exists_pos_set_lintegral_lt_of_measure_lt {f : α → ℝ≥0∞} (h : (
   rcases φ.exists_forall_le with ⟨C, hC⟩
   use (ε₂ - ε₁) / C, Ennreal.div_pos_iff.2 ⟨(tsub_pos_iff_lt.2 hε₁₂).ne', Ennreal.coe_ne_top⟩
   refine' fun s hs => lt_of_le_of_ltₓ _ hε₂ε
-  simp only [lintegral_eq_nnreal, supr_le_iff]
+  simp only [← lintegral_eq_nnreal, ← supr_le_iff]
   intro ψ hψ
   calc
     (map coe ψ).lintegral (μ.restrict s) ≤
@@ -1450,16 +1451,17 @@ theorem exists_pos_set_lintegral_lt_of_measure_lt {f : α → ℝ≥0∞} (h : (
       by
       rw [← simple_func.add_lintegral, ← simple_func.map_add @Ennreal.coe_add]
       refine' simple_func.lintegral_mono (fun x => _) le_rfl
-      simp only [add_tsub_eq_max, le_max_rightₓ, coe_map, Function.comp_app, simple_func.coe_add, simple_func.coe_sub,
-        Pi.add_apply, Pi.sub_apply, WithTop.coe_max]_ ≤ (map coe φ).lintegral (μ.restrict s) + ε₁ :=
+      simp only [← add_tsub_eq_max, ← le_max_rightₓ, ← coe_map, ← Function.comp_app, ← simple_func.coe_add, ←
+        simple_func.coe_sub, ← Pi.add_apply, ← Pi.sub_apply, ←
+        WithTop.coe_max]_ ≤ (map coe φ).lintegral (μ.restrict s) + ε₁ :=
       by
       refine' add_le_add le_rfl (le_transₓ _ (hφ _ hψ).le)
       exact
         simple_func.lintegral_mono le_rfl
           measure.restrict_le_self _ ≤ (simple_func.const α (C : ℝ≥0∞)).lintegral (μ.restrict s) + ε₁ :=
       add_le_add (simple_func.lintegral_mono (fun x => coe_le_coe.2 (hC x)) le_rfl) le_rfl _ = C * μ s + ε₁ := by
-      simp only [← simple_func.lintegral_eq_lintegral, coe_const, lintegral_const, measure.restrict_apply,
-        MeasurableSet.univ, univ_inter]_ ≤ C * ((ε₂ - ε₁) / C) + ε₁ :=
+      simp only [simple_func.lintegral_eq_lintegral, ← coe_const, ← lintegral_const, ← measure.restrict_apply, ←
+        MeasurableSet.univ, ← univ_inter]_ ≤ C * ((ε₂ - ε₁) / C) + ε₁ :=
       add_le_add_right (Ennreal.mul_le_mul le_rfl hs.le) _ _ ≤ ε₂ - ε₁ + ε₁ := add_le_add mul_div_le le_rfl _ = ε₂ :=
       tsub_add_cancel_of_le hε₁₂.le
 
@@ -1467,7 +1469,7 @@ theorem exists_pos_set_lintegral_lt_of_measure_lt {f : α → ℝ≥0∞} (h : (
 to zero as `μ s` tends to zero. -/
 theorem tendsto_set_lintegral_zero {ι} {f : α → ℝ≥0∞} (h : (∫⁻ x, f x ∂μ) ≠ ∞) {l : Filter ι} {s : ι → Set α}
     (hl : Tendsto (μ ∘ s) l (𝓝 0)) : Tendsto (fun i => ∫⁻ x in s i, f x ∂μ) l (𝓝 0) := by
-  simp only [Ennreal.nhds_zero, tendsto_infi, tendsto_principal, mem_Iio, ← pos_iff_ne_zero] at hl⊢
+  simp only [← Ennreal.nhds_zero, ← tendsto_infi, ← tendsto_principal, ← mem_Iio, pos_iff_ne_zero] at hl⊢
   intro ε ε0
   rcases exists_pos_set_lintegral_lt_of_measure_lt h ε0.ne' with ⟨δ, δ0, hδ⟩
   exact (hl δ δ0).mono fun i => hδ _
@@ -1484,7 +1486,7 @@ theorem lintegral_add_aux {f g : α → ℝ≥0∞} (hf : Measurable f) (hg : Me
     (∫⁻ a, f a + g a ∂μ) = (∫⁻ a, f a ∂μ) + ∫⁻ a, g a ∂μ :=
   calc
     (∫⁻ a, f a + g a ∂μ) = ∫⁻ a, (⨆ n, (eapprox f n : α → ℝ≥0∞) a) + ⨆ n, (eapprox g n : α → ℝ≥0∞) a ∂μ := by
-      simp only [supr_eapprox_apply, hf, hg]
+      simp only [← supr_eapprox_apply, ← hf, ← hg]
     _ = ∫⁻ a, ⨆ n, (eapprox f n + eapprox g n : α → ℝ≥0∞) a ∂μ := by
       congr
       funext a
@@ -1538,7 +1540,7 @@ theorem lintegral_add_left' {f : α → ℝ≥0∞} (hf : AeMeasurable f μ) (g 
 
 theorem lintegral_add_right' (f : α → ℝ≥0∞) {g : α → ℝ≥0∞} (hg : AeMeasurable g μ) :
     (∫⁻ a, f a + g a ∂μ) = (∫⁻ a, f a ∂μ) + ∫⁻ a, g a ∂μ := by
-  simpa only [add_commₓ] using lintegral_add_left' hg f
+  simpa only [← add_commₓ] using lintegral_add_left' hg f
 
 /-- If `f g : α → ℝ≥0∞` are two functions and one of them is (a.e.) measurable, then the Lebesgue
 integral of `f + g` equals the sum of integrals. This lemma assumes that `g` is integrable, see also
@@ -1550,12 +1552,12 @@ theorem lintegral_add_right (f : α → ℝ≥0∞) {g : α → ℝ≥0∞} (hg 
 
 @[simp]
 theorem lintegral_smul_measure (c : ℝ≥0∞) (f : α → ℝ≥0∞) : (∫⁻ a, f a ∂c • μ) = c * ∫⁻ a, f a ∂μ := by
-  simp only [lintegral, supr_subtype', simple_func.lintegral_smul, Ennreal.mul_supr, smul_eq_mul]
+  simp only [← lintegral, ← supr_subtype', ← simple_func.lintegral_smul, ← Ennreal.mul_supr, ← smul_eq_mul]
 
 @[simp]
 theorem lintegral_sum_measure {m : MeasurableSpace α} {ι} (f : α → ℝ≥0∞) (μ : ι → Measure α) :
     (∫⁻ a, f a ∂Measure.sum μ) = ∑' i, ∫⁻ a, f a ∂μ i := by
-  simp only [lintegral, supr_subtype', simple_func.lintegral_sum, Ennreal.tsum_eq_supr_sum]
+  simp only [← lintegral, ← supr_subtype', ← simple_func.lintegral_sum, ← Ennreal.tsum_eq_supr_sum]
   rw [supr_comm]
   congr
   funext s
@@ -1563,7 +1565,7 @@ theorem lintegral_sum_measure {m : MeasurableSpace α} {ι} (f : α → ℝ≥0�
   · apply bot_unique
     simp
     
-  simp only [Finset.sum_insert hi, ← hs]
+  simp only [← Finset.sum_insert hi, hs]
   refine' (Ennreal.supr_add_supr _).symm
   intro φ ψ
   exact
@@ -1578,7 +1580,7 @@ theorem has_sum_lintegral_measure {ι} {m : MeasurableSpace α} (f : α → ℝ�
 @[simp]
 theorem lintegral_add_measure {m : MeasurableSpace α} (f : α → ℝ≥0∞) (μ ν : Measure α) :
     (∫⁻ a, f a ∂μ + ν) = (∫⁻ a, f a ∂μ) + ∫⁻ a, f a ∂ν := by
-  simpa [tsum_fintype] using lintegral_sum_measure f fun b => cond b μ ν
+  simpa [← tsum_fintype] using lintegral_sum_measure f fun b => cond b μ ν
 
 @[simp]
 theorem lintegral_finset_sum_measure {ι} {m : MeasurableSpace α} (s : Finset ι) (f : α → ℝ≥0∞) (μ : ι → Measure α) :
@@ -1589,7 +1591,7 @@ theorem lintegral_finset_sum_measure {ι} {m : MeasurableSpace α} (s : Finset �
 @[simp]
 theorem lintegral_zero_measure {m : MeasurableSpace α} (f : α → ℝ≥0∞) : (∫⁻ a, f a ∂(0 : Measure α)) = 0 :=
   bot_unique <| by
-    simp [lintegral]
+    simp [← lintegral]
 
 theorem set_lintegral_empty (f : α → ℝ≥0∞) : (∫⁻ x in ∅, f x ∂μ) = 0 := by
   rw [measure.restrict_empty, lintegral_zero_measure]
@@ -1606,7 +1608,7 @@ theorem lintegral_finset_sum' (s : Finset β) {f : β → α → ℝ≥0∞} (hf
   induction' s using Finset.induction_on with a s has ih
   · simp
     
-  · simp only [Finset.sum_insert has]
+  · simp only [← Finset.sum_insert has]
     rw [Finset.forall_mem_insert] at hf
     rw [lintegral_add_left' hf.1, ih hf.2]
     
@@ -1649,7 +1651,7 @@ theorem lintegral_const_mul_le (r : ℝ≥0∞) (f : α → ℝ≥0∞) : (r * �
   rw [lintegral, Ennreal.mul_supr]
   refine' supr_le fun s => _
   rw [Ennreal.mul_supr]
-  simp only [supr_le_iff]
+  simp only [← supr_le_iff]
   intro hs
   rw [← simple_func.const_mul_lintegral, lintegral]
   refine' le_supr_of_le (const α r * s) (le_supr_of_le (fun x => _) le_rfl)
@@ -1657,7 +1659,7 @@ theorem lintegral_const_mul_le (r : ℝ≥0∞) (f : α → ℝ≥0∞) : (r * �
 
 theorem lintegral_const_mul' (r : ℝ≥0∞) (f : α → ℝ≥0∞) (hr : r ≠ ∞) : (∫⁻ a, r * f a ∂μ) = r * ∫⁻ a, f a ∂μ := by
   by_cases' h : r = 0
-  · simp [h]
+  · simp [← h]
     
   apply le_antisymmₓ _ (lintegral_const_mul_le r f)
   have rinv : r * r⁻¹ = 1 := Ennreal.mul_inv_cancel h hr
@@ -1665,8 +1667,8 @@ theorem lintegral_const_mul' (r : ℝ≥0∞) (f : α → ℝ≥0∞) (hr : r �
     rw [mul_comm]
     exact rinv
   have := lintegral_const_mul_le r⁻¹ fun x => r * f x
-  simp [(mul_assoc _ _ _).symm, rinv'] at this
-  simpa [(mul_assoc _ _ _).symm, rinv] using mul_le_mul_left' this r
+  simp [← (mul_assoc _ _ _).symm, ← rinv'] at this
+  simpa [← (mul_assoc _ _ _).symm, ← rinv] using mul_le_mul_left' this r
 
 theorem lintegral_mul_const (r : ℝ≥0∞) {f : α → ℝ≥0∞} (hf : Measurable f) : (∫⁻ a, f a * r ∂μ) = (∫⁻ a, f a ∂μ) * r :=
   by
@@ -1687,7 +1689,7 @@ theorem lintegral_mul_const' (r : ℝ≥0∞) (f : α → ℝ≥0∞) (hr : r �
 theorem lintegral_lintegral_mul {β} [MeasurableSpace β] {ν : Measure β} {f : α → ℝ≥0∞} {g : β → ℝ≥0∞}
     (hf : AeMeasurable f μ) (hg : AeMeasurable g ν) : (∫⁻ x, ∫⁻ y, f x * g y ∂ν ∂μ) = (∫⁻ x, f x ∂μ) * ∫⁻ y, g y ∂ν :=
   by
-  simp [lintegral_const_mul'' _ hg, lintegral_mul_const'' _ hf]
+  simp [← lintegral_const_mul'' _ hg, ← lintegral_mul_const'' _ hf]
 
 -- TODO: Need a better way of rewriting inside of a integral
 theorem lintegral_rw₁ {f f' : α → β} (h : f =ᵐ[μ] f') (g : β → ℝ≥0∞) : (∫⁻ a, g (f a) ∂μ) = ∫⁻ a, g (f' a) ∂μ :=
@@ -1706,19 +1708,19 @@ theorem lintegral_rw₂ {f₁ f₁' : α → β} {f₂ f₂' : α → γ} (h₁ 
 @[simp]
 theorem lintegral_indicator (f : α → ℝ≥0∞) {s : Set α} (hs : MeasurableSet s) :
     (∫⁻ a, s.indicator f a ∂μ) = ∫⁻ a in s, f a ∂μ := by
-  simp only [lintegral, ← restrict_lintegral_eq_lintegral_restrict _ hs, supr_subtype']
+  simp only [← lintegral, restrict_lintegral_eq_lintegral_restrict _ hs, ← supr_subtype']
   apply le_antisymmₓ <;> refine' supr_mono' (Subtype.forall.2 fun φ hφ => _)
   · refine' ⟨⟨φ, le_transₓ hφ (indicator_le_self _ _)⟩, _⟩
     refine' simple_func.lintegral_mono (fun x => _) le_rfl
     by_cases' hx : x ∈ s
-    · simp [hx, hs, le_reflₓ]
+    · simp [← hx, ← hs, ← le_reflₓ]
       
     · apply le_transₓ (hφ x)
-      simp [hx, hs, le_reflₓ]
+      simp [← hx, ← hs, ← le_reflₓ]
       
     
   · refine' ⟨⟨φ.restrict s, fun x => _⟩, le_rfl⟩
-    simp [hφ x, hs, indicator_le_indicator]
+    simp [← hφ x, ← hs, ← indicator_le_indicator]
     
 
 theorem lintegral_indicator₀ (f : α → ℝ≥0∞) {s : Set α} (hs : NullMeasurableSet s μ) :
@@ -1747,14 +1749,14 @@ theorem lintegral_add_mul_meas_add_le_le_lintegral {f g : α → ℝ≥0∞} (hl
       rw [lintegral_add_left hφm, lintegral_indicator₀, set_lintegral_const]
       exact measurable_set_le (hφm.null_measurable.measurable'.add_const _) hg.null_measurable _ ≤ ∫⁻ x, g x ∂μ :=
       lintegral_mono_ae (hle.mono fun x hx₁ => _)
-  simp only [indicator_apply]
+  simp only [← indicator_apply]
   split_ifs with hx₂
   exacts[hx₂, (add_zeroₓ _).trans_le <| (hφ_le x).trans hx₁]
 
 /-- **Markov's inequality** also known as **Chebyshev's first inequality**. -/
 theorem mul_meas_ge_le_lintegral₀ {f : α → ℝ≥0∞} (hf : AeMeasurable f μ) (ε : ℝ≥0∞) :
     ε * μ { x | ε ≤ f x } ≤ ∫⁻ a, f a ∂μ := by
-  simpa only [lintegral_zero, zero_addₓ] using
+  simpa only [← lintegral_zero, ← zero_addₓ] using
     lintegral_add_mul_meas_add_le_le_lintegral ((ae_of_all _) fun x => zero_le (f x)) hf ε
 
 /-- **Markov's inequality** also known as **Chebyshev's first inequality**. For a version assuming
@@ -1767,7 +1769,7 @@ theorem lintegral_eq_top_of_measure_eq_top_pos {f : α → ℝ≥0∞} (hf : AeM
   eq_top_iff.mpr <|
     calc
       ∞ = ∞ * μ { x | ∞ ≤ f x } := by
-        simp [mul_eq_top, hμf.ne.symm]
+        simp [← mul_eq_top, ← hμf.ne.symm]
       _ ≤ ∫⁻ x, f x ∂μ := mul_meas_ge_le_lintegral₀ hf ∞
       
 
@@ -1782,7 +1784,7 @@ theorem ae_eq_of_ae_le_of_lintegral_le {f g : α → ℝ≥0∞} (hfg : f ≤ᵐ
     (hg : AeMeasurable g μ) (hgf : (∫⁻ x, g x ∂μ) ≤ ∫⁻ x, f x ∂μ) : f =ᵐ[μ] g := by
   have : ∀ n : ℕ, ∀ᵐ x ∂μ, g x < f x + n⁻¹ := by
     intro n
-    simp only [ae_iff, not_ltₓ]
+    simp only [← ae_iff, ← not_ltₓ]
     have : (∫⁻ x, f x ∂μ) + (↑n)⁻¹ * μ { x : α | f x + n⁻¹ ≤ g x } ≤ ∫⁻ x, f x ∂μ :=
       (lintegral_add_mul_meas_add_le_le_lintegral hfg hg n⁻¹).trans hgf
     rw [(Ennreal.cancel_of_ne hf).add_le_iff_nonpos_right, nonpos_iff_eq_zero, mul_eq_zero] at this
@@ -1790,12 +1792,13 @@ theorem ae_eq_of_ae_le_of_lintegral_le {f g : α → ℝ≥0∞} (hfg : f ≤ᵐ
   refine' hfg.mp ((ae_all_iff.2 this).mono fun x hlt hle => hle.antisymm _)
   suffices : tendsto (fun n : ℕ => f x + n⁻¹) at_top (𝓝 (f x))
   exact ge_of_tendsto' this fun i => (hlt i).le
-  simpa only [inv_top, add_zeroₓ] using tendsto_const_nhds.add (Ennreal.tendsto_inv_iff.2 Ennreal.tendsto_nat_nhds_top)
+  simpa only [← inv_top, ← add_zeroₓ] using
+    tendsto_const_nhds.add (Ennreal.tendsto_inv_iff.2 Ennreal.tendsto_nat_nhds_top)
 
 @[simp]
 theorem lintegral_eq_zero_iff' {f : α → ℝ≥0∞} (hf : AeMeasurable f μ) : (∫⁻ a, f a ∂μ) = 0 ↔ f =ᵐ[μ] 0 :=
   have : (∫⁻ a : α, 0 ∂μ) ≠ ∞ := by
-    simpa only [lintegral_zero] using zero_ne_top
+    simpa only [← lintegral_zero] using zero_ne_top
   ⟨fun h => (ae_eq_of_ae_le_of_lintegral_le (ae_of_all _ <| zero_le f) this hf (h.trans lintegral_zero.symm).le).symm,
     fun h => (lintegral_congr_ae h).trans lintegral_zero⟩
 
@@ -1805,7 +1808,7 @@ theorem lintegral_eq_zero_iff {f : α → ℝ≥0∞} (hf : Measurable f) : (∫
 
 theorem lintegral_pos_iff_support {f : α → ℝ≥0∞} (hf : Measurable f) :
     (0 < ∫⁻ a, f a ∂μ) ↔ 0 < μ (Function.Support f) := by
-  simp [pos_iff_ne_zero, hf, Filter.EventuallyEq, ae_iff, Function.Support]
+  simp [← pos_iff_ne_zero, ← hf, ← Filter.EventuallyEq, ← ae_iff, ← Function.Support]
 
 /-- Weaker version of the monotone convergence theorem-/
 theorem lintegral_supr_ae {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, Measurable (f n)) (h_mono : ∀ n, ∀ᵐ a ∂μ, f n a ≤ f n.succ a) :
@@ -1817,22 +1820,22 @@ theorem lintegral_supr_ae {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, Measurabl
     (∫⁻ a, ⨆ n, f n a ∂μ) = ∫⁻ a, ⨆ n, g n a ∂μ :=
       lintegral_congr_ae <|
         g_eq_f.mono fun a ha => by
-          simp only [ha]
+          simp only [← ha]
     _ = ⨆ n, ∫⁻ a, g n a ∂μ :=
       lintegral_supr (fun n => measurable_const.piecewise hs.2.1 (hf n))
         (monotone_nat_of_le_succ fun n a =>
           Classical.by_cases
             (fun h : a ∈ s => by
-              simp [g, if_pos h])
+              simp [← g, ← if_pos h])
             fun h : a ∉ s => by
-            simp only [g, if_neg h]
+            simp only [← g, ← if_neg h]
             have := hs.1
             rw [subset_def] at this
             have := mt (this a) h
-            simp only [not_not, mem_set_of_eq] at this
+            simp only [← not_not, ← mem_set_of_eq] at this
             exact this n)
     _ = ⨆ n, ∫⁻ a, f n a ∂μ := by
-      simp only [lintegral_congr_ae (g_eq_f.mono fun a ha => ha _)]
+      simp only [← lintegral_congr_ae (g_eq_f.mono fun a ha => ha _)]
     
 
 theorem lintegral_sub {f g : α → ℝ≥0∞} (hg : Measurable g) (hg_fin : (∫⁻ a, g a ∂μ) ≠ ∞) (h_le : g ≤ᵐ[μ] f) :
@@ -1855,7 +1858,7 @@ theorem lintegral_sub_le (f g : α → ℝ≥0∞) (hf : Measurable f) : ((∫�
 theorem lintegral_strict_mono_of_ae_le_of_frequently_ae_lt {f g : α → ℝ≥0∞} (hg : AeMeasurable g μ)
     (hfi : (∫⁻ x, f x ∂μ) ≠ ∞) (h_le : f ≤ᵐ[μ] g) (h : ∃ᵐ x ∂μ, f x ≠ g x) : (∫⁻ x, f x ∂μ) < ∫⁻ x, g x ∂μ := by
   contrapose! h
-  simp only [not_frequently, Ne.def, not_not]
+  simp only [← not_frequently, ← Ne.def, ← not_not]
   exact ae_eq_of_ae_le_of_lintegral_le h_le hfi hg h
 
 theorem lintegral_strict_mono_of_ae_le_of_ae_lt_on {f g : α → ℝ≥0∞} (hg : AeMeasurable g μ) (hfi : (∫⁻ x, f x ∂μ) ≠ ∞)
@@ -1874,7 +1877,7 @@ theorem set_lintegral_strict_mono {f g : α → ℝ≥0∞} {s : Set α} (hsm : 
     (∫⁻ x in s, f x ∂μ) < ∫⁻ x in s, g x ∂μ :=
   lintegral_strict_mono
     (by
-      simp [hs])
+      simp [← hs])
     hg.AeMeasurable hfi ((ae_restrict_iff' hsm).mpr h)
 
 /-- Monotone convergence theorem for nonincreasing sequences of functions -/
@@ -1917,7 +1920,7 @@ theorem lintegral_liminf_le' {f : ℕ → α → ℝ≥0∞} (h_meas : ∀ n, Ae
     (∫⁻ a, liminfₓ atTop fun n => f n a ∂μ) ≤ liminfₓ atTop fun n => ∫⁻ a, f n a ∂μ :=
   calc
     (∫⁻ a, liminfₓ atTop fun n => f n a ∂μ) = ∫⁻ a, ⨆ n : ℕ, ⨅ i ≥ n, f i a ∂μ := by
-      simp only [liminf_eq_supr_infi_of_nat]
+      simp only [← liminf_eq_supr_infi_of_nat]
     _ = ⨆ n : ℕ, ∫⁻ a, ⨅ i ≥ n, f i a ∂μ :=
       lintegral_supr' (fun n => ae_measurable_binfi _ (countable_encodable _) h_meas)
         (ae_of_all μ fun a n m hnm => infi_le_infi_of_subset fun i hi => le_transₓ hnm hi)
@@ -1949,7 +1952,7 @@ theorem limsup_lintegral_le {f : ℕ → α → ℝ≥0∞} {g : α → ℝ≥0�
         exact supr_le fun i => supr_le fun hi => hn i
         
     _ = ∫⁻ a, limsupₓ atTop fun n => f n a ∂μ := by
-      simp only [limsup_eq_infi_supr_of_nat]
+      simp only [← limsup_eq_infi_supr_of_nat]
     
 
 /-- Dominated convergence theorem for nonnegative functions -/
@@ -2033,7 +2036,7 @@ open Encodable
 theorem lintegral_supr_directed [Encodable β] {f : β → α → ℝ≥0∞} (hf : ∀ b, Measurable (f b))
     (h_directed : Directed (· ≤ ·) f) : (∫⁻ a, ⨆ b, f b a ∂μ) = ⨆ b, ∫⁻ a, f b a ∂μ := by
   cases is_empty_or_nonempty β
-  · simp [supr_of_empty]
+  · simp [← supr_of_empty]
     
   inhabit β
   have : ∀ a, (⨆ b, f b a) = ⨆ n, f (h_directed.sequence f n) a := by
@@ -2041,7 +2044,7 @@ theorem lintegral_supr_directed [Encodable β] {f : β → α → ℝ≥0∞} (h
     refine' le_antisymmₓ (supr_le fun b => _) (supr_le fun n => le_supr (fun n => f n a) _)
     exact le_supr_of_le (encode b + 1) (h_directed.le_sequence b a)
   calc (∫⁻ a, ⨆ b, f b a ∂μ) = ∫⁻ a, ⨆ n, f (h_directed.sequence f n) a ∂μ := by
-      simp only [this]_ = ⨆ n, ∫⁻ a, f (h_directed.sequence f n) a ∂μ :=
+      simp only [← this]_ = ⨆ n, ∫⁻ a, f (h_directed.sequence f n) a ∂μ :=
       lintegral_supr (fun n => hf _) h_directed.sequence_mono _ = ⨆ b, ∫⁻ a, f b a ∂μ := by
       refine' le_antisymmₓ (supr_le fun n => _) (supr_le fun b => _)
       · exact le_supr (fun b => ∫⁻ a, f b a ∂μ) _
@@ -2053,9 +2056,9 @@ end
 
 theorem lintegral_tsum [Encodable β] {f : β → α → ℝ≥0∞} (hf : ∀ i, Measurable (f i)) :
     (∫⁻ a, ∑' i, f i a ∂μ) = ∑' i, ∫⁻ a, f i a ∂μ := by
-  simp only [Ennreal.tsum_eq_supr_sum]
+  simp only [← Ennreal.tsum_eq_supr_sum]
   rw [lintegral_supr_directed]
-  · simp [lintegral_finset_sum _ fun i _ => hf i]
+  · simp [← lintegral_finset_sum _ fun i _ => hf i]
     
   · intro b
     exact Finset.measurable_sum _ fun i _ => hf i
@@ -2071,26 +2074,26 @@ open Measureₓ
 
 theorem lintegral_Union₀ [Encodable β] {s : β → Set α} (hm : ∀ i, NullMeasurableSet (s i) μ)
     (hd : Pairwise (AeDisjoint μ on s)) (f : α → ℝ≥0∞) : (∫⁻ a in ⋃ i, s i, f a ∂μ) = ∑' i, ∫⁻ a in s i, f a ∂μ := by
-  simp only [measure.restrict_Union_ae hd hm, lintegral_sum_measure]
+  simp only [← measure.restrict_Union_ae hd hm, ← lintegral_sum_measure]
 
 theorem lintegral_Union [Encodable β] {s : β → Set α} (hm : ∀ i, MeasurableSet (s i)) (hd : Pairwise (Disjoint on s))
     (f : α → ℝ≥0∞) : (∫⁻ a in ⋃ i, s i, f a ∂μ) = ∑' i, ∫⁻ a in s i, f a ∂μ :=
   lintegral_Union₀ (fun i => (hm i).NullMeasurableSet) hd.AeDisjoint f
 
-theorem lintegral_bUnion₀ {t : Set β} {s : β → Set α} (ht : Countable t) (hm : ∀, ∀ i ∈ t, ∀, NullMeasurableSet (s i) μ)
+theorem lintegral_bUnion₀ {t : Set β} {s : β → Set α} (ht : t.Countable) (hm : ∀, ∀ i ∈ t, ∀, NullMeasurableSet (s i) μ)
     (hd : t.Pairwise (AeDisjoint μ on s)) (f : α → ℝ≥0∞) :
     (∫⁻ a in ⋃ i ∈ t, s i, f a ∂μ) = ∑' i : t, ∫⁻ a in s i, f a ∂μ := by
   have := ht.to_encodable
   rw [bUnion_eq_Union, lintegral_Union₀ (SetCoe.forall'.1 hm) (hd.subtype _ _)]
 
-theorem lintegral_bUnion {t : Set β} {s : β → Set α} (ht : Countable t) (hm : ∀, ∀ i ∈ t, ∀, MeasurableSet (s i))
+theorem lintegral_bUnion {t : Set β} {s : β → Set α} (ht : t.Countable) (hm : ∀, ∀ i ∈ t, ∀, MeasurableSet (s i))
     (hd : t.PairwiseDisjoint s) (f : α → ℝ≥0∞) : (∫⁻ a in ⋃ i ∈ t, s i, f a ∂μ) = ∑' i : t, ∫⁻ a in s i, f a ∂μ :=
   lintegral_bUnion₀ ht (fun i hi => (hm i hi).NullMeasurableSet) hd.AeDisjoint f
 
 theorem lintegral_bUnion_finset₀ {s : Finset β} {t : β → Set α} (hd : Set.Pairwise (↑s) (AeDisjoint μ on t))
     (hm : ∀, ∀ b ∈ s, ∀, NullMeasurableSet (t b) μ) (f : α → ℝ≥0∞) :
     (∫⁻ a in ⋃ b ∈ s, t b, f a ∂μ) = ∑ b in s, ∫⁻ a in t b, f a ∂μ := by
-  simp only [← Finset.mem_coe, lintegral_bUnion₀ s.countable_to_set hm hd, ← s.tsum_subtype']
+  simp only [Finset.mem_coe, ← lintegral_bUnion₀ s.countable_to_set hm hd, s.tsum_subtype']
 
 theorem lintegral_bUnion_finset {s : Finset β} {t : β → Set α} (hd : Set.PairwiseDisjoint (↑s) t)
     (hm : ∀, ∀ b ∈ s, ∀, MeasurableSet (t b)) (f : α → ℝ≥0∞) :
@@ -2118,7 +2121,7 @@ theorem lintegral_max {f g : α → ℝ≥0∞} (hf : Measurable f) (hg : Measur
     (∫⁻ x, max (f x) (g x) ∂μ) = (∫⁻ x in { x | f x ≤ g x }, g x ∂μ) + ∫⁻ x in { x | g x < f x }, f x ∂μ := by
   have hm : MeasurableSet { x | f x ≤ g x } := measurable_set_le hf hg
   rw [← lintegral_add_compl (fun x => max (f x) (g x)) hm]
-  simp only [← compl_set_of, ← not_leₓ]
+  simp only [compl_set_of, not_leₓ]
   refine' congr_arg2ₓ (· + ·) (set_lintegral_congr_fun hm _) (set_lintegral_congr_fun hm.compl _)
   exacts[ae_of_all _ fun x => max_eq_rightₓ, ae_of_all _ fun x hx => max_eq_leftₓ (not_leₓ.1 hx).le]
 
@@ -2130,11 +2133,11 @@ theorem set_lintegral_max {f g : α → ℝ≥0∞} (hf : Measurable f) (hg : Me
 
 theorem lintegral_map {mβ : MeasurableSpace β} {f : β → ℝ≥0∞} {g : α → β} (hf : Measurable f) (hg : Measurable g) :
     (∫⁻ a, f a ∂map g μ) = ∫⁻ a, f (g a) ∂μ := by
-  simp only [lintegral_eq_supr_eapprox_lintegral, hf, hf.comp hg]
+  simp only [← lintegral_eq_supr_eapprox_lintegral, ← hf, ← hf.comp hg]
   congr with n : 1
   convert simple_func.lintegral_map _ hg
   ext1 x
-  simp only [eapprox_comp hf hg, coe_comp]
+  simp only [← eapprox_comp hf hg, ← coe_comp]
 
 theorem lintegral_map' {mβ : MeasurableSpace β} {f : β → ℝ≥0∞} {g : α → β} (hf : AeMeasurable f (Measure.map g μ))
     (hg : AeMeasurable g μ) : (∫⁻ a, f a ∂Measure.map g μ) = ∫⁻ a, f (g a) ∂μ :=
@@ -2215,10 +2218,10 @@ section DiracAndCount
 variable [MeasurableSpace α]
 
 theorem lintegral_dirac' (a : α) {f : α → ℝ≥0∞} (hf : Measurable f) : (∫⁻ a, f a ∂dirac a) = f a := by
-  simp [lintegral_congr_ae (ae_eq_dirac' hf)]
+  simp [← lintegral_congr_ae (ae_eq_dirac' hf)]
 
 theorem lintegral_dirac [MeasurableSingletonClass α] (a : α) (f : α → ℝ≥0∞) : (∫⁻ a, f a ∂dirac a) = f a := by
-  simp [lintegral_congr_ae (ae_eq_dirac f)]
+  simp [← lintegral_congr_ae (ae_eq_dirac f)]
 
 theorem lintegral_count' {f : α → ℝ≥0∞} (hf : Measurable f) : (∫⁻ a, f a ∂count) = ∑' a, f a := by
   rw [count, lintegral_sum_measure]
@@ -2246,13 +2249,13 @@ theorem lintegral_encodable [Encodable α] [MeasurableSingletonClass α] (f : α
   rw [lintegral_smul_measure, lintegral_dirac, mul_comm]
 
 theorem lintegral_singleton' {f : α → ℝ≥0∞} (hf : Measurable f) (a : α) : (∫⁻ x in {a}, f x ∂μ) = f a * μ {a} := by
-  simp only [restrict_singleton, lintegral_smul_measure, lintegral_dirac' _ hf, mul_comm]
+  simp only [← restrict_singleton, ← lintegral_smul_measure, ← lintegral_dirac' _ hf, ← mul_comm]
 
 theorem lintegral_singleton [MeasurableSingletonClass α] (f : α → ℝ≥0∞) (a : α) : (∫⁻ x in {a}, f x ∂μ) = f a * μ {a} :=
   by
-  simp only [restrict_singleton, lintegral_smul_measure, lintegral_dirac, mul_comm]
+  simp only [← restrict_singleton, ← lintegral_smul_measure, ← lintegral_dirac, ← mul_comm]
 
-theorem lintegral_countable [MeasurableSingletonClass α] (f : α → ℝ≥0∞) {s : Set α} (hs : Countable s) :
+theorem lintegral_countable [MeasurableSingletonClass α] (f : α → ℝ≥0∞) {s : Set α} (hs : s.Countable) :
     (∫⁻ a in s, f a ∂μ) = ∑' a : s, f a * μ {(a : α)} :=
   calc
     (∫⁻ a in s, f a ∂μ) = ∫⁻ a in ⋃ x ∈ s, {x}, f a ∂μ := by
@@ -2260,7 +2263,7 @@ theorem lintegral_countable [MeasurableSingletonClass α] (f : α → ℝ≥0∞
     _ = ∑' a : s, ∫⁻ x in {a}, f x ∂μ :=
       lintegral_bUnion hs (fun _ _ => measurable_set_singleton _) (pairwise_disjoint_fiber id s) _
     _ = ∑' a : s, f a * μ {(a : α)} := by
-      simp only [lintegral_singleton]
+      simp only [← lintegral_singleton]
     
 
 theorem lintegral_insert [MeasurableSingletonClass α] {a : α} {s : Set α} (h : a ∉ s) (f : α → ℝ≥0∞) :
@@ -2270,7 +2273,7 @@ theorem lintegral_insert [MeasurableSingletonClass α] {a : α} {s : Set α} (h 
 
 theorem lintegral_finset [MeasurableSingletonClass α] (s : Finset α) (f : α → ℝ≥0∞) :
     (∫⁻ x in s, f x ∂μ) = ∑ x in s, f x * μ {x} := by
-  simp only [lintegral_countable _ s.countable_to_set, ← s.tsum_subtype']
+  simp only [← lintegral_countable _ s.countable_to_set, s.tsum_subtype']
 
 theorem lintegral_fintype [MeasurableSingletonClass α] [Fintype α] (f : α → ℝ≥0∞) : (∫⁻ x, f x ∂μ) = ∑ x, f x * μ {x} :=
   by
@@ -2290,17 +2293,18 @@ theorem ae_lt_top {f : α → ℝ≥0∞} (hf : Measurable f) (h2f : (∫⁻ x, 
   apply h2f.lt_top.not_le
   have : (f ⁻¹' {∞}).indicator ⊤ ≤ f := by
     intro x
-    by_cases' hx : x ∈ f ⁻¹' {∞} <;> [simpa [hx] , simp [hx]]
+    by_cases' hx : x ∈ f ⁻¹' {∞} <;> [simpa [← hx] , simp [← hx]]
   convert lintegral_mono this
   rw [lintegral_indicator _ (hf (measurable_set_singleton ∞))]
-  simp [Ennreal.top_mul, preimage, h]
+  simp [← Ennreal.top_mul, ← preimage, ← h]
 
-theorem ae_lt_top' {f : α → ℝ≥0∞} (hf : AeMeasurable f μ) (h2f : (∫⁻ x, f x ∂μ) ≠ ∞) : ∀ᵐ x ∂μ, f x < ∞ :=
+theorem ae_lt_top' {f : α → ℝ≥0∞} (hf : AeMeasurable f μ) (h2f : (∫⁻ x, f x ∂μ) ≠ ∞) : ∀ᵐ x ∂μ, f x < ∞ := by
   have h2f_meas : (∫⁻ x, hf.mk f x ∂μ) ≠ ∞ := by
     rwa [← lintegral_congr_ae hf.ae_eq_mk]
-  (ae_lt_top hf.measurable_mk h2f_meas).mp
-    (hf.ae_eq_mk.mono fun x hx h => by
-      rwa [hx])
+  exact
+    (ae_lt_top hf.measurable_mk h2f_meas).mp
+      (hf.ae_eq_mk.mono fun x hx h => by
+        rwa [hx])
 
 theorem set_lintegral_lt_top_of_bdd_above {s : Set α} (hs : μ s ≠ ∞) {f : α → ℝ≥0 } (hf : Measurable f)
     (hbdd : BddAbove (f '' s)) : (∫⁻ x in s, f x ∂μ) < ∞ := by
@@ -2311,7 +2315,7 @@ theorem set_lintegral_lt_top_of_bdd_above {s : Set α} (hs : μ s ≠ ∞) {f : 
     
   · rw [lintegral_const]
     refine' Ennreal.mul_lt_top ennreal.coe_lt_top.ne _
-    simp [hs]
+    simp [← hs]
     
 
 theorem set_lintegral_lt_top_of_is_compact [TopologicalSpace α] [OpensMeasurableSpace α] {s : Set α} (hs : μ s ≠ ∞)
@@ -2351,7 +2355,7 @@ theorem with_density_add_left {f : α → ℝ≥0∞} (hf : Measurable f) (g : �
 
 theorem with_density_add_right (f : α → ℝ≥0∞) {g : α → ℝ≥0∞} (hg : Measurable g) :
     μ.withDensity (f + g) = μ.withDensity f + μ.withDensity g := by
-  simpa only [add_commₓ] using with_density_add_left hg f
+  simpa only [← add_commₓ] using with_density_add_left hg f
 
 theorem with_density_smul (r : ℝ≥0∞) {f : α → ℝ≥0∞} (hf : Measurable f) : μ.withDensity (r • f) = r • μ.withDensity f :=
   by
@@ -2379,12 +2383,12 @@ theorem with_density_absolutely_continuous {m : MeasurableSpace α} (μ : Measur
 @[simp]
 theorem with_density_zero : μ.withDensity 0 = 0 := by
   ext1 s hs
-  simp [with_density_apply _ hs]
+  simp [← with_density_apply _ hs]
 
 @[simp]
 theorem with_density_one : μ.withDensity 1 = μ := by
   ext1 s hs
-  simp [with_density_apply _ hs]
+  simp [← with_density_apply _ hs]
 
 theorem with_density_tsum {f : ℕ → α → ℝ≥0∞} (h : ∀ i, Measurable (f i)) :
     μ.withDensity (∑' n, f n) = Sum fun n => μ.withDensity (f n) := by
@@ -2437,17 +2441,17 @@ theorem with_density_apply_eq_zero {f : α → ℝ≥0∞} {s : Set α} (hf : Me
     swap
     · exact hf (measurable_set_singleton 0)
       
-    simp only [Pi.zero_apply, mem_set_of_eq, Filter.mem_mk] at A
+    simp only [← Pi.zero_apply, ← mem_set_of_eq, ← Filter.mem_mk] at A
     convert A
     ext x
-    simp only [and_comm, exists_prop, mem_inter_eq, iff_selfₓ, mem_set_of_eq, mem_compl_eq, not_forall]
+    simp only [← and_comm, ← exists_prop, ← mem_inter_eq, ← iff_selfₓ, ← mem_set_of_eq, ← mem_compl_eq, ← not_forall]
     
   · intro hs
     let t := to_measurable μ ({ x | f x ≠ 0 } ∩ s)
     have A : s ⊆ t ∪ { x | f x = 0 } := by
       intro x hx
       rcases eq_or_ne (f x) 0 with (fx | fx)
-      · simp only [fx, mem_union_eq, mem_set_of_eq, eq_self_iff_true, or_trueₓ]
+      · simp only [← fx, ← mem_union_eq, ← mem_set_of_eq, ← eq_self_iff_true, ← or_trueₓ]
         
       · left
         apply subset_to_measurable _ _
@@ -2460,7 +2464,7 @@ theorem with_density_apply_eq_zero {f : α → ℝ≥0∞} {s : Set α} (hf : Me
     · have M : MeasurableSet { x : α | f x = 0 } := hf (measurable_set_singleton _)
       rw [with_density_apply _ M, lintegral_eq_zero_iff hf]
       filter_upwards [ae_restrict_mem M]
-      simp only [imp_self, Pi.zero_apply, implies_true_iff]
+      simp only [← imp_self, ← Pi.zero_apply, ← implies_true_iff]
       
     
 
@@ -2469,14 +2473,14 @@ theorem ae_with_density_iff {p : α → Prop} {f : α → ℝ≥0∞} (hf : Meas
   rw [ae_iff, ae_iff, with_density_apply_eq_zero hf]
   congr
   ext x
-  simp only [exists_prop, mem_inter_eq, iff_selfₓ, mem_set_of_eq, not_forall]
+  simp only [← exists_prop, ← mem_inter_eq, ← iff_selfₓ, ← mem_set_of_eq, ← not_forall]
 
 theorem ae_with_density_iff_ae_restrict {p : α → Prop} {f : α → ℝ≥0∞} (hf : Measurable f) :
     (∀ᵐ x ∂μ.withDensity f, p x) ↔ ∀ᵐ x ∂μ.restrict { x | f x ≠ 0 }, p x := by
   rw [ae_with_density_iff hf, ae_restrict_iff']
   · rfl
     
-  · exact hf (measurable_set_singleton 0).Compl
+  · exact hf (measurable_set_singleton 0).compl
     
 
 theorem ae_measurable_with_density_iff {E : Type _} [NormedGroup E] [NormedSpace ℝ E]
@@ -2484,7 +2488,7 @@ theorem ae_measurable_with_density_iff {E : Type _} [NormedGroup E] [NormedSpace
     {g : α → E} : AeMeasurable g (μ.withDensity fun x => (f x : ℝ≥0∞)) ↔ AeMeasurable (fun x => (f x : ℝ) • g x) μ := by
   constructor
   · rintro ⟨g', g'meas, hg'⟩
-    have A : MeasurableSet { x : α | f x ≠ 0 } := (hf (measurable_set_singleton 0)).Compl
+    have A : MeasurableSet { x : α | f x ≠ 0 } := (hf (measurable_set_singleton 0)).compl
     refine' ⟨fun x => (f x : ℝ) • g' x, hf.coe_nnreal_real.smul g'meas, _⟩
     apply @ae_of_ae_restrict_of_ae_restrict_compl _ _ _ { x | f x ≠ 0 }
     · rw [eventually_eq, ae_with_density_iff hf.coe_nnreal_ennreal] at hg'
@@ -2492,13 +2496,13 @@ theorem ae_measurable_with_density_iff {E : Type _} [NormedGroup E] [NormedSpace
       filter_upwards [hg']
       intro a ha h'a
       have : (f a : ℝ≥0∞) ≠ 0 := by
-        simpa only [Ne.def, coe_eq_zero] using h'a
+        simpa only [← Ne.def, ← coe_eq_zero] using h'a
       rw [ha this]
       
     · filter_upwards [ae_restrict_mem A.compl]
       intro x hx
-      simp only [not_not, mem_set_of_eq, mem_compl_eq] at hx
-      simp [hx]
+      simp only [← not_not, ← mem_set_of_eq, ← mem_compl_eq] at hx
+      simp [← hx]
       
     
   · rintro ⟨g', g'meas, hg'⟩
@@ -2507,15 +2511,15 @@ theorem ae_measurable_with_density_iff {E : Type _} [NormedGroup E] [NormedSpace
     filter_upwards [hg']
     intro x hx h'x
     rw [← hx, smul_smul, _root_.inv_mul_cancel, one_smul]
-    simp only [Ne.def, coe_eq_zero] at h'x
-    simpa only [Nnreal.coe_eq_zero, Ne.def] using h'x
+    simp only [← Ne.def, ← coe_eq_zero] at h'x
+    simpa only [← Nnreal.coe_eq_zero, ← Ne.def] using h'x
     
 
 theorem ae_measurable_with_density_ennreal_iff {f : α → ℝ≥0 } (hf : Measurable f) {g : α → ℝ≥0∞} :
     AeMeasurable g (μ.withDensity fun x => (f x : ℝ≥0∞)) ↔ AeMeasurable (fun x => (f x : ℝ≥0∞) * g x) μ := by
   constructor
   · rintro ⟨g', g'meas, hg'⟩
-    have A : MeasurableSet { x : α | f x ≠ 0 } := (hf (measurable_set_singleton 0)).Compl
+    have A : MeasurableSet { x : α | f x ≠ 0 } := (hf (measurable_set_singleton 0)).compl
     refine' ⟨fun x => f x * g' x, hf.coe_nnreal_ennreal.smul g'meas, _⟩
     apply ae_of_ae_restrict_of_ae_restrict_compl { x | f x ≠ 0 }
     · rw [eventually_eq, ae_with_density_iff hf.coe_nnreal_ennreal] at hg'
@@ -2523,13 +2527,13 @@ theorem ae_measurable_with_density_ennreal_iff {f : α → ℝ≥0 } (hf : Measu
       filter_upwards [hg']
       intro a ha h'a
       have : (f a : ℝ≥0∞) ≠ 0 := by
-        simpa only [Ne.def, coe_eq_zero] using h'a
+        simpa only [← Ne.def, ← coe_eq_zero] using h'a
       rw [ha this]
       
     · filter_upwards [ae_restrict_mem A.compl]
       intro x hx
-      simp only [not_not, mem_set_of_eq, mem_compl_eq] at hx
-      simp [hx]
+      simp only [← not_not, ← mem_set_of_eq, ← mem_compl_eq] at hx
+      simp [← hx]
       
     
   · rintro ⟨g', g'meas, hg'⟩
@@ -2589,14 +2593,14 @@ theorem lintegral_with_density_eq_lintegral_mul (μ : Measure α) {f : α → �
     ∀ {g : α → ℝ≥0∞}, Measurable g → (∫⁻ a, g a ∂μ.withDensity f) = ∫⁻ a, (f * g) a ∂μ := by
   apply Measurable.ennreal_induction
   · intro c s h_ms
-    simp [*, mul_comm _ c, ← indicator_mul_right]
+    simp [*, ← mul_comm _ c, indicator_mul_right]
     
   · intro g h h_univ h_mea_g h_mea_h h_ind_g h_ind_h
-    simp [mul_addₓ, *, Measurable.mul]
+    simp [← mul_addₓ, *, ← Measurable.mul]
     
   · intro g h_mea_g h_mono_g h_ind
     have : Monotone fun n a => f a * g n a := fun m n hmn x => Ennreal.mul_le_mul le_rfl (h_mono_g hmn x)
-    simp [lintegral_supr, Ennreal.mul_supr, h_mf.mul (h_mea_g _), *]
+    simp [← lintegral_supr, ← Ennreal.mul_supr, ← h_mf.mul (h_mea_g _), *]
     
 
 theorem set_lintegral_with_density_eq_set_lintegral_mul (μ : Measure α) {f g : α → ℝ≥0∞} (hf : Measurable f)
@@ -2623,19 +2627,19 @@ theorem lintegral_with_density_eq_lintegral_mul₀' {μ : Measure α} {f : α �
         rw [eventually_eq, ae_with_density_iff_ae_restrict hf.measurable_mk] at Z
         filter_upwards [Z]
         intro x hx
-        simp only [hx, Pi.mul_apply]
+        simp only [← hx, ← Pi.mul_apply]
         
-      · have M : MeasurableSet ({ x : α | f' x ≠ 0 }ᶜ) := (hf.measurable_mk (measurable_set_singleton 0).Compl).Compl
+      · have M : MeasurableSet ({ x : α | f' x ≠ 0 }ᶜ) := (hf.measurable_mk (measurable_set_singleton 0).compl).compl
         filter_upwards [ae_restrict_mem M]
         intro x hx
-        simp only [not_not, mem_set_of_eq, mem_compl_eq] at hx
-        simp only [hx, zero_mul, Pi.mul_apply]
+        simp only [← not_not, ← mem_set_of_eq, ← mem_compl_eq] at hx
+        simp only [← hx, ← zero_mul, ← Pi.mul_apply]
         _ = ∫⁻ a : α, (f * g) a ∂μ :=
       by
       apply lintegral_congr_ae
       filter_upwards [hf.ae_eq_mk]
       intro x hx
-      simp only [hx, Pi.mul_apply]
+      simp only [← hx, ← Pi.mul_apply]
 
 theorem lintegral_with_density_eq_lintegral_mul₀ {μ : Measure α} {f : α → ℝ≥0∞} (hf : AeMeasurable f μ) {g : α → ℝ≥0∞}
     (hg : AeMeasurable g μ) : (∫⁻ a, g a ∂μ.withDensity f) = ∫⁻ a, (f * g) a ∂μ :=
@@ -2667,8 +2671,8 @@ theorem lintegral_with_density_eq_lintegral_mul_non_measurable (μ : Measure α)
   intro x h'x
   rcases eq_or_ne (f x) 0 with (hx | hx)
   · have := hi x
-    simp only [hx, zero_mul, Pi.mul_apply, nonpos_iff_eq_zero] at this
-    simp [this]
+    simp only [← hx, ← zero_mul, ← Pi.mul_apply, ← nonpos_iff_eq_zero] at this
+    simp [← this]
     
   · apply le_of_eqₓ _
     dsimp'
@@ -2692,7 +2696,7 @@ theorem lintegral_with_density_eq_lintegral_mul_non_measurable₀ (μ : Measure 
       apply lintegral_congr_ae
       filter_upwards [hf.ae_eq_mk]
       intro x hx
-      simp only [hx, Pi.mul_apply]
+      simp only [← hx, ← Pi.mul_apply]
 
 theorem set_lintegral_with_density_eq_set_lintegral_mul_non_measurable₀ (μ : Measure α) {f : α → ℝ≥0∞} {s : Set α}
     (hf : AeMeasurable f (μ.restrict s)) (g : α → ℝ≥0∞) (hs : MeasurableSet s) (h'f : ∀ᵐ x ∂μ.restrict s, f x < ∞) :
@@ -2702,7 +2706,7 @@ theorem set_lintegral_with_density_eq_set_lintegral_mul_non_measurable₀ (μ : 
 theorem with_density_mul (μ : Measure α) {f g : α → ℝ≥0∞} (hf : Measurable f) (hg : Measurable g) :
     μ.withDensity (f * g) = (μ.withDensity f).withDensity g := by
   ext1 s hs
-  simp [with_density_apply _ hs, restrict_with_density hs, lintegral_with_density_eq_lintegral_mul _ hf hg]
+  simp [← with_density_apply _ hs, ← restrict_with_density hs, ← lintegral_with_density_eq_lintegral_mul _ hf hg]
 
 /-- In a sigma-finite measure space, there exists an integrable function which is
 positive everywhere (and with an arbitrarily small integral). -/
@@ -2720,8 +2724,8 @@ theorem exists_pos_lintegral_lt_of_sigma_finite (μ : Measure α) [SigmaFinite �
   have hN_meas : Measurable N := measurable_spanning_sets_index μ
   have hNs : ∀ n, N ⁻¹' {n} = s n := preimage_spanning_sets_index_singleton μ
   refine' ⟨δ ∘ N, fun x => δpos _, measurable_from_nat.comp hN_meas, _⟩
-  simpa [lintegral_comp measurable_from_nat.coe_nnreal_ennreal hN_meas, hNs, lintegral_encodable,
-    measurable_spanning_sets_index, mul_comm] using δsum
+  simpa [← lintegral_comp measurable_from_nat.coe_nnreal_ennreal hN_meas, ← hNs, ← lintegral_encodable, ←
+    measurable_spanning_sets_index, ← mul_comm] using δsum
 
 theorem lintegral_trim {μ : Measure α} (hm : m ≤ m0) {f : α → ℝ≥0∞} (hf : measurable[m] f) :
     (∫⁻ a, f a ∂μ.trim hm) = ∫⁻ a, f a ∂μ := by
@@ -2774,7 +2778,7 @@ theorem lintegral_le_of_forall_fin_meas_le_of_measurable {μ : Measure α} (hm :
     (C : ℝ≥0∞) {f : α → ℝ≥0∞} (hf_meas : Measurable f)
     (hf : ∀ s, measurable_set[m] s → μ s ≠ ∞ → (∫⁻ x in s, f x ∂μ) ≤ C) : (∫⁻ x, f x ∂μ) ≤ C := by
   have : (∫⁻ x in univ, f x ∂μ) = ∫⁻ x, f x ∂μ := by
-    simp only [measure.restrict_univ]
+    simp only [← measure.restrict_univ]
   rw [← this]
   refine' univ_le_of_forall_fin_meas_le hm C hf fun S hS_meas hS_mono => _
   rw [← lintegral_indicator]
@@ -2789,19 +2793,19 @@ theorem lintegral_le_of_forall_fin_meas_le_of_measurable {μ : Measure α} (hm :
   · refine' le_of_eqₓ (lintegral_congr fun x => _)
     simp_rw [indicator_apply]
     by_cases' hx_mem : x ∈ Union S
-    · simp only [hx_mem, if_true]
+    · simp only [← hx_mem, ← if_true]
       obtain ⟨n, hxn⟩ := mem_Union.mp hx_mem
       refine' le_antisymmₓ (trans _ (le_supr _ n)) (supr_le fun i => _)
-      · simp only [hxn, le_reflₓ, if_true]
+      · simp only [← hxn, ← le_reflₓ, ← if_true]
         
-      · by_cases' hxi : x ∈ S i <;> simp [hxi]
+      · by_cases' hxi : x ∈ S i <;> simp [← hxi]
         
       
-    · simp only [hx_mem, if_false]
+    · simp only [← hx_mem, ← if_false]
       rw [mem_Union] at hx_mem
       push_neg  at hx_mem
       refine' le_antisymmₓ (zero_le _) (supr_le fun n => _)
-      simp only [hx_mem n, if_false, nonpos_iff_eq_zero]
+      simp only [← hx_mem n, ← if_false, ← nonpos_iff_eq_zero]
       
     
   · exact fun n => hf_meas.indicator (hm _ (hS_meas n))
@@ -2852,16 +2856,17 @@ theorem SimpleFunc.exists_lt_lintegral_simple_func_of_lt_lintegral {m : Measurab
     [SigmaFinite μ] {f : α →ₛ ℝ≥0 } {L : ℝ≥0∞} (hL : L < ∫⁻ x, f x ∂μ) :
     ∃ g : α →ₛ ℝ≥0 , (∀ x, g x ≤ f x) ∧ (∫⁻ x, g x ∂μ) < ∞ ∧ L < ∫⁻ x, g x ∂μ := by
   induction' f using MeasureTheory.SimpleFunc.induction with c s hs f₁ f₂ H h₁ h₂ generalizing L
-  · simp only [hs, const_zero, coe_piecewise, coe_const, simple_func.coe_zero, univ_inter, piecewise_eq_indicator,
-      lintegral_indicator, lintegral_const, measure.restrict_apply', coe_indicator, Function.const_applyₓ] at hL
+  · simp only [← hs, ← const_zero, ← coe_piecewise, ← coe_const, ← simple_func.coe_zero, ← univ_inter, ←
+      piecewise_eq_indicator, ← lintegral_indicator, ← lintegral_const, ← measure.restrict_apply', ← coe_indicator, ←
+      Function.const_applyₓ] at hL
     have c_ne_zero : c ≠ 0 := by
       intro hc
-      simpa only [hc, Ennreal.coe_zero, zero_mul, not_lt_zero] using hL
+      simpa only [← hc, ← Ennreal.coe_zero, ← zero_mul, ← not_lt_zero] using hL
     have : L / c < μ s := by
       rwa [Ennreal.div_lt_iff, mul_comm]
-      · simp only [c_ne_zero, Ne.def, coe_eq_zero, not_false_iff, true_orₓ]
+      · simp only [← c_ne_zero, ← Ne.def, ← coe_eq_zero, ← not_false_iff, ← true_orₓ]
         
-      · simp only [Ne.def, coe_ne_top, not_false_iff, true_orₓ]
+      · simp only [← Ne.def, ← coe_ne_top, ← not_false_iff, ← true_orₓ]
         
     obtain ⟨t, ht, ts, mut, t_top⟩ : ∃ t : Set α, MeasurableSet t ∧ t ⊆ s ∧ L / ↑c < μ t ∧ μ t < ∞ :=
       measure.exists_subset_measure_lt_top hs this
@@ -2869,16 +2874,17 @@ theorem SimpleFunc.exists_lt_lintegral_simple_func_of_lt_lintegral {m : Measurab
     · apply indicator_le_indicator_of_subset ts fun x => _
       exact zero_le _
       
-    · simp only [ht, const_zero, coe_piecewise, coe_const, simple_func.coe_zero, univ_inter, piecewise_eq_indicator,
-        coe_indicator, Function.const_applyₓ, lintegral_indicator, lintegral_const, measure.restrict_apply',
-        Ennreal.mul_lt_top Ennreal.coe_ne_top t_top.ne]
+    · simp only [← ht, ← const_zero, ← coe_piecewise, ← coe_const, ← simple_func.coe_zero, ← univ_inter, ←
+        piecewise_eq_indicator, ← coe_indicator, ← Function.const_applyₓ, ← lintegral_indicator, ← lintegral_const, ←
+        measure.restrict_apply', ← Ennreal.mul_lt_top Ennreal.coe_ne_top t_top.ne]
       
-    · simp only [ht, const_zero, coe_piecewise, coe_const, simple_func.coe_zero, piecewise_eq_indicator, coe_indicator,
-        Function.const_applyₓ, lintegral_indicator, lintegral_const, measure.restrict_apply', univ_inter]
+    · simp only [← ht, ← const_zero, ← coe_piecewise, ← coe_const, ← simple_func.coe_zero, ← piecewise_eq_indicator, ←
+        coe_indicator, ← Function.const_applyₓ, ← lintegral_indicator, ← lintegral_const, ← measure.restrict_apply', ←
+        univ_inter]
       rwa [mul_comm, ← Ennreal.div_lt_iff]
-      · simp only [c_ne_zero, Ne.def, coe_eq_zero, not_false_iff, true_orₓ]
+      · simp only [← c_ne_zero, ← Ne.def, ← coe_eq_zero, ← not_false_iff, ← true_orₓ]
         
-      · simp only [Ne.def, coe_ne_top, not_false_iff, true_orₓ]
+      · simp only [← Ne.def, ← coe_ne_top, ← not_false_iff, ← true_orₓ]
         
       
     
@@ -2886,16 +2892,16 @@ theorem SimpleFunc.exists_lt_lintegral_simple_func_of_lt_lintegral {m : Measurab
     · rwa [← lintegral_add_left f₁.measurable.coe_nnreal_ennreal]
       
     by_cases' hf₁ : (∫⁻ x, f₁ x ∂μ) = 0
-    · simp only [hf₁, zero_addₓ] at hL
+    · simp only [← hf₁, ← zero_addₓ] at hL
       rcases h₂ hL with ⟨g, g_le, g_top, gL⟩
       refine' ⟨g, fun x => (g_le x).trans _, g_top, gL⟩
-      simp only [simple_func.coe_add, Pi.add_apply, le_add_iff_nonneg_left, zero_le']
+      simp only [← simple_func.coe_add, ← Pi.add_apply, ← le_add_iff_nonneg_left, ← zero_le']
       
     by_cases' hf₂ : (∫⁻ x, f₂ x ∂μ) = 0
-    · simp only [hf₂, add_zeroₓ] at hL
+    · simp only [← hf₂, ← add_zeroₓ] at hL
       rcases h₁ hL with ⟨g, g_le, g_top, gL⟩
       refine' ⟨g, fun x => (g_le x).trans _, g_top, gL⟩
-      simp only [simple_func.coe_add, Pi.add_apply, le_add_iff_nonneg_right, zero_le']
+      simp only [← simple_func.coe_add, ← Pi.add_apply, ← le_add_iff_nonneg_right, ← zero_le']
       
     obtain ⟨L₁, L₂, hL₁, hL₂, hL⟩ : ∃ L₁ L₂ : ℝ≥0∞, (L₁ < ∫⁻ x, f₁ x ∂μ) ∧ (L₂ < ∫⁻ x, f₂ x ∂μ) ∧ L < L₁ + L₂ :=
       Ennreal.exists_lt_add_of_lt_add hL hf₁ hf₂
@@ -2915,7 +2921,7 @@ theorem SimpleFunc.exists_lt_lintegral_simple_func_of_lt_lintegral {m : Measurab
 theorem exists_lt_lintegral_simple_func_of_lt_lintegral {m : MeasurableSpace α} {μ : Measure α} [SigmaFinite μ]
     {f : α → ℝ≥0 } {L : ℝ≥0∞} (hL : L < ∫⁻ x, f x ∂μ) :
     ∃ g : α →ₛ ℝ≥0 , (∀ x, g x ≤ f x) ∧ (∫⁻ x, g x ∂μ) < ∞ ∧ L < ∫⁻ x, g x ∂μ := by
-  simp_rw [lintegral_eq_nnreal, lt_supr_iff]  at hL
+  simp_rw [lintegral_eq_nnreal, lt_supr_iff] at hL
   rcases hL with ⟨g₀, hg₀, g₀L⟩
   have h'L : L < ∫⁻ x, g₀ x ∂μ := by
     convert g₀L

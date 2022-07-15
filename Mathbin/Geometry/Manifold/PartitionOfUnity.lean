@@ -163,7 +163,7 @@ theorem is_subordinate_to_partition_of_unity {f : SmoothPartitionOfUnity ι I M 
     f.toPartitionOfUnity.IsSubordinate U ↔ f.IsSubordinate U :=
   Iff.rfl
 
-alias is_subordinate_to_partition_of_unity ↔ _ SmoothPartitionOfUnity.IsSubordinate.to_partition_of_unity
+alias is_subordinate_to_partition_of_unity ↔ _ is_subordinate.to_partition_of_unity
 
 end SmoothPartitionOfUnity
 
@@ -175,7 +175,7 @@ theorem smooth_to_partition_of_unity {E : Type uE} [NormedGroup E] [NormedSpace 
     (f : BumpCovering ι M s) (hf : ∀ i, Smooth I 𝓘(ℝ) (f i)) (i : ι) : Smooth I 𝓘(ℝ) (f.toPartitionOfUnity i) :=
   (hf i).mul <|
     (smooth_finprod_cond fun j _ => smooth_const.sub (hf j)) <| by
-      simp only [mul_support_one_sub]
+      simp only [← mul_support_one_sub]
       exact f.locally_finite
 
 variable {s : Set M}
@@ -252,12 +252,12 @@ theorem exists_is_subordinate [T2Space M] [SigmaCompactSpace M] (hs : IsClosed s
     ⟨V, hsV, hVc, hVf⟩
   choose r hrR hr using fun i => (f i).exists_r_pos_lt_subset_ball (hVc i) (hVf i)
   refine' ⟨ι, ⟨c, fun i => (f i).updateR (r i) (hrR i), hcs, _, fun x hx => _⟩, fun i => _⟩
-  · simpa only [SmoothBumpFunction.support_update_r]
+  · simpa only [← SmoothBumpFunction.support_update_r]
     
   · refine' (mem_Union.1 <| hsV hx).imp fun i hi => _
     exact ((f i).updateR _ _).eventually_eq_one_of_dist_lt ((f i).support_subset_source <| hVf _ hi) (hr i hi).2
     
-  · simpa only [coe_mk, SmoothBumpFunction.support_update_r, Tsupport] using hfU i
+  · simpa only [← coe_mk, ← SmoothBumpFunction.support_update_r, ← Tsupport] using hfU i
     
 
 variable {I M}
@@ -270,7 +270,7 @@ protected theorem point_finite (x : M) : { i | fs i x ≠ 0 }.Finite :=
 
 theorem mem_chart_at_source_of_eq_one {i : ι} {x : M} (h : fs i x = 1) : x ∈ (chartAt H (fs.c i)).Source :=
   (fs i).support_subset_source <| by
-    simp [h]
+    simp [← h]
 
 theorem mem_ext_chart_at_source_of_eq_one {i : ι} {x : M} (h : fs i x = 1) : x ∈ (extChartAt I (fs.c i)).Source := by
   rw [ext_chart_at_source]
@@ -287,7 +287,7 @@ theorem apply_ind (x : M) (hx : x ∈ s) : fs (fs.ind x hx) x = 1 :=
   (fs.eventually_eq_one x hx).eq_of_nhds
 
 theorem mem_support_ind (x : M) (hx : x ∈ s) : x ∈ Support (fs <| fs.ind x hx) := by
-  simp [fs.apply_ind x hx]
+  simp [← fs.apply_ind x hx]
 
 theorem mem_chart_at_ind_source (x : M) (hx : x ∈ s) : x ∈ (chartAt H (fs.c (fs.ind x hx))).Source :=
   fs.mem_chart_at_source_of_eq_one (fs.apply_ind x hx)
@@ -315,7 +315,7 @@ theorem is_subordinate_to_bump_covering {f : SmoothBumpCovering ι I M s} {U : M
     (f.toBumpCovering.IsSubordinate fun i => U (f.c i)) ↔ f.IsSubordinate U :=
   Iff.rfl
 
-alias is_subordinate_to_bump_covering ↔ _ SmoothBumpCovering.IsSubordinate.to_bump_covering
+alias is_subordinate_to_bump_covering ↔ _ is_subordinate.to_bump_covering
 
 /-- Every `smooth_bump_covering` defines a smooth partition of unity. -/
 def toSmoothPartitionOfUnity : SmoothPartitionOfUnity ι I M s :=
@@ -365,7 +365,7 @@ theorem exists_smooth_zero_one_of_closed [T2Space M] [SigmaCompactSpace M] {s t 
   set g := f.to_smooth_partition_of_unity
   refine' ⟨⟨_, g.smooth_sum⟩, fun x hx => _, fun x => g.sum_eq_one, fun x => ⟨g.sum_nonneg x, g.sum_le_one x⟩⟩
   suffices ∀ i, g i x = 0 by
-    simp only [this, ContMdiffMap.coe_fn_mk, finsum_zero, Pi.zero_apply]
+    simp only [← this, ← ContMdiffMap.coe_fn_mk, ← finsum_zero, ← Pi.zero_apply]
   refine' fun i => f.to_smooth_partition_of_unity_zero_of_zero _
   exact nmem_support.1 (subset_compl_comm.1 (hf.support_subset i) hx)
 
@@ -378,9 +378,9 @@ defined as an example for `inhabited` instance. -/
 def single (i : ι) (s : Set M) : SmoothPartitionOfUnity ι I M s :=
   (BumpCovering.single i s).toSmoothPartitionOfUnity fun j => by
     rcases eq_or_ne j i with (rfl | h)
-    · simp only [smooth_one, ContinuousMap.coe_one, BumpCovering.coe_single, Pi.single_eq_same]
+    · simp only [← smooth_one, ← ContinuousMap.coe_one, ← BumpCovering.coe_single, ← Pi.single_eq_same]
       
-    · simp only [smooth_zero, BumpCovering.coe_single, Pi.single_eq_of_ne h, ContinuousMap.coe_zero]
+    · simp only [← smooth_zero, ← BumpCovering.coe_single, ← Pi.single_eq_of_ne h, ← ContinuousMap.coe_zero]
       
 
 instance [Inhabited ι] (s : Set M) : Inhabited (SmoothPartitionOfUnity ι I M s) :=

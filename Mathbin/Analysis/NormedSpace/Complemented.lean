@@ -36,7 +36,7 @@ theorem ker_closed_complemented_of_finite_dimensional_range (f : E →L[𝕜] F)
     f.ker.ClosedComplemented := by
   set f' : E →L[𝕜] f.range := f.cod_restrict _ (f : E →ₗ[𝕜] F).mem_range_self
   rcases f'.exists_right_inverse_of_surjective (f : E →ₗ[𝕜] F).range_range_restrict with ⟨g, hg⟩
-  simpa only [ker_cod_restrict] using f'.closed_complemented_ker_of_right_inverse g (ext_iff.1 hg)
+  simpa only [← ker_cod_restrict] using f'.closed_complemented_ker_of_right_inverse g (ext_iff.1 hg)
 
 end
 

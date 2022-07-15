@@ -52,7 +52,7 @@ theorem finrank_eq_card_choose_basis_index :
       @card (ChooseBasisIndex R M) (@ChooseBasisIndex.fintype R M _ _ _ _ (nontrivial_of_invariant_basis_number R) _) :=
   by
   let this := nontrivial_of_invariant_basis_number R
-  simp [finrank, rank_eq_card_choose_basis_index]
+  simp [← finrank, ← rank_eq_card_choose_basis_index]
 
 /-- The finrank of `(ι →₀ R)` is `fintype.card ι`. -/
 @[simp]
@@ -61,7 +61,7 @@ theorem finrank_finsupp {ι : Type v} [Fintype ι] : finrank R (ι →₀ R) = c
 
 /-- The finrank of `(ι → R)` is `fintype.card ι`. -/
 theorem finrank_pi {ι : Type v} [Fintype ι] : finrank R (ι → R) = card ι := by
-  simp [finrank]
+  simp [← finrank]
 
 /-- The finrank of the direct sum is the sum of the finranks. -/
 @[simp]
@@ -69,13 +69,13 @@ theorem finrank_direct_sum {ι : Type v} [Fintype ι] (M : ι → Type w) [∀ i
     [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] [∀ i : ι, Module.Finite R (M i)] :
     finrank R (⨁ i, M i) = ∑ i, finrank R (M i) := by
   let this := nontrivial_of_invariant_basis_number R
-  simp only [finrank, fun i => rank_eq_card_choose_basis_index R (M i), rank_direct_sum, ← mk_sigma, mk_to_nat_eq_card,
-    card_sigma]
+  simp only [← finrank, ← fun i => rank_eq_card_choose_basis_index R (M i), ← rank_direct_sum, mk_sigma, ←
+    mk_to_nat_eq_card, ← card_sigma]
 
 /-- The finrank of `M × N` is `(finrank R M) + (finrank R N)`. -/
 @[simp]
 theorem finrank_prod : finrank R (M × N) = finrank R M + finrank R N := by
-  simp [finrank, rank_lt_aleph_0 R M, rank_lt_aleph_0 R N]
+  simp [← finrank, ← rank_lt_aleph_0 R M, ← rank_lt_aleph_0 R N]
 
 /-- The finrank of a finite product is the sum of the finranks. -/
 --TODO: this should follow from `linear_equiv.finrank_eq`, that is over a field.
@@ -83,13 +83,13 @@ theorem finrank_pi_fintype {ι : Type v} [Fintype ι] {M : ι → Type w} [∀ i
     [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] [∀ i : ι, Module.Finite R (M i)] :
     finrank R (∀ i, M i) = ∑ i, finrank R (M i) := by
   let this := nontrivial_of_invariant_basis_number R
-  simp only [finrank, fun i => rank_eq_card_choose_basis_index R (M i), rank_pi_fintype, ← mk_sigma, mk_to_nat_eq_card,
-    card_sigma]
+  simp only [← finrank, ← fun i => rank_eq_card_choose_basis_index R (M i), ← rank_pi_fintype, mk_sigma, ←
+    mk_to_nat_eq_card, ← card_sigma]
 
 /-- If `m` and `n` are `fintype`, the finrank of `m × n` matrices is
   `(fintype.card m) * (fintype.card n)`. -/
 theorem finrank_matrix (m n : Type v) [Fintype m] [Fintype n] : finrank R (Matrix m n R) = card m * card n := by
-  simp [finrank]
+  simp [← finrank]
 
 end Ringₓ
 
@@ -101,7 +101,7 @@ variable [AddCommGroupₓ M] [Module R M] [Module.Free R M] [Module.Finite R M]
 
 variable [AddCommGroupₓ N] [Module R N] [Module.Free R N] [Module.Finite R N]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The finrank of `M →ₗ[R] N` is `(finrank R M) * (finrank R N)`. -/
 --TODO: this should follow from `linear_equiv.finrank_eq`, that is over a field.
 theorem finrank_linear_hom : finrank R (M →ₗ[R] N) = finrank R M * finrank R N := by
@@ -116,7 +116,7 @@ theorem finrank_linear_hom : finrank R (M →ₗ[R] N) = finrank R M * finrank R
 @[simp]
 theorem finrank_tensor_product (M : Type v) (N : Type w) [AddCommGroupₓ M] [Module R M] [Module.Free R M]
     [AddCommGroupₓ N] [Module R N] [Module.Free R N] : finrank R (M ⊗[R] N) = finrank R M * finrank R N := by
-  simp [finrank]
+  simp [← finrank]
 
 end CommRingₓ
 

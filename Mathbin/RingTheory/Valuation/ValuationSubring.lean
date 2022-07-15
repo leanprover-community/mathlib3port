@@ -92,19 +92,19 @@ instance : OrderTop (ValuationSubring K) where
 instance : Inhabited (ValuationSubring K) :=
   ⟨⊤⟩
 
-instance : ValuationRing A where
-  cond := fun a b => by
+instance :
+    ValuationRing A where cond := fun a b => by
     by_cases' (b : K) = 0
     · use 0
       left
       ext
-      simp [h]
+      simp [← h]
       
     by_cases' (a : K) = 0
     · use 0
       right
       ext
-      simp [h]
+      simp [← h]
       
     cases' A.mem_or_inv_mem (a / b) with hh hh
     · use ⟨a / b, hh⟩
@@ -137,7 +137,7 @@ instance : IsFractionRing A K where
   surj := fun z => by
     by_cases' z = 0
     · use (0, 1)
-      simp [h]
+      simp [← h]
       
     cases' A.mem_or_inv_mem z with hh hh
     · use (⟨z, hh⟩, 1)
@@ -205,7 +205,7 @@ theorem valuation_lt_one_or_eq_one (a : A) : A.Valuation a < 1 ∨ A.Valuation a
 
 theorem valuation_lt_one_iff (a : A) : a ∈ LocalRing.maximalIdeal A ↔ A.Valuation a < 1 := by
   rw [LocalRing.mem_maximal_ideal]
-  dsimp' [Nonunits]
+  dsimp' [← Nonunits]
   rw [valuation_eq_one_iff]
   exact (A.valuation_le_one a).lt_iff_ne.symm
 
@@ -415,7 +415,7 @@ def valuationSubring : ValuationSubring K :=
         · exact le_of_ltₓ h
           
         · intro c
-          simpa [c] using h
+          simpa [← c] using h
           
         · exact one_ne_zero
           
@@ -473,7 +473,7 @@ theorem unit_group_injective : Function.Injective (unitGroup : ValuationSubring 
   rw [SetLike.ext_iff] at h
   intro x
   by_cases' hx : x = 0
-  · simp only [hx, Valuation.map_zero, zero_ne_one]
+  · simp only [← hx, ← Valuation.map_zero, ← zero_ne_one]
     
   exact h (Units.mk0 x hx)
 
@@ -509,10 +509,10 @@ theorem unit_group_le_unit_group {A B : ValuationSubring K} : A.unitGroup ≤ B.
   · rintro h x hx
     rw [← A.valuation_le_one_iff x, le_iff_lt_or_eqₓ] at hx
     by_cases' h_1 : x = 0
-    · simp only [h_1, zero_mem]
+    · simp only [← h_1, ← zero_mem]
       
     by_cases' h_2 : 1 + x = 0
-    · simp only [← add_eq_zero_iff_neg_eq.1 h_2, neg_mem _ _ (one_mem _)]
+    · simp only [add_eq_zero_iff_neg_eq.1 h_2, ← neg_mem _ _ (one_mem _)]
       
     cases hx
     · have := h (show Units.mk0 _ h_2 ∈ A.unit_group from A.valuation.map_one_add_of_lt hx)

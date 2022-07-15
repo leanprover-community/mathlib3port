@@ -136,8 +136,7 @@ theorem tsum_one_div_pow_factorial_lt (n : ℕ) {m : ℝ} (m1 : 1 < m) :
         (Or.inl (tsum_geometric_of_abs_lt_1 mi))
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 theorem aux_calc (n : ℕ) {m : ℝ} (hm : 2 ≤ m) : (1 - 1 / m)⁻¹ * (1 / m ^ (n + 1)!) ≤ 1 / (m ^ n !) ^ n :=
   calc
     (1 - 1 / m)⁻¹ * (1 / m ^ (n + 1)!) ≤ 2 * (1 / m ^ (n + 1)!) :=-- the second factors coincide (and are non-negative),
@@ -182,7 +181,7 @@ theorem liouville_number_rat_initial_terms {m : ℕ} (hm : 0 < m) (k : ℕ) :
         show k.succ * k ! - k ! = (k.succ - 1) * k ! by
           rw [tsub_mul, one_mulₓ],
         Nat.succ_sub_one, add_mulₓ, one_mulₓ, pow_addₓ]
-      simp [mul_assoc]
+      simp [← mul_assoc]
       
     refine' mul_ne_zero_iff.mpr ⟨_, _⟩
     all_goals

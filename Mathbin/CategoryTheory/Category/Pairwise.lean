@@ -137,8 +137,8 @@ def cocone : Cocone (diagram U) where
 /-- Given a function `U : ι → α` for `[complete_lattice α]`,
 `infi U` provides a limit cone over `diagram U`.
 -/
-def coconeIsColimit : IsColimit (cocone U) where
-  desc := fun s =>
+def coconeIsColimit :
+    IsColimit (cocone U) where desc := fun s =>
     homOfLe
       (by
         apply CompleteLattice.Sup_le

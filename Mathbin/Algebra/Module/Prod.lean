@@ -18,7 +18,7 @@ variable {R : Type _} {S : Type _} {M : Type _} {N : Type _}
 namespace Prod
 
 instance smulWithZero [Zero R] [Zero M] [Zero N] [SmulWithZero R M] [SmulWithZero R N] : SmulWithZero R (M × N) :=
-  { Prod.hasScalar with smul_zero := fun r => Prod.extₓ (smul_zero' _ _) (smul_zero' _ _),
+  { Prod.hasSmul with smul_zero := fun r => Prod.extₓ (smul_zero' _ _) (smul_zero' _ _),
     zero_smul := fun ⟨m, n⟩ => Prod.extₓ (zero_smul _ _) (zero_smul _ _) }
 
 instance mulActionWithZero [MonoidWithZeroₓ R] [Zero M] [Zero N] [MulActionWithZero R M] [MulActionWithZero R N] :
@@ -32,7 +32,7 @@ instance {r : Semiringₓ R} [AddCommMonoidₓ M] [AddCommMonoidₓ N] [Module R
 
 instance {r : Semiringₓ R} [AddCommMonoidₓ M] [AddCommMonoidₓ N] [Module R M] [Module R N] [NoZeroSmulDivisors R M]
     [NoZeroSmulDivisors R N] : NoZeroSmulDivisors R (M × N) :=
-  ⟨fun h =>
+  ⟨fun c ⟨x, y⟩ h =>
     or_iff_not_imp_left.mpr fun hc =>
       mk.inj_iff.mpr
         ⟨(smul_eq_zero.mp (congr_arg fst h)).resolve_left hc, (smul_eq_zero.mp (congr_arg snd h)).resolve_left hc⟩⟩

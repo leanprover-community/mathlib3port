@@ -86,7 +86,7 @@ theorem eval_from_singleton (S : Set σ) (a : α) : M.evalFrom S [a] = M.StepSet
 @[simp]
 theorem eval_from_append_singleton (S : Set σ) (x : List α) (a : α) :
     M.evalFrom S (x ++ [a]) = M.StepSet (M.evalFrom S x) a := by
-  simp only [eval_from, List.foldl_append, List.foldl_cons, List.foldl_nil]
+  simp only [← eval_from, ← List.foldl_append, ← List.foldl_cons, ← List.foldl_nil]
 
 @[simp]
 theorem eval_from_empty (x : List α) : M.evalFrom ∅ x = ∅ := by
@@ -170,9 +170,9 @@ theorem to_ε_NFA_eval_from_match (M : NFA α σ) (start : Set σ) : M.toεNFA.e
   rw [eval_from, εNFA.EvalFrom, to_ε_NFA_ε_closure]
   congr
   ext S s
-  simp only [step_set, εNFA.StepSet, exists_prop, Set.mem_Union, Set.bind_def]
+  simp only [← step_set, ← εNFA.StepSet, ← exists_prop, ← Set.mem_Union, ← Set.bind_def]
   apply exists_congr
-  simp only [And.congr_right_iff]
+  simp only [← And.congr_right_iff]
   intro t ht
   rw [M.to_ε_NFA_ε_closure]
   rfl

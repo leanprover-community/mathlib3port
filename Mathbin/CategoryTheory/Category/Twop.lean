@@ -44,7 +44,7 @@ def of {X : Type _} (to_two_pointing : TwoPointing X) : Twop :=
 theorem coe_of {X : Type _} (to_two_pointing : TwoPointing X) : ↥(of to_two_pointing) = X :=
   rfl
 
-alias of ← TwoPointing.twop
+alias of ← _root_.two_pointing.Twop
 
 instance : Inhabited Twop :=
   ⟨of TwoPointing.bool⟩

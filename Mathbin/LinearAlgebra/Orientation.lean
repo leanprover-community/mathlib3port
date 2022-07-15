@@ -201,7 +201,7 @@ theorem adjust_to_orientation_apply_eq_or_eq_neg [Nontrivial R] [Nonempty ι] (e
   split_ifs with h
   · simp
     
-  · by_cases' hi : i = Classical.arbitrary ι <;> simp [units_smul_apply, hi]
+  · by_cases' hi : i = Classical.arbitrary ι <;> simp [← units_smul_apply, ← hi]
     
 
 end Basis
@@ -227,7 +227,7 @@ equal or negations. -/
 theorem eq_or_eq_neg (x₁ x₂ : Orientation R M ι) (h : Fintype.card ι = finrank R M) : x₁ = x₂ ∨ x₁ = -x₂ := by
   have e := (fin_basis R M).reindex (Fintype.equivFinOfCardEq h).symm
   rcases e.orientation_eq_or_eq_neg x₁ with (h₁ | h₁) <;>
-    rcases e.orientation_eq_or_eq_neg x₂ with (h₂ | h₂) <;> simp [h₁, h₂]
+    rcases e.orientation_eq_or_eq_neg x₂ with (h₂ | h₂) <;> simp [← h₁, ← h₂]
 
 /-- If the index type has cardinality equal to the finite dimension, an orientation equals the
 negation of another orientation if and only if they are not equal. -/
@@ -237,9 +237,9 @@ theorem ne_iff_eq_neg (x₁ x₂ : Orientation R M ι) (h : Fintype.card ι = fi
 /-- The value of `orientation.map` when the index type has cardinality equal to the finite
 dimension, in terms of `f.det`. -/
 theorem map_eq_det_inv_smul (x : Orientation R M ι) (f : M ≃ₗ[R] M) (h : Fintype.card ι = finrank R M) :
-    Orientation.map ι f x = f.det⁻¹ • x :=
+    Orientation.map ι f x = f.det⁻¹ • x := by
   have e := (fin_basis R M).reindex (Fintype.equivFinOfCardEq h).symm
-  e.map_orientation_eq_det_inv_smul x f
+  exact e.map_orientation_eq_det_inv_smul x f
 
 /-- If the index type has cardinality equal to the finite dimension, composing an alternating
 map with the same linear equiv on each argument gives the same orientation if and only if the

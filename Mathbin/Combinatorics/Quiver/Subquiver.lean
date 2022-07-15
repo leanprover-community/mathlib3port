@@ -30,8 +30,8 @@ some `wide_subquiver`. -/
 def WideSubquiver.ToType V [Quiver V] (H : WideSubquiver V) : Type u :=
   V
 
-instance wideSubquiverHasCoeToSort {V} [Quiver V] : CoeSort (WideSubquiver V) (Type u) where
-  coe := fun H => WideSubquiver.ToType V H
+instance wideSubquiverHasCoeToSort {V} [Quiver V] :
+    CoeSort (WideSubquiver V) (Type u) where coe := fun H => WideSubquiver.ToType V H
 
 /-- A wide subquiver viewed as a quiver on its own. -/
 instance WideSubquiver.quiver {V} [Quiver V] (H : WideSubquiver V) : Quiver H :=

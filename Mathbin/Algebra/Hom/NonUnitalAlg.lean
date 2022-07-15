@@ -61,6 +61,25 @@ attribute [nolint doc_blame] NonUnitalAlgHom.toDistribMulActionHom
 
 attribute [nolint doc_blame] NonUnitalAlgHom.toMulHom
 
+/-- `non_unital_alg_hom_class F R A B` asserts `F` is a type of bundled algebra homomorphisms
+from `A` to `B`.  -/
+class NonUnitalAlgHomClass (F : Type _) (R : outParam (Type _)) (A : outParam (Type _)) (B : outParam (Type _))
+  [Monoidₓ R] [NonUnitalNonAssocSemiringₓ A] [NonUnitalNonAssocSemiringₓ B] [DistribMulAction R A]
+  [DistribMulAction R B] extends DistribMulActionHomClass F R A B, MulHomClass F A B
+
+-- `R` becomes a metavariable but that's fine because it's an `out_param`
+attribute [nolint dangerous_instance] NonUnitalAlgHomClass.toMulHomClass
+
+namespace NonUnitalAlgHomClass
+
+variable [Semiringₓ R] [NonUnitalNonAssocSemiringₓ A] [Module R A] [NonUnitalNonAssocSemiringₓ B] [Module R B]
+
+-- see Note [lower instance priority]
+instance (priority := 100) {F : Type _} [NonUnitalAlgHomClass F R A B] : LinearMapClass F R A B :=
+  { ‹NonUnitalAlgHomClass F R A B› with map_smulₛₗ := DistribMulActionHomClass.map_smul }
+
+end NonUnitalAlgHomClass
+
 namespace NonUnitalAlgHom
 
 variable {R A B C} [Monoidₓ R]
@@ -83,6 +102,14 @@ initialize_simps_projections NonUnitalAlgHom (toFun → apply)
 
 theorem coe_injective : @Function.Injective (A →ₙₐ[R] B) (A → B) coeFn := by
   rintro ⟨f, _⟩ ⟨g, _⟩ ⟨h⟩ <;> congr
+
+instance : NonUnitalAlgHomClass (A →ₙₐ[R] B) R A B where
+  coe := toFun
+  coe_injective' := coe_injective
+  map_smul := fun f => f.map_smul'
+  map_add := fun f => f.map_add'
+  map_zero := fun f => f.map_zero'
+  map_mul := fun f => f.map_mul'
 
 @[ext]
 theorem ext {f g : A →ₙₐ[R] B} (h : ∀ x, f x = g x) : f = g :=
@@ -147,20 +174,20 @@ theorem coe_mul_hom_mk (f : A →ₙₐ[R] B) h₁ h₂ h₃ h₄ : ((⟨f, h₁
   rfl
 
 @[simp]
-theorem map_smul (f : A →ₙₐ[R] B) (c : R) (x : A) : f (c • x) = c • f x :=
-  f.toDistribMulActionHom.map_smul c x
+protected theorem map_smul (f : A →ₙₐ[R] B) (c : R) (x : A) : f (c • x) = c • f x :=
+  map_smul _ _ _
 
 @[simp]
-theorem map_add (f : A →ₙₐ[R] B) (x y : A) : f (x + y) = f x + f y :=
-  f.toDistribMulActionHom.map_add x y
+protected theorem map_add (f : A →ₙₐ[R] B) (x y : A) : f (x + y) = f x + f y :=
+  map_add _ _ _
 
 @[simp]
-theorem map_mul (f : A →ₙₐ[R] B) (x y : A) : f (x * y) = f x * f y :=
-  f.toMulHom.map_mul x y
+protected theorem map_mul (f : A →ₙₐ[R] B) (x y : A) : f (x * y) = f x * f y :=
+  map_mul _ _ _
 
 @[simp]
-theorem map_zero (f : A →ₙₐ[R] B) : f 0 = 0 :=
-  f.toDistribMulActionHom.map_zero
+protected theorem map_zero (f : A →ₙₐ[R] B) : f 0 = 0 :=
+  map_zero _
 
 instance : Zero (A →ₙₐ[R] B) :=
   ⟨{ (0 : A →+[R] B) with
@@ -244,13 +271,13 @@ variable {R A B}
 def prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : A →ₙₐ[R] B × C where
   toFun := Pi.prod f g
   map_zero' := by
-    simp only [Pi.prod, Prod.zero_eq_mk, map_zero]
+    simp only [← Pi.prod, ← Prod.zero_eq_mk, ← map_zero]
   map_add' := fun x y => by
-    simp only [Pi.prod, Prod.mk_add_mk, map_add]
+    simp only [← Pi.prod, ← Prod.mk_add_mk, ← map_add]
   map_mul' := fun x y => by
-    simp only [Pi.prod, Prod.mk_mul_mk, map_mul]
+    simp only [← Pi.prod, ← Prod.mk_mul_mk, ← map_mul]
   map_smul' := fun c x => by
-    simp only [Pi.prod, Prod.smul_mk, map_smul, RingHom.id_apply]
+    simp only [← Pi.prod, ← Prod.smul_mk, ← map_smul, ← RingHom.id_apply]
 
 theorem coe_prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : ⇑(f.Prod g) = Pi.prod f g :=
   rfl
@@ -315,9 +342,13 @@ namespace AlgHom
 
 variable {R A B} [CommSemiringₓ R] [Semiringₓ A] [Semiringₓ B] [Algebra R A] [Algebra R B]
 
+-- see Note [lower instance priority]
+instance (priority := 100) {F : Type _} [AlgHomClass F R A B] : NonUnitalAlgHomClass F R A B :=
+  { ‹AlgHomClass F R A B› with map_smul := map_smul }
+
 /-- A unital morphism of algebras is a `non_unital_alg_hom`. -/
 def toNonUnitalAlgHom (f : A →ₐ[R] B) : A →ₙₐ[R] B :=
-  { f with map_smul' := f.map_smul }
+  { f with map_smul' := map_smul f }
 
 instance NonUnitalAlgHom.hasCoe : Coe (A →ₐ[R] B) (A →ₙₐ[R] B) :=
   ⟨toNonUnitalAlgHom⟩

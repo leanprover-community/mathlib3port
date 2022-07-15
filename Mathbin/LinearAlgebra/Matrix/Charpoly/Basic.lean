@@ -49,25 +49,25 @@ def charmatrix (M : Matrix n n R) : Matrix n n R[X] :=
 
 @[simp]
 theorem charmatrix_apply_eq (M : Matrix n n R) (i : n) : charmatrix M i i = (x : R[X]) - c (M i i) := by
-  simp only [charmatrix, sub_left_inj, Pi.sub_apply, scalar_apply_eq, RingHom.map_matrix_apply, map_apply,
+  simp only [← charmatrix, ← sub_left_inj, ← Pi.sub_apply, ← scalar_apply_eq, ← RingHom.map_matrix_apply, ← map_apply, ←
     Dmatrix.sub_apply]
 
 @[simp]
 theorem charmatrix_apply_ne (M : Matrix n n R) (i j : n) (h : i ≠ j) : charmatrix M i j = -c (M i j) := by
-  simp only [charmatrix, Pi.sub_apply, scalar_apply_ne _ _ _ h, zero_sub, RingHom.map_matrix_apply, map_apply,
-    Dmatrix.sub_apply]
+  simp only [← charmatrix, ← Pi.sub_apply, ← scalar_apply_ne _ _ _ h, ← zero_sub, ← RingHom.map_matrix_apply, ←
+    map_apply, ← Dmatrix.sub_apply]
 
 theorem mat_poly_equiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix M) = X - c M := by
   ext k i j
-  simp only [mat_poly_equiv_coeff_apply, coeff_sub, Pi.sub_apply]
+  simp only [← mat_poly_equiv_coeff_apply, ← coeff_sub, ← Pi.sub_apply]
   by_cases' h : i = j
   · subst h
     rw [charmatrix_apply_eq, coeff_sub]
-    simp only [coeff_X, coeff_C]
+    simp only [← coeff_X, ← coeff_C]
     split_ifs <;> simp
     
   · rw [charmatrix_apply_ne _ _ _ h, coeff_X, coeff_neg, coeff_C, coeff_C]
-    split_ifs <;> simp [h]
+    split_ifs <;> simp [← h]
     
 
 theorem charmatrix_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n ≃ m) (M : Matrix n n R) :
@@ -75,7 +75,7 @@ theorem charmatrix_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n ≃ m
   ext i j x
   by_cases' h : i = j
   all_goals
-    simp [h]
+    simp [← h]
 
 /-- The characteristic polynomial of a matrix `M` is given by $\det (t I - M)$.
 -/
@@ -102,7 +102,7 @@ theorem Matrix.aeval_self_charpoly (M : Matrix n n R) : aeval M M.charpoly = 0 :
   -- Using the algebra isomorphism `matrix n n R[X] ≃ₐ[R] polynomial (matrix n n R)`,
   -- we have the same identity in `polynomial (matrix n n R)`.
   apply_fun matPolyEquiv  at h
-  simp only [mat_poly_equiv.map_mul, mat_poly_equiv_charmatrix] at h
+  simp only [← mat_poly_equiv.map_mul, ← mat_poly_equiv_charmatrix] at h
   -- Because the coefficient ring `matrix n n R` is non-commutative,
   -- evaluation at `M` is not multiplicative.
   -- However, any polynomial which is a product of the form $N * (t I - M)$

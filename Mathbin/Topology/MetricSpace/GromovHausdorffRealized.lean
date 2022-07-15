@@ -69,7 +69,7 @@ private def Cb : Type _ :=
 private def max_var : ℝ≥0 :=
   2 * ⟨diam (Univ : Set X), diam_nonneg⟩ + 1 + 2 * ⟨diam (Univ : Set Y), diam_nonneg⟩
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 private theorem one_le_max_var : 1 ≤ maxVar X Y :=
   calc
     (1 : Real) = 2 * 0 + 1 + 2 * 0 := by
@@ -103,12 +103,12 @@ variable {X : Type u} {Y : Type v} [MetricSpace X] [CompactSpace X] [Nonempty X]
 
 attribute [local instance] inhabited_of_nonempty'
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 private theorem max_var_bound : dist x y ≤ maxVar X Y :=
   calc
     dist x y ≤ diam (Univ : Set (Sum X Y)) := dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
     _ = diam (inl '' (Univ : Set X) ∪ inr '' (Univ : Set Y)) := by
-      apply congr_arg <;> ext x y z <;> cases x <;> simp [mem_univ, mem_range_self]
+      apply congr_arg <;> ext x y z <;> cases x <;> simp [← mem_univ, ← mem_range_self]
     _ ≤ diam (inl '' (Univ : Set X)) + dist (inl default) (inr default) + diam (inr '' (Univ : Set Y)) :=
       diam_union (mem_image_of_mem _ (mem_univ _)) (mem_image_of_mem _ (mem_univ _))
     _ = diam (Univ : Set X) + (dist default default + 1 + dist default default) + diam (Univ : Set Y) := by
@@ -199,7 +199,7 @@ private theorem candidates_lipschitz_aux (fA : f ∈ Candidates X Y) :
     f (x, y) - f (z, t) ≤ f (x, t) + f (t, y) - f (z, t) := sub_le_sub_right (candidates_triangle fA) _
     _ ≤ f (x, z) + f (z, t) + f (t, y) - f (z, t) := sub_le_sub_right (add_le_add_right (candidates_triangle fA) _) _
     _ = f (x, z) + f (t, y) := by
-      simp [sub_eq_add_neg, add_assocₓ]
+      simp [← sub_eq_add_neg, ← add_assocₓ]
     _ ≤ maxVar X Y * dist x z + maxVar X Y * dist t y :=
       add_le_add (candidates_dist_bound fA) (candidates_dist_bound fA)
     _ ≤ maxVar X Y * max (dist x z) (dist t y) + maxVar X Y * max (dist x z) (dist t y) := by
@@ -207,7 +207,7 @@ private theorem candidates_lipschitz_aux (fA : f ∈ Candidates X Y) :
       apply mul_le_mul_of_nonneg_left (le_max_leftₓ (dist x z) (dist t y)) (zero_le_one.trans (one_le_max_var X Y))
       apply mul_le_mul_of_nonneg_left (le_max_rightₓ (dist x z) (dist t y)) (zero_le_one.trans (one_le_max_var X Y))
     _ = 2 * maxVar X Y * max (dist x z) (dist y t) := by
-      simp [dist_comm]
+      simp [← dist_comm]
       ring
     _ = 2 * maxVar X Y * dist (x, y) (z, t) := by
       rfl
@@ -232,8 +232,8 @@ theorem candidates_b_of_candidates_mem (f : ProdSpaceFun X Y) (fA : f ∈ Candid
 
 /-- The distance on `X ⊕ Y` is a candidate -/
 private theorem dist_mem_candidates : (fun p : Sum X Y × Sum X Y => dist p.1 p.2) ∈ Candidates X Y := by
-  simp only [candidates, dist_comm, forall_const, and_trueₓ, add_commₓ, eq_self_iff_true, and_selfₓ, Sum.forall,
-    Set.mem_set_of_eq, dist_self]
+  simp only [← candidates, ← dist_comm, ← forall_const, ← and_trueₓ, ← add_commₓ, ← eq_self_iff_true, ← and_selfₓ, ←
+    Sum.forall, ← Set.mem_set_of_eq, ← dist_self]
   repeat'
     first |
       constructor|
@@ -253,11 +253,11 @@ theorem candidates_b_dist_mem_candidates_b : candidatesBDist X Y ∈ CandidatesB
 private theorem candidates_b_nonempty : (CandidatesB X Y).Nonempty :=
   ⟨_, candidates_b_dist_mem_candidates_b⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (x y)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (x y)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (x y)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (x y z)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (x y)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (x y)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (x y)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (x y)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (x y z)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (x y)
 /-- To apply Arzela-Ascoli, we need to check that the set of candidates is closed and
 equicontinuous. Equicontinuity follows from the Lipschitz control, we check closedness. -/
 private theorem closed_candidates_b : IsClosed (CandidatesB X Y) := by
@@ -282,7 +282,7 @@ private theorem closed_candidates_b : IsClosed (CandidatesB X Y) := by
         ⋂ (x) (y), { f : Cb X Y | f (x, y) ≤ max_var X Y } :=
     by
     ext
-    simp only [candidates_b, candidates, mem_inter_eq, mem_Inter, mem_set_of_eq]
+    simp only [← candidates_b, ← candidates, ← mem_inter_eq, ← mem_Inter, ← mem_set_of_eq]
   rw [this]
   repeat'
     first |
@@ -300,7 +300,7 @@ private theorem closed_candidates_b : IsClosed (CandidatesB X Y) := by
 private theorem compact_candidates_b : IsCompact (CandidatesB X Y) := by
   refine' arzela_ascoli₂ (Icc 0 (max_var X Y)) is_compact_Icc (candidates_b X Y) closed_candidates_b _ _
   · rintro f ⟨x1, x2⟩ hf
-    simp only [Set.mem_Icc]
+    simp only [← Set.mem_Icc]
     exact ⟨candidates_nonneg hf, candidates_le_max_var hf⟩
     
   · refine' equicontinuous_of_continuity_modulus (fun t => 2 * max_var X Y * t) _ _ _
@@ -344,14 +344,10 @@ private theorem HD_bound_aux2 (f : Cb X Y) (C : ℝ) : BddAbove (Range fun y : Y
   calc (⨅ x, f (inl x, inr y) + C) ≤ f (inl default, inr y) + C := cinfi_le (HD_below_aux2 C) default _ ≤ Cf + C :=
       add_le_add ((fun x => hCf (mem_range_self x)) _) le_rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 /-- Explicit bound on `HD (dist)`. This means that when looking for minimizers it will
 be sufficient to look for functions with `HD(f)` bounded by this bound. -/
 theorem HD_candidates_b_dist_le : hD (candidatesBDist X Y) ≤ diam (Univ : Set X) + 1 + diam (Univ : Set Y) := by
@@ -427,7 +423,7 @@ private theorem HD_lipschitz_aux1 (f g : Cb X Y) :
     · simpa using HD_bound_aux1 _ 0
       
   -- deduce the result from the above two steps
-  simpa [E2, E1, Function.comp]
+  simpa [← E2, ← E1, ← Function.comp]
 
 private theorem HD_lipschitz_aux2 (f g : Cb X Y) :
     (⨆ y, ⨅ x, f (inl x, inr y)) ≤ (⨆ y, ⨅ x, g (inl x, inr y)) + dist f g := by
@@ -459,7 +455,7 @@ private theorem HD_lipschitz_aux2 (f g : Cb X Y) :
     · simpa using HD_bound_aux2 _ 0
       
   -- deduce the result from the above two steps
-  simpa [E2, E1]
+  simpa [← E2, ← E1]
 
 private theorem HD_lipschitz_aux3 (f g : Cb X Y) : hD f ≤ hD g + dist f g :=
   max_leₓ (le_transₓ (HD_lipschitz_aux1 f g) (add_le_add_right (le_max_leftₓ _ _) _))

@@ -87,7 +87,7 @@ variable (R)
 
 instance self : Finite R R :=
   ⟨⟨{1}, by
-      simpa only [Finset.coe_singleton] using Ideal.span_singleton_one⟩⟩
+      simpa only [← Finset.coe_singleton] using Ideal.span_singleton_one⟩⟩
 
 variable (M)
 
@@ -137,8 +137,9 @@ end Finite
 end Module
 
 instance Module.Finite.tensor_product [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] [AddCommMonoidₓ N] [Module R N]
-    [hM : Module.Finite R M] [hN : Module.Finite R N] : Module.Finite R (TensorProduct R M N) where
-  out := (TensorProduct.map₂_mk_top_top_eq_top R M N).subst (hM.out.map₂ _ hN.out)
+    [hM : Module.Finite R M] [hN : Module.Finite R N] :
+    Module.Finite R
+      (TensorProduct R M N) where out := (TensorProduct.map₂_mk_top_top_eq_top R M N).subst (hM.out.map₂ _ hN.out)
 
 namespace Algebra
 
@@ -176,7 +177,7 @@ theorem of_restrict_scalars_finite_type [Algebra A B] [IsScalarTower R A B] [hB 
   refine' ⟨⟨S, eq_top_iff.2 fun b => _⟩⟩
   have le : adjoin R (S : Set B) ≤ Subalgebra.restrictScalars R (adjoin A S) := by
     apply (Algebra.adjoin_le _ : _ ≤ Subalgebra.restrictScalars R (adjoin A ↑S))
-    simp only [Subalgebra.coe_restrict_scalars]
+    simp only [← Subalgebra.coe_restrict_scalars]
     exact Algebra.subset_adjoin
   exact le (eq_top_iff.1 hS b)
 
@@ -185,7 +186,7 @@ variable {R A B}
 theorem of_surjective (hRA : FiniteType R A) (f : A →ₐ[R] B) (hf : Surjective f) : FiniteType R B :=
   ⟨by
     convert hRA.1.map f
-    simpa only [map_top f, @eq_comm _ ⊤, eq_top_iff, AlgHom.mem_range] using hf⟩
+    simpa only [← map_top f, ← @eq_comm _ ⊤, ← eq_top_iff, ← AlgHom.mem_range] using hf⟩
 
 theorem equiv (hRA : FiniteType R A) (e : A ≃ₐ[R] B) : FiniteType R B :=
   hRA.ofSurjective e e.Surjective
@@ -231,9 +232,8 @@ theorem iff_quotient_mv_polynomial'' : FiniteType R A ↔ ∃ (n : ℕ)(f : MvPo
   constructor
   · rw [iff_quotient_mv_polynomial']
     rintro ⟨ι, hfintype, ⟨f, hsur⟩⟩
-    let this := hfintype
-    obtain ⟨equiv⟩ := @Fintype.truncEquivFin ι (Classical.decEq ι) hfintype
-    replace equiv := MvPolynomial.renameEquiv R Equivₓ
+    skip
+    have equiv := MvPolynomial.renameEquiv R (Fintype.equivFin ι)
     exact ⟨Fintype.card ι, AlgHom.comp f Equivₓ.symm, Function.Surjective.comp hsur (AlgEquiv.symm Equivₓ).Surjective⟩
     
   · rintro ⟨n, ⟨f, hsur⟩⟩
@@ -250,6 +250,18 @@ instance prod [hA : FiniteType R A] [hB : FiniteType R B] : FiniteType R (A × B
   ⟨by
     rw [← Subalgebra.prod_top]
     exact hA.1.Prod hB.1⟩
+
+theorem is_noetherian_ring (R S : Type _) [CommRingₓ R] [CommRingₓ S] [Algebra R S] [h : Algebra.FiniteType R S]
+    [IsNoetherianRing R] : IsNoetherianRing S := by
+  obtain ⟨s, hs⟩ := h.1
+  apply is_noetherian_ring_of_surjective (MvPolynomial s R) S (MvPolynomial.aeval coe : MvPolynomial s R →ₐ[R] S)
+  rw [← Set.range_iff_surjective, AlgHom.coe_to_ring_hom, ← AlgHom.coe_range, ← Algebra.adjoin_range_eq_range_aeval,
+    Subtype.range_coe_subtype, Finset.set_of_mem, hs]
+  rfl
+
+theorem _root_.subalgebra.fg_iff_finite_type {R A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
+    (S : Subalgebra R A) : S.Fg ↔ Algebra.FiniteType R S :=
+  S.fg_top.symm.trans ⟨fun h => ⟨h⟩, fun h => h.out⟩
 
 end FiniteType
 
@@ -291,8 +303,7 @@ variable (R)
 
 /-- The ring of polynomials in finitely many variables is finitely presented. -/
 protected theorem mv_polynomial (ι : Type u_2) [Fintype ι] : FinitePresentation R (MvPolynomial ι R) := by
-  obtain ⟨equiv⟩ := @Fintype.truncEquivFin ι (Classical.decEq ι) _
-  replace equiv := MvPolynomial.renameEquiv R Equivₓ
+  have equiv := MvPolynomial.renameEquiv R (Fintype.equivFin ι)
   refine' ⟨_, AlgEquiv.toAlgHom Equivₓ.symm, _⟩
   constructor
   · exact (AlgEquiv.symm Equivₓ).Surjective
@@ -317,7 +328,7 @@ protected theorem quotient {I : Ideal A} (h : I.Fg) (hfp : FinitePresentation R 
   · exact (Ideal.Quotient.mkₐ_surjective R I).comp hf.1
     
   · refine' Ideal.fg_ker_comp _ _ hf.2 _ hf.1
-    simp [h]
+    simp [← h]
     
 
 /-- If `f : A →ₐ[R] B` is surjective with finitely generated kernel and `A` is finitely presented,
@@ -351,9 +362,8 @@ theorem iff_quotient_mv_polynomial' :
     exact RingHom.ker_coe_equiv ulift_var.to_ring_equiv
     
   · rintro ⟨ι, hfintype, f, hf⟩
-    have : Fintype ι := hfintype
-    obtain ⟨equiv⟩ := @Fintype.truncEquivFin ι (Classical.decEq ι) _
-    replace equiv := MvPolynomial.renameEquiv R Equivₓ
+    skip
+    have equiv := MvPolynomial.renameEquiv R (Fintype.equivFin ι)
     refine'
       ⟨Fintype.card ι, f.comp Equivₓ.symm, hf.1.comp (AlgEquiv.symm Equivₓ).Surjective,
         Ideal.fg_ker_comp _ f _ hf.2 equiv.symm.surjective⟩
@@ -361,7 +371,7 @@ theorem iff_quotient_mv_polynomial' :
     exact RingHom.ker_coe_equiv equiv.symm.to_ring_equiv
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `A` is a finitely presented `R`-algebra, then `mv_polynomial (fin n) A` is finitely presented
 as `R`-algebra. -/
 theorem mv_polynomial_of_finite_presentation (hfp : FinitePresentation R A) (ι : Type _) [Fintype ι] :
@@ -430,7 +440,7 @@ theorem comp {g : B →+* C} {f : A →+* B} (hg : g.Finite) (hf : f.Finite) : (
     (by
       fconstructor
       intro a b c
-      simp only [Algebra.smul_def, RingHom.map_mul, mul_assoc]
+      simp only [← Algebra.smul_def, ← RingHom.map_mul, ← mul_assoc]
       rfl)
     hf hg
 
@@ -469,7 +479,7 @@ theorem comp {g : B →+* C} {f : A →+* B} (hg : g.FiniteType) (hf : f.FiniteT
     (by
       fconstructor
       intro a b c
-      simp only [Algebra.smul_def, RingHom.map_mul, mul_assoc]
+      simp only [← Algebra.smul_def, ← RingHom.map_mul, ← mul_assoc]
       rfl)
     hf hg
 
@@ -511,7 +521,7 @@ theorem comp {g : B →+* C} {f : A →+* B} (hg : g.FinitePresentation) (hf : f
     (g.comp f).FinitePresentation :=
   @Algebra.FinitePresentation.trans A B C _ _ f.toAlgebra _ (g.comp f).toAlgebra g.toAlgebra
     { smul_assoc := fun a b c => by
-        simp only [Algebra.smul_def, RingHom.map_mul, mul_assoc]
+        simp only [← Algebra.smul_def, ← RingHom.map_mul, ← mul_assoc]
         rfl }
     hf hg
 
@@ -659,7 +669,7 @@ theorem support_gen_of_gen' {S : Set (AddMonoidAlgebra R M)} (hS : Algebra.adjoi
   suffices (of' R M '' ⋃ f ∈ S, (f.support : Set M)) = ⋃ f ∈ S, of' R M '' (f.support : Set M) by
     rw [this]
     exact support_gen_of_gen hS
-  simp only [Set.image_Union]
+  simp only [← Set.image_Union]
 
 end Semiringₓ
 
@@ -675,7 +685,7 @@ theorem exists_finset_adjoin_eq_top [h : FiniteType R (AddMonoidAlgebra R M)] :
   let this : DecidableEq M := Classical.decEq M
   use Finset.bUnion S fun f => f.support
   have : (Finset.bUnion S fun f => f.support : Set M) = ⋃ f ∈ S, (f.support : Set M) := by
-    simp only [Finset.set_bUnion_coe, Finset.coe_bUnion]
+    simp only [← Finset.set_bUnion_coe, ← Finset.coe_bUnion]
   rw [this]
   exact support_gen_of_gen' hS
 
@@ -696,8 +706,10 @@ the closure of some `S : set M` then `m ∈ closure S`. -/
 theorem mem_closure_of_mem_span_closure [Nontrivial R] {m : M} {S : Set M}
     (h : of' R M m ∈ span R (Submonoid.closure (of' R M '' S) : Set (AddMonoidAlgebra R M))) : m ∈ closure S := by
   suffices Multiplicative.ofAdd m ∈ Submonoid.closure (Multiplicative.toAdd ⁻¹' S) by
-    simpa [← to_submonoid_closure]
-  rw [Set.image_congr' (show ∀ x, of' R M x = of R M x from fun x => of'_eq_of x), ← MonoidHom.map_mclosure] at h
+    simpa [to_submonoid_closure]
+  let S' := @Submonoid.closure M Multiplicative.mulOneClass S
+  have h' : Submonoid.map (of R M) S' = Submonoid.closure ((fun x : M => (of R M) x) '' S) := MonoidHom.map_mclosure _ _
+  rw [Set.image_congr' (show ∀ x, of' R M x = of R M x from fun x => of'_eq_of x), ← h'] at h
   simpa using of'_mem_span.1 h
 
 end Ringₓ
@@ -749,7 +761,7 @@ theorem finite_type_iff_fg [CommRingₓ R] [Nontrivial R] : FiniteType R (AddMon
   obtain ⟨S, hS⟩ := @exists_finset_adjoin_eq_top R M _ _ h
   refine' AddMonoidₓ.fg_def.2 ⟨S, (eq_top_iff' _).2 fun m => _⟩
   have hm : of' R M m ∈ (adjoin R (of' R M '' ↑S)).toSubmodule := by
-    simp only [hS, top_to_submodule, Submodule.mem_top]
+    simp only [← hS, ← top_to_submodule, ← Submodule.mem_top]
   rw [adjoin_eq_span] at hm
   exact mem_closure_of_mem_span_closure hm
 
@@ -761,7 +773,7 @@ theorem fg_of_finite_type [CommRingₓ R] [Nontrivial R] [h : FiniteType R (AddM
 finite type. -/
 theorem finite_type_iff_group_fg {G : Type _} [AddCommGroupₓ G] [CommRingₓ R] [Nontrivial R] :
     FiniteType R (AddMonoidAlgebra R G) ↔ AddGroupₓ.Fg G := by
-  simpa [AddGroupₓ.FgIffAddMonoid.fg] using finite_type_iff_fg
+  simpa [← AddGroupₓ.FgIffAddMonoid.fg] using finite_type_iff_fg
 
 end AddMonoidAlgebra
 
@@ -801,7 +813,7 @@ theorem support_gen_of_gen' {S : Set (MonoidAlgebra R M)} (hS : Algebra.adjoin R
   suffices (of R M '' ⋃ f ∈ S, (f.support : Set M)) = ⋃ f ∈ S, of R M '' (f.support : Set M) by
     rw [this]
     exact support_gen_of_gen hS
-  simp only [Set.image_Union]
+  simp only [← Set.image_Union]
 
 end Semiringₓ
 
@@ -817,7 +829,7 @@ theorem exists_finset_adjoin_eq_top [h : FiniteType R (MonoidAlgebra R M)] :
   let this : DecidableEq M := Classical.decEq M
   use Finset.bUnion S fun f => f.support
   have : (Finset.bUnion S fun f => f.support : Set M) = ⋃ f ∈ S, (f.support : Set M) := by
-    simp only [Finset.set_bUnion_coe, Finset.coe_bUnion]
+    simp only [← Finset.set_bUnion_coe, ← Finset.coe_bUnion]
   rw [this]
   exact support_gen_of_gen' hS
 
@@ -886,7 +898,7 @@ theorem fg_of_finite_type [CommRingₓ R] [Nontrivial R] [h : FiniteType R (Mono
 /-- A group `G` is finitely generated if and only if `add_monoid_algebra R G` is of finite type. -/
 theorem finite_type_iff_group_fg {G : Type _} [CommGroupₓ G] [CommRingₓ R] [Nontrivial R] :
     FiniteType R (MonoidAlgebra R G) ↔ Groupₓ.Fg G := by
-  simpa [Groupₓ.FgIffMonoid.fg] using finite_type_iff_fg
+  simpa [← Groupₓ.FgIffMonoid.fg] using finite_type_iff_fg
 
 end MonoidAlgebra
 
@@ -930,7 +942,7 @@ theorem Module.Finite.injective_of_surjective_endomorphism [hfg : Finite R M] (f
     Function.Injective f := by
   let this := modulePolynomialOfEndo f
   have : IsScalarTower R R[X] M := modulePolynomialOfEndo.is_scalar_tower f
-  have hfgpoly : finite R[X] M := finite.of_restrict_scalars_finite R _ _
+  have hfgpoly : Finite R[X] M := finite.of_restrict_scalars_finite R _ _
   have X_mul : ∀ o, (X : R[X]) • o = f o := by
     intro
     simp

@@ -142,8 +142,8 @@ variable (C)
 class HasZeroObject : Prop where
   zero : ∃ X : C, IsZero X
 
-instance has_zero_object_punit : HasZeroObject (Discrete PUnit) where
-  zero :=
+instance has_zero_object_punit :
+    HasZeroObject (Discrete PUnit) where zero :=
     ⟨⟨⟨⟩⟩, by
       tidy, by
       tidy⟩
@@ -155,8 +155,7 @@ variable [HasZeroObject C]
 /-- Construct a `has_zero C` for a category with a zero object.
 This can not be a global instance as it will trigger for every `has_zero C` typeclass search.
 -/
-protected def HasZeroObject.hasZero : Zero C where
-  zero := HasZeroObject.zero.some
+protected def HasZeroObject.hasZero : Zero C where zero := HasZeroObject.zero.some
 
 localized [ZeroObject] attribute [instance] CategoryTheory.Limits.HasZeroObject.hasZero
 
@@ -209,12 +208,12 @@ theorem from_zero_ext {X : C} (f g : 0 ⟶ X) : f = g :=
 instance (X : C) : Subsingleton (X ≅ 0) := by
   tidy
 
-instance {X : C} (f : 0 ⟶ X) : Mono f where
-  right_cancellation := fun Z g h w => by
+instance {X : C} (f : 0 ⟶ X) :
+    Mono f where right_cancellation := fun Z g h w => by
     ext
 
-instance {X : C} (f : X ⟶ 0) : Epi f where
-  left_cancellation := fun Z g h w => by
+instance {X : C} (f : X ⟶ 0) :
+    Epi f where left_cancellation := fun Z g h w => by
     ext
 
 instance zero_to_zero_is_iso (f : (0 : C) ⟶ 0) : IsIso f := by

@@ -92,20 +92,20 @@ def inverseObj (A : AlgebraCat.{u} R) : Mon_ (ModuleCat.{u} R) where
   mul := @Algebra.lmul' R A _ _ _
   one_mul' := by
     ext x
-    dsimp' only [AlgebraCat.id_apply, TensorProduct.mk_apply, Algebra.linear_map_apply, LinearMap.compr₂_apply,
-      Function.comp_app, RingHom.map_one, ModuleCat.monoidalCategory.hom_apply, AlgebraCat.coe_comp,
+    dsimp' only [← AlgebraCat.id_apply, ← TensorProduct.mk_apply, ← Algebra.linear_map_apply, ← LinearMap.compr₂_apply,
+      ← Function.comp_app, ← RingHom.map_one, ← ModuleCat.monoidalCategory.hom_apply, ← AlgebraCat.coe_comp, ←
       ModuleCat.monoidalCategory.left_unitor_hom_apply]
     rw [Algebra.lmul'_apply, monoidal_category.left_unitor_hom_apply, ← Algebra.smul_def]
   mul_one' := by
     ext x
-    dsimp' only [AlgebraCat.id_apply, TensorProduct.mk_apply, Algebra.linear_map_apply, LinearMap.compr₂_apply,
-      Function.comp_app, ModuleCat.monoidalCategory.hom_apply, AlgebraCat.coe_comp]
+    dsimp' only [← AlgebraCat.id_apply, ← TensorProduct.mk_apply, ← Algebra.linear_map_apply, ← LinearMap.compr₂_apply,
+      ← Function.comp_app, ← ModuleCat.monoidalCategory.hom_apply, ← AlgebraCat.coe_comp]
     rw [Algebra.lmul'_apply, ModuleCat.monoidalCategory.right_unitor_hom_apply, ← Algebra.commutes, ← Algebra.smul_def]
   mul_assoc' := by
     ext x y z
-    dsimp' only [AlgebraCat.id_apply, TensorProduct.mk_apply, LinearMap.compr₂_apply, Function.comp_app,
-      ModuleCat.monoidalCategory.hom_apply, AlgebraCat.coe_comp, monoidal_category.associator_hom_apply]
-    simp only [Algebra.lmul'_apply, mul_assoc]
+    dsimp' only [← AlgebraCat.id_apply, ← TensorProduct.mk_apply, ← LinearMap.compr₂_apply, ← Function.comp_app, ←
+      ModuleCat.monoidalCategory.hom_apply, ← AlgebraCat.coe_comp, ← monoidal_category.associator_hom_apply]
+    simp only [← Algebra.lmul'_apply, ← mul_assoc]
 
 /-- Converting a bundled algebra to a monoid object in `Module R`.
 -/
@@ -117,11 +117,11 @@ def inverse : AlgebraCat.{u} R ⥤ Mon_ (ModuleCat.{u} R) where
       one_hom' := by
         ext
         dsimp'
-        simp only [RingHom.map_one, AlgHom.map_one],
+        simp only [← RingHom.map_one, ← AlgHom.map_one],
       mul_hom' := by
         ext
         dsimp'
-        simp only [Algebra.lmul'_apply, RingHom.map_mul, AlgHom.map_mul] }
+        simp only [← Algebra.lmul'_apply, ← RingHom.map_mul, ← AlgHom.map_mul] }
 
 end MonModuleEquivalenceAlgebra
 
@@ -141,13 +141,13 @@ def monModuleEquivalenceAlgebra : Mon_ (ModuleCat.{u} R) ≌ AlgebraCat R where
               mul_hom' := by
                 ext
                 dsimp'  at *
-                simp only [Algebra.lmul'_apply, Mon_.X.ring_mul] },
+                simp only [← Algebra.lmul'_apply, ← Mon_.X.ring_mul] },
           inv :=
             { Hom := { toFun := id, map_add' := fun x y => rfl, map_smul' := fun r a => rfl },
               mul_hom' := by
                 ext
                 dsimp'  at *
-                simp only [Algebra.lmul'_apply, Mon_.X.ring_mul] } })
+                simp only [← Algebra.lmul'_apply, ← Mon_.X.ring_mul] } })
       (by
         tidy)
   counitIso :=

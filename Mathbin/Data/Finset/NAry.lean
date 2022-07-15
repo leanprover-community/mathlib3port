@@ -36,7 +36,7 @@ def image₂ (f : α → β → γ) (s : Finset α) (t : Finset β) : Finset γ 
 
 @[simp]
 theorem mem_image₂ : c ∈ image₂ f s t ↔ ∃ a b, a ∈ s ∧ b ∈ t ∧ f a b = c := by
-  simp [image₂, and_assoc]
+  simp [← image₂, ← and_assoc]
 
 @[simp, norm_cast]
 theorem coe_image₂ (f : α → β → γ) (s : Finset α) (t : Finset β) : (image₂ f s t : Set γ) = Set.Image2 f s t :=
@@ -171,6 +171,16 @@ theorem subset_image₂ {s : Set α} {t : Set β} (hu : ↑u ⊆ Image2 f s t) :
       insert_subset.2
         ⟨mem_image₂.2 ⟨x, y, mem_insert_self _ _, mem_insert_self _ _, ha⟩,
           h.trans <| image₂_subset (subset_insert _ _) <| subset_insert _ _⟩⟩
+
+theorem bUnion_image_left : (s.bUnion fun a => t.Image <| f a) = image₂ f s t :=
+  coe_injective <| by
+    push_cast
+    exact Set.Union_image_left _
+
+theorem bUnion_image_right : (t.bUnion fun b => s.Image fun a => f a b) = image₂ f s t :=
+  coe_injective <| by
+    push_cast
+    exact Set.Union_image_right _
 
 /-!
 ### Algebraic replacement rules

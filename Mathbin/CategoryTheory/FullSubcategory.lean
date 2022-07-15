@@ -72,11 +72,9 @@ def inducedFunctor : InducedCategory D F ⥤ D where
   obj := F
   map := fun x y f => f
 
-instance InducedCategory.full : Full (inducedFunctor F) where
-  preimage := fun x y f => f
+instance InducedCategory.full : Full (inducedFunctor F) where preimage := fun x y f => f
 
-instance InducedCategory.faithful : Faithful (inducedFunctor F) :=
-  {  }
+instance InducedCategory.faithful : Faithful (inducedFunctor F) where
 
 end Induced
 
@@ -122,11 +120,9 @@ def fullSubcategory.map (h : ∀ ⦃X⦄, Z X → Z' X) : { X // Z X } ⥤ { X /
   obj := fun X => ⟨X.1, h X.2⟩
   map := fun X Y f => f
 
-instance (h : ∀ ⦃X⦄, Z X → Z' X) : Full (fullSubcategory.map h) where
-  preimage := fun X Y f => f
+instance (h : ∀ ⦃X⦄, Z X → Z' X) : Full (fullSubcategory.map h) where preimage := fun X Y f => f
 
-instance (h : ∀ ⦃X⦄, Z X → Z' X) : Faithful (fullSubcategory.map h) :=
-  {  }
+instance (h : ∀ ⦃X⦄, Z X → Z' X) : Faithful (fullSubcategory.map h) where
 
 @[simp]
 theorem fullSubcategory.map_inclusion (h : ∀ ⦃X⦄, Z X → Z' X) :

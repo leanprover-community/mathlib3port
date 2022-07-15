@@ -327,7 +327,7 @@ def ModelWithCorners.prod {𝕜 : Type u} [NondiscreteNormedField 𝕜] {E : Typ
   { I.toLocalEquiv.Prod I'.toLocalEquiv with toFun := fun x => (I x.1, I' x.2),
     invFun := fun x => (I.symm x.1, I'.symm x.2), Source := { x | x.1 ∈ I.Source ∧ x.2 ∈ I'.Source },
     source_eq := by
-      simp' only [set_of_true] with mfld_simps,
+      simp' only [← set_of_true] with mfld_simps,
     unique_diff' := I.unique_diff'.Prod I'.unique_diff',
     continuous_to_fun := I.continuous_to_fun.prod_map I'.continuous_to_fun,
     continuous_inv_fun := I.continuous_inv_fun.prod_map I'.continuous_inv_fun }
@@ -340,7 +340,7 @@ def ModelWithCorners.pi {𝕜 : Type u} [NondiscreteNormedField 𝕜] {ι : Type
     (I : ∀ i, ModelWithCorners 𝕜 (E i) (H i)) : ModelWithCorners 𝕜 (∀ i, E i) (ModelPi H) where
   toLocalEquiv := LocalEquiv.pi fun i => (I i).toLocalEquiv
   source_eq := by
-    simp' only [Set.pi_univ] with mfld_simps
+    simp' only [← Set.pi_univ] with mfld_simps
   unique_diff' := UniqueDiffOn.pi ι E _ _ fun i _ => (I i).unique_diff'
   continuous_to_fun := continuous_pi fun i => (I i).Continuous.comp (continuous_apply i)
   continuous_inv_fun := continuous_pi fun i => (I i).continuous_symm.comp (continuous_apply i)
@@ -392,7 +392,7 @@ instance ModelWithCorners.range_eq_univ_prod {𝕜 : Type u} [NondiscreteNormedF
     [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type w'} [TopologicalSpace H'] (I' : ModelWithCorners 𝕜 E' H')
     [I'.Boundaryless] : (I.Prod I').Boundaryless := by
   constructor
-  dsimp' [ModelWithCorners.prod, ModelProd]
+  dsimp' [← ModelWithCorners.prod, ← ModelProd]
   rw [← prod_range_range_eq, ModelWithCorners.Boundaryless.range_eq_univ, ModelWithCorners.Boundaryless.range_eq_univ,
     univ_prod_univ]
 
@@ -475,7 +475,7 @@ theorem cont_diff_groupoid_zero_eq : contDiffGroupoid 0 I = continuousGroupoid H
   -- by unfolding its definition
   change u ∈ contDiffGroupoid 0 I
   rw [contDiffGroupoid, mem_groupoid_of_pregroupoid]
-  simp only [cont_diff_on_zero]
+  simp only [← cont_diff_on_zero]
   constructor
   · refine' I.continuous.comp_continuous_on (u.continuous_on.comp I.continuous_on_symm _)
     exact (maps_to_preimage _ _).mono_left (inter_subset_left _ _)
@@ -491,20 +491,20 @@ theorem of_set_mem_cont_diff_groupoid {s : Set H} (hs : IsOpen s) : LocalHomeomo
   by
   rw [contDiffGroupoid, mem_groupoid_of_pregroupoid]
   suffices h : ContDiffOn 𝕜 n (I ∘ I.symm) (I.symm ⁻¹' s ∩ range I)
-  · simp [h]
+  · simp [← h]
     
   have : ContDiffOn 𝕜 n id (univ : Set E) := cont_diff_id.cont_diff_on
   exact
     this.congr_mono
       (fun x hx => by
-        simp [hx.2])
+        simp [← hx.2])
       (subset_univ _)
 
 /-- The composition of a local homeomorphism from `H` to `M` and its inverse belongs to
 the `C^n` groupoid. -/
-theorem symm_trans_mem_cont_diff_groupoid (e : LocalHomeomorph M H) : e.symm.trans e ∈ contDiffGroupoid n I :=
+theorem symm_trans_mem_cont_diff_groupoid (e : LocalHomeomorph M H) : e.symm.trans e ∈ contDiffGroupoid n I := by
   have : e.symm.trans e ≈ LocalHomeomorph.ofSet e.target e.open_target := LocalHomeomorph.trans_symm_self _
-  StructureGroupoid.eq_on_source _ (of_set_mem_cont_diff_groupoid n I e.open_target) this
+  exact StructureGroupoid.eq_on_source _ (of_set_mem_cont_diff_groupoid n I e.open_target) this
 
 variable {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
 
@@ -515,7 +515,7 @@ theorem cont_diff_groupoid_prod {I : ModelWithCorners 𝕜 E H} {I' : ModelWithC
   cases' he with he he_symm
   cases' he' with he' he'_symm
   simp only at he he_symm he' he'_symm
-  constructor <;> simp only [LocalEquiv.prod_source, LocalHomeomorph.prod_to_local_equiv]
+  constructor <;> simp only [← LocalEquiv.prod_source, ← LocalHomeomorph.prod_to_local_equiv]
   · have h3 := ContDiffOn.prod_map he he'
     rw [← I.image_eq, ← I'.image_eq, Set.prod_image_image_eq] at h3
     rw [← (I.prod I').image_eq]
@@ -609,8 +609,8 @@ instance prod {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [Normed
     [NormedGroup E'] [NormedSpace 𝕜 E'] {H : Type _} [TopologicalSpace H] {I : ModelWithCorners 𝕜 E H} {H' : Type _}
     [TopologicalSpace H'] {I' : ModelWithCorners 𝕜 E' H'} (M : Type _) [TopologicalSpace M] [ChartedSpace H M]
     [SmoothManifoldWithCorners I M] (M' : Type _) [TopologicalSpace M'] [ChartedSpace H' M']
-    [SmoothManifoldWithCorners I' M'] : SmoothManifoldWithCorners (I.Prod I') (M × M') where
-  compatible := by
+    [SmoothManifoldWithCorners I' M'] :
+    SmoothManifoldWithCorners (I.Prod I') (M × M') where compatible := by
     rintro f g ⟨f1, f2, hf1, hf2, rfl⟩ ⟨g1, g2, hg1, hg2, rfl⟩
     rw [LocalHomeomorph.prod_symm, LocalHomeomorph.prod_trans]
     have h1 := HasGroupoid.compatible (contDiffGroupoid ⊤ I) hf1 hg1
@@ -684,7 +684,7 @@ theorem ext_chart_at_open_source : IsOpen (extChartAt I x).Source := by
   exact (chart_at H x).open_source
 
 theorem mem_ext_chart_source : x ∈ (extChartAt I x).Source := by
-  simp only [ext_chart_at_source, mem_chart_source]
+  simp only [← ext_chart_at_source, ← mem_chart_source]
 
 theorem ext_chart_at_to_inv : (extChartAt I x).symm ((extChartAt I x) x) = x :=
   (extChartAt I x).left_inv (mem_ext_chart_source I x)

@@ -144,40 +144,32 @@ instance [Unique α] : Unique αᵐᵒᵖ :=
 instance [IsEmpty α] : IsEmpty αᵐᵒᵖ :=
   Function.is_empty unop
 
-instance [Zero α] : Zero αᵐᵒᵖ where
-  zero := op 0
+instance [Zero α] : Zero αᵐᵒᵖ where zero := op 0
 
 @[to_additive]
-instance [One α] : One αᵐᵒᵖ where
-  one := op 1
+instance [One α] : One αᵐᵒᵖ where one := op 1
 
-instance [Add α] : Add αᵐᵒᵖ where
-  add := fun x y => op (unop x + unop y)
+instance [Add α] : Add αᵐᵒᵖ where add := fun x y => op (unop x + unop y)
 
-instance [Sub α] : Sub αᵐᵒᵖ where
-  sub := fun x y => op (unop x - unop y)
+instance [Sub α] : Sub αᵐᵒᵖ where sub := fun x y => op (unop x - unop y)
 
-instance [Neg α] : Neg αᵐᵒᵖ where
-  neg := fun x => op <| -unop x
+instance [Neg α] : Neg αᵐᵒᵖ where neg := fun x => op <| -unop x
 
 instance [HasInvolutiveNeg α] : HasInvolutiveNeg αᵐᵒᵖ :=
   { MulOpposite.hasNeg α with neg_neg := fun a => unop_injective <| neg_negₓ _ }
 
 @[to_additive]
-instance [Mul α] : Mul αᵐᵒᵖ where
-  mul := fun x y => op (unop y * unop x)
+instance [Mul α] : Mul αᵐᵒᵖ where mul := fun x y => op (unop y * unop x)
 
 @[to_additive]
-instance [Inv α] : Inv αᵐᵒᵖ where
-  inv := fun x => op <| (unop x)⁻¹
+instance [Inv α] : Inv αᵐᵒᵖ where inv := fun x => op <| (unop x)⁻¹
 
 @[to_additive]
 instance [HasInvolutiveInv α] : HasInvolutiveInv αᵐᵒᵖ :=
   { MulOpposite.hasInv α with inv_inv := fun a => unop_injective <| inv_invₓ _ }
 
 @[to_additive]
-instance (R : Type _) [HasScalar R α] : HasScalar R αᵐᵒᵖ where
-  smul := fun c x => op (c • unop x)
+instance (R : Type _) [HasSmul R α] : HasSmul R αᵐᵒᵖ where smul := fun c x => op (c • unop x)
 
 section
 
@@ -242,11 +234,11 @@ theorem unop_sub [Sub α] (x y : αᵐᵒᵖ) : unop (x - y) = unop x - unop y :
   rfl
 
 @[simp, to_additive]
-theorem op_smul {R : Type _} [HasScalar R α] (c : R) (a : α) : op (c • a) = c • op a :=
+theorem op_smul {R : Type _} [HasSmul R α] (c : R) (a : α) : op (c • a) = c • op a :=
   rfl
 
 @[simp, to_additive]
-theorem unop_smul {R : Type _} [HasScalar R α] (c : R) (a : αᵐᵒᵖ) : unop (c • a) = c • unop a :=
+theorem unop_smul {R : Type _} [HasSmul R α] (c : R) (a : αᵐᵒᵖ) : unop (c • a) = c • unop a :=
   rfl
 
 end
@@ -279,8 +271,7 @@ end MulOpposite
 
 namespace AddOpposite
 
-instance [One α] : One αᵃᵒᵖ where
-  one := op 1
+instance [One α] : One αᵃᵒᵖ where one := op 1
 
 @[simp]
 theorem op_one [One α] : op (1 : α) = 1 :=
@@ -298,8 +289,7 @@ theorem op_eq_one_iff [One α] {a : α} : op a = 1 ↔ a = 1 :=
 theorem unop_eq_one_iff [One α] {a : αᵃᵒᵖ} : unop a = 1 ↔ a = 1 :=
   unop_injective.eq_iff' unop_one
 
-instance [Mul α] : Mul αᵃᵒᵖ where
-  mul := fun a b => op (unop a * unop b)
+instance [Mul α] : Mul αᵃᵒᵖ where mul := fun a b => op (unop a * unop b)
 
 @[simp]
 theorem op_mul [Mul α] (a b : α) : op (a * b) = op a * op b :=
@@ -309,8 +299,7 @@ theorem op_mul [Mul α] (a b : α) : op (a * b) = op a * op b :=
 theorem unop_mul [Mul α] (a b : αᵃᵒᵖ) : unop (a * b) = unop a * unop b :=
   rfl
 
-instance [Inv α] : Inv αᵃᵒᵖ where
-  inv := fun a => op (unop a)⁻¹
+instance [Inv α] : Inv αᵃᵒᵖ where inv := fun a => op (unop a)⁻¹
 
 instance [HasInvolutiveInv α] : HasInvolutiveInv αᵃᵒᵖ :=
   { AddOpposite.hasInv with inv_inv := fun a => unop_injective <| inv_invₓ _ }
@@ -323,8 +312,7 @@ theorem op_inv [Inv α] (a : α) : op a⁻¹ = (op a)⁻¹ :=
 theorem unop_inv [Inv α] (a : αᵃᵒᵖ) : unop a⁻¹ = (unop a)⁻¹ :=
   rfl
 
-instance [Div α] : Div αᵃᵒᵖ where
-  div := fun a b => op (unop a / unop b)
+instance [Div α] : Div αᵃᵒᵖ where div := fun a b => op (unop a / unop b)
 
 @[simp]
 theorem op_div [Div α] (a b : α) : op (a / b) = op a / op b :=

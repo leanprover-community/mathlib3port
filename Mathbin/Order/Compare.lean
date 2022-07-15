@@ -29,12 +29,12 @@ def cmpLe {α} [LE α] [@DecidableRel α (· ≤ ·)] (x y : α) : Ordering :=
 
 theorem cmp_le_swap {α} [LE α] [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)] (x y : α) : (cmpLe x y).swap = cmpLe y x :=
   by
-  by_cases' xy : x ≤ y <;> by_cases' yx : y ≤ x <;> simp [cmpLe, *, Ordering.swap]
+  by_cases' xy : x ≤ y <;> by_cases' yx : y ≤ x <;> simp [← cmpLe, *, ← Ordering.swap]
   cases not_orₓ xy yx (total_of _ _ _)
 
 theorem cmp_le_eq_cmp {α} [Preorderₓ α] [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)] [@DecidableRel α (· < ·)]
     (x y : α) : cmpLe x y = cmp x y := by
-  by_cases' xy : x ≤ y <;> by_cases' yx : y ≤ x <;> simp [cmpLe, lt_iff_le_not_leₓ, *, cmp, cmpUsing]
+  by_cases' xy : x ≤ y <;> by_cases' yx : y ≤ x <;> simp [← cmpLe, ← lt_iff_le_not_leₓ, *, ← cmp, ← cmpUsing]
   cases not_orₓ xy yx (total_of _ _ _)
 
 namespace Ordering
@@ -51,7 +51,7 @@ theorem compares_swap [LT α] {a b : α} {o : Ordering} : o.swap.Compares a b �
   cases o
   exacts[Iff.rfl, eq_comm, Iff.rfl]
 
-alias compares_swap ↔ Ordering.Compares.of_swap Ordering.Compares.swap
+alias compares_swap ↔ compares.of_swap compares.swap
 
 theorem swap_eq_iff_eq_swap {o o' : Ordering} : o.swap = o' ↔ o = o'.swap :=
   ⟨fun h => by
@@ -151,14 +151,30 @@ theorem of_dual_compares_of_dual [LT α] {a b : αᵒᵈ} {o : Ordering} :
   exacts[Iff.rfl, eq_comm, Iff.rfl]
 
 theorem cmp_compares [LinearOrderₓ α] (a b : α) : (cmp a b).Compares a b := by
-  obtain h | h | h := lt_trichotomyₓ a b <;> simp [cmp, cmpUsing, h, h.not_lt]
+  obtain h | h | h := lt_trichotomyₓ a b <;> simp [← cmp, ← cmpUsing, ← h, ← h.not_lt]
+
+theorem Ordering.Compares.cmp_eq [LinearOrderₓ α] {a b : α} {o : Ordering} (h : o.Compares a b) : cmp a b = o :=
+  (cmp_compares a b).inj h
 
 theorem cmp_swap [Preorderₓ α] [@DecidableRel α (· < ·)] (a b : α) : (cmp a b).swap = cmp b a := by
   unfold cmp cmpUsing
-  by_cases' a < b <;> by_cases' h₂ : b < a <;> simp [h, h₂, Ordering.swap]
+  by_cases' a < b <;> by_cases' h₂ : b < a <;> simp [← h, ← h₂, ← Ordering.swap]
   exact lt_asymmₓ h h₂
 
-theorem OrderDual.cmp_le_flip {α} [LE α] [@DecidableRel α (· ≤ ·)] (x y : α) : @cmpLe αᵒᵈ _ _ x y = cmpLe y x :=
+@[simp]
+theorem cmp_le_to_dual [LE α] [@DecidableRel α (· ≤ ·)] (x y : α) : cmpLe (toDual x) (toDual y) = cmpLe y x :=
+  rfl
+
+@[simp]
+theorem cmp_le_of_dual [LE α] [@DecidableRel α (· ≤ ·)] (x y : αᵒᵈ) : cmpLe (ofDual x) (ofDual y) = cmpLe y x :=
+  rfl
+
+@[simp]
+theorem cmp_to_dual [LT α] [@DecidableRel α (· < ·)] (x y : α) : cmp (toDual x) (toDual y) = cmp y x :=
+  rfl
+
+@[simp]
+theorem cmp_of_dual [LT α] [@DecidableRel α (· < ·)] (x y : αᵒᵈ) : cmp (ofDual x) (ofDual y) = cmp y x :=
   rfl
 
 /-- Generate a linear order structure from a preorder and `cmp` function. -/
@@ -202,6 +218,9 @@ theorem le_iff_le_of_cmp_eq_cmp (h : cmp x y = cmp x' y') : x ≤ y ↔ x' ≤ y
   apply not_congr
   apply lt_iff_lt_of_cmp_eq_cmp
   rwa [cmp_eq_cmp_symm]
+
+theorem eq_iff_eq_of_cmp_eq_cmp (h : cmp x y = cmp x' y') : x = y ↔ x' = y' := by
+  rw [le_antisymm_iffₓ, le_antisymm_iffₓ, le_iff_le_of_cmp_eq_cmp h, le_iff_le_of_cmp_eq_cmp (cmp_eq_cmp_symm.1 h)]
 
 theorem LT.lt.cmp_eq_lt (h : x < y) : cmp x y = Ordering.lt :=
   (cmp_eq_lt_iff _ _).2 h

@@ -3,8 +3,8 @@ Copyright (c) 2022 Violeta Hernández Palacios. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 -/
-import Mathbin.SetTheory.Game.Pgame
-import Mathbin.SetTheory.Ordinal.Basic
+import Mathbin.SetTheory.Game.Basic
+import Mathbin.SetTheory.Ordinal.NaturalOps
 
 /-!
 # Ordinals as games
@@ -25,11 +25,7 @@ universe u
 
 open Pgame
 
--- mathport name: «expr ≈ »
-local infixl:0 " ≈ " => Equivₓ
-
--- mathport name: «expr ⧏ »
-local infixl:50 " ⧏ " => Lf
+open NaturalOps Pgame
 
 namespace Ordinal
 
@@ -92,7 +88,7 @@ theorem to_pgame_le {a b : Ordinal} (h : a ≤ b) : a.toPgame ≤ b.toPgame := b
   exact to_pgame_lf ((to_left_moves_to_pgame_symm_lt i).trans_le h)
 
 theorem to_pgame_lt {a b : Ordinal} (h : a < b) : a.toPgame < b.toPgame :=
-  lt_of_le_of_lf (to_pgame_le h.le) (to_pgame_lf h)
+  ⟨to_pgame_le h.le, to_pgame_lf h⟩
 
 @[simp]
 theorem to_pgame_lf_iff {a b : Ordinal} : a.toPgame ⧏ b.toPgame ↔ a < b :=
@@ -116,7 +112,7 @@ theorem to_pgame_lt_iff {a b : Ordinal} : a.toPgame < b.toPgame ↔ a < b :=
     exact fun h => not_lt_of_le (to_pgame_le h), to_pgame_lt⟩
 
 @[simp]
-theorem to_pgame_equiv_iff {a b : Ordinal} : (a.toPgame ≈ b.toPgame) ↔ a = b := by
+theorem to_pgame_equiv_iff {a b : Ordinal} : a.toPgame ≈ b.toPgame ↔ a = b := by
   rw [Pgame.Equiv, le_antisymm_iffₓ, to_pgame_le_iff, to_pgame_le_iff]
 
 theorem to_pgame_injective : Function.Injective Ordinal.toPgame := fun a b h => to_pgame_equiv_iff.1 <| equiv_of_eq h
@@ -131,6 +127,38 @@ noncomputable def toPgameEmbedding : Ordinal.{u} ↪o Pgame.{u} where
   toFun := Ordinal.toPgame
   inj' := to_pgame_injective
   map_rel_iff' := @to_pgame_le_iff
+
+/-- The sum of ordinals as games corresponds to natural addition of ordinals. -/
+theorem to_pgame_add : ∀ a b : Ordinal.{u}, a.toPgame + b.toPgame ≈ (a ♯ b).toPgame
+  | a, b => by
+    refine' ⟨le_of_forall_lf (fun i => _) isEmptyElim, le_of_forall_lf (fun i => _) isEmptyElim⟩
+    · apply left_moves_add_cases i <;>
+        intro i <;>
+          let wf := to_left_moves_to_pgame_symm_lt i <;>
+            try
+                rw [add_move_left_inl] <;>
+              try
+                  rw [add_move_left_inr] <;>
+                rw [to_pgame_move_left', lf_congr_left (to_pgame_add _ _), to_pgame_lf_iff]
+      · exact nadd_lt_nadd_right wf _
+        
+      · exact nadd_lt_nadd_left wf _
+        
+      
+    · rw [to_pgame_move_left']
+      rcases lt_nadd_iff.1 (to_left_moves_to_pgame_symm_lt i) with (⟨c, hc, hc'⟩ | ⟨c, hc, hc'⟩) <;>
+        rw [← to_pgame_le_iff, ← le_congr_right (to_pgame_add _ _)] at hc' <;> apply lf_of_le_of_lf hc'
+      · apply add_lf_add_right
+        rwa [to_pgame_lf_iff]
+        
+      · apply add_lf_add_left
+        rwa [to_pgame_lf_iff]
+        
+      
+
+@[simp]
+theorem to_pgame_add_mk (a b : Ordinal) : ⟦a.toPgame⟧ + ⟦b.toPgame⟧ = ⟦(a ♯ b).toPgame⟧ :=
+  Quot.sound (to_pgame_add a b)
 
 end Ordinal
 

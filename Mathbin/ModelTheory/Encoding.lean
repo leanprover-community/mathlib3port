@@ -89,7 +89,7 @@ theorem list_decode_encode_list (l : List (L.Term α)) : listDecodeₓ (l.bind l
         by
         intro i
         rw [h, nth_append, nth_map]
-        · simp only [Option.map_eq_some', Function.comp_app, nth_eq_some]
+        · simp only [← Option.map_eq_some', ← Function.comp_app, ← nth_eq_some]
           refine' ⟨i, ⟨lt_of_lt_of_leₓ i.2 (ge_of_eq (length_fin_range _)), _⟩, rfl⟩
           rw [nth_le_fin_range, Finₓ.eta]
           
@@ -100,7 +100,7 @@ theorem list_decode_encode_list (l : List (L.Term α)) : listDecodeₓ (l.bind l
       · rw [Option.join_eq_some, h']
         
       refine' congr (congr rfl (congr rfl (congr rfl (funext fun i => Option.get_of_memₓ _ _)))) _
-      · simp [h']
+      · simp [← h']
         
       · rw [h, drop_left']
         rw [length_map, length_fin_range]
@@ -117,7 +117,7 @@ protected def encoding : Encoding (L.Term α) where
   decode_encode := fun t => by
     have h := list_decode_encode_list [t]
     rw [bind_singleton] at h
-    simp only [h, Option.join, head', List.map, Option.some_bindₓ, id.def]
+    simp only [← h, ← Option.join, ← head', ← List.map, ← Option.some_bindₓ, ← id.def]
 
 theorem list_encode_injective : Function.Injective (listEncodeₓ : L.Term α → List (Sum α (Σi, L.Functions i))) :=
   Term.encoding.encode_injective
@@ -128,8 +128,8 @@ theorem card_le : # (L.Term α) ≤ max ℵ₀ (# (Sum α (Σi, L.Functions i)))
 theorem card_sigma : # (Σn, L.Term (Sum α (Finₓ n))) = max ℵ₀ (# (Sum α (Σi, L.Functions i))) := by
   refine' le_antisymmₓ _ _
   · rw [mk_sigma]
-    refine' (sum_le_sup_lift _).trans _
-    rw [mk_nat, lift_aleph_0, mul_eq_max_of_aleph_0_le_left le_rfl, max_le_iff, Cardinal.sup_le_iff]
+    refine' (sum_le_supr_lift _).trans _
+    rw [mk_nat, lift_aleph_0, mul_eq_max_of_aleph_0_le_left le_rfl, max_le_iff, csupr_le_iff' (bdd_above_range _)]
     · refine' ⟨le_max_leftₓ _ _, fun i => card_le.trans _⟩
       rw [max_le_iff]
       refine' ⟨le_max_leftₓ _ _, _⟩
@@ -140,7 +140,7 @@ theorem card_sigma : # (Σn, L.Term (Sum α (Finₓ n))) = max ℵ₀ (# (Sum α
       exact ⟨inferInstance⟩
       
     · rw [← one_le_iff_ne_zero]
-      refine' trans _ (le_sup _ 1)
+      refine' trans _ (le_csupr (bdd_above_range _) 1)
       rw [one_le_iff_ne_zero, mk_ne_zero_iff]
       exact ⟨var (Sum.inr 0)⟩
       
@@ -153,16 +153,16 @@ theorem card_sigma : # (Σn, L.Term (Sum α (Finₓ n))) = max ℵ₀ (# (Sum α
     · rw [Cardinal.le_def]
       refine' ⟨⟨Sum.elim (fun i => ⟨0, var (Sum.inl i)⟩) fun F => ⟨1, func F.2 fun _ => var (Sum.inr 0)⟩, _⟩⟩
       · rintro (a | a) (b | b) h
-        · simp only [Sum.elim_inl, eq_self_iff_true, heq_iff_eq, true_andₓ] at h
+        · simp only [← Sum.elim_inl, ← eq_self_iff_true, ← heq_iff_eq, ← true_andₓ] at h
           rw [h]
           
-        · simp only [Sum.elim_inl, Sum.elim_inr, Nat.zero_ne_one, false_andₓ] at h
+        · simp only [← Sum.elim_inl, ← Sum.elim_inr, ← Nat.zero_ne_one, ← false_andₓ] at h
           exact h.elim
           
-        · simp only [Sum.elim_inr, Sum.elim_inl, Nat.one_ne_zero, false_andₓ] at h
+        · simp only [← Sum.elim_inr, ← Sum.elim_inl, ← Nat.one_ne_zero, ← false_andₓ] at h
           exact h.elim
           
-        · simp only [Sum.elim_inr, eq_self_iff_true, heq_iff_eq, true_andₓ] at h
+        · simp only [← Sum.elim_inr, ← eq_self_iff_true, ← heq_iff_eq, ← true_andₓ] at h
           rw [Sigma.ext_iff.2 ⟨h.1, h.2.1⟩]
           
         
@@ -172,12 +172,12 @@ theorem card_sigma : # (Σn, L.Term (Sum α (Finₓ n))) = max ℵ₀ (# (Sum α
 instance [Encodable α] [Encodable (Σi, L.Functions i)] : Encodable (L.Term α) :=
   Encodable.ofLeftInjection listEncodeₓ (fun l => (listDecodeₓ l).head'.join) fun t => by
     rw [← bind_singleton list_encode, list_decode_encode_list]
-    simp only [Option.join, head', List.map, Option.some_bindₓ, id.def]
+    simp only [← Option.join, ← head', ← List.map, ← Option.some_bindₓ, ← id.def]
 
 theorem card_le_aleph_0 [h1 : Nonempty (Encodable α)] [h2 : L.CountableFunctions] : # (L.Term α) ≤ ℵ₀ := by
   refine' card_le.trans _
   rw [max_le_iff]
-  simp only [le_reflₓ, mk_sum, add_le_aleph_0, lift_le_aleph_0, true_andₓ]
+  simp only [← le_reflₓ, ← mk_sum, ← add_le_aleph_0, ← lift_le_aleph_0, ← true_andₓ]
   exact ⟨encodable_iff.1 h1, L.card_functions_le_aleph_0⟩
 
 instance small [Small.{u} α] : Small.{u} (L.Term α) :=
@@ -231,7 +231,7 @@ def listDecodeₓ :
               t₂)⟩
       else default,
       l, by
-      simp only [List.sizeof, ← add_assocₓ]
+      simp only [← List.sizeof, add_assocₓ]
       exact le_max_of_le_right le_add_self⟩
   | Sum.inr (Sum.inl ⟨n, R⟩) :: Sum.inr (Sum.inr k) :: l =>
     ⟨if h : ∀ i : Finₓ n, ((l.map Sum.getLeft).nth i).join.isSome then
@@ -275,7 +275,7 @@ theorem list_decode_encode_list (l : List (Σn, L.BoundedFormula α n)) :
       (list_decode (list_encode φ.2 ++ l)).1 = φ ∧ (list_decode (list_encode φ.2 ++ l)).2.1 = l
   · induction' l with φ l lih
     · rw [List.nil_bind]
-      simp [list_decode]
+      simp [← list_decode]
       
     · rw [cons_bind, (h φ _).1, head_cons]
       
@@ -283,12 +283,12 @@ theorem list_decode_encode_list (l : List (Σn, L.BoundedFormula α n)) :
   · rintro ⟨n, φ⟩
     induction' φ with _ _ _ _ _ _ _ ts _ _ _ ih1 ih2 _ _ ih <;> intro l
     · rw [list_encode, singleton_append, list_decode]
-      simp only [eq_self_iff_true, heq_iff_eq, and_selfₓ]
+      simp only [← eq_self_iff_true, ← heq_iff_eq, ← and_selfₓ]
       
     · rw [list_encode, cons_append, cons_append, list_decode, dif_pos]
-      · simp only [eq_mp_eq_cast, cast_eq, eq_self_iff_true, heq_iff_eq, and_selfₓ, nil_append]
+      · simp only [← eq_mp_eq_cast, ← cast_eq, ← eq_self_iff_true, ← heq_iff_eq, ← and_selfₓ, ← nil_append]
         
-      · simp only [eq_self_iff_true, heq_iff_eq, and_selfₓ]
+      · simp only [← eq_self_iff_true, ← heq_iff_eq, ← and_selfₓ]
         
       
     · rw [list_encode, cons_append, cons_append, singleton_append, cons_append, list_decode]
@@ -306,12 +306,12 @@ theorem list_decode_encode_list (l : List (Σn, L.BoundedFormula α n)) :
               some ⟨_, ts i⟩ :=
           by
           intro i
-          simp only [Option.join, map_append, map_map, Option.bind_eq_someₓ, id.def, exists_eq_right, nth_eq_some,
-            length_append, length_map, length_fin_range]
+          simp only [← Option.join, ← map_append, ← map_map, ← Option.bind_eq_someₓ, ← id.def, ← exists_eq_right, ←
+            nth_eq_some, ← length_append, ← length_map, ← length_fin_range]
           refine' ⟨lt_of_lt_of_leₓ i.2 le_self_add, _⟩
           rw [nth_le_append, nth_le_map]
-          · simp only [Sum.getLeft, nth_le_fin_range, Finₓ.eta, Function.comp_app, eq_self_iff_true, heq_iff_eq,
-              and_selfₓ]
+          · simp only [← Sum.getLeft, ← nth_le_fin_range, ← Finₓ.eta, ← Function.comp_app, ← eq_self_iff_true, ←
+              heq_iff_eq, ← and_selfₓ]
             
           · exact lt_of_lt_of_leₓ i.is_lt (ge_of_eq (length_fin_range _))
             
@@ -328,7 +328,7 @@ theorem list_decode_encode_list (l : List (Σn, L.BoundedFormula α n)) :
           obtain ⟨h1, h2⟩ := Option.eq_some_iff_get_eqₓ.1 (h i)
           rw [h2]
           
-        simp only [eq_self_iff_true, heq_iff_eq, true_andₓ]
+        simp only [← eq_self_iff_true, ← heq_iff_eq, ← true_andₓ]
         refine' ⟨funext fun i => _, _⟩
         · obtain ⟨h1, h2⟩ := Option.eq_some_iff_get_eqₓ.1 (h i)
           rw [eq_mp_eq_cast, cast_eq_iff_heq]
@@ -340,13 +340,13 @@ theorem list_decode_encode_list (l : List (Σn, L.BoundedFormula α n)) :
         
       
     · rw [list_encode, append_assoc, cons_append, list_decode]
-      simp only [Subtype.val_eq_coe] at *
+      simp only [← Subtype.val_eq_coe] at *
       rw [(ih1 _).1, (ih1 _).2, (ih2 _).1, (ih2 _).2, sigma_imp, dif_pos rfl]
       exact ⟨rfl, rfl⟩
       
     · rw [list_encode, cons_append, list_decode]
       simp only
-      simp only [Subtype.val_eq_coe] at *
+      simp only [← Subtype.val_eq_coe] at *
       rw [(ih _).1, (ih _).2, sigma_all]
       exact ⟨rfl, rfl⟩
       
@@ -373,7 +373,7 @@ theorem card_le : # (Σn, L.BoundedFormula α n) ≤ max ℵ₀ (Cardinal.lift.{
   rw [encoding_Γ, mk_list_eq_max_mk_aleph_0, lift_max, lift_aleph_0, lift_max, lift_aleph_0, max_le_iff]
   refine' ⟨_, le_max_leftₓ _ _⟩
   rw [mk_sum, term.card_sigma, mk_sum, ← add_eq_max le_rfl, mk_sum, mk_nat]
-  simp only [lift_add, lift_lift, lift_aleph_0]
+  simp only [← lift_add, ← lift_lift, ← lift_aleph_0]
   rw [← add_assocₓ, add_commₓ, ← add_assocₓ, ← add_assocₓ, aleph_0_add_aleph_0, add_assocₓ, add_eq_max le_rfl,
     add_assocₓ, card, symbols, mk_sum, lift_add, lift_lift, lift_lift]
 

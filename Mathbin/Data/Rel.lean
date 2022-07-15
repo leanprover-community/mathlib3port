@@ -102,7 +102,7 @@ theorem inv_id : Inv (@Eq α) = @Eq α := by
 
 theorem inv_comp (r : Rel α β) (s : Rel β γ) : Inv (r ∘ s) = (Inv s ∘ Inv r) := by
   ext x z
-  simp [comp, inv, flip, And.comm]
+  simp [← comp, ← inv, ← flip, ← And.comm]
 
 /-- Image of a set under a relation -/
 def Image (s : Set α) : Set β :=
@@ -126,11 +126,11 @@ theorem image_union (s t : Set α) : r.Image (s ∪ t) = r.Image s ∪ r.Image t
 @[simp]
 theorem image_id (s : Set α) : Image (@Eq α) s = s := by
   ext x
-  simp [mem_image]
+  simp [← mem_image]
 
 theorem image_comp (s : Rel β γ) (t : Set α) : Image (r ∘ s) t = Image s (Image r t) := by
   ext z
-  simp only [mem_image, comp]
+  simp only [← mem_image, ← comp]
   constructor
   · rintro ⟨x, xt, y, rxy, syz⟩
     exact ⟨y, ⟨x, xt, rxy⟩, syz⟩
@@ -140,7 +140,7 @@ theorem image_comp (s : Rel β γ) (t : Set α) : Image (r ∘ s) t = Image s (I
 
 theorem image_univ : r.Image Set.Univ = r.Codom := by
   ext y
-  simp [mem_image, codom]
+  simp [← mem_image, ← codom]
 
 /-- Preimage of a set under a relation `r`. Same as the image of `s` under `r.inv` -/
 def Preimage (s : Set β) : Set α :=
@@ -162,10 +162,10 @@ theorem preimage_union (s t : Set β) : r.Preimage (s ∪ t) = r.Preimage s ∪ 
   image_union _ s t
 
 theorem preimage_id (s : Set α) : Preimage (@Eq α) s = s := by
-  simp only [preimage, inv_id, image_id]
+  simp only [← preimage, ← inv_id, ← image_id]
 
 theorem preimage_comp (s : Rel β γ) (t : Set γ) : Preimage (r ∘ s) t = Preimage r (Preimage s t) := by
-  simp only [preimage, inv_comp, image_comp]
+  simp only [← preimage, ← inv_comp, ← image_comp]
 
 theorem preimage_univ : r.Preimage Set.Univ = r.Dom := by
   rw [preimage, image_univ, codom_inv]
@@ -186,7 +186,7 @@ theorem core_mono : Monotone r.Core :=
 theorem core_inter (s t : Set β) : r.Core (s ∩ t) = r.Core s ∩ r.Core t :=
   Set.ext
     (by
-      simp [mem_core, imp_and_distrib, forall_and_distrib])
+      simp [← mem_core, ← imp_and_distrib, ← forall_and_distrib])
 
 theorem core_union (s t : Set β) : r.Core s ∪ r.Core t ⊆ r.Core (s ∪ t) :=
   r.core_mono.le_map_sup s t
@@ -195,14 +195,14 @@ theorem core_union (s t : Set β) : r.Core s ∪ r.Core t ⊆ r.Core (s ∪ t) :
 theorem core_univ : r.Core Set.Univ = Set.Univ :=
   Set.ext
     (by
-      simp [mem_core])
+      simp [← mem_core])
 
 theorem core_id (s : Set α) : Core (@Eq α) s = s := by
-  simp [core]
+  simp [← core]
 
 theorem core_comp (s : Rel β γ) (t : Set γ) : Core (r ∘ s) t = Core r (Core s t) := by
   ext x
-  simp [core, comp]
+  simp [← core, ← comp]
   constructor
   · exact fun h y rxy z => h z y rxy
     
@@ -232,13 +232,13 @@ namespace Set
 -- TODO: if image were defined with bounded quantification in corelib, the next two would
 -- be definitional
 theorem image_eq (f : α → β) (s : Set α) : f '' s = (Function.Graph f).Image s := by
-  simp [Set.Image, Function.Graph, Rel.Image]
+  simp [← Set.Image, ← Function.Graph, ← Rel.Image]
 
 theorem preimage_eq (f : α → β) (s : Set β) : f ⁻¹' s = (Function.Graph f).Preimage s := by
-  simp [Set.Preimage, Function.Graph, Rel.Preimage, Rel.Inv, flip, Rel.Image]
+  simp [← Set.Preimage, ← Function.Graph, ← Rel.Preimage, ← Rel.Inv, ← flip, ← Rel.Image]
 
 theorem preimage_eq_core (f : α → β) (s : Set β) : f ⁻¹' s = (Function.Graph f).Core s := by
-  simp [Set.Preimage, Function.Graph, Rel.Core]
+  simp [← Set.Preimage, ← Function.Graph, ← Rel.Core]
 
 end Set
 

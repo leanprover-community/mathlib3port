@@ -67,7 +67,7 @@ theorem map_derived_series_le_derived_series (n : ℕ) : (derivedSeries G n).map
   induction' n with n ih
   · exact le_top
     
-  · simp only [derived_series_succ, map_commutator, commutator_mono, ih]
+  · simp only [← derived_series_succ, ← map_commutator, ← commutator_mono, ← ih]
     
 
 variable {f}

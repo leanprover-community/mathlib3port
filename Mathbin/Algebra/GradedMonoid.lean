@@ -40,7 +40,7 @@ the base type `A 0` with:
 and the `i`th grade `A i` with `A 0`-actions (`•`) defined as left-multiplication:
 
 * (nothing)
-* `graded_monoid.grade_zero.has_scalar (A 0)`
+* `graded_monoid.grade_zero.has_smul (A 0)`
 * `graded_monoid.grade_zero.mul_action (A 0)`
 * (nothing)
 
@@ -137,7 +137,7 @@ def gnpowRec : ∀ n : ℕ {i}, A i → A (n • i)
 theorem gnpow_rec_zero (a : GradedMonoid A) : GradedMonoid.mk _ (gnpowRec 0 a.snd) = 1 :=
   Sigma.ext (zero_nsmul _) (heq_of_cast_eq _ rfl).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic used to autofill `graded_monoid.gmonoid.gnpow_zero'` when the default
 `graded_monoid.gmonoid.gnpow_rec` is used. -/
 unsafe def apply_gnpow_rec_zero_tac : tactic Unit :=
@@ -148,7 +148,7 @@ theorem gnpow_rec_succ (n : ℕ) (a : GradedMonoid A) :
     (GradedMonoid.mk _ <| gnpowRec n.succ a.snd) = a * ⟨_, gnpowRec n a.snd⟩ :=
   Sigma.ext (succ_nsmul _ _) (heq_of_cast_eq _ rfl).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic used to autofill `graded_monoid.gmonoid.gnpow_succ'` when the default
 `graded_monoid.gmonoid.gnpow_rec` is used. -/
 unsafe def apply_gnpow_rec_succ_tac : tactic Unit :=
@@ -232,14 +232,12 @@ variable [AddZeroClassₓ ι] [GhasMul A]
 /-- `(•) : A 0 → A i → A i` is the value provided in `graded_monoid.ghas_mul.mul`, composed with
 an `eq.rec` to turn `A (0 + i)` into `A i`.
 -/
-instance GradeZero.hasScalar (i : ι) : HasScalar (A 0) (A i) where
-  smul := fun x y => (zero_addₓ i).rec (GhasMul.mul x y)
+instance GradeZero.hasSmul (i : ι) : HasSmul (A 0) (A i) where smul := fun x y => (zero_addₓ i).rec (GhasMul.mul x y)
 
 /-- `(*) : A 0 → A 0 → A 0` is the value provided in `graded_monoid.ghas_mul.mul`, composed with
 an `eq.rec` to turn `A (0 + 0)` into `A 0`.
 -/
-instance GradeZero.hasMul : Mul (A 0) where
-  mul := (· • ·)
+instance GradeZero.hasMul : Mul (A 0) where mul := (· • ·)
 
 variable {A}
 
@@ -257,8 +255,7 @@ section Monoidₓ
 
 variable [AddMonoidₓ ι] [Gmonoid A]
 
-instance : Pow (A 0) ℕ where
-  pow := fun x n => (nsmul_zero n).rec (Gmonoid.gnpow n x : A (n • 0))
+instance : Pow (A 0) ℕ where pow := fun x n => (nsmul_zero n).rec (Gmonoid.gnpow n x : A (n • 0))
 
 variable {A}
 
@@ -331,7 +328,7 @@ theorem List.dprod_index_eq_map_sum (l : List α) (fι : α → ι) : l.dprodInd
   induction l
   · simp
     
-  · simp [l_ih]
+  · simp [← l_ih]
     
 
 /-- A dependent product for graded monoids represented by the indexed family of types `A i`.
@@ -359,7 +356,7 @@ theorem GradedMonoid.mk_list_dprod (l : List α) (fι : α → ι) (fA : ∀ a, 
   · simp
     rfl
     
-  · simp [← l_ih, GradedMonoid.mk_mul_mk, List.prod_cons]
+  · simp [l_ih, ← GradedMonoid.mk_mul_mk, ← List.prod_cons]
     rfl
     
 
@@ -383,12 +380,10 @@ section
 variable (ι) {R : Type _}
 
 @[simps one]
-instance One.ghasOne [Zero ι] [One R] : GradedMonoid.GhasOne fun i : ι => R where
-  one := 1
+instance One.ghasOne [Zero ι] [One R] : GradedMonoid.GhasOne fun i : ι => R where one := 1
 
 @[simps mul]
-instance Mul.ghasMul [Add ι] [Mul R] : GradedMonoid.GhasMul fun i : ι => R where
-  mul := fun i j => (· * ·)
+instance Mul.ghasMul [Add ι] [Mul R] : GradedMonoid.GhasMul fun i : ι => R where mul := fun i j => (· * ·)
 
 /-- If all grades are the same type and themselves form a monoid, then there is a trivial grading
 structure. -/
@@ -431,8 +426,7 @@ class SetLike.HasGradedOne {S : Type _} [SetLike S R] [One R] [Zero ι] (A : ι 
   one_mem : (1 : R) ∈ A 0
 
 instance SetLike.ghasOne {S : Type _} [SetLike S R] [One R] [Zero ι] (A : ι → S) [SetLike.HasGradedOne A] :
-    GradedMonoid.GhasOne fun i => A i where
-  one := ⟨1, SetLike.HasGradedOne.one_mem⟩
+    GradedMonoid.GhasOne fun i => A i where one := ⟨1, SetLike.HasGradedOne.one_mem⟩
 
 @[simp]
 theorem SetLike.coe_ghas_one {S : Type _} [SetLike S R] [One R] [Zero ι] (A : ι → S) [SetLike.HasGradedOne A] :
@@ -444,8 +438,8 @@ class SetLike.HasGradedMul {S : Type _} [SetLike S R] [Mul R] [Add ι] (A : ι �
   mul_mem : ∀ ⦃i j⦄ {gi gj}, gi ∈ A i → gj ∈ A j → gi * gj ∈ A (i + j)
 
 instance SetLike.ghasMul {S : Type _} [SetLike S R] [Mul R] [Add ι] (A : ι → S) [SetLike.HasGradedMul A] :
-    GradedMonoid.GhasMul fun i => A i where
-  mul := fun i j a b => ⟨(a * b : R), SetLike.HasGradedMul.mul_mem a.Prop b.Prop⟩
+    GradedMonoid.GhasMul fun i =>
+      A i where mul := fun i j a b => ⟨(a * b : R), SetLike.HasGradedMul.mul_mem a.Prop b.Prop⟩
 
 @[simp]
 theorem SetLike.coe_ghas_mul {S : Type _} [SetLike S R] [Mul R] [Add ι] (A : ι → S) [SetLike.HasGradedMul A] {i j : ι}

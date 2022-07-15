@@ -69,15 +69,13 @@ attribute [simp, reassoc] hom.h
 namespace Hom
 
 /-- The identity homomorphism for an Eilenberg–Moore algebra. -/
-def id (A : Algebra T) : Hom A A where
-  f := 𝟙 A.a
+def id (A : Algebra T) : Hom A A where f := 𝟙 A.a
 
 instance (A : Algebra T) : Inhabited (Hom A A) :=
   ⟨{ f := 𝟙 _ }⟩
 
 /-- Composition of Eilenberg–Moore algebra homomorphisms. -/
-def comp {P Q R : Algebra T} (f : Hom P Q) (g : Hom Q R) : Hom P R where
-  f := f.f ≫ g.f
+def comp {P Q R : Algebra T} (f : Hom P Q) (g : Hom Q R) : Hom P R where f := f.f ≫ g.f
 
 end Hom
 
@@ -104,8 +102,7 @@ theorem comp_f {A A' A'' : Algebra T} (f : A ⟶ A') (g : A' ⟶ A'') : (f ≫ g
 
 /-- The category of Eilenberg-Moore algebras for a monad.
     cf Definition 5.2.4 in [Riehl][riehl2017]. -/
-instance eilenbergMoore : Category (Algebra T) :=
-  {  }
+instance eilenbergMoore : Category (Algebra T) where
 
 /-- To construct an isomorphism of algebras, it suffices to give an isomorphism of the carriers which
 commutes with the structure morphisms.
@@ -151,13 +148,13 @@ def adj : T.free ⊣ T.forget :=
             { f := T.map f ≫ Y.a,
               h' := by
                 dsimp'
-                simp [← Y.assoc, ← T.μ.naturality_assoc] },
+                simp [Y.assoc, T.μ.naturality_assoc] },
           left_inv := fun f => by
             ext
             dsimp'
             simp ,
           right_inv := fun f => by
-            dsimp' only [forget_obj, monad_to_functor_eq_coe]
+            dsimp' only [← forget_obj, ← monad_to_functor_eq_coe]
             rw [← T.η.naturality_assoc, Y.unit]
             apply category.comp_id } }
 
@@ -171,11 +168,9 @@ theorem algebra_iso_of_iso {A B : Algebra T} (f : A ⟶ B) [IsIso f.f] : IsIso f
       by
       tidy⟩⟩
 
-instance forget_reflects_iso : ReflectsIsomorphisms T.forget where
-  reflects := fun A B => algebra_iso_of_iso T
+instance forget_reflects_iso : ReflectsIsomorphisms T.forget where reflects := fun A B => algebra_iso_of_iso T
 
-instance forget_faithful : Faithful T.forget :=
-  {  }
+instance forget_faithful : Faithful T.forget where
 
 instance : IsRightAdjoint T.forget :=
   ⟨T.free, T.adj⟩
@@ -197,10 +192,10 @@ def algebraFunctorOfMonadHom {T₁ T₂ : Monad C} (h : T₂ ⟶ T₁) : Algebra
     { a := A.a, a := h.app A.a ≫ A.a,
       unit' := by
         dsimp'
-        simp [A.unit],
+        simp [← A.unit],
       assoc' := by
         dsimp'
-        simp [A.assoc] }
+        simp [← A.assoc] }
   map := fun A₁ A₂ f => { f := f.f }
 
 /-- The identity monad morphism induces the identity functor from the category of algebras to itself.
@@ -247,7 +242,7 @@ def algebraFunctorOfMonadHomEq {T₁ T₂ : Monad C} {f g : T₁ ⟶ T₂} (h : 
       Algebra.isoMk (Iso.refl _)
         (by
           dsimp'
-          simp [h]))
+          simp [← h]))
     fun X Y f => by
     ext
     dsimp'
@@ -319,12 +314,10 @@ attribute [simp, reassoc] hom.h
 namespace Hom
 
 /-- The identity homomorphism for an Eilenberg–Moore coalgebra. -/
-def id (A : Coalgebra G) : Hom A A where
-  f := 𝟙 A.a
+def id (A : Coalgebra G) : Hom A A where f := 𝟙 A.a
 
 /-- Composition of Eilenberg–Moore coalgebra homomorphisms. -/
-def comp {P Q R : Coalgebra G} (f : Hom P Q) (g : Hom Q R) : Hom P R where
-  f := f.f ≫ g.f
+def comp {P Q R : Coalgebra G} (f : Hom P Q) (g : Hom Q R) : Hom P R where f := f.f ≫ g.f
 
 end Hom
 
@@ -351,8 +344,7 @@ theorem comp_f {A A' A'' : Coalgebra G} (f : A ⟶ A') (g : A' ⟶ A'') : (f ≫
   rfl
 
 /-- The category of Eilenberg-Moore coalgebras for a comonad. -/
-instance eilenbergMoore : Category (Coalgebra G) :=
-  {  }
+instance eilenbergMoore : Category (Coalgebra G) where
 
 /-- To construct an isomorphism of coalgebras, it suffices to give an isomorphism of the carriers which
 commutes with the structure morphisms.
@@ -397,7 +389,7 @@ def adj : G.forget ⊣ G.cofree :=
             { f := X.a ≫ G.map f,
               h' := by
                 dsimp'
-                simp [← coalgebra.coassoc_assoc] },
+                simp [coalgebra.coassoc_assoc] },
           invFun := fun g => g.f ≫ G.ε.app Y,
           left_inv := fun f => by
             dsimp'
@@ -418,11 +410,9 @@ theorem coalgebra_iso_of_iso {A B : Coalgebra G} (f : A ⟶ B) [IsIso f.f] : IsI
       by
       tidy⟩⟩
 
-instance forget_reflects_iso : ReflectsIsomorphisms G.forget where
-  reflects := fun A B => coalgebra_iso_of_iso G
+instance forget_reflects_iso : ReflectsIsomorphisms G.forget where reflects := fun A B => coalgebra_iso_of_iso G
 
-instance forget_faithful : Faithful (forget G) :=
-  {  }
+instance forget_faithful : Faithful (forget G) where
 
 instance : IsLeftAdjoint G.forget :=
   ⟨_, G.adj⟩

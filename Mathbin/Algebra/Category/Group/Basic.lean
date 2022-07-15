@@ -94,8 +94,7 @@ instance hasForgetToMon : HasForget₂ Groupₓₓ Mon :=
   BundledHom.forget₂ _ _
 
 @[to_additive]
-instance : Coe Groupₓₓ.{u} Mon.{u} where
-  coe := (forget₂ Groupₓₓ Mon).obj
+instance : Coe Groupₓₓ.{u} Mon.{u} where coe := (forget₂ Groupₓₓ Mon).obj
 
 end Groupₓₓ
 
@@ -175,16 +174,14 @@ instance hasForgetToGroup : HasForget₂ CommGroupₓₓ Groupₓₓ :=
   BundledHom.forget₂ _ _
 
 @[to_additive]
-instance : Coe CommGroupₓₓ.{u} Groupₓₓ.{u} where
-  coe := (forget₂ CommGroupₓₓ Groupₓₓ).obj
+instance : Coe CommGroupₓₓ.{u} Groupₓₓ.{u} where coe := (forget₂ CommGroupₓₓ Groupₓₓ).obj
 
 @[to_additive has_forget_to_AddCommMon]
 instance hasForgetToCommMon : HasForget₂ CommGroupₓₓ CommMon :=
   InducedCategory.hasForget₂ fun G : CommGroupₓₓ => CommMon.of G
 
 @[to_additive]
-instance : Coe CommGroupₓₓ.{u} CommMon.{u} where
-  coe := (forget₂ CommGroupₓₓ CommMon).obj
+instance : Coe CommGroupₓₓ.{u} CommMon.{u} where coe := (forget₂ CommGroupₓₓ CommMon).obj
 
 end CommGroupₓₓ
 
@@ -194,7 +191,7 @@ end CommGroupₓₓ
 -- Now, it just works.
 @[to_additive]
 example {R S : CommGroupₓₓ} (i : R ⟶ S) (r : R) (h : r = 1) : i r = 1 := by
-  simp [h]
+  simp [← h]
 
 namespace AddCommGroupₓₓ
 
@@ -222,7 +219,7 @@ theorem int_hom_ext {G : AddCommGroupₓₓ.{0}} (f g : AddCommGroupₓₓ.of �
 theorem injective_of_mono {G H : AddCommGroupₓₓ.{0}} (f : G ⟶ H) [Mono f] : Function.Injective f := fun g₁ g₂ h => by
   have t0 : as_hom g₁ ≫ f = as_hom g₂ ≫ f := by
     ext
-    simpa [as_hom_apply] using h
+    simpa [← as_hom_apply] using h
   have t1 : as_hom g₁ = as_hom g₂ := (cancel_mono _).1 t0
   apply as_hom_injective t1
 
@@ -300,16 +297,16 @@ def mulEquivPerm {α : Type u} : Aut α ≃* Equivₓ.Perm α :=
 end CategoryTheory.Aut
 
 @[to_additive]
-instance Groupₓₓ.forget_reflects_isos : ReflectsIsomorphisms (forget Groupₓₓ.{u}) where
-  reflects := fun X Y f _ => by
+instance Groupₓₓ.forget_reflects_isos :
+    ReflectsIsomorphisms (forget Groupₓₓ.{u}) where reflects := fun X Y f _ => by
     skip
     let i := as_iso ((forget Groupₓₓ).map f)
     let e : X ≃* Y := { f, i.to_equiv with }
     exact ⟨(is_iso.of_iso e.to_Group_iso).1⟩
 
 @[to_additive]
-instance CommGroupₓₓ.forget_reflects_isos : ReflectsIsomorphisms (forget CommGroupₓₓ.{u}) where
-  reflects := fun X Y f _ => by
+instance CommGroupₓₓ.forget_reflects_isos :
+    ReflectsIsomorphisms (forget CommGroupₓₓ.{u}) where reflects := fun X Y f _ => by
     skip
     let i := as_iso ((forget CommGroupₓₓ).map f)
     let e : X ≃* Y := { f, i.to_equiv with }

@@ -72,15 +72,16 @@ instance forget_to_BoolAlg_faithful : Faithful (forget₂ FinBoolAlg BoolAlg) :=
   InducedCategory.faithful _
 
 @[simps]
-instance hasForgetToFinPartialOrder : HasForget₂ FinBoolAlg FinPartialOrder where
-  forget₂ :=
+instance hasForgetToFinPartialOrder :
+    HasForget₂ FinBoolAlg
+      FinPartialOrder where forget₂ :=
     { obj := fun X => FinPartialOrder.of X,
       map := fun X Y f => show OrderHom X Y from ↑(show BoundedLatticeHom X Y from f) }
 
 instance forget_to_FinPartialOrder_faithful : Faithful (forget₂ FinBoolAlg FinPartialOrder) :=
-  ⟨fun X Y f g h =>
+  ⟨fun X Y f g h => by
     have := congr_arg (coeFn : _ → X → Y) h
-    FunLike.coe_injective this⟩
+    exact FunLike.coe_injective this⟩
 
 /-- Constructs an equivalence between finite Boolean algebras from an order isomorphism between
 them. -/

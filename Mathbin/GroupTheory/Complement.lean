@@ -3,6 +3,7 @@ Copyright (c) 2021 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 -/
+import Mathbin.GroupTheory.GroupAction.Quotient
 import Mathbin.GroupTheory.OrderOfElement
 
 /-!
@@ -82,12 +83,12 @@ theorem is_complement'_comm : IsComplement' H K ↔ IsComplement' K H :=
 
 @[to_additive]
 theorem is_complement_top_singleton {g : G} : IsComplement (⊤ : Set G) {g} :=
-  ⟨fun h => Prod.extₓ (Subtype.ext (mul_right_cancelₓ h)) rfl, fun x =>
+  ⟨fun ⟨x, _, rfl⟩ ⟨y, _, rfl⟩ h => Prod.extₓ (Subtype.ext (mul_right_cancelₓ h)) rfl, fun x =>
     ⟨⟨⟨x * g⁻¹, ⟨⟩⟩, g, rfl⟩, inv_mul_cancel_right x g⟩⟩
 
 @[to_additive]
 theorem is_complement_singleton_top {g : G} : IsComplement ({g} : Set G) ⊤ :=
-  ⟨fun h => Prod.extₓ rfl (Subtype.ext (mul_left_cancelₓ h)), fun x =>
+  ⟨fun ⟨⟨_, rfl⟩, x⟩ ⟨⟨_, rfl⟩, y⟩ h => Prod.extₓ rfl (Subtype.ext (mul_left_cancelₓ h)), fun x =>
     ⟨⟨⟨g, rfl⟩, g⁻¹ * x, ⟨⟩⟩, mul_inv_cancel_left g x⟩⟩
 
 @[to_additive]
@@ -191,16 +192,15 @@ theorem mem_right_transversals_iff_exists_unique_mul_inv_mem :
 @[to_additive]
 theorem mem_left_transversals_iff_exists_unique_quotient_mk'_eq :
     S ∈ LeftTransversals (H : Set G) ↔ ∀ q : Quotientₓ (QuotientGroup.leftRel H), ∃! s : S, Quotientₓ.mk' s.1 = q := by
-  have key : ∀ g h, Quotientₓ.mk' g = Quotientₓ.mk' h ↔ g⁻¹ * h ∈ H := @Quotientₓ.eq' G (QuotientGroup.leftRel H)
-  simp_rw [mem_left_transversals_iff_exists_unique_inv_mul_mem, SetLike.mem_coe, ← key]
+  simp_rw [mem_left_transversals_iff_exists_unique_inv_mul_mem, SetLike.mem_coe, ← QuotientGroup.eq']
   exact ⟨fun h q => Quotientₓ.induction_on' q h, fun h g => h (Quotientₓ.mk' g)⟩
 
 @[to_additive]
 theorem mem_right_transversals_iff_exists_unique_quotient_mk'_eq :
     S ∈ RightTransversals (H : Set G) ↔ ∀ q : Quotientₓ (QuotientGroup.rightRel H), ∃! s : S, Quotientₓ.mk' s.1 = q :=
   by
-  have key : ∀ g h, Quotientₓ.mk' g = Quotientₓ.mk' h ↔ h * g⁻¹ ∈ H := @Quotientₓ.eq' G (QuotientGroup.rightRel H)
-  simp_rw [mem_right_transversals_iff_exists_unique_mul_inv_mem, SetLike.mem_coe, ← key]
+  simp_rw [mem_right_transversals_iff_exists_unique_mul_inv_mem, SetLike.mem_coe, ← QuotientGroup.right_rel_apply, ←
+    Quotientₓ.eq']
   exact ⟨fun h q => Quotientₓ.induction_on' q h, fun h g => h (Quotientₓ.mk' g)⟩
 
 @[to_additive]
@@ -233,7 +233,7 @@ theorem range_mem_right_transversals {f : Quotientₓ (QuotientGroup.rightRel H)
       rintro ⟨-, q₁, rfl⟩ ⟨-, q₂, rfl⟩ h <;> exact congr_arg _ (((hf q₁).symm.trans h).trans (hf q₂)), fun q =>
       ⟨⟨f q, q, rfl⟩, hf q⟩⟩
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem exists_left_transversal (g : G) : ∃ S ∈ LeftTransversals (H : Set G), g ∈ S := by
   classical
@@ -246,7 +246,7 @@ theorem exists_left_transversal (g : G) : ∃ S ∈ LeftTransversals (H : Set G)
   · exact Eq.trans (congr_arg _ (Function.update_noteq hq g Quotientₓ.out')) q.out_eq'
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem exists_right_transversal (g : G) : ∃ S ∈ RightTransversals (H : Set G), g ∈ S := by
   classical
@@ -286,7 +286,7 @@ noncomputable def toFun (hS : S ∈ Subgroup.LeftTransversals (H : Set G)) : G �
 
 @[to_additive]
 theorem inv_to_fun_mul_mem (hS : S ∈ Subgroup.LeftTransversals (H : Set G)) (g : G) : (toFun hS g : G)⁻¹ * g ∈ H :=
-  Quotientₓ.exact' (mk'_to_equiv hS g)
+  QuotientGroup.left_rel_apply.mp <| Quotientₓ.exact' <| mk'_to_equiv _ _
 
 @[to_additive]
 theorem inv_mul_to_fun_mem (hS : S ∈ Subgroup.LeftTransversals (H : Set G)) (g : G) : g⁻¹ * toFun hS g ∈ H :=
@@ -325,7 +325,7 @@ noncomputable def toFun (hS : S ∈ Subgroup.RightTransversals (H : Set G)) : G 
 
 @[to_additive]
 theorem mul_inv_to_fun_mem (hS : S ∈ Subgroup.RightTransversals (H : Set G)) (g : G) : g * (toFun hS g : G)⁻¹ ∈ H :=
-  Quotientₓ.exact' (mk'_to_equiv hS _)
+  QuotientGroup.right_rel_apply.mp <| Quotientₓ.exact' <| mk'_to_equiv _ _
 
 @[to_additive]
 theorem to_fun_mul_inv_mem (hS : S ∈ Subgroup.RightTransversals (H : Set G)) (g : G) : (toFun hS g : G) * g⁻¹ ∈ H :=
@@ -355,7 +355,7 @@ instance : MulAction F (LeftTransversals (H : Set G)) where
         
       · rintro ⟨-, t', ht', rfl⟩ h
         replace h := quotient_action.inv_mul_mem f⁻¹ h
-        simp only [Subtype.ext_iff, Subtype.coe_mk, smul_left_cancel_iff, inv_smul_smul] at h⊢
+        simp only [← Subtype.ext_iff, ← Subtype.coe_mk, ← smul_left_cancel_iff, ← inv_smul_smul] at h⊢
         exact subtype.ext_iff.mp (ht2 ⟨t', ht'⟩ h)
         ⟩
   one_smul := fun T => Subtype.ext (one_smul F T)

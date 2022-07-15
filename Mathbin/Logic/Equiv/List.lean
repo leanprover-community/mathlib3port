@@ -42,7 +42,7 @@ def decodeList : ℕ → Option (List α)
 `data.nat.pairing`. -/
 instance _root_.list.encodable : Encodable (List α) :=
   ⟨encodeList, decodeList, fun l => by
-    induction' l with a l IH <;> simp [encode_list, decode_list, unpair_mkpair, encodek, *]⟩
+    induction' l with a l IH <;> simp [← encode_list, ← decode_list, ← unpair_mkpair, ← encodek, *]⟩
 
 @[simp]
 theorem encode_list_nil : encode (@nil α) = 0 :=
@@ -62,7 +62,7 @@ theorem decode_list_succ (v : ℕ) :
     decode (List α) (succ v) = (· :: ·) <$> decode α v.unpair.1 <*> decode (List α) v.unpair.2 :=
   show decodeList (succ v) = _ by
     cases' e : unpair v with v₁ v₂
-    simp [decode_list, e]
+    simp [← decode_list, ← e]
     rfl
 
 theorem length_le_encode : ∀ l : List α, length l ≤ encode l
@@ -97,7 +97,7 @@ def decodeMultiset (n : ℕ) : Option (Multiset α) :=
 /-- If `α` is encodable, then so is `multiset α`. -/
 instance _root_.multiset.encodable : Encodable (Multiset α) :=
   ⟨encodeMultiset, decodeMultiset, fun s => by
-    simp [encode_multiset, decode_multiset, encodek]⟩
+    simp [← encode_multiset, ← decode_multiset, ← encodek]⟩
 
 end Finset
 
@@ -111,7 +111,7 @@ def _root_.fintype.trunc_encodable (α : Type _) [DecidableEq α] [Fintype α] :
   @Quot.recOnSubsingleton _ (fun s : Multiset α => (∀ x : α, x ∈ s) → Trunc (Encodable α)) _ Finset.univ.1
     (fun l H => Trunc.mk <| encodableOfList l H) Finset.mem_univ
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A noncomputable way to arbitrarily choose an ordering on a finite type.
 It is not made into a global instance, since it involves an arbitrary choice.
 This can be locally made into an instance with `local attribute [instance] fintype.to_encodable`. -/
@@ -209,7 +209,7 @@ theorem denumerable_list_aux : ∀ n : ℕ, ∃ a ∈ @decodeList α _ n, encode
       ⟨a, h₁, h₂⟩
     rw [Option.mem_def] at h₁
     use of_nat α v₁ :: a
-    simp [decode_list, e, h₂, h₁, encode_list, mkpair_unpair' e]
+    simp [← decode_list, ← e, ← h₂, ← h₁, ← encode_list, ← mkpair_unpair' e]
 
 /-- If `α` is denumerable, then so is `list α`. -/
 instance denumerableList : Denumerable (List α) :=
@@ -224,7 +224,7 @@ theorem list_of_nat_succ (v : ℕ) : ofNat (List α) (succ v) = ofNat α v.unpai
   of_nat_of_decode <|
     show decodeList (succ v) = _ by
       cases' e : unpair v with v₁ v₂
-      simp [decode_list, e]
+      simp [← decode_list, ← e]
       rw [show decode_list v₂ = decode (List α) v₂ from rfl, decode_eq_of_nat] <;> rfl
 
 end List
@@ -252,7 +252,7 @@ theorem raise_lower : ∀ {l n}, List.Sorted (· ≤ ·) (n :: l) → raise (low
   | [], n, h => rfl
   | m :: l, n, h => by
     have : n ≤ m := List.rel_of_sorted_cons h _ (l.mem_cons_self _)
-    simp [raise, lower, tsub_add_cancel_of_le this, raise_lower h.of_cons]
+    simp [← raise, ← lower, ← tsub_add_cancel_of_le this, ← raise_lower h.of_cons]
 
 theorem raise_chain : ∀ l n, List.Chain (· ≤ ·) n (raise l n)
   | [], n => List.Chain.nil
@@ -270,9 +270,9 @@ instance multiset : Denumerable (Multiset α) :=
     ⟨fun s : Multiset α => encode <| lower ((s.map encode).sort (· ≤ ·)) 0, fun n =>
       Multiset.map (ofNat α) (raise (ofNat (List ℕ) n) 0), fun s => by
       have := raise_lower (List.sorted_cons.2 ⟨fun n _ => zero_le n, (s.map encode).sort_sorted _⟩) <;>
-        simp [-Multiset.coe_map, this],
+        simp [-Multiset.coe_map, ← this],
       fun n => by
-      simp [-Multiset.coe_map, List.merge_sort_eq_self _ (raise_sorted _ _), lower_raise]⟩
+      simp [-Multiset.coe_map, ← List.merge_sort_eq_self _ (raise_sorted _ _), ← lower_raise]⟩
 
 end Multiset
 
@@ -294,13 +294,13 @@ def raise' : List ℕ → ℕ → List ℕ
 theorem lower_raise' : ∀ l n, lower' (raise' l n) n = l
   | [], n => rfl
   | m :: l, n => by
-    simp [raise', lower', add_tsub_cancel_right, lower_raise']
+    simp [← raise', ← lower', ← add_tsub_cancel_right, ← lower_raise']
 
 theorem raise_lower' : ∀ {l n}, (∀, ∀ m ∈ l, ∀, n ≤ m) → List.Sorted (· < ·) l → raise' (lower' l n) n = l
   | [], n, h₁, h₂ => rfl
   | m :: l, n, h₁, h₂ => by
     have : n ≤ m := h₁ _ (l.mem_cons_self _)
-    simp [raise', lower', tsub_add_cancel_of_le this,
+    simp [← raise', ← lower', ← tsub_add_cancel_of_le this, ←
       raise_lower' (List.rel_of_sorted_cons h₂ : ∀, ∀ a ∈ l, ∀, m < a) h₂.of_cons]
 
 theorem raise'_chain : ∀ l {m n}, m < n → List.Chain (· < ·) m (raise' l n)
@@ -323,10 +323,10 @@ instance finset : Denumerable (Finset α) :=
     ⟨fun s : Finset α => encode <| lower' ((s.map (eqv α).toEmbedding).sort (· ≤ ·)) 0, fun n =>
       Finset.map (eqv α).symm.toEmbedding (raise'Finset (ofNat (List ℕ) n) 0), fun s =>
       Finset.eq_of_veq <| by
-        simp [-Multiset.coe_map, raise'_finset, raise_lower' (fun n _ => zero_le n) (Finset.sort_sorted_lt _)],
+        simp [-Multiset.coe_map, ← raise'_finset, ← raise_lower' (fun n _ => zero_le n) (Finset.sort_sorted_lt _)],
       fun n => by
-      simp [-Multiset.coe_map, Finset.map, raise'_finset, Finset.sort,
-        List.merge_sort_eq_self (· ≤ ·) ((raise'_sorted _ _).imp (@le_of_ltₓ _ _)), lower_raise']⟩
+      simp [-Multiset.coe_map, ← Finset.map, ← raise'_finset, ← Finset.sort, ←
+        List.merge_sort_eq_self (· ≤ ·) ((raise'_sorted _ _).imp (@le_of_ltₓ _ _)), ← lower_raise']⟩
 
 end Finset
 

@@ -98,7 +98,7 @@ theorem le_nhds_of_Limsup_eq_Liminf {f : Filter α} {a : α} (hl : f.IsBounded (
 
 theorem Limsup_nhds (a : α) : limsup (𝓝 a) = a :=
   cInf_eq_of_forall_ge_of_forall_gt_exists_lt (is_bounded_le_nhds a)
-    (fun h : { n : α | n ≤ a' } ∈ 𝓝 a => show a ≤ a' from @mem_of_mem_nhds α _ a _ h) fun hba : a < b =>
+    (fun a' h : { n : α | n ≤ a' } ∈ 𝓝 a => show a ≤ a' from @mem_of_mem_nhds α _ a _ h) fun b hba : a < b =>
     show ∃ (c : _)(h : { n : α | n ≤ c } ∈ 𝓝 a), c < b from
       match dense_or_discrete a b with
       | Or.inl ⟨c, hac, hcb⟩ => ⟨c, ge_mem_nhds hac, hcb⟩

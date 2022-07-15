@@ -81,7 +81,7 @@ theorem log_one : log 1 = 0 :=
 @[simp]
 theorem log_abs (x : ℝ) : log (abs x) = log x := by
   by_cases' h : x = 0
-  · simp [h]
+  · simp [← h]
     
   · rw [← exp_eq_exp, exp_log_eq_abs h, exp_log_eq_abs (abs_pos.2 h).ne', abs_abs]
     
@@ -89,6 +89,12 @@ theorem log_abs (x : ℝ) : log (abs x) = log x := by
 @[simp]
 theorem log_neg_eq_log (x : ℝ) : log (-x) = log x := by
   rw [← log_abs x, ← log_abs (-x), abs_neg]
+
+theorem sinh_log {x : ℝ} (hx : 0 < x) : sinh (log x) = (x - x⁻¹) / 2 := by
+  rw [sinh_eq, exp_neg, exp_log hx]
+
+theorem cosh_log {x : ℝ} (hx : 0 < x) : cosh (log x) = (x + x⁻¹) / 2 := by
+  rw [cosh_eq, exp_neg, exp_log hx]
 
 theorem surj_on_log' : SurjOn log (Iio 0) Univ := fun x _ =>
   ⟨-exp x, neg_lt_zero.2 <| exp_pos x, by
@@ -105,7 +111,7 @@ theorem log_div (hx : x ≠ 0) (hy : y ≠ 0) : log (x / y) = log x - log y :=
 @[simp]
 theorem log_inv (x : ℝ) : log x⁻¹ = -log x := by
   by_cases' hx : x = 0
-  · simp [hx]
+  · simp [← hx]
     
   rw [← exp_eq_exp, exp_log_eq_abs (inv_ne_zero hx), exp_neg, exp_log_eq_abs hx, abs_inv]
 
@@ -156,7 +162,7 @@ theorem log_nonpos_iff (hx : 0 < x) : log x ≤ 0 ↔ x ≤ 1 := by
 
 theorem log_nonpos_iff' (hx : 0 ≤ x) : log x ≤ 0 ↔ x ≤ 1 := by
   rcases hx.eq_or_lt with (rfl | hx)
-  · simp [le_reflₓ, zero_le_one]
+  · simp [← le_reflₓ, ← zero_le_one]
     
   exact log_nonpos_iff hx
 
@@ -194,7 +200,7 @@ theorem log_eq_zero {x : ℝ} : log x = 0 ↔ x = 0 ∨ x = 1 ∨ x = -1 := by
     · exact Or.inr (Or.inl (eq_one_of_pos_of_log_eq_zero x_gt_zero h))
       
     
-  · rintro (rfl | rfl | rfl) <;> simp only [log_one, log_zero, log_neg_eq_log]
+  · rintro (rfl | rfl | rfl) <;> simp only [← log_one, ← log_zero, ← log_neg_eq_log]
     
 
 @[simp]
@@ -226,7 +232,7 @@ theorem log_le_sub_one_of_pos {x : ℝ} (hx : 0 < x) : log x ≤ x - 1 := by
 /-- Bound for `|log x * x|` in the interval `(0, 1]`. -/
 theorem abs_log_mul_self_lt (x : ℝ) (h1 : 0 < x) (h2 : x ≤ 1) : abs (log x * x) < 1 := by
   have : 0 < 1 / x := by
-    simpa only [one_div, inv_pos] using h1
+    simpa only [← one_div, ← inv_pos] using h1
   replace := log_le_sub_one_of_pos this
   replace : log (1 / x) < 1 / x := by
     linarith
@@ -243,12 +249,12 @@ theorem abs_log_mul_self_lt (x : ℝ) (h1 : 0 < x) (h2 : x ≤ 1) : abs (log x *
 /-- The real logarithm function tends to `+∞` at `+∞`. -/
 theorem tendsto_log_at_top : Tendsto log atTop atTop :=
   tendsto_comp_exp_at_top.1 <| by
-    simpa only [log_exp] using tendsto_id
+    simpa only [← log_exp] using tendsto_id
 
 theorem tendsto_log_nhds_within_zero : Tendsto log (𝓝[≠] 0) atBot := by
   rw [← show _ = log from funext log_abs]
   refine' tendsto.comp _ tendsto_abs_nhds_within_zero
-  simpa [← tendsto_comp_exp_at_bot] using tendsto_id
+  simpa [tendsto_comp_exp_at_bot] using tendsto_id
 
 theorem continuous_on_log : ContinuousOn log ({0}ᶜ) := by
   rw [continuous_on_iff_continuous_restrict, restrict]
@@ -274,22 +280,33 @@ theorem continuous_at_log_iff : ContinuousAt log x ↔ x ≠ 0 := by
 
 open BigOperators
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem log_prod {α : Type _} (s : Finset α) (f : α → ℝ) (hf : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
     log (∏ i in s, f i) = ∑ i in s, log (f i) := by
-  classical
-  induction' s using Finset.induction_on with a s ha ih
+  induction' s using Finset.cons_induction_on with a s ha ih
   · simp
     
-  simp only [Finset.mem_insert, forall_eq_or_imp] at hf
-  simp [ha, ih hf.2, log_mul hf.1 (Finset.prod_ne_zero_iff.2 hf.2)]
+  · rw [Finset.forall_mem_cons] at hf
+    simp [← ih hf.2, ← log_mul hf.1 (Finset.prod_ne_zero_iff.2 hf.2)]
+    
+
+theorem log_nat_eq_sum_factorization (n : ℕ) : log n = n.factorization.Sum fun p t => t * log p := by
+  rcases eq_or_ne n 0 with (rfl | hn)
+  · simp
+    
+  nth_rw 0[← Nat.factorization_prod_pow_eq_self hn]
+  rw [Finsupp.prod, Nat.cast_prod, log_prod _ _ fun p hp => _, Finsupp.sum]
+  · simp_rw [Nat.cast_powₓ, log_pow]
+    
+  · norm_cast
+    exact pow_ne_zero _ (Nat.prime_of_mem_factorization hp).ne_zero
+    
 
 theorem tendsto_pow_log_div_mul_add_at_top (a b : ℝ) (n : ℕ) (ha : a ≠ 0) :
     Tendsto (fun x => log x ^ n / (a * x + b)) atTop (𝓝 0) :=
   ((tendsto_div_pow_mul_exp_add_at_top a b n ha.symm).comp tendsto_log_at_top).congr'
     (by
       filter_upwards [eventually_gt_at_top (0 : ℝ)] with x hx using by
-        simp [exp_log hx])
+        simp [← exp_log hx])
 
 theorem is_o_pow_log_id_at_top {n : ℕ} : (fun x => log x ^ n) =o[at_top] id := by
   rw [Asymptotics.is_o_iff_tendsto']

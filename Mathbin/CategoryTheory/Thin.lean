@@ -36,8 +36,7 @@ variable [CategoryStruct.{v₁} C] [∀ X Y : C, Subsingleton (X ⟶ Y)]
 
 /-- Construct a category instance from a category_struct, using the fact that
     hom spaces are subsingletons to prove the axioms. -/
-def thinCategory : Category C :=
-  {  }
+def thinCategory : Category C where
 
 end
 

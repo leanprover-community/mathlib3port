@@ -83,7 +83,7 @@ end HasLimits
 
 open HasLimits
 
--- ././Mathport/Syntax/Translate/Basic.lean:1198:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Basic.lean:1354:38: unsupported irreducible non-definition
 /-- The category of rings has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v} SemiRing.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 =>
@@ -101,8 +101,10 @@ def forget₂AddCommMonPreservesLimitsAux (F : J ⥤ SemiRing.{max v u}) :
 /-- The forgetful functor from semirings to additive commutative monoids preserves all limits.
 -/
 instance forget₂AddCommMonPreservesLimitsOfSize :
-    PreservesLimitsOfSize.{v, v} (forget₂ SemiRing AddCommMon.{max v u}) where
-  PreservesLimitsOfShape := fun J 𝒥 =>
+    PreservesLimitsOfSize.{v, v}
+      (forget₂ SemiRing
+        AddCommMon.{max v
+            u}) where PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F) (forget₂_AddCommMon_preserves_limits_aux F) }
 
@@ -117,8 +119,11 @@ def forget₂MonPreservesLimitsAux (F : J ⥤ SemiRing.{max v u}) :
 
 /-- The forgetful functor from semirings to monoids preserves all limits.
 -/
-instance forget₂MonPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget₂ SemiRing Mon.{max v u}) where
-  PreservesLimitsOfShape := fun J 𝒥 =>
+instance forget₂MonPreservesLimitsOfSize :
+    PreservesLimitsOfSize.{v, v}
+      (forget₂ SemiRing
+        Mon.{max v
+            u}) where PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F) (forget₂_Mon_preserves_limits_aux F) }
 
@@ -127,8 +132,11 @@ instance forget₂MonPreservesLimits : PreservesLimits (forget₂ SemiRing Mon.{
 
 /-- The forgetful functor from semirings to types preserves all limits.
 -/
-instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget SemiRing.{max v u}) where
-  PreservesLimitsOfShape := fun J 𝒥 =>
+instance forgetPreservesLimitsOfSize :
+    PreservesLimitsOfSize.{v, v}
+      (forget
+        SemiRing.{max v
+            u}) where PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F) (types.limit_cone_is_limit (F ⋙ forget _)) }
 
@@ -184,7 +192,7 @@ def limitCone (F : J ⥤ CommSemiRing.{max v u}) : Cone F :=
 def limitConeIsLimit (F : J ⥤ CommSemiRing.{max v u}) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 
--- ././Mathport/Syntax/Translate/Basic.lean:1198:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Basic.lean:1354:38: unsupported irreducible non-definition
 /-- The category of rings has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} CommSemiRing.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 =>
@@ -196,8 +204,9 @@ instance has_limits : HasLimits CommSemiRing.{u} :=
 /-- The forgetful functor from rings to semirings preserves all limits.
 -/
 instance forget₂SemiRingPreservesLimitsOfSize :
-    PreservesLimitsOfSize.{v, v} (forget₂ CommSemiRing SemiRing.{max v u}) where
-  PreservesLimitsOfShape := fun J 𝒥 =>
+    PreservesLimitsOfSize.{v, v}
+      (forget₂ CommSemiRing
+        SemiRing.{max v u}) where PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F => by
         infer_instance }
 
@@ -207,8 +216,11 @@ instance forget₂SemiRingPreservesLimits : PreservesLimits (forget₂ CommSemiR
 /-- The forgetful functor from rings to types preserves all limits. (That is, the underlying
 types could have been computed instead as limits in the category of types.)
 -/
-instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget CommSemiRing.{max v u}) where
-  PreservesLimitsOfShape := fun J 𝒥 =>
+instance forgetPreservesLimitsOfSize :
+    PreservesLimitsOfSize.{v, v}
+      (forget
+        CommSemiRing.{max v
+            u}) where PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F => limits.comp_preserves_limit (forget₂ CommSemiRing SemiRing) (forget SemiRing) }
 
 instance forgetPreservesLimits : PreservesLimits (forget CommSemiRing.{u}) :=
@@ -267,7 +279,7 @@ def limitCone (F : J ⥤ Ringₓₓ.{max v u}) : Cone F :=
 def limitConeIsLimit (F : J ⥤ Ringₓₓ.{max v u}) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 
--- ././Mathport/Syntax/Translate/Basic.lean:1198:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Basic.lean:1354:38: unsupported irreducible non-definition
 /-- The category of rings has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} Ringₓₓ.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 => { HasLimit := fun F => has_limit_of_created F (forget₂ Ringₓₓ SemiRing.{max v u}) } }
@@ -277,8 +289,9 @@ instance has_limits : HasLimits Ringₓₓ.{u} :=
 
 /-- The forgetful functor from rings to semirings preserves all limits.
 -/
-instance forget₂SemiRingPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget₂ Ringₓₓ SemiRing.{max v u}) where
-  PreservesLimitsOfShape := fun J 𝒥 =>
+instance forget₂SemiRingPreservesLimitsOfSize :
+    PreservesLimitsOfSize.{v, v}
+      (forget₂ Ringₓₓ SemiRing.{max v u}) where PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F => by
         infer_instance }
 
@@ -294,8 +307,10 @@ def forget₂AddCommGroupPreservesLimitsAux (F : J ⥤ Ringₓₓ.{max v u}) :
 /-- The forgetful functor from rings to additive commutative groups preserves all limits.
 -/
 instance forget₂AddCommGroupPreservesLimitsOfSize :
-    PreservesLimitsOfSize.{v, v} (forget₂ Ringₓₓ AddCommGroupₓₓ.{max v u}) where
-  PreservesLimitsOfShape := fun J 𝒥 =>
+    PreservesLimitsOfSize.{v, v}
+      (forget₂ Ringₓₓ
+        AddCommGroupₓₓ.{max v
+            u}) where PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F) (forget₂_AddCommGroup_preserves_limits_aux F) }
 
@@ -305,8 +320,11 @@ instance forget₂AddCommGroupPreservesLimits : PreservesLimits (forget₂ Ring�
 /-- The forgetful functor from rings to types preserves all limits. (That is, the underlying
 types could have been computed instead as limits in the category of types.)
 -/
-instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget Ringₓₓ.{max v u}) where
-  PreservesLimitsOfShape := fun J 𝒥 =>
+instance forgetPreservesLimitsOfSize :
+    PreservesLimitsOfSize.{v, v}
+      (forget
+        Ringₓₓ.{max v
+            u}) where PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F => limits.comp_preserves_limit (forget₂ Ringₓₓ SemiRing) (forget SemiRing.{max v u}) }
 
 instance forgetPreservesLimits : PreservesLimits (forget Ringₓₓ.{u}) :=
@@ -370,7 +388,7 @@ def limitCone (F : J ⥤ CommRingₓₓ.{max v u}) : Cone F :=
 def limitConeIsLimit (F : J ⥤ CommRingₓₓ.{max v u}) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 
--- ././Mathport/Syntax/Translate/Basic.lean:1198:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Basic.lean:1354:38: unsupported irreducible non-definition
 /-- The category of commutative rings has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} CommRingₓₓ.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 =>
@@ -382,8 +400,9 @@ instance has_limits : HasLimits CommRingₓₓ.{u} :=
 /-- The forgetful functor from commutative rings to rings preserves all limits.
 (That is, the underlying rings could have been computed instead as limits in the category of rings.)
 -/
-instance forget₂RingPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget₂ CommRingₓₓ Ringₓₓ.{max v u}) where
-  PreservesLimitsOfShape := fun J 𝒥 =>
+instance forget₂RingPreservesLimitsOfSize :
+    PreservesLimitsOfSize.{v, v}
+      (forget₂ CommRingₓₓ Ringₓₓ.{max v u}) where PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F => by
         infer_instance }
 
@@ -401,8 +420,10 @@ def forget₂CommSemiRingPreservesLimitsAux (F : J ⥤ CommRingₓₓ.{max v u})
 in the category of commutative semirings.)
 -/
 instance forget₂CommSemiRingPreservesLimitsOfSize :
-    PreservesLimitsOfSize.{v, v} (forget₂ CommRingₓₓ CommSemiRing.{max v u}) where
-  PreservesLimitsOfShape := fun J 𝒥 =>
+    PreservesLimitsOfSize.{v, v}
+      (forget₂ CommRingₓₓ
+        CommSemiRing.{max v
+            u}) where PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F) (forget₂_CommSemiRing_preserves_limits_aux F) }
 
@@ -412,8 +433,11 @@ instance forget₂CommSemiRingPreservesLimits : PreservesLimits (forget₂ CommR
 /-- The forgetful functor from commutative rings to types preserves all limits.
 (That is, the underlying types could have been computed instead as limits in the category of types.)
 -/
-instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget CommRingₓₓ.{max v u}) where
-  PreservesLimitsOfShape := fun J 𝒥 =>
+instance forgetPreservesLimitsOfSize :
+    PreservesLimitsOfSize.{v, v}
+      (forget
+        CommRingₓₓ.{max v
+            u}) where PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F => limits.comp_preserves_limit (forget₂ CommRingₓₓ Ringₓₓ) (forget Ringₓₓ) }
 
 instance forgetPreservesLimits : PreservesLimits (forget CommRingₓₓ.{u}) :=

@@ -70,13 +70,13 @@ theorem mul_norm_eq_abs_sub_sq_norm {x y z : V} (h₁ : ∃ k : ℝ, k ≠ 1 ∧
   have hzx : ⟪z, x⟫ = 0 := by
     rw [hxy, inner_smul_right, hzy, mul_zero]
   calc ∥x - y∥ * ∥x + y∥ = ∥(r - 1) • y∥ * ∥(r + 1) • y∥ := by
-      simp [sub_smul, add_smul, hxy]_ = ∥r - 1∥ * ∥y∥ * (∥r + 1∥ * ∥y∥) := by
+      simp [← sub_smul, ← add_smul, ← hxy]_ = ∥r - 1∥ * ∥y∥ * (∥r + 1∥ * ∥y∥) := by
       simp_rw [norm_smul]_ = ∥r - 1∥ * ∥r + 1∥ * ∥y∥ ^ 2 := by
       ring _ = abs ((r - 1) * (r + 1) * ∥y∥ ^ 2) := by
-      simp [abs_mul, norm_eq_abs]_ = abs (r ^ 2 * ∥y∥ ^ 2 - ∥y∥ ^ 2) := by
+      simp [← abs_mul, ← norm_eq_abs]_ = abs (r ^ 2 * ∥y∥ ^ 2 - ∥y∥ ^ 2) := by
       ring_nf _ = abs (∥x∥ ^ 2 - ∥y∥ ^ 2) := by
-      simp [hxy, norm_smul, mul_powₓ, norm_eq_abs, sq_abs]_ = abs (∥z + y∥ ^ 2 - ∥z - x∥ ^ 2) := by
-      simp [norm_add_sq_real, norm_sub_sq_real, hzy, hzx, abs_sub_comm]
+      simp [← hxy, ← norm_smul, ← mul_powₓ, ← norm_eq_abs, ← sq_abs]_ = abs (∥z + y∥ ^ 2 - ∥z - x∥ ^ 2) := by
+      simp [← norm_add_sq_real, ← norm_sub_sq_real, ← hzy, ← hzx, ← abs_sub_comm]
 
 end InnerProductGeometry
 
@@ -143,7 +143,7 @@ theorem mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_zero {a b c d p : P} (h 
   obtain ⟨-, k₁, -, hab₁⟩ := angle_eq_zero_iff.mp hapb
   obtain ⟨-, k₂, -, hcd₁⟩ := angle_eq_zero_iff.mp hcpd
   refine' mul_dist_eq_mul_dist_of_cospherical h ⟨k₁, _, hab₁⟩ ⟨k₂, _, hcd₁⟩ <;>
-    by_contra hnot <;> simp_all only [not_not, one_smul]
+    by_contra hnot <;> simp_all only [← not_not, ← one_smul]
   exacts[hab (vsub_left_cancel hab₁).symm, hcd (vsub_left_cancel hcd₁).symm]
 
 /-- **Ptolemy’s Theorem**. -/
@@ -158,20 +158,20 @@ theorem mul_dist_add_mul_dist_eq_mul_dist_of_cospherical {a b c d p : P} (h : Co
     · rw [angle_eq_angle_of_angle_eq_pi_of_angle_eq_pi hbpd hapc, angle_comm]
       
     all_goals
-      field_simp [mul_comm, hmul]
+      field_simp [← mul_comm, ← hmul]
   have h₂ : dist d a = dist a p / dist b p * dist b c := by
     rw [dist_mul_of_eq_angle_of_dist_mul c p b d p a, dist_comm c b]
     · rwa [angle_comm, angle_eq_angle_of_angle_eq_pi_of_angle_eq_pi]
       rwa [angle_comm]
       
     all_goals
-      field_simp [mul_comm, hmul]
+      field_simp [← mul_comm, ← hmul]
   have h₃ : dist d p = dist a p * dist c p / dist b p := by
-    field_simp [mul_comm, hmul]
+    field_simp [← mul_comm, ← hmul]
   have h₄ : ∀ x y : ℝ, x * (y * x) = x * x * y := fun x y => by
     rw [mul_left_commₓ, mul_comm]
-  field_simp [h₁, h₂, dist_eq_add_dist_of_angle_eq_pi hbpd, h₃, hbp, dist_comm a b, h₄, ← sq,
-    dist_sq_mul_dist_add_dist_sq_mul_dist b, hapc]
+  field_simp [← h₁, ← h₂, ← dist_eq_add_dist_of_angle_eq_pi hbpd, ← h₃, ← hbp, ← dist_comm a b, ← h₄, sq, ←
+    dist_sq_mul_dist_add_dist_sq_mul_dist b, ← hapc]
 
 end EuclideanGeometry
 

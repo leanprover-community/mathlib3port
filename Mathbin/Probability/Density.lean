@@ -87,7 +87,7 @@ def pdf {m : MeasurableSpace α} (X : α → E) (ℙ : Measure α)
 
 theorem pdf_undef {m : MeasurableSpace α} {ℙ : Measure α} {μ : Measure E} {X : α → E} (h : ¬HasPdf X ℙ μ) :
     pdf X ℙ μ = 0 := by
-  simp only [pdf, dif_neg h]
+  simp only [← pdf, ← dif_neg h]
 
 theorem has_pdf_of_pdf_ne_zero {m : MeasurableSpace α} {ℙ : Measure α} {μ : Measure E} {X : α → E} (h : pdf X ℙ μ ≠ 0) :
     HasPdf X ℙ μ := by
@@ -224,7 +224,7 @@ theorem to_quasi_measure_preserving {X : α → E} [HasPdf X ℙ μ] : QuasiMeas
 theorem have_lebesgue_decomposition_of_has_pdf {X : α → E} [hX' : HasPdf X ℙ μ] :
     (map X ℙ).HaveLebesgueDecomposition μ :=
   ⟨⟨⟨0, pdf X ℙ μ⟩, by
-      simp only [zero_addₓ, measurable_pdf X ℙ μ, true_andₓ, mutually_singular.zero_left,
+      simp only [← zero_addₓ, ← measurable_pdf X ℙ μ, ← true_andₓ, ← mutually_singular.zero_left, ←
         map_eq_with_density_pdf X ℙ μ]⟩⟩
 
 theorem has_pdf_iff {X : α → E} : HasPdf X ℙ μ ↔ Measurable X ∧ (map X ℙ).HaveLebesgueDecomposition μ ∧ map X ℙ ≪ μ :=
@@ -242,7 +242,7 @@ theorem has_pdf_iff {X : α → E} : HasPdf X ℙ μ ↔ Measurable X ∧ (map X
 theorem has_pdf_iff_of_measurable {X : α → E} (hX : Measurable X) :
     HasPdf X ℙ μ ↔ (map X ℙ).HaveLebesgueDecomposition μ ∧ map X ℙ ≪ μ := by
   rw [has_pdf_iff]
-  simp only [hX, true_andₓ]
+  simp only [← hX, ← true_andₓ]
 
 section
 
@@ -335,7 +335,7 @@ theorem has_pdf {m : MeasurableSpace α} {X : α → E} {ℙ : Measure α} {μ :
         have heq : Function.Support ((μ support)⁻¹ • (1 : E → ℝ≥0∞)) = Set.Univ := by
           ext x
           rw [Function.mem_support]
-          simp [hnt]
+          simp [← hnt]
         rw [HEq, Set.inter_univ] at this
         exact hns this
       exact Set.indicator_ae_eq_zero hu.symm)
@@ -356,7 +356,7 @@ theorem mul_pdf_integrable (hcs : IsCompact s) (huX : IsUniform X s ℙ) :
   by_cases' hsupp : volume s = ∞
   · have : pdf X ℙ =ᵐ[volume] 0 := by
       refine' ae_eq_trans huX _
-      simp [hsupp]
+      simp [← hsupp]
     refine' integrable.congr (integrable_zero _ _ _) _
     rw
       [(by
@@ -368,7 +368,8 @@ theorem mul_pdf_integrable (hcs : IsCompact s) (huX : IsUniform X s ℙ) :
   set ind := (volume s)⁻¹ • (1 : ℝ → ℝ≥0∞) with hind
   have : ∀ x, ↑∥x∥₊ * s.indicator ind x = s.indicator (fun x => ∥x∥₊ * ind x) x := fun x =>
     (s.indicator_mul_right (fun x => ↑∥x∥₊) ind).symm
-  simp only [this, lintegral_indicator _ hms, hind, mul_oneₓ, Algebra.id.smul_eq_mul, Pi.one_apply, Pi.smul_apply]
+  simp only [← this, ← lintegral_indicator _ hms, ← hind, ← mul_oneₓ, ← Algebra.id.smul_eq_mul, ← Pi.one_apply, ←
+    Pi.smul_apply]
   rw [lintegral_mul_const _ measurable_nnnorm.coe_nnreal_ennreal]
   · refine'
       (Ennreal.mul_lt_top (set_lintegral_lt_top_of_is_compact hsupp hcs continuous_nnnorm).Ne
@@ -394,9 +395,9 @@ theorem integral_eq (hnt : volume s ≠ ⊤) (huX : IsUniform X s ℙ) : (∫ x,
     by
     refine' fun x => congr_arg ((· * ·) x) _
     by_cases' hx : x ∈ s
-    · simp [Set.indicator_of_mem hx]
+    · simp [← Set.indicator_of_mem hx]
       
-    · simp [Set.indicator_of_not_mem hx]
+    · simp [← Set.indicator_of_not_mem hx]
       
   simp_rw [this, ← s.indicator_mul_right fun x => x, integral_indicator hms]
   change (∫ x in s, x * (volume s)⁻¹.toReal • 1 ∂volume) = _

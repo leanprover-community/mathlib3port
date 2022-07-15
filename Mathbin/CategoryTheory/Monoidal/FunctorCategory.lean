@@ -195,8 +195,8 @@ variable [SymmetricCategory.{v₂} D]
 the natural pointwise monoidal structure on the functor category `C ⥤ D`
 is also symmetric.
 -/
-instance functorCategorySymmetric : SymmetricCategory (C ⥤ D) where
-  symmetry' := fun F G => by
+instance functorCategorySymmetric :
+    SymmetricCategory (C ⥤ D) where symmetry' := fun F G => by
     ext X
     apply symmetry
 

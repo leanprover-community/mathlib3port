@@ -170,10 +170,10 @@ def domRestrict₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (q : Subm
   toFun := fun m => (f m).domRestrict q
   map_add' := fun m₁ m₂ =>
     LinearMap.ext fun _ => by
-      simp only [map_add, dom_restrict_apply, add_apply]
+      simp only [← map_add, ← dom_restrict_apply, ← add_apply]
   map_smul' := fun c m =>
     LinearMap.ext fun _ => by
-      simp only [f.map_smulₛₗ, dom_restrict_apply, smul_apply]
+      simp only [← f.map_smulₛₗ, ← dom_restrict_apply, ← smul_apply]
 
 theorem dom_restrict₂_apply (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (q : Submodule S N) (x : M) (y : q) :
     f.domRestrict₂ q x y = f x y :=
@@ -285,7 +285,7 @@ variable (R M Nₗ Pₗ)
 def llcomp : (Nₗ →ₗ[R] Pₗ) →ₗ[R] (M →ₗ[R] Nₗ) →ₗ[R] M →ₗ[R] Pₗ :=
   flip
     { toFun := lcomp R Pₗ, map_add' := fun f f' => ext₂ fun g x => g.map_add _ _,
-      map_smul' := fun f => ext₂ fun g x => g.map_smul _ _ }
+      map_smul' := fun c : R f => ext₂ fun g x => g.map_smul _ _ }
 
 variable {R M Nₗ Pₗ}
 
@@ -352,7 +352,7 @@ variable (R M)
 /-- Scalar multiplication as a bilinear map `R → M → M`. -/
 def lsmul : R →ₗ[R] M →ₗ[R] M :=
   mk₂ R (· • ·) add_smul (fun _ _ _ => mul_smul _ _ _) smul_add fun r s m => by
-    simp only [smul_smul, smul_eq_mul, mul_comm]
+    simp only [← smul_smul, ← smul_eq_mul, ← mul_comm]
 
 variable {R M}
 

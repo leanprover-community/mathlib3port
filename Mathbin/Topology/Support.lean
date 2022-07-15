@@ -98,14 +98,14 @@ def HasCompactMulSupport (f : α → β) : Prop :=
 theorem has_compact_mul_support_def : HasCompactMulSupport f ↔ IsCompact (Closure (MulSupport f)) := by
   rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ∉ » K)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ∉ » K)
 @[to_additive]
 theorem exists_compact_iff_has_compact_mul_support [T2Space α] :
     (∃ K : Set α, IsCompact K ∧ ∀ x _ : x ∉ K, f x = 1) ↔ HasCompactMulSupport f := by
   simp_rw [← nmem_mul_support, ← mem_compl_iff, ← subset_def, compl_subset_compl, has_compact_mul_support_def,
     exists_compact_superset_iff]
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ∉ » K)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ∉ » K)
 @[to_additive]
 theorem HasCompactMulSupport.intro [T2Space α] {K : Set α} (hK : IsCompact K) (hfK : ∀ x _ : x ∉ K, f x = 1) :
     HasCompactMulSupport f :=
@@ -238,7 +238,7 @@ namespace LocallyFinite
 
 variable {ι : Type _} {U : ι → Set X} [TopologicalSpace X] [One R]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If a family of functions `f` has locally-finite multiplicative support, subordinate to a family
 of open sets, then for any point we can find a neighbourhood on which only finitely-many members of
 `f` are not equal to 1. -/
@@ -266,14 +266,14 @@ theorem exists_finset_nhd_mul_support_subset {f : ι → X → R} (hlf : Locally
       rw [inter_assoc] at hz
       exact mem_of_mem_inter_left hz
     replace hz := mem_of_mem_inter_right (mem_of_mem_inter_left hz)
-    simp only [Finset.mem_filter, finite.mem_to_finset, mem_set_of_eq, mem_Inter, and_imp] at hz
+    simp only [← Finset.mem_filter, ← finite.mem_to_finset, ← mem_set_of_eq, ← mem_Inter, ← and_imp] at hz
     suffices (mul_support fun i => f i z) ⊆ hnf.to_finset by
       refine' hnf.to_finset.subset_coe_filter_of_subset_forall _ this fun i hi => _
       specialize hz i ⟨z, ⟨hi, hzn⟩⟩
       contrapose hz
-      simp [hz, subset_mul_tsupport (f i) hi]
+      simp [← hz, ← subset_mul_tsupport (f i) hi]
     intro i hi
-    simp only [finite.coe_to_finset, mem_set_of_eq]
+    simp only [← finite.coe_to_finset, ← mem_set_of_eq]
     exact ⟨z, ⟨hi, hzn⟩⟩
     
 

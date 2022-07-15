@@ -54,13 +54,15 @@ theorem index_comap_of_surjective {G' : Type _} [Groupₓ G'] {f : G' →* G} (h
     (H.comap f).index = H.index := by
   let this := QuotientGroup.leftRel H
   let this := QuotientGroup.leftRel (H.comap f)
-  have key : ∀ x y : G', Setoidₓ.R x y ↔ Setoidₓ.R (f x) (f y) := fun x y =>
-    iff_of_eq
-      (congr_arg (· ∈ H)
-        (by
-          rw [f.map_mul, f.map_inv]))
+  have key : ∀ x y : G', Setoidₓ.R x y ↔ Setoidₓ.R (f x) (f y) := by
+    simp only [← QuotientGroup.left_rel_apply]
+    exact fun x y =>
+      iff_of_eq
+        (congr_arg (· ∈ H)
+          (by
+            rw [f.map_mul, f.map_inv]))
   refine' Cardinal.to_nat_congr (Equivₓ.ofBijective (Quotientₓ.map' f fun x y => (key x y).mp) ⟨_, _⟩)
-  · simp_rw [← Quotientₓ.eq']  at key
+  · simp_rw [← Quotientₓ.eq'] at key
     refine' Quotientₓ.ind' fun x => _
     refine' Quotientₓ.ind' fun y => _
     exact (key x y).mpr
@@ -209,7 +211,7 @@ theorem index_eq_card [Fintype (G ⧸ H)] : H.index = Fintype.card (G ⧸ H) :=
 theorem index_mul_card [Fintype G] [hH : Fintype H] : H.index * Fintype.card H = Fintype.card G := by
   rw [← relindex_bot_left_eq_card, ← index_bot_eq_card, mul_comm] <;> exact relindex_mul_index bot_le
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem index_dvd_card [Fintype G] : H.index ∣ Fintype.card G := by
   classical

@@ -36,8 +36,9 @@ abbrev AssocRingHom (M N : Type _) [Semiringₓ M] [Semiringₓ N] :=
   RingHom M N
 
 instance bundledHom : BundledHom AssocRingHom :=
-  ⟨fun [Semiringₓ N] => @RingHom.toFun M N _ _, fun [Semiringₓ M] => @RingHom.id M _, fun [Semiringₓ P] =>
-    @RingHom.comp M N P _ _ _, fun [Semiringₓ N] => @RingHom.coe_inj M N _ _⟩
+  ⟨fun M N [Semiringₓ M] [Semiringₓ N] => @RingHom.toFun M N _ _, fun M [Semiringₓ M] => @RingHom.id M _,
+    fun M N P [Semiringₓ M] [Semiringₓ N] [Semiringₓ P] => @RingHom.comp M N P _ _ _,
+    fun M N [Semiringₓ M] [Semiringₓ N] => @RingHom.coe_inj M N _ _⟩
 
 deriving instance LargeCategory, ConcreteCategory for SemiRing
 
@@ -70,8 +71,8 @@ instance hasForgetToMon : HasForget₂ SemiRing Mon :=
   BundledHom.mkHasForget₂ (fun R hR => @MonoidWithZeroₓ.toMonoid R (@Semiringₓ.toMonoidWithZero R hR))
     (fun R₁ R₂ => RingHom.toMonoidHom) fun _ _ _ => rfl
 
-instance hasForgetToAddCommMon : HasForget₂ SemiRing AddCommMon where
-  -- can't use bundled_hom.mk_has_forget₂, since AddCommMon is an induced category
+instance hasForgetToAddCommMon :
+    HasForget₂ SemiRing AddCommMon where-- can't use bundled_hom.mk_has_forget₂, since AddCommMon is an induced category
   forget₂ := { obj := fun R => AddCommMon.of R, map := fun R₁ R₂ f => RingHom.toAddMonoidHom f }
 
 end SemiRing
@@ -85,8 +86,10 @@ namespace Ringₓₓ
 instance : BundledHom.ParentProjection @Ringₓ.toSemiring :=
   ⟨⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:978:9: unsupported derive handler λ Ring, has_coe_to_sort Ring (Type*)
-deriving instance [anonymous], LargeCategory, ConcreteCategory for Ringₓₓ
+-- ./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler λ Ring, has_coe_to_sort Ring (Type*)
+deriving instance
+  «./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler λ Ring, has_coe_to_sort Ring (Type*)»,
+  LargeCategory, ConcreteCategory for Ringₓₓ
 
 /-- Construct a bundled Ring from the underlying type and typeclass. -/
 def of (R : Type u) [Ringₓ R] : Ringₓₓ :=
@@ -113,8 +116,9 @@ theorem coe_of (R : Type u) [Ringₓ R] : (Ringₓₓ.of R : Type u) = R :=
 instance hasForgetToSemiRing : HasForget₂ Ringₓₓ SemiRing :=
   BundledHom.forget₂ _ _
 
-instance hasForgetToAddCommGroup : HasForget₂ Ringₓₓ AddCommGroupₓₓ where
-  -- can't use bundled_hom.mk_has_forget₂, since AddCommGroup is an induced category
+instance hasForgetToAddCommGroup :
+    HasForget₂ Ringₓₓ
+      AddCommGroupₓₓ where-- can't use bundled_hom.mk_has_forget₂, since AddCommGroup is an induced category
   forget₂ := { obj := fun R => AddCommGroupₓₓ.of R, map := fun R₁ R₂ f => RingHom.toAddMonoidHom f }
 
 end Ringₓₓ
@@ -211,8 +215,7 @@ instance hasForgetToCommSemiRing : HasForget₂ CommRingₓₓ CommSemiRing :=
     (by
       tidy)
 
-instance : Full (forget₂ CommRingₓₓ CommSemiRing) where
-  preimage := fun X Y f => f
+instance : Full (forget₂ CommRingₓₓ CommSemiRing) where preimage := fun X Y f => f
 
 end CommRingₓₓ
 
@@ -221,7 +224,7 @@ end CommRingₓₓ
 -- we had to mark all the concrete category `has_coe_to_sort` instances reducible.
 -- Now, it just works.
 example {R S : CommRingₓₓ} (i : R ⟶ S) (r : R) (h : r = 0) : i r = 0 := by
-  simp [h]
+  simp [← h]
 
 namespace RingEquiv
 
@@ -295,15 +298,15 @@ def ringEquivIsoCommRingIso {X Y : Type u} [CommRingₓ X] [CommRingₓ Y] :
   Hom := fun e => e.toCommRingIso
   inv := fun i => i.commRingIsoToRingEquiv
 
-instance Ringₓₓ.forget_reflects_isos : ReflectsIsomorphisms (forget Ringₓₓ.{u}) where
-  reflects := fun X Y f _ => by
+instance Ringₓₓ.forget_reflects_isos :
+    ReflectsIsomorphisms (forget Ringₓₓ.{u}) where reflects := fun X Y f _ => by
     skip
     let i := as_iso ((forget Ringₓₓ).map f)
     let e : X ≃+* Y := { f, i.to_equiv with }
     exact ⟨(is_iso.of_iso e.to_Ring_iso).1⟩
 
-instance CommRingₓₓ.forget_reflects_isos : ReflectsIsomorphisms (forget CommRingₓₓ.{u}) where
-  reflects := fun X Y f _ => by
+instance CommRingₓₓ.forget_reflects_isos :
+    ReflectsIsomorphisms (forget CommRingₓₓ.{u}) where reflects := fun X Y f _ => by
     skip
     let i := as_iso ((forget CommRingₓₓ).map f)
     let e : X ≃+* Y := { f, i.to_equiv with }

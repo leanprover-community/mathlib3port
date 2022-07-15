@@ -84,7 +84,7 @@ theorem HasDerivWithinAt.inner {f g : ℝ → E} {f' g' : E} {s : Set ℝ} {x : 
 
 theorem HasDerivAt.inner {f g : ℝ → E} {f' g' : E} {x : ℝ} :
     HasDerivAt f f' x → HasDerivAt g g' x → HasDerivAt (fun t => ⟪f t, g t⟫) (⟪f x, g'⟫ + ⟪f', g x⟫) x := by
-  simpa only [← has_deriv_within_at_univ] using HasDerivWithinAt.inner
+  simpa only [has_deriv_within_at_univ] using HasDerivWithinAt.inner
 
 theorem DifferentiableWithinAt.inner (hf : DifferentiableWithinAt ℝ f s x) (hg : DifferentiableWithinAt ℝ g s x) :
     DifferentiableWithinAt ℝ (fun x => ⟪f x, g x⟫) s x :=
@@ -111,7 +111,7 @@ theorem deriv_inner_apply {f g : ℝ → E} {x : ℝ} (hf : DifferentiableAt ℝ
   (hf.HasDerivAt.inner hg.HasDerivAt).deriv
 
 theorem cont_diff_norm_sq : ContDiff ℝ n fun x : E => ∥x∥ ^ 2 := by
-  simp only [sq, ← inner_self_eq_norm_mul_norm]
+  simp only [← sq, inner_self_eq_norm_mul_norm]
   exact (re_clm : 𝕜 →L[ℝ] ℝ).ContDiff.comp (cont_diff_id.inner cont_diff_id)
 
 theorem ContDiff.norm_sq (hf : ContDiff ℝ n f) : ContDiff ℝ n fun x => ∥f x∥ ^ 2 :=
@@ -125,14 +125,14 @@ theorem ContDiffAt.norm_sq (hf : ContDiffAt ℝ n f x) : ContDiffAt ℝ n (fun y
 
 theorem cont_diff_at_norm {x : E} (hx : x ≠ 0) : ContDiffAt ℝ n norm x := by
   have : ∥id x∥ ^ 2 ≠ 0 := pow_ne_zero _ (norm_pos_iff.2 hx).ne'
-  simpa only [id, sqrt_sq, norm_nonneg] using cont_diff_at_id.norm_sq.sqrt this
+  simpa only [← id, ← sqrt_sq, ← norm_nonneg] using cont_diff_at_id.norm_sq.sqrt this
 
 theorem ContDiffAt.norm (hf : ContDiffAt ℝ n f x) (h0 : f x ≠ 0) : ContDiffAt ℝ n (fun y => ∥f y∥) x :=
   (cont_diff_at_norm h0).comp x hf
 
 theorem ContDiffAt.dist (hf : ContDiffAt ℝ n f x) (hg : ContDiffAt ℝ n g x) (hne : f x ≠ g x) :
     ContDiffAt ℝ n (fun y => dist (f y) (g y)) x := by
-  simp only [dist_eq_norm]
+  simp only [← dist_eq_norm]
   exact (hf.sub hg).norm (sub_ne_zero.2 hne)
 
 theorem ContDiffWithinAt.norm (hf : ContDiffWithinAt ℝ n f s x) (h0 : f x ≠ 0) :
@@ -141,7 +141,7 @@ theorem ContDiffWithinAt.norm (hf : ContDiffWithinAt ℝ n f s x) (h0 : f x ≠ 
 
 theorem ContDiffWithinAt.dist (hf : ContDiffWithinAt ℝ n f s x) (hg : ContDiffWithinAt ℝ n g s x) (hne : f x ≠ g x) :
     ContDiffWithinAt ℝ n (fun y => dist (f y) (g y)) s x := by
-  simp only [dist_eq_norm]
+  simp only [← dist_eq_norm]
   exact (hf.sub hg).norm (sub_ne_zero.2 hne)
 
 theorem ContDiffOn.norm_sq (hf : ContDiffOn ℝ n f s) : ContDiffOn ℝ n (fun y => ∥f y∥ ^ 2) s := fun x hx =>
@@ -163,10 +163,10 @@ theorem ContDiff.dist (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) (hne : ∀
 omit 𝕜
 
 theorem has_strict_fderiv_at_norm_sq (x : F) : HasStrictFderivAt (fun x => ∥x∥ ^ 2) (bit0 (innerSL x)) x := by
-  simp only [sq, ← inner_self_eq_norm_mul_norm]
+  simp only [← sq, inner_self_eq_norm_mul_norm]
   convert (has_strict_fderiv_at_id x).inner (has_strict_fderiv_at_id x)
   ext y
-  simp [bit0, real_inner_comm]
+  simp [← bit0, ← real_inner_comm]
 
 include 𝕜
 
@@ -178,7 +178,7 @@ theorem DifferentiableAt.norm (hf : DifferentiableAt ℝ f x) (h0 : f x ≠ 0) :
 
 theorem DifferentiableAt.dist (hf : DifferentiableAt ℝ f x) (hg : DifferentiableAt ℝ g x) (hne : f x ≠ g x) :
     DifferentiableAt ℝ (fun y => dist (f y) (g y)) x := by
-  simp only [dist_eq_norm]
+  simp only [← dist_eq_norm]
   exact (hf.sub hg).norm (sub_ne_zero.2 hne)
 
 theorem Differentiable.norm_sq (hf : Differentiable ℝ f) : Differentiable ℝ fun y => ∥f y∥ ^ 2 := fun x => (hf x).normSq
@@ -199,7 +199,7 @@ theorem DifferentiableWithinAt.norm (hf : DifferentiableWithinAt ℝ f s x) (h0 
 
 theorem DifferentiableWithinAt.dist (hf : DifferentiableWithinAt ℝ f s x) (hg : DifferentiableWithinAt ℝ g s x)
     (hne : f x ≠ g x) : DifferentiableWithinAt ℝ (fun y => dist (f y) (g y)) s x := by
-  simp only [dist_eq_norm]
+  simp only [← dist_eq_norm]
   exact (hf.sub hg).norm (sub_ne_zero.2 hne)
 
 theorem DifferentiableOn.norm_sq (hf : DifferentiableOn ℝ f s) : DifferentiableOn ℝ (fun y => ∥f y∥ ^ 2) s :=

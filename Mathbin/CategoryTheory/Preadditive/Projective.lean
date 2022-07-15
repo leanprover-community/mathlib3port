@@ -80,8 +80,8 @@ section
 
 open ZeroObject
 
-instance zero_projective [HasZeroObject C] [HasZeroMorphisms C] : Projective (0 : C) where
-  Factors := fun E X f e epi => by
+instance zero_projective [HasZeroObject C] [HasZeroMorphisms C] :
+    Projective (0 : C) where Factors := fun E X f e epi => by
     use 0
     ext
 
@@ -93,23 +93,24 @@ theorem of_iso {P Q : C} (i : P ≅ Q) (hP : Projective P) : Projective Q := by
   obtain ⟨f', hf'⟩ := projective.factors (i.hom ≫ f) e
   exact
     ⟨i.inv ≫ f', by
-      simp [hf']⟩
+      simp [← hf']⟩
 
 theorem iso_iff {P Q : C} (i : P ≅ Q) : Projective P ↔ Projective Q :=
   ⟨of_iso i, of_iso i.symm⟩
 
 /-- The axiom of choice says that every type is a projective object in `Type`. -/
-instance (X : Type u) : Projective X where
-  Factors := fun E X' f e epi =>
+instance (X : Type u) :
+    Projective X where Factors := fun E X' f e epi =>
     ⟨fun x => ((epi_iff_surjective _).mp epi (f x)).some, by
       ext x
       exact ((epi_iff_surjective _).mp epi (f x)).some_spec⟩
 
-instance Type.enough_projectives : EnoughProjectives (Type u) where
-  presentation := fun X => ⟨{ P := X, f := 𝟙 X }⟩
+instance Type.enough_projectives : EnoughProjectives (Type u) where presentation := fun X => ⟨{ P := X, f := 𝟙 X }⟩
 
-instance {P Q : C} [HasBinaryCoproduct P Q] [Projective P] [Projective Q] : Projective (P ⨿ Q) where
-  Factors := fun E X' f e epi =>
+instance {P Q : C} [HasBinaryCoproduct P Q] [Projective P] [Projective Q] :
+    Projective
+      (P ⨿
+        Q) where Factors := fun E X' f e epi =>
     ⟨coprod.desc (factor_thru (coprod.inl ≫ f) e) (factor_thru (coprod.inr ≫ f) e), by
       tidy⟩
 
@@ -117,21 +118,23 @@ section
 
 attribute [local tidy] tactic.discrete_cases
 
-instance {β : Type v} (g : β → C) [HasCoproduct g] [∀ b, Projective (g b)] : Projective (∐ g) where
-  Factors := fun E X' f e epi =>
+instance {β : Type v} (g : β → C) [HasCoproduct g] [∀ b, Projective (g b)] :
+    Projective (∐ g) where Factors := fun E X' f e epi =>
     ⟨sigma.desc fun b => factor_thru (sigma.ι g b ≫ f) e, by
       tidy⟩
 
 end
 
 instance {P Q : C} [HasZeroMorphisms C] [HasBinaryBiproduct P Q] [Projective P] [Projective Q] :
-    Projective (P ⊞ Q) where
-  Factors := fun E X' f e epi =>
+    Projective
+      (P ⊞
+        Q) where Factors := fun E X' f e epi =>
     ⟨biprod.desc (factor_thru (biprod.inl ≫ f) e) (factor_thru (biprod.inr ≫ f) e), by
       tidy⟩
 
-instance {β : Type v} (g : β → C) [HasZeroMorphisms C] [HasBiproduct g] [∀ b, Projective (g b)] : Projective (⨁ g) where
-  Factors := fun E X' f e epi =>
+instance {β : Type v} (g : β → C) [HasZeroMorphisms C] [HasBiproduct g] [∀ b, Projective (g b)] :
+    Projective
+      (⨁ g) where Factors := fun E X' f e epi =>
     ⟨biproduct.desc fun b => factor_thru (biproduct.ι g b ≫ f) e, by
       tidy⟩
 
@@ -199,7 +202,7 @@ def Exact.lift {P Q R S : C} [Projective P] (h : P ⟶ R) (f : Q ⟶ R) (g : R �
 @[simp]
 theorem Exact.lift_comp {P Q R S : C} [Projective P] (h : P ⟶ R) (f : Q ⟶ R) (g : R ⟶ S) (hfg : Exact f g)
     (w : h ≫ g = 0) : Exact.lift h f g hfg w ≫ f = h := by
-  simp [exact.lift]
+  simp [← exact.lift]
   conv_lhs => congr skip rw [← image_subobject_arrow_comp f]
   rw [← category.assoc, factor_thru_comp, ← image_to_kernel_arrow, ← category.assoc,
     CategoryTheory.Projective.factor_thru_comp, factor_thru_kernel_subobject_comp_arrow]

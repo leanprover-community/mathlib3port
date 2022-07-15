@@ -46,16 +46,16 @@ variable {R : Type _} [CommRingₓ R]
 def crossProduct : (Finₓ 3 → R) →ₗ[R] (Finₓ 3 → R) →ₗ[R] Finₓ 3 → R := by
   apply LinearMap.mk₂ R fun a b : Finₓ 3 → R => ![a 1 * b 2 - a 2 * b 1, a 2 * b 0 - a 0 * b 2, a 0 * b 1 - a 1 * b 0]
   · intros
-    simp [vec3_add (_ : R), add_commₓ, add_assocₓ, add_left_commₓ, add_mulₓ, sub_eq_add_neg]
+    simp [← vec3_add (_ : R), ← add_commₓ, ← add_assocₓ, ← add_left_commₓ, ← add_mulₓ, ← sub_eq_add_neg]
     
   · intros
-    simp [smul_vec3 (_ : R) (_ : R), mul_comm, mul_assoc, mul_left_commₓ, mul_addₓ, sub_eq_add_neg]
+    simp [← smul_vec3 (_ : R) (_ : R), ← mul_comm, ← mul_assoc, ← mul_left_commₓ, ← mul_addₓ, ← sub_eq_add_neg]
     
   · intros
-    simp [vec3_add (_ : R), add_commₓ, add_assocₓ, add_left_commₓ, mul_addₓ, sub_eq_add_neg]
+    simp [← vec3_add (_ : R), ← add_commₓ, ← add_assocₓ, ← add_left_commₓ, ← mul_addₓ, ← sub_eq_add_neg]
     
   · intros
-    simp [smul_vec3 (_ : R) (_ : R), mul_comm, mul_assoc, mul_left_commₓ, mul_addₓ, sub_eq_add_neg]
+    simp [← smul_vec3 (_ : R) (_ : R), ← mul_comm, ← mul_assoc, ← mul_left_commₓ, ← mul_addₓ, ← sub_eq_add_neg]
     
 
 -- mathport name: «expr ×₃ »
@@ -69,7 +69,7 @@ section ProductsProperties
 
 @[simp]
 theorem cross_anticomm (v w : Finₓ 3 → R) : -(v ×₃ w) = w ×₃ v := by
-  simp [cross_apply, mul_comm]
+  simp [← cross_apply, ← mul_comm]
 
 alias cross_anticomm ← neg_cross
 
@@ -79,12 +79,12 @@ theorem cross_anticomm' (v w : Finₓ 3 → R) : v ×₃ w + w ×₃ v = 0 := by
 
 @[simp]
 theorem cross_self (v : Finₓ 3 → R) : v ×₃ v = 0 := by
-  simp [cross_apply, mul_comm]
+  simp [← cross_apply, ← mul_comm]
 
 /-- The cross product of two vectors is perpendicular to the first vector. -/
 @[simp]
 theorem dot_self_cross (v w : Finₓ 3 → R) : v ⬝ᵥ v ×₃ w = 0 := by
-  simp [cross_apply, vec3_dot_product, mul_sub, mul_assoc, mul_left_commₓ]
+  simp [← cross_apply, ← vec3_dot_product, ← mul_sub, ← mul_assoc, ← mul_left_commₓ]
 
 /-- The cross product of two vectors is perpendicular to the second vector. -/
 @[simp]
@@ -93,32 +93,33 @@ theorem dot_cross_self (v w : Finₓ 3 → R) : w ⬝ᵥ v ×₃ w = 0 := by
 
 /-- Cyclic permutations preserve the triple product. See also `triple_product_eq_det`. -/
 theorem triple_product_permutation (u v w : Finₓ 3 → R) : u ⬝ᵥ v ×₃ w = v ⬝ᵥ w ×₃ u := by
-  simp only [cross_apply, vec3_dot_product, Matrix.head_cons, Matrix.cons_vec_bit0_eq_alt0, Matrix.empty_append,
-    Matrix.cons_val_one, Matrix.cons_vec_alt0, Matrix.cons_append, Matrix.cons_val_zero]
+  simp only [← cross_apply, ← vec3_dot_product, ← Matrix.head_cons, ← Matrix.cons_vec_bit0_eq_alt0, ←
+    Matrix.empty_append, ← Matrix.cons_val_one, ← Matrix.cons_vec_alt0, ← Matrix.cons_append, ← Matrix.cons_val_zero]
   ring
 
 /-- The triple product of `u`, `v`, and `w` is equal to the determinant of the matrix
     with those vectors as its rows. -/
 theorem triple_product_eq_det (u v w : Finₓ 3 → R) : u ⬝ᵥ v ×₃ w = Matrix.det ![u, v, w] := by
-  simp only [vec3_dot_product, cross_apply, Matrix.det_fin_three, Matrix.head_cons, Matrix.cons_vec_bit0_eq_alt0,
-    Matrix.empty_vec_alt0, Matrix.cons_vec_alt0, Matrix.vec_head_vec_alt0, Finₓ.fin_append_apply_zero,
-    Matrix.empty_append, Matrix.cons_append, Matrix.cons_val', Matrix.cons_val_one, Matrix.cons_val_zero]
+  simp only [← vec3_dot_product, ← cross_apply, ← Matrix.det_fin_three, ← Matrix.head_cons, ←
+    Matrix.cons_vec_bit0_eq_alt0, ← Matrix.empty_vec_alt0, ← Matrix.cons_vec_alt0, ← Matrix.vec_head_vec_alt0, ←
+    Finₓ.fin_append_apply_zero, ← Matrix.empty_append, ← Matrix.cons_append, ← Matrix.cons_val', ← Matrix.cons_val_one,
+    ← Matrix.cons_val_zero]
   ring
 
 /-- The scalar quadruple product identity, related to the Binet-Cauchy identity. -/
 theorem cross_dot_cross (u v w x : Finₓ 3 → R) : u ×₃ v ⬝ᵥ w ×₃ x = u ⬝ᵥ w * v ⬝ᵥ x - u ⬝ᵥ x * v ⬝ᵥ w := by
-  simp only [vec3_dot_product, cross_apply, cons_append, cons_vec_bit0_eq_alt0, cons_val_one, cons_vec_alt0,
-    LinearMap.mk₂_apply, cons_val_zero, head_cons, empty_append]
+  simp only [← vec3_dot_product, ← cross_apply, ← cons_append, ← cons_vec_bit0_eq_alt0, ← cons_val_one, ← cons_vec_alt0,
+    ← LinearMap.mk₂_apply, ← cons_val_zero, ← head_cons, ← empty_append]
   ring_nf
 
 end ProductsProperties
 
 section LeibnizProperties
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 /-- The cross product satisfies the Leibniz lie property. -/
 theorem leibniz_cross (u v w : Finₓ 3 → R) : u ×₃ (v ×₃ w) = u ×₃ v ×₃ w + v ×₃ (u ×₃ w) := by
-  dsimp' only [cross_apply]
+  dsimp' only [← cross_apply]
   ext i
   fin_cases i <;> norm_num <;> ring
 

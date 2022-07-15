@@ -40,7 +40,7 @@ theorem rank_eq_card_choose_basis_index : Module.rank R M = # (ChooseBasisIndex 
 /-- The rank of `(ι →₀ R)` is `(# ι).lift`. -/
 @[simp]
 theorem rank_finsupp {ι : Type v} : Module.rank R (ι →₀ R) = (# ι).lift := by
-  simpa [lift_id', lift_umax] using (Basis.of_repr (LinearEquiv.refl _ (ι →₀ R))).mk_eq_dim.symm
+  simpa [← lift_id', ← lift_umax] using (Basis.of_repr (LinearEquiv.refl _ (ι →₀ R))).mk_eq_dim.symm
 
 /-- If `R` and `ι` lie in the same universe, the rank of `(ι →₀ R)` is `# ι`. -/
 theorem rank_finsupp' {ι : Type u} : Module.rank R (ι →₀ R) = # ι := by
@@ -49,7 +49,7 @@ theorem rank_finsupp' {ι : Type u} : Module.rank R (ι →₀ R) = # ι := by
 /-- The rank of `M × N` is `(module.rank R M).lift + (module.rank R N).lift`. -/
 @[simp]
 theorem rank_prod : Module.rank R (M × N) = lift.{w, v} (Module.rank R M) + lift.{v, w} (Module.rank R N) := by
-  simpa [rank_eq_card_choose_basis_index R M, rank_eq_card_choose_basis_index R N, lift_umax, lift_umax'] using
+  simpa [← rank_eq_card_choose_basis_index R M, ← rank_eq_card_choose_basis_index R N, ← lift_umax, ← lift_umax'] using
     ((choose_basis R M).Prod (choose_basis R N)).mk_eq_dim.symm
 
 /-- If `M` and `N` lie in the same universe, the rank of `M × N` is
@@ -64,7 +64,7 @@ theorem rank_direct_sum {ι : Type v} (M : ι → Type w) [∀ i : ι, AddCommGr
     [∀ i : ι, Module.Free R (M i)] : Module.rank R (⨁ i, M i) = Cardinal.sum fun i => Module.rank R (M i) := by
   let B := fun i => choose_basis R (M i)
   let b : Basis _ R (⨁ i, M i) := Dfinsupp.basis fun i => B i
-  simp [← b.mk_eq_dim'', fun i => (B i).mk_eq_dim'']
+  simp [b.mk_eq_dim'', ← fun i => (B i).mk_eq_dim'']
 
 /-- The rank of a finite product is the sum of the ranks. -/
 @[simp]

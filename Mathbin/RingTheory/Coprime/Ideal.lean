@@ -31,16 +31,16 @@ theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι �
   have : DecidableEq ι := Classical.decEq ι
   rw [eq_top_iff_one, Submodule.mem_supr_finset_iff_exists_sum]
   refine' h.cons_induction _ _ <;> clear t h
-  · simp only [Finset.sum_singleton, Finset.coe_singleton, Set.pairwise_singleton, iff_trueₓ]
+  · simp only [← Finset.sum_singleton, ← Finset.coe_singleton, ← Set.pairwise_singleton, ← iff_trueₓ]
     refine' fun a => ⟨fun i => if h : i = a then ⟨1, _⟩ else 0, _⟩
     · rw [h]
-      simp only [Finset.mem_singleton, Ne.def, infi_infi_eq_left, eq_self_iff_true, not_true, infi_false]
+      simp only [← Finset.mem_singleton, ← Ne.def, ← infi_infi_eq_left, ← eq_self_iff_true, ← not_true, ← infi_false]
       
-    · simp only [dif_pos, dif_ctx_congr, Submodule.coe_mk, eq_self_iff_true]
+    · simp only [← dif_pos, ← dif_ctx_congr, ← Submodule.coe_mk, ← eq_self_iff_true]
       
     
   intro a t hat h ih
-  rw [Finset.coe_cons, Set.pairwise_insert_of_symmetric fun h : I i⊔I j = ⊤ => sup_comm.trans h]
+  rw [Finset.coe_cons, Set.pairwise_insert_of_symmetric fun i j h : I i⊔I j = ⊤ => sup_comm.trans h]
   constructor
   · rintro ⟨μ, hμ⟩
     rw [Finset.sum_cons] at hμ
@@ -57,7 +57,7 @@ theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι �
       exact hat hi
       
     · have := Submodule.coe_mem (μ i)
-      simp only [mem_infi] at this⊢
+      simp only [← mem_infi] at this⊢
       intro j hj ij
       exact this _ (Finset.subset_cons _ hj) ij
       
@@ -76,13 +76,13 @@ theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι �
       refine' ⟨_, _, _, _, hμ⟩
       · refine' sum_mem _ fun x hx => _
         have := Submodule.coe_mem (μ x)
-        simp only [mem_infi] at this
+        simp only [← mem_infi] at this
         apply this _ (Finset.mem_cons_self _ _)
         rintro rfl
         exact hat hx
         
       · have := Submodule.coe_mem (μ a)
-        simp only [mem_infi] at this
+        simp only [← mem_infi] at this
         exact this _ (Finset.subset_cons _ hb) ab.symm
         
       
@@ -97,13 +97,13 @@ theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι �
               rintro rfl
               exact hat hb)
     refine' ⟨fun i => if hi : i = a then ⟨v, _⟩ else ⟨u * μ i, _⟩, _⟩
-    · simp only [mem_infi] at hv⊢
+    · simp only [← mem_infi] at hv⊢
       intro j hj ij
       rw [Finset.mem_cons, ← hi] at hj
       exact hv _ (hj.resolve_left ij)
       
     · have := Submodule.coe_mem (μ i)
-      simp only [mem_infi] at this⊢
+      simp only [← mem_infi] at this⊢
       intro j hj ij
       rcases finset.mem_cons.mp hj with (rfl | hj)
       · exact mul_mem_right _ _ hu

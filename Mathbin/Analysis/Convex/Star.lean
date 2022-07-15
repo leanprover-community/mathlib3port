@@ -56,9 +56,9 @@ section AddCommMonoidₓ
 
 variable [AddCommMonoidₓ E] [AddCommMonoidₓ F]
 
-section HasScalar
+section HasSmul
 
-variable (𝕜) [HasScalar 𝕜 E] [HasScalar 𝕜 F] (x : E) (s : Set E)
+variable (𝕜) [HasSmul 𝕜 E] [HasSmul 𝕜 F] (x : E) (s : Set E)
 
 /-- Star-convexity of sets. `s` is star-convex at `x` if every segment from `x` to a point in `s` is
 contained in `s`. -/
@@ -129,11 +129,11 @@ theorem star_convex_sUnion {S : Set (Set E)} (hS : ∀, ∀ s ∈ S, ∀, StarCo
 theorem StarConvex.prod {y : F} {s : Set E} {t : Set F} (hs : StarConvex 𝕜 x s) (ht : StarConvex 𝕜 y t) :
     StarConvex 𝕜 (x, y) (s ×ˢ t) := fun y hy a b ha hb hab => ⟨hs hy.1 ha hb hab, ht hy.2 ha hb hab⟩
 
-theorem star_convex_pi {ι : Type _} {E : ι → Type _} [∀ i, AddCommMonoidₓ (E i)] [∀ i, HasScalar 𝕜 (E i)] {x : ∀ i, E i}
+theorem star_convex_pi {ι : Type _} {E : ι → Type _} [∀ i, AddCommMonoidₓ (E i)] [∀ i, HasSmul 𝕜 (E i)] {x : ∀ i, E i}
     {s : Set ι} {t : ∀ i, Set (E i)} (ht : ∀ i, StarConvex 𝕜 (x i) (t i)) : StarConvex 𝕜 x (s.pi t) :=
   fun y hy a b ha hb hab i hi => ht i (hy i hi) ha hb hab
 
-end HasScalar
+end HasSmul
 
 section Module
 
@@ -231,7 +231,7 @@ theorem StarConvex.preimage_add_right (hs : StarConvex 𝕜 (z + x) s) : StarCon
 /-- The translation of a star-convex set is also star-convex. -/
 theorem StarConvex.preimage_add_left (hs : StarConvex 𝕜 (x + z) s) : StarConvex 𝕜 x ((fun x => x + z) ⁻¹' s) := by
   rw [add_commₓ] at hs
-  simpa only [add_commₓ] using hs.preimage_add_right
+  simpa only [← add_commₓ] using hs.preimage_add_right
 
 end Module
 
@@ -282,7 +282,7 @@ variable [AddCommMonoidₓ E] [SmulWithZero 𝕜 E] {s : Set E}
 
 theorem star_convex_zero_iff : StarConvex 𝕜 0 s ↔ ∀ ⦃x : E⦄, x ∈ s → ∀ ⦃a : 𝕜⦄, 0 ≤ a → a ≤ 1 → a • x ∈ s := by
   refine' forall_congrₓ fun x => forall_congrₓ fun hx => ⟨fun h a ha₀ ha₁ => _, fun h a b ha hb hab => _⟩
-  · simpa only [sub_add_cancel, eq_self_iff_true, forall_true_left, zero_addₓ, smul_zero'] using
+  · simpa only [← sub_add_cancel, ← eq_self_iff_true, ← forall_true_left, ← zero_addₓ, ← smul_zero'] using
       h (sub_nonneg_of_le ha₁) ha₀
     
   · rw [smul_zero', zero_addₓ]

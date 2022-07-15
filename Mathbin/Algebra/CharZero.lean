@@ -3,108 +3,37 @@ Copyright (c) 2014 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Nat.Cast
+import Mathbin.Data.Nat.CastField
 import Mathbin.Data.Fintype.Basic
-import Mathbin.Tactic.Wlog
 
 /-!
-# Characteristic zero
+# Characteristic zero (additional theorems)
 
 A ring `R` is called of characteristic zero if every natural number `n` is non-zero when considered
 as an element of `R`. Since this definition doesn't mention the multiplicative structure of `R`
 except for the existence of `1` in this file characteristic zero is defined for additive monoids
 with `1`.
 
-## Main definition
-
-`char_zero` is the typeclass of an additive monoid with one such that the natural homomorphism
-from the natural numbers into it is injective.
-
 ## Main statements
 
-* A linearly ordered semiring has characteristic zero.
 * Characteristic zero implies that the additive monoid is infinite.
-
-## TODO
-
-* Once order of a group is defined for infinite additive monoids redefine or at least connect to
-  order of `1` in the additive monoid with one.
-* Unify with `char_p` (possibly using an out-parameter)
 -/
 
 
-/-- Typeclass for monoids with characteristic zero.
-  (This is usually stated on fields but it makes sense for any additive monoid with 1.)
-
-*Warning*: for a semiring `R`, `char_zero R` and `char_p R 0` need not coincide.
-* `char_zero R` requires an injection `ℕ ↪ R`;
-* `char_p R 0` asks that only `0 : ℕ` maps to `0 : R` under the map `ℕ → R`.
-
-For instance, endowing `{0, 1}` with addition given by `max` (i.e. `1` is absorbing), shows that
-`char_zero {0, 1}` does not hold and yet `char_p {0, 1} 0` does.
-This example is formalized in `counterexamples/char_p_zero_ne_char_zero`.
- -/
-class CharZero (R : Type _) [AddMonoidₓ R] [One R] : Prop where
-  cast_injective : Function.Injective (coe : ℕ → R)
-
-theorem char_zero_of_inj_zero {R : Type _} [AddLeftCancelMonoid R] [One R] (H : ∀ n : ℕ, (n : R) = 0 → n = 0) :
-    CharZero R :=
-  ⟨fun m n => by
-    intro h
-    wlog hle : m ≤ n
-    rcases Nat.Le.dest hle with ⟨k, rfl⟩
-    rw [Nat.cast_addₓ, eq_comm, add_right_eq_selfₓ] at h
-    rw [H k h, add_zeroₓ]⟩
-
-/-- Note this is not an instance as `char_zero` implies `nontrivial`,
-and this would risk forming a loop. -/
-theorem OrderedSemiring.to_char_zero {R : Type _} [OrderedSemiring R] [Nontrivial R] : CharZero R :=
-  ⟨Nat.strict_mono_cast.Injective⟩
-
--- see Note [lower instance priority]
-instance (priority := 100) LinearOrderedSemiring.to_char_zero {R : Type _} [LinearOrderedSemiring R] : CharZero R :=
-  OrderedSemiring.to_char_zero
-
 namespace Nat
 
-variable {R : Type _} [AddMonoidₓ R] [One R] [CharZero R]
-
-theorem cast_injective : Function.Injective (coe : ℕ → R) :=
-  CharZero.cast_injective
+variable {R : Type _} [AddMonoidWithOneₓ R] [CharZero R]
 
 /-- `nat.cast` as an embedding into monoids of characteristic `0`. -/
 @[simps]
 def castEmbedding : ℕ ↪ R :=
   ⟨coe, cast_injective⟩
 
-@[simp, norm_cast]
-theorem cast_inj {m n : ℕ} : (m : R) = n ↔ m = n :=
-  cast_injective.eq_iff
-
-@[simp, norm_cast]
-theorem cast_eq_zero {n : ℕ} : (n : R) = 0 ↔ n = 0 := by
-  rw [← cast_zero, cast_inj]
-
-@[simp, norm_cast]
-theorem cast_eq_one {n : ℕ} : (n : R) = 1 ↔ n = 1 := by
-  rw [← cast_one, cast_inj]
-
 @[simp]
 theorem cast_pow_eq_one {R : Type _} [Semiringₓ R] [CharZero R] (q : ℕ) (n : ℕ) (hn : n ≠ 0) :
     (q : R) ^ n = 1 ↔ q = 1 := by
   rw [← cast_pow, cast_eq_one]
   exact pow_eq_one_iff hn
-
-@[norm_cast]
-theorem cast_ne_zero {n : ℕ} : (n : R) ≠ 0 ↔ n ≠ 0 :=
-  cast_eq_zero.Not
-
-@[norm_cast]
-theorem cast_ne_one {n : ℕ} : (n : R) ≠ 1 ↔ n ≠ 1 :=
-  cast_eq_one.Not
-
-theorem cast_add_one_ne_zero (n : ℕ) : (n + 1 : R) ≠ 0 := by
-  exact_mod_cast n.succ_ne_zero
 
 @[simp, norm_cast]
 theorem cast_div_char_zero {k : Type _} [Field k] [CharZero k] {m n : ℕ} (n_dvd : n ∣ m) : ((m / n : ℕ) : k) = m / n :=
@@ -119,7 +48,7 @@ end Nat
 
 section
 
-variable (M : Type _) [AddMonoidₓ M] [One M] [CharZero M]
+variable (M : Type _) [AddMonoidWithOneₓ M] [CharZero M]
 
 -- see Note [lower instance priority]
 instance (priority := 100) CharZero.infinite : Infinite M :=
@@ -143,7 +72,7 @@ variable {R : Type _} [NonAssocSemiringₓ R] [NoZeroDivisors R] [CharZero R]
 
 @[simp]
 theorem add_self_eq_zero {a : R} : a + a = 0 ↔ a = 0 := by
-  simp only [(two_mul a).symm, mul_eq_zero, two_ne_zero', false_orₓ]
+  simp only [← (two_mul a).symm, ← mul_eq_zero, ← two_ne_zero', ← false_orₓ]
 
 @[simp]
 theorem bit0_eq_zero {a : R} : bit0 a = 0 ↔ a = 0 :=
@@ -171,16 +100,16 @@ theorem nat_mul_inj {n : ℕ} {a b : R} (h : (n : R) * a = (n : R) * b) : n = 0 
   exact_mod_cast h
 
 theorem nat_mul_inj' {n : ℕ} {a b : R} (h : (n : R) * a = (n : R) * b) (w : n ≠ 0) : a = b := by
-  simpa [w] using nat_mul_inj h
+  simpa [← w] using nat_mul_inj h
 
 theorem bit0_injective : Function.Injective (bit0 : R → R) := fun a b h => by
-  dsimp' [bit0]  at h
-  simp only [(two_mul a).symm, (two_mul b).symm] at h
+  dsimp' [← bit0]  at h
+  simp only [← (two_mul a).symm, ← (two_mul b).symm] at h
   refine' nat_mul_inj' _ two_ne_zero
   exact_mod_cast h
 
 theorem bit1_injective : Function.Injective (bit1 : R → R) := fun a b h => by
-  simp only [bit1, add_left_injₓ] at h
+  simp only [← bit1, ← add_left_injₓ] at h
   exact bit0_injective h
 
 @[simp]
@@ -227,8 +156,8 @@ end
 
 namespace WithTop
 
-instance {R : Type _} [AddMonoidₓ R] [One R] [CharZero R] : CharZero (WithTop R) where
-  cast_injective := fun m n h => by
+instance {R : Type _} [AddMonoidWithOneₓ R] [CharZero R] :
+    CharZero (WithTop R) where cast_injective := fun m n h => by
     rwa [← coe_nat, ← coe_nat n, coe_eq_coe, Nat.cast_inj] at h
 
 end WithTop
@@ -245,8 +174,8 @@ theorem RingHom.char_zero (ϕ : R →+* S) [hS : CharZero S] : CharZero R :=
 
 theorem RingHom.char_zero_iff {ϕ : R →+* S} (hϕ : Function.Injective ϕ) : CharZero R ↔ CharZero S :=
   ⟨fun hR =>
-    ⟨fun a b h => by
-      rwa [← @Nat.cast_inj R _ _ hR, ← hϕ.eq_iff, map_nat_cast ϕ, map_nat_cast ϕ]⟩,
+    ⟨by
+      intro a b h <;> rwa [← @Nat.cast_inj R, ← hϕ.eq_iff, map_nat_cast ϕ, map_nat_cast ϕ]⟩,
     fun hS => ϕ.char_zero⟩
 
 theorem RingHom.injective_nat (f : ℕ →+* R) [CharZero R] : Function.Injective f :=

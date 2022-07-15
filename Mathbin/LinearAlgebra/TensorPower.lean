@@ -54,8 +54,7 @@ open TensorProduct DirectSum
 open PiTensorProduct
 
 /-- As a graded monoid, `⨂[R]^i M` has a `1 : ⨂[R]^0 M`. -/
-instance ghasOne : GradedMonoid.GhasOne fun i => (⨂[R]^i) M where
-  one := tprod R Finₓ.elim0
+instance ghasOne : GradedMonoid.GhasOne fun i => (⨂[R]^i) M where one := tprod R Finₓ.elim0
 
 -- mathport name: «exprₜ1»
 local notation "ₜ1" => @GradedMonoid.GhasOne.one ℕ (fun i => (⨂[R]^i) M) _ _
@@ -68,8 +67,7 @@ def mulEquiv {n m : ℕ} : (⨂[R]^n) M ⊗[R] (⨂[R]^m) M ≃ₗ[R] (⨂[R]^(n
   (tmulEquiv R M).trans (reindex R M finSumFinEquiv)
 
 /-- As a graded monoid, `⨂[R]^i M` has a `(*) : ⨂[R]^i M → ⨂[R]^j M → ⨂[R]^(i + j) M`. -/
-instance ghasMul : GradedMonoid.GhasMul fun i => (⨂[R]^i) M where
-  mul := fun i j a b => mulEquiv (a ⊗ₜ b)
+instance ghasMul : GradedMonoid.GhasMul fun i => (⨂[R]^i) M where mul := fun i j a b => mulEquiv (a ⊗ₜ b)
 
 -- mathport name: «expr ₜ* »
 local infixl:70 "ₜ*" => @GradedMonoid.GhasMul.mul ℕ (fun i => (⨂[R]^i) M) _ _ _ _

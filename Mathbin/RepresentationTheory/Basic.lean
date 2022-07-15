@@ -80,10 +80,10 @@ theorem as_algebra_hom_def : asAlgebraHom ρ = (lift k G _) ρ :=
 
 @[simp]
 theorem as_algebra_hom_single (g : G) : asAlgebraHom ρ (Finsupp.single g 1) = ρ g := by
-  simp only [as_algebra_hom_def, MonoidAlgebra.lift_single, one_smul]
+  simp only [← as_algebra_hom_def, ← MonoidAlgebra.lift_single, ← one_smul]
 
 theorem as_algebra_hom_of (g : G) : asAlgebraHom ρ (of k G g) = ρ g := by
-  simp only [MonoidAlgebra.of_apply, as_algebra_hom_single]
+  simp only [← MonoidAlgebra.of_apply, ← as_algebra_hom_single]
 
 /-- A `k`-linear representation of `G` on `V` can be thought of as
 a module over `monoid_algebra k G`.
@@ -106,37 +106,9 @@ def asGroupHom : G →* Units (V →ₗ[k] V) :=
   MonoidHom.toHomUnits ρ
 
 theorem as_group_hom_apply (g : G) : ↑(asGroupHom ρ g) = ρ g := by
-  simp only [as_group_hom, MonoidHom.coe_to_hom_units]
+  simp only [← as_group_hom, ← MonoidHom.coe_to_hom_units]
 
 end Groupₓ
-
-section Character
-
-variable {k G V : Type _} [CommRingₓ k] [Groupₓ G] [AddCommGroupₓ V] [Module k V]
-
-variable (ρ : Representation k G V)
-
-/-- The character associated to a representation of `G`, which as a map `G → k`
-sends each element to the trace of the corresponding linear map.
--/
-@[simp]
-noncomputable def character (g : G) : k :=
-  trace k V (ρ g)
-
-theorem char_mul_comm (g : G) (h : G) : character ρ (h * g) = character ρ (g * h) := by
-  simp only [trace_mul_comm, character, map_mul]
-
-/-- The character of a representation is constant on conjugacy classes. -/
-theorem char_conj (g : G) (h : G) : (character ρ) (h * g * h⁻¹) = (character ρ) g := by
-  simp only [character, ← as_group_hom_apply, map_mul, map_inv, trace_conj]
-
-variable [Nontrivial k] [Module.Free k V] [Module.Finite k V]
-
-/-- The evaluation of the character at the identity is the dimension of the representation. -/
-theorem char_one : character ρ 1 = FiniteDimensional.finrank k V := by
-  simp only [character, map_one, trace_one]
-
-end Character
 
 section TensorProduct
 
@@ -154,12 +126,12 @@ tensor product `V ⊗[k] W`.
 def tprod : Representation k G (V ⊗[k] W) where
   toFun := fun g => TensorProduct.map (ρV g) (ρW g)
   map_one' := by
-    simp only [map_one, TensorProduct.map_one]
+    simp only [← map_one, ← TensorProduct.map_one]
   map_mul' := fun g h => by
-    simp only [map_mul, TensorProduct.map_mul]
+    simp only [← map_mul, ← TensorProduct.map_mul]
 
 -- mathport name: «expr ⊗ »
-notation ρV " ⊗ " ρW => tprod ρV ρW
+local notation ρV " ⊗ " ρW => tprod ρV ρW
 
 @[simp]
 theorem tprod_apply (g : G) : (ρV ⊗ ρW) g = TensorProduct.map (ρV g) (ρW g) :=
@@ -203,20 +175,25 @@ def dual : Representation k G (Module.Dual k V) where
   toFun := fun g =>
     { toFun := fun f => f ∘ₗ ρV g⁻¹,
       map_add' := fun f₁ f₂ => by
-        simp only [add_comp],
+        simp only [← add_comp],
       map_smul' := fun r f => by
         ext
-        simp only [coe_comp, Function.comp_app, smul_apply, RingHom.id_apply] }
+        simp only [← coe_comp, ← Function.comp_app, ← smul_apply, ← RingHom.id_apply] }
   map_one' := by
     ext
-    simp only [coe_comp, Function.comp_app, map_one, inv_one, coe_mk, one_apply]
+    simp only [← coe_comp, ← Function.comp_app, ← map_one, ← inv_one, ← coe_mk, ← one_apply]
   map_mul' := fun g h => by
     ext
-    simp only [coe_comp, Function.comp_app, mul_inv_rev, map_mul, coe_mk, mul_apply]
+    simp only [← coe_comp, ← Function.comp_app, ← mul_inv_rev, ← map_mul, ← coe_mk, ← mul_apply]
 
 @[simp]
-theorem dual_apply (g : G) (f : Module.Dual k V) : (dual ρV) g f = f ∘ₗ ρV g⁻¹ :=
+theorem dual_apply (g : G) : (dual ρV) g = Module.Dual.transpose (ρV g⁻¹) :=
   rfl
+
+theorem dual_tensor_hom_comm (g : G) :
+    dualTensorHom k V W ∘ₗ TensorProduct.map (ρV.dual g) (ρW g) = (linHom ρV ρW) g ∘ₗ dualTensorHom k V W := by
+  ext
+  simp [← Module.Dual.transpose_apply]
 
 end LinearHom
 

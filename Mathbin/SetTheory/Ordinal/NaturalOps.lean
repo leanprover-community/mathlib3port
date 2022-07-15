@@ -48,10 +48,7 @@ noncomputable section
 
 /-- A type synonym for ordinals with natural addition and multiplication. -/
 def NatOrdinal : Type _ :=
-  Ordinal
-
-instance : LinearOrderₓ NatOrdinal :=
-  Ordinal.linearOrder
+  Ordinal deriving Zero, Inhabited, One, LinearOrderₓ, SuccOrder, HasWellFounded
 
 /-- The identity function between `ordinal` and `nat_ordinal`. -/
 @[matchPattern]
@@ -77,23 +74,8 @@ theorem to_ordinal_symm_eq : NatOrdinal.toOrdinal.symm = Ordinal.toNatOrdinal :=
 theorem to_ordinal_to_nat_ordinal (a : NatOrdinal) : a.toOrdinal.toNatOrdinal = a :=
   rfl
 
-instance : Zero NatOrdinal :=
-  ⟨toNatOrdinal 0⟩
-
-instance : Inhabited NatOrdinal :=
-  ⟨0⟩
-
-instance : One NatOrdinal :=
-  ⟨toNatOrdinal 1⟩
-
-instance : SuccOrder NatOrdinal :=
-  Ordinal.succOrder
-
 theorem lt_wf : @WellFounded NatOrdinal (· < ·) :=
   Ordinal.lt_wf
-
-instance : HasWellFounded NatOrdinal :=
-  Ordinal.hasWellFounded
 
 instance : IsWellOrder NatOrdinal (· < ·) :=
   Ordinal.HasLt.Lt.is_well_order
@@ -180,7 +162,7 @@ noncomputable def nadd : Ordinal → Ordinal → Ordinal
   | a, b => max ((blsub.{u, u} a) fun a' h => nadd a' b) ((blsub.{u, u} b) fun b' h => nadd a b')
 
 -- mathport name: «expr ♯ »
-local infixl:65 " ♯ " => nadd
+localized [NaturalOps] infixl:65 " ♯ " => Ordinal.nadd
 
 theorem nadd_def (a b : Ordinal) :
     a ♯ b = max ((blsub.{u, u} a) fun a' h => a' ♯ b) ((blsub.{u, u} b) fun b' h => a ♯ b') := by
@@ -188,11 +170,11 @@ theorem nadd_def (a b : Ordinal) :
 
 theorem lt_nadd_iff : a < b ♯ c ↔ (∃ b' < b, a ≤ b' ♯ c) ∨ ∃ c' < c, a ≤ b ♯ c' := by
   rw [nadd_def]
-  simp [lt_blsub_iff]
+  simp [← lt_blsub_iff]
 
 theorem nadd_le_iff : b ♯ c ≤ a ↔ (∀, ∀ b' < b, ∀, b' ♯ c < a) ∧ ∀, ∀ c' < c, ∀, b ♯ c' < a := by
   rw [nadd_def]
-  simp [blsub_le_iff]
+  simp [← blsub_le_iff]
 
 theorem nadd_lt_nadd_left (h : b < c) a : a ♯ b < a ♯ c :=
   lt_nadd_iff.2 (Or.inr ⟨b, h, le_rfl⟩)
@@ -327,6 +309,9 @@ instance : OrderedCancelAddCommMonoid NatOrdinal :=
     le_of_add_le_add_left := fun a b c => le_of_add_le_add_left, zero := 0, zero_add := zero_nadd,
     add_zero := nadd_zero, add_comm := nadd_comm }
 
+instance : AddMonoidWithOneₓ NatOrdinal :=
+  AddMonoidWithOneₓ.unary
+
 @[simp]
 theorem add_one_eq_succ : ∀ a : NatOrdinal, a + 1 = succ a :=
   nadd_one
@@ -345,10 +330,9 @@ end NatOrdinal
 
 open NatOrdinal
 
-namespace Ordinal
+open NaturalOps
 
--- mathport name: «expr ♯ »
-local infixl:65 " ♯ " => nadd
+namespace Ordinal
 
 @[simp]
 theorem to_nat_ordinal_cast_nat (n : ℕ) : toNatOrdinal n = n := by

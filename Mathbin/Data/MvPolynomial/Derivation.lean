@@ -100,10 +100,10 @@ theorem leibniz_iff_X (D : MvPolynomial σ R →ₗ[R] A) (h₁ : D 1 = 0) :
   case h_C c =>
     rw [mul_comm, C_mul', hC, smul_zero, zero_addₓ, D.map_smul, C_eq_smul_one, smul_one_smul]
   case h_add q₁ q₂ h₁ h₂ =>
-    simp only [mul_addₓ, map_add, h₁, h₂, smul_add, add_smul]
+    simp only [← mul_addₓ, ← map_add, ← h₁, ← h₂, ← smul_add, ← add_smul]
     abel
   case h_X q i hq =>
-    simp only [this, ← mul_assoc, hq, mul_smul, smul_add, smul_comm (X i), add_assocₓ]
+    simp only [← this, mul_assoc, ← hq, ← mul_smul, ← smul_add, ← smul_comm (X i), ← add_assocₓ]
 
 variable (R)
 
@@ -113,12 +113,12 @@ def mkDerivation (f : σ → A) : Derivation R (MvPolynomial σ R) A where
   map_one_eq_zero' := mk_derivationₗ_C _ 1
   leibniz' :=
     (leibniz_iff_X (mkDerivationₗ R f) (mk_derivationₗ_C _ 1)).2 fun s i => by
-      simp only [mk_derivationₗ_monomial, X, monomial_mul, one_smul, one_mulₓ]
+      simp only [← mk_derivationₗ_monomial, ← X, ← monomial_mul, ← one_smul, ← one_mulₓ]
       rw [Finsupp.sum_add_index] <;> [skip,
         · simp
           ,
         · intros
-          simp only [Nat.cast_addₓ, (monomial _).map_add, add_smul]
+          simp only [← Nat.cast_addₓ, ← (monomial _).map_add, ← add_smul]
           ]
       rw [Finsupp.sum_single_index, Finsupp.sum_single_index] <;> [skip,
         · simp

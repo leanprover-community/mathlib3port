@@ -66,11 +66,11 @@ theorem is_diag_one [DecidableEq n] [Zero α] [One α] : (1 : Matrix n n α).IsD
 theorem IsDiag.map [Zero α] [Zero β] {A : Matrix n n α} (ha : A.IsDiag) {f : α → β} (hf : f 0 = 0) : (A.map f).IsDiag :=
   by
   intro i j h
-  simp [ha h, hf]
+  simp [← ha h, ← hf]
 
 theorem IsDiag.neg [AddGroupₓ α] {A : Matrix n n α} (ha : A.IsDiag) : (-A).IsDiag := by
   intro i j h
-  simp [ha h]
+  simp [← ha h]
 
 @[simp]
 theorem is_diag_neg_iff [AddGroupₓ α] {A : Matrix n n α} : (-A).IsDiag ↔ A.IsDiag :=
@@ -78,16 +78,16 @@ theorem is_diag_neg_iff [AddGroupₓ α] {A : Matrix n n α} : (-A).IsDiag ↔ A
 
 theorem IsDiag.add [AddZeroClassₓ α] {A B : Matrix n n α} (ha : A.IsDiag) (hb : B.IsDiag) : (A + B).IsDiag := by
   intro i j h
-  simp [ha h, hb h]
+  simp [← ha h, ← hb h]
 
 theorem IsDiag.sub [AddGroupₓ α] {A B : Matrix n n α} (ha : A.IsDiag) (hb : B.IsDiag) : (A - B).IsDiag := by
   intro i j h
-  simp [ha h, hb h]
+  simp [← ha h, ← hb h]
 
 theorem IsDiag.smul [Monoidₓ R] [AddMonoidₓ α] [DistribMulAction R α] (k : R) {A : Matrix n n α} (ha : A.IsDiag) :
     (k • A).IsDiag := by
   intro i j h
-  simp [ha h]
+  simp [← ha h]
 
 @[simp]
 theorem is_diag_smul_one n [Semiringₓ α] [DecidableEq n] (k : α) : (k • (1 : Matrix n n α)).IsDiag :=
@@ -115,11 +115,11 @@ theorem IsDiag.minor [Zero α] {A : Matrix n n α} (ha : A.IsDiag) {f : m → n}
 theorem IsDiag.kronecker [MulZeroClassₓ α] {A : Matrix m m α} {B : Matrix n n α} (hA : A.IsDiag) (hB : B.IsDiag) :
     (A ⊗ₖ B).IsDiag := by
   rintro ⟨a, b⟩ ⟨c, d⟩ h
-  simp only [Prod.mk.inj_iff, Ne.def, not_and_distrib] at h
+  simp only [← Prod.mk.inj_iff, ← Ne.def, ← not_and_distrib] at h
   cases' h with hac hbd
-  · simp [hA hac]
+  · simp [← hA hac]
     
-  · simp [hB hbd]
+  · simp [← hB hbd]
     
 
 theorem IsDiag.is_symm [Zero α] {A : Matrix n n α} (h : A.IsDiag) : A.IsSymm := by
@@ -127,7 +127,7 @@ theorem IsDiag.is_symm [Zero α] {A : Matrix n n α} (h : A.IsDiag) : A.IsSymm :
   by_cases' g : i = j
   · rw [g]
     
-  simp [h g, h (Ne.symm g)]
+  simp [← h g, ← h (Ne.symm g)]
 
 /-- The block matrix `A.from_blocks 0 0 D` is diagonal if `A` and `D` are diagonal. -/
 theorem IsDiag.from_blocks [Zero α] {A : Matrix m m α} {D : Matrix n n α} (ha : A.IsDiag) (hd : D.IsDiag) :

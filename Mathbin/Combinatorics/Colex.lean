@@ -98,17 +98,16 @@ theorem Nat.sum_two_pow_lt {k : ℕ} {A : Finset ℕ} (h₁ : ∀ {x}, x ∈ A �
 
 namespace Colex
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 /-- Strictly monotone functions preserve the colex ordering. -/
 theorem hom_lt_iff {β : Type _} [LinearOrderₓ α] [DecidableEq β] [Preorderₓ β] {f : α → β} (h₁ : StrictMono f)
     (A B : Finset α) : (A.Image f).toColex < (B.Image f).toColex ↔ A.toColex < B.toColex := by
-  simp only [Colex.lt_def, not_exists, mem_image, exists_prop, not_and]
+  simp only [← Colex.lt_def, ← not_exists, ← mem_image, ← exists_prop, ← not_and]
   constructor
   · rintro ⟨k, z, q, k', _, rfl⟩
     exact
       ⟨k', fun x hx => by
-        simpa [h₁.injective.eq_iff] using z (h₁ hx), fun t => q _ t rfl, ‹k' ∈ B›⟩
+        simpa [← h₁.injective.eq_iff] using z (h₁ hx), fun t => q _ t rfl, ‹k' ∈ B›⟩
     
   rintro ⟨k, z, ka, _⟩
   refine' ⟨f k, fun x hx => _, _, k, ‹k ∈ B›, rfl⟩
@@ -116,7 +115,7 @@ theorem hom_lt_iff {β : Type _} [LinearOrderₓ α] [DecidableEq β] [Preorder�
     any_goals {
     }
     
-  · simp only [h₁.injective, Function.Injective.eq_iff]
+  · simp only [← h₁.injective, ← Function.Injective.eq_iff]
     exact fun x hx => ne_of_mem_of_not_mem hx ka
     
 
@@ -158,14 +157,14 @@ theorem lt_trichotomy [LinearOrderₓ α] (A B : Finset.Colex α) : A < B ∨ A 
   · tauto
     
   rcases exists_max_image (A \ B ∪ B \ A) id _ with ⟨k, hk, z⟩
-  · simp only [mem_union, mem_sdiff] at hk
+  · simp only [← mem_union, ← mem_sdiff] at hk
     cases hk
     · right
       right
       refine' ⟨k, fun t th => _, hk.2, hk.1⟩
       specialize z t
       by_contra h₂
-      simp only [mem_union, mem_sdiff, id.def] at z
+      simp only [← mem_union, ← mem_sdiff, ← id.def] at z
       rw [not_iff, iff_iff_and_or_not_and_not, not_not, and_comm] at h₂
       apply not_le_of_lt th (z h₂)
       
@@ -173,14 +172,14 @@ theorem lt_trichotomy [LinearOrderₓ α] (A B : Finset.Colex α) : A < B ∨ A 
       refine' ⟨k, fun t th => _, hk.2, hk.1⟩
       specialize z t
       by_contra h₃
-      simp only [mem_union, mem_sdiff, id.def] at z
+      simp only [← mem_union, ← mem_sdiff, ← id.def] at z
       rw [not_iff, iff_iff_and_or_not_and_not, not_not, and_comm, or_comm] at h₃
       apply not_le_of_lt th (z h₃)
       
     
   rw [nonempty_iff_ne_empty]
   intro a
-  simp only [union_eq_empty_iff, sdiff_eq_empty_iff_subset] at a
+  simp only [← union_eq_empty_iff, ← sdiff_eq_empty_iff_subset] at a
   apply h₁ (subset.antisymm a.1 a.2)
 
 instance [LinearOrderₓ α] : IsTrichotomous (Finset.Colex α) (· < ·) :=
@@ -192,7 +191,7 @@ instance decidableLt [LinearOrderₓ α] : ∀ {A B : Finset.Colex α}, Decidabl
       (by
         rw [Colex.lt_def]
         apply exists_congr
-        simp only [mem_union, exists_prop, or_imp_distrib, and_comm (_ ∈ B), and_assoc]
+        simp only [← mem_union, ← exists_prop, ← or_imp_distrib, ← and_comm (_ ∈ B), ← and_assoc]
         intro k
         refine' and_congr_left' (forall_congrₓ _)
         tauto)
@@ -253,7 +252,7 @@ theorem forall_lt_of_colex_lt_of_forall_lt [LinearOrderₓ α] {A B : Finset α}
 /-- `s.to_colex < {r}.to_colex` iff all elements of `s` are less than `r`. -/
 theorem lt_singleton_iff_mem_lt [LinearOrderₓ α] {r : α} {s : Finset α} :
     s.toColex < ({r} : Finset α).toColex ↔ ∀, ∀ x ∈ s, ∀, x < r := by
-  simp only [lt_def, mem_singleton, ← and_assoc, exists_eq_right]
+  simp only [← lt_def, ← mem_singleton, and_assoc, ← exists_eq_right]
   constructor
   · intro t x hx
     rw [← not_leₓ]
@@ -274,12 +273,12 @@ theorem lt_singleton_iff_mem_lt [LinearOrderₓ α] {r : α} {s : Finset α} :
 theorem mem_le_of_singleton_le [LinearOrderₓ α] {r : α} {s : Finset α} :
     ({r} : Finset α).toColex ≤ s.toColex ↔ ∃ x ∈ s, r ≤ x := by
   rw [← not_ltₓ]
-  simp [lt_singleton_iff_mem_lt]
+  simp [← lt_singleton_iff_mem_lt]
 
 /-- Colex is an extension of the base ordering on α. -/
 theorem singleton_lt_iff_lt [LinearOrderₓ α] {r s : α} : ({r} : Finset α).toColex < ({s} : Finset α).toColex ↔ r < s :=
   by
-  simp [lt_singleton_iff_mem_lt]
+  simp [← lt_singleton_iff_mem_lt]
 
 /-- Colex is an extension of the base ordering on α. -/
 theorem singleton_le_iff_le [LinearOrderₓ α] {r s : α} : ({r} : Finset α).toColex ≤ ({s} : Finset α).toColex ↔ r ≤ s :=
@@ -293,7 +292,7 @@ theorem sdiff_lt_sdiff_iff_lt [LT α] [DecidableEq α] (A B : Finset α) :
   rw [Colex.lt_def, Colex.lt_def]
   apply exists_congr
   intro k
-  simp only [mem_sdiff, not_and, not_not]
+  simp only [← mem_sdiff, ← not_and, ← not_not]
   constructor
   · rintro ⟨z, kAB, kB, kA⟩
     refine' ⟨_, kA, kB⟩
@@ -319,7 +318,7 @@ theorem empty_to_colex_lt [LinearOrderₓ α] {A : Finset α} (hA : A.Nonempty) 
   refine'
     ⟨max' _ hA, _, by
       simp , max'_mem _ _⟩
-  simp only [false_iffₓ, not_mem_empty]
+  simp only [← false_iffₓ, ← not_mem_empty]
   intro x hx t
   apply not_le_of_lt hx (le_max' _ _ t)
 
@@ -330,7 +329,7 @@ theorem colex_lt_of_ssubset [LinearOrderₓ α] {A B : Finset α} (h : A ⊂ B) 
   exact
     empty_to_colex_lt
       (by
-        simpa [Finset.Nonempty] using exists_of_ssubset h)
+        simpa [← Finset.Nonempty] using exists_of_ssubset h)
 
 @[simp]
 theorem empty_to_colex_le [LinearOrderₓ α] {A : Finset α} : (∅ : Finset α).toColex ≤ A.toColex := by

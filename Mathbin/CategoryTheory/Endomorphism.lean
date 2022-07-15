@@ -130,7 +130,9 @@ instance : Groupₓ (Aut X) := by
     intros <;>
       try
           rfl <;>
-        ext <;> simp [flip, (· * ·), Monoidₓ.mul, MulOneClassₓ.mul, MulOneClassₓ.one, One.one, Monoidₓ.one, Inv.inv]
+        ext <;>
+          simp [← flip, ← (· * ·), ← Monoidₓ.mul, ← MulOneClassₓ.mul, ← MulOneClassₓ.one, ← One.one, ← Monoidₓ.one, ←
+            Inv.inv]
 
 theorem Aut_mul_def (f g : Aut X) : f * g = g.trans f :=
   rfl
@@ -155,7 +157,7 @@ def autMulEquivOfIso {X Y : C} (h : X ≅ Y) : Aut X ≃* Aut Y where
   right_inv := by
     tidy
   map_mul' := by
-    simp [Aut_mul_def]
+    simp [← Aut_mul_def]
 
 end Aut
 

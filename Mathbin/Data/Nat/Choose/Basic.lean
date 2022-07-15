@@ -60,7 +60,7 @@ theorem choose_eq_zero_of_lt : ∀ {n k}, n < k → choose n k = 0
 
 @[simp]
 theorem choose_self (n : ℕ) : choose n n = 1 := by
-  induction n <;> simp [*, choose, choose_eq_zero_of_lt (lt_succ_self _)]
+  induction n <;> simp [*, ← choose, ← choose_eq_zero_of_lt (lt_succ_self _)]
 
 @[simp]
 theorem choose_succ_self (n : ℕ) : choose n (succ n) = 0 :=
@@ -68,7 +68,7 @@ theorem choose_succ_self (n : ℕ) : choose n (succ n) = 0 :=
 
 @[simp]
 theorem choose_one_right (n : ℕ) : choose n 1 = n := by
-  induction n <;> simp [*, choose, add_commₓ]
+  induction n <;> simp [*, ← choose, ← add_commₓ]
 
 -- The `n+1`-st triangle number is `n` more than the `n`-th triangle number
 theorem triangle_succ (n : ℕ) : (n + 1) * (n + 1 - 1) / 2 = n * (n - 1) / 2 + n := by
@@ -81,7 +81,7 @@ theorem choose_two_right (n : ℕ) : choose n 2 = n * (n - 1) / 2 := by
   induction' n with n ih
   simp
   · rw [triangle_succ n]
-    simp [choose, ih]
+    simp [← choose, ← ih]
     rw [add_commₓ]
     
 
@@ -104,7 +104,7 @@ theorem succ_mul_choose_eq : ∀ n k, succ n * choose n k = choose (succ n) (suc
   | 0, 0 => by
     decide
   | 0, k + 1 => by
-    simp [choose]
+    simp [← choose]
   | n + 1, 0 => by
     simp
   | n + 1, k + 1 => by
@@ -113,24 +113,24 @@ theorem succ_mul_choose_eq : ∀ n k, succ n * choose n k = choose (succ n) (suc
 
 theorem choose_mul_factorial_mul_factorial : ∀ {n k}, k ≤ n → choose n k * k ! * (n - k)! = n !
   | 0, _, hk => by
-    simp [Nat.eq_zero_of_le_zeroₓ hk]
+    simp [← Nat.eq_zero_of_le_zeroₓ hk]
   | n + 1, 0, hk => by
     simp
   | n + 1, succ k, hk => by
     cases' lt_or_eq_of_leₓ hk with hk₁ hk₁
     · have h : choose n k * k.succ ! * (n - k)! = (k + 1) * n ! := by
         rw [← choose_mul_factorial_mul_factorial (le_of_succ_le_succ hk)] <;>
-          simp [factorial_succ, mul_comm, mul_left_commₓ]
+          simp [← factorial_succ, ← mul_comm, ← mul_left_commₓ]
       have h₁ : (n - k)! = (n - k) * (n - k.succ)! := by
         rw [← succ_sub_succ, succ_sub (le_of_lt_succ hk₁), factorial_succ]
       have h₂ : choose n (succ k) * k.succ ! * ((n - k) * (n - k.succ)!) = (n - k) * n ! := by
         rw [← choose_mul_factorial_mul_factorial (le_of_lt_succ hk₁)] <;>
-          simp [factorial_succ, mul_comm, mul_left_commₓ, mul_assoc]
+          simp [← factorial_succ, ← mul_comm, ← mul_left_commₓ, ← mul_assoc]
       have h₃ : k * n ! ≤ n * n ! := Nat.mul_le_mul_rightₓ _ (le_of_succ_le_succ hk)
       rw [choose_succ_succ, add_mulₓ, add_mulₓ, succ_sub_succ, h, h₁, h₂, add_mulₓ, tsub_mul, factorial_succ, ←
         add_tsub_assoc_of_le h₃, add_assocₓ, ← add_mulₓ, add_tsub_cancel_left, add_commₓ]
       
-    · simp [hk₁, mul_comm, choose, tsub_self]
+    · simp [← hk₁, ← mul_comm, ← choose, ← tsub_self]
       
 
 theorem choose_mul {n k s : ℕ} (hkn : k ≤ n) (hsk : s ≤ k) :
@@ -274,7 +274,7 @@ theorem choose_le_middle (r n : ℕ) : choose n r ≤ choose n (n / 2) := by
 
 
 theorem choose_le_succ (a c : ℕ) : choose a c ≤ choose a.succ c := by
-  cases c <;> simp [Nat.choose_succ_succ]
+  cases c <;> simp [← Nat.choose_succ_succ]
 
 theorem choose_le_add (a b c : ℕ) : choose a c ≤ choose (a + b) c := by
   induction' b with b_n b_ih

@@ -76,8 +76,9 @@ theorem IsInitial.strict_hom_ext (hI : IsInitial I) {A : C} (f g : A ⟶ I) : f 
 theorem IsInitial.subsingleton_to (hI : IsInitial I) {A : C} : Subsingleton (A ⟶ I) :=
   ⟨hI.strict_hom_ext⟩
 
-instance (priority := 100) initial_mono_of_strict_initial_objects : InitialMonoClass C where
-  is_initial_mono_from := fun I A hI => { right_cancellation := fun B g h i => hI.strict_hom_ext _ _ }
+instance (priority := 100) initial_mono_of_strict_initial_objects :
+    InitialMonoClass
+      C where is_initial_mono_from := fun I A hI => { right_cancellation := fun B g h i => hI.strict_hom_ext _ _ }
 
 /-- If `I` is initial, then `X ⨯ I` is isomorphic to it. -/
 @[simps Hom]
@@ -139,10 +140,11 @@ end
 has strict initial objects. -/
 theorem has_strict_initial_objects_of_initial_is_strict [HasInitial C] (h : ∀ A f : A ⟶ ⊥_ C, IsIso f) :
     HasStrictInitialObjects C :=
-  { out := fun I A f hI =>
+  { out := fun I A f hI => by
       have := h A (f ≫ hI.to _)
-      ⟨⟨hI.to _ ≫ inv (f ≫ hI.to (⊥_ C)), by
-          rw [← assoc, is_iso.hom_inv_id], hI.hom_ext _ _⟩⟩ }
+      exact
+        ⟨⟨hI.to _ ≫ inv (f ≫ hI.to (⊥_ C)), by
+            rw [← assoc, is_iso.hom_inv_id], hI.hom_ext _ _⟩⟩ }
 
 end StrictInitial
 
@@ -176,8 +178,8 @@ theorem IsTerminal.subsingleton_to (hI : IsTerminal I) {A : C} : Subsingleton (I
 
 variable {J : Type v} [SmallCategory J]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j «expr ≠ » i)
 /-- If all but one object in a diagram is strict terminal, the the limit is isomorphic to the
 said object via `limit.π`. -/
 theorem limit_π_is_iso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J) (H : ∀ j _ : j ≠ i, IsTerminal (F.obj j))
@@ -245,10 +247,11 @@ end
 has strict terminal objects. -/
 theorem has_strict_terminal_objects_of_terminal_is_strict (I : C) (h : ∀ A f : I ⟶ A, IsIso f) :
     HasStrictTerminalObjects C :=
-  { out := fun I' A f hI' =>
+  { out := fun I' A f hI' => by
       have := h A (hI'.from _ ≫ f)
-      ⟨⟨inv (hI'.from I ≫ f) ≫ hI'.from I, hI'.hom_ext _ _, by
-          rw [assoc, is_iso.inv_hom_id]⟩⟩ }
+      exact
+        ⟨⟨inv (hI'.from I ≫ f) ≫ hI'.from I, hI'.hom_ext _ _, by
+            rw [assoc, is_iso.inv_hom_id]⟩⟩ }
 
 end StrictTerminal
 

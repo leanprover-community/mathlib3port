@@ -120,9 +120,9 @@ theorem IsTopologicalBasis.mem_nhds_iff {a : α} {s : Set α} {b : Set (Set α)}
     s ∈ 𝓝 a ↔ ∃ t ∈ b, a ∈ t ∧ t ⊆ s := by
   change s ∈ (𝓝 a).Sets ↔ ∃ t ∈ b, a ∈ t ∧ t ⊆ s
   rw [hb.eq_generate_from, nhds_generate_from, binfi_sets_eq]
-  · simp [and_assoc, And.left_comm]
+  · simp [← and_assoc, ← And.left_comm]
     
-  · exact fun t ⟨ht₁, ht₂⟩ =>
+  · exact fun s ⟨hs₁, hs₂⟩ t ⟨ht₁, ht₂⟩ =>
       have : a ∈ s ∩ t := ⟨hs₁, ht₁⟩
       let ⟨u, hu₁, hu₂, hu₃⟩ := hb.1 _ hs₂ _ ht₂ _ this
       ⟨u, ⟨hu₂, hu₁⟩, le_principal_iff.2 (subset.trans hu₃ (inter_subset_left _ _)),
@@ -134,13 +134,13 @@ theorem IsTopologicalBasis.mem_nhds_iff {a : α} {s : Set α} {b : Set (Set α)}
 
 theorem IsTopologicalBasis.is_open_iff {s : Set α} {b : Set (Set α)} (hb : IsTopologicalBasis b) :
     IsOpen s ↔ ∀, ∀ a ∈ s, ∀, ∃ t ∈ b, a ∈ t ∧ t ⊆ s := by
-  simp [is_open_iff_mem_nhds, hb.mem_nhds_iff]
+  simp [← is_open_iff_mem_nhds, ← hb.mem_nhds_iff]
 
 theorem IsTopologicalBasis.nhds_has_basis {b : Set (Set α)} (hb : IsTopologicalBasis b) {a : α} :
     (𝓝 a).HasBasis (fun t : Set α => t ∈ b ∧ a ∈ t) fun t => t :=
   ⟨fun s =>
     hb.mem_nhds_iff.trans <| by
-      simp only [exists_prop, and_assoc]⟩
+      simp only [← exists_prop, ← and_assoc]⟩
 
 protected theorem IsTopologicalBasis.is_open {s : Set α} {b : Set (Set α)} (hb : IsTopologicalBasis b) (hs : s ∈ b) :
     IsOpen s := by
@@ -164,14 +164,14 @@ theorem IsTopologicalBasis.open_eq_sUnion' {B : Set (Set α)} (hB : IsTopologica
       ⟨b, ⟨hb, bu⟩, ab⟩,
       fun ⟨b, ⟨hb, bu⟩, ab⟩ => bu ab⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (S «expr ⊆ » B)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (S «expr ⊆ » B)
 theorem IsTopologicalBasis.open_eq_sUnion {B : Set (Set α)} (hB : IsTopologicalBasis B) {u : Set α} (ou : IsOpen u) :
     ∃ (S : _)(_ : S ⊆ B), u = ⋃₀S :=
   ⟨{ s ∈ B | s ⊆ u }, fun s h => h.1, hB.open_eq_sUnion' ou⟩
 
 theorem IsTopologicalBasis.open_eq_Union {B : Set (Set α)} (hB : IsTopologicalBasis B) {u : Set α} (ou : IsOpen u) :
     ∃ (β : Type u)(f : β → Set α), (u = ⋃ i, f i) ∧ ∀ i, f i ∈ B :=
-  ⟨↥{ s ∈ B | s ⊆ u }, coe, by
+  ⟨↥({ s ∈ B | s ⊆ u }), coe, by
     rw [← sUnion_eq_Union]
     apply hB.open_eq_sUnion' ou, fun s => And.left s.2⟩
 
@@ -179,12 +179,12 @@ theorem IsTopologicalBasis.open_eq_Union {B : Set (Set α)} (hB : IsTopologicalB
 theorem IsTopologicalBasis.mem_closure_iff {b : Set (Set α)} (hb : IsTopologicalBasis b) {s : Set α} {a : α} :
     a ∈ Closure s ↔ ∀, ∀ o ∈ b, ∀, a ∈ o → (o ∩ s).Nonempty :=
   (mem_closure_iff_nhds_basis' hb.nhds_has_basis).trans <| by
-    simp only [and_imp]
+    simp only [← and_imp]
 
 /-- A set is dense iff it has non-trivial intersection with all basis sets. -/
 theorem IsTopologicalBasis.dense_iff {b : Set (Set α)} (hb : IsTopologicalBasis b) {s : Set α} :
     Dense s ↔ ∀, ∀ o ∈ b, ∀, Set.Nonempty o → (o ∩ s).Nonempty := by
-  simp only [Dense, hb.mem_closure_iff]
+  simp only [← Dense, ← hb.mem_closure_iff]
   exact ⟨fun h o hb ⟨a, ha⟩ => h a o hb ha, fun h a o hb ha => h o hb ⟨a, ha⟩⟩
 
 theorem IsTopologicalBasis.is_open_map_iff {β} [TopologicalSpace β] {B : Set (Set α)} (hB : IsTopologicalBasis B)
@@ -238,7 +238,7 @@ theorem is_topological_basis_of_cover {ι} {U : ι → Set α} (Uo : ∀ i, IsOp
     {b : ∀ i, Set (Set (U i))} (hb : ∀ i, IsTopologicalBasis (b i)) :
     IsTopologicalBasis (⋃ i : ι, Image (coe : U i → α) '' b i) := by
   refine' is_topological_basis_of_open_of_nhds (fun u hu => _) _
-  · simp only [mem_Union, mem_image] at hu
+  · simp only [← mem_Union, ← mem_image] at hu
     rcases hu with ⟨i, s, sb, rfl⟩
     exact (Uo i).is_open_map_subtype_coe _ ((hb i).IsOpen sb)
     
@@ -267,9 +267,9 @@ the latter should be used as a typeclass argument in theorems because Lean can a
 `separable_space` from `second_countable_topology` but it can't deduce `second_countable_topology`
 and `emetric_space`. -/
 class SeparableSpace : Prop where
-  exists_countable_dense : ∃ s : Set α, Countable s ∧ Dense s
+  exists_countable_dense : ∃ s : Set α, s.Countable ∧ Dense s
 
-theorem exists_countable_dense [SeparableSpace α] : ∃ s : Set α, Countable s ∧ Dense s :=
+theorem exists_countable_dense [SeparableSpace α] : ∃ s : Set α, s.Countable ∧ Dense s :=
   separable_space.exists_countable_dense
 
 /-- A nonempty separable space admits a sequence with dense range. Instead of running `cases` on the
@@ -295,15 +295,15 @@ theorem dense_range_dense_seq [SeparableSpace α] [Nonempty α] : DenseRange (de
 
 variable {α}
 
-instance (priority := 100) Encodable.to_separable_space [Encodable α] : SeparableSpace α where
-  exists_countable_dense := ⟨Set.Univ, Set.countable_encodable Set.Univ, dense_univ⟩
+instance (priority := 100) Encodable.to_separable_space [Encodable α] :
+    SeparableSpace α where exists_countable_dense := ⟨Set.Univ, Set.countable_encodable Set.Univ, dense_univ⟩
 
 theorem separable_space_of_dense_range {ι : Type _} [Encodable ι] (u : ι → α) (hu : DenseRange u) : SeparableSpace α :=
   ⟨⟨Range u, countable_range u, hu⟩⟩
 
 /-- In a separable space, a family of nonempty disjoint open sets is countable. -/
 theorem _root_.set.pairwise_disjoint.countable_of_is_open [SeparableSpace α] {ι : Type _} {s : ι → Set α} {a : Set ι}
-    (h : a.PairwiseDisjoint s) (ha : ∀, ∀ i ∈ a, ∀, IsOpen (s i)) (h'a : ∀, ∀ i ∈ a, ∀, (s i).Nonempty) : Countable a :=
+    (h : a.PairwiseDisjoint s) (ha : ∀, ∀ i ∈ a, ∀, IsOpen (s i)) (h'a : ∀, ∀ i ∈ a, ∀, (s i).Nonempty) : a.Countable :=
   by
   rcases exists_countable_dense α with ⟨u, ⟨u_encodable⟩, u_dense⟩
   have : ∀ i : a, ∃ y, y ∈ s i ∩ u := fun i => dense_iff_inter_open.1 u_dense (s i) (ha i i.2) (h'a i i.2)
@@ -311,12 +311,12 @@ theorem _root_.set.pairwise_disjoint.countable_of_is_open [SeparableSpace α] {�
   lift f to a → u using hfu
   have f_inj : injective f := by
     refine' injective_iff_pairwise_ne.mpr ((h.subtype _ _).mono fun i j hij hfij => hij ⟨hfs i, _⟩)
-    simp only [congr_arg coe hfij, hfs j]
+    simp only [← congr_arg coe hfij, ← hfs j]
   exact ⟨@Encodable.ofInj _ _ u_encodable f f_inj⟩
 
 /-- In a separable space, a family of disjoint sets with nonempty interiors is countable. -/
 theorem _root_.set.pairwise_disjoint.countable_of_nonempty_interior [SeparableSpace α] {ι : Type _} {s : ι → Set α}
-    {a : Set ι} (h : a.PairwiseDisjoint s) (ha : ∀, ∀ i ∈ a, ∀, (Interior (s i)).Nonempty) : Countable a :=
+    {a : Set ι} (h : a.PairwiseDisjoint s) (ha : ∀, ∀ i ∈ a, ∀, (Interior (s i)).Nonempty) : a.Countable :=
   (h.mono fun i => interior_subset).countable_of_is_open (fun i hi => is_open_interior) ha
 
 /-- A set `s` in a topological space is separable if it is contained in the closure of a
@@ -324,7 +324,7 @@ countable set `c`. Beware that this definition does not require that `c` is cont
 express the latter, use `separable_space s` or `is_separable (univ : set s))`. In metric spaces,
 the two definitions are equivalent, see `topological_space.is_separable.separable_space`. -/
 def IsSeparable (s : Set α) :=
-  ∃ c : Set α, Countable c ∧ s ⊆ Closure c
+  ∃ c : Set α, c.Countable ∧ s ⊆ Closure c
 
 theorem IsSeparable.mono {s u : Set α} (hs : IsSeparable s) (hu : u ⊆ s) : IsSeparable u := by
   rcases hs with ⟨c, c_count, hs⟩
@@ -349,7 +349,7 @@ theorem is_separable_Union {ι : Type _} [Encodable ι] {s : ι → Set α} (hs 
   refine' ⟨⋃ i, c i, countable_Union hc, Union_subset_iff.2 fun i => _⟩
   exact (h'c i).trans (closure_mono (subset_Union _ i))
 
-theorem _root_.set.countable.is_separable {s : Set α} (hs : Countable s) : IsSeparable s :=
+theorem _root_.set.countable.is_separable {s : Set α} (hs : s.Countable) : IsSeparable s :=
   ⟨s, hs, subset_closure⟩
 
 theorem _root_.set.finite.is_separable {s : Set α} (hs : s.Finite) : IsSeparable s :=
@@ -382,7 +382,7 @@ theorem IsSeparable.image {β : Type _} [TopologicalSpace β] {s : Set α} (hs :
 theorem is_separable_of_separable_space_subtype (s : Set α) [SeparableSpace s] : IsSeparable s := by
   have : is_separable ((coe : s → α) '' (univ : Set s)) :=
     (is_separable_of_separable_space _).Image continuous_subtype_coe
-  simpa only [image_univ, Subtype.range_coe_subtype]
+  simpa only [← image_univ, ← Subtype.range_coe_subtype]
 
 end TopologicalSpace
 
@@ -451,14 +451,14 @@ protected theorem DenseRange.separable_space {α β : Type _} [TopologicalSpace 
   let ⟨s, s_cnt, s_dense⟩ := exists_countable_dense α
   ⟨⟨f '' s, Countable.image s_cnt f, h.dense_image h' s_dense⟩⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem Dense.exists_countable_dense_subset {α : Type _} [TopologicalSpace α] {s : Set α} [SeparableSpace s]
-    (hs : Dense s) : ∃ (t : _)(_ : t ⊆ s), Countable t ∧ Dense t :=
+    (hs : Dense s) : ∃ (t : _)(_ : t ⊆ s), t.Countable ∧ Dense t :=
   let ⟨t, htc, htd⟩ := exists_countable_dense s
   ⟨coe '' t, image_subset_iff.2 fun x _ => mem_preimage.2 <| Subtype.coe_prop _, htc.Image coe,
     hs.dense_range_coe.dense_image continuous_subtype_val htd⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- Let `s` be a dense set in a topological space `α` with partial order structure. If `s` is a
 separable space (e.g., if `α` has a second countable topology), then there exists a countable
 dense subset `t ⊆ s` such that `t` contains bottom/top element of `α` when they exist and belong
@@ -466,7 +466,7 @@ to `s`. For a dense subset containing neither bot nor top elements, see
 `dense.exists_countable_dense_subset_no_bot_top`. -/
 theorem Dense.exists_countable_dense_subset_bot_top {α : Type _} [TopologicalSpace α] [PartialOrderₓ α] {s : Set α}
     [SeparableSpace s] (hs : Dense s) :
-    ∃ (t : _)(_ : t ⊆ s), Countable t ∧ Dense t ∧ (∀ x, IsBot x → x ∈ s → x ∈ t) ∧ ∀ x, IsTop x → x ∈ s → x ∈ t := by
+    ∃ (t : _)(_ : t ⊆ s), t.Countable ∧ Dense t ∧ (∀ x, IsBot x → x ∈ s → x ∈ t) ∧ ∀ x, IsTop x → x ∈ s → x ∈ t := by
   rcases hs.exists_countable_dense_subset with ⟨t, hts, htc, htd⟩
   refine' ⟨(t ∪ ({ x | IsBot x } ∪ { x | IsTop x })) ∩ s, _, _, _, _, _⟩
   exacts[inter_subset_right _ _,
@@ -482,7 +482,7 @@ dense set `s : set α` that contains those of both bottom and top elements of `�
 exist. For a dense set containing neither bot nor top elements, see
 `exists_countable_dense_no_bot_top`. -/
 theorem exists_countable_dense_bot_top (α : Type _) [TopologicalSpace α] [SeparableSpace α] [PartialOrderₓ α] :
-    ∃ s : Set α, Countable s ∧ Dense s ∧ (∀ x, IsBot x → x ∈ s) ∧ ∀ x, IsTop x → x ∈ s := by
+    ∃ s : Set α, s.Countable ∧ Dense s ∧ (∀ x, IsBot x → x ∈ s) ∧ ∀ x, IsTop x → x ∈ s := by
   simpa using dense_univ.exists_countable_dense_subset_bot_top
 
 namespace TopologicalSpace
@@ -520,27 +520,27 @@ instance is_countably_generated_nhds_within (x : α) [IsCountablyGenerated (𝓝
 
 variable (α)
 
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`is_open_generated_countable] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`is_open_generated_countable] []
 /-- A second-countable space is one with a countable basis. -/
 class SecondCountableTopology : Prop where
-  is_open_generated_countable : ∃ b : Set (Set α), Countable b ∧ t = TopologicalSpace.generateFrom b
+  is_open_generated_countable : ∃ b : Set (Set α), b.Countable ∧ t = TopologicalSpace.generateFrom b
 
 variable {α}
 
 protected theorem IsTopologicalBasis.second_countable_topology {b : Set (Set α)} (hb : IsTopologicalBasis b)
-    (hc : Countable b) : SecondCountableTopology α :=
+    (hc : b.Countable) : SecondCountableTopology α :=
   ⟨⟨b, hc, hb.eq_generate_from⟩⟩
 
 variable (α)
 
 theorem exists_countable_basis [SecondCountableTopology α] :
-    ∃ b : Set (Set α), Countable b ∧ ∅ ∉ b ∧ IsTopologicalBasis b :=
+    ∃ b : Set (Set α), b.Countable ∧ ∅ ∉ b ∧ IsTopologicalBasis b :=
   let ⟨b, hb₁, hb₂⟩ := SecondCountableTopology.is_open_generated_countable α
   let b' := (fun s => ⋂₀ s) '' { s : Set (Set α) | s.Finite ∧ s ⊆ b ∧ (⋂₀ s).Nonempty }
   ⟨b',
     ((countable_set_of_finite_subset hb₁).mono
           (by
-            simp only [← and_assoc]
+            simp only [and_assoc]
             apply inter_subset_left)).Image
       _,
     fun ⟨s, ⟨_, _, hn⟩, hp⟩ => absurd hn (not_nonempty_iff_eq_empty.2 hp), is_topological_basis_of_subbasis hb₂⟩
@@ -549,7 +549,7 @@ theorem exists_countable_basis [SecondCountableTopology α] :
 def CountableBasis [SecondCountableTopology α] : Set (Set α) :=
   (exists_countable_basis α).some
 
-theorem countable_countable_basis [SecondCountableTopology α] : Countable (CountableBasis α) :=
+theorem countable_countable_basis [SecondCountableTopology α] : (CountableBasis α).Countable :=
   (exists_countable_basis α).some_spec.1
 
 instance encodableCountableBasis [SecondCountableTopology α] : Encodable (CountableBasis α) :=
@@ -608,21 +608,21 @@ instance second_countable_topology_encodable {ι : Type _} {π : ι → Type _} 
   constructor
   refine' ⟨_, _, rfl⟩
   have :
-    countable
+    Set.Countable
       { T : Set (∀ i, π i) |
         ∃ (I : Finset ι)(s : ∀ i : I, Set (π i)),
           (∀ i, s i ∈ countable_basis (π i)) ∧ T = { f | ∀ i : I, f i ∈ s i } } :=
     by
-    simp only [set_of_exists, ← exists_prop]
+    simp only [← set_of_exists, exists_prop]
     refine' countable_Union fun I => countable.bUnion _ fun _ _ => countable_singleton _
-    change countable { s : ∀ i : I, Set (π i) | ∀ i, s i ∈ countable_basis (π i) }
+    change Set.Countable { s : ∀ i : I, Set (π i) | ∀ i, s i ∈ countable_basis (π i) }
     exact countable_pi fun i => countable_countable_basis _
   convert this using 1
   ext1 T
   constructor
   · rintro ⟨s, I, hs, rfl⟩
     refine' ⟨I, fun i => s i, fun i => hs i i.2, _⟩
-    simp only [Set.Pi, SetCoe.forall']
+    simp only [← Set.Pi, ← SetCoe.forall']
     rfl
     
   · rintro ⟨I, s, hs, rfl⟩
@@ -649,15 +649,15 @@ variable {α}
 are themselves second countable. -/
 theorem second_countable_topology_of_countable_cover {ι} [Encodable ι] {U : ι → Set α}
     [∀ i, SecondCountableTopology (U i)] (Uo : ∀ i, IsOpen (U i)) (hc : (⋃ i, U i) = univ) :
-    SecondCountableTopology α :=
+    SecondCountableTopology α := by
   have : is_topological_basis (⋃ i, image (coe : U i → α) '' countable_basis (U i)) :=
     is_topological_basis_of_cover Uo hc fun i => is_basis_countable_basis (U i)
-  this.second_countable_topology (countable_Union fun i => (countable_countable_basis _).Image _)
+  exact this.second_countable_topology (countable_Union fun i => (countable_countable_basis _).Image _)
 
 /-- In a second-countable space, an open set, given as a union of open sets,
 is equal to the union of countably many of those sets. -/
 theorem is_open_Union_countable [SecondCountableTopology α] {ι} (s : ι → Set α) (H : ∀ i, IsOpen (s i)) :
-    ∃ T : Set ι, Countable T ∧ (⋃ i ∈ T, s i) = ⋃ i, s i := by
+    ∃ T : Set ι, T.Countable ∧ (⋃ i ∈ T, s i) = ⋃ i, s i := by
   let B := { b ∈ countable_basis α | ∃ i, b ⊆ s i }
   choose f hf using fun b : B => b.2.2
   have : Encodable B := ((countable_countable_basis α).mono (sep_subset _ _)).toEncodable
@@ -667,29 +667,29 @@ theorem is_open_Union_countable [SecondCountableTopology α] {ι} (s : ι → Se
   exact ⟨_, ⟨_, rfl⟩, _, ⟨⟨⟨_, hb, _, bs⟩, rfl⟩, rfl⟩, hf _ xb⟩
 
 theorem is_open_sUnion_countable [SecondCountableTopology α] (S : Set (Set α)) (H : ∀, ∀ s ∈ S, ∀, IsOpen s) :
-    ∃ T : Set (Set α), Countable T ∧ T ⊆ S ∧ ⋃₀T = ⋃₀S :=
+    ∃ T : Set (Set α), T.Countable ∧ T ⊆ S ∧ ⋃₀T = ⋃₀S :=
   let ⟨T, cT, hT⟩ := is_open_Union_countable (fun s : S => s.1) fun s => H s.1 s.2
-  ⟨Subtype.val '' T, cT.Image _, image_subset_iff.2 fun xt => xs, by
+  ⟨Subtype.val '' T, cT.Image _, image_subset_iff.2 fun ⟨x, xs⟩ xt => xs, by
     rwa [sUnion_image, sUnion_eq_Union]⟩
 
 /-- In a topological space with second countable topology, if `f` is a function that sends each
 point `x` to a neighborhood of `x`, then for some countable set `s`, the neighborhoods `f x`,
 `x ∈ s`, cover the whole space. -/
 theorem countable_cover_nhds [SecondCountableTopology α] {f : α → Set α} (hf : ∀ x, f x ∈ 𝓝 x) :
-    ∃ s : Set α, Countable s ∧ (⋃ x ∈ s, f x) = univ := by
+    ∃ s : Set α, s.Countable ∧ (⋃ x ∈ s, f x) = univ := by
   rcases is_open_Union_countable (fun x => Interior (f x)) fun x => is_open_interior with ⟨s, hsc, hsU⟩
   suffices : (⋃ x ∈ s, Interior (f x)) = univ
   exact ⟨s, hsc, flip eq_univ_of_subset this <| Union₂_mono fun _ _ => interior_subset⟩
-  simp only [hsU, eq_univ_iff_forall, mem_Union]
+  simp only [← hsU, ← eq_univ_iff_forall, ← mem_Union]
   exact fun x => ⟨x, mem_interior_iff_mem_nhds.2 (hf x)⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem countable_cover_nhds_within [SecondCountableTopology α] {f : α → Set α} {s : Set α}
-    (hf : ∀, ∀ x ∈ s, ∀, f x ∈ 𝓝[s] x) : ∃ (t : _)(_ : t ⊆ s), Countable t ∧ s ⊆ ⋃ x ∈ t, f x := by
+    (hf : ∀, ∀ x ∈ s, ∀, f x ∈ 𝓝[s] x) : ∃ (t : _)(_ : t ⊆ s), t.Countable ∧ s ⊆ ⋃ x ∈ t, f x := by
   have : ∀ x : s, coe ⁻¹' f x ∈ 𝓝 x := fun x => preimage_coe_mem_nhds_subtype.2 (hf x x.2)
   rcases countable_cover_nhds this with ⟨t, htc, htU⟩
   refine' ⟨coe '' t, Subtype.coe_image_subset _ _, htc.image _, fun x hx => _⟩
-  simp only [bUnion_image, eq_univ_iff_forall, ← preimage_Union, mem_preimage] at htU⊢
+  simp only [← bUnion_image, ← eq_univ_iff_forall, preimage_Union, ← mem_preimage] at htU⊢
   exact htU ⟨x, hx⟩
 
 section Sigma
@@ -705,7 +705,7 @@ theorem IsTopologicalBasis.sigma {s : ∀ i : ι, Set (Set (E i))} (hs : ∀ i, 
   apply is_topological_basis_of_open_of_nhds
   · intro u hu
     obtain ⟨i, t, ts, rfl⟩ : ∃ (i : ι)(t : Set (E i)), t ∈ s i ∧ Sigma.mk i '' t = u := by
-      simpa only [mem_Union, mem_image] using hu
+      simpa only [← mem_Union, ← mem_image] using hu
     exact is_open_map_sigma_mk _ ((hs i).IsOpen ts)
     
   · rintro ⟨i, x⟩ u hxu u_open
@@ -719,7 +719,7 @@ theorem IsTopologicalBasis.sigma {s : ∀ i : ι, Set (Set (E i))} (hs : ∀ i, 
 instance [Encodable ι] [∀ i, SecondCountableTopology (E i)] : SecondCountableTopology (Σi, E i) := by
   let b := ⋃ i : ι, (fun u => (Sigma.mk i '' u : Set (Σi, E i))) '' countable_basis (E i)
   have A : is_topological_basis b := is_topological_basis.sigma fun i => is_basis_countable_basis _
-  have B : countable b := countable_Union fun i => countable.image (countable_countable_basis _) _
+  have B : b.countable := countable_Union fun i => countable.image (countable_countable_basis _) _
   exact A.second_countable_topology B
 
 end Sigma
@@ -762,7 +762,7 @@ theorem IsTopologicalBasis.sum {s : Set (Set α)} (hs : IsTopologicalBasis s) {t
 instance [SecondCountableTopology α] [SecondCountableTopology β] : SecondCountableTopology (Sum α β) := by
   let b := (fun u => Sum.inl '' u) '' countable_basis α ∪ (fun u => Sum.inr '' u) '' countable_basis β
   have A : is_topological_basis b := (is_basis_countable_basis α).Sum (is_basis_countable_basis β)
-  have B : countable b :=
+  have B : b.countable :=
     (countable.image (countable_countable_basis _) _).union (countable.image (countable_countable_basis _) _)
   exact A.second_countable_topology B
 

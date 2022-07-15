@@ -98,8 +98,8 @@ underlying category. -/
 def RightLiftingSubcat (R : Type u) :=
   R
 
-instance RightLiftingSubcat.inhabited (R : Type u) [Inhabited R] : Inhabited (RightLiftingSubcat R) where
-  default := (default : R)
+instance RightLiftingSubcat.inhabited (R : Type u) [Inhabited R] :
+    Inhabited (RightLiftingSubcat R) where default := (default : R)
 
 /-- The objects of the subcategory `right_lifting_subcategory` are the ones in the
 underlying category. -/

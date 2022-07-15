@@ -74,7 +74,7 @@ open Streamₓ
 class BoundedRandomₓ (α : Type u) [Preorderₓ α] where
   randomR : ∀ g [RandomGen g] x y : α, x ≤ y → RandGₓ g (x .. y)
 
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`Random] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`Random] []
 /-- `random α` gives us machinery to generate values of type `α` -/
 class Randomₓ (α : Type u) where
   Random : ∀ g : Type [RandomGen g], RandGₓ g α
@@ -242,8 +242,8 @@ end Finₓ
 
 open Nat
 
-instance natBoundedRandom : BoundedRandomₓ ℕ where
-  randomR := fun g inst x y hxy => do
+instance natBoundedRandom :
+    BoundedRandomₓ ℕ where randomR := fun g inst x y hxy => do
     let z ← @Finₓ.random g inst (succ <| y - x) _
     pure
         ⟨z + x, Nat.le_add_leftₓ _ _, by
@@ -252,8 +252,8 @@ instance natBoundedRandom : BoundedRandomₓ ℕ where
 /-- This `bounded_random` interval generates integers between `x` and
 `y` by first generating a natural number between `0` and `y - x` and
 shifting the result appropriately. -/
-instance intBoundedRandom : BoundedRandomₓ ℤ where
-  randomR := fun g inst x y hxy => do
+instance intBoundedRandom :
+    BoundedRandomₓ ℤ where randomR := fun g inst x y hxy => do
     let ⟨z, h₀, h₁⟩ ←
       @BoundedRandomₓ.randomR ℕ _ _ g inst 0 (Int.natAbs <| y - x)
           (by
@@ -264,11 +264,10 @@ instance intBoundedRandom : BoundedRandomₓ ℤ where
             le_transₓ (Int.coe_nat_le_coe_nat_of_le h₁)
               (le_of_eqₓ <| Int.of_nat_nat_abs_eq_of_nonneg (Int.sub_nonneg_of_leₓ hxy))⟩
 
-instance finRandom (n : ℕ) [Fact (0 < n)] : Randomₓ (Finₓ n) where
-  Random := fun g inst => @Finₓ.random g inst _ _
+instance finRandom (n : ℕ) [Fact (0 < n)] : Randomₓ (Finₓ n) where Random := fun g inst => @Finₓ.random g inst _ _
 
-instance finBoundedRandom (n : ℕ) : BoundedRandomₓ (Finₓ n) where
-  randomR := fun p => do
+instance finBoundedRandom (n : ℕ) :
+    BoundedRandomₓ (Finₓ n) where randomR := fun g inst x y : Finₓ n p => do
     let ⟨r, h, h'⟩ ← @Randₓ.randomR ℕ g inst _ _ x.val y.val p
     pure ⟨⟨r, lt_of_le_of_ltₓ h' y⟩, h, h'⟩
 
@@ -280,16 +279,19 @@ def randomFinOfPos : ∀ {n : ℕ} h : 0 < n, Randomₓ (Finₓ n)
 
 theorem bool_of_nat_mem_Icc_of_mem_Icc_to_nat (x y : Bool) (n : ℕ) :
     n ∈ (x.toNat .. y.toNat) → Bool.ofNat n ∈ (x .. y) := by
-  simp only [and_imp, Set.mem_Icc]
+  simp only [← and_imp, ← Set.mem_Icc]
   intro h₀ h₁
   constructor <;> [have h₂ := Bool.of_nat_le_of_nat h₀, have h₂ := Bool.of_nat_le_of_nat h₁] <;>
     rw [Bool.of_nat_to_nat] at h₂ <;> exact h₂
 
-instance : Randomₓ Bool where
-  Random := fun g inst => (Bool.ofNat ∘ Subtype.val) <$> @BoundedRandomₓ.randomR ℕ _ _ g inst 0 1 (Nat.zero_leₓ _)
+instance :
+    Randomₓ
+      Bool where Random := fun g inst =>
+    (Bool.ofNat ∘ Subtype.val) <$> @BoundedRandomₓ.randomR ℕ _ _ g inst 0 1 (Nat.zero_leₓ _)
 
-instance : BoundedRandomₓ Bool where
-  randomR := fun g _inst x y p =>
+instance :
+    BoundedRandomₓ
+      Bool where randomR := fun g _inst x y p =>
     Subtype.map Bool.ofNat (bool_of_nat_mem_Icc_of_mem_Icc_to_nat x y) <$>
       @BoundedRandomₓ.randomR ℕ _ _ g _inst x.toNat y.toNat (Bool.to_nat_le_to_nat p)
 
@@ -302,7 +304,7 @@ def Bitvec.random (n : ℕ) : RandGₓ g (Bitvec n) :=
 /-- generate a random bit vector of length `n` -/
 def Bitvec.randomR {n : ℕ} (x y : Bitvec n) (h : x ≤ y) : RandGₓ g (x .. y) :=
   have h' : ∀ a : Finₓ (2 ^ n), a ∈ (x.toFin .. y.toFin) → Bitvec.ofFin a ∈ (x .. y) := by
-    simp only [and_imp, Set.mem_Icc]
+    simp only [← and_imp, ← Set.mem_Icc]
     intro z h₀ h₁
     replace h₀ := Bitvec.of_fin_le_of_fin_of_le h₀
     replace h₁ := Bitvec.of_fin_le_of_fin_of_le h₁
@@ -312,9 +314,8 @@ def Bitvec.randomR {n : ℕ} (x y : Bitvec n) (h : x ≤ y) : RandGₓ g (x .. y
 
 open Nat
 
-instance randomBitvec (n : ℕ) : Randomₓ (Bitvec n) where
-  Random := fun _ inst => @Bitvec.random _ inst n
+instance randomBitvec (n : ℕ) : Randomₓ (Bitvec n) where Random := fun _ inst => @Bitvec.random _ inst n
 
-instance boundedRandomBitvec (n : ℕ) : BoundedRandomₓ (Bitvec n) where
-  randomR := fun _ inst x y p => @Bitvec.randomR _ inst _ _ _ p
+instance boundedRandomBitvec (n : ℕ) :
+    BoundedRandomₓ (Bitvec n) where randomR := fun _ inst x y p => @Bitvec.randomR _ inst _ _ _ p
 

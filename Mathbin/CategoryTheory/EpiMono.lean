@@ -102,15 +102,14 @@ theorem SplitMono.id {X Y : C} (f : X ⟶ Y) [SplitMono f] : f ≫ retraction f 
   split_mono.id'
 
 /-- The retraction of a split monomorphism is itself a split epimorphism. -/
-instance retractionSplitEpi {X Y : C} (f : X ⟶ Y) [SplitMono f] : SplitEpi (retraction f) where
-  section_ := f
+instance retractionSplitEpi {X Y : C} (f : X ⟶ Y) [SplitMono f] : SplitEpi (retraction f) where section_ := f
 
 /-- A split mono which is epi is an iso. -/
 theorem is_iso_of_epi_of_split_mono {X Y : C} (f : X ⟶ Y) [SplitMono f] [Epi f] : IsIso f :=
   ⟨⟨retraction f,
       ⟨by
         simp , by
-        simp [← cancel_epi f]⟩⟩⟩
+        simp [cancel_epi f]⟩⟩⟩
 
 /-- The chosen section of a split epimorphism.
 (Note that `section` is a reserved keyword, so we append an underscore.)
@@ -123,33 +122,32 @@ theorem SplitEpi.id {X Y : C} (f : X ⟶ Y) [SplitEpi f] : section_ f ≫ f = �
   split_epi.id'
 
 /-- The section of a split epimorphism is itself a split monomorphism. -/
-instance sectionSplitMono {X Y : C} (f : X ⟶ Y) [SplitEpi f] : SplitMono (section_ f) where
-  retraction := f
+instance sectionSplitMono {X Y : C} (f : X ⟶ Y) [SplitEpi f] : SplitMono (section_ f) where retraction := f
 
 /-- A split epi which is mono is an iso. -/
 theorem is_iso_of_mono_of_split_epi {X Y : C} (f : X ⟶ Y) [Mono f] [SplitEpi f] : IsIso f :=
   ⟨⟨section_ f,
       ⟨by
-        simp [← cancel_mono f], by
+        simp [cancel_mono f], by
         simp ⟩⟩⟩
 
 /-- Every iso is a split mono. -/
-noncomputable instance (priority := 100) SplitMono.ofIso {X Y : C} (f : X ⟶ Y) [IsIso f] : SplitMono f where
-  retraction := inv f
+noncomputable instance (priority := 100) SplitMono.ofIso {X Y : C} (f : X ⟶ Y) [IsIso f] :
+    SplitMono f where retraction := inv f
 
 /-- Every iso is a split epi. -/
-noncomputable instance (priority := 100) SplitEpi.ofIso {X Y : C} (f : X ⟶ Y) [IsIso f] : SplitEpi f where
-  section_ := inv f
+noncomputable instance (priority := 100) SplitEpi.ofIso {X Y : C} (f : X ⟶ Y) [IsIso f] :
+    SplitEpi f where section_ := inv f
 
 /-- Every split mono is a mono. -/
-instance (priority := 100) SplitMono.mono {X Y : C} (f : X ⟶ Y) [SplitMono f] : Mono f where
-  right_cancellation := fun Z g h w => by
+instance (priority := 100) SplitMono.mono {X Y : C} (f : X ⟶ Y) [SplitMono f] :
+    Mono f where right_cancellation := fun Z g h w => by
     replace w := w =≫ retraction f
     simpa using w
 
 /-- Every split epi is an epi. -/
-instance (priority := 100) SplitEpi.epi {X Y : C} (f : X ⟶ Y) [SplitEpi f] : Epi f where
-  left_cancellation := fun Z g h w => by
+instance (priority := 100) SplitEpi.epi {X Y : C} (f : X ⟶ Y) [SplitEpi f] :
+    Epi f where left_cancellation := fun Z g h w => by
     replace w := section_ f ≫= w
     simpa using w
 

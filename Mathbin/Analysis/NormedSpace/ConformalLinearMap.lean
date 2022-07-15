@@ -71,7 +71,7 @@ protected theorem LinearIsometry.is_conformal_map (f' : M →ₗᵢ[R] N) : IsCo
 theorem is_conformal_map_of_subsingleton [Subsingleton M] (f' : M →L[R] N) : IsConformalMap f' :=
   ⟨1, one_ne_zero,
     ⟨0, fun x => by
-      simp [Subsingleton.elimₓ x 0]⟩,
+      simp [← Subsingleton.elimₓ x 0]⟩,
     Subsingleton.elimₓ _ _⟩
 
 namespace IsConformalMap

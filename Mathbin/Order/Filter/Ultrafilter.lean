@@ -99,7 +99,7 @@ theorem compl_not_mem_iff : sᶜ ∉ f ↔ s ∈ f :=
 theorem frequently_iff_eventually : (∃ᶠ x in f, p x) ↔ ∀ᶠ x in f, p x :=
   compl_not_mem_iff
 
-alias frequently_iff_eventually ↔ Filter.Frequently.eventually _
+alias frequently_iff_eventually ↔ _root_.filter.frequently.eventually _
 
 theorem compl_mem_iff_not_mem : sᶜ ∈ f ↔ s ∉ f := by
   rw [← compl_not_mem_iff, compl_compl]
@@ -113,7 +113,7 @@ def ofComplNotMemIff (f : Filter α) (h : ∀ s, sᶜ ∉ f ↔ s ∈ f) : Ultra
   toFilter := f
   ne_bot' :=
     ⟨fun hf => by
-      simpa [hf] using h⟩
+      simpa [← hf] using h⟩
   le_of_le := fun g hg hgf s hs => (h s).1 fun hsc => compl_not_mem hs (hgf hsc)
 
 theorem nonempty_of_mem (hs : s ∈ f) : s.Nonempty :=
@@ -143,18 +143,18 @@ theorem eventually_not : (∀ᶠ x in f, ¬p x) ↔ ¬∀ᶠ x in f, p x :=
   compl_mem_iff_not_mem
 
 theorem eventually_imp : (∀ᶠ x in f, p x → q x) ↔ (∀ᶠ x in f, p x) → ∀ᶠ x in f, q x := by
-  simp only [imp_iff_not_or, eventually_or, eventually_not]
+  simp only [← imp_iff_not_or, ← eventually_or, ← eventually_not]
 
 theorem finite_sUnion_mem_iff {s : Set (Set α)} (hs : s.Finite) : ⋃₀s ∈ f ↔ ∃ t ∈ s, t ∈ f :=
   (Finite.induction_on hs
       (by
         simp ))
     fun a s ha hs his => by
-    simp [union_mem_iff, his, or_and_distrib_right, exists_or_distrib]
+    simp [← union_mem_iff, ← his, ← or_and_distrib_right, ← exists_or_distrib]
 
 theorem finite_bUnion_mem_iff {is : Set β} {s : β → Set α} (his : is.Finite) :
     (⋃ i ∈ is, s i) ∈ f ↔ ∃ i ∈ is, s i ∈ f := by
-  simp only [← sUnion_image, finite_sUnion_mem_iff (his.image s), bex_image_iff]
+  simp only [sUnion_image, ← finite_sUnion_mem_iff (his.image s), ← bex_image_iff]
 
 /-- Pushforward for ultrafilters. -/
 def map (m : α → β) (f : Ultrafilter α) : Ultrafilter β :=
@@ -175,7 +175,7 @@ def comap {m : α → β} (u : Ultrafilter β) (inj : Injective m) (large : Set.
   ne_bot' := u.ne_bot'.comap_of_range_mem large
   le_of_le := fun g hg hgu => by
     skip
-    simp only [← u.unique (map_le_iff_le_comap.2 hgu), comap_map inj, le_rfl]
+    simp only [u.unique (map_le_iff_le_comap.2 hgu), ← comap_map inj, ← le_rfl]
 
 @[simp]
 theorem mem_comap {m : α → β} (u : Ultrafilter β) (inj : Injective m) (large : Set.Range m ∈ u) {s : Set α} :
@@ -217,16 +217,14 @@ theorem eq_principal_of_finite_mem {f : Ultrafilter α} {s : Set α} (h : s.Fini
 defined in terms of map and join.-/
 def bind (f : Ultrafilter α) (m : α → Ultrafilter β) : Ultrafilter β :=
   (ofComplNotMemIff (bind ↑f fun x => ↑(m x))) fun s => by
-    simp only [mem_bind', mem_coe, ← compl_mem_iff_not_mem, compl_set_of, compl_compl]
+    simp only [← mem_bind', ← mem_coe, compl_mem_iff_not_mem, ← compl_set_of, ← compl_compl]
 
 instance hasBind : Bind Ultrafilter :=
   ⟨@Ultrafilter.bind⟩
 
-instance functor : Functor Ultrafilter where
-  map := @Ultrafilter.map
+instance functor : Functor Ultrafilter where map := @Ultrafilter.map
 
-instance monad : Monadₓ Ultrafilter where
-  map := @Ultrafilter.map
+instance monad : Monadₓ Ultrafilter where map := @Ultrafilter.map
 
 section
 
@@ -248,7 +246,7 @@ theorem exists_le (f : Filter α) [h : NeBot f] : ∃ u : Ultrafilter α, ↑u �
   let top : τ := ⟨f, h, le_reflₓ f⟩
   let sup : ∀ c : Set τ, IsChain r c → τ := fun c hc =>
     ⟨⨅ a : { a : τ // a ∈ insert top c }, a.1,
-      infi_ne_bot_of_directed (IsChain.directed <| hc.insert fun _ _ => Or.inl hb) fun ⟨⟨a, ha, _⟩, _⟩ => ha,
+      infi_ne_bot_of_directed (IsChain.directed <| hc.insert fun ⟨b, _, hb⟩ _ _ => Or.inl hb) fun ⟨⟨a, ha, _⟩, _⟩ => ha,
       infi_le_of_le ⟨top, mem_insert _ _⟩ le_rfl⟩
   have : ∀ c hc : IsChain r c a ha : a ∈ c, r a (sup c hc) := fun c hc a ha =>
     infi_le_of_le ⟨a, mem_insert_of_mem _ ha⟩ le_rfl
@@ -258,7 +256,7 @@ theorem exists_le (f : Filter α) [h : NeBot f] : ∃ u : Ultrafilter α, ↑u �
   exact
     ⟨⟨uτ.val, uτ.property.left, fun g hg₁ hg₂ => hmin ⟨g, hg₁, le_transₓ hg₂ uτ.property.right⟩ hg₂⟩, uτ.property.right⟩
 
-alias exists_le ← Filter.exists_ultrafilter_le
+alias exists_le ← _root_.filter.exists_ultrafilter_le
 
 /-- Construct an ultrafilter extending a given filter.
   The ultrafilter lemma is the assertion that such a filter exists;
@@ -310,7 +308,7 @@ theorem mem_iff_ultrafilter : s ∈ f ↔ ∀ g : Ultrafilter α, ↑g ≤ f →
   have : ne_bot g :=
     comap_ne_bot_iff_compl_range.2
       (by
-        simpa [compl_set_of] )
+        simpa [← compl_set_of] )
   simpa using H ((of g).map coe) (map_le_iff_le_comap.mpr (of_le g))
 
 theorem le_iff_ultrafilter {f₁ f₂ : Filter α} : f₁ ≤ f₂ ↔ ∀ g : Ultrafilter α, ↑g ≤ f₁ → ↑g ≤ f₂ :=
@@ -319,12 +317,12 @@ theorem le_iff_ultrafilter {f₁ f₂ : Filter α} : f₁ ≤ f₂ ↔ ∀ g : U
 /-- A filter equals the intersection of all the ultrafilters which contain it. -/
 theorem supr_ultrafilter_le_eq (f : Filter α) : (⨆ (g : Ultrafilter α) (hg : ↑g ≤ f), (g : Filter α)) = f :=
   eq_of_forall_ge_iff fun f' => by
-    simp only [supr_le_iff, ← le_iff_ultrafilter]
+    simp only [← supr_le_iff, le_iff_ultrafilter]
 
 /-- The `tendsto` relation can be checked on ultrafilters. -/
 theorem tendsto_iff_ultrafilter (f : α → β) (l₁ : Filter α) (l₂ : Filter β) :
     Tendsto f l₁ l₂ ↔ ∀ g : Ultrafilter α, ↑g ≤ l₁ → Tendsto f g l₂ := by
-  simpa only [tendsto_iff_comap] using le_iff_ultrafilter
+  simpa only [← tendsto_iff_comap] using le_iff_ultrafilter
 
 theorem exists_ultrafilter_iff {f : Filter α} : (∃ u : Ultrafilter α, ↑u ≤ f) ↔ NeBot f :=
   ⟨fun ⟨u, uf⟩ => ne_bot_of_le uf, fun h => @exists_ultrafilter_le _ _ h⟩
@@ -356,12 +354,12 @@ theorem bot_ne_hyperfilter : (⊥ : Filter α) ≠ hyperfilter α :=
 theorem nmem_hyperfilter_of_finite {s : Set α} (hf : s.Finite) : s ∉ hyperfilter α := fun hy =>
   compl_not_mem hy <| hyperfilter_le_cofinite hf.compl_mem_cofinite
 
-alias nmem_hyperfilter_of_finite ← Set.Finite.nmem_hyperfilter
+alias nmem_hyperfilter_of_finite ← _root_.set.finite.nmem_hyperfilter
 
 theorem compl_mem_hyperfilter_of_finite {s : Set α} (hf : Set.Finite s) : sᶜ ∈ hyperfilter α :=
   compl_mem_iff_not_mem.2 hf.nmem_hyperfilter
 
-alias compl_mem_hyperfilter_of_finite ← Set.Finite.compl_mem_hyperfilter
+alias compl_mem_hyperfilter_of_finite ← _root_.set.finite.compl_mem_hyperfilter
 
 theorem mem_hyperfilter_of_finite_compl {s : Set α} (hf : Set.Finite (sᶜ)) : s ∈ hyperfilter α :=
   compl_compl s ▸ hf.compl_mem_hyperfilter

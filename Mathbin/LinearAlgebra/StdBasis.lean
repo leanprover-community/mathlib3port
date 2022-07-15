@@ -81,7 +81,7 @@ theorem proj_std_basis_ne (i j : ι) (h : i ≠ j) : (proj i).comp (stdBasis R �
 theorem supr_range_std_basis_le_infi_ker_proj (I J : Set ι) (h : Disjoint I J) :
     (⨆ i ∈ I, range (stdBasis R φ i)) ≤ ⨅ i ∈ J, ker (proj i) := by
   refine' supr_le fun i => supr_le fun hi => range_le_iff_comap.2 _
-  simp only [(ker_comp _ _).symm, eq_top_iff, SetLike.le_def, mem_ker, comap_infi, mem_infi]
+  simp only [← (ker_comp _ _).symm, ← eq_top_iff, ← SetLike.le_def, ← mem_ker, ← comap_infi, ← mem_infi]
   rintro b - j hj
   rw [proj_std_basis_ne R φ j i, zero_apply]
   rintro rfl
@@ -92,7 +92,7 @@ theorem infi_ker_proj_le_supr_range_std_basis {I : Finset ι} {J : Set ι} (hu :
   SetLike.le_def.2
     (by
       intro b hb
-      simp only [mem_infi, mem_ker, proj_apply] at hb
+      simp only [← mem_infi, ← mem_ker, ← proj_apply] at hb
       rw [←
         show (∑ i in I, std_basis R φ i (b i)) = b by
           ext i
@@ -120,13 +120,13 @@ theorem supr_range_std_basis [Fintype ι] : (⨆ i : ι, range (stdBasis R φ i)
   exact infi_emptyset.symm
   exact funext fun i => ((@supr_pos _ _ _ fun h => range (std_basis R φ i)) <| Finset.mem_univ i).symm
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem disjoint_std_basis_std_basis (I J : Set ι) (h : Disjoint I J) :
     Disjoint (⨆ i ∈ I, range (stdBasis R φ i)) (⨆ i ∈ J, range (stdBasis R φ i)) := by
   refine'
     Disjoint.mono (supr_range_std_basis_le_infi_ker_proj _ _ _ _ <| disjoint_compl_right)
       (supr_range_std_basis_le_infi_ker_proj _ _ _ _ <| disjoint_compl_right) _
-  simp only [Disjoint, SetLike.le_def, mem_infi, mem_inf, mem_ker, mem_bot, proj_apply, funext_iff]
+  simp only [← Disjoint, ← SetLike.le_def, ← mem_infi, ← mem_inf, ← mem_ker, ← mem_bot, ← proj_apply, ← funext_iff]
   rintro b ⟨hI, hJ⟩ i
   classical
   by_cases' hiI : i ∈ I
@@ -165,7 +165,7 @@ theorem linear_independent_std_basis [Ringₓ R] [∀ i, AddCommGroupₓ (Ms i)]
     exact (hs j).map' _ (ker_std_basis _ _ _)
   apply linear_independent_Union_finite hs'
   · intro j J _ hiJ
-    simp [(Set.Unionₓ.equations._eqn_1 _).symm, Submodule.span_image, Submodule.span_Union]
+    simp [← (Set.Union.equations._eqn_1 _).symm, ← Submodule.span_image, ← Submodule.span_Union]
     have h₀ : ∀ j, span R (range fun i : ιs j => std_basis R Ms j (v j i)) ≤ range (std_basis R Ms j) := by
       intro j
       rw [span_le, LinearMap.range_coe]
@@ -191,7 +191,10 @@ section
 open LinearEquiv
 
 /-- `pi.basis (s : ∀ j, basis (ιs j) R (Ms j))` is the `Σ j, ιs j`-indexed basis on `Π j, Ms j`
-given by `s j` on each component. -/
+given by `s j` on each component.
+
+For the standard basis over `R` on the finite-dimensional space `η → R` see `pi.basis_fun`.
+-/
 protected noncomputable def basis (s : ∀ j, Basis (ιs j) R (Ms j)) : Basis (Σj, ιs j) R (∀ j, Ms j) := by
   -- The `add_comm_monoid (Π j, Ms j)` instance was hard to find.
   -- Defining this in tactic mode seems to shake up instance search enough that it works by itself.
@@ -204,12 +207,13 @@ theorem basis_repr_std_basis [DecidableEq η] (s : ∀ j, Basis (ιs j) R (Ms j)
   ext ⟨j', i'⟩
   by_cases' hj : j = j'
   · subst hj
-    simp only [Pi.basis, LinearEquiv.trans_apply, Basis.repr_self, std_basis_same, LinearEquiv.Pi_congr_right_apply,
-      Finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply]
+    simp only [← Pi.basis, ← LinearEquiv.trans_apply, ← Basis.repr_self, ← std_basis_same, ←
+      LinearEquiv.Pi_congr_right_apply, ← Finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply]
     symm
-    exact Basis.Finsupp.single_apply_left (fun h : (⟨j, i⟩ : Σj, ιs j) = ⟨j, i'⟩ => eq_of_heq (Sigma.mk.inj h).2) _ _ _
+    exact
+      Basis.Finsupp.single_apply_left (fun i i' h : (⟨j, i⟩ : Σj, ιs j) = ⟨j, i'⟩ => eq_of_heq (Sigma.mk.inj h).2) _ _ _
     
-  simp only [Pi.basis, LinearEquiv.trans_apply, Finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply,
+  simp only [← Pi.basis, ← LinearEquiv.trans_apply, ← Finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply, ←
     LinearEquiv.Pi_congr_right_apply]
   dsimp'
   rw [std_basis_ne _ _ _ _ (Ne.symm hj), LinearEquiv.map_zero, Finsupp.zero_apply, Finsupp.single_eq_of_ne]
@@ -239,13 +243,14 @@ noncomputable def basisFun : Basis η R (∀ j : η, R) :=
 
 @[simp]
 theorem basis_fun_apply [DecidableEq η] i : basisFun R η i = stdBasis R (fun i : η => R) i 1 := by
-  simp only [basis_fun, Basis.coe_of_equiv_fun, LinearEquiv.refl_symm, LinearEquiv.refl_apply, std_basis_apply]
+  simp only [← basis_fun, ← Basis.coe_of_equiv_fun, ← LinearEquiv.refl_symm, ← LinearEquiv.refl_apply, ←
+    std_basis_apply]
   congr
 
 -- Get rid of a `decidable_eq` mismatch.
 @[simp]
 theorem basis_fun_repr (x : η → R) (i : η) : (Pi.basisFun R η).repr x i = x i := by
-  simp [basis_fun]
+  simp [← basis_fun]
 
 end
 
@@ -267,13 +272,13 @@ theorem std_basis_eq_std_basis_matrix (i : n) (j : m) [DecidableEq n] [Decidable
     stdBasis R n m (i, j) = stdBasisMatrix i j (1 : R) := by
   ext a b
   by_cases' hi : i = a <;> by_cases' hj : j = b
-  · simp [std_basis, hi, hj]
+  · simp [← std_basis, ← hi, ← hj]
     
-  · simp [std_basis, hi, hj, Ne.symm hj, LinearMap.std_basis_ne]
+  · simp [← std_basis, ← hi, ← hj, ← Ne.symm hj, ← LinearMap.std_basis_ne]
     
-  · simp [std_basis, hi, hj, Ne.symm hi, LinearMap.std_basis_ne]
+  · simp [← std_basis, ← hi, ← hj, ← Ne.symm hi, ← LinearMap.std_basis_ne]
     
-  · simp [std_basis, hi, hj, Ne.symm hj, Ne.symm hi, LinearMap.std_basis_ne]
+  · simp [← std_basis, ← hi, ← hj, ← Ne.symm hj, ← Ne.symm hi, ← LinearMap.std_basis_ne]
     
 
 end Matrix

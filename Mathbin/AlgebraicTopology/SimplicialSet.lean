@@ -80,8 +80,7 @@ def boundary (n : ℕ) : SSet where
 localized [Simplicial] notation "∂Δ[" n "]" => SSet.boundary n
 
 /-- The inclusion of the boundary of the `n`-th standard simplex into that standard simplex. -/
-def boundaryInclusion (n : ℕ) : ∂Δ[n] ⟶ Δ[n] where
-  app := fun α : { α : Δ[n].obj m // _ } => α
+def boundaryInclusion (n : ℕ) : ∂Δ[n] ⟶ Δ[n] where app := fun m α : { α : Δ[n].obj m // _ } => α
 
 /-- `horn n i` (or `Λ[n, i]`) is the `i`-th horn of the `n`-th standard simplex, where `i : n`.
 It consists of all `m`-simplices `α` of `Δ[n]`
@@ -103,8 +102,7 @@ def horn (n : ℕ) (i : Finₓ (n + 1)) : SSet where
 localized [Simplicial] notation "Λ[" n ", " i "]" => SSet.horn (n : ℕ) i
 
 /-- The inclusion of the `i`-th horn of the `n`-th standard simplex into that standard simplex. -/
-def hornInclusion (n : ℕ) (i : Finₓ (n + 1)) : Λ[n, i] ⟶ Δ[n] where
-  app := fun α : { α : Δ[n].obj m // _ } => α
+def hornInclusion (n : ℕ) (i : Finₓ (n + 1)) : Λ[n, i] ⟶ Δ[n] where app := fun m α : { α : Δ[n].obj m // _ } => α
 
 section Examples
 

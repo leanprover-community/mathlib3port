@@ -42,8 +42,8 @@ variable [dec_ι : DecidableEq ι] [Preorderₓ ι]
 
 variable (G : ι → Type w)
 
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`map_self] []
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`map_map] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`map_self] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`map_map] []
 /-- A directed system is a functor from a category (directed poset) to another category. -/
 class DirectedSystem (f : ∀ i j, i ≤ j → G i → G j) : Prop where
   map_self : ∀ i x h, f i i h x = x
@@ -184,7 +184,7 @@ theorem to_module_totalize_of_le {x : DirectSum ι G} {i j : ι} (hij : i ≤ j)
   by
   rw [← @Dfinsupp.sum_single ι G _ _ _ x]
   unfold Dfinsupp.sum
-  simp only [LinearMap.map_sum]
+  simp only [← LinearMap.map_sum]
   refine' Finset.sum_congr rfl fun k hk => _
   rw [DirectSum.single_eq_lof R k (x k), DirectSum.to_module_lof, DirectSum.to_module_lof, totalize_of_le (hx k hk),
     totalize_of_le (le_transₓ (hx k hk) hij), DirectedSystem.map_map]
@@ -217,8 +217,8 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : DirectS
             apply hi0
             rw [sub_zero]
             
-          simp [LinearMap.map_sub, totalize_of_le, hik, hjk, DirectedSystem.map_map, DirectSum.apply_eq_component,
-            DirectSum.component.of]⟩)
+          simp [← LinearMap.map_sub, ← totalize_of_le, ← hik, ← hjk, ← DirectedSystem.map_map, ←
+            DirectSum.apply_eq_component, ← DirectSum.component.of]⟩)
       ⟨ind, fun _ h => (Finset.not_mem_empty _ h).elim, LinearMap.map_zero _⟩
       (fun x y ⟨i, hi, hxi⟩ ⟨j, hj, hyj⟩ =>
         let ⟨k, hik, hjk⟩ := exists_ge_ge i j
@@ -226,10 +226,11 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : DirectS
           (Finset.mem_union.1 (Dfinsupp.support_add hl)).elim (fun hl => le_transₓ (hi _ hl) hik) fun hl =>
             le_transₓ (hj _ hl) hjk,
           by
-          simp [LinearMap.map_add, hxi, hyj, to_module_totalize_of_le hik hi, to_module_totalize_of_le hjk hj]⟩)
+          simp [← LinearMap.map_add, ← hxi, ← hyj, ← to_module_totalize_of_le hik hi, ←
+            to_module_totalize_of_le hjk hj]⟩)
       fun a x ⟨i, hi, hxi⟩ =>
       ⟨i, fun k hk => hi k (DirectSum.support_smul _ _ hk), by
-        simp [LinearMap.map_smul, hxi]⟩
+        simp [← LinearMap.map_smul, ← hxi]⟩
 
 /-- A component that corresponds to zero in the direct limit is already zero in some
 bigger module in the directed system. -/
@@ -238,13 +239,13 @@ theorem of.zero_exact [IsDirected ι (· ≤ ·)] {i x} (H : of R ι G f i x = 0
   let ⟨j, hj, hxj⟩ := of.zero_exact_aux H
   if hx0 : x = 0 then
     ⟨i, le_rfl, by
-      simp [hx0]⟩
+      simp [← hx0]⟩
   else
     have hij : i ≤ j :=
       hj _ <| by
-        simp [DirectSum.apply_eq_component, hx0]
+        simp [← DirectSum.apply_eq_component, ← hx0]
     ⟨j, hij, by
-      simpa [totalize_of_le hij] using hxj⟩
+      simpa [← totalize_of_le hij] using hxj⟩
 
 end DirectLimit
 
@@ -639,8 +640,8 @@ def lift : DirectLimit G f →+* P :=
       intro x hx
       rw [SetLike.mem_coe, Ideal.mem_comap, mem_bot]
       rcases hx with (⟨i, j, hij, x, rfl⟩ | ⟨i, rfl⟩ | ⟨i, x, y, rfl⟩ | ⟨i, x, y, rfl⟩) <;>
-        simp only [RingHom.map_sub, lift_of, Hg, RingHom.map_one, RingHom.map_add, RingHom.map_mul, (g i).map_one,
-          (g i).map_add, (g i).map_mul, sub_self])
+        simp only [← RingHom.map_sub, ← lift_of, ← Hg, ← RingHom.map_one, ← RingHom.map_add, ← RingHom.map_mul, ←
+          (g i).map_one, ← (g i).map_add, ← (g i).map_mul, ← sub_self])
 
 variable {G f}
 

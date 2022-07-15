@@ -263,8 +263,8 @@ def subtypePerm (f : Perm α) {p : α → Prop} (h : ∀ x, p x ↔ p (f x)) : P
       (h (f⁻¹ x)).2 <| by
         simpa using x.2⟩,
     fun _ => by
-    simp only [perm.inv_apply_self, Subtype.coe_eta, Subtype.coe_mk], fun _ => by
-    simp only [perm.apply_inv_self, Subtype.coe_eta, Subtype.coe_mk]⟩
+    simp only [← perm.inv_apply_self, ← Subtype.coe_eta, ← Subtype.coe_mk], fun _ => by
+    simp only [← perm.apply_inv_self, ← Subtype.coe_eta, ← Subtype.coe_mk]⟩
 
 @[simp]
 theorem subtype_perm_apply (f : Perm α) {p : α → Prop} (h : ∀ x, p x ↔ p (f x)) (x : { x // p x }) :
@@ -282,10 +282,11 @@ def ofSubtype {p : α → Prop} [DecidablePred p] : Perm (Subtype p) →* Perm �
     ⟨fun x => if h : p x then f ⟨x, h⟩ else x, fun x => if h : p x then f⁻¹ ⟨x, h⟩ else x, fun x => by
       have h : ∀ h : p x, p (f ⟨x, h⟩) := fun h => (f ⟨x, h⟩).2
       simp only
-      split_ifs  at * <;> simp_all only [perm.inv_apply_self, Subtype.coe_eta, Subtype.coe_mk, not_true], fun x => by
+      split_ifs  at * <;> simp_all only [← perm.inv_apply_self, ← Subtype.coe_eta, ← Subtype.coe_mk, ← not_true],
+      fun x => by
       have h : ∀ h : p x, p (f⁻¹ ⟨x, h⟩) := fun h => (f⁻¹ ⟨x, h⟩).2
       simp only
-      split_ifs  at * <;> simp_all only [perm.apply_inv_self, Subtype.coe_eta, Subtype.coe_mk, not_true]⟩
+      split_ifs  at * <;> simp_all only [← perm.apply_inv_self, ← Subtype.coe_eta, ← Subtype.coe_mk, ← not_true]⟩
   map_one' := by
     ext
     dsimp'
@@ -295,9 +296,9 @@ def ofSubtype {p : α → Prop} [DecidablePred p] : Perm (Subtype p) →* Perm �
       by_cases' h : p x
       · have h₁ : p (f (g ⟨x, h⟩)) := (f (g ⟨x, h⟩)).2
         have h₂ : p (g ⟨x, h⟩) := (g ⟨x, h⟩).2
-        simp only [h, h₂, coe_fn_mk, perm.mul_apply, dif_pos, Subtype.coe_eta]
+        simp only [← h, ← h₂, ← coe_fn_mk, ← perm.mul_apply, ← dif_pos, ← Subtype.coe_eta]
         
-      · simp only [h, coe_fn_mk, perm.mul_apply, dif_neg, not_false_iff]
+      · simp only [← h, ← coe_fn_mk, ← perm.mul_apply, ← dif_neg, ← not_false_iff]
         
 
 theorem of_subtype_subtype_perm {f : Perm α} {p : α → Prop} [DecidablePred p] (h₁ : ∀ x, p x ↔ p (f x))
@@ -305,10 +306,10 @@ theorem of_subtype_subtype_perm {f : Perm α} {p : α → Prop} [DecidablePred p
   Equivₓ.ext fun x => by
     rw [of_subtype, subtype_perm]
     by_cases' hx : p x
-    · simp only [hx, coe_fn_mk, dif_pos, MonoidHom.coe_mk, Subtype.coe_mk]
+    · simp only [← hx, ← coe_fn_mk, ← dif_pos, ← MonoidHom.coe_mk, ← Subtype.coe_mk]
       
     · have := Classical.propDecidable
-      simp only [hx, not_not.mp (mt (h₂ x) hx), coe_fn_mk, dif_neg, not_false_iff, MonoidHom.coe_mk]
+      simp only [← hx, ← not_not.mp (mt (h₂ x) hx), ← coe_fn_mk, ← dif_neg, ← not_false_iff, ← MonoidHom.coe_mk]
       
 
 theorem of_subtype_apply_of_mem {p : α → Prop} [DecidablePred p] (f : Perm (Subtype p)) {x : α} (hx : p x) :
@@ -327,16 +328,16 @@ theorem of_subtype_apply_of_not_mem {p : α → Prop} [DecidablePred p] (f : Per
 theorem mem_iff_of_subtype_apply_mem {p : α → Prop} [DecidablePred p] (f : Perm (Subtype p)) (x : α) :
     p x ↔ p ((ofSubtype f : α → α) x) :=
   if h : p x then by
-    simpa only [of_subtype, h, coe_fn_mk, dif_pos, true_iffₓ, MonoidHom.coe_mk] using (f ⟨x, h⟩).2
+    simpa only [← of_subtype, ← h, ← coe_fn_mk, ← dif_pos, ← true_iffₓ, ← MonoidHom.coe_mk] using (f ⟨x, h⟩).2
   else by
-    simp [h, of_subtype_apply_of_not_mem f h]
+    simp [← h, ← of_subtype_apply_of_not_mem f h]
 
 @[simp]
 theorem subtype_perm_of_subtype {p : α → Prop} [DecidablePred p] (f : Perm (Subtype p)) :
     subtypePerm (ofSubtype f) (mem_iff_of_subtype_apply_mem f) = f :=
   Equivₓ.ext fun ⟨x, hx⟩ => by
-    dsimp' [subtype_perm, of_subtype]
-    simp only [show p x from hx, dif_pos, Subtype.coe_eta]
+    dsimp' [← subtype_perm, ← of_subtype]
+    simp only [← show p x from hx, ← dif_pos, ← Subtype.coe_eta]
 
 @[simp]
 theorem default_perm {n : Type _} : (default : Perm n) = 1 :=
@@ -404,8 +405,8 @@ theorem swap_mul_self (i j : α) : swap i j * swap i j = 1 :=
 
 theorem swap_mul_eq_mul_swap (f : Perm α) (x y : α) : swap x y * f = f * swap (f⁻¹ x) (f⁻¹ y) :=
   Equivₓ.ext fun z => by
-    simp only [perm.mul_apply, swap_apply_def]
-    split_ifs <;> simp_all only [perm.apply_inv_self, perm.eq_inv_iff_eq, eq_self_iff_true, not_true]
+    simp only [← perm.mul_apply, ← swap_apply_def]
+    split_ifs <;> simp_all only [← perm.apply_inv_self, ← perm.eq_inv_iff_eq, ← eq_self_iff_true, ← not_true]
 
 theorem mul_swap_eq_swap_mul (f : Perm α) (x y : α) : f * swap x y = swap (f x) (f y) * f := by
   rw [swap_mul_eq_mul_swap, perm.inv_apply_self, perm.inv_apply_self]
@@ -459,7 +460,7 @@ theorem mul_swap_eq_iff {i j : α} {σ : Perm α} : σ * swap i j = σ ↔ i = j
 
 theorem swap_mul_swap_mul_swap {x y z : α} (hwz : x ≠ y) (hxz : x ≠ z) : swap y z * swap x y * swap y z = swap z x :=
   Equivₓ.ext fun n => by
-    simp only [swap_apply_def, perm.mul_apply]
+    simp only [← swap_apply_def, ← perm.mul_apply]
     split_ifs <;> cc
 
 end Swap

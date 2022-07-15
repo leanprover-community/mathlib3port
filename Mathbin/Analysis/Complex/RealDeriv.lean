@@ -75,27 +75,27 @@ variable {E : Type _} [NormedGroup E] [NormedSpace ℂ E]
 
 theorem HasStrictDerivAt.complex_to_real_fderiv' {f : ℂ → E} {x : ℂ} {f' : E} (h : HasStrictDerivAt f f' x) :
     HasStrictFderivAt f (reClm.smul_right f' + I • imClm.smul_right f') x := by
-  simpa only [Complex.restrict_scalars_one_smul_right'] using h.has_strict_fderiv_at.restrict_scalars ℝ
+  simpa only [← Complex.restrict_scalars_one_smul_right'] using h.has_strict_fderiv_at.restrict_scalars ℝ
 
 theorem HasDerivAt.complex_to_real_fderiv' {f : ℂ → E} {x : ℂ} {f' : E} (h : HasDerivAt f f' x) :
     HasFderivAt f (reClm.smul_right f' + I • imClm.smul_right f') x := by
-  simpa only [Complex.restrict_scalars_one_smul_right'] using h.has_fderiv_at.restrict_scalars ℝ
+  simpa only [← Complex.restrict_scalars_one_smul_right'] using h.has_fderiv_at.restrict_scalars ℝ
 
 theorem HasDerivWithinAt.complex_to_real_fderiv' {f : ℂ → E} {s : Set ℂ} {x : ℂ} {f' : E}
     (h : HasDerivWithinAt f f' s x) : HasFderivWithinAt f (reClm.smul_right f' + I • imClm.smul_right f') s x := by
-  simpa only [Complex.restrict_scalars_one_smul_right'] using h.has_fderiv_within_at.restrict_scalars ℝ
+  simpa only [← Complex.restrict_scalars_one_smul_right'] using h.has_fderiv_within_at.restrict_scalars ℝ
 
 theorem HasStrictDerivAt.complex_to_real_fderiv {f : ℂ → ℂ} {f' x : ℂ} (h : HasStrictDerivAt f f' x) :
     HasStrictFderivAt f (f' • (1 : ℂ →L[ℝ] ℂ)) x := by
-  simpa only [Complex.restrict_scalars_one_smul_right] using h.has_strict_fderiv_at.restrict_scalars ℝ
+  simpa only [← Complex.restrict_scalars_one_smul_right] using h.has_strict_fderiv_at.restrict_scalars ℝ
 
 theorem HasDerivAt.complex_to_real_fderiv {f : ℂ → ℂ} {f' x : ℂ} (h : HasDerivAt f f' x) :
     HasFderivAt f (f' • (1 : ℂ →L[ℝ] ℂ)) x := by
-  simpa only [Complex.restrict_scalars_one_smul_right] using h.has_fderiv_at.restrict_scalars ℝ
+  simpa only [← Complex.restrict_scalars_one_smul_right] using h.has_fderiv_at.restrict_scalars ℝ
 
 theorem HasDerivWithinAt.complex_to_real_fderiv {f : ℂ → ℂ} {s : Set ℂ} {f' x : ℂ} (h : HasDerivWithinAt f f' s x) :
     HasFderivWithinAt f (f' • (1 : ℂ →L[ℝ] ℂ)) s x := by
-  simpa only [Complex.restrict_scalars_one_smul_right] using h.has_fderiv_within_at.restrict_scalars ℝ
+  simpa only [← Complex.restrict_scalars_one_smul_right] using h.has_fderiv_within_at.restrict_scalars ℝ
 
 end RealDerivOfComplex
 
@@ -116,7 +116,7 @@ variable {E : Type _} [NormedGroup E] [NormedSpace ℂ E] {z : ℂ} {f : ℂ →
 theorem DifferentiableAt.conformal_at (h : DifferentiableAt ℂ f z) (hf' : deriv f z ≠ 0) : ConformalAt f z := by
   rw [conformal_at_iff_is_conformal_map_fderiv, (h.has_fderiv_at.restrict_scalars ℝ).fderiv]
   apply is_conformal_map_complex_linear
-  simpa only [Ne.def, ext_ring_iff]
+  simpa only [← Ne.def, ← ext_ring_iff]
 
 /-- A complex function is conformal if and only if the function is holomorphic or antiholomorphic
     with a nonvanishing differential. -/
@@ -134,7 +134,7 @@ theorem conformal_at_iff_differentiable_at_or_differentiable_at_comp_conj {f : �
   rw [differentiable_at_iff_restrict_scalars ℝ (h_diff.comp _ conj_cle.differentiable_at)]
   refine' exists_congr fun g => rfl.congr _
   have : fderiv ℝ conj (conj z) = _ := conj_cle.fderiv
-  simp [fderiv.comp _ h_diff conj_cle.differentiable_at, this, conj_conj]
+  simp [← fderiv.comp _ h_diff conj_cle.differentiable_at, ← this, ← conj_conj]
 
 end Conformality
 

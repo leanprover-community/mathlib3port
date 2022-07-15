@@ -56,7 +56,7 @@ instance unit_is_iso_of_L_fully_faithful [Full L] [Faithful L] : IsIso (Adjuncti
             simp , by
             ext x f
             dsimp'
-            simp only [adjunction.hom_equiv_counit, preimage_comp, preimage_map, category.assoc]
+            simp only [← adjunction.hom_equiv_counit, ← preimage_comp, ← preimage_map, ← category.assoc]
             rw [← h.unit_naturality]
             simp ⟩⟩⟩
 
@@ -76,7 +76,7 @@ instance counit_is_iso_of_R_fully_faithful [Full R] [Faithful R] : IsIso (Adjunc
               simp , by
               ext x f
               dsimp'
-              simp only [adjunction.hom_equiv_unit, preimage_comp, preimage_map]
+              simp only [← adjunction.hom_equiv_unit, ← preimage_comp, ← preimage_map]
               rw [← h.counit_naturality]
               simp ⟩⟩⟩
 
@@ -103,8 +103,8 @@ noncomputable def whiskerLeftRUnitIsoOfIsIsoCounit [IsIso h.counit] : R ⋙ L �
   (R.associator L R).symm ≪≫ isoWhiskerRight (asIso h.counit) R ≪≫ Functor.leftUnitor _
 
 /-- If the unit is an isomorphism, then the left adjoint is full-/
-noncomputable def lFullOfUnitIsIso [IsIso h.Unit] : Full L where
-  preimage := fun X Y f => h.homEquiv X (L.obj Y) f ≫ inv (h.Unit.app Y)
+noncomputable def lFullOfUnitIsIso [IsIso h.Unit] :
+    Full L where preimage := fun X Y f => h.homEquiv X (L.obj Y) f ≫ inv (h.Unit.app Y)
 
 /-- If the unit is an isomorphism, then the left adjoint is faithful-/
 theorem L_faithful_of_unit_is_iso [IsIso h.Unit] : Faithful L :=
@@ -113,8 +113,8 @@ theorem L_faithful_of_unit_is_iso [IsIso h.Unit] : Faithful L :=
       simpa using H =≫ inv (h.unit.app Y) }
 
 /-- If the counit is an isomorphism, then the right adjoint is full-/
-noncomputable def rFullOfCounitIsIso [IsIso h.counit] : Full R where
-  preimage := fun X Y f => inv (h.counit.app X) ≫ (h.homEquiv (R.obj X) Y).symm f
+noncomputable def rFullOfCounitIsIso [IsIso h.counit] :
+    Full R where preimage := fun X Y f => inv (h.counit.app X) ≫ (h.homEquiv (R.obj X) Y).symm f
 
 /-- If the counit is an isomorphism, then the right adjoint is faithful-/
 theorem R_faithful_of_counit_is_iso [IsIso h.counit] : Faithful R :=
@@ -179,7 +179,7 @@ def Adjunction.restrictFullyFaithful (iC : C ⥤ C') (iD : D ⥤ D') {L' : C' �
       hom_equiv_naturality_right' := fun X Y' Y f g => by
         apply iC.map_injective
         suffices : R'.map (iD.map g) ≫ comm2.hom.app Y = comm2.hom.app Y' ≫ iC.map (R.map g)
-        simp [this]
+        simp [← this]
         apply comm2.hom.naturality g }
 
 end CategoryTheory

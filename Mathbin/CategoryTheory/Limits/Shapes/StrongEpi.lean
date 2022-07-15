@@ -74,7 +74,7 @@ theorem strong_epi_comp [StrongEpi f] [StrongEpi g] : StrongEpi (f ≫ g) :=
     HasLift := by
       intros
       have h₀ : u ≫ z = f ≫ g ≫ v := by
-        simpa [category.assoc] using h
+        simpa [← category.assoc] using h
       let w : Q ⟶ X := arrow.lift (arrow.hom_mk' h₀)
       have h₁ : w ≫ z = g ≫ v := by
         rw [arrow.lift_mk'_right]
@@ -90,7 +90,7 @@ theorem strong_mono_comp [StrongMono f] [StrongMono g] : StrongMono (f ≫ g) :=
     HasLift := by
       intros
       have h₀ : (u ≫ f) ≫ g = z ≫ v := by
-        simpa [category.assoc] using h
+        simpa [← category.assoc] using h
       let w : Y ⟶ Q := arrow.lift (arrow.hom_mk' h₀)
       have h₁ : u ≫ f = z ≫ w := by
         rw [arrow.lift_mk'_left]
@@ -106,13 +106,13 @@ theorem strong_epi_of_strong_epi [StrongEpi (f ≫ g)] : StrongEpi g :=
     HasLift := by
       intros
       have h₀ : (f ≫ u) ≫ z = (f ≫ g) ≫ v := by
-        simp only [category.assoc, h]
+        simp only [← category.assoc, ← h]
       exact
         arrow.has_lift.mk
           ⟨(arrow.lift (arrow.hom_mk' h₀) : R ⟶ X),
             (cancel_mono z).1
               (by
-                simp [h]),
+                simp [← h]),
             by
             simp ⟩ }
 
@@ -129,7 +129,7 @@ theorem strong_mono_of_strong_mono [StrongMono (f ≫ g)] : StrongMono f :=
             simp ,
             (cancel_epi z).1
               (by
-                simp [h])⟩ }
+                simp [← h])⟩ }
 
 /-- An isomorphism is in particular a strong epimorphism. -/
 instance (priority := 100) strong_epi_of_is_iso [IsIso f] : StrongEpi f where
@@ -139,7 +139,7 @@ instance (priority := 100) strong_epi_of_is_iso [IsIso f] : StrongEpi f where
     Arrow.HasLift.mk
       ⟨inv f ≫ u, by
         simp , by
-        simp [h]⟩
+        simp [← h]⟩
 
 /-- An isomorphism is in particular a strong monomorphism. -/
 instance (priority := 100) strong_mono_of_is_iso [IsIso f] : StrongMono f where
@@ -148,7 +148,7 @@ instance (priority := 100) strong_mono_of_is_iso [IsIso f] : StrongMono f where
   HasLift := fun X Y u v z _ h =>
     Arrow.HasLift.mk
       ⟨v ≫ inv f, by
-        simp [← category.assoc, ← h], by
+        simp [category.assoc, h], by
         simp ⟩
 
 end
@@ -195,8 +195,8 @@ section
 
 attribute [local instance] strong_epi_of_epi
 
-instance (priority := 100) balanced_of_strong_epi_category [StrongEpiCategory C] : Balanced C where
-  is_iso_of_mono_of_epi := fun _ _ _ _ _ => is_iso_of_mono_of_strong_epi _
+instance (priority := 100) balanced_of_strong_epi_category [StrongEpiCategory C] :
+    Balanced C where is_iso_of_mono_of_epi := fun _ _ _ _ _ => is_iso_of_mono_of_strong_epi _
 
 end
 
@@ -204,8 +204,8 @@ section
 
 attribute [local instance] strong_mono_of_mono
 
-instance (priority := 100) balanced_of_strong_mono_category [StrongMonoCategory C] : Balanced C where
-  is_iso_of_mono_of_epi := fun _ _ _ _ _ => is_iso_of_epi_of_strong_mono _
+instance (priority := 100) balanced_of_strong_mono_category [StrongMonoCategory C] :
+    Balanced C where is_iso_of_mono_of_epi := fun _ _ _ _ _ => is_iso_of_epi_of_strong_mono _
 
 end
 

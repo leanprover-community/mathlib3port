@@ -154,7 +154,7 @@ theorem left_inv_list : Function.LeftInverse (ofList γ) (toList _)
 theorem right_inv_list : Function.RightInverse (ofList γ) (toList _)
   | List.nil => rfl
   | List.cons hd tl => by
-    simp [right_inv_list tl]
+    simp [← right_inv_list tl]
 
 /-- Lists are equivalent to their associated `W_type` -/
 def equivList : WType (Listβ γ) ≃ List γ where

@@ -45,8 +45,7 @@ open Filter
 
 /-- Multiplication of ultrafilters given by `∀ᶠ m in U*V, p m ↔ ∀ᶠ m in U, ∀ᶠ m' in V, p (m*m')`. -/
 @[to_additive "Addition of ultrafilters given by\n`∀ᶠ m in U+V, p m ↔ ∀ᶠ m in U, ∀ᶠ m' in V, p (m+m')`."]
-def Ultrafilter.hasMul {M} [Mul M] : Mul (Ultrafilter M) where
-  mul := fun U V => (· * ·) <$> U <*> V
+def Ultrafilter.hasMul {M} [Mul M] : Mul (Ultrafilter M) where mul := fun U V => (· * ·) <$> U <*> V
 
 attribute [local instance] Ultrafilter.hasMul Ultrafilter.hasAdd
 
@@ -64,7 +63,7 @@ def Ultrafilter.semigroup {M} [Semigroupₓ M] : Semigroupₓ (Ultrafilter M) :=
     mul_assoc := fun U V W =>
       Ultrafilter.coe_inj.mp <|
         Filter.ext' fun p => by
-          simp only [Ultrafilter.eventually_mul, mul_assoc] }
+          simp only [← Ultrafilter.eventually_mul, ← mul_assoc] }
 
 attribute [local instance] Ultrafilter.semigroup Ultrafilter.addSemigroup
 
@@ -148,7 +147,7 @@ theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroupₓ M] (a : Streamₓ 
     apply eventually.mono (hV (n' + n))
     intro m' hm'
     apply hn
-    simpa only [Streamₓ.drop_drop] using hm'
+    simpa only [← Streamₓ.drop_drop] using hm'
     
 
 @[to_additive exists_FS_of_large]

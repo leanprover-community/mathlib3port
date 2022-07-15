@@ -3,6 +3,7 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
+import Mathbin.Algebra.Order.Field
 import Mathbin.RingTheory.Polynomial.Bernstein
 import Mathbin.Topology.ContinuousFunction.Polynomial
 
@@ -59,11 +60,11 @@ def bernstein (n ν : ℕ) : C(I, ℝ) :=
 
 @[simp]
 theorem bernstein_apply (n ν : ℕ) (x : I) : bernstein n ν x = n.choose ν * x ^ ν * (1 - x) ^ (n - ν) := by
-  dsimp' [bernstein, Polynomial.toContinuousMapOn, Polynomial.toContinuousMap, bernsteinPolynomial]
+  dsimp' [← bernstein, ← Polynomial.toContinuousMapOn, ← Polynomial.toContinuousMap, ← bernsteinPolynomial]
   simp
 
 theorem bernstein_nonneg {n ν : ℕ} {x : I} : 0 ≤ bernstein n ν x := by
-  simp only [bernstein_apply]
+  simp only [← bernstein_apply]
   exact
     mul_nonneg
       (mul_nonneg (Nat.cast_nonneg _)
@@ -96,7 +97,7 @@ def z {n : ℕ} (k : Finₓ (n + 1)) : I :=
         exact_mod_cast Finₓ.le_last k
       rw [Set.mem_Icc, le_div_iff h₁, div_le_iff h₁]
       norm_cast
-      simp [h₂]
+      simp [← h₂]
       ⟩
 
 -- mathport name: «expr /ₙ»
@@ -105,7 +106,7 @@ local postfix:90 "/ₙ" => z
 theorem probability (n : ℕ) (x : I) : (∑ k : Finₓ (n + 1), bernstein n k x) = 1 := by
   have := bernsteinPolynomial.sum ℝ n
   apply_fun fun p => Polynomial.aeval (x : ℝ) p  at this
-  simp [AlgHom.map_sum, Finset.sum_range] at this
+  simp [← AlgHom.map_sum, ← Finset.sum_range] at this
   exact this
 
 theorem variance {n : ℕ} (h : 0 < (n : ℝ)) (x : I) :
@@ -114,17 +115,17 @@ theorem variance {n : ℕ} (h : 0 < (n : ℝ)) (x : I) :
   apply_fun fun x : ℝ => x * n using GroupWithZeroₓ.mul_right_injective h'
   apply_fun fun x : ℝ => x * n using GroupWithZeroₓ.mul_right_injective h'
   dsimp'
-  conv_lhs => simp only [Finset.sum_mul, z]
+  conv_lhs => simp only [← Finset.sum_mul, ← z]
   conv_rhs => rw [div_mul_cancel _ h']
   have := bernsteinPolynomial.variance ℝ n
   apply_fun fun p => Polynomial.aeval (x : ℝ) p  at this
-  simp [AlgHom.map_sum, Finset.sum_range, ← Polynomial.nat_cast_mul] at this
+  simp [← AlgHom.map_sum, ← Finset.sum_range, Polynomial.nat_cast_mul] at this
   convert this using 1
   · congr 1
     funext k
     rw [mul_comm _ (n : ℝ), mul_comm _ (n : ℝ), ← mul_assoc, ← mul_assoc]
     congr 1
-    field_simp [h]
+    field_simp [← h]
     ring
     
   · ring
@@ -163,7 +164,7 @@ namespace bernsteinApproximation
 @[simp]
 theorem apply (n : ℕ) (f : C(I, ℝ)) (x : I) :
     bernsteinApproximation n f x = ∑ k : Finₓ (n + 1), f k/ₙ * bernstein n k x := by
-  simp [bernsteinApproximation]
+  simp [← bernsteinApproximation]
 
 /-- The modulus of (uniform) continuity for `f`, chosen so `|f x - f y| < ε/2` when `|x - y| < δ`.
 -/
@@ -183,14 +184,14 @@ def s (f : C(I, ℝ)) (ε : ℝ) (h : 0 < ε) (n : ℕ) (x : I) : Finset (Finₓ
 theorem lt_of_mem_S {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k : Finₓ (n + 1)} (m : k ∈ s f ε h n x) :
     abs (f k/ₙ - f x) < ε / 2 := by
   apply f.dist_lt_of_dist_lt_modulus (ε / 2) (half_pos h)
-  simpa [S] using m
+  simpa [← S] using m
 
 /-- If `k ∉ S`, then as `δ ≤ |x - k/n|`, we have the inequality `1 ≤ δ^-2 * (x - k/n)^2`.
 This particular formulation will be helpful later.
 -/
 theorem le_of_mem_S_compl {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k : Finₓ (n + 1)} (m : k ∈ s f ε h n xᶜ) :
     (1 : ℝ) ≤ δ f ε h ^ (-2 : ℤ) * (x - k/ₙ) ^ 2 := by
-  simp only [Finset.mem_compl, not_ltₓ, Set.mem_to_finset, Set.mem_set_of_eq, S] at m
+  simp only [← Finset.mem_compl, ← not_ltₓ, ← Set.mem_to_finset, ← Set.mem_set_of_eq, ← S] at m
   erw [zpow_neg, ← div_eq_inv_mul, one_le_div (pow_pos δ_pos 2), sq_le_sq, abs_of_pos δ_pos]
   rwa [dist_comm] at m
 
@@ -215,7 +216,7 @@ and reproduced on wikipedia.
 -/
 theorem bernstein_approximation_uniform (f : C(I, ℝ)) : Tendsto (fun n : ℕ => bernsteinApproximation n f) atTop (𝓝 f) :=
   by
-  simp only [metric.nhds_basis_ball.tendsto_right_iff, Metric.mem_ball, dist_eq_norm]
+  simp only [← metric.nhds_basis_ball.tendsto_right_iff, ← Metric.mem_ball, ← dist_eq_norm]
   intro ε h
   let δ := δ f ε h
   have nhds_zero := tendsto_const_div_at_top_nhds_0_nat (2 * ∥f∥ * δ ^ (-2 : ℤ))
@@ -239,7 +240,7 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) : Tendsto (fun n : ℕ =
       rfl _ = abs (bernsteinApproximation n f x - f x * 1) := by
       rw [mul_oneₓ]_ = abs (bernsteinApproximation n f x - f x * ∑ k : Finₓ (n + 1), bernstein n k x) := by
       rw [bernstein.probability]_ = abs (∑ k : Finₓ (n + 1), (f k/ₙ - f x) * bernstein n k x) := by
-      simp [bernsteinApproximation, Finset.mul_sum,
+      simp [← bernsteinApproximation, ← Finset.mul_sum, ←
         sub_mul]_ ≤ ∑ k : Finₓ (n + 1), abs ((f k/ₙ - f x) * bernstein n k x) :=
       Finset.abs_sum_le_sum_abs _ _ _ = ∑ k : Finₓ (n + 1), abs (f k/ₙ - f x) * bernstein n k x := by
       simp_rw [abs_mul,
@@ -289,7 +290,7 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) : Tendsto (fun n : ℕ =
         by
         conv_rhs =>
           rw [mul_assoc,
-            Finset.mul_sum]simp only [← mul_assoc]-- `bernstein.variance` and `x ∈ [0,1]` gives the uniform bound
+            Finset.mul_sum]simp only [mul_assoc]-- `bernstein.variance` and `x ∈ [0,1]` gives the uniform bound
           _ =
           2 * ∥f∥ * δ ^ (-2 : ℤ) * x * (1 - x) / n :=
         by

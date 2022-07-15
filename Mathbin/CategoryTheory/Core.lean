@@ -57,8 +57,7 @@ def inclusion : Core C ⥤ C where
   obj := id
   map := fun X Y f => f.Hom
 
-instance : Faithful (inclusion C) :=
-  {  }
+instance : Faithful (inclusion C) where
 
 variable {C} {G : Type u₂} [Groupoid.{v₂} G]
 
@@ -89,7 +88,7 @@ def ofEquivFunctor (m : Type u₁ → Type u₂) [EquivFunctor m] : Core (Type u
     exact congr_fun (EquivFunctor.map_refl _) x
   map_comp' := fun α β γ f g => by
     ext
-    simp only [EquivFunctor.map_equiv_apply, Equivₓ.to_iso_hom, Function.comp_app, core.comp_hom, types_comp]
+    simp only [← EquivFunctor.map_equiv_apply, ← Equivₓ.to_iso_hom, ← Function.comp_app, ← core.comp_hom, ← types_comp]
     erw [iso.to_equiv_comp, EquivFunctor.map_trans]
 
 end CategoryTheory

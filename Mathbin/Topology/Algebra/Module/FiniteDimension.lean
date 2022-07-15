@@ -52,7 +52,7 @@ section Semiringₓ
 variable {ι 𝕜 F : Type _} [Fintype ι] [Semiringₓ 𝕜] [TopologicalSpace 𝕜] [AddCommMonoidₓ F] [Module 𝕜 F]
   [TopologicalSpace F] [HasContinuousAdd F] [HasContinuousSmul 𝕜 F]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A linear map on `ι → 𝕜` (where `ι` is a fintype) is continuous -/
 theorem LinearMap.continuous_on_pi (f : (ι → 𝕜) →ₗ[𝕜] F) : Continuous f := by
   classical
@@ -123,7 +123,7 @@ theorem unique_topology_of_t2 {t : TopologicalSpace 𝕜} (h₁ : @TopologicalAd
         exact not_mem_compl_iff.mpr (mem_singleton ξ₀) ((balanced_core_subset _) this)
       -- For that, we use that `𝓑` is balanced : since `∥ξ₀∥ < ε < ∥ξ∥`, we have `∥ξ₀ / ξ∥ ≤ 1`,
       -- hence `ξ₀ = (ξ₀ / ξ) • ξ ∈ 𝓑` because `ξ ∈ 𝓑`.
-      refine' balanced_mem (balanced_core_balanced _) hξ _
+      refine' (balanced_core_balanced _).smul_mem _ hξ
       rw [norm_mul, norm_inv, mul_inv_le_iff (norm_pos_iff.mpr hξ0), mul_oneₓ]
       exact (hξ₀ε.trans h).le
       
@@ -259,14 +259,18 @@ theorem LinearMap.continuous_of_finite_dimensional [T2Space E] [FiniteDimensiona
   dsimp'
   rw [Basis.equiv_fun_symm_apply, Basis.sum_repr]
 
+instance LinearMap.continuousLinearMapClassOfFiniteDimensional [T2Space E] [FiniteDimensional 𝕜 E] :
+    ContinuousLinearMapClass (E →ₗ[𝕜] F') 𝕜 E F' :=
+  { LinearMap.semilinearMapClass with map_continuous := fun f => f.continuous_of_finite_dimensional }
+
 /-- In finite dimensions over a non-discrete complete normed field, the canonical identification
 (in terms of a basis) with `𝕜^n` (endowed with the product topology) is continuous.
 This is the key fact wich makes all linear maps from a T2 finite dimensional TVS over such a field
 continuous (see `linear_map.continuous_of_finite_dimensional`), which in turn implies that all
 norms are equivalent in finite dimensions. -/
-theorem continuous_equiv_fun_basis [T2Space E] {ι : Type _} [Fintype ι] (ξ : Basis ι 𝕜 E) : Continuous ξ.equivFun :=
+theorem continuous_equiv_fun_basis [T2Space E] {ι : Type _} [Fintype ι] (ξ : Basis ι 𝕜 E) : Continuous ξ.equivFun := by
   have : FiniteDimensional 𝕜 E := of_fintype_basis ξ
-  ξ.equiv_fun.to_linear_map.continuous_of_finite_dimensional
+  exact ξ.equiv_fun.to_linear_map.continuous_of_finite_dimensional
 
 namespace LinearMap
 
@@ -303,9 +307,9 @@ variable [T2Space E] [T2Space F] [FiniteDimensional 𝕜 E]
 space. -/
 def toContinuousLinearEquiv (e : E ≃ₗ[𝕜] F) : E ≃L[𝕜] F :=
   { e with continuous_to_fun := e.toLinearMap.continuous_of_finite_dimensional,
-    continuous_inv_fun :=
+    continuous_inv_fun := by
       have : FiniteDimensional 𝕜 F := e.finite_dimensional
-      e.symm.to_linear_map.continuous_of_finite_dimensional }
+      exact e.symm.to_linear_map.continuous_of_finite_dimensional }
 
 @[simp]
 theorem coe_to_continuous_linear_equiv (e : E ≃ₗ[𝕜] F) : (e.toContinuousLinearEquiv : E →ₗ[𝕜] F) = e :=

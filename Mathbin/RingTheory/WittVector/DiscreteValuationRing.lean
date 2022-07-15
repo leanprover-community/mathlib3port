@@ -53,7 +53,7 @@ noncomputable def inverseCoeff (a : Units k) (A : 𝕎 k) : ℕ → k
   | 0 => ↑a⁻¹
   | n + 1 => succNthValUnits n a A fun i => inverse_coeff i.val
 
--- ././Mathport/Syntax/Translate/Basic.lean:534:40: in linear_combination: ././Mathport/Syntax/Translate/Basic.lean:222:22: unsupported: too many args
+-- ./././Mathport/Syntax/Translate/Basic.lean:637:40: in linear_combination #[[expr «expr * »(«expr- »(H_coeff), H)], ["with"], { normalize := ff }]: ./././Mathport/Syntax/Translate/Basic.lean:308:22: unsupported: too many args
 /-- Upgrade a Witt vector `A` whose first entry `A.coeff 0` is a unit to be, itself, a unit in `𝕎 k`.
 -/
 def mkUnit {a : Units k} {A : 𝕎 k} (hA : A.coeff 0 = a) : Units (𝕎 k) :=
@@ -61,19 +61,20 @@ def mkUnit {a : Units k} {A : 𝕎 k} (hA : A.coeff 0 = a) : Units (𝕎 k) :=
     (by
       ext n
       induction' n with n ih
-      · simp [WittVector.mul_coeff_zero, inverse_coeff, hA]
+      · simp [← WittVector.mul_coeff_zero, ← inverse_coeff, ← hA]
         
       let H_coeff :=
         A.coeff (n + 1) * ↑(a⁻¹ ^ p ^ (n + 1)) +
           nth_remainder p n (truncate_fun (n + 1) A) fun i : Finₓ (n + 1) => inverse_coeff a A i
       have H := Units.mul_inv (a ^ p ^ (n + 1))
-      "././Mathport/Syntax/Translate/Basic.lean:534:40: in linear_combination: ././Mathport/Syntax/Translate/Basic.lean:222:22: unsupported: too many args"
+      trace
+        "./././Mathport/Syntax/Translate/Basic.lean:637:40: in linear_combination #[[expr «expr * »(«expr- »(H_coeff), H)], [\"with\"], { normalize := ff }]: ./././Mathport/Syntax/Translate/Basic.lean:308:22: unsupported: too many args"
       have ha : (a : k) ^ p ^ (n + 1) = ↑(a ^ p ^ (n + 1)) := by
         norm_cast
       have ha_inv : (↑a⁻¹ : k) ^ p ^ (n + 1) = ↑(a ^ p ^ (n + 1))⁻¹ := by
         exact_mod_cast inv_pow _ _
-      simp only [nth_remainder_spec, inverse_coeff, succ_nth_val_units, hA, Finₓ.val_eq_coe, one_coeff_eq_of_pos,
-        Nat.succ_pos', H_coeff, ha_inv, ha, inv_pow]
+      simp only [← nth_remainder_spec, ← inverse_coeff, ← succ_nth_val_units, ← hA, ← Finₓ.val_eq_coe, ←
+        one_coeff_eq_of_pos, ← Nat.succ_pos', ← H_coeff, ← ha_inv, ← ha, ← inv_pow]
       ring!)
 
 @[simp]
@@ -96,7 +97,7 @@ variable (p)
 theorem irreducible : Irreducible (p : 𝕎 k) := by
   have hp : ¬IsUnit (p : 𝕎 k) := by
     intro hp
-    simpa only [constant_coeff_apply, coeff_p_zero, not_is_unit_zero] using
+    simpa only [← constant_coeff_apply, ← coeff_p_zero, ← not_is_unit_zero] using
       (constant_coeff : WittVector p k →+* _).is_unit_map hp
   refine' ⟨hp, fun a b hab => _⟩
   obtain ⟨ha0, hb0⟩ : a ≠ 0 ∧ b ≠ 0 := by
@@ -114,8 +115,8 @@ theorem irreducible : Irreducible (p : 𝕎 k) := by
     
   rw [iterate_verschiebung_mul] at hab
   apply_fun fun x => coeff x 1  at hab
-  simp only [coeff_p_one, Nat.add_succ, add_commₓ _ n, Function.iterate_succ', Function.comp_app,
-    verschiebung_coeff_add_one, verschiebung_coeff_zero] at hab
+  simp only [← coeff_p_one, ← Nat.add_succ, ← add_commₓ _ n, ← Function.iterate_succ', ← Function.comp_app, ←
+    verschiebung_coeff_add_one, ← verschiebung_coeff_zero] at hab
   exact (one_ne_zero hab).elim
 
 end Field
@@ -129,12 +130,12 @@ theorem exists_eq_pow_p_mul (a : 𝕎 k) (ha : a ≠ 0) : ∃ (m : ℕ)(b : 𝕎
   obtain ⟨b, rfl⟩ := (frobenius_bijective p k).Surjective.iterate m c
   rw [WittVector.iterate_frobenius_coeff] at hc
   have := congr_fun (witt_vector.verschiebung_frobenius_comm.comp_iterate m) b
-  simp only [Function.comp_app] at this
+  simp only [← Function.comp_app] at this
   rw [← this] at hcm
   refine' ⟨m, b, _, _⟩
   · contrapose! hc
     have : 0 < p ^ m := pow_pos (Nat.Prime.pos (Fact.out _)) _
-    simp [hc, zero_pow this]
+    simp [← hc, ← zero_pow this]
     
   · rw [← mul_left_iterate (p : 𝕎 k) m]
     convert hcm

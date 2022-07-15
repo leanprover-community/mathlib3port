@@ -123,7 +123,7 @@ localized [-- you can run `open_locale classical` to get the decidability of all
 -- whenever it wants to solve a decidability question
 Classical] attribute [instance] Classical.propDecidable
 
-localized [Classical] attribute [instance] Eq.decidable decidableEqOfDecidableLe
+localized [Classical] attribute [instance] Eq.decidable
 
 -- mathport name: «expr ?»
 localized [Parser] postfix:1024 "?" => optionalₓ

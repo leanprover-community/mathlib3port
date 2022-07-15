@@ -44,7 +44,7 @@ def DirectedOn (s : Set α) :=
 variable {r}
 
 theorem directed_on_iff_directed {s} : @DirectedOn α r s ↔ Directed r (coe : s → α) := by
-  simp [Directed, DirectedOn] <;>
+  simp [← Directed, ← DirectedOn] <;>
     refine'
       ball_congr fun x hx => by
         simp <;> rfl
@@ -52,7 +52,7 @@ theorem directed_on_iff_directed {s} : @DirectedOn α r s ↔ Directed r (coe : 
 alias directed_on_iff_directed ↔ DirectedOn.directed_coe _
 
 theorem directed_on_image {s} {f : β → α} : DirectedOn r (f '' s) ↔ DirectedOn (f ⁻¹'o r) s := by
-  simp only [DirectedOn, Set.ball_image_iff, Set.bex_image_iff, Order.Preimage]
+  simp only [← DirectedOn, ← Set.ball_image_iff, ← Set.bex_image_iff, ← Order.Preimage]
 
 theorem DirectedOn.mono {s : Set α} (h : DirectedOn r s) {r' : α → α → Prop} (H : ∀ {a b}, r a b → r' a b) :
     DirectedOn r' s := fun x hx y hy =>
@@ -83,15 +83,15 @@ theorem Directed.extend_bot [Preorderₓ α] [OrderBot α] {e : ι → β} {f : 
   intro a b
   rcases(em (∃ i, e i = a)).symm with (ha | ⟨i, rfl⟩)
   · use b
-    simp [Function.extend_apply' _ _ _ ha]
+    simp [← Function.extend_apply' _ _ _ ha]
     
   rcases(em (∃ i, e i = b)).symm with (hb | ⟨j, rfl⟩)
   · use e i
-    simp [Function.extend_apply' _ _ _ hb]
+    simp [← Function.extend_apply' _ _ _ hb]
     
   rcases hf i j with ⟨k, hi, hj⟩
   use e k
-  simp only [Function.extend_applyₓ he, *, true_andₓ]
+  simp only [← Function.extend_applyₓ he, *, ← true_andₓ]
 
 /-- An antitone function on an inf-semilattice is directed. -/
 theorem directed_of_inf [SemilatticeInf α] {r : β → β → Prop} {f : α → β} (hf : ∀ a₁ a₂, a₁ ≤ a₂ → r (f a₂) (f a₁)) :

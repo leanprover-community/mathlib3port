@@ -40,7 +40,7 @@ variable (p q : ℕ) [Fact p.Prime] [Fact q.Prime]
 theorem euler_criterion_units (x : (Zmod p)ˣ) : (∃ y : (Zmod p)ˣ, y ^ 2 = x) ↔ x ^ (p / 2) = 1 := by
   by_cases' hc : p = 2
   · subst hc
-    simp only [eq_iff_true_of_subsingleton, exists_const]
+    simp only [← eq_iff_true_of_subsingleton, ← exists_const]
     
   · have h₀ :=
       FiniteField.unit_is_square_iff
@@ -59,9 +59,9 @@ theorem euler_criterion {a : Zmod p} (ha : a ≠ 0) : IsSquare (a : Zmod p) ↔ 
   apply
     (iff_congr _
           (by
-            simp [Units.ext_iff])).mp
+            simp [← Units.ext_iff])).mp
       (euler_criterion_units p (Units.mk0 a ha))
-  simp only [Units.ext_iff, sq, Units.coe_mk0, Units.coe_mul]
+  simp only [← Units.ext_iff, ← sq, ← Units.coe_mk0, ← Units.coe_mul]
   constructor
   · rintro ⟨y, hy⟩
     exact ⟨y, hy.symm⟩
@@ -69,7 +69,7 @@ theorem euler_criterion {a : Zmod p} (ha : a ≠ 0) : IsSquare (a : Zmod p) ↔ 
   · rintro ⟨y, rfl⟩
     have hy : y ≠ 0 := by
       rintro rfl
-      simpa [zero_pow] using ha
+      simpa [← zero_pow] using ha
     refine' ⟨Units.mk0 y hy, _⟩
     simp
     
@@ -120,7 +120,7 @@ def legendreSym (p : ℕ) [Fact p.Prime] (a : ℤ) : ℤ :=
 theorem legendre_sym_eq_pow (p : ℕ) (a : ℤ) [hp : Fact p.Prime] : (legendreSym p a : Zmod p) = a ^ (p / 2) := by
   rw [legendre_sym]
   by_cases' ha : (a : Zmod p) = 0
-  · simp only [ha, zero_pow (Nat.div_pos hp.1.two_le (succ_pos 1)), quadratic_char_zero, Int.cast_zeroₓ]
+  · simp only [← ha, ← zero_pow (Nat.div_pos hp.1.two_le (succ_pos 1)), ← quadratic_char_zero, ← Int.cast_zeroₓ]
     
   by_cases' hp₁ : p = 2
   · subst p
@@ -161,15 +161,11 @@ theorem legendre_sym_eq_zero_iff (p : ℕ) [Fact p.Prime] (a : ℤ) : legendreSy
 
 @[simp]
 theorem legendre_sym_zero (p : ℕ) [Fact p.Prime] : legendreSym p 0 = 0 := by
-  rw [legendre_sym]
-  exact quadratic_char_zero
+  rw [legendre_sym, Int.cast_zeroₓ, quadratic_char_zero]
 
 @[simp]
 theorem legendre_sym_one (p : ℕ) [Fact p.Prime] : legendreSym p 1 = 1 := by
-  rw [legendre_sym,
-    (by
-      norm_cast : ((1 : ℤ) : Zmod p) = 1)]
-  exact quadratic_char_one
+  rw [legendre_sym, Int.cast_oneₓ, quadratic_char_one]
 
 /-- The Legendre symbol is multiplicative in `a` for `p` fixed. -/
 theorem legendre_sym_mul (p : ℕ) [Fact p.Prime] (a b : ℤ) : legendreSym p (a * b) = legendreSym p a * legendreSym p b :=
@@ -198,7 +194,7 @@ theorem legendre_sym_sq_one' (p : ℕ) [Fact p.Prime] (a : ℤ) (ha : (a : Zmod 
 
 /-- The Legendre symbol depends only on `a` mod `p`. -/
 theorem legendre_sym_mod (p : ℕ) [Fact p.Prime] (a : ℤ) : legendreSym p a = legendreSym p (a % p) := by
-  simp only [legendre_sym, int_cast_mod]
+  simp only [← legendre_sym, ← int_cast_mod]
 
 /-- Gauss' lemma. The legendre symbol can be computed by considering the number of naturals less
   than `p/2` such that `(a * x) % p > p / 2` -/
@@ -212,7 +208,7 @@ theorem gauss_lemma {a : ℤ} (hp : p ≠ 2) (ha0 : (a : Zmod p) ≠ 0) :
     rw [legendre_sym_eq_pow, LegendreSymbol.gauss_lemma_aux p ha0] <;> simp
   cases legendre_sym_eq_one_or_neg_one p a ha0 <;>
     cases neg_one_pow_eq_or ℤ ((Ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a * x : Zmod p).val).card <;>
-      simp_all [ne_neg_self p one_ne_zero, (ne_neg_self p one_ne_zero).symm]
+      simp_all [← ne_neg_self p one_ne_zero, ← (ne_neg_self p one_ne_zero).symm]
 
 /-- When `p ∤ a`, then `legendre_sym p a = 1` iff `a` is a square mod `p`. -/
 theorem legendre_sym_eq_one_iff {a : ℤ} (ha0 : (a : Zmod p) ≠ 0) : legendreSym p a = 1 ↔ IsSquare (a : Zmod p) :=
@@ -224,11 +220,11 @@ theorem legendre_sym_eq_neg_one_iff {a : ℤ} : legendreSym p a = -1 ↔ ¬IsSqu
 
 /-- The number of square roots of `a` modulo `p` is determined by the Legendre symbol. -/
 theorem legendre_sym_card_sqrts (hp : p ≠ 2) (a : ℤ) :
-    ↑{ x : Zmod p | x ^ 2 = a }.toFinset.card = legendreSym p a + 1 :=
+    ↑{ x : Zmod p | x ^ 2 = a }.toFinset.card = legendreSym p a + 1 := by
   have h : ringChar (Zmod p) ≠ 2 := by
     rw [ring_char_zmod_n]
     exact hp
-  quadratic_char_card_sqrts h a
+  exact quadratic_char_card_sqrts h a
 
 /-- `legendre_sym p (-1)` is given by `χ₄ p`. -/
 theorem legendre_sym_neg_one (hp : p ≠ 2) : legendreSym p (-1) = χ₄ p := by
@@ -285,7 +281,8 @@ theorem legendre_sym_two (hp2 : p ≠ 2) : legendreSym p 2 = -1 ^ (p / 4 + p / 2
     Disjoint ((Ico 1 (p / 2).succ).filter fun x => p / 2 < ((2 : ℕ) * x : Zmod p).val)
       ((Ico 1 (p / 2).succ).filter fun x => x * 2 ≤ p / 2) :=
     disjoint_filter.2 fun x hx => by
-      simp [hx2 _ hx, mul_comm]
+      rw [Nat.cast_two, hx2 x hx, mul_comm]
+      simp
   have hunion :
     (((Ico 1 (p / 2).succ).filter fun x => p / 2 < ((2 : ℕ) * x : Zmod p).val) ∪
         (Ico 1 (p / 2).succ).filter fun x => x * 2 ≤ p / 2) =
@@ -295,7 +292,7 @@ theorem legendre_sym_two (hp2 : p ≠ 2) : legendreSym p 2 = -1 ^ (p / 4 + p / 2
     conv_rhs => rw [← @filter_true _ (Ico 1 (p / 2).succ)]
     exact
       filter_congr fun x hx => by
-        simp [hx2 _ hx, lt_or_leₓ, mul_comm]
+        rw [Nat.cast_two, hx2 x hx, mul_comm, iff_true_intro (lt_or_leₓ _ _)]
   have hp2' := prime_ne_zero p 2 hp2
   rw
     [(by
@@ -307,9 +304,8 @@ theorem legendre_sym_two (hp2 : p ≠ 2) : legendreSym p 2 = -1 ^ (p / 4 + p / 2
     neg_eq_self_mod_two, ← Nat.cast_addₓ, ← card_disjoint_union hdisj, hunion, hcard]
 
 theorem exists_sq_eq_two_iff (hp1 : p ≠ 2) : IsSquare (2 : Zmod p) ↔ p % 8 = 1 ∨ p % 8 = 7 := by
-  have hp2 : ((2 : ℤ) : Zmod p) ≠ 0 :=
-    prime_ne_zero p 2 fun h => by
-      simpa [h] using hp1
+  have hp2 : ((2 : ℤ) : Zmod p) ≠ 0 := by
+    exact_mod_cast prime_ne_zero p 2 hp1
   have hpm4 : p % 4 = p % 8 % 4 := (Nat.mod_mul_left_mod p 2 4).symm
   have hpm2 : p % 2 = p % 8 % 2 := (Nat.mod_mul_left_mod p 4 2).symm
   rw
@@ -338,17 +334,19 @@ theorem exists_sq_eq_prime_iff_of_mod_four_eq_one (hp1 : p % 4 = 1) (hq1 : q ≠
     subst hpq
   else by
     have h1 : p / 2 * (q / 2) % 2 = 0 :=
-      (dvd_iff_mod_eq_zeroₓ _ _).1
+      dvd_iff_mod_eq_zeroₓ.1
         (dvd_mul_of_dvd_left
-          ((dvd_iff_mod_eq_zeroₓ _ _).2 <| by
+          (dvd_iff_mod_eq_zeroₓ.2 <| by
             rw [← mod_mul_right_div_self, show 2 * 2 = 4 from rfl, hp1] <;> rfl)
           _)
     have hp_odd : p ≠ 2 := by
       by_contra
-      simp [h] at hp1
+      simp [← h] at hp1
       norm_num  at hp1
-    have hpq0 : ((p : ℤ) : Zmod q) ≠ 0 := prime_ne_zero q p (Ne.symm hpq)
-    have hqp0 : ((q : ℤ) : Zmod p) ≠ 0 := prime_ne_zero p q hpq
+    have hpq0 : ((p : ℤ) : Zmod q) ≠ 0 := by
+      exact_mod_cast prime_ne_zero q p (Ne.symm hpq)
+    have hqp0 : ((q : ℤ) : Zmod p) ≠ 0 := by
+      exact_mod_cast prime_ne_zero p q hpq
     have := quadratic_reciprocity p q hp_odd hq1 hpq
     rw [neg_one_pow_eq_pow_mod_two, h1, pow_zeroₓ] at this
     rw
@@ -358,10 +356,10 @@ theorem exists_sq_eq_prime_iff_of_mod_four_eq_one (hp1 : p % 4 = 1) (hq1 : q ≠
         norm_cast : (q : Zmod p) = (q : ℤ)),
       ← legendre_sym_eq_one_iff _ hpq0, ← legendre_sym_eq_one_iff _ hqp0]
     cases' legendre_sym_eq_one_or_neg_one p q hqp0 with h h
-    · simp only [h, eq_self_iff_true, true_iffₓ, mul_oneₓ] at this⊢
+    · simp only [← h, ← eq_self_iff_true, ← true_iffₓ, ← mul_oneₓ] at this⊢
       exact this
       
-    · simp only [h, mul_neg, mul_oneₓ] at this⊢
+    · simp only [← h, ← mul_neg, ← mul_oneₓ] at this⊢
       rw [eq_neg_of_eq_neg this.symm]
       
 
@@ -375,14 +373,16 @@ theorem exists_sq_eq_prime_iff_of_mod_four_eq_three (hp3 : p % 4 = 3) (hq3 : q %
         rw [← mod_mul_right_div_self, show 2 * 2 = 4 from rfl, hq3] <;> rfl)
   have hp_odd : p ≠ 2 := by
     by_contra
-    simp [h] at hp3
+    simp [← h] at hp3
     norm_num  at hp3
   have hq_odd : q ≠ 2 := by
     by_contra
-    simp [h] at hq3
+    simp [← h] at hq3
     norm_num  at hq3
-  have hpq0 : ((p : ℤ) : Zmod q) ≠ 0 := prime_ne_zero q p (Ne.symm hpq)
-  have hqp0 : ((q : ℤ) : Zmod p) ≠ 0 := prime_ne_zero p q hpq
+  have hpq0 : ((p : ℤ) : Zmod q) ≠ 0 := by
+    exact_mod_cast prime_ne_zero q p (Ne.symm hpq)
+  have hqp0 : ((q : ℤ) : Zmod p) ≠ 0 := by
+    exact_mod_cast prime_ne_zero p q hpq
   have := quadratic_reciprocity p q hp_odd hq_odd hpq
   rw [neg_one_pow_eq_pow_mod_two, h1, pow_oneₓ] at this
   rw
@@ -392,12 +392,12 @@ theorem exists_sq_eq_prime_iff_of_mod_four_eq_three (hp3 : p % 4 = 3) (hq3 : q %
       norm_cast : (q : Zmod p) = (q : ℤ)),
     ← legendre_sym_eq_one_iff _ hpq0, ← legendre_sym_eq_one_iff _ hqp0]
   cases' legendre_sym_eq_one_or_neg_one q p hpq0 with h h
-  · simp only [h, eq_self_iff_true, not_true, iff_falseₓ, one_mulₓ] at this⊢
-    simp only [this]
+  · simp only [← h, ← eq_self_iff_true, ← not_true, ← iff_falseₓ, ← one_mulₓ] at this⊢
+    simp only [← this]
     norm_num
     
-  · simp only [h, neg_mul, one_mulₓ, neg_inj] at this⊢
-    simp only [this, eq_self_iff_true, true_iffₓ]
+  · simp only [← h, ← neg_mul, ← one_mulₓ, ← neg_inj] at this⊢
+    simp only [← this, ← eq_self_iff_true, ← true_iffₓ]
     norm_num
     
 

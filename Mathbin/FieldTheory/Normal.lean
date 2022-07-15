@@ -145,6 +145,7 @@ theorem Normal.of_is_splitting_field (p : F[X]) [hFEp : IsSplittingField F E p] 
   refine' ⟨Hx, Or.inr _⟩
   rintro q q_irred ⟨r, hr⟩
   let D := AdjoinRoot q
+  have := Fact.mk q_irred
   let pbED := AdjoinRoot.powerBasis q_irred.ne_zero
   have : FiniteDimensional E D := PowerBasis.finite_dimensional pbED
   have finrankED : FiniteDimensional.finrank E D = q.nat_degree := PowerBasis.finrank pbED
@@ -163,7 +164,7 @@ theorem Normal.of_is_splitting_field (p : F[X]) [hFEp : IsSplittingField F E p] 
           (show Function.Injective ϕ.to_linear_map from ϕ.to_ring_hom.injective))
         FiniteDimensional.finrank_pos
   let C := AdjoinRoot (minpoly F x)
-  have Hx_irred := minpoly.irreducible Hx
+  have Hx_irred := Fact.mk (minpoly.irreducible Hx)
   let this : Algebra C D :=
     RingHom.toAlgebra
       (AdjoinRoot.lift (algebraMap F D) (AdjoinRoot.root q)
@@ -196,7 +197,7 @@ theorem Normal.of_is_splitting_field (p : F[X]) [hFEp : IsSplittingField F E p] 
   suffices (Algebra.adjoin C S).restrictScalars F = (Algebra.adjoin E {AdjoinRoot.root q}).restrictScalars F by
     rw [AdjoinRoot.adjoin_root_eq_top, Subalgebra.restrict_scalars_top, ← @Subalgebra.restrict_scalars_top F C] at this
     exact top_le_iff.mpr (Subalgebra.restrict_scalars_injective F this)
-  dsimp' only [S]
+  dsimp' only [← S]
   rw [← Finset.image_to_finset, Finset.coe_image]
   apply Eq.trans (Algebra.adjoin_res_eq_adjoin_res F E C D hFEp.adjoin_roots AdjoinRoot.adjoin_root_eq_top)
   rw [Set.image_singleton, RingHom.algebra_map_to_algebra, AdjoinRoot.lift_root]
@@ -257,7 +258,7 @@ theorem AlgHom.restrict_normal_comp [Normal F E] :
   AlgHom.ext fun _ =>
     (algebraMap E K₃).Injective
       (by
-        simp only [AlgHom.comp_apply, AlgHom.restrict_normal_commutes])
+        simp only [← AlgHom.comp_apply, ← AlgHom.restrict_normal_commutes])
 
 /-- Restrict algebra isomorphism to a normal subfield -/
 def AlgEquiv.restrictNormal [h : Normal F E] : E ≃ₐ[F] E :=
@@ -273,11 +274,29 @@ theorem AlgEquiv.restrict_normal_trans [Normal F E] :
   AlgEquiv.ext fun _ =>
     (algebraMap E K₃).Injective
       (by
-        simp only [AlgEquiv.trans_apply, AlgEquiv.restrict_normal_commutes])
+        simp only [← AlgEquiv.trans_apply, ← AlgEquiv.restrict_normal_commutes])
 
 /-- Restriction to an normal subfield as a group homomorphism -/
 def AlgEquiv.restrictNormalHom [Normal F E] : (K₁ ≃ₐ[F] K₁) →* E ≃ₐ[F] E :=
   MonoidHom.mk' (fun χ => χ.restrictNormal E) fun ω χ => χ.restrict_normal_trans ω E
+
+variable (F K₁ E)
+
+/-- If `K₁/E/F` is a tower of fields with `E/F` normal then `normal.alg_hom_equiv_aut` is an
+ equivalence. -/
+@[simps]
+def Normal.algHomEquivAut [Normal F E] : (E →ₐ[F] K₁) ≃ E ≃ₐ[F] E where
+  toFun := fun σ => AlgHom.restrictNormal' σ E
+  invFun := fun σ => (IsScalarTower.toAlgHom F E K₁).comp σ.toAlgHom
+  left_inv := fun σ => by
+    ext
+    simp [← AlgHom.restrictNormal']
+  right_inv := fun σ => by
+    ext
+    simp only [← AlgHom.restrictNormal', ← AlgEquiv.to_alg_hom_eq_coe, ← AlgEquiv.coe_of_bijective]
+    apply NoZeroSmulDivisors.algebra_map_injective E K₁
+    rw [AlgHom.restrict_normal_commutes]
+    simp
 
 end Restrict
 

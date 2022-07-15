@@ -27,7 +27,7 @@ variable [Monoidₓ R]
 
 /-- Any power of a left-regular element is left-regular. -/
 theorem IsLeftRegular.pow (n : ℕ) (rla : IsLeftRegular a) : IsLeftRegular (a ^ n) := by
-  simp only [IsLeftRegular, ← mul_left_iterate, rla.iterate n]
+  simp only [← IsLeftRegular, mul_left_iterate, ← rla.iterate n]
 
 /-- Any power of a right-regular element is right-regular. -/
 theorem IsRightRegular.pow (n : ℕ) (rra : IsRightRegular a) : IsRightRegular (a ^ n) := by

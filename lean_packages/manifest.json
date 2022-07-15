@@ -1,8 +1,8 @@
 {"version": 1,
  "packages":
  [{"url": "https://github.com/leanprover-community/mathlib4.git",
-   "rev": "8b7a86a8c1a98511e706f54beb288ee1974f052f",
+   "rev": "08d5c58aa65c3b4a28abb306e50d8e1a6d7d9f5f",
    "name": "mathlib"},
   {"url": "https://github.com/leanprover-community/lean3port.git",
-   "rev": "d47f5546fb6b55d3830ced999e56eb5ba18eaacd",
+   "rev": "00447ee70d8b7f8bbe529229b5dbb723f0ef5753",
    "name": "lean3port"}]}

@@ -49,11 +49,11 @@ theorem Ioc_eq_zero_iff : ioc a b = 0 ↔ ¬a < b := by
 theorem Ioo_eq_zero_iff [DenselyOrdered α] : ioo a b = 0 ↔ ¬a < b := by
   rw [Ioo, Finset.val_eq_zero, Finset.Ioo_eq_empty_iff]
 
-alias Icc_eq_zero_iff ↔ _ Multiset.Icc_eq_zero
+alias Icc_eq_zero_iff ↔ _ Icc_eq_zero
 
-alias Ico_eq_zero_iff ↔ _ Multiset.Ico_eq_zero
+alias Ico_eq_zero_iff ↔ _ Ico_eq_zero
 
-alias Ioc_eq_zero_iff ↔ _ Multiset.Ioc_eq_zero
+alias Ioc_eq_zero_iff ↔ _ Ioc_eq_zero
 
 @[simp]
 theorem Ioo_eq_zero (h : ¬a < b) : ioo a b = 0 :=
@@ -155,13 +155,13 @@ variable [PartialOrderₓ α] [LocallyFiniteOrder α] {a b : α}
 theorem Icc_self (a : α) : icc a a = {a} := by
   rw [Icc, Finset.Icc_self, Finset.singleton_val]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Ico_cons_right (h : a ≤ b) : b ::ₘ ico a b = icc a b := by
   classical
   rw [Ico, ← Finset.insert_val_of_not_mem right_not_mem_Ico, Finset.Ico_insert_right h]
   rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Ioo_cons_left (h : a < b) : a ::ₘ ioo a b = ico a b := by
   classical
   rw [Ioo, ← Finset.insert_val_of_not_mem left_not_mem_Ioo, Finset.Ioo_insert_left h]
@@ -230,22 +230,22 @@ section OrderedCancelAddCommMonoid
 
 variable [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] [LocallyFiniteOrder α]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem map_add_left_Icc (a b c : α) : (icc a b).map ((· + ·) c) = icc (c + a) (c + b) := by
   classical
   rw [Icc, Icc, ← Finset.image_add_left_Icc, Finset.image_val, ((Finset.nodup _).map <| add_right_injective c).dedup]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem map_add_left_Ico (a b c : α) : (ico a b).map ((· + ·) c) = ico (c + a) (c + b) := by
   classical
   rw [Ico, Ico, ← Finset.image_add_left_Ico, Finset.image_val, ((Finset.nodup _).map <| add_right_injective c).dedup]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem map_add_left_Ioc (a b c : α) : (ioc a b).map ((· + ·) c) = ioc (c + a) (c + b) := by
   classical
   rw [Ioc, Ioc, ← Finset.image_add_left_Ioc, Finset.image_val, ((Finset.nodup _).map <| add_right_injective c).dedup]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem map_add_left_Ioo (a b c : α) : (ioo a b).map ((· + ·) c) = ioo (c + a) (c + b) := by
   classical
   rw [Ioo, Ioo, ← Finset.image_add_left_Ioo, Finset.image_val, ((Finset.nodup _).map <| add_right_injective c).dedup]

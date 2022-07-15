@@ -224,7 +224,7 @@ theorem coev_app_comp_pre_app (f : B ⟶ A) [Exponentiable B] :
 
 @[simp]
 theorem pre_id (A : C) [Exponentiable A] : pre (𝟙 A) = 𝟙 _ := by
-  simp [pre]
+  simp [← pre]
 
 @[simp]
 theorem pre_map {A₁ A₂ A₃ : C} [Exponentiable A₁] [Exponentiable A₂] [Exponentiable A₃] (f : A₁ ⟶ A₂) (g : A₂ ⟶ A₃) :
@@ -319,8 +319,8 @@ variable [HasFiniteProducts D]
 Note we didn't require any coherence between the choice of finite products here, since we transport
 along the `prod_comparison` isomorphism.
 -/
-def cartesianClosedOfEquiv (e : C ≌ D) [h : CartesianClosed C] : CartesianClosed D where
-  closed' := fun X =>
+def cartesianClosedOfEquiv (e : C ≌ D) [h : CartesianClosed C] :
+    CartesianClosed D where closed' := fun X =>
     { isAdj := by
         have q : exponentiable (e.inverse.obj X) := inferInstance
         have : is_left_adjoint (prod.functor.obj (e.inverse.obj X)) := q.is_adj
@@ -331,8 +331,8 @@ def cartesianClosedOfEquiv (e : C ≌ D) [h : CartesianClosed C] : CartesianClos
           apply prod.map_iso (iso.refl _) (e.unit_iso.app Y).symm
           
         · intro Y Z g
-          dsimp' [prod_comparison]
-          simp [prod.comp_lift, ← e.inverse.map_comp, ← e.inverse.map_comp_assoc]
+          dsimp' [← prod_comparison]
+          simp [← prod.comp_lift, e.inverse.map_comp, e.inverse.map_comp_assoc]
           -- I wonder if it would be a good idea to make `map_comp` a simp lemma the other way round
           dsimp'
           simp

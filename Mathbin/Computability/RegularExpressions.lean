@@ -175,10 +175,10 @@ def rmatch : RegularExpression α → List α → Bool
 
 @[simp]
 theorem zero_rmatch (x : List α) : rmatch 0 x = ff := by
-  induction x <;> simp [rmatch, match_epsilon, *]
+  induction x <;> simp [← rmatch, ← match_epsilon, *]
 
 theorem one_rmatch_iff (x : List α) : rmatch 1 x ↔ x = [] := by
-  induction x <;> simp [rmatch, match_epsilon, *]
+  induction x <;> simp [← rmatch, ← match_epsilon, *]
 
 theorem char_rmatch_iff (a : α) (x : List α) : rmatch (char a) x ↔ x = [a] := by
   cases' x with _ x
@@ -195,7 +195,7 @@ theorem char_rmatch_iff (a : α) (x : List α) : rmatch (char a) x ↔ x = [a] :
 
 theorem add_rmatch_iff (P Q : RegularExpression α) (x : List α) : (P + Q).rmatch x ↔ P.rmatch x ∨ Q.rmatch x := by
   induction' x with _ _ ih generalizing P Q
-  · simp only [rmatch, match_epsilon, bor_coe_iff]
+  · simp only [← rmatch, ← match_epsilon, ← bor_coe_iff]
     
   · repeat'
       rw [rmatch]
@@ -219,7 +219,7 @@ theorem mul_rmatch_iff (P Q : RegularExpression α) (x : List α) :
       subst hu
       repeat'
         rw [rmatch] at h₂
-      simp [h₂]
+      simp [← h₂]
       
     
   · rw [rmatch, deriv]
@@ -242,7 +242,7 @@ theorem mul_rmatch_iff (P Q : RegularExpression α) (x : List α) :
           exact hQ
           
         · left
-          simp only [List.cons_append] at h
+          simp only [← List.cons_append] at h
           refine' ⟨t, u, h.2, _, hQ⟩
           rw [rmatch] at hP
           convert hP
@@ -259,7 +259,7 @@ theorem mul_rmatch_iff (P Q : RegularExpression α) (x : List α) :
       · cases' t with b t
         · contradiction
           
-        · simp only [List.cons_append] at h
+        · simp only [← List.cons_append] at h
           refine' ⟨t, u, h.2, _, hQ⟩
           rw [rmatch] at hP
           convert hP
@@ -276,7 +276,7 @@ theorem star_rmatch_iff (P : RegularExpression α) :
       intro m n
       convert add_lt_add_of_le_of_lt (add_le_add (zero_le m) (le_reflₓ n)) zero_lt_one
       simp
-    have IH := fun h : List.length t < List.length x => star_rmatch_iff t
+    have IH := fun t h : List.length t < List.length x => star_rmatch_iff t
     clear star_rmatch_iff
     constructor
     · cases' x with a x
@@ -294,7 +294,7 @@ theorem star_rmatch_iff (P : RegularExpression α) :
         rcases hu with ⟨S', hsum, helem⟩
         use (a :: t) :: S'
         constructor
-        · simp [hs, hsum]
+        · simp [← hs, ← hsum]
           
         · intro t' ht'
           cases' ht' with ht' ht'
@@ -319,11 +319,11 @@ theorem star_rmatch_iff (P : RegularExpression α) :
               tauto⟩
           
         · cases' t' with b t
-          · simp only [forall_eq_or_imp, List.mem_cons_iff] at helem
-            simp only [eq_self_iff_true, not_true, Ne.def, false_andₓ] at helem
+          · simp only [← forall_eq_or_imp, ← List.mem_cons_iff] at helem
+            simp only [← eq_self_iff_true, ← not_true, ← Ne.def, ← false_andₓ] at helem
             cases helem
             
-          simp only [List.join, List.cons_append] at hsum
+          simp only [← List.join, ← List.cons_append] at hsum
           refine' ⟨t, U.join, hsum.2, _, _⟩
           · specialize
               helem (b :: t)
@@ -335,7 +335,7 @@ theorem star_rmatch_iff (P : RegularExpression α) :
             
           · have hwf : U.join.length < (List.cons a x).length := by
               rw [hsum.1, hsum.2]
-              simp only [List.length_append, List.length_join, List.length]
+              simp only [← List.length_append, ← List.length_join, ← List.length]
               apply A
             rw [IH _ hwf]
             refine' ⟨U, rfl, fun t h => helem t _⟩
@@ -373,7 +373,8 @@ theorem rmatch_iff_matches (P : RegularExpression α) : ∀ x : List α, P.rmatc
     rw [add_rmatch_iff, ih₁, ih₂]
     rfl
   case comp P Q ih₁ ih₂ =>
-    simp only [mul_rmatch_iff, comp_def, Language.mul_def, exists_and_distrib_left, Set.mem_image2, Set.image_prod]
+    simp only [← mul_rmatch_iff, ← comp_def, ← Language.mul_def, ← exists_and_distrib_left, ← Set.mem_image2, ←
+      Set.image_prod]
     constructor
     · rintro ⟨x, y, hsum, hmatch₁, hmatch₂⟩
       rw [ih₁] at hmatch₁
@@ -456,9 +457,9 @@ theorem matches_map (f : α → β) : ∀ P : RegularExpression α, (P.map f).Ma
     rw [eq_comm]
     exact image_singleton
   | R + S => by
-    simp only [matches_map, map, matches_add, map_add]
+    simp only [← matches_map, ← map, ← matches_add, ← map_add]
   | R * S => by
-    simp only [matches_map, map, matches_mul, map_mul]
+    simp only [← matches_map, ← map, ← matches_mul, ← map_mul]
   | star R => by
     simp_rw [map, matches, matches_map]
     rw [Language.star_eq_supr_pow, Language.star_eq_supr_pow]

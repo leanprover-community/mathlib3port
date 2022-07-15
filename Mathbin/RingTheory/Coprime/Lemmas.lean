@@ -48,14 +48,14 @@ theorem IsCoprime.prod_left : (∀, ∀ i ∈ t, ∀, IsCoprime (s i) x) → IsC
     exact H.1.mul_left (ih H.2)
 
 theorem IsCoprime.prod_right : (∀, ∀ i ∈ t, ∀, IsCoprime x (s i)) → IsCoprime x (∏ i in t, s i) := by
-  simpa only [is_coprime_comm] using IsCoprime.prod_left
+  simpa only [← is_coprime_comm] using IsCoprime.prod_left
 
 theorem IsCoprime.prod_left_iff : IsCoprime (∏ i in t, s i) x ↔ ∀, ∀ i ∈ t, ∀, IsCoprime (s i) x :=
   (Finset.induction_on t ((iff_of_true is_coprime_one_left) fun _ => False.elim)) fun b t hbt ih => by
     rw [Finset.prod_insert hbt, IsCoprime.mul_left_iff, ih, Finset.forall_mem_insert]
 
 theorem IsCoprime.prod_right_iff : IsCoprime x (∏ i in t, s i) ↔ ∀, ∀ i ∈ t, ∀, IsCoprime x (s i) := by
-  simpa only [is_coprime_comm] using IsCoprime.prod_left_iff
+  simpa only [← is_coprime_comm] using IsCoprime.prod_left_iff
 
 theorem IsCoprime.of_prod_left (H1 : IsCoprime (∏ i in t, s i) x) (i : I) (hit : i ∈ t) : IsCoprime (s i) x :=
   IsCoprime.prod_left_iff.1 H1 i hit
@@ -76,7 +76,7 @@ theorem Finset.prod_dvd_of_coprime :
                 rintro rfl
                 exact har hir).mul_dvd
           (Hs1 a aux1) ((ih (Hs.mono _)) fun i hi => Hs1 i <| Finset.mem_insert_of_mem hi)
-      simp only [Finset.coe_insert, Set.subset_insert])
+      simp only [← Finset.coe_insert, ← Set.subset_insert])
 
 theorem Fintype.prod_dvd_of_coprime [Fintype I] (Hs : Pairwise (IsCoprime on s)) (Hs1 : ∀ i, s i ∣ z) :
     (∏ x, s x) ∣ z :=
@@ -89,11 +89,11 @@ open Finset
 theorem exists_sum_eq_one_iff_pairwise_coprime [DecidableEq I] (h : t.Nonempty) :
     (∃ μ : I → R, (∑ i in t, μ i * ∏ j in t \ {i}, s j) = 1) ↔ Pairwise (IsCoprime on fun i : t => s i) := by
   refine' h.cons_induction _ _ <;> clear t h
-  · simp only [Pairwise, sum_singleton, Finset.sdiff_self, prod_empty, mul_oneₓ, exists_apply_eq_applyₓ, Ne.def,
-      true_iffₓ]
+  · simp only [← Pairwise, ← sum_singleton, ← Finset.sdiff_self, ← prod_empty, ← mul_oneₓ, ← exists_apply_eq_applyₓ, ←
+      Ne.def, ← true_iffₓ]
     rintro a ⟨i, hi⟩ ⟨j, hj⟩ h
     rw [Finset.mem_singleton] at hi hj
-    simpa [hi, hj] using h
+    simpa [← hi, ← hj] using h
     
   intro a t hat h ih
   rw [pairwise_cons']
@@ -150,7 +150,7 @@ theorem exists_sum_eq_one_iff_pairwise_coprime [DecidableEq I] (h : t.Nonempty) 
 theorem exists_sum_eq_one_iff_pairwise_coprime' [Fintype I] [Nonempty I] [DecidableEq I] :
     (∃ μ : I → R, (∑ i : I, μ i * ∏ j in {i}ᶜ, s j) = 1) ↔ Pairwise (IsCoprime on s) := by
   convert exists_sum_eq_one_iff_pairwise_coprime Finset.univ_nonempty using 1
-  simp only [Function.onFun, pairwise_subtype_iff_pairwise_finset', coe_univ, Set.pairwise_univ]
+  simp only [← Function.onFun, ← pairwise_subtype_iff_pairwise_finset', ← coe_univ, ← Set.pairwise_univ]
   assumption
 
 theorem pairwise_coprime_iff_coprime_prod [DecidableEq I] :

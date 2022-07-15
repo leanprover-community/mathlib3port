@@ -44,11 +44,11 @@ theorem log_div_log : log x / log b = logb b x :=
 
 @[simp]
 theorem logb_zero : logb b 0 = 0 := by
-  simp [logb]
+  simp [← logb]
 
 @[simp]
 theorem logb_one : logb b 1 = 0 := by
-  simp [logb]
+  simp [← logb]
 
 @[simp]
 theorem logb_abs (x : ℝ) : logb b (abs x) = logb b x := by
@@ -66,7 +66,7 @@ theorem logb_div (hx : x ≠ 0) (hy : y ≠ 0) : logb b (x / y) = logb b x - log
 
 @[simp]
 theorem logb_inv (x : ℝ) : logb b x⁻¹ = -logb b x := by
-  simp [logb, neg_div]
+  simp [← logb, ← neg_div]
 
 section BPosAndNeOne
 
@@ -81,7 +81,7 @@ private theorem log_b_ne_zero : log b ≠ 0 := by
   linarith
   have b_ne_minus_one : b ≠ -1
   linarith
-  simp [b_ne_one, b_ne_zero, b_ne_minus_one]
+  simp [← b_ne_one, ← b_ne_zero, ← b_ne_minus_one]
 
 @[simp]
 theorem logb_rpow : logb b (b ^ x) = x := by
@@ -90,11 +90,11 @@ theorem logb_rpow : logb b (b ^ x) = x := by
 
 theorem rpow_logb_eq_abs (hx : x ≠ 0) : b ^ logb b x = abs x := by
   apply log_inj_on_pos
-  simp only [Set.mem_Ioi]
+  simp only [← Set.mem_Ioi]
   apply rpow_pos_of_pos b_pos
-  simp only [abs_pos, mem_Ioi, Ne.def, hx, not_false_iff]
+  simp only [← abs_pos, ← mem_Ioi, ← Ne.def, ← hx, ← not_false_iff]
   rw [log_rpow b_pos, logb, log_abs]
-  field_simp [log_b_ne_zero b_pos b_ne_one]
+  field_simp [← log_b_ne_zero b_pos b_ne_one]
 
 @[simp]
 theorem rpow_logb (hx : 0 < x) : b ^ logb b x = x := by
@@ -118,7 +118,7 @@ theorem surj_on_logb' : SurjOn (logb b) (Iio 0) Univ := by
   intro x x_in_univ
   use -(b ^ x)
   constructor
-  · simp only [Right.neg_neg_iff, Set.mem_Iio]
+  · simp only [← Right.neg_neg_iff, ← Set.mem_Iio]
     apply rpow_pos_of_pos b_pos
     
   · rw [logb_neg_eq_logb, logb_rpow b_pos b_ne_one]
@@ -189,7 +189,7 @@ theorem logb_nonpos_iff (hx : 0 < x) : logb b x ≤ 0 ↔ x ≤ 1 := by
 
 theorem logb_nonpos_iff' (hx : 0 ≤ x) : logb b x ≤ 0 ↔ x ≤ 1 := by
   rcases hx.eq_or_lt with (rfl | hx)
-  · simp [le_reflₓ, zero_le_one]
+  · simp [← le_reflₓ, ← zero_le_one]
     
   exact logb_nonpos_iff hb hx
 
@@ -303,7 +303,7 @@ theorem tendsto_logb_at_top_of_base_lt_one : Tendsto (logb b) atTop atBot := by
   intro e
   use 1⊔b ^ e
   intro a
-  simp only [and_imp, sup_le_iff]
+  simp only [← and_imp, ← sup_le_iff]
   intro ha
   rw [logb_le_iff_le_rpow_of_base_lt_one b_pos b_lt_one]
   tauto
@@ -347,15 +347,15 @@ theorem logb_eq_zero : logb b x = 0 ↔ b = 0 ∨ b = 1 ∨ b = -1 ∨ x = 0 ∨
 -- TODO add other limits and continuous API lemmas analogous to those in log.lean
 open BigOperators
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem logb_prod {α : Type _} (s : Finset α) (f : α → ℝ) (hf : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
     logb b (∏ i in s, f i) = ∑ i in s, logb b (f i) := by
   classical
   induction' s using Finset.induction_on with a s ha ih
   · simp
     
-  simp only [Finset.mem_insert, forall_eq_or_imp] at hf
-  simp [ha, ih hf.2, logb_mul hf.1 (Finset.prod_ne_zero_iff.2 hf.2)]
+  simp only [← Finset.mem_insert, ← forall_eq_or_imp] at hf
+  simp [← ha, ← ih hf.2, ← logb_mul hf.1 (Finset.prod_ne_zero_iff.2 hf.2)]
 
 end Real
 

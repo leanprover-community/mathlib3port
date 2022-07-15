@@ -415,7 +415,7 @@ theorem TransGen.lift {p : β → β → Prop} {a b : α} (f : α → β) (h : �
 
 theorem TransGen.lift' {p : β → β → Prop} {a b : α} (f : α → β) (h : ∀ a b, r a b → TransGen p (f a) (f b))
     (hab : TransGen r a b) : TransGen p (f a) (f b) := by
-  simpa [trans_gen_idem] using hab.lift f h
+  simpa [← trans_gen_idem] using hab.lift f h
 
 theorem TransGen.closed {p : α → α → Prop} : (∀ a b, r a b → TransGen p a b) → TransGen r a b → TransGen p a b :=
   TransGen.lift' id
@@ -439,7 +439,7 @@ section ReflTransGen
 open ReflTransGen
 
 theorem refl_trans_gen_iff_eq (h : ∀ b, ¬r a b) : ReflTransGen r a b ↔ b = a := by
-  rw [cases_head_iff] <;> simp [h, eq_comm]
+  rw [cases_head_iff] <;> simp [← h, ← eq_comm]
 
 theorem refl_trans_gen_iff_eq_or_trans_gen : ReflTransGen r a b ↔ b = a ∨ TransGen r a b := by
   refine' ⟨fun h => _, fun h => _⟩
@@ -488,7 +488,7 @@ theorem refl_trans_gen_idem : ReflTransGen (ReflTransGen r) = ReflTransGen r :=
 
 theorem ReflTransGen.lift' {p : β → β → Prop} {a b : α} (f : α → β) (h : ∀ a b, r a b → ReflTransGen p (f a) (f b))
     (hab : ReflTransGen r a b) : ReflTransGen p (f a) (f b) := by
-  simpa [refl_trans_gen_idem] using hab.lift f h
+  simpa [← refl_trans_gen_idem] using hab.lift f h
 
 theorem refl_trans_gen_closed {p : α → α → Prop} :
     (∀ a b, r a b → ReflTransGen p a b) → ReflTransGen r a b → ReflTransGen p a b :=

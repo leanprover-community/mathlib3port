@@ -41,7 +41,7 @@ theorem coe_fold_r (b : α) (l : List α) : fold op b l = l.foldr op b :=
 
 theorem coe_fold_l (b : α) (l : List α) : fold op b l = l.foldl op b :=
   (coe_foldr_swap op _ b l).trans <| by
-    simp [hc.comm]
+    simp [← hc.comm]
 
 theorem fold_eq_foldl (b : α) (s : Multiset α) : fold op b s = foldl op (right_comm _ hc.comm ha.assoc) b s :=
   (Quot.induction_on s) fun l => coe_fold_l _ _ _
@@ -55,7 +55,7 @@ theorem fold_cons_left : ∀ b a : α s : Multiset α, (a ::ₘ s).fold op b = a
   foldr_cons _ _
 
 theorem fold_cons_right (b a : α) (s : Multiset α) : (a ::ₘ s).fold op b = s.fold op b*a := by
-  simp [hc.comm]
+  simp [← hc.comm]
 
 theorem fold_cons'_right (b a : α) (s : Multiset α) : (a ::ₘ s).fold op b = s.fold op (b*a) := by
   rw [fold_eq_foldl, foldl_cons, ← fold_eq_foldl]
@@ -87,7 +87,7 @@ theorem fold_hom {op' : β → β → β} [IsCommutative β op'] [IsAssociative 
     (by
       simp )
     (by
-      simp (config := { contextual := true })[hm])
+      simp (config := { contextual := true })[← hm])
 
 theorem fold_union_inter [DecidableEq α] (s₁ s₂ : Multiset α) (b₁ b₂ : α) :
     ((s₁ ∪ s₂).fold op b₁*(s₁ ∩ s₂).fold op b₂) = s₁.fold op b₁*s₂.fold op b₂ := by
@@ -100,7 +100,7 @@ theorem fold_dedup_idem [DecidableEq α] [hi : IsIdempotent α op] (s : Multiset
       (by
         simp ))
     fun a s IH => by
-    by_cases' a ∈ s <;> simp [IH, h]
+    by_cases' a ∈ s <;> simp [← IH, ← h]
     show fold op b s = op a (fold op b s)
     rw [← cons_erase h, fold_cons_left, ← ha.assoc, hi.idempotent]
 
@@ -126,10 +126,10 @@ theorem le_smul_dedup [DecidableEq α] (s : Multiset α) : ∃ n : ℕ, s ≤ n 
       rw [count_nsmul]
       by_cases' a ∈ s
       · refine' le_transₓ _ (Nat.mul_le_mul_leftₓ _ <| count_pos.2 <| mem_dedup.2 h)
-        have : count a s ≤ fold max 0 (map (fun a => count a s) (a ::ₘ erase s a)) <;> [simp [le_max_leftₓ],
-          simpa [cons_erase h] ]
+        have : count a s ≤ fold max 0 (map (fun a => count a s) (a ::ₘ erase s a)) <;> [simp [← le_max_leftₓ],
+          simpa [← cons_erase h] ]
         
-      · simp [count_eq_zero.2 h, Nat.zero_leₓ]
+      · simp [← count_eq_zero.2 h, ← Nat.zero_leₓ]
         ⟩
 
 end Multiset

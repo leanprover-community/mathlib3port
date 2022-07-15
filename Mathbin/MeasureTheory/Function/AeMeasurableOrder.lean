@@ -30,7 +30,7 @@ supersets which are disjoint up to measure zero when `p < q`, then `f` is almost
 measurable. It is even enough to have this for `p` and `q` in a countable dense set. -/
 theorem MeasureTheory.ae_measurable_of_exist_almost_disjoint_supersets {α : Type _} {m : MeasurableSpace α}
     (μ : Measureₓ α) {β : Type _} [CompleteLinearOrder β] [DenselyOrdered β] [TopologicalSpace β] [OrderTopology β]
-    [SecondCountableTopology β] [MeasurableSpace β] [BorelSpace β] (s : Set β) (s_count : Countable s)
+    [SecondCountableTopology β] [MeasurableSpace β] [BorelSpace β] (s : Set β) (s_count : s.Countable)
     (s_dense : Dense s) (f : α → β)
     (h :
       ∀,
@@ -55,7 +55,7 @@ theorem MeasureTheory.ae_measurable_of_exist_almost_disjoint_supersets {α : Typ
       exact ⟨u, v, hu, hv, h'u, h'v, fun ps qs pq => hμ⟩
       
     · refine' ⟨univ, univ, MeasurableSet.univ, MeasurableSet.univ, subset_univ _, subset_univ _, fun ps qs pq => _⟩
-      simp only [not_and] at H
+      simp only [← not_and] at H
       exact (H ps qs pq).elim
       
   choose! u v huv using h'
@@ -86,7 +86,7 @@ theorem MeasureTheory.ae_measurable_of_exist_almost_disjoint_supersets {α : Typ
         ext1 q
         exact (huv p q).2.2.2.2 p.2 q.2.1 q.2.2
       _ = 0 := by
-        simp only [tsum_zero]
+        simp only [← tsum_zero]
       
   have ff' : ∀ᵐ x ∂μ, f x = f' x := by
     have : ∀ᵐ x ∂μ, x ∉ t := by
@@ -94,15 +94,15 @@ theorem MeasureTheory.ae_measurable_of_exist_almost_disjoint_supersets {α : Typ
       change μ _ = 0
       convert this
       ext y
-      simp only [not_exists, exists_prop, mem_set_of_eq, mem_compl_eq, not_not_mem]
+      simp only [← not_exists, ← exists_prop, ← mem_set_of_eq, ← mem_compl_eq, ← not_not_mem]
     filter_upwards [this] with x hx
     apply (infi_eq_of_forall_ge_of_forall_gt_exists_lt _ _).symm
     · intro i
       by_cases' H : x ∈ u' i
       swap
-      · simp only [H, le_top, not_false_iff, piecewise_eq_of_not_mem]
+      · simp only [← H, ← le_top, ← not_false_iff, ← piecewise_eq_of_not_mem]
         
-      simp only [H, piecewise_eq_of_mem]
+      simp only [← H, ← piecewise_eq_of_mem]
       contrapose! hx
       obtain ⟨r, ⟨xr, rq⟩, rs⟩ : ∃ r, r ∈ Ioo (i : β) (f x) ∩ s :=
         dense_iff_inter_open.1 s_dense (Ioo i (f x)) is_open_Ioo (nonempty_Ioo.2 hx)
@@ -116,7 +116,7 @@ theorem MeasureTheory.ae_measurable_of_exist_almost_disjoint_supersets {α : Typ
         dense_iff_inter_open.1 s_dense (Ioo (f x) q) is_open_Ioo (nonempty_Ioo.2 hq)
       refine' ⟨⟨r, rs⟩, _⟩
       have A : x ∈ u' r := mem_bInter fun i hi => (huv r i).2.2.1 xr
-      simp only [A, rq, piecewise_eq_of_mem, Subtype.coe_mk]
+      simp only [← A, ← rq, ← piecewise_eq_of_mem, ← Subtype.coe_mk]
       
   exact ⟨f', f'_meas, ff'⟩
 
@@ -131,7 +131,7 @@ theorem Ennreal.ae_measurable_of_exist_almost_disjoint_supersets {α : Type _} {
           ∃ u v,
             MeasurableSet u ∧ MeasurableSet v ∧ { x | f x < p } ⊆ u ∧ { x | (q : ℝ≥0∞) < f x } ⊆ v ∧ μ (u ∩ v) = 0) :
     AeMeasurable f μ := by
-  obtain ⟨s, s_count, s_dense, s_zero, s_top⟩ : ∃ s : Set ℝ≥0∞, countable s ∧ Dense s ∧ 0 ∉ s ∧ ∞ ∉ s :=
+  obtain ⟨s, s_count, s_dense, s_zero, s_top⟩ : ∃ s : Set ℝ≥0∞, s.Countable ∧ Dense s ∧ 0 ∉ s ∧ ∞ ∉ s :=
     Ennreal.exists_countable_dense_no_zero_top
   have I : ∀, ∀ x ∈ s, ∀, x ≠ ∞ := fun x xs hx => s_top (hx ▸ xs)
   apply MeasureTheory.ae_measurable_of_exist_almost_disjoint_supersets μ s s_count s_dense _

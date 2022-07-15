@@ -57,11 +57,11 @@ decreasing, strictly decreasing
 -/
 
 
-open Function
+open Function OrderDual
 
 universe u v w
 
-variable {α : Type u} {β : Type v} {γ : Type w} {r : α → α → Prop}
+variable {α : Type u} {β : Type v} {γ : Type w} {δ : Type _} {r : α → α → Prop}
 
 section MonotoneDef
 
@@ -115,8 +115,6 @@ Often, you should not need the rewriting lemmas. Instead, you probably want to a
 
 
 section OrderDual
-
-open OrderDual
 
 variable [Preorderₓ α] [Preorderₓ β] {f : α → β} {s : Set α}
 
@@ -276,11 +274,30 @@ variable [Preorderₓ α]
 
 section Preorderₓ
 
-variable [Preorderₓ β] {f : α → β}
+variable [Preorderₓ β] {f : α → β} {a b : α}
 
-protected theorem Monotone.monotone_on (hf : Monotone f) (s : Set α) : MonotoneOn f s := fun a _ b _ h => hf h
+/-!
+These four lemmas are there to strip off the semi-implicit arguments `⦃a b : α⦄`. This is useful
+when you do not want to apply a `monotone` assumption (i.e. your goal is `a ≤ b → f a ≤ f b`).
+However if you find yourself writing `hf.imp h`, then you should have written `hf h` instead.
+-/
 
-protected theorem Antitone.antitone_on (hf : Antitone f) (s : Set α) : AntitoneOn f s := fun a _ b _ h => hf h
+
+theorem Monotone.imp (hf : Monotone f) (h : a ≤ b) : f a ≤ f b :=
+  hf h
+
+theorem Antitone.imp (hf : Antitone f) (h : a ≤ b) : f b ≤ f a :=
+  hf h
+
+theorem StrictMono.imp (hf : StrictMono f) (h : a < b) : f a < f b :=
+  hf h
+
+theorem StrictAnti.imp (hf : StrictAnti f) (h : a < b) : f b < f a :=
+  hf h
+
+protected theorem Monotone.monotone_on (hf : Monotone f) (s : Set α) : MonotoneOn f s := fun a _ b _ => hf.imp
+
+protected theorem Antitone.antitone_on (hf : Antitone f) (s : Set α) : AntitoneOn f s := fun a _ b _ => hf.imp
 
 theorem monotone_on_univ : MonotoneOn f Set.Univ ↔ Monotone f :=
   ⟨fun h a b => h trivialₓ trivialₓ, fun h => h.MonotoneOn _⟩
@@ -288,9 +305,9 @@ theorem monotone_on_univ : MonotoneOn f Set.Univ ↔ Monotone f :=
 theorem antitone_on_univ : AntitoneOn f Set.Univ ↔ Antitone f :=
   ⟨fun h a b => h trivialₓ trivialₓ, fun h => h.AntitoneOn _⟩
 
-protected theorem StrictMono.strict_mono_on (hf : StrictMono f) (s : Set α) : StrictMonoOn f s := fun a _ b _ h => hf h
+protected theorem StrictMono.strict_mono_on (hf : StrictMono f) (s : Set α) : StrictMonoOn f s := fun a _ b _ => hf.imp
 
-protected theorem StrictAnti.strict_anti_on (hf : StrictAnti f) (s : Set α) : StrictAntiOn f s := fun a _ b _ h => hf h
+protected theorem StrictAnti.strict_anti_on (hf : StrictAnti f) (s : Set α) : StrictAntiOn f s := fun a _ b _ => hf.imp
 
 theorem strict_mono_on_univ : StrictMonoOn f Set.Univ ↔ StrictMono f :=
   ⟨fun h a b => h trivialₓ trivialₓ, fun h => h.StrictMonoOn _⟩
@@ -424,12 +441,12 @@ protected theorem StrictMono.ite' (hf : StrictMono f) (hg : StrictMono g) {p : �
   intro x y h
   by_cases' hy : p y
   · have hx : p x := hp h hy
-    simpa [hx, hy] using hf h
+    simpa [← hx, ← hy] using hf h
     
   by_cases' hx : p x
-  · simpa [hx, hy] using hfg hx hy h
+  · simpa [← hx, ← hy] using hfg hx hy h
     
-  · simpa [hx, hy] using hg h
+  · simpa [← hx, ← hy] using hg h
     
 
 protected theorem StrictMono.ite (hf : StrictMono f) (hg : StrictMono g) {p : α → Prop} [DecidablePred p]
@@ -625,6 +642,25 @@ theorem Antitone.strict_anti_iff_injective (hf : Antitone f) : StrictAnti f ↔ 
 
 end PartialOrderₓ
 
+/-!
+### Strictly monotone functions and `cmp`
+-/
+
+
+variable [LinearOrderₓ β] {f : α → β} {s : Set α} {x y : α}
+
+theorem StrictMonoOn.cmp_map_eq (hf : StrictMonoOn f s) (hx : x ∈ s) (hy : y ∈ s) : cmp (f x) (f y) = cmp x y :=
+  ((hf.Compares hx hy).2 (cmp_compares x y)).cmp_eq
+
+theorem StrictMono.cmp_map_eq (hf : StrictMono f) (x y : α) : cmp (f x) (f y) = cmp x y :=
+  (hf.StrictMonoOn Set.Univ).cmp_map_eq trivialₓ trivialₓ
+
+theorem StrictAntiOn.cmp_map_eq (hf : StrictAntiOn f s) (hx : x ∈ s) (hy : y ∈ s) : cmp (f x) (f y) = cmp y x :=
+  hf.dual_right.cmp_map_eq hy hx
+
+theorem StrictAnti.cmp_map_eq (hf : StrictAnti f) (x y : α) : cmp (f x) (f y) = cmp y x :=
+  (hf.StrictAntiOn Set.Univ).cmp_map_eq trivialₓ trivialₓ
+
 end LinearOrderₓ
 
 /-! ### Monotonicity in `ℕ` and `ℤ` -/
@@ -787,7 +823,31 @@ theorem Subtype.mono_coe [Preorderₓ α] (t : Set α) : Monotone (coe : Subtype
 
 theorem Subtype.strict_mono_coe [Preorderₓ α] (t : Set α) : StrictMono (coe : Subtype t → α) := fun x y => id
 
-theorem monotone_fst {α β : Type _} [Preorderₓ α] [Preorderₓ β] : Monotone (@Prod.fst α β) := fun x y h => h.1
+section Preorderₓ
 
-theorem monotone_snd {α β : Type _} [Preorderₓ α] [Preorderₓ β] : Monotone (@Prod.snd α β) := fun x y h => h.2
+variable [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] [Preorderₓ δ] {f : α → γ} {g : β → δ} {a b : α}
+
+theorem monotone_fst : Monotone (@Prod.fst α β) := fun a b => And.left
+
+theorem monotone_snd : Monotone (@Prod.snd α β) := fun a b => And.right
+
+theorem Monotone.prod_map (hf : Monotone f) (hg : Monotone g) : Monotone (Prod.map f g) := fun a b h => ⟨hf h.1, hg h.2⟩
+
+theorem Antitone.prod_map (hf : Antitone f) (hg : Antitone g) : Antitone (Prod.map f g) := fun a b h => ⟨hf h.1, hg h.2⟩
+
+end Preorderₓ
+
+section PartialOrderₓ
+
+variable [PartialOrderₓ α] [PartialOrderₓ β] [Preorderₓ γ] [Preorderₓ δ] {f : α → γ} {g : β → δ}
+
+theorem StrictMono.prod_map (hf : StrictMono f) (hg : StrictMono g) : StrictMono (Prod.map f g) := fun a b => by
+  simp_rw [Prod.lt_iff]
+  exact Or.imp (And.imp hf.imp hg.monotone.imp) (And.imp hf.monotone.imp hg.imp)
+
+theorem StrictAnti.prod_map (hf : StrictAnti f) (hg : StrictAnti g) : StrictAnti (Prod.map f g) := fun a b => by
+  simp_rw [Prod.lt_iff]
+  exact Or.imp (And.imp hf.imp hg.antitone.imp) (And.imp hf.antitone.imp hg.imp)
+
+end PartialOrderₓ
 

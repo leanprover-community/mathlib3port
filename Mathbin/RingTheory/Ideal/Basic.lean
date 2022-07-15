@@ -74,7 +74,7 @@ theorem eq_top_of_unit_mem (x y : α) (hx : x ∈ I) (h : y * x = 1) : I = ⊤ :
   eq_top_iff.2 fun z _ =>
     calc
       z = z * (y * x) := by
-        simp [h]
+        simp [← h]
       _ = z * y * x := Eq.symm <| mul_assoc z y x
       _ ∈ I := I.mul_mem_left _ hx
       
@@ -201,8 +201,8 @@ theorem IsPrime.mem_of_pow_mem {I : Ideal α} (hI : I.IsPrime) {r : α} (n : ℕ
     exact Or.cases_on (hI.mem_or_mem H) id ih
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ∉ » I)
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (y «expr ∉ » I)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ∉ » I)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y «expr ∉ » I)
 theorem not_is_prime_iff {I : Ideal α} : ¬I.IsPrime ↔ I = ⊤ ∨ ∃ (x : _)(_ : x ∉ I)(y : _)(_ : y ∉ I), x * y ∈ I := by
   simp_rw [Ideal.is_prime_iff, not_and_distrib, Ne.def, not_not, not_forall, not_or_distrib]
   exact
@@ -219,7 +219,7 @@ theorem bot_prime {R : Type _} [Ringₓ R] [IsDomain R] : (⊥ : Ideal R).IsPrim
     fun x y h =>
     mul_eq_zero.mp
       (by
-        simpa only [Submodule.mem_bot] using h)⟩
+        simpa only [← Submodule.mem_bot] using h)⟩
 
 /-- An ideal is maximal if it is maximal in the collection of proper ideals. -/
 class IsMaximal (I : Ideal α) : Prop where
@@ -278,7 +278,7 @@ theorem maximal_of_no_maximal {R : Type u} [Semiringₓ R] {P : Ideal R} (hmax :
   exact hmax M (lt_of_lt_of_leₓ hPJ hM2) hM1
 
 theorem mem_span_pair {x y z : α} : z ∈ span ({x, y} : Set α) ↔ ∃ a b, a * x + b * y = z := by
-  simp [mem_span_insert, mem_span_singleton', @eq_comm _ _ z]
+  simp [← mem_span_insert, ← mem_span_singleton', ← @eq_comm _ _ z]
 
 theorem IsMaximal.exists_inv {I : Ideal α} (hI : I.IsMaximal) {x} (hx : x ∉ I) : ∃ y, ∃ i ∈ I, y * x + i = 1 := by
   cases' is_maximal_iff.1 hI with H₁ H₂
@@ -385,7 +385,7 @@ theorem span_singleton_eq_top {x} : span ({x} : Set α) = ⊤ ↔ IsUnit x := by
   rw [is_unit_iff_dvd_one, ← span_singleton_le_span_singleton, span_singleton_one, eq_top_iff]
 
 theorem span_singleton_prime {p : α} (hp : p ≠ 0) : IsPrime (span ({p} : Set α)) ↔ Prime p := by
-  simp [is_prime_iff, Prime, span_singleton_eq_top, hp, mem_span_singleton]
+  simp [← is_prime_iff, ← Prime, ← span_singleton_eq_top, ← hp, ← mem_span_singleton]
 
 theorem IsMaximal.is_prime {I : Ideal α} (H : I.IsMaximal) : I.IsPrime :=
   ⟨H.1.1, fun x y hxy =>
@@ -445,8 +445,8 @@ theorem pow_multiset_sum_mem_span_pow (s : Multiset α) (n : ℕ) :
   induction' s using Multiset.induction_on with a s hs
   · simp
     
-  simp only [Finset.coe_insert, Multiset.map_cons, Multiset.to_finset_cons, Multiset.sum_cons, Multiset.card_cons,
-    add_pow]
+  simp only [← Finset.coe_insert, ← Multiset.map_cons, ← Multiset.to_finset_cons, ← Multiset.sum_cons, ←
+    Multiset.card_cons, ← add_pow]
   refine' Submodule.sum_mem _ _
   intro c hc
   rw [mem_span_insert]
@@ -494,7 +494,7 @@ theorem span_pow_eq_top (s : Set α) (hs : span s = ⊤) (n : ℕ) : span ((fun 
   rw [hf, one_pow] at this
   refine' span_le.mpr _ this
   rintro _ hx
-  simp_rw [Finset.mem_coe, Set.mem_image]  at hx
+  simp_rw [Finset.mem_coe, Set.mem_image] at hx
   rcases hx with ⟨x, hx, rfl⟩
   have : span ({x ^ (n + 1)} : Set α) ≤ span ((fun x : α => x ^ (n + 1)) '' s) := by
     rw [span_le, Set.singleton_subset_iff]
@@ -549,7 +549,7 @@ theorem eq_bot_or_top : I = ⊥ ∨ I = ⊤ := by
   by_cases' H : r = 0
   · simpa
     
-  simpa [H, h1] using I.mul_mem_left r⁻¹ hr
+  simpa [← H, ← h1] using I.mul_mem_left r⁻¹ hr
 
 theorem eq_bot_of_prime [h : I.IsPrime] : I = ⊥ :=
   or_iff_not_imp_right.mp I.eq_bot_or_top h.1
@@ -588,7 +588,7 @@ variable {R : Type _} [CommRingₓ R]
 theorem not_is_field_of_subsingleton {R : Type _} [Ringₓ R] [Subsingleton R] : ¬IsField R := fun ⟨⟨x, y, hxy⟩, _, _⟩ =>
   hxy (Subsingleton.elimₓ x y)
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ≠ » (0 : R))
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ≠ » (0 : R))
 theorem exists_not_is_unit_of_not_is_field [Nontrivial R] (hf : ¬IsField R) : ∃ (x : _)(_ : x ≠ (0 : R)), ¬IsUnit x :=
   by
   have : ¬_ := fun h => hf ⟨exists_pair_ne R, mul_comm, h⟩

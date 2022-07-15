@@ -70,27 +70,28 @@ instance (priority := 100) HasLipschitzMul.has_continuous_mul : HasContinuousMul
   ⟨lipschitz_with_lipschitz_const_mul_edist.Continuous⟩
 
 @[to_additive]
-instance Submonoid.has_lipschitz_mul (s : Submonoid β) : HasLipschitzMul s where
-  lipschitz_mul :=
+instance Submonoid.has_lipschitz_mul (s : Submonoid β) :
+    HasLipschitzMul s where lipschitz_mul :=
     ⟨HasLipschitzMul.c β, by
       rintro ⟨x₁, x₂⟩ ⟨y₁, y₂⟩
       convert lipschitz_with_lipschitz_const_mul_edist ⟨(x₁ : β), x₂⟩ ⟨y₁, y₂⟩ using 1⟩
 
 @[to_additive]
-instance MulOpposite.has_lipschitz_mul : HasLipschitzMul βᵐᵒᵖ where
-  lipschitz_mul :=
+instance MulOpposite.has_lipschitz_mul :
+    HasLipschitzMul
+      βᵐᵒᵖ where lipschitz_mul :=
     ⟨HasLipschitzMul.c β, fun ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ =>
       (lipschitz_with_lipschitz_const_mul_edist ⟨x₂.unop, x₁.unop⟩ ⟨y₂.unop, y₁.unop⟩).trans_eq
         (congr_arg _ <| max_commₓ _ _)⟩
 
 -- this instance could be deduced from `normed_group.has_lipschitz_add`, but we prove it separately
 -- here so that it is available earlier in the hierarchy
-instance Real.has_lipschitz_add : HasLipschitzAdd ℝ where
-  lipschitz_add :=
+instance Real.has_lipschitz_add :
+    HasLipschitzAdd ℝ where lipschitz_add :=
     ⟨2, by
       rw [lipschitz_with_iff_dist_le_mul]
       intro p q
-      simp only [Real.dist_eq, Prod.dist_eq, Prod.fst_sub, Prod.snd_sub, Nnreal.coe_one, Nnreal.coe_bit0]
+      simp only [← Real.dist_eq, ← Prod.dist_eq, ← Prod.fst_sub, ← Prod.snd_sub, ← Nnreal.coe_one, ← Nnreal.coe_bit0]
       convert le_transₓ (abs_add (p.1 - q.1) (p.2 - q.2)) _ using 2
       · abel
         
@@ -100,8 +101,8 @@ instance Real.has_lipschitz_add : HasLipschitzAdd ℝ where
 
 -- this instance has the same proof as `add_submonoid.has_lipschitz_add`, but the former can't
 -- directly be applied here since `ℝ≥0` is a subtype of `ℝ`, not an additive submonoid.
-instance Nnreal.has_lipschitz_add : HasLipschitzAdd ℝ≥0 where
-  lipschitz_add :=
+instance Nnreal.has_lipschitz_add :
+    HasLipschitzAdd ℝ≥0 where lipschitz_add :=
     ⟨HasLipschitzAdd.c ℝ, by
       rintro ⟨x₁, x₂⟩ ⟨y₁, y₂⟩
       convert lipschitz_with_lipschitz_const_add_edist ⟨(x₁ : ℝ), x₂⟩ ⟨y₁, y₂⟩ using 1⟩
@@ -110,7 +111,7 @@ end HasLipschitzMul
 
 section HasBoundedSmul
 
-variable [Zero α] [Zero β] [HasScalar α β]
+variable [Zero α] [Zero β] [HasSmul α β]
 
 /-- Mixin typeclass on a scalar action of a metric space `α` on a metric space `β` both with
 distinguished points `0`, requiring compatibility of the action in the sense that
@@ -131,8 +132,8 @@ theorem dist_pair_smul (x₁ x₂ : α) (y : β) : dist (x₁ • y) (x₂ • y
 /-- The typeclass `has_bounded_smul` on a metric-space scalar action implies continuity of the
 action. -/
 -- see Note [lower instance priority]
-instance (priority := 100) HasBoundedSmul.has_continuous_smul : HasContinuousSmul α β where
-  continuous_smul := by
+instance (priority := 100) HasBoundedSmul.has_continuous_smul :
+    HasContinuousSmul α β where continuous_smul := by
     rw [Metric.continuous_iff]
     rintro ⟨a, b⟩ ε hε
     have : 0 ≤ dist a 0 := dist_nonneg
@@ -169,9 +170,9 @@ instance (priority := 100) HasBoundedSmul.has_continuous_smul : HasContinuousSmu
 -- here so that it is available earlier in the hierarchy
 instance Real.has_bounded_smul : HasBoundedSmul ℝ ℝ where
   dist_smul_pair' := fun x y₁ y₂ => by
-    simpa [Real.dist_eq, mul_sub] using (abs_mul x (y₁ - y₂)).le
+    simpa [← Real.dist_eq, ← mul_sub] using (abs_mul x (y₁ - y₂)).le
   dist_pair_smul' := fun x₁ x₂ y => by
-    simpa [Real.dist_eq, sub_mul] using (abs_mul (x₁ - x₂) y).le
+    simpa [← Real.dist_eq, ← sub_mul] using (abs_mul (x₁ - x₂) y).le
 
 instance Nnreal.has_bounded_smul : HasBoundedSmul ℝ≥0 ℝ≥0 where
   dist_smul_pair' := fun x y₁ y₂ => by
@@ -180,14 +181,14 @@ instance Nnreal.has_bounded_smul : HasBoundedSmul ℝ≥0 ℝ≥0 where
     convert dist_pair_smul (x₁ : ℝ) x₂ (y : ℝ) using 1
 
 /-- If a scalar is central, then its right action is bounded when its left action is. -/
-instance HasBoundedSmul.op [HasScalar αᵐᵒᵖ β] [IsCentralScalar α β] : HasBoundedSmul αᵐᵒᵖ β where
+instance HasBoundedSmul.op [HasSmul αᵐᵒᵖ β] [IsCentralScalar α β] : HasBoundedSmul αᵐᵒᵖ β where
   dist_smul_pair' :=
     MulOpposite.rec fun x y₁ y₂ => by
-      simpa only [op_smul_eq_smul] using dist_smul_pair x y₁ y₂
+      simpa only [← op_smul_eq_smul] using dist_smul_pair x y₁ y₂
   dist_pair_smul' :=
     MulOpposite.rec fun x₁ =>
       MulOpposite.rec fun x₂ y => by
-        simpa only [op_smul_eq_smul] using dist_pair_smul x₁ x₂ y
+        simpa only [← op_smul_eq_smul] using dist_pair_smul x₁ x₂ y
 
 end HasBoundedSmul
 

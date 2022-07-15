@@ -31,7 +31,7 @@ variable (m : Type u → Type u) [Monadₓ m] [IsLawfulMonad m]
 def ofTypeMonad : Monad (Type u) where
   toFunctor := ofTypeFunctor m
   η' := ⟨@pure m _, fun α β f => (IsLawfulApplicative.map_comp_pure f).symm⟩
-  μ' := ⟨@mjoin m _, fun f : α → β => funext fun a => mjoin_map_map f a⟩
+  μ' := ⟨@mjoin m _, fun α β f : α → β => funext fun a => mjoin_map_map f a⟩
   assoc' := fun α => funext fun a => mjoin_map_mjoin a
   left_unit' := fun α => funext fun a => mjoin_pure a
   right_unit' := fun α => funext fun a => mjoin_map_pure a
@@ -47,14 +47,14 @@ def eq : KleisliCat m ≌ Kleisli (of_type_monad m) where
         unfold_projs
         ext
         dsimp'
-        simp [mjoin, seq_bind_eq] }
+        simp [← mjoin, ← seq_bind_eq] }
   inverse :=
     { obj := fun X => X, map := fun X Y f => f, map_id' := fun X => rfl,
       map_comp' := fun X Y Z f g => by
         unfold_projs
         ext
         dsimp'
-        simp [mjoin, seq_bind_eq] }
+        simp [← mjoin, ← seq_bind_eq] }
   unitIso := by
     refine' nat_iso.of_components (fun X => iso.refl X) fun X Y f => _
     change f >=> pure = pure >=> f

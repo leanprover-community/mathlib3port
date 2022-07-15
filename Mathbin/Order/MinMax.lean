@@ -144,9 +144,9 @@ theorem min_eq_iff : min a b = c ↔ a = c ∧ a ≤ b ∨ b = c ∧ b ≤ a := 
     refine' Or.imp (fun h' => _) (fun h' => _) (le_totalₓ a b) <;>
       exact
         ⟨by
-          simpa [h'] using h, h'⟩
+          simpa [← h'] using h, h'⟩
     
-  · rintro (⟨rfl, h⟩ | ⟨rfl, h⟩) <;> simp [h]
+  · rintro (⟨rfl, h⟩ | ⟨rfl, h⟩) <;> simp [← h]
     
 
 theorem max_eq_iff : max a b = c ↔ a = c ∧ b ≤ a ∨ b = c ∧ a ≤ b :=
@@ -179,7 +179,7 @@ theorem min_lt_max : min a b < max a b ↔ a ≠ b :=
   inf_lt_sup
 
 theorem max_lt_max (h₁ : a < c) (h₂ : b < d) : max a b < max c d := by
-  simp [lt_max_iff, max_lt_iff, *]
+  simp [← lt_max_iff, ← max_lt_iff, *]
 
 theorem min_lt_min (h₁ : a < c) (h₂ : b < d) : min a b < min c d :=
   @max_lt_max αᵒᵈ _ _ _ _ _ h₁ h₂
@@ -194,7 +194,7 @@ theorem Max.right_comm (a b c : α) : max (max a b) c = max (max a c) b :=
   right_comm max max_commₓ max_assocₓ a b c
 
 theorem MonotoneOn.map_max (hf : MonotoneOn f s) (ha : a ∈ s) (hb : b ∈ s) : f (max a b) = max (f a) (f b) := by
-  cases le_totalₓ a b <;> simp only [max_eq_rightₓ, max_eq_leftₓ, hf ha hb, hf hb ha, h]
+  cases le_totalₓ a b <;> simp only [← max_eq_rightₓ, ← max_eq_leftₓ, ← hf ha hb, ← hf hb ha, ← h]
 
 theorem MonotoneOn.map_min (hf : MonotoneOn f s) (ha : a ∈ s) (hb : b ∈ s) : f (min a b) = min (f a) (f b) :=
   hf.dual.map_max ha hb
@@ -206,13 +206,13 @@ theorem AntitoneOn.map_min (hf : AntitoneOn f s) (ha : a ∈ s) (hb : b ∈ s) :
   hf.dual.map_max ha hb
 
 theorem Monotone.map_max (hf : Monotone f) : f (max a b) = max (f a) (f b) := by
-  cases le_totalₓ a b <;> simp [h, hf h]
+  cases le_totalₓ a b <;> simp [← h, ← hf h]
 
 theorem Monotone.map_min (hf : Monotone f) : f (min a b) = min (f a) (f b) :=
   hf.dual.map_max
 
 theorem Antitone.map_max (hf : Antitone f) : f (max a b) = min (f a) (f b) := by
-  cases le_totalₓ a b <;> simp [h, hf h]
+  cases le_totalₓ a b <;> simp [← h, ← hf h]
 
 theorem Antitone.map_min (hf : Antitone f) : f (min a b) = max (f a) (f b) :=
   hf.dual.map_max

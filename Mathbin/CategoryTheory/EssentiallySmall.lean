@@ -95,8 +95,7 @@ theorem locally_small_congr {C : Type u} [Category.{v} C] {D : Type u'} [Categor
     exact equiv_of_fully_faithful e.functor
     
 
-instance (priority := 100) locally_small_self (C : Type u) [Category.{v} C] : LocallySmall.{v} C :=
-  {  }
+instance (priority := 100) locally_small_self (C : Type u) [Category.{v} C] : LocallySmall.{v} C where
 
 instance (priority := 100) locally_small_of_essentially_small (C : Type u) [Category.{v} C] [EssentiallySmall.{w} C] :
     LocallySmall.{w} C :=
@@ -138,7 +137,7 @@ variable (C) [LocallySmall.{w} C]
 
 @[simps]
 noncomputable instance : Category.{w} (ShrinkHoms C) where
-  Hom := fun X Y => Shrink (fromShrinkHoms X ⟶ fromShrinkHoms Y)
+  hom := fun X Y => Shrink (fromShrinkHoms X ⟶ fromShrinkHoms Y)
   id := fun X => equivShrink _ (𝟙 (fromShrinkHoms X))
   comp := fun X Y Z f g => equivShrink _ ((equivShrink _).symm f ≫ (equivShrink _).symm g)
 
@@ -200,14 +199,13 @@ theorem essentially_small_iff (C : Type u) [Category.{v} C] :
 /-- Any thin category is locally small.
 -/
 instance (priority := 100) locally_small_of_thin {C : Type u} [Category.{v} C] [∀ X Y : C, Subsingleton (X ⟶ Y)] :
-    LocallySmall.{w} C :=
-  {  }
+    LocallySmall.{w} C where
 
 /-- A thin category is essentially small if and only if the underlying type of its skeleton is small.
 -/
 theorem essentially_small_iff_of_thin {C : Type u} [Category.{v} C] [∀ X Y : C, Subsingleton (X ⟶ Y)] :
     EssentiallySmall.{w} C ↔ Small.{w} (Skeleton C) := by
-  simp [essentially_small_iff, CategoryTheory.locally_small_of_thin]
+  simp [← essentially_small_iff, ← CategoryTheory.locally_small_of_thin]
 
 end CategoryTheory
 

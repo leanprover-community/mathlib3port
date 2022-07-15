@@ -112,8 +112,8 @@ instance option : Denumerable (Option α) :=
 instance sum : Denumerable (Sum α β) :=
   ⟨fun n => by
     suffices ∃ a ∈ @decode_sum α β _ _ n, encode_sum a = bit (bodd n) (div2 n) by
-      simpa [bit_decomp]
-    simp [decode_sum] <;> cases bodd n <;> simp [decode_sum, bit, encode_sum]⟩
+      simpa [← bit_decomp]
+    simp [← decode_sum] <;> cases bodd n <;> simp [← decode_sum, ← bit, ← encode_sum]⟩
 
 section Sigma
 
@@ -122,7 +122,7 @@ variable {γ : α → Type _} [∀ a, Denumerable (γ a)]
 /-- A denumerable collection of denumerable types is denumerable. -/
 instance sigma : Denumerable (Sigma γ) :=
   ⟨fun n => by
-    simp [decode_sigma] <;>
+    simp [← decode_sigma] <;>
       exact
         ⟨_, _, ⟨rfl, HEq.rfl⟩, by
           simp ⟩⟩
@@ -189,11 +189,11 @@ theorem exists_succ (x : s) : ∃ n, ↑x + n + 1 ∈ s :=
           ⟨a - (x + 1), by
             rwa [add_right_commₓ, add_tsub_cancel_of_le hax]⟩
     Fintype.false
-      ⟨(((Multiset.range (succ x)).filter (· ∈ s)).pmap (fun hy : y ∈ s => Subtype.mk y hy)
+      ⟨(((Multiset.range (succ x)).filter (· ∈ s)).pmap (fun y : ℕ hy : y ∈ s => Subtype.mk y hy)
             (by
               simp [-Multiset.range_succ])).toFinset,
         by
-        simpa [Subtype.ext_iff_val, Multiset.mem_filter, -Multiset.range_succ] ⟩
+        simpa [← Subtype.ext_iff_val, ← Multiset.mem_filter, -Multiset.range_succ] ⟩
 
 end Classical
 
@@ -238,13 +238,13 @@ def ofNat (s : Set ℕ) [DecidablePred (· ∈ s)] [Infinite s] : ℕ → s
 theorem of_nat_surjective_aux : ∀ {x : ℕ} hx : x ∈ s, ∃ n, ofNat s n = ⟨x, hx⟩
   | x => fun hx => by
     let t : List s :=
-      ((List.range x).filter fun y => y ∈ s).pmap (fun hy : y ∈ s => ⟨y, hy⟩)
+      ((List.range x).filter fun y => y ∈ s).pmap (fun y : ℕ hy : y ∈ s => ⟨y, hy⟩)
         (by
           simp )
     have hmt : ∀ {y : s}, y ∈ t ↔ y < ⟨x, hx⟩ := by
-      simp [List.mem_filterₓ, Subtype.ext_iff_val, t] <;> intros <;> rfl
+      simp [← List.mem_filterₓ, ← Subtype.ext_iff_val, ← t] <;> intros <;> rfl
     have wf : ∀ m : s, List.maximum t = m → ↑m < x := fun m hmax => by
-      simpa [hmt] using List.maximum_mem hmax
+      simpa [← hmt] using List.maximum_mem hmax
     cases' hmax : List.maximum t with m
     · exact
         ⟨0,
@@ -298,13 +298,13 @@ private theorem right_inverse_aux : ∀ n, toFunAux (ofNat s n) = n
     have h₁ : (ofNat s n : ℕ) ∉ (range (ofNat s n)).filter (· ∈ s) := by
       simp
     have h₂ : (range (succ (ofNat s n))).filter (· ∈ s) = insert (ofNat s n) ((range (ofNat s n)).filter (· ∈ s)) := by
-      simp only [Finset.ext_iff, mem_insert, mem_range, mem_filter]
+      simp only [← Finset.ext_iff, ← mem_insert, ← mem_range, ← mem_filter]
       exact fun m =>
         ⟨fun h => by
-          simp only [h.2, and_trueₓ] <;> exact Or.symm (lt_or_eq_of_leₓ ((@lt_succ_iff_le _ _ _ ⟨m, h.2⟩ _).1 h.1)),
+          simp only [← h.2, ← and_trueₓ] <;> exact Or.symm (lt_or_eq_of_leₓ ((@lt_succ_iff_le _ _ _ ⟨m, h.2⟩ _).1 h.1)),
           fun h =>
           h.elim (fun h => h.symm ▸ ⟨lt_succ_self _, (of_nat s n).Prop⟩) fun h => ⟨h.1.trans (lt_succ_self _), h.2⟩⟩
-    simp only [to_fun_aux_eq, of_nat, range_succ] at ih⊢
+    simp only [← to_fun_aux_eq, ← of_nat, ← range_succ] at ih⊢
     conv => rhs rw [← ih, ← card_insert_of_not_mem h₁, ← h₂]
 
 /-- Any infinite set of naturals is denumerable. -/

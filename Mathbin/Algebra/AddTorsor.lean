@@ -240,7 +240,7 @@ instance : AddTorsor (G × G') (P × P') where
   zero_vadd := fun p => by
     simp
   add_vadd := by
-    simp [add_vadd]
+    simp [← add_vadd]
   vsub := fun p₁ p₂ => (p₁.1 -ᵥ p₂.1, p₁.2 -ᵥ p₂.2)
   Nonempty := Prod.nonempty
   vsub_vadd' := fun p₁ p₂ =>
@@ -324,7 +324,7 @@ def constVsub (p : P) : P ≃ G where
   left_inv := fun p' => by
     simp
   right_inv := fun v => by
-    simp [vsub_vadd_eq_vsub_sub]
+    simp [← vsub_vadd_eq_vsub_sub]
 
 @[simp]
 theorem coe_const_vsub (p : P) : ⇑(constVsub p) = (· -ᵥ ·) p :=
@@ -341,9 +341,9 @@ def constVadd (v : G) : Equivₓ.Perm P where
   toFun := (· +ᵥ ·) v
   invFun := (· +ᵥ ·) (-v)
   left_inv := fun p => by
-    simp [vadd_vadd]
+    simp [← vadd_vadd]
   right_inv := fun p => by
-    simp [vadd_vadd]
+    simp [← vadd_vadd]
 
 @[simp]
 theorem coe_const_vadd (v : G) : ⇑(constVadd P v) = (· +ᵥ ·) v :=
@@ -381,7 +381,7 @@ theorem point_reflection_apply (x y : P) : pointReflection x y = x -ᵥ y +ᵥ x
 @[simp]
 theorem point_reflection_symm (x : P) : (pointReflection x).symm = pointReflection x :=
   ext <| by
-    simp [point_reflection]
+    simp [← point_reflection]
 
 @[simp]
 theorem point_reflection_self (x : P) : pointReflection x x = x :=
@@ -402,7 +402,7 @@ omit G
 
 theorem injective_point_reflection_left_of_injective_bit0 {G P : Type _} [AddCommGroupₓ G] [AddTorsor G P]
     (h : Injective (bit0 : G → G)) (y : P) : Injective fun x : P => pointReflection x y :=
-  fun hy : pointReflection x₁ y = pointReflection x₂ y => by
+  fun x₁ x₂ hy : pointReflection x₁ y = pointReflection x₂ y => by
   rwa [point_reflection_apply, point_reflection_apply, vadd_eq_vadd_iff_sub_eq_vsub, vsub_sub_vsub_cancel_right, ←
     neg_vsub_eq_vsub_rev, neg_eq_iff_add_eq_zero, ← bit0, ← bit0_zero, h.eq_iff, vsub_eq_zero_iff_eq] at hy
 

@@ -65,12 +65,12 @@ theorem log_eq_one_iff {b n : ℕ} : log b n = 1 ↔ n < b * b ∧ 1 < b ∧ b �
     cases' bound with one_lt_b b_le_n
     refine' ⟨_, one_lt_b, b_le_n⟩
     rw [log_of_one_lt_of_le one_lt_b b_le_n, succ_inj', log_eq_zero_iff,
-      Nat.div_lt_iff_lt_mulₓ _ _ (lt_transₓ zero_lt_one one_lt_b)] at h_log
+      Nat.div_lt_iff_lt_mulₓ (lt_transₓ zero_lt_one one_lt_b)] at h_log
     exact h_log.resolve_right fun b_small => lt_irreflₓ _ (lt_of_lt_of_leₓ one_lt_b b_small)
     
   · rintro ⟨h, one_lt_b, b_le_n⟩
     rw [log_of_one_lt_of_le one_lt_b b_le_n, succ_inj', log_eq_zero_iff,
-      Nat.div_lt_iff_lt_mulₓ _ _ (lt_transₓ zero_lt_one one_lt_b)]
+      Nat.div_lt_iff_lt_mulₓ (lt_transₓ zero_lt_one one_lt_b)]
     exact Or.inl h
     
 
@@ -101,7 +101,7 @@ theorem pow_le_iff_le_log {b : ℕ} (hb : 1 < b) {x y : ℕ} (hy : 0 < y) : b ^ 
   split_ifs
   · have b_pos : 0 < b := zero_le_one.trans_lt hb
     rw [succ_eq_add_one, add_le_add_iff_right, ← ih (y / b) (div_lt_self hy hb) (Nat.div_pos h.1 b_pos),
-      le_div_iff_mul_le _ _ b_pos, pow_succ'ₓ]
+      le_div_iff_mul_le b_pos, pow_succ'ₓ]
     
   · refine' iff_of_false (fun hby => h ⟨le_transₓ _ hby, hb⟩) (not_succ_le_zero _)
     convert pow_mono hb.le (zero_lt_succ x)
@@ -127,11 +127,11 @@ theorem log_mul_base (b n : ℕ) (hb : 1 < b) (hn : 0 < n) : log b (n * b) = log
     have : 0 < b := zero_lt_one.trans hb
     rw [← pow_le_iff_le_log hb, pow_succ'ₓ, (strict_mono_mul_right_of_pos this).le_iff_le, pow_le_iff_le_log hb hn,
       Nat.succ_le_succ_iff]
-    simp [hn, this]
+    simp [← hn, ← this]
 
 theorem lt_pow_succ_log_self {b : ℕ} (hb : 1 < b) (x : ℕ) : x < b ^ (log b x).succ := by
   cases' x.eq_zero_or_pos with hx hx
-  · simp only [hx, log_zero_right, pow_oneₓ]
+  · simp only [← hx, ← log_zero_right, ← pow_oneₓ]
     exact pos_of_gt hb
     
   rw [← not_leₓ, pow_le_iff_le_log hb hx, not_leₓ]
@@ -186,12 +186,12 @@ theorem log_div_mul_self (b n : ℕ) : log b (n / b * b) = log b n :=
         · apply zero_le
           
         rw [← pow_le_iff_le_log, pow_succ'ₓ] at h⊢
-        · rwa [(strict_mono_mul_right_of_pos Nat.succ_pos').le_iff_le, Nat.le_div_iff_mul_leₓ _ _ Nat.succ_pos']
+        · rwa [(strict_mono_mul_right_of_pos Nat.succ_pos').le_iff_le, Nat.le_div_iff_mul_leₓ Nat.succ_pos']
           
         all_goals
-          simp [hn, Nat.div_pos hb Nat.succ_pos']
+          simp [← hn, ← Nat.div_pos hb Nat.succ_pos']
         
-      · simpa [div_eq_of_lt, hb, log_of_lt] using h
+      · simpa [← div_eq_of_lt, ← hb, ← log_of_lt] using h
         ⟩
 
 @[simp]
@@ -210,11 +210,11 @@ theorem log_div_base (b n : ℕ) : log b (n / b) = log b n - 1 := by
   rw [← succ_inj', ← succ_inj']
   simp_rw [succ_eq_add_one]
   rw [Nat.sub_add_cancelₓ, ← log_mul_base] <;>
-    · simp [succ_le_iff, log_pos, h, Nat.div_pos]
+    · simp [← succ_le_iff, ← log_pos, ← h, ← Nat.div_pos]
       
 
 private theorem add_pred_div_lt {b n : ℕ} (hb : 1 < b) (hn : 2 ≤ n) : (n + b - 1) / b < n := by
-  rw [div_lt_iff_lt_mul _ _ (zero_lt_one.trans hb), ← succ_le_iff, ← pred_eq_sub_one,
+  rw [div_lt_iff_lt_mul (zero_lt_one.trans hb), ← succ_le_iff, ← pred_eq_sub_one,
     succ_pred_eq_of_pos (add_pos (zero_lt_one.trans hn) (zero_lt_one.trans hb))]
   exact add_le_mul hn hb
 
@@ -263,7 +263,7 @@ theorem clog_pos {b n : ℕ} (hb : 1 < b) (hn : 2 ≤ n) : 0 < clog b n := by
 theorem clog_eq_one {b n : ℕ} (hn : 2 ≤ n) (h : n ≤ b) : clog b n = 1 := by
   rw [clog_of_two_le (hn.trans h) hn, clog_of_right_le_one]
   have n_pos : 0 < n := zero_lt_two.trans_le hn
-  rw [← lt_succ_iff, Nat.div_lt_iff_lt_mulₓ _ _ (n_pos.trans_le h), ← succ_le_iff, ← pred_eq_sub_one,
+  rw [← lt_succ_iff, Nat.div_lt_iff_lt_mulₓ (n_pos.trans_le h), ← succ_le_iff, ← pred_eq_sub_one,
     succ_pred_eq_of_pos (add_pos n_pos (n_pos.trans_le h)), succ_mul, one_mulₓ]
   exact add_le_add_right h _
 

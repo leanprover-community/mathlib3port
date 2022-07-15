@@ -41,11 +41,11 @@ def isLimitMapConeEmptyConeEquiv : IsLimit (G.mapCone (asEmptyCone.{v₁} X)) �
   isLimitEmptyConeEquiv D _ _ (eqToIso rfl)
 
 /-- The property of preserving terminal objects expressed in terms of `is_terminal`. -/
-def IsTerminal.isTerminalObj [PreservesLimit (Functor.empty.{v₁} C) G] (l : IsTerminal X) : IsTerminal (G.obj X) :=
+def IsTerminal.isTerminalObj [PreservesLimit (Functor.empty.{0} C) G] (l : IsTerminal X) : IsTerminal (G.obj X) :=
   isLimitMapConeEmptyConeEquiv G X (PreservesLimit.preserves l)
 
 /-- The property of reflecting terminal objects expressed in terms of `is_terminal`. -/
-def IsTerminal.isTerminalOfObj [ReflectsLimit (Functor.empty.{v₁} C) G] (l : IsTerminal (G.obj X)) : IsTerminal X :=
+def IsTerminal.isTerminalOfObj [ReflectsLimit (Functor.empty.{0} C) G] (l : IsTerminal (G.obj X)) : IsTerminal X :=
   ReflectsLimit.reflects ((isLimitMapConeEmptyConeEquiv G X).symm l)
 
 variable [HasTerminal C]
@@ -53,7 +53,7 @@ variable [HasTerminal C]
 /-- If `G` preserves the terminal object and `C` has a terminal object, then the image of the terminal
 object is terminal.
 -/
-def isLimitOfHasTerminalOfPreservesLimit [PreservesLimit (Functor.empty.{v₁} C) G] : IsTerminal (G.obj (⊤_ C)) :=
+def isLimitOfHasTerminalOfPreservesLimit [PreservesLimit (Functor.empty.{0} C) G] : IsTerminal (G.obj (⊤_ C)) :=
   terminalIsTerminal.isTerminalObj G (⊤_ C)
 
 /-- If `C` has a terminal object and `G` preserves terminal objects, then `D` has a terminal object
@@ -62,7 +62,7 @@ Note this property is somewhat unique to (co)limits of the empty diagram: for ge
 has limits of shape `J` and `G` preserves them, then `D` does not necessarily have limits of shape
 `J`.
 -/
-theorem has_terminal_of_has_terminal_of_preserves_limit [PreservesLimit (Functor.empty.{v₁} C) G] : HasTerminal D :=
+theorem has_terminal_of_has_terminal_of_preserves_limit [PreservesLimit (Functor.empty.{0} C) G] : HasTerminal D :=
   ⟨fun F => by
     have := has_limit.mk ⟨_, is_limit_of_has_terminal_of_preserves_limit G⟩
     apply has_limit_of_iso F.unique_from_empty.symm⟩
@@ -74,7 +74,7 @@ variable [HasTerminal D]
 def PreservesTerminal.ofIsoComparison [i : IsIso (terminalComparison G)] : PreservesLimit (Functor.empty C) G := by
   apply preserves_limit_of_preserves_limit_cone terminal_is_terminal
   apply (is_limit_map_cone_empty_cone_equiv _ _).symm _
-  apply is_limit.of_point_iso (limit.is_limit (Functor.empty.{v₂} D))
+  apply is_limit.of_point_iso (limit.is_limit (Functor.empty.{0} D))
   apply i
 
 /-- If there is any isomorphism `G.obj ⊤ ⟶ ⊤`, then `G` preserves terminal objects. -/
@@ -86,7 +86,7 @@ def preservesTerminalOfIsIso (f : G.obj (⊤_ C) ⟶ ⊤_ D) [i : IsIso f] : Pre
 def preservesTerminalOfIso (f : G.obj (⊤_ C) ≅ ⊤_ D) : PreservesLimit (Functor.empty C) G :=
   preservesTerminalOfIsIso G f.Hom
 
-variable [PreservesLimit (Functor.empty.{v₁} C) G]
+variable [PreservesLimit (Functor.empty.{0} C) G]
 
 /-- If `G` preserves terminal objects, then the terminal comparison map for `G` is an isomorphism.
 -/
@@ -111,11 +111,11 @@ def isColimitMapCoconeEmptyCoconeEquiv : IsColimit (G.mapCocone (asEmptyCocone.{
   isColimitEmptyCoconeEquiv D _ _ (eqToIso rfl)
 
 /-- The property of preserving initial objects expressed in terms of `is_initial`. -/
-def IsInitial.isInitialObj [PreservesColimit (Functor.empty.{v₁} C) G] (l : IsInitial X) : IsInitial (G.obj X) :=
+def IsInitial.isInitialObj [PreservesColimit (Functor.empty.{0} C) G] (l : IsInitial X) : IsInitial (G.obj X) :=
   isColimitMapCoconeEmptyCoconeEquiv G X (PreservesColimit.preserves l)
 
 /-- The property of reflecting initial objects expressed in terms of `is_initial`. -/
-def IsInitial.isInitialOfObj [ReflectsColimit (Functor.empty.{v₁} C) G] (l : IsInitial (G.obj X)) : IsInitial X :=
+def IsInitial.isInitialOfObj [ReflectsColimit (Functor.empty.{0} C) G] (l : IsInitial (G.obj X)) : IsInitial X :=
   ReflectsColimit.reflects ((isColimitMapCoconeEmptyCoconeEquiv G X).symm l)
 
 variable [HasInitial C]
@@ -123,7 +123,7 @@ variable [HasInitial C]
 /-- If `G` preserves the initial object and `C` has a initial object, then the image of the initial
 object is initial.
 -/
-def isColimitOfHasInitialOfPreservesColimit [PreservesColimit (Functor.empty.{v₁} C) G] : IsInitial (G.obj (⊥_ C)) :=
+def isColimitOfHasInitialOfPreservesColimit [PreservesColimit (Functor.empty.{0} C) G] : IsInitial (G.obj (⊥_ C)) :=
   initialIsInitial.isInitialObj G (⊥_ C)
 
 /-- If `C` has a initial object and `G` preserves initial objects, then `D` has a initial object
@@ -132,7 +132,7 @@ Note this property is somewhat unique to colimits of the empty diagram: for gene
 has colimits of shape `J` and `G` preserves them, then `D` does not necessarily have colimits of
 shape `J`.
 -/
-theorem has_initial_of_has_initial_of_preserves_colimit [PreservesColimit (Functor.empty.{v₁} C) G] : HasInitial D :=
+theorem has_initial_of_has_initial_of_preserves_colimit [PreservesColimit (Functor.empty.{0} C) G] : HasInitial D :=
   ⟨fun F => by
     have := has_colimit.mk ⟨_, is_colimit_of_has_initial_of_preserves_colimit G⟩
     apply has_colimit_of_iso F.unique_from_empty⟩
@@ -144,7 +144,7 @@ variable [HasInitial D]
 def PreservesInitial.ofIsoComparison [i : IsIso (initialComparison G)] : PreservesColimit (Functor.empty C) G := by
   apply preserves_colimit_of_preserves_colimit_cocone initial_is_initial
   apply (is_colimit_map_cocone_empty_cocone_equiv _ _).symm _
-  apply is_colimit.of_point_iso (colimit.is_colimit (Functor.empty.{v₂} D))
+  apply is_colimit.of_point_iso (colimit.is_colimit (Functor.empty.{0} D))
   apply i
 
 /-- If there is any isomorphism `⊥ ⟶ G.obj ⊥`, then `G` preserves initial objects. -/
@@ -156,7 +156,7 @@ def preservesInitialOfIsIso (f : ⊥_ D ⟶ G.obj (⊥_ C)) [i : IsIso f] : Pres
 def preservesInitialOfIso (f : ⊥_ D ≅ G.obj (⊥_ C)) : PreservesColimit (Functor.empty C) G :=
   preservesInitialOfIsIso G f.Hom
 
-variable [PreservesColimit (Functor.empty.{v₁} C) G]
+variable [PreservesColimit (Functor.empty.{0} C) G]
 
 /-- If `G` preserves initial objects, then the initial comparison map for `G` is an isomorphism. -/
 def PreservesInitial.iso : G.obj (⊥_ C) ≅ ⊥_ D :=

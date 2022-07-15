@@ -198,7 +198,7 @@ theorem Submodule.basis_of_pid_aux [Fintype ι] {O : Type _} [AddCommGroupₓ O]
   have mk_y' : (⟨y', y'M⟩ : M) = ∑ i, c i • b'M i :=
     Subtype.ext
       (show y' = M.subtype _ by
-        simp only [LinearMap.map_sum, LinearMap.map_smul]
+        simp only [← LinearMap.map_sum, ← LinearMap.map_smul]
         rfl)
   have a_smul_y' : a • y' = y := by
     refine' congr_arg coe (show (a • ⟨y', y'M⟩ : M) = ⟨y, N_le_M yN⟩ from _)
@@ -213,19 +213,19 @@ theorem Submodule.basis_of_pid_aux [Fintype ι] {O : Type _} [AddCommGroupₓ O]
       (calc
         a • ϕ ⟨y', y'M⟩ = ϕ ⟨a • y', _⟩ := (ϕ.map_smul a ⟨y', y'M⟩).symm
         _ = ϕ ⟨y, N_le_M yN⟩ := by
-          simp only [a_smul_y']
+          simp only [← a_smul_y']
         _ = a := ϕy_eq
         _ = a * 1 := (mul_oneₓ a).symm
         )
   have ϕy'_ne_zero : ϕ ⟨y', y'M⟩ ≠ 0 := by
-    simpa only [ϕy'_eq] using one_ne_zero
+    simpa only [← ϕy'_eq] using one_ne_zero
   -- `M' := ker (ϕ : M → R)` is smaller than `M` and `N' := ker (ϕ : N → R)` is smaller than `N`.
   let M' : Submodule R O := ϕ.ker.map M.subtype
   let N' : Submodule R O := (ϕ.comp (of_le N_le_M)).ker.map N.subtype
   have M'_le_M : M' ≤ M := M.map_subtype_le ϕ.ker
   have N'_le_M' : N' ≤ M' := by
     intro x hx
-    simp only [mem_map, LinearMap.mem_ker] at hx⊢
+    simp only [← mem_map, ← LinearMap.mem_ker] at hx⊢
     obtain ⟨⟨x, xN⟩, hx, rfl⟩ := hx
     exact ⟨⟨x, N_le_M xN⟩, hx, rfl⟩
   have N'_le_N : N' ≤ N := N.map_subtype_le (ϕ.comp (of_le N_le_M)).ker
@@ -237,8 +237,8 @@ theorem Submodule.basis_of_pid_aux [Fintype ι] {O : Type _} [AddCommGroupₓ O]
     obtain ⟨⟨x, xM⟩, hx', rfl⟩ := submodule.mem_map.mp xM'
     rw [LinearMap.mem_ker] at hx'
     have hc' : (c • ⟨y', y'M⟩ + ⟨x, xM⟩ : M) = 0 := Subtype.coe_injective hc
-    simpa only [LinearMap.map_add, LinearMap.map_zero, LinearMap.map_smul, smul_eq_mul, add_zeroₓ, mul_eq_zero,
-      ϕy'_ne_zero, hx', or_falseₓ] using congr_arg ϕ hc'
+    simpa only [← LinearMap.map_add, ← LinearMap.map_zero, ← LinearMap.map_smul, ← smul_eq_mul, ← add_zeroₓ, ←
+      mul_eq_zero, ← ϕy'_ne_zero, ← hx', ← or_falseₓ] using congr_arg ϕ hc'
   -- And `a • y'` is orthogonal to `N'`.
   have ay'_ortho_N' : ∀ c : R, ∀ z ∈ N', ∀, c • a • y' + z = 0 → c = 0 := by
     intro c z zN' hc
@@ -257,7 +257,7 @@ theorem Submodule.basis_of_pid_aux [Fintype ι] {O : Type _} [AddCommGroupₓ O]
       · refine' linear_map.mem_ker.mpr (show ϕ (⟨z, N_le_M zN⟩ - b • ⟨y, N_le_M yN⟩) = 0 from _)
         rw [LinearMap.map_sub, LinearMap.map_smul, hb, ϕy_eq, smul_eq_mul, mul_comm, sub_self]
         
-      · simp only [sub_eq_add_neg, neg_smul]
+      · simp only [← sub_eq_add_neg, ← neg_smul]
         rfl
         
       
@@ -280,11 +280,11 @@ theorem Submodule.basis_of_pid_aux [Fintype ι] {O : Type _} [AddCommGroupₓ O]
   intro i
   rw [Basis.coe_mk_fin_cons_of_le, Basis.coe_mk_fin_cons_of_le]
   refine' Finₓ.cases _ (fun i => _) i
-  · simp only [Finₓ.cons_zero, Finₓ.cast_le_zero]
+  · simp only [← Finₓ.cons_zero, ← Finₓ.cast_le_zero]
     exact a_smul_y'.symm
     
   · rw [Finₓ.cast_le_succ]
-    simp only [Finₓ.cons_succ, coe_of_le, h i]
+    simp only [← Finₓ.cons_succ, ← coe_of_le, ← h i]
     
 
 /-- A submodule of a free `R`-module of finite rank is also a free `R`-module of finite rank,
@@ -345,8 +345,8 @@ noncomputable def Submodule.basisOfPidOfLeSpan {ι : Type _} [Fintype ι] {b : �
 
 variable {M}
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (i «expr ∉ » I)
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i «expr ∉ » I)
 /-- A finite type torsion free module over a PID is free. -/
 noncomputable def Module.freeOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M} (hs : span R (Range s) = ⊤)
     [NoZeroSmulDivisors R M] : Σn : ℕ, Basis (Finₓ n) R M := by
@@ -372,7 +372,7 @@ noncomputable def Module.freeOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M}
       rw [one_smul]
       exact subset_span (mem_range_self (⟨i, hi⟩ : I))
       
-    · simpa [image_eq_range s I] using hI i hi
+    · simpa [← image_eq_range s I] using hI i hi
       
   choose a ha ha' using exists_a
   let A := ∏ i, a i
@@ -458,8 +458,8 @@ noncomputable def Submodule.smithNormalFormOfLe [Fintype ι] (b : Basis ι R M) 
   choose n o hno bO bN a snf using N.exists_smith_normal_form_of_le b O N_le_O
   refine' ⟨o, n, bO, bN.map (comap_subtype_equiv_of_le N_le_O).symm, (Finₓ.castLe hno).toEmbedding, a, fun i => _⟩
   ext
-  simp only [snf, Basis.map_apply, Submodule.comap_subtype_equiv_of_le_symm_apply_coe_coe, Submodule.coe_smul_of_tower,
-    RelEmbedding.coe_fn_to_embedding]
+  simp only [← snf, ← Basis.map_apply, ← Submodule.comap_subtype_equiv_of_le_symm_apply_coe_coe, ←
+    Submodule.coe_smul_of_tower, ← RelEmbedding.coe_fn_to_embedding]
 
 /-- If `M` is finite free over a PID `R`, then any submodule `N` is free
 and we can find a basis for `M` and `N` such that the inclusion map is a diagonal matrix
@@ -476,9 +476,9 @@ noncomputable def Submodule.smithNormalForm [Fintype ι] (b : Basis ι R M) (N :
   let bM' := bM.map (LinearEquiv.ofTop _ rfl)
   let e := bM'.indexEquiv b
   ⟨n, bM'.reindex e, bN.map (comapSubtypeEquivOfLe le_top), f.trans e.toEmbedding, a, fun i => by
-    simp only [snf, Basis.map_apply, LinearEquiv.of_top_apply, Submodule.coe_smul_of_tower,
-      Submodule.comap_subtype_equiv_of_le_apply_coe, coe_coe, Basis.reindex_apply, Equivₓ.to_embedding_apply,
-      Function.Embedding.trans_apply, Equivₓ.symm_apply_apply]⟩
+    simp only [← snf, ← Basis.map_apply, ← LinearEquiv.of_top_apply, ← Submodule.coe_smul_of_tower, ←
+      Submodule.comap_subtype_equiv_of_le_apply_coe, ← coe_coe, ← Basis.reindex_apply, ← Equivₓ.to_embedding_apply, ←
+      Function.Embedding.trans_apply, ← Equivₓ.symm_apply_apply]⟩
 
 /-- If `S` a finite-dimensional ring extension of a PID `R` which is free as an `R`-module,
 then any nonzero `S`-ideal `I` is free as an `R`-submodule of `S`, and we can
@@ -499,7 +499,7 @@ noncomputable def Ideal.smithNormalForm [Fintype ι] {S : Type _} [CommRingₓ S
       (by
         rw [Eq, Fintype.card_fin])
   ⟨bS, bI.reindex e, e.symm.toEmbedding.trans f, a ∘ e.symm, fun i => by
-    simp only [snf, Basis.coe_reindex, Function.Embedding.trans_apply, Equivₓ.to_embedding_apply]⟩
+    simp only [← snf, ← Basis.coe_reindex, ← Function.Embedding.trans_apply, ← Equivₓ.to_embedding_apply]⟩
 
 /-- If `S` a finite-dimensional ring extension of a PID `R` which is free as an `R`-module,
 then any nonzero `S`-ideal `I` is free as an `R`-submodule of `S`, and we can
@@ -517,8 +517,8 @@ theorem Ideal.exists_smith_normal_form [Fintype ι] {S : Type _} [CommRingₓ S]
     Equivₓ.ofBijective f ((Fintype.bijective_iff_injective_and_card f).mpr ⟨f.Injective, Fintype.card_fin _⟩)
   have fe : ∀ i, f (e.symm i) = i := e.apply_symm_apply
   ⟨bS, a ∘ e.symm, (bI.reindex e).map ((restrictScalarsEquiv _ _ _ _).restrictScalars R), fun i => by
-    simp only [snf, fe, Basis.map_apply, LinearEquiv.restrict_scalars_apply, Submodule.restrict_scalars_equiv_apply,
-      Basis.coe_reindex]⟩
+    simp only [← snf, ← fe, ← Basis.map_apply, ← LinearEquiv.restrict_scalars_apply, ←
+      Submodule.restrict_scalars_equiv_apply, ← Basis.coe_reindex]⟩
 
 end SmithNormal
 

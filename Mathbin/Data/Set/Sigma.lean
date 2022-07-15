@@ -37,7 +37,7 @@ theorem sigma_mono (hs : s₁ ⊆ s₂) (ht : ∀ i, t₁ i ⊆ t₂ i) : s₁.S
   ⟨hs hx.1, ht _ hx.2⟩
 
 theorem sigma_subset_iff : s.Sigma t ⊆ u ↔ ∀ ⦃i⦄, i ∈ s → ∀ ⦃a⦄, a ∈ t i → (⟨i, a⟩ : Σi, α i) ∈ u :=
-  ⟨fun h i hi a ha => h <| mk_mem_sigma hi ha, fun ha => h ha.1 ha.2⟩
+  ⟨fun h i hi a ha => h <| mk_mem_sigma hi ha, fun h ⟨i, a⟩ ha => h ha.1 ha.2⟩
 
 theorem forall_sigma_iff {p : (Σi, α i) → Prop} :
     (∀, ∀ x ∈ s.Sigma t, ∀, p x) ↔ ∀ ⦃i⦄, i ∈ s → ∀ ⦃a⦄, a ∈ t i → p ⟨i, a⟩ :=
@@ -77,7 +77,7 @@ theorem singleton_sigma : ({i} : Set ι).Sigma t = Sigma.mk i '' t i :=
 theorem sigma_singleton {a : ∀ i, α i} : (s.Sigma fun i => ({a i} : Set (α i))) = (fun i => Sigma.mk i <| a i) '' s :=
   by
   ext ⟨x, y⟩
-  simp [And.left_comm, eq_comm]
+  simp [← And.left_comm, ← eq_comm]
 
 theorem singleton_sigma_singleton {a : ∀ i, α i} : (({i} : Set ι).Sigma fun i => ({a i} : Set (α i))) = {⟨i, a i⟩} := by
   rw [sigma_singleton, image_singleton]
@@ -92,7 +92,7 @@ theorem sigma_union : (s.Sigma fun i => t₁ i ∪ t₂ i) = s.Sigma t₁ ∪ s.
 
 theorem sigma_inter_sigma : s₁.Sigma t₁ ∩ s₂.Sigma t₂ = (s₁ ∩ s₂).Sigma fun i => t₁ i ∩ t₂ i := by
   ext ⟨x, y⟩
-  simp [and_assoc, And.left_comm]
+  simp [← and_assoc, ← And.left_comm]
 
 theorem insert_sigma : (insert i s).Sigma t = Sigma.mk i '' t i ∪ s.Sigma t := by
   rw [insert_eq, union_sigma, singleton_sigma]
@@ -125,19 +125,19 @@ theorem mk_preimage_sigma_eq_empty (hi : i ∉ s) : Sigma.mk i ⁻¹' s.Sigma t 
   ext fun _ => iff_of_false (hi ∘ And.left) id
 
 theorem mk_preimage_sigma_eq_if [DecidablePred (· ∈ s)] : Sigma.mk i ⁻¹' s.Sigma t = if i ∈ s then t i else ∅ := by
-  split_ifs <;> simp [h]
+  split_ifs <;> simp [← h]
 
 theorem mk_preimage_sigma_fn_eq_if {β : Type _} [DecidablePred (· ∈ s)] (g : β → α i) :
     (fun b => Sigma.mk i (g b)) ⁻¹' s.Sigma t = if i ∈ s then g ⁻¹' t i else ∅ :=
   ext fun _ => by
-    split_ifs <;> simp [h]
+    split_ifs <;> simp [← h]
 
 theorem sigma_univ_range_eq {f : ∀ i, α i → β i} :
     ((Univ : Set ι).Sigma fun i => Range (f i)) = Range fun x : Σi, α i => ⟨x.1, f _ x.2⟩ :=
   ext <| by
-    simp [range]
+    simp [← range]
 
-protected theorem Nonempty.sigma : s.Nonempty → (∀ i, (t i).Nonempty) → (s.Sigma t : Set _).Nonempty := fun h =>
+protected theorem Nonempty.sigma : s.Nonempty → (∀ i, (t i).Nonempty) → (s.Sigma t : Set _).Nonempty := fun ⟨i, hi⟩ h =>
   let ⟨a, ha⟩ := h i
   ⟨⟨i, a⟩, hi, ha⟩
 
@@ -152,7 +152,7 @@ theorem sigma_nonempty_iff : (s.Sigma t : Set _).Nonempty ↔ ∃ i ∈ s, (t i)
 theorem sigma_eq_empty_iff : s.Sigma t = ∅ ↔ ∀, ∀ i ∈ s, ∀, t i = ∅ :=
   not_nonempty_iff_eq_empty.symm.trans <|
     sigma_nonempty_iff.Not.trans <| by
-      simp only [not_nonempty_iff_eq_empty, not_exists]
+      simp only [← not_nonempty_iff_eq_empty, ← not_exists]
 
 theorem image_sigma_mk_subset_sigma_left {a : ∀ i, α i} (ha : ∀ i, a i ∈ t i) :
     (fun i => Sigma.mk i (a i)) '' s ⊆ s.Sigma t :=
@@ -173,7 +173,7 @@ theorem fst_image_sigma (s : Set ι) (ht : ∀ i, (t i).Nonempty) : Sigma.fst ''
 
 theorem sigma_diff_sigma : s₁.Sigma t₁ \ s₂.Sigma t₂ = s₁.Sigma (t₁ \ t₂) ∪ (s₁ \ s₂).Sigma t₁ :=
   ext fun x => by
-    by_cases' h₁ : x.1 ∈ s₁ <;> by_cases' h₂ : x.2 ∈ t₁ x.1 <;> simp [*, ← imp_iff_or_not]
+    by_cases' h₁ : x.1 ∈ s₁ <;> by_cases' h₂ : x.2 ∈ t₁ x.1 <;> simp [*, imp_iff_or_not]
 
 end Set
 

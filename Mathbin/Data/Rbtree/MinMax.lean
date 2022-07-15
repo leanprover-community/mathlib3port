@@ -17,13 +17,13 @@ theorem mem_of_min_eq (lt : α → α → Prop) [IsIrrefl α lt] {a : α} {t : R
     contradiction
     
   all_goals
-    cases t_lchild <;> simp [Rbnode.min] <;> intro h
+    cases t_lchild <;> simp [← Rbnode.min] <;> intro h
     · subst t_val
-      simp [mem, irrefl_of lt a]
+      simp [← mem, ← irrefl_of lt a]
       
     all_goals
       rw [mem]
-      simp [t_ih_lchild h]
+      simp [← t_ih_lchild h]
 
 theorem mem_of_max_eq (lt : α → α → Prop) [IsIrrefl α lt] {a : α} {t : Rbnode α} : t.max = some a → Mem lt a t := by
   induction t
@@ -31,13 +31,13 @@ theorem mem_of_max_eq (lt : α → α → Prop) [IsIrrefl α lt] {a : α} {t : R
     contradiction
     
   all_goals
-    cases t_rchild <;> simp [Rbnode.max] <;> intro h
+    cases t_rchild <;> simp [← Rbnode.max] <;> intro h
     · subst t_val
-      simp [mem, irrefl_of lt a]
+      simp [← mem, ← irrefl_of lt a]
       
     all_goals
       rw [mem]
-      simp [t_ih_rchild h]
+      simp [← t_ih_rchild h]
 
 variable [IsStrictWeakOrder α lt]
 
@@ -47,7 +47,7 @@ theorem eq_leaf_of_min_eq_none {t : Rbnode α} : t.min = none → t = leaf := by
     rfl
     
   all_goals
-    cases t_lchild <;> simp [Rbnode.min, false_implies_iff] <;> intro h
+    cases t_lchild <;> simp [← Rbnode.min, ← false_implies_iff] <;> intro h
     all_goals
       have := t_ih_lchild h
       contradiction
@@ -58,25 +58,25 @@ theorem eq_leaf_of_max_eq_none {t : Rbnode α} : t.max = none → t = leaf := by
     rfl
     
   all_goals
-    cases t_rchild <;> simp [Rbnode.max, false_implies_iff] <;> intro h
+    cases t_rchild <;> simp [← Rbnode.max, ← false_implies_iff] <;> intro h
     all_goals
       have := t_ih_rchild h
       contradiction
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem min_is_minimal {a : α} {t : Rbnode α} :
     ∀ {lo hi}, IsSearchable lt t lo hi → t.min = some a → ∀ {b}, Mem lt b t → a ≈[lt]b ∨ lt a b := by
   classical
   induction t
-  · simp [StrictWeakOrder.Equiv]
+  · simp [← StrictWeakOrder.Equiv]
     intro _ _ hs hmin b
     contradiction
     
   all_goals
     cases t_lchild <;> intro lo hi hs hmin b hmem
-    · simp [Rbnode.min] at hmin
+    · simp [← Rbnode.min] at hmin
       subst t_val
-      simp [mem] at hmem
+      simp [← mem] at hmem
       cases' hmem with heqv hmem
       · left
         exact heqv.swap
@@ -93,7 +93,7 @@ theorem min_is_minimal {a : α} {t : Rbnode α} :
     all_goals
       have hs' := hs
       cases hs
-      simp [Rbnode.min] at hmin
+      simp [← Rbnode.min] at hmin
       rw [mem] at hmem
       cases_type* or.1
       · exact t_ih_lchild hs_hs₁ hmin hmem
@@ -118,20 +118,20 @@ theorem min_is_minimal {a : α} {t : Rbnode α} :
         assumption
         
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem max_is_maximal {a : α} {t : Rbnode α} :
     ∀ {lo hi}, IsSearchable lt t lo hi → t.max = some a → ∀ {b}, Mem lt b t → a ≈[lt]b ∨ lt b a := by
   classical
   induction t
-  · simp [StrictWeakOrder.Equiv]
+  · simp [← StrictWeakOrder.Equiv]
     intro _ _ hs hmax b
     contradiction
     
   all_goals
     cases t_rchild <;> intro lo hi hs hmax b hmem
-    · simp [Rbnode.max] at hmax
+    · simp [← Rbnode.max] at hmax
       subst t_val
-      simp [mem] at hmem
+      simp [← mem] at hmem
       cases' hmem with hmem heqv
       · have :=
           lt_of_mem_left hs
@@ -148,7 +148,7 @@ theorem max_is_maximal {a : α} {t : Rbnode α} :
     all_goals
       have hs' := hs
       cases hs
-      simp [Rbnode.max] at hmax
+      simp [← Rbnode.max] at hmax
       rw [mem] at hmem
       cases_type* or.1
       · have hmm := mem_of_max_eq lt hmax

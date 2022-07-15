@@ -76,7 +76,7 @@ theorem omega_limit_subset_of_tendsto {m : τ → τ} {f₁ f₂ : Filter τ} (h
   exact closure_mono (image2_subset (image_preimage_subset _ _) subset.rfl)
 
 theorem omega_limit_mono_left {f₁ f₂ : Filter τ} (hf : f₁ ≤ f₂) : ω f₁ ϕ s ⊆ ω f₂ ϕ s :=
-  omega_limit_subset_of_tendsto ϕ s (tendsto_id' hf)
+  omega_limit_subset_of_tendsto ϕ s (tendsto_id'.2 hf)
 
 theorem omega_limit_mono_right {s₁ s₂ : Set α} (hs : s₁ ⊆ s₂) : ω f ϕ s₁ ⊆ ω f ϕ s₂ :=
   Inter₂_mono fun u hu => closure_mono (image2_subset Subset.rfl hs)
@@ -87,7 +87,7 @@ theorem is_closed_omega_limit : IsClosed (ω f ϕ s) :=
 theorem maps_to_omega_limit' {α' β' : Type _} [TopologicalSpace β'] {f : Filter τ} {ϕ : τ → α → β} {ϕ' : τ → α' → β'}
     {ga : α → α'} {s' : Set α'} (hs : MapsTo ga s s') {gb : β → β'} (hg : ∀ᶠ t in f, EqOn (gb ∘ ϕ t) (ϕ' t ∘ ga) s)
     (hgc : Continuous gb) : MapsTo gb (ω f ϕ s) (ω f ϕ' s') := by
-  simp only [omega_limit_def, mem_Inter, maps_to]
+  simp only [← omega_limit_def, ← mem_Inter, ← maps_to]
   intro y hy u hu
   refine' map_mem_closure hgc (hy _ (inter_mem hu hg)) (forall_image2_iff.2 fun t ht x hx => _)
   calc gb (ϕ t x) = ϕ' t (ga x) := ht.2 hx _ ∈ image2 ϕ' u s' := mem_image2_of_mem ht.1 (hs hx)
@@ -99,7 +99,7 @@ theorem maps_to_omega_limit {α' β' : Type _} [TopologicalSpace β'] {f : Filte
 
 theorem omega_limit_image_eq {α' : Type _} (ϕ : τ → α' → β) (f : Filter τ) (g : α → α') :
     ω f ϕ (g '' s) = ω f (fun t x => ϕ t (g x)) s := by
-  simp only [OmegaLimit, image2_image_right]
+  simp only [← OmegaLimit, ← image2_image_right]
 
 theorem omega_limit_preimage_subset {α' : Type _} (ϕ : τ → α' → β) (s : Set α') (f : Filter τ) (g : α → α') :
     ω f (fun t x => ϕ t (g x)) (g ⁻¹' s) ⊆ ω f ϕ s :=
@@ -160,10 +160,10 @@ theorem omega_limit_Inter (p : ι → Set α) : ω f ϕ (⋂ i, p i) ⊆ ⋂ i, 
 theorem omega_limit_union : ω f ϕ (s₁ ∪ s₂) = ω f ϕ s₁ ∪ ω f ϕ s₂ := by
   ext y
   constructor
-  · simp only [mem_union, mem_omega_limit_iff_frequently, union_inter_distrib_right, union_nonempty,
+  · simp only [← mem_union, ← mem_omega_limit_iff_frequently, ← union_inter_distrib_right, ← union_nonempty, ←
       frequently_or_distrib]
     contrapose!
-    simp only [not_frequently, not_nonempty_iff_eq_empty, ← subset_empty_iff]
+    simp only [← not_frequently, ← not_nonempty_iff_eq_empty, subset_empty_iff]
     rintro ⟨⟨n₁, hn₁, h₁⟩, ⟨n₂, hn₂, h₂⟩⟩
     refine' ⟨n₁ ∩ n₂, inter_mem hn₁ hn₂, h₁.mono fun t => _, h₂.mono fun t => _⟩
     exacts[subset.trans <| inter_subset_inter_right _ <| preimage_mono <| inter_subset_left _ _,
@@ -235,9 +235,9 @@ theorem eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_li
     calc
       k \ n ⊆ ⋃ u ∈ g, j u := hg₃
       _ ⊆ Closure (image2 ϕ w s)ᶜ := by
-        simp only [Union_subset_iff, compl_subset_compl]
+        simp only [← Union_subset_iff, ← compl_subset_compl]
         intro u hu
-        mono* using w
+        mono* using ← w
         exact Inter_subset_of_subset u (Inter_subset_of_subset hu subset.rfl)
       
   have hw₄ : kᶜ ⊆ Closure (image2 ϕ w s)ᶜ := by
@@ -329,7 +329,7 @@ theorem is_invariant_omega_limit (hf : ∀ t, Tendsto ((· + ·) t) f f) : IsInv
     maps_to_omega_limit _ (maps_to_id _) (fun t' x => (ϕ.map_add _ _ _).symm) (continuous_const.flow ϕ continuous_id)
 
 theorem omega_limit_image_subset (t : τ) (ht : Tendsto (· + t) f f) : ω f ϕ (ϕ t '' s) ⊆ ω f ϕ s := by
-  simp only [omega_limit_image_eq, ← map_add]
+  simp only [← omega_limit_image_eq, map_add]
   exact omega_limit_subset_of_tendsto ϕ s ht
 
 end Flow
@@ -352,12 +352,12 @@ theorem omega_limit_image_eq (hf : ∀ t, Tendsto (· + t) f f) (t : τ) : ω f 
   Subset.antisymm (omega_limit_image_subset _ _ _ _ (hf t)) <|
     calc
       ω f ϕ s = ω f ϕ (ϕ (-t) '' (ϕ t '' s)) := by
-        simp [image_image, ← map_add]
+        simp [← image_image, map_add]
       _ ⊆ ω f ϕ (ϕ t '' s) := omega_limit_image_subset _ _ _ _ (hf _)
       
 
 theorem omega_limit_omega_limit (hf : ∀ t, Tendsto ((· + ·) t) f f) : ω f ϕ (ω f ϕ s) ⊆ ω f ϕ s := by
-  simp only [subset_def, mem_omega_limit_iff_frequently₂, frequently_iff]
+  simp only [← subset_def, ← mem_omega_limit_iff_frequently₂, ← frequently_iff]
   intro _ h
   rintro n hn u hu
   rcases mem_nhds_iff.mp hn with ⟨o, ho₁, ho₂, ho₃⟩

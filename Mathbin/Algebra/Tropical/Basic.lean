@@ -138,8 +138,7 @@ instance [DecidableEq R] : DecidableEq (Tropical R) := fun x y => decidableOfIff
 
 section Order
 
-instance [LE R] : LE (Tropical R) where
-  le := fun x y => untrop x ≤ untrop y
+instance [LE R] : LE (Tropical R) where le := fun x y => untrop x ≤ untrop y
 
 @[simp]
 theorem untrop_le_iff [LE R] {x y : Tropical R} : untrop x ≤ untrop y ↔ x ≤ y :=
@@ -148,8 +147,7 @@ theorem untrop_le_iff [LE R] {x y : Tropical R} : untrop x ≤ untrop y ↔ x �
 instance decidableLe [LE R] [DecidableRel ((· ≤ ·) : R → R → Prop)] :
     DecidableRel ((· ≤ ·) : Tropical R → Tropical R → Prop) := fun x y => ‹DecidableRel (· ≤ ·)› (untrop x) (untrop y)
 
-instance [LT R] : LT (Tropical R) where
-  lt := fun x y => untrop x < untrop y
+instance [LT R] : LT (Tropical R) where lt := fun x y => untrop x < untrop y
 
 @[simp]
 theorem untrop_lt_iff [LT R] {x y : Tropical R} : untrop x < untrop y ↔ x < y :=
@@ -298,7 +296,7 @@ theorem bit0 (x : Tropical R) : bit0 x = x :=
 
 theorem add_eq_iff {x y z : Tropical R} : x + y = z ↔ x = z ∧ x ≤ y ∨ y = z ∧ y ≤ x := by
   rw [trop_add_def, trop_eq_iff_eq_untrop]
-  simp [min_eq_iff]
+  simp [← min_eq_iff]
 
 @[simp]
 theorem add_eq_zero_iff {a b : Tropical (WithTop R)} : a + b = 0 ↔ a = 0 ∧ b = 0 := by
@@ -348,6 +346,13 @@ theorem trop_zero [Zero R] : trop (0 : R) = 1 :=
 theorem untrop_one [Zero R] : untrop (1 : Tropical R) = 0 :=
   rfl
 
+instance [LinearOrderₓ R] [OrderTop R] [Zero R] : AddMonoidWithOneₓ (Tropical R) :=
+  { Tropical.hasOne, Tropical.addCommMonoid with natCast := fun n => if n = 0 then 0 else 1, nat_cast_zero := rfl,
+    nat_cast_succ := fun n =>
+      (untrop_inj_iff _ _).1
+        (by
+          cases n <;> simp [← Nat.castₓ]) }
+
 instance [Zero R] : Nontrivial (Tropical (WithTop R)) :=
   ⟨⟨0, 1, trop_injective.Ne WithTop.top_ne_coe⟩⟩
 
@@ -372,15 +377,14 @@ instance [AddSemigroupₓ R] : Semigroupₓ (Tropical R) where
 instance [AddCommSemigroupₓ R] : CommSemigroupₓ (Tropical R) :=
   { Tropical.semigroup with mul_comm := fun _ _ => untrop_injective (add_commₓ _ _) }
 
-instance {α : Type _} [HasScalar α R] : Pow (Tropical R) α where
-  pow := fun x n => trop <| n • untrop x
+instance {α : Type _} [HasSmul α R] : Pow (Tropical R) α where pow := fun x n => trop <| n • untrop x
 
 @[simp]
-theorem untrop_pow {α : Type _} [HasScalar α R] (x : Tropical R) (n : α) : untrop (x ^ n) = n • untrop x :=
+theorem untrop_pow {α : Type _} [HasSmul α R] (x : Tropical R) (n : α) : untrop (x ^ n) = n • untrop x :=
   rfl
 
 @[simp]
-theorem trop_smul {α : Type _} [HasScalar α R] (x : R) (n : α) : trop (n • x) = trop x ^ n :=
+theorem trop_smul {α : Type _} [HasSmul α R] (x : R) (n : α) : trop (n • x) = trop x ^ n :=
   rfl
 
 instance [AddZeroClassₓ R] : MulOneClassₓ (Tropical R) where
@@ -474,7 +478,7 @@ section Semiringₓ
 variable [LinearOrderedAddCommMonoidWithTop R]
 
 instance : CommSemiringₓ (Tropical R) :=
-  { Tropical.hasZero, Tropical.distrib, Tropical.addCommMonoid, Tropical.commMonoid with
+  { Tropical.addMonoidWithOne, Tropical.distrib, Tropical.addCommMonoid, Tropical.commMonoid with
     zero_mul := fun _ => untrop_injective (top_add _), mul_zero := fun _ => untrop_injective (add_top _) }
 
 @[simp]
@@ -492,7 +496,7 @@ theorem succ_nsmul {R} [LinearOrderₓ R] [OrderTop R] (x : Tropical R) (n : ℕ
 @[simp]
 theorem mul_eq_zero_iff {R : Type _} [LinearOrderedAddCommMonoid R] {a b : Tropical (WithTop R)} :
     a * b = 0 ↔ a = 0 ∨ b = 0 := by
-  simp [← untrop_inj_iff, WithTop.add_eq_top]
+  simp [untrop_inj_iff, ← WithTop.add_eq_top]
 
 instance {R : Type _} [LinearOrderedAddCommMonoid R] : NoZeroDivisors (Tropical (WithTop R)) :=
   ⟨fun _ _ => mul_eq_zero_iff.mp⟩

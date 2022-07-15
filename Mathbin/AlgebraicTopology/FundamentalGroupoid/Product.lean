@@ -59,7 +59,7 @@ def piToPiTop : (∀ i, πₓ (X i)) ⥤ πₓ (Top.of (∀ i, X i)) where
   map_id' := by
     intro x
     change (Path.Homotopic.pi fun i => 𝟙 (x i)) = _
-    simp only [FundamentalGroupoid.id_eq_path_refl, Path.Homotopic.pi_lift]
+    simp only [← FundamentalGroupoid.id_eq_path_refl, ← Path.Homotopic.pi_lift]
     rfl
   map_comp' := fun x y z f g => (Path.Homotopic.comp_pi_eq_pi_comp f g).symm
 
@@ -102,18 +102,19 @@ theorem cone_discrete_comp_obj_map_cone :
   rfl
 
 /-- This is `pi_iso.inv` as a cone morphism (in fact, isomorphism) -/
-def piTopToPiCone : Limits.Fan.mk (πₓ (Top.of (∀ i, X i))) (proj X) ⟶ Groupoidₓ.piLimitFan fun i : I => πₓ (X i) where
-  Hom := CategoryTheory.Functor.pi' (proj X)
+def piTopToPiCone :
+    Limits.Fan.mk (πₓ (Top.of (∀ i, X i))) (proj X) ⟶
+      Groupoidₓ.piLimitFan fun i : I => πₓ (X i) where Hom := CategoryTheory.Functor.pi' (proj X)
 
-instance : IsIso (piTopToPiCone X) :=
+instance : IsIso (piTopToPiCone X) := by
   have : is_iso (pi_Top_to_pi_cone X).Hom := (inferInstance : is_iso (pi_iso X).inv)
-  limits.cones.cone_iso_of_hom_iso (pi_Top_to_pi_cone X)
+  exact limits.cones.cone_iso_of_hom_iso (pi_Top_to_pi_cone X)
 
 /-- The fundamental groupoid functor preserves products -/
 def preservesProduct : Limits.PreservesLimit (Discrete.functor X) π := by
   apply limits.preserves_limit_of_preserves_limit_cone (Top.piFanIsLimit.{u} X)
   apply (limits.is_limit.of_cone_equiv (cone_discrete_comp X)).toFun
-  simp only [cone_discrete_comp_obj_map_cone]
+  simp only [← cone_discrete_comp_obj_map_cone]
   apply limits.is_limit.of_iso_limit _ (as_iso (pi_Top_to_pi_cone X)).symm
   exact Groupoid.pi_limit_fan_is_limit _
 
@@ -153,7 +154,7 @@ def prodToProdTop : πₓ A × πₓ B ⥤ πₓ (Top.of (A × B)) where
     | (x₀, x₁), (y₀, y₁), (p₀, p₁) => Path.Homotopic.prod p₀ p₁
   map_id' := by
     rintro ⟨x₀, x₁⟩
-    simp only [CategoryTheory.prod_id, FundamentalGroupoid.id_eq_path_refl]
+    simp only [← CategoryTheory.prod_id, ← FundamentalGroupoid.id_eq_path_refl]
     unfold_aux
     rw [Path.Homotopic.prod_lift]
     rfl

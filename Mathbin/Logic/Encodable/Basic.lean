@@ -34,7 +34,7 @@ to make the range of `encode` decidable even when the finiteness of `α` is not.
 
 open Option List Nat Function
 
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`decode] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`decode] []
 /-- Constructively countable type. Made from an explicit injection `encode : α → ℕ` and a partial
 inverse `decode : ℕ → option α`. Note that finite types *are* countable. See `denumerable` if you
 wish to enforce infiniteness. -/
@@ -73,7 +73,7 @@ def decidableEqOfEncodable α [Encodable α] : DecidableEq α
 /-- If `α` is encodable and there is an injection `f : β → α`, then `β` is encodable as well. -/
 def ofLeftInjection [Encodable α] (f : β → α) (finv : α → Option β) (linv : ∀ b, finv (f b) = some b) : Encodable β :=
   ⟨fun b => encode (f b), fun n => (decode α n).bind finv, fun b => by
-    simp [Encodable.encodek, linv]⟩
+    simp [← Encodable.encodek, ← linv]⟩
 
 /-- If `α` is encodable and `f : β → α` is invertible, then `β` is encodable as well. -/
 def ofLeftInverse [Encodable α] (f : β → α) (finv : α → β) (linv : ∀ b, finv (f b) = b) : Encodable β :=
@@ -125,7 +125,7 @@ theorem decode_unit_succ n : decode PUnit (succ n) = none :=
 instance _root_.option.encodable {α : Type _} [h : Encodable α] : Encodable (Option α) :=
   ⟨fun o => Option.casesOn o Nat.zero fun a => succ (encode a), fun n =>
     Nat.casesOn n (some none) fun m => (decode α m).map some, fun o => by
-    cases o <;> dsimp' <;> simp [encodek, Nat.succ_ne_zero]⟩
+    cases o <;> dsimp' <;> simp [← encodek, ← Nat.succ_ne_zero]⟩
 
 @[simp]
 theorem encode_none [Encodable α] : encode (@none α) = 0 :=
@@ -150,7 +150,7 @@ def decode₂ α [Encodable α] (n : ℕ) : Option α :=
   (decode α n).bind (Option.guard fun a => encode a = n)
 
 theorem mem_decode₂' [Encodable α] {n : ℕ} {a : α} : a ∈ decode₂ α n ↔ a ∈ decode α n ∧ encode a = n := by
-  simp [decode₂] <;> exact ⟨fun ⟨_, h₁, rfl, h₂⟩ => ⟨h₁, h₂⟩, fun ⟨h₁, h₂⟩ => ⟨_, h₁, rfl, h₂⟩⟩
+  simp [← decode₂] <;> exact ⟨fun ⟨_, h₁, rfl, h₂⟩ => ⟨h₁, h₂⟩, fun ⟨h₁, h₂⟩ => ⟨_, h₁, rfl, h₂⟩⟩
 
 theorem mem_decode₂ [Encodable α] {n : ℕ} {a : α} : a ∈ decode₂ α n ↔ encode a = n :=
   mem_decode₂'.trans (and_iff_right_of_imp fun e => e ▸ encodek _)
@@ -161,7 +161,7 @@ theorem decode₂_eq_some [Encodable α] {n : ℕ} {a : α} : decode₂ α n = s
 @[simp]
 theorem decode₂_encode [Encodable α] (a : α) : decode₂ α (encode a) = some a := by
   ext
-  simp [mem_decode₂, eq_comm]
+  simp [← mem_decode₂, ← eq_comm]
 
 theorem decode₂_ne_none_iff [Encodable α] {n : ℕ} : decode₂ α n ≠ none ↔ n ∈ Set.Range (encode : α → ℕ) := by
   simp_rw [Set.Range, Set.mem_set_of_eq, Ne.def, Option.eq_none_iff_forall_not_mem, Encodable.mem_decode₂, not_forall,
@@ -221,7 +221,7 @@ def decodeSum (n : ℕ) : Option (Sum α β) :=
 /-- If `α` and `β` are encodable, then so is their sum. -/
 instance _root_.sum.encodable : Encodable (Sum α β) :=
   ⟨encodeSum, decodeSum, fun s => by
-    cases s <;> simp [encode_sum, decode_sum, encodek] <;> rfl⟩
+    cases s <;> simp [← encode_sum, ← decode_sum, ← encodek] <;> rfl⟩
 
 @[simp]
 theorem encode_inl (a : α) : @encode (Sum α β) _ (Sum.inl a) = bit0 (encode a) :=
@@ -266,7 +266,7 @@ theorem decode_ge_two n (h : 2 ≤ n) : decode Bool n = none := by
     exacts[h, by
       decide]
   cases' exists_eq_succ_of_ne_zero (ne_of_gtₓ this) with m e
-  simp [decode_sum] <;> cases bodd n <;> simp [decode_sum] <;> rw [e] <;> rfl
+  simp [← decode_sum] <;> cases bodd n <;> simp [← decode_sum] <;> rw [e] <;> rfl
 
 noncomputable instance _root_.Prop.encodable : Encodable Prop :=
   ofEquiv Bool Equivₓ.propEquivBool
@@ -286,7 +286,7 @@ def decodeSigma (n : ℕ) : Option (Sigma γ) :=
 
 instance _root_.sigma.encodable : Encodable (Sigma γ) :=
   ⟨encodeSigma, decodeSigma, fun ⟨a, b⟩ => by
-    simp [encode_sigma, decode_sigma, unpair_mkpair, encodek]⟩
+    simp [← encode_sigma, ← decode_sigma, ← unpair_mkpair, ← encodek]⟩
 
 @[simp]
 theorem decode_sigma_val (n : ℕ) :
@@ -341,7 +341,7 @@ def decodeSubtype (v : ℕ) : Option { a : α // P a } :=
 /-- A decidable subtype of an encodable type is encodable. -/
 instance _root_.subtype.encodable : Encodable { a : α // P a } :=
   ⟨encodeSubtype, decodeSubtype, fun ⟨v, h⟩ => by
-    simp [encode_subtype, decode_subtype, encodek, h]⟩
+    simp [← encode_subtype, ← decode_subtype, ← encodek, ← h]⟩
 
 theorem Subtype.encode_eq (a : Subtype P) : encode a = encode a.val := by
   cases a <;> rfl
@@ -457,7 +457,7 @@ def chooseX (h : ∃ x, p x) : { a : α // p a } :=
   have : ∃ n, Goodₓ p (decode α n) :=
     let ⟨w, pw⟩ := h
     ⟨encode w, by
-      simp [good, encodek, pw]⟩
+      simp [← good, ← encodek, ← pw]⟩
   match _, Nat.find_specₓ this with
   | some a, h => ⟨a, h⟩
 
@@ -478,7 +478,7 @@ theorem axiom_of_choice {α : Type _} {β : α → Type _} {R : ∀ x, β x → 
 /-- A constructive version of `classical.skolem` for `encodable` types. -/
 theorem skolem {α : Type _} {β : α → Type _} {P : ∀ x, β x → Prop} [c : ∀ a, Encodable (β a)]
     [d : ∀ x y, Decidable (P x y)] : (∀ x, ∃ y, P x y) ↔ ∃ f : ∀ a, β a, ∀ x, P x (f x) :=
-  ⟨axiom_of_choice, fun x => ⟨_, H x⟩⟩
+  ⟨axiom_of_choice, fun ⟨f, H⟩ x => ⟨_, H x⟩⟩
 
 /-- The `encode` function, viewed as an embedding. -/
 /-
@@ -517,7 +517,7 @@ protected noncomputable def sequence {r : β → β → Prop} (f : α → β) (h
 
 theorem sequence_mono_nat {r : β → β → Prop} {f : α → β} (hf : Directed r f) (n : ℕ) :
     r (f (hf.sequence f n)) (f (hf.sequence f (n + 1))) := by
-  dsimp' [Directed.sequence]
+  dsimp' [← Directed.sequence]
   generalize eq : hf.sequence f n = p
   cases' h : decode α n with a
   · exact (Classical.some_spec (hf p p)).1
@@ -527,7 +527,7 @@ theorem sequence_mono_nat {r : β → β → Prop} {f : α → β} (hf : Directe
 
 theorem rel_sequence {r : β → β → Prop} {f : α → β} (hf : Directed r f) (a : α) :
     r (f a) (f (hf.sequence f (encode a + 1))) := by
-  simp only [Directed.sequence, encodek]
+  simp only [← Directed.sequence, ← encodek]
   exact (Classical.some_spec (hf _ a)).2
 
 variable [Preorderₓ β] {f : α → β} (hf : Directed (· ≤ ·) f)

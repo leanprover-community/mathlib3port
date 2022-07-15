@@ -137,14 +137,14 @@ theorem is_closed [HasContinuousMul G] (U : OpenSubgroup G) : IsClosed (U : Set 
   apply is_open_compl_iff.1
   refine' is_open_iff_forall_mem_open.2 fun x hx => ⟨(fun y => y * x⁻¹) ⁻¹' U, _, _, _⟩
   · intro u hux
-    simp only [Set.mem_preimage, Set.mem_compl_iff, mem_coe] at hux hx⊢
+    simp only [← Set.mem_preimage, ← Set.mem_compl_iff, ← mem_coe] at hux hx⊢
     refine' mt (fun hu => _) hx
     convert U.mul_mem (U.inv_mem hux) hu
     simp
     
   · exact U.is_open.preimage (continuous_mul_right _)
     
-  · simp [U.one_mem]
+  · simp [← U.one_mem]
     
 
 section
@@ -218,14 +218,14 @@ variable {G : Type _} [Groupₓ G] [TopologicalSpace G] [HasContinuousMul G] (H 
 
 @[to_additive]
 theorem is_open_of_mem_nhds {g : G} (hg : (H : Set G) ∈ 𝓝 g) : IsOpen (H : Set G) := by
-  simp only [is_open_iff_mem_nhds, SetLike.mem_coe] at hg⊢
+  simp only [← is_open_iff_mem_nhds, ← SetLike.mem_coe] at hg⊢
   intro x hx
   have : Filter.Tendsto (fun y => y * (x⁻¹ * g)) (𝓝 x) (𝓝 <| x * (x⁻¹ * g)) :=
     (continuous_id.mul continuous_const).Tendsto _
   rw [mul_inv_cancel_left] at this
   have := Filter.mem_map'.1 (this hg)
   replace hg : g ∈ H := SetLike.mem_coe.1 (mem_of_mem_nhds hg)
-  simp only [SetLike.mem_coe, H.mul_mem_cancel_right (H.mul_mem (H.inv_mem hx) hg)] at this
+  simp only [← SetLike.mem_coe, ← H.mul_mem_cancel_right (H.mul_mem (H.inv_mem hx) hg)] at this
   exact this
 
 @[to_additive]
@@ -244,9 +244,9 @@ theorem is_open_of_one_mem_interior {G : Type _} [Groupₓ G] [TopologicalSpace 
     [show 𝓝 g = Filter.map (⇑(Homeomorph.mulLeft g)) (𝓝 1) by
       simp ]
   convert Filter.map_mono h
-  simp only [Homeomorph.coe_mul_left, Filter.map_principal, Set.image_mul_left, Filter.principal_eq_iff_eq]
+  simp only [← Homeomorph.coe_mul_left, ← Filter.map_principal, ← Set.image_mul_left, ← Filter.principal_eq_iff_eq]
   ext
-  simp [H.mul_mem_cancel_left (H.inv_mem hg)]
+  simp [← H.mul_mem_cancel_left (H.inv_mem hg)]
 
 @[to_additive]
 theorem is_open_mono {H₁ H₂ : Subgroup G} (h : H₁ ≤ H₂) (h₁ : IsOpen (H₁ : Set G)) : IsOpen (H₂ : Set G) :=

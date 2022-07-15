@@ -68,11 +68,11 @@ variable {M : Type u} [MulOneClassₓ M]
 
 @[to_additive]
 theorem ite_mul_one {P : Prop} [Decidable P] {a b : M} : ite P (a * b) 1 = ite P a 1 * ite P b 1 := by
-  by_cases' h : P <;> simp [h]
+  by_cases' h : P <;> simp [← h]
 
 @[to_additive]
 theorem ite_one_mul {P : Prop} [Decidable P] {a b : M} : ite P 1 (a * b) = ite P 1 a * ite P 1 b := by
-  by_cases' h : P <;> simp [h]
+  by_cases' h : P <;> simp [← h]
 
 @[to_additive]
 theorem eq_one_iff_eq_one_of_mul_eq_one {a b : M} (h : a * b = 1) : a = 1 ↔ b = 1 := by
@@ -105,17 +105,32 @@ theorem mul_right_commₓ : ∀ a b c : G, a * b * c = a * c * b :=
 
 @[to_additive]
 theorem mul_mul_mul_commₓ (a b c d : G) : a * b * (c * d) = a * c * (b * d) := by
-  simp only [mul_left_commₓ, mul_assoc]
+  simp only [← mul_left_commₓ, ← mul_assoc]
 
 @[to_additive]
 theorem mul_rotate (a b c : G) : a * b * c = b * c * a := by
-  simp only [mul_left_commₓ, mul_comm]
+  simp only [← mul_left_commₓ, ← mul_comm]
 
 @[to_additive]
 theorem mul_rotate' (a b c : G) : a * (b * c) = b * (c * a) := by
-  simp only [mul_left_commₓ, mul_comm]
+  simp only [← mul_left_commₓ, ← mul_comm]
 
 end CommSemigroupₓ
+
+section AddCommSemigroupₓ
+
+variable {M : Type u} [AddCommSemigroupₓ M]
+
+theorem bit0_add (a b : M) : bit0 (a + b) = bit0 a + bit0 b :=
+  add_add_add_commₓ _ _ _ _
+
+theorem bit1_add [One M] (a b : M) : bit1 (a + b) = bit0 a + bit1 b :=
+  (congr_arg (· + (1 : M)) <| bit0_add a b : _).trans (add_assocₓ _ _ _)
+
+theorem bit1_add' [One M] (a b : M) : bit1 (a + b) = bit1 a + bit0 b := by
+  rw [add_commₓ, bit1_add, add_commₓ]
+
+end AddCommSemigroupₓ
 
 attribute [local simp] mul_assoc sub_eq_add_neg
 
@@ -201,7 +216,7 @@ theorem inv_inj {a b : G} : a⁻¹ = b⁻¹ ↔ a = b :=
 
 @[to_additive]
 theorem eq_inv_of_eq_inv (h : a = b⁻¹) : b = a⁻¹ := by
-  simp [h]
+  simp [← h]
 
 @[to_additive]
 theorem eq_inv_iff_eq_inv : a = b⁻¹ ↔ b = a⁻¹ :=
@@ -255,7 +270,7 @@ theorem one_div (a : G) : 1 / a = a⁻¹ :=
 
 @[to_additive]
 theorem mul_div (a b c : G) : a * (b / c) = a * b / c := by
-  simp only [mul_assoc, div_eq_mul_inv]
+  simp only [← mul_assoc, ← div_eq_mul_inv]
 
 @[to_additive]
 theorem div_eq_mul_one_div (a b : G) : a / b = a * (1 / b) := by
@@ -319,7 +334,7 @@ theorem one_div_div : 1 / (a / b) = b / a := by
 
 @[simp, to_additive]
 theorem inv_one : (1 : α)⁻¹ = 1 := by
-  simpa only [one_div, inv_invₓ] using (inv_div (1 : α) 1).symm
+  simpa only [← one_div, ← inv_invₓ] using (inv_div (1 : α) 1).symm
 
 @[simp, to_additive]
 theorem div_one : a / 1 = a := by
@@ -364,7 +379,7 @@ theorem div_inv_eq_mul : a / b⁻¹ = a * b := by
 
 @[to_additive]
 theorem div_mul_eq_div_div_swap : a / (b * c) = a / c / b := by
-  simp only [mul_assoc, mul_inv_rev, div_eq_mul_inv]
+  simp only [← mul_assoc, ← mul_inv_rev, ← div_eq_mul_inv]
 
 end DivisionMonoid
 
@@ -484,27 +499,27 @@ theorem mul_right_surjective (a : G) : Function.Surjective fun x => x * a := fun
 
 @[to_additive]
 theorem eq_mul_inv_of_mul_eq (h : a * c = b) : a = b * c⁻¹ := by
-  simp [h.symm]
+  simp [← h.symm]
 
 @[to_additive]
 theorem eq_inv_mul_of_mul_eq (h : b * a = c) : a = b⁻¹ * c := by
-  simp [h.symm]
+  simp [← h.symm]
 
 @[to_additive]
 theorem inv_mul_eq_of_eq_mul (h : b = a * c) : a⁻¹ * b = c := by
-  simp [h]
+  simp [← h]
 
 @[to_additive]
 theorem mul_inv_eq_of_eq_mul (h : a = c * b) : a * b⁻¹ = c := by
-  simp [h]
+  simp [← h]
 
 @[to_additive]
 theorem eq_mul_of_mul_inv_eq (h : a * c⁻¹ = b) : a = b * c := by
-  simp [h.symm]
+  simp [← h.symm]
 
 @[to_additive]
 theorem eq_mul_of_inv_mul_eq (h : b⁻¹ * a = c) : a = b * c := by
-  simp [h.symm, mul_inv_cancel_left]
+  simp [← h.symm, ← mul_inv_cancel_left]
 
 @[to_additive]
 theorem mul_eq_of_eq_inv_mul (h : b = a⁻¹ * c) : a * b = c := by
@@ -512,7 +527,7 @@ theorem mul_eq_of_eq_inv_mul (h : b = a⁻¹ * c) : a * b = c := by
 
 @[to_additive]
 theorem mul_eq_of_eq_mul_inv (h : a = c * b⁻¹) : a * b = c := by
-  simp [h]
+  simp [← h]
 
 @[to_additive]
 theorem mul_eq_one_iff_eq_inv : a * b = 1 ↔ a = b⁻¹ :=
@@ -565,11 +580,11 @@ theorem inv_mul_eq_one : a⁻¹ * b = 1 ↔ a = b := by
 
 @[to_additive]
 theorem div_left_injective : Function.Injective fun a => a / b := by
-  simpa only [div_eq_mul_inv] using fun a a' h => mul_left_injective b⁻¹ h
+  simpa only [← div_eq_mul_inv] using fun a a' h => mul_left_injective b⁻¹ h
 
 @[to_additive]
 theorem div_right_injective : Function.Injective fun a => b / a := by
-  simpa only [div_eq_mul_inv] using fun a a' h => inv_injective (mul_right_injective b h)
+  simpa only [← div_eq_mul_inv] using fun a a' h => inv_injective (mul_right_injective b h)
 
 @[simp, to_additive sub_add_cancel]
 theorem div_mul_cancel' (a b : G) : a / b * b = a := by
@@ -585,23 +600,23 @@ theorem mul_div_cancel'' (a b : G) : a * b / b = a := by
 
 @[simp, to_additive]
 theorem mul_div_mul_right_eq_div (a b c : G) : a * c / (b * c) = a / b := by
-  rw [div_mul_eq_div_div_swap] <;> simp only [mul_left_injₓ, eq_self_iff_true, mul_div_cancel'']
+  rw [div_mul_eq_div_div_swap] <;> simp only [← mul_left_injₓ, ← eq_self_iff_true, ← mul_div_cancel'']
 
 @[to_additive eq_sub_of_add_eq]
 theorem eq_div_of_mul_eq' (h : a * c = b) : a = b / c := by
-  simp [← h]
+  simp [h]
 
 @[to_additive sub_eq_of_eq_add]
 theorem div_eq_of_eq_mul'' (h : a = c * b) : a / b = c := by
-  simp [h]
-
-@[to_additive]
-theorem eq_mul_of_div_eq (h : a / c = b) : a = b * c := by
   simp [← h]
 
 @[to_additive]
-theorem mul_eq_of_eq_div (h : a = c / b) : a * b = c := by
+theorem eq_mul_of_div_eq (h : a / c = b) : a = b * c := by
   simp [h]
+
+@[to_additive]
+theorem mul_eq_of_eq_div (h : a = c / b) : a * b = c := by
+  simp [← h]
 
 @[simp, to_additive]
 theorem div_right_inj : a / b = a / c ↔ b = c :=
@@ -696,15 +711,15 @@ theorem mul_div_mul_left_eq_div (a b c : G) : c * a / (c * b) = a / b := by
 
 @[to_additive eq_sub_of_add_eq']
 theorem eq_div_of_mul_eq'' (h : c * a = b) : a = b / c := by
-  simp [h.symm]
+  simp [← h.symm]
 
 @[to_additive]
 theorem eq_mul_of_div_eq' (h : a / b = c) : a = b * c := by
-  simp [h.symm]
+  simp [← h.symm]
 
 @[to_additive]
 theorem mul_eq_of_eq_div' (h : b = c / a) : a * b = c := by
-  simp [h]
+  simp [← h]
   rw [mul_comm c, mul_inv_cancel_left]
 
 @[to_additive sub_sub_self]
@@ -713,7 +728,7 @@ theorem div_div_self' (a b : G) : a / (a / b) = b := by
 
 @[to_additive]
 theorem div_eq_div_mul_div (a b c : G) : a / b = c / b * (a / c) := by
-  simp [mul_left_commₓ c]
+  simp [← mul_left_commₓ c]
 
 @[simp, to_additive]
 theorem div_div_cancel (a b : G) : a / (a / b) = b :=
@@ -773,13 +788,25 @@ theorem div_div_div_cancel_left (a b c : G) : c / a / (c / b) = b / a := by
 @[to_additive]
 theorem div_eq_div_iff_mul_eq_mul : a / b = c / d ↔ a * d = c * b := by
   rw [div_eq_iff_eq_mul, div_mul_eq_mul_div, eq_comm, div_eq_iff_eq_mul']
-  simp only [mul_comm, eq_comm]
+  simp only [← mul_comm, ← eq_comm]
 
 @[to_additive]
 theorem div_eq_div_iff_div_eq_div : a / b = c / d ↔ a / c = b / d := by
   rw [div_eq_iff_eq_mul, div_mul_eq_mul_div, div_eq_iff_eq_mul', mul_div_assoc]
 
 end CommGroupₓ
+
+section SubtractionCommMonoid
+
+variable {M : Type u} [SubtractionCommMonoid M]
+
+theorem bit0_sub (a b : M) : bit0 (a - b) = bit0 a - bit0 b :=
+  sub_add_sub_comm _ _ _ _
+
+theorem bit1_sub [One M] (a b : M) : bit1 (a - b) = bit1 a - bit0 b :=
+  (congr_arg (· + (1 : M)) <| bit0_sub a b : _).trans <| sub_add_eq_add_sub _ _ _
+
+end SubtractionCommMonoid
 
 section Commutator
 

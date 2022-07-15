@@ -65,7 +65,7 @@ when `μ ≤ ν` and `ν ≤ μ`, a more general application lemma can be writte
 theorem sub_apply [IsFiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ μ) : (μ - ν) s = μ s - ν s := by
   -- We begin by defining `measure_sub`, which will be equal to `(μ - ν)`.
   let measure_sub : Measureₓ α :=
-    @MeasureTheory.Measure.ofMeasurable α _ (fun h_t_measurable_set : MeasurableSet t => μ t - ν t)
+    @MeasureTheory.Measure.ofMeasurable α _ (fun t : Set α h_t_measurable_set : MeasurableSet t => μ t - ν t)
       (by
         simp )
       (by
@@ -78,14 +78,14 @@ theorem sub_apply [IsFiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ �
   -- Now, we demonstrate `μ - ν = measure_sub`, and apply it.
   · have h_measure_sub_add : ν + measure_sub = μ := by
       ext t h_t_measurable_set
-      simp only [Pi.add_apply, coe_add]
+      simp only [← Pi.add_apply, ← coe_add]
       rw [MeasureTheory.Measure.of_measurable_apply _ h_t_measurable_set, add_commₓ,
         tsub_add_cancel_of_le (h₂ t h_t_measurable_set)]
     have h_measure_sub_eq : μ - ν = measure_sub := by
       rw [MeasureTheory.Measure.sub_def]
       apply le_antisymmₓ
       · apply @Inf_le (Measureₓ α) measure.complete_semilattice_Inf
-        simp [le_reflₓ, add_commₓ, h_measure_sub_add]
+        simp [← le_reflₓ, ← add_commₓ, ← h_measure_sub_add]
         
       apply @le_Inf (Measureₓ α) measure.complete_semilattice_Inf
       intro d h_d
@@ -123,12 +123,12 @@ theorem restrict_sub_eq_restrict_sub_restrict (h_meas_s : MeasurableSet s) :
         
       · rw [add_apply, restrict_apply (h_meas_t.diff h_meas_s), diff_eq, inter_assoc, inter_self, ← add_apply]
         have h_mu_le_add_top : μ ≤ ν' + ν + ⊤ := by
-          simp only [add_top, le_top]
+          simp only [← add_top, ← le_top]
         exact measure.le_iff'.1 h_mu_le_add_top _
         
       
     · ext1 t h_meas_t
-      simp [restrict_apply h_meas_t, restrict_apply (h_meas_t.inter h_meas_s), inter_assoc]
+      simp [← restrict_apply h_meas_t, ← restrict_apply (h_meas_t.inter h_meas_s), ← inter_assoc]
       
     
   · refine' Inf_le_Inf_of_forall_exists_le _

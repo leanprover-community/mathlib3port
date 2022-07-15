@@ -25,6 +25,8 @@ Most of the proofs come from the properties of `semiconj_by`.
 -/
 
 
+variable {G : Type _}
+
 /-- Two elements commute if `a * b = b * a`. -/
 @[to_additive AddCommute "Two elements additively commute if `a + b = b + a`"]
 def Commute {S : Type _} [Mul S] (a b : S) : Prop :=
@@ -77,11 +79,11 @@ theorem mul_left (hac : Commute a c) (hbc : Commute b c) : Commute (a * b) c :=
 
 @[to_additive]
 protected theorem right_comm (h : Commute b c) (a : S) : a * b * c = a * c * b := by
-  simp only [mul_assoc, h.eq]
+  simp only [← mul_assoc, ← h.eq]
 
 @[to_additive]
 protected theorem left_comm (h : Commute a b) c : a * (b * c) = b * (a * c) := by
-  simp only [← mul_assoc, h.eq]
+  simp only [mul_assoc, ← h.eq]
 
 end Semigroupₓ
 
@@ -185,9 +187,23 @@ theorem _root_.is_unit_mul_self_iff : IsUnit (a * a) ↔ IsUnit a :=
 
 end Monoidₓ
 
+section DivisionMonoid
+
+variable [DivisionMonoid G] {a b : G}
+
+@[to_additive]
+theorem inv_inv : Commute a b → Commute a⁻¹ b⁻¹ :=
+  SemiconjBy.inv_inv_symm
+
+@[simp, to_additive]
+theorem inv_inv_iff : Commute a⁻¹ b⁻¹ ↔ Commute a b :=
+  SemiconjBy.inv_inv_symm_iff
+
+end DivisionMonoid
+
 section Groupₓ
 
-variable {G : Type _} [Groupₓ G] {a b : G}
+variable [Groupₓ G] {a b : G}
 
 @[to_additive]
 theorem inv_right : Commute a b → Commute a b⁻¹ :=
@@ -204,14 +220,6 @@ theorem inv_left : Commute a b → Commute a⁻¹ b :=
 @[simp, to_additive]
 theorem inv_left_iff : Commute a⁻¹ b ↔ Commute a b :=
   SemiconjBy.inv_symm_left_iff
-
-@[to_additive]
-theorem inv_inv : Commute a b → Commute a⁻¹ b⁻¹ :=
-  SemiconjBy.inv_inv_symm
-
-@[simp, to_additive]
-theorem inv_inv_iff : Commute a⁻¹ b⁻¹ ↔ Commute a b :=
-  SemiconjBy.inv_inv_symm_iff
 
 @[to_additive]
 protected theorem inv_mul_cancel (h : Commute a b) : a⁻¹ * b * a = b := by
@@ -235,7 +243,7 @@ end Commute
 
 section CommGroupₓ
 
-variable {G : Type _} [CommGroupₓ G] (a b : G)
+variable [CommGroupₓ G] (a b : G)
 
 @[simp, to_additive]
 theorem mul_inv_cancel_comm : a * b * a⁻¹ = b :=

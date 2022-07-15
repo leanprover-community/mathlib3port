@@ -35,8 +35,9 @@ def adjoinOne : Semigroupₓₓ.{u} ⥤ Mon.{u} where
   map_comp' := fun X Y Z => WithOne.map_comp
 
 @[to_additive hasForgetToAddSemigroup]
-instance hasForgetToSemigroup : HasForget₂ Mon Semigroupₓₓ where
-  forget₂ := { obj := fun M => Semigroupₓₓ.of M, map := fun M N => MonoidHom.toMulHom }
+instance hasForgetToSemigroup :
+    HasForget₂ Mon
+      Semigroupₓₓ where forget₂ := { obj := fun M => Semigroupₓₓ.of M, map := fun M N => MonoidHom.toMulHom }
 
 /-- The adjoin_one-forgetful adjunction from `Semigroup` to `Mon`.-/
 @[to_additive "The adjoin_one-forgetful adjunction from `AddSemigroup` to `AddMon`"]
@@ -46,7 +47,7 @@ def adjoinOneAdj : adjoinOne ⊣ forget₂ Mon.{u} Semigroupₓₓ.{u} :=
       hom_equiv_naturality_left_symm' := by
         intro S T M f g
         ext
-        simp only [Equivₓ.symm_symm, adjoin_one_map, coe_comp]
+        simp only [← Equivₓ.symm_symm, ← adjoin_one_map, ← coe_comp]
         simp_rw [WithOne.map]
         apply WithOne.cases_on x
         · rfl

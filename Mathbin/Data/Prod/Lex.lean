@@ -46,11 +46,9 @@ instance inhabited (α β : Type _) [Inhabited α] [Inhabited β] : Inhabited (�
   Prod.inhabited
 
 /-- Dictionary / lexicographic ordering on pairs.  -/
-instance hasLe (α β : Type _) [LT α] [LE β] : LE (α ×ₗ β) where
-  le := Prod.Lex (· < ·) (· ≤ ·)
+instance hasLe (α β : Type _) [LT α] [LE β] : LE (α ×ₗ β) where le := Prod.Lex (· < ·) (· ≤ ·)
 
-instance hasLt (α β : Type _) [LT α] [LT β] : LT (α ×ₗ β) where
-  lt := Prod.Lex (· < ·) (· < ·)
+instance hasLt (α β : Type _) [LT α] [LT β] : LT (α ×ₗ β) where lt := Prod.Lex (· < ·) (· < ·)
 
 theorem le_iff [LT α] [LE β] (a b : α × β) : toLex a ≤ toLex b ↔ a.1 < b.1 ∨ a.1 = b.1 ∧ a.2 ≤ b.2 :=
   Prod.lex_def (· < ·) (· ≤ ·)
@@ -61,9 +59,9 @@ theorem lt_iff [LT α] [LT β] (a b : α × β) : toLex a < toLex b ↔ a.1 < b.
 /-- Dictionary / lexicographic preorder for pairs. -/
 instance preorder (α β : Type _) [Preorderₓ α] [Preorderₓ β] : Preorderₓ (α ×ₗ β) :=
   { Prod.Lex.hasLe α β, Prod.Lex.hasLt α β with
-    le_refl :=
+    le_refl := by
       have : IsRefl β (· ≤ ·) := ⟨le_reflₓ⟩
-      refl_of (Prod.Lex _ _),
+      exact refl_of (Prod.Lex _ _),
     le_trans := fun _ _ _ => by
       have : IsTrans α (· < ·) := ⟨fun _ _ _ => lt_transₓ⟩
       have : IsTrans β (· ≤ ·) := ⟨fun _ _ _ => le_transₓ⟩

@@ -21,17 +21,17 @@ The file does not contain any lemmas except for
 
 For basic lemmas about these classes see `algebra.group.basic`.
 
-We also introduce notation classes `has_scalar` and `has_vadd` for multiplicative and additive
+We also introduce notation classes `has_smul` and `has_vadd` for multiplicative and additive
 actions and register the following instances:
 
 - `has_pow M ℕ`, for monoids `M`, and `has_pow G ℤ` for groups `G`;
-- `has_scalar ℕ M` for additive monoids `M`, and `has_scalar ℤ G` for additive groups `G`.
+- `has_smul ℕ M` for additive monoids `M`, and `has_smul ℤ G` for additive groups `G`.
 
 ## Notation
 
 - `+`, `-`, `*`, `/`, `^` : the usual arithmetic operations; the underlying functions are
   `has_add.add`, `has_neg.neg`/`has_sub.sub`, `has_mul.mul`, `has_div.div`, and `has_pow.pow`.
-- `a • b` is used as notation for `has_scalar.smul a b`.
+- `a • b` is used as notation for `has_smul.smul a b`.
 - `a +ᵥ b` is used as notation for `has_vadd.vadd a b`.
 
 -/
@@ -48,8 +48,8 @@ class HasVsub (G : outParam (Type _)) (P : Type _) where
   vsub : P → P → G
 
 /-- Typeclass for types with a scalar multiplication operation, denoted `•` (`\bu`) -/
-@[ext, to_additive HasVadd]
-class HasScalar (M : Type _) (α : Type _) where
+@[ext, to_additive]
+class HasSmul (M : Type _) (α : Type _) where
   smul : M → α → α
 
 -- mathport name: «expr +ᵥ »
@@ -59,15 +59,15 @@ infixl:65 " +ᵥ " => HasVadd.vadd
 infixl:65 " -ᵥ " => HasVsub.vsub
 
 -- mathport name: «expr • »
-infixr:73 " • " => HasScalar.smul
+infixr:73 " • " => HasSmul.smul
 
 attribute [to_additive_reorder 1] Pow
 
 attribute [to_additive_reorder 1 4] Pow.pow
 
-attribute [to_additive HasScalar] Pow
+attribute [to_additive HasSmul] Pow
 
-attribute [to_additive HasScalar.smul] Pow.pow
+attribute [to_additive HasSmul.smul] Pow.pow
 
 universe u
 
@@ -356,7 +356,7 @@ analysis](https://hal.inria.fr/hal-02463336).
 -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
 /-- `try_refl_tac` solves goals of the form `∀ a b, f a b = g a b`,
 if they hold by definition. -/
 unsafe def try_refl_tac : tactic Unit :=
@@ -374,12 +374,12 @@ goes for linear maps, tensor products, and so on (and even for `ℕ` itself).
 
 To solve this issue, we embed an `ℕ`-action in the definition of an `add_monoid` (which is by
 default equal to the naive action `a + ... + a`, but can be adjusted when needed), and declare
-a `has_scalar ℕ α` instance using this action. See Note [forgetful inheritance] for more
+a `has_smul ℕ α` instance using this action. See Note [forgetful inheritance] for more
 explanations on this pattern.
 
 For example, when we define `polynomial R`, then we declare the `ℕ`-action to be by multiplication
 on each coefficient (using the `ℕ`-action on `R` that comes from the fact that `R` is
-an `add_monoid`). In this way, the two natural `has_scalar ℕ (polynomial ℕ)` instances are defeq.
+an `add_monoid`). In this way, the two natural `has_smul ℕ (polynomial ℕ)` instances are defeq.
 
 The tactic `to_additive` transfers definitions and results from multiplicative monoids to additive
 monoids. To work, it has to map fields to fields. This means that we should also add corresponding
@@ -422,10 +422,10 @@ class Monoidₓ (M : Type u) extends Semigroupₓ M, MulOneClassₓ M where
 instance Monoidₓ.hasPow {M : Type _} [Monoidₓ M] : Pow M ℕ :=
   ⟨fun x n => Monoidₓ.npow n x⟩
 
-instance AddMonoidₓ.hasScalarNat {M : Type _} [AddMonoidₓ M] : HasScalar ℕ M :=
+instance AddMonoidₓ.hasSmulNat {M : Type _} [AddMonoidₓ M] : HasSmul ℕ M :=
   ⟨AddMonoidₓ.nsmul⟩
 
-attribute [to_additive AddMonoidₓ.hasScalarNat] Monoidₓ.hasPow
+attribute [to_additive AddMonoidₓ.hasSmulNat] Monoidₓ.hasPow
 
 section
 
@@ -538,7 +538,7 @@ attribute [to_additive] zpowRec
 
 section HasInvolutiveInv
 
--- ././Mathport/Syntax/Translate/Basic.lean:209:40: warning: unsupported option extends_priority
+-- ./././Mathport/Syntax/Translate/Basic.lean:293:40: warning: unsupported option extends_priority
 -- ensure that we don't go via these typeclasses to find `has_inv` on groups and groups with zero
 set_option extends_priority 50
 
@@ -667,10 +667,10 @@ attribute [to_additive SubNegMonoidₓ] DivInvMonoidₓ
 instance DivInvMonoidₓ.hasPow {M} [DivInvMonoidₓ M] : Pow M ℤ :=
   ⟨fun x n => DivInvMonoidₓ.zpow n x⟩
 
-instance SubNegMonoidₓ.hasScalarInt {M} [SubNegMonoidₓ M] : HasScalar ℤ M :=
+instance SubNegMonoidₓ.hasSmulInt {M} [SubNegMonoidₓ M] : HasSmul ℤ M :=
   ⟨SubNegMonoidₓ.zsmul⟩
 
-attribute [to_additive SubNegMonoidₓ.hasScalarInt] DivInvMonoidₓ.hasPow
+attribute [to_additive SubNegMonoidₓ.hasSmulInt] DivInvMonoidₓ.hasPow
 
 section DivInvMonoidₓ
 

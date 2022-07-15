@@ -54,7 +54,7 @@ instance (priority := 100) ConditionallyCompleteLinearOrder.to_compact_Icc_space
   refine' ⟨fun a b => _⟩
   cases' le_or_ltₓ a b with hab hab
   swap
-  · simp [hab]
+  · simp [← hab]
     
   refine' is_compact_iff_ultrafilter_le_nhds.2 fun f hf => _
   contrapose! hf
@@ -64,7 +64,7 @@ instance (priority := 100) ConditionallyCompleteLinearOrder.to_compact_Icc_space
   have hsb : b ∈ UpperBounds s := fun x hx => hx.1.2
   have sbd : BddAbove s := ⟨b, hsb⟩
   have ha : a ∈ s := by
-    simp [hpt, hab]
+    simp [← hpt, ← hab]
   rcases hab.eq_or_lt with (rfl | hlt)
   · exact ha.2
     
@@ -127,7 +127,7 @@ that cover these cases. -/
 instance (priority := 100) compact_space_of_complete_linear_order {α : Type _} [CompleteLinearOrder α]
     [TopologicalSpace α] [OrderTopology α] : CompactSpace α :=
   ⟨by
-    simp only [← Icc_bot_top, is_compact_Icc]⟩
+    simp only [Icc_bot_top, ← is_compact_Icc]⟩
 
 section
 
@@ -220,7 +220,7 @@ theorem ContinuousOn.exists_forall_le' {s : Set β} {f : β → α} (hf : Contin
   rcases(has_basis_cocompact.inf_principal _).eventually_iff.1 hc with ⟨K, hK, hKf⟩
   have hsub : insert x₀ (K ∩ s) ⊆ s := insert_subset.2 ⟨h₀, inter_subset_right _ _⟩
   obtain ⟨x, hx, hxf⟩ : ∃ x ∈ insert x₀ (K ∩ s), ∀, ∀ y ∈ insert x₀ (K ∩ s), ∀, f x ≤ f y :=
-    ((hK.inter_right hsc).insert x₀).exists_forall_le (nonempty_insert _ _) (hf.mono hsub)
+    ((hK.inter_right hsc).insert x₀).exists_forall_le (insert_nonempty _ _) (hf.mono hsub)
   refine' ⟨x, hsub hx, fun y hy => _⟩
   by_cases' hyK : y ∈ K
   exacts[hxf _ (Or.inr ⟨hyK, hy⟩), (hxf _ (Or.inl rfl)).trans (hKf ⟨hyK, hy⟩)]
@@ -334,31 +334,31 @@ theorem image_Icc (hab : a ≤ b) (h : ContinuousOn f <| Icc a b) :
   eq_Icc_of_connected_compact ⟨(nonempty_Icc.2 hab).Image f, is_preconnected_Icc.Image f h⟩
     (is_compact_Icc.image_of_continuous_on h)
 
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
 theorem image_interval_eq_Icc
-    (h : ContinuousOn f <| "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)") :
-    f '' "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)" =
-      Icc (inf (f '' "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)"))
-        (sup (f '' "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)")) :=
+    (h : ContinuousOn f <| "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)") :
+    f '' "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)" =
+      Icc (inf (f '' "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)"))
+        (sup (f '' "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)")) :=
   by
   cases' le_totalₓ a b with h2 h2
-  · simp_rw [interval_of_le h2]  at h⊢
+  · simp_rw [interval_of_le h2] at h⊢
     exact h.image_Icc h2
     
-  · simp_rw [interval_of_ge h2]  at h⊢
+  · simp_rw [interval_of_ge h2] at h⊢
     exact h.image_Icc h2
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
 theorem image_interval
-    (h : ContinuousOn f <| "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)") :
-    f '' "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)" =
-      "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)" :=
+    (h : ContinuousOn f <| "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)") :
+    f '' "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)" =
+      "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)" :=
   by
   refine' h.image_interval_eq_Icc.trans (interval_of_le _).symm
   refine' cInf_le_cSup _ _ (nonempty_interval.image _) <;> rw [h.image_interval_eq_Icc]

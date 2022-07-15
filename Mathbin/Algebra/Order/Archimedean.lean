@@ -71,17 +71,17 @@ theorem exists_unique_zsmul_near_of_pos {a : α} (ha : 0 < a) (g : α) : ∃! k 
   exact lt_of_le_of_ltₓ hm hn.2
 
 theorem exists_unique_zsmul_near_of_pos' {a : α} (ha : 0 < a) (g : α) : ∃! k : ℤ, 0 ≤ g - k • a ∧ g - k • a < a := by
-  simpa only [sub_nonneg, add_zsmul, one_zsmul, sub_lt_iff_lt_add'] using exists_unique_zsmul_near_of_pos ha g
+  simpa only [← sub_nonneg, ← add_zsmul, ← one_zsmul, ← sub_lt_iff_lt_add'] using exists_unique_zsmul_near_of_pos ha g
 
 theorem exists_unique_add_zsmul_mem_Ico {a : α} (ha : 0 < a) (b c : α) : ∃! m : ℤ, b + m • a ∈ Set.Ico c (c + a) :=
   (Equivₓ.neg ℤ).Bijective.exists_unique_iff.2 <| by
-    simpa only [Equivₓ.neg_apply, mem_Ico, neg_zsmul, ← sub_eq_add_neg, le_sub_iff_add_le, zero_addₓ, add_commₓ c,
-      sub_lt_iff_lt_add', add_assocₓ] using exists_unique_zsmul_near_of_pos' ha (b - c)
+    simpa only [← Equivₓ.neg_apply, ← mem_Ico, ← neg_zsmul, sub_eq_add_neg, ← le_sub_iff_add_le, ← zero_addₓ, ←
+      add_commₓ c, ← sub_lt_iff_lt_add', ← add_assocₓ] using exists_unique_zsmul_near_of_pos' ha (b - c)
 
 theorem exists_unique_add_zsmul_mem_Ioc {a : α} (ha : 0 < a) (b c : α) : ∃! m : ℤ, b + m • a ∈ Set.Ioc c (c + a) :=
   (Equivₓ.addRight (1 : ℤ)).Bijective.exists_unique_iff.2 <| by
-    simpa only [add_zsmul, sub_lt_iff_lt_add', le_sub_iff_add_le', ← add_assocₓ, And.comm, mem_Ioc,
-      Equivₓ.coe_add_right, one_zsmul, add_le_add_iff_right] using exists_unique_zsmul_near_of_pos ha (c - b)
+    simpa only [← add_zsmul, ← sub_lt_iff_lt_add', ← le_sub_iff_add_le', add_assocₓ, ← And.comm, ← mem_Ioc, ←
+      Equivₓ.coe_add_right, ← one_zsmul, ← add_le_add_iff_right] using exists_unique_zsmul_near_of_pos ha (c - b)
 
 end LinearOrderedAddCommGroup
 
@@ -119,7 +119,7 @@ variable [LinearOrderedRing α] [Archimedean α]
 theorem pow_unbounded_of_one_lt (x : α) {y : α} (hy1 : 1 < y) : ∃ n : ℕ, x < y ^ n :=
   sub_add_cancel y 1 ▸ add_one_pow_unbounded_of_pos _ (sub_pos.2 hy1)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Every x greater than or equal to 1 is between two successive
 natural-number powers of every y greater than one. -/
 theorem exists_nat_pow_near {x : α} {y : α} (hx : 1 ≤ x) (hy : 1 < y) : ∃ n : ℕ, y ^ n ≤ x ∧ x < y ^ (n + 1) := by
@@ -139,7 +139,7 @@ theorem exists_nat_pow_near {x : α} {y : α} (hx : 1 ≤ x) (hy : 1 < y) : ∃ 
 theorem exists_int_gt (x : α) : ∃ n : ℤ, x < n :=
   let ⟨n, h⟩ := exists_nat_gt x
   ⟨n, by
-    rwa [← coe_coe]⟩
+    rwa [Int.cast_coe_nat]⟩
 
 theorem exists_int_lt (x : α) : ∃ n : ℤ, (n : α) < x :=
   let ⟨n, h⟩ := exists_int_gt (-x)
@@ -164,7 +164,7 @@ section LinearOrderedField
 
 variable [LinearOrderedField α]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Every positive `x` is between two successive integer powers of
 another `y` greater than one. This is the same as `exists_mem_Ioc_zpow`,
 but with ≤ and < the other way around. -/
@@ -205,7 +205,7 @@ theorem exists_mem_Ioc_zpow [Archimedean α] {x : α} {y : α} (hx : 0 < x) (hy 
 theorem exists_pow_lt_of_lt_one [Archimedean α] {x y : α} (hx : 0 < x) (hy : y < 1) : ∃ n : ℕ, y ^ n < x := by
   by_cases' y_pos : y ≤ 0
   · use 1
-    simp only [pow_oneₓ]
+    simp only [← pow_oneₓ]
     linarith
     
   rw [not_leₓ] at y_pos
@@ -248,13 +248,13 @@ end LinearOrderedField
 instance : Archimedean ℕ :=
   ⟨fun n m m0 =>
     ⟨n, by
-      simpa only [mul_oneₓ, Nat.nsmul_eq_mul] using Nat.mul_le_mul_leftₓ n m0⟩⟩
+      simpa only [← mul_oneₓ, ← Nat.nsmul_eq_mul] using Nat.mul_le_mul_leftₓ n m0⟩⟩
 
 instance : Archimedean ℤ :=
   ⟨fun n m m0 =>
     ⟨n.toNat,
       le_transₓ (Int.le_to_nat _) <| by
-        simpa only [nsmul_eq_mul, Int.nat_cast_eq_coe_nat, zero_addₓ, mul_oneₓ] using
+        simpa only [← nsmul_eq_mul, ← zero_addₓ, ← mul_oneₓ] using
           mul_le_mul_of_nonneg_left (Int.add_one_le_iff.2 m0) (Int.coe_zero_le n.to_nat)⟩⟩
 
 /-- A linear ordered archimedean ring is a floor ring. This is not an `instance` because in some
@@ -291,7 +291,7 @@ theorem archimedean_iff_rat_lt : Archimedean α ↔ ∀ x : α, ∃ q : ℚ, x <
       let ⟨q, h⟩ := H x
       ⟨⌈q⌉₊,
         lt_of_lt_of_leₓ h <| by
-          simpa only [Rat.cast_coe_nat] using (@Rat.cast_le α _ _ _).2 (Nat.le_ceil _)⟩⟩
+          simpa only [← Rat.cast_coe_nat] using (@Rat.cast_le α _ _ _).2 (Nat.le_ceil _)⟩⟩
 
 theorem archimedean_iff_rat_le : Archimedean α ↔ ∀ x : α, ∃ q : ℚ, x ≤ q :=
   archimedean_iff_rat_lt.trans
@@ -321,7 +321,7 @@ theorem exists_rat_btwn {x y : α} (h : x < y) : ∃ q : ℚ, x < q ∧ (q : α)
     exact one_ne_zero
     
   · intro H
-    rw [Rat.coe_nat_num, ← coe_coe, Nat.cast_eq_zero] at H
+    rw [Rat.coe_nat_num, Int.cast_coe_nat, Nat.cast_eq_zero] at H
     subst H
     cases n0
     
@@ -352,13 +352,13 @@ theorem exists_nat_one_div_lt {ε : α} (hε : 0 < ε) : ∃ n : ℕ, 1 / (n + 1
   use n
   rw [div_lt_iff, ← div_lt_iff' hε]
   · apply hn.trans
-    simp [zero_lt_one]
+    simp [← zero_lt_one]
     
   · exact n.cast_add_one_pos
     
 
 theorem exists_pos_rat_lt {x : α} (x0 : 0 < x) : ∃ q : ℚ, 0 < q ∧ (q : α) < x := by
-  simpa only [Rat.cast_pos] using exists_rat_btwn x0
+  simpa only [← Rat.cast_pos] using exists_rat_btwn x0
 
 end LinearOrderedField
 
@@ -406,7 +406,7 @@ theorem Rat.round_cast (x : ℚ) : round (x : α) = round x := by
 
 @[simp, norm_cast]
 theorem Rat.cast_fract (x : ℚ) : (↑(fract x) : α) = fract x := by
-  simp only [fract, Rat.cast_sub]
+  simp only [← fract, ← Rat.cast_sub]
   simp
 
 end

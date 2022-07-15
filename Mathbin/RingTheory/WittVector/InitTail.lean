@@ -46,9 +46,9 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
 /-- `init_ring` is an auxiliary tactic that discharges goals factoring `init` over ring operations.
 -/
 unsafe def init_ring (assert : parse (tk "using" *> parser.pexpr)?) : tactic Unit := do
@@ -90,7 +90,7 @@ def selectPoly (n : ℕ) : MvPolynomial ℕ ℤ :=
   if P n then x n else 0
 
 theorem coeff_select (x : 𝕎 R) (n : ℕ) : (select P x).coeff n = aeval x.coeff (selectPoly P n) := by
-  dsimp' [select, select_poly]
+  dsimp' [← select, ← select_poly]
   split_ifs with hi
   · rw [aeval_X]
     
@@ -109,15 +109,15 @@ include hp
 theorem select_add_select_not : ∀ x : 𝕎 R, select P x + select (fun i => ¬P i) x = x := by
   ghost_calc _
   intro n
-  simp only [RingHom.map_add]
+  simp only [← RingHom.map_add]
   suffices
     (bind₁ (select_poly P)) (wittPolynomial p ℤ n) + (bind₁ (select_poly fun i => ¬P i)) (wittPolynomial p ℤ n) =
       wittPolynomial p ℤ n
     by
     apply_fun aeval x.coeff  at this
-    simpa only [AlgHom.map_add, aeval_bind₁, ← coeff_select]
-  simp only [witt_polynomial_eq_sum_C_mul_X_pow, select_poly, AlgHom.map_sum, AlgHom.map_pow, AlgHom.map_mul,
-    bind₁_X_right, bind₁_C_right, ← Finset.sum_add_distrib, ← mul_addₓ]
+    simpa only [← AlgHom.map_add, ← aeval_bind₁, coeff_select]
+  simp only [← witt_polynomial_eq_sum_C_mul_X_pow, ← select_poly, ← AlgHom.map_sum, ← AlgHom.map_pow, ← AlgHom.map_mul,
+    ← bind₁_X_right, ← bind₁_C_right, Finset.sum_add_distrib, mul_addₓ]
   apply Finset.sum_congr rfl
   refine' fun m hm => mul_eq_mul_left_iff.mpr (Or.inl _)
   rw [ite_pow, ite_pow, zero_pow (pow_pos hp.out.pos _)]
@@ -151,9 +151,9 @@ theorem coeff_add_of_disjoint (x y : 𝕎 R) (h : ∀ n, x.coeff n = 0 ∨ y.coe
       
   calc (x + y).coeff n = z.coeff n := by
       rw [← hx, ← hy, select_add_select_not P z]_ = x.coeff n + y.coeff n := _
-  dsimp' [z]
+  dsimp' [← z]
   split_ifs with hn
-  · dsimp' [P]  at hn
+  · dsimp' [← P]  at hn
     rw [hn, add_zeroₓ]
     
   · rw [(h n).resolve_right hn, zero_addₓ]
@@ -178,7 +178,7 @@ include hp
 
 @[simp]
 theorem init_add_tail (x : 𝕎 R) (n : ℕ) : init n x + tail n x = x := by
-  simp only [init, tail, ← not_ltₓ, select_add_select_not]
+  simp only [← init, ← tail, not_ltₓ, ← select_add_select_not]
 
 end
 
@@ -201,13 +201,13 @@ theorem init_sub (x y : 𝕎 R) (n : ℕ) : init n (x - y) = init n (init n x - 
   init_ring using witt_sub_vars
 
 theorem init_nsmul (m : ℕ) (x : 𝕎 R) (n : ℕ) : init n (m • x) = init n (m • init n x) := by
-  init_ring using fun n => witt_nsmul_vars p m n
+  init_ring using fun p [Fact (Nat.Prime p)] n => witt_nsmul_vars p m n
 
 theorem init_zsmul (m : ℤ) (x : 𝕎 R) (n : ℕ) : init n (m • x) = init n (m • init n x) := by
-  init_ring using fun n => witt_zsmul_vars p m n
+  init_ring using fun p [Fact (Nat.Prime p)] n => witt_zsmul_vars p m n
 
 theorem init_pow (m : ℕ) (x : 𝕎 R) (n : ℕ) : init n (x ^ m) = init n (init n x ^ m) := by
-  init_ring using fun n => witt_pow_vars p m n
+  init_ring using fun p [Fact (Nat.Prime p)] n => witt_pow_vars p m n
 
 section
 

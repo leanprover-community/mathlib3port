@@ -47,19 +47,19 @@ variable [OrderedRing k] [OrderedAddCommGroup E] [Module k E] [OrderedSmul k E]
 variable {a a' b b' : E} {r r' : k}
 
 theorem line_map_mono_left (ha : a ≤ a') (hr : r ≤ 1) : lineMap a b r ≤ lineMap a' b r := by
-  simp only [line_map_apply_module]
+  simp only [← line_map_apply_module]
   exact add_le_add_right (smul_le_smul_of_nonneg ha (sub_nonneg.2 hr)) _
 
 theorem line_map_strict_mono_left (ha : a < a') (hr : r < 1) : lineMap a b r < lineMap a' b r := by
-  simp only [line_map_apply_module]
+  simp only [← line_map_apply_module]
   exact add_lt_add_right (smul_lt_smul_of_pos ha (sub_pos.2 hr)) _
 
 theorem line_map_mono_right (hb : b ≤ b') (hr : 0 ≤ r) : lineMap a b r ≤ lineMap a b' r := by
-  simp only [line_map_apply_module]
+  simp only [← line_map_apply_module]
   exact add_le_add_left (smul_le_smul_of_nonneg hb hr) _
 
 theorem line_map_strict_mono_right (hb : b < b') (hr : 0 < r) : lineMap a b r < lineMap a b' r := by
-  simp only [line_map_apply_module]
+  simp only [← line_map_apply_module]
   exact add_lt_add_left (smul_lt_smul_of_pos hb hr) _
 
 theorem line_map_mono_endpoints (ha : a ≤ a') (hb : b ≤ b') (h₀ : 0 ≤ r) (h₁ : r ≤ 1) :
@@ -74,7 +74,7 @@ theorem line_map_strict_mono_endpoints (ha : a < a') (hb : b < b') (h₀ : 0 ≤
   exact (line_map_mono_left ha.le h₁).trans_lt (line_map_strict_mono_right hb h₀)
 
 theorem line_map_lt_line_map_iff_of_lt (h : r < r') : lineMap a b r < lineMap a b r' ↔ a < b := by
-  simp only [line_map_apply_module]
+  simp only [← line_map_apply_module]
   rw [← lt_sub_iff_add_lt, add_sub_assoc, ← sub_lt_iff_lt_add', ← sub_smul, ← sub_smul, sub_sub_sub_cancel_left,
     smul_lt_smul_iff_of_pos (sub_pos.2 h)]
   infer_instance
@@ -120,7 +120,7 @@ section
 variable {a b : E} {r r' : k}
 
 theorem line_map_le_line_map_iff_of_lt (h : r < r') : lineMap a b r ≤ lineMap a b r' ↔ a ≤ b := by
-  simp only [line_map_apply_module]
+  simp only [← line_map_apply_module]
   rw [← le_sub_iff_add_le, add_sub_assoc, ← sub_le_iff_le_add', ← sub_smul, ← sub_smul, sub_sub_sub_cancel_left,
     smul_le_smul_iff_of_pos (sub_pos.2 h)]
   infer_instance
@@ -237,7 +237,7 @@ theorem map_le_line_map_iff_slope_le_slope_right (h : 0 < (1 - r) * (b - a)) :
     mul_inv_cancel_right₀, le_sub, ← neg_sub (f b), smul_neg, neg_add_eq_sub]
   · exact right_ne_zero_of_mul h.ne'
     
-  · simpa [mul_sub] using h
+  · simpa [← mul_sub] using h
     
 
 /-- Given `c = line_map a b r`, `c < b`, the point `(c, f c)` is non-strictly above the

@@ -6,6 +6,7 @@ Authors: Anne Baanen
 import Mathbin.Data.Fin.Tuple.Default
 import Mathbin.Data.List.Range
 import Mathbin.GroupTheory.GroupAction.Pi
+import Mathbin.Meta.Univs
 
 /-!
 # Matrix and vector notation
@@ -59,7 +60,7 @@ def vecCons {n : ℕ} (h : α) (t : Finₓ n → α) : Finₓ n.succ → α :=
   Finₓ.cons h t
 
 -- mathport name: «expr![ ,]»
-notation3 "![" (l,* => foldr (h t => vecCons h t) vecEmpty) "]" => l
+notation3"!["(l", "* => foldr (h t => vecCons h t) vecEmpty)"]" => l
 
 /-- `vec_head v` gives the first entry of the vector `v` -/
 def vecHead {n : ℕ} (v : Finₓ n.succ → α) : α :=
@@ -77,8 +78,10 @@ variable {m n : ℕ}
 #eval ![1, 2] + ![3, 4] -- ![4, 6]
 ```
 -/
-instance PiFin.hasRepr [HasRepr α] : HasRepr (Finₓ n → α) where
-  repr := fun f => "![" ++ Stringₓ.intercalate ", " ((List.finRange n).map fun n => reprₓ (f n)) ++ "]"
+instance _root_.pi_fin.has_repr [HasRepr α] :
+    HasRepr
+      (Finₓ n →
+        α) where repr := fun f => "![" ++ Stringₓ.intercalate ", " ((List.finRange n).map fun n => reprₓ (f n)) ++ "]"
 
 end MatrixNotation
 
@@ -102,12 +105,12 @@ theorem cons_val_zero' (h : 0 < m.succ) (x : α) (u : Finₓ m → α) : vecCons
 
 @[simp]
 theorem cons_val_succ (x : α) (u : Finₓ m → α) (i : Finₓ m) : vecCons x u i.succ = u i := by
-  simp [vec_cons]
+  simp [← vec_cons]
 
 @[simp]
 theorem cons_val_succ' {i : ℕ} (h : i.succ < m.succ) (x : α) (u : Finₓ m → α) :
     vecCons x u ⟨i.succ, h⟩ = u ⟨i, Nat.lt_of_succ_lt_succₓ h⟩ := by
-  simp only [vec_cons, Finₓ.cons, Finₓ.cases_succ']
+  simp only [← vec_cons, ← Finₓ.cons, ← Finₓ.cases_succ']
 
 @[simp]
 theorem head_cons (x : α) (u : Finₓ m → α) : vecHead (vecCons x u) = x :=
@@ -116,7 +119,7 @@ theorem head_cons (x : α) (u : Finₓ m → α) : vecHead (vecCons x u) = x :=
 @[simp]
 theorem tail_cons (x : α) (u : Finₓ m → α) : vecTail (vecCons x u) = u := by
   ext
-  simp [vec_tail]
+  simp [← vec_tail]
 
 @[simp]
 theorem empty_val' {n' : Type _} (j : n') : (fun i => (![] : Finₓ 0 → n' → α) i j) = ![] :=
@@ -129,7 +132,7 @@ theorem cons_head_tail (u : Finₓ m.succ → α) : vecCons (vecHead u) (vecTail
 @[simp]
 theorem range_cons (x : α) (u : Finₓ n → α) : Set.Range (vecCons x u) = {x} ∪ Set.Range u :=
   Set.ext fun y => by
-    simp [Finₓ.exists_fin_succ, eq_comm]
+    simp [← Finₓ.exists_fin_succ, ← eq_comm]
 
 @[simp]
 theorem range_empty (u : Finₓ 0 → α) : Set.Range u = ∅ :=
@@ -160,6 +163,23 @@ theorem cons_val_fin_one (x : α) (u : Finₓ 0 → α) (i : Finₓ 1) : vecCons
 theorem cons_fin_one (x : α) (u : Finₓ 0 → α) : vecCons x u = fun _ => x :=
   funext (cons_val_fin_one x u)
 
+-- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]
+unsafe instance _root_.pi_fin.reflect [reflected_univ.{u}] [reflected _ α] [has_reflect α] :
+    ∀ {n}, has_reflect (Finₓ n → α)
+  | 0, v =>
+    (Subsingleton.elimₓ vecEmpty v).rec
+      ((by
+            trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]" :
+            reflected _ @vecEmpty.{u}).subst
+        (quote.1 α))
+  | n + 1, v =>
+    (cons_head_tail v).rec <|
+      (by
+            trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]" :
+            reflected _ @vecCons.{u}).subst₄
+        (quote.1 α) (quote.1 n) (quote.1 _) (_root_.pi_fin.reflect _)
+
 /-! ### Numeral (`bit0` and `bit1`) indices
 The following definitions and `simp` lemmas are to allow any
 numeral-indexed element of a vector given with matrix notation to
@@ -173,7 +193,7 @@ addition on `fin n`).
 @[simp]
 theorem empty_append (v : Finₓ n → α) : Finₓ.append (zero_addₓ _).symm ![] v = v := by
   ext
-  simp [Finₓ.append]
+  simp [← Finₓ.append]
 
 @[simp]
 theorem cons_append (ho : o + 1 = m + 1 + n) (x : α) (u : Finₓ m → α) (v : Finₓ n → α) :
@@ -190,15 +210,15 @@ theorem cons_append (ho : o + 1 = m + 1 + n) (x : α) (u : Finₓ m → α) (v :
   · rcases i with ⟨⟨⟩ | i, hi⟩
     · simp
       
-    · simp only [Nat.succ_eq_add_one, add_lt_add_iff_right, Finₓ.coe_mk] at h
-      simp [h]
+    · simp only [← Nat.succ_eq_add_one, ← add_lt_add_iff_right, ← Finₓ.coe_mk] at h
+      simp [← h]
       
     
   · rcases i with ⟨⟨⟩ | i, hi⟩
     · simpa using h
       
     · rw [not_ltₓ, Finₓ.coe_mk, Nat.succ_eq_add_one, add_le_add_iff_right] at h
-      simp [h]
+      simp [← h]
       
     
 
@@ -217,11 +237,11 @@ theorem vec_alt0_append (v : Finₓ n → α) : vecAlt0 rfl (Finₓ.append rfl v
   simp_rw [Function.comp, bit0, vec_alt0, Finₓ.append]
   split_ifs with h <;> congr
   · rw [Finₓ.coe_mk] at h
-    simp only [Finₓ.ext_iff, Finₓ.coe_add, Finₓ.coe_mk]
+    simp only [← Finₓ.ext_iff, ← Finₓ.coe_add, ← Finₓ.coe_mk]
     exact (Nat.mod_eq_of_ltₓ h).symm
     
   · rw [Finₓ.coe_mk, not_ltₓ] at h
-    simp only [Finₓ.ext_iff, Finₓ.coe_add, Finₓ.coe_mk, Nat.mod_eq_sub_modₓ h]
+    simp only [← Finₓ.ext_iff, ← Finₓ.coe_add, ← Finₓ.coe_mk, ← Nat.mod_eq_sub_modₓ h]
     refine' (Nat.mod_eq_of_ltₓ _).symm
     rw [tsub_lt_iff_left h]
     exact add_lt_add i.property i.property
@@ -235,14 +255,15 @@ theorem vec_alt1_append (v : Finₓ (n + 1) → α) : vecAlt1 rfl (Finₓ.append
     congr
     
   · split_ifs with h <;> simp_rw [bit1, bit0] <;> congr
-    · simp only [Finₓ.ext_iff, Finₓ.coe_add, Finₓ.coe_mk]
+    · simp only [← Finₓ.ext_iff, ← Finₓ.coe_add, ← Finₓ.coe_mk]
       rw [Finₓ.coe_mk] at h
       rw [Finₓ.coe_one]
       rw [Nat.mod_eq_of_ltₓ (Nat.lt_of_succ_ltₓ h)]
       rw [Nat.mod_eq_of_ltₓ h]
       
     · rw [Finₓ.coe_mk, not_ltₓ] at h
-      simp only [Finₓ.ext_iff, Finₓ.coe_add, Finₓ.coe_mk, Nat.mod_add_modₓ, Finₓ.coe_one, Nat.mod_eq_sub_modₓ h]
+      simp only [← Finₓ.ext_iff, ← Finₓ.coe_add, ← Finₓ.coe_mk, ← Nat.mod_add_modₓ, ← Finₓ.coe_one, ←
+        Nat.mod_eq_sub_modₓ h]
       refine' (Nat.mod_eq_of_ltₓ _).symm
       rw [tsub_lt_iff_left h]
       exact Nat.add_succ_lt_add i.property i.property
@@ -255,7 +276,7 @@ theorem vec_head_vec_alt0 (hm : m + 2 = n + 1 + (n + 1)) (v : Finₓ (m + 2) →
 
 @[simp]
 theorem vec_head_vec_alt1 (hm : m + 2 = n + 1 + (n + 1)) (v : Finₓ (m + 2) → α) : vecHead (vecAlt1 hm v) = v 1 := by
-  simp [vec_head, vec_alt1]
+  simp [← vec_head, ← vec_alt1]
 
 @[simp]
 theorem cons_vec_bit0_eq_alt0 (x : α) (u : Finₓ n → α) (i : Finₓ (n + 1)) :
@@ -282,7 +303,7 @@ theorem cons_vec_alt0 (h : m + 1 + 1 = n + 1 + (n + 1)) (x y : α) (u : Finₓ m
   rcases i with ⟨⟨⟩ | i, hi⟩
   · rfl
     
-  · simp [vec_alt0, Nat.add_succ, Nat.succ_add]
+  · simp [← vec_alt0, ← Nat.add_succ, ← Nat.succ_add]
     
 
 -- Although proved by simp, extracting element 8 of a five-element
@@ -306,7 +327,7 @@ theorem cons_vec_alt1 (h : m + 1 + 1 = n + 1 + (n + 1)) (x y : α) (u : Finₓ m
   rcases i with ⟨⟨⟩ | i, hi⟩
   · rfl
     
-  · simp [vec_alt1, Nat.add_succ, Nat.succ_add]
+  · simp [← vec_alt1, ← Nat.add_succ, ← Nat.succ_add]
     
 
 -- Although proved by simp, extracting element 9 of a five-element
@@ -319,7 +340,7 @@ end Val
 
 section Smul
 
-variable {M : Type _} [HasScalar M α]
+variable {M : Type _} [HasSmul M α]
 
 @[simp]
 theorem smul_empty (x : M) (v : Finₓ 0 → α) : x • v = ![] :=
@@ -344,13 +365,13 @@ theorem empty_add_empty (v w : Finₓ 0 → α) : v + w = ![] :=
 theorem cons_add (x : α) (v : Finₓ n → α) (w : Finₓ n.succ → α) :
     vecCons x v + w = vecCons (x + vecHead w) (v + vecTail w) := by
   ext i
-  refine' Finₓ.cases _ _ i <;> simp [vec_head, vec_tail]
+  refine' Finₓ.cases _ _ i <;> simp [← vec_head, ← vec_tail]
 
 @[simp]
 theorem add_cons (v : Finₓ n.succ → α) (y : α) (w : Finₓ n → α) :
     v + vecCons y w = vecCons (vecHead v + y) (vecTail v + w) := by
   ext i
-  refine' Finₓ.cases _ _ i <;> simp [vec_head, vec_tail]
+  refine' Finₓ.cases _ _ i <;> simp [← vec_head, ← vec_tail]
 
 @[simp]
 theorem cons_add_cons (x : α) (v : Finₓ n → α) (y : α) (w : Finₓ n → α) :
@@ -379,13 +400,13 @@ theorem empty_sub_empty (v w : Finₓ 0 → α) : v - w = ![] :=
 theorem cons_sub (x : α) (v : Finₓ n → α) (w : Finₓ n.succ → α) :
     vecCons x v - w = vecCons (x - vecHead w) (v - vecTail w) := by
   ext i
-  refine' Finₓ.cases _ _ i <;> simp [vec_head, vec_tail]
+  refine' Finₓ.cases _ _ i <;> simp [← vec_head, ← vec_tail]
 
 @[simp]
 theorem sub_cons (v : Finₓ n.succ → α) (y : α) (w : Finₓ n → α) :
     v - vecCons y w = vecCons (vecHead v - y) (vecTail v - w) := by
   ext i
-  refine' Finₓ.cases _ _ i <;> simp [vec_head, vec_tail]
+  refine' Finₓ.cases _ _ i <;> simp [← vec_head, ← vec_tail]
 
 @[simp]
 theorem cons_sub_cons (x : α) (v : Finₓ n → α) (y : α) (w : Finₓ n → α) :
@@ -433,7 +454,7 @@ theorem cons_eq_zero_iff {v : Finₓ n → α} {x : α} : vecCons x v = 0 ↔ x 
       convert congr_arg vec_tail h
       simp ⟩,
     fun ⟨hx, hv⟩ => by
-    simp [hx, hv]⟩
+    simp [← hx, ← hv]⟩
 
 open Classical
 

@@ -74,7 +74,7 @@ def mkSol (init : Finₓ E.order → α) : ℕ → α
           · exact add_lt_add_right k.is_lt n
             
           · convert add_le_add (zero_le (k : ℕ)) (not_lt.mp h)
-            simp only [zero_addₓ]
+            simp only [← zero_addₓ]
             
         E.coeffs k * mk_sol (n - E.order + k)
 
@@ -85,7 +85,7 @@ theorem is_sol_mk_sol (init : Finₓ E.order → α) : E.IsSolution (E.mkSol ini
 /-- `E.mk_sol init`'s first `E.order` terms are `init`. -/
 theorem mk_sol_eq_init (init : Finₓ E.order → α) : ∀ n : Finₓ E.order, E.mkSol init n = init n := fun n => by
   rw [mk_sol]
-  simp only [n.is_lt, dif_pos, Finₓ.mk_coe, Finₓ.eta]
+  simp only [← n.is_lt, ← dif_pos, ← Finₓ.mk_coe, ← Finₓ.eta]
 
 /-- If `u` is a solution to `E` and `init` designates its first `E.order` values,
   then `∀ n, u n = E.mk_sol init n`. -/
@@ -93,10 +93,10 @@ theorem eq_mk_of_is_sol_of_eq_init {u : ℕ → α} {init : Finₓ E.order → �
     (heq : ∀ n : Finₓ E.order, u n = init n) : ∀ n, u n = E.mkSol init n
   | n =>
     if h' : n < E.order then by
-      rw [mk_sol] <;> simp only [h', dif_pos] <;> exact_mod_cast HEq ⟨n, h'⟩
+      rw [mk_sol] <;> simp only [← h', ← dif_pos] <;> exact_mod_cast HEq ⟨n, h'⟩
     else by
       rw [mk_sol, ← tsub_add_cancel_of_le (le_of_not_ltₓ h'), h (n - E.order)]
-      simp [h']
+      simp [← h']
       congr with k
       exact by
         have wf : n - E.order + k < n := by
@@ -104,7 +104,7 @@ theorem eq_mk_of_is_sol_of_eq_init {u : ℕ → α} {init : Finₓ E.order → �
           · exact add_lt_add_right k.is_lt n
             
           · convert add_le_add (zero_le (k : ℕ)) (not_lt.mp h')
-            simp only [zero_addₓ]
+            simp only [← zero_addₓ]
             
         rw [eq_mk_of_is_sol_of_eq_init]
 
@@ -121,9 +121,9 @@ def solSpace : Submodule α (ℕ → α) where
   zero_mem' := fun n => by
     simp
   add_mem' := fun u v hu hv n => by
-    simp [mul_addₓ, sum_add_distrib, hu n, hv n]
+    simp [← mul_addₓ, ← sum_add_distrib, ← hu n, ← hv n]
   smul_mem' := fun a u hu n => by
-    simp [hu n, mul_sum] <;> congr <;> ext <;> ac_rfl
+    simp [← hu n, ← mul_sum] <;> congr <;> ext <;> ac_rfl
 
 /-- Defining property of the solution space : `u` is a solution
   iff it belongs to the solution space. -/
@@ -170,10 +170,10 @@ def tupleSucc : (Finₓ E.order → α) →ₗ[α] Finₓ E.order → α where
   toFun := fun X i => if h : (i : ℕ) + 1 < E.order then X ⟨i + 1, h⟩ else ∑ i, E.coeffs i * X i
   map_add' := fun x y => by
     ext i
-    split_ifs <;> simp [h, mul_addₓ, sum_add_distrib]
+    split_ifs <;> simp [← h, ← mul_addₓ, ← sum_add_distrib]
   map_smul' := fun x y => by
     ext i
-    split_ifs <;> simp [h, mul_sum]
+    split_ifs <;> simp [← h, ← mul_sum]
     exact
       sum_congr rfl fun x _ => by
         ac_rfl
@@ -203,13 +203,14 @@ def charPoly : α[X] :=
   `q` is a root of `E`'s characteristic polynomial. -/
 theorem geom_sol_iff_root_char_poly (q : α) : (E.IsSolution fun n => q ^ n) ↔ E.charPoly.IsRoot q := by
   rw [char_poly, Polynomial.IsRoot.def, Polynomial.eval]
-  simp only [Polynomial.eval₂_finset_sum, one_mulₓ, RingHom.id_apply, Polynomial.eval₂_monomial, Polynomial.eval₂_sub]
+  simp only [← Polynomial.eval₂_finset_sum, ← one_mulₓ, ← RingHom.id_apply, ← Polynomial.eval₂_monomial, ←
+    Polynomial.eval₂_sub]
   constructor
   · intro h
-    simpa [sub_eq_zero] using h 0
+    simpa [← sub_eq_zero] using h 0
     
   · intro h n
-    simp only [pow_addₓ, sub_eq_zero.mp h, mul_sum]
+    simp only [← pow_addₓ, ← sub_eq_zero.mp h, ← mul_sum]
     exact
       sum_congr rfl fun _ _ => by
         ring

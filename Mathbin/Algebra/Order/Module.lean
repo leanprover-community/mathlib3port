@@ -96,10 +96,9 @@ alias smul_neg_iff_of_pos ↔ _ smul_neg_of_pos_of_neg
 
 alias smul_neg_iff_of_neg ↔ _ smul_neg_of_neg_of_pos
 
-theorem antitone_smul_left (hc : c ≤ 0) : Antitone (HasScalar.smul c : M → M) := fun a b h =>
-  smul_le_smul_of_nonpos h hc
+theorem antitone_smul_left (hc : c ≤ 0) : Antitone (HasSmul.smul c : M → M) := fun a b h => smul_le_smul_of_nonpos h hc
 
-theorem strict_anti_smul_left (hc : c < 0) : StrictAnti (HasScalar.smul c : M → M) := fun a b h =>
+theorem strict_anti_smul_left (hc : c < 0) : StrictAnti (HasSmul.smul c : M → M) := fun a b h =>
   smul_lt_smul_of_neg h hc
 
 /-- Binary **rearrangement inequality**. -/
@@ -165,7 +164,11 @@ variable {M} [OrderedAddCommGroup N] [Module k N] [OrderedSmul k N]
 
 -- TODO: solve `prod.has_lt` and `prod.has_le` misalignment issue
 instance Prod.ordered_smul : OrderedSmul k (M × N) :=
-  OrderedSmul.mk' fun h hc => ⟨smul_le_smul_of_nonneg h.1.1 hc.le, smul_le_smul_of_nonneg h.1.2 hc.le⟩
+  OrderedSmul.mk' fun v u : M × N c : k h hc => ⟨smul_le_smul_of_nonneg h.1.1 hc.le, smul_le_smul_of_nonneg h.1.2 hc.le⟩
+
+instance Pi.smulWithZero'' {ι : Type _} {M : ι → Type _} [∀ i, OrderedAddCommGroup (M i)]
+    [∀ i, MulActionWithZero k (M i)] : SmulWithZero k (∀ i : ι, M i) := by
+  infer_instance
 
 instance Pi.ordered_smul {ι : Type _} {M : ι → Type _} [∀ i, OrderedAddCommGroup (M i)] [∀ i, MulActionWithZero k (M i)]
     [∀ i, OrderedSmul k (M i)] : OrderedSmul k (∀ i : ι, M i) := by

@@ -125,13 +125,14 @@ theorem cauchy_mul : ∀ a b, (a * b : ℝ).cauchy = a.cauchy * b.cauchy
 instance : CommRingₓ ℝ := by
   refine_struct
       { zero := (0 : ℝ), one := (1 : ℝ), mul := (· * ·), add := (· + ·), neg := @Neg.neg ℝ _, sub := fun a b => a + -b,
-        npow := @npowRec ℝ ⟨1⟩ ⟨(· * ·)⟩, nsmul := @nsmulRec ℝ ⟨0⟩ ⟨(· + ·)⟩,
-        zsmul := @zsmulRec ℝ ⟨0⟩ ⟨(· + ·)⟩ ⟨@Neg.neg ℝ _⟩ } <;>
+        natCast := fun n => ⟨n⟩, intCast := fun n => ⟨n⟩, npow := @npowRec ℝ ⟨1⟩ ⟨(· * ·)⟩,
+        nsmul := @nsmulRec ℝ ⟨0⟩ ⟨(· + ·)⟩, zsmul := @zsmulRec ℝ ⟨0⟩ ⟨(· + ·)⟩ ⟨@Neg.neg ℝ _⟩ } <;>
     repeat'
         rintro ⟨_⟩ <;>
       try
           rfl <;>
-        simp [← of_cauchy_zero, ← of_cauchy_one, ← of_cauchy_add, ← of_cauchy_neg, ← of_cauchy_mul] <;>
+        simp [of_cauchy_zero, of_cauchy_one, of_cauchy_add, of_cauchy_neg, of_cauchy_mul, ← fun n =>
+            show @coe ℕ ℝ ⟨_⟩ n = ⟨n⟩ from rfl] <;>
           first |
             apply add_assocₓ|
             apply add_commₓ|
@@ -220,7 +221,7 @@ instance : HasTrivialStar ℝ :=
 is `cau_seq.completion.of_rat`, not `rat.cast`. -/
 def ofRat : ℚ →+* ℝ := by
   refine_struct { toFun := of_cauchy ∘ of_rat } <;>
-    simp [of_rat_one, of_rat_zero, of_rat_mul, of_rat_add, of_cauchy_one, of_cauchy_zero, ← of_cauchy_mul, ←
+    simp [← of_rat_one, ← of_rat_zero, ← of_rat_mul, ← of_rat_add, ← of_cauchy_one, ← of_cauchy_zero, of_cauchy_mul,
       of_cauchy_add]
 
 theorem of_rat_apply (x : ℚ) : ofRat x = of_cauchy (CauSeq.Completion.ofRat x) :=
@@ -258,13 +259,13 @@ theorem mk_one : mk 1 = 1 := by
   rw [← of_cauchy_one] <;> rfl
 
 theorem mk_add {f g : CauSeq ℚ abs} : mk (f + g) = mk f + mk g := by
-  simp [mk, ← of_cauchy_add]
+  simp [← mk, of_cauchy_add]
 
 theorem mk_mul {f g : CauSeq ℚ abs} : mk (f * g) = mk f * mk g := by
-  simp [mk, ← of_cauchy_mul]
+  simp [← mk, of_cauchy_mul]
 
 theorem mk_neg {f : CauSeq ℚ abs} : mk (-f) = -mk f := by
-  simp [mk, ← of_cauchy_neg]
+  simp [← mk, of_cauchy_neg]
 
 @[simp]
 theorem mk_pos {f : CauSeq ℚ abs} : 0 < mk f ↔ Pos f := by
@@ -282,7 +283,7 @@ private theorem le_def {x y : ℝ} : x ≤ y ↔ x < y ∨ x = y :=
 
 @[simp]
 theorem mk_le {f g : CauSeq ℚ abs} : mk f ≤ mk g ↔ f ≤ g := by
-  simp [le_def, mk_eq] <;> rfl
+  simp [← le_def, ← mk_eq] <;> rfl
 
 @[elab_as_eliminator]
 protected theorem ind_mk {C : Real → Prop} (x : Real) (h : ∀ y, C (mk y)) : C x := by
@@ -294,7 +295,7 @@ theorem add_lt_add_iff_left {a b : ℝ} (c : ℝ) : c + a < c + b ↔ a < b := b
   induction a using Real.ind_mk
   induction b using Real.ind_mk
   induction c using Real.ind_mk
-  simp only [mk_lt, ← mk_add]
+  simp only [← mk_lt, mk_add]
   show Pos _ ↔ Pos _
   rw [add_sub_add_left_eq_sub]
 
@@ -321,12 +322,12 @@ instance : PartialOrderₓ ℝ where
   le_antisymm := fun a b =>
     (Real.ind_mk a) fun a =>
       (Real.ind_mk b) fun b => by
-        simpa [mk_eq] using @CauSeq.le_antisymm _ _ a b
+        simpa [← mk_eq] using @CauSeq.le_antisymm _ _ a b
 
 instance : Preorderₓ ℝ := by
   infer_instance
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:95:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:92:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible }
 theorem of_rat_lt {x y : ℚ} : ofRat x < ofRat y ↔ x < y := by
   rw [mk_lt]
   exact const_lt
@@ -337,12 +338,12 @@ protected theorem zero_lt_one : (0 : ℝ) < 1 := by
 protected theorem mul_pos {a b : ℝ} : 0 < a → 0 < b → 0 < a * b := by
   induction' a using Real.ind_mk with a
   induction' b using Real.ind_mk with b
-  simpa only [mk_lt, mk_pos, ← mk_mul] using CauSeq.mul_pos
+  simpa only [← mk_lt, ← mk_pos, mk_mul] using CauSeq.mul_pos
 
 instance : OrderedCommRing ℝ :=
   { Real.commRing, Real.partialOrder, Real.semiring with
     add_le_add_left := by
-      simp only [le_iff_eq_or_lt]
+      simp only [← le_iff_eq_or_lt]
       rintro a b ⟨rfl, h⟩
       · simp
         
@@ -413,10 +414,10 @@ noncomputable instance : LinearOrderedField ℝ :=
     mul_inv_cancel := by
       rintro ⟨a⟩ h
       rw [mul_comm]
-      simp only [← of_cauchy_inv, ← of_cauchy_mul, ← of_cauchy_one, ← of_cauchy_zero, Ne.def] at *
+      simp only [of_cauchy_inv, of_cauchy_mul, of_cauchy_one, of_cauchy_zero, ← Ne.def] at *
       exact CauSeq.Completion.inv_mul_cancel h,
     inv_zero := by
-      simp [← of_cauchy_zero, ← of_cauchy_inv] }
+      simp [of_cauchy_zero, of_cauchy_inv] }
 
 -- Extra instances to short-circuit type class resolution
 noncomputable instance : LinearOrderedAddCommGroup ℝ := by
@@ -461,7 +462,7 @@ open Rat
 theorem of_rat_eq_cast : ∀ x : ℚ, ofRat x = x :=
   ofRat.eq_rat_cast
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:95:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:92:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible }
 theorem le_mk_of_forall_le {f : CauSeq ℚ abs} : (∃ i, ∀, ∀ j ≥ i, ∀, x ≤ f j) → x ≤ mk f := by
   intro h
   induction' x using Real.ind_mk with x
@@ -482,7 +483,7 @@ theorem mk_le_of_forall_le {f : CauSeq ℚ abs} {x : ℝ} (h : ∃ i, ∀, ∀ j
   exact
     le_mk_of_forall_le
       ⟨i, fun j ij => by
-        simp [H _ ij]⟩
+        simp [← H _ ij]⟩
 
 theorem mk_near_of_forall_near {f : CauSeq ℚ abs} {x : ℝ} {ε : ℝ} (H : ∃ i, ∀, ∀ j ≥ i, ∀, abs ((f j : ℝ) - x) ≤ ε) :
     abs (mk f - x) ≤ ε :=
@@ -528,7 +529,7 @@ theorem exists_floor (x : ℝ) : ∃ ub : ℤ, (ub : ℝ) ≤ x ∧ ∀ z : ℤ,
     (let ⟨n, hn⟩ := exists_int_lt x
     ⟨n, le_of_ltₓ hn⟩)
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε)))
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε)))
 theorem exists_is_lub (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃ x, IsLub S x := by
   rcases hne, hbdd with ⟨⟨L, hL⟩, ⟨U, hU⟩⟩
   have : ∀ d : ℕ, BddAbove { m : ℤ | ∃ y ∈ S, (m : ℝ) ≤ y * d } := by
@@ -589,7 +590,7 @@ theorem Sup_def (S : Set ℝ) :
   rfl
 
 protected theorem is_lub_Sup (S : Set ℝ) (h₁ : S.Nonempty) (h₂ : BddAbove S) : IsLub S (sup S) := by
-  simp only [Sup_def, dif_pos (And.intro h₁ h₂)]
+  simp only [← Sup_def, ← dif_pos (And.intro h₁ h₂)]
   apply Classical.some_spec
 
 noncomputable instance : HasInfₓ ℝ :=
@@ -641,7 +642,7 @@ theorem Sup_empty : sup (∅ : Set ℝ) = 0 :=
     simp
 
 theorem csupr_empty {α : Sort _} [IsEmpty α] (f : α → ℝ) : (⨆ i, f i) = 0 := by
-  dsimp' [supr]
+  dsimp' [← supr]
   convert Real.Sup_empty
   rw [Set.range_eq_empty_iff]
   infer_instance
@@ -665,7 +666,7 @@ theorem Sup_univ : sup (@Set.Univ ℝ) = 0 :=
 
 @[simp]
 theorem Inf_empty : inf (∅ : Set ℝ) = 0 := by
-  simp [Inf_def, Sup_empty]
+  simp [← Inf_def, ← Sup_empty]
 
 theorem cinfi_empty {α : Sort _} [IsEmpty α] (f : α → ℝ) : (⨅ i, f i) = 0 := by
   rw [infi_of_empty', Inf_empty]

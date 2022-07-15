@@ -27,8 +27,7 @@ def Quiv :=
 
 namespace Quiv
 
-instance : CoeSort Quiv (Type u) where
-  coe := Bundled.α
+instance : CoeSort Quiv (Type u) where coe := Bundled.α
 
 instance str (C : Quiv.{v, u}) : Quiver.{v + 1, u} C :=
   C.str
@@ -106,7 +105,7 @@ def adj : Cat.free ⊣ Quiv.forget :=
             rfl,
           right_inv := by
             rintro ⟨obj, map⟩
-            dsimp' only [Prefunctor.comp]
+            dsimp' only [← Prefunctor.comp]
             congr
             ext X Y f
             exact category.id_comp _ },

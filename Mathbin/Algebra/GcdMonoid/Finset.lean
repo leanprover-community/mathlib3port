@@ -56,7 +56,7 @@ theorem lcm_empty : (∅ : Finset β).lcm f = 1 :=
 @[simp]
 theorem lcm_dvd_iff {a : α} : s.lcm f ∣ a ↔ ∀, ∀ b ∈ s, ∀, f b ∣ a := by
   apply Iff.trans Multiset.lcm_dvd
-  simp only [Multiset.mem_map, and_imp, exists_imp_distrib]
+  simp only [← Multiset.mem_map, ← and_imp, ← exists_imp_distrib]
   exact ⟨fun k b hb => k _ _ hb rfl, fun k a' b hb h => h ▸ k _ hb⟩
 
 theorem lcm_dvd {a : α} : (∀, ∀ b ∈ s, ∀, f b ∣ a) → s.lcm f ∣ a :=
@@ -78,7 +78,7 @@ theorem lcm_singleton {b : β} : ({b} : Finset β).lcm f = normalize (f b) :=
 
 @[simp]
 theorem normalize_lcm : normalize (s.lcm f) = s.lcm f := by
-  simp [lcm_def]
+  simp [← lcm_def]
 
 theorem lcm_union [DecidableEq β] : (s₁ ∪ s₂).lcm f = GcdMonoid.lcm (s₁.lcm f) (s₂.lcm f) :=
   (Finset.induction_on s₁
@@ -98,7 +98,7 @@ theorem lcm_mono (h : s₁ ⊆ s₂) : s₁.lcm f ∣ s₂.lcm f :=
   lcm_dvd fun b hb => dvd_lcm (h hb)
 
 theorem lcm_eq_zero_iff [Nontrivial α] : s.lcm f = 0 ↔ 0 ∈ f '' s := by
-  simp only [Multiset.mem_map, lcm_def, Multiset.lcm_eq_zero_iff, Set.mem_image, mem_coe, ← Finset.mem_def]
+  simp only [← Multiset.mem_map, ← lcm_def, ← Multiset.lcm_eq_zero_iff, ← Set.mem_image, ← mem_coe, Finset.mem_def]
 
 end Lcm
 
@@ -122,7 +122,7 @@ theorem gcd_empty : (∅ : Finset β).gcd f = 0 :=
 
 theorem dvd_gcd_iff {a : α} : a ∣ s.gcd f ↔ ∀, ∀ b ∈ s, ∀, a ∣ f b := by
   apply Iff.trans Multiset.dvd_gcd
-  simp only [Multiset.mem_map, and_imp, exists_imp_distrib]
+  simp only [← Multiset.mem_map, ← and_imp, ← exists_imp_distrib]
   exact ⟨fun k b hb => k _ _ hb rfl, fun k a' b hb h => h ▸ k _ hb⟩
 
 theorem gcd_dvd {b : β} (hb : b ∈ s) : s.gcd f ∣ f b :=
@@ -144,7 +144,7 @@ theorem gcd_singleton {b : β} : ({b} : Finset β).gcd f = normalize (f b) :=
 
 @[simp]
 theorem normalize_gcd : normalize (s.gcd f) = s.gcd f := by
-  simp [gcd_def]
+  simp [← gcd_def]
 
 theorem gcd_union [DecidableEq β] : (s₁ ∪ s₂).gcd f = GcdMonoid.gcd (s₁.gcd f) (s₂.gcd f) :=
   (Finset.induction_on s₁
@@ -165,7 +165,7 @@ theorem gcd_mono (h : s₁ ⊆ s₂) : s₂.gcd f ∣ s₁.gcd f :=
 
 theorem gcd_image {g : γ → β} (s : Finset γ) [DecidableEq β] [IsIdempotent α GcdMonoid.gcd] :
     (s.Image g).gcd f = s.gcd (f ∘ g) := by
-  simp [gcd, fold_image_idem]
+  simp [← gcd, ← fold_image_idem]
 
 theorem gcd_eq_gcd_image [DecidableEq α] [IsIdempotent α GcdMonoid.gcd] : s.gcd f = (s.Image f).gcd id :=
   (@gcd_image _ _ _ _ _ id _ _ _ _).symm
@@ -175,9 +175,9 @@ theorem gcd_eq_zero_iff : s.gcd f = 0 ↔ ∀ x : β, x ∈ s → f x = 0 := by
   constructor <;> intro h
   · intro b bs
     apply h (f b)
-    simp only [Multiset.mem_map, mem_def.1 bs]
+    simp only [← Multiset.mem_map, ← mem_def.1 bs]
     use b
-    simp [mem_def.1 bs]
+    simp [← mem_def.1 bs]
     
   · intro a as
     rw [Multiset.mem_map] at as
@@ -185,7 +185,7 @@ theorem gcd_eq_zero_iff : s.gcd f = 0 ↔ ∀ x : β, x ∈ s → f x = 0 := by
     apply h b (mem_def.1 bs)
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem gcd_eq_gcd_filter_ne_zero [DecidablePred fun x : β => f x = 0] : s.gcd f = (s.filter fun x => f x ≠ 0).gcd f :=
   by
   classical
@@ -200,11 +200,11 @@ theorem gcd_eq_gcd_filter_ne_zero [DecidablePred fun x : β => f x = 0] : s.gcd 
       
     intro a s has h
     rw [filter_insert]
-    split_ifs with h1 <;> simp [h, h1]
+    split_ifs with h1 <;> simp [← h, ← h1]
     
-  simp [gcd_zero_left, normalize_gcd]
+  simp [← gcd_zero_left, ← normalize_gcd]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem gcd_mul_left {a : α} : (s.gcd fun x => a * f x) = normalize a * s.gcd f := by
   classical
   apply s.induction_on
@@ -214,7 +214,7 @@ theorem gcd_mul_left {a : α} : (s.gcd fun x => a * f x) = normalize a * s.gcd f
   rw [gcd_insert, gcd_insert, h, ← gcd_mul_left]
   apply ((normalize_associated a).mul_right _).gcd_eq_right
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem gcd_mul_right {a : α} : (s.gcd fun x => f x * a) = s.gcd f * normalize a := by
   classical
   apply s.induction_on
@@ -234,7 +234,7 @@ section IsDomain
 
 variable [CommRingₓ α] [IsDomain α] [NormalizedGcdMonoid α]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem gcd_eq_of_dvd_sub {s : Finset β} {f g : β → α} {a : α} (h : ∀ x : β, x ∈ s → a ∣ f x - g x) :
     GcdMonoid.gcd a (s.gcd f) = GcdMonoid.gcd a (s.gcd g) := by
   classical

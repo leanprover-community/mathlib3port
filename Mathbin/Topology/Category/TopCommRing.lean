@@ -92,8 +92,8 @@ instance forget_to_Top_topological_ring (R : TopCommRing) : TopologicalRing ((fo
 /-- The forgetful functors to `Type` do not reflect isomorphisms,
 but the forgetful functor from `TopCommRing` to `Top` does.
 -/
-instance : ReflectsIsomorphisms (forget₂ TopCommRing.{u} Top.{u}) where
-  reflects := fun X Y f _ => by
+instance :
+    ReflectsIsomorphisms (forget₂ TopCommRing.{u} Top.{u}) where reflects := fun X Y f _ => by
     skip
     -- We have an isomorphism in `Top`,
     let i_Top := as_iso ((forget₂ TopCommRing Top).map f)

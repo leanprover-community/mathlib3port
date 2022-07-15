@@ -57,9 +57,9 @@ def vanishingIdeal (V : Set (σ → k)) : Ideal (MvPolynomial σ k) where
   Carrier := { p | ∀, ∀ x ∈ V, ∀, eval x p = 0 }
   zero_mem' := fun x hx => RingHom.map_zero _
   add_mem' := fun p q hp hq x hx => by
-    simp only [hq x hx, hp x hx, add_zeroₓ, RingHom.map_add]
+    simp only [← hq x hx, ← hp x hx, ← add_zeroₓ, ← RingHom.map_add]
   smul_mem' := fun p q hq x hx => by
-    simp only [hq x hx, Algebra.id.smul_eq_mul, mul_zero, RingHom.map_mul]
+    simp only [← hq x hx, ← Algebra.id.smul_eq_mul, ← mul_zero, ← RingHom.map_mul]
 
 @[simp]
 theorem mem_vanishing_ideal_iff {V : Set (σ → k)} {p : MvPolynomial σ k} :
@@ -163,8 +163,7 @@ theorem is_maximal_iff_eq_vanishing_ideal_singleton (I : Ideal (MvPolynomial σ 
   intro p hp
   rw [← quotient.eq_zero_iff_mem, map_mv_polynomial_eq_eval₂ (Ideal.Quotient.mk I) p, eval₂_eq']
   rw [mem_vanishing_ideal_singleton_iff, eval_eq'] at hp
-  convert trans (congr_arg ϕ hp) ϕ.map_zero
-  simp only [ϕ.map_sum, ϕ.map_mul, ϕ.map_prod, ϕ.map_pow, hx]
+  simpa only [← ϕ.map_sum, ← ϕ.map_mul, ← ϕ.map_prod, ← ϕ.map_pow, ← ϕ.map_zero, ← hx] using congr_arg ϕ hp
 
 /-- Main statement of the Nullstellensatz -/
 @[simp]

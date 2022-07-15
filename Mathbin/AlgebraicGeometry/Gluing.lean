@@ -107,7 +107,7 @@ def gluedScheme : Scheme := by
   swap
   exact (D.U i).affineCover.map y
   constructor
-  · dsimp'
+  · dsimp' [-Set.mem_range]
     rw [coe_comp, Set.range_comp]
     refine' Set.mem_image_of_mem _ _
     exact (D.U i).affineCover.Covers y
@@ -188,8 +188,8 @@ theorem ι_iso_carrier_inv (i : D.J) :
       (D.ι i).1.base :=
   by
   delta' iso_carrier
-  simp only [functor.map_iso_inv, iso.trans_inv, iso.trans_assoc, glue_data.ι_glued_iso_inv_assoc,
-    functor.map_iso_trans, category.assoc]
+  simp only [← functor.map_iso_inv, ← iso.trans_inv, ← iso.trans_assoc, ← glue_data.ι_glued_iso_inv_assoc, ←
+    functor.map_iso_trans, ← category.assoc]
   iterate 3 
     erw [← comp_base]
   simp_rw [← category.assoc]
@@ -242,7 +242,7 @@ def gluedCoverT' (x y z : 𝒰.J) :
   refine' _ ≫ (pullback_symmetry _ _).Hom
   refine' _ ≫ (pullback_right_pullback_fst_iso _ _ _).inv
   refine' pullback.map _ _ _ _ (pullback_symmetry _ _).Hom (𝟙 _) (𝟙 _) _ _
-  · simp [pullback.condition]
+  · simp [← pullback.condition]
     
   · simp
     
@@ -277,7 +277,7 @@ theorem glued_cover_cocycle_fst (x y z : 𝒰.J) :
 
 theorem glued_cover_cocycle_snd (x y z : 𝒰.J) :
     gluedCoverT' 𝒰 x y z ≫ gluedCoverT' 𝒰 y z x ≫ gluedCoverT' 𝒰 z x y ≫ pullback.snd = pullback.snd := by
-  apply pullback.hom_ext <;> simp [pullback.condition]
+  apply pullback.hom_ext <;> simp [← pullback.condition]
 
 theorem glued_cover_cocycle (x y z : 𝒰.J) : gluedCoverT' 𝒰 x y z ≫ gluedCoverT' 𝒰 y z x ≫ gluedCoverT' 𝒰 z x y = 𝟙 _ :=
   by
@@ -321,7 +321,7 @@ theorem from_glued_injective : Function.Injective 𝒰.fromGlued.1.base := by
   intro x y h
   obtain ⟨i, x, rfl⟩ := 𝒰.glued_cover.ι_jointly_surjective x
   obtain ⟨j, y, rfl⟩ := 𝒰.glued_cover.ι_jointly_surjective y
-  simp_rw [← comp_apply, ← SheafedSpace.comp_base, ← LocallyRingedSpace.comp_val]  at h
+  simp_rw [← comp_apply, ← SheafedSpace.comp_base, ← LocallyRingedSpace.comp_val] at h
   erw [ι_from_glued, ι_from_glued] at h
   let e :=
     (Top.pullbackConeIsLimit _ _).conePointUniqueUpToIso

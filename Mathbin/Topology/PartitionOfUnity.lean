@@ -192,7 +192,7 @@ protected def single (i : ι) (s : Set X) : BumpCovering ι X s where
     rintro j ⟨x, hx, -⟩
     contrapose! hx
     rw [mem_singleton_iff] at hx
-    simp [hx]
+    simp [← hx]
   nonneg' := le_update_iff.2 ⟨fun x => zero_le_one, fun _ _ => le_rfl⟩
   le_one' := update_le_iff.2 ⟨le_rfl, fun _ _ _ => zero_le_one⟩
   eventually_eq_one' := fun x _ =>
@@ -332,14 +332,14 @@ theorem exists_finset_to_pou_fun_eventually_eq (i : ι) (x : X) :
   rcases f.locally_finite x with ⟨U, hU, hf⟩
   use hf.to_finset
   filter_upwards [hU] with y hyU
-  simp only [Pi.mul_apply, Finset.prod_apply]
+  simp only [← Pi.mul_apply, ← Finset.prod_apply]
   apply to_pou_fun_eq_mul_prod
   intro j hji hj
   exact hf.mem_to_finset.2 ⟨y, ⟨hj, hyU⟩⟩
 
 theorem continuous_to_pou_fun (i : ι) : Continuous (f.toPouFun i) := by
   refine' (f i).Continuous.mul <| continuous_finprod_cond (fun j _ => continuous_const.sub (f j).Continuous) _
-  simp only [mul_support_one_sub]
+  simp only [← mul_support_one_sub]
   exact f.locally_finite
 
 /-- The partition of unity defined by a `bump_covering`.
@@ -355,15 +355,15 @@ def toPartitionOfUnity : PartitionOfUnity ι X s where
   locally_finite' := f.LocallyFinite.Subset f.support_to_pou_fun_subset
   nonneg' := fun i x => mul_nonneg (f.Nonneg i x) (finprod_cond_nonneg fun j hj => sub_nonneg.2 <| f.le_one j x)
   sum_eq_one' := fun x hx => by
-    simp only [ContinuousMap.coe_mk, sum_to_pou_fun_eq, sub_eq_self]
+    simp only [← ContinuousMap.coe_mk, ← sum_to_pou_fun_eq, ← sub_eq_self]
     apply finprod_eq_zero (fun i => 1 - f i x) (f.ind x hx)
-    · simp only [f.ind_apply x hx, sub_self]
+    · simp only [← f.ind_apply x hx, ← sub_self]
       
     · rw [mul_support_one_sub]
       exact f.point_finite x
       
   sum_le_one' := fun x => by
-    simp only [ContinuousMap.coe_mk, sum_to_pou_fun_eq, sub_le_self_iff]
+    simp only [← ContinuousMap.coe_mk, ← sum_to_pou_fun_eq, ← sub_le_self_iff]
     exact finprod_nonneg fun i => sub_nonneg.2 <| f.le_one i x
 
 theorem to_partition_of_unity_apply (i : ι) (x : X) :

@@ -95,7 +95,7 @@ theorem tendsto_in_measure_of_tendsto_ae_of_strongly_measurable [IsFiniteMeasure
     TendstoInMeasure μ f atTop g := by
   refine' fun ε hε => ennreal.tendsto_at_top_zero.mpr fun δ hδ => _
   by_cases' hδi : δ = ∞
-  · simp only [hδi, implies_true_iff, le_top, exists_const]
+  · simp only [← hδi, ← implies_true_iff, ← le_top, ← exists_const]
     
   lift δ to ℝ≥0 using hδi
   rw [gt_iff_lt, Ennreal.coe_pos, ← Nnreal.coe_pos] at hδ
@@ -131,7 +131,7 @@ theorem exists_nat_measure_lt_two_inv (hfg : TendstoInMeasure μ f atTop g) (n :
   specialize
     hfg (2⁻¹ ^ n)
       (by
-        simp only [zero_lt_bit0, pow_pos, zero_lt_one, inv_pos])
+        simp only [← zero_lt_bit0, ← pow_pos, ← zero_lt_one, ← inv_pos])
   rw [Ennreal.tendsto_at_top_zero] at hfg
   exact
     hfg (2⁻¹ ^ n)
@@ -195,13 +195,13 @@ theorem TendstoInMeasure.exists_seq_tendsto_ae (hfg : TendstoInMeasure μ f atTo
   set s := filter.at_top.limsup S with hs
   have hμs : μ s = 0 := by
     refine' measure_limsup_eq_zero (ne_of_ltₓ <| lt_of_le_of_ltₓ (Ennreal.tsum_le_tsum hμS_le) _)
-    simp only [Ennreal.tsum_geometric, Ennreal.one_sub_inv_two, inv_invₓ]
+    simp only [← Ennreal.tsum_geometric, ← Ennreal.one_sub_inv_two, ← inv_invₓ]
     decide
   have h_tendsto : ∀, ∀ x ∈ sᶜ, ∀, tendsto (fun i => f (ns i) x) at_top (𝓝 (g x)) := by
     refine' fun x hx => metric.tendsto_at_top.mpr fun ε hε => _
     rw [hs, limsup_eq_infi_supr_of_nat] at hx
-    simp only [Set.supr_eq_Union, Set.infi_eq_Inter, Set.compl_Inter, Set.compl_Union, Set.mem_Union, Set.mem_Inter,
-      Set.mem_compl_eq, Set.mem_set_of_eq, not_leₓ] at hx
+    simp only [← Set.supr_eq_Union, ← Set.infi_eq_Inter, ← Set.compl_Inter, ← Set.compl_Union, ← Set.mem_Union, ←
+      Set.mem_Inter, ← Set.mem_compl_eq, ← Set.mem_set_of_eq, ← not_leₓ] at hx
     obtain ⟨N, hNx⟩ := hx
     obtain ⟨k, hk_lt_ε⟩ := h_lt_ε_real ε hε
     refine' ⟨max N (k - 1), fun n hn_ge => lt_of_le_of_ltₓ _ hk_lt_ε⟩
@@ -260,7 +260,7 @@ theorem tendsto_in_measure_of_tendsto_snorm_of_strongly_measurable (hp_ne_zero :
   replace hfg :=
     Ennreal.Tendsto.const_mul (tendsto.ennrpow_const p.to_real hfg)
       (Or.inr <| @Ennreal.of_real_ne_top (1 / ε ^ p.to_real))
-  simp only [mul_zero, Ennreal.zero_rpow_of_pos (Ennreal.to_real_pos hp_ne_zero hp_ne_top)] at hfg
+  simp only [← mul_zero, ← Ennreal.zero_rpow_of_pos (Ennreal.to_real_pos hp_ne_zero hp_ne_top)] at hfg
   rw [Ennreal.tendsto_nhds_zero] at hfg⊢
   intro δ hδ
   refine' (hfg δ hδ).mono fun n hn => _
@@ -299,18 +299,19 @@ Lp-convergence for all `p ≠ 0`. -/
 theorem tendsto_in_measure_of_tendsto_snorm_top {E} [NormedGroup E] {f : ι → α → E} {g : α → E} {l : Filter ι}
     (hfg : Tendsto (fun n => snorm (f n - g) ∞ μ) l (𝓝 0)) : TendstoInMeasure μ f l g := by
   intro δ hδ
-  simp only [snorm_exponent_top, snorm_ess_sup] at hfg
+  simp only [← snorm_exponent_top, ← snorm_ess_sup] at hfg
   rw [Ennreal.tendsto_nhds_zero] at hfg⊢
   intro ε hε
   specialize hfg (Ennreal.ofReal δ / 2) (Ennreal.div_pos_iff.2 ⟨(Ennreal.of_real_pos.2 hδ).Ne.symm, Ennreal.two_ne_top⟩)
   refine' hfg.mono fun n hn => _
-  simp only [true_andₓ, gt_iff_lt, ge_iff_le, zero_tsub, zero_le, zero_addₓ, Set.mem_Icc, Pi.sub_apply] at *
+  simp only [← true_andₓ, ← gt_iff_lt, ← ge_iff_le, ← zero_tsub, ← zero_le, ← zero_addₓ, ← Set.mem_Icc, ←
+    Pi.sub_apply] at *
   have : essSup (fun x : α => (∥f n x - g x∥₊ : ℝ≥0∞)) μ < Ennreal.ofReal δ :=
     lt_of_le_of_ltₓ hn (Ennreal.half_lt_self (Ennreal.of_real_pos.2 hδ).Ne.symm ennreal.of_real_lt_top.ne)
   refine' ((le_of_eqₓ _).trans (ae_lt_of_ess_sup_lt this).le).trans hε.le
   congr with x
-  simp only [Ennreal.of_real_le_iff_le_to_real ennreal.coe_lt_top.ne, Ennreal.coe_to_real, not_ltₓ, coe_nnnorm,
-    Set.mem_set_of_eq, Set.mem_compl_eq]
+  simp only [← Ennreal.of_real_le_iff_le_to_real ennreal.coe_lt_top.ne, ← Ennreal.coe_to_real, ← not_ltₓ, ← coe_nnnorm,
+    ← Set.mem_set_of_eq, ← Set.mem_compl_eq]
   rw [← dist_eq_norm (f n x) (g x)]
   rfl
 

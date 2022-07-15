@@ -31,9 +31,9 @@ theorem indicator_eventually_eq (hf : f =ᶠ[l⊓𝓟 s] g) (hs : s =ᶠ[l] t) :
     hs.mem_iff.mono fun x hst hfg =>
       by_cases
         (fun hxs : x ∈ s => by
-          simp only [*, hst.1 hxs, indicator_of_mem])
+          simp only [*, ← hst.1 hxs, ← indicator_of_mem])
         fun hxs => by
-        simp only [indicator_of_not_mem hxs, indicator_of_not_mem (mt hst.2 hxs)]
+        simp only [← indicator_of_not_mem hxs, ← indicator_of_not_mem (mt hst.2 hxs)]
 
 end Zero
 
@@ -64,10 +64,10 @@ theorem Monotone.tendsto_indicator {ι} [Preorderₓ ι] [Zero β] (s : ι → S
     rw [indicator_of_mem (hs hn hi) _, indicator_of_mem ((subset_Union _ _) hi) _]
     
   · rw [not_exists] at h
-    simp only [indicator_of_not_mem (h _)]
+    simp only [← indicator_of_not_mem (h _)]
     convert tendsto_const_pure
     apply indicator_of_not_mem
-    simpa only [not_exists, mem_Union]
+    simpa only [← not_exists, ← mem_Union]
     
 
 theorem Antitone.tendsto_indicator {ι} [Preorderₓ ι] [Zero β] (s : ι → Set α) (hs : Antitone s) (f : α → β) (a : α) :
@@ -76,7 +76,7 @@ theorem Antitone.tendsto_indicator {ι} [Preorderₓ ι] [Zero β] (s : ι → S
   · rcases h with ⟨i, hi⟩
     refine' tendsto_pure.2 ((eventually_ge_at_top i).mono fun n hn => _)
     rw [indicator_of_not_mem _ _, indicator_of_not_mem _ _]
-    · simp only [mem_Inter, not_forall]
+    · simp only [← mem_Inter, ← not_forall]
       exact ⟨i, hi⟩
       
     · intro h
@@ -85,11 +85,11 @@ theorem Antitone.tendsto_indicator {ι} [Preorderₓ ι] [Zero β] (s : ι → S
       
     
   · push_neg  at h
-    simp only [indicator_of_mem, h, mem_Inter.2 h, tendsto_const_pure]
+    simp only [← indicator_of_mem, ← h, ← mem_Inter.2 h, ← tendsto_const_pure]
     
 
 theorem tendsto_indicator_bUnion_finset {ι} [Zero β] (s : ι → Set α) (f : α → β) (a : α) :
-    Tendsto (fun n : Finset ι => indicatorₓ (⋃ i ∈ n, s i) f a) atTop (pure <| indicatorₓ (Unionₓ s) f a) := by
+    Tendsto (fun n : Finset ι => indicatorₓ (⋃ i ∈ n, s i) f a) atTop (pure <| indicatorₓ (Union s) f a) := by
   rw [Union_eq_Union_finset s]
   refine' Monotone.tendsto_indicator (fun n : Finset ι => ⋃ i ∈ n, s i) _ f a
   exact fun t₁ t₂ => bUnion_subset_bUnion_left

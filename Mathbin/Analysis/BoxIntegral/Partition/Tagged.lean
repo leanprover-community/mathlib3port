@@ -135,7 +135,7 @@ theorem forall_bUnion_tagged (p : (ι → ℝ) → Box ι → Prop) (π : Prepar
     (∀, ∀ J ∈ π.bUnionTagged πi, ∀, p ((π.bUnionTagged πi).Tag J) J) ↔
       ∀, ∀ J ∈ π, ∀, ∀ J' ∈ πi J, ∀, p ((πi J).Tag J') J' :=
   by
-  simp only [bex_imp_distrib, mem_bUnion_tagged]
+  simp only [← bex_imp_distrib, ← mem_bUnion_tagged]
   refine' ⟨fun H J hJ J' hJ' => _, fun H J' J hJ hJ' => _⟩
   · rw [← π.tag_bUnion_tagged hJ hJ']
     exact H J' J hJ hJ'
@@ -183,7 +183,7 @@ theorem inf_prepartition_to_prepartition (π : TaggedPrepartition I) (π' : Prep
 
 theorem mem_inf_prepartition_comm :
     J ∈ π₁.infPrepartition π₂.toPrepartition ↔ J ∈ π₂.infPrepartition π₁.toPrepartition := by
-  simp only [← mem_to_prepartition, inf_prepartition_to_prepartition, inf_comm]
+  simp only [mem_to_prepartition, ← inf_prepartition_to_prepartition, ← inf_comm]
 
 theorem IsPartition.inf_prepartition (h₁ : π₁.IsPartition) {π₂ : Prepartition I} (h₂ : π₂.IsPartition) :
     (π₁.infPrepartition π₂).IsPartition :=

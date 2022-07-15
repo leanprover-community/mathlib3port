@@ -145,8 +145,7 @@ include i
 -- Give this a priority between `coe_fn_trans` and the default priority
 -- `α` and `β` are out_params, so this instance should not be dangerous
 @[nolint dangerous_instance]
-instance (priority := 100) : CoeFun F fun _ => ∀ a : α, β a where
-  coe := FunLike.coe
+instance (priority := 100) : CoeFun F fun _ => ∀ a : α, β a where coe := FunLike.coe
 
 @[simp]
 theorem coe_eq_coe_fn : (FunLike.coe : F → ∀ a : α, β a) = coeFn :=

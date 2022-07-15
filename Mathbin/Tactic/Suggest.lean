@@ -370,7 +370,7 @@ open SolveByElim
 initialize
   registerTraceClass.1 `silence_suggest
 
--- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ?»
 /-- `suggest` tries to apply suitable theorems/defs from the library, and generates
 a list of `exact ...` or `refine ...` scripts that could be used at this step.
 It leaves the tactic state unchanged. It is intended as a complement of the search

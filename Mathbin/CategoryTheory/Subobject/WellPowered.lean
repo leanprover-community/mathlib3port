@@ -44,8 +44,7 @@ class WellPowered : Prop where
 instance small_subobject [WellPowered C] (X : C) : Small.{v} (Subobject X) :=
   WellPowered.subobject_small X
 
-instance (priority := 100) well_powered_of_small_category (C : Type u₁) [SmallCategory C] : WellPowered C :=
-  {  }
+instance (priority := 100) well_powered_of_small_category (C : Type u₁) [SmallCategory C] : WellPowered C where
 
 variable {C}
 

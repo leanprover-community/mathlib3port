@@ -68,10 +68,10 @@ theorem pi_cons_injective {a : α} {b : δ a} {s : Finset α} (hs : a ∉ s) : F
         have :
           pi.cons s a b e₁ e
               (by
-                simpa only [Multiset.mem_cons, mem_insert] using h) =
+                simpa only [← Multiset.mem_cons, ← mem_insert] using h) =
             pi.cons s a b e₂ e
               (by
-                simpa only [Multiset.mem_cons, mem_insert] using h) :=
+                simpa only [← Multiset.mem_cons, ← mem_insert] using h) :=
           by
           rw [Eq]
         this
@@ -86,7 +86,7 @@ theorem pi_insert [∀ a, DecidableEq (δ a)] {s : Finset α} {t : ∀ a : α, F
   apply eq_of_veq
   rw [← (pi (insert a s) t).2.dedup]
   refine'
-    (fun h : s' = a ::ₘ s.1 =>
+    (fun s' h : s' = a ::ₘ s.1 =>
         (_ :
           dedup (Multiset.pi s' fun a => (t a).1) =
             dedup

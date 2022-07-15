@@ -119,13 +119,13 @@ theorem zero_apply (m : ∀ i, M₁ i) : (0 : ContinuousMultilinearMap R M₁ M�
 theorem to_multilinear_map_zero : (0 : ContinuousMultilinearMap R M₁ M₂).toMultilinearMap = 0 :=
   rfl
 
-section HasScalar
+section HasSmul
 
 variable {R' R'' A : Type _} [Monoidₓ R'] [Monoidₓ R''] [Semiringₓ A] [∀ i, Module A (M₁ i)] [Module A M₂]
   [DistribMulAction R' M₂] [HasContinuousConstSmul R' M₂] [SmulCommClass A R' M₂] [DistribMulAction R'' M₂]
   [HasContinuousConstSmul R'' M₂] [SmulCommClass A R'' M₂]
 
-instance : HasScalar R' (ContinuousMultilinearMap A M₁ M₂) :=
+instance : HasSmul R' (ContinuousMultilinearMap A M₁ M₂) :=
   ⟨fun c f => { c • f.toMultilinearMap with cont := f.cont.const_smul c }⟩
 
 @[simp]
@@ -140,7 +140,7 @@ theorem to_multilinear_map_smul (c : R') (f : ContinuousMultilinearMap A M₁ M�
 instance [SmulCommClass R' R'' M₂] : SmulCommClass R' R'' (ContinuousMultilinearMap A M₁ M₂) :=
   ⟨fun c₁ c₂ f => ext fun x => smul_comm _ _ _⟩
 
-instance [HasScalar R' R''] [IsScalarTower R' R'' M₂] : IsScalarTower R' R'' (ContinuousMultilinearMap A M₁ M₂) :=
+instance [HasSmul R' R''] [IsScalarTower R' R'' M₂] : IsScalarTower R' R'' (ContinuousMultilinearMap A M₁ M₂) :=
   ⟨fun c₁ c₂ f => ext fun x => smul_assoc _ _ _⟩
 
 instance [DistribMulAction R'ᵐᵒᵖ M₂] [IsCentralScalar R' M₂] : IsCentralScalar R' (ContinuousMultilinearMap A M₁ M₂) :=
@@ -149,7 +149,7 @@ instance [DistribMulAction R'ᵐᵒᵖ M₂] [IsCentralScalar R' M₂] : IsCentr
 instance : MulAction R' (ContinuousMultilinearMap A M₁ M₂) :=
   Function.Injective.mulAction toMultilinearMap to_multilinear_map_inj fun _ _ => rfl
 
-end HasScalar
+end HasSmul
 
 section HasContinuousAdd
 
@@ -301,7 +301,7 @@ end ApplySum
 
 section RestrictScalar
 
-variable (R) {A : Type _} [Semiringₓ A] [HasScalar R A] [∀ i : ι, Module A (M₁ i)] [Module A M₂]
+variable (R) {A : Type _} [Semiringₓ A] [HasSmul R A] [∀ i : ι, Module A (M₁ i)] [Module A M₂]
   [∀ i, IsScalarTower R A (M₁ i)] [IsScalarTower R A M₂]
 
 /-- Reinterpret an `A`-multilinear map as an `R`-multilinear map, if `A` is an algebra over `R`

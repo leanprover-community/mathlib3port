@@ -77,7 +77,7 @@ def counitCoequalises [∀ X : B, RegularEpi (adj₁.counit.app X)] (X : B) :
     refine' ⟨(regular_epi.desc' (adj₁.counit.app X) s.π _).1, _, _⟩
     · rw [← cancel_epi (adj₁.counit.app (regular_epi.W (adj₁.counit.app X)))]
       rw [← adj₁.counit_naturality_assoc]
-      dsimp' only [functor.comp_obj]
+      dsimp' only [← functor.comp_obj]
       rw [← s.condition, ← F.map_comp_assoc, ← U.map_comp, regular_epi.w, U.map_comp, F.map_comp_assoc, s.condition, ←
         adj₁.counit_naturality_assoc]
       
@@ -111,7 +111,7 @@ instance (X : B) : IsReflexivePair (F'.map (U.map (adj₁.counit.app X))) (other
       rw [← F'.map_comp, adj₁.right_triangle_components]
       apply F'.map_id)
     (by
-      dsimp' [other_map]
+      dsimp' [← other_map]
       rw [← F'.map_comp_assoc, U.map_comp, adj₁.unit_naturality_assoc, adj₁.right_triangle_components, comp_id,
         adj₂.left_triangle_components])
 
@@ -195,7 +195,7 @@ noncomputable def monadicAdjointTriangleLift (U : B ⥤ C) [MonadicRightAdjoint 
       (iso_whisker_left R (monad.comparison_forget (adjunction.of_right_adjoint U)).symm : _)
   let this : ∀ X, regular_epi ((monad.adj (adjunction.of_right_adjoint U).toMonad).counit.app X) := by
     intro X
-    simp only [monad.adj_counit]
+    simp only [← monad.adj_counit]
     exact ⟨_, _, _, _, monad.beck_algebra_coequalizer X⟩
   exact adjoint_triangle_lift R' (monad.adj _)
 

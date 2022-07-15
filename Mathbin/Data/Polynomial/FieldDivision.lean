@@ -3,11 +3,8 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 -/
-import Mathbin.Algebra.GcdMonoid.Basic
 import Mathbin.Data.Polynomial.Derivative
 import Mathbin.Data.Polynomial.RingDivision
-import Mathbin.Data.Set.Pairwise
-import Mathbin.RingTheory.Coprime.Lemmas
 import Mathbin.RingTheory.EuclideanDomain
 
 /-!
@@ -32,22 +29,18 @@ section IsDomain
 
 variable [CommRingₓ R] [IsDomain R]
 
-theorem prod_multiset_root_eq_finset_root {p : R[X]} :
-    (Multiset.map (fun a : R => X - c a) p.roots).Prod = ∏ a in p.roots.toFinset, (X - c a) ^ rootMultiplicity a p := by
-  simp only [count_roots, Finset.prod_multiset_map_count]
-
 theorem roots_C_mul (p : R[X]) {a : R} (hzero : a ≠ 0) : (c a * p).roots = p.roots := by
   by_cases' hpzero : p = 0
-  · simp only [hpzero, mul_zero]
+  · simp only [← hpzero, ← mul_zero]
     
   rw [Multiset.ext]
   intro b
   have prodzero : C a * p ≠ 0 := by
-    simp only [hpzero, or_falseₓ, Ne.def, mul_eq_zero, C_eq_zero, hzero, not_false_iff]
+    simp only [← hpzero, ← or_falseₓ, ← Ne.def, ← mul_eq_zero, ← C_eq_zero, ← hzero, ← not_false_iff]
   rw [count_roots, count_roots, root_multiplicity_mul prodzero]
   have mulzero : root_multiplicity b (C a) = 0 := by
-    simp only [hzero, root_multiplicity_eq_zero, eval_C, is_root.def, not_false_iff]
-  simp only [mulzero, zero_addₓ]
+    simp only [← hzero, ← root_multiplicity_eq_zero, ← eval_C, ← is_root.def, ← not_false_iff]
+  simp only [← mulzero, ← zero_addₓ]
 
 theorem derivative_root_multiplicity_of_root [CharZero R] {p : R[X]} {t : R} (hpt : p.IsRoot t) :
     p.derivative.rootMultiplicity t = p.rootMultiplicity t - 1 := by
@@ -55,7 +48,8 @@ theorem derivative_root_multiplicity_of_root [CharZero R] {p : R[X]} {t : R} (hp
   · simp
     
   nth_rw 0[← p.div_by_monic_mul_pow_root_multiplicity_eq t]
-  simp only [derivative_pow, derivative_mul, derivative_sub, derivative_X, derivative_C, sub_zero, mul_oneₓ]
+  simp only [← derivative_pow, ← derivative_mul, ← derivative_sub, ← derivative_X, ← derivative_C, ← sub_zero, ←
+    mul_oneₓ]
   set n := p.root_multiplicity t - 1
   have hn : n + 1 = _ := tsub_add_cancel_of_le ((root_multiplicity_pos hp).mpr hpt)
   rw [← hn]
@@ -115,14 +109,14 @@ instance : NormalizationMonoid R[X] where
 
 @[simp]
 theorem coe_norm_unit {p : R[X]} : (normUnit p : R[X]) = c ↑(normUnit p.leadingCoeff) := by
-  simp [norm_unit]
+  simp [← norm_unit]
 
 theorem leading_coeff_normalize (p : R[X]) : leadingCoeff (normalize p) = normalize (leadingCoeff p) := by
   simp
 
 theorem Monic.normalize_eq_self {p : R[X]} (hp : p.Monic) : normalize p = p := by
-  simp only [Polynomial.coe_norm_unit, normalize_apply, hp.leading_coeff, norm_unit_one, Units.coe_one,
-    polynomial.C.map_one, mul_oneₓ]
+  simp only [← Polynomial.coe_norm_unit, ← normalize_apply, ← hp.leading_coeff, ← norm_unit_one, ← Units.coe_one, ←
+    polynomial.C.map_one, ← mul_oneₓ]
 
 theorem roots_normalize {p : R[X]} : (normalize p).roots = p.roots := by
   rw [normalize_apply, mul_comm, coe_norm_unit, roots_C_mul _ (norm_unit (leading_coeff p)).ne_zero]
@@ -156,7 +150,7 @@ theorem degree_mul_leading_coeff_inv (p : R[X]) (h : q ≠ 0) : degree (p * c (l
 
 @[simp]
 theorem map_eq_zero [Semiringₓ S] [Nontrivial S] (f : R →+* S) : p.map f = 0 ↔ p = 0 := by
-  simp only [Polynomial.ext_iff, f.map_eq_zero, coeff_map, coeff_zero]
+  simp only [← Polynomial.ext_iff, ← f.map_eq_zero, ← coeff_map, ← coeff_zero]
 
 theorem map_ne_zero [Semiringₓ S] [Nontrivial S] {f : R →+* S} (hp : p ≠ 0) : p.map f ≠ 0 :=
   mt (map_eq_zero f).1 hp
@@ -170,7 +164,7 @@ variable [Field R] {p q : R[X]}
 theorem is_unit_iff_degree_eq_zero : IsUnit p ↔ degree p = 0 :=
   ⟨degree_eq_zero_of_is_unit, fun h =>
     have : degree p ≤ 0 := by
-      simp [*, le_reflₓ]
+      simp [*, ← le_reflₓ]
     have hc : coeff p 0 ≠ 0 := fun hc => by
       rw [eq_C_of_degree_le_zero this, hc] at h <;> simpa using h
     is_unit_iff_dvd_one.2
@@ -208,7 +202,7 @@ def mod (p q : R[X]) :=
 
 private theorem quotient_mul_add_remainder_eq_aux (p q : R[X]) : q * div p q + mod p q = p :=
   if h : q = 0 then by
-    simp only [h, zero_mul, mod, mod_by_monic_zero, zero_addₓ]
+    simp only [← h, ← zero_mul, ← mod, ← mod_by_monic_zero, ← zero_addₓ]
   else by
     conv => rhs rw [← mod_by_monic_add_div p (monic_mul_leading_coeff_inv h)]
     rw [div, mod, add_commₓ, mul_assoc]
@@ -230,11 +224,11 @@ theorem mod_def : p % q = p %ₘ (q * c (leadingCoeff q)⁻¹) :=
 
 theorem mod_by_monic_eq_mod (p : R[X]) (hq : Monic q) : p %ₘ q = p % q :=
   show p %ₘ q = p %ₘ (q * c (leadingCoeff q)⁻¹) by
-    simp only [monic.def.1 hq, inv_one, mul_oneₓ, C_1]
+    simp only [← monic.def.1 hq, ← inv_one, ← mul_oneₓ, ← C_1]
 
 theorem div_by_monic_eq_div (p : R[X]) (hq : Monic q) : p /ₘ q = p / q :=
   show p /ₘ q = c (leadingCoeff q)⁻¹ * (p /ₘ (q * c (leadingCoeff q)⁻¹)) by
-    simp only [monic.def.1 hq, inv_one, C_1, one_mulₓ, mul_oneₓ]
+    simp only [← monic.def.1 hq, ← inv_one, ← C_1, ← one_mulₓ, ← mul_oneₓ]
 
 theorem mod_X_sub_C_eq_C_eval (p : R[X]) (a : R) : p % (X - c a) = c (p.eval a) :=
   mod_by_monic_eq_mod p (monic_X_sub_C a) ▸ mod_by_monic_X_sub_C_eq_C_eval _ _
@@ -245,7 +239,7 @@ theorem mul_div_eq_iff_is_root : (X - c a) * (p / (X - c a)) = p ↔ IsRoot p a 
 instance : EuclideanDomain R[X] :=
   { Polynomial.commRing, Polynomial.nontrivial with Quotient := (· / ·),
     quotient_zero := by
-      simp [div_def],
+      simp [← div_def],
     remainder := (· % ·), R := _, r_well_founded := degree_lt_wf,
     quotient_mul_add_remainder_eq := quotient_mul_add_remainder_eq_aux,
     remainder_lt := fun p q hq => remainder_lt_aux _ hq,
@@ -258,7 +252,7 @@ theorem mod_eq_self_iff (hq0 : q ≠ 0) : p % q = p ↔ degree p < degree q :=
         rwa [degree_mul_leading_coeff_inv q hq0]
     rw [mod_def, mod_by_monic, dif_pos (monic_mul_leading_coeff_inv hq0)]
     unfold div_mod_by_monic_aux
-    simp only [this, false_andₓ, if_false]⟩
+    simp only [← this, ← false_andₓ, ← if_false]⟩
 
 theorem div_eq_zero_iff (hq0 : q ≠ 0) : p / q = 0 ↔ degree p < degree q :=
   ⟨fun h => by
@@ -278,13 +272,13 @@ theorem degree_add_div (hq0 : q ≠ 0) (hpq : degree q ≤ degree p) : degree q 
 
 theorem degree_div_le (p q : R[X]) : degree (p / q) ≤ degree p :=
   if hq : q = 0 then by
-    simp [hq]
+    simp [← hq]
   else by
     rw [div_def, mul_comm, degree_mul_leading_coeff_inv _ hq] <;> exact degree_div_by_monic_le _ _
 
 theorem degree_div_lt (hp : p ≠ 0) (hq : 0 < degree q) : degree (p / q) < degree p := by
   have hq0 : q ≠ 0 := fun hq0 => by
-    simpa [hq0] using hq
+    simpa [← hq0] using hq
   rw [div_def, mul_comm, degree_mul_leading_coeff_inv _ hq0] <;>
     exact
       degree_div_by_monic_lt _ (monic_mul_leading_coeff_inv hq0) hp
@@ -301,7 +295,7 @@ theorem nat_degree_map [DivisionRing k] (f : R →+* k) : natDegree (p.map f) = 
 
 @[simp]
 theorem leading_coeff_map [DivisionRing k] (f : R →+* k) : leadingCoeff (p.map f) = f (leadingCoeff p) := by
-  simp only [← coeff_nat_degree, coeff_map f, nat_degree_map]
+  simp only [coeff_nat_degree, ← coeff_map f, ← nat_degree_map]
 
 theorem monic_map_iff [DivisionRing k] {f : R →+* k} {p : R[X]} : (p.map f).Monic ↔ p.Monic := by
   rw [monic, leading_coeff_map, ← f.map_one, Function.Injective.eq_iff f.injective, monic]
@@ -311,14 +305,14 @@ theorem is_unit_map [Field k] (f : R →+* k) : IsUnit (p.map f) ↔ IsUnit p :=
 
 theorem map_div [Field k] (f : R →+* k) : (p / q).map f = p.map f / q.map f :=
   if hq0 : q = 0 then by
-    simp [hq0]
+    simp [← hq0]
   else by
     rw [div_def, div_def, Polynomial.map_mul, map_div_by_monic f (monic_mul_leading_coeff_inv hq0)] <;>
-      simp [f.map_inv, coeff_map f]
+      simp [← f.map_inv, ← coeff_map f]
 
 theorem map_mod [Field k] (f : R →+* k) : (p % q).map f = p.map f % q.map f :=
   if hq0 : q = 0 then by
-    simp [hq0]
+    simp [← hq0]
   else by
     rw [mod_def, mod_def, leading_coeff_map f, ← f.map_inv, ← map_C f, ← Polynomial.map_mul f,
       map_mod_by_monic f (monic_mul_leading_coeff_inv hq0)]
@@ -367,7 +361,7 @@ theorem is_coprime_map [Field k] (f : R →+* k) : IsCoprime (p.map f) (q.map f)
 
 theorem mem_roots_map [Field k] {f : R →+* k} {x : k} (hp : p ≠ 0) : x ∈ (p.map f).roots ↔ p.eval₂ f x = 0 := by
   rw [mem_roots (show p.map f ≠ 0 from map_ne_zero hp)]
-  dsimp' only [is_root]
+  dsimp' only [← is_root]
   rw [Polynomial.eval_map]
 
 theorem mem_root_set [Field k] [Algebra R k] {x : k} (hp : p ≠ 0) : x ∈ p.RootSet k ↔ aeval x p = 0 :=
@@ -398,13 +392,13 @@ theorem exists_root_of_degree_eq_one (h : degree p = 1) : ∃ x, IsRoot p x :=
       rw [← nat_degree_eq_of_degree_eq_some h] <;>
         exact
           mt leading_coeff_eq_zero.1 fun h0 => by
-            simpa [h0] using h
+            simpa [← h0] using h
     conv in p =>
         rw
           [eq_X_add_C_of_degree_le_one
             (show degree p ≤ 1 by
               rw [h] <;> exact le_rfl)] <;>
-      simp [is_root, mul_div_cancel' _ this]⟩
+      simp [← is_root, ← mul_div_cancel' _ this]⟩
 
 theorem coeff_inv_units (u : R[X]ˣ) (n : ℕ) : ((↑u : R[X]).coeff n)⁻¹ = (↑u⁻¹ : R[X]).coeff n := by
   rw [eq_C_of_degree_eq_zero (degree_coe_units u), eq_C_of_degree_eq_zero (degree_coe_units u⁻¹), coeff_C, coeff_C,
@@ -424,7 +418,7 @@ theorem monic_normalize (hp0 : p ≠ 0) : Monic (normalize p) := by
 
 theorem leading_coeff_div (hpq : q.degree ≤ p.degree) : (p / q).leadingCoeff = p.leadingCoeff / q.leadingCoeff := by
   by_cases' hq : q = 0
-  · simp [hq]
+  · simp [← hq]
     
   rw [div_def, leading_coeff_mul, leading_coeff_C,
     leading_coeff_div_by_monic_of_monic (monic_mul_leading_coeff_inv hq) _, mul_comm, div_eq_mul_inv]
@@ -432,9 +426,9 @@ theorem leading_coeff_div (hpq : q.degree ≤ p.degree) : (p / q).leadingCoeff =
 
 theorem div_C_mul : p / (c a * q) = c a⁻¹ * (p / q) := by
   by_cases' ha : a = 0
-  · simp [ha]
+  · simp [← ha]
     
-  simp only [div_def, leading_coeff_mul, mul_inv, leading_coeff_C, C.map_mul, mul_assoc]
+  simp only [← div_def, ← leading_coeff_mul, ← mul_inv, ← leading_coeff_C, ← C.map_mul, ← mul_assoc]
   congr 3
   rw [mul_left_commₓ q, ← mul_assoc, ← C.map_mul, mul_inv_cancel ha, C.map_one, one_mulₓ]
 
@@ -451,10 +445,10 @@ theorem dvd_C_mul (ha : a ≠ 0) : p ∣ Polynomial.c a * q ↔ p ∣ q :=
 
 theorem coe_norm_unit_of_ne_zero (hp : p ≠ 0) : (normUnit p : R[X]) = c p.leadingCoeff⁻¹ := by
   have : p.leadingCoeff ≠ 0 := mt leading_coeff_eq_zero.mp hp
-  simp [CommGroupWithZero.coe_norm_unit _ this]
+  simp [← CommGroupWithZero.coe_norm_unit _ this]
 
 theorem normalize_monic (h : Monic p) : normalize p = p := by
-  simp [h]
+  simp [← h]
 
 theorem map_dvd_map' [Field k] (f : R →+* k) {x y : R[X]} : x.map f ∣ y.map f ↔ x ∣ y :=
   if H : x = 0 then by
@@ -492,13 +486,6 @@ theorem degree_pos_of_irreducible (hp : Irreducible p) : 0 < p.degree :=
     have := eq_C_of_degree_le_zero hp0
     not_irreducible_C (p.coeff 0) <| this ▸ hp
 
-theorem pairwise_coprime_X_sub {α : Type u} [Field α] {I : Type v} {s : I → α} (H : Function.Injective s) :
-    Pairwise (IsCoprime on fun i : I => Polynomial.x - Polynomial.c (s i)) := fun i j hij =>
-  have h : s j - s i ≠ 0 := sub_ne_zero_of_ne <| Function.Injective.ne H hij.symm
-  ⟨Polynomial.c (s j - s i)⁻¹, -Polynomial.c (s j - s i)⁻¹, by
-    rw [neg_mul, ← sub_eq_add_neg, ← mul_sub, sub_sub_sub_cancel_left, ← Polynomial.C_sub, ← Polynomial.C_mul,
-      inv_mul_cancel h, Polynomial.C_1]⟩
-
 /-- If `f` is a polynomial over a field, and `a : K` satisfies `f' a ≠ 0`,
 then `f / (X - a)` is coprime with `X - a`.
 Note that we do not assume `f a = 0`, because `f / (X - a) = (f - f a) / (X - a)`. -/
@@ -514,24 +501,11 @@ theorem is_coprime_of_is_root_of_eval_derivative_ne_zero {K : Type _} [Field K] 
     rw [eq_sub_iff_add_eq, ← eq_sub_iff_add_eq', mod_by_monic_eq_sub_mul_div]
     exact monic_X_sub_C a
   replace key := congr_arg derivative key
-  simp only [derivative_X, derivative_mul, one_mulₓ, sub_zero, derivative_sub, mod_by_monic_X_sub_C_eq_C_eval,
-    derivative_C] at key
+  simp only [← derivative_X, ← derivative_mul, ← one_mulₓ, ← sub_zero, ← derivative_sub, ←
+    mod_by_monic_X_sub_C_eq_C_eval, ← derivative_C] at key
   have : X - C a ∣ derivative f := key ▸ dvd_add h (dvd_mul_right _ _)
   rw [← dvd_iff_mod_by_monic_eq_zero (monic_X_sub_C _), mod_by_monic_X_sub_C_eq_C_eval] at this
   rw [← C_inj, this, C_0]
-
-/-- The product `∏ (X - a)` for `a` inside the multiset `p.roots` divides `p`. -/
-theorem prod_multiset_X_sub_C_dvd (p : R[X]) : (Multiset.map (fun a : R => X - c a) p.roots).Prod ∣ p := by
-  rw [prod_multiset_root_eq_finset_root]
-  have hcoprime : Pairwise (IsCoprime on fun a : R => Polynomial.x - C (id a)) :=
-    pairwise_coprime_X_sub Function.injective_id
-  have H : Pairwise (IsCoprime on fun a : R => (Polynomial.x - C (id a)) ^ root_multiplicity a p) := by
-    intro a b hdiff
-    exact (hcoprime a b hdiff).pow
-  apply Finset.prod_dvd_of_coprime (H.set_pairwise (↑(Multiset.toFinset p.roots) : Set R))
-  intro a h
-  rw [Multiset.mem_to_finset] at h
-  exact pow_root_multiplicity_dvd p a
 
 end Field
 

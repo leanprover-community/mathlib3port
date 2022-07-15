@@ -3,8 +3,7 @@ Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.Data.Fin.Basic
-import Mathbin.Data.Fintype.Basic
+import Mathbin.Data.Fin.Interval
 
 /-!
 # The structure of `fintype (fin n)`
@@ -21,10 +20,9 @@ open Fintype
 namespace Finₓ
 
 @[simp]
-theorem univ_filter_zero_lt {n : ℕ} :
-    ((univ : Finset (Finₓ n.succ)).filter fun i => 0 < i) = univ.map (Finₓ.succEmbedding _).toEmbedding := by
+theorem Ioi_zero_eq_map {n : ℕ} : ioi (0 : Finₓ n.succ) = univ.map (Finₓ.succEmbedding _).toEmbedding := by
   ext i
-  simp only [mem_filter, mem_map, mem_univ, true_andₓ, Function.Embedding.coe_fn_mk, exists_true_left]
+  simp only [← mem_Ioi, ← mem_map, ← mem_univ, ← Function.Embedding.coe_fn_mk, ← exists_true_left]
   constructor
   · refine' cases _ _ i
     · rintro ⟨⟨⟩⟩
@@ -38,12 +36,10 @@ theorem univ_filter_zero_lt {n : ℕ} :
     
 
 @[simp]
-theorem univ_filter_succ_lt {n : ℕ} (j : Finₓ n) :
-    ((univ : Finset (Finₓ n.succ)).filter fun i => j.succ < i) =
-      (univ.filter fun i => j < i).map (Finₓ.succEmbedding _).toEmbedding :=
-  by
+theorem Ioi_succ {n : ℕ} (i : Finₓ n) : ioi i.succ = (ioi i).map (Finₓ.succEmbedding _).toEmbedding := by
   ext i
-  simp only [mem_filter, mem_map, mem_univ, true_andₓ, Function.Embedding.coe_fn_mk, exists_true_left]
+  simp only [← mem_filter, ← mem_Ioi, ← mem_map, ← mem_univ, ← true_andₓ, ← Function.Embedding.coe_fn_mk, ←
+    exists_true_left]
   constructor
   · refine' cases _ _ i
     · rintro ⟨⟨⟩⟩

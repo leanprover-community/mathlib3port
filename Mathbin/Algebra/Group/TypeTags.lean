@@ -106,11 +106,9 @@ instance [Nontrivial α] : Nontrivial (Additive α) :=
 instance [Nontrivial α] : Nontrivial (Multiplicative α) :=
   Multiplicative.ofAdd.Injective.Nontrivial
 
-instance Additive.hasAdd [Mul α] : Add (Additive α) where
-  add := fun x y => Additive.ofMul (x.toMul * y.toMul)
+instance Additive.hasAdd [Mul α] : Add (Additive α) where add := fun x y => Additive.ofMul (x.toMul * y.toMul)
 
-instance [Add α] : Mul (Multiplicative α) where
-  mul := fun x y => Multiplicative.ofAdd (x.toAdd + y.toAdd)
+instance [Add α] : Mul (Multiplicative α) where mul := fun x y => Multiplicative.ofAdd (x.toAdd + y.toAdd)
 
 @[simp]
 theorem of_add_add [Add α] (x y : α) : Multiplicative.ofAdd (x + y) = Multiplicative.ofAdd x * Multiplicative.ofAdd y :=
@@ -242,11 +240,10 @@ theorem of_add_neg [Neg α] (x : α) : Multiplicative.ofAdd (-x) = (Multiplicati
 theorem to_add_inv [Neg α] (x : Multiplicative α) : x⁻¹.toAdd = -x.toAdd :=
   rfl
 
-instance Additive.hasSub [Div α] : Sub (Additive α) where
-  sub := fun x y => Additive.ofMul (x.toMul / y.toMul)
+instance Additive.hasSub [Div α] : Sub (Additive α) where sub := fun x y => Additive.ofMul (x.toMul / y.toMul)
 
-instance Multiplicative.hasDiv [Sub α] : Div (Multiplicative α) where
-  div := fun x y => Multiplicative.ofAdd (x.toAdd - y.toAdd)
+instance Multiplicative.hasDiv [Sub α] :
+    Div (Multiplicative α) where div := fun x y => Multiplicative.ofAdd (x.toAdd - y.toAdd)
 
 @[simp]
 theorem of_add_sub [Sub α] (x y : α) : Multiplicative.ofAdd (x - y) = Multiplicative.ofAdd x / Multiplicative.ofAdd y :=

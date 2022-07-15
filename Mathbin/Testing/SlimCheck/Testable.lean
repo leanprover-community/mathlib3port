@@ -182,7 +182,7 @@ variable (f : Type → Prop)
 
 namespace SlimCheck
 
--- ././Mathport/Syntax/Translate/Basic.lean:1231:30: infer kinds are unsupported in Lean 4: gave_up {}
+-- ./././Mathport/Syntax/Translate/Basic.lean:1387:30: infer kinds are unsupported in Lean 4: gave_up {}
 /-- Result of trying to disprove `p`
 
 The constructors are:
@@ -250,7 +250,7 @@ class PrintablePropₓ (p : Prop) where
 instance (priority := 100) defaultPrintableProp {p} : PrintablePropₓ p :=
   ⟨none⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`run] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`run] []
 /-- `testable p` uses random examples to try to disprove `p`. -/
 class Testableₓ (p : Prop) where
   run (cfg : SlimCheckCfg) (minimize : Bool) : Genₓ (TestResultₓ p)
@@ -435,7 +435,7 @@ instance (priority := 5000) testForallInList [∀ x, Testableₓ (β x)] [HasRep
                   (combine
                     (PSum.inr <| by
                       intro j h
-                      simp only [ball_cons, named_binder]
+                      simp only [← ball_cons, ← named_binder]
                       constructor <;> assumption)
                     hp)
           | gave_up n => do
@@ -446,7 +446,7 @@ instance (priority := 5000) testForallInList [∀ x, Testableₓ (β x)] [HasRep
                 return <|
                   failure
                     (by
-                      simp only [ball_cons, named_binder]
+                      simp only [← ball_cons, ← named_binder]
                       apply not_and_of_not_right _ Hce)
                     xs n
               | gave_up n' => return <| gave_up (n + n')⟩
@@ -550,7 +550,7 @@ instance varTestable [SampleableExtₓ α] [∀ x, Testableₓ (β x)] : Testabl
 instance propVarTestable (β : Prop → Prop) [I : ∀ b : Bool, Testableₓ (β b)] :
     Testableₓ (NamedBinderₓ var <| ∀ p : Prop, β p) :=
   ⟨fun cfg min => do
-    (convert_counter_example fun b : Bool => h b) <$> @testable.run (named_binder var <| ∀ b : Bool, β b) _ cfg min⟩
+    (convert_counter_example fun h b : Bool => h b) <$> @testable.run (named_binder var <| ∀ b : Bool, β b) _ cfg min⟩
 
 instance (priority := 3000) unusedVarTestable β [Inhabited α] [Testableₓ β] :
     Testableₓ (NamedBinderₓ var <| ∀ x : α, β) :=
@@ -568,7 +568,7 @@ instance (priority := 2000) subtypeVarTestable {p : α → Prop} [∀ x, Printab
           | none => pure r
           | some str => pure <| add_to_counter_example (s! "guard: {str} (by construction)") id r (PSum.inr id)⟩
     let r ← @Testableₓ.run (∀ x : Subtype p, β x.val) (@SlimCheck.varTestable var _ _ I test) cfg min
-    pure <| convert_counter_example' ⟨fun x h' => h ⟨x, h'⟩, fun h ⟨x, h'⟩ => h x h'⟩ r⟩
+    pure <| convert_counter_example' ⟨fun h : ∀ x : Subtype p, β x x h' => h ⟨x, h'⟩, fun h ⟨x, h'⟩ => h x h'⟩ r⟩
 
 instance (priority := 100) decidableTestable (p : Prop) [PrintablePropₓ p] [Decidable p] : Testableₓ p :=
   ⟨fun cfg min =>

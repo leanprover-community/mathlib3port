@@ -36,7 +36,7 @@ open Tactic Expr
 private unsafe def illegal_ge_gt : List Name :=
   [`gt, `ge]
 
--- ././Mathport/Syntax/Translate/Basic.lean:209:40: warning: unsupported option eqn_compiler.max_steps
+-- ./././Mathport/Syntax/Translate/Basic.lean:293:40: warning: unsupported option eqn_compiler.max_steps
 set_option eqn_compiler.max_steps 20000
 
 /-- Checks whether `≥` and `>` occurs in an illegal way in the expression.
@@ -53,15 +53,15 @@ set_option eqn_compiler.max_steps 20000
 -/
 private unsafe def contains_illegal_ge_gt : expr → Bool
   | const nm us => if nm ∈ illegal_ge_gt then true else false
-  | app f e@(app (app (const nm us) tp) Tc) =>
+  | app f e@(app (app (const nm us) tp) tc) =>
     contains_illegal_ge_gt f || if nm ∈ illegal_ge_gt then false else contains_illegal_ge_gt e
-  | app (app custom_binder (app (app (app (app (const nm us) tp) Tc) (var 0)) t)) e@(lam var_name bi var_type body) =>
+  | app (app custom_binder (app (app (app (app (const nm us) tp) tc) (var 0)) t)) e@(lam var_name bi var_type body) =>
     contains_illegal_ge_gt e || if nm ∈ illegal_ge_gt then false else contains_illegal_ge_gt e
   | app f x => contains_illegal_ge_gt f || contains_illegal_ge_gt x
-  | lam `H bi (type@(app (app (app (app (const nm us) tp) Tc) (var 0)) t)) body =>
+  | lam `H bi (type@(app (app (app (app (const nm us) tp) tc) (var 0)) t)) body =>
     contains_illegal_ge_gt body || if nm ∈ illegal_ge_gt then false else contains_illegal_ge_gt type
   | lam var_name bi var_type body => contains_illegal_ge_gt var_type || contains_illegal_ge_gt body
-  | pi `H bi (type@(app (app (app (app (const nm us) tp) Tc) (var 0)) t)) body =>
+  | pi `H bi (type@(app (app (app (app (const nm us) tp) tc) (var 0)) t)) body =>
     contains_illegal_ge_gt body || if nm ∈ illegal_ge_gt then false else contains_illegal_ge_gt type
   | pi var_name bi var_type body => contains_illegal_ge_gt var_type || contains_illegal_ge_gt body
   | elet var_name type assignment body =>

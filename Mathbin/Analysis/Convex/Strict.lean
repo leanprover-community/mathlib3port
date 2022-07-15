@@ -33,9 +33,9 @@ section AddCommMonoidₓ
 
 variable [AddCommMonoidₓ E] [AddCommMonoidₓ F]
 
-section HasScalar
+section HasSmul
 
-variable (𝕜) [HasScalar 𝕜 E] [HasScalar 𝕜 F] (s : Set E)
+variable (𝕜) [HasSmul 𝕜 E] [HasSmul 𝕜 F] (s : Set E)
 
 /-- A set is strictly convex if the open segment between any two distinct points lies is in its
 interior. This basically means "convex and not flat on the boundary". -/
@@ -84,7 +84,7 @@ theorem DirectedOn.strict_convex_sUnion {S : Set (Set E)} (hdir : DirectedOn (·
   rw [sUnion_eq_Union]
   exact (directed_on_iff_directed.1 hdir).strict_convex_Union fun s => hS _ s.2
 
-end HasScalar
+end HasSmul
 
 section Module
 
@@ -187,7 +187,7 @@ theorem StrictConvex.preimage_add_right (hs : StrictConvex 𝕜 s) (z : E) : Str
 
 /-- The translation of a strictly convex set is also strictly convex. -/
 theorem StrictConvex.preimage_add_left (hs : StrictConvex 𝕜 s) (z : E) : StrictConvex 𝕜 ((fun x => x + z) ⁻¹' s) := by
-  simpa only [add_commₓ] using hs.preimage_add_right z
+  simpa only [← add_commₓ] using hs.preimage_add_right z
 
 end AddCancelCommMonoid
 
@@ -211,10 +211,10 @@ theorem StrictConvex.add (hs : StrictConvex 𝕜 s) (ht : StrictConvex 𝕜 t) :
   exact subset_interior_add_left (add_mem_add (hs hv hx hvx ha hb hab) <| ht.convex hw hy ha.le hb.le hab)
 
 theorem StrictConvex.add_left (hs : StrictConvex 𝕜 s) (z : E) : StrictConvex 𝕜 ((fun x => z + x) '' s) := by
-  simpa only [singleton_add] using (strict_convex_singleton z).add hs
+  simpa only [← singleton_add] using (strict_convex_singleton z).add hs
 
 theorem StrictConvex.add_right (hs : StrictConvex 𝕜 s) (z : E) : StrictConvex 𝕜 ((fun x => x + z) '' s) := by
-  simpa only [add_commₓ] using hs.add_left z
+  simpa only [← add_commₓ] using hs.add_left z
 
 /-- The translation of a strictly convex set is also strictly convex. -/
 theorem StrictConvex.vadd (hs : StrictConvex 𝕜 s) (x : E) : StrictConvex 𝕜 (x +ᵥ s) :=
@@ -252,7 +252,7 @@ section AddCommGroupₓ
 
 variable [AddCommGroupₓ E] [Module 𝕜 E] [NoZeroSmulDivisors 𝕜 E] [HasContinuousConstSmul 𝕜 E] {s : Set E}
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem StrictConvex.preimage_smul (hs : StrictConvex 𝕜 s) (c : 𝕜) : StrictConvex 𝕜 ((fun z => c • z) ⁻¹' s) := by
   classical
   obtain rfl | hc := eq_or_ne c 0
@@ -279,7 +279,7 @@ section AddCommGroupₓ
 
 variable [AddCommGroupₓ E] [AddCommGroupₓ F] [Module 𝕜 E] [Module 𝕜 F] {s t : Set E} {x y : E}
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem StrictConvex.eq_of_open_segment_subset_frontier [Nontrivial 𝕜] [DenselyOrdered 𝕜] (hs : StrictConvex 𝕜 s)
     (hx : x ∈ s) (hy : y ∈ s) (h : OpenSegment 𝕜 x y ⊆ Frontier s) : x = y := by
   obtain ⟨a, ha₀, ha₁⟩ := DenselyOrdered.dense (0 : 𝕜) 1 zero_lt_one

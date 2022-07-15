@@ -45,8 +45,8 @@ variable {x : α} {S : Set α} (h : IsGenericPoint x S)
 
 include h
 
-theorem IsGenericPoint.specializes {y : α} (h' : y ∈ S) : x ⤳ y := by
-  rwa [← h.def] at h'
+theorem IsGenericPoint.specializes {y : α} (h' : y ∈ S) : x ⤳ y :=
+  specializes_iff_mem_closure.2 <| h.def.symm ▸ h'
 
 theorem IsGenericPoint.mem : x ∈ S :=
   h.def ▸ subset_closure (Set.mem_singleton x)
@@ -58,7 +58,7 @@ theorem IsGenericPoint.is_irreducible : IsIrreducible S :=
   h.def ▸ is_irreducible_singleton.closure
 
 theorem IsGenericPoint.eq [T0Space α] {y : α} (h' : IsGenericPoint y S) : x = y :=
-  specializes_antisymm _ _ (h.Specializes h'.Mem) (h'.Specializes h.Mem)
+  ((h.Specializes h'.Mem).antisymm (h'.Specializes h.Mem)).Eq
 
 theorem IsGenericPoint.mem_open_set_iff {U : Set α} (hU : IsOpen U) : x ∈ U ↔ (S ∩ U).Nonempty :=
   ⟨fun h' => ⟨x, h.Mem, h'⟩, fun h' =>
@@ -153,7 +153,7 @@ noncomputable def irreducibleSetEquivPoints [QuasiSober α] [T0Space α] :
   map_rel_iff' := fun s t => by
     change _ ⤳ _ ↔ _
     rw [specializes_iff_closure_subset]
-    simp [s.prop.2.closure_eq, t.prop.2.closure_eq, ← Subtype.coe_le_coe]
+    simp [← s.prop.2.closure_eq, ← t.prop.2.closure_eq, Subtype.coe_le_coe]
 
 theorem ClosedEmbedding.quasi_sober {f : α → β} (hf : ClosedEmbedding f) [QuasiSober β] : QuasiSober α := by
   constructor
@@ -186,7 +186,7 @@ theorem OpenEmbedding.quasi_sober {f : α → β} (hf : OpenEmbedding f) [QuasiS
   rw [hf.to_embedding.closure_eq_preimage_closure_image, Set.image_singleton, show _ = _ from hx]
   apply set.image_injective.mpr hf.inj
   ext z
-  simp only [Set.image_preimage_eq_inter_range, Set.mem_inter_eq, And.congr_left_iff]
+  simp only [← Set.image_preimage_eq_inter_range, ← Set.mem_inter_eq, ← And.congr_left_iff]
   exact fun hy => ⟨fun h => hT.closure_eq ▸ closure_mono (Set.inter_subset_left _ _) h, fun h => subset_closure ⟨h, hy⟩⟩
 
 /-- A space is quasi sober if it can be covered by open quasi sober subsets. -/

@@ -38,7 +38,7 @@ open CategoryTheory
 namespace CategoryTheory.Limits
 
 /-- The type of objects for the diagram indexing a binary (co)product. -/
-inductive WalkingPair : Type v
+inductive WalkingPair : Type
   | left
   | right
   deriving DecidableEq, Inhabited
@@ -114,8 +114,8 @@ theorem pair_function_right (X Y : C) : pairFunction X Y right = Y :=
 variable [Category.{v} C]
 
 /-- The diagram on the walking pair, sending the two points to `X` and `Y`. -/
-def pair (X Y : C) : Discrete WalkingPair.{v} ⥤ C :=
-  Discrete.functor (pairFunction X Y)
+def pair (X Y : C) : Discrete WalkingPair ⥤ C :=
+  Discrete.functor fun j => WalkingPair.casesOn j X Y
 
 @[simp]
 theorem pair_obj_left (X Y : C) : (pair X Y).obj ⟨left⟩ = X :=
@@ -127,15 +127,14 @@ theorem pair_obj_right (X Y : C) : (pair X Y).obj ⟨right⟩ = Y :=
 
 section
 
-variable {F G : Discrete WalkingPair.{v} ⥤ C} (f : F.obj ⟨left⟩ ⟶ G.obj ⟨left⟩) (g : F.obj ⟨right⟩ ⟶ G.obj ⟨right⟩)
+variable {F G : Discrete WalkingPair ⥤ C} (f : F.obj ⟨left⟩ ⟶ G.obj ⟨left⟩) (g : F.obj ⟨right⟩ ⟶ G.obj ⟨right⟩)
 
 attribute [local tidy] tactic.discrete_cases
 
 /-- The natural transformation between two functors out of the
  walking pair, specified by its
 components. -/
-def mapPair : F ⟶ G where
-  app := fun j => Discrete.recOn j fun j => WalkingPair.casesOn j f g
+def mapPair : F ⟶ G where app := fun j => Discrete.recOn j fun j => WalkingPair.casesOn j f g
 
 @[simp]
 theorem map_pair_left : (mapPair f g).app ⟨left⟩ = f :=
@@ -190,6 +189,21 @@ theorem BinaryFan.π_app_left {X Y : C} (s : BinaryFan X Y) : s.π.app ⟨Walkin
 theorem BinaryFan.π_app_right {X Y : C} (s : BinaryFan X Y) : s.π.app ⟨WalkingPair.right⟩ = s.snd :=
   rfl
 
+/-- A convenient way to show that a binary fan is a limit. -/
+def BinaryFan.IsLimit.mk {X Y : C} (s : BinaryFan X Y) (lift : ∀ {T : C} f : T ⟶ X g : T ⟶ Y, T ⟶ s.x)
+    (hl₁ : ∀ {T : C} f : T ⟶ X g : T ⟶ Y, lift f g ≫ s.fst = f)
+    (hl₂ : ∀ {T : C} f : T ⟶ X g : T ⟶ Y, lift f g ≫ s.snd = g)
+    (uniq : ∀ {T : C} f : T ⟶ X g : T ⟶ Y m : T ⟶ s.x h₁ : m ≫ s.fst = f h₂ : m ≫ s.snd = g, m = lift f g) :
+    IsLimit s :=
+  IsLimit.mk (fun t => lift (BinaryFan.fst t) (BinaryFan.snd t))
+    (by
+      rintro t (rfl | rfl)
+      · exact hl₁ _ _
+        
+      · exact hl₂ _ _
+        )
+    fun t m h => uniq _ _ _ (h ⟨WalkingPair.left⟩) (h ⟨WalkingPair.right⟩)
+
 theorem BinaryFan.IsLimit.hom_ext {W X Y : C} {s : BinaryFan X Y} (h : IsLimit s) {f g : W ⟶ s.x}
     (h₁ : f ≫ s.fst = g ≫ s.fst) (h₂ : f ≫ s.snd = g ≫ s.snd) : f = g :=
   h.hom_ext fun j => Discrete.recOn j fun j => WalkingPair.casesOn j h₁ h₂
@@ -213,6 +227,21 @@ theorem BinaryCofan.ι_app_left {X Y : C} (s : BinaryCofan X Y) : s.ι.app ⟨Wa
 @[simp]
 theorem BinaryCofan.ι_app_right {X Y : C} (s : BinaryCofan X Y) : s.ι.app ⟨WalkingPair.right⟩ = s.inr :=
   rfl
+
+/-- A convenient way to show that a binary cofan is a colimit. -/
+def BinaryCofan.IsColimit.mk {X Y : C} (s : BinaryCofan X Y) (desc : ∀ {T : C} f : X ⟶ T g : Y ⟶ T, s.x ⟶ T)
+    (hd₁ : ∀ {T : C} f : X ⟶ T g : Y ⟶ T, s.inl ≫ desc f g = f)
+    (hd₂ : ∀ {T : C} f : X ⟶ T g : Y ⟶ T, s.inr ≫ desc f g = g)
+    (uniq : ∀ {T : C} f : X ⟶ T g : Y ⟶ T m : s.x ⟶ T h₁ : s.inl ≫ m = f h₂ : s.inr ≫ m = g, m = desc f g) :
+    IsColimit s :=
+  IsColimit.mk (fun t => desc (BinaryCofan.inl t) (BinaryCofan.inr t))
+    (by
+      rintro t (rfl | rfl)
+      · exact hd₁ _ _
+        
+      · exact hd₂ _ _
+        )
+    fun t m h => uniq _ _ _ (h ⟨WalkingPair.left⟩) (h ⟨WalkingPair.right⟩)
 
 theorem BinaryCofan.IsColimit.hom_ext {W X Y : C} {s : BinaryCofan X Y} (h : IsColimit s) {f g : s.x ⟶ W}
     (h₁ : s.inl ≫ f = s.inl ≫ g) (h₂ : s.inr ≫ f = s.inr ≫ g) : f = g :=
@@ -470,7 +499,7 @@ theorem prod.map_map {A₁ A₂ A₃ B₁ B₂ B₃ : C} [HasBinaryProduct A₁ 
 
 -- TODO: is it necessary to weaken the assumption here?
 @[reassoc]
-theorem prod.map_swap {A B X Y : C} (f : A ⟶ B) (g : X ⟶ Y) [HasLimitsOfShape (Discrete WalkingPair.{v}) C] :
+theorem prod.map_swap {A B X Y : C} (f : A ⟶ B) (g : X ⟶ Y) [HasLimitsOfShape (Discrete WalkingPair) C] :
     prod.map (𝟙 X) f ≫ prod.map g (𝟙 B) = prod.map g (𝟙 A) ≫ prod.map (𝟙 Y) f := by
   simp
 
@@ -518,12 +547,11 @@ theorem prod.diag_map_fst_snd {X Y : C} [HasBinaryProduct X Y] [HasBinaryProduct
   simp
 
 @[simp, reassoc]
-theorem prod.diag_map_fst_snd_comp [HasLimitsOfShape (Discrete WalkingPair.{v}) C] {X X' Y Y' : C} (g : X ⟶ Y)
+theorem prod.diag_map_fst_snd_comp [HasLimitsOfShape (Discrete WalkingPair) C] {X X' Y Y' : C} (g : X ⟶ Y)
     (g' : X' ⟶ Y') : diag (X ⨯ X') ≫ prod.map (Prod.fst ≫ g) (Prod.snd ≫ g') = prod.map g g' := by
   simp
 
-instance {X : C} [HasBinaryProduct X X] : SplitMono (diag X) where
-  retraction := prod.fst
+instance {X : C} [HasBinaryProduct X X] : SplitMono (diag X) where retraction := prod.fst
 
 end ProdLemmas
 
@@ -578,7 +606,7 @@ theorem coprod.map_map {A₁ A₂ A₃ B₁ B₂ B₃ : C} [HasBinaryCoproduct A
 
 -- I don't think it's a good idea to make any of the following three simp lemmas.
 @[reassoc]
-theorem coprod.map_swap {A B X Y : C} (f : A ⟶ B) (g : X ⟶ Y) [HasColimitsOfShape (Discrete WalkingPair.{v}) C] :
+theorem coprod.map_swap {A B X Y : C} (f : A ⟶ B) (g : X ⟶ Y) [HasColimitsOfShape (Discrete WalkingPair) C] :
     coprod.map (𝟙 X) f ≫ coprod.map g (𝟙 B) = coprod.map g (𝟙 A) ≫ coprod.map (𝟙 Y) f := by
   simp
 
@@ -629,7 +657,7 @@ theorem coprod.map_inl_inr_codiag {X Y : C} [HasBinaryCoproduct X Y] [HasBinaryC
 
 -- The simp linter says simp can prove the reassoc version of this lemma.
 @[reassoc, simp]
-theorem coprod.map_comp_inl_inr_codiag [HasColimitsOfShape (Discrete WalkingPair.{v}) C] {X X' Y Y' : C} (g : X ⟶ Y)
+theorem coprod.map_comp_inl_inr_codiag [HasColimitsOfShape (Discrete WalkingPair) C] {X X' Y Y' : C} (g : X ⟶ Y)
     (g' : X' ⟶ Y') : coprod.map (g ≫ coprod.inl) (g' ≫ coprod.inr) ≫ codiag (Y ⨿ Y') = coprod.map g g' := by
   simp
 
@@ -642,14 +670,14 @@ variable (C)
 See <https://stacks.math.columbia.edu/tag/001T>.
 -/
 abbrev HasBinaryProducts :=
-  HasLimitsOfShape (Discrete WalkingPair.{v}) C
+  HasLimitsOfShape (Discrete WalkingPair) C
 
 /-- `has_binary_coproducts` represents a choice of coproduct for every pair of objects.
 
 See <https://stacks.math.columbia.edu/tag/04AP>.
 -/
 abbrev HasBinaryCoproducts :=
-  HasColimitsOfShape (Discrete WalkingPair.{v}) C
+  HasColimitsOfShape (Discrete WalkingPair) C
 
 /-- If `C` has all limits of diagrams `pair X Y`, then it has all binary products -/
 theorem has_binary_products_of_has_limit_pair [∀ {X Y : C}, HasLimit (pair X Y)] : HasBinaryProducts C :=
@@ -848,7 +876,9 @@ end CoprodFunctor
 
 section ProdComparison
 
-variable {C} {D : Type u₂} [Category.{v} D]
+universe w
+
+variable {C} {D : Type u₂} [Category.{w} D]
 
 variable (F : C ⥤ D) {A A' B B' : C}
 
@@ -887,17 +917,17 @@ def prodComparisonNatTrans [HasBinaryProducts C] [HasBinaryProducts D] (F : C �
     prod.functor.obj A ⋙ F ⟶ F ⋙ prod.functor.obj (F.obj A) where
   app := fun B => prodComparison F A B
   naturality' := fun B B' f => by
-    simp [prod_comparison_natural]
+    simp [← prod_comparison_natural]
 
 @[reassoc]
 theorem inv_prod_comparison_map_fst [IsIso (prodComparison F A B)] :
     inv (prodComparison F A B) ≫ F.map prod.fst = Prod.fst := by
-  simp [is_iso.inv_comp_eq]
+  simp [← is_iso.inv_comp_eq]
 
 @[reassoc]
 theorem inv_prod_comparison_map_snd [IsIso (prodComparison F A B)] :
     inv (prodComparison F A B) ≫ F.map prod.snd = Prod.snd := by
-  simp [is_iso.inv_comp_eq]
+  simp [← is_iso.inv_comp_eq]
 
 /-- If the product comparison morphism is an iso, its inverse is natural. -/
 @[reassoc]
@@ -919,7 +949,9 @@ end ProdComparison
 
 section CoprodComparison
 
-variable {C} {D : Type u₂} [Category.{v} D]
+universe w
+
+variable {C} {D : Type u₂} [Category.{w} D]
 
 variable (F : C ⥤ D) {A A' B B' : C}
 
@@ -959,17 +991,17 @@ def coprodComparisonNatTrans [HasBinaryCoproducts C] [HasBinaryCoproducts D] (F 
     F ⋙ coprod.functor.obj (F.obj A) ⟶ coprod.functor.obj A ⋙ F where
   app := fun B => coprodComparison F A B
   naturality' := fun B B' f => by
-    simp [coprod_comparison_natural]
+    simp [← coprod_comparison_natural]
 
 @[reassoc]
 theorem map_inl_inv_coprod_comparison [IsIso (coprodComparison F A B)] :
     F.map coprod.inl ≫ inv (coprodComparison F A B) = coprod.inl := by
-  simp [is_iso.inv_comp_eq]
+  simp [← is_iso.inv_comp_eq]
 
 @[reassoc]
 theorem map_inr_inv_coprod_comparison [IsIso (coprodComparison F A B)] :
     F.map coprod.inr ≫ inv (coprodComparison F A B) = coprod.inr := by
-  simp [is_iso.inv_comp_eq]
+  simp [← is_iso.inv_comp_eq]
 
 /-- If the coproduct comparison morphism is an iso, its inverse is natural. -/
 @[reassoc]

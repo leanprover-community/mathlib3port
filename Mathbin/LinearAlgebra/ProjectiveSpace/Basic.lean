@@ -65,7 +65,7 @@ def mk' (v : { v : V // v ≠ 0 }) : ℙ K V :=
 
 @[simp]
 theorem mk'_eq_mk (v : { v : V // v ≠ 0 }) : mk' K v = mk K v v.2 := by
-  dsimp' [mk, mk']
+  dsimp' [← mk, ← mk']
   congr 1
   simp
 
@@ -84,7 +84,7 @@ theorem rep_nonzero (v : ℙ K V) : v.rep ≠ 0 :=
 
 @[simp]
 theorem mk_rep (v : ℙ K V) : mk K v.rep v.rep_nonzero = v := by
-  dsimp' [mk, Projectivization.rep]
+  dsimp' [← mk, ← Projectivization.rep]
   simp
 
 open FiniteDimensional
@@ -131,7 +131,7 @@ instance (v : ℙ K V) : FiniteDimensional K v.Submodule := by
 theorem submodule_injective : Function.Injective (Projectivization.submodule : ℙ K V → Submodule K V) := by
   intro u v h
   replace h := le_of_eqₓ h
-  simp only [submodule_eq] at h
+  simp only [← submodule_eq] at h
   rw [Submodule.le_span_singleton_iff] at h
   rw [← mk_rep v, ← mk_rep u]
   apply Quotientₓ.sound'
@@ -139,7 +139,7 @@ theorem submodule_injective : Function.Injective (Projectivization.submodule : �
   have : a ≠ 0 := fun c =>
     u.rep_nonzero
       (by
-        simpa [c] using ha.symm)
+        simpa [← c] using ha.symm)
   use Units.mk0 a this, ha
 
 variable (K V)
@@ -164,7 +164,7 @@ noncomputable def equivSubmodule : ℙ K V ≃ { H : Submodule K V // finrank K 
         revert x
         erw [← Set.ext_iff]
         ext x
-        dsimp'
+        dsimp' [-SetLike.mem_coe]
         rw [Submodule.span_singleton_eq_range]
         refine' ⟨fun hh => _, _⟩
         · obtain ⟨c, hc⟩ := h ⟨x, hh⟩
@@ -185,7 +185,7 @@ noncomputable def mk'' (H : Submodule K V) (h : finrank K H = 1) : ℙ K V :=
 theorem submodule_mk'' (H : Submodule K V) (h : finrank K H = 1) : (mk'' H h).Submodule = H := by
   suffices (equiv_submodule K V) (mk'' H h) = ⟨H, h⟩ by
     exact congr_arg coe this
-  dsimp' [mk'']
+  dsimp' [← mk'']
   simp
 
 @[simp]
@@ -205,7 +205,7 @@ def map {σ : K →+* L} (f : V →ₛₗ[σ] W) (hf : Function.Injective f) : �
         v.2
           (hf
             (by
-              simp [c]))⟩)
+              simp [← c]))⟩)
     (by
       rintro ⟨u, hu⟩ ⟨v, hv⟩ ⟨a, ha⟩
       use Units.map σ.to_monoid_hom a
@@ -219,8 +219,8 @@ theorem map_injective {σ : K →+* L} {τ : L →+* K} [RingHomInvPair σ τ] (
   intro u v h
   rw [← u.mk_rep, ← v.mk_rep] at *
   apply Quotientₓ.sound'
-  dsimp' [map, mk]  at h
-  simp only [Quotientₓ.eq'] at h
+  dsimp' [← map, ← mk]  at h
+  simp only [← Quotientₓ.eq'] at h
   obtain ⟨a, ha⟩ := h
   use Units.map τ.to_monoid_hom a
   dsimp'  at ha⊢

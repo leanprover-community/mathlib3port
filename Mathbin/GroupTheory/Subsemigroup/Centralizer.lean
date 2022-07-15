@@ -45,11 +45,11 @@ variable (S)
 
 @[simp, to_additive zero_mem_add_centralizer]
 theorem one_mem_centralizer [MulOneClassₓ M] : (1 : M) ∈ Centralizer S := by
-  simp [mem_centralizer_iff]
+  simp [← mem_centralizer_iff]
 
 @[simp]
 theorem zero_mem_centralizer [MulZeroClassₓ M] : (0 : M) ∈ Centralizer S := by
-  simp [mem_centralizer_iff]
+  simp [← mem_centralizer_iff]
 
 variable {S} {a b : M}
 

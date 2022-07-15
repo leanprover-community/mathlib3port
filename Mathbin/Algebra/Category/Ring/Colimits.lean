@@ -133,9 +133,8 @@ attribute [instance] colimit_setoid
 def ColimitType : Type v :=
   Quotientₓ (colimitSetoid F)deriving Inhabited
 
-instance : CommRingₓ (ColimitType F) where
+instance : AddGroupₓ (ColimitType F) where
   zero := Quot.mk _ zero
-  one := Quot.mk _ one
   neg := by
     fapply @Quot.lift
     · intro x
@@ -167,28 +166,6 @@ instance : CommRingₓ (ColimitType F) where
       · rfl
         
       
-  mul := by
-    fapply @Quot.lift _ _ (colimit_type F → colimit_type F)
-    · intro x
-      fapply @Quot.lift
-      · intro y
-        exact Quot.mk _ (mul x y)
-        
-      · intro y y' r
-        apply Quot.sound
-        exact relation.mul_2 _ _ _ r
-        
-      
-    · intro x x' r
-      funext y
-      induction y
-      dsimp'
-      apply Quot.sound
-      · exact relation.mul_1 _ _ _ r
-        
-      · rfl
-        
-      
   zero_add := fun x => by
     induction x
     dsimp'
@@ -201,39 +178,11 @@ instance : CommRingₓ (ColimitType F) where
     apply Quot.sound
     apply relation.add_zero
     rfl
-  one_mul := fun x => by
-    induction x
-    dsimp'
-    apply Quot.sound
-    apply relation.one_mul
-    rfl
-  mul_one := fun x => by
-    induction x
-    dsimp'
-    apply Quot.sound
-    apply relation.mul_one
-    rfl
   add_left_neg := fun x => by
     induction x
     dsimp'
     apply Quot.sound
     apply relation.add_left_neg
-    rfl
-  add_comm := fun x y => by
-    induction x
-    induction y
-    dsimp'
-    apply Quot.sound
-    apply relation.add_comm
-    rfl
-    rfl
-  mul_comm := fun x y => by
-    induction x
-    induction y
-    dsimp'
-    apply Quot.sound
-    apply relation.mul_comm
-    rfl
     rfl
   add_assoc := fun x y z => by
     induction x
@@ -245,36 +194,102 @@ instance : CommRingₓ (ColimitType F) where
     rfl
     rfl
     rfl
-  mul_assoc := fun x y z => by
-    induction x
-    induction y
-    induction z
-    dsimp'
-    apply Quot.sound
-    apply relation.mul_assoc
-    rfl
-    rfl
-    rfl
-  left_distrib := fun x y z => by
-    induction x
-    induction y
-    induction z
-    dsimp'
-    apply Quot.sound
-    apply relation.left_distrib
-    rfl
-    rfl
-    rfl
-  right_distrib := fun x y z => by
-    induction x
-    induction y
-    induction z
-    dsimp'
-    apply Quot.sound
-    apply relation.right_distrib
-    rfl
-    rfl
-    rfl
+
+instance : AddGroupWithOneₓ (ColimitType F) :=
+  { ColimitType.addGroup F with one := Quot.mk _ one }
+
+instance : CommRingₓ (ColimitType F) :=
+  { ColimitType.addGroupWithOne F with one := Quot.mk _ one,
+    mul := by
+      fapply @Quot.lift _ _ (colimit_type F → colimit_type F)
+      · intro x
+        fapply @Quot.lift
+        · intro y
+          exact Quot.mk _ (mul x y)
+          
+        · intro y y' r
+          apply Quot.sound
+          exact relation.mul_2 _ _ _ r
+          
+        
+      · intro x x' r
+        funext y
+        induction y
+        dsimp'
+        apply Quot.sound
+        · exact relation.mul_1 _ _ _ r
+          
+        · rfl
+          
+        ,
+    one_mul := fun x => by
+      induction x
+      dsimp'
+      apply Quot.sound
+      apply relation.one_mul
+      rfl,
+    mul_one := fun x => by
+      induction x
+      dsimp'
+      apply Quot.sound
+      apply relation.mul_one
+      rfl,
+    add_comm := fun x y => by
+      induction x
+      induction y
+      dsimp'
+      apply Quot.sound
+      apply relation.add_comm
+      rfl
+      rfl,
+    mul_comm := fun x y => by
+      induction x
+      induction y
+      dsimp'
+      apply Quot.sound
+      apply relation.mul_comm
+      rfl
+      rfl,
+    add_assoc := fun x y z => by
+      induction x
+      induction y
+      induction z
+      dsimp'
+      apply Quot.sound
+      apply relation.add_assoc
+      rfl
+      rfl
+      rfl,
+    mul_assoc := fun x y z => by
+      induction x
+      induction y
+      induction z
+      dsimp'
+      apply Quot.sound
+      apply relation.mul_assoc
+      rfl
+      rfl
+      rfl,
+    left_distrib := fun x y z => by
+      induction x
+      induction y
+      induction z
+      dsimp'
+      apply Quot.sound
+      apply relation.left_distrib
+      rfl
+      rfl
+      rfl,
+    right_distrib := fun x y z => by
+      induction x
+      induction y
+      induction z
+      dsimp'
+      apply Quot.sound
+      apply relation.right_distrib
+      rfl
+      rfl
+      rfl }
 
 @[simp]
 theorem quot_zero : Quot.mk Setoidₓ.R zero = (0 : ColimitType F) :=
@@ -465,8 +480,9 @@ def colimitIsColimit : IsColimit (colimitCocone F) where
       
     rfl
 
-instance has_colimits_CommRing : HasColimits CommRingₓₓ where
-  HasColimitsOfShape := fun J 𝒥 =>
+instance has_colimits_CommRing :
+    HasColimits
+      CommRingₓₓ where HasColimitsOfShape := fun J 𝒥 =>
     { HasColimit := fun F => has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_is_colimit F } }
 
 end CommRingₓₓ.Colimits

@@ -423,8 +423,8 @@ theorem Preorderₓ.to_has_le_injective {α : Type _} : Function.Injective (@Pre
   injection h with h_le
   have : A_lt = B_lt := by
     funext a b
-    dsimp' [(· ≤ ·)]  at A_lt_iff_le_not_le B_lt_iff_le_not_le h_le
-    simp [A_lt_iff_le_not_le, B_lt_iff_le_not_le, h_le]
+    dsimp' [← (· ≤ ·)]  at A_lt_iff_le_not_le B_lt_iff_le_not_le h_le
+    simp [← A_lt_iff_le_not_le, ← B_lt_iff_le_not_le, ← h_le]
   congr
 
 @[ext]
@@ -558,8 +558,7 @@ end OrderDual
 /-! ### Order instances on the function space -/
 
 
-instance Pi.hasLe {ι : Type u} {α : ι → Type v} [∀ i, LE (α i)] : LE (∀ i, α i) where
-  le := fun x y => ∀ i, x i ≤ y i
+instance Pi.hasLe {ι : Type u} {α : ι → Type v} [∀ i, LE (α i)] : LE (∀ i, α i) where le := fun x y => ∀ i, x i ≤ y i
 
 theorem Pi.le_def {ι : Type u} {α : ι → Type v} [∀ i, LE (α i)] {x y : ∀ i, α i} : x ≤ y ↔ ∀ i, x i ≤ y i :=
   Iff.rfl
@@ -569,22 +568,22 @@ instance Pi.preorder {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α 
 
 theorem Pi.lt_def {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] {x y : ∀ i, α i} :
     x < y ↔ x ≤ y ∧ ∃ i, x i < y i := by
-  simp (config := { contextual := true })[lt_iff_le_not_leₓ, Pi.le_def]
+  simp (config := { contextual := true })[← lt_iff_le_not_leₓ, ← Pi.le_def]
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem le_update_iff {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] [DecidableEq ι] {x y : ∀ i, α i} {i : ι}
     {a : α i} : x ≤ Function.update y i a ↔ x i ≤ a ∧ ∀ j _ : j ≠ i, x j ≤ y j :=
   Function.forall_update_iff _ fun j z => x j ≤ z
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem update_le_iff {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] [DecidableEq ι] {x y : ∀ i, α i} {i : ι}
     {a : α i} : Function.update x i a ≤ y ↔ a ≤ y i ∧ ∀ j _ : j ≠ i, x j ≤ y j :=
   Function.forall_update_iff _ fun j z => z ≤ y j
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem update_le_update_iff {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] [DecidableEq ι] {x y : ∀ i, α i}
     {i : ι} {a b : α i} : Function.update x i a ≤ Function.update y i b ↔ a ≤ b ∧ ∀ j _ : j ≠ i, x j ≤ y j := by
-  simp (config := { contextual := true })[update_le_iff]
+  simp (config := { contextual := true })[← update_le_iff]
 
 instance Pi.partialOrder {ι : Type u} {α : ι → Type v} [∀ i, PartialOrderₓ (α i)] : PartialOrderₓ (∀ i, α i) :=
   { Pi.preorder with le_antisymm := fun f g h1 h2 => funext fun b => (h1 b).antisymm (h2 b) }
@@ -695,17 +694,33 @@ theorem mk_le_mk [LE α] [LE β] {x₁ x₂ : α} {y₁ y₂ : β} : (x₁, y₁
 theorem swap_le_swap [LE α] [LE β] {x y : α × β} : x.swap ≤ y.swap ↔ x ≤ y :=
   and_comm _ _
 
+section Preorderₓ
+
+variable [Preorderₓ α] [Preorderₓ β] {a a₁ a₂ : α} {b b₁ b₂ : β} {x y : α × β}
+
 instance (α : Type u) (β : Type v) [Preorderₓ α] [Preorderₓ β] : Preorderₓ (α × β) :=
   { Prod.hasLe α β with le_refl := fun ⟨a, b⟩ => ⟨le_reflₓ a, le_reflₓ b⟩,
     le_trans := fun ⟨a, b⟩ ⟨c, d⟩ ⟨e, f⟩ ⟨hac, hbd⟩ ⟨hce, hdf⟩ => ⟨le_transₓ hac hce, le_transₓ hbd hdf⟩ }
 
 @[simp]
-theorem swap_lt_swap [Preorderₓ α] [Preorderₓ β] {x y : α × β} : x.swap < y.swap ↔ x < y :=
+theorem swap_lt_swap : x.swap < y.swap ↔ x < y :=
   and_congr swap_le_swap (not_congr swap_le_swap)
 
-theorem lt_iff [Preorderₓ α] [Preorderₓ β] {a b : α × β} : a < b ↔ a.1 < b.1 ∧ a.2 ≤ b.2 ∨ a.1 ≤ b.1 ∧ a.2 < b.2 := by
+theorem mk_le_mk_iff_left : (a₁, b) ≤ (a₂, b) ↔ a₁ ≤ a₂ :=
+  and_iff_left le_rfl
+
+theorem mk_le_mk_iff_right : (a, b₁) ≤ (a, b₂) ↔ b₁ ≤ b₂ :=
+  and_iff_right le_rfl
+
+theorem mk_lt_mk_iff_left : (a₁, b) < (a₂, b) ↔ a₁ < a₂ :=
+  lt_iff_lt_of_le_iff_le' mk_le_mk_iff_left mk_le_mk_iff_left
+
+theorem mk_lt_mk_iff_right : (a, b₁) < (a, b₂) ↔ b₁ < b₂ :=
+  lt_iff_lt_of_le_iff_le' mk_le_mk_iff_right mk_le_mk_iff_right
+
+theorem lt_iff : x < y ↔ x.1 < y.1 ∧ x.2 ≤ y.2 ∨ x.1 ≤ y.1 ∧ x.2 < y.2 := by
   refine' ⟨fun h => _, _⟩
-  · by_cases' h₁ : b.1 ≤ a.1
+  · by_cases' h₁ : y.1 ≤ x.1
     · exact Or.inr ⟨h.1.1, h.1.2.lt_of_not_le fun h₂ => h.2 ⟨h₁, h₂⟩⟩
       
     · exact Or.inl ⟨h.1.1.lt_of_not_le h₁, h.1.2⟩
@@ -719,9 +734,10 @@ theorem lt_iff [Preorderₓ α] [Preorderₓ β] {a b : α × β} : a < b ↔ a.
     
 
 @[simp]
-theorem mk_lt_mk [Preorderₓ α] [Preorderₓ β] {x₁ x₂ : α} {y₁ y₂ : β} :
-    (x₁, y₁) < (x₂, y₂) ↔ x₁ < x₂ ∧ y₁ ≤ y₂ ∨ x₁ ≤ x₂ ∧ y₁ < y₂ :=
+theorem mk_lt_mk : (a₁, b₁) < (a₂, b₂) ↔ a₁ < a₂ ∧ b₁ ≤ b₂ ∨ a₁ ≤ a₂ ∧ b₁ < b₂ :=
   lt_iff
+
+end Preorderₓ
 
 /-- The pointwise partial order on a product.
     (The lexicographic ordering is defined in order/lexicographic.lean, and the instances are

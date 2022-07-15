@@ -105,11 +105,11 @@ variable [CompletableTopField K]
 theorem coe_inv (x : K) : (x : hat K)⁻¹ = ((x⁻¹ : K) : hat K) := by
   by_cases' h : x = 0
   · rw [h, inv_zero]
-    dsimp' [Inv.inv]
+    dsimp' [← Inv.inv]
     norm_cast
     simp
     
-  · conv_lhs => dsimp [Inv.inv]
+  · conv_lhs => dsimp [← Inv.inv]
     rw [if_neg]
     · exact hat_inv_extends h
       
@@ -141,7 +141,7 @@ theorem mul_hat_inv_cancel {x : hat K} (x_ne : x ≠ 0) : x * hatInv x = 1 := by
     rintro _ ⟨z, z_ne, rfl⟩
     rw [mem_singleton_iff]
     rw [mem_compl_singleton_iff] at z_ne
-    dsimp' [c, f]
+    dsimp' [← c, ← f]
     rw [hat_inv_extends z_ne]
     norm_cast
     rw [mul_inv_cancel z_ne]
@@ -155,8 +155,8 @@ instance : Field (hat K) :=
       infer_instance : CommRingₓ (hat K)) with
     exists_pair_ne := ⟨0, 1, fun h => zero_ne_one ((uniform_embedding_coe K).inj h)⟩,
     mul_inv_cancel := fun x x_ne => by
-      dsimp' [Inv.inv]
-      simp [if_neg x_ne, mul_hat_inv_cancel x_ne],
+      dsimp' [← Inv.inv]
+      simp [← if_neg x_ne, ← mul_hat_inv_cancel x_ne],
     inv_zero :=
       show ((0 : K) : hat K)⁻¹ = ((0 : K) : hat K) by
         rw [coe_inv, inv_zero] }
@@ -165,13 +165,13 @@ instance : TopologicalDivisionRing (hat K) :=
   { Completion.top_ring_compl with
     continuous_at_inv₀ := by
       intro x x_ne
-      have : { y | hat_inv y = y⁻¹ } ∈ 𝓝 x :=
+      have : { y | hat_inv y = y⁻¹ } ∈ 𝓝 x := by
         have : {(0 : hat K)}ᶜ ⊆ { y : hat K | hat_inv y = y⁻¹ } := by
           intro y y_ne
           rw [mem_compl_singleton_iff] at y_ne
-          dsimp' [Inv.inv]
+          dsimp' [← Inv.inv]
           rw [if_neg y_ne]
-        mem_of_superset (compl_singleton_mem_nhds x_ne) this
+        exact mem_of_superset (compl_singleton_mem_nhds x_ne) this
       exact ContinuousAt.congr (continuous_hat_inv x_ne) this }
 
 end Completion

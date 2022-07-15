@@ -34,7 +34,7 @@ protected def findX : { n // p n ∧ ∀ m : ℕ+, m < n → ¬p m } := by
     exact n'.prop
     
   · obtain ⟨n', hn', pn'⟩ := n.prop.1
-    simpa [hn', Subtype.coe_eta] using pn'
+    simpa [← hn', ← Subtype.coe_eta] using pn'
     
   · exact n.prop.2 m hm ⟨m, rfl, pm⟩
     
@@ -79,7 +79,7 @@ theorem find_lt_iff (n : ℕ+) : Pnat.find h < n ↔ ∃ m < n, p m :=
 
 @[simp]
 theorem find_le_iff (n : ℕ+) : Pnat.find h ≤ n ↔ ∃ m ≤ n, p m := by
-  simp only [exists_prop, ← lt_add_one_iff, find_lt_iff]
+  simp only [← exists_prop, lt_add_one_iff, ← find_lt_iff]
 
 @[simp]
 theorem le_find_iff (n : ℕ+) : n ≤ Pnat.find h ↔ ∀, ∀ m < n, ∀, ¬p m := by
@@ -87,11 +87,11 @@ theorem le_find_iff (n : ℕ+) : n ≤ Pnat.find h ↔ ∀, ∀ m < n, ∀, ¬p 
 
 @[simp]
 theorem lt_find_iff (n : ℕ+) : n < Pnat.find h ↔ ∀, ∀ m ≤ n, ∀, ¬p m := by
-  simp only [← add_one_le_iff, le_find_iff, add_le_add_iff_right]
+  simp only [add_one_le_iff, ← le_find_iff, ← add_le_add_iff_right]
 
 @[simp]
 theorem find_eq_one : Pnat.find h = 1 ↔ p 1 := by
-  simp [find_eq_iff]
+  simp [← find_eq_iff]
 
 @[simp]
 theorem one_le_find : 1 < Pnat.find h ↔ ¬p 1 :=
@@ -106,10 +106,10 @@ theorem find_le {h : ∃ n, p n} (hn : p n) : Pnat.find h ≤ n :=
 
 theorem find_comp_succ (h : ∃ n, p n) (h₂ : ∃ n, p (n + 1)) (h1 : ¬p 1) : Pnat.find h = Pnat.find h₂ + 1 := by
   refine' (find_eq_iff _).2 ⟨Pnat.find_spec h₂, fun n => Pnat.recOn n _ _⟩
-  · simp [h1]
+  · simp [← h1]
     
   intro m IH hm
-  simp only [add_lt_add_iff_right, lt_find_iff] at hm
+  simp only [← add_lt_add_iff_right, ← lt_find_iff] at hm
   exact hm _ le_rfl
 
 end Pnat

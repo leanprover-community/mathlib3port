@@ -73,8 +73,7 @@ instance : CoeFun (Pretopology C) fun _ => ∀ X : C, Set (Presieve X) :=
 
 variable {C}
 
-instance : LE (Pretopology C) where
-  le := fun K₁ K₂ => (K₁ : ∀ X : C, Set (Presieve X)) ≤ K₂
+instance : LE (Pretopology C) where le := fun K₁ K₂ => (K₁ : ∀ X : C, Set (Presieve X)) ≤ K₂
 
 theorem le_def {K₁ K₂ : Pretopology C} : K₁ ≤ K₂ ↔ (K₁ : ∀ X : C, Set (Presieve X)) ≤ K₂ :=
   Iff.rfl

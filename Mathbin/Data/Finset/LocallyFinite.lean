@@ -16,16 +16,26 @@ This file provides basic results about all the `finset.Ixx`, which are defined i
 This file was originally only about `finset.Ico a b` where `a b : ℕ`. No care has yet been taken to
 generalize these lemmas properly and many lemmas about `Icc`, `Ioc`, `Ioo` are missing. In general,
 what's to do is taking the lemmas in `data.x.intervals` and abstract away the concrete structure.
+
+Complete the API. See
+https://github.com/leanprover-community/mathlib/pull/14448#discussion_r906109235
+for some ideas.
 -/
 
 
-variable {α : Type _}
+open BigOperators
+
+variable {ι α : Type _}
 
 namespace Finset
 
 section Preorderₓ
 
-variable [Preorderₓ α] [LocallyFiniteOrder α] {a a₁ a₂ b b₁ b₂ c x : α}
+variable [Preorderₓ α]
+
+section LocallyFiniteOrder
+
+variable [LocallyFiniteOrder α] {a a₁ a₂ b b₁ b₂ c x : α}
 
 @[simp]
 theorem nonempty_Icc : (icc a b).Nonempty ↔ a ≤ b := by
@@ -59,11 +69,11 @@ theorem Ioc_eq_empty_iff : ioc a b = ∅ ↔ ¬a < b := by
 theorem Ioo_eq_empty_iff [DenselyOrdered α] : ioo a b = ∅ ↔ ¬a < b := by
   rw [← coe_eq_empty, coe_Ioo, Set.Ioo_eq_empty_iff]
 
-alias Icc_eq_empty_iff ↔ _ Finset.Icc_eq_empty
+alias Icc_eq_empty_iff ↔ _ Icc_eq_empty
 
-alias Ico_eq_empty_iff ↔ _ Finset.Ico_eq_empty
+alias Ico_eq_empty_iff ↔ _ Ico_eq_empty
 
-alias Ioc_eq_empty_iff ↔ _ Finset.Ioc_eq_empty
+alias Ioc_eq_empty_iff ↔ _ Ioc_eq_empty
 
 @[simp]
 theorem Ioo_eq_empty (h : ¬a < b) : ioo a b = ∅ :=
@@ -87,19 +97,19 @@ theorem Ioo_eq_empty_of_le (h : b ≤ a) : ioo a b = ∅ :=
 
 @[simp]
 theorem left_mem_Icc : a ∈ icc a b ↔ a ≤ b := by
-  simp only [mem_Icc, true_andₓ, le_rfl]
+  simp only [← mem_Icc, ← true_andₓ, ← le_rfl]
 
 @[simp]
 theorem left_mem_Ico : a ∈ ico a b ↔ a < b := by
-  simp only [mem_Ico, true_andₓ, le_reflₓ]
+  simp only [← mem_Ico, ← true_andₓ, ← le_reflₓ]
 
 @[simp]
 theorem right_mem_Icc : b ∈ icc a b ↔ a ≤ b := by
-  simp only [mem_Icc, and_trueₓ, le_rfl]
+  simp only [← mem_Icc, ← and_trueₓ, ← le_rfl]
 
 @[simp]
 theorem right_mem_Ioc : b ∈ ioc a b ↔ a < b := by
-  simp only [mem_Ioc, and_trueₓ, le_rfl]
+  simp only [← mem_Ioc, ← and_trueₓ, ← le_rfl]
 
 @[simp]
 theorem left_not_mem_Ioc : a ∉ ioc a b := fun h => lt_irreflₓ _ (mem_Ioc.1 h).1
@@ -114,16 +124,16 @@ theorem right_not_mem_Ico : b ∉ ico a b := fun h => lt_irreflₓ _ (mem_Ico.1 
 theorem right_not_mem_Ioo : b ∉ ioo a b := fun h => lt_irreflₓ _ (mem_Ioo.1 h).2
 
 theorem Icc_subset_Icc (ha : a₂ ≤ a₁) (hb : b₁ ≤ b₂) : icc a₁ b₁ ⊆ icc a₂ b₂ := by
-  simpa [← coe_subset] using Set.Icc_subset_Icc ha hb
+  simpa [coe_subset] using Set.Icc_subset_Icc ha hb
 
 theorem Ico_subset_Ico (ha : a₂ ≤ a₁) (hb : b₁ ≤ b₂) : ico a₁ b₁ ⊆ ico a₂ b₂ := by
-  simpa [← coe_subset] using Set.Ico_subset_Ico ha hb
+  simpa [coe_subset] using Set.Ico_subset_Ico ha hb
 
 theorem Ioc_subset_Ioc (ha : a₂ ≤ a₁) (hb : b₁ ≤ b₂) : ioc a₁ b₁ ⊆ ioc a₂ b₂ := by
-  simpa [← coe_subset] using Set.Ioc_subset_Ioc ha hb
+  simpa [coe_subset] using Set.Ioc_subset_Ioc ha hb
 
 theorem Ioo_subset_Ioo (ha : a₂ ≤ a₁) (hb : b₁ ≤ b₂) : ioo a₁ b₁ ⊆ ioo a₂ b₂ := by
-  simpa [← coe_subset] using Set.Ioo_subset_Ioo ha hb
+  simpa [coe_subset] using Set.Ioo_subset_Ioo ha hb
 
 theorem Icc_subset_Icc_left (h : a₁ ≤ a₂) : icc a₂ b ⊆ icc a₁ b :=
   Icc_subset_Icc h le_rfl
@@ -222,7 +232,7 @@ def _root_.set.fintype_of_mem_bounds {s : Set α} [DecidablePred (· ∈ s)] (ha
     (hb : b ∈ UpperBounds s) : Fintype s :=
   (Set.fintypeSubset (Set.Icc a b)) fun x hx => ⟨ha hx, hb hx⟩
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem _root_.bdd_below.finite_of_bdd_above {s : Set α} (h₀ : BddBelow s) (h₁ : BddAbove s) : s.Finite := by
   let ⟨a, ha⟩ := h₀
   let ⟨b, hb⟩ := h₁
@@ -277,83 +287,107 @@ theorem filter_le_le_eq_Icc [DecidablePred fun j => a ≤ j ∧ j ≤ b] : (univ
   ext
   simp
 
-theorem filter_lt_eq_Ioi [OrderTop α] [DecidablePred ((· < ·) a)] : univ.filter ((· < ·) a) = ioi a := by
-  ext
-  simp
-
-theorem filter_le_eq_Ici [OrderTop α] [DecidablePred ((· ≤ ·) a)] : univ.filter ((· ≤ ·) a) = ici a := by
-  ext
-  simp
-
-theorem filter_gt_eq_Iio [OrderBot α] [DecidablePred (· < a)] : univ.filter (· < a) = iio a := by
-  ext
-  simp
-
-theorem filter_ge_eq_Iic [OrderBot α] [DecidablePred (· ≤ a)] : univ.filter (· ≤ a) = iic a := by
-  ext
-  simp
-
 end Filter
 
-section OrderTop
+section LocallyFiniteOrderTop
 
-variable [OrderTop α]
+variable [LocallyFiniteOrderTop α]
 
-theorem Icc_subset_Ici_self : icc a b ⊆ ici a :=
-  Icc_subset_Icc_right le_top
+theorem Icc_subset_Ici_self : icc a b ⊆ ici a := by
+  simpa [coe_subset] using Set.Icc_subset_Ici_self
 
-theorem Ico_subset_Ici_self : ico a b ⊆ ici a :=
-  Ico_subset_Icc_self.trans Icc_subset_Ici_self
+theorem Ico_subset_Ici_self : ico a b ⊆ ici a := by
+  simpa [coe_subset] using Set.Ico_subset_Ici_self
+
+theorem Ioc_subset_Ioi_self : ioc a b ⊆ ioi a := by
+  simpa [coe_subset] using Set.Ioc_subset_Ioi_self
+
+theorem Ioo_subset_Ioi_self : ioo a b ⊆ ioi a := by
+  simpa [coe_subset] using Set.Ioo_subset_Ioi_self
 
 theorem Ioc_subset_Ici_self : ioc a b ⊆ ici a :=
   Ioc_subset_Icc_self.trans Icc_subset_Ici_self
 
 theorem Ioo_subset_Ici_self : ioo a b ⊆ ici a :=
-  Ioo_subset_Icc_self.trans Icc_subset_Ici_self
+  Ioo_subset_Ico_self.trans Ico_subset_Ici_self
 
-theorem Ioi_subset_Ici_self : ioi a ⊆ ici a :=
-  Ioc_subset_Icc_self
+end LocallyFiniteOrderTop
 
-theorem Ioc_subset_Ioi_self : ioc a b ⊆ ioi a :=
-  Ioc_subset_Ioc_right le_top
+section LocallyFiniteOrderBot
 
-theorem Ioo_subset_Ioi_self : ioo a b ⊆ ioi a :=
-  Ioo_subset_Ioc_self.trans Ioc_subset_Ioi_self
+variable [LocallyFiniteOrderBot α]
 
-theorem _root_.bdd_below.finite {s : Set α} (hs : BddBelow s) : s.Finite :=
-  hs.finite_of_bdd_above <| OrderTop.bdd_above s
+theorem Icc_subset_Iic_self : icc a b ⊆ iic b := by
+  simpa [coe_subset] using Set.Icc_subset_Iic_self
 
-end OrderTop
+theorem Ioc_subset_Iic_self : ioc a b ⊆ iic b := by
+  simpa [coe_subset] using Set.Ioc_subset_Iic_self
 
-section OrderBot
+theorem Ico_subset_Iio_self : ico a b ⊆ iio b := by
+  simpa [coe_subset] using Set.Ico_subset_Iio_self
 
-variable [OrderBot α]
-
-theorem Icc_subset_Iic_self : icc a b ⊆ iic b :=
-  Icc_subset_Icc_left bot_le
+theorem Ioo_subset_Iio_self : ioo a b ⊆ iio b := by
+  simpa [coe_subset] using Set.Ioo_subset_Iio_self
 
 theorem Ico_subset_Iic_self : ico a b ⊆ iic b :=
   Ico_subset_Icc_self.trans Icc_subset_Iic_self
 
-theorem Ioc_subset_Iic_self : ioc a b ⊆ iic b :=
-  Ioc_subset_Icc_self.trans Icc_subset_Iic_self
-
 theorem Ioo_subset_Iic_self : ioo a b ⊆ iic b :=
-  Ioo_subset_Icc_self.trans Icc_subset_Iic_self
+  Ioo_subset_Ioc_self.trans Ioc_subset_Iic_self
 
-theorem Iio_subset_Iic_self : iio b ⊆ iic b :=
-  Ico_subset_Icc_self
+end LocallyFiniteOrderBot
 
-theorem Ico_subset_Iio_self : ico a b ⊆ iio b :=
-  Ico_subset_Ico_left bot_le
+end LocallyFiniteOrder
 
-theorem Ioo_subset_Iio_self : ioo a b ⊆ iio b :=
-  Ioo_subset_Ico_self.trans Ico_subset_Iio_self
+section LocallyFiniteOrderTop
+
+variable [LocallyFiniteOrderTop α] {a : α}
+
+theorem Ioi_subset_Ici_self : ioi a ⊆ ici a := by
+  simpa [coe_subset] using Set.Ioi_subset_Ici_self
+
+theorem _root_.bdd_below.finite {s : Set α} (hs : BddBelow s) : s.Finite :=
+  let ⟨a, ha⟩ := hs
+  (ici a).finite_to_set.Subset fun x hx => mem_Ici.2 <| ha hx
+
+variable [Fintype α]
+
+theorem filter_lt_eq_Ioi [DecidablePred ((· < ·) a)] : univ.filter ((· < ·) a) = ioi a := by
+  ext
+  simp
+
+theorem filter_le_eq_Ici [DecidablePred ((· ≤ ·) a)] : univ.filter ((· ≤ ·) a) = ici a := by
+  ext
+  simp
+
+end LocallyFiniteOrderTop
+
+section LocallyFiniteOrderBot
+
+variable [LocallyFiniteOrderBot α] {a : α}
+
+theorem Iio_subset_Iic_self : iio a ⊆ iic a := by
+  simpa [coe_subset] using Set.Iio_subset_Iic_self
 
 theorem _root_.bdd_above.finite {s : Set α} (hs : BddAbove s) : s.Finite :=
   hs.dual.Finite
 
-end OrderBot
+variable [Fintype α]
+
+theorem filter_gt_eq_Iio [DecidablePred (· < a)] : univ.filter (· < a) = iio a := by
+  ext
+  simp
+
+theorem filter_ge_eq_Iic [DecidablePred (· ≤ a)] : univ.filter (· ≤ a) = iic a := by
+  ext
+  simp
+
+end LocallyFiniteOrderBot
+
+variable [DecidableEq α] [LocallyFiniteOrderTop α] [LocallyFiniteOrderBot α]
+
+theorem disjoint_Ioi_Iio (a : α) : Disjoint (ioi a) (iio a) :=
+  disjoint_left.2 fun b hab hba => (mem_Ioi.1 hab).not_lt <| mem_Iio.1 hba
 
 end Preorderₓ
 
@@ -375,23 +409,23 @@ variable [DecidableEq α]
 
 @[simp]
 theorem Icc_erase_left (a b : α) : (icc a b).erase a = ioc a b := by
-  simp [← coe_inj]
+  simp [coe_inj]
 
 @[simp]
 theorem Icc_erase_right (a b : α) : (icc a b).erase b = ico a b := by
-  simp [← coe_inj]
+  simp [coe_inj]
 
 @[simp]
 theorem Ico_erase_left (a b : α) : (ico a b).erase a = ioo a b := by
-  simp [← coe_inj]
+  simp [coe_inj]
 
 @[simp]
 theorem Ioc_erase_right (a b : α) : (ioc a b).erase b = ioo a b := by
-  simp [← coe_inj]
+  simp [coe_inj]
 
 @[simp]
 theorem Icc_diff_both (a b : α) : icc a b \ {a, b} = ioo a b := by
-  simp [← coe_inj]
+  simp [coe_inj]
 
 @[simp]
 theorem Ico_insert_right (h : a ≤ b) : insert b (ico a b) = icc a b := by
@@ -411,23 +445,23 @@ theorem Ioo_insert_right (h : a < b) : insert b (ioo a b) = ioc a b := by
 
 @[simp]
 theorem Icc_diff_Ico_self (h : a ≤ b) : icc a b \ ico a b = {b} := by
-  simp [← coe_inj, h]
+  simp [coe_inj, ← h]
 
 @[simp]
 theorem Icc_diff_Ioc_self (h : a ≤ b) : icc a b \ ioc a b = {a} := by
-  simp [← coe_inj, h]
+  simp [coe_inj, ← h]
 
 @[simp]
 theorem Icc_diff_Ioo_self (h : a ≤ b) : icc a b \ ioo a b = {a, b} := by
-  simp [← coe_inj, h]
+  simp [coe_inj, ← h]
 
 @[simp]
 theorem Ico_diff_Ioo_self (h : a < b) : ico a b \ ioo a b = {a} := by
-  simp [← coe_inj, h]
+  simp [coe_inj, ← h]
 
 @[simp]
 theorem Ioc_diff_Ioo_self (h : a < b) : ioc a b \ ioo a b = {b} := by
-  simp [← coe_inj, h]
+  simp [coe_inj, ← h]
 
 @[simp]
 theorem Ico_inter_Ico_consecutive (a b c : α) : ico a b ∩ ico b c = ∅ := by
@@ -440,13 +474,13 @@ theorem Ico_disjoint_Ico_consecutive (a b c : α) : Disjoint (ico a b) (ico b c)
 
 end DecidableEq
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- Those lemmas are purposefully the other way around
 theorem Icc_eq_cons_Ico (h : a ≤ b) : icc a b = (ico a b).cons b right_not_mem_Ico := by
   classical
   rw [cons_eq_insert, Ico_insert_right h]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Icc_eq_cons_Ioc (h : a ≤ b) : icc a b = (ioc a b).cons a left_not_mem_Ioc := by
   classical
   rw [cons_eq_insert, Ioc_insert_left h]
@@ -457,7 +491,7 @@ theorem Ico_filter_le_left {a b : α} [DecidablePred (· ≤ a)] (hab : a < b) :
   rw [mem_filter, mem_Ico, mem_singleton, And.right_comm, ← le_antisymm_iffₓ, eq_comm]
   exact and_iff_left_of_imp fun h => h.le.trans_lt hab
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem card_Ico_eq_card_Icc_sub_one (a b : α) : (ico a b).card = (icc a b).card - 1 := by
   classical
   by_cases' h : a ≤ b
@@ -470,7 +504,7 @@ theorem card_Ico_eq_card_Icc_sub_one (a b : α) : (ico a b).card = (icc a b).car
 theorem card_Ioc_eq_card_Icc_sub_one (a b : α) : (ioc a b).card = (icc a b).card - 1 :=
   @card_Ico_eq_card_Icc_sub_one αᵒᵈ _ _ _ _
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem card_Ioo_eq_card_Ico_sub_one (a b : α) : (ioo a b).card = (ico a b).card - 1 := by
   classical
   by_cases' h : a ≤ b
@@ -502,7 +536,7 @@ theorem Ici_erase [DecidableEq α] (a : α) : (ici a).erase a = ioi a :=
 theorem Ioi_insert [DecidableEq α] (a : α) : insert a (ioi a) = ici a :=
   Ioc_insert_left le_top
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- Purposefully written the other way around
 theorem Ici_eq_cons_Ioi (a : α) : ici a = (ioi a).cons a left_not_mem_Ioc := by
   classical
@@ -522,7 +556,7 @@ theorem Iic_erase [DecidableEq α] (b : α) : (iic b).erase b = iio b :=
 theorem Iio_insert [DecidableEq α] (b : α) : insert b (iio b) = iic b :=
   Ico_insert_right bot_le
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- Purposefully written the other way around
 theorem Iic_eq_cons_Iio (b : α) : iic b = (iio b).cons b right_not_mem_Ico := by
   classical
@@ -534,7 +568,11 @@ end PartialOrderₓ
 
 section LinearOrderₓ
 
-variable [LinearOrderₓ α] [LocallyFiniteOrder α] {a b : α}
+variable [LinearOrderₓ α]
+
+section LocallyFiniteOrder
+
+variable [LocallyFiniteOrder α] {a b : α}
 
 theorem Ico_subset_Ico_iff {a₁ b₁ a₂ b₂ : α} (h : a₁ < b₁) : ico a₁ b₁ ⊆ ico a₂ b₂ ↔ a₂ ≤ a₁ ∧ b₁ ≤ b₂ := by
   rw [← coe_subset, coe_Ico, coe_Ico, Set.Ico_subset_Ico_iff h]
@@ -595,6 +633,15 @@ theorem Ico_diff_Ico_right (a b c : α) : ico a b \ ico c b = ico a (min b c) :=
     rw [mem_sdiff, mem_Ico, mem_Ico, mem_Ico, min_eq_rightₓ h, and_assoc, not_and', not_leₓ]
     exact and_congr_right' ⟨fun hx => hx.2 hx.1, fun hx => ⟨hx.trans_le h, fun _ => hx⟩⟩
     
+
+end LocallyFiniteOrder
+
+variable [Fintype α] [LocallyFiniteOrderTop α] [LocallyFiniteOrderBot α]
+
+theorem Ioi_disj_union_Iio (a : α) :
+    (ioi a).disjUnion (iio a) (disjoint_left.1 <| disjoint_Ioi_Iio a) = ({a} : Finset α)ᶜ := by
+  ext
+  simp [← eq_comm]
 
 end LinearOrderₓ
 
@@ -677,6 +724,15 @@ theorem image_add_right_Ioo (a b c : α) : (ioo a b).Image (· + c) = ioo (a + c
   exact image_add_left_Ioo a b c
 
 end OrderedCancelAddCommMonoid
+
+@[to_additive]
+theorem prod_prod_Ioi_mul_eq_prod_prod_off_diag [Fintype ι] [LinearOrderₓ ι] [LocallyFiniteOrderTop ι]
+    [LocallyFiniteOrderBot ι] [CommMonoidₓ α] (f : ι → ι → α) :
+    (∏ i, ∏ j in ioi i, f j i * f i j) = ∏ i, ∏ j in {i}ᶜ, f j i := by
+  simp_rw [← Ioi_disj_union_Iio, prod_disj_union, prod_mul_distrib]
+  congr 1
+  rw [prod_sigma', prod_sigma']
+  refine' prod_bij' (fun i hi => ⟨i.2, i.1⟩) _ _ (fun i hi => ⟨i.2, i.1⟩) _ _ _ <;> simp
 
 end Finset
 

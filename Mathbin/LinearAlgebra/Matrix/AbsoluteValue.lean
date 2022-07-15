@@ -57,7 +57,7 @@ theorem det_sum_le {ι : Type _} (s : Finset ι) {A : ι → Matrix n n R} {abv 
   det_le fun i j =>
     calc
       abv ((∑ k in s, A k) i j) = abv (∑ k in s, A k i j) := by
-        simp only [sum_apply]
+        simp only [← sum_apply]
       _ ≤ ∑ k in s, abv (A k i j) := abv.sum_le _ _
       _ ≤ ∑ k in s, x := sum_le_sum fun k _ => hx k i j
       _ = s.card • x := sum_const _
@@ -66,7 +66,7 @@ theorem det_sum_le {ι : Type _} (s : Finset ι) {A : ι → Matrix n n R} {abv 
 theorem det_sum_smul_le {ι : Type _} (s : Finset ι) {c : ι → R} {A : ι → Matrix n n R} {abv : AbsoluteValue R S} {x : S}
     (hx : ∀ k i j, abv (A k i j) ≤ x) {y : S} (hy : ∀ k, abv (c k) ≤ y) :
     abv (det (∑ k in s, c k • A k)) ≤ Nat.factorial (Fintype.card n) • (Finset.card s • y * x) ^ Fintype.card n := by
-  simpa only [smul_mul_assoc] using
+  simpa only [← smul_mul_assoc] using
     det_sum_le s fun k i j =>
       calc
         abv (c k * A k i j) = abv (c k) * abv (A k i j) := abv.map_mul _ _

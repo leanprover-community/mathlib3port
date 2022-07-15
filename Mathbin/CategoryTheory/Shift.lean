@@ -345,13 +345,13 @@ instance shift_functor_faithful (i : A) : Faithful (shiftFunctor C i) :=
   Faithful.of_comp_iso (shiftFunctorCompShiftFunctorNeg C i)
 
 /-- Shifting by `n` is a full functor. -/
-instance shiftFunctorFull (i : A) : Full (shiftFunctor C i) :=
+instance shiftFunctorFull (i : A) : Full (shiftFunctor C i) := by
   have : full (shift_functor C i ⋙ shift_functor C (-i)) := full.of_iso (shift_functor_comp_shift_functor_neg C i).symm
-  full.of_comp_faithful _ (shift_functor C (-i))
+  exact full.of_comp_faithful _ (shift_functor C (-i))
 
 /-- Shifting by `n` is an essentially surjective functor. -/
-instance shift_functor_ess_surj (i : A) : EssSurj (shiftFunctor C i) where
-  mem_ess_image := fun Y => ⟨Y⟦-i⟧, ⟨(shiftFunctorNegCompShiftFunctor C i).app Y⟩⟩
+instance shift_functor_ess_surj (i : A) :
+    EssSurj (shiftFunctor C i) where mem_ess_image := fun Y => ⟨Y⟦-i⟧, ⟨(shiftFunctorNegCompShiftFunctor C i).app Y⟩⟩
 
 end
 
@@ -384,9 +384,10 @@ attribute [local reducible] Discrete.addMonoidal
 
 theorem shift_shift_neg_hom_shift (n : A) (X : C) : (shiftShiftNeg X n).Hom⟦n⟧' = (shiftNegShift (X⟦n⟧) n).Hom := by
   -- This is just `simp, simp [eq_to_hom_map]`.
-  simp only [iso.app_hom, unit_of_tensor_iso_unit_hom_app, eq_to_iso.hom, functor.map_comp, obj_μ_app, eq_to_iso.inv,
-    obj_ε_inv_app, μ_naturalityₗ_assoc, category.assoc, μ_inv_hom_app_assoc, ε_inv_app_obj, μ_naturalityᵣ_assoc]
-  simp only [eq_to_hom_map, eq_to_hom_app, eq_to_hom_trans]
+  simp only [← iso.app_hom, ← unit_of_tensor_iso_unit_hom_app, ← eq_to_iso.hom, ← functor.map_comp, ← obj_μ_app, ←
+    eq_to_iso.inv, ← obj_ε_inv_app, ← μ_naturalityₗ_assoc, ← category.assoc, ← μ_inv_hom_app_assoc, ← ε_inv_app_obj, ←
+    μ_naturalityᵣ_assoc]
+  simp only [← eq_to_hom_map, ← eq_to_hom_app, ← eq_to_hom_trans]
 
 end
 
@@ -434,18 +435,19 @@ def shiftComm (i j : A) : X⟦i⟧⟦j⟧ ≅ X⟦j⟧⟦i⟧ :=
 @[simp]
 theorem shift_comm_symm (i j : A) : (shiftComm X i j).symm = shiftComm X j i := by
   ext
-  dsimp' [shift_comm]
-  simpa [eq_to_hom_map]
+  dsimp' [← shift_comm]
+  simpa [← eq_to_hom_map]
 
 variable {X Y}
 
 /-- When shifts are indexed by an additive commutative monoid, then shifts commute. -/
 theorem shift_comm' (i j : A) : f⟦i⟧'⟦j⟧' = (shiftComm _ _ _).Hom ≫ f⟦j⟧'⟦i⟧' ≫ (shiftComm _ _ _).Hom := by
   -- This is just `simp, simp [eq_to_hom_map]`.
-  simp only [shift_comm, iso.trans_hom, iso.symm_hom, iso.app_inv, iso.symm_inv, monoidal_functor.μ_iso_hom,
-    iso.app_hom, functor.map_iso_hom, eq_to_iso.hom, μ_naturality_assoc, nat_trans.naturality_assoc,
-    nat_trans.naturality, functor.comp_map, category.assoc, μ_inv_hom_app_assoc]
-  simp only [eq_to_hom_map, eq_to_hom_app, eq_to_hom_trans_assoc, eq_to_hom_refl, category.id_comp, μ_hom_inv_app_assoc]
+  simp only [← shift_comm, ← iso.trans_hom, ← iso.symm_hom, ← iso.app_inv, ← iso.symm_inv, ← monoidal_functor.μ_iso_hom,
+    ← iso.app_hom, ← functor.map_iso_hom, ← eq_to_iso.hom, ← μ_naturality_assoc, ← nat_trans.naturality_assoc, ←
+    nat_trans.naturality, ← functor.comp_map, ← category.assoc, ← μ_inv_hom_app_assoc]
+  simp only [← eq_to_hom_map, ← eq_to_hom_app, ← eq_to_hom_trans_assoc, ← eq_to_hom_refl, ← category.id_comp, ←
+    μ_hom_inv_app_assoc]
 
 @[reassoc]
 theorem shift_comm_hom_comp (i j : A) : (shiftComm X i j).Hom ≫ f⟦j⟧'⟦i⟧' = f⟦i⟧'⟦j⟧' ≫ (shiftComm Y i j).Hom := by
@@ -489,48 +491,48 @@ def hasShiftOfFullyFaithful (s : A → C ⥤ C) (i : ∀ i, s i ⋙ F ≅ F ⋙ 
         intros
         apply F.map_injective
         dsimp'
-        simp only [category.comp_id, category.id_comp, category.assoc, CategoryTheory.Functor.map_comp,
-          functor.image_preimage, eq_to_hom_map, iso.inv_hom_id_app_assoc]
+        simp only [← category.comp_id, ← category.id_comp, ← category.assoc, ← CategoryTheory.Functor.map_comp, ←
+          functor.image_preimage, ← eq_to_hom_map, ← iso.inv_hom_id_app_assoc]
         erw [(i m₃).Hom.naturality_assoc]
         congr 1
         dsimp'
-        simp only [eq_to_iso.inv, eq_to_hom_app, eq_to_hom_map, obj_μ_app, μ_naturality_assoc, category.assoc,
-          CategoryTheory.Functor.map_comp, functor.image_preimage]
+        simp only [← eq_to_iso.inv, ← eq_to_hom_app, ← eq_to_hom_map, ← obj_μ_app, ← μ_naturality_assoc, ←
+          category.assoc, ← CategoryTheory.Functor.map_comp, ← functor.image_preimage]
         congr 3
         dsimp'
-        simp only [← (shift_functor D m₃).map_comp_assoc, iso.inv_hom_id_app]
+        simp only [(shift_functor D m₃).map_comp_assoc, ← iso.inv_hom_id_app]
         erw [(shift_functor D m₃).map_id, category.id_comp]
         erw [((shift_monoidal_functor D A).μIso ⟨m₁ + m₂⟩ ⟨m₃⟩).inv_hom_id_app_assoc]
         congr 1
         have := dcongr_arg (fun a => (i a).inv.app X) (add_assocₓ m₁ m₂ m₃)
         dsimp'  at this
-        simp [this],
+        simp [← this],
       left_unitality := by
         intros
         apply F.map_injective
         dsimp'
-        simp only [category.comp_id, category.id_comp, category.assoc, CategoryTheory.Functor.map_comp, eq_to_hom_app,
-          eq_to_hom_map, functor.image_preimage]
+        simp only [← category.comp_id, ← category.id_comp, ← category.assoc, ← CategoryTheory.Functor.map_comp, ←
+          eq_to_hom_app, ← eq_to_hom_map, ← functor.image_preimage]
         erw [(i n).Hom.naturality_assoc]
         dsimp'
-        simp only [eq_to_iso.inv, eq_to_hom_app, category.assoc, CategoryTheory.Functor.map_comp, eq_to_hom_map,
-          obj_ε_app, functor.image_preimage]
-        simp only [← (shift_functor D n).map_comp_assoc, iso.inv_hom_id_app]
+        simp only [← eq_to_iso.inv, ← eq_to_hom_app, ← category.assoc, ← CategoryTheory.Functor.map_comp, ←
+          eq_to_hom_map, ← obj_ε_app, ← functor.image_preimage]
+        simp only [(shift_functor D n).map_comp_assoc, ← iso.inv_hom_id_app]
         dsimp'
-        simp only [category.id_comp, μ_inv_hom_app_assoc, CategoryTheory.Functor.map_id]
+        simp only [← category.id_comp, ← μ_inv_hom_app_assoc, ← CategoryTheory.Functor.map_id]
         have := dcongr_arg (fun a => (i a).inv.app X) (zero_addₓ n)
         dsimp'  at this
-        simp [this],
+        simp [← this],
       right_unitality := by
         intros
         apply F.map_injective
         dsimp'
-        simp only [category.comp_id, category.id_comp, category.assoc, iso.inv_hom_id_app_assoc, eq_to_iso.inv,
-          eq_to_hom_app, eq_to_hom_map, CategoryTheory.Functor.map_comp, functor.image_preimage, obj_zero_map_μ_app,
-          ε_hom_inv_app_assoc]
+        simp only [← category.comp_id, ← category.id_comp, ← category.assoc, ← iso.inv_hom_id_app_assoc, ←
+          eq_to_iso.inv, ← eq_to_hom_app, ← eq_to_hom_map, ← CategoryTheory.Functor.map_comp, ← functor.image_preimage,
+          ← obj_zero_map_μ_app, ← ε_hom_inv_app_assoc]
         have := dcongr_arg (fun a => (i a).inv.app X) (add_zeroₓ n)
         dsimp'  at this
-        simp [this] }
+        simp [← this] }
 
 end
 
@@ -538,9 +540,9 @@ end
 the inclusion functor intertwines the shifts. -/
 -- incorrectly reports that `[full F]` and `[faithful F]` are unused.
 @[nolint unused_arguments]
-def hasShiftOfFullyFaithfulComm (s : A → C ⥤ C) (i : ∀ i, s i ⋙ F ≅ F ⋙ shiftFunctor D i) (m : A) :
+def hasShiftOfFullyFaithfulComm (s : A → C ⥤ C) (i : ∀ i, s i ⋙ F ≅ F ⋙ shiftFunctor D i) (m : A) : by
     have := has_shift_of_fully_faithful F s i
-    shift_functor C m ⋙ F ≅ F ⋙ shift_functor D m :=
+    exact shift_functor C m ⋙ F ≅ F ⋙ shift_functor D m :=
   i m
 
 end CategoryTheory

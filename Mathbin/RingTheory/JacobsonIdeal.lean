@@ -117,7 +117,7 @@ theorem exists_mul_sub_mem_of_sub_one_mem_jacobson {I : Ideal R} (r : R) (h : r 
     ∃ s, s * r - 1 ∈ I := by
   cases' mem_jacobson_iff.1 h 1 with s hs
   use s
-  simpa [mul_sub] using hs
+  simpa [← mul_sub] using hs
 
 /-- An ideal equals its Jacobson radical iff it is the intersection of a set of maximal ideals.
 Allowing the set to include ⊤ is equivalent, and is included only to simplify some proofs. -/
@@ -146,7 +146,7 @@ theorem eq_jacobson_iff_Inf_maximal' :
       let ⟨M, hM⟩ := h
       ⟨M, ⟨fun J hJ => Or.rec_on (Classical.em (J = ⊤)) (fun h => Or.inr h) fun h => Or.inl ⟨⟨h, hM.1 J hJ⟩⟩, hM.2⟩⟩⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ∉ » I)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ∉ » I)
 /-- An ideal `I` equals its Jacobson radical if and only if every element outside `I`
 also lies outside of a maximal ideal containing `I`. -/
 theorem eq_jacobson_iff_not_mem : I.jacobson = I ↔ ∀ x _ : x ∉ I, ∃ M : Ideal R, (I ≤ M ∧ M.IsMaximal) ∧ x ∉ M := by
@@ -298,7 +298,7 @@ open Polynomial
 variable [CommRingₓ R]
 
 theorem jacobson_bot_polynomial_le_Inf_map_maximal :
-    jacobson (⊥ : Ideal R[X]) ≤ inf (map c '' { J : Ideal R | J.IsMaximal }) := by
+    jacobson (⊥ : Ideal R[X]) ≤ inf (map (c : R →+* R[X]) '' { J : Ideal R | J.IsMaximal }) := by
   refine' le_Inf fun J => exists_imp_distrib.2 fun j hj => _
   have : j.is_maximal := hj.1
   refine' trans (jacobson_mono bot_le) (le_of_eqₓ _ : J.jacobson ≤ J)
@@ -308,7 +308,8 @@ theorem jacobson_bot_polynomial_le_Inf_map_maximal :
     rwa [map_jacobson_of_bijective _, map_bot] at this
     exact RingEquiv.bijective (polynomial_quotient_equiv_quotient_polynomial j)
   refine' eq_bot_iff.2 fun f hf => _
-  simpa [(fun hX => by
+  simpa [←
+    (fun hX => by
       simpa using congr_arg (fun f => coeff f 1) hX : (X : (R ⧸ j)[X]) ≠ 0)] using
     eq_C_of_degree_eq_zero (degree_eq_zero_of_is_unit ((mem_jacobson_bot.1 hf) X))
 

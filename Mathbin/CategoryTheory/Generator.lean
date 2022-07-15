@@ -84,19 +84,19 @@ section Dual
 theorem is_separating_op_iff (𝒢 : Set C) : IsSeparating 𝒢.op ↔ IsCoseparating 𝒢 := by
   refine' ⟨fun h𝒢 X Y f g hfg => _, fun h𝒢 X Y f g hfg => _⟩
   · refine' Quiver.Hom.op_inj (h𝒢 _ _ fun G hG h => Quiver.Hom.unop_inj _)
-    simpa only [unop_comp, Quiver.Hom.unop_op] using hfg _ (Set.mem_op.1 hG) _
+    simpa only [← unop_comp, ← Quiver.Hom.unop_op] using hfg _ (Set.mem_op.1 hG) _
     
   · refine' Quiver.Hom.unop_inj (h𝒢 _ _ fun G hG h => Quiver.Hom.op_inj _)
-    simpa only [op_comp, Quiver.Hom.op_unop] using hfg _ (Set.op_mem_op.2 hG) _
+    simpa only [← op_comp, ← Quiver.Hom.op_unop] using hfg _ (Set.op_mem_op.2 hG) _
     
 
 theorem is_coseparating_op_iff (𝒢 : Set C) : IsCoseparating 𝒢.op ↔ IsSeparating 𝒢 := by
   refine' ⟨fun h𝒢 X Y f g hfg => _, fun h𝒢 X Y f g hfg => _⟩
   · refine' Quiver.Hom.op_inj (h𝒢 _ _ fun G hG h => Quiver.Hom.unop_inj _)
-    simpa only [unop_comp, Quiver.Hom.unop_op] using hfg _ (Set.mem_op.1 hG) _
+    simpa only [← unop_comp, ← Quiver.Hom.unop_op] using hfg _ (Set.mem_op.1 hG) _
     
   · refine' Quiver.Hom.unop_inj (h𝒢 _ _ fun G hG h => Quiver.Hom.op_inj _)
-    simpa only [op_comp, Quiver.Hom.op_unop] using hfg _ (Set.op_mem_op.2 hG) _
+    simpa only [← op_comp, ← Quiver.Hom.op_unop] using hfg _ (Set.op_mem_op.2 hG) _
     
 
 theorem is_coseparating_unop_iff (𝒢 : Set Cᵒᵖ) : IsCoseparating 𝒢.unop ↔ IsSeparating 𝒢 := by
@@ -153,7 +153,7 @@ section
 attribute [local instance] has_equalizers_opposite
 
 theorem IsCodetecting.is_coseparating [HasCoequalizers C] {𝒢 : Set C} : IsCodetecting 𝒢 → IsCoseparating 𝒢 := by
-  simpa only [← is_separating_op_iff, ← is_detecting_op_iff] using is_detecting.is_separating
+  simpa only [is_separating_op_iff, is_detecting_op_iff] using is_detecting.is_separating
 
 end
 
@@ -173,7 +173,7 @@ section
 attribute [local instance] balanced_opposite
 
 theorem IsCoseparating.is_codetecting [Balanced C] {𝒢 : Set C} : IsCoseparating 𝒢 → IsCodetecting 𝒢 := by
-  simpa only [← is_detecting_op_iff, ← is_separating_op_iff] using is_separating.is_detecting
+  simpa only [is_detecting_op_iff, is_separating_op_iff] using is_separating.is_detecting
 
 end
 

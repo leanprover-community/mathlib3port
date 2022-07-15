@@ -35,14 +35,15 @@ theorem tendsto_coe_nat_at_top_at_top [OrderedSemiring R] [Archimedean R] : Tend
 theorem Int.comap_coe_at_top [OrderedRing R] [Nontrivial R] [Archimedean R] : comap (coe : ℤ → R) atTop = at_top :=
   (comap_embedding_at_top fun _ _ => Int.cast_le) fun r =>
     let ⟨n, hn⟩ := exists_nat_ge r
-    ⟨n, hn⟩
+    ⟨n, by
+      exact_mod_cast hn⟩
 
 @[simp]
 theorem Int.comap_coe_at_bot [OrderedRing R] [Nontrivial R] [Archimedean R] : comap (coe : ℤ → R) atBot = at_bot :=
   (comap_embedding_at_bot fun _ _ => Int.cast_le) fun r =>
     let ⟨n, hn⟩ := exists_nat_ge (-r)
     ⟨-n, by
-      simpa [neg_le] using hn⟩
+      simpa [← neg_le] using hn⟩
 
 theorem tendsto_coe_int_at_top_iff [OrderedRing R] [Nontrivial R] [Archimedean R] {f : α → ℤ} {l : Filter α} :
     Tendsto (fun n => (f n : R)) l atTop ↔ Tendsto f l atTop := by
@@ -55,7 +56,8 @@ theorem tendsto_coe_int_at_bot_iff [OrderedRing R] [Nontrivial R] [Archimedean R
 theorem tendsto_coe_int_at_top_at_top [OrderedRing R] [Archimedean R] : Tendsto (coe : ℤ → R) atTop atTop :=
   Int.cast_mono.tendsto_at_top_at_top fun b =>
     let ⟨n, hn⟩ := exists_nat_ge b
-    ⟨n, hn⟩
+    ⟨n, by
+      exact_mod_cast hn⟩
 
 @[simp]
 theorem Rat.comap_coe_at_top [LinearOrderedField R] [Archimedean R] : comap (coe : ℚ → R) atTop = at_top :=
@@ -69,7 +71,7 @@ theorem Rat.comap_coe_at_bot [LinearOrderedField R] [Archimedean R] : comap (coe
   (comap_embedding_at_bot fun _ _ => Rat.cast_le) fun r =>
     let ⟨n, hn⟩ := exists_nat_ge (-r)
     ⟨-n, by
-      simpa [neg_le] ⟩
+      simpa [← neg_le] ⟩
 
 theorem tendsto_coe_rat_at_top_iff [LinearOrderedField R] [Archimedean R] {f : α → ℚ} {l : Filter α} :
     Tendsto (fun n => (f n : R)) l atTop ↔ Tendsto f l atTop := by
@@ -219,7 +221,7 @@ theorem Tendsto.at_top_zsmul_neg_const {f : α → ℤ} (hr : r < 0) (hf : Tends
     Tendsto (fun x => f x • r) l atBot := by
   have h : (fun x => f x • -r) = -fun x => f x • r := by
     ext
-    simp [zsmul_neg]
+    simp [← zsmul_neg]
   rw [tendsto_at_bot_iff_tends_to_neg_at_top]
   exact h ▸ tendsto.at_top_zsmul_const (neg_pos.mpr hr) hf
 

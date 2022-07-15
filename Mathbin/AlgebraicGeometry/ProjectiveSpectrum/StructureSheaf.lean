@@ -119,12 +119,12 @@ theorem add_mem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a b : ∀ x 
       exact nin h
       
     
-  · simp only [add_mulₓ, map_add, Pi.add_apply, RingHom.map_mul, ext_iff_val, add_val]
+  · simp only [← add_mulₓ, ← map_add, ← Pi.add_apply, ← RingHom.map_mul, ← ext_iff_val, ← add_val]
     obtain ⟨nin1, hy1⟩ := wa (opens.inf_le_left Va Vb y)
     obtain ⟨nin2, hy2⟩ := wb (opens.inf_le_right Va Vb y)
     dsimp' only  at hy1 hy2
     erw [hy1, hy2]
-    simpa only [val_mk', add_mk, ← Subtype.val_eq_coe, add_commₓ]
+    simpa only [← val_mk', ← add_mk, Subtype.val_eq_coe, ← add_commₓ]
     
 
 theorem neg_mem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a : ∀ x : unop U, at x.1)
@@ -132,8 +132,8 @@ theorem neg_mem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a : ∀ x : 
   rcases ha x with ⟨V, m, i, j, ⟨r, r_mem⟩, ⟨s, s_mem⟩, w⟩
   choose nin hy using w
   refine' ⟨V, m, i, j, ⟨-r, Submodule.neg_mem _ r_mem⟩, ⟨s, s_mem⟩, fun y => ⟨nin y, _⟩⟩
-  simp only [ext_iff_val, val_mk', ← Subtype.val_eq_coe] at hy
-  simp only [Pi.neg_apply, ext_iff_val, neg_val, hy, val_mk', ← Subtype.val_eq_coe, neg_mk]
+  simp only [← ext_iff_val, ← val_mk', Subtype.val_eq_coe] at hy
+  simp only [← Pi.neg_apply, ← ext_iff_val, ← neg_val, ← hy, ← val_mk', Subtype.val_eq_coe, ← neg_mk]
 
 theorem mul_mem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a b : ∀ x : unop U, at x.1)
     (ha : (isLocallyFraction 𝒜).pred a) (hb : (isLocallyFraction 𝒜).pred b) : (isLocallyFraction 𝒜).pred (a * b) :=
@@ -151,12 +151,12 @@ theorem mul_mem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a b : ∀ x 
       exact nin h
       
     
-  · simp only [Pi.mul_apply, RingHom.map_mul]
+  · simp only [← Pi.mul_apply, ← RingHom.map_mul]
     choose nin1 hy1 using wa (opens.inf_le_left Va Vb y)
     choose nin2 hy2 using wb (opens.inf_le_right Va Vb y)
     rw [ext_iff_val] at hy1 hy2⊢
     erw [mul_val, hy1, hy2]
-    simpa only [val_mk', mk_mul, ← Subtype.val_eq_coe]
+    simpa only [← val_mk', ← mk_mul, Subtype.val_eq_coe]
     
 
 end SectionSubring
@@ -314,7 +314,7 @@ def Proj.stalkIso' (x : ProjectiveSpectrum.top 𝒜) : (Proj.structureSheaf 𝒜
       change Localization.mk _ _ = Localization.mk _ _ at eq3
       rw [Localization.mk_eq_mk', IsLocalization.eq] at eq3
       obtain ⟨⟨c, hc⟩, eq3⟩ := eq3
-      simp only [← Subtype.val_eq_coe] at eq3
+      simp only [Subtype.val_eq_coe] at eq3
       have eq3' :
         ∀ y : ProjectiveSpectrum.top 𝒜 hy :
           y ∈ ProjectiveSpectrum.basicOpen 𝒜 b1⊓ProjectiveSpectrum.basicOpen 𝒜 b2⊓ProjectiveSpectrum.basicOpen 𝒜 c,
@@ -344,7 +344,7 @@ def Proj.stalkIso' (x : ProjectiveSpectrum.top 𝒜) : (Proj.structureSheaf 𝒜
           (opens.inf_le_right _ _ ≫ i2) _
       rw [Subtype.ext_iff_val]
       ext1 y
-      simp only [res_apply]
+      simp only [← res_apply]
       obtain ⟨b1_nin_y, eq6⟩ := hs1 ⟨_, le_of_hom (opens.inf_le_left _ _ ≫ opens.inf_le_right _ _) y.2⟩
       obtain ⟨b2_nin_y, eq7⟩ := hs2 ⟨_, le_of_hom (opens.inf_le_right _ _) y.2⟩
       simp only at eq6 eq7
@@ -363,8 +363,8 @@ def Proj.stalkIso' (x : ProjectiveSpectrum.top 𝒜) : (Proj.structureSheaf 𝒜
           erw
             [stalk_to_fiber_ring_hom_germ 𝒜 (ProjectiveSpectrum.basicOpen 𝒜 f.denom) ⟨x, _⟩
               (section_in_basic_open _ x f)]
-          simp only [section_in_basic_open, Subtype.ext_iff_val, HomogeneousLocalization.ext_iff_val,
-            HomogeneousLocalization.val_mk', f.eq_num_div_denom]
+          simp only [← section_in_basic_open, ← Subtype.ext_iff_val, ← HomogeneousLocalization.ext_iff_val, ←
+            HomogeneousLocalization.val_mk', ← f.eq_num_div_denom]
           rfl⟩⟩
 
 /-- `Proj` of a graded ring as a `LocallyRingedSpace`-/

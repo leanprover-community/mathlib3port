@@ -48,17 +48,13 @@ theorem op_add {X Y : C} (f g : X ⟶ Y) : (f + g).op = f.op + g.op :=
 
 variable {C} {D : Type _} [Category D] [Preadditive D]
 
-instance Functor.op_additive (F : C ⥤ D) [F.Additive] : F.op.Additive :=
-  {  }
+instance Functor.op_additive (F : C ⥤ D) [F.Additive] : F.op.Additive where
 
-instance Functor.right_op_additive (F : Cᵒᵖ ⥤ D) [F.Additive] : F.rightOp.Additive :=
-  {  }
+instance Functor.right_op_additive (F : Cᵒᵖ ⥤ D) [F.Additive] : F.rightOp.Additive where
 
-instance Functor.left_op_additive (F : C ⥤ Dᵒᵖ) [F.Additive] : F.leftOp.Additive :=
-  {  }
+instance Functor.left_op_additive (F : C ⥤ Dᵒᵖ) [F.Additive] : F.leftOp.Additive where
 
-instance Functor.unop_additive (F : Cᵒᵖ ⥤ Dᵒᵖ) [F.Additive] : F.unop.Additive :=
-  {  }
+instance Functor.unop_additive (F : Cᵒᵖ ⥤ Dᵒᵖ) [F.Additive] : F.unop.Additive where
 
 end CategoryTheory
 

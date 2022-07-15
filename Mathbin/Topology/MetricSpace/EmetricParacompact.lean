@@ -30,8 +30,8 @@ open Set
 
 namespace Emetric
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 /-- A `pseudo_emetric_space` is always a paracompact space. Formalization is based
 on [MR0236876]. -/
 -- See note [lower instance priority]
@@ -44,10 +44,10 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
     Ennreal.pow_le_pow_of_le_one (Ennreal.inv_le_one.2 ennreal.one_lt_two.le) h
   have h2pow : ∀ n : ℕ, 2 * (2⁻¹ : ℝ≥0∞) ^ (n + 1) = 2⁻¹ ^ n := by
     intro n
-    simp [pow_succₓ, ← mul_assoc, Ennreal.mul_inv_cancel]
+    simp [← pow_succₓ, mul_assoc, ← Ennreal.mul_inv_cancel]
   -- Consider an open covering `S : set (set α)`
   refine' ⟨fun ι s ho hcov => _⟩
-  simp only [Union_eq_univ_iff] at hcov
+  simp only [← Union_eq_univ_iff] at hcov
   -- choose a well founded order on `S`
   let this : LinearOrderₓ ι := linearOrderOfSTO' WellOrderingRel
   have wf : WellFounded ((· < ·) : ι → ι → Prop) := @IsWellOrder.wf ι WellOrderingRel _
@@ -74,7 +74,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
         ⋃ (x : α) (hxs : ind x = i) (hb : ball x (3 * 2⁻¹ ^ n) ⊆ s i) (hlt : ∀, ∀ m < n, ∀ j : ι, x ∉ D m j),
           ball x (2⁻¹ ^ n) :=
     fun n s => by
-    simp only [D]
+    simp only [← D]
     rw [Nat.strong_rec_on_beta']
   have memD :
     ∀ {n i y},
@@ -84,7 +84,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
     by
     intro n i y
     rw [Dn n i]
-    simp only [mem_Union, mem_ball]
+    simp only [← mem_Union, ← mem_ball]
   -- The sets `D n i` cover the whole space. Indeed, for each `x` we can choose `n` such that
   -- `ball x (3 / 2 ^ n) ⊆ s (ind x)`, then either `x ∈ D n i`, or `x ∈ D m i` for some `m < n`.
   have Dcov : ∀ x, ∃ n i, x ∈ D n i := by
@@ -95,7 +95,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
       have : 0 < ε / 3 := Ennreal.div_pos_iff.2 ⟨ε0.lt.ne', Ennreal.coe_ne_top⟩
       rcases Ennreal.exists_inv_two_pow_lt this.ne' with ⟨n, hn⟩
       refine' ⟨n, subset.trans (ball_subset_ball _) hε⟩
-      simpa only [div_eq_mul_inv, mul_comm] using (Ennreal.mul_lt_of_lt_div hn).le
+      simpa only [← div_eq_mul_inv, ← mul_comm] using (Ennreal.mul_lt_of_lt_div hn).le
     by_contra' h
     apply h n (ind x)
     exact memD.2 ⟨x, rfl, hn, fun _ _ _ => h _ _, mem_ball_self (pow_pos _)⟩
@@ -171,14 +171,14 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
             (edist_triangle_left _ _ _)_ < 2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1) + (2⁻¹ ^ (n + k + 1) + 2⁻¹ ^ m) :=
           by
           apply_rules [Ennreal.add_lt_add]_ = 2 * (2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1)) := by
-          simp only [two_mul, add_commₓ]_ ≤ 2 * (2⁻¹ ^ m + 2⁻¹ ^ (m + 1)) :=
+          simp only [← two_mul, ← add_commₓ]_ ≤ 2 * (2⁻¹ ^ m + 2⁻¹ ^ (m + 1)) :=
           Ennreal.mul_le_mul le_rfl <| add_le_add le_rfl <| hpow_le (add_le_add hm le_rfl)_ = 3 * 2⁻¹ ^ m := by
           rw [mul_addₓ, h2pow, bit1, add_mulₓ, one_mulₓ]
     -- Finally, we glue `Hgt` and `Hle`
     have : (⋃ (m ≤ n + k) (i ∈ { i : ι | (D m i ∩ B).Nonempty }), {(m, i)}).Finite :=
       (finite_le_nat _).bUnion' fun i hi => (Hle i hi).Finite.bUnion' fun _ _ => finite_singleton _
     refine' this.subset fun I hI => _
-    simp only [mem_Union]
+    simp only [← mem_Union]
     refine' ⟨I.1, _, I.2, hI, prod.mk.eta.symm⟩
     exact not_ltₓ.1 fun hlt => Hgt I.1 hlt I.2 hI.some_spec
     

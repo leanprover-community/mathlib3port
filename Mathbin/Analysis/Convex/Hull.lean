@@ -54,7 +54,7 @@ theorem convex_convex_hull : Convex 𝕜 (convexHull 𝕜 s) :=
 theorem convex_hull_eq_Inter : convexHull 𝕜 s = ⋂ (t : Set E) (hst : s ⊆ t) (ht : Convex 𝕜 t), t :=
   rfl
 
-variable {𝕜 s} {t : Set E} {x : E}
+variable {𝕜 s} {t : Set E} {x y : E}
 
 theorem mem_convex_hull_iff : x ∈ convexHull 𝕜 s ↔ ∀ t, s ⊆ t → Convex 𝕜 t → x ∈ t := by
   simp_rw [convex_hull_eq_Inter, mem_Inter]
@@ -100,9 +100,26 @@ alias convex_hull_nonempty_iff ↔ _ Set.Nonempty.convex_hull
 
 attribute [protected] Set.Nonempty.convex_hull
 
+theorem segment_subset_convex_hull (hx : x ∈ s) (hy : y ∈ s) : Segment 𝕜 x y ⊆ convexHull 𝕜 s :=
+  (convex_convex_hull _ _).segment_subset (subset_convex_hull _ _ hx) (subset_convex_hull _ _ hy)
+
 @[simp]
-theorem convex_hull_singleton {x : E} : convexHull 𝕜 ({x} : Set E) = {x} :=
+theorem convex_hull_singleton (x : E) : convexHull 𝕜 ({x} : Set E) = {x} :=
   (convex_singleton x).convex_hull_eq
+
+@[simp]
+theorem convex_hull_pair (x y : E) : convexHull 𝕜 {x, y} = Segment 𝕜 x y := by
+  refine'
+    (convex_hull_min _ <| convex_segment _ _).antisymm
+      (segment_subset_convex_hull (mem_insert _ _) <| mem_insert_of_mem _ <| mem_singleton _)
+  rw [insert_subset, singleton_subset_iff]
+  exact ⟨left_mem_segment _ _ _, right_mem_segment _ _ _⟩
+
+theorem convex_hull_convex_hull_union_left (s t : Set E) : convexHull 𝕜 (convexHull 𝕜 s ∪ t) = convexHull 𝕜 (s ∪ t) :=
+  ClosureOperator.closure_sup_closure_left _ _ _
+
+theorem convex_hull_convex_hull_union_right (s t : Set E) : convexHull 𝕜 (s ∪ convexHull 𝕜 t) = convexHull 𝕜 (s ∪ t) :=
+  ClosureOperator.closure_sup_closure_right _ _ _
 
 theorem Convex.convex_remove_iff_not_mem_convex_hull_remove {s : Set E} (hs : Convex 𝕜 s) (x : E) :
     Convex 𝕜 (s \ {x}) ↔ x ∉ convexHull 𝕜 (s \ {x}) := by

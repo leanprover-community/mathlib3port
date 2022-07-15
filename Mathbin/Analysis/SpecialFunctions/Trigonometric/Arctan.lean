@@ -26,8 +26,8 @@ theorem tan_add {x y : ℝ}
       ((∀ k : ℤ, x ≠ (2 * k + 1) * π / 2) ∧ ∀ l : ℤ, y ≠ (2 * l + 1) * π / 2) ∨
         (∃ k : ℤ, x = (2 * k + 1) * π / 2) ∧ ∃ l : ℤ, y = (2 * l + 1) * π / 2) :
     tan (x + y) = (tan x + tan y) / (1 - tan x * tan y) := by
-  simpa only [← Complex.of_real_inj, Complex.of_real_sub, Complex.of_real_add, Complex.of_real_div, Complex.of_real_mul,
-    Complex.of_real_tan] using
+  simpa only [Complex.of_real_inj, ← Complex.of_real_sub, ← Complex.of_real_add, ← Complex.of_real_div, ←
+    Complex.of_real_mul, ← Complex.of_real_tan] using
     @Complex.tan_add (x : ℂ) (y : ℂ)
       (by
         convert h <;> norm_cast)
@@ -37,8 +37,8 @@ theorem tan_add' {x y : ℝ} (h : (∀ k : ℤ, x ≠ (2 * k + 1) * π / 2) ∧ 
   tan_add (Or.inl h)
 
 theorem tan_two_mul {x : ℝ} : tan (2 * x) = 2 * tan x / (1 - tan x ^ 2) := by
-  simpa only [← Complex.of_real_inj, Complex.of_real_sub, Complex.of_real_div, Complex.of_real_pow, Complex.of_real_mul,
-    Complex.of_real_tan, Complex.of_real_bit0, Complex.of_real_one] using Complex.tan_two_mul
+  simpa only [Complex.of_real_inj, ← Complex.of_real_sub, ← Complex.of_real_div, ← Complex.of_real_pow, ←
+    Complex.of_real_mul, ← Complex.of_real_tan, ← Complex.of_real_bit0, ← Complex.of_real_one] using Complex.tan_two_mul
 
 theorem tan_ne_zero_iff {θ : ℝ} : tan θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ k * π / 2 := by
   rw [← Complex.of_real_ne_zero, Complex.of_real_tan, Complex.tan_ne_zero_iff] <;> norm_cast
@@ -65,14 +65,14 @@ theorem continuous_tan : Continuous fun x : { x | cos x ≠ 0 } => tan x :=
 
 theorem continuous_on_tan_Ioo : ContinuousOn tan (Ioo (-(π / 2)) (π / 2)) := by
   refine' ContinuousOn.mono continuous_on_tan fun x => _
-  simp only [and_imp, mem_Ioo, mem_set_of_eq, Ne.def]
+  simp only [← and_imp, ← mem_Ioo, ← mem_set_of_eq, ← Ne.def]
   rw [cos_eq_zero_iff]
   rintro hx_gt hx_lt ⟨r, hxr_eq⟩
   cases le_or_ltₓ 0 r
   · rw [lt_iff_not_geₓ] at hx_lt
     refine' hx_lt _
     rw [hxr_eq, ← one_mulₓ (π / 2), mul_div_assoc, ge_iff_le, mul_le_mul_right (half_pos pi_pos)]
-    simp [h]
+    simp [← h]
     
   · rw [lt_iff_not_geₓ] at hx_gt
     refine' hx_gt _
@@ -93,9 +93,9 @@ theorem surj_on_tan : SurjOn tan (Ioo (-(π / 2)) (π / 2)) Univ :=
   have := neg_lt_self pi_div_two_pos
   continuous_on_tan_Ioo.surj_on_of_tendsto (nonempty_Ioo.2 this)
     (by
-      simp [tendsto_tan_neg_pi_div_two, this])
+      simp [← tendsto_tan_neg_pi_div_two, ← this])
     (by
-      simp [tendsto_tan_pi_div_two, this])
+      simp [← tendsto_tan_pi_div_two, ← this])
 
 theorem tan_surjective : Function.Surjective tan := fun x => surj_on_tan.subset_range trivialₓ
 
@@ -154,7 +154,7 @@ theorem arcsin_eq_arctan {x : ℝ} (h : x ∈ Ioo (-(1 : ℝ)) 1) : arcsin x = a
 
 @[simp]
 theorem arctan_zero : arctan 0 = 0 := by
-  simp [arctan_eq_arcsin]
+  simp [← arctan_eq_arcsin]
 
 theorem arctan_eq_of_tan_eq {x y : ℝ} (h : tan x = y) (hx : x ∈ Ioo (-(π / 2)) (π / 2)) : arctan y = x :=
   inj_on_tan (arctan_mem_Ioo _) hx
@@ -168,7 +168,7 @@ theorem arctan_one : arctan 1 = π / 4 :=
 
 @[simp]
 theorem arctan_neg (x : ℝ) : arctan (-x) = -arctan x := by
-  simp [arctan_eq_arcsin, neg_div]
+  simp [← arctan_eq_arcsin, ← neg_div]
 
 @[continuity]
 theorem continuous_arctan : Continuous arctan :=

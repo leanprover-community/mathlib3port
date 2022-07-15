@@ -80,7 +80,7 @@ def chooseNat' (x y : ℕ) (p : x < y) : Genₓ (Set.Ico x y) :=
   have : ∀ i, x < i → i ≤ y → i.pred < y := fun i h₀ h₁ =>
     show i.pred.succ ≤ y by
       rwa [succ_pred_eq_of_pos] <;> apply lt_of_le_of_ltₓ (Nat.zero_leₓ _) h₀
-  (Subtype.map pred fun h : x + 1 ≤ i ∧ i ≤ y => ⟨le_pred_of_ltₓ h.1, this _ h.1 h.2⟩) <$> choose (x + 1) y p
+  (Subtype.map pred fun i h : x + 1 ≤ i ∧ i ≤ y => ⟨le_pred_of_ltₓ h.1, this _ h.1 h.2⟩) <$> choose (x + 1) y p
 
 open Nat
 
@@ -149,7 +149,7 @@ def freqAux : ∀ xs : List (ℕ+ × Genₓ α) i, i < (xs.map (Subtype.val ∘ 
       freq_aux xs (j - i)
         (by
           rw [tsub_lt_iff_right (le_of_not_gtₓ h')]
-          simpa [List.sum_cons, add_commₓ] using h)
+          simpa [← List.sum_cons, ← add_commₓ] using h)
 
 /-- `freq [(1, gena), (3, genb), (5, genc)] _` will choose one of `gena`, `genb`, `genc` with
 probabilities proportional to the number accompanying them. In this example, the sum of

@@ -81,8 +81,7 @@ instance (i : I) : Full (incl i : C i ⥤ Σi, C i) where
   preimage := fun X Y ⟨f⟩ => f
   witness' := fun X Y ⟨f⟩ => rfl
 
-instance (i : I) : Faithful (incl i : C i ⥤ Σi, C i) :=
-  {  }
+instance (i : I) : Faithful (incl i : C i ⥤ Σi, C i) where
 
 section
 

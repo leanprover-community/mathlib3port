@@ -141,8 +141,8 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
       ⟨f, hf₀, hf₁, hf01⟩
     exact
       ⟨ε UV • f, fun x hx => by
-        simp [hf₀ (subset_closure hx)], fun x hx => by
-        simp [hf₁ hx], fun x => ⟨mul_nonneg (ε01 _).1.le (hf01 _).1, mul_le_of_le_one_right (ε01 _).1.le (hf01 _).2⟩⟩
+        simp [← hf₀ (subset_closure hx)], fun x hx => by
+        simp [← hf₁ hx], fun x => ⟨mul_nonneg (ε01 _).1.le (hf01 _).1, mul_le_of_le_one_right (ε01 _).1.le (hf01 _).2⟩⟩
   choose f hf0 hfε hf0ε
   have hf01 : ∀ UV x, f UV x ∈ Icc (0 : ℝ) 1 := fun UV x => Icc_subset_Icc_right (ε01 _).2 (hf0ε _ _)
   -- The embedding is given by `F x UV = f UV x`.
@@ -170,7 +170,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
     rintro V ⟨hVB, hxV⟩
     rcases hB.exists_closure_subset (hB.mem_nhds hVB hxV) with ⟨U, hUB, hxU, hUV⟩
     set UV : ↥s := ⟨(U, V), ⟨hUB, hVB⟩, hUV⟩
-    refine' ⟨ε UV, (ε01 UV).1, fun hy : dist (F y) (F x) < ε UV => _⟩
+    refine' ⟨ε UV, (ε01 UV).1, fun y hy : dist (F y) (F x) < ε UV => _⟩
     replace hy : dist (F y UV) (F x UV) < ε UV
     exact (BoundedContinuousFunction.dist_coe_le_dist _).trans_lt hy
     contrapose! hy
@@ -184,7 +184,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
         `F x (U, V)` belong to the interval `[0, ε (U, V)]`. -/
     refine' (nhds_basis_closed_ball.comap _).ge_iff.2 fun δ δ0 => _
     have h_fin : { UV : s | δ ≤ ε UV }.Finite := by
-      simpa only [← not_ltₓ] using hε (gt_mem_nhds δ0)
+      simpa only [not_ltₓ] using hε (gt_mem_nhds δ0)
     have : ∀ᶠ y in 𝓝 x, ∀ UV, δ ≤ ε UV → dist (F y UV) (F x UV) ≤ δ := by
       refine' (eventually_all_finite h_fin).2 fun UV hUV => _
       exact (f UV).Continuous.Tendsto x (closed_ball_mem_nhds _ δ0)

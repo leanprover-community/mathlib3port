@@ -35,13 +35,13 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Finₓ n) R} (h : ∀ x 
       (eval₂_hom (RingHom.id _) (IsEmpty.elim' Finₓ.is_empty)) p = (eval finZeroElim : MvPolynomial (Finₓ 0) R →+* R) p
       by
       rw [← this]
-      simp only [coe_eval₂_hom, is_empty_ring_equiv_apply, RingEquiv.trans_apply, aeval_eq_eval₂_hom]
+      simp only [← coe_eval₂_hom, ← is_empty_ring_equiv_apply, ← RingEquiv.trans_apply, ← aeval_eq_eval₂_hom]
       congr
     exact eval₂_hom_congr rfl (Subsingleton.elimₓ _ _) rfl
     
   · let e := (finSuccEquiv R n).toRingEquiv
     apply e.injective
-    simp only [RingEquiv.map_zero]
+    simp only [← RingEquiv.map_zero]
     apply Polynomial.funext
     intro q
     rw [Polynomial.eval_zero]
@@ -50,7 +50,7 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Finₓ n) R} (h : ∀ x 
     · infer_instance
       
     intro x
-    dsimp' [e]
+    dsimp' [← e]
     rw [fin_succ_equiv_apply]
     calc _ = eval _ p := _ _ = 0 := h _
     · intro i
@@ -58,33 +58,33 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Finₓ n) R} (h : ∀ x 
       
     apply induction_on p
     · intro r
-      simp only [eval_C, Polynomial.eval_C, RingHom.coe_comp, eval₂_hom_C]
+      simp only [← eval_C, ← Polynomial.eval_C, ← RingHom.coe_comp, ← eval₂_hom_C]
       
     · intros
-      simp only [*, RingHom.map_add, Polynomial.eval_add]
+      simp only [*, ← RingHom.map_add, ← Polynomial.eval_add]
       
     · intro φ i hφ
-      simp only [*, eval_X, Polynomial.eval_mul, RingHom.map_mul, eval₂_hom_X']
+      simp only [*, ← eval_X, ← Polynomial.eval_mul, ← RingHom.map_mul, ← eval₂_hom_X']
       congr 1
       by_cases' hi : i = 0
       · subst hi
-        simp only [Polynomial.eval_X, Finₓ.cases_zero]
+        simp only [← Polynomial.eval_X, ← Finₓ.cases_zero]
         
       · rw [← Finₓ.succ_pred i hi]
-        simp only [eval_X, Polynomial.eval_C, Finₓ.cases_succ]
+        simp only [← eval_X, ← Polynomial.eval_C, ← Finₓ.cases_succ]
         
       
     · infer_instance
       
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Two multivariate polynomials over an infinite integral domain are equal
 if they are equal upon evaluating them on an arbitrary assignment of the variables. -/
 theorem funext {σ : Type _} {p q : MvPolynomial σ R} (h : ∀ x : σ → R, eval x p = eval x q) : p = q := by
   suffices ∀ p, (∀ x : σ → R, eval x p = 0) → p = 0 by
     rw [← sub_eq_zero, this (p - q)]
-    simp only [h, RingHom.map_sub, forall_const, sub_self]
+    simp only [← h, ← RingHom.map_sub, ← forall_const, ← sub_self]
   clear h p q
   intro p h
   obtain ⟨n, f, hf, p, rfl⟩ := exists_fin_rename p
@@ -94,11 +94,11 @@ theorem funext {σ : Type _} {p q : MvPolynomial σ R} (h : ∀ x : σ → R, ev
   intro x
   classical
   convert h (Function.extendₓ f x 0)
-  simp only [eval, eval₂_hom_rename, Function.extend_compₓ hf]
+  simp only [← eval, ← eval₂_hom_rename, ← Function.extend_compₓ hf]
 
 theorem funext_iff {σ : Type _} {p q : MvPolynomial σ R} : p = q ↔ ∀ x : σ → R, eval x p = eval x q :=
   ⟨by
-    rintro rfl <;> simp only [forall_const, eq_self_iff_true], funext⟩
+    rintro rfl <;> simp only [← forall_const, ← eq_self_iff_true], funext⟩
 
 end MvPolynomial
 

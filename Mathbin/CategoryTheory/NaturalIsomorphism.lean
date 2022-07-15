@@ -113,31 +113,31 @@ variable (α : F ≅ G)
 
 @[simp]
 theorem cancel_nat_iso_hom_left {X : C} {Z : D} (g g' : G.obj X ⟶ Z) : α.Hom.app X ≫ g = α.Hom.app X ≫ g' ↔ g = g' := by
-  simp only [cancel_epi]
+  simp only [← cancel_epi]
 
 @[simp]
 theorem cancel_nat_iso_inv_left {X : C} {Z : D} (g g' : F.obj X ⟶ Z) : α.inv.app X ≫ g = α.inv.app X ≫ g' ↔ g = g' := by
-  simp only [cancel_epi]
+  simp only [← cancel_epi]
 
 @[simp]
 theorem cancel_nat_iso_hom_right {X : D} {Y : C} (f f' : X ⟶ F.obj Y) : f ≫ α.Hom.app Y = f' ≫ α.Hom.app Y ↔ f = f' :=
   by
-  simp only [cancel_mono]
+  simp only [← cancel_mono]
 
 @[simp]
 theorem cancel_nat_iso_inv_right {X : D} {Y : C} (f f' : X ⟶ G.obj Y) : f ≫ α.inv.app Y = f' ≫ α.inv.app Y ↔ f = f' :=
   by
-  simp only [cancel_mono]
+  simp only [← cancel_mono]
 
 @[simp]
 theorem cancel_nat_iso_hom_right_assoc {W X X' : D} {Y : C} (f : W ⟶ X) (g : X ⟶ F.obj Y) (f' : W ⟶ X')
     (g' : X' ⟶ F.obj Y) : f ≫ g ≫ α.Hom.app Y = f' ≫ g' ≫ α.Hom.app Y ↔ f ≫ g = f' ≫ g' := by
-  simp only [← category.assoc, cancel_mono]
+  simp only [category.assoc, ← cancel_mono]
 
 @[simp]
 theorem cancel_nat_iso_inv_right_assoc {W X X' : D} {Y : C} (f : W ⟶ X) (g : X ⟶ G.obj Y) (f' : W ⟶ X')
     (g' : X' ⟶ G.obj Y) : f ≫ g ≫ α.inv.app Y = f' ≫ g' ≫ α.inv.app Y ↔ f ≫ g = f' ≫ g' := by
-  simp only [← category.assoc, cancel_mono]
+  simp only [category.assoc, ← cancel_mono]
 
 @[simp]
 theorem inv_inv_app {F G : C ⥤ D} (e : F ≅ G) (X : C) : inv (e.inv.app X) = e.Hom.app X := by
@@ -190,7 +190,7 @@ def ofComponents (app : ∀ X : C, F.obj X ≅ G.obj X)
     { app := fun X => (app X).inv,
       naturality' := fun X Y f => by
         have h := congr_arg (fun f => (app X).inv ≫ f ≫ (app Y).inv) (naturality f).symm
-        simp only [iso.inv_hom_id_assoc, iso.hom_inv_id, assoc, comp_id, cancel_mono] at h
+        simp only [← iso.inv_hom_id_assoc, ← iso.hom_inv_id, ← assoc, ← comp_id, ← cancel_mono] at h
         exact h }
 
 @[simp]
@@ -206,7 +206,7 @@ theorem ofComponents.hom_app (app : ∀ X : C, F.obj X ≅ G.obj X) naturality X
 @[simp]
 theorem ofComponents.inv_app (app : ∀ X : C, F.obj X ≅ G.obj X) naturality X :
     (ofComponents app naturality).inv.app X = (app X).inv := by
-  simp [of_components]
+  simp [← of_components]
 
 /-- A natural transformation is an isomorphism if all its components are isomorphisms.
 -/

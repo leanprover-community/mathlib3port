@@ -54,7 +54,7 @@ theorem subst_into_mul {α} [Mul α] l r tl tr t (prl : (l : α) = tl) (prr : r 
   rw [prl, prr, prt]
 
 theorem subst_into_neg {α} [Neg α] (a ta t : α) (pra : a = ta) (prt : -ta = t) : -a = t := by
-  simp [pra, prt]
+  simp [← pra, ← prt]
 
 /-- The result type of `match_numeral`, either `0`, `1`, or a top level
 decomposition of `bit0 e` or `bit1 e`. The `other` case means it is not a numeral. -/
@@ -84,7 +84,7 @@ theorem bit0_succ {α} [Semiringₓ α] (a : α) : bit0 a + 1 = bit1 a :=
 
 theorem bit1_succ {α} [Semiringₓ α] (a b : α) (h : a + 1 = b) : bit1 a + 1 = bit0 b :=
   h ▸ by
-    simp [bit1, bit0, add_left_commₓ, add_assocₓ]
+    simp [← bit1, ← bit0, ← add_left_commₓ, ← add_assocₓ]
 
 section
 
@@ -124,54 +124,54 @@ theorem one_add {α} [Semiringₓ α] (a b : α) (h : a + 1 = b) : 1 + a = b := 
 
 theorem add_bit0_bit0 {α} [Semiringₓ α] (a b c : α) (h : a + b = c) : bit0 a + bit0 b = bit0 c :=
   h ▸ by
-    simp [bit0, add_left_commₓ, add_assocₓ]
+    simp [← bit0, ← add_left_commₓ, ← add_assocₓ]
 
 theorem add_bit0_bit1 {α} [Semiringₓ α] (a b c : α) (h : a + b = c) : bit0 a + bit1 b = bit1 c :=
   h ▸ by
-    simp [bit0, bit1, add_left_commₓ, add_assocₓ]
+    simp [← bit0, ← bit1, ← add_left_commₓ, ← add_assocₓ]
 
 theorem add_bit1_bit0 {α} [Semiringₓ α] (a b c : α) (h : a + b = c) : bit1 a + bit0 b = bit1 c :=
   h ▸ by
-    simp [bit0, bit1, add_left_commₓ, add_commₓ, add_assocₓ]
+    simp [← bit0, ← bit1, ← add_left_commₓ, ← add_commₓ, ← add_assocₓ]
 
 theorem add_bit1_bit1 {α} [Semiringₓ α] (a b c : α) (h : a + b + 1 = c) : bit1 a + bit1 b = bit0 c :=
   h ▸ by
-    simp [bit0, bit1, add_left_commₓ, add_commₓ, add_assocₓ]
+    simp [← bit0, ← bit1, ← add_left_commₓ, ← add_commₓ, ← add_assocₓ]
 
 theorem adc_one_one {α} [Semiringₓ α] : (1 + 1 + 1 : α) = 3 :=
   rfl
 
 theorem adc_bit0_one {α} [Semiringₓ α] (a b : α) (h : a + 1 = b) : bit0 a + 1 + 1 = bit0 b :=
   h ▸ by
-    simp [bit0, add_left_commₓ, add_assocₓ]
+    simp [← bit0, ← add_left_commₓ, ← add_assocₓ]
 
 theorem adc_one_bit0 {α} [Semiringₓ α] (a b : α) (h : a + 1 = b) : 1 + bit0 a + 1 = bit0 b :=
   h ▸ by
-    simp [bit0, add_left_commₓ, add_assocₓ]
+    simp [← bit0, ← add_left_commₓ, ← add_assocₓ]
 
 theorem adc_bit1_one {α} [Semiringₓ α] (a b : α) (h : a + 1 = b) : bit1 a + 1 + 1 = bit1 b :=
   h ▸ by
-    simp [bit1, bit0, add_left_commₓ, add_assocₓ]
+    simp [← bit1, ← bit0, ← add_left_commₓ, ← add_assocₓ]
 
 theorem adc_one_bit1 {α} [Semiringₓ α] (a b : α) (h : a + 1 = b) : 1 + bit1 a + 1 = bit1 b :=
   h ▸ by
-    simp [bit1, bit0, add_left_commₓ, add_assocₓ]
+    simp [← bit1, ← bit0, ← add_left_commₓ, ← add_assocₓ]
 
 theorem adc_bit0_bit0 {α} [Semiringₓ α] (a b c : α) (h : a + b = c) : bit0 a + bit0 b + 1 = bit1 c :=
   h ▸ by
-    simp [bit1, bit0, add_left_commₓ, add_assocₓ]
+    simp [← bit1, ← bit0, ← add_left_commₓ, ← add_assocₓ]
 
 theorem adc_bit1_bit0 {α} [Semiringₓ α] (a b c : α) (h : a + b + 1 = c) : bit1 a + bit0 b + 1 = bit0 c :=
   h ▸ by
-    simp [bit1, bit0, add_left_commₓ, add_assocₓ]
+    simp [← bit1, ← bit0, ← add_left_commₓ, ← add_assocₓ]
 
 theorem adc_bit0_bit1 {α} [Semiringₓ α] (a b c : α) (h : a + b + 1 = c) : bit0 a + bit1 b + 1 = bit0 c :=
   h ▸ by
-    simp [bit1, bit0, add_left_commₓ, add_assocₓ]
+    simp [← bit1, ← bit0, ← add_left_commₓ, ← add_assocₓ]
 
 theorem adc_bit1_bit1 {α} [Semiringₓ α] (a b c : α) (h : a + b + 1 = c) : bit1 a + bit1 b + 1 = bit1 c :=
   h ▸ by
-    simp [bit1, bit0, add_left_commₓ, add_assocₓ]
+    simp [← bit1, ← bit0, ← add_left_commₓ, ← add_assocₓ]
 
 section
 
@@ -267,18 +267,18 @@ end
 
 theorem bit0_mul {α} [Semiringₓ α] (a b c : α) (h : a * b = c) : bit0 a * b = bit0 c :=
   h ▸ by
-    simp [bit0, add_mulₓ]
+    simp [← bit0, ← add_mulₓ]
 
 theorem mul_bit0' {α} [Semiringₓ α] (a b c : α) (h : a * b = c) : a * bit0 b = bit0 c :=
   h ▸ by
-    simp [bit0, mul_addₓ]
+    simp [← bit0, ← mul_addₓ]
 
 theorem mul_bit0_bit0 {α} [Semiringₓ α] (a b c : α) (h : a * b = c) : bit0 a * bit0 b = bit0 (bit0 c) :=
   bit0_mul _ _ _ (mul_bit0' _ _ _ h)
 
 theorem mul_bit1_bit1 {α} [Semiringₓ α] (a b c d e : α) (hc : a * b = c) (hd : a + b = d) (he : bit0 c + d = e) :
     bit1 a * bit1 b = bit1 e := by
-  rw [← he, ← hd, ← hc] <;> simp [bit1, bit0, mul_addₓ, add_mulₓ, add_left_commₓ, add_assocₓ]
+  rw [← he, ← hd, ← hc] <;> simp [← bit1, ← bit0, ← mul_addₓ, ← add_mulₓ, ← add_left_commₓ, ← add_assocₓ]
 
 section
 
@@ -421,7 +421,7 @@ theorem lt_bit0_bit1 {α} [LinearOrderedSemiring α] (a b : α) (h : a ≤ b) : 
 theorem lt_bit1_bit0 {α} [LinearOrderedSemiring α] (a b : α) (h : a + 1 ≤ b) : bit1 a < bit0 b :=
   lt_of_lt_of_leₓ
     (by
-      simp [bit0, bit1, zero_lt_one, add_assocₓ])
+      simp [← bit0, ← bit1, ← zero_lt_one, ← add_assocₓ])
     (bit0_le_bit0.2 h)
 
 theorem lt_bit1_bit1 {α} [LinearOrderedSemiring α] (a b : α) : a < b → bit1 a < bit1 b :=
@@ -841,7 +841,7 @@ rings and semirings. -/
 unsafe def prove_ne : instance_cache → expr → expr → ℚ → ℚ → tactic (instance_cache × expr)
   | ic, a, b, na, nb =>
     prove_ne_rat ic a b na nb <|> do
-      let cz_inst ← mk_mapp `` CharZero [ic.α, none, none] >>= mk_instance
+      let cz_inst ← mk_mapp `` CharZero [ic.α, none] >>= mk_instance
       if na = 1 ∧ nb = 1 then
           if na ≥ 0 ∧ nb ≥ 0 then do
             guardₓ (ic ≠ quote.1 ℕ)
@@ -1026,7 +1026,7 @@ unsafe def prove_mul_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) : tact
 
 theorem inv_neg {α} [DivisionRing α] (a b : α) (h : a⁻¹ = b) : (-a)⁻¹ = -b :=
   h ▸ by
-    simp only [inv_eq_one_div, one_div_neg_eq_neg_one_div]
+    simp only [← inv_eq_one_div, ← one_div_neg_eq_neg_one_div]
 
 theorem inv_one {α} [DivisionRing α] : (1 : α)⁻¹ = 1 :=
   inv_one
@@ -1038,7 +1038,7 @@ theorem inv_div_one {α} [DivisionRing α] (a : α) : a⁻¹ = 1 / a :=
   inv_eq_one_div _
 
 theorem inv_div {α} [DivisionRing α] (a b : α) : (a / b)⁻¹ = b / a := by
-  simp only [inv_eq_one_div, one_div_div]
+  simp only [← inv_eq_one_div, ← one_div_div]
 
 /-- Given `a` a rational numeral, returns `(b, ⊢ a⁻¹ = b)`. -/
 unsafe def prove_inv : instance_cache → expr → ℚ → tactic (instance_cache × expr × expr)
@@ -1174,11 +1174,11 @@ unsafe def eval_field : expr → tactic (expr × expr)
 
 theorem pow_bit0 [Monoidₓ α] (a c' c : α) (b : ℕ) (h : a ^ b = c') (h₂ : c' * c' = c) : a ^ bit0 b = c :=
   h₂ ▸ by
-    simp [pow_bit0, h]
+    simp [← pow_bit0, ← h]
 
 theorem pow_bit1 [Monoidₓ α] (a c₁ c₂ c : α) (b : ℕ) (h : a ^ b = c₁) (h₂ : c₁ * c₁ = c₂) (h₃ : c₂ * a = c) :
     a ^ bit1 b = c := by
-  rw [← h₃, ← h₂] <;> simp [pow_bit1, h]
+  rw [← h₃, ← h₂] <;> simp [← pow_bit1, ← h]
 
 section
 
@@ -1225,9 +1225,10 @@ unsafe def prove_zpow (ic zc nc : instance_cache) (a : expr) (na : ℚ) (b : exp
   match match_sign b with
   | Sum.inl b => do
     let (zc, nc, b', hb) ← prove_nat_uncast zc nc b
+    let (nc, b0) ← prove_pos nc b'
     let (ic, c, h) ← prove_pow a na ic b'
     let (ic, c', hc) ← c.to_rat >>= prove_inv ic c
-    let (ic, p) ← ic.mk_app `` zpow_neg [a, b, b', c, c', hb, h, hc]
+    let (ic, p) ← ic.mk_app `` zpow_neg [a, b, b', c, c', b0, hb, h, hc]
     pure (ic, zc, nc, c', p)
   | Sum.inr ff => do
     let (ic, o) ← ic.mk_app `` One.one []
@@ -1243,7 +1244,7 @@ unsafe def prove_zpow (ic zc nc : instance_cache) (a : expr) (na : ℚ) (b : exp
 unsafe def eval_pow : expr → tactic (expr × expr)
   | quote.1 (@Pow.pow (%%ₓα) _ (%%ₓm) (%%ₓe₁) (%%ₓe₂)) => do
     let n₁ ← e₁.to_rat
-    let c ← infer_type e₁ >>= mk_instance_cache
+    let c ← mk_instance_cache α
     match m with
       | quote.1 (@Monoidₓ.hasPow (%%ₓ_) (%%ₓ_)) => Prod.snd <$> prove_pow e₁ n₁ c e₂
       | quote.1 (@DivInvMonoidₓ.hasPow (%%ₓ_) (%%ₓ_)) => do
@@ -1426,7 +1427,7 @@ theorem int_to_nat_pos (a : ℤ) (b : ℕ)
   rw [← h] <;> simp
 
 theorem int_to_nat_neg (a : ℤ) (h : 0 < a) : (-a).toNat = 0 := by
-  simp only [Int.to_nat_of_nonpos, h.le, neg_nonpos]
+  simp only [← Int.to_nat_of_nonpos, ← h.le, ← neg_nonpos]
 
 theorem nat_abs_pos (a : ℤ) (b : ℕ)
     (h :
@@ -1453,7 +1454,7 @@ theorem neg_succ_of_nat (a b : ℕ) (c : ℤ) (h₁ : a + 1 = b)
           ℤ) =
         c) :
     -[1+ a] = -c := by
-  rw [← h₂, ← h₁, Int.nat_cast_eq_coe_nat] <;> rfl
+  rw [← h₂, ← h₁] <;> rfl
 
 /-- Evaluates some extra numeric operations on `nat` and `int`, specifically
 `nat.succ`, `/` and `%`, and `∣` (divisibility). -/
@@ -1544,9 +1545,9 @@ unsafe def eval_cast : expr → tactic (expr × expr)
             let (_, _, _, p) ← prove_int_uncast ic zc b
             pure (b, p)
           else
-            if inst `` Int.castCoe then do
+            if inst `` Rat.castCoe then do
               let n ← a
-              let cz_inst ← mk_mapp `` CharZero [α, none, none] >>= mk_instance
+              let cz_inst ← mk_mapp `` CharZero [α, none] >>= mk_instance
               let ic ← mk_instance_cache α
               let qc ← mk_instance_cache (quote.1 ℚ)
               let (ic, b) ← ic n
@@ -1593,7 +1594,7 @@ protected unsafe def attr : user_attribute (expr → tactic (expr × expr)) Unit
     { mk_cache := fun ns => do
         let t ←
           ns.mfoldl
-              (fun n => do
+              (fun t : expr → tactic (expr × expr) n => do
                 let t' ← eval_expr (expr → tactic (expr × expr)) (expr.const n [])
                 pure fun e => t' e <|> t e)
               fun _ => failed
@@ -1618,9 +1619,9 @@ unsafe def derive' (step : expr → tactic (expr × expr)) : expr → tactic (ex
           (fun _ _ _ _ e => do
             let (new_e, pr) ← step e
             guardₓ ¬expr.alpha_eqv new_e e
-            return ((), new_e, some pr, tt))
+            pure ((), new_e, some pr, tt))
           `eq e
-    return (e', pr)
+    pure (e', pr)
 
 /-- Simplify an expression bottom-up using the default `norm_num` set to simplify the
 subexpressions. -/

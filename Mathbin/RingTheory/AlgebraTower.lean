@@ -53,9 +53,9 @@ def Invertible.algebraTower (r : R) [Invertible (algebraMap R S r)] : Invertible
 
 /-- A natural number that is invertible when coerced to `R` is also invertible
 when coerced to any `R`-algebra. -/
-def invertibleAlgebraCoeNat (n : ℕ) [inv : Invertible (n : R)] : Invertible (n : A) :=
+def invertibleAlgebraCoeNat (n : ℕ) [inv : Invertible (n : R)] : Invertible (n : A) := by
   have : Invertible (algebraMap ℕ R n) := inv
-  invertible.algebra_tower ℕ R A n
+  exact invertible.algebra_tower ℕ R A n
 
 end Semiringₓ
 
@@ -174,7 +174,7 @@ theorem linear_independent_smul {ι : Type v₁} {b : ι → S} {ι' : Type w₁
             show g p • b p.1 • c p.2 = 0 by
               rw [hg p hp, zero_smul]).symm
     rw [Finset.sum_product_right] at h1
-    simp_rw [← smul_assoc, ← Finset.sum_smul]  at h1
+    simp_rw [← smul_assoc, ← Finset.sum_smul] at h1
     exact hb _ _ (hc _ _ h1 k (Finset.mem_image_of_mem _ hik)) i (Finset.mem_image_of_mem _ hik)
     
   exact hg _ hik
@@ -190,7 +190,7 @@ noncomputable def Basis.smul {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R 
 @[simp]
 theorem Basis.smul_repr {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) x ij :
     (b.smul c).repr x ij = b.repr (c.repr x ij.2) ij.1 := by
-  simp [Basis.smul]
+  simp [← Basis.smul]
 
 theorem Basis.smul_repr_mk {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) x i j :
     (b.smul c).repr x (i, j) = b.repr (c.repr x j) i :=
@@ -205,9 +205,9 @@ theorem Basis.smul_apply {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (
   rw [Basis.smul_repr, LinearEquiv.map_smul, Basis.repr_self, Finsupp.smul_apply, Finsupp.single_apply]
   dsimp' only
   split_ifs with hi
-  · simp [hi, Finsupp.single_apply]
+  · simp [← hi, ← Finsupp.single_apply]
     
-  · simp [hi]
+  · simp [← hi]
     
 
 end Semiringₓ
@@ -239,13 +239,13 @@ open Finset Submodule
 
 open Classical
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (yi yj yk «expr ∈ » y)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (yi yj yk «expr ∈ » y)
 theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : Submodule B C).Fg) :
     ∃ B₀ : Subalgebra A B, B₀.Fg ∧ (⊤ : Submodule B₀ C).Fg := by
   cases' hAC with x hx
   cases' hBC with y hy
   have := hy
-  simp_rw [eq_top_iff', mem_span_finset]  at this
+  simp_rw [eq_top_iff', mem_span_finset] at this
   choose f hf
   let s : Finset B := (Finset.product (x ∪ y * y) y).Image (Function.uncurry f)
   have hsx : ∀, ∀ xi ∈ x, ∀, ∀ yj ∈ y, ∀, f xi yj ∈ s := fun xi hxi yj hyj =>

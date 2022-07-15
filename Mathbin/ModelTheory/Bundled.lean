@@ -29,11 +29,28 @@ instance CategoryTheory.Bundled.structure {L : FirstOrder.Language.{u, v}}
     (M : CategoryTheory.Bundled.{w} L.Structure) : L.Structure M :=
   M.str
 
+open FirstOrder Cardinal
+
+namespace Equivₓ
+
+variable (L) {M : Type w} [L.Structure M] {N : Type w'} (g : M ≃ N)
+
+/-- A type bundled with the structure induced by an equivalence. -/
+@[simps]
+def bundledInduced : CategoryTheory.Bundled.{w'} L.Structure :=
+  ⟨N, g.inducedStructure⟩
+
+/-- An equivalence of types as a first-order equivalence to the bundled structure on the codomain.
+-/
+@[simp]
+def bundledInducedEquiv : M ≃[L] g.bundledInduced L :=
+  g.inducedStructureEquiv
+
+end Equivₓ
+
 namespace FirstOrder
 
 namespace Language
-
-open FirstOrder
 
 /-- The equivalence relation on bundled `L.Structure`s indicating that they are isomorphic. -/
 instance equivSetoid : Setoidₓ (CategoryTheory.Bundled L.Structure) where
@@ -93,6 +110,9 @@ def equivInduced {M : ModelCat.{u, v, w} T} {N : Type w'} (e : M ≃ N) : ModelC
   is_model := @Equiv.Theory_model L M N _ e.inducedStructure T e.inducedStructureEquiv _
   nonempty' := e.symm.Nonempty
 
+instance of_small (M : Type w) [Nonempty M] [L.Structure M] [M ⊨ T] [h : Small.{w'} M] : Small.{w'} (ModelCat.of T M) :=
+  h
+
 /-- Shrinks a small model to a particular universe. -/
 noncomputable def shrink (M : ModelCat.{u, v, w} T) [Small.{w'} M] : ModelCat.{u, v, w'} T :=
   equivInduced (equivShrink M)
@@ -129,9 +149,16 @@ theorem coe_of {M : Type w} [L.Structure M] [Nonempty M] (h : M ⊨ T) : (h.Bund
 
 end Theory
 
+/-- A structure that is elementarily equivalent to a model, bundled as a model. -/
+def ElementarilyEquivalent.toModel {M : T.Model} {N : Type _} [LN : L.Structure N] (h : M ≅[L] N) : T.Model where
+  Carrier := N
+  struc := LN
+  nonempty' := h.Nonempty
+  is_model := h.Theory_model
+
 /-- An elementary substructure of a bundled model as a bundled model. -/
 def ElementarySubstructure.toModel {M : T.Model} (S : L.ElementarySubstructure M) : T.Model :=
-  Theory.ModelCat.of T S
+  S.ElementarilyEquivalent.symm.toModel T
 
 instance {M : T.Model} (S : L.ElementarySubstructure M) [h : Small S] : Small (S.toModel T) :=
   h

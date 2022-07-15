@@ -39,8 +39,8 @@ theorem nat_degree_det_X_add_C_le (A B : Matrix n n α) :
   rw [det_apply]
   refine' (nat_degree_sum_le _ _).trans _
   refine' Multiset.max_nat_le_of_forall_le _ _ _
-  simp only [forall_apply_eq_imp_iff', true_andₓ, Function.comp_app, Multiset.map_map, Multiset.mem_map,
-    exists_imp_distrib, Finset.mem_univ_val]
+  simp only [← forall_apply_eq_imp_iff', ← true_andₓ, ← Function.comp_app, ← Multiset.map_map, ← Multiset.mem_map, ←
+    exists_imp_distrib, ← Finset.mem_univ_val]
   intro g
   calc
     nat_degree (sign g • ∏ i : n, (X • A.map C + B.map C) (g i) i) ≤
@@ -53,7 +53,7 @@ theorem nat_degree_det_X_add_C_le (A B : Matrix n n α) :
         _ ≤ ∑ i : n, nat_degree (((X : α[X]) • A.map C + B.map C) (g i) i) :=
       nat_degree_prod_le (Finset.univ : Finset n) fun i : n =>
         (X • A.map C + B.map C) (g i) i _ ≤ finset.univ.card • 1 :=
-      Finset.sum_le_card_nsmul _ _ 1 fun _ => _ _ ≤ Fintype.card n := by
+      Finset.sum_le_card_nsmul _ _ 1 fun i : n _ => _ _ ≤ Fintype.card n := by
       simpa
   calc
     nat_degree (((X : α[X]) • A.map C + B.map C) (g i) i) = nat_degree ((X : α[X]) * C (A (g i) i) + C (B (g i) i)) :=
@@ -76,19 +76,19 @@ theorem coeff_det_X_add_C_card (A B : Matrix n n α) :
     coeff (det ((x : α[X]) • A.map c + B.map c)) (Fintype.card n) = det A := by
   rw [det_apply, det_apply, finset_sum_coeff]
   refine' Finset.sum_congr rfl _
-  simp only [Algebra.id.smul_eq_mul, Finset.mem_univ, RingHom.map_matrix_apply, forall_true_left, map_apply,
+  simp only [← Algebra.id.smul_eq_mul, ← Finset.mem_univ, ← RingHom.map_matrix_apply, ← forall_true_left, ← map_apply, ←
     Pi.smul_apply]
   intro g
   convert coeff_smul (sign g) _ _
   rw [← mul_oneₓ (Fintype.card n)]
   convert (coeff_prod_of_nat_degree_le _ _ _ _).symm
   · ext
-    simp [coeff_C]
+    simp [← coeff_C]
     
   · intro p hp
     refine' (nat_degree_add_le _ _).trans _
-    simpa only [Pi.smul_apply, map_apply, Algebra.id.smul_eq_mul, X_mul_C, nat_degree_C, max_eq_leftₓ, zero_le'] using
-      (nat_degree_C_mul_le _ _).trans nat_degree_X_le
+    simpa only [← Pi.smul_apply, ← map_apply, ← Algebra.id.smul_eq_mul, ← X_mul_C, ← nat_degree_C, ← max_eq_leftₓ, ←
+      zero_le'] using (nat_degree_C_mul_le _ _).trans nat_degree_X_le
     
 
 theorem leading_coeff_det_X_one_add_C (A : Matrix n n α) :
@@ -97,9 +97,9 @@ theorem leading_coeff_det_X_one_add_C (A : Matrix n n α) :
   · simp
     
   rw [← @det_one n, ← coeff_det_X_add_C_card _ A, leading_coeff]
-  simp only [Matrix.map_one, C_eq_zero, RingHom.map_one]
+  simp only [← Matrix.map_one, ← C_eq_zero, ← RingHom.map_one]
   cases' (nat_degree_det_X_add_C_le 1 A).eq_or_lt with h h
-  · simp only [RingHom.map_one, Matrix.map_one, C_eq_zero] at h
+  · simp only [← RingHom.map_one, ← Matrix.map_one, ← C_eq_zero] at h
     rw [h]
     
   · -- contradiction. we have a hypothesis that the degree is less than |n|

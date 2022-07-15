@@ -69,7 +69,7 @@ protected theorem dist_comm (x y : Completion α) : dist x y = dist y x := by
     rw [completion.dist_eq, completion.dist_eq, dist_comm]
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 protected theorem dist_triangle (x y z : Completion α) : dist x z ≤ dist x y + dist y z := by
   apply induction_on₃ x y z
   · refine' is_closed_le _ (Continuous.add _ _) <;>
@@ -112,11 +112,11 @@ protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α))
         · exact Or.inl h
           
         · have Z := hε (not_leₓ.1 h)
-          simp only [Set.mem_set_of_eq] at Z
+          simp only [← Set.mem_set_of_eq] at Z
           exact Or.inr Z
           
         
-    simp only [not_le.mpr hxy, false_orₓ, not_leₓ] at this
+    simp only [← not_le.mpr hxy, ← false_orₓ, ← not_leₓ] at this
     exact ts this
     
   · /- Start from a set `s` containing an ε-neighborhood of the diagonal in `completion α`. To show
@@ -130,14 +130,14 @@ protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α))
     let r : Set (ℝ × ℝ) := { p | dist p.1 p.2 < ε }
     have : r ∈ uniformity ℝ := Metric.dist_mem_uniformity εpos
     have T := uniform_continuous_def.1 (@completion.uniform_continuous_dist α _) r this
-    simp only [uniformity_prod_eq_prod, mem_prod_iff, exists_prop, Filter.mem_map, Set.mem_set_of_eq] at T
+    simp only [← uniformity_prod_eq_prod, ← mem_prod_iff, ← exists_prop, ← Filter.mem_map, ← Set.mem_set_of_eq] at T
     rcases T with ⟨t1, ht1, t2, ht2, ht⟩
     refine' mem_of_superset ht1 _
     have A : ∀ a b : completion α, (a, b) ∈ t1 → dist a b < ε := by
       intro a b hab
       have : ((a, b), (a, a)) ∈ t1 ×ˢ t2 := ⟨hab, refl_mem_uniformity ht2⟩
       have I := ht this
-      simp [completion.dist_self, Real.dist_eq, completion.dist_comm] at I
+      simp [← completion.dist_self, ← Real.dist_eq, ← completion.dist_comm] at I
       exact lt_of_le_of_ltₓ (le_abs_self _) I
     show t1 ⊆ s
     · rintro ⟨a, b⟩ hp
@@ -162,15 +162,15 @@ of the metric space structure. -/
 protected theorem uniformity_dist' : 𝓤 (Completion α) = ⨅ ε : { ε : ℝ // 0 < ε }, 𝓟 { p | dist p.1 p.2 < ε.val } := by
   ext s
   rw [mem_infi_of_directed]
-  · simp [completion.mem_uniformity_dist, subset_def]
+  · simp [← completion.mem_uniformity_dist, ← subset_def]
     
   · rintro ⟨r, hr⟩ ⟨p, hp⟩
     use ⟨min r p, lt_minₓ hr hp⟩
-    simp (config := { contextual := true })[lt_min_iff, (· ≥ ·)]
+    simp (config := { contextual := true })[← lt_min_iff, ← (· ≥ ·)]
     
 
 protected theorem uniformity_dist : 𝓤 (Completion α) = ⨅ ε > 0, 𝓟 { p | dist p.1 p.2 < ε } := by
-  simpa [infi_subtype] using @completion.uniformity_dist' α _
+  simpa [← infi_subtype] using @completion.uniformity_dist' α _
 
 /-- Metric space structure on the completion of a pseudo_metric space. -/
 instance : MetricSpace (Completion α) where
@@ -178,6 +178,7 @@ instance : MetricSpace (Completion α) where
   eq_of_dist_eq_zero := Completion.eq_of_dist_eq_zero
   dist_comm := Completion.dist_comm
   dist_triangle := Completion.dist_triangle
+  dist := dist
   toUniformSpace := by
     infer_instance
   uniformity_dist := Completion.uniformity_dist

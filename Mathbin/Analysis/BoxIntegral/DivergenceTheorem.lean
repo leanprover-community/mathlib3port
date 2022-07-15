@@ -106,11 +106,11 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
     change ∀, ∀ y ∈ I.Icc, ∀, ∥g y∥ ≤ ε * ∥y - x∥ at hε
     clear_value g
     obtain rfl : f = fun y => a + f' (y - x) + g y := by
-      simp [hg]
+      simp [← hg]
     convert_to ∥g (i.insert_nth (I.lower i) y) - g (i.insert_nth (I.upper i) y)∥ ≤ _
     · congr 1
       have := Finₓ.insert_nth_sub_same i (I.upper i) (I.lower i) y
-      simp only [← this, f'.map_sub]
+      simp only [this, ← f'.map_sub]
       abel
       
     · have : ∀, ∀ z ∈ Icc (I.lower i) (I.upper i), ∀, i.insert_nth z y ∈ I.Icc := fun z hz =>
@@ -137,7 +137,7 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
       rw [← integral_sub (Hi _ Hu) (Hi _ Hl), ← box.volume_face_mul i, mul_smul, ← box.volume_apply, ←
         box_additive_map.to_smul_apply, ← integral_const, ← box_additive_map.volume, ←
         integral_sub (integrable_const _) ((Hi _ Hu).sub (Hi _ Hl))]
-      simp only [(· ∘ ·), Pi.sub_def, ← f'.map_smul, ← Pi.single_smul', smul_eq_mul,
+      simp only [← (· ∘ ·), ← Pi.sub_def, f'.map_smul, Pi.single_smul', ← smul_eq_mul, ←
         mul_oneₓ]_ ≤ (volume (I.face i : Set ℝⁿ)).toReal * (2 * ε * c * (I.upper i - I.lower i)) :=
       by
       -- The hard part of the estimate was done above, here we just replace `diam I.Icc`
@@ -151,7 +151,7 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
       rw [← measure.to_box_additive_apply, box.volume_apply, ← I.volume_face_mul i]
       ac_rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (y₁ y₂ «expr ∈ » «expr ∩ »(closed_ball x δ, I.Icc))
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y₁ y₂ «expr ∈ » «expr ∩ »(closed_ball x δ, I.Icc))
 /-- If `f : ℝⁿ⁺¹ → E` is differentiable on a closed rectangular box `I` with derivative `f'`, then
 the partial derivative `λ x, f' x (pi.single i 1)` is Henstock-Kurzweil integrable with integral
 equal to the difference of integrals of `f` over the faces `x i = I.upper i` and `x i = I.lower i`.
@@ -162,7 +162,7 @@ we allow `f` to be non-differentiable (but still continuous) at a countable set 
 TODO: If `n > 0`, then the condition at `x ∈ s` can be replaced by a much weaker estimate but this
 requires either better integrability theorems, or usage of a filter depending on the countable set
 `s` (we need to ensure that none of the faces of a partition contain a point from `s`). -/
-theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] E) (s : Set ℝⁿ⁺¹) (hs : Countable s)
+theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] E) (s : Set ℝⁿ⁺¹) (hs : s.Countable)
     (Hs : ∀, ∀ x ∈ s, ∀, ContinuousWithinAt f I.Icc x) (Hd : ∀, ∀ x ∈ I.Icc \ s, ∀, HasFderivWithinAt f (f' x) I.Icc x)
     (i : Finₓ (n + 1)) :
     HasIntegral.{0, u, u} I ⊥ (fun x => f' x (Pi.single i 1)) BoxAdditiveMap.volume
@@ -232,7 +232,7 @@ theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → �
     have Hmaps :
       ∀, ∀ z ∈ Icc (J.lower i) (J.upper i), ∀, maps_to (i.insert_nth z) (J.face i).Icc (closed_ball x δ ∩ I.Icc) :=
       fun z hz => (J.maps_to_insert_nth_face_Icc hz).mono subset.rfl hJδ'
-    simp only [dist_eq_norm, F, fI]
+    simp only [← dist_eq_norm, ← F, ← fI]
     dsimp'
     rw [← integral_sub (Hi _ Hu) (Hi _ Hl)]
     refine' (norm_sub_le _ _).trans (add_le_add _ _)
@@ -267,7 +267,7 @@ theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → �
     rcases exists_pos_mul_lt ε0 (2 * c) with ⟨ε', ε'0, hlt⟩
     rcases(nhds_within_has_basis nhds_basis_closed_ball _).mem_iff.1 ((Hd x hx).def ε'0) with ⟨δ, δ0, Hδ⟩
     refine' ⟨δ, δ0, fun J hle hJδ hxJ hJc => _⟩
-    simp only [box_additive_map.volume_apply, box.volume_apply, dist_eq_norm]
+    simp only [← box_additive_map.volume_apply, ← box.volume_apply, ← dist_eq_norm]
     refine'
       (norm_volume_sub_integral_face_upper_sub_lower_smul_le _ (Hc.mono <| box.le_iff_Icc.1 hle) hxJ ε'0
             (fun y hy => Hδ _) (hJc rfl)).trans
@@ -288,7 +288,7 @@ the sum of integrals of `f` over the faces of `I` taken with appropriate signs.
 More precisely, we use a non-standard generalization of the Henstock-Kurzweil integral and
 we allow `f` to be non-differentiable (but still continuous) at a countable set of points. -/
 theorem has_integral_bot_divergence_of_forall_has_deriv_within_at (f : ℝⁿ⁺¹ → Eⁿ⁺¹) (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] Eⁿ⁺¹)
-    (s : Set ℝⁿ⁺¹) (hs : Countable s) (Hs : ∀, ∀ x ∈ s, ∀, ContinuousWithinAt f I.Icc x)
+    (s : Set ℝⁿ⁺¹) (hs : s.Countable) (Hs : ∀, ∀ x ∈ s, ∀, ContinuousWithinAt f I.Icc x)
     (Hd : ∀, ∀ x ∈ I.Icc \ s, ∀, HasFderivWithinAt f (f' x) I.Icc x) :
     HasIntegral.{0, u, u} I ⊥ (fun x => ∑ i, f' x (Pi.single i 1) i) BoxAdditiveMap.volume
       (∑ i,
@@ -297,7 +297,7 @@ theorem has_integral_bot_divergence_of_forall_has_deriv_within_at (f : ℝⁿ⁺
   by
   refine' has_integral_sum fun i hi => _
   clear hi
-  simp only [has_fderiv_within_at_pi', continuous_within_at_pi] at Hd Hs
+  simp only [← has_fderiv_within_at_pi', ← continuous_within_at_pi] at Hd Hs
   convert has_integral_bot_pderiv I _ _ s hs (fun x hx => Hs x hx i) (fun x hx => Hd x hx i) i
 
 end BoxIntegral

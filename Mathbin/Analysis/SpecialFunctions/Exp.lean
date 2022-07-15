@@ -132,6 +132,9 @@ namespace Real
 
 variable {x y z : ℝ}
 
+theorem exp_half (x : ℝ) : exp (x / 2) = sqrt (exp x) := by
+  rw [eq_comm, sqrt_eq_iff_sq_eq, sq, ← exp_add, add_halves] <;> exact (exp_pos _).le
+
 /-- The real exponential function tends to `+∞` at `+∞`. -/
 theorem tendsto_exp_at_top : Tendsto exp atTop atTop := by
   have A : tendsto (fun x : ℝ => x + 1) at_top at_top := tendsto_at_top_add_const_right at_top 1 tendsto_id
@@ -172,7 +175,7 @@ theorem tendsto_exp_div_pow_at_top (n : ℕ) : Tendsto (fun x => exp x / x ^ n) 
   obtain ⟨N, hN⟩ : ∃ N, ∀, ∀ k ≥ N, ∀, (↑k ^ n : ℝ) / exp 1 ^ k < (exp 1 * C)⁻¹ :=
     eventually_at_top.1
       ((tendsto_pow_const_div_const_pow_of_one_lt n (one_lt_exp_iff.2 zero_lt_one)).Eventually (gt_mem_nhds this))
-  simp only [← exp_nat_mul, mul_oneₓ, div_lt_iff, exp_pos, ← div_eq_inv_mul] at hN
+  simp only [exp_nat_mul, ← mul_oneₓ, ← div_lt_iff, ← exp_pos, div_eq_inv_mul] at hN
   refine' ⟨N, trivialₓ, fun x hx => _⟩
   rw [Set.mem_Ioi] at hx
   have hx₀ : 0 < x := N.cast_nonneg.trans_lt hx
@@ -192,7 +195,7 @@ theorem tendsto_pow_mul_exp_neg_at_top_nhds_0 (n : ℕ) : Tendsto (fun x => x ^ 
 theorem tendsto_mul_exp_add_div_pow_at_top (b c : ℝ) (n : ℕ) (hb : 0 < b) :
     Tendsto (fun x => (b * exp x + c) / x ^ n) atTop atTop := by
   rcases n.eq_zero_or_pos with (rfl | hn)
-  · simp only [pow_zeroₓ, div_one]
+  · simp only [← pow_zeroₓ, ← div_one]
     exact (tendsto_exp_at_top.const_mul_at_top hb).at_top_add tendsto_const_nhds
     
   refine'
@@ -200,7 +203,7 @@ theorem tendsto_mul_exp_add_div_pow_at_top (b c : ℝ) (n : ℕ) (hb : 0 < b) :
       (((tendsto_exp_div_pow_at_top n).const_mul_at_top hb).at_top_add
         ((tendsto_pow_neg_at_top hn).mul (@tendsto_const_nhds _ _ _ c _)))
   intro x hx
-  simp only [zpow_neg x n]
+  simp only [← zpow_neg x n]
   ring
 
 /-- The function `(x ^ n) / (b * exp x + c)` tends to `0` at `+∞`, for any natural number
@@ -211,7 +214,7 @@ theorem tendsto_div_pow_mul_exp_add_at_top (b c : ℝ) (n : ℕ) (hb : 0 ≠ b) 
     intro b' c' h
     convert (tendsto_mul_exp_add_div_pow_at_top b' c' n h).inv_tendsto_at_top
     ext x
-    simpa only [Pi.inv_apply] using (inv_div _ _).symm
+    simpa only [← Pi.inv_apply] using (inv_div _ _).symm
   cases lt_or_gt_of_neₓ hb
   · exact H b c h
     
@@ -229,9 +232,9 @@ def expOrderIso : ℝ ≃o Ioi (0 : ℝ) :=
   StrictMono.orderIsoOfSurjective _ (exp_strict_mono.codRestrict exp_pos) <|
     (continuous_subtype_mk _ continuous_exp).Surjective
       (by
-        simp only [tendsto_Ioi_at_top, Subtype.coe_mk, tendsto_exp_at_top])
+        simp only [← tendsto_Ioi_at_top, ← Subtype.coe_mk, ← tendsto_exp_at_top])
       (by
-        simp [tendsto_exp_at_bot_nhds_within])
+        simp [← tendsto_exp_at_bot_nhds_within])
 
 @[simp]
 theorem coe_exp_order_iso_apply (x : ℝ) : (expOrderIso x : ℝ) = exp x :=
@@ -280,7 +283,7 @@ theorem comap_exp_nhds_zero : comap exp (𝓝 0) = at_bot :=
     simp
 
 theorem is_o_pow_exp_at_top {n : ℕ} : (fun x => x ^ n) =o[at_top] Real.exp := by
-  simpa [is_o_iff_tendsto fun x hx => ((exp_pos x).ne' hx).elim] using
+  simpa [← is_o_iff_tendsto fun x hx => ((exp_pos x).ne' hx).elim] using
     tendsto_div_pow_mul_exp_add_at_top 1 0 n zero_ne_one
 
 /-- `real.exp (f x)` is bounded away from zero along a filter if and only if this filter is bounded
@@ -291,10 +294,10 @@ theorem is_O_one_exp_comp {α : Type _} {l : Filter α} {f : α → ℝ} :
   calc
     ((fun x => 1 : α → ℝ) =O[l] fun x => exp (f x)) ↔ ∃ b : ℝ, 0 < b ∧ ∀ᶠ x in l, b ≤ exp (f x) :=
       Iff.trans (is_O_const_left_iff_pos_le_norm one_ne_zero) <| by
-        simp only [norm_eq_abs, abs_exp]
+        simp only [← norm_eq_abs, ← abs_exp]
     _ ↔ IsBoundedUnder (· ≥ ·) l fun x => expOrderIso (f x) := by
-      simp only [is_bounded_under, is_bounded, eventually_map, SetCoe.exists, ge_iff_le, ← Subtype.coe_le_coe,
-        exists_prop, coe_exp_order_iso_apply, Subtype.coe_mk, Set.mem_Ioi]
+      simp only [← is_bounded_under, ← is_bounded, ← eventually_map, ← SetCoe.exists, ← ge_iff_le, Subtype.coe_le_coe, ←
+        exists_prop, ← coe_exp_order_iso_apply, ← Subtype.coe_mk, ← Set.mem_Ioi]
     _ ↔ IsBoundedUnder (· ≥ ·) l f := expOrderIso.Monotone.is_bounded_under_ge_comp expOrderIso.tendsto_at_bot
     
 
@@ -305,7 +308,7 @@ namespace Complex
 theorem comap_exp_comap_abs_at_top : comap exp (comap abs atTop) = comap re atTop :=
   calc
     comap exp (comap abs atTop) = comap re (comap Real.exp atTop) := by
-      simp only [comap_comap, (· ∘ ·), abs_exp]
+      simp only [← comap_comap, ← (· ∘ ·), ← abs_exp]
     _ = comap re atTop := by
       rw [Real.comap_exp_at_top]
     
@@ -313,14 +316,14 @@ theorem comap_exp_comap_abs_at_top : comap exp (comap abs atTop) = comap re atTo
 theorem comap_exp_nhds_zero : comap exp (𝓝 0) = comap re atBot :=
   calc
     comap exp (𝓝 0) = comap re (comap Real.exp (𝓝 0)) := by
-      simp only [comap_comap, ← comap_abs_nhds_zero, (· ∘ ·), abs_exp]
+      simp only [← comap_comap, comap_abs_nhds_zero, ← (· ∘ ·), ← abs_exp]
     _ = comap re atBot := by
       rw [Real.comap_exp_nhds_zero]
     
 
 theorem comap_exp_nhds_within_zero : comap exp (𝓝[≠] 0) = comap re atBot := by
   have : exp ⁻¹' {0}ᶜ = univ := eq_univ_of_forall exp_ne_zero
-  simp [nhdsWithin, comap_exp_nhds_zero, this]
+  simp [← nhdsWithin, ← comap_exp_nhds_zero, ← this]
 
 theorem tendsto_exp_nhds_zero_iff {α : Type _} {l : Filter α} {f : α → ℂ} :
     Tendsto (fun x => exp (f x)) l (𝓝 0) ↔ Tendsto (fun x => re (f x)) l atBot := by

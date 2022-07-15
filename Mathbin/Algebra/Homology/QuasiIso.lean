@@ -37,13 +37,13 @@ class QuasiIso (f : C ⟶ D) : Prop where
 
 attribute [instance] QuasiIso.is_iso
 
-instance (priority := 100) quasi_iso_of_iso (f : C ⟶ D) [IsIso f] : QuasiIso f where
-  IsIso := fun i => by
+instance (priority := 100) quasi_iso_of_iso (f : C ⟶ D) [IsIso f] :
+    QuasiIso f where IsIso := fun i => by
     change is_iso ((homologyFunctor V c i).mapIso (as_iso f)).Hom
     infer_instance
 
-instance quasi_iso_comp (f : C ⟶ D) [QuasiIso f] (g : D ⟶ E) [QuasiIso g] : QuasiIso (f ≫ g) where
-  IsIso := fun i => by
+instance quasi_iso_comp (f : C ⟶ D) [QuasiIso f] (g : D ⟶ E) [QuasiIso g] :
+    QuasiIso (f ≫ g) where IsIso := fun i => by
     rw [functor.map_comp]
     infer_instance
 

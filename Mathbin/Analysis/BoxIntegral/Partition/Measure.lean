@@ -55,7 +55,7 @@ theorem measurable_set_Icc : MeasurableSet I.Icc :=
   measurable_set_Icc
 
 theorem measurable_set_Ioo : MeasurableSet I.Ioo :=
-  (measurable_set_pi (Finite.of_fintype _).Countable).2 <| Or.inl fun i hi => measurable_set_Ioo
+  (measurable_set_pi (Set.Finite.of_fintype _).Countable).2 <| Or.inl fun i hi => measurable_set_Ioo
 
 theorem coe_ae_eq_Icc : (I : Set (ι → ℝ)) =ᵐ[volume] I.Icc := by
   rw [coe_eq_pi]
@@ -105,7 +105,7 @@ theorem volume_apply (I : Box ι) : (volume : Measureₓ (ι → ℝ)).toBoxAddi
 
 theorem volume_face_mul {n} (i : Finₓ (n + 1)) (I : Box (Finₓ (n + 1))) :
     (∏ j, (I.face i).upper j - (I.face i).lower j) * (I.upper i - I.lower i) = ∏ j, I.upper j - I.lower j := by
-  simp only [face_lower, face_upper, (· ∘ ·), Finₓ.prod_univ_succ_above _ i, mul_comm]
+  simp only [← face_lower, ← face_upper, ← (· ∘ ·), ← Finₓ.prod_univ_succ_above _ i, ← mul_comm]
 
 end Box
 

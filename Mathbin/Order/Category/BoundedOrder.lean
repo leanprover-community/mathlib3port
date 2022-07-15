@@ -58,8 +58,9 @@ instance concreteCategory : ConcreteCategory BoundedOrderCat where
     ⟨fun X Y => by
       convert FunLike.coe_injective⟩
 
-instance hasForgetToPartialOrder : HasForget₂ BoundedOrderCat PartialOrderₓₓ where
-  forget₂ := { obj := fun X => X.toPartialOrder, map := fun X Y => BoundedOrderHom.toOrderHom }
+instance hasForgetToPartialOrder :
+    HasForget₂ BoundedOrderCat
+      PartialOrderₓₓ where forget₂ := { obj := fun X => X.toPartialOrder, map := fun X Y => BoundedOrderHom.toOrderHom }
 
 instance hasForgetToBipointed : HasForget₂ BoundedOrderCat Bipointed where
   forget₂ := { obj := fun X => ⟨X, ⊥, ⊤⟩, map := fun X Y f => ⟨f, map_bot f, map_top f⟩ }

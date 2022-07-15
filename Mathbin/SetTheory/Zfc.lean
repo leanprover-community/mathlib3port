@@ -3,7 +3,7 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Set.Basic
+import Mathbin.Data.Set.Lattice
 
 /-!
 # A model of ZFC
@@ -409,7 +409,7 @@ noncomputable def allDefinable : ∀ {n} F : Arity Setₓ.{u} n, Definable n F
   | n + 1, (F : Arity Setₓ.{u} (n + 1)) => by
     have I := fun x => all_definable (F x)
     refine' definable.eq_mk ⟨fun x : PSet => (@definable.resp _ _ (I ⟦x⟧)).1, _⟩ _
-    · dsimp' [arity.equiv]
+    · dsimp' [← arity.equiv]
       intro x y h
       rw [@Quotientₓ.sound PSet _ _ _ h]
       exact (definable.resp (F ⟦y⟧)).2
@@ -469,7 +469,7 @@ theorem ext {x y : Setₓ.{u}} : (∀ z : Setₓ.{u}, z ∈ x ↔ z ∈ y) → x
 
 theorem ext_iff {x y : Setₓ.{u}} : (∀ z : Setₓ.{u}, z ∈ x ↔ z ∈ y) ↔ x = y :=
   ⟨ext, fun h => by
-    simp [h]⟩
+    simp [← h]⟩
 
 /-- The empty ZFC set -/
 def empty : Setₓ :=
@@ -572,7 +572,7 @@ instance : HasSep Setₓ Setₓ :=
 
 @[simp]
 theorem mem_sep {p : Setₓ.{u} → Prop} {x y : Setₓ.{u}} : y ∈ { y ∈ x | p y } ↔ y ∈ x ∧ p y :=
-  Quotientₓ.induction_on₂ x y fun y =>
+  Quotientₓ.induction_on₂ x y fun ⟨α, A⟩ y =>
     ⟨fun ⟨⟨a, pa⟩, h⟩ =>
       ⟨⟨a, h⟩, by
         rw [@Quotientₓ.sound PSet _ _ _ h]
@@ -601,7 +601,7 @@ def powerset : Setₓ → Setₓ :=
 theorem mem_powerset {x y : Setₓ.{u}} : y ∈ powerset x ↔ y ⊆ x :=
   Quotientₓ.induction_on₂ x y fun ⟨α, A⟩ ⟨β, B⟩ =>
     show (⟨β, B⟩ : PSet.{u}) ∈ PSet.powerset.{u} ⟨α, A⟩ ↔ _ by
-      simp [mem_powerset, subset_iff]
+      simp [← mem_powerset, ← subset_iff]
 
 theorem Union_lem {α β : Type u} (A : α → PSet) (B : β → PSet) (αβ : ∀ a, ∃ b, Equivₓ (A a) (B b)) :
     ∀ a, ∃ b, Equivₓ ((union ⟨α, A⟩).func a) ((union ⟨β, B⟩).func b)
@@ -707,7 +707,7 @@ theorem regularity (x : Setₓ.{u}) (h : x ≠ ∅) : ∃ y ∈ x, x ∩ y = ∅
   Classical.by_contradiction fun ne =>
     h <|
       (eq_empty x).2 fun y =>
-        (induction_on y) fun IH : ∀ w : Setₓ.{u}, w ∈ z → w ∉ x =>
+        (induction_on y) fun z IH : ∀ w : Setₓ.{u}, w ∈ z → w ∉ x =>
           show z ∉ x from fun zx =>
             Ne
               ⟨z, zx,
@@ -728,13 +728,13 @@ def image (f : Setₓ → Setₓ) [H : Definable 1 f] : Setₓ → Setₓ :=
             Iff.symm (mem_image r.2)⟩
 
 theorem image.mk : ∀ f : Setₓ.{u} → Setₓ.{u} [H : Definable 1 f] x {y} h : y ∈ x, f y ∈ @image f H x
-  | _, ⟨F⟩, x, y => (Quotientₓ.induction_on₂ x y) fun y ⟨a, ya⟩ => ⟨a, F.2 _ _ ya⟩
+  | _, ⟨F⟩, x, y => (Quotientₓ.induction_on₂ x y) fun ⟨α, A⟩ y ⟨a, ya⟩ => ⟨a, F.2 _ _ ya⟩
 
 @[simp]
 theorem mem_image :
     ∀ {f : Setₓ.{u} → Setₓ.{u}} [H : Definable 1 f] {x y : Setₓ.{u}}, y ∈ @image f H x ↔ ∃ z ∈ x, f z = y
   | _, ⟨F⟩, x, y =>
-    (Quotientₓ.induction_on₂ x y) fun y =>
+    (Quotientₓ.induction_on₂ x y) fun ⟨α, A⟩ y =>
       ⟨fun ⟨a, ya⟩ => ⟨⟦A a⟧, Mem.mk A a, Eq.symm <| Quotientₓ.sound ya⟩, fun ⟨z, hz, e⟩ => e ▸ image.mk _ _ hz⟩
 
 /-- Kuratowski ordered pair -/
@@ -749,8 +749,8 @@ def pairSep (p : Setₓ.{u} → Setₓ.{u} → Prop) (x y : Setₓ.{u}) : Setₓ
 theorem mem_pair_sep {p} {x y z : Setₓ.{u}} : z ∈ pairSep p x y ↔ ∃ a ∈ x, ∃ b ∈ y, z = pair a b ∧ p a b := by
   refine' mem_sep.trans ⟨And.right, fun e => ⟨_, e⟩⟩
   rcases e with ⟨a, ax, b, bY, rfl, pab⟩
-  simp only [mem_powerset, subset_def, mem_union, pair, mem_pair]
-  rintro u (rfl | rfl) v <;> simp only [mem_singleton, mem_pair]
+  simp only [← mem_powerset, ← subset_def, ← mem_union, ← pair, ← mem_pair]
+  rintro u (rfl | rfl) v <;> simp only [← mem_singleton, ← mem_pair]
   · rintro rfl
     exact Or.inl ax
     
@@ -759,7 +759,7 @@ theorem mem_pair_sep {p} {x y z : Setₓ.{u}} : z ∈ pairSep p x y ↔ ∃ a �
 
 theorem pair_inj {x y x' y' : Setₓ.{u}} (H : pair x y = pair x' y') : x = x' ∧ y = y' := by
   have ae := ext_iff.2 H
-  simp only [pair, mem_pair] at ae
+  simp only [← pair, ← mem_pair] at ae
   obtain rfl : x = x' := by
     cases'
       (ae {x}).1
@@ -769,7 +769,7 @@ theorem pair_inj {x y x' y' : Setₓ.{u}} (H : pair x y = pair x' y') : x = x' �
     · exact singleton_inj h
       
     · have m : x' ∈ ({x} : Setₓ) := by
-        simp [h]
+        simp [← h]
       rw [mem_singleton.mp m]
       
   have he : x = y → y = y' := by
@@ -777,12 +777,12 @@ theorem pair_inj {x y x' y' : Setₓ.{u}} (H : pair x y = pair x' y') : x = x' �
     cases'
       (ae {x, y'}).2
         (by
-          simp only [eq_self_iff_true, or_trueₓ]) with
+          simp only [← eq_self_iff_true, ← or_trueₓ]) with
       xy'x xy'xx
     · rw [eq_comm, ← mem_singleton, ← xy'x, mem_pair]
       exact Or.inr rfl
       
-    · simpa [eq_comm] using
+    · simpa [← eq_comm] using
         (ext_iff.2 xy'xx y').1
           (by
             simp )
@@ -795,15 +795,15 @@ theorem pair_inj {x y x' y' : Setₓ.{u}} (H : pair x y = pair x' y') : x = x' �
       mem_singleton.mp
         ((ext_iff.2 xyx y).1 <| by
           simp )
-    simp [he rfl]
+    simp [← he rfl]
     
   · obtain rfl | yy' :=
       mem_pair.mp
         ((ext_iff.2 xyy' y).1 <| by
           simp )
-    · simp [he rfl]
+    · simp [← he rfl]
       
-    · simp [yy']
+    · simp [← yy']
       
     
 
@@ -813,7 +813,7 @@ def prod : Setₓ.{u} → Setₓ.{u} → Setₓ.{u} :=
 
 @[simp]
 theorem mem_prod {x y z : Setₓ.{u}} : z ∈ prod x y ↔ ∃ a ∈ x, ∃ b ∈ y, z = pair a b := by
-  simp [Prod]
+  simp [← Prod]
 
 @[simp]
 theorem pair_mem_prod {x y a b : Setₓ.{u}} : pair a b ∈ prod x y ↔ a ∈ x ∧ b ∈ y :=
@@ -834,7 +834,7 @@ def funs (x y : Setₓ.{u}) : Setₓ.{u} :=
 
 @[simp]
 theorem mem_funs {x y f : Setₓ.{u}} : f ∈ funs x y ↔ IsFunc x y f := by
-  simp [funs, is_func]
+  simp [← funs, ← is_func]
 
 -- TODO(Mario): Prove this computably
 noncomputable instance mapDefinableAux (f : Setₓ → Setₓ) [H : Definable 1 f] : Definable 1 fun y => pair y (f y) :=
@@ -858,7 +858,7 @@ theorem map_unique {f : Setₓ.{u} → Setₓ.{u}} [H : Definable 1 f] {x z : Se
 @[simp]
 theorem map_is_func {f : Setₓ → Setₓ} [H : Definable 1 f] {x y : Setₓ} :
     IsFunc x y (map f x) ↔ ∀, ∀ z ∈ x, ∀, f z ∈ y :=
-  ⟨fun z zx =>
+  ⟨fun ⟨ss, h⟩ z zx =>
     let ⟨t, t1, t2⟩ := h z zx
     (t2 (f z) (image.mk _ _ zx)).symm ▸ (pair_mem_prod.1 (ss t1)).right,
     fun h =>
@@ -869,11 +869,14 @@ theorem map_is_func {f : Setₓ → Setₓ} [H : Definable 1 f] {x y : Setₓ} :
 
 end Setₓ
 
--- ././Mathport/Syntax/Translate/Basic.lean:978:9: unsupported derive handler has_sep Set
--- ././Mathport/Syntax/Translate/Basic.lean:978:9: unsupported derive handler has_insert Set
+-- ./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler has_sep Set
+-- ./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler has_insert Set
 /-- The collection of all classes. A class is defined as a `set` of ZFC sets. -/
 def Class :=
-  Set Setₓ deriving HasSubset, [anonymous], HasEmptyc, Inhabited, [anonymous], HasUnion, HasInter, HasCompl, HasSdiff
+  Set Setₓ deriving HasSubset,
+  «./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler has_sep Set», HasEmptyc, Inhabited,
+  «./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler has_insert Set», HasUnion, HasInter,
+  HasCompl, HasSdiff
 
 namespace Class
 
@@ -944,7 +947,7 @@ theorem subset_hom (x y : Setₓ.{u}) : (x : Class.{u}) ⊆ y ↔ x ⊆ y :=
   Iff.rfl
 
 @[simp]
-theorem sep_hom (p : Setₓ.{u} → Prop) (x : Setₓ.{u}) : (↑{ y ∈ x | p y } : Class.{u}) = { y ∈ x | p y } :=
+theorem sep_hom (p : Setₓ.{u} → Prop) (x : Setₓ.{u}) : (↑({ y ∈ x | p y }) : Class.{u}) = { y ∈ x | p y } :=
   Set.ext fun y => Setₓ.mem_sep
 
 @[simp]

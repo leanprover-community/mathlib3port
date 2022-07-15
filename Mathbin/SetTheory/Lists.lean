@@ -79,7 +79,7 @@ def toList : ∀ {b}, Lists' α b → List (Lists α)
 
 @[simp]
 theorem to_list_cons (a : Lists α) l : toList (cons a l) = a :: l.toList := by
-  cases a <;> simp [cons]
+  cases a <;> simp [← cons]
 
 /-- Converts a `list` of ZFA lists to a proper ZFA prelist. -/
 @[simp]
@@ -108,7 +108,7 @@ theorem of_to_list : ∀ l : Lists' α true, ofList (toList l) = l :=
   case lists'.cons' b a l IH₁ IH₂ =>
     intro
     change l' with cons' a l
-    simpa [cons] using IH₂ rfl
+    simpa [← cons] using IH₂ rfl
 
 end Lists'
 
@@ -146,7 +146,7 @@ theorem mem_def {b a} {l : Lists' α b} : a ∈ l ↔ ∃ a' ∈ l.toList, a ~ a
 
 @[simp]
 theorem mem_cons {a y l} : a ∈ @cons α y l ↔ a ~ y ∨ a ∈ l := by
-  simp [mem_def, or_and_distrib_right, exists_or_distrib]
+  simp [← mem_def, ← or_and_distrib_right, ← exists_or_distrib]
 
 theorem cons_subset {a} {l₁ l₂ : Lists' α true} : Lists'.cons a l₁ ⊆ l₂ ↔ a ∈ l₂ ∧ l₁ ⊆ l₂ := by
   refine' ⟨fun h => _, fun ⟨⟨a', m, e⟩, s⟩ => subset.cons e m s⟩
@@ -166,7 +166,7 @@ theorem of_list_subset {l₁ l₂ : List (Lists α)} (h : l₁ ⊆ l₂) : Lists
     
   refine' subset.cons (Lists.Equiv.refl _) _ (l₁_ih (List.subset_of_cons_subsetₓ h))
   simp at h
-  simp [h]
+  simp [← h]
 
 @[refl]
 theorem Subset.refl {l : Lists' α true} : l ⊆ l := by
@@ -229,11 +229,11 @@ theorem is_list_to_list (l : List (Lists α)) : IsList (ofList l) :=
   Eq.refl _
 
 theorem to_of_list (l : List (Lists α)) : toList (ofList l) = l := by
-  simp [of_list, of']
+  simp [← of_list, ← of']
 
 theorem of_to_list : ∀ {l : Lists α}, IsList l → ofList (toList l) = l
   | ⟨tt, l⟩, _ => by
-    simp [of_list, of']
+    simp [← of_list, ← of']
 
 instance : Inhabited (Lists α) :=
   ⟨of' Lists'.nil⟩
@@ -283,7 +283,7 @@ theorem is_list_of_mem {a : Lists α} : ∀ {l : Lists α}, a ∈ l → IsList l
 theorem Equiv.antisymm_iff {l₁ l₂ : Lists' α true} : of' l₁ ~ of' l₂ ↔ l₁ ⊆ l₂ ∧ l₂ ⊆ l₁ := by
   refine' ⟨fun h => _, fun ⟨h₁, h₂⟩ => equiv.antisymm h₁ h₂⟩
   cases' h with _ _ _ h₁ h₂
-  · simp [Lists'.Subset.refl]
+  · simp [← Lists'.Subset.refl]
     
   · exact ⟨h₁, h₂⟩
     
@@ -329,7 +329,7 @@ theorem Equiv.trans : ∀ {l₁ l₂ l₃ : Lists α}, l₁ ~ l₂ → l₂ ~ l�
   · rintro _ ⟨⟩
     
   · intro a l IH₁ IH₂
-    simpa [IH₁] using IH₂
+    simpa [← IH₁] using IH₂
     
 
 instance : Setoidₓ (Lists α) :=
@@ -365,7 +365,7 @@ mutual
           refine'
             equiv_atom.trans
               (by
-                simp [atom])
+                simp [← atom])
     | ⟨ff, l₁⟩, ⟨tt, l₂⟩ =>
       is_false <| by
         rintro ⟨⟩

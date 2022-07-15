@@ -32,11 +32,11 @@ theorem frobenius_zmod (f : MvPolynomial σ (Zmod p)) : frobenius _ p f = expand
   · intro a
     rw [expand_C, frobenius_def, ← C_pow, Zmod.pow_card]
     
-  · simp only [AlgHom.map_add, RingHom.map_add]
+  · simp only [← AlgHom.map_add, ← RingHom.map_add]
     intro _ _ hf hg
     rw [hf, hg]
     
-  · simp only [expand_X, RingHom.map_mul, AlgHom.map_mul]
+  · simp only [← expand_X, ← RingHom.map_mul, ← AlgHom.map_mul]
     intro _ _ hf
     rw [hf, frobenius_def]
     
@@ -73,8 +73,8 @@ variable [CommRingₓ K]
 theorem eval_indicator_apply_eq_one (a : σ → K) : eval a (indicator a) = 1 := by
   nontriviality
   have : 0 < Fintype.card K - 1 := tsub_pos_of_lt Fintype.one_lt_card
-  simp only [indicator, map_prod, map_sub, map_one, map_pow, eval_X, eval_C, sub_self, zero_pow this, sub_zero,
-    Finset.prod_const_one]
+  simp only [← indicator, ← map_prod, ← map_sub, ← map_one, ← map_pow, ← eval_X, ← eval_C, ← sub_self, ← zero_pow this,
+    ← sub_zero, ← Finset.prod_const_one]
 
 theorem degrees_indicator (c : σ → K) : degrees (indicator c) ≤ ∑ s : σ, (Fintype.card K - 1) • {s} := by
   rw [indicator]
@@ -91,7 +91,7 @@ theorem indicator_mem_restrict_degree (c : σ → K) : indicator c ∈ restrictD
   intro n
   refine' le_transₓ (Multiset.count_le_of_le _ <| degrees_indicator _) (le_of_eqₓ _)
   simp_rw [← Multiset.coe_count_add_monoid_hom, (Multiset.countAddMonoidHom n).map_sum, AddMonoidHom.map_nsmul,
-    Multiset.coe_count_add_monoid_hom, nsmul_eq_mul, Nat.cast_idₓ]
+    Multiset.coe_count_add_monoid_hom, nsmul_eq_mul, Nat.cast_id]
   trans
   refine' Finset.sum_eq_single n _ _
   · intro b hb ne
@@ -110,7 +110,8 @@ variable [Field K]
 theorem eval_indicator_apply_eq_zero (a b : σ → K) (h : a ≠ b) : eval a (indicator b) = 0 := by
   obtain ⟨i, hi⟩ : ∃ i, a i ≠ b i := by
     rwa [(· ≠ ·), Function.funext_iffₓ, not_forall] at h
-  simp only [indicator, map_prod, map_sub, map_one, map_pow, eval_X, eval_C, sub_self, Finset.prod_eq_zero_iff]
+  simp only [← indicator, ← map_prod, ← map_sub, ← map_one, ← map_pow, ← eval_X, ← eval_C, ← sub_self, ←
+    Finset.prod_eq_zero_iff]
   refine' ⟨i, Finset.mem_univ _, _⟩
   rw [FiniteField.pow_card_sub_one_eq_one, sub_self]
   rwa [(· ≠ ·), sub_eq_zero]
@@ -144,8 +145,9 @@ theorem map_restrict_dom_evalₗ : (restrictDegree σ K (Fintype.card K - 1)).ma
   · exact sum_mem fun c _ => smul_mem _ _ (indicator_mem_restrict_degree _)
     
   · ext n
-    simp only [LinearMap.map_sum, @Finset.sum_apply (σ → K) (fun _ => K) _ _ _ _ _, Pi.smul_apply, LinearMap.map_smul]
-    simp only [evalₗ_apply]
+    simp only [← LinearMap.map_sum, ← @Finset.sum_apply (σ → K) (fun _ => K) _ _ _ _ _, ← Pi.smul_apply, ←
+      LinearMap.map_smul]
+    simp only [← evalₗ_apply]
     trans
     refine' Finset.sum_eq_single n (fun b _ h => _) _
     · rw [eval_indicator_apply_eq_zero _ _ h.symm, smul_zero]
@@ -168,11 +170,12 @@ universe u
 
 variable (σ : Type u) (K : Type u) [Fintype K]
 
--- ././Mathport/Syntax/Translate/Basic.lean:978:9: unsupported derive handler module K
+-- ./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler module K
 /-- The submodule of multivariate polynomials whose degree of each variable is strictly less
 than the cardinality of K. -/
 def R [CommRingₓ K] : Type u :=
-  restrictDegree σ K (Fintype.card K - 1)deriving AddCommGroupₓ, [anonymous], Inhabited
+  restrictDegree σ K (Fintype.card K - 1)deriving AddCommGroupₓ,
+  «./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler module K», Inhabited
 
 /-- Evaluation in the `mv_polynomial.R` subtype. -/
 def evalᵢ [CommRingₓ K] : R σ K →ₗ[K] (σ → K) → K :=
@@ -183,7 +186,7 @@ section CommRingₓ
 variable [CommRingₓ K]
 
 noncomputable instance decidableRestrictDegree (m : ℕ) : DecidablePred (· ∈ { n : σ →₀ ℕ | ∀ i, n i ≤ m }) := by
-  simp only [Set.mem_set_of_eq] <;> infer_instance
+  simp only [← Set.mem_set_of_eq] <;> infer_instance
 
 end CommRingₓ
 
@@ -210,7 +213,7 @@ instance [Fintype σ] : FiniteDimensional K (R σ K) :=
   IsNoetherian.iff_fg.1 <|
     IsNoetherian.iff_dim_lt_aleph_0.mpr
       (by
-        simpa only [dim_R] using Cardinal.nat_lt_aleph_0 (Fintype.card (σ → K)))
+        simpa only [← dim_R] using Cardinal.nat_lt_aleph_0 (Fintype.card (σ → K)))
 
 theorem finrank_R [Fintype σ] : FiniteDimensional.finrank K (R σ K) = Fintype.card (σ → K) :=
   FiniteDimensional.finrank_eq_of_dim_eq (dim_R σ K)

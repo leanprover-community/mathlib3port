@@ -37,7 +37,7 @@ theorem equitable_on_empty [LE β] [Add β] [One β] (f : α → β) : Equitable
 
 theorem equitable_on_iff_exists_le_le_add_one {s : Set α} {f : α → ℕ} :
     s.EquitableOn f ↔ ∃ b, ∀, ∀ a ∈ s, ∀, b ≤ f a ∧ f a ≤ b + 1 := by
-  refine' ⟨_, fun x y hx hy => (hb x hx).2.trans (add_le_add_right (hb y hy).1 _)⟩
+  refine' ⟨_, fun ⟨b, hb⟩ x y hx hy => (hb x hx).2.trans (add_le_add_right (hb y hy).1 _)⟩
   obtain rfl | ⟨x, hx⟩ := s.eq_empty_or_nonempty
   · simp
     
@@ -53,7 +53,7 @@ theorem equitable_on_iff_exists_le_le_add_one {s : Set α} {f : α → ℕ} :
 
 theorem equitable_on_iff_exists_image_subset_Icc {s : Set α} {f : α → ℕ} :
     s.EquitableOn f ↔ ∃ b, f '' s ⊆ Icc b (b + 1) := by
-  simpa only [image_subset_iff] using equitable_on_iff_exists_le_le_add_one
+  simpa only [← image_subset_iff] using equitable_on_iff_exists_le_le_add_one
 
 theorem equitable_on_iff_exists_eq_eq_add_one {s : Set α} {f : α → ℕ} :
     s.EquitableOn f ↔ ∃ b, ∀, ∀ a ∈ s, ∀, f a = b ∨ f a = b + 1 := by
@@ -101,7 +101,7 @@ theorem equitable_on_iff_le_le_add_one :
     Nat.div_eq_of_lt_leₓ
       (le_transₓ
         (by
-          simp [mul_comm])
+          simp [← mul_comm])
         (sum_le_sum fun a ha => (hb a ha).1))
       ((sum_lt_sum (fun a ha => (hb a ha).2) ⟨_, hx₁, (hb _ hx₁).2.lt_of_ne hx₂⟩).trans_le _)
   rw [mul_comm, sum_const_nat]

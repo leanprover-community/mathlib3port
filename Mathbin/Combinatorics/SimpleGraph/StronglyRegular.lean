@@ -57,9 +57,10 @@ variable {G} {n k ℓ μ : ℕ}
 theorem bot_strongly_regular : (⊥ : SimpleGraph V).IsSRGWith (Fintype.card V) 0 ℓ 0 :=
   { card := rfl, regular := bot_degree, of_adj := fun v w h => h.elim,
     of_not_adj := fun v w h => by
-      simp only [card_eq_zero, filter_congr_decidable, Fintype.card_of_finset, forall_true_left, not_false_iff, bot_adj]
+      simp only [← card_eq_zero, ← filter_congr_decidable, ← Fintype.card_of_finset, ← forall_true_left, ←
+        not_false_iff, ← bot_adj]
       ext
-      simp [mem_common_neighbors] }
+      simp [← mem_common_neighbors] }
 
 /-- Complete graphs are strongly regular. Note that `μ` can take any value
   for complete graphs, since there are no distinct pairs of non-adjacent vertices. -/
@@ -76,11 +77,11 @@ theorem IsSRGWith.card_neighbor_finset_union_eq {v w : V} (h : G.IsSRGWith n k �
     (G.neighborFinset v ∪ G.neighborFinset w).card = 2 * k - Fintype.card (G.CommonNeighbors v w) := by
   apply @Nat.add_right_cancel _ (Fintype.card (G.common_neighbors v w))
   rw [Nat.sub_add_cancelₓ, ← Set.to_finset_card]
-  · simp [neighbor_finset, common_neighbors, Set.to_finset_inter, Finset.card_union_add_card_inter, h.regular.degree_eq,
-      two_mul]
+  · simp [← neighbor_finset, ← common_neighbors, ← Set.to_finset_inter, ← Finset.card_union_add_card_inter, ←
+      h.regular.degree_eq, ← two_mul]
     
   · apply le_transₓ (card_common_neighbors_le_degree_left _ _ _)
-    simp [h.regular.degree_eq, two_mul]
+    simp [← h.regular.degree_eq, ← two_mul]
     
 
 /-- Assuming `G` is strongly regular, `2*(k + 1) - m` in `G` is the number of vertices that are
@@ -102,13 +103,13 @@ theorem compl_neighbor_finset_sdiff_inter_eq {v w : V} :
   by
   ext
   rw [← not_iff_not]
-  simp [imp_iff_not_or, or_assoc, or_comm, Or.left_comm]
+  simp [← imp_iff_not_or, ← or_assoc, ← or_comm, ← Or.left_comm]
 
 theorem sdiff_compl_neighbor_finset_inter_eq {v w : V} (h : G.Adj v w) :
     (G.neighborFinset vᶜ ∩ G.neighborFinset wᶜ) \ ({w} ∪ {v}) = G.neighborFinset vᶜ ∩ G.neighborFinset wᶜ := by
   ext
-  simp only [and_imp, mem_union, mem_sdiff, mem_compl, and_iff_left_iff_imp, mem_neighbor_finset, mem_inter,
-    mem_singleton]
+  simp only [← and_imp, ← mem_union, ← mem_sdiff, ← mem_compl, ← and_iff_left_iff_imp, ← mem_neighbor_finset, ←
+    mem_inter, ← mem_singleton]
   rintro hnv hnw (rfl | rfl)
   · exact hnv h
     
@@ -122,8 +123,8 @@ theorem IsSRGWith.compl_is_regular (h : G.IsSRGWith n k ℓ μ) : Gᶜ.IsRegular
 
 theorem IsSRGWith.card_common_neighbors_eq_of_adj_compl (h : G.IsSRGWith n k ℓ μ) {v w : V} (ha : Gᶜ.Adj v w) :
     Fintype.card ↥(Gᶜ.CommonNeighbors v w) = n - (2 * k - μ) - 2 := by
-  simp only [← Set.to_finset_card, common_neighbors, Set.to_finset_inter, neighbor_set_compl, Set.to_finset_diff,
-    Set.to_finset_singleton, Set.to_finset_compl, ← neighbor_finset_def]
+  simp only [Set.to_finset_card, ← common_neighbors, ← Set.to_finset_inter, ← neighbor_set_compl, ← Set.to_finset_diff,
+    ← Set.to_finset_singleton, ← Set.to_finset_compl, neighbor_finset_def]
   simp_rw [compl_neighbor_finset_sdiff_inter_eq]
   have hne : v ≠ w := ne_of_adj _ ha
   rw [compl_adj] at ha
@@ -131,18 +132,18 @@ theorem IsSRGWith.card_common_neighbors_eq_of_adj_compl (h : G.IsSRGWith n k ℓ
   · change 1 + 1 with 2
     rw [card_compl, h.card_neighbor_finset_union_of_not_adj hne ha.2, ← h.card]
     
-  · simp only [hne.symm, not_false_iff, mem_singleton]
+  · simp only [← hne.symm, ← not_false_iff, ← mem_singleton]
     
   · intro u
-    simp only [mem_union, mem_compl, mem_neighbor_finset, mem_inter, mem_singleton]
-    rintro (rfl | rfl) <;> simpa [adj_comm] using ha.2
+    simp only [← mem_union, ← mem_compl, ← mem_neighbor_finset, ← mem_inter, ← mem_singleton]
+    rintro (rfl | rfl) <;> simpa [← adj_comm] using ha.2
     
 
 theorem IsSRGWith.card_common_neighbors_eq_of_not_adj_compl (h : G.IsSRGWith n k ℓ μ) {v w : V} (hn : v ≠ w)
     (hna : ¬Gᶜ.Adj v w) : Fintype.card ↥(Gᶜ.CommonNeighbors v w) = n - (2 * k - ℓ) := by
-  simp only [← Set.to_finset_card, common_neighbors, Set.to_finset_inter, neighbor_set_compl, Set.to_finset_diff,
-    Set.to_finset_singleton, Set.to_finset_compl, ← neighbor_finset_def]
-  simp only [not_and, not_not, compl_adj] at hna
+  simp only [Set.to_finset_card, ← common_neighbors, ← Set.to_finset_inter, ← neighbor_set_compl, ← Set.to_finset_diff,
+    ← Set.to_finset_singleton, ← Set.to_finset_compl, neighbor_finset_def]
+  simp only [← not_and, ← not_not, ← compl_adj] at hna
   have h2' := hna hn
   simp_rw [compl_neighbor_finset_sdiff_inter_eq, sdiff_compl_neighbor_finset_inter_eq h2']
   rwa [← Finset.compl_union, card_compl, h.card_neighbor_finset_union_of_adj, ← h.card]

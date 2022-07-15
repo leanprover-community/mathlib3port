@@ -45,16 +45,16 @@ variable (R K)
 irreducible_def toPrincipalIdeal : Kˣ →* (FractionalIdeal R⁰ K)ˣ :=
   { toFun := fun x =>
       ⟨spanSingleton _ x, spanSingleton _ x⁻¹, by
-        simp only [span_singleton_one, Units.mul_inv', span_singleton_mul_span_singleton], by
-        simp only [span_singleton_one, Units.inv_mul', span_singleton_mul_span_singleton]⟩,
+        simp only [← span_singleton_one, ← Units.mul_inv', ← span_singleton_mul_span_singleton], by
+        simp only [← span_singleton_one, ← Units.inv_mul', ← span_singleton_mul_span_singleton]⟩,
     map_mul' := fun x y =>
       ext
         (by
-          simp only [Units.coe_mk, Units.coe_mul, span_singleton_mul_span_singleton]),
+          simp only [← Units.coe_mk, ← Units.coe_mul, ← span_singleton_mul_span_singleton]),
     map_one' :=
       ext
         (by
-          simp only [span_singleton_one, Units.coe_mk, Units.coe_one]) }
+          simp only [← span_singleton_one, ← Units.coe_mk, ← Units.coe_one]) }
 
 attribute [local semireducible] toPrincipalIdeal
 
@@ -106,30 +106,19 @@ noncomputable def ClassGroup.mk0 [IsDedekindDomain R] : (Ideal R)⁰ →* ClassG
 
 variable {K}
 
-theorem QuotientGroup.mk'_eq_mk' {G : Type _} [Groupₓ G] {N : Subgroup G} [hN : N.Normal] {x y : G} :
-    QuotientGroup.mk' N x = QuotientGroup.mk' N y ↔ ∃ z ∈ N, x * z = y :=
-  (@Quotientₓ.eq _ (QuotientGroup.leftRel _) _ _).trans
-    ⟨fun h : x⁻¹ * y ∈ N =>
-      ⟨_, h, by
-        rw [← mul_assoc, mul_right_invₓ, one_mulₓ]⟩,
-      fun ⟨z, z_mem, eq_y⟩ => by
-      rw [← eq_y]
-      show x⁻¹ * (x * z) ∈ N
-      rwa [← mul_assoc, mul_left_invₓ, one_mulₓ]⟩
-
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ≠ » (0 : K))
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ≠ » (0 : K))
 theorem ClassGroup.mk0_eq_mk0_iff_exists_fraction_ring [IsDedekindDomain R] {I J : (Ideal R)⁰} :
     ClassGroup.mk0 K I = ClassGroup.mk0 K J ↔ ∃ (x : _)(_ : x ≠ (0 : K)), spanSingleton R⁰ x * I = J := by
-  simp only [ClassGroup.mk0, MonoidHom.comp_apply, QuotientGroup.mk'_eq_mk']
+  simp only [← ClassGroup.mk0, ← MonoidHom.comp_apply, ← QuotientGroup.mk'_eq_mk']
   constructor
   · rintro ⟨_, ⟨x, rfl⟩, hx⟩
     refine' ⟨x, x.ne_zero, _⟩
-    simpa only [mul_comm, coe_mk0, MonoidHom.to_fun_eq_coe, coe_to_principal_ideal, Units.coe_mul] using
+    simpa only [← mul_comm, ← coe_mk0, ← MonoidHom.to_fun_eq_coe, ← coe_to_principal_ideal, ← Units.coe_mul] using
       congr_arg (coe : _ → FractionalIdeal R⁰ K) hx
     
   · rintro ⟨x, hx, eq_J⟩
     refine' ⟨_, ⟨Units.mk0 x hx, rfl⟩, Units.ext _⟩
-    simpa only [FractionalIdeal.mk0_apply, Units.coe_mk0, mul_comm, coe_to_principal_ideal, coe_coe,
+    simpa only [← FractionalIdeal.mk0_apply, ← Units.coe_mk0, ← mul_comm, ← coe_to_principal_ideal, ← coe_coe, ←
       Units.coe_mul] using eq_J
     
 
@@ -165,15 +154,15 @@ theorem ClassGroup.mk0_surjective [IsDedekindDomain R] :
   obtain ⟨a, a_ne_zero', ha⟩ := I.1.2
   have a_ne_zero := mem_non_zero_divisors_iff_ne_zero.mp a_ne_zero'
   have fa_ne_zero : (algebraMap R K) a ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors a_ne_zero'
-  refine' ⟨⟨{ Carrier := { x | (algebraMap R K a)⁻¹ * algebraMap R K x ∈ I.1 }, .. }, _⟩, _⟩
-  · simp only [RingHom.map_add, Set.mem_set_of_eq, mul_zero, RingHom.map_mul, mul_addₓ]
+  refine' ⟨⟨{ Carrier := { x | (algebraMap R K a)⁻¹ * algebraMap R K x ∈ I.1 }.. }, _⟩, _⟩
+  · simp only [← RingHom.map_add, ← Set.mem_set_of_eq, ← mul_zero, ← RingHom.map_mul, ← mul_addₓ]
     exact fun _ _ ha hb => Submodule.add_mem I ha hb
     
-  · simp only [RingHom.map_zero, Set.mem_set_of_eq, mul_zero, RingHom.map_mul]
+  · simp only [← RingHom.map_zero, ← Set.mem_set_of_eq, ← mul_zero, ← RingHom.map_mul]
     exact Submodule.zero_mem I
     
   · intro c _ hb
-    simp only [smul_eq_mul, Set.mem_set_of_eq, mul_zero, RingHom.map_mul, mul_addₓ,
+    simp only [← smul_eq_mul, ← Set.mem_set_of_eq, ← mul_zero, ← RingHom.map_mul, ← mul_addₓ, ←
       mul_left_commₓ ((algebraMap R K) a)⁻¹]
     rw [← Algebra.smul_def c]
     exact Submodule.smul_mem I c hb
@@ -186,12 +175,14 @@ theorem ClassGroup.mk0_surjective [IsDedekindDomain R] :
     
   · symm
     apply Quotientₓ.sound
+    change Setoidₓ.R _ _
+    rw [QuotientGroup.left_rel_apply]
     refine' ⟨Units.mk0 (algebraMap R K a) fa_ne_zero, _⟩
     apply @mul_left_cancelₓ _ _ I
     rw [← mul_assoc, mul_right_invₓ, one_mulₓ, eq_comm, mul_comm I]
     apply Units.ext
-    simp only [MonoidHom.coe_mk, Subtype.coe_mk, RingHom.map_mul, coe_coe, Units.coe_mul, coe_to_principal_ideal,
-      coe_mk0, FractionalIdeal.eq_span_singleton_mul]
+    simp only [← MonoidHom.coe_mk, ← Subtype.coe_mk, ← RingHom.map_mul, ← coe_coe, ← Units.coe_mul, ←
+      coe_to_principal_ideal, ← coe_mk0, ← FractionalIdeal.eq_span_singleton_mul]
     constructor
     · intro zJ' hzJ'
       obtain ⟨zJ, hzJ : (algebraMap R K a)⁻¹ * algebraMap R K zJ ∈ ↑I, rfl⟩ := (mem_coe_ideal R⁰).mp hzJ'
@@ -212,7 +203,8 @@ end
 theorem ClassGroup.mk_eq_one_iff {I : (FractionalIdeal R⁰ K)ˣ} :
     QuotientGroup.mk' (toPrincipalIdeal R K).range I = 1 ↔ (I : Submodule R K).IsPrincipal := by
   rw [← (QuotientGroup.mk' _).map_one, eq_comm, QuotientGroup.mk'_eq_mk']
-  simp only [exists_prop, one_mulₓ, exists_eq_right, to_principal_ideal_eq_iff, MonoidHom.mem_range, coe_coe]
+  simp only [← exists_prop, ← one_mulₓ, ← exists_eq_right, ← to_principal_ideal_eq_iff, ← MonoidHom.mem_range, ←
+    coe_coe]
   refine'
     ⟨fun ⟨x, hx⟩ =>
       ⟨⟨x, by
@@ -226,9 +218,9 @@ theorem ClassGroup.mk_eq_one_iff {I : (FractionalIdeal R⁰ K)ˣ} :
   refine' ⟨Units.mk0 x _, _⟩
   · intro x_eq
     apply Units.ne_zero I
-    simp [hx', x_eq]
+    simp [← hx', ← x_eq]
     
-  simp [hx']
+  simp [← hx']
 
 variable [IsDomain R]
 

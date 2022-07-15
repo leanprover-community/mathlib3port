@@ -112,8 +112,8 @@ class OrderMonoidHomClass (F : Type _) (α β : outParam <| Type _) [Preorderₓ
 
 -- See note [lower instance priority]
 @[to_additive]
-instance (priority := 100) OrderMonoidHomClass.toOrderHomClass [OrderMonoidHomClass F α β] : OrderHomClass F α β where
-  map_rel := OrderMonoidHomClass.monotone
+instance (priority := 100) OrderMonoidHomClass.toOrderHomClass [OrderMonoidHomClass F α β] :
+    OrderHomClass F α β where map_rel := OrderMonoidHomClass.monotone
 
 @[to_additive]
 instance [OrderMonoidHomClass F α β] : CoeTₓ F (α →*o β) :=

@@ -52,7 +52,7 @@ theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf mα : M
     simp_rw [← inter_indicator_mul]
     rw [lintegral_indicator _ (MeasurableSet.inter (hMf _ h_meas_s') h_meas_T), lintegral_indicator _ (hMf _ h_meas_s'),
       lintegral_indicator _ h_meas_T]
-    simp only [measurable_const, lintegral_const, univ_inter, lintegral_const_mul, MeasurableSet.univ,
+    simp only [← measurable_const, ← lintegral_const, ← univ_inter, ← lintegral_const_mul, ← MeasurableSet.univ, ←
       measure.restrict_apply]
     ring_nf
     congr
@@ -108,7 +108,7 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space
       
     · exact fun n => h_measM_f.mul (h_measM_f' n)
       
-    · exact fun a => Ennreal.mul_le_mul le_rfl (h_mono_f' h_le a)
+    · exact fun n m h_le : n ≤ m a => Ennreal.mul_le_mul le_rfl (h_mono_f' h_le a)
       
     
 

@@ -37,13 +37,13 @@ universe u u' u'' v
 variable {S : Type u'} {T : Type u''} {R : Type u} {M : Type v}
 
 /-- A sub_mul_action is a set which is closed under scalar multiplication.  -/
-structure SubMulAction (R : Type u) (M : Type v) [HasScalar R M] : Type v where
+structure SubMulAction (R : Type u) (M : Type v) [HasSmul R M] : Type v where
   Carrier : Set M
   smul_mem' : ∀ c : R {x : M}, x ∈ carrier → c • x ∈ carrier
 
 namespace SubMulAction
 
-variable [HasScalar R M]
+variable [HasSmul R M]
 
 instance : SetLike (SubMulAction R M) M :=
   ⟨SubMulAction.Carrier, fun p q h => by
@@ -80,9 +80,9 @@ end SubMulAction
 
 namespace SubMulAction
 
-section HasScalar
+section HasSmul
 
-variable [HasScalar R M]
+variable [HasSmul R M]
 
 variable (p : SubMulAction R M)
 
@@ -91,8 +91,7 @@ variable {r : R} {x : M}
 theorem smul_mem (r : R) (h : x ∈ p) : r • x ∈ p :=
   p.smul_mem' r h
 
-instance : HasScalar R p where
-  smul := fun c x => ⟨c • x.1, smul_mem _ c x.2⟩
+instance : HasSmul R p where smul := fun c x => ⟨c • x.1, smul_mem _ c x.2⟩
 
 variable {p}
 
@@ -108,7 +107,7 @@ variable (p)
 
 /-- Embedding of a submodule `p` to the ambient space `M`. -/
 protected def subtype : p →[R] M := by
-  refine' { toFun := coe, .. } <;> simp [coe_smul]
+  refine' { toFun := coe.. } <;> simp [← coe_smul]
 
 @[simp]
 theorem subtype_apply (x : p) : p.Subtype x = x :=
@@ -117,7 +116,7 @@ theorem subtype_apply (x : p) : p.Subtype x = x :=
 theorem subtype_eq_val : (SubMulAction.subtype p : p → M) = Subtype.val :=
   rfl
 
-end HasScalar
+end HasSmul
 
 section MulActionMonoid
 
@@ -125,7 +124,7 @@ variable [Monoidₓ R] [MulAction R M]
 
 section
 
-variable [HasScalar S R] [HasScalar S M] [IsScalarTower S R M]
+variable [HasSmul S R] [HasSmul S M] [IsScalarTower S R M]
 
 variable (p : SubMulAction R M)
 
@@ -133,30 +132,27 @@ theorem smul_of_tower_mem (s : S) {x : M} (h : x ∈ p) : s • x ∈ p := by
   rw [← one_smul R x, ← smul_assoc]
   exact p.smul_mem _ h
 
-instance hasScalar' : HasScalar S p where
-  smul := fun c x => ⟨c • x.1, smul_of_tower_mem _ c x.2⟩
+instance hasSmul' : HasSmul S p where smul := fun c x => ⟨c • x.1, smul_of_tower_mem _ c x.2⟩
 
-instance : IsScalarTower S R p where
-  smul_assoc := fun s r x => Subtype.ext <| smul_assoc s r ↑x
+instance : IsScalarTower S R p where smul_assoc := fun s r x => Subtype.ext <| smul_assoc s r ↑x
 
 @[simp, norm_cast]
 theorem coe_smul_of_tower (s : S) (x : p) : ((s • x : p) : M) = s • ↑x :=
   rfl
 
 @[simp]
-theorem smul_mem_iff' {G} [Groupₓ G] [HasScalar G R] [MulAction G M] [IsScalarTower G R M] (g : G) {x : M} :
+theorem smul_mem_iff' {G} [Groupₓ G] [HasSmul G R] [MulAction G M] [IsScalarTower G R M] (g : G) {x : M} :
     g • x ∈ p ↔ x ∈ p :=
   ⟨fun h => inv_smul_smul g x ▸ p.smul_of_tower_mem g⁻¹ h, p.smul_of_tower_mem g⟩
 
-instance [HasScalar Sᵐᵒᵖ R] [HasScalar Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] :
-    IsCentralScalar S p where
-  op_smul_eq_smul := fun r x => Subtype.ext <| op_smul_eq_smul r x
+instance [HasSmul Sᵐᵒᵖ R] [HasSmul Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] :
+    IsCentralScalar S p where op_smul_eq_smul := fun r x => Subtype.ext <| op_smul_eq_smul r x
 
 end
 
 section
 
-variable [Monoidₓ S] [HasScalar S R] [MulAction S M] [IsScalarTower S R M]
+variable [Monoidₓ S] [HasSmul S R] [MulAction S M] [IsScalarTower S R M]
 
 variable (p : SubMulAction R M)
 
@@ -183,7 +179,7 @@ lemma orbit_of_sub_mul {p : sub_mul_action R M} (m : p) :
 theorem StabilizerOfSubMul.submonoid {p : SubMulAction R M} (m : p) :
     MulAction.Stabilizer.submonoid R m = MulAction.Stabilizer.submonoid R (m : M) := by
   ext
-  simp only [MulAction.mem_stabilizer_submonoid_iff, ← SubMulAction.coe_smul, SetLike.coe_eq_coe]
+  simp only [← MulAction.mem_stabilizer_submonoid_iff, SubMulAction.coe_smul, ← SetLike.coe_eq_coe]
 
 end MulActionMonoid
 
@@ -213,8 +209,7 @@ theorem zero_mem (h : (p : Set M).Nonempty) : (0 : M) ∈ p :=
 
 /-- If the scalar product forms a `module`, and the `sub_mul_action` is not `⊥`, then the
 subset inherits the zero. -/
-instance [n_empty : Nonempty p] : Zero p where
-  zero := ⟨0, n_empty.elim fun x => p.zero_mem ⟨x, x.Prop⟩⟩
+instance [n_empty : Nonempty p] : Zero p where zero := ⟨0, n_empty.elim fun x => p.zero_mem ⟨x, x.Prop⟩⟩
 
 end Module
 
@@ -253,7 +248,7 @@ namespace SubMulAction
 
 variable [GroupWithZeroₓ S] [Monoidₓ R] [MulAction R M]
 
-variable [HasScalar S R] [MulAction S M] [IsScalarTower S R M]
+variable [HasSmul S R] [MulAction S M] [IsScalarTower S R M]
 
 variable (p : SubMulAction R M) {s : S} {x y : M}
 

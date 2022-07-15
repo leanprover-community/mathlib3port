@@ -86,7 +86,7 @@ def ofSums (n : ℕ) (l : Multiset ℕ) (hl : l.Sum = n) : Partition n where
     have lz : (l.filter (· = 0)).Sum = 0 := by
       rw [Multiset.sum_eq_zero_iff]
       simp
-    simpa [lz, hl] using lt
+    simpa [← lz, ← hl] using lt
 
 /-- A `multiset ℕ` induces a partition on its sum. -/
 def ofMultiset (l : Multiset ℕ) : Partition l.Sum :=

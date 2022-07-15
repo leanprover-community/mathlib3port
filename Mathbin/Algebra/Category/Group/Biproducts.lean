@@ -19,7 +19,7 @@ open CategoryTheory.Limits
 
 open BigOperators
 
-universe u
+universe w u
 
 namespace AddCommGroupₓₓ
 
@@ -80,9 +80,9 @@ theorem biprod_iso_prod_inv_comp_snd (G H : AddCommGroupₓₓ.{u}) :
     (biprodIsoProd G H).inv ≫ biprod.snd = AddMonoidHom.snd G H :=
   IsLimit.cone_point_unique_up_to_iso_inv_comp _ _ (Discrete.mk WalkingPair.right)
 
-variable {J : Type u} (f : J → AddCommGroupₓₓ.{u})
-
 namespace HasLimit
+
+variable {J : Type w} (f : J → AddCommGroupₓₓ.{max w u})
 
 /-- The map from an arbitrary cone over a indexed family of abelian groups
 to the cartesian product of those groups.
@@ -110,24 +110,25 @@ def productLimitCone : Limits.LimitCone (Discrete.functor f) where
         simp ,
       uniq' := fun s m w => by
         ext x j
-        dsimp' only [has_limit.lift]
-        simp only [AddMonoidHom.coe_mk]
+        dsimp' only [← has_limit.lift]
+        simp only [← AddMonoidHom.coe_mk]
         exact congr_arg (fun g : s.X ⟶ f j => (g : s.X → f j) x) (w ⟨j⟩) }
 
 end HasLimit
 
 open HasLimit
 
+variable {J : Type} [Fintype J]
+
 /-- We verify that the biproduct we've just defined is isomorphic to the AddCommGroup structure
 on the dependent function type
 -/
 @[simps hom_apply]
-noncomputable def biproductIsoPi [Fintype J] (f : J → AddCommGroupₓₓ.{u}) :
-    (⨁ f : AddCommGroupₓₓ) ≅ AddCommGroupₓₓ.of (∀ j, f j) :=
+noncomputable def biproductIsoPi (f : J → AddCommGroupₓₓ.{u}) : (⨁ f : AddCommGroupₓₓ) ≅ AddCommGroupₓₓ.of (∀ j, f j) :=
   IsLimit.conePointUniqueUpToIso (Biproduct.isLimit f) (productLimitCone f).IsLimit
 
 @[simp, elementwise]
-theorem biproduct_iso_pi_inv_comp_π [Fintype J] (f : J → AddCommGroupₓₓ.{u}) (j : J) :
+theorem biproduct_iso_pi_inv_comp_π (f : J → AddCommGroupₓₓ.{u}) (j : J) :
     (biproductIsoPi f).inv ≫ biproduct.π f j = Pi.evalAddMonoidHom (fun j => f j) j :=
   IsLimit.cone_point_unique_up_to_iso_inv_comp _ _ (Discrete.mk j)
 

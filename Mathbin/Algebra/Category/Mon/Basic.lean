@@ -42,8 +42,9 @@ abbrev AssocMonoidHom (M N : Type _) [Monoidₓ M] [Monoidₓ N] :=
 
 @[to_additive]
 instance bundledHom : BundledHom AssocMonoidHom :=
-  ⟨fun [Monoidₓ N] => @MonoidHom.toFun M N _ _, fun [Monoidₓ M] => @MonoidHom.id M _, fun [Monoidₓ P] =>
-    @MonoidHom.comp M N P _ _ _, fun [Monoidₓ N] => @MonoidHom.coe_inj M N _ _⟩
+  ⟨fun M N [Monoidₓ M] [Monoidₓ N] => @MonoidHom.toFun M N _ _, fun M [Monoidₓ M] => @MonoidHom.id M _,
+    fun M N P [Monoidₓ M] [Monoidₓ N] [Monoidₓ P] => @MonoidHom.comp M N P _ _ _, fun M N [Monoidₓ M] [Monoidₓ N] =>
+    @MonoidHom.coe_inj M N _ _⟩
 
 deriving instance LargeCategory, ConcreteCategory for Mon
 
@@ -142,8 +143,7 @@ instance hasForgetToMon : HasForget₂ CommMon Mon :=
   BundledHom.forget₂ _ _
 
 @[to_additive]
-instance : Coe CommMon.{u} Mon.{u} where
-  coe := (forget₂ CommMon Mon).obj
+instance : Coe CommMon.{u} Mon.{u} where coe := (forget₂ CommMon Mon).obj
 
 end CommMon
 
@@ -228,16 +228,16 @@ def mulEquivIsoCommMonIso {X Y : Type u} [CommMonoidₓ X] [CommMonoidₓ Y] : X
   inv := fun i => i.commMonIsoToMulEquiv
 
 @[to_additive]
-instance Mon.forget_reflects_isos : ReflectsIsomorphisms (forget Mon.{u}) where
-  reflects := fun X Y f _ => by
+instance Mon.forget_reflects_isos :
+    ReflectsIsomorphisms (forget Mon.{u}) where reflects := fun X Y f _ => by
     skip
     let i := as_iso ((forget Mon).map f)
     let e : X ≃* Y := { f, i.to_equiv with }
     exact ⟨(is_iso.of_iso e.to_Mon_iso).1⟩
 
 @[to_additive]
-instance CommMon.forget_reflects_isos : ReflectsIsomorphisms (forget CommMon.{u}) where
-  reflects := fun X Y f _ => by
+instance CommMon.forget_reflects_isos :
+    ReflectsIsomorphisms (forget CommMon.{u}) where reflects := fun X Y f _ => by
     skip
     let i := as_iso ((forget CommMon).map f)
     let e : X ≃* Y := { f, i.to_equiv with }

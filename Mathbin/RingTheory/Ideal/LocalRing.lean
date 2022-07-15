@@ -174,8 +174,8 @@ section
 
 variable [Semiringₓ R] [Semiringₓ S] [Semiringₓ T]
 
-instance is_local_ring_hom_id (R : Type _) [Semiringₓ R] : IsLocalRingHom (RingHom.id R) where
-  map_nonunit := fun a => id
+instance is_local_ring_hom_id (R : Type _) [Semiringₓ R] :
+    IsLocalRingHom (RingHom.id R) where map_nonunit := fun a => id
 
 @[simp]
 theorem is_unit_map_iff (f : R →+* S) [IsLocalRingHom f] a : IsUnit (f a) ↔ IsUnit a :=
@@ -186,11 +186,11 @@ theorem map_mem_nonunits_iff (f : R →+* S) [IsLocalRingHom f] a : f a ∈ Nonu
   ⟨fun h ha => h <| (is_unit_map_iff f a).mpr ha, fun h ha => h <| (is_unit_map_iff f a).mp ha⟩
 
 instance is_local_ring_hom_comp (g : S →+* T) (f : R →+* S) [IsLocalRingHom g] [IsLocalRingHom f] :
-    IsLocalRingHom (g.comp f) where
-  map_nonunit := fun a => IsLocalRingHom.map_nonunit a ∘ IsLocalRingHom.map_nonunit (f a)
+    IsLocalRingHom
+      (g.comp f) where map_nonunit := fun a => IsLocalRingHom.map_nonunit a ∘ IsLocalRingHom.map_nonunit (f a)
 
-instance is_local_ring_hom_equiv (f : R ≃+* S) : IsLocalRingHom (f : R →+* S) where
-  map_nonunit := fun a ha => by
+instance is_local_ring_hom_equiv (f : R ≃+* S) :
+    IsLocalRingHom (f : R →+* S) where map_nonunit := fun a ha => by
     convert (f.symm : S →+* R).is_unit_map ha
     exact (RingEquiv.symm_apply_apply f a).symm
 
@@ -330,7 +330,7 @@ noncomputable def map (f : R →+* S) [IsLocalRingHom f] : ResidueField R →+* 
 end ResidueField
 
 theorem ker_eq_maximal_ideal [Field K] (φ : R →+* K) (hφ : Function.Surjective φ) : φ.ker = maximalIdeal R :=
-  LocalRing.eq_maximal_ideal <| φ.ker_is_maximal_of_surjective hφ
+  LocalRing.eq_maximal_ideal <| (RingHom.ker_is_maximal_of_surjective φ) hφ
 
 end
 

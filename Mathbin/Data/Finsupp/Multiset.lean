@@ -33,11 +33,11 @@ def toMultiset : (α →₀ ℕ) ≃+ Multiset α where
       simp ⟩
   left_inv := fun f =>
     ext fun a => by
-      simp only [Sum, Multiset.count_sum', Multiset.count_singleton, mul_boole, coe_mk, mem_support_iff,
-        Multiset.count_nsmul, Finset.sum_ite_eq, ite_not, ite_eq_right_iff]
+      simp only [← Sum, ← Multiset.count_sum', ← Multiset.count_singleton, ← mul_boole, ← coe_mk, ← mem_support_iff, ←
+        Multiset.count_nsmul, ← Finset.sum_ite_eq, ← ite_not, ← ite_eq_right_iff]
       exact Eq.symm
   right_inv := fun s => by
-    simp only [Sum, coe_mk, Multiset.to_finset_sum_count_nsmul_eq]
+    simp only [← Sum, ← coe_mk, ← Multiset.to_finset_sum_count_nsmul_eq]
   map_add' := fun f g => sum_add_index' (fun a => zero_nsmul _) fun a => add_nsmul _
 
 theorem to_multiset_zero : (0 : α →₀ ℕ).toMultiset = 0 :=
@@ -65,7 +65,7 @@ theorem to_multiset_sum_single (s : Finset ι) (n : ℕ) : Finsupp.toMultiset (�
   simp_rw [to_multiset_sum, Finsupp.to_multiset_single, sum_nsmul, sum_multiset_singleton]
 
 theorem card_to_multiset (f : α →₀ ℕ) : f.toMultiset.card = f.Sum fun a => id := by
-  simp [to_multiset_apply, AddMonoidHom.map_finsupp_sum, Function.id_def]
+  simp [← to_multiset_apply, ← AddMonoidHom.map_finsupp_sum, ← Function.id_def]
 
 theorem to_multiset_map (f : α →₀ ℕ) (g : α → β) : f.toMultiset.map g = (f.mapDomain g).toMultiset := by
   refine' f.induction _ _
@@ -107,13 +107,13 @@ theorem count_to_multiset [DecidableEq α] (f : α →₀ ℕ) (a : α) : f.toMu
     f.toMultiset.count a = f.Sum fun x n => (n • {x} : Multiset α).count a :=
       (Multiset.countAddMonoidHom a).map_sum _ f.Support
     _ = f.Sum fun x n => n * ({x} : Multiset α).count a := by
-      simp only [Multiset.count_nsmul]
+      simp only [← Multiset.count_nsmul]
     _ = f a * ({a} : Multiset α).count a :=
       sum_eq_single _
         (fun a' _ H => by
-          simp only [Multiset.count_singleton, if_false, H.symm, mul_zero])
+          simp only [← Multiset.count_singleton, ← if_false, ← H.symm, ← mul_zero])
         fun H => by
-        simp only [not_mem_support_iff.1 H, zero_mul]
+        simp only [← not_mem_support_iff.1 H, ← zero_mul]
     _ = f a := by
       rw [Multiset.count_singleton_self, mul_oneₓ]
     
@@ -172,7 +172,7 @@ namespace Finsupp
 def orderIsoMultiset : (ι →₀ ℕ) ≃o Multiset ι where
   toEquiv := toMultiset.toEquiv
   map_rel_iff' := fun f g => by
-    simp [Multiset.le_iff_count, le_def]
+    simp [← Multiset.le_iff_count, ← le_def]
 
 @[simp]
 theorem coe_order_iso_multiset : ⇑(@orderIsoMultiset ι) = to_multiset :=

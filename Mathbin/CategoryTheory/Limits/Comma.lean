@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
 import Mathbin.CategoryTheory.Limits.Creates
-import Mathbin.CategoryTheory.Limits.Punit
+import Mathbin.CategoryTheory.Limits.Unit
 import Mathbin.CategoryTheory.Limits.Preserves.Basic
 import Mathbin.CategoryTheory.StructuredArrow
 import Mathbin.CategoryTheory.Arrow
@@ -60,7 +60,7 @@ def coneOfPreserves [PreservesLimit (F ⋙ snd L R) R] (c₁ : Cone (F ⋙ fst L
         { left := c₁.π.app j, right := c₂.π.app j,
           w' := ((isLimitOfPreserves R t₂).fac (limitAuxiliaryCone F c₁) j).symm },
       naturality' := fun j₁ j₂ t => by
-        ext <;> dsimp' <;> simp [← c₁.w t, ← c₂.w t] }
+        ext <;> dsimp' <;> simp [c₁.w t, c₂.w t] }
 
 /-- Provided that `R` preserves the appropriate limit, then the cone in `cone_of_preserves` is a
 limit. -/
@@ -76,9 +76,9 @@ def coneOfPreservesIsLimit [PreservesLimit (F ⋙ snd L R) R] {c₁ : Cone (F �
   uniq' := fun s m w =>
     CommaMorphism.ext _ _
       (t₁.uniq ((fst L R).mapCone s) _ fun j => by
-        simp [← w])
+        simp [w])
       (t₂.uniq ((snd L R).mapCone s) _ fun j => by
-        simp [← w])
+        simp [w])
 
 /-- (Implementation). An auxiliary cocone which is useful in order to construct colimits
 in the comma category. -/
@@ -99,7 +99,7 @@ def coconeOfPreserves [PreservesColimit (F ⋙ fst L R) L] {c₁ : Cocone (F ⋙
         { left := c₁.ι.app j, right := c₂.ι.app j,
           w' := (isColimitOfPreserves L t₁).fac (colimitAuxiliaryCocone _ c₂) j },
       naturality' := fun j₁ j₂ t => by
-        ext <;> dsimp' <;> simp [← c₁.w t, ← c₂.w t] }
+        ext <;> dsimp' <;> simp [c₁.w t, c₂.w t] }
 
 /-- Provided that `L` preserves the appropriate colimit, then the cocone in `cocone_of_preserves` is
 a colimit. -/
@@ -116,18 +116,17 @@ def coconeOfPreservesIsColimit [PreservesColimit (F ⋙ fst L R) L] {c₁ : Coco
     CommaMorphism.ext _ _
       (t₁.uniq ((fst L R).mapCocone s) _
         (by
-          simp [← w]))
+          simp [w]))
       (t₂.uniq ((snd L R).mapCocone s) _
         (by
-          simp [← w]))
+          simp [w]))
 
 instance has_limit (F : J ⥤ Comma L R) [HasLimit (F ⋙ fst L R)] [HasLimit (F ⋙ snd L R)]
     [PreservesLimit (F ⋙ snd L R) R] : HasLimit F :=
   HasLimit.mk ⟨_, coneOfPreservesIsLimit _ (limit.isLimit _) (limit.isLimit _)⟩
 
 instance has_limits_of_shape [HasLimitsOfShape J A] [HasLimitsOfShape J B] [PreservesLimitsOfShape J R] :
-    HasLimitsOfShape J (Comma L R) :=
-  {  }
+    HasLimitsOfShape J (Comma L R) where
 
 instance has_limits [HasLimits A] [HasLimits B] [PreservesLimits R] : HasLimits (Comma L R) :=
   ⟨inferInstance⟩
@@ -137,8 +136,7 @@ instance has_colimit (F : J ⥤ Comma L R) [HasColimit (F ⋙ fst L R)] [HasColi
   HasColimit.mk ⟨_, coconeOfPreservesIsColimit _ (colimit.isColimit _) (colimit.isColimit _)⟩
 
 instance has_colimits_of_shape [HasColimitsOfShape J A] [HasColimitsOfShape J B] [PreservesColimitsOfShape J L] :
-    HasColimitsOfShape J (Comma L R) :=
-  {  }
+    HasColimitsOfShape J (Comma L R) where
 
 instance has_colimits [HasColimits A] [HasColimits B] [PreservesColimits L] : HasColimits (Comma L R) :=
   ⟨inferInstance⟩
@@ -150,8 +148,7 @@ namespace Arrow
 instance has_limit (F : J ⥤ Arrow T) [i₁ : HasLimit (F ⋙ left_func)] [i₂ : HasLimit (F ⋙ right_func)] : HasLimit F :=
   @Comma.has_limit _ _ _ _ _ i₁ i₂ _
 
-instance has_limits_of_shape [HasLimitsOfShape J T] : HasLimitsOfShape J (Arrow T) :=
-  {  }
+instance has_limits_of_shape [HasLimitsOfShape J T] : HasLimitsOfShape J (Arrow T) where
 
 instance has_limits [HasLimits T] : HasLimits (Arrow T) :=
   ⟨inferInstance⟩
@@ -160,8 +157,7 @@ instance has_colimit (F : J ⥤ Arrow T) [i₁ : HasColimit (F ⋙ left_func)] [
     HasColimit F :=
   @Comma.has_colimit _ _ _ _ _ i₁ i₂ _
 
-instance has_colimits_of_shape [HasColimitsOfShape J T] : HasColimitsOfShape J (Arrow T) :=
-  {  }
+instance has_colimits_of_shape [HasColimitsOfShape J T] : HasColimitsOfShape J (Arrow T) where
 
 instance has_colimits [HasColimits T] : HasColimits (Arrow T) :=
   ⟨inferInstance⟩
@@ -176,8 +172,7 @@ instance has_limit [i₁ : HasLimit (F ⋙ proj X G)] [i₂ : PreservesLimit (F 
   @Comma.has_limit _ _ _ _ _ _ i₁ i₂
 
 instance has_limits_of_shape [HasLimitsOfShape J A] [PreservesLimitsOfShape J G] :
-    HasLimitsOfShape J (StructuredArrow X G) :=
-  {  }
+    HasLimitsOfShape J (StructuredArrow X G) where
 
 instance has_limits [HasLimits A] [PreservesLimits G] : HasLimits (StructuredArrow X G) :=
   ⟨inferInstance⟩
@@ -188,8 +183,7 @@ noncomputable instance createsLimit [i : PreservesLimit (F ⋙ proj X G) G] : Cr
       makesLimit := Comma.coneOfPreservesIsLimit _ punitConeIsLimit _,
       validLift := (Cones.ext (Iso.refl _)) fun j => (id_comp _).symm }
 
-noncomputable instance createsLimitsOfShape [PreservesLimitsOfShape J G] : CreatesLimitsOfShape J (proj X G) :=
-  {  }
+noncomputable instance createsLimitsOfShape [PreservesLimitsOfShape J G] : CreatesLimitsOfShape J (proj X G) where
 
 noncomputable instance createsLimits [PreservesLimits G] : CreatesLimits (proj X G : _) :=
   ⟨⟩
@@ -204,8 +198,7 @@ instance has_colimit [i₁ : HasColimit (F ⋙ proj G X)] [i₂ : PreservesColim
   @Comma.has_colimit _ _ _ _ _ i₁ _ i₂
 
 instance has_colimits_of_shape [HasColimitsOfShape J A] [PreservesColimitsOfShape J G] :
-    HasColimitsOfShape J (CostructuredArrow G X) :=
-  {  }
+    HasColimitsOfShape J (CostructuredArrow G X) where
 
 instance has_colimits [HasColimits A] [PreservesColimits G] : HasColimits (CostructuredArrow G X) :=
   ⟨inferInstance⟩
@@ -216,8 +209,7 @@ noncomputable instance createsColimit [i : PreservesColimit (F ⋙ proj G X) G] 
       makesColimit := Comma.coconeOfPreservesIsColimit _ _ punitCoconeIsColimit,
       validLift := (Cocones.ext (Iso.refl _)) fun j => comp_id _ }
 
-noncomputable instance createsColimitsOfShape [PreservesColimitsOfShape J G] : CreatesColimitsOfShape J (proj G X) :=
-  {  }
+noncomputable instance createsColimitsOfShape [PreservesColimitsOfShape J G] : CreatesColimitsOfShape J (proj G X) where
 
 noncomputable instance createsColimits [PreservesColimits G] : CreatesColimits (proj G X : _) :=
   ⟨⟩

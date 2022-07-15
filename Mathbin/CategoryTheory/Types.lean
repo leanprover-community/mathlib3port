@@ -118,11 +118,11 @@ variable (σ : F ⟶ G) (τ : G ⟶ H)
 
 @[simp]
 theorem map_comp_apply (f : X ⟶ Y) (g : Y ⟶ Z) (a : F.obj X) : (F.map (f ≫ g)) a = (F.map g) ((F.map f) a) := by
-  simp [types_comp]
+  simp [← types_comp]
 
 @[simp]
 theorem map_id_apply (a : F.obj X) : (F.map (𝟙 X)) a = a := by
-  simp [types_id]
+  simp [← types_id]
 
 theorem naturality (f : X ⟶ Y) (x : F.obj X) : σ.app Y ((F.map f) x) = (G.map f) (σ.app X x) :=
   congr_fun (σ.naturality f) x
@@ -172,11 +172,11 @@ def uliftFunctor : Type u ⥤ Type max u v where
 theorem ulift_functor_map {X Y : Type u} (f : X ⟶ Y) (x : ULift.{v} X) : uliftFunctor.map f x = ULift.up (f x.down) :=
   rfl
 
-instance uliftFunctorFull : Full.{u} uliftFunctor where
-  preimage := fun X Y f x => (f (ULift.up x)).down
+instance uliftFunctorFull : Full.{u} uliftFunctor where preimage := fun X Y f x => (f (ULift.up x)).down
 
-instance ulift_functor_faithful : Faithful uliftFunctor where
-  map_injective' := fun X Y f g p =>
+instance ulift_functor_faithful :
+    Faithful
+      uliftFunctor where map_injective' := fun X Y f g p =>
     funext fun x => congr_arg ULift.down (congr_fun p (ULift.up x) : ULift.up (f x) = ULift.up (g x))
 
 /-- The functor embedding `Type u` into `Type u` via `ulift` is isomorphic to the identity functor.
@@ -321,8 +321,10 @@ namespace CategoryTheory
 theorem is_iso_iff_bijective {X Y : Type u} (f : X ⟶ Y) : IsIso f ↔ Function.Bijective f :=
   Iff.intro (fun i => (as_iso f : X ≅ Y).toEquiv.Bijective) fun b => IsIso.of_iso (Equivₓ.ofBijective f b).toIso
 
-noncomputable instance : SplitEpiCategory (Type u) where
-  splitEpiOfEpi := fun X Y f hf =>
+noncomputable instance :
+    SplitEpiCategory
+      (Type
+        u) where splitEpiOfEpi := fun X Y f hf =>
     { section_ := Function.surjInv <| (epi_iff_surjective f).1 hf,
       id' := funext <| Function.right_inverse_surj_inv <| (epi_iff_surjective f).1 hf }
 

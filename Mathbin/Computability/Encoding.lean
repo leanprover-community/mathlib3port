@@ -164,7 +164,7 @@ def unaryDecodeNat : List Bool → Nat :=
   List.length
 
 theorem unary_decode_encode_nat : ∀ n, unaryDecodeNat (unaryEncodeNat n) = n := fun n =>
-  Nat.rec rfl (fun hm => (congr_arg Nat.succ hm.symm).symm) n
+  Nat.rec rfl (fun m : ℕ hm => (congr_arg Nat.succ hm.symm).symm) n
 
 /-- A unary fin_encoding of ℕ. -/
 def unaryFinEncodingNat : FinEncoding ℕ where
@@ -205,16 +205,16 @@ theorem Encoding.card_le_card_list {α : Type u} (e : Encoding.{u, v} α) :
 
 theorem Encoding.card_le_aleph_0 {α : Type u} (e : Encoding.{u, v} α) [Encodable e.Γ] : # α ≤ ℵ₀ := by
   refine' Cardinal.lift_le.1 (e.card_le_card_list.trans _)
-  simp only [Cardinal.lift_aleph_0, Cardinal.lift_le_aleph_0]
+  simp only [← Cardinal.lift_aleph_0, ← Cardinal.lift_le_aleph_0]
   cases' is_empty_or_nonempty e.Γ with h h
-  · simp only [Cardinal.mk_le_aleph_0]
+  · simp only [← Cardinal.mk_le_aleph_0]
     
   · rw [Cardinal.mk_list_eq_aleph_0]
     
 
-theorem FinEncoding.card_le_aleph_0 {α : Type u} (e : FinEncoding α) : # α ≤ ℵ₀ :=
+theorem FinEncoding.card_le_aleph_0 {α : Type u} (e : FinEncoding α) : # α ≤ ℵ₀ := by
   have : Encodable e.Γ := Fintype.toEncodable _
-  e.to_encoding.card_le_aleph_0
+  exact e.to_encoding.card_le_aleph_0
 
 end Computability
 

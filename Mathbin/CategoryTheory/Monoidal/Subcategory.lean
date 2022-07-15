@@ -97,12 +97,11 @@ def fullMonoidalSubcategory.map (h : ∀ ⦃X⦄, P X → P' X) : MonoidalFuncto
   ε := 𝟙 _
   μ := fun X Y => 𝟙 _
 
-instance fullMonoidalSubcategory.mapFull (h : ∀ ⦃X⦄, P X → P' X) : Full (fullMonoidalSubcategory.map h).toFunctor where
-  preimage := fun X Y f => f
+instance fullMonoidalSubcategory.mapFull (h : ∀ ⦃X⦄, P X → P' X) :
+    Full (fullMonoidalSubcategory.map h).toFunctor where preimage := fun X Y f => f
 
 instance fullMonoidalSubcategory.map_faithful (h : ∀ ⦃X⦄, P X → P' X) :
-    Faithful (fullMonoidalSubcategory.map h).toFunctor :=
-  {  }
+    Faithful (fullMonoidalSubcategory.map h).toFunctor where
 
 section Braided
 

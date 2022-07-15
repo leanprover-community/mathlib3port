@@ -139,7 +139,7 @@ def TriangleMorphism.comp (f : TriangleMorphism T₁ T₂) (g : TriangleMorphism
 -/
 @[simps]
 instance triangleCategory : Category (Triangle C) where
-  Hom := fun A B => TriangleMorphism A B
+  hom := fun A B => TriangleMorphism A B
   id := fun A => triangleMorphismId A
   comp := fun A B C f g => f.comp g
 

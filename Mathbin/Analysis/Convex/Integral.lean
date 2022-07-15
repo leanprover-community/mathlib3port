@@ -47,20 +47,20 @@ variable {α E F : Type _} {m0 : MeasurableSpace α} [NormedGroup E] [NormedSpac
 -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize
+-- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr E]]
 /-- If `μ` is a probability measure on `α`, `s` is a convex closed set in `E`, and `f` is an
 integrable function sending `μ`-a.e. points to `s`, then the expected value of `f` belongs to `s`:
 `∫ x, f x ∂μ ∈ s`. See also `convex.sum_mem` for a finite sum version of this lemma. -/
 theorem Convex.integral_mem [IsProbabilityMeasure μ] (hs : Convex ℝ s) (hsc : IsClosed s) (hf : ∀ᵐ x ∂μ, f x ∈ s)
     (hfi : Integrable f μ) : (∫ x, f x ∂μ) ∈ s := by
-  "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr E]]"
   rcases hfi.ae_strongly_measurable with ⟨g, hgm, hfg⟩
   have : separable_space (range g ∩ s : Set E) := (hgm.is_separable_range.mono (inter_subset_left _ _)).SeparableSpace
   obtain ⟨y₀, h₀⟩ : (range g ∩ s).Nonempty := by
     rcases(hf.and hfg).exists with ⟨x₀, h₀⟩
     exact
       ⟨f x₀, by
-        simp only [h₀.2, mem_range_self], h₀.1⟩
+        simp only [← h₀.2, ← mem_range_self], h₀.1⟩
   rw [integral_congr_ae hfg]
   rw [integrable_congr hfg] at hfi
   have hg : ∀ᵐ x ∂μ, g x ∈ Closure (range g ∩ s) := by
@@ -76,7 +76,7 @@ theorem Convex.integral_mem [IsProbabilityMeasure μ] (hs : Convex ℝ s) (hsc :
   · rw [← Ennreal.to_real_sum, (G n).sum_range_measure_preimage_singleton, measure_univ, Ennreal.one_to_real]
     exact fun _ _ => measure_ne_top _ _
     
-  · simp only [simple_func.mem_range, forall_range_iff]
+  · simp only [← simple_func.mem_range, ← forall_range_iff]
     intro x
     apply inter_subset_right (range g)
     exact simple_func.approx_on_mem hgm.measurable _ _ _
@@ -111,12 +111,13 @@ theorem ConvexOn.average_mem_epigraph [IsFiniteMeasure μ] (hg : ConvexOn ℝ s 
     (hsc : IsClosed s) (hμ : μ ≠ 0) (hfs : ∀ᵐ x ∂μ, f x ∈ s) (hfi : Integrable f μ) (hgi : Integrable (g ∘ f) μ) :
     (⨍ x, f x ∂μ, ⨍ x, g (f x) ∂μ) ∈ { p : E × ℝ | p.1 ∈ s ∧ g p.1 ≤ p.2 } := by
   have ht_mem : ∀ᵐ x ∂μ, (f x, g (f x)) ∈ { p : E × ℝ | p.1 ∈ s ∧ g p.1 ≤ p.2 } := hfs.mono fun x hx => ⟨hx, le_rfl⟩
-  simpa only [average_pair hfi hgi] using hg.convex_epigraph.average_mem (hsc.epigraph hgc) hμ ht_mem (hfi.prod_mk hgi)
+  simpa only [← average_pair hfi hgi] using
+    hg.convex_epigraph.average_mem (hsc.epigraph hgc) hμ ht_mem (hfi.prod_mk hgi)
 
 theorem ConcaveOn.average_mem_hypograph [IsFiniteMeasure μ] (hg : ConcaveOn ℝ s g) (hgc : ContinuousOn g s)
     (hsc : IsClosed s) (hμ : μ ≠ 0) (hfs : ∀ᵐ x ∂μ, f x ∈ s) (hfi : Integrable f μ) (hgi : Integrable (g ∘ f) μ) :
     (⨍ x, f x ∂μ, ⨍ x, g (f x) ∂μ) ∈ { p : E × ℝ | p.1 ∈ s ∧ p.2 ≤ g p.1 } := by
-  simpa only [mem_set_of_eq, Pi.neg_apply, average_neg, neg_le_neg_iff] using
+  simpa only [← mem_set_of_eq, ← Pi.neg_apply, ← average_neg, ← neg_le_neg_iff] using
     hg.neg.average_mem_epigraph hgc.neg hsc hμ hfs hfi hgi.neg
 
 /-- **Jensen's inequality**: if a function `g : E → ℝ` is convex and continuous on a convex closed
@@ -161,7 +162,7 @@ theorem ConcaveOn.set_average_mem_hypograph (hg : ConcaveOn ℝ s g) (hgc : Cont
     (h0 : μ t ≠ 0) (ht : μ t ≠ ∞) (hfs : ∀ᵐ x ∂μ.restrict t, f x ∈ s) (hfi : IntegrableOn f t μ)
     (hgi : IntegrableOn (g ∘ f) t μ) :
     (⨍ x in t, f x ∂μ, ⨍ x in t, g (f x) ∂μ) ∈ { p : E × ℝ | p.1 ∈ s ∧ p.2 ≤ g p.1 } := by
-  simpa only [mem_set_of_eq, Pi.neg_apply, average_neg, neg_le_neg_iff] using
+  simpa only [← mem_set_of_eq, ← Pi.neg_apply, ← average_neg, ← neg_le_neg_iff] using
     hg.neg.set_average_mem_epigraph hgc.neg hsc h0 ht hfs hfi hgi.neg
 
 /-- **Jensen's inequality**: if a function `g : E → ℝ` is convex and continuous on a convex closed
@@ -192,7 +193,7 @@ value of `g ∘ f` provided that both `f` and `g ∘ f` are integrable. See also
 theorem ConvexOn.map_integral_le [IsProbabilityMeasure μ] (hg : ConvexOn ℝ s g) (hgc : ContinuousOn g s)
     (hsc : IsClosed s) (hfs : ∀ᵐ x ∂μ, f x ∈ s) (hfi : Integrable f μ) (hgi : Integrable (g ∘ f) μ) :
     g (∫ x, f x ∂μ) ≤ ∫ x, g (f x) ∂μ := by
-  simpa only [average_eq_integral] using hg.map_average_le hgc hsc (is_probability_measure.ne_zero μ) hfs hfi hgi
+  simpa only [← average_eq_integral] using hg.map_average_le hgc hsc (is_probability_measure.ne_zero μ) hfs hfi hgi
 
 /-- **Jensen's inequality**: if a function `g : E → ℝ` is concave and continuous on a convex closed
 set `s`, `μ` is a probability measure on `α`, and `f : α → E` is a function sending `μ`-a.e.  points
@@ -201,7 +202,7 @@ value of `f` provided that both `f` and `g ∘ f` are integrable. -/
 theorem ConcaveOn.le_map_integral [IsProbabilityMeasure μ] (hg : ConcaveOn ℝ s g) (hgc : ContinuousOn g s)
     (hsc : IsClosed s) (hfs : ∀ᵐ x ∂μ, f x ∈ s) (hfi : Integrable f μ) (hgi : Integrable (g ∘ f) μ) :
     (∫ x, g (f x) ∂μ) ≤ g (∫ x, f x ∂μ) := by
-  simpa only [average_eq_integral] using hg.le_map_average hgc hsc (is_probability_measure.ne_zero μ) hfs hfi hgi
+  simpa only [← average_eq_integral] using hg.le_map_average hgc hsc (is_probability_measure.ne_zero μ) hfs hfi hgi
 
 /-!
 ### Strict Jensen's inequality
@@ -219,7 +220,7 @@ theorem ae_eq_const_or_exists_average_ne_compl [IsFiniteMeasure μ] (hfi : Integ
   push_neg  at H
   refine' hfi.ae_eq_of_forall_set_integral_eq _ _ (integrable_const _) fun t ht ht' => _
   clear ht'
-  simp only [const_apply, set_integral_const]
+  simp only [← const_apply, ← set_integral_const]
   by_cases' h₀ : μ t = 0
   · rw [restrict_eq_zero.2 h₀, integral_zero_measure, h₀, Ennreal.zero_to_real, zero_smul]
     
@@ -273,8 +274,8 @@ theorem StrictConvexOn.ae_eq_const_or_map_average_lt [IsFiniteMeasure μ] (hg : 
   rintro ⟨t, hm, h₀, h₀', hne⟩
   rcases average_mem_open_segment_compl_self hm.null_measurable_set h₀ h₀' (hfi.prod_mk hgi) with
     ⟨a, b, ha, hb, hab, h_avg⟩
-  simp only [average_pair hfi hgi, average_pair hfi.integrable_on hgi.integrable_on, Prod.smul_mk, Prod.mk_add_mk,
-    Prod.mk.inj_iff, (· ∘ ·)] at h_avg
+  simp only [← average_pair hfi hgi, ← average_pair hfi.integrable_on hgi.integrable_on, ← Prod.smul_mk, ←
+    Prod.mk_add_mk, ← Prod.mk.inj_iff, ← (· ∘ ·)] at h_avg
   rw [← h_avg.1, ← h_avg.2]
   calc g ((a • ⨍ x in t, f x ∂μ) + b • ⨍ x in tᶜ, f x ∂μ) < a * g (⨍ x in t, f x ∂μ) + b * g (⨍ x in tᶜ, f x ∂μ) :=
       hg.2 (this h₀).1 (this h₀').1 hne ha hb hab _ ≤ (a * ⨍ x in t, g (f x) ∂μ) + b * ⨍ x in tᶜ, g (f x) ∂μ :=
@@ -286,7 +287,7 @@ either `f` is a.e. equal to its average value, or `⨍ x, g (f x) ∂μ < g (⨍
 theorem StrictConcaveOn.ae_eq_const_or_lt_map_average [IsFiniteMeasure μ] (hg : StrictConcaveOn ℝ s g)
     (hgc : ContinuousOn g s) (hsc : IsClosed s) (hfs : ∀ᵐ x ∂μ, f x ∈ s) (hfi : Integrable f μ)
     (hgi : Integrable (g ∘ f) μ) : f =ᵐ[μ] const α (⨍ x, f x ∂μ) ∨ (⨍ x, g (f x) ∂μ) < g (⨍ x, f x ∂μ) := by
-  simpa only [Pi.neg_apply, average_neg, neg_lt_neg_iff] using
+  simpa only [← Pi.neg_apply, ← average_neg, ← neg_lt_neg_iff] using
     hg.neg.ae_eq_const_or_map_average_lt hgc.neg hsc hfs hfi hgi.neg
 
 /-- If `E` is a strictly convex normed space and `f : α → E` is a function such that `∥f x∥ ≤ C`
@@ -296,21 +297,21 @@ theorem ae_eq_const_or_norm_average_lt_of_norm_le_const [StrictConvexSpace ℝ E
     f =ᵐ[μ] const α (⨍ x, f x ∂μ) ∨ ∥⨍ x, f x ∂μ∥ < C := by
   cases' le_or_ltₓ C 0 with hC0 hC0
   · have : f =ᵐ[μ] 0 := h_le.mono fun x hx => norm_le_zero_iff.1 (hx.trans hC0)
-    simp only [average_congr this, Pi.zero_apply, average_zero]
+    simp only [← average_congr this, ← Pi.zero_apply, ← average_zero]
     exact Or.inl this
     
   by_cases' hfi : integrable f μ
   swap
-  · simp [average_def', integral_undef hfi, hC0, Ennreal.to_real_pos_iff]
+  · simp [← average_def', ← integral_undef hfi, ← hC0, ← Ennreal.to_real_pos_iff]
     
   cases' (le_top : μ univ ≤ ∞).eq_or_lt with hμt hμt
-  · simp [average_def', hμt, hC0]
+  · simp [← average_def', ← hμt, ← hC0]
     
   have : is_finite_measure μ := ⟨hμt⟩
   replace h_le : ∀ᵐ x ∂μ, f x ∈ closed_ball (0 : E) C
-  · simpa only [mem_closed_ball_zero_iff]
+  · simpa only [← mem_closed_ball_zero_iff]
     
-  simpa only [interior_closed_ball _ hC0.ne', mem_ball_zero_iff] using
+  simpa only [← interior_closed_ball _ hC0.ne', ← mem_ball_zero_iff] using
     (strict_convex_closed_ball ℝ (0 : E) C).ae_eq_const_or_average_mem_interior is_closed_ball h_le hfi
 
 /-- If `E` is a strictly convex normed space and `f : α → E` is a function such that `∥f x∥ ≤ C`
@@ -320,10 +321,10 @@ theorem ae_eq_const_or_norm_integral_lt_of_norm_le_const [StrictConvexSpace ℝ 
     (h_le : ∀ᵐ x ∂μ, ∥f x∥ ≤ C) : f =ᵐ[μ] const α (⨍ x, f x ∂μ) ∨ ∥∫ x, f x ∂μ∥ < (μ Univ).toReal * C := by
   cases' eq_or_ne μ 0 with h₀ h₀
   · left
-    simp [h₀]
+    simp [← h₀]
     
   have hμ : 0 < (μ univ).toReal := by
-    simp [Ennreal.to_real_pos_iff, pos_iff_ne_zero, h₀, measure_lt_top]
+    simp [← Ennreal.to_real_pos_iff, ← pos_iff_ne_zero, ← h₀, ← measure_lt_top]
   refine' (ae_eq_const_or_norm_average_lt_of_norm_le_const h_le).imp_right fun H => _
   rwa [average_def', norm_smul, norm_inv, Real.norm_eq_abs, abs_of_pos hμ, ← div_eq_inv_mul, div_lt_iff' hμ] at H
 

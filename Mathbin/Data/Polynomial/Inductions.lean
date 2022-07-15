@@ -36,23 +36,23 @@ def divX (p : R[X]) : R[X] :=
 
 @[simp]
 theorem coeff_div_X : (divX p).coeff n = p.coeff (n + 1) := by
-  simp only [div_X, coeff_monomial, true_andₓ, finset_sum_coeff, not_ltₓ, mem_Ico, zero_le, Finset.sum_ite_eq',
-    ite_eq_left_iff]
+  simp only [← div_X, ← coeff_monomial, ← true_andₓ, ← finset_sum_coeff, ← not_ltₓ, ← mem_Ico, ← zero_le, ←
+    Finset.sum_ite_eq', ← ite_eq_left_iff]
   intro h
   rw [coeff_eq_zero_of_nat_degree_lt (Nat.lt_succ_of_leₓ h)]
 
 theorem div_X_mul_X_add (p : R[X]) : divX p * X + c (p.coeff 0) = p :=
   ext <| by
-    rintro ⟨_ | _⟩ <;> simp [coeff_C, Nat.succ_ne_zero, coeff_mul_X]
+    rintro ⟨_ | _⟩ <;> simp [← coeff_C, ← Nat.succ_ne_zero, ← coeff_mul_X]
 
 @[simp]
 theorem div_X_C (a : R) : divX (c a) = 0 :=
   ext fun n => by
-    simp [div_X, coeff_C] <;> simp [coeff]
+    simp [← div_X, ← coeff_C] <;> simp [← coeff]
 
 theorem div_X_eq_zero_iff : divX p = 0 ↔ p = c (p.coeff 0) :=
   ⟨fun h => by
-    simpa [eq_comm, h] using div_X_mul_X_add p, fun h => by
+    simpa [← eq_comm, ← h] using div_X_mul_X_add p, fun h => by
     rw [h, div_X_C]⟩
 
 theorem div_X_add : divX (p + q) = divX p + divX q :=
@@ -70,10 +70,10 @@ theorem degree_div_X_lt (hp0 : p ≠ 0) : (divX p).degree < p.degree := by
             lt_of_le_of_neₓ bot_le
               (Ne.symm
                 (mt degree_eq_bot.1 <| by
-                  simp [h']))
+                  simp [← h']))
         else by
           have hXp0 : div_X p ≠ 0 := by
-            simpa [div_X_eq_zero_iff, -not_leₓ, degree_le_zero_iff] using h
+            simpa [← div_X_eq_zero_iff, -not_leₓ, ← degree_le_zero_iff] using h
           have : leading_coeff (div_X p) * leading_coeff X ≠ 0 := by
             simpa
           have : degree (C (p.coeff 0)) < degree (div_X p * X) :=
@@ -109,7 +109,7 @@ noncomputable def recOnHornerₓ {M : R[X] → Sort _} :
               exact
                 MX _
                   (fun h : div_X p = 0 => by
-                    simpa [h, hcp0] using hp)
+                    simpa [← h, ← hcp0] using hp)
                   (rec_on_horner _ M0 MC MX)
           else
             MC _ _ (coeff_mul_X_zero _) hcp0
@@ -149,7 +149,7 @@ theorem degree_pos_induction_on {P : R[X] → Prop} (p : R[X]) (h0 : 0 < degree 
         rw [eq_C_of_degree_le_zero (le_of_not_gtₓ h0)] at * <;>
           exact
             hC fun h : coeff p 0 = 0 => by
-              simpa [h, Nat.not_lt_zeroₓ] using h0')
+              simpa [← h, ← Nat.not_lt_zeroₓ] using h0')
     h0
 
 /-- A property holds for all polynomials of non-zero `nat_degree` with coefficients in a

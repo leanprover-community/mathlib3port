@@ -66,23 +66,23 @@ theorem tietze_extension_step (f : X →ᵇ ℝ) (e : C(X, Y)) (he : ClosedEmbed
   have hc₁ : IsClosed (e '' (f ⁻¹' Iic (-∥f∥ / 3))) := he.is_closed_map _ (is_closed_Iic.preimage f.continuous)
   have hc₂ : IsClosed (e '' (f ⁻¹' Ici (∥f∥ / 3))) := he.is_closed_map _ (is_closed_Ici.preimage f.continuous)
   have hd : Disjoint (e '' (f ⁻¹' Iic (-∥f∥ / 3))) (e '' (f ⁻¹' Ici (∥f∥ / 3))) := by
-    refine' disjoint_image_of_injective he.inj (disjoint_preimage _ _)
+    refine' disjoint_image_of_injective he.inj (Disjoint.preimage _ _)
     rwa [Iic_disjoint_Ici, not_leₓ]
   rcases exists_bounded_mem_Icc_of_closed_of_le hc₁ hc₂ hd hf3.le with ⟨g, hg₁, hg₂, hgf⟩
   refine' ⟨g, _, _⟩
   · refine' (norm_le <| div_nonneg hf.le h3.le).mpr fun y => _
-    simpa [Real.norm_eq_abs, abs_le, neg_div] using hgf y
+    simpa [← Real.norm_eq_abs, ← abs_le, ← neg_div] using hgf y
     
   · refine' (dist_le <| mul_nonneg h23.le hf.le).mpr fun x => _
     have hfx : -∥f∥ ≤ f x ∧ f x ≤ ∥f∥ := by
-      simpa only [Real.norm_eq_abs, abs_le] using f.norm_coe_le_norm x
+      simpa only [← Real.norm_eq_abs, ← abs_le] using f.norm_coe_le_norm x
     cases' le_totalₓ (f x) (-∥f∥ / 3) with hle₁ hle₁
     · calc abs (g (e x) - f x) = -∥f∥ / 3 - f x := by
           rw [hg₁ (mem_image_of_mem _ hle₁), abs_of_nonneg (sub_nonneg.2 hle₁)]_ ≤ 2 / 3 * ∥f∥ := by
           linarith
       
     · cases' le_totalₓ (f x) (∥f∥ / 3) with hle₂ hle₂
-      · simp only [neg_div] at *
+      · simp only [← neg_div] at *
         calc dist (g (e x)) (f x) ≤ abs (g (e x)) + abs (f x) := dist_le_norm_add_norm _ _ _ ≤ ∥f∥ / 3 + ∥f∥ / 3 :=
             add_le_add (abs_le.2 <| hgf _) (abs_le.2 ⟨hle₁, hle₂⟩)_ = 2 / 3 * ∥f∥ := by
             linarith
@@ -109,7 +109,7 @@ theorem exists_extension_norm_eq_of_closed_embedding' (f : X →ᵇ ℝ) (e : C(
   have hgf : ∀ n, dist ((g n).comp_continuous e) f ≤ (2 / 3) ^ n * ∥f∥ := by
     intro n
     induction' n with n ihn
-    · simp [g0]
+    · simp [← g0]
       
     · rw [g_succ n, add_comp_continuous, ← dist_sub_right, add_sub_cancel', pow_succₓ, mul_assoc]
       refine'
@@ -150,7 +150,8 @@ theorem exists_extension_norm_eq_of_closed_embedding' (f : X →ᵇ ℝ) (e : C(
               norm_num1)
             hg_dist hg_cau.tendsto_lim).trans_eq
         _
-    field_simp [show (3 - 2 : ℝ) = 1 by
+    field_simp [←
+      show (3 - 2 : ℝ) = 1 by
         norm_num1]
     
   · rw [← hge]
@@ -187,14 +188,14 @@ theorem exists_extension_forall_mem_Icc_of_closed_embedding (f : X →ᵇ ℝ) {
   rcases exists_extension_norm_eq_of_closed_embedding (f - const X ((a + b) / 2)) he with ⟨g, hgf, hge⟩
   refine' ⟨const Y ((a + b) / 2) + g, fun y => _, _⟩
   · suffices ∥f - const X ((a + b) / 2)∥ ≤ (b - a) / 2 by
-      simpa [Real.Icc_eq_closed_ball, add_mem_closed_ball_iff_norm] using
+      simpa [← Real.Icc_eq_closed_ball, ← add_mem_closed_ball_iff_norm] using
         (norm_coe_le_norm g y).trans (hgf.trans_le this)
     refine' (norm_le <| div_nonneg (sub_nonneg.2 hle) zero_le_two).2 fun x => _
-    simpa only [Real.Icc_eq_closed_ball] using hf x
+    simpa only [← Real.Icc_eq_closed_ball] using hf x
     
   · ext x
     have : g (e x) = f x - (a + b) / 2 := congr_fun hge x
-    simp [this]
+    simp [← this]
     
 
 /-- **Tietze extension theorem** for real-valued bounded continuous maps, a version for a closed
@@ -218,14 +219,14 @@ theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f
   · have : ∀ x, f x = a := by
       simpa using hmem
     use const Y a
-    simp [this, Function.funext_iffₓ]
+    simp [← this, ← Function.funext_iffₓ]
     
   -- Put `c = (a + b) / 2`. Then `a < c < b` and `c - a = b - c`.
   set c := (a + b) / 2
   have hac : a < c := left_lt_add_div_two.2 hlt
   have hcb : c < b := add_div_two_lt_right.2 hlt
   have hsub : c - a = b - c := by
-    simp only [c]
+    simp only [← c]
     field_simp
     ring
   /- Due to `exists_extension_forall_mem_Icc_of_closed_embedding`, there exists an extension `g`
@@ -242,7 +243,7 @@ theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f
         function `dg : Y → ℝ` such that `dg ∘ e = 0`, `dg y = 0` whenever `c ≤ g y`, `dg y = c - a`
         whenever `g y = a`, and `0 ≤ dg y ≤ c - a` for all `y`.  -/
     have hd : Disjoint (range e ∪ g ⁻¹' Ici c) (g ⁻¹' {a}) := by
-      refine' disjoint_union_left.2 ⟨_, disjoint_preimage _ _⟩
+      refine' disjoint_union_left.2 ⟨_, Disjoint.preimage _ _⟩
       · rintro _ ⟨⟨x, rfl⟩, rfl : g (e x) = a⟩
         exact ha' ⟨x, (congr_fun hgf x).symm⟩
         
@@ -253,7 +254,7 @@ theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f
       ⟨dg, dg0, dga, dgmem⟩
     replace hgf : ∀ x, (g + dg) (e x) = f x
     · intro x
-      simp [dg0 (Or.inl <| mem_range_self _), ← hgf]
+      simp [← dg0 (Or.inl <| mem_range_self _), hgf]
       
     refine' ⟨g + dg, fun y => _, funext hgf⟩
     · have hay : a < (g + dg) y := by
@@ -266,7 +267,7 @@ theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f
       rcases ha.exists_between hay with ⟨_, ⟨x, rfl⟩, hax, hxy⟩
       refine' ⟨x, hxy.le, _⟩
       cases' le_totalₓ c (g y) with hc hc
-      · simp [dg0 (Or.inr hc), (hg_mem y).2]
+      · simp [← dg0 (Or.inr hc), ← (hg_mem y).2]
         
       · calc g y + dg y ≤ c + (c - a) := add_le_add hc (dgmem _).2_ = b := by
             rw [hsub, add_sub_cancel'_right]
@@ -279,7 +280,7 @@ theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f
   · exact ⟨g, fun y => ⟨xl y, x, hxl y, hgb y⟩, hgf⟩
     
   have hd : Disjoint (range e ∪ g ⁻¹' Iic c) (g ⁻¹' {b}) := by
-    refine' disjoint_union_left.2 ⟨_, disjoint_preimage _ _⟩
+    refine' disjoint_union_left.2 ⟨_, Disjoint.preimage _ _⟩
     · rintro _ ⟨⟨x, rfl⟩, rfl : g (e x) = b⟩
       exact hb' ⟨x, (congr_fun hgf x).symm⟩
       
@@ -290,7 +291,7 @@ theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f
     ⟨dg, dg0, dgb, dgmem⟩
   replace hgf : ∀ x, (g - dg) (e x) = f x
   · intro x
-    simp [dg0 (Or.inl <| mem_range_self _), ← hgf]
+    simp [← dg0 (Or.inl <| mem_range_self _), hgf]
     
   refine' ⟨g - dg, fun y => _, funext hgf⟩
   · have hyb : (g - dg) y < b := by
@@ -316,7 +317,7 @@ theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f
         
       
     · refine' ⟨xl y, xu, _, hyxu.le⟩
-      simp [dg0 (Or.inr hc), hxl]
+      simp [← dg0 (Or.inr hc), ← hxl]
       
     
 

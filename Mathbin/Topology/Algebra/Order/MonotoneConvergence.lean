@@ -173,7 +173,7 @@ instance [Preorderₓ α] [Preorderₓ β] [TopologicalSpace α] [TopologicalSpa
 instance {ι : Type _} {α : ι → Type _} [∀ i, Preorderₓ (α i)] [∀ i, TopologicalSpace (α i)]
     [∀ i, SupConvergenceClass (α i)] : SupConvergenceClass (∀ i, α i) := by
   refine' ⟨fun f s h => _⟩
-  simp only [is_lub_pi, ← range_restrict] at h
+  simp only [← is_lub_pi, range_restrict] at h
   exact tendsto_pi_nhds.2 fun i => tendsto_at_top_is_lub ((monotone_eval _).restrict _) (h i)
 
 instance {ι : Type _} {α : ι → Type _} [∀ i, Preorderₓ (α i)] [∀ i, TopologicalSpace (α i)]
@@ -217,9 +217,9 @@ when `f x` tends to `a` as `x` tends to some point `b` in the domain. -/
 
 
 theorem Monotone.ge_of_tendsto [TopologicalSpace α] [Preorderₓ α] [OrderClosedTopology α] [SemilatticeSup β] {f : β → α}
-    {a : α} (hf : Monotone f) (ha : Tendsto f atTop (𝓝 a)) (b : β) : f b ≤ a :=
+    {a : α} (hf : Monotone f) (ha : Tendsto f atTop (𝓝 a)) (b : β) : f b ≤ a := by
   have : Nonempty β := Nonempty.intro b
-  ge_of_tendsto ha ((eventually_ge_at_top b).mono fun _ hxy => hf hxy)
+  exact ge_of_tendsto ha ((eventually_ge_at_top b).mono fun _ hxy => hf hxy)
 
 theorem Monotone.le_of_tendsto [TopologicalSpace α] [Preorderₓ α] [OrderClosedTopology α] [SemilatticeInf β] {f : β → α}
     {a : α} (hf : Monotone f) (ha : Tendsto f atBot (𝓝 a)) (b : β) : a ≤ f b :=
@@ -265,7 +265,8 @@ theorem infi_eq_of_tendsto {α} [TopologicalSpace α] [CompleteLinearOrder α] [
 theorem supr_eq_supr_subseq_of_monotone {ι₁ ι₂ α : Type _} [Preorderₓ ι₂] [CompleteLattice α] {l : Filter ι₁} [l.ne_bot]
     {f : ι₂ → α} {φ : ι₁ → ι₂} (hf : Monotone f) (hφ : Tendsto φ l atTop) : (⨆ i, f i) = ⨆ i, f (φ i) :=
   le_antisymmₓ
-    (supr_mono' fun i => exists_imp_exists (fun hj : i ≤ φ j => hf hj) (hφ.Eventually <| eventually_ge_at_top i).exists)
+    (supr_mono' fun i =>
+      exists_imp_exists (fun j hj : i ≤ φ j => hf hj) (hφ.Eventually <| eventually_ge_at_top i).exists)
     (supr_mono' fun i => ⟨φ i, le_rfl⟩)
 
 theorem infi_eq_infi_subseq_of_monotone {ι₁ ι₂ α : Type _} [Preorderₓ ι₂] [CompleteLattice α] {l : Filter ι₁} [l.ne_bot]

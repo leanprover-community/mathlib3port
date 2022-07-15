@@ -49,11 +49,13 @@ open Function Set
 
 variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {E' : Type _}
   [NormedGroup E'] [NormedSpace 𝕜 E'] {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] {H : Type _} [TopologicalSpace H]
-  {H' : Type _} [TopologicalSpace H'] {G : Type _} [TopologicalSpace G] {I : ModelWithCorners 𝕜 E H}
-  {I' : ModelWithCorners 𝕜 E' H'} {J : ModelWithCorners 𝕜 F G}
+  {H' : Type _} [TopologicalSpace H'] {G : Type _} [TopologicalSpace G] {G' : Type _} [TopologicalSpace G']
+  {I : ModelWithCorners 𝕜 E H} {I' : ModelWithCorners 𝕜 E' H'} {J : ModelWithCorners 𝕜 F G}
+  {J' : ModelWithCorners 𝕜 F G'}
 
 variable {M : Type _} [TopologicalSpace M] [ChartedSpace H M] {M' : Type _} [TopologicalSpace M'] [ChartedSpace H' M']
-  {N : Type _} [TopologicalSpace N] [ChartedSpace G N] {n : WithTop ℕ}
+  {N : Type _} [TopologicalSpace N] [ChartedSpace G N] {N' : Type _} [TopologicalSpace N'] [ChartedSpace G' N']
+  {n : WithTop ℕ}
 
 section Defs
 
@@ -131,7 +133,7 @@ theorem to_equiv_inj {h h' : M ≃ₘ^n⟮I,I'⟯ M'} : h.toEquiv = h'.toEquiv �
   to_equiv_injective.eq_iff
 
 /-- Coercion to function `λ h : M ≃ₘ^n⟮I, I'⟯ M', (h : M → M')` is injective. -/
-theorem coe_fn_injective : Injective fun x : M => h x :=
+theorem coe_fn_injective : Injective fun h : M ≃ₘ^n⟮I,I'⟯ M' x : M => h x :=
   Equivₓ.coe_fn_injective.comp to_equiv_injective
 
 @[ext]
@@ -258,7 +260,7 @@ theorem cont_mdiff_within_at_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N
   constructor
   · intro Hfh
     rw [← h.symm_apply_apply x] at Hfh
-    simpa only [(· ∘ ·), h.apply_symm_apply] using
+    simpa only [← (· ∘ ·), ← h.apply_symm_apply] using
       Hfh.comp (h x) (h.symm.cont_mdiff_within_at.of_le hm) (maps_to_preimage _ _)
     
   · rw [← h.image_eq_preimage]
@@ -269,7 +271,7 @@ theorem cont_mdiff_within_at_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N
 theorem cont_mdiff_on_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : N → M'} {s} (hm : m ≤ n) :
     ContMdiffOn I I' m (f ∘ h) s ↔ ContMdiffOn J I' m f (h.symm ⁻¹' s) :=
   h.toEquiv.forall_congr fun x => by
-    simp only [hm, coe_to_equiv, symm_apply_apply, cont_mdiff_within_at_comp_diffeomorph_iff, mem_preimage]
+    simp only [← hm, ← coe_to_equiv, ← symm_apply_apply, ← cont_mdiff_within_at_comp_diffeomorph_iff, ← mem_preimage]
 
 @[simp]
 theorem cont_mdiff_at_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : N → M'} {x} (hm : m ≤ n) :
@@ -285,7 +287,7 @@ theorem cont_mdiff_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : N �
 theorem cont_mdiff_within_at_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : M' → M} (hm : m ≤ n) {s x} :
     ContMdiffWithinAt I' J m (h ∘ f) s x ↔ ContMdiffWithinAt I' I m f s x :=
   ⟨fun Hhf => by
-    simpa only [(· ∘ ·), h.symm_apply_apply] using (h.symm.cont_mdiff_at.of_le hm).comp_cont_mdiff_within_at _ Hhf,
+    simpa only [← (· ∘ ·), ← h.symm_apply_apply] using (h.symm.cont_mdiff_at.of_le hm).comp_cont_mdiff_within_at _ Hhf,
     fun Hf => (h.ContMdiffAt.ofLe hm).comp_cont_mdiff_within_at _ Hf⟩
 
 @[simp]
@@ -307,12 +309,59 @@ theorem to_local_homeomorph_mdifferentiable (h : M ≃ₘ^n⟮I,J⟯ N) (hn : 1 
     h.toHomeomorph.toLocalHomeomorph.Mdifferentiable I J :=
   ⟨h.MdifferentiableOn _ hn, h.symm.MdifferentiableOn _ hn⟩
 
+section Constructions
+
+/-- Product of two diffeomorphisms. -/
+def prodCongr (h₁ : M ≃ₘ^n⟮I,I'⟯ M') (h₂ : N ≃ₘ^n⟮J,J'⟯ N') : (M × N) ≃ₘ^n⟮I.Prod J,I'.Prod J'⟯ M' × N' where
+  cont_mdiff_to_fun := (h₁.ContMdiff.comp cont_mdiff_fst).prod_mk (h₂.ContMdiff.comp cont_mdiff_snd)
+  cont_mdiff_inv_fun := (h₁.symm.ContMdiff.comp cont_mdiff_fst).prod_mk (h₂.symm.ContMdiff.comp cont_mdiff_snd)
+  toEquiv := h₁.toEquiv.prodCongr h₂.toEquiv
+
+@[simp]
+theorem prod_congr_symm (h₁ : M ≃ₘ^n⟮I,I'⟯ M') (h₂ : N ≃ₘ^n⟮J,J'⟯ N') :
+    (h₁.prodCongr h₂).symm = h₁.symm.prodCongr h₂.symm :=
+  rfl
+
+@[simp]
+theorem coe_prod_congr (h₁ : M ≃ₘ^n⟮I,I'⟯ M') (h₂ : N ≃ₘ^n⟮J,J'⟯ N') : ⇑(h₁.prodCongr h₂) = Prod.map h₁ h₂ :=
+  rfl
+
+section
+
+variable (I J J' M N N' n)
+
+/-- `M × N` is diffeomorphic to `N × M`. -/
+def prodComm : (M × N) ≃ₘ^n⟮I.Prod J,J.Prod I⟯ N × M where
+  cont_mdiff_to_fun := cont_mdiff_snd.prod_mk cont_mdiff_fst
+  cont_mdiff_inv_fun := cont_mdiff_snd.prod_mk cont_mdiff_fst
+  toEquiv := Equivₓ.prodComm M N
+
+@[simp]
+theorem prod_comm_symm : (prodComm I J M N n).symm = prodComm J I N M n :=
+  rfl
+
+@[simp]
+theorem coe_prod_comm : ⇑(prodComm I J M N n) = Prod.swap :=
+  rfl
+
+/-- `(M × N) × N'` is diffeomorphic to `M × (N × N')`. -/
+def prodAssoc : ((M × N) × N') ≃ₘ^n⟮(I.Prod J).Prod J',I.Prod (J.Prod J')⟯ M × N × N' where
+  cont_mdiff_to_fun :=
+    (cont_mdiff_fst.comp cont_mdiff_fst).prod_mk ((cont_mdiff_snd.comp cont_mdiff_fst).prod_mk cont_mdiff_snd)
+  cont_mdiff_inv_fun :=
+    (cont_mdiff_fst.prod_mk (cont_mdiff_fst.comp cont_mdiff_snd)).prod_mk (cont_mdiff_snd.comp cont_mdiff_snd)
+  toEquiv := Equivₓ.prodAssoc M N N'
+
+end
+
+end Constructions
+
 variable [SmoothManifoldWithCorners I M] [SmoothManifoldWithCorners J N]
 
 theorem unique_mdiff_on_image_aux (h : M ≃ₘ^n⟮I,J⟯ N) (hn : 1 ≤ n) {s : Set M} (hs : UniqueMdiffOn I s) :
     UniqueMdiffOn J (h '' s) := by
   convert hs.unique_mdiff_on_preimage (h.to_local_homeomorph_mdifferentiable hn)
-  simp [h.image_eq_preimage]
+  simp [← h.image_eq_preimage]
 
 @[simp]
 theorem unique_mdiff_on_image (h : M ≃ₘ^n⟮I,J⟯ N) (hn : 1 ≤ n) {s : Set M} :
@@ -327,7 +376,7 @@ theorem unique_mdiff_on_preimage (h : M ≃ₘ^n⟮I,J⟯ N) (hn : 1 ≤ n) {s :
 @[simp]
 theorem unique_diff_on_image (h : E ≃ₘ^n[𝕜] F) (hn : 1 ≤ n) {s : Set E} : UniqueDiffOn 𝕜 (h '' s) ↔ UniqueDiffOn 𝕜 s :=
   by
-  simp only [← unique_mdiff_on_iff_unique_diff_on, unique_mdiff_on_image, hn]
+  simp only [unique_mdiff_on_iff_unique_diff_on, ← unique_mdiff_on_image, ← hn]
 
 @[simp]
 theorem unique_diff_on_preimage (h : E ≃ₘ^n[𝕜] F) (hn : 1 ≤ n) {s : Set F} :
@@ -370,7 +419,7 @@ def transDiffeomorph (I : ModelWithCorners 𝕜 E H) (e : E ≃ₘ[𝕜] E') : M
   source_eq := by
     simp
   unique_diff' := by
-    simp [range_comp e, I.unique_diff]
+    simp [← range_comp e, ← I.unique_diff]
   continuous_to_fun := e.Continuous.comp I.Continuous
   continuous_inv_fun := I.continuous_symm.comp e.symm.Continuous
 
@@ -394,7 +443,7 @@ theorem coe_ext_chart_at_trans_diffeomorph_symm (x : M) :
 
 theorem ext_chart_at_trans_diffeomorph_target (x : M) :
     (extChartAt (I.transDiffeomorph e) x).Target = e.symm ⁻¹' (extChartAt I x).Target := by
-  simp' only [range_comp e, e.image_eq_preimage, preimage_preimage] with mfld_simps
+  simp' only [← range_comp e, ← e.image_eq_preimage, ← preimage_preimage] with mfld_simps
 
 end ModelWithCorners
 
@@ -418,7 +467,8 @@ def toTransDiffeomorph (e : E ≃ₘ[𝕜] F) : M ≃ₘ⟮I,I.transDiffeomorph 
   cont_mdiff_to_fun := fun x => by
     refine' cont_mdiff_within_at_iff.2 ⟨continuous_within_at_id, _⟩
     refine' e.cont_diff.cont_diff_within_at.congr' (fun y hy => _) _
-    · simp only [Equivₓ.coe_refl, id, (· ∘ ·), I.coe_ext_chart_at_trans_diffeomorph, (extChartAt I x).right_inv hy.1]
+    · simp only [← Equivₓ.coe_refl, ← id, ← (· ∘ ·), ← I.coe_ext_chart_at_trans_diffeomorph, ←
+        (extChartAt I x).right_inv hy.1]
       
     exact
       ⟨(extChartAt I x).map_source (mem_ext_chart_source I x), trivialₓ, by
@@ -426,13 +476,13 @@ def toTransDiffeomorph (e : E ≃ₘ[𝕜] F) : M ≃ₘ⟮I,I.transDiffeomorph 
   cont_mdiff_inv_fun := fun x => by
     refine' cont_mdiff_within_at_iff.2 ⟨continuous_within_at_id, _⟩
     refine' e.symm.cont_diff.cont_diff_within_at.congr' (fun y hy => _) _
-    · simp only [mem_inter_eq, I.ext_chart_at_trans_diffeomorph_target] at hy
-      simp only [Equivₓ.coe_refl, Equivₓ.refl_symm, id, (· ∘ ·), I.coe_ext_chart_at_trans_diffeomorph_symm,
+    · simp only [← mem_inter_eq, ← I.ext_chart_at_trans_diffeomorph_target] at hy
+      simp only [← Equivₓ.coe_refl, ← Equivₓ.refl_symm, ← id, ← (· ∘ ·), ← I.coe_ext_chart_at_trans_diffeomorph_symm, ←
         (extChartAt I x).right_inv hy.1]
       
     exact
       ⟨(extChartAt _ x).map_source (mem_ext_chart_source _ x), trivialₓ, by
-        simp' only [e.symm_apply_apply, Equivₓ.refl_symm, Equivₓ.coe_refl] with mfld_simps⟩
+        simp' only [← e.symm_apply_apply, ← Equivₓ.refl_symm, ← Equivₓ.coe_refl] with mfld_simps⟩
 
 variable {I M}
 

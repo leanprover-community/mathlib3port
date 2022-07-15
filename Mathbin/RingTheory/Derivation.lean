@@ -116,7 +116,7 @@ theorem map_sum {ι : Type _} (s : Finset ι) (f : ι → A) : D (∑ i in s, f 
   D.toLinearMap.map_sum
 
 @[simp]
-theorem map_smul_of_tower {S : Type _} [HasScalar S A] [HasScalar S M] [LinearMap.CompatibleSmul A M S R]
+theorem map_smul_of_tower {S : Type _} [HasSmul S A] [HasSmul S M] [LinearMap.CompatibleSmul A M S R]
     (D : Derivation R A M) (r : S) (a : A) : D (r • a) = r • D a :=
   D.toLinearMap.map_smul_of_tower r a
 
@@ -142,17 +142,17 @@ theorem leibniz_pow (n : ℕ) : D (a ^ n) = n • a ^ (n - 1) • D a := by
       
     · have : a * a ^ (n - 1) = a ^ n := by
         rw [← pow_succₓ, Nat.sub_add_cancelₓ hpos]
-      simp only [pow_succₓ, leibniz, ihn, smul_comm a n, smul_smul a, add_smul, this, Nat.succ_eq_add_one,
-        Nat.add_succ_sub_one, add_zeroₓ, one_nsmul]
+      simp only [← pow_succₓ, ← leibniz, ← ihn, ← smul_comm a n, ← smul_smul a, ← add_smul, ← this, ←
+        Nat.succ_eq_add_one, ← Nat.add_succ_sub_one, ← add_zeroₓ, ← one_nsmul]
       
     
 
 theorem eq_on_adjoin {s : Set A} (h : Set.EqOn D1 D2 s) : Set.EqOn D1 D2 (adjoin R s) := fun x hx =>
   Algebra.adjoin_induction hx h (fun r => (D1.map_algebra_map r).trans (D2.map_algebra_map r).symm)
     (fun x y hx hy => by
-      simp only [map_add, *])
+      simp only [← map_add, *])
     fun x y hx hy => by
-    simp only [leibniz, *]
+    simp only [← leibniz, *]
 
 /-- If adjoin of a set is the whole algebra, then any two derivations equal on this set are equal
 on the whole algebra. -/
@@ -163,7 +163,7 @@ theorem ext_of_adjoin_eq_top (s : Set A) (hs : adjoin R s = ⊤) (h : Set.EqOn D
 instance : Zero (Derivation R A M) :=
   ⟨{ toLinearMap := 0, map_one_eq_zero' := rfl,
       leibniz' := fun a b => by
-        simp only [add_zeroₓ, LinearMap.zero_apply, smul_zero] }⟩
+        simp only [← add_zeroₓ, ← LinearMap.zero_apply, ← smul_zero] }⟩
 
 @[simp]
 theorem coe_zero : ⇑(0 : Derivation R A M) = 0 :=
@@ -182,7 +182,7 @@ instance : Add (Derivation R A M) :=
       map_one_eq_zero' := by
         simp ,
       leibniz' := fun a b => by
-        simp only [leibniz, LinearMap.add_apply, coe_fn_coe, smul_add, add_add_add_commₓ] }⟩
+        simp only [← leibniz, ← LinearMap.add_apply, ← coe_fn_coe, ← smul_add, ← add_add_add_commₓ] }⟩
 
 @[simp]
 theorem coe_add (D1 D2 : Derivation R A M) : ⇑(D1 + D2) = D1 + D2 :=
@@ -202,13 +202,13 @@ section Scalar
 
 variable {S : Type _} [Monoidₓ S] [DistribMulAction S M] [SmulCommClass R S M] [SmulCommClass S A M]
 
-instance (priority := 100) : HasScalar S (Derivation R A M) :=
+instance (priority := 100) : HasSmul S (Derivation R A M) :=
   ⟨fun r D =>
     { toLinearMap := r • D,
       map_one_eq_zero' := by
         rw [LinearMap.smul_apply, coe_fn_coe, D.map_one_eq_zero, smul_zero],
       leibniz' := fun a b => by
-        simp only [LinearMap.smul_apply, coe_fn_coe, leibniz, smul_add, smul_comm r] }⟩
+        simp only [← LinearMap.smul_apply, ← coe_fn_coe, ← leibniz, ← smul_add, ← smul_comm r] }⟩
 
 @[simp]
 theorem coe_smul (r : S) (D : Derivation R A M) : ⇑(r • D) = r • D :=
@@ -233,8 +233,8 @@ def coeFnAddMonoidHom : Derivation R A M →+ A → M where
 instance (priority := 100) : DistribMulAction S (Derivation R A M) :=
   Function.Injective.distribMulAction coeFnAddMonoidHom coe_injective coe_smul
 
-instance [DistribMulAction Sᵐᵒᵖ M] [IsCentralScalar S M] : IsCentralScalar S (Derivation R A M) where
-  op_smul_eq_smul := fun _ _ => ext fun _ => op_smul_eq_smul _ _
+instance [DistribMulAction Sᵐᵒᵖ M] [IsCentralScalar S M] :
+    IsCentralScalar S (Derivation R A M) where op_smul_eq_smul := fun _ _ => ext fun _ => op_smul_eq_smul _ _
 
 end Scalar
 
@@ -257,10 +257,10 @@ def _root_.linear_map.comp_der : Derivation R A M →ₗ[R] Derivation R A N whe
   toFun := fun D =>
     { toLinearMap := (f : M →ₗ[R] N).comp (D : A →ₗ[R] M),
       map_one_eq_zero' := by
-        simp only [LinearMap.comp_apply, coe_fn_coe, map_one_eq_zero, map_zero],
+        simp only [← LinearMap.comp_apply, ← coe_fn_coe, ← map_one_eq_zero, ← map_zero],
       leibniz' := fun a b => by
-        simp only [coe_fn_coe, LinearMap.comp_apply, LinearMap.map_add, leibniz, LinearMap.coe_coe_is_scalar_tower,
-          LinearMap.map_smul] }
+        simp only [← coe_fn_coe, ← LinearMap.comp_apply, ← LinearMap.map_add, ← leibniz, ←
+          LinearMap.coe_coe_is_scalar_tower, ← LinearMap.map_smul] }
   map_add' := fun D₁ D₂ => by
     ext
     exact LinearMap.map_add _ _ _
@@ -291,7 +291,7 @@ def mk' (D : A →ₗ[R] M) (h : ∀ a b, D (a * b) = a • D b + b • D a) : D
   toLinearMap := D
   map_one_eq_zero' :=
     add_right_eq_selfₓ.1 <| by
-      simpa only [one_smul, one_mulₓ] using (h 1 1).symm
+      simpa only [← one_smul, ← one_mulₓ] using (h 1 1).symm
   leibniz' := h
 
 @[simp]
@@ -330,7 +330,7 @@ theorem leibniz_of_mul_eq_one {a b : A} (h : a * b = 1) : D a = -(a ^ 2) • D b
   rw [neg_smul]
   refine' eq_neg_of_add_eq_zero_left _
   calc D a + a ^ 2 • D b = a • b • D a + a • a • D b := by
-      simp only [smul_smul, h, one_smul, sq]_ = a • D (a * b) := by
+      simp only [← smul_smul, ← h, ← one_smul, ← sq]_ = a • D (a * b) := by
       rw [leibniz, smul_add, add_commₓ]_ = 0 := by
       rw [h, map_one_eq_zero, smul_zero]
 
@@ -348,7 +348,7 @@ theorem leibniz_inv {K : Type _} [Field K] [Module K M] [Algebra R K] (D : Deriv
 instance : Neg (Derivation R A M) :=
   ⟨fun D =>
     (mk' (-D)) fun a b => by
-      simp only [LinearMap.neg_apply, smul_neg, neg_add_rev, leibniz, coe_fn_coe, add_commₓ]⟩
+      simp only [← LinearMap.neg_apply, ← smul_neg, ← neg_add_rev, ← leibniz, ← coe_fn_coe, ← add_commₓ]⟩
 
 @[simp]
 theorem coe_neg (D : Derivation R A M) : ⇑(-D) = -D :=
@@ -364,7 +364,7 @@ theorem neg_apply : (-D) a = -D a :=
 instance : Sub (Derivation R A M) :=
   ⟨fun D1 D2 =>
     (mk' (D1 - D2 : A →ₗ[R] M)) fun a b => by
-      simp only [LinearMap.sub_apply, leibniz, coe_fn_coe, smul_sub, add_sub_add_comm]⟩
+      simp only [← LinearMap.sub_apply, ← leibniz, ← coe_fn_coe, ← smul_sub, ← add_sub_add_comm]⟩
 
 @[simp]
 theorem coe_sub (D1 D2 : Derivation R A M) : ⇑(D1 - D2) = D1 - D2 :=
@@ -393,7 +393,8 @@ variable (D : Derivation R A A) {D1 D2 : Derivation R A A} (r : R) (a b : A)
 instance : HasBracket (Derivation R A A) (Derivation R A A) :=
   ⟨fun D1 D2 =>
     (mk' ⁅(D1 : Module.End R A),(D2 : Module.End R A)⁆) fun a b => by
-      simp only [Ringₓ.lie_def, map_add, id.smul_eq_mul, LinearMap.mul_apply, leibniz, coe_fn_coe, LinearMap.sub_apply]
+      simp only [← Ringₓ.lie_def, ← map_add, ← id.smul_eq_mul, ← LinearMap.mul_apply, ← leibniz, ← coe_fn_coe, ←
+        LinearMap.sub_apply]
       ring⟩
 
 @[simp]
@@ -406,26 +407,26 @@ theorem commutator_apply : ⁅D1,D2⁆ a = D1 (D2 a) - D2 (D1 a) :=
 instance : LieRing (Derivation R A A) where
   add_lie := fun d e f => by
     ext a
-    simp only [commutator_apply, add_apply, map_add]
+    simp only [← commutator_apply, ← add_apply, ← map_add]
     ring
   lie_add := fun d e f => by
     ext a
-    simp only [commutator_apply, add_apply, map_add]
+    simp only [← commutator_apply, ← add_apply, ← map_add]
     ring
   lie_self := fun d => by
     ext a
-    simp only [commutator_apply, add_apply, map_add]
+    simp only [← commutator_apply, ← add_apply, ← map_add]
     ring_nf
   leibniz_lie := fun d e f => by
     ext a
-    simp only [commutator_apply, add_apply, sub_apply, map_sub]
+    simp only [← commutator_apply, ← add_apply, ← sub_apply, ← map_sub]
     ring
 
 instance : LieAlgebra R (Derivation R A A) :=
   { Derivation.module with
     lie_smul := fun r d e => by
       ext a
-      simp only [commutator_apply, map_smul, smul_sub, smul_apply] }
+      simp only [← commutator_apply, ← map_smul, ← smul_sub, ← smul_apply] }
 
 end LieStructures
 

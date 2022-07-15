@@ -40,7 +40,7 @@ theorem ultrafilter_basis_is_basis : TopologicalSpace.IsTopologicalBasis (Ultraf
   ⟨by
     rintro _ ⟨a, rfl⟩ _ ⟨b, rfl⟩ u ⟨ua, ub⟩
     refine' ⟨_, ⟨a ∩ b, rfl⟩, inter_mem ua ub, fun v hv => ⟨_, _⟩⟩ <;>
-      apply mem_of_superset hv <;> simp [inter_subset_right a b],
+      apply mem_of_superset hv <;> simp [← inter_subset_right a b],
     eq_univ_of_univ_subset <| subset_sUnion_of_mem <| ⟨Univ, eq_univ_of_forall fun u => univ_mem⟩, rfl⟩
 
 /-- The basic open sets for the topology on ultrafilters are open. -/
@@ -59,7 +59,8 @@ theorem ultrafilter_is_closed_basic (s : Set α) : IsClosed { u : Ultrafilter α
 theorem ultrafilter_converges_iff {u : Ultrafilter (Ultrafilter α)} {x : Ultrafilter α} : ↑u ≤ 𝓝 x ↔ x = mjoin u := by
   rw [eq_comm, ← Ultrafilter.coe_le_coe]
   change ↑u ≤ 𝓝 x ↔ ∀, ∀ s ∈ x, ∀, { v : Ultrafilter α | s ∈ v } ∈ u
-  simp only [TopologicalSpace.nhds_generate_from, le_infi_iff, UltrafilterBasis, le_principal_iff, mem_set_of_eq]
+  simp only [← TopologicalSpace.nhds_generate_from, ← le_infi_iff, ← UltrafilterBasis, ← le_principal_iff, ←
+    mem_set_of_eq]
   constructor
   · intro h a ha
     exact h _ ⟨ha, a, rfl⟩
@@ -80,7 +81,7 @@ instance Ultrafilter.t2_space : T2Space (Ultrafilter α) :=
 instance : TotallyDisconnectedSpace (Ultrafilter α) := by
   rw [totally_disconnected_space_iff_connected_component_singleton]
   intro A
-  simp only [Set.eq_singleton_iff_unique_mem, mem_connected_component, true_andₓ]
+  simp only [← Set.eq_singleton_iff_unique_mem, ← mem_connected_component, ← true_andₓ]
   intro B hB
   rw [← Ultrafilter.coe_le_coe]
   intro s hs
@@ -91,7 +92,7 @@ instance : TotallyDisconnectedSpace (Ultrafilter α) := by
 
 theorem ultrafilter_comap_pure_nhds (b : Ultrafilter α) : comap pure (𝓝 b) ≤ b := by
   rw [TopologicalSpace.nhds_generate_from]
-  simp only [comap_infi, comap_principal]
+  simp only [← comap_infi, ← comap_principal]
   intro s hs
   rw [← le_principal_iff]
   refine' infi_le_of_le { u | s ∈ u } _
@@ -284,7 +285,8 @@ instance StoneCech.t2_space : T2Space (StoneCech α) := by
   skip
   let ff := stoneCechExtend hf
   change ff ⟦x⟧ = ff ⟦y⟧
-  have lim := fun gz : (g : Filter (StoneCech α)) ≤ 𝓝 ⟦z⟧ => ((continuous_stone_cech_extend hf).Tendsto _).mono_left gz
+  have lim := fun z : Ultrafilter α gz : (g : Filter (StoneCech α)) ≤ 𝓝 ⟦z⟧ =>
+    ((continuous_stone_cech_extend hf).Tendsto _).mono_left gz
   exact tendsto_nhds_unique (limₓ x gx) (limₓ y gy)
 
 instance StoneCech.compact_space : CompactSpace (StoneCech α) :=

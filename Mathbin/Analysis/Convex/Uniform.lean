@@ -34,7 +34,9 @@ open Set Metric
 
 open Convex Pointwise
 
-/-- A *uniformly convex space* is a real normed space where .
+/-- A *uniformly convex space* is a real normed space where the triangle inequality is strict with a
+uniform bound. Namely, over the `x` and `y` of norm `1`, `∥x + y∥` is uniformly bounded above
+by a constant `< 2` when `∥x - y∥` is uniformly bounded below by a positive constant.
 
 See also `uniform_convex_space.of_uniform_convex_closed_unit_ball`. -/
 class UniformConvexSpace (E : Type _) [SemiNormedGroup E] : Prop where
@@ -115,7 +117,7 @@ theorem exists_forall_closed_ball_dist_add_le_two_mul_sub (hε : 0 < ε) (r : �
       infer_instance
   have := h hx hy
   simp_rw [← smul_add, ← smul_sub, norm_smul_of_nonneg (inv_nonneg.2 hr.le), ← div_eq_inv_mul, div_le_div_right hr,
-    div_le_iff hr, sub_mul]  at this
+    div_le_iff hr, sub_mul] at this
   exact this hxy
 
 end SemiNormedGroup

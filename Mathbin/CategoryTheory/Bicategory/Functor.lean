@@ -261,14 +261,14 @@ def comp (F : OplaxFunctor B C) (G : OplaxFunctor C D) : OplaxFunctor B D :=
       rw [← map₂_comp_assoc, map_comp_naturality_right, map₂_comp_assoc, map_comp_naturality_right, assoc],
     map₂_associator' := fun a b c d f g h => by
       dsimp'
-      simp only [map₂_associator, ← map₂_comp_assoc, ← map_comp_naturality_right_assoc, whisker_left_comp, assoc]
-      simp only [map₂_associator, map₂_comp, map_comp_naturality_left_assoc, comp_whisker_right, assoc],
+      simp only [← map₂_associator, map₂_comp_assoc, map_comp_naturality_right_assoc, ← whisker_left_comp, ← assoc]
+      simp only [← map₂_associator, ← map₂_comp, ← map_comp_naturality_left_assoc, ← comp_whisker_right, ← assoc],
     map₂_left_unitor' := fun a b f => by
       dsimp'
-      simp only [map₂_left_unitor, map₂_comp, map_comp_naturality_left_assoc, comp_whisker_right, assoc],
+      simp only [← map₂_left_unitor, ← map₂_comp, ← map_comp_naturality_left_assoc, ← comp_whisker_right, ← assoc],
     map₂_right_unitor' := fun a b f => by
       dsimp'
-      simp only [map₂_right_unitor, map₂_comp, map_comp_naturality_right_assoc, whisker_left_comp, assoc] }
+      simp only [← map₂_right_unitor, ← map₂_comp, ← map_comp_naturality_right_assoc, ← whisker_left_comp, ← assoc] }
 
 /-- A structure on an oplax functor that promotes an oplax functor to a pseudofunctor.
 See `pseudofunctor.mk_of_oplax`.
@@ -489,9 +489,9 @@ noncomputable def mkOfOplax' (F : OplaxFunctor B C) [∀ a, IsIso (F.map_id a)]
       rw [← assoc, is_iso.eq_comp_inv, F.map_comp_naturality_left],
     map₂_associator' := fun a b c d f g h => by
       dsimp'
-      simp only [← assoc]
+      simp only [assoc]
       rw [is_iso.eq_comp_inv, ← inv_whisker_left, is_iso.eq_comp_inv]
-      simp only [assoc, F.map₂_associator] }
+      simp only [← assoc, ← F.map₂_associator] }
 
 end
 

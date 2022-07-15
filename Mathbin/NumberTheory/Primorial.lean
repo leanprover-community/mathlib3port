@@ -39,7 +39,7 @@ theorem primorial_succ {n : ℕ} (n_big : 1 < n) (r : n % 2 = 1) : (n + 1)# = n#
   refine' prod_congr _ fun _ _ => rfl
   rw [range_succ, filter_insert, if_neg fun h => _]
   have two_dvd : 2 ∣ n + 1 :=
-    (dvd_iff_mod_eq_zero _ _).mpr
+    dvd_iff_mod_eq_zero.mpr
       (by
         rw [← mod_add_mod, r, mod_self])
   linarith [(h.dvd_iff_eq (Nat.bit0_ne_one 1)).mp two_dvd]
@@ -77,13 +77,13 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
         have recurse : m + 1 < n + 2 := by
           linarith
         calc (n + 2)# = ∏ i in filter Nat.Prime (range (2 * m + 2)), i := by
-            simpa [two_mul, ← twice_m]
+            simpa [← two_mul, twice_m]
               _ = ∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2) ∪ range (m + 2)), i :=
             by
             rw [range_eq_Ico, Finset.union_comm, Finset.Ico_union_Ico_eq_Ico]
             · exact bot_le
               
-            · simpa only [add_le_add_iff_right, two_mul] using Nat.le_add_leftₓ m m
+            · simpa only [← add_le_add_iff_right, ← two_mul] using Nat.le_add_leftₓ m m
               _ = ∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)) ∪ filter Nat.Prime (range (m + 2)), i :=
             by
             rw
@@ -93,7 +93,7 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
             by
             apply Finset.prod_union
             have disj : Disjoint (Finset.ico (m + 2) (2 * m + 2)) (range (m + 2)) := by
-              simp only [Finset.disjoint_left, and_imp, Finset.mem_Ico, not_ltₓ, Finset.mem_range]
+              simp only [← Finset.disjoint_left, ← and_imp, ← Finset.mem_Ico, ← not_ltₓ, ← Finset.mem_range]
               intro _ pr _
               exact pr
             exact
@@ -110,7 +110,7 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
                 rw [Finset.mem_filter]
                 intro pr
                 rcases pr with ⟨size, is_prime⟩
-                simp only [Finset.mem_Ico] at size
+                simp only [← Finset.mem_Ico] at size
                 rcases size with ⟨a_big, a_small⟩
                 exact dvd_choose_of_middling_prime a is_prime m a_big (nat.lt_succ_iff.mp a_small)
                 
@@ -135,6 +135,6 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
               (Nat.le_succₓ _)
         
       · have n_zero : n = 0 := eq_bot_iff.2 (succ_le_succ_iff.1 n_le_one)
-        norm_num [n_zero, primorial, range_succ, prod_filter, Nat.not_prime_zero, Nat.prime_two]
+        norm_num [← n_zero, ← primorial, ← range_succ, ← prod_filter, ← Nat.not_prime_zero, ← Nat.prime_two]
         
 

@@ -181,11 +181,11 @@ unsafe def horner_expr.refl_conv (e : horner_expr) : ring_m (horner_expr × expr
   return (e, p)
 
 theorem zero_hornerₓ {α} [CommSemiringₓ α] x n b : @hornerₓ α _ 0 x n b = b := by
-  simp [horner]
+  simp [← horner]
 
 theorem horner_hornerₓ {α} [CommSemiringₓ α] a₁ x n₁ n₂ b n' (h : n₁ + n₂ = n') :
     @hornerₓ α _ (hornerₓ a₁ x n₁ 0) x n₂ b = hornerₓ a₁ x n' b := by
-  simp [h.symm, horner, pow_addₓ, mul_assoc]
+  simp [← h.symm, ← horner, ← pow_addₓ, ← mul_assoc]
 
 /-- Evaluate `horner a n x b` where `a` and `b` are already in normal form. -/
 unsafe def eval_horner : horner_expr → expr × ℕ → expr × ℕ → horner_expr → ring_m (horner_expr × expr)
@@ -201,25 +201,25 @@ unsafe def eval_horner : horner_expr → expr × ℕ → expr × ℕ → horner_
 
 theorem const_add_hornerₓ {α} [CommSemiringₓ α] k a x n b b' (h : k + b = b') :
     k + @hornerₓ α _ a x n b = hornerₓ a x n b' := by
-  simp [h.symm, horner] <;> cc
+  simp [← h.symm, ← horner] <;> cc
 
 theorem horner_add_constₓ {α} [CommSemiringₓ α] a x n b k b' (h : b + k = b') :
     @hornerₓ α _ a x n b + k = hornerₓ a x n b' := by
-  simp [h.symm, horner, add_assocₓ]
+  simp [← h.symm, ← horner, ← add_assocₓ]
 
 theorem horner_add_horner_ltₓ {α} [CommSemiringₓ α] a₁ x n₁ b₁ a₂ n₂ b₂ k a' b' (h₁ : n₁ + k = n₂)
     (h₂ : (a₁ + hornerₓ a₂ x k 0 : α) = a') (h₃ : b₁ + b₂ = b') :
     @hornerₓ α _ a₁ x n₁ b₁ + hornerₓ a₂ x n₂ b₂ = hornerₓ a' x n₁ b' := by
-  simp [h₂.symm, h₃.symm, h₁.symm, horner, pow_addₓ, mul_addₓ, mul_comm, mul_left_commₓ] <;> cc
+  simp [← h₂.symm, ← h₃.symm, ← h₁.symm, ← horner, ← pow_addₓ, ← mul_addₓ, ← mul_comm, ← mul_left_commₓ] <;> cc
 
 theorem horner_add_horner_gtₓ {α} [CommSemiringₓ α] a₁ x n₁ b₁ a₂ n₂ b₂ k a' b' (h₁ : n₂ + k = n₁)
     (h₂ : (hornerₓ a₁ x k 0 + a₂ : α) = a') (h₃ : b₁ + b₂ = b') :
     @hornerₓ α _ a₁ x n₁ b₁ + hornerₓ a₂ x n₂ b₂ = hornerₓ a' x n₂ b' := by
-  simp [h₂.symm, h₃.symm, h₁.symm, horner, pow_addₓ, mul_addₓ, mul_comm, mul_left_commₓ] <;> cc
+  simp [← h₂.symm, ← h₃.symm, ← h₁.symm, ← horner, ← pow_addₓ, ← mul_addₓ, ← mul_comm, ← mul_left_commₓ] <;> cc
 
 theorem horner_add_horner_eqₓ {α} [CommSemiringₓ α] a₁ x n b₁ a₂ b₂ a' b' t (h₁ : a₁ + a₂ = a') (h₂ : b₁ + b₂ = b')
     (h₃ : hornerₓ a' x n b' = t) : @hornerₓ α _ a₁ x n b₁ + hornerₓ a₂ x n b₂ = t := by
-  simp [h₃.symm, h₂.symm, h₁.symm, horner, add_mulₓ, mul_comm (x ^ n)] <;> cc
+  simp [← h₃.symm, ← h₂.symm, ← h₁.symm, ← horner, ← add_mulₓ, ← mul_comm (x ^ n)] <;> cc
 
 /-- Evaluate `a + b` where `a` and `b` are already in normal form. -/
 unsafe def eval_add : horner_expr → horner_expr → ring_m (horner_expr × expr)
@@ -292,7 +292,7 @@ unsafe def eval_add : horner_expr → horner_expr → ring_m (horner_expr × exp
 
 theorem horner_neg {α} [CommRingₓ α] a x n b a' b' (h₁ : -a = a') (h₂ : -b = b') :
     -@hornerₓ α _ a x n b = hornerₓ a' x n b' := by
-  simp [h₂.symm, h₁.symm, horner] <;> cc
+  simp [← h₂.symm, ← h₁.symm, ← horner] <;> cc
 
 /-- Evaluate `-a` where `a` is already in normal form. -/
 unsafe def eval_neg : horner_expr → ring_m (horner_expr × expr)
@@ -308,11 +308,11 @@ unsafe def eval_neg : horner_expr → ring_m (horner_expr × expr)
 
 theorem horner_const_mulₓ {α} [CommSemiringₓ α] c a x n b a' b' (h₁ : c * a = a') (h₂ : c * b = b') :
     c * @hornerₓ α _ a x n b = hornerₓ a' x n b' := by
-  simp [h₂.symm, h₁.symm, horner, mul_addₓ, mul_assoc]
+  simp [← h₂.symm, ← h₁.symm, ← horner, ← mul_addₓ, ← mul_assoc]
 
 theorem horner_mul_constₓ {α} [CommSemiringₓ α] a x n b c a' b' (h₁ : a * c = a') (h₂ : b * c = b') :
     @hornerₓ α _ a x n b * c = hornerₓ a' x n b' := by
-  simp [h₂.symm, h₁.symm, horner, add_mulₓ, mul_right_commₓ]
+  simp [← h₂.symm, ← h₁.symm, ← horner, ← add_mulₓ, ← mul_right_commₓ]
 
 /-- Evaluate `k * a` where `k` is a rational numeral and `a` is in normal form. -/
 unsafe def eval_const_mul (k : expr × ℚ) : horner_expr → ring_m (horner_expr × expr)
@@ -327,12 +327,12 @@ unsafe def eval_const_mul (k : expr × ℚ) : horner_expr → ring_m (horner_exp
 
 theorem horner_mul_horner_zeroₓ {α} [CommSemiringₓ α] a₁ x n₁ b₁ a₂ n₂ aa t (h₁ : @hornerₓ α _ a₁ x n₁ b₁ * a₂ = aa)
     (h₂ : hornerₓ aa x n₂ 0 = t) : hornerₓ a₁ x n₁ b₁ * hornerₓ a₂ x n₂ 0 = t := by
-  rw [← h₂, ← h₁] <;> simp [horner, mul_addₓ, mul_comm, mul_left_commₓ, mul_assoc]
+  rw [← h₂, ← h₁] <;> simp [← horner, ← mul_addₓ, ← mul_comm, ← mul_left_commₓ, ← mul_assoc]
 
 theorem horner_mul_hornerₓ {α} [CommSemiringₓ α] a₁ x n₁ b₁ a₂ n₂ b₂ aa haa ab bb t
     (h₁ : @hornerₓ α _ a₁ x n₁ b₁ * a₂ = aa) (h₂ : hornerₓ aa x n₂ 0 = haa) (h₃ : a₁ * b₂ = ab) (h₄ : b₁ * b₂ = bb)
     (H : haa + hornerₓ ab x n₁ bb = t) : hornerₓ a₁ x n₁ b₁ * hornerₓ a₂ x n₂ b₂ = t := by
-  rw [← H, ← h₂, ← h₁, ← h₃, ← h₄] <;> simp [horner, mul_addₓ, mul_comm, mul_left_commₓ, mul_assoc]
+  rw [← H, ← h₂, ← h₁, ← h₃, ← h₄] <;> simp [← horner, ← mul_addₓ, ← mul_comm, ← mul_left_commₓ, ← mul_assoc]
 
 /-- Evaluate `a * b` where `a` and `b` are in normal form. -/
 unsafe def eval_mul : horner_expr → horner_expr → ring_m (horner_expr × expr)
@@ -380,7 +380,7 @@ unsafe def eval_mul : horner_expr → horner_expr → ring_m (horner_expr × exp
 
 theorem horner_powₓ {α} [CommSemiringₓ α] a x n m n' a' (h₁ : n * m = n') (h₂ : a ^ m = a') :
     @hornerₓ α _ a x n 0 ^ m = hornerₓ a' x n' 0 := by
-  simp [h₁.symm, h₂.symm, horner, mul_powₓ, pow_mulₓ]
+  simp [← h₁.symm, ← h₂.symm, ← horner, ← mul_powₓ, ← pow_mulₓ]
 
 theorem pow_succ {α} [CommSemiringₓ α] a n b c (h₁ : (a : α) ^ n = b) (h₂ : b * a = c) : a ^ (n + 1) = c := by
   rw [← h₂, ← h₁, pow_succ'ₓ]
@@ -414,7 +414,7 @@ unsafe def eval_pow : horner_expr → expr × ℕ → ring_m (horner_expr × exp
         return (t, c `` pow_succₓ [e, e₂, tl, t, hl, p₂])
 
 theorem horner_atomₓ {α} [CommSemiringₓ α] (x : α) : x = hornerₓ 1 x 1 0 := by
-  simp [horner]
+  simp [← horner]
 
 /-- Evaluate `a` where `a` is an atom. -/
 unsafe def eval_atom (e : expr) : ring_m (horner_expr × expr) := do
@@ -423,6 +423,15 @@ unsafe def eval_atom (e : expr) : ring_m (horner_expr × expr) := do
   let α0 ← ic_lift fun ic => ic.mk_app `` Zero.zero []
   let α1 ← ic_lift fun ic => ic.mk_app `` One.one []
   return (xadd' c (const α1 1) (e, i) (quote.1 1, 1) (const α0 0), c `` horner_atom [e])
+
+/-- Evaluate `a` where `a` is an atom. -/
+unsafe def eval_norm_atom (norm_atom : expr → tactic (expr × expr)) (e : expr) : ring_m (horner_expr × expr) := do
+  let o ← lift <| try_core (guardₓ (e.get_app_args.length > 0) >> norm_atom e)
+  match o with
+    | none => eval_atom e
+    | some (e', p) => do
+      let (e₂, p₂) ← eval_atom e'
+      Prod.mk e₂ <$> lift (mk_eq_trans p p₂)
 
 theorem subst_into_powₓ {α} [Monoidₓ α] l r tl tr t (prl : (l : α) = tl) (prr : (r : ℕ) = tr) (prt : tl ^ tr = t) :
     l ^ r = t := by
@@ -436,7 +445,7 @@ theorem unfold_div {α} [DivisionRing α] (a b c : α) (h : a * b⁻¹ = c) : a 
 
 /-- Evaluate a ring expression `e` recursively to normal form, together with a proof of
 equality. -/
-unsafe def eval : expr → ring_m (horner_expr × expr)
+unsafe def eval (norm_atom : expr → tactic (expr × expr)) : expr → ring_m (horner_expr × expr)
   | quote.1 ((%%ₓe₁) + %%ₓe₂) => do
     let (e₁', p₁) ← eval e₁
     let (e₂', p₂) ← eval e₂
@@ -451,7 +460,7 @@ unsafe def eval : expr → ring_m (horner_expr × expr)
         let (e', p) ← eval e
         let p' ← ic_lift fun ic => ic.mk_app `` unfold_sub [e₁, e₂, e', p]
         return (e', p'))
-      (eval_atom e)
+      (eval_norm_atom norm_atom e)
   | quote.1 (-%%ₓe) => do
     let (e₁, p₁) ← eval e
     let (e₂, p₂) ← eval_neg e₁
@@ -468,7 +477,7 @@ unsafe def eval : expr → ring_m (horner_expr × expr)
         let (e', p) ← lift <| norm_num.derive e <|> refl_conv e
         let n ← lift <| e'.to_rat
         return (const e' n, p)) <|>
-      eval_atom e
+      eval_norm_atom norm_atom e
   | e@(quote.1 (@Div.div _ (%%ₓinst) (%%ₓe₁) (%%ₓe₂))) =>
     mcond
       (succeeds do
@@ -480,7 +489,7 @@ unsafe def eval : expr → ring_m (horner_expr × expr)
         let (e', p) ← eval e
         let p' ← ic_lift fun ic => ic.mk_app `` unfold_div [e₁, e₂, e', p]
         return (e', p'))
-      (eval_atom e)
+      (eval_norm_atom norm_atom e)
   | e@(quote.1 (@Pow.pow _ _ (%%ₓP) (%%ₓe₁) (%%ₓe₂))) => do
     let (e₂', p₂) ← lift <| norm_num.derive e₂ <|> refl_conv e₂
     match e₂', P with
@@ -489,30 +498,31 @@ unsafe def eval : expr → ring_m (horner_expr × expr)
         let (e', p') ← eval_pow e₁' (e₂, k)
         let p ← ic_lift fun ic => ic `` subst_into_pow [e₁, e₂, e₁', e₂', e', p₁, p₂, p']
         return (e', p)
-      | _, _ => eval_atom e
+      | _, _ => eval_norm_atom norm_atom e
   | e =>
     match e.toNat with
     | some n => (const e (Rat.ofInt n)).refl_conv
-    | none => eval_atom e
+    | none => eval_norm_atom norm_atom e
 
 /-- Evaluate a ring expression `e` recursively to normal form, together with a proof of
 equality. -/
-unsafe def eval' (red : Transparency) (atoms : ref (Buffer expr)) (e : expr) : tactic (expr × expr) :=
+unsafe def eval' (red : Transparency) (atoms : ref (Buffer expr)) (norm_atom : expr → tactic (expr × expr)) (e : expr) :
+    tactic (expr × expr) :=
   ring_m.run' red atoms e <| do
-    let (e', p) ← eval e
+    let (e', p) ← eval norm_atom e
     return (e', p)
 
 theorem horner_def' {α} [CommSemiringₓ α] a x n b : @hornerₓ α _ a x n b = x ^ n * a + b := by
-  simp [horner, mul_comm]
+  simp [← horner, ← mul_comm]
 
 theorem mul_assoc_rev {α} [Semigroupₓ α] (a b c : α) : a * (b * c) = a * b * c := by
-  simp [mul_assoc]
+  simp [← mul_assoc]
 
 theorem pow_add_rev {α} [Monoidₓ α] (a : α) (m n : ℕ) : a ^ m * a ^ n = a ^ (m + n) := by
-  simp [pow_addₓ]
+  simp [← pow_addₓ]
 
 theorem pow_add_rev_right {α} [Monoidₓ α] (a b : α) (m n : ℕ) : b * a ^ m * a ^ n = b * a ^ (m + n) := by
-  simp [pow_addₓ, mul_assoc]
+  simp [← pow_addₓ, ← mul_assoc]
 
 theorem add_neg_eq_sub {α} [AddGroupₓ α] (a b : α) : a + -b = a - b :=
   (sub_eq_add_neg a b).symm
@@ -538,52 +548,66 @@ instance : Inhabited NormalizeMode :=
   ⟨NormalizeMode.horner⟩
 
 /-- A `ring`-based normalization simplifier that rewrites ring expressions into the specified mode.
-  See `normalize`. This version takes a list of atoms to persist across multiple calls. -/
-unsafe def normalize' (atoms : ref (Buffer expr)) (red : Transparency) (mode := NormalizeMode.horner) (e : expr) :
-    tactic (expr × expr) := do
-  let pow_lemma ← simp_lemmas.mk.add_simp `` pow_oneₓ
-  let lemmas :=
-    match mode with
-    | normalize_mode.SOP =>
-      [`` horner_def', `` add_zeroₓ, `` mul_oneₓ, `` mul_addₓ, `` mul_sub, `` mul_assoc_rev, `` pow_add_rev,
-        `` pow_add_rev_right, `` mul_neg, `` add_neg_eq_sub]
-    | normalize_mode.horner =>
-      [`` horner.equations._eqn_1, `` add_zeroₓ, `` one_mulₓ, `` pow_oneₓ, `` neg_mul, `` add_neg_eq_sub]
-    | _ => []
-  let lemmas ← lemmas.mfoldl simp_lemmas.add_simp simp_lemmas.mk
-  trans_conv
-      (fun e => do
-        guardₓ (mode ≠ normalize_mode.raw)
-        let (e', pr, _) ← simplify simp_lemmas.mk [] e
-        pure (e', pr))
-      (fun e => do
-        let a ← read_ref atoms
-        let (a, e', pr) ←
-          ext_simplify_core a {  } simp_lemmas.mk (fun _ => failed)
-              (fun a _ _ _ e => do
-                write_ref atoms a
-                let (new_e, pr) ← eval' red atoms e
-                let (new_e, pr) ←
-                  (match mode with
-                      | normalize_mode.raw => fun _ => pure (new_e, pr)
-                      | normalize_mode.horner =>
-                        trans_conv (fun _ => pure (new_e, pr)) fun e => do
-                          let (e', prf, _) ← simplify lemmas [] e
-                          pure (e', prf)
-                      | normalize_mode.SOP =>
-                        (trans_conv fun _ => pure (new_e, pr)) <|
-                          (trans_conv fun e => do
-                              let (e', prf, _) ← simplify lemmas [] e
-                              pure (e', prf)) <|
-                            simp_bottom_up' fun e => norm_num.derive e <|> pow_lemma e)
-                      e
-                guardₓ ¬expr.alpha_eqv new_e e
-                let a ← read_ref atoms
-                pure (a, new_e, some pr, ff))
-              (fun _ _ _ _ _ => failed) `eq e
-        write_ref atoms a
-        pure (e', pr))
-      e
+See `normalize`. This version takes a list of atoms to persist across multiple calls.
+
+* `atoms`: a mutable reference containing the atom set from the previous call
+* `red`: the reducibility setting to use when comparing atoms for defeq
+* `mode`: the normalization style (see `normalize_mode`)
+* `recursive`: if true, atoms will be reduced recursively using `normalize'`
+* `e`: the expression to normalize
+* `inner`: This should be set to `ff`. It is used internally to disable normalization
+  at the top level when called from `eval` in order to prevent an infinite loop
+  `eval' -> eval_atom -> normalize' -> eval'` when called on something that can't
+  be simplified like `x`.
+-/
+unsafe def normalize' (atoms : ref (Buffer expr)) (red : Transparency) (mode := NormalizeMode.horner)
+    (recursive := true) : expr → optParam _ false → tactic (expr × expr)
+  | e, inner => do
+    let pow_lemma ← simp_lemmas.mk.add_simp `` pow_oneₓ
+    let lemmas :=
+      match mode with
+      | normalize_mode.SOP =>
+        [`` horner_def', `` add_zeroₓ, `` mul_oneₓ, `` mul_addₓ, `` mul_sub, `` mul_assoc_rev, `` pow_add_rev,
+          `` pow_add_rev_right, `` mul_neg, `` add_neg_eq_sub]
+      | normalize_mode.horner =>
+        [`` horner.equations._eqn_1, `` add_zeroₓ, `` one_mulₓ, `` pow_oneₓ, `` neg_mul, `` add_neg_eq_sub]
+      | _ => []
+    let lemmas ← lemmas.mfoldl simp_lemmas.add_simp simp_lemmas.mk
+    trans_conv
+        (fun e => do
+          guardₓ (mode ≠ normalize_mode.raw)
+          let (e', pr, _) ← simplify simp_lemmas.mk [] e
+          pure (e', pr))
+        (fun e => do
+          let a ← read_ref atoms
+          let norm_rec := if recursive then fun e => normalize' e tt else fun _ => failed
+          let (a, e', pr) ←
+            ext_simplify_core a {  } simp_lemmas.mk (fun _ => failed)
+                (fun a _ _ p e => do
+                  guardₓ (inner → p)
+                  write_ref atoms a
+                  let (new_e, pr) ← eval' red atoms norm_rec e
+                  let (new_e, pr) ←
+                    (match mode with
+                        | normalize_mode.raw => fun _ => pure (new_e, pr)
+                        | normalize_mode.horner =>
+                          trans_conv (fun _ => pure (new_e, pr)) fun e => do
+                            let (e', prf, _) ← simplify lemmas [] e
+                            pure (e', prf)
+                        | normalize_mode.SOP =>
+                          (trans_conv fun _ => pure (new_e, pr)) <|
+                            (trans_conv fun e => do
+                                let (e', prf, _) ← simplify lemmas [] e
+                                pure (e', prf)) <|
+                              simp_bottom_up' fun e => norm_num.derive e <|> pow_lemma e)
+                        e
+                  guardₓ ¬expr.alpha_eqv new_e e
+                  let a ← read_ref atoms
+                  pure (a, new_e, some pr, ff))
+                (fun _ _ _ _ _ => failed) `eq e
+          write_ref atoms a
+          pure (e', pr))
+        e
 
 /-- A `ring`-based normalization simplifier that rewrites ring expressions into the specified mode.
 
@@ -595,8 +619,17 @@ unsafe def normalize' (atoms : ref (Buffer expr)) (red : Transparency) (mode := 
     This results in terms like `(3 * x ^ 2 * y + 1) * x + y`.
   * `SOP` means sum of products form, expanding everything to monomials.
     This results in terms like `3 * x ^ 3 * y + x + y`. -/
-unsafe def normalize (red : Transparency) (mode := NormalizeMode.horner) (e : expr) : tactic (expr × expr) :=
-  (using_new_ref mkBuffer) fun atoms => normalize' atoms red mode e
+unsafe def normalize (red : Transparency) (mode := NormalizeMode.horner) (recursive := true) (e : expr) :
+    tactic (expr × expr) :=
+  (using_new_ref mkBuffer) fun atoms => normalize' atoms red mode recursive e
+
+/-- Configuration for `ring_nf`.
+
+  * `recursive`: if true, atoms inside ring expressions will be reduced recursively
+-/
+structure RingNfCfg where
+  recursive := true
+  deriving Inhabited
 
 end Ringₓ
 
@@ -613,7 +646,8 @@ unsafe def ring1 (red : parse (tk "!")?) : tactic Unit :=
   let transp := if red.isSome then semireducible else reducible
   do
   let quote.1 ((%%ₓe₁) = %%ₓe₂) ← target >>= instantiate_mvars
-  let ((e₁', p₁), (e₂', p₂)) ← ring_m.run transp e₁ <| Prod.mk <$> eval e₁ <*> eval e₂
+  let ((e₁', p₁), (e₂', p₂)) ←
+    ring_m.run transp e₁ <| Prod.mk <$> eval (fun _ => failed) e₁ <*> eval (fun _ => failed) e₂
   is_def_eq e₁' e₂'
   let p ← mk_eq_symm p₂ >>= mk_eq_trans p₁
   tactic.exact p
@@ -636,10 +670,13 @@ which rewrites all ring expressions into a normal form. When writing a normal fo
 `ring_nf SOP` will use sum-of-products form instead of horner form.
 `ring_nf!` will use a more aggressive reducibility setting to identify atoms.
 -/
-unsafe def ring_nf (red : parse (tk "!")?) (SOP : parse ring.mode) (loc : parse location) : tactic Unit := do
+unsafe def ring_nf (red : parse (tk "!")?) (SOP : parse ring.mode) (loc : parse location) (cfg : RingNfCfg := {  }) :
+    tactic Unit := do
   let ns ← loc.get_locals
   let transp := if red.isSome then semireducible else reducible
-  let tt ← (using_new_ref mkBuffer) fun atoms => tactic.replace_at (normalize' atoms transp SOP) ns loc.include_goal |
+  let tt ←
+    (using_new_ref mkBuffer) fun atoms =>
+        tactic.replace_at (normalize' atoms transp SOP cfg.recursive) ns loc.include_goal |
     fail "ring_nf failed to simplify"
   when loc <| try tactic.reflexivity
 
@@ -682,9 +719,10 @@ local postfix:1024 "?" => optionalₓ
 
 /-- Normalises expressions in commutative (semi-)rings inside of a `conv` block using the tactic `ring`.
 -/
-unsafe def ring_nf (red : parse (lean.parser.tk "!")?) (SOP : parse ring.mode) : conv Unit :=
+unsafe def ring_nf (red : parse (lean.parser.tk "!")?) (SOP : parse ring.mode) (cfg : Ring.RingNfCfg := {  }) :
+    conv Unit :=
   let transp := if red.isSome then semireducible else reducible
-  replace_lhs (normalize transp SOP) <|> fail "ring_nf failed to simplify"
+  replace_lhs (normalize transp SOP cfg.recursive) <|> fail "ring_nf failed to simplify"
 
 /-- Normalises expressions in commutative (semi-)rings inside of a `conv` block using the tactic `ring`.
 -/

@@ -65,8 +65,7 @@ def mk' {X A : C} (f : A ⟶ X) [hf : Mono f] : MonoOver X where
 def forget (X : C) : MonoOver X ⥤ Over X :=
   fullSubcategoryInclusion _
 
-instance : Coe (MonoOver X) C where
-  coe := fun Y => Y.val.left
+instance : Coe (MonoOver X) C where coe := fun Y => Y.val.left
 
 @[simp]
 theorem forget_obj_left {f} : ((forget X).obj f).left = (f : C) :=
@@ -233,14 +232,13 @@ theorem map_obj_left (f : X ⟶ Y) [Mono f] (g : MonoOver X) : ((map f).obj g : 
 theorem map_obj_arrow (f : X ⟶ Y) [Mono f] (g : MonoOver X) : ((map f).obj g).arrow = g.arrow ≫ f :=
   rfl
 
-instance fullMap (f : X ⟶ Y) [Mono f] : Full (map f) where
-  preimage := fun g h e => by
+instance fullMap (f : X ⟶ Y) [Mono f] :
+    Full (map f) where preimage := fun g h e => by
     refine' hom_mk e.left _
     rw [← cancel_mono f, assoc]
     apply w e
 
-instance faithful_map (f : X ⟶ Y) [Mono f] : Faithful (map f) :=
-  {  }
+instance faithful_map (f : X ⟶ Y) [Mono f] : Faithful (map f) where
 
 /-- Isomorphic objects have equivalent `mono_over` categories.
 -/
@@ -369,8 +367,7 @@ instance : IsRightAdjoint (forget X) where
   left := image
   adj := imageForgetAdj
 
-instance reflective : Reflective (forget X) :=
-  {  }
+instance reflective : Reflective (forget X) where
 
 /-- Forgetting that a monomorphism over `X` is a monomorphism, then taking its image,
 is the identity functor.
@@ -390,8 +387,7 @@ we can still take the "forward map" under it, which agrees with `mono_over.map f
 def exists (f : X ⟶ Y) : MonoOver X ⥤ MonoOver Y :=
   forget _ ⋙ Over.map f ⋙ image
 
-instance faithful_exists (f : X ⟶ Y) : Faithful (exists f) :=
-  {  }
+instance faithful_exists (f : X ⟶ Y) : Faithful (exists f) where
 
 /-- When `f : X ⟶ Y` is a monomorphism, `exists f` agrees with `map f`.
 -/

@@ -131,16 +131,18 @@ def Monad.comparisonForget (h : L ⊣ R) : Monad.comparison h ⋙ h.toMonad.forg
 theorem Monad.left_comparison (h : L ⊣ R) : L ⋙ Monad.comparison h = h.toMonad.free :=
   rfl
 
-instance [Faithful R] (h : L ⊣ R) : Faithful (Monad.comparison h) where
-  map_injective' := fun X Y f g w => R.map_injective (congr_arg Monad.Algebra.Hom.f w : _)
+instance [Faithful R] (h : L ⊣ R) :
+    Faithful
+      (Monad.comparison
+        h) where map_injective' := fun X Y f g w => R.map_injective (congr_arg Monad.Algebra.Hom.f w : _)
 
-instance (T : Monad C) : Full (Monad.comparison T.adj) where
-  preimage := fun X Y f =>
+instance (T : Monad C) :
+    Full (Monad.comparison T.adj) where preimage := fun X Y f =>
     ⟨f.f, by
       simpa using f.h⟩
 
-instance (T : Monad C) : EssSurj (Monad.comparison T.adj) where
-  mem_ess_image := fun X =>
+instance (T : Monad C) :
+    EssSurj (Monad.comparison T.adj) where mem_ess_image := fun X =>
     ⟨{ a := X.a, a := X.a,
         unit' := by
           simpa using X.unit,
@@ -179,16 +181,18 @@ def Comonad.comparisonForget {L : C ⥤ D} {R : D ⥤ C} (h : L ⊣ R) : Comonad
 theorem Comonad.left_comparison (h : L ⊣ R) : R ⋙ Comonad.comparison h = h.toComonad.cofree :=
   rfl
 
-instance Comonad.comparison_faithful_of_faithful [Faithful L] (h : L ⊣ R) : Faithful (Comonad.comparison h) where
-  map_injective' := fun X Y f g w => L.map_injective (congr_arg Comonad.Coalgebra.Hom.f w : _)
+instance Comonad.comparison_faithful_of_faithful [Faithful L] (h : L ⊣ R) :
+    Faithful
+      (Comonad.comparison
+        h) where map_injective' := fun X Y f g w => L.map_injective (congr_arg Comonad.Coalgebra.Hom.f w : _)
 
-instance (G : Comonad C) : Full (Comonad.comparison G.adj) where
-  preimage := fun X Y f =>
+instance (G : Comonad C) :
+    Full (Comonad.comparison G.adj) where preimage := fun X Y f =>
     ⟨f.f, by
       simpa using f.h⟩
 
-instance (G : Comonad C) : EssSurj (Comonad.comparison G.adj) where
-  mem_ess_image := fun X =>
+instance (G : Comonad C) :
+    EssSurj (Comonad.comparison G.adj) where mem_ess_image := fun X =>
     ⟨{ a := X.a, a := X.a,
         counit' := by
           simpa using X.counit,
@@ -231,9 +235,9 @@ instance [Reflective R] (X : (Adjunction.ofRightAdjoint R).toMonad.Algebra) :
     IsIso ((Adjunction.ofRightAdjoint R).Unit.app X.a) :=
   ⟨⟨X.a,
       ⟨X.Unit, by
-        dsimp' only [functor.id_obj]
+        dsimp' only [← functor.id_obj]
         rw [← (adjunction.of_right_adjoint R).unit_naturality]
-        dsimp' only [functor.comp_obj, adjunction.to_monad_coe]
+        dsimp' only [← functor.comp_obj, ← adjunction.to_monad_coe]
         rw [unit_obj_eq_map_unit, ← functor.map_comp, ← functor.map_comp]
         erw [X.unit]
         simp ⟩⟩⟩
@@ -244,14 +248,14 @@ instance comparison_ess_surj [Reflective R] : EssSurj (Monad.comparison (Adjunct
   refine' monad.algebra.iso_mk _ _
   · exact as_iso ((adjunction.of_right_adjoint R).Unit.app X.A)
     
-  dsimp' only [functor.comp_map, monad.comparison_obj_a, as_iso_hom, functor.comp_obj, monad.comparison_obj_A,
-    monad_to_functor_eq_coe, adjunction.to_monad_coe]
+  dsimp' only [← functor.comp_map, ← monad.comparison_obj_a, ← as_iso_hom, ← functor.comp_obj, ← monad.comparison_obj_A,
+    ← monad_to_functor_eq_coe, ← adjunction.to_monad_coe]
   rw [← cancel_epi ((adjunction.of_right_adjoint R).Unit.app X.A), adjunction.unit_naturality_assoc,
     adjunction.right_triangle_components, comp_id]
   apply (X.unit_assoc _).symm
 
-instance comparisonFull [Full R] [IsRightAdjoint R] : Full (Monad.comparison (Adjunction.ofRightAdjoint R)) where
-  preimage := fun X Y f => R.preimage f.f
+instance comparisonFull [Full R] [IsRightAdjoint R] :
+    Full (Monad.comparison (Adjunction.ofRightAdjoint R)) where preimage := fun X Y f => R.preimage f.f
 
 end Reflective
 
@@ -260,8 +264,8 @@ end Reflective
 -- It is possible to do this computably since the construction gives the data of the inverse, not
 -- just the existence of an inverse on each object.
 -- see Note [lower instance priority]
-noncomputable instance (priority := 100) monadicOfReflective [Reflective R] : MonadicRightAdjoint R where
-  eqv := Equivalence.ofFullyFaithfullyEssSurj _
+noncomputable instance (priority := 100) monadicOfReflective [Reflective R] :
+    MonadicRightAdjoint R where eqv := Equivalence.ofFullyFaithfullyEssSurj _
 
 end CategoryTheory
 

@@ -120,17 +120,17 @@ localized [UnitInterval] notation "σ" => UnitInterval.symm
 @[simp]
 theorem symm_zero : σ 0 = 1 :=
   Subtype.ext <| by
-    simp [symm]
+    simp [← symm]
 
 @[simp]
 theorem symm_one : σ 1 = 0 :=
   Subtype.ext <| by
-    simp [symm]
+    simp [← symm]
 
 @[simp]
 theorem symm_symm (x : I) : σ (σ x) = x :=
   Subtype.ext <| by
-    simp [symm]
+    simp [← symm]
 
 @[simp]
 theorem coe_symm_eq (x : I) : (σ x : ℝ) = 1 - x :=
@@ -193,10 +193,10 @@ theorem proj_Icc_eq_one {x : ℝ} : projIcc (0 : ℝ) 1 zero_le_one x = 1 ↔ 1 
 
 namespace Tactic.Interactive
 
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
 /-- A tactic that solves `0 ≤ ↑x`, `0 ≤ 1 - ↑x`, `↑x ≤ 1`, and `1 - ↑x ≤ 1` for `x : I`. -/
 unsafe def unit_interval : tactic Unit :=
   sorry <|> sorry <|> sorry <|> sorry
@@ -213,7 +213,7 @@ variable {𝕜 : Type _} [LinearOrderedField 𝕜] [TopologicalSpace 𝕜] [Topo
 -- At the end of the day I only care about `ℝ`, so I'm hesitant to put work into generalizing.
 theorem affine_homeomorph_image_I (a b : 𝕜) (h : 0 < a) :
     affineHomeomorph a b h.Ne.symm '' Set.Icc 0 1 = Set.Icc b (a + b) := by
-  simp [h]
+  simp [← h]
 
 /-- The affine homeomorphism from a nontrivial interval `[a,b]` to `[0,1]`.
 -/
@@ -221,7 +221,7 @@ def iccHomeoI (a b : 𝕜) (h : a < b) : Set.Icc a b ≃ₜ Set.Icc (0 : 𝕜) (
   let e := Homeomorph.image (affineHomeomorph (b - a) a (sub_pos.mpr h).Ne.symm) (Set.Icc 0 1)
   refine' (e.trans _).symm
   apply Homeomorph.setCongr
-  simp [sub_pos.mpr h]
+  simp [← sub_pos.mpr h]
 
 @[simp]
 theorem Icc_homeo_I_apply_coe (a b : 𝕜) (h : a < b) (x : Set.Icc a b) : ((iccHomeoI a b h) x : 𝕜) = (x - a) / (b - a) :=

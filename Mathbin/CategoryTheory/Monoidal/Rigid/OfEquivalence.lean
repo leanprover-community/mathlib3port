@@ -29,11 +29,11 @@ def exactPairingOfFaithful [Faithful F.toFunctor] {X Y : C} (eval : Y ⊗ X ⟶ 
   evaluation_coevaluation' :=
     F.toFunctor.map_injective
       (by
-        simp [map_eval, map_coeval, monoidal_functor.map_tensor])
+        simp [← map_eval, ← map_coeval, ← monoidal_functor.map_tensor])
   coevaluation_evaluation' :=
     F.toFunctor.map_injective
       (by
-        simp [map_eval, map_coeval, monoidal_functor.map_tensor])
+        simp [← map_eval, ← map_coeval, ← monoidal_functor.map_tensor])
 
 /-- Given a pair of objects which are sent by a fully faithful functor to a pair of objects
 with an exact pairing, we get an exact pairing.
@@ -66,12 +66,12 @@ def hasRightDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasRightDual 
     infer_instance
 
 /-- Pull back a left rigid structure along an equivalence. -/
-def leftRigidCategoryOfEquivalence [IsEquivalence F.toFunctor] [LeftRigidCategory D] : LeftRigidCategory C where
-  leftDual := fun X => hasLeftDualOfEquivalence F X
+def leftRigidCategoryOfEquivalence [IsEquivalence F.toFunctor] [LeftRigidCategory D] :
+    LeftRigidCategory C where leftDual := fun X => hasLeftDualOfEquivalence F X
 
 /-- Pull back a right rigid structure along an equivalence. -/
-def rightRigidCategoryOfEquivalence [IsEquivalence F.toFunctor] [RightRigidCategory D] : RightRigidCategory C where
-  rightDual := fun X => hasRightDualOfEquivalence F X
+def rightRigidCategoryOfEquivalence [IsEquivalence F.toFunctor] [RightRigidCategory D] :
+    RightRigidCategory C where rightDual := fun X => hasRightDualOfEquivalence F X
 
 /-- Pull back a rigid structure along an equivalence. -/
 def rigidCategoryOfEquivalence [IsEquivalence F.toFunctor] [RigidCategory D] : RigidCategory C where

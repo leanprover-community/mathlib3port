@@ -24,9 +24,9 @@ variable {ι R K M M₁ M₂ M₃ V : Type _}
 
 namespace QuadraticForm
 
-variable [Ringₓ R]
+variable [Semiringₓ R]
 
-variable [AddCommGroupₓ M] [AddCommGroupₓ M₁] [AddCommGroupₓ M₂] [AddCommGroupₓ M₃]
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₁] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃]
 
 variable [Module R M] [Module R M₁] [Module R M₂] [Module R M₃]
 
@@ -115,7 +115,7 @@ def isometryOfCompLinearEquiv (Q : QuadraticForm R M) (f : M₁ ≃ₗ[R] M) : Q
   { f.symm with
     map_app' := by
       intro
-      simp only [comp_apply, LinearEquiv.coe_coe, LinearEquiv.to_fun_eq_coe, LinearEquiv.apply_symm_apply,
+      simp only [← comp_apply, ← LinearEquiv.coe_coe, ← LinearEquiv.to_fun_eq_coe, ← LinearEquiv.apply_symm_apply, ←
         f.apply_symm_apply] }
 
 /-- A quadratic form is isometric to its bases representations. -/
@@ -147,7 +147,7 @@ theorem equivalent_weighted_sum_squares_units_of_nondegenerate' (Q : QuadraticFo
     ∃ w : Finₓ (FiniteDimensional.finrank K V) → Kˣ, Equivalent Q (weightedSumSquares K w) := by
   obtain ⟨v, hv₁⟩ := exists_orthogonal_basis (associated_is_symm _ Q)
   have hv₂ := hv₁.not_is_ortho_basis_self_of_nondegenerate hQ
-  simp_rw [is_ortho, associated_eq_self_apply]  at hv₂
+  simp_rw [is_ortho, associated_eq_self_apply] at hv₂
   exact ⟨fun i => Units.mk0 _ (hv₂ i), ⟨Q.isometry_weighted_sum_squares v hv₁⟩⟩
 
 end QuadraticForm

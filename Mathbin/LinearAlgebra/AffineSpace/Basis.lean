@@ -88,7 +88,7 @@ noncomputable def basisOf (i : ι) : Basis { j : ι // j ≠ i } k V :=
 
 @[simp]
 theorem basis_of_apply (i : ι) (j : { j : ι // j ≠ i }) : b.basisOf i j = b.points ↑j -ᵥ b.points i := by
-  simp [basis_of]
+  simp [← basis_of]
 
 /-- The `i`th barycentric coordinate of a point. -/
 noncomputable def coord (i : ι) : P →ᵃ[k] k where
@@ -104,32 +104,32 @@ theorem linear_eq_sum_coords (i : ι) : (b.Coord i).linear = -(b.basisOf i).sumC
 
 @[simp]
 theorem coord_apply_eq (i : ι) : b.Coord i (b.points i) = 1 := by
-  simp only [coord, Basis.coe_sum_coords, LinearEquiv.map_zero, LinearEquiv.coe_coe, sub_zero, AffineMap.coe_mk,
-    Finsupp.sum_zero_index, vsub_self]
+  simp only [← coord, ← Basis.coe_sum_coords, ← LinearEquiv.map_zero, ← LinearEquiv.coe_coe, ← sub_zero, ←
+    AffineMap.coe_mk, ← Finsupp.sum_zero_index, ← vsub_self]
 
 @[simp]
 theorem coord_apply_neq (i j : ι) (h : j ≠ i) : b.Coord i (b.points j) = 0 := by
   rw [coord, AffineMap.coe_mk, ← Subtype.coe_mk j h, ← b.basis_of_apply i ⟨j, h⟩, Basis.sum_coords_self_apply, sub_self]
 
 theorem coord_apply [DecidableEq ι] (i j : ι) : b.Coord i (b.points j) = if i = j then 1 else 0 := by
-  cases eq_or_ne i j <;> simp [h.symm]
-  simp [h]
+  cases eq_or_ne i j <;> simp [← h.symm]
+  simp [← h]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem coord_apply_combination_of_mem {s : Finset ι} {i : ι} (hi : i ∈ s) {w : ι → k} (hw : s.Sum w = 1) :
     b.Coord i (s.affineCombination b.points w) = w i := by
   classical
-  simp only [coord_apply, hi, Finset.affine_combination_eq_linear_combination, if_true, mul_boole, hw,
-    Function.comp_app, smul_eq_mul, s.sum_ite_eq, s.map_affine_combination b.points w hw]
+  simp only [← coord_apply, ← hi, ← Finset.affine_combination_eq_linear_combination, ← if_true, ← mul_boole, ← hw, ←
+    Function.comp_app, ← smul_eq_mul, ← s.sum_ite_eq, ← s.map_affine_combination b.points w hw]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem coord_apply_combination_of_not_mem {s : Finset ι} {i : ι} (hi : i ∉ s) {w : ι → k} (hw : s.Sum w = 1) :
     b.Coord i (s.affineCombination b.points w) = 0 := by
   classical
-  simp only [coord_apply, hi, Finset.affine_combination_eq_linear_combination, if_false, mul_boole, hw,
-    Function.comp_app, smul_eq_mul, s.sum_ite_eq, s.map_affine_combination b.points w hw]
+  simp only [← coord_apply, ← hi, ← Finset.affine_combination_eq_linear_combination, ← if_false, ← mul_boole, ← hw, ←
+    Function.comp_app, ← smul_eq_mul, ← s.sum_ite_eq, ← s.map_affine_combination b.points w hw]
 
 @[simp]
 theorem sum_coord_apply_eq_one [Fintype ι] (q : P) : (∑ i, b.Coord i q) = 1 := by
@@ -162,7 +162,7 @@ theorem linear_combination_coord_eq_self [Fintype ι] (b : AffineBasis ι k V) (
 
 theorem ext_elem [Fintype ι] {q₁ q₂ : P} (h : ∀ i, b.Coord i q₁ = b.Coord i q₂) : q₁ = q₂ := by
   rw [← b.affine_combination_coord_eq_self q₁, ← b.affine_combination_coord_eq_self q₂]
-  simp only [h]
+  simp only [← h]
 
 @[simp]
 theorem coe_coord_of_subsingleton_eq_one [Subsingleton ι] (i : ι) : (b.Coord i : P → k) = 1 := by
@@ -181,7 +181,7 @@ theorem coe_coord_of_subsingleton_eq_one [Subsingleton ι] (i : ι) : (b.Coord i
     simp
   rw [Pi.one_apply, hq, b.coord_apply_combination_of_mem hi hw]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem surjective_coord [Nontrivial ι] (i : ι) : Function.Surjective <| b.Coord i := by
   classical
   intro x
@@ -193,9 +193,9 @@ theorem surjective_coord [Nontrivial ι] (i : ι) : Function.Surjective <| b.Coo
     simp
   let w : ι → k := fun j' => if j' = i then x else 1 - x
   have hw : s.sum w = 1 := by
-    simp [hij, Finset.sum_ite, Finset.filter_insert, Finset.filter_eq']
+    simp [← hij, ← Finset.sum_ite, ← Finset.filter_insert, ← Finset.filter_eq']
   use s.affine_combination b.points w
-  simp [b.coord_apply_combination_of_mem hi hw]
+  simp [← b.coord_apply_combination_of_mem hi hw]
 
 /-- Barycentric coordinates as an affine map. -/
 noncomputable def coords : P →ᵃ[k] ι → k where
@@ -204,13 +204,14 @@ noncomputable def coords : P →ᵃ[k] ι → k where
     { toFun := fun v i => -(b.basisOf i).sumCoords v,
       map_add' := fun v w => by
         ext i
-        simp only [LinearMap.map_add, Pi.add_apply, neg_add],
+        simp only [← LinearMap.map_add, ← Pi.add_apply, ← neg_add],
       map_smul' := fun t v => by
         ext i
-        simpa only [LinearMap.map_smul, Pi.smul_apply, smul_neg] }
+        simpa only [← LinearMap.map_smul, ← Pi.smul_apply, ← smul_neg] }
   map_vadd' := fun p v => by
     ext i
-    simp only [linear_eq_sum_coords, LinearMap.coe_mk, LinearMap.neg_apply, Pi.vadd_apply', AffineMap.map_vadd]
+    simp only [← linear_eq_sum_coords, ← LinearMap.coe_mk, ← LinearMap.neg_apply, ← Pi.vadd_apply', ←
+      AffineMap.map_vadd]
 
 @[simp]
 theorem coords_apply (q : P) (i : ι) : b.coords q i = b.Coord i q :=
@@ -249,7 +250,7 @@ theorem affine_independent_of_to_matrix_right_inv [DecidableEq ι'] (p : ι' →
       finset.univ.affine_combination_eq_linear_combination _ _ hw₂, ← finset.univ.map_affine_combination p w₁ hw₁, ←
       finset.univ.map_affine_combination p w₂ hw₂, hweq]
   replace hweq' := congr_arg (fun w => A.vec_mul w) hweq'
-  simpa only [Matrix.vec_mul_vec_mul, ← Matrix.mul_eq_mul, hA, Matrix.vec_mul_one] using hweq'
+  simpa only [← Matrix.vec_mul_vec_mul, Matrix.mul_eq_mul, ← hA, ← Matrix.vec_mul_one] using hweq'
 
 /-- Given a family of points `p : ι' → P` and an affine basis `b`, if the matrix whose rows are the
 coordinates of `p` with respect `b` has a left inverse, then `p` spans the entire space. -/
@@ -265,7 +266,7 @@ theorem affine_span_eq_top_of_to_matrix_left_inv [DecidableEq ι] [Nontrivial k]
         simp _ = ∑ j, ∑ l, A i j * b.to_matrix p j l := by
         simp_rw [Finset.mul_sum]_ = ∑ l, ∑ j, A i j * b.to_matrix p j l := by
         rw [Finset.sum_comm]_ = ∑ l, (A ⬝ b.to_matrix p) i l := rfl _ = 1 := by
-        simp [hA, Matrix.one_apply, Finset.filter_eq]
+        simp [← hA, ← Matrix.one_apply, ← Finset.filter_eq]
   have hbi : b.points i = finset.univ.affine_combination p (A i) := by
     apply b.ext_elem
     intro j
@@ -285,7 +286,7 @@ theorem to_matrix_vec_mul_coords (x : P) : (b.toMatrix b₂.points).vecMul (b₂
   change _ = b.coord j x
   conv_rhs => rw [← b₂.affine_combination_coord_eq_self x]
   rw [Finset.map_affine_combination _ _ _ (b₂.sum_coord_apply_eq_one x)]
-  simp [Matrix.vecMulₓ, Matrix.dotProduct, to_matrix_apply, coords]
+  simp [← Matrix.vecMulₓ, ← Matrix.dotProduct, ← to_matrix_apply, ← coords]
 
 variable [DecidableEq ι]
 
@@ -364,7 +365,7 @@ theorem exists_affine_basis_of_finite_dimensional {ι : Type _} [Fintype ι] [Fi
   rw [← affine_independent_equiv (Fintype.equivOfCardEq hs)] at h_ind
   refine' ⟨⟨_, h_ind, _⟩⟩
   rw [range_comp]
-  simp [h_tot]
+  simp [← h_tot]
 
 end DivisionRing
 

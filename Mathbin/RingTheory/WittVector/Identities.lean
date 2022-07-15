@@ -41,7 +41,7 @@ noncomputable section
 /-- The composition of Frobenius and Verschiebung is multiplication by `p`. -/
 theorem frobenius_verschiebung (x : 𝕎 R) : frobenius (verschiebung x) = x * p := by
   ghost_calc x
-  ghost_simp [mul_comm]
+  ghost_simp [← mul_comm]
 
 /-- Verschiebung is the same as multiplication by `p` on the ring of Witt vectors of `zmod p`. -/
 theorem verschiebung_zmod (x : 𝕎 (Zmod p)) : verschiebung x = x * p := by
@@ -51,7 +51,7 @@ variable (p R)
 
 theorem coeff_p_pow [CharP R p] (i : ℕ) : (p ^ i : 𝕎 R).coeff i = 1 := by
   induction' i with i h
-  · simp only [one_coeff_zero, Ne.def, pow_zeroₓ]
+  · simp only [← one_coeff_zero, ← Ne.def, ← pow_zeroₓ]
     
   · rw [pow_succ'ₓ, ← frobenius_verschiebung, coeff_frobenius_char_p, verschiebung_coeff_succ, h, one_pow]
     
@@ -76,9 +76,9 @@ theorem coeff_p_pow_eq_zero [CharP R p] {i j : ℕ} (hj : j ≠ i) : (p ^ i : �
 
 theorem coeff_p [CharP R p] (i : ℕ) : (p : 𝕎 R).coeff i = if i = 1 then 1 else 0 := by
   split_ifs with hi
-  · simpa only [hi, pow_oneₓ] using coeff_p_pow p R 1
+  · simpa only [← hi, ← pow_oneₓ] using coeff_p_pow p R 1
     
-  · simpa only [pow_oneₓ] using coeff_p_pow_eq_zero p R hi
+  · simpa only [← pow_oneₓ] using coeff_p_pow_eq_zero p R hi
     
 
 @[simp]
@@ -92,7 +92,7 @@ theorem coeff_p_one [CharP R p] : (p : 𝕎 R).coeff 1 = 1 := by
 
 theorem p_nonzero [Nontrivial R] [CharP R p] : (p : 𝕎 R) ≠ 0 := by
   intro h
-  simpa only [h, zero_coeff, zero_ne_one] using coeff_p_one p R
+  simpa only [← h, ← zero_coeff, ← zero_ne_one] using coeff_p_one p R
 
 theorem FractionRing.p_nonzero [Nontrivial R] [CharP R p] : (p : FractionRing (𝕎 R)) ≠ 0 := by
   simpa using (IsFractionRing.injective (𝕎 R) (FractionRing (𝕎 R))).Ne (p_nonzero _ _)
@@ -102,7 +102,7 @@ variable {p R}
 /-- The “projection formula” for Frobenius and Verschiebung. -/
 theorem verschiebung_mul_frobenius (x y : 𝕎 R) : verschiebung (x * frobenius y) = verschiebung x * y := by
   ghost_calc x y
-  rintro ⟨⟩ <;> ghost_simp [mul_assoc]
+  rintro ⟨⟩ <;> ghost_simp [← mul_assoc]
 
 theorem mul_char_p_coeff_zero [CharP R p] (x : 𝕎 R) : (x * p).coeff 0 = 0 := by
   rw [← frobenius_verschiebung, coeff_frobenius_char_p, verschiebung_coeff_zero, zero_pow]
@@ -190,7 +190,7 @@ theorem iterate_verschiebung_mul_coeff (x y : 𝕎 R) (i j : ℕ) :
     
   · apply mul_coeff_zero
     
-  · simp only [iterate_frobenius_coeff]
+  · simp only [← iterate_frobenius_coeff]
     
 
 end CharP

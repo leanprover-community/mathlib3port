@@ -60,7 +60,7 @@ variable {X : Type u} [Preorderₓ X]
 def homOfLe {x y : X} (h : x ≤ y) : x ⟶ y :=
   ULift.up (Plift.up h)
 
-alias hom_of_le ← LE.le.hom
+alias hom_of_le ← _root_.has_le.le.hom
 
 @[simp]
 theorem hom_of_le_refl {x : X} : (le_reflₓ x).Hom = 𝟙 x :=
@@ -75,7 +75,7 @@ theorem hom_of_le_comp {x y z : X} (h : x ≤ y) (k : y ≤ z) : h.Hom ≫ k.Hom
 theorem le_of_hom {x y : X} (h : x ⟶ y) : x ≤ y :=
   h.down.down
 
-alias le_of_hom ← Quiver.Hom.le
+alias le_of_hom ← _root_.quiver.hom.le
 
 @[simp]
 theorem le_of_hom_hom_of_le {x y : X} (h : x ≤ y) : h.Hom.le = h :=

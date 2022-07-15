@@ -384,7 +384,7 @@ def Lequiv.addEmptyConstants [ie : IsEmpty α] : L ≃ᴸ L[[α]] where
   left_inv := by
     rw [Lhom_with_constants, Lhom.sum_elim_comp_inl]
   right_inv := by
-    simp only [Lhom.comp_sum_elim, Lhom_with_constants, Lhom.comp_id]
+    simp only [← Lhom.comp_sum_elim, ← Lhom_with_constants, ← Lhom.comp_id]
     exact trans (congr rfl (Subsingleton.elimₓ _ _)) Lhom.sum_elim_inl_inr
 
 variable {α} {β : Type _}

@@ -97,8 +97,7 @@ protected theorem ext {α β} {x y : Const α β} (h : x.run = y.run) : x = y :=
 protected def map {γ α β} (f : α → β) (x : Const γ β) : Const γ α :=
   x
 
-instance {γ} : Functor (Const γ) where
-  map := @Const.map γ
+instance {γ} : Functor (Const γ) where map := @Const.map γ
 
 instance {γ} : IsLawfulFunctor (Const γ) := by
   constructor <;> intros <;> rfl
@@ -166,8 +165,7 @@ variable [Functor F] [Functor G]
 protected def map {α β : Type v} (h : α → β) : Comp F G α → Comp F G β
   | comp.mk x => Comp.mk ((· <$> ·) h <$> x)
 
-instance : Functor (Comp F G) where
-  map := @Comp.map F G _ _
+instance : Functor (Comp F G) where map := @Comp.map F G _ _
 
 @[functor_norm]
 theorem map_mk {α β} (h : α → β) (x : F (G α)) : h <$> Comp.mk x = Comp.mk ((· <$> ·) h <$> x) :=
@@ -183,11 +181,11 @@ variable {α β γ : Type v}
 
 protected theorem id_map : ∀ x : Comp F G α, Comp.map id x = x
   | comp.mk x => by
-    simp [comp.map, Functor.map_id]
+    simp [← comp.map, ← Functor.map_id]
 
 protected theorem comp_map (g' : α → β) (h : β → γ) : ∀ x : Comp F G α, Comp.map (h ∘ g') x = Comp.map h (Comp.map g' x)
   | comp.mk x => by
-    simp' [comp.map, Functor.map_comp_map g' h] with functor_norm
+    simp' [← comp.map, ← Functor.map_comp_map g' h] with functor_norm
 
 instance : IsLawfulFunctor (Comp F G) where
   id_map := @Comp.id_map F G _ _ _ _

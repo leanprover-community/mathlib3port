@@ -61,8 +61,8 @@ instance : CommMonoidₓ (center M) :=
   { (center M).toMonoid with mul_comm := fun a b => Subtype.ext <| b.Prop _ }
 
 /-- The center of a monoid acts commutatively on that monoid. -/
-instance center.smul_comm_class_left : SmulCommClass (center M) M M where
-  smul_comm := fun m x y => (Commute.left_comm (m.Prop x) y).symm
+instance center.smul_comm_class_left :
+    SmulCommClass (center M) M M where smul_comm := fun m x y => (Commute.left_comm (m.Prop x) y).symm
 
 /-- The center of a monoid acts commutatively on that monoid. -/
 instance center.smul_comm_class_right : SmulCommClass M (center M) M :=

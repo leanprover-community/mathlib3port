@@ -168,11 +168,11 @@ theorem coe_to_add_equiv (f : R ≃+* S) : ⇑(f : R ≃+ S) = f :=
   rfl
 
 /-- The `ring_equiv` between two semirings with a unique element. -/
-def ringEquivOfUniqueOfUnique {M N} [Unique M] [Unique N] [Add M] [Mul M] [Add N] [Mul N] : M ≃+* N :=
-  { AddEquiv.addEquivOfUniqueOfUnique, MulEquiv.mulEquivOfUniqueOfUnique with }
+def ringEquivOfUnique {M N} [Unique M] [Unique N] [Add M] [Mul M] [Add N] [Mul N] : M ≃+* N :=
+  { AddEquiv.addEquivOfUnique, MulEquiv.mulEquivOfUnique with }
 
 instance {M N} [Unique M] [Unique N] [Add M] [Mul M] [Add N] [Mul N] : Unique (M ≃+* N) where
-  default := ringEquivOfUniqueOfUnique
+  default := ringEquivOfUnique
   uniq := fun _ => ext fun x => Subsingleton.elimₓ _ _
 
 variable (R)

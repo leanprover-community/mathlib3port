@@ -95,7 +95,7 @@ theorem Prod.continuous_to_fun :
     exact maps_to_preimage _ _
     
   rintro ⟨b, v₁, v₂⟩ ⟨hb₁, hb₂⟩
-  simp only [prod.to_fun', Prod.mk.inj_iff, eq_self_iff_true, and_trueₓ]
+  simp only [← prod.to_fun', ← Prod.mk.inj_iff, ← eq_self_iff_true, ← and_trueₓ]
   rw [e₁.coe_fst]
   rw [e₁.source_eq, mem_preimage]
   exact hb₁
@@ -114,13 +114,13 @@ theorem Prod.left_inv {x : TotalSpace (E₁×ᵇE₂)} (h : x ∈ @TotalSpace.pr
     Prod.invFun' e₁ e₂ (Prod.toFun' e₁ e₂ x) = x := by
   obtain ⟨x, v₁, v₂⟩ := x
   obtain ⟨h₁ : x ∈ e₁.base_set, h₂ : x ∈ e₂.base_set⟩ := h
-  simp only [prod.to_fun', prod.inv_fun', symm_apply_apply_mk, h₁, h₂]
+  simp only [← prod.to_fun', ← prod.inv_fun', ← symm_apply_apply_mk, ← h₁, ← h₂]
 
 theorem Prod.right_inv {x : B × F₁ × F₂} (h : x ∈ (e₁.BaseSet ∩ e₂.BaseSet) ×ˢ (Univ : Set (F₁ × F₂))) :
     Prod.toFun' e₁ e₂ (Prod.invFun' e₁ e₂ x) = x := by
   obtain ⟨x, w₁, w₂⟩ := x
   obtain ⟨⟨h₁ : x ∈ e₁.base_set, h₂ : x ∈ e₂.base_set⟩, -⟩ := h
-  simp only [prod.to_fun', prod.inv_fun', apply_mk_symm, h₁, h₂]
+  simp only [← prod.to_fun', ← prod.inv_fun', ← apply_mk_symm, ← h₁, ← h₂]
 
 theorem Prod.continuous_inv_fun :
     ContinuousOn (Prod.invFun' e₁ e₂) ((e₁.BaseSet ∩ e₂.BaseSet) ×ˢ (Univ : Set (F₁ × F₂))) := by
@@ -204,7 +204,7 @@ instance _root_.bundle.prod.topological_vector_bundle : TopologicalVectorBundle 
         (((continuous_on_coord_change e₁ he₁ e₁' he₁').mono _).prodMapL R
               ((continuous_on_coord_change e₂ he₂ e₂' he₂').mono _)).congr
           _ <;>
-      dsimp' only [base_set_prod] with mfld_simps
+      dsimp' only [← base_set_prod] with mfld_simps
     · mfld_set_tac
       
     · mfld_set_tac

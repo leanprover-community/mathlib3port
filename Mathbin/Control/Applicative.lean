@@ -31,7 +31,7 @@ variable {α β γ σ : Type u}
 
 theorem Applicativeₓ.map_seq_map (f : α → β → γ) (g : σ → β) (x : F α) (y : F σ) :
     f <$> x <*> g <$> y = (flip (· ∘ ·) g ∘ f) <$> x <*> y := by
-  simp' [flip] with functor_norm
+  simp' [← flip] with functor_norm
 
 theorem Applicativeₓ.pure_seq_eq_map' (f : α → β) : (· <*> ·) (pure f : F (α → β)) = (· <$> ·) f := by
   ext <;> simp' with functor_norm
@@ -88,16 +88,16 @@ theorem map_pure (f : α → β) (x : α) : (f <$> pure x : Comp F G β) = pure 
 
 theorem seq_pure (f : Comp F G (α → β)) (x : α) : f <*> pure x = (fun g : α → β => g x) <$> f :=
   comp.ext <| by
-    simp' [(· ∘ ·)] with functor_norm
+    simp' [← (· ∘ ·)] with functor_norm
 
 theorem seq_assoc (x : Comp F G α) (f : Comp F G (α → β)) (g : Comp F G (β → γ)) :
     g <*> (f <*> x) = @Function.comp α β γ <$> g <*> f <*> x :=
   comp.ext <| by
-    simp' [(· ∘ ·)] with functor_norm
+    simp' [← (· ∘ ·)] with functor_norm
 
 theorem pure_seq_eq_map (f : α → β) (x : Comp F G α) : pure f <*> x = f <$> x :=
   comp.ext <| by
-    simp' [Applicativeₓ.pure_seq_eq_map'] with functor_norm
+    simp' [← Applicativeₓ.pure_seq_eq_map'] with functor_norm
 
 instance : IsLawfulApplicative (Comp F G) where
   pure_seq_eq_map := @Comp.pure_seq_eq_map F G _ _ _ _
@@ -115,15 +115,15 @@ theorem applicative_comp_id {F} [AF : Applicativeₓ F] [LF : IsLawfulApplicativ
 
 open IsCommApplicative
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
 instance {f : Type u → Type w} {g : Type v → Type u} [Applicativeₓ f] [Applicativeₓ g] [IsCommApplicative f]
     [IsCommApplicative g] : IsCommApplicative (Comp f g) := by
   refine' { @comp.is_lawful_applicative f g _ _ _ _ with .. }
   intros
   casesm* comp _ _ _
-  simp' [map, Seqₓ.seq] with functor_norm
+  simp' [← map, ← Seqₓ.seq] with functor_norm
   rw [commutative_map]
-  simp' [comp.mk, flip, (· ∘ ·)] with functor_norm
+  simp' [← comp.mk, ← flip, ← (· ∘ ·)] with functor_norm
   congr
   funext
   rw [commutative_map]
@@ -145,12 +145,12 @@ instance {α} [One α] [Mul α] : Applicativeₓ (Const α) where
   seq := fun β γ f x => (f * x : α)
 
 instance {α} [Monoidₓ α] : IsLawfulApplicative (Const α) := by
-  refine' { .. } <;> intros <;> simp [mul_assoc, (· <$> ·), (· <*> ·), pure]
+  refine' { .. } <;> intros <;> simp [← mul_assoc, ← (· <$> ·), ← (· <*> ·), ← pure]
 
 instance {α} [Zero α] [Add α] : Applicativeₓ (AddConst α) where
   pure := fun β x => (0 : α)
   seq := fun β γ f x => (f + x : α)
 
 instance {α} [AddMonoidₓ α] : IsLawfulApplicative (AddConst α) := by
-  refine' { .. } <;> intros <;> simp [add_assocₓ, (· <$> ·), (· <*> ·), pure]
+  refine' { .. } <;> intros <;> simp [← add_assocₓ, ← (· <$> ·), ← (· <*> ·), ← pure]
 

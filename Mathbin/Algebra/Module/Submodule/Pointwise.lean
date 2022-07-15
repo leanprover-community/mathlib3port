@@ -47,8 +47,10 @@ Recall that When `R` is the semiring corresponding to the nonnegative elements o
 `submodule R' M` is the type of cones of `M`. This instance reflects such cones about `0`.
 
 This is available as an instance in the `pointwise` locale. -/
-protected def hasPointwiseNeg : Neg (Submodule R M) where
-  neg := fun p =>
+protected def hasPointwiseNeg :
+    Neg
+      (Submodule R
+        M) where neg := fun p =>
     { -p.toAddSubmonoid with Carrier := -(p : Set M),
       smul_mem' := fun r m hm => Set.mem_neg.2 <| smul_neg r m ▸ p.smul_mem r <| Set.mem_neg.1 hm }
 
@@ -150,14 +152,7 @@ theorem add_eq_sup (p q : Submodule R M) : p + q = p⊔q :=
 theorem zero_eq_bot : (0 : Submodule R M) = ⊥ :=
   rfl
 
-/-- This is not an instance, as it would form a simp loop between `bot_eq_zero` and
-`submodule.zero_eq_bot`. It can be safely enabled with
-```lean
-local attribute [-simp] submodule.zero_eq_bot
-local attribute [instance] canonically_ordered_add_monoid
-```
--/
-def canonicallyOrderedAddMonoid : CanonicallyOrderedAddMonoid (Submodule R M) :=
+instance : CanonicallyOrderedAddMonoid (Submodule R M) :=
   { Submodule.pointwiseAddCommMonoid, Submodule.completeLattice with zero := 0, bot := ⊥, add := (· + ·),
     add_le_add_left := fun a b => sup_le_sup_left, exists_add_of_le := fun a b h => ⟨b, (sup_eq_right.2 h).symm⟩,
     le_self_add := fun a b => le_sup_left }

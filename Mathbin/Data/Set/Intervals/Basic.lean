@@ -126,40 +126,64 @@ theorem mem_Ici : x ∈ Ici a ↔ a ≤ x :=
 theorem mem_Ioi : x ∈ Ioi a ↔ a < x :=
   Iff.rfl
 
+instance decidableMemIoo [Decidable (a < x ∧ x < b)] : Decidable (x ∈ Ioo a b) := by
+  assumption
+
+instance decidableMemIco [Decidable (a ≤ x ∧ x < b)] : Decidable (x ∈ Ico a b) := by
+  assumption
+
+instance decidableMemIio [Decidable (x < b)] : Decidable (x ∈ Iio b) := by
+  assumption
+
+instance decidableMemIcc [Decidable (a ≤ x ∧ x ≤ b)] : Decidable (x ∈ Icc a b) := by
+  assumption
+
+instance decidableMemIic [Decidable (x ≤ b)] : Decidable (x ∈ Iic b) := by
+  assumption
+
+instance decidableMemIoc [Decidable (a < x ∧ x ≤ b)] : Decidable (x ∈ Ioc a b) := by
+  assumption
+
+instance decidableMemIci [Decidable (a ≤ x)] : Decidable (x ∈ Ici a) := by
+  assumption
+
+instance decidableMemIoi [Decidable (a < x)] : Decidable (x ∈ Ioi a) := by
+  assumption
+
 @[simp]
 theorem left_mem_Ioo : a ∈ Ioo a b ↔ False := by
-  simp [lt_irreflₓ]
+  simp [← lt_irreflₓ]
 
 @[simp]
 theorem left_mem_Ico : a ∈ Ico a b ↔ a < b := by
-  simp [le_reflₓ]
+  simp [← le_reflₓ]
 
 @[simp]
 theorem left_mem_Icc : a ∈ Icc a b ↔ a ≤ b := by
-  simp [le_reflₓ]
+  simp [← le_reflₓ]
 
 @[simp]
 theorem left_mem_Ioc : a ∈ Ioc a b ↔ False := by
-  simp [lt_irreflₓ]
+  simp [← lt_irreflₓ]
 
 theorem left_mem_Ici : a ∈ Ici a := by
   simp
 
 @[simp]
 theorem right_mem_Ioo : b ∈ Ioo a b ↔ False := by
-  simp [lt_irreflₓ]
+  simp [← lt_irreflₓ]
 
 @[simp]
 theorem right_mem_Ico : b ∈ Ico a b ↔ False := by
-  simp [lt_irreflₓ]
+  simp [← lt_irreflₓ]
 
 @[simp]
 theorem right_mem_Icc : b ∈ Icc a b ↔ a ≤ b := by
-  simp [le_reflₓ]
+  simp [← le_reflₓ]
 
 @[simp]
 theorem right_mem_Ioc : b ∈ Ioc a b ↔ a < b := by
-  simp [le_reflₓ]
+  simp [← le_reflₓ]
 
 theorem right_mem_Iic : a ∈ Iic a := by
   simp
@@ -404,17 +428,23 @@ theorem Iio_subset_Iic_self : Iio a ⊆ Iic a := fun x hx => le_of_ltₓ hx
 
 theorem Ico_subset_Ici_self : Ico a b ⊆ Ici a := fun x => And.left
 
+theorem Ioi_ssubset_Ici_self : Ioi a ⊂ Ici a :=
+  ⟨Ioi_subset_Ici_self, fun h => lt_irreflₓ a (h le_rfl)⟩
+
+theorem Iio_ssubset_Iic_self : Iio a ⊂ Iic a :=
+  @Ioi_ssubset_Ici_self αᵒᵈ _ _
+
 theorem Icc_subset_Icc_iff (h₁ : a₁ ≤ b₁) : Icc a₁ b₁ ⊆ Icc a₂ b₂ ↔ a₂ ≤ a₁ ∧ b₁ ≤ b₂ :=
-  ⟨fun h => ⟨(h ⟨le_rfl, h₁⟩).1, (h ⟨h₁, le_rfl⟩).2⟩, fun x ⟨hx, hx'⟩ => ⟨h.trans hx, hx'.trans h'⟩⟩
+  ⟨fun h => ⟨(h ⟨le_rfl, h₁⟩).1, (h ⟨h₁, le_rfl⟩).2⟩, fun ⟨h, h'⟩ x ⟨hx, hx'⟩ => ⟨h.trans hx, hx'.trans h'⟩⟩
 
 theorem Icc_subset_Ioo_iff (h₁ : a₁ ≤ b₁) : Icc a₁ b₁ ⊆ Ioo a₂ b₂ ↔ a₂ < a₁ ∧ b₁ < b₂ :=
-  ⟨fun h => ⟨(h ⟨le_rfl, h₁⟩).1, (h ⟨h₁, le_rfl⟩).2⟩, fun x ⟨hx, hx'⟩ => ⟨h.trans_le hx, hx'.trans_lt h'⟩⟩
+  ⟨fun h => ⟨(h ⟨le_rfl, h₁⟩).1, (h ⟨h₁, le_rfl⟩).2⟩, fun ⟨h, h'⟩ x ⟨hx, hx'⟩ => ⟨h.trans_le hx, hx'.trans_lt h'⟩⟩
 
 theorem Icc_subset_Ico_iff (h₁ : a₁ ≤ b₁) : Icc a₁ b₁ ⊆ Ico a₂ b₂ ↔ a₂ ≤ a₁ ∧ b₁ < b₂ :=
-  ⟨fun h => ⟨(h ⟨le_rfl, h₁⟩).1, (h ⟨h₁, le_rfl⟩).2⟩, fun x ⟨hx, hx'⟩ => ⟨h.trans hx, hx'.trans_lt h'⟩⟩
+  ⟨fun h => ⟨(h ⟨le_rfl, h₁⟩).1, (h ⟨h₁, le_rfl⟩).2⟩, fun ⟨h, h'⟩ x ⟨hx, hx'⟩ => ⟨h.trans hx, hx'.trans_lt h'⟩⟩
 
 theorem Icc_subset_Ioc_iff (h₁ : a₁ ≤ b₁) : Icc a₁ b₁ ⊆ Ioc a₂ b₂ ↔ a₂ < a₁ ∧ b₁ ≤ b₂ :=
-  ⟨fun h => ⟨(h ⟨le_rfl, h₁⟩).1, (h ⟨h₁, le_rfl⟩).2⟩, fun x ⟨hx, hx'⟩ => ⟨h.trans_le hx, hx'.trans h'⟩⟩
+  ⟨fun h => ⟨(h ⟨le_rfl, h₁⟩).1, (h ⟨h₁, le_rfl⟩).2⟩, fun ⟨h, h'⟩ x ⟨hx, hx'⟩ => ⟨h.trans_le hx, hx'.trans h'⟩⟩
 
 theorem Icc_subset_Iio_iff (h₁ : a₁ ≤ b₁) : Icc a₁ b₁ ⊆ Iio b₂ ↔ b₁ < b₂ :=
   ⟨fun h => h ⟨h₁, le_rfl⟩, fun h x ⟨hx, hx'⟩ => hx'.trans_lt h⟩
@@ -535,7 +565,7 @@ variable [PartialOrderₓ α] {a b c : α}
 @[simp]
 theorem Icc_self (a : α) : Icc a a = {a} :=
   Set.ext <| by
-    simp [Icc, le_antisymm_iffₓ, and_comm]
+    simp [← Icc, ← le_antisymm_iffₓ, ← and_comm]
 
 @[simp]
 theorem Icc_eq_singleton_iff : Icc a b = {c} ↔ a = c ∧ b = c := by
@@ -550,22 +580,22 @@ theorem Icc_eq_singleton_iff : Icc a b = {c} ↔ a = c ∧ b = c := by
 @[simp]
 theorem Icc_diff_left : Icc a b \ {a} = Ioc a b :=
   ext fun x => by
-    simp [lt_iff_le_and_ne, eq_comm, And.right_comm]
+    simp [← lt_iff_le_and_ne, ← eq_comm, ← And.right_comm]
 
 @[simp]
 theorem Icc_diff_right : Icc a b \ {b} = Ico a b :=
   ext fun x => by
-    simp [lt_iff_le_and_ne, and_assoc]
+    simp [← lt_iff_le_and_ne, ← and_assoc]
 
 @[simp]
 theorem Ico_diff_left : Ico a b \ {a} = Ioo a b :=
   ext fun x => by
-    simp [And.right_comm, ← lt_iff_le_and_ne, eq_comm]
+    simp [← And.right_comm, lt_iff_le_and_ne, ← eq_comm]
 
 @[simp]
 theorem Ioc_diff_right : Ioc a b \ {b} = Ioo a b :=
   ext fun x => by
-    simp [and_assoc, ← lt_iff_le_and_ne]
+    simp [← and_assoc, lt_iff_le_and_ne]
 
 @[simp]
 theorem Icc_diff_both : Icc a b \ {a, b} = Ioo a b := by
@@ -574,12 +604,12 @@ theorem Icc_diff_both : Icc a b \ {a, b} = Ioo a b := by
 @[simp]
 theorem Ici_diff_left : Ici a \ {a} = Ioi a :=
   ext fun x => by
-    simp [lt_iff_le_and_ne, eq_comm]
+    simp [← lt_iff_le_and_ne, ← eq_comm]
 
 @[simp]
 theorem Iic_diff_right : Iic a \ {a} = Iio a :=
   ext fun x => by
-    simp [lt_iff_le_and_ne]
+    simp [← lt_iff_le_and_ne]
 
 @[simp]
 theorem Ico_diff_Ioo_same (h : a < b) : Ico a b \ Ioo a b = {a} := by
@@ -600,7 +630,7 @@ theorem Icc_diff_Ioc_same (h : a ≤ b) : Icc a b \ Ioc a b = {a} := by
 @[simp]
 theorem Icc_diff_Ioo_same (h : a ≤ b) : Icc a b \ Ioo a b = {a, b} := by
   rw [← Icc_diff_both, diff_diff_cancel_left]
-  simp [insert_subset, h]
+  simp [← insert_subset, ← h]
 
 @[simp]
 theorem Ici_diff_Ioi_same : Ici a \ Ioi a = {a} := by
@@ -613,7 +643,7 @@ theorem Iic_diff_Iio_same : Iic a \ Iio a = {a} := by
 @[simp]
 theorem Ioi_union_left : Ioi a ∪ {a} = Ici a :=
   ext fun x => by
-    simp [eq_comm, le_iff_eq_or_lt]
+    simp [← eq_comm, ← le_iff_eq_or_lt]
 
 @[simp]
 theorem Iio_union_right : Iio a ∪ {a} = Iic a :=
@@ -623,13 +653,13 @@ theorem Ioo_union_left (hab : a < b) : Ioo a b ∪ {a} = Ico a b := by
   rw [← Ico_diff_left, diff_union_self, union_eq_self_of_subset_right (singleton_subset_iff.2 <| left_mem_Ico.2 hab)]
 
 theorem Ioo_union_right (hab : a < b) : Ioo a b ∪ {b} = Ioc a b := by
-  simpa only [dual_Ioo, dual_Ico] using Ioo_union_left hab.dual
+  simpa only [← dual_Ioo, ← dual_Ico] using Ioo_union_left hab.dual
 
 theorem Ioc_union_left (hab : a ≤ b) : Ioc a b ∪ {a} = Icc a b := by
   rw [← Icc_diff_left, diff_union_self, union_eq_self_of_subset_right (singleton_subset_iff.2 <| left_mem_Icc.2 hab)]
 
 theorem Ico_union_right (hab : a ≤ b) : Ico a b ∪ {b} = Icc a b := by
-  simpa only [dual_Ioc, dual_Icc] using Ioc_union_left hab.dual
+  simpa only [← dual_Ioc, ← dual_Icc] using Ioc_union_left hab.dual
 
 @[simp]
 theorem Ico_insert_right (h : a ≤ b) : insert b (Ico a b) = Icc a b := by
@@ -668,8 +698,8 @@ theorem mem_Iic_Iio_of_subset_of_subset {s : Set α} (ho : Iio a ⊆ s) (hc : s 
     s ∈ ({Iic a, Iio a} : Set (Set α)) :=
   @mem_Ici_Ioi_of_subset_of_subset αᵒᵈ _ a s ho hc
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 theorem mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset {s : Set α} (ho : Ioo a b ⊆ s) (hc : s ⊆ Icc a b) :
     s ∈ ({Icc a b, Ico a b, Ioc a b, Ioo a b} : Set (Set α)) := by
   classical
@@ -732,11 +762,11 @@ theorem Iic_top : Iic (⊤ : α) = univ :=
 
 @[simp]
 theorem Icc_top : Icc a ⊤ = Ici a := by
-  simp [← Ici_inter_Iic]
+  simp [Ici_inter_Iic]
 
 @[simp]
 theorem Ioc_top : Ioc a ⊤ = Ioi a := by
-  simp [← Ioi_inter_Iic]
+  simp [Ioi_inter_Iic]
 
 end OrderTop
 
@@ -758,11 +788,11 @@ theorem Ici_bot : Ici (⊥ : α) = univ :=
 
 @[simp]
 theorem Icc_bot : Icc ⊥ a = Iic a := by
-  simp [← Ici_inter_Iic]
+  simp [Ici_inter_Iic]
 
 @[simp]
 theorem Ico_bot : Ico ⊥ a = Iio a := by
-  simp [← Ici_inter_Iio]
+  simp [Ici_inter_Iio]
 
 end OrderBot
 
@@ -880,10 +910,10 @@ theorem Ioo_subset_Ioo_iff [DenselyOrdered α] (h₁ : a₁ < b₁) : Ioo a₁ b
 
 theorem Ico_eq_Ico_iff (h : a₁ < b₁ ∨ a₂ < b₂) : Ico a₁ b₁ = Ico a₂ b₂ ↔ a₁ = a₂ ∧ b₁ = b₂ :=
   ⟨fun e => by
-    simp [subset.antisymm_iff] at e
-    simp [le_antisymm_iffₓ]
+    simp [← subset.antisymm_iff] at e
+    simp [← le_antisymm_iffₓ]
     cases h <;>
-      simp [Ico_subset_Ico_iff h] at e <;> [rcases e with ⟨⟨h₁, h₂⟩, e'⟩, rcases e with ⟨e', ⟨h₁, h₂⟩⟩] <;>
+      simp [← Ico_subset_Ico_iff h] at e <;> [rcases e with ⟨⟨h₁, h₂⟩, e'⟩, rcases e with ⟨e', ⟨h₁, h₂⟩⟩] <;>
         have := (Ico_subset_Ico_iff <| h₁.trans_lt <| h.trans_le h₂).1 e' <;> tauto,
     fun ⟨h₁, h₂⟩ => by
     rw [h₁, h₂]⟩
@@ -945,11 +975,11 @@ theorem Ioo_union_Ioi' (h₁ : c < b) : Ioo a b ∪ Ioi c = Ioi (min a c) := by
     
 
 theorem Ioo_union_Ioi (h : c < max a b) : Ioo a b ∪ Ioi c = Ioi (min a c) := by
-  cases' le_totalₓ a b with hab hab <;> simp [hab] at h
+  cases' le_totalₓ a b with hab hab <;> simp [← hab] at h
   · exact Ioo_union_Ioi' h
     
   · rw [min_commₓ]
-    simp [*, min_eq_left_of_ltₓ]
+    simp [*, ← min_eq_left_of_ltₓ]
     
 
 theorem Ioi_subset_Ioo_union_Ici : Ioi a ⊆ Ioo a b ∪ Ici b := fun x hx =>
@@ -977,7 +1007,7 @@ theorem Ico_union_Ici' (h₁ : c ≤ b) : Ico a b ∪ Ici c = Ici (min a c) := b
     
 
 theorem Ico_union_Ici (h : c ≤ max a b) : Ico a b ∪ Ici c = Ici (min a c) := by
-  cases' le_totalₓ a b with hab hab <;> simp [hab] at h
+  cases' le_totalₓ a b with hab hab <;> simp [← hab] at h
   · exact Ico_union_Ici' h
     
   · simp [*]
@@ -1001,7 +1031,7 @@ theorem Ioc_union_Ioi' (h₁ : c ≤ b) : Ioc a b ∪ Ioi c = Ioi (min a c) := b
     
 
 theorem Ioc_union_Ioi (h : c ≤ max a b) : Ioc a b ∪ Ioi c = Ioi (min a c) := by
-  cases' le_totalₓ a b with hab hab <;> simp [hab] at h
+  cases' le_totalₓ a b with hab hab <;> simp [← hab] at h
   · exact Ioc_union_Ioi' h
     
   · simp [*]
@@ -1039,7 +1069,7 @@ theorem Icc_union_Ici' (h₁ : c ≤ b) : Icc a b ∪ Ici c = Ici (min a c) := b
     
 
 theorem Icc_union_Ici (h : c ≤ max a b) : Icc a b ∪ Ici c = Ici (min a c) := by
-  cases' le_or_ltₓ a b with hab hab <;> simp [hab] at h
+  cases' le_or_ltₓ a b with hab hab <;> simp [← hab] at h
   · exact Icc_union_Ici' h
     
   · cases h
@@ -1078,7 +1108,7 @@ theorem Iio_union_Ico' (h₁ : c ≤ b) : Iio b ∪ Ico c d = Iio (max b d) := b
     
 
 theorem Iio_union_Ico (h : min c d ≤ b) : Iio b ∪ Ico c d = Iio (max b d) := by
-  cases' le_totalₓ c d with hcd hcd <;> simp [hcd] at h
+  cases' le_totalₓ c d with hcd hcd <;> simp [← hcd] at h
   · exact Iio_union_Ico' h
     
   · simp [*]
@@ -1102,11 +1132,11 @@ theorem Iic_union_Ioc' (h₁ : c < b) : Iic b ∪ Ioc c d = Iic (max b d) := by
     
 
 theorem Iic_union_Ioc (h : min c d < b) : Iic b ∪ Ioc c d = Iic (max b d) := by
-  cases' le_totalₓ c d with hcd hcd <;> simp [hcd] at h
+  cases' le_totalₓ c d with hcd hcd <;> simp [← hcd] at h
   · exact Iic_union_Ioc' h
     
   · rw [max_commₓ]
-    simp [*, max_eq_right_of_ltₓ h]
+    simp [*, ← max_eq_right_of_ltₓ h]
     
 
 theorem Iio_subset_Iic_union_Ioo : Iio b ⊆ Iic a ∪ Ioo a b := fun x hx =>
@@ -1119,19 +1149,19 @@ theorem Iic_union_Ioo_eq_Iio (h : a < b) : Iic a ∪ Ioo a b = Iio b :=
 theorem Iio_union_Ioo' (h₁ : c < b) : Iio b ∪ Ioo c d = Iio (max b d) := by
   ext x
   cases' lt_or_leₓ x b with hba hba
-  · simp [hba, h₁]
+  · simp [← hba, ← h₁]
     
-  · simp only [mem_Iio, mem_union_eq, mem_Ioo, lt_max_iff]
+  · simp only [← mem_Iio, ← mem_union_eq, ← mem_Ioo, ← lt_max_iff]
     refine' or_congr Iff.rfl ⟨And.right, _⟩
     exact fun h₂ => ⟨h₁.trans_le hba, h₂⟩
     
 
 theorem Iio_union_Ioo (h : min c d < b) : Iio b ∪ Ioo c d = Iio (max b d) := by
-  cases' le_totalₓ c d with hcd hcd <;> simp [hcd] at h
+  cases' le_totalₓ c d with hcd hcd <;> simp [← hcd] at h
   · exact Iio_union_Ioo' h
     
   · rw [max_commₓ]
-    simp [*, max_eq_right_of_ltₓ h]
+    simp [*, ← max_eq_right_of_ltₓ h]
     
 
 theorem Iic_subset_Iic_union_Icc : Iic b ⊆ Iic a ∪ Icc a b :=
@@ -1152,7 +1182,7 @@ theorem Iic_union_Icc' (h₁ : c ≤ b) : Iic b ∪ Icc c d = Iic (max b d) := b
     
 
 theorem Iic_union_Icc (h : min c d ≤ b) : Iic b ∪ Icc c d = Iic (max b d) := by
-  cases' le_or_ltₓ c d with hcd hcd <;> simp [hcd] at h
+  cases' le_or_ltₓ c d with hcd hcd <;> simp [← hcd] at h
   · exact Iic_union_Icc' h
     
   · cases h
@@ -1206,7 +1236,7 @@ theorem Ico_union_Ico' (h₁ : c ≤ b) (h₂ : a ≤ d) : Ico a b ∪ Ico c d =
 
 theorem Ico_union_Ico (h₁ : min a b ≤ max c d) (h₂ : min c d ≤ max a b) : Ico a b ∪ Ico c d = Ico (min a c) (max b d) :=
   by
-  cases' le_totalₓ a b with hab hab <;> cases' le_totalₓ c d with hcd hcd <;> simp [hab, hcd] at h₁ h₂
+  cases' le_totalₓ a b with hab hab <;> cases' le_totalₓ c d with hcd hcd <;> simp [← hab, ← hcd] at h₁ h₂
   · exact Ico_union_Ico' h₂ h₁
     
   all_goals
@@ -1280,7 +1310,7 @@ theorem Ioc_union_Ioc' (h₁ : c ≤ b) (h₂ : a ≤ d) : Ioc a b ∪ Ioc c d =
 
 theorem Ioc_union_Ioc (h₁ : min a b ≤ max c d) (h₂ : min c d ≤ max a b) : Ioc a b ∪ Ioc c d = Ioc (min a c) (max b d) :=
   by
-  cases' le_totalₓ a b with hab hab <;> cases' le_totalₓ c d with hcd hcd <;> simp [hab, hcd] at h₁ h₂
+  cases' le_totalₓ a b with hab hab <;> cases' le_totalₓ c d with hcd hcd <;> simp [← hab, ← hcd] at h₁ h₂
   · exact Ioc_union_Ioc' h₂ h₁
     
   all_goals
@@ -1335,12 +1365,12 @@ theorem Icc_union_Icc (h₁ : min a b < max c d) (h₂ : min c d < max a b) : Ic
   by
   cases' le_or_ltₓ a b with hab hab <;>
     cases' le_or_ltₓ c d with hcd hcd <;>
-      simp only [min_eq_leftₓ, min_eq_rightₓ, max_eq_leftₓ, max_eq_rightₓ, min_eq_left_of_ltₓ, min_eq_right_of_ltₓ,
-        max_eq_left_of_ltₓ, max_eq_right_of_ltₓ, hab, hcd] at h₁ h₂
+      simp only [← min_eq_leftₓ, ← min_eq_rightₓ, ← max_eq_leftₓ, ← max_eq_rightₓ, ← min_eq_left_of_ltₓ, ←
+        min_eq_right_of_ltₓ, ← max_eq_left_of_ltₓ, ← max_eq_right_of_ltₓ, ← hab, ← hcd] at h₁ h₂
   · exact Icc_union_Icc' h₂.le h₁.le
     
   all_goals
-    simp [*, min_eq_left_of_ltₓ, max_eq_left_of_ltₓ, min_eq_right_of_ltₓ, max_eq_right_of_ltₓ]
+    simp [*, ← min_eq_left_of_ltₓ, ← max_eq_left_of_ltₓ, ← min_eq_right_of_ltₓ, ← max_eq_right_of_ltₓ]
 
 theorem Ioc_subset_Ioc_union_Icc : Ioc a c ⊆ Ioc a b ∪ Icc b c :=
   Subset.trans Ioc_subset_Ioc_union_Ioc (union_subset_union_right _ Ioc_subset_Icc_self)
@@ -1369,11 +1399,11 @@ theorem Ioo_union_Ioo (h₁ : min a b < max c d) (h₂ : min c d < max a b) : Io
   by
   cases' le_totalₓ a b with hab hab <;>
     cases' le_totalₓ c d with hcd hcd <;>
-      simp only [min_eq_leftₓ, min_eq_rightₓ, max_eq_leftₓ, max_eq_rightₓ, hab, hcd] at h₁ h₂
+      simp only [← min_eq_leftₓ, ← min_eq_rightₓ, ← max_eq_leftₓ, ← max_eq_rightₓ, ← hab, ← hcd] at h₁ h₂
   · exact Ioo_union_Ioo' h₂ h₁
     
   all_goals
-    simp [*, min_eq_left_of_ltₓ, min_eq_right_of_ltₓ, max_eq_left_of_ltₓ, max_eq_right_of_ltₓ, le_of_ltₓ h₂,
+    simp [*, ← min_eq_left_of_ltₓ, ← min_eq_right_of_ltₓ, ← max_eq_left_of_ltₓ, ← max_eq_right_of_ltₓ, ← le_of_ltₓ h₂, ←
       le_of_ltₓ h₁]
 
 end LinearOrderₓ
@@ -1387,7 +1417,7 @@ variable [SemilatticeInf α]
 @[simp]
 theorem Iic_inter_Iic {a b : α} : Iic a ∩ Iic b = Iic (a⊓b) := by
   ext x
-  simp [Iic]
+  simp [← Iic]
 
 @[simp]
 theorem Ioc_inter_Iic (a b c : α) : Ioc a b ∩ Iic c = Ioc a (b⊓c) := by
@@ -1402,7 +1432,7 @@ variable [SemilatticeSup α]
 @[simp]
 theorem Ici_inter_Ici {a b : α} : Ici a ∩ Ici b = Ici (a⊔b) := by
   ext x
-  simp [Ici]
+  simp [← Ici]
 
 @[simp]
 theorem Ico_inter_Ici (a b c : α) : Ico a b ∩ Ici c = Ico (a⊔c) b := by
@@ -1415,7 +1445,7 @@ section Both
 variable [Lattice α] {a b c a₁ a₂ b₁ b₂ : α}
 
 theorem Icc_inter_Icc : Icc a₁ b₁ ∩ Icc a₂ b₂ = Icc (a₁⊔a₂) (b₁⊓b₂) := by
-  simp only [Ici_inter_Iic.symm, Ici_inter_Ici.symm, Iic_inter_Iic.symm] <;> ac_rfl
+  simp only [← Ici_inter_Iic.symm, ← Ici_inter_Ici.symm, ← Iic_inter_Iic.symm] <;> ac_rfl
 
 @[simp]
 theorem Icc_inter_Icc_eq_singleton (hab : a ≤ b) (hbc : b ≤ c) : Icc a b ∩ Icc b c = {b} := by
@@ -1438,21 +1468,21 @@ theorem Iio_inter_Iio : Iio a ∩ Iio b = Iio (a⊓b) :=
   ext fun _ => lt_inf_iff.symm
 
 theorem Ico_inter_Ico : Ico a₁ b₁ ∩ Ico a₂ b₂ = Ico (a₁⊔a₂) (b₁⊓b₂) := by
-  simp only [Ici_inter_Iio.symm, Ici_inter_Ici.symm, Iio_inter_Iio.symm] <;> ac_rfl
+  simp only [← Ici_inter_Iio.symm, ← Ici_inter_Ici.symm, ← Iio_inter_Iio.symm] <;> ac_rfl
 
 theorem Ioc_inter_Ioc : Ioc a₁ b₁ ∩ Ioc a₂ b₂ = Ioc (a₁⊔a₂) (b₁⊓b₂) := by
-  simp only [Ioi_inter_Iic.symm, Ioi_inter_Ioi.symm, Iic_inter_Iic.symm] <;> ac_rfl
+  simp only [← Ioi_inter_Iic.symm, ← Ioi_inter_Ioi.symm, ← Iic_inter_Iic.symm] <;> ac_rfl
 
 theorem Ioo_inter_Ioo : Ioo a₁ b₁ ∩ Ioo a₂ b₂ = Ioo (a₁⊔a₂) (b₁⊓b₂) := by
-  simp only [Ioi_inter_Iio.symm, Ioi_inter_Ioi.symm, Iio_inter_Iio.symm] <;> ac_rfl
+  simp only [← Ioi_inter_Iio.symm, ← Ioi_inter_Ioi.symm, ← Iio_inter_Iio.symm] <;> ac_rfl
 
 theorem Ioc_inter_Ioo_of_left_lt (h : b₁ < b₂) : Ioc a₁ b₁ ∩ Ioo a₂ b₂ = Ioc (max a₁ a₂) b₁ :=
   ext fun x => by
-    simp [and_assoc, @And.left_comm (x ≤ _), and_iff_left_iff_imp.2 fun h' => lt_of_le_of_ltₓ h' h]
+    simp [← and_assoc, ← @And.left_comm (x ≤ _), ← and_iff_left_iff_imp.2 fun h' => lt_of_le_of_ltₓ h' h]
 
 theorem Ioc_inter_Ioo_of_right_le (h : b₂ ≤ b₁) : Ioc a₁ b₁ ∩ Ioo a₂ b₂ = Ioo (max a₁ a₂) b₂ :=
   ext fun x => by
-    simp [and_assoc, @And.left_comm (x ≤ _), and_iff_right_iff_imp.2 fun h' => (le_of_ltₓ h').trans h]
+    simp [← and_assoc, ← @And.left_comm (x ≤ _), ← and_iff_right_iff_imp.2 fun h' => (le_of_ltₓ h').trans h]
 
 theorem Ioo_inter_Ioc_of_left_le (h : b₁ ≤ b₂) : Ioo a₁ b₁ ∩ Ioc a₂ b₂ = Ioo (max a₁ a₂) b₁ := by
   rw [inter_comm, Ioc_inter_Ioo_of_right_le h, max_commₓ]
@@ -1467,7 +1497,7 @@ theorem Ico_diff_Iio : Ico a b \ Iio c = Ico (max a c) b := by
 @[simp]
 theorem Ioc_diff_Ioi : Ioc a b \ Ioi c = Ioc a (min b c) :=
   ext <| by
-    simp (config := { contextual := true })[iff_def]
+    simp (config := { contextual := true })[← iff_def]
 
 @[simp]
 theorem Ioc_inter_Ioi : Ioc a b ∩ Ioi c = Ioc (a⊔c) b := by
@@ -1476,7 +1506,7 @@ theorem Ioc_inter_Ioi : Ioc a b ∩ Ioi c = Ioc (a⊔c) b := by
 @[simp]
 theorem Ico_inter_Iio : Ico a b ∩ Iio c = Ico a (min b c) :=
   ext <| by
-    simp (config := { contextual := true })[iff_def]
+    simp (config := { contextual := true })[← iff_def]
 
 @[simp]
 theorem Ioc_diff_Iic : Ioc a b \ Iic c = Ioc (max a c) b := by
@@ -1500,7 +1530,7 @@ theorem Ioc_union_Ioc_union_Ioc_cycle : Ioc a b ∪ Ioc b c ∪ Ioc c a = Ioc (m
   rw [Ioc_union_Ioc, Ioc_union_Ioc]
   ac_rfl
   all_goals
-    solve_by_elim [min_le_of_left_le, min_le_of_right_le, le_max_of_le_left, le_max_of_le_right, le_reflₓ]
+    solve_by_elim [← min_le_of_left_le, ← min_le_of_right_le, ← le_max_of_le_left, ← le_max_of_le_right, ← le_reflₓ]
 
 end LinearOrderₓ
 
@@ -1530,7 +1560,7 @@ theorem Iic_prod_eq (a : α × β) : Iic a = Iic a.1 ×ˢ Iic a.2 :=
 @[simp]
 theorem Icc_prod_Icc (a₁ a₂ : α) (b₁ b₂ : β) : Icc a₁ a₂ ×ˢ Icc b₁ b₂ = Icc (a₁, b₁) (a₂, b₂) := by
   ext ⟨x, y⟩
-  simp [And.assoc, and_comm, And.left_comm]
+  simp [← And.assoc, ← and_comm, ← And.left_comm]
 
 theorem Icc_prod_eq (a b : α × β) : Icc a b = Icc a.1 b.1 ×ˢ Icc a.2 b.2 := by
   simp
@@ -1646,10 +1676,10 @@ theorem nonempty_Ico_sdiff {x dx y dy : α} (h : dy < dx) (hx : 0 < dx) : Nonemp
   by
   cases' lt_or_leₓ x y with h' h'
   · use x
-    simp [*, not_leₓ.2 h']
+    simp [*, ← not_leₓ.2 h']
     
   · use max x (x + dy)
-    simp [*, le_reflₓ]
+    simp [*, ← le_reflₓ]
     
 
 end LinearOrderedAddCommGroup
@@ -1667,38 +1697,38 @@ variable [Preorderₓ α] [Preorderₓ β]
 @[simp]
 theorem preimage_Iic (e : α ≃o β) (b : β) : e ⁻¹' Iic b = Iic (e.symm b) := by
   ext x
-  simp [← e.le_iff_le]
+  simp [e.le_iff_le]
 
 @[simp]
 theorem preimage_Ici (e : α ≃o β) (b : β) : e ⁻¹' Ici b = Ici (e.symm b) := by
   ext x
-  simp [← e.le_iff_le]
+  simp [e.le_iff_le]
 
 @[simp]
 theorem preimage_Iio (e : α ≃o β) (b : β) : e ⁻¹' Iio b = Iio (e.symm b) := by
   ext x
-  simp [← e.lt_iff_lt]
+  simp [e.lt_iff_lt]
 
 @[simp]
 theorem preimage_Ioi (e : α ≃o β) (b : β) : e ⁻¹' Ioi b = Ioi (e.symm b) := by
   ext x
-  simp [← e.lt_iff_lt]
+  simp [e.lt_iff_lt]
 
 @[simp]
 theorem preimage_Icc (e : α ≃o β) (a b : β) : e ⁻¹' Icc a b = Icc (e.symm a) (e.symm b) := by
-  simp [← Ici_inter_Iic]
+  simp [Ici_inter_Iic]
 
 @[simp]
 theorem preimage_Ico (e : α ≃o β) (a b : β) : e ⁻¹' Ico a b = Ico (e.symm a) (e.symm b) := by
-  simp [← Ici_inter_Iio]
+  simp [Ici_inter_Iio]
 
 @[simp]
 theorem preimage_Ioc (e : α ≃o β) (a b : β) : e ⁻¹' Ioc a b = Ioc (e.symm a) (e.symm b) := by
-  simp [← Ioi_inter_Iic]
+  simp [Ioi_inter_Iic]
 
 @[simp]
 theorem preimage_Ioo (e : α ≃o β) (a b : β) : e ⁻¹' Ioo a b = Ioo (e.symm a) (e.symm b) := by
-  simp [← Ioi_inter_Iio]
+  simp [Ioi_inter_Iio]
 
 @[simp]
 theorem image_Iic (e : α ≃o β) (a : α) : e '' Iic a = Iic (e a) := by

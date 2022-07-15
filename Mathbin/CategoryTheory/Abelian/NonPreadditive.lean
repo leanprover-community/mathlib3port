@@ -72,7 +72,7 @@ class NonPreadditiveAbelian extends HasZeroMorphisms C, NormalMonoCategory C, No
   [HasFiniteProducts : HasFiniteProducts C]
   [HasFiniteCoproducts : HasFiniteCoproducts C]
 
--- ././Mathport/Syntax/Translate/Basic.lean:209:40: warning: unsupported option default_priority
+-- ./././Mathport/Syntax/Translate/Basic.lean:293:40: warning: unsupported option default_priority
 set_option default_priority 100
 
 attribute [instance] non_preadditive_abelian.has_zero_object
@@ -109,7 +109,7 @@ instance : Epi (Abelian.factorThruImage f) :=
   (-- It will suffice to consider some g : I ⟶ R such that p ≫ g = 0 and show that g = 0.
       NormalMonoCategory.epi_of_zero_cancel
       _)
-    fun hpg : p ≫ g = 0 => by
+    fun R g : I ⟶ R hpg : p ≫ g = 0 => by
     -- Since C is abelian, u := ker g ≫ i is the kernel of some morphism h.
     let u := kernel.ι g ≫ i
     have : mono u := mono_comp _ _
@@ -120,7 +120,7 @@ instance : Epi (Abelian.factorThruImage f) :=
     have fh : f ≫ h = 0
     calc f ≫ h = (p ≫ i) ≫ h := (abelian.image.fac f).symm ▸ rfl _ = ((t ≫ kernel.ι g) ≫ i) ≫ h :=
         ht ▸ rfl _ = t ≫ u ≫ h := by
-        simp only [category.assoc] <;> conv_lhs => congr skip rw [← category.assoc]_ = t ≫ 0 := hu.w ▸ rfl _ = 0 :=
+        simp only [← category.assoc] <;> conv_lhs => congr skip rw [← category.assoc]_ = t ≫ 0 := hu.w ▸ rfl _ = 0 :=
         has_zero_morphisms.comp_zero _ _
     -- h factors through the cokernel of f via some l.
     obtain ⟨l, hl⟩ := cokernel.desc' f h fh
@@ -143,7 +143,7 @@ instance : Mono (Abelian.factorThruCoimage f) :=
   let I := Abelian.coimage f
   let i := Abelian.factorThruCoimage f
   let p := cokernel.π (kernel.ι f)
-  (NormalEpiCategory.mono_of_cancel_zero _) fun hgi : g ≫ i = 0 => by
+  (NormalEpiCategory.mono_of_cancel_zero _) fun R g : R ⟶ I hgi : g ≫ i = 0 => by
     -- Since C is abelian, u := p ≫ coker g is the cokernel of some morphism h.
     let u := p ≫ cokernel.π g
     have : epi u := epi_comp _ _
@@ -154,7 +154,7 @@ instance : Mono (Abelian.factorThruCoimage f) :=
     have hf : h ≫ f = 0
     calc h ≫ f = h ≫ p ≫ i := (abelian.coimage.fac f).symm ▸ rfl _ = h ≫ p ≫ cokernel.π g ≫ t :=
         ht ▸ rfl _ = h ≫ u ≫ t := by
-        simp only [category.assoc] <;> conv_lhs => congr skip rw [← category.assoc]_ = 0 ≫ t := by
+        simp only [← category.assoc] <;> conv_lhs => congr skip rw [← category.assoc]_ = 0 ≫ t := by
         rw [← category.assoc, hu.w]_ = 0 := zero_comp
     -- h factors through the kernel of f via some l.
     obtain ⟨l, hl⟩ := kernel.lift' f h hf
@@ -343,7 +343,7 @@ theorem sub_self {X Y : C} (a : X ⟶ Y) : a - a = 0 := by
   rw [sub_def, ← category.comp_id a, ← prod.comp_lift, category.assoc, diag_σ, comp_zero]
 
 theorem lift_sub_lift {X Y : C} (a b c d : X ⟶ Y) : prod.lift a b - prod.lift c d = prod.lift (a - c) (b - d) := by
-  simp only [sub_def]
+  simp only [← sub_def]
   ext
   · rw [category.assoc, σ_comp, prod.lift_map_assoc, prod.lift_fst, prod.lift_fst, prod.lift_fst]
     

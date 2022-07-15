@@ -38,7 +38,7 @@ We use notation `𝕎 R`, entered `\bbW`, for the Witt vectors over `R`.
 
 noncomputable section
 
--- ././Mathport/Syntax/Translate/Basic.lean:1284:32: infer kinds are unsupported in Lean 4: mk []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1439:34: infer kinds are unsupported in Lean 4: mk []
 /-- `witt_vector p R` is the ring of `p`-typical Witt vectors over the commutative ring `R`,
 where `p` is a prime number.
 
@@ -76,7 +76,7 @@ theorem ext {x y : 𝕎 R} (h : ∀ n, x.coeff n = y.coeff n) : x = y := by
   cases x
   cases y
   simp only at h
-  simp [Function.funext_iffₓ, h]
+  simp [← Function.funext_iffₓ, ← h]
 
 theorem ext_iff {x y : 𝕎 R} : x = y ↔ ∀ n, x.coeff n = y.coeff n :=
   ⟨fun h n => by
@@ -180,10 +180,10 @@ instance : Add (𝕎 R) :=
 instance : Sub (𝕎 R) :=
   ⟨fun x y => eval (wittSub p) ![x, y]⟩
 
-instance hasNatScalar : HasScalar ℕ (𝕎 R) :=
+instance hasNatScalar : HasSmul ℕ (𝕎 R) :=
   ⟨fun n x => eval (wittNsmul p n) ![x]⟩
 
-instance hasIntScalar : HasScalar ℤ (𝕎 R) :=
+instance hasIntScalar : HasSmul ℤ (𝕎 R) :=
   ⟨fun n x => eval (wittZsmul p n) ![x]⟩
 
 instance : Mul (𝕎 R) :=
@@ -195,6 +195,12 @@ instance : Neg (𝕎 R) :=
 instance hasNatPow : Pow (𝕎 R) ℕ :=
   ⟨fun x n => eval (wittPow p n) ![x]⟩
 
+instance : HasNatCast (𝕎 R) :=
+  ⟨Nat.unaryCast⟩
+
+instance : HasIntCast (𝕎 R) :=
+  ⟨Int.castDef⟩
+
 end RingOperations
 
 section WittStructureSimplifications
@@ -202,29 +208,30 @@ section WittStructureSimplifications
 @[simp]
 theorem witt_zero_eq_zero (n : ℕ) : wittZero p n = 0 := by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
-  simp only [witt_zero, wittStructureRat, bind₁, aeval_zero', constant_coeff_X_in_terms_of_W, RingHom.map_zero,
-    AlgHom.map_zero, map_witt_structure_int]
+  simp only [← witt_zero, ← wittStructureRat, ← bind₁, ← aeval_zero', ← constant_coeff_X_in_terms_of_W, ←
+    RingHom.map_zero, ← AlgHom.map_zero, ← map_witt_structure_int]
 
 @[simp]
 theorem witt_one_zero_eq_one : wittOne p 0 = 1 := by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
-  simp only [witt_one, wittStructureRat, X_in_terms_of_W_zero, AlgHom.map_one, RingHom.map_one, bind₁_X_right,
-    map_witt_structure_int]
+  simp only [← witt_one, ← wittStructureRat, ← X_in_terms_of_W_zero, ← AlgHom.map_one, ← RingHom.map_one, ←
+    bind₁_X_right, ← map_witt_structure_int]
 
 @[simp]
 theorem witt_one_pos_eq_zero (n : ℕ) (hn : 0 < n) : wittOne p n = 0 := by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
-  simp only [witt_one, wittStructureRat, RingHom.map_zero, AlgHom.map_one, RingHom.map_one, map_witt_structure_int]
+  simp only [← witt_one, ← wittStructureRat, ← RingHom.map_zero, ← AlgHom.map_one, ← RingHom.map_one, ←
+    map_witt_structure_int]
   revert hn
   apply Nat.strong_induction_onₓ n
   clear n
   intro n IH hn
   rw [X_in_terms_of_W_eq]
-  simp only [AlgHom.map_mul, AlgHom.map_sub, AlgHom.map_sum, AlgHom.map_pow, bind₁_X_right, bind₁_C_right]
+  simp only [← AlgHom.map_mul, ← AlgHom.map_sub, ← AlgHom.map_sum, ← AlgHom.map_pow, ← bind₁_X_right, ← bind₁_C_right]
   rw [sub_mul, one_mulₓ]
   rw [Finset.sum_eq_single 0]
-  · simp only [inv_of_eq_inv, one_mulₓ, inv_pow, tsub_zero, RingHom.map_one, pow_zeroₓ]
-    simp only [one_pow, one_mulₓ, X_in_terms_of_W_zero, sub_self, bind₁_X_right]
+  · simp only [← inv_of_eq_inv, ← one_mulₓ, ← inv_pow, ← tsub_zero, ← RingHom.map_one, ← pow_zeroₓ]
+    simp only [← one_pow, ← one_mulₓ, ← X_in_terms_of_W_zero, ← sub_self, ← bind₁_X_right]
     
   · intro i hin hi0
     rw [Finset.mem_range] at hin
@@ -238,56 +245,56 @@ theorem witt_one_pos_eq_zero (n : ℕ) (hn : 0 < n) : wittOne p n = 0 := by
 @[simp]
 theorem witt_add_zero : wittAdd p 0 = x (0, 0) + x (1, 0) := by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
-  simp only [witt_add, wittStructureRat, AlgHom.map_add, RingHom.map_add, rename_X, X_in_terms_of_W_zero, map_X,
-    witt_polynomial_zero, bind₁_X_right, map_witt_structure_int]
+  simp only [← witt_add, ← wittStructureRat, ← AlgHom.map_add, ← RingHom.map_add, ← rename_X, ← X_in_terms_of_W_zero, ←
+    map_X, ← witt_polynomial_zero, ← bind₁_X_right, ← map_witt_structure_int]
 
 @[simp]
 theorem witt_sub_zero : wittSub p 0 = x (0, 0) - x (1, 0) := by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
-  simp only [witt_sub, wittStructureRat, AlgHom.map_sub, RingHom.map_sub, rename_X, X_in_terms_of_W_zero, map_X,
-    witt_polynomial_zero, bind₁_X_right, map_witt_structure_int]
+  simp only [← witt_sub, ← wittStructureRat, ← AlgHom.map_sub, ← RingHom.map_sub, ← rename_X, ← X_in_terms_of_W_zero, ←
+    map_X, ← witt_polynomial_zero, ← bind₁_X_right, ← map_witt_structure_int]
 
 @[simp]
 theorem witt_mul_zero : wittMul p 0 = x (0, 0) * x (1, 0) := by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
-  simp only [witt_mul, wittStructureRat, rename_X, X_in_terms_of_W_zero, map_X, witt_polynomial_zero, RingHom.map_mul,
-    bind₁_X_right, AlgHom.map_mul, map_witt_structure_int]
+  simp only [← witt_mul, ← wittStructureRat, ← rename_X, ← X_in_terms_of_W_zero, ← map_X, ← witt_polynomial_zero, ←
+    RingHom.map_mul, ← bind₁_X_right, ← AlgHom.map_mul, ← map_witt_structure_int]
 
 @[simp]
 theorem witt_neg_zero : wittNeg p 0 = -x (0, 0) := by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
-  simp only [witt_neg, wittStructureRat, rename_X, X_in_terms_of_W_zero, map_X, witt_polynomial_zero, RingHom.map_neg,
-    AlgHom.map_neg, bind₁_X_right, map_witt_structure_int]
+  simp only [← witt_neg, ← wittStructureRat, ← rename_X, ← X_in_terms_of_W_zero, ← map_X, ← witt_polynomial_zero, ←
+    RingHom.map_neg, ← AlgHom.map_neg, ← bind₁_X_right, ← map_witt_structure_int]
 
 @[simp]
 theorem constant_coeff_witt_add (n : ℕ) : constantCoeff (wittAdd p n) = 0 := by
   apply constant_coeff_witt_structure_int p _ _ n
-  simp only [add_zeroₓ, RingHom.map_add, constant_coeff_X]
+  simp only [← add_zeroₓ, ← RingHom.map_add, ← constant_coeff_X]
 
 @[simp]
 theorem constant_coeff_witt_sub (n : ℕ) : constantCoeff (wittSub p n) = 0 := by
   apply constant_coeff_witt_structure_int p _ _ n
-  simp only [sub_zero, RingHom.map_sub, constant_coeff_X]
+  simp only [← sub_zero, ← RingHom.map_sub, ← constant_coeff_X]
 
 @[simp]
 theorem constant_coeff_witt_mul (n : ℕ) : constantCoeff (wittMul p n) = 0 := by
   apply constant_coeff_witt_structure_int p _ _ n
-  simp only [mul_zero, RingHom.map_mul, constant_coeff_X]
+  simp only [← mul_zero, ← RingHom.map_mul, ← constant_coeff_X]
 
 @[simp]
 theorem constant_coeff_witt_neg (n : ℕ) : constantCoeff (wittNeg p n) = 0 := by
   apply constant_coeff_witt_structure_int p _ _ n
-  simp only [neg_zero, RingHom.map_neg, constant_coeff_X]
+  simp only [← neg_zero, ← RingHom.map_neg, ← constant_coeff_X]
 
 @[simp]
 theorem constant_coeff_witt_nsmul (m : ℕ) (n : ℕ) : constantCoeff (wittNsmul p m n) = 0 := by
   apply constant_coeff_witt_structure_int p _ _ n
-  simp only [smul_zero, map_nsmul, constant_coeff_X]
+  simp only [← smul_zero, ← map_nsmul, ← constant_coeff_X]
 
 @[simp]
 theorem constant_coeff_witt_zsmul (z : ℤ) (n : ℕ) : constantCoeff (wittZsmul p z n) = 0 := by
   apply constant_coeff_witt_structure_int p _ _ n
-  simp only [smul_zero, map_zsmul, constant_coeff_X]
+  simp only [← smul_zero, ← map_zsmul, ← constant_coeff_X]
 
 end WittStructureSimplifications
 
@@ -298,23 +305,23 @@ variable (p R)
 @[simp]
 theorem zero_coeff (n : ℕ) : (0 : 𝕎 R).coeff n = 0 :=
   show (aeval _ (wittZero p n) : R) = 0 by
-    simp only [witt_zero_eq_zero, AlgHom.map_zero]
+    simp only [← witt_zero_eq_zero, ← AlgHom.map_zero]
 
 @[simp]
 theorem one_coeff_zero : (1 : 𝕎 R).coeff 0 = 1 :=
   show (aeval _ (wittOne p 0) : R) = 1 by
-    simp only [witt_one_zero_eq_one, AlgHom.map_one]
+    simp only [← witt_one_zero_eq_one, ← AlgHom.map_one]
 
 @[simp]
 theorem one_coeff_eq_of_pos (n : ℕ) (hn : 0 < n) : coeff (1 : 𝕎 R) n = 0 :=
   show (aeval _ (wittOne p n) : R) = 0 by
-    simp only [hn, witt_one_pos_eq_zero, AlgHom.map_zero]
+    simp only [← hn, ← witt_one_pos_eq_zero, ← AlgHom.map_zero]
 
 variable {p R}
 
 omit hp
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 @[simp]
 theorem v2_coeff {p' R'} (x y : WittVector p' R') (i : Finₓ 2) : (![x, y] i).coeff = ![x.coeff, y.coeff] i := by
   fin_cases i <;> simp
@@ -322,31 +329,31 @@ theorem v2_coeff {p' R'} (x y : WittVector p' R') (i : Finₓ 2) : (![x, y] i).c
 include hp
 
 theorem add_coeff (x y : 𝕎 R) (n : ℕ) : (x + y).coeff n = peval (wittAdd p n) ![x.coeff, y.coeff] := by
-  simp [(· + ·), eval]
+  simp [← (· + ·), ← eval]
 
 theorem sub_coeff (x y : 𝕎 R) (n : ℕ) : (x - y).coeff n = peval (wittSub p n) ![x.coeff, y.coeff] := by
-  simp [Sub.sub, eval]
+  simp [← Sub.sub, ← eval]
 
 theorem mul_coeff (x y : 𝕎 R) (n : ℕ) : (x * y).coeff n = peval (wittMul p n) ![x.coeff, y.coeff] := by
-  simp [(· * ·), eval]
+  simp [← (· * ·), ← eval]
 
 theorem neg_coeff (x : 𝕎 R) (n : ℕ) : (-x).coeff n = peval (wittNeg p n) ![x.coeff] := by
-  simp [Neg.neg, eval, Matrix.cons_fin_one]
+  simp [← Neg.neg, ← eval, ← Matrix.cons_fin_one]
 
 theorem nsmul_coeff (m : ℕ) (x : 𝕎 R) (n : ℕ) : (m • x).coeff n = peval (wittNsmul p m n) ![x.coeff] := by
-  simp [HasScalar.smul, eval, Matrix.cons_fin_one]
+  simp [← HasSmul.smul, ← eval, ← Matrix.cons_fin_one]
 
 theorem zsmul_coeff (m : ℤ) (x : 𝕎 R) (n : ℕ) : (m • x).coeff n = peval (wittZsmul p m n) ![x.coeff] := by
-  simp [HasScalar.smul, eval, Matrix.cons_fin_one]
+  simp [← HasSmul.smul, ← eval, ← Matrix.cons_fin_one]
 
 theorem pow_coeff (m : ℕ) (x : 𝕎 R) (n : ℕ) : (x ^ m).coeff n = peval (wittPow p m n) ![x.coeff] := by
-  simp [Pow.pow, eval, Matrix.cons_fin_one]
+  simp [← Pow.pow, ← eval, ← Matrix.cons_fin_one]
 
 theorem add_coeff_zero (x y : 𝕎 R) : (x + y).coeff 0 = x.coeff 0 + y.coeff 0 := by
-  simp [add_coeff, peval]
+  simp [← add_coeff, ← peval]
 
 theorem mul_coeff_zero (x y : 𝕎 R) : (x * y).coeff 0 = x.coeff 0 * y.coeff 0 := by
-  simp [mul_coeff, peval]
+  simp [← mul_coeff, ← peval]
 
 end Coeff
 

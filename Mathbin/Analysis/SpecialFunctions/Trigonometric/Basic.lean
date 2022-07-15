@@ -122,20 +122,20 @@ localized [Real] notation "π" => Real.pi
 
 @[simp]
 theorem cos_pi_div_two : cos (π / 2) = 0 := by
-  rw [Real.pi, mul_div_cancel_left _ (@two_ne_zero' ℝ _ _ _)] <;> exact (Classical.some_spec exists_cos_eq_zero).2
+  rw [Real.pi, mul_div_cancel_left _ (@two_ne_zero' ℝ _ _)] <;> exact (Classical.some_spec exists_cos_eq_zero).2
 
 theorem one_le_pi_div_two : (1 : ℝ) ≤ π / 2 := by
-  rw [Real.pi, mul_div_cancel_left _ (@two_ne_zero' ℝ _ _ _)] <;> exact (Classical.some_spec exists_cos_eq_zero).1.1
+  rw [Real.pi, mul_div_cancel_left _ (@two_ne_zero' ℝ _ _)] <;> exact (Classical.some_spec exists_cos_eq_zero).1.1
 
 theorem pi_div_two_le_two : π / 2 ≤ 2 := by
-  rw [Real.pi, mul_div_cancel_left _ (@two_ne_zero' ℝ _ _ _)] <;> exact (Classical.some_spec exists_cos_eq_zero).1.2
+  rw [Real.pi, mul_div_cancel_left _ (@two_ne_zero' ℝ _ _)] <;> exact (Classical.some_spec exists_cos_eq_zero).1.2
 
 theorem two_le_pi : (2 : ℝ) ≤ π :=
   (div_le_div_right
         (show (0 : ℝ) < 2 by
           norm_num)).1
     (by
-      rw [div_self (@two_ne_zero' ℝ _ _ _)] <;> exact one_le_pi_div_two)
+      rw [div_self (@two_ne_zero' ℝ _ _)] <;> exact one_le_pi_div_two)
 
 theorem pi_le_four : π ≤ 4 :=
   (div_le_div_right
@@ -197,18 +197,18 @@ theorem sin_pi : sin π = 0 := by
 @[simp]
 theorem cos_pi : cos π = -1 := by
   rw [← mul_div_cancel_left π (@two_ne_zero ℝ _ _), mul_div_assoc, cos_two_mul, cos_pi_div_two] <;>
-    simp [bit0, pow_addₓ]
+    simp [← bit0, ← pow_addₓ]
 
 @[simp]
 theorem sin_two_pi : sin (2 * π) = 0 := by
-  simp [two_mul, sin_add]
+  simp [← two_mul, ← sin_add]
 
 @[simp]
 theorem cos_two_pi : cos (2 * π) = 1 := by
-  simp [two_mul, cos_add]
+  simp [← two_mul, ← cos_add]
 
 theorem sin_antiperiodic : Function.Antiperiodic sin π := by
-  simp [sin_add]
+  simp [← sin_add]
 
 theorem sin_periodic : Function.Periodic sin (2 * π) :=
   sin_antiperiodic.Periodic
@@ -270,7 +270,7 @@ theorem sin_int_mul_two_pi_sub (x : ℝ) (n : ℤ) : sin (n * (2 * π) - x) = -s
   sin_neg x ▸ sin_periodic.int_mul_sub_eq n
 
 theorem cos_antiperiodic : Function.Antiperiodic cos π := by
-  simp [cos_add]
+  simp [← cos_add]
 
 theorem cos_periodic : Function.Periodic cos (2 * π) :=
   cos_antiperiodic.Periodic
@@ -333,19 +333,19 @@ theorem cos_int_mul_two_pi_sub (x : ℝ) (n : ℤ) : cos (n * (2 * π) - x) = co
 
 @[simp]
 theorem cos_nat_mul_two_pi_add_pi (n : ℕ) : cos (n * (2 * π) + π) = -1 := by
-  simpa only [cos_zero] using (cos_periodic.nat_mul n).add_antiperiod_eq cos_antiperiodic
+  simpa only [← cos_zero] using (cos_periodic.nat_mul n).add_antiperiod_eq cos_antiperiodic
 
 @[simp]
 theorem cos_int_mul_two_pi_add_pi (n : ℤ) : cos (n * (2 * π) + π) = -1 := by
-  simpa only [cos_zero] using (cos_periodic.int_mul n).add_antiperiod_eq cos_antiperiodic
+  simpa only [← cos_zero] using (cos_periodic.int_mul n).add_antiperiod_eq cos_antiperiodic
 
 @[simp]
 theorem cos_nat_mul_two_pi_sub_pi (n : ℕ) : cos (n * (2 * π) - π) = -1 := by
-  simpa only [cos_zero] using (cos_periodic.nat_mul n).sub_antiperiod_eq cos_antiperiodic
+  simpa only [← cos_zero] using (cos_periodic.nat_mul n).sub_antiperiod_eq cos_antiperiodic
 
 @[simp]
 theorem cos_int_mul_two_pi_sub_pi (n : ℤ) : cos (n * (2 * π) - π) = -1 := by
-  simpa only [cos_zero] using (cos_periodic.int_mul n).sub_antiperiod_eq cos_antiperiodic
+  simpa only [← cos_zero] using (cos_periodic.int_mul n).sub_antiperiod_eq cos_antiperiodic
 
 theorem sin_pos_of_pos_of_lt_pi {x : ℝ} (h0x : 0 < x) (hxp : x < π) : 0 < sin x :=
   if hx2 : x ≤ 2 then sin_pos_of_pos_of_le_two h0x hx2
@@ -373,26 +373,26 @@ theorem sin_nonpos_of_nonnpos_of_neg_pi_le {x : ℝ} (hx0 : x ≤ 0) (hpx : -π 
 @[simp]
 theorem sin_pi_div_two : sin (π / 2) = 1 :=
   have : sin (π / 2) = 1 ∨ sin (π / 2) = -1 := by
-    simpa [sq, mul_self_eq_one_iff] using sin_sq_add_cos_sq (π / 2)
+    simpa [← sq, ← mul_self_eq_one_iff] using sin_sq_add_cos_sq (π / 2)
   this.resolve_right fun h =>
     show ¬(0 : ℝ) < -1 by
         norm_num <|
       h ▸ sin_pos_of_pos_of_lt_pi pi_div_two_pos (half_lt_self pi_pos)
 
 theorem sin_add_pi_div_two (x : ℝ) : sin (x + π / 2) = cos x := by
-  simp [sin_add]
+  simp [← sin_add]
 
 theorem sin_sub_pi_div_two (x : ℝ) : sin (x - π / 2) = -cos x := by
-  simp [sub_eq_add_neg, sin_add]
+  simp [← sub_eq_add_neg, ← sin_add]
 
 theorem sin_pi_div_two_sub (x : ℝ) : sin (π / 2 - x) = cos x := by
-  simp [sub_eq_add_neg, sin_add]
+  simp [← sub_eq_add_neg, ← sin_add]
 
 theorem cos_add_pi_div_two (x : ℝ) : cos (x + π / 2) = -sin x := by
-  simp [cos_add]
+  simp [← cos_add]
 
 theorem cos_sub_pi_div_two (x : ℝ) : cos (x - π / 2) = sin x := by
-  simp [sub_eq_add_neg, cos_add]
+  simp [← sub_eq_add_neg, ← cos_add]
 
 theorem cos_pi_div_two_sub (x : ℝ) : cos (π / 2 - x) = sin x := by
   rw [← cos_neg, neg_sub, cos_sub_pi_div_two]
@@ -452,7 +452,7 @@ theorem sin_eq_zero_iff_of_lt_of_lt {x : ℝ} (hx₁ : -π < x) (hx₂ : x < π)
             _ < 0 := sin_neg_of_neg_of_neg_pi_lt h0 hx₁
             ),
     fun h => by
-    simp [h]⟩
+    simp [← h]⟩
 
 theorem sin_eq_zero_iff {x : ℝ} : sin x = 0 ↔ ∃ n : ℤ, (n : ℝ) * π = x :=
   ⟨fun h =>
@@ -462,7 +462,7 @@ theorem sin_eq_zero_iff {x : ℝ} : sin x = 0 ↔ ∃ n : ℤ, (n : ℝ) * π = 
           le_of_not_gtₓ fun h₃ =>
             (sin_pos_of_pos_of_lt_pi h₃ (sub_floor_div_mul_lt _ pi_pos)).Ne
               (by
-                simp [sub_eq_add_neg, sin_add, h, sin_int_mul_pi]))⟩,
+                simp [← sub_eq_add_neg, ← sin_add, ← h, ← sin_int_mul_pi]))⟩,
     fun ⟨n, hn⟩ => hn ▸ sin_int_mul_pi _⟩
 
 theorem sin_ne_zero_iff {x : ℝ} : sin x ≠ 0 ↔ ∀ n : ℤ, (n : ℝ) * π ≠ x := by
@@ -505,7 +505,7 @@ theorem cos_eq_one_iff_of_lt_of_lt {x : ℝ} (hx₁ : -(2 * π) < x) (hx₂ : x 
         (by
           linarith)
     simp , fun h => by
-    simp [h]⟩
+    simp [← h]⟩
 
 theorem cos_lt_cos_of_nonneg_of_le_pi_div_two {x y : ℝ} (hx₁ : 0 ≤ x) (hy₂ : y ≤ π / 2) (hxy : x < y) : cos y < cos x :=
   by
@@ -575,11 +575,11 @@ theorem inj_on_cos : InjOn cos (Icc 0 π) :=
   strict_anti_on_cos.InjOn
 
 theorem surj_on_sin : SurjOn sin (Icc (-(π / 2)) (π / 2)) (Icc (-1) 1) := by
-  simpa only [sin_neg, sin_pi_div_two] using
+  simpa only [← sin_neg, ← sin_pi_div_two] using
     intermediate_value_Icc (neg_le_self pi_div_two_pos.le) continuous_sin.continuous_on
 
 theorem surj_on_cos : SurjOn cos (Icc 0 π) (Icc (-1) 1) := by
-  simpa only [cos_zero, cos_pi] using intermediate_value_Icc' pi_pos.le continuous_cos.continuous_on
+  simpa only [← cos_zero, ← cos_pi] using intermediate_value_Icc' pi_pos.le continuous_cos.continuous_on
 
 theorem sin_mem_Icc (x : ℝ) : sin x ∈ Icc (-1 : ℝ) 1 :=
   ⟨neg_one_le_sin x, sin_le_one x⟩
@@ -846,7 +846,8 @@ theorem sq_cos_pi_div_six : cos (π / 6) ^ 2 = 3 / 4 := by
 @[simp]
 theorem cos_pi_div_six : cos (π / 6) = sqrt 3 / 2 := by
   suffices sqrt 3 = cos (π / 6) * 2 by
-    field_simp [(by
+    field_simp [←
+      (by
         norm_num : 0 ≠ 2)]
     exact this.symm
   rw [sqrt_eq_iff_sq_eq]
@@ -909,7 +910,7 @@ theorem tan_pi_div_four : tan (π / 4) = 1 := by
 
 @[simp]
 theorem tan_pi_div_two : tan (π / 2) = 0 := by
-  simp [tan_eq_sin_div_cos]
+  simp [← tan_eq_sin_div_cos]
 
 theorem tan_pos_of_pos_of_lt_pi_div_two {x : ℝ} (h0x : 0 < x) (hxp : x < π / 2) : 0 < tan x := by
   rw [tan_eq_sin_div_cos] <;>
@@ -926,9 +927,9 @@ theorem tan_nonneg_of_nonneg_of_le_pi_div_two {x : ℝ} (h0x : 0 ≤ x) (hxp : x
   match lt_or_eq_of_leₓ h0x, lt_or_eq_of_leₓ hxp with
   | Or.inl hx0, Or.inl hxp => le_of_ltₓ (tan_pos_of_pos_of_lt_pi_div_two hx0 hxp)
   | Or.inl hx0, Or.inr hxp => by
-    simp [hxp, tan_eq_sin_div_cos]
+    simp [← hxp, ← tan_eq_sin_div_cos]
   | Or.inr hx0, _ => by
-    simp [hx0.symm]
+    simp [← hx0.symm]
 
 theorem tan_neg_of_neg_of_pi_div_two_lt {x : ℝ} (hx0 : x < 0) (hpx : -(π / 2) < x) : tan x < 0 :=
   neg_pos.1
@@ -1001,7 +1002,7 @@ theorem tan_inj_of_lt_of_lt_pi_div_two {x y : ℝ} (hx₁ : -(π / 2) < x) (hx�
   inj_on_tan ⟨hx₁, hx₂⟩ ⟨hy₁, hy₂⟩ hxy
 
 theorem tan_periodic : Function.Periodic tan π := by
-  simpa only [Function.Periodic, tan_eq_sin_div_cos] using sin_antiperiodic.div cos_antiperiodic
+  simpa only [← Function.Periodic, ← tan_eq_sin_div_cos] using sin_antiperiodic.div cos_antiperiodic
 
 theorem tan_add_pi (x : ℝ) : tan (x + π) = tan x :=
   tan_periodic x
@@ -1051,7 +1052,7 @@ theorem tendsto_cos_pi_div_two : Tendsto cos (𝓝[<] (π / 2)) (𝓝[>] 0) := b
 
 theorem tendsto_tan_pi_div_two : Tendsto tan (𝓝[<] (π / 2)) atTop := by
   convert tendsto_cos_pi_div_two.inv_tendsto_zero.at_top_mul zero_lt_one tendsto_sin_pi_div_two
-  simp only [Pi.inv_apply, ← div_eq_inv_mul, ← tan_eq_sin_div_cos]
+  simp only [← Pi.inv_apply, div_eq_inv_mul, tan_eq_sin_div_cos]
 
 theorem tendsto_sin_neg_pi_div_two : Tendsto sin (𝓝[>] -(π / 2)) (𝓝 (-1)) := by
   convert continuous_sin.continuous_within_at
@@ -1072,7 +1073,7 @@ theorem tendsto_tan_neg_pi_div_two : Tendsto tan (𝓝[>] -(π / 2)) atBot := by
       (by
         norm_num)
       tendsto_sin_neg_pi_div_two
-  simp only [Pi.inv_apply, ← div_eq_inv_mul, ← tan_eq_sin_div_cos]
+  simp only [← Pi.inv_apply, div_eq_inv_mul, tan_eq_sin_div_cos]
 
 end Real
 
@@ -1114,14 +1115,14 @@ theorem cos_pi : cos π = -1 := by
 
 @[simp]
 theorem sin_two_pi : sin (2 * π) = 0 := by
-  simp [two_mul, sin_add]
+  simp [← two_mul, ← sin_add]
 
 @[simp]
 theorem cos_two_pi : cos (2 * π) = 1 := by
-  simp [two_mul, cos_add]
+  simp [← two_mul, ← cos_add]
 
 theorem sin_antiperiodic : Function.Antiperiodic sin π := by
-  simp [sin_add]
+  simp [← sin_add]
 
 theorem sin_periodic : Function.Periodic sin (2 * π) :=
   sin_antiperiodic.Periodic
@@ -1169,7 +1170,7 @@ theorem sin_int_mul_two_pi_sub (x : ℂ) (n : ℤ) : sin (n * (2 * π) - x) = -s
   sin_neg x ▸ sin_periodic.int_mul_sub_eq n
 
 theorem cos_antiperiodic : Function.Antiperiodic cos π := by
-  simp [cos_add]
+  simp [← cos_add]
 
 theorem cos_periodic : Function.Periodic cos (2 * π) :=
   cos_antiperiodic.Periodic
@@ -1217,37 +1218,37 @@ theorem cos_int_mul_two_pi_sub (x : ℂ) (n : ℤ) : cos (n * (2 * π) - x) = co
   cos_neg x ▸ cos_periodic.int_mul_sub_eq n
 
 theorem cos_nat_mul_two_pi_add_pi (n : ℕ) : cos (n * (2 * π) + π) = -1 := by
-  simpa only [cos_zero] using (cos_periodic.nat_mul n).add_antiperiod_eq cos_antiperiodic
+  simpa only [← cos_zero] using (cos_periodic.nat_mul n).add_antiperiod_eq cos_antiperiodic
 
 theorem cos_int_mul_two_pi_add_pi (n : ℤ) : cos (n * (2 * π) + π) = -1 := by
-  simpa only [cos_zero] using (cos_periodic.int_mul n).add_antiperiod_eq cos_antiperiodic
+  simpa only [← cos_zero] using (cos_periodic.int_mul n).add_antiperiod_eq cos_antiperiodic
 
 theorem cos_nat_mul_two_pi_sub_pi (n : ℕ) : cos (n * (2 * π) - π) = -1 := by
-  simpa only [cos_zero] using (cos_periodic.nat_mul n).sub_antiperiod_eq cos_antiperiodic
+  simpa only [← cos_zero] using (cos_periodic.nat_mul n).sub_antiperiod_eq cos_antiperiodic
 
 theorem cos_int_mul_two_pi_sub_pi (n : ℤ) : cos (n * (2 * π) - π) = -1 := by
-  simpa only [cos_zero] using (cos_periodic.int_mul n).sub_antiperiod_eq cos_antiperiodic
+  simpa only [← cos_zero] using (cos_periodic.int_mul n).sub_antiperiod_eq cos_antiperiodic
 
 theorem sin_add_pi_div_two (x : ℂ) : sin (x + π / 2) = cos x := by
-  simp [sin_add]
+  simp [← sin_add]
 
 theorem sin_sub_pi_div_two (x : ℂ) : sin (x - π / 2) = -cos x := by
-  simp [sub_eq_add_neg, sin_add]
+  simp [← sub_eq_add_neg, ← sin_add]
 
 theorem sin_pi_div_two_sub (x : ℂ) : sin (π / 2 - x) = cos x := by
-  simp [sub_eq_add_neg, sin_add]
+  simp [← sub_eq_add_neg, ← sin_add]
 
 theorem cos_add_pi_div_two (x : ℂ) : cos (x + π / 2) = -sin x := by
-  simp [cos_add]
+  simp [← cos_add]
 
 theorem cos_sub_pi_div_two (x : ℂ) : cos (x - π / 2) = sin x := by
-  simp [sub_eq_add_neg, cos_add]
+  simp [← sub_eq_add_neg, ← cos_add]
 
 theorem cos_pi_div_two_sub (x : ℂ) : cos (π / 2 - x) = sin x := by
   rw [← cos_neg, neg_sub, cos_sub_pi_div_two]
 
 theorem tan_periodic : Function.Periodic tan π := by
-  simpa only [tan_eq_sin_div_cos] using sin_antiperiodic.div cos_antiperiodic
+  simpa only [← tan_eq_sin_div_cos] using sin_antiperiodic.div cos_antiperiodic
 
 theorem tan_add_pi (x : ℂ) : tan (x + π) = tan x :=
   tan_periodic x
@@ -1283,13 +1284,13 @@ theorem tan_int_mul_pi_sub (x : ℂ) (n : ℤ) : tan (n * π - x) = -tan x :=
   tan_neg x ▸ tan_periodic.int_mul_sub_eq n
 
 theorem exp_antiperiodic : Function.Antiperiodic exp (π * I) := by
-  simp [exp_add, exp_mul_I]
+  simp [← exp_add, ← exp_mul_I]
 
 theorem exp_periodic : Function.Periodic exp (2 * π * I) :=
   (mul_assoc (2 : ℂ) π i).symm ▸ exp_antiperiodic.Periodic
 
 theorem exp_mul_I_antiperiodic : Function.Antiperiodic (fun x => exp (x * I)) π := by
-  simpa only [mul_inv_cancel_right₀ I_ne_zero] using exp_antiperiodic.mul_const I_ne_zero
+  simpa only [← mul_inv_cancel_right₀ I_ne_zero] using exp_antiperiodic.mul_const I_ne_zero
 
 theorem exp_mul_I_periodic : Function.Periodic (fun x => exp (x * I)) (2 * π) :=
   exp_mul_I_antiperiodic.Periodic
@@ -1324,8 +1325,8 @@ $$\left|exp^{a\left(e^{z}+e^{-z}\right)}\right| \le e^{a\cos b \exp^{|re z|}}.$$
 -/
 theorem abs_exp_mul_exp_add_exp_neg_le_of_abs_im_le {a b : ℝ} (ha : a ≤ 0) {z : ℂ} (hz : abs z.im ≤ b)
     (hb : b ≤ π / 2) : abs (exp (a * (exp z + exp (-z)))) ≤ Real.exp (a * Real.cos b * Real.exp (abs z.re)) := by
-  simp only [abs_exp, Real.exp_le_exp, of_real_mul_re, add_re, exp_re, neg_im, Real.cos_neg, ← add_mulₓ, mul_assoc,
-    mul_comm (Real.cos b), neg_re, ← Real.cos_abs z.im]
+  simp only [← abs_exp, ← Real.exp_le_exp, ← of_real_mul_re, ← add_re, ← exp_re, ← neg_im, ← Real.cos_neg, add_mulₓ, ←
+    mul_assoc, ← mul_comm (Real.cos b), ← neg_re, Real.cos_abs z.im]
   have : Real.exp (abs z.re) ≤ Real.exp z.re + Real.exp (-z.re) :=
     apply_abs_le_add_of_nonneg (fun x => (Real.exp_pos x).le) z.re
   refine' mul_le_mul_of_nonpos_left (mul_le_mul this _ _ ((Real.exp_pos _).le.trans this)) ha

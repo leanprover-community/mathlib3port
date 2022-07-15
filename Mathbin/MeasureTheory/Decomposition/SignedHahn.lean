@@ -200,7 +200,7 @@ private theorem measure_of_restrict_nonpos_seq (hi₂ : ¬s ≤[i] 0) (n : ℕ)
         mt
           (restrict_le_zero_subset _ _
             (by
-              simp [Nat.lt_succ_iffₓ]))
+              simp [← Nat.lt_succ_iffₓ]))
           hn
       convert measurable_of_not_restrict_le_zero _ hn
       exact
@@ -270,7 +270,7 @@ private theorem exists_subset_restrict_nonpos' (hi₁ : MeasurableSet i) (hi₂ 
       
     · convert le_of_eqₓ s.empty.symm
       ext
-      simp only [exists_prop, Set.mem_empty_eq, Set.mem_Union, not_and, iff_falseₓ]
+      simp only [← exists_prop, ← Set.mem_empty_eq, ← Set.mem_Union, ← not_and, ← iff_falseₓ]
       exact fun h' => False.elim (h h')
       
     
@@ -278,14 +278,14 @@ private theorem exists_subset_restrict_nonpos' (hi₁ : MeasurableSet i) (hi₂ 
     exact MeasurableSet.Union_Prop fun _ => restrict_nonpos_seq_measurable_set _
     
   · intro a b hab x hx
-    simp only [exists_prop, Set.mem_Union, Set.mem_inter_eq, Set.inf_eq_inter] at hx
+    simp only [← exists_prop, ← Set.mem_Union, ← Set.mem_inter_eq, ← Set.inf_eq_inter] at hx
     exact
       let ⟨⟨_, hx₁⟩, _, hx₂⟩ := hx
       restrict_nonpos_seq_disjoint a b hab ⟨hx₁, hx₂⟩
     
   · apply Set.Union_subset
     intro a x
-    simp only [and_imp, exists_prop, Set.mem_Union]
+    simp only [← and_imp, ← exists_prop, ← Set.mem_Union]
     intro _ hx
     exact restrict_nonpos_seq_subset _ hx
     
@@ -308,7 +308,7 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) : ∃ j : Set α, Measurabl
     intro n
     convert hn (n + 1) <;>
       · ext l
-        simp only [exists_prop, Set.mem_Union, And.congr_left_iff]
+        simp only [← exists_prop, ← Set.mem_Union, ← And.congr_left_iff]
         exact fun _ => nat.lt_succ_iff.symm
         
   have h₁ : s i = s A + ∑' l, s (restrict_nonpos_seq s i l) := by
@@ -329,7 +329,7 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) : ∃ j : Set α, Measurabl
     · exact le_of_ltₓ (restrict_nonpos_seq_lt n (hn' n))
       
   have h₃ : tendsto (fun n => (bdd n : ℝ) + 1) at_top at_top := by
-    simp only [one_div] at h₃'
+    simp only [← one_div] at h₃'
     exact Summable.tendsto_top_of_pos h₃' fun n => Nat.cast_add_one_pos (bdd n)
   have h₄ : tendsto (fun n => (bdd n : ℝ)) at_top at_top := by
     convert at_top.tendsto_at_top_add_const_right (-1) h₃
@@ -357,7 +357,7 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) : ∃ j : Set α, Measurabl
   have hA' : A ⊆ i \ ⋃ l ≤ k, restrict_nonpos_seq s i l := by
     apply Set.diff_subset_diff_right
     intro x
-    simp only [Set.mem_Union]
+    simp only [← Set.mem_Union]
     rintro ⟨n, _, hn₂⟩
     exact ⟨n, hn₂⟩
   refine' find_exists_one_div_lt_min (hn' k) (Buffer.lt_aux_2 hk₁) ⟨E, Set.Subset.trans hE₂ hA', hE₁, _⟩
@@ -453,7 +453,7 @@ complement measurable sets `i` and `j` such that `i` is positive, `j` is negativ
 theorem exists_is_compl_positive_negative (s : SignedMeasure α) :
     ∃ i j : Set α, MeasurableSet i ∧ 0 ≤[i] s ∧ MeasurableSet j ∧ s ≤[j] 0 ∧ IsCompl i j :=
   let ⟨i, hi₁, hi₂, hi₃⟩ := exists_compl_positive_negative s
-  ⟨i, iᶜ, hi₁, hi₂, hi₁.Compl, hi₃, is_compl_compl⟩
+  ⟨i, iᶜ, hi₁, hi₂, hi₁.compl, hi₃, is_compl_compl⟩
 
 /-- The symmetric difference of two Hahn decompositions has measure zero. -/
 theorem of_symm_diff_compl_positive_negative {s : SignedMeasure α} {i j : Set α} (hi : MeasurableSet i)

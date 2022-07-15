@@ -90,8 +90,8 @@ def preorderToCat : Preorderₓₓ.{u} ⥤ Cat where
     apply CategoryTheory.Functor.ext
     tidy
 
-instance : Faithful preorderToCat.{u} where
-  map_injective' := fun X Y f g h => by
+instance :
+    Faithful preorderToCat.{u} where map_injective' := fun X Y f g h => by
     ext x
     exact functor.congr_obj h x
 

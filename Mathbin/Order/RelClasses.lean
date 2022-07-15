@@ -75,7 +75,7 @@ theorem IsTotal.swap r [IsTotal α r] : IsTotal α (swap r) :=
 
 theorem IsTrichotomous.swap r [IsTrichotomous α r] : IsTrichotomous α (swap r) :=
   ⟨fun a b => by
-    simpa [swap, Or.comm, Or.left_comm] using trichotomous_of r a b⟩
+    simpa [← swap, ← Or.comm, ← Or.left_comm] using trichotomous_of r a b⟩
 
 theorem IsPreorder.swap r [IsPreorder α r] : IsPreorder α (swap r) :=
   { @IsRefl.swap α r _, @IsTrans.swap α r _ with }
@@ -110,6 +110,20 @@ theorem ne_of_irrefl {r} [IsIrrefl α r] : ∀ {x y : α}, r x y → x ≠ y
 
 theorem ne_of_irrefl' {r} [IsIrrefl α r] : ∀ {x y : α}, r x y → y ≠ x
   | _, _, h, rfl => irrefl _ h
+
+theorem not_rel r [IsIrrefl α r] [Subsingleton α] x y : ¬r x y :=
+  Subsingleton.elimₓ x y ▸ irrefl x
+
+@[simp]
+theorem empty_relation_apply (a b : α) : EmptyRelation a b ↔ False :=
+  Iff.rfl
+
+theorem eq_empty_relation r [IsIrrefl α r] [Subsingleton α] : r = EmptyRelation :=
+  funext₂ <| by
+    simpa using not_rel r
+
+instance : IsIrrefl α EmptyRelation :=
+  ⟨fun a => id⟩
 
 theorem trans_trichotomous_left [IsTrans α r] [IsTrichotomous α r] {a b c : α} : ¬r b a → r b c → r a c := by
   intro h₁ h₂
@@ -196,7 +210,7 @@ class IsOrderConnected (α : Type u) (lt : α → α → Prop) : Prop where
 theorem IsOrderConnected.neg_trans {r : α → α → Prop} [IsOrderConnected α r] {a b c} (h₁ : ¬r a b) (h₂ : ¬r b c) :
     ¬r a c :=
   mt (IsOrderConnected.conn a b c) <| by
-    simp [h₁, h₂]
+    simp [← h₁, ← h₂]
 
 theorem is_strict_weak_order_of_is_order_connected [IsAsymm α r] [IsOrderConnected α r] : IsStrictWeakOrder α r :=
   { @IsAsymm.is_irrefl α r _ with trans := fun a b c h₁ h₂ => (IsOrderConnected.conn _ c _ h₁).resolve_right (asymm h₂),
@@ -272,11 +286,13 @@ def IsWellOrder.toHasWellFounded [LT α] [hwo : IsWellOrder α (· < ·)] : HasW
   R := (· < ·)
   wf := hwo.wf
 
-instance EmptyRelation.is_well_order [Subsingleton α] : IsWellOrder α EmptyRelation where
-  trichotomous := fun a b => Or.inr <| Or.inl <| Subsingleton.elimₓ _ _
-  irrefl := fun a => id
-  trans := fun a b c => False.elim
-  wf := ⟨fun a => ⟨_, fun y => False.elim⟩⟩
+-- This isn't made into an instance as it loops with `is_irrefl α r`.
+theorem Subsingleton.is_well_order [Subsingleton α] (r : α → α → Prop) [hr : IsIrrefl α r] : IsWellOrder α r :=
+  { hr with trichotomous := fun a b => Or.inr <| Or.inl <| Subsingleton.elimₓ a b,
+    trans := fun a b c h => (not_rel r a b h).elim, wf := ⟨fun a => ⟨_, fun y h => (not_rel r y a h).elim⟩⟩ }
+
+instance EmptyRelation.is_well_order [Subsingleton α] : IsWellOrder α EmptyRelation :=
+  Subsingleton.is_well_order _
 
 instance (priority := 100) IsEmpty.is_well_order [IsEmpty α] (r : α → α → Prop) : IsWellOrder α r where
   trichotomous := isEmptyElim
@@ -295,7 +311,7 @@ instance Prod.Lex.is_well_order [IsWellOrder α r] [IsWellOrder β s] : IsWellOr
         | Or.inl h => Or.inl <| Prod.Lex.right _ h
         | Or.inr (Or.inr h) => Or.inr <| Or.inr <| Prod.Lex.right _ h
         | Or.inr (Or.inl e) => e ▸ Or.inr <| Or.inl rfl
-  irrefl := fun h => by
+  irrefl := fun ⟨a₁, a₂⟩ h => by
     cases' h with _ _ _ _ h _ _ _ h <;> [exact irrefl _ h, exact irrefl _ h]
   trans := fun a b c h₁ h₂ => by
     cases' h₁ with a₁ a₂ b₁ b₂ ab a₁ b₁ b₂ ab <;> cases' h₂ with _ _ c₁ c₂ bc _ _ c₂ bc
@@ -321,11 +337,14 @@ def Bounded (r : α → α → Prop) (s : Set α) : Prop :=
 
 @[simp]
 theorem not_bounded_iff {r : α → α → Prop} (s : Set α) : ¬Bounded r s ↔ Unbounded r s := by
-  simp only [bounded, unbounded, not_forall, not_exists, exists_prop, not_and, not_not]
+  simp only [← bounded, ← unbounded, ← not_forall, ← not_exists, ← exists_prop, ← not_and, ← not_not]
 
 @[simp]
 theorem not_unbounded_iff {r : α → α → Prop} (s : Set α) : ¬Unbounded r s ↔ Bounded r s := by
   rw [not_iff_comm, not_bounded_iff]
+
+theorem unbounded_of_is_empty [IsEmpty α] {r : α → α → Prop} (s : Set α) : Unbounded r s :=
+  isEmptyElim
 
 end Set
 
@@ -538,11 +557,9 @@ instance [Preorderₓ α] : IsTrans α (· ≤ ·) :=
 instance [Preorderₓ α] : IsTrans α (· ≥ ·) :=
   IsTrans.swap _
 
-instance [Preorderₓ α] : IsPreorder α (· ≤ ·) :=
-  {  }
+instance [Preorderₓ α] : IsPreorder α (· ≤ ·) where
 
-instance [Preorderₓ α] : IsPreorder α (· ≥ ·) :=
-  {  }
+instance [Preorderₓ α] : IsPreorder α (· ≥ ·) where
 
 instance [Preorderₓ α] : IsIrrefl α (· < ·) :=
   ⟨lt_irreflₓ⟩
@@ -568,11 +585,9 @@ instance [Preorderₓ α] : IsAntisymm α (· < ·) :=
 instance [Preorderₓ α] : IsAntisymm α (· > ·) :=
   IsAsymm.is_antisymm _
 
-instance [Preorderₓ α] : IsStrictOrder α (· < ·) :=
-  {  }
+instance [Preorderₓ α] : IsStrictOrder α (· < ·) where
 
-instance [Preorderₓ α] : IsStrictOrder α (· > ·) :=
-  {  }
+instance [Preorderₓ α] : IsStrictOrder α (· > ·) where
 
 instance [Preorderₓ α] : IsNonstrictStrictOrder α (· ≤ ·) (· < ·) :=
   ⟨@lt_iff_le_not_leₓ _ _⟩
@@ -583,11 +598,9 @@ instance [PartialOrderₓ α] : IsAntisymm α (· ≤ ·) :=
 instance [PartialOrderₓ α] : IsAntisymm α (· ≥ ·) :=
   IsAntisymm.swap _
 
-instance [PartialOrderₓ α] : IsPartialOrder α (· ≤ ·) :=
-  {  }
+instance [PartialOrderₓ α] : IsPartialOrder α (· ≤ ·) where
 
-instance [PartialOrderₓ α] : IsPartialOrder α (· ≥ ·) :=
-  {  }
+instance [PartialOrderₓ α] : IsPartialOrder α (· ≥ ·) where
 
 instance [LinearOrderₓ α] : IsTotal α (· ≤ ·) :=
   ⟨le_totalₓ⟩
@@ -598,14 +611,11 @@ instance [LinearOrderₓ α] : IsTotal α (· ≥ ·) :=
 instance LinearOrderₓ.is_total_preorder [LinearOrderₓ α] : IsTotalPreorder α (· ≤ ·) := by
   infer_instance
 
-instance [LinearOrderₓ α] : IsTotalPreorder α (· ≥ ·) :=
-  {  }
+instance [LinearOrderₓ α] : IsTotalPreorder α (· ≥ ·) where
 
-instance [LinearOrderₓ α] : IsLinearOrder α (· ≤ ·) :=
-  {  }
+instance [LinearOrderₓ α] : IsLinearOrder α (· ≤ ·) where
 
-instance [LinearOrderₓ α] : IsLinearOrder α (· ≥ ·) :=
-  {  }
+instance [LinearOrderₓ α] : IsLinearOrder α (· ≥ ·) where
 
 instance [LinearOrderₓ α] : IsTrichotomous α (· < ·) :=
   ⟨lt_trichotomyₓ⟩
@@ -622,8 +632,7 @@ instance [LinearOrderₓ α] : IsTrichotomous α (· ≥ ·) :=
 instance [LinearOrderₓ α] : IsStrictTotalOrder α (· < ·) := by
   infer_instance
 
-instance [LinearOrderₓ α] : IsStrictTotalOrder' α (· < ·) :=
-  {  }
+instance [LinearOrderₓ α] : IsStrictTotalOrder' α (· < ·) where
 
 instance [LinearOrderₓ α] : IsOrderConnected α (· < ·) := by
   infer_instance

@@ -156,8 +156,7 @@ variable (P : PrelocalPredicate T)
 /-- The natural transformation including the subpresheaf of functions satisfying a local predicate
 into the presheaf of all functions.
 -/
-def subtype : subpresheafToTypes P ⟶ presheafToTypes X T where
-  app := fun U f => f.1
+def subtype : subpresheafToTypes P ⟶ presheafToTypes X T where app := fun U f => f.1
 
 open Top.Presheaf
 
@@ -218,7 +217,7 @@ def stalkToFiber (P : LocalPredicate T) (x : X) : (subsheafToTypes P).1.stalk x 
 @[simp]
 theorem stalk_to_fiber_germ (P : LocalPredicate T) (U : Opens X) (x : U) f :
     stalkToFiber P x ((subsheafToTypes P).1.germ x f) = f.1 x := by
-  dsimp' [presheaf.germ, stalk_to_fiber]
+  dsimp' [← presheaf.germ, ← stalk_to_fiber]
   cases x
   simp
   rfl
@@ -259,7 +258,7 @@ theorem stalk_to_fiber_injective (P : LocalPredicate T) (x : X)
   obtain ⟨V, ⟨fV, hV⟩, rfl⟩ := jointly_surjective'.{v, v} tV
   · -- Decompose everything into its constituent parts:
     dsimp'
-    simp only [stalk_to_fiber, types.colimit.ι_desc_apply'] at h
+    simp only [← stalk_to_fiber, ← types.colimit.ι_desc_apply'] at h
     specialize w (unop U) (unop V) fU hU fV hV h
     rcases w with ⟨W, iU, iV, w⟩
     -- and put it back together again in the correct order.

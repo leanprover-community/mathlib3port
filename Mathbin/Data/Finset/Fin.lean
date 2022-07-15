@@ -27,7 +27,7 @@ def finRange (n : ℕ) : Finset (Finₓ n) :=
 
 @[simp]
 theorem fin_range_card : (finRange n).card = n := by
-  simp [fin_range]
+  simp [← fin_range]
 
 @[simp]
 theorem mem_fin_range (m : Finₓ n) : m ∈ finRange n :=

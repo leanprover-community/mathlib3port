@@ -24,6 +24,11 @@ This file defines upper and lower sets in an order.
 * `lower_set.Iic`: Principal lower set. `set.Iic` as an lower set.
 * `lower_set.Iio`: Strict principal lower set. `set.Iio` as an lower set.
 
+## Notes
+
+Upper sets are ordered by **reverse** inclusion. This convention is motivated by the fact that this
+makes them order-isomorphic to lower sets and antichains, and matches the convention on `filter`.
+
 ## TODO
 
 Lattice structure on antichains. Order equivalence between upper/lower sets and antichains.
@@ -81,11 +86,11 @@ theorem is_upper_set_Union {f : ι → Set α} (hf : ∀ i, IsUpperSet (f i)) : 
 theorem is_lower_set_Union {f : ι → Set α} (hf : ∀ i, IsLowerSet (f i)) : IsLowerSet (⋃ i, f i) := fun a b h =>
   Exists₂.imp <| forall_range_iff.2 fun i => hf i h
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 theorem is_upper_set_Union₂ {f : ∀ i, κ i → Set α} (hf : ∀ i j, IsUpperSet (f i j)) : IsUpperSet (⋃ (i) (j), f i j) :=
   is_upper_set_Union fun i => is_upper_set_Union <| hf i
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 theorem is_lower_set_Union₂ {f : ∀ i, κ i → Set α} (hf : ∀ i j, IsLowerSet (f i j)) : IsLowerSet (⋃ (i) (j), f i j) :=
   is_lower_set_Union fun i => is_lower_set_Union <| hf i
 
@@ -101,11 +106,11 @@ theorem is_upper_set_Inter {f : ι → Set α} (hf : ∀ i, IsUpperSet (f i)) : 
 theorem is_lower_set_Inter {f : ι → Set α} (hf : ∀ i, IsLowerSet (f i)) : IsLowerSet (⋂ i, f i) := fun a b h =>
   forall₂_imp <| forall_range_iff.2 fun i => hf i h
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 theorem is_upper_set_Inter₂ {f : ∀ i, κ i → Set α} (hf : ∀ i j, IsUpperSet (f i j)) : IsUpperSet (⋂ (i) (j), f i j) :=
   is_upper_set_Inter fun i => is_upper_set_Inter <| hf i
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 theorem is_lower_set_Inter₂ {f : ∀ i, κ i → Set α} (hf : ∀ i j, IsLowerSet (f i j)) : IsLowerSet (⋂ (i) (j), f i j) :=
   is_lower_set_Inter fun i => is_lower_set_Inter <| hf i
 
@@ -224,115 +229,116 @@ namespace UpperSet
 variable {S : Set (UpperSet α)} {s t : UpperSet α} {a : α}
 
 instance : HasSup (UpperSet α) :=
-  ⟨fun s t => ⟨s ∪ t, s.upper.union t.upper⟩⟩
-
-instance : HasInf (UpperSet α) :=
   ⟨fun s t => ⟨s ∩ t, s.upper.inter t.upper⟩⟩
 
-instance : HasTop (UpperSet α) :=
-  ⟨⟨Univ, is_upper_set_univ⟩⟩
+instance : HasInf (UpperSet α) :=
+  ⟨fun s t => ⟨s ∪ t, s.upper.union t.upper⟩⟩
 
-instance : HasBot (UpperSet α) :=
+instance : HasTop (UpperSet α) :=
   ⟨⟨∅, is_upper_set_empty⟩⟩
 
-instance : HasSupₓ (UpperSet α) :=
-  ⟨fun S => ⟨⋃ s ∈ S, ↑s, is_upper_set_Union₂ fun s _ => s.upper⟩⟩
+instance : HasBot (UpperSet α) :=
+  ⟨⟨Univ, is_upper_set_univ⟩⟩
 
-instance : HasInfₓ (UpperSet α) :=
+instance : HasSupₓ (UpperSet α) :=
   ⟨fun S => ⟨⋂ s ∈ S, ↑s, is_upper_set_Inter₂ fun s _ => s.upper⟩⟩
 
+instance : HasInfₓ (UpperSet α) :=
+  ⟨fun S => ⟨⋃ s ∈ S, ↑s, is_upper_set_Union₂ fun s _ => s.upper⟩⟩
+
 instance : CompleteDistribLattice (UpperSet α) :=
-  SetLike.coe_injective.CompleteDistribLattice _ (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ => rfl) rfl rfl
+  (toDual.Injective.comp <| SetLike.coe_injective).CompleteDistribLattice _ (fun _ _ => rfl) (fun _ _ => rfl)
+    (fun _ => rfl) (fun _ => rfl) rfl rfl
 
 instance : Inhabited (UpperSet α) :=
   ⟨⊥⟩
 
 @[simp]
-theorem coe_top : ((⊤ : UpperSet α) : Set α) = univ :=
+theorem coe_top : ((⊤ : UpperSet α) : Set α) = ∅ :=
   rfl
 
 @[simp]
-theorem coe_bot : ((⊥ : UpperSet α) : Set α) = ∅ :=
+theorem coe_bot : ((⊥ : UpperSet α) : Set α) = univ :=
   rfl
 
 @[simp]
-theorem coe_sup (s t : UpperSet α) : (↑(s⊔t) : Set α) = s ∪ t :=
+theorem coe_sup (s t : UpperSet α) : (↑(s⊔t) : Set α) = s ∩ t :=
   rfl
 
 @[simp]
-theorem coe_inf (s t : UpperSet α) : (↑(s⊓t) : Set α) = s ∩ t :=
+theorem coe_inf (s t : UpperSet α) : (↑(s⊓t) : Set α) = s ∪ t :=
   rfl
 
 @[simp]
-theorem coe_Sup (S : Set (UpperSet α)) : (↑(sup S) : Set α) = ⋃ s ∈ S, ↑s :=
+theorem coe_Sup (S : Set (UpperSet α)) : (↑(sup S) : Set α) = ⋂ s ∈ S, ↑s :=
   rfl
 
 @[simp]
-theorem coe_Inf (S : Set (UpperSet α)) : (↑(inf S) : Set α) = ⋂ s ∈ S, ↑s :=
+theorem coe_Inf (S : Set (UpperSet α)) : (↑(inf S) : Set α) = ⋃ s ∈ S, ↑s :=
   rfl
 
 @[simp]
-theorem coe_supr (f : ι → UpperSet α) : (↑(⨆ i, f i) : Set α) = ⋃ i, f i := by
-  simp [supr]
+theorem coe_supr (f : ι → UpperSet α) : (↑(⨆ i, f i) : Set α) = ⋂ i, f i := by
+  simp [← supr]
 
 @[simp]
-theorem coe_infi (f : ι → UpperSet α) : (↑(⨅ i, f i) : Set α) = ⋂ i, f i := by
-  simp [infi]
+theorem coe_infi (f : ι → UpperSet α) : (↑(⨅ i, f i) : Set α) = ⋃ i, f i := by
+  simp [← infi]
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 @[simp]
-theorem coe_supr₂ (f : ∀ i, κ i → UpperSet α) : (↑(⨆ (i) (j), f i j) : Set α) = ⋃ (i) (j), f i j := by
+theorem coe_supr₂ (f : ∀ i, κ i → UpperSet α) : (↑(⨆ (i) (j), f i j) : Set α) = ⋂ (i) (j), f i j := by
   simp_rw [coe_supr]
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 @[simp]
-theorem coe_infi₂ (f : ∀ i, κ i → UpperSet α) : (↑(⨅ (i) (j), f i j) : Set α) = ⋂ (i) (j), f i j := by
+theorem coe_infi₂ (f : ∀ i, κ i → UpperSet α) : (↑(⨅ (i) (j), f i j) : Set α) = ⋃ (i) (j), f i j := by
   simp_rw [coe_infi]
 
 @[simp]
-theorem mem_top : a ∈ (⊤ : UpperSet α) :=
-  trivialₓ
-
-@[simp]
-theorem not_mem_bot : a ∉ (⊥ : UpperSet α) :=
+theorem not_mem_top : a ∉ (⊤ : UpperSet α) :=
   id
 
 @[simp]
-theorem mem_sup_iff : a ∈ s⊔t ↔ a ∈ s ∨ a ∈ t :=
+theorem mem_bot : a ∈ (⊥ : UpperSet α) :=
+  trivialₓ
+
+@[simp]
+theorem mem_sup_iff : a ∈ s⊔t ↔ a ∈ s ∧ a ∈ t :=
   Iff.rfl
 
 @[simp]
-theorem mem_inf_iff : a ∈ s⊓t ↔ a ∈ s ∧ a ∈ t :=
+theorem mem_inf_iff : a ∈ s⊓t ↔ a ∈ s ∨ a ∈ t :=
   Iff.rfl
 
 @[simp]
-theorem mem_Sup_iff : a ∈ sup S ↔ ∃ s ∈ S, a ∈ s :=
-  mem_Union₂
-
-@[simp]
-theorem mem_Inf_iff : a ∈ inf S ↔ ∀, ∀ s ∈ S, ∀, a ∈ s :=
+theorem mem_Sup_iff : a ∈ sup S ↔ ∀, ∀ s ∈ S, ∀, a ∈ s :=
   mem_Inter₂
 
 @[simp]
-theorem mem_supr_iff {f : ι → UpperSet α} : (a ∈ ⨆ i, f i) ↔ ∃ i, a ∈ f i := by
-  rw [← SetLike.mem_coe, coe_supr]
-  exact mem_Union
+theorem mem_Inf_iff : a ∈ inf S ↔ ∃ s ∈ S, a ∈ s :=
+  mem_Union₂
 
 @[simp]
-theorem mem_infi_iff {f : ι → UpperSet α} : (a ∈ ⨅ i, f i) ↔ ∀ i, a ∈ f i := by
-  rw [← SetLike.mem_coe, coe_infi]
+theorem mem_supr_iff {f : ι → UpperSet α} : (a ∈ ⨆ i, f i) ↔ ∀ i, a ∈ f i := by
+  rw [← SetLike.mem_coe, coe_supr]
   exact mem_Inter
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 @[simp]
-theorem mem_supr₂_iff {f : ∀ i, κ i → UpperSet α} : (a ∈ ⨆ (i) (j), f i j) ↔ ∃ i j, a ∈ f i j := by
+theorem mem_infi_iff {f : ι → UpperSet α} : (a ∈ ⨅ i, f i) ↔ ∃ i, a ∈ f i := by
+  rw [← SetLike.mem_coe, coe_infi]
+  exact mem_Union
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+@[simp]
+theorem mem_supr₂_iff {f : ∀ i, κ i → UpperSet α} : (a ∈ ⨆ (i) (j), f i j) ↔ ∀ i j, a ∈ f i j := by
   simp_rw [mem_supr_iff]
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 @[simp]
-theorem mem_infi₂_iff {f : ∀ i, κ i → UpperSet α} : (a ∈ ⨅ (i) (j), f i j) ↔ ∀ i j, a ∈ f i j := by
+theorem mem_infi₂_iff {f : ∀ i, κ i → UpperSet α} : (a ∈ ⨅ (i) (j), f i j) ↔ ∃ i j, a ∈ f i j := by
   simp_rw [mem_infi_iff]
 
 end UpperSet
@@ -397,14 +403,14 @@ theorem coe_supr (f : ι → LowerSet α) : (↑(⨆ i, f i) : Set α) = ⋃ i, 
 theorem coe_infi (f : ι → LowerSet α) : (↑(⨅ i, f i) : Set α) = ⋂ i, f i := by
   simp_rw [infi, coe_Inf, mem_range, Inter_exists, Inter_Inter_eq']
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 @[simp]
 theorem coe_supr₂ (f : ∀ i, κ i → LowerSet α) : (↑(⨆ (i) (j), f i j) : Set α) = ⋃ (i) (j), f i j := by
   simp_rw [coe_supr]
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 @[simp]
 theorem coe_infi₂ (f : ∀ i, κ i → LowerSet α) : (↑(⨅ (i) (j), f i j) : Set α) = ⋂ (i) (j), f i j := by
   simp_rw [coe_infi]
@@ -443,12 +449,12 @@ theorem mem_infi_iff {f : ι → LowerSet α} : (a ∈ ⨅ i, f i) ↔ ∀ i, a 
   rw [← SetLike.mem_coe, coe_infi]
   exact mem_Inter
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 @[simp]
 theorem mem_supr₂_iff {f : ∀ i, κ i → LowerSet α} : (a ∈ ⨆ (i) (j), f i j) ↔ ∃ i j, a ∈ f i j := by
   simp_rw [mem_supr_iff]
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 @[simp]
 theorem mem_infi₂_iff {f : ∀ i, κ i → LowerSet α} : (a ∈ ⨅ (i) (j), f i j) ↔ ∀ i j, a ∈ f i j := by
   simp_rw [mem_infi_iff]
@@ -460,135 +466,152 @@ end LowerSet
 
 /-- The complement of a lower set as an upper set. -/
 def UpperSet.compl (s : UpperSet α) : LowerSet α :=
-  ⟨sᶜ, s.upper.Compl⟩
+  ⟨sᶜ, s.upper.compl⟩
 
 /-- The complement of a lower set as an upper set. -/
 def LowerSet.compl (s : LowerSet α) : UpperSet α :=
-  ⟨sᶜ, s.lower.Compl⟩
+  ⟨sᶜ, s.lower.compl⟩
 
 namespace UpperSet
 
-variable {s : UpperSet α} {a : α}
+variable {s t : UpperSet α} {a : α}
 
 @[simp]
-theorem coe_compl (s : UpperSet α) : (s.Compl : Set α) = sᶜ :=
+theorem coe_compl (s : UpperSet α) : (s.compl : Set α) = sᶜ :=
   rfl
 
 @[simp]
-theorem mem_compl_iff : a ∈ s.Compl ↔ a ∉ s :=
+theorem mem_compl_iff : a ∈ s.compl ↔ a ∉ s :=
   Iff.rfl
 
 @[simp]
-theorem compl_compl (s : UpperSet α) : s.Compl.Compl = s :=
+theorem compl_compl (s : UpperSet α) : s.compl.compl = s :=
   UpperSet.ext <| compl_compl _
 
 @[simp]
-protected theorem compl_sup (s t : UpperSet α) : (s⊔t).Compl = s.Compl⊓t.Compl :=
-  LowerSet.ext compl_sup
+theorem compl_le_compl : s.compl ≤ t.compl ↔ s ≤ t :=
+  compl_subset_compl
 
 @[simp]
-protected theorem compl_inf (s t : UpperSet α) : (s⊓t).Compl = s.Compl⊔t.Compl :=
+protected theorem compl_sup (s t : UpperSet α) : (s⊔t).compl = s.compl⊔t.compl :=
   LowerSet.ext compl_inf
 
 @[simp]
-protected theorem compl_top : (⊤ : UpperSet α).Compl = ⊥ :=
-  LowerSet.ext compl_univ
+protected theorem compl_inf (s t : UpperSet α) : (s⊓t).compl = s.compl⊓t.compl :=
+  LowerSet.ext compl_sup
 
 @[simp]
-protected theorem compl_bot : (⊥ : UpperSet α).Compl = ⊤ :=
+protected theorem compl_top : (⊤ : UpperSet α).compl = ⊤ :=
   LowerSet.ext compl_empty
 
 @[simp]
-protected theorem compl_Sup (S : Set (UpperSet α)) : (sup S).Compl = ⨅ s ∈ S, UpperSet.compl s :=
-  LowerSet.ext <| by
-    simp only [coe_compl, coe_Sup, compl_Union₂, LowerSet.coe_infi₂]
+protected theorem compl_bot : (⊥ : UpperSet α).compl = ⊥ :=
+  LowerSet.ext compl_univ
 
 @[simp]
-protected theorem compl_Inf (S : Set (UpperSet α)) : (inf S).Compl = ⨆ s ∈ S, UpperSet.compl s :=
+protected theorem compl_Sup (S : Set (UpperSet α)) : (sup S).compl = ⨆ s ∈ S, UpperSet.compl s :=
   LowerSet.ext <| by
-    simp only [coe_compl, coe_Inf, compl_Inter₂, LowerSet.coe_supr₂]
+    simp only [← coe_compl, ← coe_Sup, ← compl_Inter₂, ← LowerSet.coe_supr₂]
 
 @[simp]
-protected theorem compl_supr (f : ι → UpperSet α) : (⨆ i, f i).Compl = ⨅ i, (f i).Compl :=
+protected theorem compl_Inf (S : Set (UpperSet α)) : (inf S).compl = ⨅ s ∈ S, UpperSet.compl s :=
   LowerSet.ext <| by
-    simp only [coe_compl, coe_supr, compl_Union, LowerSet.coe_infi]
+    simp only [← coe_compl, ← coe_Inf, ← compl_Union₂, ← LowerSet.coe_infi₂]
 
 @[simp]
-protected theorem compl_infi (f : ι → UpperSet α) : (⨅ i, f i).Compl = ⨆ i, (f i).Compl :=
+protected theorem compl_supr (f : ι → UpperSet α) : (⨆ i, f i).compl = ⨆ i, (f i).compl :=
   LowerSet.ext <| by
-    simp only [coe_compl, coe_infi, compl_Inter, LowerSet.coe_supr]
+    simp only [← coe_compl, ← coe_supr, ← compl_Inter, ← LowerSet.coe_supr]
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 @[simp]
-theorem compl_supr₂ (f : ∀ i, κ i → UpperSet α) : (⨆ (i) (j), f i j).Compl = ⨅ (i) (j), (f i j).Compl := by
+protected theorem compl_infi (f : ι → UpperSet α) : (⨅ i, f i).compl = ⨅ i, (f i).compl :=
+  LowerSet.ext <| by
+    simp only [← coe_compl, ← coe_infi, ← compl_Union, ← LowerSet.coe_infi]
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+@[simp]
+theorem compl_supr₂ (f : ∀ i, κ i → UpperSet α) : (⨆ (i) (j), f i j).compl = ⨆ (i) (j), (f i j).compl := by
   simp_rw [UpperSet.compl_supr]
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 @[simp]
-theorem compl_infi₂ (f : ∀ i, κ i → UpperSet α) : (⨅ (i) (j), f i j).Compl = ⨆ (i) (j), (f i j).Compl := by
+theorem compl_infi₂ (f : ∀ i, κ i → UpperSet α) : (⨅ (i) (j), f i j).compl = ⨅ (i) (j), (f i j).compl := by
   simp_rw [UpperSet.compl_infi]
 
 end UpperSet
 
 namespace LowerSet
 
-variable {s : LowerSet α} {a : α}
+variable {s t : LowerSet α} {a : α}
 
 @[simp]
-theorem coe_compl (s : LowerSet α) : (s.Compl : Set α) = sᶜ :=
+theorem coe_compl (s : LowerSet α) : (s.compl : Set α) = sᶜ :=
   rfl
 
 @[simp]
-theorem mem_compl_iff : a ∈ s.Compl ↔ a ∉ s :=
+theorem mem_compl_iff : a ∈ s.compl ↔ a ∉ s :=
   Iff.rfl
 
 @[simp]
-theorem compl_compl (s : LowerSet α) : s.Compl.Compl = s :=
+theorem compl_compl (s : LowerSet α) : s.compl.compl = s :=
   LowerSet.ext <| compl_compl _
 
-protected theorem compl_sup (s t : LowerSet α) : (s⊔t).Compl = s.Compl⊓t.Compl :=
+@[simp]
+theorem compl_le_compl : s.compl ≤ t.compl ↔ s ≤ t :=
+  compl_subset_compl
+
+protected theorem compl_sup (s t : LowerSet α) : (s⊔t).compl = s.compl⊔t.compl :=
   UpperSet.ext compl_sup
 
-protected theorem compl_inf (s t : LowerSet α) : (s⊓t).Compl = s.Compl⊔t.Compl :=
+protected theorem compl_inf (s t : LowerSet α) : (s⊓t).compl = s.compl⊓t.compl :=
   UpperSet.ext compl_inf
 
-protected theorem compl_top : (⊤ : LowerSet α).Compl = ⊥ :=
+protected theorem compl_top : (⊤ : LowerSet α).compl = ⊤ :=
   UpperSet.ext compl_univ
 
-protected theorem compl_bot : (⊥ : LowerSet α).Compl = ⊤ :=
+protected theorem compl_bot : (⊥ : LowerSet α).compl = ⊥ :=
   UpperSet.ext compl_empty
 
-protected theorem compl_Sup (S : Set (LowerSet α)) : (sup S).Compl = ⨅ s ∈ S, LowerSet.compl s :=
+protected theorem compl_Sup (S : Set (LowerSet α)) : (sup S).compl = ⨆ s ∈ S, LowerSet.compl s :=
   UpperSet.ext <| by
-    simp only [coe_compl, coe_Sup, compl_Union₂, UpperSet.coe_infi₂]
+    simp only [← coe_compl, ← coe_Sup, ← compl_Union₂, ← UpperSet.coe_supr₂]
 
-protected theorem compl_Inf (S : Set (LowerSet α)) : (inf S).Compl = ⨆ s ∈ S, LowerSet.compl s :=
+protected theorem compl_Inf (S : Set (LowerSet α)) : (inf S).compl = ⨅ s ∈ S, LowerSet.compl s :=
   UpperSet.ext <| by
-    simp only [coe_compl, coe_Inf, compl_Inter₂, UpperSet.coe_supr₂]
+    simp only [← coe_compl, ← coe_Inf, ← compl_Inter₂, ← UpperSet.coe_infi₂]
 
-protected theorem compl_supr (f : ι → LowerSet α) : (⨆ i, f i).Compl = ⨅ i, (f i).Compl :=
+protected theorem compl_supr (f : ι → LowerSet α) : (⨆ i, f i).compl = ⨆ i, (f i).compl :=
   UpperSet.ext <| by
-    simp only [coe_compl, coe_supr, compl_Union, UpperSet.coe_infi]
+    simp only [← coe_compl, ← coe_supr, ← compl_Union, ← UpperSet.coe_supr]
 
-protected theorem compl_infi (f : ι → LowerSet α) : (⨅ i, f i).Compl = ⨆ i, (f i).Compl :=
+protected theorem compl_infi (f : ι → LowerSet α) : (⨅ i, f i).compl = ⨅ i, (f i).compl :=
   UpperSet.ext <| by
-    simp only [coe_compl, coe_infi, compl_Inter, UpperSet.coe_supr]
+    simp only [← coe_compl, ← coe_infi, ← compl_Inter, ← UpperSet.coe_infi]
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 @[simp]
-theorem compl_supr₂ (f : ∀ i, κ i → LowerSet α) : (⨆ (i) (j), f i j).Compl = ⨅ (i) (j), (f i j).Compl := by
+theorem compl_supr₂ (f : ∀ i, κ i → LowerSet α) : (⨆ (i) (j), f i j).compl = ⨆ (i) (j), (f i j).compl := by
   simp_rw [LowerSet.compl_supr]
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 @[simp]
-theorem compl_infi₂ (f : ∀ i, κ i → LowerSet α) : (⨅ (i) (j), f i j).Compl = ⨆ (i) (j), (f i j).Compl := by
+theorem compl_infi₂ (f : ∀ i, κ i → LowerSet α) : (⨅ (i) (j), f i j).compl = ⨅ (i) (j), (f i j).compl := by
   simp_rw [LowerSet.compl_infi]
 
 end LowerSet
+
+/-- Upper sets are order-isomorphic to lower sets under complementation. -/
+@[simps]
+def upperSetIsoLowerSet : UpperSet α ≃o LowerSet α where
+  toFun := UpperSet.compl
+  invFun := LowerSet.compl
+  left_inv := UpperSet.compl_compl
+  right_inv := LowerSet.compl_compl
+  map_rel_iff' := fun _ _ => UpperSet.compl_le_compl
 
 end LE
 
@@ -625,16 +648,16 @@ theorem mem_Ici_iff : b ∈ ici a ↔ a ≤ b :=
 theorem mem_Ioi_iff : b ∈ ioi a ↔ a < b :=
   Iff.rfl
 
-theorem Ioi_le_Ici (a : α) : ioi a ≤ ici a :=
+theorem Icoi_le_Ioi (a : α) : ici a ≤ ioi a :=
   Ioi_subset_Ici_self
 
 @[simp]
-theorem Ici_top [OrderBot α] : ici (⊥ : α) = ⊤ :=
-  SetLike.coe_injective Ici_bot
+theorem Ioi_top [OrderTop α] : ioi (⊤ : α) = ⊤ :=
+  SetLike.coe_injective Ioi_top
 
 @[simp]
-theorem Ioi_bot [OrderTop α] : ioi (⊤ : α) = ⊥ :=
-  SetLike.coe_injective Ioi_top
+theorem Ici_bot [OrderBot α] : ici (⊥ : α) = ⊥ :=
+  SetLike.coe_injective Ici_bot
 
 end Preorderₓ
 
@@ -643,15 +666,15 @@ section SemilatticeSup
 variable [SemilatticeSup α]
 
 @[simp]
-theorem Ici_sup (a b : α) : ici (a⊔b) = ici a⊓ici b :=
+theorem Ici_sup (a b : α) : ici (a⊔b) = ici a⊔ici b :=
   ext Ici_inter_Ici.symm
 
 /-- `upper_set.Ici` as a `sup_hom`. -/
-def iciSupHom : SupHom α (UpperSet α)ᵒᵈ :=
+def iciSupHom : SupHom α (UpperSet α) :=
   ⟨ici, Ici_sup⟩
 
 @[simp]
-theorem Ici_sup_hom_apply (a : α) : iciSupHom a = toDual (ici a) :=
+theorem Ici_sup_hom_apply (a : α) : iciSupHom a = ici a :=
   rfl
 
 end SemilatticeSup
@@ -661,24 +684,24 @@ section CompleteLattice
 variable [CompleteLattice α]
 
 @[simp]
-theorem Ici_Sup (S : Set α) : ici (sup S) = ⨅ a ∈ S, ici a :=
+theorem Ici_Sup (S : Set α) : ici (sup S) = ⨆ a ∈ S, ici a :=
   SetLike.ext fun c => by
-    simp only [mem_Ici_iff, mem_infi_iff, Sup_le_iff]
+    simp only [← mem_Ici_iff, ← mem_supr_iff, ← Sup_le_iff]
 
 @[simp]
-theorem Ici_supr (f : ι → α) : ici (⨆ i, f i) = ⨅ i, ici (f i) :=
+theorem Ici_supr (f : ι → α) : ici (⨆ i, f i) = ⨆ i, ici (f i) :=
   SetLike.ext fun c => by
-    simp only [mem_Ici_iff, mem_infi_iff, supr_le_iff]
+    simp only [← mem_Ici_iff, ← mem_supr_iff, ← supr_le_iff]
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 @[simp]
-theorem Ici_supr₂ (f : ∀ i, κ i → α) : ici (⨆ (i) (j), f i j) = ⨅ (i) (j), ici (f i j) := by
+theorem Ici_supr₂ (f : ∀ i, κ i → α) : ici (⨆ (i) (j), f i j) = ⨆ (i) (j), ici (f i j) := by
   simp_rw [Ici_supr]
 
 /-- `upper_set.Ici` as a `Sup_hom`. -/
-def iciSupHomₓ : SupHomₓ α (UpperSet α)ᵒᵈ :=
-  ⟨ici, fun s => (Ici_Sup s).trans Inf_image.symm⟩
+def iciSupHomₓ : SupHomₓ α (UpperSet α) :=
+  ⟨ici, fun s => (Ici_Sup s).trans Sup_image.symm⟩
 
 @[simp]
 theorem Ici_Sup_hom_apply (a : α) : iciSupHomₓ a = toDual (ici a) :=
@@ -761,15 +784,15 @@ variable [CompleteLattice α]
 @[simp]
 theorem Iic_Inf (S : Set α) : iic (inf S) = ⨅ a ∈ S, iic a :=
   SetLike.ext fun c => by
-    simp only [mem_Iic_iff, mem_infi₂_iff, le_Inf_iff]
+    simp only [← mem_Iic_iff, ← mem_infi₂_iff, ← le_Inf_iff]
 
 @[simp]
 theorem Iic_infi (f : ι → α) : iic (⨅ i, f i) = ⨅ i, iic (f i) :=
   SetLike.ext fun c => by
-    simp only [mem_Iic_iff, mem_infi_iff, le_infi_iff]
+    simp only [← mem_Iic_iff, ← mem_infi_iff, ← le_infi_iff]
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 @[simp]
 theorem Iic_infi₂ (f : ∀ i, κ i → α) : iic (⨅ (i) (j), f i j) = ⨅ (i) (j), iic (f i j) := by
   simp_rw [Iic_infi]

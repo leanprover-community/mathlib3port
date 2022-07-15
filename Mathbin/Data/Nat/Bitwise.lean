@@ -45,7 +45,7 @@ theorem bit_tt : bit true = bit1 :=
 
 @[simp]
 theorem bit_eq_zero {n : ℕ} {b : Bool} : n.bit b = 0 ↔ n = 0 ∧ b = ff := by
-  cases b <;> norm_num [bit0_eq_zero, Nat.bit1_ne_zero]
+  cases b <;> norm_num [← bit0_eq_zero, ← Nat.bit1_ne_zero]
 
 theorem zero_of_test_bit_eq_ff {n : ℕ} (h : ∀ i, testBit n i = ff) : n = 0 := by
   induction' n using Nat.binaryRec with b n hn
@@ -61,16 +61,16 @@ theorem zero_of_test_bit_eq_ff {n : ℕ} (h : ∀ i, testBit n i = ff) : n = 0 :
 
 @[simp]
 theorem zero_test_bit (i : ℕ) : testBit 0 i = ff := by
-  simp [test_bit]
+  simp [← test_bit]
 
 /-- Bitwise extensionality: Two numbers agree if they agree at every bit position. -/
 theorem eq_of_test_bit_eq {n m : ℕ} (h : ∀ i, testBit n i = testBit m i) : n = m := by
   induction' n using Nat.binaryRec with b n hn generalizing m
-  · simp only [zero_test_bit] at h
+  · simp only [← zero_test_bit] at h
     exact (zero_of_test_bit_eq_ff fun i => (h i).symm).symm
     
   induction' m using Nat.binaryRec with b' m hm
-  · simp only [zero_test_bit] at h
+  · simp only [← zero_test_bit] at h
     exact zero_of_test_bit_eq_ff h
     
   suffices h' : n = m
@@ -116,14 +116,14 @@ theorem lt_of_test_bit {n m : ℕ} (i : ℕ) (hn : testBit n i = ff) (hm : testB
   induction' n using Nat.binaryRec with b n hn' generalizing i m
   · contrapose! hm
     rw [le_zero_iff] at hm
-    simp [hm]
+    simp [← hm]
     
   induction' m using Nat.binaryRec with b' m hm' generalizing i
   · exact False.elim (Bool.ff_ne_tt ((zero_test_bit i).symm.trans hm))
     
   by_cases' hi : i = 0
   · subst hi
-    simp only [test_bit_zero] at hn hm
+    simp only [← test_bit_zero] at hn hm
     have : n = m :=
       eq_of_test_bit_eq fun i => by
         convert
@@ -136,11 +136,12 @@ theorem lt_of_test_bit {n m : ℕ} (i : ℕ) (hn : testBit n i = ff) (hm : testB
     exact lt_add_one _
     
   · obtain ⟨i', rfl⟩ := exists_eq_succ_of_ne_zero hi
-    simp only [test_bit_succ] at hn hm
+    simp only [← test_bit_succ] at hn hm
     have :=
       hn' _ hn hm fun j hj => by
         convert hnm j.succ (succ_lt_succ hj) using 1 <;> rw [test_bit_succ]
-    cases b <;> cases b' <;> simp only [bit_ff, bit_tt, bit0_val n, bit1_val n, bit0_val m, bit1_val m] <;> linarith
+    cases b <;>
+      cases b' <;> simp only [← bit_ff, ← bit_tt, ← bit0_val n, ← bit1_val n, ← bit0_val m, ← bit1_val m] <;> linarith
     
 
 @[simp]
@@ -154,7 +155,7 @@ theorem test_bit_two_pow_of_ne {n m : ℕ} (hm : n ≠ m) : testBit (2 ^ n) m = 
     exact Nat.pow_lt_pow_of_lt_right one_lt_two hm
     
   · rw [pow_div hm.le zero_lt_two, ← tsub_add_cancel_of_le (succ_le_of_lt <| tsub_pos_of_lt hm)]
-    simp [pow_succₓ]
+    simp [← pow_succₓ]
     
 
 theorem test_bit_two_pow (n m : ℕ) : testBit (2 ^ n) m = (n = m) := by
@@ -163,7 +164,7 @@ theorem test_bit_two_pow (n m : ℕ) : testBit (2 ^ n) m = (n = m) := by
     simp
     
   · rw [test_bit_two_pow_of_ne h]
-    simp [h]
+    simp [← h]
     
 
 /-- If `f` is a commutative operation on bools such that `f ff ff = ff`, then `bitwise f` is also
@@ -188,29 +189,29 @@ theorem lxor_comm (n m : ℕ) : lxor n m = lxor m n :=
 
 @[simp]
 theorem zero_lxor (n : ℕ) : lxor 0 n = n := by
-  simp [lxor]
+  simp [← lxor]
 
 @[simp]
 theorem lxor_zero (n : ℕ) : lxor n 0 = n := by
-  simp [lxor]
+  simp [← lxor]
 
 @[simp]
 theorem zero_land (n : ℕ) : landₓ 0 n = 0 := by
-  simp [land]
+  simp [← land]
 
 @[simp]
 theorem land_zero (n : ℕ) : landₓ n 0 = 0 := by
-  simp [land]
+  simp [← land]
 
 @[simp]
 theorem zero_lor (n : ℕ) : lorₓ 0 n = n := by
-  simp [lor]
+  simp [← lor]
 
 @[simp]
 theorem lor_zero (n : ℕ) : lorₓ n 0 = n := by
-  simp [lor]
+  simp [← lor]
 
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
 /-- Proving associativity of bitwise operations in general essentially boils down to a huge case
     distinction, so it is shorter to use this tactic instead of proving it in the general case. -/
 unsafe def bitwise_assoc_tac : tactic Unit :=
@@ -236,9 +237,9 @@ theorem lxor_self (n : ℕ) : lxor n n = 0 :=
 theorem lxor_right_inj {n m m' : ℕ} (h : lxor n m = lxor n m') : m = m' :=
   calc
     m = lxor n (lxor n m') := by
-      simp [← lxor_assoc, ← h]
+      simp [lxor_assoc, h]
     _ = m' := by
-      simp [← lxor_assoc]
+      simp [lxor_assoc]
     
 
 theorem lxor_left_inj {n n' m : ℕ} (h : lxor n m = lxor n' m) : n = n' := by
@@ -257,19 +258,19 @@ theorem lxor_trichotomy {a b c : ℕ} (h : lxor a (lxor b c) ≠ 0) : lxor b c <
   -- The xor of any two of `a`, `b`, `c` is the xor of `v` and the third.
   have hab : lxor a b = lxor c v := by
     rw [hv]
-    conv_rhs => rw [lxor_comm]simp [lxor_assoc]
+    conv_rhs => rw [lxor_comm]simp [← lxor_assoc]
   have hac : lxor a c = lxor b v := by
     rw [hv]
     conv_rhs => congr skip rw [lxor_comm]
     rw [← lxor_assoc, ← lxor_assoc, lxor_self, zero_lxor, lxor_comm]
   have hbc : lxor b c = lxor a v := by
-    simp [hv, ← lxor_assoc]
+    simp [← hv, lxor_assoc]
   -- If `i` is the position of the most significant bit of `v`, then at least one of `a`, `b`, `c`
   -- has a one bit at position `i`.
   obtain ⟨i, ⟨hi, hi'⟩⟩ := exists_most_significant_bit h
   have : test_bit a i = tt ∨ test_bit b i = tt ∨ test_bit c i = tt := by
     contrapose! hi
-    simp only [eq_ff_eq_not_eq_tt, Ne, test_bit_lxor] at hi⊢
+    simp only [← eq_ff_eq_not_eq_tt, ← Ne, ← test_bit_lxor] at hi⊢
     rw [hi.1, hi.2.1, hi.2.2, bxor_ff, bxor_ff]
   -- If, say, `a` has a one bit at position `i`, then `a xor v` has a zero bit at position `i`, but
       -- the same bits as `a` in positions greater than `j`, so `a xor v < a`.
@@ -288,9 +289,9 @@ theorem lxor_trichotomy {a b c : ℕ} (h : lxor a (lxor b c) ≠ 0) : lxor b c <
     exact
       lt_of_test_bit i
         (by
-          simp [h, hi])
+          simp [← h, ← hi])
         h fun j hj => by
-        simp [hi' _ hj]
+        simp [← hi' _ hj]
 
 end Nat
 

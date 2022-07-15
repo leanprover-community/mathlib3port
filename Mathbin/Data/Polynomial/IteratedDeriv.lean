@@ -51,27 +51,27 @@ theorem iterated_deriv_zero_left : iteratedDeriv (0 : R[X]) n = 0 := by
 @[simp]
 theorem iterated_deriv_add : iteratedDeriv (p + q) n = iteratedDeriv p n + iteratedDeriv q n := by
   induction' n with n ih
-  · simp only [iterated_deriv_zero_right]
+  · simp only [← iterated_deriv_zero_right]
     
-  · simp only [iterated_deriv_succ, ih, derivative_add]
+  · simp only [← iterated_deriv_succ, ← ih, ← derivative_add]
     
 
 @[simp]
 theorem iterated_deriv_smul {S : Type _} [Monoidₓ S] [DistribMulAction S R] [IsScalarTower S R R] (s : S) :
     iteratedDeriv (s • p) n = s • iteratedDeriv p n := by
   induction' n with n ih
-  · simp only [iterated_deriv_zero_right]
+  · simp only [← iterated_deriv_zero_right]
     
-  · simp only [iterated_deriv_succ, ih, derivative_smul]
+  · simp only [← iterated_deriv_succ, ← ih, ← derivative_smul]
     
 
 @[simp]
 theorem iterated_deriv_X_zero : iteratedDeriv (x : R[X]) 0 = X := by
-  simp only [iterated_deriv_zero_right]
+  simp only [← iterated_deriv_zero_right]
 
 @[simp]
 theorem iterated_deriv_X_one : iteratedDeriv (x : R[X]) 1 = 1 := by
-  simp only [iterated_deriv, derivative_X, Function.iterate_one]
+  simp only [← iterated_deriv, ← derivative_X, ← Function.iterate_one]
 
 @[simp]
 theorem iterated_deriv_X (h : 1 < n) : iteratedDeriv (x : R[X]) n = 0 := by
@@ -79,20 +79,20 @@ theorem iterated_deriv_X (h : 1 < n) : iteratedDeriv (x : R[X]) n = 0 := by
   · exfalso
     exact Nat.not_lt_zeroₓ 1 h
     
-  · simp only [iterated_deriv_succ]
+  · simp only [← iterated_deriv_succ]
     by_cases' H : n = 1
     · rw [H]
-      simp only [iterated_deriv_X_one, derivative_one]
+      simp only [← iterated_deriv_X_one, ← derivative_one]
       
     · replace h : 1 < n := Arrayₓ.push_back_idx h (Ne.symm H)
       rw [ih h]
-      simp only [derivative_zero]
+      simp only [← derivative_zero]
       
     
 
 @[simp]
 theorem iterated_deriv_C_zero : iteratedDeriv (c r) 0 = c r := by
-  simp only [iterated_deriv_zero_right]
+  simp only [← iterated_deriv_zero_right]
 
 @[simp]
 theorem iterated_deriv_C (h : 0 < n) : iteratedDeriv (c r) n = 0 := by
@@ -102,29 +102,30 @@ theorem iterated_deriv_C (h : 0 < n) : iteratedDeriv (c r) n = 0 := by
     
   · by_cases' H : n = 0
     · rw [iterated_deriv_succ, H]
-      simp only [iterated_deriv_C_zero, derivative_C]
+      simp only [← iterated_deriv_C_zero, ← derivative_C]
       
     · replace h : 0 < n := Nat.pos_of_ne_zeroₓ H
       rw [iterated_deriv_succ, ih h]
-      simp only [derivative_zero]
+      simp only [← derivative_zero]
       
     
 
 @[simp]
 theorem iterated_deriv_one_zero : iteratedDeriv (1 : R[X]) 0 = 1 := by
-  simp only [iterated_deriv_zero_right]
+  simp only [← iterated_deriv_zero_right]
 
 @[simp]
 theorem iterated_deriv_one : 0 < n → iteratedDeriv (1 : R[X]) n = 0 := fun h => by
   have eq1 : (1 : R[X]) = C 1 := by
-    simp only [RingHom.map_one]
+    simp only [← RingHom.map_one]
   rw [eq1]
   exact iterated_deriv_C _ _ h
 
 theorem coeff_iterated_deriv_as_prod_Ico :
     ∀ m : ℕ, (iteratedDeriv f k).coeff m = (∏ i in ico m.succ (m + k.succ), i) • f.coeff (m + k) := by
   induction' k with k ih
-  · simp only [add_zeroₓ, forall_const, one_smul, Ico_self, eq_self_iff_true, iterated_deriv_zero_right, prod_empty]
+  · simp only [← add_zeroₓ, ← forall_const, ← one_smul, ← Ico_self, ← eq_self_iff_true, ← iterated_deriv_zero_right, ←
+      prod_empty]
     
   · intro m
     rw [iterated_deriv_succ, coeff_derivative, ih (m + 1), ← Nat.cast_add_one, ← nsmul_eq_mul', smul_smul, mul_comm]
@@ -216,9 +217,9 @@ variable [Ringₓ R] (p q : R[X]) (n : ℕ)
 @[simp]
 theorem iterated_deriv_neg : iteratedDeriv (-p) n = -iteratedDeriv p n := by
   induction' n with n ih
-  · simp only [iterated_deriv_zero_right]
+  · simp only [← iterated_deriv_zero_right]
     
-  · simp only [iterated_deriv_succ, ih, derivative_neg]
+  · simp only [← iterated_deriv_succ, ← ih, ← derivative_neg]
     
 
 @[simp]

@@ -27,13 +27,13 @@ primarily an auxiliary construction used to provide `tensor_algebra.graded_algeb
 def GradedAlgebra.ι : M →ₗ[R] ⨁ i : ℕ, ↥((ι R : M →ₗ[_] _).range ^ i) :=
   DirectSum.lof R ℕ (fun i => ↥((ι R : M →ₗ[_] _).range ^ i)) 1 ∘ₗ
     (ι R).codRestrict _ fun m => by
-      simpa only [pow_oneₓ] using LinearMap.mem_range_self _ m
+      simpa only [← pow_oneₓ] using LinearMap.mem_range_self _ m
 
 theorem GradedAlgebra.ι_apply (m : M) :
     GradedAlgebra.ι R M m =
       DirectSum.of (fun i => ↥((ι R : M →ₗ[_] _).range ^ i)) 1
         ⟨ι R m, by
-          simpa only [pow_oneₓ] using LinearMap.mem_range_self _ m⟩ :=
+          simpa only [← pow_oneₓ] using LinearMap.mem_range_self _ m⟩ :=
   rfl
 
 variable {R M}
@@ -43,11 +43,11 @@ instance gradedAlgebra : GradedAlgebra ((· ^ ·) (ι R : M →ₗ[R] TensorAlge
   GradedAlgebra.ofAlgHom _ (lift _ <| GradedAlgebra.ι R M)
     (by
       ext m
-      dsimp' only [LinearMap.comp_apply, AlgHom.to_linear_map_apply, AlgHom.comp_apply, AlgHom.id_apply]
+      dsimp' only [← LinearMap.comp_apply, ← AlgHom.to_linear_map_apply, ← AlgHom.comp_apply, ← AlgHom.id_apply]
       rw [lift_ι_apply, graded_algebra.ι_apply, DirectSum.coe_alg_hom_of, Subtype.coe_mk])
     fun i x => by
     cases' x with x hx
-    dsimp' only [Subtype.coe_mk, DirectSum.lof_eq_of]
+    dsimp' only [← Subtype.coe_mk, ← DirectSum.lof_eq_of]
     refine' Submodule.pow_induction_on_left' _ (fun r => _) (fun x y i hx hy ihx ihy => _) (fun m hm i x hx ih => _) hx
     · rw [AlgHom.commutes, DirectSum.algebra_map_apply]
       rfl

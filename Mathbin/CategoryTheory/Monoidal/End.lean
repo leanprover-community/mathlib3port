@@ -60,12 +60,12 @@ def tensoringRightMonoidal [MonoidalCategory.{v} C] : MonoidalFunctor C (C ⥤ C
     μ_natural' := fun X Y X' Y' f g => by
       ext Z
       dsimp'
-      simp only [← id_tensor_comp_tensor_id g f, id_tensor_comp, ← tensor_id, category.assoc, associator_naturality,
+      simp only [id_tensor_comp_tensor_id g f, ← id_tensor_comp, tensor_id, ← category.assoc, ← associator_naturality, ←
         associator_naturality_assoc],
     associativity' := fun X Y Z => by
       ext W
       dsimp'
-      simp [pentagon],
+      simp [← pentagon],
     left_unitality' := fun X => by
       ext Y
       dsimp'
@@ -243,7 +243,7 @@ theorem obj_μ_inv_app (m₁ m₂ m₃ : M) (X : C) :
     rw [← functor.map_comp]
     simp
     
-  · simp only [monoidal_functor.μ_iso_hom, category.assoc, nat_iso.inv_inv_app, is_iso.inv_comp]
+  · simp only [← monoidal_functor.μ_iso_hom, ← category.assoc, ← nat_iso.inv_inv_app, ← is_iso.inv_comp]
     congr
     · ext
       simp
@@ -286,9 +286,9 @@ noncomputable def equivOfTensorIsoUnit (m n : M) (h₁ : m ⊗ n ≅ 𝟙_ M) (h
   functor_unit_iso_comp' := by
     intro X
     dsimp'
-    simp only [μ_naturalityᵣ_assoc, μ_naturalityₗ_assoc, ε_inv_app_obj, category.assoc, obj_μ_inv_app, functor.map_comp,
-      μ_inv_hom_app_assoc, obj_ε_app, unit_of_tensor_iso_unit_inv_app]
-    simp [← nat_trans.comp_app, ← F.to_functor.map_comp, ← H, -functor.map_comp]
+    simp only [← μ_naturalityᵣ_assoc, ← μ_naturalityₗ_assoc, ← ε_inv_app_obj, ← category.assoc, ← obj_μ_inv_app, ←
+      functor.map_comp, ← μ_inv_hom_app_assoc, ← obj_ε_app, ← unit_of_tensor_iso_unit_inv_app]
+    simp [nat_trans.comp_app, F.to_functor.map_comp, H, -functor.map_comp]
 
 end CategoryTheory
 

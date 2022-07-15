@@ -72,7 +72,7 @@ theorem coe_le_one (p : Pmf α) (a : α) : p a ≤ 1 :=
   has_sum_le
     (by
       intro b
-      split_ifs <;> simp only [h, zero_le'])
+      split_ifs <;> simp only [← h, ← zero_le'])
     (has_sum_ite_eq a (p a)) (has_sum_coe_one p)
 
 section OuterMeasure
@@ -90,7 +90,7 @@ theorem to_outer_measure_apply : p.toOuterMeasure s = ∑' x, s.indicator (coe �
   tsum_congr fun x => smul_dirac_apply (p x) x s
 
 theorem to_outer_measure_apply' : p.toOuterMeasure s = ↑(∑' x : α, s.indicator p x) := by
-  simp only [Ennreal.coe_tsum (Nnreal.indicator_summable (summable_coe p) s), Ennreal.coe_indicator,
+  simp only [← Ennreal.coe_tsum (Nnreal.indicator_summable (summable_coe p) s), ← Ennreal.coe_indicator, ←
     to_outer_measure_apply]
 
 @[simp]
@@ -123,7 +123,7 @@ theorem to_outer_measure_apply_eq_one_iff : p.toOuterMeasure s = 1 ↔ p.Support
 
 @[simp]
 theorem to_outer_measure_apply_inter_support : p.toOuterMeasure (s ∩ p.Support) = p.toOuterMeasure s := by
-  simp only [to_outer_measure_apply', Ennreal.coe_eq_coe, Pmf.Support, Set.indicator_inter_support]
+  simp only [← to_outer_measure_apply', ← Ennreal.coe_eq_coe, ← Pmf.Support, ← Set.indicator_inter_support]
 
 /-- Slightly stronger than `outer_measure.mono` having an intersection with `p.support` -/
 theorem to_outer_measure_mono {s t : Set α} (h : s ∩ p.Support ⊆ t) : p.toOuterMeasure s ≤ p.toOuterMeasure t :=
@@ -176,15 +176,16 @@ theorem to_measure_apply_eq_one_iff (hs : MeasurableSet s) : p.toMeasure s = 1 �
 @[simp]
 theorem to_measure_apply_inter_support (hs : MeasurableSet s) (hp : MeasurableSet p.Support) :
     p.toMeasure (s ∩ p.Support) = p.toMeasure s := by
-  simp [p.to_measure_apply_eq_to_outer_measure_apply s hs, p.to_measure_apply_eq_to_outer_measure_apply _ (hs.inter hp)]
+  simp [← p.to_measure_apply_eq_to_outer_measure_apply s hs, ←
+    p.to_measure_apply_eq_to_outer_measure_apply _ (hs.inter hp)]
 
 theorem to_measure_mono {s t : Set α} (hs : MeasurableSet s) (ht : MeasurableSet t) (h : s ∩ p.Support ⊆ t) :
     p.toMeasure s ≤ p.toMeasure t := by
-  simpa only [p.to_measure_apply_eq_to_outer_measure_apply, hs, ht] using to_outer_measure_mono p h
+  simpa only [← p.to_measure_apply_eq_to_outer_measure_apply, ← hs, ← ht] using to_outer_measure_mono p h
 
 theorem to_measure_apply_eq_of_inter_support_eq {s t : Set α} (hs : MeasurableSet s) (ht : MeasurableSet t)
     (h : s ∩ p.Support = t ∩ p.Support) : p.toMeasure s = p.toMeasure t := by
-  simpa only [p.to_measure_apply_eq_to_outer_measure_apply, hs, ht] using
+  simpa only [← p.to_measure_apply_eq_to_outer_measure_apply, ← hs, ← ht] using
     to_outer_measure_apply_eq_of_inter_support_eq p h
 
 section MeasurableSingletonClass
@@ -208,8 +209,8 @@ end MeasurableSingletonClass
 /-- The measure associated to a `pmf` by `to_measure` is a probability measure -/
 instance toMeasure.is_probability_measure (p : Pmf α) : IsProbabilityMeasure p.toMeasure :=
   ⟨by
-    simpa only [MeasurableSet.univ, to_measure_apply_eq_to_outer_measure_apply, Set.indicator_univ,
-      to_outer_measure_apply', Ennreal.coe_eq_one] using tsum_coe p⟩
+    simpa only [← MeasurableSet.univ, ← to_measure_apply_eq_to_outer_measure_apply, ← Set.indicator_univ, ←
+      to_outer_measure_apply', ← Ennreal.coe_eq_one] using tsum_coe p⟩
 
 end Measureₓ
 

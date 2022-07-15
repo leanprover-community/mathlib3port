@@ -74,7 +74,7 @@ variable [FloorRing K]
 /-- Just a computational lemma we need for the next main proof. -/
 protected theorem comp_exact_value_correctness_of_stream_eq_some_aux_comp {a : K} (b c : K)
     (fract_a_ne_zero : Int.fract a ≠ 0) : ((⌊a⌋ : K) * b + c) / Int.fract a + b = (b * a + c) / Int.fract a := by
-  field_simp [fract_a_ne_zero]
+  field_simp [← fract_a_ne_zero]
   rw [Int.fract]
   ring
 
@@ -106,19 +106,19 @@ theorem comp_exact_value_correctness_of_stream_eq_some :
     -- nat.zero
     have : int_fract_pair.of v = ifp_zero := by
       have : int_fract_pair.stream v 0 = some (int_fract_pair.of v) := rfl
-      simpa only [this] using stream_zero_eq
+      simpa only [← this] using stream_zero_eq
     cases this
     cases' Decidable.em (Int.fract v = 0) with fract_eq_zero fract_ne_zero
     -- int.fract v = 0; we must then have `v = ⌊v⌋`
     · suffices v = ⌊v⌋ by
-        simpa [continuants_aux, fract_eq_zero, comp_exact_value]
+        simpa [← continuants_aux, ← fract_eq_zero, ← comp_exact_value]
       calc v = Int.fract v + ⌊v⌋ := by
           rw [Int.fract_add_floor]_ = ⌊v⌋ := by
-          simp [fract_eq_zero]
+          simp [← fract_eq_zero]
       
     -- int.fract v ≠ 0; the claim then easily follows by unfolding a single computation step
-    · field_simp [continuants_aux, next_continuants, next_numerator, next_denominator, of_h_eq_floor, comp_exact_value,
-        fract_ne_zero]
+    · field_simp [← continuants_aux, ← next_continuants, ← next_numerator, ← next_denominator, ← of_h_eq_floor, ←
+        comp_exact_value, ← fract_ne_zero]
       
     
   · intro ifp_succ_n succ_nth_stream_eq
@@ -133,7 +133,7 @@ theorem comp_exact_value_correctness_of_stream_eq_some :
     cases' Decidable.em (ifp_succ_n.fr = 0) with ifp_succ_n_fr_eq_zero ifp_succ_n_fr_ne_zero
     -- ifp_succ_n.fr = 0
     · suffices v = conts.a / conts.b by
-        simpa [comp_exact_value, ifp_succ_n_fr_eq_zero]
+        simpa [← comp_exact_value, ← ifp_succ_n_fr_eq_zero]
       -- use the IH and the fact that ifp_n.fr⁻¹ = ⌊ifp_n.fr⁻¹⌋ to prove this case
       obtain ⟨ifp_n', nth_stream_eq', ifp_n_fract_inv_eq_floor⟩ :
         ∃ ifp_n, int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr⁻¹ = ⌊ifp_n.fr⁻¹⌋
@@ -145,7 +145,7 @@ theorem comp_exact_value_correctness_of_stream_eq_some :
         nth_of_eq_some_of_nth_int_fract_pair_stream_fr_ne_zero nth_stream_eq nth_fract_ne_zero
       rw [← ifp_n_fract_inv_eq_floor] at s_nth_eq
       suffices v = comp_exact_value ppconts pconts ifp_n.fr by
-        simpa [conts, continuants_aux, s_nth_eq, comp_exact_value, nth_fract_ne_zero] using this
+        simpa [← conts, ← continuants_aux, ← s_nth_eq, ← comp_exact_value, ← nth_fract_ne_zero] using this
       exact IH nth_stream_eq
       
     -- ifp_succ_n.fr ≠ 0
@@ -172,7 +172,7 @@ theorem comp_exact_value_correctness_of_stream_eq_some :
       let pB := pconts.b
       have : comp_exact_value ppconts pconts ifp_n.fr = (ppA + ifp_n.fr⁻¹ * pA) / (ppB + ifp_n.fr⁻¹ * pB) := by
         -- unfold comp_exact_value and the convergent computation once
-        field_simp [ifp_n_fract_ne_zero, comp_exact_value, next_continuants, next_numerator, next_denominator]
+        field_simp [← ifp_n_fract_ne_zero, ← comp_exact_value, ← next_continuants, ← next_numerator, ← next_denominator]
         ac_rfl
       rw [this]
       -- two calculations needed to show the claim
@@ -182,8 +182,8 @@ theorem comp_exact_value_correctness_of_stream_eq_some :
       have : Int.fract (1 / ifp_n.fr) ≠ 0 := by
         simpa using ifp_succ_n_fr_ne_zero
       -- now unfold the recurrence one step and simplify both sides to arrive at the conclusion
-      field_simp [conts, comp_exact_value, continuants_aux_recurrence s_nth_eq ppconts_eq pconts_eq, next_continuants,
-        next_numerator, next_denominator, this, tmp_calc, tmp_calc']
+      field_simp [← conts, ← comp_exact_value, ← continuants_aux_recurrence s_nth_eq ppconts_eq pconts_eq, ←
+        next_continuants, ← next_numerator, ← next_denominator, ← this, ← tmp_calc, ← tmp_calc']
       ac_rfl
       
     
@@ -216,7 +216,8 @@ theorem of_correctness_of_nth_stream_eq_none (nth_stream_eq_none : IntFractPair.
         exact IH nth_stream_eq_none
         
       
-    · simpa [nth_stream_fr_eq_zero, comp_exact_value] using comp_exact_value_correctness_of_stream_eq_some nth_stream_eq
+    · simpa [← nth_stream_fr_eq_zero, ← comp_exact_value] using
+        comp_exact_value_correctness_of_stream_eq_some nth_stream_eq
       
 
 /-- If `generalized_continued_fraction.of v` terminated at step `n`, then the `n`th convergent is

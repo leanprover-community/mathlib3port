@@ -33,13 +33,13 @@ theorem is_prime_pow_iff_pow_succ : IsPrimePow n ↔ ∃ (p : R)(k : ℕ), Prime
       fun ⟨p, k, hp, hn⟩ => ⟨_, _, hp, Nat.succ_pos', hn⟩⟩
 
 theorem not_is_prime_pow_zero [NoZeroDivisors R] : ¬IsPrimePow (0 : R) := by
-  simp only [is_prime_pow_def, not_exists, not_and', and_imp]
+  simp only [← is_prime_pow_def, ← not_exists, ← not_and', ← and_imp]
   intro x n hn hx
   rw [pow_eq_zero hx]
   simp
 
 theorem not_is_prime_pow_one : ¬IsPrimePow (1 : R) := by
-  simp only [is_prime_pow_def, not_exists, not_and', and_imp]
+  simp only [← is_prime_pow_def, ← not_exists, ← not_and', ← and_imp]
   intro x n hn hx ht
   exact ht.not_unit (is_unit_of_pow_eq_one x n hx hn)
 
@@ -74,7 +74,7 @@ end UniqueUnits
 section Nat
 
 theorem is_prime_pow_nat_iff (n : ℕ) : IsPrimePow n ↔ ∃ p k : ℕ, Nat.Prime p ∧ 0 < k ∧ p ^ k = n := by
-  simp only [is_prime_pow_def, Nat.prime_iff]
+  simp only [← is_prime_pow_def, ← Nat.prime_iff]
 
 theorem Nat.Prime.is_prime_pow {p : ℕ} (hp : p.Prime) : IsPrimePow p :=
   (Nat.prime_iff.mp hp).IsPrimePow
@@ -101,7 +101,7 @@ theorem IsPrimePow.dvd {n m : ℕ} (hn : IsPrimePow n) (hm : m ∣ n) (hm₁ : m
 
 theorem Nat.disjoint_divisors_filter_prime_pow {a b : ℕ} (hab : a.Coprime b) :
     Disjoint (a.divisors.filter IsPrimePow) (b.divisors.filter IsPrimePow) := by
-  simp only [Finset.disjoint_left, Finset.mem_filter, and_imp, Nat.mem_divisors, not_and]
+  simp only [← Finset.disjoint_left, ← Finset.mem_filter, ← and_imp, ← Nat.mem_divisors, ← not_and]
   rintro n han ha hn hbn hb -
   exact hn.ne_one (Nat.eq_one_of_dvd_coprimes hab han hbn)
 

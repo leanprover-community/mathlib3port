@@ -56,7 +56,7 @@ theorem inf_edist_empty : infEdist x ∅ = ∞ :=
   infi_emptyset
 
 theorem le_inf_edist {d} : d ≤ infEdist x s ↔ ∀, ∀ y ∈ s, ∀, d ≤ edist x y := by
-  simp only [inf_edist, le_infi_iff]
+  simp only [← inf_edist, ← le_infi_iff]
 
 /-- The edist to a union is the minimum of the edists -/
 @[simp]
@@ -95,7 +95,7 @@ theorem inf_edist_le_inf_edist_add_edist : infEdist x s ≤ infEdist y s + edist
     (⨅ z ∈ s, edist x z) ≤ ⨅ z ∈ s, edist y z + edist x y :=
       infi₂_mono fun z hz => (edist_triangle _ _ _).trans_eq (add_commₓ _ _)
     _ = (⨅ z ∈ s, edist y z) + edist x y := by
-      simp only [Ennreal.infi_add]
+      simp only [← Ennreal.infi_add]
     
 
 theorem inf_edist_le_edist_add_inf_edist : infEdist x s ≤ edist x y + infEdist y s := by
@@ -109,14 +109,14 @@ theorem continuous_inf_edist : Continuous fun x => infEdist x s :=
       (by
         simp ) <|
     by
-    simp only [one_mulₓ, inf_edist_le_inf_edist_add_edist, forall_2_true_iff]
+    simp only [← one_mulₓ, ← inf_edist_le_inf_edist_add_edist, ← forall_2_true_iff]
 
 /-- The edist to a set and to its closure coincide -/
 theorem inf_edist_closure : infEdist x (Closure s) = infEdist x s := by
   refine' le_antisymmₓ (inf_edist_anti subset_closure) _
   refine' Ennreal.le_of_forall_pos_le_add fun ε εpos h => _
   have ε0 : 0 < (ε / 2 : ℝ≥0∞) := by
-    simpa [pos_iff_ne_zero] using εpos
+    simpa [← pos_iff_ne_zero] using εpos
   have : inf_edist x (Closure s) < inf_edist x (Closure s) + ε / 2 := Ennreal.lt_add_right h.ne ε0.ne'
   rcases inf_edist_lt_iff.mp this with ⟨y, ycs, hy⟩
   -- y : α,  ycs : y ∈ closure s,  hy : edist x y < inf_edist x (closure s) + ↑ε / 2
@@ -150,7 +150,7 @@ theorem disjoint_closed_ball_of_lt_inf_edist {r : ℝ≥0∞} (h : r < infEdist 
 
 /-- The infimum edistance is invariant under isometries -/
 theorem inf_edist_image (hΦ : Isometry Φ) : infEdist (Φ x) (Φ '' t) = infEdist x t := by
-  simp only [inf_edist, infi_image, hΦ.edist_eq]
+  simp only [← inf_edist, ← infi_image, ← hΦ.edist_eq]
 
 theorem _root_.is_open.exists_Union_is_closed {U : Set α} (hU : IsOpen U) :
     ∃ F : ℕ → Set α, (∀ n, IsClosed (F n)) ∧ (∀ n, F n ⊆ U) ∧ (⋃ n, F n) = U ∧ Monotone F := by
@@ -164,23 +164,23 @@ theorem _root_.is_open.exists_Union_is_closed {U : Set α} (hU : IsOpen U) :
   refine' ⟨F, fun n => IsClosed.preimage continuous_inf_edist is_closed_Ici, F_subset, _, _⟩
   show Monotone F
   · intro m n hmn x hx
-    simp only [mem_Ici, mem_preimage] at hx⊢
+    simp only [← mem_Ici, ← mem_preimage] at hx⊢
     apply le_transₓ (Ennreal.pow_le_pow_of_le_one a_lt_one.le hmn) hx
     
   show (⋃ n, F n) = U
   · refine'
       subset.antisymm
         (by
-          simp only [Union_subset_iff, F_subset, forall_const])
+          simp only [← Union_subset_iff, ← F_subset, ← forall_const])
         fun x hx => _
     have : ¬x ∈ Uᶜ := by
       simpa using hx
     rw [mem_iff_inf_edist_zero_of_closed hU.is_closed_compl] at this
     have B : 0 < inf_edist x (Uᶜ) := by
-      simpa [pos_iff_ne_zero] using this
+      simpa [← pos_iff_ne_zero] using this
     have : Filter.Tendsto (fun n => a ^ n) at_top (𝓝 0) := Ennreal.tendsto_pow_at_top_nhds_0_of_lt_1 a_lt_one
     rcases((tendsto_order.1 this).2 _ B).exists with ⟨n, hn⟩
-    simp only [mem_Union, mem_Ici, mem_preimage]
+    simp only [← mem_Union, ← mem_Ici, ← mem_preimage]
     exact ⟨n, hn.le⟩
     
 
@@ -224,7 +224,7 @@ variable [PseudoEmetricSpace α] [PseudoEmetricSpace β] {x y : α} {s t u : Set
 /-- The Hausdorff edistance of a set to itself vanishes -/
 @[simp]
 theorem Hausdorff_edist_self : hausdorffEdist s s = 0 := by
-  simp only [Hausdorff_edist_def, sup_idem, Ennreal.supr_eq_zero]
+  simp only [← Hausdorff_edist_def, ← sup_idem, ← Ennreal.supr_eq_zero]
   exact fun x hx => inf_edist_zero_of_mem hx
 
 /-- The Haudorff edistances of `s` to `t` and of `t` to `s` coincide -/
@@ -235,7 +235,7 @@ theorem Hausdorff_edist_comm : hausdorffEdist s t = hausdorffEdist t s := by
 in each set to the other set -/
 theorem Hausdorff_edist_le_of_inf_edist {r : ℝ≥0∞} (H1 : ∀, ∀ x ∈ s, ∀, infEdist x t ≤ r)
     (H2 : ∀, ∀ x ∈ t, ∀, infEdist x s ≤ r) : hausdorffEdist s t ≤ r := by
-  simp only [Hausdorff_edist, sup_le_iff, supr_le_iff]
+  simp only [← Hausdorff_edist, ← sup_le_iff, ← supr_le_iff]
   exact ⟨H1, H2⟩
 
 /-- Bounding the Hausdorff edistance by exhibiting, for any point in each set,
@@ -273,7 +273,7 @@ between `s` and `t` -/
 theorem inf_edist_le_inf_edist_add_Hausdorff_edist : infEdist x t ≤ infEdist x s + hausdorffEdist s t :=
   Ennreal.le_of_forall_pos_le_add fun ε εpos h => by
     have ε0 : (ε / 2 : ℝ≥0∞) ≠ 0 := by
-      simpa [pos_iff_ne_zero] using εpos
+      simpa [← pos_iff_ne_zero] using εpos
     have : inf_edist x s < inf_edist x s + ε / 2 := Ennreal.lt_add_right (Ennreal.add_lt_top.1 h).1.Ne ε0
     rcases inf_edist_lt_iff.mp this with ⟨y, ys, dxy⟩
     -- y : α,  ys : y ∈ s,  dxy : edist x y < inf_edist x s + ↑ε / 2
@@ -283,11 +283,11 @@ theorem inf_edist_le_inf_edist_add_Hausdorff_edist : infEdist x t ≤ infEdist x
     calc inf_edist x t ≤ edist x z := inf_edist_le_edist_of_mem zt _ ≤ edist x y + edist y z :=
         edist_triangle _ _ _ _ ≤ inf_edist x s + ε / 2 + (Hausdorff_edist s t + ε / 2) :=
         add_le_add dxy.le dyz.le _ = inf_edist x s + Hausdorff_edist s t + ε := by
-        simp [Ennreal.add_halves, add_commₓ, add_left_commₓ]
+        simp [← Ennreal.add_halves, ← add_commₓ, ← add_left_commₓ]
 
 /-- The Hausdorff edistance is invariant under eisometries -/
 theorem Hausdorff_edist_image (h : Isometry Φ) : hausdorffEdist (Φ '' s) (Φ '' t) = hausdorffEdist s t := by
-  simp only [Hausdorff_edist_def, supr_image, inf_edist_image h]
+  simp only [← Hausdorff_edist_def, ← supr_image, ← inf_edist_image h]
 
 /-- The Hausdorff distance is controlled by the diameter of the union -/
 theorem Hausdorff_edist_le_ediam (hs : s.Nonempty) (ht : t.Nonempty) : hausdorffEdist s t ≤ diam (s ∪ t) := by
@@ -304,7 +304,7 @@ theorem Hausdorff_edist_le_ediam (hs : s.Nonempty) (ht : t.Nonempty) : hausdorff
 /-- The Hausdorff distance satisfies the triangular inequality -/
 theorem Hausdorff_edist_triangle : hausdorffEdist s u ≤ hausdorffEdist s t + hausdorffEdist t u := by
   rw [Hausdorff_edist_def]
-  simp only [sup_le_iff, supr_le_iff]
+  simp only [← sup_le_iff, ← supr_le_iff]
   constructor
   show ∀, ∀ x ∈ s, ∀, inf_edist x u ≤ Hausdorff_edist s t + Hausdorff_edist t u
   exact fun x xs =>
@@ -318,14 +318,14 @@ theorem Hausdorff_edist_triangle : hausdorffEdist s u ≤ hausdorffEdist s t + h
       inf_edist x s ≤ inf_edist x t + Hausdorff_edist t s := inf_edist_le_inf_edist_add_Hausdorff_edist
       _ ≤ Hausdorff_edist u t + Hausdorff_edist t s := add_le_add_right (inf_edist_le_Hausdorff_edist_of_mem xu) _
       _ = Hausdorff_edist s t + Hausdorff_edist t u := by
-        simp [Hausdorff_edist_comm, add_commₓ]
+        simp [← Hausdorff_edist_comm, ← add_commₓ]
       
 
 /-- Two sets are at zero Hausdorff edistance if and only if they have the same closure -/
 theorem Hausdorff_edist_zero_iff_closure_eq_closure : hausdorffEdist s t = 0 ↔ Closure s = Closure t :=
   calc
     hausdorffEdist s t = 0 ↔ s ⊆ Closure t ∧ t ⊆ Closure s := by
-      simp only [Hausdorff_edist_def, Ennreal.sup_eq_zero, Ennreal.supr_eq_zero, ← mem_closure_iff_inf_edist_zero,
+      simp only [← Hausdorff_edist_def, ← Ennreal.sup_eq_zero, ← Ennreal.supr_eq_zero, mem_closure_iff_inf_edist_zero, ←
         subset_def]
     _ ↔ Closure s = Closure t :=
       ⟨fun h => Subset.antisymm (closure_minimal h.1 is_closed_closure) (closure_minimal h.2 is_closed_closure),
@@ -343,7 +343,7 @@ theorem Hausdorff_edist_closure₁ : hausdorffEdist (Closure s) t = hausdorffEdi
   refine' le_antisymmₓ _ _
   · calc _ ≤ Hausdorff_edist (Closure s) s + Hausdorff_edist s t := Hausdorff_edist_triangle _ = Hausdorff_edist s t :=
         by
-        simp [Hausdorff_edist_comm]
+        simp [← Hausdorff_edist_comm]
     
   · calc _ ≤ Hausdorff_edist s (Closure s) + Hausdorff_edist (Closure s) t :=
         Hausdorff_edist_triangle _ = Hausdorff_edist (Closure s) t := by
@@ -353,7 +353,7 @@ theorem Hausdorff_edist_closure₁ : hausdorffEdist (Closure s) t = hausdorffEdi
 /-- Replacing a set by its closure does not change the Hausdorff edistance. -/
 @[simp]
 theorem Hausdorff_edist_closure₂ : hausdorffEdist s (Closure t) = hausdorffEdist s t := by
-  simp [@Hausdorff_edist_comm _ _ s _]
+  simp [← @Hausdorff_edist_comm _ _ s _]
 
 /-- The Hausdorff edistance between sets or their closures is the same -/
 @[simp]
@@ -417,13 +417,13 @@ def infDist (x : α) (s : Set α) : ℝ :=
 
 /-- the minimal distance is always nonnegative -/
 theorem inf_dist_nonneg : 0 ≤ infDist x s := by
-  simp [inf_dist]
+  simp [← inf_dist]
 
 /-- the minimal distance to the empty set is 0 (if you want to have the more reasonable
 value ∞ instead, use `inf_edist`, which takes values in ℝ≥0∞) -/
 @[simp]
 theorem inf_dist_empty : infDist x ∅ = 0 := by
-  simp [inf_dist]
+  simp [← inf_dist]
 
 /-- In a metric space, the minimal edistance to a nonempty set is finite -/
 theorem inf_edist_ne_top (h : s.Nonempty) : infEdist x s ≠ ⊤ := by
@@ -433,12 +433,12 @@ theorem inf_edist_ne_top (h : s.Nonempty) : infEdist x s ≠ ⊤ := by
 
 /-- The minimal distance of a point to a set containing it vanishes -/
 theorem inf_dist_zero_of_mem (h : x ∈ s) : infDist x s = 0 := by
-  simp [inf_edist_zero_of_mem h, inf_dist]
+  simp [← inf_edist_zero_of_mem h, ← inf_dist]
 
 /-- The minimal distance to a singleton is the distance to the unique point in this singleton -/
 @[simp]
 theorem inf_dist_singleton : infDist x {y} = dist x y := by
-  simp [inf_dist, inf_edist, dist_edist]
+  simp [← inf_dist, ← inf_edist, ← dist_edist]
 
 /-- The minimal distance to a set is bounded by the distance to any point in this set -/
 theorem inf_dist_le_dist_of_mem (h : y ∈ s) : infDist x s ≤ dist x y := by
@@ -460,13 +460,13 @@ theorem inf_dist_lt_iff {r : ℝ} (hs : s.Nonempty) : infDist x s < r ↔ ∃ y 
 the distance between `x` and `y` -/
 theorem inf_dist_le_inf_dist_add_dist : infDist x s ≤ infDist y s + dist x y := by
   cases' s.eq_empty_or_nonempty with hs hs
-  · simp [hs, dist_nonneg]
+  · simp [← hs, ← dist_nonneg]
     
   · rw [inf_dist, inf_dist, dist_edist, ← Ennreal.to_real_add (inf_edist_ne_top hs) (edist_ne_top _ _),
       Ennreal.to_real_le_to_real (inf_edist_ne_top hs)]
     · exact inf_edist_le_inf_edist_add_edist
       
-    · simp [Ennreal.add_eq_top, inf_edist_ne_top hs, edist_ne_top]
+    · simp [← Ennreal.add_eq_top, ← inf_edist_ne_top hs, ← edist_ne_top]
       
     
 
@@ -482,7 +482,7 @@ theorem disjoint_ball_inf_dist : Disjoint (Ball x (infDist x s)) s :=
         
 
 theorem ball_inf_dist_subset_compl : Ball x (infDist x s) ⊆ sᶜ :=
-  disjoint_iff_subset_compl_right.1 disjoint_ball_inf_dist
+  disjoint_ball_inf_dist.subset_compl_right
 
 theorem ball_inf_dist_compl_subset : Ball x (infDist x (sᶜ)) ⊆ s :=
   ball_inf_dist_subset_compl.trans (compl_compl s).Subset
@@ -509,7 +509,7 @@ variable {s}
 
 /-- The minimal distance to a set and its closure coincide -/
 theorem inf_dist_eq_closure : infDist x (Closure s) = infDist x s := by
-  simp [inf_dist, inf_edist_closure]
+  simp [← inf_dist, ← inf_edist_closure]
 
 /-- If a point belongs to the closure of `s`, then its infimum distance to `s` equals zero.
 The converse is true provided that `s` is nonempty, see `mem_closure_iff_inf_dist_zero`. -/
@@ -519,7 +519,7 @@ theorem inf_dist_zero_of_mem_closure (hx : x ∈ Closure s) : infDist x s = 0 :=
 
 /-- A point belongs to the closure of `s` iff its infimum distance to this set vanishes -/
 theorem mem_closure_iff_inf_dist_zero (h : s.Nonempty) : x ∈ Closure s ↔ infDist x s = 0 := by
-  simp [mem_closure_iff_inf_edist_zero, inf_dist, Ennreal.to_real_eq_zero_iff, inf_edist_ne_top h]
+  simp [← mem_closure_iff_inf_edist_zero, ← inf_dist, ← Ennreal.to_real_eq_zero_iff, ← inf_edist_ne_top h]
 
 /-- Given a closed set `s`, a point belongs to `s` iff its infimum distance to this set vanishes -/
 theorem _root_.is_closed.mem_iff_inf_dist_zero (h : IsClosed s) (hs : s.Nonempty) : x ∈ s ↔ infDist x s = 0 := by
@@ -529,11 +529,11 @@ theorem _root_.is_closed.mem_iff_inf_dist_zero (h : IsClosed s) (hs : s.Nonempty
 theorem _root_.is_closed.not_mem_iff_inf_dist_pos (h : IsClosed s) (hs : s.Nonempty) : x ∉ s ↔ 0 < infDist x s := by
   rw [← not_iff_not]
   push_neg
-  simp [h.mem_iff_inf_dist_zero hs, le_antisymm_iffₓ, inf_dist_nonneg]
+  simp [← h.mem_iff_inf_dist_zero hs, ← le_antisymm_iffₓ, ← inf_dist_nonneg]
 
 /-- The infimum distance is invariant under isometries -/
 theorem inf_dist_image (hΦ : Isometry Φ) : infDist (Φ x) (Φ '' t) = infDist x t := by
-  simp [inf_dist, inf_edist_image hΦ]
+  simp [← inf_dist, ← inf_edist_image hΦ]
 
 theorem inf_dist_inter_closed_ball_of_mem (h : y ∈ s) : infDist x (s ∩ ClosedBall x (dist y x)) = infDist x s := by
   replace h : y ∈ s ∩ closed_ball x (dist y x) := ⟨h, mem_closed_ball.2 le_rfl⟩
@@ -565,7 +565,7 @@ theorem _root_.is_closed.exists_inf_dist_eq_dist [ProperSpace α] (h : IsClosed 
 
 theorem exists_mem_closure_inf_dist_eq_dist [ProperSpace α] (hne : s.Nonempty) (x : α) :
     ∃ y ∈ Closure s, infDist x s = dist x y := by
-  simpa only [inf_dist_eq_closure] using is_closed_closure.exists_inf_dist_eq_dist hne.closure x
+  simpa only [← inf_dist_eq_closure] using is_closed_closure.exists_inf_dist_eq_dist hne.closure x
 
 /-! ### Distance of a point to a set as a function into `ℝ≥0`. -/
 
@@ -601,7 +601,7 @@ def hausdorffDist (s t : Set α) : ℝ :=
 
 /-- The Hausdorff distance is nonnegative -/
 theorem Hausdorff_dist_nonneg : 0 ≤ hausdorffDist s t := by
-  simp [Hausdorff_dist]
+  simp [← Hausdorff_dist]
 
 /-- If two sets are nonempty and bounded in a metric space, they are at finite Hausdorff
 edistance. -/
@@ -630,27 +630,27 @@ theorem Hausdorff_edist_ne_top_of_nonempty_of_bounded (hs : s.Nonempty) (ht : t.
 /-- The Hausdorff distance between a set and itself is zero -/
 @[simp]
 theorem Hausdorff_dist_self_zero : hausdorffDist s s = 0 := by
-  simp [Hausdorff_dist]
+  simp [← Hausdorff_dist]
 
 /-- The Hausdorff distance from `s` to `t` and from `t` to `s` coincide -/
 theorem Hausdorff_dist_comm : hausdorffDist s t = hausdorffDist t s := by
-  simp [Hausdorff_dist, Hausdorff_edist_comm]
+  simp [← Hausdorff_dist, ← Hausdorff_edist_comm]
 
 /-- The Hausdorff distance to the empty set vanishes (if you want to have the more reasonable
 value ∞ instead, use `Hausdorff_edist`, which takes values in ℝ≥0∞) -/
 @[simp]
 theorem Hausdorff_dist_empty : hausdorffDist s ∅ = 0 := by
   cases' s.eq_empty_or_nonempty with h h
-  · simp [h]
+  · simp [← h]
     
-  · simp [Hausdorff_dist, Hausdorff_edist_empty h]
+  · simp [← Hausdorff_dist, ← Hausdorff_edist_empty h]
     
 
 /-- The Hausdorff distance to the empty set vanishes (if you want to have the more reasonable
 value ∞ instead, use `Hausdorff_edist`, which takes values in ℝ≥0∞) -/
 @[simp]
 theorem Hausdorff_dist_empty' : hausdorffDist ∅ s = 0 := by
-  simp [Hausdorff_dist_comm]
+  simp [← Hausdorff_dist_comm]
 
 /-- Bounding the Hausdorff distance by bounding the distance of any point
 in each set to the other set -/
@@ -731,14 +731,14 @@ theorem exists_dist_lt_of_Hausdorff_dist_lt' {r : ℝ} (h : y ∈ t) (H : hausdo
     (fin : hausdorffEdist s t ≠ ⊤) : ∃ x ∈ s, dist x y < r := by
   rw [Hausdorff_dist_comm] at H
   rw [Hausdorff_edist_comm] at fin
-  simpa [dist_comm] using exists_dist_lt_of_Hausdorff_dist_lt h H Finₓ
+  simpa [← dist_comm] using exists_dist_lt_of_Hausdorff_dist_lt h H Finₓ
 
 /-- The infimum distance to `s` and `t` are the same, up to the Hausdorff distance
 between `s` and `t` -/
 theorem inf_dist_le_inf_dist_add_Hausdorff_dist (fin : hausdorffEdist s t ≠ ⊤) :
     infDist x t ≤ infDist x s + hausdorffDist s t := by
   rcases empty_or_nonempty_of_Hausdorff_edist_ne_top Finₓ with (⟨hs, ht⟩ | ⟨hs, ht⟩)
-  · simp only [hs, ht, Hausdorff_dist_empty, inf_dist_empty, zero_addₓ]
+  · simp only [← hs, ← ht, ← Hausdorff_dist_empty, ← inf_dist_empty, ← zero_addₓ]
     
   rw [inf_dist, inf_dist, Hausdorff_dist, ← Ennreal.to_real_add (inf_edist_ne_top hs) Finₓ,
     Ennreal.to_real_le_to_real (inf_edist_ne_top ht)]
@@ -749,27 +749,27 @@ theorem inf_dist_le_inf_dist_add_Hausdorff_dist (fin : hausdorffEdist s t ≠ �
 
 /-- The Hausdorff distance is invariant under isometries -/
 theorem Hausdorff_dist_image (h : Isometry Φ) : hausdorffDist (Φ '' s) (Φ '' t) = hausdorffDist s t := by
-  simp [Hausdorff_dist, Hausdorff_edist_image h]
+  simp [← Hausdorff_dist, ← Hausdorff_edist_image h]
 
 /-- The Hausdorff distance satisfies the triangular inequality -/
 theorem Hausdorff_dist_triangle (fin : hausdorffEdist s t ≠ ⊤) :
     hausdorffDist s u ≤ hausdorffDist s t + hausdorffDist t u := by
   by_cases' Hausdorff_edist s u = ⊤
   · calc Hausdorff_dist s u = 0 + 0 := by
-        simp [Hausdorff_dist, h]_ ≤ Hausdorff_dist s t + Hausdorff_dist t u :=
+        simp [← Hausdorff_dist, ← h]_ ≤ Hausdorff_dist s t + Hausdorff_dist t u :=
         add_le_add Hausdorff_dist_nonneg Hausdorff_dist_nonneg
     
   · have Dtu : Hausdorff_edist t u < ⊤ :=
       calc
         Hausdorff_edist t u ≤ Hausdorff_edist t s + Hausdorff_edist s u := Hausdorff_edist_triangle
         _ = Hausdorff_edist s t + Hausdorff_edist s u := by
-          simp [Hausdorff_edist_comm]
+          simp [← Hausdorff_edist_comm]
         _ < ⊤ := lt_top_iff_ne_top.mpr <| ennreal.add_ne_top.mpr ⟨Finₓ, h⟩
         
     rw [Hausdorff_dist, Hausdorff_dist, Hausdorff_dist, ← Ennreal.to_real_add Finₓ Dtu.ne, Ennreal.to_real_le_to_real h]
     · exact Hausdorff_edist_triangle
       
-    · simp [Ennreal.add_eq_top, lt_top_iff_ne_top.1 Dtu, Finₓ]
+    · simp [← Ennreal.add_eq_top, ← lt_top_iff_ne_top.1 Dtu, ← Finₓ]
       
     
 
@@ -778,37 +778,37 @@ theorem Hausdorff_dist_triangle' (fin : hausdorffEdist t u ≠ ⊤) :
     hausdorffDist s u ≤ hausdorffDist s t + hausdorffDist t u := by
   rw [Hausdorff_edist_comm] at fin
   have I : Hausdorff_dist u s ≤ Hausdorff_dist u t + Hausdorff_dist t s := Hausdorff_dist_triangle Finₓ
-  simpa [add_commₓ, Hausdorff_dist_comm] using I
+  simpa [← add_commₓ, ← Hausdorff_dist_comm] using I
 
 /-- The Hausdorff distance between a set and its closure vanish -/
 @[simp]
 theorem Hausdorff_dist_self_closure : hausdorffDist s (Closure s) = 0 := by
-  simp [Hausdorff_dist]
+  simp [← Hausdorff_dist]
 
 /-- Replacing a set by its closure does not change the Hausdorff distance. -/
 @[simp]
 theorem Hausdorff_dist_closure₁ : hausdorffDist (Closure s) t = hausdorffDist s t := by
-  simp [Hausdorff_dist]
+  simp [← Hausdorff_dist]
 
 /-- Replacing a set by its closure does not change the Hausdorff distance. -/
 @[simp]
 theorem Hausdorff_dist_closure₂ : hausdorffDist s (Closure t) = hausdorffDist s t := by
-  simp [Hausdorff_dist]
+  simp [← Hausdorff_dist]
 
 /-- The Hausdorff distance between two sets and their closures coincide -/
 @[simp]
 theorem Hausdorff_dist_closure : hausdorffDist (Closure s) (Closure t) = hausdorffDist s t := by
-  simp [Hausdorff_dist]
+  simp [← Hausdorff_dist]
 
 /-- Two sets are at zero Hausdorff distance if and only if they have the same closures -/
 theorem Hausdorff_dist_zero_iff_closure_eq_closure (fin : hausdorffEdist s t ≠ ⊤) :
     hausdorffDist s t = 0 ↔ Closure s = Closure t := by
-  simp [Hausdorff_edist_zero_iff_closure_eq_closure.symm, Hausdorff_dist, Ennreal.to_real_eq_zero_iff, Finₓ]
+  simp [← Hausdorff_edist_zero_iff_closure_eq_closure.symm, ← Hausdorff_dist, ← Ennreal.to_real_eq_zero_iff, ← Finₓ]
 
 /-- Two closed sets are at zero Hausdorff distance if and only if they coincide -/
 theorem _root_.is_closed.Hausdorff_dist_zero_iff_eq (hs : IsClosed s) (ht : IsClosed t) (fin : hausdorffEdist s t ≠ ⊤) :
     hausdorffDist s t = 0 ↔ s = t := by
-  simp [← Hausdorff_edist_zero_iff_eq_of_closed hs ht, Hausdorff_dist, Ennreal.to_real_eq_zero_iff, Finₓ]
+  simp [Hausdorff_edist_zero_iff_eq_of_closed hs ht, ← Hausdorff_dist, ← Ennreal.to_real_eq_zero_iff, ← Finₓ]
 
 end
 
@@ -839,7 +839,7 @@ theorem is_open_thickening {δ : ℝ} {E : Set α} : IsOpen (Thickening δ E) :=
 /-- The (open) thickening of the empty set is empty. -/
 @[simp]
 theorem thickening_empty (δ : ℝ) : Thickening δ (∅ : Set α) = ∅ := by
-  simp only [thickening, set_of_false, inf_edist_empty, not_top_lt]
+  simp only [← thickening, ← set_of_false, ← inf_edist_empty, ← not_top_lt]
 
 theorem thickening_of_nonpos (hδ : δ ≤ 0) (s : Set α) : Thickening δ s = ∅ :=
   eq_empty_of_forall_not_mem fun x => ((Ennreal.of_real_of_nonpos hδ).trans_le bot_le).not_lt
@@ -867,7 +867,7 @@ theorem mem_thickening_iff {E : Set X} {x : X} : x ∈ Thickening δ E ↔ ∃ z
     intro z
     rw [dist_edist]
     have d_lt_top : edist x z < ∞ := by
-      simp only [edist_dist, Ennreal.of_real_lt_top]
+      simp only [← edist_dist, ← Ennreal.of_real_lt_top]
     have key := @Ennreal.of_real_lt_of_real_iff_of_nonneg (edist x z).toReal δ Ennreal.to_real_nonneg
     rwa [Ennreal.of_real_to_real d_lt_top.ne] at key
   simp_rw [mem_thickening_iff_exists_edist_lt, key_iff]
@@ -875,7 +875,7 @@ theorem mem_thickening_iff {E : Set X} {x : X} : x ∈ Thickening δ E ↔ ∃ z
 @[simp]
 theorem thickening_singleton (δ : ℝ) (x : X) : Thickening δ ({x} : Set X) = Ball x δ := by
   ext
-  simp [mem_thickening_iff]
+  simp [← mem_thickening_iff]
 
 /-- The (open) `δ`-thickening `thickening δ E` of a subset `E` in a metric space equals the
 union of balls of radius `δ` centered at points of `E`. -/
@@ -933,11 +933,11 @@ theorem is_closed_cthickening {δ : ℝ} {E : Set α} : IsClosed (Cthickening δ
 /-- The closed thickening of the empty set is empty. -/
 @[simp]
 theorem cthickening_empty (δ : ℝ) : Cthickening δ (∅ : Set α) = ∅ := by
-  simp only [cthickening, Ennreal.of_real_ne_top, set_of_false, inf_edist_empty, top_le_iff]
+  simp only [← cthickening, ← Ennreal.of_real_ne_top, ← set_of_false, ← inf_edist_empty, ← top_le_iff]
 
 theorem cthickening_of_nonpos {δ : ℝ} (hδ : δ ≤ 0) (E : Set α) : Cthickening δ E = Closure E := by
   ext x
-  simp [mem_closure_iff_inf_edist_zero, cthickening, Ennreal.of_real_eq_zero.2 hδ]
+  simp [← mem_closure_iff_inf_edist_zero, ← cthickening, ← Ennreal.of_real_eq_zero.2 hδ]
 
 /-- The closed thickening with radius zero is the closure of the set. -/
 @[simp]
@@ -953,14 +953,14 @@ theorem cthickening_mono {δ₁ δ₂ : ℝ} (hle : δ₁ ≤ δ₂) (E : Set α
 theorem cthickening_singleton {α : Type _} [PseudoMetricSpace α] (x : α) {δ : ℝ} (hδ : 0 ≤ δ) :
     Cthickening δ ({x} : Set α) = ClosedBall x δ := by
   ext y
-  simp [cthickening, edist_dist, Ennreal.of_real_le_of_real_iff hδ]
+  simp [← cthickening, ← edist_dist, ← Ennreal.of_real_le_of_real_iff hδ]
 
 theorem closed_ball_subset_cthickening_singleton {α : Type _} [PseudoMetricSpace α] (x : α) (δ : ℝ) :
     ClosedBall x δ ⊆ Cthickening δ ({x} : Set α) := by
   rcases lt_or_leₓ δ 0 with (hδ | hδ)
-  · simp only [closed_ball_eq_empty.mpr hδ, empty_subset]
+  · simp only [← closed_ball_eq_empty.mpr hδ, ← empty_subset]
     
-  · simp only [cthickening_singleton x hδ]
+  · simp only [← cthickening_singleton x hδ]
     
 
 /-- The closed thickening `cthickening δ E` with a fixed thickening radius `δ` is
@@ -1073,7 +1073,7 @@ theorem cthickening_eq_Inter_cthickening' {δ : ℝ} (s : Set ℝ) (hsδ : s ⊆
     
   · unfold thickening cthickening
     intro x hx
-    simp only [mem_Inter, mem_set_of_eq] at *
+    simp only [← mem_Inter, ← mem_set_of_eq] at *
     apply Ennreal.le_of_forall_pos_le_add
     intro η η_pos _
     rcases hs (δ + η) (lt_add_of_pos_right _ (nnreal.coe_pos.mpr η_pos)) with ⟨ε, ⟨hsε, hε⟩⟩
@@ -1144,7 +1144,7 @@ theorem frontier_thickening_subset (E : Set α) {δ : ℝ} (δ_pos : 0 < δ) :
     Frontier (Thickening δ E) ⊆ { x : α | infEdist x E = Ennreal.ofReal δ } := by
   have singleton_preim :
     { x : α | inf_edist x E = Ennreal.ofReal δ } = (fun x => inf_edist x E) ⁻¹' {Ennreal.ofReal δ} := by
-    simp only [preimage, mem_singleton_iff]
+    simp only [← preimage, ← mem_singleton_iff]
   rw [thickening_eq_preimage_inf_edist, singleton_preim, ← frontier_Iio' ⟨(0 : ℝ≥0∞), ennreal.of_real_pos.mpr δ_pos⟩]
   exact continuous_inf_edist.frontier_preimage_subset (Iio (Ennreal.ofReal δ))
 
@@ -1153,7 +1153,7 @@ theorem frontier_cthickening_subset (E : Set α) {δ : ℝ} :
     Frontier (Cthickening δ E) ⊆ { x : α | infEdist x E = Ennreal.ofReal δ } := by
   have singleton_preim :
     { x : α | inf_edist x E = Ennreal.ofReal δ } = (fun x => inf_edist x E) ⁻¹' {Ennreal.ofReal δ} := by
-    simp only [preimage, mem_singleton_iff]
+    simp only [← preimage, ← mem_singleton_iff]
   rw [cthickening_eq_preimage_inf_edist, singleton_preim, ← frontier_Iic' ⟨∞, Ennreal.of_real_lt_top⟩]
   exact continuous_inf_edist.frontier_preimage_subset (Iic (Ennreal.ofReal δ))
 
@@ -1169,7 +1169,7 @@ theorem closed_ball_subset_cthickening {α : Type _} [PseudoMetricSpace α] {x :
 theorem _root_.is_compact.cthickening_eq_bUnion_closed_ball {α : Type _} [PseudoMetricSpace α] {δ : ℝ} {E : Set α}
     (hE : IsCompact E) (hδ : 0 ≤ δ) : Cthickening δ E = ⋃ x ∈ E, ClosedBall x δ := by
   rcases eq_empty_or_nonempty E with (rfl | hne)
-  · simp only [cthickening_empty, Union_false, Union_empty]
+  · simp only [← cthickening_empty, ← Union_false, ← Union_empty]
     
   refine' subset.antisymm (fun x hx => _) (Union₂_subset fun x hx => closed_ball_subset_cthickening hx _)
   obtain ⟨y, yE, hy⟩ : ∃ y ∈ E, Emetric.infEdist x E = edist x y := hE.exists_inf_edist_eq_edist hne _
@@ -1182,7 +1182,7 @@ theorem _root_.is_compact.cthickening_eq_bUnion_closed_ball {α : Type _} [Pseud
 /-- For the equality, see `inf_edist_cthickening`. -/
 theorem inf_edist_le_inf_edist_cthickening_add : infEdist x s ≤ infEdist x (Cthickening δ s) + Ennreal.ofReal δ := by
   refine' le_of_forall_lt' fun r h => _
-  simp_rw [← lt_tsub_iff_right, inf_edist_lt_iff, mem_cthickening_iff]  at h
+  simp_rw [← lt_tsub_iff_right, inf_edist_lt_iff, mem_cthickening_iff] at h
   obtain ⟨y, hy, hxy⟩ := h
   exact
     inf_edist_le_edist_add_inf_edist.trans_lt
@@ -1198,10 +1198,10 @@ theorem inf_edist_le_inf_edist_thickening_add : infEdist x s ≤ infEdist x (Thi
 @[simp]
 theorem thickening_thickening_subset (ε δ : ℝ) (s : Set α) : Thickening ε (Thickening δ s) ⊆ Thickening (ε + δ) s := by
   obtain hε | hε := le_totalₓ ε 0
-  · simp only [thickening_of_nonpos hε, empty_subset]
+  · simp only [← thickening_of_nonpos hε, ← empty_subset]
     
   obtain hδ | hδ := le_totalₓ δ 0
-  · simp only [thickening_of_nonpos hδ, thickening_empty, empty_subset]
+  · simp only [← thickening_of_nonpos hδ, ← thickening_empty, ← empty_subset]
     
   intro x
   simp_rw [mem_thickening_iff_exists_edist_lt, Ennreal.of_real_add hε hδ]
@@ -1212,7 +1212,7 @@ theorem thickening_thickening_subset (ε δ : ℝ) (s : Set α) : Thickening ε 
 theorem thickening_cthickening_subset (ε : ℝ) (hδ : 0 ≤ δ) (s : Set α) :
     Thickening ε (Cthickening δ s) ⊆ Thickening (ε + δ) s := by
   obtain hε | hε := le_totalₓ ε 0
-  · simp only [thickening_of_nonpos hε, empty_subset]
+  · simp only [← thickening_of_nonpos hε, ← empty_subset]
     
   intro x
   simp_rw [mem_thickening_iff_exists_edist_lt, mem_cthickening_iff, ← inf_edist_lt_iff, Ennreal.of_real_add hε hδ]
@@ -1226,7 +1226,7 @@ theorem thickening_cthickening_subset (ε : ℝ) (hδ : 0 ≤ δ) (s : Set α) :
 theorem cthickening_thickening_subset (hε : 0 ≤ ε) (δ : ℝ) (s : Set α) :
     Cthickening ε (Thickening δ s) ⊆ Cthickening (ε + δ) s := by
   obtain hδ | hδ := le_totalₓ δ 0
-  · simp only [thickening_of_nonpos hδ, cthickening_empty, empty_subset]
+  · simp only [← thickening_of_nonpos hδ, ← cthickening_empty, ← empty_subset]
     
   intro x
   simp_rw [mem_cthickening_iff, Ennreal.of_real_add hε hδ]

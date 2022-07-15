@@ -44,8 +44,7 @@ def map {α β : Type _} (f : α → β) : P.Obj α → P.Obj β := fun ⟨a, g�
 instance Obj.inhabited [Inhabited P.A] [Inhabited α] : Inhabited (P.Obj α) :=
   ⟨⟨default, default⟩⟩
 
-instance : Functor P.Obj where
-  map := @map P
+instance : Functor P.Obj where map := @map P
 
 protected theorem map_eq {α β : Type _} (f : α → β) (a : P.A) (g : P.B a → α) :
     @Functor.map P.Obj _ _ _ f ⟨a, g⟩ = ⟨a, f ∘ g⟩ :=
@@ -121,7 +120,7 @@ theorem fst_map {α β : Type u} (x : P.Obj α) (f : α → β) : (f <$> x).1 = 
 @[simp]
 theorem iget_map [DecidableEq P.A] {α β : Type u} [Inhabited α] [Inhabited β] (x : P.Obj α) (f : α → β) (i : P.Idx)
     (h : i.1 = x.1) : (f <$> x).iget i = f (x.iget i) := by
-  simp only [obj.iget, fst_map, *, dif_pos, eq_self_iff_true]
+  simp only [← obj.iget, ← fst_map, *, ← dif_pos, ← eq_self_iff_true]
   cases x
   rfl
 
@@ -169,7 +168,7 @@ theorem liftp_iff {α : Type u} (p : α → Prop) (x : P.Obj α) : Liftp p x ↔
 
 theorem liftp_iff' {α : Type u} (p : α → Prop) (a : P.A) (f : P.B a → α) :
     @Liftp.{u} P.Obj _ α p ⟨a, f⟩ ↔ ∀ i, p (f i) := by
-  simp only [liftp_iff, Sigma.mk.inj_iff] <;> constructor <;> intro
+  simp only [← liftp_iff, ← Sigma.mk.inj_iff] <;> constructor <;> intro
   · casesm* Exists _, _ ∧ _
     subst_vars
     assumption
@@ -209,14 +208,14 @@ open Set
 
 theorem supp_eq {α : Type u} (a : P.A) (f : P.B a → α) : @Supp.{u} P.Obj _ α (⟨a, f⟩ : P.Obj α) = f '' univ := by
   ext
-  simp only [supp, image_univ, mem_range, mem_set_of_eq]
+  simp only [← supp, ← image_univ, ← mem_range, ← mem_set_of_eq]
   constructor <;> intro h
   · apply @h fun x => ∃ y : P.B a, f y = x
     rw [liftp_iff']
     intro
     refine' ⟨_, rfl⟩
     
-  · simp only [liftp_iff']
+  · simp only [← liftp_iff']
     cases h
     subst x
     tauto

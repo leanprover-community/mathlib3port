@@ -52,7 +52,7 @@ protected theorem wf : (∃ x, p x) → WellFounded (Upto.Gt p)
       rw [this]
       apply measure_wf
     ext ⟨a, ha⟩ ⟨b, _⟩
-    dsimp' [Measureₓ, InvImage, upto.gt]
+    dsimp' [← Measureₓ, ← InvImage, ← upto.gt]
     rw [tsub_lt_tsub_iff_left_of_le]
     exact le_of_not_ltₓ fun h' => ha _ h' h
 

@@ -89,11 +89,11 @@ theorem mul_inv_of_self_assoc [Monoidₓ α] (a b : α) [Invertible a] : a * (�
 
 @[simp]
 theorem mul_inv_of_mul_self_cancel [Monoidₓ α] (a b : α) [Invertible b] : a * ⅟ b * b = a := by
-  simp [mul_assoc]
+  simp [← mul_assoc]
 
 @[simp]
 theorem mul_mul_inv_of_self_cancel [Monoidₓ α] (a b : α) [Invertible b] : a * b * ⅟ b = a := by
-  simp [mul_assoc]
+  simp [← mul_assoc]
 
 theorem inv_of_eq_right_inv [Monoidₓ α] {a b : α} [Invertible a] (hac : a * b = 1) : ⅟ a = b :=
   left_inv_eq_right_invₓ (inv_of_mul_self _) hac
@@ -207,33 +207,33 @@ theorem inv_of_inj [Monoidₓ α] {a b : α} [Invertible a] [Invertible b] : ⅟
 /-- `⅟b * ⅟a` is the inverse of `a * b` -/
 def invertibleMul [Monoidₓ α] (a b : α) [Invertible a] [Invertible b] : Invertible (a * b) :=
   ⟨⅟ b * ⅟ a, by
-    simp [← mul_assoc], by
-    simp [← mul_assoc]⟩
+    simp [mul_assoc], by
+    simp [mul_assoc]⟩
 
 @[simp]
 theorem inv_of_mul [Monoidₓ α] (a b : α) [Invertible a] [Invertible b] [Invertible (a * b)] : ⅟ (a * b) = ⅟ b * ⅟ a :=
   inv_of_eq_right_inv
     (by
-      simp [← mul_assoc])
+      simp [mul_assoc])
 
 theorem Commute.inv_of_right [Monoidₓ α] {a b : α} [Invertible b] (h : Commute a b) : Commute a (⅟ b) :=
   calc
     a * ⅟ b = ⅟ b * (b * a * ⅟ b) := by
-      simp [mul_assoc]
+      simp [← mul_assoc]
     _ = ⅟ b * (a * b * ⅟ b) := by
       rw [h.eq]
     _ = ⅟ b * a := by
-      simp [mul_assoc]
+      simp [← mul_assoc]
     
 
 theorem Commute.inv_of_left [Monoidₓ α] {a b : α} [Invertible b] (h : Commute b a) : Commute (⅟ b) a :=
   calc
     ⅟ b * a = ⅟ b * (a * b * ⅟ b) := by
-      simp [mul_assoc]
+      simp [← mul_assoc]
     _ = ⅟ b * (b * a * ⅟ b) := by
       rw [h.eq]
     _ = a * ⅟ b := by
-      simp [mul_assoc]
+      simp [← mul_assoc]
     
 
 theorem commute_inv_of {M : Type _} [One M] [Mul M] (m : M) [Invertible m] : Commute m (⅟ m) :=
@@ -246,7 +246,7 @@ theorem nonzero_of_invertible [MulZeroOneClassₓ α] (a : α) [Nontrivial α] [
   zero_ne_one <|
     calc
       0 = ⅟ a * a := by
-        simp [ha]
+        simp [← ha]
       _ = 1 := inv_of_mul_self a
       
 
@@ -296,14 +296,14 @@ theorem div_self_of_invertible (a : α) [Invertible a] : a / a = 1 :=
 /-- `b / a` is the inverse of `a / b` -/
 def invertibleDiv (a b : α) [Invertible a] [Invertible b] : Invertible (a / b) :=
   ⟨b / a, by
-    simp [← mul_div_assoc], by
-    simp [← mul_div_assoc]⟩
+    simp [mul_div_assoc], by
+    simp [mul_div_assoc]⟩
 
 @[simp]
 theorem inv_of_div (a b : α) [Invertible a] [Invertible b] [Invertible (a / b)] : ⅟ (a / b) = b / a :=
   inv_of_eq_right_inv
     (by
-      simp [← mul_div_assoc])
+      simp [mul_div_assoc])
 
 /-- `a` is the inverse of `a⁻¹` -/
 def invertibleInv {a : α} [Invertible a] : Invertible a⁻¹ :=

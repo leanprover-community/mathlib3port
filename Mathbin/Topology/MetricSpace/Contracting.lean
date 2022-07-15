@@ -48,7 +48,7 @@ theorem to_lipschitz_with (hf : ContractingWith K f) : LipschitzWith K f :=
   hf.2
 
 theorem one_sub_K_pos' (hf : ContractingWith K f) : (0 : ℝ≥0∞) < 1 - K := by
-  simp [hf.1]
+  simp [← hf.1]
 
 theorem one_sub_K_ne_zero (hf : ContractingWith K f) : (1 : ℝ≥0∞) - K ≠ 0 :=
   ne_of_gtₓ hf.one_sub_K_pos'
@@ -71,12 +71,12 @@ theorem edist_inequality (hf : ContractingWith K f) {x y} (h : edist x y ≠ ∞
 
 theorem edist_le_of_fixed_point (hf : ContractingWith K f) {x y} (h : edist x y ≠ ∞) (hy : IsFixedPt f y) :
     edist x y ≤ edist x (f x) / (1 - K) := by
-  simpa only [hy.eq, edist_self, add_zeroₓ] using hf.edist_inequality h
+  simpa only [← hy.eq, ← edist_self, ← add_zeroₓ] using hf.edist_inequality h
 
 theorem eq_or_edist_eq_top_of_fixed_points (hf : ContractingWith K f) {x y} (hx : IsFixedPt f x) (hy : IsFixedPt f y) :
     x = y ∨ edist x y = ∞ := by
   refine' or_iff_not_imp_right.2 fun h => edist_le_zero.1 _
-  simpa only [hx.eq, edist_self, add_zeroₓ, Ennreal.zero_div] using hf.edist_le_of_fixed_point h hy
+  simpa only [← hx.eq, ← edist_self, ← add_zeroₓ, ← Ennreal.zero_div] using hf.edist_le_of_fixed_point h hy
 
 /-- If a map `f` is `contracting_with K`, and `s` is a forward-invariant set, then
 restriction of `f` to `s` is `contracting_with K` as well. -/
@@ -129,7 +129,7 @@ theorem apriori_edist_iterate_efixed_point_le (hf : ContractingWith K f) {x : α
 theorem edist_efixed_point_le (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) :
     edist x (efixedPoint f hf x hx) ≤ edist x (f x) / (1 - K) := by
   convert hf.apriori_edist_iterate_efixed_point_le hx 0
-  simp only [pow_zeroₓ, mul_oneₓ]
+  simp only [← pow_zeroₓ, ← mul_oneₓ]
 
 theorem edist_efixed_point_lt_top (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) :
     edist x (efixedPoint f hf x hx) < ∞ :=
@@ -162,7 +162,7 @@ theorem exists_fixed_point' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s 
   refine' ⟨y, y.2, Subtype.ext_iff_val.1 hfy, _, fun n => _⟩
   · convert (continuous_subtype_coe.tendsto _).comp h_tendsto
     ext n
-    simp only [(· ∘ ·), maps_to.iterate_restrict, maps_to.coe_restrict_apply, Subtype.coe_mk]
+    simp only [← (· ∘ ·), ← maps_to.iterate_restrict, ← maps_to.coe_restrict_apply, ← Subtype.coe_mk]
     
   · convert hle n
     rw [maps_to.iterate_restrict, eq_comm, maps_to.coe_restrict_apply, Subtype.coe_mk]
@@ -258,7 +258,7 @@ theorem dist_inequality x y : dist x y ≤ (dist x (f x) + dist y (f y)) / (1 - 
     
 
 theorem dist_le_of_fixed_point x {y} (hy : IsFixedPt f y) : dist x y ≤ dist x (f x) / (1 - K) := by
-  simpa only [hy.eq, dist_self, add_zeroₓ] using hf.dist_inequality x y
+  simpa only [← hy.eq, ← dist_self, ← add_zeroₓ] using hf.dist_inequality x y
 
 theorem fixed_point_unique' {x y} (hx : IsFixedPt f x) (hy : IsFixedPt f y) : x = y :=
   (hf.eq_or_edist_eq_top_of_fixed_points hx hy).resolve_right (edist_ne_top _ _)
@@ -328,7 +328,7 @@ theorem is_fixed_pt_fixed_point_iterate {n : ℕ} (hf : ContractingWith K (f^[n]
   rw [← iterate_succ_apply, iterate_succ_apply', hx] at this
   contrapose! this
   have := dist_pos.2 (Ne.symm this)
-  simpa only [Nnreal.coe_one, one_mulₓ, Nnreal.val_eq_coe] using (mul_lt_mul_right this).mpr hf.left
+  simpa only [← Nnreal.coe_one, ← one_mulₓ, ← Nnreal.val_eq_coe] using (mul_lt_mul_right this).mpr hf.left
 
 end ContractingWith
 

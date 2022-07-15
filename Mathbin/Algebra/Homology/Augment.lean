@@ -74,7 +74,7 @@ def augment (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 1 0 ≫ 
     · simpa using s
       
     · rw [C.shape]
-      simpa [← Ne.def, Nat.succ_ne_succ] using s
+      simpa [Ne.def, ← Nat.succ_ne_succ] using s
       
   d_comp_d' := fun i j k hij hjk => by
     rcases i with (_ | _ | i) <;>
@@ -107,7 +107,7 @@ theorem augment_d_one_zero (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w
 @[simp]
 theorem augment_d_succ_succ (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 1 0 ≫ f = 0) (i j : ℕ) :
     (augment C f w).d (i + 1) (j + 1) = C.d i j := by
-  dsimp' [augment]
+  dsimp' [← augment]
   rcases i with (_ | i)
   rfl
   rfl
@@ -267,7 +267,7 @@ def augment (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f ≫ C.d 
     · simpa using s
       
     · rw [C.shape]
-      simp only [ComplexShape.up_rel]
+      simp only [← ComplexShape.up_rel]
       contrapose! s
       rw [← s]
       
@@ -282,7 +282,7 @@ def augment (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f ≫ C.d 
     · exact w
       
     · rw [C.shape, comp_zero]
-      simp only [Nat.nat_zero_eq_zero, ComplexShape.up_rel, zero_addₓ]
+      simp only [← Nat.nat_zero_eq_zero, ← ComplexShape.up_rel, ← zero_addₓ]
       exact (Nat.one_lt_succ_succ _).Ne
       
 
@@ -345,7 +345,7 @@ theorem truncate_augment_inv_f (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x
 @[simp]
 theorem cochain_complex_d_succ_succ_zero (C : CochainComplex V ℕ) (i : ℕ) : C.d 0 (i + 2) = 0 := by
   rw [C.shape]
-  simp only [ComplexShape.up_rel, zero_addₓ]
+  simp only [← ComplexShape.up_rel, ← zero_addₓ]
   exact (Nat.one_lt_succ_succ _).Ne
 
 /-- Augmenting a truncated complex with the original object and morphism is isomorphic

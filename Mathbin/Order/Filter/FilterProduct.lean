@@ -28,7 +28,7 @@ open Classical
 namespace Filter
 
 -- mathport name: «expr∀* , »
-local notation3 "∀* " (...) ", " r:(scoped p => Filter.Eventually p φ) => r
+local notation3"∀* "(...)", "r:(scoped p => Filter.Eventually p φ) => r
 
 namespace Germ
 
@@ -46,7 +46,7 @@ instance [DivisionRing β] : DivisionRing β* :=
           (φ.em fun y => f y = 0).elim (fun H => (hf <| coe_eq.2 H).elim) fun H => H.mono fun x => mul_inv_cancel,
     inv_zero :=
       coe_eq.2 <| by
-        simp only [(· ∘ ·), inv_zero] }
+        simp only [← (· ∘ ·), ← inv_zero] }
 
 /-- If `φ` is an ultrafilter then the ultraproduct is a field. -/
 instance [Field β] : Field β* :=
@@ -65,7 +65,7 @@ theorem const_div [DivisionRing β] (x y : β) : (↑(x / y) : β*) = ↑x / ↑
   rfl
 
 theorem coe_lt [Preorderₓ β] {f g : α → β} : (f : β*) < g ↔ ∀* x, f x < g x := by
-  simp only [lt_iff_le_not_leₓ, eventually_and, coe_le, eventually_not, eventually_le]
+  simp only [← lt_iff_le_not_leₓ, ← eventually_and, ← coe_le, ← eventually_not, ← eventually_le]
 
 theorem coe_pos [Preorderₓ β] [Zero β] {f : α → β} : 0 < (f : β*) ↔ ∀* x, 0 < f x :=
   coe_lt

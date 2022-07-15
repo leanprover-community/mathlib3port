@@ -255,7 +255,7 @@ unsafe def norm_cast_attr : user_attribute norm_cast_cache (Option Label) where
     some fun decl prio persistent => do
       let param ← get_label_param norm_cast_attr decl
       match param with
-        | some l => when (l ≠ elim) <| simp_attr.push_cast decl () tt
+        | some l => when (l ≠ elim) <| simp_attr.push_cast decl () tt prio
         | none => do
           let e ← mk_const decl
           let ty ← infer_type e
@@ -494,7 +494,7 @@ unsafe def derive (e : expr) : tactic (expr × expr) := do
 -/
 unsafe def derive_push_cast (extra_lems : List simp_arg_type) (e : expr) : tactic (expr × expr) := do
   let (s, _) ← mk_simp_set true [`push_cast] extra_lems
-  let (e, prf, _) ← simplify (s.erase [`int.coe_nat_succ]) [] e { failIfUnchanged := false } `eq tactic.assumption
+  let (e, prf, _) ← simplify (s.erase [`nat.cast_succ]) [] e { failIfUnchanged := false } `eq tactic.assumption
   return (e, prf)
 
 end NormCast
@@ -618,12 +618,12 @@ end Conv.Interactive
 -- TODO: move this elsewhere?
 @[norm_cast]
 theorem ite_cast {α β} [HasLiftT α β] {c : Prop} [Decidable c] {a b : α} : ↑(ite c a b) = ite c (↑a : β) (↑b : β) := by
-  by_cases' h : c <;> simp [h]
+  by_cases' h : c <;> simp [← h]
 
 @[norm_cast]
 theorem dite_cast {α β} [HasLiftT α β] {c : Prop} [Decidable c] {a : c → α} {b : ¬c → α} :
     ↑(dite c a b) = dite c (fun h => (↑(a h) : β)) fun h => (↑(b h) : β) := by
-  by_cases' h : c <;> simp [h]
+  by_cases' h : c <;> simp [← h]
 
 add_hint_tactic norm_cast  at *
 
@@ -736,13 +736,4 @@ A full description of the tactic, and the use of each lemma category, can be fou
 add_tactic_doc
   { Name := "norm_cast attributes", category := DocCategory.attr, declNames := [`` norm_cast.norm_cast_attr],
     tags := ["coercions", "simplification"] }
-
--- Lemmas defined in core.
-attribute [norm_cast]
-  Int.nat_abs_of_nat Int.coe_nat_subₓ Int.coe_nat_mul Int.coe_nat_zero Int.coe_nat_one Int.coe_nat_add
-
--- Lemmas about nat.succ need to get a low priority, so that they are tried last.
--- This is because `nat.succ _` matches `1`, `3`, `x+1`, etc.
--- Rewriting would then produce really wrong terms.
-attribute [norm_cast] Int.coe_nat_succ
 

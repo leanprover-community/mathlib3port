@@ -60,34 +60,32 @@ theorem map_eq_zero_iff (F : C ⥤ D) [PreservesZeroMorphisms F] [Faithful F] {X
     exact F.map_zero _ _⟩
 
 instance (priority := 100) preserves_zero_morphisms_of_is_left_adjoint (F : C ⥤ D) [IsLeftAdjoint F] :
-    PreservesZeroMorphisms F where
-  map_zero' := fun X Y => by
+    PreservesZeroMorphisms F where map_zero' := fun X Y => by
     let adj := Adjunction.ofLeftAdjoint F
     calc F.map (0 : X ⟶ Y) = F.map 0 ≫ F.map (adj.unit.app Y) ≫ adj.counit.app (F.obj Y) :=
         _ _ = F.map 0 ≫ F.map ((right_adjoint F).map (0 : F.obj X ⟶ _)) ≫ adj.counit.app (F.obj Y) := _ _ = 0 := _
     · rw [adjunction.left_triangle_components]
       exact (category.comp_id _).symm
       
-    · simp only [← category.assoc, ← F.map_comp, zero_comp]
+    · simp only [category.assoc, F.map_comp, ← zero_comp]
       
-    · simp only [adjunction.counit_naturality, comp_zero]
+    · simp only [← adjunction.counit_naturality, ← comp_zero]
       
 
 instance (priority := 100) preserves_zero_morphisms_of_is_right_adjoint (G : C ⥤ D) [IsRightAdjoint G] :
-    PreservesZeroMorphisms G where
-  map_zero' := fun X Y => by
+    PreservesZeroMorphisms G where map_zero' := fun X Y => by
     let adj := Adjunction.ofRightAdjoint G
     calc G.map (0 : X ⟶ Y) = adj.unit.app (G.obj X) ≫ G.map (adj.counit.app X) ≫ G.map 0 :=
         _ _ = adj.unit.app (G.obj X) ≫ G.map ((left_adjoint G).map (0 : _ ⟶ G.obj X)) ≫ G.map 0 := _ _ = 0 := _
     · rw [adjunction.right_triangle_components_assoc]
       
-    · simp only [← G.map_comp, comp_zero]
+    · simp only [G.map_comp, ← comp_zero]
       
-    · simp only [adjunction.unit_naturality_assoc, zero_comp]
+    · simp only [← adjunction.unit_naturality_assoc, ← zero_comp]
       
 
-instance (priority := 100) preserves_zero_morphisms_of_full (F : C ⥤ D) [Full F] : PreservesZeroMorphisms F where
-  map_zero' := fun X Y =>
+instance (priority := 100) preserves_zero_morphisms_of_full (F : C ⥤ D) [Full F] :
+    PreservesZeroMorphisms F where map_zero' := fun X Y =>
     calc
       F.map (0 : X ⟶ Y) = F.map (0 ≫ F.preimage (0 : F.obj Y ⟶ F.obj Y)) := by
         rw [zero_comp]
@@ -125,16 +123,16 @@ theorem preserves_zero_morphisms_of_map_zero_object (i : F.obj 0 ≅ 0) : Preser
         _ = F.map 0 ≫ (i.Hom ≫ i.inv) ≫ F.map 0 := by
           rw [iso.hom_inv_id, category.id_comp]
         _ = 0 := by
-          simp only [zero_of_to_zero i.hom, zero_comp, comp_zero]
+          simp only [← zero_of_to_zero i.hom, ← zero_comp, ← comp_zero]
          }
 
 instance (priority := 100) preserves_zero_morphisms_of_preserves_initial_object
-    [PreservesColimit (Functor.empty.{v₁} C) F] : PreservesZeroMorphisms F :=
+    [PreservesColimit (Functor.empty.{0} C) F] : PreservesZeroMorphisms F :=
   preserves_zero_morphisms_of_map_zero_object <|
     (F.mapIso HasZeroObject.zeroIsoInitial).trans <| (PreservesInitial.iso F).trans HasZeroObject.zeroIsoInitial.symm
 
 instance (priority := 100) preserves_zero_morphisms_of_preserves_terminal_object
-    [PreservesLimit (Functor.empty.{v₁} C) F] : PreservesZeroMorphisms F :=
+    [PreservesLimit (Functor.empty.{0} C) F] : PreservesZeroMorphisms F :=
   preserves_zero_morphisms_of_map_zero_object <|
     (F.mapIso HasZeroObject.zeroIsoTerminal).trans <| (PreservesTerminal.iso F).trans HasZeroObject.zeroIsoTerminal.symm
 

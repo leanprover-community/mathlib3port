@@ -55,12 +55,12 @@ noncomputable def supportedEquivMvPolynomial (s : Set σ) : supported R s ≃ₐ
 theorem supported_equiv_mv_polynomial_symm_C (s : Set σ) (x : R) :
     (supportedEquivMvPolynomial s).symm (c x) = algebraMap R (supported R s) x := by
   ext1
-  simp [supported_equiv_mv_polynomial, MvPolynomial.algebra_map_eq]
+  simp [← supported_equiv_mv_polynomial, ← MvPolynomial.algebra_map_eq]
 
 @[simp]
 theorem supported_equiv_mv_polynomial_symm_X (s : Set σ) (i : s) :
     (↑((supportedEquivMvPolynomial s).symm (x i : MvPolynomial s R)) : MvPolynomial σ R) = x i := by
-  simp [supported_equiv_mv_polynomial]
+  simp [← supported_equiv_mv_polynomial]
 
 variable {s t : Set σ}
 
@@ -92,11 +92,11 @@ theorem supported_eq_adjoin_X : supported R s = Algebra.adjoin R (X '' s) :=
 
 @[simp]
 theorem supported_univ : supported R (Set.Univ : Set σ) = ⊤ := by
-  simp [Algebra.eq_top_iff, mem_supported]
+  simp [← Algebra.eq_top_iff, ← mem_supported]
 
 @[simp]
 theorem supported_empty : supported R (∅ : Set σ) = ⊥ := by
-  simp [supported_eq_adjoin_X]
+  simp [← supported_eq_adjoin_X]
 
 variable {s}
 
@@ -105,7 +105,7 @@ theorem supported_mono (st : s ⊆ t) : supported R s ≤ supported R t :=
 
 @[simp]
 theorem X_mem_supported [Nontrivial R] {i : σ} : x i ∈ supported R s ↔ i ∈ s := by
-  simp [mem_supported]
+  simp [← mem_supported]
 
 @[simp]
 theorem supported_le_supported_iff [Nontrivial R] : supported R s ≤ supported R t ↔ s ⊆ t := by
@@ -119,7 +119,7 @@ theorem supported_le_supported_iff [Nontrivial R] : supported R s ≤ supported 
 theorem supported_strict_mono [Nontrivial R] : StrictMono (supported R : Set σ → Subalgebra R (MvPolynomial σ R)) :=
   strict_mono_of_le_iff_le fun _ _ => supported_le_supported_iff.symm
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem exists_restrict_to_vars (R : Type _) [CommRingₓ R] {F : MvPolynomial σ ℤ} (hF : ↑F.vars ⊆ s) :
     ∃ f : (s → R) → R, ∀ x : σ → R, f (x ∘ coe : s → R) = aeval x F := by
   classical
@@ -127,7 +127,7 @@ theorem exists_restrict_to_vars (R : Type _) [CommRingₓ R] {F : MvPolynomial �
   cases' hF with F' hF'
   use fun z => aeval z F'
   intro x
-  simp only [← hF', aeval_rename]
+  simp only [hF', ← aeval_rename]
 
 end CommSemiringₓ
 

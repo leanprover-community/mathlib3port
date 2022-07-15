@@ -116,7 +116,7 @@ theorem nhds_mk_of_nhds (n : α → Filter α) (a : α) (h₀ : pure ≤ n)
   refine' le_antisymmₓ (fun s hs => _) fun s hs => _
   · have h₀ : { b | s ∈ n b } ⊆ s := fun b hb => mem_pure.1 <| h₀ b hb
     have h₁ : { b | s ∈ n b } ∈ 𝓝 a := by
-      refine' IsOpen.mem_nhds (fun hb : s ∈ n b => _) hs
+      refine' IsOpen.mem_nhds (fun b hb : s ∈ n b => _) hs
       rcases h₁ hb with ⟨t, ht, hts, h⟩
       exact mem_of_superset ht h
     exact mem_of_superset h₁ h₀
@@ -207,8 +207,7 @@ complete lattice.  (Note that later `topological_space α` will equipped with th
 def tmpCompleteLattice {α : Type u} : CompleteLattice (TopologicalSpace α) :=
   (giGenerateFrom α).liftCompleteLattice
 
-instance : LE (TopologicalSpace α) where
-  le := fun t s => s.IsOpen ≤ t.IsOpen
+instance : LE (TopologicalSpace α) where le := fun t s => s.IsOpen ≤ t.IsOpen
 
 protected theorem TopologicalSpace.le_def {α} {t s : TopologicalSpace α} : t ≤ s ↔ s.IsOpen ≤ t.IsOpen :=
   Iff.rfl
@@ -234,14 +233,13 @@ instance : CompleteLattice (TopologicalSpace α) :=
 theorem is_open_implies_is_open_iff {a b : TopologicalSpace α} : (∀ s, a.IsOpen s → b.IsOpen s) ↔ b ≤ a :=
   Iff.rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`eq_bot] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`eq_bot] []
 /-- A topological space is discrete if every set is open, that is,
   its topology equals the discrete topology `⊥`. -/
 class DiscreteTopology (α : Type _) [t : TopologicalSpace α] : Prop where
   eq_bot : t = ⊥
 
-instance (priority := 100) discrete_topology_bot (α : Type _) : @DiscreteTopology α ⊥ where
-  eq_bot := rfl
+instance (priority := 100) discrete_topology_bot (α : Type _) : @DiscreteTopology α ⊥ where eq_bot := rfl
 
 @[simp]
 theorem is_open_discrete [TopologicalSpace α] [DiscreteTopology α] (s : Set α) : IsOpen s :=
@@ -269,7 +267,7 @@ theorem mem_nhds_discrete [TopologicalSpace α] [DiscreteTopology α] {x : α} {
 
 theorem le_of_nhds_le_nhds {t₁ t₂ : TopologicalSpace α} (h : ∀ x, @nhds α t₁ x ≤ @nhds α t₂ x) : t₁ ≤ t₂ := fun s =>
   show @IsOpen α t₂ s → @IsOpen α t₁ s by
-    simp only [is_open_iff_nhds, le_principal_iff]
+    simp only [← is_open_iff_nhds, ← le_principal_iff]
     exact fun hs a ha => h _ <| hs _ ha
 
 theorem eq_of_nhds_eq_nhds {t₁ t₂ : TopologicalSpace α} (h : ∀ x, @nhds α t₁ x = @nhds α t₂ x) : t₁ = t₂ :=
@@ -283,7 +281,7 @@ theorem forall_open_iff_discrete {X : Type _} [TopologicalSpace X] : (∀ s : Se
     ⟨by
       ext U
       show IsOpen U ↔ True
-      simp [h U]⟩,
+      simp [← h U]⟩,
     fun a => @is_open_discrete _ _ a⟩
 
 theorem singletons_open_iff_discrete {X : Type _} [TopologicalSpace X] :
@@ -305,10 +303,10 @@ def TopologicalSpace.induced {α : Type u} {β : Type v} (f : α → β) (t : To
   is_open_inter := by
     rintro s₁ s₂ ⟨s'₁, hs₁, rfl⟩ ⟨s'₂, hs₂, rfl⟩ <;> exact ⟨s'₁ ∩ s'₂, t.is_open_inter _ _ hs₁ hs₂, preimage_inter⟩
   is_open_sUnion := fun s h => by
-    simp only [Classical.skolem] at h
+    simp only [← Classical.skolem] at h
     cases' h with f hf
     apply Exists.introₓ (⋃ (x : Set α) (h : x ∈ s), f x h)
-    simp only [sUnion_eq_bUnion, preimage_Union, fun x h => (hf x h).right]
+    simp only [← sUnion_eq_bUnion, ← preimage_Union, ← fun x h => (hf x h).right]
     refine' ⟨_, rfl⟩
     exact
       (@is_open_Union β _ t _) fun i => show IsOpen (⋃ h, f i h) from (@is_open_Union β _ t _) fun h => (hf i h).left
@@ -323,11 +321,11 @@ theorem is_open_induced_iff' [t : TopologicalSpace β] {s : Set α} {f : α → 
 
 theorem is_closed_induced_iff [t : TopologicalSpace β] {s : Set α} {f : α → β} :
     @IsClosed α (t.induced f) s ↔ ∃ t, IsClosed t ∧ f ⁻¹' t = s := by
-  simp only [← is_open_compl_iff, is_open_induced_iff]
+  simp only [is_open_compl_iff, ← is_open_induced_iff]
   exact
     compl_surjective.exists.trans
       (by
-        simp only [preimage_compl, compl_inj_iff])
+        simp only [← preimage_compl, ← compl_inj_iff])
 
 /-- Given `f : α → β` and a topology on `α`, the coinduced topology on `β` is defined
   such that `s:set β` is open if the preimage of `s` is open. This is the finest topology that
@@ -514,7 +512,7 @@ theorem le_induced_generate_from {α β} [t : TopologicalSpace α] {b : Set (Set
     (h : ∀ a : Set β, a ∈ b → IsOpen (f ⁻¹' a)) : t ≤ induced f (generateFrom b) := by
   rw [induced_generate_from_eq]
   apply le_generate_from
-  simp only [mem_image, and_imp, forall_apply_eq_imp_iff₂, exists_imp_distrib]
+  simp only [← mem_image, ← and_imp, ← forall_apply_eq_imp_iff₂, ← exists_imp_distrib]
   exact h
 
 /-- This construction is left adjoint to the operation sending a topology on `α`
@@ -552,7 +550,7 @@ theorem nhds_adjoint_nhds_of_ne {α : Type _} (a : α) (f : Filter α) {b : α} 
   · intro U hU
     rw [mem_nhds_iff]
     use {b}
-    simp only [and_trueₓ, singleton_subset_iff, mem_singleton]
+    simp only [← and_trueₓ, ← singleton_subset_iff, ← mem_singleton]
     refine' ⟨hU, fun ha => (h.symm ha).elim⟩
     
   · exact @pure_le_nhds α (nhdsAdjoint a f) b
@@ -563,7 +561,7 @@ theorem is_open_singleton_nhds_adjoint {α : Type _} {a b : α} (f : Filter α) 
   rw [is_open_singleton_iff_nhds_eq_pure]
   exact nhds_adjoint_nhds_of_ne a f hb
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (b «expr ≠ » a)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (b «expr ≠ » a)
 theorem le_nhds_adjoint_iff' {α : Type _} (a : α) (f : Filter α) (t : TopologicalSpace α) :
     t ≤ nhdsAdjoint a f ↔ @nhds α t a ≤ pure a⊔f ∧ ∀ b _ : b ≠ a, @nhds α t b = pure b := by
   rw [le_iff_nhds]
@@ -583,7 +581,7 @@ theorem le_nhds_adjoint_iff' {α : Type _} (a : α) (f : Filter α) (t : Topolog
     by_cases' hb : b = a
     · rwa [hb, nhds_adjoint_nhds]
       
-    · simp [nhds_adjoint_nhds_of_ne a f hb, h' b hb]
+    · simp [← nhds_adjoint_nhds_of_ne a f hb, ← h' b hb]
       
     
 
@@ -636,7 +634,7 @@ theorem continuous_induced_rng {g : γ → α} {t₂ : tspace β} {t₁ : tspace
     cont t₁ (induced f t₂) g := by
   rw [continuous_def]
   rintro s ⟨t, ht, s_eq⟩
-  simpa [← s_eq] using continuous_def.1 h t ht
+  simpa [s_eq] using continuous_def.1 h t ht
 
 theorem continuous_induced_rng' [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] {g : γ → α} (f : α → β)
     (H : ‹TopologicalSpace α› = ‹TopologicalSpace β›.induced f) (h : Continuous (f ∘ g)) : Continuous g :=
@@ -721,15 +719,16 @@ theorem continuous_bot {t : tspace β} : cont ⊥ t f :=
 theorem continuous_top {t : tspace α} : cont t ⊤ f :=
   continuous_iff_coinduced_le.2 <| le_top
 
-theorem continuous_id_of_le {t t' : tspace α} (h : t ≤ t') : cont t t' id := by
-  rw [continuous_def]
-  intro u hu
-  exact h u hu
+theorem continuous_id_iff_le {t t' : tspace α} : cont t t' id ↔ t ≤ t' :=
+  @continuous_def _ _ t t' id
+
+theorem continuous_id_of_le {t t' : tspace α} (h : t ≤ t') : cont t t' id :=
+  continuous_id_iff_le.2 h
 
 -- 𝓝 in the induced topology
 theorem mem_nhds_induced [T : TopologicalSpace α] (f : β → α) (a : β) (s : Set β) :
     s ∈ @nhds β (TopologicalSpace.induced f T) a ↔ ∃ u ∈ 𝓝 (f a), f ⁻¹' u ⊆ s := by
-  simp only [mem_nhds_iff, is_open_induced_iff, exists_prop, Set.mem_set_of_eq]
+  simp only [← mem_nhds_iff, ← is_open_induced_iff, ← exists_prop, ← Set.mem_set_of_eq]
   constructor
   · rintro ⟨u, usub, ⟨v, openv, ueq⟩, au⟩
     exact
@@ -781,11 +780,11 @@ theorem map_nhds_induced_of_mem {a : α} (h : Range f ∈ 𝓝 (f a)) : map f (@
 
 theorem closure_induced [t : TopologicalSpace β] {f : α → β} {a : α} {s : Set α} :
     a ∈ @Closure α (TopologicalSpace.induced f t) s ↔ f a ∈ Closure (f '' s) := by
-  simp only [mem_closure_iff_frequently, nhds_induced, frequently_comap, mem_image, and_comm]
+  simp only [← mem_closure_iff_frequently, ← nhds_induced, ← frequently_comap, ← mem_image, ← and_comm]
 
 theorem is_closed_induced_iff' [t : TopologicalSpace β] {f : α → β} {s : Set α} :
     @IsClosed α (t.induced f) s ↔ ∀ a, f a ∈ Closure (f '' s) → a ∈ s := by
-  simp only [← closure_subset_iff_is_closed, subset_def, closure_induced]
+  simp only [closure_subset_iff_is_closed, ← subset_def, ← closure_induced]
 
 end Induced
 
@@ -804,14 +803,14 @@ theorem nhds_true : 𝓝 True = pure True :=
 @[simp]
 theorem nhds_false : 𝓝 False = ⊤ :=
   TopologicalSpace.nhds_generate_from.trans <| by
-    simp [@And.comm (_ ∈ _)]
+    simp [← @And.comm (_ ∈ _)]
 
 theorem continuous_Prop {p : α → Prop} : Continuous p ↔ IsOpen { x | p x } :=
   ⟨fun h : Continuous p => by
     have : IsOpen (p ⁻¹' {True}) := is_open_singleton_true.Preimage h
-    simpa [preimage, eq_trueₓ] using this, fun h : IsOpen { x | p x } =>
-    continuous_generated_from fun hs : s = {True} => by
-      simp [hs, preimage, eq_trueₓ, h]⟩
+    simpa [← preimage, ← eq_trueₓ] using this, fun h : IsOpen { x | p x } =>
+    continuous_generated_from fun s hs : s = {True} => by
+      simp [← hs, ← preimage, ← eq_trueₓ, ← h]⟩
 
 theorem is_open_iff_continuous_mem {s : Set α} : IsOpen s ↔ Continuous fun x => x ∈ s :=
   continuous_Prop.symm
@@ -870,10 +869,10 @@ variable {t : ι → TopologicalSpace α}
 
 theorem is_open_supr_iff {s : Set α} : @IsOpen _ (⨆ i, t i) s ↔ ∀ i, @IsOpen _ (t i) s :=
   show s ∈ SetOf (supr t).IsOpen ↔ s ∈ { x : Set α | ∀ i : ι, (t i).IsOpen x } by
-    simp [set_of_is_open_supr]
+    simp [← set_of_is_open_supr]
 
-theorem is_closed_infi_iff {s : Set α} : @IsClosed _ (⨆ i, t i) s ↔ ∀ i, @IsClosed _ (t i) s := by
-  simp [← is_open_compl_iff, is_open_supr_iff]
+theorem is_closed_supr_iff {s : Set α} : @IsClosed _ (⨆ i, t i) s ↔ ∀ i, @IsClosed _ (t i) s := by
+  simp [is_open_compl_iff, ← is_open_supr_iff]
 
 end infi
 

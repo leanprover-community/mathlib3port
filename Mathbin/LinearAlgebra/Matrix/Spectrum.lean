@@ -69,11 +69,11 @@ theorem spectral_theorem : hA.eigenvectorMatrixInv ⬝ A = diagonalₓ (coe ∘ 
       (is_hermitian_iff_is_self_adjoint.1 hA) _ (Fintype.card n) finrank_euclidean_space (EuclideanSpace.single j 1)
       ((Fintype.equivOfCardEq (Fintype.card_fin _)).symm i)
   · rw [eigenvector_basis, InnerProductSpace.IsSelfAdjoint.diagonalizationBasis, to_lin'_apply]
-    simp only [Basis.toMatrix, Basis.coe_to_orthonormal_basis_repr, Basis.equiv_fun_apply]
+    simp only [← Basis.toMatrix, ← Basis.coe_to_orthonormal_basis_repr, ← Basis.equiv_fun_apply]
     simp_rw [Basis.reindex_repr, EuclideanSpace.single, PiLp.equiv_symm_apply', mul_vec_single, mul_oneₓ]
     rfl
     
-  · simp only [diagonal_mul, (· ∘ ·), eigenvalues, eigenvector_basis,
+  · simp only [← diagonal_mul, ← (· ∘ ·), ← eigenvalues, ← eigenvector_basis, ←
       InnerProductSpace.IsSelfAdjoint.diagonalizationBasis]
     rw [Basis.to_matrix_apply, Basis.coe_to_orthonormal_basis_repr, Basis.reindex_repr, Basis.equiv_fun_apply,
       Pi.basis_fun_apply, eigenvalues₀, LinearMap.coe_std_basis, EuclideanSpace.single, PiLp.equiv_symm_apply']

@@ -51,8 +51,17 @@ def nim : Ordinal → Pgame
 
 namespace Pgame
 
+-- mathport name: «expr ⧏ »
+local infixl:50 " ⧏ " => Lf
+
 -- mathport name: «expr ≈ »
 local infixl:0 " ≈ " => Equiv
+
+-- mathport name: «expr ∥ »
+local infixl:50 " ∥ " => Fuzzy
+
+-- mathport name: «expr ≡r »
+local infixl:50 " ≡r " => Relabelling
 
 namespace nim
 
@@ -82,17 +91,16 @@ noncomputable instance : Unique (nim 1).RightMoves := by
   exact Ordinal.uniqueOutOne
 
 /-- `nim 0` has exactly the same moves as `0`. -/
-def nimZeroRelabelling : Relabelling (nim 0) 0 :=
+def nimZeroRelabelling : nim 0 ≡r 0 :=
   Relabelling.isEmpty _
 
 @[simp]
 theorem nim_zero_equiv : nim 0 ≈ 0 :=
   Equiv.is_empty _
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 /-- `nim 1` has exactly the same moves as `star`. -/
-noncomputable def nimOneRelabelling : Relabelling (nim 1) star := by
+noncomputable def nimOneRelabelling : nim 1 ≡r star := by
   rw [nim_def]
   refine' ⟨_, _, fun i => _, fun j => _⟩
   any_goals {
@@ -178,36 +186,31 @@ theorem exists_move_left_eq {O O' : Ordinal} (h : O' < O) : ∃ i, (nim O).moveL
   ⟨toLeftMovesNim ⟨O', h⟩, by
     simp ⟩
 
-@[simp]
-theorem zero_first_loses : (nim (0 : Ordinal)).FirstLoses :=
-  Equiv.is_empty _
-
-theorem non_zero_first_wins {O : Ordinal} (hO : O ≠ 0) : (nim O).FirstWins := by
-  rw [impartial.first_wins_symm, nim_def, lf_iff_forall_le]
+theorem non_zero_first_wins {O : Ordinal} (hO : O ≠ 0) : nim O ∥ 0 := by
+  rw [impartial.fuzzy_zero_iff_lf, nim_def, lf_zero_le]
   rw [← Ordinal.pos_iff_ne_zero] at hO
   exact
-    Or.inr
-      ⟨(Ordinal.principalSegOut hO).top, by
-        simp ⟩
+    ⟨(Ordinal.principalSegOut hO).top, by
+      simp ⟩
 
 @[simp]
-theorem sum_first_loses_iff_eq (O₁ O₂ : Ordinal) : (nim O₁ + nim O₂).FirstLoses ↔ O₁ = O₂ := by
+theorem add_equiv_zero_iff_eq (O₁ O₂ : Ordinal) : (nim O₁ + nim O₂ ≈ 0) ↔ O₁ = O₂ := by
   constructor
   · contrapose
     intro h
-    rw [impartial.not_first_loses]
+    rw [impartial.not_equiv_zero_iff]
     wlog h' : O₁ ≤ O₂ using O₁ O₂, O₂ O₁
     · exact le_totalₓ O₁ O₂
       
     · have h : O₁ < O₂ := lt_of_le_of_neₓ h' h
-      rw [impartial.first_wins_symm', lf_iff_forall_le, nim_def O₂]
-      refine' Or.inl ⟨to_left_moves_add (Sum.inr _), _⟩
+      rw [impartial.fuzzy_zero_iff_gf, zero_lf_le, nim_def O₂]
+      refine' ⟨to_left_moves_add (Sum.inr _), _⟩
       · exact (Ordinal.principalSegOut h).top
         
       · simpa using (impartial.add_self (nim O₁)).2
         
       
-    · exact first_wins_of_equiv add_comm_equiv (this (Ne.symm h))
+    · exact (fuzzy_congr_left add_comm_equiv).1 (this (Ne.symm h))
       
     
   · rintro rfl
@@ -215,17 +218,12 @@ theorem sum_first_loses_iff_eq (O₁ O₂ : Ordinal) : (nim O₁ + nim O₂).Fir
     
 
 @[simp]
-theorem sum_first_wins_iff_neq (O₁ O₂ : Ordinal) : (nim O₁ + nim O₂).FirstWins ↔ O₁ ≠ O₂ := by
-  rw [iff_not_comm, impartial.not_first_wins, sum_first_loses_iff_eq]
+theorem add_fuzzy_zero_iff_ne (O₁ O₂ : Ordinal) : nim O₁ + nim O₂ ∥ 0 ↔ O₁ ≠ O₂ := by
+  rw [iff_not_comm, impartial.not_fuzzy_zero_iff, add_equiv_zero_iff_eq]
 
 @[simp]
-theorem equiv_iff_eq (O₁ O₂ : Ordinal) : (nim O₁ ≈ nim O₂) ↔ O₁ = O₂ :=
-  ⟨fun h =>
-    (sum_first_loses_iff_eq _ _).1 <| by
-      rw [first_loses_of_equiv_iff (add_congr_left h), sum_first_loses_iff_eq],
-    by
-    rintro rfl
-    rfl⟩
+theorem equiv_iff_eq (O₁ O₂ : Ordinal) : (nim O₁ ≈ nim O₂) ↔ O₁ = O₂ := by
+  rw [impartial.equiv_iff_add_equiv_zero, add_equiv_zero_iff_eq]
 
 end nim
 
@@ -242,13 +240,13 @@ theorem grundy_value_def (G : Pgame) : grundyValue G = Ordinal.mex.{u, u} fun i 
 theorem equiv_nim_grundy_value : ∀ G : Pgame.{u} [G.Impartial], G ≈ nim (grundyValue G)
   | G => by
     intro hG
-    rw [impartial.equiv_iff_sum_first_loses, ← impartial.no_good_left_moves_iff_first_loses]
+    rw [impartial.equiv_iff_add_equiv_zero, ← impartial.forall_left_moves_fuzzy_iff_equiv_zero]
     intro i
     apply left_moves_add_cases i
     · intro i₁
       rw [add_move_left_inl]
-      apply first_wins_of_equiv (add_congr_left (equiv_nim_grundy_value (G.move_left i₁)).symm)
-      rw [nim.sum_first_wins_iff_neq]
+      apply (fuzzy_congr_left (add_congr_left (equiv_nim_grundy_value (G.move_left i₁)).symm)).1
+      rw [nim.add_fuzzy_zero_iff_ne]
       intro heq
       rw [eq_comm, grundy_value_def G] at heq
       have h := Ordinal.ne_mex _
@@ -256,7 +254,7 @@ theorem equiv_nim_grundy_value : ∀ G : Pgame.{u} [G.Impartial], G ≈ nim (gru
       exact (h i₁).irrefl
       
     · intro i₂
-      rw [add_move_left_inr, ← impartial.good_left_move_iff_first_wins]
+      rw [add_move_left_inr, ← impartial.exists_left_move_equiv_iff_fuzzy_zero]
       revert i₂
       rw [nim.nim_def]
       intro i₂
@@ -270,8 +268,8 @@ theorem equiv_nim_grundy_value : ∀ G : Pgame.{u} [G.Impartial], G ≈ nim (gru
       cases' h' with i hi
       use to_left_moves_add (Sum.inl i)
       rw [add_move_left_inl, move_left_mk]
-      apply first_loses_of_equiv (add_congr_left (equiv_nim_grundy_value (G.move_left i)).symm)
-      simpa only [hi] using impartial.add_self (nim (grundy_value (G.move_left i)))
+      apply (add_congr_left (equiv_nim_grundy_value (G.move_left i))).trans
+      simpa only [← hi] using impartial.add_self (nim (grundy_value (G.move_left i)))
       
 
 @[simp]
@@ -292,14 +290,14 @@ theorem grundy_value_eq_iff_equiv (G H : Pgame) [G.Impartial] [H.Impartial] : gr
 
 @[simp]
 theorem grundy_value_zero : grundyValue 0 = 0 := by
-  simp [nim.nim_zero_equiv.symm]
+  simp [← nim.nim_zero_equiv.symm]
 
 @[simp]
 theorem grundy_value_iff_equiv_zero (G : Pgame) [G.Impartial] : grundyValue G = 0 ↔ (G ≈ 0) := by
   rw [← grundy_value_eq_iff_equiv, grundy_value_zero]
 
 theorem grundy_value_star : grundyValue star = 1 := by
-  simp [nim.nim_one_equiv.symm]
+  simp [← nim.nim_one_equiv.symm]
 
 @[simp]
 theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} m) = Nat.lxor n m := by
@@ -324,7 +322,7 @@ theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} 
       replace hk := Ordinal.nat_cast_lt.1 hk
       -- Thus, the problem is reduced to computing the Grundy value of `nim n + nim k` or
       -- `nim k + nim m`, both of which can be dealt with using an inductive hypothesis.
-      simp only [hk', add_move_left_inl, add_move_left_inr, id]
+      simp only [← hk', ← add_move_left_inl, ← add_move_left_inr, ← id]
       first |
         rw [hn _ hk]|
         rw [hm _ hk]
@@ -354,12 +352,12 @@ theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} 
     -- is `(u xor m) xor m = u` or `n xor (u xor n) = u` as required.
     · obtain ⟨i, hi⟩ := nim.exists_move_left_eq (Ordinal.nat_cast_lt.2 h)
       refine' ⟨to_left_moves_add (Sum.inl i), _⟩
-      simp only [hi, add_move_left_inl]
+      simp only [← hi, ← add_move_left_inl]
       rw [hn _ h, Nat.lxor_assoc, Nat.lxor_self, Nat.lxor_zero]
       
     · obtain ⟨i, hi⟩ := nim.exists_move_left_eq (Ordinal.nat_cast_lt.2 h)
       refine' ⟨to_left_moves_add (Sum.inr i), _⟩
-      simp only [hi, add_move_left_inr]
+      simp only [← hi, ← add_move_left_inr]
       rw [hm _ h, Nat.lxor_comm, Nat.lxor_assoc, Nat.lxor_self, Nat.lxor_zero]
       
   -- We are done!
@@ -374,7 +372,7 @@ theorem grundy_value_add (G H : Pgame) [G.Impartial] [H.Impartial] {n m : ℕ} (
     (hH : grundyValue H = m) : grundyValue (G + H) = Nat.lxor n m := by
   rw [← nim.grundy_value (Nat.lxor n m), grundy_value_eq_iff_equiv]
   refine' Equivₓ.trans _ nim_add_nim_equiv
-  convert add_congr (equiv_nim_grundy_value G) (equiv_nim_grundy_value H) <;> simp only [hG, hH]
+  convert add_congr (equiv_nim_grundy_value G) (equiv_nim_grundy_value H) <;> simp only [← hG, ← hH]
 
 end Pgame
 

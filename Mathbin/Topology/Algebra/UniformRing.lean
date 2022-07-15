@@ -74,7 +74,7 @@ theorem Continuous.mul {β : Type _} [TopologicalSpace β] {f g : β → Complet
   continuous_mul.comp (hf.prod_mk hg : _)
 
 instance : Ringₓ (Completion α) :=
-  { Completion.addCommGroup, Completion.hasMul α, Completion.hasOne α with
+  { AddMonoidWithOneₓ.unary, Completion.addCommGroup, Completion.hasMul α, Completion.hasOne α with
     one_mul := fun a =>
       Completion.induction_on a (is_closed_eq (Continuous.mul continuous_const continuous_id) continuous_id) fun a => by
         rw [← coe_one, ← coe_mul, one_mulₓ],
@@ -200,7 +200,7 @@ instance topological_ring [CommRingₓ α] [UniformSpace α] [UniformAddGroup α
   convert topological_ring_quotient (⊥ : Ideal α).closure <;>
     try
       apply ring_sep_rel
-  simp [UniformSpace.commRing]
+  simp [← UniformSpace.commRing]
 
 end UniformSpace
 

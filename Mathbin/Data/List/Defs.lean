@@ -69,8 +69,7 @@ def head' : List α → Option α
   | a :: l => some a
 
 /-- Convert a list into an array (whose length is the length of `l`). -/
-def toArrayₓ (l : List α) : Arrayₓ l.length α where
-  data := fun v => l.nthLe v.1 v.2
+def toArrayₓ (l : List α) : Arrayₓ l.length α where data := fun v => l.nthLe v.1 v.2
 
 /-- "inhabited" `nth` function: returns `default` instead of `none` in the case
   that the index is out of bounds. -/
@@ -670,7 +669,7 @@ theorem chain_cons {a b : α} {l : List α} : Chain R a (b :: l) ↔ R a b ∧ C
 attribute [simp] chain.nil
 
 instance decidableChain [DecidableRel R] (a : α) (l : List α) : Decidable (Chain R a l) := by
-  induction l generalizing a <;> simp only [chain.nil, chain_cons] <;> skip <;> infer_instance
+  induction l generalizing a <;> simp only [← chain.nil, ← chain_cons] <;> skip <;> infer_instance
 
 instance decidableChain' [DecidableRel R] (l : List α) : Decidable (Chain' R l) := by
   cases l <;> dunfold chain' <;> infer_instance

@@ -31,19 +31,21 @@ section CartesianClosed
 
 instance (X : Type v₁) : IsLeftAdjoint (Types.binaryProductFunctor.obj X) where
   right := { obj := fun Y => X ⟶ Y, map := fun Y₁ Y₂ f g => g ≫ f }
-  adj := Adjunction.mkOfUnitCounit { Unit := { app := fun x => ⟨x, z⟩ }, counit := { app := fun Z xf => xf.2 xf.1 } }
+  adj :=
+    Adjunction.mkOfUnitCounit { Unit := { app := fun Z z : Z x => ⟨x, z⟩ }, counit := { app := fun Z xf => xf.2 xf.1 } }
 
 instance : HasFiniteProducts (Type v₁) :=
-  has_finite_products_of_has_products _
+  has_finite_products_of_has_products.{v₁} _
 
-instance : CartesianClosed (Type v₁) where
-  closed' := fun X => { isAdj := Adjunction.leftAdjointOfNatIso (Types.binaryProductIsoProd.app X) }
+instance :
+    CartesianClosed
+      (Type v₁) where closed' := fun X => { isAdj := Adjunction.leftAdjointOfNatIso (Types.binaryProductIsoProd.app X) }
 
 instance {C : Type u₁} [Category.{v₁} C] : HasFiniteProducts (C ⥤ Type u₁) :=
-  has_finite_products_of_has_products _
+  has_finite_products_of_has_products.{u₁} _
 
-instance {C : Type v₁} [SmallCategory C] : CartesianClosed (C ⥤ Type v₁) where
-  closed' := fun F =>
+instance {C : Type v₁} [SmallCategory C] :
+    CartesianClosed (C ⥤ Type v₁) where closed' := fun F =>
     { isAdj := by
         let this := functor_category.prod_preserves_colimits F
         apply is_left_adjoint_of_preserves_colimits (prod.functor.obj F) }

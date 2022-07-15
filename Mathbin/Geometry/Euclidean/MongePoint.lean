@@ -116,7 +116,7 @@ theorem sum_monge_point_weights_with_circumcenter (n : ℕ) : (∑ i, mongePoint
   simp_rw [sum_points_with_circumcenter, monge_point_weights_with_circumcenter, sum_const, card_fin, nsmul_eq_mul]
   have hn1 : (n + 1 : ℝ) ≠ 0 := by
     exact_mod_cast Nat.succ_ne_zero _
-  field_simp [hn1]
+  field_simp [← hn1]
   ring
 
 include V
@@ -147,9 +147,9 @@ theorem monge_point_eq_affine_combination_of_points_with_circumcenter {n : ℕ} 
   · rw [if_pos (mem_univ _), sub_zero, add_zeroₓ, card_fin]
     have hn3 : (n + 2 + 1 : ℝ) ≠ 0 := by
       exact_mod_cast Nat.succ_ne_zero _
-    field_simp [hn1, hn3, mul_comm]
+    field_simp [← hn1, ← hn3, ← mul_comm]
     
-  · field_simp [hn1]
+  · field_simp [← hn1]
     ring
     
 
@@ -175,11 +175,11 @@ theorem monge_point_vsub_face_centroid_weights_with_circumcenter_eq_sub {n : ℕ
   · rw [Pi.sub_apply, monge_point_weights_with_circumcenter, centroid_weights_with_circumcenter,
       monge_point_vsub_face_centroid_weights_with_circumcenter]
     have hu : card ({i₁, i₂}ᶜ : Finset (Finₓ (n + 3))) = n + 1 := by
-      simp [card_compl, Fintype.card_fin, h]
+      simp [← card_compl, ← Fintype.card_fin, ← h]
     rw [hu]
-    by_cases' hi : i = i₁ ∨ i = i₂ <;> simp [compl_eq_univ_sdiff, hi]
+    by_cases' hi : i = i₁ ∨ i = i₂ <;> simp [← compl_eq_univ_sdiff, ← hi]
     
-  · simp [monge_point_weights_with_circumcenter, centroid_weights_with_circumcenter,
+  · simp [← monge_point_weights_with_circumcenter, ← centroid_weights_with_circumcenter, ←
       monge_point_vsub_face_centroid_weights_with_circumcenter]
     
 
@@ -190,7 +190,7 @@ theorem sum_monge_point_vsub_face_centroid_weights_with_circumcenter {n : ℕ} {
   rw [monge_point_vsub_face_centroid_weights_with_circumcenter_eq_sub h]
   simp_rw [Pi.sub_apply, sum_sub_distrib, sum_monge_point_weights_with_circumcenter]
   rw [sum_centroid_weights_with_circumcenter, sub_self]
-  simp [← card_pos, card_compl, h]
+  simp [card_pos, ← card_compl, ← h]
 
 include V
 
@@ -212,7 +212,7 @@ vertices not in that face. -/
 theorem inner_monge_point_vsub_face_centroid_vsub {n : ℕ} (s : Simplex ℝ P (n + 2)) {i₁ i₂ : Finₓ (n + 3)} :
     ⟪s.mongePoint -ᵥ ({i₁, i₂}ᶜ : Finset (Finₓ (n + 3))).centroid ℝ s.points, s.points i₁ -ᵥ s.points i₂⟫ = 0 := by
   by_cases' h : i₁ = i₂
-  · simp [h]
+  · simp [← h]
     
   simp_rw [monge_point_vsub_face_centroid_eq_weighted_vsub_of_points_with_circumcenter s h,
     point_eq_affine_combination_of_points_with_circumcenter, affine_combination_vsub]
@@ -220,13 +220,13 @@ theorem inner_monge_point_vsub_face_centroid_vsub {n : ℕ} (s : Simplex ℝ P (
     simp
   rw [inner_weighted_vsub _ (sum_monge_point_vsub_face_centroid_weights_with_circumcenter h) _ hs,
     sum_points_with_circumcenter, points_with_circumcenter_eq_circumcenter]
-  simp only [monge_point_vsub_face_centroid_weights_with_circumcenter, points_with_circumcenter_point]
+  simp only [← monge_point_vsub_face_centroid_weights_with_circumcenter, ← points_with_circumcenter_point]
   let fs : Finset (Finₓ (n + 3)) := {i₁, i₂}
   have hfs : ∀ i : Finₓ (n + 3), i ∉ fs → i ≠ i₁ ∧ i ≠ i₂ := by
     intro i hi
     constructor <;>
       · intro hj
-        simpa [← hj] using hi
+        simpa [hj] using hi
         
   rw [← sum_subset fs.subset_univ _]
   · simp_rw [sum_points_with_circumcenter, points_with_circumcenter_eq_circumcenter, points_with_circumcenter_point,
@@ -236,18 +236,18 @@ theorem inner_monge_point_vsub_face_centroid_vsub {n : ℕ} (s : Simplex ℝ P (
       repeat'
         rw [← sum_subset fs.subset_univ _]
       · simp_rw [sum_insert (not_mem_singleton.2 h), sum_singleton]
-        simp [h, Ne.symm h, dist_comm (s.points i₁)]
+        simp [← h, ← Ne.symm h, ← dist_comm (s.points i₁)]
         
       all_goals
         intro i hu hi
-        simp [hfs i hi]
+        simp [← hfs i hi]
       
     · intro i hu hi
-      simp [hfs i hi, point_weights_with_circumcenter]
+      simp [← hfs i hi, ← point_weights_with_circumcenter]
       
     
   · intro i hu hi
-    simp [hfs i hi]
+    simp [← hfs i hi]
     
 
 /-- A Monge plane of an (n+2)-simplex is the (n+1)-dimensional affine
@@ -332,7 +332,7 @@ theorem eq_monge_point_of_forall_mem_monge_plane {n : ℕ} {s : Simplex ℝ P (n
     obtain ⟨i₂, h₂⟩ :=
       card_pos.1
         (show 0 < card s₁ by
-          simp [card_erase_of_mem])
+          simp [← card_erase_of_mem])
     have h₁₂ : i₁ ≠ i₂ := (ne_of_mem_erase h₂).symm
     exact (Submodule.mem_inf.1 (h' i₂ h₁₂)).2
   exact Submodule.disjoint_def.1 (vectorSpan ℝ (Set.Range s.points)).orthogonal_disjoint _ hv hi
@@ -478,7 +478,7 @@ theorem altitude_eq_monge_plane (t : Triangle ℝ P) {i₁ i₂ i₃ : Finₓ 3}
     decide!
   rw [monge_plane_def, altitude_def, direction_affine_span, hs, he, centroid_singleton, coe_insert, coe_singleton,
     vector_span_image_eq_span_vsub_set_left_ne ℝ _ (Set.mem_insert i₂ _)]
-  simp [h₂₃, Submodule.span_insert_eq_span]
+  simp [← h₂₃, ← Submodule.span_insert_eq_span]
 
 /-- The orthocenter lies in the altitudes. -/
 theorem orthocenter_mem_altitude (t : Triangle ℝ P) {i₁ : Finₓ 3} : t.orthocenter ∈ t.altitude i₁ := by
@@ -524,7 +524,7 @@ theorem dist_orthocenter_reflection_circumcenter (t : Triangle ℝ P) {i₁ i₂
   obtain ⟨i₃, hi₃, hi₃₁, hi₃₂⟩ : ∃ i₃, univ \ ({i₁, i₂} : Finset (Finₓ 3)) = {i₃} ∧ i₃ ≠ i₁ ∧ i₃ ≠ i₂ := by
     decide!
   simp_rw [← sum_sdiff hu, hi₃]
-  simp [hi₃₁, hi₃₂]
+  simp [← hi₃₁, ← hi₃₂]
   norm_num
 
 /-- The distance from the orthocenter to the reflection of the

@@ -36,7 +36,7 @@ functor, applicative, monad, simp
 -/
 
 
--- ././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:59:9: unsupported: weird string
+-- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:60:9: unsupported: weird string
 mk_simp_attribute monad_norm from functor_norm
 
 attribute [ext] ReaderTₓ.ext StateTₓ.ext ExceptTₓ.ext OptionTₓ.ext

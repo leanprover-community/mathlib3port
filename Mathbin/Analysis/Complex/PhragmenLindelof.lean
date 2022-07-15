@@ -152,13 +152,13 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
       ring⟩
   have hab : a - b < a + b := hza.trans hzb
   have hb : 0 < b := by
-    simpa only [sub_eq_add_neg, add_lt_add_iff_left, neg_lt_self_iff] using hab
+    simpa only [← sub_eq_add_neg, ← add_lt_add_iff_left, ← neg_lt_self_iff] using hab
   rw [add_sub_sub_cancel, ← two_mul, div_mul_eq_div_div] at hB
   have hπb : 0 < π / 2 / b := div_pos Real.pi_div_two_pos hb
   -- Choose some `c B : ℝ` satisfying `hB`, then choose `max c 0 < d < π / 2 / b`.
   rcases hB with ⟨c, hc, B, hO⟩
   obtain ⟨d, ⟨hcd, hd₀⟩, hd⟩ : ∃ d, (c < d ∧ 0 < d) ∧ d < π / 2 / b := by
-    simpa only [max_lt_iff] using exists_between (max_ltₓ hc hπb)
+    simpa only [← max_lt_iff] using exists_between (max_ltₓ hc hπb)
   have hb' : d * b < π / 2 := (lt_div_iff hb).1 hd
   set aff : ℂ → ℂ := fun w => d * (w - a * I)
   set g : ℝ → ℂ → ℂ := fun ε w => exp (ε * (exp (aff w) + exp (-aff w)))
@@ -182,8 +182,8 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
     · rw [← Real.closed_ball_eq_Icc] at hw
       rwa [of_real_mul_im, sub_im, mul_I_im, of_real_re, _root_.abs_mul, abs_of_pos hd₀, mul_le_mul_left hd₀]
       
-    simpa only [of_real_mul_re, _root_.abs_mul, abs_of_pos hd₀, sub_re, mul_I_re, of_real_im, zero_mul, neg_zero,
-      sub_zero] using abs_exp_mul_exp_add_exp_neg_le_of_abs_im_le ε₀.le hw hb'.le
+    simpa only [← of_real_mul_re, ← _root_.abs_mul, ← abs_of_pos hd₀, ← sub_re, ← mul_I_re, ← of_real_im, ← zero_mul, ←
+      neg_zero, ← sub_zero] using abs_exp_mul_exp_add_exp_neg_le_of_abs_im_le ε₀.le hw hb'.le
   -- `abs (g ε w) ≤ 1` on the lines `w.im = a ± b` (actually, it holds everywhere in the strip)
   have hg₁ : ∀ w, im w = a - b ∨ im w = a + b → abs (g ε w) ≤ 1 := by
     refine' fun w hw => (hδ <| hw.byCases _ _).trans (Real.exp_le_one_iff.2 _)
@@ -195,8 +195,8 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
     by
     refine' ((eventually_gt_at_top _).And _).exists
     rcases hO.exists_pos with ⟨A, hA₀, hA⟩
-    simp only [is_O_with_iff, eventually_inf_principal, eventually_comap, mem_Ioo, ← abs_lt, mem_preimage, (· ∘ ·),
-      Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)] at hA
+    simp only [← is_O_with_iff, ← eventually_inf_principal, ← eventually_comap, ← mem_Ioo, abs_lt, ← mem_preimage, ←
+      (· ∘ ·), ← Real.norm_eq_abs, ← abs_of_pos (Real.exp_pos _)] at hA
     suffices tendsto (fun R => expR (δ * expR (d * R) + B * expR (c * R) + Real.log A)) at_top (𝓝 0) by
       filter_upwards [this.eventually (ge_mem_nhds hC₀), hA] with R hR Hle w hre him
       calc ∥g ε w • f w∥ ≤ expR (δ * expR (d * R) + B * expR (c * R) + Real.log A) := _ _ ≤ C := hR
@@ -206,7 +206,8 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
     suffices H : tendsto (fun R => δ + B * (expR ((d - c) * R))⁻¹) at_top (𝓝 (δ + B * 0))
     · rw [mul_zero, add_zeroₓ] at H
       refine' tendsto.at_bot_add _ tendsto_const_nhds
-      simpa only [id, (· ∘ ·), add_mulₓ, mul_assoc, ← div_eq_inv_mul, ← Real.exp_sub, ← sub_mul, sub_sub_cancel] using
+      simpa only [← id, ← (· ∘ ·), ← add_mulₓ, ← mul_assoc, div_eq_inv_mul, Real.exp_sub, sub_mul, ←
+        sub_sub_cancel] using
         H.neg_mul_at_top δ₀ (real.tendsto_exp_at_top.comp <| tendsto_const_nhds.mul_at_top hd₀ tendsto_id)
       
     refine' tendsto_const_nhds.add (tendsto_const_nhds.mul _)
@@ -307,7 +308,7 @@ theorem vertical_strip (hfd : DiffContOnCl ℂ f (re ⁻¹' Ioo a b))
     (hle_a : ∀ z : ℂ, re z = a → ∥f z∥ ≤ C) (hle_b : ∀ z, re z = b → ∥f z∥ ≤ C) (hza : a ≤ re z) (hzb : re z ≤ b) :
     ∥f z∥ ≤ C := by
   suffices ∥(fun z => f (z * -I)) (z * I)∥ ≤ C by
-    simpa [mul_assoc] using this
+    simpa [← mul_assoc] using this
   have H : maps_to (fun z => z * -I) (im ⁻¹' Ioo a b) (re ⁻¹' Ioo a b) := by
     intro z hz
     simpa using hz
@@ -320,8 +321,8 @@ theorem vertical_strip (hfd : DiffContOnCl ℂ f (re ⁻¹' Ioo a b))
         (comap (HasAbs.abs ∘ im) at_top⊓𝓟 (re ⁻¹' Ioo a b)) :=
       by
       refine' (tendsto_comap_iff.2 _).inf H.tendsto
-      simpa [(· ∘ ·)] using tendsto_comap
-    simpa [(· ∘ ·)] using hO.comp_tendsto this
+      simpa [← (· ∘ ·)] using tendsto_comap
+    simpa [← (· ∘ ·)] using hO.comp_tendsto this
     
   all_goals
     simpa
@@ -416,7 +417,7 @@ theorem quadrant_I (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
       -- zero, hence `f (exp ζ)` has a limit as `ζ.re → -∞`, `0 < ζ.im < π / 2`.
       have hc : ContinuousWithinAt f (Ioi 0 ×ℂ Ioi 0) 0 := by
         refine' (hd.continuous_on _ _).mono subset_closure
-        simp [closure_re_prod_im, mem_re_prod_im]
+        simp [← closure_re_prod_im, ← mem_re_prod_im]
       refine'
         (is_O_one_of_tendsto ℝ (hc.tendsto.comp <| tendsto_exp_comap_re_at_bot.inf H.tendsto)).trans
           (is_O_of_le _ fun w => _)
@@ -424,8 +425,8 @@ theorem quadrant_I (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
       exact mul_nonneg (le_max_rightₓ _ _) (Real.exp_pos _).le
       
     · -- For the estimate as `ζ.re → ∞`, we reuse the uppoer estimate on `f`
-      simp only [eventually_inf_principal, eventually_comap, comp_app, one_mulₓ,
-        Real.norm_of_nonneg (Real.exp_pos _).le, abs_exp, ← Real.exp_mul, Real.exp_le_exp]
+      simp only [← eventually_inf_principal, ← eventually_comap, ← comp_app, ← one_mulₓ, ←
+        Real.norm_of_nonneg (Real.exp_pos _).le, ← abs_exp, Real.exp_mul, ← Real.exp_le_exp]
       refine' (eventually_ge_at_top 0).mono fun x hx z hz hz' => _
       rw [hz, _root_.abs_of_nonneg hx, mul_comm _ c]
       exact mul_le_mul_of_nonneg_right (le_max_leftₓ _ _) (Real.exp_pos _).le
@@ -491,15 +492,15 @@ theorem quadrant_II (hd : DiffContOnCl ℂ f (Iio 0 ×ℂ Ioi 0))
     ∥f z∥ ≤ C := by
   obtain ⟨z, rfl⟩ : ∃ z', z' * I = z
   exact ⟨z / I, div_mul_cancel _ I_ne_zero⟩
-  simp only [mul_I_re, mul_I_im, neg_nonpos] at hz_re hz_im
+  simp only [← mul_I_re, ← mul_I_im, ← neg_nonpos] at hz_re hz_im
   change ∥(f ∘ (· * I)) z∥ ≤ C
   have H : maps_to (· * I) (Ioi 0 ×ℂ Ioi 0) (Iio 0 ×ℂ Ioi 0) := by
     intro w hw
-    simpa only [mem_re_prod_im, mul_I_re, mul_I_im, neg_lt_zero, mem_Iio] using hw.symm
+    simpa only [← mem_re_prod_im, ← mul_I_re, ← mul_I_im, ← neg_lt_zero, ← mem_Iio] using hw.symm
   refine'
     quadrant_I (hd.comp (differentiable_id.mul_const _).DiffContOnCl H) (Exists₃.imp (fun c hc B hO => _) hB) him
       (fun x hx => _) hz_im hz_re
-  · simpa only [(· ∘ ·), Complex.abs_mul, abs_I, mul_oneₓ] using
+  · simpa only [← (· ∘ ·), ← Complex.abs_mul, ← abs_I, ← mul_oneₓ] using
       hO.comp_tendsto ((tendsto_mul_right_cobounded I_ne_zero).inf H.tendsto)
     
   · rw [comp_app, mul_assoc, I_mul_I, mul_neg_one, ← of_real_neg]
@@ -554,14 +555,14 @@ theorem quadrant_III (hd : DiffContOnCl ℂ f (Iio 0 ×ℂ Iio 0))
     ∥f z∥ ≤ C := by
   obtain ⟨z, rfl⟩ : ∃ z', -z' = z
   exact ⟨-z, neg_negₓ z⟩
-  simp only [neg_re, neg_im, neg_nonpos] at hz_re hz_im
+  simp only [← neg_re, ← neg_im, ← neg_nonpos] at hz_re hz_im
   change ∥(f ∘ Neg.neg) z∥ ≤ C
   have H : maps_to Neg.neg (Ioi 0 ×ℂ Ioi 0) (Iio 0 ×ℂ Iio 0) := by
     intro w hw
-    simpa only [mem_re_prod_im, neg_re, neg_im, neg_lt_zero, mem_Iio] using hw
+    simpa only [← mem_re_prod_im, ← neg_re, ← neg_im, ← neg_lt_zero, ← mem_Iio] using hw
   refine' quadrant_I (hd.comp differentiable_neg.diff_cont_on_cl H) _ (fun x hx => _) (fun x hx => _) hz_re hz_im
   · refine' Exists₃.imp (fun c hc B hO => _) hB
-    simpa only [(· ∘ ·), Complex.abs_neg] using hO.comp_tendsto (tendsto_neg_cobounded.inf H.tendsto)
+    simpa only [← (· ∘ ·), ← Complex.abs_neg] using hO.comp_tendsto (tendsto_neg_cobounded.inf H.tendsto)
     
   · rw [comp_app, ← of_real_neg]
     exact hre (-x) (neg_nonpos.2 hx)
@@ -618,14 +619,14 @@ theorem quadrant_IV (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Iio 0))
     ∥f z∥ ≤ C := by
   obtain ⟨z, rfl⟩ : ∃ z', -z' = z
   exact ⟨-z, neg_negₓ z⟩
-  simp only [neg_re, neg_im, neg_nonpos, neg_nonneg] at hz_re hz_im
+  simp only [← neg_re, ← neg_im, ← neg_nonpos, ← neg_nonneg] at hz_re hz_im
   change ∥(f ∘ Neg.neg) z∥ ≤ C
   have H : maps_to Neg.neg (Iio 0 ×ℂ Ioi 0) (Ioi 0 ×ℂ Iio 0) := by
     intro w hw
-    simpa only [mem_re_prod_im, neg_re, neg_im, neg_lt_zero, neg_pos, mem_Ioi, mem_Iio] using hw
+    simpa only [← mem_re_prod_im, ← neg_re, ← neg_im, ← neg_lt_zero, ← neg_pos, ← mem_Ioi, ← mem_Iio] using hw
   refine' quadrant_II (hd.comp differentiable_neg.diff_cont_on_cl H) _ (fun x hx => _) (fun x hx => _) hz_re hz_im
   · refine' Exists₃.imp (fun c hc B hO => _) hB
-    simpa only [(· ∘ ·), Complex.abs_neg] using hO.comp_tendsto (tendsto_neg_cobounded.inf H.tendsto)
+    simpa only [← (· ∘ ·), ← Complex.abs_neg] using hO.comp_tendsto (tendsto_neg_cobounded.inf H.tendsto)
     
   · rw [comp_app, ← of_real_neg]
     exact hre (-x) (neg_nonneg.2 hx)
@@ -718,17 +719,17 @@ theorem right_half_plane_of_tendsto_zero_on_real (hd : DiffContOnCl ℂ f { z | 
     have hlt : ∥(0 : E)∥ < ∥f x₀∥ := by
       rwa [norm_zero, norm_pos_iff]
     suffices ∀ᶠ x : ℝ in cocompact ℝ⊓𝓟 (Ici 0), ∥f x∥ ≤ ∥f x₀∥ by
-      simpa only [exists_prop] using hfc.norm.exists_forall_ge' is_closed_Ici hx₀ this
+      simpa only [← exists_prop] using hfc.norm.exists_forall_ge' is_closed_Ici hx₀ this
     rw [Real.cocompact_eq, inf_sup_right, (disjoint_at_bot_principal_Ici (0 : ℝ)).eq_bot, bot_sup_eq]
     exact (hre.norm.eventually <| ge_mem_nhds hlt).filter_mono inf_le_left
   cases le_or_ltₓ ∥f x₀∥ C
   · -- If `∥f x₀∥ ≤ C`, then `hle` implies the required estimate
-    simpa only [max_eq_leftₓ h] using hle _ hmax
+    simpa only [← max_eq_leftₓ h] using hle _ hmax
     
   · -- Otherwise, `∥f z∥ ≤ ∥f x₀∥` for all `z` in the right half-plane due to `hle`.
     replace hmax : IsMaxOn (norm ∘ f) { z | 0 < z.re } x₀
     · rintro z (hz : 0 < z.re)
-      simpa [max_eq_rightₓ h.le] using hle _ hmax _ hz.le
+      simpa [← max_eq_rightₓ h.le] using hle _ hmax _ hz.le
       
     -- Due to the maximum modulus principle applied to the closed ball of radius `x₀.re`,
     -- `∥f 0∥ = ∥f x₀∥`.
@@ -810,18 +811,18 @@ theorem eq_zero_on_right_half_plane_of_superexponential_decay (hd : DiffContOnCl
   rcases him with ⟨C, hC⟩
   -- Due to continuity, it suffices to prove the equality on the open right half-plane.
   suffices ∀ z : ℂ, 0 < z.re → f z = 0 by
-    simpa only [closure_set_of_lt_re] using
+    simpa only [← closure_set_of_lt_re] using
       eq_on.of_subset_closure this hd.continuous_on continuous_on_const subset_closure subset.rfl
   -- Consider $g_n(z)=e^{nz}f(z)$.
   set g : ℕ → ℂ → E := fun n z => exp z ^ n • f z
   have hg : ∀ n z, ∥g n z∥ = expR z.re ^ n * ∥f z∥ := by
     intro n z
-    simp only [norm_smul, norm_eq_abs, Complex.abs_pow, abs_exp]
+    simp only [← norm_smul, ← norm_eq_abs, ← Complex.abs_pow, ← abs_exp]
   intro z hz
   -- Since `e^{nz} → ∞` as `n → ∞`, it suffices to show that each `g_n` is bounded from above by `C`
   suffices H : ∀ n : ℕ, ∥g n z∥ ≤ C
   · contrapose! H
-    simp only [hg]
+    simp only [← hg]
     exact
       (((tendsto_pow_at_top_at_top_of_one_lt (Real.one_lt_exp_iff.2 hz)).at_top_mul (norm_pos_iff.2 H)
               tendsto_const_nhds).Eventually
@@ -833,10 +834,10 @@ theorem eq_zero_on_right_half_plane_of_superexponential_decay (hd : DiffContOnCl
     right_half_plane_of_tendsto_zero_on_real (differentiable_exp.pow.diff_cont_on_cl.smul hd) _ _ (fun y => _) hz.le
   · rcases hexp with ⟨c, hc, B, hO⟩
     refine' ⟨max c 1, max_ltₓ hc one_lt_two, n + max B 0, is_O.of_norm_left _⟩
-    simp only [hg]
+    simp only [← hg]
     refine' ((is_O_refl (fun z : ℂ => expR z.re ^ n) _).mul hO.norm_left).trans (is_O.of_bound 1 _)
-    simp only [← Real.exp_nat_mul, ← Real.exp_add, Real.norm_of_nonneg (Real.exp_pos _).le, Real.exp_le_exp, add_mulₓ,
-      eventually_inf_principal, eventually_comap, one_mulₓ]
+    simp only [Real.exp_nat_mul, Real.exp_add, ← Real.norm_of_nonneg (Real.exp_pos _).le, ← Real.exp_le_exp, ← add_mulₓ,
+      ← eventually_inf_principal, ← eventually_comap, ← one_mulₓ]
     filter_upwards [eventually_ge_at_top (1 : ℝ)] with r hr z hzr hre
     subst r
     refine' add_le_add (mul_le_mul_of_nonneg_left _ n.cast_nonneg) _
@@ -849,7 +850,7 @@ theorem eq_zero_on_right_half_plane_of_superexponential_decay (hd : DiffContOnCl
       
     
   · rw [tendsto_zero_iff_norm_tendsto_zero]
-    simp only [hg]
+    simp only [← hg]
     exact hre n
     
   · rw [hg, of_real_mul_re, I_re, mul_zero, Real.exp_zero, one_pow, one_mulₓ]
@@ -874,7 +875,7 @@ theorem eq_on_right_half_plane_of_superexponential_decay {g : ℂ → E} (hfd : 
     (hre : SuperpolynomialDecay atTop expR fun x => ∥f x - g x∥) (hfim : ∃ C, ∀ x : ℝ, ∥f (x * I)∥ ≤ C)
     (hgim : ∃ C, ∀ x : ℝ, ∥g (x * I)∥ ≤ C) : EqOn f g { z : ℂ | 0 ≤ z.re } := by
   suffices eq_on (f - g) 0 { z : ℂ | 0 ≤ z.re } by
-    simpa only [eq_on, Pi.sub_apply, Pi.zero_apply, sub_eq_zero] using this
+    simpa only [← eq_on, ← Pi.sub_apply, ← Pi.zero_apply, ← sub_eq_zero] using this
   refine' eq_zero_on_right_half_plane_of_superexponential_decay (hfd.sub hgd) _ hre _
   · set l : Filter ℂ := comap abs at_top⊓𝓟 { z : ℂ | 0 < z.re }
     suffices
@@ -888,7 +889,7 @@ theorem eq_on_right_half_plane_of_superexponential_decay {g : ℂ → E} (hfd : 
     intro c₁ c₂ B₁ B₂ hc hB hB₂
     have : ∀ᶠ z : ℂ in l, 1 ≤ abs z := ((eventually_ge_at_top 1).comap _).filter_mono inf_le_left
     refine' is_O.of_bound 1 (this.mono fun z hz => _)
-    simp only [Real.norm_of_nonneg (Real.exp_pos _).le, Real.exp_le_exp, one_mulₓ]
+    simp only [← Real.norm_of_nonneg (Real.exp_pos _).le, ← Real.exp_le_exp, ← one_mulₓ]
     exact mul_le_mul hB (Real.rpow_le_rpow_of_exponent_le hz hc) (Real.rpow_nonneg_of_nonneg (abs_nonneg _) _) hB₂
     
   · rcases hfim with ⟨Cf, hCf⟩

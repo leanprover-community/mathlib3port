@@ -73,7 +73,7 @@ theorem card_of_is_empty [IsEmpty α] : Nat.card α = 0 := by
 
 @[simp]
 theorem card_prod (α β : Type _) : Nat.card (α × β) = Nat.card α * Nat.card β := by
-  simp only [Nat.card, mk_prod, to_nat_mul, to_nat_lift]
+  simp only [← Nat.card, ← mk_prod, ← to_nat_mul, ← to_nat_lift]
 
 @[simp]
 theorem card_ulift (α : Type _) : Nat.card (ULift α) = Nat.card α :=

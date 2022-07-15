@@ -62,7 +62,7 @@ section Module
 
 variable [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 
-variable [HasScalar R M] [MulAction A M] [IsScalarTower R A M]
+variable [HasSmul R M] [MulAction A M] [IsScalarTower R A M]
 
 variable {R} (A) {M}
 
@@ -117,7 +117,7 @@ theorem Algebra.ext {S : Type u} {A : Type v} [CommSemiringₓ S] [Semiringₓ A
           r • x) :
     h1 = h2 :=
   (Algebra.algebra_ext _ _) fun r => by
-    simpa only [@Algebra.smul_def _ _ _ _ h1, @Algebra.smul_def _ _ _ _ h2, mul_oneₓ] using h r 1
+    simpa only [← @Algebra.smul_def _ _ _ _ h1, ← @Algebra.smul_def _ _ _ _ h2, ← mul_oneₓ] using h r 1
 
 /-- In a tower, the canonical map from the middle element to the top element is an
 algebra homomorphism over the bottom element. -/
@@ -156,7 +156,7 @@ instance (priority := 999) subsemiring (U : Subsemiring S) : IsScalarTower U S A
 
 @[nolint instance_priority]
 instance of_ring_hom {R A B : Type _} [CommSemiringₓ R] [CommSemiringₓ A] [CommSemiringₓ B] [Algebra R A] [Algebra R B]
-    (f : A →ₐ[R] B) : @IsScalarTower R A B _ f.toRingHom.toAlgebra.toHasScalar _ := by
+    (f : A →ₐ[R] B) : @IsScalarTower R A B _ f.toRingHom.toAlgebra.toHasSmul _ := by
   let this := (f : A →+* B).toAlgebra
   exact of_algebra_map_eq fun x => (f.commutes x).symm
 

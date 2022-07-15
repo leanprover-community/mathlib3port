@@ -37,13 +37,13 @@ def evaluationLeftAdjoint (c : C) : D ⥤ C ⥤ D where
       map_id' := by
         intros
         ext ⟨j⟩
-        simp only [cofan.mk_ι_app, colimit.ι_desc, category.comp_id]
+        simp only [← cofan.mk_ι_app, ← colimit.ι_desc, ← category.comp_id]
         congr 1
         rw [category.comp_id],
       map_comp' := by
         intros
         ext
-        simp only [cofan.mk_ι_app, colimit.ι_desc_assoc, colimit.ι_desc]
+        simp only [← cofan.mk_ι_app, ← colimit.ι_desc_assoc, ← colimit.ι_desc]
         congr 1
         rw [category.assoc] }
   map := fun d₁ d₂ f =>
@@ -81,8 +81,8 @@ def evaluationAdjunctionRight (c : C) : evaluationLeftAdjoint D c ⊣ (evaluatio
             intro f
             ext x ⟨g⟩
             dsimp'
-            simp only [colimit.ι_desc, limits.cofan.mk_ι_app, category.assoc, ← f.naturality,
-              evaluation_left_adjoint_obj_map, colimit.ι_desc_assoc, cofan.mk_ι_app]
+            simp only [← colimit.ι_desc, ← limits.cofan.mk_ι_app, ← category.assoc, f.naturality, ←
+              evaluation_left_adjoint_obj_map, ← colimit.ι_desc_assoc, ← cofan.mk_ι_app]
             congr 2
             rw [category.id_comp],
           right_inv := fun f => by
@@ -125,14 +125,14 @@ def evaluationRightAdjoint (c : C) : D ⥤ C ⥤ D where
         intros
         ext ⟨j⟩
         dsimp'
-        simp only [limit.lift_π, category.id_comp, fan.mk_π_app]
+        simp only [← limit.lift_π, ← category.id_comp, ← fan.mk_π_app]
         congr
         simp ,
       map_comp' := by
         intros
         ext ⟨j⟩
         dsimp'
-        simp only [limit.lift_π, fan.mk_π_app, category.assoc]
+        simp only [← limit.lift_π, ← fan.mk_π_app, ← category.assoc]
         congr 1
         simp }
   map := fun d₁ d₂ f =>
@@ -173,7 +173,7 @@ def evaluationAdjunctionLeft (c : C) : (evaluation _ _).obj c ⊣ evaluationRigh
             intro f
             ext x ⟨g⟩
             dsimp'
-            simp only [limit.lift_π, evaluation_right_adjoint_obj_map, nat_trans.naturality_assoc, fan.mk_π_app]
+            simp only [← limit.lift_π, ← evaluation_right_adjoint_obj_map, ← nat_trans.naturality_assoc, ← fan.mk_π_app]
             congr
             rw [category.comp_id] },
       hom_equiv_naturality_left_symm' := by

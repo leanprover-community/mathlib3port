@@ -6,6 +6,7 @@ Authors: Yaël Dillies, Bhavik Mehta
 import Mathbin.Analysis.Convex.Star
 import Mathbin.Analysis.NormedSpace.Pointwise
 import Mathbin.Analysis.Seminorm
+import Mathbin.Tactic.Congrm
 
 /-!
 # The Minkowksi functional
@@ -54,15 +55,14 @@ def gauge (s : Set E) (x : E) : ℝ :=
 
 variable {s t : Set E} {a : ℝ} {x : E}
 
-theorem gauge_def : gauge s x = inf { r ∈ Set.Ioi 0 | x ∈ r • s } :=
+theorem gauge_def : gauge s x = inf ({ r ∈ Set.Ioi 0 | x ∈ r • s }) :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `congrm #[[expr Inf (λ r, _)]]
 /-- An alternative definition of the gauge using scalar multiplication on the element rather than on
 the set. -/
-theorem gauge_def' : gauge s x = inf { r ∈ Set.Ioi 0 | r⁻¹ • x ∈ s } := by
-  unfold gauge
-  congr 1
-  ext r
+theorem gauge_def' : gauge s x = inf ({ r ∈ Set.Ioi 0 | r⁻¹ • x ∈ s }) := by
+  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `congrm #[[expr Inf (λ r, _)]]"
   exact and_congr_right fun hr => mem_smul_set_iff_inv_smul_mem₀ hr.ne' _ _
 
 private theorem gauge_set_bdd_below : BddBelow { r : ℝ | 0 < r ∧ x ∈ r • s } :=
@@ -87,9 +87,9 @@ but, the real infimum of the empty set in Lean being defined as `0`, it holds un
 theorem gauge_zero : gauge s 0 = 0 := by
   rw [gauge_def']
   by_cases' (0 : E) ∈ s
-  · simp only [smul_zero, sep_true, h, cInf_Ioi]
+  · simp only [← smul_zero, ← sep_true, ← h, ← cInf_Ioi]
     
-  · simp only [smul_zero, sep_false, h, Real.Inf_empty]
+  · simp only [← smul_zero, ← sep_false, ← h, ← Real.Inf_empty]
     
 
 @[simp]
@@ -97,9 +97,9 @@ theorem gauge_zero' : gauge (0 : Set E) = 0 := by
   ext
   rw [gauge_def']
   obtain rfl | hx := eq_or_ne x 0
-  · simp only [cInf_Ioi, mem_zero, Pi.zero_apply, eq_self_iff_true, sep_true, smul_zero]
+  · simp only [← cInf_Ioi, ← mem_zero, ← Pi.zero_apply, ← eq_self_iff_true, ← sep_true, ← smul_zero]
     
-  · simp only [mem_zero, Pi.zero_apply, inv_eq_zero, smul_eq_zero]
+  · simp only [← mem_zero, ← Pi.zero_apply, ← inv_eq_zero, ← smul_eq_zero]
     convert Real.Inf_empty
     exact eq_empty_iff_forall_not_mem.2 fun r hr => hr.2.elim (ne_of_gtₓ hr.1) hx
     
@@ -107,7 +107,7 @@ theorem gauge_zero' : gauge (0 : Set E) = 0 := by
 @[simp]
 theorem gauge_empty : gauge (∅ : Set E) = 0 := by
   ext
-  simp only [gauge_def', Real.Inf_empty, mem_empty_eq, Pi.zero_apply, sep_false]
+  simp only [← gauge_def', ← Real.Inf_empty, ← mem_empty_eq, ← Pi.zero_apply, ← sep_false]
 
 theorem gauge_of_subset_zero (h : s ⊆ 0) : gauge s = 0 := by
   obtain rfl | rfl := subset_singleton_iff_eq.1 h
@@ -224,7 +224,7 @@ theorem gauge_smul_of_nonneg [MulActionWithZero α E] [IsScalarTower α ℝ (Set
   simp_rw [Set.mem_smul_set, Set.mem_sep_eq]
   constructor
   · rintro ⟨hr, hx⟩
-    simp_rw [mem_Ioi]  at hr⊢
+    simp_rw [mem_Ioi] at hr⊢
     rw [← mem_smul_set_iff_inv_smul_mem₀ hr.ne'] at hx
     have := smul_pos (inv_pos.2 ha') hr
     refine' ⟨a⁻¹ • r, ⟨this, _⟩, smul_inv_smul₀ ha'.ne' _⟩
@@ -264,7 +264,7 @@ theorem gauge_smul_left_of_nonneg [MulActionWithZero α E] [SmulCommClass α ℝ
   simp_rw [Set.mem_smul_set, Set.mem_sep_eq]
   constructor
   · rintro ⟨hr, y, hy, h⟩
-    simp_rw [mem_Ioi]  at hr⊢
+    simp_rw [mem_Ioi] at hr⊢
     refine' ⟨a • r, ⟨smul_pos ha' hr, _⟩, inv_smul_smul₀ ha'.ne' _⟩
     rwa [smul_inv₀, smul_assoc, ← h, inv_smul_smul₀ ha'.ne']
     
@@ -305,7 +305,7 @@ theorem interior_subset_gauge_lt_one (s : Set E) : Interior s ⊆ { x | gauge s 
   let s' := f ⁻¹' Interior s
   have hs' : IsOpen s' := hf.is_open_preimage _ is_open_interior
   have one_mem : (1 : ℝ) ∈ s' := by
-    simpa only [s', f, Set.mem_preimage, one_smul]
+    simpa only [← s', ← f, ← Set.mem_preimage, ← one_smul]
   obtain ⟨ε, hε₀, hε⟩ := (Metric.nhds_basis_closed_ball.1 _).1 (is_open_iff_mem_nhds.1 hs' 1 one_mem)
   rw [Real.closed_ball_eq_Icc] at hε
   have hε₁ : 0 < 1 + ε := hε₀.trans (lt_one_add ε)
@@ -354,11 +354,9 @@ theorem gauge_add_le (hs : Convex ℝ s) (absorbs : Absorbent ℝ s) (x y : E) :
 
 /-- `gauge s` as a seminorm when `s` is symmetric, convex and absorbent. -/
 @[simps]
-def gaugeSeminorm (hs₀ : ∀, ∀ x ∈ s, ∀, -x ∈ s) (hs₁ : Convex ℝ s) (hs₂ : Absorbent ℝ s) : Seminorm ℝ E where
-  toFun := gauge s
-  smul' := fun r x => by
+def gaugeSeminorm (hs₀ : ∀, ∀ x ∈ s, ∀, -x ∈ s) (hs₁ : Convex ℝ s) (hs₂ : Absorbent ℝ s) : Seminorm ℝ E :=
+  Seminorm.of (gauge s) (gauge_add_le hs₁ hs₂) fun r x => by
     rw [gauge_smul hs₀, Real.norm_eq_abs, smul_eq_mul] <;> infer_instance
-  triangle' := gauge_add_le hs₁ hs₂
 
 section gaugeSeminorm
 

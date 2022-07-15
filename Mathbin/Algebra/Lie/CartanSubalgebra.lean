@@ -35,13 +35,22 @@ class IsCartanSubalgebra : Prop where
   nilpotent : LieAlgebra.IsNilpotent R H
   self_normalizing : H.normalizer = H
 
+instance [H.IsCartanSubalgebra] : LieAlgebra.IsNilpotent R H :=
+  is_cartan_subalgebra.nilpotent
+
+@[simp]
+theorem centralizer_eq_self_of_is_cartan_subalgebra (H : LieSubalgebra R L) [H.IsCartanSubalgebra] :
+    H.toLieSubmodule.Centralizer = H.toLieSubmodule := by
+  rw [← LieSubmodule.coe_to_submodule_eq_iff, coe_centralizer_eq_normalizer, is_cartan_subalgebra.self_normalizing,
+    coe_to_lie_submodule]
+
 end LieSubalgebra
 
 @[simp]
 theorem LieIdeal.normalizer_eq_top {R : Type u} {L : Type v} [CommRingₓ R] [LieRing L] [LieAlgebra R L]
     (I : LieIdeal R L) : (I : LieSubalgebra R L).normalizer = ⊤ := by
   ext x
-  simpa only [LieSubalgebra.mem_normalizer_iff, LieSubalgebra.mem_top, iff_trueₓ] using fun y hy => I.lie_mem hy
+  simpa only [← LieSubalgebra.mem_normalizer_iff, ← LieSubalgebra.mem_top, ← iff_trueₓ] using fun y hy => I.lie_mem hy
 
 open LieIdeal
 

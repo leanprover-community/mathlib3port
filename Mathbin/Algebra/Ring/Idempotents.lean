@@ -91,15 +91,13 @@ theorem iff_eq_zero_or_one {p : G₀} : IsIdempotentElem p ↔ p = 0 ∨ p = 1 :
 
 section Instances
 
-instance : Zero { p : M₀ // IsIdempotentElem p } where
-  zero := ⟨0, zero⟩
+instance : Zero { p : M₀ // IsIdempotentElem p } where zero := ⟨0, zero⟩
 
 @[simp]
 theorem coe_zero : ↑(0 : { p : M₀ // IsIdempotentElem p }) = (0 : M₀) :=
   rfl
 
-instance : One { p : M₁ // IsIdempotentElem p } where
-  one := ⟨1, one⟩
+instance : One { p : M₁ // IsIdempotentElem p } where one := ⟨1, one⟩
 
 @[simp]
 theorem coe_one : ↑(1 : { p : M₁ // IsIdempotentElem p }) = (1 : M₁) :=

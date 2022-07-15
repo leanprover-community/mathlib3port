@@ -30,24 +30,24 @@ namespace Pi
 
 @[to_additive]
 instance semigroup [∀ i, Semigroupₓ <| f i] : Semigroupₓ (∀ i : I, f i) := by
-  refine_struct { mul := (· * ·), .. } <;>
+  refine_struct { mul := (· * ·).. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 instance semigroupWithZero [∀ i, SemigroupWithZeroₓ <| f i] : SemigroupWithZeroₓ (∀ i : I, f i) := by
-  refine_struct { zero := (0 : ∀ i, f i), mul := (· * ·), .. } <;>
+  refine_struct { zero := (0 : ∀ i, f i), mul := (· * ·).. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 @[to_additive]
 instance commSemigroup [∀ i, CommSemigroupₓ <| f i] : CommSemigroupₓ (∀ i : I, f i) := by
-  refine_struct { mul := (· * ·), .. } <;>
+  refine_struct { mul := (· * ·).. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 @[to_additive]
 instance mulOneClass [∀ i, MulOneClassₓ <| f i] : MulOneClassₓ (∀ i : I, f i) := by
-  refine_struct { one := (1 : ∀ i, f i), mul := (· * ·), .. } <;>
+  refine_struct { one := (1 : ∀ i, f i), mul := (· * ·).. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
@@ -130,7 +130,7 @@ instance leftCancelMonoid [∀ i, LeftCancelMonoid <| f i] : LeftCancelMonoid (�
 
 @[to_additive AddRightCancelMonoid]
 instance rightCancelMonoid [∀ i, RightCancelMonoid <| f i] : RightCancelMonoid (∀ i : I, f i) := by
-  refine_struct { one := (1 : ∀ i, f i), mul := (· * ·), npow := Monoidₓ.npow, .. } <;>
+  refine_struct { one := (1 : ∀ i, f i), mul := (· * ·), npow := Monoidₓ.npow.. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
@@ -147,12 +147,12 @@ instance cancelCommMonoid [∀ i, CancelCommMonoid <| f i] : CancelCommMonoid (�
       tactic.pi_instance_derive_field
 
 instance mulZeroClass [∀ i, MulZeroClassₓ <| f i] : MulZeroClassₓ (∀ i : I, f i) := by
-  refine_struct { zero := (0 : ∀ i, f i), mul := (· * ·), .. } <;>
+  refine_struct { zero := (0 : ∀ i, f i), mul := (· * ·).. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 instance mulZeroOneClass [∀ i, MulZeroOneClassₓ <| f i] : MulZeroOneClassₓ (∀ i : I, f i) := by
-  refine_struct { zero := (0 : ∀ i, f i), one := (1 : ∀ i, f i), mul := (· * ·), .. } <;>
+  refine_struct { zero := (0 : ∀ i, f i), one := (1 : ∀ i, f i), mul := (· * ·).. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
@@ -336,13 +336,13 @@ theorem Pi.mul_single_commute [∀ i, MulOneClassₓ <| f i] :
   ext k
   by_cases' h1 : i = k
   · subst h1
-    simp [hij]
+    simp [← hij]
     
   by_cases' h2 : j = k
   · subst h2
-    simp [hij]
+    simp [← hij]
     
-  simp [h1, h2]
+  simp [← h1, ← h2]
 
 /-- The injection into a pi group with the same values commutes. -/
 @[to_additive "The injection into an additive pi group with the same values commutes."]
@@ -361,7 +361,52 @@ theorem Pi.update_eq_div_mul_single [∀ i, Groupₓ <| f i] (g : ∀ i : I, f i
   rcases eq_or_ne i j with (rfl | h)
   · simp
     
-  · simp [Function.update_noteq h.symm, h]
+  · simp [← Function.update_noteq h.symm, ← h]
+    
+
+@[to_additive Pi.single_add_single_eq_single_add_single]
+theorem Pi.mul_single_mul_mul_single_eq_mul_single_mul_mul_single {M : Type _} [CommMonoidₓ M] {k l m n : I} {u v : M}
+    (hu : u ≠ 1) (hv : v ≠ 1) :
+    mulSingle k u * mulSingle l v = mulSingle m u * mulSingle n v ↔
+      k = m ∧ l = n ∨ u = v ∧ k = n ∧ l = m ∨ u * v = 1 ∧ k = l ∧ m = n :=
+  by
+  refine' ⟨fun h => _, _⟩
+  · have hk := congr_fun h k
+    have hl := congr_fun h l
+    have hm := (congr_fun h m).symm
+    have hn := (congr_fun h n).symm
+    simp only [← mul_apply, ← mul_single_apply, ← if_pos rfl] at hk hl hm hn
+    rcases eq_or_ne k m with (rfl | hkm)
+    · refine' Or.inl ⟨rfl, not_ne_iff.mp fun hln => (hv _).elim⟩
+      rcases eq_or_ne k l with (rfl | hkl)
+      · rwa [if_neg hln.symm, if_neg hln.symm, one_mulₓ, one_mulₓ] at hn
+        
+      · rwa [if_neg hkl.symm, if_neg hln, one_mulₓ, one_mulₓ] at hl
+        
+      
+    · rcases eq_or_ne m n with (rfl | hmn)
+      · rcases eq_or_ne k l with (rfl | hkl)
+        · rw [if_neg hkm.symm, if_neg hkm.symm, one_mulₓ, if_pos rfl] at hm
+          exact Or.inr (Or.inr ⟨hm, rfl, rfl⟩)
+          
+        · simpa only [← if_neg hkm, ← if_neg hkl, ← mul_oneₓ] using hk
+          
+        
+      · rw [if_neg hkm.symm, if_neg hmn, one_mulₓ, mul_oneₓ] at hm
+        obtain rfl := (ite_ne_right_iff.mp (ne_of_eq_of_ne hm.symm hu)).1
+        rw [if_neg hkm, if_neg hkm, one_mulₓ, mul_oneₓ] at hk
+        obtain rfl := (ite_ne_right_iff.mp (ne_of_eq_of_ne hk.symm hu)).1
+        exact Or.inr (Or.inl ⟨hk.trans (if_pos rfl), rfl, rfl⟩)
+        
+      
+    
+  · rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl, rfl⟩ | ⟨h, rfl, rfl⟩)
+    · rfl
+      
+    · apply mul_comm
+      
+    · simp_rw [← Pi.mul_single_mul, h, mul_single_one]
+      
     
 
 end Single

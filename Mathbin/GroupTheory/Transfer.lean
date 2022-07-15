@@ -38,7 +38,10 @@ variable (R S T : LeftTransversals (H : Set G)) [Fintype (G ⧸ H)]
 noncomputable def diff : A :=
   let α := MemLeftTransversals.toEquiv S.2
   let β := MemLeftTransversals.toEquiv T.2
-  ∏ q, ϕ ⟨(α q)⁻¹ * β q, Quotientₓ.exact' ((α.symm_apply_apply q).trans (β.symm_apply_apply q).symm)⟩
+  ∏ q,
+    ϕ
+      ⟨(α q)⁻¹ * β q,
+        QuotientGroup.left_rel_apply.mp <| Quotientₓ.exact' ((α.symm_apply_apply q).trans (β.symm_apply_apply q).symm)⟩
 
 @[to_additive]
 theorem diff_mul_diff : diff ϕ R S * diff ϕ S T = diff ϕ R T :=

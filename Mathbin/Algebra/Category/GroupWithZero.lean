@@ -48,11 +48,13 @@ instance : ConcreteCategory GroupWithZeroₓₓ where
   forget := ⟨coeSort, fun X Y => coeFn, fun X => rfl, fun X Y Z f g => rfl⟩
   forget_faithful := ⟨fun X Y f g h => FunLike.coe_injective h⟩
 
-instance hasForgetToBipointed : HasForget₂ GroupWithZeroₓₓ Bipointed where
-  forget₂ := { obj := fun X => ⟨X, 0, 1⟩, map := fun X Y f => ⟨f, f.map_zero', f.map_one'⟩ }
+instance hasForgetToBipointed :
+    HasForget₂ GroupWithZeroₓₓ
+      Bipointed where forget₂ := { obj := fun X => ⟨X, 0, 1⟩, map := fun X Y f => ⟨f, f.map_zero', f.map_one'⟩ }
 
-instance hasForgetToMon : HasForget₂ GroupWithZeroₓₓ Mon where
-  forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => MonoidWithZeroHom.toMonoidHom }
+instance hasForgetToMon :
+    HasForget₂ GroupWithZeroₓₓ
+      Mon where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => MonoidWithZeroHom.toMonoidHom }
 
 /-- Constructs an isomorphism of groups with zero from a group isomorphism between them. -/
 @[simps]

@@ -62,7 +62,7 @@ theorem embedding_pi_tangent_coe : ⇑f.embeddingPiTangent = fun x i => (f i x �
 
 theorem embedding_pi_tangent_inj_on : InjOn f.embeddingPiTangent s := by
   intro x hx y hy h
-  simp only [embedding_pi_tangent_coe, funext_iff] at h
+  simp only [← embedding_pi_tangent_coe, ← funext_iff] at h
   obtain ⟨h₁, h₂⟩ := Prod.mk.inj_iff.1 (h (f.ind x hx))
   rw [f.apply_ind x hx] at h₂
   rw [← h₂, f.apply_ind x hx, one_smul, one_smul] at h₁
@@ -85,7 +85,7 @@ theorem comp_embedding_pi_tangent_mfderiv (x : M) (hx : x ∈ s) :
   convert has_mfderiv_at_unique this _
   refine' (has_mfderiv_at_ext_chart_at I (f.mem_chart_at_ind_source x hx)).congr_of_eventually_eq _
   refine' (f.eventually_eq_one x hx).mono fun y hy => _
-  simp only [embedding_pi_tangent_coe, ContinuousLinearMap.coe_comp', (· ∘ ·), ContinuousLinearMap.coe_fst',
+  simp only [← embedding_pi_tangent_coe, ← ContinuousLinearMap.coe_comp', ← (· ∘ ·), ← ContinuousLinearMap.coe_fst', ←
     ContinuousLinearMap.proj_apply]
   rw [hy, Pi.one_apply, one_smul]
 
@@ -126,7 +126,7 @@ theorem exists_embedding_euclidean_of_compact [T2Space M] [CompactSpace M] :
     ∃ (n : ℕ)(e : M → EuclideanSpace ℝ (Finₓ n)),
       Smooth I (𝓡 n) e ∧ ClosedEmbedding e ∧ ∀ x : M, Injective (mfderiv I (𝓡 n) e x) :=
   by
-  rcases SmoothBumpCovering.exists_is_subordinate I is_closed_univ fun _ => univ_mem with ⟨ι, f, -⟩
+  rcases SmoothBumpCovering.exists_is_subordinate I is_closed_univ fun x : M _ => univ_mem with ⟨ι, f, -⟩
   have := f.fintype
   rcases f.exists_immersion_euclidean with ⟨n, e, hsmooth, hinj, hinj_mfderiv⟩
   exact ⟨n, e, hsmooth, hsmooth.continuous.closed_embedding hinj, hinj_mfderiv⟩

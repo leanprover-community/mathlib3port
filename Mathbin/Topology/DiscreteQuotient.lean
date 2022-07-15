@@ -123,7 +123,7 @@ theorem proj_surjective : Function.Surjective S.proj :=
 
 theorem fiber_eq (x : X) : S.proj ⁻¹' {S.proj x} = SetOf (S.Rel x) := by
   ext1 y
-  simp only [Set.mem_preimage, Set.mem_singleton_iff, Quotientₓ.eq', DiscreteQuotient.proj.equations._eqn_1,
+  simp only [← Set.mem_preimage, ← Set.mem_singleton_iff, ← Quotientₓ.eq', ← DiscreteQuotient.proj.equations._eqn_1, ←
     Set.mem_set_of_eq]
   exact ⟨fun h => S.symm _ _ h, fun h => S.symm _ _ h⟩
 
@@ -131,7 +131,7 @@ theorem proj_is_locally_constant : IsLocallyConstant S.proj := by
   rw [(IsLocallyConstant.tfae S.proj).out 0 3]
   intro x
   rcases S.proj_surjective x with ⟨x, rfl⟩
-  simp [fiber_eq, (S.clopen x).1]
+  simp [← fiber_eq, ← (S.clopen x).1]
 
 theorem proj_continuous : Continuous S.proj :=
   IsLocallyConstant.continuous <| proj_is_locally_constant _
@@ -361,12 +361,7 @@ theorem exists_of_compat [CompactSpace X] (Qs : ∀ Q : DiscreteQuotient X, Q)
     IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed (fun Q : DiscreteQuotient X => Q.proj ⁻¹' {Qs _})
       (fun A B => _) (fun i => _) (fun i => (fiber_closed _ _).IsCompact) fun i => fiber_closed _ _
   · refine' ⟨x, fun Q => _⟩
-    specialize hx _ ⟨Q, rfl⟩
-    dsimp'  at hx
-    rcases proj_surjective _ (Qs Q) with ⟨y, hy⟩
-    rw [← hy] at *
-    rw [fiber_eq] at hx
-    exact Quotientₓ.sound' (Q.symm y x hx)
+    exact hx _ ⟨Q, rfl⟩
     
   · refine' ⟨A⊓B, fun a ha => _, fun a ha => _⟩
     · dsimp' only

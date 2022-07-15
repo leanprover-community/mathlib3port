@@ -92,11 +92,10 @@ def functor : C ⥤ Quotient r where
   obj := fun a => { as := a }
   map := fun _ _ f => Quot.mk _ f
 
-noncomputable instance : Full (functor r) where
-  preimage := fun X Y f => Quot.out f
+noncomputable instance : Full (functor r) where preimage := fun X Y f => Quot.out f
 
-instance : EssSurj (functor r) where
-  mem_ess_image := fun Y =>
+instance :
+    EssSurj (functor r) where mem_ess_image := fun Y =>
     ⟨Y.as,
       ⟨eqToIso
           (by
@@ -145,7 +144,7 @@ def lift : Quotient r ⥤ D where
     Quot.liftOn hf (fun f => F.map f)
       (by
         rintro _ _ ⟨_, _, _, _, _, _, h⟩
-        simp [H _ _ _ _ h])
+        simp [← H _ _ _ _ h])
   map_id' := fun a => F.map_id a.as
   map_comp' := by
     rintro a b c ⟨f⟩ ⟨g⟩

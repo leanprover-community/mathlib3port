@@ -72,8 +72,8 @@ section
 
 open ZeroObject
 
-instance zero_injective [HasZeroObject C] [HasZeroMorphisms C] : Injective (0 : C) where
-  Factors := fun X Y g f mono =>
+instance zero_injective [HasZeroObject C] [HasZeroMorphisms C] :
+    Injective (0 : C) where Factors := fun X Y g f mono =>
     ⟨0, by
       ext⟩
 
@@ -88,10 +88,10 @@ theorem of_iso {P Q : C} (i : P ≅ Q) (hP : Injective P) : Injective Q :=
 theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
   ⟨of_iso i, of_iso i.symm⟩
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The axiom of choice says that every nonempty type is an injective object in `Type`. -/
-instance (X : Type u) [Nonempty X] : Injective X where
-  Factors := fun Y Z g f mono =>
+instance (X : Type u) [Nonempty X] :
+    Injective X where Factors := fun Y Z g f mono =>
     ⟨fun z => by
       classical <;> exact if h : z ∈ Set.Range f then g (Classical.some h) else Nonempty.some inferInstance, by
       ext y
@@ -103,58 +103,60 @@ instance (X : Type u) [Nonempty X] : Injective X where
       · exact False.elim (h ⟨y, rfl⟩)
         ⟩
 
-instance Type.enough_injectives : EnoughInjectives (Type u) where
-  presentation := fun X =>
+instance Type.enough_injectives :
+    EnoughInjectives
+      (Type
+        u) where presentation := fun X =>
     Nonempty.intro
       { j := WithBot X, Injective := inferInstance, f := Option.some,
         mono := by
           rw [mono_iff_injective]
           exact Option.some_injective X }
 
-instance {P Q : C} [HasBinaryProduct P Q] [Injective P] [Injective Q] : Injective (P ⨯ Q) where
-  Factors := fun X Y g f mono => by
+instance {P Q : C} [HasBinaryProduct P Q] [Injective P] [Injective Q] :
+    Injective (P ⨯ Q) where Factors := fun X Y g f mono => by
     skip
     use limits.prod.lift (factor_thru (g ≫ limits.prod.fst) f) (factor_thru (g ≫ limits.prod.snd) f)
-    simp only [prod.comp_lift, comp_factor_thru]
+    simp only [← prod.comp_lift, ← comp_factor_thru]
     ext
-    · simp only [prod.lift_fst]
+    · simp only [← prod.lift_fst]
       
-    · simp only [prod.lift_snd]
+    · simp only [← prod.lift_snd]
       
 
-instance {β : Type v} (c : β → C) [HasProduct c] [∀ b, Injective (c b)] : Injective (∏ c) where
-  Factors := fun X Y g f mono => by
+instance {β : Type v} (c : β → C) [HasProduct c] [∀ b, Injective (c b)] :
+    Injective (∏ c) where Factors := fun X Y g f mono => by
     skip
     refine' ⟨pi.lift fun b => factor_thru (g ≫ pi.π c _) f, _⟩
     ext ⟨j⟩
-    simp only [category.assoc, limit.lift_π, fan.mk_π_app, comp_factor_thru]
+    simp only [← category.assoc, ← limit.lift_π, ← fan.mk_π_app, ← comp_factor_thru]
 
-instance {P Q : C} [HasZeroMorphisms C] [HasBinaryBiproduct P Q] [Injective P] [Injective Q] : Injective (P ⊞ Q) where
-  Factors := fun X Y g f mono => by
+instance {P Q : C} [HasZeroMorphisms C] [HasBinaryBiproduct P Q] [Injective P] [Injective Q] :
+    Injective (P ⊞ Q) where Factors := fun X Y g f mono => by
     skip
     refine' ⟨biprod.lift (factor_thru (g ≫ biprod.fst) f) (factor_thru (g ≫ biprod.snd) f), _⟩
     ext
-    · simp only [category.assoc, biprod.lift_fst, comp_factor_thru]
+    · simp only [← category.assoc, ← biprod.lift_fst, ← comp_factor_thru]
       
-    · simp only [category.assoc, biprod.lift_snd, comp_factor_thru]
+    · simp only [← category.assoc, ← biprod.lift_snd, ← comp_factor_thru]
       
 
-instance {β : Type v} (c : β → C) [HasZeroMorphisms C] [HasBiproduct c] [∀ b, Injective (c b)] : Injective (⨁ c) where
-  Factors := fun X Y g f mono => by
+instance {β : Type v} (c : β → C) [HasZeroMorphisms C] [HasBiproduct c] [∀ b, Injective (c b)] :
+    Injective (⨁ c) where Factors := fun X Y g f mono => by
     skip
     refine' ⟨biproduct.lift fun b => factor_thru (g ≫ biproduct.π _ _) f, _⟩
     ext
-    simp only [category.assoc, biproduct.lift_π, comp_factor_thru]
+    simp only [← category.assoc, ← biproduct.lift_π, ← comp_factor_thru]
 
-instance {P : Cᵒᵖ} [Projective P] : Injective P.unop where
-  Factors := fun X Y g f mono => by
+instance {P : Cᵒᵖ} [Projective P] :
+    Injective P.unop where Factors := fun X Y g f mono => by
     skip
     refine' ⟨(@projective.factor_thru Cᵒᵖ _ P (Opposite.op X) (Opposite.op Y) _ g.op f.op _).unop, _⟩
     convert
       congr_arg Quiver.Hom.unop (@projective.factor_thru_comp Cᵒᵖ _ P (Opposite.op X) (Opposite.op Y) _ g.op f.op _)
 
-instance {J : C} [Injective J] : Projective (Opposite.op J) where
-  Factors := fun E X f e epi => by
+instance {J : C} [Injective J] :
+    Projective (Opposite.op J) where Factors := fun E X f e epi => by
     skip
     refine' ⟨(@factor_thru C _ J _ _ _ f.unop e.unop _).op, _⟩
     convert congr_arg Quiver.Hom.op (@comp_factor_thru C _ J _ _ _ f.unop e.unop _)

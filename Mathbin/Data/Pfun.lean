@@ -73,7 +73,7 @@ def Dom (f : α →. β) : Set α :=
 
 @[simp]
 theorem mem_dom (f : α →. β) (x : α) : x ∈ Dom f ↔ ∃ y, y ∈ f x := by
-  simp [dom, Part.dom_iff_mem]
+  simp [← dom, ← Part.dom_iff_mem]
 
 theorem dom_eq (f : α →. β) : Dom f = { x | ∃ y, y ∈ f x } :=
   Set.ext (mem_dom f)
@@ -153,14 +153,14 @@ def restrict (f : α →. β) {p : Set α} (H : p ⊆ f.Dom) : α →. β := fun
 @[simp]
 theorem mem_restrict {f : α →. β} {s : Set α} (h : s ⊆ f.Dom) (a : α) (b : β) : b ∈ f.restrict h a ↔ a ∈ s ∧ b ∈ f a :=
   by
-  simp [restrict]
+  simp [← restrict]
 
 /-- Turns a function into a partial function with a prescribed domain. -/
 def res (f : α → β) (s : Set α) : α →. β :=
   (Pfun.lift f).restrict s.subset_univ
 
 theorem mem_res (f : α → β) (s : Set α) (a : α) (b : β) : b ∈ res f s a ↔ a ∈ s ∧ f a = b := by
-  simp [res, @eq_comm _ b]
+  simp [← res, ← @eq_comm _ b]
 
 theorem res_univ (f : α → β) : Pfun.res f Set.Univ = f :=
   rfl
@@ -193,7 +193,7 @@ instance : Monadₓ (Pfun α) where
 instance : IsLawfulMonad (Pfun α) where
   bind_pure_comp_eq_map := fun β γ f x => funext fun a => Part.bind_some_eq_map _ _
   id_map := fun β f => by
-    funext a <;> dsimp' [Functor.map, Pfun.map] <;> cases f a <;> rfl
+    funext a <;> dsimp' [← Functor.map, ← Pfun.map] <;> cases f a <;> rfl
   pure_bind := fun β γ x f => funext fun a => Part.bind_some.{u_1, u_2} _ (f x)
   bind_assoc := fun β γ δ f g k => funext fun a => (f a).bind_assoc (fun b => g b a) fun b => k b a
 
@@ -228,23 +228,23 @@ theorem mem_fix_iff {f : α →. Sum β α} {a : α} {b : β} :
     rw [WellFounded.fix_F_eq] at h₂
     simp at h₂
     cases' h₂ with h₂ h₃
-    cases' e : (f a).get h₂ with b' a' <;> simp [e] at h₃
+    cases' e : (f a).get h₂ with b' a' <;> simp [← e] at h₃
     · subst b'
       refine' Or.inl ⟨h₂, e⟩
       
     · exact Or.inr ⟨a', ⟨_, e⟩, Part.mem_assert _ h₃⟩
       ,
     fun h => by
-    simp [fix]
+    simp [← fix]
     rcases h with (⟨h₁, h₂⟩ | ⟨a', h, h₃⟩)
     · refine' ⟨⟨_, fun y h' => _⟩, _⟩
       · injection Part.mem_unique ⟨h₁, h₂⟩ h'
         
       · rw [WellFounded.fix_F_eq]
-        simp [h₁, h₂]
+        simp [← h₁, ← h₂]
         
       
-    · simp [fix] at h₃
+    · simp [← fix] at h₃
       cases' h₃ with h₃ h₄
       refine' ⟨⟨_, fun y h' => _⟩, _⟩
       · injection Part.mem_unique h h' with e
@@ -252,7 +252,7 @@ theorem mem_fix_iff {f : α →. Sum β α} {a : α} {b : β} :
         
       · cases' h with h₁ h₂
         rw [WellFounded.fix_F_eq]
-        simp [h₁, h₂, h₄]
+        simp [← h₁, ← h₂, ← h₄]
         
       ⟩
 
@@ -353,7 +353,7 @@ theorem preimage_union (s t : Set β) : f.Preimage (s ∪ t) = f.Preimage s ∪ 
   Rel.preimage_union _ s t
 
 theorem preimage_univ : f.Preimage Set.Univ = f.Dom := by
-  ext <;> simp [mem_preimage, mem_dom]
+  ext <;> simp [← mem_preimage, ← mem_dom]
 
 /-- Core of a set `s : set β` with respect to a partial function `f : α →. β`. Set of all `a : α`
 such that `f a ∈ s`, if `f a` is defined. -/
@@ -377,7 +377,7 @@ theorem core_inter (s t : Set β) : f.Core (s ∩ t) = f.Core s ∩ f.Core t :=
   Rel.core_inter _ s t
 
 theorem mem_core_res (f : α → β) (s : Set α) (t : Set β) (x : α) : x ∈ (res f s).Core t ↔ x ∈ s → f x ∈ t := by
-  simp [mem_core, mem_res]
+  simp [← mem_core, ← mem_res]
 
 section
 
@@ -386,14 +386,14 @@ open Classical
 theorem core_res (f : α → β) (s : Set α) (t : Set β) : (res f s).Core t = sᶜ ∪ f ⁻¹' t := by
   ext
   rw [mem_core_res]
-  by_cases' h : x ∈ s <;> simp [h]
+  by_cases' h : x ∈ s <;> simp [← h]
 
 end
 
 theorem core_restrict (f : α → β) (s : Set β) : (f : α →. β).Core s = s.Preimage f := by
-  ext x <;> simp [core_def]
+  ext x <;> simp [← core_def]
 
-theorem preimage_subset_core (f : α →. β) (s : Set β) : f.Preimage s ⊆ f.Core s := fun y' fxy' =>
+theorem preimage_subset_core (f : α →. β) (s : Set β) : f.Preimage s ⊆ f.Core s := fun x ⟨y, ys, fxy⟩ y' fxy' =>
   have : y = y' := Part.mem_unique fxy fxy'
   this ▸ ys
 
@@ -410,7 +410,7 @@ theorem core_eq (f : α →. β) (s : Set β) : f.Core s = f.Preimage s ∪ f.Do
 
 theorem preimage_as_subtype (f : α →. β) (s : Set β) : f.asSubtype ⁻¹' s = Subtype.val ⁻¹' f.Preimage s := by
   ext x
-  simp only [Set.mem_preimage, Set.mem_set_of_eq, Pfun.asSubtype, Pfun.mem_preimage]
+  simp only [← Set.mem_preimage, ← Set.mem_set_of_eq, ← Pfun.asSubtype, ← Pfun.mem_preimage]
   show f.fn x.val _ ∈ s ↔ ∃ y ∈ s, y ∈ f x.val
   exact
     Iff.intro (fun h => ⟨_, h, Part.get_mem _⟩) fun ⟨y, ys, fxy⟩ =>
@@ -489,12 +489,12 @@ theorem _root_.part.bind_comp (f : β →. γ) (g : α →. β) (a : Part α) : 
 @[simp]
 theorem comp_assoc (f : γ →. δ) (g : β →. γ) (h : α →. β) : (f.comp g).comp h = f.comp (g.comp h) :=
   ext fun _ _ => by
-    simp only [comp_apply, Part.bind_comp]
+    simp only [← comp_apply, ← Part.bind_comp]
 
 -- This can't be `simp`
 theorem coe_comp (g : β → γ) (f : α → β) : ((g ∘ f : α → γ) : α →. γ) = (g : β →. γ).comp f :=
   ext fun _ _ => by
-    simp only [coe_val, comp_apply, Part.bind_some]
+    simp only [← coe_val, ← comp_apply, ← Part.bind_some]
 
 end Pfun
 

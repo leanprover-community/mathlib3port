@@ -47,10 +47,10 @@ instance : NormedGroup ℂ :=
   NormedGroup.ofCore ℂ { norm_eq_zero_iff := fun z => abs_eq_zero, triangle := abs_add, norm_neg := abs_neg }
 
 instance : NormedField ℂ :=
-  { Complex.field with norm := abs, dist_eq := fun _ _ => rfl, norm_mul' := abs_mul }
+  { Complex.field, Complex.normedGroup with norm := abs, dist_eq := fun _ _ => rfl, norm_mul' := abs_mul }
 
-instance : NondiscreteNormedField ℂ where
-  non_trivial :=
+instance :
+    NondiscreteNormedField ℂ where non_trivial :=
     ⟨2, by
       simp <;> norm_num⟩
 
@@ -70,11 +70,45 @@ instance (priority := 900) _root_.normed_space.complex_to_real {E : Type _} [Nor
 theorem dist_eq (z w : ℂ) : dist z w = abs (z - w) :=
   rfl
 
-theorem dist_self_conj (z : ℂ) : dist z (conj z) = 2 * abs z.im := by
-  simp only [dist_eq, sub_conj, of_real_mul, of_real_bit0, of_real_one, abs_mul, abs_two, abs_of_real, abs_I, mul_oneₓ]
+theorem dist_eq_re_im (z w : ℂ) : dist z w = Real.sqrt ((z.re - w.re) ^ 2 + (z.im - w.im) ^ 2) := by
+  rw [sq, sq]
+  rfl
+
+@[simp]
+theorem dist_mk (x₁ y₁ x₂ y₂ : ℝ) : dist (mk x₁ y₁) (mk x₂ y₂) = Real.sqrt ((x₁ - x₂) ^ 2 + (y₁ - y₂) ^ 2) :=
+  dist_eq_re_im _ _
+
+theorem dist_of_re_eq {z w : ℂ} (h : z.re = w.re) : dist z w = dist z.im w.im := by
+  rw [dist_eq_re_im, h, sub_self, zero_pow two_pos, zero_addₓ, Real.sqrt_sq_eq_abs, Real.dist_eq]
+
+theorem nndist_of_re_eq {z w : ℂ} (h : z.re = w.re) : nndist z w = nndist z.im w.im :=
+  Nnreal.eq <| dist_of_re_eq h
+
+theorem edist_of_re_eq {z w : ℂ} (h : z.re = w.re) : edist z w = edist z.im w.im := by
+  rw [edist_nndist, edist_nndist, nndist_of_re_eq h]
+
+theorem dist_of_im_eq {z w : ℂ} (h : z.im = w.im) : dist z w = dist z.re w.re := by
+  rw [dist_eq_re_im, h, sub_self, zero_pow two_pos, add_zeroₓ, Real.sqrt_sq_eq_abs, Real.dist_eq]
+
+theorem nndist_of_im_eq {z w : ℂ} (h : z.im = w.im) : nndist z w = nndist z.re w.re :=
+  Nnreal.eq <| dist_of_im_eq h
+
+theorem edist_of_im_eq {z w : ℂ} (h : z.im = w.im) : edist z w = edist z.re w.re := by
+  rw [edist_nndist, edist_nndist, nndist_of_im_eq h]
 
 theorem dist_conj_self (z : ℂ) : dist (conj z) z = 2 * abs z.im := by
-  rw [dist_comm, dist_self_conj]
+  rw [dist_of_re_eq (conj_re z), conj_im, dist_comm, Real.dist_eq, sub_neg_eq_add, ← two_mul, _root_.abs_mul,
+    abs_of_pos (@two_pos ℝ _ _)]
+
+theorem nndist_conj_self (z : ℂ) : nndist (conj z) z = 2 * Real.nnabs z.im :=
+  Nnreal.eq <| by
+    rw [← dist_nndist, Nnreal.coe_mul, Nnreal.coe_two, Real.coe_nnabs, dist_conj_self]
+
+theorem dist_self_conj (z : ℂ) : dist z (conj z) = 2 * abs z.im := by
+  rw [dist_comm, dist_conj_self]
+
+theorem nndist_self_conj (z : ℂ) : nndist z (conj z) = 2 * Real.nnabs z.im := by
+  rw [nndist_comm, nndist_conj_self]
 
 @[simp]
 theorem comap_abs_nhds_zero : Filter.comap abs (𝓝 0) = 𝓝 0 :=
@@ -95,10 +129,10 @@ theorem norm_nat (n : ℕ) : ∥(n : ℂ)∥ = n :=
 
 @[simp]
 theorem norm_int {n : ℤ} : ∥(n : ℂ)∥ = abs n := by
-  simp (config := { singlePass := true })[← Rat.cast_coe_int]
+  simp (config := { singlePass := true })[Rat.cast_coe_int]
 
 theorem norm_int_of_nonneg {n : ℤ} (hn : 0 ≤ n) : ∥(n : ℂ)∥ = n := by
-  simp [hn]
+  simp [← hn]
 
 @[continuity]
 theorem continuous_abs : Continuous abs :=
@@ -106,7 +140,7 @@ theorem continuous_abs : Continuous abs :=
 
 @[continuity]
 theorem continuous_norm_sq : Continuous normSq := by
-  simpa [← norm_sq_eq_abs] using continuous_abs.pow 2
+  simpa [norm_sq_eq_abs] using continuous_abs.pow 2
 
 @[simp, norm_cast]
 theorem nnnorm_real (r : ℝ) : ∥(r : ℂ)∥₊ = ∥r∥₊ :=
@@ -120,7 +154,7 @@ theorem nnnorm_nat (n : ℕ) : ∥(n : ℂ)∥₊ = n :=
 @[simp, norm_cast]
 theorem nnnorm_int (n : ℤ) : ∥(n : ℂ)∥₊ = ∥n∥₊ :=
   Subtype.ext <| by
-    simp only [coe_nnnorm, norm_int, Int.norm_eq_abs]
+    simp only [← coe_nnnorm, ← norm_int, ← Int.norm_eq_abs]
 
 theorem nnnorm_eq_one_of_pow_eq_one {ζ : ℂ} {n : ℕ} (h : ζ ^ n = 1) (hn : n ≠ 0) : ∥ζ∥₊ = 1 := by
   refine' (@pow_left_inj Nnreal _ _ _ _ zero_le' zero_le' hn.bot_lt).mp _
@@ -135,14 +169,14 @@ theorem tendsto_abs_cocompact_at_top : Filter.Tendsto abs (Filter.cocompact ℂ)
 
 /-- The `norm_sq` function on `ℂ` is proper. -/
 theorem tendsto_norm_sq_cocompact_at_top : Filter.Tendsto normSq (Filter.cocompact ℂ) Filter.atTop := by
-  simpa [mul_self_abs] using tendsto_abs_cocompact_at_top.at_top_mul_at_top tendsto_abs_cocompact_at_top
+  simpa [← mul_self_abs] using tendsto_abs_cocompact_at_top.at_top_mul_at_top tendsto_abs_cocompact_at_top
 
 open ContinuousLinearMap
 
 /-- Continuous linear map version of the real part function, from `ℂ` to `ℝ`. -/
 def reClm : ℂ →L[ℝ] ℝ :=
   reLm.mkContinuous 1 fun x => by
-    simp [Real.norm_eq_abs, abs_re_le_abs]
+    simp [← Real.norm_eq_abs, ← abs_re_le_abs]
 
 @[continuity]
 theorem continuous_re : Continuous re :=
@@ -175,7 +209,7 @@ theorem re_clm_nnnorm : ∥re_clm∥₊ = 1 :=
 /-- Continuous linear map version of the real part function, from `ℂ` to `ℝ`. -/
 def imClm : ℂ →L[ℝ] ℝ :=
   imLm.mkContinuous 1 fun x => by
-    simp [Real.norm_eq_abs, abs_im_le_abs]
+    simp [← Real.norm_eq_abs, ← abs_im_le_abs]
 
 @[continuity]
 theorem continuous_im : Continuous im :=
@@ -210,7 +244,7 @@ theorem restrict_scalars_one_smul_right' {E : Type _} [NormedGroup E] [NormedSpa
       reClm.smul_right x + I • imClm.smul_right x :=
   by
   ext ⟨a, b⟩
-  simp [mk_eq_add_mul_I, add_smul, mul_smul, smul_comm I]
+  simp [← mk_eq_add_mul_I, ← add_smul, ← mul_smul, ← smul_comm I]
 
 theorem restrict_scalars_one_smul_right (x : ℂ) :
     ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smul_right x : ℂ →L[ℂ] ℂ) = x • 1 := by
@@ -320,29 +354,29 @@ noncomputable instance : IsROrC ℂ where
   im := ⟨Complex.im, Complex.zero_im, Complex.add_im⟩
   i := Complex.i
   I_re_ax := by
-    simp only [AddMonoidHom.coe_mk, Complex.I_re]
+    simp only [← AddMonoidHom.coe_mk, ← Complex.I_re]
   I_mul_I_ax := by
-    simp only [Complex.I_mul_I, eq_self_iff_true, or_trueₓ]
+    simp only [← Complex.I_mul_I, ← eq_self_iff_true, ← or_trueₓ]
   re_add_im_ax := fun z => by
-    simp only [AddMonoidHom.coe_mk, Complex.re_add_im, Complex.coe_algebra_map, Complex.of_real_eq_coe]
+    simp only [← AddMonoidHom.coe_mk, ← Complex.re_add_im, ← Complex.coe_algebra_map, ← Complex.of_real_eq_coe]
   of_real_re_ax := fun r => by
-    simp only [AddMonoidHom.coe_mk, Complex.of_real_re, Complex.coe_algebra_map, Complex.of_real_eq_coe]
+    simp only [← AddMonoidHom.coe_mk, ← Complex.of_real_re, ← Complex.coe_algebra_map, ← Complex.of_real_eq_coe]
   of_real_im_ax := fun r => by
-    simp only [AddMonoidHom.coe_mk, Complex.of_real_im, Complex.coe_algebra_map, Complex.of_real_eq_coe]
+    simp only [← AddMonoidHom.coe_mk, ← Complex.of_real_im, ← Complex.coe_algebra_map, ← Complex.of_real_eq_coe]
   mul_re_ax := fun z w => by
-    simp only [Complex.mul_re, AddMonoidHom.coe_mk]
+    simp only [← Complex.mul_re, ← AddMonoidHom.coe_mk]
   mul_im_ax := fun z w => by
-    simp only [AddMonoidHom.coe_mk, Complex.mul_im]
+    simp only [← AddMonoidHom.coe_mk, ← Complex.mul_im]
   conj_re_ax := fun z => rfl
   conj_im_ax := fun z => rfl
   conj_I_ax := by
-    simp only [Complex.conj_I, RingHom.coe_mk]
+    simp only [← Complex.conj_I, ← RingHom.coe_mk]
   norm_sq_eq_def_ax := fun z => by
-    simp only [← Complex.norm_sq_eq_abs, ← Complex.norm_sq_apply, AddMonoidHom.coe_mk, Complex.norm_eq_abs]
+    simp only [Complex.norm_sq_eq_abs, Complex.norm_sq_apply, ← AddMonoidHom.coe_mk, ← Complex.norm_eq_abs]
   mul_im_I_ax := fun z => by
-    simp only [mul_oneₓ, AddMonoidHom.coe_mk, Complex.I_im]
+    simp only [← mul_oneₓ, ← AddMonoidHom.coe_mk, ← Complex.I_im]
   inv_def_ax := fun z => by
-    simp only [Complex.inv_def, Complex.norm_sq_eq_abs, Complex.coe_algebra_map, Complex.of_real_eq_coe,
+    simp only [← Complex.inv_def, ← Complex.norm_sq_eq_abs, ← Complex.coe_algebra_map, ← Complex.of_real_eq_coe, ←
       Complex.norm_eq_abs]
   div_I_ax := Complex.div_I
 
@@ -368,7 +402,7 @@ def equivRealProdAddHom : ℂ ≃+ ℝ × ℝ :=
 def equivRealProdAddHomLm : ℂ ≃ₗ[ℝ] ℝ × ℝ :=
   { equivRealProdAddHom with
     map_smul' := by
-      simp [equiv_real_prod_add_hom] }
+      simp [← equiv_real_prod_add_hom] }
 
 /-- The natural `continuous_linear_equiv` from `ℂ` to `ℝ × ℝ`. -/
 @[simps (config := { simpRhs := true }) apply symm_apply_re symm_apply_im]
@@ -423,11 +457,11 @@ theorem I_to_complex : IC = Complex.i :=
 
 @[simp]
 theorem norm_sq_to_complex {x : ℂ} : norm_sqC x = Complex.normSq x := by
-  simp [IsROrC.normSq, Complex.normSq]
+  simp [← IsROrC.normSq, ← Complex.normSq]
 
 @[simp]
 theorem abs_to_complex {x : ℂ} : absC x = Complex.abs x := by
-  simp [IsROrC.abs, Complex.abs]
+  simp [← IsROrC.abs, ← Complex.abs]
 
 end IsROrC
 

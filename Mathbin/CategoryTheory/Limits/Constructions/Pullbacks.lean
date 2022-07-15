@@ -32,7 +32,7 @@ theorem has_limit_cospan_of_has_limit_pair_of_has_limit_parallel_pair {C : Type 
   HasLimit.mk
     { Cone :=
         PullbackCone.mk (e ≫ π₁) (e ≫ π₂) <| by
-          simp only [category.assoc, equalizer.condition],
+          simp only [← category.assoc, ← equalizer.condition],
       IsLimit :=
         (PullbackCone.IsLimit.mk _
             (fun s =>

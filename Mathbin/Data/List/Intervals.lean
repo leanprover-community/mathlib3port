@@ -41,21 +41,21 @@ theorem zero_bot (n : ℕ) : ico 0 n = range n := by
 
 @[simp]
 theorem length (n m : ℕ) : length (ico n m) = m - n := by
-  dsimp' [Ico]
-  simp only [length_range']
+  dsimp' [← Ico]
+  simp only [← length_range']
 
 theorem pairwise_lt (n m : ℕ) : Pairwiseₓ (· < ·) (ico n m) := by
-  dsimp' [Ico]
-  simp only [pairwise_lt_range']
+  dsimp' [← Ico]
+  simp only [← pairwise_lt_range']
 
 theorem nodup (n m : ℕ) : Nodupₓ (ico n m) := by
-  dsimp' [Ico]
-  simp only [nodup_range']
+  dsimp' [← Ico]
+  simp only [← nodup_range']
 
 @[simp]
 theorem mem {n m l : ℕ} : l ∈ ico n m ↔ n ≤ l ∧ l < m := by
   suffices n ≤ l ∧ l < n + (m - n) ↔ n ≤ l ∧ l < m by
-    simp [Ico, this]
+    simp [← Ico, ← this]
   cases' le_totalₓ n m with hnm hmn
   · rw [add_tsub_cancel_of_le hnm]
     
@@ -65,7 +65,7 @@ theorem mem {n m l : ℕ} : l ∈ ico n m ↔ n ≤ l ∧ l < m := by
     
 
 theorem eq_nil_of_le {n m : ℕ} (h : m ≤ n) : ico n m = [] := by
-  simp [Ico, tsub_eq_zero_iff_le.mpr h]
+  simp [← Ico, ← tsub_eq_zero_iff_le.mpr h]
 
 theorem map_add (n m k : ℕ) : (ico n m).map ((· + ·) k) = ico (n + k) (m + k) := by
   rw [Ico, Ico, map_add_range', add_tsub_add_eq_tsub_right, add_commₓ n k]
@@ -97,7 +97,7 @@ theorem append_consecutive {n m l : ℕ} (hnm : n ≤ m) (hml : m ≤ l) : ico n
 theorem inter_consecutive (n m l : ℕ) : ico n m ∩ ico m l = [] := by
   apply eq_nil_iff_forall_not_mem.2
   intro a
-  simp only [and_imp, not_and, not_ltₓ, List.mem_inter, List.ico.mem]
+  simp only [← and_imp, ← not_and, ← not_ltₓ, ← List.mem_inter, ← List.ico.mem]
   intro h₁ h₂ h₃
   exfalso
   exact not_lt_of_geₓ h₃ h₂
@@ -108,8 +108,8 @@ theorem bag_inter_consecutive (n m l : ℕ) : List.bagInterₓ (ico n m) (ico m 
 
 @[simp]
 theorem succ_singleton {n : ℕ} : ico n (n + 1) = [n] := by
-  dsimp' [Ico]
-  simp [add_tsub_cancel_left]
+  dsimp' [← Ico]
+  simp [← add_tsub_cancel_left]
 
 theorem succ_top {n m : ℕ} (h : n ≤ m) : ico n (m + 1) = ico n m ++ [m] := by
   rwa [← succ_singleton, append_consecutive]
@@ -121,7 +121,7 @@ theorem eq_cons {n m : ℕ} (h : n < m) : ico n m = n :: ico (n + 1) m := by
 
 @[simp]
 theorem pred_singleton {m : ℕ} (h : 0 < m) : ico (m - 1) m = [m - 1] := by
-  dsimp' [Ico]
+  dsimp' [← Ico]
   rw [tsub_tsub_cancel_of_le (succ_le_of_lt h)]
   simp
 
@@ -184,7 +184,7 @@ theorem filter_le (n m l : ℕ) : ((ico n m).filter fun x => l ≤ x) = ico (max
 
 theorem filter_lt_of_succ_bot {n m : ℕ} (hnm : n < m) : ((ico n m).filter fun x => x < n + 1) = [n] := by
   have r : min m (n + 1) = n + 1 := (@inf_eq_right _ _ m (n + 1)).mpr hnm
-  simp [filter_lt n m (n + 1), r]
+  simp [← filter_lt n m (n + 1), ← r]
 
 @[simp]
 theorem filter_le_of_bot {n m : ℕ} (hnm : n < m) : ((ico n m).filter fun x => x ≤ n) = [n] := by
@@ -207,7 +207,7 @@ theorem trichotomy (n a b : ℕ) : n < a ∨ b ≤ n ∨ n ∈ ico a b := by
       exact h₂
       
     · left
-      simp only [Ico.mem, not_and, not_ltₓ] at *
+      simp only [← Ico.mem, ← not_and, ← not_ltₓ] at *
       exact h₂ h₁
       
     

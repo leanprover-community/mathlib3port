@@ -23,11 +23,11 @@ def linComb : List Nat → List Term → Term
 
 theorem lin_comb_holds {v : Nat → Int} : ∀ {ts} ns, (∀, ∀ t ∈ ts, ∀, 0 ≤ Term.val v t) → 0 ≤ (linComb ns ts).val v
   | [], [], h => by
-    simp only [add_zeroₓ, term.val, lin_comb, coeffs.val_nil]
+    simp only [← add_zeroₓ, ← term.val, ← lin_comb, ← coeffs.val_nil]
   | [], _ :: _, h => by
-    simp only [add_zeroₓ, term.val, lin_comb, coeffs.val_nil]
+    simp only [← add_zeroₓ, ← term.val, ← lin_comb, ← coeffs.val_nil]
   | _ :: _, [], h => by
-    simp only [add_zeroₓ, term.val, lin_comb, coeffs.val_nil]
+    simp only [← add_zeroₓ, ← term.val, ← lin_comb, ← coeffs.val_nil]
   | t :: ts, n :: ns, h => by
     have : 0 ≤ ↑n * term.val v t + term.val v (lin_comb ns ts) := by
       apply add_nonneg
@@ -38,7 +38,7 @@ theorem lin_comb_holds {v : Nat → Int} : ∀ {ts} ns, (∀, ∀ t ∈ ts, ∀,
       · apply lin_comb_holds
         apply List.forall_mem_of_forall_mem_consₓ h
         
-    simpa only [lin_comb, term.val_mul, term.val_add]
+    simpa only [← lin_comb, ← term.val_mul, ← term.val_add]
 
 /-- `unsat_lin_comb ns ts` asserts that the linear combination
     `lin_comb ns ts` is unsatisfiable  -/

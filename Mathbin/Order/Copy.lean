@@ -25,7 +25,7 @@ with possibly different definitional equalities. -/
 def BoundedOrder.copy {h : LE α} {h' : LE α} (c : @BoundedOrder α h') (top : α) (eq_top : top = @BoundedOrder.top α _ c)
     (bot : α) (eq_bot : bot = @BoundedOrder.bot α _ c) (le_eq : ∀ x y : α, (@LE.le α h) x y ↔ x ≤ y) :
     @BoundedOrder α h := by
-  refine' { top, bot, .. }
+  refine' { top, bot.. }
   all_goals
     abstract 
       subst_vars
@@ -37,7 +37,7 @@ def BoundedOrder.copy {h : LE α} {h' : LE α} (c : @BoundedOrder α h') (top : 
 with possibly different definitional equalities. -/
 def Lattice.copy (c : Lattice α) (le : α → α → Prop) (eq_le : le = @Lattice.Le α c) (sup : α → α → α)
     (eq_sup : sup = @Lattice.sup α c) (inf : α → α → α) (eq_inf : inf = @Lattice.inf α c) : Lattice α := by
-  refine' { le, sup, inf, .. }
+  refine' { le, sup, inf.. }
   all_goals
     abstract 
       subst_vars
@@ -49,7 +49,7 @@ with possibly different definitional equalities. -/
 def DistribLattice.copy (c : DistribLattice α) (le : α → α → Prop) (eq_le : le = @DistribLattice.Le α c)
     (sup : α → α → α) (eq_sup : sup = @DistribLattice.sup α c) (inf : α → α → α)
     (eq_inf : inf = @DistribLattice.inf α c) : DistribLattice α := by
-  refine' { le, sup, inf, .. }
+  refine' { le, sup, inf.. }
   all_goals
     abstract 
       subst_vars
@@ -65,7 +65,7 @@ def CompleteLattice.copy (c : CompleteLattice α) (le : α → α → Prop) (eq_
     (eq_Inf : Inf = @CompleteLattice.infₓ α c) : CompleteLattice α := by
   refine'
     { Lattice.copy (@CompleteLattice.toLattice α c) le eq_le sup eq_sup inf eq_inf with le, top, bot, sup, inf, sup,
-      inf, .. }
+      inf.. }
   all_goals
     abstract 
       subst_vars
@@ -81,7 +81,7 @@ def Frame.copy (c : Frame α) (le : α → α → Prop) (eq_le : le = @Frame.Le 
   refine'
     { CompleteLattice.copy (@frame.to_complete_lattice α c) le eq_le top eq_top bot eq_bot sup eq_sup inf eq_inf Sup
         eq_Sup Inf eq_Inf with
-      le, top, bot, sup, inf, sup, inf, .. }
+      le, top, bot, sup, inf, sup, inf.. }
   all_goals
     abstract 
       subst_vars
@@ -97,7 +97,7 @@ def Coframe.copy (c : Coframe α) (le : α → α → Prop) (eq_le : le = @Cofra
   refine'
     { CompleteLattice.copy (@coframe.to_complete_lattice α c) le eq_le top eq_top bot eq_bot sup eq_sup inf eq_inf Sup
         eq_Sup Inf eq_Inf with
-      le, top, bot, sup, inf, sup, inf, .. }
+      le, top, bot, sup, inf, sup, inf.. }
   all_goals
     abstract 
       subst_vars
@@ -125,7 +125,7 @@ def ConditionallyCompleteLattice.copy (c : ConditionallyCompleteLattice α) (le 
     (eq_inf : inf = @ConditionallyCompleteLattice.inf α c) (Sup : Set α → α)
     (eq_Sup : Sup = @ConditionallyCompleteLattice.supₓ α c) (Inf : Set α → α)
     (eq_Inf : Inf = @ConditionallyCompleteLattice.infₓ α c) : ConditionallyCompleteLattice α := by
-  refine' { le, sup, inf, sup, inf, .. }
+  refine' { le, sup, inf, sup, inf.. }
   all_goals
     abstract 
       subst_vars

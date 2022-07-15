@@ -79,7 +79,7 @@ section OrderedRing
 variable {R S : Type _} [Ringₓ R] [OrderedRing S] (abv : AbsoluteValue R S)
 
 protected theorem sub_le (a b c : R) : abv (a - c) ≤ abv (a - b) + abv (b - c) := by
-  simpa [sub_eq_add_neg, add_assocₓ] using abv.add_le (a - b) (b - c)
+  simpa [← sub_eq_add_neg, ← add_assocₓ] using abv.add_le (a - b) (b - c)
 
 protected theorem le_sub (a b : R) : abv a - abv b ≤ abv (a - b) :=
   sub_le_iff_le_add.2 <| by
@@ -145,7 +145,7 @@ variable {R S : Type _} [Ringₓ R] [LinearOrderedCommRing S] (abv : AbsoluteVal
 @[simp]
 protected theorem map_neg (a : R) : abv (-a) = abv a := by
   by_cases' ha : a = 0
-  · simp [ha]
+  · simp [← ha]
     
   refine'
     (mul_self_eq_mul_self_iff.mp
@@ -188,10 +188,10 @@ end AbsoluteValue
 
 section IsAbsoluteValue
 
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`abv_nonneg] []
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`abv_eq_zero] []
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`abv_add] []
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`abv_mul] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`abv_nonneg] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`abv_eq_zero] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`abv_add] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`abv_mul] []
 /-- A function `f` is an absolute value if it is nonnegative, zero only at 0, additive, and
 multiplicative.
 
@@ -231,7 +231,7 @@ theorem abv_zero : abv 0 = 0 :=
   (abv_eq_zero abv).2 rfl
 
 theorem abv_pos {a : R} : 0 < abv a ↔ a ≠ 0 := by
-  rw [lt_iff_le_and_ne, Ne, eq_comm] <;> simp [abv_eq_zero abv, abv_nonneg abv]
+  rw [lt_iff_le_and_ne, Ne, eq_comm] <;> simp [← abv_eq_zero abv, ← abv_nonneg abv]
 
 end OrderedSemiring
 
@@ -287,7 +287,7 @@ theorem abv_sub (a b : R) : abv (a - b) = abv (b - a) := by
   rw [← neg_sub, abv_neg abv]
 
 theorem abv_sub_le (a b c : R) : abv (a - c) ≤ abv (a - b) + abv (b - c) := by
-  simpa [sub_eq_add_neg, add_assocₓ] using abv_add abv (a - b) (b - c)
+  simpa [← sub_eq_add_neg, ← add_assocₓ] using abv_add abv (a - b) (b - c)
 
 theorem sub_abv_le_abv_sub (a b : R) : abv a - abv b ≤ abv (a - b) :=
   sub_le_iff_le_add.2 <| by

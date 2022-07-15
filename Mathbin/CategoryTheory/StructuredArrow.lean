@@ -86,8 +86,8 @@ def homMk {f f' : StructuredArrow S T} (g : f.right ⟶ f'.right) (w : f.Hom ≫
 /-- Given a structured arrow `X ⟶ F(U)`, and an arrow `U ⟶ Y`, we can construct a morphism of
 structured arrow given by `(X ⟶ F(U)) ⟶ (X ⟶ F(U) ⟶ F(Y))`.
 -/
-def homMk' {F : C ⥤ D} {X : D} {Y : C} (U : StructuredArrow X F) (f : U.right ⟶ Y) : U ⟶ mk (U.Hom ≫ F.map f) where
-  right := f
+def homMk' {F : C ⥤ D} {X : D} {Y : C} (U : StructuredArrow X F) (f : U.right ⟶ Y) :
+    U ⟶ mk (U.Hom ≫ F.map f) where right := f
 
 /-- To construct an isomorphism of structured arrows,
 we need an isomorphism of the objects underlying the target,
@@ -101,7 +101,7 @@ def isoMk {f f' : StructuredArrow S T} (g : f.right ≅ f'.right) (w : f.Hom ≫
         ext))
     g
     (by
-      simpa [eq_to_hom_map] using w.symm)
+      simpa [← eq_to_hom_map] using w.symm)
 
 /-- A morphism between source objects `S ⟶ S'`
 contravariantly induces a functor between structured arrows,
@@ -130,8 +130,9 @@ theorem map_comp {f : S ⟶ S'} {f' : S' ⟶ S''} {h : StructuredArrow S'' T} :
   rw [eq_mk h]
   simp
 
-instance proj_reflects_iso : ReflectsIsomorphisms (proj S T) where
-  reflects := fun Y Z f t =>
+instance proj_reflects_iso :
+    ReflectsIsomorphisms
+      (proj S T) where reflects := fun Y Z f t =>
     ⟨⟨structured_arrow.hom_mk (inv ((proj S T).map f))
           (by
             simp ),
@@ -152,7 +153,7 @@ def mkIdInitial [Full T] [Faithful T] : IsInitial (mk (𝟙 (T.obj Y))) where
   uniq' := fun c m _ => by
     ext
     apply T.map_injective
-    simpa only [hom_mk_right, T.image_preimage, ← w m] using (category.id_comp _).symm
+    simpa only [← hom_mk_right, ← T.image_preimage, w m] using (category.id_comp _).symm
 
 variable {A : Type u₃} [Category.{v₃} A] {B : Type u₄} [Category.{v₄} B]
 
@@ -168,7 +169,7 @@ def post (S : C) (F : B ⥤ C) (G : C ⥤ D) : StructuredArrow S F ⥤ Structure
   map := fun X Y f =>
     { right := f.right,
       w' := by
-        simp [functor.comp_map, ← G.map_comp, ← f.w] }
+        simp [← functor.comp_map, G.map_comp, f.w] }
 
 end StructuredArrow
 
@@ -226,7 +227,7 @@ def homMk {f f' : CostructuredArrow S T} (g : f.left ⟶ f'.left) (w : S.map g �
       (by
         ext)
   w' := by
-    simpa [eq_to_hom_map] using w
+    simpa [← eq_to_hom_map] using w
 
 /-- To construct an isomorphism of costructured arrows,
 we need an isomorphism of the objects underlying the source,
@@ -239,7 +240,7 @@ def isoMk {f f' : CostructuredArrow S T} (g : f.left ≅ f'.left) (w : S.map g.H
       (by
         ext))
     (by
-      simpa [eq_to_hom_map] using w)
+      simpa [← eq_to_hom_map] using w)
 
 /-- A morphism between target objects `T ⟶ T'`
 covariantly induces a functor between costructured arrows,
@@ -268,8 +269,9 @@ theorem map_comp {f : T ⟶ T'} {f' : T' ⟶ T''} {h : CostructuredArrow S T} :
   rw [eq_mk h]
   simp
 
-instance proj_reflects_iso : ReflectsIsomorphisms (proj S T) where
-  reflects := fun Y Z f t =>
+instance proj_reflects_iso :
+    ReflectsIsomorphisms
+      (proj S T) where reflects := fun Y Z f t =>
     ⟨⟨costructured_arrow.hom_mk (inv ((proj S T).map f))
           (by
             simp ),
@@ -291,7 +293,7 @@ def mkIdTerminal [Full S] [Faithful S] : IsTerminal (mk (𝟙 (S.obj Y))) where
     rintro c m -
     ext
     apply S.map_injective
-    simpa only [hom_mk_left, S.image_preimage, ← w m] using (category.comp_id _).symm
+    simpa only [← hom_mk_left, ← S.image_preimage, w m] using (category.comp_id _).symm
 
 variable {A : Type u₃} [Category.{v₃} A] {B : Type u₄} [Category.{v₄} B]
 
@@ -307,7 +309,7 @@ def post (F : B ⥤ C) (G : C ⥤ D) (S : C) : CostructuredArrow F S ⥤ Costruc
   map := fun X Y f =>
     { left := f.left,
       w' := by
-        simp [functor.comp_map, ← G.map_comp, ← f.w] }
+        simp [← functor.comp_map, G.map_comp, f.w] }
 
 end CostructuredArrow
 

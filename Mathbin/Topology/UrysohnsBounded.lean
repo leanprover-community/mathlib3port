@@ -48,8 +48,8 @@ theorem exists_bounded_mem_Icc_of_closed_of_le {X : Type _} [TopologicalSpace X]
     ∃ f : X →ᵇ ℝ, EqOn f (const X a) s ∧ EqOn f (const X b) t ∧ ∀ x, f x ∈ Icc a b :=
   let ⟨f, hfs, hft, hf01⟩ := exists_bounded_zero_one_of_closed hs ht hd
   ⟨BoundedContinuousFunction.const X a + (b - a) • f, fun x hx => by
-    simp [hfs hx], fun x hx => by
-    simp [hft hx], fun x =>
+    simp [← hfs hx], fun x hx => by
+    simp [← hft hx], fun x =>
     ⟨by
       dsimp' <;> nlinarith [(hf01 x).1], by
       dsimp' <;> nlinarith [(hf01 x).2]⟩⟩

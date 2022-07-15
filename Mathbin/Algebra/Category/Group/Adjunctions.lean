@@ -132,12 +132,12 @@ def abelianize : Groupₓₓ.{u} ⥤ CommGroupₓₓ.{u} where
           simp }
   map_id' := by
     intros
-    simp only [MonoidHom.mk_coe, coe_id]
+    simp only [← MonoidHom.mk_coe, ← coe_id]
     ext1
     rfl
   map_comp' := by
     intros
-    simp only [coe_comp]
+    simp only [← coe_comp]
     ext1
     rfl
 

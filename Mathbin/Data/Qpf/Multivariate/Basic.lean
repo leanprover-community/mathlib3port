@@ -295,15 +295,15 @@ theorem supp_preservation_iff_liftp_preservation : q.SuppPreservation ↔ q.Lift
   · rintro α p ⟨a, f⟩
     have h' := h
     rw [supp_preservation_iff_uniform] at h'
-    dsimp' only [supp_preservation, supp]  at h
-    simp only [liftp_iff_of_is_uniform, supp_eq_of_is_uniform, Mvpfunctor.liftp_iff', h', image_univ, mem_range,
-      exists_imp_distrib]
+    dsimp' only [← supp_preservation, ← supp]  at h
+    simp only [← liftp_iff_of_is_uniform, ← supp_eq_of_is_uniform, ← Mvpfunctor.liftp_iff', ← h', ← image_univ, ←
+      mem_range, ← exists_imp_distrib]
     constructor <;> intros <;> subst_vars <;> solve_by_elim
     
   · rintro α ⟨a, f⟩
-    simp only [liftp_preservation] at h
+    simp only [← liftp_preservation] at h
     ext
-    simp [supp, h]
+    simp [← supp, ← h]
     
 
 theorem liftp_preservation_iff_uniform : q.LiftpPreservation ↔ q.IsUniform := by

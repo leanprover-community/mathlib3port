@@ -134,7 +134,7 @@ theorem lie_skew : -⁅y,x⁆ = ⁅x,y⁆ := by
   have h : ⁅x + y,x⁆ + ⁅x + y,y⁆ = 0 := by
     rw [← lie_add]
     apply lie_self
-  simpa [neg_eq_iff_add_eq_zero] using h
+  simpa [← neg_eq_iff_add_eq_zero] using h
 
 /-- Every Lie algebra is a module over itself. -/
 instance lieAlgebraSelfModule : LieModule R L L where
@@ -155,11 +155,11 @@ theorem lie_neg : ⁅x,-m⁆ = -⁅x,m⁆ := by
 
 @[simp]
 theorem sub_lie : ⁅x - y,m⁆ = ⁅x,m⁆ - ⁅y,m⁆ := by
-  simp [sub_eq_add_neg]
+  simp [← sub_eq_add_neg]
 
 @[simp]
 theorem lie_sub : ⁅x,m - n⁆ = ⁅x,m⁆ - ⁅x,n⁆ := by
-  simp [sub_eq_add_neg]
+  simp [← sub_eq_add_neg]
 
 @[simp]
 theorem nsmul_lie (n : ℕ) : ⁅n • x,m⁆ = n • ⁅x,m⁆ :=
@@ -185,28 +185,27 @@ theorem lie_jacobi : ⁅x,⁅y,z⁆⁆ + ⁅y,⁅z,x⁆⁆ + ⁅z,⁅x,y⁆⁆ =
   rw [← neg_negₓ ⁅x,y⁆, lie_neg z, lie_skew y x, ← lie_skew, lie_lie]
   abel
 
-instance LieRing.intLieAlgebra : LieAlgebra ℤ L where
-  lie_smul := fun n x y => lie_zsmul x y n
+instance LieRing.intLieAlgebra : LieAlgebra ℤ L where lie_smul := fun n x y => lie_zsmul x y n
 
 instance : LieRingModule L (M →ₗ[R] N) where
   bracket := fun x f =>
     { toFun := fun m => ⁅x,f m⁆ - f ⁅x,m⁆,
       map_add' := fun m n => by
-        simp only [lie_add, LinearMap.map_add]
+        simp only [← lie_add, ← LinearMap.map_add]
         abel,
       map_smul' := fun t m => by
-        simp only [smul_sub, LinearMap.map_smul, lie_smul, RingHom.id_apply] }
+        simp only [← smul_sub, ← LinearMap.map_smul, ← lie_smul, ← RingHom.id_apply] }
   add_lie := fun x y f => by
     ext n
-    simp only [add_lie, LinearMap.coe_mk, LinearMap.add_apply, LinearMap.map_add]
+    simp only [← add_lie, ← LinearMap.coe_mk, ← LinearMap.add_apply, ← LinearMap.map_add]
     abel
   lie_add := fun x f g => by
     ext n
-    simp only [LinearMap.coe_mk, lie_add, LinearMap.add_apply]
+    simp only [← LinearMap.coe_mk, ← lie_add, ← LinearMap.add_apply]
     abel
   leibniz_lie := fun x y f => by
     ext n
-    simp only [lie_lie, LinearMap.coe_mk, LinearMap.map_sub, LinearMap.add_apply, lie_sub]
+    simp only [← lie_lie, ← LinearMap.coe_mk, ← LinearMap.map_sub, ← LinearMap.add_apply, ← lie_sub]
     abel
 
 @[simp]
@@ -216,10 +215,10 @@ theorem LieHom.lie_apply (f : M →ₗ[R] N) (x : L) (m : M) : ⁅x,f⁆ m = ⁅
 instance : LieModule R L (M →ₗ[R] N) where
   smul_lie := fun t x f => by
     ext n
-    simp only [smul_sub, smul_lie, LinearMap.smul_apply, LieHom.lie_apply, LinearMap.map_smul]
+    simp only [← smul_sub, ← smul_lie, ← LinearMap.smul_apply, ← LieHom.lie_apply, ← LinearMap.map_smul]
   lie_smul := fun t x f => by
     ext n
-    simp only [smul_sub, LinearMap.smul_apply, LieHom.lie_apply, lie_smul]
+    simp only [← smul_sub, ← LinearMap.smul_apply, ← LieHom.lie_apply, ← lie_smul]
 
 end BasicProperties
 
@@ -417,9 +416,9 @@ def LieRingModule.compLieHom : LieRingModule L₁ M where
   bracket := fun x m => ⁅f x,m⁆
   lie_add := fun x => lie_add (f x)
   add_lie := fun x y m => by
-    simp only [LieHom.map_add, add_lie]
+    simp only [← LieHom.map_add, ← add_lie]
   leibniz_lie := fun x y m => by
-    simp only [lie_lie, sub_add_cancel, LieHom.map_lie]
+    simp only [← lie_lie, ← sub_add_cancel, ← LieHom.map_lie]
 
 theorem LieRingModule.comp_lie_hom_apply (x : L₁) (m : M) :
     have := LieRingModule.compLieHom M f
@@ -433,9 +432,9 @@ See note [reducible non-instances]. -/
 def LieModule.compLieHom [Module R M] [LieModule R L₂ M] :
     @LieModule R L₁ M _ _ _ _ _ (LieRingModule.compLieHom M f) where
   smul_lie := fun t x m => by
-    simp only [smul_lie, LieHom.map_smul]
+    simp only [← smul_lie, ← LieHom.map_smul]
   lie_smul := fun t x m => by
-    simp only [lie_smul]
+    simp only [← lie_smul]
 
 end ModulePullBack
 
@@ -643,7 +642,7 @@ theorem map_lie (f : M →ₗ⁅R,L⁆ N) (x : L) (m : M) : f ⁅x,m⁆ = ⁅x,f
   LieModuleHom.map_lie' f
 
 theorem map_lie₂ (f : M →ₗ⁅R,L⁆ N →ₗ[R] P) (x : L) (m : M) (n : N) : ⁅x,f m n⁆ = f ⁅x,m⁆ n + f m ⁅x,n⁆ := by
-  simp only [sub_add_cancel, map_lie, LieHom.lie_apply]
+  simp only [← sub_add_cancel, ← map_lie, ← LieHom.lie_apply]
 
 @[simp]
 theorem map_zero (f : M →ₗ⁅R,L⁆ N) : f 0 = 0 :=
@@ -743,20 +742,20 @@ def inverse (f : M →ₗ⁅R,L⁆ N) (g : N → M) (h₁ : Function.LeftInverse
         _ = ⁅x,g n⁆ := h₁ _
          }
 
-instance : Add (M →ₗ⁅R,L⁆ N) where
-  add := fun f g =>
+instance :
+    Add (M →ₗ⁅R,L⁆ N) where add := fun f g =>
     { (f : M →ₗ[R] N) + (g : M →ₗ[R] N) with
       map_lie' := by
         simp }
 
-instance : Sub (M →ₗ⁅R,L⁆ N) where
-  sub := fun f g =>
+instance :
+    Sub (M →ₗ⁅R,L⁆ N) where sub := fun f g =>
     { (f : M →ₗ[R] N) - (g : M →ₗ[R] N) with
       map_lie' := by
         simp }
 
-instance : Neg (M →ₗ⁅R,L⁆ N) where
-  neg := fun f =>
+instance :
+    Neg (M →ₗ⁅R,L⁆ N) where neg := fun f =>
     { -(f : M →ₗ[R] N) with
       map_lie' := by
         simp }
@@ -782,8 +781,8 @@ theorem coe_neg (f : M →ₗ⁅R,L⁆ N) : ⇑(-f) = -f :=
 theorem neg_apply (f : M →ₗ⁅R,L⁆ N) (m : M) : (-f) m = -f m :=
   rfl
 
-instance hasNsmul : HasScalar ℕ (M →ₗ⁅R,L⁆ N) where
-  smul := fun n f =>
+instance hasNsmul :
+    HasSmul ℕ (M →ₗ⁅R,L⁆ N) where smul := fun n f =>
     { n • (f : M →ₗ[R] N) with
       map_lie' := fun x m => by
         simp }
@@ -795,8 +794,8 @@ theorem coe_nsmul (n : ℕ) (f : M →ₗ⁅R,L⁆ N) : ⇑(n • f) = n • f :
 theorem nsmul_apply (n : ℕ) (f : M →ₗ⁅R,L⁆ N) (m : M) : (n • f) m = n • f m :=
   rfl
 
-instance hasZsmul : HasScalar ℤ (M →ₗ⁅R,L⁆ N) where
-  smul := fun z f =>
+instance hasZsmul :
+    HasSmul ℤ (M →ₗ⁅R,L⁆ N) where smul := fun z f =>
     { z • (f : M →ₗ[R] N) with
       map_lie' := fun x m => by
         simp }
@@ -811,8 +810,8 @@ theorem zsmul_apply (z : ℤ) (f : M →ₗ⁅R,L⁆ N) (m : M) : (z • f) m = 
 instance : AddCommGroupₓ (M →ₗ⁅R,L⁆ N) :=
   coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_nsmul _ _) fun _ _ => coe_zsmul _ _
 
-instance : HasScalar R (M →ₗ⁅R,L⁆ N) where
-  smul := fun t f =>
+instance :
+    HasSmul R (M →ₗ⁅R,L⁆ N) where smul := fun t f =>
     { t • (f : M →ₗ[R] N) with
       map_lie' := by
         simp }

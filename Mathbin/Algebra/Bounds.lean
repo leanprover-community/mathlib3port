@@ -111,7 +111,7 @@ theorem csupr_mul (hf : BddAbove (Set.Range f)) (a : G) : (⨆ i, f i) * a = ⨆
 
 @[to_additive]
 theorem csupr_div (hf : BddAbove (Set.Range f)) (a : G) : (⨆ i, f i) / a = ⨆ i, f i / a := by
-  simp only [div_eq_mul_inv, csupr_mul hf]
+  simp only [← div_eq_mul_inv, ← csupr_mul hf]
 
 end Right
 

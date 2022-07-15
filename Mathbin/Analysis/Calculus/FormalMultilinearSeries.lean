@@ -97,7 +97,7 @@ theorem comp_continuous_linear_map_apply (p : FormalMultilinearSeries 𝕜 F G) 
     (p.compContinuousLinearMap u) n v = p n (u ∘ v) :=
   rfl
 
-variable (𝕜) [CommRingₓ 𝕜'] [HasScalar 𝕜 𝕜']
+variable (𝕜) [CommRingₓ 𝕜'] [HasSmul 𝕜 𝕜']
 
 variable [Module 𝕜' E] [HasContinuousConstSmul 𝕜' E] [IsScalarTower 𝕜 𝕜' E]
 

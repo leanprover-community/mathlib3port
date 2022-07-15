@@ -82,7 +82,7 @@ theorem rev_at_add {N O n o : ℕ} (hn : n ≤ N) (ho : o ≤ O) : revAt (N + O)
 
 @[simp]
 theorem rev_at_zero (N : ℕ) : revAt N 0 = N := by
-  simp [rev_at]
+  simp [← rev_at]
 
 /-- `reflect N f` is the polynomial such that `(reflect N f).coeff i = f.coeff (rev_at N i)`.
 In other words, the terms with exponent `[0, ..., N]` now have exponent `[N, ..., 0]`.
@@ -101,7 +101,7 @@ theorem reflect_support (N : ℕ) (f : R[X]) : (reflect N f).Support = image (re
 @[simp]
 theorem coeff_reflect (N : ℕ) (f : R[X]) (i : ℕ) : coeff (reflect N f) i = f.coeff (revAt N i) := by
   rcases f with ⟨⟩
-  simp only [reflect, coeff]
+  simp only [← reflect, ← coeff]
   calc Finsupp.embDomain (rev_at N) f i = Finsupp.embDomain (rev_at N) f (rev_at N (rev_at N i)) := by
       rw [rev_at_invol]_ = f (rev_at N i) := Finsupp.emb_domain_apply _ _ _
 
@@ -112,17 +112,17 @@ theorem reflect_zero {N : ℕ} : reflect N (0 : R[X]) = 0 :=
 @[simp]
 theorem reflect_eq_zero_iff {N : ℕ} {f : R[X]} : reflect N (f : R[X]) = 0 ↔ f = 0 := by
   rcases f with ⟨⟩
-  simp [reflect]
+  simp [← reflect]
 
 @[simp]
 theorem reflect_add (f g : R[X]) (N : ℕ) : reflect N (f + g) = reflect N f + reflect N g := by
   ext
-  simp only [coeff_add, coeff_reflect]
+  simp only [← coeff_add, ← coeff_reflect]
 
 @[simp]
 theorem reflect_C_mul (f : R[X]) (r : R) (N : ℕ) : reflect N (c r * f) = c r * reflect N f := by
   ext
-  simp only [coeff_reflect, coeff_C_mul]
+  simp only [← coeff_reflect, ← coeff_C_mul]
 
 @[simp]
 theorem reflect_C_mul_X_pow (N n : ℕ) {c : R} : reflect N (c c * X ^ n) = c c * X ^ revAt N n := by
@@ -213,12 +213,12 @@ theorem eval₂_reflect_mul_pow (i : R →+* S) (x : S) [Invertible x] (N : ℕ)
   · simp
     
   · intro n r hr0 hnN
-    simp only [rev_at_le hnN, reflect_C_mul_X_pow, eval₂_X_pow, eval₂_C, eval₂_mul]
+    simp only [← rev_at_le hnN, ← reflect_C_mul_X_pow, ← eval₂_X_pow, ← eval₂_C, ← eval₂_mul]
     conv in x ^ N => rw [← Nat.sub_add_cancelₓ hnN]
     rw [pow_addₓ, ← mul_assoc, mul_assoc (i r), ← mul_powₓ, inv_of_mul_self, one_pow, mul_oneₓ]
     
   · intros
-    simp [*, add_mulₓ]
+    simp [*, ← add_mulₓ]
     
 
 theorem eval₂_reflect_eq_zero_iff (i : R →+* S) (x : S) [Invertible x] (N : ℕ) (f : R[X]) (hf : f.natDegree ≤ N) :
@@ -252,7 +252,7 @@ theorem reverse_zero : reverse (0 : R[X]) = 0 :=
 
 @[simp]
 theorem reverse_eq_zero : f.reverse = 0 ↔ f = 0 := by
-  simp [reverse]
+  simp [← reverse]
 
 theorem reverse_nat_degree_le (f : R[X]) : f.reverse.natDegree ≤ f.natDegree := by
   rw [nat_degree_le_iff_degree_le, degree_le_iff_coeff_zero]
@@ -306,12 +306,12 @@ theorem reverse_mul {f g : R[X]} (fg : f.leadingCoeff * g.leadingCoeff ≠ 0) : 
 theorem reverse_mul_of_domain {R : Type _} [Ringₓ R] [NoZeroDivisors R] (f g : R[X]) :
     reverse (f * g) = reverse f * reverse g := by
   by_cases' f0 : f = 0
-  · simp only [f0, zero_mul, reverse_zero]
+  · simp only [← f0, ← zero_mul, ← reverse_zero]
     
   by_cases' g0 : g = 0
   · rw [g0, mul_zero, reverse_zero, mul_zero]
     
-  simp [reverse_mul, *]
+  simp [← reverse_mul, *]
 
 theorem trailing_coeff_mul {R : Type _} [Ringₓ R] [NoZeroDivisors R] (p q : R[X]) :
     (p * q).trailingCoeff = p.trailingCoeff * q.trailingCoeff := by
@@ -324,8 +324,8 @@ theorem coeff_one_reverse (f : R[X]) : coeff (reverse f) 1 = nextCoeff f := by
   · have : coeff f 1 = 0 :=
       coeff_eq_zero_of_nat_degree_lt
         (by
-          simp only [hf, zero_lt_one])
-    simp [*, rev_at]
+          simp only [← hf, ← zero_lt_one])
+    simp [*, ← rev_at]
     
   · rw [rev_at_le]
     exact Nat.succ_le_iff.2 (pos_iff_ne_zero.2 hf)

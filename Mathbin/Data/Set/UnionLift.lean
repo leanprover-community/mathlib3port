@@ -50,14 +50,14 @@ it on each component, and proving that it agrees on the intersections. -/
 simplify terms involving `Union_lift`. -/
 @[nolint unused_arguments]
 noncomputable def unionLift (S : ι → Set α) (f : ∀ i x : S i, β)
-    (hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩) (T : Set α) (hT : T ⊆ Unionₓ S)
-    (x : T) : β :=
+    (hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩) (T : Set α) (hT : T ⊆ Union S) (x : T) :
+    β :=
   let i := Classical.indefiniteDescription _ (mem_Union.1 (hT x.Prop))
   f i ⟨x, i.Prop⟩
 
 variable {S : ι → Set α} {f : ∀ i x : S i, β}
-  {hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩} {T : Set α} {hT : T ⊆ Unionₓ S}
-  (hT' : T = Unionₓ S)
+  {hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩} {T : Set α} {hT : T ⊆ Union S}
+  (hT' : T = Union S)
 
 @[simp]
 theorem Union_lift_mk {i : ι} (x : S i) (hx : (x : α) ∈ T) : unionLift S f hf T hT ⟨x, hx⟩ = f i x := by
@@ -129,17 +129,17 @@ theorem Union_lift_binary (dir : Directed (· ≤ ·) S) (op : T → T → T) (o
   have hxy : (Set.inclusion (Set.subset_Union S k) (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩) : α) ∈ S k :=
     (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩).Prop
   conv_lhs => rw [hx, hy, ← hopi, Union_lift_of_mem _ hxy]
-  simp only [coe_inclusion, Subtype.coe_eta]
+  simp only [← coe_inclusion, ← Subtype.coe_eta]
 
 end UnionLift
 
 variable {S : ι → Set α} {f : ∀ i x : S i, β}
-  {hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩} {hS : Unionₓ S = univ}
+  {hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩} {hS : Union S = univ}
 
 /-- Glue together functions defined on each of a collection `S` of sets that cover a type. See
   also `set.Union_lift`.   -/
 noncomputable def liftCover (S : ι → Set α) (f : ∀ i x : S i, β)
-    (hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩) (hS : Unionₓ S = univ) (a : α) : β :=
+    (hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩) (hS : Union S = univ) (a : α) : β :=
   unionLift S f hf Univ (hS ▸ Set.Subset.refl _) ⟨a, trivialₓ⟩
 
 @[simp]

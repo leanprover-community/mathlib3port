@@ -80,7 +80,7 @@ def initialColimitCocone : Limits.ColimitCocone (Functor.empty (Type u)) where
   IsColimit := by
     tidy
 
-/-- The initial object in `Type u` is `punit`. -/
+/-- The initial object in `Type u` is `pempty`. -/
 noncomputable def initialIso : ⊥_ Type u ≅ Pempty :=
   colimit.isoColimitCocone initialColimitCocone
 
@@ -104,7 +104,7 @@ theorem binary_product_cone_snd (X Y : Type u) : (binaryProductCone X Y).snd = P
 /-- The product type `X × Y` is a binary product for `X` and `Y`. -/
 @[simps]
 def binaryProductLimit (X Y : Type u) : IsLimit (binaryProductCone X Y) where
-  lift := fun x => (s.fst x, s.snd x)
+  lift := fun s : BinaryFan X Y x => (s.fst x, s.snd x)
   fac' := fun s j => Discrete.recOn j fun j => WalkingPair.casesOn j rfl rfl
   uniq' := fun s m w => funext fun x => Prod.extₓ (congr_fun (w ⟨left⟩) x) (congr_fun (w ⟨right⟩) x)
 
@@ -328,7 +328,7 @@ def coequalizerColimit : Limits.ColimitCocone (parallelPair f g) where
   Cocone := Cofork.ofπ (Quot.mk (CoequalizerRel f g)) (funext fun x => Quot.sound (CoequalizerRel.rel x))
   IsColimit :=
     (Cofork.IsColimit.mk' _) fun s =>
-      ⟨Quot.lift s.π fun h : CoequalizerRel f g a b => by
+      ⟨Quot.lift s.π fun a b h : CoequalizerRel f g a b => by
           cases h
           exact congr_fun s.condition h_1,
         rfl, fun m hm => funext fun x => Quot.induction_on x (congr_fun hm : _)⟩

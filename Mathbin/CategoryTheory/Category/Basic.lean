@@ -159,11 +159,13 @@ theorem eq_of_comp_right_eq {f g : Y ⟶ Z} (w : ∀ {X : C} h : X ⟶ Y, h ≫ 
   convert w (𝟙 Y)
   tidy
 
-theorem eq_of_comp_left_eq' (f g : X ⟶ Y) (w : (fun h : Y ⟶ Z => f ≫ h) = fun h : Y ⟶ Z => g ≫ h) : f = g :=
+theorem eq_of_comp_left_eq' (f g : X ⟶ Y) (w : (fun {Z : C} h : Y ⟶ Z => f ≫ h) = fun {Z : C} h : Y ⟶ Z => g ≫ h) :
+    f = g :=
   eq_of_comp_left_eq fun Z h => by
     convert congr_fun (congr_fun w Z) h
 
-theorem eq_of_comp_right_eq' (f g : Y ⟶ Z) (w : (fun h : X ⟶ Y => h ≫ f) = fun h : X ⟶ Y => h ≫ g) : f = g :=
+theorem eq_of_comp_right_eq' (f g : Y ⟶ Z) (w : (fun {X : C} h : X ⟶ Y => h ≫ f) = fun {X : C} h : X ⟶ Y => h ≫ g) :
+    f = g :=
   eq_of_comp_right_eq fun X h => by
     convert congr_fun (congr_fun w X) h
 

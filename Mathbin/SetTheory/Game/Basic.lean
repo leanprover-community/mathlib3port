@@ -24,10 +24,9 @@ the abelian group structure on games allows us to simplify many proofs for pre-g
 
 open Function Pgame
 
-universe u
+open Pgame
 
--- mathport name: «expr ≈ »
-local infixl:0 " ≈ " => Pgame.Equiv
+universe u
 
 instance Pgame.setoid : Setoidₓ Pgame :=
   ⟨(· ≈ ·), equiv_refl, @Pgame.Equiv.symm, @Pgame.Equiv.trans⟩
@@ -45,8 +44,9 @@ abbrev Game :=
 
 namespace Game
 
-instance : AddCommGroupₓ Game where
+instance : AddCommGroupWithOne Game where
   zero := ⟦0⟧
+  one := ⟦1⟧
   neg := Quot.lift (fun x => ⟦-x⟧) fun x y h => Quot.sound ((@neg_equiv_neg_iff x y).2 h)
   add := Quotientₓ.lift₂ (fun x y : Pgame => ⟦x + y⟧) fun x₁ y₁ x₂ y₂ hx hy => Quot.sound (Pgame.add_congr hx hy)
   add_zero := by
@@ -65,14 +65,11 @@ instance : AddCommGroupₓ Game where
     rintro ⟨x⟩ ⟨y⟩
     exact Quot.sound add_comm_equiv
 
-instance : One Game :=
-  ⟨⟦1⟧⟩
-
 instance : Inhabited Game :=
   ⟨0⟩
 
 instance : PartialOrderₓ Game where
-  le := Quotientₓ.lift₂ (fun x y => x ≤ y) fun x₁ y₁ x₂ y₂ hx hy => propext (le_congr hx hy)
+  le := Quotientₓ.lift₂ (· ≤ ·) fun x₁ y₁ x₂ y₂ hx hy => propext (le_congr hx hy)
   le_refl := by
     rintro ⟨x⟩
     exact le_reflₓ x
@@ -83,6 +80,10 @@ instance : PartialOrderₓ Game where
     rintro ⟨x⟩ ⟨y⟩ h₁ h₂
     apply Quot.sound
     exact ⟨h₁, h₂⟩
+  lt := Quotientₓ.lift₂ (· < ·) fun x₁ y₁ x₂ y₂ hx hy => propext (lt_congr hx hy)
+  lt_iff_le_not_le := by
+    rintro ⟨x⟩ ⟨y⟩
+    exact @lt_iff_le_not_leₓ _ _ x y
 
 /-- The less or fuzzy relation on games.
 
@@ -103,7 +104,7 @@ theorem not_le : ∀ {x y : Game}, ¬x ≤ y ↔ y ⧏ x := by
 @[simp]
 theorem not_lf : ∀ {x y : Game}, ¬x ⧏ y ↔ y ≤ x := by
   rintro ⟨x⟩ ⟨y⟩
-  exact Pgame.not_lf
+  exact not_lf
 
 instance : IsTrichotomous Game (· ⧏ ·) :=
   ⟨by
@@ -112,11 +113,33 @@ instance : IsTrichotomous Game (· ⧏ ·) :=
     rw [Quotientₓ.eq]
     apply lf_or_equiv_or_gf⟩
 
+/-! It can be useful to use these lemmas to turn `pgame` inequalities into `game` inequalities, as
+the `add_comm_group` structure on `game` often simplifies many proofs. -/
+
+
+theorem _root_.pgame.le_iff_game_le {x y : Pgame} : x ≤ y ↔ ⟦x⟧ ≤ ⟦y⟧ :=
+  Iff.rfl
+
+theorem _root_.pgame.lf_iff_game_lf {x y : Pgame} : Pgame.Lf x y ↔ ⟦x⟧ ⧏ ⟦y⟧ :=
+  Iff.rfl
+
+theorem _root_.pgame.lt_iff_game_lt {x y : Pgame} : x < y ↔ ⟦x⟧ < ⟦y⟧ :=
+  Iff.rfl
+
+theorem _root_.pgame.equiv_iff_game_eq {x y : Pgame} : x ≈ y ↔ ⟦x⟧ = ⟦y⟧ :=
+  (@Quotientₓ.eq _ _ x y).symm
+
 /-- The fuzzy, confused, or incomparable relation on games.
 
 If `x ∥ 0`, then the first player can always win `x`. -/
 def Fuzzy : Game → Game → Prop :=
   Quotientₓ.lift₂ Fuzzy fun x₁ y₁ x₂ y₂ hx hy => propext (fuzzy_congr hx hy)
+
+-- mathport name: «expr ∥ »
+local infixl:50 " ∥ " => Fuzzy
+
+theorem _root_.pgame.fuzzy_iff_game_fuzzy {x y : Pgame} : Pgame.Fuzzy x y ↔ ⟦x⟧ ∥ ⟦y⟧ :=
+  Iff.rfl
 
 instance covariant_class_add_le : CovariantClass Game Game (· + ·) (· ≤ ·) :=
   ⟨by
@@ -147,7 +170,8 @@ theorem add_lf_add_left : ∀ {b c : Game} h : b ⧏ c a, a + b ⧏ a + c := by
   apply add_lf_add_left h
 
 instance orderedAddCommGroup : OrderedAddCommGroup Game :=
-  { Game.addCommGroup, Game.partialOrder with add_le_add_left := @add_le_add_left _ _ _ Game.covariant_class_add_le }
+  { Game.addCommGroupWithOne, Game.partialOrder with
+    add_le_add_left := @add_le_add_left _ _ _ Game.covariant_class_add_le }
 
 end Game
 
@@ -168,9 +192,8 @@ theorem quot_sub (a b : Pgame) : ⟦a - b⟧ = ⟦a⟧ - ⟦b⟧ :=
 theorem quot_eq_of_mk_quot_eq {x y : Pgame} (L : x.LeftMoves ≃ y.LeftMoves) (R : x.RightMoves ≃ y.RightMoves)
     (hl : ∀ i : x.LeftMoves, ⟦x.moveLeft i⟧ = ⟦y.moveLeft (L i)⟧)
     (hr : ∀ j : y.RightMoves, ⟦x.moveRight (R.symm j)⟧ = ⟦y.moveRight j⟧) : ⟦x⟧ = ⟦y⟧ := by
-  simp only [Quotientₓ.eq] at hl hr
-  apply Quotientₓ.sound
-  apply equiv_of_mk_equiv L R hl hr
+  simp_rw [Quotientₓ.eq] at hl hr
+  exact Quot.sound (equiv_of_mk_equiv L R hl hr)
 
 /-! Multiplicative operations can be defined at the level of pre-games,
 but to prove their properties we need to use the abelian group structure of games.
@@ -317,14 +340,25 @@ theorem quot_mul_comm : ∀ x y : Pgame.{u}, ⟦x * y⟧ = ⟦y * x⟧
 theorem mul_comm_equiv (x y : Pgame) : x * y ≈ y * x :=
   Quotientₓ.exact <| quot_mul_comm _ _
 
+instance is_empty_mul_zero_left_moves (x : Pgame.{u}) : IsEmpty (x * 0).LeftMoves := by
+  cases x
+  apply Sum.is_empty
+
+instance is_empty_mul_zero_right_moves (x : Pgame.{u}) : IsEmpty (x * 0).RightMoves := by
+  cases x
+  apply Sum.is_empty
+
+instance is_empty_zero_mul_left_moves (x : Pgame.{u}) : IsEmpty (0 * x).LeftMoves := by
+  cases x
+  apply Sum.is_empty
+
+instance is_empty_zero_mul_right_moves (x : Pgame.{u}) : IsEmpty (0 * x).RightMoves := by
+  cases x
+  apply Sum.is_empty
+
 /-- `x * 0` has exactly the same moves as `0`. -/
-def mulZeroRelabelling : ∀ x : Pgame, Relabelling (x * 0) 0
-  | mk xl xr xL xR =>
-    ⟨by
-      fconstructor <;> rintro (⟨_, ⟨⟩⟩ | ⟨_, ⟨⟩⟩), by
-      fconstructor <;> rintro (⟨_, ⟨⟩⟩ | ⟨_, ⟨⟩⟩), by
-      rintro (⟨_, ⟨⟩⟩ | ⟨_, ⟨⟩⟩), by
-      rintro ⟨⟩⟩
+def mulZeroRelabelling (x : Pgame) : x * 0 ≡r 0 :=
+  Relabelling.isEmpty _
 
 /-- `x * 0` is equivalent to `0`. -/
 theorem mul_zero_equiv (x : Pgame) : x * 0 ≈ 0 :=
@@ -335,13 +369,8 @@ theorem quot_mul_zero (x : Pgame) : ⟦x * 0⟧ = ⟦0⟧ :=
   @Quotientₓ.sound _ _ (x * 0) _ x.mul_zero_equiv
 
 /-- `0 * x` has exactly the same moves as `0`. -/
-def zeroMulRelabelling : ∀ x : Pgame, Relabelling (0 * x) 0
-  | mk xl xr xL xR =>
-    ⟨by
-      fconstructor <;> rintro (⟨⟨⟩, _⟩ | ⟨⟨⟩, _⟩), by
-      fconstructor <;> rintro (⟨⟨⟩, _⟩ | ⟨⟨⟩, _⟩), by
-      rintro (⟨⟨⟩, _⟩ | ⟨⟨⟩, _⟩), by
-      rintro ⟨⟩⟩
+def zeroMulRelabelling (x : Pgame) : 0 * x ≡r 0 :=
+  Relabelling.isEmpty _
 
 /-- `0 * x` is equivalent to `0`. -/
 theorem zero_mul_equiv (x : Pgame) : 0 * x ≈ 0 :=
@@ -357,30 +386,30 @@ theorem quot_neg_mul : ∀ x y : Pgame, ⟦-x * y⟧ = -⟦x * y⟧
     let x := mk xl xr xL xR
     let y := mk yl yr yL yR
     refine' quot_eq_of_mk_quot_eq _ _ _ _
-    · fconstructor <;> rintro (⟨_, _⟩ | ⟨_, _⟩) <;> solve_by_elim [Sum.inl, Sum.inr, Prod.mk]
+    · fconstructor <;> rintro (⟨_, _⟩ | ⟨_, _⟩) <;> solve_by_elim [← Sum.inl, ← Sum.inr, ← Prod.mk]
       
-    · fconstructor <;> rintro (⟨_, _⟩ | ⟨_, _⟩) <;> solve_by_elim [Sum.inl, Sum.inr, Prod.mk]
+    · fconstructor <;> rintro (⟨_, _⟩ | ⟨_, _⟩) <;> solve_by_elim [← Sum.inl, ← Sum.inr, ← Prod.mk]
       
     · rintro (⟨i, j⟩ | ⟨i, j⟩)
       · change ⟦-xR i * y + -x * yL j - -xR i * yL j⟧ = ⟦-(xR i * y + x * yL j - xR i * yL j)⟧
-        simp only [quot_add, quot_sub, quot_neg_mul]
+        simp only [← quot_add, ← quot_sub, ← quot_neg_mul]
         simp
         abel
         
       · change ⟦-xL i * y + -x * yR j - -xL i * yR j⟧ = ⟦-(xL i * y + x * yR j - xL i * yR j)⟧
-        simp only [quot_add, quot_sub, quot_neg_mul]
+        simp only [← quot_add, ← quot_sub, ← quot_neg_mul]
         simp
         abel
         
       
     · rintro (⟨i, j⟩ | ⟨i, j⟩)
       · change ⟦-xL i * y + -x * yL j - -xL i * yL j⟧ = ⟦-(xL i * y + x * yL j - xL i * yL j)⟧
-        simp only [quot_add, quot_sub, quot_neg_mul]
+        simp only [← quot_add, ← quot_sub, ← quot_neg_mul]
         simp
         abel
         
       · change ⟦-xR i * y + -x * yR j - -xR i * yR j⟧ = ⟦-(xR i * y + x * yR j - xR i * yR j)⟧
-        simp only [quot_add, quot_sub, quot_neg_mul]
+        simp only [← quot_add, ← quot_sub, ← quot_neg_mul]
         simp
         abel
         
@@ -398,9 +427,9 @@ theorem quot_left_distrib : ∀ x y z : Pgame, ⟦x * (y + z)⟧ = ⟦x * y⟧ +
     let z := mk zl zr zL zR
     refine' quot_eq_of_mk_quot_eq _ _ _ _
     · fconstructor
-      · rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;> solve_by_elim [Sum.inl, Sum.inr, Prod.mk]
+      · rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;> solve_by_elim [← Sum.inl, ← Sum.inr, ← Prod.mk]
         
-      · rintro (⟨⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, _⟩ | ⟨_, _⟩) <;> solve_by_elim [Sum.inl, Sum.inr, Prod.mk]
+      · rintro (⟨⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, _⟩ | ⟨_, _⟩) <;> solve_by_elim [← Sum.inl, ← Sum.inr, ← Prod.mk]
         
       · rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;> rfl
         
@@ -408,9 +437,9 @@ theorem quot_left_distrib : ∀ x y z : Pgame, ⟦x * (y + z)⟧ = ⟦x * y⟧ +
         
       
     · fconstructor
-      · rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;> solve_by_elim [Sum.inl, Sum.inr, Prod.mk]
+      · rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;> solve_by_elim [← Sum.inl, ← Sum.inr, ← Prod.mk]
         
-      · rintro (⟨⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, _⟩ | ⟨_, _⟩) <;> solve_by_elim [Sum.inl, Sum.inr, Prod.mk]
+      · rintro (⟨⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, _⟩ | ⟨_, _⟩) <;> solve_by_elim [← Sum.inl, ← Sum.inr, ← Prod.mk]
         
       · rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;> rfl
         
@@ -419,37 +448,37 @@ theorem quot_left_distrib : ∀ x y z : Pgame, ⟦x * (y + z)⟧ = ⟦x * y⟧ +
       
     · rintro (⟨i, j | k⟩ | ⟨i, j | k⟩)
       · change ⟦xL i * (y + z) + x * (yL j + z) - xL i * (yL j + z)⟧ = ⟦xL i * y + x * yL j - xL i * yL j + x * z⟧
-        simp [quot_left_distrib]
+        simp [← quot_left_distrib]
         abel
         
       · change ⟦xL i * (y + z) + x * (y + zL k) - xL i * (y + zL k)⟧ = ⟦x * y + (xL i * z + x * zL k - xL i * zL k)⟧
-        simp [quot_left_distrib]
+        simp [← quot_left_distrib]
         abel
         
       · change ⟦xR i * (y + z) + x * (yR j + z) - xR i * (yR j + z)⟧ = ⟦xR i * y + x * yR j - xR i * yR j + x * z⟧
-        simp [quot_left_distrib]
+        simp [← quot_left_distrib]
         abel
         
       · change ⟦xR i * (y + z) + x * (y + zR k) - xR i * (y + zR k)⟧ = ⟦x * y + (xR i * z + x * zR k - xR i * zR k)⟧
-        simp [quot_left_distrib]
+        simp [← quot_left_distrib]
         abel
         
       
     · rintro (⟨⟨i, j⟩ | ⟨i, j⟩⟩ | ⟨i, k⟩ | ⟨i, k⟩)
       · change ⟦xL i * (y + z) + x * (yR j + z) - xL i * (yR j + z)⟧ = ⟦xL i * y + x * yR j - xL i * yR j + x * z⟧
-        simp [quot_left_distrib]
+        simp [← quot_left_distrib]
         abel
         
       · change ⟦xR i * (y + z) + x * (yL j + z) - xR i * (yL j + z)⟧ = ⟦xR i * y + x * yL j - xR i * yL j + x * z⟧
-        simp [quot_left_distrib]
+        simp [← quot_left_distrib]
         abel
         
       · change ⟦xL i * (y + z) + x * (y + zR k) - xL i * (y + zR k)⟧ = ⟦x * y + (xL i * z + x * zR k - xL i * zR k)⟧
-        simp [quot_left_distrib]
+        simp [← quot_left_distrib]
         abel
         
       · change ⟦xR i * (y + z) + x * (y + zL k) - xR i * (y + zL k)⟧ = ⟦x * y + (xR i * z + x * zL k - xR i * zL k)⟧
-        simp [quot_left_distrib]
+        simp [← quot_left_distrib]
         abel
         
       
@@ -465,7 +494,7 @@ theorem quot_left_distrib_sub (x y z : Pgame) : ⟦x * (y - z)⟧ = ⟦x * y⟧ 
 
 @[simp]
 theorem quot_right_distrib (x y z : Pgame) : ⟦(x + y) * z⟧ = ⟦x * z⟧ + ⟦y * z⟧ := by
-  simp only [quot_mul_comm, quot_left_distrib]
+  simp only [← quot_mul_comm, ← quot_left_distrib]
 
 /-- `(x + y) * z` is equivalent to `x * z + y * z.`-/
 theorem right_distrib_equiv (x y z : Pgame) : (x + y) * z ≈ x * z + y * z :=
@@ -511,11 +540,11 @@ theorem quot_mul_one : ∀ x : Pgame, ⟦x * 1⟧ = ⟦x⟧
       
     · rintro (⟨i, ⟨⟩⟩ | ⟨i, ⟨⟩⟩)
       change ⟦xL i * 1 + x * 0 - xL i * 0⟧ = ⟦xL i⟧
-      simp [quot_mul_one]
+      simp [← quot_mul_one]
       
     · rintro i
       change ⟦xR i * 1 + x * 0 - xR i * 0⟧ = ⟦xR i⟧
-      simp [quot_mul_one]
+      simp [← quot_mul_one]
       
 
 /-- `x * 1` is equivalent to `x`. -/
@@ -537,9 +566,9 @@ theorem quot_mul_assoc : ∀ x y z : Pgame, ⟦x * y * z⟧ = ⟦x * (y * z)⟧
     let z := mk zl zr zL zR
     refine' quot_eq_of_mk_quot_eq _ _ _ _
     · fconstructor
-      · rintro (⟨⟨_, _⟩ | ⟨_, _⟩, _⟩ | ⟨⟨_, _⟩ | ⟨_, _⟩, _⟩) <;> solve_by_elim [Sum.inl, Sum.inr, Prod.mk]
+      · rintro (⟨⟨_, _⟩ | ⟨_, _⟩, _⟩ | ⟨⟨_, _⟩ | ⟨_, _⟩, _⟩) <;> solve_by_elim [← Sum.inl, ← Sum.inr, ← Prod.mk]
         
-      · rintro (⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩) <;> solve_by_elim [Sum.inl, Sum.inr, Prod.mk]
+      · rintro (⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩) <;> solve_by_elim [← Sum.inl, ← Sum.inr, ← Prod.mk]
         
       · rintro (⟨⟨_, _⟩ | ⟨_, _⟩, _⟩ | ⟨⟨_, _⟩ | ⟨_, _⟩, _⟩) <;> rfl
         
@@ -547,9 +576,9 @@ theorem quot_mul_assoc : ∀ x y z : Pgame, ⟦x * y * z⟧ = ⟦x * (y * z)⟧
         
       
     · fconstructor
-      · rintro (⟨⟨_, _⟩ | ⟨_, _⟩, _⟩ | ⟨⟨_, _⟩ | ⟨_, _⟩, _⟩) <;> solve_by_elim [Sum.inl, Sum.inr, Prod.mk]
+      · rintro (⟨⟨_, _⟩ | ⟨_, _⟩, _⟩ | ⟨⟨_, _⟩ | ⟨_, _⟩, _⟩) <;> solve_by_elim [← Sum.inl, ← Sum.inr, ← Prod.mk]
         
-      · rintro (⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩) <;> solve_by_elim [Sum.inl, Sum.inr, Prod.mk]
+      · rintro (⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩) <;> solve_by_elim [← Sum.inl, ← Sum.inr, ← Prod.mk]
         
       · rintro (⟨⟨_, _⟩ | ⟨_, _⟩, _⟩ | ⟨⟨_, _⟩ | ⟨_, _⟩, _⟩) <;> rfl
         
@@ -560,25 +589,25 @@ theorem quot_mul_assoc : ∀ x y z : Pgame, ⟦x * y * z⟧ = ⟦x * (y * z)⟧
       · change
           ⟦(xL i * y + x * yL j - xL i * yL j) * z + x * y * zL k - (xL i * y + x * yL j - xL i * yL j) * zL k⟧ =
             ⟦xL i * (y * z) + x * (yL j * z + y * zL k - yL j * zL k) - xL i * (yL j * z + y * zL k - yL j * zL k)⟧
-        simp [quot_mul_assoc]
+        simp [← quot_mul_assoc]
         abel
         
       · change
           ⟦(xR i * y + x * yR j - xR i * yR j) * z + x * y * zL k - (xR i * y + x * yR j - xR i * yR j) * zL k⟧ =
             ⟦xR i * (y * z) + x * (yR j * z + y * zL k - yR j * zL k) - xR i * (yR j * z + y * zL k - yR j * zL k)⟧
-        simp [quot_mul_assoc]
+        simp [← quot_mul_assoc]
         abel
         
       · change
           ⟦(xL i * y + x * yR j - xL i * yR j) * z + x * y * zR k - (xL i * y + x * yR j - xL i * yR j) * zR k⟧ =
             ⟦xL i * (y * z) + x * (yR j * z + y * zR k - yR j * zR k) - xL i * (yR j * z + y * zR k - yR j * zR k)⟧
-        simp [quot_mul_assoc]
+        simp [← quot_mul_assoc]
         abel
         
       · change
           ⟦(xR i * y + x * yL j - xR i * yL j) * z + x * y * zR k - (xR i * y + x * yL j - xR i * yL j) * zR k⟧ =
             ⟦xR i * (y * z) + x * (yL j * z + y * zR k - yL j * zR k) - xR i * (yL j * z + y * zR k - yL j * zR k)⟧
-        simp [quot_mul_assoc]
+        simp [← quot_mul_assoc]
         abel
         
       
@@ -586,25 +615,25 @@ theorem quot_mul_assoc : ∀ x y z : Pgame, ⟦x * y * z⟧ = ⟦x * (y * z)⟧
       · change
           ⟦(xL i * y + x * yL j - xL i * yL j) * z + x * y * zR k - (xL i * y + x * yL j - xL i * yL j) * zR k⟧ =
             ⟦xL i * (y * z) + x * (yL j * z + y * zR k - yL j * zR k) - xL i * (yL j * z + y * zR k - yL j * zR k)⟧
-        simp [quot_mul_assoc]
+        simp [← quot_mul_assoc]
         abel
         
       · change
           ⟦(xL i * y + x * yR j - xL i * yR j) * z + x * y * zL k - (xL i * y + x * yR j - xL i * yR j) * zL k⟧ =
             ⟦xL i * (y * z) + x * (yR j * z + y * zL k - yR j * zL k) - xL i * (yR j * z + y * zL k - yR j * zL k)⟧
-        simp [quot_mul_assoc]
+        simp [← quot_mul_assoc]
         abel
         
       · change
           ⟦(xR i * y + x * yL j - xR i * yL j) * z + x * y * zL k - (xR i * y + x * yL j - xR i * yL j) * zL k⟧ =
             ⟦xR i * (y * z) + x * (yL j * z + y * zL k - yL j * zL k) - xR i * (yL j * z + y * zL k - yL j * zL k)⟧
-        simp [quot_mul_assoc]
+        simp [← quot_mul_assoc]
         abel
         
       · change
           ⟦(xR i * y + x * yR j - xR i * yR j) * z + x * y * zR k - (xR i * y + x * yR j - xR i * yR j) * zR k⟧ =
             ⟦xR i * (y * z) + x * (yR j * z + y * zR k - yR j * zR k) - xR i * (yR j * z + y * zR k - yR j * zR k)⟧
-        simp [quot_mul_assoc]
+        simp [← quot_mul_assoc]
         abel
         
       
@@ -623,8 +652,20 @@ inductive InvTy (l r : Type u) : Bool → Type u
   | right₁ : l → inv_ty false → inv_ty true
   | right₂ : r → inv_ty true → inv_ty true
 
+instance (l r : Type u) [IsEmpty l] [IsEmpty r] : IsEmpty (InvTy l r true) :=
+  ⟨by
+    rintro (_ | _ | _ | a | a) <;> exact isEmptyElim a⟩
+
 instance (l r : Type u) : Inhabited (InvTy l r false) :=
   ⟨InvTy.zero⟩
+
+instance uniqueInvTy (l r : Type u) [IsEmpty l] [IsEmpty r] : Unique (InvTy l r false) :=
+  { InvTy.inhabited l r with
+    uniq := by
+      rintro (a | a | a)
+      rfl
+      all_goals
+        exact isEmptyElim a }
 
 /-- Because the two halves of the definition of `inv` produce more elements
 of each side, we have to define the two families inductively.
@@ -635,6 +676,15 @@ def invVal {l r} (L : l → Pgame) (R : r → Pgame) (IHl : l → Pgame) (IHr : 
   | _, inv_ty.left₂ i j => (1 + (L i - mk l r L R) * inv_val j) * IHl i
   | _, inv_ty.right₁ i j => (1 + (L i - mk l r L R) * inv_val j) * IHl i
   | _, inv_ty.right₂ i j => (1 + (R i - mk l r L R) * inv_val j) * IHr i
+
+@[simp]
+theorem inv_val_is_empty {l r : Type u} {b} L R IHl IHr (i : InvTy l r b) [IsEmpty l] [IsEmpty r] :
+    invVal L R IHl IHr i = 0 := by
+  cases' i with a _ a _ a _ a
+  · rfl
+    
+  all_goals
+    exact isEmptyElim a
 
 /-- The inverse of a positive surreal number `x = {L | R}` is
 given by `x⁻¹ = {0,
@@ -650,15 +700,72 @@ def inv' : Pgame → Pgame
     let IHr := fun i => inv' (R i)
     ⟨InvTy l' r false, InvTy l' r true, invVal L' R IHl' IHr, invVal L' R IHl' IHr⟩
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
-/-- The inverse of a surreal number in terms of the inverse on positive surreals. -/
+theorem zero_lf_inv' : ∀ x : Pgame, 0 ⧏ inv' x
+  | ⟨xl, xr, xL, xR⟩ => by
+    convert lf_mk _ _ inv_ty.zero
+    rfl
+
+/-- `inv' 0` has exactly the same moves as `1`. -/
+def inv'Zero : inv' 0 ≡r 1 := by
+  change mk _ _ _ _ ≡r 1
+  refine' ⟨_, _, fun i => _, isEmptyElim⟩ <;> dsimp'
+  · apply Equivₓ.equivPunit
+    
+  · apply Equivₓ.equivPempty
+    
+  · simp
+    
+
+theorem inv'_zero_equiv : inv' 0 ≈ 1 :=
+  inv'Zero.Equiv
+
+/-- `inv' 1` has exactly the same moves as `1`. -/
+def inv'One : inv' 1 ≡r (1 : Pgame.{u}) := by
+  change relabelling (mk _ _ _ _) 1
+  have : IsEmpty { i : PUnit.{u + 1} // (0 : Pgame.{u}) < 0 } := by
+    rw [lt_self_iff_false]
+    infer_instance
+  refine' ⟨_, _, fun i => _, isEmptyElim⟩ <;> dsimp'
+  · apply Equivₓ.equivPunit
+    
+  · apply Equivₓ.equivPempty
+    
+  · simp
+    
+
+theorem inv'_one_equiv : inv' 1 ≈ 1 :=
+  inv'One.Equiv
+
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+/-- The inverse of a pre-game in terms of the inverse on positive pre-games. -/
 noncomputable instance : Inv Pgame :=
   ⟨by
     classical
-    exact fun x => if x = 0 then 0 else if 0 < x then inv' x else inv' (-x)⟩
+    exact fun x => if x ≈ 0 then 0 else if 0 < x then inv' x else -inv' (-x)⟩
 
 noncomputable instance : Div Pgame :=
   ⟨fun x y => x * y⁻¹⟩
+
+theorem inv_eq_of_equiv_zero {x : Pgame} (h : x ≈ 0) : x⁻¹ = 0 :=
+  if_pos h
+
+@[simp]
+theorem inv_zero : (0 : Pgame)⁻¹ = 0 :=
+  inv_eq_of_equiv_zero (equiv_refl _)
+
+theorem inv_eq_of_pos {x : Pgame} (h : 0 < x) : x⁻¹ = inv' x :=
+  (if_neg h.Lf.not_equiv').trans (if_pos h)
+
+theorem inv_eq_of_lf_zero {x : Pgame} (h : x ⧏ 0) : x⁻¹ = -inv' (-x) :=
+  (if_neg h.not_equiv).trans (if_neg h.not_gt)
+
+/-- `1⁻¹` has exactly the same moves as `1`. -/
+def invOne : 1⁻¹ ≡r 1 := by
+  rw [inv_eq_of_pos zero_lt_one]
+  exact inv'_one
+
+theorem inv_one_equiv : 1⁻¹ ≈ 1 :=
+  invOne.Equiv
 
 end Pgame
 

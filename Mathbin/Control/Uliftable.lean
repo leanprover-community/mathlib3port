@@ -38,7 +38,7 @@ universe u₀ u₁ v₀ v₁ v₂ w w₀ w₁
 
 variable {s : Type u₀} {s' : Type u₁} {r r' w w' : Type _}
 
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`congr] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`congr] []
 /-- Given a universe polymorphic type family `M.{u} : Type u₁ → Type
 u₂`, this class convert between instantiations, from
 `M.{u} : Type u₁ → Type u₂` to `M.{v} : Type v₁ → Type v₂` and back -/
@@ -93,34 +93,37 @@ end Uliftable
 
 open ULift
 
-instance : Uliftable id id where
-  congr := fun α β F => F
+instance : Uliftable id id where congr := fun α β F => F
 
 /-- for specific state types, this function helps to create a uliftable instance -/
 def StateTₓ.uliftable' {m : Type u₀ → Type v₀} {m' : Type u₁ → Type v₁} [Uliftable m m'] (F : s ≃ s') :
-    Uliftable (StateTₓ s m) (StateTₓ s' m') where
-  congr := fun α β G => StateTₓ.equiv <| (Equivₓ.piCongr F) fun _ => Uliftable.congr _ _ <| Equivₓ.prodCongr G F
+    Uliftable (StateTₓ s m)
+      (StateTₓ s'
+        m') where congr := fun α β G =>
+    StateTₓ.equiv <| (Equivₓ.piCongr F) fun _ => Uliftable.congr _ _ <| Equivₓ.prodCongr G F
 
 instance {m m'} [Uliftable m m'] : Uliftable (StateTₓ s m) (StateTₓ (ULift s) m') :=
   StateTₓ.uliftable' Equivₓ.ulift.symm
 
 /-- for specific reader monads, this function helps to create a uliftable instance -/
-def ReaderTₓ.uliftable' {m m'} [Uliftable m m'] (F : s ≃ s') : Uliftable (ReaderTₓ s m) (ReaderTₓ s' m') where
-  congr := fun α β G => ReaderTₓ.equiv <| (Equivₓ.piCongr F) fun _ => Uliftable.congr _ _ G
+def ReaderTₓ.uliftable' {m m'} [Uliftable m m'] (F : s ≃ s') :
+    Uliftable (ReaderTₓ s m)
+      (ReaderTₓ s' m') where congr := fun α β G => ReaderTₓ.equiv <| (Equivₓ.piCongr F) fun _ => Uliftable.congr _ _ G
 
 instance {m m'} [Uliftable m m'] : Uliftable (ReaderTₓ s m) (ReaderTₓ (ULift s) m') :=
   ReaderTₓ.uliftable' Equivₓ.ulift.symm
 
 /-- for specific continuation passing monads, this function helps to create a uliftable instance -/
-def ContT.uliftable' {m m'} [Uliftable m m'] (F : r ≃ r') : Uliftable (ContT r m) (ContT r' m') where
-  congr := fun α β => ContT.equiv (Uliftable.congr _ _ F)
+def ContT.uliftable' {m m'} [Uliftable m m'] (F : r ≃ r') :
+    Uliftable (ContT r m) (ContT r' m') where congr := fun α β => ContT.equiv (Uliftable.congr _ _ F)
 
 instance {s m m'} [Uliftable m m'] : Uliftable (ContT s m) (ContT (ULift s) m') :=
   ContT.uliftable' Equivₓ.ulift.symm
 
 /-- for specific writer monads, this function helps to create a uliftable instance -/
-def WriterTₓ.uliftable' {m m'} [Uliftable m m'] (F : w ≃ w') : Uliftable (WriterTₓ w m) (WriterTₓ w' m') where
-  congr := fun α β G => WriterTₓ.equiv <| Uliftable.congr _ _ <| Equivₓ.prodCongr G F
+def WriterTₓ.uliftable' {m m'} [Uliftable m m'] (F : w ≃ w') :
+    Uliftable (WriterTₓ w m)
+      (WriterTₓ w' m') where congr := fun α β G => WriterTₓ.equiv <| Uliftable.congr _ _ <| Equivₓ.prodCongr G F
 
 instance {m m'} [Uliftable m m'] : Uliftable (WriterTₓ s m) (WriterTₓ (ULift s) m') :=
   WriterTₓ.uliftable' Equivₓ.ulift.symm

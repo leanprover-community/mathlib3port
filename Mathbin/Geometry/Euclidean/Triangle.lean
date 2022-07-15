@@ -165,7 +165,7 @@ theorem cos_angle_sub_add_angle_sub_rev_eq_neg_cos_angle {x y : V} (hx : x ≠ 0
       inner_sub_left, inner_sub_right, inner_sub_right, inner_sub_right, inner_sub_right, real_inner_comm x y, H2, H3,
       Real.mul_self_sqrt (sub_nonneg_of_le (real_inner_mul_inner_self_le x y)), real_inner_self_eq_norm_mul_norm,
       real_inner_self_eq_norm_mul_norm, real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two]
-    field_simp [hxn, hyn, hxyn]
+    field_simp [← hxn, ← hyn, ← hxyn]
     ring
     
 
@@ -210,7 +210,7 @@ theorem sin_angle_sub_add_angle_sub_rev_eq_sin_angle {x y : V} (hx : x ≠ 0) (h
       inner_sub_left, inner_sub_left, inner_sub_right, inner_sub_right, inner_sub_right, inner_sub_right,
       real_inner_comm x y, H3, H4, real_inner_self_eq_norm_mul_norm, real_inner_self_eq_norm_mul_norm,
       real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two]
-    field_simp [hxn, hyn, hxyn]
+    field_simp [← hxn, ← hyn, ← hxyn]
     ring
     
 
@@ -307,9 +307,9 @@ include V
 /-- **Pythagorean theorem**, if-and-only-if angle-at-point form. -/
 theorem dist_sq_eq_dist_sq_add_dist_sq_iff_angle_eq_pi_div_two (p1 p2 p3 : P) :
     dist p1 p3 * dist p1 p3 = dist p1 p2 * dist p1 p2 + dist p3 p2 * dist p3 p2 ↔ ∠ p1 p2 p3 = π / 2 := by
-  erw [PseudoMetricSpace.dist_comm p3 p2, dist_eq_norm_vsub V p1 p3, dist_eq_norm_vsub V p1 p2,
-    dist_eq_norm_vsub V p2 p3, ← norm_sub_sq_eq_norm_sq_add_norm_sq_iff_angle_eq_pi_div_two,
-    vsub_sub_vsub_cancel_right p1, ← neg_vsub_eq_vsub_rev p2 p3, norm_neg]
+  erw [dist_comm p3 p2, dist_eq_norm_vsub V p1 p3, dist_eq_norm_vsub V p1 p2, dist_eq_norm_vsub V p2 p3, ←
+    norm_sub_sq_eq_norm_sq_add_norm_sq_iff_angle_eq_pi_div_two, vsub_sub_vsub_cancel_right p1, ←
+    neg_vsub_eq_vsub_rev p2 p3, norm_neg]
 
 /-- **Law of cosines** (cosine rule), angle-at-point form. -/
 theorem dist_sq_eq_dist_sq_add_dist_sq_sub_two_mul_dist_mul_dist_mul_cos_angle (p1 p2 p3 : P) :
@@ -369,12 +369,12 @@ theorem dist_sq_mul_dist_add_dist_sq_mul_dist (a b c p : P) (h : ∠ b p c = π)
 theorem dist_sq_add_dist_sq_eq_two_mul_dist_midpoint_sq_add_half_dist_sq (a b c : P) :
     dist a b ^ 2 + dist a c ^ 2 = 2 * (dist a (midpoint ℝ b c) ^ 2 + (dist b c / 2) ^ 2) := by
   by_cases' hbc : b = c
-  · simp [hbc, midpoint_self, dist_self, two_mul]
+  · simp [← hbc, ← midpoint_self, ← dist_self, ← two_mul]
     
   · let m := midpoint ℝ b c
     have : dist b c ≠ 0 := (dist_pos.mpr hbc).ne'
     have hm := dist_sq_mul_dist_add_dist_sq_mul_dist a b c m (angle_midpoint_eq_pi b c hbc)
-    simp only [dist_left_midpoint, dist_right_midpoint, Real.norm_two] at hm
+    simp only [← dist_left_midpoint, ← dist_right_midpoint, ← Real.norm_two] at hm
     calc
       dist a b ^ 2 + dist a c ^ 2 =
           2 / dist b c * (dist a b ^ 2 * (2⁻¹ * dist b c) + dist a c ^ 2 * (2⁻¹ * dist b c)) :=
@@ -390,12 +390,12 @@ theorem dist_mul_of_eq_angle_of_dist_mul (a b c a' b' c' : P) (r : ℝ) (h : ∠
     (hab : dist a' b' = r * dist a b) (hcb : dist c' b' = r * dist c b) : dist a' c' = r * dist a c := by
   have h' : dist a' c' ^ 2 = (r * dist a c) ^ 2
   calc dist a' c' ^ 2 = dist a' b' ^ 2 + dist c' b' ^ 2 - 2 * dist a' b' * dist c' b' * Real.cos (∠ a' b' c') := by
-      simp [pow_two,
+      simp [← pow_two, ←
         law_cos a' b' c']_ = r ^ 2 * (dist a b ^ 2 + dist c b ^ 2 - 2 * dist a b * dist c b * Real.cos (∠ a b c)) :=
       by
       rw [h, hab, hcb]
       ring _ = (r * dist a c) ^ 2 := by
-      simp [pow_two, ← law_cos a b c, mul_powₓ]
+      simp [← pow_two, law_cos a b c, ← mul_powₓ]
   by_cases' hab₁ : a = b
   · have hab'₁ : a' = b' := by
       rw [← dist_eq_zero, hab, dist_eq_zero.mpr hab₁, mul_zero r]

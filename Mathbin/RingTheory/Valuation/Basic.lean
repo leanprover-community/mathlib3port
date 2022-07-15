@@ -213,7 +213,7 @@ theorem unit_map_eq (u : Rˣ) : (Units.map (v : R →* Γ₀) u : Γ₀) = v u :
 def comap {S : Type _} [Ringₓ S] (f : S →+* R) (v : Valuation R Γ₀) : Valuation S Γ₀ :=
   { v.toMonoidWithZeroHom.comp f.toMonoidWithZeroHom with toFun := v ∘ f,
     map_add_le_max' := fun x y => by
-      simp only [comp_app, map_add, f.map_add] }
+      simp only [← comp_app, ← map_add, ← f.map_add] }
 
 @[simp]
 theorem comap_apply {S : Type _} [Ringₓ S] (f : S →+* R) (v : Valuation R Γ₀) (s : S) : v.comap f s = v (f s) :=
@@ -314,12 +314,12 @@ theorem map_eq_of_sub_lt (h : v (y - x) < v x) : v y = v x := by
 
 theorem map_one_add_of_lt (h : v x < 1) : v (1 + x) = 1 := by
   rw [← v.map_one] at h
-  simpa only [v.map_one] using v.map_add_eq_of_lt_left h
+  simpa only [← v.map_one] using v.map_add_eq_of_lt_left h
 
 theorem map_one_sub_of_lt (h : v x < 1) : v (1 - x) = 1 := by
   rw [← v.map_one, ← v.map_neg] at h
   rw [sub_eq_add_neg 1 x]
-  simpa only [v.map_one, v.map_neg] using v.map_add_eq_of_lt_left h
+  simpa only [← v.map_one, ← v.map_neg] using v.map_add_eq_of_lt_left h
 
 /-- The subgroup of elements whose valuation is less than a certain unit.-/
 def ltAddSubgroup (v : Valuation R Γ₀) (γ : Γ₀ˣ) : AddSubgroup R where
@@ -376,7 +376,7 @@ theorem comap {S : Type _} [Ringₓ S] (f : S →+* R) (h : v₁.IsEquiv v₂) :
   h (f r) (f s)
 
 theorem val_eq (h : v₁.IsEquiv v₂) {r s : R} : v₁ r = v₁ s ↔ v₂ r = v₂ s := by
-  simpa only [le_antisymm_iffₓ] using and_congr (h r s) (h s r)
+  simpa only [← le_antisymm_iffₓ] using and_congr (h r s) (h s r)
 
 theorem ne_zero (h : v₁.IsEquiv v₂) {r : R} : v₁ r ≠ 0 ↔ v₂ r ≠ 0 := by
   have : v₁ r ≠ v₁ 0 ↔ v₂ r ≠ v₂ 0 := not_iff_not_of_iff h.val_eq
@@ -396,7 +396,7 @@ theorem is_equiv_of_val_le_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOrd
   by
   intro x y
   by_cases' hy : y = 0
-  · simp [hy, zero_iff]
+  · simp [← hy, ← zero_iff]
     
   rw
     [show y = 1 * y by
@@ -443,7 +443,7 @@ theorem is_equiv_iff_val_eq_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOr
           [show x = -1 + (1 + x) by
             simp ]
         refine' le_transₓ (v'.map_add _ _) _
-        simp [this]
+        simp [← this]
         
       · rw [h] at hx'
         exact le_of_eqₓ hx'
@@ -460,7 +460,7 @@ theorem is_equiv_iff_val_eq_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOr
           [show x = -1 + (1 + x) by
             simp ]
         refine' le_transₓ (v.map_add _ _) _
-        simp [this]
+        simp [← this]
         
       · rw [← h] at hx'
         exact le_of_eqₓ hx'
@@ -522,7 +522,7 @@ theorem map_add_supp (a : R) {s : R} (h : s ∈ supp v) : v (a + s) = v a := by
   have aux : ∀ a s, v s = 0 → v (a + s) ≤ v a := by
     intro a' s' h'
     refine' le_transₓ (v.map_add a' s') (max_leₓ le_rfl _)
-    simp [h']
+    simp [← h']
   apply le_antisymmₓ (aux a s h)
   calc v a = v (a + s + -s) := by
       simp _ ≤ v (a + s) :=
@@ -537,7 +537,7 @@ def onQuotVal {J : Ideal R} (hJ : J ≤ supp v) : R ⧸ J → Γ₀ := fun q =>
     calc
       v a = v (b + -(-a + b)) := by
         simp
-      _ = v b := v.map_add_supp b ((Ideal.neg_mem_iff _).2 <| hJ h)
+      _ = v b := v.map_add_supp b <| (Ideal.neg_mem_iff _).2 <| hJ <| QuotientAddGroup.left_rel_apply.mp h
       
 
 /-- The extension of valuation v on R to valuation on R/J if J ⊆ supp v -/
@@ -613,8 +613,7 @@ variable [LinearOrderedAddCommMonoidWithTop Γ₀] [LinearOrderedAddCommMonoidWi
 variable (R) (Γ₀) [Ringₓ R]
 
 /-- A valuation is coerced to the underlying function `R → Γ₀`. -/
-instance : CoeFun (AddValuation R Γ₀) fun _ => R → Γ₀ where
-  coe := fun v => v.toMonoidWithZeroHom.toFun
+instance : CoeFun (AddValuation R Γ₀) fun _ => R → Γ₀ where coe := fun v => v.toMonoidWithZeroHom.toFun
 
 variable {R} {Γ₀} (v : AddValuation R Γ₀) {x y z : R}
 

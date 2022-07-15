@@ -52,16 +52,16 @@ theorem has_deriv_at_gronwall_bound (δ K ε x : ℝ) :
     HasDerivAt (gronwallBound δ K ε) (K * gronwallBound δ K ε x + ε) x := by
   by_cases' hK : K = 0
   · subst K
-    simp only [gronwall_bound_K0, zero_mul, zero_addₓ]
+    simp only [← gronwall_bound_K0, ← zero_mul, ← zero_addₓ]
     convert ((has_deriv_at_id x).const_mul ε).const_add δ
     rw [mul_oneₓ]
     
-  · simp only [gronwall_bound_of_K_ne_0 hK]
+  · simp only [← gronwall_bound_of_K_ne_0 hK]
     convert
       (((has_deriv_at_id x).const_mul K).exp.const_mul δ).add
         ((((has_deriv_at_id x).const_mul K).exp.sub_const 1).const_mul (ε / K)) using
       1
-    simp only [id, mul_addₓ, (mul_assoc _ _ _).symm, mul_comm _ K, mul_div_cancel' _ hK]
+    simp only [← id, ← mul_addₓ, ← (mul_assoc _ _ _).symm, ← mul_comm _ K, ← mul_div_cancel' _ hK]
     ring
     
 
@@ -72,27 +72,27 @@ theorem has_deriv_at_gronwall_bound_shift (δ K ε x a : ℝ) :
 
 theorem gronwall_bound_x0 (δ K ε : ℝ) : gronwallBound δ K ε 0 = δ := by
   by_cases' hK : K = 0
-  · simp only [gronwallBound, if_pos hK, mul_zero, add_zeroₓ]
+  · simp only [← gronwallBound, ← if_pos hK, ← mul_zero, ← add_zeroₓ]
     
-  · simp only [gronwallBound, if_neg hK, mul_zero, exp_zero, sub_self, mul_oneₓ, add_zeroₓ]
+  · simp only [← gronwallBound, ← if_neg hK, ← mul_zero, ← exp_zero, ← sub_self, ← mul_oneₓ, ← add_zeroₓ]
     
 
 theorem gronwall_bound_ε0 (δ K x : ℝ) : gronwallBound δ K 0 x = δ * exp (K * x) := by
   by_cases' hK : K = 0
-  · simp only [gronwall_bound_K0, hK, zero_mul, exp_zero, add_zeroₓ, mul_oneₓ]
+  · simp only [← gronwall_bound_K0, ← hK, ← zero_mul, ← exp_zero, ← add_zeroₓ, ← mul_oneₓ]
     
-  · simp only [gronwall_bound_of_K_ne_0 hK, zero_div, zero_mul, add_zeroₓ]
+  · simp only [← gronwall_bound_of_K_ne_0 hK, ← zero_div, ← zero_mul, ← add_zeroₓ]
     
 
 theorem gronwall_bound_ε0_δ0 (K x : ℝ) : gronwallBound 0 K 0 x = 0 := by
-  simp only [gronwall_bound_ε0, zero_mul]
+  simp only [← gronwall_bound_ε0, ← zero_mul]
 
 theorem gronwall_bound_continuous_ε (δ K x : ℝ) : Continuous fun ε => gronwallBound δ K ε x := by
   by_cases' hK : K = 0
-  · simp only [gronwall_bound_K0, hK]
+  · simp only [← gronwall_bound_K0, ← hK]
     exact continuous_const.add (continuous_id.mul continuous_const)
     
-  · simp only [gronwall_bound_of_K_ne_0 hK]
+  · simp only [← gronwall_bound_of_K_ne_0 hK]
     exact continuous_const.add ((continuous_id.mul continuous_const).mul continuous_const)
     
 
@@ -126,7 +126,7 @@ theorem le_gronwall_bound_of_liminf_deriv_right_le {f f' : ℝ → ℝ} {δ K ε
   intro x hx
   change f x ≤ (fun ε' => gronwallBound δ K ε' (x - a)) ε
   convert continuous_within_at_const.closure_le _ _ (H x hx)
-  · simp only [closure_Ioi, left_mem_Ici]
+  · simp only [← closure_Ioi, ← left_mem_Ici]
     
   exact (gronwall_bound_continuous_ε δ K (x - a)).ContinuousWithinAt
 
@@ -140,7 +140,7 @@ theorem norm_le_gronwall_bound_of_norm_deriv_right_le {f f' : ℝ → E} {δ K �
   le_gronwall_bound_of_liminf_deriv_right_le (continuous_norm.comp_continuous_on hf)
     (fun x hx r hr => (hf' x hx).liminf_right_slope_norm_le hr) ha bound
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » s t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » s t)
 /-- If `f` and `g` are two approximate solutions of the same ODE, then the distance between them
 can't grow faster than exponentially. This is a simple corollary of Grönwall's inequality, and some
 people call this Grönwall's inequality too.
@@ -154,7 +154,7 @@ theorem dist_le_of_approx_trajectories_ODE_of_mem_set {v : ℝ → E → E} {s :
     (hg : ContinuousOn g (Icc a b)) (hg' : ∀, ∀ t ∈ Ico a b, ∀, HasDerivWithinAt g (g' t) (Ici t) t)
     (g_bound : ∀, ∀ t ∈ Ico a b, ∀, dist (g' t) (v t (g t)) ≤ εg) (hgs : ∀, ∀ t ∈ Ico a b, ∀, g t ∈ s t)
     (ha : dist (f a) (g a) ≤ δ) : ∀, ∀ t ∈ Icc a b, ∀, dist (f t) (g t) ≤ gronwallBound δ K (εf + εg) (t - a) := by
-  simp only [dist_eq_norm] at ha⊢
+  simp only [← dist_eq_norm] at ha⊢
   have h_deriv : ∀, ∀ t ∈ Ico a b, ∀, HasDerivWithinAt (fun t => f t - g t) (f' t - g' t) (Ici t) t := fun t ht =>
     (hf' t ht).sub (hg' t ht)
   apply norm_le_gronwall_bound_of_norm_deriv_right_le (hf.sub hg) h_deriv ha
@@ -182,7 +182,7 @@ theorem dist_le_of_approx_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0 } 
   dist_le_of_approx_trajectories_ODE_of_mem_set (fun t x hx y hy => (hv t).dist_le_mul x y) hf hf' f_bound hfs hg hg'
     g_bound (fun t ht => trivialₓ) ha
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » s t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » s t)
 /-- If `f` and `g` are two exact solutions of the same ODE, then the distance between them
 can't grow faster than exponentially. This is a simple corollary of Grönwall's inequality, and some
 people call this Grönwall's inequality too.
@@ -218,7 +218,7 @@ theorem dist_le_of_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0 } (hv : �
   dist_le_of_trajectories_ODE_of_mem_set (fun t x hx y hy => (hv t).dist_le_mul x y) hf hf' hfs hg hg'
     (fun t ht => trivialₓ) ha
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » s t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » s t)
 /-- There exists only one solution of an ODE \(\dot x=v(t, x)\) in a set `s ⊆ ℝ × E` with
 a given initial value provided that RHS is Lipschitz continuous in `x` within `s`,
 and we consider only solutions included in `s`. -/

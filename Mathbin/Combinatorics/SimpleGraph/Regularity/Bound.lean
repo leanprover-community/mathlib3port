@@ -51,7 +51,7 @@ theorem step_bound_pos_iff {n : ℕ} : 0 < stepBound n ↔ 0 < n :=
         norm_num)
       _
 
-alias step_bound_pos_iff ↔ _ SzemerediRegularity.step_bound_pos
+alias step_bound_pos_iff ↔ _ step_bound_pos
 
 variable {α : Type _} [DecidableEq α] [Fintype α] {P : Finpartition (univ : Finset α)} {u : Finset α} {ε : ℝ}
 
@@ -123,7 +123,7 @@ theorem a_add_one_le_four_pow_parts_card : a + 1 ≤ 4 ^ P.parts.card := by
       (by
         norm_num)
       _
-  rw [step_bound, ← Nat.div_div_eq_div_mulₓ, Nat.add_le_to_le_subₓ _ h, tsub_le_iff_left, ← Nat.add_sub_assocₓ h]
+  rw [step_bound, ← Nat.div_div_eq_div_mulₓ, ← Nat.le_sub_iff_right h, tsub_le_iff_left, ← Nat.add_sub_assocₓ h]
   exact Nat.le_pred_of_ltₓ (Nat.lt_div_mul_add h)
 
 theorem card_aux₁ (hucard : u.card = m * 4 ^ P.parts.card + a) : (4 ^ P.parts.card - a) * m + a * (m + 1) = u.card := by
@@ -163,7 +163,8 @@ theorem initial_bound_pos : 0 < initialBound ε l :=
 theorem hundred_lt_pow_initial_bound_mul {ε : ℝ} (hε : 0 < ε) (l : ℕ) : 100 < 4 ^ initialBound ε l * ε ^ 5 := by
   rw [← rpow_nat_cast 4, ← div_lt_iff (pow_pos hε 5), lt_rpow_iff_log_lt _ zero_lt_four, ← div_lt_iff, initial_bound,
     Nat.cast_max, Nat.cast_max]
-  · exact lt_max_of_lt_right (lt_max_of_lt_right <| Nat.lt_floor_add_one _)
+  · push_cast
+    exact lt_max_of_lt_right (lt_max_of_lt_right <| Nat.lt_floor_add_one _)
     
   · exact
       log_pos

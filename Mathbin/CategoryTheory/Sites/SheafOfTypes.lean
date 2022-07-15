@@ -181,7 +181,7 @@ theorem FamilyOfElements.Compatible.sieve_extend {x : FamilyOfElements P R} (hx 
     erw [← functor_to_types.map_comp_apply]
     rw [← op_comp]
   apply hx
-  simp [comm, h₁.some_spec.some_spec.some_spec.2, h₂.some_spec.some_spec.some_spec.2]
+  simp [← comm, ← h₁.some_spec.some_spec.some_spec.2, ← h₂.some_spec.some_spec.some_spec.2]
 
 /-- The extension of a family agrees with the original family. -/
 theorem extend_agrees {x : FamilyOfElements P R} (t : x.Compatible) {f : Y ⟶ X} (hf : R f) :
@@ -278,7 +278,7 @@ theorem FamilyOfElements.Compatible.functor_pullback (h : x.Compatible) : (x.Fun
   exact
     h (F.map g₁) (F.map g₂) h₁ h₂
       (by
-        simp only [← F.map_comp, Eq])
+        simp only [F.map_comp, ← Eq])
 
 end FunctorPullback
 
@@ -302,11 +302,11 @@ def FamilyOfElements.pullback (f : Y ⟶ X) (x : FamilyOfElements P S) : FamilyO
 
 theorem FamilyOfElements.Compatible.pullback (f : Y ⟶ X) {x : FamilyOfElements P S} (h : x.Compatible) :
     (x.pullback f).Compatible := by
-  simp only [compatible_iff_sieve_compatible] at h⊢
+  simp only [← compatible_iff_sieve_compatible] at h⊢
   intro W Z f₁ f₂ hf
   unfold family_of_elements.pullback
   rw [← h (f₁ ≫ f) f₂ hf]
-  simp only [assoc]
+  simp only [← assoc]
 
 end Pullback
 
@@ -344,9 +344,9 @@ def FamilyOfElements.IsAmalgamation (x : FamilyOfElements P R) (t : P.obj (op X)
 theorem FamilyOfElements.IsAmalgamation.comp_presheaf_map {x : FamilyOfElements P R} {t} (f : P ⟶ Q)
     (h : x.IsAmalgamation t) : (x.compPresheafMap f).IsAmalgamation (f.app (op X) t) := by
   intro Y g hg
-  dsimp' [family_of_elements.comp_presheaf_map]
+  dsimp' [← family_of_elements.comp_presheaf_map]
   change (f.app _ ≫ Q.map _) _ = _
-  simp [← f.naturality, h g hg]
+  simp [f.naturality, ← h g hg]
 
 theorem is_compatible_of_exists_amalgamation (x : FamilyOfElements P R) (h : ∃ t, x.IsAmalgamation t) : x.Compatible :=
   by
@@ -361,7 +361,7 @@ theorem is_amalgamation_restrict {R₁ R₂ : Presieve X} (h : R₁ ≤ R₂) (x
 theorem is_amalgamation_sieve_extend {R : Presieve X} (x : FamilyOfElements P R) (t : P.obj (op X))
     (ht : x.IsAmalgamation t) : x.sieveExtend.IsAmalgamation t := by
   intro Y f hf
-  dsimp' [family_of_elements.sieve_extend]
+  dsimp' [← family_of_elements.sieve_extend]
   rw [← ht _, ← functor_to_types.map_comp_apply, ← op_comp, hf.some_spec.some_spec.some_spec.2]
 
 /-- A presheaf is separated for a presieve if there is at most one amalgamation. -/
@@ -398,7 +398,7 @@ theorem is_separated_for_top (P : Cᵒᵖ ⥤ Type w) : IsSeparatedFor P (⊤ : 
     h₂ (𝟙 X)
       (by
         simp )
-  simp only [op_id, functor_to_types.map_id_apply] at q₁ q₂
+  simp only [← op_id, ← functor_to_types.map_id_apply] at q₁ q₂
   rw [q₁, q₂]
 
 /-- We define `P` to be a sheaf for the presieve `R` if every compatible family has a unique
@@ -581,12 +581,12 @@ theorem is_sheaf_for_iff_generate (R : Presieve X) : IsSheafFor P R ↔ IsSheafF
   · intro q x hx
     apply exists_imp_exists _ (q _ (hx.restrict (le_generate R)))
     intro t ht
-    simpa [hx] using is_amalgamation_sieve_extend _ _ ht
+    simpa [← hx] using is_amalgamation_sieve_extend _ _ ht
     
   · intro q x hx
     apply exists_imp_exists _ (q _ hx.sieve_extend)
     intro t ht
-    simpa [hx] using is_amalgamation_restrict (le_generate R) _ _ ht
+    simpa [← hx] using is_amalgamation_restrict (le_generate R) _ _ ht
     
 
 /-- Every presheaf is a sheaf for the family {𝟙 X}.
@@ -623,14 +623,14 @@ theorem is_sheaf_for_iso {P' : Cᵒᵖ ⥤ Type w} (i : P ≅ P') : IsSheafFor P
   use i.hom.app _ t
   fconstructor
   · convert family_of_elements.is_amalgamation.comp_presheaf_map i.hom ht1
-    dsimp' [x']
+    dsimp' [← x']
     simp
     
   · intro y hy
     rw
       [show y = (i.inv.app (op X) ≫ i.hom.app (op X)) y by
         simp ]
-    simp [ht2 (i.inv.app _ y) (family_of_elements.is_amalgamation.comp_presheaf_map i.inv hy)]
+    simp [← ht2 (i.inv.app _ y) (family_of_elements.is_amalgamation.comp_presheaf_map i.inv hy)]
     
 
 /-- If a presieve `R` on `X` has a subsieve `S` such that:
@@ -721,7 +721,7 @@ theorem is_sheaf_pretopology [HasPullbacks C] (K : Pretopology C) :
 
 /-- Any presheaf is a sheaf for the bottom (trivial) grothendieck topology. -/
 theorem is_sheaf_bot : IsSheaf (⊥ : GrothendieckTopology C) P := fun X => by
-  simp [is_sheaf_for_top_sieve]
+  simp [← is_sheaf_for_top_sieve]
 
 end Presieve
 
@@ -786,7 +786,7 @@ def secondMap : FirstObj P S ⟶ SecondObj P S :=
 theorem w : forkMap P S ≫ firstMap P S = forkMap P S ≫ secondMap P S := by
   apply limit.hom_ext
   rintro ⟨Y, Z, g, f, hf⟩
-  simp [first_map, second_map, fork_map]
+  simp [← first_map, ← second_map, ← fork_map]
 
 /-- The family of elements given by `x : first_obj P S` is compatible iff `first_map` and `second_map`
 map it to the same point.
@@ -797,18 +797,18 @@ theorem compatible_iff (x : FirstObj P S) :
   constructor
   · intro t
     ext ⟨Y, Z, g, f, hf⟩
-    simpa [first_map, second_map] using t _ g hf
+    simpa [← first_map, ← second_map] using t _ g hf
     
   · intro t Y Z f g hf
     rw [types.limit_ext_iff'] at t
-    simpa [first_map, second_map] using t ⟨⟨Y, Z, g, f, hf⟩⟩
+    simpa [← first_map, ← second_map] using t ⟨⟨Y, Z, g, f, hf⟩⟩
     
 
 /-- `P` is a sheaf for `S`, iff the fork given by `w` is an equalizer. -/
 theorem equalizer_sheaf_condition : Presieve.IsSheafFor P S ↔ Nonempty (IsLimit (Fork.ofι _ (w P S))) := by
   rw [types.type_equalizer_iff_unique, ← Equivₓ.forall_congr_left (first_obj_eq_family P S).toEquiv.symm]
   simp_rw [← compatible_iff]
-  simp only [inv_hom_id_apply, iso.to_equiv_symm_fun]
+  simp only [← inv_hom_id_apply, ← iso.to_equiv_symm_fun]
   apply ball_congr
   intro x tx
   apply exists_unique_congr
@@ -818,11 +818,11 @@ theorem equalizer_sheaf_condition : Presieve.IsSheafFor P S ↔ Nonempty (IsLimi
   constructor
   · intro q
     ext Y f hf
-    simpa [first_obj_eq_family, fork_map] using q _ _
+    simpa [← first_obj_eq_family, ← fork_map] using q _ _
     
   · intro q Y f hf
     rw [← q]
-    simp [first_obj_eq_family, fork_map]
+    simp [← first_obj_eq_family, ← fork_map]
     
 
 end Sieve
@@ -857,8 +857,8 @@ def secondMap : FirstObj P R ⟶ SecondObj P R :=
 theorem w : forkMap P R ≫ firstMap P R = forkMap P R ≫ secondMap P R := by
   apply limit.hom_ext
   rintro ⟨⟨Y, f, hf⟩, ⟨Z, g, hg⟩⟩
-  simp only [first_map, second_map, fork_map]
-  simp only [limit.lift_π, limit.lift_π_assoc, assoc, fan.mk_π_app, Subtype.coe_mk, Subtype.val_eq_coe]
+  simp only [← first_map, ← second_map, ← fork_map]
+  simp only [← limit.lift_π, ← limit.lift_π_assoc, ← assoc, ← fan.mk_π_app, ← Subtype.coe_mk, ← Subtype.val_eq_coe]
   rw [← P.map_comp, ← op_comp, pullback.condition]
   simp
 
@@ -871,11 +871,11 @@ theorem compatible_iff (x : FirstObj P R) :
   constructor
   · intro t
     ext ⟨⟨Y, f, hf⟩, Z, g, hg⟩
-    simpa [first_map, second_map] using t hf hg
+    simpa [← first_map, ← second_map] using t hf hg
     
   · intro t Y Z f g hf hg
     rw [types.limit_ext_iff'] at t
-    simpa [first_map, second_map] using t ⟨⟨⟨Y, f, hf⟩, Z, g, hg⟩⟩
+    simpa [← first_map, ← second_map] using t ⟨⟨⟨Y, f, hf⟩, Z, g, hg⟩⟩
     
 
 /-- `P` is a sheaf for `R`, iff the fork given by `w` is an equalizer.
@@ -893,11 +893,11 @@ theorem sheaf_condition : R.IsSheafFor P ↔ Nonempty (IsLimit (Fork.ofι _ (w P
   constructor
   · intro q
     ext Y f hf
-    simpa [fork_map] using q _ _
+    simpa [← fork_map] using q _ _
     
   · intro q Y f hf
     rw [← q]
-    simp [fork_map]
+    simp [← fork_map]
     
 
 end Presieve
@@ -945,11 +945,9 @@ def sheafOfTypesToPresheaf : SheafOfTypes J ⥤ Cᵒᵖ ⥤ Type w where
   map_id' := fun X => rfl
   map_comp' := fun X Y Z f g => rfl
 
-instance : Full (sheafOfTypesToPresheaf J) where
-  Preimage := fun X Y f => ⟨f⟩
+instance : Full (sheafOfTypesToPresheaf J) where Preimage := fun X Y f => ⟨f⟩
 
-instance : Faithful (sheafOfTypesToPresheaf J) :=
-  {  }
+instance : Faithful (sheafOfTypesToPresheaf J) where
 
 /-- The category of sheaves on the bottom (trivial) grothendieck topology is equivalent to the category
 of presheaves.

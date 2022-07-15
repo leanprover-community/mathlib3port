@@ -105,8 +105,8 @@ theorem coe_mk {to_fun inv_fun map_add map_smul left_inv right_inv} :
 @[nolint doc_blame]
 def toEquiv : (M ≃ₛₗ[σ] M₂) → M ≃ M₂ := fun f => f.toAddEquiv.toEquiv
 
-theorem to_equiv_injective : Function.Injective (toEquiv : (M ≃ₛₗ[σ] M₂) → M ≃ M₂) := fun h =>
-  LinearEquiv.mk.inj_eq.mpr (Equivₓ.mk.inj h)
+theorem to_equiv_injective : Function.Injective (toEquiv : (M ≃ₛₗ[σ] M₂) → M ≃ M₂) :=
+  fun ⟨_, _, _, _, _, _⟩ ⟨_, _, _, _, _, _⟩ h => LinearEquiv.mk.inj_eq.mpr (Equivₓ.mk.inj h)
 
 @[simp]
 theorem to_equiv_inj {e₁ e₂ : M ≃ₛₗ[σ] M₂} : e₁.toEquiv = e₂.toEquiv ↔ e₁ = e₂ :=
@@ -345,33 +345,33 @@ include module_M₃
 theorem eq_comp_to_linear_map_symm (f : M₂ →ₛₗ[σ₂₃] M₃) (g : M₁ →ₛₗ[σ₁₃] M₃) :
     f = g.comp e₁₂.symm.toLinearMap ↔ f.comp e₁₂.toLinearMap = g := by
   constructor <;> intro H <;> ext
-  · simp [H, e₁₂.to_equiv.eq_comp_symm f g]
-    
   · simp [← H, ← e₁₂.to_equiv.eq_comp_symm f g]
+    
+  · simp [H, e₁₂.to_equiv.eq_comp_symm f g]
     
 
 theorem comp_to_linear_map_symm_eq (f : M₂ →ₛₗ[σ₂₃] M₃) (g : M₁ →ₛₗ[σ₁₃] M₃) :
     g.comp e₁₂.symm.toLinearMap = f ↔ g = f.comp e₁₂.toLinearMap := by
   constructor <;> intro H <;> ext
-  · simp [← H, ← e₁₂.to_equiv.comp_symm_eq f g]
-    
   · simp [H, e₁₂.to_equiv.comp_symm_eq f g]
+    
+  · simp [← H, ← e₁₂.to_equiv.comp_symm_eq f g]
     
 
 theorem eq_to_linear_map_symm_comp (f : M₃ →ₛₗ[σ₃₁] M₁) (g : M₃ →ₛₗ[σ₃₂] M₂) :
     f = e₁₂.symm.toLinearMap.comp g ↔ e₁₂.toLinearMap.comp f = g := by
   constructor <;> intro H <;> ext
-  · simp [H, e₁₂.to_equiv.eq_symm_comp f g]
-    
   · simp [← H, ← e₁₂.to_equiv.eq_symm_comp f g]
+    
+  · simp [H, e₁₂.to_equiv.eq_symm_comp f g]
     
 
 theorem to_linear_map_symm_comp_eq (f : M₃ →ₛₗ[σ₃₁] M₁) (g : M₃ →ₛₗ[σ₃₂] M₂) :
     e₁₂.symm.toLinearMap.comp g = f ↔ g = e₁₂.toLinearMap.comp f := by
   constructor <;> intro H <;> ext
-  · simp [← H, ← e₁₂.to_equiv.symm_comp_eq f g]
-    
   · simp [H, e₁₂.to_equiv.symm_comp_eq f g]
+    
+  · simp [← H, ← e₁₂.to_equiv.symm_comp_eq f g]
     
 
 omit module_M₃
@@ -584,11 +584,9 @@ protected theorem smul_def (f : M ≃ₗ[R] M) (a : M) : f • a = f a :=
 instance apply_has_faithful_smul : HasFaithfulSmul (M ≃ₗ[R] M) M :=
   ⟨fun _ _ => LinearEquiv.ext⟩
 
-instance apply_smul_comm_class : SmulCommClass R (M ≃ₗ[R] M) M where
-  smul_comm := fun r e m => (e.map_smul r m).symm
+instance apply_smul_comm_class : SmulCommClass R (M ≃ₗ[R] M) M where smul_comm := fun r e m => (e.map_smul r m).symm
 
-instance apply_smul_comm_class' : SmulCommClass (M ≃ₗ[R] M) R M where
-  smul_comm := LinearEquiv.map_smul
+instance apply_smul_comm_class' : SmulCommClass (M ≃ₗ[R] M) R M where smul_comm := LinearEquiv.map_smul
 
 end Automorphisms
 

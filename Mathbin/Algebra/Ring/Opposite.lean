@@ -44,7 +44,7 @@ instance [NonUnitalSemiringₓ α] : NonUnitalSemiringₓ αᵐᵒᵖ :=
   { MulOpposite.semigroupWithZero α, MulOpposite.nonUnitalNonAssocSemiring α with }
 
 instance [NonAssocSemiringₓ α] : NonAssocSemiringₓ αᵐᵒᵖ :=
-  { MulOpposite.mulZeroOneClass α, MulOpposite.nonUnitalNonAssocSemiring α with }
+  { MulOpposite.addMonoidWithOne α, MulOpposite.mulZeroOneClass α, MulOpposite.nonUnitalNonAssocSemiring α with }
 
 instance [Semiringₓ α] : Semiringₓ αᵐᵒᵖ :=
   { MulOpposite.nonUnitalSemiring α, MulOpposite.nonAssocSemiring α, MulOpposite.monoidWithZero α with }
@@ -62,10 +62,11 @@ instance [NonUnitalRing α] : NonUnitalRing αᵐᵒᵖ :=
   { MulOpposite.addCommGroup α, MulOpposite.semigroupWithZero α, MulOpposite.distrib α with }
 
 instance [NonAssocRing α] : NonAssocRing αᵐᵒᵖ :=
-  { MulOpposite.addCommGroup α, MulOpposite.mulZeroOneClass α, MulOpposite.distrib α with }
+  { MulOpposite.addCommGroup α, MulOpposite.mulZeroOneClass α, MulOpposite.distrib α,
+    MulOpposite.addGroupWithOne α with }
 
 instance [Ringₓ α] : Ringₓ αᵐᵒᵖ :=
-  { MulOpposite.addCommGroup α, MulOpposite.monoid α, MulOpposite.semiring α with }
+  { MulOpposite.monoid α, MulOpposite.nonAssocRing α with }
 
 instance [NonUnitalCommRing α] : NonUnitalCommRing αᵐᵒᵖ :=
   { MulOpposite.nonUnitalRing α, MulOpposite.nonUnitalCommSemiring α with }
@@ -73,8 +74,9 @@ instance [NonUnitalCommRing α] : NonUnitalCommRing αᵐᵒᵖ :=
 instance [CommRingₓ α] : CommRingₓ αᵐᵒᵖ :=
   { MulOpposite.ring α, MulOpposite.commSemiring α with }
 
-instance [Zero α] [Mul α] [NoZeroDivisors α] : NoZeroDivisors αᵐᵒᵖ where
-  eq_zero_or_eq_zero_of_mul_eq_zero := fun H : op (_ * _) = op (0 : α) =>
+instance [Zero α] [Mul α] [NoZeroDivisors α] :
+    NoZeroDivisors
+      αᵐᵒᵖ where eq_zero_or_eq_zero_of_mul_eq_zero := fun x y H : op (_ * _) = op (0 : α) =>
     Or.cases_on (eq_zero_or_eq_zero_of_mul_eq_zero <| op_injective H) (fun hy => Or.inr <| unop_injective <| hy)
       fun hx => Or.inl <| unop_injective <| hx
 
@@ -146,8 +148,9 @@ instance [NonUnitalCommRing α] : NonUnitalCommRing αᵃᵒᵖ :=
 instance [CommRingₓ α] : CommRingₓ αᵃᵒᵖ :=
   { AddOpposite.ring α, AddOpposite.commSemiring α with }
 
-instance [Zero α] [Mul α] [NoZeroDivisors α] : NoZeroDivisors αᵃᵒᵖ where
-  eq_zero_or_eq_zero_of_mul_eq_zero := fun H : op (_ * _) = op (0 : α) =>
+instance [Zero α] [Mul α] [NoZeroDivisors α] :
+    NoZeroDivisors
+      αᵃᵒᵖ where eq_zero_or_eq_zero_of_mul_eq_zero := fun x y H : op (_ * _) = op (0 : α) =>
     Or.imp (fun hx => unop_injective hx) (fun hy => unop_injective hy)
       (@eq_zero_or_eq_zero_of_mul_eq_zero α _ _ _ _ _ <| op_injective H)
 

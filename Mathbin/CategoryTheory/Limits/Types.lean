@@ -51,8 +51,11 @@ def limitConeIsLimit (F : J ⥤ Type max v u) : IsLimit (limitCone F) where
 
 See <https://stacks.math.columbia.edu/tag/002U>.
 -/
-instance has_limits_of_size : HasLimitsOfSize.{v} (Type max v u) where
-  HasLimitsOfShape := fun J 𝒥 =>
+instance has_limits_of_size :
+    HasLimitsOfSize.{v}
+      (Type
+        max v
+          u) where HasLimitsOfShape := fun J 𝒥 =>
     { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } }
 
 instance : HasLimits (Type u) :=
@@ -107,13 +110,13 @@ noncomputable def Limit.mk (F : J ⥤ Type max v u) (x : ∀ j, F.obj j) (h : �
 @[simp]
 theorem Limit.π_mk (F : J ⥤ Type max v u) (x : ∀ j, F.obj j) (h : ∀ j j' f : j ⟶ j', F.map f (x j) = x j') j :
     limit.π F j (Limit.mk F x h) = x j := by
-  dsimp' [limit.mk]
+  dsimp' [← limit.mk]
   simp
 
 @[simp]
 theorem Limit.π_mk' (F : J ⥤ Type v) (x : ∀ j, F.obj j) (h : ∀ j j' f : j ⟶ j', F.map f (x j) = x j') j :
     limit.π F j (Limit.mk.{v, v} F x h) = x j := by
-  dsimp' [limit.mk]
+  dsimp' [← limit.mk]
   simp
 
 -- PROJECT: prove this for concrete categories where the forgetful functor preserves limits
@@ -121,13 +124,13 @@ theorem Limit.π_mk' (F : J ⥤ Type v) (x : ∀ j, F.obj j) (h : ∀ j j' f : j
 theorem limit_ext (F : J ⥤ Type max v u) (x y : limit F) (w : ∀ j, limit.π F j x = limit.π F j y) : x = y := by
   apply (limit_equiv_sections F).Injective
   ext j
-  simp [w j]
+  simp [← w j]
 
 @[ext]
 theorem limit_ext' (F : J ⥤ Type v) (x y : limit F) (w : ∀ j, limit.π F j x = limit.π F j y) : x = y := by
   apply (limitEquivSections.{v, v} F).Injective
   ext j
-  simp [w j]
+  simp [← w j]
 
 theorem limit_ext_iff (F : J ⥤ Type max v u) (x y : limit F) : x = y ↔ ∀ j, limit.π F j x = limit.π F j y :=
   ⟨fun t _ => t ▸ rfl, limit_ext _ _ _⟩
@@ -193,8 +196,10 @@ def colimitCocone (F : J ⥤ Type max v u) : Cocone F where
 attribute [local elab_with_expected_type] Quot.lift
 
 /-- (internal implementation) the fact that the proposed colimit cocone is the colimit -/
-def colimitCoconeIsColimit (F : J ⥤ Type max v u) : IsColimit (colimitCocone F) where
-  desc := fun s =>
+def colimitCoconeIsColimit (F : J ⥤ Type max v u) :
+    IsColimit
+      (colimitCocone
+        F) where desc := fun s =>
     Quot.lift (fun p : Σj, F.obj j => s.ι.app p.1 p.2) fun ⟨j, x⟩ ⟨j', x'⟩ ⟨f, hf⟩ => by
       rw [hf] <;> exact (congr_fun (cocone.w s f) x).symm
 
@@ -202,8 +207,11 @@ def colimitCoconeIsColimit (F : J ⥤ Type max v u) : IsColimit (colimitCocone F
 
 See <https://stacks.math.columbia.edu/tag/002U>.
 -/
-instance has_colimits_of_size : HasColimitsOfSize.{v} (Type max v u) where
-  HasColimitsOfShape := fun J 𝒥 =>
+instance has_colimits_of_size :
+    HasColimitsOfSize.{v}
+      (Type
+        max v
+          u) where HasColimitsOfShape := fun J 𝒥 =>
     { HasColimit := fun F => has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_cocone_is_colimit F } }
 
 instance : HasColimits (Type u) :=
@@ -411,8 +419,7 @@ section
 def Image : Type u :=
   Set.Range f
 
-instance [Inhabited α] : Inhabited (Image f) where
-  default := ⟨f default, ⟨_, rfl⟩⟩
+instance [Inhabited α] : Inhabited (Image f) where default := ⟨f default, ⟨_, rfl⟩⟩
 
 /-- the inclusion of `image f` into the target -/
 def Image.ι : Image f ⟶ β :=
@@ -449,19 +456,21 @@ noncomputable def isImage : IsImage (monoFactorisation f) where
 instance : HasImage f :=
   HasImage.mk ⟨_, isImage f⟩
 
-instance : HasImages (Type u) where
-  HasImage := by
+instance :
+    HasImages (Type u) where HasImage := by
     infer_instance
 
-instance : HasImageMaps (Type u) where
-  HasImageMap := fun f g st =>
+instance :
+    HasImageMaps
+      (Type
+        u) where HasImageMap := fun f g st =>
     HasImageMap.transport st (monoFactorisation f.Hom) (isImage g.Hom)
       (fun x =>
         ⟨st.right x.1,
           ⟨st.left (Classical.some x.2), by
             have p := st.w
             replace p := congr_fun p (Classical.some x.2)
-            simp only [functor.id_map, types_comp_apply, Subtype.val_eq_coe] at p
+            simp only [← functor.id_map, ← types_comp_apply, ← Subtype.val_eq_coe] at p
             erw [p, Classical.some_spec x.2]⟩⟩)
       rfl
 

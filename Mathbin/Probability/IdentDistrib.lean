@@ -108,7 +108,7 @@ theorem measure_mem_eq (h : IdentDistrib f g μ ν) {s : Set γ} (hs : Measurabl
   rw [← measure.map_apply_of_ae_measurable h.ae_measurable_fst hs, ←
     measure.map_apply_of_ae_measurable h.ae_measurable_snd hs, h.map_eq]
 
-alias measure_mem_eq ← ProbabilityTheory.IdentDistrib.measure_preimage_eq
+alias measure_mem_eq ← measure_preimage_eq
 
 theorem ae_snd (h : IdentDistrib f g μ ν) {p : γ → Prop} (pmeas : MeasurableSet { x | p x }) (hp : ∀ᵐ x ∂μ, p (f x)) :
     ∀ᵐ x ∂ν, p (g x) := by
@@ -175,14 +175,14 @@ theorem integral_eq [NormedGroup γ] [NormedSpace ℝ γ] [CompleteSpace γ] [Bo
 theorem snorm_eq [NormedGroup γ] [OpensMeasurableSpace γ] (h : IdentDistrib f g μ ν) (p : ℝ≥0∞) :
     snorm f p μ = snorm g p ν := by
   by_cases' h0 : p = 0
-  · simp [h0]
+  · simp [← h0]
     
   by_cases' h_top : p = ∞
-  · simp only [h_top, snorm, snorm_ess_sup, Ennreal.top_ne_zero, eq_self_iff_true, if_true, if_false]
+  · simp only [← h_top, ← snorm, ← snorm_ess_sup, ← Ennreal.top_ne_zero, ← eq_self_iff_true, ← if_true, ← if_false]
     apply ess_sup_eq
     exact h.comp (measurable_coe_nnreal_ennreal.comp measurable_nnnorm)
     
-  simp only [snorm_eq_snorm' h0 h_top, snorm', one_div]
+  simp only [← snorm_eq_snorm' h0 h_top, ← snorm', ← one_div]
   congr 1
   apply lintegral_eq
   exact h.comp (Measurable.pow_const (measurable_coe_nnreal_ennreal.comp measurable_nnnorm) p.to_real)

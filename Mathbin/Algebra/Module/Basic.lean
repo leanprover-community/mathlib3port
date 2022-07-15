@@ -93,26 +93,26 @@ theorem inv_of_two_smul_add_inv_of_two_smul [Invertible (2 : R)] (x : M) : (⅟ 
 /-- Pullback a `module` structure along an injective additive monoid homomorphism.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Injective.module [AddCommMonoidₓ M₂] [HasScalar R M₂] (f : M₂ →+ M) (hf : Injective f)
+protected def Function.Injective.module [AddCommMonoidₓ M₂] [HasSmul R M₂] (f : M₂ →+ M) (hf : Injective f)
     (smul : ∀ c : R x, f (c • x) = c • f x) : Module R M₂ :=
   { hf.DistribMulAction f smul with smul := (· • ·),
     add_smul := fun c₁ c₂ x =>
       hf <| by
-        simp only [smul, f.map_add, add_smul],
+        simp only [← smul, ← f.map_add, ← add_smul],
     zero_smul := fun x =>
       hf <| by
-        simp only [smul, zero_smul, f.map_zero] }
+        simp only [← smul, ← zero_smul, ← f.map_zero] }
 
 /-- Pushforward a `module` structure along a surjective additive monoid homomorphism. -/
-protected def Function.Surjective.module [AddCommMonoidₓ M₂] [HasScalar R M₂] (f : M →+ M₂) (hf : Surjective f)
+protected def Function.Surjective.module [AddCommMonoidₓ M₂] [HasSmul R M₂] (f : M →+ M₂) (hf : Surjective f)
     (smul : ∀ c : R x, f (c • x) = c • f x) : Module R M₂ :=
   { hf.DistribMulAction f smul with smul := (· • ·),
     add_smul := fun c₁ c₂ x => by
       rcases hf x with ⟨x, rfl⟩
-      simp only [add_smul, ← smul, ← f.map_add],
+      simp only [← add_smul, smul, f.map_add],
     zero_smul := fun x => by
       rcases hf x with ⟨x, rfl⟩
-      simp only [← f.map_zero, ← smul, zero_smul] }
+      simp only [f.map_zero, smul, ← zero_smul] }
 
 /-- Push forward the action of `R` on `M` along a compatible surjective map `f : R →+* S`.
 
@@ -120,13 +120,13 @@ See also `function.surjective.mul_action_left` and `function.surjective.distrib_
 -/
 @[reducible]
 def Function.Surjective.moduleLeft {R S M : Type _} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] [Semiringₓ S]
-    [HasScalar S M] (f : R →+* S) (hf : Function.Surjective f) (hsmul : ∀ c x : M, f c • x = c • x) : Module S M :=
+    [HasSmul S M] (f : R →+* S) (hf : Function.Surjective f) (hsmul : ∀ c x : M, f c • x = c • x) : Module S M :=
   { hf.distribMulActionLeft f.toMonoidHom hsmul with smul := (· • ·),
     zero_smul := fun x => by
       rw [← f.map_zero, hsmul, zero_smul],
     add_smul :=
       hf.Forall₂.mpr fun a b x => by
-        simp only [← f.map_add, hsmul, add_smul] }
+        simp only [f.map_add, ← hsmul, ← add_smul] }
 
 variable {R} (M)
 
@@ -136,9 +136,9 @@ See note [reducible non-instances]. -/
 @[reducible]
 def Module.compHom [Semiringₓ S] (f : S →+* R) : Module S M :=
   { MulActionWithZero.compHom M f.toMonoidWithZeroHom, DistribMulAction.compHom M (f : S →* R) with
-    smul := HasScalar.Comp.smul f,
+    smul := HasSmul.Comp.smul f,
     add_smul := fun r s x => by
-      simp [add_smul] }
+      simp [← add_smul] }
 
 variable (R) (M)
 
@@ -153,7 +153,7 @@ def Module.toAddMonoidEnd : R →+* AddMonoidₓ.End M :=
         simp ,
     map_add' := fun x y =>
       AddMonoidHom.ext fun r => by
-        simp [add_smul] }
+        simp [← add_smul] }
 
 /-- A convenience alias for `module.to_add_monoid_End` as an `add_monoid_hom`, usually to allow the
 use of `add_monoid_hom.flip`. -/
@@ -212,7 +212,7 @@ and `smul_zero`. As these fields can be deduced from the other ones when `M` is 
 this provides a way to construct a module structure by checking less properties, in
 `module.of_core`. -/
 @[nolint has_inhabited_instance]
-structure Module.Core extends HasScalar R M where
+structure Module.Core extends HasSmul R M where
   smul_add : ∀ r : R x y : M, r • (x + y) = r • x + r • y
   add_smul : ∀ r s : R x : M, (r + s) • x = r • x + s • x
   mul_smul : ∀ r s : R x : M, (r * s) • x = r • s • x
@@ -223,7 +223,7 @@ variable {R M}
 /-- Define `module` without proving `zero_smul` and `smul_zero` by using an auxiliary
 structure `module.core`, when the underlying space is an `add_comm_group`. -/
 def Module.ofCore (H : Module.Core R M) : Module R M := by
-  let this := H.to_has_scalar <;>
+  let this := H.to_has_smul <;>
     exact
       { H with zero_smul := fun x => (AddMonoidHom.mk' (fun r : R => r • x) fun r s => H.add_smul r s x).map_zero,
         smul_zero := fun r => (AddMonoidHom.mk' ((· • ·) r) (H.smul_add r)).map_zero }
@@ -235,10 +235,11 @@ end AddCommGroupₓ
 theorem Module.ext' {R : Type _} [Semiringₓ R] {M : Type _} [AddCommMonoidₓ M] (P Q : Module R M)
     (w :
       ∀ r : R m : M,
-        (have := P
-          r • m) =
+        by
+          have := P
+          exact r • m = by
           have := Q
-          r • m) :
+          exact r • m) :
     P = Q := by
   ext
   exact w _ _
@@ -268,7 +269,7 @@ theorem neg_one_smul (x : M) : (-1 : R) • x = -x := by
 variable {R}
 
 theorem sub_smul (r s : R) (y : M) : (r - s) • y = r • y - s • y := by
-  simp [add_smul, sub_eq_add_neg]
+  simp [← add_smul, ← sub_eq_add_neg]
 
 end Module
 
@@ -340,8 +341,8 @@ end
 /-- Convert back any exotic `ℕ`-smul to the canonical instance. This should not be needed since in
 mathlib all `add_comm_monoid`s should normally have exactly one `ℕ`-module structure by design.
 -/
-theorem nat_smul_eq_nsmul (h : Module ℕ M) (n : ℕ) (x : M) : @HasScalar.smul ℕ M h.toHasScalar n x = n • x := by
-  rw [nsmul_eq_smul_cast ℕ n x, Nat.cast_idₓ]
+theorem nat_smul_eq_nsmul (h : Module ℕ M) (n : ℕ) (x : M) : @HasSmul.smul ℕ M h.toHasSmul n x = n • x := by
+  rw [nsmul_eq_smul_cast ℕ n x, Nat.cast_id]
 
 /-- All `ℕ`-module structures are equal. Not an instance since in mathlib all `add_comm_monoid`
 should normally have exactly one `ℕ`-module structure by design. -/
@@ -350,13 +351,13 @@ def AddCommMonoidₓ.natModule.unique : Unique (Module ℕ M) where
     infer_instance
   uniq := fun P => (Module.ext' P _) fun n => nat_smul_eq_nsmul P n
 
-instance AddCommMonoidₓ.nat_is_scalar_tower : IsScalarTower ℕ R M where
-  smul_assoc := fun n x y =>
+instance AddCommMonoidₓ.nat_is_scalar_tower :
+    IsScalarTower ℕ R M where smul_assoc := fun n x y =>
     Nat.recOn n
       (by
-        simp only [zero_smul])
+        simp only [← zero_smul])
       fun n ih => by
-      simp only [Nat.succ_eq_add_one, add_smul, one_smul, ih]
+      simp only [← Nat.succ_eq_add_one, ← add_smul, ← one_smul, ← ih]
 
 end AddCommMonoidₓ
 
@@ -379,8 +380,8 @@ end
 
 /-- Convert back any exotic `ℤ`-smul to the canonical instance. This should not be needed since in
 mathlib all `add_comm_group`s should normally have exactly one `ℤ`-module structure by design. -/
-theorem int_smul_eq_zsmul (h : Module ℤ M) (n : ℤ) (x : M) : @HasScalar.smul ℤ M h.toHasScalar n x = n • x := by
-  rw [zsmul_eq_smul_cast ℤ n x, Int.cast_idₓ]
+theorem int_smul_eq_zsmul (h : Module ℤ M) (n : ℤ) (x : M) : @HasSmul.smul ℤ M h.toHasSmul n x = n • x := by
+  rw [zsmul_eq_smul_cast ℤ n x, Int.cast_id]
 
 /-- All `ℤ`-module structures are equal. Not an instance since in mathlib all `add_comm_group`
 should normally have exactly one `ℤ`-module structure by design. -/
@@ -394,28 +395,28 @@ end AddCommGroupₓ
 theorem map_int_cast_smul [AddCommGroupₓ M] [AddCommGroupₓ M₂] {F : Type _} [AddMonoidHomClass F M M₂] (f : F)
     (R S : Type _) [Ringₓ R] [Ringₓ S] [Module R M] [Module S M₂] (x : ℤ) (a : M) : f ((x : R) • a) = (x : S) • f a :=
   by
-  simp only [← zsmul_eq_smul_cast, map_zsmul]
+  simp only [zsmul_eq_smul_cast, ← map_zsmul]
 
 theorem map_nat_cast_smul [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] {F : Type _} [AddMonoidHomClass F M M₂] (f : F)
     (R S : Type _) [Semiringₓ R] [Semiringₓ S] [Module R M] [Module S M₂] (x : ℕ) (a : M) :
     f ((x : R) • a) = (x : S) • f a := by
-  simp only [← nsmul_eq_smul_cast, map_nsmul]
+  simp only [nsmul_eq_smul_cast, ← map_nsmul]
 
 theorem map_inv_int_cast_smul [AddCommGroupₓ M] [AddCommGroupₓ M₂] {F : Type _} [AddMonoidHomClass F M M₂] (f : F)
     (R S : Type _) [DivisionRing R] [DivisionRing S] [Module R M] [Module S M₂] (n : ℤ) (x : M) :
     f ((n⁻¹ : R) • x) = (n⁻¹ : S) • f x := by
   by_cases' hR : (n : R) = 0 <;> by_cases' hS : (n : S) = 0
-  · simp [hR, hS]
+  · simp [← hR, ← hS]
     
   · suffices ∀ y, f y = 0 by
-      simp [this]
+      simp [← this]
     clear x
     intro x
     rw [← inv_smul_smul₀ hS (f x), ← map_int_cast_smul f R S]
-    simp [hR]
+    simp [← hR]
     
   · suffices ∀ y, f y = 0 by
-      simp [this]
+      simp [← this]
     clear x
     intro x
     rw [← smul_inv_smul₀ hR x, map_int_cast_smul f R S, hS, zero_smul]
@@ -425,8 +426,8 @@ theorem map_inv_int_cast_smul [AddCommGroupₓ M] [AddCommGroupₓ M₂] {F : Ty
 
 theorem map_inv_nat_cast_smul [AddCommGroupₓ M] [AddCommGroupₓ M₂] {F : Type _} [AddMonoidHomClass F M M₂] (f : F)
     (R S : Type _) [DivisionRing R] [DivisionRing S] [Module R M] [Module S M₂] (n : ℕ) (x : M) :
-    f ((n⁻¹ : R) • x) = (n⁻¹ : S) • f x :=
-  map_inv_int_cast_smul f R S n x
+    f ((n⁻¹ : R) • x) = (n⁻¹ : S) • f x := by
+  exact_mod_cast map_inv_int_cast_smul f R S n x
 
 theorem map_rat_cast_smul [AddCommGroupₓ M] [AddCommGroupₓ M₂] {F : Type _} [AddMonoidHomClass F M M₂] (f : F)
     (R S : Type _) [DivisionRing R] [DivisionRing S] [Module R M] [Module S M₂] (c : ℚ) (x : M) :
@@ -475,16 +476,13 @@ theorem rat_cast_smul_eq {E : Type _} (R S : Type _) [AddCommGroupₓ E] [Divisi
   map_rat_cast_smul (AddMonoidHom.id E) R S r x
 
 instance AddCommGroupₓ.int_is_scalar_tower {R : Type u} {M : Type v} [Ringₓ R] [AddCommGroupₓ M] [Module R M] :
-    IsScalarTower ℤ R M where
-  smul_assoc := fun n x y => ((smulAddHom R M).flip y).map_zsmul x n
+    IsScalarTower ℤ R M where smul_assoc := fun n x y => ((smulAddHom R M).flip y).map_zsmul x n
 
 instance IsScalarTower.rat {R : Type u} {M : Type v} [Ringₓ R] [AddCommGroupₓ M] [Module R M] [Module ℚ R]
-    [Module ℚ M] : IsScalarTower ℚ R M where
-  smul_assoc := fun r x y => map_rat_smul ((smulAddHom R M).flip y) r x
+    [Module ℚ M] : IsScalarTower ℚ R M where smul_assoc := fun r x y => map_rat_smul ((smulAddHom R M).flip y) r x
 
 instance SmulCommClass.rat {R : Type u} {M : Type v} [Semiringₓ R] [AddCommGroupₓ M] [Module R M] [Module ℚ M] :
-    SmulCommClass ℚ R M where
-  smul_comm := fun r x y => (map_rat_smul (smulAddHom R M x) r y).symm
+    SmulCommClass ℚ R M where smul_comm := fun r x y => (map_rat_smul (smulAddHom R M x) r y).symm
 
 instance SmulCommClass.rat' {R : Type u} {M : Type v} [Semiringₓ R] [AddCommGroupₓ M] [Module R M] [Module ℚ M] :
     SmulCommClass R ℚ M :=
@@ -507,14 +505,14 @@ is the result `smul_eq_zero`: a scalar multiple is `0` iff either argument is `0
 
 It is a generalization of the `no_zero_divisors` class to heterogeneous multiplication.
 -/
-class NoZeroSmulDivisors (R M : Type _) [Zero R] [Zero M] [HasScalar R M] : Prop where
+class NoZeroSmulDivisors (R M : Type _) [Zero R] [Zero M] [HasSmul R M] : Prop where
   eq_zero_or_eq_zero_of_smul_eq_zero : ∀ {c : R} {x : M}, c • x = 0 → c = 0 ∨ x = 0
 
 export NoZeroSmulDivisors (eq_zero_or_eq_zero_of_smul_eq_zero)
 
 /-- Pullback a `no_zero_smul_divisors` instance along an injective function. -/
-theorem Function.Injective.no_zero_smul_divisors {R M N : Type _} [Zero R] [Zero M] [Zero N] [HasScalar R M]
-    [HasScalar R N] [NoZeroSmulDivisors R N] (f : M → N) (hf : Function.Injective f) (h0 : f 0 = 0)
+theorem Function.Injective.no_zero_smul_divisors {R M N : Type _} [Zero R] [Zero M] [Zero N] [HasSmul R M] [HasSmul R N]
+    [NoZeroSmulDivisors R N] (f : M → N) (hf : Function.Injective f) (h0 : f 0 = 0)
     (hs : ∀ c : R x : M, f (c • x) = c • f x) : NoZeroSmulDivisors R M :=
   ⟨fun c m h =>
     Or.imp_rightₓ (@hf _ _) <|
@@ -523,19 +521,21 @@ theorem Function.Injective.no_zero_smul_divisors {R M N : Type _} [Zero R] [Zero
           (by
             rw [← hs, h, h0])⟩
 
+-- See note [lower instance priority]
+instance (priority := 100) NoZeroDivisors.to_no_zero_smul_divisors [Zero R] [Mul R] [NoZeroDivisors R] :
+    NoZeroSmulDivisors R R :=
+  ⟨fun c x => eq_zero_or_eq_zero_of_mul_eq_zero⟩
+
 section Module
 
 variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
-
-instance NoZeroSmulDivisors.of_no_zero_divisors [NoZeroDivisors R] : NoZeroSmulDivisors R R :=
-  ⟨fun c x => NoZeroDivisors.eq_zero_or_eq_zero_of_mul_eq_zero⟩
 
 @[simp]
 theorem smul_eq_zero [NoZeroSmulDivisors R M] {c : R} {x : M} : c • x = 0 ↔ c = 0 ∨ x = 0 :=
   ⟨eq_zero_or_eq_zero_of_smul_eq_zero, fun h => h.elim (fun h => h.symm ▸ zero_smul R x) fun h => h.symm ▸ smul_zero c⟩
 
 theorem smul_ne_zero [NoZeroSmulDivisors R M] {c : R} {x : M} : c • x ≠ 0 ↔ c ≠ 0 ∧ x ≠ 0 := by
-  simp only [Ne.def, smul_eq_zero, not_or_distrib]
+  simp only [← Ne.def, ← smul_eq_zero, ← not_or_distrib]
 
 section Nat
 
@@ -552,7 +552,7 @@ theorem Nat.no_zero_smul_divisors : NoZeroSmulDivisors ℕ M :=
 @[simp]
 theorem two_nsmul_eq_zero {v : M} : 2 • v = 0 ↔ v = 0 := by
   have := Nat.no_zero_smul_divisors R M
-  norm_num [smul_eq_zero]
+  norm_num [← smul_eq_zero]
 
 end Nat
 
@@ -560,8 +560,8 @@ variable (R M)
 
 /-- If `M` is an `R`-module with one and `M` has characteristic zero, then `R` has characteristic
 zero as well. Usually `M` is an `R`-algebra. -/
-theorem CharZero.of_module [One M] [CharZero M] : CharZero R := by
-  refine' ⟨fun m n h => @Nat.cast_injective M _ _ _ _ _ _⟩
+theorem CharZero.of_module M [AddCommMonoidWithOne M] [CharZero M] [Module R M] : CharZero R := by
+  refine' ⟨fun m n h => @Nat.cast_injective M _ _ _ _ _⟩
   rw [← nsmul_one, ← nsmul_one, nsmul_eq_smul_cast R m (1 : M), nsmul_eq_smul_cast R n (1 : M), h]
 
 end Module
@@ -633,7 +633,7 @@ section DivisionRing
 variable [DivisionRing R] [AddCommGroupₓ M] [Module R M]
 
 -- see note [lower instance priority]
-instance (priority := 100) NoZeroSmulDivisors.of_division_ring : NoZeroSmulDivisors R M :=
+instance (priority := 100) DivisionRing.to_no_zero_smul_divisors : NoZeroSmulDivisors R M :=
   ⟨fun c x h => or_iff_not_imp_left.2 fun hc => (smul_eq_zero_iff_eq' hc).1 h⟩
 
 end DivisionRing

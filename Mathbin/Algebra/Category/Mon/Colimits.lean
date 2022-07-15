@@ -261,8 +261,9 @@ def colimitIsColimit : IsColimit (colimitCocone F) where
       
     rfl
 
-instance has_colimits_Mon : HasColimits Mon where
-  HasColimitsOfShape := fun J 𝒥 =>
+instance has_colimits_Mon :
+    HasColimits
+      Mon where HasColimitsOfShape := fun J 𝒥 =>
     { HasColimit := fun F => has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_is_colimit F } }
 
 end Mon.Colimits

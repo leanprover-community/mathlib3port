@@ -55,14 +55,12 @@ def mapAddHom {X Y : C} : (X ⟶ Y) →+ (F.obj X ⟶ F.obj Y) :=
 theorem coe_map_add_hom {X Y : C} : ⇑(F.mapAddHom : (X ⟶ Y) →+ _) = @map C _ D _ F X Y :=
   rfl
 
-instance (priority := 100) preserves_zero_morphisms_of_additive : PreservesZeroMorphisms F where
-  map_zero' := fun X Y => F.mapAddHom.map_zero
+instance (priority := 100) preserves_zero_morphisms_of_additive :
+    PreservesZeroMorphisms F where map_zero' := fun X Y => F.mapAddHom.map_zero
 
-instance : Additive (𝟭 C) :=
-  {  }
+instance : Additive (𝟭 C) where
 
-instance {E : Type _} [Category E] [Preadditive E] (G : D ⥤ E) [Functor.Additive G] : Additive (F ⋙ G) :=
-  {  }
+instance {E : Type _} [Category E] [Preadditive E] (G : D ⥤ E) [Functor.Additive G] : Additive (F ⋙ G) where
 
 @[simp]
 theorem map_neg {X Y : C} {f : X ⟶ Y} : F.map (-f) = -F.map f :=
@@ -89,8 +87,7 @@ section InducedCategory
 
 variable {C : Type _} {D : Type _} [Category D] [Preadditive D] (F : C → D)
 
-instance induced_functor_additive : Functor.Additive (inducedFunctor F) :=
-  {  }
+instance induced_functor_additive : Functor.Additive (inducedFunctor F) where
 
 end InducedCategory
 
@@ -107,19 +104,20 @@ open CategoryTheory.Limits
 
 open CategoryTheory.Preadditive
 
-instance (priority := 100) preservesFiniteBiproductsOfAdditive [Additive F] : PreservesFiniteBiproducts F where
-  preserves := fun J _ =>
+instance (priority := 100) preservesFiniteBiproductsOfAdditive [Additive F] :
+    PreservesFiniteBiproducts
+      F where preserves := fun J _ =>
     { preserves := fun f =>
         { preserves := fun b hb =>
             is_bilimit_of_total _
               (by
                 simp_rw [F.map_bicone_π, F.map_bicone_ι, ← F.map_comp, ← F.map_sum]
-                dsimp' only [map_bicone_X]
+                dsimp' only [← map_bicone_X]
                 simp_rw [← F.map_id]
                 refine' congr_arg _ (hb.is_limit.hom_ext fun j => hb.is_colimit.hom_ext fun j' => _)
                 cases j
                 cases j'
-                simp [sum_comp, comp_sum, bicone.ι_π, comp_dite, dite_comp]) } }
+                simp [← sum_comp, ← comp_sum, ← bicone.ι_π, ← comp_dite, ← dite_comp]) } }
 
 theorem additive_of_preserves_binary_biproducts [HasBinaryBiproducts C] [PreservesZeroMorphisms F]
     [PreservesBinaryBiproducts F] : Additive F :=
@@ -135,8 +133,8 @@ namespace Equivalenceₓ
 
 variable {C D : Type _} [Category C] [Category D] [Preadditive C] [Preadditive D]
 
-instance inverse_additive (e : C ≌ D) [e.Functor.Additive] : e.inverse.Additive where
-  map_add' := fun X Y f g => by
+instance inverse_additive (e : C ≌ D) [e.Functor.Additive] :
+    e.inverse.Additive where map_add' := fun X Y f g => by
     apply e.functor.map_injective
     simp
 
@@ -183,8 +181,7 @@ theorem AdditiveFunctor.forget_obj_of (F : C ⥤ D) [F.Additive] :
 theorem AdditiveFunctor.forget_map (F G : C ⥤+ D) (α : F ⟶ G) : (AdditiveFunctor.forget C D).map α = α :=
   rfl
 
-instance : Functor.Additive (AdditiveFunctor.forget C D) where
-  map_add' := fun F G α β => rfl
+instance : Functor.Additive (AdditiveFunctor.forget C D) where map_add' := fun F G α β => rfl
 
 instance (F : C ⥤+ D) : Functor.Additive F.1 :=
   F.2

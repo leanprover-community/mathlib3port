@@ -119,7 +119,7 @@ instance [∀ i, PartialOrderₓ (α i)] : PartialOrderₓ (Σi, α i) :=
 namespace Lex
 
 -- mathport name: «exprΣₗ , »
-notation3 "Σₗ " (...) ", " r:(scoped p => Lex Sigma p) => r
+notation3"Σₗ "(...)", "r:(scoped p => Lex Sigma p) => r
 
 /-- The lexicographical `≤` on a sigma type. -/
 instance hasLe [LT ι] [∀ i, LE (α i)] : LE (Σₗ i, α i) :=

@@ -70,20 +70,22 @@ theorem op_injective : Function.Injective (op : α → αᵒᵖ) := fun _ _ => i
 theorem unop_injective : Function.Injective (unop : αᵒᵖ → α) := fun _ _ => id
 
 @[simp]
-theorem op_inj_iff (x y : α) : op x = op y ↔ x = y :=
-  Iff.rfl
-
-@[simp]
-theorem unop_inj_iff (x y : αᵒᵖ) : unop x = unop y ↔ x = y :=
-  Iff.rfl
-
-@[simp]
 theorem op_unop (x : αᵒᵖ) : op (unop x) = x :=
   rfl
 
 @[simp]
 theorem unop_op (x : α) : unop (op x) = x :=
   rfl
+
+-- We could prove these by `iff.rfl`, but that would make these eligible for `dsimp`. That would be
+-- a bad idea because `opposite` is irreducible.
+@[simp]
+theorem op_inj_iff (x y : α) : op x = op y ↔ x = y :=
+  op_injective.eq_iff
+
+@[simp]
+theorem unop_inj_iff (x y : αᵒᵖ) : unop x = unop y ↔ x = y :=
+  unop_injective.eq_iff
 
 /-- The type-level equivalence between a type and its opposite. -/
 def equivToOpposite : α ≃ αᵒᵖ where

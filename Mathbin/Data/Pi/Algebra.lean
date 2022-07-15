@@ -166,21 +166,21 @@ theorem mul_single_apply {β : Sort _} [One β] (i : I) (x : β) (i' : I) : mulS
 /-- On non-dependent functions, `pi.mul_single` is symmetric in the two indices. -/
 @[to_additive "On non-dependent functions, `pi.single` is symmetric in the two\nindices."]
 theorem mul_single_comm {β : Sort _} [One β] (i : I) (x : β) (i' : I) : mulSingle i x i' = mulSingle i' x i := by
-  simp [mul_single_apply, eq_comm]
+  simp [← mul_single_apply, ← eq_comm]
 
 @[to_additive]
 theorem apply_mul_single (f' : ∀ i, f i → g i) (hf' : ∀ i, f' i 1 = 1) (i : I) (x : f i) (j : I) :
     f' j (mulSingle i x j) = mulSingle i (f' i x) j := by
-  simpa only [Pi.one_apply, hf', mul_single] using Function.apply_update f' 1 i x j
+  simpa only [← Pi.one_apply, ← hf', ← mul_single] using Function.apply_update f' 1 i x j
 
 @[to_additive apply_single₂]
 theorem apply_mul_single₂ (f' : ∀ i, f i → g i → h i) (hf' : ∀ i, f' i 1 1 = 1) (i : I) (x : f i) (y : g i) (j : I) :
     f' j (mulSingle i x j) (mulSingle i y j) = mulSingle i (f' i x y) j := by
   by_cases' h : j = i
   · subst h
-    simp only [mul_single_eq_same]
+    simp only [← mul_single_eq_same]
     
-  · simp only [mul_single_eq_of_ne h, hf']
+  · simp only [← mul_single_eq_of_ne h, ← hf']
     
 
 @[to_additive]

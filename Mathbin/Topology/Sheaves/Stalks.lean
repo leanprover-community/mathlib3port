@@ -151,7 +151,7 @@ attribute [local tidy] tactic.op_induction'
 @[simp]
 theorem id (ℱ : X.Presheaf C) (x : X) : ℱ.stalkPushforward C (𝟙 X) x = (stalkFunctor C x).map (Pushforward.id ℱ).Hom :=
   by
-  dsimp' [stalk_pushforward, stalk_functor]
+  dsimp' [← stalk_pushforward, ← stalk_functor]
   ext1
   run_tac
     tactic.op_induction'
@@ -168,12 +168,12 @@ theorem id (ℱ : X.Presheaf C) (x : X) : ℱ.stalkPushforward C (𝟙 X) x = (s
 @[simp]
 theorem comp (ℱ : X.Presheaf C) (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) :
     ℱ.stalkPushforward C (f ≫ g) x = (f _* ℱ).stalkPushforward C g (f x) ≫ ℱ.stalkPushforward C f x := by
-  dsimp' [stalk_pushforward, stalk_functor]
+  dsimp' [← stalk_pushforward, ← stalk_functor]
   ext U
   induction U using Opposite.rec
   cases U
   cases U_val
-  simp only [colimit.ι_map_assoc, colimit.ι_pre_assoc, whisker_right_app, category.assoc]
+  simp only [← colimit.ι_map_assoc, ← colimit.ι_pre_assoc, ← whisker_right_app, ← category.assoc]
   dsimp'
   -- FIXME: Some of these are simp lemmas, but don't fire successfully:
   erw [CategoryTheory.Functor.map_id, category.id_comp, category.id_comp, category.id_comp, colimit.ι_pre,
@@ -192,7 +192,7 @@ theorem stalk_pushforward_iso_of_open_embedding {f : X ⟶ Y} (hf : OpenEmbeddin
   · fapply nat_iso.of_components
     · intro U
       refine' F.map_iso (eq_to_iso _)
-      dsimp' only [functor.op]
+      dsimp' only [← functor.op]
       exact congr_arg op (Subtype.eq <| Set.preimage_image_eq (unop U).1.1 hf.inj)
       
     · intro U V i
@@ -206,7 +206,7 @@ theorem stalk_pushforward_iso_of_open_embedding {f : X ⟶ Y} (hf : OpenEmbeddin
     rw [colimit.ι_pre, category.assoc]
     erw [colimit.ι_map_assoc, colimit.ι_pre, ← F.map_comp_assoc]
     apply colimit.w ((open_nhds.inclusion (f x)).op ⋙ f _* F) _
-    dsimp' only [functor.op]
+    dsimp' only [← functor.op]
     refine' ((hom_of_le _).op : op (unop U) ⟶ _)
     exact Set.image_preimage_subset _ _
     
@@ -249,9 +249,9 @@ def stalkPullbackIso (f : X ⟶ Y) (F : Y.Presheaf C) (x : X) : F.stalk (f x) �
     ext j
     induction j using Opposite.rec
     cases j
-    simp only [TopologicalSpace.OpenNhds.inclusion_map_iso_inv, whisker_right_app, whisker_left_app,
-      whiskering_left_obj_map, functor.comp_map, colimit.ι_map_assoc, nat_trans.op_id, Lan_obj_map,
-      pushforward_pullback_adjunction_unit_app_app, category.assoc, colimit.ι_pre_assoc]
+    simp only [← TopologicalSpace.OpenNhds.inclusion_map_iso_inv, ← whisker_right_app, ← whisker_left_app, ←
+      whiskering_left_obj_map, ← functor.comp_map, ← colimit.ι_map_assoc, ← nat_trans.op_id, ← Lan_obj_map, ←
+      pushforward_pullback_adjunction_unit_app_app, ← category.assoc, ← colimit.ι_pre_assoc]
     erw [colimit.ι_desc, colimit.pre_desc, colimit.ι_desc, category.comp_id]
     simpa
   inv_hom_id' := by
@@ -263,9 +263,9 @@ def stalkPullbackIso (f : X ⟶ Y) (F : Y.Presheaf C) (x : X) : F.stalk (f x) �
     rcases j_right with ⟨⟨⟩⟩
     erw [colimit.map_desc, colimit.map_desc, colimit.ι_desc_assoc, colimit.ι_desc_assoc, colimit.ι_desc,
       category.comp_id]
-    simp only [cocone.whisker_ι, colimit.cocone_ι, open_nhds.inclusion_map_iso_inv, cocones.precompose_obj_ι,
-      whisker_right_app, whisker_left_app, nat_trans.comp_app, whiskering_left_obj_map, nat_trans.op_id, Lan_obj_map,
-      pushforward_pullback_adjunction_unit_app_app]
+    simp only [← cocone.whisker_ι, ← colimit.cocone_ι, ← open_nhds.inclusion_map_iso_inv, ← cocones.precompose_obj_ι, ←
+      whisker_right_app, ← whisker_left_app, ← nat_trans.comp_app, ← whiskering_left_obj_map, ← nat_trans.op_id, ←
+      Lan_obj_map, ← pushforward_pullback_adjunction_unit_app_app]
     erw [←
       colimit.w _
         (@hom_of_le (open_nhds x) _ ⟨_, U_property⟩ ⟨(opens.map f).obj (unop j_left), j_hom.unop.le U_property⟩
@@ -273,7 +273,7 @@ def stalkPullbackIso (f : X ⟶ Y) (F : Y.Presheaf C) (x : X) : F.stalk (f x) �
     erw [colimit.ι_pre_assoc (Lan.diagram _ F _) (costructured_arrow.map _)]
     erw [colimit.ι_pre_assoc (Lan.diagram _ F _) (costructured_arrow.map _)]
     congr
-    simp only [category.assoc, costructured_arrow.map_mk]
+    simp only [← category.assoc, ← costructured_arrow.map_mk]
     delta' costructured_arrow.mk
     congr
 
@@ -313,7 +313,7 @@ theorem stalk_specializes_stalk_functor_map {F G : X.Presheaf C} (f : F ⟶ G) {
     F.stalkSpecializes h ≫ (stalkFunctor C x).map f = (stalkFunctor C y).map f ≫ G.stalkSpecializes h := by
   ext
   delta' stalk_functor
-  simpa [stalk_specializes]
+  simpa [← stalk_specializes]
 
 @[simp, reassoc, elementwise]
 theorem stalk_specializes_stalk_pushforward (f : X ⟶ Y) (F : X.Presheaf C) {x y : X} (h : x ⤳ y) :
@@ -322,7 +322,7 @@ theorem stalk_specializes_stalk_pushforward (f : X ⟶ Y) (F : X.Presheaf C) {x 
   by
   ext
   delta' stalk_pushforward
-  simpa [stalk_specializes]
+  simpa [← stalk_specializes]
 
 end StalkSpecializes
 
@@ -370,7 +370,7 @@ theorem stalk_functor_map_injective_of_app_injective {F G : Presheaf C X} (f : F
   fun s t hst => by
   rcases germ_exist F x s with ⟨U₁, hxU₁, s, rfl⟩
   rcases germ_exist F x t with ⟨U₂, hxU₂, t, rfl⟩
-  simp only [stalk_functor_map_germ_apply _ ⟨x, _⟩] at hst
+  simp only [← stalk_functor_map_germ_apply _ ⟨x, _⟩] at hst
   obtain ⟨W, hxW, iWU₁, iWU₂, heq⟩ := G.germ_eq x hxU₁ hxU₂ _ _ hst
   rw [← comp_apply, ← comp_apply, ← f.naturality, ← f.naturality, comp_apply, comp_apply] at heq
   replace heq := h W HEq

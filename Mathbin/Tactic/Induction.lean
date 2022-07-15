@@ -251,6 +251,9 @@ unsafe def get_constructor_argument_info (inductive_name : Name) (num_params : �
       let recursive_leading_pis ← match_recursive_constructor_arg inductive_name type
       pure ⟨c, type, dep, occs, recursive_leading_pis⟩
 
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Get information about a constructor `C` of an inductive type `I`.
 
 Input:
@@ -265,18 +268,23 @@ A `constructor_info` structure for `C`.
 -/
 unsafe def get_constructor_info (iname : Name) (num_params : ℕ) (c : Name) : tactic constructor_info := do
   let env ← get_env
-  when ¬env c <| throwError "Expected {← c} to be a constructor."
+  when ¬env c <|
+      "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   let decl ← env.get c
   let args ← get_constructor_argument_info iname num_params decl.type
   let non_param_args := args.drop num_params
   let rec_args := non_param_args.filter fun ainfo => ainfo.is_recursive
   pure { cname := decl, non_param_args, num_non_param_args := non_param_args, rec_args, num_rec_args := rec_args }
 
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Get information about an inductive type `I`, given `I`'s name.
 -/
 unsafe def get_inductive_info (I : Name) : tactic inductive_info := do
   let env ← get_env
-  when ¬env I <| throwError "Expected {← I} to be an inductive type."
+  when ¬env I <|
+      "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   let decl ← env.get I
   let type := decl.type
   let num_params := env.inductive_num_params I
@@ -490,6 +498,9 @@ unsafe def clear_dependent_if_exists (h : Name) : tactic Unit := do
   let some h ← try_core <| get_local h | pure ()
   clear' tt [h]
 
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Rename the new hypotheses in the goal for a minor premise.
 
 Input:
@@ -542,7 +553,7 @@ unsafe def constructor_renames (generate_induction_hyps : Bool) (mpinfo : major_
   let ih_renames ←
     ihs.mmapFilter fun ⟨⟨ih_hyp_ppname, arg_hyp_ppname, _⟩, with_pat⟩ => do
         let some arg_hyp ← pure <| arg_hyp_map.find arg_hyp_ppname |
-          throwError "internal error in constructor_renames: {← arg_hyp_ppname} not found in arg_hyp_map"
+          "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
         let some new ←
           with_pat.to_name_spec
               (pure <|
@@ -728,7 +739,7 @@ unsafe def generalize_complex_index_args (major_premise : expr) (num_params : �
     let new_ctx
       ←-- Replace the index args in the relevant context.
             relevant_ctx.mmap
-          fun h => js_ks.mfoldr (fun h => kreplace h j k) h
+          fun h => js_ks.mfoldr (fun ⟨j, k⟩ h => kreplace h j k) h
     let-- Replace the index args in the major premise.
     new_major_premise_type := major_premise_head.mk_app (major_premise_param_args ++ ks)
     let new_major_premise :=
@@ -737,7 +748,7 @@ unsafe def generalize_complex_index_args (major_premise : expr) (num_params : �
     let new_tgt
       ←-- Replace the index args in the target.
             js_ks.mfoldr
-          (fun tgt => kreplace tgt j k) tgt
+          (fun ⟨j, k⟩ tgt => kreplace tgt j k) tgt
     let new_tgt := new_tgt.pis (new_major_premise :: new_ctx)
     let-- Generate the index equations and their proofs.
     eq_name := if generate_induction_hyps then `induction_eq else `cases_eq
@@ -767,6 +778,12 @@ understandable induction hypotheses in many practical cases.
 -/
 
 
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Process one index equation for `simplify_ih`.
 
 Input: a local constant `h : x = y` or `h : x == y`.
@@ -811,11 +828,9 @@ unsafe def process_index_equation : expr → tactic (expr × Option expr)
             let arg := (const `heq_of_eq [u]) lhs_type lhs rhs c
             pure (arg, some c)
   | local_const _ _ _ T =>
-    throwError "process_index_equation: expected a homogeneous or heterogeneous equation, but got:
-      {← T}"
+    "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   | e =>
-    throwError "process_index_equation: expected a local constant, but got:
-      {← e}"
+    "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
 
 /-- `assign_local_to_unassigned_mvar mv pp_name binfo`, where `mv` is a
 metavariable, acts as follows:
@@ -839,6 +854,9 @@ newly created local constants.
 unsafe def assign_locals_to_unassigned_mvars (mvars : List (expr × Name × BinderInfo)) : tactic (List expr) :=
   mvars.mmapFilter fun ⟨mv, pp_name, binfo⟩ => assign_local_to_unassigned_mvar mv pp_name binfo
 
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Simplify an induction hypothesis.
 
 Input: a local constant
@@ -916,8 +934,7 @@ unsafe def simplify_ih (num_leading_pis : ℕ) (num_generalized : ℕ) (num_inde
   -- Type-check the new induction hypothesis as a sanity check.
         type_check
         new_ih <|>
-      throwError "internal error in simplify_ih: constructed term does not type check:
-        {← new_ih}"
+      "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   let ih'
     ←-- Replace the old induction hypothesis with the new one.
         note
@@ -946,7 +963,7 @@ unsafe def set_cases_tags (in_tag : Tag) (rs : List (Name × List expr)) : tacti
       [g] =>
       set_tag g in_tag
     | _ =>
-      let tgs : List (Name × List expr × expr) := rs (fun g => ⟨n, new_hyps, g⟩) gs
+      let tgs : List (Name × List expr × expr) := rs (fun ⟨n, new_hyps⟩ g => ⟨n, new_hyps, g⟩) gs
       tgs fun ⟨n, new_hyps, g⟩ =>
         with_enable_tags <| set_tag g <| (case_tag.from_tag_hyps (n :: in_tag) (new_hyps expr.local_uniq_name)).render
 
@@ -962,6 +979,15 @@ non-interactive variant `eliminate_hyp.`
 
 open Eliminate
 
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `eliminate_hyp generate_ihs h gm with_patterns` performs induction or case
 analysis on the hypothesis `h`. If `generate_ihs` is true, the tactic performs
 induction, otherwise case analysis.
@@ -1019,8 +1045,7 @@ unsafe def eliminate_hyp (generate_ihs : Bool) (major_premise : expr)
       ←-- Get info about the inductive type
             get_app_fn_const_whnf
             major_premise_type <|>
-          throwError "The type of {(← major_premise)} should be an inductive type, but it is
-            {← major_premise_type}"
+          "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
     let iinfo ← get_inductive_info iname
     -- We would like to disallow mutual/nested inductive types, since these have
         -- complicated recursors which we probably don't support. However, there seems
@@ -1058,7 +1083,7 @@ unsafe def eliminate_hyp (generate_ihs : Bool) (major_premise : expr)
     let drec_suffix := if generate_ihs then "drec_on" else "dcases_on"
     interactive.apply (rec_app rec_suffix) <|>
         interactive.apply (rec_app drec_suffix) <|>
-          throwError "Failed to apply the (dependent) recursor for {(← iname)} on {← major_premise}."
+          "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
     let-- Prepare the "with" names for each constructor case.
     with_patterns :=
       Prod.fst <| with_patterns.takeList (iinfo.constructors.map constructor_info.num_nameable_hypotheses)
@@ -1117,7 +1142,7 @@ unsafe def eliminate_hyp (generate_ihs : Bool) (major_premise : expr)
                 fun ⟨ih, _, arg_info⟩ => do
                 let ih ← get_local ih
                 let some num_leading_pis ← pure arg_info |
-                  throwError"eliminate_hyp: internal error: unexpected non-recursive argument info"
+                  "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
                 simplify_ih num_leading_pis num_auto_generalized num_index_vars ih
             trace_state_eliminate_hyp "State after simplifying IHs and before clearing index variables:"
             -- Try to clear the index variables. These often become unused during

@@ -50,7 +50,7 @@ def toMon : Monad C → Mon_ (C ⥤ C) := fun M =>
     mul_assoc' := by
       ext
       dsimp'
-      simp [M.assoc] }
+      simp [← M.assoc] }
 
 variable (C)
 
@@ -99,7 +99,7 @@ def monToMonad : Mon_ (C ⥤ C) ⥤ Monad C where
       app_μ' := by
         intro X
         erw [← nat_trans.comp_app, f.mul_hom]
-        simpa only [nat_trans.naturality, nat_trans.hcomp_app, assoc, nat_trans.comp_app, of_Mon_μ] }
+        simpa only [← nat_trans.naturality, ← nat_trans.hcomp_app, ← assoc, ← nat_trans.comp_app, ← of_Mon_μ] }
 
 namespace MonadMonEquiv
 
@@ -120,13 +120,11 @@ def counitIso : monToMonad C ⋙ monadToMon C ≅ 𝟭 _ where
 
 /-- Auxiliary definition for `Monad_Mon_equiv` -/
 @[simps]
-def unitIsoHom : 𝟭 _ ⟶ monadToMon C ⋙ monToMonad C where
-  app := fun _ => { app := fun _ => 𝟙 _ }
+def unitIsoHom : 𝟭 _ ⟶ monadToMon C ⋙ monToMonad C where app := fun _ => { app := fun _ => 𝟙 _ }
 
 /-- Auxiliary definition for `Monad_Mon_equiv` -/
 @[simps]
-def unitIsoInv : monadToMon C ⋙ monToMonad C ⟶ 𝟭 _ where
-  app := fun _ => { app := fun _ => 𝟙 _ }
+def unitIsoInv : monadToMon C ⋙ monToMonad C ⟶ 𝟭 _ where app := fun _ => { app := fun _ => 𝟙 _ }
 
 /-- Isomorphism of functors used in `Monad_Mon_equiv` -/
 @[simps]

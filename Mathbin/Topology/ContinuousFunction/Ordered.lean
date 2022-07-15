@@ -23,8 +23,7 @@ section
 variable [LinearOrderedAddCommGroup β] [OrderTopology β]
 
 /-- The pointwise absolute value of a continuous function as a continuous function. -/
-def abs (f : C(α, β)) : C(α, β) where
-  toFun := fun x => abs (f x)
+def abs (f : C(α, β)) : C(α, β) where toFun := fun x => abs (f x)
 
 -- see Note [lower instance priority]
 instance (priority := 100) : HasAbs C(α, β) :=
@@ -55,8 +54,8 @@ theorem le_def [PartialOrderₓ β] {f g : C(α, β)} : f ≤ g ↔ ∀ a, f a �
 theorem lt_def [PartialOrderₓ β] {f g : C(α, β)} : f < g ↔ (∀ a, f a ≤ g a) ∧ ∃ a, f a < g a :=
   Pi.lt_def
 
-instance hasSup [LinearOrderₓ β] [OrderClosedTopology β] : HasSup C(α, β) where
-  sup := fun f g => { toFun := fun a => max (f a) (g a) }
+instance hasSup [LinearOrderₓ β] [OrderClosedTopology β] :
+    HasSup C(α, β) where sup := fun f g => { toFun := fun a => max (f a) (g a) }
 
 @[simp, norm_cast]
 theorem sup_coe [LinearOrderₓ β] [OrderClosedTopology β] (f g : C(α, β)) : ((f⊔g : C(α, β)) : α → β) = (f⊔g : α → β) :=
@@ -71,17 +70,17 @@ instance [LinearOrderₓ β] [OrderClosedTopology β] : SemilatticeSup C(α, β)
     le_sup_left := fun f g =>
       le_def.mpr
         (by
-          simp [le_reflₓ]),
+          simp [← le_reflₓ]),
     le_sup_right := fun f g =>
       le_def.mpr
         (by
-          simp [le_reflₓ]),
+          simp [← le_reflₓ]),
     sup_le := fun f₁ f₂ g w₁ w₂ =>
       le_def.mpr fun a => by
-        simp [le_def.mp w₁ a, le_def.mp w₂ a] }
+        simp [← le_def.mp w₁ a, ← le_def.mp w₂ a] }
 
-instance hasInf [LinearOrderₓ β] [OrderClosedTopology β] : HasInf C(α, β) where
-  inf := fun f g => { toFun := fun a => min (f a) (g a) }
+instance hasInf [LinearOrderₓ β] [OrderClosedTopology β] :
+    HasInf C(α, β) where inf := fun f g => { toFun := fun a => min (f a) (g a) }
 
 @[simp, norm_cast]
 theorem inf_coe [LinearOrderₓ β] [OrderClosedTopology β] (f g : C(α, β)) : ((f⊓g : C(α, β)) : α → β) = (f⊓g : α → β) :=
@@ -96,14 +95,14 @@ instance [LinearOrderₓ β] [OrderClosedTopology β] : SemilatticeInf C(α, β)
     inf_le_left := fun f g =>
       le_def.mpr
         (by
-          simp [le_reflₓ]),
+          simp [← le_reflₓ]),
     inf_le_right := fun f g =>
       le_def.mpr
         (by
-          simp [le_reflₓ]),
+          simp [← le_reflₓ]),
     le_inf := fun f₁ f₂ g w₁ w₂ =>
       le_def.mpr fun a => by
-        simp [le_def.mp w₁ a, le_def.mp w₂ a] }
+        simp [← le_def.mp w₁ a, ← le_def.mp w₂ a] }
 
 instance [LinearOrderₓ β] [OrderClosedTopology β] : Lattice C(α, β) :=
   { ContinuousMap.semilatticeInf, ContinuousMap.semilatticeSup with }
@@ -121,7 +120,7 @@ theorem sup'_apply {ι : Type _} {s : Finset ι} (H : s.Nonempty) (f : ι → C(
 theorem sup'_coe {ι : Type _} {s : Finset ι} (H : s.Nonempty) (f : ι → C(β, γ)) :
     ((s.sup' H f : C(β, γ)) : ι → β) = s.sup' H fun a => (f a : β → γ) := by
   ext
-  simp [sup'_apply]
+  simp [← sup'_apply]
 
 end Sup'
 

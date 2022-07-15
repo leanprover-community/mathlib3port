@@ -44,12 +44,12 @@ variable (f : α → β) (p : Pmf α) (b : β)
 
 @[simp]
 theorem map_apply : (map f p) b = ∑' a, if b = f a then p a else 0 := by
-  simp [map]
+  simp [← map]
 
 @[simp]
 theorem support_map : (map f p).Support = f '' p.Support :=
   Set.ext fun b => by
-    simp [map, @eq_comm β b]
+    simp [← map, ← @eq_comm β b]
 
 theorem mem_support_map_iff : b ∈ (map f p).Support ↔ ∃ a ∈ p.Support, f a = b := by
   simp
@@ -58,13 +58,13 @@ theorem bind_pure_comp : bind p (pure ∘ f) = map f p :=
   rfl
 
 theorem map_id : map id p = p := by
-  simp [map]
+  simp [← map]
 
 theorem map_comp (g : β → γ) : (p.map f).map g = p.map (g ∘ f) := by
-  simp [map]
+  simp [← map]
 
 theorem pure_map (a : α) : (pure a).map f = pure (f a) := by
-  simp [map]
+  simp [← map]
 
 section Measureₓ
 
@@ -72,7 +72,7 @@ variable (s : Set β)
 
 @[simp]
 theorem to_outer_measure_map_apply : (p.map f).toOuterMeasure s = p.toOuterMeasure (f ⁻¹' s) := by
-  simp [map, Set.indicatorₓ, to_outer_measure_apply p (f ⁻¹' s)]
+  simp [← map, ← Set.indicatorₓ, ← to_outer_measure_apply p (f ⁻¹' s)]
 
 @[simp]
 theorem to_measure_map_apply [MeasurableSpace α] [MeasurableSpace β] (hf : Measurable f) (hs : MeasurableSet s) :
@@ -95,14 +95,14 @@ variable (q : Pmf (α → β)) (p : Pmf α) (b : β)
 
 @[simp]
 theorem seq_apply : (seq q p) b = ∑' (f : α → β) (a : α), if b = f a then q f * p a else 0 := by
-  simp only [seq, mul_boole, bind_apply, pure_apply]
+  simp only [← seq, ← mul_boole, ← bind_apply, ← pure_apply]
   refine' tsum_congr fun f => (Nnreal.tsum_mul_left (q f) _).symm.trans (tsum_congr fun a => _)
-  simpa only [mul_zero] using mul_ite (b = f a) (q f) (p a) 0
+  simpa only [← mul_zero] using mul_ite (b = f a) (q f) (p a) 0
 
 @[simp]
 theorem support_seq : (seq q p).Support = ⋃ f ∈ q.Support, f '' p.Support :=
   Set.ext fun b => by
-    simp [-mem_support_iff, seq, @eq_comm β b]
+    simp [-mem_support_iff, ← seq, ← @eq_comm β b]
 
 theorem mem_support_seq_iff : b ∈ (seq q p).Support ↔ ∃ f ∈ q.Support, b ∈ f '' p.Support := by
   simp
@@ -111,13 +111,13 @@ end Seq
 
 section OfFinset
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (a «expr ∉ » s)
 /-- Given a finset `s` and a function `f : α → ℝ≥0` with sum `1` on `s`,
   such that `f a = 0` for `a ∉ s`, we get a `pmf` -/
 def ofFinset (f : α → ℝ≥0 ) (s : Finset α) (h : (∑ a in s, f a) = 1) (h' : ∀ a _ : a ∉ s, f a = 0) : Pmf α :=
   ⟨f, h ▸ has_sum_sum_of_ne_finset_zero h'⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (a «expr ∉ » s)
 variable {f : α → ℝ≥0 } {s : Finset α} (h : (∑ a in s, f a) = 1) (h' : ∀ a _ : a ∉ s, f a = 0)
 
 @[simp]
@@ -127,7 +127,7 @@ theorem of_finset_apply (a : α) : ofFinset f s h h' a = f a :=
 @[simp]
 theorem support_of_finset : (ofFinset f s h h').Support = s ∩ Function.Support f :=
   Set.ext fun a => by
-    simpa [mem_support_iff] using mt (h' a)
+    simpa [← mem_support_iff] using mt (h' a)
 
 theorem mem_support_of_finset_iff (a : α) : a ∈ (ofFinset f s h h').Support ↔ a ∈ s ∧ f a ≠ 0 := by
   simp
@@ -195,7 +195,9 @@ section OfMultiset
 def ofMultiset (s : Multiset α) (hs : s ≠ 0) : Pmf α :=
   ⟨fun a => s.count a / s.card, by
     have : (∑ a in s.toFinset, (s.count a : ℝ) / s.card) = 1 := by
-      simp [div_eq_inv_mul, finset.mul_sum.symm, (Nat.cast_sum _ _).symm, hs]
+      simp only [← div_eq_inv_mul, Finset.mul_sum, Nat.cast_sum, ← Multiset.to_finset_sum_count_eq]
+      rw [inv_mul_cancel]
+      simp [← hs]
     have : (∑ a in s.toFinset, (s.count a : ℝ≥0 ) / s.card) = 1 := by
       rw [← Nnreal.eq_iff, Nnreal.coe_one, ← this, Nnreal.coe_sum] <;> simp
     rw [← this]
@@ -212,7 +214,7 @@ theorem of_multiset_apply (a : α) : ofMultiset s hs a = s.count a / s.card :=
 theorem support_of_multiset : (ofMultiset s hs).Support = s.toFinset :=
   Set.ext
     (by
-      simp [mem_support_iff, hs])
+      simp [← mem_support_iff, ← hs])
 
 theorem mem_support_of_multiset_iff (a : α) : a ∈ (ofMultiset s hs).Support ↔ a ∈ s.toFinset := by
   simp
@@ -231,10 +233,10 @@ theorem to_outer_measure_of_multiset_apply :
   refine' tsum_congr fun x => _
   by_cases' hx : x ∈ t
   · have : (Multiset.card s : ℝ≥0 ) ≠ 0 := by
-      simp [hs]
-    simp [Set.indicatorₓ, hx, div_eq_mul_inv, Ennreal.coe_inv this]
+      simp [← hs]
+    simp [← Set.indicatorₓ, ← hx, ← div_eq_mul_inv, ← Ennreal.coe_inv this]
     
-  · simp [hx]
+  · simp [← hx]
     
 
 @[simp]
@@ -257,14 +259,14 @@ def uniformOfFinset (s : Finset α) (hs : s.Nonempty) : Pmf α :=
       calc
         (∑ a : α in s, ite (a ∈ s) (s.card : ℝ≥0 )⁻¹ 0) = ∑ a : α in s, (s.card : ℝ≥0 )⁻¹ :=
           Finset.sum_congr rfl fun x hx => by
-            simp [hx]
+            simp [← hx]
         _ = s.card • (s.card : ℝ≥0 )⁻¹ := Finset.sum_const _
         _ = (s.card : ℝ≥0 ) * (s.card : ℝ≥0 )⁻¹ := by
           rw [nsmul_eq_mul]
         _ = 1 := div_self (Nat.cast_ne_zero.2 <| Finset.card_ne_zero_of_mem hx)
         )
     fun x hx => by
-    simp only [hx, if_false]
+    simp only [← hx, ← if_false]
 
 variable {s : Finset α} (hs : s.Nonempty) {a : α}
 
@@ -273,17 +275,17 @@ theorem uniform_of_finset_apply (a : α) : uniformOfFinset s hs a = if a ∈ s t
   rfl
 
 theorem uniform_of_finset_apply_of_mem (ha : a ∈ s) : uniformOfFinset s hs a = s.card⁻¹ := by
-  simp [ha]
+  simp [← ha]
 
 theorem uniform_of_finset_apply_of_not_mem (ha : a ∉ s) : uniformOfFinset s hs a = 0 := by
-  simp [ha]
+  simp [← ha]
 
 @[simp]
 theorem support_uniform_of_finset : (uniformOfFinset s hs).Support = s :=
   Set.ext
     (by
       let ⟨a, ha⟩ := hs
-      simp [mem_support_iff, Finset.ne_empty_of_mem ha])
+      simp [← mem_support_iff, ← Finset.ne_empty_of_mem ha])
 
 theorem mem_support_uniform_of_finset_iff (a : α) : a ∈ (uniformOfFinset s hs).Support ↔ a ∈ s := by
   simp
@@ -301,23 +303,23 @@ theorem to_outer_measure_uniform_of_finset_apply :
     _ = ↑(∑' x, if x ∈ s ∧ x ∈ t then (s.card : ℝ≥0 )⁻¹ else 0) := by
       refine' Ennreal.coe_eq_coe.2 <| tsum_congr fun x => _
       by_cases' hxt : x ∈ t
-      · by_cases' hxs : x ∈ s <;> simp [hxt, hxs]
+      · by_cases' hxs : x ∈ s <;> simp [← hxt, ← hxs]
         
-      · simp [hxt]
+      · simp [← hxt]
         
     _ = ↑(∑ x in s.filter (· ∈ t), if x ∈ s ∧ x ∈ t then (s.card : ℝ≥0 )⁻¹ else 0) := by
       refine' Ennreal.coe_eq_coe.2 (tsum_eq_sum fun x hx => _)
       have : ¬(x ∈ s ∧ x ∈ t) := fun h => hx (Finset.mem_filter.2 h)
-      simp [this]
+      simp [← this]
     _ = ↑(∑ x in s.filter (· ∈ t), (s.card : ℝ≥0 )⁻¹) :=
       Ennreal.coe_eq_coe.2
         ((Finset.sum_congr rfl) fun x hx => by
           let this : x ∈ s ∧ x ∈ t := by
             simpa using hx
-          simp [this])
+          simp [← this])
     _ = (s.filter (· ∈ t)).card / s.card := by
       let this : (s.card : ℝ≥0 ) ≠ 0 := Nat.cast_ne_zero.2 (hs.recOn fun _ => Finset.card_ne_zero_of_mem)
-      simp [div_eq_mul_inv, Ennreal.coe_inv this]
+      simp [← div_eq_mul_inv, ← Ennreal.coe_inv this]
     
 
 @[simp]
@@ -339,12 +341,12 @@ variable [Fintype α] [Nonempty α]
 
 @[simp]
 theorem uniform_of_fintype_apply (a : α) : uniformOfFintype α a = (Fintype.card α)⁻¹ := by
-  simpa only [uniform_of_fintype, Finset.mem_univ, if_true, uniform_of_finset_apply]
+  simpa only [← uniform_of_fintype, ← Finset.mem_univ, ← if_true, ← uniform_of_finset_apply]
 
 @[simp]
 theorem support_uniform_of_fintype (α : Type _) [Fintype α] [Nonempty α] : (uniformOfFintype α).Support = ⊤ :=
   Set.ext fun x => by
-    simpa [mem_support_iff] using Fintype.card_ne_zero
+    simpa [← mem_support_iff] using Fintype.card_ne_zero
 
 theorem mem_support_uniform_of_fintype (a : α) : a ∈ (uniformOfFintype α).Support := by
   simp
@@ -355,11 +357,11 @@ variable (s : Set α)
 
 theorem to_outer_measure_uniform_of_fintype_apply :
     (uniformOfFintype α).toOuterMeasure s = Fintype.card s / Fintype.card α := by
-  simpa [uniform_of_fintype]
+  simpa [← uniform_of_fintype]
 
 theorem to_measure_uniform_of_fintype_apply [MeasurableSpace α] (hs : MeasurableSet s) :
     (uniformOfFintype α).toMeasure s = Fintype.card s / Fintype.card α := by
-  simpa [uniform_of_fintype, hs]
+  simpa [← uniform_of_fintype, ← hs]
 
 end Measureₓ
 
@@ -385,7 +387,7 @@ theorem normalize_apply (a : α) : (normalize f hf0) a = f a * (∑' x, f x)⁻�
 theorem support_normalize : (normalize f hf0).Support = Function.Support f :=
   Set.ext
     (by
-      simp [mem_support_iff, hf0])
+      simp [← mem_support_iff, ← hf0])
 
 theorem mem_support_normalize_iff (a : α) : a ∈ (normalize f hf0).Support ↔ f a ≠ 0 := by
   simp
@@ -428,7 +430,7 @@ section Bernoulli
 def bernoulli (p : ℝ≥0 ) (h : p ≤ 1) : Pmf Bool :=
   ofFintype (fun b => cond b p (1 - p))
     (Nnreal.eq <| by
-      simp [h])
+      simp [← h])
 
 variable {p : ℝ≥0 } (h : p ≤ 1) (b : Bool)
 
@@ -443,7 +445,7 @@ theorem support_bernoulli : (bernoulli p h).Support = { b | cond b (p ≠ 0) (p 
   · simp_rw [mem_support_iff, bernoulli_apply, Bool.cond_ff, Ne.def, tsub_eq_zero_iff_le, not_leₓ]
     exact ⟨ne_of_ltₓ, lt_of_le_of_neₓ h⟩
     
-  · simp only [mem_support_iff, bernoulli_apply, Bool.cond_tt, Set.mem_set_of_eq]
+  · simp only [← mem_support_iff, ← bernoulli_apply, ← Bool.cond_tt, ← Set.mem_set_of_eq]
     
 
 theorem mem_support_bernoulli_iff : b ∈ (bernoulli p h).Support ↔ cond b (p ≠ 0) (p ≠ 1) := by

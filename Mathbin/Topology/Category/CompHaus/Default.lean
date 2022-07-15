@@ -147,8 +147,8 @@ theorem Top_to_CompHaus_obj (X : Top) : ↥(topToCompHaus.obj X) = StoneCech X :
 
 /-- The category of compact Hausdorff spaces is reflective in the category of topological spaces.
 -/
-noncomputable instance compHausToTop.reflective : Reflective compHausToTop where
-  toIsRightAdjoint := ⟨topToCompHaus, Adjunction.adjunctionOfEquivLeft _ _⟩
+noncomputable instance compHausToTop.reflective :
+    Reflective compHausToTop where toIsRightAdjoint := ⟨topToCompHaus, Adjunction.adjunctionOfEquivLeft _ _⟩
 
 noncomputable instance compHausToTop.createsLimits : CreatesLimits compHausToTop :=
   monadicCreatesLimits _
@@ -161,7 +161,7 @@ instance CompHaus.has_colimits : Limits.HasColimits CompHaus :=
 
 namespace CompHaus
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 /-- An explicit limit cone for a functor `F : J ⥤ CompHaus`, defined in terms of
 `Top.limit_cone`. -/
 def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHaus.{max v u}) : Limits.Cone F where
@@ -176,7 +176,7 @@ def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHaus.{max v u}) : Li
             ⋂ (i : J) (j : J) (f : i ⟶ j), { u | F.map f (u i) = u j } :=
           by
           ext1
-          simp only [Set.mem_Inter, Set.mem_set_of_eq]
+          simp only [← Set.mem_Inter, ← Set.mem_set_of_eq]
         rw [this]
         apply is_closed_Inter
         intro i
@@ -196,7 +196,7 @@ def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHaus.{max v u}) : Li
       naturality' := by
         intro _ _ _
         ext ⟨x, hx⟩
-        simp only [comp_apply, functor.const.obj_map, id_apply]
+        simp only [← comp_apply, ← functor.const.obj_map, ← id_apply]
         exact (hx f).symm }
 
 /-- The limit cone `CompHaus.limit_cone F` is indeed a limit cone. -/
@@ -228,10 +228,10 @@ theorem epi_iff_surjective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Epi f ↔ Functi
       rw [← cancel_epi f]
       ext x
       dsimp'
-      simp only [comp_apply, ContinuousMap.coe_mk, Subtype.coe_mk, hφ0 (Set.mem_range_self x), Pi.zero_apply]
+      simp only [← comp_apply, ← ContinuousMap.coe_mk, ← Subtype.coe_mk, ← hφ0 (Set.mem_range_self x), ← Pi.zero_apply]
     apply_fun fun e => (e y).down  at H
     dsimp'  at H
-    simp only [Subtype.mk_eq_mk, hφ1 (Set.mem_singleton y), Pi.one_apply] at H
+    simp only [← Subtype.mk_eq_mk, ← hφ1 (Set.mem_singleton y), ← Pi.one_apply] at H
     exact zero_ne_one H
     
   · rw [← CategoryTheory.epi_iff_surjective]

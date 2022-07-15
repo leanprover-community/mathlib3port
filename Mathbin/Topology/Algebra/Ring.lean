@@ -75,9 +75,9 @@ proving `continuous_neg`. -/
 theorem TopologicalSemiring.to_topological_ring [TopologicalSpace α] [NonAssocRing α] (h : TopologicalSemiring α) :
     TopologicalRing α :=
   { h,
-    (have := h.to_has_continuous_mul
-    TopologicalSemiring.has_continuous_neg_of_mul :
-      HasContinuousNeg α) with }
+    (by
+      have := h.to_has_continuous_mul
+      exact TopologicalSemiring.has_continuous_neg_of_mul : HasContinuousNeg α) with }
 
 -- See note [lower instance priority]
 instance (priority := 100) TopologicalRing.to_topological_add_group [NonUnitalNonAssocRing α] [TopologicalSpace α]
@@ -142,40 +142,37 @@ variable {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 /-- The product topology on the cartesian product of two topological semirings
   makes the product into a topological semiring. -/
 instance [NonUnitalNonAssocSemiringₓ α] [NonUnitalNonAssocSemiringₓ β] [TopologicalSemiring α] [TopologicalSemiring β] :
-    TopologicalSemiring (α × β) :=
-  {  }
+    TopologicalSemiring (α × β) where
 
 /-- The product topology on the cartesian product of two topological rings
   makes the product into a topological ring. -/
 instance [NonUnitalNonAssocRing α] [NonUnitalNonAssocRing β] [TopologicalRing α] [TopologicalRing β] :
-    TopologicalRing (α × β) :=
-  {  }
+    TopologicalRing (α × β) where
 
 end
 
 instance {β : Type _} {C : β → Type _} [∀ b, TopologicalSpace (C b)] [∀ b, NonUnitalNonAssocSemiringₓ (C b)]
-    [∀ b, TopologicalSemiring (C b)] : TopologicalSemiring (∀ b, C b) :=
-  {  }
+    [∀ b, TopologicalSemiring (C b)] : TopologicalSemiring (∀ b, C b) where
 
 instance {β : Type _} {C : β → Type _} [∀ b, TopologicalSpace (C b)] [∀ b, NonUnitalNonAssocRing (C b)]
-    [∀ b, TopologicalRing (C b)] : TopologicalRing (∀ b, C b) :=
-  {  }
+    [∀ b, TopologicalRing (C b)] : TopologicalRing (∀ b, C b) where
 
 section MulOpposite
 
 open MulOpposite
 
-instance [NonUnitalNonAssocSemiringₓ α] [TopologicalSpace α] [HasContinuousAdd α] : HasContinuousAdd αᵐᵒᵖ where
-  continuous_add := continuous_induced_rng <| (@continuous_add α _ _ _).comp (continuous_unop.prod_map continuous_unop)
+instance [NonUnitalNonAssocSemiringₓ α] [TopologicalSpace α] [HasContinuousAdd α] :
+    HasContinuousAdd
+      αᵐᵒᵖ where continuous_add :=
+    continuous_induced_rng <| (@continuous_add α _ _ _).comp (continuous_unop.prod_map continuous_unop)
 
-instance [NonUnitalNonAssocSemiringₓ α] [TopologicalSpace α] [TopologicalSemiring α] : TopologicalSemiring αᵐᵒᵖ :=
-  {  }
+instance [NonUnitalNonAssocSemiringₓ α] [TopologicalSpace α] [TopologicalSemiring α] : TopologicalSemiring αᵐᵒᵖ where
 
-instance [NonUnitalNonAssocRing α] [TopologicalSpace α] [HasContinuousNeg α] : HasContinuousNeg αᵐᵒᵖ where
-  continuous_neg := continuous_induced_rng <| (@continuous_neg α _ _ _).comp continuous_unop
+instance [NonUnitalNonAssocRing α] [TopologicalSpace α] [HasContinuousNeg α] :
+    HasContinuousNeg
+      αᵐᵒᵖ where continuous_neg := continuous_induced_rng <| (@continuous_neg α _ _ _).comp continuous_unop
 
-instance [NonUnitalNonAssocRing α] [TopologicalSpace α] [TopologicalRing α] : TopologicalRing αᵐᵒᵖ :=
-  {  }
+instance [NonUnitalNonAssocRing α] [TopologicalSpace α] [TopologicalRing α] : TopologicalRing αᵐᵒᵖ where
 
 end MulOpposite
 
@@ -183,15 +180,13 @@ section AddOpposite
 
 open AddOpposite
 
-instance [NonUnitalNonAssocSemiringₓ α] [TopologicalSpace α] [HasContinuousMul α] : HasContinuousMul αᵃᵒᵖ where
-  continuous_mul := by
+instance [NonUnitalNonAssocSemiringₓ α] [TopologicalSpace α] [HasContinuousMul α] :
+    HasContinuousMul αᵃᵒᵖ where continuous_mul := by
     convert continuous_op.comp <| (@continuous_mul α _ _ _).comp <| continuous_unop.prod_map continuous_unop
 
-instance [NonUnitalNonAssocSemiringₓ α] [TopologicalSpace α] [TopologicalSemiring α] : TopologicalSemiring αᵃᵒᵖ :=
-  {  }
+instance [NonUnitalNonAssocSemiringₓ α] [TopologicalSpace α] [TopologicalSemiring α] : TopologicalSemiring αᵃᵒᵖ where
 
-instance [NonUnitalNonAssocRing α] [TopologicalSpace α] [TopologicalRing α] : TopologicalRing αᵃᵒᵖ :=
-  {  }
+instance [NonUnitalNonAssocRing α] [TopologicalSpace α] [TopologicalRing α] : TopologicalRing αᵃᵒᵖ where
 
 end AddOpposite
 
@@ -220,10 +215,10 @@ theorem TopologicalRing.of_add_group_of_nhds_zero [TopologicalAddGroup R]
     by
     convert this using 1
     · ext
-      simp only [comp_app, mul_addₓ, add_mulₓ]
+      simp only [← comp_app, ← mul_addₓ, ← add_mulₓ]
       abel
       
-    · simp only [add_commₓ]
+    · simp only [← add_commₓ]
       
   refine' tendsto_map.comp (hadd.comp (tendsto.prod_mk _ hmul))
   exact hadd.comp (((hmul_right y₀).comp tendsto_fst).prod_mk ((hmul_left x₀).comp tendsto_snd))
@@ -233,9 +228,9 @@ theorem TopologicalRing.of_nhds_zero (hadd : Tendsto (uncurry ((· + ·) : R →
     (hmul : Tendsto (uncurry ((· * ·) : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) <| 𝓝 0)
     (hmul_left : ∀ x₀ : R, Tendsto (fun x : R => x₀ * x) (𝓝 0) <| 𝓝 0)
     (hmul_right : ∀ x₀ : R, Tendsto (fun x : R => x * x₀) (𝓝 0) <| 𝓝 0)
-    (hleft : ∀ x₀ : R, 𝓝 x₀ = map (fun x => x₀ + x) (𝓝 0)) : TopologicalRing R :=
+    (hleft : ∀ x₀ : R, 𝓝 x₀ = map (fun x => x₀ + x) (𝓝 0)) : TopologicalRing R := by
   have := TopologicalAddGroup.of_comm_of_nhds_zero hadd hneg hleft
-  TopologicalRing.of_add_group_of_nhds_zero hmul hmul_left hmul_right
+  exact TopologicalRing.of_add_group_of_nhds_zero hmul hmul_left hmul_right
 
 end
 

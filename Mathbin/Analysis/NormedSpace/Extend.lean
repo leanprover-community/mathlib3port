@@ -43,8 +43,8 @@ noncomputable def LinearMap.extendTo𝕜' [Module ℝ F] [IsScalarTower ℝ 𝕜
   let fc : F → 𝕜 := fun x => (fr x : 𝕜) - (I : 𝕜) * fr ((I : 𝕜) • x)
   have add : ∀ x y : F, fc (x + y) = fc x + fc y := by
     intro x y
-    simp only [fc]
-    simp only [smul_add, LinearMap.map_add, of_real_add]
+    simp only [← fc]
+    simp only [← smul_add, ← LinearMap.map_add, ← of_real_add]
     rw [mul_addₓ]
     abel
   have A : ∀ c : ℝ x : F, (fr ((c : 𝕜) • x) : 𝕜) = (c : 𝕜) * (fr x : 𝕜) := by
@@ -54,19 +54,19 @@ noncomputable def LinearMap.extendTo𝕜' [Module ℝ F] [IsScalarTower ℝ 𝕜
     rw [IsROrC.of_real_alg, smul_assoc, fr.map_smul, Algebra.id.smul_eq_mul, one_smul]
   have smul_ℝ : ∀ c : ℝ x : F, fc ((c : 𝕜) • x) = (c : 𝕜) * fc x := by
     intro c x
-    simp only [fc, A]
+    simp only [← fc, ← A]
     rw [A c x]
     rw [smul_smul, mul_comm I (c : 𝕜), ← smul_smul, A, mul_sub]
     ring
   have smul_I : ∀ x : F, fc ((I : 𝕜) • x) = (I : 𝕜) * fc x := by
     intro x
-    simp only [fc]
+    simp only [← fc]
     cases' @I_mul_I_ax 𝕜 _ with h h
-    · simp [h]
+    · simp [← h]
       
     rw [mul_sub, ← mul_assoc, smul_smul, h]
-    simp only [neg_mul, LinearMap.map_neg, one_mulₓ, one_smul, mul_neg, of_real_neg, neg_smul, sub_neg_eq_add,
-      add_commₓ]
+    simp only [← neg_mul, ← LinearMap.map_neg, ← one_mulₓ, ← one_smul, ← mul_neg, ← of_real_neg, ← neg_smul, ←
+      sub_neg_eq_add, ← add_commₓ]
   have smul_𝕜 : ∀ c : 𝕜 x : F, fc (c • x) = c • fc x := by
     intro c x
     rw [← re_add_im c, add_smul, add_smul, add, smul_ℝ, ← smul_smul, smul_ℝ, smul_I, ← mul_assoc]
@@ -77,7 +77,7 @@ theorem LinearMap.extend_to_𝕜'_apply [Module ℝ F] [IsScalarTower ℝ 𝕜 F
     fr.extendTo𝕜' x = (fr x : 𝕜) - (i : 𝕜) * fr ((i : 𝕜) • x) :=
   rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The norm of the extension is bounded by `∥fr∥`. -/
 theorem norm_bound [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[ℝ] ℝ) (x : F) :
     ∥(fr.toLinearMap.extendTo𝕜' x : 𝕜)∥ ≤ ∥fr∥ * ∥x∥ := by
@@ -96,11 +96,11 @@ theorem norm_bound [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[�
   let fx := (lm x)⁻¹
   let t := fx / (abs𝕜 fx : 𝕜)
   have ht : abs𝕜 t = 1 := by
-    field_simp [abs_of_real, of_real_inv, IsROrC.abs_inv, IsROrC.abs_div, IsROrC.abs_abs, h]
+    field_simp [← abs_of_real, ← of_real_inv, ← IsROrC.abs_inv, ← IsROrC.abs_div, ← IsROrC.abs_abs, ← h]
   have h1 : (fr (t • x) : 𝕜) = lm (t • x) := by
     apply ext
-    · simp only [lm, of_real_re, LinearMap.extend_to_𝕜'_apply, mul_re, I_re, of_real_im, zero_mul, AddMonoidHom.map_sub,
-        sub_zero, mul_zero]
+    · simp only [← lm, ← of_real_re, ← LinearMap.extend_to_𝕜'_apply, ← mul_re, ← I_re, ← of_real_im, ← zero_mul, ←
+        AddMonoidHom.map_sub, ← sub_zero, ← mul_zero]
       rfl
       
     · symm

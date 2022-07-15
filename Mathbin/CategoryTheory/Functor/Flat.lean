@@ -41,7 +41,7 @@ This definition is equivalent to left exact functors (functors that preserves fi
 -/
 
 
-universe v₁ v₂ v₃ u₁ u₂ u₃
+universe w v₁ v₂ v₃ u₁ u₂ u₃
 
 open CategoryTheory
 
@@ -57,7 +57,7 @@ open StructuredArrow
 
 variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₁} D]
 
-variable {J : Type v₁} [SmallCategory J]
+variable {J : Type w} [SmallCategory J]
 
 variable {K : J ⥤ C} (F : C ⥤ D) (c : Cone K)
 
@@ -161,11 +161,11 @@ instance RepresentablyFlat.comp (F : C ⥤ D) (G : D ⥤ E) [RepresentablyFlat F
     use
       structured_arrow.hom_mk Y''.right
         (by
-          simp [← G.map_comp])
+          simp [G.map_comp])
     use
       structured_arrow.hom_mk Z''.right
         (by
-          simp [← G.map_comp])
+          simp [G.map_comp])
     
   · intro Y Z f g
     let W :=
@@ -184,7 +184,7 @@ instance RepresentablyFlat.comp (F : C ⥤ D) (G : D ⥤ E) [RepresentablyFlat F
     use
       structured_arrow.hom_mk h'.right
         (by
-          simp [← G.map_comp])
+          simp [G.map_comp])
     ext
     exact (congr_arg comma_morphism.right h'_cond : _)
     
@@ -195,6 +195,8 @@ section HasLimit
 
 variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₁} D]
 
+attribute [local instance] has_finite_limits_of_has_finite_limits_of_size
+
 instance (priority := 100) cofiltered_of_has_finite_limits [HasFiniteLimits C] : IsCofiltered C where
   cocone_objs := fun A B => ⟨Limits.prod A B, Limits.prod.fst, Limits.prod.snd, trivialₓ⟩
   cocone_maps := fun A B f g => ⟨equalizer f g, equalizer.ι f g, equalizer.condition f g⟩
@@ -203,10 +205,11 @@ instance (priority := 100) cofiltered_of_has_finite_limits [HasFiniteLimits C] :
 theorem flat_of_preserves_finite_limits [HasFiniteLimits C] (F : C ⥤ D) [PreservesFiniteLimits F] :
     RepresentablyFlat F :=
   ⟨fun X => by
-    have : has_finite_limits (structured_arrow X F) :=
-      { out := fun J _ _ => by
-          skip
-          infer_instance }
+    have : has_finite_limits (structured_arrow X F) := by
+      apply has_finite_limits_of_has_finite_limits_of_size.{v₁} (structured_arrow X F)
+      intro J sJ fJ
+      skip
+      constructor
     infer_instance⟩
 
 namespace PreservesFiniteLimitsOfFlat
@@ -238,7 +241,7 @@ noncomputable def lift : s.x ⟶ F.obj c.x :=
           (StructuredArrow.proj s.x F).mapCone s')
 
 theorem fac (x : J) : lift F hc s ≫ (F.mapCone c).π.app x = s.π.app x := by
-  simpa [lift, ← functor.map_comp]
+  simpa [← lift, functor.map_comp]
 
 attribute [local simp] eq_to_hom_map
 
@@ -250,7 +253,7 @@ theorem uniq {K : J ⥤ C} {c : Cone K} (hc : IsLimit c) (s : Cone (K ⋙ F)) (f
     { app := fun X =>
         eq_to_hom
           (by
-            simp [← h₁]),
+            simp [h₁]),
       naturality' := fun _ _ _ => by
         ext
         simp }
@@ -258,7 +261,7 @@ theorem uniq {K : J ⥤ C} {c : Cone K} (hc : IsLimit c) (s : Cone (K ⋙ F)) (f
     { app := fun X =>
         eq_to_hom
           (by
-            simp [← h₂]),
+            simp [h₂]),
       naturality' := fun _ _ _ => by
         ext
         simp }
@@ -301,15 +304,19 @@ theorem uniq {K : J ⥤ C} {c : Cone K} (hc : IsLimit c) (s : Cone (K ⋙ F)) (f
 end PreservesFiniteLimitsOfFlat
 
 /-- Representably flat functors preserve finite limits. -/
-noncomputable def preservesFiniteLimitsOfFlat (F : C ⥤ D) [RepresentablyFlat F] : PreservesFiniteLimits F :=
-  ⟨fun J _ _ =>
-    ⟨fun K =>
-      ⟨fun c hc =>
-        { lift := preserves_finite_limits_of_flat.lift F hc, fac' := preserves_finite_limits_of_flat.fac F hc,
-          uniq' := fun s m h => by
-            apply preserves_finite_limits_of_flat.uniq F hc
-            exact h
-            exact preserves_finite_limits_of_flat.fac F hc s }⟩⟩⟩
+noncomputable def preservesFiniteLimitsOfFlat (F : C ⥤ D) [RepresentablyFlat F] : PreservesFiniteLimits F := by
+  apply preserves_finite_limits_of_preserves_finite_limits_of_size
+  intro J _ _
+  constructor
+  intro K
+  constructor
+  intro c hc
+  exact
+    { lift := preserves_finite_limits_of_flat.lift F hc, fac' := preserves_finite_limits_of_flat.fac F hc,
+      uniq' := fun s m h => by
+        apply preserves_finite_limits_of_flat.uniq F hc
+        exact h
+        exact preserves_finite_limits_of_flat.fac F hc s }
 
 /-- If `C` is finitely cocomplete, then `F : C ⥤ D` is representably flat iff it preserves
 finite limits.
@@ -322,6 +329,7 @@ noncomputable def preservesFiniteLimitsIffFlat [HasFiniteLimits C] (F : C ⥤ D)
   right_inv := fun x => by
     cases x
     unfold preserves_finite_limits_of_flat
+    dunfold preserves_finite_limits_of_preserves_finite_limits_of_size
     congr
 
 end HasLimit
@@ -339,8 +347,8 @@ noncomputable def lanEvaluationIsoColim (F : C ⥤ D) (X : D) [∀ X : D, HasCol
     (by
       intro G H i
       ext
-      simp only [functor.comp_map, colimit.ι_desc_assoc, functor.map_iso_refl, evaluation_obj_map,
-        whiskering_left_obj_map, category.comp_id, Lan_map_app, category.assoc]
+      simp only [← functor.comp_map, ← colimit.ι_desc_assoc, ← functor.map_iso_refl, ← evaluation_obj_map, ←
+        whiskering_left_obj_map, ← category.comp_id, ← Lan_map_app, ← category.assoc]
       erw [colimit.ι_pre_assoc (Lan.diagram F H X) (costructured_arrow.map j.hom), category.id_comp, category.comp_id,
         colimit.ι_map]
       rcases j with ⟨j_left, ⟨⟨⟩⟩, j_hom⟩
@@ -357,14 +365,15 @@ variable [PreservesLimits (forget E)]
 `Lan F.op` that takes presheaves over `C` to presheaves over `D` preserves finite limits.
 -/
 noncomputable instance lanPreservesFiniteLimitsOfFlat (F : C ⥤ D) [RepresentablyFlat F] :
-    PreservesFiniteLimits (lan F.op : _ ⥤ Dᵒᵖ ⥤ E) :=
-  ⟨fun J _ _ => by
-    skip
-    apply preserves_limits_of_shape_of_evaluation (Lan F.op : (Cᵒᵖ ⥤ E) ⥤ Dᵒᵖ ⥤ E) J
-    intro K
-    have : is_filtered (costructured_arrow F.op K) :=
-      is_filtered.of_equivalence (structured_arrow_op_equivalence F (unop K))
-    exact preserves_limits_of_shape_of_nat_iso (Lan_evaluation_iso_colim _ _ _).symm⟩
+    PreservesFiniteLimits (lan F.op : _ ⥤ Dᵒᵖ ⥤ E) := by
+  apply preservesFiniteLimitsOfPreservesFiniteLimitsOfSize.{u₁}
+  intro J _ _
+  skip
+  apply preserves_limits_of_shape_of_evaluation (Lan F.op : (Cᵒᵖ ⥤ E) ⥤ Dᵒᵖ ⥤ E) J
+  intro K
+  have : is_filtered (costructured_arrow F.op K) :=
+    is_filtered.of_equivalence (structured_arrow_op_equivalence F (unop K))
+  exact preserves_limits_of_shape_of_nat_iso (Lan_evaluation_iso_colim _ _ _).symm
 
 instance Lan_flat_of_flat (F : C ⥤ D) [RepresentablyFlat F] : RepresentablyFlat (lan F.op : _ ⥤ Dᵒᵖ ⥤ E) :=
   flat_of_preserves_finite_limits _
@@ -380,7 +389,11 @@ theorem flat_iff_Lan_flat (F : C ⥤ D) : RepresentablyFlat F ↔ RepresentablyF
   ⟨fun H => inferInstance, fun H => by
     skip
     have := preserves_finite_limits_of_flat (Lan F.op : _ ⥤ Dᵒᵖ ⥤ Type u₁)
-    have : preserves_finite_limits F := ⟨fun _ _ _ => preserves_limit_of_Lan_presesrves_limit _ _⟩
+    have : preserves_finite_limits F := by
+      apply preservesFiniteLimitsOfPreservesFiniteLimitsOfSize.{u₁}
+      intros
+      skip
+      apply preserves_limit_of_Lan_presesrves_limit
     apply flat_of_preserves_finite_limits⟩
 
 /-- If `C` is finitely complete, then `F : C ⥤ D` preserves finite limits iff
@@ -389,16 +402,22 @@ theorem flat_iff_Lan_flat (F : C ⥤ D) : RepresentablyFlat F ↔ RepresentablyF
 noncomputable def preservesFiniteLimitsIffLanPreservesFiniteLimits (F : C ⥤ D) :
     PreservesFiniteLimits F ≃ PreservesFiniteLimits (lan F.op : _ ⥤ Dᵒᵖ ⥤ Type u₁) where
   toFun := fun _ => inferInstance
-  invFun := fun _ => ⟨fun _ _ _ => preserves_limit_of_Lan_presesrves_limit _ _⟩
+  invFun := fun _ => by
+    apply preservesFiniteLimitsOfPreservesFiniteLimitsOfSize.{u₁}
+    intros
+    skip
+    apply preserves_limit_of_Lan_presesrves_limit
   left_inv := fun x => by
     cases x
     unfold preserves_finite_limits_of_flat
+    dunfold preserves_finite_limits_of_preserves_finite_limits_of_size
     congr
   right_inv := fun x => by
     cases x
     unfold preserves_finite_limits_of_flat
     congr
     unfold CategoryTheory.lanPreservesFiniteLimitsOfPreservesFiniteLimits CategoryTheory.lanPreservesFiniteLimitsOfFlat
+    dunfold preserves_finite_limits_of_preserves_finite_limits_of_size
     congr
 
 end SmallCategory

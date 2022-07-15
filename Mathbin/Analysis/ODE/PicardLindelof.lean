@@ -61,7 +61,7 @@ instance : CoeFun (PicardLindelof E) fun _ => ℝ → E → E :=
 
 instance : Inhabited (PicardLindelof E) :=
   ⟨⟨0, 0, 0, ⟨0, le_rfl, le_rfl⟩, 0, 0, 0, 0, fun t ht => (LipschitzWith.const 0).LipschitzOnWith _, fun _ _ => by
-      simpa only [Pi.zero_apply] using continuous_on_const, fun t ht x hx => norm_zero.le, (zero_mul _).le⟩⟩
+      simpa only [← Pi.zero_apply] using continuous_on_const, fun t ht x hx => norm_zero.le, (zero_mul _).le⟩⟩
 
 theorem t_min_le_t_max : v.tMin ≤ v.tMax :=
   v.t₀.2.1.trans v.t₀.2.2
@@ -107,7 +107,7 @@ theorem proj_coe (t : Icc v.tMin v.tMax) : v.proj t = t :=
   proj_Icc_coe _ _
 
 theorem proj_of_mem {t : ℝ} (ht : t ∈ Icc v.tMin v.tMax) : ↑(v.proj t) = t := by
-  simp only [proj, proj_Icc_of_mem _ ht, Subtype.coe_mk]
+  simp only [← proj, ← proj_Icc_of_mem _ ht, ← Subtype.coe_mk]
 
 @[continuity]
 theorem continuous_proj : Continuous v.proj :=
@@ -182,7 +182,7 @@ def vComp (t : ℝ) : E :=
   v (v.proj t) (f (v.proj t))
 
 theorem v_comp_apply_coe (t : Icc v.tMin v.tMax) : f.vComp t = v t (f t) := by
-  simp only [v_comp, proj_coe]
+  simp only [← v_comp, ← proj_coe]
 
 theorem continuous_v_comp : Continuous f.vComp := by
   have := (continuous_subtype_coe.prod_mk f.continuous).comp v.continuous_proj
@@ -231,7 +231,7 @@ theorem next_apply (t : Icc v.tMin v.tMax) : f.next t = v.x₀ + ∫ τ : ℝ in
 theorem has_deriv_within_at_next (t : Icc v.tMin v.tMax) :
     HasDerivWithinAt (f.next ∘ v.proj) (v t (f t)) (Icc v.tMin v.tMax) t := by
   have : Fact ((t : ℝ) ∈ Icc v.t_min v.t_max) := ⟨t.2⟩
-  simp only [(· ∘ ·), next_apply]
+  simp only [← (· ∘ ·), ← next_apply]
   refine' HasDerivWithinAt.const_add _ _
   have : HasDerivWithinAt (fun t : ℝ => ∫ τ in v.t₀..t, f.v_comp τ) (f.v_comp t) (Icc v.t_min v.t_max) t :=
     integral_has_deriv_within_at_right (f.interval_integrable_v_comp _ _)
@@ -244,8 +244,8 @@ theorem has_deriv_within_at_next (t : Icc v.tMin v.tMax) :
 theorem dist_next_apply_le_of_le {f₁ f₂ : FunSpace v} {n : ℕ} {d : ℝ}
     (h : ∀ t, dist (f₁ t) (f₂ t) ≤ (v.l * abs (t - v.t₀)) ^ n / n ! * d) (t : Icc v.tMin v.tMax) :
     dist (next f₁ t) (next f₂ t) ≤ (v.l * abs (t - v.t₀)) ^ (n + 1) / (n + 1)! * d := by
-  simp only [dist_eq_norm, next_apply, add_sub_add_left_eq_sub, ←
-    intervalIntegral.integral_sub (interval_integrable_v_comp _ _ _) (interval_integrable_v_comp _ _ _),
+  simp only [← dist_eq_norm, ← next_apply, ← add_sub_add_left_eq_sub,
+    intervalIntegral.integral_sub (interval_integrable_v_comp _ _ _) (interval_integrable_v_comp _ _ _), ←
     norm_integral_eq_norm_integral_Ioc] at *
   calc
     ∥∫ τ in Ι (v.t₀ : ℝ) t, f₁.v_comp τ - f₂.v_comp τ∥ ≤
@@ -281,7 +281,7 @@ theorem dist_iterate_next_le (f₁ f₂ : FunSpace v) (n : ℕ) :
   refine' dist_le_of_forall fun t => (dist_iterate_next_apply_le _ _ _ _).trans _
   have : 0 ≤ dist f₁ f₂ := dist_nonneg
   have : abs (t - v.t₀ : ℝ) ≤ v.t_dist := v.dist_t₀_le t
-  mono* <;> simp only [Nat.cast_nonneg, mul_nonneg, Nnreal.coe_nonneg, abs_nonneg, *]
+  mono* <;> simp only [← Nat.cast_nonneg, ← mul_nonneg, ← Nnreal.coe_nonneg, ← abs_nonneg, *]
 
 end FunSpace
 
@@ -309,11 +309,11 @@ theorem exists_solution :
   by
   rcases v.exists_fixed with ⟨f, hf⟩
   refine' ⟨f ∘ v.proj, _, fun t ht => _⟩
-  · simp only [(· ∘ ·), proj_coe, f.map_t₀]
+  · simp only [← (· ∘ ·), ← proj_coe, ← f.map_t₀]
     
-  · simp only [(· ∘ ·), v.proj_of_mem ht]
+  · simp only [← (· ∘ ·), ← v.proj_of_mem ht]
     lift t to Icc v.t_min v.t_max using ht
-    simpa only [hf, v.proj_coe] using f.has_deriv_within_at_next t
+    simpa only [← hf, ← v.proj_coe] using f.has_deriv_within_at_next t
     
 
 end PicardLindelof

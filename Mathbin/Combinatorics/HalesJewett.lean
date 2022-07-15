@@ -146,14 +146,14 @@ theorem apply {α ι} (l : Line α ι) (x : α) : l x = fun i => (l.idxFun i).ge
   rfl
 
 theorem apply_none {α ι} (l : Line α ι) (x : α) (i : ι) (h : l.idxFun i = none) : l x i = x := by
-  simp only [Option.get_or_else_none, h, l.apply]
+  simp only [← Option.get_or_else_none, ← h, ← l.apply]
 
 theorem apply_of_ne_none {α ι} (l : Line α ι) (x : α) (i : ι) (h : l.idxFun i ≠ none) : some (l x i) = l.idxFun i := by
   rw [l.apply, Option.get_or_else_of_ne_none h]
 
 @[simp]
 theorem map_apply {α α' ι} (f : α → α') (l : Line α ι) (x : α) : l.map f (f x) = f ∘ l x := by
-  simp only [line.apply, line.map, Option.get_or_else_map]
+  simp only [← line.apply, ← line.map, ← Option.get_or_else_map]
 
 @[simp]
 theorem vertical_apply {α ι ι'} (v : ι → α) (l : Line α ι') (x : α) : l.vertical v x = Sum.elim v (l x) := by

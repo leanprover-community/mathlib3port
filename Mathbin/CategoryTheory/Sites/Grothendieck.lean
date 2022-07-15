@@ -133,7 +133,7 @@ Section 2, Definition 1 (iv).
 theorem intersection_covering (rj : R ∈ J X) (sj : S ∈ J X) : R⊓S ∈ J X := by
   apply J.transitive rj _ fun Y f Hf => _
   rw [sieve.pullback_inter, R.pullback_eq_top_of_mem Hf]
-  simp [sj]
+  simp [← sj]
 
 @[simp]
 theorem intersection_covering_iff : R⊓S ∈ J X ↔ R ∈ J X ∧ S ∈ J X :=
@@ -154,7 +154,7 @@ theorem covers_iff (S : Sieve X) (f : Y ⟶ X) : J.Covers S f ↔ S.pullback f �
   Iff.rfl
 
 theorem covering_iff_covers_id (S : Sieve X) : S ∈ J X ↔ J.Covers S (𝟙 X) := by
-  simp [covers_iff]
+  simp [← covers_iff]
 
 /-- The maximality axiom in 'arrow' form: Any arrow `f` in `S` is covered by `S`. -/
 theorem arrow_max (f : Y ⟶ X) (S : Sieve X) (hf : S f) : J.Covers S f := by
@@ -164,7 +164,7 @@ theorem arrow_max (f : Y ⟶ X) (S : Sieve X) (hf : S f) : J.Covers S f := by
 /-- The stability axiom in 'arrow' form: If `S` covers `f` then `S` covers `g ≫ f` for any `g`. -/
 theorem arrow_stable (f : Y ⟶ X) (S : Sieve X) (h : J.Covers S f) {Z : C} (g : Z ⟶ Y) : J.Covers S (g ≫ f) := by
   rw [covers_iff] at h⊢
-  simp [h, sieve.pullback_comp]
+  simp [← h, ← sieve.pullback_comp]
 
 /-- The transitivity axiom in 'arrow' form: If `S` covers `f` and every arrow in `S` is covered by
 `R`, then `R` covers `f`.
@@ -178,7 +178,7 @@ theorem arrow_trans (f : Y ⟶ X) (S R : Sieve X) (h : J.Covers S f) :
   apply k (g ≫ f) hg
 
 theorem arrow_intersect (f : Y ⟶ X) (S R : Sieve X) (hS : J.Covers S f) (hR : J.Covers R f) : J.Covers (S⊓R) f := by
-  simpa [covers_iff] using And.intro hS hR
+  simpa [← covers_iff] using And.intro hS hR
 
 variable (C)
 
@@ -193,7 +193,7 @@ def trivial : GrothendieckTopology C where
   top_mem' := fun X => rfl
   pullback_stable' := fun X Y S f hf => by
     rw [Set.mem_singleton_iff] at hf⊢
-    simp [hf]
+    simp [← hf]
   transitive' := fun X S hS R hR => by
     rw [Set.mem_singleton_iff, ← sieve.id_mem_iff_eq_top] at hS
     simpa using hR hS
@@ -217,8 +217,8 @@ theorem trivial_covering : S ∈ trivial C X ↔ S = ⊤ :=
   Set.mem_singleton_iff
 
 /-- See <https://stacks.math.columbia.edu/tag/00Z6> -/
-instance : LE (GrothendieckTopology C) where
-  le := fun J₁ J₂ => (J₁ : ∀ X : C, Set (Sieve X)) ≤ (J₂ : ∀ X : C, Set (Sieve X))
+instance :
+    LE (GrothendieckTopology C) where le := fun J₁ J₂ => (J₁ : ∀ X : C, Set (Sieve X)) ≤ (J₂ : ∀ X : C, Set (Sieve X))
 
 theorem le_def {J₁ J₂ : GrothendieckTopology C} : J₁ ≤ J₂ ↔ (J₁ : ∀ X : C, Set (Sieve X)) ≤ J₂ :=
   Iff.rfl
@@ -230,8 +230,8 @@ instance : PartialOrderₓ (GrothendieckTopology C) :=
     le_antisymm := fun J₁ J₂ h₁₂ h₂₁ => GrothendieckTopology.ext (le_antisymmₓ h₁₂ h₂₁) }
 
 /-- See <https://stacks.math.columbia.edu/tag/00Z7> -/
-instance : HasInfₓ (GrothendieckTopology C) where
-  inf := fun T =>
+instance :
+    HasInfₓ (GrothendieckTopology C) where inf := fun T =>
     { Sieves := inf (sieves '' T),
       top_mem' := by
         rintro X S ⟨⟨_, J, hJ, rfl⟩, rfl⟩
@@ -299,7 +299,7 @@ theorem bot_covers (S : Sieve X) (f : Y ⟶ X) : (⊥ : GrothendieckTopology C).
 
 @[simp]
 theorem top_covers (S : Sieve X) (f : Y ⟶ X) : (⊤ : GrothendieckTopology C).Covers S f := by
-  simp [covers_iff]
+  simp [← covers_iff]
 
 /-- The dense Grothendieck topology.
 
@@ -347,7 +347,7 @@ def atomic (hro : RightOreCondition C) : GrothendieckTopology C where
     rintro X Y S h ⟨Z, f, hf⟩
     rcases hro h f with ⟨W, g, k, comm⟩
     refine' ⟨_, g, _⟩
-    simp [comm, hf]
+    simp [← comm, ← hf]
   transitive' := by
     rintro X S ⟨Y, f, hf⟩ R h
     rcases h hf with ⟨Z, g, hg⟩
@@ -454,7 +454,7 @@ def Arrow.base {f : Y ⟶ X} {S : J.cover X} (I : (S.pullback f).arrow) : S.arro
 @[simps]
 def Relation.base {f : Y ⟶ X} {S : J.cover X} (I : (S.pullback f).Relation) : S.Relation :=
   ⟨_, _, _, I.g₁, I.g₂, I.f₁ ≫ f, I.f₂ ≫ f, I.h₁, I.h₂, by
-    simp [reassoc_of I.w]⟩
+    simp [← reassoc_of I.w]⟩
 
 @[simp]
 theorem Relation.base_fst {f : Y ⟶ X} {S : J.cover X} (I : (S.pullback f).Relation) : I.fst.base = I.base.fst :=
@@ -555,8 +555,8 @@ abbrev multifork {D : Type w} [Category.{max v u} D] (S : J.cover X) (P : Cᵒ�
   Limits.Multifork.ofι _ (P.obj (Opposite.op X)) (fun I => P.map I.f.op)
     (by
       intro I
-      dsimp' [index]
-      simp only [← P.map_comp, ← op_comp, I.w])
+      dsimp' [← index]
+      simp only [P.map_comp, op_comp, ← I.w])
 
 /-- The canonical map from `P.obj (op X)` to the multiequalizer associated to a covering sieve,
 assuming such a multiequalizer exists. This will be used in `sheaf.lean` to provide an equivalent
@@ -566,8 +566,8 @@ noncomputable abbrev toMultiequalizer {D : Type w} [Category.{max v u} D] (S : J
   Limits.multiequalizer.lift _ _ (fun I => P.map I.f.op)
     (by
       intro I
-      dsimp' only [index, relation.fst, relation.snd]
-      simp only [← P.map_comp, ← op_comp, I.w])
+      dsimp' only [← index, ← relation.fst, ← relation.snd]
+      simp only [P.map_comp, op_comp, ← I.w])
 
 end Cover
 

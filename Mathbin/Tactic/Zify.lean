@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 -/
 import Mathbin.Data.Int.Cast
+import Mathbin.Data.Int.CharZero
 import Mathbin.Tactic.NormCast
 
 /-!

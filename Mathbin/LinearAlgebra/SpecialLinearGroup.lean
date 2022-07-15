@@ -104,8 +104,8 @@ instance hasMul : Mul (SpecialLinearGroup n R) :=
 instance hasOne : One (SpecialLinearGroup n R) :=
   ⟨⟨1, det_one⟩⟩
 
-instance : Pow (SpecialLinearGroup n R) ℕ where
-  pow := fun x n => ⟨x ^ n, (det_pow _ _).trans <| x.Prop.symm ▸ one_pow _⟩
+instance :
+    Pow (SpecialLinearGroup n R) ℕ where pow := fun x n => ⟨x ^ n, (det_pow _ _).trans <| x.Prop.symm ▸ one_pow _⟩
 
 instance : Inhabited (SpecialLinearGroup n R) :=
   ⟨1⟩
@@ -145,7 +145,7 @@ theorem det_ne_zero [Nontrivial R] (g : SpecialLinearGroup n R) : det ↑ₘg �
 theorem row_ne_zero [Nontrivial R] (g : SpecialLinearGroup n R) (i : n) : ↑ₘg i ≠ 0 := fun h =>
   g.det_ne_zero <|
     det_eq_zero_of_row_eq_zero i <| by
-      simp [h]
+      simp [← h]
 
 end CoeLemmas
 
@@ -156,7 +156,7 @@ instance : Groupₓ (SpecialLinearGroup n R) :=
   { SpecialLinearGroup.monoid, SpecialLinearGroup.hasInv with
     mul_left_inv := fun A => by
       ext1
-      simp [adjugate_mul] }
+      simp [← adjugate_mul] }
 
 /-- A version of `matrix.to_lin' A` that produces linear equivalences. -/
 def toLin' : SpecialLinearGroup n R →* (n → R) ≃ₗ[R] n → R where
@@ -201,7 +201,7 @@ def map (f : R →+* S) : SpecialLinearGroup n R →* SpecialLinearGroup n S whe
   toFun := fun g =>
     ⟨f.mapMatrix ↑g, by
       rw [← f.map_det]
-      simp [g.2]⟩
+      simp [← g.2]⟩
   map_one' := Subtype.ext <| f.mapMatrix.map_one
   map_mul' := fun x y => Subtype.ext <| f.mapMatrix.map_mul x y
 
@@ -227,7 +227,7 @@ each element. -/
 instance : Neg (SpecialLinearGroup n R) :=
   ⟨fun g =>
     ⟨-g, by
-      simpa [(Fact.out <| Even <| Fintype.card n).neg_one_pow, g.det_coe] using det_smul (↑ₘg) (-1)⟩⟩
+      simpa [← (Fact.out <| Even <| Fintype.card n).neg_one_pow, ← g.det_coe] using det_smul (↑ₘg) (-1)⟩⟩
 
 @[simp]
 theorem coe_neg (g : SpecialLinearGroup n R) : ↑(-g) = -(g : Matrix n n R) :=
@@ -246,8 +246,7 @@ end Neg
 section CoeFnInstance
 
 /-- This instance is here for convenience, but is not the simp-normal form. -/
-instance : CoeFun (SpecialLinearGroup n R) fun _ => n → n → R where
-  coe := fun A => A.val
+instance : CoeFun (SpecialLinearGroup n R) fun _ => n → n → R where coe := fun A => A.val
 
 @[simp]
 theorem coe_fn_eq_coe (s : SpecialLinearGroup n R) : ⇑s = ↑ₘs :=

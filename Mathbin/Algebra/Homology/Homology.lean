@@ -148,7 +148,7 @@ theorem cycles_map_id (i : ι) : cyclesMap (𝟙 C₁) i = 𝟙 _ := by
 @[simp]
 theorem cycles_map_comp (f : C₁ ⟶ C₂) (g : C₂ ⟶ C₃) (i : ι) : cyclesMap (f ≫ g) i = cyclesMap f i ≫ cyclesMap g i := by
   dunfold cyclesMap
-  simp [subobject.factor_thru_right]
+  simp [← subobject.factor_thru_right]
 
 variable (V c)
 
@@ -218,11 +218,12 @@ def homologyFunctor [HasCokernels V] (i : ι) : HomologicalComplex V c ⥤ V whe
   map_id' := by
     intros
     ext1
-    simp only [homology.π_map, kernel_subobject_map_id, hom.sq_from_id, category.id_comp, category.comp_id]
+    simp only [← homology.π_map, ← kernel_subobject_map_id, ← hom.sq_from_id, ← category.id_comp, ← category.comp_id]
   map_comp' := by
     intros
     ext1
-    simp only [hom.sq_from_comp, kernel_subobject_map_comp, homology.π_map_assoc, homology.π_map, category.assoc]
+    simp only [← hom.sq_from_comp, ← kernel_subobject_map_comp, ← homology.π_map_assoc, ← homology.π_map, ←
+      category.assoc]
 
 /-- The homology functor from `ι`-indexed complexes to `ι`-graded objects in `V`. -/
 @[simps]
@@ -232,13 +233,13 @@ def gradedHomologyFunctor [HasCokernels V] : HomologicalComplex V c ⥤ GradedOb
   map_id' := by
     intros
     ext
-    simp only [pi.id_apply, homology.π_map, homology_functor_map, kernel_subobject_map_id, hom.sq_from_id,
-      category.id_comp, category.comp_id]
+    simp only [← pi.id_apply, ← homology.π_map, ← homology_functor_map, ← kernel_subobject_map_id, ← hom.sq_from_id, ←
+      category.id_comp, ← category.comp_id]
   map_comp' := by
     intros
     ext
-    simp only [hom.sq_from_comp, kernel_subobject_map_comp, homology.π_map_assoc, pi.comp_apply, homology.π_map,
-      homology_functor_map, category.assoc]
+    simp only [← hom.sq_from_comp, ← kernel_subobject_map_comp, ← homology.π_map_assoc, ← pi.comp_apply, ←
+      homology.π_map, ← homology_functor_map, ← category.assoc]
 
 end
 

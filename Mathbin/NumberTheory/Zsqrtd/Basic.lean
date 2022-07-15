@@ -125,7 +125,7 @@ theorem bit1_re z : (bit1 z : ℤ√d).re = bit1 z.re :=
 
 @[simp]
 theorem bit1_im z : (bit1 z : ℤ√d).im = bit0 z.im := by
-  simp [bit1]
+  simp [← bit1]
 
 /-- Negation in `ℤ√d` -/
 instance : Neg (ℤ√d) :=
@@ -151,18 +151,26 @@ theorem mul_re (z w : ℤ√d) : (z * w).re = z.re * w.re + d * z.im * w.im :=
 theorem mul_im (z w : ℤ√d) : (z * w).im = z.re * w.im + z.im * w.re :=
   rfl
 
-instance : CommRingₓ (ℤ√d) := by
+instance : AddCommGroupₓ (ℤ√d) := by
   refine_struct
-      { add := (· + ·), zero := (0 : ℤ√d), neg := Neg.neg, mul := (· * ·), sub := fun a b => a + -b, one := 1,
-        npow := @npowRec (ℤ√d) ⟨1⟩ ⟨(· * ·)⟩, nsmul := @nsmulRec (ℤ√d) ⟨0⟩ ⟨(· + ·)⟩,
-        zsmul := @zsmulRec (ℤ√d) ⟨0⟩ ⟨(· + ·)⟩ ⟨Neg.neg⟩ } <;>
+      { add := (· + ·), zero := (0 : ℤ√d), sub := fun a b => a + -b, neg := Neg.neg,
+        zsmul := @zsmulRec (ℤ√d) ⟨0⟩ ⟨(· + ·)⟩ ⟨Neg.neg⟩, nsmul := @nsmulRec (ℤ√d) ⟨0⟩ ⟨(· + ·)⟩ } <;>
     intros <;>
       try
           rfl <;>
-        simp [ext, add_mulₓ, mul_addₓ, add_commₓ, add_left_commₓ, mul_comm, mul_left_commₓ]
+        simp [← ext, ← add_commₓ, ← add_left_commₓ]
 
-instance : AddCommMonoidₓ (ℤ√d) := by
-  infer_instance
+instance : AddGroupWithOneₓ (ℤ√d) :=
+  { Zsqrtd.addCommGroup with natCast := fun n => of_int n, intCast := of_int, one := 1 }
+
+instance : CommRingₓ (ℤ√d) := by
+  refine_struct
+      { Zsqrtd.addGroupWithOne with add := (· + ·), zero := (0 : ℤ√d), mul := (· * ·), one := 1,
+        npow := @npowRec (ℤ√d) ⟨1⟩ ⟨(· * ·)⟩ } <;>
+    intros <;>
+      try
+          rfl <;>
+        simp [← ext, ← add_mulₓ, ← mul_addₓ, ← add_commₓ, ← add_left_commₓ, ← mul_comm, ← mul_left_commₓ]
 
 instance : AddMonoidₓ (ℤ√d) := by
   infer_instance
@@ -221,7 +229,8 @@ theorem conj_zero : conj (0 : ℤ√d) = 0 :=
 
 @[simp]
 theorem conj_one : conj (1 : ℤ√d) = 1 := by
-  simp only [Zsqrtd.ext, Zsqrtd.conj_re, Zsqrtd.conj_im, Zsqrtd.one_im, neg_zero, eq_self_iff_true, and_selfₓ]
+  simp only [← Zsqrtd.ext, ← Zsqrtd.conj_re, ← Zsqrtd.conj_im, ← Zsqrtd.one_im, ← neg_zero, ← eq_self_iff_true, ←
+    and_selfₓ]
 
 @[simp]
 theorem conj_neg (x : ℤ√d) : (-x).conj = -x.conj :=
@@ -237,45 +246,45 @@ theorem conj_sub (x y : ℤ√d) : (x - y).conj = x.conj - y.conj :=
 
 @[simp]
 theorem conj_conj {d : ℤ} (x : ℤ√d) : x.conj.conj = x := by
-  simp only [ext, true_andₓ, conj_re, eq_self_iff_true, neg_negₓ, conj_im]
+  simp only [← ext, ← true_andₓ, ← conj_re, ← eq_self_iff_true, ← neg_negₓ, ← conj_im]
 
 instance : Nontrivial (ℤ√d) :=
   ⟨⟨0, 1, by
       decide⟩⟩
 
 @[simp]
-theorem coe_nat_re (n : ℕ) : (n : ℤ√d).re = n := by
-  induction n <;> simp [*]
+theorem coe_nat_re (n : ℕ) : (n : ℤ√d).re = n :=
+  rfl
 
 @[simp]
-theorem coe_nat_im (n : ℕ) : (n : ℤ√d).im = 0 := by
-  induction n <;> simp [*]
+theorem coe_nat_im (n : ℕ) : (n : ℤ√d).im = 0 :=
+  rfl
 
-theorem coe_nat_val (n : ℕ) : (n : ℤ√d) = ⟨n, 0⟩ := by
-  simp [ext]
+theorem coe_nat_val (n : ℕ) : (n : ℤ√d) = ⟨n, 0⟩ :=
+  rfl
 
 @[simp]
 theorem coe_int_re (n : ℤ) : (n : ℤ√d).re = n := by
-  cases n <;> simp [*, Int.of_nat_eq_coe, Int.neg_succ_of_nat_eq]
+  cases n <;> rfl
 
 @[simp]
 theorem coe_int_im (n : ℤ) : (n : ℤ√d).im = 0 := by
-  cases n <;> simp [*]
+  cases n <;> rfl
 
 theorem coe_int_val (n : ℤ) : (n : ℤ√d) = ⟨n, 0⟩ := by
-  simp [ext]
+  simp [← ext]
 
-instance : CharZero (ℤ√d) where
-  cast_injective := fun m n => by
-    simp [ext]
+instance :
+    CharZero (ℤ√d) where cast_injective := fun m n => by
+    simp [← ext]
 
 @[simp]
 theorem of_int_eq_coe (n : ℤ) : (of_int n : ℤ√d) = n := by
-  simp [ext, of_int_re, of_int_im]
+  simp [← ext, ← of_int_re, ← of_int_im]
 
 @[simp]
 theorem smul_val (n x y : ℤ) : (n : ℤ√d) * ⟨x, y⟩ = ⟨n * x, n * y⟩ := by
-  simp [ext]
+  simp [← ext]
 
 theorem smul_re (a : ℤ) (b : ℤ√d) : (↑a * b).re = a * b.re := by
   simp
@@ -285,24 +294,24 @@ theorem smul_im (a : ℤ) (b : ℤ√d) : (↑a * b).im = a * b.im := by
 
 @[simp]
 theorem muld_val (x y : ℤ) : sqrtd * ⟨x, y⟩ = ⟨d * y, x⟩ := by
-  simp [ext]
+  simp [← ext]
 
 @[simp]
 theorem dmuld : sqrtd * sqrtd = d := by
-  simp [ext]
+  simp [← ext]
 
 @[simp]
 theorem smuld_val (n x y : ℤ) : sqrtd * (n : ℤ√d) * ⟨x, y⟩ = ⟨d * n * y, n * x⟩ := by
-  simp [ext]
+  simp [← ext]
 
 theorem decompose {x y : ℤ} : (⟨x, y⟩ : ℤ√d) = x + sqrtd * y := by
-  simp [ext]
+  simp [← ext]
 
 theorem mul_conj {x y : ℤ} : (⟨x, y⟩ * conj ⟨x, y⟩ : ℤ√d) = x * x - d * y * y := by
-  simp [ext, sub_eq_add_neg, mul_comm]
+  simp [← ext, ← sub_eq_add_neg, ← mul_comm]
 
 theorem conj_mul {a b : ℤ√d} : conj (a * b) = conj a * conj b := by
-  simp [ext]
+  simp [← ext]
   ring
 
 protected theorem coe_int_add (m n : ℤ) : (↑(m + n) : ℤ√d) = ↑m + ↑n :=
@@ -320,7 +329,8 @@ protected theorem coe_int_inj {m n : ℤ} (h : (↑m : ℤ√d) = ↑n) : m = n 
 theorem coe_int_dvd_iff (z : ℤ) (a : ℤ√d) : ↑z ∣ a ↔ z ∣ a.re ∧ z ∣ a.im := by
   constructor
   · rintro ⟨x, rfl⟩
-    simp only [add_zeroₓ, coe_int_re, zero_mul, mul_im, dvd_mul_right, and_selfₓ, mul_re, mul_zero, coe_int_im]
+    simp only [← add_zeroₓ, ← coe_int_re, ← zero_mul, ← mul_im, ← dvd_mul_right, ← and_selfₓ, ← mul_re, ← mul_zero, ←
+      coe_int_im]
     
   · rintro ⟨⟨r, hr⟩, ⟨i, hi⟩⟩
     use ⟨r, i⟩
@@ -342,14 +352,14 @@ theorem coe_int_dvd_coe_int (a b : ℤ) : (a : ℤ√d) ∣ b ↔ a ∣ b := by
 protected theorem eq_of_smul_eq_smul_left {a : ℤ} {b c : ℤ√d} (ha : a ≠ 0) (h : ↑a * b = a * c) : b = c := by
   rw [ext] at h⊢
   apply And.imp _ _ h <;>
-    · simp only [smul_re, smul_im]
+    · simp only [← smul_re, ← smul_im]
       exact Int.eq_of_mul_eq_mul_left ha
       
 
 section Gcd
 
 theorem gcd_eq_zero_iff (a : ℤ√d) : Int.gcdₓ a.re a.im = 0 ↔ a = 0 := by
-  simp only [Int.gcd_eq_zero_iff, ext, eq_self_iff_true, zero_im, zero_re]
+  simp only [← Int.gcd_eq_zero_iff, ← ext, ← eq_self_iff_true, ← zero_im, ← zero_re]
 
 theorem gcd_pos_iff (a : ℤ√d) : 0 < Int.gcdₓ a.re a.im ↔ a ≠ 0 :=
   pos_iff_ne_zero.trans <| not_congr a.gcd_eq_zero_iff
@@ -358,9 +368,9 @@ theorem coprime_of_dvd_coprime {a b : ℤ√d} (hcoprime : IsCoprime a.re a.im) 
   apply is_coprime_of_dvd
   · rintro ⟨hre, him⟩
     obtain rfl : b = 0 := by
-      simp only [ext, hre, eq_self_iff_true, zero_im, him, and_selfₓ, zero_re]
+      simp only [← ext, ← hre, ← eq_self_iff_true, ← zero_im, ← him, ← and_selfₓ, ← zero_re]
     rw [zero_dvd_iff] at hdvd
-    simpa only [hdvd, zero_im, zero_re, not_coprime_zero_zero] using hcoprime
+    simpa only [← hdvd, ← zero_im, ← zero_re, ← not_coprime_zero_zero] using hcoprime
     
   · intro z hz hznezero hzdvdu hzdvdv
     apply hz
@@ -395,26 +405,26 @@ theorem sq_le_of_le {c d x y z w : ℕ} (xz : z ≤ x) (yw : y ≤ w) (xy : SqLe
 
 theorem sq_le_add_mixed {c d x y z w : ℕ} (xy : SqLe x c y d) (zw : SqLe z c w d) : c * (x * z) ≤ d * (y * w) :=
   Nat.mul_self_le_mul_self_iff.2 <| by
-    simpa [mul_comm, mul_left_commₓ] using mul_le_mul xy zw (Nat.zero_leₓ _) (Nat.zero_leₓ _)
+    simpa [← mul_comm, ← mul_left_commₓ] using mul_le_mul xy zw (Nat.zero_leₓ _) (Nat.zero_leₓ _)
 
 theorem sq_le_add {c d x y z w : ℕ} (xy : SqLe x c y d) (zw : SqLe z c w d) : SqLe (x + z) c (y + w) d := by
   have xz := sq_le_add_mixed xy zw
-  simp [sq_le, mul_assoc] at xy zw
-  simp [sq_le, mul_addₓ, mul_comm, mul_left_commₓ, add_le_add, *]
+  simp [← sq_le, ← mul_assoc] at xy zw
+  simp [← sq_le, ← mul_addₓ, ← mul_comm, ← mul_left_commₓ, ← add_le_add, *]
 
 theorem sq_le_cancel {c d x y z w : ℕ} (zw : SqLe y d x c) (h : SqLe (x + z) c (y + w) d) : SqLe z c w d := by
   apply le_of_not_gtₓ
   intro l
   refine' not_le_of_gtₓ _ h
-  simp [sq_le, mul_addₓ, mul_comm, mul_left_commₓ, add_assocₓ]
+  simp [← sq_le, ← mul_addₓ, ← mul_comm, ← mul_left_commₓ, ← add_assocₓ]
   have hm := sq_le_add_mixed zw (le_of_ltₓ l)
-  simp [sq_le, mul_assoc] at l zw
+  simp [← sq_le, ← mul_assoc] at l zw
   exact
     lt_of_le_of_ltₓ (add_le_add_right zw _)
       (add_lt_add_left (add_lt_add_of_le_of_lt hm (add_lt_add_of_le_of_lt hm l)) _)
 
 theorem sq_le_smul {c d x y : ℕ} (n : ℕ) (xy : SqLe x c y d) : SqLe (n * x) c (n * y) d := by
-  simpa [sq_le, mul_left_commₓ, mul_assoc] using Nat.mul_le_mul_leftₓ (n * n) xy
+  simpa [← sq_le, ← mul_left_commₓ, ← mul_assoc] using Nat.mul_le_mul_leftₓ (n * n) xy
 
 theorem sq_le_mul {d x y z w : ℕ} :
     (SqLe x 1 y d → SqLe z 1 w d → SqLe (x * w + y * z) d (x * z + d * y * w) 1) ∧
@@ -429,7 +439,7 @@ theorem sq_le_mul {d x y z w : ℕ} :
           (sub_nonneg_of_le (Int.coe_nat_le_coe_nat_of_le zw))
       refine' Int.le_of_coe_nat_le_coe_nat (le_of_sub_nonneg _)
       convert this
-      simp only [one_mulₓ, Int.coe_nat_add, Int.coe_nat_mul]
+      simp only [← one_mulₓ, ← Int.coe_nat_add, ← Int.coe_nat_mul]
       ring
       
 
@@ -447,7 +457,7 @@ theorem nonnegg_comm {c d : ℕ} {x y : ℤ} : Nonnegg c d x y = Nonnegg d c y x
 theorem nonnegg_neg_pos {c d} : ∀ {a b : ℕ}, Nonnegg c d (-a) b ↔ SqLe a d b c
   | 0, b =>
     ⟨by
-      simp [sq_le, Nat.zero_leₓ], fun a => trivialₓ⟩
+      simp [← sq_le, ← Nat.zero_leₓ], fun a => trivialₓ⟩
   | a + 1, b => by
     rw [← Int.neg_succ_of_nat_coe] <;> rfl
 
@@ -472,15 +482,15 @@ theorem norm_def (n : ℤ√d) : n.norm = n.re * n.re - d * n.im * n.im :=
 
 @[simp]
 theorem norm_zero : norm 0 = 0 := by
-  simp [norm]
+  simp [← norm]
 
 @[simp]
 theorem norm_one : norm 1 = 1 := by
-  simp [norm]
+  simp [← norm]
 
 @[simp]
 theorem norm_int_cast (n : ℤ) : norm n = n * n := by
-  simp [norm]
+  simp [← norm]
 
 @[simp]
 theorem norm_nat_cast (n : ℕ) : norm n = n * n :=
@@ -488,7 +498,7 @@ theorem norm_nat_cast (n : ℕ) : norm n = n * n :=
 
 @[simp]
 theorem norm_mul (n m : ℤ√d) : norm (n * m) = norm n * norm m := by
-  simp only [norm, mul_im, mul_re]
+  simp only [← norm, ← mul_im, ← mul_re]
   ring
 
 /-- `norm` as a `monoid_hom`. -/
@@ -498,17 +508,17 @@ def normMonoidHom : ℤ√d →* ℤ where
   map_one' := norm_one
 
 theorem norm_eq_mul_conj (n : ℤ√d) : (norm n : ℤ√d) = n * n.conj := by
-  cases n <;> simp [norm, conj, Zsqrtd.ext, mul_comm, sub_eq_add_neg]
+  cases n <;> simp [← norm, ← conj, ← Zsqrtd.ext, ← mul_comm, ← sub_eq_add_neg]
 
 @[simp]
 theorem norm_neg (x : ℤ√d) : (-x).norm = x.norm :=
   coe_int_inj <| by
-    simp only [norm_eq_mul_conj, conj_neg, neg_mul, mul_neg, neg_negₓ]
+    simp only [← norm_eq_mul_conj, ← conj_neg, ← neg_mul, ← mul_neg, ← neg_negₓ]
 
 @[simp]
 theorem norm_conj (x : ℤ√d) : x.conj.norm = x.norm :=
   coe_int_inj <| by
-    simp only [norm_eq_mul_conj, conj_conj, mul_comm]
+    simp only [← norm_eq_mul_conj, ← conj_conj, ← mul_comm]
 
 theorem norm_nonneg (hd : d ≤ 0) (n : ℤ√d) : 0 ≤ n.norm :=
   add_nonneg (mul_self_nonneg _)
@@ -632,7 +642,7 @@ theorem Nonneg.add {a b : ℤ√d} (ha : nonneg a) (hb : nonneg b) : nonneg (a +
           (le_of_neg_le_neg
             (@Int.Le.intro _ _ y
               (by
-                simp [add_commₓ, *])))
+                simp [← add_commₓ, *])))
       
     · apply Nat.le_add_leftₓ
       
@@ -643,7 +653,7 @@ theorem Nonneg.add {a b : ℤ√d} (ha : nonneg a) (hb : nonneg b) : nonneg (a +
           (le_of_neg_le_neg
             (@Int.Le.intro _ _ x
               (by
-                simp [add_commₓ, *])))
+                simp [← add_commₓ, *])))
       
     · apply Nat.le_add_leftₓ
       
@@ -659,7 +669,7 @@ theorem Nonneg.add {a b : ℤ√d} (ha : nonneg a) (hb : nonneg b) : nonneg (a +
     · apply Nat.le_add_rightₓ
       
     
-  · simpa [add_commₓ] using nonnegg_pos_neg.2 (sq_le_add (nonnegg_pos_neg.1 ha) (nonnegg_pos_neg.1 hb))
+  · simpa [← add_commₓ] using nonnegg_pos_neg.2 (sq_le_add (nonnegg_pos_neg.1 ha) (nonnegg_pos_neg.1 hb))
     
   · exact nonneg_add_lem ha hb
     
@@ -673,7 +683,7 @@ theorem Nonneg.add {a b : ℤ√d} (ha : nonneg a) (hb : nonneg b) : nonneg (a +
     rw [add_commₓ, add_commₓ ↑y]
     exact nonneg_add_lem hb ha
     
-  · simpa [add_commₓ] using nonnegg_neg_pos.2 (sq_le_add (nonnegg_neg_pos.1 ha) (nonnegg_neg_pos.1 hb))
+  · simpa [← add_commₓ] using nonnegg_neg_pos.2 (sq_le_add (nonnegg_neg_pos.1 ha) (nonnegg_neg_pos.1 hb))
     
 
 theorem nonneg_iff_zero_le {a : ℤ√d} : nonneg a ↔ 0 ≤ a :=
@@ -701,9 +711,9 @@ instance : Preorderₓ (ℤ√d) where
   le := (· ≤ ·)
   le_refl := fun a =>
     show nonneg (a - a) by
-      simp only [sub_self]
+      simp only [← sub_self]
   le_trans := fun a b c hab hbc => by
-    simpa [sub_add_sub_cancel'] using hab.add hbc
+    simpa [← sub_add_sub_cancel'] using hab.add hbc
   lt := (· < ·)
   lt_iff_le_not_le := fun a b => (and_iff_right_of_imp (Zsqrtd.le_total _ _).resolve_left).symm
 
@@ -714,21 +724,20 @@ theorem le_arch (a : ℤ√d) : ∃ n : ℕ, a ≤ n := by
       | ⟨Int.ofNat x, Int.ofNat y⟩ => ⟨0, 0, trivialₓ⟩
       | ⟨Int.ofNat x, -[1+ y]⟩ =>
         ⟨0, y + 1, by
-          simp [Int.neg_succ_of_nat_coe, add_assocₓ]⟩
+          simp [← Int.neg_succ_of_nat_coe, ← add_assocₓ]⟩
       | ⟨-[1+ x], Int.ofNat y⟩ =>
         ⟨x + 1, 0, by
-          simp [Int.neg_succ_of_nat_coe, add_assocₓ]⟩
+          simp [← Int.neg_succ_of_nat_coe, ← add_assocₓ]⟩
       | ⟨-[1+ x], -[1+ y]⟩ =>
         ⟨x + 1, y + 1, by
-          simp [Int.neg_succ_of_nat_coe, add_assocₓ]⟩
+          simp [← Int.neg_succ_of_nat_coe, ← add_assocₓ]⟩
   refine' ⟨x + d * y, h.trans _⟩
-  rw [← Int.cast_coe_nat, ← of_int_eq_coe]
   change nonneg ⟨↑x + d * y - ↑x, 0 - ↑y⟩
   cases' y with y
   · simp
     
   have h : ∀ y, sq_le y d (d * y) 1 := fun y => by
-    simpa [sq_le, mul_comm, mul_left_commₓ] using Nat.mul_le_mul_rightₓ (y * y) (Nat.le_mul_self d)
+    simpa [← sq_le, ← mul_comm, ← mul_left_commₓ] using Nat.mul_le_mul_rightₓ (y * y) (Nat.le_mul_self d)
   rw
     [show (x : ℤ) + d * Nat.succ y - x = d * Nat.succ y by
       simp ]
@@ -745,7 +754,7 @@ protected theorem add_lt_add_left (a b : ℤ√d) (h : a < b) c : c + a < c + b 
   h (Zsqrtd.le_of_add_le_add_left _ _ _ h')
 
 theorem nonneg_smul {a : ℤ√d} {n : ℕ} (ha : nonneg a) : nonneg (n * a) := by
-  rw [← Int.cast_coe_nat] <;>
+  simp (config := { singlePass := true })only [Int.cast_coe_nat] <;>
     exact
       match a, nonneg_cases ha, ha with
       | _, ⟨x, y, Or.inl rfl⟩, ha => by
@@ -762,11 +771,11 @@ theorem nonneg_muld {a : ℤ√d} (ha : nonneg a) : nonneg (sqrtd * a) := by
     | _, ⟨x, y, Or.inr <| Or.inl rfl⟩, ha => by
       simp <;>
         apply nonnegg_neg_pos.2 <;>
-          simpa [sq_le, mul_comm, mul_left_commₓ] using Nat.mul_le_mul_leftₓ d (nonnegg_pos_neg.1 ha)
+          simpa [← sq_le, ← mul_comm, ← mul_left_commₓ] using Nat.mul_le_mul_leftₓ d (nonnegg_pos_neg.1 ha)
     | _, ⟨x, y, Or.inr <| Or.inr rfl⟩, ha => by
       simp <;>
         apply nonnegg_pos_neg.2 <;>
-          simpa [sq_le, mul_comm, mul_left_commₓ] using Nat.mul_le_mul_leftₓ d (nonnegg_neg_pos.1 ha)
+          simpa [← sq_le, ← mul_comm, ← mul_left_commₓ] using Nat.mul_le_mul_leftₓ d (nonnegg_neg_pos.1 ha)
 
 theorem nonneg_mul_lem {x y : ℕ} {a : ℤ√d} (ha : nonneg a) : nonneg (⟨x, y⟩ * a) := by
   have : (⟨x, y⟩ * a : ℤ√d) = x * a + sqrtd * (y * a) := by
@@ -787,7 +796,7 @@ theorem nonneg_mul {a b : ℤ√d} (ha : nonneg a) (hb : nonneg b) : nonneg (a *
         [calc
           (⟨-x, y⟩ * ⟨-z, w⟩ : ℤ√d) = ⟨_, _⟩ := rfl
           _ = ⟨x * z + d * y * w, -(x * w + y * z)⟩ := by
-            simp [add_commₓ]
+            simp [← add_commₓ]
           ] <;>
       exact nonnegg_pos_neg.2 (sq_le_mul.left (nonnegg_neg_pos.1 ha) (nonnegg_neg_pos.1 hb))
   | _, _, ⟨x, y, Or.inr <| Or.inr rfl⟩, ⟨z, w, Or.inr <| Or.inl rfl⟩, ha, hb => by
@@ -795,7 +804,7 @@ theorem nonneg_mul {a b : ℤ√d} (ha : nonneg a) (hb : nonneg b) : nonneg (a *
         [calc
           (⟨-x, y⟩ * ⟨z, -w⟩ : ℤ√d) = ⟨_, _⟩ := rfl
           _ = ⟨-(x * z + d * y * w), x * w + y * z⟩ := by
-            simp [add_commₓ]
+            simp [← add_commₓ]
           ] <;>
       exact nonnegg_neg_pos.2 (sq_le_mul.right.left (nonnegg_neg_pos.1 ha) (nonnegg_pos_neg.1 hb))
   | _, _, ⟨x, y, Or.inr <| Or.inl rfl⟩, ⟨z, w, Or.inr <| Or.inr rfl⟩, ha, hb => by
@@ -803,7 +812,7 @@ theorem nonneg_mul {a b : ℤ√d} (ha : nonneg a) (hb : nonneg b) : nonneg (a *
         [calc
           (⟨x, -y⟩ * ⟨-z, w⟩ : ℤ√d) = ⟨_, _⟩ := rfl
           _ = ⟨-(x * z + d * y * w), x * w + y * z⟩ := by
-            simp [add_commₓ]
+            simp [← add_commₓ]
           ] <;>
       exact nonnegg_neg_pos.2 (sq_le_mul.right.right.left (nonnegg_pos_neg.1 ha) (nonnegg_neg_pos.1 hb))
   | _, _, ⟨x, y, Or.inr <| Or.inl rfl⟩, ⟨z, w, Or.inr <| Or.inl rfl⟩, ha, hb => by
@@ -811,7 +820,7 @@ theorem nonneg_mul {a b : ℤ√d} (ha : nonneg a) (hb : nonneg b) : nonneg (a *
         [calc
           (⟨x, -y⟩ * ⟨z, -w⟩ : ℤ√d) = ⟨_, _⟩ := rfl
           _ = ⟨x * z + d * y * w, -(x * w + y * z)⟩ := by
-            simp [add_commₓ]
+            simp [← add_commₓ]
           ] <;>
       exact nonnegg_pos_neg.2 (sq_le_mul.right.right.right (nonnegg_pos_neg.1 ha) (nonnegg_pos_neg.1 hb))
 
@@ -823,7 +832,7 @@ protected theorem mul_nonneg (a b : ℤ√d) : 0 ≤ a → 0 ≤ b → 0 ≤ a *
 theorem not_sq_le_succ c d y (h : 0 < c) : ¬SqLe (y + 1) c 0 d :=
   not_le_of_gtₓ <| mul_pos (mul_pos h <| Nat.succ_posₓ _) <| Nat.succ_posₓ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`ns] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`ns] []
 /-- A nonsquare is a natural number that is not equal to the square of an
   integer. This is implemented as a typeclass because it's a necessary condition
   for much of the Pell equation theory. -/
@@ -847,7 +856,7 @@ theorem divides_sq_eq_zero {x y} (h : x * x = d * y * y) : x = 0 ∧ y = 0 :=
       have : m * m = d * (n * n) :=
         Nat.eq_of_mul_eq_mul_leftₓ (mul_pos gpos gpos)
           (by
-            simpa [mul_comm, mul_left_commₓ] using h)
+            simpa [← mul_comm, ← mul_left_commₓ] using h)
       have co2 :=
         let co1 := co.mul_right co
         co1.mul co1
@@ -857,7 +866,7 @@ theorem divides_sq_eq_zero {x y} (h : x * x = d * y * y) : x = 0 ∧ y = 0 :=
               (by
                 rw [this] <;> apply dvd_mul_right) <|
             co2.dvd_of_dvd_mul_right <| by
-              simp [this])
+              simp [← this])
 
 theorem divides_sq_eq_zero_z {x y : ℤ} (h : x * x = d * y * y) : x = 0 ∧ y = 0 := by
   rw [mul_assoc, ← Int.nat_abs_mul_self, ← Int.nat_abs_mul_self, ← Int.coe_nat_mul, ← mul_assoc] at h <;>
@@ -921,9 +930,9 @@ protected theorem eq_zero_or_eq_zero_of_mul_eq_zero : ∀ {a b : ℤ√d}, a * b
                 mul_right_cancel₀ w0 <|
                   calc
                     x * x * w = -y * (x * z) := by
-                      simp [h2, mul_assoc, mul_left_commₓ]
+                      simp [← h2, ← mul_assoc, ← mul_left_commₓ]
                     _ = d * y * y * w := by
-                      simp [h1, mul_assoc, mul_left_commₓ]
+                      simp [← h1, ← mul_assoc, ← mul_left_commₓ]
                     
         else
           Or.inl <|
@@ -931,9 +940,9 @@ protected theorem eq_zero_or_eq_zero_of_mul_eq_zero : ∀ {a b : ℤ√d}, a * b
               mul_right_cancel₀ z0 <|
                 calc
                   x * x * z = d * -y * (x * w) := by
-                    simp [h1, mul_assoc, mul_left_commₓ]
+                    simp [← h1, ← mul_assoc, ← mul_left_commₓ]
                   _ = d * y * y * z := by
-                    simp [h2, mul_assoc, mul_left_commₓ]
+                    simp [← h2, ← mul_assoc, ← mul_left_commₓ]
                   
 
 instance : IsDomain (ℤ√d) :=
@@ -975,8 +984,8 @@ theorem norm_eq_zero {d : ℤ} (h_nonsquare : ∀ n : ℤ, d ≠ n * n) (a : ℤ
   · push_neg  at h
     suffices a.re * a.re = 0 by
       rw [eq_zero_of_mul_self_eq_zero this] at ha⊢
-      simpa only [true_andₓ, or_self_right, zero_re, zero_im, eq_self_iff_true, zero_eq_mul, mul_zero, mul_eq_zero,
-        h.ne, false_orₓ, or_selfₓ] using ha
+      simpa only [← true_andₓ, ← or_self_right, ← zero_re, ← zero_im, ← eq_self_iff_true, ← zero_eq_mul, ← mul_zero, ←
+        mul_eq_zero, ← h.ne, ← false_orₓ, ← or_selfₓ] using ha
     apply _root_.le_antisymm _ (mul_self_nonneg _)
     rw [ha, mul_assoc]
     exact mul_nonpos_of_nonpos_of_nonneg h.le (mul_self_nonneg _)
@@ -987,7 +996,7 @@ variable {R : Type}
 @[ext]
 theorem hom_ext [Ringₓ R] {d : ℤ} (f g : ℤ√d →+* R) (h : f sqrtd = g sqrtd) : f = g := by
   ext ⟨x_re, x_im⟩
-  simp [decompose, h]
+  simp [← decompose, ← h]
 
 variable [CommRingₓ R]
 
@@ -1010,7 +1019,7 @@ def lift {d : ℤ} : { r : R // r * r = ↑d } ≃ (ℤ√d →+* R) where
             a.re * b.re + (a.re * b.im + a.im * b.re) * r + a.im * b.im * (r * r) :=
           by
           ring
-        simp [this, r.prop]
+        simp [← this, ← r.prop]
         ring }
   invFun := fun f =>
     ⟨f sqrtd, by
@@ -1029,7 +1038,7 @@ theorem lift_injective [CharZero R] {d : ℤ} (r : { r : R // r * r = ↑d }) (h
   (injective_iff_map_eq_zero (lift r)).mpr fun a ha => by
     have h_inj : Function.Injective (coe : ℤ → R) := Int.cast_injective
     suffices lift r a.norm = 0 by
-      simp only [coe_int_re, add_zeroₓ, lift_apply_apply, coe_int_im, Int.cast_zeroₓ, zero_mul] at this
+      simp only [← coe_int_re, ← add_zeroₓ, ← lift_apply_apply, ← coe_int_im, ← Int.cast_zeroₓ, ← zero_mul] at this
       rwa [← Int.cast_zeroₓ, h_inj.eq_iff, norm_eq_zero hd] at this
     rw [norm_eq_mul_conj, RingHom.map_mul, ha, zero_mul]
 

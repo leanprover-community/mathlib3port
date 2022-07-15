@@ -65,8 +65,7 @@ namespace UnitaryGroup
 instance coeMatrix : Coe (unitaryGroup n α) (Matrix n n α) :=
   ⟨Subtype.val⟩
 
-instance coeFun : CoeFun (unitaryGroup n α) fun _ => n → n → α where
-  coe := fun A => A.val
+instance coeFun : CoeFun (unitaryGroup n α) fun _ => n → n → α where coe := fun A => A.val
 
 /-- `to_lin' A` is matrix multiplication of vectors by `A`, as a linear map.
 

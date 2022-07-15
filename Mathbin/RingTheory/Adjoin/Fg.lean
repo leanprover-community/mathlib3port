@@ -160,7 +160,7 @@ theorem fg_top (S : Subalgebra R A) : (⊤ : Subalgebra R S).Fg ↔ S.Fg :=
       rw [Algebra.map_top, range_val]
       exact h⟩
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem induction_on_adjoin [IsNoetherian R A] (P : Subalgebra R A → Prop) (base : P ⊥)
     (ih : ∀ S : Subalgebra R A x : A, P S → P (Algebra.adjoin R (insert x S))) (S : Subalgebra R A) : P S := by
   classical
@@ -170,7 +170,7 @@ theorem induction_on_adjoin [IsNoetherian R A] (P : Subalgebra R A → Prop) (ba
     
   intro x t hxt h
   rw [Finset.coe_insert]
-  simpa only [Algebra.adjoin_insert_adjoin] using ih _ x h
+  simpa only [← Algebra.adjoin_insert_adjoin] using ih _ x h
 
 end Subalgebra
 

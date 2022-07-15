@@ -49,13 +49,12 @@ def isLimitMapConePullbackConeEquiv :
       IsLimit
         (PullbackCone.mk (G.map h) (G.map k)
           (by
-            simp only [← G.map_comp, comm]) :
+            simp only [G.map_comp, ← comm]) :
           PullbackCone (G.map f) (G.map g)) :=
-  (IsLimit.whiskerEquivalenceEquiv walkingCospanEquiv.{v₂, v₁}).trans <|
-    (IsLimit.postcomposeHomEquiv (diagramIsoCospan.{v₂} _) _).symm.trans <|
-      is_limit.equiv_iso_limit <|
-        Cones.ext (Iso.refl _) <| by
-          rintro (_ | _ | _) <;> dsimp' <;> simpa only [category.comp_id, category.id_comp, ← G.map_comp]
+  (IsLimit.postcomposeHomEquiv (diagramIsoCospan.{v₂} _) _).symm.trans <|
+    is_limit.equiv_iso_limit <|
+      Cones.ext (Iso.refl _) <| by
+        rintro (_ | _ | _) <;> dsimp' <;> simp only [← comp_id, ← id_comp, ← G.map_comp]
 
 /-- The property of preserving pullbacks expressed in terms of binary fans. -/
 def isLimitPullbackConeMapOfIsLimit [PreservesLimit (cospan f g) G] (l : IsLimit (PullbackCone.mk h k comm)) :
@@ -76,15 +75,14 @@ def isLimitOfHasPullbackOfPreservesLimit [HasPullback f g] :
   isLimitPullbackConeMapOfIsLimit G _ (pullbackIsPullback f g)
 
 /-- If `F` preserves the pullback of `f, g`, it also preserves the pullback of `g, f`. -/
-def preservesPullbackSymmetry : PreservesLimit (cospan g f) G where
-  preserves := fun c hc => by
-    apply (is_limit.whisker_equivalence_equiv walkingCospanEquiv.{v₂, v₁}).symm.toFun
+def preservesPullbackSymmetry :
+    PreservesLimit (cospan g f) G where preserves := fun c hc => by
     apply (is_limit.postcompose_hom_equiv (diagramIsoCospan.{v₂} _) _).toFun
     apply is_limit.of_iso_limit _ (pullback_cone.iso_mk _).symm
     apply pullback_cone.flip_is_limit
     apply (is_limit_map_cone_pullback_cone_equiv _ _).toFun
     · apply preserves_limit.preserves with { instances := false }
-      · dsimp' [walking_cospan_equiv]
+      · dsimp'
         infer_instance
         
       apply pullback_cone.flip_is_limit
@@ -103,19 +101,19 @@ def PreservesPullback.iso : G.obj (pullback f g) ≅ pullback (G.map f) (G.map g
 
 @[reassoc]
 theorem PreservesPullback.iso_hom_fst : (PreservesPullback.iso G f g).Hom ≫ pullback.fst = G.map pullback.fst := by
-  simp [preserves_pullback.iso]
+  simp [← preserves_pullback.iso]
 
 @[reassoc]
 theorem PreservesPullback.iso_hom_snd : (PreservesPullback.iso G f g).Hom ≫ pullback.snd = G.map pullback.snd := by
-  simp [preserves_pullback.iso]
+  simp [← preserves_pullback.iso]
 
 @[simp, reassoc]
 theorem PreservesPullback.iso_inv_fst : (PreservesPullback.iso G f g).inv ≫ G.map pullback.fst = pullback.fst := by
-  simp [preserves_pullback.iso, iso.inv_comp_eq]
+  simp [← preserves_pullback.iso, ← iso.inv_comp_eq]
 
 @[simp, reassoc]
 theorem PreservesPullback.iso_inv_snd : (PreservesPullback.iso G f g).inv ≫ G.map pullback.snd = pullback.snd := by
-  simp [preserves_pullback.iso, iso.inv_comp_eq]
+  simp [← preserves_pullback.iso, ← iso.inv_comp_eq]
 
 end Pullback
 
@@ -136,13 +134,12 @@ def isColimitMapCoconePushoutCoconeEquiv :
       IsColimit
         (PushoutCocone.mk (G.map h) (G.map k)
           (by
-            simp only [← G.map_comp, comm]) :
+            simp only [G.map_comp, ← comm]) :
           PushoutCocone (G.map f) (G.map g)) :=
-  (IsColimit.whiskerEquivalenceEquiv walkingSpanEquiv.{v₂, v₁}).trans <|
-    (IsColimit.precomposeHomEquiv (diagramIsoSpan.{v₂} _).symm _).symm.trans <|
-      is_colimit.equiv_iso_colimit <|
-        Cocones.ext (Iso.refl _) <| by
-          rintro (_ | _ | _) <;> dsimp' <;> simpa only [category.comp_id, category.id_comp, ← G.map_comp]
+  (IsColimit.precomposeHomEquiv (diagramIsoSpan.{v₂} _).symm _).symm.trans <|
+    is_colimit.equiv_iso_colimit <|
+      Cocones.ext (Iso.refl _) <| by
+        rintro (_ | _ | _) <;> dsimp' <;> simp only [← category.comp_id, ← category.id_comp, G.map_comp]
 
 /-- The property of preserving pushouts expressed in terms of binary cofans. -/
 def isColimitPushoutCoconeMapOfIsColimit [PreservesColimit (span f g) G] (l : IsColimit (PushoutCocone.mk h k comm)) :
@@ -163,15 +160,14 @@ def isColimitOfHasPushoutOfPreservesColimit [HasPushout f g] :
   isColimitPushoutCoconeMapOfIsColimit G _ (pushoutIsPushout f g)
 
 /-- If `F` preserves the pushout of `f, g`, it also preserves the pushout of `g, f`. -/
-def preservesPushoutSymmetry : PreservesColimit (span g f) G where
-  preserves := fun c hc => by
-    apply (is_colimit.whisker_equivalence_equiv walkingSpanEquiv.{v₂, v₁}).symm.toFun
+def preservesPushoutSymmetry :
+    PreservesColimit (span g f) G where preserves := fun c hc => by
     apply (is_colimit.precompose_hom_equiv (diagramIsoSpan.{v₂} _).symm _).toFun
     apply is_colimit.of_iso_colimit _ (pushout_cocone.iso_mk _).symm
     apply pushout_cocone.flip_is_colimit
     apply (is_colimit_map_cocone_pushout_cocone_equiv _ _).toFun
     · apply preserves_colimit.preserves with { instances := false }
-      · dsimp' [walking_span_equiv]
+      · dsimp'
         infer_instance
         
       apply pushout_cocone.flip_is_colimit
@@ -200,11 +196,11 @@ theorem PreservesPushout.inr_iso_hom : pushout.inr ≫ (PreservesPushout.iso G f
 
 @[simp, reassoc]
 theorem PreservesPushout.inl_iso_inv : G.map pushout.inl ≫ (PreservesPushout.iso G f g).inv = pushout.inl := by
-  simp [preserves_pushout.iso, iso.comp_inv_eq]
+  simp [← preserves_pushout.iso, ← iso.comp_inv_eq]
 
 @[simp, reassoc]
 theorem PreservesPushout.inr_iso_inv : G.map pushout.inr ≫ (PreservesPushout.iso G f g).inv = pushout.inr := by
-  simp [preserves_pushout.iso, iso.comp_inv_eq]
+  simp [← preserves_pushout.iso, ← iso.comp_inv_eq]
 
 end Pushout
 

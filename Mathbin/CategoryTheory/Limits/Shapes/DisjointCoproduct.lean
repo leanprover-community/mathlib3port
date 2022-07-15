@@ -113,7 +113,7 @@ theorem initial_mono_class_of_disjoint_coproducts [CoproductsDisjoint C] : Initi
       CoproductDisjoint.mono_inl _ _ (𝟙 X)
         { desc := fun s : BinaryCofan _ _ => s.inr,
           fac' := fun s j => Discrete.casesOn j fun j => WalkingPair.casesOn j (hI.hom_ext _ _) (id_comp _),
-          uniq' := fun m w => (id_comp _).symm.trans (w ⟨WalkingPair.right⟩) } }
+          uniq' := fun s : BinaryCofan _ _ m w => (id_comp _).symm.trans (w ⟨WalkingPair.right⟩) } }
 
 end Limits
 

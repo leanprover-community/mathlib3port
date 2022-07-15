@@ -146,11 +146,16 @@ def combinedIsColimit (F : J ⥤ K ⥤ C) (c : ∀ k : K, ColimitCocone (F.flip.
 
 noncomputable section
 
-instance functor_category_has_limits_of_shape [HasLimitsOfShape J C] : HasLimitsOfShape J (K ⥤ C) where
-  HasLimit := fun F => HasLimit.mk { Cone := combineCones F fun k => getLimitCone _, IsLimit := combinedIsLimit _ _ }
+instance functor_category_has_limits_of_shape [HasLimitsOfShape J C] :
+    HasLimitsOfShape J
+      (K ⥤
+        C) where HasLimit := fun F =>
+    HasLimit.mk { Cone := combineCones F fun k => getLimitCone _, IsLimit := combinedIsLimit _ _ }
 
-instance functor_category_has_colimits_of_shape [HasColimitsOfShape J C] : HasColimitsOfShape J (K ⥤ C) where
-  HasColimit := fun F =>
+instance functor_category_has_colimits_of_shape [HasColimitsOfShape J C] :
+    HasColimitsOfShape J
+      (K ⥤
+        C) where HasColimit := fun F =>
     HasColimit.mk { Cocone := combineCocones _ fun k => getColimitCocone _, IsColimit := combinedIsColimit _ _ }
 
 instance functor_category_has_limits_of_size [HasLimitsOfSize.{v₁, u₁} C] : HasLimitsOfSize.{v₁, u₁} (K ⥤ C) :=
@@ -160,8 +165,9 @@ instance functor_category_has_colimits_of_size [HasColimitsOfSize.{v₁, u₁} C
   ⟨inferInstance⟩
 
 instance evaluationPreservesLimitsOfShape [HasLimitsOfShape J C] (k : K) :
-    PreservesLimitsOfShape J ((evaluation K C).obj k) where
-  PreservesLimit := fun F =>
+    PreservesLimitsOfShape J
+      ((evaluation K C).obj
+        k) where PreservesLimit := fun F =>
     preservesLimitOfPreservesLimitCone (combinedIsLimit _ _) <|
       IsLimit.ofIsoLimit (limit.isLimit _) (evaluateCombinedCones F _ k).symm
 
@@ -175,13 +181,13 @@ def limitObjIsoLimitCompEvaluation [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) (k
 @[simp, reassoc]
 theorem limit_obj_iso_limit_comp_evaluation_hom_π [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J) (k : K) :
     (limitObjIsoLimitCompEvaluation F k).Hom ≫ limit.π (F ⋙ (evaluation K C).obj k) j = (limit.π F j).app k := by
-  dsimp' [limit_obj_iso_limit_comp_evaluation]
+  dsimp' [← limit_obj_iso_limit_comp_evaluation]
   simp
 
 @[simp, reassoc]
 theorem limit_obj_iso_limit_comp_evaluation_inv_π_app [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J) (k : K) :
     (limitObjIsoLimitCompEvaluation F k).inv ≫ (limit.π F j).app k = limit.π (F ⋙ (evaluation K C).obj k) j := by
-  dsimp' [limit_obj_iso_limit_comp_evaluation]
+  dsimp' [← limit_obj_iso_limit_comp_evaluation]
   rw [iso.inv_comp_eq]
   simp
 
@@ -209,8 +215,9 @@ theorem limit_obj_ext {H : J ⥤ K ⥤ C} [HasLimitsOfShape J C] {k : K} {W : C}
   simpa using w j
 
 instance evaluationPreservesColimitsOfShape [HasColimitsOfShape J C] (k : K) :
-    PreservesColimitsOfShape J ((evaluation K C).obj k) where
-  PreservesColimit := fun F =>
+    PreservesColimitsOfShape J
+      ((evaluation K C).obj
+        k) where PreservesColimit := fun F =>
     preservesColimitOfPreservesColimitCocone (combinedIsColimit _ _) <|
       IsColimit.ofIsoColimit (colimit.isColimit _) (evaluateCombinedCocones F _ k).symm
 
@@ -225,14 +232,14 @@ def colimitObjIsoColimitCompEvaluation [HasColimitsOfShape J C] (F : J ⥤ K ⥤
 theorem colimit_obj_iso_colimit_comp_evaluation_ι_inv [HasColimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J) (k : K) :
     colimit.ι (F ⋙ (evaluation K C).obj k) j ≫ (colimitObjIsoColimitCompEvaluation F k).inv = (colimit.ι F j).app k :=
   by
-  dsimp' [colimit_obj_iso_colimit_comp_evaluation]
+  dsimp' [← colimit_obj_iso_colimit_comp_evaluation]
   simp
 
 @[simp, reassoc]
 theorem colimit_obj_iso_colimit_comp_evaluation_ι_app_hom [HasColimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J) (k : K) :
     (colimit.ι F j).app k ≫ (colimitObjIsoColimitCompEvaluation F k).Hom = colimit.ι (F ⋙ (evaluation K C).obj k) j :=
   by
-  dsimp' [colimit_obj_iso_colimit_comp_evaluation]
+  dsimp' [← colimit_obj_iso_colimit_comp_evaluation]
   rw [← iso.eq_comp_inv]
   simp
 
@@ -261,8 +268,8 @@ theorem colimit_obj_ext {H : J ⥤ K ⥤ C} [HasColimitsOfShape J C] {k : K} {W 
   ext
   simpa using w j
 
-instance evaluationPreservesLimits [HasLimits C] (k : K) : PreservesLimits ((evaluation K C).obj k) where
-  PreservesLimitsOfShape := fun J 𝒥 => by
+instance evaluationPreservesLimits [HasLimits C] (k : K) :
+    PreservesLimits ((evaluation K C).obj k) where PreservesLimitsOfShape := fun J 𝒥 => by
     skip <;> infer_instance
 
 /-- `F : D ⥤ K ⥤ C` preserves the limit of some `G : J ⥤ D` if it does for each `k : K`. -/
@@ -285,8 +292,8 @@ def preservesLimitsOfEvaluation.{w', w} (F : D ⥤ K ⥤ C)
     (H : ∀ k : K, PreservesLimitsOfSize.{w', w} (F ⋙ (evaluation K C).obj k)) : PreservesLimitsOfSize.{w', w} F :=
   ⟨fun L hL => preserves_limits_of_shape_of_evaluation F L fun k => preserves_limits_of_size.preserves_limits_of_shape⟩
 
-instance evaluationPreservesColimits [HasColimits C] (k : K) : PreservesColimits ((evaluation K C).obj k) where
-  PreservesColimitsOfShape := fun J 𝒥 => by
+instance evaluationPreservesColimits [HasColimits C] (k : K) :
+    PreservesColimits ((evaluation K C).obj k) where PreservesColimitsOfShape := fun J 𝒥 => by
     skip <;> infer_instance
 
 /-- `F : D ⥤ K ⥤ C` preserves the colimit of some `G : J ⥤ D` if it does for each `k : K`. -/

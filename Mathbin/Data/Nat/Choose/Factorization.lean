@@ -34,14 +34,14 @@ variable {p n k : ℕ}
 -/
 theorem factorization_choose_le_log : (choose n k).factorization p ≤ log p n := by
   by_cases' h : (choose n k).factorization p = 0
-  · simp [h]
+  · simp [← h]
     
   have hp : p.prime := Not.imp_symm (choose n k).factorization_eq_zero_of_non_prime h
   have hkn : k ≤ n := by
     refine' le_of_not_ltₓ fun hnk => h _
-    simp [choose_eq_zero_of_lt hnk]
+    simp [← choose_eq_zero_of_lt hnk]
   rw [← @padic_val_nat_eq_factorization p _ ⟨hp⟩, @padic_val_nat_def _ ⟨hp⟩ _ (choose_pos hkn)]
-  simp only [hp.multiplicity_choose hkn (lt_add_one _), Enat.get_coe]
+  simp only [← hp.multiplicity_choose hkn (lt_add_one _), ← Enat.get_coe]
   refine' (Finset.card_filter_le _ _).trans (le_of_eqₓ (Nat.card_Ico _ _))
 
 /-- A `pow` form of `nat.factorization_choose_le`
@@ -70,11 +70,11 @@ theorem factorization_choose_of_lt_three_mul (hp' : p ≠ 2) (hk : p ≤ k) (hk'
   · exact factorization_eq_zero_of_non_prime (choose n k) hp
     
   cases' lt_or_leₓ n k with hnk hkn
-  · simp [choose_eq_zero_of_lt hnk]
+  · simp [← choose_eq_zero_of_lt hnk]
     
   rw [← @padic_val_nat_eq_factorization p _ ⟨hp⟩, @padic_val_nat_def _ ⟨hp⟩ _ (choose_pos hkn)]
-  simp only [hp.multiplicity_choose hkn (lt_add_one _), Enat.get_coe, Finset.card_eq_zero, Finset.filter_eq_empty_iff,
-    not_leₓ]
+  simp only [← hp.multiplicity_choose hkn (lt_add_one _), ← Enat.get_coe, ← Finset.card_eq_zero, ←
+    Finset.filter_eq_empty_iff, ← not_leₓ]
   intro i hi
   rcases eq_or_lt_of_le (finset.mem_Ico.mp hi).1 with (rfl | hi)
   · rw [pow_oneₓ, ← add_lt_add_iff_left (2 * p), ← succ_mul, two_mul, add_add_add_commₓ]
@@ -114,7 +114,7 @@ theorem factorization_factorial_eq_zero_of_lt (h : n < p) : (factorial n).factor
 
 theorem factorization_choose_eq_zero_of_lt (h : n < p) : (choose n k).factorization p = 0 := by
   by_cases' hnk : n < k
-  · simp [choose_eq_zero_of_lt hnk]
+  · simp [← choose_eq_zero_of_lt hnk]
     
   rw [choose_eq_factorial_div_factorial (le_of_not_ltₓ hnk),
     factorization_div (factorial_mul_factorial_dvd_factorial (le_of_not_ltₓ hnk)), Finsupp.coe_tsub, Pi.sub_apply,

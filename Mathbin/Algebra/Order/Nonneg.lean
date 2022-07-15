@@ -81,9 +81,9 @@ protected noncomputable def conditionallyCompleteLinearOrderBot [ConditionallyCo
         Subtype.eq <| by
           rw [bot_eq]
           cases' h.lt_or_eq with h2 h2
-          · simp [h2.not_le]
+          · simp [← h2.not_le]
             
-          simp [h2] }
+          simp [← h2] }
 
 instance inhabited [Preorderₓ α] {a : α} : Inhabited { x : α // a ≤ x } :=
   ⟨⟨a, le_rfl⟩⟩
@@ -112,7 +112,7 @@ protected theorem coe_add [AddZeroClassₓ α] [Preorderₓ α] [CovariantClass 
     (a b : { x : α // 0 ≤ x }) : ((a + b : { x : α // 0 ≤ x }) : α) = a + b :=
   rfl
 
-instance hasNsmul [AddMonoidₓ α] [Preorderₓ α] [CovariantClass α α (· + ·) (· ≤ ·)] : HasScalar ℕ { x : α // 0 ≤ x } :=
+instance hasNsmul [AddMonoidₓ α] [Preorderₓ α] [CovariantClass α α (· + ·) (· ≤ ·)] : HasSmul ℕ { x : α // 0 ≤ x } :=
   ⟨fun n x => ⟨n • x, nsmul_nonneg x.Prop n⟩⟩
 
 @[simp]
@@ -151,10 +151,9 @@ instance archimedean [OrderedAddCommMonoid α] [Archimedean α] : Archimedean { 
     let ⟨n, hr⟩ := Archimedean.arch (x : α) (pos_y : (0 : α) < y)
     ⟨n,
       show (x : α) ≤ (n • y : { x : α // 0 ≤ x }) by
-        simp [*, -nsmul_eq_mul, nsmul_coe]⟩⟩
+        simp [*, -nsmul_eq_mul, ← nsmul_coe]⟩⟩
 
-instance hasOne [OrderedSemiring α] : One { x : α // 0 ≤ x } where
-  one := ⟨1, zero_le_one⟩
+instance hasOne [OrderedSemiring α] : One { x : α // 0 ≤ x } where one := ⟨1, zero_le_one⟩
 
 @[simp, norm_cast]
 protected theorem coe_one [OrderedSemiring α] : ((1 : { x : α // 0 ≤ x }) : α) = 1 :=
@@ -164,8 +163,7 @@ protected theorem coe_one [OrderedSemiring α] : ((1 : { x : α // 0 ≤ x }) : 
 theorem mk_eq_one [OrderedSemiring α] {x : α} (hx : 0 ≤ x) : (⟨x, hx⟩ : { x : α // 0 ≤ x }) = 1 ↔ x = 1 :=
   Subtype.ext_iff
 
-instance hasMul [OrderedSemiring α] : Mul { x : α // 0 ≤ x } where
-  mul := fun x y => ⟨x * y, mul_nonneg x.2 y.2⟩
+instance hasMul [OrderedSemiring α] : Mul { x : α // 0 ≤ x } where mul := fun x y => ⟨x * y, mul_nonneg x.2 y.2⟩
 
 @[simp, norm_cast]
 protected theorem coe_mul [OrderedSemiring α] (a b : { x : α // 0 ≤ x }) : ((a * b : { x : α // 0 ≤ x }) : α) = a * b :=
@@ -176,8 +174,14 @@ theorem mk_mul_mk [OrderedSemiring α] {x y : α} (hx : 0 ≤ x) (hy : 0 ≤ y) 
     (⟨x, hx⟩ : { x : α // 0 ≤ x }) * ⟨y, hy⟩ = ⟨x * y, mul_nonneg hx hy⟩ :=
   rfl
 
-instance hasPow [OrderedSemiring α] : Pow { x : α // 0 ≤ x } ℕ where
-  pow := fun x n => ⟨x ^ n, pow_nonneg x.2 n⟩
+instance addMonoidWithOne [OrderedSemiring α] : AddMonoidWithOneₓ { x : α // 0 ≤ x } :=
+  { Nonneg.hasOne, Nonneg.orderedCancelAddCommMonoid with natCast := fun n => ⟨n, Nat.cast_nonneg n⟩,
+    nat_cast_zero := by
+      simp [← Nat.castₓ],
+    nat_cast_succ := fun _ => by
+      simp [← Nat.castₓ] <;> rfl }
+
+instance hasPow [OrderedSemiring α] : Pow { x : α // 0 ≤ x } ℕ where pow := fun x n => ⟨x ^ n, pow_nonneg x.2 n⟩
 
 @[simp, norm_cast]
 protected theorem coe_pow [OrderedSemiring α] (a : { x : α // 0 ≤ x }) (n : ℕ) :
@@ -190,10 +194,12 @@ theorem mk_pow [OrderedSemiring α] {x : α} (hx : 0 ≤ x) (n : ℕ) :
   rfl
 
 instance orderedSemiring [OrderedSemiring α] : OrderedSemiring { x : α // 0 ≤ x } :=
-  Subtype.coe_injective.OrderedSemiring _ rfl rfl (fun x y => rfl) (fun x y => rfl) (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.OrderedSemiring _ rfl rfl (fun x y => rfl) (fun x y => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
+    fun _ => rfl
 
 instance orderedCommSemiring [OrderedCommSemiring α] : OrderedCommSemiring { x : α // 0 ≤ x } :=
-  Subtype.coe_injective.OrderedCommSemiring _ rfl rfl (fun x y => rfl) (fun x y => rfl) (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.OrderedCommSemiring _ rfl rfl (fun x y => rfl) (fun x y => rfl) (fun _ _ => rfl)
+    (fun _ _ => rfl) fun _ => rfl
 
 -- These prevent noncomputable instances being found, as it does not require `linear_order` which
 -- is frequently non-computable.
@@ -207,8 +213,8 @@ instance nontrivial [LinearOrderedSemiring α] : Nontrivial { x : α // 0 ≤ x 
   ⟨⟨0, 1, fun h => zero_ne_one (congr_arg Subtype.val h)⟩⟩
 
 instance linearOrderedSemiring [LinearOrderedSemiring α] : LinearOrderedSemiring { x : α // 0 ≤ x } :=
-  Subtype.coe_injective.LinearOrderedSemiring _ rfl rfl (fun x y => rfl) (fun x y => rfl) (fun _ _ => rfl) fun _ _ =>
-    rfl
+  Subtype.coe_injective.LinearOrderedSemiring _ rfl rfl (fun x y => rfl) (fun x y => rfl) (fun _ _ => rfl)
+    (fun _ _ => rfl) fun _ => rfl
 
 instance linearOrderedCommMonoidWithZero [LinearOrderedCommRing α] :
     LinearOrderedCommMonoidWithZero { x : α // 0 ≤ x } :=
@@ -223,8 +229,7 @@ def coeRingHom [OrderedSemiring α] : { x : α // 0 ≤ x } →+* α :=
 protected theorem coe_nat_cast [OrderedSemiring α] (n : ℕ) : ((↑n : { x : α // 0 ≤ x }) : α) = n :=
   map_nat_cast (coeRingHom : { x : α // 0 ≤ x } →+* α) n
 
-instance hasInv [LinearOrderedField α] : Inv { x : α // 0 ≤ x } where
-  inv := fun x => ⟨x⁻¹, inv_nonneg.mpr x.2⟩
+instance hasInv [LinearOrderedField α] : Inv { x : α // 0 ≤ x } where inv := fun x => ⟨x⁻¹, inv_nonneg.mpr x.2⟩
 
 @[simp, norm_cast]
 protected theorem coe_inv [LinearOrderedField α] (a : { x : α // 0 ≤ x }) : ((a⁻¹ : { x : α // 0 ≤ x }) : α) = a⁻¹ :=
@@ -247,8 +252,7 @@ instance linearOrderedCommGroupWithZero [LinearOrderedField α] : LinearOrderedC
       ext
       exact h }
 
-instance hasDiv [LinearOrderedField α] : Div { x : α // 0 ≤ x } where
-  div := fun x y => ⟨x / y, div_nonneg x.2 y.2⟩
+instance hasDiv [LinearOrderedField α] : Div { x : α // 0 ≤ x } where div := fun x y => ⟨x / y, div_nonneg x.2 y.2⟩
 
 @[simp, norm_cast]
 protected theorem coe_div [LinearOrderedField α] (a b : { x : α // 0 ≤ x }) :
@@ -308,7 +312,7 @@ theorem coe_to_nonneg {a : α} : (toNonneg a : α) = max a 0 :=
 
 @[simp]
 theorem to_nonneg_of_nonneg {a : α} (h : 0 ≤ a) : toNonneg a = ⟨a, h⟩ := by
-  simp [to_nonneg, h]
+  simp [← to_nonneg, ← h]
 
 @[simp]
 theorem to_nonneg_coe {a : { x : α // 0 ≤ x }} : toNonneg (a : α) = a := by
@@ -318,12 +322,12 @@ theorem to_nonneg_coe {a : { x : α // 0 ≤ x }} : toNonneg (a : α) = a := by
 @[simp]
 theorem to_nonneg_le {a : α} {b : { x : α // 0 ≤ x }} : toNonneg a ≤ b ↔ a ≤ b := by
   cases' b with b hb
-  simp [to_nonneg, hb]
+  simp [← to_nonneg, ← hb]
 
 @[simp]
 theorem to_nonneg_lt {a : { x : α // 0 ≤ x }} {b : α} : a < toNonneg b ↔ ↑a < b := by
   cases' a with a ha
-  simp [to_nonneg, ha.not_lt]
+  simp [← to_nonneg, ← ha.not_lt]
 
 instance hasSub [Sub α] : Sub { x : α // 0 ≤ x } :=
   ⟨fun x y => toNonneg (x - y)⟩
@@ -338,7 +342,7 @@ end LinearOrderₓ
 instance hasOrderedSub [LinearOrderedRing α] : HasOrderedSub { x : α // 0 ≤ x } :=
   ⟨by
     rintro ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩
-    simp only [sub_le_iff_le_add, Subtype.mk_le_mk, mk_sub_mk, mk_add_mk, to_nonneg_le, Subtype.coe_mk]⟩
+    simp only [← sub_le_iff_le_add, ← Subtype.mk_le_mk, ← mk_sub_mk, ← mk_add_mk, ← to_nonneg_le, ← Subtype.coe_mk]⟩
 
 end Nonneg
 

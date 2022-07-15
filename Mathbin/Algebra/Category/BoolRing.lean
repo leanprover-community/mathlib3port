@@ -72,10 +72,13 @@ end BoolRing
 
 
 @[simps]
-instance BoolRing.hasForgetToBoolAlg : HasForget₂ BoolRing BoolAlg where
-  forget₂ := { obj := fun X => BoolAlg.of (AsBoolalg X), map := fun X Y => RingHom.asBoolalg }
+instance BoolRing.hasForgetToBoolAlg :
+    HasForget₂ BoolRing
+      BoolAlg where forget₂ := { obj := fun X => BoolAlg.of (AsBoolalg X), map := fun X Y => RingHom.asBoolalg }
 
 @[simps]
-instance BoolAlg.hasForgetToBoolRing : HasForget₂ BoolAlg BoolRing where
-  forget₂ := { obj := fun X => BoolRing.of (AsBoolring X), map := fun X Y => BoundedLatticeHom.asBoolring }
+instance BoolAlg.hasForgetToBoolRing :
+    HasForget₂ BoolAlg
+      BoolRing where forget₂ :=
+    { obj := fun X => BoolRing.of (AsBoolring X), map := fun X Y => BoundedLatticeHom.asBoolring }
 

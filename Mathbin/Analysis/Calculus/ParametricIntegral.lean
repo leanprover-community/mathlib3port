@@ -82,18 +82,18 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
   have hF_int' : ∀, ∀ x ∈ ball x₀ ε, ∀, integrable (F x) μ := by
     intro x x_in
     have : ∀ᵐ a ∂μ, ∥F x₀ a - F x a∥ ≤ ε * b a := by
-      simp only [norm_sub_rev (F x₀ _)]
+      simp only [← norm_sub_rev (F x₀ _)]
       refine' h_lipsch.mono fun a ha => (ha x x_in).trans _
       rw [mul_comm ε]
       rw [mem_ball, dist_eq_norm] at x_in
       exact mul_le_mul_of_nonneg_left x_in.le (b_nonneg _)
     exact integrable_of_norm_sub_le (hF_meas x x_in) hF_int (integrable.const_mul bound_integrable.norm ε) this
-  have hF'_int : integrable F' μ :=
+  have hF'_int : integrable F' μ := by
     have : ∀ᵐ a ∂μ, ∥F' a∥ ≤ b a := by
       apply (h_diff.and h_lipsch).mono
       rintro a ⟨ha_diff, ha_lip⟩
       refine' ha_diff.le_of_lip' (b_nonneg a) (mem_of_superset (ball_mem_nhds _ ε_pos) <| ha_lip)
-    b_int.mono' hF'_meas this
+    exact b_int.mono' hF'_meas this
   refine' ⟨hF'_int, _⟩
   have h_ball : ball x₀ ε ∈ 𝓝 x₀ := ball_mem_nhds x₀ ε_pos
   have :
@@ -131,9 +131,9 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
     exact mul_le_mul_of_nonneg_left ha_bound (nneg _)
     apply mul_le_mul_of_nonneg_left ((F' a).le_op_norm _) (nneg _)
     by_cases' h : ∥x - x₀∥ = 0
-    · simpa [h] using add_nonneg (b_nonneg a) (norm_nonneg (F' a))
+    · simpa [← h] using add_nonneg (b_nonneg a) (norm_nonneg (F' a))
       
-    · field_simp [h]
+    · field_simp [← h]
       
     
   · exact b_int.add hF'_int.norm
@@ -210,12 +210,12 @@ theorem has_deriv_at_integral_of_dominated_loc_of_lip {F : 𝕜 → α → E} {F
     hF'_int key
   replace hF'_int : integrable F' μ
   · rw [← integrable_norm_iff hm] at hF'_int
-    simpa only [L, (· ∘ ·), integrable_norm_iff, hF'_meas, one_mulₓ, norm_one, ContinuousLinearMap.comp_apply,
-      ContinuousLinearMap.coe_restrict_scalarsL', ContinuousLinearMap.norm_restrict_scalars,
-      ContinuousLinearMap.norm_smul_rightL_apply] using hF'_int
+    simpa only [← L, ← (· ∘ ·), ← integrable_norm_iff, ← hF'_meas, ← one_mulₓ, ← norm_one, ←
+      ContinuousLinearMap.comp_apply, ← ContinuousLinearMap.coe_restrict_scalarsL', ←
+      ContinuousLinearMap.norm_restrict_scalars, ← ContinuousLinearMap.norm_smul_rightL_apply] using hF'_int
     
   refine' ⟨hF'_int, _⟩
-  simp_rw [has_deriv_at_iff_has_fderiv_at]  at h_diff⊢
+  simp_rw [has_deriv_at_iff_has_fderiv_at] at h_diff⊢
   rwa [ContinuousLinearMap.integral_comp_comm _ hF'_int] at key
   all_goals
     infer_instance

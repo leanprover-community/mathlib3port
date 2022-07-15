@@ -152,12 +152,12 @@ end Functor
 @[simp, reassoc]
 theorem map_hom_inv_app (F : C ⥤ D ⥤ E) {X Y : C} (e : X ≅ Y) (Z : D) :
     (F.map e.Hom).app Z ≫ (F.map e.inv).app Z = 𝟙 _ := by
-  simp [← nat_trans.comp_app, ← functor.map_comp]
+  simp [nat_trans.comp_app, functor.map_comp]
 
 @[simp, reassoc]
 theorem map_inv_hom_app (F : C ⥤ D ⥤ E) {X Y : C} (e : X ≅ Y) (Z : D) :
     (F.map e.inv).app Z ≫ (F.map e.Hom).app Z = 𝟙 _ := by
-  simp [← nat_trans.comp_app, ← functor.map_comp]
+  simp [nat_trans.comp_app, functor.map_comp]
 
 end CategoryTheory
 

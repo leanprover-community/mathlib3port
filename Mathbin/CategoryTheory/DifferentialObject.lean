@@ -68,18 +68,16 @@ namespace Hom
 
 /-- The identity morphism of a differential object. -/
 @[simps]
-def id (X : DifferentialObject C) : Hom X X where
-  f := 𝟙 X.x
+def id (X : DifferentialObject C) : Hom X X where f := 𝟙 X.x
 
 /-- The composition of morphisms of differential objects. -/
 @[simps]
-def comp {X Y Z : DifferentialObject C} (f : Hom X Y) (g : Hom Y Z) : Hom X Z where
-  f := f.f ≫ g.f
+def comp {X Y Z : DifferentialObject C} (f : Hom X Y) (g : Hom Y Z) : Hom X Z where f := f.f ≫ g.f
 
 end Hom
 
 instance categoryOfDifferentialObjects : Category (DifferentialObject C) where
-  Hom := Hom
+  hom := Hom
   id := Hom.id
   comp := fun X Y Z f g => Hom.comp f g
 
@@ -104,11 +102,9 @@ def forget : DifferentialObject C ⥤ C where
   obj := fun X => X.x
   map := fun X Y f => f.f
 
-instance forget_faithful : Faithful (forget C) :=
-  {  }
+instance forget_faithful : Faithful (forget C) where
 
-instance hasZeroMorphisms : HasZeroMorphisms (DifferentialObject C) where
-  HasZero := fun X Y => ⟨{ f := 0 }⟩
+instance hasZeroMorphisms : HasZeroMorphisms (DifferentialObject C) where HasZero := fun X Y => ⟨{ f := 0 }⟩
 
 variable {C}
 
@@ -120,7 +116,7 @@ theorem zero_f (P Q : DifferentialObject C) : (0 : P ⟶ Q).f = 0 :=
 -/
 @[simps]
 def isoApp {X Y : DifferentialObject C} (f : X ≅ Y) : X.x ≅ Y.x :=
-  ⟨f.Hom.f, f.inv.f, by
+  ⟨f.hom.f, f.inv.f, by
     dsimp'
     rw [← comp_f, iso.hom_inv_id, id_f], by
     dsimp'
@@ -141,8 +137,8 @@ theorem iso_app_trans {X Y Z : DifferentialObject C} (f : X ≅ Y) (g : Y ≅ Z)
 /-- An isomorphism of differential objects can be constructed
 from an isomorphism of the underlying objects that commutes with the differentials. -/
 @[simps]
-def mkIso {X Y : DifferentialObject C} (f : X.x ≅ Y.x) (hf : X.d ≫ f.Hom⟦1⟧' = f.Hom ≫ Y.d) : X ≅ Y where
-  Hom := ⟨f.Hom, hf⟩
+def mkIso {X Y : DifferentialObject C} (f : X.x ≅ Y.x) (hf : X.d ≫ f.hom⟦1⟧' = f.hom ≫ Y.d) : X ≅ Y where
+  hom := ⟨f.hom, hf⟩
   inv :=
     ⟨f.inv, by
       dsimp'
@@ -219,11 +215,10 @@ namespace DifferentialObject
 
 variable (C : Type (u + 1)) [LargeCategory C] [ConcreteCategory C] [HasZeroMorphisms C] [HasShift C ℤ]
 
-instance concreteCategoryOfDifferentialObjects : ConcreteCategory (DifferentialObject C) where
-  forget := forget C ⋙ CategoryTheory.forget C
+instance concreteCategoryOfDifferentialObjects :
+    ConcreteCategory (DifferentialObject C) where forget := forget C ⋙ CategoryTheory.forget C
 
-instance : HasForget₂ (DifferentialObject C) C where
-  forget₂ := forget C
+instance : HasForget₂ (DifferentialObject C) C where forget₂ := forget C
 
 end DifferentialObject
 
@@ -242,7 +237,7 @@ noncomputable section
 @[simps]
 def shiftFunctor (n : ℤ) : DifferentialObject C ⥤ DifferentialObject C where
   obj := fun X =>
-    { x := X.x⟦n⟧, d := X.d⟦n⟧' ≫ (shiftComm _ _ _).Hom,
+    { x := X.x⟦n⟧, d := X.d⟦n⟧' ≫ (shiftComm _ _ _).hom,
       d_squared' := by
         rw [functor.map_comp, category.assoc, shift_comm_hom_comp_assoc, ← functor.map_comp_assoc, X.d_squared,
           functor.map_zero, zero_comp] }
@@ -275,7 +270,7 @@ def shiftFunctorAdd (m n : ℤ) : shiftFunctor C (m + n) ≅ shiftFunctor C m �
     simp_rw [category.assoc, obj_μ_inv_app, μ_inv_hom_app_assoc, functor.map_comp, obj_μ_app, category.assoc,
       μ_naturality_assoc, μ_inv_hom_app_assoc, obj_μ_inv_app, category.assoc, μ_naturalityₗ_assoc, μ_inv_hom_app_assoc,
       μ_inv_naturalityᵣ_assoc]
-    simp only [eq_to_hom_map, eq_to_hom_app, eq_to_iso.hom, eq_to_hom_trans_assoc, eq_to_iso.inv]
+    simp only [← eq_to_hom_map, ← eq_to_hom_app, ← eq_to_iso.hom, ← eq_to_hom_trans_assoc, ← eq_to_iso.inv]
     
   · intro X Y f
     ext

@@ -44,11 +44,10 @@ def digits (b : ℕ) (q : ℚ) (n : ℕ) : ℕ :=
     `(b : R) ^ (clog b r - 1) < r ≤ (b : R) ^ clog b r`.
   * `int.clog_zpow_gi`:  the galois insertion between `int.clog` and `zpow`.
 * `int.neg_log_inv_eq_clog`, `int.neg_clog_inv_eq_log`: the link between the two definitions.
-
 -/
 
 
-variable {R : Type _} [LinearOrderedField R] [FloorRing R]
+variable {R : Type _} [LinearOrderedSemifield R] [FloorSemiring R]
 
 namespace Int
 
@@ -70,11 +69,11 @@ theorem log_of_right_le_one (b : ℕ) {r : R} (hr : r ≤ 1) : log b r = -Nat.cl
 @[simp, norm_cast]
 theorem log_nat_cast (b : ℕ) (n : ℕ) : log b (n : R) = Nat.log b n := by
   cases n
-  · simp [log_of_right_le_one _ _, Nat.log_zero_right]
+  · simp [← log_of_right_le_one _ _, ← Nat.log_zero_right]
     
   · have : 1 ≤ (n.succ : R) := by
       simp
-    simp [log_of_one_le_right _ this, ← Nat.cast_succₓ]
+    simp [← log_of_one_le_right _ this, Nat.cast_succₓ]
     
 
 theorem log_of_left_le_one {b : ℕ} (hb : b ≤ 1) (r : R) : log b r = 0 := by
@@ -244,11 +243,11 @@ theorem neg_clog_inv_eq_log (b : ℕ) (r : R) : -clog b r⁻¹ = log b r := by
 @[simp, norm_cast]
 theorem clog_nat_cast (b : ℕ) (n : ℕ) : clog b (n : R) = Nat.clog b n := by
   cases n
-  · simp [clog_of_right_le_one _ _, Nat.clog_zero_right]
+  · simp [← clog_of_right_le_one _ _, ← Nat.clog_zero_right]
     
   · have : 1 ≤ (n.succ : R) := by
       simp
-    simp [clog_of_one_le_right _ this, ← Nat.cast_succₓ]
+    simp [← clog_of_one_le_right _ this, Nat.cast_succₓ]
     
 
 theorem clog_of_left_le_one {b : ℕ} (hb : b ≤ 1) (r : R) : clog b r = 0 := by
@@ -266,10 +265,10 @@ theorem self_le_zpow_clog {b : ℕ} (hb : 1 < b) (r : R) : r ≤ (b : R) ^ clog 
     
 
 theorem zpow_pred_clog_lt_self {b : ℕ} {r : R} (hb : 1 < b) (hr : 0 < r) : (b : R) ^ (clog b r - 1) < r := by
-  rw [← neg_log_inv_eq_clog, ← neg_add', zpow_neg, inv_lt (zpow_pos_of_pos _ _) hr]
+  rw [← neg_log_inv_eq_clog, ← neg_add', zpow_neg, inv_lt _ hr]
   · exact lt_zpow_succ_log_self hb _
     
-  · exact nat.cast_pos.mpr (zero_le_one.trans_lt hb)
+  · exact zpow_pos_of_pos (nat.cast_pos.mpr <| zero_le_one.trans_lt hb) _
     
 
 @[simp]

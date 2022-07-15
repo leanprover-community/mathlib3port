@@ -152,6 +152,9 @@ unsafe def instance_tree.to_format : instance_tree → tactic format
 unsafe instance instance_tree.has_to_tactic_format : has_to_tactic_format instance_tree :=
   ⟨instance_tree.to_format⟩
 
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `slim_check` considers a proof goal and tries to generate examples
 that would contradict the statement.
 
@@ -214,22 +217,7 @@ unsafe def slim_check (cfg : SlimCheckCfg := {  }) : tactic Unit := do
       traceSuccess := cfg.traceSuccess || is_trace_enabled_for `slim_check.success }
   let inst ←
     mk_app `` testable [tgt'] >>= mk_instance <|>
-        throwError "Failed to create a `testable` instance for `{(← tgt)}`.
-          What to do:
-          1. make sure that the types you are using have `slim_check.sampleable` instances
-             (you can use `#sample my_type` if you are unsure);
-          2. make sure that the relations and predicates that your proposition use are decidable;
-          3. make sure that instances of `slim_check.testable` exist that, when combined,
-             apply to your decorated proposition:
-          ```
-          {(← tgt')}
-          ```
-          
-          Use `set_option trace.class_instances true` to understand what instances are missing.
-          
-          Try this:
-          set_option trace.class_instances true
-          #check (by apply_instance : slim_check.testable ({← tgt'}))"
+        "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   let e ← mk_mapp `` testable.check [tgt, quote.1 cfg, tgt', inst]
   when_tracing `slim_check.decoration
       (← do

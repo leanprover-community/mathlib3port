@@ -33,8 +33,8 @@ variable [HasSupₓ α]
 /-- `has_Sup` structure on a nonempty subset `s` of an object with `has_Sup`. This definition is
 non-canonical (it uses `default s`); it should be used only as here, as an auxiliary instance in the
 construction of the `conditionally_complete_linear_order` structure. -/
-noncomputable def subsetHasSup [Inhabited s] : HasSupₓ s where
-  sup := fun t => if ht : sup (coe '' t : Set α) ∈ s then ⟨sup (coe '' t : Set α), ht⟩ else default
+noncomputable def subsetHasSup [Inhabited s] :
+    HasSupₓ s where sup := fun t => if ht : sup (coe '' t : Set α) ∈ s then ⟨sup (coe '' t : Set α), ht⟩ else default
 
 attribute [local instance] subsetHasSup
 
@@ -45,7 +45,7 @@ theorem subset_Sup_def [Inhabited s] :
 
 theorem subset_Sup_of_within [Inhabited s] {t : Set s} (h : sup (coe '' t : Set α) ∈ s) :
     sup (coe '' t : Set α) = (@sup s _ t : α) := by
-  simp [dif_pos h]
+  simp [← dif_pos h]
 
 end HasSupₓ
 
@@ -56,8 +56,8 @@ variable [HasInfₓ α]
 /-- `has_Inf` structure on a nonempty subset `s` of an object with `has_Inf`. This definition is
 non-canonical (it uses `default s`); it should be used only as here, as an auxiliary instance in the
 construction of the `conditionally_complete_linear_order` structure. -/
-noncomputable def subsetHasInf [Inhabited s] : HasInfₓ s where
-  inf := fun t => if ht : inf (coe '' t : Set α) ∈ s then ⟨inf (coe '' t : Set α), ht⟩ else default
+noncomputable def subsetHasInf [Inhabited s] :
+    HasInfₓ s where inf := fun t => if ht : inf (coe '' t : Set α) ∈ s then ⟨inf (coe '' t : Set α), ht⟩ else default
 
 attribute [local instance] subsetHasInf
 
@@ -68,7 +68,7 @@ theorem subset_Inf_def [Inhabited s] :
 
 theorem subset_Inf_of_within [Inhabited s] {t : Set s} (h : inf (coe '' t : Set α) ∈ s) :
     inf (coe '' t : Set α) = (@inf s _ t : α) := by
-  simp [dif_pos h]
+  simp [← dif_pos h]
 
 end HasInfₓ
 

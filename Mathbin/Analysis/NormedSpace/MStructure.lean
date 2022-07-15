@@ -115,7 +115,7 @@ theorem commute [HasFaithfulSmul M X] {P Q : M} (h₁ : IsLprojection X P) (h₂
         _ ≥ ∥R • x∥ + 2 • ∥(P * R) • x - (R * P * R) • x∥ := by
           rw [Ge]
           have := add_le_add_right (norm_le_insert' (R • x) (R • P • R • x)) (2 • ∥(1 - R) • P • R • x∥)
-          simpa only [mul_smul, sub_smul, one_smul] using this
+          simpa only [← mul_smul, ← sub_smul, ← one_smul] using this
         
     rw [Ge] at e1
     nth_rw_rhs 0[← add_zeroₓ ∥R • x∥]  at e1
@@ -195,9 +195,9 @@ theorem coe_sdiff [HasFaithfulSmul M X] (P Q : { P : M // IsLprojection X P }) :
 instance [HasFaithfulSmul M X] : PartialOrderₓ { P : M // IsLprojection X P } where
   le := fun P Q => (↑P : M) = ↑(P⊓Q)
   le_refl := fun P => by
-    simpa only [coe_inf, ← sq] using P.prop.proj.eq.symm
+    simpa only [← coe_inf, sq] using P.prop.proj.eq.symm
   le_trans := fun P Q R h₁ h₂ => by
-    simp only [coe_inf] at h₁ h₂⊢
+    simp only [← coe_inf] at h₁ h₂⊢
     rw [h₁, mul_assoc, ← h₂]
   le_antisymm := fun P Q h₁ h₂ =>
     Subtype.eq
@@ -211,7 +211,7 @@ instance : Zero { P : M // IsLprojection X P } :=
   ⟨⟨0,
       ⟨by
         rw [IsIdempotentElem, zero_mul], fun x => by
-        simp only [zero_smul, norm_zero, sub_zero, one_smul, zero_addₓ]⟩⟩⟩
+        simp only [← zero_smul, ← norm_zero, ← sub_zero, ← one_smul, ← zero_addₓ]⟩⟩⟩
 
 @[simp]
 theorem coe_zero : ↑(0 : { P : M // IsLprojection X P }) = (0 : M) :=

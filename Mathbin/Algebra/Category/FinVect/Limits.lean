@@ -33,32 +33,34 @@ open CategoryTheory.Limits
 
 namespace FinVect
 
-variable {J : Type v} [SmallCategory J] [FinCategory J]
+variable {J : Type} [SmallCategory J] [FinCategory J]
 
 variable {k : Type v} [Field k]
 
-instance {J : Type v} [Fintype J] (Z : J → ModuleCat.{v} k) [∀ j, FiniteDimensional k (Z j)] :
-    FiniteDimensional k (∏ fun j => Z j : ModuleCat.{v} k) :=
+instance {J : Type} [Fintype J] (Z : J → ModuleCat.{v} k) [∀ j, FiniteDimensional k (Z j)] :
+    FiniteDimensional k (∏ fun j => Z j : ModuleCat.{v} k) := by
   have : FiniteDimensional k (ModuleCat.of k (∀ j, Z j)) := by
     dsimp'
     infer_instance
-  FiniteDimensional.of_injective (ModuleCat.piIsoPi.{v, v, v} _).Hom
-    ((ModuleCat.mono_iff_injective _).1
-      (by
-        infer_instance))
+  exact
+    FiniteDimensional.of_injective (ModuleCat.piIsoPi _).Hom
+      ((ModuleCat.mono_iff_injective _).1
+        (by
+          infer_instance))
 
 /-- Finite limits of finite finite dimensional vectors spaces are finite dimensional,
 because we can realise them as subobjects of a finite product. -/
 instance (F : J ⥤ FinVect k) :
-    FiniteDimensional k (limit (F ⋙ forget₂ (FinVect k) (ModuleCat.{v} k)) : ModuleCat.{v} k) :=
+    FiniteDimensional k (limit (F ⋙ forget₂ (FinVect k) (ModuleCat.{v} k)) : ModuleCat.{v} k) := by
   have : ∀ j, FiniteDimensional k ((F ⋙ forget₂ (FinVect k) (ModuleCat.{v} k)).obj j) := by
     intro j
     change FiniteDimensional k (F.obj j)
     infer_instance
-  FiniteDimensional.of_injective (limit_subobject_product (F ⋙ forget₂ (FinVect k) (ModuleCat.{v} k)))
-    ((ModuleCat.mono_iff_injective _).1
-      (by
-        infer_instance))
+  exact
+    FiniteDimensional.of_injective (limit_subobject_product (F ⋙ forget₂ (FinVect k) (ModuleCat.{v} k)))
+      ((ModuleCat.mono_iff_injective _).1
+        (by
+          infer_instance))
 
 /-- The forgetful functor from `FinVect k` to `Module k` creates all finite limits. -/
 def forget₂CreatesLimit (F : J ⥤ FinVect k) : CreatesLimit F (forget₂ (FinVect k) (ModuleCat.{v} k)) :=
@@ -67,15 +69,18 @@ def forget₂CreatesLimit (F : J ⥤ FinVect k) : CreatesLimit F (forget₂ (Fin
       infer_instance⟩
     (Iso.refl _)
 
-instance : CreatesLimitsOfShape J (forget₂ (FinVect k) (ModuleCat.{v} k)) where
-  CreatesLimit := fun F => forget₂CreatesLimit F
+instance :
+    CreatesLimitsOfShape J (forget₂ (FinVect k) (ModuleCat.{v} k)) where CreatesLimit := fun F => forget₂CreatesLimit F
 
-instance : HasFiniteLimits (FinVect k) where
-  out := fun J _ _ =>
+instance :
+    HasFiniteLimits
+      (FinVect
+        k) where out := fun J _ _ =>
     has_limits_of_shape_of_has_limits_of_shape_creates_limits_of_shape (forget₂ (FinVect k) (ModuleCat.{v} k))
 
-instance : PreservesFiniteLimits (forget₂ (FinVect k) (ModuleCat.{v} k)) where
-  PreservesFiniteLimits := fun J _ _ => inferInstance
+instance :
+    PreservesFiniteLimits
+      (forget₂ (FinVect k) (ModuleCat.{v} k)) where PreservesFiniteLimits := fun J _ _ => inferInstance
 
 end FinVect
 

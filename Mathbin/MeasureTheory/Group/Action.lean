@@ -26,28 +26,28 @@ namespace MeasureTheory
 
 variable {G M α : Type _}
 
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_vadd] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_vadd] []
 /-- A measure `μ : measure α` is invariant under an additive action of `M` on `α` if for any
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c +ᵥ x` is equal to
 the measure of `s`. -/
 class VaddInvariantMeasure (M α : Type _) [HasVadd M α] {_ : MeasurableSpace α} (μ : Measure α) : Prop where
   measure_preimage_vadd : ∀ c : M ⦃s : Set α⦄, MeasurableSet s → μ ((fun x => c +ᵥ x) ⁻¹' s) = μ s
 
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_smul] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_smul] []
 /-- A measure `μ : measure α` is invariant under a multiplicative action of `M` on `α` if for any
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c • x` is equal to
 the measure of `s`. -/
 @[to_additive]
-class SmulInvariantMeasure (M α : Type _) [HasScalar M α] {_ : MeasurableSpace α} (μ : Measure α) : Prop where
+class SmulInvariantMeasure (M α : Type _) [HasSmul M α] {_ : MeasurableSpace α} (μ : Measure α) : Prop where
   measure_preimage_smul : ∀ c : M ⦃s : Set α⦄, MeasurableSet s → μ ((fun x => c • x) ⁻¹' s) = μ s
 
 namespace SmulInvariantMeasure
 
 @[to_additive]
-instance zero [MeasurableSpace α] [HasScalar M α] : SmulInvariantMeasure M α 0 :=
+instance zero [MeasurableSpace α] [HasSmul M α] : SmulInvariantMeasure M α 0 :=
   ⟨fun _ _ _ => rfl⟩
 
-variable [HasScalar M α] {m : MeasurableSpace α} {μ ν : Measure α}
+variable [HasSmul M α] {m : MeasurableSpace α} {μ ν : Measure α}
 
 @[to_additive]
 instance add [SmulInvariantMeasure M α μ] [SmulInvariantMeasure M α ν] : SmulInvariantMeasure M α (μ + ν) :=
@@ -151,7 +151,7 @@ variable {μ}
 
 @[to_additive]
 theorem NullMeasurableSet.smul {s} (hs : NullMeasurableSet s μ) (c : G) : NullMeasurableSet (c • s) μ := by
-  simpa only [← preimage_smul_inv] using hs.preimage (measure_preserving_smul _ _).QuasiMeasurePreserving
+  simpa only [preimage_smul_inv] using hs.preimage (measure_preserving_smul _ _).QuasiMeasurePreserving
 
 section IsMinimal
 

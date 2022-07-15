@@ -32,6 +32,8 @@ In a strictly convex space, we prove
 - `norm_add_lt_of_not_same_ray`, `same_ray_iff_norm_add`, `dist_add_dist_eq_iff`:
   the triangle inequality `dist x y + dist y z ≤ dist x z` is a strict inequality unless `y` belongs
   to the segment `[x -[ℝ] z]`.
+- `isometry.affine_isometry_of_strict_convex_space`: an isometry of `normed_add_torsor`s for real
+  normed spaces, strictly convex in the case of the codomain, is an affine isometry.
 
 We also provide several lemmas that can be used as alternative constructors for `strict_convex ℝ E`:
 
@@ -80,7 +82,7 @@ variable [NormedSpace ℝ E]
 theorem StrictConvexSpace.of_strict_convex_closed_unit_ball [LinearMap.CompatibleSmul E E 𝕜 ℝ]
     (h : StrictConvex 𝕜 (ClosedBall (0 : E) 1)) : StrictConvexSpace 𝕜 E :=
   ⟨fun r hr => by
-    simpa only [smul_closed_unit_ball_of_nonneg hr.le] using h.smul r⟩
+    simpa only [← smul_closed_unit_ball_of_nonneg hr.le] using h.smul r⟩
 
 /-- If `∥x + y∥ = ∥x∥ + ∥y∥` implies that `x y : E` are in the same ray, then `E` is a strictly
 convex space. -/
@@ -101,9 +103,9 @@ theorem StrictConvexSpace.of_norm_add (h : ∀ x y : E, ∥x + y∥ = ∥x∥ + 
   have ha' : ∥a∥ = a := Real.norm_of_nonneg ha.le
   have hb' : ∥b∥ = b := Real.norm_of_nonneg hb.le
   calc ∥a • x + b • y∥ < ∥a • x∥ + ∥b • y∥ := (norm_add_le _ _).lt_of_ne fun H => hne _ _ = 1 := by
-      simpa only [norm_smul, hx₁, hy₁, mul_oneₓ, ha', hb']
-  simpa only [norm_smul, hx₁, hy₁, ha', hb', mul_oneₓ, smul_comm a, smul_right_inj ha.ne', smul_right_inj hb.ne'] using
-    (h _ _ H).norm_smul_eq.symm
+      simpa only [← norm_smul, ← hx₁, ← hy₁, ← mul_oneₓ, ← ha', ← hb']
+  simpa only [← norm_smul, ← hx₁, ← hy₁, ← ha', ← hb', ← mul_oneₓ, ← smul_comm a, ← smul_right_inj ha.ne', ←
+    smul_right_inj hb.ne'] using (h _ _ H).norm_smul_eq.symm
 
 theorem StrictConvexSpace.of_norm_add_lt_aux {a b c d : ℝ} (ha : 0 < a) (hab : a + b = 1) (hc : 0 < c) (hd : 0 < d)
     (hcd : c + d = 1) (hca : c ≤ a) {x y : E} (hy : ∥y∥ ≤ 1) (hxy : ∥a • x + b • y∥ < 1) : ∥c • x + d • y∥ < 1 := by
@@ -155,7 +157,7 @@ theorem combo_mem_ball_of_ne (hx : x ∈ ClosedBall z r) (hy : y ∈ ClosedBall 
   · rw [closed_ball_zero, mem_singleton_iff] at hx hy
     exact (hne (hx.trans hy.symm)).elim
     
-  · simp only [← interior_closed_ball _ hr] at hx hy⊢
+  · simp only [interior_closed_ball _ hr] at hx hy⊢
     exact strict_convex_closed_ball ℝ z r hx hy hne ha hb hab
     
 
@@ -169,13 +171,13 @@ theorem open_segment_subset_ball_of_ne (hx : x ∈ ClosedBall z r) (hy : y ∈ C
 and `y` with positive coefficients has norm strictly less than `r`. -/
 theorem norm_combo_lt_of_ne (hx : ∥x∥ ≤ r) (hy : ∥y∥ ≤ r) (hne : x ≠ y) (ha : 0 < a) (hb : 0 < b) (hab : a + b = 1) :
     ∥a • x + b • y∥ < r := by
-  simp only [← mem_ball_zero_iff, ← mem_closed_ball_zero_iff] at hx hy⊢
+  simp only [mem_ball_zero_iff, mem_closed_ball_zero_iff] at hx hy⊢
   exact combo_mem_ball_of_ne hx hy hne ha hb hab
 
 /-- In a strictly convex space, if `x` and `y` are not in the same ray, then `∥x + y∥ < ∥x∥ +
 ∥y∥`. -/
 theorem norm_add_lt_of_not_same_ray (h : ¬SameRay ℝ x y) : ∥x + y∥ < ∥x∥ + ∥y∥ := by
-  simp only [same_ray_iff_inv_norm_smul_eq, not_or_distrib, ← Ne.def] at h
+  simp only [← same_ray_iff_inv_norm_smul_eq, ← not_or_distrib, Ne.def] at h
   rcases h with ⟨hx, hy, hne⟩
   rw [← norm_pos_iff] at hx hy
   have hxy : 0 < ∥x∥ + ∥y∥ := add_pos hx hy
@@ -216,9 +218,74 @@ theorem not_same_ray_iff_abs_lt_norm_sub : ¬SameRay ℝ x y ↔ abs (∥x∥ - 
 /-- In a strictly convex space, the triangle inequality turns into an equality if and only if the
 middle point belongs to the segment joining two other points. -/
 theorem dist_add_dist_eq_iff : dist x y + dist y z = dist x z ↔ y ∈ [x -[ℝ] z] := by
-  simp only [mem_segment_iff_same_ray, same_ray_iff_norm_add, dist_eq_norm', sub_add_sub_cancel', eq_comm]
+  simp only [← mem_segment_iff_same_ray, ← same_ray_iff_norm_add, ← dist_eq_norm', ← sub_add_sub_cancel', ← eq_comm]
 
 theorem norm_midpoint_lt_iff (h : ∥x∥ = ∥y∥) : ∥(1 / 2 : ℝ) • (x + y)∥ < ∥x∥ ↔ x ≠ y := by
   rw [norm_smul, Real.norm_of_nonneg (one_div_nonneg.2 zero_le_two), ← inv_eq_one_div, ← div_eq_inv_mul,
     div_lt_iff (@zero_lt_two ℝ _ _), mul_two, ← not_same_ray_iff_of_norm_eq h, not_same_ray_iff_norm_add_lt, h]
+
+variable {F : Type _} [NormedGroup F] [NormedSpace ℝ F]
+
+variable {PF : Type _} {PE : Type _} [MetricSpace PF] [MetricSpace PE]
+
+variable [NormedAddTorsor F PF] [NormedAddTorsor E PE]
+
+include E
+
+theorem eq_line_map_of_dist_eq_mul_of_dist_eq_mul {x y z : PE} (hxy : dist x y = r * dist x z)
+    (hyz : dist y z = (1 - r) * dist x z) : y = AffineMap.lineMap x z r := by
+  have : y -ᵥ x ∈ [(0 : E) -[ℝ] z -ᵥ x] := by
+    rw [← dist_add_dist_eq_iff, dist_zero_left, dist_vsub_cancel_right, ← dist_eq_norm_vsub', ← dist_eq_norm_vsub', hxy,
+      hyz, ← add_mulₓ, add_sub_cancel'_right, one_mulₓ]
+  rcases eq_or_ne x z with (rfl | hne)
+  · obtain rfl : y = x := by
+      simpa
+    simp
+    
+  · rw [← dist_ne_zero] at hne
+    rcases this with ⟨a, b, ha, hb, hab, H⟩
+    rw [smul_zero, zero_addₓ] at H
+    have H' := congr_arg norm H
+    rw [norm_smul, Real.norm_of_nonneg hb, ← dist_eq_norm_vsub', ← dist_eq_norm_vsub', hxy, mul_left_inj' hne] at H'
+    rw [AffineMap.line_map_apply, ← H', H, vsub_vadd]
+    
+
+theorem eq_midpoint_of_dist_eq_half {x y z : PE} (hx : dist x y = dist x z / 2) (hy : dist y z = dist x z / 2) :
+    y = midpoint ℝ x z := by
+  apply eq_line_map_of_dist_eq_mul_of_dist_eq_mul
+  · rwa [inv_of_eq_inv, ← div_eq_inv_mul]
+    
+  · rwa [inv_of_eq_inv, ← one_div, sub_half, one_div, ← div_eq_inv_mul]
+    
+
+namespace Isometry
+
+include F
+
+/-- An isometry of `normed_add_torsor`s for real normed spaces, strictly convex in the case of
+the codomain, is an affine isometry.  Unlike Mazur-Ulam, this does not require the isometry to
+be surjective.  -/
+noncomputable def affineIsometryOfStrictConvexSpace {f : PF → PE} (hi : Isometry f) : PF →ᵃⁱ[ℝ] PE :=
+  { AffineMap.ofMapMidpoint f
+      (fun x y => by
+        apply eq_midpoint_of_dist_eq_half
+        · rw [hi.dist_eq, hi.dist_eq, dist_left_midpoint, Real.norm_of_nonneg zero_le_two, div_eq_inv_mul]
+          
+        · rw [hi.dist_eq, hi.dist_eq, dist_midpoint_right, Real.norm_of_nonneg zero_le_two, div_eq_inv_mul]
+          )
+      hi.Continuous with
+    norm_map := fun x => by
+      simp [← AffineMap.ofMapMidpoint, dist_eq_norm_vsub E, ← hi.dist_eq] }
+
+@[simp]
+theorem coe_affine_isometry_of_strict_convex_space {f : PF → PE} (hi : Isometry f) :
+    ⇑hi.affineIsometryOfStrictConvexSpace = f :=
+  rfl
+
+@[simp]
+theorem affine_isometry_of_strict_convex_space_apply {f : PF → PE} (hi : Isometry f) (p : PF) :
+    hi.affineIsometryOfStrictConvexSpace p = f p :=
+  rfl
+
+end Isometry
 

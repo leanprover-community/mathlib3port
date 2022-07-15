@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
 import Mathbin.Data.Zmod.Basic
-import Mathbin.GroupTheory.QuotientGroup
+import Mathbin.GroupTheory.GroupAction.Quotient
 import Mathbin.RingTheory.Int.Basic
 
 /-!
@@ -91,6 +91,8 @@ namespace MulAction
 open AddAction Subgroup AddSubgroup Function
 
 variable {α β : Type _} [Groupₓ α] (a : α) [MulAction α β] (b : β)
+
+attribute [local semireducible] MulOpposite
 
 /-- The quotient `(a ^ ℤ) ⧸ (stabilizer b)` is cyclic of order `minimal_period ((•) a) b`. -/
 noncomputable def zpowersQuotientStabilizerEquiv :

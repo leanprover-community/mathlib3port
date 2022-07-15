@@ -63,15 +63,13 @@ attribute [simp, reassoc] hom.h
 namespace Hom
 
 /-- The identity morphism of an algebra of endofunctor `F` -/
-def id : Hom A A where
-  f := 𝟙 _
+def id : Hom A A where f := 𝟙 _
 
 instance : Inhabited (Hom A A) :=
   ⟨{ f := 𝟙 _ }⟩
 
 /-- The composition of morphisms between algebras of endofunctor `F` -/
-def comp (f : Hom A₀ A₁) (g : Hom A₁ A₂) : Hom A₀ A₂ where
-  f := f.1 ≫ g.1
+def comp (f : Hom A₀ A₁) (g : Hom A₁ A₂) : Hom A₀ A₂ where f := f.1 ≫ g.1
 
 end Hom
 
@@ -99,8 +97,7 @@ theorem comp_f : (f ≫ g).1 = f.1 ≫ g.1 :=
   rfl
 
 /-- Algebras of an endofunctor `F` form a category -/
-instance (F : C ⥤ C) : Category (Algebra F) :=
-  {  }
+instance (F : C ⥤ C) : Category (Algebra F) where
 
 /-- To construct an isomorphism of algebras, it suffices to give an isomorphism of the As which
 commutes with the structure morphisms.
@@ -129,11 +126,9 @@ theorem iso_of_iso (f : A₀ ⟶ A₁) [IsIso f.1] : IsIso f :=
       by
       tidy⟩⟩
 
-instance forget_reflects_iso : ReflectsIsomorphisms (forget F) where
-  reflects := fun A B => iso_of_iso
+instance forget_reflects_iso : ReflectsIsomorphisms (forget F) where reflects := fun A B => iso_of_iso
 
-instance forget_faithful : Faithful (forget F) :=
-  {  }
+instance forget_faithful : Faithful (forget F) where
 
 /-- From a natural transformation `α : G → F` we get a functor from
 algebras of `F` to algebras of `G`.
@@ -184,7 +179,7 @@ def functorOfNatTransEq {F G : C ⥤ C} {α β : F ⟶ G} (h : α = β) : functo
       isoMk (Iso.refl _)
         (by
           dsimp'
-          simp [h]))
+          simp [← h]))
     fun X Y f => by
     ext
     dsimp'

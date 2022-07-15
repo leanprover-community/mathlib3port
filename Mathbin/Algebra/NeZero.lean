@@ -25,14 +25,14 @@ class NeZero {R} [Zero R] (n : R) : Prop where
 theorem NeZero.ne {R} [Zero R] (n : R) [h : NeZero n] : n ≠ 0 :=
   h.out
 
-theorem NeZero.ne' (n : ℕ) R [Zero R] [One R] [Add R] [h : NeZero (n : R)] : (n : R) ≠ 0 :=
+theorem NeZero.ne' (n : ℕ) R [AddMonoidWithOneₓ R] [h : NeZero (n : R)] : (n : R) ≠ 0 :=
   h.out
 
 theorem ne_zero_iff {R : Type _} [Zero R] {n : R} : NeZero n ↔ n ≠ 0 :=
   ⟨fun h => h.out, NeZero.mk⟩
 
 theorem not_ne_zero {R : Type _} [Zero R] {n : R} : ¬NeZero n ↔ n = 0 := by
-  simp [ne_zero_iff]
+  simp [← ne_zero_iff]
 
 namespace NeZero
 
@@ -50,7 +50,7 @@ theorem of_pos [Preorderₓ M] [Zero M] (h : 0 < x) : NeZero x :=
 theorem of_gt [CanonicallyOrderedAddMonoid M] (h : x < y) : NeZero y :=
   of_pos <| pos_of_gt h
 
-instance char_zero [NeZero n] [AddMonoidₓ M] [One M] [CharZero M] : NeZero (n : M) :=
+instance char_zero [NeZero n] [AddMonoidWithOneₓ M] [CharZero M] : NeZero (n : M) :=
   ⟨Nat.cast_ne_zero.mpr <| NeZero.ne n⟩
 
 instance (priority := 100) invertible [MulZeroOneClassₓ M] [Nontrivial M] [Invertible x] : NeZero x :=
@@ -66,6 +66,11 @@ theorem of_map [Zero R] [Zero M] [ZeroHomClass F R M] (f : F) [NeZero (f r)] : N
   ⟨fun h =>
     ne (f r) <| by
       convert map_zero f⟩
+
+theorem nat_of_ne_zero [Semiringₓ R] [Semiringₓ S] [RingHomClass F R S] (f : F) [hn : NeZero (n : S)] :
+    NeZero (n : R) := by
+  apply NeZero.of_map f
+  simp [← hn]
 
 theorem of_injective [Zero R] [h : NeZero r] [Zero M] [ZeroHomClass F R M] {f : F} (hf : Function.Injective f) :
     NeZero (f r) :=
@@ -85,23 +90,24 @@ theorem pos (r : R) [CanonicallyOrderedAddMonoid R] [NeZero r] : 0 < r :=
 
 variable (R M)
 
-theorem of_not_dvd [AddMonoidₓ M] [One M] [CharP M p] (h : ¬p ∣ n) : NeZero (n : M) :=
+theorem of_not_dvd [AddMonoidWithOneₓ M] [CharP M p] (h : ¬p ∣ n) : NeZero (n : M) :=
   ⟨(not_iff_not.mpr <| CharP.cast_eq_zero_iff M p n).mpr h⟩
 
 theorem of_no_zero_smul_divisors (n : ℕ) [CommRingₓ R] [NeZero (n : R)] [Ringₓ M] [Nontrivial M] [Algebra R M]
     [NoZeroSmulDivisors R M] : NeZero (n : M) :=
   nat_of_injective <| NoZeroSmulDivisors.algebra_map_injective R M
 
-theorem of_ne_zero_coe [Zero R] [One R] [Add R] [h : NeZero (n : R)] : NeZero n :=
+theorem of_ne_zero_coe [AddMonoidWithOneₓ R] [h : NeZero (n : R)] : NeZero n :=
   ⟨by
     cases h
     rintro rfl
-    contradiction⟩
+    · simpa using h
+      ⟩
 
-theorem not_char_dvd [AddMonoidₓ R] [One R] (p : ℕ) [CharP R p] (k : ℕ) [h : NeZero (k : R)] : ¬p ∣ k := by
+theorem not_char_dvd [AddMonoidWithOneₓ R] (p : ℕ) [CharP R p] (k : ℕ) [h : NeZero (k : R)] : ¬p ∣ k := by
   rwa [← not_iff_not.mpr <| CharP.cast_eq_zero_iff R p k, ← Ne.def, ← ne_zero_iff]
 
-theorem pos_of_ne_zero_coe [Zero R] [One R] [Add R] [NeZero (n : R)] : 0 < n :=
+theorem pos_of_ne_zero_coe [AddMonoidWithOneₓ R] [NeZero (n : R)] : 0 < n :=
   (NeZero.of_ne_zero_coe R).out.bot_lt
 
 end NeZero

@@ -51,14 +51,14 @@ variable {N I}
 instance addCommGroup : AddCommGroupₓ (M ⧸ N) :=
   Submodule.Quotient.addCommGroup _
 
-instance module' {S : Type _} [Semiringₓ S] [HasScalar S R] [Module S M] [IsScalarTower S R M] : Module S (M ⧸ N) :=
+instance module' {S : Type _} [Semiringₓ S] [HasSmul S R] [Module S M] [IsScalarTower S R M] : Module S (M ⧸ N) :=
   Submodule.Quotient.module' _
 
 instance module : Module R (M ⧸ N) :=
   Submodule.Quotient.module _
 
-instance is_central_scalar {S : Type _} [Semiringₓ S] [HasScalar S R] [Module S M] [IsScalarTower S R M]
-    [HasScalar Sᵐᵒᵖ R] [Module Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] : IsCentralScalar S (M ⧸ N) :=
+instance is_central_scalar {S : Type _} [Semiringₓ S] [HasSmul S R] [Module S M] [IsScalarTower S R M] [HasSmul Sᵐᵒᵖ R]
+    [Module Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] : IsCentralScalar S (M ⧸ N) :=
   Submodule.Quotient.is_central_scalar _
 
 instance inhabited : Inhabited (M ⧸ N) :=
@@ -105,7 +105,7 @@ instance lieQuotientHasBracket : HasBracket (L ⧸ I) (L ⧸ I) :=
     apply (Submodule.Quotient.eq I.to_submodule).2
     rw [Submodule.quotient_rel_r_def] at h₁ h₂
     have h : ⁅x₁,x₂⁆ - ⁅y₁,y₂⁆ = ⁅x₁,x₂ - y₂⁆ + ⁅x₁ - y₁,y₂⁆ := by
-      simp [-lie_skew, sub_eq_add_neg, add_assocₓ]
+      simp [-lie_skew, ← sub_eq_add_neg, ← add_assocₓ]
     rw [h]
     apply Submodule.add_mem
     · apply lie_mem_right R L I x₁ (x₂ - y₂) h₂
@@ -159,8 +159,8 @@ instance lieQuotientLieRing : LieRing (L ⧸ I) where
     apply congr_arg
     apply leibniz_lie
 
-instance lieQuotientLieAlgebra : LieAlgebra R (L ⧸ I) where
-  lie_smul := by
+instance lieQuotientLieAlgebra :
+    LieAlgebra R (L ⧸ I) where lie_smul := by
     intro t x' y'
     apply Quotientₓ.induction_on₂' x' y'
     intro x y
@@ -217,8 +217,8 @@ noncomputable def quotKerEquivRange : (L ⧸ f.ker) ≃ₗ⁅R⁆ f.range :=
     map_lie' := by
       rintro ⟨x⟩ ⟨y⟩
       rw [← SetLike.coe_eq_coe, LieSubalgebra.coe_bracket]
-      simp only [Submodule.Quotient.quot_mk_eq_mk, LinearMap.quot_ker_equiv_range_apply_mk, ←
-        LieSubmodule.Quotient.mk_bracket, coe_to_linear_map, map_lie] }
+      simp only [← Submodule.Quotient.quot_mk_eq_mk, ← LinearMap.quot_ker_equiv_range_apply_mk,
+        LieSubmodule.Quotient.mk_bracket, ← coe_to_linear_map, ← map_lie] }
 
 end LieHom
 

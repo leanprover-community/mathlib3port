@@ -6,7 +6,7 @@ Authors: David Wärn
 import Mathbin.CategoryTheory.Elements
 import Mathbin.CategoryTheory.IsConnected
 import Mathbin.CategoryTheory.SingleObj
-import Mathbin.GroupTheory.GroupAction.Basic
+import Mathbin.GroupTheory.GroupAction.Quotient
 import Mathbin.GroupTheory.SemidirectProduct
 
 /-!
@@ -185,7 +185,7 @@ def uncurry (F : G →* (X → H) ⋊[mulAutArrow] G) (sane : ∀ g, (F g).right
     intro x y z f g
     revert y z g
     refine' action_category.cases _
-    simp [single_obj.comp_as_mul, sane]
+    simp [← single_obj.comp_as_mul, ← sane]
 
 end Groupₓ
 

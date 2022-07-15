@@ -113,7 +113,7 @@ variable [HasFiniteProducts C] [Reflective i] [CartesianClosed C]
 This is the converse of `preserves_binary_products_of_exponential_ideal`.
 -/
 instance (priority := 10) exponential_ideal_of_preserves_binary_products
-    [PreservesLimitsOfShape (Discrete.{v₁} WalkingPair) (leftAdjoint i)] : ExponentialIdeal i := by
+    [PreservesLimitsOfShape (Discrete WalkingPair) (leftAdjoint i)] : ExponentialIdeal i := by
   let ir := adjunction.of_right_adjoint i
   let L : C ⥤ D := left_adjoint i
   let η : 𝟭 C ⟶ L ⋙ i := ir.unit
@@ -138,8 +138,8 @@ variable [ExponentialIdeal i]
 /-- If `i` witnesses that `D` is a reflective subcategory and an exponential ideal, then `D` is
 itself cartesian closed.
 -/
-def cartesianClosedOfReflective : CartesianClosed D where
-  closed' := fun B =>
+def cartesianClosedOfReflective :
+    CartesianClosed D where closed' := fun B =>
     { isAdj :=
         { right := i ⋙ exp (i.obj B) ⋙ leftAdjoint i,
           adj := by
@@ -147,7 +147,7 @@ def cartesianClosedOfReflective : CartesianClosed D where
             · symm
               apply nat_iso.of_components _ _
               · intro X
-                have := Adjunction.rightAdjointPreservesLimits.{v₁, v₁} (adjunction.of_right_adjoint i)
+                have := Adjunction.rightAdjointPreservesLimits.{0, 0} (adjunction.of_right_adjoint i)
                 apply as_iso (prod_comparison i B X)
                 
               · intro X Y f
@@ -190,12 +190,13 @@ noncomputable def bijection (A B : C) (X : D) :
     _ ≃ (i.obj ((leftAdjoint i).obj A ⨯ (leftAdjoint i).obj B) ⟶ i.obj X) := by
       apply iso.hom_congr _ (iso.refl _)
       have : preserves_limits i := (adjunction.of_right_adjoint i).rightAdjointPreservesLimits
+      have := preserves_smallest_limits_of_preserves_limits i
       exact (preserves_limit_pair.iso _ _ _).symm
     _ ≃ ((leftAdjoint i).obj A ⨯ (leftAdjoint i).obj B ⟶ X) := (equivOfFullyFaithful _).symm
     
 
 theorem bijection_symm_apply_id (A B : C) : (bijection i A B _).symm (𝟙 _) = prodComparison _ _ _ := by
-  dsimp' [bijection]
+  dsimp' [← bijection]
   rw [comp_id, comp_id, comp_id, i.map_id, comp_id, unit_comp_partial_bijective_symm_apply,
     unit_comp_partial_bijective_symm_apply, uncurry_natural_left, uncurry_curry, uncurry_natural_left, uncurry_curry,
     prod.lift_map_assoc, comp_id, prod.lift_map_assoc, comp_id, prod.comp_lift_assoc, prod.lift_snd,
@@ -211,7 +212,7 @@ theorem bijection_symm_apply_id (A B : C) : (bijection i A B _).symm (𝟙 _) = 
 
 theorem bijection_natural (A B : C) (X X' : D) (f : (leftAdjoint i).obj (A ⨯ B) ⟶ X) (g : X ⟶ X') :
     bijection i _ _ _ (f ≫ g) = bijection i _ _ _ f ≫ g := by
-  dsimp' [bijection]
+  dsimp' [← bijection]
   apply i.map_injective
   rw [i.image_preimage, i.map_comp, i.image_preimage, comp_id, comp_id, comp_id, comp_id, comp_id, comp_id,
     adjunction.hom_equiv_naturality_right, ← assoc, curry_natural_right _ (i.map g),
@@ -234,17 +235,16 @@ attribute [local instance] prod_comparison_iso
 This is the converse of `exponential_ideal_of_preserves_binary_products`.
 -/
 noncomputable def preservesBinaryProductsOfExponentialIdeal :
-    PreservesLimitsOfShape (Discrete WalkingPair) (leftAdjoint i) where
-  PreservesLimit := fun K => by
+    PreservesLimitsOfShape (Discrete WalkingPair) (leftAdjoint i) where PreservesLimit := fun K => by
     apply limits.preserves_limit_of_iso_diagram _ (diagram_iso_pair K).symm
     apply preserves_limit_pair.of_iso_prod_comparison
 
 /-- If a reflective subcategory is an exponential ideal, then the reflector preserves finite products.
 -/
-noncomputable def preservesFiniteProductsOfExponentialIdeal (J : Type _) [Fintype J] :
+noncomputable def preservesFiniteProductsOfExponentialIdeal (J : Type) [Fintype J] :
     PreservesLimitsOfShape (Discrete J) (leftAdjoint i) := by
   let this := preserves_binary_products_of_exponential_ideal i
-  let this := leftAdjointPreservesTerminalOfReflective.{v₁} i
+  let this := leftAdjointPreservesTerminalOfReflective.{0} i
   apply preserves_finite_products_of_preserves_binary_and_terminal (left_adjoint i) J
 
 end

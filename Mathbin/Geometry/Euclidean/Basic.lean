@@ -86,17 +86,17 @@ theorem IsConformalMap.preserves_angle {E F : Type _} [InnerProductSpace ℝ E] 
     (h : IsConformalMap f') (u v : E) : angle (f' u) (f' v) = angle u v := by
   obtain ⟨c, hc, li, hcf⟩ := h
   suffices c * (c * inner u v) / (∥c∥ * ∥u∥ * (∥c∥ * ∥v∥)) = inner u v / (∥u∥ * ∥v∥) by
-    simp [this, angle, hcf, norm_smul, inner_smul_left, inner_smul_right]
+    simp [← this, ← angle, ← hcf, ← norm_smul, ← inner_smul_left, ← inner_smul_right]
   by_cases' hu : ∥u∥ = 0
-  · simp [norm_eq_zero.mp hu]
+  · simp [← norm_eq_zero.mp hu]
     
   by_cases' hv : ∥v∥ = 0
-  · simp [norm_eq_zero.mp hv]
+  · simp [← norm_eq_zero.mp hv]
     
   have hc : ∥c∥ ≠ 0 := fun w => hc (norm_eq_zero.mp w)
   field_simp
   have : c * c = ∥c∥ * ∥c∥ := by
-    simp [Real.norm_eq_abs, abs_mul_abs_self]
+    simp [← Real.norm_eq_abs, ← abs_mul_abs_self]
   convert congr_arg (fun x => x * ⟪u, v⟫ * ∥u∥ * ∥v∥) this using 1 <;> ring
 
 /-- If a real differentiable map `f` is conformal at a point `x`,
@@ -194,7 +194,7 @@ theorem angle_smul_left_of_neg (x y : V) {r : ℝ} (hr : r < 0) : angle (r • x
 product of their norms. -/
 theorem cos_angle_mul_norm_mul_norm (x y : V) : Real.cos (angle x y) * (∥x∥ * ∥y∥) = inner x y := by
   rw [cos_angle, div_mul_cancel_of_imp]
-  simp (config := { contextual := true })[or_imp_distrib]
+  simp (config := { contextual := true })[← or_imp_distrib]
 
 /-- The sine of the angle between two vectors, multiplied by the
 product of their norms. -/
@@ -220,7 +220,7 @@ theorem sin_angle_mul_norm_mul_norm (x y : V) :
       rw [hy, inner_zero_right, zero_mul, neg_zero]
       
     
-  · field_simp [h]
+  · field_simp [← h]
     ring_nf
     
 
@@ -246,16 +246,16 @@ theorem angle_add_angle_eq_pi_of_angle_eq_pi {x y : V} (z : V) (h : angle x y = 
 them is π/2. -/
 theorem inner_eq_zero_iff_angle_eq_pi_div_two (x y : V) : ⟪x, y⟫ = 0 ↔ angle x y = π / 2 :=
   Iff.symm <| by
-    simp (config := { contextual := true })[angle, or_imp_distrib]
+    simp (config := { contextual := true })[← angle, ← or_imp_distrib]
 
 /-- If the angle between two vectors is π, the inner product equals the negative product
 of the norms. -/
 theorem inner_eq_neg_mul_norm_of_angle_eq_pi {x y : V} (h : angle x y = π) : ⟪x, y⟫ = -(∥x∥ * ∥y∥) := by
-  simp [← cos_angle_mul_norm_mul_norm, h]
+  simp [cos_angle_mul_norm_mul_norm, ← h]
 
 /-- If the angle between two vectors is 0, the inner product equals the product of the norms. -/
 theorem inner_eq_mul_norm_of_angle_eq_zero {x y : V} (h : angle x y = 0) : ⟪x, y⟫ = ∥x∥ * ∥y∥ := by
-  simp [← cos_angle_mul_norm_mul_norm, h]
+  simp [cos_angle_mul_norm_mul_norm, ← h]
 
 /-- The inner product of two non-zero vectors equals the negative product of their norms
 if and only if the angle between the two vectors is π. -/
@@ -407,7 +407,7 @@ theorem angle_eq_zero_of_angle_eq_pi_left {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π)
   rw [← neg_vsub_eq_vsub_rev, neg_ne_zero] at hp1p2
   use hp1p2, -r + 1, add_pos (neg_pos_of_neg hr) zero_lt_one
   rw [add_smul, ← neg_vsub_eq_vsub_rev p1 p2, smul_neg]
-  simp [← hpr]
+  simp [hpr]
 
 /-- If the angle ∠ABC at a point is π, the angle ∠BCA is 0. -/
 theorem angle_eq_zero_of_angle_eq_pi_right {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π) : ∠ p2 p3 p1 = 0 := by
@@ -489,7 +489,7 @@ theorem angle_midpoint_eq_pi (p1 p2 : P) (hp1p2 : p1 ≠ p2) : ∠ p1 (midpoint 
   have : p2 -ᵥ midpoint ℝ p1 p2 = -(p1 -ᵥ midpoint ℝ p1 p2) := by
     rw [neg_vsub_eq_vsub_rev]
     simp
-  simp [angle, this, hp1p2, -zero_lt_one]
+  simp [← angle, ← this, ← hp1p2, -zero_lt_one]
 
 /-- If M is the midpoint of the segment AB and C is the same distance from A as it is from B
 then ∠CMA = π / 2. -/
@@ -523,10 +523,12 @@ theorem inner_weighted_vsub {ι₁ : Type _} {s₁ : Finset ι₁} {w₁ : ι₁
 in terms of the pairwise distances between the points in that
 combination. -/
 theorem dist_affine_combination {ι : Type _} {s : Finset ι} {w₁ w₂ : ι → ℝ} (p : ι → P) (h₁ : (∑ i in s, w₁ i) = 1)
-    (h₂ : (∑ i in s, w₂ i) = 1) :
-    dist (s.affineCombination p w₁) (s.affineCombination p w₂) *
-        dist (s.affineCombination p w₁) (s.affineCombination p w₂) =
-      (-∑ i₁ in s, ∑ i₂ in s, (w₁ - w₂) i₁ * (w₁ - w₂) i₂ * (dist (p i₁) (p i₂) * dist (p i₁) (p i₂))) / 2 :=
+    (h₂ : (∑ i in s, w₂ i) = 1) : by
+    have a₁ := s.affine_combination p w₁ <;>
+      have a₂ := s.affine_combination p w₂ <;>
+        exact
+          dist a₁ a₂ * dist a₁ a₂ =
+            (-∑ i₁ in s, ∑ i₂ in s, (w₁ - w₂) i₁ * (w₁ - w₂) i₂ * (dist (p i₁) (p i₂) * dist (p i₁) (p i₂))) / 2 :=
   by
   rw [dist_eq_norm_vsub V (s.affine_combination p w₁) (s.affine_combination p w₂), ← inner_self_eq_norm_mul_norm,
     Finset.affine_combination_vsub]
@@ -547,7 +549,7 @@ theorem inner_vsub_vsub_of_dist_eq_of_dist_eq {c₁ c₂ p₁ p₂ : P} (hc₁ :
     rw [dist_comm p₁, dist_comm p₂, dist_eq_norm_vsub V _ p₁, dist_eq_norm_vsub V _ p₂, ←
       real_inner_add_sub_eq_zero_iff] at hc₁ hc₂
     simp_rw [← neg_vsub_eq_vsub_rev c₁, ← neg_vsub_eq_vsub_rev c₂, sub_neg_eq_add, neg_add_eq_sub, hc₁, hc₂, sub_zero]
-  simpa [inner_add_left, ← mul_two,
+  simpa [← inner_add_left, mul_two, ←
     (by
       norm_num : (2 : ℝ) ≠ 0)] using
     h
@@ -579,10 +581,10 @@ theorem dist_smul_vadd_eq_dist {v : V} (p₁ p₂ : P) (hv : v ≠ 0) (r : ℝ) 
 
 open AffineSubspace FiniteDimensional
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 /-- Distances `r₁` `r₂` of `p` from two different points `c₁` `c₂` determine at
 most two points `p₁` `p₂` in a two-dimensional subspace containing those points
 (two circles intersect in at most two points). -/
@@ -599,7 +601,7 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
   have hb : LinearIndependent ℝ b := by
     refine' linear_independent_of_ne_zero_of_inner_eq_zero _ _
     · intro i
-      fin_cases i <;> simp [b, hc.symm, hp.symm]
+      fin_cases i <;> simp [← b, ← hc.symm, ← hp.symm]
       
     · intro i j hij
       fin_cases i <;>
@@ -638,18 +640,18 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
     rcases hv' with ⟨t₂, rfl⟩
     exact ⟨t₁, t₂, hv⟩
   rcases hv (p -ᵥ p₁) (vsub_mem_direction hps hp₁s) with ⟨t₁, t₂, hpt⟩
-  simp only [hpt, inner_add_right, inner_smul_right, ho, mul_zero, add_zeroₓ, mul_eq_zero, inner_self_eq_zero,
-    vsub_eq_zero_iff_eq, hc.symm, or_falseₓ] at hop
+  simp only [← hpt, ← inner_add_right, ← inner_smul_right, ← ho, ← mul_zero, ← add_zeroₓ, ← mul_eq_zero, ←
+    inner_self_eq_zero, ← vsub_eq_zero_iff_eq, ← hc.symm, ← or_falseₓ] at hop
   rw [hop, zero_smul, zero_addₓ, ← eq_vadd_iff_vsub_eq] at hpt
   subst hpt
   have hp' : (p₂ -ᵥ p₁ : V) ≠ 0 := by
-    simp [hp.symm]
+    simp [← hp.symm]
   have hp₂ : dist ((1 : ℝ) • (p₂ -ᵥ p₁) +ᵥ p₁) c₁ = r₁ := by
-    simp [hp₂c₁]
+    simp [← hp₂c₁]
   rw [← hp₁c₁, dist_smul_vadd_eq_dist _ _ hp'] at hpc₁ hp₂
-  simp only [one_ne_zero, false_orₓ] at hp₂
+  simp only [← one_ne_zero, ← false_orₓ] at hp₂
   rw [hp₂.symm] at hpc₁
-  cases hpc₁ <;> simp [hpc₁]
+  cases hpc₁ <;> simp [← hpc₁]
 
 /-- Distances `r₁` `r₂` of `p` from two different points `c₁` `c₂` determine at
 most two points `p₁` `p₂` in two-dimensional space (two circles intersect in at
@@ -657,12 +659,13 @@ most two points). -/
 theorem eq_of_dist_eq_of_dist_eq_of_finrank_eq_two [FiniteDimensional ℝ V] (hd : finrank ℝ V = 2) {c₁ c₂ p₁ p₂ p : P}
     {r₁ r₂ : ℝ} (hc : c₁ ≠ c₂) (hp : p₁ ≠ p₂) (hp₁c₁ : dist p₁ c₁ = r₁) (hp₂c₁ : dist p₂ c₁ = r₁)
     (hpc₁ : dist p c₁ = r₁) (hp₁c₂ : dist p₁ c₂ = r₂) (hp₂c₂ : dist p₂ c₂ = r₂) (hpc₂ : dist p c₂ = r₂) :
-    p = p₁ ∨ p = p₂ :=
+    p = p₁ ∨ p = p₂ := by
   have hd' : finrank ℝ (⊤ : AffineSubspace ℝ P).direction = 2 := by
     rw [direction_top, finrank_top]
     exact hd
-  eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two hd' (mem_top ℝ V _) (mem_top ℝ V _) (mem_top ℝ V _) (mem_top ℝ V _)
-    (mem_top ℝ V _) hc hp hp₁c₁ hp₂c₁ hpc₁ hp₁c₂ hp₂c₂ hpc₂
+  exact
+    eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two hd' (mem_top ℝ V _) (mem_top ℝ V _) (mem_top ℝ V _)
+      (mem_top ℝ V _) (mem_top ℝ V _) hc hp hp₁c₁ hp₂c₁ hpc₁ hp₁c₂ hp₂c₂ hpc₂
 
 variable {V}
 
@@ -884,7 +887,7 @@ theorem dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_
       dist p1 (orthogonalProjection s p2) * dist p1 (orthogonalProjection s p2) +
         dist p2 (orthogonalProjection s p2) * dist p2 (orthogonalProjection s p2) :=
   by
-  rw [PseudoMetricSpace.dist_comm p2 _, dist_eq_norm_vsub V p1 _, dist_eq_norm_vsub V p1 _, dist_eq_norm_vsub V _ p2, ←
+  rw [dist_comm p2 _, dist_eq_norm_vsub V p1 _, dist_eq_norm_vsub V p1 _, dist_eq_norm_vsub V _ p2, ←
     vsub_add_vsub_cancel p1 (orthogonalProjection s p2) p2, norm_add_sq_eq_norm_sq_add_norm_sq_iff_real_inner_eq_zero]
   exact
     Submodule.inner_right_of_mem_orthogonal (vsub_orthogonal_projection_mem_direction p2 hp1)
@@ -932,9 +935,9 @@ def reflection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.directio
         congr 1
         abel
       have : p = v +ᵥ ↑(Classical.arbitrary s) := (vsub_vadd p ↑(Classical.arbitrary s)).symm
-      simpa only [coe_vadd, reflection_apply, AffineMap.map_vadd, orthogonal_projection_linear,
-        orthogonal_projection_mem_subspace_eq_self, vadd_vsub, ContinuousLinearMap.coe_coe,
-        ContinuousLinearEquiv.coe_coe, this] using key)
+      simpa only [← coe_vadd, ← reflection_apply, ← AffineMap.map_vadd, ← orthogonal_projection_linear, ←
+        orthogonal_projection_mem_subspace_eq_self, ← vadd_vsub, ← ContinuousLinearMap.coe_coe, ←
+        ContinuousLinearEquiv.coe_coe, ← this] using key)
 
 /-- The result of reflecting. -/
 theorem reflection_apply (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] (p : P) :
@@ -956,7 +959,7 @@ theorem reflection_reflection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteS
     intro a b h
     have : (a : P) -ᵥ (b +ᵥ a) = -b := by
       rw [vsub_vadd_eq_vsub_sub, vsub_self, zero_sub]
-    simp [reflection, h, this]
+    simp [← reflection, ← h, ← this]
   rw [← vsub_vadd p (orthogonalProjection s p)]
   exact this (orthogonalProjection s p) _ (orthogonal_projection_vsub_orthogonal_projection s p)
 
@@ -985,7 +988,7 @@ theorem reflection_eq_self_iff {s : AffineSubspace ℝ P} [Nonempty s] [Complete
     exact h
     
   · intro h
-    simp [h]
+    simp [← h]
     
 
 /-- Reflecting a point in two subspaces produces the same result if
@@ -1106,7 +1109,7 @@ theorem Cospherical.affine_independent {s : Set P} (hs : Cospherical s) {p : Fin
   have hv0 : v ≠ 0 := by
     intro h
     have he : p 1 = p 0 := by
-      simpa [h] using hv 1
+      simpa [← h] using hv 1
     exact
       (by
           decide : (1 : Finₓ 3) ≠ 0)
@@ -1121,18 +1124,18 @@ theorem Cospherical.affine_independent {s : Set P} (hs : Cospherical s) {p : Fin
   have hf0 : f 0 = 0 := by
     have hf0' := hf 0
     rw [eq_comm, ← @vsub_eq_zero_iff_eq V, vadd_vsub, smul_eq_zero] at hf0'
-    simpa [hv0] using hf0'
+    simpa [← hv0] using hf0'
   have hfi : Function.Injective f := by
     intro i j h
     have hi := hf i
     rw [h, ← hf j] at hi
     exact hpi hi
-  simp_rw [← hsd 0, hf0, zero_smul, zero_vadd, dist_smul_vadd_eq_dist (p 0) c hv0]  at hsd
+  simp_rw [← hsd 0, hf0, zero_smul, zero_vadd, dist_smul_vadd_eq_dist (p 0) c hv0] at hsd
   have hfn0 : ∀ i, i ≠ 0 → f i ≠ 0 := fun i => (hfi.ne_iff' hf0).2
   have hfn0' : ∀ i, i ≠ 0 → f i = -2 * ⟪v, p 0 -ᵥ c⟫ / ⟪v, v⟫ := by
     intro i hi
     have hsdi := hsd i
-    simpa [hfn0, hi] using hsdi
+    simpa [← hfn0, ← hi] using hsdi
   have hf12 : f 1 = f 2 := by
     rw
       [hfn0' 1

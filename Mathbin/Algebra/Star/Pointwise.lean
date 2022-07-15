@@ -56,7 +56,7 @@ theorem mem_star [HasStar α] : a ∈ s⋆ ↔ a⋆ ∈ s :=
   Iff.rfl
 
 theorem star_mem_star [HasInvolutiveStar α] : a⋆ ∈ s⋆ ↔ a ∈ s := by
-  simp only [mem_star, star_star]
+  simp only [← mem_star, ← star_star]
 
 @[simp]
 theorem star_preimage [HasStar α] : HasStar.star ⁻¹' s = s⋆ :=
@@ -64,8 +64,8 @@ theorem star_preimage [HasStar α] : HasStar.star ⁻¹' s = s⋆ :=
 
 @[simp]
 theorem image_star [HasInvolutiveStar α] : HasStar.star '' s = s⋆ := by
-  simp only [← star_preimage]
-  rw [image_eq_preimage_of_inverse] <;> intro <;> simp only [star_star]
+  simp only [star_preimage]
+  rw [image_eq_preimage_of_inverse] <;> intro <;> simp only [← star_star]
 
 @[simp]
 theorem inter_star [HasStar α] : (s ∩ t)⋆ = s⋆ ∩ t⋆ :=
@@ -91,7 +91,7 @@ theorem compl_star [HasStar α] : (sᶜ)⋆ = s⋆ᶜ :=
 instance [HasInvolutiveStar α] : HasInvolutiveStar (Set α) where
   star := HasStar.star
   star_involutive := fun s => by
-    simp only [← star_preimage, preimage_preimage, star_star, preimage_id']
+    simp only [star_preimage, ← preimage_preimage, ← star_star, ← preimage_id']
 
 @[simp]
 theorem star_subset_star [HasInvolutiveStar α] {s t : Set α} : s⋆ ⊆ t⋆ ↔ s ⊆ t :=
@@ -114,19 +114,19 @@ protected theorem star_add [AddMonoidₓ α] [StarAddMonoid α] (s t : Set α) :
   simp_rw [← image_star, ← image2_add, image_image2, image2_image_left, image2_image_right, star_add]
 
 @[simp]
-instance [HasStar α] [HasTrivialStar α] : HasTrivialStar (Set α) where
-  star_trivial := fun s => by
+instance [HasStar α] [HasTrivialStar α] :
+    HasTrivialStar (Set α) where star_trivial := fun s => by
     rw [← star_preimage]
     ext1
-    simp [star_trivial]
+    simp [← star_trivial]
 
 protected theorem star_inv [Groupₓ α] [StarSemigroup α] (s : Set α) : s⁻¹⋆ = s⋆⁻¹ := by
   ext
-  simp only [mem_star, mem_inv, star_inv]
+  simp only [← mem_star, ← mem_inv, ← star_inv]
 
 protected theorem star_inv' [DivisionRing α] [StarRing α] (s : Set α) : s⁻¹⋆ = s⋆⁻¹ := by
   ext
-  simp only [mem_star, mem_inv, star_inv']
+  simp only [← mem_star, ← mem_inv, ← star_inv']
 
 end Set
 

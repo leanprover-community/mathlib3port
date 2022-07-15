@@ -31,8 +31,7 @@ instance Prj.inhabited {v : Typevec.{u} n} [Inhabited (v i)] : Inhabited (Prj i 
 def Prj.map ⦃α β : Typevec n⦄ (f : α ⟹ β) : Prj i α → Prj i β :=
   f _
 
-instance Prj.mvfunctor : Mvfunctor (Prj i) where
-  map := Prj.map i
+instance Prj.mvfunctor : Mvfunctor (Prj i) where map := Prj.map i
 
 /-- Polynomial representation of the projection functor -/
 def Prj.p : Mvpfunctor.{u} n where

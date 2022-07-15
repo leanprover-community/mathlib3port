@@ -16,8 +16,7 @@ universe u
 
 namespace CategoryTheory
 
-instance : ReflectsIsomorphisms (forget (Type u)) where
-  reflects := fun X Y f i => i
+instance : ReflectsIsomorphisms (forget (Type u)) where reflects := fun X Y f i => i
 
 variable (C : Type (u + 1)) [Category C] [ConcreteCategory.{u} C]
 

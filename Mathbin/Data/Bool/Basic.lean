@@ -78,7 +78,7 @@ theorem to_bool_or (p q : Prop) [Decidable p] [Decidable q] : toBool (p ∨ q) =
 theorem to_bool_eq {p q : Prop} [Decidable p] [Decidable q] : toBool p = toBool q ↔ (p ↔ q) :=
   ⟨fun h =>
     (coe_to_bool p).symm.trans <| by
-      simp [h],
+      simp [← h],
     to_bool_congr⟩
 
 theorem not_ff : ¬ff :=
@@ -94,7 +94,7 @@ theorem dichotomy (b : Bool) : b = ff ∨ b = tt := by
 @[simp]
 theorem forall_bool {p : Bool → Prop} : (∀ b, p b) ↔ p false ∧ p true :=
   ⟨fun h => by
-    simp [h], fun b => by
+    simp [← h], fun ⟨h₁, h₂⟩ b => by
     cases b <;> assumption⟩
 
 @[simp]
@@ -147,10 +147,10 @@ theorem bor_left_comm : ∀ a b c, (a || (b || c)) = (b || (a || c)) := by
   decide
 
 theorem bor_inl {a b : Bool} (H : a) : a || b := by
-  simp [H]
+  simp [← H]
 
 theorem bor_inr {a b : Bool} (H : b) : a || b := by
-  simp [H]
+  simp [← H]
 
 theorem band_comm : ∀ a b, (a && b) = (b && a) := by
   decide
@@ -171,6 +171,18 @@ theorem band_intro : ∀ {a b : Bool}, a → b → a && b := by
 theorem band_elim_right : ∀ {a b : Bool}, a && b → b := by
   decide
 
+theorem band_bor_distrib_left (a b c : Bool) : (a && (b || c)) = (a && b || a && c) := by
+  cases a <;> simp
+
+theorem band_bor_distrib_right (a b c : Bool) : ((a || b) && c) = (a && c || b && c) := by
+  cases c <;> simp
+
+theorem bor_band_distrib_left (a b c : Bool) : (a || b && c) = ((a || b) && (a || c)) := by
+  cases a <;> simp
+
+theorem bor_band_distrib_right (a b c : Bool) : (a && b || c) = ((a || c) && (b || c)) := by
+  cases c <;> simp
+
 @[simp]
 theorem bnot_false : bnot false = tt :=
   rfl
@@ -178,6 +190,20 @@ theorem bnot_false : bnot false = tt :=
 @[simp]
 theorem bnot_true : bnot true = ff :=
   rfl
+
+@[simp]
+theorem not_eq_bnot : ∀ {a b : Bool}, ¬a = !b ↔ a = b := by
+  decide
+
+@[simp]
+theorem bnot_not_eq : ∀ {a b : Bool}, ¬!a = b ↔ a = b := by
+  decide
+
+theorem ne_bnot {a b : Bool} : a ≠ !b ↔ a = b :=
+  not_eq_bnot
+
+theorem bnot_ne {a b : Bool} : !a ≠ b ↔ a = b :=
+  bnot_not_eq
 
 @[simp]
 theorem bnot_iff_not : ∀ {b : Bool}, !b ↔ ¬b := by
@@ -235,6 +261,12 @@ theorem bxor_ff_left : ∀ a, bxor false a = a := by
 theorem bxor_ff_right : ∀ a, bxor a false = a := by
   decide
 
+theorem band_bxor_distrib_left (a b c : Bool) : (a && bxor b c) = bxor (a && b) (a && c) := by
+  cases a <;> simp
+
+theorem band_bxor_distrib_right (a b c : Bool) : (bxor a b && c) = bxor (a && c) (b && c) := by
+  cases c <;> simp
+
 theorem bxor_iff_ne : ∀ {x y : Bool}, bxor x y = tt ↔ x ≠ y := by
   decide
 
@@ -264,7 +296,6 @@ instance : LinearOrderₓ Bool where
     decide
   decidableLe := inferInstance
   DecidableEq := inferInstance
-  decidableLt := inferInstance
   max := bor
   max_def := by
     funext x y
@@ -323,7 +354,7 @@ def ofNat (n : ℕ) : Bool :=
   toBool (n ≠ 0)
 
 theorem of_nat_le_of_nat {n m : ℕ} (h : n ≤ m) : ofNat n ≤ ofNat m := by
-  simp [of_nat] <;> cases Nat.decidableEq n 0 <;> cases Nat.decidableEq m 0 <;> simp only [to_bool]
+  simp [← of_nat] <;> cases Nat.decidableEq n 0 <;> cases Nat.decidableEq m 0 <;> simp only [← to_bool]
   · subst m
     have h := le_antisymmₓ h (Nat.zero_leₓ _)
     contradiction
@@ -333,11 +364,11 @@ theorem of_nat_le_of_nat {n m : ℕ} (h : n ≤ m) : ofNat n ≤ ofNat m := by
     
 
 theorem to_nat_le_to_nat {b₀ b₁ : Bool} (h : b₀ ≤ b₁) : toNat b₀ ≤ toNat b₁ := by
-  cases h <;> subst h <;> [cases b₁, cases b₀] <;> simp [to_nat, Nat.zero_leₓ]
+  cases h <;> subst h <;> [cases b₁, cases b₀] <;> simp [← to_nat, ← Nat.zero_leₓ]
 
 theorem of_nat_to_nat (b : Bool) : ofNat (toNat b) = b := by
   cases b <;>
-    simp only [of_nat, to_nat] <;>
+    simp only [← of_nat, ← to_nat] <;>
       exact by
         decide
 
@@ -349,7 +380,7 @@ theorem injective_iff {α : Sort _} {f : Bool → α} : Function.Injective f ↔
 
 /-- **Kaminski's Equation** -/
 theorem apply_apply_apply (f : Bool → Bool) (x : Bool) : f (f (f x)) = f x := by
-  cases x <;> cases h₁ : f tt <;> cases h₂ : f ff <;> simp only [h₁, h₂]
+  cases x <;> cases h₁ : f tt <;> cases h₂ : f ff <;> simp only [← h₁, ← h₂]
 
 end Bool
 

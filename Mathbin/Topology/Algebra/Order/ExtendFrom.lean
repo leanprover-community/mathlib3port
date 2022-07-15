@@ -41,9 +41,9 @@ theorem eq_lim_at_left_extend_from_Ioo [TopologicalSpace α] [LinearOrderₓ α]
     extendFrom (Ioo a b) f a = la := by
   apply extend_from_eq
   · rw [closure_Ioo hab.ne]
-    simp only [le_of_ltₓ hab, left_mem_Icc, right_mem_Icc]
+    simp only [← le_of_ltₓ hab, ← left_mem_Icc, ← right_mem_Icc]
     
-  · simpa [hab]
+  · simpa [← hab]
     
 
 theorem eq_lim_at_right_extend_from_Ioo [TopologicalSpace α] [LinearOrderₓ α] [DenselyOrdered α] [OrderTopology α]
@@ -51,9 +51,9 @@ theorem eq_lim_at_right_extend_from_Ioo [TopologicalSpace α] [LinearOrderₓ α
     extendFrom (Ioo a b) f b = lb := by
   apply extend_from_eq
   · rw [closure_Ioo hab.ne]
-    simp only [le_of_ltₓ hab, left_mem_Icc, right_mem_Icc]
+    simp only [← le_of_ltₓ hab, ← left_mem_Icc, ← right_mem_Icc]
     
-  · simpa [hab]
+  · simpa [← hab]
     
 
 theorem continuous_on_Ico_extend_from_Ioo [TopologicalSpace α] [LinearOrderₓ α] [DenselyOrdered α] [OrderTopology α]
@@ -66,7 +66,7 @@ theorem continuous_on_Ico_extend_from_Ioo [TopologicalSpace α] [LinearOrderₓ 
   · intro x x_in
     rcases eq_left_or_mem_Ioo_of_mem_Ico x_in with (rfl | h)
     · use la
-      simpa [hab]
+      simpa [← hab]
       
     · use f x, hf x h
       

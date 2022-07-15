@@ -27,7 +27,7 @@ instance functorHasRightDual [RightRigidCategory D] (F : C ⥤ D) : HasRightDual
   rightDual :=
     { obj := fun X => F.obj Xᘁ, map := fun X Y f => F.map (inv f)ᘁ,
       map_comp' := fun X Y Z f g => by
-        simp [comp_right_adjoint_mate] }
+        simp [← comp_right_adjoint_mate] }
   exact :=
     { evaluation :=
         { app := fun X => ε_ _ _,
@@ -44,14 +44,13 @@ instance functorHasRightDual [RightRigidCategory D] (F : C ⥤ D) : HasRightDual
               coevaluation_comp_right_adjoint_mate, category.assoc, ← comp_tensor_id, is_iso.inv_hom_id, tensor_id,
               category.comp_id] } }
 
-instance rightRigidFunctorCategory [RightRigidCategory D] : RightRigidCategory (C ⥤ D) :=
-  {  }
+instance rightRigidFunctorCategory [RightRigidCategory D] : RightRigidCategory (C ⥤ D) where
 
 instance functorHasLeftDual [LeftRigidCategory D] (F : C ⥤ D) : HasLeftDual F where
   leftDual :=
     { obj := fun X => ᘁF.obj X, map := fun X Y f => ᘁF.map (inv f),
       map_comp' := fun X Y Z f g => by
-        simp [comp_left_adjoint_mate] }
+        simp [← comp_left_adjoint_mate] }
   exact :=
     { evaluation :=
         { app := fun X => ε_ _ _,
@@ -68,11 +67,9 @@ instance functorHasLeftDual [LeftRigidCategory D] (F : C ⥤ D) : HasLeftDual F 
               coevaluation_comp_left_adjoint_mate, category.assoc, ← id_tensor_comp, is_iso.inv_hom_id, tensor_id,
               category.comp_id] } }
 
-instance leftRigidFunctorCategory [LeftRigidCategory D] : LeftRigidCategory (C ⥤ D) :=
-  {  }
+instance leftRigidFunctorCategory [LeftRigidCategory D] : LeftRigidCategory (C ⥤ D) where
 
-instance rigidFunctorCategory [RigidCategory D] : RigidCategory (C ⥤ D) :=
-  {  }
+instance rigidFunctorCategory [RigidCategory D] : RigidCategory (C ⥤ D) where
 
 end CategoryTheory.Monoidal
 

@@ -38,17 +38,17 @@ def antidiagonal (f : α →₀ ℕ) : Finset ((α →₀ ℕ) × (α →₀ ℕ
 @[simp]
 theorem mem_antidiagonal {f : α →₀ ℕ} {p : (α →₀ ℕ) × (α →₀ ℕ)} : p ∈ antidiagonal f ↔ p.1 + p.2 = f := by
   rcases p with ⟨p₁, p₂⟩
-  simp [antidiagonal, antidiagonal', ← And.assoc, ← finsupp.to_multiset.apply_eq_iff_eq]
+  simp [← antidiagonal, ← antidiagonal', And.assoc, finsupp.to_multiset.apply_eq_iff_eq]
 
 theorem swap_mem_antidiagonal {n : α →₀ ℕ} {f : (α →₀ ℕ) × (α →₀ ℕ)} : f.swap ∈ antidiagonal n ↔ f ∈ antidiagonal n :=
   by
-  simp only [mem_antidiagonal, add_commₓ, Prod.swap]
+  simp only [← mem_antidiagonal, ← add_commₓ, ← Prod.swap]
 
 theorem antidiagonal_filter_fst_eq (f g : α →₀ ℕ) [D : ∀ p : (α →₀ ℕ) × (α →₀ ℕ), Decidable (p.1 = g)] :
     ((antidiagonal f).filter fun p => p.1 = g) = if g ≤ f then {(g, f - g)} else ∅ := by
   ext ⟨a, b⟩
   suffices a = g → (a + b = f ↔ g ≤ f ∧ b = f - g) by
-    simpa [apply_ite ((· ∈ ·) (a, b)), ← And.assoc, @And.right_comm _ (a = _), And.congr_left_iff]
+    simpa [← apply_ite ((· ∈ ·) (a, b)), And.assoc, ← @And.right_comm _ (a = _), ← And.congr_left_iff]
   rintro rfl
   constructor
   · rintro rfl
@@ -62,7 +62,7 @@ theorem antidiagonal_filter_snd_eq (f g : α →₀ ℕ) [D : ∀ p : (α →₀
     ((antidiagonal f).filter fun p => p.2 = g) = if g ≤ f then {(f - g, g)} else ∅ := by
   ext ⟨a, b⟩
   suffices b = g → (a + b = f ↔ g ≤ f ∧ a = f - g) by
-    simpa [apply_ite ((· ∈ ·) (a, b)), ← And.assoc, And.congr_left_iff]
+    simpa [← apply_ite ((· ∈ ·) (a, b)), And.assoc, ← And.congr_left_iff]
   rintro rfl
   constructor
   · rintro rfl

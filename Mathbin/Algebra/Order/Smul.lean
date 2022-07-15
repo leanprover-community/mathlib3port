@@ -3,8 +3,9 @@ Copyright (c) 2020 Frédéric Dupuis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 -/
-import Mathbin.GroupTheory.GroupAction.Group
+import Mathbin.Algebra.Order.Field
 import Mathbin.Algebra.SmulWithZero
+import Mathbin.GroupTheory.GroupAction.Group
 
 /-!
 # Ordered scalar product
@@ -46,15 +47,15 @@ namespace OrderDual
 
 variable {R M : Type _}
 
-instance [HasScalar R M] : HasScalar R Mᵒᵈ :=
+instance [HasSmul R M] : HasSmul R Mᵒᵈ :=
   ⟨fun k x => OrderDual.rec (fun x' => (k • x' : M)) x⟩
 
 instance [Zero R] [AddZeroClassₓ M] [h : SmulWithZero R M] : SmulWithZero R Mᵒᵈ :=
-  { OrderDual.hasScalar with zero_smul := fun m => OrderDual.rec (zero_smul _) m,
+  { OrderDual.hasSmul with zero_smul := fun m => OrderDual.rec (zero_smul _) m,
     smul_zero := fun r => OrderDual.rec (smul_zero' _) r }
 
 instance [Monoidₓ R] [MulAction R M] : MulAction R Mᵒᵈ :=
-  { OrderDual.hasScalar with one_smul := fun m => OrderDual.rec (one_smul _) m,
+  { OrderDual.hasSmul with one_smul := fun m => OrderDual.rec (one_smul _) m,
     mul_smul := fun r => OrderDual.rec mul_smul r }
 
 instance [MonoidWithZeroₓ R] [AddMonoidₓ M] [MulActionWithZero R M] : MulActionWithZero R Mᵒᵈ :=
@@ -69,11 +70,11 @@ instance [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [Ordere
   lt_of_smul_lt_smul_of_pos := fun a b => @OrderedSmul.lt_of_smul_lt_smul_of_pos R M _ _ _ _ b a
 
 @[simp]
-theorem to_dual_smul [HasScalar R M] {c : R} {a : M} : toDual (c • a) = c • toDual a :=
+theorem to_dual_smul [HasSmul R M] {c : R} {a : M} : toDual (c • a) = c • toDual a :=
   rfl
 
 @[simp]
-theorem of_dual_smul [HasScalar R M] {c : R} {a : Mᵒᵈ} : ofDual (c • a) = c • ofDual a :=
+theorem of_dual_smul [HasSmul R M] {c : R} {a : Mᵒᵈ} : ofDual (c • a) = c • ofDual a :=
   rfl
 
 end OrderDual
@@ -129,10 +130,9 @@ theorem smul_pos_iff_of_pos (hc : 0 < c) : 0 < c • a ↔ 0 < a :=
 
 alias smul_pos_iff_of_pos ↔ _ smul_pos
 
-theorem monotone_smul_left (hc : 0 ≤ c) : Monotone (HasScalar.smul c : M → M) := fun a b h =>
-  smul_le_smul_of_nonneg h hc
+theorem monotone_smul_left (hc : 0 ≤ c) : Monotone (HasSmul.smul c : M → M) := fun a b h => smul_le_smul_of_nonneg h hc
 
-theorem strict_mono_smul_left (hc : 0 < c) : StrictMono (HasScalar.smul c : M → M) := fun a b h =>
+theorem strict_mono_smul_left (hc : 0 < c) : StrictMono (HasSmul.smul c : M → M) := fun a b h =>
   smul_lt_smul_of_pos h hc
 
 end OrderedSmul
@@ -148,12 +148,12 @@ theorem OrderedSmul.mk'' {R M : Type _} [LinearOrderedSemiring R] [OrderedAddCom
     refine' fun a b c hab hc => (hlt hab hc).lt_of_ne _
     rw [Ne.def, (hR hc.ne').smul_left_cancel]
     exact hab.ne
-  refine' { smul_lt_smul_of_pos := hlt', .. }
+  refine' { smul_lt_smul_of_pos := hlt'.. }
   intro a b c h hc
   rcases hR hc.ne' with ⟨c, rfl⟩
   rw [← inv_smul_smul c a, ← inv_smul_smul c b]
   refine' hlt' h (pos_of_mul_pos_left _ hc.le)
-  simp only [c.mul_inv, zero_lt_one]
+  simp only [← c.mul_inv, ← zero_lt_one]
 
 /-- If `R` is a linear ordered field, then it suffices to verify only the first axiom of
 `ordered_smul`. -/

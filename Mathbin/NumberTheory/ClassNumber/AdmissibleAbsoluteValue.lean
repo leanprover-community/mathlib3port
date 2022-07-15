@@ -61,7 +61,7 @@ theorem exists_partition {ι : Type _} [Fintype ι] {ε : ℝ} (hε : 0 < ε) {b
   let e := Fintype.equivFin ι
   obtain ⟨t, ht⟩ := h.exists_partition' (Fintype.card ι) hε hb (A ∘ e.symm)
   refine' ⟨t ∘ e, fun i₀ i₁ h => _⟩
-  convert ht (e i₀) (e i₁) h <;> simp only [e.symm_apply_apply]
+  convert ht (e i₀) (e i₁) h <;> simp only [← e.symm_apply_apply]
 
 /-- Any large enough family of vectors in `R^n` has a pair of elements
 whose remainders are close together, pointwise. -/
@@ -95,7 +95,7 @@ theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
     obtain ⟨s, hs⟩ :=
       @Fintype.exists_lt_card_fiber_of_mul_lt_card _ _ _ _ _ t (M ^ n)
         (by
-          simpa only [Fintype.card_fin, pow_succₓ] using Nat.lt_succ_selfₓ (M ^ n.succ))
+          simpa only [← Fintype.card_fin, ← pow_succₓ] using Nat.lt_succ_selfₓ (M ^ n.succ))
     refine' ⟨fun i => (finset.univ.filter fun x => t x = s).toList.nthLe i _, _, fun i₀ i₁ => ht _ _ _⟩
     · refine' i.2.trans_le _
       rwa [Finset.length_to_list]
@@ -127,7 +127,7 @@ theorem exists_approx {ι : Type _} [Fintype ι] {ε : ℝ} (hε : 0 < ε) {b : 
   let e := Fintype.equivFin ι
   obtain ⟨i₀, i₁, ne, h⟩ := h.exists_approx_aux (Fintype.card ι) hε hb fun x y => A x (e.symm y)
   refine' ⟨i₀, i₁, Ne, fun k => _⟩
-  convert h (e k) <;> simp only [e.symm_apply_apply]
+  convert h (e k) <;> simp only [← e.symm_apply_apply]
 
 end IsAdmissible
 

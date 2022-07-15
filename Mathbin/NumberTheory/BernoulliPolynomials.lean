@@ -68,7 +68,7 @@ section Examples
 
 @[simp]
 theorem bernoulli_zero : bernoulli 0 = 1 := by
-  simp [bernoulli]
+  simp [← bernoulli]
 
 @[simp]
 theorem bernoulli_eval_zero (n : ℕ) : (bernoulli n).eval 0 = bernoulli n := by
@@ -76,18 +76,18 @@ theorem bernoulli_eval_zero (n : ℕ) : (bernoulli n).eval 0 = bernoulli n := by
   have : (∑ x : ℕ in range n, _root_.bernoulli x * n.choose x * 0 ^ (n - x)) = 0 := by
     apply sum_eq_zero fun x hx => _
     have h : 0 < n - x := tsub_pos_of_lt (mem_range.1 hx)
-    simp [h]
-  simp [this]
+    simp [← h]
+  simp [← this]
 
 @[simp]
 theorem bernoulli_eval_one (n : ℕ) : (bernoulli n).eval 1 = bernoulli' n := by
-  simp only [bernoulli, eval_finset_sum]
-  simp only [← succ_eq_add_one, sum_range_succ, mul_oneₓ, cast_one, choose_self, (_root_.bernoulli _).mul_comm,
-    sum_bernoulli, one_pow, mul_oneₓ, eval_C, eval_monomial]
+  simp only [← bernoulli, ← eval_finset_sum]
+  simp only [succ_eq_add_one, ← sum_range_succ, ← mul_oneₓ, ← cast_one, ← choose_self, ← (_root_.bernoulli _).mul_comm,
+    ← sum_bernoulli, ← one_pow, ← mul_oneₓ, ← eval_C, ← eval_monomial]
   by_cases' h : n = 1
-  · norm_num [h]
+  · norm_num [← h]
     
-  · simp [h]
+  · simp [← h]
     exact bernoulli_eq_bernoulli'_of_ne_one h
     
 
@@ -112,14 +112,14 @@ theorem derivative_bernoulli (k : ℕ) : (bernoulli k).derivative = k * bernoull
   cases k
   · rw [Nat.cast_zeroₓ, zero_mul, bernoulli_zero, derivative_one]
     
-  · exact derivative_bernoulli_add_one k
+  · exact_mod_cast derivative_bernoulli_add_one k
     
 
 @[simp]
 theorem sum_bernoulli (n : ℕ) : (∑ k in range (n + 1), ((n + 1).choose k : ℚ) • bernoulli k) = monomial n (n + 1 : ℚ) :=
   by
   simp_rw [bernoulli_def, Finset.smul_sum, Finset.range_eq_Ico, ← Finset.sum_Ico_Ico_comm, Finset.sum_Ico_eq_sum_range]
-  simp only [cast_succ, add_tsub_cancel_left, tsub_zero, zero_addₓ, LinearMap.map_add]
+  simp only [← cast_succ, ← add_tsub_cancel_left, ← tsub_zero, ← zero_addₓ, ← LinearMap.map_add]
   simp_rw [smul_monomial, mul_comm (_root_.bernoulli _) _, smul_eq_mul, ← mul_assoc]
   conv_lhs =>
     apply_congr skip conv =>
@@ -127,8 +127,9 @@ theorem sum_bernoulli (n : ℕ) : (∑ k in range (n + 1), ((n + 1).choose k : �
         choose_mul ((le_tsub_iff_left <| mem_range_le H).1 <| mem_range_le H_1) (le.intro rfl), Nat.cast_mulₓ,
         add_commₓ x x_1, add_tsub_cancel_right, mul_assoc, mul_comm, ← smul_eq_mul, ← smul_monomial]rw [← sum_smul]
   rw [sum_range_succ_comm]
-  simp only [add_right_eq_selfₓ, cast_succ, mul_oneₓ, cast_one, cast_add, add_tsub_cancel_left, choose_succ_self_right,
-    one_smul, _root_.bernoulli_zero, sum_singleton, zero_addₓ, LinearMap.map_add, range_one]
+  simp only [← add_right_eq_selfₓ, ← cast_succ, ← mul_oneₓ, ← cast_one, ← cast_add, ← add_tsub_cancel_left, ←
+    choose_succ_self_right, ← one_smul, ← _root_.bernoulli_zero, ← sum_singleton, ← zero_addₓ, ← LinearMap.map_add, ←
+    range_one]
   apply sum_eq_zero fun x hx => _
   have f : ∀, ∀ x ∈ range n, ∀, ¬n + 1 - x = 1 := by
     rintro x H
@@ -137,7 +138,7 @@ theorem sum_bernoulli (n : ℕ) : (∑ k in range (n + 1), ((n + 1).choose k : �
     exact ne_of_ltₓ (Nat.lt_of_lt_of_leₓ one_lt_two (le_tsub_of_add_le_left (succ_le_succ H)))
   rw [sum_bernoulli]
   have g : ite (n + 1 - x = 1) (1 : ℚ) 0 = 0 := by
-    simp only [ite_eq_right_iff, one_ne_zero]
+    simp only [← ite_eq_right_iff, ← one_ne_zero]
     intro h₁
     exact (f x hx) h₁
   rw [g, zero_smul]
@@ -147,9 +148,7 @@ theorem bernoulli_eq_sub_sum (n : ℕ) :
     (n.succ : ℚ) • bernoulli n =
       monomial n (n.succ : ℚ) - ∑ k in Finset.range n, ((n + 1).choose k : ℚ) • bernoulli k :=
   by
-  change _ = (monomial n) ((n : ℚ) + 1) - ∑ k : ℕ in range n, ↑((n + 1).choose k) • bernoulli k
-  rw [← sum_bernoulli n, sum_range_succ, add_commₓ]
-  simp only [cast_succ, choose_succ_self_right, add_sub_cancel]
+  rw [Nat.cast_succₓ, ← sum_bernoulli n, sum_range_succ, add_sub_cancel', choose_succ_self_right, Nat.cast_succₓ]
 
 /-- Another version of `bernoulli.sum_range_pow`. -/
 theorem sum_range_pow_eq_bernoulli_sub (n p : ℕ) :
@@ -158,7 +157,8 @@ theorem sum_range_pow_eq_bernoulli_sub (n p : ℕ) :
   · simp_rw [eval_monomial]
     symm
     rw [← sum_flip _, sum_range_succ]
-    simp only [tsub_self, tsub_zero, choose_zero_right, cast_one, mul_oneₓ, pow_zeroₓ, add_tsub_cancel_right]
+    simp only [← tsub_self, ← tsub_zero, ← choose_zero_right, ← cast_one, ← mul_oneₓ, ← pow_zeroₓ, ←
+      add_tsub_cancel_right]
     apply sum_congr rfl fun x hx => _
     apply congr_arg2ₓ _ (congr_arg2ₓ _ _ _) rfl
     · rw [Nat.sub_sub_selfₓ (mem_range_le hx)]
@@ -213,8 +213,8 @@ theorem bernoulli_generating_function (t : A) :
   rw [coeff_succ_X_mul, coeff_rescale, coeff_exp, PowerSeries.coeff_mul, nat.sum_antidiagonal_eq_sum_range_succ_mk,
     sum_range_succ]
   -- last term is zero so kill with `add_zero`
-  simp only [RingHom.map_sub, tsub_self, constant_coeff_one, constant_coeff_exp, coeff_zero_eq_constant_coeff, mul_zero,
-    sub_self, add_zeroₓ]
+  simp only [← RingHom.map_sub, ← tsub_self, ← constant_coeff_one, ← constant_coeff_exp, ← coeff_zero_eq_constant_coeff,
+    ← mul_zero, ← sub_self, ← add_zeroₓ]
   -- Let's multiply both sides by (n+1)! (OK because it's a unit)
   set u : Units ℚ :=
     ⟨(n + 1)!, (n + 1)!⁻¹,
@@ -241,9 +241,10 @@ theorem bernoulli_generating_function (t : A) :
   -- factorials and binomial coefficients between ℕ and ℚ and A.
   intro i hi
   -- deal with coefficients of e^X-1
-  simp only [Nat.cast_choose ℚ (mem_range_le hi), coeff_mk, if_neg (mem_range_sub_ne_zero hi), one_div, AlgHom.map_smul,
-    PowerSeries.coeff_one, Units.coe_mk, coeff_exp, sub_zero, LinearMap.map_sub, Algebra.smul_mul_assoc,
-    Algebra.smul_def, mul_right_commₓ _ ((aeval t) _), ← mul_assoc, ← RingHom.map_mul, succ_eq_add_one]
+  simp only [← Nat.cast_choose ℚ (mem_range_le hi), ← coeff_mk, ← if_neg (mem_range_sub_ne_zero hi), ← one_div, ←
+    AlgHom.map_smul, ← PowerSeries.coeff_one, ← Units.coe_mk, ← coeff_exp, ← sub_zero, ← LinearMap.map_sub, ←
+    Algebra.smul_mul_assoc, ← Algebra.smul_def, ← mul_right_commₓ _ ((aeval t) _), mul_assoc, RingHom.map_mul, ←
+    succ_eq_add_one]
   -- finally cancel the Bernoulli polynomial and the algebra_map
   congr
   apply congr_arg

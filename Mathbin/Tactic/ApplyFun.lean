@@ -7,14 +7,17 @@ import Mathbin.Tactic.Monotonicity.Default
 
 namespace Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Apply the function `f` given by `e : pexpr` to the local hypothesis `hyp`, which must either be
 of the form `a = b` or `a ≤ b`, replacing the type of `hyp` with `f a = f b` or `f a ≤ f b`. If
 `hyp` names an inequality then a new goal `monotone f` is created, unless the name of a proof of
 this fact is passed as the optional argument `mono_lem`, or the `mono` tactic can prove it.
 -/
 unsafe def apply_fun_to_hyp (e : pexpr) (mono_lem : Option pexpr) (hyp : expr) : tactic Unit := do
-  let t ← infer_type hyp
+  let t ← infer_type hyp >>= instantiate_mvars
   let prf ←
     match t with
       | quote.1 ((%%ₓl) = %%ₓr) => do
@@ -40,13 +43,17 @@ unsafe def apply_fun_to_hyp (e : pexpr) (mono_lem : Option pexpr) (hyp : expr) :
                   swap
               return n
         to_expr (pquote.1 ((%%ₓHmono) (%%ₓhyp)))
-      | _ => throwError "failed to apply {(← e)} at {← hyp}"
+      | _ =>
+        "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   clear hyp
   let hyp ← note hyp.local_pp_name none prf
   -- let's try to force β-reduction at `h`
       try <|
       tactic.dsimp_hyp hyp simp_lemmas.mk [] { eta := False, beta := True }
 
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Attempt to "apply" a function `f` represented by the argument `e : pexpr` to the goal.
 
 If the goal is of the form `a ≠ b`, we obtain the new goal `f a ≠ f b`.
@@ -84,7 +91,8 @@ unsafe def apply_fun_to_goal (e : pexpr) (lem : Option pexpr) : tactic Unit := d
               n
         apply n
         clear n
-    | _ => throwError "failed to apply {← e} to the goal"
+    | _ =>
+      "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
 
 namespace Interactive
 

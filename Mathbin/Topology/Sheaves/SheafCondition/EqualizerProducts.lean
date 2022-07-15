@@ -19,7 +19,7 @@ in terms of an equalizer diagram where the two objects are
 -/
 
 
-universe v u
+universe v' v u
 
 noncomputable section
 
@@ -35,9 +35,9 @@ open TopologicalSpace.Opens
 
 namespace Top
 
-variable {C : Type u} [Category.{v} C] [HasProducts C]
+variable {C : Type u} [Category.{v} C] [HasProducts.{v} C]
 
-variable {X : Top.{v}} (F : Presheaf C X) {ι : Type v} (U : ι → Opens X)
+variable {X : Top.{v'}} (F : Presheaf C X) {ι : Type v} (U : ι → Opens X)
 
 namespace Presheaf
 
@@ -77,9 +77,9 @@ theorem res_π (i : ι) : res F U ≫ limit.π _ ⟨i⟩ = F.map (Opens.leSupr U
 
 @[elementwise]
 theorem w : res F U ≫ leftRes F U = res F U ≫ rightRes F U := by
-  dsimp' [res, left_res, right_res]
+  dsimp' [← res, ← left_res, ← right_res]
   ext
-  simp only [limit.lift_π, limit.lift_π_assoc, fan.mk_π_app, category.assoc]
+  simp only [← limit.lift_π, ← limit.lift_π_assoc, ← fan.mk_π_app, ← category.assoc]
   rw [← F.map_comp]
   rw [← F.map_comp]
   congr
@@ -87,7 +87,7 @@ theorem w : res F U ≫ leftRes F U = res F U ≫ rightRes F U := by
 /-- The equalizer diagram for the sheaf condition.
 -/
 @[reducible]
-def diagram : walking_parallel_pair.{v} ⥤ C :=
+def diagram : walking_parallel_pair ⥤ C :=
   parallelPair (leftRes F U) (rightRes F U)
 
 /-- The restriction map `F.obj U ⟶ Π F.obj (U i)` gives a cone over the equalizer diagram
@@ -136,10 +136,10 @@ def diagram.isoOfIso (α : F ≅ G) : diagram F U ≅ diagram G U :=
       · simp
         
       · ext
-        simp [left_res]
+        simp [← left_res]
         
       · ext
-        simp [right_res]
+        simp [← right_res]
         
       · simp
         )
@@ -156,12 +156,12 @@ def fork.isoOfIso (α : F ≅ G) : fork F U ≅ (Cones.postcompose (diagram.isoO
   · ext
     dunfold fork.ι
     -- Ugh, `simp` can't unfold abbreviations.
-    simp [res, diagram.iso_of_iso]
+    simp [← res, ← diagram.iso_of_iso]
     
 
 section OpenEmbedding
 
-variable {V : Top.{v}} {j : V ⟶ X} (oe : OpenEmbedding j)
+variable {V : Top.{v'}} {j : V ⟶ X} (oe : OpenEmbedding j)
 
 variable (𝒰 : ι → Opens V)
 
@@ -183,18 +183,18 @@ def piInters.isoOfOpenEmbedding : piInters (oe.IsOpenMap.Functor.op ⋙ F) 𝒰 
   Pi.mapIso fun X =>
     F.mapIso
       (by
-        dsimp' [IsOpenMap.functor]
+        dsimp' [← IsOpenMap.functor]
         exact
           iso.op
             { Hom :=
                 hom_of_le
                   (by
-                    simp only [oe.to_embedding.inj, Set.image_inter]
+                    simp only [← oe.to_embedding.inj, ← Set.image_inter]
                     exact le_rfl),
               inv :=
                 hom_of_le
                   (by
-                    simp only [oe.to_embedding.inj, Set.image_inter]
+                    simp only [← oe.to_embedding.inj, ← Set.image_inter]
                     exact le_rfl) })
 
 /-- The isomorphism of sheaf condition diagrams corresponding to an open embedding. -/
@@ -209,17 +209,19 @@ def diagram.isoOfOpenEmbedding : diagram (oe.IsOpenMap.Functor.op ⋙ F) 𝒰 �
       · simp
         
       · ext
-        dsimp' [left_res, IsOpenMap.functor]
-        simp only [limit.lift_π, cones.postcompose_obj_π, iso.op_hom, discrete.nat_iso_hom_app, functor.map_iso_refl,
-          functor.map_iso_hom, lim_map_π_assoc, limit.lift_map, fan.mk_π_app, nat_trans.comp_app, category.assoc]
+        dsimp' [← left_res, ← IsOpenMap.functor]
+        simp only [← limit.lift_π, ← cones.postcompose_obj_π, ← iso.op_hom, ← discrete.nat_iso_hom_app, ←
+          functor.map_iso_refl, ← functor.map_iso_hom, ← lim_map_π_assoc, ← limit.lift_map, ← fan.mk_π_app, ←
+          nat_trans.comp_app, ← category.assoc]
         dsimp'
         rw [category.id_comp, ← F.map_comp]
         rfl
         
       · ext
-        dsimp' [right_res, IsOpenMap.functor]
-        simp only [limit.lift_π, cones.postcompose_obj_π, iso.op_hom, discrete.nat_iso_hom_app, functor.map_iso_refl,
-          functor.map_iso_hom, lim_map_π_assoc, limit.lift_map, fan.mk_π_app, nat_trans.comp_app, category.assoc]
+        dsimp' [← right_res, ← IsOpenMap.functor]
+        simp only [← limit.lift_π, ← cones.postcompose_obj_π, ← iso.op_hom, ← discrete.nat_iso_hom_app, ←
+          functor.map_iso_refl, ← functor.map_iso_hom, ← lim_map_π_assoc, ← limit.lift_map, ← fan.mk_π_app, ←
+          nat_trans.comp_app, ← category.assoc]
         dsimp'
         rw [category.id_comp, ← F.map_comp]
         rfl
@@ -239,26 +241,27 @@ def fork.isoOfOpenEmbedding :
       (Cones.postcompose (diagram.isoOfOpenEmbedding oe 𝒰).inv).obj (fork F (Cover.ofOpenEmbedding oe 𝒰)) :=
   by
   fapply fork.ext
-  · dsimp' [IsOpenMap.functor]
+  · dsimp' [← IsOpenMap.functor]
     exact
       F.map_iso
         (iso.op
           { Hom :=
               hom_of_le
                 (by
-                  simp only [supr_s, supr_mk, le_def, Subtype.coe_mk, Set.le_eq_subset, Set.image_Union]),
+                  simp only [← supr_s, ← supr_mk, ← le_def, ← Subtype.coe_mk, ← Set.le_eq_subset, ← Set.image_Union]),
             inv :=
               hom_of_le
                 (by
-                  simp only [supr_s, supr_mk, le_def, Subtype.coe_mk, Set.le_eq_subset, Set.image_Union]) })
+                  simp only [← supr_s, ← supr_mk, ← le_def, ← Subtype.coe_mk, ← Set.le_eq_subset, ← Set.image_Union]) })
     
   · ext ⟨j⟩
     dunfold fork.ι
     -- Ugh, it is unpleasant that we need this.
-    simp only [res, diagram.iso_of_open_embedding, discrete.nat_iso_inv_app, functor.map_iso_inv, limit.lift_π,
-      cones.postcompose_obj_π, functor.comp_map, fork_π_app_walking_parallel_pair_zero, pi_opens.iso_of_open_embedding,
-      nat_iso.of_components.inv_app, functor.map_iso_refl, functor.op_map, limit.lift_map, fan.mk_π_app,
-      nat_trans.comp_app, Quiver.Hom.unop_op, category.assoc, lim_map_eq_lim_map]
+    simp only [← res, ← diagram.iso_of_open_embedding, ← discrete.nat_iso_inv_app, ← functor.map_iso_inv, ←
+      limit.lift_π, ← cones.postcompose_obj_π, ← functor.comp_map, ← fork_π_app_walking_parallel_pair_zero, ←
+      pi_opens.iso_of_open_embedding, ← nat_iso.of_components.inv_app, ← functor.map_iso_refl, ← functor.op_map, ←
+      limit.lift_map, ← fan.mk_π_app, ← nat_trans.comp_app, ← Quiver.Hom.unop_op, ← category.assoc, ←
+      lim_map_eq_lim_map]
     dsimp'
     rw [category.comp_id, ← F.map_comp]
     rfl

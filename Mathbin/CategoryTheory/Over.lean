@@ -39,8 +39,7 @@ def Over (X : T) :=
   CostructuredArrow (𝟭 T) X deriving Category
 
 -- Satisfying the inhabited linter
-instance Over.inhabited [Inhabited T] : Inhabited (Over (default : T)) where
-  default := { left := default, Hom := 𝟙 _ }
+instance Over.inhabited [Inhabited T] : Inhabited (Over (default : T)) where default := { left := default, Hom := 𝟙 _ }
 
 namespace Over
 
@@ -73,8 +72,7 @@ def mk {X Y : T} (f : Y ⟶ X) : Over X :=
 
 /-- We can set up a coercion from arrows with codomain `X` to `over X`. This most likely should not
     be a global instance, but it is sometimes useful. -/
-def coeFromHom {X Y : T} : Coe (Y ⟶ X) (Over X) where
-  coe := mk
+def coeFromHom {X Y : T} : Coe (Y ⟶ X) (Over X) where coe := mk
 
 section
 
@@ -178,13 +176,14 @@ def mapComp {Y Z : T} (f : X ⟶ Y) (g : Y ⟶ Z) : map (f ≫ g) ≅ map f ⋙ 
 
 end
 
-instance forget_reflects_iso : ReflectsIsomorphisms (forget X) where
-  reflects := fun Y Z f t =>
+instance forget_reflects_iso :
+    ReflectsIsomorphisms
+      (forget
+        X) where reflects := fun Y Z f t =>
     ⟨⟨over.hom_mk (inv ((forget X).map f)) ((as_iso ((forget X).map f)).inv_comp_eq.2 (over.w f).symm), by
         tidy⟩⟩
 
-instance forget_faithful : Faithful (forget X) :=
-  {  }
+instance forget_faithful : Faithful (forget X) where
 
 /-- If `k.left` is an epimorphism, then `k` is an epimorphism. In other words, `over.forget X` reflects
 epimorphisms.
@@ -208,7 +207,7 @@ monomorphisms.
 The converse of `category_theory.over.mono_of_mono_left`.
 -/
 instance mono_left_of_mono {f g : Over X} (k : f ⟶ g) [Mono k] : Mono k.left := by
-  refine' ⟨fun l m a => _⟩
+  refine' ⟨fun Y : T l m a => _⟩
   let l' : mk (m ≫ f.hom) ⟶ f :=
     hom_mk l
       (by
@@ -301,8 +300,8 @@ def Under (X : T) :=
   StructuredArrow X (𝟭 T)deriving Category
 
 -- Satisfying the inhabited linter
-instance Under.inhabited [Inhabited T] : Inhabited (Under (default : T)) where
-  default := { right := default, Hom := 𝟙 _ }
+instance Under.inhabited [Inhabited T] :
+    Inhabited (Under (default : T)) where default := { right := default, Hom := 𝟙 _ }
 
 namespace Under
 
@@ -424,13 +423,14 @@ def mapComp {Y Z : T} (f : X ⟶ Y) (g : Y ⟶ Z) : map (f ≫ g) ≅ map g ⋙ 
 
 end
 
-instance forget_reflects_iso : ReflectsIsomorphisms (forget X) where
-  reflects := fun Y Z f t =>
+instance forget_reflects_iso :
+    ReflectsIsomorphisms
+      (forget
+        X) where reflects := fun Y Z f t =>
     ⟨⟨under.hom_mk (inv ((under.forget X).map f)) ((is_iso.comp_inv_eq _).2 (under.w f).symm), by
         tidy⟩⟩
 
-instance forget_faithful : Faithful (forget X) :=
-  {  }
+instance forget_faithful : Faithful (forget X) where
 
 section
 

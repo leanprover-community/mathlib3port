@@ -65,7 +65,7 @@ end PerformanceHack
 
 section ExtraAttributes
 
--- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr *»
+-- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr *»
 /-- An attribute that tells `@[to_additive]` that certain arguments of this definition are not
 involved when using `@[to_additive]`.
 This helps the heuristic of `@[to_additive]` by also transforming definitions if `ℕ` or another
@@ -125,7 +125,7 @@ unsafe def relevant_arg_attr : user_attribute (name_map ℕ) ℕ where
       []⟩
   parser := lean.parser.small_nat
 
--- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr *»
+-- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr *»
 /-- An attribute that stores all the declarations that needs their arguments reordered when
 applying `@[to_additive]`. Currently, we only support swapping consecutive arguments.
 The list of the natural numbers contains the positions of the first of the two arguments
@@ -278,10 +278,10 @@ unsafe def target_name (src tgt : Name) (dict : name_map Name) (allow_auto_name 
           " to itself.\nGive the desired additive name explicitly using `@[to_additive additive_name]`. ")
     else pure res
 
--- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ?»
 /-- the parser for the arguments to `to_additive`. -/
 unsafe def parser : lean.parser ValueTypeₓ := do
   let bang ← Option.isSome <$> «expr ?» (tk "!")

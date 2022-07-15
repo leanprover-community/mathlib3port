@@ -60,7 +60,7 @@ theorem has_strict_fderiv_at_exp_zero_of_radius_pos (h : 0 < (expSeries 𝕂 �
   convert (has_fpower_series_at_exp_zero_of_radius_pos h).HasStrictFderivAt
   ext x
   change x = expSeries 𝕂 𝔸 1 fun _ => x
-  simp [exp_series_apply_eq]
+  simp [← exp_series_apply_eq]
 
 /-- The exponential in a Banach-algebra `𝔸` over a normed field `𝕂` has Fréchet-derivative
 `1 : 𝔸 →L[𝕂] 𝔸` at zero, as long as it converges on a neighborhood of zero. -/

@@ -304,10 +304,10 @@ def whiskerIsoMapGenerateCocone :
         congr }
   hom_inv_id' := by
     ext
-    simp [eq_to_hom_map]
+    simp [← eq_to_hom_map]
   inv_hom_id' := by
     ext
-    simp [eq_to_hom_map]
+    simp [← eq_to_hom_map]
 
 /-- Given a presheaf `F` on the topological space `X` and a family of opens `U` of `X`,
     the natural cone associated to `F` and `U` used in the definition of
@@ -358,7 +358,7 @@ theorem is_sheaf_sites_iff_is_sheaf_opens_le_cover :
 
 end
 
-variable [HasProducts C]
+variable [HasProducts.{v} C]
 
 /-- The sheaf condition in terms of an equalizer diagram is equivalent
 to the reformulation in terms of a limit diagram over all `{ V : opens X // ∃ i, V ≤ U i }`.

@@ -58,7 +58,7 @@ theorem replace_eq_expr {α} [h : Zero α] {x y : α} (h1 : x = 0) (h2 : y = x) 
 /-! ### Configuration -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
 /-- A configuration object for `linear_combination`.
 
 `normalize` describes whether or not the normalization step should be used.
@@ -126,6 +126,12 @@ unsafe def sum_equalities (h_equality1 h_equality2 : expr) : tactic expr :=
 unsafe def sum_two_hyps_one_mul_helper (h_equality1 h_equality2 : expr) (coeff_for_eq2 : pexpr) : tactic expr :=
   mul_equality_expr h_equality2 coeff_for_eq2 >>= sum_equalities h_equality1
 
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Given that `l_sum1 = r_sum1`, `l_h1 = r_h1`, ..., `l_hn = r_hn`, and given
   coefficients `c_1`, ..., `c_n`, this tactic returns an `expr` proving that
     `l_sum1 + (c_1 * l_h1) + ... + (c_n * l_hn)`
@@ -151,12 +157,10 @@ unsafe def make_sum_of_hyps_helper (expected_tp : expr) : Option (tactic expr) �
         -- h_equality ← get_local h_equality_nam,
         quote.1
         (@Eq (%%ₓeqtp) _ _)
-      ← infer_type h_equality | throwError "{← h_equality} is expected to be a proof of an equality"
+      ← infer_type h_equality |
+      "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
     is_def_eq eqtp expected_tp <|>
-        throwError
-          "{(←
-            h_equality)} is an equality between terms of type {(←
-            eqtp)}, but is expected to be between terms of type {← expected_tp}"
+        "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
     make_sum_of_hyps_helper (some (mul_equality_expr h_equality coeff)) h_eqs_names coeffs
   | some tactic_hcombo, h_equality :: h_eqs_names, coeff :: coeffs => do
     let hcombo

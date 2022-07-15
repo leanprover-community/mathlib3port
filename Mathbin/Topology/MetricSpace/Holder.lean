@@ -68,11 +68,11 @@ theorem Set.Subsingleton.holder_on_with {s : Set X} (hs : s.Subsingleton) (C r :
   hs.induction_on (holder_on_with_empty C r f) (holder_on_with_singleton C r f)
 
 theorem holder_on_with_univ {C r : ℝ≥0 } {f : X → Y} : HolderOnWith C r f Univ ↔ HolderWith C r f := by
-  simp only [HolderOnWith, HolderWith, mem_univ, true_implies_iff]
+  simp only [← HolderOnWith, ← HolderWith, ← mem_univ, ← true_implies_iff]
 
 @[simp]
 theorem holder_on_with_one {C : ℝ≥0 } {f : X → Y} {s : Set X} : HolderOnWith C 1 f s ↔ LipschitzOnWith C f s := by
-  simp only [HolderOnWith, LipschitzOnWith, Nnreal.coe_one, Ennreal.rpow_one]
+  simp only [← HolderOnWith, ← LipschitzOnWith, ← Nnreal.coe_one, ← Ennreal.rpow_one]
 
 alias holder_on_with_one ↔ _ LipschitzOnWith.holder_on_with
 

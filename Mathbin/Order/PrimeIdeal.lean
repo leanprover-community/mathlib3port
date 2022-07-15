@@ -160,7 +160,7 @@ theorem IsPrime.mem_compl_of_not_mem (hI : IsPrime I) (hxnI : x ∉ I) : xᶜ �
   hI.mem_or_compl_mem.resolve_left hxnI
 
 theorem is_prime_of_mem_or_compl_mem [IsProper I] (h : ∀ {x : P}, x ∈ I ∨ xᶜ ∈ I) : IsPrime I := by
-  simp only [is_prime_iff_mem_or_mem, or_iff_not_imp_left]
+  simp only [← is_prime_iff_mem_or_mem, ← or_iff_not_imp_left]
   intro x y hxy hxI
   have hxcI : xᶜ ∈ I := h.resolve_left hxI
   have ass : x⊓y⊔y⊓xᶜ ∈ I := sup_mem hxy (I.lower inf_le_right hxcI)
@@ -170,7 +170,7 @@ theorem is_prime_iff_mem_or_compl_mem [IsProper I] : IsPrime I ↔ ∀ {x : P}, 
   ⟨fun h _ => h.mem_or_compl_mem, is_prime_of_mem_or_compl_mem⟩
 
 instance (priority := 100) IsPrime.is_maximal [IsPrime I] : IsMaximal I := by
-  simp only [is_maximal_iff, Set.eq_univ_iff_forall, is_prime.to_is_proper, true_andₓ]
+  simp only [← is_maximal_iff, ← Set.eq_univ_iff_forall, ← is_prime.to_is_proper, ← true_andₓ]
   intro J hIJ x
   rcases Set.exists_of_ssubset hIJ with ⟨y, hyJ, hyI⟩
   suffices ass : x⊓y⊔x⊓yᶜ ∈ J

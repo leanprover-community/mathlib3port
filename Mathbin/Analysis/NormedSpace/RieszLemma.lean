@@ -31,7 +31,7 @@ variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
 
 variable {F : Type _} [SemiNormedGroup F] [NormedSpace ℝ F]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Riesz's lemma, which usually states that it is possible to find a
 vector with norm 1 whose distance to a closed proper subspace is
 arbitrarily close to 1. The statement here is in terms of multiples of
@@ -47,7 +47,7 @@ theorem riesz_lemma {F : Subspace 𝕜 E} (hFc : IsClosed (F : Set E)) (hF : ∃
   have hdp : 0 < d := lt_of_le_of_neₓ Metric.inf_dist_nonneg fun heq => hx ((hFc.mem_iff_inf_dist_zero hFn).2 HEq.symm)
   let r' := max r 2⁻¹
   have hr' : r' < 1 := by
-    simp [r', hr]
+    simp [← r', ← hr]
     norm_num
   have hlt : 0 < r' :=
     lt_of_lt_of_leₓ
@@ -59,7 +59,7 @@ theorem riesz_lemma {F : Subspace 𝕜 E} (hFc : IsClosed (F : Set E)) (hF : ∃
   have x_ne_y₀ : x - y₀ ∉ F := by
     by_contra h
     have : x - y₀ + y₀ ∈ F := F.add_mem h hy₀F
-    simp only [neg_add_cancel_right, sub_eq_add_neg] at this
+    simp only [← neg_add_cancel_right, ← sub_eq_add_neg] at this
     exact hx this
   refine' ⟨x - y₀, x_ne_y₀, fun y hy => le_of_ltₓ _⟩
   have hy₀y : y₀ + y ∈ F := F.add_mem hy₀F hy
@@ -85,27 +85,27 @@ theorem riesz_lemma_of_norm_lt {c : 𝕜} (hc : 1 < ∥c∥) {R : ℝ} (hR : ∥
     simpa using hR
   rcases riesz_lemma hFc hF this with ⟨x, xF, hx⟩
   have x0 : x ≠ 0 := fun H => by
-    simpa [H] using xF
+    simpa [← H] using xF
   obtain ⟨d, d0, dxlt, ledx, -⟩ : ∃ d : 𝕜, d ≠ 0 ∧ ∥d • x∥ < R ∧ R / ∥c∥ ≤ ∥d • x∥ ∧ ∥d∥⁻¹ ≤ R⁻¹ * ∥c∥ * ∥x∥ :=
     rescale_to_shell hc Rpos x0
   refine' ⟨d • x, dxlt.le, fun y hy => _⟩
   set y' := d⁻¹ • y with hy'
   have y'F : y' ∈ F := by
-    simp [hy', Submodule.smul_mem _ _ hy]
+    simp [← hy', ← Submodule.smul_mem _ _ hy]
   have yy' : y = d • y' := by
-    simp [hy', smul_smul, mul_inv_cancel d0]
+    simp [← hy', ← smul_smul, ← mul_inv_cancel d0]
   calc 1 = ∥c∥ / R * (R / ∥c∥) := by
-      field_simp [Rpos.ne', (zero_lt_one.trans hc).ne']_ ≤ ∥c∥ / R * ∥d • x∥ :=
+      field_simp [← Rpos.ne', ← (zero_lt_one.trans hc).ne']_ ≤ ∥c∥ / R * ∥d • x∥ :=
       mul_le_mul_of_nonneg_left ledx (div_nonneg (norm_nonneg _) Rpos.le)_ = ∥d∥ * (∥c∥ / R * ∥x∥) := by
-      simp [norm_smul]
+      simp [← norm_smul]
       ring _ ≤ ∥d∥ * ∥x - y'∥ :=
       mul_le_mul_of_nonneg_left
         (hx y'
           (by
-            simp [hy', Submodule.smul_mem _ _ hy]))
+            simp [← hy', ← Submodule.smul_mem _ _ hy]))
         (norm_nonneg _)_ = ∥d • x - y∥ :=
       by
-      simp [yy', ← smul_sub, norm_smul]
+      simp [← yy', smul_sub, ← norm_smul]
 
 theorem Metric.closed_ball_inf_dist_compl_subset_closure {x : F} {s : Set F} (hx : x ∈ s) :
     ClosedBall x (infDist x (sᶜ)) ⊆ Closure s := by
@@ -114,8 +114,6 @@ theorem Metric.closed_ball_inf_dist_compl_subset_closure {x : F} {s : Set F} (hx
     exact closure_mono (singleton_subset_iff.2 hx)
     
   · rw [← closure_ball x h₀]
-    apply closure_mono
-    calc ball x (inf_dist x (sᶜ)) ⊆ sᶜᶜ := disjoint_iff_subset_compl_right.1 disjoint_ball_inf_dist _ = s :=
-        compl_compl s
+    exact closure_mono ball_inf_dist_compl_subset
     
 

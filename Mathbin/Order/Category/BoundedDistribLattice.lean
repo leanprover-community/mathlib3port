@@ -60,8 +60,9 @@ instance : LargeCategory.{u} BoundedDistribLattice :=
 instance : ConcreteCategory BoundedDistribLattice :=
   InducedCategory.concreteCategory toBoundedLattice
 
-instance hasForgetToDistribLattice : HasForget₂ BoundedDistribLattice DistribLatticeₓ where
-  forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => BoundedLatticeHom.toLatticeHom }
+instance hasForgetToDistribLattice :
+    HasForget₂ BoundedDistribLattice
+      DistribLatticeₓ where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => BoundedLatticeHom.toLatticeHom }
 
 instance hasForgetToBoundedLattice : HasForget₂ BoundedDistribLattice BoundedLattice :=
   InducedCategory.hasForget₂ toBoundedLattice

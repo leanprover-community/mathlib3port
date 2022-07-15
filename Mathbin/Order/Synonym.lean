@@ -121,13 +121,13 @@ protected theorem forall {p : αᵒᵈ → Prop} : (∀ a, p a) ↔ ∀ a, p (to
 protected theorem exists {p : αᵒᵈ → Prop} : (∃ a, p a) ↔ ∃ a, p (toDual a) :=
   Iff.rfl
 
-alias to_dual_le_to_dual ↔ _ LE.le.dual
+alias to_dual_le_to_dual ↔ _ _root_.has_le.le.dual
 
-alias to_dual_lt_to_dual ↔ _ LT.lt.dual
+alias to_dual_lt_to_dual ↔ _ _root_.has_lt.lt.dual
 
-alias of_dual_le_of_dual ↔ _ LE.le.of_dual
+alias of_dual_le_of_dual ↔ _ _root_.has_le.le.of_dual
 
-alias of_dual_lt_of_dual ↔ _ LT.lt.of_dual
+alias of_dual_lt_of_dual ↔ _ _root_.has_lt.lt.of_dual
 
 end OrderDual
 

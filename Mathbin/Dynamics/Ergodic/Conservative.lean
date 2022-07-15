@@ -48,7 +48,7 @@ namespace MeasureTheory
 
 open Measureₓ
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (m «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (m «expr ≠ » 0)
 /-- We say that a non-singular (`measure_theory.quasi_measure_preserving`) self-map is
 *conservative* if for any measurable set `s` of positive measure there exists `x ∈ s` such that `x`
 returns back to `s` under some iteration of `f`. -/
@@ -78,7 +78,7 @@ after `m` iterations of `f`. -/
 theorem frequently_measure_inter_ne_zero (hf : Conservative f μ) (hs : MeasurableSet s) (h0 : μ s ≠ 0) :
     ∃ᶠ m in at_top, μ (s ∩ f^[m] ⁻¹' s) ≠ 0 := by
   by_contra H
-  simp only [not_frequently, eventually_at_top, Ne.def, not_not] at H
+  simp only [← not_frequently, ← eventually_at_top, ← Ne.def, ← not_not] at H
   rcases H with ⟨N, hN⟩
   induction' N with N ihN
   · apply h0
@@ -115,10 +115,10 @@ theorem exists_gt_measure_inter_ne_zero (hf : Conservative f μ) (hs : Measurabl
 /-- Poincaré recurrence theorem: given a conservative map `f` and a measurable set `s`, the set
 of points `x ∈ s` such that `x` does not return to `s` after `≥ n` iterations has measure zero. -/
 theorem measure_mem_forall_ge_image_not_mem_eq_zero (hf : Conservative f μ) (hs : MeasurableSet s) (n : ℕ) :
-    μ { x ∈ s | ∀, ∀ m ≥ n, ∀, (f^[m]) x ∉ s } = 0 := by
+    μ ({ x ∈ s | ∀, ∀ m ≥ n, ∀, (f^[m]) x ∉ s }) = 0 := by
   by_contra H
   have : MeasurableSet (s ∩ { x | ∀, ∀ m ≥ n, ∀, (f^[m]) x ∉ s }) := by
-    simp only [set_of_forall, ← compl_set_of]
+    simp only [← set_of_forall, compl_set_of]
     exact hs.inter (MeasurableSet.bInter (countable_encodable _) fun m _ => hf.measurable.iterate m hs.compl)
   rcases(hf.exists_gt_measure_inter_ne_zero this H) n with ⟨m, hmn, hm⟩
   rcases nonempty_of_measure_ne_zero hm with ⟨x, ⟨hxs, hxn⟩, hxm, -⟩
@@ -128,7 +128,7 @@ theorem measure_mem_forall_ge_image_not_mem_eq_zero (hf : Conservative f μ) (hs
 almost every point `x ∈ s` returns back to `s` infinitely many times. -/
 theorem ae_mem_imp_frequently_image_mem (hf : Conservative f μ) (hs : MeasurableSet s) :
     ∀ᵐ x ∂μ, x ∈ s → ∃ᶠ n in at_top, (f^[n]) x ∈ s := by
-  simp only [frequently_at_top, @forall_swap (_ ∈ s), ae_all_iff]
+  simp only [← frequently_at_top, ← @forall_swap (_ ∈ s), ← ae_all_iff]
   intro n
   filter_upwards [measure_zero_iff_ae_nmem.1 (hf.measure_mem_forall_ge_image_not_mem_eq_zero hs n)]
   simp

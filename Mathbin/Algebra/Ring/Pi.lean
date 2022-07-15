@@ -27,23 +27,23 @@ variable {f : I → Type v}
 variable (x y : ∀ i, f i) (i : I)
 
 instance distrib [∀ i, Distribₓ <| f i] : Distribₓ (∀ i : I, f i) := by
-  refine_struct { add := (· + ·), mul := (· * ·), .. } <;>
+  refine_struct { add := (· + ·), mul := (· * ·).. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 instance nonUnitalNonAssocSemiring [∀ i, NonUnitalNonAssocSemiringₓ <| f i] :
     NonUnitalNonAssocSemiringₓ (∀ i : I, f i) := by
-  refine_struct { zero := (0 : ∀ i, f i), add := (· + ·), mul := (· * ·), .. } <;>
+  refine_struct { zero := (0 : ∀ i, f i), add := (· + ·), mul := (· * ·).. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 instance nonUnitalSemiring [∀ i, NonUnitalSemiringₓ <| f i] : NonUnitalSemiringₓ (∀ i : I, f i) := by
-  refine_struct { zero := (0 : ∀ i, f i), add := (· + ·), mul := (· * ·), .. } <;>
+  refine_struct { zero := (0 : ∀ i, f i), add := (· + ·), mul := (· * ·).. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 instance nonAssocSemiring [∀ i, NonAssocSemiringₓ <| f i] : NonAssocSemiringₓ (∀ i : I, f i) := by
-  refine_struct { zero := (0 : ∀ i, f i), one := 1, add := (· + ·), mul := (· * ·), .. } <;>
+  refine_struct { zero := (0 : ∀ i, f i), one := 1, add := (· + ·), mul := (· * ·).. } <;>
     run_tac
       tactic.pi_instance_derive_field
 

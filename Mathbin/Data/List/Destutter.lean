@@ -49,10 +49,10 @@ theorem destutter'_cons_neg (h : ¬R b a) : (a :: l).destutter' R b = l.destutte
 
 variable (R)
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem destutter'_singleton : [b].destutter' R a = if R a b then [a, b] else [a] := by
-  split_ifs <;> simp [h]
+  split_ifs <;> simp [← h]
 
 theorem destutter'_sublist a : l.destutter' R a <+ a :: l := by
   induction' l with b l hl generalizing a

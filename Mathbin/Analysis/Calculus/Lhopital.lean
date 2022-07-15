@@ -72,8 +72,8 @@ theorem lhopital_zero_right_on_Ioo (hff' : ∀, ∀ x ∈ Ioo a b, ∀, HasDeriv
   have : ∀, ∀ x ∈ Ioo a b, ∀, ((fun x' => f' x' / g' x') ∘ c) x = f x / g x := by
     intro x hx
     rcases hc x hx with ⟨h₁, h₂⟩
-    field_simp [hg x hx, hg' (c x) ((sub x hx) h₁)]
-    simp only [h₂]
+    field_simp [← hg x hx, ← hg' (c x) ((sub x hx) h₁)]
+    simp only [← h₂]
     rwa [mul_comm]
   have cmp : ∀, ∀ x ∈ Ioo a b, ∀, a < c x ∧ c x < x := fun x hx => (hc x hx).1
   rw [← nhds_within_Ioo_eq_nhds_within_Ioi hab]
@@ -130,11 +130,11 @@ theorem lhopital_zero_left_on_Ioo (hff' : ∀, ∀ x ∈ Ioo a b, ∀, HasDerivA
         rwa [mul_comm, ← neg_eq_neg_one_mul, neg_eq_zero] at h)
       (hfb.comp tendsto_neg_nhds_within_Ioi_neg) (hgb.comp tendsto_neg_nhds_within_Ioi_neg)
       (by
-        simp only [neg_div_neg_eq, mul_oneₓ, mul_neg]
+        simp only [← neg_div_neg_eq, ← mul_oneₓ, ← mul_neg]
         exact (tendsto_congr fun x => rfl).mp (hdiv.comp tendsto_neg_nhds_within_Ioi_neg))
   have := this.comp tendsto_neg_nhds_within_Iio
   unfold Function.comp  at this
-  simpa only [neg_negₓ]
+  simpa only [← neg_negₓ]
 
 theorem lhopital_zero_left_on_Ioc (hff' : ∀, ∀ x ∈ Ioo a b, ∀, HasDerivAt f (f' x) x)
     (hgg' : ∀, ∀ x ∈ Ioo a b, ∀, HasDerivAt g (g' x) x) (hcf : ContinuousOn f (Ioc a b))
@@ -181,7 +181,7 @@ theorem lhopital_zero_at_top_on_Ioi (hff' : ∀, ∀ x ∈ Ioi a, ∀, HasDerivA
         refine' neg_ne_zero.mpr (inv_ne_zero <| pow_ne_zero _ <| ne_of_gtₓ hx))
   have := this.comp tendsto_inv_at_top_zero'
   unfold Function.comp  at this
-  simpa only [inv_invₓ]
+  simpa only [← inv_invₓ]
 
 theorem lhopital_zero_at_bot_on_Iio (hff' : ∀, ∀ x ∈ Iio a, ∀, HasDerivAt f (f' x) x)
     (hgg' : ∀, ∀ x ∈ Iio a, ∀, HasDerivAt g (g' x) x) (hg' : ∀, ∀ x ∈ Iio a, ∀, g' x ≠ 0)
@@ -206,11 +206,11 @@ theorem lhopital_zero_at_bot_on_Iio (hff' : ∀, ∀ x ∈ Iio a, ∀, HasDerivA
         rwa [mul_comm, ← neg_eq_neg_one_mul, neg_eq_zero] at h)
       (hfbot.comp tendsto_neg_at_top_at_bot) (hgbot.comp tendsto_neg_at_top_at_bot)
       (by
-        simp only [mul_oneₓ, mul_neg, neg_div_neg_eq]
+        simp only [← mul_oneₓ, ← mul_neg, ← neg_div_neg_eq]
         exact (tendsto_congr fun x => rfl).mp (hdiv.comp tendsto_neg_at_top_at_bot))
   have := this.comp tendsto_neg_at_bot_at_top
   unfold Function.comp  at this
-  simpa only [neg_negₓ]
+  simpa only [← neg_negₓ]
 
 end HasDerivAt
 
@@ -339,7 +339,7 @@ theorem lhopital_zero_nhds' (hff' : ∀ᶠ x in 𝓝[univ \ {a}] a, HasDerivAt f
     ext
     rw [mem_diff_singleton, eq_true_intro <| mem_univ x, true_andₓ, ne_iff_lt_or_gtₓ]
     rfl
-  simp only [this, nhds_within_union, tendsto_sup, eventually_sup] at *
+  simp only [← this, ← nhds_within_union, ← tendsto_sup, ← eventually_sup] at *
   exact
     ⟨lhopital_zero_nhds_left hff'.1 hgg'.1 hg'.1 hfa.1 hga.1 hdiv.1,
       lhopital_zero_nhds_right hff'.2 hgg'.2 hg'.2 hfa.2 hga.2 hdiv.2⟩
@@ -439,7 +439,7 @@ theorem lhopital_zero_nhds' (hdf : ∀ᶠ x in 𝓝[univ \ {a}] a, Differentiabl
     ext
     rw [mem_diff_singleton, eq_true_intro <| mem_univ x, true_andₓ, ne_iff_lt_or_gtₓ]
     rfl
-  simp only [this, nhds_within_union, tendsto_sup, eventually_sup] at *
+  simp only [← this, ← nhds_within_union, ← tendsto_sup, ← eventually_sup] at *
   exact
     ⟨lhopital_zero_nhds_left hdf.1 hg'.1 hfa.1 hga.1 hdiv.1, lhopital_zero_nhds_right hdf.2 hg'.2 hfa.2 hga.2 hdiv.2⟩
 

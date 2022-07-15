@@ -83,7 +83,7 @@ protected theorem insert (hs : IsAntichain r s) (hl : ∀ ⦃b⦄, b ∈ s → a
 
 theorem _root_.is_antichain_insert_of_symmetric (hr : Symmetric r) :
     IsAntichain r (insert a s) ↔ IsAntichain r s ∧ ∀ ⦃b⦄, b ∈ s → a ≠ b → ¬r a b :=
-  pairwise_insert_of_symmetric hr.Compl
+  pairwise_insert_of_symmetric hr.compl
 
 theorem insert_of_symmetric (hs : IsAntichain r s) (hr : Symmetric r) (h : ∀ ⦃b⦄, b ∈ s → a ≠ b → ¬r a b) :
     IsAntichain r (insert a s) :=

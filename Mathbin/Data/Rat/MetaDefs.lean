@@ -3,7 +3,7 @@ Copyright (c) 2019 Robert Y. Lewis . All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 -/
-import Mathbin.Data.Rat.Basic
+import Mathbin.Data.Rat.Defs
 import Mathbin.Tactic.Core
 
 /-!
@@ -43,8 +43,15 @@ unsafe def rat.mk_numeral (type has_zero has_one has_add has_neg has_div : expr)
       let dene := denom.mk_numeral type Zero One Add
       quote.1 (@Div.div.{0} (%%ₓtype) (%%ₓDiv) (%%ₓnume) (%%ₓdene))
 
+section
+
+-- Note that here we are disabling the "safety" of reflected, to allow us to reuse `rat.mk_numeral`.
+-- The usual way to provide the required `reflected` instance would be via rewriting to prove that
+-- the expression we use here is equivalent.
+attribute [local semireducible] reflected
+
 /-- `rat.reflect q` represents the rational number `q` as a numeral expression of type `ℚ`. -/
-protected unsafe def rat.reflect : ℚ → expr :=
+unsafe instance rat.reflect : has_reflect ℚ :=
   rat.mk_numeral (quote.1 ℚ)
     (quote.1
       (by
@@ -61,13 +68,6 @@ protected unsafe def rat.reflect : ℚ → expr :=
     (quote.1
       (by
         infer_instance : Div ℚ))
-
-section
-
-attribute [local semireducible] reflected
-
-unsafe instance : has_reflect ℚ :=
-  rat.reflect
 
 end
 

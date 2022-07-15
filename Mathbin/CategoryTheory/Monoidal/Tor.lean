@@ -65,7 +65,7 @@ def torSuccOfProjective (X Y : C) [Projective Y] (n : ℕ) : ((tor C (n + 1)).ob
 /-- The higher `Tor'` groups for `X` and `Y` are zero if `X` is projective. -/
 def tor'SuccOfProjective (X Y : C) [Projective X] (n : ℕ) : ((tor' C (n + 1)).obj X).obj Y ≅ 0 := by
   -- This unfortunately needs a manual `dsimp`, to avoid a slow unification problem.
-  dsimp' only [Tor', functor.flip]
+  dsimp' only [← Tor', ← functor.flip]
   exact ((tensoring_right C).obj Y).leftDerivedObjProjectiveSucc n X
 
 end CategoryTheory

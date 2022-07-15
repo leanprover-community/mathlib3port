@@ -45,12 +45,13 @@ theorem deriv_eq_smul_circle_integral [CompleteSpace F] {R : ℝ} {c : ℂ} {f :
     (hf : DiffContOnCl ℂ f (Ball c R)) : deriv f c = (2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - c) ^ (-2 : ℤ) • f z := by
   lift R to ℝ≥0 using hR.le
   refine' (hf.has_fpower_series_on_ball hR).HasFpowerSeriesAt.deriv.trans _
-  simp only [cauchy_power_series_apply, one_div, zpow_neg, pow_oneₓ, smul_smul, zpow_two, mul_inv]
+  simp only [← cauchy_power_series_apply, ← one_div, ← zpow_neg, ← pow_oneₓ, ← smul_smul, ← zpow_two, ← mul_inv]
 
 theorem norm_deriv_le_aux [CompleteSpace F] {c : ℂ} {R C : ℝ} {f : ℂ → F} (hR : 0 < R)
     (hf : DiffContOnCl ℂ f (Ball c R)) (hC : ∀, ∀ z ∈ Sphere c R, ∀, ∥f z∥ ≤ C) : ∥deriv f c∥ ≤ C / R := by
-  have : ∀, ∀ z ∈ sphere c R, ∀, ∥(z - c) ^ (-2 : ℤ) • f z∥ ≤ C / (R * R) := fun hz : abs (z - c) = R => by
-    simpa [-mul_inv_rev, norm_smul, hz, zpow_two, ← div_eq_inv_mul] using (div_le_div_right (mul_pos hR hR)).2 (hC z hz)
+  have : ∀, ∀ z ∈ sphere c R, ∀, ∥(z - c) ^ (-2 : ℤ) • f z∥ ≤ C / (R * R) := fun z hz : abs (z - c) = R => by
+    simpa [-mul_inv_rev, ← norm_smul, ← hz, ← zpow_two, div_eq_inv_mul] using
+      (div_le_div_right (mul_pos hR hR)).2 (hC z hz)
   calc ∥deriv f c∥ = ∥(2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - c) ^ (-2 : ℤ) • f z∥ :=
       congr_arg norm (deriv_eq_smul_circle_integral hR hf)_ ≤ R * (C / (R * R)) :=
       circleIntegral.norm_two_pi_I_inv_smul_integral_le_of_norm_le_const hR.le this _ = C / R := by
@@ -95,7 +96,7 @@ theorem apply_eq_apply_of_bounded {f : E → F} (hf : Differentiable ℂ f) (hb 
     f z = f w := by
   set g : ℂ → F := f ∘ fun t : ℂ => t • (w - z) + z
   suffices g 0 = g 1 by
-    simpa [g]
+    simpa [← g]
   apply liouville_theorem_aux
   exacts[hf.comp ((differentiable_id.smul_const (w - z)).AddConst z), hb.mono (range_comp_subset_range _ _)]
 

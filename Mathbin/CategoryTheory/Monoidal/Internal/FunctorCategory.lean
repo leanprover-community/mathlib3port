@@ -109,25 +109,25 @@ def unitIso : 𝟭 (Mon_ (C ⥤ D)) ≅ Functor ⋙ inverse :=
             one_hom' := by
               ext X
               dsimp'
-              simp only [category.comp_id],
+              simp only [← category.comp_id],
             mul_hom' := by
               ext X
               dsimp'
-              simp only [tensor_id, category.id_comp, category.comp_id] },
+              simp only [← tensor_id, ← category.id_comp, ← category.comp_id] },
         inv :=
           { Hom := { app := fun _ => 𝟙 _ },
             one_hom' := by
               ext X
               dsimp'
-              simp only [category.comp_id],
+              simp only [← category.comp_id],
             mul_hom' := by
               ext X
               dsimp'
-              simp only [tensor_id, category.id_comp, category.comp_id] } })
+              simp only [← tensor_id, ← category.id_comp, ← category.comp_id] } })
     fun A B f => by
     ext X
-    simp only [functor.id_map, functor.comp_map, functor_map_app_hom, Mon_.comp_hom', category.id_comp,
-      category.comp_id, inverse_map_hom_app, nat_trans.comp_app]
+    simp only [← functor.id_map, ← functor.comp_map, ← functor_map_app_hom, ← Mon_.comp_hom', ← category.id_comp, ←
+      category.comp_id, ← inverse_map_hom_app, ← nat_trans.comp_app]
 
 /-- The counit for the equivalence `Mon_ (C ⥤ D) ≌ C ⥤ Mon_ D`.
 -/
@@ -196,25 +196,25 @@ def unitIso : 𝟭 (CommMon_ (C ⥤ D)) ≅ Functor ⋙ inverse :=
             one_hom' := by
               ext X
               dsimp'
-              simp only [category.comp_id],
+              simp only [← category.comp_id],
             mul_hom' := by
               ext X
               dsimp'
-              simp only [tensor_id, category.id_comp, category.comp_id] },
+              simp only [← tensor_id, ← category.id_comp, ← category.comp_id] },
         inv :=
           { Hom := { app := fun _ => 𝟙 _ },
             one_hom' := by
               ext X
               dsimp'
-              simp only [category.comp_id],
+              simp only [← category.comp_id],
             mul_hom' := by
               ext X
               dsimp'
-              simp only [tensor_id, category.id_comp, category.comp_id] } })
+              simp only [← tensor_id, ← category.id_comp, ← category.comp_id] } })
     fun A B f => by
     ext X
     dsimp'
-    simp only [category.id_comp, category.comp_id]
+    simp only [← category.id_comp, ← category.comp_id]
 
 /-- The counit for the equivalence `CommMon_ (C ⥤ D) ≌ C ⥤ CommMon_ D`.
 -/

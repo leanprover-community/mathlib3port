@@ -254,14 +254,14 @@ protected def inf (𝒮 : Set (Sieve X)) : Sieve X where
 protected def union (S R : Sieve X) : Sieve X where
   Arrows := fun Y f => S f ∨ R f
   downward_closed' := by
-    rintro Y Z f (h | h) g <;> simp [h]
+    rintro Y Z f (h | h) g <;> simp [← h]
 
 /-- The intersection of two sieves is a sieve. -/
 protected def inter (S R : Sieve X) : Sieve X where
   Arrows := fun Y f => S f ∧ R f
   downward_closed' := by
     rintro Y Z f ⟨h₁, h₂⟩ g
-    simp [h₁, h₂]
+    simp [← h₁, ← h₂]
 
 /-- Sieves on an object `X` form a complete lattice.
 We generate this directly rather than using the galois insertion for nicer definitional properties.
@@ -336,7 +336,7 @@ def bind (S : Presieve X) (R : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄, S f → Sieve Y) :
     rintro Y Z f ⟨W, f, h, hh, hf, rfl⟩ g
     exact
       ⟨_, g ≫ f, _, hh, by
-        simp [hf]⟩
+        simp [← hf]⟩
 
 open Order Lattice
 
@@ -388,22 +388,22 @@ theorem generate_top : generate (⊤ : Presieve X) = ⊤ :=
 def pullback (h : Y ⟶ X) (S : Sieve X) : Sieve Y where
   Arrows := fun Y sl => S (sl ≫ h)
   downward_closed' := fun Z W f g h => by
-    simp [g]
+    simp [← g]
 
 @[simp]
 theorem pullback_id : S.pullback (𝟙 _) = S := by
-  simp [sieve.ext_iff]
+  simp [← sieve.ext_iff]
 
 @[simp]
 theorem pullback_top {f : Y ⟶ X} : (⊤ : Sieve X).pullback f = ⊤ :=
   top_unique fun _ g => id
 
 theorem pullback_comp {f : Y ⟶ X} {g : Z ⟶ Y} (S : Sieve X) : S.pullback (g ≫ f) = (S.pullback f).pullback g := by
-  simp [sieve.ext_iff]
+  simp [← sieve.ext_iff]
 
 @[simp]
 theorem pullback_inter {f : Y ⟶ X} (S R : Sieve X) : (S⊓R).pullback f = S.pullback f⊓R.pullback f := by
-  simp [sieve.ext_iff]
+  simp [← sieve.ext_iff]
 
 theorem pullback_eq_top_iff_mem (f : Y ⟶ X) : S f ↔ S.pullback f = ⊤ := by
   rw [← id_mem_iff_eq_top, pullback_apply, id_comp]
@@ -417,10 +417,10 @@ factors through some `g : Z ⟶ Y` which is in `R`.
 @[simps]
 def pushforward (f : Y ⟶ X) (R : Sieve Y) : Sieve X where
   Arrows := fun Z gf => ∃ g, g ≫ f = gf ∧ R g
-  downward_closed' := fun h =>
+  downward_closed' := fun Z₁ Z₂ g ⟨j, k, z⟩ h =>
     ⟨h ≫ j, by
-      simp [k], by
-      simp [z]⟩
+      simp [← k], by
+      simp [← z]⟩
 
 theorem pushforward_apply_comp {R : Sieve Y} {Z : C} {g : Z ⟶ Y} (hg : R g) (f : Y ⟶ X) : R.pushforward f (g ≫ f) :=
   ⟨g, rfl, hg⟩
@@ -560,7 +560,7 @@ theorem functor_pushforward_id (R : Sieve X) : R.FunctorPushforward (𝟭 _) = R
 theorem functor_pushforward_comp (R : Sieve X) :
     R.FunctorPushforward (F ⋙ G) = (R.FunctorPushforward F).FunctorPushforward G := by
   ext
-  simpa [R.arrows.functor_pushforward_comp F G]
+  simpa [← R.arrows.functor_pushforward_comp F G]
 
 theorem functor_galois_connection (X : C) :
     GaloisConnection (Sieve.functorPushforward F : Sieve X → Sieve (F.obj X)) (Sieve.functorPullback F) := by
@@ -653,13 +653,11 @@ def functor (S : Sieve X) : Cᵒᵖ ⥤ Type v₁ where
 presheaves.
 -/
 @[simps]
-def natTransOfLe {S T : Sieve X} (h : S ≤ T) : S.Functor ⟶ T.Functor where
-  app := fun Y f => ⟨f.1, h _ f.2⟩
+def natTransOfLe {S T : Sieve X} (h : S ≤ T) : S.Functor ⟶ T.Functor where app := fun Y f => ⟨f.1, h _ f.2⟩
 
 /-- The natural inclusion from the functor induced by a sieve to the yoneda embedding. -/
 @[simps]
-def functorInclusion (S : Sieve X) : S.Functor ⟶ yoneda.obj X where
-  app := fun Y f => f.1
+def functorInclusion (S : Sieve X) : S.Functor ⟶ yoneda.obj X where app := fun Y f => f.1
 
 theorem nat_trans_of_le_comm {S T : Sieve X} (h : S ≤ T) : natTransOfLe h ≫ functorInclusion _ = functorInclusion _ :=
   rfl
@@ -685,7 +683,7 @@ def sieveOfSubfunctor {R} (f : R ⟶ yoneda.obj X) : Sieve X where
 
 theorem sieve_of_subfunctor_functor_inclusion : sieveOfSubfunctor S.functorInclusion = S := by
   ext
-  simp only [functor_inclusion_app, sieve_of_subfunctor_apply, Subtype.val_eq_coe]
+  simp only [← functor_inclusion_app, ← sieve_of_subfunctor_apply, ← Subtype.val_eq_coe]
   constructor
   · rintro ⟨⟨f, hf⟩, rfl⟩
     exact hf

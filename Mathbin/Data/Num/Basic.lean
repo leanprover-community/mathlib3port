@@ -166,11 +166,11 @@ instance : LE PosNum :=
 
 instance decidableLt : @DecidableRel PosNum (· < ·)
   | a, b => by
-    dsimp' [(· < ·)] <;> infer_instance
+    dsimp' [← (· < ·)] <;> infer_instance
 
 instance decidableLe : @DecidableRel PosNum (· ≤ ·)
   | a, b => by
-    dsimp' [(· ≤ ·)] <;> infer_instance
+    dsimp' [← (· ≤ ·)] <;> infer_instance
 
 end PosNum
 
@@ -289,11 +289,11 @@ instance : LE Num :=
 
 instance decidableLt : @DecidableRel Num (· < ·)
   | a, b => by
-    dsimp' [(· < ·)] <;> infer_instance
+    dsimp' [← (· < ·)] <;> infer_instance
 
 instance decidableLe : @DecidableRel Num (· ≤ ·)
   | a, b => by
-    dsimp' [(· ≤ ·)] <;> infer_instance
+    dsimp' [← (· ≤ ·)] <;> infer_instance
 
 /-- Converts a `num` to a `znum`.
   -/
@@ -526,11 +526,11 @@ instance : LE Znum :=
 
 instance decidableLt : @DecidableRel Znum (· < ·)
   | a, b => by
-    dsimp' [(· < ·)] <;> infer_instance
+    dsimp' [← (· < ·)] <;> infer_instance
 
 instance decidableLe : @DecidableRel Znum (· ≤ ·)
   | a, b => by
-    dsimp' [(· ≤ ·)] <;> infer_instance
+    dsimp' [← (· ≤ ·)] <;> infer_instance
 
 end Znum
 

@@ -16,6 +16,8 @@ of characteristic zero. The result that the complex numbers are algebraically cl
 
 open BigOperators
 
+open Set Function
+
 /-! ### Definition and basic arithmmetic -/
 
 
@@ -52,7 +54,19 @@ theorem ext : ∀ {z w : ℂ}, z.re = w.re → z.im = w.im → z = w
 
 theorem ext_iff {z w : ℂ} : z = w ↔ z.re = w.re ∧ z.im = w.im :=
   ⟨fun H => by
-    simp [H], And.ndrec ext⟩
+    simp [← H], And.ndrec ext⟩
+
+theorem re_surjective : Surjective re := fun x => ⟨⟨x, 0⟩, rfl⟩
+
+theorem im_surjective : Surjective im := fun y => ⟨⟨0, y⟩, rfl⟩
+
+@[simp]
+theorem range_re : Range re = univ :=
+  re_surjective.range_eq
+
+@[simp]
+theorem range_im : Range im = univ :=
+  im_surjective.range_eq
 
 instance : Coe ℝ ℂ :=
   ⟨fun r => ⟨r, 0⟩⟩
@@ -172,12 +186,12 @@ theorem of_real_add (r s : ℝ) : ((r + s : ℝ) : ℂ) = r + s :=
 @[simp, norm_cast]
 theorem of_real_bit0 (r : ℝ) : ((bit0 r : ℝ) : ℂ) = bit0 r :=
   ext_iff.2 <| by
-    simp [bit0]
+    simp [← bit0]
 
 @[simp, norm_cast]
 theorem of_real_bit1 (r : ℝ) : ((bit1 r : ℝ) : ℂ) = bit1 r :=
   ext_iff.2 <| by
-    simp [bit1]
+    simp [← bit1]
 
 instance : Neg ℂ :=
   ⟨fun z => ⟨-z.re, -z.im⟩⟩
@@ -277,16 +291,10 @@ theorem I_mul_im (z : ℂ) : (I * z).im = z.re := by
 /- We use a nonstandard formula for the `ℕ` and `ℤ` actions to make sure there is no
 diamond from the other actions they inherit through the `ℝ`-action on `ℂ` and action transitivity
 defined in `data.complex.module.lean`. -/
-instance : CommRingₓ ℂ := by
+instance : AddCommGroupₓ ℂ := by
   refine_struct
-      { zero := (0 : ℂ), add := (· + ·), neg := Neg.neg, sub := Sub.sub, one := 1, mul := (· * ·),
-        zero_add := fun z => by
-          apply ext_iff.2
-          simp ,
-        add_zero := fun z => by
-          apply ext_iff.2
-          simp ,
-        nsmul := fun n z => ⟨n • z.re - 0 * z.im, n • z.im + 0 * z.re⟩, npow := @npowRec _ ⟨(1 : ℂ)⟩ ⟨(· * ·)⟩,
+      { zero := (0 : ℂ), add := (· + ·), neg := Neg.neg, sub := Sub.sub,
+        nsmul := fun n z => ⟨n • z.re - 0 * z.im, n • z.im + 0 * z.re⟩,
         zsmul := fun n z => ⟨n • z.re - 0 * z.im, n • z.im + 0 * z.re⟩ } <;>
     intros <;>
       try
@@ -299,15 +307,43 @@ instance : CommRingₓ ℂ := by
                   ring_nf
                 
 
-/-- This shortcut instance ensures we do not find `add_comm_group` via the noncomputable
-`complex.normed_group` instance. -/
-instance : AddCommGroupₓ ℂ := by
-  infer_instance
+instance : AddGroupWithOneₓ ℂ :=
+  { Complex.addCommGroup with natCast := fun n => ⟨n, 0⟩,
+    nat_cast_zero := by
+      ext <;> simp [← Nat.castₓ],
+    nat_cast_succ := fun _ => by
+      ext <;> simp [← Nat.castₓ],
+    intCast := fun n => ⟨n, 0⟩,
+    int_cast_of_nat := fun _ => by
+      ext <;> simp [← fun n => show @coe ℕ ℂ ⟨_⟩ n = ⟨n, 0⟩ from rfl],
+    int_cast_neg_succ_of_nat := fun _ => by
+      ext <;> simp [← fun n => show @coe ℕ ℂ ⟨_⟩ n = ⟨n, 0⟩ from rfl],
+    one := 1 }
+
+instance : CommRingₓ ℂ := by
+  refine_struct
+      { Complex.addGroupWithOne with zero := (0 : ℂ), add := (· + ·), one := 1, mul := (· * ·),
+        npow := @npowRec _ ⟨(1 : ℂ)⟩ ⟨(· * ·)⟩ } <;>
+    intros <;>
+      try
+          rfl <;>
+        apply ext_iff.2 <;>
+          constructor <;>
+            simp <;>
+              · first |
+                  ring1|
+                  ring_nf
+                
 
 /-- This shortcut instance ensures we do not find `ring` via the noncomputable `complex.field`
 instance. -/
 instance : Ringₓ ℂ := by
   infer_instance
+
+/-- This shortcut instance ensures we do not find `comm_semiring` via the noncomputable
+`complex.field` instance. -/
+instance : CommSemiringₓ ℂ :=
+  inferInstance
 
 /-- The "real part" map, considered as an additive group homomorphism. -/
 def reAddGroupHom : ℂ →+ ℝ where
@@ -346,11 +382,11 @@ notation `conj` in the locale `complex_conjugate`. -/
 instance : StarRing ℂ where
   star := fun z => ⟨z.re, -z.im⟩
   star_involutive := fun x => by
-    simp only [eta, neg_negₓ]
+    simp only [← eta, ← neg_negₓ]
   star_mul := fun a b => by
-    ext <;> simp [add_commₓ] <;> ring
+    ext <;> simp [← add_commₓ] <;> ring
   star_add := fun a b => by
-    ext <;> simp [add_commₓ]
+    ext <;> simp [← add_commₓ]
 
 @[simp]
 theorem conj_re (z : ℂ) : (conj z).re = z.re :=
@@ -362,7 +398,7 @@ theorem conj_im (z : ℂ) : (conj z).im = -z.im :=
 
 theorem conj_of_real (r : ℝ) : conj (r : ℂ) = r :=
   ext_iff.2 <| by
-    simp [conj]
+    simp [← conj]
 
 @[simp]
 theorem conj_I : conj i = -I :=
@@ -371,11 +407,11 @@ theorem conj_I : conj i = -I :=
 
 theorem conj_bit0 (z : ℂ) : conj (bit0 z) = bit0 (conj z) :=
   ext_iff.2 <| by
-    simp [bit0]
+    simp [← bit0]
 
 theorem conj_bit1 (z : ℂ) : conj (bit1 z) = bit1 (conj z) :=
   ext_iff.2 <| by
-    simp [bit0]
+    simp [← bit0]
 
 @[simp]
 theorem conj_neg_I : conj (-I) = I :=
@@ -421,7 +457,7 @@ theorem norm_sq_apply (z : ℂ) : normSq z = z.re * z.re + z.im * z.im :=
 
 @[simp]
 theorem norm_sq_of_real (r : ℝ) : normSq r = r * r := by
-  simp [norm_sq]
+  simp [← norm_sq]
 
 @[simp]
 theorem norm_sq_mk (x y : ℝ) : normSq ⟨x, y⟩ = x * x + y * y :=
@@ -431,7 +467,7 @@ theorem norm_sq_add_mul_I (x y : ℝ) : normSq (x + y * I) = x ^ 2 + y ^ 2 := by
   rw [← mk_eq_add_mul_I, norm_sq_mk, sq, sq]
 
 theorem norm_sq_eq_conj_mul_self {z : ℂ} : (normSq z : ℂ) = conj z * z := by
-  ext <;> simp [norm_sq, mul_comm]
+  ext <;> simp [← norm_sq, ← mul_comm]
 
 @[simp]
 theorem norm_sq_zero : normSq 0 = 0 :=
@@ -443,10 +479,16 @@ theorem norm_sq_one : normSq 1 = 1 :=
 
 @[simp]
 theorem norm_sq_I : normSq i = 1 := by
-  simp [norm_sq]
+  simp [← norm_sq]
 
 theorem norm_sq_nonneg (z : ℂ) : 0 ≤ normSq z :=
   add_nonneg (mul_self_nonneg _) (mul_self_nonneg _)
+
+@[simp]
+theorem range_norm_sq : Range normSq = Ici 0 :=
+  (Subset.antisymm (range_subset_iff.2 norm_sq_nonneg)) fun x hx =>
+    ⟨Real.sqrt x, by
+      rw [norm_sq_of_real, Real.mul_self_sqrt hx]⟩
 
 theorem norm_sq_eq_zero {z : ℂ} : normSq z = 0 ↔ z = 0 :=
   ⟨fun h =>
@@ -460,17 +502,17 @@ theorem norm_sq_pos {z : ℂ} : 0 < normSq z ↔ z ≠ 0 :=
 
 @[simp]
 theorem norm_sq_neg (z : ℂ) : normSq (-z) = normSq z := by
-  simp [norm_sq]
+  simp [← norm_sq]
 
 @[simp]
 theorem norm_sq_conj (z : ℂ) : normSq (conj z) = normSq z := by
-  simp [norm_sq]
+  simp [← norm_sq]
 
 theorem norm_sq_mul (z w : ℂ) : normSq (z * w) = normSq z * normSq w :=
   normSq.map_mul z w
 
 theorem norm_sq_add (z w : ℂ) : normSq (z + w) = normSq z + normSq w + 2 * (z * conj w).re := by
-  dsimp' [norm_sq] <;> ring
+  dsimp' [← norm_sq] <;> ring
 
 theorem re_sq_le_norm_sq (z : ℂ) : z.re * z.re ≤ normSq z :=
   le_add_of_nonneg_right (mul_self_nonneg _)
@@ -480,11 +522,11 @@ theorem im_sq_le_norm_sq (z : ℂ) : z.im * z.im ≤ normSq z :=
 
 theorem mul_conj (z : ℂ) : z * conj z = normSq z :=
   ext_iff.2 <| by
-    simp [norm_sq, mul_comm, sub_eq_neg_add, add_commₓ]
+    simp [← norm_sq, ← mul_comm, ← sub_eq_neg_add, ← add_commₓ]
 
 theorem add_conj (z : ℂ) : z + conj z = (2 * z.re : ℝ) :=
   ext_iff.2 <| by
-    simp [two_mul]
+    simp [← two_mul]
 
 /-- The coercion `ℝ → ℂ` as a `ring_hom`. -/
 def ofReal : ℝ →+* ℂ :=
@@ -513,15 +555,15 @@ theorem of_real_sub (r s : ℝ) : ((r - s : ℝ) : ℂ) = r - s :=
 
 @[simp, norm_cast]
 theorem of_real_pow (r : ℝ) (n : ℕ) : ((r ^ n : ℝ) : ℂ) = r ^ n := by
-  induction n <;> simp [*, of_real_mul, pow_succₓ]
+  induction n <;> simp [*, ← of_real_mul, ← pow_succₓ]
 
 theorem sub_conj (z : ℂ) : z - conj z = (2 * z.im : ℝ) * I :=
   ext_iff.2 <| by
-    simp [two_mul, sub_eq_add_neg]
+    simp [← two_mul, ← sub_eq_add_neg]
 
 theorem norm_sq_sub (z w : ℂ) : normSq (z - w) = normSq z + normSq w - 2 * (z * conj w).re := by
   rw [sub_eq_add_neg, norm_sq_add]
-  simp only [RingHom.map_neg, mul_neg, neg_re, Tactic.Ring.add_neg_eq_sub, norm_sq_neg]
+  simp only [← RingHom.map_neg, ← mul_neg, ← neg_re, ← Tactic.Ring.add_neg_eq_sub, ← norm_sq_neg]
 
 /-! ### Inversion -/
 
@@ -534,11 +576,11 @@ theorem inv_def (z : ℂ) : z⁻¹ = conj z * ((normSq z)⁻¹ : ℝ) :=
 
 @[simp]
 theorem inv_re (z : ℂ) : z⁻¹.re = z.re / normSq z := by
-  simp [inv_def, division_def]
+  simp [← inv_def, ← division_def]
 
 @[simp]
 theorem inv_im (z : ℂ) : z⁻¹.im = -z.im / normSq z := by
-  simp [inv_def, division_def]
+  simp [← inv_def, ← division_def]
 
 @[simp, norm_cast]
 theorem of_real_inv (r : ℝ) : ((r⁻¹ : ℝ) : ℂ) = r⁻¹ :=
@@ -567,10 +609,10 @@ theorem I_zpow_bit1 (n : ℤ) : I ^ bit1 n = -1 ^ n * I := by
   rw [zpow_bit1', I_mul_I]
 
 theorem div_re (z w : ℂ) : (z / w).re = z.re * w.re / normSq w + z.im * w.im / normSq w := by
-  simp [div_eq_mul_inv, mul_assoc, sub_eq_add_neg]
+  simp [← div_eq_mul_inv, ← mul_assoc, ← sub_eq_add_neg]
 
 theorem div_im (z w : ℂ) : (z / w).im = z.im * w.re / normSq w - z.re * w.im / normSq w := by
-  simp [div_eq_mul_inv, mul_assoc, sub_eq_add_neg, add_commₓ]
+  simp [← div_eq_mul_inv, ← mul_assoc, ← sub_eq_add_neg, ← add_commₓ]
 
 theorem conj_inv (x : ℂ) : conj x⁻¹ = (conj x)⁻¹ :=
   star_inv' _
@@ -586,11 +628,11 @@ theorem of_real_zpow (r : ℝ) (n : ℤ) : ((r ^ n : ℝ) : ℂ) = (r : ℂ) ^ n
 @[simp]
 theorem div_I (z : ℂ) : z / I = -(z * I) :=
   (div_eq_iff_mul_eq I_ne_zero).2 <| by
-    simp [mul_assoc]
+    simp [← mul_assoc]
 
 @[simp]
 theorem inv_I : I⁻¹ = -I := by
-  simp [inv_eq_one_div]
+  simp [← inv_eq_one_div]
 
 @[simp]
 theorem norm_sq_inv (z : ℂ) : normSq z⁻¹ = (normSq z)⁻¹ :=
@@ -648,11 +690,11 @@ instance char_zero_complex : CharZero ℂ :=
 
 /-- A complex number `z` plus its conjugate `conj z` is `2` times its real part. -/
 theorem re_eq_add_conj (z : ℂ) : (z.re : ℂ) = (z + conj z) / 2 := by
-  simp only [add_conj, of_real_mul, of_real_one, of_real_bit0, mul_div_cancel_left (z.re : ℂ) two_ne_zero']
+  simp only [← add_conj, ← of_real_mul, ← of_real_one, ← of_real_bit0, ← mul_div_cancel_left (z.re : ℂ) two_ne_zero']
 
 /-- A complex number `z` minus its conjugate `conj z` is `2i` times its imaginary part. -/
 theorem im_eq_sub_conj (z : ℂ) : (z.im : ℂ) = (z - conj z) / (2 * I) := by
-  simp only [sub_conj, of_real_mul, of_real_one, of_real_bit0, mul_right_commₓ,
+  simp only [← sub_conj, ← of_real_mul, ← of_real_one, ← of_real_bit0, ← mul_right_commₓ, ←
     mul_div_cancel_left _ (mul_ne_zero two_ne_zero' I_ne_zero : 2 * I ≠ 0)]
 
 /-! ### Absolute value -/
@@ -668,7 +710,7 @@ local notation "abs'" => HasAbs.abs
 
 @[simp, norm_cast]
 theorem abs_of_real (r : ℝ) : abs r = abs r := by
-  simp [abs, norm_sq_of_real, Real.sqrt_mul_self_eq_abs]
+  simp [← abs, ← norm_sq_of_real, ← Real.sqrt_mul_self_eq_abs]
 
 theorem abs_of_nonneg {r : ℝ} (h : 0 ≤ r) : abs r = r :=
   (abs_of_real _).trans (abs_of_nonneg h)
@@ -696,15 +738,15 @@ theorem sq_abs_sub_sq_im (z : ℂ) : abs z ^ 2 - z.im ^ 2 = z.re ^ 2 := by
 
 @[simp]
 theorem abs_zero : abs 0 = 0 := by
-  simp [abs]
+  simp [← abs]
 
 @[simp]
 theorem abs_one : abs 1 = 1 := by
-  simp [abs]
+  simp [← abs]
 
 @[simp]
 theorem abs_I : abs i = 1 := by
-  simp [abs]
+  simp [← abs]
 
 @[simp]
 theorem abs_two : abs 2 = 2 :=
@@ -721,6 +763,10 @@ theorem abs_nonneg (z : ℂ) : 0 ≤ abs z :=
   Real.sqrt_nonneg _
 
 @[simp]
+theorem range_abs : Range abs = Ici 0 :=
+  (Subset.antisymm (range_subset_iff.2 abs_nonneg)) fun x hx => ⟨x, abs_of_nonneg hx⟩
+
+@[simp]
 theorem abs_eq_zero {z : ℂ} : abs z = 0 ↔ z = 0 :=
   (Real.sqrt_eq_zero <| norm_sq_nonneg _).trans norm_sq_eq_zero
 
@@ -729,7 +775,7 @@ theorem abs_ne_zero {z : ℂ} : abs z ≠ 0 ↔ z ≠ 0 :=
 
 @[simp]
 theorem abs_conj (z : ℂ) : abs (conj z) = abs z := by
-  simp [abs]
+  simp [← abs]
 
 @[simp]
 theorem abs_mul (z w : ℂ) : abs (z * w) = abs z * abs w := by
@@ -823,17 +869,28 @@ theorem abs_abs_sub_le_abs_sub : ∀ z w, abs (abs z - abs w) ≤ abs (z - w) :=
   abs_abv_sub_le_abv_sub abs
 
 theorem abs_le_abs_re_add_abs_im (z : ℂ) : abs z ≤ abs z.re + abs z.im := by
-  simpa [re_add_im] using abs_add z.re (z.im * I)
+  simpa [← re_add_im] using abs_add z.re (z.im * I)
+
+theorem abs_le_sqrt_two_mul_max (z : ℂ) : abs z ≤ Real.sqrt 2 * max (abs z.re) (abs z.im) := by
+  cases' z with x y
+  simp only [← abs, ← norm_sq_mk, sq]
+  wlog (discharger := tactic.skip) hle : abs x ≤ abs y := le_totalₓ (abs x) (abs y) using x y, y x
+  · calc Real.sqrt (x ^ 2 + y ^ 2) ≤ Real.sqrt (y ^ 2 + y ^ 2) :=
+        Real.sqrt_le_sqrt (add_le_add_right (sq_le_sq.2 hle) _)_ = Real.sqrt 2 * max (abs x) (abs y) := by
+        rw [max_eq_rightₓ hle, ← two_mul, Real.sqrt_mul two_pos.le, Real.sqrt_sq_eq_abs]
+    
+  · rwa [add_commₓ, max_commₓ]
+    
 
 theorem abs_re_div_abs_le_one (z : ℂ) : abs (z.re / z.abs) ≤ 1 :=
   if hz : z = 0 then by
-    simp [hz, zero_le_one]
+    simp [← hz, ← zero_le_one]
   else by
     simp_rw [_root_.abs_div, abs_abs, div_le_iff (abs_pos.2 hz), one_mulₓ, abs_re_le_abs]
 
 theorem abs_im_div_abs_le_one (z : ℂ) : abs (z.im / z.abs) ≤ 1 :=
   if hz : z = 0 then by
-    simp [hz, zero_le_one]
+    simp [← hz, ← zero_le_one]
   else by
     simp_rw [_root_.abs_div, abs_abs, div_le_iff (abs_pos.2 hz), one_mulₓ, abs_im_le_abs]
 
@@ -874,11 +931,11 @@ theorem lt_def {z w : ℂ} : z < w ↔ z.re < w.re ∧ z.im = w.im :=
 
 @[simp, norm_cast]
 theorem real_le_real {x y : ℝ} : (x : ℂ) ≤ (y : ℂ) ↔ x ≤ y := by
-  simp [le_def]
+  simp [← le_def]
 
 @[simp, norm_cast]
 theorem real_lt_real {x y : ℝ} : (x : ℂ) < (y : ℂ) ↔ x < y := by
-  simp [lt_def]
+  simp [← lt_def]
 
 @[simp, norm_cast]
 theorem zero_le_real {x : ℝ} : (0 : ℂ) ≤ (x : ℂ) ↔ 0 ≤ x :=
@@ -906,7 +963,7 @@ protected def orderedCommRing : OrderedCommRing ℂ :=
   { Complex.partialOrder, Complex.commRing with zero_le_one := ⟨zero_le_one, rfl⟩,
     add_le_add_left := fun w z h y => ⟨add_le_add_left h.1 _, congr_arg2ₓ (· + ·) rfl h.2⟩,
     mul_pos := fun z w hz hw => by
-      simp [lt_def, mul_re, mul_im, ← hz.2, ← hw.2, mul_pos hz.1 hw.1] }
+      simp [← lt_def, ← mul_re, ← mul_im, hz.2, hw.2, ← mul_pos hz.1 hw.1] }
 
 localized [ComplexOrder] attribute [instance] Complex.orderedCommRing
 
@@ -924,14 +981,15 @@ protected def starOrderedRing : StarOrderedRing ℂ :=
           rw [le_def] at hr
           exact hr.2.symm
         ext
-        · simp only [of_real_im, star_def, of_real_re, sub_zero, conj_re, mul_re, mul_zero, ← Real.sqrt_mul h₁ r.re,
-            Real.sqrt_mul_self h₁]
+        · simp only [← of_real_im, ← star_def, ← of_real_re, ← sub_zero, ← conj_re, ← mul_re, ← mul_zero,
+            Real.sqrt_mul h₁ r.re, ← Real.sqrt_mul_self h₁]
           
-        · simp only [h₂, add_zeroₓ, of_real_im, star_def, zero_mul, conj_im, mul_im, mul_zero, neg_zero]
+        · simp only [← h₂, ← add_zeroₓ, ← of_real_im, ← star_def, ← zero_mul, ← conj_im, ← mul_im, ← mul_zero, ←
+            neg_zero]
           
         
       · obtain ⟨s, rfl⟩ := h
-        simp only [← norm_sq_eq_conj_mul_self, norm_sq_nonneg, zero_le_real, star_def]
+        simp only [norm_sq_eq_conj_mul_self, ← norm_sq_nonneg, ← zero_le_real, ← star_def]
          }
 
 localized [ComplexOrder] attribute [instance] Complex.starOrderedRing
@@ -977,7 +1035,7 @@ theorem equiv_lim_aux (f : CauSeq ℂ abs) : f ≈ CauSeq.const abs (limAux f) :
     fun i H j ij => by
     cases' H _ ij with H₁ H₂
     apply lt_of_le_of_ltₓ (abs_le_abs_re_add_abs_im _)
-    dsimp' [lim_aux]  at *
+    dsimp' [← lim_aux]  at *
     have := add_lt_add H₁ H₂
     rwa [add_halves] at this
 
@@ -994,9 +1052,9 @@ theorem lim_eq_lim_im_add_lim_re (f : CauSeq ℂ abs) : limₓ f = ↑(limₓ (c
         CauSeq.ext fun _ =>
           Complex.ext
             (by
-              simp [lim_aux, cau_seq_re])
+              simp [← lim_aux, ← cau_seq_re])
             (by
-              simp [lim_aux, cau_seq_im])
+              simp [← lim_aux, ← cau_seq_im])
       
 
 theorem lim_re (f : CauSeq ℂ abs) : limₓ (cauSeqRe f) = (limₓ f).re := by
@@ -1017,9 +1075,9 @@ noncomputable def cauSeqConj (f : CauSeq ℂ abs) : CauSeq ℂ abs :=
 theorem lim_conj (f : CauSeq ℂ abs) : limₓ (cauSeqConj f) = conj (limₓ f) :=
   Complex.ext
     (by
-      simp [cau_seq_conj, (lim_re _).symm, cau_seq_re])
+      simp [← cau_seq_conj, ← (lim_re _).symm, ← cau_seq_re])
     (by
-      simp [cau_seq_conj, (lim_im _).symm, cau_seq_im, (lim_neg _).symm] <;> rfl)
+      simp [← cau_seq_conj, ← (lim_im _).symm, ← cau_seq_im, ← (lim_neg _).symm] <;> rfl)
 
 /-- The absolute value of a complex Cauchy sequence, as a real Cauchy sequence. -/
 noncomputable def cauSeqAbs (f : CauSeq ℂ abs) : CauSeq ℝ abs' :=

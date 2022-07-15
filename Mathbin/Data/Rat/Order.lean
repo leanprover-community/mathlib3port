@@ -3,7 +3,8 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Data.Rat.Basic
+import Mathbin.Algebra.Order.Field
+import Mathbin.Data.Rat.Defs
 
 /-!
 # Order for Rational Numbers
@@ -38,7 +39,7 @@ theorem mk_nonneg (a : ℤ) {b : ℤ} (h : 0 < b) : (a /. b).Nonneg ↔ 0 ≤ a 
   generalize ha : a /. b = x
   cases' x with n₁ d₁ h₁ c₁
   rw [num_denom'] at ha
-  simp [Rat.Nonneg]
+  simp [← Rat.Nonneg]
   have d0 := Int.coe_nat_lt.2 h₁
   have := (mk_eq (ne_of_gtₓ h) (ne_of_gtₓ d0)).1 ha
   constructor <;> intro h₂
@@ -56,7 +57,7 @@ protected theorem nonneg_add {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonne
     (numDenomCasesOn' b) fun n₂ d₂ h₂ => by
       have d₁0 : 0 < (d₁ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zeroₓ h₁)
       have d₂0 : 0 < (d₂ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zeroₓ h₂)
-      simp [d₁0, d₂0, h₁, h₂, mul_pos d₁0 d₂0]
+      simp [← d₁0, ← d₂0, ← h₁, ← h₂, ← mul_pos d₁0 d₂0]
       intro n₁0 n₂0
       apply add_nonneg <;>
         apply mul_nonneg <;>
@@ -70,12 +71,12 @@ protected theorem nonneg_mul {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonne
     (numDenomCasesOn' b) fun n₂ d₂ h₂ => by
       have d₁0 : 0 < (d₁ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zeroₓ h₁)
       have d₂0 : 0 < (d₂ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zeroₓ h₂)
-      simp (config := { contextual := true })[d₁0, d₂0, h₁, h₂, mul_pos d₁0 d₂0, mul_nonneg]
+      simp (config := { contextual := true })[← d₁0, ← d₂0, ← h₁, ← h₂, ← mul_pos d₁0 d₂0, ← mul_nonneg]
 
 protected theorem nonneg_antisymm {a} : Rat.Nonneg a → Rat.Nonneg (-a) → a = 0 :=
   (numDenomCasesOn' a) fun n d h => by
     have d0 : 0 < (d : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zeroₓ h)
-    simp [d0, h]
+    simp [← d0, ← h]
     exact fun h₁ h₂ => le_antisymmₓ h₂ h₁
 
 protected theorem nonneg_total : Rat.Nonneg a ∨ Rat.Nonneg (-a) := by
@@ -100,7 +101,7 @@ instance decidableLe : DecidableRel ((· ≤ ·) : ℚ → ℚ → Prop)
 protected theorem le_def {a b c d : ℤ} (b0 : 0 < b) (d0 : 0 < d) : a /. b ≤ c /. d ↔ a * d ≤ c * b := by
   show Rat.Nonneg _ ↔ _
   rw [← sub_nonneg]
-  simp [sub_eq_add_neg, ne_of_gtₓ b0, ne_of_gtₓ d0, mul_pos d0 b0]
+  simp [← sub_eq_add_neg, ← ne_of_gtₓ b0, ← ne_of_gtₓ d0, ← mul_pos d0 b0]
 
 protected theorem le_refl : a ≤ a :=
   show Rat.Nonneg (a - a) by
@@ -118,7 +119,7 @@ protected theorem le_antisymm {a b : ℚ} (hab : a ≤ b) (hba : b ≤ a) : a = 
 
 protected theorem le_trans {a b c : ℚ} (hab : a ≤ b) (hbc : b ≤ c) : a ≤ c := by
   have : Rat.Nonneg (b - a + (c - b)) := Rat.nonneg_add hab hbc
-  simpa [sub_eq_add_neg, add_commₓ, add_left_commₓ]
+  simpa [← sub_eq_add_neg, ← add_commₓ, ← add_left_commₓ]
 
 instance : LinearOrderₓ ℚ where
   le := Rat.Le
@@ -160,7 +161,7 @@ instance : Preorderₓ ℚ := by
 
 protected theorem le_def' {p q : ℚ} : p ≤ q ↔ p.num * q.denom ≤ q.num * p.denom := by
   rw [← @num_denom q, ← @num_denom p]
-  conv_rhs => simp only [num_denom]
+  conv_rhs => simp only [← num_denom]
   exact
     Rat.le_def
       (by
@@ -231,22 +232,23 @@ instance : OrderedAddCommMonoid ℚ := by
 
 theorem num_pos_iff_pos {a : ℚ} : 0 < a.num ↔ 0 < a :=
   lt_iff_lt_of_le_iff_le <| by
-    simpa [(by
+    simpa [←
+      (by
         cases a <;> rfl : (-a).num = -a.num)] using
       @num_nonneg_iff_zero_le (-a)
 
 theorem div_lt_div_iff_mul_lt_mul {a b c d : ℤ} (b_pos : 0 < b) (d_pos : 0 < d) : (a : ℚ) / b < c / d ↔ a * d < c * b :=
   by
-  simp only [lt_iff_le_not_leₓ]
+  simp only [← lt_iff_le_not_leₓ]
   apply and_congr
-  · simp [div_num_denom, Rat.le_def b_pos d_pos]
+  · simp [← div_num_denom, ← Rat.le_def b_pos d_pos]
     
   · apply not_iff_not_of_iff
-    simp [div_num_denom, Rat.le_def d_pos b_pos]
+    simp [← div_num_denom, ← Rat.le_def d_pos b_pos]
     
 
 theorem lt_one_iff_num_lt_denom {q : ℚ} : q < 1 ↔ q.num < q.denom := by
-  simp [Rat.lt_def]
+  simp [← Rat.lt_def]
 
 theorem abs_def (q : ℚ) : abs q = q.num.natAbs /. q.denom := by
   cases' le_totalₓ q 0 with hq hq

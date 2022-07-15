@@ -86,12 +86,12 @@ section
 variable {C : Type u} [Category.{v} C]
 
 /-- A category where every morphism `is_iso` is a groupoid. -/
-noncomputable def Groupoid.ofIsIso (all_is_iso : ∀ {X Y : C} f : X ⟶ Y, IsIso f) : Groupoid.{v} C where
-  inv := fun X Y f => inv f
+noncomputable def Groupoid.ofIsIso (all_is_iso : ∀ {X Y : C} f : X ⟶ Y, IsIso f) :
+    Groupoid.{v} C where inv := fun X Y f => inv f
 
 /-- A category with a unique morphism between any two objects is a groupoid -/
-def Groupoid.ofHomUnique (all_unique : ∀ {X Y : C}, Unique (X ⟶ Y)) : Groupoid.{v} C where
-  inv := fun X Y f => all_unique.default
+def Groupoid.ofHomUnique (all_unique : ∀ {X Y : C}, Unique (X ⟶ Y)) :
+    Groupoid.{v} C where inv := fun X Y f => all_unique.default
 
 end
 
@@ -102,11 +102,12 @@ instance InducedCategory.groupoid {C : Type u} (D : Type u₂) [Groupoid.{v} D] 
 
 section
 
-instance groupoidPi {I : Type u} {J : I → Type u₂} [∀ i, Groupoid.{v} (J i)] : Groupoid.{max u v} (∀ i : I, J i) where
-  inv := fun f : ∀ i, x i ⟶ y i => fun i : I => Groupoid.inv (f i)
+instance groupoidPi {I : Type u} {J : I → Type u₂} [∀ i, Groupoid.{v} (J i)] :
+    Groupoid.{max u v}
+      (∀ i : I, J i) where inv := fun x y : ∀ i, J i f : ∀ i, x i ⟶ y i => fun i : I => Groupoid.inv (f i)
 
-instance groupoidProd {α : Type u} {β : Type v} [Groupoid.{u₂} α] [Groupoid.{v₂} β] : Groupoid.{max u₂ v₂} (α × β) where
-  inv := fun f : x ⟶ y => (Groupoid.inv f.1, Groupoid.inv f.2)
+instance groupoidProd {α : Type u} {β : Type v} [Groupoid.{u₂} α] [Groupoid.{v₂} β] :
+    Groupoid.{max u₂ v₂} (α × β) where inv := fun x y : α × β f : x ⟶ y => (Groupoid.inv f.1, Groupoid.inv f.2)
 
 end
 

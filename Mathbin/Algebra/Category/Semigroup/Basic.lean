@@ -224,16 +224,16 @@ def mulEquivIsoSemigroupIso {X Y : Type u} [Semigroupₓ X] [Semigroupₓ Y] :
   inv := fun i => i.semigroupIsoToMulEquiv
 
 @[to_additive]
-instance Magma.forget_reflects_isos : ReflectsIsomorphisms (forget Magma.{u}) where
-  reflects := fun X Y f _ => by
+instance Magma.forget_reflects_isos :
+    ReflectsIsomorphisms (forget Magma.{u}) where reflects := fun X Y f _ => by
     skip
     let i := as_iso ((forget Magma).map f)
     let e : X ≃* Y := { f, i.to_equiv with }
     exact ⟨(is_iso.of_iso e.to_Magma_iso).1⟩
 
 @[to_additive]
-instance Semigroupₓₓ.forget_reflects_isos : ReflectsIsomorphisms (forget Semigroupₓₓ.{u}) where
-  reflects := fun X Y f _ => by
+instance Semigroupₓₓ.forget_reflects_isos :
+    ReflectsIsomorphisms (forget Semigroupₓₓ.{u}) where reflects := fun X Y f _ => by
     skip
     let i := as_iso ((forget Semigroupₓₓ).map f)
     let e : X ≃* Y := { f, i.to_equiv with }

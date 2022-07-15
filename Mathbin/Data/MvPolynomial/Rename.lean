@@ -65,20 +65,20 @@ theorem rename_X (f : σ → τ) (i : σ) : rename f (x i : MvPolynomial σ R) =
 theorem map_rename (f : R →+* S) (g : σ → τ) (p : MvPolynomial σ R) : map f (rename g p) = rename g (map f p) :=
   MvPolynomial.induction_on p
     (fun a => by
-      simp only [map_C, rename_C])
+      simp only [← map_C, ← rename_C])
     (fun p q hp hq => by
-      simp only [hp, hq, AlgHom.map_add, RingHom.map_add])
+      simp only [← hp, ← hq, ← AlgHom.map_add, ← RingHom.map_add])
     fun p n hp => by
-    simp only [hp, rename_X, map_X, RingHom.map_mul, AlgHom.map_mul]
+    simp only [← hp, ← rename_X, ← map_X, ← RingHom.map_mul, ← AlgHom.map_mul]
 
 @[simp]
 theorem rename_rename (f : σ → τ) (g : τ → α) (p : MvPolynomial σ R) : rename g (rename f p) = rename (g ∘ f) p :=
   show rename g (eval₂ c (X ∘ f) p) = _ by
-    simp only [rename, aeval_eq_eval₂_hom]
-    simp [eval₂_comp_left _ C (X ∘ f) p, (· ∘ ·), eval₂_C, eval_X]
+    simp only [← rename, ← aeval_eq_eval₂_hom]
+    simp [← eval₂_comp_left _ C (X ∘ f) p, ← (· ∘ ·), ← eval₂_C, ← eval_X]
     apply eval₂_hom_congr _ rfl rfl
     ext1
-    simp only [comp_app, RingHom.coe_comp, eval₂_hom_C]
+    simp only [← comp_app, ← RingHom.coe_comp, ← eval₂_hom_C]
 
 @[simp]
 theorem rename_id (p : MvPolynomial σ R) : rename id p = p :=
@@ -94,7 +94,7 @@ theorem rename_monomial (f : σ → τ) (d : σ →₀ ℕ) (r : R) : rename f (
     
 
 theorem rename_eq (f : σ → τ) (p : MvPolynomial σ R) : rename f p = Finsupp.mapDomain (Finsupp.mapDomain f) p := by
-  simp only [rename, aeval_def, eval₂, Finsupp.mapDomain, algebra_map_eq, X_pow_eq_monomial, ←
+  simp only [← rename, ← aeval_def, ← eval₂, ← Finsupp.mapDomain, ← algebra_map_eq, ← X_pow_eq_monomial,
     monomial_finsupp_sum_index]
   rfl
 
@@ -211,23 +211,24 @@ theorem exists_finset_rename (p : MvPolynomial σ R) :
   · rintro p q ⟨s, p, rfl⟩ ⟨t, q, rfl⟩
     refine' ⟨s ∪ t, ⟨_, _⟩⟩
     · refine' rename (Subtype.map id _) p + rename (Subtype.map id _) q <;>
-        simp (config := { contextual := true })only [id.def, true_orₓ, or_trueₓ, Finset.mem_union, forall_true_iff]
+        simp (config := { contextual := true })only [← id.def, ← true_orₓ, ← or_trueₓ, ← Finset.mem_union, ←
+          forall_true_iff]
       
-    · simp only [rename_rename, AlgHom.map_add]
+    · simp only [← rename_rename, ← AlgHom.map_add]
       rfl
       
     
   · rintro p n ⟨s, p, rfl⟩
     refine' ⟨insert n s, ⟨_, _⟩⟩
     · refine' rename (Subtype.map id _) p * X ⟨n, s.mem_insert_self n⟩
-      simp (config := { contextual := true })only [id.def, or_trueₓ, Finset.mem_insert, forall_true_iff]
+      simp (config := { contextual := true })only [← id.def, ← or_trueₓ, ← Finset.mem_insert, ← forall_true_iff]
       
-    · simp only [rename_rename, rename_X, Subtype.coe_mk, AlgHom.map_mul]
+    · simp only [← rename_rename, ← rename_X, ← Subtype.coe_mk, ← AlgHom.map_mul]
       rfl
       
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- `exists_finset_rename` for two polyonomials at once: for any two polynomials `p₁`, `p₂` in a
   polynomial semiring `R[σ]` of possibly infinitely many variables, `exists_finset_rename₂` yields
   a finite subset `s` of `σ` such that both `p₁` and `p₂` are contained in the polynomial semiring
@@ -250,7 +251,7 @@ theorem exists_fin_rename (p : MvPolynomial σ R) :
   let e := Fintype.equivFin { x // x ∈ s }
   refine' ⟨n, coe ∘ e.symm, subtype.val_injective.comp e.symm.injective, rename e q, _⟩
   rw [← rename_rename, rename_rename e]
-  simp only [Function.comp, Equivₓ.symm_apply_apply, rename_rename]
+  simp only [← Function.comp, ← Equivₓ.symm_apply_apply, ← rename_rename]
 
 end Rename
 
@@ -258,11 +259,11 @@ theorem eval₂_cast_comp (f : σ → τ) (c : ℤ →+* R) (g : τ → R) (p : 
     eval₂ c (g ∘ f) p = eval₂ c g (rename f p) :=
   MvPolynomial.induction_on p
     (fun n => by
-      simp only [eval₂_C, rename_C])
+      simp only [← eval₂_C, ← rename_C])
     (fun p q hp hq => by
-      simp only [hp, hq, rename, eval₂_add, AlgHom.map_add])
+      simp only [← hp, ← hq, ← rename, ← eval₂_add, ← AlgHom.map_add])
     fun p n hp => by
-    simp only [hp, rename, aeval_def, eval₂_X, eval₂_mul]
+    simp only [← hp, ← rename, ← aeval_def, ← eval₂_X, ← eval₂_mul]
 
 section Coeff
 
@@ -272,10 +273,10 @@ theorem coeff_rename_map_domain (f : σ → τ) (hf : Injective f) (φ : MvPolyn
   apply induction_on' φ
   · intro u r
     rw [rename_monomial, coeff_monomial, coeff_monomial]
-    simp only [(Finsupp.map_domain_injective hf).eq_iff]
+    simp only [← (Finsupp.map_domain_injective hf).eq_iff]
     
   · intros
-    simp only [*, AlgHom.map_add, coeff_add]
+    simp only [*, ← AlgHom.map_add, ← coeff_add]
     
 
 theorem coeff_rename_eq_zero (f : σ → τ) (φ : MvPolynomial σ R) (d : τ →₀ ℕ)
@@ -299,13 +300,13 @@ theorem constant_coeff_rename {τ : Type _} (f : σ → τ) (φ : MvPolynomial �
     constantCoeff (rename f φ) = constantCoeff φ := by
   apply φ.induction_on
   · intro a
-    simp only [constant_coeff_C, rename_C]
+    simp only [← constant_coeff_C, ← rename_C]
     
   · intro p q hp hq
-    simp only [hp, hq, RingHom.map_add, AlgHom.map_add]
+    simp only [← hp, ← hq, ← RingHom.map_add, ← AlgHom.map_add]
     
   · intro p n hp
-    simp only [hp, rename_X, constant_coeff_X, RingHom.map_mul, AlgHom.map_mul]
+    simp only [← hp, ← rename_X, ← constant_coeff_X, ← RingHom.map_mul, ← AlgHom.map_mul]
     
 
 end Coeff

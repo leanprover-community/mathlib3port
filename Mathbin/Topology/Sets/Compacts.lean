@@ -109,7 +109,7 @@ theorem coe_top [CompactSpace α] : (↑(⊤ : Compacts α) : Set α) = univ :=
 theorem coe_bot : (↑(⊥ : Compacts α) : Set α) = ∅ :=
   rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem coe_finset_sup {ι : Type _} {s : Finset ι} {f : ι → Compacts α} : (↑(s.sup f) : Set α) = s.sup fun i => f i :=
   by
@@ -133,10 +133,10 @@ protected def equiv (f : α ≃ₜ β) : Compacts α ≃ Compacts β where
   invFun := Compacts.map _ f.symm.Continuous
   left_inv := fun s => by
     ext1
-    simp only [coe_map, ← image_comp, f.symm_comp_self, image_id]
+    simp only [← coe_map, image_comp, ← f.symm_comp_self, ← image_id]
   right_inv := fun s => by
     ext1
-    simp only [coe_map, ← image_comp, f.self_comp_symm, image_id]
+    simp only [← coe_map, image_comp, ← f.self_comp_symm, ← image_id]
 
 /-- The image of a compact set under a homeomorphism can also be expressed as a preimage. -/
 theorem equiv_to_fun_val (f : α ≃ₜ β) (K : Compacts α) : (Compacts.equiv f K).1 = f.symm ⁻¹' K.1 :=

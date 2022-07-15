@@ -40,15 +40,13 @@ variable {ι : Type _} {α : ι → Type _}
 namespace PSigma
 
 -- mathport name: «exprΣₗ' , »
-notation3 "Σₗ' " (...) ", " r:(scoped p => Lex PSigma p) => r
+notation3"Σₗ' "(...)", "r:(scoped p => Lex PSigma p) => r
 
 /-- The lexicographical `≤` on a sigma type. -/
-instance Lex.hasLe [LT ι] [∀ i, LE (α i)] : LE (Σₗ' i, α i) where
-  le := Lex (· < ·) fun i => (· ≤ ·)
+instance Lex.hasLe [LT ι] [∀ i, LE (α i)] : LE (Σₗ' i, α i) where le := Lex (· < ·) fun i => (· ≤ ·)
 
 /-- The lexicographical `<` on a sigma type. -/
-instance Lex.hasLt [LT ι] [∀ i, LT (α i)] : LT (Σₗ' i, α i) where
-  lt := Lex (· < ·) fun i => (· < ·)
+instance Lex.hasLt [LT ι] [∀ i, LT (α i)] : LT (Σₗ' i, α i) where lt := Lex (· < ·) fun i => (· < ·)
 
 instance Lex.preorder [Preorderₓ ι] [∀ i, Preorderₓ (α i)] : Preorderₓ (Σₗ' i, α i) :=
   { Lex.hasLe, Lex.hasLt with le_refl := fun ⟨i, a⟩ => Lex.right _ le_rfl,

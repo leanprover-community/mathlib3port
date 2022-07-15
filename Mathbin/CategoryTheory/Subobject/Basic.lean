@@ -126,8 +126,7 @@ Prefer to use the coercion `P : C` rather than explicitly writing `underlying.ob
 noncomputable def underlying {X : C} : Subobject X ⥤ C :=
   representative ⋙ MonoOver.forget _ ⋙ Over.forget _
 
-instance : Coe (Subobject X) C where
-  coe := fun Y => underlying.obj Y
+instance : Coe (Subobject X) C where coe := fun Y => underlying.obj Y
 
 @[simp]
 theorem underlying_as_coe {X : C} (P : Subobject X) : underlying.obj P = P :=
@@ -196,12 +195,12 @@ theorem le_of_comm {B : C} {X Y : Subobject B} (f : (X : C) ⟶ (Y : C)) (w : f 
 theorem le_mk_of_comm {B A : C} {X : Subobject B} {f : A ⟶ B} [Mono f] (g : (X : C) ⟶ A) (w : g ≫ f = X.arrow) :
     X ≤ mk f :=
   le_of_comm (g ≫ (underlyingIso f).inv) <| by
-    simp [w]
+    simp [← w]
 
 theorem mk_le_of_comm {B A : C} {X : Subobject B} {f : A ⟶ B} [Mono f] (g : A ⟶ (X : C)) (w : g ≫ X.arrow = f) :
     mk f ≤ X :=
   le_of_comm ((underlyingIso f).Hom ≫ g) <| by
-    simp [w]
+    simp [← w]
 
 /-- To show that two subobjects are equal, it suffices to exhibit an isomorphism commuting with
     the arrows. -/
@@ -215,7 +214,7 @@ theorem eq_of_comm {B : C} {X Y : Subobject B} (f : (X : C) ≅ (Y : C)) (w : f.
 theorem eq_mk_of_comm {B A : C} {X : Subobject B} (f : A ⟶ B) [Mono f] (i : (X : C) ≅ A) (w : i.Hom ≫ f = X.arrow) :
     X = mk f :=
   eq_of_comm (i.trans (underlyingIso f).symm) <| by
-    simp [w]
+    simp [← w]
 
 /-- To show that two subobjects are equal, it suffices to exhibit an isomorphism commuting with
     the arrows. -/
@@ -232,7 +231,7 @@ theorem mk_eq_of_comm {B A : C} {X : Subobject B} (f : A ⟶ B) [Mono f] (i : A 
 theorem mk_eq_mk_of_comm {B A₁ A₂ : C} (f : A₁ ⟶ B) (g : A₂ ⟶ B) [Mono f] [Mono g] (i : A₁ ≅ A₂) (w : i.Hom ≫ g = f) :
     mk f = mk g :=
   eq_mk_of_comm _ ((underlyingIso f).trans i) <| by
-    simp [w]
+    simp [← w]
 
 /-- An inequality of subobjects is witnessed by some morphism between the corresponding objects. -/
 -- We make `X` and `Y` explicit arguments here so that when `of_le` appears in goal statements
@@ -255,7 +254,7 @@ instance {B : C} (X Y : Subobject B) (h : X ≤ Y) : Mono (ofLe X Y h) := by
 theorem of_le_mk_le_mk_of_comm {B A₁ A₂ : C} {f₁ : A₁ ⟶ B} {f₂ : A₂ ⟶ B} [Mono f₁] [Mono f₂] (g : A₁ ⟶ A₂)
     (w : g ≫ f₂ = f₁) : ofLe _ _ (mk_le_mk_of_comm g w) = (underlyingIso _).Hom ≫ g ≫ (underlyingIso _).inv := by
   ext
-  simp [w]
+  simp [← w]
 
 /-- An inequality of subobjects is witnessed by some morphism between the corresponding objects. -/
 def ofLeMk {B A : C} (X : Subobject B) (f : A ⟶ B) [Mono f] (h : X ≤ mk f) : (X : C) ⟶ A :=
@@ -263,7 +262,7 @@ def ofLeMk {B A : C} (X : Subobject B) (f : A ⟶ B) [Mono f] (h : X ≤ mk f) :
 
 @[simp]
 theorem of_le_mk_comp {B A : C} {X : Subobject B} {f : A ⟶ B} [Mono f] (h : X ≤ mk f) : ofLeMk X f h ≫ f = X.arrow := by
-  simp [of_le_mk]
+  simp [← of_le_mk]
 
 /-- An inequality of subobjects is witnessed by some morphism between the corresponding objects. -/
 def ofMkLe {B A : C} (f : A ⟶ B) [Mono f] (X : Subobject B) (h : mk f ≤ X) : A ⟶ (X : C) :=
@@ -272,7 +271,7 @@ def ofMkLe {B A : C} (f : A ⟶ B) [Mono f] (X : Subobject B) (h : mk f ≤ X) :
 @[simp]
 theorem of_mk_le_arrow {B A : C} {f : A ⟶ B} [Mono f] {X : Subobject B} (h : mk f ≤ X) : ofMkLe f X h ≫ X.arrow = f :=
   by
-  simp [of_mk_le]
+  simp [← of_mk_le]
 
 /-- An inequality of subobjects is witnessed by some morphism between the corresponding objects. -/
 def ofMkLeMk {B A₁ A₂ : C} (f : A₁ ⟶ B) (g : A₂ ⟶ B) [Mono f] [Mono g] (h : mk f ≤ mk g) : A₁ ⟶ A₂ :=
@@ -281,47 +280,47 @@ def ofMkLeMk {B A₁ A₂ : C} (f : A₁ ⟶ B) (g : A₂ ⟶ B) [Mono f] [Mono 
 @[simp]
 theorem of_mk_le_mk_comp {B A₁ A₂ : C} {f : A₁ ⟶ B} {g : A₂ ⟶ B} [Mono f] [Mono g] (h : mk f ≤ mk g) :
     ofMkLeMk f g h ≫ g = f := by
-  simp [of_mk_le_mk]
+  simp [← of_mk_le_mk]
 
 @[simp, reassoc]
 theorem of_le_comp_of_le {B : C} (X Y Z : Subobject B) (h₁ : X ≤ Y) (h₂ : Y ≤ Z) :
     ofLe X Y h₁ ≫ ofLe Y Z h₂ = ofLe X Z (h₁.trans h₂) := by
-  simp [of_le, ← functor.map_comp underlying]
+  simp [← of_le, functor.map_comp underlying]
 
 @[simp, reassoc]
 theorem of_le_comp_of_le_mk {B A : C} (X Y : Subobject B) (f : A ⟶ B) [Mono f] (h₁ : X ≤ Y) (h₂ : Y ≤ mk f) :
     ofLe X Y h₁ ≫ ofLeMk Y f h₂ = ofLeMk X f (h₁.trans h₂) := by
-  simp [of_mk_le, of_le_mk, of_le, ← functor.map_comp_assoc underlying]
+  simp [← of_mk_le, ← of_le_mk, ← of_le, functor.map_comp_assoc underlying]
 
 @[simp, reassoc]
 theorem of_le_mk_comp_of_mk_le {B A : C} (X : Subobject B) (f : A ⟶ B) [Mono f] (Y : Subobject B) (h₁ : X ≤ mk f)
     (h₂ : mk f ≤ Y) : ofLeMk X f h₁ ≫ ofMkLe f Y h₂ = ofLe X Y (h₁.trans h₂) := by
-  simp [of_mk_le, of_le_mk, of_le, ← functor.map_comp underlying]
+  simp [← of_mk_le, ← of_le_mk, ← of_le, functor.map_comp underlying]
 
 @[simp, reassoc]
 theorem of_le_mk_comp_of_mk_le_mk {B A₁ A₂ : C} (X : Subobject B) (f : A₁ ⟶ B) [Mono f] (g : A₂ ⟶ B) [Mono g]
     (h₁ : X ≤ mk f) (h₂ : mk f ≤ mk g) : ofLeMk X f h₁ ≫ ofMkLeMk f g h₂ = ofLeMk X g (h₁.trans h₂) := by
-  simp [of_mk_le, of_le_mk, of_le, of_mk_le_mk, ← functor.map_comp_assoc underlying]
+  simp [← of_mk_le, ← of_le_mk, ← of_le, ← of_mk_le_mk, functor.map_comp_assoc underlying]
 
 @[simp, reassoc]
 theorem of_mk_le_comp_of_le {B A₁ : C} (f : A₁ ⟶ B) [Mono f] (X Y : Subobject B) (h₁ : mk f ≤ X) (h₂ : X ≤ Y) :
     ofMkLe f X h₁ ≫ ofLe X Y h₂ = ofMkLe f Y (h₁.trans h₂) := by
-  simp [of_mk_le, of_le_mk, of_le, of_mk_le_mk, ← functor.map_comp underlying]
+  simp [← of_mk_le, ← of_le_mk, ← of_le, ← of_mk_le_mk, functor.map_comp underlying]
 
 @[simp, reassoc]
 theorem of_mk_le_comp_of_le_mk {B A₁ A₂ : C} (f : A₁ ⟶ B) [Mono f] (X : Subobject B) (g : A₂ ⟶ B) [Mono g]
     (h₁ : mk f ≤ X) (h₂ : X ≤ mk g) : ofMkLe f X h₁ ≫ ofLeMk X g h₂ = ofMkLeMk f g (h₁.trans h₂) := by
-  simp [of_mk_le, of_le_mk, of_le, of_mk_le_mk, ← functor.map_comp_assoc underlying]
+  simp [← of_mk_le, ← of_le_mk, ← of_le, ← of_mk_le_mk, functor.map_comp_assoc underlying]
 
 @[simp, reassoc]
 theorem of_mk_le_mk_comp_of_mk_le {B A₁ A₂ : C} (f : A₁ ⟶ B) [Mono f] (g : A₂ ⟶ B) [Mono g] (X : Subobject B)
     (h₁ : mk f ≤ mk g) (h₂ : mk g ≤ X) : ofMkLeMk f g h₁ ≫ ofMkLe g X h₂ = ofMkLe f X (h₁.trans h₂) := by
-  simp [of_mk_le, of_le_mk, of_le, of_mk_le_mk, ← functor.map_comp underlying]
+  simp [← of_mk_le, ← of_le_mk, ← of_le, ← of_mk_le_mk, functor.map_comp underlying]
 
 @[simp, reassoc]
 theorem of_mk_le_mk_comp_of_mk_le_mk {B A₁ A₂ A₃ : C} (f : A₁ ⟶ B) [Mono f] (g : A₂ ⟶ B) [Mono g] (h : A₃ ⟶ B) [Mono h]
     (h₁ : mk f ≤ mk g) (h₂ : mk g ≤ mk h) : ofMkLeMk f g h₁ ≫ ofMkLeMk g h h₂ = ofMkLeMk f h (h₁.trans h₂) := by
-  simp [of_mk_le, of_le_mk, of_le, of_mk_le_mk, ← functor.map_comp_assoc underlying]
+  simp [← of_mk_le, ← of_le_mk, ← of_le, ← of_mk_le_mk, functor.map_comp_assoc underlying]
 
 @[simp]
 theorem of_le_refl {B : C} (X : Subobject B) : ofLe X X le_rfl = 𝟙 _ := by
@@ -433,8 +432,7 @@ theorem pullback_comp (f : X ⟶ Y) (g : Y ⟶ Z) (x : Subobject Z) :
   apply Quotientₓ.sound
   refine' ⟨(mono_over.pullback_comp _ _).app t⟩
 
-instance (f : X ⟶ Y) : Faithful (pullback f) :=
-  {  }
+instance (f : X ⟶ Y) : Faithful (pullback f) where
 
 end Pullback
 
@@ -479,7 +477,7 @@ def mapIsoToOrderIso (e : X ≅ Y) : Subobject X ≃o Subobject Y where
     fconstructor
     · intro h
       apply_fun (map e.inv).obj  at h
-      simp_rw [← map_comp, e.hom_inv_id, map_id]  at h
+      simp_rw [← map_comp, e.hom_inv_id, map_id] at h
       exact h
       
     · intro h

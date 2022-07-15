@@ -3,7 +3,7 @@ Copyright (c) 2022 Kyle Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 -/
-import Mathbin.SetTheory.Cardinal.Finite
+import Mathbin.Data.Fintype.Basic
 
 /-!
 # Finite types
@@ -28,14 +28,6 @@ vice versa. Every `fintype` instance should be computable since they are meant
 for computation. If it's not possible to write a computable `fintype` instance,
 one should prefer writing a `finite` instance instead.
 
-The cardinality of a finite type `α` is given by `nat.card α`. This function has
-the "junk value" of `0` for infinite types, but to ensure the function has valid
-output, one just needs to know that it's possible to produce a `finite` instance
-for the type. (Note: we could have defined a `finite.card` that required you to
-supply a `finite` instance, but (a) the function would be `noncomputable` anyway
-so there is no need to supply the instance and (b) the function would have a more
-complicated dependent type that easily leads to "motive not type correct" errors.)
-
 ## Main definitions
 
 * `finite α` denotes that `α` is a finite type.
@@ -58,10 +50,6 @@ that cannot be inferred using `finite.of_fintype'`. (However, when using
 `open_locale classical` or the `classical` tactic the instances relying only
 on `decidable` instances will give `finite` instances.) In the future we might
 consider writing automation to create these "lowered" instances.
-
-Theorems about `nat.card` are sometimes incidentally true for both finite and infinite
-types. If removing a finiteness constraint results in no loss in legibility, we remove
-it. We generally put such theorems into the `set_theory.cardinal.finite` module.
 
 ## Tags
 
@@ -104,59 +92,37 @@ priority than ones coming from `fintype` instances. -/
 instance (priority := 900) Finite.of_fintype' (α : Type _) [Fintype α] : Finite α :=
   Finite.of_fintype ‹_›
 
-/-- There is (noncomputably) an equivalence between a finite type `α` and `fin (nat.card α)`. -/
-def Finite.equivFin (α : Type _) [Finite α] : α ≃ Finₓ (Nat.card α) := by
-  have := (Finite.exists_equiv_fin α).some_spec.some
-  rwa [Nat.card_eq_of_equiv_fin this]
-
-/-- Similar to `finite.equiv_fin` but with control over the term used for the cardinality. -/
-def Finite.equivFinOfCardEq [Finite α] {n : ℕ} (h : Nat.card α = n) : α ≃ Finₓ n := by
-  subst h
-  apply Finite.equivFin
-
 /-- Noncomputably get a `fintype` instance from a `finite` instance. This is not an
 instance because we want `fintype` instances to be useful for computations. -/
 def Fintype.ofFinite (α : Type _) [Finite α] : Fintype α :=
-  Fintype.ofEquiv _ (Finite.equivFin α).symm
+  Nonempty.some <|
+    let ⟨n, ⟨e⟩⟩ := Finite.exists_equiv_fin α
+    ⟨Fintype.ofEquiv _ e.symm⟩
 
 theorem finite_iff_nonempty_fintype (α : Type _) : Finite α ↔ Nonempty (Fintype α) :=
-  ⟨fun _ => ⟨Fintype.ofFinite α⟩, fun ⟨_⟩ => inferInstance⟩
+  ⟨fun h =>
+    let ⟨k, ⟨e⟩⟩ := @Finite.exists_equiv_fin α h
+    ⟨Fintype.ofEquiv _ e.symm⟩,
+    fun ⟨_⟩ => inferInstance⟩
+
+theorem not_finite_iff_infinite {α : Type _} : ¬Finite α ↔ Infinite α := by
+  rw [← is_empty_fintype, finite_iff_nonempty_fintype, not_nonempty_iff]
 
 theorem finite_or_infinite (α : Type _) : Finite α ∨ Infinite α := by
-  cases fintypeOrInfinite α
-  · exact Or.inl inferInstance
-    
-  · exact Or.inr inferInstance
-    
+  rw [← not_finite_iff_infinite]
+  apply em
 
 theorem not_finite (α : Type _) [h1 : Infinite α] [h2 : Finite α] : False :=
-  have := Fintype.ofFinite α
-  not_fintype α
+  not_finite_iff_infinite.mpr h1 h2
 
-theorem Finite.of_not_infinite {α : Type _} (h : ¬Infinite α) : Finite α :=
-  Finite.of_fintype (fintypeOfNotInfinite h)
+theorem Finite.of_not_infinite {α : Type _} (h : ¬Infinite α) : Finite α := by
+  rwa [← not_finite_iff_infinite, not_not] at h
 
 theorem Infinite.of_not_finite {α : Type _} (h : ¬Finite α) : Infinite α :=
-  ⟨fun h' => h (Finite.of_fintype h')⟩
+  not_finite_iff_infinite.mp h
 
 theorem not_infinite_iff_finite {α : Type _} : ¬Infinite α ↔ Finite α :=
-  ⟨Finite.of_not_infinite, fun h h' => not_finite α⟩
-
-theorem not_finite_iff_infinite {α : Type _} : ¬Finite α ↔ Infinite α :=
-  not_infinite_iff_finite.not_right.symm
-
-theorem Nat.card_eq (α : Type _) : Nat.card α = if h : Finite α then @Fintype.card α (Fintype.ofFinite α) else 0 := by
-  cases finite_or_infinite α
-  · let this := Fintype.ofFinite α
-    simp only [*, Nat.card_eq_fintype_card, dif_pos]
-    
-  · simp [*, not_finite_iff_infinite.mpr h]
-    
-
-theorem Finite.card_pos_iff [Finite α] : 0 < Nat.card α ↔ Nonempty α := by
-  have := Fintype.ofFinite α
-  simp only [Nat.card_eq_fintype_card]
-  exact Fintype.card_pos_iff
+  not_finite_iff_infinite.not_right.symm
 
 theorem of_subsingleton {α : Sort _} [Subsingleton α] : Finite α :=
   Finite.of_equiv _ Equivₓ.plift
@@ -167,13 +133,13 @@ instance Finite.prop (p : Prop) : Finite p :=
 
 namespace Finite
 
-theorem exists_max [Finite α] [Nonempty α] [LinearOrderₓ β] (f : α → β) : ∃ x₀ : α, ∀ x, f x ≤ f x₀ :=
+theorem exists_max [Finite α] [Nonempty α] [LinearOrderₓ β] (f : α → β) : ∃ x₀ : α, ∀ x, f x ≤ f x₀ := by
   have := Fintype.ofFinite α
-  Fintype.exists_max f
+  exact Fintype.exists_max f
 
-theorem exists_min [Finite α] [Nonempty α] [LinearOrderₓ β] (f : α → β) : ∃ x₀ : α, ∀ x, f x₀ ≤ f x :=
+theorem exists_min [Finite α] [Nonempty α] [LinearOrderₓ β] (f : α → β) : ∃ x₀ : α, ∀ x, f x₀ ≤ f x := by
   have := Fintype.ofFinite α
-  Fintype.exists_min f
+  exact Fintype.exists_min f
 
 instance {α : Sort _} [Finite α] : Finite (Plift α) :=
   Finite.of_equiv _ Equivₓ.plift.symm
@@ -190,30 +156,17 @@ theorem of_injective {α β : Sort _} [Finite β] (f : α → β) (H : Function.
 theorem of_surjective {α β : Sort _} [Finite α] (f : α → β) (H : Function.Surjective f) : Finite β :=
   of_injective _ <| Function.injective_surj_inv H
 
-theorem card_eq [Finite α] [Finite β] : Nat.card α = Nat.card β ↔ Nonempty (α ≃ β) := by
-  have := Fintype.ofFinite α
-  have := Fintype.ofFinite β
-  simp [Fintype.card_eq]
-
 -- see Note [lower instance priority]
 instance (priority := 100) of_is_empty {α : Sort _} [IsEmpty α] : Finite α :=
   Finite.of_equiv _ Equivₓ.plift
 
-theorem card_le_one_iff_subsingleton [Finite α] : Nat.card α ≤ 1 ↔ Subsingleton α := by
+instance [Finite α] [Finite β] : Finite (α × β) := by
   have := Fintype.ofFinite α
-  simp [Fintype.card_le_one_iff_subsingleton]
+  have := Fintype.ofFinite β
+  infer_instance
 
-theorem one_lt_card_iff_nontrivial [Finite α] : 1 < Nat.card α ↔ Nontrivial α := by
-  have := Fintype.ofFinite α
-  simp [Fintype.one_lt_card_iff_nontrivial]
-
-theorem one_lt_card [Finite α] [h : Nontrivial α] : 1 < Nat.card α :=
-  one_lt_card_iff_nontrivial.mpr h
-
-@[simp]
-theorem card_option [Finite α] : Nat.card (Option α) = Nat.card α + 1 := by
-  have := Fintype.ofFinite α
-  simp
+instance {α β : Sort _} [Finite α] [Finite β] : Finite (PProd α β) :=
+  of_equiv _ Equivₓ.pprodEquivProdPlift.symm
 
 theorem prod_left β [Finite (α × β)] [Nonempty β] : Finite α :=
   of_surjective (Prod.fst : α × β → α) Prod.fst_surjectiveₓ
@@ -236,40 +189,19 @@ theorem sum_left β [Finite (Sum α β)] : Finite α :=
 theorem sum_right α [Finite (Sum α β)] : Finite β :=
   of_injective (Sum.inr : β → Sum α β) Sum.inr_injective
 
-theorem card_sum [Finite α] [Finite β] : Nat.card (Sum α β) = Nat.card α + Nat.card β := by
-  have := Fintype.ofFinite α
-  have := Fintype.ofFinite β
-  simp
+instance {β : α → Type _} [Finite α] [∀ a, Finite (β a)] : Finite (Σa, β a) := by
+  let this := Fintype.ofFinite α
+  let this := fun a => Fintype.ofFinite (β a)
+  infer_instance
 
-theorem card_le_of_injective [Finite β] (f : α → β) (hf : Function.Injective f) : Nat.card α ≤ Nat.card β := by
-  have := Fintype.ofFinite β
-  have := Fintype.ofInjective f hf
-  simpa using Fintype.card_le_of_injective f hf
-
-theorem card_le_of_embedding [Finite β] (f : α ↪ β) : Nat.card α ≤ Nat.card β :=
-  card_le_of_injective _ f.Injective
-
-theorem card_le_of_surjective [Finite α] (f : α → β) (hf : Function.Surjective f) : Nat.card β ≤ Nat.card α := by
-  have := Fintype.ofFinite α
-  have := Fintype.ofSurjective f hf
-  simpa using Fintype.card_le_of_surjective f hf
-
-theorem card_eq_zero_iff [Finite α] : Nat.card α = 0 ↔ IsEmpty α := by
-  have := Fintype.ofFinite α
-  simp [Fintype.card_eq_zero_iff]
+instance {ι : Sort _} {π : ι → Sort _} [Finite ι] [∀ i, Finite (π i)] : Finite (Σ'i, π i) :=
+  of_equiv _ (Equivₓ.psigmaEquivSigmaPlift π).symm
 
 end Finite
 
+/-- This instance also provides `[finite s]` for `s : set α`. -/
 instance Subtype.finite {α : Sort _} [Finite α] {p : α → Prop} : Finite { x // p x } :=
   Finite.of_injective coe Subtype.coe_injective
-
-theorem Finite.card_subtype_le [Finite α] (p : α → Prop) : Nat.card { x // p x } ≤ Nat.card α := by
-  have := Fintype.ofFinite α
-  simpa using Fintype.card_subtype_le p
-
-theorem Finite.card_subtype_lt [Finite α] {p : α → Prop} {x : α} (hx : ¬p x) : Nat.card { x // p x } < Nat.card α := by
-  have := Fintype.ofFinite α
-  simpa using Fintype.card_subtype_lt hx
 
 instance Pi.finite {α : Sort _} {β : α → Sort _} [Finite α] [∀ a, Finite (β a)] : Finite (∀ a, β a) := by
   have := Fintype.ofFinite (Plift α)

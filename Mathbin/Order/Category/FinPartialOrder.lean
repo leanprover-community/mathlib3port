@@ -63,8 +63,8 @@ instance concreteCategory : ConcreteCategory FinPartialOrder :=
 instance hasForgetToPartialOrder : HasForget₂ FinPartialOrder PartialOrderₓₓ :=
   InducedCategory.hasForget₂ FinPartialOrder.toPartialOrder
 
-instance hasForgetToFintype : HasForget₂ FinPartialOrder Fintypeₓ where
-  forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => coeFn }
+instance hasForgetToFintype :
+    HasForget₂ FinPartialOrder Fintypeₓ where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => coeFn }
 
 /-- Constructs an isomorphism of finite partial orders from an order isomorphism between them. -/
 @[simps]

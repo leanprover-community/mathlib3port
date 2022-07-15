@@ -63,18 +63,18 @@ theorem sub_smul_slope_vadd (f : k → PE) (a b : k) : (b - a) • slope f a b +
 @[simp]
 theorem slope_vadd_const (f : k → E) (c : PE) : (slope fun x => f x +ᵥ c) = slope f := by
   ext a b
-  simp only [slope, vadd_vsub_vadd_cancel_right, vsub_eq_sub]
+  simp only [← slope, ← vadd_vsub_vadd_cancel_right, ← vsub_eq_sub]
 
 @[simp]
 theorem slope_sub_smul (f : k → E) {a b : k} (h : a ≠ b) : slope (fun x => (x - a) • f x) a b = f b := by
-  simp [slope, inv_smul_smul₀ (sub_ne_zero.2 h.symm)]
+  simp [← slope, ← inv_smul_smul₀ (sub_ne_zero.2 h.symm)]
 
 theorem eq_of_slope_eq_zero {f : k → PE} {a b : k} (h : slope f a b = (0 : E)) : f a = f b := by
   rw [← sub_smul_slope_vadd f a b, h, smul_zero, zero_vadd]
 
 theorem AffineMap.slope_comp {F PF : Type _} [AddCommGroupₓ F] [Module k F] [AddTorsor F PF] (f : PE →ᵃ[k] PF)
     (g : k → PE) (a b : k) : slope (f ∘ g) a b = f.linear (slope g a b) := by
-  simp only [slope, (· ∘ ·), f.linear.map_smul, f.linear_map_vsub]
+  simp only [← slope, ← (· ∘ ·), ← f.linear.map_smul, ← f.linear_map_vsub]
 
 theorem LinearMap.slope_comp {F : Type _} [AddCommGroupₓ F] [Module k F] (f : E →ₗ[k] F) (g : k → E) (a b : k) :
     slope (f ∘ g) a b = f (slope g a b) :=
@@ -92,14 +92,14 @@ theorem sub_div_sub_smul_slope_add_sub_div_sub_smul_slope (f : k → PE) (a b c 
   · subst hab
     rw [sub_self, zero_div, zero_smul, zero_addₓ]
     by_cases' hac : a = c
-    · simp [hac]
+    · simp [← hac]
       
     · rw [div_self (sub_ne_zero.2 <| Ne.symm hac), one_smul]
       
     
   by_cases' hbc : b = c
   · subst hbc
-    simp [sub_ne_zero.2 (Ne.symm hab)]
+    simp [← sub_ne_zero.2 (Ne.symm hab)]
     
   rw [add_commₓ]
   simp_rw [slope, div_eq_inv_mul, mul_smul, ← smul_add, smul_inv_smul₀ (sub_ne_zero.2 <| Ne.symm hab),
@@ -109,7 +109,8 @@ theorem sub_div_sub_smul_slope_add_sub_div_sub_smul_slope (f : k → PE) (a b c 
 `line_map` to express this property. -/
 theorem line_map_slope_slope_sub_div_sub (f : k → PE) (a b c : k) (h : a ≠ c) :
     lineMap (slope f a b) (slope f b c) ((c - b) / (c - a)) = slope f a c := by
-  field_simp [sub_ne_zero.2 h.symm, ← sub_div_sub_smul_slope_add_sub_div_sub_smul_slope f a b c, line_map_apply_module]
+  field_simp [← sub_ne_zero.2 h.symm, sub_div_sub_smul_slope_add_sub_div_sub_smul_slope f a b c, ←
+    line_map_apply_module]
 
 /-- `slope f a b` is an affine combination of `slope f a (line_map a b r)` and
 `slope f (line_map a b r) b`. We use `line_map` to express this property. -/

@@ -72,9 +72,9 @@ theorem map_snd_prod (I : Ideal R) (J : Ideal S) : map (RingHom.snd R S) (prod I
       exact h.2, fun h => ⟨⟨0, x⟩, ⟨⟨Ideal.zero_mem _, h⟩, rfl⟩⟩⟩
 
 @[simp]
-theorem map_prod_comm_prod : map (↑(RingEquiv.prodComm : R × S ≃+* S × R)) (prod I J) = prod J I := by
+theorem map_prod_comm_prod : map ((RingEquiv.prodComm : R × S ≃+* S × R) : R × S →+* S × R) (prod I J) = prod J I := by
   refine' trans (ideal_prod_eq _) _
-  simp [map_map]
+  simp [← map_map]
 
 /-- Ideals of `R × S` are in one-to-one correspondence with pairs of ideals of `R` and ideals of
     `S`. -/
@@ -90,12 +90,12 @@ theorem ideal_prod_equiv_symm_apply (I : Ideal R) (J : Ideal S) : idealProdEquiv
   rfl
 
 theorem prod.ext_iff {I I' : Ideal R} {J J' : Ideal S} : prod I J = prod I' J' ↔ I = I' ∧ J = J' := by
-  simp only [← ideal_prod_equiv_symm_apply, ideal_prod_equiv.symm.injective.eq_iff, Prod.mk.inj_iff]
+  simp only [ideal_prod_equiv_symm_apply, ← ideal_prod_equiv.symm.injective.eq_iff, ← Prod.mk.inj_iff]
 
 theorem is_prime_of_is_prime_prod_top {I : Ideal R} (h : (Ideal.prod I (⊤ : Ideal S)).IsPrime) : I.IsPrime := by
   constructor
   · contrapose! h
-    simp [is_prime_iff, h]
+    simp [← is_prime_iff, ← h]
     
   · intro x y hxy
     have : (⟨x, 1⟩ : R × S) * ⟨y, 1⟩ ∈ Prod I ⊤ := by
@@ -130,12 +130,12 @@ theorem is_prime_ideal_prod_top' {I : Ideal S} [h : I.IsPrime] : (prod (⊤ : Id
 
 theorem ideal_prod_prime_aux {I : Ideal R} {J : Ideal S} : (Ideal.prod I J).IsPrime → I = ⊤ ∨ J = ⊤ := by
   contrapose!
-  simp only [ne_top_iff_one, is_prime_iff, not_and, not_forall, not_or_distrib]
-  exact fun hIJ =>
+  simp only [← ne_top_iff_one, ← is_prime_iff, ← not_and, ← not_forall, ← not_or_distrib]
+  exact fun ⟨hI, hJ⟩ hIJ =>
     ⟨⟨0, 1⟩, ⟨1, 0⟩, by
       simp , by
-      simp [hJ], by
-      simp [hI]⟩
+      simp [← hJ], by
+      simp [← hI]⟩
 
 /-- Classification of prime ideals in product rings: the prime ideals of `R × S` are precisely the
     ideals of the form `p × S` or `R × p`, where `p` is a prime ideal of `R` or `S`. -/
@@ -179,14 +179,14 @@ noncomputable def primeIdealsEquiv :
     Equivₓ.ofBijective primeIdealsEquivImpl
       (by
         constructor
-        · rintro (⟨I, hI⟩ | ⟨J, hJ⟩) (⟨I', hI'⟩ | ⟨J', hJ'⟩) h <;> simp [Prod.ext_iff] at h
-          · simp [h]
+        · rintro (⟨I, hI⟩ | ⟨J, hJ⟩) (⟨I', hI'⟩ | ⟨J', hJ'⟩) h <;> simp [← Prod.ext_iff] at h
+          · simp [← h]
             
           · exact False.elim (hI.ne_top h.1)
             
           · exact False.elim (hJ.ne_top h.2)
             
-          · simp [h]
+          · simp [← h]
             
           
         · rintro ⟨I, hI⟩

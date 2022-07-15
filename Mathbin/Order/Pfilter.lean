@@ -65,6 +65,9 @@ section Preorderₓ
 
 variable [Preorderₓ P] {x y : P} (F s t : Pfilter P)
 
+instance [Inhabited P] : Inhabited (Pfilter P) :=
+  ⟨⟨default⟩⟩
+
 /-- A filter on `P` is a subset of `P`. -/
 instance : Coe (Pfilter P) (Set P) :=
   ⟨fun F => F.dual.Carrier⟩
@@ -88,13 +91,6 @@ theorem directed : DirectedOn (· ≥ ·) (F : Set P) :=
 
 theorem mem_of_le {F : Pfilter P} : x ≤ y → x ∈ F → y ∈ F := fun h => F.dual.lower h
 
-/-- The smallest filter containing a given element. -/
-def principal (p : P) : Pfilter P :=
-  ⟨Ideal.principal p⟩
-
-instance [Inhabited P] : Inhabited (Pfilter P) :=
-  ⟨⟨default⟩⟩
-
 /-- Two filters are equal when their underlying sets are equal. -/
 @[ext]
 theorem ext (h : (s : Set P) = t) : s = t := by
@@ -110,9 +106,28 @@ instance : PartialOrderₓ (Pfilter P) :=
 theorem mem_of_mem_of_le {F G : Pfilter P} : x ∈ F → F ≤ G → x ∈ G :=
   ideal.mem_of_mem_of_le
 
+/-- The smallest filter containing a given element. -/
+def principal (p : P) : Pfilter P :=
+  ⟨Ideal.principal p⟩
+
+@[simp]
+theorem mem_def (x : P) (I : Ideal Pᵒᵈ) : x ∈ (⟨I⟩ : Pfilter P) ↔ OrderDual.toDual x ∈ I :=
+  Iff.rfl
+
 @[simp]
 theorem principal_le_iff {F : Pfilter P} : principal x ≤ F ↔ x ∈ F :=
   ideal.principal_le_iff
+
+@[simp]
+theorem mem_principal : x ∈ principal y ↔ y ≤ x :=
+  ideal.mem_principal
+
+-- defeq abuse
+theorem antitone_principal : Antitone (principal : P → Pfilter P) := by
+  delta' Antitone <;> simp
+
+theorem principal_le_principal_iff {p q : P} : principal q ≤ principal p ↔ p ≤ q := by
+  simp
 
 end Preorderₓ
 
@@ -150,6 +165,26 @@ theorem inf_mem_iff : x⊓y ∈ F ↔ x ∈ F ∧ y ∈ F :=
   ideal.sup_mem_iff
 
 end SemilatticeInf
+
+section CompleteSemilatticeInf
+
+variable [CompleteSemilatticeInf P] {F : Pfilter P}
+
+theorem Inf_gc :
+    GaloisConnection (fun x => OrderDual.toDual (principal x)) fun F => inf (OrderDual.ofDual F : Pfilter P) :=
+  fun x F => by
+  simp
+  rfl
+
+/-- If a poset `P` admits arbitrary `Inf`s, then `principal` and `Inf` form a Galois coinsertion. -/
+def infGi :
+    GaloisCoinsertion (fun x => OrderDual.toDual (principal x)) fun F => inf (OrderDual.ofDual F : Pfilter P) where
+  choice := fun F _ => inf (id F : Pfilter P)
+  gc := Inf_gc
+  u_l_le := fun s => Inf_le <| mem_principal.2 <| le_reflₓ s
+  choice_eq := fun _ _ => rfl
+
+end CompleteSemilatticeInf
 
 end Pfilter
 

@@ -69,15 +69,14 @@ theorem naturality {X Y : C} (α : yoneda.obj X ⟶ yoneda.obj Y) {Z Z' : C} (f 
 
 See <https://stacks.math.columbia.edu/tag/001P>.
 -/
-instance yonedaFull : Full (yoneda : C ⥤ Cᵒᵖ ⥤ Type v₁) where
-  preimage := fun X Y f => f.app (op X) (𝟙 X)
+instance yonedaFull : Full (yoneda : C ⥤ Cᵒᵖ ⥤ Type v₁) where preimage := fun X Y f => f.app (op X) (𝟙 X)
 
 /-- The Yoneda embedding is faithful.
 
 See <https://stacks.math.columbia.edu/tag/001P>.
 -/
-instance yoneda_faithful : Faithful (yoneda : C ⥤ Cᵒᵖ ⥤ Type v₁) where
-  map_injective' := fun X Y f g p => by
+instance yoneda_faithful :
+    Faithful (yoneda : C ⥤ Cᵒᵖ ⥤ Type v₁) where map_injective' := fun X Y f g p => by
     convert congr_fun (congr_app p (op X)) (𝟙 X) <;> dsimp' <;> simp
 
 /-- Extensionality via Yoneda. The typical usage would be
@@ -110,11 +109,10 @@ theorem naturality {X Y : Cᵒᵖ} (α : coyoneda.obj X ⟶ coyoneda.obj Y) {Z Z
     α.app Z' h ≫ f = α.app Z (h ≫ f) :=
   (FunctorToTypes.naturality _ _ α f h).symm
 
-instance coyonedaFull : Full (coyoneda : Cᵒᵖ ⥤ C ⥤ Type v₁) where
-  preimage := fun X Y f => (f.app _ (𝟙 X.unop)).op
+instance coyonedaFull : Full (coyoneda : Cᵒᵖ ⥤ C ⥤ Type v₁) where preimage := fun X Y f => (f.app _ (𝟙 X.unop)).op
 
-instance coyoneda_faithful : Faithful (coyoneda : Cᵒᵖ ⥤ C ⥤ Type v₁) where
-  map_injective' := fun X Y f g p => by
+instance coyoneda_faithful :
+    Faithful (coyoneda : Cᵒᵖ ⥤ C ⥤ Type v₁) where map_injective' := fun X Y f g p => by
     have t := congr_fun (congr_app p X.unop) (𝟙 _)
     simpa using congr_arg Quiver.Hom.op t
 
@@ -140,8 +138,7 @@ See <https://stacks.math.columbia.edu/tag/001Q>.
 class Representable (F : Cᵒᵖ ⥤ Type v₁) : Prop where
   has_representation : ∃ (X : _)(f : yoneda.obj X ⟶ F), IsIso f
 
-instance {X : C} : Representable (yoneda.obj X) where
-  has_representation := ⟨X, 𝟙 _, inferInstance⟩
+instance {X : C} : Representable (yoneda.obj X) where has_representation := ⟨X, 𝟙 _, inferInstance⟩
 
 /-- A functor `F : C ⥤ Type v₁` is corepresentable if there is object `X` so `F ≅ coyoneda.obj X`.
 
@@ -150,8 +147,7 @@ See <https://stacks.math.columbia.edu/tag/001Q>.
 class Corepresentable (F : C ⥤ Type v₁) : Prop where
   has_corepresentation : ∃ (X : _)(f : coyoneda.obj X ⟶ F), IsIso f
 
-instance {X : Cᵒᵖ} : Corepresentable (coyoneda.obj X) where
-  has_corepresentation := ⟨X, 𝟙 _, inferInstance⟩
+instance {X : Cᵒᵖ} : Corepresentable (coyoneda.obj X) where has_corepresentation := ⟨X, 𝟙 _, inferInstance⟩
 
 -- instance : corepresentable (𝟭 (Type v₁)) :=
 -- corepresentable_of_nat_iso (op punit) coyoneda.punit_iso
@@ -293,7 +289,7 @@ def yonedaLemma : yonedaPairing C ≅ yonedaEvaluation C where
         ext
         dsimp'
         erw [category.id_comp, ← functor_to_types.naturality]
-        simp only [category.comp_id, yoneda_obj_map] }
+        simp only [← category.comp_id, ← yoneda_obj_map] }
   inv :=
     { app := fun F x =>
         { app := fun X a => (F.2.map a.op) x.down,
@@ -311,7 +307,7 @@ def yonedaLemma : yonedaPairing C ≅ yonedaEvaluation C where
     ext
     dsimp'
     erw [← functor_to_types.naturality, obj_map_id]
-    simp only [yoneda_map_app, Quiver.Hom.unop_op]
+    simp only [← yoneda_map_app, ← Quiver.Hom.unop_op]
     erw [category.id_comp]
   inv_hom_id' := by
     ext

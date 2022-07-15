@@ -53,21 +53,21 @@ theorem coe_sigma (s : Finset ι) (t : ∀ i, Finset (α i)) :
 
 @[simp]
 theorem sigma_nonempty : (s.Sigma t).Nonempty ↔ ∃ i ∈ s, (t i).Nonempty := by
-  simp [Finset.Nonempty]
+  simp [← Finset.Nonempty]
 
 @[simp]
 theorem sigma_eq_empty : s.Sigma t = ∅ ↔ ∀, ∀ i ∈ s, ∀, t i = ∅ := by
-  simp only [← not_nonempty_iff_eq_empty, sigma_nonempty, not_exists]
+  simp only [not_nonempty_iff_eq_empty, ← sigma_nonempty, ← not_exists]
 
 @[mono]
-theorem sigma_mono (hs : s₁ ⊆ s₂) (ht : ∀ i, t₁ i ⊆ t₂ i) : s₁.Sigma t₁ ⊆ s₂.Sigma t₂ := fun h =>
+theorem sigma_mono (hs : s₁ ⊆ s₂) (ht : ∀ i, t₁ i ⊆ t₂ i) : s₁.Sigma t₁ ⊆ s₂.Sigma t₂ := fun ⟨i, a⟩ h =>
   let ⟨hi, ha⟩ := mem_sigma.1 h
   mem_sigma.2 ⟨hs hi, ht i ha⟩
 
 theorem sigma_eq_bUnion [DecidableEq (Σi, α i)] (s : Finset ι) (t : ∀ i, Finset (α i)) :
     s.Sigma t = s.bUnion fun i => (t i).map <| Embedding.sigmaMk i := by
   ext ⟨x, y⟩
-  simp [And.left_comm]
+  simp [← And.left_comm]
 
 variable (s t) (f : (Σi, α i) → β)
 
@@ -104,7 +104,7 @@ theorem mem_sigma_lift (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) (a : S
       rw [sigma_lift, dif_pos rfl, mem_map]
       exact
         ⟨_, hx, by
-          simp [Sigma.ext_iff]⟩
+          simp [← Sigma.ext_iff]⟩
       
     
   · rw [sigma_lift, dif_neg h]

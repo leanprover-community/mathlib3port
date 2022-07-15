@@ -97,14 +97,14 @@ theorem t_inv (i j : D.J) : D.t i j ≫ D.t j i = 𝟙 _ := by
     simp
   have := D.cocycle i j i
   rw [D.t'_iij, D.t'_jii, D.t'_iji, fst_eq_snd_of_mono_eq, Eq] at this
-  simp only [category.assoc, is_iso.inv_hom_id_assoc] at this
+  simp only [← category.assoc, ← is_iso.inv_hom_id_assoc] at this
   rw [← is_iso.eq_inv_comp, ← category.assoc, is_iso.comp_inv_eq] at this
   simpa using this
 
 theorem t'_inv (i j k : D.J) :
     D.t' i j k ≫ (pullbackSymmetry _ _).Hom ≫ D.t' j i k ≫ (pullbackSymmetry _ _).Hom = 𝟙 _ := by
   rw [← cancel_mono (pullback.fst : pullback (D.f i j) (D.f i k) ⟶ _)]
-  simp [t_fac, t_fac_assoc]
+  simp [← t_fac, ← t_fac_assoc]
 
 instance t_is_iso (i j : D.J) : IsIso (D.t i j) :=
   ⟨⟨D.t j i, D.t_inv _ _, D.t_inv _ _⟩⟩
@@ -120,7 +120,7 @@ theorem t'_comp_eq_pullback_symmetry (i j k : D.J) :
   · exact is_iso.eq_inv_of_hom_inv_id (D.cocycle _ _ _)
     
   · rw [← cancel_mono (pullback.fst : pullback (D.f i j) (D.f i k) ⟶ _)]
-    simp [t_fac, t_fac_assoc]
+    simp [← t_fac, ← t_fac_assoc]
     
 
 /-- (Implementation) The disjoint union of `U i`. -/
@@ -219,7 +219,7 @@ theorem types_ι_jointly_surjective (D : GlueData (Type _)) (x : D.glued) : ∃ 
   rcases(colimit.iso_colimit_cocone (types.coproduct_colimit_cocone _)).Hom x' with ⟨i, y⟩
   exact
     ⟨i, y, by
-      simpa [← multicoequalizer.ι_sigma_π, -multicoequalizer.ι_sigma_π] ⟩
+      simpa [multicoequalizer.ι_sigma_π, -multicoequalizer.ι_sigma_π] ⟩
 
 variable (F : C ⥤ C') [H : ∀ i j k, PreservesLimit (cospan (D.f i j) (D.f i k)) F]
 
@@ -245,10 +245,10 @@ def mapGlueData : GlueData C' where
     (PreservesPullback.iso F (D.f i j) (D.f i k)).inv ≫
       F.map (D.t' i j k) ≫ (PreservesPullback.iso F (D.f j k) (D.f j i)).Hom
   t_fac := fun i j k => by
-    simpa [iso.inv_comp_eq] using congr_arg (fun f => F.map f) (D.t_fac i j k)
+    simpa [← iso.inv_comp_eq] using congr_arg (fun f => F.map f) (D.t_fac i j k)
   cocycle := fun i j k => by
-    simp only [category.assoc, iso.hom_inv_id_assoc, ← functor.map_comp_assoc, D.cocycle, iso.inv_hom_id,
-      CategoryTheory.Functor.map_id, category.id_comp]
+    simp only [← category.assoc, ← iso.hom_inv_id_assoc, functor.map_comp_assoc, ← D.cocycle, ← iso.inv_hom_id, ←
+      CategoryTheory.Functor.map_id, ← category.id_comp]
 
 /-- The diagram of the image of a `glue_data` under a functor `F` is naturally isomorphic to the
 original diagram of the `glue_data` via `F`.

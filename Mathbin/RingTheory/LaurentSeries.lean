@@ -49,7 +49,7 @@ theorem coe_power_series (x : PowerSeries R) : (x : LaurentSeries R) = HahnSerie
 @[simp]
 theorem coeff_coe_power_series (x : PowerSeries R) (n : ℕ) :
     HahnSeries.coeff (x : LaurentSeries R) n = PowerSeries.coeff R n x := by
-  rw [← Int.nat_cast_eq_coe_nat, coe_power_series, of_power_series_apply_coeff]
+  rw [coe_power_series, of_power_series_apply_coeff]
 
 /-- This is a power series that can be multiplied by an integer power of `X` to give our
   Laurent series. If the Laurent series is nonzero, `power_series_part` has a nonzero
@@ -74,7 +74,7 @@ theorem power_series_part_eq_zero (x : LaurentSeries R) : x.powerSeriesPart = 0 
     intro h
     rw [PowerSeries.ext_iff, not_forall]
     refine' ⟨0, _⟩
-    simp [coeff_order_ne_zero h]
+    simp [← coeff_order_ne_zero h]
     
   · rintro rfl
     simp
@@ -94,7 +94,7 @@ theorem single_order_mul_power_series_part (x : LaurentSeries R) :
       exact order_le_of_coeff_ne_zero h.symm
       
     · contrapose! h
-      simp only [Set.mem_range, RelEmbedding.coe_fn_mk, Function.Embedding.coe_fn_mk, Int.nat_cast_eq_coe_nat] at h
+      simp only [← Set.mem_range, ← RelEmbedding.coe_fn_mk, ← Function.Embedding.coe_fn_mk] at h
       obtain ⟨m, hm⟩ := h
       rw [← sub_nonneg, ← hm]
       exact Int.zero_le_of_nat _
@@ -123,10 +123,10 @@ instance of_power_series_localization [CommRingₓ R] :
   map_units := by
     rintro ⟨_, n, rfl⟩
     refine' ⟨⟨single (n : ℤ) 1, single (-n : ℤ) 1, _, _⟩, _⟩
-    · simp only [single_mul_single, mul_oneₓ, add_right_negₓ]
+    · simp only [← single_mul_single, ← mul_oneₓ, ← add_right_negₓ]
       rfl
       
-    · simp only [single_mul_single, mul_oneₓ, add_left_negₓ]
+    · simp only [← single_mul_single, ← mul_oneₓ, ← add_left_negₓ]
       rfl
       
     · simp
@@ -135,15 +135,15 @@ instance of_power_series_localization [CommRingₓ R] :
     intro z
     by_cases' h : 0 ≤ z.order
     · refine' ⟨⟨PowerSeries.x ^ Int.natAbs z.order * power_series_part z, 1⟩, _⟩
-      simp only [RingHom.map_one, mul_oneₓ, RingHom.map_mul, coe_algebra_map, of_power_series_X_pow, Submonoid.coe_one,
-        Int.nat_cast_eq_coe_nat]
+      simp only [← RingHom.map_one, ← mul_oneₓ, ← RingHom.map_mul, ← coe_algebra_map, ← of_power_series_X_pow, ←
+        Submonoid.coe_one]
       rw [Int.nat_abs_of_nonneg h, ← coe_power_series, single_order_mul_power_series_part]
       
     · refine' ⟨⟨power_series_part z, PowerSeries.x ^ Int.natAbs z.order, ⟨_, rfl⟩⟩, _⟩
-      simp only [coe_algebra_map, of_power_series_power_series_part]
+      simp only [← coe_algebra_map, ← of_power_series_power_series_part]
       rw [mul_comm _ z]
       refine' congr rfl _
-      rw [Subtype.coe_mk, of_power_series_X_pow, Int.nat_cast_eq_coe_nat, Int.of_nat_nat_abs_of_nonpos]
+      rw [Subtype.coe_mk, of_power_series_X_pow, Int.of_nat_nat_abs_of_nonpos]
       exact le_of_not_geₓ h
       
   eq_iff_exists := by
@@ -206,9 +206,8 @@ theorem coeff_coe (i : ℤ) :
   · rw [Int.nat_abs_of_nat_core, Int.of_nat_eq_coe, coeff_coe_power_series, if_neg (Int.coe_nat_nonneg _).not_lt]
     
   · rw [coe_power_series, of_power_series_apply, emb_domain_notin_image_support, if_pos (Int.neg_succ_lt_zeroₓ _)]
-    simp only [not_exists, RelEmbedding.coe_fn_mk, Set.mem_image, not_and, Function.Embedding.coe_fn_mk, Ne.def,
-      to_power_series_symm_apply_coeff, mem_support, Int.nat_cast_eq_coe_nat, Int.coe_nat_eq, implies_true_iff,
-      not_false_iff]
+    simp only [← not_exists, ← RelEmbedding.coe_fn_mk, ← Set.mem_image, ← not_and, ← Function.Embedding.coe_fn_mk, ←
+      Ne.def, ← to_power_series_symm_apply_coeff, ← mem_support, ← Int.coe_nat_eq, ← implies_true_iff, ← not_false_iff]
     
 
 @[simp, norm_cast]
@@ -223,7 +222,7 @@ theorem coe_X : ((x : PowerSeries R) : LaurentSeries R) = single 1 1 :=
 theorem coe_smul {S : Type _} [Semiringₓ S] [Module R S] (r : R) (x : PowerSeries S) :
     ((r • x : PowerSeries S) : LaurentSeries S) = r • x := by
   ext
-  simp [coeff_coe, coeff_smul, smul_ite]
+  simp [← coeff_coe, ← coeff_smul, ← smul_ite]
 
 @[simp, norm_cast]
 theorem coe_bit0 : ((bit0 f : PowerSeries R) : LaurentSeries R) = bit0 f :=

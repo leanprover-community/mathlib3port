@@ -60,7 +60,7 @@ def equivalenceReflectsNormalMono {D : Type u₂} [Category.{v₁} D] [HasZeroMo
   g := Full.preimage (hf.g ≫ (F.objObjPreimageIso hf.z).inv)
   w :=
     Faithful.map_injective F <| by
-      simp [reassoc_of hf.w]
+      simp [← reassoc_of hf.w]
   IsLimit :=
     reflects_limit.reflects <|
       IsLimit.ofConeEquiv (Cones.postcomposeEquivalence (compNatIso F : _)) <|
@@ -133,8 +133,8 @@ end
 def normalMonoOfMono [NormalMonoCategory C] (f : X ⟶ Y) [Mono f] : NormalMono f :=
   NormalMonoCategory.normalMonoOfMono _
 
-instance (priority := 100) regularMonoCategoryOfNormalMonoCategory [NormalMonoCategory C] : RegularMonoCategory C where
-  regularMonoOfMono := fun _ _ f _ => by
+instance (priority := 100) regularMonoCategoryOfNormalMonoCategory [NormalMonoCategory C] :
+    RegularMonoCategory C where regularMonoOfMono := fun _ _ f _ => by
     have := normal_mono_of_mono f
     infer_instance
 
@@ -164,7 +164,7 @@ def equivalenceReflectsNormalEpi {D : Type u₂} [Category.{v₁} D] [HasZeroMor
   g := Full.preimage ((F.objObjPreimageIso hf.w).Hom ≫ hf.g)
   w :=
     Faithful.map_injective F <| by
-      simp [hf.w]
+      simp [← hf.w]
   IsColimit :=
     reflects_colimit.reflects <|
       IsColimit.ofCoconeEquiv (Cocones.precomposeEquivalence (compNatIso F).symm) <|
@@ -274,8 +274,8 @@ end
 def normalEpiOfEpi [NormalEpiCategory C] (f : X ⟶ Y) [Epi f] : NormalEpi f :=
   NormalEpiCategory.normalEpiOfEpi _
 
-instance (priority := 100) regularEpiCategoryOfNormalEpiCategory [NormalEpiCategory C] : RegularEpiCategory C where
-  regularEpiOfEpi := fun _ _ f _ => by
+instance (priority := 100) regularEpiCategoryOfNormalEpiCategory [NormalEpiCategory C] :
+    RegularEpiCategory C where regularEpiOfEpi := fun _ _ f _ => by
     have := normal_epi_of_epi f
     infer_instance
 

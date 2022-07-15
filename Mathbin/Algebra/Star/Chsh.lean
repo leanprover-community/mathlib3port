@@ -106,9 +106,9 @@ theorem CHSH_id [CommRingₓ R] {A₀ A₁ B₀ B₁ : R} (A₀_inv : A₀ ^ 2 =
   rw [← sub_eq_zero]
   repeat'
     ring_nf
-    simp only [A₁_inv, B₁_inv, sub_eq_add_neg, add_mulₓ, mul_addₓ, sub_mul, mul_sub, add_assocₓ, neg_add, neg_sub,
-      sub_add, sub_sub, neg_mul, ← sq, A₀_inv, B₀_inv, ← sq, ← mul_assoc, one_mulₓ, mul_oneₓ, add_right_negₓ, add_zeroₓ,
-      sub_eq_add_neg, A₀_inv, mul_oneₓ, add_right_negₓ, zero_mul]
+    simp only [← A₁_inv, ← B₁_inv, ← sub_eq_add_neg, ← add_mulₓ, ← mul_addₓ, ← sub_mul, ← mul_sub, ← add_assocₓ, ←
+      neg_add, ← neg_sub, ← sub_add, ← sub_sub, ← neg_mul, sq, ← A₀_inv, ← B₀_inv, sq, mul_assoc, ← one_mulₓ, ←
+      mul_oneₓ, ← add_right_negₓ, ← add_zeroₓ, ← sub_eq_add_neg, ← A₀_inv, ← mul_oneₓ, ← add_right_negₓ, ← zero_mul]
 
 /-- Given a CHSH tuple (A₀, A₁, B₀, B₁) in a *commutative* ordered `*`-algebra over ℝ,
 `A₀ * B₀ + A₀ * B₁ + A₁ * B₀ - A₁ * B₁ ≤ 2`.
@@ -122,13 +122,13 @@ theorem CHSH_inequality_of_comm [OrderedCommRing R] [StarOrderedRing R] [Algebra
     have idem : P * P = 4 * P := CHSH_id T.A₀_inv T.A₁_inv T.B₀_inv T.B₁_inv
     have idem' : P = (1 / 4 : ℝ) • (P * P) := by
       have h : 4 * P = (4 : ℝ) • P := by
-        simp [Algebra.smul_def]
+        simp [← Algebra.smul_def]
       rw [idem, h, ← mul_smul]
       norm_num
     have sa : star P = P := by
-      dsimp' [P]
-      simp only [star_add, star_sub, star_mul, star_bit0, star_one, T.A₀_sa, T.A₁_sa, T.B₀_sa, T.B₁_sa, mul_comm B₀,
-        mul_comm B₁]
+      dsimp' [← P]
+      simp only [← star_add, ← star_sub, ← star_mul, ← star_bit0, ← star_one, ← T.A₀_sa, ← T.A₁_sa, ← T.B₀_sa, ←
+        T.B₁_sa, ← mul_comm B₀, ← mul_comm B₁]
     rw [idem']
     conv_rhs => congr skip congr rw [← sa]
     convert smul_le_smul_of_nonneg (star_mul_self_nonneg : 0 ≤ star P * P) _
@@ -139,7 +139,7 @@ theorem CHSH_inequality_of_comm [OrderedCommRing R] [StarOrderedRing R] [Algebra
     · norm_num
       
   apply le_of_sub_nonneg
-  simpa only [sub_add_eq_sub_sub, ← sub_add] using i₁
+  simpa only [← sub_add_eq_sub_sub, sub_add] using i₁
 
 /-!
 We now prove some rather specialized lemmas in preparation for the Tsirelson inequality,
@@ -162,7 +162,8 @@ we prepare some easy lemmas about √2.
 -- defeated me. Thanks for the rescue from Shing Tak Lam!
 theorem tsirelson_inequality_aux : √2 * √2 ^ 3 = √2 * (2 * √2⁻¹ + 4 * (√2⁻¹ * 2⁻¹)) := by
   ring_nf
-  field_simp [(@Real.sqrt_pos 2).2
+  field_simp [←
+    (@Real.sqrt_pos 2).2
       (by
         norm_num)]
   convert
@@ -171,7 +172,7 @@ theorem tsirelson_inequality_aux : √2 * √2 ^ 3 = √2 * (2 * √2⁻¹ + 4 *
           (by
             norm_num)) using
       1 <;>
-    simp only [← pow_mulₓ] <;> norm_num
+    simp only [pow_mulₓ] <;> norm_num
 
 theorem sqrt_two_inv_mul_self : √2⁻¹ * √2⁻¹ = (2⁻¹ : ℝ) := by
   rw [← mul_inv]
@@ -198,21 +199,21 @@ theorem tsirelson_inequality [OrderedRing R] [StarOrderedRing R] [Algebra ℝ R]
   let P := √2⁻¹ • (A₁ + A₀) - B₀
   let Q := √2⁻¹ • (A₁ - A₀) + B₁
   have w : √2 ^ 3 • 1 - A₀ * B₀ - A₀ * B₁ - A₁ * B₀ + A₁ * B₁ = √2⁻¹ • (P ^ 2 + Q ^ 2) := by
-    dsimp' [P, Q]
+    dsimp' [← P, ← Q]
     -- distribute out all the powers and products appearing on the RHS
-    simp only [sq, sub_mul, mul_sub, add_mulₓ, mul_addₓ, smul_add, smul_sub]
+    simp only [← sq, ← sub_mul, ← mul_sub, ← add_mulₓ, ← mul_addₓ, ← smul_add, ← smul_sub]
     -- pull all coefficients out to the front, and combine `√2`s where possible
-    simp only [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, ← mul_smul, sqrt_two_inv_mul_self]
+    simp only [← Algebra.mul_smul_comm, ← Algebra.smul_mul_assoc, mul_smul, ← sqrt_two_inv_mul_self]
     -- replace Aᵢ * Aᵢ = 1 and Bᵢ * Bᵢ = 1
-    simp only [← sq, T.A₀_inv, T.A₁_inv, T.B₀_inv, T.B₁_inv]
+    simp only [sq, ← T.A₀_inv, ← T.A₁_inv, ← T.B₀_inv, ← T.B₁_inv]
     -- move Aᵢ to the left of Bᵢ
-    simp only [← T.A₀B₀_commutes, ← T.A₀B₁_commutes, ← T.A₁B₀_commutes, ← T.A₁B₁_commutes]
+    simp only [T.A₀B₀_commutes, T.A₀B₁_commutes, T.A₁B₀_commutes, T.A₁B₁_commutes]
     -- collect terms, simplify coefficients, and collect terms again:
     abel
     -- all terms coincide, but the last one. Simplify all other terms
-    simp only [M]
-    simp only [neg_mul, Int.cast_bit0, one_mulₓ, mul_inv_cancel_of_invertible, Int.cast_oneₓ, one_smul, Int.cast_neg,
-      add_right_injₓ, neg_smul, ← add_smul]
+    simp only [← M]
+    simp only [← neg_mul, ← Int.cast_bit0, ← one_mulₓ, ← mul_inv_cancel_of_invertible, ← Int.cast_oneₓ, ← one_smul, ←
+      Int.cast_neg, ← add_right_injₓ, ← neg_smul, add_smul]
     -- just look at the coefficients now:
     congr
     exact
@@ -222,11 +223,11 @@ theorem tsirelson_inequality [OrderedRing R] [StarOrderedRing R] [Algebra ℝ R]
         tsirelson_inequality_aux
   have pos : 0 ≤ √2⁻¹ • (P ^ 2 + Q ^ 2) := by
     have P_sa : star P = P := by
-      dsimp' [P]
-      simp only [star_smul, star_add, star_sub, star_id_of_comm, T.A₀_sa, T.A₁_sa, T.B₀_sa, T.B₁_sa]
+      dsimp' [← P]
+      simp only [← star_smul, ← star_add, ← star_sub, ← star_id_of_comm, ← T.A₀_sa, ← T.A₁_sa, ← T.B₀_sa, ← T.B₁_sa]
     have Q_sa : star Q = Q := by
-      dsimp' [Q]
-      simp only [star_smul, star_add, star_sub, star_id_of_comm, T.A₀_sa, T.A₁_sa, T.B₀_sa, T.B₁_sa]
+      dsimp' [← Q]
+      simp only [← star_smul, ← star_add, ← star_sub, ← star_id_of_comm, ← T.A₀_sa, ← T.A₁_sa, ← T.B₀_sa, ← T.B₁_sa]
     have P2_nonneg : 0 ≤ P ^ 2 := by
       rw [sq]
       conv => congr skip congr rw [← P_sa]
@@ -243,5 +244,5 @@ theorem tsirelson_inequality [OrderedRing R] [StarOrderedRing R] [Algebra ℝ R]
     -- `norm_num` can't directly show `0 ≤ √2⁻¹`
     simp
   apply le_of_sub_nonneg
-  simpa only [sub_add_eq_sub_sub, ← sub_add, w] using Pos
+  simpa only [← sub_add_eq_sub_sub, sub_add, ← w] using Pos
 

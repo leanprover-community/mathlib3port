@@ -66,7 +66,7 @@ instance funLike : FunLike (M ↪ₑ[L] N) M fun _ => N where
 instance : CoeFun (M ↪ₑ[L] N) fun _ => M → N :=
   FunLike.hasCoeToFun
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem map_bounded_formula (f : M ↪ₑ[L] N) {α : Type} {n : ℕ} (φ : L.BoundedFormula α n) (v : α → M)
     (xs : Finₓ n → M) : φ.realize (f ∘ v) (f ∘ xs) ↔ φ.realize v xs := by
@@ -78,7 +78,7 @@ theorem map_bounded_formula (f : M ↪ₑ[L] N) {α : Type} {n : ℕ} (φ : L.Bo
   have h :=
     f.map_formula' ((φ.restrict_free_var id).toFormula.relabel (Fintype.equivFin _))
       (Sum.elim (v ∘ coe) xs ∘ (Fintype.equivFin _).symm)
-  simp only [formula.realize_relabel, bounded_formula.realize_to_formula, iff_eq_eq] at h
+  simp only [← formula.realize_relabel, ← bounded_formula.realize_to_formula, ← iff_eq_eq] at h
   rw [← Function.comp.assoc _ _ (Fintype.equivFin _).symm,
     Function.comp.assoc _ (Fintype.equivFin _).symm (Fintype.equivFin _), Equivₓ.symm_comp_self, Function.comp.right_id,
     Function.comp.assoc, Sum.elim_comp_inl, Function.comp.assoc _ _ Sum.inr, Sum.elim_comp_inr, ←
@@ -95,19 +95,21 @@ theorem map_sentence (f : M ↪ₑ[L] N) (φ : L.Sentence) : M ⊨ φ ↔ N ⊨ 
   rw [sentence.realize, sentence.realize, ← f.map_formula, Unique.eq_default (f ∘ default)]
 
 theorem Theory_model_iff (f : M ↪ₑ[L] N) (T : L.Theory) : M ⊨ T ↔ N ⊨ T := by
-  simp only [Theory.model_iff, f.map_sentence]
+  simp only [← Theory.model_iff, ← f.map_sentence]
+
+theorem elementarily_equivalent (f : M ↪ₑ[L] N) : M ≅[L] N :=
+  elementarily_equivalent_iff.2 f.map_sentence
 
 @[simp]
 theorem injective (φ : M ↪ₑ[L] N) : Function.Injective φ := by
   intro x y
   have h := φ.map_formula ((var 0).equal (var 1) : L.formula (Finₓ 2)) fun i => if i = 0 then x else y
   rw [formula.realize_equal, formula.realize_equal] at h
-  simp only [Nat.one_ne_zero, term.realize, Finₓ.one_eq_zero_iff, if_true, eq_self_iff_true, Function.comp_app,
-    if_false] at h
+  simp only [← Nat.one_ne_zero, ← term.realize, ← Finₓ.one_eq_zero_iff, ← if_true, ← eq_self_iff_true, ←
+    Function.comp_app, ← if_false] at h
   exact h.1
 
-instance embeddingLike : EmbeddingLike (M ↪ₑ[L] N) M N where
-  injective' := injective
+instance embeddingLike : EmbeddingLike (M ↪ₑ[L] N) M N where injective' := injective
 
 @[simp]
 theorem map_fun (φ : M ↪ₑ[L] N) {n : ℕ} (f : L.Functions n) (x : Finₓ n → M) : φ (funMap f x) = funMap f (φ ∘ x) := by
@@ -116,9 +118,9 @@ theorem map_fun (φ : M ↪ₑ[L] N) {n : ℕ} (f : L.Functions n) (x : Finₓ n
   rw [eq_comm, h]
 
 @[simp]
-theorem map_rel (φ : M ↪ₑ[L] N) {n : ℕ} (r : L.Relations n) (x : Finₓ n → M) : RelMap r (φ ∘ x) ↔ RelMap r x :=
+theorem map_rel (φ : M ↪ₑ[L] N) {n : ℕ} (r : L.Relations n) (x : Finₓ n → M) : RelMap r (φ ∘ x) ↔ RelMap r x := by
   have h := φ.map_formula (r.formula var) x
-  h
+  exact h
 
 instance strongHomClass : StrongHomClass L (M ↪ₑ[L] N) M N where
   map_fun := map_fun
@@ -134,8 +136,7 @@ def toEmbedding (f : M ↪ₑ[L] N) : M ↪[L] N where
   inj' := f.Injective
 
 /-- An elementary embedding is also a first-order homomorphism. -/
-def toHom (f : M ↪ₑ[L] N) : M →[L] N where
-  toFun := f
+def toHom (f : M ↪ₑ[L] N) : M →[L] N where toFun := f
 
 @[simp]
 theorem to_embedding_to_hom (f : M ↪ₑ[L] N) : f.toEmbedding.toHom = f.toHom :=
@@ -163,8 +164,7 @@ variable (L) (M)
 
 /-- The identity elementary embedding from a structure to itself -/
 @[refl]
-def refl : M ↪ₑ[L] M where
-  toFun := id
+def refl : M ↪ₑ[L] M where toFun := id
 
 variable {L} {M}
 
@@ -177,8 +177,7 @@ theorem refl_apply (x : M) : refl L M x = x :=
 
 /-- Composition of elementary embeddings -/
 @[trans]
-def comp (hnp : N ↪ₑ[L] P) (hmn : M ↪ₑ[L] N) : M ↪ₑ[L] P where
-  toFun := hnp ∘ hmn
+def comp (hnp : N ↪ₑ[L] P) (hmn : M ↪ₑ[L] N) : M ↪ₑ[L] P where toFun := hnp ∘ hmn
 
 @[simp]
 theorem comp_apply (g : N ↪ₑ[L] P) (f : M ↪ₑ[L] N) (x : M) : g.comp f x = g (f x) :=
@@ -236,16 +235,16 @@ theorem is_elementary_of_exists (f : M ↪[L] N)
   · exact fun _ _ => Iff.rfl
     
   · intros
-    simp [bounded_formula.realize, ← Sum.comp_elim, embedding.realize_term]
+    simp [← bounded_formula.realize, Sum.comp_elim, ← embedding.realize_term]
     
   · intros
-    simp [bounded_formula.realize, ← Sum.comp_elim, embedding.realize_term]
+    simp [← bounded_formula.realize, Sum.comp_elim, ← embedding.realize_term]
     
   · intro _ _ _ ih1 ih2 _
-    simp [ih1, ih2]
+    simp [← ih1, ← ih2]
     
   · intro n φ ih xs
-    simp only [bounded_formula.realize_all]
+    simp only [← bounded_formula.realize_all]
     refine' ⟨fun h a => _, _⟩
     · rw [← ih, Finₓ.comp_snoc]
       exact h (f a)
@@ -277,8 +276,7 @@ end Embedding
 namespace Equivₓ
 
 /-- A first-order equivalence is also an elementary embedding. -/
-def toElementaryEmbedding (f : M ≃[L] N) : M ↪ₑ[L] N where
-  toFun := f
+def toElementaryEmbedding (f : M ≃[L] N) : M ↪ₑ[L] N where toFun := f
 
 @[simp]
 theorem to_elementary_embedding_to_embedding (f : M ≃[L] N) : f.toElementaryEmbedding.toEmbedding = f.toEmbedding :=
@@ -332,7 +330,7 @@ instance : Coe (L.ElementarySubstructure M) (L.Substructure M) :=
   ⟨ElementarySubstructure.toSubstructure⟩
 
 instance : SetLike (L.ElementarySubstructure M) M :=
-  ⟨fun x => x.toSubstructure.Carrier, fun h => by
+  ⟨fun x => x.toSubstructure.Carrier, fun ⟨⟨s, hs1⟩, hs2⟩ ⟨⟨t, ht1⟩, ht2⟩ h => by
     congr
     exact h⟩
 
@@ -370,13 +368,16 @@ theorem realize_sentence (S : L.ElementarySubstructure M) (φ : L.Sentence) : S 
 
 @[simp]
 theorem Theory_model_iff (S : L.ElementarySubstructure M) (T : L.Theory) : S ⊨ T ↔ M ⊨ T := by
-  simp only [Theory.model_iff, realize_sentence]
+  simp only [← Theory.model_iff, ← realize_sentence]
 
 instance Theory_model {T : L.Theory} [h : M ⊨ T] {S : L.ElementarySubstructure M} : S ⊨ T :=
   (Theory_model_iff S T).2 h
 
 instance [h : Nonempty M] {S : L.ElementarySubstructure M} : Nonempty S :=
   (model_nonempty_theory_iff L).1 inferInstance
+
+theorem elementarily_equivalent (S : L.ElementarySubstructure M) : S ≅[L] M :=
+  S.Subtype.ElementarilyEquivalent
 
 end ElementarySubstructure
 

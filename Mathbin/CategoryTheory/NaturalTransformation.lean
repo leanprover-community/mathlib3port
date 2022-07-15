@@ -62,8 +62,7 @@ theorem congr_app {F G : C ⥤ D} {α β : NatTrans F G} (h : α = β) (X : C) :
 namespace NatTrans
 
 /-- `nat_trans.id F` is the identity natural transformation on a functor `F`. -/
-protected def id (F : C ⥤ D) : NatTrans F F where
-  app := fun X => 𝟙 (F.obj X)
+protected def id (F : C ⥤ D) : NatTrans F F where app := fun X => 𝟙 (F.obj X)
 
 @[simp]
 theorem id_app' (F : C ⥤ D) (X : C) : (NatTrans.id F).app X = 𝟙 (F.obj X) :=
@@ -81,8 +80,7 @@ section
 variable {F G H I : C ⥤ D}
 
 /-- `vcomp α β` is the vertical compositions of natural transformations. -/
-def vcomp (α : NatTrans F G) (β : NatTrans G H) : NatTrans F H where
-  app := fun X => α.app X ≫ β.app X
+def vcomp (α : NatTrans F G) (β : NatTrans G H) : NatTrans F H where app := fun X => α.app X ≫ β.app X
 
 -- functor_category will rewrite (vcomp α β) to (α ≫ β), so this is not a
 -- suitable simp lemma.  We will declare the variant vcomp_app' there.

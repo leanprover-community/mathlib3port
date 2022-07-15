@@ -61,17 +61,17 @@ def flipEquivalenceUnitIso : 𝟭 (HomologicalComplex (HomologicalComplex V c) c
             comm' := fun i j h => by
               ext
               dsimp'
-              simp only [category.id_comp, category.comp_id] },
+              simp only [← category.id_comp, ← category.comp_id] },
         inv :=
           { f := fun i => { f := fun j => 𝟙 ((C.x i).x j) },
             comm' := fun i j h => by
               ext
               dsimp'
-              simp only [category.id_comp, category.comp_id] } })
+              simp only [← category.id_comp, ← category.comp_id] } })
     fun X Y f => by
     ext
     dsimp'
-    simp only [category.id_comp, category.comp_id]
+    simp only [← category.id_comp, ← category.comp_id]
 
 /-- Auxiliary definition for `homological_complex.flip_equivalence` .-/
 @[simps]
@@ -83,17 +83,17 @@ def flipEquivalenceCounitIso : flip V c' c ⋙ flip V c c' ≅ 𝟭 (Homological
             comm' := fun i j h => by
               ext
               dsimp'
-              simp only [category.id_comp, category.comp_id] },
+              simp only [← category.id_comp, ← category.comp_id] },
         inv :=
           { f := fun i => { f := fun j => 𝟙 ((C.x i).x j) },
             comm' := fun i j h => by
               ext
               dsimp'
-              simp only [category.id_comp, category.comp_id] } })
+              simp only [← category.id_comp, ← category.comp_id] } })
     fun X Y f => by
     ext
     dsimp'
-    simp only [category.id_comp, category.comp_id]
+    simp only [← category.id_comp, ← category.comp_id]
 
 /-- Flipping a complex of complexes over the diagonal, as an equivalence of categories. -/
 @[simps]

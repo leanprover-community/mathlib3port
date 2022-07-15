@@ -80,7 +80,7 @@ theorem commutator_eq_bot_iff_le_centralizer : ⁅H₁,H₂⁆ = ⊥ ↔ H₁ �
 /-- **The Three Subgroups Lemma** (via the Hall-Witt identity) -/
 theorem commutator_commutator_eq_bot_of_rotate (h1 : ⁅⁅H₂,H₃⁆,H₁⁆ = ⊥) (h2 : ⁅⁅H₃,H₁⁆,H₂⁆ = ⊥) : ⁅⁅H₁,H₂⁆,H₃⁆ = ⊥ := by
   simp_rw [commutator_eq_bot_iff_le_centralizer, commutator_le, mem_centralizer_iff_commutator_eq_one, ←
-    commutator_element_def]  at h1 h2⊢
+    commutator_element_def] at h1 h2⊢
   intro x hx y hy z hz
   trans x * z * ⁅y,⁅z⁻¹,x⁻¹⁆⁆⁻¹ * z⁻¹ * y * ⁅x⁻¹,⁅y⁻¹,z⁆⁆⁻¹ * y⁻¹ * x⁻¹
   · group
@@ -108,7 +108,7 @@ instance commutator_normal [h₁ : H₁.Normal] [h₂ : H₂.Normal] : Normal �
     exact Subgroup.normal_closure_normal
     
   refine' Set.Subset.antisymm Groupₓ.subset_conjugates_of_set fun a h => _
-  simp_rw [Groupₓ.mem_conjugates_of_set_iff, is_conj_iff]  at h
+  simp_rw [Groupₓ.mem_conjugates_of_set_iff, is_conj_iff] at h
   rcases h with ⟨b, ⟨c, hc, e, he, rfl⟩, d, rfl⟩
   exact ⟨_, h₁.conj_mem c hc d, _, h₂.conj_mem e he d, (conjugate_commutator_element c e d).symm⟩
 
@@ -167,8 +167,8 @@ theorem commutator_prod_prod (K₁ K₂ : Subgroup G') : ⁅H₁.Prod K₁,H₂.
     constructor <;>
       · rw [map_commutator]
         apply commutator_mono <;>
-          simp [le_prod_iff, map_map, MonoidHom.fst_comp_inl, MonoidHom.snd_comp_inl, MonoidHom.fst_comp_inr,
-            MonoidHom.snd_comp_inr]
+          simp [← le_prod_iff, ← map_map, ← MonoidHom.fst_comp_inl, ← MonoidHom.snd_comp_inl, ← MonoidHom.fst_comp_inr,
+            ← MonoidHom.snd_comp_inr]
         
     
 
@@ -180,7 +180,7 @@ theorem commutator_pi_pi_le {η : Type _} {Gs : η → Type _} [∀ i, Groupₓ 
     ⁅Subgroup.pi Set.Univ H,Subgroup.pi Set.Univ K⁆ ≤ Subgroup.pi Set.Univ fun i => ⁅H i,K i⁆ :=
   commutator_le.mpr fun p hp q hq i hi => commutator_mem_commutator (hp i hi) (hq i hi)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The commutator of a finite direct product is contained in the direct product of the commutators.
 -/
 theorem commutator_pi_pi_of_fintype {η : Type _} [Fintype η] {Gs : η → Type _} [∀ i, Groupₓ (Gs i)]
@@ -199,7 +199,7 @@ theorem commutator_pi_pi_of_fintype {η : Type _} [Fintype η] {Gs : η → Type
         · subst h
           simpa using hx
           
-        · simp [h, one_mem]
+        · simp [← h, ← one_mem]
           
         
     

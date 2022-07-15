@@ -71,7 +71,7 @@ noncomputable def quotientInfEquivSupQuotient (p p' : Submodule R M) :
     (by
       rw [← ker_eq_bot, quotient_inf_to_sup_quotient, ker_liftq_eq_bot]
       rw [ker_comp, ker_mkq]
-      exact fun hx2 => ⟨hx1, hx2⟩)
+      exact fun ⟨x, hx1⟩ hx2 => ⟨hx1, hx2⟩)
     (by
       rw [← range_eq_top, quotient_inf_to_sup_quotient, range_liftq, eq_top_iff']
       rintro ⟨x, hx⟩
@@ -95,13 +95,13 @@ theorem quotient_inf_equiv_sup_quotient_apply_mk (p p' : Submodule R M) (x : p) 
 theorem quotient_inf_equiv_sup_quotient_symm_apply_left (p p' : Submodule R M) (x : p⊔p') (hx : (x : M) ∈ p) :
     (quotientInfEquivSupQuotient p p').symm (Submodule.Quotient.mk x) = Submodule.Quotient.mk ⟨x, hx⟩ :=
   (LinearEquiv.symm_apply_eq _).2 <| by
-    simp [of_le_apply]
+    simp [← of_le_apply]
 
 @[simp]
 theorem quotient_inf_equiv_sup_quotient_symm_apply_eq_zero_iff {p p' : Submodule R M} {x : p⊔p'} :
     (quotientInfEquivSupQuotient p p').symm (Submodule.Quotient.mk x) = 0 ↔ (x : M) ∈ p' :=
   (LinearEquiv.symm_apply_eq _).trans <| by
-    simp [of_le_apply]
+    simp [← of_le_apply]
 
 theorem quotient_inf_equiv_sup_quotient_symm_apply_right (p p' : Submodule R M) {x : p⊔p'} (hx : (x : M) ∈ p') :
     (quotientInfEquivSupQuotient p p').symm (Submodule.Quotient.mk x) = 0 :=

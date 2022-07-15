@@ -105,10 +105,10 @@ theorem circulant_sub [Sub α] [Sub n] (v w : n → α) : circulant (v - w) = ci
 theorem circulant_mul [Semiringₓ α] [Fintype n] [AddGroupₓ n] (v w : n → α) :
     circulant v ⬝ circulant w = circulant (mulVecₓ (circulant v) w) := by
   ext i j
-  simp only [mul_apply, mul_vec, circulant, dot_product]
+  simp only [← mul_apply, ← mul_vec, ← circulant, ← dot_product]
   refine' Fintype.sum_equiv (Equivₓ.subRight j) _ _ _
   intro x
-  simp only [Equivₓ.sub_right_apply, sub_sub_sub_cancel_right]
+  simp only [← Equivₓ.sub_right_apply, ← sub_sub_sub_cancel_right]
 
 theorem Fin.circulant_mul [Semiringₓ α] :
     ∀ {n} v w : Finₓ n → α, circulant v ⬝ circulant w = circulant (mulVecₓ (circulant v) w)
@@ -120,13 +120,13 @@ theorem Fin.circulant_mul [Semiringₓ α] :
 theorem circulant_mul_comm [CommSemigroupₓ α] [AddCommMonoidₓ α] [Fintype n] [AddCommGroupₓ n] (v w : n → α) :
     circulant v ⬝ circulant w = circulant w ⬝ circulant v := by
   ext i j
-  simp only [mul_apply, circulant, mul_comm]
+  simp only [← mul_apply, ← circulant, ← mul_comm]
   refine' Fintype.sum_equiv ((Equivₓ.subLeft i).trans (Equivₓ.addRight j)) _ _ _
   intro x
   congr 2
   · simp
     
-  · simp only [Equivₓ.coe_add_right, Function.comp_app, Equivₓ.coe_trans, Equivₓ.sub_left_apply]
+  · simp only [← Equivₓ.coe_add_right, ← Function.comp_app, ← Equivₓ.coe_trans, ← Equivₓ.sub_left_apply]
     abel
     
 
@@ -137,20 +137,20 @@ theorem Fin.circulant_mul_comm [CommSemigroupₓ α] [AddCommMonoidₓ α] :
   | n + 1 => circulant_mul_comm
 
 /-- `k • circulant v` is another circulant matrix `circulant (k • v)`. -/
-theorem circulant_smul [Sub n] [HasScalar R α] (k : R) (v : n → α) : circulant (k • v) = k • circulant v := by
+theorem circulant_smul [Sub n] [HasSmul R α] (k : R) (v : n → α) : circulant (k • v) = k • circulant v := by
   ext <;> simp
 
 @[simp]
 theorem circulant_single_one α n [Zero α] [One α] [DecidableEq n] [AddGroupₓ n] :
     circulant (Pi.single 0 1 : n → α) = (1 : Matrix n n α) := by
   ext i j
-  simp [one_apply, Pi.single_apply, sub_eq_zero]
+  simp [← one_apply, ← Pi.single_apply, ← sub_eq_zero]
 
 @[simp]
 theorem circulant_single n [Semiringₓ α] [DecidableEq n] [AddGroupₓ n] [Fintype n] (a : α) :
     circulant (Pi.single 0 a : n → α) = scalar n a := by
   ext i j
-  simp [Pi.single_apply, one_apply, sub_eq_zero]
+  simp [← Pi.single_apply, ← one_apply, ← sub_eq_zero]
 
 /-- Note we use `↑i = 0` instead of `i = 0` as `fin 0` has no `0`.
 This means that we cannot state this with `pi.single` as we did with `matrix.circulant_single`. -/
@@ -160,7 +160,7 @@ theorem Fin.circulant_ite α [Zero α] [One α] : ∀ n, circulant (fun i => ite
   | n + 1 => by
     rw [← circulant_single_one]
     congr with j
-    simp only [Pi.single_apply, Finₓ.ext_iff]
+    simp only [← Pi.single_apply, ← Finₓ.ext_iff]
     congr
 
 /-- A circulant of `v` is symmetric iff `v` equals its reverse. -/
@@ -169,7 +169,7 @@ theorem circulant_is_symm_iff [AddGroupₓ n] {v : n → α} : (circulant v).IsS
 
 theorem Fin.circulant_is_symm_iff : ∀ {n} {v : Finₓ n → α}, (circulant v).IsSymm ↔ ∀ i, v (-i) = v i
   | 0 => fun v => by
-    simp [is_symm.ext_iff, IsEmpty.forall_iff]
+    simp [← is_symm.ext_iff, ← IsEmpty.forall_iff]
   | n + 1 => fun v => circulant_is_symm_iff
 
 /-- If `circulant v` is symmetric, `∀ i j : I, v (- i) = v i`. -/

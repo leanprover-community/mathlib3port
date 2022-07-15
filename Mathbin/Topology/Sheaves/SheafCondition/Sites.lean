@@ -43,7 +43,7 @@ open CategoryTheory TopologicalSpace Top CategoryTheory.Limits Opposite
 
 open Top.Presheaf.SheafConditionEqualizerProducts
 
-variable {C : Type u} [Category.{v} C] [HasProducts C]
+variable {C : Type u} [Category.{v} C] [HasProducts.{v} C]
 
 variable {X : Top.{v}} (F : Presheaf C X)
 
@@ -375,7 +375,7 @@ theorem pi_opens_to_first_obj_comp_second_map_eq :
 theorem fork_map_comp_first_map_to_pi_opens_eq :
     Presheaf.forkMap (PresieveOfCovering U) F ≫ firstObjToPiOpens F U = res F U := by
   ext i
-  dsimp' [presheaf.fork_map, first_obj_to_pi_opens, res]
+  dsimp' [← presheaf.fork_map, ← first_obj_to_pi_opens, ← res]
   rw [category.assoc, limit.lift_π, fan.mk_π_app, limit.lift_π, fan.mk_π_app, limit.lift_π, fan.mk_π_app]
   rfl
 
@@ -513,7 +513,7 @@ namespace Top.Sheaf
 
 open CategoryTheory TopologicalSpace Top Opposite
 
-variable {C : Type u} [Category.{v} C] [Limits.HasProducts C]
+variable {C : Type u} [Category.{v} C] [Limits.HasProducts.{v} C]
 
 variable {X : Top.{v}} {ι : Type _} {B : ι → Opens X}
 

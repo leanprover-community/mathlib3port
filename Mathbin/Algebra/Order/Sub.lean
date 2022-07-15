@@ -76,7 +76,7 @@ theorem le_mul_tsub {R : Type _} [Distribₓ R] [Preorderₓ R] [Sub R] [HasOrde
 
 theorem le_tsub_mul {R : Type _} [CommSemiringₓ R] [Preorderₓ R] [Sub R] [HasOrderedSub R]
     [CovariantClass R R (· * ·) (· ≤ ·)] {a b c : R} : a * c - b * c ≤ (a - b) * c := by
-  simpa only [mul_comm _ c] using le_mul_tsub
+  simpa only [← mul_comm _ c] using le_mul_tsub
 
 end Add
 
@@ -286,13 +286,13 @@ protected theorem lt_add_of_tsub_lt_left (hb : AddLeCancellable b) (h : a - b < 
   rw [lt_iff_le_and_ne, ← tsub_le_iff_left]
   refine' ⟨h.le, _⟩
   rintro rfl
-  simpa [hb] using h
+  simpa [← hb] using h
 
 protected theorem lt_add_of_tsub_lt_right (hc : AddLeCancellable c) (h : a - c < b) : a < b + c := by
   rw [lt_iff_le_and_ne, ← tsub_le_iff_right]
   refine' ⟨h.le, _⟩
   rintro rfl
-  simpa [hc] using h
+  simpa [← hc] using h
 
 end AddLeCancellable
 
@@ -470,6 +470,9 @@ theorem tsub_add_tsub_cancel (hab : b ≤ a) (hbc : c ≤ b) : a - b + (b - c) =
 
 theorem tsub_tsub_tsub_cancel_right (h : c ≤ b) : a - c - (b - c) = a - b := by
   rw [tsub_tsub, add_tsub_cancel_of_le h]
+
+theorem tsub_lt_of_lt (h : a < b) : a - c < b :=
+  lt_of_le_of_ltₓ tsub_le_self h
 
 /-! ### Lemmas that assume that an element is `add_le_cancellable`. -/
 

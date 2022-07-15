@@ -205,8 +205,7 @@ variable (η)
 
 /-- The identity modification. -/
 @[simps]
-def id : Modification η η where
-  app := fun a => 𝟙 (η.app a)
+def id : Modification η η where app := fun a => 𝟙 (η.app a)
 
 instance : Inhabited (Modification η η) :=
   ⟨Modification.id η⟩
@@ -233,8 +232,7 @@ end
 
 /-- Vertical composition of modifications. -/
 @[simps]
-def vcomp (Γ : Modification η θ) (Δ : Modification θ ι) : Modification η ι where
-  app := fun a => Γ.app a ≫ Δ.app a
+def vcomp (Γ : Modification η θ) (Δ : Modification θ ι) : Modification η ι where app := fun a => Γ.app a ≫ Δ.app a
 
 end Modification
 

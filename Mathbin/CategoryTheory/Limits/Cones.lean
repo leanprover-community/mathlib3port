@@ -163,8 +163,8 @@ def equiv (F : J ⥤ C) : Cone F ≅ ΣX, F.cones.obj X where
 
 /-- A map to the vertex of a cone naturally induces a cone by composition. -/
 @[simps]
-def extensions (c : Cone F) : yoneda.obj c.x ⋙ ulift_functor.{u₁} ⟶ F.cones where
-  app := fun X f => (const J).map f.down ≫ c.π
+def extensions (c : Cone F) :
+    yoneda.obj c.x ⋙ ulift_functor.{u₁} ⟶ F.cones where app := fun X f => (const J).map f.down ≫ c.π
 
 /-- A map to the vertex of a cone induces a cone by composition. -/
 @[simps]
@@ -196,8 +196,8 @@ def equiv (F : J ⥤ C) : Cocone F ≅ ΣX, F.cocones.obj X where
 
 /-- A map from the vertex of a cocone naturally induces a cocone by composition. -/
 @[simps]
-def extensions (c : Cocone F) : coyoneda.obj (op c.x) ⋙ ulift_functor.{u₁} ⟶ F.cocones where
-  app := fun X f => c.ι ≫ (const J).map f.down
+def extensions (c : Cocone F) :
+    coyoneda.obj (op c.x) ⋙ ulift_functor.{u₁} ⟶ F.cocones where app := fun X f => c.ι ≫ (const J).map f.down
 
 /-- A map from the vertex of a cocone induces a cocone by composition. -/
 @[simps]
@@ -337,7 +337,7 @@ def whiskeringEquivalence (e : K ≌ J) : Cone F ≌ Cone (e.Functor ⋙ F) wher
             intro k
             dsimp'
             -- See library note [dsimp, simp]
-            simpa [e.counit_app_functor] using s.w (e.unit_inv.app k)))
+            simpa [← e.counit_app_functor] using s.w (e.unit_inv.app k)))
       (by
         tidy)
 
@@ -372,18 +372,19 @@ def functoriality : Cone F ⥤ Cone (F ⋙ G) where
   map := fun X Y f =>
     { Hom := G.map f.Hom,
       w' := fun j => by
-        simp [-cone_morphism.w, ← f.w j] }
+        simp [-cone_morphism.w, f.w j] }
 
-instance functorialityFull [Full G] [Faithful G] : Full (functoriality F G) where
-  preimage := fun X Y t =>
+instance functorialityFull [Full G] [Faithful G] :
+    Full
+      (functoriality F G) where preimage := fun X Y t =>
     { Hom := G.preimage t.Hom,
       w' := fun j =>
         G.map_injective
           (by
             simpa using t.w j) }
 
-instance functoriality_faithful [Faithful G] : Faithful (Cones.functoriality F G) where
-  map_injective' := fun X Y f g e => by
+instance functoriality_faithful [Faithful G] :
+    Faithful (Cones.functoriality F G) where map_injective' := fun X Y f g e => by
     ext1
     injection e
     apply G.map_injective h_1
@@ -550,7 +551,7 @@ def whiskeringEquivalence (e : K ≌ J) : Cocone F ≌ Cocone (e.Functor ⋙ F) 
           (by
             intro k
             dsimp'
-            simpa [e.counit_inv_app_functor k] using s.w (e.unit.app k)))
+            simpa [← e.counit_inv_app_functor k] using s.w (e.unit.app k)))
       (by
         tidy)
 
@@ -587,16 +588,17 @@ def functoriality : Cocone F ⥤ Cocone (F ⋙ G) where
       w' := by
         intros <;> rw [← functor.map_comp, cocone_morphism.w] }
 
-instance functorialityFull [Full G] [Faithful G] : Full (functoriality F G) where
-  preimage := fun X Y t =>
+instance functorialityFull [Full G] [Faithful G] :
+    Full
+      (functoriality F G) where preimage := fun X Y t =>
     { Hom := G.preimage t.Hom,
       w' := fun j =>
         G.map_injective
           (by
             simpa using t.w j) }
 
-instance functoriality_faithful [Faithful G] : Faithful (functoriality F G) where
-  map_injective' := fun X Y f g e => by
+instance functoriality_faithful [Faithful G] :
+    Faithful (functoriality F G) where map_injective' := fun X Y f g e => by
     ext1
     injection e
     apply G.map_injective h_1
@@ -627,8 +629,8 @@ def functorialityEquivalence (e : C ≌ D) : Cocone F ≌ Cocone (F ⋙ e.Functo
               -- In this configuration `simp` reaches a dead-end and needs help.
               intro j
               dsimp'
-              simp only [← equivalence.counit_inv_app_functor, iso.inv_hom_id_app, map_comp, equivalence.fun_inv_map,
-                assoc, id_comp, iso.inv_hom_id_app_assoc]
+              simp only [equivalence.counit_inv_app_functor, ← iso.inv_hom_id_app, ← map_comp, ←
+                equivalence.fun_inv_map, ← assoc, ← id_comp, ← iso.inv_hom_id_app_assoc]
               dsimp'
               simp ))-- See note [dsimp, simp].
       fun c c' f => by
@@ -929,7 +931,7 @@ def coconeOfConeLeftOp (c : Cone F.leftOp) : Cocone F where
 
 @[simp]
 theorem cocone_of_cone_left_op_ι_app (c : Cone F.leftOp) j : (coconeOfConeLeftOp c).ι.app j = (c.π.app (op j)).op := by
-  dsimp' only [cocone_of_cone_left_op]
+  dsimp' only [← cocone_of_cone_left_op]
   simp
 
 /-- Change a cocone on `F : J ⥤ Cᵒᵖ` to a cone on `F.left_op : Jᵒᵖ ⥤ C`. -/

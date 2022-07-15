@@ -58,16 +58,14 @@ attribute [simp, reassoc] hom.act_hom
 
 /-- The identity morphism on a module object. -/
 @[simps]
-def id (M : Modₓ A) : Hom M M where
-  Hom := 𝟙 M.x
+def id (M : Modₓ A) : Hom M M where Hom := 𝟙 M.x
 
 instance homInhabited (M : Modₓ A) : Inhabited (Hom M M) :=
   ⟨id M⟩
 
 /-- Composition of module object morphisms. -/
 @[simps]
-def comp {M N O : Modₓ A} (f : Hom M N) (g : Hom N O) : Hom M O where
-  Hom := f.Hom ≫ g.Hom
+def comp {M N O : Modₓ A} (f : Hom M N) (g : Hom N O) : Hom M O where Hom := f.Hom ≫ g.Hom
 
 instance : Category (Modₓ A) where
   Hom := fun M N => Hom M N

@@ -37,9 +37,9 @@ theorem mono_of_nonzero_from_simple [HasKernels C] {X Y : C} [Simple X] {f : X �
 /-- The part of **Schur's lemma** that holds in any preadditive category with kernels:
 that a nonzero morphism between simple objects is an isomorphism.
 -/
-theorem is_iso_of_hom_simple [HasKernels C] {X Y : C} [Simple X] [Simple Y] {f : X ⟶ Y} (w : f ≠ 0) : IsIso f :=
+theorem is_iso_of_hom_simple [HasKernels C] {X Y : C} [Simple X] [Simple Y] {f : X ⟶ Y} (w : f ≠ 0) : IsIso f := by
   have := mono_of_nonzero_from_simple w
-  is_iso_of_mono_of_nonzero w
+  exact is_iso_of_mono_of_nonzero w
 
 /-- As a corollary of Schur's lemma for preadditive categories,
 any morphism between simple objects is (exclusively) either an isomorphism or zero.
@@ -48,9 +48,9 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
   ⟨fun I => by
     intro h
     apply id_nonzero X
-    simp only [← is_iso.hom_inv_id f, h, zero_comp], fun w => is_iso_of_hom_simple w⟩
+    simp only [is_iso.hom_inv_id f, ← h, ← zero_comp], fun w => is_iso_of_hom_simple w⟩
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- In any preadditive category with kernels,
 the endomorphisms of a simple object form a division ring.
 -/
@@ -60,9 +60,9 @@ noncomputable instance [HasKernels C] {X : C} [Simple X] : DivisionRing (End X) 
       { (inferInstance : Ringₓ (End X)) with
         inv := fun f =>
           if h : f = 0 then 0
-          else
+          else by
             have := is_iso_of_hom_simple h
-            inv f,
+            exact inv f,
         exists_pair_ne := ⟨𝟙 X, 0, id_nonzero _⟩, inv_zero := dif_pos rfl,
         mul_inv_cancel := fun f h => by
           have := is_iso_of_hom_simple h
@@ -79,13 +79,13 @@ variable (𝕜 : Type _) [DivisionRing 𝕜]
 the hom space between two non-isomorphic simple objects is 0-dimensional.
 -/
 theorem finrank_hom_simple_simple_eq_zero_of_not_iso [HasKernels C] [Linear 𝕜 C] {X Y : C} [Simple X] [Simple Y]
-    (h : (X ≅ Y) → False) : finrank 𝕜 (X ⟶ Y) = 0 :=
+    (h : (X ≅ Y) → False) : finrank 𝕜 (X ⟶ Y) = 0 := by
   have :=
     subsingleton_of_forall_eq (0 : X ⟶ Y) fun f => by
       have p := not_congr (is_iso_iff_nonzero f)
-      simp only [not_not, Ne.def] at p
+      simp only [← not_not, ← Ne.def] at p
       refine' p.mp fun _ => h (as_iso f)
-  finrank_zero_of_subsingleton
+  exact finrank_zero_of_subsingleton
 
 end
 
@@ -144,7 +144,7 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
     ∃ c : 𝕜, c • 𝟙 X = f :=
   (finrank_eq_one_iff_of_nonzero' (𝟙 X) (id_nonzero X)).mp (finrank_endomorphism_simple_eq_one 𝕜 X) f
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Endomorphisms of a simple object form a field if they are finite dimensional.
 This can't be an instance as `𝕜` would be undetermined.
 -/
@@ -155,7 +155,7 @@ noncomputable def fieldEndOfFiniteDimensional (X : C) [Simple X] [I : FiniteDime
         mul_comm := fun f g => by
           obtain ⟨c, rfl⟩ := endomorphism_simple_eq_smul_id 𝕜 f
           obtain ⟨d, rfl⟩ := endomorphism_simple_eq_smul_id 𝕜 g
-          simp [← mul_smul, mul_comm c d] }
+          simp [mul_smul, ← mul_comm c d] }
 
 /-- **Schur's lemma** for `𝕜`-linear categories:
 if hom spaces are finite dimensional, then the hom space between simples is at most 1-dimensional.

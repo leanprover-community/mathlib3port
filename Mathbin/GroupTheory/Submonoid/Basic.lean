@@ -210,7 +210,7 @@ instance : HasTop (Submonoid M) :=
 instance : HasBot (Submonoid M) :=
   ⟨{ Carrier := {1}, one_mem' := Set.mem_singleton 1,
       mul_mem' := fun a b ha hb => by
-        simp only [Set.mem_singleton_iff] at *
+        simp only [← Set.mem_singleton_iff] at *
         rw [ha, hb, mul_oneₓ] }⟩
 
 @[to_additive]
@@ -270,11 +270,11 @@ theorem mem_Inf {S : Set (Submonoid M)} {x : M} : x ∈ inf S ↔ ∀, ∀ p ∈
 
 @[to_additive]
 theorem mem_infi {ι : Sort _} {S : ι → Submonoid M} {x : M} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
-  simp only [infi, mem_Inf, Set.forall_range_iff]
+  simp only [← infi, ← mem_Inf, ← Set.forall_range_iff]
 
 @[simp, norm_cast, to_additive]
 theorem coe_infi {ι : Sort _} {S : ι → Submonoid M} : (↑(⨅ i, S i) : Set M) = ⋂ i, S i := by
-  simp only [infi, coe_Inf, Set.bInter_range]
+  simp only [← infi, ← coe_Inf, ← Set.bInter_range]
 
 /-- Submonoids of a monoid form a complete lattice. -/
 @[to_additive "The `add_submonoid`s of an `add_monoid` form a complete lattice."]
@@ -296,7 +296,7 @@ theorem subsingleton_iff : Subsingleton (Submonoid M) ↔ Subsingleton M :=
     ⟨fun x y =>
       Submonoid.ext fun i =>
         Subsingleton.elimₓ 1 i ▸ by
-          simp [Submonoid.one_mem]⟩⟩
+          simp [← Submonoid.one_mem]⟩⟩
 
 @[simp, to_additive]
 theorem nontrivial_iff : Nontrivial (Submonoid M) ↔ Nontrivial M :=
@@ -362,7 +362,7 @@ theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure s) (Hs : ∀, 
 theorem closure_induction' (s : Set M) {p : ∀ x, x ∈ closure s → Prop} (Hs : ∀ x h : x ∈ s, p x (subset_closure h))
     (H1 : p 1 (one_mem _)) (Hmul : ∀ x hx y hy, p x hx → p y hy → p (x * y) (mul_mem hx hy)) {x} (hx : x ∈ closure s) :
     p x hx := by
-  refine' Exists.elim _ fun hc : p x hx => hc
+  refine' Exists.elim _ fun hx : x ∈ closure s hc : p x hx => hc
   exact closure_induction hx (fun x hx => ⟨_, Hs x hx⟩) ⟨_, H1⟩ fun x y ⟨hx', hx⟩ ⟨hy', hy⟩ => ⟨_, Hmul _ _ _ _ hx hy⟩
 
 /-- An induction principle for closure membership for predicates with two arguments.  -/
@@ -383,7 +383,7 @@ and verify that `p x` and `p y` imply `p (x * y)`. -/
 theorem dense_induction {p : M → Prop} (x : M) {s : Set M} (hs : closure s = ⊤) (Hs : ∀, ∀ x ∈ s, ∀, p x) (H1 : p 1)
     (Hmul : ∀ x y, p x → p y → p (x * y)) : p x := by
   have : ∀, ∀ x ∈ closure s, ∀, p x := fun x hx => closure_induction hx Hs H1 Hmul
-  simpa [hs] using this x
+  simpa [← hs] using this x
 
 variable (M)
 
@@ -425,7 +425,7 @@ theorem closure_singleton_le_iff_mem (m : M) (p : Submonoid M) : closure {m} ≤
 @[to_additive]
 theorem mem_supr {ι : Sort _} (p : ι → Submonoid M) {m : M} : (m ∈ ⨆ i, p i) ↔ ∀ N, (∀ i, p i ≤ N) → m ∈ N := by
   rw [← closure_singleton_le_iff_mem, le_supr_iff]
-  simp only [closure_singleton_le_iff_mem]
+  simp only [← closure_singleton_le_iff_mem]
 
 @[to_additive]
 theorem supr_eq_closure {ι : Sort _} (p : ι → Submonoid M) : (⨆ i, p i) = Submonoid.closure (⋃ i, (p i : Set M)) := by
@@ -454,7 +454,7 @@ def eqMlocus (f g : M →* N) : Submonoid M where
   Carrier := { x | f x = g x }
   one_mem' := by
     rw [Set.mem_set_of_eq, f.map_one, g.map_one]
-  mul_mem' := fun hy : _ = _ => by
+  mul_mem' := fun x y hx : _ = _ hy : _ = _ => by
     simp [*]
 
 /-- If two monoid homomorphisms are equal on a set, then they are equal on its submonoid closure. -/
@@ -485,7 +485,7 @@ section IsUnit
 def IsUnit.submonoid (M : Type _) [Monoidₓ M] : Submonoid M where
   Carrier := SetOf IsUnit
   one_mem' := by
-    simp only [is_unit_one, Set.mem_set_of_eq]
+    simp only [← is_unit_one, ← Set.mem_set_of_eq]
   mul_mem' := by
     intro a b ha hb
     rw [Set.mem_set_of_eq] at *
@@ -513,9 +513,9 @@ def ofMdense {M N} [Monoidₓ M] [Monoidₓ N] {s : Set M} (f : M → N) (hs : c
   map_mul' := fun x y =>
     dense_induction y hs (fun y hy x => hmul x y hy)
       (by
-        simp [h1])
+        simp [← h1])
       (fun y₁ y₂ h₁ h₂ x => by
-        simp only [← mul_assoc, h₁, h₂])
+        simp only [mul_assoc, ← h₁, ← h₂])
       x
 
 /-- Let `s` be a subset of an additive monoid `M` such that the closure of `s` is the whole monoid.

@@ -56,51 +56,51 @@ def oangle (x y : V) : Real.Angle :=
 /-- If the first vector passed to `oangle` is 0, the result is 0. -/
 @[simp]
 theorem oangle_zero_left (x : V) : hb.oangle 0 x = 0 := by
-  simp [oangle]
+  simp [← oangle]
 
 /-- If the second vector passed to `oangle` is 0, the result is 0. -/
 @[simp]
 theorem oangle_zero_right (x : V) : hb.oangle x 0 = 0 := by
-  simp [oangle]
+  simp [← oangle]
 
 /-- If the two vectors passed to `oangle` are the same, the result is 0. -/
 @[simp]
 theorem oangle_self (x : V) : hb.oangle x x = 0 := by
-  by_cases' h : x = 0 <;> simp [oangle, h]
+  by_cases' h : x = 0 <;> simp [← oangle, ← h]
 
 /-- Swapping the two vectors passed to `oangle` negates the angle. -/
 theorem oangle_rev (x y : V) : hb.oangle y x = -hb.oangle x y := by
-  simp only [oangle]
+  simp only [← oangle]
   convert Complex.arg_inv_coe_angle _
   exact (inv_div _ _).symm
 
 /-- Adding the angles between two vectors in each order results in 0. -/
 @[simp]
 theorem oangle_add_oangle_rev (x y : V) : hb.oangle x y + hb.oangle y x = 0 := by
-  simp [hb.oangle_rev y x]
+  simp [← hb.oangle_rev y x]
 
 /-- Negating the first vector passed to `oangle` adds `π` to the angle. -/
 theorem oangle_neg_left {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) : hb.oangle (-x) y = hb.oangle x y + π := by
-  simp only [oangle, div_neg_eq_neg_div, map_neg]
+  simp only [← oangle, ← div_neg_eq_neg_div, ← map_neg]
   refine' Complex.arg_neg_coe_angle _
-  simp [hx, hy]
+  simp [← hx, ← hy]
 
 /-- Negating the second vector passed to `oangle` adds `π` to the angle. -/
 theorem oangle_neg_right {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) : hb.oangle x (-y) = hb.oangle x y + π := by
-  simp only [oangle, neg_div, map_neg]
+  simp only [← oangle, ← neg_div, ← map_neg]
   refine' Complex.arg_neg_coe_angle _
-  simp [hx, hy]
+  simp [← hx, ← hy]
 
 /-- Negating the first vector passed to `oangle` does not change twice the angle. -/
 @[simp]
 theorem two_zsmul_oangle_neg_left (x y : V) : (2 : ℤ) • hb.oangle (-x) y = (2 : ℤ) • hb.oangle x y := by
   by_cases' hx : x = 0
-  · simp [hx]
+  · simp [← hx]
     
   · by_cases' hy : y = 0
-    · simp [hy]
+    · simp [← hy]
       
-    · simp [hb.oangle_neg_left hx hy]
+    · simp [← hb.oangle_neg_left hx hy]
       
     
 
@@ -108,19 +108,19 @@ theorem two_zsmul_oangle_neg_left (x y : V) : (2 : ℤ) • hb.oangle (-x) y = (
 @[simp]
 theorem two_zsmul_oangle_neg_right (x y : V) : (2 : ℤ) • hb.oangle x (-y) = (2 : ℤ) • hb.oangle x y := by
   by_cases' hx : x = 0
-  · simp [hx]
+  · simp [← hx]
     
   · by_cases' hy : y = 0
-    · simp [hy]
+    · simp [← hy]
       
-    · simp [hb.oangle_neg_right hx hy]
+    · simp [← hb.oangle_neg_right hx hy]
       
     
 
 /-- Negating both vectors passed to `oangle` does not change the angle. -/
 @[simp]
 theorem oangle_neg_neg (x y : V) : hb.oangle (-x) (-y) = hb.oangle x y := by
-  simp [oangle, neg_div_neg_eq]
+  simp [← oangle, ← neg_div_neg_eq]
 
 /-- Negating the first vector produces the same angle as negating the second vector. -/
 theorem oangle_neg_left_eq_neg_right (x y : V) : hb.oangle (-x) y = hb.oangle x (-y) := by
@@ -129,22 +129,22 @@ theorem oangle_neg_left_eq_neg_right (x y : V) : hb.oangle (-x) y = hb.oangle x 
 /-- The angle between the negation of a nonzero vector and that vector is `π`. -/
 @[simp]
 theorem oangle_neg_self_left {x : V} (hx : x ≠ 0) : hb.oangle (-x) x = π := by
-  simp [oangle_neg_left, hx]
+  simp [← oangle_neg_left, ← hx]
 
 /-- The angle between a nonzero vector and its negation is `π`. -/
 @[simp]
 theorem oangle_neg_self_right {x : V} (hx : x ≠ 0) : hb.oangle x (-x) = π := by
-  simp [oangle_neg_right, hx]
+  simp [← oangle_neg_right, ← hx]
 
 /-- Twice the angle between the negation of a vector and that vector is 0. -/
 @[simp]
 theorem two_zsmul_oangle_neg_self_left (x : V) : (2 : ℤ) • hb.oangle (-x) x = 0 := by
-  by_cases' hx : x = 0 <;> simp [hx]
+  by_cases' hx : x = 0 <;> simp [← hx]
 
 /-- Twice the angle between a vector and its negation is 0. -/
 @[simp]
 theorem two_zsmul_oangle_neg_self_right (x : V) : (2 : ℤ) • hb.oangle x (-x) = 0 := by
-  by_cases' hx : x = 0 <;> simp [hx]
+  by_cases' hx : x = 0 <;> simp [← hx]
 
 /-- Adding the angles between two vectors in each order, with the first vector in each angle
 negated, results in 0. -/
@@ -162,7 +162,7 @@ theorem oangle_add_oangle_rev_neg_right (x y : V) : hb.oangle x (-y) + hb.oangle
 angle. -/
 @[simp]
 theorem oangle_smul_left_of_pos (x y : V) {r : ℝ} (hr : 0 < r) : hb.oangle (r • x) y = hb.oangle x y := by
-  simp only [oangle, LinearIsometryEquiv.map_smul, Complex.real_smul]
+  simp only [← oangle, ← LinearIsometryEquiv.map_smul, ← Complex.real_smul]
   rw [mul_comm, div_mul_eq_div_mul_one_div, one_div, mul_comm, ← Complex.of_real_inv]
   congr 1
   exact Complex.arg_real_mul _ (inv_pos.2 hr)
@@ -171,7 +171,7 @@ theorem oangle_smul_left_of_pos (x y : V) {r : ℝ} (hr : 0 < r) : hb.oangle (r 
 angle. -/
 @[simp]
 theorem oangle_smul_right_of_pos (x y : V) {r : ℝ} (hr : 0 < r) : hb.oangle x (r • y) = hb.oangle x y := by
-  simp only [oangle, LinearIsometryEquiv.map_smul, Complex.real_smul]
+  simp only [← oangle, ← LinearIsometryEquiv.map_smul, ← Complex.real_smul]
   congr 1
   rw [mul_div_assoc]
   exact Complex.arg_real_mul _ hr
@@ -192,18 +192,18 @@ theorem oangle_smul_right_of_neg (x y : V) {r : ℝ} (hr : r < 0) : hb.oangle x 
 @[simp]
 theorem oangle_smul_left_self_of_nonneg (x : V) {r : ℝ} (hr : 0 ≤ r) : hb.oangle (r • x) x = 0 := by
   rcases hr.lt_or_eq with (h | h)
-  · simp [h]
+  · simp [← h]
     
-  · simp [h.symm]
+  · simp [← h.symm]
     
 
 /-- The angle between a vector and a nonnegative multiple of that vector is 0. -/
 @[simp]
 theorem oangle_smul_right_self_of_nonneg (x : V) {r : ℝ} (hr : 0 ≤ r) : hb.oangle x (r • x) = 0 := by
   rcases hr.lt_or_eq with (h | h)
-  · simp [h]
+  · simp [← h]
     
-  · simp [h.symm]
+  · simp [← h.symm]
     
 
 /-- The angle between two nonnegative multiples of the same vector is 0. -/
@@ -211,9 +211,9 @@ theorem oangle_smul_right_self_of_nonneg (x : V) {r : ℝ} (hr : 0 ≤ r) : hb.o
 theorem oangle_smul_smul_self_of_nonneg (x : V) {r₁ r₂ : ℝ} (hr₁ : 0 ≤ r₁) (hr₂ : 0 ≤ r₂) :
     hb.oangle (r₁ • x) (r₂ • x) = 0 := by
   rcases hr₁.lt_or_eq with (h | h)
-  · simp [h, hr₂]
+  · simp [← h, ← hr₂]
     
-  · simp [h.symm]
+  · simp [← h.symm]
     
 
 /-- Multiplying the first vector passed to `oangle` by a nonzero real does not change twice the
@@ -221,46 +221,46 @@ angle. -/
 @[simp]
 theorem two_zsmul_oangle_smul_left_of_ne_zero (x y : V) {r : ℝ} (hr : r ≠ 0) :
     (2 : ℤ) • hb.oangle (r • x) y = (2 : ℤ) • hb.oangle x y := by
-  rcases hr.lt_or_lt with (h | h) <;> simp [h]
+  rcases hr.lt_or_lt with (h | h) <;> simp [← h]
 
 /-- Multiplying the second vector passed to `oangle` by a nonzero real does not change twice the
 angle. -/
 @[simp]
 theorem two_zsmul_oangle_smul_right_of_ne_zero (x y : V) {r : ℝ} (hr : r ≠ 0) :
     (2 : ℤ) • hb.oangle x (r • y) = (2 : ℤ) • hb.oangle x y := by
-  rcases hr.lt_or_lt with (h | h) <;> simp [h]
+  rcases hr.lt_or_lt with (h | h) <;> simp [← h]
 
 /-- Twice the angle between a multiple of a vector and that vector is 0. -/
 @[simp]
 theorem two_zsmul_oangle_smul_left_self (x : V) {r : ℝ} : (2 : ℤ) • hb.oangle (r • x) x = 0 := by
-  rcases lt_or_leₓ r 0 with (h | h) <;> simp [h]
+  rcases lt_or_leₓ r 0 with (h | h) <;> simp [← h]
 
 /-- Twice the angle between a vector and a multiple of that vector is 0. -/
 @[simp]
 theorem two_zsmul_oangle_smul_right_self (x : V) {r : ℝ} : (2 : ℤ) • hb.oangle x (r • x) = 0 := by
-  rcases lt_or_leₓ r 0 with (h | h) <;> simp [h]
+  rcases lt_or_leₓ r 0 with (h | h) <;> simp [← h]
 
 /-- Twice the angle between two multiples of a vector is 0. -/
 @[simp]
 theorem two_zsmul_oangle_smul_smul_self (x : V) {r₁ r₂ : ℝ} : (2 : ℤ) • hb.oangle (r₁ • x) (r₂ • x) = 0 := by
-  by_cases' h : r₁ = 0 <;> simp [h]
+  by_cases' h : r₁ = 0 <;> simp [← h]
 
 /-- Two vectors are equal if and only if they have equal norms and zero angle between them. -/
 theorem eq_iff_norm_eq_and_oangle_eq_zero (x y : V) : x = y ↔ ∥x∥ = ∥y∥ ∧ hb.oangle x y = 0 := by
   constructor
   · intro h
-    simp [h]
+    simp [← h]
     
   · rintro ⟨hn, ha⟩
     rw [oangle] at ha
     by_cases' hy0 : y = 0
-    · simpa [hy0] using hn
+    · simpa [← hy0] using hn
       
     · have hx0 : x ≠ 0 := norm_ne_zero_iff.1 (hn.symm ▸ norm_ne_zero_iff.2 hy0)
       have hx0' : (Complex.isometryOfOrthonormal hb).symm x ≠ 0 := by
-        simp [hx0]
+        simp [← hx0]
       have hy0' : (Complex.isometryOfOrthonormal hb).symm y ≠ 0 := by
-        simp [hy0]
+        simp [← hy0]
       rw [Complex.arg_div_coe_angle hy0' hx0', sub_eq_zero, Complex.arg_coe_angle_eq_iff,
         Complex.arg_eq_arg_iff hy0' hx0', ← Complex.norm_eq_abs, ← Complex.norm_eq_abs, LinearIsometryEquiv.norm_map,
         LinearIsometryEquiv.norm_map, hn, ← Complex.of_real_div, div_self (norm_ne_zero_iff.2 hy0), Complex.of_real_one,
@@ -287,11 +287,11 @@ theorem oangle_add {x y z : V} (hx : x ≠ 0) (hy : y ≠ 0) (hz : z ≠ 0) : hb
   simp_rw [oangle]
   rw [← Complex.arg_mul_coe_angle]
   · rw [mul_comm, div_mul_div_cancel]
-    simp [hy]
+    simp [← hy]
     
-  · simp [hx, hy]
+  · simp [← hx, ← hy]
     
-  · simp [hy, hz]
+  · simp [← hy, ← hz]
     
 
 /-- Given three nonzero vectors, the angle between the second and the third plus the angle
@@ -319,7 +319,7 @@ theorem oangle_sub_right {x y z : V} (hx : x ≠ 0) (hy : y ≠ 0) (hz : z ≠ 0
 @[simp]
 theorem oangle_add_cyc3 {x y z : V} (hx : x ≠ 0) (hy : y ≠ 0) (hz : z ≠ 0) :
     hb.oangle x y + hb.oangle y z + hb.oangle z x = 0 := by
-  simp [hx, hy, hz]
+  simp [← hx, ← hy, ← hz]
 
 /-- Given three nonzero vectors, adding the angles between them in cyclic order, with the first
 vector in each angle negated, results in π. If the vectors add to 0, this is a version of the
@@ -347,7 +347,7 @@ theorem oangle_add_cyc3_neg_right {x y z : V} (hx : x ≠ 0) (hy : y ≠ 0) (hz 
 theorem oangle_sub_eq_oangle_sub_rev_of_norm_eq {x y : V} (h : ∥x∥ = ∥y∥) : hb.oangle x (x - y) = hb.oangle (y - x) y :=
   by
   by_cases' hx : x = 0
-  · simp [hx]
+  · simp [← hx]
     
   · have hy : y ≠ 0 := norm_ne_zero_iff.1 (h ▸ norm_ne_zero_iff.2 hx)
     simp_rw [hb.oangle_rev y, oangle, LinearIsometryEquiv.map_sub, ← Complex.arg_conj_coe_angle, sub_div,
@@ -356,10 +356,10 @@ theorem oangle_sub_eq_oangle_sub_rev_of_norm_eq {x y : V} (h : ∥x∥ = ∥y∥
     rw [← inv_div]
     simp_rw [Complex.inv_def, Complex.norm_sq_div, ← Complex.sq_abs, ← Complex.norm_eq_abs,
       LinearIsometryEquiv.norm_map, h]
-    simp [hy]
+    simp [← hy]
     
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:95:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([1]) }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:92:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([1]) }
 /-- The angle at the apex of an isosceles triangle is `π` minus twice a base angle, oriented
 vector angle form. -/
 theorem oangle_eq_pi_sub_two_zsmul_oangle_sub_of_norm_eq {x y : V} (hn : x ≠ y) (h : ∥x∥ = ∥y∥) :
@@ -421,32 +421,32 @@ def rotation (θ : Real.Angle) : V ≃ₗᵢ[ℝ] V :=
 /-- The determinant of `rotation` (as a linear map) is equal to `1`. -/
 @[simp]
 theorem det_rotation (θ : Real.Angle) : ((hb.rotation θ).toLinearEquiv : V →ₗ[ℝ] V).det = 1 := by
-  simp [rotation, ← LinearIsometryEquiv.to_linear_equiv_symm, ← LinearEquiv.comp_coe]
+  simp [← rotation, LinearIsometryEquiv.to_linear_equiv_symm, LinearEquiv.comp_coe]
 
 /-- The determinant of `rotation` (as a linear equiv) is equal to `1`. -/
 @[simp]
 theorem linear_equiv_det_rotation (θ : Real.Angle) : (hb.rotation θ).toLinearEquiv.det = 1 := by
-  simp [rotation, ← LinearIsometryEquiv.to_linear_equiv_symm]
+  simp [← rotation, LinearIsometryEquiv.to_linear_equiv_symm]
 
 /-- The inverse of `rotation` is rotation by the negation of the angle. -/
 @[simp]
 theorem rotation_symm (θ : Real.Angle) : (hb.rotation θ).symm = hb.rotation (-θ) := by
-  simp [rotation, LinearIsometryEquiv.trans_assoc]
+  simp [← rotation, ← LinearIsometryEquiv.trans_assoc]
 
 /-- Rotation by 0 is the identity. -/
 @[simp]
 theorem rotation_zero : hb.rotation 0 = LinearIsometryEquiv.refl ℝ V := by
-  simp [rotation]
+  simp [← rotation]
 
 /-- Rotation by π is negation. -/
 theorem rotation_pi : hb.rotation π = LinearIsometryEquiv.neg ℝ := by
   ext x
-  simp [rotation]
+  simp [← rotation]
 
 /-- Rotating twice is equivalent to rotating by the sum of the angles. -/
 @[simp]
 theorem rotation_trans (θ₁ θ₂ : Real.Angle) : (hb.rotation θ₁).trans (hb.rotation θ₂) = hb.rotation (θ₂ + θ₁) := by
-  simp only [rotation, ← LinearIsometryEquiv.trans_assoc]
+  simp only [← rotation, LinearIsometryEquiv.trans_assoc]
   ext1 x
   simp
 
@@ -454,36 +454,38 @@ theorem rotation_trans (θ₁ θ₂ : Real.Angle) : (hb.rotation θ₁).trans (h
 @[simp]
 theorem oangle_rotation_left {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) (θ : Real.Angle) :
     hb.oangle (hb.rotation θ x) y = hb.oangle x y - θ := by
-  simp [oangle, rotation, Complex.arg_div_coe_angle, Complex.arg_mul_coe_angle, hx, hy, ne_zero_of_mem_circle]
+  simp [← oangle, ← rotation, ← Complex.arg_div_coe_angle, ← Complex.arg_mul_coe_angle, ← hx, ← hy, ←
+    ne_zero_of_mem_circle]
   abel
 
 /-- Rotating the second vector by `θ` adds `θ` to the angle between two vectors. -/
 @[simp]
 theorem oangle_rotation_right {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) (θ : Real.Angle) :
     hb.oangle x (hb.rotation θ y) = hb.oangle x y + θ := by
-  simp [oangle, rotation, Complex.arg_div_coe_angle, Complex.arg_mul_coe_angle, hx, hy, ne_zero_of_mem_circle]
+  simp [← oangle, ← rotation, ← Complex.arg_div_coe_angle, ← Complex.arg_mul_coe_angle, ← hx, ← hy, ←
+    ne_zero_of_mem_circle]
   abel
 
 /-- The rotation of a vector by `θ` has an angle of `-θ` from that vector. -/
 @[simp]
 theorem oangle_rotation_self_left {x : V} (hx : x ≠ 0) (θ : Real.Angle) : hb.oangle (hb.rotation θ x) x = -θ := by
-  simp [hx]
+  simp [← hx]
 
 /-- A vector has an angle of `θ` from the rotation of that vector by `θ`. -/
 @[simp]
 theorem oangle_rotation_self_right {x : V} (hx : x ≠ 0) (θ : Real.Angle) : hb.oangle x (hb.rotation θ x) = θ := by
-  simp [hx]
+  simp [← hx]
 
 /-- Rotating the first vector by the angle between the two vectors results an an angle of 0. -/
 @[simp]
 theorem oangle_rotation_oangle_left (x y : V) : hb.oangle (hb.rotation (hb.oangle x y) x) y = 0 := by
   by_cases' hx : x = 0
-  · simp [hx]
+  · simp [← hx]
     
   · by_cases' hy : y = 0
-    · simp [hy]
+    · simp [← hy]
       
-    · simp [hx, hy]
+    · simp [← hx, ← hy]
       
     
 
@@ -497,7 +499,7 @@ theorem oangle_rotation_oangle_right (x y : V) : hb.oangle y (hb.rotation (hb.oa
 /-- Rotating both vectors by the same angle does not change the angle between those vectors. -/
 @[simp]
 theorem oangle_rotation (x y : V) (θ : Real.Angle) : hb.oangle (hb.rotation θ x) (hb.rotation θ y) = hb.oangle x y := by
-  by_cases' hx : x = 0 <;> by_cases' hy : y = 0 <;> simp [hx, hy]
+  by_cases' hx : x = 0 <;> by_cases' hy : y = 0 <;> simp [← hx, ← hy]
 
 /-- A rotation of a nonzero vector equals that vector if and only if the angle is zero. -/
 @[simp]
@@ -505,10 +507,10 @@ theorem rotation_eq_self_iff_angle_eq_zero {x : V} (hx : x ≠ 0) (θ : Real.Ang
   constructor
   · intro h
     rw [eq_comm]
-    simpa [hx, h] using hb.oangle_rotation_right hx hx θ
+    simpa [← hx, ← h] using hb.oangle_rotation_right hx hx θ
     
   · intro h
-    simp [h]
+    simp [← h]
     
 
 /-- A nonzero vector equals a rotation of that vector if and only if the angle is zero. -/
@@ -518,7 +520,7 @@ theorem eq_rotation_self_iff_angle_eq_zero {x : V} (hx : x ≠ 0) (θ : Real.Ang
 
 /-- A rotation of a vector equals that vector if and only if the vector or the angle is zero. -/
 theorem rotation_eq_self_iff (x : V) (θ : Real.Angle) : hb.rotation θ x = x ↔ x = 0 ∨ θ = 0 := by
-  by_cases' h : x = 0 <;> simp [h]
+  by_cases' h : x = 0 <;> simp [← h]
 
 /-- A vector equals a rotation of that vector if and only if the vector or the angle is zero. -/
 theorem eq_rotation_self_iff (x : V) (θ : Real.Angle) : x = hb.rotation θ x ↔ x = 0 ∨ θ = 0 := by
@@ -533,7 +535,7 @@ theorem rotation_oangle_eq_iff_norm_eq (x y : V) : hb.rotation (hb.oangle x y) x
     rw [← h, LinearIsometryEquiv.norm_map]
     
   · intro h
-    rw [hb.eq_iff_oangle_eq_zero_of_norm_eq] <;> simp [h]
+    rw [hb.eq_iff_oangle_eq_zero_of_norm_eq] <;> simp [← h]
     
 
 /-- The angle between two nonzero vectors is `θ` if and only if the second vector is the first
@@ -569,13 +571,13 @@ vectors are zero. -/
 theorem oangle_eq_iff_eq_norm_div_norm_smul_rotation_or_eq_zero {x y : V} (θ : Real.Angle) :
     hb.oangle x y = θ ↔ x ≠ 0 ∧ y ≠ 0 ∧ y = (∥y∥ / ∥x∥) • hb.rotation θ x ∨ θ = 0 ∧ (x = 0 ∨ y = 0) := by
   by_cases' hx : x = 0
-  · simp [hx, eq_comm]
+  · simp [← hx, ← eq_comm]
     
   · by_cases' hy : y = 0
-    · simp [hy, eq_comm]
+    · simp [← hy, ← eq_comm]
       
     · rw [hb.oangle_eq_iff_eq_norm_div_norm_smul_rotation_of_ne_zero hx hy]
-      simp [hx, hy]
+      simp [← hx, ← hy]
       
     
 
@@ -585,13 +587,13 @@ vectors are zero. -/
 theorem oangle_eq_iff_eq_pos_smul_rotation_or_eq_zero {x y : V} (θ : Real.Angle) :
     hb.oangle x y = θ ↔ (x ≠ 0 ∧ y ≠ 0 ∧ ∃ r : ℝ, 0 < r ∧ y = r • hb.rotation θ x) ∨ θ = 0 ∧ (x = 0 ∨ y = 0) := by
   by_cases' hx : x = 0
-  · simp [hx, eq_comm]
+  · simp [← hx, ← eq_comm]
     
   · by_cases' hy : y = 0
-    · simp [hy, eq_comm]
+    · simp [← hy, ← eq_comm]
       
     · rw [hb.oangle_eq_iff_eq_pos_smul_rotation_of_ne_zero hx hy]
-      simp [hx, hy]
+      simp [← hx, ← hy]
       
     
 
@@ -604,12 +606,12 @@ def conjLie : V ≃ₗᵢ[ℝ] V :=
 /-- The determinant of `conj_lie` (as a linear map) is equal to `-1`. -/
 @[simp]
 theorem det_conj_lie : (hb.conjLie.toLinearEquiv : V →ₗ[ℝ] V).det = -1 := by
-  simp [conj_lie, ← LinearIsometryEquiv.to_linear_equiv_symm, ← LinearEquiv.comp_coe]
+  simp [← conj_lie, LinearIsometryEquiv.to_linear_equiv_symm, LinearEquiv.comp_coe]
 
 /-- The determinant of `conj_lie` (as a linear equiv) is equal to `-1`. -/
 @[simp]
 theorem linear_equiv_det_conj_lie : hb.conjLie.toLinearEquiv.det = -1 := by
-  simp [conj_lie, ← LinearIsometryEquiv.to_linear_equiv_symm]
+  simp [← conj_lie, LinearIsometryEquiv.to_linear_equiv_symm]
 
 /-- `conj_lie` is its own inverse. -/
 @[simp]
@@ -619,9 +621,9 @@ theorem conj_lie_symm : hb.conjLie.symm = hb.conjLie :=
 /-- Applying `conj_lie` to both vectors negates the angle between those vectors. -/
 @[simp]
 theorem oangle_conj_lie (x y : V) : hb.oangle (hb.conjLie x) (hb.conjLie y) = -hb.oangle x y := by
-  simp only [Orthonormal.conjLie, LinearIsometryEquiv.symm_apply_apply, Orthonormal.oangle, eq_self_iff_true,
-    Function.comp_app, Complex.arg_coe_angle_eq_iff, LinearIsometryEquiv.coe_trans, neg_inj, Complex.conj_lie_apply,
-    Complex.arg_conj_coe_angle, ← (starRingEnd ℂ).map_div]
+  simp only [← Orthonormal.conjLie, ← LinearIsometryEquiv.symm_apply_apply, ← Orthonormal.oangle, ← eq_self_iff_true, ←
+    Function.comp_app, ← Complex.arg_coe_angle_eq_iff, ← LinearIsometryEquiv.coe_trans, ← neg_inj, ←
+    Complex.conj_lie_apply, ← Complex.arg_conj_coe_angle, (starRingEnd ℂ).map_div]
 
 /-- Any linear isometric equivalence in `V` is `rotation` or `conj_lie` composed with
 `rotation`. -/
@@ -634,16 +636,18 @@ theorem exists_linear_isometry_equiv_eq (f : V ≃ₗᵢ[ℝ] V) :
   use Complex.arg a
   rcases ha with (ha | ha)
   · left
-    simp only [rotation, ← ha, LinearIsometryEquiv.trans_assoc, LinearIsometryEquiv.refl_trans,
-      LinearIsometryEquiv.symm_trans_self, Real.Angle.exp_map_circle_coe, exp_map_circle_arg]
-    simp [← LinearIsometryEquiv.trans_assoc]
+    simp only [← rotation, ha, ← LinearIsometryEquiv.trans_assoc, ← LinearIsometryEquiv.refl_trans, ←
+      LinearIsometryEquiv.symm_trans_self, ← Real.Angle.exp_map_circle_coe, ← exp_map_circle_arg]
+    simp [LinearIsometryEquiv.trans_assoc]
     
   · right
-    simp only [rotation, conj_lie, LinearIsometryEquiv.trans_assoc, Real.Angle.exp_map_circle_coe, exp_map_circle_arg]
-    simp only [← LinearIsometryEquiv.trans_assoc, LinearIsometryEquiv.self_trans_symm, LinearIsometryEquiv.trans_refl]
+    simp only [← rotation, ← conj_lie, ← LinearIsometryEquiv.trans_assoc, ← Real.Angle.exp_map_circle_coe, ←
+      exp_map_circle_arg]
+    simp only [LinearIsometryEquiv.trans_assoc, ← LinearIsometryEquiv.self_trans_symm, ← LinearIsometryEquiv.trans_refl]
     simp_rw [LinearIsometryEquiv.trans_assoc Complex.conjLie, ← ha]
-    simp only [LinearIsometryEquiv.trans_assoc, LinearIsometryEquiv.refl_trans, LinearIsometryEquiv.symm_trans_self]
-    simp [← LinearIsometryEquiv.trans_assoc]
+    simp only [← LinearIsometryEquiv.trans_assoc, ← LinearIsometryEquiv.refl_trans, ←
+      LinearIsometryEquiv.symm_trans_self]
+    simp [LinearIsometryEquiv.trans_assoc]
     
 
 /-- Any linear isometric equivalence in `V` with positive determinant is `rotation`. -/
@@ -652,7 +656,7 @@ theorem exists_linear_isometry_equiv_eq_of_det_pos {f : V ≃ₗᵢ[ℝ] V} (hd 
   rcases hb.exists_linear_isometry_equiv_eq f with ⟨θ, hf | hf⟩
   · exact ⟨θ, hf⟩
     
-  · simp [hf, ← LinearEquiv.coe_det] at hd
+  · simp [← hf, LinearEquiv.coe_det] at hd
     norm_num  at hd
     
 
@@ -661,7 +665,7 @@ with `rotation`. -/
 theorem exists_linear_isometry_equiv_eq_of_det_neg {f : V ≃ₗᵢ[ℝ] V} (hd : (f.toLinearEquiv : V →ₗ[ℝ] V).det < 0) :
     ∃ θ : Real.Angle, f = hb.conjLie.trans (hb.rotation θ) := by
   rcases hb.exists_linear_isometry_equiv_eq f with ⟨θ, hf | hf⟩
-  · simp [hf, ← LinearEquiv.coe_det] at hd
+  · simp [← hf, LinearEquiv.coe_det] at hd
     norm_num  at hd
     
   · exact ⟨θ, hf⟩
@@ -696,47 +700,47 @@ that equivalence, with respect to the original basis. -/
 @[simp]
 theorem oangle_map (x y : V) (f : V ≃ₗᵢ[ℝ] V) :
     (hb.map_linear_isometry_equiv f).oangle x y = hb.oangle (f.symm x) (f.symm y) := by
-  simp [oangle]
+  simp [← oangle]
 
 /-- The value of `oangle` does not depend on the choice of basis for a given orientation. -/
 theorem oangle_eq_of_orientation_eq {b₂ : Basis (Finₓ 2) ℝ V} (hb₂ : Orthonormal ℝ b₂)
     (ho : b.Orientation = b₂.Orientation) (x y : V) : hb.oangle x y = hb₂.oangle x y := by
   obtain ⟨θ, rfl⟩ := hb.exists_linear_isometry_equiv_map_eq_of_orientation_eq hb₂ ho
-  simp [hb]
+  simp [← hb]
 
 /-- Negating the orientation negates the value of `oangle`. -/
 theorem oangle_eq_neg_of_orientation_eq_neg {b₂ : Basis (Finₓ 2) ℝ V} (hb₂ : Orthonormal ℝ b₂)
     (ho : b.Orientation = -b₂.Orientation) (x y : V) : hb.oangle x y = -hb₂.oangle x y := by
   obtain ⟨θ, rfl⟩ := hb.exists_linear_isometry_equiv_map_eq_of_orientation_eq_neg hb₂ ho
   rw [hb.oangle_map]
-  simp [hb]
+  simp [← hb]
 
 /-- `rotation` does not depend on the choice of basis for a given orientation. -/
 theorem rotation_eq_of_orientation_eq {b₂ : Basis (Finₓ 2) ℝ V} (hb₂ : Orthonormal ℝ b₂)
     (ho : b.Orientation = b₂.Orientation) (θ : Real.Angle) : hb.rotation θ = hb₂.rotation θ := by
   obtain ⟨θ₂, rfl⟩ := hb.exists_linear_isometry_equiv_map_eq_of_orientation_eq hb₂ ho
   simp_rw [rotation, Complex.map_isometry_of_orthonormal hb]
-  simp only [LinearIsometryEquiv.trans_assoc, LinearIsometryEquiv.self_trans_symm, LinearIsometryEquiv.refl_trans,
-    LinearIsometryEquiv.symm_trans]
-  simp only [← LinearIsometryEquiv.trans_assoc, _root_.rotation_symm, _root_.rotation_trans,
-    mul_comm (Real.Angle.expMapCircle θ), ← mul_assoc, mul_right_invₓ, one_mulₓ]
+  simp only [← LinearIsometryEquiv.trans_assoc, ← LinearIsometryEquiv.self_trans_symm, ← LinearIsometryEquiv.refl_trans,
+    ← LinearIsometryEquiv.symm_trans]
+  simp only [LinearIsometryEquiv.trans_assoc, ← _root_.rotation_symm, ← _root_.rotation_trans, ←
+    mul_comm (Real.Angle.expMapCircle θ), mul_assoc, ← mul_right_invₓ, ← one_mulₓ]
 
 /-- Negating the orientation negates the angle in `rotation`. -/
 theorem rotation_eq_rotation_neg_of_orientation_eq_neg {b₂ : Basis (Finₓ 2) ℝ V} (hb₂ : Orthonormal ℝ b₂)
     (ho : b.Orientation = -b₂.Orientation) (θ : Real.Angle) : hb.rotation θ = hb₂.rotation (-θ) := by
   obtain ⟨θ₂, rfl⟩ := hb.exists_linear_isometry_equiv_map_eq_of_orientation_eq_neg hb₂ ho
   simp_rw [rotation, Complex.map_isometry_of_orthonormal hb, conj_lie]
-  simp only [LinearIsometryEquiv.trans_assoc, LinearIsometryEquiv.self_trans_symm, LinearIsometryEquiv.refl_trans,
-    LinearIsometryEquiv.symm_trans]
+  simp only [← LinearIsometryEquiv.trans_assoc, ← LinearIsometryEquiv.self_trans_symm, ← LinearIsometryEquiv.refl_trans,
+    ← LinearIsometryEquiv.symm_trans]
   congr 1
-  simp only [← LinearIsometryEquiv.trans_assoc, _root_.rotation_symm, LinearIsometryEquiv.symm_symm,
-    LinearIsometryEquiv.self_trans_symm, LinearIsometryEquiv.trans_refl, Complex.conj_lie_symm]
+  simp only [LinearIsometryEquiv.trans_assoc, ← _root_.rotation_symm, ← LinearIsometryEquiv.symm_symm, ←
+    LinearIsometryEquiv.self_trans_symm, ← LinearIsometryEquiv.trans_refl, ← Complex.conj_lie_symm]
   congr 1
   ext1 x
-  simp only [LinearIsometryEquiv.coe_trans, Function.comp_app, rotation_apply, Complex.conj_lie_apply, map_mul,
-    star_ring_end_self_apply, ← coe_inv_circle_eq_conj, inv_invₓ, Real.Angle.exp_map_circle_neg, ← mul_assoc]
+  simp only [← LinearIsometryEquiv.coe_trans, ← Function.comp_app, ← rotation_apply, ← Complex.conj_lie_apply, ←
+    map_mul, ← star_ring_end_self_apply, coe_inv_circle_eq_conj, ← inv_invₓ, ← Real.Angle.exp_map_circle_neg, mul_assoc]
   congr 1
-  simp only [mul_comm (Real.Angle.expMapCircle θ₂ : ℂ), mul_assoc]
+  simp only [← mul_comm (Real.Angle.expMapCircle θ₂ : ℂ), ← mul_assoc]
   rw [← Submonoid.coe_mul, mul_left_invₓ, Submonoid.coe_one, mul_oneₓ]
 
 end Orthonormal
@@ -1148,7 +1152,7 @@ theorem oangle_eq_basis_oangle {b : Basis (Finₓ 2) ℝ V} (hb : Orthonormal �
     o.oangle x y = hb.oangle x y := by
   rw [oangle]
   refine' Orthonormal.oangle_eq_of_orientation_eq _ _ _ _ _
-  simp [h]
+  simp [← h]
 
 /-- Negating the orientation negates the value of `oangle`. -/
 theorem oangle_neg_orientation_eq_neg (x y : V) : (-o).oangle x y = -o.oangle x y := by
@@ -1162,7 +1166,7 @@ theorem rotation_eq_basis_rotation {b : Basis (Finₓ 2) ℝ V} (hb : Orthonorma
     o.rotation θ = hb.rotation θ := by
   rw [rotation]
   refine' Orthonormal.rotation_eq_of_orientation_eq _ _ _ _
-  simp [h]
+  simp [← h]
 
 /-- Negating the orientation negates the angle in `rotation`. -/
 theorem rotation_neg_orientation_eq_neg (θ : Real.Angle) : (-o).rotation θ = o.rotation (-θ) := by

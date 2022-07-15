@@ -58,13 +58,13 @@ attribute [functor_norm] seq_assoc pure_seq_eq_map
 
 @[functor_norm]
 theorem seq_map_assoc (x : F (α → β)) (f : γ → α) (y : F γ) : x <*> f <$> y = (fun m : α → β => m ∘ f) <$> x <*> y := by
-  simp [(pure_seq_eq_map _ _).symm]
-  simp [seq_assoc, (comp_map _ _ _).symm, (· ∘ ·)]
-  simp [pure_seq_eq_map]
+  simp [← (pure_seq_eq_map _ _).symm]
+  simp [← seq_assoc, ← (comp_map _ _ _).symm, ← (· ∘ ·)]
+  simp [← pure_seq_eq_map]
 
 @[functor_norm]
 theorem map_seq (f : β → γ) (x : F (α → β)) (y : F α) : f <$> (x <*> y) = (· ∘ ·) f <$> x <*> y := by
-  simp [(pure_seq_eq_map _ _).symm] <;> simp [seq_assoc]
+  simp [← (pure_seq_eq_map _ _).symm] <;> simp [← seq_assoc]
 
 end Applicativeₓ
 
@@ -82,11 +82,11 @@ def List.mpartition {f : Type → Type} [Monadₓ f] {α : Type} (p : α → f B
   | x :: xs => mcond (p x) (Prod.map (cons x) id <$> List.mpartition xs) (Prod.map id (cons x) <$> List.mpartition xs)
 
 theorem map_bind (x : m α) {g : α → m β} {f : β → γ} : f <$> (x >>= g) = x >>= fun a => f <$> g a := by
-  rw [← bind_pure_comp_eq_map, bind_assoc] <;> simp [bind_pure_comp_eq_map]
+  rw [← bind_pure_comp_eq_map, bind_assoc] <;> simp [← bind_pure_comp_eq_map]
 
 theorem seq_bind_eq (x : m α) {g : β → m γ} {f : α → β} : f <$> x >>= g = x >>= g ∘ f :=
   show bind (f <$> x) g = bind x (g ∘ f) by
-    rw [← bind_pure_comp_eq_map, bind_assoc] <;> simp [pure_bind]
+    rw [← bind_pure_comp_eq_map, bind_assoc] <;> simp [← pure_bind]
 
 theorem seq_eq_bind_mapₓ {x : m α} {f : m (α → β)} : f <*> x = f >>= (· <$> x) :=
   (bind_map_eq_seq f x).symm
@@ -105,15 +105,15 @@ infixl:55
 
 @[functor_norm]
 theorem fish_pure {α β} (f : α → m β) : f >=> pure = f := by
-  simp' only [(· >=> ·)] with functor_norm
+  simp' only [← (· >=> ·)] with functor_norm
 
 @[functor_norm]
 theorem fish_pipe {α β} (f : α → m β) : pure >=> f = f := by
-  simp' only [(· >=> ·)] with functor_norm
+  simp' only [← (· >=> ·)] with functor_norm
 
 @[functor_norm]
 theorem fish_assoc {α β γ φ} (f : α → m β) (g : β → m γ) (h : γ → m φ) : f >=> g >=> h = f >=> (g >=> h) := by
-  simp' only [(· >=> ·)] with functor_norm
+  simp' only [← (· >=> ·)] with functor_norm
 
 variable {β' γ' : Type v}
 
@@ -140,14 +140,15 @@ section
 variable {m : Type u → Type u} [Monadₓ m] [IsLawfulMonad m]
 
 theorem mjoin_map_map {α β : Type u} (f : α → β) (a : m (m α)) : mjoin (Functor.map f <$> a) = f <$> mjoin a := by
-  simp only [mjoin, (· ∘ ·), id.def, (bind_pure_comp_eq_map _ _).symm, bind_assoc, map_bind, pure_bind]
+  simp only [← mjoin, ← (· ∘ ·), ← id.def, ← (bind_pure_comp_eq_map _ _).symm, ← bind_assoc, ← map_bind, ← pure_bind]
 
 theorem mjoin_map_mjoin {α : Type u} (a : m (m (m α))) : mjoin (mjoin <$> a) = mjoin (mjoin a) := by
-  simp only [mjoin, (· ∘ ·), id.def, map_bind, (bind_pure_comp_eq_map _ _).symm, bind_assoc, pure_bind]
+  simp only [← mjoin, ← (· ∘ ·), ← id.def, ← map_bind, ← (bind_pure_comp_eq_map _ _).symm, ← bind_assoc, ← pure_bind]
 
 @[simp]
 theorem mjoin_map_pure {α : Type u} (a : m α) : mjoin (pure <$> a) = a := by
-  simp only [mjoin, (· ∘ ·), id.def, map_bind, (bind_pure_comp_eq_map _ _).symm, bind_assoc, pure_bind, bind_pureₓ]
+  simp only [← mjoin, ← (· ∘ ·), ← id.def, ← map_bind, ← (bind_pure_comp_eq_map _ _).symm, ← bind_assoc, ← pure_bind, ←
+    bind_pureₓ]
 
 @[simp]
 theorem mjoin_pure {α : Type u} (a : m α) : mjoin (pure a) = a :=
@@ -167,11 +168,11 @@ def mtry {α} (x : F α) : F Unit :=
 
 @[simp]
 theorem guard_true {h : Decidable True} : @guardₓ F _ True h = pure () := by
-  simp [guardₓ]
+  simp [← guardₓ]
 
 @[simp]
 theorem guard_false {h : Decidable False} : @guardₓ F _ False h = failure := by
-  simp [guardₓ]
+  simp [← guardₓ]
 
 end Alternativeₓ
 
@@ -215,8 +216,8 @@ theorem IsCommApplicative.commutative_map {m : Type _ → Type _} [Applicative�
     (b : m β) {f : α → β → γ} : f <$> a <*> b = flip f <$> b <*> a :=
   calc
     f <$> a <*> b = (fun p : α × β => f p.1 p.2) <$> (Prod.mk <$> a <*> b) := by
-      simp [seq_map_assoc, map_seq, seq_assoc, seq_pure, map_map]
+      simp [← seq_map_assoc, ← map_seq, ← seq_assoc, ← seq_pure, ← map_map]
     _ = (fun b a => f a b) <$> b <*> a := by
-      rw [IsCommApplicative.commutative_prod] <;> simp [seq_map_assoc, map_seq, seq_assoc, seq_pure, map_map]
+      rw [IsCommApplicative.commutative_prod] <;> simp [← seq_map_assoc, ← map_seq, ← seq_assoc, ← seq_pure, ← map_map]
     
 

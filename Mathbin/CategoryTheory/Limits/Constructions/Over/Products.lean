@@ -17,12 +17,12 @@ pullbacks, then `over B` has `J`-indexed products.
 -/
 
 
-universe v u
+universe w v u
 
 -- morphism levels before object levels. See note [category_theory universes].
 open CategoryTheory CategoryTheory.Limits
 
-variable {J : Type v}
+variable {J : Type w}
 
 variable {C : Type u} [Category.{v} C]
 
@@ -37,12 +37,12 @@ Given a product diagram in `C/B`, construct the corresponding wide pullback diag
 in `C`.
 -/
 @[reducible]
-def widePullbackDiagramOfDiagramOver (B : C) {J : Type v} (F : Discrete J ⥤ Over B) : WidePullbackShape J ⥤ C :=
+def widePullbackDiagramOfDiagramOver (B : C) {J : Type w} (F : Discrete J ⥤ Over B) : WidePullbackShape J ⥤ C :=
   WidePullbackShape.wideCospan B (fun j => (F.obj ⟨j⟩).left) fun j => (F.obj ⟨j⟩).Hom
 
 /-- (Impl) A preliminary definition to avoid timeouts. -/
 @[simps]
-def conesEquivInverseObj (B : C) {J : Type v} (F : Discrete J ⥤ Over B) (c : Cone F) :
+def conesEquivInverseObj (B : C) {J : Type w} (F : Discrete J ⥤ Over B) (c : Cone F) :
     Cone (widePullbackDiagramOfDiagramOver B F) where
   x := c.x.left
   π :=
@@ -61,7 +61,7 @@ def conesEquivInverseObj (B : C) {J : Type v} (F : Discrete J ⥤ Over B) (c : C
 
 /-- (Impl) A preliminary definition to avoid timeouts. -/
 @[simps]
-def conesEquivInverse (B : C) {J : Type v} (F : Discrete J ⥤ Over B) :
+def conesEquivInverse (B : C) {J : Type w} (F : Discrete J ⥤ Over B) :
     Cone F ⥤ Cone (widePullbackDiagramOfDiagramOver B F) where
   obj := conesEquivInverseObj B F
   map := fun c₁ c₂ f =>
@@ -79,7 +79,7 @@ attribute [local tidy] tactic.discrete_cases
 
 /-- (Impl) A preliminary definition to avoid timeouts. -/
 @[simps]
-def conesEquivFunctor (B : C) {J : Type v} (F : Discrete J ⥤ Over B) :
+def conesEquivFunctor (B : C) {J : Type w} (F : Discrete J ⥤ Over B) :
     Cone (widePullbackDiagramOfDiagramOver B F) ⥤ Cone F where
   obj := fun c =>
     { x := Over.mk (c.π.app none),
@@ -145,7 +145,7 @@ theorem over_binary_product_of_pullback [HasPullbacks C] {B : C} : HasBinaryProd
   over_product_of_wide_pullback
 
 /-- Given all wide pullbacks in `C`, construct products in `C/B`. -/
-theorem over_products_of_wide_pullbacks [HasWidePullbacks C] {B : C} : HasProducts (Over B) := fun J =>
+theorem over_products_of_wide_pullbacks [HasWidePullbacks.{w} C] {B : C} : HasProducts.{w} (Over B) := fun J =>
   over_product_of_wide_pullback
 
 /-- Given all finite wide pullbacks in `C`, construct finite products in `C/B`. -/

@@ -39,7 +39,7 @@ instance KleisliCat.categoryStruct {m} [Monadₓ.{u, v} m] : CategoryStruct (Kle
 
 instance KleisliCat.category {m} [Monadₓ.{u, v} m] [IsLawfulMonad m] : Category (KleisliCat m) := by
   refine' { id_comp' := _, comp_id' := _, assoc' := _ } <;>
-    intros <;> ext <;> unfold_projs <;> simp' only [(· >=> ·)] with functor_norm
+    intros <;> ext <;> unfold_projs <;> simp' only [← (· >=> ·)] with functor_norm
 
 @[simp]
 theorem KleisliCat.id_def {m} [Monadₓ m] (α : KleisliCat m) : 𝟙 α = @pure m _ α :=

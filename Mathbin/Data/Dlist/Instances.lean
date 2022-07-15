@@ -24,8 +24,8 @@ variable (α : Type _)
 /-- The natural equivalence between lists and difference lists, using
 `dlist.of_list` and `dlist.to_list`. -/
 def listEquivDlist : List α ≃ Dlist α := by
-  refine' { toFun := Dlist.ofList, invFun := Dlist.toList, .. } <;>
-    simp [Function.RightInverse, left_inverse, to_list_of_list, of_list_to_list]
+  refine' { toFun := Dlist.ofList, invFun := Dlist.toList.. } <;>
+    simp [← Function.RightInverse, ← left_inverse, ← to_list_of_list, ← of_list_to_list]
 
 instance : Traversable Dlist :=
   Equivₓ.traversable listEquivDlist

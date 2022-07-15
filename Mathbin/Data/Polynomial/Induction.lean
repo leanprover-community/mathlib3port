@@ -30,12 +30,12 @@ variable [Semiringₓ R] {p q r : R[X]}
 
 theorem sum_C_mul_X_eq (p : R[X]) : (p.Sum fun n a => c a * X ^ n) = p := by
   ext n
-  simp only [Polynomial.sum, X_pow_eq_monomial, coeff_monomial, mul_oneₓ, finset_sum_coeff, C_mul_monomial, not_not,
-    mem_support_iff, Finset.sum_ite_eq', ite_eq_left_iff]
+  simp only [← Polynomial.sum, ← X_pow_eq_monomial, ← coeff_monomial, ← mul_oneₓ, ← finset_sum_coeff, ← C_mul_monomial,
+    ← not_not, ← mem_support_iff, ← Finset.sum_ite_eq', ← ite_eq_left_iff]
   exact fun h => h.symm
 
 theorem sum_monomial_eq (p : R[X]) : (p.Sum fun n a => monomial n a) = p := by
-  simp only [monomial_eq_C_mul_X, sum_C_mul_X_eq]
+  simp only [← monomial_eq_C_mul_X, ← sum_C_mul_X_eq]
 
 @[elab_as_eliminator]
 protected theorem induction_on {M : R[X] → Prop} (p : R[X]) (h_C : ∀ a, M (c a)) (h_add : ∀ p q, M p → M q → M (p + q))
@@ -43,7 +43,7 @@ protected theorem induction_on {M : R[X] → Prop} (p : R[X]) (h_C : ∀ a, M (c
   have A : ∀ {n : ℕ} {a}, M (C a * X ^ n) := by
     intro n a
     induction' n with n ih
-    · simp only [pow_zeroₓ, mul_oneₓ, h_C]
+    · simp only [← pow_zeroₓ, ← mul_oneₓ, ← h_C]
       
     · exact h_monomial _ _ ih
       
@@ -110,7 +110,7 @@ theorem mem_span_C_coeff : f ∈ span R[X] { g : R[X] | ∃ i : ℕ, g = c (coef
     simp
   have : monomial n (1 : R) • C (coeff f n) ∈ p := p.smul_mem _ this
   convert this using 1
-  simp only [monomial_mul_C, one_mulₓ, smul_eq_mul]
+  simp only [← monomial_mul_C, ← one_mulₓ, ← smul_eq_mul]
   rw [monomial_eq_C_mul_X]
 
 theorem exists_coeff_not_mem_C_inverse : f ∉ I → ∃ i : ℕ, coeff f i ∉ C ⁻¹' I.Carrier :=

@@ -89,7 +89,7 @@ instance (j : ConnectedComponents J) : IsConnected (Component j) := by
   · erw
       [List.last_pmap _ f (j₁ :: l)
         (by
-          simpa [h₁₂] using hf)
+          simpa [← h₁₂] using hf)
         (List.cons_ne_nil _ _)]
     exact Subtype.ext hl₂
     
@@ -134,14 +134,13 @@ instance : Full (decomposedTo J) where
     subst this
     rfl
 
-instance : Faithful (decomposedTo J) where
-  map_injective' := by
+instance :
+    Faithful (decomposedTo J) where map_injective' := by
     rintro ⟨_, j, rfl⟩ ⟨_, k, hY⟩ ⟨_, _, _, f⟩ ⟨_, _, _, g⟩ e
     change f = g at e
     subst e
 
-instance : EssSurj (decomposedTo J) where
-  mem_ess_image := fun j => ⟨⟨_, j, rfl⟩, ⟨Iso.refl _⟩⟩
+instance : EssSurj (decomposedTo J) where mem_ess_image := fun j => ⟨⟨_, j, rfl⟩, ⟨Iso.refl _⟩⟩
 
 instance : IsEquivalence (decomposedTo J) :=
   Equivalence.ofFullyFaithfullyEssSurj _

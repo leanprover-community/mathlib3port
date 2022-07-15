@@ -64,13 +64,12 @@ include fF
 protected def map : (Comp F G) α → (Comp F G) β :=
   (map fun i => map f : (F fun i => G i α) → F fun i => G i β)
 
-instance : Mvfunctor (Comp F G) where
-  map := fun α β => Comp.map
+instance : Mvfunctor (Comp F G) where map := fun α β => Comp.map
 
-theorem map_mk (x : F fun i => G i α) : f <$$> Comp.mk x = Comp.mk ((fun x : G i α => f <$$> x) <$$> x) :=
+theorem map_mk (x : F fun i => G i α) : f <$$> Comp.mk x = Comp.mk ((fun i x : G i α => f <$$> x) <$$> x) :=
   rfl
 
-theorem get_map (x : Comp F G α) : Comp.get (f <$$> x) = (fun x : G i α => f <$$> x) <$$> Comp.get x :=
+theorem get_map (x : Comp F G α) : Comp.get (f <$$> x) = (fun i x : G i α => f <$$> x) <$$> Comp.get x :=
   rfl
 
 include q q'
@@ -82,12 +81,13 @@ instance : Mvqpf (Comp F G) where
     Mvpfunctor.comp.mk ∘ reprₓ ∘ (map fun i => (repr : G i α → (fun i : Fin2 n => Obj (p (G i)) α) i)) ∘ comp.get
   abs_repr := by
     intros
-    simp [(· ∘ ·), Mvfunctor.map_map, (· ⊚ ·), abs_repr]
+    simp [← (· ∘ ·), ← Mvfunctor.map_map, ← (· ⊚ ·), ← abs_repr]
   abs_map := by
     intros
-    simp [(· ∘ ·)]
+    simp [← (· ∘ ·)]
     rw [← abs_map]
-    simp [Mvfunctor.id_map, (· ⊚ ·), map_mk, Mvpfunctor.comp.get_map, abs_map, Mvfunctor.map_map, abs_repr]
+    simp [← Mvfunctor.id_map, ← (· ⊚ ·), ← map_mk, ← Mvpfunctor.comp.get_map, ← abs_map, ← Mvfunctor.map_map, ←
+      abs_repr]
 
 end Comp
 

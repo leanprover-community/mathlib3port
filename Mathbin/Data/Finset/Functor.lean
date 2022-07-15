@@ -34,8 +34,7 @@ variable {α β : Type u} [∀ P, Decidable P]
 
 /-- Because `finset.image` requires a `decidable_eq` instance for the target type, we can only
 construct `functor finset` when working classically. -/
-instance : Functor Finset where
-  map := fun α β f s => s.Image f
+instance : Functor Finset where map := fun α β f s => s.Image f
 
 instance : IsLawfulFunctor Finset where
   id_map := fun α s => image_id
@@ -120,7 +119,7 @@ instance : IsLawfulApplicative Finset :=
     seq_assoc := fun α β γ s t u => by
       ext a
       simp_rw [seq_def, fmap_def]
-      simp only [exists_prop, mem_sup, mem_image]
+      simp only [← exists_prop, ← mem_sup, ← mem_image]
       constructor
       · rintro ⟨g, hg, b, ⟨f, hf, a, ha, rfl⟩, rfl⟩
         exact ⟨g ∘ f, ⟨comp g, ⟨g, hg, rfl⟩, f, hf, rfl⟩, a, ha, rfl⟩
@@ -200,7 +199,7 @@ theorem map_comp_coe (h : α → β) : Functor.map h ∘ Multiset.toFinset = Mul
 theorem map_traverse (g : α → G β) (h : β → γ) (s : Finset α) :
     Functor.map h <$> traverse g s = traverse (Functor.map h ∘ g) s := by
   unfold traverse
-  simp' only [map_comp_coe] with functor_norm
+  simp' only [← map_comp_coe] with functor_norm
   rw [IsLawfulFunctor.comp_map, Multiset.map_traverse]
 
 end Traversable

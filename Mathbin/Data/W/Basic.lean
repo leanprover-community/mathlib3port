@@ -99,7 +99,7 @@ theorem infinite_of_nonempty_of_is_empty (a b : α) [ha : Nonempty (β a)] [he :
       · simp_all
         
       · refine' congr_arg Nat.succ (ih _)
-        simp_all [Function.funext_iffₓ]
+        simp_all [← Function.funext_iffₓ]
         
       ⟩
 

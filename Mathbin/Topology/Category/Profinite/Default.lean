@@ -190,8 +190,8 @@ def toProfiniteAdjToCompHaus : CompHaus.toProfinite ⊣ profiniteToCompHaus :=
   Adjunction.adjunctionOfEquivLeft _ _
 
 /-- The category of profinite sets is reflective in the category of compact hausdroff spaces -/
-instance toCompHaus.reflective : Reflective profiniteToCompHaus where
-  toIsRightAdjoint := ⟨CompHaus.toProfinite, Profinite.toProfiniteAdjToCompHaus⟩
+instance toCompHaus.reflective :
+    Reflective profiniteToCompHaus where toIsRightAdjoint := ⟨CompHaus.toProfinite, Profinite.toProfiniteAdjToCompHaus⟩
 
 noncomputable instance toCompHaus.createsLimits : CreatesLimits profiniteToCompHaus :=
   monadicCreatesLimits _
@@ -218,9 +218,9 @@ theorem is_closed_map : IsClosedMap f :=
   CompHaus.is_closed_map _
 
 /-- Any continuous bijection of profinite spaces induces an isomorphism. -/
-theorem is_iso_of_bijective (bij : Function.Bijective f) : IsIso f :=
+theorem is_iso_of_bijective (bij : Function.Bijective f) : IsIso f := by
   have := CompHaus.is_iso_of_bijective (Profinite_to_CompHaus.map f) bij
-  is_iso_of_fully_faithful profiniteToCompHaus _
+  exact is_iso_of_fully_faithful profiniteToCompHaus _
 
 /-- Any continuous bijection of profinite spaces induces an isomorphism. -/
 noncomputable def isoOfBijective (bij : Function.Bijective f) : X ≅ Y := by
@@ -269,7 +269,7 @@ def isoEquivHomeo : (X ≅ Y) ≃ (X ≃ₜ Y) where
     ext
     rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Function.Surjective f := by
   constructor
   · contrapose!
@@ -292,14 +292,14 @@ theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Funct
     have H : h = g := by
       rw [← cancel_epi f]
       ext x
-      dsimp' [LocallyConstant.ofClopen]
+      dsimp' [← LocallyConstant.ofClopen]
       rw [if_neg]
       · rfl
         
       refine' mt (fun α => hVU α) _
-      simp only [Set.mem_range_self, not_true, not_false_iff, Set.mem_compl_eq]
+      simp only [← Set.mem_range_self, ← not_true, ← not_false_iff, ← Set.mem_compl_eq]
     apply_fun fun e => (e y).down  at H
-    dsimp' [LocallyConstant.ofClopen]  at H
+    dsimp' [← LocallyConstant.ofClopen]  at H
     rw [if_pos hyV] at H
     exact top_ne_bot H
     

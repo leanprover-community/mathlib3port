@@ -70,7 +70,7 @@ theorem norm_max_aux₁ [CompleteSpace F] {f : ℂ → F} {z w : ℂ} (hd : Diff
     refine' this.ne _
     have A : (∮ ζ in C(z, r), (ζ - z)⁻¹ • f ζ) = (2 * π * I : ℂ) • f z :=
       hd.circle_integral_sub_inv_smul (mem_ball_self hr)
-    simp [A, norm_smul, real.pi_pos.le]
+    simp [← A, ← norm_smul, ← real.pi_pos.le]
   suffices ∥∮ ζ in C(z, r), (ζ - z)⁻¹ • f ζ∥ < 2 * π * r * (∥f z∥ / r) by
     rwa [mul_assoc, mul_div_cancel' _ hr.ne'] at this
   /- This inequality is true because `∥(ζ - z)⁻¹ • f ζ∥ ≤ ∥f z∥ / r` for all `ζ` on the circle and
@@ -101,9 +101,9 @@ theorem norm_max_aux₂ {f : ℂ → F} {z w : ℂ} (hd : DiffContOnCl ℂ f (Ba
   set e : F →L[ℂ] F̂ := UniformSpace.Completion.toComplL
   have he : ∀ x, ∥e x∥ = ∥x∥ := UniformSpace.Completion.norm_coe
   replace hz : IsMaxOn (norm ∘ e ∘ f) (closed_ball z (dist w z)) z
-  · simpa only [IsMaxOn, (· ∘ ·), he] using hz
+  · simpa only [← IsMaxOn, ← (· ∘ ·), ← he] using hz
     
-  simpa only [he] using norm_max_aux₁ (e.differentiable.comp_diff_cont_on_cl hd) hz
+  simpa only [← he] using norm_max_aux₁ (e.differentiable.comp_diff_cont_on_cl hd) hz
 
 /-!
 Then we replace the assumption `is_max_on (norm ∘ f) (closed_ball z r) z` with a seemingly weaker
@@ -138,12 +138,12 @@ theorem norm_eq_on_closed_ball_of_is_max_on {f : E → F} {z : E} {r : ℝ} (hd 
   set e : ℂ → E := line_map z w
   have hde : Differentiable ℂ e := (differentiable_id.smul_const (w - z)).AddConst z
   suffices ∥(f ∘ e) (1 : ℂ)∥ = ∥(f ∘ e) (0 : ℂ)∥ by
-    simpa [e]
+    simpa [← e]
   have hr : dist (1 : ℂ) 0 = 1 := by
     simp
   have hball : maps_to e (ball 0 1) (ball z r) := by
     refine' ((lipschitz_with_line_map z w).maps_to_ball (mt nndist_eq_zero.1 hne) 0 1).mono subset.rfl _
-    simpa only [line_map_apply_zero, mul_oneₓ, coe_nndist] using ball_subset_ball hw
+    simpa only [← line_map_apply_zero, ← mul_oneₓ, ← coe_nndist] using ball_subset_ball hw
   exact norm_max_aux₃ hr (hd.comp hde.diff_cont_on_cl hball) (hz.comp_maps_to hball (line_map_apply_zero z w))
 
 /-!
@@ -219,10 +219,10 @@ theorem norm_le_of_forall_mem_frontier_norm_le [Nontrivial E] {f : E → F} {U :
   replace hd : DiffContOnCl ℂ (f ∘ e) (e ⁻¹' U)
   exact hd.comp hde.diff_cont_on_cl (maps_to_preimage _ _)
   have h₀ : (0 : ℂ) ∈ e ⁻¹' U := by
-    simpa only [e, mem_preimage, line_map_apply_zero]
+    simpa only [← e, ← mem_preimage, ← line_map_apply_zero]
   rcases exists_mem_frontier_is_max_on_norm (hL.bounded_preimage hU) ⟨0, h₀⟩ hd with ⟨ζ, hζU, hζ⟩
   calc ∥f z∥ = ∥f (e 0)∥ := by
-      simp only [e, line_map_apply_zero]_ ≤ ∥f (e ζ)∥ := hζ (subset_closure h₀)_ ≤ C :=
+      simp only [← e, ← line_map_apply_zero]_ ≤ ∥f (e ζ)∥ := hζ (subset_closure h₀)_ ≤ C :=
       hC _ (hde.continuous.frontier_preimage_subset _ hζU)
 
 /-- If two complex differentiable functions `f g : E → F` are equal on the boundary of a bounded set
@@ -230,10 +230,10 @@ theorem norm_le_of_forall_mem_frontier_norm_le [Nontrivial E] {f : E → F} {U :
 theorem eq_on_closure_of_eq_on_frontier [Nontrivial E] {f g : E → F} {U : Set E} (hU : Bounded U)
     (hf : DiffContOnCl ℂ f U) (hg : DiffContOnCl ℂ g U) (hfg : EqOn f g (Frontier U)) : EqOn f g (Closure U) := by
   suffices H : ∀, ∀ z ∈ Closure U, ∀, ∥(f - g) z∥ ≤ 0
-  · simpa [sub_eq_zero] using H
+  · simpa [← sub_eq_zero] using H
     
   refine' fun z hz => norm_le_of_forall_mem_frontier_norm_le hU (hf.sub hg) (fun w hw => _) hz
-  simp [hfg hw]
+  simp [← hfg hw]
 
 /-- If two complex differentiable functions `f g : E → F` are equal on the boundary of a bounded set
 `U`, then they are equal on `U`. -/

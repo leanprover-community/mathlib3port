@@ -461,8 +461,8 @@ instance {mM : MulOneClassₓ M} {mN : MulOneClassₓ N} : CoeFun (M →* N) fun
 instance {mM : MulZeroOneClassₓ M} {mN : MulZeroOneClassₓ N} : CoeFun (M →*₀ N) fun _ => M → N :=
   ⟨MonoidWithZeroHom.toFun⟩
 
-initialize_simps_projections -- these must come after the coe_to_fun definitions
-ZeroHom (toFun → apply)
+-- these must come after the coe_to_fun definitions
+initialize_simps_projections ZeroHom (toFun → apply)
 
 initialize_simps_projections AddHom (toFun → apply)
 
@@ -1021,8 +1021,8 @@ instance : Monoidₓ (Monoidₓ.End M) where
 instance : Inhabited (Monoidₓ.End M) :=
   ⟨1⟩
 
-instance : CoeFun (Monoidₓ.End M) fun _ => M → M :=
-  ⟨MonoidHom.toFun⟩
+instance : MonoidHomClass (Monoidₓ.End M) M M :=
+  MonoidHom.monoidHomClass
 
 end End
 
@@ -1056,8 +1056,8 @@ instance : Monoidₓ (AddMonoidₓ.End A) where
 instance : Inhabited (AddMonoidₓ.End A) :=
   ⟨1⟩
 
-instance : CoeFun (AddMonoidₓ.End A) fun _ => A → A :=
-  ⟨AddMonoidHom.toFun⟩
+instance : AddMonoidHomClass (AddMonoidₓ.End A) A A :=
+  AddMonoidHom.addMonoidHomClass
 
 end End
 
@@ -1112,7 +1112,7 @@ theorem OneHom.one_comp [One M] [One N] [One P] (f : OneHom M N) : (1 : OneHom N
 @[simp, to_additive]
 theorem OneHom.comp_one [One M] [One N] [One P] (f : OneHom N P) : f.comp (1 : OneHom M N) = 1 := by
   ext
-  simp only [OneHom.map_one, OneHom.coe_comp, Function.comp_app, OneHom.one_apply]
+  simp only [← OneHom.map_one, ← OneHom.coe_comp, ← Function.comp_app, ← OneHom.one_apply]
 
 @[to_additive]
 instance [One M] [One N] : Inhabited (OneHom M N) :=
@@ -1160,7 +1160,7 @@ theorem mul_comp [Mul M] [Mul N] [CommSemigroupₓ P] (g₁ g₂ : N →ₙ* P) 
 theorem comp_mul [Mul M] [CommSemigroupₓ N] [CommSemigroupₓ P] (g : N →ₙ* P) (f₁ f₂ : M →ₙ* N) :
     g.comp (f₁ * f₂) = g.comp f₁ * g.comp f₂ := by
   ext
-  simp only [mul_apply, Function.comp_app, map_mul, coe_comp]
+  simp only [← mul_apply, ← Function.comp_app, ← map_mul, ← coe_comp]
 
 end MulHom
 
@@ -1199,7 +1199,7 @@ theorem one_comp [MulOneClassₓ M] [MulOneClassₓ N] [MulOneClassₓ P] (f : M
 @[simp, to_additive]
 theorem comp_one [MulOneClassₓ M] [MulOneClassₓ N] [MulOneClassₓ P] (f : N →* P) : f.comp (1 : M →* N) = 1 := by
   ext
-  simp only [map_one, coe_comp, Function.comp_app, one_apply]
+  simp only [← map_one, ← coe_comp, ← Function.comp_app, ← one_apply]
 
 @[to_additive]
 theorem mul_comp [MulOneClassₓ M] [MulOneClassₓ N] [CommMonoidₓ P] (g₁ g₂ : N →* P) (f : M →* N) :
@@ -1210,7 +1210,7 @@ theorem mul_comp [MulOneClassₓ M] [MulOneClassₓ N] [CommMonoidₓ P] (g₁ g
 theorem comp_mul [MulOneClassₓ M] [CommMonoidₓ N] [CommMonoidₓ P] (g : N →* P) (f₁ f₂ : M →* N) :
     g.comp (f₁ * f₂) = g.comp f₁ * g.comp f₂ := by
   ext
-  simp only [mul_apply, Function.comp_app, map_mul, coe_comp]
+  simp only [← mul_apply, ← Function.comp_app, ← map_mul, ← coe_comp]
 
 /-- If two homomorphism from a group to a monoid are equal at `x`, then they are equal at `x⁻¹`. -/
 @[to_additive
@@ -1281,10 +1281,10 @@ def ofMapMulInv {H : Type _} [Groupₓ H] (f : G → H) (map_div : ∀ a b : G, 
   (mk' f) fun x y =>
     calc
       f (x * y) = f x * (f <| 1 * 1⁻¹ * y⁻¹)⁻¹ := by
-        simp only [one_mulₓ, inv_one, ← map_div, inv_invₓ]
+        simp only [← one_mulₓ, ← inv_one, map_div, ← inv_invₓ]
       _ = f x * f y := by
-        simp only [map_div]
-        simp only [mul_right_invₓ, one_mulₓ, inv_invₓ]
+        simp only [← map_div]
+        simp only [← mul_right_invₓ, ← one_mulₓ, ← inv_invₓ]
       
 
 @[simp, to_additive]
@@ -1297,7 +1297,7 @@ theorem coe_of_map_mul_inv {H : Type _} [Groupₓ H] (f : G → H) (map_div : �
 def ofMapDiv {H : Type _} [Groupₓ H] (f : G → H) (hf : ∀ x y, f (x / y) = f x / f y) : G →* H :=
   ofMapMulInv f
     (by
-      simpa only [div_eq_mul_inv] using hf)
+      simpa only [← div_eq_mul_inv] using hf)
 
 @[simp, to_additive]
 theorem coe_of_map_div {H : Type _} [Groupₓ H] (f : G → H) (hf : ∀ x y, f (x / y) = f x / f y) : ⇑(ofMapDiv f hf) = f :=
@@ -1323,13 +1323,13 @@ theorem inv_apply {M G} {mM : MulOneClassₓ M} {gG : CommGroupₓ G} (f : M →
 theorem inv_comp {M N A} {mM : MulOneClassₓ M} {gN : MulOneClassₓ N} {gA : CommGroupₓ A} (φ : N →* A) (ψ : M →* N) :
     φ⁻¹.comp ψ = (φ.comp ψ)⁻¹ := by
   ext
-  simp only [Function.comp_app, inv_apply, coe_comp]
+  simp only [← Function.comp_app, ← inv_apply, ← coe_comp]
 
 @[simp, to_additive]
 theorem comp_inv {M A B} {mM : MulOneClassₓ M} {mA : CommGroupₓ A} {mB : CommGroupₓ B} (φ : A →* B) (ψ : M →* A) :
     φ.comp ψ⁻¹ = (φ.comp ψ)⁻¹ := by
   ext
-  simp only [Function.comp_app, inv_apply, map_inv, coe_comp]
+  simp only [← Function.comp_app, ← inv_apply, ← map_inv, ← coe_comp]
 
 /-- If `f` and `g` are monoid homomorphisms to a commutative group, then `f / g` is the homomorphism
 sending `x` to `(f x) / (g x)`. -/
@@ -1337,7 +1337,7 @@ sending `x` to `(f x) / (g x)`. -/
 instance {M G} [MulOneClassₓ M] [CommGroupₓ G] : Div (M →* G) :=
   ⟨fun f g =>
     (mk' fun x => f x / g x) fun a b => by
-      simp [div_eq_mul_inv, mul_assoc, mul_left_commₓ, mul_comm]⟩
+      simp [← div_eq_mul_inv, ← mul_assoc, ← mul_left_commₓ, ← mul_comm]⟩
 
 /-- If `f` and `g` are monoid homomorphisms to an additive commutative group, then `f - g`
 is the homomorphism sending `x` to `(f x) - (g x)`. -/
@@ -1363,7 +1363,7 @@ variable [Mul M] [Mul N] {a x y : M}
 
 @[simp, to_additive]
 protected theorem SemiconjBy.map [MulHomClass F M N] (h : SemiconjBy a x y) (f : F) : SemiconjBy (f a) (f x) (f y) := by
-  simpa only [SemiconjBy, map_mul] using congr_arg f h
+  simpa only [← SemiconjBy, ← map_mul] using congr_arg f h
 
 @[simp, to_additive]
 protected theorem Commute.map [MulHomClass F M N] (h : Commute x y) (f : F) : Commute (f x) (f y) :=

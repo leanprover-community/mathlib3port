@@ -247,47 +247,47 @@ def projectMap (X Y : F C) : (X ⟶ Y) → (projectObjₓ f X ⟶ projectObjₓ 
         
       · exact hfg.trans hgh
         
-      · simp only [project_map_aux, hf, hg]
+      · simp only [← project_map_aux, ← hf, ← hg]
         
-      · simp only [project_map_aux, hfg, hfg']
+      · simp only [← project_map_aux, ← hfg, ← hfg']
         
-      · simp only [project_map_aux, category.comp_id]
+      · simp only [← project_map_aux, ← category.comp_id]
         
-      · simp only [project_map_aux, category.id_comp]
+      · simp only [← project_map_aux, ← category.id_comp]
         
-      · simp only [project_map_aux, category.assoc]
+      · simp only [← project_map_aux, ← category.assoc]
         
-      · simp only [project_map_aux, monoidal_category.tensor_id]
+      · simp only [← project_map_aux, ← monoidal_category.tensor_id]
         rfl
         
-      · simp only [project_map_aux, monoidal_category.tensor_comp]
+      · simp only [← project_map_aux, ← monoidal_category.tensor_comp]
         
-      · simp only [project_map_aux, iso.hom_inv_id]
+      · simp only [← project_map_aux, ← iso.hom_inv_id]
         
-      · simp only [project_map_aux, iso.inv_hom_id]
+      · simp only [← project_map_aux, ← iso.inv_hom_id]
         
-      · simp only [project_map_aux, monoidal_category.associator_naturality]
+      · simp only [← project_map_aux, ← monoidal_category.associator_naturality]
         
-      · simp only [project_map_aux, iso.hom_inv_id]
+      · simp only [← project_map_aux, ← iso.hom_inv_id]
         
-      · simp only [project_map_aux, iso.inv_hom_id]
+      · simp only [← project_map_aux, ← iso.inv_hom_id]
         
-      · simp only [project_map_aux]
-        dsimp' [project_obj]
+      · simp only [← project_map_aux]
+        dsimp' [← project_obj]
         exact monoidal_category.right_unitor_naturality _
         
-      · simp only [project_map_aux, iso.hom_inv_id]
+      · simp only [← project_map_aux, ← iso.hom_inv_id]
         
-      · simp only [project_map_aux, iso.inv_hom_id]
+      · simp only [← project_map_aux, ← iso.inv_hom_id]
         
-      · simp only [project_map_aux]
-        dsimp' [project_obj]
+      · simp only [← project_map_aux]
+        dsimp' [← project_obj]
         exact monoidal_category.left_unitor_naturality _
         
-      · simp only [project_map_aux]
+      · simp only [← project_map_aux]
         exact monoidal_category.pentagon _ _ _ _
         
-      · simp only [project_map_aux]
+      · simp only [← project_map_aux]
         exact monoidal_category.triangle _ _
         )
 

@@ -61,7 +61,7 @@ theorem degree_pos_of_root {p : R[X]} (hp : p ≠ 0) (h : IsRoot p a) : 0 < degr
   lt_of_not_geₓ fun hlt => by
     have := eq_C_of_degree_le_zero hlt
     rw [is_root, this, eval_C] at h
-    simp only [h, RingHom.map_zero] at this
+    simp only [← h, ← RingHom.map_zero] at this
     exact hp this
 
 theorem nat_degree_le_iff_coeff_eq_zero : p.natDegree ≤ n ↔ ∀ N : ℕ, n < N → p.coeff N = 0 := by
@@ -136,7 +136,7 @@ theorem nat_degree_C_mul_eq_of_mul_ne_zero (h : a * p.leadingCoeff ≠ 0) : (c a
 
 theorem nat_degree_add_coeff_mul (f g : R[X]) :
     (f * g).coeff (f.natDegree + g.natDegree) = f.coeff f.natDegree * g.coeff g.natDegree := by
-  simp only [coeff_nat_degree, coeff_mul_degree_add_degree]
+  simp only [← coeff_nat_degree, ← coeff_mul_degree_add_degree]
 
 theorem nat_degree_lt_coeff_mul (h : p.natDegree + q.natDegree < m + n) : (p * q).coeff (m + n) = 0 :=
   coeff_eq_zero_of_nat_degree_lt (nat_degree_mul_le.trans_lt h)
@@ -146,7 +146,7 @@ theorem degree_sum_eq_of_disjoint (f : S → R[X]) (s : Finset S)
   induction' s using Finset.induction_on with x s hx IH
   · simp
     
-  · simp only [hx, Finset.sum_insert, not_false_iff, Finset.sup_insert]
+  · simp only [← hx, ← Finset.sum_insert, ← not_false_iff, ← Finset.sup_insert]
     specialize
       IH
         (h.mono fun _ => by
@@ -160,15 +160,15 @@ theorem degree_sum_eq_of_disjoint (f : S → R[X]) (s : Finset S)
       obtain ⟨y, hy, hy'⟩ := Finset.exists_mem_eq_sup s hs fun i => degree (f i)
       rw [IH, hy'] at H
       by_cases' hx0 : f x = 0
-      · simp [hx0, IH]
+      · simp [← hx0, ← IH]
         
       have hy0 : f y ≠ 0 := by
         contrapose! H
-        simpa [H, degree_eq_bot] using hx0
+        simpa [← H, ← degree_eq_bot] using hx0
       refine' absurd H (h _ _ fun H => hx _)
-      · simp [hx0]
+      · simp [← hx0]
         
-      · simp [hy, hy0]
+      · simp [← hy, ← hy0]
         
       · exact H.symm ▸ hy
         
@@ -190,18 +190,18 @@ theorem nat_degree_sum_eq_of_disjoint (f : S → R[X]) (s : Finset S)
       · rw [Finset.sup'_le_iff]
         intro b hb
         by_cases' hb' : f b = 0
-        · simpa [hb'] using hs
+        · simpa [← hb'] using hs
           
         rw [degree_eq_nat_degree hb']
         exact Finset.le_sup' _ hb
         
       · rw [Finset.sup'_le_iff]
         intro b hb
-        simp only [Finset.le_sup'_iff, exists_prop, Function.comp_app]
+        simp only [← Finset.le_sup'_iff, ← exists_prop, ← Function.comp_app]
         by_cases' hb' : f b = 0
         · refine' ⟨x, hx, _⟩
           contrapose! hx'
-          simpa [hb', degree_eq_bot] using hx'
+          simpa [← hb', ← degree_eq_bot] using hx'
           
         exact ⟨b, hb, (degree_eq_nat_degree hb').Ge⟩
         
@@ -212,7 +212,7 @@ theorem nat_degree_sum_eq_of_disjoint (f : S → R[X]) (s : Finset S)
   · push_neg  at H
     rw [Finset.sum_eq_zero H, nat_degree_zero, eq_comm, show 0 = ⊥ from rfl, Finset.sup_eq_bot_iff]
     intro x hx
-    simp [H x hx]
+    simp [← H x hx]
     
 
 variable [Semiringₓ S]
@@ -222,7 +222,7 @@ theorem nat_degree_pos_of_eval₂_root {p : R[X]} (hp : p ≠ 0) (f : R →+* S)
   lt_of_not_geₓ fun hlt => by
     have A : p = C (p.coeff 0) := eq_C_of_nat_degree_le_zero hlt
     rw [A, eval₂_C] at hz
-    simp only [inj (p.coeff 0) hz, RingHom.map_zero] at A
+    simp only [← inj (p.coeff 0) hz, ← RingHom.map_zero] at A
     exact hp A
 
 theorem degree_pos_of_eval₂_root {p : R[X]} (hp : p ≠ 0) (f : R →+* S) {z : S} (hz : eval₂ f z p = 0)
@@ -232,7 +232,7 @@ theorem degree_pos_of_eval₂_root {p : R[X]} (hp : p ≠ 0) (f : R →+* S) {z 
 @[simp]
 theorem coe_lt_degree {p : R[X]} {n : ℕ} : (n : WithBot ℕ) < degree p ↔ n < natDegree p := by
   by_cases' h : p = 0
-  · simp [h]
+  · simp [← h]
     
   rw [degree_eq_nat_degree h, WithBot.coe_lt_coe]
 
@@ -251,10 +251,10 @@ theorem degree_C_mul (a0 : a ≠ 0) : (c a * p).degree = p.degree := by
   rw [degree_mul, degree_C a0, zero_addₓ]
 
 theorem nat_degree_mul_C (a0 : a ≠ 0) : (p * c a).natDegree = p.natDegree := by
-  simp only [nat_degree, degree_mul_C a0]
+  simp only [← nat_degree, ← degree_mul_C a0]
 
 theorem nat_degree_C_mul (a0 : a ≠ 0) : (c a * p).natDegree = p.natDegree := by
-  simp only [nat_degree, degree_C_mul a0]
+  simp only [← nat_degree, ← degree_C_mul a0]
 
 theorem nat_degree_comp : natDegree (p.comp q) = natDegree p * natDegree q := by
   by_cases' q0 : q.nat_degree = 0
@@ -262,11 +262,11 @@ theorem nat_degree_comp : natDegree (p.comp q) = natDegree p * natDegree q := by
       mul_zero]
     
   · by_cases' p0 : p = 0
-    · simp only [p0, zero_comp, nat_degree_zero, zero_mul]
+    · simp only [← p0, ← zero_comp, ← nat_degree_zero, ← zero_mul]
       
     refine' le_antisymmₓ nat_degree_comp_le (le_nat_degree_of_ne_zero _)
-    simp only [coeff_comp_degree_mul_degree q0, p0, mul_eq_zero, leading_coeff_eq_zero, or_selfₓ,
-      ne_zero_of_nat_degree_gt (Nat.pos_of_ne_zeroₓ q0), pow_ne_zero, Ne.def, not_false_iff]
+    simp only [← coeff_comp_degree_mul_degree q0, ← p0, ← mul_eq_zero, ← leading_coeff_eq_zero, ← or_selfₓ, ←
+      ne_zero_of_nat_degree_gt (Nat.pos_of_ne_zeroₓ q0), ← pow_ne_zero, ← Ne.def, ← not_false_iff]
     
 
 theorem leading_coeff_comp (hq : natDegree q ≠ 0) :

@@ -91,7 +91,8 @@ protected def uniformityBasis : FilterBasis ((α → β) × (α → β)) :=
 
 /-- Core of the uniform structure of uniform convergence -/
 protected def uniformCore : UniformSpace.Core (α → β) :=
-  UniformSpace.Core.mkOfBasis (UniformConvergence.uniformityBasis α β) (fun f => hVU ▸ fun x => refl_mem_uniformity hV)
+  UniformSpace.Core.mkOfBasis (UniformConvergence.uniformityBasis α β)
+    (fun U ⟨V, hV, hVU⟩ f => hVU ▸ fun x => refl_mem_uniformity hV)
     (fun U ⟨V, hV, hVU⟩ =>
       hVU ▸
         ⟨UniformConvergence.Gen α β (Prod.swap ⁻¹' V), ⟨Prod.swap ⁻¹' V, tendsto_swap_uniformity hV, rfl⟩,
@@ -99,7 +100,7 @@ protected def uniformCore : UniformSpace.Core (α → β) :=
     fun U ⟨V, hV, hVU⟩ =>
     hVU ▸
       let ⟨W, hW, hWV⟩ := comp_mem_uniformity_sets hV
-      ⟨UniformConvergence.Gen α β W, ⟨W, hW, rfl⟩, fun x => hWV ⟨w x, ⟨huw x, hwv x⟩⟩⟩
+      ⟨UniformConvergence.Gen α β W, ⟨W, hW, rfl⟩, fun uv ⟨w, huw, hwv⟩ x => hWV ⟨w x, ⟨huw x, hwv x⟩⟩⟩
 
 /-- Uniform structure of uniform convergence -/
 protected def uniformSpace : UniformSpace (α → β) :=
@@ -177,7 +178,7 @@ protected theorem topological_space_eq :
       ⨅ (s : Set α) (hs : s ∈ 𝔖),
         TopologicalSpace.induced (fun f => s.restrict f) (UniformConvergence.topologicalSpace s β) :=
   by
-  simp only [UniformConvergenceOn.topologicalSpace, to_topological_space_infi, to_topological_space_infi,
+  simp only [← UniformConvergenceOn.topologicalSpace, ← to_topological_space_infi, ← to_topological_space_infi, ←
     to_topological_space_comap]
   rfl
 

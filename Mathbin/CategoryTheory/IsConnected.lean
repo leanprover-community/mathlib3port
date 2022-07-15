@@ -1,11 +1,12 @@
 /-
 Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Bhavik Mehta
+Authors: Bhavik Mehta, Jakob von Raumer
 -/
 import Mathbin.Data.List.Chain
 import Mathbin.CategoryTheory.Punit
 import Mathbin.CategoryTheory.Groupoid
+import Mathbin.CategoryTheory.Category.Ulift
 
 /-!
 # Connected category
@@ -88,7 +89,7 @@ The converse is given in `is_connected.of_any_functor_const_on_obj`.
 theorem any_functor_const_on_obj [IsPreconnected J] {α : Type u₁} (F : J ⥤ Discrete α) (j j' : J) :
     F.obj j = F.obj j' := by
   ext
-  exact ((iso_constant F j').Hom.app j).down.1
+  exact ((iso_constant F j').hom.app j).down.1
 
 /-- If any functor to a discrete category is constant on objects, J is connected.
 The converse of `any_functor_const_on_obj`.
@@ -152,10 +153,24 @@ theorem IsConnected.of_induct [Nonempty J] {j₀ : J}
   IsConnected.of_constant_of_preserves_morphisms fun α F a => by
     have w :=
       h { j | F j = F j₀ } rfl fun _ _ f => by
-        simp [a f]
+        simp [← a f]
     dsimp'  at w
     intro j j'
     rw [w j, w j']
+
+/-- Lifting the universe level of morphisms and objects preserves connectedness. -/
+instance [hc : IsConnected J] : IsConnected (UliftHom.{v₂} (ULift.{u₂} J)) := by
+  have : Nonempty (UliftHom.{v₂} (ULift.{u₂} J)) := by
+    simp [← ulift_hom, ← hc.is_nonempty]
+  apply is_connected.of_induct
+  rintro p hj₀ h ⟨j⟩
+  let p' : Set J := (fun j : J => p { down := j } : Set J)
+  have hj₀' : Classical.choice hc.is_nonempty ∈ p' := by
+    simp only [← p']
+    exact hj₀
+  apply
+    induct_on_objects (fun j : J => p { down := j }) hj₀' fun _ _ f =>
+      h ((ulift_hom_ulift_category.equiv J).Functor.map f)
 
 /-- Another induction principle for `is_preconnected J`:
 given a type family `Z : J → Sort*` and
@@ -199,20 +214,21 @@ theorem is_connected_of_equivalent {K : Type u₁} [Category.{v₂} K] (e : J �
     to_is_preconnected := is_preconnected_of_equivalent e }
 
 /-- If `J` is preconnected, then `Jᵒᵖ` is preconnected as well. -/
-instance is_preconnected_op [IsPreconnected J] : IsPreconnected Jᵒᵖ where
-  iso_constant := fun α F X =>
+instance is_preconnected_op [IsPreconnected J] :
+    IsPreconnected
+      Jᵒᵖ where iso_constant := fun α F X =>
     ⟨NatIso.ofComponents
         (fun Y =>
           eqToIso
             (Discrete.ext _ _
               (Discrete.eq_of_hom
                 ((Nonempty.some (IsPreconnected.iso_constant (F.rightOp ⋙ (Discrete.opposite α).Functor) (unop X))).app
-                    (unop Y)).Hom)))
+                    (unop Y)).hom)))
         fun Y Z f => Subsingleton.elimₓ _ _⟩
 
 /-- If `J` is connected, then `Jᵒᵖ` is connected as well. -/
-instance is_connected_op [IsConnected J] : IsConnected Jᵒᵖ where
-  is_nonempty := Nonempty.intro (op (Classical.arbitrary J))
+instance is_connected_op [IsConnected J] :
+    IsConnected Jᵒᵖ where is_nonempty := Nonempty.intro (op (Classical.arbitrary J))
 
 theorem is_preconnected_of_is_preconnected_op [IsPreconnected Jᵒᵖ] : IsPreconnected J :=
   is_preconnected_of_equivalent (opOpEquivalence J)

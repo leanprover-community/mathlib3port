@@ -171,9 +171,9 @@ instance Monoidₓ.hasMeasurablePow (M : Type _) [Monoidₓ M] [MeasurableSpace 
     HasMeasurablePow M ℕ :=
   ⟨measurable_from_prod_encodable fun n => by
       induction' n with n ih
-      · simp only [pow_zeroₓ, ← Pi.one_def, measurable_one]
+      · simp only [← pow_zeroₓ, Pi.one_def, ← measurable_one]
         
-      · simp only [pow_succₓ]
+      · simp only [← pow_succₓ]
         exact measurable_id.mul ih
         ⟩
 
@@ -320,7 +320,7 @@ theorem measurable_set_eq_fun_of_encodable {m : MeasurableSpace α} {E} [Measura
     [Encodable E] {f g : α → E} (hf : Measurable f) (hg : Measurable g) : MeasurableSet { x | f x = g x } := by
   have : { x | f x = g x } = ⋃ j, { x | f x = j } ∩ { x | g x = j } := by
     ext1 x
-    simp only [Set.mem_set_of_eq, Set.mem_Union, Set.mem_inter_eq, exists_eq_right']
+    simp only [← Set.mem_set_of_eq, ← Set.mem_Union, ← Set.mem_inter_eq, ← exists_eq_right']
   rw [this]
   refine' MeasurableSet.Union fun j => MeasurableSet.inter _ _
   · exact hf (measurable_set_singleton j)
@@ -382,25 +382,25 @@ attribute [measurability] Measurable.neg AeMeasurable.neg
 theorem measurable_inv_iff {G : Type _} [Groupₓ G] [MeasurableSpace G] [HasMeasurableInv G] {f : α → G} :
     (Measurable fun x => (f x)⁻¹) ↔ Measurable f :=
   ⟨fun h => by
-    simpa only [inv_invₓ] using h.inv, fun h => h.inv⟩
+    simpa only [← inv_invₓ] using h.inv, fun h => h.inv⟩
 
 @[simp, to_additive]
 theorem ae_measurable_inv_iff {G : Type _} [Groupₓ G] [MeasurableSpace G] [HasMeasurableInv G] {f : α → G} :
     AeMeasurable (fun x => (f x)⁻¹) μ ↔ AeMeasurable f μ :=
   ⟨fun h => by
-    simpa only [inv_invₓ] using h.inv, fun h => h.inv⟩
+    simpa only [← inv_invₓ] using h.inv, fun h => h.inv⟩
 
 @[simp]
 theorem measurable_inv_iff₀ {G₀ : Type _} [GroupWithZeroₓ G₀] [MeasurableSpace G₀] [HasMeasurableInv G₀] {f : α → G₀} :
     (Measurable fun x => (f x)⁻¹) ↔ Measurable f :=
   ⟨fun h => by
-    simpa only [inv_invₓ] using h.inv, fun h => h.inv⟩
+    simpa only [← inv_invₓ] using h.inv, fun h => h.inv⟩
 
 @[simp]
 theorem ae_measurable_inv_iff₀ {G₀ : Type _} [GroupWithZeroₓ G₀] [MeasurableSpace G₀] [HasMeasurableInv G₀]
     {f : α → G₀} : AeMeasurable (fun x => (f x)⁻¹) μ ↔ AeMeasurable f μ :=
   ⟨fun h => by
-    simpa only [inv_invₓ] using h.inv, fun h => h.inv⟩
+    simpa only [← inv_invₓ] using h.inv, fun h => h.inv⟩
 
 omit m
 
@@ -431,7 +431,7 @@ instance DivInvMonoidₓ.hasMeasurableZpow (G : Type u) [DivInvMonoidₓ G] [Mea
 instance (priority := 100) has_measurable_div₂_of_mul_inv (G : Type _) [MeasurableSpace G] [DivInvMonoidₓ G]
     [HasMeasurableMul₂ G] [HasMeasurableInv G] : HasMeasurableDiv₂ G :=
   ⟨by
-    simp only [div_eq_mul_inv]
+    simp only [← div_eq_mul_inv]
     exact measurable_fst.mul measurable_snd.inv⟩
 
 /-- We say that the action of `M` on `α` `has_measurable_vadd` if for each `c` the map `x ↦ c +ᵥ x`
@@ -443,7 +443,7 @@ class HasMeasurableVadd (M α : Type _) [HasVadd M α] [MeasurableSpace M] [Meas
 /-- We say that the action of `M` on `α` `has_measurable_smul` if for each `c` the map `x ↦ c • x`
 is a measurable function and for each `x` the map `c ↦ c • x` is a measurable function. -/
 @[to_additive]
-class HasMeasurableSmul (M α : Type _) [HasScalar M α] [MeasurableSpace M] [MeasurableSpace α] : Prop where
+class HasMeasurableSmul (M α : Type _) [HasSmul M α] [MeasurableSpace M] [MeasurableSpace α] : Prop where
   measurable_const_smul : ∀ c : M, Measurable ((· • ·) c : α → α)
   measurable_smul_const : ∀ x : α, Measurable fun c : M => c • x
 
@@ -455,7 +455,7 @@ class HasMeasurableVadd₂ (M α : Type _) [HasVadd M α] [MeasurableSpace M] [M
 /-- We say that the action of `M` on `α` `has_measurable_smul₂` if the map
 `(c, x) ↦ c • x` is a measurable function. -/
 @[to_additive HasMeasurableVadd₂]
-class HasMeasurableSmul₂ (M α : Type _) [HasScalar M α] [MeasurableSpace M] [MeasurableSpace α] : Prop where
+class HasMeasurableSmul₂ (M α : Type _) [HasSmul M α] [MeasurableSpace M] [MeasurableSpace α] : Prop where
   measurable_smul : Measurable (Function.uncurry (· • ·) : M × α → α)
 
 export HasMeasurableSmul (measurable_const_smul measurable_smul_const)
@@ -490,7 +490,7 @@ instance Subgroup.has_measurable_smul {G α} [MeasurableSpace G] [MeasurableSpac
 
 section Smul
 
-variable {M β α : Type _} [MeasurableSpace M] [MeasurableSpace β] [HasScalar M β] {m : MeasurableSpace α} {f : α → M}
+variable {M β α : Type _} [MeasurableSpace M] [MeasurableSpace β] [HasSmul M β] {m : MeasurableSpace α} {f : α → M}
   {g : α → β}
 
 include m
@@ -542,12 +542,12 @@ theorem AeMeasurable.const_smul (hf : AeMeasurable g μ) (c : M) : AeMeasurable 
 omit m
 
 @[to_additive]
-instance Pi.has_measurable_smul {ι : Type _} {α : ι → Type _} [∀ i, HasScalar M (α i)] [∀ i, MeasurableSpace (α i)]
+instance Pi.has_measurable_smul {ι : Type _} {α : ι → Type _} [∀ i, HasSmul M (α i)] [∀ i, MeasurableSpace (α i)]
     [∀ i, HasMeasurableSmul M (α i)] : HasMeasurableSmul M (∀ i, α i) :=
   ⟨fun g => measurable_pi_iff.mpr fun i => (measurable_pi_apply i).const_smul _, fun g =>
     measurable_pi_iff.mpr fun i => measurable_smul_const _⟩
 
-/-- `add_monoid.has_scalar_nat` is measurable. -/
+/-- `add_monoid.has_smul_nat` is measurable. -/
 instance AddMonoidₓ.has_measurable_smul_nat₂ (M : Type _) [AddMonoidₓ M] [MeasurableSpace M] [HasMeasurableAdd₂ M] :
     HasMeasurableSmul₂ ℕ M :=
   ⟨by
@@ -555,13 +555,13 @@ instance AddMonoidₓ.has_measurable_smul_nat₂ (M : Type _) [AddMonoidₓ M] [
       apply this.comp measurable_swap
     refine' measurable_from_prod_encodable fun n => _
     induction' n with n ih
-    · simp only [zero_smul, ← Pi.zero_def, measurable_zero]
+    · simp only [← zero_smul, Pi.zero_def, ← measurable_zero]
       
-    · simp only [succ_nsmul]
+    · simp only [← succ_nsmul]
       exact measurable_id.add ih
       ⟩
 
-/-- `sub_neg_monoid.has_scalar_int` is measurable. -/
+/-- `sub_neg_monoid.has_smul_int` is measurable. -/
 instance SubNegMonoidₓ.has_measurable_smul_int₂ (M : Type _) [SubNegMonoidₓ M] [MeasurableSpace M] [HasMeasurableAdd₂ M]
     [HasMeasurableNeg M] : HasMeasurableSmul₂ ℤ M :=
   ⟨by
@@ -569,10 +569,10 @@ instance SubNegMonoidₓ.has_measurable_smul_int₂ (M : Type _) [SubNegMonoid�
       apply this.comp measurable_swap
     refine' measurable_from_prod_encodable fun n => _
     induction' n with n n ih
-    · simp only [of_nat_zsmul]
+    · simp only [← of_nat_zsmul]
       exact measurable_const_smul _
       
-    · simp only [zsmul_neg_succ_of_nat]
+    · simp only [← zsmul_neg_succ_of_nat]
       exact (measurable_const_smul _).neg
       ⟩
 
@@ -588,12 +588,12 @@ variable {G : Type _} [Groupₓ G] [MeasurableSpace G] [MulAction G β] [HasMeas
 @[to_additive]
 theorem measurable_const_smul_iff (c : G) : (Measurable fun x => c • f x) ↔ Measurable f :=
   ⟨fun h => by
-    simpa only [inv_smul_smul] using h.const_smul' c⁻¹, fun h => h.const_smul c⟩
+    simpa only [← inv_smul_smul] using h.const_smul' c⁻¹, fun h => h.const_smul c⟩
 
 @[to_additive]
 theorem ae_measurable_const_smul_iff (c : G) : AeMeasurable (fun x => c • f x) μ ↔ AeMeasurable f μ :=
   ⟨fun h => by
-    simpa only [inv_smul_smul] using h.const_smul' c⁻¹, fun h => h.const_smul c⟩
+    simpa only [← inv_smul_smul] using h.const_smul' c⁻¹, fun h => h.const_smul c⟩
 
 @[to_additive]
 instance : MeasurableSpace Mˣ :=
@@ -655,17 +655,17 @@ instance {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul₂ M] : HasM
   ⟨measurable_mul_op.comp ((measurable_mul_unop.comp measurable_snd).mul (measurable_mul_unop.comp measurable_fst))⟩
 
 /-- If a scalar is central, then its right action is measurable when its left action is. -/
-instance HasMeasurableSmul.op {M α} [MeasurableSpace M] [MeasurableSpace α] [HasScalar M α] [HasScalar Mᵐᵒᵖ α]
+instance HasMeasurableSmul.op {M α} [MeasurableSpace M] [MeasurableSpace α] [HasSmul M α] [HasSmul Mᵐᵒᵖ α]
     [IsCentralScalar M α] [HasMeasurableSmul M α] : HasMeasurableSmul Mᵐᵒᵖ α :=
   ⟨MulOpposite.rec fun c =>
       show Measurable fun x => op c • x by
-        simpa only [op_smul_eq_smul] using measurable_const_smul c,
+        simpa only [← op_smul_eq_smul] using measurable_const_smul c,
     fun x =>
     show Measurable fun c => op (unop c) • x by
-      simpa only [op_smul_eq_smul] using (measurable_smul_const x).comp measurable_mul_unop⟩
+      simpa only [← op_smul_eq_smul] using (measurable_smul_const x).comp measurable_mul_unop⟩
 
 /-- If a scalar is central, then its right action is measurable when its left action is. -/
-instance HasMeasurableSmul₂.op {M α} [MeasurableSpace M] [MeasurableSpace α] [HasScalar M α] [HasScalar Mᵐᵒᵖ α]
+instance HasMeasurableSmul₂.op {M α} [MeasurableSpace M] [MeasurableSpace α] [HasSmul M α] [HasSmul Mᵐᵒᵖ α]
     [IsCentralScalar M α] [HasMeasurableSmul₂ M α] : HasMeasurableSmul₂ Mᵐᵒᵖ α :=
   ⟨show Measurable fun x : Mᵐᵒᵖ × α => op (unop x.1) • x.2 by
       simp_rw [op_smul_eq_smul]
@@ -715,12 +715,12 @@ theorem List.ae_measurable_prod' (l : List (α → M)) (hl : ∀, ∀ f ∈ l, �
 @[measurability, to_additive]
 theorem List.measurable_prod (l : List (α → M)) (hl : ∀, ∀ f ∈ l, ∀, Measurable f) :
     Measurable fun x => (l.map fun f : α → M => f x).Prod := by
-  simpa only [← Pi.list_prod_apply] using l.measurable_prod' hl
+  simpa only [Pi.list_prod_apply] using l.measurable_prod' hl
 
 @[measurability, to_additive]
 theorem List.ae_measurable_prod (l : List (α → M)) (hl : ∀, ∀ f ∈ l, ∀, AeMeasurable f μ) :
     AeMeasurable (fun x => (l.map fun f : α → M => f x).Prod) μ := by
-  simpa only [← Pi.list_prod_apply] using l.ae_measurable_prod' hl
+  simpa only [Pi.list_prod_apply] using l.ae_measurable_prod' hl
 
 omit m
 
@@ -753,12 +753,12 @@ theorem Multiset.ae_measurable_prod' (l : Multiset (α → M)) (hl : ∀, ∀ f 
 @[measurability, to_additive]
 theorem Multiset.measurable_prod (s : Multiset (α → M)) (hs : ∀, ∀ f ∈ s, ∀, Measurable f) :
     Measurable fun x => (s.map fun f : α → M => f x).Prod := by
-  simpa only [← Pi.multiset_prod_apply] using s.measurable_prod' hs
+  simpa only [Pi.multiset_prod_apply] using s.measurable_prod' hs
 
 @[measurability, to_additive]
 theorem Multiset.ae_measurable_prod (s : Multiset (α → M)) (hs : ∀, ∀ f ∈ s, ∀, AeMeasurable f μ) :
     AeMeasurable (fun x => (s.map fun f : α → M => f x).Prod) μ := by
-  simpa only [← Pi.multiset_prod_apply] using s.ae_measurable_prod' hs
+  simpa only [Pi.multiset_prod_apply] using s.ae_measurable_prod' hs
 
 @[measurability, to_additive]
 theorem Finset.measurable_prod' (s : Finset ι) (hf : ∀, ∀ i ∈ s, ∀, Measurable (f i)) : Measurable (∏ i in s, f i) :=
@@ -767,7 +767,7 @@ theorem Finset.measurable_prod' (s : Finset ι) (hf : ∀, ∀ i ∈ s, ∀, Mea
 @[measurability, to_additive]
 theorem Finset.measurable_prod (s : Finset ι) (hf : ∀, ∀ i ∈ s, ∀, Measurable (f i)) :
     Measurable fun a => ∏ i in s, f i a := by
-  simpa only [← Finset.prod_apply] using s.measurable_prod' hf
+  simpa only [Finset.prod_apply] using s.measurable_prod' hf
 
 @[measurability, to_additive]
 theorem Finset.ae_measurable_prod' (s : Finset ι) (hf : ∀, ∀ i ∈ s, ∀, AeMeasurable (f i) μ) :
@@ -779,7 +779,7 @@ theorem Finset.ae_measurable_prod' (s : Finset ι) (hf : ∀, ∀ i ∈ s, ∀, 
 @[measurability, to_additive]
 theorem Finset.ae_measurable_prod (s : Finset ι) (hf : ∀, ∀ i ∈ s, ∀, AeMeasurable (f i) μ) :
     AeMeasurable (fun a => ∏ i in s, f i a) μ := by
-  simpa only [← Finset.prod_apply] using s.ae_measurable_prod' hf
+  simpa only [Finset.prod_apply] using s.ae_measurable_prod' hf
 
 omit m
 

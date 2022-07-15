@@ -235,7 +235,7 @@ def idComputableInPolyTime {α : Type} (ea : FinEncoding α) : @Tm2ComputableInP
   outputsFun := fun _ =>
     { steps := 1, evals_in_steps := rfl,
       steps_le_m := by
-        simp only [Polynomial.eval_one] }
+        simp only [← Polynomial.eval_one] }
 
 instance inhabitedTm2ComputableInPolyTime :
     Inhabited (Tm2ComputableInPolyTime (default : FinEncoding Bool) default id) :=

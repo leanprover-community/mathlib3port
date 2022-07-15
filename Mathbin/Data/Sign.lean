@@ -219,7 +219,7 @@ theorem sign_apply : sign a = ite (0 < a) 1 (ite (a < 0) (-1) 0) :=
 
 @[simp]
 theorem sign_zero : sign (0 : α) = 0 := by
-  simp [sign_apply]
+  simp [← sign_apply]
 
 @[simp]
 theorem sign_pos (ha : 0 < a) : sign a = 1 := by
@@ -266,8 +266,9 @@ def signHom : α →*₀ SignType where
   map_mul' := fun x y => by
     rcases lt_trichotomyₓ x 0 with (hx | hx | hx) <;>
       rcases lt_trichotomyₓ y 0 with (hy | hy | hy) <;>
-        simp only [sign_zero, mul_zero, zero_mul, sign_pos, sign_neg, hx, hy, mul_oneₓ, neg_one_mul, neg_negₓ, one_mulₓ,
-          mul_pos_of_neg_of_neg, mul_neg_of_neg_of_pos, neg_zero', mul_neg_of_pos_of_neg, mul_pos]
+        simp only [← sign_zero, ← mul_zero, ← zero_mul, ← sign_pos, ← sign_neg, ← hx, ← hy, ← mul_oneₓ, ← neg_one_mul, ←
+          neg_negₓ, ← one_mulₓ, ← mul_pos_of_neg_of_neg, ← mul_neg_of_neg_of_pos, ← neg_zero', ← mul_neg_of_pos_of_neg,
+          ← mul_pos]
 
 end LinearOrderedRing
 

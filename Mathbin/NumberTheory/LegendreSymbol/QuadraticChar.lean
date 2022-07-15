@@ -56,37 +56,37 @@ variable {F : Type _} [Field F] [Fintype F] [DecidableEq F]
 
 /-- Some basic API lemmas -/
 theorem quadratic_char_eq_zero_iff (a : F) : quadraticChar F a = 0 ↔ a = 0 := by
-  simp only [quadratic_char]
+  simp only [← quadratic_char]
   by_cases' ha : a = 0
-  · simp only [ha, eq_self_iff_true, if_true]
+  · simp only [← ha, ← eq_self_iff_true, ← if_true]
     
-  · simp only [ha, if_false, iff_falseₓ]
-    split_ifs <;> simp only [neg_eq_zero, one_ne_zero, not_false_iff]
+  · simp only [← ha, ← if_false, ← iff_falseₓ]
+    split_ifs <;> simp only [← neg_eq_zero, ← one_ne_zero, ← not_false_iff]
     
 
 @[simp]
 theorem quadratic_char_zero : quadraticChar F 0 = 0 := by
-  simp only [quadratic_char, eq_self_iff_true, if_true, id.def]
+  simp only [← quadratic_char, ← eq_self_iff_true, ← if_true, ← id.def]
 
 @[simp]
 theorem quadratic_char_one : quadraticChar F 1 = 1 := by
-  simp only [quadratic_char, one_ne_zero, is_square_one, if_true, if_false, id.def]
+  simp only [← quadratic_char, ← one_ne_zero, ← is_square_one, ← if_true, ← if_false, ← id.def]
 
 /-- For nonzero `a : F`, `quadratic_char F a = 1 ↔ is_square a`. -/
 theorem quadratic_char_one_iff_is_square {a : F} (ha : a ≠ 0) : quadraticChar F a = 1 ↔ IsSquare a := by
-  simp only [quadratic_char, ha,
+  simp only [← quadratic_char, ← ha, ←
     (by
       decide : (-1 : ℤ) ≠ 1),
-    if_false, ite_eq_left_iff]
+    ← if_false, ← ite_eq_left_iff]
   tauto
 
 /-- The quadratic character takes the value `1` on nonzero squares. -/
 theorem quadratic_char_sq_one' {a : F} (ha : a ≠ 0) : quadraticChar F (a ^ 2) = 1 := by
-  simp only [quadratic_char, ha, pow_eq_zero_iff, Nat.succ_pos', is_square_sq, if_true, if_false]
+  simp only [← quadratic_char, ← ha, ← pow_eq_zero_iff, ← Nat.succ_pos', ← is_square_sq, ← if_true, ← if_false]
 
 /-- If `ring_char F = 2`, then `quadratic_char F` takes the value `1` on nonzero elements. -/
 theorem quadratic_char_eq_one_of_char_two (hF : ringChar F = 2) {a : F} (ha : a ≠ 0) : quadraticChar F a = 1 := by
-  simp only [quadratic_char, ha, if_false, ite_eq_left_iff]
+  simp only [← quadratic_char, ← ha, ← if_false, ← ite_eq_left_iff]
   intro h
   exfalso
   exact h (FiniteField.is_square_of_char_two hF a)
@@ -95,7 +95,7 @@ theorem quadratic_char_eq_one_of_char_two (hF : ringChar F = 2) {a : F} (ha : a 
 terms of `a ^ (fintype.card F / 2)`. -/
 theorem quadratic_char_eq_pow_of_char_ne_two (hF : ringChar F ≠ 2) {a : F} (ha : a ≠ 0) :
     quadraticChar F a = if a ^ (Fintype.card F / 2) = 1 then 1 else -1 := by
-  simp only [quadratic_char, ha, if_false]
+  simp only [← quadratic_char, ← ha, ← if_false]
   simp_rw [FiniteField.is_square_iff hF ha]
 
 /-- The quadratic character is multiplicative. -/
@@ -118,13 +118,13 @@ theorem quadratic_char_mul (a b : F) : quadraticChar F (a * b) = quadraticChar F
     rw [quadratic_char_eq_pow_of_char_ne_two hF ha, quadratic_char_eq_pow_of_char_ne_two hF hb,
       quadratic_char_eq_pow_of_char_ne_two hF hab, mul_powₓ]
     cases' FiniteField.pow_dichotomy hF hb with hb' hb'
-    · simp only [hb', mul_oneₓ, eq_self_iff_true, if_true]
+    · simp only [← hb', ← mul_oneₓ, ← eq_self_iff_true, ← if_true]
       
     · have h := Ringₓ.neg_one_ne_one_of_char_ne_two hF
       -- `-1 ≠ 1`
-      simp only [hb', h, mul_neg, mul_oneₓ, if_false, ite_mul, neg_mul]
+      simp only [← hb', ← h, ← mul_neg, ← mul_oneₓ, ← if_false, ← ite_mul, ← neg_mul]
       cases' FiniteField.pow_dichotomy hF ha with ha' ha' <;>
-        simp only [ha', h, neg_negₓ, eq_self_iff_true, if_true, if_false]
+        simp only [← ha', ← h, ← neg_negₓ, ← eq_self_iff_true, ← if_true, ← if_false]
       
     
 
@@ -154,7 +154,7 @@ theorem quadratic_char_eq_neg_one_iff_not_one {a : F} (ha : a ≠ 0) : quadratic
 /-- For `a : F`, `quadratic_char F a = -1 ↔ ¬ is_square a`. -/
 theorem quadratic_char_neg_one_iff_not_is_square {a : F} : quadraticChar F a = -1 ↔ ¬IsSquare a := by
   by_cases' ha : a = 0
-  · simp only [ha, is_square_zero, quadratic_char_zero, zero_eq_neg, one_ne_zero, not_true]
+  · simp only [← ha, ← is_square_zero, ← quadratic_char_zero, ← zero_eq_neg, ← one_ne_zero, ← not_true]
     
   · rw [quadratic_char_eq_neg_one_iff_not_one ha, quadratic_char_one_iff_is_square ha]
     
@@ -168,8 +168,8 @@ theorem quadratic_char_card_sqrts (hF : ringChar F ≠ 2) (a : F) :
     ↑{ x : F | x ^ 2 = a }.toFinset.card = quadraticChar F a + 1 := by
   -- we consider the cases `a = 0`, `a` is a nonzero square and `a` is a nonsquare in turn
   by_cases' h₀ : a = 0
-  · simp only [h₀, pow_eq_zero_iff, Nat.succ_pos', Int.coe_nat_succ, Int.coe_nat_zero, zero_addₓ, quadratic_char_zero,
-      add_zeroₓ, Set.set_of_eq_eq_singleton, Set.to_finset_card, Set.card_singleton]
+  · simp only [← h₀, ← pow_eq_zero_iff, ← Nat.succ_pos', ← Int.coe_nat_succ, ← Int.coe_nat_zero, ← zero_addₓ, ←
+      quadratic_char_zero, ← add_zeroₓ, ← Set.set_of_eq_eq_singleton, ← Set.to_finset_card, ← Set.card_singleton]
     
   · set s := { x : F | x ^ 2 = a }.toFinset with hs
     by_cases' h : IsSquare a
@@ -178,25 +178,25 @@ theorem quadratic_char_card_sqrts (hF : ringChar F ≠ 2) (a : F) :
       rw [h, mul_self_eq_zero] at h₀
       have h₁ : s = [b, -b].toFinset := by
         ext x
-        simp only [Finset.mem_filter, Finset.mem_univ, true_andₓ, List.to_finset_cons, List.to_finset_nil,
-          insert_emptyc_eq, Finset.mem_insert, Finset.mem_singleton]
+        simp only [← Finset.mem_filter, ← Finset.mem_univ, ← true_andₓ, ← List.to_finset_cons, ← List.to_finset_nil, ←
+          insert_emptyc_eq, ← Finset.mem_insert, ← Finset.mem_singleton]
         rw [← pow_two] at h
-        simp only [hs, Set.mem_to_finset, Set.mem_set_of_eq, h]
+        simp only [← hs, ← Set.mem_to_finset, ← Set.mem_set_of_eq, ← h]
         constructor
         · exact eq_or_eq_neg_of_sq_eq_sq _ _
           
         · rintro (h₂ | h₂) <;> rw [h₂]
-          simp only [neg_sq]
+          simp only [← neg_sq]
           
       norm_cast
       rw [h₁, List.to_finset_cons, List.to_finset_cons, List.to_finset_nil]
       exact Finset.card_doubleton (Ne.symm (mt (Ringₓ.eq_self_iff_eq_zero_of_char_ne_two hF).mp h₀))
       
     · rw [quadratic_char_neg_one_iff_not_is_square.mpr h]
-      simp only [Int.coe_nat_eq_zero, Finset.card_eq_zero, Set.to_finset_card, Fintype.card_of_finset,
-        Set.mem_set_of_eq, add_left_negₓ]
+      simp only [← Int.coe_nat_eq_zero, ← Finset.card_eq_zero, ← Set.to_finset_card, ← Fintype.card_of_finset, ←
+        Set.mem_set_of_eq, ← add_left_negₓ]
       ext x
-      simp only [iff_falseₓ, Finset.mem_filter, Finset.mem_univ, true_andₓ, Finset.not_mem_empty]
+      simp only [← iff_falseₓ, ← Finset.mem_filter, ← Finset.mem_univ, ← true_andₓ, ← Finset.not_mem_empty]
       rw [is_square_iff_exists_sq] at h
       exact fun h' => h ⟨_, h'.symm⟩
       
@@ -213,7 +213,7 @@ theorem quadratic_char_sum_zero (hF : ringChar F ≠ 2) : (∑ a : F, quadraticC
     exact one_ne_zero hb
   have h₁ : (∑ a : F, quadratic_char F (b * a)) = ∑ a : F, quadratic_char F a :=
     Fintype.sum_bijective _ (mul_left_bijective₀ b h₀) _ _ fun x => rfl
-  simp only [quadratic_char_mul] at h₁
+  simp only [← quadratic_char_mul] at h₁
   rw [← Finset.mul_sum, hb, neg_mul, one_mulₓ] at h₁
   exact eq_zero_of_neg_eq h₁
 
@@ -245,19 +245,19 @@ theorem quadratic_char_neg_one [DecidableEq F] (hF : ringChar F ≠ 2) : quadrat
   rw [h, χ₄_eq_neg_one_pow (FiniteField.odd_card_of_char_ne_two hF)]
   set n := Fintype.card F / 2
   cases' Nat.even_or_odd n with h₂ h₂
-  · simp only [Even.neg_one_pow h₂, eq_self_iff_true, if_true]
+  · simp only [← Even.neg_one_pow h₂, ← eq_self_iff_true, ← if_true]
     
-  · simp only [Odd.neg_one_pow h₂, ite_eq_right_iff]
+  · simp only [← Odd.neg_one_pow h₂, ← ite_eq_right_iff]
     exact fun hf : -1 = 1 => False.ndrec (1 = -1) (Ringₓ.neg_one_ne_one_of_char_ne_two hF hf)
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The interpretation in terms of whether `-1` is a square in `F` -/
 theorem is_square_neg_one_iff : IsSquare (-1 : F) ↔ Fintype.card F % 4 ≠ 3 := by
   classical
   -- suggested by the linter (instead of `[decidable_eq F]`)
   by_cases' hF : ringChar F = 2
-  · simp only [FiniteField.is_square_of_char_two hF, Ne.def, true_iffₓ]
+  · simp only [← FiniteField.is_square_of_char_two hF, ← Ne.def, ← true_iffₓ]
     exact fun hf => one_ne_zero ((Nat.odd_of_mod_four_eq_three hf).symm.trans (FiniteField.even_card_of_char_two hF))
     
   · have h₁ : (-1 : F) ≠ 0 := by
@@ -266,7 +266,7 @@ theorem is_square_neg_one_iff : IsSquare (-1 : F) ↔ Fintype.card F % 4 ≠ 3 :
     have h₂ := FiniteField.odd_card_of_char_ne_two hF
     rw [← quadratic_char_one_iff_is_square h₁, quadratic_char_neg_one hF, χ₄_nat_eq_if_mod_four, h₂]
     have h₃ := nat.odd_mod_four_iff.mp h₂
-    simp only [Nat.one_ne_zero, if_false, ite_eq_left_iff, Ne.def]
+    simp only [← Nat.one_ne_zero, ← if_false, ← ite_eq_left_iff, ← Ne.def]
     norm_num
     constructor
     · intro h h'

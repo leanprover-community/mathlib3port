@@ -38,7 +38,7 @@ theorem arcsin_mem_Icc (x : ℝ) : arcsin x ∈ Icc (-(π / 2)) (π / 2) :=
 @[simp]
 theorem range_arcsin : Range arcsin = Icc (-(π / 2)) (π / 2) := by
   rw [arcsin, range_comp coe]
-  simp [Icc]
+  simp [← Icc]
 
 theorem arcsin_le_pi_div_two (x : ℝ) : arcsin x ≤ π / 2 :=
   (arcsin_mem_Icc x).2
@@ -50,7 +50,7 @@ theorem arcsin_proj_Icc (x : ℝ) : arcsin (projIcc (-1) 1 (neg_le_self zero_le_
   rw [arcsin, Function.comp_app, Icc_extend_coe, Function.comp_app, Icc_extend]
 
 theorem sin_arcsin' {x : ℝ} (hx : x ∈ Icc (-1 : ℝ) 1) : sin (arcsin x) = x := by
-  simpa [arcsin, Icc_extend_of_mem _ _ hx, -OrderIso.apply_symm_apply] using
+  simpa [← arcsin, ← Icc_extend_of_mem _ _ hx, -OrderIso.apply_symm_apply] using
     Subtype.ext_iff.1 (sin_order_iso.apply_symm_apply ⟨x, hx⟩)
 
 theorem sin_arcsin {x : ℝ} (hx₁ : -1 ≤ x) (hx₂ : x ≤ 1) : sin (arcsin x) = x :=
@@ -126,10 +126,10 @@ theorem arcsin_le_iff_le_sin {x y : ℝ} (hx : x ∈ Icc (-1 : ℝ) 1) (hy : y �
 
 theorem arcsin_le_iff_le_sin' {x y : ℝ} (hy : y ∈ Ico (-(π / 2)) (π / 2)) : arcsin x ≤ y ↔ x ≤ sin y := by
   cases' le_totalₓ x (-1) with hx₁ hx₁
-  · simp [arcsin_of_le_neg_one hx₁, hy.1, hx₁.trans (neg_one_le_sin _)]
+  · simp [← arcsin_of_le_neg_one hx₁, ← hy.1, ← hx₁.trans (neg_one_le_sin _)]
     
   cases' lt_or_leₓ 1 x with hx₂ hx₂
-  · simp [arcsin_of_one_le hx₂.le, hy.2.not_le, (sin_le_one y).trans_lt hx₂]
+  · simp [← arcsin_of_one_le hx₂.le, ← hy.2.not_le, ← (sin_le_one y).trans_lt hx₂]
     
   exact arcsin_le_iff_le_sin ⟨hx₁, hx₂⟩ (mem_Icc_of_Ico hy)
 
@@ -156,7 +156,8 @@ theorem lt_arcsin_iff_sin_lt' {x y : ℝ} (hx : x ∈ Ico (-(π / 2)) (π / 2)) 
   not_leₓ.symm.trans <| (not_congr <| arcsin_le_iff_le_sin' hx).trans not_leₓ
 
 theorem arcsin_eq_iff_eq_sin {x y : ℝ} (hy : y ∈ Ioo (-(π / 2)) (π / 2)) : arcsin x = y ↔ x = sin y := by
-  simp only [le_antisymm_iffₓ, arcsin_le_iff_le_sin' (mem_Ico_of_Ioo hy), le_arcsin_iff_sin_le' (mem_Ioc_of_Ioo hy)]
+  simp only [← le_antisymm_iffₓ, ← arcsin_le_iff_le_sin' (mem_Ico_of_Ioo hy), ←
+    le_arcsin_iff_sin_le' (mem_Ioc_of_Ioo hy)]
 
 @[simp]
 theorem arcsin_nonneg {x : ℝ} : 0 ≤ arcsin x ↔ 0 ≤ x :=
@@ -169,7 +170,7 @@ theorem arcsin_nonpos {x : ℝ} : arcsin x ≤ 0 ↔ x ≤ 0 :=
 
 @[simp]
 theorem arcsin_eq_zero_iff {x : ℝ} : arcsin x = 0 ↔ x = 0 := by
-  simp [le_antisymm_iffₓ]
+  simp [← le_antisymm_iffₓ]
 
 @[simp]
 theorem zero_eq_arcsin_iff {x} : 0 = arcsin x ↔ x = 0 :=
@@ -261,7 +262,7 @@ theorem arccos_eq_pi_div_two_sub_arcsin (x : ℝ) : arccos x = π / 2 - arcsin x
   rfl
 
 theorem arcsin_eq_pi_div_two_sub_arccos (x : ℝ) : arcsin x = π / 2 - arccos x := by
-  simp [arccos]
+  simp [← arccos]
 
 theorem arccos_le_pi (x : ℝ) : arccos x ≤ π := by
   unfold arccos <;> linarith [neg_pi_div_two_le_arcsin x]
@@ -273,7 +274,7 @@ theorem cos_arccos {x : ℝ} (hx₁ : -1 ≤ x) (hx₂ : x ≤ 1) : cos (arccos 
   rw [arccos, cos_pi_div_two_sub, sin_arcsin hx₁ hx₂]
 
 theorem arccos_cos {x : ℝ} (hx₁ : 0 ≤ x) (hx₂ : x ≤ π) : arccos (cos x) = x := by
-  rw [arccos, ← sin_pi_div_two_sub, arcsin_sin] <;> simp [sub_eq_add_neg] <;> linarith
+  rw [arccos, ← sin_pi_div_two_sub, arcsin_sin] <;> simp [← sub_eq_add_neg] <;> linarith
 
 theorem strict_anti_on_arccos : StrictAntiOn arccos (Icc (-1) 1) := fun x hx y hy h =>
   sub_lt_sub_left (strict_mono_on_arcsin hx hy h) _
@@ -286,23 +287,23 @@ theorem arccos_inj {x y : ℝ} (hx₁ : -1 ≤ x) (hx₂ : x ≤ 1) (hy₁ : -1 
 
 @[simp]
 theorem arccos_zero : arccos 0 = π / 2 := by
-  simp [arccos]
+  simp [← arccos]
 
 @[simp]
 theorem arccos_one : arccos 1 = 0 := by
-  simp [arccos]
+  simp [← arccos]
 
 @[simp]
 theorem arccos_neg_one : arccos (-1) = π := by
-  simp [arccos, add_halves]
+  simp [← arccos, ← add_halves]
 
 @[simp]
 theorem arccos_eq_zero {x} : arccos x = 0 ↔ 1 ≤ x := by
-  simp [arccos, sub_eq_zero]
+  simp [← arccos, ← sub_eq_zero]
 
 @[simp]
 theorem arccos_eq_pi_div_two {x} : arccos x = π / 2 ↔ x = 0 := by
-  simp [arccos]
+  simp [← arccos]
 
 @[simp]
 theorem arccos_eq_pi {x} : arccos x = π ↔ x ≤ -1 := by
@@ -316,7 +317,7 @@ theorem sin_arccos {x : ℝ} (hx₁ : -1 ≤ x) (hx₂ : x ≤ 1) : sin (arccos 
 
 @[simp]
 theorem arccos_le_pi_div_two {x} : arccos x ≤ π / 2 ↔ 0 ≤ x := by
-  simp [arccos]
+  simp [← arccos]
 
 @[simp]
 theorem arccos_le_pi_div_four {x} : arccos x ≤ π / 4 ↔ sqrt 2 / 2 ≤ x := by

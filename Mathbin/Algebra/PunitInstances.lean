@@ -26,7 +26,7 @@ variable {R S : Type _} (x y : PUnit.{u + 1}) (s : Set PUnit.{u + 1})
 instance : CommGroupₓ PUnit := by
   refine_struct
       { mul := fun _ _ => star, one := star, inv := fun _ => star, div := fun _ _ => star, npow := fun _ _ => star,
-        zpow := fun _ _ => star, .. } <;>
+        zpow := fun _ _ => star.. } <;>
     intros <;> exact Subsingleton.elimₓ _ _
 
 @[simp, to_additive]
@@ -48,7 +48,8 @@ theorem inv_eq : x⁻¹ = star :=
   rfl
 
 instance : CommRingₓ PUnit := by
-  refine' { PUnit.commGroup, PUnit.addCommGroup with .. } <;> intros <;> exact Subsingleton.elimₓ _ _
+  refine' { PUnit.commGroup, PUnit.addCommGroup with natCast := fun _ => PUnit.unit.. } <;>
+    intros <;> exact Subsingleton.elimₓ _ _
 
 instance : CancelCommMonoidWithZero PUnit := by
   refine' { PUnit.commRing with .. } <;> intros <;> exact Subsingleton.elimₓ _ _
@@ -59,7 +60,7 @@ instance : NormalizedGcdMonoid PUnit := by
         gcd_dvd_left := fun _ _ => ⟨star, Subsingleton.elimₓ _ _⟩,
         gcd_dvd_right := fun _ _ => ⟨star, Subsingleton.elimₓ _ _⟩,
         dvd_gcd := fun _ _ _ _ _ => ⟨star, Subsingleton.elimₓ _ _⟩,
-        gcd_mul_lcm := fun _ _ => ⟨1, Subsingleton.elimₓ _ _⟩, .. } <;>
+        gcd_mul_lcm := fun _ _ => ⟨1, Subsingleton.elimₓ _ _⟩.. } <;>
     intros <;> exact Subsingleton.elimₓ _ _
 
 @[simp]
@@ -79,11 +80,11 @@ instance : CompleteBooleanAlgebra PUnit := by
       { le := fun _ _ => True, le_antisymm := fun _ _ _ _ => Subsingleton.elimₓ _ _, lt := fun _ _ => False,
         lt_iff_le_not_le := fun _ _ => iff_of_false not_false fun H => H.2 trivialₓ, top := star, bot := star,
         sup := fun _ _ => star, inf := fun _ _ => star, sup := fun _ => star, inf := fun _ => star,
-        Compl := fun _ => star, sdiff := fun _ _ => star, .. } <;>
+        compl := fun _ => star, sdiff := fun _ _ => star.. } <;>
     intros <;>
       first |
         trivial|
-        simp only [eq_iff_true_of_subsingleton]
+        simp only [← eq_iff_true_of_subsingleton]
 
 @[simp]
 theorem top_eq : (⊤ : PUnit) = star :=
@@ -128,7 +129,7 @@ theorem not_lt : ¬x < y :=
 instance : CanonicallyOrderedAddMonoid PUnit := by
   refine'
       { PUnit.commRing, PUnit.completeBooleanAlgebra with
-        exists_add_of_le := fun _ _ _ => ⟨star, Subsingleton.elimₓ _ _⟩, .. } <;>
+        exists_add_of_le := fun _ _ _ => ⟨star, Subsingleton.elimₓ _ _⟩.. } <;>
     intros <;> trivial
 
 instance : LinearOrderedCancelAddCommMonoid PUnit :=
@@ -137,8 +138,7 @@ instance : LinearOrderedCancelAddCommMonoid PUnit :=
     decidableLe := fun _ _ => Decidable.true, DecidableEq := PUnit.decidableEq,
     decidableLt := fun _ _ => Decidable.false }
 
-instance : HasScalar R PUnit where
-  smul := fun _ _ => unit
+instance : HasSmul R PUnit where smul := fun _ _ => unit
 
 @[simp]
 theorem smul_eq (r : R) : r • y = star :=
@@ -150,14 +150,14 @@ instance : IsCentralScalar R PUnit :=
 instance : SmulCommClass R S PUnit :=
   ⟨fun _ _ _ => Subsingleton.elimₓ _ _⟩
 
-instance [HasScalar R S] : IsScalarTower R S PUnit :=
+instance [HasSmul R S] : IsScalarTower R S PUnit :=
   ⟨fun _ _ _ => Subsingleton.elimₓ _ _⟩
 
 instance [Zero R] : SmulWithZero R PUnit := by
-  refine' { PUnit.hasScalar with .. } <;> intros <;> exact Subsingleton.elimₓ _ _
+  refine' { PUnit.hasSmul with .. } <;> intros <;> exact Subsingleton.elimₓ _ _
 
 instance [Monoidₓ R] : MulAction R PUnit := by
-  refine' { PUnit.hasScalar with .. } <;> intros <;> exact Subsingleton.elimₓ _ _
+  refine' { PUnit.hasSmul with .. } <;> intros <;> exact Subsingleton.elimₓ _ _
 
 instance [Monoidₓ R] : DistribMulAction R PUnit := by
   refine' { PUnit.mulAction with .. } <;> intros <;> exact Subsingleton.elimₓ _ _

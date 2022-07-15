@@ -64,7 +64,7 @@ theorem homothety_continuous (x : F) (t : R) : Continuous <| homothety x t := by
     rw [this]
     continuity
   ext y
-  simp [homothety_apply]
+  simp [← homothety_apply]
 
 end CommRingₓ
 
@@ -74,7 +74,7 @@ variable [Field R] [Module R F] [HasContinuousConstSmul R F]
 
 theorem homothety_is_open_map (x : F) (t : R) (ht : t ≠ 0) : IsOpenMap <| homothety x t := by
   apply IsOpenMap.of_inverse (homothety_continuous x t⁻¹) <;>
-    intro e <;> simp [← AffineMap.comp_apply, ← homothety_mul, ht]
+    intro e <;> simp [AffineMap.comp_apply, homothety_mul, ← ht]
 
 end Field
 

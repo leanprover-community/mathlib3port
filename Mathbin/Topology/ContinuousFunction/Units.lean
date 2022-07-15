@@ -57,7 +57,7 @@ theorem _root_.normed_ring.is_unit_unit_continuous {f : C(X, R)} (h : ∀ x, IsU
     continuous_induced_rng
       (Continuous.prod_mk f.continuous (mul_opposite.continuous_op.comp (continuous_iff_continuous_at.mpr fun x => _)))
   have := NormedRing.inverse_continuous_at (h x).Unit
-  simp only [← Ring.inverse_unit, IsUnit.unit_spec, ← Function.comp_applyₓ] at this⊢
+  simp only [Ring.inverse_unit, ← IsUnit.unit_spec, Function.comp_applyₓ] at this⊢
   exact this.comp (f.continuous_at x)
 
 /-- Construct a continuous map into the group of units of a normed ring from a function into the
@@ -92,8 +92,9 @@ theorem is_unit_iff_forall_ne_zero (f : C(X, 𝕜)) : IsUnit f ↔ ∀ x, f x �
 
 theorem spectrum_eq_range (f : C(X, 𝕜)) : Spectrum 𝕜 f = Set.Range f := by
   ext
-  simp only [Spectrum.mem_iff, is_unit_iff_forall_ne_zero, not_forall, coe_sub, Pi.sub_apply, algebra_map_apply,
-    Algebra.id.smul_eq_mul, mul_oneₓ, not_not, Set.mem_range, sub_eq_zero, @eq_comm _ x _]
+  simp only [← Spectrum.mem_iff, ← is_unit_iff_forall_ne_zero, ← not_forall, ← coe_sub, ← Pi.sub_apply, ←
+    algebra_map_apply, ← Algebra.id.smul_eq_mul, ← mul_oneₓ, ← not_not, ← Set.mem_range, ← sub_eq_zero, ←
+    @eq_comm _ x _]
 
 end NormedField
 

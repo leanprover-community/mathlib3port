@@ -162,37 +162,47 @@ theorem unique_iff_subsingleton_and_nonempty (α : Sort u) : Nonempty (Unique α
       exact Unique.mk' α⟩⟩
 
 @[simp]
-theorem Pi.default_def {β : ∀ a : α, Sort v} [∀ a, Inhabited (β a)] :
+theorem Pi.default_def {β : α → Sort v} [∀ a, Inhabited (β a)] :
     @default (∀ a, β a) _ = fun a : α => @default (β a) _ :=
   rfl
 
-theorem Pi.default_apply {β : ∀ a : α, Sort v} [∀ a, Inhabited (β a)] (a : α) : @default (∀ a, β a) _ a = default :=
+theorem Pi.default_apply {β : α → Sort v} [∀ a, Inhabited (β a)] (a : α) : @default (∀ a, β a) _ a = default :=
   rfl
 
-instance Pi.unique {β : ∀ a : α, Sort v} [∀ a, Unique (β a)] : Unique (∀ a, β a) :=
+instance Pi.unique {β : α → Sort v} [∀ a, Unique (β a)] : Unique (∀ a, β a) :=
   { Pi.inhabited α with uniq := fun f => funext fun x => Unique.eq_default _ }
 
 /-- There is a unique function on an empty domain. -/
-instance Pi.uniqueOfIsEmpty [IsEmpty α] (β : ∀ a : α, Sort v) : Unique (∀ a, β a) where
+instance Pi.uniqueOfIsEmpty [IsEmpty α] (β : α → Sort v) : Unique (∀ a, β a) where
   default := isEmptyElim
   uniq := fun f => funext isEmptyElim
+
+theorem eq_const_of_unique [Unique α] (f : α → β) : f = Function.const α (f default) := by
+  ext x
+  rw [Subsingleton.elimₓ x default]
+
+theorem heq_const_of_unique [Unique α] {β : α → Sort v} (f : ∀ a, β a) : HEq f (Function.const α (f default)) :=
+  (Function.hfunext rfl) fun i _ _ => by
+    rw [Subsingleton.elimₓ i default]
 
 namespace Function
 
 variable {f : α → β}
 
-/-- If the domain of a surjective function is a singleton,
-then the codomain is a singleton as well. -/
-protected def Surjective.unique (hf : Surjective f) [Unique α] : Unique β where
-  default := f default
-  uniq := fun b =>
-    let ⟨a, ha⟩ := hf b
-    ha ▸ congr_arg f (Unique.eq_default _)
-
 /-- If the codomain of an injective function is a subsingleton, then the domain
 is a subsingleton as well. -/
 protected theorem Injective.subsingleton (hf : Injective f) [Subsingleton β] : Subsingleton α :=
   ⟨fun x y => hf <| Subsingleton.elimₓ _ _⟩
+
+/-- If the domain of a surjective function is a subsingleton, then the codomain is a subsingleton as
+well. -/
+protected theorem Surjective.subsingleton [Subsingleton α] (hf : Surjective f) : Subsingleton β :=
+  ⟨hf.Forall₂.2 fun x y => congr_arg f <| Subsingleton.elimₓ x y⟩
+
+/-- If the domain of a surjective function is a singleton,
+then the codomain is a singleton as well. -/
+protected def Surjective.unique (hf : Surjective f) [Unique α] : Unique β :=
+  @Unique.mk' _ ⟨f default⟩ hf.Subsingleton
 
 /-- If `α` is inhabited and admits an injective map to a subsingleton type, then `α` is `unique`. -/
 protected def Injective.unique [Inhabited α] [Subsingleton β] (hf : Injective f) : Unique α :=

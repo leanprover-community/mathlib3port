@@ -50,7 +50,7 @@ protected theorem Orientation.fin_orthonormal_basis_orthonormal {n : ℕ} (hn : 
 /-- `orientation.fin_orthonormal_basis` gives a basis with the required orientation. -/
 @[simp]
 theorem Orientation.fin_orthonormal_basis_orientation {n : ℕ} (hn : 0 < n) (h : finrank ℝ E = n)
-    (x : Orientation ℝ E (Finₓ n)) : (x.finOrthonormalBasis hn h).Orientation = x :=
+    (x : Orientation ℝ E (Finₓ n)) : (x.finOrthonormalBasis hn h).Orientation = x := by
   have := Finₓ.pos_iff_nonempty.1 hn
-  Basis.orientation_adjust_to_orientation _ _
+  exact Basis.orientation_adjust_to_orientation _ _
 

@@ -111,7 +111,7 @@ theorem mem_range_map_to_fraction_ring_iff_of_field (B : Type _) [CommRingₓ B]
   iterate 3 
     congr with
   convert Iff.rfl
-  rw [Units.coe_inv']
+  rw [Units.coe_inv]
   rfl
 
 /-- Given a domain `A` with fraction field `K`, and a submonoid `S` of `A` which

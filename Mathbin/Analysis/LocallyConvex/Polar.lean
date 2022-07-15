@@ -3,7 +3,7 @@ Copyright (c) 2022 Moritz Doll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll, Kalle Kytölä
 -/
-import Mathbin.Analysis.Normed.NormedField
+import Mathbin.Analysis.Normed.Field.Basic
 import Mathbin.Analysis.Convex.Basic
 import Mathbin.LinearAlgebra.SesquilinearForm
 import Mathbin.Topology.Algebra.Module.WeakDual
@@ -61,11 +61,11 @@ theorem polar_mem (s : Set E) (y : F) (hy : y ∈ B.Polar s) : ∀, ∀ x ∈ s,
 
 @[simp]
 theorem zero_mem_polar (s : Set E) : (0 : F) ∈ B.Polar s := fun _ _ => by
-  simp only [map_zero, norm_zero, zero_le_one]
+  simp only [← map_zero, ← norm_zero, ← zero_le_one]
 
 theorem polar_eq_Inter {s : Set E} : B.Polar s = ⋂ x ∈ s, { y : F | ∥B x y∥ ≤ 1 } := by
   ext
-  simp only [polar_mem_iff, Set.mem_Inter, Set.mem_set_of_eq]
+  simp only [← polar_mem_iff, ← Set.mem_Inter, ← Set.mem_set_of_eq]
 
 /-- The map `B.polar : set E → set F` forms an order-reversing Galois connection with
 `B.flip.polar : set F → set E`. We use `order_dual.to_dual` and `order_dual.of_dual` to express
@@ -124,7 +124,7 @@ theorem polar_univ (h : SeparatingRight B) : B.Polar Set.Univ = {(0 : F)} := by
   rw [Set.eq_singleton_iff_unique_mem]
   refine'
     ⟨by
-      simp only [zero_mem_polar], fun y hy => h _ fun x => _⟩
+      simp only [← zero_mem_polar], fun y hy => h _ fun x => _⟩
   refine' norm_le_zero_iff.mp (le_of_forall_le_of_dense fun ε hε => _)
   rcases NormedField.exists_norm_lt 𝕜 hε with ⟨c, hc, hcε⟩
   calc ∥B x y∥ = ∥c∥ * ∥B (c⁻¹ • x) y∥ := by

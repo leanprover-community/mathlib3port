@@ -31,8 +31,8 @@ open CategoryTheory Function
 
 namespace Profinite
 
-instance projective_ultrafilter (X : Type u) : Projective (of <| Ultrafilter X) where
-  factors := fun Y Z f g hg => by
+instance projective_ultrafilter (X : Type u) :
+    Projective (of <| Ultrafilter X) where factors := fun Y Z f g hg => by
     rw [epi_iff_surjective] at hg
     obtain ⟨g', hg'⟩ := hg.has_right_inverse
     let t : X → Y := g' ∘ f ∘ (pure : X → Ultrafilter X)
@@ -40,7 +40,7 @@ instance projective_ultrafilter (X : Type u) : Projective (of <| Ultrafilter X) 
     have hh : Continuous h := continuous_ultrafilter_extend _
     use ⟨h, hh⟩
     apply faithful.map_injective (forget Profinite)
-    simp only [forget_map_eq_coe, ContinuousMap.coe_mk, coe_comp]
+    simp only [← forget_map_eq_coe, ← ContinuousMap.coe_mk, ← coe_comp]
     refine' dense_range_pure.equalizer (g.continuous.comp hh) f.continuous _
     rw [comp.assoc, ultrafilter_extend_extends, ← comp.assoc, hg'.comp_eq_id, comp.left_id]
 
@@ -53,8 +53,7 @@ def projectivePresentation (X : Profinite.{u}) : ProjectivePresentation X where
     (ConcreteCategory.epi_of_surjective _) fun x =>
       ⟨(pure x : Ultrafilter X), congr_fun (ultrafilter_extend_extends (𝟙 X)) x⟩
 
-instance : EnoughProjectives Profinite.{u} where
-  presentation := fun X => ⟨projectivePresentation X⟩
+instance : EnoughProjectives Profinite.{u} where presentation := fun X => ⟨projectivePresentation X⟩
 
 end Profinite
 

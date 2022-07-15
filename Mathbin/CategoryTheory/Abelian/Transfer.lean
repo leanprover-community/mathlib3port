@@ -101,11 +101,11 @@ def coimageIsoImageAux {X Y : C} (f : X ⟶ Y) : kernel (G.map (cokernel.π (F.m
       kernel_comp_mono _ _ _ ≅ kernel (cokernel.π (f ≫ i.inv.app Y) ≫ (cokernel_epi_comp (i.hom.app X) _).inv) :=
       kernel_iso_of_eq
         (by
-          simp only [cokernel.π_desc, cokernel_epi_comp_inv])_ ≅ kernel (cokernel.π (f ≫ _)) :=
+          simp only [← cokernel.π_desc, ← cokernel_epi_comp_inv])_ ≅ kernel (cokernel.π (f ≫ _)) :=
       kernel_comp_mono _ _ _ ≅ kernel (inv (i.inv.app Y) ≫ cokernel.π f ≫ (cokernel_comp_is_iso f (i.inv.app Y)).inv) :=
       kernel_iso_of_eq
         (by
-          simp only [cokernel.π_desc, cokernel_comp_is_iso_inv, iso.hom_inv_id_app_assoc,
+          simp only [← cokernel.π_desc, ← cokernel_comp_is_iso_inv, ← iso.hom_inv_id_app_assoc, ←
             nat_iso.inv_inv_app])_ ≅ kernel (cokernel.π f ≫ _) :=
       kernel_is_iso_comp _ _ _ ≅ kernel (cokernel.π f) := kernel_comp_mono _ _
 
@@ -136,7 +136,7 @@ attribute [local simp] cokernel_iso coimage_iso_image coimage_iso_image_aux
 theorem coimage_iso_image_hom {X Y : C} (f : X ⟶ Y) :
     (coimageIsoImage F G i adj f).Hom = Abelian.coimageImageComparison f := by
   ext
-  simpa [-functor.map_comp, ← G.map_comp_assoc] using nat_iso.naturality_1 i f
+  simpa [-functor.map_comp, G.map_comp_assoc] using nat_iso.naturality_1 i f
 
 end AbelianOfAdjunction
 

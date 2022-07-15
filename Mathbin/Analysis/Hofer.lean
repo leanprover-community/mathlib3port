@@ -42,13 +42,13 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
   replace H : ∀ k : ℕ, ∀ x', d x' x ≤ 2 * ε ∧ 2 ^ k * ϕ x ≤ ϕ x' → ∃ y, d x' y ≤ ε / 2 ^ k ∧ 2 * ϕ x' < ϕ y
   · intro k x'
     push_neg  at H
-    simpa [reformulation] using
+    simpa [← reformulation] using
       H (ε / 2 ^ k)
         (by
-          simp [ε_pos, zero_lt_two])
+          simp [← ε_pos, ← zero_lt_two])
         x'
         (by
-          simp [ε_pos, zero_lt_two, one_le_two])
+          simp [← ε_pos, ← zero_lt_two, ← one_le_two])
     
   clear reformulation
   have : Nonempty X := ⟨x⟩
@@ -69,7 +69,7 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
     intro n
     induction' n using Nat.case_strong_induction_onₓ with n IH
     · specialize hu 0
-      simpa [hu0, mul_nonneg_iff, zero_le_one, ε_pos.le, le_reflₓ] using hu
+      simpa [← hu0, ← mul_nonneg_iff, ← zero_le_one, ← ε_pos.le, ← le_reflₓ] using hu
       
     have A : d (u (n + 1)) x ≤ 2 * ε := by
       rw [dist_comm]
@@ -92,7 +92,7 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
   -- Hence u is Cauchy
   have cauchy_u : CauchySeq u := by
     refine' cauchy_seq_of_le_geometric _ ε one_half_lt_one fun n => _
-    simpa only [one_div, inv_pow] using key₁ n
+    simpa only [← one_div, ← inv_pow] using key₁ n
   -- So u converges to some y
   obtain ⟨y, limy⟩ : ∃ y, tendsto u at_top (𝓝 y)
   exact CompleteSpace.complete cauchy_u

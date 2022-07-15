@@ -73,7 +73,7 @@ theorem exists_integer_multiple' (a : S) : ∃ b : M, IsInteger R (a * algebraMa
 
 /-- Each element `a : S` has an `M`-multiple which is an integer.
 
-This version multiplies `a` on the left, matching the argument order in the `has_scalar` instance.
+This version multiplies `a` on the left, matching the argument order in the `has_smul` instance.
 -/
 theorem exists_integer_multiple (a : S) : ∃ b : M, IsInteger R ((b : R) • a) := by
   simp_rw [Algebra.smul_def, mul_comm _ a]

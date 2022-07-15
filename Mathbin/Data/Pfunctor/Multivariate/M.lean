@@ -65,7 +65,7 @@ inductive M.Path : P.last.M → Fin2 n → Type u
 instance M.Path.inhabited (x : P.last.M) {i} [Inhabited (P.drop.B x.head i)] : Inhabited (M.Path P x i) :=
   ⟨M.Path.root _ (Pfunctor.M.head x) (Pfunctor.M.children x)
       (Pfunctor.M.casesOn' x <| by
-        intros <;> simp [Pfunctor.M.dest_mk] <;> ext <;> rw [Pfunctor.M.children_mk] <;> rfl)
+        intros <;> simp [← Pfunctor.M.dest_mk] <;> ext <;> rw [Pfunctor.M.children_mk] <;> rfl)
       _ default⟩
 
 /-- Polynomial functor of the M-type of `P`. `A` is a data-less
@@ -191,7 +191,7 @@ theorem M.bisim {α : Typevec n} (R : P.M α → P.M α → Prop)
     x y (r : R x y) : x = y := by
   cases' x with a₁ f₁
   cases' y with a₂ f₂
-  dsimp' [Mp]  at *
+  dsimp' [← Mp]  at *
   have : a₁ = a₂ := by
     refine' Pfunctor.M.bisim (fun a₁ a₂ => ∃ x y, R x y ∧ x.1 = a₁ ∧ y.1 = a₂) _ _ _ ⟨⟨a₁, f₁⟩, ⟨a₂, f₂⟩, r, rfl, rfl⟩
     rintro _ _ ⟨⟨a₁, f₁⟩, ⟨a₂, f₂⟩, r, rfl, rfl⟩
@@ -238,7 +238,7 @@ theorem M.bisim₀ {α : Typevec n} (R : P.M α → P.M α → Prop) (h₀ : Equ
   simp
   intro i
   replace h₁ := congr_fun (congr_fun h₁ Fin2.fz) i
-  simp [(· ⊚ ·), append_fun, split_fun] at h₁
+  simp [← (· ⊚ ·), ← append_fun, ← split_fun] at h₁
   replace h₁ := Quot.exact _ h₁
   rw [h₀.eqv_gen_iff] at h₁
   exact h₁
@@ -247,7 +247,7 @@ theorem M.bisim' {α : Typevec n} (R : P.M α → P.M α → Prop)
     (h : ∀ x y, R x y → (id ::: Quot.mk R) <$$> M.dest _ x = (id ::: Quot.mk R) <$$> M.dest _ y) x y (r : R x y) :
     x = y := by
   have := M.bisim₀ P (EqvGen R) _ _
-  · solve_by_elim [EqvGen.rel]
+  · solve_by_elim [← EqvGen.rel]
     
   · apply EqvGen.is_equivalence
     

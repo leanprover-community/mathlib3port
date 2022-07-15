@@ -193,7 +193,7 @@ In this section we prove the following results:
 /-- If a preconnected set contains endpoints of an interval, then it includes the whole interval. -/
 theorem IsPreconnected.Icc_subset {s : Set α} (hs : IsPreconnected s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) :
     Icc a b ⊆ s := by
-  simpa only [image_id] using hs.intermediate_value ha hb continuous_on_id
+  simpa only [← image_id] using hs.intermediate_value ha hb continuous_on_id
 
 theorem IsPreconnected.ord_connected {s : Set α} (h : IsPreconnected s) : OrdConnected s :=
   ⟨fun x hx y hy => h.Icc_subset hx hy⟩
@@ -241,7 +241,7 @@ theorem IsPreconnected.Iio_cSup_subset {s : Set α} (hs : IsPreconnected s) (hb 
     Iio (sup s) ⊆ s :=
   @IsPreconnected.Ioi_cInf_subset αᵒᵈ _ _ _ s hs ha hb
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 /-- A preconnected set in a conditionally complete linear order is either one of the intervals
 `[Inf s, Sup s]`, `[Inf s, Sup s)`, `(Inf s, Sup s]`, `(Inf s, Sup s)`, `[Inf s, +∞)`,
 `(Inf s, +∞)`, `(-∞, Sup s]`, `(-∞, Sup s)`, `(-∞, +∞)`, or `∅`. The converse statement requires
@@ -458,10 +458,10 @@ theorem set_of_is_preconnected_eq_of_ordered :
           {Univ, ∅}) :=
   by
   refine' subset.antisymm set_of_is_preconnected_subset_of_ordered _
-  simp only [subset_def, -mem_range, forall_range_iff, uncurry, or_imp_distrib, forall_and_distrib, mem_union,
-    mem_set_of_eq, insert_eq, mem_singleton_iff, forall_eq, forall_true_iff, and_trueₓ, is_preconnected_Icc,
-    is_preconnected_Ico, is_preconnected_Ioc, is_preconnected_Ioo, is_preconnected_Ioi, is_preconnected_Iio,
-    is_preconnected_Ici, is_preconnected_Iic, is_preconnected_univ, is_preconnected_empty]
+  simp only [← subset_def, -mem_range, ← forall_range_iff, ← uncurry, ← or_imp_distrib, ← forall_and_distrib, ←
+    mem_union, ← mem_set_of_eq, ← insert_eq, ← mem_singleton_iff, ← forall_eq, ← forall_true_iff, ← and_trueₓ, ←
+    is_preconnected_Icc, ← is_preconnected_Ico, ← is_preconnected_Ioc, ← is_preconnected_Ioo, ← is_preconnected_Ioi, ←
+    is_preconnected_Iio, ← is_preconnected_Ici, ← is_preconnected_Iic, ← is_preconnected_univ, ← is_preconnected_empty]
 
 /-!
 ### Intermediate Value Theorem on an interval
@@ -488,7 +488,7 @@ theorem intermediate_value_Icc' {a b : α} (hab : a ≤ b) {f : α → δ} (hf :
 /-- **Intermediate Value Theorem** for continuous functions on closed intervals, unordered case. -/
 theorem intermediate_value_interval {a b : α} {f : α → δ} (hf : ContinuousOn f (Interval a b)) :
     Interval (f a) (f b) ⊆ f '' Interval a b := by
-  cases le_totalₓ (f a) (f b) <;> simp [*, is_preconnected_interval.intermediate_value]
+  cases le_totalₓ (f a) (f b) <;> simp [*, ← is_preconnected_interval.intermediate_value]
 
 theorem intermediate_value_Ico {a b : α} (hab : a ≤ b) {f : α → δ} (hf : ContinuousOn f (Icc a b)) :
     Ico (f a) (f b) ⊆ f '' Ico a b :=
@@ -544,7 +544,7 @@ theorem ContinuousOn.surj_on_Icc {s : Set α} [hs : OrdConnected s] {f : α → 
 `b` are two points of this set, then `f` sends `s` to a superset of `[f x, f y]`. -/
 theorem ContinuousOn.surj_on_interval {s : Set α} [hs : OrdConnected s] {f : α → δ} (hf : ContinuousOn f s) {a b : α}
     (ha : a ∈ s) (hb : b ∈ s) : SurjOn f s (Interval (f a) (f b)) := by
-  cases' le_totalₓ (f a) (f b) with hab hab <;> simp [hf.surj_on_Icc, *]
+  cases' le_totalₓ (f a) (f b) with hab hab <;> simp [← hf.surj_on_Icc, *]
 
 /-- A continuous function which tendsto `at_top` `at_top` and to `at_bot` `at_bot` is surjective. -/
 theorem Continuous.surjective {f : α → δ} (hf : Continuous f) (h_top : Tendsto f atTop atTop)

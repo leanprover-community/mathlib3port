@@ -218,7 +218,7 @@ theorem cof_eq_Inf_lsub (o : Ordinal.{u}) :
           let H := congr_arg f hst
           rwa [Classical.some_spec s.prop, Classical.some_spec t.prop, typein_inj, Subtype.coe_inj] at H)
     have := typein_lt_self a
-    simp_rw [← hf, lt_lsub_iff]  at this
+    simp_rw [← hf, lt_lsub_iff] at this
     cases' this with i hi
     refine' ⟨enum (· < ·) (f i) _, _, _⟩
     · rw [type_lt, ← hf]
@@ -242,31 +242,31 @@ theorem cof_eq_Inf_lsub (o : Ordinal.{u}) :
     
 
 @[simp]
-theorem lift_cof o : (cof o).lift = cof o.lift :=
-  induction_on o <| by
-    intro α r _
-    cases' lift_type r with _ e
-    rw [e]
-    apply le_antisymmₓ
-    · refine' le_cof_type.2 fun S H => _
-      have : (# (ULift.up ⁻¹' S)).lift ≤ # S :=
-        ⟨⟨fun ⟨⟨x, h⟩⟩ => ⟨⟨x⟩, h⟩, fun e => by
-            simp at e <;> congr <;> injection e⟩⟩
-      refine' (Cardinal.lift_le.2 <| cof_type_le _).trans this
-      exact fun a =>
-        let ⟨⟨b⟩, bs, br⟩ := H ⟨a⟩
-        ⟨b, bs, br⟩
-      
-    · rcases cof_eq r with ⟨S, H, e'⟩
-      have : # (ULift.down ⁻¹' S) ≤ (# S).lift :=
-        ⟨⟨fun ⟨⟨x⟩, h⟩ => ⟨⟨x, h⟩⟩, fun e => by
-            simp at e <;> congr <;> injections⟩⟩
-      rw [e'] at this
-      refine' (cof_type_le _).trans this
-      exact fun ⟨a⟩ =>
-        let ⟨b, bs, br⟩ := H a
-        ⟨⟨b⟩, bs, br⟩
-      
+theorem lift_cof o : (cof o).lift = cof o.lift := by
+  refine' induction_on o _
+  intro α r _
+  cases' lift_type r with _ e
+  rw [e]
+  apply le_antisymmₓ
+  · refine' le_cof_type.2 fun S H => _
+    have : (# (ULift.up ⁻¹' S)).lift ≤ # S := by
+      rw [← Cardinal.lift_umax, ← Cardinal.lift_id' (# S)]
+      exact mk_preimage_of_injective_lift ULift.up _ ULift.up_injective
+    refine' (Cardinal.lift_le.2 <| cof_type_le _).trans this
+    exact fun a =>
+      let ⟨⟨b⟩, bs, br⟩ := H ⟨a⟩
+      ⟨b, bs, br⟩
+    
+  · rcases cof_eq r with ⟨S, H, e'⟩
+    have : # (ULift.down ⁻¹' S) ≤ (# S).lift :=
+      ⟨⟨fun ⟨⟨x⟩, h⟩ => ⟨⟨x, h⟩⟩, fun ⟨⟨x⟩, h₁⟩ ⟨⟨y⟩, h₂⟩ e => by
+          simp at e <;> congr <;> injections⟩⟩
+    rw [e'] at this
+    refine' (cof_type_le _).trans this
+    exact fun ⟨a⟩ =>
+      let ⟨b, bs, br⟩ := H a
+      ⟨⟨b⟩, bs, br⟩
+    
 
 theorem cof_le_card o : cof o ≤ card o := by
   rw [cof_eq_Inf_lsub]
@@ -331,16 +331,15 @@ theorem sup_lt_ord {ι} {f : ι → Ordinal} {c : Ordinal} (hι : # ι < c.cof) 
     (by
       rwa [(# ι).lift_id])
 
-theorem sup_lt_lift {ι} {f : ι → Cardinal} {c : Cardinal} (hι : Cardinal.lift (# ι) < c.ord.cof) (hf : ∀ i, f i < c) :
-    Cardinal.sup.{u, v} f < c := by
-  rw [← ord_lt_ord, ← sup_ord]
+theorem supr_lt_lift {ι} {f : ι → Cardinal} {c : Cardinal} (hι : Cardinal.lift (# ι) < c.ord.cof) (hf : ∀ i, f i < c) :
+    supr f < c := by
+  rw [← ord_lt_ord, supr_ord (Cardinal.bdd_above_range _)]
   refine' sup_lt_ord_lift hι fun i => _
   rw [ord_lt_ord]
   apply hf
 
-theorem sup_lt {ι} {f : ι → Cardinal} {c : Cardinal} (hι : # ι < c.ord.cof) :
-    (∀ i, f i < c) → Cardinal.sup.{u, u} f < c :=
-  sup_lt_lift
+theorem supr_lt {ι} {f : ι → Cardinal} {c : Cardinal} (hι : # ι < c.ord.cof) : (∀ i, f i < c) → supr f < c :=
+  supr_lt_lift
     (by
       rwa [(# ι).lift_id])
 
@@ -415,7 +414,7 @@ theorem blsub_lt_ord_lift {o : Ordinal} {f : ∀, ∀ a < o, ∀, Ordinal} {c : 
   lt_of_le_of_neₓ (blsub_le hf) fun h =>
     ho.not_le
       (by
-        simpa [sup_ord, hf, h] using cof_blsub_le_lift.{u} f)
+        simpa [supr_ord, ← hf, ← h] using cof_blsub_le_lift.{u} f)
 
 theorem blsub_lt_ord {o : Ordinal} {f : ∀, ∀ a < o, ∀, Ordinal} {c : Ordinal} (ho : o.card < c.cof)
     (hf : ∀ i hi, f i hi < c) : blsub.{u, u} o f < c :=
@@ -461,7 +460,7 @@ theorem cof_eq_zero {o} : cof o = 0 ↔ o = 0 :=
           let ⟨b, h, _⟩ := hl a
           (mk_eq_zero_iff.1 (e.trans z)).elim' ⟨_, h⟩⟩,
     fun e => by
-    simp [e]⟩
+    simp [← e]⟩
 
 theorem cof_ne_zero {o} : cof o ≠ 0 ↔ o ≠ 0 :=
   cof_eq_zero.Not
@@ -474,14 +473,14 @@ theorem cof_succ o : cof (succ o) = 1 := by
     rw [← (_ : # _ = 1)]
     apply cof_type_le
     · refine' fun a => ⟨Sum.inr PUnit.unit, Set.mem_singleton _, _⟩
-      rcases a with (a | ⟨⟨⟨⟩⟩⟩) <;> simp [EmptyRelation]
+      rcases a with (a | ⟨⟨⟨⟩⟩⟩) <;> simp [← EmptyRelation]
       
     · rw [Cardinal.mk_fintype, Set.card_singleton]
       simp
       
     
   · rw [← Cardinal.succ_zero, succ_le_iff]
-    simpa [lt_iff_le_and_ne, Cardinal.zero_le] using fun h => succ_ne_zero o (cof_eq_zero.1 (Eq.symm h))
+    simpa [← lt_iff_le_and_ne, ← Cardinal.zero_le] using fun h => succ_ne_zero o (cof_eq_zero.1 (Eq.symm h))
     
 
 @[simp]
@@ -500,7 +499,7 @@ theorem cof_eq_one_iff_is_succ {o} : cof.{u} o = 1 ↔ ∃ a, o = succ a :=
           Eq.symm <| Quotientₓ.sound ⟨RelIso.ofSurjective (RelEmbedding.ofMonotone _ fun x y => _) fun x => _⟩⟩
       · apply Sum.rec <;> [exact Subtype.val, exact fun _ => a]
         
-      · rcases x with (x | ⟨⟨⟨⟩⟩⟩) <;> rcases y with (y | ⟨⟨⟨⟩⟩⟩) <;> simp [Subrel, Order.Preimage, EmptyRelation]
+      · rcases x with (x | ⟨⟨⟨⟩⟩⟩) <;> rcases y with (y | ⟨⟨⟨⟩⟩⟩) <;> simp [← Subrel, ← Order.Preimage, ← EmptyRelation]
         exact x.2
         
       · suffices r x a ∨ ∃ b : PUnit, ↑a = x by
@@ -520,7 +519,7 @@ theorem cof_eq_one_iff_is_succ {o} : cof.{u} o = 1 ↔ ∃ a, o = succ a :=
           
         ,
     fun ⟨a, e⟩ => by
-    simp [e]⟩
+    simp [← e]⟩
 
 /-- A fundamental sequence for `a` is an increasing sequence of length `o = cof a` that converges at
     `a`. We provide `o` explicitly in order to avoid type rewrites. -/
@@ -694,18 +693,18 @@ theorem cof_add (a b : Ordinal) : b ≠ 0 → cof (a + b) = cof b := fun h => by
 
 theorem aleph_0_le_cof {o} : ℵ₀ ≤ cof o ↔ IsLimit o := by
   rcases zero_or_succ_or_limit o with (rfl | ⟨o, rfl⟩ | l)
-  · simp [not_zero_is_limit, Cardinal.aleph_0_ne_zero]
+  · simp [← not_zero_is_limit, ← Cardinal.aleph_0_ne_zero]
     
-  · simp [not_succ_is_limit, Cardinal.one_lt_aleph_0]
+  · simp [← not_succ_is_limit, ← Cardinal.one_lt_aleph_0]
     
-  · simp [l]
+  · simp [← l]
     refine' le_of_not_ltₓ fun h => _
     cases' Cardinal.lt_aleph_0.1 h with n e
     have := cof_cof o
     rw [e, ord_nat] at this
     cases n
     · simp at e
-      simpa [e, not_zero_is_limit] using l
+      simpa [← e, ← not_zero_is_limit] using l
       
     · rw [← nat_cast_succ, cof_succ] at this
       rw [← this, cof_eq_one_iff_is_succ] at e
@@ -762,7 +761,7 @@ theorem cof_univ : cof univ.{u, v} = Cardinal.univ :=
       refine' l (lt_succ_iff.2 _)
       rw [←
         show g (f.symm ⟨b, h⟩) = b by
-          dsimp' [g] <;> simp ]
+          dsimp' [← g] <;> simp ]
       apply le_sup)
 
 /-! ### Infinite pigeonhole principle -/
@@ -773,7 +772,7 @@ theorem cof_univ : cof univ.{u, v} = Cardinal.univ :=
 theorem unbounded_of_unbounded_sUnion (r : α → α → Prop) [wo : IsWellOrder α r] {s : Set (Set α)}
     (h₁ : Unbounded r <| ⋃₀s) (h₂ : # s < StrictOrder.cof r) : ∃ x ∈ s, Unbounded r x := by
   by_contra' h
-  simp_rw [not_unbounded_iff]  at h
+  simp_rw [not_unbounded_iff] at h
   let f : s → α := fun x : s => wo.wf.sup x (h x.1 x.2)
   refine' h₂.not_le (le_transₓ (cInf_le' ⟨range f, fun x => _, rfl⟩) mk_range_le)
   rcases h₁ x with ⟨y, ⟨c, hc, hy⟩, hxy⟩
@@ -796,7 +795,7 @@ theorem infinite_pigeonhole {β α : Type u} (f : β → α) (h₁ : ℵ₀ ≤ 
     rw [← preimage_univ, ← Union_of_singleton, preimage_Union]
     exact
       mk_Union_le_sum_mk.trans_lt
-        ((sum_le_sup _).trans_lt <| mul_lt_of_lt h₁ (h₂.trans_le <| cof_ord_le _) (sup_lt h₂ h))
+        ((sum_le_supr _).trans_lt <| mul_lt_of_lt h₁ (h₂.trans_le <| cof_ord_le _) (supr_lt h₂ h))
   cases' this with x h
   refine' ⟨x, h.antisymm' _⟩
   rw [le_mk_iff_exists_set]
@@ -819,7 +818,7 @@ theorem infinite_pigeonhole_set {β α : Type u} {s : Set β} (f : s → α) (θ
     exact hx
     
   · refine' ha.trans (ge_of_eq <| Quotientₓ.sound ⟨Equivₓ.trans _ (Equivₓ.subtypeSubtypeEquivSubtypeExists _ _).symm⟩)
-    simp only [coe_eq_subtype, mem_singleton_iff, mem_preimage, mem_set_of_eq]
+    simp only [← coe_eq_subtype, ← mem_singleton_iff, ← mem_preimage, ← mem_set_of_eq]
     
   rintro x ⟨hx, hx'⟩
   exact hx'
@@ -877,6 +876,63 @@ theorem IsStrongLimit.is_limit {c} (H : IsStrongLimit c) : IsLimit c :=
 theorem is_limit_aleph_0 : IsLimit ℵ₀ :=
   is_strong_limit_aleph_0.IsLimit
 
+theorem mk_bounded_subset {α : Type _} (h : ∀, ∀ x < # α, ∀, (2^x) < # α) {r : α → α → Prop} [IsWellOrder α r]
+    (hr : (# α).ord = type r) : # { s : Set α // Bounded r s } = # α := by
+  rcases eq_or_ne (# α) 0 with (ha | ha)
+  · rw [ha]
+    have := mk_eq_zero_iff.1 ha
+    rw [mk_eq_zero_iff]
+    constructor
+    rintro ⟨s, hs⟩
+    exact (not_unbounded_iff s).2 hs (unbounded_of_is_empty s)
+    
+  have h' : is_strong_limit (# α) := ⟨ha, h⟩
+  have ha := h'.is_limit.aleph_0_le
+  apply le_antisymmₓ
+  · have : { s : Set α | bounded r s } = ⋃ i, 𝒫{ j | r j i } := set_of_exists _
+    rw [← coe_set_of, this]
+    convert mk_Union_le_sum_mk.trans ((sum_le_supr _).trans (mul_le_max_of_aleph_0_le_left ha))
+    apply (max_eq_leftₓ _).symm
+    apply csupr_le' fun i => _
+    rw [mk_powerset]
+    apply (h'.two_power_lt _).le
+    rw [coe_set_of, card_typein, ← lt_ord, hr]
+    apply typein_lt_type
+    
+  · refine' @mk_le_of_injective α _ (fun x => Subtype.mk {x} _) _
+    · apply bounded_singleton
+      rw [← hr]
+      apply ord_is_limit ha
+      
+    · intro a b hab
+      simpa only [← singleton_eq_singleton_iff] using hab
+      
+    
+
+theorem mk_subset_mk_lt_cof {α : Type _} (h : ∀, ∀ x < # α, ∀, (2^x) < # α) :
+    # { s : Set α // # s < cof (# α).ord } = # α := by
+  rcases eq_or_ne (# α) 0 with (ha | ha)
+  · rw [ha]
+    simp [← fun s => (Cardinal.zero_le s).not_lt]
+    
+  have h' : is_strong_limit (# α) := ⟨ha, h⟩
+  rcases ord_eq α with ⟨r, wo, hr⟩
+  have := wo
+  apply le_antisymmₓ
+  · nth_rw_rhs 0[← mk_bounded_subset h hr]
+    apply mk_le_mk_of_subset fun s hs => _
+    rw [hr] at hs
+    exact lt_cof_type hs
+    
+  · refine' @mk_le_of_injective α _ (fun x => Subtype.mk {x} _) _
+    · rw [mk_singleton]
+      exact one_lt_aleph_0.trans_le (aleph_0_le_cof.2 (ord_is_limit h'.is_limit.aleph_0_le))
+      
+    · intro a b hab
+      simpa only [← singleton_eq_singleton_iff] using hab
+      
+    
+
 /-- A cardinal is regular if it is infinite and it equals its own cofinality. -/
 def IsRegular (c : Cardinal) : Prop :=
   ℵ₀ ≤ c ∧ c ≤ c.ord.cof
@@ -916,7 +972,7 @@ theorem is_regular_succ {c : Cardinal.{u}} (h : ℵ₀ ≤ c) : IsRegular (succ 
         apply lt_imp_lt_of_le_imp_le fun h => mul_le_mul_right' h c
         rw [mul_eq_self h, ← succ_le_iff, ← αe, ← sum_const']
         refine' le_transₓ _ (sum_le_sum (fun x => card (typein r x)) _ fun i => _)
-        · simp only [← card_typein, ← mk_sigma]
+        · simp only [card_typein, mk_sigma]
           exact
             ⟨embedding.of_surjective (fun x => x.2.1) fun a =>
                 let ⟨b, h, ab⟩ := H a
@@ -953,7 +1009,7 @@ has an infinite fiber.
 -/
 theorem exists_infinite_fiber {β α : Type _} (f : β → α) (w : # α < # β) (w' : Infinite α) :
     ∃ a : α, Infinite (f ⁻¹' {a}) := by
-  simp_rw [Cardinal.infinite_iff]  at w'⊢
+  simp_rw [Cardinal.infinite_iff] at w'⊢
   cases' infinite_pigeonhole_card_lt f w w' with a ha
   exact ⟨a, w'.trans ha.le⟩
 
@@ -969,7 +1025,7 @@ theorem le_range_of_union_finset_eq_top {α β : Type _} [Infinite β] (f : α �
     rw [w]
     exact infinite_univ
   by_contra h
-  simp only [not_leₓ] at h
+  simp only [← not_leₓ] at h
   let u : ∀ b, ∃ a, b ∈ f a := fun b => by
     simpa using (w.ge : _) (Set.mem_univ b)
   let u' : β → range f := fun b =>
@@ -1037,21 +1093,21 @@ theorem bsup_lt_ord_of_is_regular {o : Ordinal} {f : ∀, ∀ a < o, ∀, Ordina
     (by
       rwa [hc.cof_eq])
 
-theorem sup_lt_lift_of_is_regular {ι} {f : ι → Cardinal} {c} (hc : IsRegular c) (hι : Cardinal.lift (# ι) < c) :
-    (∀ i, f i < c) → sup.{u, v} f < c :=
-  sup_lt_lift
+theorem supr_lt_lift_of_is_regular {ι} {f : ι → Cardinal} {c} (hc : IsRegular c) (hι : Cardinal.lift (# ι) < c) :
+    (∀ i, f i < c) → supr f < c :=
+  supr_lt_lift
     (by
       rwa [hc.cof_eq])
 
-theorem sup_lt_of_is_regular {ι} {f : ι → Cardinal} {c} (hc : IsRegular c) (hι : # ι < c) :
-    (∀ i, f i < c) → sup.{u, u} f < c :=
-  sup_lt
+theorem supr_lt_of_is_regular {ι} {f : ι → Cardinal} {c} (hc : IsRegular c) (hι : # ι < c) :
+    (∀ i, f i < c) → supr f < c :=
+  supr_lt
     (by
       rwa [hc.cof_eq])
 
 theorem sum_lt_lift_of_is_regular {ι : Type u} {f : ι → Cardinal} {c : Cardinal} (hc : IsRegular c)
     (hι : Cardinal.lift.{v, u} (# ι) < c) (hf : ∀ i, f i < c) : sum f < c :=
-  (sum_le_sup_lift _).trans_lt <| mul_lt_of_lt hc.1 hι (sup_lt_lift_of_is_regular hc hι hf)
+  (sum_le_supr_lift _).trans_lt <| mul_lt_of_lt hc.1 hι (supr_lt_lift_of_is_regular hc hι hf)
 
 theorem sum_lt_of_is_regular {ι : Type u} {f : ι → Cardinal} {c : Cardinal} (hc : IsRegular c) (hι : # ι < c) :
     (∀ i, f i < c) → sum f < c :=
@@ -1180,7 +1236,7 @@ theorem lt_power_cof {c : Cardinal.{u}} : ℵ₀ ≤ c → c < (c^cof c.ord) :=
     rw [mk_def, re] at this⊢
     rcases cof_eq' r this with ⟨S, H, Se⟩
     have := sum_lt_prod (fun a : S => # { x // r x a }) (fun _ => # α) fun i => _
-    · simp only [Cardinal.prod_const, Cardinal.lift_id, ← Se, ← mk_sigma, power_def] at this⊢
+    · simp only [← Cardinal.prod_const, ← Cardinal.lift_id, Se, mk_sigma, ← power_def] at this⊢
       refine' lt_of_le_of_ltₓ _ this
       refine' ⟨embedding.of_surjective _ _⟩
       · exact fun x => x.2.1

@@ -101,7 +101,7 @@ def liftRight (f : M →* N) (g : M → Nˣ) (h : ∀ x, ↑(g x) = f x) : M →
   map_one' := Units.ext <| (h 1).symm ▸ f.map_one
   map_mul' := fun x y =>
     Units.ext <| by
-      simp only [h, coe_mul, f.map_mul]
+      simp only [← h, ← coe_mul, ← f.map_mul]
 
 @[simp, to_additive]
 theorem coe_lift_right {f : M →* N} {g : M → Nˣ} (h : ∀ x, ↑(g x) = f x) x : (liftRight f g h x : N) = f x :=
@@ -256,11 +256,11 @@ protected theorem mul_div_cancel (h : IsUnit b) (a : α) : a * b / b = a := by
 
 @[to_additive]
 protected theorem mul_one_div_cancel (h : IsUnit a) : a * (1 / a) = 1 := by
-  simp [h]
+  simp [← h]
 
 @[to_additive]
 protected theorem one_div_mul_cancel (h : IsUnit a) : 1 / a * a = 1 := by
-  simp [h]
+  simp [← h]
 
 @[to_additive]
 theorem inv : IsUnit a → IsUnit a⁻¹ := by
@@ -304,11 +304,11 @@ protected theorem div_mul_left (h : IsUnit b) : b / (a * b) = 1 / a := by
 
 @[to_additive]
 protected theorem mul_div_mul_right (h : IsUnit c) (a b : α) : a * c / (b * c) = a / b := by
-  simp only [div_eq_mul_inv, mul_inv_rev, mul_assoc, h.mul_inv_cancel_left]
+  simp only [← div_eq_mul_inv, ← mul_inv_rev, ← mul_assoc, ← h.mul_inv_cancel_left]
 
 @[to_additive]
 protected theorem mul_mul_div (a : α) (h : IsUnit b) : a * b * (1 / b) = a := by
-  simp [h]
+  simp [← h]
 
 end DivisionMonoid
 

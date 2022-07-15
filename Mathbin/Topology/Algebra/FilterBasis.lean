@@ -113,9 +113,9 @@ is discrete. -/
 @[to_additive "The trivial additive group filter basis consists of `{0}` only. The associated\ntopology is discrete."]
 instance : Inhabited (GroupFilterBasis G) :=
   ⟨by
-    refine' { Sets := {{1}}, Nonempty := singleton_nonempty _, .. }
+    refine' { Sets := {{1}}, Nonempty := singleton_nonempty _.. }
     all_goals
-      simp only [exists_prop, mem_singleton_iff]
+      simp only [← exists_prop, ← mem_singleton_iff]
     · rintro - - rfl rfl
       use {1}
       simp
@@ -145,7 +145,7 @@ def n (B : GroupFilterBasis G) : G → Filter G := fun x => map (fun y => x * y)
 
 @[simp, to_additive]
 theorem N_one (B : GroupFilterBasis G) : B.n 1 = B.toFilterBasis.filter := by
-  simp only [N, one_mulₓ, map_id']
+  simp only [← N, ← one_mulₓ, ← map_id']
 
 @[to_additive]
 protected theorem has_basis (B : GroupFilterBasis G) (x : G) :
@@ -163,7 +163,7 @@ theorem nhds_eq (B : GroupFilterBasis G) {x₀ : G} : @nhds G B.topology x₀ = 
   · intro x U U_in
     rw [(B.has_basis x).mem_iff] at U_in
     rcases U_in with ⟨V, V_in, H⟩
-    simpa [mem_pure] using H (mem_image_of_mem _ (GroupFilterBasis.one V_in))
+    simpa [← mem_pure] using H (mem_image_of_mem _ (GroupFilterBasis.one V_in))
     
   · intro x U U_in
     rw [(B.has_basis x).mem_iff] at U_in
@@ -182,14 +182,14 @@ theorem nhds_eq (B : GroupFilterBasis G) {x₀ : G} : @nhds G B.topology x₀ = 
       rintro z ⟨w, wW, rfl⟩
       exact
         ⟨t * w, hW (mul_mem_mul tW wW), by
-          simp [mul_assoc]⟩
+          simp [← mul_assoc]⟩
       
     
 
 @[to_additive]
 theorem nhds_one_eq (B : GroupFilterBasis G) : @nhds G B.topology (1 : G) = B.toFilterBasis.filter := by
   rw [B.nhds_eq]
-  simp only [N, one_mulₓ]
+  simp only [← N, ← one_mulₓ]
   exact map_id
 
 @[to_additive]
@@ -338,16 +338,16 @@ instance [DiscreteTopology R] : Inhabited (ModuleFilterBasis R M) :=
         rw [mem_singleton_iff] at h
         use univ, univ_mem, {0}, rfl
         rintro a ⟨x, m, -, hm, rfl⟩
-        simp [mem_singleton_iff.1 hm, h],
+        simp [← mem_singleton_iff.1 hm, ← h],
       smul_left' := by
         rintro x₀ U (h : U ∈ {{(0 : M)}})
         rw [mem_singleton_iff] at h
         use {0}, rfl
-        simp [h],
+        simp [← h],
       smul_right' := by
         rintro m₀ U (h : U ∈ (0 : Set (Set M)))
         rw [Set.mem_zero] at h
-        simp [h, nhds_discrete] }⟩
+        simp [← h, ← nhds_discrete] }⟩
 
 /-- The topology associated to a module filter basis on a module over a topological ring.
 It has the given basis as a basis of neighborhoods of zero. -/

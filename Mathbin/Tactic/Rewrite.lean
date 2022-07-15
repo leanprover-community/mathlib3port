@@ -166,7 +166,7 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `eq_lemmas
+-- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `eq_lemmas
 private unsafe def assoc_rw_goal (rs : List rw_rule) : tactic Unit :=
   rs.mmap' fun r => do
     save_info r
@@ -183,7 +183,7 @@ private unsafe def assoc_rw_goal (rs : List rw_rule) : tactic Unit :=
 private unsafe def uses_hyp (e : expr) (h : expr) : Bool :=
   (e.fold false) fun t _ r => r || t = h
 
--- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `eq_lemmas
+-- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `eq_lemmas
 private unsafe def assoc_rw_hyp : List rw_rule → expr → tactic Unit
   | [], hyp => skip
   | r :: rs, hyp => do

@@ -139,8 +139,7 @@ def forgetToSheafedSpace : LocallyRingedSpace ⥤ SheafedSpace CommRingₓₓ wh
   obj := fun X => X.toSheafedSpace
   map := fun X Y f => f.1
 
-instance : Faithful forgetToSheafedSpace :=
-  {  }
+instance : Faithful forgetToSheafedSpace where
 
 /-- The forgetful functor from `LocallyRingedSpace` to `Top`. -/
 @[simps]
@@ -188,8 +187,9 @@ def isoOfSheafedSpaceIso {X Y : LocallyRingedSpace} (f : X.toSheafedSpace ≅ Y.
   hom_inv_id' := hom_ext _ _ f.hom_inv_id
   inv_hom_id' := hom_ext _ _ f.inv_hom_id
 
-instance : ReflectsIsomorphisms forgetToSheafedSpace where
-  reflects := fun X Y f i =>
+instance :
+    ReflectsIsomorphisms
+      forgetToSheafedSpace where reflects := fun X Y f i =>
     { out :=
         ⟨hom_of_SheafedSpace_hom_of_is_iso (CategoryTheory.inv (forget_to_SheafedSpace.map f)),
           hom_ext _ _ (is_iso.hom_inv_id _), hom_ext _ _ (is_iso.inv_hom_id _)⟩ }
@@ -262,8 +262,8 @@ theorem preimage_basic_open {X Y : LocallyRingedSpace} (f : X ⟶ Y) {U : Opens 
 theorem basic_open_zero (X : LocallyRingedSpace) (U : Opens X.Carrier) :
     X.toRingedSpace.basicOpen (0 : X.Presheaf.obj <| op U) = ∅ := by
   ext
-  simp only [Set.mem_empty_eq, TopologicalSpace.Opens.empty_eq, TopologicalSpace.Opens.mem_coe, opens.coe_bot,
-    iff_falseₓ, RingedSpace.basic_open, is_unit_zero_iff, Set.mem_set_of_eq, map_zero]
+  simp only [← Set.mem_empty_eq, ← TopologicalSpace.Opens.empty_eq, ← TopologicalSpace.Opens.mem_coe, ← opens.coe_bot, ←
+    iff_falseₓ, ← RingedSpace.basic_open, ← is_unit_zero_iff, ← Set.mem_set_of_eq, ← map_zero]
   rintro ⟨⟨y, _⟩, h, e⟩
   exact @zero_ne_one (X.presheaf.stalk y) _ _ h
 

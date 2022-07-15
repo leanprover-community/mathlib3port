@@ -236,7 +236,7 @@ theorem pair_mk_mk (f : α → β) hf (g : α → γ) hg :
 
 theorem pair_eq_mk (f : α →ₘ[μ] β) (g : α →ₘ[μ] γ) :
     f.pair g = mk (fun x => (f x, g x)) (f.AeStronglyMeasurable.prod_mk g.AeStronglyMeasurable) := by
-  simp only [← pair_mk_mk, mk_coe_fn]
+  simp only [pair_mk_mk, ← mk_coe_fn]
 
 theorem coe_fn_pair (f : α →ₘ[μ] β) (g : α →ₘ[μ] γ) : f.pair g =ᵐ[μ] fun x => (f x, g x) := by
   rw [pair_eq_mk]
@@ -387,14 +387,12 @@ section Lattice
 
 section Sup
 
-variable [SemilatticeSup β] [MeasurableSpace β] [SecondCountableTopology β] [PseudoMetrizableSpace β] [BorelSpace β]
-  [HasMeasurableSup₂ β]
+variable [SemilatticeSup β] [HasContinuousSup β]
 
-instance : HasSup (α →ₘ[μ] β) where
-  sup := fun f g => AeEqFun.comp₂Measurable (·⊔·) measurable_sup f g
+instance : HasSup (α →ₘ[μ] β) where sup := fun f g => AeEqFun.comp₂ (·⊔·) continuous_sup f g
 
 theorem coe_fn_sup (f g : α →ₘ[μ] β) : ⇑(f⊔g) =ᵐ[μ] fun x => f x⊔g x :=
-  coe_fn_comp₂_measurable _ _ _ _
+  coe_fn_comp₂ _ _ _ _
 
 protected theorem le_sup_left (f g : α →ₘ[μ] β) : f ≤ f⊔g := by
   rw [← coe_fn_le]
@@ -418,14 +416,12 @@ end Sup
 
 section Inf
 
-variable [SemilatticeInf β] [MeasurableSpace β] [SecondCountableTopology β] [PseudoMetrizableSpace β] [BorelSpace β]
-  [HasMeasurableInf₂ β]
+variable [SemilatticeInf β] [HasContinuousInf β]
 
-instance : HasInf (α →ₘ[μ] β) where
-  inf := fun f g => AeEqFun.comp₂Measurable (·⊓·) measurable_inf f g
+instance : HasInf (α →ₘ[μ] β) where inf := fun f g => AeEqFun.comp₂ (·⊓·) continuous_inf f g
 
 theorem coe_fn_inf (f g : α →ₘ[μ] β) : ⇑(f⊓g) =ᵐ[μ] fun x => f x⊓g x :=
-  coe_fn_comp₂_measurable _ _ _ _
+  coe_fn_comp₂ _ _ _ _
 
 protected theorem inf_le_left (f g : α →ₘ[μ] β) : f⊓g ≤ f := by
   rw [← coe_fn_le]
@@ -447,8 +443,7 @@ protected theorem le_inf (f' f g : α →ₘ[μ] β) (hf : f' ≤ f) (hg : f' �
 
 end Inf
 
-instance [Lattice β] [MeasurableSpace β] [SecondCountableTopology β] [PseudoMetrizableSpace β] [BorelSpace β]
-    [HasMeasurableSup₂ β] [HasMeasurableInf₂ β] : Lattice (α →ₘ[μ] β) :=
+instance [Lattice β] [TopologicalLattice β] : Lattice (α →ₘ[μ] β) :=
   { AeEqFun.partialOrder with sup := HasSup.sup, le_sup_left := AeEqFun.le_sup_left,
     le_sup_right := AeEqFun.le_sup_right, sup_le := AeEqFun.sup_le, inf := HasInf.inf,
     inf_le_left := AeEqFun.inf_le_left, inf_le_right := AeEqFun.inf_le_right, le_inf := AeEqFun.le_inf }
@@ -490,15 +485,15 @@ theorem one_to_germ [One β] : (1 : α →ₘ[μ] β).toGerm = 1 :=
 
 -- Note we set up the scalar actions before the `monoid` structures in case we want to
 -- try to override the `nsmul` or `zsmul` fields in future.
-section HasScalar
+section HasSmul
 
 variable {𝕜 𝕜' : Type _}
 
-variable [HasScalar 𝕜 γ] [HasContinuousConstSmul 𝕜 γ]
+variable [HasSmul 𝕜 γ] [HasContinuousConstSmul 𝕜 γ]
 
-variable [HasScalar 𝕜' γ] [HasContinuousConstSmul 𝕜' γ]
+variable [HasSmul 𝕜' γ] [HasContinuousConstSmul 𝕜' γ]
 
-instance : HasScalar 𝕜 (α →ₘ[μ] γ) :=
+instance : HasSmul 𝕜 (α →ₘ[μ] γ) :=
   ⟨fun c f => comp ((· • ·) c) (continuous_id.const_smul c) f⟩
 
 @[simp]
@@ -517,17 +512,17 @@ instance [SmulCommClass 𝕜 𝕜' γ] : SmulCommClass 𝕜 𝕜' (α →ₘ[μ]
     (induction_on f) fun f hf => by
       simp_rw [smul_mk, smul_comm]⟩
 
-instance [HasScalar 𝕜 𝕜'] [IsScalarTower 𝕜 𝕜' γ] : IsScalarTower 𝕜 𝕜' (α →ₘ[μ] γ) :=
+instance [HasSmul 𝕜 𝕜'] [IsScalarTower 𝕜 𝕜' γ] : IsScalarTower 𝕜 𝕜' (α →ₘ[μ] γ) :=
   ⟨fun a b f =>
     (induction_on f) fun f hf => by
       simp_rw [smul_mk, smul_assoc]⟩
 
-instance [HasScalar 𝕜ᵐᵒᵖ γ] [IsCentralScalar 𝕜 γ] : IsCentralScalar 𝕜 (α →ₘ[μ] γ) :=
+instance [HasSmul 𝕜ᵐᵒᵖ γ] [IsCentralScalar 𝕜 γ] : IsCentralScalar 𝕜 (α →ₘ[μ] γ) :=
   ⟨fun a f =>
     (induction_on f) fun f hf => by
       simp_rw [smul_mk, op_smul_eq_smul]⟩
 
-end HasScalar
+end HasSmul
 
 section Mul
 
@@ -716,10 +711,20 @@ theorem lintegral_eq_zero_iff {f : α →ₘ[μ] ℝ≥0∞} : lintegral f = 0 �
 
 theorem lintegral_add (f g : α →ₘ[μ] ℝ≥0∞) : lintegral (f + g) = lintegral f + lintegral g :=
   (induction_on₂ f g) fun f hf g hg => by
-    simp [lintegral_add_left' hf.ae_measurable]
+    simp [← lintegral_add_left' hf.ae_measurable]
 
 theorem lintegral_mono {f g : α →ₘ[μ] ℝ≥0∞} : f ≤ g → lintegral f ≤ lintegral g :=
   (induction_on₂ f g) fun f hf g hg hfg => lintegral_mono_ae hfg
+
+section Abs
+
+theorem coe_fn_abs {β} [TopologicalSpace β] [Lattice β] [TopologicalLattice β] [AddGroupₓ β] [TopologicalAddGroup β]
+    (f : α →ₘ[μ] β) : ⇑(abs f) =ᵐ[μ] fun x => abs (f x) := by
+  simp_rw [abs_eq_sup_neg]
+  filter_upwards [ae_eq_fun.coe_fn_sup f (-f), ae_eq_fun.coe_fn_neg f] with x hx_sup hx_neg
+  rw [hx_sup, hx_neg, Pi.neg_apply]
+
+end Abs
 
 section PosPart
 

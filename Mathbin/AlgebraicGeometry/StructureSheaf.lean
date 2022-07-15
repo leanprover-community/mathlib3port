@@ -172,9 +172,9 @@ def sectionsSubring (U : (Opens (PrimeSpectrum.top R))ᵒᵖ) : Subring (∀ x :
     · intro H
       cases y.1.IsPrime.mem_or_mem H <;> contradiction
       
-    · simp only [add_mulₓ, RingHom.map_add, Pi.add_apply, RingHom.map_mul]
+    · simp only [← add_mulₓ, ← RingHom.map_add, ← Pi.add_apply, ← RingHom.map_mul]
       erw [← wa, ← wb]
-      simp only [mul_assoc]
+      simp only [← mul_assoc]
       congr 2
       rw [mul_comm]
       rfl
@@ -188,9 +188,9 @@ def sectionsSubring (U : (Opens (PrimeSpectrum.top R))ᵒᵖ) : Subring (∀ x :
     fconstructor
     · exact nm
       
-    · simp only [RingHom.map_neg, Pi.neg_apply]
+    · simp only [← RingHom.map_neg, ← Pi.neg_apply]
       erw [← w]
-      simp only [neg_mul]
+      simp only [← neg_mul]
       
   mul_mem' := by
     intro a b ha hb x
@@ -204,9 +204,9 @@ def sectionsSubring (U : (Opens (PrimeSpectrum.top R))ᵒᵖ) : Subring (∀ x :
     · intro H
       cases y.1.IsPrime.mem_or_mem H <;> contradiction
       
-    · simp only [Pi.mul_apply, RingHom.map_mul]
+    · simp only [← Pi.mul_apply, ← RingHom.map_mul]
       erw [← wa, ← wb]
-      simp only [mul_left_commₓ, mul_assoc, mul_comm]
+      simp only [← mul_left_commₓ, ← mul_assoc, ← mul_comm]
       rfl
       
 
@@ -511,7 +511,7 @@ def stalkIso (x : PrimeSpectrum.top R) :
   hom_inv_id' :=
     (structureSheaf R).1.stalk_hom_ext fun U hxU => by
       ext s
-      simp only [comp_apply]
+      simp only [← comp_apply]
       rw [id_apply, stalk_to_fiber_ring_hom_germ']
       obtain ⟨V, hxV, iVU, f, g, hg, hs⟩ := exists_const _ _ s x hxU
       erw [← res_apply R U V iVU s ⟨x, hxV⟩, ← hs, const_apply, localization_to_stalk_mk']
@@ -523,7 +523,8 @@ def stalkIso (x : PrimeSpectrum.top R) :
         (RingHom.id (Localization.AtPrime _)) <|
       by
       ext f
-      simp only [RingHom.comp_apply, RingHom.id_apply, localization_to_stalk_of, stalk_to_fiber_ring_hom_to_stalk]
+      simp only [← RingHom.comp_apply, ← RingHom.id_apply, ← localization_to_stalk_of, ←
+        stalk_to_fiber_ring_hom_to_stalk]
 
 instance (x : PrimeSpectrum R) : IsIso (stalkToFiberRingHom R x) :=
   IsIso.of_iso (stalkIso R x)
@@ -569,7 +570,7 @@ theorem to_basic_open_injective (f : R) : Function.Injective (toBasicOpen R f) :
   intro s t h_eq
   obtain ⟨a, ⟨b, hb⟩, rfl⟩ := IsLocalization.mk'_surjective (Submonoid.powers f) s
   obtain ⟨c, ⟨d, hd⟩, rfl⟩ := IsLocalization.mk'_surjective (Submonoid.powers f) t
-  simp only [to_basic_open_mk'] at h_eq
+  simp only [← to_basic_open_mk'] at h_eq
   rw [IsLocalization.eq]
   -- We know that the fractions `a/b` and `c/d` are equal as sections of the structure sheaf on
   -- `basic_open f`. We need to show that they agree as elements in the localization of `R` at `f`.
@@ -578,13 +579,13 @@ theorem to_basic_open_injective (f : R) : Function.Injective (toBasicOpen R f) :
   let I : Ideal R :=
     { Carrier := { r : R | a * d * r = c * b * r },
       zero_mem' := by
-        simp only [Set.mem_set_of_eq, mul_zero],
+        simp only [← Set.mem_set_of_eq, ← mul_zero],
       add_mem' := fun r₁ r₂ hr₁ hr₂ => by
         dsimp'  at hr₁ hr₂⊢
-        simp only [mul_addₓ, hr₁, hr₂],
+        simp only [← mul_addₓ, ← hr₁, ← hr₂],
       smul_mem' := fun r₁ r₂ hr₂ => by
         dsimp'  at hr₂⊢
-        simp only [mul_comm r₁ r₂, ← mul_assoc, hr₂] }
+        simp only [← mul_comm r₁ r₂, mul_assoc, ← hr₂] }
   -- Our claim now reduces to showing that `f` is contained in the radical of `I`
   suffices f ∈ I.radical by
     cases' this with n hn
@@ -639,7 +640,7 @@ theorem locally_const_basic_open (U : Opens (PrimeSpectrum.top R)) (s : (structu
   apply const_ext
   rw [mul_assoc f c g, hc]
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (i j «expr ∈ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i j «expr ∈ » t)
 /-
 Auxiliary lemma for surjectivity of `to_basic_open`.
 A local representation of a section `s` as fractions `a i / h i` on finitely many basic opens
@@ -670,7 +671,7 @@ theorem normalize_finite_fraction_representation (U : Opens (PrimeSpectrum.top R
     -- Crucially, we need injectivity of `to_basic_open`
     apply to_basic_open_injective R (h i * h j)
     rw [to_basic_open_mk', to_basic_open_mk']
-    simp only [SetLike.coe_mk]
+    simp only [← SetLike.coe_mk]
     -- Here, both sides of the equation are equal to a restriction of `s`
     trans
     convert congr_arg ((structure_sheaf R).1.map iDj.op) (hs j).symm using 1
@@ -703,7 +704,7 @@ theorem normalize_finite_fraction_representation (U : Opens (PrimeSpectrum.top R
         linarith)
   -- Expanding the fraction `a i / h i` by the power `(h i) ^ N` gives the desired normalization
   refine' ⟨fun i => a i * h i ^ N, fun i => h i ^ (N + 1), fun i => eq_to_hom (basic_opens_eq i) ≫ iDh i, _, _, _⟩
-  · simpa only [basic_opens_eq] using h_cover
+  · simpa only [← basic_opens_eq] using h_cover
     
   · intro i hi j hj
     -- Here we need to show that our new fractions `a i / h i` satisfy the normalization condition
@@ -711,11 +712,11 @@ theorem normalize_finite_fraction_representation (U : Opens (PrimeSpectrum.top R
     -- `n (i, j)` which was originally chosen. We denote their difference by `k`
     have n_le_N : n (i, j) ≤ N := Finset.le_sup (finset.mem_product.mpr ⟨hi, hj⟩)
     cases' Nat.Le.dest n_le_N with k hk
-    simp only [← hk, pow_addₓ, pow_oneₓ]
+    simp only [hk, ← pow_addₓ, ← pow_oneₓ]
     -- To accommodate for the difference `k`, we multiply both sides of the equation `n_spec (i, j)`
       -- by `(h i * h j) ^ k`
       convert congr_arg (fun z => z * (h i * h j) ^ k) (n_spec (i, j)) using 1 <;>
-      · simp only [n, mul_powₓ]
+      · simp only [← n, ← mul_powₓ]
         ring
         
     
@@ -759,10 +760,10 @@ theorem to_basic_open_surjective (f : R) : Function.Surjective (toBasicOpen R f)
   -- Next we show that some power of `f` is a linear combination of the `h i`
   obtain ⟨n, hn⟩ : f ∈ (Ideal.span (h '' ↑t)).radical := by
     rw [← vanishing_ideal_zero_locus_eq_radical, zero_locus_span]
-    simp_rw [Subtype.val_eq_coe, basic_open_eq_zero_locus_compl]  at ht_cover
+    simp_rw [Subtype.val_eq_coe, basic_open_eq_zero_locus_compl] at ht_cover
     rw [Set.compl_subset_comm] at ht_cover
     -- Why doesn't `simp_rw` do this?
-    simp_rw [Set.compl_Union, compl_compl, ← zero_locus_Union, ← Finset.set_bUnion_coe, ← Set.image_eq_Union]  at
+    simp_rw [Set.compl_Union, compl_compl, ← zero_locus_Union, ← Finset.set_bUnion_coe, ← Set.image_eq_Union] at
       ht_cover
     apply vanishing_ideal_anti_mono ht_cover
     exact subset_vanishing_ideal_zero_locus {f} (Set.mem_singleton f)
@@ -813,10 +814,10 @@ theorem to_basic_open_surjective (f : R) : Function.Surjective (toBasicOpen R f)
   rw [mul_assoc, ah_ha j hj i hi]
   ring
 
-instance is_iso_to_basic_open (f : R) : IsIso (show CommRingₓₓ.of _ ⟶ _ from toBasicOpen R f) :=
+instance is_iso_to_basic_open (f : R) : IsIso (show CommRingₓₓ.of _ ⟶ _ from toBasicOpen R f) := by
   have : is_iso ((forget CommRingₓₓ).map (show CommRingₓₓ.of _ ⟶ _ from to_basic_open R f)) :=
     (is_iso_iff_bijective _).mpr ⟨to_basic_open_injective R f, to_basic_open_surjective R f⟩
-  is_iso_of_reflects_iso _ (forget CommRingₓₓ)
+  exact is_iso_of_reflects_iso _ (forget CommRingₓₓ)
 
 /-- The ring isomorphism between the structure sheaf on `basic_open f` and the localization of `R`
 at the submonoid of powers of `f`. -/
@@ -899,11 +900,10 @@ theorem global_sections_iso_hom (R : CommRingₓₓ) : (globalSectionsIso R).hom
 @[simp, reassoc, elementwise]
 theorem to_stalk_stalk_specializes {R : Type _} [CommRingₓ R] {x y : PrimeSpectrum R} (h : x ⤳ y) :
     toStalk R y ≫ (structureSheaf R).val.stalkSpecializes h = toStalk R x := by
-  dsimp' [to_stalk]
+  dsimp' [← to_stalk]
   simpa
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 @[simp, reassoc, elementwise]
 theorem localization_to_stalk_stalk_specializes {R : Type _} [CommRingₓ R] {x y : PrimeSpectrum R} (h : x ⤳ y) :
     StructureSheaf.localizationToStalk R y ≫ (structureSheaf R).val.stalkSpecializes h =
@@ -914,7 +914,7 @@ theorem localization_to_stalk_stalk_specializes {R : Type _} [CommRingₓ R] {x 
   }
   erw [RingHom.comp_assoc]
   conv_rhs => erw [RingHom.comp_assoc]
-  dsimp' [CommRingₓₓ.ofHom, localization_to_stalk, PrimeSpectrum.localizationMapOfSpecializes]
+  dsimp' [← CommRingₓₓ.ofHom, ← localization_to_stalk, ← PrimeSpectrum.localizationMapOfSpecializes]
   rw [IsLocalization.lift_comp, IsLocalization.lift_comp, IsLocalization.lift_comp]
   exact to_stalk_stalk_specializes h
 
@@ -959,7 +959,7 @@ theorem comap_fun_is_locally_fraction (f : R →+* S) (U : Opens (PrimeSpectrum.
   rintro ⟨q, ⟨hqW, hqV⟩⟩
   specialize h_frac ⟨PrimeSpectrum.comap f q, hqW⟩
   refine' ⟨h_frac.1, _⟩
-  dsimp' only [comap_fun]
+  dsimp' only [← comap_fun]
   erw [← Localization.local_ring_hom_to_map (PrimeSpectrum.comap f q).asIdeal, ← RingHom.map_mul, h_frac.2,
     Localization.local_ring_hom_to_map]
   rfl

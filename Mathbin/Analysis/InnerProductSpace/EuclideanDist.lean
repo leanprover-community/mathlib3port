@@ -54,7 +54,7 @@ theorem closed_ball_eq_preimage (x : E) (r : ℝ) :
     ClosedBall x r = toEuclidean ⁻¹' Metric.ClosedBall (toEuclidean x) r :=
   rfl
 
-theorem ball_subset_closed_ball {x : E} {r : ℝ} : Ball x r ⊆ ClosedBall x r := fun hy : _ < _ => le_of_ltₓ hy
+theorem ball_subset_closed_ball {x : E} {r : ℝ} : Ball x r ⊆ ClosedBall x r := fun y hy : _ < _ => le_of_ltₓ hy
 
 theorem is_open_ball {x : E} {r : ℝ} : IsOpen (Ball x r) :=
   Metric.is_open_ball.Preimage toEuclidean.Continuous
@@ -102,7 +102,7 @@ variable {F : Type _} [NormedGroup F] [NormedSpace ℝ F] {f g : F → E} {n : W
 
 theorem ContDiff.euclidean_dist (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) (h : ∀ x, f x ≠ g x) :
     ContDiff ℝ n fun x => Euclidean.dist (f x) (g x) := by
-  simp only [Euclidean.dist]
+  simp only [← Euclidean.dist]
   apply @ContDiff.dist ℝ
   exacts[(@toEuclidean E _ _ _).ContDiff.comp hf, (@toEuclidean E _ _ _).ContDiff.comp hg, fun x =>
     to_euclidean.injective.ne (h x)]

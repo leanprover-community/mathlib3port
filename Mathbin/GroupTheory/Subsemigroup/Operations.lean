@@ -288,7 +288,7 @@ include hf
 @[to_additive " `map f` and `comap f` form a `galois_coinsertion` when `f` is injective. "]
 def gciMapComap : GaloisCoinsertion (map f) (comap f) :=
   (gc_map_comap f).toGaloisCoinsertion fun S x => by
-    simp [mem_comap, mem_map, hf.eq_iff]
+    simp [← mem_comap, ← mem_map, ← hf.eq_iff]
 
 @[to_additive]
 theorem comap_map_eq_of_injective (S : Subsemigroup M) : (S.map f).comap f = S :=
@@ -341,7 +341,7 @@ def giMapComap : GaloisInsertion (map f) (comap f) :=
     let ⟨y, hy⟩ := hf x
     mem_map.2
       ⟨y, by
-        simp [hy, h]⟩
+        simp [← hy, ← h]⟩
 
 @[to_additive]
 theorem map_comap_eq_of_surjective (S : Subsemigroup N) : (S.comap f).map f = S :=
@@ -496,12 +496,12 @@ theorem prod_mono {s₁ s₂ : Subsemigroup M} {t₁ t₂ : Subsemigroup N} (hs 
 @[to_additive prod_top]
 theorem prod_top (s : Subsemigroup M) : s.Prod (⊤ : Subsemigroup N) = s.comap (MulHom.fst M N) :=
   ext fun x => by
-    simp [mem_prod, MulHom.coe_fst]
+    simp [← mem_prod, ← MulHom.coe_fst]
 
 @[to_additive top_prod]
 theorem top_prod (s : Subsemigroup N) : (⊤ : Subsemigroup M).Prod s = s.comap (MulHom.snd M N) :=
   ext fun x => by
-    simp [mem_prod, MulHom.coe_snd]
+    simp [← mem_prod, ← MulHom.coe_snd]
 
 @[simp, to_additive top_prod_top]
 theorem top_prod_top : (⊤ : Subsemigroup M).Prod (⊤ : Subsemigroup N) = ⊤ :=
@@ -510,7 +510,7 @@ theorem top_prod_top : (⊤ : Subsemigroup M).Prod (⊤ : Subsemigroup N) = ⊤ 
 @[to_additive]
 theorem bot_prod_bot : (⊥ : Subsemigroup M).Prod (⊥ : Subsemigroup N) = ⊥ :=
   SetLike.coe_injective <| by
-    simp [coe_prod, Prod.one_eq_mk]
+    simp [← coe_prod, ← Prod.one_eq_mk]
 
 /-- The product of subsemigroups is isomorphic to their product as semigroups. -/
 @[to_additive prod_equiv "The product of additive subsemigroups is isomorphic to their product\nas additive semigroups"]
@@ -579,7 +579,7 @@ theorem srange_eq_map (f : M →ₙ* N) : f.srange = (⊤ : Subsemigroup M).map 
 
 @[to_additive]
 theorem map_srange (g : N →ₙ* P) (f : M →ₙ* N) : f.srange.map g = (g.comp f).srange := by
-  simpa only [srange_eq_map] using (⊤ : Subsemigroup M).map_map g f
+  simpa only [← srange_eq_map] using (⊤ : Subsemigroup M).map_map g f
 
 @[to_additive]
 theorem srange_top_iff_surjective {N} [Mul N] {f : M →ₙ* N} : f.srange = (⊤ : Subsemigroup N) ↔ Function.Surjective f :=
@@ -681,7 +681,7 @@ theorem srange_snd [Nonempty M] : (snd M N).srange = ⊤ :=
 @[to_additive]
 theorem prod_eq_top_iff [Nonempty M] [Nonempty N] {s : Subsemigroup M} {t : Subsemigroup N} :
     s.Prod t = ⊤ ↔ s = ⊤ ∧ t = ⊤ := by
-  simp only [eq_top_iff, le_prod_iff, ← (gc_map_comap _).le_iff_le, ← srange_eq_map, srange_fst, srange_snd]
+  simp only [← eq_top_iff, ← le_prod_iff, (gc_map_comap _).le_iff_le, srange_eq_map, ← srange_fst, ← srange_snd]
 
 /-- The semigroup hom associated to an inclusion of subsemigroups. -/
 @[to_additive "The `add_semigroup` hom associated to an inclusion of subsemigroups."]

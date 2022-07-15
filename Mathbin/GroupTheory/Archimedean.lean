@@ -42,7 +42,7 @@ theorem AddSubgroup.cyclic_of_min {H : AddSubgroup G} {a : G} (ha : IsLeast { g 
   refine'
     le_antisymmₓ _
       (H.closure_le.mpr <| by
-        simp [a_in])
+        simp [← a_in])
   intro g g_in
   obtain ⟨k, ⟨nonneg, lt⟩, _⟩ : ∃! k, 0 ≤ g - k • a ∧ g - k • a < a := exists_unique_zsmul_near_of_pos' a_pos g
   have h_zero : g - k • a = 0 := by
@@ -55,7 +55,7 @@ theorem AddSubgroup.cyclic_of_min {H : AddSubgroup G} {a : G} (ha : IsLeast { g 
         
     have h' : ¬a ≤ g - k • a := not_le.mpr lt
     contradiction
-  simp [sub_eq_zero.mp h_zero, AddSubgroup.mem_closure_singleton]
+  simp [← sub_eq_zero.mp h_zero, ← AddSubgroup.mem_closure_singleton]
 
 /-- Every subgroup of `ℤ` is cyclic. -/
 theorem Int.subgroup_cyclic (H : AddSubgroup ℤ) : ∃ a, H = AddSubgroup.closure {a} := by

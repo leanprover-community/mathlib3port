@@ -114,7 +114,7 @@ def RemoveNone.Fiber (a : Option α) : Set (Perm α) :=
 
 theorem RemoveNone.mem_fiber (a : Option α) (f : Perm α) :
     f ∈ RemoveNone.Fiber a ↔ ∃ F : Perm (Option α), F ∈ Derangements (Option α) ∧ F none = a ∧ removeNone F = f := by
-  simp [remove_none.fiber, Derangements]
+  simp [← remove_none.fiber, ← Derangements]
 
 theorem RemoveNone.fiber_none : RemoveNone.Fiber (@none α) = ∅ := by
   rw [Set.eq_empty_iff_forall_not_mem]
@@ -145,11 +145,11 @@ theorem RemoveNone.fiber_some (a : α) : RemoveNone.Fiber (some a) = { f : Perm 
     constructor
     · intro x
       apply_fun swap none (some a)
-      simp only [perm.decompose_option_symm_apply, swap_apply_self, perm.coe_mul]
+      simp only [← perm.decompose_option_symm_apply, ← swap_apply_self, ← perm.coe_mul]
       cases x
       · simp
         
-      simp only [Equivₓ.option_congr_apply, Option.map_some'ₓ]
+      simp only [← Equivₓ.option_congr_apply, ← Option.map_some'ₓ]
       by_cases' x_vs_a : x = a
       · rw [x_vs_a, swap_apply_right]
         apply Option.some_ne_none

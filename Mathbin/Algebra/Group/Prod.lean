@@ -279,7 +279,7 @@ theorem snd_comp_prod (f : M →ₙ* N) (g : M →ₙ* P) : (snd N P).comp (f.Pr
 @[simp, to_additive prod_unique]
 theorem prod_unique (f : M →ₙ* N × P) : ((fst N P).comp f).Prod ((snd N P).comp f) = f :=
   ext fun x => by
-    simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
+    simp only [← prod_apply, ← coe_fst, ← coe_snd, ← comp_apply, ← Prod.mk.eta]
 
 end Prod
 
@@ -421,7 +421,7 @@ theorem snd_comp_prod (f : M →* N) (g : M →* P) : (snd N P).comp (f.Prod g) 
 @[simp, to_additive prod_unique]
 theorem prod_unique (f : M →* N × P) : ((fst N P).comp f).Prod ((snd N P).comp f) = f :=
   ext fun x => by
-    simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
+    simp only [← prod_apply, ← coe_fst, ← coe_snd, ← comp_apply, ← Prod.mk.eta]
 
 end Prod
 
@@ -466,17 +466,17 @@ theorem coprod_apply (p : M × N) : f.coprod g p = f p.1 * g p.2 :=
 @[simp, to_additive]
 theorem coprod_comp_inl : (f.coprod g).comp (inl M N) = f :=
   ext fun x => by
-    simp [coprod_apply]
+    simp [← coprod_apply]
 
 @[simp, to_additive]
 theorem coprod_comp_inr : (f.coprod g).comp (inr M N) = g :=
   ext fun x => by
-    simp [coprod_apply]
+    simp [← coprod_apply]
 
 @[simp, to_additive]
 theorem coprod_unique (f : M × N →* P) : (f.comp (inl M N)).coprod (f.comp (inr M N)) = f :=
   ext fun x => by
-    simp [coprod_apply, inl_apply, inr_apply, ← map_mul]
+    simp [← coprod_apply, ← inl_apply, ← inr_apply, map_mul]
 
 @[simp, to_additive]
 theorem coprod_inl_inr {M N : Type _} [CommMonoidₓ M] [CommMonoidₓ N] : (inl M N).coprod (inr M N) = id (M × N) :=
@@ -512,6 +512,23 @@ theorem coe_prod_comm : ⇑(prodComm : M × N ≃* N × M) = Prod.swap :=
 theorem coe_prod_comm_symm : ⇑(prodComm : M × N ≃* N × M).symm = Prod.swap :=
   rfl
 
+variable {M' N' : Type _} [MulOneClassₓ M'] [MulOneClassₓ N']
+
+/-- Product of multiplicative isomorphisms; the maps come from `equiv.prod_congr`.-/
+@[to_additive prod_congr "Product of additive isomorphisms; the maps come from `equiv.prod_congr`."]
+def prodCongr (f : M ≃* M') (g : N ≃* N') : M × N ≃* M' × N' :=
+  { f.toEquiv.prodCongr g.toEquiv with map_mul' := fun x y => Prod.extₓ (f.map_mul _ _) (g.map_mul _ _) }
+
+/-- Multiplying by the trivial monoid doesn't change the structure.-/
+@[to_additive unique_prod "Multiplying by the trivial monoid doesn't change the structure."]
+def uniqueProd [Unique N] : N × M ≃* M :=
+  { Equivₓ.uniqueProd M N with map_mul' := fun x y => rfl }
+
+/-- Multiplying by the trivial monoid doesn't change the structure.-/
+@[to_additive prod_unique "Multiplying by the trivial monoid doesn't change the structure."]
+def prodUnique [Unique N] : M × N ≃* M :=
+  { Equivₓ.prodUnique M N with map_mul' := fun x y => rfl }
+
 end
 
 section
@@ -531,7 +548,7 @@ def prodUnits : (M × N)ˣ ≃* Mˣ × Nˣ where
   left_inv := fun u => by
     simp
   right_inv := fun ⟨u₁, u₂⟩ => by
-    simp [Units.map]
+    simp [← Units.map]
   map_mul' := MonoidHom.map_mul _
 
 end
@@ -549,9 +566,9 @@ Used mainly to define the natural topology of `αˣ`. -/
 def embedProduct (α : Type _) [Monoidₓ α] : αˣ →* α × αᵐᵒᵖ where
   toFun := fun x => ⟨x, op ↑x⁻¹⟩
   map_one' := by
-    simp only [inv_one, eq_self_iff_true, Units.coe_one, op_one, Prod.mk_eq_one, and_selfₓ]
+    simp only [← inv_one, ← eq_self_iff_true, ← Units.coe_one, ← op_one, ← Prod.mk_eq_one, ← and_selfₓ]
   map_mul' := fun x y => by
-    simp only [mul_inv_rev, op_mul, Units.coe_mul, Prod.mk_mul_mk]
+    simp only [← mul_inv_rev, ← op_mul, ← Units.coe_mul, ← Prod.mk_mul_mk]
 
 @[to_additive]
 theorem embed_product_injective (α : Type _) [Monoidₓ α] : Function.Injective (embedProduct α) := fun a₁ a₂ h =>
@@ -584,7 +601,7 @@ def mulMonoidWithZeroHom [CommMonoidWithZero α] : α × α →*₀ α :=
 
 /-- Division as a monoid homomorphism. -/
 @[to_additive "Subtraction as an additive monoid homomorphism.", simps]
-def divMonoidHom [CommGroupₓ α] : α × α →* α where
+def divMonoidHom [DivisionCommMonoid α] : α × α →* α where
   toFun := fun a => a.1 / a.2
   map_one' := div_one _
   map_mul' := fun a b => mul_div_mul_comm _ _ _ _

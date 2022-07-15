@@ -136,9 +136,9 @@ product one using this pseudoemetric space and `pseudo_emetric_space.replace_uni
 def pseudoEmetricAux : PseudoEmetricSpace (PiLp p β) where
   edist := fun f g => (∑ i, edist (f i) (g i) ^ p) ^ (1 / p)
   edist_self := fun f => by
-    simp [edist, Ennreal.zero_rpow_of_pos (Pos p), Ennreal.zero_rpow_of_pos (inv_pos.2 <| Pos p)]
+    simp [← edist, ← Ennreal.zero_rpow_of_pos (Pos p), ← Ennreal.zero_rpow_of_pos (inv_pos.2 <| Pos p)]
   edist_comm := fun f g => by
-    simp [edist, edist_comm]
+    simp [← edist, ← edist_comm]
   edist_triangle := fun f g h =>
     calc
       (∑ i, edist (f i) (h i) ^ p) ^ (1 / p) ≤ (∑ i, (edist (f i) (g i) + edist (g i) (h i)) ^ p) ^ (1 / p) := by
@@ -169,17 +169,17 @@ def pseudoMetricAux : PseudoMetricSpace (PiLp p α) :=
     fun f g => by
     have A : ∀ i, edist (f i) (g i) ^ p ≠ ⊤ := fun i => Ennreal.rpow_ne_top_of_nonneg (Pos p).le (edist_ne_top _ _)
     have B : edist f g = (∑ i, edist (f i) (g i) ^ p) ^ (1 / p) := rfl
-    simp only [B, dist_edist, Ennreal.to_real_rpow, ← Ennreal.to_real_sum fun i _ => A i]
+    simp only [← B, ← dist_edist, ← Ennreal.to_real_rpow, Ennreal.to_real_sum fun i _ => A i]
 
 attribute [local instance] PiLp.pseudoMetricAux
 
 theorem lipschitz_with_equiv_aux : LipschitzWith 1 (PiLp.equiv p β) := by
   have cancel : p * (1 / p) = 1 := mul_div_cancel' 1 (Pos p).ne'
   intro x y
-  simp only [edist, forall_prop_of_true, one_mulₓ, Finset.mem_univ, Finset.sup_le_iff, Ennreal.coe_one]
+  simp only [← edist, ← forall_prop_of_true, ← one_mulₓ, ← Finset.mem_univ, ← Finset.sup_le_iff, ← Ennreal.coe_one]
   intro i
   calc edist (x i) (y i) = (edist (x i) (y i) ^ p) ^ (1 / p) := by
-      simp [← Ennreal.rpow_mul, cancel, -one_div]_ ≤ (∑ i, edist (x i) (y i) ^ p) ^ (1 / p) := by
+      simp [Ennreal.rpow_mul, ← cancel, -one_div]_ ≤ (∑ i, edist (x i) (y i) ^ p) ^ (1 / p) := by
       apply Ennreal.rpow_le_rpow _ (one_div_nonneg.2 <| (Pos p).le)
       exact Finset.single_le_sum (fun i hi => (bot_le : (0 : ℝ≥0∞) ≤ _)) (Finset.mem_univ i)
 
@@ -188,7 +188,7 @@ theorem antilipschitz_with_equiv_aux : AntilipschitzWith ((Fintype.card ι : ℝ
   have nonneg : 0 ≤ 1 / p := one_div_nonneg.2 (le_of_ltₓ Pos)
   have cancel : p * (1 / p) = 1 := mul_div_cancel' 1 (ne_of_gtₓ Pos)
   intro x y
-  simp [edist, -one_div]
+  simp [← edist, -one_div]
   calc (∑ i, edist (x i) (y i) ^ p) ^ (1 / p) ≤ (∑ i, edist (PiLp.equiv p β x) (PiLp.equiv p β y) ^ p) ^ (1 / p) := by
       apply Ennreal.rpow_le_rpow _ nonneg
       apply Finset.sum_le_sum fun i hi => _
@@ -198,8 +198,8 @@ theorem antilipschitz_with_equiv_aux : AntilipschitzWith ((Fintype.card ι : ℝ
           (Finset.mem_univ
             i)_ = ((Fintype.card ι : ℝ≥0 ) ^ (1 / p) : ℝ≥0 ) * edist (PiLp.equiv p β x) (PiLp.equiv p β y) :=
       by
-      simp only [nsmul_eq_mul, Finset.card_univ, Ennreal.rpow_one, Finset.sum_const,
-        Ennreal.mul_rpow_of_nonneg _ _ nonneg, ← Ennreal.rpow_mul, cancel]
+      simp only [← nsmul_eq_mul, ← Finset.card_univ, ← Ennreal.rpow_one, ← Finset.sum_const, ←
+        Ennreal.mul_rpow_of_nonneg _ _ nonneg, Ennreal.rpow_mul, ← cancel]
       have : (Fintype.card ι : ℝ≥0∞) = (Fintype.card ι : ℝ≥0 ) := (Ennreal.coe_nat (Fintype.card ι)).symm
       rw [this, Ennreal.coe_rpow_of_nonneg _ nonneg]
 
@@ -288,7 +288,7 @@ norm. -/
 instance semiNormedGroup [∀ i, SemiNormedGroup (β i)] : SemiNormedGroup (PiLp p β) :=
   { Pi.addCommGroup with norm := fun f => (∑ i, ∥f i∥ ^ p) ^ (1 / p),
     dist_eq := fun x y => by
-      simp [PiLp.dist_eq, dist_eq_norm, sub_eq_add_neg] }
+      simp [← PiLp.dist_eq, ← dist_eq_norm, ← sub_eq_add_neg] }
 
 /-- normed group instance on the product of finitely many normed groups, using the `L^p` norm. -/
 instance normedGroup [∀ i, NormedGroup (α i)] : NormedGroup (PiLp p α) :=
@@ -303,15 +303,15 @@ theorem norm_eq {p : ℝ} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, SemiNorm
 theorem nnnorm_eq {p : ℝ} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, SemiNormedGroup (β i)] (f : PiLp p β) :
     ∥f∥₊ = (∑ i, ∥f i∥₊ ^ p) ^ (1 / p) := by
   ext
-  simp [Nnreal.coe_sum, norm_eq]
+  simp [← Nnreal.coe_sum, ← norm_eq]
 
 theorem norm_eq_of_nat {p : ℝ} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, SemiNormedGroup (β i)] (n : ℕ) (h : p = n)
     (f : PiLp p β) : ∥f∥ = (∑ i, ∥f i∥ ^ n) ^ (1 / (n : ℝ)) := by
-  simp [norm_eq, h, Real.sqrt_eq_rpow, ← Real.rpow_nat_cast]
+  simp [← norm_eq, ← h, ← Real.sqrt_eq_rpow, Real.rpow_nat_cast]
 
 theorem norm_eq_of_L2 {β : ι → Type _} [∀ i, SemiNormedGroup (β i)] (x : PiLp 2 β) : ∥x∥ = sqrt (∑ i : ι, ∥x i∥ ^ 2) :=
   by
-  rw [norm_eq_of_nat 2] <;> simp [sqrt_eq_rpow]
+  rw [norm_eq_of_nat 2] <;> simp [← sqrt_eq_rpow]
 
 theorem nnnorm_eq_of_L2 {β : ι → Type _} [∀ i, SemiNormedGroup (β i)] (x : PiLp 2 β) :
     ∥x∥₊ = Nnreal.sqrt (∑ i : ι, ∥x i∥₊ ^ 2) :=
@@ -343,7 +343,7 @@ instance normedSpace [∀ i, SemiNormedGroup (β i)] [∀ i, NormedSpace 𝕜 (�
     norm_smul_le := by
       intro c f
       have : p * (1 / p) = 1 := mul_div_cancel' 1 (lt_of_lt_of_leₓ zero_lt_one fact_one_le_p.out).ne'
-      simp only [PiLp.norm_eq, norm_smul, mul_rpow, norm_nonneg, ← Finset.mul_sum, Pi.smul_apply]
+      simp only [← PiLp.norm_eq, ← norm_smul, ← mul_rpow, ← norm_nonneg, Finset.mul_sum, ← Pi.smul_apply]
       rw [mul_rpow (rpow_nonneg_of_nonneg (norm_nonneg _) _), ← rpow_mul (norm_nonneg _), this, rpow_one]
       exact Finset.sum_nonneg fun i hi => rpow_nonneg_of_nonneg (norm_nonneg _) _ }
 

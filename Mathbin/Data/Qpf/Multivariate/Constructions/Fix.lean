@@ -99,9 +99,9 @@ theorem recF_eq_of_Wequiv (α : Typevec n) {β : Type _} (u : F (α.Append1 β) 
   intro h
   induction h
   case mvqpf.Wequiv.ind a f' f₀ f₁ h ih =>
-    simp only [recF_eq, Function.comp, ih]
+    simp only [← recF_eq, ← Function.comp, ← ih]
   case mvqpf.Wequiv.abs a₀ f'₀ f₀ a₁ f'₁ f₁ h =>
-    simp only [recF_eq', abs_map, Mvpfunctor.W_dest'_W_mk, h]
+    simp only [← recF_eq', ← abs_map, ← Mvpfunctor.W_dest'_W_mk, ← h]
   case mvqpf.Wequiv.trans x y z e₁ e₂ ih₁ ih₂ =>
     exact Eq.trans ih₁ ih₂
 
@@ -187,8 +187,7 @@ attribute [nolint has_inhabited_instance] fix
 def Fix.map {α β : Typevec n} (g : α ⟹ β) : Fix F α → Fix F β :=
   Quotientₓ.lift (fun x : q.p.W α => ⟦q.p.wMap g x⟧) fun a b h => Quot.sound (Wequiv_map _ _ _ h)
 
-instance Fix.mvfunctor : Mvfunctor (Fix F) where
-  map := @Fix.map _ _ _ _
+instance Fix.mvfunctor : Mvfunctor (Fix F) where map := @Fix.map _ _ _ _
 
 variable {α : Typevec.{u} n}
 
@@ -313,7 +312,7 @@ instance mvqpfFix : Mvqpf (Fix F) where
     apply Wrepr_equiv
   abs_map := by
     intro α β g x
-    conv => rhs dsimp [Mvfunctor.map]
+    conv => rhs dsimp [← Mvfunctor.map]
     rw [fix.map]
     apply Quot.sound
     apply Wequiv.refl
@@ -324,12 +323,12 @@ def Fix.drec {β : Fix F α → Type u} (g : ∀ x : F (α ::: Sigma β), β (fi
   let y := @Fix.rec _ F _ _ α (Sigma β) (fun i => ⟨_, g i⟩) x
   have : x = y.1 := by
     symm
-    dsimp' [y]
+    dsimp' [← y]
     apply fix.ind_rec _ id _ x
     intro x' ih
     rw [fix.rec_eq]
     dsimp'
-    simp [append_fun_id_id] at ih
+    simp [← append_fun_id_id] at ih
     congr
     conv => rhs rw [← ih]
     rw [Mvfunctor.map_map, ← append_fun_comp, id_comp]

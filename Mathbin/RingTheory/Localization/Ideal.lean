@@ -42,7 +42,7 @@ private def map_ideal (I : Ideal R) : Ideal S where
     rintro a b ⟨a', ha⟩ ⟨b', hb⟩
     use ⟨a'.2 * b'.1 + b'.2 * a'.1, I.add_mem (I.mul_mem_left _ b'.1.2) (I.mul_mem_left _ a'.1.2)⟩
     use a'.2 * b'.2
-    simp only [RingHom.map_add, Submodule.coe_mk, Submonoid.coe_mul, RingHom.map_mul]
+    simp only [← RingHom.map_add, ← Submodule.coe_mk, ← Submonoid.coe_mul, ← RingHom.map_mul]
     rw [add_mulₓ, ← mul_assoc a, ha, mul_comm (algebraMap R S a'.2) (algebraMap R S b'.2), ← mul_assoc b, hb]
     ring
   smul_mem' := by
@@ -50,7 +50,7 @@ private def map_ideal (I : Ideal R) : Ideal S where
     obtain ⟨c', hc⟩ := IsLocalization.surj M c
     use ⟨c'.1 * x'.1, I.mul_mem_left c'.1 x'.1.2⟩
     use c'.2 * x'.2
-    simp only [← hx, ← hc, smul_eq_mul, Submodule.coe_mk, Submonoid.coe_mul, RingHom.map_mul]
+    simp only [hx, hc, ← smul_eq_mul, ← Submodule.coe_mk, ← Submonoid.coe_mul, ← RingHom.map_mul]
     ring
 
 theorem mem_map_algebra_map_iff {I : Ideal R} {z} :
@@ -61,7 +61,7 @@ theorem mem_map_algebra_map_iff {I : Ideal R} {z} :
     obtain ⟨y, hy⟩ := hz
     use
       ⟨⟨⟨y, hy.left⟩, 1⟩, by
-        simp [hy.right]⟩
+        simp [← hy.right]⟩
     
   · rintro ⟨⟨a, s⟩, h⟩
     rw [← Ideal.unit_mul_mem_iff_mem _ (map_units S s), mul_comm]
@@ -82,7 +82,7 @@ theorem comap_map_of_is_prime_disjoint (I : Ideal R) (hI : I.IsPrime) (hM : Disj
   refine' le_antisymmₓ (fun a ha => _) Ideal.le_comap_map
   obtain ⟨⟨b, s⟩, h⟩ := (mem_map_algebra_map_iff M S).1 (Ideal.mem_comap.1 ha)
   replace h : algebraMap R S (a * s) = algebraMap R S b := by
-    simpa only [← map_mul] using h
+    simpa only [map_mul] using h
   obtain ⟨c, hc⟩ := (eq_iff_exists M S).1 h
   have : a * (s * c) ∈ I := by
     rw [← mul_assoc, hc]
@@ -177,7 +177,7 @@ theorem surjective_quotient_map_of_maximal_of_localization {I : Ideal S} [I.IsPr
       ⟨0,
         eq_comm.1
           (by
-            simp [Ideal.Quotient.eq_zero_iff_mem, this])⟩
+            simp [← Ideal.Quotient.eq_zero_iff_mem, ← this])⟩
     
   · rw [Ideal.Quotient.maximal_ideal_iff_is_field_quotient] at hI
     obtain ⟨n, hn⟩ := hI.3 hM
@@ -186,10 +186,10 @@ theorem surjective_quotient_map_of_maximal_of_localization {I : Ideal S} [I.IsPr
     -- The rest of the proof is essentially just algebraic manipulations to prove the equality
     rw [← RingHom.map_mul] at hn
     replace hn := congr_arg (Ideal.quotientMap I (algebraMap R S) le_rfl) hn
-    simp only [RingHom.map_one, Ideal.quotient_map_mk, RingHom.map_mul] at hn
+    simp only [← RingHom.map_one, ← Ideal.quotient_map_mk, ← RingHom.map_mul] at hn
     rw [Ideal.quotient_map_mk, ← sub_eq_zero, ← RingHom.map_sub, Ideal.Quotient.eq_zero_iff_mem, ←
       Ideal.Quotient.eq_zero_iff_mem, RingHom.map_sub, sub_eq_zero, mk'_eq_mul_mk'_one]
-    simp only [mul_eq_mul_left_iff, RingHom.map_mul]
+    simp only [← mul_eq_mul_left_iff, ← RingHom.map_mul]
     exact
       Or.inl
         (mul_left_cancel₀

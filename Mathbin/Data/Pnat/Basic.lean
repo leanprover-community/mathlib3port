@@ -157,7 +157,7 @@ instance : AddRightCancelSemigroup ℕ+ :=
 instance (priority := 10) : CovariantClass ℕ+ ℕ+ (· + ·) (· ≤ ·) :=
   ⟨by
     rintro ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩
-    simp [← Pnat.coe_le_coe]⟩
+    simp [Pnat.coe_le_coe]⟩
 
 @[simp]
 theorem ne_zero (n : ℕ+) : (n : ℕ) ≠ 0 :=
@@ -272,14 +272,14 @@ theorem le_one_iff {n : ℕ+} : n ≤ 1 ↔ n = 1 := by
   rcases n with ⟨_ | n, hn⟩
   · exact absurd hn (lt_irreflₓ _)
     
-  · simp [← Pnat.coe_le_coe, Subtype.ext_iff, Nat.succ_le_succ_iff, Nat.succ_inj']
+  · simp [Pnat.coe_le_coe, ← Subtype.ext_iff, ← Nat.succ_le_succ_iff, ← Nat.succ_inj']
     
 
 theorem lt_add_left (n m : ℕ+) : n < m + n := by
   rcases m with ⟨_ | m, hm⟩
   · exact absurd hm (lt_irreflₓ _)
     
-  · simp [← Pnat.coe_lt_coe]
+  · simp [Pnat.coe_lt_coe]
     
 
 theorem lt_add_right (n m : ℕ+) : n < n + m :=
@@ -456,7 +456,7 @@ theorem div_add_mod' (m k : ℕ+) : (div m k * k + mod m k : ℕ) = m := by
   exact div_add_mod _ _
 
 theorem mod_coe (m k : ℕ+) : (mod m k : ℕ) = ite ((m : ℕ) % (k : ℕ) = 0) (k : ℕ) ((m : ℕ) % (k : ℕ)) := by
-  dsimp' [mod, mod_div]
+  dsimp' [← mod, ← mod_div]
   cases (m : ℕ) % (k : ℕ)
   · rw [if_pos rfl]
     rfl
@@ -467,7 +467,7 @@ theorem mod_coe (m k : ℕ+) : (mod m k : ℕ) = ite ((m : ℕ) % (k : ℕ) = 0)
 
 theorem div_coe (m k : ℕ+) : (div m k : ℕ) = ite ((m : ℕ) % (k : ℕ) = 0) ((m : ℕ) / (k : ℕ)).pred ((m : ℕ) / (k : ℕ)) :=
   by
-  dsimp' [div, mod_div]
+  dsimp' [← div, ← mod_div]
   cases (m : ℕ) % (k : ℕ)
   · rw [if_pos rfl]
     rfl

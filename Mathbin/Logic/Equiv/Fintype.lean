@@ -45,7 +45,7 @@ theorem Function.Embedding.to_equiv_range_apply (a : α) : f.toEquivRange a = �
 @[simp]
 theorem Function.Embedding.to_equiv_range_symm_apply_self (a : α) :
     f.toEquivRange.symm ⟨f a, Set.mem_range_self a⟩ = a := by
-  simp [Equivₓ.symm_apply_eq]
+  simp [← Equivₓ.symm_apply_eq]
 
 theorem Function.Embedding.to_equiv_range_eq_of_injective : f.toEquivRange = Equivₓ.ofInjective f f.Injective := by
   ext
@@ -68,7 +68,7 @@ theorem Equivₓ.Perm.via_fintype_embedding_apply_image (a : α) : e.viaFintypeE
 
 theorem Equivₓ.Perm.via_fintype_embedding_apply_mem_range {b : β} (h : b ∈ Set.Range f) :
     e.viaFintypeEmbedding f b = f (e (f.invOfMemRange ⟨b, h⟩)) := by
-  simpa [Equivₓ.Perm.viaFintypeEmbedding, Equivₓ.Perm.extend_domain_apply_subtype, h]
+  simpa [← Equivₓ.Perm.viaFintypeEmbedding, ← Equivₓ.Perm.extend_domain_apply_subtype, ← h]
 
 theorem Equivₓ.Perm.via_fintype_embedding_apply_not_mem_range {b : β} (h : b ∉ Set.Range f) :
     e.viaFintypeEmbedding f b = b := by
@@ -77,7 +77,7 @@ theorem Equivₓ.Perm.via_fintype_embedding_apply_not_mem_range {b : β} (h : b 
 @[simp]
 theorem Equivₓ.Perm.via_fintype_embedding_sign [DecidableEq α] [Fintype β] :
     Equivₓ.Perm.sign (e.viaFintypeEmbedding f) = Equivₓ.Perm.sign e := by
-  simp [Equivₓ.Perm.viaFintypeEmbedding]
+  simp [← Equivₓ.Perm.viaFintypeEmbedding]
 
 namespace Equivₓ
 
@@ -100,7 +100,7 @@ noncomputable abbrev extendSubtype (e : { x // p x } ≃ { x // q x }) : Perm α
 
 theorem extend_subtype_apply_of_mem (e : { x // p x } ≃ { x // q x }) x (hx : p x) : e.extendSubtype x = e ⟨x, hx⟩ := by
   dunfold extend_subtype
-  simp only [subtype_congr, Equivₓ.trans_apply, Equivₓ.sum_congr_apply]
+  simp only [← subtype_congr, ← Equivₓ.trans_apply, ← Equivₓ.sum_congr_apply]
   rw [sum_compl_apply_symm_of_pos _ _ hx, Sum.map_inl, sum_compl_apply_inl]
 
 theorem extend_subtype_mem (e : { x // p x } ≃ { x // q x }) x (hx : p x) : q (e.extendSubtype x) := by
@@ -110,7 +110,7 @@ theorem extend_subtype_mem (e : { x // p x } ≃ { x // q x }) x (hx : p x) : q 
 theorem extend_subtype_apply_of_not_mem (e : { x // p x } ≃ { x // q x }) x (hx : ¬p x) :
     e.extendSubtype x = e.toCompl ⟨x, hx⟩ := by
   dunfold extend_subtype
-  simp only [subtype_congr, Equivₓ.trans_apply, Equivₓ.sum_congr_apply]
+  simp only [← subtype_congr, ← Equivₓ.trans_apply, ← Equivₓ.sum_congr_apply]
   rw [sum_compl_apply_symm_of_neg _ _ hx, Sum.map_inr, sum_compl_apply_inr]
 
 theorem extend_subtype_not_mem (e : { x // p x } ≃ { x // q x }) x (hx : ¬p x) : ¬q (e.extendSubtype x) := by

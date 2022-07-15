@@ -46,8 +46,8 @@ theorem mul_apply {g₁ g₂ : α →₀ β} {a : α} : (g₁ * g₂) a = g₁ a
 
 theorem support_mul [DecidableEq α] {g₁ g₂ : α →₀ β} : (g₁ * g₂).Support ⊆ g₁.Support ∩ g₂.Support := by
   intro a h
-  simp only [mul_apply, mem_support_iff] at h
-  simp only [mem_support_iff, mem_inter, Ne.def]
+  simp only [← mul_apply, ← mem_support_iff] at h
+  simp only [← mem_support_iff, ← mem_inter, ← Ne.def]
   rw [← not_or_distrib]
   intro w
   apply h
@@ -83,15 +83,16 @@ instance [NonUnitalRing β] : NonUnitalRing (α →₀ β) :=
 instance [NonUnitalCommRing β] : NonUnitalCommRing (α →₀ β) :=
   Finsupp.coe_fn_injective.NonUnitalCommRing _ coe_zero coe_add coe_mul coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
 
--- TODO can this be generalized in the direction of `pi.has_scalar'`
+-- TODO can this be generalized in the direction of `pi.has_smul'`
 -- (i.e. dependent functions and finsupps)
 -- TODO in theory this could be generalised, we only really need `smul_zero` for the definition
-instance pointwiseScalar [Semiringₓ β] : HasScalar (α → β) (α →₀ β) where
-  smul := fun f g =>
+instance pointwiseScalar [Semiringₓ β] :
+    HasSmul (α → β) (α →₀ β) where smul := fun f g =>
     Finsupp.ofSupportFinite (fun a => f a • g a)
       (by
         apply Set.Finite.subset g.finite_support
-        simp only [Function.support_subset_iff, Finsupp.mem_support_iff, Ne.def, Finsupp.fun_support_eq, Finset.mem_coe]
+        simp only [← Function.support_subset_iff, ← Finsupp.mem_support_iff, ← Ne.def, ← Finsupp.fun_support_eq, ←
+          Finset.mem_coe]
         intro x hx h
         apply hx
         rw [h, smul_zero])

@@ -78,8 +78,8 @@ theorem colimit_inv_aux_eq_of_rel (x y : Σj, F.obj j) (h : Types.FilteredColimi
 
 /-- Taking inverses in the colimit. See also `colimit_inv_aux`. -/
 @[to_additive "Negation in the colimit. See also `colimit_neg_aux`."]
-instance colimitHasInv : Inv G where
-  inv := fun x => by
+instance colimitHasInv :
+    Inv G where inv := fun x => by
     refine' Quot.lift (colimit_inv_aux F) _ x
     intro x y h
     apply colimit_inv_aux_eq_of_rel
@@ -101,7 +101,7 @@ instance colimitGroup : Groupₓ G :=
       erw [colimit_inv_mk_eq, colimit_mul_mk_eq (F ⋙ forget₂ Groupₓₓ Mon.{max v u}) ⟨j, _⟩ ⟨j, _⟩ j (𝟙 j) (𝟙 j),
         colimit_one_eq (F ⋙ forget₂ Groupₓₓ Mon.{max v u}) j]
       dsimp'
-      simp only [CategoryTheory.Functor.map_id, id_apply, mul_left_invₓ] }
+      simp only [← CategoryTheory.Functor.map_id, ← id_apply, ← mul_left_invₓ] }
 
 /-- The bundled group giving the filtered colimit of a diagram. -/
 @[to_additive "The bundled additive group giving the filtered colimit of a diagram."]
@@ -127,8 +127,10 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone where
         funext fun x => MonoidHom.congr_fun (h j) x
 
 @[to_additive forget₂_AddMon_preserves_filtered_colimits]
-instance forget₂MonPreservesFilteredColimits : PreservesFilteredColimits (forget₂ Groupₓₓ Mon.{u}) where
-  PreservesFilteredColimits := fun J _ _ =>
+instance forget₂MonPreservesFilteredColimits :
+    PreservesFilteredColimits
+      (forget₂ Groupₓₓ
+        Mon.{u}) where PreservesFilteredColimits := fun J _ _ =>
     { PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
           (Mon.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ Groupₓₓ Mon.{u})) }
@@ -187,8 +189,10 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone where
         funext fun x => MonoidHom.congr_fun (h j) x
 
 @[to_additive forget₂_AddGroup_preserves_filtered_colimits]
-instance forget₂GroupPreservesFilteredColimits : PreservesFilteredColimits (forget₂ CommGroupₓₓ Groupₓₓ.{u}) where
-  PreservesFilteredColimits := fun J _ _ =>
+instance forget₂GroupPreservesFilteredColimits :
+    PreservesFilteredColimits
+      (forget₂ CommGroupₓₓ
+        Groupₓₓ.{u}) where PreservesFilteredColimits := fun J _ _ =>
     { PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
           (Groupₓₓ.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ CommGroupₓₓ Groupₓₓ.{u})) }

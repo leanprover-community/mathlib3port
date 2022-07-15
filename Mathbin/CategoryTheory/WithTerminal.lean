@@ -89,11 +89,9 @@ def incl : C ⥤ WithTerminal C where
   obj := of
   map := fun X Y f => f
 
-instance : Full (incl : C ⥤ _) where
-  preimage := fun X Y f => f
+instance : Full (incl : C ⥤ _) where preimage := fun X Y f => f
 
-instance : Faithful (incl : C ⥤ _) :=
-  {  }
+instance : Faithful (incl : C ⥤ _) where
 
 /-- Map `with_terminal` with respect to a functor `F : C ⥤ D`. -/
 def map {D : Type _} [Category D] (F : C ⥤ D) : WithTerminal C ⥤ WithTerminal D where
@@ -241,11 +239,9 @@ def incl : C ⥤ WithInitial C where
   obj := of
   map := fun X Y f => f
 
-instance : Full (incl : C ⥤ _) where
-  preimage := fun X Y f => f
+instance : Full (incl : C ⥤ _) where preimage := fun X Y f => f
 
-instance : Faithful (incl : C ⥤ _) :=
-  {  }
+instance : Faithful (incl : C ⥤ _) where
 
 /-- Map `with_initial` with respect to a functor `F : C ⥤ D`. -/
 def map {D : Type _} [Category D] (F : C ⥤ D) : WithInitial C ⥤ WithInitial D where

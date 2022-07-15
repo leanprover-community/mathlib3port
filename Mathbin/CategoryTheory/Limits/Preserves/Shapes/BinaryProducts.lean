@@ -19,13 +19,13 @@ the product of `X` and `Y`.
 
 noncomputable section
 
-universe v u₁ u₂
+universe v₁ v₂ u₁ u₂
 
 open CategoryTheory CategoryTheory.Category CategoryTheory.Limits
 
-variable {C : Type u₁} [Category.{v} C]
+variable {C : Type u₁} [Category.{v₁} C]
 
-variable {D : Type u₂} [Category.{v} D]
+variable {D : Type u₂} [Category.{v₂} D]
 
 variable (G : C ⥤ D)
 
@@ -40,7 +40,7 @@ essentially lets us commute `binary_fan.mk` with `functor.map_cone`.
 -/
 def isLimitMapConeBinaryFanEquiv :
     IsLimit (G.mapCone (BinaryFan.mk f g)) ≃ IsLimit (BinaryFan.mk (G.map f) (G.map g)) :=
-  (IsLimit.postcomposeHomEquiv (diagramIsoPair.{v} _) _).symm.trans
+  (IsLimit.postcomposeHomEquiv (diagramIsoPair _) _).symm.trans
     (IsLimit.equivIsoLimit
       (Cones.ext (Iso.refl _)
         (by
@@ -105,7 +105,7 @@ This essentially lets us commute `binary_cofan.mk` with `functor.map_cocone`.
 -/
 def isColimitMapCoconeBinaryCofanEquiv :
     IsColimit (G.mapCocone (BinaryCofan.mk f g)) ≃ IsColimit (BinaryCofan.mk (G.map f) (G.map g)) :=
-  (IsColimit.precomposeHomEquiv (diagramIsoPair.{v} _).symm _).symm.trans
+  (IsColimit.precomposeHomEquiv (diagramIsoPair _).symm _).symm.trans
     (IsColimit.equivIsoColimit
       (Cocones.ext (Iso.refl _)
         (by

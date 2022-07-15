@@ -52,13 +52,13 @@ abbrev Hom (α β : Type _) [Frame α] [Frame β] : Type _ :=
   FrameHom α β
 
 instance bundledHom : BundledHom Hom :=
-  ⟨fun [Frame β] => (coeFn : FrameHom α β → α → β), fun [Frame α] => FrameHom.id α, fun [Frame γ] => FrameHom.comp,
-    fun [Frame β] => FunLike.coe_injective⟩
+  ⟨fun α β [Frame α] [Frame β] => (coeFn : FrameHom α β → α → β), fun α [Frame α] => FrameHom.id α,
+    fun α β γ [Frame α] [Frame β] [Frame γ] => FrameHom.comp, fun α β [Frame α] [Frame β] => FunLike.coe_injective⟩
 
 deriving instance LargeCategory, ConcreteCategory for Frame
 
-instance hasForgetToLattice : HasForget₂ Frame Latticeₓ where
-  forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => FrameHom.toLatticeHom }
+instance hasForgetToLattice :
+    HasForget₂ Frame Latticeₓ where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => FrameHom.toLatticeHom }
 
 /-- Constructs an isomorphism of frames from an order isomorphism between them. -/
 @[simps]

@@ -82,7 +82,7 @@ theorem is_chain_univ_iff : IsChain r (Univ : Set α) ↔ IsTrichotomous α r :=
   exact h trivialₓ trivialₓ
 
 theorem IsChain.image (r : α → α → Prop) (s : β → β → Prop) (f : α → β) (h : ∀ x y, r x y → s (f x) (f y)) {c : Set α}
-    (hrc : IsChain r c) : IsChain s (f '' c) := fun y ⟨b, hb₁, hb₂⟩ =>
+    (hrc : IsChain r c) : IsChain s (f '' c) := fun x ⟨a, ha₁, ha₂⟩ y ⟨b, hb₁, hb₂⟩ =>
   ha₂ ▸ hb₂ ▸ fun hxy => (hrc ha₁ hb₁ <| ne_of_apply_ne f hxy).imp (h _ _) (h _ _)
 
 section Total
@@ -98,7 +98,7 @@ theorem IsChain.directed_on (H : IsChain r s) : DirectedOn r s := fun x hx y hy 
 protected theorem IsChain.directed {f : β → α} {c : Set β} (h : IsChain (f ⁻¹'o r) c) :
     Directed r fun x : { a : β // a ∈ c } => f x := fun ⟨a, ha⟩ ⟨b, hb⟩ =>
   (by_cases fun hab : a = b => by
-      simp only [hab, exists_prop, and_selfₓ, Subtype.exists] <;> exact ⟨b, hb, refl _⟩)
+      simp only [← hab, ← exists_prop, ← and_selfₓ, ← Subtype.exists] <;> exact ⟨b, hb, refl _⟩)
     fun hab => ((h ha hb hab).elim fun h => ⟨⟨b, hb⟩, h, refl _⟩) fun h => ⟨⟨a, ha⟩, refl _, h⟩
 
 end Total
@@ -124,24 +124,24 @@ def SuccChain (r : α → α → Prop) (s : Set α) : Set α :=
 theorem succ_chain_spec (h : ∃ t, IsChain r s ∧ SuperChain r s t) : SuperChain r s (SuccChain r s) := by
   let ⟨t, hc'⟩ := h
   have : IsChain r s ∧ SuperChain r s (some h) := @some_spec _ (fun t => IsChain r s ∧ SuperChain r s t) _
-  simp [SuccChain, dif_pos, h, this.right]
+  simp [← SuccChain, ← dif_pos, ← h, ← this.right]
 
 theorem IsChain.succ (hs : IsChain r s) : IsChain r (SuccChain r s) :=
   if h : ∃ t, IsChain r s ∧ SuperChain r s t then (succ_chain_spec h).1
   else by
-    simp [SuccChain, dif_neg, h]
+    simp [← SuccChain, ← dif_neg, ← h]
     exact hs
 
 theorem IsChain.super_chain_succ_chain (hs₁ : IsChain r s) (hs₂ : ¬IsMaxChain r s) : SuperChain r s (SuccChain r s) :=
   by
-  simp [IsMaxChain, not_and_distrib, not_forall_not] at hs₂
+  simp [← IsMaxChain, ← not_and_distrib, ← not_forall_not] at hs₂
   obtain ⟨t, ht, hst⟩ := hs₂.neg_resolve_left hs₁
   exact succ_chain_spec ⟨t, hs₁, ht, ssubset_iff_subset_ne.2 hst⟩
 
 theorem subset_succ_chain : s ⊆ SuccChain r s :=
   if h : ∃ t, IsChain r s ∧ SuperChain r s t then (succ_chain_spec h).2.1
   else by
-    simp [SuccChain, dif_neg, h, subset.rfl]
+    simp [← SuccChain, ← dif_neg, ← h, ← subset.rfl]
 
 /-- Predicate for whether a set is reachable from `∅` using `succ_chain` and `⋃₀`. -/
 inductive ChainClosure (r : α → α → Prop) : Set α → Prop
@@ -186,7 +186,7 @@ private theorem chain_closure_succ_total (hc₁ : ChainClosure r c₁) (hc₂ : 
   case union s hs ih =>
     apply Or.imp_left h.antisymm'
     apply Classical.by_contradiction
-    simp [not_or_distrib, sUnion_subset_iff, not_forall]
+    simp [← not_or_distrib, ← sUnion_subset_iff, ← not_forall]
     intro c₃ hc₃ h₁ h₂
     obtain h | h := chain_closure_succ_total_aux hc₁ (hs c₃ hc₃) fun c₄ => ih _ hc₃
     · exact h₁ (subset_succ_chain.trans h)
@@ -219,7 +219,7 @@ theorem ChainClosure.is_chain (hc : ChainClosure r c) : IsChain r c := by
     exact h.succ
   case union s hs h =>
     change ∀, ∀ c ∈ s, ∀, IsChain r c at h
-    exact fun hneq =>
+    exact fun c₁ ⟨t₁, ht₁, (hc₁ : c₁ ∈ t₁)⟩ c₂ ⟨t₂, ht₂, (hc₂ : c₂ ∈ t₂)⟩ hneq =>
       ((hs _ ht₁).Total <| hs _ ht₂).elim (fun ht => h t₂ ht₂ (ht hc₁) hc₂ hneq) fun ht => h t₁ ht₁ hc₁ (ht hc₂) hneq
 
 /-- **Hausdorff's maximality principle**

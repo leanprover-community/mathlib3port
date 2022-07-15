@@ -30,15 +30,15 @@ theorem dedup_nil : dedup [] = ([] : List α) :=
 
 theorem dedup_cons_of_mem' {a : α} {l : List α} (h : a ∈ dedup l) : dedup (a :: l) = dedup l :=
   pw_filter_cons_of_neg <| by
-    simpa only [forall_mem_ne] using h
+    simpa only [← forall_mem_ne] using h
 
 theorem dedup_cons_of_not_mem' {a : α} {l : List α} (h : a ∉ dedup l) : dedup (a :: l) = a :: dedup l :=
   pw_filter_cons_of_pos <| by
-    simpa only [forall_mem_ne] using h
+    simpa only [← forall_mem_ne] using h
 
 @[simp]
 theorem mem_dedup {a : α} {l : List α} : a ∈ dedup l ↔ a ∈ l := by
-  simpa only [dedup, forall_mem_ne, not_not] using
+  simpa only [← dedup, ← forall_mem_ne, ← not_not] using
     not_congr (@forall_mem_pw_filter α (· ≠ ·) _ (fun x y z xz => not_and_distrib.1 <| mt (And.ndrec Eq.trans) xz) a l)
 
 @[simp]

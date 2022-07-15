@@ -58,7 +58,7 @@ theorem right_mono [Preorderₓ α] [Preorderₓ β] {f : α → β} {g : β →
 
 theorem order_iso_comp [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {f : α → β} {g : β → α} (h : IsOrderRightAdjoint f g)
     (e : β ≃o γ) : IsOrderRightAdjoint (e ∘ f) (g ∘ e.symm) := fun y => by
-  simpa [e.le_symm_apply] using h (e.symm y)
+  simpa [← e.le_symm_apply] using h (e.symm y)
 
 theorem comp_order_iso [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {f : α → β} {g : β → α} (h : IsOrderRightAdjoint f g)
     (e : γ ≃o α) : IsOrderRightAdjoint (f ∘ e) (e.symm ∘ g) := by
@@ -81,7 +81,7 @@ theorem Semiconj.symm_adjoint [PartialOrderₓ α] [Preorderₓ β] {fa : α ≃
     (h : Function.Semiconj g fa fb) {g' : β → α} (hg' : IsOrderRightAdjoint g g') : Function.Semiconj g' fb fa := by
   refine' fun y => (hg' _).unique _
   rw [← fa.surjective.image_preimage { x | g x ≤ fb y }, preimage_set_of_eq]
-  simp only [h.eq, fb.le_iff_le, fa.left_ord_continuous (hg' _)]
+  simp only [← h.eq, ← fb.le_iff_le, ← fa.left_ord_continuous (hg' _)]
 
 variable {G : Type _}
 
@@ -90,7 +90,7 @@ theorem semiconj_of_is_lub [PartialOrderₓ α] [Groupₓ G] (f₁ f₂ : G →*
   refine' fun y => (H _).unique _
   have := (f₁ g).LeftOrdContinuous (H y)
   rw [← range_comp, ← (Equivₓ.mulRight g).Surjective.range_comp _] at this
-  simpa [(· ∘ ·)] using this
+  simpa [← (· ∘ ·)] using this
 
 /-- Consider two actions `f₁ f₂ : G → α → α` of a group on a complete lattice by order
 isomorphisms. Then the map `x ↦ ⨆ g : G, (f₁ g)⁻¹ (f₂ g x)` semiconjugates each `f₁ g'` to `f₂ g'`.

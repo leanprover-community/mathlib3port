@@ -276,16 +276,16 @@ section
 /-! `subalgebra`s inherit structure from their `submodule` coercions. -/
 
 
-instance module' [Semiringₓ R'] [HasScalar R' R] [Module R' A] [IsScalarTower R' R A] : Module R' S :=
+instance module' [Semiringₓ R'] [HasSmul R' R] [Module R' A] [IsScalarTower R' R A] : Module R' S :=
   S.toSubmodule.module'
 
 instance : Module R S :=
   S.module'
 
-instance [Semiringₓ R'] [HasScalar R' R] [Module R' A] [IsScalarTower R' R A] : IsScalarTower R' R S :=
+instance [Semiringₓ R'] [HasSmul R' R] [Module R' A] [IsScalarTower R' R A] : IsScalarTower R' R S :=
   S.toSubmodule.IsScalarTower
 
-instance algebra' [CommSemiringₓ R'] [HasScalar R' R] [Algebra R' A] [IsScalarTower R' R A] : Algebra R' S :=
+instance algebra' [CommSemiringₓ R'] [HasSmul R' R] [Algebra R' A] [IsScalarTower R' R A] : Algebra R' S :=
   { ((algebraMap R' A).codRestrict S) fun x => by
       rw [Algebra.algebra_map_eq_smul_one, ← smul_one_smul R x (1 : A), ← Algebra.algebra_map_eq_smul_one]
       exact algebra_map_mem S _ with
@@ -323,12 +323,12 @@ protected theorem coe_sub {R : Type u} {A : Type v} [CommRingₓ R] [Ringₓ A] 
   rfl
 
 @[simp, norm_cast]
-theorem coe_smul [Semiringₓ R'] [HasScalar R' R] [Module R' A] [IsScalarTower R' R A] (r : R') (x : S) :
+theorem coe_smul [Semiringₓ R'] [HasSmul R' R] [Module R' A] [IsScalarTower R' R A] (r : R') (x : S) :
     (↑(r • x) : A) = r • ↑x :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_algebra_map [CommSemiringₓ R'] [HasScalar R' R] [Algebra R' A] [IsScalarTower R' R A] (r : R') :
+theorem coe_algebra_map [CommSemiringₓ R'] [HasSmul R' R] [Algebra R' A] [IsScalarTower R' R A] (r : R') :
     ↑(algebraMap R' S r) = algebraMap R' A r :=
   rfl
 
@@ -532,9 +532,9 @@ def rangeRestrict (f : A →ₐ[R] B) : A →ₐ[R] f.range :=
 /-- The equalizer of two R-algebra homomorphisms -/
 def equalizer (ϕ ψ : A →ₐ[R] B) : Subalgebra R A where
   Carrier := { a | ϕ a = ψ a }
-  add_mem' := fun hy : ϕ y = ψ y => by
+  add_mem' := fun x y hx : ϕ x = ψ x hy : ϕ y = ψ y => by
     rw [Set.mem_set_of_eq, ϕ.map_add, ψ.map_add, hx, hy]
-  mul_mem' := fun hy : ϕ y = ψ y => by
+  mul_mem' := fun x y hx : ϕ x = ψ x hy : ϕ y = ψ y => by
     rw [Set.mem_set_of_eq, ϕ.map_mul, ψ.map_mul, hx, hy]
   algebra_map_mem' := fun x => by
     rw [Set.mem_set_of_eq, AlgHom.commutes, AlgHom.commutes]
@@ -696,7 +696,7 @@ theorem coe_Inf (S : Set (Subalgebra R A)) : (↑(inf S) : Set A) = ⋂ s ∈ S,
   Inf_image
 
 theorem mem_Inf {S : Set (Subalgebra R A)} {x : A} : x ∈ inf S ↔ ∀, ∀ p ∈ S, ∀, x ∈ p := by
-  simp only [← SetLike.mem_coe, coe_Inf, Set.mem_Inter₂]
+  simp only [SetLike.mem_coe, ← coe_Inf, ← Set.mem_Inter₂]
 
 @[simp]
 theorem Inf_to_submodule (S : Set (Subalgebra R A)) : (inf S).toSubmodule = inf (Subalgebra.toSubmodule '' S) :=
@@ -710,10 +710,10 @@ theorem Inf_to_subsemiring (S : Set (Subalgebra R A)) : (inf S).toSubsemiring = 
 
 @[simp, norm_cast]
 theorem coe_infi {ι : Sort _} {S : ι → Subalgebra R A} : (↑(⨅ i, S i) : Set A) = ⋂ i, S i := by
-  simp [infi]
+  simp [← infi]
 
 theorem mem_infi {ι : Sort _} {S : ι → Subalgebra R A} {x : A} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
-  simp only [infi, mem_Inf, Set.forall_range_iff]
+  simp only [← infi, ← mem_Inf, ← Set.forall_range_iff]
 
 @[simp]
 theorem infi_to_submodule {ι : Sort _} (S : ι → Subalgebra R A) : (⨅ i, S i).toSubmodule = ⨅ i, (S i).toSubmodule :=
@@ -731,11 +731,11 @@ theorem mem_bot {x : A} : x ∈ (⊥ : Subalgebra R A) ↔ x ∈ Set.Range (alge
 
 theorem to_submodule_bot : (⊥ : Subalgebra R A).toSubmodule = R∙1 := by
   ext x
-  simp [mem_bot, -Set.singleton_one, Submodule.mem_span_singleton, Algebra.smul_def]
+  simp [← mem_bot, -Set.singleton_one, ← Submodule.mem_span_singleton, ← Algebra.smul_def]
 
 @[simp]
 theorem coe_bot : ((⊥ : Subalgebra R A) : Set A) = Set.Range (algebraMap R A) := by
-  simp [Set.ext_iff, Algebra.mem_bot]
+  simp [← Set.ext_iff, ← Algebra.mem_bot]
 
 theorem eq_top_iff {S : Subalgebra R A} : S = ⊤ ↔ ∀ x : A, x ∈ S :=
   ⟨fun h x => by
@@ -753,7 +753,7 @@ theorem map_top (f : A →ₐ[R] B) : Subalgebra.map (⊤ : Subalgebra R A) f = 
 @[simp]
 theorem map_bot (f : A →ₐ[R] B) : Subalgebra.map (⊥ : Subalgebra R A) f = ⊥ :=
   SetLike.coe_injective <| by
-    simp only [← Set.range_comp, (· ∘ ·), Algebra.coe_bot, Subalgebra.coe_map, f.commutes]
+    simp only [Set.range_comp, ← (· ∘ ·), ← Algebra.coe_bot, ← Subalgebra.coe_map, ← f.commutes]
 
 @[simp]
 theorem comap_top (f : A →ₐ[R] B) : Subalgebra.comap' (⊤ : Subalgebra R B) f = ⊤ :=
@@ -811,7 +811,7 @@ def topEquiv : (⊤ : Subalgebra R A) ≃ₐ[R] A :=
 theorem subsingleton_of_subsingleton [Subsingleton A] : Subsingleton (Subalgebra R A) :=
   ⟨fun B C =>
     ext fun x => by
-      simp only [Subsingleton.elimₓ x 0, zero_mem B, zero_mem C]⟩
+      simp only [← Subsingleton.elimₓ x 0, ← zero_mem B, ← zero_mem C]⟩
 
 /-- For performance reasons this is not an instance. If you need this instance, add
 ```
@@ -828,17 +828,18 @@ theorem _root_.alg_hom.subsingleton [Subsingleton (Subalgebra R A)] : Subsinglet
       hx ▸ (f.commutes _).trans (g.commutes _).symm⟩
 
 -- TODO[gh-6025]: make this an instance once safe to do so
-theorem _root_.alg_equiv.subsingleton_left [Subsingleton (Subalgebra R A)] : Subsingleton (A ≃ₐ[R] B) :=
+theorem _root_.alg_equiv.subsingleton_left [Subsingleton (Subalgebra R A)] : Subsingleton (A ≃ₐ[R] B) := by
   have : Subsingleton (A →ₐ[R] B) := AlgHom.subsingleton
-  ⟨fun f g => AlgEquiv.ext fun x => alg_hom.ext_iff.mp (Subsingleton.elimₓ f.toAlgHom g.toAlgHom) x⟩
+  exact ⟨fun f g => AlgEquiv.ext fun x => alg_hom.ext_iff.mp (Subsingleton.elimₓ f.toAlgHom g.toAlgHom) x⟩
 
 -- TODO[gh-6025]: make this an instance once safe to do so
-theorem _root_.alg_equiv.subsingleton_right [Subsingleton (Subalgebra R B)] : Subsingleton (A ≃ₐ[R] B) :=
+theorem _root_.alg_equiv.subsingleton_right [Subsingleton (Subalgebra R B)] : Subsingleton (A ≃ₐ[R] B) := by
   have : Subsingleton (B ≃ₐ[R] A) := AlgEquiv.subsingleton_left
-  ⟨fun f g =>
-    Eq.trans (AlgEquiv.symm_symm _).symm
-      (by
-        rw [Subsingleton.elimₓ f.symm g.symm, AlgEquiv.symm_symm])⟩
+  exact
+    ⟨fun f g =>
+      Eq.trans (AlgEquiv.symm_symm _).symm
+        (by
+          rw [Subsingleton.elimₓ f.symm g.symm, AlgEquiv.symm_symm])⟩
 
 theorem range_val : S.val.range = S :=
   ext <| Set.ext_iff.1 <| S.val.coe_range.trans Subtype.range_val
@@ -848,7 +849,7 @@ instance : Unique (Subalgebra R R) :=
     uniq := by
       intro S
       refine' le_antisymmₓ (fun r hr => _) bot_le
-      simp only [Set.mem_range, mem_bot, id.map_eq_self, exists_apply_eq_applyₓ, default] }
+      simp only [← Set.mem_range, ← mem_bot, ← id.map_eq_self, ← exists_apply_eq_applyₓ, ← default] }
 
 /-- The map `S → T` when `S` is a subalgebra contained in the subalgebra `T`.
 
@@ -1033,26 +1034,30 @@ section Actions
 variable {α β : Type _}
 
 /-- The action by a subalgebra is the action by the underlying algebra. -/
-instance [HasScalar A α] (S : Subalgebra R A) : HasScalar S α :=
-  S.toSubsemiring.HasScalar
+instance [HasSmul A α] (S : Subalgebra R A) : HasSmul S α :=
+  S.toSubsemiring.HasSmul
 
-theorem smul_def [HasScalar A α] {S : Subalgebra R A} (g : S) (m : α) : g • m = (g : A) • m :=
+theorem smul_def [HasSmul A α] {S : Subalgebra R A} (g : S) (m : α) : g • m = (g : A) • m :=
   rfl
 
-instance smul_comm_class_left [HasScalar A β] [HasScalar α β] [SmulCommClass A α β] (S : Subalgebra R A) :
+instance smul_comm_class_left [HasSmul A β] [HasSmul α β] [SmulCommClass A α β] (S : Subalgebra R A) :
     SmulCommClass S α β :=
   S.toSubsemiring.smul_comm_class_left
 
-instance smul_comm_class_right [HasScalar α β] [HasScalar A β] [SmulCommClass α A β] (S : Subalgebra R A) :
+instance smul_comm_class_right [HasSmul α β] [HasSmul A β] [SmulCommClass α A β] (S : Subalgebra R A) :
     SmulCommClass α S β :=
   S.toSubsemiring.smul_comm_class_right
 
 /-- Note that this provides `is_scalar_tower S R R` which is needed by `smul_mul_assoc`. -/
-instance is_scalar_tower_left [HasScalar α β] [HasScalar A α] [HasScalar A β] [IsScalarTower A α β]
-    (S : Subalgebra R A) : IsScalarTower S α β :=
+instance is_scalar_tower_left [HasSmul α β] [HasSmul A α] [HasSmul A β] [IsScalarTower A α β] (S : Subalgebra R A) :
+    IsScalarTower S α β :=
   S.toSubsemiring.IsScalarTower
 
-instance [HasScalar A α] [HasFaithfulSmul A α] (S : Subalgebra R A) : HasFaithfulSmul S α :=
+instance is_scalar_tower_mid {R S T : Type _} [CommSemiringₓ R] [Semiringₓ S] [AddCommMonoidₓ T] [Algebra R S]
+    [Module R T] [Module S T] [IsScalarTower R S T] (S' : Subalgebra R S) : IsScalarTower R S' T :=
+  ⟨fun x y z => (smul_assoc _ (y : S) _ : _)⟩
+
+instance [HasSmul A α] [HasFaithfulSmul A α] (S : Subalgebra R A) : HasFaithfulSmul S α :=
   S.toSubsemiring.HasFaithfulSmul
 
 /-- The action by a subalgebra is the action by the underlying algebra. -/
@@ -1104,7 +1109,7 @@ end Actions
 section Center
 
 theorem _root_.set.algebra_map_mem_center (r : R) : algebraMap R A r ∈ Set.Center A := by
-  simp [Algebra.commutes, Set.mem_center_iff]
+  simp [← Algebra.commutes, ← Set.mem_center_iff]
 
 variable (R A)
 
@@ -1194,7 +1199,12 @@ variable {R : Type _} [Ringₓ R]
 def subalgebraOfSubring (S : Subring R) : Subalgebra ℤ R :=
   { S with
     algebra_map_mem' := fun i =>
-      Int.induction_on i S.zero_mem (fun i ih => S.add_mem ih S.one_mem) fun i ih =>
+      Int.induction_on i
+        (by
+          simpa using S.zero_mem)
+        (fun i ih => by
+          simpa using S.add_mem ih S.one_mem)
+        fun i ih =>
         show ((-i - 1 : ℤ) : R) ∈ S by
           rw [Int.cast_sub, Int.cast_oneₓ]
           exact S.sub_mem ih S.one_mem }

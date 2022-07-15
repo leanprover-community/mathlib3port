@@ -39,7 +39,7 @@ theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
   subst s
   cases' eq_empty_or_nonempty (univ.sigma f) with he hne
   · convert h0
-    simpa [funext_iff] using he
+    simpa [← funext_iff] using he
     
   · rcases sigma_nonempty.1 hne with ⟨i, -, hi⟩
     rcases H_ex i (f i) hi with ⟨x, x_mem, hr⟩
@@ -59,7 +59,7 @@ theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
           ⟨mem_univ _, by
             simp ⟩,
         by
-        simp [hx']⟩,
+        simp [← hx']⟩,
       (@le_update_iff _ _ _ _ g g i _).2 ⟨subset_insert _ _, fun _ _ => le_rfl⟩]
     
 

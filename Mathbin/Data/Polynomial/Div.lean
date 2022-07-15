@@ -51,14 +51,16 @@ theorem multiplicity_finite_of_degree_pos_of_monic (hp : (0 : WithBot ℕ) < deg
     zero_ne_one
   ⟨natDegree q, fun ⟨r, hr⟩ => by
     have hp0 : p ≠ 0 := fun hp0 => by
-      simp [hp0] at hp <;> contradiction
+      simp [← hp0] at hp <;> contradiction
     have hr0 : r ≠ 0 := fun hr0 => by
       simp_all
     have hpn1 : leadingCoeff p ^ (natDegree q + 1) = 1 := by
-      simp [show _ = _ from hmp]
+      simp [← show _ = _ from hmp]
     have hpn0' : leadingCoeff p ^ (natDegree q + 1) ≠ 0 := hpn1.symm ▸ zn0.symm
     have hpnr0 : leadingCoeff (p ^ (natDegree q + 1)) * leadingCoeff r ≠ 0 := by
-      simp only [leading_coeff_pow' hpn0', leading_coeff_eq_zero, hpn1, one_pow, one_mulₓ, Ne.def, hr0] <;> simp
+      simp only [← leading_coeff_pow' hpn0', ← leading_coeff_eq_zero, ← hpn1, ← one_pow, ← one_mulₓ, ← Ne.def, ←
+          hr0] <;>
+        simp
     have hnp : 0 < natDegree p := by
       rw [← WithBot.coe_lt_coe, ← degree_eq_nat_degree hp0] <;> exact hp
     have := congr_arg nat_degree hr
@@ -236,7 +238,7 @@ theorem degree_add_div_by_monic (hq : Monic q) (h : degree q ≤ degree p) : deg
 
 theorem degree_div_by_monic_le (p q : R[X]) : degree (p /ₘ q) ≤ degree p :=
   if hp0 : p = 0 then by
-    simp only [hp0, zero_div_by_monic, le_reflₓ]
+    simp only [← hp0, ← zero_div_by_monic, ← le_reflₓ]
   else
     if hq : Monic q then
       if h : degree q ≤ degree p then by
@@ -246,7 +248,7 @@ theorem degree_div_by_monic_le (p q : R[X]) : degree (p /ₘ q) ≤ degree p :=
             exact WithBot.coe_le_coe.2 (Nat.le_add_leftₓ _ _)
       else by
         unfold div_by_monic div_mod_by_monic_aux <;>
-          simp only [dif_pos hq, h, false_andₓ, if_false, degree_zero, bot_le]
+          simp only [← dif_pos hq, ← h, ← false_andₓ, ← if_false, ← degree_zero, ← bot_le]
     else (div_by_monic_eq_of_not_monic p hq).symm ▸ bot_le
 
 theorem degree_div_by_monic_lt (p : R[X]) {q : R[X]} (hq : Monic q) (hp0 : p ≠ 0) (h0q : 0 < degree q) :
@@ -288,9 +290,9 @@ theorem div_mod_by_monic_unique {f g} (q r : R[X]) (hg : Monic g) (h : r + g * q
     eq_of_sub_eq_zero
       (by
         rw [← sub_eq_zero_of_eq (h.1.trans (mod_by_monic_add_div f hg).symm)] <;>
-          simp [mul_addₓ, mul_comm, sub_eq_add_neg, add_commₓ, add_left_commₓ, add_assocₓ])
+          simp [← mul_addₓ, ← mul_comm, ← sub_eq_add_neg, ← add_commₓ, ← add_left_commₓ, ← add_assocₓ])
   have h₂ : degree (r - f %ₘ g) = degree (g * (q - f /ₘ g)) := by
-    simp [h₁]
+    simp [← h₁]
   have h₄ : degree (r - f %ₘ g) < degree g :=
     calc
       degree (r - f %ₘ g) ≤ max (degree r) (degree (f %ₘ g)) := degree_sub_le _ _
@@ -304,13 +306,13 @@ theorem div_mod_by_monic_unique {f g} (q r : R[X]) (hg : Monic g) (h : r + g * q
             erw [degree_eq_nat_degree hg.ne_zero, degree_eq_nat_degree hqf, WithBot.coe_le_coe] <;>
               exact Nat.le_add_rightₓ _ _
           _ = degree (r - f %ₘ g) := by
-            rw [h₂, degree_mul'] <;> simpa [monic.def.1 hg]
+            rw [h₂, degree_mul'] <;> simpa [← monic.def.1 hg]
           
   exact
     ⟨Eq.symm <| eq_of_sub_eq_zero h₅,
       Eq.symm <|
         eq_of_sub_eq_zero <| by
-          simpa [h₅] using h₁⟩
+          simpa [← h₅] using h₁⟩
 
 theorem map_mod_div_by_monic [CommRingₓ S] (f : R →+* S) (hq : Monic q) :
     (p /ₘ q).map f = p.map f /ₘ q.map f ∧ (p %ₘ q).map f = p.map f %ₘ q.map f := by
@@ -425,8 +427,8 @@ theorem sum_mod_by_monic_coeff (hq : q.Monic) {n : ℕ} (hn : q.degree ≤ n) :
 
 theorem sub_dvd_eval_sub (a b : R) (p : R[X]) : a - b ∣ p.eval a - p.eval b := by
   suffices X - C b ∣ p - C (p.eval b) by
-    simpa only [coe_eval_ring_hom, eval_sub, eval_X, eval_C] using (eval_ring_hom a).map_dvd this
-  simp [dvd_iff_is_root]
+    simpa only [← coe_eval_ring_hom, ← eval_sub, ← eval_X, ← eval_C] using (eval_ring_hom a).map_dvd this
+  simp [← dvd_iff_is_root]
 
 variable (R)
 
@@ -448,9 +450,9 @@ variable {R}
 section multiplicity
 
 /-- An algorithm for deciding polynomial divisibility.
-The algorithm is "compute `p %ₘ q` and compare to `0`". `
+The algorithm is "compute `p %ₘ q` and compare to `0`".
 See `polynomial.mod_by_monic` for the algorithm that computes `%ₘ`.
- -/
+-/
 def decidableDvdMonic (p : R[X]) (hq : Monic q) : Decidable (q ∣ p) :=
   decidableOfIff (p %ₘ q = 0) (dvd_iff_mod_by_monic_eq_zero hq)
 
@@ -463,7 +465,7 @@ theorem multiplicity_X_sub_C_finite (a : R) (h0 : p ≠ 0) : multiplicity.Finite
   decide
 
 /-- The largest power of `X - C a` which divides `p`.
-This is computable via the divisibility algorithm `decidable_dvd_monic`. -/
+This is computable via the divisibility algorithm `polynomial.decidable_dvd_monic`. -/
 def rootMultiplicity (a : R) (p : R[X]) : ℕ :=
   if h0 : p = 0 then 0
   else
@@ -475,7 +477,7 @@ theorem root_multiplicity_eq_multiplicity (p : R[X]) (a : R) :
     rootMultiplicity a p =
       if h0 : p = 0 then 0 else (multiplicity (X - c a) p).get (multiplicity_X_sub_C_finite a h0) :=
   by
-  simp [multiplicity, root_multiplicity, Part.Dom] <;> congr <;> funext <;> congr
+  simp [← multiplicity, ← root_multiplicity, ← Part.Dom] <;> congr <;> funext <;> congr
 
 @[simp]
 theorem root_multiplicity_zero {x : R} : rootMultiplicity x 0 = 0 :=
@@ -504,7 +506,7 @@ theorem root_multiplicity_C (r a : R) : rootMultiplicity a (c r) = 0 := by
 
 theorem pow_root_multiplicity_dvd (p : R[X]) (a : R) : (X - c a) ^ rootMultiplicity a p ∣ p :=
   if h : p = 0 then by
-    simp [h]
+    simp [← h]
   else by
     rw [root_multiplicity_eq_multiplicity, dif_neg h] <;> exact multiplicity.pow_multiplicity_dvd _
 
@@ -513,7 +515,7 @@ theorem div_by_monic_mul_pow_root_multiplicity_eq (p : R[X]) (a : R) :
   have : Monic ((X - c a) ^ rootMultiplicity a p) := (monic_X_sub_C _).pow _
   conv_rhs =>
       rw [← mod_by_monic_add_div p this, (dvd_iff_mod_by_monic_eq_zero this).2 (pow_root_multiplicity_dvd _ _)] <;>
-    simp [mul_comm]
+    simp [← mul_comm]
 
 theorem eval_div_by_monic_pow_root_multiplicity_ne_zero {p : R[X]} (a : R) (hp : p ≠ 0) :
     eval a (p /ₘ (X - c a) ^ rootMultiplicity a p) ≠ 0 := by

@@ -30,28 +30,28 @@ attribute [local tidy] tactic.discrete_cases
 
 /-- Construct a cone for the empty diagram given an object. -/
 @[simps]
-def asEmptyCone (X : C) : Cone (Functor.empty.{w} C) :=
+def asEmptyCone (X : C) : Cone (Functor.empty.{0} C) :=
   { x,
     π := by
       tidy }
 
 /-- Construct a cocone for the empty diagram given an object. -/
 @[simps]
-def asEmptyCocone (X : C) : Cocone (Functor.empty.{w} C) :=
+def asEmptyCocone (X : C) : Cocone (Functor.empty.{0} C) :=
   { x,
     ι := by
       tidy }
 
 /-- `X` is terminal if the cone it induces on the empty diagram is limiting. -/
 abbrev IsTerminal (X : C) :=
-  IsLimit (asEmptyCone.{v₁} X)
+  IsLimit (asEmptyCone X)
 
 /-- `X` is initial if the cocone it induces on the empty diagram is colimiting. -/
 abbrev IsInitial (X : C) :=
-  IsColimit (asEmptyCocone.{v₁} X)
+  IsColimit (asEmptyCocone X)
 
 /-- An object `Y` is terminal iff for every `X` there is a unique morphism `X ⟶ Y`. -/
-def isTerminalEquivUnique (F : Discrete.{v₁} Pempty ⥤ C) (Y : C) :
+def isTerminalEquivUnique (F : Discrete.{0} Pempty.{1} ⥤ C) (Y : C) :
     IsLimit
         (⟨Y, by
           tidy⟩ :
@@ -77,8 +77,7 @@ def isTerminalEquivUnique (F : Discrete.{v₁} Pempty ⥤ C) (Y : C) :
 
 /-- An object `Y` is terminal if for every `X` there is a unique morphism `X ⟶ Y`
     (as an instance). -/
-def IsTerminal.ofUnique (Y : C) [h : ∀ X : C, Unique (X ⟶ Y)] : IsTerminal Y where
-  lift := fun s => (h s.x).default
+def IsTerminal.ofUnique (Y : C) [h : ∀ X : C, Unique (X ⟶ Y)] : IsTerminal Y where lift := fun s => (h s.x).default
 
 /-- If `α` is a preorder with top, then `⊤` is a terminal object. -/
 def isTerminalTop {α : Type _} [Preorderₓ α] [OrderTop α] : IsTerminal (⊤ : α) :=
@@ -89,7 +88,7 @@ def IsTerminal.ofIso {Y Z : C} (hY : IsTerminal Y) (i : Y ≅ Z) : IsTerminal Z 
   IsLimit.ofIsoLimit hY { Hom := { Hom := i.Hom }, inv := { Hom := i.inv } }
 
 /-- An object `X` is initial iff for every `Y` there is a unique morphism `X ⟶ Y`. -/
-def isInitialEquivUnique (F : Discrete.{v₁} Pempty ⥤ C) (X : C) :
+def isInitialEquivUnique (F : Discrete.{0} Pempty.{1} ⥤ C) (X : C) :
     IsColimit
         (⟨X, by
           tidy⟩ :
@@ -115,8 +114,7 @@ def isInitialEquivUnique (F : Discrete.{v₁} Pempty ⥤ C) (X : C) :
 
 /-- An object `X` is initial if for every `Y` there is a unique morphism `X ⟶ Y`
     (as an instance). -/
-def IsInitial.ofUnique (X : C) [h : ∀ Y : C, Unique (X ⟶ Y)] : IsInitial X where
-  desc := fun s => (h s.x).default
+def IsInitial.ofUnique (X : C) [h : ∀ Y : C, Unique (X ⟶ Y)] : IsInitial X where desc := fun s => (h s.x).default
 
 /-- If `α` is a preorder with bot, then `⊥` is an initial object. -/
 def isInitialBot {α : Type _} [Preorderₓ α] [OrderBot α] : IsInitial (⊥ : α) :=
@@ -196,13 +194,13 @@ variable (C)
 Use `has_terminal_of_unique` to construct instances.
 -/
 abbrev HasTerminal :=
-  HasLimitsOfShape (Discrete.{v₁} Pempty) C
+  HasLimitsOfShape (Discrete.{0} Pempty) C
 
 /-- A category has an initial object if it has a colimit over the empty diagram.
 Use `has_initial_of_unique` to construct instances.
 -/
 abbrev HasInitial :=
-  HasColimitsOfShape (Discrete.{v₁} Pempty) C
+  HasColimitsOfShape (Discrete.{0} Pempty) C
 
 section Univ
 
@@ -294,14 +292,14 @@ You can use the notation `⊤_ C`.
 This object is characterized by having a unique morphism from any object.
 -/
 abbrev terminal [HasTerminal C] : C :=
-  limit (Functor.empty.{v₁} C)
+  limit (Functor.empty.{0} C)
 
 /-- An arbitrary choice of initial object, if one exists.
 You can use the notation `⊥_ C`.
 This object is characterized by having a unique morphism to any object.
 -/
 abbrev initial [HasInitial C] : C :=
-  colimit (Functor.empty.{v₁} C)
+  colimit (Functor.empty.{0} C)
 
 -- mathport name: «expr⊤_ »
 notation "⊤_ " C:20 => terminal C
@@ -332,12 +330,10 @@ abbrev initial.to [HasInitial C] (P : C) : ⊥_ C ⟶ P :=
   colimit.desc (Functor.empty C) (asEmptyCocone P)
 
 /-- A terminal object is terminal. -/
-def terminalIsTerminal [HasTerminal C] : IsTerminal (⊤_ C) where
-  lift := fun s => terminal.from _
+def terminalIsTerminal [HasTerminal C] : IsTerminal (⊤_ C) where lift := fun s => terminal.from _
 
 /-- An initial object is initial. -/
-def initialIsInitial [HasInitial C] : IsInitial (⊥_ C) where
-  desc := fun s => initial.to _
+def initialIsInitial [HasInitial C] : IsInitial (⊥_ C) where desc := fun s => initial.to _
 
 instance uniqueToTerminal [HasTerminal C] (P : C) : Unique (P ⟶ ⊤_ C) :=
   isTerminalEquivUnique _ (⊤_ C) terminalIsTerminal P
@@ -530,14 +526,13 @@ def coneOfDiagramTerminal {X : J} (hX : IsTerminal X) (F : J ⥤ C) [∀ i j : J
       naturality' := by
         intro i j f
         dsimp'
-        simp only [is_iso.eq_inv_comp, is_iso.comp_inv_eq, category.id_comp, ← F.map_comp,
+        simp only [← is_iso.eq_inv_comp, ← is_iso.comp_inv_eq, ← category.id_comp, F.map_comp, ←
           hX.hom_ext (hX.from i) (f ≫ hX.from j)] }
 
 /-- From a functor `F : J ⥤ C`, given a terminal object of `J` and that the morphisms in the
 diagram are isomorphisms, show the cone `cone_of_diagram_terminal` is a limit. -/
 def limitOfDiagramTerminal {X : J} (hX : IsTerminal X) (F : J ⥤ C) [∀ i j : J f : i ⟶ j, IsIso (F.map f)] :
-    IsLimit (coneOfDiagramTerminal hX F) where
-  lift := fun S => S.π.app _
+    IsLimit (coneOfDiagramTerminal hX F) where lift := fun S => S.π.app _
 
 /-- For a functor `F : J ⥤ C`, if `J` has a terminal object and all the morphisms in the diagram
 are isomorphisms, then the image of the terminal object is isomorphic to the limit of `F`. -/
@@ -585,14 +580,13 @@ def coconeOfDiagramInitial {X : J} (hX : IsInitial X) (F : J ⥤ C) [∀ i j : J
       naturality' := by
         intro i j f
         dsimp'
-        simp only [is_iso.eq_inv_comp, is_iso.comp_inv_eq, category.comp_id, ← F.map_comp,
+        simp only [← is_iso.eq_inv_comp, ← is_iso.comp_inv_eq, ← category.comp_id, F.map_comp, ←
           hX.hom_ext (hX.to i ≫ f) (hX.to j)] }
 
 /-- From a functor `F : J ⥤ C`, given an initial object of `J` and that the morphisms in the
 diagram are isomorphisms, show the cone `cocone_of_diagram_initial` is a colimit. -/
 def colimitOfDiagramInitial {X : J} (hX : IsInitial X) (F : J ⥤ C) [∀ i j : J f : i ⟶ j, IsIso (F.map f)] :
-    IsColimit (coconeOfDiagramInitial hX F) where
-  desc := fun S => S.ι.app _
+    IsColimit (coconeOfDiagramInitial hX F) where desc := fun S => S.ι.app _
 
 /-- For a functor `F : J ⥤ C`, if `J` has an initial object and all the morphisms in the diagram
 are isomorphisms, then the image of the initial object is isomorphic to the colimit of `F`. -/

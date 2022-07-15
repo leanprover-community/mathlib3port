@@ -75,7 +75,7 @@ def Presieve.CoverByImage (G : C ⥤ D) (U : D) : Presieve U := fun Y f => Nonem
 consisting of those arrows that factor through images of `G`.
 -/
 def Sieve.coverByImage (G : C ⥤ D) (U : D) : Sieve U :=
-  ⟨Presieve.CoverByImage G U, fun g =>
+  ⟨Presieve.CoverByImage G U, fun X Y f ⟨⟨Z, f₁, f₂, (e : _ = _)⟩⟩ g =>
     ⟨⟨Z, g ≫ f₁, f₂,
         show (g ≫ f₁) ≫ f₂ = g ≫ f by
           rw [category.assoc, ← e]⟩⟩⟩
@@ -105,7 +105,7 @@ theorem ext (H : CoverDense K G) (ℱ : SheafOfTypes K) (X : D) {s t : ℱ.val.o
     (h : ∀ ⦃Y : C⦄ f : G.obj Y ⟶ X, ℱ.val.map f.op s = ℱ.val.map f.op t) : s = t := by
   apply (ℱ.cond (sieve.cover_by_image G X) (H.is_cover X)).IsSeparatedFor.ext
   rintro Y _ ⟨Z, f₁, f₂, ⟨rfl⟩⟩
-  simp [h f₂]
+  simp [← h f₂]
 
 theorem functor_pullback_pushforward_covering [Full G] (H : CoverDense K G) {X : C} (T : K (G.obj X)) :
     (T.val.FunctorPullback G).FunctorPushforward G ∈ K (G.obj X) := by
@@ -159,17 +159,17 @@ theorem pushforward_family_compatible {X} (x : ℱ.obj (op X)) : (pushforwardFam
   intro Y₁ Y₂ Z g₁ g₂ f₁ f₂ h₁ h₂ e
   apply H.ext
   intro Y f
-  simp only [pushforward_family, ← functor_to_types.map_comp_apply, ← op_comp]
+  simp only [← pushforward_family, functor_to_types.map_comp_apply, op_comp]
   change (ℱ.map _ ≫ α.app (op _) ≫ ℱ'.val.map _) _ = (ℱ.map _ ≫ α.app (op _) ≫ ℱ'.val.map _) _
   rw [← G.image_preimage (f ≫ g₁ ≫ _)]
   rw [← G.image_preimage (f ≫ g₂ ≫ _)]
   erw [← α.naturality (G.preimage _).op]
   erw [← α.naturality (G.preimage _).op]
   refine' congr_fun _ x
-  simp only [Quiver.Hom.unop_op, functor.comp_map, ← op_comp, ← category.assoc, functor.op_map, ← ℱ.map_comp,
+  simp only [← Quiver.Hom.unop_op, ← functor.comp_map, op_comp, category.assoc, ← functor.op_map, ℱ.map_comp, ←
     G.image_preimage]
   congr 3
-  simp [e]
+  simp [← e]
 
 /-- (Implementation). The morphism `ℱ(X) ⟶ ℱ'(X)` given by gluing the `pushforward_family`. -/
 noncomputable def appHom (X : D) : ℱ.obj (op X) ⟶ ℱ'.val.obj (op X) := fun x =>
@@ -183,8 +183,8 @@ theorem pushforward_family_apply {X} (x : ℱ.obj (op X)) {Y : C} (f : G.obj Y �
   rw [← G.image_preimage (Nonempty.some _ : presieve.cover_by_image_structure _ _).lift]
   change ℱ.map _ ≫ α.app (op _) ≫ ℱ'.val.map _ = ℱ.map f.op ≫ α.app (op Y)
   erw [← α.naturality (G.preimage _).op]
-  simp only [← functor.map_comp, ← category.assoc, functor.comp_map, G.image_preimage, G.op_map, Quiver.Hom.unop_op, ←
-    op_comp, presieve.cover_by_image_structure.fac]
+  simp only [functor.map_comp, category.assoc, ← functor.comp_map, ← G.image_preimage, ← G.op_map, ← Quiver.Hom.unop_op,
+    op_comp, ← presieve.cover_by_image_structure.fac]
 
 @[simp]
 theorem app_hom_restrict {X : D} {Y : C} (f : op X ⟶ op (G.obj Y)) x :
@@ -229,7 +229,7 @@ noncomputable def presheafHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) : ℱ �
     ext x
     apply H.ext ℱ' (unop Y)
     intro Y' f'
-    simp only [app_hom_restrict, types_comp_apply, ← functor_to_types.map_comp_apply]
+    simp only [← app_hom_restrict, ← types_comp_apply, functor_to_types.map_comp_apply]
     rw [app_hom_restrict H α (f ≫ f'.op : op (unop X) ⟶ _)]
 
 /-- Given an natural isomorphism `G ⋙ ℱ ≅ G ⋙ ℱ'` between presheaves of types, where `G` is full and
@@ -273,10 +273,10 @@ noncomputable def sheafCoyonedaHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) :
     intro Y' f' hf'
     change unop X ⟶ ℱ.obj (op (unop _)) at x
     dsimp'
-    simp only [pushforward_family, functor.comp_map, coyoneda_obj_map, hom_over_app, category.assoc]
+    simp only [← pushforward_family, ← functor.comp_map, ← coyoneda_obj_map, ← hom_over_app, ← category.assoc]
     congr 1
     conv_lhs => rw [← hf'.some.fac]
-    simp only [← category.assoc, op_comp, functor.map_comp]
+    simp only [category.assoc, ← op_comp, ← functor.map_comp]
     congr 1
     refine' (app_hom_restrict H (hom_over α (unop X)) hf'.some.map.op x).trans _
     simp
@@ -319,7 +319,8 @@ noncomputable def presheafIso {ℱ ℱ' : Sheaf K A} (i : G.op ⋙ ℱ.val ≅ G
     intro X
     apply is_iso_of_reflects_iso _ yoneda
     use (sheaf_yoneda_hom H i.inv).app X
-    constructor <;> ext x : 2 <;> simp only [sheaf_hom, nat_trans.comp_app, nat_trans.id_app, functor.image_preimage]
+    constructor <;>
+      ext x : 2 <;> simp only [← sheaf_hom, ← nat_trans.comp_app, ← nat_trans.id_app, ← functor.image_preimage]
     exact ((presheaf_iso H (iso_over i (unop x))).app X).hom_inv_id
     exact ((presheaf_iso H (iso_over i (unop x))).app X).inv_hom_id
     infer_instance
@@ -354,10 +355,10 @@ theorem sheaf_hom_restrict_eq (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) : whiske
   apply sheaf_eq_amalgamation ℱ' (H.is_cover _)
   intro Y f hf
   conv_lhs => rw [← hf.some.fac]
-  simp only [pushforward_family, functor.comp_map, yoneda_map_app, coyoneda_obj_map, op_comp,
-    functor_to_types.map_comp_apply, hom_over_app, ← category.assoc]
+  simp only [← pushforward_family, ← functor.comp_map, ← yoneda_map_app, ← coyoneda_obj_map, ← op_comp, ←
+    functor_to_types.map_comp_apply, ← hom_over_app, category.assoc]
   congr 1
-  simp only [category.assoc]
+  simp only [← category.assoc]
   congr 1
   rw [← G.image_preimage hf.some.map]
   symm
@@ -406,12 +407,12 @@ theorem compatible_preserving [Faithful G] : CompatiblePreserving K G := by
   intro ℱ Z T x hx Y₁ Y₂ X f₁ f₂ g₁ g₂ hg₁ hg₂ eq
   apply H.ext
   intro W i
-  simp only [← functor_to_types.map_comp_apply, ← op_comp]
+  simp only [functor_to_types.map_comp_apply, op_comp]
   rw [← G.image_preimage (i ≫ f₁)]
   rw [← G.image_preimage (i ≫ f₂)]
   apply hx
   apply G.map_injective
-  simp [Eq]
+  simp [← Eq]
 
 noncomputable instance Sites.Pullback.full [Faithful G] (Hp : CoverPreserving J K G) :
     Full (Sites.pullback A H.CompatiblePreserving Hp) where
@@ -419,8 +420,7 @@ noncomputable instance Sites.Pullback.full [Faithful G] (Hp : CoverPreserving J 
   witness' := fun ℱ ℱ' α => Sheaf.Hom.ext _ _ <| H.sheaf_hom_restrict_eq α.val
 
 instance Sites.Pullback.faithful [Faithful G] (Hp : CoverPreserving J K G) :
-    Faithful (Sites.pullback A H.CompatiblePreserving Hp) where
-  map_injective' := by
+    Faithful (Sites.pullback A H.CompatiblePreserving Hp) where map_injective' := by
     intro ℱ ℱ' α β e
     ext1
     apply_fun fun e => e.val  at e

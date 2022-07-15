@@ -114,11 +114,11 @@ def coimageImageComparison' : Abelian.coimage f ⟶ Abelian.image f :=
 theorem coimage_image_comparison_eq_coimage_image_comparison' : coimageImageComparison f = coimageImageComparison' f :=
   by
   ext
-  simp [coimage_image_comparison, coimage_image_comparison']
+  simp [← coimage_image_comparison, ← coimage_image_comparison']
 
 @[simp, reassoc]
 theorem coimage_image_factorisation : coimage.π f ≫ coimageImageComparison f ≫ image.ι f = f := by
-  simp [coimage_image_comparison]
+  simp [← coimage_image_comparison]
 
 end CategoryTheory.Abelian
 

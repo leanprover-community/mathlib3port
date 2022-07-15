@@ -52,7 +52,7 @@ theorem linear_independent_single {φ : ι → Type _} {f : ∀ ι, φ ι → M}
   · intro i t ht hit
     refine' (disjoint_lsingle_lsingle {i} t (disjoint_singleton_left.2 hit)).mono _ _
     · rw [span_le]
-      simp only [supr_singleton]
+      simp only [← supr_singleton]
       rw [range_coe]
       apply range_comp_subset_range
       
@@ -71,30 +71,31 @@ protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (
         { toFun := fun ix => (b ix.1).repr (g ix.1) ix.2,
           support := g.support.Sigma fun i => ((b i).repr (g i)).support,
           mem_support_to_fun := fun ix => by
-            simp only [Finset.mem_sigma, mem_support_iff, and_iff_right_iff_imp, Ne.def]
+            simp only [← Finset.mem_sigma, ← mem_support_iff, ← and_iff_right_iff_imp, ← Ne.def]
             intro b hg
-            simpa [hg] using b },
+            simpa [← hg] using b },
       invFun := fun g =>
         { toFun := fun i => (b i).repr.symm (g.comapDomain _ (Set.inj_on_of_injective sigma_mk_injective _)),
           support := g.support.Image Sigma.fst,
           mem_support_to_fun := fun i => by
             rw [Ne.def, ← (b i).repr.Injective.eq_iff, (b i).repr.apply_symm_apply, ext_iff]
-            simp only [exists_prop, LinearEquiv.map_zero, comap_domain_apply, zero_apply, exists_and_distrib_right,
-              mem_support_iff, exists_eq_right, Sigma.exists, Finset.mem_image, not_forall] },
+            simp only [← exists_prop, ← LinearEquiv.map_zero, ← comap_domain_apply, ← zero_apply, ←
+              exists_and_distrib_right, ← mem_support_iff, ← exists_eq_right, ← Sigma.exists, ← Finset.mem_image, ←
+              not_forall] },
       left_inv := fun g => by
         ext i
         rw [← (b i).repr.Injective.eq_iff]
         ext x
-        simp only [coe_mk, LinearEquiv.apply_symm_apply, comap_domain_apply],
+        simp only [← coe_mk, ← LinearEquiv.apply_symm_apply, ← comap_domain_apply],
       right_inv := fun g => by
         ext ⟨i, x⟩
-        simp only [coe_mk, LinearEquiv.apply_symm_apply, comap_domain_apply],
+        simp only [← coe_mk, ← LinearEquiv.apply_symm_apply, ← comap_domain_apply],
       map_add' := fun g h => by
         ext ⟨i, x⟩
-        simp only [coe_mk, add_apply, LinearEquiv.map_add],
+        simp only [← coe_mk, ← add_apply, ← LinearEquiv.map_add],
       map_smul' := fun c h => by
         ext ⟨i, x⟩
-        simp only [coe_mk, smul_apply, LinearEquiv.map_smul, RingHom.id_apply] }
+        simp only [← coe_mk, ← smul_apply, ← LinearEquiv.map_smul, ← RingHom.id_apply] }
 
 @[simp]
 theorem basis_repr {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) (g : ι →₀ M) ix :
@@ -109,9 +110,10 @@ theorem coe_basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) :
       ext ⟨j, y⟩
       by_cases' h : i = j
       · cases h
-        simp only [basis_repr, single_eq_same, Basis.repr_self, Basis.Finsupp.single_apply_left sigma_mk_injective]
+        simp only [← basis_repr, ← single_eq_same, ← Basis.repr_self, ←
+          Basis.Finsupp.single_apply_left sigma_mk_injective]
         
-      simp only [basis_repr, single_apply, h, false_andₓ, if_false, LinearEquiv.map_zero, zero_apply]
+      simp only [← basis_repr, ← single_apply, ← h, ← false_andₓ, ← if_false, ← LinearEquiv.map_zero, ← zero_apply]
 
 /-- The basis on `ι →₀ M` with basis vectors `λ i, single i 1`. -/
 @[simps]
@@ -165,7 +167,7 @@ theorem equiv_of_dim_eq_lift_dim (h : Cardinal.lift.{w} (Module.rank K V) = Card
   let e := (equiv.ulift.symm.trans e).trans Equivₓ.ulift
   exact ⟨m.repr ≪≫ₗ Finsupp.domLcongr e ≪≫ₗ m'.repr.symm⟩
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Two `K`-vector spaces are equivalent if their dimension is the same. -/
 def equivOfDimEqDim (h : Module.rank K V₁ = Module.rank K V₂) : V₁ ≃ₗ[K] V₂ := by
   classical

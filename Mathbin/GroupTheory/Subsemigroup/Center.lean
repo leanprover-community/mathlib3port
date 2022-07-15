@@ -41,11 +41,11 @@ instance decidableMemCenter [Mul M] [DecidableEq M] [Fintype M] : DecidablePred 
 
 @[simp, to_additive zero_mem_add_center]
 theorem one_mem_center [MulOneClassₓ M] : (1 : M) ∈ Set.Center M := by
-  simp [mem_center_iff]
+  simp [← mem_center_iff]
 
 @[simp]
 theorem zero_mem_center [MulZeroClassₓ M] : (0 : M) ∈ Set.Center M := by
-  simp [mem_center_iff]
+  simp [← mem_center_iff]
 
 variable {M}
 
@@ -88,7 +88,7 @@ theorem inv_mem_center₀ [GroupWithZeroₓ M] {a : M} (ha : a ∈ Set.Center M)
     exact zero_mem_center M
     
   rcases IsUnit.mk0 _ ha0 with ⟨a, rfl⟩
-  rw [← Units.coe_inv']
+  rw [← Units.coe_inv]
   exact center_units_subset (inv_mem_center (subset_center_units ha))
 
 @[simp, to_additive sub_mem_add_center]

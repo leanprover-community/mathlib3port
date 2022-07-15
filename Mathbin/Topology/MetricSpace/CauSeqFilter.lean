@@ -34,7 +34,7 @@ theorem CauSeq.tendsto_limit [NormedRing β] [hn : IsAbsoluteValue (norm : β �
       exists N
       intro b hb
       apply hεs
-      dsimp' [Metric.Ball]
+      dsimp' [← Metric.Ball]
       rw [dist_comm, dist_eq_norm]
       solve_by_elim)
 
@@ -65,7 +65,7 @@ theorem CauchySeq.is_cau_seq {f : ℕ → β} (hf : CauchySeq f) : IsCauSeq norm
   intro j hj
   rw [← dist_eq_norm]
   apply @htsub (f j, f N)
-  apply Set.mk_mem_prod <;> solve_by_elim [le_reflₓ]
+  apply Set.mk_mem_prod <;> solve_by_elim [← le_reflₓ]
 
 theorem CauSeq.cauchy_seq (f : CauSeq β norm) : CauchySeq f := by
   refine'
@@ -75,12 +75,12 @@ theorem CauSeq.cauchy_seq (f : CauSeq β norm) : CauchySeq f := by
   rcases mem_uniformity_dist.1 hs with ⟨ε, ⟨hε, hεs⟩⟩
   cases' CauSeq.cauchy₂ f hε with N hN
   exists { n | n ≥ N }.Image f
-  simp only [exists_prop, mem_at_top_sets, mem_map, mem_image, ge_iff_le, mem_set_of_eq]
+  simp only [← exists_prop, ← mem_at_top_sets, ← mem_map, ← mem_image, ← ge_iff_le, ← mem_set_of_eq]
   constructor
   · exists N
     intro b hb
     exists b
-    simp [hb]
+    simp [← hb]
     
   · rintro ⟨a, b⟩ ⟨⟨a', ⟨ha'1, ha'2⟩⟩, ⟨b', ⟨hb'1, hb'2⟩⟩⟩
     dsimp'  at ha'1 ha'2 hb'1 hb'2
@@ -106,5 +106,5 @@ instance (priority := 100) complete_space_of_cau_seq_complete [CauSeq.IsComplete
   intro ε εpos
   cases' (CauSeq.equiv_lim ⟨u, C⟩) _ εpos with N hN
   exists N
-  simpa [dist_eq_norm] using hN
+  simpa [← dist_eq_norm] using hN
 

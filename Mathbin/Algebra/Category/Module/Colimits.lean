@@ -396,8 +396,10 @@ def colimitCoconeIsColimit : IsColimit (colimitCocone F) where
       
     rfl
 
-instance has_colimits_Module : HasColimits (ModuleCat.{max v u} R) where
-  HasColimitsOfShape := fun J 𝒥 =>
+instance has_colimits_Module :
+    HasColimits
+      (ModuleCat.{max v u}
+        R) where HasColimitsOfShape := fun J 𝒥 =>
     { HasColimit := fun F => has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_cocone_is_colimit F } }
 
 -- We manually add a `has_colimits` instance with universe parameters swapped, for otherwise

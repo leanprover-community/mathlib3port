@@ -128,8 +128,8 @@ instance RestrictScalars.opModule [Module Sᵐᵒᵖ M] : Module Rᵐᵒᵖ (Res
   exact Module.compHom M (algebraMap R S).op
 
 instance RestrictScalars.is_central_scalar [Module S M] [Module Sᵐᵒᵖ M] [IsCentralScalar S M] :
-    IsCentralScalar R (RestrictScalars R S M) where
-  op_smul_eq_smul := fun r x => (op_smul_eq_smul (algebraMap R S r) (_ : M) : _)
+    IsCentralScalar R
+      (RestrictScalars R S M) where op_smul_eq_smul := fun r x => (op_smul_eq_smul (algebraMap R S r) (_ : M) : _)
 
 /-- The `R`-algebra homomorphism from the original coefficient algebra `S` to endomorphisms
 of `restrict_scalars R S M`.

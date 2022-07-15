@@ -39,9 +39,9 @@ noncomputable def mirror :=
 
 @[simp]
 theorem mirror_zero : (0 : R[X]).mirror = 0 := by
-  simp [mirror]
+  simp [← mirror]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mirror_monomial (n : ℕ) (a : R) : (monomial n a).mirror = monomial n a := by
   classical
   by_cases' ha : a = 0

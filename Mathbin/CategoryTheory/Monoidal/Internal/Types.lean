@@ -55,7 +55,7 @@ def inverse : Mon.{u} ⥤ Mon_ (Type u) where
         simp ,
       mul_assoc' := by
         ext ⟨⟨x, y⟩, z⟩
-        simp [mul_assoc] }
+        simp [← mul_assoc] }
   map := fun A B f => { Hom := f }
 
 end monTypeEquivalenceMon

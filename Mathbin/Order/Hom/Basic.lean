@@ -204,6 +204,9 @@ theorem coe_fun_mk {f : α → β} (hf : Monotone f) : (mk f hf : α → β) = f
 theorem ext (f g : α →o β) (h : (f : α → β) = g) : f = g :=
   FunLike.coe_injective h
 
+theorem coe_eq (f : α →o β) : coe f = f := by
+  ext <;> rfl
+
 /-- One can lift an unbundled monotone function to a bundled one. -/
 instance : CanLift (α → β) (α →o β) where
   coe := coeFn
@@ -257,7 +260,7 @@ def curry : (α × β →o γ) ≃o (α →o β →o γ) where
     ext x y
     rfl
   map_rel_iff' := fun f g => by
-    simp [le_def]
+    simp [← le_def]
 
 @[simp]
 theorem curry_apply (f : α × β →o γ) (x : α) (y : β) : curry f x y = f (x, y) :=
@@ -477,7 +480,7 @@ def RelEmbedding.orderEmbeddingOfLtEmbedding [PartialOrderₓ α] [PartialOrder�
   { f with
     map_rel_iff' := by
       intros
-      simp [le_iff_lt_or_eqₓ, f.map_rel_iff, f.injective.eq_iff] }
+      simp [← le_iff_lt_or_eqₓ, ← f.map_rel_iff, ← f.injective.eq_iff] }
 
 @[simp]
 theorem RelEmbedding.order_embedding_of_lt_embedding_apply [PartialOrderₓ α] [PartialOrderₓ β]
@@ -493,7 +496,7 @@ variable [Preorderₓ α] [Preorderₓ β] (f : α ↪o β)
 def ltEmbedding : ((· < ·) : α → α → Prop) ↪r ((· < ·) : β → β → Prop) :=
   { f with
     map_rel_iff' := by
-      intros <;> simp [lt_iff_le_not_leₓ, f.map_rel_iff] }
+      intros <;> simp [← lt_iff_le_not_leₓ, ← f.map_rel_iff] }
 
 @[simp]
 theorem lt_embedding_apply (x : α) : f.ltEmbedding x = f x :=
@@ -534,7 +537,7 @@ protected def dual : αᵒᵈ ↪o βᵒᵈ :=
 protected def withBotMap (f : α ↪o β) : WithBot α ↪o WithBot β :=
   { f.toEmbedding.optionMap with toFun := WithBot.map f,
     map_rel_iff' := fun a b => by
-      cases a <;> cases b <;> simp [WithBot.none_eq_bot, WithBot.some_eq_coe, WithBot.not_coe_le_bot] }
+      cases a <;> cases b <;> simp [← WithBot.none_eq_bot, ← WithBot.some_eq_coe, ← WithBot.not_coe_le_bot] }
 
 /-- A version of `with_top.map` for order embeddings. -/
 @[simps (config := { fullyApplied := false })]
@@ -833,6 +836,22 @@ def ofCmpEqCmp {α β} [LinearOrderₓ α] [LinearOrderₓ β] (f : α → β) (
       convert (h _ _).symm
       apply gf }
 
+/-- To show that `f : α →o β` and `g : β →o α` make up an order isomorphism it is enough to show
+    that `g` is the inverse of `f`-/
+def ofHomInv {F G : Type _} [OrderHomClass F α β] [OrderHomClass G β α] (f : F) (g : G)
+    (h₁ : (f : α →o β).comp (g : β →o α) = OrderHom.id) (h₂ : (g : β →o α).comp (f : α →o β) = OrderHom.id) :
+    α ≃o β where
+  toFun := f
+  invFun := g
+  left_inv := FunLike.congr_fun h₂
+  right_inv := FunLike.congr_fun h₁
+  map_rel_iff' := fun a b =>
+    ⟨fun h => by
+      replace h := map_rel g h
+      rwa [Equivₓ.coe_fn_mk, show g (f a) = (g : β →o α).comp (f : α →o β) a from rfl,
+        show g (f b) = (g : β →o α).comp (f : α →o β) b from rfl, h₂] at h,
+      fun h => (f : α →o β).Monotone h⟩
+
 /-- Order isomorphism between two equal sets. -/
 def setCongr (s t : Set α) (h : s = t) : s ≃o t where
   toEquiv := Equivₓ.setCongr h
@@ -848,7 +867,7 @@ def Set.univ : (Set.Univ : Set α) ≃o α where
 def funUnique (α β : Type _) [Unique α] [Preorderₓ β] : (α → β) ≃o β where
   toEquiv := Equivₓ.funUnique α β
   map_rel_iff' := fun f g => by
-    simp [Pi.le_def, Unique.forall_iff]
+    simp [← Pi.le_def, ← Unique.forall_iff]
 
 @[simp]
 theorem fun_unique_symm_apply {α β : Type _} [Unique α] [Preorderₓ β] :
@@ -866,7 +885,7 @@ order isomorphism. -/
 def toOrderIso (e : α ≃ β) (h₁ : Monotone e) (h₂ : Monotone e.symm) : α ≃o β :=
   ⟨e, fun x y =>
     ⟨fun h => by
-      simpa only [e.symm_apply_apply] using h₂ h, fun h => h₁ h⟩⟩
+      simpa only [← e.symm_apply_apply] using h₂ h, fun h => h₁ h⟩⟩
 
 @[simp]
 theorem coe_to_order_iso (e : α ≃ β) (h₁ : Monotone e) (h₂ : Monotone e.symm) : ⇑(e.toOrderIso h₁ h₂) = e :=
@@ -948,7 +967,7 @@ theorem OrderEmbedding.map_inf_le [SemilatticeInf α] [SemilatticeInf β] (f : �
 
 theorem OrderIso.map_inf [SemilatticeInf α] [SemilatticeInf β] (f : α ≃o β) (x y : α) : f (x⊓y) = f x⊓f y := by
   refine' (f.to_order_embedding.map_inf_le x y).antisymm _
-  simpa [← f.symm.le_iff_le] using f.symm.to_order_embedding.map_inf_le (f x) (f y)
+  simpa [f.symm.le_iff_le] using f.symm.to_order_embedding.map_inf_le (f x) (f y)
 
 /-- Note that this goal could also be stated `(disjoint on f) a b` -/
 theorem Disjoint.map_order_iso [SemilatticeInf α] [OrderBot α] [SemilatticeInf β] [OrderBot β] {a b : α} (f : α ≃o β)

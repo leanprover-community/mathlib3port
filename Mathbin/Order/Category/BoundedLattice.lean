@@ -61,17 +61,22 @@ instance : ConcreteCategory BoundedLattice where
     ⟨fun X Y => by
       convert FunLike.coe_injective⟩
 
-instance hasForgetToBoundedOrder : HasForget₂ BoundedLattice BoundedOrderCat where
-  forget₂ := { obj := fun X => BoundedOrderCat.of X, map := fun X Y => BoundedLatticeHom.toBoundedOrderHom }
+instance hasForgetToBoundedOrder :
+    HasForget₂ BoundedLattice
+      BoundedOrderCat where forget₂ :=
+    { obj := fun X => BoundedOrderCat.of X, map := fun X Y => BoundedLatticeHom.toBoundedOrderHom }
 
-instance hasForgetToLattice : HasForget₂ BoundedLattice Latticeₓ where
-  forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => BoundedLatticeHom.toLatticeHom }
+instance hasForgetToLattice :
+    HasForget₂ BoundedLattice
+      Latticeₓ where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => BoundedLatticeHom.toLatticeHom }
 
-instance hasForgetToSemilatticeSup : HasForget₂ BoundedLattice SemilatticeSupCat where
-  forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => BoundedLatticeHom.toSupBotHom }
+instance hasForgetToSemilatticeSup :
+    HasForget₂ BoundedLattice
+      SemilatticeSupCat where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => BoundedLatticeHom.toSupBotHom }
 
-instance hasForgetToSemilatticeInf : HasForget₂ BoundedLattice SemilatticeInfCat where
-  forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => BoundedLatticeHom.toInfTopHom }
+instance hasForgetToSemilatticeInf :
+    HasForget₂ BoundedLattice
+      SemilatticeInfCat where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => BoundedLatticeHom.toInfTopHom }
 
 @[simp]
 theorem coe_forget_to_BoundedOrder (X : BoundedLattice) : ↥((forget₂ BoundedLattice BoundedOrderCat).obj X) = ↥X :=

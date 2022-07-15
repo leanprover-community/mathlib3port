@@ -30,7 +30,7 @@ protected def floor : ℚ → ℤ
 
 protected theorem le_floor {z : ℤ} : ∀ {r : ℚ}, z ≤ Rat.floor r ↔ (z : ℚ) ≤ r
   | ⟨n, d, h, c⟩ => by
-    simp [Rat.floor]
+    simp [← Rat.floor]
     rw [num_denom']
     have h' := Int.coe_nat_lt.2 h
     conv => rhs rw [coe_int_eq_mk, Rat.le_def zero_lt_one h', mul_oneₓ]
@@ -46,7 +46,7 @@ protected theorem floor_def {q : ℚ} : ⌊q⌋ = q.num / q.denom := by
 theorem floor_int_div_nat_eq_div {n : ℤ} {d : ℕ} : ⌊(↑n : ℚ) / (↑d : ℚ)⌋ = n / (↑d : ℤ) := by
   rw [Rat.floor_def]
   cases' Decidable.em (d = 0) with d_eq_zero d_ne_zero
-  · simp [d_eq_zero]
+  · simp [← d_eq_zero]
     
   · set q := (n : ℚ) / d with q_eq
     obtain ⟨c, n_eq_c_mul_num, d_eq_c_mul_denom⟩ : ∃ c, n = c * q.num ∧ (d : ℤ) = c * q.denom := by
@@ -58,7 +58,7 @@ theorem floor_int_div_nat_eq_div {n : ℤ} {d : ℕ} : ⌊(↑n : ℚ) / (↑d :
     suffices q.num / q.denom = c * q.num / (c * q.denom) by
       rwa [n_eq_c_mul_num, d_eq_c_mul_denom]
     suffices c > 0 by
-      solve_by_elim [Int.mul_div_mul_of_pos]
+      solve_by_elim [← Int.mul_div_mul_of_pos]
     have q_denom_mul_c_pos : (0 : ℤ) < q.denom * c := by
       have : (d : ℤ) > 0 := by
         exact_mod_cast pos_iff_ne_zero.elim_right d_ne_zero
@@ -101,7 +101,7 @@ theorem num_lt_succ_floor_mul_denom (q : ℚ) : q.num < (⌊q⌋ + 1) * q.denom 
   have : 0 < 1 - fract q := by
     have : fract q < 1 := fract_lt_one q
     have : 0 + fract q < 1 := by
-      simp [this]
+      simp [← this]
     rwa [lt_sub_iff_add_lt]
   exact
     mul_pos this
@@ -118,7 +118,7 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).n
   suffices (q_inv - ⌊q_inv⌋).num < q.num by
     rwa [q_inv_eq]
   suffices ((q.denom - q.num * ⌊q_inv⌋ : ℚ) / q.num).num < q.num by
-    field_simp [this, ne_of_gtₓ q_num_pos]
+    field_simp [← this, ← ne_of_gtₓ q_num_pos]
   suffices (q.denom : ℤ) - q.num * ⌊q_inv⌋ < q.num by
     -- use that `q.num` and `q.denom` are coprime to show that the numerator stays unreduced
     have : ((q.denom - q.num * ⌊q_inv⌋ : ℚ) / q.num).num = q.denom - q.num * ⌊q_inv⌋ := by
@@ -127,7 +127,7 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).n
       have : (q.num.nat_abs : ℚ) = (q.num : ℚ) := by
         exact_mod_cast q_num_abs_eq_q_num
       have tmp := Nat.coprime_sub_mul_floor_rat_div_of_coprime q.cop.symm
-      simpa only [this, q_num_abs_eq_q_num] using tmp
+      simpa only [← this, ← q_num_abs_eq_q_num] using tmp
     rwa [this]
   -- to show the claim, start with the following inequality
   have q_inv_num_denom_ineq : q⁻¹.num - ⌊q⁻¹⌋ * q⁻¹.denom < q⁻¹.denom := by

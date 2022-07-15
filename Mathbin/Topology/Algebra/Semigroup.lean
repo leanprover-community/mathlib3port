@@ -16,7 +16,7 @@ We also state a corresponding lemma guaranteeing that a subset of `M` contains a
 -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (m m' «expr ∈ » N)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (m m' «expr ∈ » N)
 /-- Any nonempty compact Hausdorff semigroup where right-multiplication is continuous contains
 an idempotent, i.e. an `m` such that `m * m = m`. -/
 @[to_additive
@@ -65,9 +65,9 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
       apply Set.univ_nonempty
       
     convert
-      @IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed _ _ _ (c.nonempty_coe_sort.mpr hcnemp)
+      @IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed _ _ _ (set.nonempty_coe_sort.mpr hcnemp)
         (coe : c → Set M) _ _ _ _
-    · simp only [Subtype.range_coe_subtype, Set.set_of_mem_eq]
+    · simp only [← Subtype.range_coe_subtype, ← Set.set_of_mem_eq]
       
     · refine' DirectedOn.directed_coe (IsChain.directed_on hc.symm)
       
@@ -90,7 +90,7 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
     exact Set.sInter_subset_of_mem hs
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » s)
 /-- A version of `exists_idempotent_of_compact_t2_of_continuous_mul_left` where the idempotent lies
 in some specified nonempty compact subsemigroup. -/
 @[to_additive exists_idempotent_in_compact_add_subsemigroup

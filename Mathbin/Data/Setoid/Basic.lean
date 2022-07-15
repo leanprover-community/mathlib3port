@@ -136,7 +136,7 @@ instance : HasInfₓ (Setoidₓ α) :=
     is the infimum of the set's image under the map to the underlying binary operation. -/
 theorem Inf_def {s : Set (Setoidₓ α)} : (inf s).Rel = inf (rel '' s) := by
   ext
-  simp only [Inf_image, infi_apply, infi_Prop_eq]
+  simp only [← Inf_image, ← infi_apply, ← infi_Prop_eq]
   rfl
 
 instance : PartialOrderₓ (Setoidₓ α) where
@@ -167,7 +167,7 @@ theorem bot_def : (⊥ : Setoidₓ α).Rel = (· = ·) :=
   rfl
 
 theorem eq_top_iff {s : Setoidₓ α} : s = (⊤ : Setoidₓ α) ↔ ∀ x y : α, s.Rel x y := by
-  simp [eq_top_iff, Setoidₓ.le_def, Setoidₓ.top_def, Pi.top_apply]
+  simp [← eq_top_iff, ← Setoidₓ.le_def, ← Setoidₓ.top_def, ← Pi.top_apply]
 
 /-- The inductively defined equivalence closure of a binary relation r is the infimum
     of the set of all equivalence relations containing r. -/
@@ -181,7 +181,7 @@ theorem eqv_gen_eq (r : α → α → Prop) : EqvGen.setoid r = inf { s : Setoid
 theorem sup_eq_eqv_gen (r s : Setoidₓ α) : r⊔s = EqvGen.setoid fun x y => r.Rel x y ∨ s.Rel x y := by
   rw [eqv_gen_eq]
   apply congr_arg Inf
-  simp only [le_def, or_imp_distrib, ← forall_and_distrib]
+  simp only [← le_def, ← or_imp_distrib, forall_and_distrib]
 
 /-- The supremum of 2 equivalence relations r and s is the equivalence closure of the
     supremum of the underlying binary operations. -/
@@ -193,7 +193,7 @@ theorem sup_def {r s : Setoidₓ α} : r⊔s = EqvGen.setoid (r.Rel⊔s.Rel) := 
 theorem Sup_eq_eqv_gen (S : Set (Setoidₓ α)) : sup S = EqvGen.setoid fun x y => ∃ r : Setoidₓ α, r ∈ S ∧ r.Rel x y := by
   rw [eqv_gen_eq]
   apply congr_arg Inf
-  simp only [UpperBounds, le_def, and_imp, exists_imp_distrib]
+  simp only [← UpperBounds, ← le_def, ← and_imp, ← exists_imp_distrib]
   ext
   exact ⟨fun H x y r hr => H hr, fun H r hr x y => H r hr⟩
 
@@ -202,7 +202,7 @@ theorem Sup_eq_eqv_gen (S : Set (Setoidₓ α)) : sup S = EqvGen.setoid fun x y 
 theorem Sup_def {s : Set (Setoidₓ α)} : sup s = EqvGen.setoid (sup (rel '' s)) := by
   rw [Sup_eq_eqv_gen, Sup_image]
   congr with x y
-  simp only [supr_apply, supr_Prop_eq, exists_prop]
+  simp only [← supr_apply, ← supr_Prop_eq, ← exists_prop]
 
 /-- The equivalence closure of an equivalence relation r is r. -/
 @[simp]
@@ -251,7 +251,7 @@ def liftEquiv (r : Setoidₓ α) : { f : α → β // r ≤ ker f } ≃ (Quotien
   toFun := fun f => Quotientₓ.lift (f : α → β) f.2
   invFun := fun f =>
     ⟨f ∘ Quotientₓ.mk, fun x y h => by
-      simp [ker_def, Quotientₓ.sound h]⟩
+      simp [← ker_def, ← Quotientₓ.sound h]⟩
   left_inv := fun ⟨f, hf⟩ => Subtype.eq <| funext fun x => rfl
   right_inv := fun f => funext fun x => (Quotientₓ.induction_on' x) fun x => rfl
 
@@ -410,15 +410,15 @@ end Setoidₓ
 
 @[simp]
 theorem Quotientₓ.subsingleton_iff {s : Setoidₓ α} : Subsingleton (Quotientₓ s) ↔ s = ⊤ := by
-  simp only [subsingleton_iff, eq_top_iff, Setoidₓ.le_def, Setoidₓ.top_def, Pi.top_apply, forall_const]
+  simp only [← subsingleton_iff, ← eq_top_iff, ← Setoidₓ.le_def, ← Setoidₓ.top_def, ← Pi.top_apply, ← forall_const]
   refine' (surjective_quotient_mk _).forall.trans (forall_congrₓ fun a => _)
   refine' (surjective_quotient_mk _).forall.trans (forall_congrₓ fun b => _)
   exact Quotientₓ.eq'
 
 theorem Quot.subsingleton_iff (r : α → α → Prop) : Subsingleton (Quot r) ↔ EqvGen r = ⊤ := by
-  simp only [subsingleton_iff, _root_.eq_top_iff, Pi.le_def, Pi.top_apply, forall_const]
+  simp only [← subsingleton_iff, ← _root_.eq_top_iff, ← Pi.le_def, ← Pi.top_apply, ← forall_const]
   refine' (surjective_quot_mk _).forall.trans (forall_congrₓ fun a => _)
   refine' (surjective_quot_mk _).forall.trans (forall_congrₓ fun b => _)
   rw [Quot.eq]
-  simp only [forall_const, le_Prop_eq]
+  simp only [← forall_const, ← le_Prop_eq]
 

@@ -83,7 +83,7 @@ theorem is_integral_closure_adjoing_singleton_of_prime_pow [hcycl : IsCyclotomic
   rw [← smul_assoc, ← smul_mul_assoc, Units.inv_eq_coe_inv, coe_coe, zsmul_eq_mul, ← Int.cast_mul, Units.inv_mul,
     Int.cast_oneₓ, one_mulₓ,
     show (p : ℚ) ^ n • x = ((p : ℕ) : ℤ) ^ n • x by
-      simp [smul_def]] at
+      simp [← smul_def]] at
     H
   cases k
   · have : IsCyclotomicExtension {1} ℚ K := by
@@ -98,7 +98,7 @@ theorem is_integral_closure_adjoing_singleton_of_prime_pow [hcycl : IsCyclotomic
     exact Subalgebra.algebra_map_mem _ _
     
   · have hmin : (minpoly ℤ B.gen).IsEisensteinAt (Submodule.span ℤ {((p : ℕ) : ℤ)}) := by
-      have h₁ := minpoly.gcd_domain_eq_field_fractions ℚ hint
+      have h₁ := minpoly.gcd_domain_eq_field_fractions' ℚ hint
       have h₂ := hζ.minpoly_sub_one_eq_cyclotomic_comp (cyclotomic.irreducible_rat (p ^ _).Pos)
       rw [IsPrimitiveRoot.sub_one_power_basis_gen] at h₁
       rw [h₁, ← map_cyclotomic_int,
@@ -107,13 +107,14 @@ theorem is_integral_closure_adjoing_singleton_of_prime_pow [hcycl : IsCyclotomic
         show X + 1 = map (algebraMap ℤ ℚ) (X + 1) by
           simp ,
         ← map_comp] at h₂
+      have : CharZero ℚ := OrderedSemiring.to_char_zero
       rw [IsPrimitiveRoot.sub_one_power_basis_gen, map_injective (algebraMap ℤ ℚ) (algebraMap ℤ ℚ).injective_int h₂]
       exact cyclotomic_prime_pow_comp_X_add_one_is_eisenstein_at _ _
     refine'
       adjoin_le _
         (mem_adjoin_of_smul_prime_pow_smul_of_minpoly_is_eiseinstein_at (Nat.prime_iff_prime_int.1 hp.out) hint h H
           hmin)
-    simp only [Set.singleton_subset_iff, SetLike.mem_coe]
+    simp only [← Set.singleton_subset_iff, ← SetLike.mem_coe]
     exact Subalgebra.sub_mem _ (self_mem_adjoin_singleton ℤ _) (Subalgebra.one_mem _)
     
 
@@ -130,22 +131,23 @@ attribute [local instance] algebra_rat_subsingleton
 `cyclotomic_ring (p ^ k) ℤ ℚ`. -/
 theorem cyclotomic_ring_is_integral_closure_of_prime_pow :
     IsIntegralClosure (CyclotomicRing (p ^ k) ℤ ℚ) ℤ (CyclotomicField (p ^ k) ℚ) := by
+  have : CharZero ℚ := OrderedSemiring.to_char_zero
   have : IsCyclotomicExtension {p ^ k} ℚ (CyclotomicField (p ^ k) ℚ) := by
     convert CyclotomicField.is_cyclotomic_extension (p ^ k) _
     · exact Subsingleton.elimₓ _ _
       
     · exact NeZero.char_zero
       
-  have hζ := zeta_primitive_root (p ^ k) ℚ (CyclotomicField (p ^ k) ℚ)
+  have hζ := zeta_spec (p ^ k) ℚ (CyclotomicField (p ^ k) ℚ)
   refine' ⟨IsFractionRing.injective _ _, fun x => ⟨fun h => ⟨⟨x, _⟩, rfl⟩, _⟩⟩
   · have := (is_integral_closure_adjoing_singleton_of_prime_pow hζ).is_integral_iff
     obtain ⟨y, rfl⟩ := this.1 h
     convert adjoin_mono _ y.2
-    · simp only [eq_iff_true_of_subsingleton]
+    · simp only [← eq_iff_true_of_subsingleton]
       
-    · simp only [eq_iff_true_of_subsingleton]
+    · simp only [← eq_iff_true_of_subsingleton]
       
-    · simp only [Pnat.pow_coe, Set.singleton_subset_iff, Set.mem_set_of_eq]
+    · simp only [← Pnat.pow_coe, ← Set.singleton_subset_iff, ← Set.mem_set_of_eq]
       exact hζ.pow_eq_one
       
     

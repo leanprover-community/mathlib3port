@@ -95,7 +95,7 @@ unsafe def lint_core (all_decls non_auto_decls : List declaration) (checks : Lis
             | result.exception msg _ _ => some <| "LINTER FAILED:\n" ++ msg "(no message)" fun msg => toString <| msg ()
       let results :=
         results
-          (fun warning =>
+          (fun results : rb_map Name Stringₓ warning =>
             match warning with
             | (decl_name, some w) => results decl_name w
             | (_, none) => results)
@@ -258,7 +258,7 @@ unsafe def lint_all (slow : Bool := true) (verbose : LintVerbosity := LintVerbos
   let l := e.get_decls
   lint_aux l (some 0) "in all imported files (including this one)" slow verbose checks
 
--- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr *»
+-- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr *»
 /-- Parses an optional `only`, followed by a sequence of zero or more identifiers.
 Prepends `linter.` to each of these identifiers. -/
 unsafe def parse_lint_additions : parser (Bool × List Name) :=

@@ -44,8 +44,8 @@ variable {C : Type u} [Category.{v} C] [MonoidalCategory.{v} C]
 This isn't an instance because it's not usually how we want to construct internal homs,
 we'll usually prove all objects are closed uniformly.
 -/
-def tensorClosed {X Y : C} (hX : Closed X) (hY : Closed Y) : Closed (X ⊗ Y) where
-  isAdj := by
+def tensorClosed {X Y : C} (hX : Closed X) (hY : Closed Y) :
+    Closed (X ⊗ Y) where isAdj := by
     have := hX.is_adj
     have := hY.is_adj
     exact adjunction.left_adjoint_of_nat_iso (monoidal_category.tensor_left_tensor _ _).symm
@@ -54,8 +54,10 @@ def tensorClosed {X Y : C} (hX : Closed X) (hY : Closed Y) : Closed (X ⊗ Y) wh
 This isn't an instance because most of the time we'll prove closedness for all objects at once,
 rather than just for this one.
 -/
-def unitClosed : Closed (𝟙_ C) where
-  isAdj :=
+def unitClosed :
+    Closed
+      (𝟙_
+        C) where isAdj :=
     { right := 𝟭 C,
       adj :=
         Adjunction.mkOfHomEquiv
@@ -220,7 +222,7 @@ theorem coev_app_comp_pre_app (f : B ⟶ A) :
 
 @[simp]
 theorem pre_id (A : C) [Closed A] : pre (𝟙 A) = 𝟙 _ := by
-  simp only [pre, Functor.map_id]
+  simp only [← pre, ← Functor.map_id]
   dsimp'
   simp
 

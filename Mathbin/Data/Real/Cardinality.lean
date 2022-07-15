@@ -59,28 +59,28 @@ def cantorFunctionAux (c : ℝ) (f : ℕ → Bool) (n : ℕ) : ℝ :=
 
 @[simp]
 theorem cantor_function_aux_tt (h : f n = tt) : cantorFunctionAux c f n = c ^ n := by
-  simp [cantor_function_aux, h]
+  simp [← cantor_function_aux, ← h]
 
 @[simp]
 theorem cantor_function_aux_ff (h : f n = ff) : cantorFunctionAux c f n = 0 := by
-  simp [cantor_function_aux, h]
+  simp [← cantor_function_aux, ← h]
 
 theorem cantor_function_aux_nonneg (h : 0 ≤ c) : 0 ≤ cantorFunctionAux c f n := by
-  cases h' : f n <;> simp [h']
+  cases h' : f n <;> simp [← h']
   apply pow_nonneg h
 
 theorem cantor_function_aux_eq (h : f n = g n) : cantorFunctionAux c f n = cantorFunctionAux c g n := by
-  simp [cantor_function_aux, h]
+  simp [← cantor_function_aux, ← h]
 
 theorem cantor_function_aux_succ (f : ℕ → Bool) :
     (fun n => cantorFunctionAux c f (n + 1)) = fun n => c * cantorFunctionAux c (fun n => f (n + 1)) n := by
   ext n
-  cases h : f (n + 1) <;> simp [h, pow_succₓ]
+  cases h : f (n + 1) <;> simp [← h, ← pow_succₓ]
 
 theorem summable_cantor_function (f : ℕ → Bool) (h1 : 0 ≤ c) (h2 : c < 1) : Summable (cantorFunctionAux c f) := by
   apply (summable_geometric_of_lt_1 h1 h2).summable_of_eq_zero_or_self
   intro n
-  cases h : f n <;> simp [h]
+  cases h : f n <;> simp [← h]
 
 /-- `cantor_function c (f : ℕ → bool)` is `Σ n, f n * c ^ n`, where `tt` is interpreted as `1` and
 `ff` is interpreted as `0`. It is implemented using `cantor_function_aux`. -/
@@ -92,9 +92,9 @@ theorem cantor_function_le (h1 : 0 ≤ c) (h2 : c < 1) (h3 : ∀ n, f n → g n)
   apply tsum_le_tsum _ (summable_cantor_function f h1 h2) (summable_cantor_function g h1 h2)
   intro n
   cases h : f n
-  simp [h, cantor_function_aux_nonneg h1]
+  simp [← h, ← cantor_function_aux_nonneg h1]
   replace h3 : g n = tt := h3 n h
-  simp [h, h3]
+  simp [← h, ← h3]
 
 theorem cantor_function_succ (f : ℕ → Bool) (h1 : 0 ≤ c) (h2 : c < 1) :
     cantorFunction c f = cond (f 0) 1 0 + c * cantorFunction c fun n => f (n + 1) := by
@@ -153,7 +153,7 @@ theorem increasing_cantor_function (h1 : 0 < c) (h2 : c < 1 / 2) {n : ℕ} {f g 
   rw [mul_lt_mul_left h1]
   exact ih (fun k hk => hn _ <| Nat.succ_lt_succₓ hk) fn gn
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- `cantor_function c` is injective if `0 < c < 1/2`. -/
 theorem cantor_function_injective (h1 : 0 < c) (h2 : c < 1 / 2) : Function.Injective (cantorFunction c) := by
   intro f g hfg
@@ -207,7 +207,7 @@ theorem mk_univ_real : # (Set.Univ : Set ℝ) = 𝔠 := by
   rw [mk_univ, mk_real]
 
 /-- **Non-Denumerability of the Continuum**: The reals are not countable. -/
-theorem not_countable_real : ¬Countable (Set.Univ : Set ℝ) := by
+theorem not_countable_real : ¬(Set.Univ : Set ℝ).Countable := by
   rw [← mk_set_le_aleph_0, not_leₓ, mk_univ_real]
   apply cantor
 

@@ -381,11 +381,11 @@ variable {L} [AddGroupₓ G]
 
 theorem smul_convolution [SmulCommClass ℝ 𝕜 F] {y : 𝕜} : y • f ⋆[L, μ] g = y • (f ⋆[L, μ] g) := by
   ext
-  simp only [Pi.smul_apply, convolution_def, ← integral_smul, L.map_smul₂]
+  simp only [← Pi.smul_apply, ← convolution_def, integral_smul, ← L.map_smul₂]
 
 theorem convolution_smul [SmulCommClass ℝ 𝕜 F] {y : 𝕜} : f ⋆[L, μ] y • g = y • (f ⋆[L, μ] g) := by
   ext
-  simp only [Pi.smul_apply, convolution_def, ← integral_smul, (L _).map_smul]
+  simp only [← Pi.smul_apply, ← convolution_def, integral_smul, ← (L _).map_smul]
 
 theorem zero_convolution : 0 ⋆[L, μ] g = 0 := by
   ext
@@ -397,7 +397,7 @@ theorem convolution_zero : f ⋆[L, μ] 0 = 0 := by
 
 theorem ConvolutionExistsAt.distrib_add {x : G} (hfg : ConvolutionExistsAt f g x L μ)
     (hfg' : ConvolutionExistsAt f g' x L μ) : (f ⋆[L, μ] (g + g')) x = (f ⋆[L, μ] g) x + (f ⋆[L, μ] g') x := by
-  simp only [convolution_def, (L _).map_add, Pi.add_apply, integral_add hfg hfg']
+  simp only [← convolution_def, ← (L _).map_add, ← Pi.add_apply, ← integral_add hfg hfg']
 
 theorem ConvolutionExists.distrib_add (hfg : ConvolutionExists f g L μ) (hfg' : ConvolutionExists f g' L μ) :
     f ⋆[L, μ] (g + g') = f ⋆[L, μ] g + f ⋆[L, μ] g' := by
@@ -406,7 +406,7 @@ theorem ConvolutionExists.distrib_add (hfg : ConvolutionExists f g L μ) (hfg' :
 
 theorem ConvolutionExistsAt.add_distrib {x : G} (hfg : ConvolutionExistsAt f g x L μ)
     (hfg' : ConvolutionExistsAt f' g x L μ) : ((f + f') ⋆[L, μ] g) x = (f ⋆[L, μ] g) x + (f' ⋆[L, μ] g) x := by
-  simp only [convolution_def, L.map_add₂, Pi.add_apply, integral_add hfg hfg']
+  simp only [← convolution_def, ← L.map_add₂, ← Pi.add_apply, ← integral_add hfg hfg']
 
 theorem ConvolutionExists.add_distrib (hfg : ConvolutionExists f g L μ) (hfg' : ConvolutionExists f' g L μ) :
     (f + f') ⋆[L, μ] g = f ⋆[L, μ] g + f' ⋆[L, μ] g := by
@@ -425,7 +425,7 @@ theorem support_convolution_subset_swap : Support (f ⋆[L, μ] g) ⊆ Support g
   intro x h2x
   by_contra hx
   apply h2x
-  simp_rw [Set.mem_add, not_exists, not_and_distrib, nmem_support]  at hx
+  simp_rw [Set.mem_add, not_exists, not_and_distrib, nmem_support] at hx
   rw [convolution_def]
   convert integral_zero G F
   ext t
@@ -632,7 +632,7 @@ theorem dist_convolution_le' {x₀ : G} {R ε : ℝ} (hε : 0 ≤ ε) (hif : Int
       simp_rw [ht, L.map_zero₂, L.map_zero, norm_zero, zero_mul, dist_self]
       
   simp_rw [convolution_def]
-  simp_rw [dist_eq_norm]  at h2⊢
+  simp_rw [dist_eq_norm] at h2⊢
   rw [← integral_sub hfg.integrable]
   swap
   · exact (L.flip (g x₀)).integrable_comp hif
@@ -672,7 +672,7 @@ theorem convolution_tendsto_right {ι} {l : Filter ι} {φ : ι → G → ℝ} (
     (hiφ : ∀ i, (∫ s, φ i s ∂μ) = 1) (hφ : Tendsto (fun n => Support (φ n)) l (𝓝 0).smallSets)
     (hmg : AeStronglyMeasurable g μ) {x₀ : G} (hcg : ContinuousAt g x₀) :
     Tendsto (fun i => (φ i ⋆[lsmul ℝ ℝ, μ] g : G → E') x₀) l (𝓝 (g x₀)) := by
-  simp_rw [tendsto_small_sets_iff]  at hφ
+  simp_rw [tendsto_small_sets_iff] at hφ
   rw [Metric.continuous_at_iff] at hcg
   rw [Metric.tendsto_nhds]
   intro ε hε
@@ -800,7 +800,7 @@ theorem convolution_assoc (hL : ∀ x : E y : E' z : E'', L₂ (L x y) z = L₃ 
     (hi : Integrable (uncurry fun x y => (L₃ (f y)) ((L₄ (g (x - y))) (k (x₀ - x)))) (ν.Prod μ)) :
     ((f ⋆[L, μ] g) ⋆[L₂, ν] k) x₀ = (f ⋆[L₃, μ] g ⋆[L₄, ν] k) x₀ := by
   have h1 := fun t => (L₂.flip (k (x₀ - t))).integral_comp_comm (h₁ t)
-  dsimp' only [flip_apply]  at h1
+  dsimp' only [← flip_apply]  at h1
   simp_rw [convolution_def, ← (L₃ (f _)).integral_comp_comm (h₄ (x₀ - _)), ← h1, hL]
   rw [integral_integral_swap hi]
   congr
@@ -861,7 +861,7 @@ theorem HasCompactSupport.has_fderiv_at_convolution_right (hcg : HasCompactSuppo
 theorem HasCompactSupport.has_fderiv_at_convolution_left [IsNegInvariant μ] (hcf : HasCompactSupport f)
     (hf : ContDiff 𝕜 1 f) (hg : LocallyIntegrable g μ) (x₀ : G) :
     HasFderivAt (f ⋆[L, μ] g) ((fderiv 𝕜 f ⋆[L.precompL G, μ] g) x₀) x₀ := by
-  simp (config := { singlePass := true })only [← convolution_flip]
+  simp (config := { singlePass := true })only [convolution_flip]
   exact hcf.has_fderiv_at_convolution_right L.flip hg hf x₀
 
 theorem HasCompactSupport.cont_diff_convolution_right [FiniteDimensional 𝕜 G] (hcg : HasCompactSupport g)
@@ -934,7 +934,7 @@ theorem HasCompactSupport.has_deriv_at_convolution_right (hf : LocallyIntegrable
 theorem HasCompactSupport.has_deriv_at_convolution_left [IsNegInvariant μ] (hcf : HasCompactSupport f₀)
     (hf : ContDiff 𝕜 1 f₀) (hg : LocallyIntegrable g₀ μ) (x₀ : 𝕜) :
     HasDerivAt (f₀ ⋆[L, μ] g₀) ((deriv f₀ ⋆[L, μ] g₀) x₀) x₀ := by
-  simp (config := { singlePass := true })only [← convolution_flip]
+  simp (config := { singlePass := true })only [convolution_flip]
   exact hcf.has_deriv_at_convolution_right L.flip hg hf x₀
 
 end Real

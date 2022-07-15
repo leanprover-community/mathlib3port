@@ -11,7 +11,7 @@ This file defines hermitian matrices and some basic results about them.
 
 ## Main definition
 
- * `matrix.is_hermitian `: a matrix `A : matrix n n α` is hermitian if `Aᴴ = A`.
+ * `matrix.is_hermitian` : a matrix `A : matrix n n α` is hermitian if `Aᴴ = A`.
 
 ## Tags
 
@@ -61,10 +61,10 @@ theorem is_hermitian_transpose_mul_self [Fintype n] (A : Matrix n n α) : (Aᴴ 
   rw [is_hermitian, conj_transpose_mul, conj_transpose_conj_transpose]
 
 theorem is_hermitian_add_transpose_self (A : Matrix n n α) : (A + Aᴴ).IsHermitian := by
-  simp [is_hermitian, add_commₓ]
+  simp [← is_hermitian, ← add_commₓ]
 
 theorem is_hermitian_transpose_add_self (A : Matrix n n α) : (Aᴴ + A).IsHermitian := by
-  simp [is_hermitian, add_commₓ]
+  simp [← is_hermitian, ← add_commₓ]
 
 @[simp]
 theorem is_hermitian_zero : (0 : Matrix n n α).IsHermitian :=
@@ -157,8 +157,8 @@ theorem is_hermitian_iff_is_self_adjoint [Fintype n] [DecidableEq n] {A : Matrix
         ((PiLp.linearEquiv α fun _ : n => α).symm.conj A.toLin' : Module.End α (PiLp 2 _)) :=
   by
   rw [InnerProductSpace.IsSelfAdjoint, (PiLp.equiv 2 fun _ : n => α).symm.Surjective.Forall₂]
-  simp only [LinearEquiv.conj_apply, LinearMap.comp_apply, LinearEquiv.coe_coe, PiLp.linear_equiv_apply,
-    PiLp.linear_equiv_symm_apply, LinearEquiv.symm_symm]
+  simp only [← LinearEquiv.conj_apply, ← LinearMap.comp_apply, ← LinearEquiv.coe_coe, ← PiLp.linear_equiv_apply, ←
+    PiLp.linear_equiv_symm_apply, ← LinearEquiv.symm_symm]
   simp_rw [EuclideanSpace.inner_eq_star_dot_product, Equivₓ.apply_symm_apply, to_lin'_apply, star_mul_vec,
     dot_product_mul_vec]
   constructor
@@ -167,8 +167,8 @@ theorem is_hermitian_iff_is_self_adjoint [Fintype n] [DecidableEq n] {A : Matrix
     
   · intro h
     ext i j
-    simpa only [(Pi.single_star i 1).symm, ← star_mul_vec, mul_oneₓ, dot_product_single, single_vec_mul, star_one,
-      one_mulₓ] using
+    simpa only [← (Pi.single_star i 1).symm, star_mul_vec, ← mul_oneₓ, ← dot_product_single, ← single_vec_mul, ←
+      star_one, ← one_mulₓ] using
       h (@Pi.single _ _ _ (fun i => AddZeroClassₓ.toHasZero α) i 1)
         (@Pi.single _ _ _ (fun i => AddZeroClassₓ.toHasZero α) j 1)
     

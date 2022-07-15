@@ -3,9 +3,10 @@ Copyright (c) 2021 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Eric Rodriguez
 -/
-import Mathbin.Data.Nat.Choose.Basic
-import Mathbin.Data.Nat.Cast
 import Mathbin.Algebra.GroupPower.Lemmas
+import Mathbin.Algebra.Order.Field
+import Mathbin.Data.Nat.Cast
+import Mathbin.Data.Nat.Choose.Basic
 
 /-!
 # Inequalities for binomial coefficients

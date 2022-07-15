@@ -69,7 +69,7 @@ variable {G}
 theorem exponent_exists_iff_ne_zero : ExponentExists G ↔ exponent G ≠ 0 := by
   rw [exponent]
   split_ifs
-  · simp [h, @not_lt_zero' ℕ]
+  · simp [← h, ← @not_lt_zero' ℕ]
     
   --if this isn't done this way, `to_additive` freaks
   · tauto
@@ -77,7 +77,7 @@ theorem exponent_exists_iff_ne_zero : ExponentExists G ↔ exponent G ≠ 0 := b
 
 @[to_additive]
 theorem exponent_eq_zero_iff : exponent G = 0 ↔ ¬ExponentExists G := by
-  simp only [exponent_exists_iff_ne_zero, not_not]
+  simp only [← exponent_exists_iff_ne_zero, ← not_not]
 
 @[to_additive]
 theorem exponent_eq_zero_of_order_zero {g : G} (hg : orderOf g = 0) : exponent G = 0 :=
@@ -98,7 +98,7 @@ theorem pow_eq_mod_exponent {n : ℕ} (g : G) : g ^ n = g ^ (n % exponent G) :=
     g ^ n = g ^ (n % exponent G + exponent G * (n / exponent G)) := by
       rw [Nat.mod_add_divₓ]
     _ = g ^ (n % exponent G) := by
-      simp [pow_addₓ, pow_mulₓ, pow_exponent_eq_one]
+      simp [← pow_addₓ, ← pow_mulₓ, ← pow_exponent_eq_one]
     
 
 @[to_additive]
@@ -242,7 +242,7 @@ variable [LeftCancelMonoid G]
 
 @[to_additive]
 theorem exponent_ne_zero_of_fintype [Fintype G] : exponent G ≠ 0 := by
-  simpa [← lcm_order_eq_exponent, Finset.lcm_eq_zero_iff] using fun x => (order_of_pos x).ne'
+  simpa [lcm_order_eq_exponent, ← Finset.lcm_eq_zero_iff] using fun x => (order_of_pos x).ne'
 
 end LeftCancelMonoid
 
@@ -269,7 +269,7 @@ theorem exponent_eq_supr_order_of (h : ∀ g : G, 0 < orderOf g) : exponent G = 
   by_contra' h
   obtain ⟨p, hp, hpe⟩ := h
   replace hp := Nat.prime_of_mem_factors hp
-  simp only [Nat.factors_count_eq] at hpe
+  simp only [← Nat.factors_count_eq] at hpe
   set k := (orderOf t).factorization p with hk
   obtain ⟨g, hg⟩ := hp.exists_order_of_eq_pow_factorization_exponent G
   suffices orderOf t < orderOf (t ^ p ^ k * g) by
@@ -285,7 +285,7 @@ theorem exponent_eq_supr_order_of (h : ∀ g : G, 0 < orderOf g) : exponent G = 
     nth_rw 0[← pow_oneₓ p]
     convert Nat.pow_succ_factorization_not_dvd (h <| t ^ p ^ k).ne' hp
     rw [hpk', Nat.factorization_div hpk]
-    simp [hp]
+    simp [← hp]
   rw [(Commute.all _ g).order_of_mul_eq_mul_order_of_of_coprime hcoprime, hpk', hg, ha, ← ht, ← hk, pow_addₓ, pow_addₓ,
     pow_oneₓ, ← mul_assoc, ← mul_assoc, Nat.div_mul_cancelₓ, mul_assoc, lt_mul_iff_one_lt_right <| h t, ← pow_succ'ₓ]
   exact one_lt_pow hp.one_lt a.succ_ne_zero

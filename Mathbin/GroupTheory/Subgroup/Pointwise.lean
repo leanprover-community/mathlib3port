@@ -66,6 +66,20 @@ theorem mem_smul_pointwise_iff_exists (m : G) (a : α) (S : Subgroup G) : m ∈ 
 instance pointwise_central_scalar [MulDistribMulAction αᵐᵒᵖ G] [IsCentralScalar α G] : IsCentralScalar α (Subgroup G) :=
   ⟨fun a S => (congr_arg fun f => S.map f) <| MonoidHom.ext <| op_smul_eq_smul _⟩
 
+theorem conj_smul_le_of_le {P H : Subgroup G} (hP : P ≤ H) (h : H) : MulAut.conj (h : G) • P ≤ H := by
+  rintro - ⟨g, hg, rfl⟩
+  exact H.mul_mem (H.mul_mem h.2 (hP hg)) (H.inv_mem h.2)
+
+theorem conj_smul_subgroup_of {P H : Subgroup G} (hP : P ≤ H) (h : H) :
+    MulAut.conj h • P.subgroupOf H = (MulAut.conj (h : G) • P).subgroupOf H := by
+  refine' le_antisymmₓ _ _
+  · rintro - ⟨g, hg, rfl⟩
+    exact ⟨g, hg, rfl⟩
+    
+  · rintro p ⟨g, hg, hp⟩
+    exact ⟨⟨g, hP hg⟩, hg, Subtype.ext hp⟩
+    
+
 end Monoidₓ
 
 section Groupₓ

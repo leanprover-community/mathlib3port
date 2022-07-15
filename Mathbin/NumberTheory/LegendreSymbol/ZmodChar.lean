@@ -68,7 +68,7 @@ theorem χ₄_nat_eq_if_mod_four (n : ℕ) : χ₄ n = if n % 2 = 0 then 0 else 
 /-- Alternative description for odd `n : ℕ` in terms of powers of `-1` -/
 theorem χ₄_eq_neg_one_pow {n : ℕ} (hn : n % 2 = 1) : χ₄ n = -1 ^ (n / 2) := by
   rw [χ₄_nat_eq_if_mod_four]
-  simp only [hn, Nat.one_ne_zero, if_false]
+  simp only [← hn, ← Nat.one_ne_zero, ← if_false]
   nth_rw 0[← Nat.div_add_modₓ n 4]
   nth_rw
     0[(by

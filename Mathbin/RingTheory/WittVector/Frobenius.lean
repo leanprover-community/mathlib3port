@@ -172,7 +172,7 @@ theorem map_frobenius_poly (n : ℕ) : MvPolynomial.map (Int.castRingHom ℚ) (f
   clear n
   intro n IH
   rw [X_in_terms_of_W_eq]
-  simp only [AlgHom.map_sum, AlgHom.map_sub, AlgHom.map_mul, AlgHom.map_pow, bind₁_C_right]
+  simp only [← AlgHom.map_sum, ← AlgHom.map_sub, ← AlgHom.map_mul, ← AlgHom.map_pow, ← bind₁_C_right]
   have h1 : ↑p ^ n * ⅟ (↑p : ℚ) ^ n = 1 := by
     rw [← mul_powₓ, mul_inv_of_self, one_pow]
   rw [bind₁_X_right, Function.comp_app, witt_polynomial_eq_sum_C_mul_X_pow, sum_range_succ, sum_range_succ, tsub_self,
@@ -181,7 +181,7 @@ theorem map_frobenius_poly (n : ℕ) : MvPolynomial.map (Int.castRingHom ℚ) (f
     one_mulₓ, add_commₓ _ (X n ^ p), add_assocₓ, ← add_sub, add_right_injₓ, frobenius_poly_aux_eq, RingHom.map_sub,
     map_X, mul_sub, sub_eq_add_neg, add_commₓ _ (C ↑p * X (n + 1)), ← add_sub, add_right_injₓ, neg_eq_iff_neg_eq,
     neg_sub]
-  simp only [RingHom.map_sum, mul_sum, sum_mul, ← sum_sub_distrib]
+  simp only [← RingHom.map_sum, ← mul_sum, ← sum_mul, sum_sub_distrib]
   apply sum_congr rfl
   intro i hi
   rw [mem_range] at hi
@@ -196,15 +196,15 @@ theorem map_frobenius_poly (n : ℕ) : MvPolynomial.map (Int.castRingHom ℚ) (f
   rw [RingHom.map_mul, RingHom.map_mul, RingHom.map_pow, RingHom.map_pow, RingHom.map_pow, RingHom.map_pow,
     RingHom.map_pow, map_C, map_X, mul_powₓ]
   rw [mul_comm (C ↑p ^ i), mul_comm _ ((X i ^ p) ^ _), mul_comm (C ↑p ^ (j + 1)), mul_comm (C ↑p)]
-  simp only [mul_assoc]
+  simp only [← mul_assoc]
   apply congr_arg
   apply congr_arg
   rw [← C_eq_coe_nat]
-  simp only [← RingHom.map_pow, ← C_mul]
+  simp only [RingHom.map_pow, C_mul]
   rw [C_inj]
-  simp only [inv_of_eq_inv, RingHom.eq_int_cast, inv_pow, Int.cast_coe_nat, Nat.cast_mulₓ]
+  simp only [← inv_of_eq_inv, ← RingHom.eq_int_cast, ← inv_pow, ← Int.cast_coe_nat, ← Nat.cast_mulₓ, ← Int.cast_mul]
   rw [Rat.coe_nat_div _ _ (map_frobenius_poly.key₁ p (n - i) j hj)]
-  simp only [Nat.cast_powₓ, pow_addₓ, pow_oneₓ]
+  simp only [← Nat.cast_powₓ, ← pow_addₓ, ← pow_oneₓ]
   suffices
     ((p ^ (n - i)).choose (j + 1) * p ^ (j - v p ⟨j + 1, j.succ_pos⟩) * p * p ^ n : ℚ) =
       p ^ j * p * ((p ^ (n - i)).choose (j + 1) * p ^ i) * p ^ (n - i - v p ⟨j + 1, j.succ_pos⟩)
@@ -213,19 +213,19 @@ theorem map_frobenius_poly (n : ℕ) : MvPolynomial.map (Int.castRingHom ℚ) (f
       intro
       apply pow_ne_zero
       exact_mod_cast hp.1.ne_zero
-    simpa [aux, -one_div] with field_simps using this.symm
+    simpa [← aux, -one_div] with field_simps using this.symm
   rw [mul_comm _ (p : ℚ), mul_assoc, mul_assoc, ← pow_addₓ, map_frobenius_poly.key₂ p hi hj]
   ring_exp
 
 theorem frobenius_poly_zmod (n : ℕ) : MvPolynomial.map (Int.castRingHom (Zmod p)) (frobeniusPoly p n) = x n ^ p := by
   rw [frobenius_poly, RingHom.map_add, RingHom.map_pow, RingHom.map_mul, map_X, map_C]
-  simp only [Int.cast_coe_nat, add_zeroₓ, RingHom.eq_int_cast, Zmod.nat_cast_self, zero_mul, C_0]
+  simp only [← Int.cast_coe_nat, ← add_zeroₓ, ← RingHom.eq_int_cast, ← Zmod.nat_cast_self, ← zero_mul, ← C_0]
 
 @[simp]
 theorem bind₁_frobenius_poly_witt_polynomial (n : ℕ) :
     bind₁ (frobeniusPoly p) (wittPolynomial p ℤ n) = wittPolynomial p ℤ (n + 1) := by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
-  simp only [map_bind₁, map_frobenius_poly, bind₁_frobenius_poly_rat_witt_polynomial, map_witt_polynomial]
+  simp only [← map_bind₁, ← map_frobenius_poly, ← bind₁_frobenius_poly_rat_witt_polynomial, ← map_witt_polynomial]
 
 variable {p}
 
@@ -255,7 +255,7 @@ variable {p}
 @[ghost_simps]
 theorem ghost_component_frobenius_fun (n : ℕ) (x : 𝕎 R) :
     ghostComponent n (frobeniusFun x) = ghostComponent (n + 1) x := by
-  simp only [ghost_component_apply, frobenius_fun, coeff_mk, ← bind₁_frobenius_poly_witt_polynomial, aeval_bind₁]
+  simp only [← ghost_component_apply, ← frobenius_fun, ← coeff_mk, bind₁_frobenius_poly_witt_polynomial, ← aeval_bind₁]
 
 /-- If `R` has characteristic `p`, then there is a ring endomorphism
 that raises `r : R` to the power `p`.
@@ -317,11 +317,11 @@ theorem coeff_frobenius_char_p (x : 𝕎 R) (n : ℕ) : coeff (frobenius x) n = 
 
 theorem frobenius_eq_map_frobenius : @frobenius p R _ _ = map (frobenius R p) := by
   ext x n
-  simp only [coeff_frobenius_char_p, map_coeff, frobenius_def]
+  simp only [← coeff_frobenius_char_p, ← map_coeff, ← frobenius_def]
 
 @[simp]
 theorem frobenius_zmodp (x : 𝕎 (Zmod p)) : frobenius x = x := by
-  simp only [ext_iff, coeff_frobenius_char_p, Zmod.pow_card, eq_self_iff_true, forall_const]
+  simp only [← ext_iff, ← coeff_frobenius_char_p, ← Zmod.pow_card, ← eq_self_iff_true, ← forall_const]
 
 variable (p R)
 

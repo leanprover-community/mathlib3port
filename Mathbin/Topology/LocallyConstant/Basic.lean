@@ -128,9 +128,9 @@ theorem apply_eq_of_is_preconnected {f : X → Y} (hf : IsLocallyConstant f) {s 
   exact not_not.1 this
   intro hxV
   specialize hs U (Uᶜ) (hf {f y}) (hf ({f y}ᶜ)) _ ⟨y, ⟨hy, rfl⟩⟩ ⟨x, ⟨hx, hxV⟩⟩
-  · simp only [union_compl_self, subset_univ]
+  · simp only [← union_compl_self, ← subset_univ]
     
-  · simpa only [inter_empty, not_nonempty_empty, inter_compl_self] using hs
+  · simpa only [← inter_empty, ← not_nonempty_empty, ← inter_compl_self] using hs
     
 
 theorem iff_is_const [PreconnectedSpace X] {f : X → Y} : IsLocallyConstant f ↔ ∀ x y, f x = f y :=
@@ -166,7 +166,7 @@ theorem desc {α β : Type _} (f : X → α) (g : α → β) (h : IsLocallyConst
   intro a
   have : f ⁻¹' {a} = g ∘ f ⁻¹' {g a} := by
     ext x
-    simp only [mem_singleton_iff, Function.comp_app, mem_preimage]
+    simp only [← mem_singleton_iff, ← Function.comp_app, ← mem_preimage]
     exact
       ⟨fun h => by
         rw [h], fun h => inj h⟩
@@ -256,7 +256,7 @@ def const (X : Type _) {Y : Type _} [TopologicalSpace X] (y : Y) : LocallyConsta
 theorem coe_const (y : Y) : (const X y : X → Y) = Function.const X y :=
   rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 /-- The locally constant function to `fin 2` associated to a clopen set. -/
 def ofClopen {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)] (hU : IsClopen U) :
     LocallyConstant X (Finₓ 2) where
@@ -267,7 +267,7 @@ def ofClopen {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x 
     fin_cases e
     · convert hU.1 using 1
       ext
-      simp only [Nat.one_ne_zero, mem_singleton_iff, Finₓ.one_eq_zero_iff, mem_preimage, ite_eq_left_iff]
+      simp only [← Nat.one_ne_zero, ← mem_singleton_iff, ← Finₓ.one_eq_zero_iff, ← mem_preimage, ← ite_eq_left_iff]
       tauto
       
     · rw [← is_closed_compl_iff]
@@ -280,20 +280,21 @@ def ofClopen {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x 
 theorem of_clopen_fiber_zero {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)] (hU : IsClopen U) :
     ofClopen hU ⁻¹' ({0} : Set (Finₓ 2)) = U := by
   ext
-  simp only [of_clopen, Nat.one_ne_zero, mem_singleton_iff, Finₓ.one_eq_zero_iff, coe_mk, mem_preimage, ite_eq_left_iff]
+  simp only [← of_clopen, ← Nat.one_ne_zero, ← mem_singleton_iff, ← Finₓ.one_eq_zero_iff, ← coe_mk, ← mem_preimage, ←
+    ite_eq_left_iff]
   tauto
 
 @[simp]
 theorem of_clopen_fiber_one {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)] (hU : IsClopen U) :
     ofClopen hU ⁻¹' ({1} : Set (Finₓ 2)) = Uᶜ := by
   ext
-  simp only [of_clopen, Nat.one_ne_zero, mem_singleton_iff, coe_mk, Finₓ.zero_eq_one_iff, mem_preimage,
-    ite_eq_right_iff, mem_compl_eq]
+  simp only [← of_clopen, ← Nat.one_ne_zero, ← mem_singleton_iff, ← coe_mk, ← Finₓ.zero_eq_one_iff, ← mem_preimage, ←
+    ite_eq_right_iff, ← mem_compl_eq]
   tauto
 
 theorem locally_constant_eq_of_fiber_zero_eq {X : Type _} [TopologicalSpace X] (f g : LocallyConstant X (Finₓ 2))
     (h : f ⁻¹' ({0} : Set (Finₓ 2)) = g ⁻¹' {0}) : f = g := by
-  simp only [Set.ext_iff, mem_singleton_iff, mem_preimage] at h
+  simp only [← Set.ext_iff, ← mem_singleton_iff, ← mem_preimage] at h
   ext1 x
   exact Finₓ.fin_two_eq_of_eq_zero_iff (h x)
 
@@ -350,7 +351,7 @@ def unflip {X α β : Type _} [Fintype α] [TopologicalSpace X] (f : α → Loca
   IsLocallyConstant := by
     rw [(IsLocallyConstant.tfae fun x a => f a x).out 0 3]
     intro g
-    have : (fun a : α => f a x) ⁻¹' {g} = ⋂ a : α, f a ⁻¹' {g a} := by
+    have : (fun x : X a : α => f a x) ⁻¹' {g} = ⋂ a : α, f a ⁻¹' {g a} := by
       tidy
     rw [this]
     apply is_open_Inter
@@ -403,18 +404,18 @@ theorem coe_comap (f : X → Y) (g : LocallyConstant Y Z) (hf : Continuous f) : 
 @[simp]
 theorem comap_id : @comap X X Z _ _ id = id := by
   ext
-  simp only [continuous_id, id.def, Function.comp.right_id, coe_comap]
+  simp only [← continuous_id, ← id.def, ← Function.comp.right_id, ← coe_comap]
 
 theorem comap_comp [TopologicalSpace Z] (f : X → Y) (g : Y → Z) (hf : Continuous f) (hg : Continuous g) :
     @comap _ _ α _ _ f ∘ comap g = comap (g ∘ f) := by
   ext
-  simp only [hf, hg, hg.comp hf, coe_comap]
+  simp only [← hf, ← hg, ← hg.comp hf, ← coe_comap]
 
 theorem comap_const (f : X → Y) (y : Y) (h : ∀ x, f x = y) :
     (comap f : LocallyConstant Y Z → LocallyConstant X Z) = fun g => ⟨fun x => g y, IsLocallyConstant.const _⟩ := by
   ext
   rw [coe_comap]
-  · simp only [h, coe_mk, Function.comp_app]
+  · simp only [← h, ← coe_mk, ← Function.comp_app]
     
   · rw
       [show f = fun x => y by
@@ -474,7 +475,7 @@ noncomputable def mulIndicator (hU : IsClopen U) : LocallyConstant X R where
       rintro y hy
       rw [Set.mem_compl_iff] at h
       rw [Set.mem_compl_iff] at hy
-      simp [h, hy]
+      simp [← h, ← hy]
       
 
 variable (a : X)

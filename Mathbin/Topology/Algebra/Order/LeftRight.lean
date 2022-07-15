@@ -33,7 +33,7 @@ variable {α β : Type _} [TopologicalSpace α] [PartialOrderₓ α] [Topologica
 
 theorem continuous_within_at_Ioi_iff_Ici {a : α} {f : α → β} :
     ContinuousWithinAt f (Ioi a) a ↔ ContinuousWithinAt f (Ici a) a := by
-  simp only [← Ici_diff_left, continuous_within_at_diff_self]
+  simp only [Ici_diff_left, ← continuous_within_at_diff_self]
 
 theorem continuous_within_at_Iio_iff_Iic {a : α} {f : α → β} :
     ContinuousWithinAt f (Iio a) a ↔ ContinuousWithinAt f (Iic a) a :=
@@ -54,7 +54,7 @@ theorem nhds_left_sup_nhds_right' (a : α) : 𝓝[≤] a⊔𝓝[>] a = 𝓝 a :=
 
 theorem continuous_at_iff_continuous_left_right {a : α} {f : α → β} :
     ContinuousAt f a ↔ ContinuousWithinAt f (Iic a) a ∧ ContinuousWithinAt f (Ici a) a := by
-  simp only [ContinuousWithinAt, ContinuousAt, ← tendsto_sup, nhds_left_sup_nhds_right]
+  simp only [← ContinuousWithinAt, ← ContinuousAt, tendsto_sup, ← nhds_left_sup_nhds_right]
 
 theorem continuous_at_iff_continuous_left'_right' {a : α} {f : α → β} :
     ContinuousAt f a ↔ ContinuousWithinAt f (Iio a) a ∧ ContinuousWithinAt f (Ioi a) a := by

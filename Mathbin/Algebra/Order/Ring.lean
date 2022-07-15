@@ -5,6 +5,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro
 -/
 import Mathbin.Algebra.Order.Group
 import Mathbin.Algebra.Order.Sub
+import Mathbin.Algebra.CharZero.Defs
 import Mathbin.Algebra.Hom.Ring
 import Mathbin.Data.Set.Intervals.Basic
 
@@ -225,14 +226,14 @@ theorem mul_lt_of_lt_one_right (ha : 0 < a) (hb : b < 1) : a * b < a :=
 protected theorem Decidable.mul_le_mul_of_nonneg_left [@DecidableRel α (· ≤ ·)] (h₁ : a ≤ b) (h₂ : 0 ≤ c) :
     c * a ≤ c * b := by
   by_cases' ba : b ≤ a
-  · simp [ba.antisymm h₁]
+  · simp [← ba.antisymm h₁]
     
   by_cases' c0 : c ≤ 0
-  · simp [c0.antisymm h₂]
+  · simp [← c0.antisymm h₂]
     
   exact (mul_lt_mul_of_pos_left (h₁.lt_of_not_le ba) (h₂.lt_of_not_le c0)).le
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_le_mul_of_nonneg_left : a ≤ b → 0 ≤ c → c * a ≤ c * b := by
   classical <;> exact Decidable.mul_le_mul_of_nonneg_left
 
@@ -240,14 +241,14 @@ theorem mul_le_mul_of_nonneg_left : a ≤ b → 0 ≤ c → c * a ≤ c * b := b
 protected theorem Decidable.mul_le_mul_of_nonneg_right [@DecidableRel α (· ≤ ·)] (h₁ : a ≤ b) (h₂ : 0 ≤ c) :
     a * c ≤ b * c := by
   by_cases' ba : b ≤ a
-  · simp [ba.antisymm h₁]
+  · simp [← ba.antisymm h₁]
     
   by_cases' c0 : c ≤ 0
-  · simp [c0.antisymm h₂]
+  · simp [← c0.antisymm h₂]
     
   exact (mul_lt_mul_of_pos_right (h₁.lt_of_not_le ba) (h₂.lt_of_not_le c0)).le
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_le_mul_of_nonneg_right : a ≤ b → 0 ≤ c → a * c ≤ b * c := by
   classical <;> exact Decidable.mul_le_mul_of_nonneg_right
 
@@ -260,16 +261,16 @@ protected theorem Decidable.mul_le_mul [@DecidableRel α (· ≤ ·)] (hac : a �
     _ ≤ c * d := Decidable.mul_le_mul_of_nonneg_left hbd nn_c
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_le_mul : a ≤ c → b ≤ d → 0 ≤ b → 0 ≤ c → a * b ≤ c * d := by
   classical <;> exact Decidable.mul_le_mul
 
 -- See Note [decidable namespace]
 protected theorem Decidable.mul_nonneg_le_one_le {α : Type _} [OrderedSemiring α] [@DecidableRel α (· ≤ ·)] {a b c : α}
     (h₁ : 0 ≤ c) (h₂ : a ≤ c) (h₃ : 0 ≤ b) (h₄ : b ≤ 1) : a * b ≤ c := by
-  simpa only [mul_oneₓ] using Decidable.mul_le_mul h₂ h₄ h₃ h₁
+  simpa only [← mul_oneₓ] using Decidable.mul_le_mul h₂ h₄ h₃ h₁
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_nonneg_le_one_le {α : Type _} [OrderedSemiring α] {a b c : α} : 0 ≤ c → a ≤ c → 0 ≤ b → b ≤ 1 → a * b ≤ c :=
   by
   classical <;> exact Decidable.mul_nonneg_le_one_le
@@ -279,7 +280,7 @@ protected theorem Decidable.mul_nonneg [@DecidableRel α (· ≤ ·)] (ha : 0 �
   have h : 0 * b ≤ a * b := Decidable.mul_le_mul_of_nonneg_right ha hb
   rwa [zero_mul] at h
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_nonneg : 0 ≤ a → 0 ≤ b → 0 ≤ a * b := by
   classical <;> exact Decidable.mul_nonneg
 
@@ -298,7 +299,7 @@ protected theorem Decidable.mul_nonpos_of_nonneg_of_nonpos [@DecidableRel α (·
   have h : a * b ≤ a * 0 := Decidable.mul_le_mul_of_nonneg_left hb ha
   rwa [mul_zero] at h
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_nonpos_of_nonneg_of_nonpos : 0 ≤ a → b ≤ 0 → a * b ≤ 0 := by
   classical <;> exact Decidable.mul_nonpos_of_nonneg_of_nonpos
 
@@ -308,7 +309,7 @@ protected theorem Decidable.mul_nonpos_of_nonpos_of_nonneg [@DecidableRel α (·
   have h : a * b ≤ 0 * b := Decidable.mul_le_mul_of_nonneg_right ha hb
   rwa [zero_mul] at h
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_nonpos_of_nonpos_of_nonneg : a ≤ 0 → 0 ≤ b → a * b ≤ 0 := by
   classical <;> exact Decidable.mul_nonpos_of_nonpos_of_nonneg
 
@@ -320,7 +321,7 @@ protected theorem Decidable.mul_lt_mul [@DecidableRel α (· ≤ ·)] (hac : a <
     _ ≤ c * d := Decidable.mul_le_mul_of_nonneg_left hbd nn_c
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_lt_mul : a < c → b ≤ d → 0 < b → 0 ≤ c → a * b < c * d := by
   classical <;> exact Decidable.mul_lt_mul
 
@@ -332,7 +333,7 @@ protected theorem Decidable.mul_lt_mul' [@DecidableRel α (· ≤ ·)] (h1 : a �
     _ < c * d := mul_lt_mul_of_pos_left h2 h4
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_lt_mul' : a ≤ c → b < d → 0 ≤ b → 0 < c → a * b < c * d := by
   classical <;> exact Decidable.mul_lt_mul'
 
@@ -385,7 +386,7 @@ protected theorem Decidable.mul_lt_mul'' [@DecidableRel α (· ≤ ·)] (h1 : a 
   h4.lt_or_eq_dec.elim (fun b0 => Decidable.mul_lt_mul h1 h2.le b0 <| h3.trans h1.le) fun b0 => by
     rw [← b0, mul_zero] <;> exact mul_pos (h3.trans_lt h1) (h4.trans_lt h2)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_lt_mul'' : a < c → b < d → 0 ≤ a → 0 ≤ b → a * b < c * d := by
   classical <;> exact Decidable.mul_lt_mul''
 
@@ -395,7 +396,7 @@ protected theorem Decidable.le_mul_of_one_le_right [@DecidableRel α (· ≤ ·)
     rwa [mul_oneₓ] at this
   Decidable.mul_le_mul_of_nonneg_left h hb
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem le_mul_of_one_le_right : 0 ≤ b → 1 ≤ a → b ≤ b * a := by
   classical <;> exact Decidable.le_mul_of_one_le_right
 
@@ -405,7 +406,7 @@ protected theorem Decidable.le_mul_of_one_le_left [@DecidableRel α (· ≤ ·)]
     rwa [one_mulₓ] at this
   Decidable.mul_le_mul_of_nonneg_right h hb
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem le_mul_of_one_le_left : 0 ≤ b → 1 ≤ a → b ≤ a * b := by
   classical <;> exact Decidable.le_mul_of_one_le_left
 
@@ -415,7 +416,7 @@ protected theorem Decidable.lt_mul_of_one_lt_right [@DecidableRel α (· ≤ ·)
     rwa [mul_oneₓ] at this
   Decidable.mul_lt_mul' le_rfl h zero_le_one hb
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem lt_mul_of_one_lt_right : 0 < b → 1 < a → b < b * a := by
   classical <;> exact Decidable.lt_mul_of_one_lt_right
 
@@ -425,7 +426,7 @@ protected theorem Decidable.lt_mul_of_one_lt_left [@DecidableRel α (· ≤ ·)]
     rwa [one_mulₓ] at this
   Decidable.mul_lt_mul h le_rfl hb (zero_le_one.trans h.le)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem lt_mul_of_one_lt_left : 0 < b → 1 < a → b < a * b := by
   classical <;> exact Decidable.lt_mul_of_one_lt_left
 
@@ -442,7 +443,7 @@ protected theorem Decidable.add_le_mul_two_add [@DecidableRel α (· ≤ ·)] {a
       rw [mul_addₓ, mul_two, add_assocₓ]
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem add_le_mul_two_add {a b : α} : 2 ≤ a → 0 ≤ b → a + (2 + b) ≤ a * (2 + b) := by
   classical <;> exact Decidable.add_le_mul_two_add
 
@@ -451,21 +452,21 @@ protected theorem Decidable.one_le_mul_of_one_le_of_one_le [@DecidableRel α (·
     (b1 : 1 ≤ b) : (1 : α) ≤ a * b :=
   (mul_oneₓ (1 : α)).symm.le.trans (Decidable.mul_le_mul a1 b1 zero_le_one (zero_le_one.trans a1))
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem one_le_mul_of_one_le_of_one_le {a b : α} : 1 ≤ a → 1 ≤ b → (1 : α) ≤ a * b := by
   classical <;> exact Decidable.one_le_mul_of_one_le_of_one_le
 
 /-- Pullback an `ordered_semiring` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
-def Function.Injective.orderedSemiring {β : Type _} [Zero β] [One β] [Add β] [Mul β] [HasScalar ℕ β] [Pow β ℕ]
-    (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
-    (mul : ∀ x y, f (x * y) = f x * f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : OrderedSemiring β :=
-  { hf.OrderedCancelAddCommMonoid f zero add nsmul, hf.Semiring f zero one add mul nsmul npow with
+def Function.Injective.orderedSemiring {β : Type _} [Zero β] [One β] [Add β] [Mul β] [Pow β ℕ] [HasSmul ℕ β]
+    [HasNatCast β] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
+    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
+    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) : OrderedSemiring β :=
+  { hf.OrderedCancelAddCommMonoid f zero add nsmul, hf.Semiring f zero one add mul nsmul npow nat_cast with
     zero_le_one :=
       show f 0 ≤ f 1 by
-        simp only [zero, one, zero_le_one],
+        simp only [← zero, ← one, ← zero_le_one],
     mul_lt_mul_of_pos_left := fun a b c ab c0 =>
       show f (c * a) < f (c * b) by
         rw [mul, mul]
@@ -502,7 +503,7 @@ protected theorem Decidable.one_lt_mul [@DecidableRel α (· ≤ ·)] (ha : 1 �
   nontriviality
   exact one_mulₓ (1 : α) ▸ Decidable.mul_lt_mul' ha hb zero_le_one (zero_lt_one.trans_le ha)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem one_lt_mul : 1 ≤ a → 1 < b → 1 < a * b := by
   classical <;> exact Decidable.one_lt_mul
 
@@ -510,7 +511,7 @@ theorem one_lt_mul : 1 ≤ a → 1 < b → 1 < a * b := by
 protected theorem Decidable.mul_le_one [@DecidableRel α (· ≤ ·)] (ha : a ≤ 1) (hb' : 0 ≤ b) (hb : b ≤ 1) : a * b ≤ 1 :=
   one_mulₓ (1 : α) ▸ Decidable.mul_le_mul ha hb hb' zero_le_one
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_le_one : a ≤ 1 → 0 ≤ b → b ≤ 1 → a * b ≤ 1 := by
   classical <;> exact Decidable.mul_le_one
 
@@ -520,7 +521,7 @@ protected theorem Decidable.one_lt_mul_of_le_of_lt [@DecidableRel α (· ≤ ·)
   calc 1 = 1 * 1 := by
       rw [one_mulₓ]_ < a * b := Decidable.mul_lt_mul' ha hb zero_le_one (zero_lt_one.trans_le ha)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem one_lt_mul_of_le_of_lt : 1 ≤ a → 1 < b → 1 < a * b := by
   classical <;> exact Decidable.one_lt_mul_of_le_of_lt
 
@@ -530,7 +531,7 @@ protected theorem Decidable.one_lt_mul_of_lt_of_le [@DecidableRel α (· ≤ ·)
   calc 1 = 1 * 1 := by
       rw [one_mulₓ]_ < a * b := Decidable.mul_lt_mul ha hb zero_lt_one <| zero_le_one.trans ha.le
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem one_lt_mul_of_lt_of_le : 1 < a → 1 ≤ b → 1 < a * b := by
   classical <;> exact Decidable.one_lt_mul_of_lt_of_le
 
@@ -541,7 +542,7 @@ protected theorem Decidable.mul_le_of_le_one_right [@DecidableRel α (· ≤ ·)
     _ = a := mul_oneₓ a
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_le_of_le_one_right : 0 ≤ a → b ≤ 1 → a * b ≤ a := by
   classical <;> exact Decidable.mul_le_of_le_one_right
 
@@ -552,7 +553,7 @@ protected theorem Decidable.mul_le_of_le_one_left [@DecidableRel α (· ≤ ·)]
     _ = b := one_mulₓ b
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_le_of_le_one_left : 0 ≤ b → a ≤ 1 → a * b ≤ b := by
   classical <;> exact Decidable.mul_le_of_le_one_left
 
@@ -564,7 +565,7 @@ protected theorem Decidable.mul_lt_one_of_nonneg_of_lt_one_left [@DecidableRel �
     _ < 1 := ha
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_lt_one_of_nonneg_of_lt_one_left : 0 ≤ a → a < 1 → b ≤ 1 → a * b < 1 := by
   classical <;> exact Decidable.mul_lt_one_of_nonneg_of_lt_one_left
 
@@ -576,9 +577,18 @@ protected theorem Decidable.mul_lt_one_of_nonneg_of_lt_one_right [@DecidableRel 
     _ < 1 := hb
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_lt_one_of_nonneg_of_lt_one_right : a ≤ 1 → 0 ≤ b → b < 1 → a * b < 1 := by
   classical <;> exact Decidable.mul_lt_one_of_nonneg_of_lt_one_right
+
+theorem Nat.strict_mono_cast [Nontrivial α] : StrictMono (coe : ℕ → α) :=
+  strict_mono_nat_of_lt_succ fun n => by
+    rw [Nat.cast_succₓ] <;> apply lt_add_one
+
+/-- Note this is not an instance as `char_zero` implies `nontrivial`,
+and this would risk forming a loop. -/
+theorem OrderedSemiring.to_char_zero [Nontrivial α] : CharZero α :=
+  ⟨Nat.strict_mono_cast.Injective⟩
 
 section HasExistsAddOfLe
 
@@ -622,11 +632,12 @@ class OrderedCommSemiring (α : Type u) extends OrderedSemiring α, CommSemiring
 /-- Pullback an `ordered_comm_semiring` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
-def Function.Injective.orderedCommSemiring [OrderedCommSemiring α] {β : Type _} [Zero β] [One β] [Add β] [Mul β]
-    [HasScalar ℕ β] [Pow β ℕ] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
-    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : OrderedCommSemiring β :=
-  { hf.CommSemiring f zero one add mul nsmul npow, hf.OrderedSemiring f zero one add mul nsmul npow with }
+def Function.Injective.orderedCommSemiring [OrderedCommSemiring α] {β : Type _} [AddMonoidWithOneₓ β] [Mul β] [Pow β ℕ]
+    (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
+    (mul : ∀ x y, f (x * y) = f x * f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
+    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) : OrderedCommSemiring β :=
+  { hf.CommSemiring f zero one add mul nsmul npow nat_cast,
+    hf.OrderedSemiring f zero one add mul nsmul npow nat_cast with }
 
 end OrderedCommSemiring
 
@@ -690,7 +701,7 @@ theorem pos_and_pos_or_neg_and_neg_of_mul_pos (hab : 0 < a * b) : 0 < a ∧ 0 < 
 theorem nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg (hab : 0 ≤ a * b) : 0 ≤ a ∧ 0 ≤ b ∨ a ≤ 0 ∧ b ≤ 0 := by
   have := @LinearOrderₓ.decidableLe α _
   refine' Decidable.or_iff_not_and_not.2 _
-  simp only [not_and, not_leₓ]
+  simp only [← not_and, ← not_leₓ]
   intro ab nab
   apply not_lt_of_le hab _
   rcases lt_trichotomyₓ 0 a with (ha | rfl | ha)
@@ -902,11 +913,12 @@ instance (priority := 100) LinearOrderedSemiring.to_no_max_order {α : Type _} [
 /-- Pullback a `linear_ordered_semiring` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
-def Function.Injective.linearOrderedSemiring {β : Type _} [Zero β] [One β] [Add β] [Mul β] [HasScalar ℕ β] [Pow β ℕ]
-    (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
-    (mul : ∀ x y, f (x * y) = f x * f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : LinearOrderedSemiring β :=
-  { LinearOrderₓ.lift f hf, pullback_nonzero f zero one, hf.OrderedSemiring f zero one add mul nsmul npow with }
+def Function.Injective.linearOrderedSemiring {β : Type _} [Zero β] [One β] [Add β] [Mul β] [Pow β ℕ] [HasSmul ℕ β]
+    [HasNatCast β] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
+    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
+    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) : LinearOrderedSemiring β :=
+  { LinearOrderₓ.lift f hf, pullback_nonzero f zero one,
+    hf.OrderedSemiring f zero one add mul nsmul npow nat_cast with }
 
 @[simp]
 theorem Units.inv_pos {u : αˣ} : (0 : α) < ↑u⁻¹ ↔ (0 : α) < u :=
@@ -917,6 +929,10 @@ theorem Units.inv_pos {u : αˣ} : (0 : α) < ↑u⁻¹ ↔ (0 : α) < u :=
 theorem Units.inv_neg {u : αˣ} : ↑u⁻¹ < (0 : α) ↔ ↑u < (0 : α) :=
   have : ∀ {u : αˣ}, ↑u < (0 : α) → ↑u⁻¹ < (0 : α) := fun u h => neg_of_mul_pos_left (u.mul_inv.symm ▸ zero_lt_one) h.le
   ⟨this, this⟩
+
+-- see Note [lower instance priority]
+instance (priority := 100) LinearOrderedSemiring.to_char_zero : CharZero α :=
+  OrderedSemiring.to_char_zero
 
 end LinearOrderedSemiring
 
@@ -1005,14 +1021,14 @@ variable [OrderedRing α] {a b c : α}
 protected theorem Decidable.OrderedRing.mul_nonneg [@DecidableRel α (· ≤ ·)] {a b : α} (h₁ : 0 ≤ a) (h₂ : 0 ≤ b) :
     0 ≤ a * b := by
   by_cases' ha : a ≤ 0
-  · simp [le_antisymmₓ ha h₁]
+  · simp [← le_antisymmₓ ha h₁]
     
   by_cases' hb : b ≤ 0
-  · simp [le_antisymmₓ hb h₂]
+  · simp [← le_antisymmₓ hb h₂]
     
   exact (le_not_le_of_ltₓ (OrderedRing.mul_pos a b (h₁.lt_of_not_le ha) (h₂.lt_of_not_le hb))).1
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem OrderedRing.mul_nonneg : 0 ≤ a → 0 ≤ b → 0 ≤ a * b := by
   classical <;> exact Decidable.OrderedRing.mul_nonneg
 
@@ -1022,7 +1038,7 @@ protected theorem Decidable.OrderedRing.mul_le_mul_of_nonneg_left [@DecidableRel
   rw [← sub_nonneg, ← mul_sub]
   exact Decidable.OrderedRing.mul_nonneg h₂ (sub_nonneg.2 h₁)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem OrderedRing.mul_le_mul_of_nonneg_left : a ≤ b → 0 ≤ c → c * a ≤ c * b := by
   classical <;> exact Decidable.OrderedRing.mul_le_mul_of_nonneg_left
 
@@ -1032,7 +1048,7 @@ protected theorem Decidable.OrderedRing.mul_le_mul_of_nonneg_right [@DecidableRe
   rw [← sub_nonneg, ← sub_mul]
   exact Decidable.OrderedRing.mul_nonneg (sub_nonneg.2 h₁) h₂
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem OrderedRing.mul_le_mul_of_nonneg_right : a ≤ b → 0 ≤ c → a * c ≤ b * c := by
   classical <;> exact Decidable.OrderedRing.mul_le_mul_of_nonneg_right
 
@@ -1060,7 +1076,7 @@ protected theorem Decidable.mul_le_mul_of_nonpos_left [@DecidableRel α (· ≤ 
     rwa [neg_mul, neg_mul] at this
   le_of_neg_le_neg this
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_le_mul_of_nonpos_left {a b c : α} : b ≤ a → c ≤ 0 → c * a ≤ c * b := by
   classical <;> exact Decidable.mul_le_mul_of_nonpos_left
 
@@ -1073,7 +1089,7 @@ protected theorem Decidable.mul_le_mul_of_nonpos_right [@DecidableRel α (· ≤
     rwa [mul_neg, mul_neg] at this
   le_of_neg_le_neg this
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_le_mul_of_nonpos_right {a b c : α} : b ≤ a → c ≤ 0 → a * c ≤ b * c := by
   classical <;> exact Decidable.mul_le_mul_of_nonpos_right
 
@@ -1083,7 +1099,7 @@ protected theorem Decidable.mul_nonneg_of_nonpos_of_nonpos [@DecidableRel α (·
   have : 0 * b ≤ a * b := Decidable.mul_le_mul_of_nonpos_right ha hb
   rwa [zero_mul] at this
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_nonneg_of_nonpos_of_nonpos {a b : α} : a ≤ 0 → b ≤ 0 → 0 ≤ a * b := by
   classical <;> exact Decidable.mul_nonneg_of_nonpos_of_nonpos
 
@@ -1108,12 +1124,14 @@ theorem mul_pos_of_neg_of_neg {a b : α} (ha : a < 0) (hb : b < 0) : 0 < a * b :
 /-- Pullback an `ordered_ring` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
-def Function.Injective.orderedRing {β : Type _} [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [HasScalar ℕ β]
-    [HasScalar ℤ β] [Pow β ℕ] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
-    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
+def Function.Injective.orderedRing {β : Type _} [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [HasSmul ℕ β]
+    [HasSmul ℤ β] [Pow β ℕ] [HasNatCast β] [HasIntCast β] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0)
+    (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
     (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : OrderedRing β :=
-  { hf.OrderedSemiring f zero one add mul nsmul npow, hf.Ring f zero one add mul neg sub nsmul zsmul npow with
+    (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n)
+    (int_cast : ∀ n : ℤ, f n = n) : OrderedRing β :=
+  { hf.OrderedSemiring f zero one add mul nsmul npow nat_cast,
+    hf.Ring f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with
     mul_pos := fun a b a0 b0 =>
       show f 0 < f (a * b) by
         rw [zero, mul]
@@ -1147,12 +1165,13 @@ instance (priority := 100) OrderedCommRing.toOrderedCommSemiring {α : Type u} [
 See note [reducible non-instances]. -/
 @[reducible]
 def Function.Injective.orderedCommRing [OrderedCommRing α] {β : Type _} [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β]
-    [HasScalar ℕ β] [HasScalar ℤ β] [Pow β ℕ] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
-    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
-    (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : OrderedCommRing β :=
-  { hf.OrderedRing f zero one add mul neg sub nsmul zsmul npow,
-    hf.CommRing f zero one add mul neg sub nsmul zsmul npow with }
+    [Pow β ℕ] [HasSmul ℕ β] [HasSmul ℤ β] [HasNatCast β] [HasIntCast β] (f : β → α) (hf : Function.Injective f)
+    (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
+    (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
+    (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n)
+    (int_cast : ∀ n : ℤ, f n = n) : OrderedCommRing β :=
+  { hf.OrderedRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast,
+    hf.CommRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with }
 
 end OrderedCommRing
 
@@ -1230,7 +1249,8 @@ theorem abs_mul (a b : α) : abs (a * b) = abs a * abs b := by
   rw [abs_eq (Decidable.mul_nonneg (abs_nonneg a) (abs_nonneg b))]
   cases' le_totalₓ a 0 with ha ha <;>
     cases' le_totalₓ b 0 with hb hb <;>
-      simp only [abs_of_nonpos, abs_of_nonneg, true_orₓ, or_trueₓ, eq_self_iff_true, neg_mul, mul_neg, neg_negₓ, *]
+      simp only [← abs_of_nonpos, ← abs_of_nonneg, ← true_orₓ, ← or_trueₓ, ← eq_self_iff_true, ← neg_mul, ← mul_neg, ←
+        neg_negₓ, *]
 
 /-- `abs` as a `monoid_with_zero_hom`. -/
 def absHom : α →*₀ α :=
@@ -1269,11 +1289,11 @@ theorem mul_self_nonneg (a : α) : 0 ≤ a * a :=
 
 @[simp]
 theorem neg_le_self_iff : -a ≤ a ↔ 0 ≤ a := by
-  simp [neg_le_iff_add_nonneg, ← two_mul, mul_nonneg_iff, zero_le_one, (@zero_lt_two α _ _).not_le]
+  simp [← neg_le_iff_add_nonneg, two_mul, ← mul_nonneg_iff, ← zero_le_one, ← (@zero_lt_two α _ _).not_le]
 
 @[simp]
 theorem neg_lt_self_iff : -a < a ↔ 0 < a := by
-  simp [neg_lt_iff_pos_add, ← two_mul, mul_pos_iff, zero_lt_one, (@zero_lt_two α _ _).not_lt]
+  simp [← neg_lt_iff_pos_add, two_mul, ← mul_pos_iff, ← zero_lt_one, ← (@zero_lt_two α _ _).not_lt]
 
 @[simp]
 theorem le_neg_self_iff : a ≤ -a ↔ a ≤ 0 :=
@@ -1295,11 +1315,11 @@ theorem lt_neg_self_iff : a < -a ↔ a < 0 :=
 
 @[simp]
 theorem abs_eq_self : abs a = a ↔ 0 ≤ a := by
-  simp [abs_eq_max_neg]
+  simp [← abs_eq_max_neg]
 
 @[simp]
 theorem abs_eq_neg_self : abs a = -a ↔ a ≤ 0 := by
-  simp [abs_eq_max_neg]
+  simp [← abs_eq_max_neg]
 
 /-- For an element `a` of a linear ordered ring, either `abs a = a` and `0 ≤ a`,
     or `abs a = -a` and `a < 0`.
@@ -1313,6 +1333,11 @@ theorem abs_cases (a : α) : abs a = a ∧ 0 ≤ a ∨ abs a = -a ∧ a < 0 := b
     push_neg  at h
     exact ⟨abs_eq_neg_self.mpr (le_of_ltₓ h), h⟩
     
+
+@[simp]
+theorem max_zero_add_max_neg_zero_eq_abs_self (a : α) : max a 0 + max (-a) 0 = abs a := by
+  symm
+  rcases le_totalₓ 0 a with (ha | ha) <;> simp [← ha]
 
 theorem gt_of_mul_lt_mul_neg_left (h : c * a < c * b) (hc : c ≤ 0) : b < a :=
   have nhc : 0 ≤ -c := neg_nonneg_of_nonpos hc
@@ -1409,18 +1434,19 @@ theorem abs_le_iff_mul_self_le : abs a ≤ abs b ↔ a * a ≤ b * b := by
   exact mul_self_le_mul_self_iff (abs_nonneg a) (abs_nonneg b)
 
 theorem abs_le_one_iff_mul_self_le_one : abs a ≤ 1 ↔ a * a ≤ 1 := by
-  simpa only [abs_one, one_mulₓ] using @abs_le_iff_mul_self_le α _ a 1
+  simpa only [← abs_one, ← one_mulₓ] using @abs_le_iff_mul_self_le α _ a 1
 
 /-- Pullback a `linear_ordered_ring` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
-def Function.Injective.linearOrderedRing {β : Type _} [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [HasScalar ℕ β]
-    [HasScalar ℤ β] [Pow β ℕ] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
-    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
+def Function.Injective.linearOrderedRing {β : Type _} [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [HasSmul ℕ β]
+    [HasSmul ℤ β] [Pow β ℕ] [HasNatCast β] [HasIntCast β] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0)
+    (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
     (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : LinearOrderedRing β :=
+    (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n)
+    (int_cast : ∀ n : ℤ, f n = n) : LinearOrderedRing β :=
   { LinearOrderₓ.lift f hf, pullback_nonzero f zero one,
-    hf.OrderedRing f zero one add mul neg sub nsmul zsmul npow with }
+    hf.OrderedRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with }
 
 end LinearOrderedRing
 
@@ -1450,13 +1476,14 @@ theorem max_mul_mul_le_max_mul_max (b c : α) (ha : 0 ≤ a) (hd : 0 ≤ d) : ma
     Decidable.mul_le_mul (le_max_rightₓ a c) (le_max_rightₓ b d) hd (le_transₓ ha (le_max_leftₓ a c))
   max_leₓ
     (by
-      simpa [mul_comm, max_commₓ] using ba)
+      simpa [← mul_comm, ← max_commₓ] using ba)
     (by
-      simpa [mul_comm, max_commₓ] using cd)
+      simpa [← mul_comm, ← max_commₓ] using cd)
 
 theorem abs_sub_sq (a b : α) : abs (a - b) * abs (a - b) = a * a + b * b - (1 + 1) * a * b := by
   rw [abs_mul_abs_self]
-  simp only [mul_addₓ, add_commₓ, add_left_commₓ, mul_comm, sub_eq_add_neg, mul_oneₓ, mul_neg, neg_add_rev, neg_negₓ]
+  simp only [← mul_addₓ, ← add_commₓ, ← add_left_commₓ, ← mul_comm, ← sub_eq_add_neg, ← mul_oneₓ, ← mul_neg, ←
+    neg_add_rev, ← neg_negₓ]
 
 end LinearOrderedCommRing
 
@@ -1466,14 +1493,14 @@ variable [Ringₓ α] [LinearOrderₓ α] {a b : α}
 
 @[simp]
 theorem abs_dvd (a b : α) : abs a ∣ b ↔ a ∣ b := by
-  cases' abs_choice a with h h <;> simp only [h, neg_dvd]
+  cases' abs_choice a with h h <;> simp only [← h, ← neg_dvd]
 
 theorem abs_dvd_self (a : α) : abs a ∣ a :=
   (abs_dvd a a).mpr (dvd_refl a)
 
 @[simp]
 theorem dvd_abs (a b : α) : a ∣ abs b ↔ a ∣ b := by
-  cases' abs_choice b with h h <;> simp only [h, dvd_neg]
+  cases' abs_choice b with h h <;> simp only [← h, ← dvd_neg]
 
 theorem self_dvd_abs (a : α) : a ∣ abs a :=
   (dvd_abs a a).mpr (dvd_refl a)
@@ -1490,13 +1517,14 @@ variable [LinearOrderedCommRing α]
 /-- Pullback a `linear_ordered_comm_ring` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
-def Function.Injective.linearOrderedCommRing {β : Type _} [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β]
-    [HasScalar ℕ β] [HasScalar ℤ β] [Pow β ℕ] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
-    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
+def Function.Injective.linearOrderedCommRing {β : Type _} [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [Pow β ℕ]
+    [HasSmul ℕ β] [HasSmul ℤ β] [HasNatCast β] [HasIntCast β] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0)
+    (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
     (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : LinearOrderedCommRing β :=
+    (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n)
+    (int_cast : ∀ n : ℤ, f n = n) : LinearOrderedCommRing β :=
   { LinearOrderₓ.lift f hf, pullback_nonzero f zero one,
-    hf.OrderedCommRing f zero one add mul neg sub nsmul zsmul npow with }
+    hf.OrderedCommRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with }
 
 end LinearOrderedCommRing
 
@@ -1596,7 +1624,7 @@ theorem zero_lt_one [Nontrivial α] : (0 : α) < 1 :=
 
 @[simp]
 theorem mul_pos : 0 < a * b ↔ 0 < a ∧ 0 < b := by
-  simp only [pos_iff_ne_zero, Ne.def, mul_eq_zero, not_or_distrib]
+  simp only [← pos_iff_ne_zero, ← Ne.def, ← mul_eq_zero, ← not_or_distrib]
 
 end CanonicallyOrderedCommSemiring
 
@@ -1619,7 +1647,7 @@ protected theorem mul_tsub (h : AddLeCancellable (a * c)) : a * (b - c) = a * b 
     
 
 protected theorem tsub_mul (h : AddLeCancellable (b * c)) : (a - b) * c = a * c - b * c := by
-  simp only [mul_comm _ c] at *
+  simp only [← mul_comm _ c] at *
   exact h.mul_tsub
 
 end AddLeCancellable
@@ -1646,6 +1674,15 @@ namespace WithTop
 instance [Nonempty α] : Nontrivial (WithTop α) :=
   Option.nontrivial
 
+instance [AddMonoidWithOneₓ α] : AddMonoidWithOneₓ (WithTop α) :=
+  { WithTop.addMonoid, WithTop.hasOne with natCast := fun n => ((n : α) : WithTop α),
+    nat_cast_zero :=
+      show (((0 : ℕ) : α) : WithTop α) = 0 by
+        simp ,
+    nat_cast_succ :=
+      show ∀ n, (((n + 1 : ℕ) : α) : WithTop α) = (((n : ℕ) : α) : WithTop α) + 1 by
+        simp [← WithTop.coe_add] }
+
 variable [DecidableEq α]
 
 section Mul
@@ -1663,11 +1700,11 @@ theorem mul_def {a b : WithTop α} : a * b = if a = 0 ∨ b = 0 then 0 else a.bi
 
 @[simp]
 theorem mul_top {a : WithTop α} (h : a ≠ 0) : a * ⊤ = ⊤ := by
-  cases a <;> simp [mul_def, h] <;> rfl
+  cases a <;> simp [← mul_def, ← h] <;> rfl
 
 @[simp]
 theorem top_mul {a : WithTop α} (h : a ≠ 0) : ⊤ * a = ⊤ := by
-  cases a <;> simp [mul_def, h] <;> rfl
+  cases a <;> simp [← mul_def, ← h] <;> rfl
 
 @[simp]
 theorem top_mul_top : (⊤ * ⊤ : WithTop α) = ⊤ :=
@@ -1682,40 +1719,40 @@ variable [MulZeroClassₓ α]
 @[norm_cast]
 theorem coe_mul {a b : α} : (↑(a * b) : WithTop α) = a * b :=
   (Decidable.byCases fun this : a = 0 => by
-      simp [this])
+      simp [← this])
     fun ha =>
     (Decidable.byCases fun this : b = 0 => by
-        simp [this])
+        simp [← this])
       fun hb => by
-      simp [*, mul_def]
+      simp [*, ← mul_def]
       rfl
 
 theorem mul_coe {b : α} (hb : b ≠ 0) : ∀ {a : WithTop α}, a * b = a.bind fun a : α => ↑(a * b)
   | none =>
     show (if (⊤ : WithTop α) = 0 ∨ (b : WithTop α) = 0 then 0 else ⊤ : WithTop α) = ⊤ by
-      simp [hb]
+      simp [← hb]
   | some a => show ↑a * ↑b = ↑(a * b) from coe_mul.symm
 
 @[simp]
 theorem mul_eq_top_iff {a b : WithTop α} : a * b = ⊤ ↔ a ≠ 0 ∧ b = ⊤ ∨ a = ⊤ ∧ b ≠ 0 := by
-  cases a <;> cases b <;> simp only [none_eq_top, some_eq_coe]
-  · simp [← coe_mul]
+  cases a <;> cases b <;> simp only [← none_eq_top, ← some_eq_coe]
+  · simp [coe_mul]
     
   · suffices ⊤ * (b : WithTop α) = ⊤ ↔ b ≠ 0 by
       simpa
-    by_cases' hb : b = 0 <;> simp [hb]
+    by_cases' hb : b = 0 <;> simp [← hb]
     
   · suffices (a : WithTop α) * ⊤ = ⊤ ↔ a ≠ 0 by
       simpa
-    by_cases' ha : a = 0 <;> simp [ha]
+    by_cases' ha : a = 0 <;> simp [← ha]
     
-  · simp [← coe_mul]
+  · simp [coe_mul]
     
 
 theorem mul_lt_top [Preorderₓ α] {a b : WithTop α} (ha : a ≠ ⊤) (hb : b ≠ ⊤) : a * b < ⊤ := by
   lift a to α using ha
   lift b to α using hb
-  simp only [← coe_mul, coe_lt_top]
+  simp only [coe_mul, ← coe_lt_top]
 
 end MulZeroClassₓ
 
@@ -1729,7 +1766,7 @@ instance [MulZeroOneClassₓ α] [Nontrivial α] : MulZeroOneClassₓ (WithTop �
           simp [-WithTop.coe_one]
       | some a =>
         show ((1 : α) : WithTop α) * a = a by
-          simp [coe_mul.symm, -WithTop.coe_one],
+          simp [← coe_mul.symm, -WithTop.coe_one],
     mul_one := fun a =>
       match a with
       | none =>
@@ -1737,7 +1774,7 @@ instance [MulZeroOneClassₓ α] [Nontrivial α] : MulZeroOneClassₓ (WithTop �
           simp [-WithTop.coe_one]
       | some a =>
         show ↑a * ((1 : α) : WithTop α) = a by
-          simp [coe_mul.symm, -WithTop.coe_one] }
+          simp [← coe_mul.symm, -WithTop.coe_one] }
 
 /-- A version of `with_top.map` for `monoid_with_zero_hom`s. -/
 @[simps (config := { fullyApplied := false })]
@@ -1754,32 +1791,32 @@ protected def _root_.monoid_with_zero_hom.with_top_map {R S : Type _} [MulZeroOn
       · simp
         
       induction x using WithTop.recTopCoe
-      · simp [hy, this]
+      · simp [← hy, ← this]
         
       induction y using WithTop.recTopCoe
       · have : (f x : WithTop S) ≠ 0 := by
-          simpa [hf.eq_iff' (map_zero f)] using hx
-        simp [hx, this]
+          simpa [← hf.eq_iff' (map_zero f)] using hx
+        simp [← hx, ← this]
         
-      simp [← coe_mul] }
+      simp [coe_mul] }
 
 instance [MulZeroClassₓ α] [NoZeroDivisors α] : NoZeroDivisors (WithTop α) :=
   ⟨fun a b => by
-    cases a <;> cases b <;> dsimp' [mul_def] <;> split_ifs <;> simp_all [none_eq_top, some_eq_coe, mul_eq_zero]⟩
+    cases a <;> cases b <;> dsimp' [← mul_def] <;> split_ifs <;> simp_all [← none_eq_top, ← some_eq_coe, ← mul_eq_zero]⟩
 
 instance [SemigroupWithZeroₓ α] [NoZeroDivisors α] : SemigroupWithZeroₓ (WithTop α) :=
   { WithTop.mulZeroClass with mul := (· * ·), zero := 0,
     mul_assoc := fun a b c => by
       cases a
-      · by_cases' hb : b = 0 <;> by_cases' hc : c = 0 <;> simp [*, none_eq_top]
+      · by_cases' hb : b = 0 <;> by_cases' hc : c = 0 <;> simp [*, ← none_eq_top]
         
       cases b
-      · by_cases' ha : a = 0 <;> by_cases' hc : c = 0 <;> simp [*, none_eq_top, some_eq_coe]
+      · by_cases' ha : a = 0 <;> by_cases' hc : c = 0 <;> simp [*, ← none_eq_top, ← some_eq_coe]
         
       cases c
-      · by_cases' ha : a = 0 <;> by_cases' hb : b = 0 <;> simp [*, none_eq_top, some_eq_coe]
+      · by_cases' ha : a = 0 <;> by_cases' hb : b = 0 <;> simp [*, ← none_eq_top, ← some_eq_coe]
         
-      simp [some_eq_coe, coe_mul.symm, mul_assoc] }
+      simp [← some_eq_coe, ← coe_mul.symm, ← mul_assoc] }
 
 instance [MonoidWithZeroₓ α] [NoZeroDivisors α] [Nontrivial α] : MonoidWithZeroₓ (WithTop α) :=
   { WithTop.mulZeroOneClass, WithTop.semigroupWithZero with }
@@ -1788,25 +1825,25 @@ instance [CommMonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] : CommMonoi
   { WithTop.monoidWithZero with mul := (· * ·), zero := 0,
     mul_comm := fun a b => by
       by_cases' ha : a = 0
-      · simp [ha]
+      · simp [← ha]
         
       by_cases' hb : b = 0
-      · simp [hb]
+      · simp [← hb]
         
-      simp [ha, hb, mul_def, Option.bind_comm a b, mul_comm] }
+      simp [← ha, ← hb, ← mul_def, ← Option.bind_comm a b, ← mul_comm] }
 
 variable [CanonicallyOrderedCommSemiring α]
 
 private theorem distrib' (a b c : WithTop α) : (a + b) * c = a * c + b * c := by
   cases c
   · show (a + b) * ⊤ = a * ⊤ + b * ⊤
-    by_cases' ha : a = 0 <;> simp [ha]
+    by_cases' ha : a = 0 <;> simp [← ha]
     
   · show (a + b) * c = a * c + b * c
     by_cases' hc : c = 0
-    · simp [hc]
+    · simp [← hc]
       
-    simp [mul_coe hc]
+    simp [← mul_coe hc]
     cases a <;> cases b
     repeat'
       first |
@@ -1818,7 +1855,7 @@ private theorem distrib' (a b c : WithTop α) : (a + b) * c = a * c + b * c := b
 that derives from both `non_assoc_non_unital_semiring` and `canonically_ordered_add_monoid`, both
 of which are required for distributivity. -/
 instance [Nontrivial α] : CommSemiringₓ (WithTop α) :=
-  { WithTop.addCommMonoid, WithTop.commMonoidWithZero with right_distrib := distrib',
+  { WithTop.addMonoidWithOne, WithTop.addCommMonoid, WithTop.commMonoidWithZero with right_distrib := distrib',
     left_distrib := fun a b c => by
       rw [mul_comm, distrib', mul_comm b, mul_comm c] <;> rfl }
 
@@ -1838,6 +1875,15 @@ namespace WithBot
 
 instance [Nonempty α] : Nontrivial (WithBot α) :=
   Option.nontrivial
+
+instance [AddMonoidWithOneₓ α] : AddMonoidWithOneₓ (WithBot α) :=
+  { WithBot.addMonoid, WithBot.hasOne with natCast := fun n => ((n : α) : WithBot α),
+    nat_cast_zero :=
+      show (((0 : ℕ) : α) : WithBot α) = 0 by
+        simp ,
+    nat_cast_succ :=
+      show ∀ n, (((n + 1 : ℕ) : α) : WithBot α) = (((n : ℕ) : α) : WithBot α) + 1 by
+        simp [← WithBot.coe_add] }
 
 variable [DecidableEq α]
 
@@ -1872,12 +1918,12 @@ variable [MulZeroClassₓ α]
 @[norm_cast]
 theorem coe_mul {a b : α} : (↑(a * b) : WithBot α) = a * b :=
   (Decidable.byCases fun this : a = 0 => by
-      simp [this])
+      simp [← this])
     fun ha =>
     (Decidable.byCases fun this : b = 0 => by
-        simp [this])
+        simp [← this])
       fun hb => by
-      simp [*, mul_def]
+      simp [*, ← mul_def]
       rfl
 
 theorem mul_coe {b : α} (hb : b ≠ 0) {a : WithBot α} : a * b = a.bind fun a : α => ↑(a * b) :=
@@ -1890,7 +1936,7 @@ theorem mul_eq_bot_iff {a b : WithBot α} : a * b = ⊥ ↔ a ≠ 0 ∧ b = ⊥ 
 theorem bot_lt_mul [Preorderₓ α] {a b : WithBot α} (ha : ⊥ < a) (hb : ⊥ < b) : ⊥ < a * b := by
   lift a to α using ne_bot_of_gt ha
   lift b to α using ne_bot_of_gt hb
-  simp only [← coe_mul, bot_lt_coe]
+  simp only [coe_mul, ← bot_lt_coe]
 
 end MulZeroClassₓ
 

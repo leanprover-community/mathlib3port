@@ -43,9 +43,9 @@ theorem tendsto_extend_from {A : Set X} {f : X → Y} {x : X} (h : ∃ y, Tendst
   tendsto_nhds_lim h
 
 theorem extend_from_eq [T2Space Y] {A : Set X} {f : X → Y} {x : X} {y : Y} (hx : x ∈ Closure A)
-    (hf : Tendsto f (𝓝[A] x) (𝓝 y)) : extendFrom A f x = y :=
+    (hf : Tendsto f (𝓝[A] x) (𝓝 y)) : extendFrom A f x = y := by
   have := mem_closure_iff_nhds_within_ne_bot.mp hx
-  tendsto_nhds_unique (tendsto_nhds_lim ⟨y, hf⟩) hf
+  exact tendsto_nhds_unique (tendsto_nhds_lim ⟨y, hf⟩) hf
 
 theorem extend_from_extends [T2Space Y] {f : X → Y} {A : Set X} (hf : ContinuousOn f A) :
     ∀, ∀ x ∈ A, ∀, extendFrom A f x = f x := fun x x_in => extend_from_eq (subset_closure x_in) (hf x x_in)
@@ -57,7 +57,7 @@ theorem continuous_on_extend_from [RegularSpace Y] {f : X → Y} {A B : Set X} (
   set φ := extendFrom A f
   intro x x_in
   suffices ∀, ∀ V' ∈ 𝓝 (φ x), ∀, IsClosed V' → φ ⁻¹' V' ∈ 𝓝[B] x by
-    simpa [ContinuousWithinAt, (closed_nhds_basis _).tendsto_right_iff]
+    simpa [← ContinuousWithinAt, ← (closed_nhds_basis _).tendsto_right_iff]
   intro V' V'_in V'_closed
   obtain ⟨V, V_in, V_op, hV⟩ : ∃ V ∈ 𝓝 x, IsOpen V ∧ V ∩ A ⊆ f ⁻¹' V' := by
     have := tendsto_extend_from (hf x x_in)
@@ -70,7 +70,7 @@ theorem continuous_on_extend_from [RegularSpace Y] {f : X → Y} {A B : Set X} (
   have limy : tendsto f (𝓝[A] y) (𝓝 <| φ y) := tendsto_extend_from (hf y hyB)
   have hVy : V ∈ 𝓝 y := IsOpen.mem_nhds V_op hyV
   have : V ∩ A ∈ 𝓝[A] y := by
-    simpa [inter_comm] using inter_mem_nhds_within _ hVy
+    simpa [← inter_comm] using inter_mem_nhds_within _ hVy
   exact V'_closed.mem_of_tendsto limy (mem_of_superset this hV)
 
 /-- If a function `f` to a regular space `Y` has a limit within a

@@ -115,28 +115,22 @@ instance [IsEmpty α] : IsEmpty αˢʸᵐ :=
   Function.is_empty unsym
 
 @[to_additive]
-instance [One α] : One αˢʸᵐ where
-  one := sym 1
+instance [One α] : One αˢʸᵐ where one := sym 1
 
-instance [Add α] : Add αˢʸᵐ where
-  add := fun a b => sym (unsym a + unsym b)
+instance [Add α] : Add αˢʸᵐ where add := fun a b => sym (unsym a + unsym b)
 
-instance [Sub α] : Sub αˢʸᵐ where
-  sub := fun a b => sym (unsym a - unsym b)
+instance [Sub α] : Sub αˢʸᵐ where sub := fun a b => sym (unsym a - unsym b)
 
-instance [Neg α] : Neg αˢʸᵐ where
-  neg := fun a => sym (-unsym a)
+instance [Neg α] : Neg αˢʸᵐ where neg := fun a => sym (-unsym a)
 
 -- Introduce the symmetrized multiplication
-instance [Add α] [Mul α] [One α] [Invertible (2 : α)] : Mul αˢʸᵐ where
-  mul := fun a b => sym (⅟ 2 * (unsym a * unsym b + unsym b * unsym a))
+instance [Add α] [Mul α] [One α] [Invertible (2 : α)] :
+    Mul αˢʸᵐ where mul := fun a b => sym (⅟ 2 * (unsym a * unsym b + unsym b * unsym a))
 
 @[to_additive]
-instance [Inv α] : Inv αˢʸᵐ where
-  inv := fun a => Sym <| (unsym a)⁻¹
+instance [Inv α] : Inv αˢʸᵐ where inv := fun a => Sym <| (unsym a)⁻¹
 
-instance (R : Type _) [HasScalar R α] : HasScalar R αˢʸᵐ where
-  smul := fun r a => sym (r • unsym a)
+instance (R : Type _) [HasSmul R α] : HasSmul R αˢʸᵐ where smul := fun r a => sym (r • unsym a)
 
 @[simp, to_additive]
 theorem sym_one [One α] : sym (1 : α) = 1 :=
@@ -191,11 +185,11 @@ theorem unsym_inv [Inv α] (a : αˢʸᵐ) : unsym a⁻¹ = (unsym a)⁻¹ :=
   rfl
 
 @[simp]
-theorem sym_smul {R : Type _} [HasScalar R α] (c : R) (a : α) : sym (c • a) = c • sym a :=
+theorem sym_smul {R : Type _} [HasSmul R α] (c : R) (a : α) : sym (c • a) = c • sym a :=
   rfl
 
 @[simp]
-theorem unsym_smul {R : Type _} [HasScalar R α] (c : R) (a : αˢʸᵐ) : unsym (c • a) = c • unsym a :=
+theorem unsym_smul {R : Type _} [HasSmul R α] (c : R) (a : αˢʸᵐ) : unsym (c • a) = c • unsym a :=
   rfl
 
 @[simp, to_additive]

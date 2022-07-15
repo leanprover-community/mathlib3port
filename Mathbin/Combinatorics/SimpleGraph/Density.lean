@@ -45,7 +45,7 @@ def edgeDensity (s : Finset α) (t : Finset β) : ℚ :=
 variable {r}
 
 theorem mem_interedges_iff {x : α × β} : x ∈ interedges r s t ↔ x.1 ∈ s ∧ x.2 ∈ t ∧ r x.1 x.2 := by
-  simp only [interedges, and_assoc, mem_filter, Finset.mem_product]
+  simp only [← interedges, ← and_assoc, ← mem_filter, ← Finset.mem_product]
 
 theorem mk_mem_interedges_iff : (a, b) ∈ interedges r s t ↔ a ∈ s ∧ b ∈ t ∧ r a b :=
   mem_interedges_iff
@@ -60,7 +60,7 @@ theorem interedges_mono (hs : s₂ ⊆ s₁) (ht : t₂ ⊆ t₁) : interedges r
 
 variable (r)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem card_interedges_add_card_interedges_compl (s : Finset α) (t : Finset β) :
     (interedges r s t).card + (interedges (fun x y => ¬r x y) s t).card = s.card * t.card := by
   classical
@@ -86,12 +86,12 @@ theorem interedges_disjoint_right (s : Finset α) {t t' : Finset β} (ht : Disjo
 theorem interedges_bUnion_left (s : Finset ι) (t : Finset β) (f : ι → Finset α) :
     interedges r (s.bUnion f) t = s.bUnion fun a => interedges r (f a) t :=
   ext fun a => by
-    simp only [mem_bUnion, mem_interedges_iff, exists_and_distrib_right]
+    simp only [← mem_bUnion, ← mem_interedges_iff, ← exists_and_distrib_right]
 
 theorem interedges_bUnion_right (s : Finset α) (t : Finset ι) (f : ι → Finset β) :
     interedges r s (t.bUnion f) = t.bUnion fun b => interedges r s (f b) :=
   ext fun a => by
-    simp only [mem_interedges_iff, mem_bUnion, ← exists_and_distrib_left, ← exists_and_distrib_right]
+    simp only [← mem_interedges_iff, ← mem_bUnion, exists_and_distrib_left, exists_and_distrib_right]
 
 theorem interedges_bUnion (s : Finset ι) (t : Finset κ) (f : ι → Finset α) (g : κ → Finset β) :
     interedges r (s.bUnion f) (t.bUnion g) = (s.product t).bUnion fun ab => interedges r (f ab.1) (g ab.2) := by
@@ -147,8 +147,8 @@ theorem mk_mem_interedges_comm : (a, b) ∈ interedges r s t ↔ (b, a) ∈ inte
   @swap_mem_interedges_iff _ _ _ _ _ hr (b, a)
 
 theorem card_interedges_comm (s t : Finset α) : (interedges r s t).card = (interedges r t s).card :=
-  Finset.card_congr (fun _ => x.swap) (fun x => (swap_mem_interedges_iff hr).2) (fun _ _ _ _ h => Prod.swap_injective h)
-    fun x h => ⟨x.swap, (swap_mem_interedges_iff hr).2 h, x.swap_swap⟩
+  Finset.card_congr (fun x : α × α _ => x.swap) (fun x => (swap_mem_interedges_iff hr).2)
+    (fun _ _ _ _ h => Prod.swap_injective h) fun x h => ⟨x.swap, (swap_mem_interedges_iff hr).2 h, x.swap_swap⟩
 
 theorem edge_density_comm (s t : Finset α) : edgeDensity r s t = edgeDensity r t s := by
   rw [edge_density, mul_comm, card_interedges_comm hr, edge_density]

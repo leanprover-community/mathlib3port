@@ -21,18 +21,19 @@ namespace Real
 
 /-- The type of angles -/
 def Angle : Type :=
-  ℝ ⧸ AddSubgroup.zmultiples (2 * π)
+  ℝ ⧸ AddSubgroup.zmultiples (2 * π)deriving AddCommGroupₓ, TopologicalSpace, TopologicalAddGroup
 
 namespace Angle
-
-instance Angle.addCommGroup : AddCommGroupₓ Angle :=
-  QuotientAddGroup.addCommGroup _
 
 instance : Inhabited Angle :=
   ⟨0⟩
 
 instance : Coe ℝ Angle :=
   ⟨QuotientAddGroup.mk' _⟩
+
+@[continuity]
+theorem continuous_coe : Continuous (coe : ℝ → Angle) :=
+  continuous_quotient_mk
 
 /-- Coercion `ℝ → angle` as an additive homomorphism. -/
 def coeHom : ℝ →+ angle :=
@@ -64,17 +65,23 @@ theorem coe_neg (x : ℝ) : ↑(-x : ℝ) = -(↑x : Angle) :=
 theorem coe_sub (x y : ℝ) : ↑(x - y : ℝ) = (↑x - ↑y : Angle) :=
   rfl
 
+theorem coe_nsmul (n : ℕ) (x : ℝ) : ↑(n • x : ℝ) = (n • ↑x : Angle) :=
+  rfl
+
+theorem coe_zsmul (z : ℤ) (x : ℝ) : ↑(z • x : ℝ) = (z • ↑x : Angle) :=
+  rfl
+
 @[simp, norm_cast]
 theorem coe_nat_mul_eq_nsmul (x : ℝ) (n : ℕ) : ↑((n : ℝ) * x) = n • (↑x : Angle) := by
-  simpa only [nsmul_eq_mul] using coe_hom.map_nsmul x n
+  simpa only [← nsmul_eq_mul] using coe_hom.map_nsmul x n
 
 @[simp, norm_cast]
 theorem coe_int_mul_eq_zsmul (x : ℝ) (n : ℤ) : ↑((n : ℝ) * x : ℝ) = n • (↑x : Angle) := by
-  simpa only [zsmul_eq_mul] using coe_hom.map_zsmul x n
+  simpa only [← zsmul_eq_mul] using coe_hom.map_zsmul x n
 
 theorem angle_eq_iff_two_pi_dvd_sub {ψ θ : ℝ} : (θ : Angle) = ψ ↔ ∃ k : ℤ, θ - ψ = 2 * π * k := by
-  simp only [QuotientAddGroup.eq, AddSubgroup.zmultiples_eq_closure, AddSubgroup.mem_closure_singleton, zsmul_eq_mul',
-    (sub_eq_neg_add _ _).symm, eq_comm]
+  simp only [← QuotientAddGroup.eq, ← AddSubgroup.zmultiples_eq_closure, ← AddSubgroup.mem_closure_singleton, ←
+    zsmul_eq_mul', ← (sub_eq_neg_add _ _).symm, ← eq_comm]
 
 @[simp]
 theorem coe_two_pi : ↑(2 * π : ℝ) = (0 : Angle) :=
@@ -86,18 +93,18 @@ theorem coe_two_pi : ↑(2 * π : ℝ) = (0 : Angle) :=
 theorem neg_coe_pi : -(π : Angle) = π := by
   rw [← coe_neg, angle_eq_iff_two_pi_dvd_sub]
   use -1
-  simp [two_mul, sub_eq_add_neg]
+  simp [← two_mul, ← sub_eq_add_neg]
 
 theorem sub_coe_pi_eq_add_coe_pi (θ : Angle) : θ - π = θ + π := by
   rw [sub_eq_add_neg, neg_coe_pi]
 
 @[simp]
 theorem two_nsmul_coe_pi : (2 : ℕ) • (π : Angle) = 0 := by
-  simp [← coe_nat_mul_eq_nsmul]
+  simp [coe_nat_mul_eq_nsmul]
 
 @[simp]
 theorem two_zsmul_coe_pi : (2 : ℤ) • (π : Angle) = 0 := by
-  simp [← coe_int_mul_eq_zsmul]
+  simp [coe_int_mul_eq_zsmul]
 
 @[simp]
 theorem coe_pi_add_coe_pi : (π : Real.Angle) + π = 0 := by
@@ -160,8 +167,7 @@ theorem cos_sin_inj {θ ψ : ℝ} (Hcos : cos θ = cos ψ) (Hsin : sin θ = sin 
   · exact hs
     
   rw [eq_neg_iff_add_eq_zero, hs] at hc
-  cases' Quotientₓ.exact' hc with n hn
-  change n • _ = _ at hn
+  obtain ⟨n, hn⟩ : ∃ n, n • _ = _ := quotient_add_group.left_rel_apply.mp (Quotientₓ.exact' hc)
   rw [← neg_one_mul, add_zeroₓ, ← sub_eq_zero, zsmul_eq_mul, ← mul_assoc, ← sub_mul, mul_eq_zero,
     eq_false_intro (ne_of_gtₓ pi_pos), or_falseₓ, sub_neg_eq_add, ← Int.cast_zeroₓ, ← Int.cast_oneₓ, ← Int.cast_bit0, ←
     Int.cast_mul, ← Int.cast_add, Int.cast_inj] at hn
@@ -177,6 +183,10 @@ def sin (θ : Angle) : ℝ :=
 theorem sin_coe (x : ℝ) : sin (x : Angle) = Real.sin x :=
   rfl
 
+@[continuity]
+theorem continuous_sin : Continuous sin :=
+  continuous_quotient_lift_on' _ Real.continuous_sin
+
 /-- The cosine of a `real.angle`. -/
 def cos (θ : Angle) : ℝ :=
   cos_periodic.lift θ
@@ -184,6 +194,10 @@ def cos (θ : Angle) : ℝ :=
 @[simp]
 theorem cos_coe (x : ℝ) : cos (x : Angle) = Real.cos x :=
   rfl
+
+@[continuity]
+theorem continuous_cos : Continuous cos :=
+  continuous_quotient_lift_on' _ Real.continuous_cos
 
 end Angle
 

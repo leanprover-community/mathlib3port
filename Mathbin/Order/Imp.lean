@@ -40,13 +40,13 @@ theorem imp_eq_arrow (p q : Prop) : p ⇒ₒ q = (p → q) :=
 
 @[simp]
 theorem biimp_eq_iff (p q : Prop) : p ⇔ₒ q = (p ↔ q) := by
-  simp [biimp, ← iff_def]
+  simp [← biimp, iff_def]
 
 variable [BooleanAlgebra α] {a b c d : α}
 
 @[simp]
 theorem compl_imp (a b : α) : (a ⇒ₒ b)ᶜ = a \ b := by
-  simp [imp, sdiff_eq]
+  simp [← imp, ← sdiff_eq]
 
 theorem compl_sdiff (a b : α) : (a \ b)ᶜ = a ⇒ₒ b := by
   rw [← compl_imp, compl_compl]
@@ -56,7 +56,7 @@ theorem imp_mono (h₁ : a ≤ b) (h₂ : c ≤ d) : b ⇒ₒ c ≤ a ⇒ₒ d :
   sup_le_sup (compl_le_compl h₁) h₂
 
 theorem inf_imp_eq (a b c : α) : a⊓(b ⇒ₒ c) = a ⇒ₒ b ⇒ₒ a⊓c := by
-  unfold imp <;> simp [inf_sup_left]
+  unfold imp <;> simp [← inf_sup_left]
 
 @[simp]
 theorem imp_eq_top_iff : a ⇒ₒ b = ⊤ ↔ a ≤ b := by
@@ -64,7 +64,7 @@ theorem imp_eq_top_iff : a ⇒ₒ b = ⊤ ↔ a ≤ b := by
 
 @[simp]
 theorem imp_eq_bot_iff : a ⇒ₒ b = ⊥ ↔ a = ⊤ ∧ b = ⊥ := by
-  simp [imp]
+  simp [← imp]
 
 @[simp]
 theorem imp_bot (a : α) : a ⇒ₒ ⊥ = aᶜ :=
@@ -72,7 +72,7 @@ theorem imp_bot (a : α) : a ⇒ₒ ⊥ = aᶜ :=
 
 @[simp]
 theorem top_imp (a : α) : ⊤ ⇒ₒ a = a := by
-  simp [imp]
+  simp [← imp]
 
 @[simp]
 theorem bot_imp (a : α) : ⊥ ⇒ₒ a = ⊤ :=
@@ -88,7 +88,7 @@ theorem imp_self (a : α) : a ⇒ₒ a = ⊤ :=
 
 @[simp]
 theorem compl_imp_compl (a b : α) : aᶜ ⇒ₒ bᶜ = b ⇒ₒ a := by
-  simp [imp, sup_comm]
+  simp [← imp, ← sup_comm]
 
 theorem imp_inf_le {α : Type _} [BooleanAlgebra α] (a b : α) : (a ⇒ₒ b)⊓a ≤ b := by
   unfold imp
@@ -96,7 +96,7 @@ theorem imp_inf_le {α : Type _} [BooleanAlgebra α] (a b : α) : (a ⇒ₒ b)�
   simp
 
 theorem inf_imp_eq_imp_imp (a b c : α) : a⊓b ⇒ₒ c = a ⇒ₒ (b ⇒ₒ c) := by
-  simp [imp, sup_assoc]
+  simp [← imp, ← sup_assoc]
 
 theorem le_imp_iff : a ≤ b ⇒ₒ c ↔ a⊓b ≤ c := by
   rw [imp, sup_comm, is_compl_compl.le_sup_right_iff_inf_left_le]
@@ -113,7 +113,7 @@ theorem biimp_comm (a b : α) : a ⇔ₒ b = b ⇔ₒ a := by
 
 @[simp]
 theorem biimp_eq_top_iff : a ⇔ₒ b = ⊤ ↔ a = b := by
-  simp [biimp, ← le_antisymm_iffₓ]
+  simp [← biimp, le_antisymm_iffₓ]
 
 @[simp]
 theorem biimp_self (a : α) : a ⇔ₒ a = ⊤ :=
@@ -123,14 +123,14 @@ theorem biimp_symm : a ≤ b ⇔ₒ c ↔ a ≤ c ⇔ₒ b := by
   rw [biimp_comm]
 
 theorem compl_symm_diff (a b : α) : (a ∆ b)ᶜ = a ⇔ₒ b := by
-  simp only [biimp, imp, symmDiff, sdiff_eq, compl_sup, compl_inf, compl_compl]
+  simp only [← biimp, ← imp, ← symmDiff, ← sdiff_eq, ← compl_sup, ← compl_inf, ← compl_compl]
 
 theorem compl_biimp (a b : α) : (a ⇔ₒ b)ᶜ = a ∆ b := by
   rw [← compl_symm_diff, compl_compl]
 
 @[simp]
 theorem compl_biimp_compl : aᶜ ⇔ₒ bᶜ = a ⇔ₒ b := by
-  simp [biimp, inf_comm]
+  simp [← biimp, ← inf_comm]
 
 end Lattice
 

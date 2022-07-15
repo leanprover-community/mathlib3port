@@ -173,7 +173,7 @@ section Mem
 
 /-- `a ∈ s` means that `a` has nonzero multiplicity in `s`. -/
 def Mem (a : α) (s : Multiset α) : Prop :=
-  Quot.liftOn s (fun l => a ∈ l) fun e : l₁ ~ l₂ => propext <| e.mem_iff
+  Quot.liftOn s (fun l => a ∈ l) fun l₁ l₂ e : l₁ ~ l₂ => propext <| e.mem_iff
 
 instance : HasMem α (Multiset α) :=
   ⟨Mem⟩
@@ -201,7 +201,7 @@ theorem forall_mem_cons {p : α → Prop} {a : α} {s : Multiset α} :
   (Quotientₓ.induction_on' s) fun L => List.forall_mem_consₓ
 
 theorem exists_cons_of_mem {s : Multiset α} {a : α} : a ∈ s → ∃ t, s = a ::ₘ t :=
-  (Quot.induction_on s) fun h : a ∈ l =>
+  (Quot.induction_on s) fun l h : a ∈ l =>
     let ⟨l₁, l₂, e⟩ := mem_split h
     e.symm ▸ ⟨(l₁ ++ l₂ : List α), Quot.sound perm_middle⟩
 
@@ -247,11 +247,11 @@ theorem cons_eq_cons {a b : α} {as bs : Multiset α} :
       
     · have : a ∈ b ::ₘ bs := Eq ▸ mem_cons_self _ _
       have : a ∈ bs := by
-        simpa [h]
+        simpa [← h]
       rcases exists_cons_of_mem this with ⟨cs, hcs⟩
-      simp [h, hcs]
+      simp [← h, ← hcs]
       have : a ::ₘ as = b ::ₘ a ::ₘ cs := by
-        simp [Eq, hcs]
+        simp [← Eq, ← hcs]
       have : a ::ₘ as = a ::ₘ b ::ₘ cs := by
         rwa [cons_swap]
       simpa using this
@@ -261,7 +261,7 @@ theorem cons_eq_cons {a b : α} {as bs : Multiset α} :
     rcases h with (⟨eq₁, eq₂⟩ | ⟨h, cs, eq₁, eq₂⟩)
     · simp [*]
       
-    · simp [*, cons_swap a b]
+    · simp [*, ← cons_swap a b]
       
     
 
@@ -310,7 +310,7 @@ theorem ssubset_cons {s : Multiset α} {a : α} (ha : a ∉ s) : s ⊂ a ::ₘ s
 
 @[simp]
 theorem cons_subset {a : α} {s t : Multiset α} : a ::ₘ s ⊆ t ↔ a ∈ t ∧ s ⊆ t := by
-  simp [subset_iff, or_imp_distrib, forall_and_distrib]
+  simp [← subset_iff, ← or_imp_distrib, ← forall_and_distrib]
 
 theorem cons_subset_cons {a : α} {s t : Multiset α} : s ⊆ t → a ::ₘ s ⊆ a ::ₘ t :=
   (Quotientₓ.induction_on₂ s t) fun _ _ => cons_subset_consₓ _
@@ -376,7 +376,7 @@ variable {s t : Multiset α} {a : α}
 theorem subset_of_le : s ≤ t → s ⊆ t :=
   (Quotientₓ.induction_on₂ s t) fun l₁ l₂ => Subperm.subset
 
-alias subset_of_le ← Multiset.Le.subset
+alias subset_of_le ← le.subset
 
 theorem mem_of_le (h : s ≤ t) : a ∈ s → a ∈ t :=
   mem_of_subset (subset_of_le h)
@@ -402,7 +402,7 @@ theorem le_zero : s ≤ 0 ↔ s = 0 :=
 theorem lt_cons_self (s : Multiset α) (a : α) : s < a ::ₘ s :=
   (Quot.induction_on s) fun l =>
     suffices l <+~ a :: l ∧ ¬l ~ a :: l by
-      simpa [lt_iff_le_and_ne]
+      simpa [← lt_iff_le_and_ne]
     ⟨(sublist_cons _ _).Subperm, fun p => ne_of_ltₓ (lt_succ_selfₓ (length l)) p.length_eq⟩
 
 theorem le_cons_self (s : Multiset α) (a : α) : s ≤ a ::ₘ s :=
@@ -441,7 +441,7 @@ theorem singleton_eq_cons (a : α) : singleton a = a ::ₘ 0 :=
 
 @[simp]
 theorem mem_singleton {a b : α} : b ∈ ({a} : Multiset α) ↔ b = a := by
-  simp only [singleton_eq_cons, mem_cons, iff_selfₓ, or_falseₓ, not_mem_zero]
+  simp only [← singleton_eq_cons, ← mem_cons, ← iff_selfₓ, ← or_falseₓ, ← not_mem_zero]
 
 theorem mem_singleton_self (a : α) : a ∈ ({a} : Multiset α) := by
   rw [singleton_eq_cons]
@@ -527,6 +527,11 @@ instance : CanonicallyOrderedAddMonoid (Multiset α) :=
         let ⟨l, p⟩ := s.exists_perm_append
         ⟨l, Quot.sound p⟩ }
 
+/-- This is a `rfl` and `simp` version of `bot_eq_zero`. -/
+@[simp]
+theorem bot_eq_zero : (⊥ : Multiset α) = 0 :=
+  rfl
+
 @[simp]
 theorem cons_add (a : α) (s t : Multiset α) : a ::ₘ s + t = a ::ₘ (s + t) := by
   rw [← singleton_add, ← singleton_add, add_assocₓ]
@@ -588,7 +593,7 @@ theorem card_cons (a : α) (s : Multiset α) : card (a ::ₘ s) = card s + 1 :=
 
 @[simp]
 theorem card_singleton (a : α) : card ({a} : Multiset α) = 1 := by
-  simp only [singleton_eq_cons, card_zero, eq_self_iff_true, zero_addₓ, card_cons]
+  simp only [← singleton_eq_cons, ← card_zero, ← eq_self_iff_true, ← zero_addₓ, ← card_cons]
 
 theorem card_pair (a b : α) : ({a, b} : Multiset α).card = 2 := by
   rw [insert_eq_cons, card_cons, card_singleton]
@@ -615,7 +620,7 @@ theorem lt_iff_cons_le {s t : Multiset α} : s < t ↔ ∃ a, a ::ₘ s ≤ t :=
 @[simp]
 theorem card_eq_zero {s : Multiset α} : card s = 0 ↔ s = 0 :=
   ⟨fun h => (eq_of_le_of_card_le (zero_le _) (le_of_eqₓ h)).symm, fun e => by
-    simp [e]⟩
+    simp [← e]⟩
 
 theorem card_pos {s : Multiset α} : 0 < card s ↔ s ≠ 0 :=
   pos_iff_ne_zero.trans <| not_congr card_eq_zero
@@ -704,11 +709,11 @@ theorem repeat_zero (a : α) : repeat a 0 = 0 :=
 
 @[simp]
 theorem repeat_succ (a : α) n : repeat a (n + 1) = a ::ₘ repeat a n := by
-  simp [repeat]
+  simp [← repeat]
 
 @[simp]
 theorem repeat_one (a : α) : repeat a 1 = {a} := by
-  simp only [repeat_succ, singleton_eq_cons, eq_self_iff_true, repeat_zero, cons_inj_right]
+  simp only [← repeat_succ, ← singleton_eq_cons, ← eq_self_iff_true, ← repeat_zero, ← cons_inj_right]
 
 @[simp]
 theorem card_repeat : ∀ a : α n, card (repeat a n) = n :=
@@ -830,7 +835,7 @@ theorem erase_le (a : α) (s : Multiset α) : s.erase a ≤ s :=
 @[simp]
 theorem erase_lt {a : α} {s : Multiset α} : s.erase a < s ↔ a ∈ s :=
   ⟨fun h => not_imp_comm.1 erase_of_not_mem (ne_of_ltₓ h), fun h => by
-    simpa [h] using lt_cons_self (s.erase a) a⟩
+    simpa [← h] using lt_cons_self (s.erase a) a⟩
 
 theorem erase_subset (a : α) (s : Multiset α) : s.erase a ⊆ s :=
   subset_of_le (erase_le a s)
@@ -899,7 +904,7 @@ theorem map_hcongr {β' : Type _} {m : Multiset α} {f : α → β} {f' : α →
     (hf : ∀, ∀ a ∈ m, ∀, HEq (f a) (f' a)) : HEq (map f m) (map f' m) := by
   subst h
   simp at hf
-  simp [map_congr rfl hf]
+  simp [← map_congr rfl hf]
 
 theorem forall_mem_map_iff {f : α → β} {p : β → Prop} {s : Multiset α} :
     (∀, ∀ y ∈ s.map f, ∀, p y) ↔ ∀, ∀ x ∈ s, ∀, p (f x) :=
@@ -1133,7 +1138,7 @@ theorem foldr_induction' (f : α → β → β) (H : LeftCommutative f) (x : β)
   refine'
     Multiset.induction
       (by
-        simp [px])
+        simp [← px])
       _
   intro a s hs hsa
   rw [foldr_cons]
@@ -1159,7 +1164,7 @@ theorem foldl_induction (f : α → α → α) (H : RightCommutative f) (x : α)
 /-- Lift of the list `pmap` operation. Map a partial function `f` over a multiset
   `s` whose elements are all in the domain of `f`. -/
 def pmap {p : α → Prop} (f : ∀ a, p a → β) (s : Multiset α) : (∀, ∀ a ∈ s, ∀, p a) → Multiset β :=
-  (Quot.recOn s fun l H => ↑(pmap f l H)) fun pp : l₁ ~ l₂ =>
+  (Quot.recOn s fun l H => ↑(pmap f l H)) fun l₁ l₂ pp : l₁ ~ l₂ =>
     funext fun H₂ : ∀, ∀ a ∈ l₂, ∀, p a =>
       have H₁ : ∀, ∀ a ∈ l₁, ∀, p a := fun a h => H₂ a (pp.Subset h)
       have :
@@ -1257,14 +1262,14 @@ protected def decidableForallMultiset {p : α → Prop} [hp : ∀ a, Decidable (
 instance decidableDforallMultiset {p : ∀, ∀ a ∈ m, ∀, Prop} [hp : ∀ a h : a ∈ m, Decidable (p a h)] :
     Decidable (∀ a h : a ∈ m, p a h) :=
   decidableOfDecidableOfIff (@Multiset.decidableForallMultiset { a // a ∈ m } m.attach (fun a => p a.1 a.2) _)
-    (Iff.intro (fun h a ha => h ⟨a, ha⟩ (mem_attach _ _)) fun _ => h _ _)
+    (Iff.intro (fun h a ha => h ⟨a, ha⟩ (mem_attach _ _)) fun h ⟨a, ha⟩ _ => h _ _)
 
 /-- decidable equality for functions whose domain is bounded by multisets -/
 instance decidableEqPiMultiset {β : α → Type _} [h : ∀ a, DecidableEq (β a)] : DecidableEq (∀, ∀ a ∈ m, ∀, β a) :=
   fun f g =>
   decidableOfIff (∀ a h : a ∈ m, f a h = g a h)
     (by
-      simp [Function.funext_iffₓ])
+      simp [← Function.funext_iffₓ])
 
 /-- If `p` is a decidable predicate,
 so is the existence of an element in a multiset satisfying `p`. -/
@@ -1313,9 +1318,9 @@ protected theorem sub_le_iff_le_add : s - t ≤ u ↔ s ≤ u + t := by
     exact
       Multiset.induction_on t
         (by
-          simp [Multiset.sub_zero])
+          simp [← Multiset.sub_zero])
         fun a t IH s => by
-        simp [IH, erase_le_iff_le_cons]
+        simp [← IH, ← erase_le_iff_le_cons]
 
 instance : HasOrderedSub (Multiset α) :=
   ⟨fun n m k => Multiset.sub_le_iff_le_add⟩
@@ -1410,14 +1415,14 @@ theorem inter_le_left (s t : Multiset α) : s ∩ t ≤ s :=
 theorem inter_le_right (s : Multiset α) : ∀ t, s ∩ t ≤ t :=
   (Multiset.induction_on s fun t => (zero_inter t).symm ▸ zero_le _) fun a s IH t =>
     if h : a ∈ t then by
-      simpa [h] using cons_le_cons a (IH (t.erase a))
+      simpa [← h] using cons_le_cons a (IH (t.erase a))
     else by
-      simp [h, IH]
+      simp [← h, ← IH]
 
 theorem le_inter (h₁ : s ≤ t) (h₂ : s ≤ u) : s ≤ t ∩ u := by
   revert s u
   refine' Multiset.induction_on t _ fun a t IH => _ <;> intros
-  · simp [h₁]
+  · simp [← h₁]
     
   by_cases' a ∈ u
   · rw [cons_inter_of_pos _ h, ← erase_le_iff_le_cons]
@@ -1469,7 +1474,7 @@ theorem union_le_add (s t : Multiset α) : s ∪ t ≤ s + t :=
   union_le (le_add_right _ _) (le_add_left _ _)
 
 theorem union_add_distrib (s t u : Multiset α) : s ∪ t + u = s + u ∪ (t + u) := by
-  simpa [(· ∪ ·), union, eq_comm, add_assocₓ] using
+  simpa [← (· ∪ ·), ← union, ← eq_comm, ← add_assocₓ] using
     show s + u - (t + u) = s - t by
       rw [add_commₓ t, tsub_add_eq_tsub_tsub, add_tsub_cancel_right]
 
@@ -1619,15 +1624,18 @@ theorem filter_cons {a : α} (s : Multiset α) : filter p (a ::ₘ s) = (if p a 
   · rw [filter_cons_of_neg _ h, zero_addₓ]
     
 
+theorem filter_singleton {a : α} (p : α → Prop) [DecidablePred p] : filter p {a} = if p a then {a} else ∅ := by
+  simp only [← singleton, ← filter_cons, ← filter_zero, ← add_zeroₓ, ← empty_eq_zero]
+
 theorem filter_nsmul (s : Multiset α) (n : ℕ) : filter p (n • s) = n • filter p s := by
   refine' s.induction_on _ _
-  · simp only [filter_zero, nsmul_zero]
+  · simp only [← filter_zero, ← nsmul_zero]
     
   · intro a ha ih
     rw [nsmul_cons, filter_add, ih, filter_cons, nsmul_add]
     congr
     split_ifs with hp <;>
-      · simp only [filter_eq_self, nsmul_zero, filter_eq_nil]
+      · simp only [← filter_eq_self, ← nsmul_zero, ← filter_eq_nil]
         intro b hb
         rwa [mem_singleton.mp (mem_of_mem_nsmul hb)]
         
@@ -1666,7 +1674,7 @@ theorem filter_sub [DecidableEq α] (s t : Multiset α) : filter p (s - t) = fil
 
 @[simp]
 theorem filter_union [DecidableEq α] (s t : Multiset α) : filter p (s ∪ t) = filter p s ∪ filter p t := by
-  simp [(· ∪ ·), union]
+  simp [← (· ∪ ·), ← union]
 
 @[simp]
 theorem filter_inter [DecidableEq α] (s t : Multiset α) : filter p (s ∩ t) = filter p s ∩ filter p t :=
@@ -1683,11 +1691,11 @@ theorem filter_add_filter q [DecidablePred q] (s : Multiset α) :
     by_cases' p a <;> by_cases' q a <;> simp [*]
 
 theorem filter_add_not (s : Multiset α) : filter p s + filter (fun a => ¬p a) s = s := by
-  rw [filter_add_filter, filter_eq_self.2, filter_eq_nil.2] <;> simp [Decidable.em]
+  rw [filter_add_filter, filter_eq_self.2, filter_eq_nil.2] <;> simp [← Decidable.em]
 
 theorem map_filter (f : β → α) (s : Multiset β) : filter p (map f s) = map f (filter (p ∘ f) s) :=
   Quot.induction_on s fun l => by
-    simp [map_filter]
+    simp [← map_filter]
 
 /-! ### Simultaneously filter and map elements of a multiset -/
 
@@ -1787,7 +1795,7 @@ variable (p)
 
 theorem countp_cons (b : α) s : countp p (b ::ₘ s) = countp p s + if p b then 1 else 0 :=
   Quot.induction_on s <| by
-    simp [List.countp_cons]
+    simp [← List.countp_cons]
 
 theorem countp_eq_card_filter s : countp p s = card (filter p s) :=
   (Quot.induction_on s) fun l => l.countp_eq_length_filter p
@@ -1797,15 +1805,15 @@ theorem countp_le_card s : countp p s ≤ card s :=
 
 @[simp]
 theorem countp_add s t : countp p (s + t) = countp p s + countp p t := by
-  simp [countp_eq_card_filter]
+  simp [← countp_eq_card_filter]
 
 @[simp]
 theorem countp_nsmul s (n : ℕ) : countp p (n • s) = n * countp p s := by
-  induction n <;> simp [*, succ_nsmul', succ_mul, zero_nsmul]
+  induction n <;> simp [*, ← succ_nsmul', ← succ_mul, ← zero_nsmul]
 
 theorem card_eq_countp_add_countp s : card s = countp p s + countp (fun x => ¬p x) s :=
   (Quot.induction_on s) fun l => by
-    simp [l.length_eq_countp_add_countp p]
+    simp [← l.length_eq_countp_add_countp p]
 
 /-- `countp p`, the number of elements of a multiset satisfying `p`, promoted to an
 `add_monoid_hom`. -/
@@ -1820,14 +1828,14 @@ theorem coe_countp_add_monoid_hom : (countpAddMonoidHom p : Multiset α → ℕ)
 
 @[simp]
 theorem countp_sub [DecidableEq α] {s t : Multiset α} (h : t ≤ s) : countp p (s - t) = countp p s - countp p t := by
-  simp [countp_eq_card_filter, h, filter_le_filter]
+  simp [← countp_eq_card_filter, ← h, ← filter_le_filter]
 
 theorem countp_le_of_le {s t} (h : s ≤ t) : countp p s ≤ countp p t := by
-  simpa [countp_eq_card_filter] using card_le_of_le (filter_le_filter p h)
+  simpa [← countp_eq_card_filter] using card_le_of_le (filter_le_filter p h)
 
 @[simp]
 theorem countp_filter q [DecidablePred q] (s : Multiset α) : countp p (filter q s) = countp (fun a => p a ∧ q a) s := by
-  simp [countp_eq_card_filter]
+  simp [← countp_eq_card_filter]
 
 theorem countp_eq_countp_filter_add s (p q : α → Prop) [DecidablePred p] [DecidablePred q] :
     countp p s = (filter q s).countp p + (filter (fun a => ¬q a) s).countp p :=
@@ -1867,7 +1875,7 @@ theorem countp_congr {s s' : Multiset α} (hs : s = s') {p p' : α → Prop} [De
     (hp : ∀, ∀ x ∈ s, ∀, p x = p' x) : s.countp p = s'.countp p' :=
   Quot.induction_on₂ s s'
     (fun l l' hs hp => by
-      simp only [quot_mk_to_coe'', coe_eq_coe] at hs
+      simp only [← quot_mk_to_coe'', ← coe_eq_coe] at hs
       exact hs.countp_congr hp)
     hs hp
 
@@ -1914,10 +1922,10 @@ theorem count_cons (a b : α) (s : Multiset α) : count a (b ::ₘ s) = count a 
 
 @[simp]
 theorem count_singleton_self (a : α) : count a ({a} : Multiset α) = 1 := by
-  simp only [count_cons_self, singleton_eq_cons, eq_self_iff_true, count_zero]
+  simp only [← count_cons_self, ← singleton_eq_cons, ← eq_self_iff_true, ← count_zero]
 
 theorem count_singleton (a b : α) : count a ({b} : Multiset α) = if a = b then 1 else 0 := by
-  simp only [count_cons, singleton_eq_cons, count_zero, zero_addₓ]
+  simp only [← count_cons, ← singleton_eq_cons, ← count_zero, ← zero_addₓ]
 
 @[simp]
 theorem count_add (a : α) : ∀ s t, count a (s + t) = count a s + count a t :=
@@ -1933,10 +1941,10 @@ theorem coe_count_add_monoid_hom {a : α} : (countAddMonoidHom a : Multiset α �
 
 @[simp]
 theorem count_nsmul (a : α) n s : count a (n • s) = n * count a s := by
-  induction n <;> simp [*, succ_nsmul', succ_mul, zero_nsmul]
+  induction n <;> simp [*, ← succ_nsmul', ← succ_mul, ← zero_nsmul]
 
 theorem count_pos {a : α} {s : Multiset α} : 0 < count a s ↔ a ∈ s := by
-  simp [count, countp_pos]
+  simp [← count, ← countp_pos]
 
 theorem one_le_count_iff_mem {a : α} {s : Multiset α} : 1 ≤ count a s ↔ a ∈ s := by
   rw [succ_le_iff, count_pos]
@@ -1950,14 +1958,14 @@ theorem count_eq_zero {a : α} {s : Multiset α} : count a s = 0 ↔ a ∉ s :=
   iff_not_comm.1 <| count_pos.symm.trans pos_iff_ne_zero
 
 theorem count_ne_zero {a : α} {s : Multiset α} : count a s ≠ 0 ↔ a ∈ s := by
-  simp [Ne.def, count_eq_zero]
+  simp [← Ne.def, ← count_eq_zero]
 
 theorem count_eq_card {a : α} {s} : count a s = card s ↔ ∀, ∀ x ∈ s, ∀, a = x :=
   countp_eq_card
 
 @[simp]
 theorem count_repeat_self (a : α) (n : ℕ) : count a (repeat a n) = n := by
-  simp [repeat]
+  simp [← repeat]
 
 theorem count_repeat (a b : α) (n : ℕ) : count a (repeat b n) = if a = b then n else 0 := by
   split_ifs with h₁
@@ -2005,7 +2013,7 @@ theorem count_sub (a : α) (s t : Multiset α) : count a (s - t) = count a s - c
 
 @[simp]
 theorem count_union (a : α) (s t : Multiset α) : count a (s ∪ t) = max (count a s) (count a t) := by
-  simp [(· ∪ ·), union, tsub_add_eq_max, -add_commₓ]
+  simp [← (· ∪ ·), ← union, ← tsub_add_eq_max, -add_commₓ]
 
 @[simp]
 theorem count_inter (a : α) (s t : Multiset α) : count a (s ∩ t) = min (count a s) (count a t) := by
@@ -2046,7 +2054,7 @@ theorem le_iff_count {s t : Multiset α} : s ≤ t ↔ ∀ a, count a s ≤ coun
   ⟨fun h a => count_le_of_le a h, fun al => by
     rw [←
         (ext.2 fun a => by
-          simp [max_eq_rightₓ (al a)] :
+          simp [← max_eq_rightₓ (al a)] :
           s ∪ t = t)] <;>
       apply le_union_left⟩
 
@@ -2056,21 +2064,21 @@ instance : DistribLattice (Multiset α) :=
       le_of_eqₓ <|
         Eq.symm <|
           ext.2 fun a => by
-            simp only [max_min_distrib_left, Multiset.count_inter, Multiset.sup_eq_union, Multiset.count_union,
-              Multiset.inf_eq_inter] }
+            simp only [← max_min_distrib_left, ← Multiset.count_inter, ← Multiset.sup_eq_union, ← Multiset.count_union,
+              ← Multiset.inf_eq_inter] }
 
 theorem repeat_inf (s : Multiset α) (a : α) (n : ℕ) : repeat a n⊓s = repeat a (min (s.count a) n) := by
   ext x
   rw [inf_eq_inter, count_inter, count_repeat, count_repeat]
   by_cases' x = a
-  simp only [min_commₓ, h, if_true, eq_self_iff_true]
-  simp only [h, if_false, zero_min]
+  simp only [← min_commₓ, ← h, ← if_true, ← eq_self_iff_true]
+  simp only [← h, ← if_false, ← zero_min]
 
 theorem count_map {α β : Type _} (f : α → β) (s : Multiset α) [DecidableEq β] (b : β) :
     count b (map f s) = (s.filter fun a => b = f a).card :=
   countp_map _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- `multiset.map f` preserves `count` if `f` is injective on the set of elements contained in
 the multiset -/
 theorem count_map_eq_count [DecidableEq β] (f : α → β) (s : Multiset α) (hf : Set.InjOn f { x : α | x ∈ s }) x
@@ -2079,7 +2087,7 @@ theorem count_map_eq_count [DecidableEq β] (f : α → β) (s : Multiset α) (h
     rw [count, countp_map, ← this]
     exact count_filter_of_pos rfl
   · rw [eq_repeat.2 ⟨rfl, fun b hb => eq_comm.1 ((hf H (mem_filter.1 hb).left) (mem_filter.1 hb).right)⟩]
-    simp only [count_repeat, eq_self_iff_true, if_true, card_repeat]
+    simp only [← count_repeat, ← eq_self_iff_true, ← if_true, ← card_repeat]
     
 
 /-- `multiset.map f` preserves `count` if `f` is injective -/
@@ -2105,7 +2113,7 @@ theorem filter_eq (s : Multiset α) (b : α) : s.filter (Eq b) = repeat b (count
 @[simp]
 theorem repeat_inter (x : α) (n : ℕ) (s : Multiset α) : repeat x n ∩ s = repeat x (min n (s.count x)) := by
   refine' le_antisymmₓ _ _
-  · simp only [le_iff_count, count_inter, count_repeat]
+  · simp only [← le_iff_count, ← count_inter, ← count_repeat]
     intro a
     split_ifs with h
     · rw [h]
@@ -2113,7 +2121,7 @@ theorem repeat_inter (x : α) (n : ℕ) (s : Multiset α) : repeat x n ∩ s = r
     · rw [Nat.zero_minₓ]
       
     
-  simp only [le_inter_iff, ← le_count_iff_repeat_le, count_inter, count_repeat_self]
+  simp only [← le_inter_iff, le_count_iff_repeat_le, ← count_inter, ← count_repeat_self]
 
 @[simp]
 theorem inter_repeat (s : Multiset α) (x : α) (n : ℕ) : s ∩ repeat x n = repeat x (min (s.count x) n) := by
@@ -2123,12 +2131,12 @@ end
 
 section Embedding
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem map_le_map_iff {f : α → β} (hf : Function.Injective f) {s t : Multiset α} : s.map f ≤ t.map f ↔ s ≤ t := by
   classical
   refine' ⟨fun h => le_iff_count.mpr fun a => _, map_le_map⟩
-  simpa [count_map_eq_count' f _ hf] using le_iff_count.mp h (f a)
+  simpa [← count_map_eq_count' f _ hf] using le_iff_count.mp h (f a)
 
 /-- Associate to an embedding `f` from `α` to `β` the order embedding that maps a multiset to its
 image under `f`. -/
@@ -2151,7 +2159,7 @@ for more discussion.
 @[simp]
 theorem map_count_true_eq_filter_card (s : Multiset α) (p : α → Prop) [DecidablePred p] :
     (s.map p).count True = (s.filter p).card := by
-  simp only [count_eq_card_filter_eq, map_filter, card_map, Function.comp.left_id, eq_true_eq_id]
+  simp only [← count_eq_card_filter_eq, ← map_filter, ← card_map, ← Function.comp.left_id, ← eq_true_eq_id]
 
 /-! ### Lift a relation to `multiset`s -/
 
@@ -2256,7 +2264,7 @@ theorem rel_add_left {as₀ as₁} :
       simp )
     (by
       intro a s ih bs
-      simp only [ih, cons_add, rel_cons_left]
+      simp only [← ih, ← cons_add, ← rel_cons_left]
       constructor
       · intro h
         rcases h with ⟨b, bs', hab, h, rfl⟩
@@ -2275,14 +2283,14 @@ theorem rel_add_left {as₀ as₁} :
 
 theorem rel_add_right {as bs₀ bs₁} : Rel r as (bs₀ + bs₁) ↔ ∃ as₀ as₁, Rel r as₀ bs₀ ∧ Rel r as₁ bs₁ ∧ as = as₀ + as₁ :=
   by
-  rw [← rel_flip, rel_add_left] <;> simp [rel_flip]
+  rw [← rel_flip, rel_add_left] <;> simp [← rel_flip]
 
 theorem rel_map_left {s : Multiset γ} {f : γ → α} : ∀ {t}, Rel r (s.map f) t ↔ Rel (fun a b => r (f a) b) s t :=
   Multiset.induction_on s
     (by
       simp )
     (by
-      simp (config := { contextual := true })[rel_cons_left])
+      simp (config := { contextual := true })[← rel_cons_left])
 
 theorem rel_map_right {s : Multiset α} {t : Multiset γ} {f : γ → β} :
     Rel r s (t.map f) ↔ Rel (fun a b => r a (f b)) s t := by
@@ -2367,7 +2375,7 @@ section Map
 
 theorem map_eq_map {f : α → β} (hf : Function.Injective f) {s t : Multiset α} : s.map f = t.map f ↔ s = t := by
   rw [← rel_eq, ← rel_eq, rel_map]
-  simp only [hf.eq_iff]
+  simp only [← hf.eq_iff]
 
 theorem map_injective {f : α → β} (hf : Function.Injective f) : Function.Injective (Multiset.map f) := fun x y =>
   (map_eq_map hf).1
@@ -2379,7 +2387,7 @@ section Quot
 theorem map_mk_eq_map_mk_of_rel {r : α → α → Prop} {s t : Multiset α} (hst : s.Rel r t) :
     s.map (Quot.mk r) = t.map (Quot.mk r) :=
   (Rel.rec_on hst rfl) fun a b s t hab hst ih => by
-    simp [ih, Quot.sound hab]
+    simp [← ih, ← Quot.sound hab]
 
 theorem exists_multiset_eq_map_quot_mk {r : α → α → Prop} (s : Multiset (Quot r)) :
     ∃ t : Multiset α, s = t.map (Quot.mk r) :=
@@ -2417,7 +2425,7 @@ theorem disjoint_right {s t : Multiset α} : Disjoint s t ↔ ∀ {a}, a ∈ t �
   disjoint_comm
 
 theorem disjoint_iff_ne {s t : Multiset α} : Disjoint s t ↔ ∀, ∀ a ∈ s, ∀, ∀, ∀ b ∈ t, ∀, a ≠ b := by
-  simp [disjoint_left, imp_not_comm]
+  simp [← disjoint_left, ← imp_not_comm]
 
 theorem disjoint_of_subset_left {s t u : Multiset α} (h : s ⊆ u) (d : Disjoint u t) : Disjoint s t
   | x, m₁ => d (h m₁)
@@ -2437,7 +2445,7 @@ theorem zero_disjoint (l : Multiset α) : Disjoint 0 l
 
 @[simp]
 theorem singleton_disjoint {l : Multiset α} {a : α} : Disjoint {a} l ↔ a ∉ l := by
-  simp [Disjoint] <;> rfl
+  simp [← Disjoint] <;> rfl
 
 @[simp]
 theorem disjoint_singleton {l : Multiset α} {a : α} : Disjoint l {a} ↔ a ∉ l := by
@@ -2445,7 +2453,7 @@ theorem disjoint_singleton {l : Multiset α} {a : α} : Disjoint l {a} ↔ a ∉
 
 @[simp]
 theorem disjoint_add_left {s t u : Multiset α} : Disjoint (s + t) u ↔ Disjoint s u ∧ Disjoint t u := by
-  simp [Disjoint, or_imp_distrib, forall_and_distrib]
+  simp [← Disjoint, ← or_imp_distrib, ← forall_and_distrib]
 
 @[simp]
 theorem disjoint_add_right {s t u : Multiset α} : Disjoint s (t + u) ↔ Disjoint s t ∧ Disjoint s u := by
@@ -2461,17 +2469,17 @@ theorem disjoint_cons_right {a : α} {s t : Multiset α} : Disjoint s (a ::ₘ t
   rw [disjoint_comm, disjoint_cons_left] <;> tauto
 
 theorem inter_eq_zero_iff_disjoint [DecidableEq α] {s t : Multiset α} : s ∩ t = 0 ↔ Disjoint s t := by
-  rw [← subset_zero] <;> simp [subset_iff, Disjoint]
+  rw [← subset_zero] <;> simp [← subset_iff, ← Disjoint]
 
 @[simp]
 theorem disjoint_union_left [DecidableEq α] {s t u : Multiset α} : Disjoint (s ∪ t) u ↔ Disjoint s u ∧ Disjoint t u :=
   by
-  simp [Disjoint, or_imp_distrib, forall_and_distrib]
+  simp [← Disjoint, ← or_imp_distrib, ← forall_and_distrib]
 
 @[simp]
 theorem disjoint_union_right [DecidableEq α] {s t u : Multiset α} : Disjoint s (t ∪ u) ↔ Disjoint s t ∧ Disjoint s u :=
   by
-  simp [Disjoint, or_imp_distrib, forall_and_distrib]
+  simp [← Disjoint, ← or_imp_distrib, ← forall_and_distrib]
 
 theorem add_eq_union_iff_disjoint [DecidableEq α] {s t : Multiset α} : s + t = s ∪ t ↔ Disjoint s t := by
   simp_rw [← inter_eq_zero_iff_disjoint, ext, count_add, count_union, count_inter, count_zero, Nat.min_eq_zero_iff,
@@ -2479,7 +2487,7 @@ theorem add_eq_union_iff_disjoint [DecidableEq α] {s t : Multiset α} : s + t =
 
 theorem disjoint_map_map {f : α → γ} {g : β → γ} {s : Multiset α} {t : Multiset β} :
     Disjoint (s.map f) (t.map g) ↔ ∀, ∀ a ∈ s, ∀, ∀, ∀ b ∈ t, ∀, f a ≠ g b := by
-  simp [Disjoint, @eq_comm _ (f _) (g _)]
+  simp [← Disjoint, ← @eq_comm _ (f _) (g _)]
   rfl
 
 /-- `pairwise r m` states that there exists a list of the elements s.t. `r` holds pairwise on this
@@ -2536,7 +2544,7 @@ variable (α)
 /-- The equivalence between lists and multisets of a subsingleton type. -/
 def subsingletonEquiv [Subsingleton α] : List α ≃ Multiset α where
   toFun := coe
-  invFun := (Quot.lift id) fun h : a ~ b => (List.ext_le h.length_eq) fun n h₁ h₂ => Subsingleton.elimₓ _ _
+  invFun := (Quot.lift id) fun a b : List α h : a ~ b => (List.ext_le h.length_eq) fun n h₁ h₂ => Subsingleton.elimₓ _ _
   left_inv := fun l => rfl
   right_inv := fun m => (Quot.induction_on m) fun l => rfl
 

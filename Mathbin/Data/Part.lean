@@ -195,8 +195,8 @@ theorem some_get {a : Part α} (ha : a.Dom) : Part.some (Part.get a ha) = a :=
 
 theorem get_eq_iff_eq_some {a : Part α} {ha : a.Dom} {b : α} : a.get ha = b ↔ a = some b :=
   ⟨fun h => by
-    simp [h.symm], fun h => by
-    simp [h]⟩
+    simp [← h.symm], fun h => by
+    simp [← h]⟩
 
 theorem get_eq_get_of_eq (a : Part α) (ha : a.Dom) {b : Part α} (h : a = b) : a.get ha = b.get (h ▸ ha) := by
   congr
@@ -244,7 +244,7 @@ theorem get_or_else_some (a : α) (d : α) [Decidable (some a).Dom] : getOrElse 
 @[simp]
 theorem mem_to_option {o : Part α} [Decidable o.Dom] {a : α} : a ∈ toOption o ↔ a ∈ o := by
   unfold to_option
-  by_cases' h : o.dom <;> simp [h]
+  by_cases' h : o.dom <;> simp [← h]
   · exact ⟨fun h => ⟨_, h⟩, fun ⟨_, h⟩ => h⟩
     
   · exact mt Exists.fst h
@@ -280,9 +280,9 @@ theorem mem_of_option {a : α} : ∀ {o : Option α}, a ∈ ofOption o ↔ a ∈
 @[simp]
 theorem of_option_dom {α} : ∀ o : Option α, (ofOption o).Dom ↔ o.isSome
   | Option.none => by
-    simp [of_option, none]
+    simp [← of_option, ← none]
   | Option.some a => by
-    simp [of_option]
+    simp [← of_option]
 
 theorem of_option_eq_get {α} (o : Option α) : ofOption o = ⟨_, @Option.getₓ _ o⟩ :=
   (Part.ext' (of_option_dom o)) fun h₁ h₂ => by
@@ -399,22 +399,22 @@ theorem mem_assert_iff {p : Prop} {f : p → Part α} {a} : a ∈ assert p f ↔
     fun ⟨a, h⟩ => mem_assert _ h⟩
 
 theorem assert_pos {p : Prop} {f : p → Part α} (h : p) : assert p f = f h := by
-  dsimp' [assert]
+  dsimp' [← assert]
   cases h' : f h
-  simp only [h', h, true_andₓ, iff_selfₓ, exists_prop_of_true, eq_iff_iff]
+  simp only [← h', ← h, ← true_andₓ, ← iff_selfₓ, ← exists_prop_of_true, ← eq_iff_iff]
   apply Function.hfunext
-  · simp only [h, h', exists_prop_of_true]
+  · simp only [← h, ← h', ← exists_prop_of_true]
     
   · cc
     
 
 theorem assert_neg {p : Prop} {f : p → Part α} (h : ¬p) : assert p f = none := by
-  dsimp' [assert, none]
+  dsimp' [← assert, ← none]
   congr
-  · simp only [h, not_false_iff, exists_prop_of_false]
+  · simp only [← h, ← not_false_iff, ← exists_prop_of_false]
     
   · apply Function.hfunext
-    · simp only [h, not_false_iff, exists_prop_of_false]
+    · simp only [← h, ← not_false_iff, ← exists_prop_of_false]
       
     cc
     
@@ -430,7 +430,7 @@ theorem mem_bind_iff {f : Part α} {g : α → Part β} {b} : b ∈ f.bind g ↔
 
 protected theorem Dom.bind {o : Part α} (h : o.Dom) (f : α → Part β) : o.bind f = f (o.get h) := by
   ext b
-  simp only [Part.mem_bind_iff, exists_prop]
+  simp only [← Part.mem_bind_iff, ← exists_prop]
   refine' ⟨_, fun hb => ⟨o.get h, Part.get_mem _, hb⟩⟩
   rintro ⟨a, ha, hb⟩
   rwa [Part.get_eq_of_mem ha]
@@ -453,7 +453,7 @@ theorem bind_of_mem {o : Part α} {a : α} (h : a ∈ o) (f : α → Part β) : 
 
 theorem bind_some_eq_map (f : α → β) (x : Part α) : x.bind (some ∘ f) = map f x :=
   ext <| by
-    simp [eq_comm]
+    simp [← eq_comm]
 
 theorem bind_to_option (f : α → Part β) (o : Part α) [Decidable o.Dom] [∀ a, Decidable (f a).Dom]
     [Decidable (o.bind f).Dom] : (o.bind f).toOption = o.toOption.elim Option.none fun a => (f a).toOption := by
@@ -476,7 +476,7 @@ theorem bind_map {γ} (f : α → β) x (g : β → Part γ) : (map f x).bind g 
 
 @[simp]
 theorem map_bind {γ} (f : α → Part β) (x : Part α) (g : β → γ) : map g (x.bind f) = x.bind fun y => map g (f y) := by
-  rw [← bind_some_eq_map, bind_assoc] <;> simp [bind_some_eq_map]
+  rw [← bind_some_eq_map, bind_assoc] <;> simp [← bind_some_eq_map]
 
 theorem map_map (g : β → γ) (f : α → β) (o : Part α) : map g (map f o) = map (g ∘ f) o := by
   rw [← bind_some_eq_map, bind_map, bind_some_eq_map]
@@ -498,7 +498,7 @@ theorem map_id' {f : α → α} (H : ∀ x : α, f x = x) o : map f o = o := by
 
 @[simp]
 theorem bind_some_right (x : Part α) : x.bind some = x := by
-  rw [bind_some_eq_map] <;> simp [map_id']
+  rw [bind_some_eq_map] <;> simp [← map_id']
 
 @[simp]
 theorem pure_eq_some (a : α) : pure a = some a :=
@@ -520,11 +520,11 @@ theorem bind_le {α} (x : Part α) (f : α → Part β) (y : Part β) : x >>= f 
   constructor <;> intro h
   · intro a h' b
     replace h := h b
-    simp only [and_imp, exists_prop, bind_eq_bind, mem_bind_iff, exists_imp_distrib] at h
+    simp only [← and_imp, ← exists_prop, ← bind_eq_bind, ← mem_bind_iff, ← exists_imp_distrib] at h
     apply h _ h'
     
   · intro b h'
-    simp only [exists_prop, bind_eq_bind, mem_bind_iff] at h'
+    simp only [← exists_prop, ← bind_eq_bind, ← mem_bind_iff] at h'
     rcases h' with ⟨a, h₀, h₁⟩
     apply h _ h₀ _ h₁
     
@@ -539,7 +539,7 @@ def restrict (p : Prop) (o : Part α) (H : p → o.Dom) : Part α :=
 
 @[simp]
 theorem mem_restrict (p : Prop) (o : Part α) (h : p → o.Dom) (a : α) : a ∈ restrict p o h ↔ p ∧ a ∈ o := by
-  dsimp' [restrict, mem_eq]
+  dsimp' [← restrict, ← mem_eq]
   constructor
   · rintro ⟨h₀, h₁⟩
     exact ⟨h₀, ⟨_, h₁⟩⟩
@@ -565,35 +565,26 @@ section Instances
 
 -- We define several instances for constants and operations on `part α` inherited from `α`.
 @[to_additive]
-instance [One α] : One (Part α) where
-  one := pure 1
+instance [One α] : One (Part α) where one := pure 1
 
 @[to_additive]
-instance [Mul α] : Mul (Part α) where
-  mul := fun a b => (· * ·) <$> a <*> b
+instance [Mul α] : Mul (Part α) where mul := fun a b => (· * ·) <$> a <*> b
 
 @[to_additive]
-instance [Inv α] : Inv (Part α) where
-  inv := map Inv.inv
+instance [Inv α] : Inv (Part α) where inv := map Inv.inv
 
 @[to_additive]
-instance [Div α] : Div (Part α) where
-  div := fun a b => (· / ·) <$> a <*> b
+instance [Div α] : Div (Part α) where div := fun a b => (· / ·) <$> a <*> b
 
-instance [Mod α] : Mod (Part α) where
-  mod := fun a b => (· % ·) <$> a <*> b
+instance [Mod α] : Mod (Part α) where mod := fun a b => (· % ·) <$> a <*> b
 
-instance [Append α] : Append (Part α) where
-  append := fun a b => (· ++ ·) <$> a <*> b
+instance [Append α] : Append (Part α) where append := fun a b => (· ++ ·) <$> a <*> b
 
-instance [HasInter α] : HasInter (Part α) where
-  inter := fun a b => (· ∩ ·) <$> a <*> b
+instance [HasInter α] : HasInter (Part α) where inter := fun a b => (· ∩ ·) <$> a <*> b
 
-instance [HasUnion α] : HasUnion (Part α) where
-  union := fun a b => (· ∪ ·) <$> a <*> b
+instance [HasUnion α] : HasUnion (Part α) where union := fun a b => (· ∪ ·) <$> a <*> b
 
-instance [HasSdiff α] : HasSdiff (Part α) where
-  sdiff := fun a b => (· \ ·) <$> a <*> b
+instance [HasSdiff α] : HasSdiff (Part α) where sdiff := fun a b => (· \ ·) <$> a <*> b
 
 @[to_additive]
 theorem one_mem_one [One α] : (1 : α) ∈ (1 : Part α) :=

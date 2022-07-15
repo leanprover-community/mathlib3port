@@ -43,7 +43,7 @@ def of {X : Type _} (point : X) : Pointed :=
 theorem coe_of {X : Type _} (point : X) : ↥(of point) = X :=
   rfl
 
-alias of ← Prod.pointed
+alias of ← _root_.prod.Pointed
 
 instance : Inhabited Pointed :=
   ⟨of ((), ())⟩

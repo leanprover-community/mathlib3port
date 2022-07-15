@@ -5,6 +5,7 @@ Authors: Thomas Browning
 -/
 import Mathbin.GroupTheory.Abelianization
 import Mathbin.GroupTheory.GroupAction.ConjAct
+import Mathbin.GroupTheory.GroupAction.Quotient
 import Mathbin.GroupTheory.Index
 
 /-!
@@ -89,7 +90,7 @@ theorem Subgroup.comm_prob_subgroup_le : commProb H ≤ commProb G * H.index ^ 2
   · apply card_le_of_injective _ _
     exact fun p => ⟨⟨p.1.1, p.1.2⟩, subtype.ext_iff.mp p.2⟩
     exact fun p q h => by
-      simpa only [Subtype.ext_iff, Prod.ext_iff] using h
+      simpa only [← Subtype.ext_iff, ← Prod.ext_iff] using h
     
   · exact pow_ne_zero 2 (nat.cast_ne_zero.mpr card_ne_zero)
     

@@ -66,7 +66,7 @@ def IsAtom (a : α) : Prop :=
   a ≠ ⊥ ∧ ∀ b, b < a → b = ⊥
 
 theorem IsAtom.Iic (ha : IsAtom a) (hax : a ≤ x) : IsAtom (⟨a, hax⟩ : Set.Iic x) :=
-  ⟨fun con => ha.1 (Subtype.mk_eq_mk.1 con), fun hba => Subtype.mk_eq_mk.2 (ha.2 b hba)⟩
+  ⟨fun con => ha.1 (Subtype.mk_eq_mk.1 con), fun ⟨b, hb⟩ hba => Subtype.mk_eq_mk.2 (ha.2 b hba)⟩
 
 theorem IsAtom.of_is_atom_coe_Iic {a : Set.Iic x} (ha : IsAtom a) : IsAtom (a : α) :=
   ⟨fun con => ha.1 (Subtype.ext con), fun b hba => Subtype.mk_eq_mk.1 (ha.2 ⟨b, hba.le.trans a.Prop⟩ hba)⟩
@@ -86,7 +86,7 @@ theorem IsAtom.Iic_eq (h : IsAtom a) : Set.Iic a = {⊥, a} :=
 
 @[simp]
 theorem bot_covby_iff : ⊥ ⋖ a ↔ IsAtom a := by
-  simp only [Covby, bot_lt_iff_ne_bot, IsAtom, not_imp_not]
+  simp only [← Covby, ← bot_lt_iff_ne_bot, ← IsAtom, ← not_imp_not]
 
 alias bot_covby_iff ↔ Covby.is_atom IsAtom.bot_covby
 
@@ -299,7 +299,7 @@ instance (priority := 100) : IsAtomic α :=
   ⟨fun b => by
     rcases eq_Sup_atoms b with ⟨s, rfl, hs⟩
     cases' s.eq_empty_or_nonempty with h h
-    · simp [h]
+    · simp [← h]
       
     · exact Or.intro_rightₓ _ ⟨h.some, hs _ h.some_spec, le_Sup h.some_spec⟩
       ⟩
@@ -338,7 +338,7 @@ instance (priority := 100) : IsCoatomic α :=
   ⟨fun b => by
     rcases eq_Inf_coatoms b with ⟨s, rfl, hs⟩
     cases' s.eq_empty_or_nonempty with h h
-    · simp [h]
+    · simp [← h]
       
     · exact Or.intro_rightₓ _ ⟨h.some, hs _ h.some_spec, Inf_le h.some_spec⟩
       ⟩
@@ -437,9 +437,9 @@ theorem eq_bot_of_lt : a = ⊥ :=
 theorem eq_top_of_lt : b = ⊤ :=
   (IsSimpleOrder.eq_bot_or_eq_top _).resolve_left h.ne_bot
 
-alias eq_bot_of_lt ← LT.lt.eq_bot
+alias eq_bot_of_lt ← has_lt.lt.eq_bot
 
-alias eq_top_of_lt ← LT.lt.eq_top
+alias eq_top_of_lt ← has_lt.lt.eq_top
 
 end Preorderₓ
 
@@ -480,21 +480,21 @@ def equivBool {α} [DecidableEq α] [LE α] [BoundedOrder α] [IsSimpleOrder α]
   toFun := fun x => x = ⊤
   invFun := fun x => cond x ⊤ ⊥
   left_inv := fun x => by
-    rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp [bot_ne_top]
+    rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp [← bot_ne_top]
   right_inv := fun x => by
-    cases x <;> simp [bot_ne_top]
+    cases x <;> simp [← bot_ne_top]
 
 /-- Every simple lattice over a partial order is order-isomorphic to `bool`. -/
 def orderIsoBool : α ≃o Bool :=
   { equivBool with
     map_rel_iff' := fun a b => by
       rcases eq_bot_or_eq_top a with (rfl | rfl)
-      · simp [bot_ne_top]
+      · simp [← bot_ne_top]
         
       · rcases eq_bot_or_eq_top b with (rfl | rfl)
-        · simp [bot_ne_top.symm, bot_ne_top, Bool.ff_lt_tt]
+        · simp [← bot_ne_top.symm, ← bot_ne_top, ← Bool.ff_lt_tt]
           
-        · simp [bot_ne_top]
+        · simp [← bot_ne_top]
           
          }
 
@@ -507,21 +507,21 @@ instance (priority := 200) {α} [DecidableEq α] [LE α] [BoundedOrder α] [IsSi
 protected def booleanAlgebra {α} [DecidableEq α] [Lattice α] [BoundedOrder α] [IsSimpleOrder α] : BooleanAlgebra α :=
   { show BoundedOrder α by
       infer_instance,
-    IsSimpleOrder.distribLattice with Compl := fun x => if x = ⊥ then ⊤ else ⊥,
+    IsSimpleOrder.distribLattice with compl := fun x => if x = ⊥ then ⊤ else ⊥,
     sdiff := fun x y => if x = ⊤ ∧ y = ⊥ then ⊤ else ⊥,
     sdiff_eq := fun x y => by
-      rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp [bot_ne_top, HasSdiff.sdiff, compl],
+      rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp [← bot_ne_top, ← HasSdiff.sdiff, ← compl],
     inf_compl_le_bot := fun x => by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · simp
         
-      · simp only [top_inf_eq]
-        split_ifs with h h <;> simp [h]
+      · simp only [← top_inf_eq]
+        split_ifs with h h <;> simp [← h]
         ,
     top_le_sup_compl := fun x => by
       rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp ,
     sup_inf_sdiff := fun x y => by
-      rcases eq_bot_or_eq_top x with (rfl | rfl) <;> rcases eq_bot_or_eq_top y with (rfl | rfl) <;> simp [bot_ne_top],
+      rcases eq_bot_or_eq_top x with (rfl | rfl) <;> rcases eq_bot_or_eq_top y with (rfl | rfl) <;> simp [← bot_ne_top],
     inf_inf_sdiff := fun x y => by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · simpa
@@ -529,8 +529,8 @@ protected def booleanAlgebra {α} [DecidableEq α] [Lattice α] [BoundedOrder α
       rcases eq_bot_or_eq_top y with (rfl | rfl)
       · simpa
         
-      · simp only [true_andₓ, top_inf_eq, eq_self_iff_true]
-        split_ifs with h h <;> simpa [h]
+      · simp only [← true_andₓ, ← top_inf_eq, ← eq_self_iff_true]
+        split_ifs with h h <;> simpa [← h]
          }
 
 end DecidableEq
@@ -577,16 +577,16 @@ protected noncomputable def completeBooleanAlgebra : CompleteBooleanAlgebra α :
   { IsSimpleOrder.completeLattice, IsSimpleOrder.booleanAlgebra with
     infi_sup_le_sup_Inf := fun x s => by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
-      · simp only [bot_sup_eq, ← Inf_eq_infi]
+      · simp only [← bot_sup_eq, Inf_eq_infi]
         exact le_rfl
         
-      · simp only [top_sup_eq, le_top]
+      · simp only [← top_sup_eq, ← le_top]
         ,
     inf_Sup_le_supr_inf := fun x s => by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
-      · simp only [bot_inf_eq, bot_le]
+      · simp only [← bot_inf_eq, ← bot_le]
         
-      · simp only [top_inf_eq, ← Sup_eq_supr]
+      · simp only [← top_inf_eq, Sup_eq_supr]
         exact le_rfl
          }
 
@@ -596,7 +596,7 @@ namespace IsSimpleOrder
 
 variable [CompleteLattice α] [IsSimpleOrder α]
 
--- ././Mathport/Syntax/Translate/Basic.lean:209:40: warning: unsupported option default_priority
+-- ./././Mathport/Syntax/Translate/Basic.lean:293:40: warning: unsupported option default_priority
 set_option default_priority 100
 
 instance : IsAtomistic α :=
@@ -618,7 +618,7 @@ variable [PartialOrderₓ α] [BoundedOrder α] [IsSimpleOrder α] [DecidableEq 
 theorem univ : (Finset.univ : Finset α) = {⊤, ⊥} := by
   change Finset.map _ (Finset.univ : Finset Bool) = _
   rw [Fintype.univ_bool]
-  simp only [Finset.map_insert, Function.Embedding.coe_fn_mk, Finset.map_singleton]
+  simp only [← Finset.map_insert, ← Function.Embedding.coe_fn_mk, ← Finset.map_singleton]
   rfl
 
 theorem card : Fintype.card α = 2 :=
@@ -649,13 +649,13 @@ namespace Set
 theorem is_simple_order_Iic_iff_is_atom [PartialOrderₓ α] [OrderBot α] {a : α} : IsSimpleOrder (Iic a) ↔ IsAtom a :=
   is_simple_order_iff_is_atom_top.trans <|
     and_congr (not_congr Subtype.mk_eq_mk)
-      ⟨fun h b ab => Subtype.mk_eq_mk.1 (h ⟨b, le_of_ltₓ ab⟩ ab), fun hbotb =>
+      ⟨fun h b ab => Subtype.mk_eq_mk.1 (h ⟨b, le_of_ltₓ ab⟩ ab), fun h ⟨b, hab⟩ hbotb =>
         Subtype.mk_eq_mk.2 (h b (Subtype.mk_lt_mk.1 hbotb))⟩
 
 theorem is_simple_order_Ici_iff_is_coatom [PartialOrderₓ α] [OrderTop α] {a : α} : IsSimpleOrder (Ici a) ↔ IsCoatom a :=
   is_simple_order_iff_is_coatom_bot.trans <|
     and_congr (not_congr Subtype.mk_eq_mk)
-      ⟨fun h b ab => Subtype.mk_eq_mk.1 (h ⟨b, le_of_ltₓ ab⟩ ab), fun hbotb =>
+      ⟨fun h b ab => Subtype.mk_eq_mk.1 (h ⟨b, le_of_ltₓ ab⟩ ab), fun h ⟨b, hab⟩ hbotb =>
         Subtype.mk_eq_mk.2 (h b (Subtype.mk_lt_mk.1 hbotb))⟩
 
 end Set

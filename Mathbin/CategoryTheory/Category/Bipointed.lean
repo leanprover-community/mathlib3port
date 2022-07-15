@@ -42,7 +42,7 @@ def of {X : Type _} (to_prod : X × X) : Bipointed :=
 theorem coe_of {X : Type _} (to_prod : X × X) : ↥(of to_prod) = X :=
   rfl
 
-alias of ← Prod.bipointed
+alias of ← _root_.prod.Bipointed
 
 instance : Inhabited Bipointed :=
   ⟨of ((), ())⟩

@@ -40,11 +40,11 @@ instance [NonUnitalSemiringₓ R] [NonUnitalSemiringₓ S] : NonUnitalSemiring�
 
 /-- Product of two `non_assoc_semiring`s is a `non_assoc_semiring`. -/
 instance [NonAssocSemiringₓ R] [NonAssocSemiringₓ S] : NonAssocSemiringₓ (R × S) :=
-  { Prod.nonUnitalNonAssocSemiring, Prod.mulOneClass with }
+  { Prod.nonUnitalNonAssocSemiring, Prod.mulOneClass, Prod.addMonoidWithOne with }
 
 /-- Product of two semirings is a semiring. -/
 instance [Semiringₓ R] [Semiringₓ S] : Semiringₓ (R × S) :=
-  { Prod.addCommMonoid, Prod.monoidWithZero, Prod.distrib with }
+  { Prod.addCommMonoid, Prod.monoidWithZero, Prod.distrib, Prod.addMonoidWithOne with }
 
 /-- Product of two `non_unital_comm_semiring`s is a `non_unital_comm_semiring`. -/
 instance [NonUnitalCommSemiring R] [NonUnitalCommSemiring S] : NonUnitalCommSemiring (R × S) :=
@@ -61,11 +61,11 @@ instance [NonUnitalRing R] [NonUnitalRing S] : NonUnitalRing (R × S) :=
   { Prod.addCommGroup, Prod.nonUnitalSemiring with }
 
 instance [NonAssocRing R] [NonAssocRing S] : NonAssocRing (R × S) :=
-  { Prod.addCommGroup, Prod.nonAssocSemiring with }
+  { Prod.addCommGroup, Prod.nonAssocSemiring, Prod.addGroupWithOne with }
 
 /-- Product of two rings is a ring. -/
 instance [Ringₓ R] [Ringₓ S] : Ringₓ (R × S) :=
-  { Prod.addCommGroup, Prod.semiring with }
+  { Prod.addCommGroup, Prod.addGroupWithOne, Prod.semiring with }
 
 /-- Product of two `non_unital_comm_ring`s is a `non_unital_comm_ring`. -/
 instance [NonUnitalCommRing R] [NonUnitalCommRing S] : NonUnitalCommRing (R × S) :=
@@ -123,7 +123,7 @@ theorem snd_comp_prod : (snd S T).comp (f.Prod g) = g :=
 
 theorem prod_unique (f : R →+* S × T) : ((fst S T).comp f).Prod ((snd S T).comp f) = f :=
   ext fun x => by
-    simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
+    simp only [← prod_apply, ← coe_fst, ← coe_snd, ← comp_apply, ← Prod.mk.eta]
 
 end Prod
 

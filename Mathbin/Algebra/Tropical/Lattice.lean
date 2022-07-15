@@ -29,11 +29,9 @@ variable {R S : Type _}
 
 open Tropical
 
-instance [HasSup R] : HasSup (Tropical R) where
-  sup := fun x y => trop (untrop x⊔untrop y)
+instance [HasSup R] : HasSup (Tropical R) where sup := fun x y => trop (untrop x⊔untrop y)
 
-instance [HasInf R] : HasInf (Tropical R) where
-  inf := fun x y => trop (untrop x⊓untrop y)
+instance [HasInf R] : HasInf (Tropical R) where inf := fun x y => trop (untrop x⊓untrop y)
 
 instance [SemilatticeInf R] : SemilatticeInf (Tropical R) :=
   { Tropical.hasInf, Tropical.partialOrder with le_inf := fun _ _ _ => le_inf, inf_le_left := fun _ _ => inf_le_left,
@@ -46,11 +44,9 @@ instance [SemilatticeSup R] : SemilatticeSup (Tropical R) :=
 instance [Lattice R] : Lattice (Tropical R) :=
   { Tropical.semilatticeInf, Tropical.semilatticeSup with }
 
-instance [HasSupₓ R] : HasSupₓ (Tropical R) where
-  sup := fun s => trop (sup (untrop '' s))
+instance [HasSupₓ R] : HasSupₓ (Tropical R) where sup := fun s => trop (sup (untrop '' s))
 
-instance [HasInfₓ R] : HasInfₓ (Tropical R) where
-  inf := fun s => trop (inf (untrop '' s))
+instance [HasInfₓ R] : HasInfₓ (Tropical R) where inf := fun s => trop (inf (untrop '' s))
 
 instance [ConditionallyCompleteLattice R] : ConditionallyCompleteLattice (Tropical R) :=
   { Tropical.hasSupₓ, Tropical.hasInfₓ, Tropical.lattice with

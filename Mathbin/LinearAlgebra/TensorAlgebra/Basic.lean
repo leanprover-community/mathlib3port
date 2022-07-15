@@ -54,11 +54,12 @@ inductive Rel : FreeAlgebra R M → FreeAlgebra R M → Prop-- force `ι` to be 
 
 end TensorAlgebra
 
--- ././Mathport/Syntax/Translate/Basic.lean:978:9: unsupported derive handler algebra R
+-- ./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler algebra R
 /-- The tensor algebra of the module `M` over the commutative semiring `R`.
 -/
 def TensorAlgebra :=
-  RingQuot (TensorAlgebra.Rel R M)deriving Inhabited, Semiringₓ, [anonymous]
+  RingQuot (TensorAlgebra.Rel R M)deriving Inhabited, Semiringₓ,
+  «./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler algebra R»
 
 namespace TensorAlgebra
 
@@ -88,8 +89,8 @@ of `f` to a morphism of `R`-algebras `tensor_algebra R M → A`.
 def lift {A : Type _} [Semiringₓ A] [Algebra R A] : (M →ₗ[R] A) ≃ (TensorAlgebra R M →ₐ[R] A) where
   toFun :=
     RingQuot.liftAlgHom R ∘ fun f =>
-      ⟨FreeAlgebra.lift R ⇑f, fun h : Rel R M x y => by
-        induction h <;> simp [Algebra.smul_def]⟩
+      ⟨FreeAlgebra.lift R ⇑f, fun x y h : Rel R M x y => by
+        induction h <;> simp [← Algebra.smul_def]⟩
   invFun := fun F => F.toLinearMap.comp (ι R)
   left_inv := fun f =>
     LinearMap.ext fun x => (RingQuot.lift_alg_hom_mk_alg_hom_apply _ _ _ _).trans (FreeAlgebra.lift_ι_apply f x)
@@ -106,7 +107,7 @@ theorem ι_comp_lift {A : Type _} [Semiringₓ A] [Algebra R A] (f : M →ₗ[R]
 
 @[simp]
 theorem lift_ι_apply {A : Type _} [Semiringₓ A] [Algebra R A] (f : M →ₗ[R] A) x : lift R f (ι R x) = f x := by
-  dsimp' [lift, ι]
+  dsimp' [← lift, ← ι]
   rfl
 
 @[simp]
@@ -145,7 +146,7 @@ theorem induction {C : TensorAlgebra R M → Prop} (h_grade0 : ∀ r, C (algebra
   -- the mapping through the subalgebra is the identity
   have of_id : AlgHom.id R (TensorAlgebra R M) = s.val.comp (lift R of) := by
     ext
-    simp [of]
+    simp [← of]
   -- finding a proof is finding an element of the subalgebra
   convert Subtype.prop (lift R of a)
   exact AlgHom.congr_fun of_id a
@@ -157,7 +158,7 @@ def algebraMapInv : TensorAlgebra R M →ₐ[R] R :=
 variable (M)
 
 theorem algebra_map_left_inverse : Function.LeftInverse algebraMapInv (algebraMap R <| TensorAlgebra R M) := fun x => by
-  simp [algebra_map_inv]
+  simp [← algebra_map_inv]
 
 @[simp]
 theorem algebra_map_inj (x y : R) : algebraMap R (TensorAlgebra R M) x = algebraMap R (TensorAlgebra R M) y ↔ x = y :=
@@ -190,7 +191,7 @@ def ιInv : TensorAlgebra R M →ₗ[R] M :=
   (TrivSqZeroExt.sndHom R M).comp toTrivSqZeroExt.toLinearMap
 
 theorem ι_left_inverse : Function.LeftInverse ιInv (ι R : M → TensorAlgebra R M) := fun x => by
-  simp [ι_inv]
+  simp [← ι_inv]
 
 variable (R)
 
@@ -255,7 +256,7 @@ def toTensor : FreeAlgebra R M →ₐ[R] TensorAlgebra R M :=
 
 @[simp]
 theorem to_tensor_ι (m : M) : (FreeAlgebra.ι R m).toTensor = TensorAlgebra.ι R m := by
-  simp [to_tensor]
+  simp [← to_tensor]
 
 end FreeAlgebra
 

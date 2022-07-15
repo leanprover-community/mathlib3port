@@ -31,20 +31,17 @@ namespace AlgebraicGeometry
 variable (X : Scheme)
 
 instance : T0Space X.Carrier := by
-  rw [t0_space_iff_not_inseparable]
-  intro x y h h'
+  rw [t0_space_iff_inseparable]
+  intro x y h
   obtain ⟨U, R, ⟨e⟩⟩ := X.local_affine x
-  have hy := (h' _ U.1.2).mp U.2
-  erw [← subtype_inseparable_iff (⟨x, U.2⟩ : U.1.1) (⟨y, hy⟩ : U.1.1)] at h'
+  have hy : y ∈ U.val := (h.mem_open_iff U.1.2).1 U.2
+  erw [← subtype_inseparable_iff (⟨x, U.2⟩ : U.1.1) (⟨y, hy⟩ : U.1.1)] at h
   let e' : U.1 ≃ₜ PrimeSpectrum R :=
     homeo_of_iso ((LocallyRingedSpace.forget_to_SheafedSpace ⋙ SheafedSpace.forget _).mapIso e)
   have := t0_space_of_injective_of_continuous e'.injective e'.continuous
-  rw [t0_space_iff_not_inseparable] at this
-  exact
-    this ⟨x, U.2⟩ ⟨y, hy⟩
-      (by
-        simpa using h)
-      h'
+  rw [t0_space_iff_inseparable] at this
+  · simpa only [← Subtype.mk_eq_mk] using this ⟨x, U.2⟩ ⟨y, hy⟩ h
+    
 
 instance : QuasiSober X.Carrier := by
   apply quasi_sober_of_open_cover (Set.Range fun x => Set.Range <| (X.affine_cover.map x).1.base) with
@@ -123,11 +120,11 @@ theorem affine_is_reduced_iff (R : CommRingₓₓ) : IsReduced (Scheme.spec.obj 
     infer_instance
   exact is_reduced_of_injective (to_Spec_Γ R) (as_iso <| to_Spec_Γ R).commRingIsoToRingEquiv.Injective
 
-theorem is_reduced_of_is_affine_is_reduced [IsAffine X] [h : IsReduced (X.Presheaf.obj (op ⊤))] : IsReduced X :=
+theorem is_reduced_of_is_affine_is_reduced [IsAffine X] [h : IsReduced (X.Presheaf.obj (op ⊤))] : IsReduced X := by
   have : IsReduced (Scheme.Spec.obj (op (Scheme.Γ.obj (op X)))) := by
     rw [affine_is_reduced_iff]
     exact h
-  is_reduced_of_open_immersion X.iso_Spec.hom
+  exact is_reduced_of_open_immersion X.iso_Spec.hom
 
 /-- To show that a statement `P` holds for all open subsets of all schemes, it suffices to show that
 1. In any scheme `X`, if `P` holds for an open cover of `U`, then `P` holds for `U`.
@@ -193,7 +190,7 @@ theorem eq_zero_of_basic_open_empty {X : Scheme} [hX : IsReduced X] {U : Opens X
           trivial⟩
     · rw [← Scheme.preimage_basic_open, hs]
       ext1
-      simp [opens.map]
+      simp [← opens.map]
       
     · erw [← PresheafedSpace.stalk_map_germ_apply f.1 ⟨_, _⟩ ⟨x, _⟩] at H
       apply_fun inv <| PresheafedSpace.stalk_map f.val x  at H
@@ -253,10 +250,10 @@ instance is_irreducible_of_is_integral [IsIntegral X] : IrreducibleSpace X.Carri
   by_contra H
   replace H : ¬IsPreirreducible (⊤ : Set X.carrier) := fun h =>
     H { to_preirreducible_space := ⟨h⟩, to_nonempty := inferInstance }
-  simp_rw [is_preirreducible_iff_closed_union_closed, not_forall, not_or_distrib]  at H
+  simp_rw [is_preirreducible_iff_closed_union_closed, not_forall, not_or_distrib] at H
   rcases H with ⟨S, T, hS, hT, h₁, h₂, h₃⟩
   erw [not_forall] at h₂ h₃
-  simp_rw [not_forall]  at h₂ h₃
+  simp_rw [not_forall] at h₂ h₃
   have : Nonempty (⟨Sᶜ, hS.1⟩ : opens X.carrier) := ⟨⟨_, h₂.some_spec.some_spec⟩⟩
   have : Nonempty (⟨Tᶜ, hT.1⟩ : opens X.carrier) := ⟨⟨_, h₃.some_spec.some_spec⟩⟩
   have : Nonempty (⟨Sᶜ, hS.1⟩⊔⟨Tᶜ, hT.1⟩ : opens X.carrier) := ⟨⟨_, Or.inl h₂.some_spec.some_spec⟩⟩
@@ -322,7 +319,7 @@ instance {R : CommRingₓₓ} [H : IsDomain R] : IsIntegral (Scheme.spec.obj <| 
   apply is_integral_of_is_irreducible_is_reduced with { instances := false }
   · infer_instance
     
-  · dsimp' [Spec.Top_obj]
+  · dsimp' [← Spec.Top_obj]
     infer_instance
     
 
@@ -332,11 +329,11 @@ theorem affine_is_integral_iff (R : CommRingₓₓ) : IsIntegral (Scheme.spec.ob
     fun h => inferInstance⟩
 
 theorem is_integral_of_is_affine_is_domain [IsAffine X] [Nonempty X.Carrier] [h : IsDomain (X.Presheaf.obj (op ⊤))] :
-    IsIntegral X :=
+    IsIntegral X := by
   have : IsIntegral (Scheme.Spec.obj (op (Scheme.Γ.obj (op X)))) := by
     rw [affine_is_integral_iff]
     exact h
-  is_integral_of_open_immersion X.iso_Spec.hom
+  exact is_integral_of_open_immersion X.iso_Spec.hom
 
 theorem map_injective_of_is_integral [IsIntegral X] {U V : Opens X.Carrier} (i : U ⟶ V) [H : Nonempty U] :
     Function.Injective (X.Presheaf.map i.op) := by

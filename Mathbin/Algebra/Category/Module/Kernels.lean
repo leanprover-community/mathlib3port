@@ -43,7 +43,7 @@ def kernelIsLimit : IsLimit (kernelCone f) :=
     LinearMap.ext fun x =>
       Subtype.ext_iff_val.2
         (by
-          simpa [← h] )
+          simpa [h] )
 
 /-- The cokernel cocone induced by the projection onto the quotient. -/
 def cokernelCocone : CokernelCofork f :=

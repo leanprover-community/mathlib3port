@@ -51,12 +51,12 @@ namespace CategoryTheory.Limits
 
 open CategoryTheory
 
-universe v u u₂
+universe w v u u₂
 
-variable {J : Type v}
+variable {J : Type w}
 
 /-- The type of objects for the diagram indexing a wide (co)equalizer. -/
-inductive WalkingParallelFamily (J : Type v) : Type v
+inductive WalkingParallelFamily (J : Type w) : Type w
   | zero : walking_parallel_family
   | one : walking_parallel_family
 
@@ -72,14 +72,13 @@ instance : Inhabited (WalkingParallelFamily J) :=
   ⟨zero⟩
 
 /-- The type family of morphisms for the diagram indexing a wide (co)equalizer. -/
-inductive WalkingParallelFamily.Hom (J : Type v) : WalkingParallelFamily J → WalkingParallelFamily J → Type v
-  | id : ∀ X : WalkingParallelFamily.{v} J, walking_parallel_family.hom X X
+inductive WalkingParallelFamily.Hom (J : Type w) : WalkingParallelFamily J → WalkingParallelFamily J → Type w
+  | id : ∀ X : WalkingParallelFamily.{w} J, walking_parallel_family.hom X X
   | line : ∀ j : J, walking_parallel_family.hom zero one
   deriving DecidableEq
 
 /-- Satisfying the inhabited linter -/
-instance (J : Type v) : Inhabited (WalkingParallelFamily.Hom J zero zero) where
-  default := Hom.id _
+instance (J : Type v) : Inhabited (WalkingParallelFamily.Hom J zero zero) where default := Hom.id _
 
 open WalkingParallelFamily.Hom
 
@@ -145,8 +144,7 @@ def diagramIsoParallelFamily (F : WalkingParallelFamily J ⥤ C) : F ≅ paralle
 /-- `walking_parallel_pair` as a category is equivalent to a special case of
 `walking_parallel_family`.  -/
 @[simps]
-def walkingParallelFamilyEquivWalkingParallelPair :
-    WalkingParallelFamily.{v} (ULift Bool) ≌ walking_parallel_pair.{v} where
+def walkingParallelFamilyEquivWalkingParallelPair : WalkingParallelFamily.{w} (ULift Bool) ≌ walking_parallel_pair where
   Functor := parallelFamily fun p => cond p.down WalkingParallelPairHom.left WalkingParallelPairHom.right
   inverse := parallelPair (line (ULift.up true)) (line (ULift.up false))
   unitIso :=
@@ -217,7 +215,7 @@ def Trident.ofι [Nonempty J] {P : C} (ι : P ⟶ X) (w : ∀ j₁ j₂, ι ≫ 
         cases' f with _ k
         · simp
           
-        · simp [w (Classical.arbitrary J) k]
+        · simp [← w (Classical.arbitrary J) k]
            }
 
 /-- A cotrident on `f : J → (X ⟶ Y)` is determined by the morphism `π : Y ⟶ P` satisfying
@@ -233,7 +231,7 @@ def Cotrident.ofπ [Nonempty J] {P : C} (π : Y ⟶ P) (w : ∀ j₁ j₂, f j�
         cases' f with _ k
         · simp
           
-        · simp [w (Classical.arbitrary J) k]
+        · simp [← w (Classical.arbitrary J) k]
            }
 
 -- See note [dsimp, simp]
@@ -410,7 +408,7 @@ def Cocone.ofCotrident {F : WalkingParallelFamily J ⥤ C} (t : Cotrident fun j 
               tidy) ≫
           t.ι.app X,
       naturality' := fun j j' g => by
-        cases g <;> dsimp' <;> simp [cotrident.app_one t] }
+        cases g <;> dsimp' <;> simp [← cotrident.app_one t] }
 
 @[simp]
 theorem Cone.of_trident_π {F : WalkingParallelFamily J ⥤ C} (t : Trident fun j => F.map (line j)) j :
@@ -591,8 +589,8 @@ theorem wideEqualizer.hom_ext [Nonempty J] {W : C} {k l : W ⟶ wideEqualizer f}
   Trident.IsLimit.hom_ext (limit.isLimit _) h
 
 /-- A wide equalizer morphism is a monomorphism -/
-instance wideEqualizer.ι_mono [Nonempty J] : Mono (wideEqualizer.ι f) where
-  right_cancellation := fun Z h k w => wideEqualizer.hom_ext w
+instance wideEqualizer.ι_mono [Nonempty J] :
+    Mono (wideEqualizer.ι f) where right_cancellation := fun Z h k w => wideEqualizer.hom_ext w
 
 end
 
@@ -679,8 +677,8 @@ theorem wideCoequalizer.hom_ext [Nonempty J] {W : C} {k l : wideCoequalizer f �
   Cotrident.IsColimit.hom_ext (colimit.isColimit _) h
 
 /-- A wide coequalizer morphism is an epimorphism -/
-instance wideCoequalizer.π_epi [Nonempty J] : Epi (wideCoequalizer.π f) where
-  left_cancellation := fun Z h k w => wideCoequalizer.hom_ext w
+instance wideCoequalizer.π_epi [Nonempty J] :
+    Epi (wideCoequalizer.π f) where left_cancellation := fun Z h k w => wideCoequalizer.hom_ext w
 
 end
 
@@ -699,27 +697,27 @@ variable (C)
 
 /-- `has_wide_equalizers` represents a choice of wide equalizer for every family of morphisms -/
 abbrev HasWideEqualizers :=
-  ∀ J, HasLimitsOfShape (WalkingParallelFamily.{v} J) C
+  ∀ J, HasLimitsOfShape (WalkingParallelFamily.{w} J) C
 
 /-- `has_wide_coequalizers` represents a choice of wide coequalizer for every family of morphisms -/
 abbrev HasWideCoequalizers :=
-  ∀ J, HasColimitsOfShape (WalkingParallelFamily.{v} J) C
+  ∀ J, HasColimitsOfShape (WalkingParallelFamily.{w} J) C
 
 /-- If `C` has all limits of diagrams `parallel_family f`, then it has all wide equalizers -/
 theorem has_wide_equalizers_of_has_limit_parallel_family
-    [∀ {J} {X Y : C} {f : J → (X ⟶ Y)}, HasLimit (parallelFamily f)] : HasWideEqualizers C := fun J =>
+    [∀ {J : Type w} {X Y : C} {f : J → (X ⟶ Y)}, HasLimit (parallelFamily f)] : HasWideEqualizers.{w} C := fun J =>
   { HasLimit := fun F => has_limit_of_iso (diagramIsoParallelFamily F).symm }
 
 /-- If `C` has all colimits of diagrams `parallel_family f`, then it has all wide coequalizers -/
 theorem has_wide_coequalizers_of_has_colimit_parallel_family
-    [∀ {J} {X Y : C} {f : J → (X ⟶ Y)}, HasColimit (parallelFamily f)] : HasWideCoequalizers C := fun J =>
+    [∀ {J : Type w} {X Y : C} {f : J → (X ⟶ Y)}, HasColimit (parallelFamily f)] : HasWideCoequalizers.{w} C := fun J =>
   { HasColimit := fun F => has_colimit_of_iso (diagramIsoParallelFamily F) }
 
-instance (priority := 10) has_equalizers_of_has_wide_equalizers [HasWideEqualizers C] : HasEqualizers C :=
-  has_limits_of_shape_of_equivalence walkingParallelFamilyEquivWalkingParallelPair
+instance (priority := 10) has_equalizers_of_has_wide_equalizers [HasWideEqualizers.{w} C] : HasEqualizers C :=
+  has_limits_of_shape_of_equivalence.{w} walkingParallelFamilyEquivWalkingParallelPair
 
-instance (priority := 10) has_coequalizers_of_has_wide_coequalizers [HasWideCoequalizers C] : HasCoequalizers C :=
-  has_colimits_of_shape_of_equivalence walkingParallelFamilyEquivWalkingParallelPair
+instance (priority := 10) has_coequalizers_of_has_wide_coequalizers [HasWideCoequalizers.{w} C] : HasCoequalizers C :=
+  has_colimits_of_shape_of_equivalence.{w} walkingParallelFamilyEquivWalkingParallelPair
 
 end CategoryTheory.Limits
 

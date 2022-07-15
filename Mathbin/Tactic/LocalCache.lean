@@ -11,12 +11,12 @@ namespace LocalCache
 
 namespace Internal
 
-variable {α : Type} [reflected α] [has_reflect α]
+variable {α : Type} [reflected _ α] [has_reflect α]
 
 unsafe def mk_full_namespace (ns : Name) : Name :=
   `local_cache ++ ns
 
-unsafe def save_data (dn : Name) (a : α) [reflected a] : tactic Unit :=
+unsafe def save_data (dn : Name) (a : α) [reflected _ a] : tactic Unit :=
   tactic.add_decl <| mk_definition dn [] (reflect α) (reflect a)
 
 unsafe def load_data (dn : Name) : tactic α := do
@@ -28,8 +28,8 @@ unsafe def poke_data (dn : Name) : tactic Bool := do
   let e ← tactic.get_env
   return (e dn).toBool
 
-unsafe def run_once_under_name {α : Type} [reflected α] [has_reflect α] (t : tactic α) (cache_name : Name) : tactic α :=
-  do
+unsafe def run_once_under_name {α : Type} [reflected _ α] [has_reflect α] (t : tactic α) (cache_name : Name) :
+    tactic α := do
   load_data cache_name <|> do
       let a ← t
       save_data cache_name a
@@ -193,7 +193,7 @@ unsafe def clear (ns : Name) (s : cache_scope := block_local) : tactic Unit :=
   s.clear ns
 
 /-- Gets the (optionally present) value-in-cache for `ns`. -/
-unsafe def get (ns : Name) (α : Type) [reflected α] [has_reflect α] (s : cache_scope := block_local) :
+unsafe def get (ns : Name) (α : Type) [reflected _ α] [has_reflect α] (s : cache_scope := block_local) :
     tactic (Option α) := do
   let dn ← some <$> s.try_get_name ns <|> return none
   match dn with
@@ -219,7 +219,7 @@ open LocalCache LocalCache.Internal
 
     If `α` is just `unit`, this means we just run `t` once each tactic
     block. -/
-unsafe def run_once {α : Type} [reflected α] [has_reflect α] (ns : Name) (t : tactic α)
+unsafe def run_once {α : Type} [reflected _ α] [has_reflect α] (ns : Name) (t : tactic α)
     (s : cache_scope := cache_scope.block_local) : tactic α :=
   s.get_name ns >>= run_once_under_name t
 

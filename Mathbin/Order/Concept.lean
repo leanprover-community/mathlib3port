@@ -92,15 +92,15 @@ theorem intent_closure_Union (f : ι → Set α) : IntentClosure r (⋃ i, f i) 
 theorem extent_closure_Union (f : ι → Set β) : ExtentClosure r (⋃ i, f i) = ⋂ i, ExtentClosure r (f i) :=
   intent_closure_Union _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 @[simp]
 theorem intent_closure_Union₂ (f : ∀ i, κ i → Set α) :
     IntentClosure r (⋃ (i) (j), f i j) = ⋂ (i) (j), IntentClosure r (f i j) :=
   (gc_intent_closure_extent_closure r).l_supr₂
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 @[simp]
 theorem extent_closure_Union₂ (f : ∀ i, κ i → Set β) :
     ExtentClosure r (⋃ (i) (j), f i j) = ⋂ (i) (j), ExtentClosure r (f i j) :=

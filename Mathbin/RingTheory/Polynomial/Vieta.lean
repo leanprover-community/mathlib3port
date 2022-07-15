@@ -32,7 +32,7 @@ variable {R : Type _} [CommSemiringₓ R]
 
 variable (σ : Type _) [Fintype σ]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A sum version of Vieta's formula. Viewing `X i` as variables,
 the product of linear terms `λ + X i` is equal to a linear combination of
 the symmetric polynomials `esymm σ R j`. -/
@@ -55,7 +55,7 @@ theorem prod_X_add_C_eq_sum_esymm :
     exact (mem_powerset_len.mp ht).2
   rw [map_prod, prod_const, ← h]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A fully expanded sum version of Vieta's formula, evaluated at the roots.
 The product of linear terms `X + r i` is equal to `∑ j in range (n + 1), e_j * X ^ (n - j)`,
 where `e_j` is the `j`th symmetric polynomial of the constant terms `r i`. -/
@@ -69,17 +69,17 @@ theorem prod_X_add_C_eval (r : σ → R) :
   apply_fun Polynomial.map (eval r)  at h
   rw [Polynomial.map_prod, Polynomial.map_sum] at h
   convert h
-  simp only [eval_X, Polynomial.map_add, Polynomial.map_C, Polynomial.map_X, eq_self_iff_true]
+  simp only [← eval_X, ← Polynomial.map_add, ← Polynomial.map_C, ← Polynomial.map_X, ← eq_self_iff_true]
   funext
-  simp only [Function.funext_iffₓ, esymm, Polynomial.map_C, Polynomial.map_sum, map_sum, Polynomial.map_C,
-    Polynomial.map_pow, Polynomial.map_X, Polynomial.map_mul]
+  simp only [← Function.funext_iffₓ, ← esymm, ← Polynomial.map_C, ← Polynomial.map_sum, ← map_sum, ← Polynomial.map_C, ←
+    Polynomial.map_pow, ← Polynomial.map_X, ← Polynomial.map_mul]
   congr
   funext
-  simp only [eval_prod, eval_X, map_prod]
+  simp only [← eval_prod, ← eval_X, ← map_prod]
 
 theorem esymm_to_sum (r : σ → R) (j : ℕ) :
     Polynomial.c (eval r (esymm σ R j)) = ∑ t in powersetLen j (univ : Finset σ), ∏ i in t, Polynomial.c (r i) := by
-  simp only [esymm, eval_sum, eval_prod, eval_X, map_sum, map_prod]
+  simp only [← esymm, ← eval_sum, ← eval_prod, ← eval_X, ← map_sum, ← map_prod]
 
 /-- Vieta's formula for the coefficients of the product of linear terms `X + r i`,
 The `k`th coefficient is `∑ t in powerset_len (card σ - k) (univ : finset σ), ∏ i in t, r i`,
@@ -102,8 +102,8 @@ theorem prod_X_add_C_coeff (r : σ → R) (k : ℕ) (h : k ≤ card σ) :
     rw [tsub_eq_iff_eq_add_of_le (mem_range_succ_iff.mp haσ)]
     have hσ := (tsub_eq_iff_eq_add_of_le h).mp (mem_singleton.mp ha).symm
     rwa [add_commₓ]
-  simp only [prod_X_add_C_eval, ← esymm_to_sum, finset_sum_coeff, coeff_C_mul_X_pow, sum_ite, hk, sum_singleton, esymm,
-    eval_sum, eval_prod, eval_X, add_zeroₓ, sum_const_zero]
+  simp only [← prod_X_add_C_eval, esymm_to_sum, ← finset_sum_coeff, ← coeff_C_mul_X_pow, ← sum_ite, ← hk, ←
+    sum_singleton, ← esymm, ← eval_sum, ← eval_prod, ← eval_X, ← add_zeroₓ, ← sum_const_zero]
 
 end MvPolynomial
 

@@ -93,9 +93,9 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
     We use the shorthand `B n = 2^{-n}` in ennreal. -/
   let B : ℕ → ℝ≥0∞ := fun n => 2⁻¹ ^ n
   have B_pos : ∀ n, (0 : ℝ≥0∞) < B n := by
-    simp [B, Ennreal.pow_pos]
+    simp [← B, ← Ennreal.pow_pos]
   have B_ne_top : ∀ n, B n ≠ ⊤ := by
-    simp [B, Ennreal.pow_ne_top]
+    simp [← B, ← Ennreal.pow_ne_top]
   /- Consider a sequence of closed sets `s n` with `edist (s n) (s (n+1)) < B n`.
     We will show that it converges. The limit set is t0 = ⋂n, closure (⋃m≥n, s m).
     We will have to show that a point in `s n` is close to a point in `t0`, and a point
@@ -124,7 +124,7 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
             
           · exact z.2
             
-          simp only [B, Ennreal.inv_pow, div_eq_mul_inv]
+          simp only [← B, ← Ennreal.inv_pow, ← div_eq_mul_inv]
           rw [← pow_addₓ]
           apply hs <;> simp
         exact ⟨⟨z', z'_mem⟩, le_of_ltₓ hz'⟩
@@ -141,7 +141,8 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
       mem_Inter.2 fun k =>
         mem_closure_of_tendsto y_lim
           (by
-            simp only [exists_prop, Set.mem_Union, Filter.eventually_at_top, Set.mem_preimage, Set.preimage_Union]
+            simp only [← exists_prop, ← Set.mem_Union, ← Filter.eventually_at_top, ← Set.mem_preimage, ←
+              Set.preimage_Union]
             exact ⟨k, fun m hm => ⟨n + m, zero_addₓ k ▸ add_le_add (zero_le n) hm, (z m).2⟩⟩)
     use this
     -- Then, we check that `y` is close to `x = z n`. This follows from the fact that `y`
@@ -160,7 +161,7 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
       apply mem_Inter.1 xt0 n
     rcases mem_closure_iff.1 this (B n) (B_pos n) with ⟨z, hz, Dxz⟩
     -- z : α,  Dxz : edist x z < B n,
-    simp only [exists_prop, Set.mem_Union] at hz
+    simp only [← exists_prop, ← Set.mem_Union] at hz
     rcases hz with ⟨m, ⟨m_ge_n, hm⟩⟩
     -- m : ℕ, m_ge_n : m ≥ n, hm : z ∈ s m
     have : Hausdorff_edist (s m : Set α) (s n) < B n := hs n m n m_ge_n (le_reflₓ n)
@@ -180,7 +181,7 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
   have : tendsto (fun n => 2 * B n) at_top (𝓝 (2 * 0)) :=
     Ennreal.Tendsto.const_mul
       (Ennreal.tendsto_pow_at_top_nhds_0_of_lt_1 <| by
-        simp [Ennreal.one_lt_two])
+        simp [← Ennreal.one_lt_two])
       (Or.inr <| by
         simp )
   rw [mul_zero] at this
@@ -188,7 +189,7 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
   exact ((tendsto_order.1 this).2 ε εpos).exists_forall_of_at_top
   exact ⟨N, fun n hn => lt_of_le_of_ltₓ (main n) (hN n hn)⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (v «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (v «expr ⊆ » s)
 /-- In a compact space, the type of closed subsets is compact. -/
 instance Closeds.compact_space [CompactSpace α] : CompactSpace (Closeds α) :=
   ⟨by
@@ -226,7 +227,7 @@ instance Closeds.compact_space [CompactSpace α] : CompactSpace (Closeds α) :=
     -- `F` is finite
     · apply @finite.of_finite_image _ _ F coe
       · apply fs.finite_subsets.subset fun b => _
-        simp only [and_imp, Set.mem_image, Set.mem_set_of_eq, exists_imp_distrib]
+        simp only [← and_imp, ← Set.mem_image, ← Set.mem_set_of_eq, ← exists_imp_distrib]
         intro x hx hx'
         rwa [hx'] at hx
         
@@ -276,7 +277,7 @@ theorem NonemptyCompacts.is_closed_in_closeds [CompleteSpace α] :
     exact nonempty_of_Hausdorff_edist_ne_top ht.1 (ne_of_ltₓ Dst)
     
   · refine' compact_iff_totally_bounded_complete.2 ⟨_, s.closed.is_complete⟩
-    refine' totally_bounded_iff.2 fun εpos : 0 < ε => _
+    refine' totally_bounded_iff.2 fun ε εpos : 0 < ε => _
     -- we have to show that s is covered by finitely many eballs of radius ε
     -- pick a nonempty compact set t at distance at most ε/2 of s
     rcases mem_closure_iff.1 hs (ε / 2) (Ennreal.half_pos εpos.ne') with ⟨t, ht, Dst⟩
@@ -326,7 +327,7 @@ instance NonemptyCompacts.second_countable_topology [SecondCountableTopology α]
     let v0 := { t : Set α | t.Finite ∧ t ⊆ s }
     let v : Set (nonempty_compacts α) := { t : nonempty_compacts α | (t : Set α) ∈ v0 }
     refine' ⟨⟨v, _, _⟩⟩
-    · have : countable v0 := countable_set_of_finite_subset cs
+    · have : v0.countable := countable_set_of_finite_subset cs
       exact this.preimage SetLike.coe_injective
       
     · refine' fun t => mem_closure_iff.2 fun ε εpos => _
@@ -361,7 +362,7 @@ instance NonemptyCompacts.second_countable_topology [SecondCountableTopology α]
         intro x hx
         rcases tb x hx with ⟨y, yv, Dxy⟩
         have : y ∈ c := by
-          simp [c, -mem_image] <;> exact ⟨yv, ⟨x, hx, Dxy⟩⟩
+          simp [← c, -mem_image] <;> exact ⟨yv, ⟨x, hx, Dxy⟩⟩
         exact ⟨y, this, le_of_ltₓ Dxy⟩
       -- points in `c` are well approximated by points in `t`
       have ct : ∀, ∀ y ∈ c, ∀, ∃ x ∈ t, edist y x ≤ δ := by
@@ -373,7 +374,7 @@ instance NonemptyCompacts.second_countable_topology [SecondCountableTopology α]
             
         exact ⟨x, xt, this⟩
       -- it follows that their Hausdorff distance is small
-      have : Hausdorff_edist (t : Set α) c ≤ δ := Hausdorff_edist_le_of_mem_edist Tc ct
+      have : Hausdorff_edist (t : Set α) c ≤ δ := Hausdorff_edist_le_of_mem_edist tc ct
       have Dtc : Hausdorff_edist (t : Set α) c < ε := this.trans_lt δlt
       -- the set `c` is not empty, as it is well approximated by a nonempty set
       have hc : c.nonempty := nonempty_of_Hausdorff_edist_ne_top t.nonempty (ne_top_of_lt Dtc)
@@ -418,8 +419,8 @@ theorem lipschitz_inf_dist_set (x : α) : LipschitzWith 1 fun s : NonemptyCompac
     exact inf_dist_le_inf_dist_add_Hausdorff_dist (edist_ne_top t s)
 
 theorem lipschitz_inf_dist : LipschitzWith 2 fun p : α × NonemptyCompacts α => infDist p.1 p.2 :=
-  @LipschitzWith.uncurry _ _ _ _ _ _ (fun s : NonemptyCompacts α => infDist x s) 1 1 (fun s => lipschitz_inf_dist_pt s)
-    lipschitz_inf_dist_set
+  @LipschitzWith.uncurry _ _ _ _ _ _ (fun x : α s : NonemptyCompacts α => infDist x s) 1 1
+    (fun s => lipschitz_inf_dist_pt s) lipschitz_inf_dist_set
 
 theorem uniform_continuous_inf_dist_Hausdorff_dist :
     UniformContinuous fun p : α × NonemptyCompacts α => infDist p.1 p.2 :=

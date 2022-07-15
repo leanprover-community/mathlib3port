@@ -65,7 +65,7 @@ theorem sort_singleton (a : α) : sort r {a} = [a] :=
 
 theorem sort_perm_to_list (s : Finset α) : sort r s ~ s.toList := by
   rw [← Multiset.coe_eq_coe]
-  simp only [coe_to_list, sort_eq]
+  simp only [← coe_to_list, ← sort_eq]
 
 end Sort
 
@@ -171,17 +171,17 @@ theorem order_emb_of_fin_mem (s : Finset α) {k : ℕ} (h : s.card = k) (i : Fin
 
 @[simp]
 theorem range_order_emb_of_fin (s : Finset α) {k : ℕ} (h : s.card = k) : Set.Range (s.orderEmbOfFin h) = s := by
-  simp [order_emb_of_fin, Set.range_comp coe (s.order_iso_of_fin h)]
+  simp [← order_emb_of_fin, ← Set.range_comp coe (s.order_iso_of_fin h)]
 
 /-- The bijection `order_emb_of_fin s h` sends `0` to the minimum of `s`. -/
 theorem order_emb_of_fin_zero {s : Finset α} {k : ℕ} (h : s.card = k) (hz : 0 < k) :
     orderEmbOfFin s h ⟨0, hz⟩ = s.min' (card_pos.mp (h.symm ▸ hz)) := by
-  simp only [order_emb_of_fin_apply, Subtype.coe_mk, sorted_zero_eq_min']
+  simp only [← order_emb_of_fin_apply, ← Subtype.coe_mk, ← sorted_zero_eq_min']
 
 /-- The bijection `order_emb_of_fin s h` sends `k-1` to the maximum of `s`. -/
 theorem order_emb_of_fin_last {s : Finset α} {k : ℕ} (h : s.card = k) (hz : 0 < k) :
     orderEmbOfFin s h ⟨k - 1, Buffer.lt_aux_2 hz⟩ = s.max' (card_pos.mp (h.symm ▸ hz)) := by
-  simp [order_emb_of_fin_apply, max'_eq_sorted_last, h]
+  simp [← order_emb_of_fin_apply, ← max'_eq_sorted_last, ← h]
 
 /-- `order_emb_of_fin {a} h` sends any argument to `a`. -/
 @[simp]
@@ -223,9 +223,9 @@ def orderEmbOfCardLe (s : Finset α) {k : ℕ} (h : k ≤ s.card) : Finₓ k ↪
   (Finₓ.castLe h).trans (s.orderEmbOfFin rfl)
 
 theorem order_emb_of_card_le_mem (s : Finset α) {k : ℕ} (h : k ≤ s.card) a : orderEmbOfCardLe s h a ∈ s := by
-  simp only [order_emb_of_card_le, RelEmbedding.coe_trans, Finset.order_emb_of_fin_mem]
+  simp only [← order_emb_of_card_le, ← RelEmbedding.coe_trans, ← Finset.order_emb_of_fin_mem]
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem card_le_of_interleaved {s t : Finset α} (h : ∀ x y _ : x ∈ s _ : y ∈ s, x < y → ∃ z ∈ t, x < z ∧ z < y) :
     s.card ≤ t.card + 1 := by
   have h1 : ∀ i : Finₓ (s.card - 1), ↑i + 1 < (s.sort (· ≤ ·)).length := by

@@ -39,7 +39,7 @@ protected def zero (n : ℕ) : Bitvec n :=
 @[reducible]
 protected def one : ∀ n : ℕ, Bitvec n
   | 0 => nil
-  | succ n => repeat false n++ₜtt::ᵥnil
+  | succ n => repeat false n++ₜtt ::ᵥ nil
 
 /-- Create a bitvector from another with a provably equal length. -/
 protected def cong {a b : ℕ} (h : a = b) : Bitvec a → Bitvec b
@@ -87,7 +87,7 @@ def ushr (x : Bitvec n) (i : ℕ) : Bitvec n :=
 /-- signed shift right -/
 def sshr : ∀ {m : ℕ}, Bitvec m → ℕ → Bitvec m
   | 0, _, _ => nil
-  | succ m, x, i => head x::ᵥfillShr (tail x) i (head x)
+  | succ m, x, i => head x ::ᵥ fillShr (tail x) i (head x)
 
 end Shift
 
@@ -140,7 +140,7 @@ protected def neg (x : Bitvec n) : Bitvec n :=
 def adc (x y : Bitvec n) (c : Bool) : Bitvec (n + 1) :=
   let f := fun x y c => (Bitvec.carry x y c, Bitvec.xor3 x y c)
   let ⟨c, z⟩ := Vector.mapAccumr₂ f x y c
-  c::ᵥz
+  c ::ᵥ z
 
 /-- The sum of two bitvectors -/
 protected def add (x y : Bitvec n) : Bitvec n :=
@@ -245,12 +245,12 @@ variable {α : Type}
 /-- Create a bitvector from a `nat` -/
 protected def ofNat : ∀ n : ℕ, Nat → Bitvec n
   | 0, x => nil
-  | succ n, x => of_nat n (x / 2)++ₜtoBool (x % 2 = 1)::ᵥnil
+  | succ n, x => of_nat n (x / 2)++ₜtoBool (x % 2 = 1) ::ᵥ nil
 
 /-- Create a bitvector in the two's complement representation from an `int` -/
 protected def ofInt : ∀ n : ℕ, Int → Bitvec (succ n)
-  | n, Int.ofNat m => ff::ᵥBitvec.ofNat n m
-  | n, Int.negSucc m => tt::ᵥnot (Bitvec.ofNat n m)
+  | n, Int.ofNat m => ff ::ᵥ Bitvec.ofNat n m
+  | n, Int.negSucc m => tt ::ᵥ not (Bitvec.ofNat n m)
 
 /-- `add_lsb r b` is `r + r + 1` if `b` is `tt` and `r + r` otherwise. -/
 def addLsb (r : ℕ) (b : Bool) :=
@@ -273,9 +273,9 @@ attribute [local simp] Nat.zero_add Nat.add_zero Nat.one_mul Nat.mul_one Nat.zer
 
 -- mul_left_comm
 theorem to_nat_append {m : ℕ} (xs : Bitvec m) (b : Bool) :
-    Bitvec.toNat (xs++ₜb::ᵥnil) = Bitvec.toNat xs * 2 + Bitvec.toNat (b::ᵥnil) := by
+    Bitvec.toNat (xs++ₜb ::ᵥ nil) = Bitvec.toNat xs * 2 + Bitvec.toNat (b ::ᵥ nil) := by
   cases' xs with xs P
-  simp [bits_to_nat_to_list]
+  simp [← bits_to_nat_to_list]
   clear P
   unfold bits_to_nat List.foldlₓ
   -- generalize the accumulator of foldl
@@ -286,23 +286,23 @@ theorem to_nat_append {m : ℕ} (xs : Bitvec m) (b : Bool) :
   induction' xs with x xs generalizing x
   · simp
     unfold List.foldlₓ add_lsb
-    simp [Nat.mul_succ]
+    simp [← Nat.mul_succ]
     
   · simp
     apply xs_ih
     
 
-theorem bits_to_nat_to_bool (n : ℕ) : Bitvec.toNat (toBool (n % 2 = 1)::ᵥnil) = n % 2 := by
-  simp [bits_to_nat_to_list]
+theorem bits_to_nat_to_bool (n : ℕ) : Bitvec.toNat (toBool (n % 2 = 1) ::ᵥ nil) = n % 2 := by
+  simp [← bits_to_nat_to_list]
   unfold bits_to_nat add_lsb List.foldlₓ cond
-  simp [cond_to_bool_mod_two]
+  simp [← cond_to_bool_mod_two]
 
-theorem of_nat_succ {k n : ℕ} : Bitvec.ofNat (succ k) n = Bitvec.ofNat k (n / 2)++ₜtoBool (n % 2 = 1)::ᵥnil :=
+theorem of_nat_succ {k n : ℕ} : Bitvec.ofNat (succ k) n = Bitvec.ofNat k (n / 2)++ₜtoBool (n % 2 = 1) ::ᵥ nil :=
   rfl
 
 theorem to_nat_of_nat {k n : ℕ} : Bitvec.toNat (Bitvec.ofNat k n) = n % 2 ^ k := by
   induction' k with k ih generalizing n
-  · simp [Nat.mod_oneₓ]
+  · simp [← Nat.mod_oneₓ]
     rfl
     
   · rw [of_nat_succ, to_nat_append, ih, bits_to_nat_to_bool, mod_pow_succ, Nat.mul_comm]

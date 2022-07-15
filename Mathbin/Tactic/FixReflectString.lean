@@ -41,7 +41,7 @@ unsafe instance (priority := 2000) : has_reflect Stringₓ
     else
       have ts : List (Thunkₓ Stringₓ) := (s.to_chunks chunk_size).map fun s _ => s
       have h : s = Stringₓ.join (ts.map fun t => t ()) := undefined
-      suffices reflected (Stringₓ.join <| ts.map fun t => t ()) by
+      suffices reflected _ (Stringₓ.join <| ts.map fun t => t ()) by
         rwa [h]
       quote.1 (Stringₓ.join <| List.map _ _)
 

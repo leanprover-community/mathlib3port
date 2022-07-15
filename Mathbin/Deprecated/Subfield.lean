@@ -55,7 +55,7 @@ theorem Univ.is_subfield : IsSubfield (@Set.Univ F) :=
 theorem Preimage.is_subfield {K : Type _} [Field K] (f : F →+* K) {s : Set K} (hs : IsSubfield s) :
     IsSubfield (f ⁻¹' s) :=
   { f.is_subring_preimage hs.to_is_subring with
-    inv_mem := fun ha : f a ∈ s =>
+    inv_mem := fun a ha : f a ∈ s =>
       show f a⁻¹ ∈ s by
         rw [f.map_inv]
         exact hs.inv_mem ha }
@@ -87,7 +87,7 @@ theorem Closure.is_submonoid : IsSubmonoid (Closure S) :=
             IsSubmonoid.mul_mem ring.closure.is_subring.to_is_submonoid hq hs, (div_mul_div_comm _ _ _ _).symm⟩,
     one_mem := ring_closure_subset <| IsSubmonoid.one_mem Ringₓ.Closure.is_subring.to_is_submonoid }
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Closure.is_subfield : IsSubfield (Closure S) :=
   have h0 : (0 : F) ∈ Closure S :=
     ring_closure_subset <| Ringₓ.Closure.is_subring.to_is_add_subgroup.to_is_add_submonoid.zero_mem
@@ -98,10 +98,10 @@ theorem Closure.is_subfield : IsSubfield (Closure S) :=
       rcases id hb with ⟨r, hr, s, hs, rfl⟩
       classical
       by_cases' hq0 : q = 0
-      · simp [hb, hq0]
+      · simp [← hb, ← hq0]
         
       by_cases' hs0 : s = 0
-      · simp [ha, hs0]
+      · simp [← ha, ← hs0]
         
       exact
         ⟨p * s + q * r,
@@ -145,7 +145,7 @@ theorem IsSubfield.inter {S₁ S₂ : Set F} (hS₁ : IsSubfield S₁) (hS₂ : 
   { IsSubring.inter hS₁.to_is_subring hS₂.to_is_subring with
     inv_mem := fun x hx => ⟨hS₁.inv_mem hx.1, hS₂.inv_mem hx.2⟩ }
 
-theorem IsSubfield.Inter {ι : Sort _} {S : ι → Set F} (h : ∀ y : ι, IsSubfield (S y)) : IsSubfield (Set.Interₓ S) :=
+theorem IsSubfield.Inter {ι : Sort _} {S : ι → Set F} (h : ∀ y : ι, IsSubfield (S y)) : IsSubfield (Set.Inter S) :=
   { IsSubring.Inter fun y => (h y).to_is_subring with
     inv_mem := fun x hx => Set.mem_Inter.2 fun y => (h y).inv_mem <| Set.mem_Inter.1 hx y }
 

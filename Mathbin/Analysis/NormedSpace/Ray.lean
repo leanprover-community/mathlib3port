@@ -43,7 +43,7 @@ theorem norm_sub (h : SameRay ℝ x y) : ∥x - y∥ = abs (∥x∥ - ∥y∥) :
 
 theorem norm_smul_eq (h : SameRay ℝ x y) : ∥x∥ • y = ∥y∥ • x := by
   rcases h.exists_eq_smul with ⟨u, a, b, ha, hb, -, rfl, rfl⟩
-  simp only [norm_smul_of_nonneg, *, mul_smul, smul_comm ∥u∥]
+  simp only [← norm_smul_of_nonneg, *, ← mul_smul, ← smul_comm ∥u∥]
   apply smul_comm
 
 end SameRay
@@ -58,7 +58,7 @@ theorem norm_inj_on_ray_left (hx : x ≠ 0) : { y | SameRay ℝ x y }.InjOn norm
   rw [h]
 
 theorem norm_inj_on_ray_right (hy : y ≠ 0) : { x | SameRay ℝ x y }.InjOn norm := by
-  simpa only [same_ray_comm] using norm_inj_on_ray_left hy
+  simpa only [← same_ray_comm] using norm_inj_on_ray_left hy
 
 theorem same_ray_iff_norm_smul_eq : SameRay ℝ x y ↔ ∥x∥ • y = ∥y∥ • x :=
   ⟨SameRay.norm_smul_eq, fun h =>
@@ -76,12 +76,12 @@ alias same_ray_iff_inv_norm_smul_eq_of_ne ↔ SameRay.inv_norm_smul_eq _
 the unit vectors `∥x∥⁻¹ • x` and `∥y∥⁻¹ • y` are equal. -/
 theorem same_ray_iff_inv_norm_smul_eq : SameRay ℝ x y ↔ x = 0 ∨ y = 0 ∨ ∥x∥⁻¹ • x = ∥y∥⁻¹ • y := by
   rcases eq_or_ne x 0 with (rfl | hx)
-  · simp [SameRay.zero_left]
+  · simp [← SameRay.zero_left]
     
   rcases eq_or_ne y 0 with (rfl | hy)
-  · simp [SameRay.zero_right]
+  · simp [← SameRay.zero_right]
     
-  simp only [same_ray_iff_inv_norm_smul_eq_of_ne hx hy, *, false_orₓ]
+  simp only [← same_ray_iff_inv_norm_smul_eq_of_ne hx hy, *, ← false_orₓ]
 
 theorem same_ray_iff_of_norm_eq (h : ∥x∥ = ∥y∥) : SameRay ℝ x y ↔ x = y := by
   obtain rfl | hy := eq_or_ne y 0

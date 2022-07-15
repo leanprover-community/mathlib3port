@@ -97,7 +97,7 @@ theorem monotone_l : Monotone l :=
 
 theorem upper_bounds_l_image (s : Set α) : UpperBounds (l '' s) = u ⁻¹' UpperBounds s :=
   Set.ext fun b => by
-    simp [UpperBounds, gc _ _]
+    simp [← UpperBounds, ← gc _ _]
 
 theorem lower_bounds_u_image (s : Set β) : LowerBounds (u '' s) = l ⁻¹' LowerBounds s :=
   gc.dual.upper_bounds_l_image s
@@ -234,7 +234,7 @@ include gc
 
 theorem l_sup : l (a₁⊔a₂) = l a₁⊔l a₂ :=
   (gc.is_lub_l_image is_lub_pair).unique <| by
-    simp only [image_pair, is_lub_pair]
+    simp only [← image_pair, ← is_lub_pair]
 
 end SemilatticeSup
 
@@ -261,21 +261,21 @@ theorem l_supr {f : ι → α} : l (supr f) = ⨆ i, l (f i) :=
       show IsLub (Range (l ∘ f)) (l (supr f)) by
         rw [range_comp, ← Sup_range] <;> exact gc.is_lub_l_image (is_lub_Sup _)
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 theorem l_supr₂ {f : ∀ i, κ i → α} : l (⨆ (i) (j), f i j) = ⨆ (i) (j), l (f i j) := by
   simp_rw [gc.l_supr]
 
 theorem u_infi {f : ι → β} : u (infi f) = ⨅ i, u (f i) :=
   gc.dual.l_supr
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 theorem u_infi₂ {f : ∀ i, κ i → β} : u (⨅ (i) (j), f i j) = ⨅ (i) (j), u (f i j) :=
   gc.dual.l_supr₂
 
 theorem l_Sup {s : Set α} : l (sup s) = ⨆ a ∈ s, l a := by
-  simp only [Sup_eq_supr, gc.l_supr]
+  simp only [← Sup_eq_supr, ← gc.l_supr]
 
 theorem u_Inf {s : Set β} : u (inf s) = ⨅ a ∈ s, u a :=
   gc.dual.l_Sup
@@ -303,7 +303,8 @@ protected theorem compose [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {l1
 
 protected theorem dfun {ι : Type u} {α : ι → Type v} {β : ι → Type w} [∀ i, Preorderₓ (α i)] [∀ i, Preorderₓ (β i)]
     (l : ∀ i, α i → β i) (u : ∀ i, β i → α i) (gc : ∀ i, GaloisConnection (l i) (u i)) :
-    GaloisConnection (fun i => l i (a i)) fun b i => u i (b i) := fun a b => forall_congrₓ fun i => gc i (a i) (b i)
+    GaloisConnection (fun a : ∀ i, α i i => l i (a i)) fun b i => u i (b i) := fun a b =>
+  forall_congrₓ fun i => gc i (a i) (b i)
 
 end Constructions
 
@@ -330,6 +331,45 @@ theorem l_comm_iff_u_comm {X : Type _} [PartialOrderₓ X] {Y : Type _} [Preorde
 
 end GaloisConnection
 
+section
+
+variable [CompleteLattice α] [CompleteLattice β] [CompleteLattice γ] {f : α → β → γ} {s : Set α} {t : Set β}
+  {l u : α → β → γ} {l₁ u₁ : β → γ → α} {l₂ u₂ : α → γ → β}
+
+theorem Sup_image2_eq_Sup_Sup (h₁ : ∀ b, GaloisConnection (swap l b) (u₁ b)) (h₂ : ∀ a, GaloisConnection (l a) (u₂ a)) :
+    sup (Image2 l s t) = l (sup s) (sup t) := by
+  simp_rw [Sup_image2, ← (h₂ _).l_Sup, ← (h₁ _).l_Sup]
+
+theorem Sup_image2_eq_Sup_Inf (h₁ : ∀ b, GaloisConnection (swap l b) (u₁ b))
+    (h₂ : ∀ a, GaloisConnection (l a ∘ of_dual) (to_dual ∘ u₂ a)) : sup (Image2 l s t) = l (sup s) (inf t) :=
+  @Sup_image2_eq_Sup_Sup _ βᵒᵈ _ _ _ _ _ _ _ _ _ h₁ h₂
+
+theorem Sup_image2_eq_Inf_Sup (h₁ : ∀ b, GaloisConnection (swap l b ∘ of_dual) (to_dual ∘ u₁ b))
+    (h₂ : ∀ a, GaloisConnection (l a) (u₂ a)) : sup (Image2 l s t) = l (inf s) (sup t) :=
+  @Sup_image2_eq_Sup_Sup αᵒᵈ _ _ _ _ _ _ _ _ _ _ h₁ h₂
+
+theorem Sup_image2_eq_Inf_Inf (h₁ : ∀ b, GaloisConnection (swap l b ∘ of_dual) (to_dual ∘ u₁ b))
+    (h₂ : ∀ a, GaloisConnection (l a ∘ of_dual) (to_dual ∘ u₂ a)) : sup (Image2 l s t) = l (inf s) (inf t) :=
+  @Sup_image2_eq_Sup_Sup αᵒᵈ βᵒᵈ _ _ _ _ _ _ _ _ _ h₁ h₂
+
+theorem Inf_image2_eq_Inf_Inf (h₁ : ∀ b, GaloisConnection (l₁ b) (swap u b)) (h₂ : ∀ a, GaloisConnection (l₂ a) (u a)) :
+    inf (Image2 u s t) = u (inf s) (inf t) := by
+  simp_rw [Inf_image2, ← (h₂ _).u_Inf, ← (h₁ _).u_Inf]
+
+theorem Inf_image2_eq_Inf_Sup (h₁ : ∀ b, GaloisConnection (l₁ b) (swap u b))
+    (h₂ : ∀ a, GaloisConnection (to_dual ∘ l₂ a) (u a ∘ of_dual)) : inf (Image2 u s t) = u (inf s) (sup t) :=
+  @Inf_image2_eq_Inf_Inf _ βᵒᵈ _ _ _ _ _ _ _ _ _ h₁ h₂
+
+theorem Inf_image2_eq_Sup_Inf (h₁ : ∀ b, GaloisConnection (to_dual ∘ l₁ b) (swap u b ∘ of_dual))
+    (h₂ : ∀ a, GaloisConnection (l₂ a) (u a)) : inf (Image2 u s t) = u (sup s) (inf t) :=
+  @Inf_image2_eq_Inf_Inf αᵒᵈ _ _ _ _ _ _ _ _ _ _ h₁ h₂
+
+theorem Inf_image2_eq_Sup_Sup (h₁ : ∀ b, GaloisConnection (to_dual ∘ l₁ b) (swap u b ∘ of_dual))
+    (h₂ : ∀ a, GaloisConnection (to_dual ∘ l₂ a) (u a ∘ of_dual)) : inf (Image2 u s t) = u (sup s) (sup t) :=
+  @Inf_image2_eq_Inf_Inf αᵒᵈ βᵒᵈ _ _ _ _ _ _ _ _ _ h₁ h₂
+
+end
+
 namespace OrderIso
 
 variable [Preorderₓ α] [Preorderₓ β]
@@ -355,7 +395,7 @@ end OrderIso
 namespace Nat
 
 theorem galois_connection_mul_div {k : ℕ} (h : 0 < k) : GaloisConnection (fun n => n * k) fun n => n / k := fun x y =>
-  (le_div_iff_mul_leₓ x y h).symm
+  (le_div_iff_mul_leₓ h).symm
 
 end Nat
 
@@ -415,7 +455,7 @@ theorem l_sup_u [SemilatticeSup α] [SemilatticeSup β] (gi : GaloisInsertion l 
   calc
     l (u a⊔u b) = l (u a)⊔l (u b) := gi.gc.l_sup
     _ = a⊔b := by
-      simp only [gi.l_u_eq]
+      simp only [← gi.l_u_eq]
     
 
 theorem l_supr_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x} (f : ι → β) :
@@ -425,11 +465,11 @@ theorem l_supr_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion
     _ = ⨆ i : ι, f i := congr_arg _ <| funext fun i => gi.l_u_eq (f i)
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i hi)
 theorem l_bsupr_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x} {p : ι → Prop}
     (f : ∀ i hi : p i, β) : l (⨆ (i) (hi), u (f i hi)) = ⨆ (i) (hi), f i hi := by
-  simp only [supr_subtype', gi.l_supr_u]
+  simp only [← supr_subtype', ← gi.l_supr_u]
 
 theorem l_Sup_u_image [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) (s : Set β) :
     l (sup (u '' s)) = sup s := by
@@ -439,7 +479,7 @@ theorem l_inf_u [SemilatticeInf α] [SemilatticeInf β] (gi : GaloisInsertion l 
   calc
     l (u a⊓u b) = l (u (a⊓b)) := congr_arg l gi.gc.u_inf.symm
     _ = a⊓b := by
-      simp only [gi.l_u_eq]
+      simp only [← gi.l_u_eq]
     
 
 theorem l_infi_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x} (f : ι → β) :
@@ -449,11 +489,11 @@ theorem l_infi_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion
     _ = ⨅ i : ι, f i := gi.l_u_eq _
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i hi)
 theorem l_binfi_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x} {p : ι → Prop}
     (f : ∀ i hi : p i, β) : l (⨅ (i) (hi), u (f i hi)) = ⨅ (i) (hi), f i hi := by
-  simp only [infi_subtype', gi.l_infi_u]
+  simp only [← infi_subtype', ← gi.l_infi_u]
 
 theorem l_Inf_u_image [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) (s : Set β) :
     l (inf (u '' s)) = inf s := by
@@ -463,12 +503,12 @@ theorem l_infi_of_ul_eq_self [CompleteLattice α] [CompleteLattice β] (gi : Gal
     (hf : ∀ i, u (l (f i)) = f i) : l (⨅ i, f i) = ⨅ i, l (f i) :=
   calc
     l (⨅ i, f i) = l (⨅ i : ι, u (l (f i))) := by
-      simp [hf]
+      simp [← hf]
     _ = ⨅ i, l (f i) := gi.l_infi_u _
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i hi)
 theorem l_binfi_of_ul_eq_self [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x}
     {p : ι → Prop} (f : ∀ i hi : p i, α) (hf : ∀ i hi, u (l (f i hi)) = f i hi) :
     l (⨅ (i) (hi), f i hi) = ⨅ (i) (hi), l (f i hi) := by
@@ -513,11 +553,11 @@ def liftSemilatticeInf [SemilatticeInf α] (gi : GaloisInsertion l u) : Semilatt
       gi.choice (u a⊓u b) <|
         le_inf (gi.gc.monotone_u <| gi.gc.l_le <| inf_le_left) (gi.gc.monotone_u <| gi.gc.l_le <| inf_le_right),
     inf_le_left := by
-      simp only [gi.choice_eq] <;> exact fun a b => gi.gc.l_le inf_le_left,
+      simp only [← gi.choice_eq] <;> exact fun a b => gi.gc.l_le inf_le_left,
     inf_le_right := by
-      simp only [gi.choice_eq] <;> exact fun a b => gi.gc.l_le inf_le_right,
+      simp only [← gi.choice_eq] <;> exact fun a b => gi.gc.l_le inf_le_right,
     le_inf := by
-      simp only [gi.choice_eq] <;>
+      simp only [← gi.choice_eq] <;>
         exact fun a b c hac hbc =>
           (gi.le_l_u a).trans <| gi.gc.monotone_l <| le_inf (gi.gc.monotone_u hac) (gi.gc.monotone_u hbc) }
 
@@ -533,7 +573,7 @@ def liftLattice [Lattice α] (gi : GaloisInsertion l u) : Lattice β :=
 def liftOrderTop [Preorderₓ α] [OrderTop α] (gi : GaloisInsertion l u) : OrderTop β where
   top := gi.choice ⊤ <| le_top
   le_top := by
-    simp only [gi.choice_eq] <;> exact fun b => (gi.le_l_u b).trans (gi.gc.monotone_l le_top)
+    simp only [← gi.choice_eq] <;> exact fun b => (gi.le_l_u b).trans (gi.gc.monotone_l le_top)
 
 /-- Lift the top, bottom, suprema, and infima along a Galois insertion -/
 -- See note [reducible non instances]
@@ -654,8 +694,8 @@ theorem u_supr_l [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinserti
     u (⨆ i, l (f i)) = ⨆ i, f i :=
   gi.dual.l_infi_u _
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i hi)
 theorem u_bsupr_l [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u) {ι : Sort x} {p : ι → Prop}
     (f : ∀ i hi : p i, α) : u (⨆ (i) (hi), l (f i hi)) = ⨆ (i) (hi), f i hi :=
   gi.dual.l_binfi_u _
@@ -668,8 +708,8 @@ theorem u_supr_of_lu_eq_self [CompleteLattice α] [CompleteLattice β] (gi : Gal
     (f : ι → β) (hf : ∀ i, l (u (f i)) = f i) : u (⨆ i, f i) = ⨆ i, u (f i) :=
   gi.dual.l_infi_of_ul_eq_self _ hf
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i hi)
 theorem u_bsupr_of_lu_eq_self [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u) {ι : Sort x}
     {p : ι → Prop} (f : ∀ i hi : p i, β) (hf : ∀ i hi, l (u (f i hi)) = f i hi) :
     u (⨆ (i) (hi), f i hi) = ⨆ (i) (hi), u (f i hi) :=

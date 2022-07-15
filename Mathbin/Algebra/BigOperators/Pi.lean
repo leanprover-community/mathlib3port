@@ -52,7 +52,7 @@ theorem prod_mk_prod {α β γ : Type _} [CommMonoidₓ α] [CommMonoidₓ β] (
   have := Classical.decEq γ
   Finset.induction_on s rfl
     (by
-      simp (config := { contextual := true })[Prod.ext_iff])
+      simp (config := { contextual := true })[← Prod.ext_iff])
 
 section Single
 
@@ -69,7 +69,7 @@ theorem AddMonoidHom.functions_ext [Fintype I] (G : Type _) [AddCommMonoidₓ G]
     (w : ∀ i : I x : Z i, g (Pi.single i x) = h (Pi.single i x)) : g = h := by
   ext k
   rw [← Finset.univ_sum_single k, g.map_sum, h.map_sum]
-  simp only [w]
+  simp only [← w]
 
 /-- This is used as the ext lemma instead of `add_monoid_hom.functions_ext` for reasons explained in
 note [partially-applied ext lemmas]. -/
@@ -94,7 +94,7 @@ variable [∀ i, NonAssocSemiringₓ (f i)]
 @[ext]
 theorem RingHom.functions_ext [Fintype I] (G : Type _) [NonAssocSemiringₓ G] (g h : (∀ i, f i) →+* G)
     (w : ∀ i : I x : f i, g (single i x) = h (single i x)) : g = h :=
-  RingHom.coe_add_monoid_hom_injective <| AddMonoidHom.functions_ext G (g : (∀ i, f i) →+ G) h w
+  RingHom.coe_add_monoid_hom_injective <| @AddMonoidHom.functions_ext I _ f _ _ G _ (g : (∀ i, f i) →+ G) h w
 
 end RingHom
 

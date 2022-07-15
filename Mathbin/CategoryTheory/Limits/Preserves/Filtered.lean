@@ -42,12 +42,11 @@ class PreservesFilteredColimits (F : C ⥤ D) : Type max u₁ u₂ (v + 1) where
 attribute [instance] preserves_filtered_colimits.preserves_filtered_colimits
 
 instance (priority := 100) PreservesColimits.preservesFilteredColimits (F : C ⥤ D) [PreservesColimits F] :
-    PreservesFilteredColimits F where
-  PreservesFilteredColimits := inferInstance
+    PreservesFilteredColimits F where PreservesFilteredColimits := inferInstance
 
 instance compPreservesFilteredColimits (F : C ⥤ D) (G : D ⥤ E) [PreservesFilteredColimits F]
-    [PreservesFilteredColimits G] : PreservesFilteredColimits (F ⋙ G) where
-  PreservesFilteredColimits := fun J _ _ => inferInstance
+    [PreservesFilteredColimits G] :
+    PreservesFilteredColimits (F ⋙ G) where PreservesFilteredColimits := fun J _ _ => inferInstance
 
 /-- A functor is said to preserve cofiltered limits, if it preserves all limits of shape `J`, where
 `J` is a cofiltered category.
@@ -58,12 +57,11 @@ class PreservesCofilteredLimits (F : C ⥤ D) : Type max u₁ u₂ (v + 1) where
 attribute [instance] preserves_cofiltered_limits.preserves_cofiltered_limits
 
 instance (priority := 100) PreservesLimits.preservesCofilteredLimits (F : C ⥤ D) [PreservesLimits F] :
-    PreservesCofilteredLimits F where
-  PreservesCofilteredLimits := inferInstance
+    PreservesCofilteredLimits F where PreservesCofilteredLimits := inferInstance
 
 instance compPreservesCofilteredLimits (F : C ⥤ D) (G : D ⥤ E) [PreservesCofilteredLimits F]
-    [PreservesCofilteredLimits G] : PreservesCofilteredLimits (F ⋙ G) where
-  PreservesCofilteredLimits := fun J _ _ => inferInstance
+    [PreservesCofilteredLimits G] :
+    PreservesCofilteredLimits (F ⋙ G) where PreservesCofilteredLimits := fun J _ _ => inferInstance
 
 end CategoryTheory.Limits
 

@@ -49,14 +49,14 @@ open Pointwise
 
 /-- The submonoid with every element inverted. -/
 @[to_additive " The additive submonoid with every element negated. "]
-protected def hasInv : Inv (Submonoid G) where
-  inv := fun S =>
+protected def hasInv :
+    Inv (Submonoid G) where inv := fun S =>
     { Carrier := (S : Set G)⁻¹,
       one_mem' :=
         show (1 : G)⁻¹ ∈ S by
           rw [inv_one]
           exact S.one_mem,
-      mul_mem' := fun hb : b⁻¹ ∈ S =>
+      mul_mem' := fun a b ha : a⁻¹ ∈ S hb : b⁻¹ ∈ S =>
         show (a * b)⁻¹ ∈ S by
           rw [mul_inv_rev]
           exact S.mul_mem hb ha }
@@ -74,9 +74,8 @@ theorem mem_inv {g : G} {S : Submonoid G} : g ∈ S⁻¹ ↔ g⁻¹ ∈ S :=
   Iff.rfl
 
 @[to_additive]
-instance : HasInvolutiveInv (Submonoid G) where
-  inv := Inv.inv
-  inv_inv := fun S => SetLike.coe_injective <| inv_invₓ _
+instance : HasInvolutiveInv (Submonoid G) :=
+  (SetLike.coe_injective.HasInvolutiveInv _) fun _ => rfl
 
 @[simp, to_additive]
 theorem inv_le_inv (S T : Submonoid G) : S⁻¹ ≤ T⁻¹ ↔ S ≤ T :=
@@ -138,9 +137,12 @@ variable [Monoidₓ α] [MulDistribMulAction α M]
 
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwiseMulAction : MulAction α (Submonoid M) where
-  smul := fun a S => S.map (MulDistribMulAction.toMonoidEnd _ _ a)
-  one_smul := fun S => (congr_arg (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id
-  mul_smul := fun a₁ a₂ S => (congr_arg (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
+  smul := fun a S => S.map (MulDistribMulAction.toMonoidEnd _ M a)
+  one_smul := fun S => by
+    ext
+    simp
+  mul_smul := fun a₁ a₂ S =>
+    (congr_arg (fun f : Monoidₓ.End M => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
 
 localized [Pointwise] attribute [instance] Submonoid.pointwiseMulAction
 
@@ -158,7 +160,7 @@ theorem mem_smul_pointwise_iff_exists (m : M) (a : α) (S : Submonoid M) : m ∈
 
 instance pointwise_central_scalar [MulDistribMulAction αᵐᵒᵖ M] [IsCentralScalar α M] :
     IsCentralScalar α (Submonoid M) :=
-  ⟨fun a S => (congr_arg fun f => S.map f) <| MonoidHom.ext <| op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_arg fun f : Monoidₓ.End M => S.map f) <| MonoidHom.ext <| op_smul_eq_smul _⟩
 
 end Monoidₓ
 
@@ -237,9 +239,10 @@ variable [Monoidₓ α] [DistribMulAction α A]
 
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwiseMulAction : MulAction α (AddSubmonoid A) where
-  smul := fun a S => S.map (DistribMulAction.toAddMonoidEnd _ _ a)
-  one_smul := fun S => (congr_arg (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id
-  mul_smul := fun a₁ a₂ S => (congr_arg (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
+  smul := fun a S => S.map (DistribMulAction.toAddMonoidEnd _ A a)
+  one_smul := fun S => (congr_arg (fun f : AddMonoidₓ.End A => S.map f) (MonoidHom.map_one _)).trans S.map_id
+  mul_smul := fun a₁ a₂ S =>
+    (congr_arg (fun f : AddMonoidₓ.End A => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
 
 localized [Pointwise] attribute [instance] AddSubmonoid.pointwiseMulAction
 
@@ -254,7 +257,7 @@ theorem smul_mem_pointwise_smul (m : A) (a : α) (S : AddSubmonoid A) : m ∈ S 
 
 instance pointwise_central_scalar [DistribMulAction αᵐᵒᵖ A] [IsCentralScalar α A] :
     IsCentralScalar α (AddSubmonoid A) :=
-  ⟨fun a S => (congr_arg fun f => S.map f) <| AddMonoidHom.ext <| op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_arg fun f : AddMonoidₓ.End A => S.map f) <| AddMonoidHom.ext <| op_smul_eq_smul _⟩
 
 end Monoidₓ
 
@@ -349,7 +352,7 @@ protected theorem mul_induction_on {M N : AddSubmonoid R} {C : R → Prop} {r : 
     (hm : ∀, ∀ m ∈ M, ∀, ∀ n ∈ N, ∀, C (m * n)) (ha : ∀ x y, C x → C y → C (x + y)) : C r :=
   (@mul_le _ _ _ _
         ⟨C, ha, by
-          simpa only [zero_mul] using hm _ (zero_mem _) _ (zero_mem _)⟩).2
+          simpa only [← zero_mul] using hm _ (zero_mem _) _ (zero_mem _)⟩).2
     hm hr
 
 open Pointwise
@@ -370,8 +373,8 @@ theorem closure_mul_closure (S T : Set R) : closure S * closure T = closure (S *
         exact subset_closure ⟨_, _, ‹_›, ‹_›, rfl⟩
     all_goals
       intros
-      simp only [mul_zero, zero_mul, zero_mem, left_distrib, right_distrib, mul_smul_comm, smul_mul_assoc]
-      solve_by_elim [add_mem _ _, zero_mem _]
+      simp only [← mul_zero, ← zero_mul, ← zero_mem, ← left_distrib, ← right_distrib, ← mul_smul_comm, ← smul_mul_assoc]
+      solve_by_elim [← add_mem _ _, ← zero_mem _]
     
   · rw [closure_le]
     rintro _ ⟨a, b, ha, hb, rfl⟩

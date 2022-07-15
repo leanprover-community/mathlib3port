@@ -199,7 +199,7 @@ theorem IsMaximal.is_coatom' [IsMaximal I] : IsCoatom I :=
 theorem _root_.is_coatom.is_maximal (hI : IsCoatom I) : IsMaximal I :=
   { IsCoatom.is_proper ‹_› with
     maximal_proper := fun _ _ => by
-      simp [hI.2 _ ‹_›] }
+      simp [← hI.2 _ ‹_›] }
 
 theorem is_maximal_iff_is_coatom : IsMaximal I ↔ IsCoatom I :=
   ⟨fun h => h.IsCoatom, fun h => h.IsMaximal⟩
@@ -321,7 +321,7 @@ instance : HasSup (Ideal P) :=
       nonempty' := by
         cases inter_nonempty I J
         exact ⟨w, w, h.1, w, h.2, le_sup_left⟩,
-      directed' := fun y ⟨yi, _, yj, _, _⟩ =>
+      directed' := fun x ⟨xi, _, xj, _, _⟩ y ⟨yi, _, yj, _, _⟩ =>
         ⟨x⊔y,
           ⟨xi⊔yi, sup_mem ‹_› ‹_›, xj⊔yj, sup_mem ‹_› ‹_›,
             sup_le
@@ -336,14 +336,14 @@ instance : HasSup (Ideal P) :=
           le_sup_left, le_sup_right⟩,
       lower' := fun x y h ⟨yi, _, yj, _, _⟩ => ⟨yi, ‹_›, yj, ‹_›, h.trans ‹_›⟩ }⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (i «expr ∈ » I)
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (j «expr ∈ » J)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i «expr ∈ » I)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j «expr ∈ » J)
 instance : Lattice (Ideal P) :=
   { Ideal.partialOrder with sup := (·⊔·),
-    le_sup_left := fun i _ : i ∈ I => by
+    le_sup_left := fun I J i _ : i ∈ I => by
       cases J.nonempty
       exact ⟨i, ‹_›, w, ‹_›, le_sup_left⟩,
-    le_sup_right := fun j _ : j ∈ J => by
+    le_sup_right := fun I J j _ : j ∈ J => by
       cases I.nonempty
       exact ⟨w, ‹_›, j, ‹_›, le_sup_right⟩,
     sup_le := fun I J K hIK hJK a ⟨i, hi, j, hj, ha⟩ =>
@@ -370,7 +370,7 @@ theorem mem_sup : x ∈ I⊔J ↔ ∃ i ∈ I, ∃ j ∈ J, x ≤ i⊔j :=
 theorem lt_sup_principal_of_not_mem (hx : x ∉ I) : I < I⊔principal x :=
   le_sup_left.lt_of_ne fun h =>
     hx <| by
-      simpa only [left_eq_sup, principal_le_iff] using h
+      simpa only [← left_eq_sup, ← principal_le_iff] using h
 
 end SemilatticeSupDirected
 
@@ -515,7 +515,7 @@ def idealOfCofinals : Ideal P where
   Carrier := { x : P | ∃ n, x ≤ sequenceOfCofinals p 𝒟 n }
   lower' := fun x y hxy ⟨n, hn⟩ => ⟨n, le_transₓ hxy hn⟩
   nonempty' := ⟨p, 0, le_rfl⟩
-  directed' := fun y ⟨m, hm⟩ =>
+  directed' := fun x ⟨n, hn⟩ y ⟨m, hm⟩ =>
     ⟨_, ⟨max n m, le_rfl⟩, le_transₓ hn <| sequenceOfCofinals.monotone p 𝒟 (le_max_leftₓ _ _),
       le_transₓ hm <| sequenceOfCofinals.monotone p 𝒟 (le_max_rightₓ _ _)⟩
 

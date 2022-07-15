@@ -82,17 +82,17 @@ theorem CNF_foldr {b : Ordinal} (b0 : b ≠ 0) o : (cNF b o).foldr (fun p r => b
 private theorem CNF_pairwise_aux (b o : Ordinal.{u}) :
     (∀ p : Ordinal × Ordinal, p ∈ cNF b o → p.1 ≤ log b o) ∧ (cNF b o).Pairwise fun p q => q.1 < p.1 := by
   by_cases' b0 : b = 0
-  · simp only [b0, zero_CNF, List.Pairwiseₓ.nil, and_trueₓ]
+  · simp only [← b0, ← zero_CNF, ← List.Pairwiseₓ.nil, ← and_trueₓ]
     exact fun _ => False.elim
     
   cases' lt_or_eq_of_leₓ (one_le_iff_ne_zero.2 b0) with b1 b1
   · refine' CNF_rec b0 _ _ o
-    · simp only [CNF_zero, List.Pairwiseₓ.nil, and_trueₓ]
+    · simp only [← CNF_zero, ← List.Pairwiseₓ.nil, ← and_trueₓ]
       exact fun _ => False.elim
       
     intro o o0 IH
     cases' IH with IH₁ IH₂
-    simp only [CNF_ne_zero b0 o0, List.forall_mem_consₓ, List.pairwise_cons, IH₂, and_trueₓ]
+    simp only [← CNF_ne_zero b0 o0, ← List.forall_mem_consₓ, ← List.pairwise_cons, ← IH₂, ← and_trueₓ]
     refine' ⟨⟨le_rfl, fun p m => _⟩, fun p m => _⟩
     · exact (IH₁ p m).trans (log_mono_right _ <| le_of_ltₓ <| mod_opow_log_lt_self b0 o0)
       
@@ -100,18 +100,18 @@ private theorem CNF_pairwise_aux (b o : Ordinal.{u}) :
       · rw [Ordinal.pos_iff_ne_zero]
         intro e
         rw [e] at m
-        simpa only [CNF_zero] using m
+        simpa only [← CNF_zero] using m
         
       · exact mod_lt _ (opow_ne_zero _ b0)
         
       
     
   · by_cases' o0 : o = 0
-    · simp only [o0, CNF_zero, List.Pairwiseₓ.nil, and_trueₓ]
+    · simp only [← o0, ← CNF_zero, ← List.Pairwiseₓ.nil, ← and_trueₓ]
       exact fun _ => False.elim
       
     rw [← b1, one_CNF o0]
-    simp only [List.mem_singletonₓ, log_one_left, forall_eq, le_reflₓ, true_andₓ, List.pairwise_singleton]
+    simp only [← List.mem_singletonₓ, ← log_one_left, ← forall_eq, ← le_reflₓ, ← true_andₓ, ← List.pairwise_singleton]
     
 
 theorem CNF_pairwise (b o : Ordinal.{u}) : (cNF b o).Pairwise fun p q : Ordinal × Ordinal => q.1 < p.1 :=
@@ -134,7 +134,7 @@ private theorem CNF_snd_lt_aux {b o : Ordinal.{u}} (b1 : 1 < b) :
         rw [CNF_zero]
         exact False.elim)
       (fun o o0 IH => _) o
-  simp only [CNF_ne_zero b0 o0, List.mem_cons_iff, forall_eq_or_imp, iff_true_intro @IH, and_trueₓ]
+  simp only [← CNF_ne_zero b0 o0, ← List.mem_cons_iff, ← forall_eq_or_imp, ← iff_true_intro @IH, ← and_trueₓ]
   nth_rw 1[← @succ_le_iff]
   rw [div_lt (opow_ne_zero _ b0), ← opow_succ, le_div (opow_ne_zero _ b0), succ_zero, mul_oneₓ]
   refine' ⟨lt_opow_succ_log_self b1 _, opow_log_le_self _ _⟩

@@ -86,9 +86,9 @@ def Γ : AffineSchemeᵒᵖ ⥤ CommRingₓₓ :=
 def equivCommRing : AffineScheme ≌ CommRingₓₓᵒᵖ :=
   equivEssImageOfReflective.symm
 
-instance ΓIsEquiv : IsEquivalence Γ.{u} :=
+instance ΓIsEquiv : IsEquivalence Γ.{u} := by
   have : is_equivalence Γ.{u}.rightOp.op := is_equivalence.of_equivalence equiv_CommRing.op
-  (functor.is_equivalence_trans Γ.{u}.rightOp.op (op_op_equivalence _).Functor : _)
+  exact (functor.is_equivalence_trans Γ.{u}.rightOp.op (op_op_equivalence _).Functor : _)
 
 instance : HasColimits AffineScheme.{u} := by
   have := Adjunction.has_limits_of_equivalence.{u} Γ.{u}
@@ -194,7 +194,7 @@ theorem Scheme.Spec_map_presheaf_map_eq_to_hom {X : Scheme} {U V : Opens X.Carri
   cases h
   refine' (Scheme.congr_app this _).trans _
   erw [category.id_comp]
-  simpa [eq_to_hom_map]
+  simpa [← eq_to_hom_map]
 
 theorem IsAffineOpen.Spec_Γ_identity_hom_app_from_Spec {X : Scheme} {U : Opens X.Carrier} (hU : IsAffineOpen U) :
     specΓIdentity.Hom.app (X.Presheaf.obj <| op U) ≫ hU.fromSpec.1.c.app (op U) =
@@ -205,8 +205,8 @@ theorem IsAffineOpen.Spec_Γ_identity_hom_app_from_Spec {X : Scheme} {U : Opens 
   rw [← is_iso.comp_inv_eq] at e₁
   have e₂ := Γ_Spec.adjunction_unit_app_app_top (X.restrict U.open_embedding)
   erw [← e₂] at e₁
-  simp only [functor.id_map, Quiver.Hom.unop_op, functor.comp_map, ← functor.map_inv, ← op_inv,
-    LocallyRingedSpace.Γ_map, category.assoc, functor.right_op_map, inv_eq_to_hom] at e₁
+  simp only [← functor.id_map, ← Quiver.Hom.unop_op, ← functor.comp_map, functor.map_inv, op_inv, ←
+    LocallyRingedSpace.Γ_map, ← category.assoc, ← functor.right_op_map, ← inv_eq_to_hom] at e₁
   delta' is_affine_open.from_Spec Scheme.iso_Spec
   rw [Scheme.comp_val_c_app, Scheme.comp_val_c_app, ← e₁]
   simp_rw [category.assoc]
@@ -220,9 +220,9 @@ theorem IsAffineOpen.Spec_Γ_identity_hom_app_from_Spec {X : Scheme} {U : Opens 
     (as_iso (Γ_Spec.adjunction.unit.app (X.restrict U.open_embedding))).inv.1.c.naturality_assoc
       (eq_to_hom U.inclusion_map_eq_top).op _
   erw [e₃, e₄, ← Scheme.comp_val_c_app_assoc, iso.inv_hom_id]
-  simp only [eq_to_hom_map, eq_to_hom_op, Scheme.Spec_map_presheaf_map_eq_to_hom]
+  simp only [← eq_to_hom_map, ← eq_to_hom_op, ← Scheme.Spec_map_presheaf_map_eq_to_hom]
   erw [Scheme.Spec_map_presheaf_map_eq_to_hom, category.id_comp]
-  simpa only [eq_to_hom_trans]
+  simpa only [← eq_to_hom_trans]
 
 @[elementwise]
 theorem IsAffineOpen.from_Spec_app_eq {X : Scheme} {U : Opens X.Carrier} (hU : IsAffineOpen U) :
@@ -294,7 +294,7 @@ theorem is_basis_basic_open (X : Scheme) [IsAffine X] :
       (Top.homeoOfIso (Scheme.forget_to_Top.map_iso X.iso_Spec)).Inducing using
     1
   ext
-  simp only [Set.mem_image, exists_exists_eq_and]
+  simp only [← Set.mem_image, ← exists_exists_eq_and]
   constructor
   · rintro ⟨_, ⟨x, rfl⟩, rfl⟩
     refine' ⟨_, ⟨_, ⟨x, rfl⟩, rfl⟩, _⟩
@@ -317,10 +317,10 @@ noncomputable def IsAffineOpen.primeIdealOf {X : Scheme} {U : Opens X.Carrier} (
 
 theorem IsAffineOpen.from_Spec_prime_ideal_of {X : Scheme} {U : Opens X.Carrier} (hU : IsAffineOpen U) (x : U) :
     hU.fromSpec.val.base (hU.primeIdealOf x) = x.1 := by
-  dsimp' only [is_affine_open.from_Spec, Subtype.coe_mk]
+  dsimp' only [← is_affine_open.from_Spec, ← Subtype.coe_mk]
   erw [← Scheme.comp_val_base_apply, ← Scheme.comp_val_base_apply]
-  simpa only [← functor.map_comp_assoc, ← functor.map_comp, ← op_comp, eq_to_hom_trans, op_id, eq_to_hom_refl,
-    CategoryTheory.Functor.map_id, category.id_comp, iso.hom_inv_id_assoc]
+  simpa only [functor.map_comp_assoc, functor.map_comp, op_comp, ← eq_to_hom_trans, ← op_id, ← eq_to_hom_refl, ←
+    CategoryTheory.Functor.map_id, ← category.id_comp, ← iso.hom_inv_id_assoc]
 
 theorem IsAffineOpen.is_localization_stalk_aux {X : Scheme} (U : Opens X.Carrier)
     [IsAffine (X.restrict U.OpenEmbedding)] :
@@ -346,11 +346,11 @@ theorem IsAffineOpen.is_localization_stalk_aux {X : Scheme} (U : Opens X.Carrier
     rw [opens.inclusion_map_eq_top]
     rfl
   rw [Scheme.inv_val_c_app, is_iso.comp_inv_eq, Scheme.app_eq _ e, Γ_Spec.adjunction_unit_app_app_top]
-  simp only [category.assoc, eq_to_hom_op]
+  simp only [← category.assoc, ← eq_to_hom_op]
   erw [← functor.map_comp_assoc]
   rw [eq_to_hom_trans, eq_to_hom_refl, CategoryTheory.Functor.map_id, category.id_comp]
   erw [Spec_Γ_identity.inv_hom_id_app_assoc]
-  simp only [eq_to_hom_map, eq_to_hom_trans]
+  simp only [← eq_to_hom_map, ← eq_to_hom_trans]
 
 theorem IsAffineOpen.is_localization_stalk {X : Scheme} {U : Opens X.Carrier} (hU : IsAffineOpen U) (x : U) :
     IsLocalization.AtPrime (X.Presheaf.stalk x) (hU.primeIdealOf x).asIdeal := by
@@ -371,14 +371,14 @@ theorem IsAffineOpen.is_localization_stalk {X : Scheme} {U : Opens X.Carrier} (h
   rw [RingHom.algebra_map_to_algebra]
   refine' (PresheafedSpace.stalk_map_germ hU.from_Spec.1 _ ⟨_, _⟩).trans _
   delta' is_affine_open.from_Spec Scheme.iso_Spec structure_sheaf.to_stalk
-  simp only [Scheme.comp_val_c_app, category.assoc]
-  dsimp' only [functor.op, as_iso_inv, unop_op]
+  simp only [← Scheme.comp_val_c_app, ← category.assoc]
+  dsimp' only [← functor.op, ← as_iso_inv, ← unop_op]
   erw [is_affine_open.is_localization_stalk_aux]
-  simp only [category.assoc]
+  simp only [← category.assoc]
   conv_lhs => rw [← category.assoc]
   erw [← X.presheaf.map_comp, Spec_Γ_naturality_assoc]
   congr 1
-  simp only [← category.assoc]
+  simp only [category.assoc]
   trans _ ≫ (structure_sheaf (X.presheaf.obj <| op U)).1.germ ⟨_, _⟩
   · rfl
     
@@ -391,7 +391,7 @@ theorem IsAffineOpen.is_localization_stalk {X : Scheme} {U : Opens X.Carrier} (h
   trans LocallyRingedSpace.Γ.map (Quiver.Hom.op <| Scheme.Spec.map (X.presheaf.map (𝟙 (op U))).op) ≫ _
   · congr
     
-  simp only [CategoryTheory.Functor.map_id, op_id]
+  simp only [← CategoryTheory.Functor.map_id, ← op_id]
   erw [CategoryTheory.Functor.map_id]
   rw [category.id_comp]
   rfl

@@ -81,32 +81,34 @@ def cons (a : α) (s : Sym α n) : Sym α n.succ :=
   ⟨a ::ₘ s.1, by
     rw [Multiset.card_cons, s.2]⟩
 
+-- mathport name: «expr ::ₛ »
+infixr:67 " ::ₛ " => cons
+
 @[simp]
-theorem cons_inj_right (a : α) (s s' : Sym α n) : a :: s = a :: s' ↔ s = s' :=
+theorem cons_inj_right (a : α) (s s' : Sym α n) : a ::ₛ s = a ::ₛ s' ↔ s = s' :=
   Subtype.ext_iff.trans <| (Multiset.cons_inj_right _).trans Subtype.ext_iff.symm
 
 @[simp]
-theorem cons_inj_left (a a' : α) (s : Sym α n) : a :: s = a' :: s ↔ a = a' :=
+theorem cons_inj_left (a a' : α) (s : Sym α n) : a ::ₛ s = a' ::ₛ s ↔ a = a' :=
   Subtype.ext_iff.trans <| Multiset.cons_inj_left _
 
-theorem cons_swap (a b : α) (s : Sym α n) : a :: b :: s = b :: a :: s :=
+theorem cons_swap (a b : α) (s : Sym α n) : a ::ₛ b ::ₛ s = b ::ₛ a ::ₛ s :=
   Subtype.ext <| Multiset.cons_swap a b s.1
 
-theorem coe_cons (s : Sym α n) (a : α) : (a :: s : Multiset α) = a ::ₘ s :=
+theorem coe_cons (s : Sym α n) (a : α) : (a ::ₛ s : Multiset α) = a ::ₘ s :=
   rfl
 
 /-- This is the quotient map that takes a list of n elements as an n-tuple and produces an nth
 symmetric power.
 -/
-instance : HasLift (Vector α n) (Sym α n) where
-  lift := fun x => ⟨↑x.val, (Multiset.coe_card _).trans x.2⟩
+instance : HasLift (Vector α n) (Sym α n) where lift := fun x => ⟨↑x.val, (Multiset.coe_card _).trans x.2⟩
 
 @[simp]
 theorem of_vector_nil : ↑(Vector.nil : Vector α 0) = (Sym.nil : Sym α 0) :=
   rfl
 
 @[simp]
-theorem of_vector_cons (a : α) (v : Vector α n) : ↑(Vector.cons a v) = a :: (↑v : Sym α n) := by
+theorem of_vector_cons (a : α) (v : Vector α n) : ↑(Vector.cons a v) = a ::ₛ (↑v : Sym α n) := by
   cases v
   rfl
 
@@ -123,17 +125,17 @@ theorem mem_mk (a : α) (s : Multiset α) (h : s.card = n) : a ∈ mk s h ↔ a 
   Iff.rfl
 
 @[simp]
-theorem mem_cons {a b : α} {s : Sym α n} : a ∈ b :: s ↔ a = b ∨ a ∈ s :=
+theorem mem_cons {a b : α} {s : Sym α n} : a ∈ b ::ₛ s ↔ a = b ∨ a ∈ s :=
   Multiset.mem_cons
 
-theorem mem_cons_of_mem {a b : α} {s : Sym α n} (h : a ∈ s) : a ∈ b :: s :=
+theorem mem_cons_of_mem {a b : α} {s : Sym α n} (h : a ∈ s) : a ∈ b ::ₛ s :=
   Multiset.mem_cons_of_mem h
 
 @[simp]
-theorem mem_cons_self (a : α) (s : Sym α n) : a ∈ a :: s :=
+theorem mem_cons_self (a : α) (s : Sym α n) : a ∈ a ::ₛ s :=
   Multiset.mem_cons_self a s.1
 
-theorem cons_of_coe_eq (a : α) (v : Vector α n) : a :: (↑v : Sym α n) = ↑(a::ᵥv) :=
+theorem cons_of_coe_eq (a : α) (v : Vector α n) : a ::ₛ (↑v : Sym α n) = ↑(a ::ᵥ v) :=
   Subtype.ext <| by
     cases v
     rfl
@@ -161,12 +163,12 @@ theorem coe_erase [DecidableEq α] {s : Sym α n.succ} {a : α} (h : a ∈ s) :
   rfl
 
 @[simp]
-theorem cons_erase [DecidableEq α] {s : Sym α n.succ} {a : α} (h : a ∈ s) : a :: s.erase a h = s :=
+theorem cons_erase [DecidableEq α] {s : Sym α n.succ} {a : α} (h : a ∈ s) : a ::ₛ s.erase a h = s :=
   coe_injective <| Multiset.cons_erase h
 
 @[simp]
-theorem erase_cons_head [DecidableEq α] (s : Sym α n) (a : α) (h : a ∈ a :: s := mem_cons_self a s) :
-    (a :: s).erase a h = s :=
+theorem erase_cons_head [DecidableEq α] (s : Sym α n) (a : α) (h : a ∈ a ::ₛ s := mem_cons_self a s) :
+    (a ::ₛ s).erase a h = s :=
   coe_injective <| Multiset.erase_cons_head a s.1
 
 /-- Another definition of the nth symmetric power, using vectors modulo permutations. (See `sym`.)
@@ -177,7 +179,7 @@ def Sym' (α : Type _) (n : ℕ) :=
 /-- This is `cons` but for the alternative `sym'` definition.
 -/
 def cons' {α : Type _} {n : ℕ} : α → Sym' α n → Sym' α (Nat.succ n) := fun a =>
-  Quotientₓ.map (Vector.cons a) fun h => List.Perm.cons _ h
+  Quotientₓ.map (Vector.cons a) fun ⟨l₁, h₁⟩ ⟨l₂, h₂⟩ h => List.Perm.cons _ h
 
 /-- Multisets of cardinality n are equivalent to length-n vectors up to permutations.
 -/
@@ -189,7 +191,7 @@ def symEquivSym' {α : Type _} {n : ℕ} : Sym α n ≃ Sym' α n :=
     rfl
 
 theorem cons_equiv_eq_equiv_cons (α : Type _) (n : ℕ) (a : α) (s : Sym α n) :
-    a :: symEquivSym' s = symEquivSym' (a :: s) := by
+    a :: symEquivSym' s = symEquivSym' (a ::ₛ s) := by
   rcases s with ⟨⟨l⟩, _⟩
   rfl
 
@@ -209,7 +211,7 @@ instance uniqueZero : Unique (Sym α 0) :=
 def repeat (a : α) (n : ℕ) : Sym α n :=
   ⟨Multiset.repeat a n, Multiset.card_repeat _ _⟩
 
-theorem repeat_succ {a : α} {n : ℕ} : repeat a n.succ = a :: repeat a n :=
+theorem repeat_succ {a : α} {n : ℕ} : repeat a n.succ = a ::ₛ repeat a n :=
   rfl
 
 theorem coe_repeat : (repeat a n : Multiset α) = Multiset.repeat a n :=
@@ -227,8 +229,8 @@ theorem eq_repeat_iff : s = repeat a n ↔ ∀, ∀ b ∈ s, ∀, b = a := by
 theorem exists_mem (s : Sym α n.succ) : ∃ a, a ∈ s :=
   Multiset.card_pos_iff_exists_mem.1 <| s.2.symm ▸ n.succ_pos
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
-theorem exists_eq_cons_of_succ (s : Sym α n.succ) : ∃ (a : α)(s' : Sym α n), s = a :: s' := by
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+theorem exists_eq_cons_of_succ (s : Sym α n.succ) : ∃ (a : α)(s' : Sym α n), s = a ::ₛ s' := by
   obtain ⟨a, ha⟩ := exists_mem s
   classical
   exact ⟨a, s.erase a ha, (cons_erase ha).symm⟩
@@ -276,7 +278,7 @@ instance (n : ℕ) [Nontrivial α] : Nontrivial (Sym α (n + 1)) :=
 the underlying `n`-tuple. -/
 def map {n : ℕ} (f : α → β) (x : Sym α n) : Sym β n :=
   ⟨x.val.map f, by
-    simpa [Multiset.card_map] using x.property⟩
+    simpa [← Multiset.card_map] using x.property⟩
 
 @[simp]
 theorem mem_map {n : ℕ} {f : α → β} {b : β} {l : Sym α n} : b ∈ Sym.map f l ↔ ∃ a, a ∈ l ∧ f a = b :=
@@ -285,23 +287,23 @@ theorem mem_map {n : ℕ} {f : α → β} {b : β} {l : Sym α n} : b ∈ Sym.ma
 /-- Note: `sym.map_id` is not simp-normal, as simp ends up unfolding `id` with `sym.map_congr` -/
 @[simp]
 theorem map_id' {α : Type _} {n : ℕ} (s : Sym α n) : Sym.map (fun x : α => x) s = s := by
-  simp [Sym.map]
+  simp [← Sym.map]
 
 theorem map_id {α : Type _} {n : ℕ} (s : Sym α n) : Sym.map id s = s := by
-  simp [Sym.map]
+  simp [← Sym.map]
 
 @[simp]
 theorem map_map {α β γ : Type _} {n : ℕ} (g : β → γ) (f : α → β) (s : Sym α n) :
     Sym.map g (Sym.map f s) = Sym.map (g ∘ f) s := by
-  simp [Sym.map]
+  simp [← Sym.map]
 
 @[simp]
 theorem map_zero (f : α → β) : Sym.map f (0 : Sym α 0) = (0 : Sym β 0) :=
   rfl
 
 @[simp]
-theorem map_cons {n : ℕ} (f : α → β) (a : α) (s : Sym α n) : (a :: s).map f = f a :: s.map f := by
-  simp [map, cons]
+theorem map_cons {n : ℕ} (f : α → β) (a : α) (s : Sym α n) : (a ::ₛ s).map f = f a ::ₛ s.map f := by
+  simp [← map, ← cons]
 
 @[congr]
 theorem map_congr {f g : α → β} {s : Sym α n} (h : ∀, ∀ x ∈ s, ∀, f x = g x) : map f s = map g s :=
@@ -312,7 +314,7 @@ theorem map_mk {f : α → β} {m : Multiset α} {hc : m.card = n} :
     map f (mk m hc) =
       mk (m.map f)
         (by
-          simp [hc]) :=
+          simp [← hc]) :=
   rfl
 
 @[simp]

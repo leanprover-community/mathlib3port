@@ -19,21 +19,21 @@ the limit of `f`.
 
 noncomputable section
 
-universe v u₁ u₂
+universe w v₁ v₂ u₁ u₂
 
 open CategoryTheory CategoryTheory.Category CategoryTheory.Limits
 
-variable {C : Type u₁} [Category.{v} C]
+variable {C : Type u₁} [Category.{v₁} C]
 
-variable {D : Type u₂} [Category.{v} D]
+variable {D : Type u₂} [Category.{v₂} D]
 
 variable (G : C ⥤ D)
 
 namespace CategoryTheory.Limits
 
-variable {J : Type v} (f : J → C)
+variable {J : Type w} (f : J → C)
 
--- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases
+-- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]
 /-- The map of a fan is a limit iff the fan consisting of the mapped morphisms is a limit. This
 essentially lets us commute `fan.mk` with `functor.map_cone`.
 -/
@@ -43,7 +43,7 @@ def isLimitMapConeFanMkEquiv {P : C} (g : ∀ j, P ⟶ f j) :
   refine' discrete.nat_iso fun j => iso.refl (G.obj (f j.as))
   refine'
     cones.ext (iso.refl _) fun j => by
-      "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases"
+      trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]"
       dsimp'
       simp
 
@@ -95,7 +95,7 @@ instance : IsIso (piComparison G f) := by
 
 end
 
--- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases
+-- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]
 /-- The map of a cofan is a colimit iff the cofan consisting of the mapped morphisms is a colimit.
 This essentially lets us commute `cofan.mk` with `functor.map_cocone`.
 -/
@@ -106,7 +106,7 @@ def isColimitMapCoconeCofanMkEquiv {P : C} (g : ∀ j, f j ⟶ P) :
   refine' discrete.nat_iso fun j => iso.refl (G.obj (f j.as))
   refine'
     cocones.ext (iso.refl _) fun j => by
-      "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases"
+      trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]"
       dsimp'
       simp
 

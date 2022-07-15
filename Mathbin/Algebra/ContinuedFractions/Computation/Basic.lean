@@ -146,7 +146,7 @@ position `n`, we also return `none` at `n + 1`.
 -/
 theorem stream_is_seq (v : K) : (IntFractPair.stream v).IsSeq := by
   intro _ hyp
-  simp [int_fract_pair.stream, hyp]
+  simp [← int_fract_pair.stream, ← hyp]
 
 /-- Uses `int_fract_pair.stream` to create a sequence with head (i.e. `seq1`) of integer and fractional
 parts of a value `v`. The first value of `int_fract_pair.stream` is never `none`, so we can safely

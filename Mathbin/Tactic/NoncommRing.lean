@@ -9,7 +9,7 @@ namespace Tactic
 
 namespace Interactive
 
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
 /-- A tactic for simplifying identities in not-necessarily-commutative rings.
 
 An example:

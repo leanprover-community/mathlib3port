@@ -181,7 +181,7 @@ theorem ext'_iff {c d : Con M} : c.R = d.R ↔ c = d :=
 def mulKer (f : M → P) (h : ∀ x y, f (x * y) = f x * f y) : Con M where
   toSetoid := Setoidₓ.ker f
   mul' := fun _ _ _ _ h1 h2 => by
-    dsimp' [Setoidₓ.ker, on_fun]  at *
+    dsimp' [← Setoidₓ.ker, ← on_fun]  at *
     rw [h, h1, h2, h]
 
 /-- Given types with multiplications `M, N`, the product of two congruence relations `c` on `M` and
@@ -354,7 +354,7 @@ theorem Inf_to_setoid (S : Set (Con M)) : (inf S).toSetoid = inf (to_setoid '' S
       "The infimum of a set of additive congruence relations is the same as the infimum\nof the set's image under the map to the underlying binary relation."]
 theorem Inf_def (S : Set (Con M)) : ⇑(inf S) = inf (@Set.Image (Con M) (M → M → Prop) coeFn S) := by
   ext
-  simp only [Inf_image, infi_apply, infi_Prop_eq]
+  simp only [← Inf_image, ← infi_apply, ← infi_Prop_eq]
   rfl
 
 @[to_additive]
@@ -445,7 +445,7 @@ theorem con_gen_idem (r : M → M → Prop) : conGen (conGen r) = conGen r :=
 theorem sup_eq_con_gen (c d : Con M) : c⊔d = conGen fun x y => c x y ∨ d x y := by
   rw [con_gen_eq]
   apply congr_arg Inf
-  simp only [le_def, or_imp_distrib, ← forall_and_distrib]
+  simp only [← le_def, ← or_imp_distrib, forall_and_distrib]
 
 /-- The supremum of two congruence relations equals the smallest congruence relation containing
     the supremum of the underlying binary operations. -/
@@ -472,7 +472,7 @@ theorem Sup_eq_con_gen (S : Set (Con M)) : sup S = conGen fun x y => ∃ c : Con
 theorem Sup_def {S : Set (Con M)} : sup S = conGen (sup (@Set.Image (Con M) (M → M → Prop) coeFn S)) := by
   rw [Sup_eq_con_gen, Sup_image]
   congr with x y
-  simp only [Sup_image, supr_apply, supr_Prop_eq, exists_prop, rel_eq_coe]
+  simp only [← Sup_image, ← supr_apply, ← supr_Prop_eq, ← exists_prop, ← rel_eq_coe]
 
 variable (M)
 
@@ -900,18 +900,21 @@ protected theorem pow {M : Type _} [Monoidₓ M] (c : Con M) : ∀ n : ℕ {w x}
   | 0, w, x, h => by
     simpa using c.refl _
   | Nat.succ n, w, x, h => by
-    simpa [pow_succₓ] using c.mul h (pow n h)
+    simpa [← pow_succₓ] using c.mul h (pow n h)
 
 @[to_additive]
-instance {M : Type _} [MulOneClassₓ M] (c : Con M) : One c.Quotient where
-  one := ((1 : M) : c.Quotient)
+instance {M : Type _} [MulOneClassₓ M] (c : Con M) : One c.Quotient where one := ((1 : M) : c.Quotient)
 
-instance _root_.add_con.quotient.has_nsmul {M : Type _} [AddMonoidₓ M] (c : AddCon M) : HasScalar ℕ c.Quotient where
-  smul := fun n x => (Quotientₓ.liftOn' x fun w => ((n • w : M) : c.Quotient)) fun x y h => c.Eq.2 <| c.nsmul n h
+instance _root_.add_con.quotient.has_nsmul {M : Type _} [AddMonoidₓ M] (c : AddCon M) :
+    HasSmul ℕ
+      c.Quotient where smul := fun n x =>
+    (Quotientₓ.liftOn' x fun w => ((n • w : M) : c.Quotient)) fun x y h => c.Eq.2 <| c.nsmul n h
 
 @[to_additive AddCon.Quotient.hasNsmul]
-instance {M : Type _} [Monoidₓ M] (c : Con M) : Pow c.Quotient ℕ where
-  pow := fun x n => (Quotientₓ.liftOn' x fun w => ((w ^ n : M) : c.Quotient)) fun x y h => c.Eq.2 <| c.pow n h
+instance {M : Type _} [Monoidₓ M] (c : Con M) :
+    Pow c.Quotient
+      ℕ where pow := fun x n =>
+    (Quotientₓ.liftOn' x fun w => ((w ^ n : M) : c.Quotient)) fun x y h => c.Eq.2 <| c.pow n h
 
 /-- The quotient of a semigroup by a congruence relation is a semigroup. -/
 @[to_additive "The quotient of an `add_semigroup` by an additive congruence relation is\nan `add_semigroup`."]
@@ -947,15 +950,15 @@ protected theorem inv : ∀ {w x}, c w x → c w⁻¹ x⁻¹ := fun x y h => by
 /-- Multiplicative congruence relations preserve division. -/
 @[to_additive "Additive congruence relations preserve subtraction."]
 protected theorem div : ∀ {w x y z}, c w x → c y z → c (w / y) (x / z) := fun w x y z h1 h2 => by
-  simpa only [div_eq_mul_inv] using c.mul h1 (c.inv h2)
+  simpa only [← div_eq_mul_inv] using c.mul h1 (c.inv h2)
 
 /-- Multiplicative congruence relations preserve integer powers. -/
 @[to_additive AddCon.zsmul "Additive congruence relations preserve integer scaling."]
 protected theorem zpow : ∀ n : ℤ {w x}, c w x → c (w ^ n) (x ^ n)
   | Int.ofNat n, w, x, h => by
-    simpa only [zpow_of_nat] using c.pow _ h
+    simpa only [← zpow_of_nat] using c.pow _ h
   | -[1+ n], w, x, h => by
-    simpa only [zpow_neg_succ_of_nat] using c.inv (c.pow _ h)
+    simpa only [← zpow_neg_succ_of_nat] using c.inv (c.pow _ h)
 
 /-- The inversion induced on the quotient by a congruence relation on a type with a
     inversion. -/
@@ -972,7 +975,7 @@ instance hasDiv : Div c.Quotient :=
 
 /-- The integer scaling induced on the quotient by a congruence relation on a type with a
     subtraction. -/
-instance _root_.add_con.quotient.has_zsmul {M : Type _} [AddGroupₓ M] (c : AddCon M) : HasScalar ℤ c.Quotient :=
+instance _root_.add_con.quotient.has_zsmul {M : Type _} [AddGroupₓ M] (c : AddCon M) : HasSmul ℤ c.Quotient :=
   ⟨fun z x => (Quotientₓ.liftOn' x fun w => ((z • w : M) : c.Quotient)) fun x y h => c.Eq.2 <| c.zsmul z h⟩
 
 /-- The integer power induced on the quotient by a congruence relation on a type with a
@@ -1002,7 +1005,8 @@ def liftOnUnits (u : Units c.Quotient) (f : ∀ x y : M, c (x * y) 1 → c (y * 
     (Hf : ∀ x y hxy hyx x' y' hxy' hyx', c x x' → c y y' → f x y hxy hyx = f x' y' hxy' hyx') : α := by
   refine'
     @Con.hrecOn₂ M M _ _ c c (fun x y => x * y = 1 → y * x = 1 → α) (u : c.quotient) (↑u⁻¹ : c.quotient)
-      (fun hyx : (y * x : c.quotient) = 1 => f x y (c.eq.1 hxy) (c.eq.1 hyx)) (fun x y x' y' hx hy => _) u.3 u.4
+      (fun x y : M hxy : (x * y : c.quotient) = 1 hyx : (y * x : c.quotient) = 1 => f x y (c.eq.1 hxy) (c.eq.1 hyx))
+      (fun x y x' y' hx hy => _) u.3 u.4
   ext1
   · rw [c.eq.2 hx, c.eq.2 hy]
     

@@ -38,8 +38,7 @@ variable {α}
 
 namespace Opens
 
-instance : Coe (Opens α) (Set α) where
-  coe := Subtype.val
+instance : Coe (Opens α) (Set α) where coe := Subtype.val
 
 theorem val_eq_coe (U : Opens α) : U.1 = ↑U :=
   rfl
@@ -48,11 +47,9 @@ theorem val_eq_coe (U : Opens α) : U.1 = ↑U :=
 theorem coe_mk {α : Type _} [TopologicalSpace α] {U : Set α} {hU : IsOpen U} : ↑(⟨U, hU⟩ : Opens α) = U :=
   rfl
 
-instance : HasSubset (Opens α) where
-  Subset := fun U V => (U : Set α) ⊆ V
+instance : HasSubset (Opens α) where Subset := fun U V => (U : Set α) ⊆ V
 
-instance : HasMem α (Opens α) where
-  Mem := fun a U => a ∈ (U : Set α)
+instance : HasMem α (Opens α) where Mem := fun a U => a ∈ (U : Set α)
 
 @[simp]
 theorem subset_coe {U V : Opens α} : ((U : Set α) ⊆ (V : Set α)) = (U ⊆ V) :=
@@ -159,7 +156,7 @@ theorem empty_eq : (∅ : Opens α) = ⊥ :=
 
 theorem supr_def {ι} (s : ι → Opens α) : (⨆ i, s i) = ⟨⋃ i, s i, is_open_Union fun i => (s i).2⟩ := by
   ext
-  simp only [supr, coe_Sup, bUnion_range]
+  simp only [← supr, ← coe_Sup, ← bUnion_range]
   rfl
 
 @[simp]
@@ -170,7 +167,7 @@ theorem supr_mk {ι} (s : ι → Set α) (h : ∀ i, IsOpen (s i)) :
 
 @[simp]
 theorem supr_s {ι} (s : ι → Opens α) : ((⨆ i, s i : Opens α) : Set α) = ⋃ i, s i := by
-  simp [supr_def]
+  simp [← supr_def]
 
 @[simp]
 theorem mem_supr {ι} {x : α} {s : ι → Opens α} : x ∈ supr s ↔ ∃ i, x ∈ s i := by
@@ -185,7 +182,7 @@ instance : Frame (Opens α) :=
   { Opens.completeLattice with sup := sup,
     inf_Sup_le_supr_inf := fun a s =>
       (ext <| by
-          simp only [coe_inf, supr_s, coe_Sup, Set.inter_Union₂]).le }
+          simp only [← coe_inf, ← supr_s, ← coe_Sup, ← Set.inter_Union₂]).le }
 
 theorem open_embedding_of_le {U V : Opens α} (i : U ≤ V) : OpenEmbedding (Set.inclusion i) :=
   { inj := Set.inclusion_injective i, induced := (@induced_compose _ _ _ _ (Set.inclusion i) coe).symm,
@@ -223,7 +220,7 @@ theorem is_basis_iff_nbhd {B : Set (Opens α)} : IsBasis B ↔ ∀ {U : Opens α
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (Us «expr ⊆ » B)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (Us «expr ⊆ » B)
 theorem is_basis_iff_cover {B : Set (Opens α)} : IsBasis B ↔ ∀ U : Opens α, ∃ (Us : _)(_ : Us ⊆ B), U = sup Us := by
   constructor
   · intro hB U
@@ -246,7 +243,8 @@ def comap (f : C(α, β)) : FrameHom (Opens β) (Opens α) where
   toFun := fun s => ⟨f ⁻¹' s, s.2.Preimage f.Continuous⟩
   map_Sup' := fun s =>
     ext <| by
-      simp only [coe_Sup, preimage_Union, coe_mk, mem_image, Union_exists, bUnion_and', Union_Union_eq_right]
+      simp only [← coe_Sup, ← preimage_Union, ← coe_mk, ← mem_image, ← Union_exists, ← bUnion_and', ←
+        Union_Union_eq_right]
   map_inf' := fun a b => rfl
   map_top' := rfl
 
@@ -273,11 +271,10 @@ protected theorem comap_comap (g : C(β, γ)) (f : C(α, β)) (U : Opens γ) : c
 
 theorem comap_injective [T0Space β] : Injective (comap : C(α, β) → FrameHom (Opens β) (Opens α)) := fun f g h =>
   ContinuousMap.ext fun a =>
-    Inseparable.eq fun s hs => by
-      simp_rw [← mem_preimage]
-      congr 2
-      have := FunLike.congr_fun h ⟨_, hs⟩
-      exact congr_arg (coe : opens α → Set α) this
+    Inseparable.eq <|
+      inseparable_iff_forall_open.2 fun s hs =>
+        have : comap f ⟨s, hs⟩ = comap g ⟨s, hs⟩ := FunLike.congr_fun h ⟨_, hs⟩
+        show a ∈ f ⁻¹' s ↔ a ∈ g ⁻¹' s from Set.ext_iff.1 (ext_iff.2 this) a
 
 /-- A homeomorphism induces an equivalence on open sets, by taking comaps. -/
 @[simp]

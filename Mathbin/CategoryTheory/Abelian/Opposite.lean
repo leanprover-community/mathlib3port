@@ -39,7 +39,7 @@ variable {C} {X Y : C} (f : X ⟶ Y) {A B : Cᵒᵖ} (g : A ⟶ B)
 def kernelOpUnop : (kernel f.op).unop ≅ cokernel f where
   Hom :=
     (kernel.lift f.op (cokernel.π f).op <| by
-        simp [← op_comp]).unop
+        simp [op_comp]).unop
   inv :=
     cokernel.desc f (kernel.ι f.op).unop <| by
       rw [← f.unop_op, ← unop_comp, f.unop_op]
@@ -49,11 +49,11 @@ def kernelOpUnop : (kernel f.op).unop ≅ cokernel f where
     congr 1
     dsimp'
     ext
-    simp [← op_comp]
+    simp [op_comp]
   inv_hom_id' := by
     dsimp'
     ext
-    simp [← unop_comp]
+    simp [unop_comp]
 
 /-- The cokernel of `f.op` is the opposite of `kernel f`. -/
 -- TODO: Generalize (this will work whenever f has a kernel)
@@ -66,17 +66,17 @@ def cokernelOpUnop : (cokernel f.op).unop ≅ kernel f where
       simp
   inv :=
     (cokernel.desc f.op (kernel.ι f).op <| by
-        simp [← op_comp]).unop
+        simp [op_comp]).unop
   hom_inv_id' := by
     rw [← unop_id, ← (kernel.lift f _ _).unop_op, ← unop_comp]
     congr 1
     dsimp'
     ext
-    simp [← op_comp]
+    simp [op_comp]
   inv_hom_id' := by
     dsimp'
     ext
-    simp [← unop_comp]
+    simp [unop_comp]
 
 /-- The kernel of `g.unop` is the opposite of `cokernel g`. -/
 @[simps]
@@ -90,10 +90,10 @@ def cokernelUnopOp : Opposite.op (cokernel g.unop) ≅ kernel g :=
 
 theorem Cokernel.π_op :
     (cokernel.π f.op).unop = (cokernelOpUnop f).Hom ≫ kernel.ι f ≫ eqToHom (Opposite.unop_op _).symm := by
-  simp [cokernel_op_unop]
+  simp [← cokernel_op_unop]
 
 theorem Kernel.ι_op : (kernel.ι f.op).unop = eqToHom (Opposite.unop_op _) ≫ cokernel.π f ≫ (kernelOpUnop f).inv := by
-  simp [kernel_op_unop]
+  simp [← kernel_op_unop]
 
 /-- The kernel of `f.op` is the opposite of `cokernel f`. -/
 @[simps]

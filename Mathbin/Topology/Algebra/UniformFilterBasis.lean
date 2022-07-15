@@ -35,8 +35,8 @@ topological abelian group structure is compatible with its group structure. -/
 protected theorem uniform_add_group : @UniformAddGroup G B.UniformSpace _ :=
   @topological_add_group_is_uniform G _ B.topology B.is_topological_add_group
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » M)
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » M)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » M)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » M)
 theorem cauchy_iff {F : Filter G} :
     @Cauchy G B.UniformSpace F ↔ F.ne_bot ∧ ∀, ∀ U ∈ B, ∀, ∃ M ∈ F, ∀ x y _ : x ∈ M _ : y ∈ M, y - x ∈ U := by
   let this := B.uniform_space
@@ -45,7 +45,7 @@ theorem cauchy_iff {F : Filter G} :
     constructor <;> rintro ⟨h', h⟩ <;> refine' ⟨h', _⟩ <;> [rwa [← this], rwa [this]]
   rw [uniformity_eq_comap_nhds_zero G, ← map_le_iff_le_comap]
   change tendsto _ _ _ ↔ _
-  simp [(basis_sets F).prod_self.tendsto_iff B.nhds_zero_has_basis, @forall_swap (_ ∈ _) G]
+  simp [← (basis_sets F).prod_self.tendsto_iff B.nhds_zero_has_basis, ← @forall_swap (_ ∈ _) G]
 
 end AddGroupFilterBasis
 

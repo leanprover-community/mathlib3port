@@ -94,7 +94,7 @@ variable {R A}
 
 @[simp]
 theorem lmul'_apply {x y : A} : lmul' R (x ⊗ₜ y) = x * y := by
-  simp only [Algebra.lmul', TensorProduct.lift.tmul, AlgHom.to_linear_map_apply, lmul_apply]
+  simp only [← Algebra.lmul', ← TensorProduct.lift.tmul, ← AlgHom.to_linear_map_apply, ← lmul_apply]
 
 @[simp]
 theorem lmul_left_apply (p q : A) : lmulLeft R p q = p * q :=
@@ -111,22 +111,22 @@ theorem lmul_left_right_apply (vw : A × A) (p : A) : lmulLeftRight R vw p = vw.
 @[simp]
 theorem lmul_left_one : lmulLeft R (1 : A) = LinearMap.id := by
   ext
-  simp only [LinearMap.id_coe, one_mulₓ, id.def, lmul_left_apply]
+  simp only [← LinearMap.id_coe, ← one_mulₓ, ← id.def, ← lmul_left_apply]
 
 @[simp]
 theorem lmul_left_mul (a b : A) : lmulLeft R (a * b) = (lmulLeft R a).comp (lmulLeft R b) := by
   ext
-  simp only [lmul_left_apply, LinearMap.comp_apply, mul_assoc]
+  simp only [← lmul_left_apply, ← LinearMap.comp_apply, ← mul_assoc]
 
 @[simp]
 theorem lmul_right_one : lmulRight R (1 : A) = LinearMap.id := by
   ext
-  simp only [LinearMap.id_coe, mul_oneₓ, id.def, lmul_right_apply]
+  simp only [← LinearMap.id_coe, ← mul_oneₓ, ← id.def, ← lmul_right_apply]
 
 @[simp]
 theorem lmul_right_mul (a b : A) : lmulRight R (a * b) = (lmulRight R b).comp (lmulRight R a) := by
   ext
-  simp only [lmul_right_apply, LinearMap.comp_apply, mul_assoc]
+  simp only [← lmul_right_apply, ← LinearMap.comp_apply, ← mul_assoc]
 
 @[simp]
 theorem lmul_left_zero_eq_zero : lmulLeft R (0 : A) = 0 :=

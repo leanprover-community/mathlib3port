@@ -190,7 +190,7 @@ def evaluationUncurried : C × (C ⥤ D) ⥤ D where
     cases Z
     cases Y
     cases X
-    simp only [prod_comp, nat_trans.comp_app, functor.map_comp, category.assoc]
+    simp only [← prod_comp, ← nat_trans.comp_app, ← functor.map_comp, ← category.assoc]
     rw [← nat_trans.comp_app, nat_trans.naturality, nat_trans.comp_app, category.assoc, nat_trans.naturality]
 
 end
@@ -243,7 +243,7 @@ def prod {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.Prod 
   naturality' := fun X Y f => by
     cases X
     cases Y
-    simp only [functor.prod_map, Prod.mk.inj_iff, prod_comp]
+    simp only [← functor.prod_map, ← Prod.mk.inj_iff, ← prod_comp]
     constructor <;> rw [naturality]
 
 /- Again, it is inadvisable in Lean 3 to setup a notation `α × β`;

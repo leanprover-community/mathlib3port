@@ -119,18 +119,18 @@ theorem geom_mean_le_arith_mean_weighted (w z : ι → ℝ) (hw : ∀, ∀ i ∈
     
   -- If all numbers `z i` with non-zero weight are positive, then we apply Jensen's inequality
   -- for `exp` and numbers `log (z i)` with weights `w i`.
-  · simp only [not_exists, not_and, Ne.def, not_not] at A
+  · simp only [← not_exists, ← not_and, ← Ne.def, ← not_not] at A
     have := convex_on_exp.map_sum_le hw hw' fun i _ => Set.mem_univ <| log (z i)
-    simp only [exp_sum, (· ∘ ·), smul_eq_mul, mul_comm (w _) (log _)] at this
+    simp only [← exp_sum, ← (· ∘ ·), ← smul_eq_mul, ← mul_comm (w _) (log _)] at this
     convert this using 1 <;> [apply prod_congr rfl, apply sum_congr rfl] <;> intro i hi
     · cases' eq_or_lt_of_le (hz i hi) with hz hz
-      · simp [A i hi hz.symm]
+      · simp [← A i hi hz.symm]
         
       · exact rpow_def_of_pos hz _
         
       
     · cases' eq_or_lt_of_le (hz i hi) with hz hz
-      · simp [A i hi hz.symm]
+      · simp [← A i hi hz.symm]
         
       · rw [exp_log hz]
         
@@ -194,22 +194,23 @@ theorem geom_mean_le_arith_mean_weighted (w z : ι → ℝ≥0 ) (hw' : (∑ i i
 for two `nnreal` numbers. -/
 theorem geom_mean_le_arith_mean2_weighted (w₁ w₂ p₁ p₂ : ℝ≥0 ) :
     w₁ + w₂ = 1 → p₁ ^ (w₁ : ℝ) * p₂ ^ (w₂ : ℝ) ≤ w₁ * p₁ + w₂ * p₂ := by
-  simpa only [Finₓ.prod_univ_succ, Finₓ.sum_univ_succ, Finset.prod_empty, Finset.sum_empty, Fintype.univ_of_is_empty,
-    Finₓ.cons_succ, Finₓ.cons_zero, add_zeroₓ, mul_oneₓ] using geom_mean_le_arith_mean_weighted univ ![w₁, w₂] ![p₁, p₂]
+  simpa only [← Finₓ.prod_univ_succ, ← Finₓ.sum_univ_succ, ← Finset.prod_empty, ← Finset.sum_empty, ←
+    Fintype.univ_of_is_empty, ← Finₓ.cons_succ, ← Finₓ.cons_zero, ← add_zeroₓ, ← mul_oneₓ] using
+    geom_mean_le_arith_mean_weighted univ ![w₁, w₂] ![p₁, p₂]
 
 theorem geom_mean_le_arith_mean3_weighted (w₁ w₂ w₃ p₁ p₂ p₃ : ℝ≥0 ) :
     w₁ + w₂ + w₃ = 1 → p₁ ^ (w₁ : ℝ) * p₂ ^ (w₂ : ℝ) * p₃ ^ (w₃ : ℝ) ≤ w₁ * p₁ + w₂ * p₂ + w₃ * p₃ := by
-  simpa only [Finₓ.prod_univ_succ, Finₓ.sum_univ_succ, Finset.prod_empty, Finset.sum_empty, Fintype.univ_of_is_empty,
-    Finₓ.cons_succ, Finₓ.cons_zero, add_zeroₓ, mul_oneₓ, ← add_assocₓ, mul_assoc] using
-    geom_mean_le_arith_mean_weighted univ ![w₁, w₂, w₃] ![p₁, p₂, p₃]
+  simpa only [← Finₓ.prod_univ_succ, ← Finₓ.sum_univ_succ, ← Finset.prod_empty, ← Finset.sum_empty, ←
+    Fintype.univ_of_is_empty, ← Finₓ.cons_succ, ← Finₓ.cons_zero, ← add_zeroₓ, ← mul_oneₓ, add_assocₓ, ←
+    mul_assoc] using geom_mean_le_arith_mean_weighted univ ![w₁, w₂, w₃] ![p₁, p₂, p₃]
 
 theorem geom_mean_le_arith_mean4_weighted (w₁ w₂ w₃ w₄ p₁ p₂ p₃ p₄ : ℝ≥0 ) :
     w₁ + w₂ + w₃ + w₄ = 1 →
       p₁ ^ (w₁ : ℝ) * p₂ ^ (w₂ : ℝ) * p₃ ^ (w₃ : ℝ) * p₄ ^ (w₄ : ℝ) ≤ w₁ * p₁ + w₂ * p₂ + w₃ * p₃ + w₄ * p₄ :=
   by
-  simpa only [Finₓ.prod_univ_succ, Finₓ.sum_univ_succ, Finset.prod_empty, Finset.sum_empty, Fintype.univ_of_is_empty,
-    Finₓ.cons_succ, Finₓ.cons_zero, add_zeroₓ, mul_oneₓ, ← add_assocₓ, mul_assoc] using
-    geom_mean_le_arith_mean_weighted univ ![w₁, w₂, w₃, w₄] ![p₁, p₂, p₃, p₄]
+  simpa only [← Finₓ.prod_univ_succ, ← Finₓ.sum_univ_succ, ← Finset.prod_empty, ← Finset.sum_empty, ←
+    Fintype.univ_of_is_empty, ← Finₓ.cons_succ, ← Finₓ.cons_zero, ← add_zeroₓ, ← mul_oneₓ, add_assocₓ, ←
+    mul_assoc] using geom_mean_le_arith_mean_weighted univ ![w₁, w₂, w₃, w₄] ![p₁, p₂, p₃, p₄]
 
 end Nnreal
 
@@ -249,7 +250,7 @@ namespace Real
 /-- Young's inequality, a version for nonnegative real numbers. -/
 theorem young_inequality_of_nonneg {a b p q : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (hpq : p.IsConjugateExponent q) :
     a * b ≤ a ^ p / p + b ^ q / q := by
-  simpa [← rpow_mul, ha, hb, hpq.ne_zero, hpq.symm.ne_zero, div_eq_inv_mul] using
+  simpa [rpow_mul, ← ha, ← hb, ← hpq.ne_zero, ← hpq.symm.ne_zero, ← div_eq_inv_mul] using
     geom_mean_le_arith_mean2_weighted hpq.one_div_nonneg hpq.symm.one_div_nonneg (rpow_nonneg_of_nonneg ha p)
       (rpow_nonneg_of_nonneg hb q) hpq.inv_add_inv_conj
 
@@ -289,7 +290,7 @@ theorem young_inequality (a b : ℝ≥0∞) {p q : ℝ} (hpq : p.IsConjugateExpo
   · refine' le_transₓ le_top (le_of_eqₓ _)
     repeat'
       rw [div_eq_mul_inv]
-    cases h <;> rw [h] <;> simp [h, hpq.pos, hpq.symm.pos]
+    cases h <;> rw [h] <;> simp [← h, ← hpq.pos, ← hpq.symm.pos]
     
   push_neg  at h
   -- if a ≠ ⊤ and b ≠ ⊤, use the nnreal version: nnreal.young_inequality_real
@@ -297,11 +298,11 @@ theorem young_inequality (a b : ℝ≥0∞) {p q : ℝ} (hpq : p.IsConjugateExpo
     coe_rpow_of_nonneg _ hpq.symm.nonneg, Ennreal.ofReal, Ennreal.ofReal, ←
     @coe_div (Real.toNnreal p) _
       (by
-        simp [hpq.pos]),
+        simp [← hpq.pos]),
     ←
     @coe_div (Real.toNnreal q) _
       (by
-        simp [hpq.symm.pos]),
+        simp [← hpq.symm.pos]),
     ← coe_add, coe_le_coe]
   exact Nnreal.young_inequality_real a.to_nnreal b.to_nnreal hpq
 
@@ -336,8 +337,8 @@ private theorem inner_le_Lp_mul_Lp_of_norm_le_one (f g : ι → ℝ≥0 ) {p q :
 private theorem inner_le_Lp_mul_Lp_of_norm_eq_zero (f g : ι → ℝ≥0 ) {p q : ℝ} (hpq : p.IsConjugateExponent q)
     (hf : (∑ i in s, f i ^ p) = 0) :
     (∑ i in s, f i * g i) ≤ (∑ i in s, f i ^ p) ^ (1 / p) * (∑ i in s, g i ^ q) ^ (1 / q) := by
-  simp only [hf, hpq.ne_zero, one_div, sum_eq_zero_iff, zero_rpow, zero_mul, inv_eq_zero, Ne.def, not_false_iff,
-    le_zero_iff, mul_eq_zero]
+  simp only [← hf, ← hpq.ne_zero, ← one_div, ← sum_eq_zero_iff, ← zero_rpow, ← zero_mul, ← inv_eq_zero, ← Ne.def, ←
+    not_false_iff, ← le_zero_iff, ← mul_eq_zero]
   intro i his
   left
   rw [sum_eq_zero_iff] at hf
@@ -362,7 +363,7 @@ theorem inner_le_Lp_mul_Lq (f g : ι → ℝ≥0 ) {p q : ℝ} (hpq : p.IsConjug
   let f' := fun i => f i / (∑ i in s, f i ^ p) ^ (1 / p)
   let g' := fun i => g i / (∑ i in s, g i ^ q) ^ (1 / q)
   suffices (∑ i in s, f' i * g' i) ≤ 1 by
-    simp_rw [f', g', div_mul_div_comm, ← sum_div]  at this
+    simp_rw [f', g', div_mul_div_comm, ← sum_div] at this
     rwa [div_le_iff, one_mulₓ] at this
     refine' mul_ne_zero _ _
     · rw [Ne.def, rpow_eq_zero_iff, not_and_distrib]
@@ -422,9 +423,9 @@ theorem inner_le_Lp_mul_Lq_has_sum {f g : ι → ℝ≥0 } {A B : ℝ≥0 } {p q
   have hB : B = (∑' i : ι, g i ^ q) ^ (1 / q) := by
     rw [hg.tsum_eq, rpow_inv_rpow_self hpq.symm.ne_zero]
   refine' ⟨∑' i, f i * g i, _, _⟩
-  · simpa [hA, hB] using H₂
+  · simpa [← hA, ← hB] using H₂
     
-  · simpa only [rpow_self_rpow_inv hpq.ne_zero] using H₁.has_sum
+  · simpa only [← rpow_self_rpow_inv hpq.ne_zero] using H₁.has_sum
     
 
 /-- For `1 ≤ p`, the `p`-th power of the sum of `f i` is bounded above by a constant times the
@@ -433,7 +434,7 @@ sum of the `p`-th powers of `f i`. Version for sums over finite sets, with `ℝ�
 theorem rpow_sum_le_const_mul_sum_rpow (f : ι → ℝ≥0 ) {p : ℝ} (hp : 1 ≤ p) :
     (∑ i in s, f i) ^ p ≤ card s ^ (p - 1) * ∑ i in s, f i ^ p := by
   cases' eq_or_lt_of_le hp with hp hp
-  · simp [← hp]
+  · simp [hp]
     
   let q : ℝ := p / (p - 1)
   have hpq : p.is_conjugate_exponent q := by
@@ -442,8 +443,8 @@ theorem rpow_sum_le_const_mul_sum_rpow (f : ι → ℝ≥0 ) {p : ℝ} (hp : 1 �
   have hq : 1 / q * p = p - 1 := by
     rw [← hpq.div_conj_eq_sub_one]
     ring
-  simpa only [Nnreal.mul_rpow, ← Nnreal.rpow_mul, hp₁, hq, one_mulₓ, one_rpow, rpow_one, Pi.one_apply, sum_const,
-    Nat.smul_one_eq_coe] using Nnreal.rpow_le_rpow (inner_le_Lp_mul_Lq s 1 f hpq.symm) hpq.nonneg
+  simpa only [← Nnreal.mul_rpow, Nnreal.rpow_mul, ← hp₁, ← hq, ← one_mulₓ, ← one_rpow, ← rpow_one, ← Pi.one_apply, ←
+    sum_const, ← Nat.smul_one_eq_coe] using Nnreal.rpow_le_rpow (inner_le_Lp_mul_Lq s 1 f hpq.symm) hpq.nonneg
 
 /-- The `L_p` seminorm of a vector `f` is the greatest value of the inner product
 `∑ i in s, f i * g i` over functions `g` of `L_q` seminorm less than or equal to one. -/
@@ -454,23 +455,23 @@ theorem is_greatest_Lp (f : ι → ℝ≥0 ) {p q : ℝ} (hpq : p.IsConjugateExp
   constructor
   · use fun i => f i ^ p / f i / (∑ i in s, f i ^ p) ^ (1 / q)
     by_cases' hf : (∑ i in s, f i ^ p) = 0
-    · simp [hf, hpq.ne_zero, hpq.symm.ne_zero]
+    · simp [← hf, ← hpq.ne_zero, ← hpq.symm.ne_zero]
       
     · have A : p + q - q ≠ 0 := by
-        simp [hpq.ne_zero]
+        simp [← hpq.ne_zero]
       have B : ∀ y : ℝ≥0 , y * y ^ p / y = y ^ p := by
         refine' fun y => mul_div_cancel_left_of_imp fun h => _
-        simpa [h, hpq.ne_zero]
-      simp only [Set.mem_set_of_eq, div_rpow, ← sum_div, ← rpow_mul, div_mul_cancel _ hpq.symm.ne_zero, rpow_one,
-        div_le_iff hf, one_mulₓ, hpq.mul_eq_add, ← rpow_sub' _ A, _root_.add_sub_cancel, le_reflₓ, true_andₓ, ←
-        mul_div_assoc, B]
+        simpa [← h, ← hpq.ne_zero]
+      simp only [← Set.mem_set_of_eq, ← div_rpow, sum_div, rpow_mul, ← div_mul_cancel _ hpq.symm.ne_zero, ← rpow_one, ←
+        div_le_iff hf, ← one_mulₓ, ← hpq.mul_eq_add, rpow_sub' _ A, ← _root_.add_sub_cancel, ← le_reflₓ, ← true_andₓ,
+        mul_div_assoc, ← B]
       rw [div_eq_iff, ← rpow_add hf, hpq.inv_add_inv_conj, rpow_one]
-      simpa [hpq.symm.ne_zero] using hf
+      simpa [← hpq.symm.ne_zero] using hf
       
     
   · rintro _ ⟨g, hg, rfl⟩
     apply le_transₓ (inner_le_Lp_mul_Lq s f g hpq)
-    simpa only [mul_oneₓ] using mul_le_mul_left' (Nnreal.rpow_le_one hg (le_of_ltₓ hpq.symm.one_div_pos)) _
+    simpa only [← mul_oneₓ] using mul_le_mul_left' (Nnreal.rpow_le_one hg (le_of_ltₓ hpq.symm.one_div_pos)) _
     
 
 /-- Minkowski inequality: the `L_p` seminorm of the sum of two vectors is less than or equal
@@ -479,11 +480,11 @@ theorem Lp_add_le (f g : ι → ℝ≥0 ) {p : ℝ} (hp : 1 ≤ p) :
     (∑ i in s, (f i + g i) ^ p) ^ (1 / p) ≤ (∑ i in s, f i ^ p) ^ (1 / p) + (∑ i in s, g i ^ p) ^ (1 / p) := by
   -- The result is trivial when `p = 1`, so we can assume `1 < p`.
   rcases eq_or_lt_of_le hp with (rfl | hp)
-  · simp [Finset.sum_add_distrib]
+  · simp [← Finset.sum_add_distrib]
     
   have hpq := Real.is_conjugate_exponent_conjugate_exponent hp
   have := is_greatest_Lp s (f + g) hpq
-  simp only [Pi.add_apply, add_mulₓ, sum_add_distrib] at this
+  simp only [← Pi.add_apply, ← add_mulₓ, ← sum_add_distrib] at this
   rcases this.1 with ⟨φ, hφ, H⟩
   rw [← H]
   exact add_le_add ((is_greatest_Lp s f hpq).2 ⟨φ, hφ, rfl⟩) ((is_greatest_Lp s g hpq).2 ⟨φ, hφ, rfl⟩)
@@ -536,9 +537,9 @@ theorem Lp_add_le_has_sum {f g : ι → ℝ≥0 } {A B : ℝ≥0 } {p : ℝ} (hp
   have hB : B = (∑' i : ι, g i ^ p) ^ (1 / p) := by
     rw [hg.tsum_eq, rpow_inv_rpow_self hp']
   refine' ⟨(∑' i, (f i + g i) ^ p) ^ (1 / p), _, _⟩
-  · simpa [hA, hB] using H₂
+  · simpa [← hA, ← hB] using H₂
     
-  · simpa only [rpow_self_rpow_inv hp'] using H₁.has_sum
+  · simpa only [← rpow_self_rpow_inv hp'] using H₁.has_sum
     
 
 end Nnreal
@@ -557,7 +558,7 @@ theorem inner_le_Lp_mul_Lq (hpq : IsConjugateExponent p q) :
       (Nnreal.inner_le_Lp_mul_Lq s (fun i => ⟨_, abs_nonneg (f i)⟩) (fun i => ⟨_, abs_nonneg (g i)⟩) hpq)
   push_cast at this
   refine' le_transₓ (sum_le_sum fun i hi => _) this
-  simp only [← abs_mul, le_abs_self]
+  simp only [abs_mul, ← le_abs_self]
 
 /-- For `1 ≤ p`, the `p`-th power of the sum of `f i` is bounded above by a constant times the
 sum of the `p`-th powers of `f i`. Version for sums over finite sets, with `ℝ`-valued functions. -/
@@ -577,7 +578,7 @@ theorem Lp_add_le (hp : 1 ≤ p) :
   have := Nnreal.coe_le_coe.2 (Nnreal.Lp_add_le s (fun i => ⟨_, abs_nonneg (f i)⟩) (fun i => ⟨_, abs_nonneg (g i)⟩) hp)
   push_cast at this
   refine' le_transₓ (rpow_le_rpow _ (sum_le_sum fun i hi => _) _) this <;>
-    simp [sum_nonneg, rpow_nonneg_of_nonneg, abs_nonneg, le_transₓ zero_le_one hp, abs_add, rpow_le_rpow]
+    simp [← sum_nonneg, ← rpow_nonneg_of_nonneg, ← abs_nonneg, ← le_transₓ zero_le_one hp, ← abs_add, ← rpow_le_rpow]
 
 variable {f g}
 
@@ -588,7 +589,7 @@ theorem inner_le_Lp_mul_Lq_of_nonneg (hpq : IsConjugateExponent p q) (hf : ∀, 
     (hg : ∀, ∀ i ∈ s, ∀, 0 ≤ g i) :
     (∑ i in s, f i * g i) ≤ (∑ i in s, f i ^ p) ^ (1 / p) * (∑ i in s, g i ^ q) ^ (1 / q) := by
   convert inner_le_Lp_mul_Lq s f g hpq using 3 <;>
-    apply sum_congr rfl <;> intro i hi <;> simp only [abs_of_nonneg, hf i hi, hg i hi]
+    apply sum_congr rfl <;> intro i hi <;> simp only [← abs_of_nonneg, ← hf i hi, ← hg i hi]
 
 /-- Hölder inequality: the scalar product of two functions is bounded by the product of their
 `L^p` and `L^q` norms when `p` and `q` are conjugate exponents. A version for `ℝ`-valued functions.
@@ -634,7 +635,7 @@ functions. -/
 theorem rpow_sum_le_const_mul_sum_rpow_of_nonneg (hp : 1 ≤ p) (hf : ∀, ∀ i ∈ s, ∀, 0 ≤ f i) :
     (∑ i in s, f i) ^ p ≤ card s ^ (p - 1) * ∑ i in s, f i ^ p := by
   convert rpow_sum_le_const_mul_sum_rpow s f hp using 2 <;>
-    apply sum_congr rfl <;> intro i hi <;> simp only [abs_of_nonneg, hf i hi]
+    apply sum_congr rfl <;> intro i hi <;> simp only [← abs_of_nonneg, ← hf i hi]
 
 /-- Minkowski inequality: the `L_p` seminorm of the sum of two vectors is less than or equal
 to the sum of the `L_p`-seminorms of the summands. A version for `ℝ`-valued nonnegative
@@ -642,7 +643,7 @@ functions. -/
 theorem Lp_add_le_of_nonneg (hp : 1 ≤ p) (hf : ∀, ∀ i ∈ s, ∀, 0 ≤ f i) (hg : ∀, ∀ i ∈ s, ∀, 0 ≤ g i) :
     (∑ i in s, (f i + g i) ^ p) ^ (1 / p) ≤ (∑ i in s, f i ^ p) ^ (1 / p) + (∑ i in s, g i ^ p) ^ (1 / p) := by
   convert Lp_add_le s f g hp using 2 <;> [skip, congr 1, congr 1] <;>
-    apply sum_congr rfl <;> intro i hi <;> simp only [abs_of_nonneg, hf i hi, hg i hi, add_nonneg]
+    apply sum_congr rfl <;> intro i hi <;> simp only [← abs_of_nonneg, ← hf i hi, ← hg i hi, ← add_nonneg]
 
 /-- Minkowski inequality: the `L_p` seminorm of the infinite sum of two vectors is less than or
 equal to the infinite sum of the `L_p`-seminorms of the summands, if these infinite sums both
@@ -697,30 +698,30 @@ theorem inner_le_Lp_mul_Lq (hpq : p.IsConjugateExponent q) :
     (∑ i in s, f i * g i) ≤ (∑ i in s, f i ^ p) ^ (1 / p) * (∑ i in s, g i ^ q) ^ (1 / q) := by
   by_cases' H : (∑ i in s, f i ^ p) ^ (1 / p) = 0 ∨ (∑ i in s, g i ^ q) ^ (1 / q) = 0
   · replace H : (∀, ∀ i ∈ s, ∀, f i = 0) ∨ ∀, ∀ i ∈ s, ∀, g i = 0
-    · simpa [Ennreal.rpow_eq_zero_iff, hpq.pos, hpq.symm.pos, asymm hpq.pos, asymm hpq.symm.pos,
+    · simpa [← Ennreal.rpow_eq_zero_iff, ← hpq.pos, ← hpq.symm.pos, ← asymm hpq.pos, ← asymm hpq.symm.pos, ←
         sum_eq_zero_iff_of_nonneg] using H
       
     have : ∀, ∀ i ∈ s, ∀, f i * g i = 0 := fun i hi => by
-      cases H <;> simp [H i hi]
+      cases H <;> simp [← H i hi]
     have : (∑ i in s, f i * g i) = ∑ i in s, 0 := sum_congr rfl this
-    simp [this]
+    simp [← this]
     
   push_neg  at H
   by_cases' H' : (∑ i in s, f i ^ p) ^ (1 / p) = ⊤ ∨ (∑ i in s, g i ^ q) ^ (1 / q) = ⊤
-  · cases H' <;> simp [H', -one_div, H]
+  · cases H' <;> simp [← H', -one_div, ← H]
     
   replace H' : (∀, ∀ i ∈ s, ∀, f i ≠ ⊤) ∧ ∀, ∀ i ∈ s, ∀, g i ≠ ⊤
-  · simpa [Ennreal.rpow_eq_top_iff, asymm hpq.pos, asymm hpq.symm.pos, hpq.pos, hpq.symm.pos, Ennreal.sum_eq_top_iff,
-      not_or_distrib] using H'
+  · simpa [← Ennreal.rpow_eq_top_iff, ← asymm hpq.pos, ← asymm hpq.symm.pos, ← hpq.pos, ← hpq.symm.pos, ←
+      Ennreal.sum_eq_top_iff, ← not_or_distrib] using H'
     
   have :=
     Ennreal.coe_le_coe.2
       (@Nnreal.inner_le_Lp_mul_Lq _ s (fun i => Ennreal.toNnreal (f i)) (fun i => Ennreal.toNnreal (g i)) _ _ hpq)
-  simp [← Ennreal.coe_rpow_of_nonneg, le_of_ltₓ hpq.pos, le_of_ltₓ hpq.one_div_pos, le_of_ltₓ hpq.symm.pos,
+  simp [Ennreal.coe_rpow_of_nonneg, ← le_of_ltₓ hpq.pos, ← le_of_ltₓ hpq.one_div_pos, ← le_of_ltₓ hpq.symm.pos, ←
     le_of_ltₓ hpq.symm.one_div_pos] at this
   convert this using 1 <;> [skip, congr 2] <;> [skip, skip, simp , skip, simp ] <;>
     · apply Finset.sum_congr rfl fun i hi => _
-      simp [H'.1 i hi, H'.2 i hi, -WithZero.coe_mul, with_top.coe_mul.symm]
+      simp [← H'.1 i hi, ← H'.2 i hi, -WithZero.coe_mul, ← with_top.coe_mul.symm]
       
 
 /-- For `1 ≤ p`, the `p`-th power of the sum of `f i` is bounded above by a constant times the
@@ -728,7 +729,7 @@ sum of the `p`-th powers of `f i`. Version for sums over finite sets, with `ℝ�
 -/
 theorem rpow_sum_le_const_mul_sum_rpow (hp : 1 ≤ p) : (∑ i in s, f i) ^ p ≤ card s ^ (p - 1) * ∑ i in s, f i ^ p := by
   cases' eq_or_lt_of_le hp with hp hp
-  · simp [← hp]
+  · simp [hp]
     
   let q : ℝ := p / (p - 1)
   have hpq : p.is_conjugate_exponent q := by
@@ -737,8 +738,8 @@ theorem rpow_sum_le_const_mul_sum_rpow (hp : 1 ≤ p) : (∑ i in s, f i) ^ p �
   have hq : 1 / q * p = p - 1 := by
     rw [← hpq.div_conj_eq_sub_one]
     ring
-  simpa only [Ennreal.mul_rpow_of_nonneg _ _ hpq.nonneg, ← Ennreal.rpow_mul, hp₁, hq, coe_one, one_mulₓ, one_rpow,
-    rpow_one, Pi.one_apply, sum_const, Nat.smul_one_eq_coe] using
+  simpa only [← Ennreal.mul_rpow_of_nonneg _ _ hpq.nonneg, Ennreal.rpow_mul, ← hp₁, ← hq, ← coe_one, ← one_mulₓ, ←
+    one_rpow, ← rpow_one, ← Pi.one_apply, ← sum_const, ← Nat.smul_one_eq_coe] using
     Ennreal.rpow_le_rpow (inner_le_Lp_mul_Lq s 1 f hpq.symm) hpq.nonneg
 
 /-- Minkowski inequality: the `L_p` seminorm of the sum of two vectors is less than or equal
@@ -747,19 +748,19 @@ functions. -/
 theorem Lp_add_le (hp : 1 ≤ p) :
     (∑ i in s, (f i + g i) ^ p) ^ (1 / p) ≤ (∑ i in s, f i ^ p) ^ (1 / p) + (∑ i in s, g i ^ p) ^ (1 / p) := by
   by_cases' H' : (∑ i in s, f i ^ p) ^ (1 / p) = ⊤ ∨ (∑ i in s, g i ^ p) ^ (1 / p) = ⊤
-  · cases H' <;> simp [H', -one_div]
+  · cases H' <;> simp [← H', -one_div]
     
   have pos : 0 < p := lt_of_lt_of_leₓ zero_lt_one hp
   replace H' : (∀, ∀ i ∈ s, ∀, f i ≠ ⊤) ∧ ∀, ∀ i ∈ s, ∀, g i ≠ ⊤
-  · simpa [Ennreal.rpow_eq_top_iff, asymm Pos, Pos, Ennreal.sum_eq_top_iff, not_or_distrib] using H'
+  · simpa [← Ennreal.rpow_eq_top_iff, ← asymm Pos, ← Pos, ← Ennreal.sum_eq_top_iff, ← not_or_distrib] using H'
     
   have :=
     Ennreal.coe_le_coe.2
       (@Nnreal.Lp_add_le _ s (fun i => Ennreal.toNnreal (f i)) (fun i => Ennreal.toNnreal (g i)) _ hp)
-  push_cast [← Ennreal.coe_rpow_of_nonneg, le_of_ltₓ Pos, le_of_ltₓ (one_div_pos.2 Pos)] at this
+  push_cast [Ennreal.coe_rpow_of_nonneg, ← le_of_ltₓ Pos, ← le_of_ltₓ (one_div_pos.2 Pos)] at this
   convert this using 2 <;> [skip, congr 1, congr 1] <;>
     · apply Finset.sum_congr rfl fun i hi => _
-      simp [H'.1 i hi, H'.2 i hi]
+      simp [← H'.1 i hi, ← H'.2 i hi]
       
 
 end Ennreal

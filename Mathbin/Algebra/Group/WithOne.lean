@@ -441,8 +441,20 @@ end Groupₓ
 instance [CommGroupₓ α] : CommGroupWithZero (WithZero α) :=
   { WithZero.groupWithZero, WithZero.commMonoidWithZero with }
 
+instance [AddMonoidWithOneₓ α] : AddMonoidWithOneₓ (WithZero α) :=
+  { WithZero.addMonoid, WithZero.hasOne with natCast := fun n => if n = 0 then 0 else (n.cast : α),
+    nat_cast_zero := rfl,
+    nat_cast_succ := fun n => by
+      cases n
+      show (((1 : ℕ) : α) : WithZero α) = 0 + 1
+      · rw [Nat.cast_oneₓ, coe_one, zero_addₓ]
+        
+      show (((n + 2 : ℕ) : α) : WithZero α) = ((n + 1 : ℕ) : α) + 1
+      · rw [Nat.cast_succₓ, coe_add, coe_one]
+         }
+
 instance [Semiringₓ α] : Semiringₓ (WithZero α) :=
-  { WithZero.addCommMonoid, WithZero.mulZeroClass, WithZero.monoidWithZero with
+  { WithZero.addMonoidWithOne, WithZero.addCommMonoid, WithZero.mulZeroClass, WithZero.monoidWithZero with
     left_distrib := fun a b c => by
       cases' a with a
       · rfl

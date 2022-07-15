@@ -31,7 +31,7 @@ theorem mul_eq_mul_prime_prod {α : Type _} [DecidableEq α] {x y a : R} {s : Fi
   induction' s using Finset.induction with i s his ih generalizing x y a
   · exact
       ⟨∅, ∅, x, y, by
-        simp [hx]⟩
+        simp [← hx]⟩
     
   · rw [prod_insert his, ← mul_assoc] at hx
     have hpi : Prime (p i) := hp i (mem_insert_self _ _)
@@ -47,13 +47,13 @@ theorem mul_eq_mul_prime_prod {α : Type _} [DecidableEq α] {x y a : R} {s : Fi
       exact
         ⟨insert i t, u, d, c, by
           rw [insert_union, htus], disjoint_insert_left.2 ⟨hiu, htu⟩, by
-          simp [hbc, prod_insert hit, mul_assoc, mul_comm, mul_left_commₓ]⟩
+          simp [← hbc, ← prod_insert hit, ← mul_assoc, ← mul_comm, ← mul_left_commₓ]⟩
       
     · rw [← mul_assoc, mul_right_commₓ b, mul_left_inj' hpi.ne_zero] at hbc
       exact
         ⟨t, insert i u, b, d, by
           rw [union_insert, htus], disjoint_insert_right.2 ⟨hit, htu⟩, by
-          simp [← hbc, prod_insert hiu, mul_assoc, mul_comm, mul_left_commₓ]⟩
+          simp [hbc, ← prod_insert hiu, ← mul_assoc, ← mul_comm, ← mul_left_commₓ]⟩
       
     
 
@@ -81,7 +81,7 @@ theorem Prime.neg {p : α} (hp : Prime p) : Prime (-p) := by
   exact
     ⟨neg_ne_zero.mpr h1, by
       rwa [IsUnit.neg_iff], by
-      simpa [neg_dvd] using h3⟩
+      simpa [← neg_dvd] using h3⟩
 
 theorem Prime.abs [LinearOrderₓ α] {p : α} (hp : Prime p) : Prime (abs p) := by
   obtain h | h := abs_choice p <;> rw [h]

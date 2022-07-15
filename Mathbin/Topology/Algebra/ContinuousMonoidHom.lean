@@ -216,8 +216,8 @@ theorem is_inducing : Inducing (toContinuousMap : ContinuousMonoidHom A B → C(
 theorem is_embedding : Embedding (toContinuousMap : ContinuousMonoidHom A B → C(A, B)) :=
   ⟨is_inducing A B, to_continuous_map_injective⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (x y)
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (U V W)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (x y)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (U V W)
 theorem is_closed_embedding [HasContinuousMul B] [T2Space B] :
     ClosedEmbedding (toContinuousMap : ContinuousMonoidHom A B → C(A, B)) :=
   ⟨is_embedding A B,
@@ -256,7 +256,7 @@ theorem is_closed_embedding [HasContinuousMul B] [T2Space B] :
         obtain ⟨UV, W, hUV, hW, hfUV, hfW, h⟩ := t2_separation hf2.symm
         have hB := @continuous_mul B _ _ _
         obtain ⟨U, V, hU, hV, hfU, hfV, h'⟩ := is_open_prod_iff.mp (hUV.preimage hB) (f x) (f y) hfUV
-        refine' ⟨x, y, U, V, W, hU, hV, hW, (disjoint_iff.mpr h).mono_left _, ⟨hfU, hfV⟩, hfW⟩
+        refine' ⟨x, y, U, V, W, hU, hV, hW, h.mono_left _, ⟨hfU, hfV⟩, hfW⟩
         rintro _ ⟨x, y, hx : (x, y).1 ∈ U, hy : (x, y).2 ∈ V, rfl⟩
         exact h' ⟨hx, hy⟩
         ⟩⟩

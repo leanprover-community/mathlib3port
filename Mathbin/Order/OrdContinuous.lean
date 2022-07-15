@@ -50,7 +50,7 @@ section Preorderₓ
 variable (α) [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {g : β → γ} {f : α → β}
 
 protected theorem id : LeftOrdContinuous (id : α → α) := fun s x h => by
-  simpa only [image_id] using h
+  simpa only [← image_id] using h
 
 variable {α}
 
@@ -68,7 +68,7 @@ theorem mono (hf : LeftOrdContinuous f) : Monotone f := fun a₁ a₂ h =>
   (hf.map_is_greatest this).2 <| mem_image_of_mem _ (Or.inl rfl)
 
 theorem comp (hg : LeftOrdContinuous g) (hf : LeftOrdContinuous f) : LeftOrdContinuous (g ∘ f) := fun s x h => by
-  simpa only [image_image] using hg (hf h)
+  simpa only [← image_image] using hg (hf h)
 
 protected theorem iterate {f : α → α} (hf : LeftOrdContinuous f) (n : ℕ) : LeftOrdContinuous (f^[n]) :=
   (Nat.recOn n (LeftOrdContinuous.id α)) fun n ihn => ihn.comp hf
@@ -81,13 +81,13 @@ variable [SemilatticeSup α] [SemilatticeSup β] {f : α → β}
 
 theorem map_sup (hf : LeftOrdContinuous f) (x y : α) : f (x⊔y) = f x⊔f y :=
   (hf is_lub_pair).unique <| by
-    simp only [image_pair, is_lub_pair]
+    simp only [← image_pair, ← is_lub_pair]
 
 theorem le_iff (hf : LeftOrdContinuous f) (h : Injective f) {x y} : f x ≤ f y ↔ x ≤ y := by
-  simp only [← sup_eq_right, ← hf.map_sup, h.eq_iff]
+  simp only [sup_eq_right, hf.map_sup, ← h.eq_iff]
 
 theorem lt_iff (hf : LeftOrdContinuous f) (h : Injective f) {x y} : f x < f y ↔ x < y := by
-  simp only [lt_iff_le_not_leₓ, hf.le_iff h]
+  simp only [← lt_iff_le_not_leₓ, ← hf.le_iff h]
 
 variable (f)
 
@@ -114,7 +114,7 @@ theorem map_Sup (hf : LeftOrdContinuous f) (s : Set α) : f (sup s) = ⨆ x ∈ 
   rw [hf.map_Sup', Sup_image]
 
 theorem map_supr (hf : LeftOrdContinuous f) (g : ι → α) : f (⨆ i, g i) = ⨆ i, f (g i) := by
-  simp only [supr, hf.map_Sup', ← range_comp]
+  simp only [← supr, ← hf.map_Sup', range_comp]
 
 end CompleteLattice
 
@@ -127,7 +127,7 @@ theorem map_cSup (hf : LeftOrdContinuous f) {s : Set α} (sne : s.Nonempty) (sbd
   ((hf <| is_lub_cSup sne sbdd).cSup_eq <| sne.Image f).symm
 
 theorem map_csupr (hf : LeftOrdContinuous f) {g : ι → α} (hg : BddAbove (Range g)) : f (⨆ i, g i) = ⨆ i, f (g i) := by
-  simp only [supr, hf.map_cSup (range_nonempty _) hg, ← range_comp]
+  simp only [← supr, ← hf.map_cSup (range_nonempty _) hg, range_comp]
 
 end ConditionallyCompleteLattice
 
@@ -140,7 +140,7 @@ section Preorderₓ
 variable (α) [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {g : β → γ} {f : α → β}
 
 protected theorem id : RightOrdContinuous (id : α → α) := fun s x h => by
-  simpa only [image_id] using h
+  simpa only [← image_id] using h
 
 variable {α}
 

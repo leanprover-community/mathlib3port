@@ -18,6 +18,8 @@ This file proves properties of the central binomial coefficients (that is, `nat.
   coefficients.
 * `nat.four_pow_lt_mul_central_binom`: an exponential lower bound on the central binomial
   coefficient.
+* `succ_dvd_central_binom`: The result that `n+1 ∣ n.central_binom`, ensuring that the explicit
+  definition of the Catalan numbers is integer-valued.
 -/
 
 
@@ -84,7 +86,7 @@ theorem four_pow_lt_mul_central_binom (n : ℕ) (n_big : 4 ≤ n) : 4 ^ n < n * 
   · clear IH
     decide!
     
-  · norm_num [central_binom, choose]
+  · norm_num [← central_binom, ← choose]
     
   obtain ⟨n, rfl⟩ : ∃ m, n = m + 1 := Nat.exists_eq_succ_of_ne_zero (zero_lt_four.trans hn).ne'
   calc 4 ^ (n + 1) < 4 * (n * central_binom n) :=
@@ -101,11 +103,11 @@ because it appears in Erdős's proof of Bertrand's postulate.
 theorem four_pow_le_two_mul_self_mul_central_binom : ∀ n : ℕ n_pos : 0 < n, 4 ^ n ≤ 2 * n * centralBinom n
   | 0, pr => (Nat.not_lt_zeroₓ _ pr).elim
   | 1, pr => by
-    norm_num [central_binom, choose]
+    norm_num [← central_binom, ← choose]
   | 2, pr => by
-    norm_num [central_binom, choose]
+    norm_num [← central_binom, ← choose]
   | 3, pr => by
-    norm_num [central_binom, choose]
+    norm_num [← central_binom, ← choose]
   | n@(m + 4), _ =>
     calc
       4 ^ n ≤ n * centralBinom n := (four_pow_lt_mul_central_binom _ le_add_self).le
@@ -113,6 +115,25 @@ theorem four_pow_le_two_mul_self_mul_central_binom : ∀ n : ℕ n_pos : 0 < n, 
         rw [mul_assoc]
         refine' le_mul_of_pos_left zero_lt_two
       
+
+theorem two_dvd_central_binom_succ (n : ℕ) : 2 ∣ centralBinom (n + 1) := by
+  use (n + 1 + n).choose n
+  rw [central_binom_eq_two_mul_choose, two_mul, ← add_assocₓ, choose_succ_succ, choose_symm_add, ← two_mul]
+
+theorem two_dvd_central_binom_of_one_le {n : ℕ} (h : 0 < n) : 2 ∣ centralBinom n := by
+  rw [← Nat.succ_pred_eq_of_posₓ h]
+  exact two_dvd_central_binom_succ n.pred
+
+/-- A crucial lemma to ensure that Catalan numbers can be defined via their explicit formula
+  `catalan n = n.central_binom / (n + 1)`. -/
+theorem succ_dvd_central_binom (n : ℕ) : n + 1 ∣ n.centralBinom := by
+  have h_s : (n + 1).Coprime (2 * n + 1) := by
+    rw [two_mul, add_assocₓ, coprime_add_self_right, coprime_self_add_left]
+    exact coprime_one_left n
+  apply h_s.dvd_of_dvd_mul_left
+  apply dvd_of_mul_dvd_mul_left zero_lt_two
+  rw [← mul_assoc, ← succ_mul_central_binom_succ, mul_comm]
+  exact mul_dvd_mul_left _ (two_dvd_central_binom_succ n)
 
 end Nat
 

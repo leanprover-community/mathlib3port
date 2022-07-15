@@ -40,7 +40,7 @@ open Pointwise
 
 @[refl]
 protected theorem refl (H : Subgroup G) : Commensurable H H := by
-  simp [Commensurable]
+  simp [← Commensurable]
 
 theorem comm {H K : Subgroup G} : Commensurable H K ↔ Commensurable K H :=
   And.comm

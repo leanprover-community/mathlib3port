@@ -35,7 +35,7 @@ open AffineMap
 theorem AffineSubspace.is_closed_direction_iff (s : AffineSubspace 𝕜 Q) :
     IsClosed (s.direction : Set W) ↔ IsClosed (s : Set Q) := by
   rcases s.eq_bot_or_nonempty with (rfl | ⟨x, hx⟩)
-  · simp [is_closed_singleton]
+  · simp [← is_closed_singleton]
     
   rw [← (Isometric.vaddConst x).toHomeomorph.symm.is_closed_image, AffineSubspace.coe_direction_eq_vsub_set_right hx]
   rfl
@@ -44,7 +44,7 @@ include V
 
 @[simp]
 theorem dist_center_homothety (p₁ p₂ : P) (c : 𝕜) : dist p₁ (homothety p₁ c p₂) = ∥c∥ * dist p₁ p₂ := by
-  simp [homothety_def, norm_smul, ← dist_eq_norm_vsub, dist_comm]
+  simp [← homothety_def, ← norm_smul, dist_eq_norm_vsub, ← dist_comm]
 
 @[simp]
 theorem dist_homothety_center (p₁ p₂ : P) (c : 𝕜) : dist (homothety p₁ c p₂) p₁ = ∥c∥ * dist p₁ p₂ := by
@@ -54,14 +54,14 @@ theorem dist_homothety_center (p₁ p₂ : P) (c : 𝕜) : dist (homothety p₁ 
 theorem dist_line_map_line_map (p₁ p₂ : P) (c₁ c₂ : 𝕜) :
     dist (lineMap p₁ p₂ c₁) (lineMap p₁ p₂ c₂) = dist c₁ c₂ * dist p₁ p₂ := by
   rw [dist_comm p₁ p₂]
-  simp only [line_map_apply, dist_eq_norm_vsub, vadd_vsub_vadd_cancel_right, ← sub_smul, norm_smul, vsub_eq_sub]
+  simp only [← line_map_apply, ← dist_eq_norm_vsub, ← vadd_vsub_vadd_cancel_right, sub_smul, ← norm_smul, ← vsub_eq_sub]
 
 theorem lipschitz_with_line_map (p₁ p₂ : P) : LipschitzWith (nndist p₁ p₂) (lineMap p₁ p₂ : 𝕜 → P) :=
   LipschitzWith.of_dist_le_mul fun c₁ c₂ => ((dist_line_map_line_map p₁ p₂ c₁ c₂).trans (mul_comm _ _)).le
 
 @[simp]
 theorem dist_line_map_left (p₁ p₂ : P) (c : 𝕜) : dist (lineMap p₁ p₂ c) p₁ = ∥c∥ * dist p₁ p₂ := by
-  simpa only [line_map_apply_zero, dist_zero_right] using dist_line_map_line_map p₁ p₂ c 0
+  simpa only [← line_map_apply_zero, ← dist_zero_right] using dist_line_map_line_map p₁ p₂ c 0
 
 @[simp]
 theorem dist_left_line_map (p₁ p₂ : P) (c : 𝕜) : dist p₁ (lineMap p₁ p₂ c) = ∥c∥ * dist p₁ p₂ :=
@@ -69,7 +69,7 @@ theorem dist_left_line_map (p₁ p₂ : P) (c : 𝕜) : dist p₁ (lineMap p₁ 
 
 @[simp]
 theorem dist_line_map_right (p₁ p₂ : P) (c : 𝕜) : dist (lineMap p₁ p₂ c) p₂ = ∥1 - c∥ * dist p₁ p₂ := by
-  simpa only [line_map_apply_one, dist_eq_norm'] using dist_line_map_line_map p₁ p₂ c 1
+  simpa only [← line_map_apply_one, ← dist_eq_norm'] using dist_line_map_line_map p₁ p₂ c 1
 
 @[simp]
 theorem dist_right_line_map (p₁ p₂ : P) (c : 𝕜) : dist p₂ (lineMap p₁ p₂ c) = ∥1 - c∥ * dist p₁ p₂ :=
@@ -130,13 +130,13 @@ theorem eventually_homothety_mem_of_mem_interior (x : Q) {s : Set Q} {y : Q} (hy
   rw [(NormedGroup.nhds_basis_norm_lt (1 : 𝕜)).eventually_iff]
   cases' eq_or_ne y x with h h
   · use 1
-    simp [h.symm, interior_subset hy]
+    simp [← h.symm, ← interior_subset hy]
     
   have hxy : 0 < ∥y -ᵥ x∥ := by
     rwa [norm_pos_iff, vsub_ne_zero]
   obtain ⟨u, hu₁, hu₂, hu₃⟩ := mem_interior.mp hy
   obtain ⟨ε, hε, hyε⟩ := metric.is_open_iff.mp hu₂ y hu₃
-  refine' ⟨ε / ∥y -ᵥ x∥, div_pos hε hxy, fun hδ : ∥δ - 1∥ < ε / ∥y -ᵥ x∥ => hu₁ (hyε _)⟩
+  refine' ⟨ε / ∥y -ᵥ x∥, div_pos hε hxy, fun δ hδ : ∥δ - 1∥ < ε / ∥y -ᵥ x∥ => hu₁ (hyε _)⟩
   rw [lt_div_iff hxy, ← norm_smul, sub_smul, one_smul] at hδ
   rwa [homothety_apply, Metric.mem_ball, dist_eq_norm_vsub W, vadd_vsub_eq_sub_vsub]
 
@@ -158,7 +158,7 @@ theorem dist_midpoint_midpoint_le (p₁ p₂ p₃ p₄ : V) :
 
 include V W
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 /-- A continuous map between two normed affine spaces is an affine map provided that
 it sends midpoints to midpoints. -/
 def AffineMap.ofMapMidpoint (f : P → Q) (h : ∀ x y, f (midpoint ℝ x y) = midpoint ℝ (f x) (f y)) (hfc : Continuous f) :
@@ -170,7 +170,7 @@ def AffineMap.ofMapMidpoint (f : P → Q) (h : ∀ x y, f (midpoint ℝ x y) = m
             (by
               simp )
             fun x y => by
-            simp [h]).toRealLinearMap <|
+            simp [← h]).toRealLinearMap <|
         by
         apply_rules [Continuous.vadd, Continuous.vsub, continuous_const, hfc.comp, continuous_id]))
     (Classical.arbitrary P) fun p => by

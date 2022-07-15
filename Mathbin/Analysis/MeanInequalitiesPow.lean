@@ -66,8 +66,8 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ) (hw : ∀, ∀ i �
     (hz : ∀, ∀ i ∈ s, ∀, 0 ≤ z i) {p : ℝ} (hp : 1 ≤ p) : (∑ i in s, w i * z i) ^ p ≤ ∑ i in s, w i * z i ^ p :=
   (convex_on_rpow hp).map_sum_le hw hw' hz
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 theorem arith_mean_le_rpow_mean (w z : ι → ℝ) (hw : ∀, ∀ i ∈ s, ∀, 0 ≤ w i) (hw' : (∑ i in s, w i) = 1)
     (hz : ∀, ∀ i ∈ s, ∀, 0 ≤ z i) {p : ℝ} (hp : 1 ≤ p) : (∑ i in s, w i * z i) ≤ (∑ i in s, w i * z i ^ p) ^ (1 / p) :=
   by
@@ -107,9 +107,9 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ≥0 ) (hw' : (∑ i
 theorem rpow_arith_mean_le_arith_mean2_rpow (w₁ w₂ z₁ z₂ : ℝ≥0 ) (hw' : w₁ + w₂ = 1) {p : ℝ} (hp : 1 ≤ p) :
     (w₁ * z₁ + w₂ * z₂) ^ p ≤ w₁ * z₁ ^ p + w₂ * z₂ ^ p := by
   have h := rpow_arith_mean_le_arith_mean_rpow univ ![w₁, w₂] ![z₁, z₂] _ hp
-  · simpa [Finₓ.sum_univ_succ] using h
+  · simpa [← Finₓ.sum_univ_succ] using h
     
-  · simp [hw', Finₓ.sum_univ_succ]
+  · simp [← hw', ← Finₓ.sum_univ_succ]
     
 
 /-- Weighted generalized mean inequality, version for sums over finite sets, with `ℝ≥0`-valued
@@ -136,7 +136,7 @@ private theorem add_rpow_le_one_of_add_le_one {p : ℝ} (a b : ℝ≥0 ) (hab : 
 theorem add_rpow_le_rpow_add {p : ℝ} (a b : ℝ≥0 ) (hp1 : 1 ≤ p) : a ^ p + b ^ p ≤ (a + b) ^ p := by
   have hp_pos : 0 < p := lt_of_lt_of_leₓ zero_lt_one hp1
   by_cases' h_zero : a + b = 0
-  · simp [add_eq_zero_iff.mp h_zero, hp_pos.ne']
+  · simp [← add_eq_zero_iff.mp h_zero, ← hp_pos.ne']
     
   have h_nonzero : ¬(a = 0 ∧ b = 0) := by
     rwa [add_eq_zero_iff] at h_zero
@@ -145,7 +145,7 @@ theorem add_rpow_le_rpow_add {p : ℝ} (a b : ℝ≥0 ) (hp1 : 1 ≤ p) : a ^ p 
   have h := add_rpow_le_one_of_add_le_one (a / (a + b)) (b / (a + b)) h_add.le hp1
   rw [div_rpow a (a + b), div_rpow b (a + b)] at h
   have hab_0 : (a + b) ^ p ≠ 0 := by
-    simp [hp_pos, h_nonzero]
+    simp [← hp_pos, ← h_nonzero]
   have hab_0' : 0 < (a + b) ^ p := zero_lt_iff.mpr hab_0
   have h_mul : (a + b) ^ p * (a ^ p / (a + b) ^ p + b ^ p / (a + b) ^ p) ≤ (a + b) ^ p := by
     nth_rw 3[← mul_oneₓ ((a + b) ^ p)]
@@ -157,7 +157,7 @@ theorem rpow_add_rpow_le_add {p : ℝ} (a b : ℝ≥0 ) (hp1 : 1 ≤ p) : (a ^ p
   rw [←
     @Nnreal.le_rpow_one_div_iff _ _ (1 / p)
       (by
-        simp [lt_of_lt_of_leₓ zero_lt_one hp1])]
+        simp [← lt_of_lt_of_leₓ zero_lt_one hp1])]
   rw [one_div_one_div]
   exact add_rpow_le_rpow_add _ _ hp1
 
@@ -189,16 +189,16 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ≥0∞) (hw' : (∑
   have hp_pos : 0 < p := lt_of_lt_of_leₓ zero_lt_one hp
   have hp_nonneg : 0 ≤ p := le_of_ltₓ hp_pos
   have hp_not_nonpos : ¬p ≤ 0 := by
-    simp [hp_pos]
+    simp [← hp_pos]
   have hp_not_neg : ¬p < 0 := by
-    simp [hp_nonneg]
+    simp [← hp_nonneg]
   have h_top_iff_rpow_top : ∀ i : ι hi : i ∈ s, w i * z i = ⊤ ↔ w i * z i ^ p = ⊤ := by
-    simp [hp_pos, hp_nonneg, hp_not_nonpos, hp_not_neg]
+    simp [← hp_pos, ← hp_nonneg, ← hp_not_nonpos, ← hp_not_neg]
   refine' le_of_top_imp_top_of_to_nnreal_le _ _
   · -- first, prove `(∑ i in s, w i * z i) ^ p = ⊤ → ∑ i in s, (w i * z i ^ p) = ⊤`
     rw [rpow_eq_top_iff, sum_eq_top_iff, sum_eq_top_iff]
     intro h
-    simp only [and_falseₓ, hp_not_neg, false_orₓ] at h
+    simp only [← and_falseₓ, ← hp_not_neg, ← false_orₓ] at h
     rcases h.left with ⟨a, H, ha⟩
     use a, H
     rwa [← h_top_iff_rpow_top a H]
@@ -208,12 +208,12 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ≥0∞) (hw' : (∑
     -- by using `nnreal.rpow_arith_mean_le_arith_mean_rpow`.
     intro h_top_rpow_sum _
     -- show hypotheses needed to put the `.to_nnreal` inside the sums.
-    have h_top : ∀ a : ι, a ∈ s → w a * z a ≠ ⊤ :=
+    have h_top : ∀ a : ι, a ∈ s → w a * z a ≠ ⊤ := by
       have h_top_sum : (∑ i : ι in s, w i * z i) ≠ ⊤ := by
         intro h
         rw [h, top_rpow_of_pos hp_pos] at h_top_rpow_sum
         exact h_top_rpow_sum rfl
-      fun a ha => (lt_top_of_sum_ne_top h_top_sum ha).Ne
+      exact fun a ha => (lt_top_of_sum_ne_top h_top_sum ha).Ne
     have h_top_rpow : ∀ a : ι, a ∈ s → w a * z a ^ p ≠ ⊤ := by
       intro i hi
       specialize h_top i hi
@@ -236,9 +236,9 @@ exponents. -/
 theorem rpow_arith_mean_le_arith_mean2_rpow (w₁ w₂ z₁ z₂ : ℝ≥0∞) (hw' : w₁ + w₂ = 1) {p : ℝ} (hp : 1 ≤ p) :
     (w₁ * z₁ + w₂ * z₂) ^ p ≤ w₁ * z₁ ^ p + w₂ * z₂ ^ p := by
   have h := rpow_arith_mean_le_arith_mean_rpow univ ![w₁, w₂] ![z₁, z₂] _ hp
-  · simpa [Finₓ.sum_univ_succ] using h
+  · simpa [← Finₓ.sum_univ_succ] using h
     
-  · simp [hw', Finₓ.sum_univ_succ]
+  · simp [← hw', ← Finₓ.sum_univ_succ]
     
 
 end Ennreal
@@ -255,13 +255,13 @@ theorem add_rpow_le_rpow_add {p : ℝ} (a b : ℝ≥0∞) (hp1 : 1 ≤ p) : a ^ 
   obtain ⟨ha_top, hb_top⟩ := add_ne_top.mp h_top
   lift a to ℝ≥0 using ha_top
   lift b to ℝ≥0 using hb_top
-  simpa [← Ennreal.coe_rpow_of_nonneg _ hp_pos.le] using Ennreal.coe_le_coe.2 (Nnreal.add_rpow_le_rpow_add a b hp1)
+  simpa [Ennreal.coe_rpow_of_nonneg _ hp_pos.le] using Ennreal.coe_le_coe.2 (Nnreal.add_rpow_le_rpow_add a b hp1)
 
 theorem rpow_add_rpow_le_add {p : ℝ} (a b : ℝ≥0∞) (hp1 : 1 ≤ p) : (a ^ p + b ^ p) ^ (1 / p) ≤ a + b := by
   rw [←
     @Ennreal.le_rpow_one_div_iff _ _ (1 / p)
       (by
-        simp [lt_of_lt_of_leₓ zero_lt_one hp1])]
+        simp [← lt_of_lt_of_leₓ zero_lt_one hp1])]
   rw [one_div_one_div]
   exact add_rpow_le_rpow_add _ _ hp1
 

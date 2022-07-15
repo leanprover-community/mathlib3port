@@ -35,8 +35,8 @@ def natProdNatEquivNat : ℕ × ℕ ≃ ℕ :=
 @[simp]
 def boolProdNatEquivNat : Bool × ℕ ≃ ℕ :=
   ⟨fun ⟨b, n⟩ => bit b n, boddDiv2, fun ⟨b, n⟩ => by
-    simp [bool_prod_nat_equiv_nat._match_1, bodd_bit, div2_bit], fun n => by
-    simp [bool_prod_nat_equiv_nat._match_1, bit_decomp]⟩
+    simp [← bool_prod_nat_equiv_nat._match_1, ← bodd_bit, ← div2_bit], fun n => by
+    simp [← bool_prod_nat_equiv_nat._match_1, ← bit_decomp]⟩
 
 /-- An equivalence between `ℕ ⊕ ℕ` and `ℕ`, by mapping `(sum.inl x)` to `2 * x` and `(sum.inr x)` to
 `2 * x + 1`.
@@ -65,8 +65,8 @@ def pnatEquivNat : ℕ+ ≃ ℕ :=
   ⟨fun n => pred n.1, succPnat, fun ⟨n, h⟩ => by
     cases n
     cases h
-    simp [succ_pnat, h], fun n => by
-    simp [succ_pnat]⟩
+    simp [← succ_pnat, ← h], fun n => by
+    simp [← succ_pnat]⟩
 
 end Equivₓ
 

@@ -88,7 +88,7 @@ theorem char_p_of_is_fraction_ring [CharP R p] : CharP K p :=
 
 /-- If `R` has characteristic `0`, then so does Frac(R). -/
 theorem char_zero_of_is_fraction_ring [CharZero R] : CharZero K :=
-  @CharP.char_p_to_char_zero K _ _ (char_p_of_is_fraction_ring R 0)
+  @CharP.char_p_to_char_zero K _ (char_p_of_is_fraction_ring R 0)
 
 variable [IsDomain R]
 

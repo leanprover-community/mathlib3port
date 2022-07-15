@@ -80,7 +80,7 @@ variable [DecidableEq ι] [Zero M]
 @[simp]
 theorem Finsupp.to_dfinsupp_single (i : ι) (m : M) : (Finsupp.single i m).toDfinsupp = Dfinsupp.single i m := by
   ext
-  simp [Finsupp.single_apply, Dfinsupp.single_apply]
+  simp [← Finsupp.single_apply, ← Dfinsupp.single_apply]
 
 variable [∀ m : M, Decidable (m ≠ 0)]
 
@@ -96,7 +96,7 @@ write `(dfinsupp.to_finsupp f : ι →₀ M)` instead of `f.to_finsupp`, as for 
 using dot notation or omitting the type ascription prevents the type being resolved correctly. -/
 def Dfinsupp.toFinsupp (f : Π₀ i : ι, M) : ι →₀ M :=
   ⟨f.support, f, fun i => by
-    simp only [Dfinsupp.mem_support_iff]⟩
+    simp only [← Dfinsupp.mem_support_iff]⟩
 
 @[simp]
 theorem Dfinsupp.to_finsupp_coe (f : Π₀ i : ι, M) : ⇑f.toFinsupp = f :=
@@ -111,7 +111,7 @@ theorem Dfinsupp.to_finsupp_support (f : Π₀ i : ι, M) : f.toFinsupp.support 
 theorem Dfinsupp.to_finsupp_single (i : ι) (m : M) :
     (Dfinsupp.single i m : Π₀ i : ι, M).toFinsupp = Finsupp.single i m := by
   ext
-  simp [Finsupp.single_apply, Dfinsupp.single_apply]
+  simp [← Finsupp.single_apply, ← Dfinsupp.single_apply]
 
 @[simp]
 theorem Finsupp.to_dfinsupp_to_finsupp (f : ι →₀ M) : f.toDfinsupp.toFinsupp = f :=
@@ -238,16 +238,16 @@ def sigmaFinsuppEquivDfinsupp [Zero N] : ((Σi, η i) →₀ N) ≃ Π₀ i, η 
     refine'
       on_finset (Finset.sigma f.support fun j => (f j).support) (fun ji => f ji.1 ji.2) fun g hg =>
         finset.mem_sigma.mpr ⟨_, mem_support_iff.mpr hg⟩
-    simp only [Ne.def, Dfinsupp.mem_support_to_fun]
+    simp only [← Ne.def, ← Dfinsupp.mem_support_to_fun]
     intro h
     rw [h] at hg
     simpa using hg
   left_inv := fun f => by
     ext
-    simp [split]
+    simp [← split]
   right_inv := fun f => by
     ext
-    simp [split]
+    simp [← split]
 
 @[simp]
 theorem sigma_finsupp_equiv_dfinsupp_apply [Zero N] (f : (Σi, η i) →₀ N) :
@@ -275,12 +275,12 @@ theorem sigma_finsupp_equiv_dfinsupp_single [Zero N] (a : Σi, η i) (n : N) :
   ext j b
   by_cases' h : i = j
   · subst h
-    simp [split_apply, Finsupp.single_apply]
+    simp [← split_apply, ← Finsupp.single_apply]
     
   suffices Finsupp.single (⟨i, a⟩ : Σi, η i) n ⟨j, b⟩ = 0 by
-    simp [split_apply, dif_neg h, this]
+    simp [← split_apply, ← dif_neg h, ← this]
   have H : (⟨i, a⟩ : Σi, η i) ≠ ⟨j, b⟩ := by
-    simp [h]
+    simp [← h]
   rw [Finsupp.single_apply, if_neg H]
 
 -- Without this Lean fails to find the `add_zero_class` instance on `Π₀ i, (η i →₀ N)`.
@@ -307,7 +307,7 @@ attribute [-instance] Finsupp.addZeroClass
 theorem sigma_finsupp_equiv_dfinsupp_smul {R} [Monoidₓ R] [AddMonoidₓ N] [DistribMulAction R N] (r : R)
     (f : (Σi, η i) →₀ N) :
     sigmaFinsuppEquivDfinsupp (r • f) =
-      @HasScalar.smul R (Π₀ i, η i →₀ N) MulAction.toHasScalar r (sigmaFinsuppEquivDfinsupp f) :=
+      @HasSmul.smul R (Π₀ i, η i →₀ N) MulAction.toHasSmul r (sigmaFinsuppEquivDfinsupp f) :=
   by
   ext
   rfl

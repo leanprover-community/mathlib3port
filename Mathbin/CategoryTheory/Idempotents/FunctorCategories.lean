@@ -47,10 +47,10 @@ instance functor_category_is_idempotent_complete [IsIdempotentComplete C] : IsId
             rw [comp_id, assoc, p.naturality φ, ← assoc, ← limits.equalizer.condition, comp_id]),
       map_id' := fun j => by
         ext
-        simp only [comp_id, Functor.map_id, equalizer.lift_ι, id_comp],
+        simp only [← comp_id, ← Functor.map_id, ← equalizer.lift_ι, ← id_comp],
       map_comp' := fun j j' j'' φ φ' => by
         ext
-        simp only [assoc, functor.map_comp, equalizer.lift_ι, equalizer.lift_ι_assoc] }
+        simp only [← assoc, ← functor.map_comp, ← equalizer.lift_ι, ← equalizer.lift_ι_assoc] }
   let i : Y ⟶ F :=
     { app := fun j => equalizer.ι _ _,
       naturality' := fun j j' φ => by
@@ -63,12 +63,13 @@ instance functor_category_is_idempotent_complete [IsIdempotentComplete C] : IsId
             exact (congr_app hp j).symm),
       naturality' := fun j j' φ => by
         ext
-        simp only [assoc, equalizer.lift_ι, nat_trans.naturality, equalizer.lift_ι_assoc] }
+        simp only [← assoc, ← equalizer.lift_ι, ← nat_trans.naturality, ← equalizer.lift_ι_assoc] }
   use Y, i, e
   constructor <;> ext j
-  · simp only [nat_trans.comp_app, assoc, equalizer.lift_ι, nat_trans.id_app, id_comp, ← equalizer.condition, comp_id]
+  · simp only [← nat_trans.comp_app, ← assoc, ← equalizer.lift_ι, ← nat_trans.id_app, ← id_comp, equalizer.condition, ←
+      comp_id]
     
-  · simp only [nat_trans.comp_app, equalizer.lift_ι]
+  · simp only [← nat_trans.comp_app, ← equalizer.lift_ι]
     
 
 namespace KaroubiFunctorCategoryEmbedding
@@ -84,18 +85,18 @@ def obj (P : Karoubi (J ⥤ C)) : J ⥤ Karoubi C where
   map := fun j j' φ =>
     { f := P.p.app j ≫ P.x.map φ,
       comm := by
-        simp only [nat_trans.naturality, assoc]
+        simp only [← nat_trans.naturality, ← assoc]
         have h := congr_app P.idem j
         rw [nat_trans.comp_app] at h
         slice_rhs 1 3 => erw [h, h] }
   map_id' := fun j => by
     ext
-    simp only [Functor.map_id, comp_id, id_eq]
+    simp only [← Functor.map_id, ← comp_id, ← id_eq]
   map_comp' := fun j j' j'' φ φ' => by
     ext
     have h := congr_app P.idem j
     rw [nat_trans.comp_app] at h
-    simp only [assoc, nat_trans.naturality_assoc, functor.map_comp, comp]
+    simp only [← assoc, ← nat_trans.naturality_assoc, ← functor.map_comp, ← comp]
     slice_rhs 1 2 => rw [h]
     rw [assoc]
 
@@ -105,7 +106,7 @@ def map {P Q : Karoubi (J ⥤ C)} (f : P ⟶ Q) : obj P ⟶ obj Q where
   app := fun j => ⟨f.f.app j, congr_app f.comm j⟩
   naturality' := fun j j' φ => by
     ext
-    simp only [comp]
+    simp only [← comp]
     have h := congr_app (comp_p f) j
     have h' := congr_app (p_comp f) j'
     dsimp'  at h h'⊢
@@ -133,8 +134,8 @@ instance : Full (karoubiFunctorCategoryEmbedding J C) where
           naturality' := fun j j' φ => by
             slice_rhs 1 1 => rw [← karoubi.comp_p]
             have h := hom_ext.mp (f.naturality φ)
-            simp only [comp] at h
-            dsimp' [karoubi_functor_category_embedding]  at h⊢
+            simp only [← comp] at h
+            dsimp' [← karoubi_functor_category_embedding]  at h⊢
             erw [assoc, ← h, ← P.p.naturality φ, assoc, p_comp (f.app j')] },
       comm := by
         ext j
@@ -143,8 +144,8 @@ instance : Full (karoubiFunctorCategoryEmbedding J C) where
     ext j
     rfl
 
-instance : Faithful (karoubiFunctorCategoryEmbedding J C) where
-  map_injective' := fun P Q f f' h => by
+instance :
+    Faithful (karoubiFunctorCategoryEmbedding J C) where map_injective' := fun P Q f f' h => by
     ext j
     exact hom_ext.mp (congr_app h j)
 
@@ -156,8 +157,8 @@ theorem to_karoubi_comp_karoubi_functor_category_embedding :
   apply Functor.ext
   · intro X Y f
     ext j
-    dsimp' [to_karoubi]
-    simp only [eq_to_hom_app, eq_to_hom_refl, id_comp]
+    dsimp' [← to_karoubi]
+    simp only [← eq_to_hom_app, ← eq_to_hom_refl, ← id_comp]
     erw [comp_id]
     
   · intro X
@@ -165,7 +166,7 @@ theorem to_karoubi_comp_karoubi_functor_category_embedding :
     · intro j j' φ
       ext
       dsimp'
-      simpa only [comp_id, id_comp]
+      simpa only [← comp_id, ← id_comp]
       
     · intro j
       rfl

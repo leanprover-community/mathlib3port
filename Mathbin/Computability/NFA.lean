@@ -65,7 +65,7 @@ theorem eval_from_singleton (S : Set σ) (a : α) : M.evalFrom S [a] = M.StepSet
 @[simp]
 theorem eval_from_append_singleton (S : Set σ) (x : List α) (a : α) :
     M.evalFrom S (x ++ [a]) = M.StepSet (M.evalFrom S x) a := by
-  simp only [eval_from, List.foldl_append, List.foldl_cons, List.foldl_nil]
+  simp only [← eval_from, ← List.foldl_append, ← List.foldl_cons, ← List.foldl_nil]
 
 /-- `M.eval x` computes all possible paths though `M` with input `x` starting at an element of
   `M.start`. -/
@@ -131,7 +131,7 @@ theorem to_NFA_eval_from_match (M : DFA α σ) (start : σ) (s : List α) :
     
   · rw [List.foldlₓ, List.foldlₓ,
       show M.to_NFA.step_set {start} a = {M.step start a} by
-        simpa [NFA.StepSet] ]
+        simpa [← NFA.StepSet] ]
     tauto
     
 

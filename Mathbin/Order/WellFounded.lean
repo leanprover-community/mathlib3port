@@ -45,7 +45,11 @@ theorem has_min {α} {r : α → α → Prop} (H : WellFounded r) (s : Set α) :
         not_imp_not.1 fun hne hx => hne <| ⟨x, hx, fun y hy hyx => hne <| IH y hyx hy⟩)
       ha
 
-/-- A minimal element of a nonempty set in a well-founded order -/
+/-- A minimal element of a nonempty set in a well-founded order.
+
+If you're working with a nonempty linear order, consider defining a
+`conditionally_complete_linear_order_bot` instance via
+`well_founded.conditionally_complete_linear_order_with_bot` and using `Inf` instead. -/
 noncomputable def min {r : α → α → Prop} (H : WellFounded r) (p : Set α) (h : p.Nonempty) : α :=
   Classical.some (H.has_min p h)
 
@@ -58,7 +62,7 @@ theorem not_lt_min {r : α → α → Prop} (H : WellFounded r) (p : Set α) (h 
   let ⟨_, h'⟩ := Classical.some_spec (H.has_min p h)
   h' _ xp
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem well_founded_iff_has_min {r : α → α → Prop} :
     WellFounded r ↔ ∀ p : Set α, p.Nonempty → ∃ m ∈ p, ∀, ∀ x ∈ p, ∀, ¬r x m := by
   classical
@@ -90,7 +94,7 @@ theorem eq_iff_not_lt_of_le {α} [PartialOrderₓ α] {x y : α} : x ≤ y → y
 
 theorem well_founded_iff_has_max' [PartialOrderₓ α] :
     WellFounded ((· > ·) : α → α → Prop) ↔ ∀ p : Set α, p.Nonempty → ∃ m ∈ p, ∀, ∀ x ∈ p, ∀, m ≤ x → x = m := by
-  simp only [eq_iff_not_lt_of_le, well_founded_iff_has_min]
+  simp only [← eq_iff_not_lt_of_le, ← well_founded_iff_has_min]
 
 theorem well_founded_iff_has_min' [PartialOrderₓ α] :
     WellFounded (LT.lt : α → α → Prop) ↔ ∀ p : Set α, p.Nonempty → ∃ m ∈ p, ∀, ∀ x ∈ p, ∀, x ≤ m → x = m :=

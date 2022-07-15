@@ -74,11 +74,9 @@ def linearCoyoneda : Cᵒᵖ ⥤ C ⥤ ModuleCat R where
     ext
     simp
 
-instance linear_yoneda_obj_additive (X : C) : ((linearYoneda R C).obj X).Additive :=
-  {  }
+instance linear_yoneda_obj_additive (X : C) : ((linearYoneda R C).obj X).Additive where
 
-instance linear_coyoneda_obj_additive (Y : Cᵒᵖ) : ((linearCoyoneda R C).obj Y).Additive :=
-  {  }
+instance linear_coyoneda_obj_additive (Y : Cᵒᵖ) : ((linearCoyoneda R C).obj Y).Additive where
 
 @[simp]
 theorem whiskering_linear_yoneda : linearYoneda R C ⋙ (whiskeringRight _ _ _).obj (forget (ModuleCat.{v} R)) = yoneda :=

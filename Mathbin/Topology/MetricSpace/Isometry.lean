@@ -37,8 +37,8 @@ def Isometry [PseudoEmetricSpace α] [PseudoEmetricSpace β] (f : α → β) : P
 theorem isometry_emetric_iff_metric [PseudoMetricSpace α] [PseudoMetricSpace β] {f : α → β} :
     Isometry f ↔ ∀ x y, dist (f x) (f y) = dist x y :=
   ⟨fun H x y => by
-    simp [dist_edist, H x y], fun H x y => by
-    simp [edist_dist, H x y]⟩
+    simp [← dist_edist, ← H x y], fun H x y => by
+    simp [← edist_dist, ← H x y]⟩
 
 /-- An isometry preserves edistances. -/
 theorem Isometry.edist_eq [PseudoEmetricSpace α] [PseudoEmetricSpace β] {f : α → β} (hf : Isometry f) (x y : α) :
@@ -65,7 +65,7 @@ theorem Isometry.lipschitz (h : Isometry f) : LipschitzWith 1 f :=
   LipschitzWith.of_edist_le fun x y => le_of_eqₓ (h x y)
 
 theorem Isometry.antilipschitz (h : Isometry f) : AntilipschitzWith 1 f := fun x y => by
-  simp only [h x y, Ennreal.coe_one, one_mulₓ, le_reflₓ]
+  simp only [← h x y, ← Ennreal.coe_one, ← one_mulₓ, ← le_reflₓ]
 
 /-- An isometry from an emetric space is injective -/
 theorem Isometry.injective {α : Type u} [EmetricSpace α] {f : α → β} (h : Isometry f) : Injective f :=
@@ -105,7 +105,7 @@ theorem Isometry.right_inv {f : α → β} {g : β → α} (h : Isometry f) (hg 
 /-- Isometries preserve the diameter in pseudoemetric spaces. -/
 theorem Isometry.ediam_image (hf : Isometry f) (s : Set α) : Emetric.diam (f '' s) = Emetric.diam s :=
   eq_of_forall_ge_iff fun d => by
-    simp only [Emetric.diam_le_iff, ball_image_iff, hf.edist_eq]
+    simp only [← Emetric.diam_le_iff, ← ball_image_iff, ← hf.edist_eq]
 
 theorem Isometry.ediam_range (hf : Isometry f) : Emetric.diam (Range f) = Emetric.diam (Univ : Set α) := by
   rw [← image_univ]
@@ -354,13 +354,13 @@ theorem ediam_preimage (h : α ≃ᵢ β) (s : Set β) : Emetric.diam (h ⁻¹' 
 @[simp]
 theorem preimage_emetric_ball (h : α ≃ᵢ β) (x : β) (r : ℝ≥0∞) : h ⁻¹' Emetric.Ball x r = Emetric.Ball (h.symm x) r := by
   ext y
-  simp [← h.edist_eq]
+  simp [h.edist_eq]
 
 @[simp]
 theorem preimage_emetric_closed_ball (h : α ≃ᵢ β) (x : β) (r : ℝ≥0∞) :
     h ⁻¹' Emetric.ClosedBall x r = Emetric.ClosedBall (h.symm x) r := by
   ext y
-  simp [← h.edist_eq]
+  simp [h.edist_eq]
 
 @[simp]
 theorem image_emetric_ball (h : α ≃ᵢ β) (x : α) (r : ℝ≥0∞) : h '' Emetric.Ball x r = Emetric.Ball (h x) r := by
@@ -457,18 +457,18 @@ theorem diam_univ : Metric.diam (Univ : Set α) = Metric.diam (Univ : Set β) :=
 @[simp]
 theorem preimage_ball (h : α ≃ᵢ β) (x : β) (r : ℝ) : h ⁻¹' Metric.Ball x r = Metric.Ball (h.symm x) r := by
   ext y
-  simp [← h.dist_eq]
+  simp [h.dist_eq]
 
 @[simp]
 theorem preimage_sphere (h : α ≃ᵢ β) (x : β) (r : ℝ) : h ⁻¹' Metric.Sphere x r = Metric.Sphere (h.symm x) r := by
   ext y
-  simp [← h.dist_eq]
+  simp [h.dist_eq]
 
 @[simp]
 theorem preimage_closed_ball (h : α ≃ᵢ β) (x : β) (r : ℝ) :
     h ⁻¹' Metric.ClosedBall x r = Metric.ClosedBall (h.symm x) r := by
   ext y
-  simp [← h.dist_eq]
+  simp [h.dist_eq]
 
 @[simp]
 theorem image_ball (h : α ≃ᵢ β) (x : α) (r : ℝ) : h '' Metric.Ball x r = Metric.Ball (h x) r := by
@@ -491,6 +491,6 @@ range of the isometry. -/
 @[simps (config := { simpRhs := true }) toEquiv apply]
 def Isometry.isometricOnRange [EmetricSpace α] [PseudoEmetricSpace β] {f : α → β} (h : Isometry f) : α ≃ᵢ Range f where
   isometry_to_fun := fun x y => by
-    simpa [Subtype.edist_eq] using h x y
+    simpa [← Subtype.edist_eq] using h x y
   toEquiv := Equivₓ.ofInjective f h.Injective
 

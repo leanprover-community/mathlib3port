@@ -66,7 +66,7 @@ theorem to_topsp_is_topological_basis (F : Ctop α σ) :
     @TopologicalSpace.IsTopologicalBasis _ F.toTopsp (Set.Range F.f) := by
   let this := F.to_topsp <;>
     exact
-      ⟨fun v ⟨b, e₂⟩ => e₁ ▸ e₂ ▸ fun x h => ⟨_, ⟨_, rfl⟩, F.inter_mem a b x h, F.inter_sub a b x h⟩,
+      ⟨fun u ⟨a, e₁⟩ v ⟨b, e₂⟩ => e₁ ▸ e₂ ▸ fun x h => ⟨_, ⟨_, rfl⟩, F.inter_mem a b x h, F.inter_sub a b x h⟩,
         eq_univ_iff_forall.2 fun x => ⟨_, ⟨_, rfl⟩, F.top_mem x⟩, rfl⟩
 
 @[simp]
@@ -108,7 +108,8 @@ theorem is_closed_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} :
     F.is_open_iff.trans <|
       forall_congrₓ fun a =>
         show (a ∉ s → ∃ b : F.σ, a ∈ F.f b ∧ ∀, ∀ z ∈ F.f b, ∀, z ∉ s) ↔ _ by
-          have := Classical.propDecidable <;> rw [not_imp_comm] <;> simp [not_exists, not_and, not_forall, and_comm]
+          have := Classical.propDecidable <;>
+            rw [not_imp_comm] <;> simp [← not_exists, ← not_and, ← not_forall, ← and_comm]
 
 theorem mem_interior_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} {a : α} :
     a ∈ Interior s ↔ ∃ b, a ∈ F.f b ∧ F.f b ⊆ s :=
@@ -133,7 +134,8 @@ variable [TopologicalSpace α]
 protected def id : Realizer α :=
   ⟨{ x : Set α // IsOpen x },
     { f := Subtype.val, top := fun _ => ⟨Univ, is_open_univ⟩, top_mem := mem_univ,
-      inter := fun a h₃ => ⟨_, h₁.inter h₂⟩, inter_mem := fun a => id, inter_sub := fun a h₃ => Subset.refl _ },
+      inter := fun ⟨x, h₁⟩ ⟨y, h₂⟩ a h₃ => ⟨_, h₁.inter h₂⟩, inter_mem := fun ⟨x, h₁⟩ ⟨y, h₂⟩ a => id,
+      inter_sub := fun ⟨x, h₁⟩ ⟨y, h₂⟩ a h₃ => Subset.refl _ },
     (ext Subtype.property) fun x s h =>
       let ⟨t, h, o, m⟩ := mem_nhds_iff.1 h
       ⟨⟨t, o⟩, m, h⟩⟩
@@ -160,8 +162,8 @@ theorem of_equiv_F (F : Realizer α) (E : F.σ ≃ τ) (s : τ) : (F.ofEquiv E).
 protected def nhds (F : Realizer α) (a : α) : (𝓝 a).Realizer :=
   ⟨{ s : F.σ // a ∈ F.f s },
     { f := fun s => F.f s.1, pt := ⟨_, F.f.top_mem a⟩, inf := fun ⟨x, h₁⟩ ⟨y, h₂⟩ => ⟨_, F.f.inter_mem x y a ⟨h₁, h₂⟩⟩,
-      inf_le_left := fun z h => (F.f.inter_sub x y a ⟨h₁, h₂⟩ h).1,
-      inf_le_right := fun z h => (F.f.inter_sub x y a ⟨h₁, h₂⟩ h).2 },
+      inf_le_left := fun ⟨x, h₁⟩ ⟨y, h₂⟩ z h => (F.f.inter_sub x y a ⟨h₁, h₂⟩ h).1,
+      inf_le_right := fun ⟨x, h₁⟩ ⟨y, h₂⟩ z h => (F.f.inter_sub x y a ⟨h₁, h₂⟩ h).2 },
     filter_eq <|
       Set.ext fun x =>
         ⟨fun ⟨⟨s, as⟩, h⟩ => mem_nhds_iff.2 ⟨_, h, F.IsOpen _, as⟩, fun h =>

@@ -52,7 +52,7 @@ private def arity : MvPolynomialFun σ R → Type u
   | Sum.inr (Sum.inr ⟨tt⟩) => ULift Bool
 
 private def arity_fintype (x : MvPolynomialFun σ R) : Fintype (Arity σ R x) := by
-  rcases x with (x | x | ⟨_ | _⟩) <;> dsimp' [arity] <;> infer_instance
+  rcases x with (x | x | ⟨_ | _⟩) <;> dsimp' [← arity] <;> infer_instance
 
 attribute [local instance] arity_fintype
 
@@ -76,23 +76,23 @@ private theorem to_mv_polynomial_surjective : Function.Surjective (@toMvPolynomi
     rcases ih₂ with ⟨w₂, rfl⟩
     exact
       ⟨WType.mk (Sum.inr (Sum.inr ⟨tt⟩)) fun x => cond x.down w₁ w₂, by
-        simp [to_mv_polynomial]⟩
+        simp [← to_mv_polynomial]⟩
     
   · rcases ih with ⟨w, rfl⟩
     exact
       ⟨WType.mk (Sum.inr (Sum.inr ⟨ff⟩)) fun x => cond x.down w (WType.mk (Sum.inr (Sum.inl i)) Pempty.elimₓ), by
-        simp [to_mv_polynomial]⟩
+        simp [← to_mv_polynomial]⟩
     
 
 private theorem cardinal_mv_polynomial_fun_le : # (MvPolynomialFun σ R) ≤ max (max (# R) (# σ)) ℵ₀ :=
   calc
     # (MvPolynomialFun σ R) = # R + # σ + # (ULift Bool) := by
-      dsimp' [mv_polynomial_fun] <;> simp only [← add_def, add_assocₓ, Cardinal.mk_ulift]
+      dsimp' [← mv_polynomial_fun] <;> simp only [add_def, ← add_assocₓ, ← Cardinal.mk_ulift]
     _ ≤ max (max (# R + # σ) (# (ULift Bool))) ℵ₀ := add_le_max _ _
     _ ≤ max (max (max (max (# R) (# σ)) ℵ₀) (# (ULift Bool))) ℵ₀ :=
       max_le_max (max_le_max (add_le_max _ _) le_rfl) le_rfl
     _ ≤ _ := by
-      simp only [max_commₓ ℵ₀, max_assocₓ, max_left_commₓ ℵ₀, max_selfₓ,
+      simp only [← max_commₓ ℵ₀, ← max_assocₓ, ← max_left_commₓ ℵ₀, ← max_selfₓ, ←
         max_eq_leftₓ (lt_aleph_0_of_fintype (ULift.{u} Bool)).le]
     
 
@@ -106,7 +106,7 @@ theorem cardinal_mk_le_max {σ R : Type u} [CommSemiringₓ R] : # (MvPolynomial
     _ ≤ max (# (MvPolynomialFun σ R)) ℵ₀ := WType.cardinal_mk_le_max_aleph_0_of_fintype
     _ ≤ _ := max_le_max cardinal_mv_polynomial_fun_le le_rfl
     _ ≤ _ := by
-      simp only [max_assocₓ, max_selfₓ]
+      simp only [← max_assocₓ, ← max_selfₓ]
     
 
 end MvPolynomial

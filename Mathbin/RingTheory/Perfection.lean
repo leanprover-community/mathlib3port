@@ -623,7 +623,7 @@ instance : IsDomain (PreTilt K v O hv p) :=
   { (inferInstance : CommRingₓ (PreTilt K v O hv p)) with
     exists_pair_ne := (CharP.nontrivial_of_char_ne_one hp.1.ne_one).1,
     eq_zero_or_eq_zero_of_mul_eq_zero := fun f g hfg => by
-      simp_rw [← map_eq_zero]  at hfg⊢
+      simp_rw [← map_eq_zero] at hfg⊢
       contrapose! hfg
       rw [Valuation.map_mul]
       exact mul_ne_zero hfg.1 hfg.2 }

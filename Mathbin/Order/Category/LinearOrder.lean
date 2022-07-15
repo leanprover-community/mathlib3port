@@ -44,8 +44,10 @@ instance : Inhabited LinearOrderₓₓ :=
 instance (α : LinearOrderₓₓ) : LinearOrderₓ α :=
   α.str
 
-instance hasForgetToLattice : HasForget₂ LinearOrderₓₓ Latticeₓ where
-  forget₂ := { obj := fun X => Latticeₓ.of X, map := fun X Y f => (OrderHomClass.toLatticeHom X Y f : LatticeHom X Y) }
+instance hasForgetToLattice :
+    HasForget₂ LinearOrderₓₓ
+      Latticeₓ where forget₂ :=
+    { obj := fun X => Latticeₓ.of X, map := fun X Y f => (OrderHomClass.toLatticeHom X Y f : LatticeHom X Y) }
 
 /-- Constructs an equivalence between linear orders from an order isomorphism between them. -/
 @[simps]

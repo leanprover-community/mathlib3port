@@ -143,7 +143,7 @@ instance : HasSdiff (Clopens α) :=
   ⟨fun s t => ⟨s \ t, s.clopen.diff t.clopen⟩⟩
 
 instance : HasCompl (Clopens α) :=
-  ⟨fun s => ⟨sᶜ, s.clopen.Compl⟩⟩
+  ⟨fun s => ⟨sᶜ, s.clopen.compl⟩⟩
 
 instance : BooleanAlgebra (Clopens α) :=
   SetLike.coe_injective.BooleanAlgebra _ (fun _ _ => rfl) (fun _ _ => rfl) rfl rfl (fun _ => rfl) fun _ _ => rfl

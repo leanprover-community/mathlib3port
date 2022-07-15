@@ -176,7 +176,7 @@ theorem convex_independent_iff_finset {p : ι → E} :
     rw [hab, image_singleton, coe_singleton, convex_hull_singleton]
     exact Set.mem_singleton _
   rw [convex_hull_eq_union_convex_hull_finite_subsets] at hx
-  simp_rw [Set.mem_Union]  at hx
+  simp_rw [Set.mem_Union] at hx
   obtain ⟨t, ht, hx⟩ := hx
   rw [← hp.mem_set_image]
   refine' ht _

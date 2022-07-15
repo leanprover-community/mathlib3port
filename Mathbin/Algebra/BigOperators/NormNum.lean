@@ -87,16 +87,16 @@ theorem Finset.insert_eq_coe_list_of_mem {α : Type _} [DecidableEq α] (x : α)
     (h : x ∈ xs') (nd_xs : xs'.Nodup) (hxs' : xs = Finset.mk (↑xs') (Multiset.coe_nodup.mpr nd_xs)) :
     insert x xs = Finset.mk (↑xs') (Multiset.coe_nodup.mpr nd_xs) := by
   have h : x ∈ xs := by
-    simpa [hxs'] using h
+    simpa [← hxs'] using h
   rw [Finset.insert_eq_of_mem h, hxs']
 
 theorem Finset.insert_eq_coe_list_cons {α : Type _} [DecidableEq α] (x : α) (xs : Finset α) {xs' : List α} (h : x ∉ xs')
     (nd_xs : xs'.Nodup) (nd_xxs : (x :: xs').Nodup) (hxs' : xs = Finset.mk (↑xs') (Multiset.coe_nodup.mpr nd_xs)) :
     insert x xs = Finset.mk (↑(x :: xs')) (Multiset.coe_nodup.mpr nd_xxs) := by
   have h : x ∉ xs := by
-    simpa [hxs'] using h
+    simpa [← hxs'] using h
   rw [← Finset.val_inj, Finset.insert_val_of_not_mem h, hxs']
-  simp only [Multiset.cons_coe]
+  simp only [← Multiset.cons_coe]
 
 /-- Convert an expression denoting a finset to a list of elements,
 a proof that this list is equal to the original finset,

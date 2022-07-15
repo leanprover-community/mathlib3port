@@ -60,9 +60,9 @@ theorem of_subsingleton [Subsingleton M] (x y : M) : SameRay R x y := by
   exact zero_left _
 
 @[nontriviality]
-theorem of_subsingleton' [Subsingleton R] (x y : M) : SameRay R x y :=
+theorem of_subsingleton' [Subsingleton R] (x y : M) : SameRay R x y := by
   have := Module.subsingleton R M
-  of_subsingleton x y
+  exact of_subsingleton x y
 
 /-- `same_ray` is reflexive. -/
 @[refl]
@@ -164,7 +164,7 @@ theorem smul {S : Type _} [Monoidₓ S] [DistribMulAction S M] [SmulCommClass R 
     SameRay R (s • x) (s • y) :=
   h.map (s • (LinearMap.id : M →ₗ[R] M))
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 /-- If `x` and `y` are on the same ray as `z`, then so is `x + y`. -/
 theorem add_left (hx : SameRay R x z) (hy : SameRay R y z) : SameRay R (x + y) z := by
   rcases eq_or_ne x 0 with (rfl | hx₀)
@@ -181,7 +181,7 @@ theorem add_left (hx : SameRay R x z) (hy : SameRay R y z) : SameRay R (x + y) z
   refine' Or.inr (Or.inr ⟨rx * ry, ry * rz₁ + rx * rz₂, mul_pos hrx hry, _, _⟩)
   · apply_rules [add_pos, mul_pos]
     
-  · simp only [mul_smul, smul_add, add_smul, ← Hx, ← Hy]
+  · simp only [← mul_smul, ← smul_add, ← add_smul, Hx, Hy]
     rw [smul_comm]
     
 
@@ -347,7 +347,7 @@ variable {M N : Type _} [AddCommGroupₓ M] [AddCommGroupₓ N] [Module R M] [Mo
 /-- `same_ray.neg` as an `iff`. -/
 @[simp]
 theorem same_ray_neg_iff : SameRay R (-x) (-y) ↔ SameRay R x y := by
-  simp only [SameRay, neg_eq_zero, smul_neg, neg_inj]
+  simp only [← SameRay, ← neg_eq_zero, ← smul_neg, ← neg_inj]
 
 alias same_ray_neg_iff ↔ SameRay.of_neg SameRay.neg
 
@@ -359,7 +359,7 @@ theorem eq_zero_of_same_ray_neg_smul_right [NoZeroSmulDivisors R M] {r : R} (hr 
   rcases h with (rfl | h₀ | ⟨r₁, r₂, hr₁, hr₂, h⟩)
   · rfl
     
-  · simpa [hr.ne] using h₀
+  · simpa [← hr.ne] using h₀
     
   · rw [← sub_eq_zero, smul_smul, ← sub_smul, smul_eq_zero] at h
     refine' h.resolve_left (ne_of_gtₓ <| sub_pos.2 _)
@@ -427,7 +427,7 @@ theorem ne_neg_self [NoZeroSmulDivisors R M] (x : Module.Ray R M) : x ≠ -x := 
 
 theorem neg_units_smul (u : Rˣ) (v : Module.Ray R M) : -u • v = -(u • v) := by
   induction v using Module.Ray.ind
-  simp only [smul_ray_of_ne_zero, Units.smul_def, Units.coe_neg, neg_smul, neg_ray_of_ne_zero]
+  simp only [← smul_ray_of_ne_zero, ← Units.smul_def, ← Units.coe_neg, ← neg_smul, ← neg_ray_of_ne_zero]
 
 /-- Scaling by a negative unit is negation. -/
 theorem units_smul_of_neg (u : Rˣ) (hu : (u : R) < 0) (v : Module.Ray R M) : u • v = -v := by
@@ -470,7 +470,7 @@ theorem same_ray_smul_right_iff {v : M} {r : R} : SameRay R v (r • v) ↔ 0 �
 /-- A nonzero vector is in the same ray as a multiple of itself if and only if that multiple
 is positive. -/
 theorem same_ray_smul_right_iff_of_ne {v : M} (hv : v ≠ 0) {r : R} (hr : r ≠ 0) : SameRay R v (r • v) ↔ 0 < r := by
-  simp only [same_ray_smul_right_iff, hv, or_falseₓ, hr.symm.le_iff_lt]
+  simp only [← same_ray_smul_right_iff, ← hv, ← or_falseₓ, ← hr.symm.le_iff_lt]
 
 @[simp]
 theorem same_ray_smul_left_iff {v : M} {r : R} : SameRay R (r • v) v ↔ 0 ≤ r ∨ v = 0 :=
@@ -487,7 +487,7 @@ theorem same_ray_neg_smul_right_iff {v : M} {r : R} : SameRay R (-v) (r • v) �
 
 theorem same_ray_neg_smul_right_iff_of_ne {v : M} {r : R} (hv : v ≠ 0) (hr : r ≠ 0) : SameRay R (-v) (r • v) ↔ r < 0 :=
   by
-  simp only [same_ray_neg_smul_right_iff, hv, or_falseₓ, hr.le_iff_lt]
+  simp only [← same_ray_neg_smul_right_iff, ← hv, ← or_falseₓ, ← hr.le_iff_lt]
 
 @[simp]
 theorem same_ray_neg_smul_left_iff {v : M} {r : R} : SameRay R (r • v) (-v) ↔ r ≤ 0 ∨ v = 0 :=
@@ -499,7 +499,7 @@ theorem same_ray_neg_smul_left_iff_of_ne {v : M} {r : R} (hv : v ≠ 0) (hr : r 
 @[simp]
 theorem units_smul_eq_self_iff {u : Rˣ} {v : Module.Ray R M} : u • v = v ↔ (0 : R) < u := by
   induction' v using Module.Ray.ind with v hv
-  simp only [smul_ray_of_ne_zero, ray_eq_iff, Units.smul_def, same_ray_smul_left_iff_of_ne hv u.ne_zero]
+  simp only [← smul_ray_of_ne_zero, ← ray_eq_iff, ← Units.smul_def, ← same_ray_smul_left_iff_of_ne hv u.ne_zero]
 
 @[simp]
 theorem units_smul_eq_neg_iff {u : Rˣ} {v : Module.Ray R M} : u • v = -v ↔ ↑u < (0 : R) := by

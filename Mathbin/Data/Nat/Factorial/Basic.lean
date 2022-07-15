@@ -63,7 +63,7 @@ theorem factorial_ne_zero (n : ℕ) : n ! ≠ 0 :=
 
 theorem factorial_dvd_factorial {m n} (h : m ≤ n) : m ! ∣ n ! := by
   induction' n with n IH
-  · simp [Nat.eq_zero_of_le_zeroₓ h]
+  · simp [← Nat.eq_zero_of_le_zeroₓ h]
     
   obtain rfl | hl := h.eq_or_lt
   · simp
@@ -320,13 +320,13 @@ theorem desc_factorial_self : ∀ n : ℕ, n.descFactorial n = n !
 @[simp]
 theorem desc_factorial_eq_zero_iff_lt {n : ℕ} : ∀ {k : ℕ}, n.descFactorial k = 0 ↔ n < k
   | 0 => by
-    simp only [desc_factorial_zero, Nat.one_ne_zero, Nat.not_lt_zeroₓ]
+    simp only [← desc_factorial_zero, ← Nat.one_ne_zero, ← Nat.not_lt_zeroₓ]
   | succ k => by
     rw [desc_factorial_succ, mul_eq_zero, desc_factorial_eq_zero_iff_lt, lt_succ_iff, tsub_eq_zero_iff_le,
       lt_iff_le_and_ne, or_iff_left_iff_imp, and_imp]
     exact fun h _ => h
 
-alias Nat.desc_factorial_eq_zero_iff_lt ↔ _ Nat.desc_factorial_of_lt
+alias desc_factorial_eq_zero_iff_lt ↔ _ desc_factorial_of_lt
 
 theorem add_desc_factorial_eq_asc_factorial (n : ℕ) : ∀ k : ℕ, (n + k).descFactorial k = n.ascFactorial k
   | 0 => by

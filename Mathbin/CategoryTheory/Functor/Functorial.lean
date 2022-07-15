@@ -64,8 +64,7 @@ instance (F : C ⥤ D) : Functorial.{v₁, v₂} F.obj :=
 theorem map_functorial_obj (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) : map F.obj f = F.map f :=
   rfl
 
-instance functorialId : Functorial.{v₁, v₁} (id : C → C) where
-  map := fun X Y f => f
+instance functorialId : Functorial.{v₁, v₁} (id : C → C) where map := fun X Y f => f
 
 section
 

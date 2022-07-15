@@ -55,8 +55,8 @@ noncomputable def coeffIntegerNormalization (p : S[X]) (i : ℕ) : R :=
 
 theorem coeff_integer_normalization_of_not_mem_support (p : S[X]) (i : ℕ) (h : coeff p i = 0) :
     coeffIntegerNormalization M p i = 0 := by
-  simp only [coeff_integer_normalization, h, mem_support_iff, eq_self_iff_true, not_true, Ne.def, dif_neg,
-    not_false_iff]
+  simp only [← coeff_integer_normalization, ← h, ← mem_support_iff, ← eq_self_iff_true, ← not_true, ← Ne.def, ← dif_neg,
+    ← not_false_iff]
 
 theorem coeff_integer_normalization_mem_support (p : S[X]) (i : ℕ) (h : coeffIntegerNormalization M p i ≠ 0) :
     i ∈ p.support := by
@@ -71,7 +71,7 @@ noncomputable def integerNormalization (p : S[X]) : R[X] :=
 @[simp]
 theorem integer_normalization_coeff (p : S[X]) (i : ℕ) :
     (integerNormalization M p).coeff i = coeffIntegerNormalization M p i := by
-  simp (config := { contextual := true })[integer_normalization, coeff_monomial,
+  simp (config := { contextual := true })[← integer_normalization, ← coeff_monomial, ←
     coeff_integer_normalization_of_not_mem_support]
 
 theorem integer_normalization_spec (p : S[X]) :
@@ -154,7 +154,7 @@ theorem is_algebraic_iff [Algebra A C] [Algebra K C] [IsScalarTower A K C] {x : 
     · have : algebraMap A K (p.coeff i) = 0 :=
         trans (Polynomial.coeff_map _ _).symm
           (by
-            simp [h])
+            simp [← h])
       exact to_map_eq_zero_iff.mp this
       
     · rwa [IsScalarTower.aeval_apply _ K] at px
@@ -241,7 +241,9 @@ theorem is_integral_localization (H : Algebra.IsIntegral R S) :
     
 
 theorem is_integral_localization' {R S : Type _} [CommRingₓ R] [CommRingₓ S] {f : R →+* S} (hf : f.IsIntegral)
-    (M : Submonoid R) : (map (Localization (M.map (f : R →* S))) f M.le_comap_map : Localization M →+* _).IsIntegral :=
+    (M : Submonoid R) :
+    (map (Localization (M.map (f : R →* S))) f (M.le_comap_map : _ ≤ Submonoid.comap (f : R →* S) _) :
+        Localization M →+* _).IsIntegral :=
   @is_integral_localization R _ M S _ f.toAlgebra _ _ _ _ _ _ _ _ hf
 
 end IsIntegral
@@ -324,7 +326,7 @@ variable (R S K)
 /-- `S` is algebraic over `R` iff a fraction ring of `S` is algebraic over `R` -/
 theorem is_algebraic_iff' [Field K] [IsDomain R] [IsDomain S] [Algebra R K] [Algebra S K] [NoZeroSmulDivisors R K]
     [IsFractionRing S K] [IsScalarTower R S K] : Algebra.IsAlgebraic R S ↔ Algebra.IsAlgebraic R K := by
-  simp only [Algebra.IsAlgebraic]
+  simp only [← Algebra.IsAlgebraic]
   constructor
   · intro h x
     rw [IsFractionRing.is_algebraic_iff R (FractionRing R) K, is_algebraic_iff_is_integral]

@@ -124,9 +124,9 @@ theorem powers_le_non_zero_divisors_of_no_zero_divisors [NoZeroDivisors M] {a : 
   le_non_zero_divisors_of_no_zero_divisors fun h => absurd (h.recOn fun _ hn => pow_eq_zero hn) ha
 
 theorem map_le_non_zero_divisors_of_injective [NoZeroDivisors M'] [MonoidWithZeroHomClass F M M'] (f : F)
-    (hf : Function.Injective f) {S : Submonoid M} (hS : S ≤ M⁰) : S.map ↑f ≤ M'⁰ := by
+    (hf : Function.Injective f) {S : Submonoid M} (hS : S ≤ M⁰) : S.map f ≤ M'⁰ := by
   cases subsingleton_or_nontrivial M
-  · simp [Subsingleton.elimₓ S ⊥]
+  · simp [← Subsingleton.elimₓ S ⊥]
     
   · exact
       le_non_zero_divisors_of_no_zero_divisors fun h =>

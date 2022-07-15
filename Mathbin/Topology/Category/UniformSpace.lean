@@ -72,8 +72,9 @@ theorem hom_ext {X Y : UniformSpaceₓ} {f g : X ⟶ Y} : (f : X → Y) = g → 
   Subtype.eq
 
 /-- The forgetful functor from uniform spaces to topological spaces. -/
-instance hasForgetToTop : HasForget₂ UniformSpaceₓ.{u} Top.{u} where
-  forget₂ :=
+instance hasForgetToTop :
+    HasForget₂ UniformSpaceₓ.{u}
+      Top.{u} where forget₂ :=
     { obj := fun X => Top.of X,
       map := fun X Y f => { toFun := f, continuous_to_fun := UniformContinuous.continuous f.property } }
 
@@ -111,12 +112,12 @@ def of (X : Type u) [UniformSpace X] [CompleteSpace X] [SeparatedSpace X] : Cplt
 theorem coe_of (X : Type u) [UniformSpace X] [CompleteSpace X] [SeparatedSpace X] : (of X : Type u) = X :=
   rfl
 
-instance : Inhabited CpltSepUniformSpace :=
+instance : Inhabited CpltSepUniformSpace := by
   have : SeparatedSpace Empty :=
     separated_iff_t2.mpr
       (by
         infer_instance)
-  ⟨CpltSepUniformSpace.of Empty⟩
+  exact ⟨CpltSepUniformSpace.of Empty⟩
 
 /-- The category instance on `CpltSepUniformSpace`. -/
 instance category : LargeCategory CpltSepUniformSpace :=
@@ -198,8 +199,7 @@ noncomputable def adj : completion_functor ⊣ forget₂ CpltSepUniformSpace Uni
 noncomputable instance : IsRightAdjoint (forget₂ CpltSepUniformSpace UniformSpaceₓ) :=
   ⟨completionFunctor, adj⟩
 
-noncomputable instance : Reflective (forget₂ CpltSepUniformSpace UniformSpaceₓ) :=
-  {  }
+noncomputable instance : Reflective (forget₂ CpltSepUniformSpace UniformSpaceₓ) where
 
 open CategoryTheory.Limits
 

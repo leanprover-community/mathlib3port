@@ -244,8 +244,7 @@ section Pi
 variable {I A : Type _} {X : I → Type _} [TopologicalSpace A] [∀ i, TopologicalSpace (X i)]
 
 /-- Abbreviation for product of continuous maps, which is continuous -/
-def pi (f : ∀ i, C(A, X i)) : C(A, ∀ i, X i) where
-  toFun := fun i : I => f i a
+def pi (f : ∀ i, C(A, X i)) : C(A, ∀ i, X i) where toFun := fun a : A i : I => f i a
 
 @[simp]
 theorem pi_eval (f : ∀ i, C(A, X i)) (a : A) : (pi f) a = fun i : I => (f i) a :=

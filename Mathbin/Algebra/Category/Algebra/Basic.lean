@@ -47,11 +47,14 @@ instance : ConcreteCategory.{v} (AlgebraCat.{v} R) where
   forget := { obj := fun R => R, map := fun R S f => (f : R → S) }
   forget_faithful := {  }
 
-instance hasForgetToRing : HasForget₂ (AlgebraCat.{v} R) Ringₓₓ.{v} where
-  forget₂ := { obj := fun A => Ringₓₓ.of A, map := fun A₁ A₂ f => AlgHom.toRingHom f }
+instance hasForgetToRing :
+    HasForget₂ (AlgebraCat.{v} R)
+      Ringₓₓ.{v} where forget₂ := { obj := fun A => Ringₓₓ.of A, map := fun A₁ A₂ f => AlgHom.toRingHom f }
 
-instance hasForgetToModule : HasForget₂ (AlgebraCat.{v} R) (ModuleCat.{v} R) where
-  forget₂ := { obj := fun M => ModuleCat.of R M, map := fun M₁ M₂ f => AlgHom.toLinearMap f }
+instance hasForgetToModule :
+    HasForget₂ (AlgebraCat.{v} R)
+      (ModuleCat.{v}
+        R) where forget₂ := { obj := fun M => ModuleCat.of R M, map := fun M₁ M₂ f => AlgHom.toLinearMap f }
 
 /-- The object in the category of R-algebras associated to a type equipped with the appropriate
 typeclasses. -/
@@ -105,14 +108,14 @@ def free : Type u ⥤ AlgebraCat.{u} R where
   map_id' := by
     intro X
     ext1
-    simp only [FreeAlgebra.ι_comp_lift]
+    simp only [← FreeAlgebra.ι_comp_lift]
     rfl
   map_comp' := by
     intros
     ext1
-    simp only [FreeAlgebra.ι_comp_lift]
+    simp only [← FreeAlgebra.ι_comp_lift]
     ext1
-    simp only [FreeAlgebra.lift_ι_apply, CategoryTheory.coe_comp, Function.comp_app, types_comp_apply]
+    simp only [← FreeAlgebra.lift_ι_apply, ← CategoryTheory.coe_comp, ← Function.comp_app, ← types_comp_apply]
 
 /-- The free/forget adjunction for `R`-algebras. -/
 def adj : free.{u} R ⊣ forget (AlgebraCat.{u} R) :=
@@ -122,12 +125,12 @@ def adj : free.{u} R ⊣ forget (AlgebraCat.{u} R) :=
       hom_equiv_naturality_left_symm' := by
         intros
         ext
-        simp only [free_map, Equivₓ.symm_symm, FreeAlgebra.lift_ι_apply, CategoryTheory.coe_comp, Function.comp_app,
-          types_comp_apply],
+        simp only [← free_map, ← Equivₓ.symm_symm, ← FreeAlgebra.lift_ι_apply, ← CategoryTheory.coe_comp, ←
+          Function.comp_app, ← types_comp_apply],
       hom_equiv_naturality_right' := by
         intros
         ext
-        simp only [forget_map_eq_coe, CategoryTheory.coe_comp, Function.comp_app, FreeAlgebra.lift_symm_apply,
+        simp only [← forget_map_eq_coe, ← CategoryTheory.coe_comp, ← Function.comp_app, ← FreeAlgebra.lift_symm_apply, ←
           types_comp_apply] }
 
 instance : IsRightAdjoint (forget (AlgebraCat.{u} R)) :=
@@ -183,8 +186,8 @@ def algEquivIsoAlgebraIso {X Y : Type u} [Ringₓ X] [Ringₓ Y] [Algebra R X] [
 instance (X : Type u) [Ringₓ X] [Algebra R X] : Coe (Subalgebra R X) (AlgebraCat R) :=
   ⟨fun N => AlgebraCat.of R N⟩
 
-instance AlgebraCat.forget_reflects_isos : ReflectsIsomorphisms (forget (AlgebraCat.{u} R)) where
-  reflects := fun X Y f _ => by
+instance AlgebraCat.forget_reflects_isos :
+    ReflectsIsomorphisms (forget (AlgebraCat.{u} R)) where reflects := fun X Y f _ => by
     skip
     let i := as_iso ((forget (AlgebraCat.{u} R)).map f)
     let e : X ≃ₐ[R] Y := { f, i.to_equiv with }

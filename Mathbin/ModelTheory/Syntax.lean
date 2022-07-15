@@ -22,6 +22,8 @@ This file defines first-order terms, formulas, sentences, and theories in a styl
 * A `first_order.language.Theory` is a set of sentences.
 * The variables of terms and formulas can be relabelled with `first_order.language.term.relabel`,
 `first_order.language.bounded_formula.relabel`, and `first_order.language.formula.relabel`.
+* Given an operation on terms and an operation on relations,
+  `first_order.language.bounded_formula.map_term_rel` gives an operation on formulas.
 * `first_order.language.bounded_formula.cast_le` adds more `fin`-indexed variables.
 * `first_order.language.bounded_formula.lift_at` raises the indexes of the `fin`-indexed variables
 above a particular index.
@@ -63,8 +65,8 @@ open FirstOrder
 
 open Structure Finₓ
 
--- ././Mathport/Syntax/Translate/Basic.lean:1231:30: infer kinds are unsupported in Lean 4: var {}
--- ././Mathport/Syntax/Translate/Basic.lean:1231:30: infer kinds are unsupported in Lean 4: func {}
+-- ./././Mathport/Syntax/Translate/Basic.lean:1387:30: infer kinds are unsupported in Lean 4: var {}
+-- ./././Mathport/Syntax/Translate/Basic.lean:1387:30: infer kinds are unsupported in Lean 4: func {}
 /-- A term on `α` is either a variable indexed by an element of `α`
   or a function symbol applied to simpler terms. -/
 inductive Term (α : Type u') : Type max u u'
@@ -98,21 +100,29 @@ def relabelₓ (g : α → β) : L.Term α → L.Term β
   | var i => var (g i)
   | func f ts => func f fun i => (ts i).relabel
 
-@[simp]
 theorem relabel_id (t : L.Term α) : t.relabel id = t := by
   induction' t with _ _ _ _ ih
   · rfl
     
-  · simp [ih]
+  · simp [← ih]
     
+
+@[simp]
+theorem relabel_id_eq_id : (Term.relabelₓ id : L.Term α → L.Term α) = id :=
+  funext relabel_id
 
 @[simp]
 theorem relabel_relabel (f : α → β) (g : β → γ) (t : L.Term α) : (t.relabel f).relabel g = t.relabel (g ∘ f) := by
   induction' t with _ _ _ _ ih
   · rfl
     
-  · simp [ih]
+  · simp [← ih]
     
+
+@[simp]
+theorem relabel_comp_relabel (f : α → β) (g : β → γ) :
+    (Term.relabelₓ g ∘ Term.relabelₓ f : L.Term α → L.Term γ) = Term.relabelₓ (g ∘ f) :=
+  funext (relabel_relabel f g)
 
 /-- Restricts a term to use only a set of the given variables. -/
 def restrictVarₓ [DecidableEq α] : ∀ t : L.Term α f : t.varFinset → β, L.Term β
@@ -205,7 +215,7 @@ def Lequiv.onTerm (φ : L ≃ᴸ L') : L.Term α ≃ L'.Term α where
 
 variable (L) (α)
 
--- ././Mathport/Syntax/Translate/Basic.lean:1231:30: infer kinds are unsupported in Lean 4: falsum {}
+-- ./././Mathport/Syntax/Translate/Basic.lean:1387:30: infer kinds are unsupported in Lean 4: falsum {}
 /-- `bounded_formula α n` is the type of formulas with free variables indexed by `α` and up to `n`
   additional free variables. -/
 inductive BoundedFormula : ℕ → Type max u v u'
@@ -316,52 +326,43 @@ def castLeₓ : ∀ {m n : ℕ} h : m ≤ n, L.BoundedFormula α m → L.Bounded
   | m, n, h, imp f₁ f₂ => (f₁.cast_le h).imp (f₂.cast_le h)
   | m, n, h, all f => (f.cast_le (add_le_add_right h 1)).all
 
-/-- A function to help relabel the variables in bounded formulas. -/
-def relabelAux (g : α → Sum β (Finₓ n)) (k : ℕ) : Sum α (Finₓ k) → Sum β (Finₓ (n + k)) :=
-  Sum.map id finSumFinEquiv ∘ Equivₓ.sumAssoc _ _ _ ∘ Sum.map g id
-
 @[simp]
-theorem sum_elim_comp_relabel_aux {m : ℕ} {g : α → Sum β (Finₓ n)} {v : β → M} {xs : Finₓ (n + m) → M} :
-    Sum.elim v xs ∘ relabelAux g m = Sum.elim (Sum.elim v (xs ∘ castAdd m) ∘ g) (xs ∘ natAdd n) := by
-  ext x
-  cases x
-  · simp only [bounded_formula.relabel_aux, Function.comp_app, Sum.map_inl, Sum.elim_inl]
-    cases' g x with l r <;> simp
-    
-  · simp [bounded_formula.relabel_aux]
-    
-
-@[simp]
-theorem relabel_aux_sum_inl (k : ℕ) : relabelAux (Sum.inl : α → Sum α (Finₓ n)) k = Sum.map id (natAdd n) := by
-  ext x
-  cases x <;>
-    · simp [relabel_aux]
-      
-
-/-- Relabels a bounded formula's variables along a particular function. -/
-@[simp]
-def relabelₓ (g : α → Sum β (Finₓ n)) : ∀ {k : ℕ}, L.BoundedFormula α k → L.BoundedFormula β (n + k)
-  | k, falsum => falsum
-  | k, equal t₁ t₂ => equal (t₁.relabel (relabelAux g k)) (t₂.relabel (relabelAux g k))
-  | k, rel R ts => rel R (Term.relabelₓ (relabelAux g k) ∘ ts)
-  | k, imp f₁ f₂ => f₁.relabel.imp f₂.relabel
-  | k, all f => f.relabel.all
-
-@[simp]
-theorem relabel_sum_inl (φ : L.BoundedFormula α n) :
-    (φ.relabel Sum.inl : L.BoundedFormula α (0 + n)) = φ.cast_le (ge_of_eq (zero_addₓ n)) := by
+theorem cast_le_rfl {n} (h : n ≤ n) (φ : L.BoundedFormula α n) : φ.cast_le h = φ := by
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
   · rfl
     
-  · simp [Finₓ.nat_add_zero, cast_le_of_eq]
+  · simp [← Finₓ.cast_le_of_eq]
     
-  · simp [Finₓ.nat_add_zero, cast_le_of_eq]
+  · simp [← Finₓ.cast_le_of_eq]
     
-  · simp [ih1, ih2]
+  · simp [← Finₓ.cast_le_of_eq, ← ih1, ← ih2]
     
-  · simp only [ih3, relabel, cast_le]
-    rfl
+  · simp [← Finₓ.cast_le_of_eq, ← ih3]
     
+
+@[simp]
+theorem cast_le_cast_le {k m n} (km : k ≤ m) (mn : m ≤ n) (φ : L.BoundedFormula α k) :
+    (φ.cast_le km).cast_le mn = φ.cast_le (km.trans mn) := by
+  revert m n
+  induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3 <;> intro m n km mn
+  · rfl
+    
+  · simp
+    
+  · simp only [← cast_le, ← eq_self_iff_true, ← heq_iff_eq, ← true_andₓ]
+    rw [← Function.comp.assoc, relabel_comp_relabel]
+    simp
+    
+  · simp [← ih1, ← ih2]
+    
+  · simp only [← cast_le, ← ih3]
+    
+
+@[simp]
+theorem cast_le_comp_cast_le {k m n} (km : k ≤ m) (mn : m ≤ n) :
+    (BoundedFormula.castLeₓ mn ∘ BoundedFormula.castLeₓ km : L.BoundedFormula α k → L.BoundedFormula α n) =
+      BoundedFormula.castLeₓ (km.trans mn) :=
+  funext (cast_le_cast_le km mn)
 
 /-- Restricts a bounded formula to only use a particular set of free variables. -/
 def restrictFreeVarₓ [DecidableEq α] : ∀ {n : ℕ} φ : L.BoundedFormula α n f : φ.freeVarFinset → β, L.BoundedFormula β n
@@ -385,27 +386,142 @@ def exsₓ : ∀ {n}, L.BoundedFormula α n → L.Formula α
   | 0, φ => φ
   | n + 1, φ => φ.ex.exs
 
+/-- Maps bounded formulas along a map of terms and a map of relations. -/
+def mapTermRelₓ {g : ℕ → ℕ} (ft : ∀ n, L.Term (Sum α (Finₓ n)) → L'.Term (Sum β (Finₓ (g n))))
+    (fr : ∀ n, L.Relations n → L'.Relations n)
+    (h : ∀ n, L'.BoundedFormula β (g (n + 1)) → L'.BoundedFormula β (g n + 1)) :
+    ∀ {n}, L.BoundedFormula α n → L'.BoundedFormula β (g n)
+  | n, falsum => falsum
+  | n, equal t₁ t₂ => equal (ft _ t₁) (ft _ t₂)
+  | n, rel R ts => rel (fr _ R) fun i => ft _ (ts i)
+  | n, imp φ₁ φ₂ => φ₁.mapTermRel.imp φ₂.mapTermRel
+  | n, all φ => (h n φ.mapTermRel).all
+
 /-- Raises all of the `fin`-indexed variables of a formula greater than or equal to `m` by `n'`. -/
-def liftAtₓ : ∀ {n : ℕ} n' m : ℕ, L.BoundedFormula α n → L.BoundedFormula α (n + n')
-  | n, n', m, falsum => falsum
-  | n, n', m, equal t₁ t₂ => (t₁.liftAt n' m).bdEqual (t₂.liftAt n' m)
-  | n, n', m, rel R ts => R.BoundedFormula (Term.liftAt n' m ∘ ts)
-  | n, n', m, imp f₁ f₂ => (f₁.liftAt n' m).imp (f₂.liftAt n' m)
-  | n, n', m, all f =>
-    ((f.liftAt n' m).cast_le
-        (by
-          rw [add_assocₓ, add_commₓ 1, ← add_assocₓ])).all
+def liftAt : ∀ {n : ℕ} n' m : ℕ, L.BoundedFormula α n → L.BoundedFormula α (n + n') := fun n n' m φ =>
+  φ.mapTermRel (fun k t => t.liftAt n' m) (fun _ => id) fun _ =>
+    castLeₓ
+      (by
+        rw [add_assocₓ, add_commₓ 1, add_assocₓ])
+
+@[simp]
+theorem map_term_rel_map_term_rel {L'' : Language} (ft : ∀ n, L.Term (Sum α (Finₓ n)) → L'.Term (Sum β (Finₓ n)))
+    (fr : ∀ n, L.Relations n → L'.Relations n) (ft' : ∀ n, L'.Term (Sum β (Finₓ n)) → L''.Term (Sum γ (Finₓ n)))
+    (fr' : ∀ n, L'.Relations n → L''.Relations n) {n} (φ : L.BoundedFormula α n) :
+    ((φ.mapTermRel ft fr fun _ => id).mapTermRel ft' fr' fun _ => id) =
+      φ.mapTermRel (fun _ => ft' _ ∘ ft _) (fun _ => fr' _ ∘ fr _) fun _ => id :=
+  by
+  induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
+  · rfl
+    
+  · simp [← map_term_rel]
+    
+  · simp [← map_term_rel]
+    
+  · simp [← map_term_rel, ← ih1, ← ih2]
+    
+  · simp [← map_term_rel, ← ih3]
+    
+
+@[simp]
+theorem map_term_rel_id_id_id {n} (φ : L.BoundedFormula α n) :
+    (φ.mapTermRel (fun _ => id) (fun _ => id) fun _ => id) = φ := by
+  induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
+  · rfl
+    
+  · simp [← map_term_rel]
+    
+  · simp [← map_term_rel]
+    
+  · simp [← map_term_rel, ← ih1, ← ih2]
+    
+  · simp [← map_term_rel, ← ih3]
+    
+
+/-- An equivalence of bounded formulas given by an equivalence of terms and an equivalence of
+relations. -/
+@[simps]
+def mapTermRelEquiv (ft : ∀ n, L.Term (Sum α (Finₓ n)) ≃ L'.Term (Sum β (Finₓ n)))
+    (fr : ∀ n, L.Relations n ≃ L'.Relations n) {n} : L.BoundedFormula α n ≃ L'.BoundedFormula β n :=
+  ⟨mapTermRelₓ (fun n => ft n) (fun n => fr n) fun _ => id,
+    mapTermRelₓ (fun n => (ft n).symm) (fun n => (fr n).symm) fun _ => id, fun φ => by
+    simp , fun φ => by
+    simp ⟩
+
+/-- A function to help relabel the variables in bounded formulas. -/
+def relabelAux (g : α → Sum β (Finₓ n)) (k : ℕ) : Sum α (Finₓ k) → Sum β (Finₓ (n + k)) :=
+  Sum.map id finSumFinEquiv ∘ Equivₓ.sumAssoc _ _ _ ∘ Sum.map g id
+
+@[simp]
+theorem sum_elim_comp_relabel_aux {m : ℕ} {g : α → Sum β (Finₓ n)} {v : β → M} {xs : Finₓ (n + m) → M} :
+    Sum.elim v xs ∘ relabelAux g m = Sum.elim (Sum.elim v (xs ∘ castAdd m) ∘ g) (xs ∘ natAdd n) := by
+  ext x
+  cases x
+  · simp only [← bounded_formula.relabel_aux, ← Function.comp_app, ← Sum.map_inl, ← Sum.elim_inl]
+    cases' g x with l r <;> simp
+    
+  · simp [← bounded_formula.relabel_aux]
+    
+
+@[simp]
+theorem relabel_aux_sum_inl (k : ℕ) : relabelAux (Sum.inl : α → Sum α (Finₓ n)) k = Sum.map id (natAdd n) := by
+  ext x
+  cases x <;>
+    · simp [← relabel_aux]
+      
+
+/-- Relabels a bounded formula's variables along a particular function. -/
+def relabel (g : α → Sum β (Finₓ n)) {k} (φ : L.BoundedFormula α k) : L.BoundedFormula β (n + k) :=
+  φ.mapTermRel (fun _ t => t.relabel (relabelAux g _)) (fun _ => id) fun _ => castLeₓ (ge_of_eq (add_assocₓ _ _ _))
+
+@[simp]
+theorem relabel_falsum (g : α → Sum β (Finₓ n)) {k} : (falsum : L.BoundedFormula α k).relabel g = falsum :=
+  rfl
+
+@[simp]
+theorem relabel_bot (g : α → Sum β (Finₓ n)) {k} : (⊥ : L.BoundedFormula α k).relabel g = ⊥ :=
+  rfl
+
+@[simp]
+theorem relabel_imp (g : α → Sum β (Finₓ n)) {k} (φ ψ : L.BoundedFormula α k) :
+    (φ.imp ψ).relabel g = (φ.relabel g).imp (ψ.relabel g) :=
+  rfl
+
+@[simp]
+theorem relabel_not (g : α → Sum β (Finₓ n)) {k} (φ : L.BoundedFormula α k) : φ.Not.relabel g = (φ.relabel g).Not := by
+  simp [← bounded_formula.not]
+
+@[simp]
+theorem relabel_all (g : α → Sum β (Finₓ n)) {k} (φ : L.BoundedFormula α (k + 1)) :
+    φ.all.relabel g = (φ.relabel g).all := by
+  rw [relabel, map_term_rel, relabel]
+  simp
+
+@[simp]
+theorem relabel_ex (g : α → Sum β (Finₓ n)) {k} (φ : L.BoundedFormula α (k + 1)) : φ.ex.relabel g = (φ.relabel g).ex :=
+  by
+  simp [← bounded_formula.ex]
+
+@[simp]
+theorem relabel_sum_inl (φ : L.BoundedFormula α n) :
+    (φ.relabel Sum.inl : L.BoundedFormula α (0 + n)) = φ.cast_le (ge_of_eq (zero_addₓ n)) := by
+  simp only [← relabel, ← relabel_aux_sum_inl]
+  induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
+  · rfl
+    
+  · simp [← Finₓ.nat_add_zero, ← cast_le_of_eq, ← map_term_rel]
+    
+  · simp [← Finₓ.nat_add_zero, ← cast_le_of_eq, ← map_term_rel]
+    
+  · simp [← map_term_rel, ← ih1, ← ih2]
+    
+  · simp [← map_term_rel, ← ih3, ← cast_le]
+    
 
 /-- Substitutes the variables in a given formula with terms. -/
 @[simp]
-def substₓ : ∀ {n : ℕ}, L.BoundedFormula α n → (α → L.Term β) → L.BoundedFormula β n
-  | n, falsum, tf => falsum
-  | n, equal t₁ t₂, tf =>
-    equal (t₁.subst (Sum.elim (Term.relabelₓ Sum.inl ∘ tf) (var ∘ Sum.inr)))
-      (t₂.subst (Sum.elim (Term.relabelₓ Sum.inl ∘ tf) (var ∘ Sum.inr)))
-  | n, rel R ts, tf => rel R fun i => (ts i).subst (Sum.elim (Term.relabelₓ Sum.inl ∘ tf) (var ∘ Sum.inr))
-  | n, imp φ₁ φ₂, tf => (φ₁.subst tf).imp (φ₂.subst tf)
-  | n, all φ, tf => (φ.subst tf).all
+def subst {n : ℕ} (φ : L.BoundedFormula α n) (f : α → L.Term β) : L.BoundedFormula β n :=
+  φ.mapTermRel (fun _ t => t.subst (Sum.elim (Term.relabelₓ Sum.inl ∘ f) (var ∘ Sum.inr))) (fun _ => id) fun _ => id
 
 /-- Turns the extra variables of a bounded formula into free variables. -/
 @[simp]
@@ -499,7 +615,11 @@ theorem IsPrenex.induction_on_all_not {P : ∀ {n}, L.BoundedFormula α n → Pr
 
 theorem IsPrenex.relabel {m : ℕ} {φ : L.BoundedFormula α m} (h : φ.IsPrenex) (f : α → Sum β (Finₓ n)) :
     (φ.relabel f).IsPrenex :=
-  IsPrenex.rec_on h (fun _ _ h => (h.relabel f).IsPrenex) (fun _ _ _ h => h.all) fun _ _ _ h => h.ex
+  IsPrenex.rec_on h (fun _ _ h => (h.relabel f).IsPrenex)
+    (fun _ _ _ h => by
+      simp [← h.all])
+    fun _ _ _ h => by
+    simp [← h.ex]
 
 theorem IsPrenex.cast_le (hφ : IsPrenex φ) : ∀ {n} {h : l ≤ n}, (φ.cast_le h).IsPrenex :=
   IsPrenex.rec_on hφ (fun _ _ ih _ _ => ih.cast_le.IsPrenex) (fun _ _ _ ih _ _ => ih.all) fun _ _ _ ih _ _ => ih.ex
@@ -618,15 +738,15 @@ theorem comp_on_bounded_formula {L'' : Language} (φ : L' →ᴸ L'') (ψ : L �
   induction' f with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
   · rfl
     
-  · simp only [on_bounded_formula, comp_on_term, Function.comp_app]
+  · simp only [← on_bounded_formula, ← comp_on_term, ← Function.comp_app]
     rfl
     
-  · simp only [on_bounded_formula, comp_on_relation, comp_on_term, Function.comp_app]
+  · simp only [← on_bounded_formula, ← comp_on_relation, ← comp_on_term, ← Function.comp_app]
     rfl
     
-  · simp only [on_bounded_formula, Function.comp_app, ih1, ih2, eq_self_iff_true, and_selfₓ]
+  · simp only [← on_bounded_formula, ← Function.comp_app, ← ih1, ← ih2, ← eq_self_iff_true, ← and_selfₓ]
     
-  · simp only [ih3, on_bounded_formula, Function.comp_app]
+  · simp only [← ih3, ← on_bounded_formula, ← Function.comp_app]
     
 
 /-- Maps a formula's symbols along a language map. -/
@@ -710,7 +830,7 @@ namespace Formula
 
 /-- Relabels a formula's variables along a particular function. -/
 def relabel (g : α → β) : L.Formula α → L.Formula β :=
-  @BoundedFormula.relabelₓ _ _ _ 0 (Sum.inl ∘ g) 0
+  @BoundedFormula.relabel _ _ _ 0 (Sum.inl ∘ g) 0
 
 /-- The graph of a function as a first-order formula. -/
 def graph (f : L.Functions n) : L.Formula (Finₓ (n + 1)) :=
@@ -783,7 +903,7 @@ def NonemptyTheory : L.Theory :=
 
 /-- A theory indicating that each of a set of constants is distinct. -/
 def DistinctConstantsTheory (s : Set α) : L[[α]].Theory :=
-  (s ×ˢ s ∩ (Set.Diagonal α).Compl).Image fun ab => ((L.con ab.1).Term.equal (L.con ab.2).Term).Not
+  (fun ab : α × α => ((L.con ab.1).Term.equal (L.con ab.2).Term).Not) '' (s ×ˢ s ∩ Set.Diagonal αᶜ)
 
 variable {L} {α}
 
@@ -795,18 +915,18 @@ theorem monotone_distinct_constants_theory : Monotone (L.DistinctConstantsTheory
 theorem directed_distinct_constants_theory : Directed (· ⊆ ·) (L.DistinctConstantsTheory : Set α → L[[α]].Theory) :=
   Monotone.directed_le monotone_distinct_constants_theory
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem distinct_constants_theory_eq_Union (s : Set α) :
     L.DistinctConstantsTheory s =
       ⋃ t : Finset s, L.DistinctConstantsTheory (t.map (Function.Embedding.subtype fun x => x ∈ s)) :=
   by
   classical
-  simp only [distinct_constants_theory]
+  simp only [← distinct_constants_theory]
   rw [← image_Union, ← Union_inter]
   refine' congr rfl (congr (congr rfl _) rfl)
   ext ⟨i, j⟩
-  simp only [prod_mk_mem_set_prod_eq, Finset.coe_map, Function.Embedding.coe_subtype, mem_Union, mem_image,
-    Finset.mem_coe, Subtype.exists, Subtype.coe_mk, exists_and_distrib_right, exists_eq_right]
+  simp only [← prod_mk_mem_set_prod_eq, ← Finset.coe_map, ← Function.Embedding.coe_subtype, ← mem_Union, ← mem_image, ←
+    Finset.mem_coe, ← Subtype.exists, ← Subtype.coe_mk, ← exists_and_distrib_right, ← exists_eq_right]
   refine' ⟨fun h => ⟨{⟨i, h.1⟩, ⟨j, h.2⟩}, ⟨h.1, _⟩, ⟨h.2, _⟩⟩, _⟩
   · simp
     

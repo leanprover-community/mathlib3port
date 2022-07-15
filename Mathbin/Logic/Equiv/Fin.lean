@@ -58,7 +58,7 @@ theorem Finₓ.preimage_apply_01_prod {α : Finₓ 2 → Type u} (s : Set (α 0)
     (fun f : ∀ i, α i => (f 0, f 1)) ⁻¹' s ×ˢ t = Set.Pi Set.Univ (Finₓ.cons s <| Finₓ.cons t Finₓ.elim0) := by
   ext f
   have : (Finₓ.cons s (Finₓ.cons t Finₓ.elim0) : ∀ i, Set (α i)) 1 = t := rfl
-  simp [Finₓ.forall_fin_two, this]
+  simp [← Finₓ.forall_fin_two, ← this]
 
 theorem Finₓ.preimage_apply_01_prod' {α : Type u} (s t : Set α) :
     (fun f : Finₓ 2 → α => (f 0, f 1)) ⁻¹' s ×ˢ t = Set.Pi Set.Univ ![s, t] :=
@@ -131,7 +131,7 @@ def finSuccEquiv' {n : ℕ} (i : Finₓ (n + 1)) : Finₓ (n + 1) ≃ Option (Fi
 
 @[simp]
 theorem fin_succ_equiv'_at {n : ℕ} (i : Finₓ (n + 1)) : (finSuccEquiv' i) i = none := by
-  simp [finSuccEquiv']
+  simp [← finSuccEquiv']
 
 @[simp]
 theorem fin_succ_equiv'_succ_above {n : ℕ} (i : Finₓ (n + 1)) (j : Finₓ n) : finSuccEquiv' i (i.succAbove j) = some j :=
@@ -210,7 +210,7 @@ theorem fin_succ_equiv_last_cast_succ {n : ℕ} (i : Finₓ n) : finSuccEquivLas
 
 @[simp]
 theorem fin_succ_equiv_last_last {n : ℕ} : finSuccEquivLast (Finₓ.last n) = none := by
-  simp [finSuccEquivLast]
+  simp [← finSuccEquivLast]
 
 @[simp]
 theorem fin_succ_equiv_last_symm_some {n : ℕ} (i : Finₓ n) : finSuccEquivLast.symm (some i) = i.cast_succ :=
@@ -231,7 +231,7 @@ def Equivₓ.piFinSuccAboveEquiv {n : ℕ} (α : Finₓ (n + 1) → Type u) (i :
   toFun := fun f => (f i, fun j => f (i.succAbove j))
   invFun := fun f => i.insertNth f.1 f.2
   left_inv := fun f => by
-    simp [Finₓ.insert_nth_eq_iff]
+    simp [← Finₓ.insert_nth_eq_iff]
   right_inv := fun f => by
     simp
 
@@ -282,11 +282,11 @@ def finAddFlip : Finₓ (m + n) ≃ Finₓ (n + m) :=
 
 @[simp]
 theorem fin_add_flip_apply_cast_add (k : Finₓ m) (n : ℕ) : finAddFlip (Finₓ.castAdd n k) = Finₓ.natAdd n k := by
-  simp [finAddFlip]
+  simp [← finAddFlip]
 
 @[simp]
 theorem fin_add_flip_apply_nat_add (k : Finₓ n) (m : ℕ) : finAddFlip (Finₓ.natAdd m k) = Finₓ.castAdd m k := by
-  simp [finAddFlip]
+  simp [← finAddFlip]
 
 @[simp]
 theorem fin_add_flip_apply_mk_left {k : ℕ} (h : k < m) (hk : k < m + n := Nat.lt_add_rightₓ k m n h)
@@ -297,7 +297,7 @@ theorem fin_add_flip_apply_mk_left {k : ℕ} (h : k < m) (hk : k < m + n := Nat.
 theorem fin_add_flip_apply_mk_right {k : ℕ} (h₁ : m ≤ k) (h₂ : k < m + n) :
     finAddFlip (⟨k, h₂⟩ : Finₓ (m + n)) = ⟨k - m, tsub_le_self.trans_lt <| add_commₓ m n ▸ h₂⟩ := by
   convert fin_add_flip_apply_nat_add ⟨k - m, (tsub_lt_iff_right h₁).2 _⟩ m
-  · simp [add_tsub_cancel_of_le h₁]
+  · simp [← add_tsub_cancel_of_le h₁]
     
   · rwa [add_commₓ]
     
@@ -309,11 +309,11 @@ def finRotate : ∀ n, Equivₓ.Perm (Finₓ n)
 
 theorem fin_rotate_of_lt {k : ℕ} (h : k < n) :
     finRotate (n + 1) ⟨k, lt_of_lt_of_leₓ h (Nat.le_succₓ _)⟩ = ⟨k + 1, Nat.succ_lt_succₓ h⟩ := by
-  dsimp' [finRotate]
-  simp [h, add_commₓ]
+  dsimp' [← finRotate]
+  simp [← h, ← add_commₓ]
 
 theorem fin_rotate_last' : finRotate (n + 1) ⟨n, lt_add_one _⟩ = ⟨0, Nat.zero_lt_succₓ _⟩ := by
-  dsimp' [finRotate]
+  dsimp' [← finRotate]
   rw [fin_add_flip_apply_mk_right]
   simp
 
@@ -328,7 +328,7 @@ theorem Finₓ.snoc_eq_cons_rotate {α : Type _} (v : Finₓ n → α) (a : α) 
     rfl
     
   · have h'' : n = i := by
-      simp only [not_ltₓ] at h'
+      simp only [← not_ltₓ] at h'
       exact (Nat.eq_of_le_of_lt_succ h' h).symm
     subst h''
     rw [fin_rotate_last', Finₓ.snoc, Finₓ.cons, dif_neg (lt_irreflₓ _)]
@@ -349,11 +349,11 @@ theorem fin_rotate_succ_apply {n : ℕ} (i : Finₓ n.succ) : finRotate n.succ i
   · simp
     
   rcases i.le_last.eq_or_lt with (rfl | h)
-  · simp [fin_rotate_last]
+  · simp [← fin_rotate_last]
     
   · cases i
-    simp only [Finₓ.lt_iff_coe_lt_coe, Finₓ.coe_last, Finₓ.coe_mk] at h
-    simp [fin_rotate_of_lt h, Finₓ.eq_iff_veq, Finₓ.add_def, Nat.mod_eq_of_ltₓ (Nat.succ_lt_succₓ h)]
+    simp only [← Finₓ.lt_iff_coe_lt_coe, ← Finₓ.coe_last, ← Finₓ.coe_mk] at h
+    simp [← fin_rotate_of_lt h, ← Finₓ.eq_iff_veq, ← Finₓ.add_def, ← Nat.mod_eq_of_ltₓ (Nat.succ_lt_succₓ h)]
     
 
 @[simp]

@@ -34,11 +34,11 @@ theorem polynomial_functions_closure_eq_top' : (polynomialFunctions I).topologic
   refine' Filter.Tendsto.frequently (bernstein_approximation_uniform f) _
   apply frequently_of_forall
   intro n
-  simp only [SetLike.mem_coe]
+  simp only [← SetLike.mem_coe]
   apply Subalgebra.sum_mem
   rintro n -
   apply Subalgebra.smul_mem
-  dsimp' [bernstein, polynomialFunctions]
+  dsimp' [← bernstein, ← polynomialFunctions]
   simp
 
 /-- The **Weierstrass Approximation Theorem**:
@@ -62,7 +62,7 @@ theorem polynomial_functions_closure_eq_top (a b : ℝ) : (polynomialFunctions (
     have p := polynomial_functions_closure_eq_top'
     -- and pullback both sides, obtaining an equation between subalgebras of `C([a,b], ℝ)`.
     apply_fun fun s => s.comap' W  at p
-    simp only [Algebra.comap_top] at p
+    simp only [← Algebra.comap_top] at p
     -- Since the pullback operation is continuous, it commutes with taking `topological_closure`,
     rw [Subalgebra.topological_closure_comap'_homeomorph _ W W' w] at p
     -- and precomposing with an affine map takes polynomial functions to polynomial functions.

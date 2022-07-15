@@ -81,18 +81,18 @@ def limitCone (F : J ⥤ AlgebraCat.{max v w} R) : Cone F where
 -/
 def limitConeIsLimit (F : J ⥤ AlgebraCat.{max v w} R) : IsLimit (limitCone F) := by
   refine' is_limit.of_faithful (forget (AlgebraCat R)) (types.limit_cone_is_limit _) (fun s => { .. }) fun s => rfl
-  · simp only [forget_map_eq_coe, AlgHom.map_one, functor.map_cone_π_app]
+  · simp only [← forget_map_eq_coe, ← AlgHom.map_one, ← functor.map_cone_π_app]
     rfl
     
   · intro x y
-    simp only [forget_map_eq_coe, AlgHom.map_mul, functor.map_cone_π_app]
+    simp only [← forget_map_eq_coe, ← AlgHom.map_mul, ← functor.map_cone_π_app]
     rfl
     
-  · simp only [forget_map_eq_coe, AlgHom.map_zero, functor.map_cone_π_app]
+  · simp only [← forget_map_eq_coe, ← AlgHom.map_zero, ← functor.map_cone_π_app]
     rfl
     
   · intro x y
-    simp only [forget_map_eq_coe, AlgHom.map_add, functor.map_cone_π_app]
+    simp only [← forget_map_eq_coe, ← AlgHom.map_add, ← functor.map_cone_π_app]
     rfl
     
   · intro r
@@ -104,7 +104,7 @@ end HasLimits
 
 open HasLimits
 
--- ././Mathport/Syntax/Translate/Basic.lean:1198:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Basic.lean:1354:38: unsupported irreducible non-definition
 /-- The category of R-algebras has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} (AlgebraCat.{max v w} R) :=
   { HasLimitsOfShape := fun J 𝒥 =>
@@ -115,8 +115,11 @@ instance has_limits : HasLimits (AlgebraCat.{w} R) :=
 
 /-- The forgetful functor from R-algebras to rings preserves all limits.
 -/
-instance forget₂RingPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget₂ (AlgebraCat R) Ringₓₓ.{max v w}) where
-  PreservesLimitsOfShape := fun J 𝒥 =>
+instance forget₂RingPreservesLimitsOfSize :
+    PreservesLimitsOfSize.{v, v}
+      (forget₂ (AlgebraCat R)
+        Ringₓₓ.{max v
+            w}) where PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
           (by
@@ -128,8 +131,10 @@ instance forget₂RingPreservesLimits : PreservesLimits (forget₂ (AlgebraCat R
 /-- The forgetful functor from R-algebras to R-modules preserves all limits.
 -/
 instance forget₂ModulePreservesLimitsOfSize :
-    PreservesLimitsOfSize.{v, v} (forget₂ (AlgebraCat R) (ModuleCat.{max v w} R)) where
-  PreservesLimitsOfShape := fun J 𝒥 =>
+    PreservesLimitsOfSize.{v, v}
+      (forget₂ (AlgebraCat R)
+        (ModuleCat.{max v w}
+          R)) where PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
           (by
@@ -140,8 +145,11 @@ instance forget₂ModulePreservesLimits : PreservesLimits (forget₂ (AlgebraCat
 
 /-- The forgetful functor from R-algebras to types preserves all limits.
 -/
-instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget (AlgebraCat.{max v w} R)) where
-  PreservesLimitsOfShape := fun J 𝒥 =>
+instance forgetPreservesLimitsOfSize :
+    PreservesLimitsOfSize.{v, v}
+      (forget
+        (AlgebraCat.{max v w}
+          R)) where PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F) (types.limit_cone_is_limit (F ⋙ forget _)) }
 

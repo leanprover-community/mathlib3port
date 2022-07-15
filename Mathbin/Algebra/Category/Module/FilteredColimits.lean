@@ -69,12 +69,12 @@ theorem colimit_smul_aux_eq_of_rel (r : R) (x y : Σj, F.obj j)
   apply M.mk_eq
   obtain ⟨k, f, g, hfg⟩ := h
   use k, f, g
-  simp only [CategoryTheory.Functor.comp_map, forget_map_eq_coe] at hfg
+  simp only [← CategoryTheory.Functor.comp_map, ← forget_map_eq_coe] at hfg
   rw [LinearMap.map_smul, LinearMap.map_smul, hfg]
 
 /-- Scalar multiplication in the colimit. See also `colimit_smul_aux`. -/
-instance colimitHasScalar : HasScalar R M where
-  smul := fun r x => by
+instance colimitHasSmul :
+    HasSmul R M where smul := fun r x => by
     refine' Quot.lift (colimit_smul_aux F r) _ x
     intro x y h
     apply colimit_smul_aux_eq_of_rel
@@ -175,8 +175,9 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone where
         funext fun x => LinearMap.congr_fun (h j) x
 
 instance forget₂AddCommGroupPreservesFilteredColimits :
-    PreservesFilteredColimits (forget₂ (ModuleCat R) AddCommGroupₓₓ.{u}) where
-  PreservesFilteredColimits := fun J _ _ =>
+    PreservesFilteredColimits
+      (forget₂ (ModuleCat R)
+        AddCommGroupₓₓ.{u}) where PreservesFilteredColimits := fun J _ _ =>
     { PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimit_cocone_is_colimit F)
           (AddCommGroupₓₓ.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ (ModuleCat.{u} R) AddCommGroupₓₓ.{u})) }

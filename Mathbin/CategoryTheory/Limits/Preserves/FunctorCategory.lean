@@ -53,8 +53,10 @@ work to convert to this version: namely, the natural isomorphism
 `(evaluation C D).obj k ⋙ prod.functor.obj (F.obj k) ≅ prod.functor.obj F ⋙ (evaluation C D).obj k`
 -/
 def FunctorCategory.prodPreservesColimits [HasBinaryProducts D] [HasColimits D]
-    [∀ X : D, PreservesColimits (prod.functor.obj X)] (F : C ⥤ D) : PreservesColimits (prod.functor.obj F) where
-  PreservesColimitsOfShape := fun J 𝒥 =>
+    [∀ X : D, PreservesColimits (prod.functor.obj X)] (F : C ⥤ D) :
+    PreservesColimits
+      (prod.functor.obj
+        F) where PreservesColimitsOfShape := fun J 𝒥 =>
     { PreservesColimit := fun K =>
         { preserves := fun c t => by
             apply evaluation_jointly_reflects_colimits _ fun k => _

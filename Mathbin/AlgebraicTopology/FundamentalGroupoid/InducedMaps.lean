@@ -88,15 +88,15 @@ include hfg
 /-- If `f(p(t) = g(q(t))` for two paths `p` and `q`, then the induced path homotopy classes
 `f(p)` and `g(p)` are the same as well, despite having a priori different types -/
 theorem heq_path_of_eq_image : HEq ((πₘ f).map ⟦p⟧) ((πₘ g).map ⟦q⟧) := by
-  simp only [map_eq, ← Path.Homotopic.map_lift]
+  simp only [← map_eq, Path.Homotopic.map_lift]
   apply Path.Homotopic.hpath_hext
   exact hfg
 
 private theorem start_path : f x₀ = g x₂ := by
-  convert hfg 0 <;> simp only [Path.source]
+  convert hfg 0 <;> simp only [← Path.source]
 
 private theorem end_path : f x₁ = g x₃ := by
-  convert hfg 1 <;> simp only [Path.target]
+  convert hfg 1 <;> simp only [← Path.target]
 
 theorem eq_path_of_eq_image : (πₘ f).map ⟦p⟧ = hcast (start_path hfg) ≫ (πₘ g).map ⟦q⟧ ≫ hcast (end_path hfg).symm := by
   rw [functor.conj_eq_to_hom_iff_heq]
@@ -181,7 +181,7 @@ theorem eval_at_eq (x : X) :
   by
   dunfold prod_to_prod_Top_I uhpath01 hcast
   refine' (@functor.conj_eq_to_hom_iff_heq (πₓ Y) _ _ _ _ _ _ _ _ _).mpr _
-  simp only [id_eq_path_refl, prod_to_prod_Top_map, Path.Homotopic.prod_lift, map_eq, ← Path.Homotopic.map_lift]
+  simp only [← id_eq_path_refl, ← prod_to_prod_Top_map, ← Path.Homotopic.prod_lift, ← map_eq, Path.Homotopic.map_lift]
   apply Path.Homotopic.hpath_hext
   intro
   rfl
@@ -194,7 +194,7 @@ theorem eq_diag_path :
   rw [H.apply_zero_path, H.apply_one_path, H.eval_at_eq, H.eval_at_eq]
   dunfold prod_to_prod_Top_I
   constructor <;>
-    · slice_lhs 2 5 => simp [← CategoryTheory.Functor.map_comp]
+    · slice_lhs 2 5 => simp [CategoryTheory.Functor.map_comp]
       rfl
       
 
@@ -225,7 +225,7 @@ open ContinuousMap
 /-- Homotopy equivalent topological spaces have equivalent fundamental groupoids. -/
 def equivOfHomotopyEquiv (hequiv : X ≃ₕ Y) : πₓ X ≌ πₓ Y := by
   apply equivalence.mk (πₘ hequiv.to_fun : πₓ X ⥤ πₓ Y) (πₘ hequiv.inv_fun : πₓ Y ⥤ πₓ X) <;>
-    simp only [Groupoid.hom_to_functor, Groupoid.id_to_functor]
+    simp only [← Groupoid.hom_to_functor, ← Groupoid.id_to_functor]
   · convert (as_iso (homotopic_maps_nat_iso hequiv.left_inv.some)).symm
     exacts[(π.map_id X).symm, (π.map_comp _ _).symm]
     

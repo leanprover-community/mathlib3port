@@ -47,7 +47,7 @@ variable [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [Module.Free R M]
 
 variable [AddCommGroupₓ N] [Module R N] [Module.Free R N]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 instance linear_map [Module.Finite R M] [Module.Finite R N] : Module.Free R (M →ₗ[R] N) := by
   cases subsingleton_or_nontrivial R
   · apply Module.Free.of_subsingleton'
@@ -57,13 +57,13 @@ instance linear_map [Module.Finite R M] [Module.Finite R N] : Module.Free R (M �
 
 variable {R M}
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A free module with a basis indexed by a `fintype` is finite. -/
 theorem _root_.module.finite.of_basis {R : Type _} {M : Type _} {ι : Type _} [CommRingₓ R] [AddCommGroupₓ M]
     [Module R M] [Fintype ι] (b : Basis ι R M) : Module.Finite R M := by
   classical
   refine' ⟨⟨finset.univ.image b, _⟩⟩
-  simp only [Set.image_univ, Finset.coe_univ, Finset.coe_image, Basis.span_eq]
+  simp only [← Set.image_univ, ← Finset.coe_univ, ← Finset.coe_image, ← Basis.span_eq]
 
 instance _root_.module.finite.matrix {ι₁ : Type _} [Fintype ι₁] {ι₂ : Type _} [Fintype ι₂] :
     Module.Finite R (Matrix ι₁ ι₂ R) :=
@@ -71,7 +71,7 @@ instance _root_.module.finite.matrix {ι₁ : Type _} [Fintype ι₁] {ι₂ : T
 
 variable (M)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 instance _root_.module.finite.linear_map [Module.Finite R M] [Module.Finite R N] : Module.Finite R (M →ₗ[R] N) := by
   cases subsingleton_or_nontrivial R
   · infer_instance

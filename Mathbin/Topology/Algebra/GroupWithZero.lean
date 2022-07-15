@@ -51,23 +51,23 @@ section DivConst
 variable [GroupWithZeroₓ G₀] [TopologicalSpace G₀] [HasContinuousMul G₀] {f : α → G₀} {s : Set α} {l : Filter α}
 
 theorem Filter.Tendsto.div_const {x y : G₀} (hf : Tendsto f l (𝓝 x)) : Tendsto (fun a => f a / y) l (𝓝 (x / y)) := by
-  simpa only [div_eq_mul_inv] using hf.mul tendsto_const_nhds
+  simpa only [← div_eq_mul_inv] using hf.mul tendsto_const_nhds
 
 variable [TopologicalSpace α]
 
 theorem ContinuousAt.div_const {a : α} (hf : ContinuousAt f a) {y : G₀} : ContinuousAt (fun x => f x / y) a := by
-  simpa only [div_eq_mul_inv] using hf.mul continuous_at_const
+  simpa only [← div_eq_mul_inv] using hf.mul continuous_at_const
 
 theorem ContinuousWithinAt.div_const {a} (hf : ContinuousWithinAt f s a) {y : G₀} :
     ContinuousWithinAt (fun x => f x / y) s a :=
   hf.div_const
 
 theorem ContinuousOn.div_const (hf : ContinuousOn f s) {y : G₀} : ContinuousOn (fun x => f x / y) s := by
-  simpa only [div_eq_mul_inv] using hf.mul continuous_on_const
+  simpa only [← div_eq_mul_inv] using hf.mul continuous_on_const
 
 @[continuity]
 theorem Continuous.div_const (hf : Continuous f) {y : G₀} : Continuous fun x => f x / y := by
-  simpa only [div_eq_mul_inv] using hf.mul continuous_const
+  simpa only [← div_eq_mul_inv] using hf.mul continuous_const
 
 end DivConst
 
@@ -135,7 +135,7 @@ variable [GroupWithZeroₓ G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G�
 
 theorem Filter.Tendsto.div {l : Filter α} {a b : G₀} (hf : Tendsto f l (𝓝 a)) (hg : Tendsto g l (𝓝 b)) (hy : b ≠ 0) :
     Tendsto (f / g) l (𝓝 (a / b)) := by
-  simpa only [div_eq_mul_inv] using hf.mul (hg.inv₀ hy)
+  simpa only [← div_eq_mul_inv] using hf.mul (hg.inv₀ hy)
 
 variable [TopologicalSpace α] [TopologicalSpace β] {s : Set α} {a : α}
 
@@ -153,7 +153,7 @@ theorem ContinuousAt.div (hf : ContinuousAt f a) (hg : ContinuousAt g a) (h₀ :
 
 @[continuity]
 theorem Continuous.div (hf : Continuous f) (hg : Continuous g) (h₀ : ∀ x, g x ≠ 0) : Continuous (f / g) := by
-  simpa only [div_eq_mul_inv] using hf.mul (hg.inv₀ h₀)
+  simpa only [← div_eq_mul_inv] using hf.mul (hg.inv₀ h₀)
 
 theorem continuous_on_div : ContinuousOn (fun p : G₀ × G₀ => p.1 / p.2) { p | p.2 ≠ 0 } :=
   (continuous_on_fst.div continuous_on_snd) fun _ => id
@@ -227,9 +227,9 @@ variable [GroupWithZeroₓ G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G�
 
 theorem continuous_at_zpow₀ (x : G₀) (m : ℤ) (h : x ≠ 0 ∨ 0 ≤ m) : ContinuousAt (fun x => x ^ m) x := by
   cases m
-  · simpa only [zpow_of_nat] using continuous_at_pow x m
+  · simpa only [← zpow_of_nat] using continuous_at_pow x m
     
-  · simp only [zpow_neg_succ_of_nat]
+  · simp only [← zpow_neg_succ_of_nat]
     have hx : x ≠ 0 := h.resolve_right (Int.neg_succ_of_nat_lt_zero m).not_le
     exact (continuous_at_pow x (m + 1)).inv₀ (pow_ne_zero _ hx)
     

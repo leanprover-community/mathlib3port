@@ -42,8 +42,7 @@ namespace CategoryTheory.Over
 instance has_colimit_of_has_colimit_comp_forget (F : J ⥤ Over X) [i : HasColimit (F ⋙ forget X)] : HasColimit F :=
   @CostructuredArrow.has_colimit _ _ _ _ i _
 
-instance [HasColimitsOfShape J C] : HasColimitsOfShape J (Over X) :=
-  {  }
+instance [HasColimitsOfShape J C] : HasColimitsOfShape J (Over X) where
 
 instance [HasColimits C] : HasColimits (Over X) :=
   ⟨inferInstance⟩
@@ -73,7 +72,7 @@ def pullback {X Y : C} (f : X ⟶ Y) : Over Y ⥤ Over X where
     Over.homMk
       (pullback.lift (pullback.fst ≫ k.left) pullback.snd
         (by
-          simp [pullback.condition]))
+          simp [← pullback.condition]))
       (by
         tidy)
 
@@ -95,7 +94,7 @@ def mapPullbackAdj {A B : C} (f : A ⟶ B) : Over.map f ⊣ pullback f :=
           right_inv := fun Y => by
             ext
             dsimp'
-            simp only [pullback.lift_fst]
+            simp only [← pullback.lift_fst]
             dsimp'
             rw [pullback.lift_snd, ← over.w Y]
             rfl } }
@@ -121,8 +120,7 @@ namespace CategoryTheory.Under
 instance has_limit_of_has_limit_comp_forget (F : J ⥤ Under X) [i : HasLimit (F ⋙ forget X)] : HasLimit F :=
   @StructuredArrow.has_limit _ _ _ _ i _
 
-instance [HasLimitsOfShape J C] : HasLimitsOfShape J (Under X) :=
-  {  }
+instance [HasLimitsOfShape J C] : HasLimitsOfShape J (Under X) where
 
 instance [HasLimits C] : HasLimits (Under X) :=
   ⟨inferInstance⟩
@@ -150,7 +148,7 @@ def pushout {X Y : C} (f : X ⟶ Y) : Under X ⥤ Under Y where
     Under.homMk
       (pushout.desc (k.right ≫ pushout.inl) pushout.inr
         (by
-          simp [← pushout.condition]))
+          simp [pushout.condition]))
       (by
         tidy)
 

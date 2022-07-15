@@ -41,49 +41,39 @@ namespace CategoryTheory.MonoidalCategory
 class LiftObj (X : C) where
   lift : FreeMonoidalCategory C
 
-instance liftObjUnit : LiftObj (𝟙_ C) where
-  lift := Unit
+instance liftObjUnit : LiftObj (𝟙_ C) where lift := Unit
 
-instance liftObjTensor (X Y : C) [LiftObj X] [LiftObj Y] : LiftObj (X ⊗ Y) where
-  lift := LiftObj.lift X ⊗ LiftObj.lift Y
+instance liftObjTensor (X Y : C) [LiftObj X] [LiftObj Y] : LiftObj (X ⊗ Y) where lift := LiftObj.lift X ⊗ LiftObj.lift Y
 
-instance (priority := 100) liftObjOf (X : C) : LiftObj X where
-  lift := of X
+instance (priority := 100) liftObjOf (X : C) : LiftObj X where lift := of X
 
 /-- A typeclass carrying a choice of lift of a morphism from `C` to `free_monoidal_category C`. -/
 class LiftHom {X Y : C} [LiftObj X] [LiftObj Y] (f : X ⟶ Y) where
   lift : LiftObj.lift X ⟶ LiftObj.lift Y
 
-instance liftHomId (X : C) [LiftObj X] : LiftHom (𝟙 X) where
-  lift := 𝟙 _
+instance liftHomId (X : C) [LiftObj X] : LiftHom (𝟙 X) where lift := 𝟙 _
 
-instance liftHomLeftUnitorHom (X : C) [LiftObj X] : LiftHom (λ_ X).Hom where
-  lift := (λ_ (LiftObj.lift X)).Hom
+instance liftHomLeftUnitorHom (X : C) [LiftObj X] : LiftHom (λ_ X).Hom where lift := (λ_ (LiftObj.lift X)).Hom
 
-instance liftHomLeftUnitorInv (X : C) [LiftObj X] : LiftHom (λ_ X).inv where
-  lift := (λ_ (LiftObj.lift X)).inv
+instance liftHomLeftUnitorInv (X : C) [LiftObj X] : LiftHom (λ_ X).inv where lift := (λ_ (LiftObj.lift X)).inv
 
-instance liftHomRightUnitorHom (X : C) [LiftObj X] : LiftHom (ρ_ X).Hom where
-  lift := (ρ_ (LiftObj.lift X)).Hom
+instance liftHomRightUnitorHom (X : C) [LiftObj X] : LiftHom (ρ_ X).Hom where lift := (ρ_ (LiftObj.lift X)).Hom
 
-instance liftHomRightUnitorInv (X : C) [LiftObj X] : LiftHom (ρ_ X).inv where
-  lift := (ρ_ (LiftObj.lift X)).inv
+instance liftHomRightUnitorInv (X : C) [LiftObj X] : LiftHom (ρ_ X).inv where lift := (ρ_ (LiftObj.lift X)).inv
 
-instance liftHomAssociatorHom (X Y Z : C) [LiftObj X] [LiftObj Y] [LiftObj Z] : LiftHom (α_ X Y Z).Hom where
-  lift := (α_ (LiftObj.lift X) (LiftObj.lift Y) (LiftObj.lift Z)).Hom
+instance liftHomAssociatorHom (X Y Z : C) [LiftObj X] [LiftObj Y] [LiftObj Z] :
+    LiftHom (α_ X Y Z).Hom where lift := (α_ (LiftObj.lift X) (LiftObj.lift Y) (LiftObj.lift Z)).Hom
 
-instance liftHomAssociatorInv (X Y Z : C) [LiftObj X] [LiftObj Y] [LiftObj Z] : LiftHom (α_ X Y Z).inv where
-  lift := (α_ (LiftObj.lift X) (LiftObj.lift Y) (LiftObj.lift Z)).inv
+instance liftHomAssociatorInv (X Y Z : C) [LiftObj X] [LiftObj Y] [LiftObj Z] :
+    LiftHom (α_ X Y Z).inv where lift := (α_ (LiftObj.lift X) (LiftObj.lift Y) (LiftObj.lift Z)).inv
 
 instance liftHomComp {X Y Z : C} [LiftObj X] [LiftObj Y] [LiftObj Z] (f : X ⟶ Y) (g : Y ⟶ Z) [LiftHom f] [LiftHom g] :
-    LiftHom (f ≫ g) where
-  lift := LiftHom.lift f ≫ LiftHom.lift g
+    LiftHom (f ≫ g) where lift := LiftHom.lift f ≫ LiftHom.lift g
 
 instance liftHomTensor {W X Y Z : C} [LiftObj W] [LiftObj X] [LiftObj Y] [LiftObj Z] (f : W ⟶ X) (g : Y ⟶ Z) [LiftHom f]
-    [LiftHom g] : LiftHom (f ⊗ g) where
-  lift := LiftHom.lift f ⊗ LiftHom.lift g
+    [LiftHom g] : LiftHom (f ⊗ g) where lift := LiftHom.lift f ⊗ LiftHom.lift g
 
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`Hom] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`Hom] []
 /-- A typeclass carrying a choice of monoidal structural isomorphism between two objects.
 Used by the `⊗≫` monoidal composition operator, and the `coherence` tactic.
 -/
@@ -181,11 +171,11 @@ example {W X Y Z : C} (f : W ⟶ (X ⊗ Y) ⊗ Z) : W ⟶ X ⊗ Y ⊗ Z :=
 
 @[simp]
 theorem monoidal_comp_refl {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : f ⊗≫ g = f ≫ g := by
-  dsimp' [monoidal_comp]
+  dsimp' [← monoidal_comp]
   simp
 
 example {U V W X Y : C} (f : U ⟶ V ⊗ W ⊗ X) (g : (V ⊗ W) ⊗ X ⟶ Y) : f ⊗≫ g = f ≫ (α_ _ _ _).inv ≫ g := by
-  simp [monoidal_comp]
+  simp [← monoidal_comp]
 
 end CategoryTheory.MonoidalCategory
 
@@ -205,7 +195,7 @@ unsafe def mk_project_map_expr (e : expr) : tactic expr :=
     (pquote.1
       (CategoryTheory.FreeMonoidalCategory.projectMap id _ _ (CategoryTheory.MonoidalCategory.LiftHom.lift (%%ₓe))))
 
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
 /-- Coherence tactic for monoidal categories. -/
 unsafe def monoidal_coherence : tactic Unit := do
   let o ← get_options
@@ -253,9 +243,9 @@ theorem assoc_lift_hom {W X Y Z : C} [LiftObj W] [LiftObj X] [LiftObj Y] (f : W 
     [LiftHom g] : f ≫ g ≫ h = (f ≫ g) ≫ h :=
   (Category.assoc _ _ _).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
 /-- Internal tactic used in `coherence`.
 
 Rewrites an equation `f = g` as `f₀ ≫ f₁ = g₀ ≫ g₁`,
@@ -283,8 +273,8 @@ end Coherence
 
 open Coherence
 
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
 /-- The main part of `coherence` tactic. -/
 unsafe def coherence_loop : tactic Unit := do
   -- To prove an equality `f = g` in a monoidal category,
@@ -323,8 +313,8 @@ unsafe def coherence_loop : tactic Unit := do
           -- and whose second terms can be identified by recursively called `coherence`.
             coherence_loop
 
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
 /-- Use the coherence theorem for monoidal categories to solve equations in a monoidal equation,
 where the two sides only differ by replacing strings of monoidal structural morphisms
 (that is, associators, unitors, and identities)
@@ -353,26 +343,26 @@ add_tactic_doc
   { Name := "coherence", category := DocCategory.tactic, declNames := [`tactic.interactive.coherence],
     tags := ["category theory"] }
 
--- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `coherence
+-- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]
 example f : (λ_ (𝟙_ C)).Hom ≫ f ≫ (λ_ (𝟙_ C)).Hom = (ρ_ (𝟙_ C)).Hom ≫ f ≫ (ρ_ (𝟙_ C)).Hom := by
-  "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `coherence"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]"
 
--- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `coherence
+-- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]
 example {U V W X Y : C} (f : U ⟶ V ⊗ W ⊗ X) (g : (V ⊗ W) ⊗ X ⟶ Y) : f ⊗≫ g = f ≫ (α_ _ _ _).inv ≫ g := by
-  "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `coherence"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]"
 
--- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `coherence
+-- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]
 example {U : C} (f : U ⟶ 𝟙_ C) : f ≫ (ρ_ (𝟙_ C)).inv ≫ (λ_ (𝟙_ C)).Hom = f := by
-  "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `coherence"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]"
 
--- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `coherence
+-- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]
 example (W X Y Z : C) f :
     ((α_ W X Y).Hom ⊗ 𝟙 Z) ≫
         (α_ W (X ⊗ Y) Z).Hom ≫ (𝟙 W ⊗ (α_ X Y Z).Hom) ≫ f ≫ (α_ (W ⊗ X) Y Z).Hom ≫ (α_ W X (Y ⊗ Z)).Hom =
       (α_ (W ⊗ X) Y Z).Hom ≫
         (α_ W X (Y ⊗ Z)).Hom ≫ f ≫ ((α_ W X Y).Hom ⊗ 𝟙 Z) ≫ (α_ W (X ⊗ Y) Z).Hom ≫ (𝟙 W ⊗ (α_ X Y Z).Hom) :=
   by
-  "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `coherence"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]"
 
 end Tactic
 

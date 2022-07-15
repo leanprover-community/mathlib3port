@@ -49,8 +49,8 @@ unsafe def mono_function.to_tactic_format : mono_function → tactic format
     let xs' ← pp xs
     return f! "{fn' } _ {xs'}"
 
-unsafe instance has_to_tactic_format_mono_function : has_to_tactic_format mono_function where
-  to_tactic_format := mono_function.to_tactic_format
+unsafe instance has_to_tactic_format_mono_function :
+    has_to_tactic_format mono_function where to_tactic_format := mono_function.to_tactic_format
 
 unsafe structure ac_mono_ctx' (rel : Type) where
   to_rel : rel
@@ -77,8 +77,8 @@ unsafe def ac_mono_ctx.to_tactic_format (ctx : ac_mono_ctx) : tactic format := d
         , right := {r }
         , rel_def := {rel} }}"
 
-unsafe instance has_to_tactic_format_mono_ctx : has_to_tactic_format ac_mono_ctx where
-  to_tactic_format := ac_mono_ctx.to_tactic_format
+unsafe instance has_to_tactic_format_mono_ctx :
+    has_to_tactic_format ac_mono_ctx where to_tactic_format := ac_mono_ctx.to_tactic_format
 
 unsafe def as_goal (e : expr) (tac : tactic Unit) : tactic Unit := do
   let gs ← get_goals
@@ -292,13 +292,13 @@ unsafe def mono_law.to_tactic_format : mono_law → tactic format
     let y₁ ← pp y₁
     return f! "assoc {x₀ }; {x₁ } | {y₀ }; {y₁}"
 
-unsafe instance has_to_tactic_format_mono_law : has_to_tactic_format mono_law where
-  to_tactic_format := mono_law.to_tactic_format
+unsafe instance has_to_tactic_format_mono_law :
+    has_to_tactic_format mono_law where to_tactic_format := mono_law.to_tactic_format
 
 unsafe def mk_rel (ctx : ac_mono_ctx_ne) (f : expr → expr) : expr :=
   ctx.to_rel (f ctx.left) (f ctx.right)
 
--- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `xs₁
+-- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `xs₁
 unsafe def mk_congr_args (fn : expr) (xs₀ xs₁ : List expr) (l r : expr) : tactic expr := do
   let p ← mk_app `eq [fn.mk_app <| xs₀ ++ l :: xs₁, fn.mk_app <| xs₀ ++ r :: xs₁]
   Prod.snd <$>
@@ -427,7 +427,7 @@ def List.minimumOn {α β} [LinearOrderₓ β] (f : α → β) : List α → Lis
   | x :: xs =>
     Prod.snd <|
       xs.foldl
-        (fun b =>
+        (fun ⟨k, a⟩ b =>
           let k' := f b
           if k < k' then (k, a) else if k' < k then (k', [b]) else (k, b :: a))
         (f x, [x])
@@ -519,10 +519,10 @@ unsafe def mono (many : parse (tk "*")?) (dir : parse side)
 add_tactic_doc
   { Name := "mono", category := DocCategory.tactic, declNames := [`tactic.interactive.mono], tags := ["monotonicity"] }
 
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `g
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `g
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
 /-- transforms a goal of the form `f x ≼ f y` into `x ≤ y` using lemmas
 marked as `monotonic`.
 

@@ -41,7 +41,7 @@ theorem norm_one (φ : CharacterSpace 𝕜 A) : ∥toNormedDual (φ : WeakDual �
     exact Spectrum.norm_le_norm_of_mem (apply_mem_spectrum φ a)
     
   · have : ∥φ 1∥ ≤ x * ∥(1 : A)∥ := h 1
-    simpa only [norm_one, mul_oneₓ, map_one] using this
+    simpa only [← norm_one, ← mul_oneₓ, ← map_one] using this
     
 
 instance [ProperSpace 𝕜] : CompactSpace (CharacterSpace 𝕜 A) := by

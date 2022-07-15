@@ -43,9 +43,9 @@ theorem mem_range' {m : ℕ} : ∀ {s n : ℕ}, m ∈ range' s n ↔ s ≤ m ∧
   | s, succ n =>
     have : m = s → m < s + n + 1 := fun e => e ▸ lt_succ_of_leₓ (Nat.le_add_rightₓ _ _)
     have l : m = s ∨ s + 1 ≤ m ↔ s ≤ m := by
-      simpa only [eq_comm] using (@Decidable.le_iff_eq_or_lt _ _ _ s m).symm
+      simpa only [← eq_comm] using (@Decidable.le_iff_eq_or_lt _ _ _ s m).symm
     (mem_cons_iff _ _ _).trans <| by
-      simp only [mem_range', or_and_distrib_left, or_iff_right_of_imp this, l, add_right_commₓ] <;> rfl
+      simp only [← mem_range', ← or_and_distrib_left, ← or_iff_right_of_imp this, ← l, ← add_right_commₓ] <;> rfl
 
 theorem map_add_range' a : ∀ s n : ℕ, map ((· + ·) a) (range' s n) = range' (a + s) n
   | s, 0 => rfl
@@ -81,7 +81,7 @@ theorem range'_append : ∀ s m n : ℕ, range' s m ++ range' (s + m) n = range'
 
 theorem range'_sublist_right {s m n : ℕ} : range' s m <+ range' s n ↔ m ≤ n :=
   ⟨fun h => by
-    simpa only [length_range'] using length_le_of_sublist h, fun h => by
+    simpa only [← length_range'] using length_le_of_sublist h, fun h => by
     rw [← tsub_add_cancel_of_le h, ← range'_append] <;> apply sublist_append_left⟩
 
 theorem range'_subset_right {s m n : ℕ} : range' s m ⊆ range' s n ↔ m ≤ n :=
@@ -124,27 +124,27 @@ theorem range'_eq_map_range (s n : ℕ) : range' s n = map ((· + ·) s) (range 
 
 @[simp]
 theorem length_range (n : ℕ) : length (range n) = n := by
-  simp only [range_eq_range', length_range']
+  simp only [← range_eq_range', ← length_range']
 
 @[simp]
 theorem range_eq_nil {n : ℕ} : range n = [] ↔ n = 0 := by
   rw [← length_eq_zero, length_range]
 
 theorem pairwise_lt_range (n : ℕ) : Pairwiseₓ (· < ·) (range n) := by
-  simp only [range_eq_range', pairwise_lt_range']
+  simp only [← range_eq_range', ← pairwise_lt_range']
 
 theorem nodup_range (n : ℕ) : Nodupₓ (range n) := by
-  simp only [range_eq_range', nodup_range']
+  simp only [← range_eq_range', ← nodup_range']
 
 theorem range_sublist {m n : ℕ} : range m <+ range n ↔ m ≤ n := by
-  simp only [range_eq_range', range'_sublist_right]
+  simp only [← range_eq_range', ← range'_sublist_right]
 
 theorem range_subset {m n : ℕ} : range m ⊆ range n ↔ m ≤ n := by
-  simp only [range_eq_range', range'_subset_right]
+  simp only [← range_eq_range', ← range'_subset_right]
 
 @[simp]
 theorem mem_range {m n : ℕ} : m ∈ range n ↔ m < n := by
-  simp only [range_eq_range', mem_range', Nat.zero_leₓ, true_andₓ, zero_addₓ]
+  simp only [← range_eq_range', ← mem_range', ← Nat.zero_leₓ, ← true_andₓ, ← zero_addₓ]
 
 @[simp]
 theorem not_mem_range_self {n : ℕ} : n ∉ range n :=
@@ -152,13 +152,13 @@ theorem not_mem_range_self {n : ℕ} : n ∉ range n :=
 
 @[simp]
 theorem self_mem_range_succ (n : ℕ) : n ∈ range (n + 1) := by
-  simp only [succ_pos', lt_add_iff_pos_right, mem_range]
+  simp only [← succ_pos', ← lt_add_iff_pos_right, ← mem_range]
 
 theorem nth_range {m n : ℕ} (h : m < n) : nth (range n) m = some m := by
-  simp only [range_eq_range', nth_range' _ h, zero_addₓ]
+  simp only [← range_eq_range', ← nth_range' _ h, ← zero_addₓ]
 
 theorem range_succ (n : ℕ) : range (succ n) = range n ++ [n] := by
-  simp only [range_eq_range', range'_concat, zero_addₓ]
+  simp only [← range_eq_range', ← range'_concat, ← zero_addₓ]
 
 @[simp]
 theorem range_zero : range 0 = [] :=
@@ -170,7 +170,7 @@ theorem chain'_range_succ (r : ℕ → ℕ → Prop) (n : ℕ) : Chain' r (range
   · simp
     
   · rw [range_succ]
-    simp only [append_assoc, singleton_append, chain'_append_cons_cons, chain'_singleton, and_trueₓ]
+    simp only [← append_assoc, ← singleton_append, ← chain'_append_cons_cons, ← chain'_singleton, ← and_trueₓ]
     rw [hn, forall_lt_succ]
     
 
@@ -188,28 +188,28 @@ theorem range_add (a : ℕ) : ∀ b, range (a + b) = range a ++ (range b).map fu
 theorem iota_eq_reverse_range' : ∀ n : ℕ, iota n = reverse (range' 1 n)
   | 0 => rfl
   | n + 1 => by
-    simp only [iota, range'_concat, iota_eq_reverse_range' n, reverse_append, add_commₓ] <;> rfl
+    simp only [← iota, ← range'_concat, ← iota_eq_reverse_range' n, ← reverse_append, ← add_commₓ] <;> rfl
 
 @[simp]
 theorem length_iota (n : ℕ) : length (iota n) = n := by
-  simp only [iota_eq_reverse_range', length_reverse, length_range']
+  simp only [← iota_eq_reverse_range', ← length_reverse, ← length_range']
 
 theorem pairwise_gt_iota (n : ℕ) : Pairwiseₓ (· > ·) (iota n) := by
-  simp only [iota_eq_reverse_range', pairwise_reverse, pairwise_lt_range']
+  simp only [← iota_eq_reverse_range', ← pairwise_reverse, ← pairwise_lt_range']
 
 theorem nodup_iota (n : ℕ) : Nodupₓ (iota n) := by
-  simp only [iota_eq_reverse_range', nodup_reverse, nodup_range']
+  simp only [← iota_eq_reverse_range', ← nodup_reverse, ← nodup_range']
 
 theorem mem_iota {m n : ℕ} : m ∈ iota n ↔ 1 ≤ m ∧ m ≤ n := by
-  simp only [iota_eq_reverse_range', mem_reverse, mem_range', add_commₓ, lt_succ_iff]
+  simp only [← iota_eq_reverse_range', ← mem_reverse, ← mem_range', ← add_commₓ, ← lt_succ_iff]
 
 theorem reverse_range' : ∀ s n : ℕ, reverse (range' s n) = map (fun i => s + n - 1 - i) (range n)
   | s, 0 => rfl
   | s, n + 1 => by
     rw [range'_concat, reverse_append, range_succ_eq_map] <;>
-      simpa only [show s + (n + 1) - 1 = s + n from rfl, (· ∘ ·), fun a i =>
-        show a - 1 - i = a - succ i from pred_sub _ _, reverse_singleton, map_cons, tsub_zero, cons_append, nil_append,
-        eq_self_iff_true, true_andₓ, map_map] using reverse_range' s n
+      simpa only [← show s + (n + 1) - 1 = s + n from rfl, ← (· ∘ ·), ← fun a i =>
+        show a - 1 - i = a - succ i from pred_sub _ _, ← reverse_singleton, ← map_cons, ← tsub_zero, ← cons_append, ←
+        nil_append, ← eq_self_iff_true, ← true_andₓ, ← map_map] using reverse_range' s n
 
 /-- All elements of `fin n`, from `0` to `n-1`. -/
 def finRange (n : ℕ) : List (Finₓ n) :=
@@ -269,21 +269,21 @@ theorem enum_from_map_fst : ∀ n l : List α, map Prod.fst (enumFrom n l) = ran
 
 @[simp]
 theorem enum_map_fst (l : List α) : map Prod.fst (enum l) = range l.length := by
-  simp only [enum, enum_from_map_fst, range_eq_range']
+  simp only [← enum, ← enum_from_map_fst, ← range_eq_range']
 
 theorem enum_eq_zip_range (l : List α) : l.enum = (range l.length).zip l :=
   zip_of_prod (enum_map_fst _) (enum_map_snd _)
 
 @[simp]
 theorem unzip_enum_eq_prod (l : List α) : l.enum.unzip = (range l.length, l) := by
-  simp only [enum_eq_zip_range, unzip_zip, length_range]
+  simp only [← enum_eq_zip_range, ← unzip_zip, ← length_range]
 
 theorem enum_from_eq_zip_range' (l : List α) {n : ℕ} : l.enumFrom n = (range' n l.length).zip l :=
   zip_of_prod (enum_from_map_fst _ _) (enum_from_map_snd _ _)
 
 @[simp]
 theorem unzip_enum_from_eq_prod (l : List α) {n : ℕ} : (l.enumFrom n).unzip = (range' n l.length, l) := by
-  simp only [enum_from_eq_zip_range', unzip_zip, length_range']
+  simp only [← enum_from_eq_zip_range', ← unzip_zip, ← length_range']
 
 @[simp]
 theorem nth_le_range {n} i (H : i < (range n).length) : nthLe (range n) i H = i :=
@@ -295,7 +295,7 @@ theorem nth_le_range {n} i (H : i < (range n).length) : nthLe (range n) i H = i 
 
 @[simp]
 theorem nth_le_fin_range {n : ℕ} {i : ℕ} h : (finRange n).nthLe i h = ⟨i, length_fin_range n ▸ h⟩ := by
-  simp only [fin_range, nth_le_range, nth_le_pmap, Finₓ.mk_eq_subtype_mk]
+  simp only [← fin_range, ← nth_le_range, ← nth_le_pmap, ← Finₓ.mk_eq_subtype_mk]
 
 theorem of_fn_eq_pmap {α n} {f : Finₓ n → α} : ofFnₓ f = pmap (fun i hi => f ⟨i, hi⟩) (range n) fun _ => mem_range.1 :=
   by
@@ -306,7 +306,7 @@ theorem of_fn_eq_pmap {α n} {f : Finₓ n → α} : ofFnₓ f = pmap (fun i hi 
           simp )
         fun i hi1 hi2 => by
         simp at hi1
-        simp [nth_le_of_fn f ⟨i, hi1⟩, -Subtype.val_eq_coe]
+        simp [← nth_le_of_fn f ⟨i, hi1⟩, -Subtype.val_eq_coe]
 
 theorem of_fn_id n : ofFnₓ id = finRange n :=
   of_fn_eq_pmap

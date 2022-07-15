@@ -67,22 +67,23 @@ open Measureₓ VectorMeasure
 
 variable (j : JordanDecomposition α)
 
-instance : Zero (JordanDecomposition α) where
-  zero := ⟨0, 0, MutuallySingular.zero_right⟩
+instance : Zero (JordanDecomposition α) where zero := ⟨0, 0, MutuallySingular.zero_right⟩
 
-instance : Inhabited (JordanDecomposition α) where
-  default := 0
+instance : Inhabited (JordanDecomposition α) where default := 0
 
 instance : HasInvolutiveNeg (JordanDecomposition α) where
   neg := fun j => ⟨j.negPart, j.posPart, j.MutuallySingular.symm⟩
   neg_neg := fun j => JordanDecomposition.ext _ _ rfl rfl
 
-instance : HasScalar ℝ≥0 (JordanDecomposition α) where
-  smul := fun r j =>
+instance :
+    HasSmul ℝ≥0
+      (JordanDecomposition
+        α) where smul := fun r j =>
     ⟨r • j.posPart, r • j.negPart, MutuallySingular.smul _ (MutuallySingular.smul _ j.MutuallySingular.symm).symm⟩
 
-instance hasScalarReal : HasScalar ℝ (JordanDecomposition α) where
-  smul := fun r j => if hr : 0 ≤ r then r.toNnreal • j else -((-r).toNnreal • j)
+instance hasSmulReal :
+    HasSmul ℝ
+      (JordanDecomposition α) where smul := fun r j => if hr : 0 ≤ r then r.toNnreal • j else -((-r).toNnreal • j)
 
 @[simp]
 theorem zero_pos_part : (0 : JordanDecomposition α).posPart = 0 :=
@@ -190,21 +191,21 @@ theorem, and is shown by
 def toJordanDecomposition (s : SignedMeasure α) : JordanDecomposition α :=
   let i := some s.exists_compl_positive_negative
   let hi := some_spec s.exists_compl_positive_negative
-  { posPart := s.toMeasureOfZeroLe i hi.1 hi.2.1, negPart := s.toMeasureOfLeZero (iᶜ) hi.1.Compl hi.2.2,
+  { posPart := s.toMeasureOfZeroLe i hi.1 hi.2.1, negPart := s.toMeasureOfLeZero (iᶜ) hi.1.compl hi.2.2,
     pos_part_finite := inferInstance, neg_part_finite := inferInstance,
     MutuallySingular := by
-      refine' ⟨iᶜ, hi.1.Compl, _, _⟩
-      · rw [to_measure_of_zero_le_apply _ _ hi.1 hi.1.Compl]
+      refine' ⟨iᶜ, hi.1.compl, _, _⟩
+      · rw [to_measure_of_zero_le_apply _ _ hi.1 hi.1.compl]
         simp
         
-      · rw [to_measure_of_le_zero_apply _ _ hi.1.Compl hi.1.Compl.Compl]
+      · rw [to_measure_of_le_zero_apply _ _ hi.1.compl hi.1.compl.compl]
         simp
          }
 
 theorem to_jordan_decomposition_spec (s : SignedMeasure α) :
     ∃ (i : Set α)(hi₁ : MeasurableSet i)(hi₂ : 0 ≤[i] s)(hi₃ : s ≤[iᶜ] 0),
       s.toJordanDecomposition.posPart = s.toMeasureOfZeroLe i hi₁ hi₂ ∧
-        s.toJordanDecomposition.negPart = s.toMeasureOfLeZero (iᶜ) hi₁.Compl hi₃ :=
+        s.toJordanDecomposition.negPart = s.toMeasureOfLeZero (iᶜ) hi₁.compl hi₃ :=
   by
   set i := some s.exists_compl_positive_negative
   obtain ⟨hi₁, hi₂, hi₃⟩ := some_spec s.exists_compl_positive_negative
@@ -222,11 +223,11 @@ signed measure corresponding to
 theorem to_signed_measure_to_jordan_decomposition (s : SignedMeasure α) : s.toJordanDecomposition.toSignedMeasure = s :=
   by
   obtain ⟨i, hi₁, hi₂, hi₃, hμ, hν⟩ := s.to_jordan_decomposition_spec
-  simp only [jordan_decomposition.to_signed_measure, hμ, hν]
+  simp only [← jordan_decomposition.to_signed_measure, ← hμ, ← hν]
   ext k hk
   rw [to_signed_measure_sub_apply hk, to_measure_of_zero_le_apply _ hi₂ hi₁ hk,
     to_measure_of_le_zero_apply _ hi₃ hi₁.compl hk]
-  simp only [Ennreal.coe_to_real, Subtype.coe_mk, Ennreal.some_eq_coe, sub_neg_eq_add]
+  simp only [← Ennreal.coe_to_real, ← Subtype.coe_mk, ← Ennreal.some_eq_coe, ← sub_neg_eq_add]
   rw [← of_union _ (MeasurableSet.inter hi₁ hk) (MeasurableSet.inter hi₁.compl hk), Set.inter_comm i,
     Set.inter_comm (iᶜ), Set.inter_union_compl _ _]
   · infer_instance
@@ -254,7 +255,7 @@ theorem subset_negative_null_set (hu : MeasurableSet u) (hv : MeasurableSet v) (
     (hw₁ : s w = 0) (hw₂ : w ⊆ u) (hwt : v ⊆ w) : s v = 0 := by
   rw [← s.neg_le_neg_iff _ hu, neg_zero] at hsu
   have := subset_positive_null_set hu hv hw hsu
-  simp only [Pi.neg_apply, neg_eq_zero, coe_neg] at this
+  simp only [← Pi.neg_apply, ← neg_eq_zero, ← coe_neg] at this
   exact this hw₁ hw₂ hwt
 
 /-- If the symmetric difference of two positive sets is a null-set, then so are the differences
@@ -280,7 +281,7 @@ theorem of_diff_eq_zero_of_symm_diff_eq_zero_negative (hu : MeasurableSet u) (hv
   rw [← s.neg_le_neg_iff _ hu, neg_zero] at hsu
   rw [← s.neg_le_neg_iff _ hv, neg_zero] at hsv
   have := of_diff_eq_zero_of_symm_diff_eq_zero_positive hu hv hsu hsv
-  simp only [Pi.neg_apply, neg_eq_zero, coe_neg] at this
+  simp only [← Pi.neg_apply, ← neg_eq_zero, ← coe_neg] at this
   exact this hs
 
 theorem of_inter_eq_of_symm_diff_eq_zero_positive (hu : MeasurableSet u) (hv : MeasurableSet v) (hw : MeasurableSet w)
@@ -308,7 +309,7 @@ theorem of_inter_eq_of_symm_diff_eq_zero_negative (hu : MeasurableSet u) (hv : M
   rw [← s.neg_le_neg_iff _ hu, neg_zero] at hsu
   rw [← s.neg_le_neg_iff _ hv, neg_zero] at hsv
   have := of_inter_eq_of_symm_diff_eq_zero_positive hu hv hw hsu hsv
-  simp only [Pi.neg_apply, neg_inj, neg_eq_zero, coe_neg] at this
+  simp only [← Pi.neg_apply, ← neg_inj, ← neg_eq_zero, ← coe_neg] at this
   exact this hs
 
 end
@@ -412,16 +413,16 @@ def toJordanDecompositionEquiv (α : Type _) [MeasurableSpace α] : SignedMeasur
 
 theorem to_jordan_decomposition_zero : (0 : SignedMeasure α).toJordanDecomposition = 0 := by
   apply to_signed_measure_injective
-  simp [to_signed_measure_zero]
+  simp [← to_signed_measure_zero]
 
 theorem to_jordan_decomposition_neg (s : SignedMeasure α) : (-s).toJordanDecomposition = -s.toJordanDecomposition := by
   apply to_signed_measure_injective
-  simp [to_signed_measure_neg]
+  simp [← to_signed_measure_neg]
 
 theorem to_jordan_decomposition_smul (s : SignedMeasure α) (r : ℝ≥0 ) :
     (r • s).toJordanDecomposition = r • s.toJordanDecomposition := by
   apply to_signed_measure_injective
-  simp [to_signed_measure_smul]
+  simp [← to_signed_measure_smul]
 
 private theorem to_jordan_decomposition_smul_real_nonneg (s : SignedMeasure α) (r : ℝ) (hr : 0 ≤ r) :
     (r • s).toJordanDecomposition = r • s.toJordanDecomposition := by
@@ -462,10 +463,10 @@ def totalVariation (s : SignedMeasure α) : Measure α :=
   s.toJordanDecomposition.posPart + s.toJordanDecomposition.negPart
 
 theorem total_variation_zero : (0 : SignedMeasure α).totalVariation = 0 := by
-  simp [total_variation, to_jordan_decomposition_zero]
+  simp [← total_variation, ← to_jordan_decomposition_zero]
 
 theorem total_variation_neg (s : SignedMeasure α) : (-s).totalVariation = s.totalVariation := by
-  simp [total_variation, to_jordan_decomposition_neg, add_commₓ]
+  simp [← total_variation, ← to_jordan_decomposition_neg, ← add_commₓ]
 
 theorem null_of_total_variation_zero (s : SignedMeasure α) {i : Set α} (hs : s.totalVariation i = 0) : s i = 0 := by
   rw [total_variation, measure.coe_add, Pi.add_apply, add_eq_zero_iff] at hs
@@ -473,9 +474,9 @@ theorem null_of_total_variation_zero (s : SignedMeasure α) {i : Set α} (hs : s
     measure.to_signed_measure_apply, measure.to_signed_measure_apply]
   by_cases' hi : MeasurableSet i
   · rw [if_pos hi, if_pos hi]
-    simp [hs.1, hs.2]
+    simp [← hs.1, ← hs.2]
     
-  · simp [if_neg hi]
+  · simp [← if_neg hi]
     
 
 theorem absolutely_continuous_ennreal_iff (s : SignedMeasure α) (μ : VectorMeasure α ℝ≥0∞) :
@@ -486,7 +487,7 @@ theorem absolutely_continuous_ennreal_iff (s : SignedMeasure α) (μ : VectorMea
     rw [total_variation, measure.add_apply, hpos, hneg, to_measure_of_zero_le_apply _ _ _ hS₁,
       to_measure_of_le_zero_apply _ _ _ hS₁]
     rw [← vector_measure.absolutely_continuous.ennreal_to_measure] at h
-    simp [h (measure_mono_null (i.inter_subset_right S) hS₂), h (measure_mono_null (iᶜ.inter_subset_right S) hS₂)]
+    simp [← h (measure_mono_null (i.inter_subset_right S) hS₂), ← h (measure_mono_null (iᶜ.inter_subset_right S) hS₂)]
     
   · refine' vector_measure.absolutely_continuous.mk fun S hS₁ hS₂ => _
     rw [← vector_measure.ennreal_to_measure_apply hS₁] at hS₂
@@ -516,11 +517,11 @@ theorem mutually_singular_iff (s t : SignedMeasure α) : s ⊥ᵥ t ↔ s.totalV
     refine' ⟨u, hmeas, _, _⟩
     · rw [total_variation, measure.add_apply, hipos, hineg, to_measure_of_zero_le_apply _ _ _ hmeas,
         to_measure_of_le_zero_apply _ _ _ hmeas]
-      simp [hu₁ _ (Set.inter_subset_right _ _)]
+      simp [← hu₁ _ (Set.inter_subset_right _ _)]
       
     · rw [total_variation, measure.add_apply, hjpos, hjneg, to_measure_of_zero_le_apply _ _ _ hmeas.compl,
         to_measure_of_le_zero_apply _ _ _ hmeas.compl]
-      simp [hu₂ _ (Set.inter_subset_right _ _)]
+      simp [← hu₂ _ (Set.inter_subset_right _ _)]
       
     
   · rintro ⟨u, hmeas, hu₁, hu₂⟩
@@ -537,7 +538,7 @@ theorem mutually_singular_ennreal_iff (s : SignedMeasure α) (μ : VectorMeasure
     refine' ⟨u, hmeas, _, _⟩
     · rw [total_variation, measure.add_apply, hpos, hneg, to_measure_of_zero_le_apply _ _ _ hmeas,
         to_measure_of_le_zero_apply _ _ _ hmeas]
-      simp [hu₁ _ (Set.inter_subset_right _ _)]
+      simp [← hu₁ _ (Set.inter_subset_right _ _)]
       
     · rw [vector_measure.ennreal_to_measure_apply hmeas.compl]
       exact hu₂ _ (Set.Subset.refl _)

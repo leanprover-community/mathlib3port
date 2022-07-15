@@ -93,8 +93,8 @@ theorem prod_self_subset {U} (hU : U ∈ nhds (1 : G × G)) : ∃ V : OpenSubgro
 
 /-- The cartesian product of two nonarchimedean groups is nonarchimedean. -/
 @[to_additive]
-instance : NonarchimedeanGroup (G × K) where
-  is_nonarchimedean := fun U hU =>
+instance :
+    NonarchimedeanGroup (G × K) where is_nonarchimedean := fun U hU =>
     let ⟨V, W, h⟩ := prod_subset hU
     ⟨V.Prod W, ‹_›⟩
 
@@ -113,8 +113,7 @@ variable [Ringₓ R] [TopologicalSpace R] [NonarchimedeanRing R]
 variable [Ringₓ S] [TopologicalSpace S] [NonarchimedeanRing S]
 
 /-- The cartesian product of two nonarchimedean rings is nonarchimedean. -/
-instance : NonarchimedeanRing (R × S) where
-  is_nonarchimedean := NonarchimedeanAddGroup.is_nonarchimedean
+instance : NonarchimedeanRing (R × S) where is_nonarchimedean := NonarchimedeanAddGroup.is_nonarchimedean
 
 /-- Given an open subgroup `U` and an element `r` of a nonarchimedean ring, there is an open
   subgroup `V` such that `r • V` is contained in `U`. -/
@@ -127,11 +126,11 @@ theorem mul_subset (U : OpenAddSubgroup R) : ∃ V : OpenAddSubgroup R, (V : Set
     prod_self_subset
       (IsOpen.mem_nhds (IsOpen.preimage continuous_mul U.IsOpen)
         (by
-          simpa only [Set.mem_preimage, OpenAddSubgroup.mem_coe, Prod.snd_zero, mul_zero] using U.zero_mem))
+          simpa only [← Set.mem_preimage, ← OpenAddSubgroup.mem_coe, ← Prod.snd_zero, ← mul_zero] using U.zero_mem))
   use V
   rintro v ⟨a, b, ha, hb, hv⟩
   have hy := H (Set.mk_mem_prod ha hb)
-  simp only [Set.mem_preimage, OpenAddSubgroup.mem_coe] at hy
+  simp only [← Set.mem_preimage, ← OpenAddSubgroup.mem_coe] at hy
   rwa [hv] at hy
 
 end NonarchimedeanRing

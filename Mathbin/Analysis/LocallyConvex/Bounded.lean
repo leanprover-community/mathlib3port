@@ -33,6 +33,8 @@ von Neumann-bounded sets.
 
 variable {𝕜 E ι : Type _}
 
+open Filter
+
 open TopologicalSpace Pointwise
 
 namespace Bornology
@@ -43,7 +45,7 @@ section Zero
 
 variable (𝕜)
 
-variable [SemiNormedRing 𝕜] [HasScalar 𝕜 E] [Zero E]
+variable [SemiNormedRing 𝕜] [HasSmul 𝕜 E] [Zero E]
 
 variable [TopologicalSpace E]
 
@@ -90,6 +92,32 @@ theorem IsVonNBounded.of_topological_space_le {t t' : TopologicalSpace E} (h : t
   hs <| (le_iff_nhds t t').mp h 0 hV
 
 end MultipleTopologies
+
+section Image
+
+variable {𝕜₁ 𝕜₂ F : Type _} [NormedDivisionRing 𝕜₁] [NormedDivisionRing 𝕜₂] [AddCommGroupₓ E] [Module 𝕜₁ E]
+  [AddCommGroupₓ F] [Module 𝕜₂ F] [TopologicalSpace E] [TopologicalSpace F]
+
+/-- A continuous linear image of a bounded set is bounded. -/
+theorem IsVonNBounded.image {σ : 𝕜₁ →+* 𝕜₂} [RingHomSurjective σ] [RingHomIsometric σ] {s : Set E}
+    (hs : IsVonNBounded 𝕜₁ s) (f : E →SL[σ] F) : IsVonNBounded 𝕜₂ (f '' s) := by
+  let σ' := RingEquiv.ofBijective σ ⟨σ.injective, σ.is_surjective⟩
+  have σ_iso : Isometry σ := AddMonoidHomClass.isometry_of_norm σ fun x => RingHomIsometric.is_iso
+  have σ'_symm_iso : Isometry σ'.symm := σ_iso.right_inv σ'.right_inv
+  have f_tendsto_zero := f.continuous.tendsto 0
+  rw [map_zero] at f_tendsto_zero
+  intro V hV
+  rcases hs (f_tendsto_zero hV) with ⟨r, hrpos, hr⟩
+  refine' ⟨r, hrpos, fun a ha => _⟩
+  rw [← σ'.apply_symm_apply a]
+  have hanz : a ≠ 0 := norm_pos_iff.mp (hrpos.trans_le ha)
+  have : σ'.symm a ≠ 0 := (RingHom.map_ne_zero σ'.symm.to_ring_hom).mpr hanz
+  change _ ⊆ σ _ • _
+  rw [Set.image_subset_iff, f.preimage_smul_setₛₗ this.is_unit]
+  refine' hr (σ'.symm a) _
+  rwa [σ'_symm_iso.norm_map_of_map_zero (map_zero _)]
+
+end Image
 
 section NormedField
 
@@ -141,7 +169,7 @@ theorem TotallyBounded.is_vonN_bounded {s : Set E} (hs : TotallyBounded s) : Bor
   have h : Filter.Tendsto (fun x : E × E => x.fst + x.snd) (𝓝 (0, 0)) (𝓝 ((0 : E) + (0 : E))) := tendsto_add
   rw [add_zeroₓ] at h
   have h' := (nhds_basis_closed_balanced 𝕜 E).Prod (nhds_basis_closed_balanced 𝕜 E)
-  simp_rw [← nhds_prod_eq, id.def]  at h'
+  simp_rw [← nhds_prod_eq, id.def] at h'
   rcases h.basis_left h' U hU with ⟨x, hx, h''⟩
   rcases hs x.snd hx.2.1 with ⟨t, ht, hs⟩
   refine' Absorbs.mono_right _ hs
@@ -150,7 +178,7 @@ theorem TotallyBounded.is_vonN_bounded {s : Set E} (hs : TotallyBounded s) : Bor
     intro z hz
     rcases set.mem_add.mp hz with ⟨z1, z2, hz1, hz2, hz⟩
     have hz' : (z1, z2) ∈ x.fst ×ˢ x.snd := ⟨hz1, hz2⟩
-    simpa only [hz] using h'' hz'
+    simpa only [← hz] using h'' hz'
   refine' fun y hy => Absorbs.mono_left _ hx_fstsnd
   rw [← Set.singleton_vadd, vadd_eq_add]
   exact (absorbent_nhds_zero hx.1.1).Absorbs.add hx.2.2.2.absorbs_self

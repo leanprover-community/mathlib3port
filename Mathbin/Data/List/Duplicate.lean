@@ -64,9 +64,9 @@ theorem not_duplicate_nil (x : α) : ¬x ∈+ [] := fun H => H.ne_nil rfl
 
 theorem Duplicate.ne_singleton (h : x ∈+ l) (y : α) : l ≠ [y] := by
   induction' h with l' h z l' h hm
-  · simp [ne_nil_of_mem h]
+  · simp [← ne_nil_of_mem h]
     
-  · simp [ne_nil_of_mem h.mem]
+  · simp [← ne_nil_of_mem h.mem]
     
 
 @[simp]
@@ -94,10 +94,10 @@ theorem duplicate_cons_iff {y : α} : x ∈+ y :: l ↔ y = x ∧ x ∈ l ∨ x 
     
 
 theorem Duplicate.of_duplicate_cons {y : α} (h : x ∈+ y :: l) (hx : x ≠ y) : x ∈+ l := by
-  simpa [duplicate_cons_iff, hx.symm] using h
+  simpa [← duplicate_cons_iff, ← hx.symm] using h
 
 theorem duplicate_cons_iff_of_ne {y : α} (hne : x ≠ y) : x ∈+ y :: l ↔ x ∈+ l := by
-  simp [duplicate_cons_iff, hne.symm]
+  simp [← duplicate_cons_iff, ← hne.symm]
 
 theorem Duplicate.mono_sublist {l' : List α} (hx : x ∈+ l) (h : l <+ l') : x ∈+ l' := by
   induction' h with l₁ l₂ y h IH l₁ l₂ y h IH
@@ -107,9 +107,9 @@ theorem Duplicate.mono_sublist {l' : List α} (hx : x ∈+ l) (h : l <+ l') : x 
     
   · rw [duplicate_cons_iff] at hx⊢
     rcases hx with (⟨rfl, hx⟩ | hx)
-    · simp [h.subset hx]
+    · simp [← h.subset hx]
       
-    · simp [IH hx]
+    · simp [← IH hx]
       
     
 
@@ -119,7 +119,7 @@ theorem duplicate_iff_sublist : x ∈+ l ↔ [x, x] <+ l := by
   · simp
     
   · by_cases' hx : x = y
-    · simp [hx, cons_sublist_cons_iff, singleton_sublist]
+    · simp [← hx, ← cons_sublist_cons_iff, ← singleton_sublist]
       
     · rw [duplicate_cons_iff_of_ne hx, IH]
       refine' ⟨sublist_cons_of_sublist y, fun h => _⟩
@@ -135,12 +135,12 @@ theorem nodup_iff_forall_not_duplicate : Nodupₓ l ↔ ∀ x : α, ¬x ∈+ l :
   simp_rw [nodup_iff_sublist, duplicate_iff_sublist]
 
 theorem exists_duplicate_iff_not_nodup : (∃ x : α, x ∈+ l) ↔ ¬Nodupₓ l := by
-  simp [nodup_iff_forall_not_duplicate]
+  simp [← nodup_iff_forall_not_duplicate]
 
 theorem Duplicate.not_nodup (h : x ∈+ l) : ¬Nodupₓ l := fun H => nodup_iff_forall_not_duplicate.mp H _ h
 
 theorem duplicate_iff_two_le_count [DecidableEq α] : x ∈+ l ↔ 2 ≤ count x l := by
-  simp [duplicate_iff_sublist, le_count_iff_repeat_sublist]
+  simp [← duplicate_iff_sublist, ← le_count_iff_repeat_sublist]
 
 instance decidableDuplicate [DecidableEq α] (x : α) : ∀ l : List α, Decidable (x ∈+ l)
   | [] => isFalse (not_duplicate_nil x)
@@ -152,7 +152,7 @@ instance decidableDuplicate [DecidableEq α] (x : α) : ∀ l : List α, Decidab
       else
         isFalse
           (by
-            simpa [duplicate_cons_iff, h] using hx)
+            simpa [← duplicate_cons_iff, ← h] using hx)
 
 end List
 

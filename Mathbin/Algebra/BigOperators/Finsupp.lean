@@ -48,10 +48,10 @@ section
 variable {R S : Type _} [NonUnitalNonAssocSemiringₓ R] [NonUnitalNonAssocSemiringₓ S]
 
 theorem Finsupp.sum_mul (b : S) (s : α →₀ R) {f : α → R → S} : s.Sum f * b = s.Sum fun a c => f a c * b := by
-  simp only [Finsupp.sum, Finset.sum_mul]
+  simp only [← Finsupp.sum, ← Finset.sum_mul]
 
 theorem Finsupp.mul_sum (b : S) (s : α →₀ R) {f : α → R → S} : b * s.Sum f = s.Sum fun a c => b * f a c := by
-  simp only [Finsupp.sum, Finset.mul_sum]
+  simp only [← Finsupp.sum, ← Finset.mul_sum]
 
 end
 

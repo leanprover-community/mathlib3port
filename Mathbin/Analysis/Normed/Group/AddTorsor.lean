@@ -36,8 +36,7 @@ variable {α V P : Type _} [SemiNormedGroup V] [PseudoMetricSpace P] [NormedAddT
 variable {W Q : Type _} [NormedGroup W] [MetricSpace Q] [NormedAddTorsor W Q]
 
 /-- A `semi_normed_group` is a `normed_add_torsor` over itself. -/
-instance (priority := 100) SemiNormedGroup.toNormedAddTorsor : NormedAddTorsor V V where
-  dist_eq_norm' := dist_eq_norm
+instance (priority := 100) SemiNormedGroup.toNormedAddTorsor : NormedAddTorsor V V where dist_eq_norm' := dist_eq_norm
 
 include V
 
@@ -51,6 +50,12 @@ lemma, it is necessary to have `V` as an explicit argument; otherwise
 theorem dist_eq_norm_vsub (x y : P) : dist x y = ∥x -ᵥ y∥ :=
   NormedAddTorsor.dist_eq_norm' x y
 
+/-- The distance equals the norm of subtracting two points. In this
+lemma, it is necessary to have `V` as an explicit argument; otherwise
+`rw dist_eq_norm_vsub'` sometimes doesn't work. -/
+theorem dist_eq_norm_vsub' (x y : P) : dist x y = ∥y -ᵥ x∥ :=
+  (dist_comm _ _).trans (dist_eq_norm_vsub _ _ _)
+
 end
 
 @[simp]
@@ -63,7 +68,7 @@ theorem dist_vadd_cancel_right (v₁ v₂ : V) (x : P) : dist (v₁ +ᵥ x) (v�
 
 @[simp]
 theorem dist_vadd_left (v : V) (x : P) : dist (v +ᵥ x) x = ∥v∥ := by
-  simp [dist_eq_norm_vsub V _ x]
+  simp [← dist_eq_norm_vsub V _ x]
 
 @[simp]
 theorem dist_vadd_right (v : V) (x : P) : dist x (v +ᵥ x) = ∥v∥ := by
@@ -129,17 +134,17 @@ theorem dist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) : dist (p₁ -ᵥ p₂) (p�
   exact norm_sub_le _ _
 
 theorem nndist_vadd_vadd_le (v v' : V) (p p' : P) : nndist (v +ᵥ p) (v' +ᵥ p') ≤ nndist v v' + nndist p p' := by
-  simp only [← Nnreal.coe_le_coe, Nnreal.coe_add, ← dist_nndist, dist_vadd_vadd_le]
+  simp only [Nnreal.coe_le_coe, ← Nnreal.coe_add, dist_nndist, ← dist_vadd_vadd_le]
 
 theorem nndist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) : nndist (p₁ -ᵥ p₂) (p₃ -ᵥ p₄) ≤ nndist p₁ p₃ + nndist p₂ p₄ := by
-  simp only [← Nnreal.coe_le_coe, Nnreal.coe_add, ← dist_nndist, dist_vsub_vsub_le]
+  simp only [Nnreal.coe_le_coe, ← Nnreal.coe_add, dist_nndist, ← dist_vsub_vsub_le]
 
 theorem edist_vadd_vadd_le (v v' : V) (p p' : P) : edist (v +ᵥ p) (v' +ᵥ p') ≤ edist v v' + edist p p' := by
-  simp only [edist_nndist]
+  simp only [← edist_nndist]
   apply_mod_cast nndist_vadd_vadd_le
 
 theorem edist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) : edist (p₁ -ᵥ p₂) (p₃ -ᵥ p₄) ≤ edist p₁ p₃ + edist p₂ p₄ := by
-  simp only [edist_nndist]
+  simp only [← edist_nndist]
   apply_mod_cast nndist_vsub_vsub_le
 
 omit V
@@ -153,7 +158,7 @@ def pseudoMetricSpaceOfNormedGroupOfAddTorsor (V P : Type _) [SemiNormedGroup V]
   dist_self := fun x => by
     simp
   dist_comm := fun x y => by
-    simp only [← neg_vsub_eq_vsub_rev y x, norm_neg]
+    simp only [neg_vsub_eq_vsub_rev y x, ← norm_neg]
   dist_triangle := by
     intro x y z
     change ∥x -ᵥ z∥ ≤ ∥x -ᵥ y∥ + ∥y -ᵥ z∥
@@ -170,7 +175,7 @@ def metricSpaceOfNormedGroupOfAddTorsor (V P : Type _) [NormedGroup V] [AddTorso
   eq_of_dist_eq_zero := fun x y h => by
     simpa using h
   dist_comm := fun x y => by
-    simp only [← neg_vsub_eq_vsub_rev y x, norm_neg]
+    simp only [neg_vsub_eq_vsub_rev y x, ← norm_neg]
   dist_triangle := by
     intro x y z
     change ∥x -ᵥ z∥ ≤ ∥x -ᵥ y∥ + ∥y -ᵥ z∥
@@ -201,8 +206,8 @@ theorem uniform_continuous_vadd : UniformContinuous fun x : V × P => x.1 +ᵥ x
 theorem uniform_continuous_vsub : UniformContinuous fun x : P × P => x.1 -ᵥ x.2 :=
   (LipschitzWith.prod_fst.vsub LipschitzWith.prod_snd).UniformContinuous
 
-instance (priority := 100) NormedAddTorsor.to_has_continuous_vadd : HasContinuousVadd V P where
-  continuous_vadd := uniform_continuous_vadd.Continuous
+instance (priority := 100) NormedAddTorsor.to_has_continuous_vadd :
+    HasContinuousVadd V P where continuous_vadd := uniform_continuous_vadd.Continuous
 
 theorem continuous_vsub : Continuous fun x : P × P => x.1 -ᵥ x.2 :=
   uniform_continuous_vsub.Continuous

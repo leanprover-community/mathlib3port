@@ -65,7 +65,7 @@ theorem cSup_empty : sup (∅ : Set ℤ) = 0 :=
 theorem cSup_of_not_bdd_above {s : Set ℤ} (h : ¬BddAbove s) : sup s = 0 :=
   dif_neg
     (by
-      simp [h])
+      simp [← h])
 
 theorem cInf_eq_least_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : ℤ) (Hb : ∀, ∀ z ∈ s, ∀, b ≤ z)
     (Hinh : ∃ z : ℤ, z ∈ s) : inf s = leastOfBdd b Hb Hinh := by
@@ -84,7 +84,7 @@ theorem cInf_empty : inf (∅ : Set ℤ) = 0 :=
 theorem cInf_of_not_bdd_below {s : Set ℤ} (h : ¬BddBelow s) : inf s = 0 :=
   dif_neg
     (by
-      simp [h])
+      simp [← h])
 
 theorem cSup_mem {s : Set ℤ} (h1 : s.Nonempty) (h2 : BddAbove s) : sup s ∈ s := by
   convert (greatest_of_bdd _ (Classical.some_spec h2) h1).2.1

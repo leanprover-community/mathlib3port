@@ -133,11 +133,9 @@ def incl : skeleton.{u} ⥤ Fintypeₓ.{u} where
   obj := fun X => Fintypeₓ.of (ULift (Finₓ X.len))
   map := fun _ _ f => f
 
-instance : Full incl where
-  preimage := fun _ _ f => f
+instance : Full incl where preimage := fun _ _ f => f
 
-instance : Faithful incl :=
-  {  }
+instance : Faithful incl where
 
 instance : EssSurj incl :=
   ess_surj.mk fun X =>

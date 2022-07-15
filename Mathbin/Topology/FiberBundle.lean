@@ -231,6 +231,9 @@ theorem apply_symm_apply {x : B × F} (hx : x ∈ e.Target) : e (e.toLocalEquiv.
 theorem apply_symm_apply' {b : B} {x : F} (hx : b ∈ e.BaseSet) : e (e.toLocalEquiv.symm (b, x)) = (b, x) :=
   e.apply_symm_apply (e.mem_target.2 hx)
 
+theorem symm_apply_apply {x : Z} (hx : x ∈ e.Source) : e.toLocalEquiv.symm (e x) = x :=
+  e.toLocalEquiv.left_inv hx
+
 @[simp, mfld_simps]
 theorem symm_apply_mk_proj {x : Z} (ex : x ∈ e.Source) : e.toLocalEquiv.symm (proj x, (e x).2) = x := by
   rw [← e.coe_fst ex, Prod.mk.eta, ← e.coe_coe, e.to_local_equiv.left_inv ex]
@@ -238,7 +241,7 @@ theorem symm_apply_mk_proj {x : Z} (ex : x ∈ e.Source) : e.toLocalEquiv.symm (
 @[simp, mfld_simps]
 theorem preimage_symm_proj_base_set : e.toLocalEquiv.symm ⁻¹' (proj ⁻¹' e.BaseSet) ∩ e.Target = e.Target := by
   refine' inter_eq_right_iff_subset.mpr fun x hx => _
-  simp only [mem_preimage, LocalEquiv.inv_fun_as_coe, e.proj_symm_apply hx]
+  simp only [← mem_preimage, ← LocalEquiv.inv_fun_as_coe, ← e.proj_symm_apply hx]
   exact e.mem_target.mp hx
 
 @[simp, mfld_simps]
@@ -246,9 +249,17 @@ theorem preimage_symm_proj_inter (s : Set B) :
     e.toLocalEquiv.symm ⁻¹' (proj ⁻¹' s) ∩ e.BaseSet ×ˢ (Univ : Set F) = (s ∩ e.BaseSet) ×ˢ (Univ : Set F) := by
   ext ⟨x, y⟩
   suffices x ∈ e.base_set → (proj (e.to_local_equiv.symm (x, y)) ∈ s ↔ x ∈ s) by
-    simpa only [prod_mk_mem_set_prod_eq, mem_inter_eq, and_trueₓ, mem_univ, And.congr_left_iff]
+    simpa only [← prod_mk_mem_set_prod_eq, ← mem_inter_eq, ← and_trueₓ, ← mem_univ, ← And.congr_left_iff]
   intro h
   rw [e.proj_symm_apply' h]
+
+theorem target_inter_preimage_symm_source_eq (e f : Pretrivialization F proj) :
+    f.Target ∩ f.toLocalEquiv.symm ⁻¹' e.Source = (e.BaseSet ∩ f.BaseSet) ×ˢ (Univ : Set F) := by
+  rw [inter_comm, f.target_eq, e.source_eq, f.preimage_symm_proj_inter]
+
+theorem trans_source (e f : Pretrivialization F proj) :
+    (f.toLocalEquiv.symm.trans e.toLocalEquiv).Source = (e.BaseSet ∩ f.BaseSet) ×ˢ (Univ : Set F) := by
+  rw [LocalEquiv.trans_source, LocalEquiv.symm_source, e.target_inter_preimage_symm_source_eq]
 
 theorem symm_trans_symm (e e' : Pretrivialization F proj) :
     (e.toLocalEquiv.symm.trans e'.toLocalEquiv).symm = e'.toLocalEquiv.symm.trans e.toLocalEquiv := by
@@ -378,13 +389,33 @@ def compHomeomorph {Z' : Type _} [TopologicalSpace Z'] (h : Z' ≃ₜ Z) : Trivi
   BaseSet := e.BaseSet
   open_base_set := e.open_base_set
   source_eq := by
-    simp [e.source_eq, preimage_preimage]
+    simp [← e.source_eq, ← preimage_preimage]
   target_eq := by
-    simp [e.target_eq]
+    simp [← e.target_eq]
   proj_to_fun := fun p hp => by
     have hp : h p ∈ e.Source := by
       simpa using hp
-    simp [hp]
+    simp [← hp]
+
+/-- Read off the continuity of a function `f : Z → X` at `z : Z` by transferring via a
+trivialization of `Z` containing `z`. -/
+theorem continuous_at_of_comp_right {X : Type _} [TopologicalSpace X] {f : Z → X} {z : Z} (e : Trivialization F proj)
+    (he : proj z ∈ e.BaseSet) (hf : ContinuousAt (f ∘ e.toLocalEquiv.symm) (e z)) : ContinuousAt f z := by
+  have hez : z ∈ e.to_local_equiv.symm.target := by
+    rw [LocalEquiv.symm_target, e.mem_source]
+    exact he
+  rwa [e.to_local_homeomorph.symm.continuous_at_iff_continuous_at_comp_right hez, LocalHomeomorph.symm_symm]
+
+/-- Read off the continuity of a function `f : X → Z` at `x : X` by transferring via a
+trivialization of `Z` containing `f x`. -/
+theorem continuous_at_of_comp_left {X : Type _} [TopologicalSpace X] {f : X → Z} {x : X} (e : Trivialization F proj)
+    (hf_proj : ContinuousAt (proj ∘ f) x) (he : proj (f x) ∈ e.BaseSet) (hf : ContinuousAt (e ∘ f) x) :
+    ContinuousAt f x := by
+  rw [e.to_local_homeomorph.continuous_at_iff_continuous_at_comp_left]
+  · exact hf
+    
+  rw [e.source_eq, ← preimage_comp]
+  exact hf_proj.preimage_mem_nhds (e.open_base_set.mem_nhds he)
 
 end TopologicalFiberBundle.Trivialization
 
@@ -454,7 +485,7 @@ theorem IsTopologicalFiberBundle.comp_homeomorph {Z' : Type _} [TopologicalSpace
     (e : IsTopologicalFiberBundle F proj) (h : Z' ≃ₜ Z) : IsTopologicalFiberBundle F (proj ∘ h) := fun x =>
   let ⟨e, he⟩ := e x
   ⟨e.comp_homeomorph h, by
-    simpa [TopologicalFiberBundle.Trivialization.compHomeomorph] using he⟩
+    simpa [← TopologicalFiberBundle.Trivialization.compHomeomorph] using he⟩
 
 namespace TopologicalFiberBundle.Trivialization
 
@@ -468,7 +499,7 @@ def transFiberHomeomorph {F' : Type _} [TopologicalSpace F'] (e : Trivialization
   open_base_set := e.open_base_set
   source_eq := e.source_eq
   target_eq := by
-    simp [e.target_eq, prod_univ, preimage_preimage]
+    simp [← e.target_eq, ← prod_univ, ← preimage_preimage]
   proj_to_fun := e.proj_to_fun
 
 @[simp]
@@ -527,9 +558,9 @@ def coordChangeHomeomorph (e₁ e₂ : Trivialization F proj) {b : B} (h₁ : b 
   toFun := e₁.coordChange e₂ b
   invFun := e₂.coordChange e₁ b
   left_inv := fun x => by
-    simp only [*, coord_change_coord_change, coord_change_same_apply]
+    simp only [*, ← coord_change_coord_change, ← coord_change_same_apply]
   right_inv := fun x => by
-    simp only [*, coord_change_coord_change, coord_change_same_apply]
+    simp only [*, ← coord_change_coord_change, ← coord_change_same_apply]
   continuous_to_fun := e₁.continuous_coord_change e₂ h₁ h₂
   continuous_inv_fun := e₂.continuous_coord_change e₁ h₂ h₁
 
@@ -556,22 +587,22 @@ noncomputable def TopologicalFiberBundle.Trivialization.comap (e : Trivializatio
   invFun := fun p =>
     if h : f p.1 ∈ e.BaseSet then
       ⟨⟨p.1, e.toLocalHomeomorph.symm (f p.1, p.2)⟩, by
-        simp [e.proj_symm_apply' h]⟩
+        simp [← e.proj_symm_apply' h]⟩
     else
       ⟨⟨b', e.toLocalHomeomorph.symm (f b', p.2)⟩, by
-        simp [e.proj_symm_apply' hb']⟩
+        simp [← e.proj_symm_apply' hb']⟩
   Source := { p | f (p : B' × Z).1 ∈ e.BaseSet }
   Target := { p | f p.1 ∈ e.BaseSet }
   map_source' := fun p hp => hp
-  map_target' := fun hp : f p.1 ∈ e.BaseSet => by
-    simp [hp]
+  map_target' := fun p hp : f p.1 ∈ e.BaseSet => by
+    simp [← hp]
   left_inv' := by
     rintro ⟨⟨b, x⟩, hbx⟩ hb
     dsimp'  at *
     have hx : x ∈ e.source := e.mem_source.2 (hbx ▸ hb)
     ext <;> simp [*]
-  right_inv' := fun hp : f p.1 ∈ e.BaseSet => by
-    simp [*, e.apply_symm_apply']
+  right_inv' := fun p hp : f p.1 ∈ e.BaseSet => by
+    simp [*, ← e.apply_symm_apply']
   open_source := e.open_base_set.Preimage (hf.comp <| continuous_fst.comp continuous_subtype_coe)
   open_target := e.open_base_set.Preimage (hf.comp continuous_fst)
   continuous_to_fun :=
@@ -587,8 +618,8 @@ noncomputable def TopologicalFiberBundle.Trivialization.comap (e : Trivializatio
       ContinuousOn (fun p : B' × F => (p.1, e.to_local_homeomorph.symm (f p.1, p.2)))
         { p : B' × F | f p.1 ∈ e.base_set }
       by
-      refine' this.congr fun hp : f p.1 ∈ e.base_set => _
-      simp [hp]
+      refine' this.congr fun p hp : f p.1 ∈ e.base_set => _
+      simp [← hp]
     · refine' continuous_on_fst.prod (e.to_local_homeomorph.symm.continuous_on.comp _ _)
       · exact ((hf.comp continuous_fst).prod_mk continuous_snd).ContinuousOn
         
@@ -617,7 +648,7 @@ namespace TopologicalFiberBundle.Trivialization
 
 theorem is_image_preimage_prod (e : Trivialization F proj) (s : Set B) :
     e.toLocalHomeomorph.IsImage (proj ⁻¹' s) (s ×ˢ (Univ : Set F)) := fun x hx => by
-  simp [e.coe_fst', hx]
+  simp [← e.coe_fst', ← hx]
 
 /-- Restrict a `trivialization` to an open set in the base. `-/
 def restrOpen (e : Trivialization F proj) (s : Set B) (hs : IsOpen s) : Trivialization F proj where
@@ -626,9 +657,9 @@ def restrOpen (e : Trivialization F proj) (s : Set B) (hs : IsOpen s) : Triviali
   BaseSet := e.BaseSet ∩ s
   open_base_set := IsOpen.inter e.open_base_set hs
   source_eq := by
-    simp [e.source_eq]
+    simp [← e.source_eq]
   target_eq := by
-    simp [e.target_eq, prod_univ]
+    simp [← e.target_eq, ← prod_univ]
   proj_to_fun := fun p hp => e.proj_to_fun p hp.1
 
 section Piecewise
@@ -656,9 +687,9 @@ noncomputable def piecewise (e e' : Trivialization F proj) (s : Set B)
   BaseSet := s.ite e.BaseSet e'.BaseSet
   open_base_set := e.open_base_set.ite e'.open_base_set Hs
   source_eq := by
-    simp [e.source_eq, e'.source_eq]
+    simp [← e.source_eq, ← e'.source_eq]
   target_eq := by
-    simp [e.target_eq, e'.target_eq, prod_univ]
+    simp [← e.target_eq, ← e'.target_eq, ← prod_univ]
   proj_to_fun := by
     rintro p (⟨he, hs⟩ | ⟨he, hs⟩) <;> simp [*]
 
@@ -672,7 +703,7 @@ noncomputable def piecewiseLeOfEq [LinearOrderₓ B] [OrderTopology B] (e e' : T
   e.piecewise e' (Iic a)
     (Set.ext fun x =>
       And.congr_left_iff.2 fun hx => by
-        simp [He, He', mem_singleton_iff.1 (frontier_Iic_subset _ hx)])
+        simp [← He, ← He', ← mem_singleton_iff.1 (frontier_Iic_subset _ hx)])
     fun p hp => Heq p <| frontier_Iic_subset _ hp.2
 
 /-- Given two bundle trivializations `e`, `e'` of a topological fiber bundle `proj : Z → B` over a
@@ -686,9 +717,9 @@ noncomputable def piecewiseLe [LinearOrderₓ B] [OrderTopology B] (e e' : Trivi
   e.piecewiseLeOfEq (e'.transFiberHomeomorph (e'.coordChangeHomeomorph e He' He)) a He He' <| by
     rintro p rfl
     ext1
-    · simp [e.coe_fst', e'.coe_fst', *]
+    · simp [← e.coe_fst', ← e'.coe_fst', *]
       
-    · simp [e'.coord_change_apply_snd, *]
+    · simp [← e'.coord_change_apply_snd, *]
       
 
 /-- Given two bundle trivializations `e`, `e'` over disjoint sets, `e.disjoint_union e' H` is the
@@ -715,11 +746,11 @@ noncomputable def disjointUnion (e e' : Trivialization F proj) (H : Disjoint e.B
       
     · show (e.source.piecewise e e' p).1 = proj p
       rw [piecewise_eq_of_not_mem, e'.coe_fst hp']
-      simp only [e.source_eq, e'.source_eq] at hp'⊢
+      simp only [← e.source_eq, ← e'.source_eq] at hp'⊢
       exact fun h => H ⟨h, hp'⟩
       
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `h` is a topological fiber bundle over a conditionally complete linear order,
 then it is trivial over any closed interval. -/
 theorem _root_.is_topological_fiber_bundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinearOrder B]
@@ -738,7 +769,7 @@ theorem _root_.is_topological_fiber_bundle.exists_trivialization_Icc_subset [Con
   set s : Set B := { x ∈ Icc a b | ∃ e : trivialization F proj, Icc a x ⊆ e.BaseSet }
   have ha : a ∈ s :=
     ⟨left_mem_Icc.2 hab, ea, by
-      simp [hea]⟩
+      simp [← hea]⟩
   have sne : s.nonempty := ⟨a, ha⟩
   have hsb : b ∈ UpperBounds s := fun x hx => hx.1.2
   have sbd : BddAbove s := ⟨b, hsb⟩
@@ -900,25 +931,25 @@ def trivChange (i j : ι) : LocalHomeomorph (B × F) (B × F) where
     simpa using hp
   left_inv' := by
     rintro ⟨x, v⟩ hx
-    simp only [prod_mk_mem_set_prod_eq, mem_inter_eq, and_trueₓ, mem_univ] at hx
+    simp only [← prod_mk_mem_set_prod_eq, ← mem_inter_eq, ← and_trueₓ, ← mem_univ] at hx
     rw [Z.coord_change_comp, Z.coord_change_self]
     · exact hx.1
       
-    · simp [hx]
+    · simp [← hx]
       
   right_inv' := by
     rintro ⟨x, v⟩ hx
-    simp only [prod_mk_mem_set_prod_eq, mem_inter_eq, and_trueₓ, mem_univ] at hx
+    simp only [← prod_mk_mem_set_prod_eq, ← mem_inter_eq, ← and_trueₓ, ← mem_univ] at hx
     rw [Z.coord_change_comp, Z.coord_change_self]
     · exact hx.2
       
-    · simp [hx]
+    · simp [← hx]
       
   open_source := (IsOpen.inter (Z.is_open_base_set i) (Z.is_open_base_set j)).Prod is_open_univ
   open_target := (IsOpen.inter (Z.is_open_base_set i) (Z.is_open_base_set j)).Prod is_open_univ
   continuous_to_fun := ContinuousOn.prod continuous_fst.ContinuousOn (Z.coord_change_continuous i j)
   continuous_inv_fun := by
-    simpa [inter_comm] using ContinuousOn.prod continuous_fst.continuous_on (Z.coord_change_continuous j i)
+    simpa [← inter_comm] using ContinuousOn.prod continuous_fst.continuous_on (Z.coord_change_continuous j i)
 
 @[simp, mfld_simps]
 theorem mem_triv_change_source (i j : ι) (p : B × F) :
@@ -940,9 +971,9 @@ def localTrivAsLocalEquiv (i : ι) : LocalEquiv Z.TotalSpace (B × F) where
   invFun := fun p => ⟨p.1, Z.coordChange i (Z.indexAt p.1) p.1 p.2⟩
   toFun := fun p => ⟨p.1, Z.coordChange (Z.indexAt p.1) i p.1 p.2⟩
   map_source' := fun p hp => by
-    simpa only [Set.mem_preimage, and_trueₓ, Set.mem_univ, Set.prod_mk_mem_set_prod_eq] using hp
+    simpa only [← Set.mem_preimage, ← and_trueₓ, ← Set.mem_univ, ← Set.prod_mk_mem_set_prod_eq] using hp
   map_target' := fun p hp => by
-    simpa only [Set.mem_preimage, and_trueₓ, Set.mem_univ, Set.mem_prod] using hp
+    simpa only [← Set.mem_preimage, ← and_trueₓ, ← Set.mem_univ, ← Set.mem_prod] using hp
   left_inv' := by
     rintro ⟨x, v⟩ hx
     change x ∈ Z.base_set i at hx
@@ -950,15 +981,15 @@ def localTrivAsLocalEquiv (i : ι) : LocalEquiv Z.TotalSpace (B × F) where
     rw [Z.coord_change_comp, Z.coord_change_self]
     · exact Z.mem_base_set_at _
       
-    · simp only [hx, mem_inter_eq, and_selfₓ, mem_base_set_at]
+    · simp only [← hx, ← mem_inter_eq, ← and_selfₓ, ← mem_base_set_at]
       
   right_inv' := by
     rintro ⟨x, v⟩ hx
-    simp only [prod_mk_mem_set_prod_eq, and_trueₓ, mem_univ] at hx
+    simp only [← prod_mk_mem_set_prod_eq, ← and_trueₓ, ← mem_univ] at hx
     rw [Z.coord_change_comp, Z.coord_change_self]
     · exact hx
       
-    · simp only [hx, mem_inter_eq, and_selfₓ, mem_base_set_at]
+    · simp only [← hx, ← mem_inter_eq, ← and_selfₓ, ← mem_base_set_at]
       
 
 variable (i : ι)
@@ -970,7 +1001,7 @@ theorem mem_local_triv_as_local_equiv_source (p : Z.TotalSpace) :
 theorem mem_local_triv_as_local_equiv_target (p : B × F) : p ∈ (Z.localTrivAsLocalEquiv i).Target ↔ p.1 ∈ Z.BaseSet i :=
   by
   erw [mem_prod]
-  simp only [and_trueₓ, mem_univ]
+  simp only [← and_trueₓ, ← mem_univ]
 
 theorem local_triv_as_local_equiv_apply (p : Z.TotalSpace) :
     (Z.localTrivAsLocalEquiv i) p = ⟨p.1, Z.coordChange (Z.indexAt p.1) i p.1 p.2⟩ :=
@@ -981,14 +1012,14 @@ theorem local_triv_as_local_equiv_trans (i j : ι) :
     (Z.localTrivAsLocalEquiv i).symm.trans (Z.localTrivAsLocalEquiv j) ≈ (Z.trivChange i j).toLocalEquiv := by
   constructor
   · ext x
-    simp' only [mem_local_triv_as_local_equiv_target] with mfld_simps
+    simp' only [← mem_local_triv_as_local_equiv_target] with mfld_simps
     rfl
     
   · rintro ⟨x, v⟩ hx
-    simp only [triv_change, local_triv_as_local_equiv, LocalEquiv.symm, true_andₓ, Prod.mk.inj_iff,
-      prod_mk_mem_set_prod_eq, LocalEquiv.trans_source, mem_inter_eq, and_trueₓ, mem_preimage, proj, mem_univ,
-      LocalEquiv.coe_mk, eq_self_iff_true, LocalEquiv.coe_trans, total_space.proj] at hx⊢
-    simp only [Z.coord_change_comp, hx, mem_inter_eq, and_selfₓ, mem_base_set_at]
+    simp only [← triv_change, ← local_triv_as_local_equiv, ← LocalEquiv.symm, ← true_andₓ, ← Prod.mk.inj_iff, ←
+      prod_mk_mem_set_prod_eq, ← LocalEquiv.trans_source, ← mem_inter_eq, ← and_trueₓ, ← mem_preimage, ← proj, ←
+      mem_univ, ← LocalEquiv.coe_mk, ← eq_self_iff_true, ← LocalEquiv.coe_trans, ← total_space.proj] at hx⊢
+    simp only [← Z.coord_change_comp, ← hx, ← mem_inter_eq, ← and_selfₓ, ← mem_base_set_at]
     
 
 variable (ι)
@@ -1002,11 +1033,11 @@ variable {ι}
 
 theorem open_source' (i : ι) : IsOpen (Z.localTrivAsLocalEquiv i).Source := by
   apply TopologicalSpace.GenerateOpen.basic
-  simp only [exists_prop, mem_Union, mem_singleton_iff]
+  simp only [← exists_prop, ← mem_Union, ← mem_singleton_iff]
   refine' ⟨i, Z.base_set i ×ˢ (univ : Set F), (Z.is_open_base_set i).Prod is_open_univ, _⟩
   ext p
-  simp only [local_triv_as_local_equiv_apply, prod_mk_mem_set_prod_eq, mem_inter_eq, and_selfₓ,
-    mem_local_triv_as_local_equiv_source, and_trueₓ, mem_univ, mem_preimage]
+  simp only [← local_triv_as_local_equiv_apply, ← prod_mk_mem_set_prod_eq, ← mem_inter_eq, ← and_selfₓ, ←
+    mem_local_triv_as_local_equiv_source, ← and_trueₓ, ← mem_univ, ← mem_preimage]
 
 open TopologicalFiberBundle
 
@@ -1026,16 +1057,16 @@ def localTriv (i : ι) : Trivialization F Z.proj where
     rw [continuous_on_open_iff (Z.open_source' i)]
     intro s s_open
     apply TopologicalSpace.GenerateOpen.basic
-    simp only [exists_prop, mem_Union, mem_singleton_iff]
+    simp only [← exists_prop, ← mem_Union, ← mem_singleton_iff]
     exact ⟨i, s, s_open, rfl⟩
   continuous_inv_fun := by
     apply continuous_on_open_of_generate_from ((Z.is_open_base_set i).Prod is_open_univ)
     intro t ht
-    simp only [exists_prop, mem_Union, mem_singleton_iff] at ht
+    simp only [← exists_prop, ← mem_Union, ← mem_singleton_iff] at ht
     obtain ⟨j, s, s_open, ts⟩ :
       ∃ j s, IsOpen s ∧ t = (local_triv_as_local_equiv Z j).Source ∩ local_triv_as_local_equiv Z j ⁻¹' s := ht
     rw [ts]
-    simp only [LocalEquiv.right_inv, preimage_inter, LocalEquiv.left_inv]
+    simp only [← LocalEquiv.right_inv, ← preimage_inter, ← LocalEquiv.left_inv]
     let e := Z.local_triv_as_local_equiv i
     let e' := Z.local_triv_as_local_equiv j
     let f := e.symm.trans e'
@@ -1043,7 +1074,7 @@ def localTriv (i : ι) : Trivialization F Z.proj where
       rw [(Z.local_triv_as_local_equiv_trans i j).source_inter_preimage_eq]
       exact (continuous_on_open_iff (Z.triv_change i j).open_source).1 (Z.triv_change i j).ContinuousOn _ s_open
     convert this using 1
-    dsimp' [LocalEquiv.trans_source]
+    dsimp' [← LocalEquiv.trans_source]
     rw [← preimage_comp, inter_assoc]
     rfl
   toLocalEquiv := Z.localTrivAsLocalEquiv i
@@ -1078,12 +1109,12 @@ theorem continuous_const_section (v : F) (h : ∀ i j, ∀, ∀ x ∈ Z.BaseSet 
   apply continuous_iff_continuous_at.2 fun x => _
   have A : Z.base_set (Z.index_at x) ∈ 𝓝 x := IsOpen.mem_nhds (Z.is_open_base_set (Z.index_at x)) (Z.mem_base_set_at x)
   apply ((Z.local_triv_at x).toLocalHomeomorph.continuous_at_iff_continuous_at_comp_left _).2
-  · simp' only [(· ∘ ·)] with mfld_simps
+  · simp' only [← (· ∘ ·)] with mfld_simps
     apply continuous_at_id.prod
     have : ContinuousOn (fun y : B => v) (Z.base_set (Z.index_at x)) := continuous_on_const
     apply (this.congr _).ContinuousAt A
     intro y hy
-    simp' only [h, hy, mem_base_set_at] with mfld_simps
+    simp' only [← h, ← hy, ← mem_base_set_at] with mfld_simps
     
   · exact A
     
@@ -1113,7 +1144,21 @@ theorem local_triv_apply (p : Z.TotalSpace) : (Z.localTriv i) p = ⟨p.1, Z.coor
   rfl
 
 @[simp, mfld_simps]
+theorem local_triv_at_apply (p : Z.TotalSpace) : (Z.localTrivAt p.1) p = ⟨p.1, p.2⟩ := by
+  rw [local_triv_at, local_triv_apply, coord_change_self]
+  exact Z.mem_base_set_at p.1
+
+@[simp, mfld_simps]
+theorem local_triv_at_apply_mk (b : B) (a : F) : (Z.localTrivAt b) ⟨b, a⟩ = ⟨b, a⟩ :=
+  Z.local_triv_at_apply _
+
+@[simp, mfld_simps]
 theorem mem_local_triv_source (p : Z.TotalSpace) : p ∈ (Z.localTriv i).Source ↔ p.1 ∈ (Z.localTriv i).BaseSet :=
+  Iff.rfl
+
+@[simp, mfld_simps]
+theorem mem_local_triv_at_source (p : Z.TotalSpace) (b : B) :
+    p ∈ (Z.localTrivAt b).Source ↔ p.1 ∈ (Z.localTrivAt b).BaseSet :=
   Iff.rfl
 
 @[simp, mfld_simps]
@@ -1121,14 +1166,13 @@ theorem mem_local_triv_target (p : B × F) : p ∈ (Z.localTriv i).Target ↔ p.
   Trivialization.mem_target _
 
 @[simp, mfld_simps]
-theorem local_triv_symm_fst (p : B × F) :
-    (Z.localTriv i).toLocalHomeomorph.symm p = ⟨p.1, Z.coordChange i (Z.indexAt p.1) p.1 p.2⟩ :=
-  rfl
+theorem mem_local_triv_at_target (p : B × F) (b : B) : p ∈ (Z.localTrivAt b).Target ↔ p.1 ∈ (Z.localTrivAt b).BaseSet :=
+  Trivialization.mem_target _
 
 @[simp, mfld_simps]
-theorem local_triv_at_apply (b : B) (a : F) : (Z.localTrivAt b) ⟨b, a⟩ = ⟨b, a⟩ := by
-  rw [local_triv_at, local_triv_apply, coord_change_self]
-  exact Z.mem_base_set_at b
+theorem local_triv_symm_apply (p : B × F) :
+    (Z.localTriv i).toLocalHomeomorph.symm p = ⟨p.1, Z.coordChange i (Z.indexAt p.1) p.1 p.2⟩ :=
+  rfl
 
 @[simp, mfld_simps]
 theorem mem_local_triv_at_base_set (b : B) : b ∈ (Z.localTrivAt b).BaseSet := by
@@ -1140,13 +1184,13 @@ theorem mem_local_triv_at_base_set (b : B) : b ∈ (Z.localTrivAt b).BaseSet := 
 theorem continuous_total_space_mk (b : B) : Continuous (totalSpaceMk b : Z.Fiber b → Bundle.TotalSpace Z.Fiber) := by
   rw [continuous_iff_le_induced, TopologicalFiberBundleCore.toTopologicalSpace]
   apply le_induced_generate_from
-  simp only [total_space_mk, mem_Union, mem_singleton_iff, local_triv_as_local_equiv_source,
+  simp only [← total_space_mk, ← mem_Union, ← mem_singleton_iff, ← local_triv_as_local_equiv_source, ←
     local_triv_as_local_equiv_coe]
   rintro s ⟨i, t, ht, rfl⟩
   rw [← (Z.local_triv i).source_inter_preimage_target_inter t, preimage_inter, ← preimage_comp,
     trivialization.source_eq]
   apply IsOpen.inter
-  · simp only [total_space.proj, proj, ← preimage_comp]
+  · simp only [← total_space.proj, ← proj, preimage_comp]
     by_cases' b ∈ (Z.local_triv i).BaseSet
     · rw [preimage_const_of_mem h]
       exact is_open_univ
@@ -1155,7 +1199,7 @@ theorem continuous_total_space_mk (b : B) : Continuous (totalSpaceMk b : Z.Fiber
       exact is_open_empty
       
     
-  · simp only [Function.comp, local_triv_apply]
+  · simp only [← Function.comp, ← local_triv_apply]
     rw [preimage_inter, preimage_comp]
     by_cases' b ∈ Z.base_set i
     · have hc : Continuous fun x : Z.fiber b => (Z.coord_change (Z.index_at b) i b) x :=
@@ -1174,7 +1218,7 @@ variable (F) {Z : Type _} [TopologicalSpace B] [TopologicalSpace F] {proj : Z �
 
 open TopologicalFiberBundle
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas)
 /-- This structure permits to define a fiber bundle when trivializations are given as local
 equivalences but there is not yet a topology on the total space. The total space is hence given a
 topology in such a way that there is a fiber bundle structure for which the local equivalences
@@ -1234,10 +1278,10 @@ def trivializationOfMemPretrivializationAtlas (he : e ∈ a.PretrivializationAtl
       rw [is_open_coinduced, is_open_induced_iff]
       obtain ⟨u, hu1, hu2⟩ := continuous_on_iff'.mp (a.continuous_triv_change _ he _ he') s hs
       have hu3 := congr_arg (fun s => (fun x : e'.target => (x : B × F)) ⁻¹' s) hu2
-      simp only [Subtype.coe_preimage_self, preimage_inter, univ_inter] at hu3
+      simp only [← Subtype.coe_preimage_self, ← preimage_inter, ← univ_inter] at hu3
       refine'
         ⟨u ∩ e'.to_local_equiv.target ∩ e'.to_local_equiv.symm ⁻¹' e.source, _, by
-          simp only [preimage_inter, inter_univ, Subtype.coe_preimage_self, hu3.symm]
+          simp only [← preimage_inter, ← inter_univ, ← Subtype.coe_preimage_self, ← hu3.symm]
           rfl⟩
       rw [inter_assoc]
       exact hu1.inter (a.is_open_target_of_mem_pretrivialization_atlas_inter e e' he'),
@@ -1249,6 +1293,34 @@ theorem is_topological_fiber_bundle : @IsTopologicalFiberBundle B F Z _ _ a.tota
 theorem continuous_proj : @Continuous _ _ a.totalSpaceTopology _ proj := by
   let this := a.total_space_topology
   exact a.is_topological_fiber_bundle.continuous_proj
+
+/-- For a fiber bundle `Z` over `B` constructed using the `topological_fiber_prebundle` mechanism,
+continuity of a function `Z → X` on an open set `s` can be checked by precomposing at each point
+with the pretrivialization used for the construction at that point. -/
+theorem continuous_on_of_comp_right {X : Type _} [TopologicalSpace X] {f : Z → X} {s : Set B} (hs : IsOpen s)
+    (hf :
+      ∀,
+        ∀ b ∈ s,
+          ∀,
+            ContinuousOn (f ∘ (a.pretrivializationAt b).toLocalEquiv.symm)
+              ((s ∩ (a.pretrivializationAt b).BaseSet) ×ˢ (Set.Univ : Set F))) :
+    @ContinuousOn _ _ a.totalSpaceTopology _ f (proj ⁻¹' s) := by
+  let this := a.total_space_topology
+  intro z hz
+  let e : trivialization F proj :=
+    a.trivialization_of_mem_pretrivialization_atlas (a.pretrivialization_mem_atlas (proj z))
+  refine' (e.continuous_at_of_comp_right _ ((hf (proj z) hz).ContinuousAt (IsOpen.mem_nhds _ _))).ContinuousWithinAt
+  · exact a.mem_base_pretrivialization_at (proj z)
+    
+  · exact (hs.inter (a.pretrivialization_at (proj z)).open_base_set).Prod is_open_univ
+    
+  refine' ⟨_, mem_univ _⟩
+  rw [e.coe_fst]
+  · exact ⟨hz, a.mem_base_pretrivialization_at (proj z)⟩
+    
+  · rw [e.mem_source]
+    exact a.mem_base_pretrivialization_at (proj z)
+    
 
 end TopologicalFiberPrebundle
 

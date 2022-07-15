@@ -67,8 +67,8 @@ structure Comma (L : A ⥤ T) (R : B ⥤ T) : Type max u₁ u₂ v₃ where
   Hom : L.obj left ⟶ R.obj right
 
 -- Satisfying the inhabited linter
-instance Comma.inhabited [Inhabited T] : Inhabited (Comma (𝟭 T) (𝟭 T)) where
-  default := { left := default, right := default, Hom := 𝟙 default }
+instance Comma.inhabited [Inhabited T] :
+    Inhabited (Comma (𝟭 T) (𝟭 T)) where default := { left := default, right := default, Hom := 𝟙 default }
 
 variable {L : A ⥤ T} {R : B ⥤ T}
 
@@ -143,8 +143,7 @@ def snd : Comma L R ⥤ B where
     to `T`, where the components are given by the morphism that constitutes an object of the comma
     category. -/
 @[simps]
-def natTrans : fst L R ⋙ L ⟶ snd L R ⋙ R where
-  app := fun X => X.Hom
+def natTrans : fst L R ⋙ L ⟶ snd L R ⋙ R where app := fun X => X.Hom
 
 @[simp]
 theorem eq_to_hom_left (X Y : Comma L R) (H : X = Y) :
@@ -258,7 +257,7 @@ def post (L : A ⥤ T) (R : B ⥤ T) (F : T ⥤ C) : Comma L R ⥤ Comma (L ⋙ 
   map := fun X Y f =>
     { left := f.left, right := f.right,
       w' := by
-        simp only [functor.comp_map, ← F.map_comp, f.w] }
+        simp only [← functor.comp_map, F.map_comp, ← f.w] }
 
 end
 

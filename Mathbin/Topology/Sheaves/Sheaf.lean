@@ -5,7 +5,7 @@ Authors: Scott Morrison
 -/
 import Mathbin.Topology.Sheaves.SheafCondition.EqualizerProducts
 import Mathbin.CategoryTheory.FullSubcategory
-import Mathbin.CategoryTheory.Limits.Punit
+import Mathbin.CategoryTheory.Limits.Unit
 
 /-!
 # Sheaves
@@ -38,7 +38,7 @@ for those `V : opens X` such that `V ≤ U i` for some `i`.
 -/
 
 
-universe v u
+universe w v u
 
 noncomputable section
 
@@ -54,9 +54,9 @@ open TopologicalSpace.Opens
 
 namespace Top
 
-variable {C : Type u} [Category.{v} C] [HasProducts C]
+variable {C : Type u} [Category.{v} C] [HasProducts.{v} C]
 
-variable {X : Top.{v}} (F : Presheaf C X) {ι : Type v} (U : ι → Opens X)
+variable {X : Top.{w}} (F : Presheaf C X) {ι : Type v} (U : ι → Opens X)
 
 namespace Presheaf
 
@@ -67,12 +67,12 @@ open SheafConditionEqualizerProducts
 is the equalizer of the two morphisms
 `∏ F.obj (U i) ⟶ ∏ F.obj (U i) ⊓ (U j)`.
 -/
-def IsSheaf (F : Presheaf C X) : Prop :=
+def IsSheaf (F : Presheaf.{w, v, u} C X) : Prop :=
   ∀ ⦃ι : Type v⦄ U : ι → Opens X, Nonempty (IsLimit (SheafConditionEqualizerProducts.fork F U))
 
-/-- The presheaf valued in `punit` over any topological space is a sheaf.
+/-- The presheaf valued in `unit` over any topological space is a sheaf.
 -/
-theorem is_sheaf_punit (F : Presheaf (CategoryTheory.Discrete PUnit) X) : F.IsSheaf := fun ι U => ⟨punitConeIsLimit⟩
+theorem is_sheaf_unit (F : Presheaf (CategoryTheory.Discrete Unit) X) : F.IsSheaf := fun ι U => ⟨punitConeIsLimit⟩
 
 /-- Transfer the sheaf condition across an isomorphism of presheaves.
 -/
@@ -90,12 +90,12 @@ variable (C X)
 /-- A `sheaf C X` is a presheaf of objects from `C` over a (bundled) topological space `X`,
 satisfying the sheaf condition.
 -/
-def Sheaf : Type max u v :=
+def Sheaf : Type max u v w :=
   { F : Presheaf C X // F.IsSheaf }deriving Category
 
 -- Let's construct a trivial example, to keep the inhabited linter happy.
 instance sheafInhabited : Inhabited (Sheaf (CategoryTheory.Discrete PUnit) X) :=
-  ⟨⟨Functor.star _, Presheaf.is_sheaf_punit _⟩⟩
+  ⟨⟨Functor.star _, Presheaf.is_sheaf_unit _⟩⟩
 
 namespace Sheaf
 

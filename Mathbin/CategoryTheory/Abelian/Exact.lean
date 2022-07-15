@@ -106,7 +106,7 @@ theorem exact_iff' {cg : KernelFork g} (hg : IsLimit cg) {cf : CokernelCofork f}
     refine' fun h => ⟨h.1, _⟩
     apply zero_of_epi_comp (is_limit.cone_point_unique_up_to_iso hg (limit.is_limit _)).Hom
     apply zero_of_comp_mono (is_colimit.cocone_point_unique_up_to_iso (colimit.is_colimit _) hf).Hom
-    simp [h.2]
+    simp [← h.2]
     
 
 theorem exact_tfae :
@@ -121,10 +121,25 @@ theorem exact_tfae :
 
 theorem IsEquivalence.exact_iff {D : Type u₁} [Category.{v₁} D] [Abelian D] (F : C ⥤ D) [IsEquivalence F] :
     Exact (F.map f) (F.map g) ↔ Exact f g := by
-  simp only [exact_iff, ← F.map_eq_zero_iff, F.map_comp, category.assoc, ← kernel_comparison_comp_ι g F, ←
+  simp only [← exact_iff, F.map_eq_zero_iff, ← F.map_comp, ← category.assoc, kernel_comparison_comp_ι g F,
     π_comp_cokernel_comparison f F]
   rw [is_iso.comp_left_eq_zero (kernel_comparison g F), ← category.assoc,
     is_iso.comp_right_eq_zero _ (cokernel_comparison f F)]
+
+/-- The dual result is true even in non-abelian categories, see
+    `category_theory.exact_epi_comp_iff`. -/
+theorem exact_epi_comp_iff {W : C} (h : W ⟶ X) [Epi h] : Exact (h ≫ f) g ↔ Exact f g := by
+  refine' ⟨fun hfg => _, fun h => exact_epi_comp h⟩
+  let hc :=
+    is_cokernel_of_comp _ _ (colimit.is_colimit (parallel_pair (h ≫ f) 0))
+      (by
+        rw [← cancel_epi h, ← category.assoc, cokernel_cofork.condition, comp_zero])
+      rfl
+  refine' (exact_iff' _ _ (limit.is_limit _) hc).2 ⟨_, ((exact_iff _ _).1 hfg).2⟩
+  exact
+    zero_of_epi_comp h
+      (by
+        rw [← hfg.1, category.assoc])
 
 /-- If `(f, g)` is exact, then `images.image.ι f` is a kernel of `g`. -/
 def isLimitImage (h : Exact f g) :
@@ -217,13 +232,13 @@ def isLimitOfExactOfMono [Mono f] (h : Exact f g) : IsLimit (KernelFork.ofι _ h
 theorem exact_of_is_cokernel (w : f ≫ g = 0) (h : IsColimit (CokernelCofork.ofπ _ w)) : Exact f g := by
   refine' (exact_iff _ _).2 ⟨w, _⟩
   have := h.fac (cokernel_cofork.of_π _ (cokernel.condition f)) walking_parallel_pair.one
-  simp only [cofork.of_π_ι_app] at this
+  simp only [← cofork.of_π_ι_app] at this
   rw [← this, ← category.assoc, kernel.condition, zero_comp]
 
 theorem exact_of_is_kernel (w : f ≫ g = 0) (h : IsLimit (KernelFork.ofι _ w)) : Exact f g := by
   refine' (exact_iff _ _).2 ⟨w, _⟩
   have := h.fac (kernel_fork.of_ι _ (kernel.condition g)) walking_parallel_pair.zero
-  simp only [fork.of_ι_π_app] at this
+  simp only [← fork.of_ι_π_app] at this
   rw [← this, category.assoc, cokernel.condition, comp_zero]
 
 section
@@ -260,7 +275,7 @@ theorem tfae_epi : Tfae [Epi f, cokernel.π f = 0, Exact f (0 : Y ⟶ Z)] := by
     exact
       ⟨by
         simp , by
-        simp [cokernel.π_of_epi]⟩
+        simp [← cokernel.π_of_epi]⟩
     
   tfae_have 2 → 1
   · exact epi_of_cokernel_π_eq_zero _
@@ -280,9 +295,9 @@ theorem Exact.op (h : Exact f g) : Exact g.op f.op := by
   rw [exact_iff]
   refine'
     ⟨by
-      simp [← op_comp, h.w], Quiver.Hom.unop_inj _⟩
-  simp only [unop_comp, cokernel.π_op, eq_to_hom_refl, kernel.ι_op, category.id_comp, category.assoc,
-    kernel_comp_cokernel_assoc _ _ h, zero_comp, comp_zero, unop_zero]
+      simp [op_comp, ← h.w], Quiver.Hom.unop_inj _⟩
+  simp only [← unop_comp, ← cokernel.π_op, ← eq_to_hom_refl, ← kernel.ι_op, ← category.id_comp, ← category.assoc, ←
+    kernel_comp_cokernel_assoc _ _ h, ← zero_comp, ← comp_zero, ← unop_zero]
 
 theorem Exact.op_iff : Exact g.op f.op ↔ Exact f g :=
   ⟨fun e => by
@@ -306,18 +321,18 @@ namespace Functor
 variable {D : Type u₂} [Category.{v₂} D] [Abelian D]
 
 instance (priority := 100) reflectsExactSequencesOfPreservesZeroMorphismsOfFaithful (F : C ⥤ D)
-    [PreservesZeroMorphisms F] [Faithful F] : ReflectsExactSequences F where
-  reflects := fun X Y Z f g hfg => by
+    [PreservesZeroMorphisms F] [Faithful F] :
+    ReflectsExactSequences F where reflects := fun X Y Z f g hfg => by
     rw [abelian.exact_iff, ← F.map_comp, F.map_eq_zero_iff] at hfg
     refine' (abelian.exact_iff _ _).2 ⟨hfg.1, F.zero_of_map_zero _ _⟩
     obtain ⟨k, hk⟩ :=
       kernel.lift' (F.map g) (F.map (kernel.ι g))
         (by
-          simp only [← F.map_comp, kernel.condition, CategoryTheory.Functor.map_zero])
+          simp only [F.map_comp, ← kernel.condition, ← CategoryTheory.Functor.map_zero])
     obtain ⟨l, hl⟩ :=
       cokernel.desc' (F.map f) (F.map (cokernel.π f))
         (by
-          simp only [← F.map_comp, cokernel.condition, CategoryTheory.Functor.map_zero])
+          simp only [F.map_comp, ← cokernel.condition, ← CategoryTheory.Functor.map_zero])
     rw [F.map_comp, ← hk, ← hl, category.assoc, reassoc_of hfg.2, zero_comp, comp_zero]
 
 end Functor

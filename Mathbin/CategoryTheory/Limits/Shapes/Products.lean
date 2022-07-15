@@ -34,7 +34,7 @@ general limits can be used.
 
 noncomputable section
 
-universe w v u u₂
+universe w v v₂ u u₂
 
 open CategoryTheory
 
@@ -184,7 +184,7 @@ abbrev Sigma.mapIso {f g : β → C} [HasCoproductsOfShape β C] (p : ∀ b, f b
 
 section Comparison
 
-variable {D : Type u₂} [Category.{v} D] (G : C ⥤ D)
+variable {D : Type u₂} [Category.{v₂} D] (G : C ⥤ D)
 
 variable (f : β → C)
 
@@ -198,13 +198,13 @@ theorem pi_comparison_comp_π [HasProduct f] [HasProduct fun b => G.obj (f b)] (
     piComparison G f ≫ Pi.π _ b = G.map (Pi.π f b) :=
   limit.lift_π _ (Discrete.mk b)
 
--- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases
+-- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]
 @[simp, reassoc]
 theorem map_lift_pi_comparison [HasProduct f] [HasProduct fun b => G.obj (f b)] (P : C) (g : ∀ j, P ⟶ f j) :
     G.map (Pi.lift g) ≫ piComparison G f = Pi.lift fun j => G.map (g j) := by
   ext
-  "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases"
-  simp [← G.map_comp]
+  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]"
+  simp [G.map_comp]
 
 /-- The comparison morphism for the coproduct of `f`. This is an iso iff `G` preserves the coproduct
 of `f`, see `preserves_coproduct.of_iso_comparison`. -/
@@ -216,13 +216,13 @@ theorem ι_comp_sigma_comparison [HasCoproduct f] [HasCoproduct fun b => G.obj (
     Sigma.ι _ b ≫ sigmaComparison G f = G.map (Sigma.ι f b) :=
   colimit.ι_desc _ (Discrete.mk b)
 
--- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases
+-- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]
 @[simp, reassoc]
 theorem sigma_comparison_map_desc [HasCoproduct f] [HasCoproduct fun b => G.obj (f b)] (P : C) (g : ∀ j, f j ⟶ P) :
     sigmaComparison G f ≫ G.map (Sigma.desc g) = Sigma.desc fun j => G.map (g j) := by
   ext
-  "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases"
-  simp [← G.map_comp]
+  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]"
+  simp [G.map_comp]
 
 end Comparison
 
@@ -230,19 +230,25 @@ variable (C)
 
 /-- An abbreviation for `Π J, has_limits_of_shape (discrete J) C` -/
 abbrev HasProducts :=
-  ∀ J : Type v, HasLimitsOfShape (Discrete J) C
+  ∀ J : Type w, HasLimitsOfShape (Discrete J) C
 
 /-- An abbreviation for `Π J, has_colimits_of_shape (discrete J) C` -/
 abbrev HasCoproducts :=
-  ∀ J : Type v, HasColimitsOfShape (Discrete J) C
+  ∀ J : Type w, HasColimitsOfShape (Discrete J) C
 
 variable {C}
 
-theorem has_products_of_limit_fans (lf : ∀ {J : Type v} f : J → C, Fan f)
-    (lf_is_limit : ∀ {J : Type v} f : J → C, IsLimit (lf f)) : HasProducts C := fun J =>
+theorem has_smallest_products_of_has_products [HasProducts.{w} C] : HasProducts.{0} C := fun J =>
+  has_limits_of_shape_of_equivalence (Discrete.equivalence Equivₓ.ulift : Discrete (ULift.{w} J) ≌ _)
+
+theorem has_smallest_coproducts_of_has_coproducts [HasCoproducts.{w} C] : HasCoproducts.{0} C := fun J =>
+  has_colimits_of_shape_of_equivalence (Discrete.equivalence Equivₓ.ulift : Discrete (ULift.{w} J) ≌ _)
+
+theorem has_products_of_limit_fans (lf : ∀ {J : Type w} f : J → C, Fan f)
+    (lf_is_limit : ∀ {J : Type w} f : J → C, IsLimit (lf f)) : HasProducts.{w} C := fun J : Type w =>
   { HasLimit := fun F =>
       HasLimit.mk
-        ⟨(Cones.postcompose Discrete.natIsoFunctor.inv).obj (lf fun j => F.obj (Discrete.mk j)),
+        ⟨(Cones.postcompose Discrete.natIsoFunctor.inv).obj (lf fun j => F.obj ⟨j⟩),
           (IsLimit.postcomposeInvEquiv _ _).symm (lf_is_limit _)⟩ }
 
 /-!
@@ -270,7 +276,7 @@ def limitConeOfUnique : LimitCone (Discrete.functor f) where
       fac' := fun s j => by
         have w := (s.π.naturality (eq_to_hom (Unique.default_eq _))).symm
         dsimp'  at w
-        simpa [eq_to_hom_map] using w,
+        simpa [← eq_to_hom_map] using w,
       uniq' := fun s m w => by
         specialize w default
         dsimp'  at w
@@ -284,7 +290,7 @@ instance (priority := 100) has_product_unique : HasProduct f :=
 def productUniqueIso : ∏ f ≅ f default :=
   IsLimit.conePointUniqueUpToIso (limit.isLimit _) (limitConeOfUnique f).IsLimit
 
--- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases
+-- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]
 /-- The colimit cocone for the coproduct over an index type with exactly one term. -/
 @[simps]
 def colimitCoconeOfUnique : ColimitCocone (Discrete.functor f) where
@@ -294,7 +300,7 @@ def colimitCoconeOfUnique : ColimitCocone (Discrete.functor f) where
         { app := fun j =>
             eqToHom
               (by
-                "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases"
+                trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]"
                 dsimp'
                 congr) } }
   IsColimit :=
@@ -302,7 +308,7 @@ def colimitCoconeOfUnique : ColimitCocone (Discrete.functor f) where
       fac' := fun s j => by
         have w := s.ι.naturality (eq_to_hom (Unique.eq_default _))
         dsimp'  at w
-        simpa [eq_to_hom_map] using w,
+        simpa [← eq_to_hom_map] using w,
       uniq' := fun s m w => by
         specialize w default
         dsimp'  at w
@@ -332,15 +338,15 @@ def Pi.reindex : piObj (f ∘ ε) ≅ piObj f :=
 
 @[simp, reassoc]
 theorem Pi.reindex_hom_π (b : β) : (Pi.reindex ε f).Hom ≫ Pi.π f (ε b) = Pi.π (f ∘ ε) b := by
-  dsimp' [pi.reindex]
-  simp only [has_limit.iso_of_equivalence_hom_π, discrete.nat_iso_inv_app, equivalence.equivalence_mk'_counit,
-    discrete.equivalence_counit_iso, discrete.nat_iso_hom_app, eq_to_iso.hom, eq_to_hom_map]
+  dsimp' [← pi.reindex]
+  simp only [← has_limit.iso_of_equivalence_hom_π, ← discrete.nat_iso_inv_app, ← equivalence.equivalence_mk'_counit, ←
+    discrete.equivalence_counit_iso, ← discrete.nat_iso_hom_app, ← eq_to_iso.hom, ← eq_to_hom_map]
   dsimp'
-  simpa [eq_to_hom_map] using limit.w (discrete.functor (f ∘ ε)) (discrete.eq_to_hom' (ε.symm_apply_apply b))
+  simpa [← eq_to_hom_map] using limit.w (discrete.functor (f ∘ ε)) (discrete.eq_to_hom' (ε.symm_apply_apply b))
 
 @[simp, reassoc]
 theorem Pi.reindex_inv_π (b : β) : (Pi.reindex ε f).inv ≫ Pi.π (f ∘ ε) b = Pi.π f (ε b) := by
-  simp [iso.inv_comp_eq]
+  simp [← iso.inv_comp_eq]
 
 end
 
@@ -354,15 +360,16 @@ def Sigma.reindex : sigmaObj (f ∘ ε) ≅ sigmaObj f :=
 
 @[simp, reassoc]
 theorem Sigma.ι_reindex_hom (b : β) : Sigma.ι (f ∘ ε) b ≫ (Sigma.reindex ε f).Hom = Sigma.ι f (ε b) := by
-  dsimp' [sigma.reindex]
-  simp only [has_colimit.iso_of_equivalence_hom_π, equivalence.equivalence_mk'_unit, discrete.equivalence_unit_iso,
-    discrete.nat_iso_hom_app, eq_to_iso.hom, eq_to_hom_map, discrete.nat_iso_inv_app]
+  dsimp' [← sigma.reindex]
+  simp only [← has_colimit.iso_of_equivalence_hom_π, ← equivalence.equivalence_mk'_unit, ←
+    discrete.equivalence_unit_iso, ← discrete.nat_iso_hom_app, ← eq_to_iso.hom, ← eq_to_hom_map, ←
+    discrete.nat_iso_inv_app]
   dsimp'
-  simp [eq_to_hom_map, ← colimit.w (discrete.functor f) (discrete.eq_to_hom' (ε.apply_symm_apply (ε b)))]
+  simp [← eq_to_hom_map, colimit.w (discrete.functor f) (discrete.eq_to_hom' (ε.apply_symm_apply (ε b)))]
 
 @[simp, reassoc]
 theorem Sigma.ι_reindex_inv (b : β) : Sigma.ι f (ε b) ≫ (Sigma.reindex ε f).inv = Sigma.ι (f ∘ ε) b := by
-  simp [iso.comp_inv_eq]
+  simp [← iso.comp_inv_eq]
 
 end
 

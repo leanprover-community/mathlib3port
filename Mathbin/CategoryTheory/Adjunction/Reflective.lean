@@ -93,8 +93,8 @@ theorem mem_ess_image_of_unit_split_mono [Reflective i] {A : C} [SplitMono ((ofR
   exact mem_ess_image_of_unit_is_iso A
 
 /-- Composition of reflective functors. -/
-instance Reflective.comp (F : C ⥤ D) (G : D ⥤ E) [Fr : Reflective F] [Gr : Reflective G] : Reflective (F ⋙ G) where
-  to_faithful := Faithful.comp F G
+instance Reflective.comp (F : C ⥤ D) (G : D ⥤ E) [Fr : Reflective F] [Gr : Reflective G] :
+    Reflective (F ⋙ G) where to_faithful := Faithful.comp F G
 
 /-- (Implementation) Auxiliary definition for `unit_comp_partial_bijective`. -/
 def unitCompPartialBijectiveAux [Reflective i] (A : C) (B : D) :
@@ -105,7 +105,7 @@ def unitCompPartialBijectiveAux [Reflective i] (A : C) (B : D) :
 theorem unit_comp_partial_bijective_aux_symm_apply [Reflective i] {A : C} {B : D}
     (f : i.obj ((leftAdjoint i).obj A) ⟶ i.obj B) :
     (unitCompPartialBijectiveAux _ _).symm f = (ofRightAdjoint i).Unit.app A ≫ f := by
-  simp [unit_comp_partial_bijective_aux]
+  simp [← unit_comp_partial_bijective_aux]
 
 /-- If `i` has a reflector `L`, then the function `(i.obj (L.obj A) ⟶ B) → (A ⟶ B)` given by
 precomposing with `η.app A` is a bijection provided `B` is in the essential image of `i`.
@@ -129,7 +129,7 @@ def unitCompPartialBijective [Reflective i] (A : C) {B : C} (hB : B ∈ i.EssIma
 @[simp]
 theorem unit_comp_partial_bijective_symm_apply [Reflective i] (A : C) {B : C} (hB : B ∈ i.EssImage) f :
     (unitCompPartialBijective A hB).symm f = (ofRightAdjoint i).Unit.app A ≫ f := by
-  simp [unit_comp_partial_bijective, unit_comp_partial_bijective_aux_symm_apply]
+  simp [← unit_comp_partial_bijective, ← unit_comp_partial_bijective_aux_symm_apply]
 
 theorem unit_comp_partial_bijective_symm_natural [Reflective i] (A : C) {B B' : C} (h : B ⟶ B') (hB : B ∈ i.EssImage)
     (hB' : B' ∈ i.EssImage) (f : i.obj ((leftAdjoint i).obj A) ⟶ B) :
@@ -152,7 +152,7 @@ def equivEssImageOfReflective [Reflective i] : D ≌ i.EssImage where
       (by
         intro X Y f
         dsimp'
-        simp only [is_iso.eq_inv_comp, is_iso.comp_inv_eq, category.assoc]
+        simp only [← is_iso.eq_inv_comp, ← is_iso.comp_inv_eq, ← category.assoc]
         exact ((of_right_adjoint i).counit.naturality _).symm)
   counitIso :=
     NatIso.ofComponents
@@ -164,7 +164,7 @@ def equivEssImageOfReflective [Reflective i] : D ≌ i.EssImage where
       (by
         intro X Y f
         dsimp'
-        simp only [is_iso.eq_inv_comp, is_iso.comp_inv_eq, category.assoc]
+        simp only [← is_iso.eq_inv_comp, ← is_iso.comp_inv_eq, ← category.assoc]
         exact ((of_right_adjoint i).Unit.naturality f).symm)
 
 end CategoryTheory

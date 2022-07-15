@@ -62,7 +62,7 @@ theorem WithBot.add_eq_one_iff : ∀ {n m : WithBot ℕ}, n + m = 1 ↔ n = 0 �
     erw [WithBot.coe_eq_coe, WithBot.coe_eq_coe, WithBot.coe_eq_coe, WithBot.coe_eq_coe] <;> simp
   | some n, some (m + 1) => by
     erw [WithBot.coe_eq_coe, WithBot.coe_eq_coe, WithBot.coe_eq_coe, WithBot.coe_eq_coe, WithBot.coe_eq_coe] <;>
-      simp [Nat.add_succ, Nat.succ_inj', Nat.succ_ne_zero]
+      simp [← Nat.add_succ, ← Nat.succ_inj', ← Nat.succ_ne_zero]
 
 @[simp]
 theorem WithBot.coe_nonneg {n : ℕ} : 0 ≤ (n : WithBot ℕ) := by
@@ -76,7 +76,7 @@ theorem WithBot.lt_zero_iff (n : WithBot ℕ) : n < 0 ↔ n = ⊥ :=
     fun n =>
     iff_of_false
       (by
-        simp [WithBot.some_eq_coe])
+        simp [← WithBot.some_eq_coe])
       fun h => Option.noConfusion h
 
 theorem WithBot.one_le_iff_zero_lt {x : WithBot ℕ} : 1 ≤ x ↔ 0 < x := by

@@ -62,7 +62,7 @@ theorem bounded_below (coercive : IsCoercive B) : ∃ C, 0 < C ∧ ∀ v, C * �
     
   · have : v = 0 := by
       simpa using h
-    simp [this]
+    simp [← this]
     
 
 theorem antilipschitz (coercive : IsCoercive B) : ∃ C : ℝ≥0 , 0 < C ∧ AntilipschitzWith C B♯ := by

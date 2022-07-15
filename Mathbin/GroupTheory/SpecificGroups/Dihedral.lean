@@ -59,7 +59,7 @@ private def inv : DihedralGroup n → DihedralGroup n
 instance : Groupₓ (DihedralGroup n) where
   mul := mul
   mul_assoc := by
-    rintro (a | a) (b | b) (c | c) <;> simp only [mul] <;> ring
+    rintro (a | a) (b | b) (c | c) <;> simp only [← mul] <;> ring
   one := one
   one_mul := by
     rintro (a | a)
@@ -125,7 +125,8 @@ theorem card [Fact (0 < n)] : Fintype.card (DihedralGroup n) = 2 * n := by
 @[simp]
 theorem r_one_pow (k : ℕ) : (r 1 : DihedralGroup n) ^ k = r k := by
   induction' k with k IH
-  · rfl
+  · rw [Nat.cast_zeroₓ]
+    rfl
     
   · rw [pow_succₓ, IH, r_mul_r]
     congr 1

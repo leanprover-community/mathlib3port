@@ -166,16 +166,16 @@ theorem continuous_at_extend [RegularSpace γ] {b : β} {f : α → γ} (di : De
   set φ := di.extend f
   have := di.comap_nhds_ne_bot
   suffices ∀, ∀ V' ∈ 𝓝 (φ b), ∀, IsClosed V' → φ ⁻¹' V' ∈ 𝓝 b by
-    simpa [ContinuousAt, (closed_nhds_basis _).tendsto_right_iff]
+    simpa [← ContinuousAt, ← (closed_nhds_basis _).tendsto_right_iff]
   intro V' V'_in V'_closed
   set V₁ := { x | tendsto f (comap i <| 𝓝 x) (𝓝 <| φ x) }
   have V₁_in : V₁ ∈ 𝓝 b := by
     filter_upwards [hf]
     rintro x ⟨c, hc⟩
-    dsimp' [V₁, φ]
+    dsimp' [← V₁, ← φ]
     rwa [di.extend_eq_of_tendsto hc]
   obtain ⟨V₂, V₂_in, V₂_op, hV₂⟩ : ∃ V₂ ∈ 𝓝 b, IsOpen V₂ ∧ ∀, ∀ x ∈ i ⁻¹' V₂, ∀, f x ∈ V' := by
-    simpa [and_assoc] using
+    simpa [← and_assoc] using
       ((nhds_basis_opens' b).comap i).tendsto_left_iff.mp (mem_of_mem_nhds V₁_in : b ∈ V₁) V' V'_in
   suffices ∀, ∀ x ∈ V₁ ∩ V₂, ∀, φ x ∈ V' by
     filter_upwards [inter_mem V₁_in V₂_in] using this
@@ -195,7 +195,7 @@ theorem mk' (i : α → β) (c : Continuous i) (dense : ∀ x, x ∈ Closure (Ra
       (induced_iff_nhds_eq i).2 fun a =>
         le_antisymmₓ (tendsto_iff_comap.1 <| c.Tendsto _)
           (by
-            simpa [Filter.le_def] using H a),
+            simpa [← Filter.le_def] using H a),
     dense }
 
 end DenseInducing
@@ -244,11 +244,11 @@ protected theorem subtype (p : α → Prop) : DenseEmbedding (subtypeEmb p e) :=
       dense_iff_closure_eq.2 <| by
         ext ⟨x, hx⟩
         rw [image_eq_range] at hx
-        simpa [closure_subtype, ← range_comp, (· ∘ ·)] ,
+        simpa [← closure_subtype, range_comp, ← (· ∘ ·)] ,
     inj := (de.inj.comp Subtype.coe_injective).codRestrict _,
     induced :=
       (induced_iff_nhds_eq _).2 fun ⟨x, hx⟩ => by
-        simp [subtype_emb, nhds_subtype_eq_comap, de.to_inducing.nhds_eq_comap, comap_comap, (· ∘ ·)] }
+        simp [← subtype_emb, ← nhds_subtype_eq_comap, ← de.to_inducing.nhds_eq_comap, ← comap_comap, ← (· ∘ ·)] }
 
 theorem dense_image {s : Set α} : Dense (e '' s) ↔ Dense s :=
   de.to_dense_inducing.dense_image

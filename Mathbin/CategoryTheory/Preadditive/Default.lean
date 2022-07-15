@@ -107,7 +107,7 @@ instance InducedCategory.category : Preadditive.{v} (InducedCategory C F) where
 end InducedCategory
 
 instance (X : C) : AddCommGroupₓ (End X) := by
-  dsimp' [End]
+  dsimp' [← End]
   infer_instance
 
 instance (X : C) : Ringₓ (End X) :=
@@ -265,7 +265,7 @@ theorem kernel_fork_of_fork_of_ι {P : C} (ι : P ⟶ X) (w : ι ≫ f = ι ≫ 
     kernelForkOfFork (Fork.ofι ι w) =
       KernelFork.ofι ι
         (by
-          simp [w]) :=
+          simp [← w]) :=
   rfl
 
 /-- A kernel of `f - g` is an equalizer of `f` and `g`. -/
@@ -318,7 +318,7 @@ theorem cokernel_cofork_of_cofork_of_π {P : C} (π : Y ⟶ P) (w : f ≫ π = g
     cokernelCoforkOfCofork (Cofork.ofπ π w) =
       CokernelCofork.ofπ π
         (by
-          simp [w]) :=
+          simp [← w]) :=
   rfl
 
 /-- A cokernel of `f - g` is a coequalizer of `f` and `g`. -/

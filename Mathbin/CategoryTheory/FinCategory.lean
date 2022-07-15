@@ -6,6 +6,7 @@ Authors: Scott Morrison
 import Mathbin.Data.Fintype.Basic
 import Mathbin.CategoryTheory.DiscreteCategory
 import Mathbin.CategoryTheory.Opposites
+import Mathbin.CategoryTheory.Category.Ulift
 
 /-!
 # Finite categories
@@ -20,7 +21,7 @@ having to supply instances or delay with non-defeq conflicts between instances.
 -/
 
 
-universe v u
+universe w v u
 
 open Classical
 
@@ -45,8 +46,7 @@ class FinCategory (J : Type v) [SmallCategory J] where
 
 attribute [instance] fin_category.fintype_obj fin_category.fintype_hom
 
-instance finCategoryDiscreteOfFintype (J : Type v) [Fintype J] : FinCategory (Discrete J) :=
-  {  }
+instance finCategoryDiscreteOfFintype (J : Type v) [Fintype J] : FinCategory (Discrete J) where
 
 namespace FinCategory
 
@@ -96,8 +96,7 @@ noncomputable def asTypeEquivObjAsType : AsType α ≌ ObjAsType α :=
       dsimp'
       simp )
 
-noncomputable instance asTypeFinCategory : FinCategory (AsType α) :=
-  {  }
+noncomputable instance asTypeFinCategory : FinCategory (AsType α) where
 
 /-- The constructed category (`as_type α`) is indeed equivalent to `α`. -/
 noncomputable def equivAsType : AsType α ≌ α :=
@@ -112,6 +111,10 @@ open Opposite
 instance finCategoryOpposite {J : Type v} [SmallCategory J] [FinCategory J] : FinCategory Jᵒᵖ where
   fintypeObj := Fintype.ofEquiv _ equivToOpposite
   fintypeHom := fun j j' => Fintype.ofEquiv _ (opEquiv j j').symm
+
+/-- Applying `ulift` to morphisms and objects of a category preserves finiteness. -/
+instance finCategoryUlift {J : Type v} [SmallCategory J] [FinCategory J] :
+    FinCategory.{max w v} (UliftHom.{w, max w v} (ULift.{w, v} J)) where fintypeObj := ULift.fintype J
 
 end CategoryTheory
 

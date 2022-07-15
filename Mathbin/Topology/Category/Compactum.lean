@@ -98,8 +98,7 @@ def adj : free ⊣ forget :=
   Monad.adj _
 
 -- Basic instances
-instance : ConcreteCategory Compactum where
-  forget := forget
+instance : ConcreteCategory Compactum where forget := forget
 
 instance : CoeSort Compactum (Type _) :=
   ⟨forget.obj⟩
@@ -196,7 +195,7 @@ private theorem subset_cl {X : Compactum} (A : Set X) : A ⊆ Cl A := fun a ha =
   ⟨X.incl a, ha, by
     simp ⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (B C «expr ∈ » C0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (B C «expr ∈ » C0)
 private theorem cl_cl {X : Compactum} (A : Set X) : Cl (Cl A) ⊆ Cl A := by
   rintro _ ⟨F, hF, rfl⟩
   -- Notation to be used in this proof.
@@ -211,7 +210,7 @@ private theorem cl_cl {X : Compactum} (A : Set X) : Cl (Cl A) ⊆ Cl A := by
   have claim1 : ∀ B C _ : B ∈ C0 _ : C ∈ C0, B ∩ C ∈ C0 := by
     rintro B ⟨Q, hQ, rfl⟩ C ⟨R, hR, rfl⟩
     use Q ∩ R
-    simp only [and_trueₓ, eq_self_iff_true, Set.preimage_inter, Subtype.val_eq_coe]
+    simp only [← and_trueₓ, ← eq_self_iff_true, ← Set.preimage_inter, ← Subtype.val_eq_coe]
     exact inter_sets _ hQ hR
   -- All sets in C0 are nonempty.
   have claim2 : ∀, ∀ B ∈ C0, ∀, Set.Nonempty B := by
@@ -264,7 +263,7 @@ theorem is_closed_cl {X : Compactum} (A : Set X) : IsClosed (Cl A) := by
   intro F hF
   exact cl_cl _ ⟨F, hF, rfl⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0)
 theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤ 𝓝 x → X.str F = x := by
   -- Notation to be used in this proof.
   let fsu := Finset (Set (Ultrafilter X))
@@ -292,7 +291,7 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
     rintro S1 ⟨S1, hS1, rfl⟩ S2 ⟨S2, hS2, rfl⟩
     exact
       ⟨S1 ∩ S2, inter_mem hS1 hS2, by
-        simp [basic_inter]⟩
+        simp [← basic_inter]⟩
   -- For every S ∈ T0, the intersection AA ∩ S is nonempty.
   have claim4 : ∀, ∀ S ∈ T0, ∀, (AA ∩ S).Nonempty := by
     rintro S ⟨S, hS, rfl⟩
@@ -339,7 +338,7 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
       apply mem_of_superset (h1 (Or.inl rfl))
       rintro x ⟨rfl⟩
       exact hP
-    simp [← c1, c2]
+    simp [c1, ← c2]
   -- Finish...
   intro T hT
   refine' claim6 _ (finite_inter_mem (finite_inter_closure_has_finite_inter _) _ _)
@@ -423,7 +422,7 @@ def homOfContinuous {X Y : Compactum} (f : X → Y) (cont : Continuous f) : X �
       ext (F : Ultrafilter X)
       specialize cont (X.str F) F (le_nhds_of_str_eq F (X.str F) rfl)
       have := str_eq_of_le_nhds (Ultrafilter.map f F) _ cont
-      simpa only [← this, types_comp_apply, of_type_functor_map] }
+      simpa only [this, ← types_comp_apply, ← of_type_functor_map] }
 
 end Compactum
 
@@ -435,8 +434,7 @@ def compactumToCompHaus : Compactum ⥤ CompHaus where
 namespace compactumToCompHaus
 
 /-- The functor Compactum_to_CompHaus is full. -/
-def full : Full compactumToCompHaus.{u} where
-  preimage := fun X Y f => Compactum.homOfContinuous f.1 f.2
+def full : Full compactumToCompHaus.{u} where preimage := fun X Y f => Compactum.homOfContinuous f.1 f.2
 
 /-- The functor Compactum_to_CompHaus is faithful. -/
 theorem faithful : Faithful compactumToCompHaus :=

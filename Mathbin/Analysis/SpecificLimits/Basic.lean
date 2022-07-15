@@ -29,12 +29,11 @@ theorem tendsto_inverse_at_top_nhds_0_nat : Tendsto (fun n : ℕ => (n : ℝ)⁻
   tendsto_inv_at_top_zero.comp tendsto_coe_nat_at_top_at_top
 
 theorem tendsto_const_div_at_top_nhds_0_nat (C : ℝ) : Tendsto (fun n : ℕ => C / n) atTop (𝓝 0) := by
-  simpa only [mul_zero] using tendsto_const_nhds.mul tendsto_inverse_at_top_nhds_0_nat
+  simpa only [← mul_zero] using tendsto_const_nhds.mul tendsto_inverse_at_top_nhds_0_nat
 
 theorem Nnreal.tendsto_inverse_at_top_nhds_0_nat : Tendsto (fun n : ℕ => (n : ℝ≥0 )⁻¹) atTop (𝓝 0) := by
   rw [← Nnreal.tendsto_coe]
-  convert tendsto_inverse_at_top_nhds_0_nat
-  simp
+  exact tendsto_inverse_at_top_nhds_0_nat
 
 theorem Nnreal.tendsto_const_div_at_top_nhds_0_nat (C : ℝ≥0 ) : Tendsto (fun n : ℕ => C / n) atTop (𝓝 0) := by
   simpa using tendsto_const_nhds.mul Nnreal.tendsto_inverse_at_top_nhds_0_nat
@@ -64,7 +63,7 @@ theorem tendsto_pow_at_top_nhds_0_of_lt_1 {𝕜 : Type _} [LinearOrderedField �
   h₁.eq_or_lt.elim
     (fun this : 0 = r =>
       (tendsto_add_at_top_iff_nat 1).mp <| by
-        simp [pow_succₓ, ← this, tendsto_const_nhds])
+        simp [← pow_succₓ, this, ← tendsto_const_nhds])
     fun this : 0 < r =>
     have : Tendsto (fun n => (r⁻¹ ^ n)⁻¹) atTop (𝓝 0) :=
       tendsto_inv_at_top_zero.comp (tendsto_pow_at_top_at_top_of_one_lt <| one_lt_inv this h₂)
@@ -87,24 +86,24 @@ theorem geom_lt {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) {n : ℕ} (hn : 0 < n
   refine' (monotone_mul_left_of_nonneg hc).seq_pos_lt_seq_of_le_of_lt hn _ _ h
   · simp
     
-  · simp [pow_succₓ, mul_assoc, le_reflₓ]
+  · simp [← pow_succₓ, ← mul_assoc, ← le_reflₓ]
     
 
 theorem geom_le {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) (n : ℕ) (h : ∀, ∀ k < n, ∀, c * u k ≤ u (k + 1)) : c ^ n * u 0 ≤ u n :=
   by
-  refine' (monotone_mul_left_of_nonneg hc).seq_le_seq n _ _ h <;> simp [pow_succₓ, mul_assoc, le_reflₓ]
+  refine' (monotone_mul_left_of_nonneg hc).seq_le_seq n _ _ h <;> simp [← pow_succₓ, ← mul_assoc, ← le_reflₓ]
 
 theorem lt_geom {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) {n : ℕ} (hn : 0 < n) (h : ∀, ∀ k < n, ∀, u (k + 1) < c * u k) :
     u n < c ^ n * u 0 := by
   refine' (monotone_mul_left_of_nonneg hc).seq_pos_lt_seq_of_lt_of_le hn _ h _
   · simp
     
-  · simp [pow_succₓ, mul_assoc, le_reflₓ]
+  · simp [← pow_succₓ, ← mul_assoc, ← le_reflₓ]
     
 
 theorem le_geom {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) (n : ℕ) (h : ∀, ∀ k < n, ∀, u (k + 1) ≤ c * u k) : u n ≤ c ^ n * u 0 :=
   by
-  refine' (monotone_mul_left_of_nonneg hc).seq_le_seq n _ h _ <;> simp [pow_succₓ, mul_assoc, le_reflₓ]
+  refine' (monotone_mul_left_of_nonneg hc).seq_le_seq n _ h _ <;> simp [← pow_succₓ, ← mul_assoc, ← le_reflₓ]
 
 /-- If a sequence `v` of real numbers satisfies `k * v n ≤ v (n+1)` with `1 < k`,
 then it goes to +∞. -/
@@ -115,7 +114,7 @@ theorem tendsto_at_top_of_geom_le {v : ℕ → ℝ} {c : ℝ} (h₀ : 0 < v 0) (
 
 theorem Nnreal.tendsto_pow_at_top_nhds_0_of_lt_1 {r : ℝ≥0 } (hr : r < 1) : Tendsto (fun n : ℕ => r ^ n) atTop (𝓝 0) :=
   Nnreal.tendsto_coe.1 <| by
-    simp only [Nnreal.coe_pow, Nnreal.coe_zero, tendsto_pow_at_top_nhds_0_of_lt_1 r.coe_nonneg hr]
+    simp only [← Nnreal.coe_pow, ← Nnreal.coe_zero, ← tendsto_pow_at_top_nhds_0_of_lt_1 r.coe_nonneg hr]
 
 theorem Ennreal.tendsto_pow_at_top_nhds_0_of_lt_1 {r : ℝ≥0∞} (hr : r < 1) : Tendsto (fun n : ℕ => r ^ n) atTop (𝓝 0) :=
   by
@@ -134,7 +133,7 @@ theorem has_sum_geometric_of_lt_1 {r : ℝ} (h₁ : 0 ≤ r) (h₂ : r < 1) : Ha
   have : Tendsto (fun n => (r ^ n - 1) * (r - 1)⁻¹) atTop (𝓝 ((0 - 1) * (r - 1)⁻¹)) :=
     ((tendsto_pow_at_top_nhds_0_of_lt_1 h₁ h₂).sub tendsto_const_nhds).mul tendsto_const_nhds
   (has_sum_iff_tendsto_nat_of_nonneg (pow_nonneg h₁) _).mpr <| by
-    simp_all [neg_inv, geom_sum_eq, div_eq_mul_inv]
+    simp_all [← neg_inv, ← geom_sum_eq, ← div_eq_mul_inv]
 
 theorem summable_geometric_of_lt_1 {r : ℝ} (h₁ : 0 ≤ r) (h₂ : r < 1) : Summable fun n : ℕ => r ^ n :=
   ⟨_, has_sum_geometric_of_lt_1 h₁ h₂⟩
@@ -171,12 +170,12 @@ theorem tsum_geometric_inv_two_ge (n : ℕ) : (∑' i, ite (n ≤ i) ((2 : ℝ)�
   have A : Summable fun i : ℕ => ite (n ≤ i) ((2⁻¹ : ℝ) ^ i) 0 := by
     apply summable_of_nonneg_of_le _ _ summable_geometric_two <;>
       · intro i
-        by_cases' hi : n ≤ i <;> simp [hi]
+        by_cases' hi : n ≤ i <;> simp [← hi]
         
   have B : ((Finset.range n).Sum fun i : ℕ => ite (n ≤ i) ((2⁻¹ : ℝ) ^ i) 0) = 0 :=
     Finset.sum_eq_zero fun i hi => ite_eq_right_iff.2 fun h => (lt_irreflₓ _ ((Finset.mem_range.1 hi).trans_le h)).elim
-  simp only [← sum_add_tsum_nat_add n A, B, if_true, zero_addₓ, zero_le', le_add_iff_nonneg_left, pow_addₓ,
-    tsum_mul_right, tsum_geometric_inv_two]
+  simp only [sum_add_tsum_nat_add n A, ← B, ← if_true, ← zero_addₓ, ← zero_le', ← le_add_iff_nonneg_left, ← pow_addₓ, ←
+    tsum_mul_right, ← tsum_geometric_inv_two]
 
 theorem has_sum_geometric_two' (a : ℝ) : HasSum (fun n : ℕ => a / 2 / 2 ^ n) a := by
   convert HasSum.mul_left (a / 2) (has_sum_geometric_of_lt_1 (le_of_ltₓ one_half_pos) one_half_lt_one)
@@ -257,13 +256,13 @@ omit hr hC
 theorem edist_le_of_edist_le_geometric_of_tendsto {a : α} (ha : Tendsto f atTop (𝓝 a)) (n : ℕ) :
     edist (f n) a ≤ C * r ^ n / (1 - r) := by
   convert edist_le_tsum_of_edist_le_of_tendsto _ hu ha _
-  simp only [pow_addₓ, Ennreal.tsum_mul_left, Ennreal.tsum_geometric, div_eq_mul_inv, mul_assoc]
+  simp only [← pow_addₓ, ← Ennreal.tsum_mul_left, ← Ennreal.tsum_geometric, ← div_eq_mul_inv, ← mul_assoc]
 
 /-- If `edist (f n) (f (n+1))` is bounded by `C * r^n`, then the distance from
 `f 0` to the limit of `f` is bounded above by `C / (1 - r)`. -/
 theorem edist_le_of_edist_le_geometric_of_tendsto₀ {a : α} (ha : Tendsto f atTop (𝓝 a)) : edist (f 0) a ≤ C / (1 - r) :=
   by
-  simpa only [pow_zeroₓ, mul_oneₓ] using edist_le_of_edist_le_geometric_of_tendsto r C hu ha 0
+  simpa only [← pow_zeroₓ, ← mul_oneₓ] using edist_le_of_edist_le_geometric_of_tendsto r C hu ha 0
 
 end EdistLeGeometric
 
@@ -276,9 +275,9 @@ include hC hu
 
 /-- If `edist (f n) (f (n+1))` is bounded by `C * 2^-n`, then `f` is a Cauchy sequence.-/
 theorem cauchy_seq_of_edist_le_geometric_two : CauchySeq f := by
-  simp only [div_eq_mul_inv, Ennreal.inv_pow] at hu
+  simp only [← div_eq_mul_inv, ← Ennreal.inv_pow] at hu
   refine' cauchy_seq_of_edist_le_geometric 2⁻¹ C _ hC hu
-  simp [Ennreal.one_lt_two]
+  simp [← Ennreal.one_lt_two]
 
 omit hC
 
@@ -287,7 +286,7 @@ include ha
 /-- If `edist (f n) (f (n+1))` is bounded by `C * 2^-n`, then the distance from
 `f n` to the limit of `f` is bounded above by `2 * C * 2^-n`. -/
 theorem edist_le_of_edist_le_geometric_two_of_tendsto (n : ℕ) : edist (f n) a ≤ 2 * C / 2 ^ n := by
-  simp only [div_eq_mul_inv, Ennreal.inv_pow] at *
+  simp only [← div_eq_mul_inv, ← Ennreal.inv_pow] at *
   rw [mul_assoc, mul_comm]
   convert edist_le_of_edist_le_geometric_of_tendsto 2⁻¹ C hu ha n
   rw [Ennreal.one_sub_inv_two, inv_invₓ]
@@ -295,7 +294,7 @@ theorem edist_le_of_edist_le_geometric_two_of_tendsto (n : ℕ) : edist (f n) a 
 /-- If `edist (f n) (f (n+1))` is bounded by `C * 2^-n`, then the distance from
 `f 0` to the limit of `f` is bounded above by `2 * C`. -/
 theorem edist_le_of_edist_le_geometric_two_of_tendsto₀ : edist (f 0) a ≤ 2 * C := by
-  simpa only [pow_zeroₓ, div_eq_mul_inv, Ennreal.inv_one, mul_oneₓ] using
+  simpa only [← pow_zeroₓ, ← div_eq_mul_inv, ← Ennreal.inv_one, ← mul_oneₓ] using
     edist_le_of_edist_le_geometric_two_of_tendsto C hu ha 0
 
 end EdistLeGeometricTwo
@@ -308,7 +307,7 @@ include hr hu
 
 theorem aux_has_sum_of_le_geometric : HasSum (fun n : ℕ => C * r ^ n) (C / (1 - r)) := by
   rcases sign_cases_of_C_mul_pow_nonneg fun n => dist_nonneg.trans (hu n) with (rfl | ⟨C₀, r₀⟩)
-  · simp [has_sum_zero]
+  · simp [← has_sum_zero]
     
   · refine' HasSum.mul_left C _
     simpa using has_sum_geometric_of_lt_1 r₀ hr
@@ -333,7 +332,7 @@ theorem dist_le_of_le_geometric_of_tendsto {a : α} (ha : Tendsto f atTop (𝓝 
     dist (f n) a ≤ C * r ^ n / (1 - r) := by
   have := aux_has_sum_of_le_geometric hr hu
   convert dist_le_tsum_of_dist_le_of_tendsto _ hu ⟨_, this⟩ ha n
-  simp only [pow_addₓ, mul_left_commₓ C, mul_div_right_comm]
+  simp only [← pow_addₓ, ← mul_left_commₓ C, ← mul_div_right_comm]
   rw [mul_comm]
   exact (this.mul_left _).tsum_eq.symm
 
@@ -357,7 +356,7 @@ include hu₂
 theorem dist_le_of_le_geometric_two_of_tendsto {a : α} (ha : Tendsto f atTop (𝓝 a)) (n : ℕ) :
     dist (f n) a ≤ C / 2 ^ n := by
   convert dist_le_tsum_of_dist_le_of_tendsto _ hu₂ (summable_geometric_two' C) ha n
-  simp only [add_commₓ n, pow_addₓ, ← div_div]
+  simp only [← add_commₓ n, ← pow_addₓ, div_div]
   symm
   exact ((has_sum_geometric_two' C).div_const _).tsum_eq
 
@@ -403,7 +402,7 @@ theorem Set.Countable.exists_pos_has_sum_le {ι : Type _} {s : Set ι} (hs : s.C
   · split_ifs
     exacts[hf0 _, zero_lt_one]
     
-  · simpa only [Subtype.coe_prop, dif_pos, Subtype.coe_eta]
+  · simpa only [← Subtype.coe_prop, ← dif_pos, ← Subtype.coe_eta]
     
 
 theorem Set.Countable.exists_pos_forall_sum_le {ι : Type _} {s : Set ι} (hs : s.Countable) {ε : ℝ} (hε : 0 < ε) :
@@ -476,7 +475,7 @@ theorem tendsto_factorial_div_pow_self_at_top : Tendsto (fun n => n ! / n ^ n : 
       rcases Nat.exists_eq_succ_of_ne_zero hn.ne.symm with ⟨k, rfl⟩
       rw [← prod_range_add_one_eq_factorial, pow_eq_prod_const, div_eq_mul_inv, ← inv_eq_one_div, prod_nat_cast,
         Nat.cast_succₓ, ← prod_inv_distrib, ← prod_mul_distrib, Finset.prod_range_succ']
-      simp only [prod_range_succ', one_mulₓ, Nat.cast_addₓ, zero_addₓ, Nat.cast_oneₓ]
+      simp only [← prod_range_succ', ← one_mulₓ, ← Nat.cast_addₓ, ← zero_addₓ, ← Nat.cast_oneₓ]
       refine'
           mul_le_of_le_one_left
             (inv_nonneg.mpr <| by
@@ -504,7 +503,7 @@ theorem tendsto_nat_floor_at_top {α : Type _} [LinearOrderedSemiring α] [Floor
     Tendsto (fun x : α => ⌊x⌋₊) atTop atTop :=
   Nat.floor_mono.tendsto_at_top_at_top fun x =>
     ⟨max 0 (x + 1), by
-      simp [Nat.le_floor_iff]⟩
+      simp [← Nat.le_floor_iff]⟩
 
 variable {R : Type _} [TopologicalSpace R] [LinearOrderedField R] [OrderTopology R] [FloorRing R]
 
@@ -513,13 +512,13 @@ theorem tendsto_nat_floor_mul_div_at_top {a : R} (ha : 0 ≤ a) : Tendsto (fun x
   rw [sub_zero] at A
   apply tendsto_of_tendsto_of_tendsto_of_le_of_le' A tendsto_const_nhds
   · refine' eventually_at_top.2 ⟨1, fun x hx => _⟩
-    simp only [le_div_iff (zero_lt_one.trans_le hx), sub_mul, inv_mul_cancel (zero_lt_one.trans_le hx).ne']
+    simp only [← le_div_iff (zero_lt_one.trans_le hx), ← sub_mul, ← inv_mul_cancel (zero_lt_one.trans_le hx).ne']
     have := Nat.lt_floor_add_one (a * x)
     linarith
     
   · refine' eventually_at_top.2 ⟨1, fun x hx => _⟩
     rw [div_le_iff (zero_lt_one.trans_le hx)]
-    simp [Nat.floor_le (mul_nonneg ha (zero_le_one.trans hx))]
+    simp [← Nat.floor_le (mul_nonneg ha (zero_le_one.trans hx))]
     
 
 theorem tendsto_nat_floor_div_at_top : Tendsto (fun x => (⌊x⌋₊ : R) / x) atTop (𝓝 1) := by
@@ -534,8 +533,8 @@ theorem tendsto_nat_ceil_mul_div_at_top {a : R} (ha : 0 ≤ a) : Tendsto (fun x 
     exact Nat.le_ceil _
     
   · refine' eventually_at_top.2 ⟨1, fun x hx => _⟩
-    simp [div_le_iff (zero_lt_one.trans_le hx), inv_mul_cancel (zero_lt_one.trans_le hx).ne',
-      (Nat.ceil_lt_add_one (mul_nonneg ha (zero_le_one.trans hx))).le, add_mulₓ]
+    simp [← div_le_iff (zero_lt_one.trans_le hx), ← inv_mul_cancel (zero_lt_one.trans_le hx).ne', ←
+      (Nat.ceil_lt_add_one (mul_nonneg ha (zero_le_one.trans hx))).le, ← add_mulₓ]
     
 
 theorem tendsto_nat_ceil_div_at_top : Tendsto (fun x => (⌈x⌉₊ : R) / x) atTop (𝓝 1) := by

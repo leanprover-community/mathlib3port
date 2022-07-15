@@ -72,7 +72,7 @@ variable (𝕜 E : Type _) [OrderedSemiring 𝕜] [AddCommGroupₓ E] [Module �
 theorem LocallyConvexSpace.of_basis_zero {ι : Type _} (b : ι → Set E) (p : ι → Prop) (hbasis : (𝓝 0).HasBasis p b)
     (hconvex : ∀ i, p i → Convex 𝕜 (b i)) : LocallyConvexSpace 𝕜 E := by
   refine'
-    LocallyConvexSpace.of_bases 𝕜 E (fun i : ι => (· + ·) x '' b i) (fun _ => p) (fun x => _) fun x i hi =>
+    LocallyConvexSpace.of_bases 𝕜 E (fun x : E i : ι => (· + ·) x '' b i) (fun _ => p) (fun x => _) fun x i hi =>
       (hconvex i hi).translate x
   rw [← map_add_left_nhds_zero]
   exact hbasis.map _

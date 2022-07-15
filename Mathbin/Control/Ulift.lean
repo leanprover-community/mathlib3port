@@ -58,14 +58,14 @@ instance : IsLawfulFunctor Plift where
 instance : IsLawfulApplicative Plift where
   pure_seq_eq_map := fun α β g ⟨x⟩ => rfl
   map_pure := fun α β g x => rfl
-  seq_pure := fun x => rfl
+  seq_pure := fun α β ⟨g⟩ x => rfl
   seq_assoc := fun α β γ ⟨x⟩ ⟨g⟩ ⟨h⟩ => rfl
 
 instance : IsLawfulMonad Plift where
   bind_pure_comp_eq_map := fun α β f ⟨x⟩ => rfl
   bind_map_eq_seq := fun α β ⟨a⟩ ⟨b⟩ => rfl
   pure_bind := fun α β x f => rfl
-  bind_assoc := fun f g => rfl
+  bind_assoc := fun α β γ ⟨x⟩ f g => rfl
 
 @[simp]
 theorem rec.constant {α : Sort u} {β : Type v} (b : β) : (@Plift.rec α (fun _ => β) fun _ => b) = fun _ => b :=
@@ -120,18 +120,18 @@ instance : IsLawfulApplicative ULift where
   to_is_lawful_functor := ULift.is_lawful_functor
   pure_seq_eq_map := fun α β g ⟨x⟩ => rfl
   map_pure := fun α β g x => rfl
-  seq_pure := fun x => rfl
+  seq_pure := fun α β ⟨g⟩ x => rfl
   seq_assoc := fun α β γ ⟨x⟩ ⟨g⟩ ⟨h⟩ => rfl
 
 instance : IsLawfulMonad ULift where
   bind_pure_comp_eq_map := fun α β f ⟨x⟩ => rfl
   bind_map_eq_seq := fun α β ⟨a⟩ ⟨b⟩ => rfl
   pure_bind := fun α β x f => by
-    dsimp' only [bind, pure, ULift.pure, ULift.bind]
+    dsimp' only [← bind, ← pure, ← ULift.pure, ← ULift.bind]
     cases f x
     rfl
-  bind_assoc := fun f g => by
-    dsimp' only [bind, pure, ULift.pure, ULift.bind]
+  bind_assoc := fun α β γ ⟨x⟩ f g => by
+    dsimp' only [← bind, ← pure, ← ULift.pure, ← ULift.bind]
     cases f x
     rfl
 

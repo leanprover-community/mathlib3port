@@ -63,15 +63,15 @@ def frobeniusMorphism (h : L ⊣ F) (A : C) : prod.functor.obj (F.obj A) ⋙ L �
 Frobenius morphism is an isomorphism.
 -/
 instance frobenius_morphism_iso_of_preserves_binary_products (h : L ⊣ F) (A : C)
-    [PreservesLimitsOfShape (Discrete.{v} WalkingPair) L] [Full F] [Faithful F] : IsIso (frobeniusMorphism F h A) := by
+    [PreservesLimitsOfShape (Discrete WalkingPair) L] [Full F] [Faithful F] : IsIso (frobeniusMorphism F h A) := by
   apply nat_iso.is_iso_of_is_iso_app _
   intro B
-  dsimp' [frobenius_morphism]
+  dsimp' [← frobenius_morphism]
   infer_instance
 
 variable [CartesianClosed C] [CartesianClosed D]
 
-variable [PreservesLimitsOfShape (Discrete.{v} WalkingPair) F]
+variable [PreservesLimitsOfShape (Discrete WalkingPair) F]
 
 /-- The exponential comparison map.
 `F` is a cartesian closed functor if this is an iso for all `A`.
@@ -125,8 +125,8 @@ theorem frobenius_morphism_mate (h : L ⊣ F) (A : C) :
   by
   rw [← Equivₓ.eq_symm_apply]
   ext B : 2
-  dsimp' [frobenius_morphism, transfer_nat_trans_self, transfer_nat_trans, adjunction.comp]
-  simp only [id_comp, comp_id]
+  dsimp' [← frobenius_morphism, ← transfer_nat_trans_self, ← transfer_nat_trans, ← adjunction.comp]
+  simp only [← id_comp, ← comp_id]
   rw [← L.map_comp_assoc, prod.map_id_comp, assoc, exp_comparison_ev, prod.map_id_comp, assoc, ← F.map_id, ←
     prod_comparison_inv_natural_assoc, ← F.map_comp, exp.ev_coev, F.map_id (A ⨯ L.obj B), comp_id]
   apply prod.hom_ext
@@ -160,8 +160,8 @@ TODO: Show the converse, that if `F` is cartesian closed and its left adjoint pr
 products, then it is full and faithful.
 -/
 def cartesianClosedFunctorOfLeftAdjointPreservesBinaryProducts (h : L ⊣ F) [Full F] [Faithful F]
-    [PreservesLimitsOfShape (Discrete.{v} WalkingPair) L] : CartesianClosedFunctor F where
-  comparison_iso := fun A => exp_comparison_iso_of_frobenius_morphism_iso F h _
+    [PreservesLimitsOfShape (Discrete WalkingPair) L] :
+    CartesianClosedFunctor F where comparison_iso := fun A => exp_comparison_iso_of_frobenius_morphism_iso F h _
 
 end CategoryTheory
 

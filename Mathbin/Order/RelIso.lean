@@ -274,7 +274,7 @@ protected def refl (r : α → α → Prop) : r ↪r r :=
 @[trans]
 protected def trans (f : r ↪r s) (g : s ↪r t) : r ↪r t :=
   ⟨f.1.trans g.1, fun a b => by
-    simp [f.map_rel_iff, g.map_rel_iff]⟩
+    simp [← f.map_rel_iff, ← g.map_rel_iff]⟩
 
 instance (r : α → α → Prop) : Inhabited (r ↪r r) :=
   ⟨RelEmbedding.refl _⟩
@@ -373,7 +373,7 @@ def ofMonotone [IsTrichotomous α r] [IsAsymm β s] (f : α → β) (H : ∀ a b
       exact fun h =>
         @irrefl _ s _ _
           (by
-            simpa [e] using H _ _ h)
+            simpa [← e] using H _ _ h)
     
   · refine' (@trichotomous _ r _ a b).resolve_right (Or.ndrec (fun e => _) fun h' => _)
     · subst e
@@ -541,7 +541,7 @@ lexicographic orders on the sum.
 def sumLexCongr {α₁ α₂ β₁ β₂ r₁ r₂ s₁ s₂} (e₁ : @RelIso α₁ β₁ r₁ s₁) (e₂ : @RelIso α₂ β₂ r₂ s₂) :
     Sum.Lex r₁ r₂ ≃r Sum.Lex s₁ s₂ :=
   ⟨Equivₓ.sumCongr e₁.toEquiv e₂.toEquiv, fun a b => by
-    cases' e₁ with f hf <;> cases' e₂ with g hg <;> cases a <;> cases b <;> simp [hf, hg]⟩
+    cases' e₁ with f hf <;> cases' e₂ with g hg <;> cases a <;> cases b <;> simp [← hf, ← hg]⟩
 
 /-- Given relation isomorphisms `r₁ ≃r s₁` and `r₂ ≃r s₂`, construct a relation isomorphism for the
 lexicographic orders on the product.
@@ -549,7 +549,7 @@ lexicographic orders on the product.
 def prodLexCongr {α₁ α₂ β₁ β₂ r₁ r₂ s₁ s₂} (e₁ : @RelIso α₁ β₁ r₁ s₁) (e₂ : @RelIso α₂ β₂ r₂ s₂) :
     Prod.Lex r₁ r₂ ≃r Prod.Lex s₁ s₂ :=
   ⟨Equivₓ.prodCongr e₁.toEquiv e₂.toEquiv, fun a b => by
-    simp [Prod.lex_def, e₁.map_rel_iff, e₂.map_rel_iff]⟩
+    simp [← Prod.lex_def, ← e₁.map_rel_iff, ← e₂.map_rel_iff]⟩
 
 instance : Groupₓ (r ≃r r) where
   one := RelIso.refl r

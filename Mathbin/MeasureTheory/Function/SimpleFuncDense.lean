@@ -82,7 +82,7 @@ theorem nearest_pt_ind_succ (e : ℕ → α) (N : ℕ) (x : α) :
     nearestPtInd e (N + 1) x =
       if ∀, ∀ k ≤ N, ∀, edist (e (N + 1)) x < edist (e k) x then N + 1 else nearestPtInd e N x :=
   by
-  simp only [nearest_pt_ind, coe_piecewise, Set.piecewise]
+  simp only [← nearest_pt_ind, ← coe_piecewise, ← Set.piecewise]
   congr
   simp
 
@@ -90,15 +90,15 @@ theorem nearest_pt_ind_le (e : ℕ → α) (N : ℕ) (x : α) : nearestPtInd e N
   induction' N with N ihN
   · simp
     
-  simp only [nearest_pt_ind_succ]
+  simp only [← nearest_pt_ind_succ]
   split_ifs
   exacts[le_rfl, ihN.trans N.le_succ]
 
 theorem edist_nearest_pt_le (e : ℕ → α) (x : α) {k N : ℕ} (hk : k ≤ N) : edist (nearestPt e N x) x ≤ edist (e k) x := by
   induction' N with N ihN generalizing k
-  · simp [nonpos_iff_eq_zero.1 hk, le_reflₓ]
+  · simp [← nonpos_iff_eq_zero.1 hk, ← le_reflₓ]
     
-  · simp only [nearest_pt, nearest_pt_ind_succ, map_apply]
+  · simp only [← nearest_pt, ← nearest_pt_ind_succ, ← map_apply]
     split_ifs
     · rcases hk.eq_or_lt with (rfl | hk)
       exacts[le_rfl, (h k (Nat.lt_succ_iffₓ.1 hk)).le]
@@ -149,15 +149,15 @@ theorem tendsto_approx_on {f : β → α} (hf : Measurable f) {s : Set α} {y₀
     (hx : f x ∈ Closure s) : Tendsto (fun n => approxOn f hf s y₀ h₀ n x) atTop (𝓝 <| f x) := by
   have : Nonempty s := ⟨⟨y₀, h₀⟩⟩
   rw [← @Subtype.range_coe _ s, ← image_univ, ← (dense_range_dense_seq s).closure_eq] at hx
-  simp only [approx_on, coe_comp]
+  simp only [← approx_on, ← coe_comp]
   refine' tendsto_nearest_pt (closure_minimal _ is_closed_closure hx)
-  simp only [Nat.range_cases_on, closure_union, range_comp coe]
+  simp only [← Nat.range_cases_on, ← closure_union, ← range_comp coe]
   exact subset.trans (image_closure_subset_closure_image continuous_subtype_coe) (subset_union_right _ _)
 
 theorem edist_approx_on_mono {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s) [SeparableSpace s]
     (x : β) {m n : ℕ} (h : m ≤ n) : edist (approxOn f hf s y₀ h₀ n x) (f x) ≤ edist (approxOn f hf s y₀ h₀ m x) (f x) :=
   by
-  dsimp' only [approx_on, coe_comp, (· ∘ ·)]
+  dsimp' only [← approx_on, ← coe_comp, ← (· ∘ ·)]
   exact edist_nearest_pt_le _ _ ((nearest_pt_ind_le _ _ _).trans h)
 
 theorem edist_approx_on_le {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s) [SeparableSpace s] (x : β)

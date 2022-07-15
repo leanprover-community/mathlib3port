@@ -229,7 +229,7 @@ $GL_2(R)$ if `a ^ 2 + b ^ 2` is nonzero. -/
 def planeConformalMatrix {R} [Field R] (a b : R) (hab : a ^ 2 + b ^ 2 ≠ 0) : Matrix.GeneralLinearGroup (Finₓ 2) R :=
   GeneralLinearGroup.mkOfDetNeZero ![![a, -b], ![b, a]]
     (by
-      simpa [det_fin_two, sq] using hab)
+      simpa [← det_fin_two, ← sq] using hab)
 
 /- TODO: Add Iwasawa matrices `n_x=![![1,x],![0,1]]`, `a_t=![![exp(t/2),0],![0,exp(-t/2)]]` and
   `k_θ==![![cos θ, sin θ],![-sin θ, cos θ]]`
@@ -244,8 +244,7 @@ variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [CommRingₓ R]
 section CoeFnInstance
 
 /-- This instance is here for convenience, but is not the simp-normal form. -/
-instance : CoeFun (GL n R) fun _ => n → n → R where
-  coe := fun A => A.val
+instance : CoeFun (GL n R) fun _ => n → n → R where coe := fun A => A.val
 
 @[simp]
 theorem coe_fn_eq_coe (A : GL n R) : ⇑A = (↑A : Matrix n n R) :=

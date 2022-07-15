@@ -77,35 +77,9 @@ instance : Add Enat :=
 instance (n : ℕ) : Decidable (some n).Dom :=
   isTrue trivialₓ
 
-theorem some_eq_coe (n : ℕ) : some n = n := by
-  induction' n with n ih
-  · rfl
-    
-  apply Part.ext'
-  · show True ↔ (n : Enat).Dom ∧ True
-    rw [← ih, and_trueₓ]
-    exact Iff.rfl
-    
-  · intro h H
-    show n.succ = (n : Enat).get H.1 + 1
-    rw [Nat.cast_succₓ] at H
-    revert H
-    simp only [← ih]
-    intro
-    rfl
-    
-
-@[simp]
-theorem coe_inj {x y : ℕ} : (x : Enat) = y ↔ x = y := by
-  simpa only [← some_eq_coe] using Part.some_inj
-
 @[simp]
 theorem dom_some (x : ℕ) : (some x).Dom :=
   trivialₓ
-
-@[simp]
-theorem dom_coe (x : ℕ) : (x : Enat).Dom := by
-  rw [← some_eq_coe] <;> trivial
 
 instance : AddCommMonoidₓ Enat where
   add := (· + ·)
@@ -114,6 +88,21 @@ instance : AddCommMonoidₓ Enat where
   zero_add := fun x => Part.ext' (true_andₓ _) fun _ _ => zero_addₓ _
   add_zero := fun x => Part.ext' (and_trueₓ _) fun _ _ => add_zeroₓ _
   add_assoc := fun x y z => Part.ext' And.assoc fun _ _ => add_assocₓ _ _ _
+
+instance : AddMonoidWithOneₓ Enat :=
+  { Enat.addCommMonoid with one := 1, natCast := some, nat_cast_zero := rfl,
+    nat_cast_succ := fun _ => Part.ext' (true_andₓ _).symm fun _ _ => rfl }
+
+theorem some_eq_coe (n : ℕ) : some n = n :=
+  rfl
+
+@[simp]
+theorem coe_inj {x y : ℕ} : (x : Enat) = y ↔ x = y :=
+  Part.some_inj
+
+@[simp]
+theorem dom_coe (x : ℕ) : (x : Enat).Dom :=
+  trivialₓ
 
 instance : LE Enat :=
   ⟨fun x y => ∃ h : y.Dom → x.Dom, ∀ hy : y.Dom, x.get (h hy) ≤ y.get hy⟩
@@ -136,7 +125,7 @@ protected theorem cases_on' {P : Enat → Prop} : ∀ a : Enat, P ⊤ → (∀ n
 
 @[elab_as_eliminator]
 protected theorem cases_on {P : Enat → Prop} : ∀ a : Enat, P ⊤ → (∀ n : ℕ, P n) → P a := by
-  simp only [← some_eq_coe]
+  simp only [some_eq_coe]
   exact Enat.cases_on'
 
 @[simp]
@@ -160,7 +149,7 @@ theorem get_coe {x : ℕ} : get (x : Enat) (dom_coe x) = x :=
   get_coe' _ _
 
 theorem coe_add_get {x : ℕ} {y : Enat} (h : ((x : Enat) + y).Dom) : get ((x : Enat) + y) h = x + get y h.2 := by
-  simp only [← some_eq_coe] at h⊢
+  simp only [some_eq_coe] at h⊢
   rfl
 
 @[simp]
@@ -195,8 +184,8 @@ instance decidableLe (x y : Enat) [Decidable x.Dom] [Decidable y.Dom] : Decidabl
     decidableOfDecidableOfIff
         (show Decidable (∀ hy : (y : Enat).Dom, x.get hx ≤ (y : Enat).get hy) from forallPropDecidable _) <|
       by
-      dsimp' [(· ≤ ·)]
-      simp only [hx, exists_prop_of_true, forall_true_iff]
+      dsimp' [← (· ≤ ·)]
+      simp only [← hx, ← exists_prop_of_true, ← forall_true_iff]
   else
     if hy : y.Dom then is_false fun h => hx <| dom_of_le_of_dom h hy
     else isTrue ⟨fun h => (hy h).elim, fun h => (hy h).elim⟩
@@ -255,19 +244,19 @@ theorem get_le_get {x y : Enat} {hx : x.Dom} {hy : y.Dom} : x.get hx ≤ y.get h
 theorem le_coe_iff (x : Enat) (n : ℕ) : x ≤ n ↔ ∃ h : x.Dom, x.get h ≤ n := by
   rw [← some_eq_coe]
   show (∃ h : True → x.dom, _) ↔ ∃ h : x.dom, x.get h ≤ n
-  simp only [forall_prop_of_true, some_eq_coe, dom_coe, get_coe']
+  simp only [← forall_prop_of_true, ← some_eq_coe, ← dom_coe, ← get_coe']
 
 theorem lt_coe_iff (x : Enat) (n : ℕ) : x < n ↔ ∃ h : x.Dom, x.get h < n := by
-  simp only [lt_def, forall_prop_of_true, get_coe', dom_coe]
+  simp only [← lt_def, ← forall_prop_of_true, ← get_coe', ← dom_coe]
 
 theorem coe_le_iff (n : ℕ) (x : Enat) : (n : Enat) ≤ x ↔ ∀ h : x.Dom, n ≤ x.get h := by
   rw [← some_eq_coe]
-  simp only [le_def, exists_prop_of_true, dom_some, forall_true_iff]
+  simp only [← le_def, ← exists_prop_of_true, ← dom_some, ← forall_true_iff]
   rfl
 
 theorem coe_lt_iff (n : ℕ) (x : Enat) : (n : Enat) < x ↔ ∀ h : x.Dom, n < x.get h := by
   rw [← some_eq_coe]
-  simp only [lt_def, exists_prop_of_true, dom_some, forall_true_iff]
+  simp only [← lt_def, ← exists_prop_of_true, ← dom_some, ← forall_true_iff]
   rfl
 
 protected theorem zero_lt_one : (0 : Enat) < 1 := by
@@ -287,6 +276,12 @@ instance orderTop : OrderTop Enat where
   top := ⊤
   le_top := fun x => ⟨fun h => False.elim h, fun hy => False.elim hy⟩
 
+theorem eq_zero_iff {x : Enat} : x = 0 ↔ x ≤ 0 :=
+  eq_bot_iff
+
+theorem ne_zero_iff {x : Enat} : x ≠ 0 ↔ ⊥ < x :=
+  bot_lt_iff_ne_bot.symm
+
 theorem dom_of_lt {x y : Enat} : x < y → x.Dom :=
   (Enat.cases_on x not_top_lt) fun _ _ => dom_coe _
 
@@ -297,18 +292,24 @@ theorem top_eq_none : (⊤ : Enat) = none :=
 theorem coe_lt_top (x : ℕ) : (x : Enat) < ⊤ :=
   Ne.lt_top fun h =>
     absurd (congr_arg Dom h) <| by
-      simpa only [dom_coe] using true_ne_false
+      simpa only [← dom_coe] using true_ne_false
 
 @[simp]
 theorem coe_ne_top (x : ℕ) : (x : Enat) ≠ ⊤ :=
   ne_of_ltₓ (coe_lt_top x)
 
-theorem ne_top_iff {x : Enat} : x ≠ ⊤ ↔ ∃ n : ℕ, x = n := by
-  simpa only [← some_eq_coe] using Part.ne_none_iff
+theorem not_is_max_coe (x : ℕ) : ¬IsMax (x : Enat) :=
+  not_is_max_of_lt (coe_lt_top x)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+theorem ne_top_iff {x : Enat} : x ≠ ⊤ ↔ ∃ n : ℕ, x = n := by
+  simpa only [some_eq_coe] using Part.ne_none_iff
+
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem ne_top_iff_dom {x : Enat} : x ≠ ⊤ ↔ x.Dom := by
   classical <;> exact not_iff_comm.1 part.eq_none_iff'.symm
+
+theorem not_dom_iff_eq_top {x : Enat} : ¬x.Dom ↔ x = ⊤ :=
+  Iff.not_left ne_top_iff_dom.symm
 
 theorem ne_top_of_lt {x y : Enat} (h : x < y) : x ≠ ⊤ :=
   ne_of_ltₓ <| lt_of_lt_of_leₓ h le_top
@@ -331,13 +332,15 @@ theorem eq_top_iff_forall_le (x : Enat) : x = ⊤ ↔ ∀ n : ℕ, (n : Enat) �
 theorem pos_iff_one_le {x : Enat} : 0 < x ↔ 1 ≤ x :=
   (Enat.cases_on x
       (by
-        simp only [iff_trueₓ, le_top, coe_lt_top, ← @Nat.cast_zeroₓ Enat]))
+        simp only [← iff_trueₓ, ← le_top, ← coe_lt_top, @Nat.cast_zeroₓ Enat]))
     fun n => by
     rw [← Nat.cast_zeroₓ, ← Nat.cast_oneₓ, Enat.coe_lt_coe, Enat.coe_le_coe]
     rfl
 
-instance : IsTotal Enat (· ≤ ·) where
-  Total := fun x y =>
+instance :
+    IsTotal Enat
+      (· ≤
+        ·) where Total := fun x y =>
     Enat.cases_on x (Or.inr le_top)
       (Enat.cases_on y (fun _ => Or.inl le_top) fun x y =>
         (le_totalₓ x y).elim (Or.inr ∘ coe_le_coe.2) (Or.inl ∘ coe_le_coe.2))
@@ -355,13 +358,13 @@ noncomputable instance : Lattice Enat :=
 
 instance : OrderedAddCommMonoid Enat :=
   { Enat.linearOrder, Enat.addCommMonoid with
-    add_le_add_left := fun c =>
+    add_le_add_left := fun a b ⟨h₁, h₂⟩ c =>
       Enat.cases_on c
         (by
           simp )
         fun c =>
         ⟨fun h => And.intro (dom_coe _) (h₁ h.2), fun h => by
-          simpa only [coe_add_get] using add_le_add_left (h₂ _) c⟩ }
+          simpa only [← coe_add_get] using add_le_add_left (h₂ _) c⟩ }
 
 instance : CanonicallyOrderedAddMonoid Enat :=
   { Enat.semilatticeSup, Enat.orderBot, Enat.orderedAddCommMonoid with
@@ -438,14 +441,14 @@ theorem lt_add_one_iff_lt {x y : Enat} (hx : x ≠ ⊤) : x < y + 1 ↔ x ≤ y 
 
 theorem add_eq_top_iff {a b : Enat} : a + b = ⊤ ↔ a = ⊤ ∨ b = ⊤ := by
   apply Enat.cases_on a <;>
-    apply Enat.cases_on b <;> simp <;> simp only [(Nat.cast_addₓ _ _).symm, Enat.coe_ne_top] <;> simp
+    apply Enat.cases_on b <;> simp <;> simp only [← (Nat.cast_addₓ _ _).symm, ← Enat.coe_ne_top] <;> simp
 
 protected theorem add_right_cancel_iff {a b c : Enat} (hc : c ≠ ⊤) : a + c = b + c ↔ a = b := by
   rcases ne_top_iff.1 hc with ⟨c, rfl⟩
   apply Enat.cases_on a <;>
     apply Enat.cases_on b <;>
-      simp [add_eq_top_iff, coe_ne_top, @eq_comm _ (⊤ : Enat)] <;>
-        simp only [(Nat.cast_addₓ _ _).symm, add_left_cancel_iffₓ, Enat.coe_inj, add_commₓ] <;> tauto
+      simp [← add_eq_top_iff, ← coe_ne_top, ← @eq_comm _ (⊤ : Enat)] <;>
+        simp only [← (Nat.cast_addₓ _ _).symm, ← add_left_cancel_iffₓ, ← Enat.coe_inj, ← add_commₓ] <;> tauto
 
 protected theorem add_left_cancel_iff {a b c : Enat} (ha : a ≠ ⊤) : a + b = a + c ↔ b = c := by
   rw [add_commₓ a, add_commₓ a, Enat.add_right_cancel_iff ha]
@@ -474,7 +477,7 @@ theorem to_with_top_some (n : ℕ) : toWithTop (some n) = n :=
   rfl
 
 theorem to_with_top_coe (n : ℕ) {_ : Decidable (n : Enat).Dom} : toWithTop n = n := by
-  simp only [← some_eq_coe, ← to_with_top_some]
+  simp only [some_eq_coe, to_with_top_some]
 
 @[simp]
 theorem to_with_top_coe' (n : ℕ) {h : Decidable (n : Enat).Dom} : toWithTop (n : Enat) = n := by
@@ -503,7 +506,7 @@ open Classical
 
 @[simp]
 theorem to_with_top_add {x y : Enat} : toWithTop (x + y) = toWithTop x + toWithTop y := by
-  apply Enat.cases_on y <;> apply Enat.cases_on x <;> simp [← Nat.cast_addₓ, ← WithTop.coe_add]
+  apply Enat.cases_on y <;> apply Enat.cases_on x <;> simp [Nat.cast_addₓ, WithTop.coe_add]
 
 /-- `equiv` between `enat` and `with_top ℕ` (for the order isomorphism see `with_top_order_iso`). -/
 noncomputable def withTopEquiv : Enat ≃ WithTop ℕ where
@@ -515,7 +518,7 @@ noncomputable def withTopEquiv : Enat ≃ WithTop ℕ where
   left_inv := fun x => by
     apply Enat.cases_on x <;> intros <;> simp <;> rfl
   right_inv := fun x => by
-    cases x <;> simp [with_top_equiv._match_1] <;> rfl
+    cases x <;> simp [← with_top_equiv._match_1] <;> rfl
 
 @[simp]
 theorem with_top_equiv_top : withTopEquiv ⊤ = ⊤ :=
@@ -527,7 +530,7 @@ theorem with_top_equiv_coe (n : Nat) : withTopEquiv n = n :=
 
 @[simp]
 theorem with_top_equiv_zero : withTopEquiv 0 = 0 := by
-  simpa only [Nat.cast_zeroₓ] using with_top_equiv_coe 0
+  simpa only [← Nat.cast_zeroₓ] using with_top_equiv_coe 0
 
 @[simp]
 theorem with_top_equiv_le {x y : Enat} : withTopEquiv x ≤ withTopEquiv y ↔ x ≤ y :=
@@ -565,11 +568,11 @@ theorem with_top_equiv_symm_lt {x y : WithTop ℕ} : withTopEquiv.symm x < withT
 noncomputable def withTopAddEquiv : Enat ≃+ WithTop ℕ :=
   { withTopEquiv with
     map_add' := fun x y => by
-      simp only [with_top_equiv] <;> convert to_with_top_add }
+      simp only [← with_top_equiv] <;> convert to_with_top_add }
 
 end WithTopEquiv
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem lt_wf : @WellFounded Enat (· < ·) := by
   classical
   change WellFounded fun a b : Enat => a < b

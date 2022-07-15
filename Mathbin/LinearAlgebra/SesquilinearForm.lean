@@ -83,7 +83,7 @@ theorem is_Ortho_flip (B : M₁ →ₛₗ[I₁] M₁ →ₛₗ[I₁'] R) {v : n 
   · rw [flip_apply]
     exact h j i (Ne.symm hij)
     
-  simp_rw [flip_apply]  at h
+  simp_rw [flip_apply] at h
   exact h j i (Ne.symm hij)
 
 end CommRingₓ
@@ -126,7 +126,7 @@ theorem ortho_smul_right {B : V₁ →ₛₗ[I₁] V₂ →ₛₗ[I₂] K} {x y}
       
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A set of orthogonal vectors `v` with respect to some sesquilinear form `B` is linearly
   independent if for all `i`, `B (v i) (v i) ≠ 0`. -/
 theorem linear_independent_of_is_Ortho {B : V₁ →ₛₗ[I₁] V₁ →ₛₗ[I₁'] K} {v : n → V₁} (hv₁ : B.IsOrtho v)
@@ -140,7 +140,7 @@ theorem linear_independent_of_is_Ortho {B : V₁ →ₛₗ[I₁] V₁ →ₛₗ[
     apply Finset.sum_eq_single_of_mem i hi
     intro j hj hij
     rw [is_Ortho_def.1 hv₁ _ _ hij, mul_zero]
-  simp_rw [B.map_sum₂, map_smulₛₗ₂, smul_eq_mul, hsum]  at this
+  simp_rw [B.map_sum₂, map_smulₛₗ₂, smul_eq_mul, hsum] at this
   apply I₁.map_eq_zero.mp
   exact eq_zero_of_ne_zero_of_mul_right_eq_zero (hv₂ i) this
 
@@ -206,7 +206,7 @@ protected theorem eq (H : B.IsSymm) x y : I (B x y) = B y x :=
 
 theorem is_refl (H : B.IsSymm) : B.IsRefl := fun x y H1 => by
   rw [← H.eq]
-  simp [H1]
+  simp [← H1]
 
 theorem ortho_comm (H : B.IsSymm) {x y} : IsOrtho B x y ↔ IsOrtho B y x :=
   H.IsRefl.ortho_comm
@@ -251,7 +251,7 @@ theorem self_eq_zero x : B x x = 0 :=
 
 theorem neg x y : -B x y = B y x := by
   have H1 : B (y + x) (y + x) = 0 := self_eq_zero H (y + x)
-  simp [map_add, self_eq_zero H] at H1
+  simp [← map_add, ← self_eq_zero H] at H1
   rw [add_eq_zero_iff_neg_eq] at H1
   exact H1
 
@@ -272,7 +272,7 @@ theorem is_alt_iff_eq_neg_flip [NoZeroDivisors R] [CharZero R] {B : M₁ →ₛ�
     
   intro x
   let h' := congr_fun₂ h x x
-  simp only [neg_apply, flip_apply, ← add_eq_zero_iff_eq_neg] at h'
+  simp only [← neg_apply, ← flip_apply, add_eq_zero_iff_eq_neg] at h'
   exact add_self_eq_zero.mp h'
 
 end Alternating
@@ -413,7 +413,7 @@ theorem is_adjoint_pair_iff_comp_eq_compl₂ : IsAdjointPair B B' f g ↔ B'.com
     
 
 theorem is_adjoint_pair_zero : IsAdjointPair B B' 0 0 := fun _ _ => by
-  simp only [zero_apply, map_zero]
+  simp only [← zero_apply, ← map_zero]
 
 theorem is_adjoint_pair_id : IsAdjointPair B B 1 1 := fun x y => rfl
 
@@ -448,7 +448,7 @@ theorem IsAdjointPair.sub (h : IsAdjointPair B B' f g) (h' : IsAdjointPair B B' 
   rw [f.sub_apply, g.sub_apply, B'.map_sub₂, (B x).map_sub, h, h']
 
 theorem IsAdjointPair.smul (c : R) (h : IsAdjointPair B B' f g) : IsAdjointPair B B' (c • f) (c • g) := fun _ _ => by
-  simp only [smul_apply, map_smul, smul_eq_mul, h _ _]
+  simp only [← smul_apply, ← map_smul, ← smul_eq_mul, ← h _ _]
 
 end AddCommGroupₓ
 
@@ -525,13 +525,14 @@ theorem is_pair_self_adjoint_equiv (e : M₁ ≃ₗ[R] M) (f : Module.End R M) :
       (F.comp f).compl₁₂ (↑e : M₁ →ₗ[R] M) (↑e : M₁ →ₗ[R] M) :=
     by
     ext
-    simp only [LinearEquiv.symm_conj_apply, coe_comp, LinearEquiv.coe_coe, compl₁₂_apply, LinearEquiv.apply_symm_apply]
+    simp only [← LinearEquiv.symm_conj_apply, ← coe_comp, ← LinearEquiv.coe_coe, ← compl₁₂_apply, ←
+      LinearEquiv.apply_symm_apply]
   have hᵣ :
     (B.compl₁₂ (↑e : M₁ →ₗ[R] M) (↑e : M₁ →ₗ[R] M)).compl₂ (e.symm.conj f) =
       (B.compl₂ f).compl₁₂ (↑e : M₁ →ₗ[R] M) (↑e : M₁ →ₗ[R] M) :=
     by
     ext
-    simp only [LinearEquiv.symm_conj_apply, compl₂_apply, coe_comp, LinearEquiv.coe_coe, compl₁₂_apply,
+    simp only [← LinearEquiv.symm_conj_apply, ← compl₂_apply, ← coe_comp, ← LinearEquiv.coe_coe, ← compl₁₂_apply, ←
       LinearEquiv.apply_symm_apply]
   have he : Function.Surjective (⇑(↑e : M₁ →ₗ[R] M) : M₁ → M) := e.surjective
   simp_rw [is_pair_self_adjoint, is_adjoint_pair_iff_comp_eq_compl₂, hₗ, hᵣ, compl₁₂_inj he he]
@@ -595,7 +596,7 @@ theorem separating_left_iff_linear_nontrivial {B : M₁ →ₛₗ[I₁] M₂ →
     B.SeparatingLeft ↔ ∀ x : M₁, B x = 0 → x = 0 := by
   constructor <;> intro h x hB
   · let h' := h x
-    simp only [hB, zero_apply, eq_self_iff_true, forall_const] at h'
+    simp only [← hB, ← zero_apply, ← eq_self_iff_true, ← forall_const] at h'
     exact h'
     
   have h' : B x = 0 := by
@@ -644,7 +645,7 @@ theorem nondegenerate_restrict_of_disjoint_orthogonal {B : M →ₗ[R] M →ₗ[
   rw [Submodule.mk_eq_zero, ← Submodule.mem_bot R]
   refine' hW ⟨hx, fun y hy => _⟩
   specialize b₁ ⟨y, hy⟩
-  simp_rw [dom_restrict₁₂_apply, Submodule.coe_mk]  at b₁
+  simp_rw [dom_restrict₁₂_apply, Submodule.coe_mk] at b₁
   rw [hB.ortho_comm]
   exact b₁
 
@@ -684,7 +685,7 @@ theorem IsOrthoₓ.separating_left_of_not_is_ortho_basis_self [NoZeroDivisors R]
   ext i
   rw [Finsupp.zero_apply]
   specialize hB (v i)
-  simp_rw [Basis.repr_symm_apply, Finsupp.total_apply, Finsupp.sum, map_sum₂, map_smulₛₗ₂, smul_eq_mul]  at hB
+  simp_rw [Basis.repr_symm_apply, Finsupp.total_apply, Finsupp.sum, map_sum₂, map_smulₛₗ₂, smul_eq_mul] at hB
   rw [Finset.sum_eq_single i] at hB
   · exact eq_zero_of_ne_zero_of_mul_right_eq_zero (h i) hB
     

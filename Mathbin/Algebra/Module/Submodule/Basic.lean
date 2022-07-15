@@ -166,7 +166,7 @@ protected theorem add_mem (h₁ : x ∈ p) (h₂ : y ∈ p) : x + y ∈ p :=
 theorem smul_mem (r : R) (h : x ∈ p) : r • x ∈ p :=
   p.smul_mem' r h
 
-theorem smul_of_tower_mem [HasScalar S R] [HasScalar S M] [IsScalarTower S R M] (r : S) (h : x ∈ p) : r • x ∈ p :=
+theorem smul_of_tower_mem [HasSmul S R] [HasSmul S M] [IsScalarTower S R M] (r : S) (h : x ∈ p) : r • x ∈ p :=
   p.toSubMulAction.smul_of_tower_mem r h
 
 protected theorem sum_mem {t : Finset ι} {f : ι → M} : (∀, ∀ c ∈ t, ∀, f c ∈ p) → (∑ i in t, f i) ∈ p :=
@@ -177,7 +177,7 @@ theorem sum_smul_mem {t : Finset ι} {f : ι → M} (r : ι → R) (hyp : ∀, �
   sum_mem fun i hi => smul_mem _ _ (hyp i hi)
 
 @[simp]
-theorem smul_mem_iff' [Groupₓ G] [MulAction G M] [HasScalar G R] [IsScalarTower G R M] (g : G) : g • x ∈ p ↔ x ∈ p :=
+theorem smul_mem_iff' [Groupₓ G] [MulAction G M] [HasSmul G R] [IsScalarTower G R M] (g : G) : g • x ∈ p ↔ x ∈ p :=
   p.toSubMulAction.smul_mem_iff' g
 
 instance : Add p :=
@@ -189,14 +189,14 @@ instance : Zero p :=
 instance : Inhabited p :=
   ⟨0⟩
 
-instance [HasScalar S R] [HasScalar S M] [IsScalarTower S R M] : HasScalar S p :=
+instance [HasSmul S R] [HasSmul S M] [IsScalarTower S R M] : HasSmul S p :=
   ⟨fun c x => ⟨c • x.1, smul_of_tower_mem _ c x.2⟩⟩
 
-instance [HasScalar S R] [HasScalar S M] [IsScalarTower S R M] : IsScalarTower S R p :=
+instance [HasSmul S R] [HasSmul S M] [IsScalarTower S R M] : IsScalarTower S R p :=
   p.toSubMulAction.IsScalarTower
 
-instance [HasScalar S R] [HasScalar S M] [IsScalarTower S R M] [HasScalar Sᵐᵒᵖ R] [HasScalar Sᵐᵒᵖ M]
-    [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] : IsCentralScalar S p :=
+instance [HasSmul S R] [HasSmul S M] [IsScalarTower S R M] [HasSmul Sᵐᵒᵖ R] [HasSmul Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M]
+    [IsCentralScalar S M] : IsCentralScalar S p :=
   p.toSubMulAction.IsCentralScalar
 
 protected theorem nonempty : (p : Set M).Nonempty :=
@@ -225,7 +225,7 @@ theorem coe_smul (r : R) (x : p) : ((r • x : p) : M) = r • ↑x :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_smul_of_tower [HasScalar S R] [HasScalar S M] [IsScalarTower S R M] (r : S) (x : p) :
+theorem coe_smul_of_tower [HasSmul S R] [HasSmul S M] [IsScalarTower S R M] (r : S) (x : p) :
     ((r • x : p) : M) = r • ↑x :=
   rfl
 
@@ -242,11 +242,11 @@ variable (p)
 instance : AddCommMonoidₓ p :=
   { p.toAddSubmonoid.toAddCommMonoid with add := (· + ·), zero := 0 }
 
-instance module' [Semiringₓ S] [HasScalar S R] [Module S M] [IsScalarTower S R M] : Module S p := by
-  refine' { p.to_sub_mul_action.mul_action' with smul := (· • ·), .. } <;>
+instance module' [Semiringₓ S] [HasSmul S R] [Module S M] [IsScalarTower S R M] : Module S p := by
+  refine' { p.to_sub_mul_action.mul_action' with smul := (· • ·).. } <;>
     · intros
       apply SetCoe.ext
-      simp [smul_add, add_smul, mul_smul]
+      simp [← smul_add, ← add_smul, ← mul_smul]
       
 
 instance : Module R p :=
@@ -259,7 +259,7 @@ instance no_zero_smul_divisors [NoZeroSmulDivisors R M] : NoZeroSmulDivisors R p
 
 /-- Embedding of a submodule `p` to the ambient space `M`. -/
 protected def subtype : p →ₗ[R] M := by
-  refine' { toFun := coe, .. } <;> simp [coe_smul]
+  refine' { toFun := coe.. } <;> simp [← coe_smul]
 
 theorem subtype_apply (x : p) : p.Subtype x = x :=
   rfl
@@ -278,7 +278,7 @@ theorem coe_sum (x : ι → p) (s : Finset ι) : ↑(∑ i in s, x i) = ∑ i in
 
 section RestrictScalars
 
-variable (S) [Semiringₓ S] [Module S M] [Module R M] [HasScalar S R] [IsScalarTower S R M]
+variable (S) [Semiringₓ S] [Module S M] [Module R M] [HasSmul S R] [IsScalarTower S R M]
 
 /-- `V.restrict_scalars S` is the `S`-submodule of the `S`-module given by restriction of scalars,
 corresponding to `V`, an `R`-submodule of the original `R`-module.
@@ -315,8 +315,8 @@ instance restrictScalars.origModule (p : Submodule R M) : Module R (p.restrictSc
   (by
     infer_instance : Module R p)
 
-instance (p : Submodule R M) : IsScalarTower S R (p.restrictScalars S) where
-  smul_assoc := fun r s x => Subtype.ext <| smul_assoc r s (x : M)
+instance (p : Submodule R M) :
+    IsScalarTower S R (p.restrictScalars S) where smul_assoc := fun r s x => Subtype.ext <| smul_assoc r s (x : M)
 
 /-- `restrict_scalars S` is an embedding of the lattice of `R`-submodules into
 the lattice of `S`-submodules. -/
@@ -325,7 +325,7 @@ def restrictScalarsEmbedding : Submodule R M ↪o Submodule S M where
   toFun := restrictScalars S
   inj' := restrict_scalars_injective S R M
   map_rel_iff' := fun p q => by
-    simp [SetLike.le_def]
+    simp [← SetLike.le_def]
 
 /-- Turning `p : submodule R M` into an `S`-submodule gives the same module structure
 as turning it into a type and adding a module structure. -/
@@ -483,7 +483,7 @@ namespace Submodule
 
 variable [DivisionRing S] [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
-variable [HasScalar S R] [Module S M] [IsScalarTower S R M]
+variable [HasSmul S R] [Module S M] [IsScalarTower S R M]
 
 variable (p : Submodule R M) {s : S} {x y : M}
 

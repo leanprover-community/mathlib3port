@@ -70,6 +70,13 @@ instance : Inhabited (AdjoinRoot f) :=
 instance : DecidableEq (AdjoinRoot f) :=
   Classical.decEq _
 
+protected theorem nontrivial [IsDomain R] (h : degree f ≠ 0) : Nontrivial (AdjoinRoot f) :=
+  Ideal.Quotient.nontrivial
+    (by
+      simp_rw [Ne.def, span_singleton_eq_top, Polynomial.is_unit_iff, not_exists, not_and]
+      rintro x hx rfl
+      exact h (degree_C hx.ne_zero))
+
 /-- Ring homomorphism from `R[x]` to `adjoin_root f` sending `X` to the `root`. -/
 def mk : R[X] →+* AdjoinRoot f :=
   Ideal.Quotient.mk _
@@ -85,7 +92,7 @@ def of : R →+* AdjoinRoot f :=
 instance [CommSemiringₓ S] [Algebra S R] : Algebra S (AdjoinRoot f) :=
   Ideal.Quotient.algebra S
 
-instance [CommSemiringₓ S] [CommSemiringₓ K] [HasScalar S K] [Algebra S R] [Algebra K R] [IsScalarTower S K R] :
+instance [CommSemiringₓ S] [CommSemiringₓ K] [HasSmul S K] [Algebra S R] [Algebra K R] [IsScalarTower S K R] :
     IsScalarTower S K (AdjoinRoot f) :=
   Submodule.Quotient.is_scalar_tower _ _
 
@@ -119,9 +126,10 @@ theorem mk_eq_mk {g h : R[X]} : mk f g = mk f h ↔ f ∣ g - h :=
 
 @[simp]
 theorem mk_self : mk f f = 0 :=
-  Quotientₓ.sound'
-    (mem_span_singleton.2 <| by
-      simp )
+  Quotientₓ.sound' <|
+    QuotientAddGroup.left_rel_apply.mpr
+      (mem_span_singleton.2 <| by
+        simp )
 
 @[simp]
 theorem mk_C (x : R) : mk f (c x) = x :=
@@ -228,21 +236,25 @@ end CommRingₓ
 
 section Irreducible
 
-variable [Field K] {f : K[X]} [Irreducible f]
+variable [Field K] {f : K[X]}
 
-instance is_maximal_span : IsMaximal (span {f} : Ideal K[X]) :=
-  PrincipalIdealRing.is_maximal_of_irreducible ‹Irreducible f›
+instance span_maximal_of_irreducible [Fact (Irreducible f)] : (span {f}).IsMaximal :=
+  PrincipalIdealRing.is_maximal_of_irreducible <| Fact.out _
 
-noncomputable instance field : Field (AdjoinRoot f) :=
+noncomputable instance field [Fact (Irreducible f)] : Field (AdjoinRoot f) :=
   { AdjoinRoot.commRing f, Ideal.Quotient.field (span {f} : Ideal K[X]) with }
 
-theorem coe_injective : Function.Injective (coe : K → AdjoinRoot f) :=
+theorem coe_injective (h : degree f ≠ 0) : Function.Injective (coe : K → AdjoinRoot f) :=
+  have := AdjoinRoot.nontrivial f h
+  (of f).Injective
+
+theorem coe_injective' [Fact (Irreducible f)] : Function.Injective (coe : K → AdjoinRoot f) :=
   (of f).Injective
 
 variable (f)
 
-theorem mul_div_root_cancel :
-    ((X - c (root f)) * (f.map (of f) / (X - c (root f))) : Polynomial (AdjoinRoot f)) = f.map (of f) :=
+theorem mul_div_root_cancel [Fact (Irreducible f)] :
+    (X - c (root f)) * (f.map (of f) / (X - c (root f))) = f.map (of f) :=
   mul_div_eq_iff_is_root.2 <| is_root_root _
 
 end Irreducible
@@ -258,7 +270,7 @@ theorem is_integral_root' (hg : g.Monic) : IsIntegral R (root g) :=
 
 This is a well-defined right inverse to `adjoin_root.mk`, see `adjoin_root.mk_left_inverse`. -/
 def modByMonicHom (hg : g.Monic) : AdjoinRoot g →ₗ[R] R[X] :=
-  (Submodule.liftq _ (Polynomial.modByMonicHom g) fun hf : f ∈ (Ideal.span {g}).restrictScalars R =>
+  (Submodule.liftq _ (Polynomial.modByMonicHom g) fun f hf : f ∈ (Ideal.span {g}).restrictScalars R =>
         (mem_ker_mod_by_monic hg).mpr (Ideal.mem_span_singleton.mp hf)).comp <|
     (Submodule.Quotient.restrictScalarsEquiv R (Ideal.span {g} : Ideal R[X])).symm.toLinearMap
 
@@ -283,24 +295,24 @@ def powerBasisAux' (hg : g.Monic) : Basis (Finₓ g.natDegree) R (AdjoinRoot g) 
       invFun := fun c => mk g <| ∑ i : Finₓ g.natDegree, monomial i (c i),
       map_add' := fun f₁ f₂ =>
         funext fun i => by
-          simp only [(mod_by_monic_hom hg).map_add, coeff_add, Pi.add_apply],
+          simp only [← (mod_by_monic_hom hg).map_add, ← coeff_add, ← Pi.add_apply],
       map_smul' := fun f₁ f₂ =>
         funext fun i => by
-          simp only [(mod_by_monic_hom hg).map_smul, coeff_smul, Pi.smul_apply, RingHom.id_apply],
+          simp only [← (mod_by_monic_hom hg).map_smul, ← coeff_smul, ← Pi.smul_apply, ← RingHom.id_apply],
       left_inv := fun f =>
         induction_on g f fun f =>
           Eq.symm <|
             mk_eq_mk.mpr <| by
-              simp only [mod_by_monic_hom_mk, sum_mod_by_monic_coeff hg degree_le_nat_degree]
+              simp only [← mod_by_monic_hom_mk, ← sum_mod_by_monic_coeff hg degree_le_nat_degree]
               rw [mod_by_monic_eq_sub_mul_div _ hg, sub_sub_cancel]
               exact dvd_mul_right _ _,
       right_inv := fun x =>
         funext fun i => by
           nontriviality R
-          simp only [mod_by_monic_hom_mk]
+          simp only [← mod_by_monic_hom_mk]
           rw [(mod_by_monic_eq_self_iff hg).mpr, finset_sum_coeff, Finset.sum_eq_single i] <;>
             try
-              simp only [coeff_monomial, eq_self_iff_true, if_true]
+              simp only [← coeff_monomial, ← eq_self_iff_true, ← if_true]
           · intro j _ hj
             exact if_neg (fin.coe_injective.ne hj)
             
@@ -325,7 +337,7 @@ def powerBasis' (hg : g.Monic) : PowerBasis R (AdjoinRoot g) where
   dim := g.natDegree
   Basis := powerBasisAux' hg
   basis_eq_pow := fun i => by
-    simp only [power_basis_aux', Basis.coe_of_equiv_fun, LinearEquiv.coe_symm_mk]
+    simp only [← power_basis_aux', ← Basis.coe_of_equiv_fun, ← LinearEquiv.coe_symm_mk]
     rw [Finset.sum_eq_single i]
     · rw [Function.update_same, monomial_one_right_eq_X_pow, (mk g).map_pow, mk_X]
       
@@ -352,10 +364,10 @@ theorem minpoly_root (hf : f ≠ 0) : minpoly K (root f) = f * c f.leadingCoeff�
   intro q q_monic q_aeval
   have commutes : (lift (algebraMap K (AdjoinRoot f)) (root f) q_aeval).comp (mk q) = mk f := by
     ext
-    · simp only [RingHom.comp_apply, mk_C, lift_of]
+    · simp only [← RingHom.comp_apply, ← mk_C, ← lift_of]
       rfl
       
-    · simp only [RingHom.comp_apply, mk_X, lift_root]
+    · simp only [← RingHom.comp_apply, ← mk_X, ← lift_root]
       
   rw [degree_eq_nat_degree f'_monic.ne_zero, degree_eq_nat_degree q_monic.ne_zero, WithBot.coe_le_coe,
     nat_degree_mul hf, nat_degree_C, add_zeroₓ]
@@ -477,7 +489,8 @@ variable [CommRingₓ R] (I : Ideal R) (f : Polynomial R)
 `f : polynomial R` and `I : ideal R`.
 
 See `adjoin_root.quot_map_of_equiv` for the isomorphism with `(R/I)[X] / (f mod I)`. -/
-def quotMapOfEquivQuotMapCMapSpanMk : AdjoinRoot f ⧸ I.map (of f) ≃+* AdjoinRoot f ⧸ (I.map c).map (span {f}) :=
+def quotMapOfEquivQuotMapCMapSpanMk :
+    AdjoinRoot f ⧸ I.map (of f) ≃+* AdjoinRoot f ⧸ (I.map (c : R →+* R[X])).map (span {f}) :=
   Ideal.quotEquivOfEq
     (by
       rw [of, AdjoinRoot.mk, Ideal.map_map])
@@ -490,8 +503,9 @@ theorem quot_map_of_equiv_quot_map_C_map_span_mk_mk (x : AdjoinRoot f) :
 /-- The natural isomorphism `R[α]/((I[x] ⊔ (f)) / (f)) ≅ (R[x]/I[x])/((f) ⊔ I[x] / I[x])`
   for `α` a root of `f : polynomial R` and `I : ideal R`-/
 def quotMapCMapSpanMkEquivQuotMapCQuotMapSpanMk :
-    AdjoinRoot f ⧸ (I.map (c : R →+* R[X])).map (span {f}) ≃+* (R[X] ⧸ map c I) ⧸ (span {f}).map (I.map c) :=
-  quotQuotEquivComm (span ({f} : Set (Polynomial R))) (I.map (c : R →+* Polynomial R))
+    AdjoinRoot f ⧸ (I.map (c : R →+* R[X])).map (span ({f} : Set R[X])) ≃+*
+      (R[X] ⧸ I.map (c : R →+* R[X])) ⧸ (span ({f} : Set R[X])).map (I.map (c : R →+* R[X])) :=
+  quotQuotEquivComm (Ideal.span ({f} : Set (Polynomial R))) (I.map (c : R →+* Polynomial R))
 
 @[simp]
 theorem quot_map_C_map_span_mk_equiv_quot_map_C_quot_map_span_mk_mk (p : R[X]) :
@@ -515,7 +529,7 @@ theorem Polynomial.quot_quot_equiv_comm_mk_mk (p : R[X]) :
     (Polynomial.quotQuotEquivComm I f).symm (Ideal.Quotient.mk _ (Ideal.Quotient.mk _ p)) =
       Ideal.Quotient.mk _ (p.map I) :=
   by
-  simp only [polynomial.quot_quot_equiv_comm, quotient_equiv_symm_mk,
+  simp only [← polynomial.quot_quot_equiv_comm, ← quotient_equiv_symm_mk, ←
     polynomial_quotient_equiv_quotient_polynomial_symm_mk]
 
 /-- The natural isomorphism `R[α]/I[α] ≅ (R/I)[X]/(f mod I)` for `α` a root of `f : polynomial R`

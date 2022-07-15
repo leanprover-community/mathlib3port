@@ -22,10 +22,9 @@ prove anything using these instances.
 
 universe u
 
-namespace Pgame
+open Pgame
 
--- mathport name: «expr ⧏ »
-local infixl:50 " ⧏ " => Lf
+namespace Pgame
 
 /-- A short game is a game with a finite set of moves at every turn. -/
 inductive Short : Pgame.{u} → Type (u + 1)
@@ -208,11 +207,11 @@ instance shortNat : ∀ n : ℕ, Short n
   | n + 1 => @Pgame.shortAdd _ _ (short_nat n) Pgame.short1
 
 instance shortBit0 (x : Pgame.{u}) [Short x] : Short (bit0 x) := by
-  dsimp' [bit0]
+  dsimp' [← bit0]
   infer_instance
 
 instance shortBit1 (x : Pgame.{u}) [Short x] : Short (bit1 x) := by
-  dsimp' [bit1]
+  dsimp' [← bit1]
   infer_instance
 
 /-- Auxiliary construction of decidability instances.
@@ -264,9 +263,8 @@ instance leDecidable (x y : Pgame.{u}) [Short x] [Short y] : Decidable (x ≤ y)
 instance lfDecidable (x y : Pgame.{u}) [Short x] [Short y] : Decidable (x ⧏ y) :=
   (leLfDecidable x y).2
 
-instance ltDecidable (x y : Pgame.{u}) [Short x] [Short y] : Decidable (x < y) := by
-  rw [lt_iff_le_and_lf]
-  exact And.decidable
+instance ltDecidable (x y : Pgame.{u}) [Short x] [Short y] : Decidable (x < y) :=
+  And.decidable
 
 instance equivDecidable (x y : Pgame.{u}) [Short x] [Short y] : Decidable (x ≈ y) :=
   And.decidable

@@ -39,7 +39,7 @@ universe w v v' u
 
 namespace CategoryTheory
 
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`forget] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`forget] []
 /-- A concrete category is a category `C` with a fixed faithful functor `forget : C ⥤ Type`.
 
 Note that `concrete_category` potentially depends on three independent universe levels,
@@ -59,8 +59,7 @@ attribute [instance] concrete_category.forget_faithful
 def forget (C : Type v) [Category C] [ConcreteCategory.{u} C] : C ⥤ Type u :=
   ConcreteCategory.forget C
 
-instance ConcreteCategory.types : ConcreteCategory (Type u) where
-  forget := 𝟭 _
+instance ConcreteCategory.types : ConcreteCategory (Type u) where forget := 𝟭 _
 
 /-- Provide a coercion to `Type u` for a concrete category. This is not marked as an instance
 as it could potentially apply to every type, and so is too expensive in typeclass search.
@@ -162,8 +161,7 @@ instance forget_faithful (C : Type v) (D : Type v') [Category C] [ConcreteCatego
   HasForget₂.forget_comp.faithful_of_comp
 
 instance InducedCategory.concreteCategory {C : Type v} {D : Type v'} [Category D] [ConcreteCategory D] (f : C → D) :
-    ConcreteCategory (InducedCategory D f) where
-  forget := inducedFunctor f ⋙ forget D
+    ConcreteCategory (InducedCategory D f) where forget := inducedFunctor f ⋙ forget D
 
 instance InducedCategory.hasForget₂ {C : Type v} {D : Type v'} [Category D] [ConcreteCategory D] (f : C → D) :
     HasForget₂ (InducedCategory D f) D where
@@ -171,8 +169,7 @@ instance InducedCategory.hasForget₂ {C : Type v} {D : Type v'} [Category D] [C
   forget_comp := rfl
 
 instance fullSubcategory.concreteCategory {C : Type v} [Category C] [ConcreteCategory C] (Z : C → Prop) :
-    ConcreteCategory { X : C // Z X } where
-  forget := fullSubcategoryInclusion Z ⋙ forget C
+    ConcreteCategory { X : C // Z X } where forget := fullSubcategoryInclusion Z ⋙ forget C
 
 instance fullSubcategory.hasForget₂ {C : Type v} [Category C] [ConcreteCategory C] (Z : C → Prop) :
     HasForget₂ { X : C // Z X } C where

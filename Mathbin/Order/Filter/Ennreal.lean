@@ -63,8 +63,8 @@ theorem limsup_const_mul_of_ne_top {u : α → ℝ≥0∞} {a : ℝ≥0∞} (ha_
     function.bijective_iff_has_inverse.mpr
       ⟨fun x => a⁻¹ * x,
         ⟨fun x => by
-          simp [← mul_assoc, inv_mul_cancel ha_zero ha_top], fun x => by
-          simp [g, ← mul_assoc, mul_inv_cancel ha_zero ha_top]⟩⟩
+          simp [mul_assoc, ← inv_mul_cancel ha_zero ha_top], fun x => by
+          simp [← g, mul_assoc, ← mul_inv_cancel ha_zero ha_top]⟩⟩
   have hg_mono : StrictMono g :=
     Monotone.strict_mono_of_injective
       (fun _ _ _ => by
@@ -86,8 +86,8 @@ theorem limsup_const_mul [CountableInterFilter f] {u : α → ℝ≥0∞} {a : �
   · have hau : (fun x => a * u x) =ᶠ[f] 0 := by
       refine' hu.mono fun x hx => _
       rw [Pi.zero_apply] at hx
-      simp [hx]
-    simp only [limsup_congr hu, limsup_congr hau, Pi.zero_apply, ← bot_eq_zero, limsup_const_bot]
+      simp [← hx]
+    simp only [← limsup_congr hu, ← limsup_congr hau, ← Pi.zero_apply, bot_eq_zero, ← limsup_const_bot]
     simp
     
   · simp_rw [ha_top, top_mul]
@@ -95,11 +95,11 @@ theorem limsup_const_mul [CountableInterFilter f] {u : α → ℝ≥0∞} {a : �
       rw [eventually_eq, not_eventually] at hu
       refine' hu.mono fun x hx => _
       rw [Pi.zero_apply] at hx
-      simp [hx]
+      simp [← hx]
     have h_top_le : (f.limsup fun x : α => ite (u x = 0) (0 : ℝ≥0∞) ⊤) = ⊤ :=
       eq_top_iff.mpr (le_limsup_of_frequently_le hu_mul)
     have hfu : f.limsup u ≠ 0 := mt limsup_eq_zero_iff.1 hu
-    simp only [h_top_le, hfu, if_false]
+    simp only [← h_top_le, ← hfu, ← if_false]
     
 
 theorem limsup_add_le [CountableInterFilter f] (u v : α → ℝ≥0∞) : f.limsup (u + v) ≤ f.limsup u + f.limsup v :=

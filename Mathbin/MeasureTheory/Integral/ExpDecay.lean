@@ -27,17 +27,17 @@ open Real intervalIntegral MeasureTheory Set Filter
 theorem integral_exp_neg_le {b : ℝ} (a X : ℝ) (h2 : 0 < b) : (∫ x in a..X, exp (-b * x)) ≤ exp (-b * a) / b := by
   rw [integral_deriv_eq_sub' fun x => -exp (-b * x) / b]
   -- goal 1/4: F(X) - F(a) is bounded
-  · simp only [tsub_le_iff_right]
+  · simp only [← tsub_le_iff_right]
     rw [neg_div b (exp (-b * a)), neg_div b (exp (-b * X)), add_neg_selfₓ, neg_le, neg_zero]
     exact (div_pos (exp_pos _) h2).le
     
   -- goal 2/4: the derivative of F is exp(-b x)
   · ext1
-    simp [h2.ne']
+    simp [← h2.ne']
     
   -- goal 3/4: F is differentiable
   · intro x hx
-    simp [h2.ne']
+    simp [← h2.ne']
     
   -- goal 4/4: exp(-b x) is continuous
   · apply Continuous.continuous_on
@@ -50,7 +50,7 @@ theorem exp_neg_integrable_on_Ioi (a : ℝ) {b : ℝ} (h : 0 < b) : IntegrableOn
     intro X
     exact (continuous_const.mul continuous_id).exp.integrable_on_Ioc
   apply integrable_on_Ioi_of_interval_integral_norm_bounded (exp (-b * a) / b) a this tendsto_id
-  simp only [eventually_at_top, norm_of_nonneg (exp_pos _).le]
+  simp only [← eventually_at_top, ← norm_of_nonneg (exp_pos _).le]
   exact ⟨a, fun b2 hb2 => integral_exp_neg_le a b2 h⟩
 
 /-- If `f` is continuous on `[a, ∞)`, and is `O (exp (-b * x))` at `∞` for some `b > 0`, then
@@ -68,7 +68,7 @@ theorem integrable_of_is_O_exp_neg {f : ℝ → ℝ} {a b : ℝ} (h0 : 0 < b) (h
     exact (h1.mono u).interval_integrable_of_Icc (le_max_leftₓ a r)
   suffices integrable_on f (Ioi v) by
     have t : integrable_on f (Ioc a v ∪ Ioi v) := integrable_on_union.mpr ⟨int_left, this⟩
-    simpa only [Ioc_union_Ioi_eq_Ioi, le_max_iff, le_reflₓ, true_orₓ] using t
+    simpa only [← Ioc_union_Ioi_eq_Ioi, ← le_max_iff, ← le_reflₓ, ← true_orₓ] using t
   -- now show integrable on `(v, ∞)` from asymptotic
   constructor
   · exact (h1.mono <| Ioi_subset_Ici <| le_max_leftₓ a r).AeStronglyMeasurable measurable_set_Ioi

@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Bhavik Mehta
+Authors: Bhavik Mehta, Jakob von Raumer
 -/
 import Mathbin.CategoryTheory.Limits.HasLimits
 import Mathbin.CategoryTheory.Thin
@@ -25,13 +25,13 @@ pullbacks and finite wide pullbacks.
 -/
 
 
-universe v u
+universe w w' v u
 
 open CategoryTheory CategoryTheory.Limits Opposite
 
 namespace CategoryTheory.Limits
 
-variable (J : Type v)
+variable (J : Type w)
 
 /-- A wide pullback shape for any type `J` can be written simply as `option J`. -/
 def WidePullbackShape :=
@@ -46,7 +46,7 @@ namespace WidePullbackShape
 variable {J}
 
 /-- The type of arrows for the shape indexing a wide pullback. -/
-inductive Hom : WidePullbackShape J → WidePullbackShape J → Type v
+inductive Hom : WidePullbackShape J → WidePullbackShape J → Type w
   | id : ∀ X, hom X X
   | term : ∀ j : J, hom (some j) none
   deriving DecidableEq
@@ -119,7 +119,29 @@ def mkCone {F : WidePullbackShape J ⥤ C} {X : C} (f : X ⟶ F.obj none) (π : 
           | none => f
           | some j => π j,
         naturality' := fun j j' f => by
-          cases j <;> cases j' <;> cases f <;> unfold_aux <;> dsimp' <;> simp [w] } }
+          cases j <;> cases j' <;> cases f <;> unfold_aux <;> dsimp' <;> simp [← w] } }
+
+/-- Wide pullback diagrams of equivalent index types are equivlent. -/
+def equivalenceOfEquiv (J' : Type w') (h : J ≃ J') : WidePullbackShape J ≌ WidePullbackShape J' where
+  Functor := wideCospan none (fun j => some (h j)) fun j => Hom.term (h j)
+  inverse := wideCospan none (fun j => some (h.invFun j)) fun j => Hom.term (h.invFun j)
+  unitIso :=
+    NatIso.ofComponents
+      (fun j => by
+        cases j <;> simp )
+      fun j k f => by
+      simp only [← eq_iff_true_of_subsingleton]
+  counitIso :=
+    NatIso.ofComponents
+      (fun j => by
+        cases j <;> simp )
+      fun j k f => by
+      simp only [← eq_iff_true_of_subsingleton]
+
+/-- Lifting universe and morphism levels preserves wide pullback diagrams. -/
+def uliftEquivalence : UliftHom.{w'} (ULift.{w'} (WidePullbackShape J)) ≌ WidePullbackShape (ULift J) :=
+  (UliftHomUliftCategory.equiv.{w', w', w, w} (WidePullbackShape J)).symm.trans
+    (equivalenceOfEquiv _ (Equivₓ.ulift.{w', w}.symm : J ≃ ULift.{w'} J))
 
 end WidePullbackShape
 
@@ -128,7 +150,7 @@ namespace WidePushoutShape
 variable {J}
 
 /-- The type of arrows for the shape indexing a wide psuhout. -/
-inductive Hom : WidePushoutShape J → WidePushoutShape J → Type v
+inductive Hom : WidePushoutShape J → WidePushoutShape J → Type w
   | id : ∀ X, hom X X
   | init : ∀ j : J, hom none (some j)
   deriving DecidableEq
@@ -200,7 +222,7 @@ def mkCocone {F : WidePushoutShape J ⥤ C} {X : C} (f : F.obj none ⟶ X) (ι :
           | none => f
           | some j => ι j,
         naturality' := fun j j' f => by
-          cases j <;> cases j' <;> cases f <;> unfold_aux <;> dsimp' <;> simp [w] } }
+          cases j <;> cases j' <;> cases f <;> unfold_aux <;> dsimp' <;> simp [← w] } }
 
 end WidePushoutShape
 
@@ -208,11 +230,11 @@ variable (C : Type u) [Category.{v} C]
 
 /-- `has_wide_pullbacks` represents a choice of wide pullback for every collection of morphisms -/
 abbrev HasWidePullbacks : Prop :=
-  ∀ J : Type v, HasLimitsOfShape (WidePullbackShape J) C
+  ∀ J : Type w, HasLimitsOfShape (WidePullbackShape J) C
 
 /-- `has_wide_pushouts` represents a choice of wide pushout for every collection of morphisms -/
 abbrev HasWidePushouts : Prop :=
-  ∀ J : Type v, HasColimitsOfShape (WidePushoutShape J) C
+  ∀ J : Type w, HasColimitsOfShape (WidePushoutShape J) C
 
 variable {C J}
 
@@ -455,6 +477,11 @@ def widePullbackShapeOpEquiv : (WidePullbackShape J)ᵒᵖ ≌ WidePushoutShape 
   inverse := widePushoutShapeOp J
   unitIso := (widePullbackShapeOpUnop J).symm
   counitIso := widePushoutShapeUnopOp J
+
+/-- If a category has wide pullbacks on a higher universe level it also has wide pullbacks
+on a lower universe level. -/
+theorem has_wide_pullbacks_shrink [HasWidePullbacks.{max w w'} C] : HasWidePullbacks.{w} C := fun J =>
+  has_limits_of_shape_of_equivalence (WidePullbackShape.equivalenceOfEquiv _ Equivₓ.ulift.{w'})
 
 end CategoryTheory.Limits
 

@@ -202,24 +202,24 @@ noncomputable def isoPullback (h : IsPullback fst snd f g) [HasPullback f g] : P
 @[simp]
 theorem iso_pullback_hom_fst (h : IsPullback fst snd f g) [HasPullback f g] : h.isoPullback.Hom ≫ pullback.fst = fst :=
   by
-  dsimp' [iso_pullback, cone, comm_sq.cone]
+  dsimp' [← iso_pullback, ← cone, ← comm_sq.cone]
   simp
 
 @[simp]
 theorem iso_pullback_hom_snd (h : IsPullback fst snd f g) [HasPullback f g] : h.isoPullback.Hom ≫ pullback.snd = snd :=
   by
-  dsimp' [iso_pullback, cone, comm_sq.cone]
+  dsimp' [← iso_pullback, ← cone, ← comm_sq.cone]
   simp
 
 @[simp]
 theorem iso_pullback_inv_fst (h : IsPullback fst snd f g) [HasPullback f g] : h.isoPullback.inv ≫ fst = pullback.fst :=
   by
-  simp [iso.inv_comp_eq]
+  simp [← iso.inv_comp_eq]
 
 @[simp]
 theorem iso_pullback_inv_snd (h : IsPullback fst snd f g) [HasPullback f g] : h.isoPullback.inv ≫ snd = pullback.snd :=
   by
-  simp [iso.inv_comp_eq]
+  simp [← iso.inv_comp_eq]
 
 theorem of_iso_pullback (h : CommSq fst snd f g) [HasPullback f g] (i : P ≅ pullback f g)
     (w₁ : i.Hom ≫ pullback.fst = fst) (w₂ : i.Hom ≫ pullback.snd = snd) : IsPullback fst snd f g :=
@@ -300,21 +300,21 @@ noncomputable def isoPushout (h : IsPushout f g inl inr) [HasPushout f g] : P �
 
 @[simp]
 theorem inl_iso_pushout_inv (h : IsPushout f g inl inr) [HasPushout f g] : pushout.inl ≫ h.isoPushout.inv = inl := by
-  dsimp' [iso_pushout, cocone, comm_sq.cocone]
+  dsimp' [← iso_pushout, ← cocone, ← comm_sq.cocone]
   simp
 
 @[simp]
 theorem inr_iso_pushout_inv (h : IsPushout f g inl inr) [HasPushout f g] : pushout.inr ≫ h.isoPushout.inv = inr := by
-  dsimp' [iso_pushout, cocone, comm_sq.cocone]
+  dsimp' [← iso_pushout, ← cocone, ← comm_sq.cocone]
   simp
 
 @[simp]
 theorem inl_iso_pushout_hom (h : IsPushout f g inl inr) [HasPushout f g] : inl ≫ h.isoPushout.Hom = pushout.inl := by
-  simp [← iso.eq_comp_inv]
+  simp [iso.eq_comp_inv]
 
 @[simp]
 theorem inr_iso_pushout_hom (h : IsPushout f g inl inr) [HasPushout f g] : inr ≫ h.isoPushout.Hom = pushout.inr := by
-  simp [← iso.eq_comp_inv]
+  simp [iso.eq_comp_inv]
 
 theorem of_iso_pushout (h : CommSq f g inl inr) [HasPushout f g] (i : P ≅ pushout f g) (w₁ : inl ≫ i.Hom = pushout.inl)
     (w₂ : inr ≫ i.Hom = pushout.inr) : IsPushout f g inl inr :=
@@ -468,9 +468,8 @@ theorem map_is_pullback [PreservesLimit (cospan h i) F] (s : IsPullback f g h i)
   -- and so the relevant `walking_cospan` diagrams live in different universes too!
   refine'
     is_pullback.of_is_limit' (F.map_comm_sq s.to_comm_sq)
-      (is_limit.of_whisker_equivalence walking_cospan_equiv
-        (is_limit.equiv_of_nat_iso_of_iso (cospan_comp_iso F h i) _ _ (walking_cospan.ext _ _ _)
-          (is_limit_of_preserves F s.is_limit)))
+      (is_limit.equiv_of_nat_iso_of_iso (cospan_comp_iso F h i) _ _ (walking_cospan.ext _ _ _)
+        (is_limit_of_preserves F s.is_limit))
   · rfl
     
   · dsimp'
@@ -486,9 +485,8 @@ theorem map_is_pushout [PreservesColimit (span f g) F] (s : IsPushout f g h i) :
     IsPushout (F.map f) (F.map g) (F.map h) (F.map i) := by
   refine'
     is_pushout.of_is_colimit' (F.map_comm_sq s.to_comm_sq)
-      (is_colimit.of_whisker_equivalence walking_span_equiv
-        (is_colimit.equiv_of_nat_iso_of_iso (span_comp_iso F f g) _ _ (walking_span.ext _ _ _)
-          (is_colimit_of_preserves F s.is_colimit)))
+      (is_colimit.equiv_of_nat_iso_of_iso (span_comp_iso F f g) _ _ (walking_span.ext _ _ _)
+        (is_colimit_of_preserves F s.is_colimit))
   · rfl
     
   · dsimp'
@@ -502,11 +500,11 @@ theorem map_is_pushout [PreservesColimit (span f g) F] (s : IsPushout f g h i) :
 
 end Functor
 
-alias functor.map_comm_sq ← CommSq.map
+alias functor.map_comm_sq ← comm_sq.map
 
-alias functor.map_is_pullback ← IsPullback.map
+alias functor.map_is_pullback ← is_pullback.map
 
-alias functor.map_is_pushout ← IsPushout.map
+alias functor.map_is_pushout ← is_pushout.map
 
 end CategoryTheory
 

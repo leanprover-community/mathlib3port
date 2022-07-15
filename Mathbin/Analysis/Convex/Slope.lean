@@ -42,7 +42,7 @@ theorem ConvexOn.slope_mono_adjacent (hf : ConvexOn 𝕜 s f) {x y z : 𝕜} (hx
         rw [div_eq_iff] <;> [ring, linarith])
   rw [hy] at key
   replace key := mul_le_mul_of_nonneg_left key hxz.le
-  field_simp [hxy.ne', hyz.ne', hxz.ne', mul_comm (z - x) _]  at key⊢
+  field_simp [← hxy.ne', ← hyz.ne', ← hxz.ne', ← mul_comm (z - x) _]  at key⊢
   rw [div_le_div_right]
   · linarith
     
@@ -80,7 +80,7 @@ theorem StrictConvexOn.slope_strict_mono_adjacent (hf : StrictConvexOn 𝕜 s f)
         rw [div_eq_iff] <;> [ring, linarith])
   rw [hy] at key
   replace key := mul_lt_mul_of_pos_left key hxz
-  field_simp [hxy.ne', hyz.ne', hxz.ne', mul_comm (z - x) _]  at key⊢
+  field_simp [← hxy.ne', ← hyz.ne', ← hxz.ne', ← mul_comm (z - x) _]  at key⊢
   rw [div_lt_div_right]
   · linarith
     

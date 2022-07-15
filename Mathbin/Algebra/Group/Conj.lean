@@ -100,7 +100,7 @@ theorem conj_pow {i : ℕ} {a b : α} : (a * b * a⁻¹) ^ i = a * b ^ i * a⁻�
   induction' i with i hi
   · simp
     
-  · simp [pow_succₓ, hi]
+  · simp [← pow_succₓ, ← hi]
     
 
 @[simp]
@@ -108,7 +108,7 @@ theorem conj_zpow {i : ℤ} {a b : α} : (a * b * a⁻¹) ^ i = a * b ^ i * a⁻
   induction i
   · simp
     
-  · simp [zpow_neg_succ_of_nat, conj_pow]
+  · simp [← zpow_neg_succ_of_nat, ← conj_pow]
     
 
 theorem conj_injective {x : α} : Function.Injective fun g : α => x * g * x⁻¹ :=
@@ -120,11 +120,11 @@ end Groupₓ
 theorem is_conj_iff₀ [GroupWithZeroₓ α] {a b : α} : IsConj a b ↔ ∃ c : α, c ≠ 0 ∧ c * a * c⁻¹ = b :=
   ⟨fun ⟨c, hc⟩ =>
     ⟨c, by
-      rw [← Units.coe_inv', Units.mul_inv_eq_iff_eq_mul]
+      rw [← Units.coe_inv, Units.mul_inv_eq_iff_eq_mul]
       exact ⟨c.ne_zero, hc⟩⟩,
     fun ⟨c, c0, hc⟩ =>
     ⟨Units.mk0 c c0, by
-      rw [SemiconjBy, ← Units.mul_inv_eq_iff_eq_mul, Units.coe_inv', Units.coe_mk0]
+      rw [SemiconjBy, ← Units.mul_inv_eq_iff_eq_mul, Units.coe_inv, Units.coe_mk0]
       exact hc⟩⟩
 
 namespace IsConj
@@ -246,7 +246,7 @@ theorem mk_bijective : Function.Bijective (@ConjClasses.mk α _) :=
 
 /-- The bijection between a `comm_group` and its `conj_classes`. -/
 def mkEquiv : α ≃ ConjClasses α :=
-  ⟨ConjClasses.mk, Quotientₓ.lift id fun b => is_conj_iff_eq.1, Quotientₓ.lift_mk _ _, by
+  ⟨ConjClasses.mk, Quotientₓ.lift id fun a : α b => is_conj_iff_eq.1, Quotientₓ.lift_mk _ _, by
     rw [Function.RightInverse, Function.LeftInverse, forall_is_conj]
     intro x
     rw [← quotient_mk_eq_mk, ← quotient_mk_eq_mk, Quotientₓ.lift_mk, id.def]⟩
@@ -287,7 +287,7 @@ attribute [local instance] IsConj.setoid
 
 /-- Given a conjugacy class `a`, `carrier a` is the set it represents. -/
 def Carrier : ConjClasses α → Set α :=
-  Quotientₓ.lift ConjugatesOf fun b ab => IsConj.conjugates_of_eq ab
+  Quotientₓ.lift ConjugatesOf fun a : α b ab => IsConj.conjugates_of_eq ab
 
 theorem mem_carrier_mk {a : α} : a ∈ Carrier (ConjClasses.mk a) :=
   IsConj.refl _

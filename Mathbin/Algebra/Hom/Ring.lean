@@ -172,7 +172,7 @@ end
 
 /-- The identity non-unital ring homomorphism from a non-unital semiring to itself. -/
 protected def id (α : Type _) [NonUnitalNonAssocSemiringₓ α] : α →ₙ+* α := by
-  refine' { toFun := id, .. } <;> intros <;> rfl
+  refine' { toFun := id.. } <;> intros <;> rfl
 
 include rα rβ
 
@@ -338,7 +338,7 @@ variable [NonAssocSemiringₓ α] [NonAssocSemiringₓ β] [RingHomClass F α β
 /-- Ring homomorphisms preserve `bit1`. -/
 @[simp]
 theorem map_bit1 (f : F) (a : α) : (f (bit1 a) : β) = bit1 (f a) := by
-  simp [bit1]
+  simp [← bit1]
 
 instance : CoeTₓ F (α →+* β) :=
   ⟨fun f =>
@@ -503,7 +503,7 @@ theorem codomain_trivial_iff_range_eq_singleton_zero : (0 : β) = 1 ↔ Set.Rang
     ⟨fun h =>
       Set.ext fun y =>
         ⟨fun ⟨x, hx⟩ => by
-          simp [← hx, h x], fun hy =>
+          simp [hx, ← h x], fun hy =>
           ⟨0, by
             simpa using hy.symm⟩⟩,
       fun h x => Set.mem_singleton_iff.mp (h ▸ Set.mem_range_self x)⟩
@@ -549,7 +549,7 @@ end Semiringₓ
 
 /-- The identity ring homomorphism from a semiring to itself. -/
 def id (α : Type _) [NonAssocSemiringₓ α] : α →+* α := by
-  refine' { toFun := id, .. } <;> intros <;> rfl
+  refine' { toFun := id.. } <;> intros <;> rfl
 
 include rα
 
@@ -655,7 +655,7 @@ def mkRingHomOfMulSelfOfTwoNeZero (h : ∀ x, f (x * x) = f x * f x) (h_two : (2
       have hxy := h (x + y)
       rw [mul_addₓ, add_mulₓ, add_mulₓ, f.map_add, f.map_add, f.map_add, f.map_add, h x, h y, add_mulₓ, mul_addₓ,
         mul_addₓ, ← sub_eq_zero, add_commₓ, ← sub_sub, ← sub_sub, ← sub_sub, mul_comm y x, mul_comm (f y) (f x)] at hxy
-      simp only [add_assocₓ, add_sub_assoc, add_sub_cancel'_right] at hxy
+      simp only [← add_assocₓ, ← add_sub_assoc, ← add_sub_cancel'_right] at hxy
       rw [sub_sub, ← two_mul, ← add_sub_assoc, ← two_mul, ← mul_sub, mul_eq_zero, sub_eq_zero, or_iff_not_imp_left] at
         hxy
       exact hxy h_two }

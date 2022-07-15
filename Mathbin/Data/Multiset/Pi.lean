@@ -51,17 +51,17 @@ theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : 
   rcases ne_or_eq a'' a with (h₁ | rfl)
   rcases eq_or_ne a'' a' with (rfl | h₂)
   all_goals
-    simp [*, pi.cons_same, pi.cons_ne]
+    simp [*, ← pi.cons_same, ← pi.cons_ne]
 
 /-- `pi m t` constructs the Cartesian product over `t` indexed by `m`. -/
 def pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : Multiset (∀, ∀ a ∈ m, ∀, δ a) :=
-  m.recOn {Pi.emptyₓ δ} (fun p : Multiset (∀, ∀ a ∈ m, ∀, δ a) => (t a).bind fun b => p.map <| Pi.cons m a b)
+  m.recOn {Pi.emptyₓ δ} (fun a m p : Multiset (∀, ∀ a ∈ m, ∀, δ a) => (t a).bind fun b => p.map <| Pi.cons m a b)
     (by
       intro a a' m n
       by_cases' eq : a = a'
       · subst Eq
         
-      · simp [map_bind, bind_bind (t a') (t a)]
+      · simp [← map_bind, ← bind_bind (t a') (t a)]
         apply bind_hcongr
         · rw [cons_swap a a']
           
@@ -106,7 +106,7 @@ theorem card_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : card (pi m t) =
     (by
       simp )
     (by
-      simp (config := { contextual := true })[mul_comm])
+      simp (config := { contextual := true })[← mul_comm])
 
 protected theorem Nodup.pi {s : Multiset α} {t : ∀ a, Multiset (δ a)} :
     Nodup s → (∀, ∀ a ∈ s, ∀, Nodup (t a)) → Nodup (pi s t) :=

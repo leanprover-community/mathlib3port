@@ -42,13 +42,13 @@ instance [MulOneClassₓ M] [CommMonoidₓ N] : CommMonoidₓ (M →* N) where
       map_one' := by
         simp ,
       map_mul' := fun x y => by
-        simp [mul_powₓ] }
+        simp [← mul_powₓ] }
   npow_zero' := fun f => by
     ext x
     simp
   npow_succ' := fun n f => by
     ext x
-    simp [pow_succₓ]
+    simp [← pow_succₓ]
 
 /-- If `G` is a commutative group, then `M →* G` is a commutative group too. -/
 @[to_additive "If `G` is an additive commutative group, then `M →+ G` is an additive commutative\ngroup too."]
@@ -65,22 +65,27 @@ instance {M G} [MulOneClassₓ M] [CommGroupₓ G] : CommGroupₓ (M →* G) :=
         map_one' := by
           simp ,
         map_mul' := fun x y => by
-          simp [mul_zpow] },
+          simp [← mul_zpow] },
     zpow_zero' := fun f => by
       ext x
       simp ,
     zpow_succ' := fun n f => by
       ext x
-      simp [zpow_of_nat, pow_succₓ],
+      simp [← zpow_of_nat, ← pow_succₓ],
     zpow_neg' := fun n f => by
       ext x
       simp }
+
+instance [AddCommMonoidₓ M] : AddCommMonoidₓ (AddMonoidₓ.End M) :=
+  AddMonoidHom.addCommMonoid
 
 instance [AddCommMonoidₓ M] : Semiringₓ (AddMonoidₓ.End M) :=
   { AddMonoidₓ.End.monoid M, AddMonoidHom.addCommMonoid with zero_mul := fun x => AddMonoidHom.ext fun i => rfl,
     mul_zero := fun x => AddMonoidHom.ext fun i => AddMonoidHom.map_zero _,
     left_distrib := fun x y z => AddMonoidHom.ext fun i => AddMonoidHom.map_add _ _ _,
-    right_distrib := fun x y z => AddMonoidHom.ext fun i => rfl }
+    right_distrib := fun x y z => AddMonoidHom.ext fun i => rfl, natCast := fun n => n • 1,
+    nat_cast_zero := AddMonoidₓ.nsmul_zero' _,
+    nat_cast_succ := fun n => (AddMonoidₓ.nsmul_succ' n 1).trans (add_commₓ _ _) }
 
 instance [AddCommGroupₓ M] : Ringₓ (AddMonoidₓ.End M) :=
   { AddMonoidₓ.End.semiring, AddMonoidHom.addCommGroup with }

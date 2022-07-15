@@ -77,7 +77,7 @@ protected def Equivₓ.star [HasInvolutiveStar R] : Equivₓ.Perm R :=
   star_involutive.toPerm _
 
 theorem eq_star_of_eq_star [HasInvolutiveStar R] {r s : R} (h : r = star s) : s = star r := by
-  simp [h]
+  simp [← h]
 
 theorem eq_star_iff_eq_star [HasInvolutiveStar R] {r s : R} : r = star s ↔ s = star r :=
   ⟨eq_star_of_eq_star, eq_star_of_eq_star⟩
@@ -240,8 +240,8 @@ which makes `R` with its multiplicative structure into a `*`-semigroup
 class StarRing (R : Type u) [NonUnitalSemiringₓ R] extends StarSemigroup R where
   star_add : ∀ r s : R, star (r + s) = star r + star s
 
-instance (priority := 100) StarRing.toStarAddMonoid [NonUnitalSemiringₓ R] [StarRing R] : StarAddMonoid R where
-  star_add := StarRing.star_add
+instance (priority := 100) StarRing.toStarAddMonoid [NonUnitalSemiringₓ R] [StarRing R] :
+    StarAddMonoid R where star_add := StarRing.star_add
 
 /-- `star` as an `ring_equiv` from `R` to `Rᵐᵒᵖ` -/
 @[simps apply]
@@ -313,11 +313,11 @@ theorem star_div' [Field R] [StarRing R] (x y : R) : star (x / y) = star x / sta
 
 @[simp]
 theorem star_bit0 [AddMonoidₓ R] [StarAddMonoid R] (r : R) : star (bit0 r) = bit0 (star r) := by
-  simp [bit0]
+  simp [← bit0]
 
 @[simp]
 theorem star_bit1 [Semiringₓ R] [StarRing R] (r : R) : star (bit1 r) = bit1 (star r) := by
-  simp [bit1]
+  simp [← bit1]
 
 /-- Any commutative semiring admits the trivial `*`-structure.
 
@@ -363,12 +363,12 @@ and the two star structures are compatible in the sense
 
 Note that it is up to the user of this typeclass to enforce
 `[semiring R] [star_ring R] [add_comm_monoid A] [star_add_monoid A] [module R A]`, and that
-the statement only requires `[has_star R] [has_star A] [has_scalar R A]`.
+the statement only requires `[has_star R] [has_star A] [has_smul R A]`.
 
 If used as `[comm_ring R] [star_ring R] [semiring A] [star_ring A] [algebra R A]`, this represents a
 star algebra.
 -/
-class StarModule (R : Type u) (A : Type v) [HasStar R] [HasStar A] [HasScalar R A] : Prop where
+class StarModule (R : Type u) (A : Type v) [HasStar R] [HasStar A] [HasSmul R A] : Prop where
   star_smul : ∀ r : R a : A, star (r • a) = star r • star a
 
 export StarModule (star_smul)
@@ -411,7 +411,7 @@ theorem coe_star (u : Rˣ) : ↑(star u) = (star ↑u : R) :=
 theorem coe_star_inv (u : Rˣ) : ↑(star u)⁻¹ = (star ↑u⁻¹ : R) :=
   rfl
 
-instance {A : Type _} [HasStar A] [HasScalar R A] [StarModule R A] : StarModule Rˣ A :=
+instance {A : Type _} [HasStar A] [HasSmul R A] [StarModule R A] : StarModule Rˣ A :=
   ⟨fun u a => (star_smul (↑u) a : _)⟩
 
 end Units
@@ -445,8 +445,7 @@ theorem star_inv_of {R : Type _} [Monoidₓ R] [StarSemigroup R] (r : R) [Invert
 namespace MulOpposite
 
 /-- The opposite type carries the same star operation. -/
-instance [HasStar R] : HasStar Rᵐᵒᵖ where
-  star := fun r => op (star r.unop)
+instance [HasStar R] : HasStar Rᵐᵒᵖ where star := fun r => op (star r.unop)
 
 @[simp]
 theorem unop_star [HasStar R] (r : Rᵐᵒᵖ) : unop (star r) = star (unop r) :=
@@ -456,14 +455,14 @@ theorem unop_star [HasStar R] (r : Rᵐᵒᵖ) : unop (star r) = star (unop r) :
 theorem op_star [HasStar R] (r : R) : op (star r) = star (op r) :=
   rfl
 
-instance [HasInvolutiveStar R] : HasInvolutiveStar Rᵐᵒᵖ where
-  star_involutive := fun r => unop_injective (star_star r.unop)
+instance [HasInvolutiveStar R] :
+    HasInvolutiveStar Rᵐᵒᵖ where star_involutive := fun r => unop_injective (star_star r.unop)
 
-instance [Monoidₓ R] [StarSemigroup R] : StarSemigroup Rᵐᵒᵖ where
-  star_mul := fun x y => unop_injective (star_mul y.unop x.unop)
+instance [Monoidₓ R] [StarSemigroup R] :
+    StarSemigroup Rᵐᵒᵖ where star_mul := fun x y => unop_injective (star_mul y.unop x.unop)
 
-instance [AddMonoidₓ R] [StarAddMonoid R] : StarAddMonoid Rᵐᵒᵖ where
-  star_add := fun x y => unop_injective (star_add x.unop y.unop)
+instance [AddMonoidₓ R] [StarAddMonoid R] :
+    StarAddMonoid Rᵐᵒᵖ where star_add := fun x y => unop_injective (star_add x.unop y.unop)
 
 instance [Semiringₓ R] [StarRing R] : StarRing Rᵐᵒᵖ :=
   { MulOpposite.starAddMonoid with }

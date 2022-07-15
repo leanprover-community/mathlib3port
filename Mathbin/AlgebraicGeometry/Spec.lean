@@ -103,7 +103,7 @@ theorem Spec.SheafedSpace_map_id {R : CommRingₓₓ} : Spec.sheafedSpaceMap (�
         swap
         · rw [Spec.Top_map_id, TopologicalSpace.Opens.map_id_obj_unop]
           
-        simpa [eq_to_hom_map]
+        simpa [← eq_to_hom_map]
 
 theorem Spec.SheafedSpace_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) (g : S ⟶ T) :
     Spec.sheafedSpaceMap (f ≫ g) = Spec.sheafedSpaceMap g ≫ Spec.sheafedSpaceMap f :=
@@ -129,7 +129,7 @@ def Spec.toSheafedSpace : CommRingₓₓᵒᵖ ⥤ SheafedSpace CommRingₓₓ w
 
 /-- Spec, as a contravariant functor from commutative rings to presheafed spaces.
 -/
-def Spec.toPresheafedSpace : CommRingₓₓᵒᵖ ⥤ PresheafedSpace CommRingₓₓ :=
+def Spec.toPresheafedSpace : CommRingₓₓᵒᵖ ⥤ PresheafedSpace.{u} CommRingₓₓ.{u} :=
   Spec.to_SheafedSpace ⋙ SheafedSpace.forget_to_PresheafedSpace
 
 @[simp]

@@ -44,7 +44,7 @@ theorem PairwiseDisjoint.bUnion_finset {s : Set ι'} {g : ι' → Finset ι} {f 
     (hs : s.PairwiseDisjoint fun i' : ι' => (g i').sup f) (hg : ∀, ∀ i ∈ s, ∀, (g i : Set ι).PairwiseDisjoint f) :
     (⋃ i ∈ s, ↑(g i)).PairwiseDisjoint f := by
   rintro a ha b hb hab
-  simp_rw [Set.mem_Union]  at ha hb
+  simp_rw [Set.mem_Union] at ha hb
   obtain ⟨c, hc, ha⟩ := ha
   obtain ⟨d, hd, hb⟩ := hb
   obtain hcd | hcd := eq_or_ne (g c) (g d)

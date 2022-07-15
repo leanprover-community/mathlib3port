@@ -328,7 +328,7 @@ theorem IsExtrOn.on_preimage (g : δ → α) {b : δ} (hf : IsExtrOn f s (g b)) 
 
 theorem IsMinOn.comp_maps_to {t : Set δ} {g : δ → α} {b : δ} (hf : IsMinOn f s a) (hg : MapsTo g t s) (ha : g b = a) :
     IsMinOn (f ∘ g) t b := fun y hy => by
-  simpa only [mem_set_of_eq, ha, (· ∘ ·)] using hf (hg hy)
+  simpa only [← mem_set_of_eq, ← ha, ← (· ∘ ·)] using hf (hg hy)
 
 theorem IsMaxOn.comp_maps_to {t : Set δ} {g : δ → α} {b : δ} (hf : IsMaxOn f s a) (hg : MapsTo g t s) (ha : g b = a) :
     IsMaxOn (f ∘ g) t b :=
@@ -387,16 +387,16 @@ theorem IsExtrOn.neg (hf : IsExtrOn f s a) : IsExtrOn (fun x => -f x) s a :=
   hf.elim (fun hf => hf.neg.is_extr) fun hf => hf.neg.is_extr
 
 theorem IsMinFilter.sub (hf : IsMinFilter f l a) (hg : IsMaxFilter g l a) : IsMinFilter (fun x => f x - g x) l a := by
-  simpa only [sub_eq_add_neg] using hf.add hg.neg
+  simpa only [← sub_eq_add_neg] using hf.add hg.neg
 
 theorem IsMaxFilter.sub (hf : IsMaxFilter f l a) (hg : IsMinFilter g l a) : IsMaxFilter (fun x => f x - g x) l a := by
-  simpa only [sub_eq_add_neg] using hf.add hg.neg
+  simpa only [← sub_eq_add_neg] using hf.add hg.neg
 
 theorem IsMinOn.sub (hf : IsMinOn f s a) (hg : IsMaxOn g s a) : IsMinOn (fun x => f x - g x) s a := by
-  simpa only [sub_eq_add_neg] using hf.add hg.neg
+  simpa only [← sub_eq_add_neg] using hf.add hg.neg
 
 theorem IsMaxOn.sub (hf : IsMaxOn f s a) (hg : IsMinOn g s a) : IsMaxOn (fun x => f x - g x) s a := by
-  simpa only [sub_eq_add_neg] using hf.add hg.neg
+  simpa only [← sub_eq_add_neg] using hf.add hg.neg
 
 end OrderedAddCommGroup
 
@@ -525,9 +525,9 @@ section ConditionallyCompleteLinearOrder
 
 variable [ConditionallyCompleteLinearOrder α] {f : β → α} {s : Set β} {x₀ : β}
 
-theorem IsMaxOn.supr_eq (hx₀ : x₀ ∈ s) (h : IsMaxOn f s x₀) : (⨆ x : s, f x) = f x₀ :=
+theorem IsMaxOn.supr_eq (hx₀ : x₀ ∈ s) (h : IsMaxOn f s x₀) : (⨆ x : s, f x) = f x₀ := by
   have : Nonempty s := ⟨⟨x₀, hx₀⟩⟩
-  csupr_eq_of_forall_le_of_forall_lt_exists_gt (fun x => h x.Prop) fun w hw => ⟨⟨x₀, hx₀⟩, hw⟩
+  exact csupr_eq_of_forall_le_of_forall_lt_exists_gt (fun x => h x.Prop) fun w hw => ⟨⟨x₀, hx₀⟩, hw⟩
 
 theorem IsMinOn.infi_eq (hx₀ : x₀ ∈ s) (h : IsMinOn f s x₀) : (⨅ x : s, f x) = f x₀ :=
   @IsMaxOn.supr_eq αᵒᵈ β _ _ _ _ hx₀ h

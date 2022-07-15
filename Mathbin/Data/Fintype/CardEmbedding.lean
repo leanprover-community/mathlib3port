@@ -29,7 +29,7 @@ namespace Fintype
 theorem card_embedding_eq_of_unique {α β : Type _} [Unique α] [Fintype β] [Fintype (α ↪ β)] : ‖α ↪ β‖ = ‖β‖ :=
   card_congr Equivₓ.uniqueEmbeddingEquivResult
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- Establishes the cardinality of the type of all injections between two finite types.
 @[simp]
 theorem card_embedding_eq {α β} [Fintype α] [Fintype β] [Fintype (α ↪ β)] : ‖α ↪ β‖ = ‖β‖.descFactorial ‖α‖ := by
@@ -42,7 +42,8 @@ theorem card_embedding_eq {α β} [Fintype α] [Fintype β] [Fintype (α ↪ β)
     exact ⟨embedding.of_is_empty, fun x => FunLike.ext _ _ isEmptyElim⟩
     
   · rw [card_option, Nat.desc_factorial_succ, card_congr (embedding.option_embedding_equiv α β), card_sigma, ← ih]
-    simp only [Fintype.card_compl_set, Fintype.card_range, Finset.sum_const, Finset.card_univ, smul_eq_mul, mul_comm]
+    simp only [← Fintype.card_compl_set, ← Fintype.card_range, ← Finset.sum_const, ← Finset.card_univ, ← smul_eq_mul, ←
+      mul_comm]
     
 
 /- The cardinality of embeddings from an infinite type to a finite type is zero.

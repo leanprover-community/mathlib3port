@@ -7,6 +7,7 @@ import Mathbin.Algebra.Group.InjSurj
 import Mathbin.Algebra.Group.Commute
 import Mathbin.Algebra.Hom.Equiv
 import Mathbin.Algebra.Opposites
+import Mathbin.Data.Int.Cast.Defs
 
 /-!
 # Group structures on the multiplicative and additive opposites
@@ -42,6 +43,15 @@ instance [AddZeroClassₓ α] : AddZeroClassₓ αᵐᵒᵖ :=
 instance [AddMonoidₓ α] : AddMonoidₓ αᵐᵒᵖ :=
   unop_injective.AddMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
+instance [AddMonoidWithOneₓ α] : AddMonoidWithOneₓ αᵐᵒᵖ :=
+  { MulOpposite.addMonoid α, MulOpposite.hasOne α with natCast := fun n => op n,
+    nat_cast_zero :=
+      show op ((0 : ℕ) : α) = 0 by
+        simp ,
+    nat_cast_succ :=
+      show ∀ n, op ((n + 1 : ℕ) : α) = op (n : ℕ) + 1 by
+        simp }
+
 instance [AddCommMonoidₓ α] : AddCommMonoidₓ αᵐᵒᵖ :=
   unop_injective.AddCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
@@ -50,6 +60,15 @@ instance [SubNegMonoidₓ α] : SubNegMonoidₓ αᵐᵒᵖ :=
 
 instance [AddGroupₓ α] : AddGroupₓ αᵐᵒᵖ :=
   unop_injective.AddGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
+
+instance [AddGroupWithOneₓ α] : AddGroupWithOneₓ αᵐᵒᵖ :=
+  { MulOpposite.addMonoidWithOne α, MulOpposite.addGroup α with intCast := fun n => op n,
+    int_cast_of_nat := fun n =>
+      show op ((n : ℤ) : α) = op n by
+        rw [Int.cast_coe_nat],
+    int_cast_neg_succ_of_nat := fun n =>
+      show op _ = op (-unop (op ((n + 1 : ℕ) : α))) by
+        erw [unop_op, Int.cast_neg_succ_of_nat] <;> rfl }
 
 instance [AddCommGroupₓ α] : AddCommGroupₓ αᵐᵒᵖ :=
   unop_injective.AddCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
@@ -146,11 +165,11 @@ theorem unop_div [DivInvMonoidₓ α] (x y : αᵐᵒᵖ) : unop (x / y) = (unop
 
 @[simp, to_additive]
 theorem op_div [DivInvMonoidₓ α] (x y : α) : op (x / y) = (op y)⁻¹ * op x := by
-  simp [div_eq_mul_inv]
+  simp [← div_eq_mul_inv]
 
 @[simp, to_additive]
 theorem semiconj_by_op [Mul α] {a x y : α} : SemiconjBy (op a) (op y) (op x) ↔ SemiconjBy a x y := by
-  simp only [SemiconjBy, ← op_mul, op_inj, eq_comm]
+  simp only [← SemiconjBy, op_mul, ← op_inj, ← eq_comm]
 
 @[simp, to_additive]
 theorem semiconj_by_unop [Mul α] {a x y : αᵐᵒᵖ} : SemiconjBy (unop a) (unop y) (unop x) ↔ SemiconjBy a x y := by
@@ -213,8 +232,7 @@ instance [CommSemigroupₓ α] : CommSemigroupₓ αᵃᵒᵖ :=
 instance [MulOneClassₓ α] : MulOneClassₓ αᵃᵒᵖ :=
   unop_injective.MulOneClass _ rfl fun x y => rfl
 
-instance {β} [Pow α β] : Pow αᵃᵒᵖ β where
-  pow := fun a b => op (unop a ^ b)
+instance {β} [Pow α β] : Pow αᵃᵒᵖ β where pow := fun a b => op (unop a ^ b)
 
 @[simp]
 theorem op_pow {β} [Pow α β] (a : α) (b : β) : op (a ^ b) = op a ^ b :=
@@ -270,7 +288,7 @@ defines a semigroup homomorphism to `Nᵐᵒᵖ`. -/
 def MulHom.toOpposite {M N : Type _} [Mul M] [Mul N] (f : M →ₙ* N) (hf : ∀ x y, Commute (f x) (f y)) : M →ₙ* Nᵐᵒᵖ where
   toFun := MulOpposite.op ∘ f
   map_mul' := fun x y => by
-    simp [(hf x y).Eq]
+    simp [← (hf x y).Eq]
 
 /-- A semigroup homomorphism `f : M →ₙ* N` such that `f x` commutes with `f y` for all `x, y`
 defines a semigroup homomorphism from `Mᵐᵒᵖ`. -/
@@ -292,7 +310,7 @@ def MonoidHom.toOpposite {M N : Type _} [MulOneClassₓ M] [MulOneClassₓ N] (f
   toFun := MulOpposite.op ∘ f
   map_one' := congr_arg op f.map_one
   map_mul' := fun x y => by
-    simp [(hf x y).Eq]
+    simp [← (hf x y).Eq]
 
 /-- A monoid homomorphism `f : M →* N` such that `f x` commutes with `f y` for all `x, y` defines
 a monoid homomorphism from `Mᵐᵒᵖ`. -/

@@ -55,7 +55,7 @@ theorem mem_list_primes_of_dvd_prod {p : M} (hp : Prime p) {L : List M} (hL : �
   obtain ⟨x, hx1, hx2⟩ := hp.dvd_prod_iff.mp hpL
   rwa [(prime_dvd_prime_iff_eq hp (hL x hx1)).mp hx2]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem perm_of_prod_eq_prod :
     ∀ {l₁ l₂ : List M}, l₁.Prod = l₂.Prod → (∀, ∀ p ∈ l₁, ∀, Prime p) → (∀, ∀ p ∈ l₂, ∀, Prime p) → Perm l₁ l₂
   | [], [], _, _, _ => Perm.nil

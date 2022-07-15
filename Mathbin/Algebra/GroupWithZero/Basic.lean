@@ -57,10 +57,10 @@ protected def Function.Injective.mulZeroClass [Mul M₀'] [Zero M₀'] (f : M₀
   zero := 0
   zero_mul := fun a =>
     hf <| by
-      simp only [mul, zero, zero_mul]
+      simp only [← mul, ← zero, ← zero_mul]
   mul_zero := fun a =>
     hf <| by
-      simp only [mul, zero, mul_zero]
+      simp only [← mul, ← zero, ← mul_zero]
 
 /-- Pushforward a `mul_zero_class` instance along an surjective function.
 See note [reducible non-instances]. -/
@@ -71,10 +71,10 @@ protected def Function.Surjective.mulZeroClass [Mul M₀'] [Zero M₀'] (f : M�
   zero := 0
   mul_zero :=
     hf.forall.2 fun x => by
-      simp only [← zero, ← mul, mul_zero]
+      simp only [zero, mul, ← mul_zero]
   zero_mul :=
     hf.forall.2 fun x => by
-      simp only [← zero, ← mul, zero_mul]
+      simp only [zero, mul, ← zero_mul]
 
 theorem mul_eq_zero_of_left (h : a = 0) (b : M₀) : a * b = 0 :=
   h.symm ▸ zero_mul b
@@ -379,7 +379,7 @@ noncomputable def inverse : M₀ → M₀ := fun x => if h : IsUnit x then ((h.U
 /-- By definition, if `x` is invertible then `inverse x = x⁻¹`. -/
 @[simp]
 theorem inverse_unit (u : M₀ˣ) : inverse (u : M₀) = (u⁻¹ : M₀ˣ) := by
-  simp only [Units.is_unit, inverse, dif_pos]
+  simp only [← Units.is_unit, ← inverse, ← dif_pos]
   exact Units.inv_unique rfl
 
 /-- By definition, if `x` is not invertible then `inverse x = 0`. -/
@@ -474,18 +474,18 @@ instance (priority := 10) CancelMonoidWithZero.to_no_zero_divisors : NoZeroDivis
     rw [ab0, mul_zero]⟩
 
 theorem mul_left_inj' (hc : c ≠ 0) : a * c = b * c ↔ a = b :=
-  ⟨mul_right_cancel₀ hc, fun h => h ▸ rfl⟩
+  (mul_left_injective₀ hc).eq_iff
 
 theorem mul_right_inj' (ha : a ≠ 0) : a * b = a * c ↔ b = c :=
-  ⟨mul_left_cancel₀ ha, fun h => h ▸ rfl⟩
+  (mul_right_injective₀ ha).eq_iff
 
 @[simp]
 theorem mul_eq_mul_right_iff : a * c = b * c ↔ a = b ∨ c = 0 := by
-  by_cases' hc : c = 0 <;> [simp [hc], simp [mul_left_inj', hc]]
+  by_cases' hc : c = 0 <;> [simp [← hc], simp [← mul_left_inj', ← hc]]
 
 @[simp]
 theorem mul_eq_mul_left_iff : a * b = a * c ↔ b = c ∨ a = 0 := by
-  by_cases' ha : a = 0 <;> [simp [ha], simp [mul_right_inj', ha]]
+  by_cases' ha : a = 0 <;> [simp [← ha], simp [← mul_right_inj', ← ha]]
 
 theorem mul_right_eq_self₀ : a * b = a ↔ b = 1 ∨ a = 0 :=
   calc
@@ -582,7 +582,7 @@ theorem mul_inv_cancel_right₀ (h : b ≠ 0) (a : G₀) : a * b * b⁻¹ = a :=
   calc
     a * b * b⁻¹ = a * (b * b⁻¹) := mul_assoc _ _ _
     _ = a := by
-      simp [h]
+      simp [← h]
     
 
 @[simp]
@@ -590,35 +590,35 @@ theorem mul_inv_cancel_left₀ (h : a ≠ 0) (b : G₀) : a * (a⁻¹ * b) = b :
   calc
     a * (a⁻¹ * b) = a * a⁻¹ * b := (mul_assoc _ _ _).symm
     _ = b := by
-      simp [h]
+      simp [← h]
     
 
 theorem inv_ne_zero (h : a ≠ 0) : a⁻¹ ≠ 0 := fun a_eq_0 => by
-  simpa [a_eq_0] using mul_inv_cancel h
+  simpa [← a_eq_0] using mul_inv_cancel h
 
 @[simp]
 theorem inv_mul_cancel (h : a ≠ 0) : a⁻¹ * a = 1 :=
   calc
     a⁻¹ * a = a⁻¹ * a * a⁻¹ * a⁻¹⁻¹ := by
-      simp [inv_ne_zero h]
+      simp [← inv_ne_zero h]
     _ = a⁻¹ * a⁻¹⁻¹ := by
-      simp [h]
+      simp [← h]
     _ = 1 := by
-      simp [inv_ne_zero h]
+      simp [← inv_ne_zero h]
     
 
 theorem GroupWithZeroₓ.mul_left_injective (h : x ≠ 0) : Function.Injective fun y => x * y := fun y y' w => by
-  simpa only [← mul_assoc, inv_mul_cancel h, one_mulₓ] using congr_arg (fun y => x⁻¹ * y) w
+  simpa only [mul_assoc, ← inv_mul_cancel h, ← one_mulₓ] using congr_arg (fun y => x⁻¹ * y) w
 
 theorem GroupWithZeroₓ.mul_right_injective (h : x ≠ 0) : Function.Injective fun y => y * x := fun y y' w => by
-  simpa only [mul_assoc, mul_inv_cancel h, mul_oneₓ] using congr_arg (fun y => y * x⁻¹) w
+  simpa only [← mul_assoc, ← mul_inv_cancel h, ← mul_oneₓ] using congr_arg (fun y => y * x⁻¹) w
 
 @[simp]
 theorem inv_mul_cancel_right₀ (h : b ≠ 0) (a : G₀) : a * b⁻¹ * b = a :=
   calc
     a * b⁻¹ * b = a * (b⁻¹ * b) := mul_assoc _ _ _
     _ = a := by
-      simp [h]
+      simp [← h]
     
 
 @[simp]
@@ -626,7 +626,7 @@ theorem inv_mul_cancel_left₀ (h : a ≠ 0) (b : G₀) : a⁻¹ * (a * b) = b :
   calc
     a⁻¹ * (a * b) = a⁻¹ * a * b := (mul_assoc _ _ _).symm
     _ = b := by
-      simp [h]
+      simp [← h]
     
 
 private theorem inv_eq_of_mul (h : a * b = 1) : a⁻¹ = b := by
@@ -637,20 +637,220 @@ instance (priority := 100) GroupWithZeroₓ.toDivisionMonoid : DivisionMonoid G�
   { ‹GroupWithZeroₓ G₀› with inv := Inv.inv,
     inv_inv := fun a => by
       by_cases' h : a = 0
-      · simp [h]
+      · simp [← h]
         
       · exact left_inv_eq_right_invₓ (inv_mul_cancel <| inv_ne_zero h) (inv_mul_cancel h)
         ,
     mul_inv_rev := fun a b => by
       by_cases' ha : a = 0
-      · simp [ha]
+      · simp [← ha]
         
       by_cases' hb : b = 0
-      · simp [hb]
+      · simp [← hb]
         
       refine' inv_eq_of_mul _
-      simp [mul_assoc, ha, hb],
+      simp [← mul_assoc, ← ha, ← hb],
     inv_eq_of_mul := fun a b => inv_eq_of_mul }
+
+end GroupWithZeroₓ
+
+namespace Units
+
+variable [GroupWithZeroₓ G₀]
+
+variable {a b : G₀}
+
+/-- Embed a non-zero element of a `group_with_zero` into the unit group.
+  By combining this function with the operations on units,
+  or the `/ₚ` operation, it is possible to write a division
+  as a partial function with three arguments. -/
+def mk0 (a : G₀) (ha : a ≠ 0) : G₀ˣ :=
+  ⟨a, a⁻¹, mul_inv_cancel ha, inv_mul_cancel ha⟩
+
+@[simp]
+theorem mk0_one (h := one_ne_zero) : mk0 (1 : G₀) h = 1 := by
+  ext
+  rfl
+
+@[simp]
+theorem coe_mk0 {a : G₀} (h : a ≠ 0) : (mk0 a h : G₀) = a :=
+  rfl
+
+@[simp]
+theorem mk0_coe (u : G₀ˣ) (h : (u : G₀) ≠ 0) : mk0 (u : G₀) h = u :=
+  Units.ext rfl
+
+@[simp]
+theorem mul_inv' (u : G₀ˣ) : (u : G₀) * u⁻¹ = 1 :=
+  mul_inv_cancel u.ne_zero
+
+@[simp]
+theorem inv_mul' (u : G₀ˣ) : (u⁻¹ : G₀) * u = 1 :=
+  inv_mul_cancel u.ne_zero
+
+@[simp]
+theorem mk0_inj {a b : G₀} (ha : a ≠ 0) (hb : b ≠ 0) : Units.mk0 a ha = Units.mk0 b hb ↔ a = b :=
+  ⟨fun h => by
+    injection h, fun h => Units.ext h⟩
+
+/-- In a group with zero, an existential over a unit can be rewritten in terms of `units.mk0`. -/
+theorem exists0 {p : G₀ˣ → Prop} : (∃ g : G₀ˣ, p g) ↔ ∃ (g : G₀)(hg : g ≠ 0), p (Units.mk0 g hg) :=
+  ⟨fun ⟨g, pg⟩ => ⟨g, g.ne_zero, (g.mk0_coe g.ne_zero).symm ▸ pg⟩, fun ⟨g, hg, pg⟩ => ⟨Units.mk0 g hg, pg⟩⟩
+
+/-- An alternative version of `units.exists0`. This one is useful if Lean cannot
+figure out `p` when using `units.exists0` from right to left. -/
+theorem exists0' {p : ∀ g : G₀, g ≠ 0 → Prop} : (∃ (g : G₀)(hg : g ≠ 0), p g hg) ↔ ∃ g : G₀ˣ, p g g.ne_zero :=
+  Iff.trans
+    (by
+      simp_rw [coe_mk0])
+    exists0.symm
+
+@[simp]
+theorem exists_iff_ne_zero {x : G₀} : (∃ u : G₀ˣ, ↑u = x) ↔ x ≠ 0 := by
+  simp [← exists0]
+
+theorem _root_.group_with_zero.eq_zero_or_unit (a : G₀) : a = 0 ∨ ∃ u : G₀ˣ, a = u := by
+  by_cases' h : a = 0
+  · left
+    exact h
+    
+  · right
+    simpa only [← eq_comm] using units.exists_iff_ne_zero.mpr h
+    
+
+@[simp]
+theorem smul_mk0 {α : Type _} [HasSmul G₀ α] {g : G₀} (hg : g ≠ 0) (a : α) : mk0 g hg • a = g • a :=
+  rfl
+
+end Units
+
+section GroupWithZeroₓ
+
+variable [GroupWithZeroₓ G₀] {a b c : G₀}
+
+theorem IsUnit.mk0 (x : G₀) (hx : x ≠ 0) : IsUnit x :=
+  (Units.mk0 x hx).IsUnit
+
+theorem is_unit_iff_ne_zero : IsUnit a ↔ a ≠ 0 :=
+  Units.exists_iff_ne_zero
+
+alias is_unit_iff_ne_zero ↔ _ Ne.is_unit
+
+attribute [protected] Ne.is_unit
+
+-- see Note [lower instance priority]
+instance (priority := 10) GroupWithZeroₓ.no_zero_divisors : NoZeroDivisors G₀ :=
+  { (‹_› : GroupWithZeroₓ G₀) with
+    eq_zero_or_eq_zero_of_mul_eq_zero := fun a b h => by
+      contrapose! h
+      exact (Units.mk0 a h.1 * Units.mk0 b h.2).ne_zero }
+
+-- see Note [lower instance priority]
+instance (priority := 10) GroupWithZeroₓ.cancelMonoidWithZero : CancelMonoidWithZero G₀ :=
+  { (‹_› : GroupWithZeroₓ G₀) with
+    mul_left_cancel_of_ne_zero := fun x y z hx h => by
+      rw [← inv_mul_cancel_left₀ hx y, h, inv_mul_cancel_left₀ hx z],
+    mul_right_cancel_of_ne_zero := fun x y z hy h => by
+      rw [← mul_inv_cancel_right₀ hy x, h, mul_inv_cancel_right₀ hy z] }
+
+-- Can't be put next to the other `mk0` lemmas because it depends on the
+-- `no_zero_divisors` instance, which depends on `mk0`.
+@[simp]
+theorem Units.mk0_mul (x y : G₀) hxy :
+    Units.mk0 (x * y) hxy = Units.mk0 x (mul_ne_zero_iff.mp hxy).1 * Units.mk0 y (mul_ne_zero_iff.mp hxy).2 := by
+  ext
+  rfl
+
+@[simp]
+theorem div_self (h : a ≠ 0) : a / a = 1 :=
+  h.IsUnit.div_self
+
+theorem eq_mul_inv_iff_mul_eq₀ (hc : c ≠ 0) : a = b * c⁻¹ ↔ a * c = b :=
+  hc.IsUnit.eq_mul_inv_iff_mul_eq
+
+theorem eq_inv_mul_iff_mul_eq₀ (hb : b ≠ 0) : a = b⁻¹ * c ↔ b * a = c :=
+  hb.IsUnit.eq_inv_mul_iff_mul_eq
+
+theorem inv_mul_eq_iff_eq_mul₀ (ha : a ≠ 0) : a⁻¹ * b = c ↔ b = a * c :=
+  ha.IsUnit.inv_mul_eq_iff_eq_mul
+
+theorem mul_inv_eq_iff_eq_mul₀ (hb : b ≠ 0) : a * b⁻¹ = c ↔ a = c * b :=
+  hb.IsUnit.mul_inv_eq_iff_eq_mul
+
+theorem mul_inv_eq_one₀ (hb : b ≠ 0) : a * b⁻¹ = 1 ↔ a = b :=
+  hb.IsUnit.mul_inv_eq_one
+
+theorem inv_mul_eq_one₀ (ha : a ≠ 0) : a⁻¹ * b = 1 ↔ a = b :=
+  ha.IsUnit.inv_mul_eq_one
+
+theorem mul_eq_one_iff_eq_inv₀ (hb : b ≠ 0) : a * b = 1 ↔ a = b⁻¹ :=
+  hb.IsUnit.mul_eq_one_iff_eq_inv
+
+theorem mul_eq_one_iff_inv_eq₀ (ha : a ≠ 0) : a * b = 1 ↔ a⁻¹ = b :=
+  ha.IsUnit.mul_eq_one_iff_inv_eq
+
+@[simp]
+theorem div_mul_cancel (a : G₀) (h : b ≠ 0) : a / b * b = a :=
+  h.IsUnit.div_mul_cancel _
+
+@[simp]
+theorem mul_div_cancel (a : G₀) (h : b ≠ 0) : a * b / b = a :=
+  h.IsUnit.mul_div_cancel _
+
+theorem mul_one_div_cancel (h : a ≠ 0) : a * (1 / a) = 1 :=
+  h.IsUnit.mul_one_div_cancel
+
+theorem one_div_mul_cancel (h : a ≠ 0) : 1 / a * a = 1 :=
+  h.IsUnit.one_div_mul_cancel
+
+theorem div_left_inj' (hc : c ≠ 0) : a / c = b / c ↔ a = b :=
+  hc.IsUnit.div_left_inj
+
+@[field_simps]
+theorem div_eq_iff (hb : b ≠ 0) : a / b = c ↔ a = c * b :=
+  hb.IsUnit.div_eq_iff
+
+@[field_simps]
+theorem eq_div_iff (hb : b ≠ 0) : c = a / b ↔ c * b = a :=
+  hb.IsUnit.eq_div_iff
+
+theorem div_eq_iff_mul_eq (hb : b ≠ 0) : a / b = c ↔ c * b = a :=
+  hb.IsUnit.div_eq_iff.trans eq_comm
+
+theorem eq_div_iff_mul_eq (hc : c ≠ 0) : a = b / c ↔ a * c = b :=
+  hc.IsUnit.eq_div_iff
+
+theorem div_eq_of_eq_mul (hb : b ≠ 0) : a = c * b → a / b = c :=
+  hb.IsUnit.div_eq_of_eq_mul
+
+theorem eq_div_of_mul_eq (hc : c ≠ 0) : a * c = b → a = b / c :=
+  hc.IsUnit.eq_div_of_mul_eq
+
+theorem div_eq_one_iff_eq (hb : b ≠ 0) : a / b = 1 ↔ a = b :=
+  hb.IsUnit.div_eq_one_iff_eq
+
+theorem div_mul_left (hb : b ≠ 0) : b / (a * b) = 1 / a :=
+  hb.IsUnit.div_mul_left
+
+theorem mul_div_mul_right (a b : G₀) (hc : c ≠ 0) : a * c / (b * c) = a / b :=
+  hc.IsUnit.mul_div_mul_right _ _
+
+theorem mul_mul_div (a : G₀) (hb : b ≠ 0) : a = a * b * (1 / b) :=
+  (hb.IsUnit.mul_mul_div _).symm
+
+theorem div_div_div_cancel_right (a : G₀) (hc : c ≠ 0) : a / c / (b / c) = a / b := by
+  rw [div_div_eq_mul_div, div_mul_cancel _ hc]
+
+theorem div_mul_div_cancel (a : G₀) (hc : c ≠ 0) : a / c * (c / b) = a / b := by
+  rw [← mul_div_assoc, div_mul_cancel _ hc]
+
+@[simp]
+theorem zero_div (a : G₀) : 0 / a = 0 := by
+  rw [div_eq_mul_inv, zero_mul]
+
+@[simp]
+theorem div_zero (a : G₀) : a / 0 = 0 := by
+  rw [div_eq_mul_inv, inv_zero, mul_zero]
 
 /-- Multiplying `a` by itself and then by its inverse results in `a`
 (whether or not `a` is zero). -/
@@ -682,178 +882,23 @@ theorem inv_mul_mul_self (a : G₀) : a⁻¹ * a * a = a := by
   · rw [inv_mul_cancel h, one_mulₓ]
     
 
-/-- Multiplying `a` by itself and then dividing by itself results in
-`a` (whether or not `a` is zero). -/
+/-- Multiplying `a` by itself and then dividing by itself results in `a`, whether or not `a` is
+zero. -/
 @[simp]
 theorem mul_self_div_self (a : G₀) : a * a / a = a := by
   rw [div_eq_mul_inv, mul_self_mul_inv a]
 
-/-- Dividing `a` by itself and then multiplying by itself results in
-`a` (whether or not `a` is zero). -/
+/-- Dividing `a` by itself and then multiplying by itself results in `a`, whether or not `a` is
+zero. -/
 @[simp]
 theorem div_self_mul_self (a : G₀) : a / a * a = a := by
   rw [div_eq_mul_inv, mul_inv_mul_self a]
-
-theorem eq_mul_inv_iff_mul_eq₀ (hc : c ≠ 0) : a = b * c⁻¹ ↔ a * c = b := by
-  constructor <;> rintro rfl <;> [rw [inv_mul_cancel_right₀ hc], rw [mul_inv_cancel_right₀ hc]]
-
-theorem eq_inv_mul_iff_mul_eq₀ (hb : b ≠ 0) : a = b⁻¹ * c ↔ b * a = c := by
-  constructor <;> rintro rfl <;> [rw [mul_inv_cancel_left₀ hb], rw [inv_mul_cancel_left₀ hb]]
-
-theorem inv_mul_eq_iff_eq_mul₀ (ha : a ≠ 0) : a⁻¹ * b = c ↔ b = a * c := by
-  rw [eq_comm, eq_inv_mul_iff_mul_eq₀ ha, eq_comm]
-
-theorem mul_inv_eq_iff_eq_mul₀ (hb : b ≠ 0) : a * b⁻¹ = c ↔ a = c * b := by
-  rw [eq_comm, eq_mul_inv_iff_mul_eq₀ hb, eq_comm]
-
-theorem mul_inv_eq_one₀ (hb : b ≠ 0) : a * b⁻¹ = 1 ↔ a = b := by
-  rw [mul_inv_eq_iff_eq_mul₀ hb, one_mulₓ]
-
-theorem inv_mul_eq_one₀ (ha : a ≠ 0) : a⁻¹ * b = 1 ↔ a = b := by
-  rw [inv_mul_eq_iff_eq_mul₀ ha, mul_oneₓ, eq_comm]
-
-theorem mul_eq_one_iff_eq_inv₀ (hb : b ≠ 0) : a * b = 1 ↔ a = b⁻¹ := by
-  convert mul_inv_eq_one₀ (inv_ne_zero hb)
-  rw [inv_invₓ]
-
-theorem mul_eq_one_iff_inv_eq₀ (ha : a ≠ 0) : a * b = 1 ↔ a⁻¹ = b := by
-  convert inv_mul_eq_one₀ (inv_ne_zero ha)
-  rw [inv_invₓ]
-
-end GroupWithZeroₓ
-
-namespace Units
-
-variable [GroupWithZeroₓ G₀]
-
-variable {a b : G₀}
-
-/-- Embed a non-zero element of a `group_with_zero` into the unit group.
-  By combining this function with the operations on units,
-  or the `/ₚ` operation, it is possible to write a division
-  as a partial function with three arguments. -/
-def mk0 (a : G₀) (ha : a ≠ 0) : G₀ˣ :=
-  ⟨a, a⁻¹, mul_inv_cancel ha, inv_mul_cancel ha⟩
-
-@[simp]
-theorem mk0_one (h := one_ne_zero) : mk0 (1 : G₀) h = 1 := by
-  ext
-  rfl
-
-@[simp]
-theorem coe_mk0 {a : G₀} (h : a ≠ 0) : (mk0 a h : G₀) = a :=
-  rfl
-
-@[simp]
-theorem mk0_coe (u : G₀ˣ) (h : (u : G₀) ≠ 0) : mk0 (u : G₀) h = u :=
-  Units.ext rfl
-
-@[simp, norm_cast]
-theorem coe_inv' (u : G₀ˣ) : ((u⁻¹ : G₀ˣ) : G₀) = u⁻¹ :=
-  eq_inv_of_mul_eq_one_left u.inv_mul
-
-@[simp]
-theorem mul_inv' (u : G₀ˣ) : (u : G₀) * u⁻¹ = 1 :=
-  mul_inv_cancel u.ne_zero
-
-@[simp]
-theorem inv_mul' (u : G₀ˣ) : (u⁻¹ : G₀) * u = 1 :=
-  inv_mul_cancel u.ne_zero
-
-@[simp]
-theorem mk0_inj {a b : G₀} (ha : a ≠ 0) (hb : b ≠ 0) : Units.mk0 a ha = Units.mk0 b hb ↔ a = b :=
-  ⟨fun h => by
-    injection h, fun h => Units.ext h⟩
-
-/-- In a group with zero, an existential over a unit can be rewritten in terms of `units.mk0`. -/
-theorem exists0 {p : G₀ˣ → Prop} : (∃ g : G₀ˣ, p g) ↔ ∃ (g : G₀)(hg : g ≠ 0), p (Units.mk0 g hg) :=
-  ⟨fun ⟨g, pg⟩ => ⟨g, g.ne_zero, (g.mk0_coe g.ne_zero).symm ▸ pg⟩, fun ⟨g, hg, pg⟩ => ⟨Units.mk0 g hg, pg⟩⟩
-
-/-- An alternative version of `units.exists0`. This one is useful if Lean cannot
-figure out `p` when using `units.exists0` from right to left. -/
-theorem exists0' {p : ∀ g : G₀, g ≠ 0 → Prop} : (∃ (g : G₀)(hg : g ≠ 0), p g hg) ↔ ∃ g : G₀ˣ, p g g.ne_zero :=
-  Iff.trans
-    (by
-      simp_rw [coe_mk0])
-    exists0.symm
-
-@[simp]
-theorem exists_iff_ne_zero {x : G₀} : (∃ u : G₀ˣ, ↑u = x) ↔ x ≠ 0 := by
-  simp [exists0]
-
-theorem _root_.group_with_zero.eq_zero_or_unit (a : G₀) : a = 0 ∨ ∃ u : G₀ˣ, a = u := by
-  by_cases' h : a = 0
-  · left
-    exact h
-    
-  · right
-    simpa only [eq_comm] using units.exists_iff_ne_zero.mpr h
-    
-
-@[simp]
-theorem smul_mk0 {α : Type _} [HasScalar G₀ α] {g : G₀} (hg : g ≠ 0) (a : α) : mk0 g hg • a = g • a :=
-  rfl
-
-end Units
-
-section GroupWithZeroₓ
-
-variable [GroupWithZeroₓ G₀]
-
-theorem IsUnit.mk0 (x : G₀) (hx : x ≠ 0) : IsUnit x :=
-  (Units.mk0 x hx).IsUnit
-
-theorem is_unit_iff_ne_zero {x : G₀} : IsUnit x ↔ x ≠ 0 :=
-  Units.exists_iff_ne_zero
-
--- see Note [lower instance priority]
-instance (priority := 10) GroupWithZeroₓ.no_zero_divisors : NoZeroDivisors G₀ :=
-  { (‹_› : GroupWithZeroₓ G₀) with
-    eq_zero_or_eq_zero_of_mul_eq_zero := fun a b h => by
-      contrapose! h
-      exact (Units.mk0 a h.1 * Units.mk0 b h.2).ne_zero }
-
--- see Note [lower instance priority]
-instance (priority := 10) GroupWithZeroₓ.cancelMonoidWithZero : CancelMonoidWithZero G₀ :=
-  { (‹_› : GroupWithZeroₓ G₀) with
-    mul_left_cancel_of_ne_zero := fun x y z hx h => by
-      rw [← inv_mul_cancel_left₀ hx y, h, inv_mul_cancel_left₀ hx z],
-    mul_right_cancel_of_ne_zero := fun x y z hy h => by
-      rw [← mul_inv_cancel_right₀ hy x, h, mul_inv_cancel_right₀ hy z] }
-
--- Can't be put next to the other `mk0` lemmas becuase it depends on the
--- `no_zero_divisors` instance, which depends on `mk0`.
-@[simp]
-theorem Units.mk0_mul (x y : G₀) hxy :
-    Units.mk0 (x * y) hxy = Units.mk0 x (mul_ne_zero_iff.mp hxy).1 * Units.mk0 y (mul_ne_zero_iff.mp hxy).2 := by
-  ext
-  rfl
-
-@[simp]
-theorem div_self {a : G₀} (h : a ≠ 0) : a / a = 1 := by
-  rw [div_eq_mul_inv, mul_inv_cancel h]
-
-@[simp]
-theorem zero_div (a : G₀) : 0 / a = 0 := by
-  rw [div_eq_mul_inv, zero_mul]
-
-@[simp]
-theorem div_zero (a : G₀) : a / 0 = 0 := by
-  rw [div_eq_mul_inv, inv_zero, mul_zero]
-
-@[simp]
-theorem div_mul_cancel (a : G₀) {b : G₀} (h : b ≠ 0) : a / b * b = a := by
-  rw [div_eq_mul_inv, inv_mul_cancel_right₀ h a]
 
 theorem div_mul_cancel_of_imp {a b : G₀} (h : b = 0 → a = 0) : a / b * b = a :=
   Classical.by_cases
     (fun hb : b = 0 => by
       simp [*])
     (div_mul_cancel a)
-
-@[simp]
-theorem mul_div_cancel (a : G₀) {b : G₀} (h : b ≠ 0) : a * b / b = a := by
-  rw [div_eq_mul_inv, mul_inv_cancel_right₀ h a]
 
 theorem mul_div_cancel_of_imp {a b : G₀} (h : b = 0 → a = 0) : a * b / b = a :=
   Classical.by_cases
@@ -867,20 +912,12 @@ attribute [local simp] div_eq_mul_inv mul_comm mul_assoc mul_left_commₓ
 theorem div_self_mul_self' (a : G₀) : a / (a * a) = a⁻¹ :=
   calc
     a / (a * a) = a⁻¹⁻¹ * a⁻¹ * a⁻¹ := by
-      simp [mul_inv_rev]
+      simp [← mul_inv_rev]
     _ = a⁻¹ := inv_mul_mul_self _
     
 
-theorem mul_one_div_cancel {a : G₀} (h : a ≠ 0) : a * (1 / a) = 1 := by
-  simp [h]
-
-theorem one_div_mul_cancel {a : G₀} (h : a ≠ 0) : 1 / a * a = 1 := by
-  simp [h]
-
 theorem one_div_ne_zero {a : G₀} (h : a ≠ 0) : 1 / a ≠ 0 := by
-  simpa only [one_div] using inv_ne_zero h
-
-variable {a b c : G₀}
+  simpa only [← one_div] using inv_ne_zero h
 
 @[simp]
 theorem inv_eq_zero {a : G₀} : a⁻¹ = 0 ↔ a = 0 := by
@@ -900,39 +937,10 @@ theorem div_ne_zero (ha : a ≠ 0) (hb : b ≠ 0) : a / b ≠ 0 := by
 
 @[simp]
 theorem div_eq_zero_iff : a / b = 0 ↔ a = 0 ∨ b = 0 := by
-  simp [div_eq_mul_inv]
+  simp [← div_eq_mul_inv]
 
 theorem div_ne_zero_iff : a / b ≠ 0 ↔ a ≠ 0 ∧ b ≠ 0 :=
   (not_congr div_eq_zero_iff).trans not_or_distrib
-
-theorem div_left_inj' (hc : c ≠ 0) : a / c = b / c ↔ a = b := by
-  rw [← divp_mk0 _ hc, ← divp_mk0 _ hc, divp_left_inj]
-
-theorem div_eq_iff_mul_eq (hb : b ≠ 0) : a / b = c ↔ c * b = a :=
-  ⟨fun h => by
-    rw [← h, div_mul_cancel _ hb], fun h => by
-    rw [← h, mul_div_cancel _ hb]⟩
-
-theorem eq_div_iff_mul_eq (hc : c ≠ 0) : a = b / c ↔ a * c = b := by
-  rw [eq_comm, div_eq_iff_mul_eq hc]
-
-theorem div_eq_of_eq_mul {x : G₀} (hx : x ≠ 0) {y z : G₀} (h : y = z * x) : y / x = z :=
-  (div_eq_iff_mul_eq hx).2 h.symm
-
-theorem eq_div_of_mul_eq {x : G₀} (hx : x ≠ 0) {y z : G₀} (h : z * x = y) : z = y / x :=
-  Eq.symm <| div_eq_of_eq_mul hx h.symm
-
-theorem div_eq_one_iff_eq (hb : b ≠ 0) : a / b = 1 ↔ a = b :=
-  ⟨eq_of_div_eq_one, fun h => h.symm ▸ div_self hb⟩
-
-theorem div_mul_left {a b : G₀} (hb : b ≠ 0) : b / (a * b) = 1 / a := by
-  simp only [div_eq_mul_inv, mul_inv_rev, mul_inv_cancel_left₀ hb, one_mulₓ]
-
-theorem mul_div_mul_right (a b : G₀) {c : G₀} (hc : c ≠ 0) : a * c / (b * c) = a / b := by
-  simp only [div_eq_mul_inv, mul_inv_rev, mul_assoc, mul_inv_cancel_left₀ hc]
-
-theorem mul_mul_div (a : G₀) {b : G₀} (hb : b ≠ 0) : a = a * b * (1 / b) := by
-  simp [hb]
 
 theorem Ring.inverse_eq_inv (a : G₀) : Ring.inverse a = a⁻¹ := by
   obtain rfl | ha := eq_or_ne a 0
@@ -959,26 +967,12 @@ theorem ne_zero_of_one_div_ne_zero {a : G₀} (h : 1 / a ≠ 0) : a ≠ 0 := fun
 theorem eq_zero_of_one_div_eq_zero {a : G₀} (h : 1 / a = 0) : a = 0 :=
   Classical.by_cases (fun ha => ha) fun ha => ((one_div_ne_zero ha) h).elim
 
-theorem div_div_div_cancel_right (a : G₀) (hc : c ≠ 0) : a / c / (b / c) = a / b := by
-  rw [div_div_eq_mul_div, div_mul_cancel _ hc]
-
-theorem div_mul_div_cancel (a : G₀) (hc : c ≠ 0) : a / c * (c / b) = a / b := by
-  rw [← mul_div_assoc, div_mul_cancel _ hc]
-
-@[field_simps]
-theorem eq_div_iff (hb : b ≠ 0) : c = a / b ↔ c * b = a :=
-  eq_div_iff_mul_eq hb
-
-@[field_simps]
-theorem div_eq_iff (hb : b ≠ 0) : a / b = c ↔ a = c * b :=
-  (div_eq_iff_mul_eq hb).trans eq_comm
-
 end GroupWithZeroₓ
 
 section CommGroupWithZero
 
 -- comm
-variable [CommGroupWithZero G₀] {a b c : G₀}
+variable [CommGroupWithZero G₀] {a b c d : G₀}
 
 -- see Note [lower instance priority]
 instance (priority := 10) CommGroupWithZero.cancelCommMonoidWithZero : CancelCommMonoidWithZero G₀ :=
@@ -1004,50 +998,37 @@ protected def Function.Surjective.commGroupWithZero [Zero G₀'] [Mul G₀'] [On
     (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) : CommGroupWithZero G₀' :=
   { hf.GroupWithZero h01 f zero one mul inv div npow zpow, hf.CommSemigroup f mul with }
 
-theorem div_mul_right {a : G₀} (b : G₀) (ha : a ≠ 0) : a / (a * b) = 1 / b := by
-  rw [mul_comm, div_mul_left ha]
+theorem div_mul_right (b : G₀) (ha : a ≠ 0) : a / (a * b) = 1 / b :=
+  ha.IsUnit.div_mul_right _
 
 theorem mul_div_cancel_left_of_imp {a b : G₀} (h : a = 0 → b = 0) : a * b / a = b := by
   rw [mul_comm, mul_div_cancel_of_imp h]
 
-theorem mul_div_cancel_left {a : G₀} (b : G₀) (ha : a ≠ 0) : a * b / a = b :=
-  mul_div_cancel_left_of_imp fun h => (ha h).elim
+theorem mul_div_cancel_left (b : G₀) (ha : a ≠ 0) : a * b / a = b :=
+  ha.IsUnit.mul_div_cancel_left _
 
 theorem mul_div_cancel_of_imp' {a b : G₀} (h : b = 0 → a = 0) : b * (a / b) = a := by
   rw [mul_comm, div_mul_cancel_of_imp h]
 
-theorem mul_div_cancel' (a : G₀) {b : G₀} (hb : b ≠ 0) : b * (a / b) = a := by
-  rw [mul_comm, div_mul_cancel _ hb]
+theorem mul_div_cancel' (a : G₀) (hb : b ≠ 0) : b * (a / b) = a :=
+  hb.IsUnit.mul_div_cancel' _
 
-attribute [local simp] mul_assoc mul_comm mul_left_commₓ
-
-theorem mul_div_mul_left (a b : G₀) {c : G₀} (hc : c ≠ 0) : c * a / (c * b) = a / b := by
-  rw [mul_comm c, mul_comm c, mul_div_mul_right _ _ hc]
+theorem mul_div_mul_left (a b : G₀) (hc : c ≠ 0) : c * a / (c * b) = a / b :=
+  hc.IsUnit.mul_div_mul_left _ _
 
 theorem mul_eq_mul_of_div_eq_div (a : G₀) {b : G₀} (c : G₀) {d : G₀} (hb : b ≠ 0) (hd : d ≠ 0) (h : a / b = c / d) :
     a * d = c * b := by
   rw [← mul_oneₓ a, ← div_self hb, ← mul_comm_div, h, div_mul_eq_mul_div, div_mul_cancel _ hd]
 
-theorem div_helper {a : G₀} (b : G₀) (h : a ≠ 0) : 1 / (a * b) * a = 1 / b := by
-  rw [div_mul_eq_mul_div, one_mulₓ, div_mul_right _ h]
-
-end CommGroupWithZero
-
-section CommGroupWithZero
-
-variable [CommGroupWithZero G₀] {a b c d : G₀}
-
 @[field_simps]
 theorem div_eq_div_iff (hb : b ≠ 0) (hd : d ≠ 0) : a / b = c / d ↔ a * d = c * b :=
-  calc
-    a / b = c / d ↔ a / b * (b * d) = c / d * (b * d) := by
-      rw [mul_left_inj' (mul_ne_zero hb hd)]
-    _ ↔ a * d = c * b := by
-      rw [← mul_assoc, div_mul_cancel _ hb, ← mul_assoc, mul_right_commₓ, div_mul_cancel _ hd]
-    
+  hb.IsUnit.div_eq_div_iff hd.IsUnit
 
-theorem div_div_cancel' (ha : a ≠ 0) : a / (a / b) = b := by
-  rw [div_eq_mul_inv, inv_div, mul_div_cancel' _ ha]
+theorem div_div_cancel' (ha : a ≠ 0) : a / (a / b) = b :=
+  ha.IsUnit.div_div_cancel
+
+theorem div_helper (b : G₀) (h : a ≠ 0) : 1 / (a * b) * a = 1 / b := by
+  rw [div_mul_eq_mul_div, one_mulₓ, div_mul_right _ h]
 
 end CommGroupWithZero
 
@@ -1055,11 +1036,11 @@ namespace SemiconjBy
 
 @[simp]
 theorem zero_right [MulZeroClassₓ G₀] (a : G₀) : SemiconjBy a 0 0 := by
-  simp only [SemiconjBy, mul_zero, zero_mul]
+  simp only [← SemiconjBy, ← mul_zero, ← zero_mul]
 
 @[simp]
 theorem zero_left [MulZeroClassₓ G₀] (x y : G₀) : SemiconjBy 0 x y := by
-  simp only [SemiconjBy, mul_zero, zero_mul]
+  simp only [← SemiconjBy, ← mul_zero, ← zero_mul]
 
 variable [GroupWithZeroₓ G₀] {a x y x' y' : G₀}
 
@@ -1067,7 +1048,7 @@ variable [GroupWithZeroₓ G₀] {a x y x' y' : G₀}
 theorem inv_symm_left_iff₀ : SemiconjBy a⁻¹ x y ↔ SemiconjBy a y x :=
   Classical.by_cases
     (fun ha : a = 0 => by
-      simp only [ha, inv_zero, SemiconjBy.zero_left])
+      simp only [← ha, ← inv_zero, ← SemiconjBy.zero_left])
     fun ha => @units_inv_symm_left_iff _ _ (Units.mk0 a ha) _ _
 
 theorem inv_symm_left₀ (h : SemiconjBy a x y) : SemiconjBy a⁻¹ y x :=
@@ -1075,12 +1056,12 @@ theorem inv_symm_left₀ (h : SemiconjBy a x y) : SemiconjBy a⁻¹ y x :=
 
 theorem inv_right₀ (h : SemiconjBy a x y) : SemiconjBy a x⁻¹ y⁻¹ := by
   by_cases' ha : a = 0
-  · simp only [ha, zero_left]
+  · simp only [← ha, ← zero_left]
     
   by_cases' hx : x = 0
   · subst x
-    simp only [SemiconjBy, mul_zero, @eq_comm _ _ (y * a), mul_eq_zero] at h
-    simp [h.resolve_right ha]
+    simp only [← SemiconjBy, ← mul_zero, ← @eq_comm _ _ (y * a), ← mul_eq_zero] at h
+    simp [← h.resolve_right ha]
     
   · have := mul_ne_zero ha hx
     rw [h.eq, mul_ne_zero_iff] at this
@@ -1123,9 +1104,6 @@ theorem inv_right_iff₀ : Commute a b⁻¹ ↔ Commute a b :=
 theorem inv_right₀ (h : Commute a b) : Commute a b⁻¹ :=
   inv_right_iff₀.2 h
 
-theorem inv_inv₀ (h : Commute a b) : Commute a⁻¹ b⁻¹ :=
-  h.inv_left₀.inv_right₀
-
 @[simp]
 theorem div_right (hab : Commute a b) (hac : Commute a c) : Commute a (b / c) :=
   hab.div_right hac
@@ -1162,14 +1140,14 @@ variable (f : G₀ →*₀ G₀') (a b : G₀)
 @[simp]
 theorem map_inv : f a⁻¹ = (f a)⁻¹ := by
   by_cases' h : a = 0
-  · simp [h]
+  · simp [← h]
     
   apply eq_inv_of_mul_eq_one_left
   rw [← f.map_mul, inv_mul_cancel h, f.map_one]
 
 @[simp]
 theorem map_div : f (a / b) = f a / f b := by
-  simpa only [div_eq_mul_inv] using (f.map_mul _ _).trans <| _root_.congr_arg _ <| f.map_inv b
+  simpa only [← div_eq_mul_inv] using (f.map_mul _ _).trans <| _root_.congr_arg _ <| f.map_inv b
 
 end GroupWithZeroₓ
 
@@ -1194,16 +1172,13 @@ theorem MonoidWithZeroₓ.inverse_apply {M : Type _} [CommMonoidWithZero M] (a :
   rfl
 
 /-- Inversion on a commutative group with zero, considered as a monoid with zero homomorphism. -/
-def invMonoidWithZeroHom {G₀ : Type _} [CommGroupWithZero G₀] : G₀ →*₀ G₀ where
-  toFun := Inv.inv
-  map_zero' := inv_zero
-  map_one' := inv_one
-  map_mul' := mul_inv
+def invMonoidWithZeroHom {G₀ : Type _} [CommGroupWithZero G₀] : G₀ →*₀ G₀ :=
+  { invMonoidHom with map_zero' := inv_zero }
 
 @[simp]
 theorem MonoidHom.map_units_inv {M G₀ : Type _} [Monoidₓ M] [GroupWithZeroₓ G₀] (f : M →* G₀) (u : Mˣ) :
     f ↑u⁻¹ = (f u)⁻¹ := by
-  rw [← Units.coe_map, ← Units.coe_map, ← Units.coe_inv', MonoidHom.map_inv]
+  rw [← Units.coe_map, ← Units.coe_map, ← Units.coe_inv, MonoidHom.map_inv]
 
 @[simp]
 theorem MonoidWithZeroHom.map_units_inv {M G₀ : Type _} [MonoidWithZeroₓ M] [GroupWithZeroₓ G₀] (f : M →*₀ G₀)

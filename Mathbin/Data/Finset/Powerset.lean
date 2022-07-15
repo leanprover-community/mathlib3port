@@ -28,7 +28,8 @@ def powerset (s : Finset α) : Finset (Finset α) :=
 
 @[simp]
 theorem mem_powerset {s t : Finset α} : s ∈ powerset t ↔ s ⊆ t := by
-  cases s <;> simp only [powerset, mem_mk, mem_pmap, mem_powerset, exists_prop, exists_eq_right] <;> rw [← val_le_iff]
+  cases s <;>
+    simp only [← powerset, ← mem_mk, ← mem_pmap, ← mem_powerset, ← exists_prop, ← exists_eq_right] <;> rw [← val_le_iff]
 
 @[simp]
 theorem empty_mem_powerset (s : Finset α) : ∅ ∈ powerset s :=
@@ -59,7 +60,7 @@ theorem not_mem_of_mem_powerset_of_not_mem {s t : Finset α} {a : α} (ht : t �
 theorem powerset_insert [DecidableEq α] (s : Finset α) (a : α) :
     powerset (insert a s) = s.Powerset ∪ s.Powerset.Image (insert a) := by
   ext t
-  simp only [exists_prop, mem_powerset, mem_image, mem_union, subset_insert_iff]
+  simp only [← exists_prop, ← mem_powerset, ← mem_image, ← mem_union, ← subset_insert_iff]
   by_cases' h : a ∈ t
   · constructor
     · exact fun H => Or.inr ⟨_, H, insert_erase h⟩
@@ -75,18 +76,18 @@ theorem powerset_insert [DecidableEq α] (s : Finset α) (a : α) :
       
     
   · have : ¬∃ u : Finset α, u ⊆ s ∧ insert a u = t := by
-      simp [Ne.symm (ne_insert_of_not_mem _ _ h)]
-    simp [Finset.erase_eq_of_not_mem h, this]
+      simp [← Ne.symm (ne_insert_of_not_mem _ _ h)]
+    simp [← Finset.erase_eq_of_not_mem h, ← this]
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- For predicate `p` decidable on subsets, it is decidable whether `p` holds for any subset. -/
 instance decidableExistsOfDecidableSubsets {s : Finset α} {p : ∀ t _ : t ⊆ s, Prop} [∀ t h : t ⊆ s, Decidable (p t h)] :
     Decidable (∃ (t : _)(h : t ⊆ s), p t h) :=
   decidableOfIff (∃ (t : _)(hs : t ∈ s.Powerset), p t (mem_powerset.1 hs))
     ⟨fun ⟨t, _, hp⟩ => ⟨t, _, hp⟩, fun ⟨t, hs, hp⟩ => ⟨t, mem_powerset.2 hs, hp⟩⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- For predicate `p` decidable on subsets, it is decidable whether `p` holds for every subset. -/
 instance decidableForallOfDecidableSubsets {s : Finset α} {p : ∀ t _ : t ⊆ s, Prop} [∀ t h : t ⊆ s, Decidable (p t h)] :
     Decidable (∀ t h : t ⊆ s, p t h) :=
@@ -123,14 +124,14 @@ theorem empty_mem_ssubsets {s : Finset α} (h : s.Nonempty) : ∅ ∈ s.ssubsets
   rw [mem_ssubsets, ssubset_iff_subset_ne]
   exact ⟨empty_subset s, h.ne_empty.symm⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊂ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊂ » s)
 /-- For predicate `p` decidable on ssubsets, it is decidable whether `p` holds for any ssubset. -/
 instance decidableExistsOfDecidableSsubsets {s : Finset α} {p : ∀ t _ : t ⊂ s, Prop}
     [∀ t h : t ⊂ s, Decidable (p t h)] : Decidable (∃ t h, p t h) :=
   decidableOfIff (∃ (t : _)(hs : t ∈ s.ssubsets), p t (mem_ssubsets.1 hs))
     ⟨fun ⟨t, _, hp⟩ => ⟨t, _, hp⟩, fun ⟨t, hs, hp⟩ => ⟨t, mem_ssubsets.2 hs, hp⟩⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊂ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊂ » s)
 /-- For predicate `p` decidable on ssubsets, it is decidable whether `p` holds for every ssubset. -/
 instance decidableForallOfDecidableSsubsets {s : Finset α} {p : ∀ t _ : t ⊂ s, Prop}
     [∀ t h : t ⊂ s, Decidable (p t h)] : Decidable (∀ t h, p t h) :=
@@ -161,7 +162,7 @@ def powersetLen (n : ℕ) (s : Finset α) : Finset (Finset α) :=
 
 /-- **Formula for the Number of Combinations** -/
 theorem mem_powerset_len {n} {s t : Finset α} : s ∈ powersetLen n t ↔ s ⊆ t ∧ card s = n := by
-  cases s <;> simp [powerset_len, val_le_iff.symm] <;> rfl
+  cases s <;> simp [← powerset_len, ← val_le_iff.symm] <;> rfl
 
 @[simp]
 theorem powerset_len_mono {n} {s t : Finset α} (h : s ⊆ t) : powersetLen n s ⊆ powersetLen n t := fun u h' =>
@@ -189,7 +190,7 @@ theorem powerset_len_empty (n : ℕ) {s : Finset α} (h : s.card < n) : powerset
 
 theorem powerset_len_eq_filter {n} {s : Finset α} : powersetLen n s = (powerset s).filter fun x => x.card = n := by
   ext
-  simp [mem_powerset_len]
+  simp [← mem_powerset_len]
 
 theorem powerset_len_succ_insert [DecidableEq α] {x : α} {s : Finset α} (h : x ∉ s) (n : ℕ) :
     powersetLen n.succ (insert x s) = powersetLen n.succ s ∪ (powersetLen n s).Image (insert x) := by
@@ -198,12 +199,12 @@ theorem powerset_len_succ_insert [DecidableEq α] {x : α} {s : Finset α} (h : 
   rw [powerset_len_eq_filter, image_filter]
   congr 1
   ext t
-  simp only [mem_powerset, mem_filter, Function.comp_app, And.congr_right_iff]
+  simp only [← mem_powerset, ← mem_filter, ← Function.comp_app, ← And.congr_right_iff]
   intro ht
   have : x ∉ t := fun H => h (ht H)
-  simp [card_insert_of_not_mem this, Nat.succ_inj']
+  simp [← card_insert_of_not_mem this, ← Nat.succ_inj']
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem powerset_len_nonempty {n : ℕ} {s : Finset α} (h : n < s.card) : (powersetLen n s).Nonempty := by
   classical
   induction' s using Finset.induction_on with x s hx IH generalizing n
@@ -251,10 +252,10 @@ theorem powerset_len_sup [DecidableEq α] (u : Finset α) (n : ℕ) (hn : n < u.
     
   · rw [sup_eq_bUnion, le_iff_subset, subset_iff]
     cases' (Nat.succ_le_of_ltₓ hn).eq_or_lt with h' h'
-    · simp [h']
+    · simp [← h']
       
     · intro x hx
-      simp only [mem_bUnion, exists_prop, id.def]
+      simp only [← mem_bUnion, ← exists_prop, ← id.def]
       obtain ⟨t, ht⟩ : ∃ t, t ∈ powerset_len n (u.erase x) := powerset_len_nonempty _
       · refine' ⟨insert x t, _, mem_insert_self _ _⟩
         rw [← insert_erase hx, powerset_len_succ_insert (not_mem_erase _ _)]
@@ -271,7 +272,14 @@ theorem powerset_len_card_add (s : Finset α) {i : ℕ} (hi : 0 < i) : s.powerse
 
 @[simp]
 theorem map_val_val_powerset_len (s : Finset α) (i : ℕ) : (s.powersetLen i).val.map Finset.val = s.1.powersetLen i := by
-  simp [Finset.powersetLen, map_pmap, pmap_eq_map, map_id']
+  simp [← Finset.powersetLen, ← map_pmap, ← pmap_eq_map, ← map_id']
+
+theorem powerset_len_map {β : Type _} (f : α ↪ β) (n : ℕ) (s : Finset α) :
+    powersetLen n (s.map f) = (powersetLen n s).map (mapEmbedding f).toEmbedding :=
+  eq_of_veq <|
+    Multiset.map_injective (@eq_of_veq _) <| by
+      simp_rw [map_val_val_powerset_len, map_val, Multiset.map_map, Function.comp, RelEmbedding.coe_fn_to_embedding,
+        map_embedding_apply, map_val, ← Multiset.map_map _ val, map_val_val_powerset_len, Multiset.powerset_len_map]
 
 end PowersetLen
 

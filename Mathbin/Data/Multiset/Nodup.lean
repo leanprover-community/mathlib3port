@@ -90,7 +90,7 @@ theorem disjoint_of_nodup_add {s t : Multiset α} (d : Nodup (s + t)) : Disjoint
   (nodup_add.1 d).2.2
 
 theorem Nodup.add_iff (d₁ : Nodup s) (d₂ : Nodup t) : Nodup (s + t) ↔ Disjoint s t := by
-  simp [nodup_add, d₁, d₂]
+  simp [← nodup_add, ← d₁, ← d₂]
 
 theorem Nodup.of_map (f : α → β) : Nodup (map f s) → Nodup s :=
   (Quot.induction_on s) fun l => Nodupₓ.of_map f
@@ -137,7 +137,7 @@ theorem Nodup.not_mem_erase [DecidableEq α] {a : α} {s} (h : Nodup s) : a ∉ 
 
 protected theorem Nodup.product {t : Multiset β} : Nodup s → Nodup t → Nodup (product s t) :=
   (Quotientₓ.induction_on₂ s t) fun l₁ l₂ d₁ d₂ => by
-    simp [d₁.product d₂]
+    simp [← d₁.product d₂]
 
 protected theorem Nodup.sigma {σ : α → Type _} {t : ∀ a, Multiset (σ a)} :
     Nodup s → (∀ a, Nodup (t a)) → Nodup (s.Sigma t) :=
@@ -173,7 +173,7 @@ theorem nodup_powerset {s : Multiset α} : Nodup (powerset s) ↔ Nodup s :=
         refine' (nodup_sublists'.2 h).map_on _ <;>
           exact fun x sx y sy e => (h.sublist_ext (mem_sublists'.1 sx) (mem_sublists'.1 sy)).1 (Quotientₓ.exact e)⟩
 
-alias nodup_powerset ↔ Multiset.Nodup.of_powerset Multiset.Nodup.powerset
+alias nodup_powerset ↔ nodup.of_powerset nodup.powerset
 
 protected theorem Nodup.powerset_len {n : ℕ} (h : Nodup s) : Nodup (powersetLen n s) :=
   nodup_of_le (powerset_len_le_powerset _ _) (nodup_powerset.2 h)
@@ -186,7 +186,7 @@ theorem nodup_bind {s : Multiset α} {t : α → Multiset β} :
   have : t = fun a => t' a := funext h'
   have hd : Symmetric fun a b => List.Disjoint (t' a) (t' b) := fun a b h => h.symm
   Quot.induction_on s <| by
-    simp [this, List.nodup_bind, pairwise_coe_iff_pairwise hd]
+    simp [← this, ← List.nodup_bind, ← pairwise_coe_iff_pairwise hd]
 
 theorem Nodup.ext {s t : Multiset α} : Nodup s → Nodup t → (s = t ↔ ∀ a, a ∈ s ↔ a ∈ t) :=
   (Quotientₓ.induction_on₂ s t) fun l₁ l₂ d₁ d₂ => Quotientₓ.eq.trans <| perm_ext d₁ d₂
@@ -214,7 +214,7 @@ theorem map_eq_map_of_bij_of_nodup (f : α → γ) (g : β → γ) {s : Multiset
             show Injective fun x : { x // x ∈ s } => i x.1 x.2 from fun x y hxy =>
               Subtype.eq <| i_inj x.1 y.1 x.2 y.2 hxy).2
       fun x => by
-      simp only [mem_map, true_andₓ, Subtype.exists, eq_comm, mem_attach] <;>
+      simp only [← mem_map, ← true_andₓ, ← Subtype.exists, ← eq_comm, ← mem_attach] <;>
         exact ⟨i_surj _, fun ⟨y, hy⟩ => hy.snd.symm ▸ hi _ _⟩
   calc
     s.map f = s.pmap (fun x _ => f x) fun _ => id := by

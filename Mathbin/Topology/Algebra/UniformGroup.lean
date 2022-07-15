@@ -54,7 +54,7 @@ attribute [to_additive] UniformGroup
 theorem UniformGroup.mk' {α} [UniformSpace α] [Groupₓ α] (h₁ : UniformContinuous fun p : α × α => p.1 * p.2)
     (h₂ : UniformContinuous fun p : α => p⁻¹) : UniformGroup α :=
   ⟨by
-    simpa only [div_eq_mul_inv] using h₁.comp (uniform_continuous_fst.prod_mk (h₂.comp uniform_continuous_snd))⟩
+    simpa only [← div_eq_mul_inv] using h₁.comp (uniform_continuous_fst.prod_mk (h₂.comp uniform_continuous_snd))⟩
 
 variable [UniformSpace α] [Groupₓ α] [UniformGroup α]
 
@@ -87,6 +87,34 @@ theorem UniformContinuous.mul [UniformSpace β] {f : β → α} {g : β → α} 
 theorem uniform_continuous_mul : UniformContinuous fun p : α × α => p.1 * p.2 :=
   uniform_continuous_fst.mul uniform_continuous_snd
 
+@[to_additive UniformContinuous.const_nsmul]
+theorem UniformContinuous.pow_const [UniformSpace β] {f : β → α} (hf : UniformContinuous f) :
+    ∀ n : ℕ, UniformContinuous fun x => f x ^ n
+  | 0 => by
+    simp_rw [pow_zeroₓ]
+    exact uniform_continuous_const
+  | n + 1 => by
+    simp_rw [pow_succₓ]
+    exact hf.mul (UniformContinuous.pow_const n)
+
+@[to_additive uniform_continuous_const_nsmul]
+theorem uniform_continuous_pow_const (n : ℕ) : UniformContinuous fun x : α => x ^ n :=
+  uniform_continuous_id.pow_const n
+
+@[to_additive UniformContinuous.const_zsmul]
+theorem UniformContinuous.zpow_const [UniformSpace β] {f : β → α} (hf : UniformContinuous f) :
+    ∀ n : ℤ, UniformContinuous fun x => f x ^ n
+  | (n : ℕ) => by
+    simp_rw [zpow_coe_nat]
+    exact hf.pow_const _
+  | -[1+ n] => by
+    simp_rw [zpow_neg_succ_of_nat]
+    exact (hf.pow_const _).inv
+
+@[to_additive uniform_continuous_const_zsmul]
+theorem uniform_continuous_zpow_const (n : ℤ) : UniformContinuous fun x : α => x ^ n :=
+  uniform_continuous_id.zpow_const n
+
 @[to_additive]
 instance (priority := 10) UniformGroup.to_topological_group : TopologicalGroup α where
   continuous_mul := uniform_continuous_mul.Continuous
@@ -103,18 +131,18 @@ theorem uniformity_translate_mul (a : α) : ((𝓤 α).map fun x : α × α => (
   le_antisymmₓ (uniform_continuous_id.mul uniform_continuous_const)
     (calc
       𝓤 α = ((𝓤 α).map fun x : α × α => (x.1 * a⁻¹, x.2 * a⁻¹)).map fun x : α × α => (x.1 * a, x.2 * a) := by
-        simp [Filter.map_map, (· ∘ ·)] <;> exact filter.map_id.symm
+        simp [← Filter.map_map, ← (· ∘ ·)] <;> exact filter.map_id.symm
       _ ≤ (𝓤 α).map fun x : α × α => (x.1 * a, x.2 * a) :=
         Filter.map_mono (uniform_continuous_id.mul uniform_continuous_const)
       )
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:95:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([1]) }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:92:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([1]) }
 @[to_additive]
 theorem uniform_embedding_translate_mul (a : α) : UniformEmbedding fun x : α => x * a :=
   { comap_uniformity := by
       rw [← uniformity_translate_mul a, comap_map]
       rintro ⟨p₁, p₂⟩ ⟨q₁, q₂⟩
-      simp (config := { contextual := true })[Prod.eq_iff_fst_eq_snd_eq],
+      simp (config := { contextual := true })[← Prod.eq_iff_fst_eq_snd_eq],
     inj := mul_left_injective a }
 
 namespace MulOpposite
@@ -148,13 +176,13 @@ theorem uniformity_eq_comap_nhds_one : 𝓤 α = comap (fun x : α × α => x.2 
     rcases mem_uniformity_of_uniform_continuous_invariant uniform_continuous_div hs with ⟨t, ht, hts⟩
     refine' mem_map.2 (mem_of_superset ht _)
     rintro ⟨a, b⟩
-    simpa [subset_def] using hts a b a
+    simpa [← subset_def] using hts a b a
     
   · intro s hs
     rcases mem_uniformity_of_uniform_continuous_invariant uniform_continuous_mul hs with ⟨t, ht, hts⟩
     refine' ⟨_, ht, _⟩
     rintro ⟨a, b⟩
-    simpa [subset_def] using hts 1 (b / a) a
+    simpa [← subset_def] using hts 1 (b / a) a
     
 
 @[to_additive]
@@ -168,7 +196,7 @@ open MulOpposite
 theorem uniformity_eq_comap_inv_mul_nhds_one : 𝓤 α = comap (fun x : α × α => x.1⁻¹ * x.2) (𝓝 (1 : α)) := by
   rw [← comap_uniformity_mul_opposite, uniformity_eq_comap_nhds_one, ← op_one, ← comap_unop_nhds, comap_comap,
     comap_comap]
-  simp [(· ∘ ·)]
+  simp [← (· ∘ ·)]
 
 @[to_additive]
 theorem uniformity_eq_comap_inv_mul_nhds_one_swapped : 𝓤 α = comap (fun x : α × α => x.2⁻¹ * x.1) (𝓝 (1 : α)) := by
@@ -206,13 +234,13 @@ theorem group_separation_rel (x y : α) : (x, y) ∈ SeparationRel α ↔ x / y 
   have : Embedding fun a => a * (y / x) := (uniform_embedding_translate_mul (y / x)).Embedding
   show (x, y) ∈ ⋂₀ (𝓤 α).Sets ↔ x / y ∈ Closure ({1} : Set α) by
     rw [this.closure_eq_preimage_closure_image, uniformity_eq_comap_nhds_one α, sInter_comap_sets]
-    simp [mem_closure_iff_nhds, inter_singleton_nonempty, sub_eq_add_neg, add_assocₓ]
+    simp [← mem_closure_iff_nhds, ← inter_singleton_nonempty, ← sub_eq_add_neg, ← add_assocₓ]
 
 @[to_additive]
 theorem uniform_continuous_of_tendsto_one {hom : Type _} [UniformSpace β] [Groupₓ β] [UniformGroup β]
     [MonoidHomClass hom α β] {f : hom} (h : Tendsto f (𝓝 1) (𝓝 1)) : UniformContinuous f := by
   have : ((fun x : β × β => x.2 / x.1) ∘ fun x : α × α => (f x.1, f x.2)) = fun x : α × α => f (x.2 / x.1) := by
-    simp only [map_div]
+    simp only [← map_div]
   rw [UniformContinuous, uniformity_eq_comap_nhds_one α, uniformity_eq_comap_nhds_one β, tendsto_comap_iff, this]
   exact tendsto.comp h tendsto_comap
 
@@ -277,7 +305,33 @@ theorem CauchySeq.inv {ι : Type _} [SemilatticeSup ι] {u : ι → α} (h : Cau
 theorem totally_bounded_iff_subset_finite_Union_nhds_one {s : Set α} :
     TotallyBounded s ↔ ∀, ∀ U ∈ 𝓝 (1 : α), ∀, ∃ t : Set α, t.Finite ∧ s ⊆ ⋃ y ∈ t, y • U :=
   (𝓝 (1 : α)).basis_sets.uniformity_of_nhds_one_inv_mul_swapped.totally_bounded_iff.trans <| by
-    simp [← preimage_smul_inv, preimage]
+    simp [preimage_smul_inv, ← preimage]
+
+section UniformConvergence
+
+variable {ι : Type _} {l : Filter ι} {f f' : ι → β → α} {g g' : β → α} {s : Set β}
+
+@[to_additive]
+theorem TendstoUniformlyOn.mul (hf : TendstoUniformlyOn f g l s) (hf' : TendstoUniformlyOn f' g' l s) :
+    TendstoUniformlyOn (f * f') (g * g') l s := fun u hu =>
+  ((uniform_continuous_mul.comp_tendsto_uniformly_on (hf.Prod hf')) u hu).diag_of_prod
+
+@[to_additive]
+theorem TendstoUniformlyOn.div (hf : TendstoUniformlyOn f g l s) (hf' : TendstoUniformlyOn f' g' l s) :
+    TendstoUniformlyOn (f / f') (g / g') l s := fun u hu =>
+  ((uniform_continuous_div.comp_tendsto_uniformly_on (hf.Prod hf')) u hu).diag_of_prod
+
+@[to_additive]
+theorem UniformCauchySeqOn.mul (hf : UniformCauchySeqOn f l s) (hf' : UniformCauchySeqOn f' l s) :
+    UniformCauchySeqOn (f * f') l s := fun u hu => by
+  simpa using (uniform_continuous_mul.comp_uniform_cauchy_seq_on (hf.prod' hf')) u hu
+
+@[to_additive]
+theorem UniformCauchySeqOn.div (hf : UniformCauchySeqOn f l s) (hf' : UniformCauchySeqOn f' l s) :
+    UniformCauchySeqOn (f / f') l s := fun u hu => by
+  simpa using (uniform_continuous_div.comp_uniform_cauchy_seq_on (hf.prod' hf')) u hu
+
+end UniformConvergence
 
 end UniformGroup
 
@@ -293,10 +347,10 @@ def TopologicalGroup.toUniformSpace : UniformSpace G where
   uniformity := comap (fun p : G × G => p.2 / p.1) (𝓝 1)
   refl := by
     refine' map_le_iff_le_comap.1 (le_transₓ _ (pure_le_nhds 1)) <;>
-      simp (config := { contextual := true })[Set.subset_def]
+      simp (config := { contextual := true })[← Set.subset_def]
   symm := by
     suffices tendsto (fun p : G × G => (p.2 / p.1)⁻¹) (comap (fun p : G × G => p.2 / p.1) (𝓝 1)) (𝓝 1⁻¹) by
-      simpa [tendsto_comap_iff]
+      simpa [← tendsto_comap_iff]
     exact tendsto.comp (tendsto.inv tendsto_id) tendsto_comap
   comp := by
     intro D H
@@ -313,7 +367,7 @@ def TopologicalGroup.toUniformSpace : UniformSpace G where
         by
         intro p p_comp_rel
         rcases p_comp_rel with ⟨z, ⟨Hz1, Hz2⟩⟩
-        simpa [sub_eq_add_neg, add_commₓ, add_left_commₓ] using V_sum _ Hz1 _ Hz2
+        simpa [← sub_eq_add_neg, ← add_commₓ, ← add_left_commₓ] using V_sum _ Hz1 _ Hz2
       exact Set.Subset.trans comp_rel_sub U_sub
       
     · exact monotone_comp_rel monotone_id monotone_id
@@ -356,7 +410,7 @@ theorem TopologicalGroup.tendsto_locally_uniformly_iff {ι α : Type _} [Topolog
     (p : Filter ι) :
     @TendstoLocallyUniformly α G ι (TopologicalGroup.toUniformSpace G) _ F f p ↔
       ∀, ∀ u ∈ 𝓝 (1 : G), ∀ x : α, ∃ t ∈ 𝓝 x, ∀ᶠ i in p, ∀, ∀ a ∈ t, ∀, F i a / f a ∈ u :=
-  ⟨fun h u hu => h _ ⟨u, hu, fun _ => id⟩, fun x =>
+  ⟨fun h u hu => h _ ⟨u, hu, fun _ => id⟩, fun h v ⟨u, hu, hv⟩ x =>
     exists_imp_exists (fun a => exists_imp_exists fun ha hp => mem_of_superset hp fun i hi a ha => hv (hi a ha))
       (h u hu x)⟩
 
@@ -365,7 +419,7 @@ theorem TopologicalGroup.tendsto_locally_uniformly_on_iff {ι α : Type _} [Topo
     (f : α → G) (p : Filter ι) (s : Set α) :
     @TendstoLocallyUniformlyOn α G ι (TopologicalGroup.toUniformSpace G) _ F f p s ↔
       ∀, ∀ u ∈ 𝓝 (1 : G), ∀, ∀ x ∈ s, ∀, ∃ t ∈ 𝓝[s] x, ∀ᶠ i in p, ∀, ∀ a ∈ t, ∀, F i a / f a ∈ u :=
-  ⟨fun h u hu => h _ ⟨u, hu, fun _ => id⟩, fun x =>
+  ⟨fun h u hu => h _ ⟨u, hu, fun _ => id⟩, fun h v ⟨u, hu, hv⟩ x =>
     (exists_imp_exists fun a => exists_imp_exists fun ha hp => mem_of_superset hp fun i hi a ha => hv (hi a ha)) ∘
       h u hu x⟩
 
@@ -398,7 +452,7 @@ theorem topological_group_is_uniform : UniformGroup G := by
   constructor
   rw [UniformContinuous, uniformity_prod_eq_prod, tendsto_map'_iff, uniformity_eq_comap_nhds_one' G, tendsto_comap_iff,
     prod_comap_comap_eq]
-  simpa [(· ∘ ·), div_eq_mul_inv, mul_comm, mul_left_commₓ] using this
+  simpa [← (· ∘ ·), ← div_eq_mul_inv, ← mul_comm, ← mul_left_commₓ] using this
 
 open Set
 
@@ -413,7 +467,7 @@ theorem TopologicalGroup.t2_space_iff_one_closed : T2Space G ↔ IsClosed ({1} :
       rw [div_one] at this
       rw [← this, h] at x_in
       change x = 1 at x_in
-      simp [x_in]
+      simp [← x_in]
       
     · exact subset_closure
       
@@ -513,7 +567,7 @@ variable {W' : Set G} (W'_nhd : W' ∈ 𝓝 (0 : G))
 
 include W'_nhd
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x x' «expr ∈ » U₂)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x x' «expr ∈ » U₂)
 private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
     ∃ U₂ ∈ comap e (𝓝 x₀), ∀ x x' _ : x ∈ U₂ _ : x' ∈ U₂, Φ (x' - x, y₁) ∈ W' := by
   let Nx := 𝓝 x₀
@@ -531,10 +585,10 @@ private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
   simp_rw [ball_mem_comm]
   exact limₓ W' W'_nhd
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x x' «expr ∈ » U₁)
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (y y' «expr ∈ » V₁)
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x x' «expr ∈ » U)
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (y y' «expr ∈ » V)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x x' «expr ∈ » U₁)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y y' «expr ∈ » V₁)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x x' «expr ∈ » U)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y y' «expr ∈ » V)
 private theorem extend_Z_bilin_key (x₀ : α) (y₀ : γ) :
     ∃ U ∈ comap e (𝓝 x₀),
       ∃ V ∈ comap f (𝓝 y₀), ∀ x x' _ : x ∈ U _ : x' ∈ U, ∀ y y' _ : y ∈ V _ : y' ∈ V, Φ (x', y') - Φ (x, y) ∈ W' :=
@@ -627,7 +681,7 @@ theorem extend_Z_bilin : Continuous (extend (de.Prod df) Φ) := by
     rw [mem_map, mem_comap, nhds_prod_eq]
     exists (U' ×ˢ V') ×ˢ U' ×ˢ V'
     rw [mem_prod_same_iff]
-    simp only [exists_prop]
+    simp only [← exists_prop]
     constructor
     · change U' ∈ 𝓝 x₀ at U'_nhd
       change V' ∈ 𝓝 y₀ at V'_nhd
@@ -635,7 +689,7 @@ theorem extend_Z_bilin : Continuous (extend (de.Prod df) Φ) := by
       tauto
       
     · intro p h'
-      simp only [Set.mem_preimage, Set.prod_mk_mem_set_prod_eq] at h'
+      simp only [← Set.mem_preimage, ← Set.prod_mk_mem_set_prod_eq] at h'
       rcases p with ⟨⟨x, y⟩, ⟨x', y'⟩⟩
       apply h <;> tauto
       

@@ -111,7 +111,7 @@ def SeqContinuous (f : X → Y) : Prop :=
   ∀ x : ℕ → X, ∀ {a : X}, (x ⟶ a) → (f ∘ x) ⟶ f a
 
 -- A continuous function is sequentially continuous.
-protected theorem Continuous.seq_continuous {f : X → Y} (hf : Continuous f) : SeqContinuous f := fun _ : x ⟶ a =>
+protected theorem Continuous.seq_continuous {f : X → Y} (hf : Continuous f) : SeqContinuous f := fun x a _ : x ⟶ a =>
   have : Tendsto f (𝓝 a) (𝓝 (f a)) := Continuous.tendsto ‹Continuous f› a
   show (f ∘ x) ⟶ f a from Tendsto.comp this ‹x ⟶ a›
 
@@ -121,8 +121,8 @@ theorem continuous_iff_seq_continuous {f : X → Y} [SequentialSpace X] : Contin
     show Continuous f from
       suffices h : ∀ {s : Set Y}, IsClosed s → IsSeqClosed (f ⁻¹' s) from
         continuous_iff_is_closed.mpr fun s _ => is_seq_closed_iff_is_closed.mp <| h ‹IsClosed s›
-      fun _ : IsClosed s =>
-      is_seq_closed_of_def fun _ : x ⟶ a =>
+      fun s _ : IsClosed s =>
+      is_seq_closed_of_def fun x : ℕ → X a _ : ∀ n, f (x n) ∈ s _ : x ⟶ a =>
         have : (f ∘ x) ⟶ f a := ‹SeqContinuous f› x ‹x ⟶ a›
         show f a ∈ s from ‹IsClosed s›.IsSeqClosed.mem_of_tendsto ‹∀ n, f (x n) ∈ s› ‹(f ∘ x) ⟶ f a›
 
@@ -142,7 +142,7 @@ instance (priority := 100) : SequentialSpace X :=
   ⟨show ∀ s, SeqClosure s = Closure s from fun s =>
       suffices Closure s ⊆ SeqClosure s from Set.Subset.antisymm (seq_closure_subset_closure s) this
       -- For every a ∈ closure s, we need to construct a sequence `x` in `s` that converges to `a`:
-    fun ha : a ∈ Closure s =>
+    fun a : X ha : a ∈ Closure s =>
       -- Since we are in a first-countable space, the neighborhood filter around `a` has a decreasing
     -- basis `U` indexed by `ℕ`.
     by
@@ -226,7 +226,7 @@ open UniformSpace Prod
 
 variable [UniformSpace X] {s : Set X}
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem lebesgue_number_lemma_seq {ι : Type _} [IsCountablyGenerated (𝓤 X)] {c : ι → Set X} (hs : IsSeqCompact s)
     (hc₁ : ∀ i, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i, c i) : ∃ V ∈ 𝓤 X, SymmetricRel V ∧ ∀, ∀ x ∈ s, ∀, ∃ i, Ball x V ⊆ c i :=
   by
@@ -270,25 +270,25 @@ theorem lebesgue_number_lemma_seq {ι : Type _} [IsCountablyGenerated (𝓤 X)] 
   calc ball (x <| φ N) (V <| φ N) ⊆ ball (x <| φ N) W := preimage_mono hVNW _ ⊆ ball x₀ (V n₀) :=
       ball_subset_of_comp_subset x_φ_N_in hWW _ ⊆ c i₀ := hn₀
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem IsSeqCompact.totally_bounded (h : IsSeqCompact s) : TotallyBounded s := by
   classical
   apply totally_bounded_of_forall_symm
   unfold IsSeqCompact  at h
   contrapose! h
   rcases h with ⟨V, V_in, V_symm, h⟩
-  simp_rw [not_subset]  at h
+  simp_rw [not_subset] at h
   have : ∀ t : Set X, t.Finite → ∃ a, a ∈ s ∧ a ∉ ⋃ y ∈ t, ball y V := by
     intro t ht
     obtain ⟨a, a_in, H⟩ : ∃ a ∈ s, ∀, ∀ x ∈ t, ∀, (x, a) ∉ V := by
-      simpa [ht] using h t
+      simpa [← ht] using h t
     use a, a_in
     intro H'
     obtain ⟨x, x_in, hx⟩ := mem_Union₂.mp H'
     exact H x x_in hx
   cases' seq_of_forall_finite_exists this with u hu
   clear h this
-  simp [forall_and_distrib] at hu
+  simp [← forall_and_distrib] at hu
   cases' hu with u_in hu
   use u, u_in
   clear u_in
@@ -300,7 +300,7 @@ theorem IsSeqCompact.totally_bounded (h : IsSeqCompact s) : TotallyBounded s := 
   specialize hu (φ <| N + 1) (φ N) (hφ <| lt_add_one N)
   exact hu hN
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 protected theorem IsSeqCompact.is_compact [is_countably_generated <| 𝓤 X] (hs : IsSeqCompact s) : IsCompact s := by
   classical
   rw [is_compact_iff_finite_subcover]

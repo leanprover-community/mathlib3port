@@ -42,8 +42,8 @@ instance groupObj (F : J ⥤ Groupₓₓ.{max v u}) j : Groupₓ ((F ⋙ forget 
 def sectionsSubgroup (F : J ⥤ Groupₓₓ) : Subgroup (∀ j, F.obj j) :=
   { Mon.sectionsSubmonoid (F ⋙ forget₂ Groupₓₓ Mon) with Carrier := (F ⋙ forget Groupₓₓ).sections,
     inv_mem' := fun a ah j j' f => by
-      simp only [forget_map_eq_coe, functor.comp_map, Pi.inv_apply, MonoidHom.map_inv, inv_inj]
-      dsimp' [functor.sections]  at ah
+      simp only [← forget_map_eq_coe, ← functor.comp_map, ← Pi.inv_apply, ← MonoidHom.map_inv, ← inv_inj]
+      dsimp' [← functor.sections]  at ah
       rw [ah f] }
 
 @[to_additive]
@@ -86,8 +86,11 @@ def limitConeIsLimit (F : J ⥤ Groupₓₓ.{max v u}) : IsLimit (limitCone F) :
 
 /-- The category of groups has all limits. -/
 @[to_additive "The category of additive groups has all limits."]
-instance has_limits_of_size : HasLimitsOfSize.{v, v} Groupₓₓ.{max v u} where
-  HasLimitsOfShape := fun J 𝒥 => { HasLimit := fun F => has_limit_of_created F (forget₂ Groupₓₓ Mon.{max v u}) }
+instance has_limits_of_size :
+    HasLimitsOfSize.{v, v}
+      Groupₓₓ.{max v
+          u} where HasLimitsOfShape := fun J 𝒥 =>
+    { HasLimit := fun F => has_limit_of_created F (forget₂ Groupₓₓ Mon.{max v u}) }
 
 @[to_additive]
 instance has_limits : HasLimits Groupₓₓ.{u} :=
@@ -99,8 +102,9 @@ This means the underlying monoid of a limit can be computed as a limit in the ca
 -/
 @[to_additive AddGroupₓₓ.forget₂AddMonPreservesLimits
       "The forgetful functor from additive groups\nto additive monoids preserves all limits.\n\nThis means the underlying additive monoid of a limit can be computed as a limit in the category of\nadditive monoids."]
-instance forget₂MonPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget₂ Groupₓₓ Mon.{max v u}) where
-  PreservesLimitsOfShape := fun J 𝒥 =>
+instance forget₂MonPreservesLimitsOfSize :
+    PreservesLimitsOfSize.{v, v}
+      (forget₂ Groupₓₓ Mon.{max v u}) where PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F => by
         infer_instance }
 
@@ -113,8 +117,11 @@ instance forget₂MonPreservesLimits : PreservesLimits (forget₂ Groupₓₓ Mo
 This means the underlying type of a limit can be computed as a limit in the category of types. -/
 @[to_additive
       "The forgetful functor from additive groups to types preserves all limits.\n\nThis means the underlying type of a limit can be computed as a limit in the category of types."]
-instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget Groupₓₓ.{max v u}) where
-  PreservesLimitsOfShape := fun J 𝒥 =>
+instance forgetPreservesLimitsOfSize :
+    PreservesLimitsOfSize.{v, v}
+      (forget
+        Groupₓₓ.{max v
+            u}) where PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F => limits.comp_preserves_limit (forget₂ Groupₓₓ Mon) (forget Mon) }
 
 @[to_additive]
@@ -172,8 +179,11 @@ def limitConeIsLimit (F : J ⥤ CommGroupₓₓ.{max v u}) : IsLimit (limitCone 
 
 /-- The category of commutative groups has all limits. -/
 @[to_additive "The category of additive commutative groups has all limits."]
-instance has_limits_of_size : HasLimitsOfSize.{v, v} CommGroupₓₓ.{max v u} where
-  HasLimitsOfShape := fun J 𝒥 => { HasLimit := fun F => has_limit_of_created F (forget₂ CommGroupₓₓ Groupₓₓ.{max v u}) }
+instance has_limits_of_size :
+    HasLimitsOfSize.{v, v}
+      CommGroupₓₓ.{max v
+          u} where HasLimitsOfShape := fun J 𝒥 =>
+    { HasLimit := fun F => has_limit_of_created F (forget₂ CommGroupₓₓ Groupₓₓ.{max v u}) }
 
 @[to_additive]
 instance has_limits : HasLimits CommGroupₓₓ.{u} :=
@@ -185,8 +195,9 @@ of groups.)
 -/
 @[to_additive AddCommGroupₓₓ.forget₂AddGroupPreservesLimits
       "The forgetful functor from additive commutative groups to groups preserves all limits.\n(That is, the underlying group could have been computed instead as limits in the category\nof additive groups.)"]
-instance forget₂GroupPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget₂ CommGroupₓₓ Groupₓₓ.{max v u}) where
-  PreservesLimitsOfShape := fun J 𝒥 =>
+instance forget₂GroupPreservesLimitsOfSize :
+    PreservesLimitsOfSize.{v, v}
+      (forget₂ CommGroupₓₓ Groupₓₓ.{max v u}) where PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F => by
         infer_instance }
 
@@ -208,8 +219,10 @@ in the category of commutative monoids.)
 @[to_additive AddCommGroupₓₓ.forget₂AddCommMonPreservesLimits
       "The forgetful functor from additive commutative groups to additive commutative monoids preserves\nall limits. (That is, the underlying additive commutative monoids could have been computed instead\nas limits in the category of additive commutative monoids.)"]
 instance forget₂CommMonPreservesLimitsOfSize :
-    PreservesLimitsOfSize.{v, v} (forget₂ CommGroupₓₓ CommMon.{max v u}) where
-  PreservesLimitsOfShape := fun J 𝒥 =>
+    PreservesLimitsOfSize.{v, v}
+      (forget₂ CommGroupₓₓ
+        CommMon.{max v
+            u}) where PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F) (forget₂_CommMon_preserves_limits_aux F) }
 
@@ -218,8 +231,11 @@ underlying types could have been computed instead as limits in the category of t
 -/
 @[to_additive AddCommGroupₓₓ.forgetPreservesLimits
       "The forgetful functor from additive commutative groups to types preserves all limits. (That is,\nthe underlying types could have been computed instead as limits in the category of types.)"]
-instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget CommGroupₓₓ.{max v u}) where
-  PreservesLimitsOfShape := fun J 𝒥 =>
+instance forgetPreservesLimitsOfSize :
+    PreservesLimitsOfSize.{v, v}
+      (forget
+        CommGroupₓₓ.{max v
+            u}) where PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F => limits.comp_preserves_limit (forget₂ CommGroupₓₓ Groupₓₓ) (forget Groupₓₓ) }
 
 -- Verify we can form limits indexed over smaller categories.
@@ -239,7 +255,7 @@ def kernelIsoKer {G H : AddCommGroupₓₓ.{u}} (f : G ⟶ H) : kernel f ≅ Add
         ⟨kernel.ι f g, by
           -- TODO where is this `has_coe_t_aux.coe` coming from? can we prevent it appearing?
           change (kernel.ι f) g ∈ f.ker
-          simp [AddMonoidHom.mem_ker]⟩,
+          simp [← AddMonoidHom.mem_ker]⟩,
       map_zero' := by
         ext
         simp ,
@@ -256,7 +272,7 @@ def kernelIsoKer {G H : AddCommGroupₓₓ.{u}} (f : G ⟶ H) : kernel f ≅ Add
     simp
   inv_hom_id' := by
     apply AddCommGroupₓₓ.ext
-    simp only [AddMonoidHom.coe_mk, coe_id, coe_comp]
+    simp only [← AddMonoidHom.coe_mk, ← coe_id, ← coe_comp]
     rintro ⟨x, mem⟩
     simp
 
@@ -269,7 +285,7 @@ theorem kernel_iso_ker_hom_comp_subtype {G H : AddCommGroupₓₓ} (f : G ⟶ H)
 theorem kernel_iso_ker_inv_comp_ι {G H : AddCommGroupₓₓ} (f : G ⟶ H) :
     (kernelIsoKer f).inv ≫ kernel.ι f = AddSubgroup.subtype f.ker := by
   ext
-  simp [kernel_iso_ker]
+  simp [← kernel_iso_ker]
 
 /-- The categorical kernel inclusion for `f : G ⟶ H`, as an object over `G`,
 agrees with the `subtype` map.

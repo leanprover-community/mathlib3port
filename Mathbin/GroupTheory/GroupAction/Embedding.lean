@@ -23,7 +23,7 @@ variable {G G' α β : Type _}
 namespace Function.Embedding
 
 @[to_additive Function.Embedding.hasVadd]
-instance [Groupₓ G] [MulAction G β] : HasScalar G (α ↪ β) :=
+instance [Groupₓ G] [MulAction G β] : HasSmul G (α ↪ β) :=
   ⟨fun g f => f.trans (MulAction.toPerm g).toEmbedding⟩
 
 @[to_additive]
@@ -38,7 +38,7 @@ theorem smul_apply [Groupₓ G] [MulAction G β] (g : G) (f : α ↪ β) (a : α
 theorem coe_smul [Groupₓ G] [MulAction G β] (g : G) (f : α ↪ β) : ⇑(g • f) = g • f :=
   rfl
 
-instance [Groupₓ G] [Groupₓ G'] [HasScalar G G'] [MulAction G β] [MulAction G' β] [IsScalarTower G G' β] :
+instance [Groupₓ G] [Groupₓ G'] [HasSmul G G'] [MulAction G β] [MulAction G' β] [IsScalarTower G G' β] :
     IsScalarTower G G' (α ↪ β) :=
   ⟨fun x y z => Function.Embedding.ext fun i => smul_assoc x y (z i)⟩
 

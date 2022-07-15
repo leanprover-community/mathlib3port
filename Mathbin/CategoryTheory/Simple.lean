@@ -76,7 +76,7 @@ theorem Simple.of_iso {X Y : C} [Simple Y] (i : X ≅ Y) : Simple X :=
         infer_instance
          }
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem kernel_zero_of_nonzero_from_simple {X Y : C} [Simple X] {f : X ⟶ Y} [HasKernel f] (w : f ≠ 0) :
     kernel.ι f = 0 := by
   classical
@@ -94,7 +94,7 @@ theorem epi_of_nonzero_to_simple [HasEqualizers C] {X Y : C} [Simple Y] {f : X �
   have : is_iso (image.ι f) := is_iso_of_mono_of_nonzero fun h => w (eq_zero_of_image_eq_zero h)
   apply epi_comp
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mono_to_simple_zero_of_not_iso {X Y : C} [Simple Y] {f : X ⟶ Y} [Mono f] (w : IsIso f → False) : f = 0 := by
   classical
   by_contra
@@ -111,7 +111,7 @@ instance (X : C) [Simple.{v} X] : Nontrivial (End X) :=
 section
 
 theorem Simple.not_is_zero (X : C) [Simple X] : ¬IsZero X := by
-  simpa [limits.is_zero.iff_id_eq_zero] using id_nonzero X
+  simpa [← limits.is_zero.iff_id_eq_zero] using id_nonzero X
 
 variable [HasZeroObject C]
 
@@ -135,7 +135,7 @@ section Abelian
 
 variable [Abelian C]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- In an abelian category, an object satisfying the dual of the definition of a simple object is
     simple. -/
 theorem simple_of_cosimple (X : C) (h : ∀ {Z : C} f : X ⟶ Z [Epi f], IsIso f ↔ f ≠ 0) : Simple X :=
@@ -157,19 +157,19 @@ theorem simple_of_cosimple (X : C) (h : ∀ {Z : C} f : X ⟶ Z [Epi f], IsIso f
       ⟩
 
 /-- A nonzero epimorphism from a simple object is an isomorphism. -/
-theorem is_iso_of_epi_of_nonzero {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f] (w : f ≠ 0) : IsIso f :=
-  have-- `f ≠ 0` means that `kernel.ι f` is not an iso, and hence zero, and hence `f` is a mono.
-   : mono f := preadditive.mono_of_kernel_zero (mono_to_simple_zero_of_not_iso (kernel_not_iso_of_nonzero w))
-  is_iso_of_mono_of_epi f
+theorem is_iso_of_epi_of_nonzero {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f] (w : f ≠ 0) : IsIso f := by
+  -- `f ≠ 0` means that `kernel.ι f` is not an iso, and hence zero, and hence `f` is a mono.
+  have : mono f := preadditive.mono_of_kernel_zero (mono_to_simple_zero_of_not_iso (kernel_not_iso_of_nonzero w))
+  exact is_iso_of_mono_of_epi f
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem cokernel_zero_of_nonzero_to_simple {X Y : C} [Simple Y] {f : X ⟶ Y} (w : f ≠ 0) : cokernel.π f = 0 := by
   classical
   by_contra h
   have := is_iso_of_epi_of_nonzero h
   exact w (eq_zero_of_mono_cokernel f)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem epi_from_simple_zero_of_not_iso {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f] (w : IsIso f → False) : f = 0 := by
   classical
   by_contra
@@ -188,7 +188,7 @@ theorem Biprod.is_iso_inl_iff_is_zero (X Y : C) : IsIso (biprod.inl : X ⟶ X �
   constructor
   · intro h
     replace h := h =≫ biprod.snd
-    simpa [← is_zero.iff_split_epi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y)] using h
+    simpa [is_zero.iff_split_epi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y)] using h
     
   · intro h
     rw [is_zero.iff_split_epi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y)] at h
@@ -222,8 +222,8 @@ open Subobject
 instance {X : C} [Simple X] : Nontrivial (Subobject X) :=
   nontrivial_of_not_is_zero (Simple.not_is_zero X)
 
-instance {X : C} [Simple X] : IsSimpleOrder (Subobject X) where
-  eq_bot_or_eq_top := by
+instance {X : C} [Simple X] :
+    IsSimpleOrder (Subobject X) where eq_bot_or_eq_top := by
     rintro ⟨⟨⟨Y : C, ⟨⟨⟩⟩, f : Y ⟶ X⟩, m : mono f⟩⟩
     skip
     change mk f = ⊥ ∨ mk f = ⊤

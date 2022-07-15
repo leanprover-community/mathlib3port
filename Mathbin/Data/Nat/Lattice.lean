@@ -44,11 +44,11 @@ theorem _root_.set.infinite.nat.Sup_eq_zero {s : Set ℕ} (h : s.Infinite) : sup
 theorem Inf_eq_zero {s : Set ℕ} : inf s = 0 ↔ 0 ∈ s ∨ s = ∅ := by
   cases eq_empty_or_nonempty s
   · subst h
-    simp only [or_trueₓ, eq_self_iff_true, iff_trueₓ, Inf, HasInfₓ.inf, mem_empty_eq, exists_false, dif_neg,
-      not_false_iff]
+    simp only [← or_trueₓ, ← eq_self_iff_true, ← iff_trueₓ, ← Inf, ← HasInfₓ.inf, ← mem_empty_eq, ← exists_false, ←
+      dif_neg, ← not_false_iff]
     
   · have := ne_empty_iff_nonempty.mpr h
-    simp only [this, or_falseₓ, Nat.Inf_def, h, Nat.find_eq_zero]
+    simp only [← this, ← or_falseₓ, ← Nat.Inf_def, ← h, ← Nat.find_eq_zero]
     
 
 @[simp]
@@ -56,6 +56,10 @@ theorem Inf_empty : inf ∅ = 0 := by
   rw [Inf_eq_zero]
   right
   rfl
+
+@[simp]
+theorem infi_of_empty {ι : Sort _} [IsEmpty ι] (f : ι → ℕ) : infi f = 0 := by
+  rw [infi_of_empty', Inf_empty]
 
 theorem Inf_mem {s : Set ℕ} (h : s.Nonempty) : inf s ∈ s := by
   rw [Nat.Inf_def h]
@@ -119,9 +123,13 @@ noncomputable instance : ConditionallyCompleteLinearOrderBot ℕ :=
     cInf_le := fun s a hb ha => by
       rw [Inf_def ⟨a, ha⟩] <;> exact Nat.find_min'ₓ _ ha,
     cSup_empty := by
-      simp only [Sup_def, Set.mem_empty_eq, forall_const, forall_prop_of_false, not_false_iff, exists_const]
+      simp only [← Sup_def, ← Set.mem_empty_eq, ← forall_const, ← forall_prop_of_false, ← not_false_iff, ← exists_const]
       apply bot_unique (Nat.find_min'ₓ _ _)
       trivial }
+
+theorem Sup_mem {s : Set ℕ} (h₁ : s.Nonempty) (h₂ : BddAbove s) : sup s ∈ s :=
+  let ⟨k, hk⟩ := h₂
+  h₁.cSup_mem ((finite_le_nat k).Subset hk)
 
 theorem Inf_add {n : ℕ} {p : ℕ → Prop} (hn : n ≤ inf { m | p m }) : inf { m | p (m + n) } + n = inf { m | p m } := by
   obtain h | ⟨m, hm⟩ := { m | p (m + n) }.eq_empty_or_nonempty
@@ -160,7 +168,7 @@ section
 variable {α : Type _} [CompleteLattice α]
 
 theorem supr_lt_succ (u : ℕ → α) (n : ℕ) : (⨆ k < n + 1, u k) = (⨆ k < n, u k)⊔u n := by
-  simp [Nat.lt_succ_iff_lt_or_eq, supr_or, supr_sup_eq]
+  simp [← Nat.lt_succ_iff_lt_or_eq, ← supr_or, ← supr_sup_eq]
 
 theorem supr_lt_succ' (u : ℕ → α) (n : ℕ) : (⨆ k < n + 1, u k) = u 0⊔⨆ k < n, u (k + 1) := by
   rw [← sup_supr_nat_succ]

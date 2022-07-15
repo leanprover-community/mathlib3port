@@ -50,7 +50,7 @@ theorem card_image_diag (s : Finset α) : (s.diag.Image Quotientₓ.mk).card = s
   cases Quotientₓ.eq.1 h
   · rfl
     
-  · simp only [mem_coe, mem_diag] at hx
+  · simp only [← mem_coe, ← mem_diag] at hx
     rw [hx.2]
     
 
@@ -60,7 +60,7 @@ theorem two_mul_card_image_off_diag (s : Finset α) : 2 * (s.offDiag.Image Quoti
       (fun x => mem_image_of_mem _ : ∀, ∀ x ∈ s.off_diag, ∀, Quotientₓ.mk x ∈ s.off_diag.image Quotientₓ.mk),
     sum_const_nat (Quotientₓ.ind _), mul_comm]
   rintro ⟨x, y⟩ hxy
-  simp_rw [mem_image, exists_prop, mem_off_diag, Quotientₓ.eq]  at hxy
+  simp_rw [mem_image, exists_prop, mem_off_diag, Quotientₓ.eq] at hxy
   obtain ⟨a, ⟨ha₁, ha₂, ha⟩, h⟩ := hxy
   obtain ⟨hx, hy, hxy⟩ : x ∈ s ∧ y ∈ s ∧ x ≠ y := by
     cases h <;> have := ha.symm <;> exact ⟨‹_›, ‹_›, ‹_›⟩
@@ -71,7 +71,7 @@ theorem two_mul_card_image_off_diag (s : Finset α) : 2 * (s.offDiag.Image Quoti
     rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩) <;> rw [mem_off_diag] <;> exact ⟨‹_›, ‹_›, ‹_›⟩
   -- hxy' is used here
   rw [this, card_insert_of_not_mem, card_singleton]
-  simp only [not_and, Prod.mk.inj_iff, mem_singleton]
+  simp only [← not_and, ← Prod.mk.inj_iff, ← mem_singleton]
   exact fun _ => hxy'
 
 /-- The `off_diag` of `s : finset α` is sent on a finset of `sym2 α` of card `s.off_diag.card / 2`.

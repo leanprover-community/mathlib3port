@@ -67,8 +67,7 @@ variable [IsFiltered J]
 -/
 @[to_additive
       "As `J` is nonempty, we can pick an arbitrary object `j₀ : J`. We use this object to\ndefine the \"zero\" in the colimit as the equivalence class of `⟨j₀, 0 : F.obj j₀⟩`."]
-instance colimitHasOne : One M where
-  one := M.mk ⟨IsFiltered.nonempty.some, 1⟩
+instance colimitHasOne : One M where one := M.mk ⟨IsFiltered.nonempty.some, 1⟩
 
 /-- The definition of the "one" in the colimit is independent of the chosen object of `J`.
 In particular, this lemma allows us to "unfold" the definition of `colimit_one` at a custom chosen
@@ -124,8 +123,8 @@ theorem colimit_mul_aux_eq_of_rel_right {x y y' : Σj, F.obj j}
 
 /-- Multiplication in the colimit. See also `colimit_mul_aux`. -/
 @[to_additive "Addition in the colimit. See also `colimit_add_aux`."]
-instance colimitHasMul : Mul M where
-  mul := fun x y => by
+instance colimitHasMul :
+    Mul M where mul := fun x y => by
     refine' Quot.lift₂ (colimit_mul_aux F) _ _ x y
     · intro x y y' h
       apply colimit_mul_aux_eq_of_rel_right
@@ -182,7 +181,7 @@ instance colimitMonoid : Monoidₓ M :=
         colimit_mul_mk_eq F ⟨max₃ j₁ j₂ j₃, _⟩ ⟨j₃, z⟩ _ (𝟙 _) (third_to_max₃ j₁ j₂ j₃),
         colimit_mul_mk_eq F ⟨j₂, y⟩ ⟨j₃, z⟩ _ (second_to_max₃ j₁ j₂ j₃) (third_to_max₃ j₁ j₂ j₃),
         colimit_mul_mk_eq F ⟨j₁, x⟩ ⟨max₃ j₁ j₂ j₃, _⟩ _ (first_to_max₃ j₁ j₂ j₃) (𝟙 _)]
-      simp only [F.map_id, id_apply, mul_assoc] }
+      simp only [← F.map_id, ← id_apply, ← mul_assoc] }
 
 /-- The bundled monoid giving the filtered colimit of a diagram. -/
 @[to_additive "The bundled additive monoid giving the filtered colimit of a diagram."]
@@ -228,7 +227,7 @@ def colimitDesc (t : cocone F) : colimit ⟶ t.x where
     cases' x with i x
     cases' y with j y
     rw [colimit_mul_mk_eq F ⟨i, x⟩ ⟨j, y⟩ (max' i j) (left_to_max i j) (right_to_max i j)]
-    dsimp' [types.colimit_cocone_is_colimit]
+    dsimp' [← types.colimit_cocone_is_colimit]
     rw [MonoidHom.map_mul, t.w_apply, t.w_apply]
 
 /-- The proposed colimit cocone is a colimit in `Mon`. -/
@@ -243,8 +242,10 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone where
         funext fun x => MonoidHom.congr_fun (h j) x
 
 @[to_additive]
-instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget Mon.{u}) where
-  PreservesFilteredColimits := fun J _ _ =>
+instance forgetPreservesFilteredColimits :
+    PreservesFilteredColimits
+      (forget
+        Mon.{u}) where PreservesFilteredColimits := fun J _ _ =>
     { PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
           (types.colimit_cocone_is_colimit (F ⋙ forget Mon.{u})) }
@@ -309,8 +310,10 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone where
         funext fun x => MonoidHom.congr_fun (h j) x
 
 @[to_additive forget₂_AddMon_preserves_filtered_colimits]
-instance forget₂MonPreservesFilteredColimits : PreservesFilteredColimits (forget₂ CommMon Mon.{u}) where
-  PreservesFilteredColimits := fun J _ _ =>
+instance forget₂MonPreservesFilteredColimits :
+    PreservesFilteredColimits
+      (forget₂ CommMon
+        Mon.{u}) where PreservesFilteredColimits := fun J _ _ =>
     { PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
           (Mon.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ CommMon Mon.{u})) }

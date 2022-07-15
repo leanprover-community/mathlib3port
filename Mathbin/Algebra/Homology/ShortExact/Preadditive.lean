@@ -109,11 +109,11 @@ theorem exact_of_split {A B C : 𝒜} {f : A ⟶ B} {g : B ⟶ C} {χ : C ⟶ B}
       swap
       · infer_instance
         
-      simp only [image_to_kernel_arrow, image_subobject_arrow_comp, category.id_comp, category.assoc]
+      simp only [← image_to_kernel_arrow, ← image_subobject_arrow_comp, ← category.id_comp, ← category.assoc]
       calc (kernel_subobject g).arrow ≫ φ ≫ f = (kernel_subobject g).arrow ≫ 𝟙 B := _ _ = (kernel_subobject g).arrow :=
           category.comp_id _
       rw [← H, preadditive.comp_add]
-      simp only [add_zeroₓ, zero_comp, kernel_subobject_arrow_comp_assoc] }
+      simp only [← add_zeroₓ, ← zero_comp, ← kernel_subobject_arrow_comp_assoc] }
 
 section
 
@@ -156,7 +156,7 @@ theorem Split.map {𝒜 ℬ : Type _} [Category 𝒜] [Preadditive 𝒜] [Catego
     [Functor.Additive F] {A B C : 𝒜} {f : A ⟶ B} {g : B ⟶ C} (h : Split f g) : Split (F.map f) (F.map g) := by
   obtain ⟨φ, χ, h1, h2, h3, h4, h5⟩ := h
   refine' ⟨⟨F.map φ, F.map χ, _⟩⟩
-  simp only [← F.map_comp, ← F.map_id, ← F.map_add, F.map_zero, *, eq_self_iff_true, and_trueₓ]
+  simp only [F.map_comp, F.map_id, F.map_add, ← F.map_zero, *, ← eq_self_iff_true, ← and_trueₓ]
 
 /-- The sequence `A ⟶ A ⊞ B ⟶ B` is exact. -/
 theorem exact_inl_snd [HasBinaryBiproducts 𝒜] (A B : 𝒜) : Exact (biprod.inl : A ⟶ A ⊞ B) biprod.snd :=
@@ -244,7 +244,7 @@ theorem iso_hom_fst : h.Iso.Hom ≫ biprod.fst = h.retraction :=
 has a splitting. -/
 def splittingOfIsIsoZero {X Y Z : 𝒜} (f : X ⟶ Y) [IsIso f] (hZ : IsZero Z) : Splitting f (0 : Y ⟶ Z) :=
   ⟨(asIso f).symm ≪≫ isoBiprodZero hZ, by
-    simp [hZ.eq_of_tgt _ 0], by
+    simp [← hZ.eq_of_tgt _ 0], by
     simp ⟩
 
 include h
@@ -278,8 +278,8 @@ variable (h : Splitting f g)
 theorem split_add : h.retraction ≫ f + g ≫ h.section = 𝟙 _ := by
   delta' splitting.section retraction
   rw [← cancel_mono h.iso.hom, ← cancel_epi h.iso.inv]
-  simp only [category.comp_id, category.id_comp, category.assoc, iso.inv_hom_id_assoc, iso.inv_hom_id,
-    limits.biprod.total, preadditive.comp_add, preadditive.add_comp, splitting.comp_iso_eq_inl,
+  simp only [← category.comp_id, ← category.id_comp, ← category.assoc, ← iso.inv_hom_id_assoc, ← iso.inv_hom_id, ←
+    limits.biprod.total, ← preadditive.comp_add, ← preadditive.add_comp, ← splitting.comp_iso_eq_inl, ←
     splitting.iso_comp_eq_snd_assoc]
 
 @[reassoc]
@@ -293,7 +293,7 @@ theorem π_section_eq_id_sub : g ≫ h.section = 𝟙 _ - h.retraction ≫ f :=
 theorem splittings_comm (h h' : Splitting f g) : h'.section ≫ h.retraction = -(h.section ≫ h'.retraction) := by
   have := h.mono
   rw [← cancel_mono f]
-  simp [retraction_ι_eq_id_sub]
+  simp [← retraction_ι_eq_id_sub]
 
 include h
 
@@ -314,7 +314,7 @@ protected theorem exact : Exact f g := by
   · exact exact_inl_snd _ _
     
   · refine' arrow.iso_mk (iso.refl _) h.iso _
-    simp only [iso.refl_hom, arrow.mk_hom, category.id_comp, comp_iso_eq_inl]
+    simp only [← iso.refl_hom, ← arrow.mk_hom, ← category.id_comp, ← comp_iso_eq_inl]
     
   · refine' arrow.iso_mk h.iso (iso.refl _) _
     dsimp'

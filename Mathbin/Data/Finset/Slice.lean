@@ -50,7 +50,7 @@ theorem sized_union : (A ∪ B).Sized r ↔ A.Sized r ∧ B.Sized r :=
   ⟨fun hA => ⟨hA.mono <| subset_union_left _ _, hA.mono <| subset_union_right _ _⟩, fun hA x hx =>
     (hx.elim fun h => hA.1 h) fun h => hA.2 h⟩
 
-alias sized_union ↔ _ Set.Sized.union
+alias sized_union ↔ _ sized.union
 
 --TODO: A `forall_Union` lemma would be handy here.
 @[simp]
@@ -58,7 +58,7 @@ theorem sized_Union {f : ι → Set (Finset α)} : (⋃ i, f i).Sized r ↔ ∀ 
   simp_rw [Set.Sized, Set.mem_Union, forall_exists_index]
   exact forall_swap
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 @[simp]
 theorem sized_Union₂ {f : ∀ i, κ i → Set (Finset α)} : (⋃ (i) (j), f i j).Sized r ↔ ∀ i j, (f i j).Sized r := by
   simp_rw [sized_Union]
@@ -93,7 +93,7 @@ theorem subset_powerset_len_univ_iff : 𝒜 ⊆ powersetLen r univ ↔ (𝒜 : S
   forall_congrₓ fun A => by
     rw [mem_powerset_len_univ_iff, mem_coe]
 
-alias subset_powerset_len_univ_iff ↔ _ Set.Sized.subset_powerset_len_univ
+alias subset_powerset_len_univ_iff ↔ _ _root_.set.sized.subset_powerset_len_univ
 
 theorem _root_.set.sized.card_le (h𝒜 : (𝒜 : Set (Finset α)).Sized r) : card 𝒜 ≤ (Fintype.card α).choose r := by
   rw [Fintype.card, ← card_powerset_len]

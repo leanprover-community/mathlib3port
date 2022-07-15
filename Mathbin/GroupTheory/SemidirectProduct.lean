@@ -62,16 +62,16 @@ private def inv_aux (a : N ⋊[φ] G) : N ⋊[φ] G :=
   ⟨φ i a.1⁻¹, i⟩
 
 private theorem mul_assoc_aux (a b c : N ⋊[φ] G) : mulAux (mulAux a b) c = mulAux a (mulAux b c) := by
-  simp [mul_aux, mul_assoc, MulEquiv.map_mul]
+  simp [← mul_aux, ← mul_assoc, ← MulEquiv.map_mul]
 
 private theorem mul_one_aux (a : N ⋊[φ] G) : mulAux a oneAux = a := by
-  cases a <;> simp [mul_aux, one_aux]
+  cases a <;> simp [← mul_aux, ← one_aux]
 
 private theorem one_mul_aux (a : N ⋊[φ] G) : mulAux oneAux a = a := by
-  cases a <;> simp [mul_aux, one_aux]
+  cases a <;> simp [← mul_aux, ← one_aux]
 
 private theorem mul_left_inv_aux (a : N ⋊[φ] G) : mulAux (invAux a) a = one_aux := by
-  simp only [mul_aux, inv_aux, one_aux, ← MulEquiv.map_mul, mul_left_invₓ] <;> simp
+  simp only [← mul_aux, ← inv_aux, ← one_aux, MulEquiv.map_mul, ← mul_left_invₓ] <;> simp
 
 instance : Groupₓ (N ⋊[φ] G) where
   one := oneAux
@@ -179,19 +179,19 @@ theorem right_hom_eq_right : (rightHom : N ⋊[φ] G → G) = right :=
 
 @[simp]
 theorem right_hom_comp_inl : (rightHom : N ⋊[φ] G →* G).comp inl = 1 := by
-  ext <;> simp [right_hom]
+  ext <;> simp [← right_hom]
 
 @[simp]
 theorem right_hom_comp_inr : (rightHom : N ⋊[φ] G →* G).comp inr = MonoidHom.id _ := by
-  ext <;> simp [right_hom]
+  ext <;> simp [← right_hom]
 
 @[simp]
 theorem right_hom_inl (n : N) : rightHom (inl n : N ⋊[φ] G) = 1 := by
-  simp [right_hom]
+  simp [← right_hom]
 
 @[simp]
 theorem right_hom_inr (g : G) : rightHom (inr g : N ⋊[φ] G) = g := by
-  simp [right_hom]
+  simp [← right_hom]
 
 theorem right_hom_surjective : Function.Surjective (rightHom : N ⋊[φ] G → G) :=
   Function.surjective_iff_has_right_inverse.2 ⟨inr, right_hom_inr⟩
@@ -199,10 +199,10 @@ theorem right_hom_surjective : Function.Surjective (rightHom : N ⋊[φ] G → G
 theorem range_inl_eq_ker_right_hom : (inl : N →* N ⋊[φ] G).range = rightHom.ker :=
   le_antisymmₓ
     (fun _ => by
-      simp (config := { contextual := true })[MonoidHom.mem_ker, eq_comm])
+      simp (config := { contextual := true })[← MonoidHom.mem_ker, ← eq_comm])
     fun x hx =>
     ⟨x.left, by
-      ext <;> simp_all [MonoidHom.mem_ker]⟩
+      ext <;> simp_all [← MonoidHom.mem_ker]⟩
 
 section lift
 
@@ -216,12 +216,12 @@ def lift (f₁ : N →* H) (f₂ : G →* H) (h : ∀ g, f₁.comp (φ g).toMono
     simp
   map_mul' := fun a b => by
     have := fun n g => MonoidHom.ext_iff.1 (h n) g
-    simp only [MulAut.conj_apply, MonoidHom.comp_apply, MulEquiv.coe_to_monoid_hom] at this
-    simp [this, mul_assoc]
+    simp only [← MulAut.conj_apply, ← MonoidHom.comp_apply, ← MulEquiv.coe_to_monoid_hom] at this
+    simp [← this, ← mul_assoc]
 
 @[simp]
 theorem lift_inl (n : N) : lift f₁ f₂ h (inl n) = f₁ n := by
-  simp [lift]
+  simp [← lift]
 
 @[simp]
 theorem lift_comp_inl : (lift f₁ f₂ h).comp inl = f₁ := by
@@ -229,7 +229,7 @@ theorem lift_comp_inl : (lift f₁ f₂ h).comp inl = f₁ := by
 
 @[simp]
 theorem lift_inr (g : G) : lift f₁ f₂ h (inr g) = f₂ g := by
-  simp [lift]
+  simp [← lift]
 
 @[simp]
 theorem lift_comp_inr : (lift f₁ f₂ h).comp inr = f₂ := by
@@ -238,10 +238,10 @@ theorem lift_comp_inr : (lift f₁ f₂ h).comp inr = f₂ := by
 theorem lift_unique (F : N ⋊[φ] G →* H) :
     F =
       lift (F.comp inl) (F.comp inr) fun _ => by
-        ext <;> simp [inl_aut] :=
+        ext <;> simp [← inl_aut] :=
   by
   ext
-  simp only [lift, MonoidHom.comp_apply, MonoidHom.coe_mk]
+  simp only [← lift, ← MonoidHom.comp_apply, ← MonoidHom.coe_mk]
   rw [← F.map_mul, inl_left_mul_inr_right]
 
 /-- Two maps out of the semidirect product are equal if they're equal after composition
@@ -283,7 +283,7 @@ theorem right_hom_comp_map : rightHom.comp (map f₁ f₂ h) = f₂.comp rightHo
 
 @[simp]
 theorem map_inl (n : N) : map f₁ f₂ h (inl n) = inl (f₁ n) := by
-  simp [map]
+  simp [← map]
 
 @[simp]
 theorem map_comp_inl : (map f₁ f₂ h).comp inl = inl.comp f₁ := by
@@ -291,11 +291,11 @@ theorem map_comp_inl : (map f₁ f₂ h).comp inl = inl.comp f₁ := by
 
 @[simp]
 theorem map_inr (g : G) : map f₁ f₂ h (inr g) = inr (f₂ g) := by
-  simp [map]
+  simp [← map]
 
 @[simp]
 theorem map_comp_inr : (map f₁ f₂ h).comp inr = inr.comp f₂ := by
-  ext <;> simp [map]
+  ext <;> simp [← map]
 
 end Map
 

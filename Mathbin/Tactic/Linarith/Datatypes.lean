@@ -296,12 +296,12 @@ The default `certificate_oracle` used by `linarith` is
 unsafe def certificate_oracle : Type :=
   List Comp → ℕ → tactic (rb_map ℕ ℕ)
 
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
 /-- A configuration object for `linarith`. -/
 unsafe structure linarith_config : Type where
   discharger : tactic Unit := sorry
   restrict_type : Option Type := none
-  restrict_type_reflect : reflected restrict_type := by
+  restrict_type_reflect : reflected _ restrict_type := by
     run_tac
       tactic.apply_instance
   exfalso : Bool := true
@@ -311,7 +311,7 @@ unsafe structure linarith_config : Type where
   preprocessors : Option (List global_branching_preprocessor) := none
   oracle : Option certificate_oracle := none
 
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
 /-- `cfg.update_reducibility reduce_semi` will change the transparency setting of `cfg` to
 `semireducible` if `reduce_semi` is true. In this case, it also sets the discharger to `ring!`,
 since this is typically needed when using stronger unification.
@@ -350,7 +350,7 @@ unsafe def parse_into_comp_and_expr : expr → Option (ineq × expr)
   | quote.1 ((%%ₓe) = 0) => (Ineq.eq, e)
   | _ => none
 
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
 /-- `mk_single_comp_zero_pf c h` assumes that `h` is a proof of `t R 0`.
 It produces a pair `(R', h')`, where `h'` is a proof of `c*t R' 0`.
 Typically `R` and `R'` will be the same, except when `c = 0`, in which case `R'` is `=`.

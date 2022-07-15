@@ -50,7 +50,7 @@ open Set
 
 open BigOperators Pointwise
 
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`well_founded_submodule_lt] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`well_founded_submodule_lt] []
 /-- `is_artinian R M` is the proposition that `M` is an Artinian `R`-module,
 implemented as the well-foundedness of submodule inclusion.
 -/
@@ -96,9 +96,9 @@ theorem is_artinian_of_range_eq_ker [IsArtinian R M] [IsArtinian R P] (f : M →
       f.range (Submodule.map f) (Submodule.comap f) (Submodule.comap g) (Submodule.map g) (Submodule.gciMapComap hf)
       (Submodule.giMapComap hg)
       (by
-        simp [Submodule.map_comap_eq, inf_comm])
+        simp [← Submodule.map_comap_eq, ← inf_comm])
       (by
-        simp [Submodule.comap_map_eq, h])⟩
+        simp [← Submodule.comap_map_eq, ← h])⟩
 
 instance is_artinian_prod [IsArtinian R M] [IsArtinian R P] : IsArtinian R (M × P) :=
   is_artinian_of_range_eq_ker (LinearMap.inl R M P) (LinearMap.snd R M P) LinearMap.inl_injective
@@ -158,11 +158,11 @@ theorem IsArtinian.finite_of_linear_independent [Nontrivial R] [IsArtinian R M] 
     intro a b
     rw [span_le_span_iff hs (this b) (this a), Set.image_subset_image_iff (subtype.coe_injective.comp f.injective),
       Set.subset_def]
-    simp only [Set.mem_set_of_eq]
+    simp only [← Set.mem_set_of_eq]
     exact ⟨fun hab x => le_transₓ hab, fun h => h _ le_rfl⟩
   exact
     ⟨⟨fun n => span R (coe ∘ f '' { m | n ≤ m }), fun x y => by
-        simp (config := { contextual := true })[le_antisymm_iffₓ, (this _ _).symm]⟩,
+        simp (config := { contextual := true })[← le_antisymm_iffₓ, ← (this _ _).symm]⟩,
       by
       intro a b
       conv_rhs => rw [Gt, lt_iff_le_not_leₓ, this, this, ← lt_iff_le_not_leₓ]
@@ -216,7 +216,7 @@ theorem IsArtinian.exists_endomorphism_iterate_ker_sup_range_eq_top [I : IsArtin
   use x - (f ^ (n + 1)) y
   constructor
   · rw [LinearMap.mem_ker, LinearMap.map_sub, ← hy, sub_eq_zero, pow_addₓ]
-    simp [iterate_add_apply]
+    simp [← iterate_add_apply]
     
   · use (f ^ (n + 1)) y
     simp
@@ -319,13 +319,13 @@ theorem is_artinian_of_fg_of_artinian {R M} [Ringₓ R] [AddCommGroupₓ M] [Mod
     · intro f g
       apply Subtype.eq
       change (∑ i in s.attach, (f i + g i) • _) = _
-      simp only [add_smul, Finset.sum_add_distrib]
+      simp only [← add_smul, ← Finset.sum_add_distrib]
       rfl
       
     · intro c f
       apply Subtype.eq
       change (∑ i in s.attach, (c • f i) • _) = _
-      simp only [smul_eq_mul, mul_smul]
+      simp only [← smul_eq_mul, ← mul_smul]
       exact finset.smul_sum.symm
       
     
@@ -367,7 +367,7 @@ open IsArtinian
 
 variable {R : Type _} [CommRingₓ R] [IsArtinianRing R]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem is_nilpotent_jacobson_bot : IsNilpotent (Ideal.jacobson (⊥ : Ideal R)) := by
   let Jac := Ideal.jacobson (⊥ : Ideal R)
   let f : ℕ →o (Ideal R)ᵒᵈ := ⟨fun n => Jac ^ n, fun _ _ h => Ideal.pow_le_pow h⟩
@@ -376,7 +376,7 @@ theorem is_nilpotent_jacobson_bot : IsNilpotent (Ideal.jacobson (⊥ : Ideal R))
   let J : Ideal R := annihilator (Jac ^ n)
   suffices J = ⊤ by
     have hJ : J • Jac ^ n = ⊥ := annihilator_smul (Jac ^ n)
-    simpa only [this, top_smul, Ideal.zero_eq_bot] using hJ
+    simpa only [← this, ← top_smul, ← Ideal.zero_eq_bot] using hJ
   by_contra hJ
   change J ≠ ⊤ at hJ
   rcases IsArtinian.set_has_minimal { J' : Ideal R | J < J' } ⟨⊤, hJ.lt_top⟩ with
@@ -404,7 +404,7 @@ theorem is_nilpotent_jacobson_bot : IsNilpotent (Ideal.jacobson (⊥ : Ideal R))
           rwa [mul_comm])
         le_rfl _ = ⊥ :=
       by
-      simp [J]
+      simp [← J]
   refine' hxJ (mem_annihilator.2 fun y hy => (mem_bot R).1 _)
   refine' this (mul_mem_mul (mem_span_singleton_self x) _)
   rwa [← hn (n + 1) (Nat.le_succₓ _)]

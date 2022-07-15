@@ -109,8 +109,8 @@ class HenselianLocalRing (R : Type _) [CommRingₓ R] extends LocalRing R : Prop
       ∃ a : R, f.IsRoot a ∧ a - a₀ ∈ maximalIdeal R
 
 -- see Note [lower instance priority]
-instance (priority := 100) Field.henselian (K : Type _) [Field K] : HenselianLocalRing K where
-  is_henselian := fun f hf a₀ h₁ h₂ => by
+instance (priority := 100) Field.henselian (K : Type _) [Field K] :
+    HenselianLocalRing K where is_henselian := fun f hf a₀ h₁ h₂ => by
     refine' ⟨a₀, _, _⟩ <;> rwa [(maximal_ideal K).eq_bot_of_prime, Ideal.mem_bot] at *
     rw [sub_self]
 
@@ -133,7 +133,7 @@ theorem HenselianLocalRing.tfae (R : Type u) [CommRingₓ R] [LocalRing R] :
     intro f hf a₀ h₁ h₂
     specialize H f hf (residue R a₀)
     have aux := flip mem_nonunits_iff.mp h₂
-    simp only [aeval_def, RingHom.algebra_map_to_algebra, eval₂_at_apply, ← Ideal.Quotient.eq_zero_iff_mem, ←
+    simp only [← aeval_def, ← RingHom.algebra_map_to_algebra, ← eval₂_at_apply, Ideal.Quotient.eq_zero_iff_mem,
       LocalRing.mem_maximal_ideal] at H h₁ aux
     obtain ⟨a, ha₁, ha₂⟩ := H h₁ aux
     refine' ⟨a, ha₁, _⟩
@@ -144,7 +144,7 @@ theorem HenselianLocalRing.tfae (R : Type u) [CommRingₓ R] [LocalRing R] :
   · intro hR K _K φ hφ f hf a₀ h₁ h₂
     obtain ⟨a₀, rfl⟩ := hφ a₀
     have H := HenselianLocalRing.is_henselian f hf a₀
-    simp only [← ker_eq_maximal_ideal φ hφ, eval₂_at_apply, φ.mem_ker] at H h₁ h₂
+    simp only [ker_eq_maximal_ideal φ hφ, ← eval₂_at_apply, ← φ.mem_ker] at H h₁ h₂
     obtain ⟨a, ha₁, ha₂⟩ := H h₁ _
     · refine' ⟨a, ha₁, _⟩
       rwa [φ.map_sub, sub_eq_zero] at ha₂
@@ -168,7 +168,7 @@ instance (R : Type _) [CommRingₓ R] [hR : HenselianLocalRing R] : HenselianRin
     rw [h₂]
     exact not_is_unit_zero
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A ring `R` that is `I`-adically complete is Henselian at `I`. -/
 -- see Note [lower instance priority]
 instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRingₓ R] (I : Ideal R) [IsAdicComplete I R] :
@@ -184,7 +184,7 @@ instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRing�
     let c : ℕ → R := fun n => Nat.recOn n a₀ fun _ b => b - f.eval b * Ring.inverse (f'.eval b)
     have hc : ∀ n, c (n + 1) = c n - f.eval (c n) * Ring.inverse (f'.eval (c n)) := by
       intro n
-      dsimp' only [c, Nat.rec_add_one]
+      dsimp' only [← c, ← Nat.rec_add_one]
       rfl
     -- we now spend some time determining properties of the sequence `c : ℕ → R`
     -- `hc_mod`: for every `n`, we have `c n ≡ a₀ [SMOD I]`
@@ -210,11 +210,11 @@ instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRing�
     have hfcI : ∀ n, f.eval (c n) ∈ I ^ (n + 1) := by
       intro n
       induction' n with n ih
-      · simpa only [pow_oneₓ]
+      · simpa only [← pow_oneₓ]
         
-      simp only [Nat.succ_eq_add_one]
+      simp only [← Nat.succ_eq_add_one]
       rw [← taylor_eval_sub (c n), hc]
-      simp only [sub_eq_add_neg, add_neg_cancel_comm]
+      simp only [← sub_eq_add_neg, ← add_neg_cancel_comm]
       rw [eval_eq_sum, sum_over_range' _ _ _ (lt_add_of_pos_right _ zero_lt_two), ←
         Finset.sum_range_add_sum_Ico _ (Nat.le_add_leftₓ _ _)]
       swap
@@ -222,13 +222,13 @@ instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRing�
         rw [zero_mul]
         
       refine' Ideal.add_mem _ _ _
-      · simp only [Finset.sum_range_succ, taylor_coeff_one, mul_oneₓ, pow_oneₓ, taylor_coeff_zero, mul_neg,
-          Finset.sum_singleton, Finset.range_one, pow_zeroₓ]
+      · simp only [← Finset.sum_range_succ, ← taylor_coeff_one, ← mul_oneₓ, ← pow_oneₓ, ← taylor_coeff_zero, ← mul_neg,
+          ← Finset.sum_singleton, ← Finset.range_one, ← pow_zeroₓ]
         rw [mul_left_commₓ, Ring.mul_inverse_cancel _ (hf'c n), mul_oneₓ, add_neg_selfₓ]
         exact Ideal.zero_mem _
         
       · refine' Submodule.sum_mem _ _
-        simp only [Finset.mem_Ico]
+        simp only [← Finset.mem_Ico]
         rintro i ⟨h2i, hi⟩
         have aux : n + 2 ≤ i * (n + 1) := by
           trans 2 * (n + 1) <;> nlinarith only [h2i]

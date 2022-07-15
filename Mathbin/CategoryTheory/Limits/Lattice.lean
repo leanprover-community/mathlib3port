@@ -14,7 +14,7 @@ import Mathbin.CategoryTheory.Limits.Shapes.FiniteLimits
 -/
 
 
-universe u
+universe w u
 
 open CategoryTheory
 
@@ -26,7 +26,7 @@ section Semilattice
 
 variable {α : Type u}
 
-variable {J : Type u} [SmallCategory J] [FinCategory J]
+variable {J : Type w} [SmallCategory J] [FinCategory J]
 
 /-- The limit cone over any functor from a finite diagram into a `semilattice_inf` with `order_top`.
 -/
@@ -70,7 +70,7 @@ theorem finite_product_eq_finset_inf [SemilatticeInf α] [OrderTop α] {ι : Typ
   trans
   exact (is_limit.cone_point_unique_up_to_iso (limit.is_limit _) (finite_limit_cone (discrete.functor f)).IsLimit).to_eq
   change finset.univ.inf (f ∘ discrete_equiv.to_embedding) = (Fintype.elems ι).inf f
-  simp only [← Finset.inf_map, Finset.univ_map_equiv_to_embedding]
+  simp only [Finset.inf_map, ← Finset.univ_map_equiv_to_embedding]
   rfl
 
 /-- A finite coproduct in the category of a `semilattice_sup` with `order_bot` is the same as the
@@ -83,8 +83,15 @@ theorem finite_coproduct_eq_finset_sup [SemilatticeSup α] [OrderBot α] {ι : T
     (is_colimit.cocone_point_unique_up_to_iso (colimit.is_colimit _)
         (finite_colimit_cocone (discrete.functor f)).IsColimit).to_eq
   change finset.univ.sup (f ∘ discrete_equiv.to_embedding) = (Fintype.elems ι).sup f
-  simp only [← Finset.sup_map, Finset.univ_map_equiv_to_embedding]
+  simp only [Finset.sup_map, ← Finset.univ_map_equiv_to_embedding]
   rfl
+
+-- see Note [lower instance priority]
+instance (priority := 100) [SemilatticeInf α] [OrderTop α] : HasBinaryProducts α := by
+  have : ∀ x y : α, has_limit (pair x y) := by
+    let this := has_finite_limits_of_has_finite_limits_of_size.{u} α
+    infer_instance
+  apply has_binary_products_of_has_limit_pair
 
 /-- The binary product in the category of a `semilattice_inf` with `order_top` is the same as the
 infimum.
@@ -94,7 +101,7 @@ theorem prod_eq_inf [SemilatticeInf α] [OrderTop α] (x y : α) : Limits.prod x
   calc
     Limits.prod x y = limit (pair x y) := rfl
     _ = Finset.univ.inf (pair x y).obj := by
-      rw [finite_limit_eq_finset_univ_inf (pair x y)]
+      rw [finite_limit_eq_finset_univ_inf (pair.{u} x y)]
     _ = x⊓(y⊓⊤) := rfl
     -- Note: finset.inf is realized as a fold, hence the definitional equality
         _ =
@@ -102,6 +109,13 @@ theorem prod_eq_inf [SemilatticeInf α] [OrderTop α] (x y : α) : Limits.prod x
       by
       rw [inf_top_eq]
     
+
+-- see Note [lower instance priority]
+instance (priority := 100) [SemilatticeSup α] [OrderBot α] : HasBinaryCoproducts α := by
+  have : ∀ x y : α, has_colimit (pair x y) := by
+    let this := has_finite_colimits_of_has_finite_colimits_of_size.{u} α
+    infer_instance
+  apply has_binary_coproducts_of_has_colimit_pair
 
 /-- The binary coproduct in the category of a `semilattice_sup` with `order_bot` is the same as the
 supremum.
@@ -183,12 +197,12 @@ def colimitCocone (F : J ⥤ α) : ColimitCocone F where
 -- It would be nice to only use the `Inf` half of the complete lattice, but
 -- this seems not to have been described separately.
 -- see Note [lower instance priority]
-instance (priority := 100) has_limits_of_complete_lattice : HasLimits α where
-  HasLimitsOfShape := fun J 𝒥 => { HasLimit := fun F => has_limit.mk (limit_cone F) }
+instance (priority := 100) has_limits_of_complete_lattice :
+    HasLimits α where HasLimitsOfShape := fun J 𝒥 => { HasLimit := fun F => has_limit.mk (limit_cone F) }
 
 -- see Note [lower instance priority]
-instance (priority := 100) has_colimits_of_complete_lattice : HasColimits α where
-  HasColimitsOfShape := fun J 𝒥 => { HasColimit := fun F => has_colimit.mk (colimit_cocone F) }
+instance (priority := 100) has_colimits_of_complete_lattice :
+    HasColimits α where HasColimitsOfShape := fun J 𝒥 => { HasColimit := fun F => has_colimit.mk (colimit_cocone F) }
 
 /-- The limit of a functor into a complete lattice is the infimum of the objects in the image.
 -/

@@ -83,7 +83,7 @@ def diagramNatTrans {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (X : C) : J.diagram P X
 theorem diagram_nat_trans_id (X : C) (P : Cᵒᵖ ⥤ D) : J.diagramNatTrans (𝟙 P) X = 𝟙 (J.diagram P X) := by
   ext
   dsimp'
-  simp only [multiequalizer.lift_ι, category.id_comp]
+  simp only [← multiequalizer.lift_ι, ← category.id_comp]
   erw [category.comp_id]
 
 @[simp]
@@ -116,15 +116,15 @@ def plusObj : Cᵒᵖ ⥤ D where
     intro X
     ext S
     dsimp'
-    simp only [diagram_pullback_app, colimit.ι_pre, ι_colim_map_assoc, category.comp_id]
+    simp only [← diagram_pullback_app, ← colimit.ι_pre, ← ι_colim_map_assoc, ← category.comp_id]
     let e := S.unop.pullback_id
-    dsimp' only [functor.op, pullback_obj]
+    dsimp' only [← functor.op, ← pullback_obj]
     erw [← colimit.w _ e.inv.op, ← category.assoc]
     convert category.id_comp _
     ext I
     dsimp'
-    simp only [multiequalizer.lift_ι, category.id_comp, category.assoc]
-    dsimp' [cover.arrow.map, cover.arrow.base]
+    simp only [← multiequalizer.lift_ι, ← category.id_comp, ← category.assoc]
+    dsimp' [← cover.arrow.map, ← cover.arrow.base]
     cases I
     congr
     simp
@@ -132,16 +132,16 @@ def plusObj : Cᵒᵖ ⥤ D where
     intro X Y Z f g
     ext S
     dsimp'
-    simp only [diagram_pullback_app, colimit.ι_pre_assoc, colimit.ι_pre, ι_colim_map_assoc, category.assoc]
+    simp only [← diagram_pullback_app, ← colimit.ι_pre_assoc, ← colimit.ι_pre, ← ι_colim_map_assoc, ← category.assoc]
     let e := S.unop.pullback_comp g.unop f.unop
-    dsimp' only [functor.op, pullback_obj]
+    dsimp' only [← functor.op, ← pullback_obj]
     erw [← colimit.w _ e.inv.op, ← category.assoc, ← category.assoc]
     congr 1
     ext I
     dsimp'
-    simp only [multiequalizer.lift_ι, category.assoc]
+    simp only [← multiequalizer.lift_ι, ← category.assoc]
     cases I
-    dsimp' only [cover.arrow.base, cover.arrow.map]
+    dsimp' only [← cover.arrow.base, ← cover.arrow.map]
     congr 2
     simp
 
@@ -150,9 +150,10 @@ def plusMap {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : J.plusObj P ⟶ J.plusObj Q w
   app := fun X => colimMap (J.diagramNatTrans η X.unop)
   naturality' := by
     intro X Y f
-    dsimp' [plus_obj]
+    dsimp' [← plus_obj]
     ext
-    simp only [diagram_pullback_app, ι_colim_map, colimit.ι_pre_assoc, colimit.ι_pre, ι_colim_map_assoc, category.assoc]
+    simp only [← diagram_pullback_app, ← ι_colim_map, ← colimit.ι_pre_assoc, ← colimit.ι_pre, ← ι_colim_map_assoc, ←
+      category.assoc]
     simp_rw [← category.assoc]
     congr 1
     ext
@@ -162,7 +163,7 @@ def plusMap {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : J.plusObj P ⟶ J.plusObj Q w
 @[simp]
 theorem plus_map_id (P : Cᵒᵖ ⥤ D) : J.plusMap (𝟙 P) = 𝟙 _ := by
   ext x : 2
-  dsimp' only [plus_map, plus_obj]
+  dsimp' only [← plus_map, ← plus_obj]
   rw [J.diagram_nat_trans_id, nat_trans.id_app]
   ext
   dsimp'
@@ -171,7 +172,7 @@ theorem plus_map_id (P : Cᵒᵖ ⥤ D) : J.plusMap (𝟙 P) = 𝟙 _ := by
 @[simp]
 theorem plus_map_comp {P Q R : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (γ : Q ⟶ R) : J.plusMap (η ≫ γ) = J.plusMap η ≫ J.plusMap γ := by
   ext : 2
-  dsimp' only [plus_map]
+  dsimp' only [← plus_map]
   rw [J.diagram_nat_trans_comp]
   ext
   dsimp'
@@ -195,25 +196,25 @@ def toPlus : P ⟶ J.plusObj P where
   app := fun X => Cover.toMultiequalizer (⊤ : J.cover X.unop) P ≫ colimit.ι (J.diagram P X.unop) (op ⊤)
   naturality' := by
     intro X Y f
-    dsimp' [plus_obj]
+    dsimp' [← plus_obj]
     delta' cover.to_multiequalizer
-    simp only [diagram_pullback_app, colimit.ι_pre, ι_colim_map_assoc, category.assoc]
-    dsimp' only [functor.op, unop_op]
+    simp only [← diagram_pullback_app, ← colimit.ι_pre, ← ι_colim_map_assoc, ← category.assoc]
+    dsimp' only [← functor.op, ← unop_op]
     let e : (J.pullback f.unop).obj ⊤ ⟶ ⊤ := hom_of_le (OrderTop.le_top _)
     rw [← colimit.w _ e.op, ← category.assoc, ← category.assoc, ← category.assoc]
     congr 1
     ext
     dsimp'
-    simp only [multiequalizer.lift_ι, category.assoc]
-    dsimp' [cover.arrow.base]
+    simp only [← multiequalizer.lift_ι, ← category.assoc]
+    dsimp' [← cover.arrow.base]
     simp
 
 @[simp, reassoc]
 theorem to_plus_naturality {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : η ≫ J.toPlus Q = J.toPlus _ ≫ J.plusMap η := by
   ext
-  dsimp' [to_plus, plus_map]
+  dsimp' [← to_plus, ← plus_map]
   delta' cover.to_multiequalizer
-  simp only [ι_colim_map, category.assoc]
+  simp only [← ι_colim_map, ← category.assoc]
   simp_rw [← category.assoc]
   congr 1
   ext
@@ -234,23 +235,23 @@ variable {D}
 @[simp]
 theorem plus_map_to_plus : J.plusMap (J.toPlus P) = J.toPlus (J.plusObj P) := by
   ext X S
-  dsimp' [to_plus, plus_obj, plus_map]
+  dsimp' [← to_plus, ← plus_obj, ← plus_map]
   delta' cover.to_multiequalizer
-  simp only [ι_colim_map]
+  simp only [← ι_colim_map]
   let e : S.unop ⟶ ⊤ := hom_of_le (OrderTop.le_top _)
   simp_rw [← colimit.w _ e.op, ← category.assoc]
   congr 1
   ext I
   dsimp'
-  simp only [diagram_pullback_app, colimit.ι_pre, multiequalizer.lift_ι, ι_colim_map_assoc, category.assoc]
-  dsimp' only [functor.op]
+  simp only [← diagram_pullback_app, ← colimit.ι_pre, ← multiequalizer.lift_ι, ← ι_colim_map_assoc, ← category.assoc]
+  dsimp' only [← functor.op]
   let ee : (J.pullback (I.map e).f).obj S.unop ⟶ ⊤ := hom_of_le (OrderTop.le_top _)
   simp_rw [← colimit.w _ ee.op, ← category.assoc]
   congr 1
   ext II
   dsimp'
-  simp only [limit.lift_π, multifork.of_ι_π_app, multiequalizer.lift_ι, category.assoc]
-  dsimp' [multifork.of_ι]
+  simp only [← limit.lift_π, ← multifork.of_ι_π_app, ← multiequalizer.lift_ι, ← category.assoc]
+  dsimp' [← multifork.of_ι]
   convert
     multiequalizer.condition (S.unop.index P)
       ⟨_, _, _, II.f, 𝟙 _, I.f, II.f ≫ I.f, I.hf, sieve.downward_closed _ I.hf _, by
@@ -258,7 +259,7 @@ theorem plus_map_to_plus : J.plusMap (J.toPlus P) = J.toPlus (J.plusObj P) := by
   · cases I
     rfl
     
-  · dsimp' [cover.index]
+  · dsimp' [← cover.index]
     erw [P.map_id, category.comp_id]
     rfl
     
@@ -283,7 +284,7 @@ theorem is_iso_to_plus_of_is_sheaf (hP : Presheaf.IsSheaf J P) : IsIso (J.toPlus
     dsimp'
     simpa
   have : (J.diagram P X.unop).map e = inv (S.unop.to_multiequalizer P) ≫ T.unop.to_multiequalizer P := by
-    simp [← this]
+    simp [this]
   rw [this]
   infer_instance
 
@@ -302,15 +303,15 @@ def plusLift {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSheaf J Q) : 
 @[simp, reassoc]
 theorem to_plus_plus_lift {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSheaf J Q) : J.toPlus P ≫ J.plusLift η hQ = η :=
   by
-  dsimp' [plus_lift]
+  dsimp' [← plus_lift]
   rw [← category.assoc]
   rw [iso.comp_inv_eq]
-  dsimp' only [iso_to_plus, as_iso]
+  dsimp' only [← iso_to_plus, ← as_iso]
   rw [to_plus_naturality]
 
 theorem plus_lift_unique {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSheaf J Q) (γ : J.plusObj P ⟶ Q)
     (hγ : J.toPlus P ≫ γ = η) : γ = J.plusLift η hQ := by
-  dsimp' only [plus_lift]
+  dsimp' only [← plus_lift]
   rw [iso.eq_comp_inv, ← hγ, plus_map_comp]
   dsimp'
   simp

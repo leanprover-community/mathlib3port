@@ -63,16 +63,16 @@ theorem measurable_measure {μ : α → Measure β} :
 theorem measurable_map (f : α → β) (hf : Measurable f) : Measurable fun μ : Measure α => map f μ :=
   (measurable_of_measurable_coe _) fun s hs =>
     suffices Measurable fun μ : Measure α => μ (f ⁻¹' s) by
-      simpa [map_apply, hs, hf]
+      simpa [← map_apply, ← hs, ← hf]
     measurable_coe (hf hs)
 
 theorem measurable_dirac : Measurable (Measure.dirac : α → Measure α) :=
   (measurable_of_measurable_coe _) fun s hs => by
-    simp only [dirac_apply', hs]
+    simp only [← dirac_apply', ← hs]
     exact measurable_one.indicator hs
 
 theorem measurable_lintegral {f : α → ℝ≥0∞} (hf : Measurable f) : Measurable fun μ : Measure α => ∫⁻ x, f x ∂μ := by
-  simp only [lintegral_eq_supr_eapprox_lintegral, hf, simple_func.lintegral]
+  simp only [← lintegral_eq_supr_eapprox_lintegral, ← hf, ← simple_func.lintegral]
   refine' measurable_supr fun n => Finset.measurable_sum _ fun i _ => _
   refine' Measurable.const_mul _ _
   exact measurable_coe ((simple_func.eapprox f n).measurable_set_preimage _)
@@ -85,7 +85,7 @@ def join (m : Measure (Measure α)) : Measure α :=
       simp )
     (by
       intro f hf h
-      simp [measure_Union h hf]
+      simp [← measure_Union h hf]
       apply lintegral_tsum
       intro i
       exact measurable_coe (hf i))
@@ -97,11 +97,11 @@ theorem join_apply {m : Measure (Measure α)} : ∀ {s : Set α}, MeasurableSet 
 @[simp]
 theorem join_zero : (0 : Measure (Measure α)).join = 0 := by
   ext1 s hs
-  simp [hs]
+  simp [← hs]
 
 theorem measurable_join : Measurable (join : Measure (Measure α) → Measure α) :=
   (measurable_of_measurable_coe _) fun s hs => by
-    simp only [join_apply hs] <;> exact measurable_lintegral (measurable_coe hs)
+    simp only [← join_apply hs] <;> exact measurable_lintegral (measurable_coe hs)
 
 theorem lintegral_join {m : Measure (Measure α)} {f : α → ℝ≥0∞} (hf : Measurable f) :
     (∫⁻ x, f x ∂join m) = ∫⁻ μ, ∫⁻ x, f x ∂μ ∂m := by
@@ -111,7 +111,7 @@ theorem lintegral_join {m : Measure (Measure α)} {f : α → ℝ≥0∞} (hf : 
       join m (⇑(simple_func.eapprox (fun a : α => f a) n) ⁻¹' {x}) =
         ∫⁻ μ, μ (⇑(simple_func.eapprox (fun a : α => f a) n) ⁻¹' {x}) ∂m :=
     fun n x => join_apply (simple_func.measurable_set_preimage _ _)
-  simp only [simple_func.lintegral, this]
+  simp only [← simple_func.lintegral, ← this]
   trans
   have :
     ∀ s : ℕ → Finset ℝ≥0∞ f : ℕ → ℝ≥0∞ → Measureₓ α → ℝ≥0∞ hf : ∀ n r, Measurable (f n r) hm :
@@ -164,12 +164,12 @@ def bind (m : Measure α) (f : α → Measure β) : Measure β :=
 
 @[simp]
 theorem bind_zero_left (f : α → Measure β) : bind 0 f = 0 := by
-  simp [bind]
+  simp [← bind]
 
 @[simp]
 theorem bind_zero_right (m : Measure α) : bind m (0 : α → Measure β) = 0 := by
   ext1 s hs
-  simp only [bind, hs, join_apply, coe_zero, Pi.zero_apply]
+  simp only [← bind, ← hs, ← join_apply, ← coe_zero, ← Pi.zero_apply]
   rw [lintegral_map (measurable_coe hs) measurable_zero]
   simp
 
@@ -205,7 +205,7 @@ theorem bind_dirac {f : α → Measure β} (hf : Measurable f) (a : α) : bind (
 
 theorem dirac_bind {m : Measure α} : bind m dirac = m :=
   measure.ext fun s hs => by
-    simp [bind_apply hs measurable_dirac, dirac_apply' _ hs, lintegral_indicator 1 hs]
+    simp [← bind_apply hs measurable_dirac, ← dirac_apply' _ hs, ← lintegral_indicator 1 hs]
 
 theorem join_eq_bind (μ : Measure (Measure α)) : join μ = bind μ id := by
   rw [bind, map_id]

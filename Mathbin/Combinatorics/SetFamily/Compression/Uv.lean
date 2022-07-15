@@ -75,6 +75,8 @@ section GeneralizedBooleanAlgebra
 variable [GeneralizedBooleanAlgebra α] [DecidableRel (@Disjoint α _ _)] [DecidableRel ((· ≤ ·) : α → α → Prop)]
   {s : Finset α} {u v a b : α}
 
+attribute [local instance] decidableEqOfDecidableLe
+
 /-- To UV-compress `a`, if it doesn't touch `U` and does contain `V`, we remove `V` and
 put `U` in. We'll only really use this when `|U| = |V|` and `U ∩ V = ∅`. -/
 def compress (u v a : α) : α :=
@@ -117,7 +119,7 @@ theorem compression_self (u : α) (s : Finset α) : 𝓒 u u s = s := by
     rw [mem_filter, compress_self, and_selfₓ]
     
   · refine' eq_empty_of_forall_not_mem fun a ha => _
-    simp_rw [mem_filter, mem_image, compress_self]  at ha
+    simp_rw [mem_filter, mem_image, compress_self] at ha
     obtain ⟨⟨b, hb, rfl⟩, hb'⟩ := ha
     exact hb' hb
     
@@ -154,7 +156,7 @@ theorem compress_mem_compression (ha : a ∈ s) : compress u v a ∈ 𝓒 u v s 
 -- This is a special case of `compress_mem_compression` once we have `compression_idem`.
 theorem compress_mem_compression_of_mem_compression (ha : a ∈ 𝓒 u v s) : compress u v a ∈ 𝓒 u v s := by
   rw [mem_compression] at ha⊢
-  simp only [compress_idem, exists_prop]
+  simp only [← compress_idem, ← exists_prop]
   obtain ⟨_, ha⟩ | ⟨_, b, hb, rfl⟩ := ha
   · exact Or.inl ⟨ha, ha⟩
     

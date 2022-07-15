@@ -15,7 +15,7 @@ meaning is defined incrementally through attributes.
 
 namespace Tactic
 
-unsafe def replacer_core {α : Type} [reflected α] (ntac : Name) (eval : ∀ β [reflected β], expr → tactic β) :
+unsafe def replacer_core {α : Type} [reflected _ α] (ntac : Name) (eval : ∀ β [reflected _ β], expr → tactic β) :
     List Name → tactic α
   | [] => fail ("no implementation defined for " ++ toString ntac)
   | n :: ns => do
@@ -32,8 +32,8 @@ unsafe def replacer_core {α : Type} [reflected α] (ntac : Name) (eval : ∀ β
             return (tac (guardₓ (ns ≠ []) >> some (replacer_core ns)))
     tac
 
-unsafe def replacer (ntac : Name) {α : Type} [reflected α] (F : Type → Type) (eF : ∀ β, reflected β → reflected (F β))
-    (R : ∀ β, F β → β) : tactic α :=
+unsafe def replacer (ntac : Name) {α : Type} [reflected _ α] (F : Type → Type)
+    (eF : ∀ β, reflected _ β → reflected _ (F β)) (R : ∀ β, F β → β) : tactic α :=
   attribute.get_instances ntac >>= replacer_core ntac fun β eβ e => R β <$> @eval_expr' (F β) (eF β eβ) e
 
 unsafe def mk_replacer₁ : expr → Nat → expr × expr
@@ -51,7 +51,7 @@ unsafe def mk_replacer₂ (ntac : Name) (v : expr × expr) : expr → Nat → Op
       (expr.const `` replacer []).mk_app
         [reflect ntac, β, reflect β, expr.lam `γ BinderInfo.default (quote.1 Type) v.1,
           expr.lam `γ BinderInfo.default (quote.1 Type) <|
-            expr.lam `eγ BinderInfo.inst_implicit ((quote.1 (@reflected Type) : expr) β) v.2,
+            expr.lam `eγ BinderInfo.inst_implicit ((quote.1 (reflected Type) : expr) β) v.2,
           expr.lam `γ BinderInfo.default (quote.1 Type) <|
             expr.lam `f BinderInfo.default v.1 <| (List.range i).foldr (fun i e' => e' (expr.var (i + 2))) (expr.var 0)]
   | _, i => none

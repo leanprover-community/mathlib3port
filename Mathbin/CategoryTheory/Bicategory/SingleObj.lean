@@ -90,7 +90,7 @@ def endMonoidalStarFunctor : MonoidalFunctor (EndMonoidal (MonoidalSingleObj.sta
   μ := fun X Y => 𝟙 _
   μ_natural' := fun X Y X' Y' f g => by
     dsimp'
-    simp only [category.id_comp, category.comp_id]
+    simp only [← category.id_comp, ← category.comp_id]
     -- Should we provide further simp lemmas so this goal becomes visible?
     exact (tensor_id_comp_id_tensor _ _).symm
 

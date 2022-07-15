@@ -98,7 +98,7 @@ instance gradeBy.graded_monoid [AddMonoidₓ M] [AddMonoidₓ ι] [CommSemiring�
       
   mul_mem := fun i j a b ha hb c hc => by
     set h := support_mul a b hc
-    simp only [Finset.mem_bUnion] at h
+    simp only [← Finset.mem_bUnion] at h
     rcases h with ⟨ma, ⟨hma, ⟨mb, ⟨hmb, hmc⟩⟩⟩⟩
     rw [← ha ma hma, ← hb mb hmb, finset.mem_singleton.mp hmc]
     apply AddMonoidHom.map_add
@@ -110,7 +110,7 @@ instance grade.graded_monoid [AddMonoidₓ M] [CommSemiringₓ R] :
 variable {R} [AddMonoidₓ M] [DecidableEq ι] [AddMonoidₓ ι] [CommSemiringₓ R] (f : M →+ ι)
 
 /-- Auxiliary definition; the canonical grade decomposition, used to provide
-`graded_algebra.decompose`. -/
+`direct_sum.decompose`. -/
 def decomposeAux : AddMonoidAlgebra R M →ₐ[R] ⨁ i : ι, gradeBy R f i :=
   AddMonoidAlgebra.lift R M _
     { toFun := fun m =>
@@ -121,7 +121,7 @@ def decomposeAux : AddMonoidAlgebra R M →ₐ[R] ⨁ i : ι, gradeBy R f i :=
             congr 2 <;>
               try
                   ext <;>
-                simp only [Submodule.mem_to_add_submonoid, to_add_one, AddMonoidHom.map_zero]),
+                simp only [← Submodule.mem_to_add_submonoid, ← to_add_one, ← AddMonoidHom.map_zero]),
       map_mul' := fun i j => by
         symm
         convert DirectSum.of_mul_of _ _
@@ -130,7 +130,7 @@ def decomposeAux : AddMonoidAlgebra R M →ₐ[R] ⨁ i : ι, gradeBy R f i :=
         · rw [to_add_mul, AddMonoidHom.map_add]
           
         · ext
-          simp only [Submodule.mem_to_add_submonoid, AddMonoidHom.map_add, to_add_mul]
+          simp only [← Submodule.mem_to_add_submonoid, ← AddMonoidHom.map_add, ← to_add_mul]
           
         · exact
             Eq.trans
@@ -162,13 +162,13 @@ theorem decompose_aux_coe {i : ι} (x : gradeBy R f i) : decomposeAux f ↑x = D
     
   · intro m b y hmy hb ih hmby
     have : Disjoint (Finsupp.single m b).Support y.support := by
-      simpa only [Finsupp.support_single_ne_zero _ hb, Finset.disjoint_singleton_left]
+      simpa only [← Finsupp.support_single_ne_zero _ hb, ← Finset.disjoint_singleton_left]
     rw [mem_grade_by_iff, Finsupp.support_add_eq this, Finset.coe_union, Set.union_subset_iff] at hmby
     cases' hmby with h1 h2
     have : f m = i := by
       rwa [Finsupp.support_single_ne_zero _ hb, Finset.coe_singleton, Set.singleton_subset_iff] at h1
     subst this
-    simp only [AlgHom.map_add, Submodule.coe_mk, decompose_aux_single f m]
+    simp only [← AlgHom.map_add, ← Submodule.coe_mk, ← decompose_aux_single f m]
     let ih' := ih h2
     dsimp'  at ih'
     rw [ih', ← AddMonoidHom.map_add]
@@ -185,33 +185,41 @@ instance gradeBy.gradedAlgebra : GradedAlgebra (gradeBy R f) :=
     fun i x => by
     convert (decompose_aux_coe f x : _)
 
+-- Lean can't find this later without us repeating it
+instance gradeBy.decomposition : DirectSum.Decomposition (gradeBy R f) := by
+  infer_instance
+
 @[simp]
 theorem decompose_aux_eq_decompose :
-    ⇑(decomposeAux f : AddMonoidAlgebra R M →ₐ[R] ⨁ i : ι, gradeBy R f i) = GradedAlgebra.decompose (gradeBy R f) :=
+    ⇑(decomposeAux f : AddMonoidAlgebra R M →ₐ[R] ⨁ i : ι, gradeBy R f i) = DirectSum.decompose (gradeBy R f) :=
   rfl
 
 @[simp]
 theorem GradesBy.decompose_single (m : M) (r : R) :
-    GradedAlgebra.decompose (gradeBy R f) (Finsupp.single m r) =
+    DirectSum.decompose (gradeBy R f) (Finsupp.single m r) =
       DirectSum.of (fun i : ι => gradeBy R f i) (f m) ⟨Finsupp.single m r, single_mem_grade_by _ _ _⟩ :=
   decompose_aux_single _ _ _
 
 instance grade.gradedAlgebra : GradedAlgebra (grade R : ι → Submodule _ _) :=
   AddMonoidAlgebra.gradeBy.gradedAlgebra (AddMonoidHom.id _)
 
+-- Lean can't find this later without us repeating it
+instance grade.decomposition : DirectSum.Decomposition (grade R : ι → Submodule _ _) := by
+  infer_instance
+
 @[simp]
 theorem grade.decompose_single (i : ι) (r : R) :
-    GradedAlgebra.decompose (grade R : ι → Submodule _ _) (Finsupp.single i r) =
+    DirectSum.decompose (grade R : ι → Submodule _ _) (Finsupp.single i r) =
       DirectSum.of (fun i : ι => grade R i) i ⟨Finsupp.single i r, single_mem_grade _ _⟩ :=
   decompose_aux_single _ _ _
 
 /-- `add_monoid_algebra.gradesby` describe an internally graded algebra -/
 theorem gradeBy.is_internal : DirectSum.IsInternal (gradeBy R f) :=
-  GradedAlgebra.is_internal _
+  DirectSum.Decomposition.is_internal _
 
 /-- `add_monoid_algebra.grades` describe an internally graded algebra -/
 theorem grade.is_internal : DirectSum.IsInternal (grade R : ι → Submodule R _) :=
-  GradedAlgebra.is_internal _
+  DirectSum.Decomposition.is_internal _
 
 end AddMonoidAlgebra
 

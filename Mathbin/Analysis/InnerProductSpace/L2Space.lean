@@ -110,7 +110,7 @@ instance : InnerProductSpace 𝕜 (lp G 2) :=
       calc ∥f∥ ^ 2 = ∥f∥ ^ (2 : ℝ≥0∞).toReal := by
           norm_cast _ = ∑' i, ∥f i∥ ^ (2 : ℝ≥0∞).toReal := lp.norm_rpow_eq_tsum _ f _ = ∑' i, ∥f i∥ ^ 2 := by
           norm_cast _ = ∑' i, re ⟪f i, f i⟫ := by
-          simp only [norm_sq_eq_inner]_ = re (∑' i, ⟪f i, f i⟫) := (is_R_or_C.re_clm.map_tsum _).symm _ = _ := by
+          simp only [← norm_sq_eq_inner]_ = re (∑' i, ⟪f i, f i⟫) := (is_R_or_C.re_clm.map_tsum _).symm _ = _ := by
           congr
       · norm_num
         
@@ -119,11 +119,11 @@ instance : InnerProductSpace 𝕜 (lp G 2) :=
     conj_sym := fun f g => by
       calc conj _ = conj (∑' i, ⟪g i, f i⟫) := by
           congr _ = ∑' i, conj ⟪g i, f i⟫ := is_R_or_C.conj_cle.map_tsum _ = ∑' i, ⟪f i, g i⟫ := by
-          simp only [inner_conj_sym]_ = _ := by
+          simp only [← inner_conj_sym]_ = _ := by
           congr,
     add_left := fun f₁ f₂ g => by
       calc _ = ∑' i, ⟪(f₁ + f₂) i, g i⟫ := _ _ = ∑' i, ⟪f₁ i, g i⟫ + ⟪f₂ i, g i⟫ := by
-          simp only [inner_add_left, Pi.add_apply, coe_fn_add]_ = (∑' i, ⟪f₁ i, g i⟫) + ∑' i, ⟪f₂ i, g i⟫ :=
+          simp only [← inner_add_left, ← Pi.add_apply, ← coe_fn_add]_ = (∑' i, ⟪f₁ i, g i⟫) + ∑' i, ⟪f₂ i, g i⟫ :=
           tsum_add _ _ _ = _ := by
           congr
       · congr
@@ -134,8 +134,8 @@ instance : InnerProductSpace 𝕜 (lp G 2) :=
         ,
     smul_left := fun f g c => by
       calc _ = ∑' i, ⟪c • f i, g i⟫ := _ _ = ∑' i, conj c * ⟪f i, g i⟫ := by
-          simp only [inner_smul_left]_ = conj c * ∑' i, ⟪f i, g i⟫ := tsum_mul_left _ = _ := _
-      · simp only [coe_fn_smul, Pi.smul_apply]
+          simp only [← inner_smul_left]_ = conj c * ∑' i, ⟪f i, g i⟫ := tsum_mul_left _ = _ := _
+      · simp only [← coe_fn_smul, ← Pi.smul_apply]
         
       · congr
          }
@@ -158,7 +158,7 @@ theorem inner_single_left (i : ι) (a : G i) (f : lp G 2) : ⟪lp.single 2 i a, 
     
 
 theorem inner_single_right (i : ι) (a : G i) (f : lp G 2) : ⟪f, lp.single 2 i a⟫ = ⟪f i, a⟫ := by
-  simpa [inner_conj_sym] using congr_arg conj (inner_single_left i a f)
+  simpa [← inner_conj_sym] using congr_arg conj (inner_single_left i a f)
 
 end lp
 
@@ -179,16 +179,17 @@ protected theorem summable_of_lp (f : lp G 2) : Summable fun i => V i (f i) := b
   · norm_num
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A mutually orthogonal family of subspaces of `E` induce a linear isometry from `lp 2` of the
 subspaces into `E`. -/
 protected def linearIsometry : lp G 2 →ₗᵢ[𝕜] E where
   toFun := fun f => ∑' i, V i (f i)
   map_add' := fun f g => by
-    simp only [tsum_add (hV.summable_of_lp f) (hV.summable_of_lp g), lp.coe_fn_add, Pi.add_apply,
+    simp only [← tsum_add (hV.summable_of_lp f) (hV.summable_of_lp g), ← lp.coe_fn_add, ← Pi.add_apply, ←
       LinearIsometry.map_add]
   map_smul' := fun c f => by
-    simpa only [LinearIsometry.map_smul, Pi.smul_apply, lp.coe_fn_smul] using tsum_const_smul (hV.summable_of_lp f)
+    simpa only [← LinearIsometry.map_smul, ← Pi.smul_apply, ← lp.coe_fn_smul] using
+      tsum_const_smul (hV.summable_of_lp f)
   norm_map' := fun f => by
     classical
     -- needed for lattice instance on `finset ι`, for `filter.at_top_ne_bot`
@@ -226,7 +227,7 @@ protected theorem linear_isometry_apply_dfinsupp_sum_single (W₀ : Π₀ i : ι
     hV.linear_isometry (∑ i in W₀.support, lp.single 2 i (W₀ i)) =
       ∑ i in W₀.support, hV.linear_isometry (lp.single 2 i (W₀ i)) :=
     hV.linear_isometry.to_linear_map.map_sum
-  simp (config := { contextual := true })[Dfinsupp.sum, this]
+  simp (config := { contextual := true })[← Dfinsupp.sum, ← this]
 
 /-- The canonical linear isometry from the `lp 2` of a mutually orthogonal family of subspaces of
 `E` into E, has range the closure of the span of the subspaces. -/
@@ -270,7 +271,7 @@ a vector `w : lp G 2` is the image of the infinite sum of the associated element
 protected theorem linear_isometry_equiv_symm_apply [∀ i, CompleteSpace (G i)]
     (hV' : (⨆ i, (V i).toLinearMap.range).topologicalClosure = ⊤) (w : lp G 2) :
     (hV.LinearIsometryEquiv hV').symm w = ∑' i, V i (w i) := by
-  simp [OrthogonalFamily.linearIsometryEquiv, OrthogonalFamily.linear_isometry_apply]
+  simp [← OrthogonalFamily.linearIsometryEquiv, ← OrthogonalFamily.linear_isometry_apply]
 
 /-- In the canonical isometric isomorphism `E ≃ₗᵢ[𝕜] lp G 2` induced by an orthogonal family `G`,
 a vector `w : lp G 2` is the image of the infinite sum of the associated elements in `E`, and this
@@ -278,7 +279,7 @@ sum indeed converges. -/
 protected theorem has_sum_linear_isometry_equiv_symm [∀ i, CompleteSpace (G i)]
     (hV' : (⨆ i, (V i).toLinearMap.range).topologicalClosure = ⊤) (w : lp G 2) :
     HasSum (fun i => V i (w i)) ((hV.LinearIsometryEquiv hV').symm w) := by
-  simp [OrthogonalFamily.linearIsometryEquiv, OrthogonalFamily.has_sum_linear_isometry]
+  simp [← OrthogonalFamily.linearIsometryEquiv, ← OrthogonalFamily.has_sum_linear_isometry]
 
 /-- In the canonical isometric isomorphism `E ≃ₗᵢ[𝕜] lp G 2` induced by an `ι`-indexed orthogonal
 family `G`, an "elementary basis vector" in `lp G 2` supported at `i : ι` is the image of the
@@ -287,7 +288,7 @@ associated element in `E`. -/
 protected theorem linear_isometry_equiv_symm_apply_single [∀ i, CompleteSpace (G i)]
     (hV' : (⨆ i, (V i).toLinearMap.range).topologicalClosure = ⊤) {i : ι} (x : G i) :
     (hV.LinearIsometryEquiv hV').symm (lp.single 2 i x) = V i x := by
-  simp [OrthogonalFamily.linearIsometryEquiv, OrthogonalFamily.linear_isometry_apply_single]
+  simp [← OrthogonalFamily.linearIsometryEquiv, ← OrthogonalFamily.linear_isometry_apply_single]
 
 /-- In the canonical isometric isomorphism `E ≃ₗᵢ[𝕜] lp G 2` induced by an `ι`-indexed orthogonal
 family `G`, a finitely-supported vector in `lp G 2` is the image of the associated finite sum of
@@ -296,7 +297,7 @@ elements of `E`. -/
 protected theorem linear_isometry_equiv_symm_apply_dfinsupp_sum_single [∀ i, CompleteSpace (G i)]
     (hV' : (⨆ i, (V i).toLinearMap.range).topologicalClosure = ⊤) (W₀ : Π₀ i : ι, G i) :
     (hV.LinearIsometryEquiv hV').symm (W₀.Sum (lp.single 2)) = W₀.Sum fun i => V i := by
-  simp [OrthogonalFamily.linearIsometryEquiv, OrthogonalFamily.linear_isometry_apply_dfinsupp_sum_single]
+  simp [← OrthogonalFamily.linearIsometryEquiv, ← OrthogonalFamily.linear_isometry_apply_dfinsupp_sum_single]
 
 /-- In the canonical isometric isomorphism `E ≃ₗᵢ[𝕜] lp G 2` induced by an `ι`-indexed orthogonal
 family `G`, a finitely-supported vector in `lp G 2` is the image of the associated finite sum of
@@ -308,7 +309,7 @@ protected theorem linear_isometry_equiv_apply_dfinsupp_sum_single [∀ i, Comple
   rw [← hV.linear_isometry_equiv_symm_apply_dfinsupp_sum_single hV']
   rw [LinearIsometryEquiv.apply_symm_apply]
   ext i
-  simp (config := { contextual := true })[Dfinsupp.sum, lp.single_apply]
+  simp (config := { contextual := true })[← Dfinsupp.sum, ← lp.single_apply]
 
 end OrthogonalFamily
 
@@ -332,8 +333,7 @@ instance {ι : Type _} : Inhabited (HilbertBasis ι 𝕜 ℓ²(ι,𝕜)) :=
   ⟨of_repr (LinearIsometryEquiv.refl 𝕜 _)⟩
 
 /-- `b i` is the `i`th basis vector. -/
-instance : CoeFun (HilbertBasis ι 𝕜 E) fun _ => ι → E where
-  coe := fun b i => b.repr.symm (lp.single 2 i (1 : 𝕜))
+instance : CoeFun (HilbertBasis ι 𝕜 E) fun _ => ι → E where coe := fun b i => b.repr.symm (lp.single 2 i (1 : 𝕜))
 
 @[simp]
 protected theorem repr_symm_single (b : HilbertBasis ι 𝕜 E) (i : ι) : b.repr.symm (lp.single 2 i (1 : 𝕜)) = b i :=
@@ -373,7 +373,7 @@ protected theorem has_sum_repr_symm (b : HilbertBasis ι 𝕜 E) (f : ℓ²(ι,�
 protected theorem has_sum_repr (b : HilbertBasis ι 𝕜 E) (x : E) : HasSum (fun i => b.repr x i • b i) x := by
   simpa using b.has_sum_repr_symm (b.repr x)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 protected theorem dense_span (b : HilbertBasis ι 𝕜 E) : (span 𝕜 (Set.Range b)).topologicalClosure = ⊤ := by
   classical
@@ -381,7 +381,7 @@ protected theorem dense_span (b : HilbertBasis ι 𝕜 E) : (span 𝕜 (Set.Rang
   rintro x -
   refine' mem_closure_of_tendsto (b.has_sum_repr x) (eventually_of_forall _)
   intro s
-  simp only [SetLike.mem_coe]
+  simp only [← SetLike.mem_coe]
   refine' sum_mem _
   rintro i -
   refine' smul_mem _ _ _
@@ -397,13 +397,13 @@ protected def mk (hsp : (span 𝕜 (Set.Range v)).topologicalClosure = ⊤) : Hi
     hv.OrthogonalFamily.LinearIsometryEquiv
       (by
         convert hsp
-        simp [← LinearMap.span_singleton_eq_range, ← Submodule.span_Union])
+        simp [LinearMap.span_singleton_eq_range, Submodule.span_Union])
 
 @[simp]
 protected theorem coe_mk (hsp : (span 𝕜 (Set.Range v)).topologicalClosure = ⊤) : ⇑(HilbertBasis.mk hv hsp) = v := by
   ext i
   show (HilbertBasis.mk hv hsp).repr.symm _ = v i
-  simp [HilbertBasis.mk]
+  simp [← HilbertBasis.mk]
 
 /-- An orthonormal family of vectors whose span has trivial orthogonal complement is a Hilbert
 basis. -/
@@ -426,7 +426,7 @@ theorem _root_.orthonormal.exists_hilbert_basis_extension {s : Set E} (hs : Orth
   ⟨w,
     HilbertBasis.mkOfOrthogonalEqBot hw_ortho
       (by
-        simpa [maximal_orthonormal_iff_orthogonal_complement_eq_bot hw_ortho] using hw_max),
+        simpa [← maximal_orthonormal_iff_orthogonal_complement_eq_bot hw_ortho] using hw_max),
     hws, HilbertBasis.coe_of_orthogonal_eq_bot_mk _ _⟩
 
 variable (𝕜 E)

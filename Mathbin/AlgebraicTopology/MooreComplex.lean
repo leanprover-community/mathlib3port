@@ -75,7 +75,7 @@ def objD : ∀ n : ℕ, (objX X (n + 1) : C) ⟶ (objX X n : C)
     -- A morphism `f` factors through the kernel of `g` exactly if `f ≫ g = 0`.
     apply kernel_subobject_factors
     -- Use a simplicial identity
-    dsimp' [obj_X]
+    dsimp' [← obj_X]
     erw [category.assoc, ← X.δ_comp_δ (Finₓ.zero_le i.succ), ← category.assoc]
     -- It's the first two factors which are zero.
     convert zero_comp
@@ -96,7 +96,7 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
     -- after the first simp the proofs are almost identical
     cases n <;>
     dsimp'
-  · simp only [subobject.factor_thru_arrow_assoc]
+  · simp only [← subobject.factor_thru_arrow_assoc]
     slice_lhs 2 3 => erw [← X.δ_comp_δ (Finₓ.zero_le 0)]
     rw [←
       factor_thru_arrow _ _
@@ -106,7 +106,7 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
     slice_lhs 2 3 => rw [kernel_subobject_arrow_comp]
     simp
     
-  · simp [factor_thru_right]
+  · simp [← factor_thru_right]
     slice_lhs 2 3 => erw [← X.δ_comp_δ (Finₓ.zero_le 0)]
     rw [←
       factor_thru_arrow _ _

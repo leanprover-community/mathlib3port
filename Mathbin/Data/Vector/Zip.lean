@@ -29,17 +29,17 @@ theorem zip_with_to_list (x : Vector α n) (y : Vector β n) :
 
 @[simp]
 theorem zip_with_nth (x : Vector α n) (y : Vector β n) i : (Vector.zipWith f x y).nth i = f (x.nth i) (y.nth i) := by
-  dsimp' only [Vector.zipWith, Vector.nth]
+  dsimp' only [← Vector.zipWith, ← Vector.nth]
   cases x
   cases y
-  simp only [List.nth_le_zip_with, Subtype.coe_mk]
+  simp only [← List.nth_le_zip_with, ← Subtype.coe_mk]
   congr
 
 @[simp]
 theorem zip_with_tail (x : Vector α n) (y : Vector β n) :
     (Vector.zipWith f x y).tail = Vector.zipWith f x.tail y.tail := by
   ext
-  simp [nth_tail]
+  simp [← nth_tail]
 
 @[to_additive]
 theorem prod_mul_prod_eq_prod_zip_with [CommMonoidₓ α] (x y : Vector α n) :

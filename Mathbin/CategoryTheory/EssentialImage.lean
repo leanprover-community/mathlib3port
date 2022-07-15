@@ -92,7 +92,7 @@ def toEssImageCompEssentialImageInclusion (F : C ⥤ D) : F.toEssImage ⋙ F.ess
 
 end Functor
 
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`mem_ess_image] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`mem_ess_image] []
 /-- A functor `F : C ⥤ D` is essentially surjective if every object of `D` is in the essential image
 of `F`. In other words, for every `Y : D`, there is some `X : C` with `F.obj X ≅ Y`.
 
@@ -101,8 +101,8 @@ See <https://stacks.math.columbia.edu/tag/001C>.
 class EssSurj (F : C ⥤ D) : Prop where
   mem_ess_image (Y : D) : Y ∈ F.EssImage
 
-instance : EssSurj F.toEssImage where
-  mem_ess_image := fun ⟨Y, hY⟩ => ⟨_, ⟨⟨_, _, hY.getIso.hom_inv_id, hY.getIso.inv_hom_id⟩⟩⟩
+instance :
+    EssSurj F.toEssImage where mem_ess_image := fun ⟨Y, hY⟩ => ⟨_, ⟨⟨_, _, hY.getIso.hom_inv_id, hY.getIso.inv_hom_id⟩⟩⟩
 
 variable (F) [EssSurj F]
 
@@ -122,9 +122,9 @@ instance Faithful.to_ess_image (F : C ⥤ D) [Faithful F] : Faithful F.toEssImag
   Faithful.of_comp_iso F.toEssImageCompEssentialImageInclusion
 
 /-- The induced functor of a full functor is full -/
-instance Full.toEssImage (F : C ⥤ D) [Full F] : Full F.toEssImage :=
+instance Full.toEssImage (F : C ⥤ D) [Full F] : Full F.toEssImage := by
   have := full.of_iso F.to_ess_image_comp_essential_image_inclusion.symm
-  full.of_comp_faithful F.to_ess_image F.ess_image_inclusion
+  exact full.of_comp_faithful F.to_ess_image F.ess_image_inclusion
 
 end CategoryTheory
 

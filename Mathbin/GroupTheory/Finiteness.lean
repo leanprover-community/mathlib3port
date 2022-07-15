@@ -50,19 +50,19 @@ add_decl_doc AddSubmonoid.Fg
 theorem Submonoid.fg_iff (P : Submonoid M) : Submonoid.Fg P ↔ ∃ S : Set M, Submonoid.closure S = P ∧ S.Finite :=
   ⟨fun ⟨S, hS⟩ => ⟨S, hS, Finset.finite_to_set S⟩, fun ⟨S, hS, hf⟩ =>
     ⟨Set.Finite.toFinset hf, by
-      simp [hS]⟩⟩
+      simp [← hS]⟩⟩
 
 theorem Submonoid.fg_iff_add_fg (P : Submonoid M) : P.Fg ↔ P.toAddSubmonoid.Fg :=
   ⟨fun h =>
     let ⟨S, hS, hf⟩ := (Submonoid.fg_iff _).1 h
     (AddSubmonoid.fg_iff _).mpr
       ⟨Additive.toMul ⁻¹' S, by
-        simp [← Submonoid.to_add_submonoid_closure, hS], hf⟩,
+        simp [Submonoid.to_add_submonoid_closure, ← hS], hf⟩,
     fun h =>
     let ⟨T, hT, hf⟩ := (AddSubmonoid.fg_iff _).1 h
     (Submonoid.fg_iff _).mpr
       ⟨Multiplicative.ofAdd ⁻¹' T, by
-        simp [← AddSubmonoid.to_submonoid'_closure, hT], hf⟩⟩
+        simp [AddSubmonoid.to_submonoid'_closure, ← hT], hf⟩⟩
 
 theorem AddSubmonoid.fg_iff_mul_fg (P : AddSubmonoid N) : P.Fg ↔ P.toSubmonoid.Fg := by
   convert (Submonoid.fg_iff_add_fg P.to_submonoid).symm
@@ -110,9 +110,14 @@ instance AddMonoidₓ.fg_of_monoid_fg [Monoidₓ.Fg M] : AddMonoidₓ.Fg (Additi
 instance Monoidₓ.fg_of_add_monoid_fg [AddMonoidₓ.Fg N] : Monoidₓ.Fg (Multiplicative N) :=
   AddMonoidₓ.fg_iff_mul_fg.1 ‹_›
 
+@[to_additive]
+instance (priority := 100) Monoidₓ.fg_of_fintype [Fintype M] : Monoidₓ.Fg M :=
+  ⟨⟨Finset.univ, by
+      rw [Finset.coe_univ] <;> exact Submonoid.closure_univ⟩⟩
+
 end Monoidₓ
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem Submonoid.Fg.map {M' : Type _} [Monoidₓ M'] {P : Submonoid M} (h : P.Fg) (e : M →* M') : (P.map e).Fg := by
   classical
@@ -137,7 +142,7 @@ theorem Monoidₓ.fg_iff_submonoid_fg (N : Submonoid M) : Monoidₓ.Fg N ↔ N.F
   conv_rhs => rw [← N.range_subtype, MonoidHom.mrange_eq_map]
   exact ⟨fun h => h.out.map N.subtype, fun h => ⟨h.map_injective N.subtype Subtype.coe_injective⟩⟩
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem Monoidₓ.fg_of_surjective {M' : Type _} [Monoidₓ M'] [Monoidₓ.Fg M] (f : M →* M') (hf : Function.Surjective f) :
     Monoidₓ.Fg M' := by
@@ -179,7 +184,7 @@ add_decl_doc AddSubgroup.Fg
 theorem Subgroup.fg_iff (P : Subgroup G) : Subgroup.Fg P ↔ ∃ S : Set G, Subgroup.closure S = P ∧ S.Finite :=
   ⟨fun ⟨S, hS⟩ => ⟨S, hS, Finset.finite_to_set S⟩, fun ⟨S, hS, hf⟩ =>
     ⟨Set.Finite.toFinset hf, by
-      simp [hS]⟩⟩
+      simp [← hS]⟩⟩
 
 /-- A subgroup is finitely generated if and only if it is finitely generated as a submonoid. -/
 @[to_additive AddSubgroup.FgIffAddSubmonoid.fg
@@ -261,6 +266,11 @@ instance AddGroupₓ.fg_of_group_fg [Groupₓ.Fg G] : AddGroupₓ.Fg (Additive G
 
 instance Groupₓ.fg_of_mul_group_fg [AddGroupₓ.Fg H] : Groupₓ.Fg (Multiplicative H) :=
   AddGroupₓ.fg_iff_mul_fg.1 ‹_›
+
+@[to_additive]
+instance (priority := 100) Groupₓ.fg_of_fintype [Fintype G] : Groupₓ.Fg G :=
+  ⟨⟨Finset.univ, by
+      rw [Finset.coe_univ] <;> exact Subgroup.closure_univ⟩⟩
 
 @[to_additive]
 theorem Groupₓ.fg_of_surjective {G' : Type _} [Groupₓ G'] [hG : Groupₓ.Fg G] {f : G →* G'}

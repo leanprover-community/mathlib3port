@@ -3,6 +3,7 @@ Copyright (c) 2019 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Scott Morrison
 -/
+import Mathbin.Algebra.Order.Hom.Monoid
 import Mathbin.SetTheory.Game.Ordinal
 
 /-!
@@ -40,6 +41,10 @@ simultaneously. This will make for a fun and challenging project.
 
 The branch `surreal_mul` contains some progress on this proof.
 
+### Todo
+
+- Define the field structure on the surreals.
+
 ## References
 
 * [Conway, *On numbers and games*][conway2001]
@@ -60,26 +65,34 @@ namespace Pgame
 /-- A pre-game is numeric if everything in the L set is less than everything in the R set,
 and all the elements of L and R are also numeric. -/
 def Numeric : Pgame → Prop
-  | ⟨l, r, L, R⟩ => (∀ i j, L i < R j) ∧ (∀ i, numeric (L i)) ∧ ∀ i, numeric (R i)
+  | ⟨l, r, L, R⟩ => (∀ i j, L i < R j) ∧ (∀ i, numeric (L i)) ∧ ∀ j, numeric (R j)
 
-theorem numeric_def (x : Pgame) :
-    Numeric x ↔ (∀ i j, x.moveLeft i < x.moveRight j) ∧ (∀ i, Numeric (x.moveLeft i)) ∧ ∀ i, Numeric (x.moveRight i) :=
+theorem numeric_def {x : Pgame} :
+    Numeric x ↔ (∀ i j, x.moveLeft i < x.moveRight j) ∧ (∀ i, Numeric (x.moveLeft i)) ∧ ∀ j, Numeric (x.moveRight j) :=
   by
   cases x
   rfl
 
-theorem Numeric.left_lt_right {x : Pgame} (o : Numeric x) (i : x.LeftMoves) (j : x.RightMoves) :
-    x.moveLeft i < x.moveRight j := by
-  cases' x with xl xr xL xR
+namespace Numeric
+
+theorem mk {x : Pgame} (h₁ : ∀ i j, x.moveLeft i < x.moveRight j) (h₂ : ∀ i, Numeric (x.moveLeft i))
+    (h₃ : ∀ j, Numeric (x.moveRight j)) : Numeric x :=
+  numeric_def.2 ⟨h₁, h₂, h₃⟩
+
+theorem left_lt_right {x : Pgame} (o : Numeric x) (i : x.LeftMoves) (j : x.RightMoves) : x.moveLeft i < x.moveRight j :=
+  by
+  cases x
   exact o.1 i j
 
-theorem Numeric.move_left {x : Pgame} (o : Numeric x) (i : x.LeftMoves) : Numeric (x.moveLeft i) := by
-  cases' x with xl xr xL xR
+theorem move_left {x : Pgame} (o : Numeric x) (i : x.LeftMoves) : Numeric (x.moveLeft i) := by
+  cases x
   exact o.2.1 i
 
-theorem Numeric.move_right {x : Pgame} (o : Numeric x) (j : x.RightMoves) : Numeric (x.moveRight j) := by
-  cases' x with xl xr xL xR
+theorem move_right {x : Pgame} (o : Numeric x) (j : x.RightMoves) : Numeric (x.moveRight j) := by
+  cases x
   exact o.2.2 j
+
+end Numeric
 
 @[elab_as_eliminator]
 theorem numeric_rec {C : Pgame → Prop}
@@ -95,50 +108,45 @@ theorem lf_asymm {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : x ⧏ y → �
   refine' numeric_rec fun yl yr yL yR hy oyl oyr IHyl IHyr => _
   rw [mk_lf_mk, mk_lf_mk]
   rintro (⟨i, h₁⟩ | ⟨j, h₁⟩) (⟨i, h₂⟩ | ⟨j, h₂⟩)
-  · exact IHxl _ _ (oyl _) (move_left_lf_of_le _ h₁) (move_left_lf_of_le _ h₂)
+  · exact IHxl _ _ (oyl _) (h₁.move_left_lf _) (h₂.move_left_lf _)
     
-  · exact (le_transₓ h₂ h₁).not_lf (lf_of_lt (hy _ _))
+  · exact (le_transₓ h₂ h₁).not_gf (lf_of_lt (hy _ _))
     
-  · exact (le_transₓ h₁ h₂).not_lf (lf_of_lt (hx _ _))
+  · exact (le_transₓ h₁ h₂).not_gf (lf_of_lt (hx _ _))
     
-  · exact IHxr _ _ (oyr _) (lf_move_right_of_le _ h₁) (lf_move_right_of_le _ h₂)
+  · exact IHxr _ _ (oyr _) (h₁.lf_move_right _) (h₂.lf_move_right _)
     
 
 theorem le_of_lf {x y : Pgame} (h : x ⧏ y) (ox : Numeric x) (oy : Numeric y) : x ≤ y :=
   not_lf.1 (lf_asymm ox oy h)
 
-alias le_of_lf ← Pgame.Lf.le
+alias le_of_lf ← lf.le
 
 theorem lt_of_lf {x y : Pgame} (h : x ⧏ y) (ox : Numeric x) (oy : Numeric y) : x < y :=
   (lt_or_fuzzy_of_lf h).resolve_right (not_fuzzy_of_le (h.le ox oy))
 
-alias lt_of_lf ← Pgame.Lf.lt
+alias lt_of_lf ← lf.lt
 
 theorem lf_iff_lt {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : x ⧏ y ↔ x < y :=
   ⟨fun h => h.lt ox oy, lf_of_lt⟩
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 /-- Definition of `x ≤ y` on numeric pre-games, in terms of `<` -/
 theorem le_iff_forall_lt {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
     x ≤ y ↔ (∀ i, x.moveLeft i < y) ∧ ∀ j, x < y.moveRight j := by
-  rw [le_iff_forall_lf]
-  refine' and_congr _ _ <;>
+  refine' le_iff_forall_lf.trans (and_congr _ _) <;>
     refine' forall_congrₓ fun i => lf_iff_lt _ _ <;> apply_rules [numeric.move_left, numeric.move_right]
 
-theorem le_of_forall_lt {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
-    ((∀ i, x.moveLeft i < y) ∧ ∀ j, x < y.moveRight j) → x ≤ y :=
-  (le_iff_forall_lt ox oy).2
-
 /-- Definition of `x < y` on numeric pre-games, in terms of `≤` -/
-theorem lt_iff_forall_le {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
+theorem lt_iff_exists_le {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
     x < y ↔ (∃ i, x ≤ y.moveLeft i) ∨ ∃ j, x.moveRight j ≤ y := by
-  rw [← lf_iff_lt ox oy, lf_iff_forall_le]
+  rw [← lf_iff_lt ox oy, lf_iff_exists_le]
 
-theorem lt_of_forall_le {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
+theorem lt_of_exists_le {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
     ((∃ i, x ≤ y.moveLeft i) ∨ ∃ j, x.moveRight j ≤ y) → x < y :=
-  (lt_iff_forall_le ox oy).2
+  (lt_iff_exists_le ox oy).2
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 /-- The definition of `x < y` on numeric pre-games, in terms of `<` two moves later. -/
 theorem lt_def {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
     x < y ↔
@@ -158,15 +166,14 @@ theorem lt_or_equiv_or_gt {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : x < 
   ((lf_or_equiv_or_gf x y).imp fun h => h.lt ox oy) <| Or.imp_rightₓ fun h => h.lt oy ox
 
 theorem numeric_of_is_empty (x : Pgame) [IsEmpty x.LeftMoves] [IsEmpty x.RightMoves] : Numeric x :=
-  (numeric_def x).2 ⟨isEmptyElim, isEmptyElim, isEmptyElim⟩
+  Numeric.mk isEmptyElim isEmptyElim isEmptyElim
 
-theorem numeric_of_is_empty_left_moves (x : Pgame) [IsEmpty x.LeftMoves] (H : ∀ j, Numeric (x.moveRight j)) :
-    Numeric x :=
-  (numeric_def x).2 ⟨isEmptyElim, isEmptyElim, H⟩
+theorem numeric_of_is_empty_left_moves (x : Pgame) [IsEmpty x.LeftMoves] : (∀ j, Numeric (x.moveRight j)) → Numeric x :=
+  Numeric.mk isEmptyElim isEmptyElim
 
 theorem numeric_of_is_empty_right_moves (x : Pgame) [IsEmpty x.RightMoves] (H : ∀ i, Numeric (x.moveLeft i)) :
     Numeric x :=
-  (numeric_def x).2 ⟨fun _ => isEmptyElim, H, isEmptyElim⟩
+  Numeric.mk (fun _ => isEmptyElim) H isEmptyElim
 
 theorem numeric_zero : Numeric 0 :=
   numeric_of_is_empty 0
@@ -177,19 +184,21 @@ theorem numeric_one : Numeric 1 :=
 theorem Numeric.neg : ∀ {x : Pgame} o : Numeric x, Numeric (-x)
   | ⟨l, r, L, R⟩, o => ⟨fun j i => neg_lt_neg_iff.2 (o.1 i j), fun j => (o.2.2 j).neg, fun i => (o.2.1 i).neg⟩
 
-theorem Numeric.move_left_lt {x : Pgame} (o : Numeric x) i : x.moveLeft i < x :=
+namespace Numeric
+
+theorem move_left_lt {x : Pgame} (o : Numeric x) i : x.moveLeft i < x :=
   (Pgame.move_left_lf i).lt (o.moveLeft i) o
 
-theorem Numeric.move_left_le {x : Pgame} (o : Numeric x) i : x.moveLeft i ≤ x :=
+theorem move_left_le {x : Pgame} (o : Numeric x) i : x.moveLeft i ≤ x :=
   (o.move_left_lt i).le
 
-theorem Numeric.lt_move_right {x : Pgame} (o : Numeric x) j : x < x.moveRight j :=
+theorem lt_move_right {x : Pgame} (o : Numeric x) j : x < x.moveRight j :=
   (Pgame.lf_move_right j).lt o (o.moveRight j)
 
-theorem Numeric.le_move_right {x : Pgame} (o : Numeric x) j : x ≤ x.moveRight j :=
+theorem le_move_right {x : Pgame} (o : Numeric x) j : x ≤ x.moveRight j :=
   (o.lt_move_right j).le
 
-theorem Numeric.add : ∀ {x y : Pgame} ox : Numeric x oy : Numeric y, Numeric (x + y)
+theorem add : ∀ {x y : Pgame} ox : Numeric x oy : Numeric y, Numeric (x + y)
   | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩, ox, oy =>
     ⟨by
       rintro (ix | iy) (jx | jy)
@@ -220,8 +229,10 @@ theorem Numeric.add : ∀ {x y : Pgame} ox : Numeric x oy : Numeric y, Numeric (
           
         ⟩
 
-theorem Numeric.sub {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : Numeric (x - y) :=
+theorem sub {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : Numeric (x - y) :=
   ox.add oy.neg
+
+end Numeric
 
 /-- Pre-games defined by natural numbers are numeric. -/
 theorem numeric_nat : ∀ n : ℕ, Numeric n
@@ -289,7 +300,7 @@ instance : LT Surreal :=
 /-- Addition on surreals is inherited from pre-game addition:
 the sum of `x = {xL | xR}` and `y = {yL | yR}` is `{xL + y, x + yL | xR + y, x + yR}`. -/
 instance : Add Surreal :=
-  ⟨Surreal.lift₂ (fun oy => ⟦⟨x + y, ox.add oy⟩⟧) fun x₁ y₁ x₂ y₂ _ _ _ _ hx hy =>
+  ⟨Surreal.lift₂ (fun x y : Pgame ox oy => ⟦⟨x + y, ox.add oy⟩⟧) fun x₁ y₁ x₂ y₂ _ _ _ _ hx hy =>
       Quotientₓ.sound (Pgame.add_congr hx hy)⟩
 
 /-- Negation for surreal numbers is inherited from pre-game negation:
@@ -326,7 +337,7 @@ instance : OrderedAddCommGroup Surreal where
     apply @le_transₓ Pgame
   lt_iff_le_not_le := by
     rintro ⟨_, ox⟩ ⟨_, oy⟩
-    exact lt_iff_le_not_leₓ
+    apply @lt_iff_le_not_leₓ Pgame
   le_antisymm := by
     rintro ⟨_⟩ ⟨_⟩ h₁ h₂
     exact Quotientₓ.sound ⟨h₁, h₂⟩
@@ -334,12 +345,37 @@ instance : OrderedAddCommGroup Surreal where
     rintro ⟨_⟩ ⟨_⟩ hx ⟨_⟩
     exact @add_le_add_left Pgame _ _ _ _ _ hx _
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 noncomputable instance : LinearOrderedAddCommGroup Surreal :=
   { Surreal.orderedAddCommGroup with
     le_total := by
       rintro ⟨⟨x, ox⟩⟩ ⟨⟨y, oy⟩⟩ <;> classical <;> exact or_iff_not_imp_left.2 fun h => (Pgame.not_le.1 h).le oy ox,
     decidableLe := Classical.decRel _ }
+
+instance : AddMonoidWithOneₓ Surreal :=
+  AddMonoidWithOneₓ.unary
+
+/-- Casts a `surreal` number into a `game`. -/
+def toGame : Surreal →+o Game where
+  toFun := lift (fun x _ => ⟦x⟧) fun x y ox oy => Quot.sound
+  map_zero' := rfl
+  map_add' := by
+    rintro ⟨_, _⟩ ⟨_, _⟩
+    rfl
+  monotone' := by
+    rintro ⟨_, _⟩ ⟨_, _⟩
+    exact id
+
+theorem zero_to_game : toGame 0 = 0 :=
+  rfl
+
+@[simp]
+theorem one_to_game : toGame 1 = 1 :=
+  rfl
+
+@[simp]
+theorem nat_to_game : ∀ n : ℕ, toGame n = n :=
+  map_nat_cast' _ one_to_game
 
 end Surreal
 
@@ -355,6 +391,3 @@ noncomputable def toSurreal : Ordinal ↪o Surreal where
 
 end Ordinal
 
--- We conclude with some ideas for further work on surreals; these would make fun projects.
--- TODO define the inclusion of groups `surreal → game`
--- TODO define the field structure on the surreals

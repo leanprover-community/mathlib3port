@@ -172,7 +172,7 @@ instance : Mul (PerfectClosure K p) :=
       (fun x : ℕ × K =>
         Quot.lift (fun y : ℕ × K => mk K p (x.1 + y.1, (frobenius K p^[y.1]) x.2 * (frobenius K p^[x.1]) y.2))
           (mul_aux_right K p x))
-      fun H : R K p x1 x2 => funext fun e => (Quot.induction_on e) fun y => mul_aux_left K p x1 x2 y H⟩
+      fun x1 x2 H : R K p x1 x2 => funext fun e => (Quot.induction_on e) fun y => mul_aux_left K p x1 x2 y H⟩
 
 @[simp]
 theorem mk_mul_mk (x y : ℕ × K) :
@@ -186,22 +186,22 @@ instance : CommMonoidₓ (PerfectClosure K p) :=
         (Quot.induction_on f) fun ⟨n, y⟩ =>
           (Quot.induction_on g) fun ⟨s, z⟩ =>
             congr_arg (Quot.mk _) <| by
-              simp only [add_assocₓ, mul_assoc, RingHom.iterate_map_mul, ← iterate_add_apply, add_commₓ,
+              simp only [← add_assocₓ, ← mul_assoc, ← RingHom.iterate_map_mul, iterate_add_apply, ← add_commₓ, ←
                 add_left_commₓ],
     one := mk K p (0, 1),
     one_mul := fun e =>
       Quot.induction_on e fun ⟨n, x⟩ =>
         congr_arg (Quot.mk _) <| by
-          simp only [RingHom.iterate_map_one, iterate_zero_apply, one_mulₓ, zero_addₓ],
+          simp only [← RingHom.iterate_map_one, ← iterate_zero_apply, ← one_mulₓ, ← zero_addₓ],
     mul_one := fun e =>
       Quot.induction_on e fun ⟨n, x⟩ =>
         congr_arg (Quot.mk _) <| by
-          simp only [RingHom.iterate_map_one, iterate_zero_apply, mul_oneₓ, add_zeroₓ],
+          simp only [← RingHom.iterate_map_one, ← iterate_zero_apply, ← mul_oneₓ, ← add_zeroₓ],
     mul_comm := fun e f =>
       Quot.induction_on e fun ⟨m, x⟩ =>
         Quot.induction_on f fun ⟨n, y⟩ =>
           congr_arg (Quot.mk _) <| by
-            simp only [add_commₓ, mul_comm] }
+            simp only [← add_commₓ, ← mul_comm] }
 
 theorem one_def : (1 : PerfectClosure K p) = mk K p (0, 1) :=
   rfl
@@ -230,7 +230,7 @@ instance : Add (PerfectClosure K p) :=
       (fun x : ℕ × K =>
         Quot.lift (fun y : ℕ × K => mk K p (x.1 + y.1, (frobenius K p^[y.1]) x.2 + (frobenius K p^[x.1]) y.2))
           (add_aux_right K p x))
-      fun H : R K p x1 x2 => funext fun e => (Quot.induction_on e) fun y => add_aux_left K p x1 x2 y H⟩
+      fun x1 x2 H : R K p x1 x2 => funext fun e => (Quot.induction_on e) fun y => add_aux_left K p x1 x2 y H⟩
 
 @[simp]
 theorem mk_add_mk (x y : ℕ × K) :
@@ -238,7 +238,7 @@ theorem mk_add_mk (x y : ℕ × K) :
   rfl
 
 instance : Neg (PerfectClosure K p) :=
-  ⟨Quot.lift (fun x : ℕ × K => mk K p (x.1, -x.2)) fun H : R K p x y =>
+  ⟨Quot.lift (fun x : ℕ × K => mk K p (x.1, -x.2)) fun x y H : R K p x y =>
       match x, y, H with
       | _, _, r.intro n x =>
         Quot.sound <| by
@@ -254,60 +254,66 @@ instance : Zero (PerfectClosure K p) :=
 theorem zero_def : (0 : PerfectClosure K p) = mk K p (0, 0) :=
   rfl
 
+@[simp]
+theorem mk_zero_zero : mk K p (0, 0) = 0 :=
+  rfl
+
 theorem mk_zero (n : ℕ) : mk K p (n, 0) = 0 := by
   induction' n with n ih <;> [rfl, rw [← ih]] <;>
     symm <;> apply Quot.sound <;> have := r.intro n (0 : K) <;> rwa [frobenius_zero K p] at this
 
 theorem R.sound (m n : ℕ) (x y : K) (H : (frobenius K p^[m]) x = y) : mk K p (n, x) = mk K p (m + n, y) := by
   subst H <;>
-    induction' m with m ih <;> [simp only [zero_addₓ, iterate_zero_apply], rw [ih, Nat.succ_add, iterate_succ']] <;>
+    induction' m with m ih <;> [simp only [← zero_addₓ, ← iterate_zero_apply], rw [ih, Nat.succ_add, iterate_succ']] <;>
       apply Quot.sound <;> apply r.intro
 
-instance : CommRingₓ (PerfectClosure K p) :=
-  { (inferInstance : Add (PerfectClosure K p)), (inferInstance : Neg (PerfectClosure K p)),
-    (inferInstance : CommMonoidₓ (PerfectClosure K p)) with
+instance : AddCommGroupₓ (PerfectClosure K p) :=
+  { (inferInstance : Add (PerfectClosure K p)), (inferInstance : Neg (PerfectClosure K p)) with
     add_assoc := fun e f g =>
       (Quot.induction_on e) fun ⟨m, x⟩ =>
         (Quot.induction_on f) fun ⟨n, y⟩ =>
           (Quot.induction_on g) fun ⟨s, z⟩ =>
             congr_arg (Quot.mk _) <| by
-              simp only [RingHom.iterate_map_add, ← iterate_add_apply, add_assocₓ, add_commₓ s _],
+              simp only [← RingHom.iterate_map_add, iterate_add_apply, ← add_assocₓ, ← add_commₓ s _],
     zero := 0,
     zero_add := fun e =>
       Quot.induction_on e fun ⟨n, x⟩ =>
         congr_arg (Quot.mk _) <| by
-          simp only [RingHom.iterate_map_zero, iterate_zero_apply, zero_addₓ],
+          simp only [← RingHom.iterate_map_zero, ← iterate_zero_apply, ← zero_addₓ],
     add_zero := fun e =>
       Quot.induction_on e fun ⟨n, x⟩ =>
         congr_arg (Quot.mk _) <| by
-          simp only [RingHom.iterate_map_zero, iterate_zero_apply, add_zeroₓ],
+          simp only [← RingHom.iterate_map_zero, ← iterate_zero_apply, ← add_zeroₓ],
     sub_eq_add_neg := fun a b => rfl,
     add_left_neg := fun e =>
       Quot.induction_on e fun ⟨n, x⟩ => by
-        simp only [quot_mk_eq_mk, neg_mk, mk_add_mk, RingHom.iterate_map_neg, add_left_negₓ, mk_zero],
+        simp only [← quot_mk_eq_mk, ← neg_mk, ← mk_add_mk, ← RingHom.iterate_map_neg, ← add_left_negₓ, ← mk_zero],
     add_comm := fun e f =>
       Quot.induction_on e fun ⟨m, x⟩ =>
         Quot.induction_on f fun ⟨n, y⟩ =>
           congr_arg (Quot.mk _) <| by
-            simp only [add_commₓ],
+            simp only [← add_commₓ] }
+
+instance : CommRingₓ (PerfectClosure K p) :=
+  { PerfectClosure.addCommGroup K p, AddMonoidWithOneₓ.unary, (inferInstance : CommMonoidₓ (PerfectClosure K p)) with
     left_distrib := fun e f g =>
       (Quot.induction_on e) fun ⟨m, x⟩ =>
         (Quot.induction_on f) fun ⟨n, y⟩ =>
           (Quot.induction_on g) fun ⟨s, z⟩ =>
             show Quot.mk _ _ = Quot.mk _ _ by
-              simp only [add_assocₓ, add_commₓ, add_left_commₓ] <;>
+              simp only [← add_assocₓ, ← add_commₓ, ← add_left_commₓ] <;>
                 apply r.sound <;>
-                  simp only [RingHom.iterate_map_mul, RingHom.iterate_map_add, ← iterate_add_apply, mul_addₓ, add_commₓ,
-                    add_left_commₓ],
+                  simp only [← RingHom.iterate_map_mul, ← RingHom.iterate_map_add, iterate_add_apply, ← mul_addₓ, ←
+                    add_commₓ, ← add_left_commₓ],
     right_distrib := fun e f g =>
       (Quot.induction_on e) fun ⟨m, x⟩ =>
         (Quot.induction_on f) fun ⟨n, y⟩ =>
           (Quot.induction_on g) fun ⟨s, z⟩ =>
             show Quot.mk _ _ = Quot.mk _ _ by
-              simp only [add_assocₓ, add_commₓ _ s, add_left_commₓ _ s] <;>
+              simp only [← add_assocₓ, ← add_commₓ _ s, ← add_left_commₓ _ s] <;>
                 apply r.sound <;>
-                  simp only [RingHom.iterate_map_mul, RingHom.iterate_map_add, ← iterate_add_apply, add_mulₓ, add_commₓ,
-                    add_left_commₓ] }
+                  simp only [← RingHom.iterate_map_mul, ← RingHom.iterate_map_add, iterate_add_apply, ← add_mulₓ, ←
+                    add_commₓ, ← add_left_commₓ] }
 
 theorem eq_iff' (x y : ℕ × K) :
     mk K p x = mk K p y ↔ ∃ z, (frobenius K p^[y.1 + z]) x.2 = (frobenius K p^[x.1 + z]) y.2 := by
@@ -330,7 +336,7 @@ theorem eq_iff' (x y : ℕ × K) :
       rw [← add_assocₓ, iterate_add_apply, ih1]
       rw [← iterate_add_apply, add_commₓ, iterate_add_apply, ih2]
       rw [← iterate_add_apply]
-      simp only [add_commₓ, add_left_commₓ]
+      simp only [← add_commₓ, ← add_left_commₓ]
     
   intro H
   cases' x with m x
@@ -343,7 +349,7 @@ theorem eq_iff' (x y : ℕ × K) :
 theorem nat_cast (n x : ℕ) : (x : PerfectClosure K p) = mk K p (n, x) := by
   induction' n with n ih
   · induction' x with x ih
-    · rfl
+    · simp
       
     rw [Nat.cast_succₓ, Nat.cast_succₓ, ih]
     rfl
@@ -354,13 +360,13 @@ theorem nat_cast (n x : ℕ) : (x : PerfectClosure K p) = mk K p (n, x) := by
   apply r.intro
 
 theorem int_cast (x : ℤ) : (x : PerfectClosure K p) = mk K p (0, x) := by
-  induction x <;> simp only [Int.cast_of_nat, Int.cast_neg_succ_of_nat, nat_cast K p 0] <;> rfl
+  induction x <;> simp only [← Int.cast_of_nat, ← Int.cast_neg_succ_of_nat, ← nat_cast K p 0] <;> rfl
 
 theorem nat_cast_eq_iff (x y : ℕ) : (x : PerfectClosure K p) = y ↔ (x : K) = y := by
   constructor <;> intro H
   · rw [nat_cast K p 0, nat_cast K p 0, eq_iff'] at H
     cases' H with z H
-    simpa only [zero_addₓ, iterate_fixed (frobenius_nat_cast K p _)] using H
+    simpa only [← zero_addₓ, ← iterate_fixed (frobenius_nat_cast K p _)] using H
     
   rw [nat_cast K p 0, nat_cast K p 0, H]
 
@@ -373,7 +379,7 @@ instance : CharP (PerfectClosure K p) p := by
 theorem frobenius_mk (x : ℕ × K) :
     (frobenius (PerfectClosure K p) p : PerfectClosure K p → PerfectClosure K p) (mk K p x) = mk _ _ (x.1, x.2 ^ p) :=
   by
-  simp only [frobenius_def]
+  simp only [← frobenius_def]
   cases' x with n x
   dsimp' only
   suffices ∀ p' : ℕ, mk K p (n, x) ^ p' = mk K p (n, x ^ p') by
@@ -387,7 +393,7 @@ theorem frobenius_mk (x : ℕ × K) :
     rw [pow_succₓ, ih]
     symm
     apply r.sound
-    simp only [pow_succₓ, (frobenius _ _).iterate_map_mul]
+    simp only [← pow_succₓ, ← (frobenius _ _).iterate_map_mul]
 
 /-- Embedding of `K` into `perfect_closure K p` -/
 def of : K →+* PerfectClosure K p where
@@ -407,7 +413,7 @@ theorem eq_iff [CommRingₓ K] [IsDomain K] (p : ℕ) [Fact p.Prime] [CharP K p]
   (eq_iff' K p x y).trans
     ⟨fun ⟨z, H⟩ =>
       (frobenius_inj K p).iterate z <| by
-        simpa only [add_commₓ, iterate_add] using H,
+        simpa only [← add_commₓ, ← iterate_add] using H,
       fun H => ⟨0, H⟩⟩
 
 section Field
@@ -415,11 +421,11 @@ section Field
 variable [Field K] (p : ℕ) [Fact p.Prime] [CharP K p]
 
 instance : Inv (PerfectClosure K p) :=
-  ⟨Quot.lift (fun x : ℕ × K => Quot.mk (R K p) (x.1, x.2⁻¹)) fun H : R K p x y =>
+  ⟨Quot.lift (fun x : ℕ × K => Quot.mk (R K p) (x.1, x.2⁻¹)) fun x y H : R K p x y =>
       match x, y, H with
       | _, _, r.intro n x =>
         Quot.sound <| by
-          simp only [frobenius_def]
+          simp only [← frobenius_def]
           rw [← inv_pow]
           apply r.intro⟩
 
@@ -427,11 +433,11 @@ instance : Field (PerfectClosure K p) :=
   { (inferInstance : Inv (PerfectClosure K p)), (inferInstance : CommRingₓ (PerfectClosure K p)) with
     exists_pair_ne := ⟨0, 1, fun H => zero_ne_one ((eq_iff _ _ _ _).1 H)⟩,
     mul_inv_cancel := fun e =>
-      (induction_on e) fun H =>
+      (induction_on e) fun ⟨m, x⟩ H =>
         have := mt (eq_iff _ _ _ _).2 H
         (eq_iff _ _ _ _).2
           (by
-            simp only [(frobenius _ _).iterate_map_one, (frobenius K p).iterate_map_zero, iterate_zero_apply, ←
+            simp only [← (frobenius _ _).iterate_map_one, ← (frobenius K p).iterate_map_zero, ← iterate_zero_apply,
                 (frobenius _ p).iterate_map_mul] at this⊢ <;>
               rw [mul_inv_cancel this, (frobenius _ _).iterate_map_one]),
     inv_zero :=
@@ -446,11 +452,11 @@ instance : PerfectRing (PerfectClosure K p) p where
       | _, _, r.intro n x => Quot.sound (R.intro _ _)
   frobenius_pth_root' := fun e =>
     induction_on e fun ⟨n, x⟩ => by
-      simp only [lift_on_mk, frobenius_mk]
+      simp only [← lift_on_mk, ← frobenius_mk]
       exact (Quot.sound <| r.intro _ _).symm
   pth_root_frobenius' := fun e =>
     induction_on e fun ⟨n, x⟩ => by
-      simp only [lift_on_mk, frobenius_mk]
+      simp only [← lift_on_mk, ← frobenius_mk]
       exact (Quot.sound <| r.intro _ _).symm
 
 theorem eq_pth_root (x : ℕ × K) : mk K p x = (pthRoot (PerfectClosure K p) p^[x.1]) (of K p x.2) := by
@@ -471,20 +477,20 @@ def lift (L : Type v) [CommSemiringₓ L] [CharP L p] [PerfectRing L p] : (K →
     field to_fun =>
       refine' fun e => lift_on e (fun x => (pthRoot L p^[x.1]) (f x.2)) _
       rintro a b ⟨n⟩
-      simp only [f.map_frobenius, iterate_succ_apply, pth_root_frobenius]
+      simp only [← f.map_frobenius, ← iterate_succ_apply, ← pth_root_frobenius]
     field map_one' =>
       exact f.map_one
     field map_zero' =>
       exact f.map_zero
     field map_mul' =>
       rintro ⟨x⟩ ⟨y⟩
-      simp only [quot_mk_eq_mk, lift_on_mk, mk_mul_mk, RingHom.map_iterate_frobenius, RingHom.iterate_map_mul,
-        RingHom.map_mul]
+      simp only [← quot_mk_eq_mk, ← lift_on_mk, ← mk_mul_mk, ← RingHom.map_iterate_frobenius, ← RingHom.iterate_map_mul,
+        ← RingHom.map_mul]
       rw [iterate_add_apply, this _ _, add_commₓ, iterate_add_apply, this _ _]
     field map_add' =>
       rintro ⟨x⟩ ⟨y⟩
-      simp only [quot_mk_eq_mk, lift_on_mk, mk_add_mk, RingHom.map_iterate_frobenius, RingHom.iterate_map_add,
-        RingHom.map_add]
+      simp only [← quot_mk_eq_mk, ← lift_on_mk, ← mk_add_mk, ← RingHom.map_iterate_frobenius, ← RingHom.iterate_map_add,
+        ← RingHom.map_add]
       rw [iterate_add_apply, this _ _, add_commₓ x.1, iterate_add_apply, this _ _]
   field inv_fun =>
     exact fun f => f.comp (of K p)
@@ -495,7 +501,7 @@ def lift (L : Type v) [CommSemiringₓ L] [CharP L p] [PerfectRing L p] : (K →
   field right_inv =>
     intro f
     ext ⟨x⟩
-    simp only [RingHom.coe_mk, quot_mk_eq_mk, RingHom.comp_apply, lift_on_mk]
+    simp only [← RingHom.coe_mk, ← quot_mk_eq_mk, ← RingHom.comp_apply, ← lift_on_mk]
     rw [eq_pth_root, RingHom.map_iterate_pth_root]
 
 end Field

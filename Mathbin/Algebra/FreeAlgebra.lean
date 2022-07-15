@@ -93,13 +93,13 @@ def hasOne : One (Pre R X) :=
 /-- Scalar multiplication defined as multiplication by the image of elements from `R`.
 Note: Used for notation only.
 -/
-def hasScalar : HasScalar R (Pre R X) :=
+def hasSmul : HasSmul R (Pre R X) :=
   ⟨fun r m => mul (of_scalar r) m⟩
 
 end Pre
 
 attribute [local instance]
-  pre.has_coe_generator pre.has_coe_semiring pre.has_mul pre.has_add pre.has_zero pre.has_one pre.has_scalar
+  pre.has_coe_generator pre.has_coe_semiring pre.has_mul pre.has_add pre.has_zero pre.has_one pre.has_smul
 
 /-- Given a function from `X` to an `R`-algebra `A`, `lift_fun` provides a lift of `f` to a function
 from `pre R X` to `A`. This is mainly used in the construction of `free_algebra.lift`.
@@ -145,7 +145,7 @@ def FreeAlgebra :=
 namespace FreeAlgebra
 
 attribute [local instance]
-  pre.has_coe_generator pre.has_coe_semiring pre.has_mul pre.has_add pre.has_zero pre.has_one pre.has_scalar
+  pre.has_coe_generator pre.has_coe_semiring pre.has_mul pre.has_add pre.has_zero pre.has_one pre.has_smul
 
 instance : Semiringₓ (FreeAlgebra R X) where
   add := Quot.map₂ (· + ·) (fun _ _ _ => Rel.add_compat_right) fun _ _ _ => Rel.add_compat_left
@@ -190,8 +190,7 @@ instance : Semiringₓ (FreeAlgebra R X) where
 instance : Inhabited (FreeAlgebra R X) :=
   ⟨0⟩
 
-instance : HasScalar R (FreeAlgebra R X) where
-  smul := fun r => Quot.map ((· * ·) ↑r) fun a b => Rel.mul_compat_right
+instance : HasSmul R (FreeAlgebra R X) where smul := fun r => Quot.map ((· * ·) ↑r) fun a b => Rel.mul_compat_right
 
 instance : Algebra R (FreeAlgebra R X) where
   toFun := fun r => Quot.mk _ r
@@ -375,7 +374,7 @@ noncomputable def equivMonoidAlgebraFreeMonoid : FreeAlgebra R X ≃ₐ[R] Monoi
         
       · intro x y ih
         simp at ih
-        simp [ih]
+        simp [← ih]
         )
     (by
       ext
@@ -391,7 +390,7 @@ def algebraMapInv : FreeAlgebra R X →ₐ[R] R :=
   lift R (0 : X → R)
 
 theorem algebra_map_left_inverse : Function.LeftInverse algebraMapInv (algebraMap R <| FreeAlgebra R X) := fun x => by
-  simp [algebra_map_inv]
+  simp [← algebra_map_inv]
 
 @[simp]
 theorem algebra_map_inj (x y : R) : algebraMap R (FreeAlgebra R X) x = algebraMap R (FreeAlgebra R X) y ↔ x = y :=
@@ -405,7 +404,7 @@ theorem algebra_map_eq_zero_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 0 �
 theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 ↔ x = 1 :=
   map_eq_one_iff (algebraMap _ _) algebra_map_left_inverse.Injective
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- this proof is copied from the approach in `free_abelian_group.of_injective`
 theorem ι_injective [Nontrivial R] : Function.Injective (ι R : X → FreeAlgebra R X) := fun x y hoxy =>
   Classical.by_contradiction fun hxy : x ≠ y =>
@@ -463,10 +462,10 @@ theorem induction {C : FreeAlgebra R X → Prop} (h_grade0 : ∀ r, C (algebraMa
   -- the mapping through the subalgebra is the identity
   have of_id : AlgHom.id R (FreeAlgebra R X) = s.val.comp (lift R of) := by
     ext
-    simp [of, Subtype.coind]
+    simp [← of, ← Subtype.coind]
   -- finding a proof is finding an element of the subalgebra
   convert Subtype.prop (lift R of a)
-  simp [AlgHom.ext_iff] at of_id
+  simp [← AlgHom.ext_iff] at of_id
   exact of_id a
 
 end FreeAlgebra

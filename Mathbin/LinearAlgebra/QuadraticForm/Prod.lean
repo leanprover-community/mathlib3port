@@ -34,13 +34,13 @@ universe u v w
 
 variable {ι : Type _} {R : Type _} {M₁ M₂ N₁ N₂ : Type _} {Mᵢ Nᵢ : ι → Type _}
 
-variable [Ringₓ R]
+variable [Semiringₓ R]
 
-variable [AddCommGroupₓ M₁] [AddCommGroupₓ M₂] [AddCommGroupₓ N₁] [AddCommGroupₓ N₂]
+variable [AddCommMonoidₓ M₁] [AddCommMonoidₓ M₂] [AddCommMonoidₓ N₁] [AddCommMonoidₓ N₂]
 
 variable [Module R M₁] [Module R M₂] [Module R N₁] [Module R N₂]
 
-variable [∀ i, AddCommGroupₓ (Mᵢ i)] [∀ i, AddCommGroupₓ (Nᵢ i)]
+variable [∀ i, AddCommMonoidₓ (Mᵢ i)] [∀ i, AddCommMonoidₓ (Nᵢ i)]
 
 variable [∀ i, Module R (Mᵢ i)] [∀ i, Module R (Nᵢ i)]
 
@@ -69,7 +69,7 @@ theorem Equivalent.prod {Q₁ : QuadraticForm R M₁} {Q₂ : QuadraticForm R M�
 /-- If a product is anisotropic then its components must be. The converse is not true. -/
 theorem anisotropic_of_prod {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q₁ : QuadraticForm R M₁}
     {Q₂ : QuadraticForm R M₂} (h : (Q₁.Prod Q₂).Anisotropic) : Q₁.Anisotropic ∧ Q₂.Anisotropic := by
-  simp_rw [anisotropic, prod_to_fun, Prod.forall, Prod.mk_eq_zero]  at h
+  simp_rw [anisotropic, prod_to_fun, Prod.forall, Prod.mk_eq_zero] at h
   constructor
   · intro x hx
     refine' (h x 0 _).1
@@ -87,10 +87,10 @@ theorem nonneg_prod_iff {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q�
   · intro h
     constructor
     · intro x
-      simpa only [add_zeroₓ, map_zero] using h x 0
+      simpa only [← add_zeroₓ, ← map_zero] using h x 0
       
     · intro x
-      simpa only [zero_addₓ, map_zero] using h 0 x
+      simpa only [← zero_addₓ, ← map_zero] using h 0 x
       
     
   · rintro ⟨h₁, h₂⟩ x₁ x₂
@@ -132,19 +132,19 @@ from a pair of isometries between the left and right parts. -/
 def Isometry.pi [Fintype ι] {Q : ∀ i, QuadraticForm R (Mᵢ i)} {Q' : ∀ i, QuadraticForm R (Nᵢ i)}
     (e : ∀ i, (Q i).Isometry (Q' i)) : (pi Q).Isometry (pi Q') where
   map_app' := fun x => by
-    simp only [pi_apply, LinearEquiv.Pi_congr_right_apply, LinearEquiv.to_fun_eq_coe, isometry.coe_to_linear_equiv,
-      isometry.map_app]
+    simp only [← pi_apply, ← LinearEquiv.Pi_congr_right_apply, ← LinearEquiv.to_fun_eq_coe, ←
+      isometry.coe_to_linear_equiv, ← isometry.map_app]
   toLinearEquiv := LinearEquiv.piCongrRight fun i => (e i : Mᵢ i ≃ₗ[R] Nᵢ i)
 
 theorem Equivalent.pi [Fintype ι] {Q : ∀ i, QuadraticForm R (Mᵢ i)} {Q' : ∀ i, QuadraticForm R (Nᵢ i)}
     (e : ∀ i, (Q i).Equivalent (Q' i)) : (pi Q).Equivalent (pi Q') :=
   ⟨Isometry.pi fun i => Classical.choice (e i)⟩
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If a family is anisotropic then its components must be. The converse is not true. -/
 theorem anisotropic_of_pi [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (Mᵢ i)] {Q : ∀ i, QuadraticForm R (Mᵢ i)}
     (h : (pi Q).Anisotropic) : ∀ i, (Q i).Anisotropic := by
-  simp_rw [anisotropic, pi_apply, Function.funext_iffₓ, Pi.zero_apply]  at h
+  simp_rw [anisotropic, pi_apply, Function.funext_iffₓ, Pi.zero_apply] at h
   intro i x hx
   classical
   have := h (Pi.single i x) _ i
@@ -160,7 +160,7 @@ theorem anisotropic_of_pi [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (M�
   · rw [Pi.single_eq_of_ne hji, map_zero]
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem nonneg_pi_iff [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (Mᵢ i)] {Q : ∀ i, QuadraticForm R (Mᵢ i)} :
     (∀ x, 0 ≤ pi Q x) ↔ ∀ i x, 0 ≤ Q i x := by
   simp_rw [pi, sum_apply, comp_apply, LinearMap.proj_apply]

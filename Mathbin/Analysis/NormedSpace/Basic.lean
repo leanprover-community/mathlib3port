@@ -3,7 +3,7 @@ Copyright (c) 2018 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 -/
-import Mathbin.Analysis.Normed.NormedField
+import Mathbin.Analysis.Normed.Field.Basic
 import Mathbin.Analysis.Normed.Group.InfiniteSum
 import Mathbin.Data.Matrix.Basic
 import Mathbin.Topology.Sequences
@@ -20,7 +20,7 @@ variable {α : Type _} {β : Type _} {γ : Type _} {ι : Type _}
 
 noncomputable section
 
-open Filter Metric
+open Filter Metric Function Set
 
 open TopologicalSpace BigOperators Nnreal Ennreal uniformity Pointwise
 
@@ -28,7 +28,7 @@ section SemiNormedGroup
 
 section Prio
 
--- ././Mathport/Syntax/Translate/Basic.lean:209:40: warning: unsupported option extends_priority
+-- ./././Mathport/Syntax/Translate/Basic.lean:293:40: warning: unsupported option extends_priority
 set_option extends_priority 920
 
 /-- A normed space over a normed field is a vector space endowed with a norm which satisfies the
@@ -50,16 +50,15 @@ variable [NormedField α] [SemiNormedGroup β]
 -- see Note [lower instance priority]
 instance (priority := 100) NormedSpace.has_bounded_smul [NormedSpace α β] : HasBoundedSmul α β where
   dist_smul_pair' := fun x y₁ y₂ => by
-    simpa [dist_eq_norm, smul_sub] using NormedSpace.norm_smul_le x (y₁ - y₂)
+    simpa [← dist_eq_norm, ← smul_sub] using NormedSpace.norm_smul_le x (y₁ - y₂)
   dist_pair_smul' := fun x₁ x₂ y => by
-    simpa [dist_eq_norm, sub_smul] using NormedSpace.norm_smul_le (x₁ - x₂) y
+    simpa [← dist_eq_norm, ← sub_smul] using NormedSpace.norm_smul_le (x₁ - x₂) y
 
-instance NormedField.toNormedSpace : NormedSpace α α where
-  norm_smul_le := fun a b => le_of_eqₓ (norm_mul a b)
+instance NormedField.toNormedSpace : NormedSpace α α where norm_smul_le := fun a b => le_of_eqₓ (norm_mul a b)
 
 theorem norm_smul [NormedSpace α β] (s : α) (x : β) : ∥s • x∥ = ∥s∥ * ∥x∥ := by
   by_cases' h : s = 0
-  · simp [h]
+  · simp [← h]
     
   · refine' le_antisymmₓ (NormedSpace.norm_smul_le s x) _
     calc ∥s∥ * ∥x∥ = ∥s∥ * ∥s⁻¹ • s • x∥ := by
@@ -73,10 +72,10 @@ theorem abs_norm_eq_norm (z : β) : abs ∥z∥ = ∥z∥ :=
   (abs_eq (norm_nonneg z)).mpr (Or.inl rfl)
 
 theorem inv_norm_smul_mem_closed_unit_ball [NormedSpace ℝ β] (x : β) : ∥x∥⁻¹ • x ∈ ClosedBall (0 : β) 1 := by
-  simp only [mem_closed_ball_zero_iff, norm_smul, norm_inv, norm_norm, ← div_eq_inv_mul, div_self_le_one]
+  simp only [← mem_closed_ball_zero_iff, ← norm_smul, ← norm_inv, ← norm_norm, div_eq_inv_mul, ← div_self_le_one]
 
 theorem dist_smul [NormedSpace α β] (s : α) (x y : β) : dist (s • x) (s • y) = ∥s∥ * dist x y := by
-  simp only [dist_eq_norm, (norm_smul _ _).symm, smul_sub]
+  simp only [← dist_eq_norm, ← (norm_smul _ _).symm, ← smul_sub]
 
 theorem nnnorm_smul [NormedSpace α β] (s : α) (x : β) : ∥s • x∥₊ = ∥s∥₊ * ∥x∥₊ :=
   Nnreal.eq <| norm_smul s x
@@ -111,13 +110,13 @@ theorem Filter.IsBoundedUnder.smul_tendsto_zero {f : ι → α} {g : ι → E} {
   hg.op_zero_is_bounded_under_le hf (flip (· • ·)) fun x y => ((norm_smul y x).trans (mul_comm _ _)).le
 
 theorem closure_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) : Closure (Ball x r) = ClosedBall x r := by
-  refine' Set.Subset.antisymm closure_ball_subset_closed_ball fun y hy => _
-  have : ContinuousWithinAt (fun c : ℝ => c • (y - x) + x) (Set.Ico 0 1) 1 :=
+  refine' subset.antisymm closure_ball_subset_closed_ball fun y hy => _
+  have : ContinuousWithinAt (fun c : ℝ => c • (y - x) + x) (Ico 0 1) 1 :=
     ((continuous_id.smul continuous_const).add continuous_const).ContinuousWithinAt
   convert this.mem_closure _ _
   · rw [one_smul, sub_add_cancel]
     
-  · simp [closure_Ico (@zero_ne_one ℝ _ _), zero_le_one]
+  · simp [← closure_Ico (@zero_ne_one ℝ _ _), ← zero_le_one]
     
   · rintro c ⟨hc0, hc1⟩
     rw [mem_ball, dist_eq_norm, add_sub_cancel, norm_smul, Real.norm_eq_abs, abs_of_nonneg hc0, mul_comm, ← mul_oneₓ r]
@@ -136,23 +135,23 @@ theorem interior_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0
   cases' hr.lt_or_lt with hr hr
   · rw [closed_ball_eq_empty.2 hr, ball_eq_empty.2 hr.le, interior_empty]
     
-  refine' Set.Subset.antisymm _ ball_subset_interior_closed_ball
+  refine' subset.antisymm _ ball_subset_interior_closed_ball
   intro y hy
   rcases(mem_closed_ball.1 <| interior_subset hy).lt_or_eq with (hr | rfl)
   · exact hr
     
   set f : ℝ → E := fun c : ℝ => c • (y - x) + x
-  suffices f ⁻¹' closed_ball x (dist y x) ⊆ Set.Icc (-1) 1 by
+  suffices f ⁻¹' closed_ball x (dist y x) ⊆ Icc (-1) 1 by
     have hfc : Continuous f := (continuous_id.smul continuous_const).add continuous_const
     have hf1 : (1 : ℝ) ∈ f ⁻¹' Interior (closed_ball x <| dist y x) := by
-      simpa [f]
-    have h1 : (1 : ℝ) ∈ Interior (Set.Icc (-1 : ℝ) 1) :=
+      simpa [← f]
+    have h1 : (1 : ℝ) ∈ Interior (Icc (-1 : ℝ) 1) :=
       interior_mono this (preimage_interior_subset_interior_preimage hfc hf1)
     contrapose h1
     simp
   intro c hc
-  rw [Set.mem_Icc, ← abs_le, ← Real.norm_eq_abs, ← mul_le_mul_right hr]
-  simpa [f, dist_eq_norm, norm_smul] using hc
+  rw [mem_Icc, ← abs_le, ← Real.norm_eq_abs, ← mul_le_mul_right hr]
+  simpa [← f, ← dist_eq_norm, ← norm_smul] using hc
 
 theorem frontier_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) : Frontier (ClosedBall x r) = Sphere x r :=
   by
@@ -173,12 +172,12 @@ def homeomorphUnitBall {E : Type _} [SemiNormedGroup E] [NormedSpace ℝ E] : E 
   invFun := fun x => (1 - ∥(x : E)∥)⁻¹ • (x : E)
   left_inv := fun x => by
     have : 0 < 1 + ∥x∥ := (norm_nonneg x).trans_lt (lt_one_add _)
-    field_simp [this.ne', abs_of_pos this, norm_smul, smul_smul, Real.norm_eq_abs, abs_div]
+    field_simp [← this.ne', ← abs_of_pos this, ← norm_smul, ← smul_smul, ← Real.norm_eq_abs, ← abs_div]
   right_inv := fun x =>
     Subtype.ext
       (by
         have : 0 < 1 - ∥(x : E)∥ := sub_pos.2 (mem_ball_zero_iff.1 x.2)
-        field_simp [norm_smul, smul_smul, Real.norm_eq_abs, abs_div, abs_of_pos this, this.ne'])
+        field_simp [← norm_smul, ← smul_smul, ← Real.norm_eq_abs, ← abs_div, ← abs_of_pos this, ← this.ne'])
   continuous_to_fun :=
     continuous_subtype_mk _ <|
       ((continuous_const.add continuous_norm).inv₀ fun x => ((norm_nonneg x).trans_lt (lt_one_add _)).ne').smul
@@ -187,20 +186,6 @@ def homeomorphUnitBall {E : Type _} [SemiNormedGroup E] [NormedSpace ℝ E] : E 
     Continuous.smul
       ((continuous_const.sub continuous_subtype_coe.norm).inv₀ fun x => (sub_pos.2 <| mem_ball_zero_iff.1 x.2).ne')
       continuous_subtype_coe
-
-variable (α)
-
-theorem ne_neg_of_mem_sphere [CharZero α] {r : ℝ} (hr : r ≠ 0) (x : Sphere (0 : E) r) : x ≠ -x := fun h =>
-  ne_zero_of_mem_sphere hr x
-    ((self_eq_neg α _).mp
-      (by
-        conv_lhs => rw [h]
-        simp ))
-
-theorem ne_neg_of_mem_unit_sphere [CharZero α] (x : Sphere (0 : E) 1) : x ≠ -x :=
-  ne_neg_of_mem_sphere α one_ne_zero x
-
-variable {α}
 
 open NormedField
 
@@ -212,22 +197,24 @@ instance Prod.normedSpace : NormedSpace α (E × F) :=
   { Prod.normedGroup, Prod.module with
     norm_smul_le := fun s x =>
       le_of_eqₓ <| by
-        simp [Prod.norm_def, norm_smul, mul_max_of_nonneg] }
+        simp [← Prod.norm_def, ← norm_smul, ← mul_max_of_nonneg] }
 
 /-- The product of finitely many normed spaces is a normed space, with the sup norm. -/
 instance Pi.normedSpace {E : ι → Type _} [Fintype ι] [∀ i, SemiNormedGroup (E i)] [∀ i, NormedSpace α (E i)] :
-    NormedSpace α (∀ i, E i) where
-  norm_smul_le := fun a f =>
+    NormedSpace α
+      (∀ i,
+        E
+          i) where norm_smul_le := fun a f =>
     le_of_eqₓ <|
       show
         (↑(Finset.sup Finset.univ fun b : ι => ∥a • f b∥₊) : ℝ) = ∥a∥₊ * ↑(Finset.sup Finset.univ fun b : ι => ∥f b∥₊)
         by
-        simp only [(Nnreal.coe_mul _ _).symm, Nnreal.mul_finset_sup, nnnorm_smul]
+        simp only [← (Nnreal.coe_mul _ _).symm, ← Nnreal.mul_finset_sup, ← nnnorm_smul]
 
 /-- A subspace of a normed space is also a normed space, with the restriction of the norm. -/
-instance Submodule.normedSpace {𝕜 R : Type _} [HasScalar 𝕜 R] [NormedField 𝕜] [Ringₓ R] {E : Type _} [SemiNormedGroup E]
-    [NormedSpace 𝕜 E] [Module R E] [IsScalarTower 𝕜 R E] (s : Submodule R E) : NormedSpace 𝕜 s where
-  norm_smul_le := fun c x => le_of_eqₓ <| norm_smul c (x : E)
+instance Submodule.normedSpace {𝕜 R : Type _} [HasSmul 𝕜 R] [NormedField 𝕜] [Ringₓ R] {E : Type _} [SemiNormedGroup E]
+    [NormedSpace 𝕜 E] [Module R E] [IsScalarTower 𝕜 R E] (s : Submodule R E) :
+    NormedSpace 𝕜 s where norm_smul_le := fun c x => le_of_eqₓ <| norm_smul c (x : E)
 
 /-- If there is a scalar `c` with `∥c∥>1`, then any element with nonzero norm can be
 moved by scalar multiplication to any shell of width `∥c∥`. Also recap information on the norm of
@@ -289,6 +276,29 @@ gives some more context. -/
 instance (priority := 100) NormedSpace.toModule' : Module α F :=
   NormedSpace.toModule
 
+section Surj
+
+variable (E) [NormedSpace ℝ E] [Nontrivial E]
+
+theorem exists_norm_eq {c : ℝ} (hc : 0 ≤ c) : ∃ x : E, ∥x∥ = c := by
+  rcases exists_ne (0 : E) with ⟨x, hx⟩
+  rw [← norm_ne_zero_iff] at hx
+  use c • ∥x∥⁻¹ • x
+  simp [← norm_smul, ← Real.norm_of_nonneg hc, ← hx]
+
+@[simp]
+theorem range_norm : Range (norm : E → ℝ) = Ici 0 :=
+  Subset.antisymm (range_subset_iff.2 norm_nonneg) fun _ => exists_norm_eq E
+
+theorem nnnorm_surjective : Surjective (nnnorm : E → ℝ≥0 ) := fun c =>
+  (exists_norm_eq E c.coe_nonneg).imp fun x h => Nnreal.eq h
+
+@[simp]
+theorem range_nnnorm : Range (nnnorm : E → ℝ≥0 ) = univ :=
+  (nnnorm_surjective E).range_eq
+
+end Surj
+
 theorem interior_closed_ball' [NormedSpace ℝ E] [Nontrivial E] (x : E) (r : ℝ) : Interior (ClosedBall x r) = Ball x r :=
   by
   rcases eq_or_ne r 0 with (rfl | hr)
@@ -327,7 +337,7 @@ theorem NormedSpace.exists_lt_norm (c : ℝ) : ∃ x : E, c < ∥x∥ := by
   rwa [norm_smul, ← div_lt_iff]
   rwa [norm_pos_iff]
 
-protected theorem NormedSpace.unbounded_univ : ¬Bounded (Set.Univ : Set E) := fun h =>
+protected theorem NormedSpace.unbounded_univ : ¬Bounded (Univ : Set E) := fun h =>
   let ⟨R, hR⟩ := bounded_iff_forall_norm_le.1 h
   let ⟨x, hx⟩ := NormedSpace.exists_lt_norm 𝕜 E R
   hx.not_le (hR x trivialₓ)
@@ -364,8 +374,8 @@ class NormedAlgebra (𝕜 : Type _) (𝕜' : Type _) [NormedField 𝕜] [SemiNor
 
 variable {𝕜 : Type _} (𝕜' : Type _) [NormedField 𝕜] [SemiNormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜']
 
-instance (priority := 100) NormedAlgebra.toNormedSpace : NormedSpace 𝕜 𝕜' where
-  norm_smul_le := NormedAlgebra.norm_smul_le
+instance (priority := 100) NormedAlgebra.toNormedSpace :
+    NormedSpace 𝕜 𝕜' where norm_smul_le := NormedAlgebra.norm_smul_le
 
 /-- While this may appear identical to `normed_algebra.to_normed_space`, it contains an implicit
 argument involving `normed_ring.to_semi_normed_ring` that typeclass inference has trouble inferring.
@@ -432,13 +442,13 @@ normed algebra over the rationals.
 
 Phrased another way, if `𝕜` is a normed algebra over the reals, then `algebra_rat` respects that
 norm. -/
-instance normedAlgebraRat {𝕜} [NormedDivisionRing 𝕜] [CharZero 𝕜] [NormedAlgebra ℝ 𝕜] : NormedAlgebra ℚ 𝕜 where
-  norm_smul_le := fun q x => by
+instance normedAlgebraRat {𝕜} [NormedDivisionRing 𝕜] [CharZero 𝕜] [NormedAlgebra ℝ 𝕜] :
+    NormedAlgebra ℚ 𝕜 where norm_smul_le := fun q x => by
     rw [← smul_one_smul ℝ q x, Rat.smul_one_eq_coe, norm_smul, Rat.norm_cast_real]
 
-instance PUnit.normedAlgebra : NormedAlgebra 𝕜 PUnit where
-  norm_smul_le := fun q x => by
-    simp only [PUnit.norm_eq_zero, mul_zero]
+instance PUnit.normedAlgebra :
+    NormedAlgebra 𝕜 PUnit where norm_smul_le := fun q x => by
+    simp only [← PUnit.norm_eq_zero, ← mul_zero]
 
 instance : NormedAlgebra 𝕜 (ULift 𝕜') :=
   { ULift.normedSpace with }

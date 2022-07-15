@@ -32,7 +32,7 @@ open Interval
 variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
 -- mathport name: «expr⨍ in .. , »
-notation3 "⨍ " (...) " in " a ".." b ", " r:(scoped f => average Measure.restrict volume Ι a b f) => r
+notation3"⨍ "(...)" in "a".."b", "r:(scoped f => average Measure.restrict volume Ι a b f) => r
 
 theorem interval_average_symm (f : ℝ → E) (a b : ℝ) : (⨍ x in a..b, f x) = ⨍ x in b..a, f x := by
   rw [set_average_eq, set_average_eq, interval_oc_swap]

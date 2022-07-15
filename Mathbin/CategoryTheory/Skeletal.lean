@@ -77,8 +77,7 @@ instance [Inhabited C] : Inhabited (Skeleton C) :=
 noncomputable def fromSkeleton : Skeleton C ⥤ C :=
   inducedFunctor _ deriving Full, Faithful
 
-instance : EssSurj (fromSkeleton C) where
-  mem_ess_image := fun X => ⟨Quotientₓ.mk X, Quotientₓ.mk_out X⟩
+instance : EssSurj (fromSkeleton C) where mem_ess_image := fun X => ⟨Quotientₓ.mk X, Quotientₓ.mk_out X⟩
 
 noncomputable instance : IsEquivalence (fromSkeleton C) :=
   Equivalence.ofFullyFaithfullyEssSurj (fromSkeleton C)
@@ -163,8 +162,8 @@ theorem comp_to_thin_skeleton (F : C ⥤ D) : F ⋙ toThinSkeleton D = toThinSke
   rfl
 
 /-- Given a natural transformation `F₁ ⟶ F₂`, induce a natural transformation `map F₁ ⟶ map F₂`.-/
-def mapNatTrans {F₁ F₂ : C ⥤ D} (k : F₁ ⟶ F₂) : map F₁ ⟶ map F₂ where
-  app := fun X => Quotientₓ.recOnSubsingleton X fun x => ⟨⟨⟨k.app x⟩⟩⟩
+def mapNatTrans {F₁ F₂ : C ⥤ D} (k : F₁ ⟶ F₂) :
+    map F₁ ⟶ map F₂ where app := fun X => Quotientₓ.recOnSubsingleton X fun x => ⟨⟨⟨k.app x⟩⟩⟩
 
 /-- A functor `C ⥤ D ⥤ E` computably lowers to a functor
 `thin_skeleton C ⥤ thin_skeleton D ⥤ thin_skeleton E` -/
@@ -173,8 +172,8 @@ def mapNatTrans {F₁ F₂ : C ⥤ D} (k : F₁ ⟶ F₂) : map F₁ ⟶ map F�
 def map₂ (F : C ⥤ D ⥤ E) : ThinSkeleton C ⥤ ThinSkeleton D ⥤ ThinSkeleton E where
   obj := fun x =>
     { obj := fun y =>
-        Quotientₓ.map₂ (fun X Y => (F.obj X).obj Y) (fun Y₁ Y₂ ⟨hY⟩ => ⟨(F.obj X₁).mapIso hY ≪≫ (F.mapIso hX).app Y₂⟩) x
-          y,
+        Quotientₓ.map₂ (fun X Y => (F.obj X).obj Y)
+          (fun X₁ X₂ ⟨hX⟩ Y₁ Y₂ ⟨hY⟩ => ⟨(F.obj X₁).mapIso hY ≪≫ (F.mapIso hX).app Y₂⟩) x y,
       map := fun y₁ y₂ =>
         (Quotientₓ.recOnSubsingleton x) fun X =>
           (Quotientₓ.recOnSubsingleton₂ y₁ y₂) fun Y₁ Y₂ hY => homOfLe (hY.le.elim fun g => ⟨(F.obj X).map g⟩) }
@@ -188,8 +187,7 @@ section
 
 variable [∀ X Y : C, Subsingleton (X ⟶ Y)]
 
-instance to_thin_skeleton_faithful : Faithful (toThinSkeleton C) :=
-  {  }
+instance to_thin_skeleton_faithful : Faithful (toThinSkeleton C) where
 
 /-- Use `quotient.out` to create a functor out of the thin skeleton. -/
 @[simps]

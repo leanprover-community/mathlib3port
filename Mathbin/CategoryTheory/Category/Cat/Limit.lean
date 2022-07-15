@@ -49,11 +49,11 @@ def homDiagram {F : J ⥤ Cat.{v, v}} (X Y : limit (F ⋙ Cat.objects.{v, v})) :
   map_id' := fun X => by
     ext f
     dsimp'
-    simp [functor.congr_hom (F.map_id X) f]
+    simp [← functor.congr_hom (F.map_id X) f]
   map_comp' := fun X Y Z f g => by
     ext h
     dsimp'
-    simp [functor.congr_hom (F.map_comp f g) h, eq_to_hom_map]
+    simp [← functor.congr_hom (F.map_comp f g) h, ← eq_to_hom_map]
     rfl
 
 @[simps]
@@ -71,8 +71,7 @@ instance (F : J ⥤ Cat.{v, v}) : Category (limit (F ⋙ Cat.objects)) where
 
 /-- Auxiliary definition: the limit category. -/
 @[simps]
-def limitConeX (F : J ⥤ Cat.{v, v}) : Cat.{v, v} where
-  α := limit (F ⋙ Cat.objects)
+def limitConeX (F : J ⥤ Cat.{v, v}) : Cat.{v, v} where α := limit (F ⋙ Cat.objects)
 
 /-- Auxiliary definition: the cone over the limit category. -/
 @[simps]
@@ -100,7 +99,7 @@ def limitConeLift (F : J ⥤ Cat.{v, v}) (s : Cone F) : s.x ⟶ limitConeX F whe
       
     · intro j j' h
       dsimp'
-      simp only [category.assoc, functor.map_comp, eq_to_hom_map, eq_to_hom_trans, eq_to_hom_trans_assoc]
+      simp only [← category.assoc, ← functor.map_comp, ← eq_to_hom_map, ← eq_to_hom_trans, ← eq_to_hom_trans_assoc]
       rw [← functor.comp_map]
       have := (s.π.naturality h).symm
       conv at this => congr skip dsimp simp
@@ -129,24 +128,28 @@ def limitConeIsLimit (F : J ⥤ Cat.{v, v}) : IsLimit (limitCone F) where
     · intro X
       ext
       dsimp'
-      simp only [types.limit.lift_π_apply', ← w j]
+      simp only [← types.limit.lift_π_apply', w j]
       rfl
       
     · intro X Y f
       dsimp'
-      simp [fun j => functor.congr_hom (w j).symm f]
+      simp [← fun j => functor.congr_hom (w j).symm f]
       congr
       
 
 end HasLimits
 
 /-- The category of small categories has all small limits. -/
-instance : HasLimits Cat.{v, v} where
-  HasLimitsOfShape := fun J _ =>
+instance :
+    HasLimits
+      Cat.{v,
+        v} where HasLimitsOfShape := fun J _ =>
     { HasLimit := fun F => ⟨⟨⟨has_limits.limit_cone F, has_limits.limit_cone_is_limit F⟩⟩⟩ }
 
-instance : PreservesLimits Cat.objects.{v, v} where
-  PreservesLimitsOfShape := fun J _ =>
+instance :
+    PreservesLimits
+      Cat.objects.{v,
+        v} where PreservesLimitsOfShape := fun J _ =>
     { PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (has_limits.limit_cone_is_limit F)
           (limits.is_limit.of_iso_limit (limit.is_limit (F ⋙ Cat.objects))

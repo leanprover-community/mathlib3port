@@ -102,7 +102,7 @@ theorem repr_gen_pow_is_integral [IsDomain S] (hmin : minpoly S B.gen = (minpoly
     rw [← @aeval_X_pow R _ _ _ _ B.gen, ← mod_by_monic_add_div (X ^ n) (minpoly.monic hB)]
     simp
   by_cases' hQ : Q = 0
-  · simp [this, hQ, is_integral_zero]
+  · simp [← this, ← hQ, ← is_integral_zero]
     
   have hlt : Q.nat_degree < B.dim := by
     rw [← B.nat_degree_minpoly, hmin, (minpoly.monic hB).nat_degree_map, nat_degree_lt_nat_degree_iff hQ]
@@ -110,18 +110,18 @@ theorem repr_gen_pow_is_integral [IsDomain S] (hmin : minpoly S B.gen = (minpoly
     exact degree_mod_by_monic_lt _ (minpoly.monic hB)
     infer_instance
   rw [this, aeval_eq_sum_range' hlt]
-  simp only [LinearEquiv.map_sum, LinearEquiv.map_smulₛₗ, RingHom.id_apply, Finset.sum_apply']
+  simp only [← LinearEquiv.map_sum, ← LinearEquiv.map_smulₛₗ, ← RingHom.id_apply, ← Finset.sum_apply']
   refine' IsIntegral.sum _ fun j hj => _
   replace hj := Finset.mem_range.1 hj
   rw [← Finₓ.coe_mk hj, ← B.basis_eq_pow, Algebra.smul_def, IsScalarTower.algebra_map_apply R S A, ← Algebra.smul_def,
     LinearEquiv.map_smul]
-  simp only [algebra_map_smul, Finsupp.coe_smul, Pi.smul_apply, B.basis.repr_self_apply]
+  simp only [← algebra_map_smul, ← Finsupp.coe_smul, ← Pi.smul_apply, ← B.basis.repr_self_apply]
   by_cases' hij : (⟨j, hj⟩ : Finₓ _) = i
-  · simp only [hij, eq_self_iff_true, if_true]
+  · simp only [← hij, ← eq_self_iff_true, ← if_true]
     rw [Algebra.smul_def, mul_oneₓ]
     exact is_integral_algebra_map
     
-  · simp [hij, is_integral_zero]
+  · simp [← hij, ← is_integral_zero]
     
 
 variable {B}
@@ -136,10 +136,10 @@ theorem repr_mul_is_integral [IsDomain S] {x y : A} (hx : ∀ i, IsIntegral R (B
   intro i
   rw [← B.basis.sum_repr x, ← B.basis.sum_repr y, Finset.sum_mul_sum, LinearEquiv.map_sum, Finset.sum_apply']
   refine' IsIntegral.sum _ fun I hI => _
-  simp only [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, LinearEquiv.map_smulₛₗ, RingHom.id_apply, Finsupp.coe_smul,
-    Pi.smul_apply, id.smul_eq_mul]
+  simp only [← Algebra.smul_mul_assoc, ← Algebra.mul_smul_comm, ← LinearEquiv.map_smulₛₗ, ← RingHom.id_apply, ←
+    Finsupp.coe_smul, ← Pi.smul_apply, ← id.smul_eq_mul]
   refine' is_integral_mul (hy _) (is_integral_mul (hx _) _)
-  simp only [coe_basis, ← pow_addₓ]
+  simp only [← coe_basis, pow_addₓ]
   refine' repr_gen_pow_is_integral hB hmin _ _
 
 /-- Let `B : power_basis S A` be such that `is_integral R B.gen`, and let `x : A` be and element
@@ -149,7 +149,7 @@ if `R` is a GCD domain and `S` is its fraction ring. -/
 theorem repr_pow_is_integral [IsDomain S] {x : A} (hx : ∀ i, IsIntegral R (B.Basis.repr x i))
     (hmin : minpoly S B.gen = (minpoly R B.gen).map (algebraMap R S)) (n : ℕ) :
     ∀ i, IsIntegral R (B.Basis.repr (x ^ n) i) := by
-  nontriviality A using Subsingleton.elimₓ (x ^ n) 0, is_integral_zero
+  nontriviality A using ← Subsingleton.elimₓ (x ^ n) 0, ← is_integral_zero
   revert hx
   refine' Nat.case_strong_induction_onₓ n _ fun n hn => _
   · intro hx i

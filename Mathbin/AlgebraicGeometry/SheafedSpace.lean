@@ -31,29 +31,28 @@ open CategoryTheory.Limits
 
 open CategoryTheory.Category CategoryTheory.Functor
 
-variable (C : Type u) [Category.{v} C] [Limits.HasProducts C]
+variable (C : Type u) [Category.{v} C] [HasProducts.{v} C]
 
 attribute [local tidy] tactic.op_induction'
 
 namespace AlgebraicGeometry
 
 /-- A `SheafedSpace C` is a topological space equipped with a sheaf of `C`s. -/
-structure SheafedSpace extends PresheafedSpace C where
+structure SheafedSpace extends PresheafedSpace.{v} C where
   IsSheaf : presheaf.IsSheaf
 
 variable {C}
 
 namespace SheafedSpace
 
-instance coeCarrier : Coe (SheafedSpace C) Top where
-  coe := fun X => X.Carrier
+instance coeCarrier : Coe (SheafedSpace C) Top where coe := fun X => X.Carrier
 
 /-- Extract the `sheaf C (X : Top)` from a `SheafedSpace C`. -/
 def sheaf (X : SheafedSpace C) : Sheaf C (X : Top.{v}) :=
   ⟨X.Presheaf, X.IsSheaf⟩
 
 @[simp]
-theorem as_coe (X : SheafedSpace C) : X.Carrier = (X : Top.{v}) :=
+theorem as_coe (X : SheafedSpace.{v} C) : X.Carrier = (X : Top.{v}) :=
   rfl
 
 @[simp]
@@ -63,22 +62,22 @@ theorem mk_coe carrier presheaf h : (({ Carrier, Presheaf, IsSheaf := h } : Shea
 instance (X : SheafedSpace.{v} C) : TopologicalSpace X :=
   X.Carrier.str
 
-/-- The trivial `punit` valued sheaf on any topological space. -/
-def punit (X : Top) : SheafedSpace (discrete PUnit) :=
-  { @PresheafedSpace.const (discrete PUnit) _ X ⟨⟨⟩⟩ with IsSheaf := Presheaf.is_sheaf_punit _ }
+/-- The trivial `unit` valued sheaf on any topological space. -/
+def unit (X : Top) : SheafedSpace (discrete Unit) :=
+  { @PresheafedSpace.const (discrete Unit) _ X ⟨⟨⟩⟩ with IsSheaf := Presheaf.is_sheaf_unit _ }
 
-instance : Inhabited (SheafedSpace (discrete PUnit)) :=
-  ⟨punit (Top.of Pempty)⟩
+instance : Inhabited (SheafedSpace (discrete Unit)) :=
+  ⟨unit (Top.of Pempty)⟩
 
 instance : Category (SheafedSpace C) :=
-  show Category (InducedCategory (PresheafedSpace C) SheafedSpace.toPresheafedSpace) by
+  show Category (InducedCategory (PresheafedSpace.{v} C) SheafedSpace.toPresheafedSpace) by
     infer_instance
 
 /-- Forgetting the sheaf condition is a functor from `SheafedSpace C` to `PresheafedSpace C`. -/
-def forgetToPresheafedSpace : SheafedSpace C ⥤ PresheafedSpace C :=
+def forgetToPresheafedSpace : SheafedSpace.{v} C ⥤ PresheafedSpace.{v} C :=
   inducedFunctor _ deriving Full, Faithful
 
-instance is_PresheafedSpace_iso {X Y : SheafedSpace C} (f : X ⟶ Y) [IsIso f] : @IsIso (PresheafedSpace C) _ _ _ f :=
+instance is_PresheafedSpace_iso {X Y : SheafedSpace.{v} C} (f : X ⟶ Y) [IsIso f] : @IsIso (PresheafedSpace C) _ _ _ f :=
   SheafedSpace.forgetToPresheafedSpace.map_is_iso f
 
 variable {C}
@@ -105,7 +104,7 @@ theorem id_c_app (X : SheafedSpace C) U :
   by
   induction U using Opposite.rec
   cases U
-  simp only [id_c]
+  simp only [← id_c]
   dsimp'
   simp
 

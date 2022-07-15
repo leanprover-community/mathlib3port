@@ -97,8 +97,10 @@ def whiskeringRight : (D ⥤ E) ⥤ (C ⥤ D) ⥤ C ⥤ E where
 
 variable {C} {D} {E}
 
-instance faithful_whiskering_right_obj {F : D ⥤ E} [Faithful F] : Faithful ((whiskeringRight C D E).obj F) where
-  map_injective' := fun G H α β hαβ =>
+instance faithful_whiskering_right_obj {F : D ⥤ E} [Faithful F] :
+    Faithful
+      ((whiskeringRight C D E).obj
+        F) where map_injective' := fun G H α β hαβ =>
     NatTrans.ext _ _ <| funext fun X => Functor.map_injective _ <| congr_fun (congr_arg NatTrans.app hαβ) X
 
 @[simp]

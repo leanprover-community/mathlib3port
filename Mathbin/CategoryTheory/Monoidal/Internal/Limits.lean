@@ -79,15 +79,19 @@ def limitConeIsLimit (F : J ⥤ Mon_ C) : IsLimit (limitCone F) where
   uniq' := fun s m w => by
     ext
     dsimp'
-    simp only [Mon_.forget_map, limit.lift_π, functor.map_cone_π_app]
+    simp only [← Mon_.forget_map, ← limit.lift_π, ← functor.map_cone_π_app]
     exact congr_arg Mon_.Hom.hom (w j)
 
-instance has_limits : HasLimits (Mon_ C) where
-  HasLimitsOfShape := fun J 𝒥 =>
+instance has_limits :
+    HasLimits
+      (Mon_
+        C) where HasLimitsOfShape := fun J 𝒥 =>
     { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } }
 
-instance forgetPreservesLimits : PreservesLimits (Mon_.forget C) where
-  PreservesLimitsOfShape := fun J 𝒥 =>
+instance forgetPreservesLimits :
+    PreservesLimits
+      (Mon_.forget
+        C) where PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F : J ⥤ Mon_ C =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
           (is_limit.of_iso_limit (limit.is_limit (F ⋙ Mon_.forget C)) (forget_map_cone_limit_cone_iso F).symm) }

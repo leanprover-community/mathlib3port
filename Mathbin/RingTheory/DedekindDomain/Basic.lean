@@ -42,7 +42,7 @@ variable (R A K : Type _) [CommRingₓ R] [CommRingₓ A] [Field K]
 
 open nonZeroDivisors Polynomial
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (p «expr ≠ » («expr⊥»() : ideal R))
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (p «expr ≠ » («expr⊥»() : ideal R))
 /-- A ring `R` has Krull dimension at most one if all nonzero prime ideals are maximal. -/
 def Ringₓ.DimensionLeOne : Prop :=
   ∀ p _ : p ≠ (⊥ : Ideal R), p.IsPrime → p.IsMaximal
@@ -52,9 +52,9 @@ open Ideal Ringₓ
 namespace Ringₓ
 
 theorem DimensionLeOne.principal_ideal_ring [IsDomain A] [IsPrincipalIdealRing A] : DimensionLeOne A :=
-  fun p nonzero prime =>
+  fun p nonzero prime => by
   have := Prime
-  IsPrime.to_maximal_ideal nonzero
+  exact IsPrime.to_maximal_ideal nonzero
 
 theorem DimensionLeOne.is_integral_closure (B : Type _) [CommRingₓ B] [IsDomain B] [Nontrivial R] [Algebra R A]
     [Algebra R B] [Algebra B A] [IsScalarTower R B A] [IsIntegralClosure B R A] (h : DimensionLeOne R) :

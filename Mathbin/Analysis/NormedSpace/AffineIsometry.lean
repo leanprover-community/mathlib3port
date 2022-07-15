@@ -135,11 +135,11 @@ theorem dist_map (x y : P) : dist (f x) (f y) = dist x y := by
 
 @[simp]
 theorem nndist_map (x y : P) : nndist (f x) (f y) = nndist x y := by
-  simp [nndist_dist]
+  simp [← nndist_dist]
 
 @[simp]
 theorem edist_map (x y : P) : edist (f x) (f y) = edist x y := by
-  simp [edist_dist]
+  simp [← edist_dist]
 
 protected theorem isometry : Isometry f :=
   f.edist_map
@@ -728,7 +728,7 @@ theorem AffineMap.continuous_linear_iff {f : P →ᵃ[𝕜] P₂} : Continuous f
     ext v
     simp
   rw [this]
-  simp only [Homeomorph.comp_continuous_iff, Homeomorph.comp_continuous_iff']
+  simp only [← Homeomorph.comp_continuous_iff, ← Homeomorph.comp_continuous_iff']
 
 /-- If `f` is an affine map, then its linear part is an open map iff `f` is an open map. -/
 theorem AffineMap.is_open_map_linear_iff {f : P →ᵃ[𝕜] P₂} : IsOpenMap f.linear ↔ IsOpenMap f := by
@@ -741,5 +741,5 @@ theorem AffineMap.is_open_map_linear_iff {f : P →ᵃ[𝕜] P₂} : IsOpenMap f
     ext v
     simp
   rw [this]
-  simp only [Homeomorph.comp_is_open_map_iff, Homeomorph.comp_is_open_map_iff']
+  simp only [← Homeomorph.comp_is_open_map_iff, ← Homeomorph.comp_is_open_map_iff']
 

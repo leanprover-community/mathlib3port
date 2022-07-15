@@ -33,8 +33,8 @@ theorem same_ray_iff : SameRay ℝ x y ↔ x = 0 ∨ y = 0 ∨ x.arg = y.arg := 
   rcases eq_or_ne y 0 with (rfl | hy)
   · simp
     
-  simp only [hx, hy, false_orₓ, same_ray_iff_norm_smul_eq, arg_eq_arg_iff hx hy]
-  field_simp [hx, hy]
+  simp only [← hx, ← hy, ← false_orₓ, ← same_ray_iff_norm_smul_eq, ← arg_eq_arg_iff hx hy]
+  field_simp [← hx, ← hy]
   rw [mul_comm, eq_comm]
 
 theorem abs_add_eq_iff : (x + y).abs = x.abs + y.abs ↔ x = 0 ∨ y = 0 ∨ x.arg = y.arg :=

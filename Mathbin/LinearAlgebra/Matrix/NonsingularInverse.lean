@@ -148,7 +148,7 @@ theorem mul_eq_one_comm : A ⬝ B = 1 ↔ B ⬝ A = 1 :=
   let this : Invertible B := invertible_of_det_invertible B
   calc B ⬝ A = B ⬝ A ⬝ (B ⬝ ⅟ B) := by
       rw [Matrix.mul_inv_of_self, Matrix.mul_one]_ = B ⬝ (A ⬝ B ⬝ ⅟ B) := by
-      simp only [Matrix.mul_assoc]_ = B ⬝ ⅟ B := by
+      simp only [← Matrix.mul_assoc]_ = B ⬝ ⅟ B := by
       rw [h, Matrix.one_mul]_ = 1 := Matrix.mul_inv_of_self B
 
 variable (A B)
@@ -167,7 +167,7 @@ def unitOfDetInvertible [Invertible A.det] : (Matrix n n α)ˣ :=
 
 /-- When lowered to a prop, `matrix.invertible_equiv_det_invertible` forms an `iff`. -/
 theorem is_unit_iff_is_unit_det : IsUnit A ↔ IsUnit A.det := by
-  simp only [← nonempty_invertible_iff_is_unit, (invertible_equiv_det_invertible A).nonempty_congr]
+  simp only [nonempty_invertible_iff_is_unit, ← (invertible_equiv_det_invertible A).nonempty_congr]
 
 /-! #### Variants of the statements above with `is_unit`-/
 
@@ -258,19 +258,19 @@ theorem nonsing_inv_mul (h : IsUnit A.det) : A⁻¹ ⬝ A = 1 := by
 
 @[simp]
 theorem mul_nonsing_inv_cancel_right (B : Matrix m n α) (h : IsUnit A.det) : B ⬝ A ⬝ A⁻¹ = B := by
-  simp [Matrix.mul_assoc, mul_nonsing_inv A h]
+  simp [← Matrix.mul_assoc, ← mul_nonsing_inv A h]
 
 @[simp]
 theorem mul_nonsing_inv_cancel_left (B : Matrix n m α) (h : IsUnit A.det) : A ⬝ (A⁻¹ ⬝ B) = B := by
-  simp [← Matrix.mul_assoc, mul_nonsing_inv A h]
+  simp [Matrix.mul_assoc, ← mul_nonsing_inv A h]
 
 @[simp]
 theorem nonsing_inv_mul_cancel_right (B : Matrix m n α) (h : IsUnit A.det) : B ⬝ A⁻¹ ⬝ A = B := by
-  simp [Matrix.mul_assoc, nonsing_inv_mul A h]
+  simp [← Matrix.mul_assoc, ← nonsing_inv_mul A h]
 
 @[simp]
 theorem nonsing_inv_mul_cancel_left (B : Matrix n m α) (h : IsUnit A.det) : A⁻¹ ⬝ (A ⬝ B) = B := by
-  simp [← Matrix.mul_assoc, nonsing_inv_mul A h]
+  simp [Matrix.mul_assoc, ← nonsing_inv_mul A h]
 
 @[simp]
 theorem mul_inv_of_invertible [Invertible A] : A ⬝ A⁻¹ = 1 :=
@@ -402,7 +402,7 @@ theorem inv_zero : (0 : Matrix n n α)⁻¹ = 0 := by
     
   · have hn : Nonempty n := fintype.card_pos_iff.mp hc
     refine' nonsing_inv_apply_not_is_unit _ _
-    simp [hn]
+    simp [← hn]
     
 
 @[simp]
@@ -414,12 +414,12 @@ theorem inv_one : (1 : Matrix n n α)⁻¹ = 1 :=
 theorem inv_smul (k : α) [Invertible k] (h : IsUnit A.det) : (k • A)⁻¹ = ⅟ k • A⁻¹ :=
   inv_eq_left_inv
     (by
-      simp [h, smul_smul])
+      simp [← h, ← smul_smul])
 
 theorem inv_smul' (k : αˣ) (h : IsUnit A.det) : (k • A)⁻¹ = k⁻¹ • A⁻¹ :=
   inv_eq_left_inv
     (by
-      simp [h, smul_smul])
+      simp [← h, ← smul_smul])
 
 theorem inv_adjugate (A : Matrix n n α) (h : IsUnit A.det) : (adjugate A)⁻¹ = h.Unit⁻¹ • A := by
   refine' inv_eq_left_inv _
@@ -464,7 +464,7 @@ def diagonalInvertibleEquivInvertible (v : n → α) : Invertible (diagonalₓ v
 /-- When lowered to a prop, `matrix.diagonal_invertible_equiv_invertible` forms an `iff`. -/
 @[simp]
 theorem is_unit_diagonal {v : n → α} : IsUnit (diagonalₓ v) ↔ IsUnit v := by
-  simp only [← nonempty_invertible_iff_is_unit, (diagonal_invertible_equiv_invertible v).nonempty_congr]
+  simp only [nonempty_invertible_iff_is_unit, ← (diagonal_invertible_equiv_invertible v).nonempty_congr]
 
 theorem inv_diagonal (v : n → α) : (diagonalₓ v)⁻¹ = diagonalₓ (Ring.inverse v) := by
   rw [nonsing_inv_eq_ring_inverse]
@@ -483,11 +483,11 @@ theorem inv_inv_inv (A : Matrix n n α) : A⁻¹⁻¹⁻¹ = A⁻¹ := by
   by_cases' h : IsUnit A.det
   · rw [nonsing_inv_nonsing_inv _ h]
     
-  · simp [nonsing_inv_apply_not_is_unit _ h]
+  · simp [← nonsing_inv_apply_not_is_unit _ h]
     
 
 theorem mul_inv_rev (A B : Matrix n n α) : (A ⬝ B)⁻¹ = B⁻¹ ⬝ A⁻¹ := by
-  simp only [inv_def]
+  simp only [← inv_def]
   rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul, det_mul, adjugate_mul_distrib, Ring.mul_inverse_rev]
 
 /-- A version of `list.prod_inv_reverse` for `matrix.has_inv`. -/
@@ -534,9 +534,9 @@ theorem det_from_blocks₁₁ (A : Matrix m m α) (B : Matrix m n α) (C : Matri
     from_blocks A B C D =
       from_blocks 1 0 (C ⬝ ⅟ A) 1 ⬝ from_blocks A 0 0 (D - C ⬝ ⅟ A ⬝ B) ⬝ from_blocks 1 (⅟ A ⬝ B) 0 1 :=
     by
-    simp only [from_blocks_multiply, Matrix.mul_zero, Matrix.zero_mul, add_zeroₓ, zero_addₓ, Matrix.one_mul,
-      Matrix.mul_one, Matrix.inv_of_mul_self, Matrix.mul_inv_of_self_assoc, Matrix.mul_inv_of_mul_self_cancel,
-      Matrix.mul_assoc, add_sub_cancel'_right]
+    simp only [← from_blocks_multiply, ← Matrix.mul_zero, ← Matrix.zero_mul, ← add_zeroₓ, ← zero_addₓ, ← Matrix.one_mul,
+      ← Matrix.mul_one, ← Matrix.inv_of_mul_self, ← Matrix.mul_inv_of_self_assoc, ← Matrix.mul_inv_of_mul_self_cancel, ←
+      Matrix.mul_assoc, ← add_sub_cancel'_right]
   rw [this, det_mul, det_mul, det_from_blocks_zero₂₁, det_from_blocks_zero₂₁, det_from_blocks_zero₁₂, det_one, det_one,
     one_mulₓ, one_mulₓ, mul_oneₓ]
 

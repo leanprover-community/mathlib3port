@@ -357,7 +357,7 @@ namespace Snum
 /-- `a.bits n` is the vector of the `n` first bits of `a` (starting from the LSB). -/
 def bits : Snum → ∀ n, Vector Bool n
   | p, 0 => Vector.nil
-  | p, n + 1 => head p::ᵥbits (tail p) n
+  | p, n + 1 => head p ::ᵥ bits (tail p) n
 
 def cadd : Snum → Snum → Bool → Snum :=
   (rec' fun a p c => czadd c a p) fun a p IH =>

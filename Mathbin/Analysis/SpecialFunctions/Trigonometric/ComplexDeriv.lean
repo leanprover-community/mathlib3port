@@ -32,9 +32,9 @@ theorem has_deriv_at_tan {x : ℂ} (h : cos x ≠ 0) : HasDerivAt tan (1 / cos x
 open TopologicalSpace
 
 theorem tendsto_abs_tan_of_cos_eq_zero {x : ℂ} (hx : cos x = 0) : Tendsto (fun x => abs (tan x)) (𝓝[≠] x) atTop := by
-  simp only [tan_eq_sin_div_cos, ← norm_eq_abs, norm_div]
+  simp only [← tan_eq_sin_div_cos, norm_eq_abs, ← norm_div]
   have A : sin x ≠ 0 := fun h => by
-    simpa [*, sq] using sin_sq_add_cos_sq x
+    simpa [*, ← sq] using sin_sq_add_cos_sq x
   have B : tendsto cos (𝓝[≠] x) (𝓝[≠] 0) := hx ▸ (has_deriv_at_cos x).tendsto_punctured_nhds (neg_ne_zero.2 A)
   exact
     continuous_sin.continuous_within_at.norm.mul_at_top (norm_pos_iff.2 A)
@@ -56,7 +56,7 @@ theorem differentiable_at_tan {x : ℂ} : DifferentiableAt ℂ tan x ↔ cos x �
 theorem deriv_tan (x : ℂ) : deriv tan x = 1 / cos x ^ 2 :=
   if h : cos x = 0 then by
     have : ¬DifferentiableAt ℂ tan x := mt differentiable_at_tan.1 (not_not.2 h)
-    simp [deriv_zero_of_not_differentiable_at this, h, sq]
+    simp [← deriv_zero_of_not_differentiable_at this, ← h, ← sq]
   else (has_deriv_at_tan h).deriv
 
 @[simp]

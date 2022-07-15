@@ -84,7 +84,7 @@ theorem nat_trailing_degree_zero : natTrailingDegree (0 : R[X]) = 0 :=
 theorem trailing_degree_eq_top : trailingDegree p = ⊤ ↔ p = 0 :=
   ⟨fun h => by
     rw [trailing_degree, ← min_eq_inf_with_top] at h <;> exact support_eq_empty.1 (min_eq_none.1 h), fun h => by
-    simp [h]⟩
+    simp [← h]⟩
 
 theorem trailing_degree_eq_nat_trailing_degree (hp : p ≠ 0) : trailingDegree p = (natTrailingDegree p : WithTop ℕ) := by
   let ⟨n, hn⟩ := not_forall.1 (mt Option.eq_none_iff_forall_not_mem.2 (mt trailing_degree_eq_top.1 hp))
@@ -182,12 +182,12 @@ theorem nat_trailing_degree_monomial (ha : a ≠ 0) : natTrailingDegree (monomia
 
 theorem nat_trailing_degree_monomial_le : natTrailingDegree (monomial n a) ≤ n :=
   if ha : a = 0 then by
-    simp [ha]
+    simp [← ha]
   else (nat_trailing_degree_monomial ha).le
 
 theorem le_trailing_degree_monomial : ↑n ≤ trailingDegree (monomial n a) :=
   if ha : a = 0 then by
-    simp [ha]
+    simp [← ha]
   else (trailing_degree_monomial ha).Ge
 
 @[simp]
@@ -210,7 +210,7 @@ theorem nat_trailing_degree_one : natTrailingDegree (1 : R[X]) = 0 :=
 
 @[simp]
 theorem nat_trailing_degree_nat_cast (n : ℕ) : natTrailingDegree (n : R[X]) = 0 := by
-  simp only [← C_eq_nat_cast, nat_trailing_degree_C]
+  simp only [C_eq_nat_cast, ← nat_trailing_degree_C]
 
 @[simp]
 theorem trailing_degree_C_mul_X_pow (n : ℕ) (ha : a ≠ 0) : trailingDegree (c a * X ^ n) = n := by
@@ -239,7 +239,7 @@ theorem coeff_nat_trailing_degree_pred_eq_zero {p : R[X]} {hp : (0 : WithTop ℕ
     Nat.sub_ltₓ ((WithTop.zero_lt_coe (natTrailingDegree p)).mp hp) Nat.one_posₓ
 
 theorem le_trailing_degree_X_pow (n : ℕ) : (n : WithTop ℕ) ≤ trailingDegree (X ^ n : R[X]) := by
-  simpa only [C_1, one_mulₓ] using le_trailing_degree_C_mul_X_pow n (1 : R)
+  simpa only [← C_1, ← one_mulₓ] using le_trailing_degree_C_mul_X_pow n (1 : R)
 
 theorem le_trailing_degree_X : (1 : WithTop ℕ) ≤ trailingDegree (x : R[X]) :=
   le_trailing_degree_monomial
@@ -402,11 +402,11 @@ theorem trailing_degree_neg (p : R[X]) : trailingDegree (-p) = trailingDegree p 
 
 @[simp]
 theorem nat_trailing_degree_neg (p : R[X]) : natTrailingDegree (-p) = natTrailingDegree p := by
-  simp [nat_trailing_degree]
+  simp [← nat_trailing_degree]
 
 @[simp]
 theorem nat_trailing_degree_int_cast (n : ℤ) : natTrailingDegree (n : R[X]) = 0 := by
-  simp only [← C_eq_int_cast, nat_trailing_degree_C]
+  simp only [C_eq_int_cast, ← nat_trailing_degree_C]
 
 end Ringₓ
 
@@ -442,7 +442,7 @@ theorem coeff_nat_trailing_degree_eq_zero_of_trailing_degree_lt (h : trailingDeg
 theorem ne_zero_of_trailing_degree_lt {n : WithTop ℕ} (h : trailingDegree p < n) : p ≠ 0 := fun h₀ =>
   h.not_le
     (by
-      simp [h₀])
+      simp [← h₀])
 
 end Semiringₓ
 

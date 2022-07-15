@@ -19,7 +19,7 @@ open CategoryTheory.Limits
 
 open BigOperators
 
-universe v u
+universe w v u
 
 namespace ModuleCat
 
@@ -81,9 +81,9 @@ theorem biprod_iso_prod_inv_comp_snd (M N : ModuleCat.{v} R) :
     (biprodIsoProd M N).inv ≫ biprod.snd = LinearMap.snd R M N :=
   IsLimit.cone_point_unique_up_to_iso_inv_comp _ _ (Discrete.mk WalkingPair.right)
 
-variable {J : Type v} (f : J → ModuleCat.{v} R)
-
 namespace HasLimit
+
+variable {J : Type w} (f : J → ModuleCat.{max w v} R)
 
 /-- The map from an arbitrary cone over a indexed family of abelian groups
 to the cartesian product of those groups.
@@ -112,13 +112,15 @@ def productLimitCone : Limits.LimitCone (Discrete.functor f) where
         simp ,
       uniq' := fun s m w => by
         ext x j
-        dsimp' only [has_limit.lift]
-        simp only [LinearMap.coe_mk]
+        dsimp' only [← has_limit.lift]
+        simp only [← LinearMap.coe_mk]
         exact congr_arg (fun g : s.X ⟶ f j => (g : s.X → f j) x) (w ⟨j⟩) }
 
 end HasLimit
 
 open HasLimit
+
+variable {J : Type} (f : J → ModuleCat.{v} R)
 
 /-- We verify that the biproduct we've just defined is isomorphic to the `Module R` structure
 on the dependent function type

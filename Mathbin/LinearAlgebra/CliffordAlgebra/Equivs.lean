@@ -141,7 +141,7 @@ theorem Q_apply (r : ℝ) : q r = -(r * r) :=
 def toComplex : CliffordAlgebra q →ₐ[ℝ] ℂ :=
   CliffordAlgebra.lift q
     ⟨LinearMap.toSpanSingleton _ _ Complex.i, fun r => by
-      dsimp' [LinearMap.toSpanSingleton, LinearMap.id]
+      dsimp' [← LinearMap.toSpanSingleton, ← LinearMap.id]
       rw [mul_mul_mul_commₓ]
       simp ⟩
 
@@ -153,7 +153,7 @@ theorem to_complex_ι (r : ℝ) : toComplex (ι q r) = r • Complex.i :=
 @[simp]
 theorem to_complex_involute (c : CliffordAlgebra q) : toComplex c.involute = conj (toComplex c) := by
   have : to_complex (involute (ι Q 1)) = conj (to_complex (ι Q 1)) := by
-    simp only [involute_ι, to_complex_ι, AlgHom.map_neg, one_smul, Complex.conj_I]
+    simp only [← involute_ι, ← to_complex_ι, ← AlgHom.map_neg, ← one_smul, ← Complex.conj_I]
   suffices to_complex.comp involute = complex.conj_ae.to_alg_hom.comp to_complex by
     exact AlgHom.congr_fun this c
   ext : 2
@@ -173,7 +173,7 @@ theorem of_complex_I : ofComplex Complex.i = ι q 1 :=
 @[simp]
 theorem to_complex_comp_of_complex : toComplex.comp ofComplex = AlgHom.id ℝ ℂ := by
   ext1
-  dsimp' only [AlgHom.comp_apply, Subtype.coe_mk, AlgHom.id_apply]
+  dsimp' only [← AlgHom.comp_apply, ← Subtype.coe_mk, ← AlgHom.id_apply]
   rw [of_complex_I, to_complex_ι, one_smul]
 
 @[simp]
@@ -183,7 +183,8 @@ theorem to_complex_of_complex (c : ℂ) : toComplex (ofComplex c) = c :=
 @[simp]
 theorem of_complex_comp_to_complex : ofComplex.comp toComplex = AlgHom.id ℝ (CliffordAlgebra q) := by
   ext
-  dsimp' only [LinearMap.comp_apply, Subtype.coe_mk, AlgHom.id_apply, AlgHom.to_linear_map_apply, AlgHom.comp_apply]
+  dsimp' only [← LinearMap.comp_apply, ← Subtype.coe_mk, ← AlgHom.id_apply, ← AlgHom.to_linear_map_apply, ←
+    AlgHom.comp_apply]
   rw [to_complex_ι, one_smul, of_complex_I]
 
 @[simp]
@@ -297,14 +298,14 @@ theorem to_quaternion_involute_reverse (c : CliffordAlgebra (q c₁ c₂)) :
     toQuaternion (involute (reverse c)) = QuaternionAlgebra.conj (toQuaternion c) := by
   induction c using CliffordAlgebra.induction
   case h_grade0 r =>
-    simp only [reverse.commutes, AlgHom.commutes, QuaternionAlgebra.coe_algebra_map, QuaternionAlgebra.conj_coe]
+    simp only [← reverse.commutes, ← AlgHom.commutes, ← QuaternionAlgebra.coe_algebra_map, ← QuaternionAlgebra.conj_coe]
   case h_grade1 x =>
     rw [reverse_ι, involute_ι, to_quaternion_ι, AlgHom.map_neg, to_quaternion_ι, QuaternionAlgebra.neg_mk, conj_mk,
       neg_zero]
   case h_mul x₁ x₂ hx₁ hx₂ =>
-    simp only [reverse.map_mul, AlgHom.map_mul, hx₁, hx₂, QuaternionAlgebra.conj_mul]
+    simp only [← reverse.map_mul, ← AlgHom.map_mul, ← hx₁, ← hx₂, ← QuaternionAlgebra.conj_mul]
   case h_add x₁ x₂ hx₁ hx₂ =>
-    simp only [reverse.map_add, AlgHom.map_add, hx₁, hx₂, QuaternionAlgebra.conj_add]
+    simp only [← reverse.map_add, ← AlgHom.map_add, ← hx₁, ← hx₂, ← QuaternionAlgebra.conj_add]
 
 /-- Map a quaternion into the clifford algebra. -/
 def ofQuaternion : ℍ[R,c₁,c₂] →ₐ[R] CliffordAlgebra (q c₁ c₂) :=
@@ -328,7 +329,7 @@ theorem of_quaternion_comp_to_quaternion : ofQuaternion.comp toQuaternion = AlgH
     dsimp'
     rw [to_quaternion_ι]
     dsimp'
-    simp only [to_quaternion_ι, zero_smul, one_smul, zero_addₓ, add_zeroₓ, RingHom.map_zero]
+    simp only [← to_quaternion_ι, ← zero_smul, ← one_smul, ← zero_addₓ, ← add_zeroₓ, ← RingHom.map_zero]
 
 @[simp]
 theorem of_quaternion_to_quaternion (c : CliffordAlgebra (q c₁ c₂)) : ofQuaternion (toQuaternion c) = c :=
@@ -337,7 +338,7 @@ theorem of_quaternion_to_quaternion (c : CliffordAlgebra (q c₁ c₂)) : ofQuat
 @[simp]
 theorem to_quaternion_comp_of_quaternion : toQuaternion.comp ofQuaternion = AlgHom.id R ℍ[R,c₁,c₂] := by
   apply quaternion_algebra.lift.symm.injective
-  ext1 <;> dsimp' [QuaternionAlgebra.Basis.lift] <;> simp
+  ext1 <;> dsimp' [← QuaternionAlgebra.Basis.lift] <;> simp
 
 @[simp]
 theorem to_quaternion_of_quaternion (q : ℍ[R,c₁,c₂]) : toQuaternion (ofQuaternion q) = q :=

@@ -48,7 +48,7 @@ noncomputable def sqrt : ℝ≥0 ≃o ℝ≥0 :=
   OrderIso.symm <|
     (StrictMono.orderIsoOfSurjective (fun x => x * x) fun x y h => mul_self_lt_mul_self x.2 h) <|
       (continuous_id.mul continuous_id).Surjective tendsto_mul_self_at_top <| by
-        simp [order_bot.at_bot_eq]
+        simp [← order_bot.at_bot_eq]
 
 theorem sqrt_le_sqrt_iff : sqrt x ≤ sqrt y ↔ x ≤ y :=
   sqrt.le_iff_le
@@ -165,7 +165,7 @@ theorem continuous_sqrt : Continuous sqrt :=
   Nnreal.continuous_coe.comp <| Nnreal.sqrt.Continuous.comp continuous_real_to_nnreal
 
 theorem sqrt_eq_zero_of_nonpos (h : x ≤ 0) : sqrt x = 0 := by
-  simp [sqrt, Real.to_nnreal_eq_zero.2 h]
+  simp [← sqrt, ← Real.to_nnreal_eq_zero.2 h]
 
 theorem sqrt_nonneg (x : ℝ) : 0 ≤ sqrt x :=
   Nnreal.coe_nonneg _
@@ -197,7 +197,7 @@ theorem sqrt_eq_iff_mul_self_eq (hx : 0 ≤ x) (hy : 0 ≤ y) : sqrt x = y ↔ y
     rw [← h, sqrt_mul_self hy]⟩
 
 theorem sqrt_eq_iff_mul_self_eq_of_pos (h : 0 < y) : sqrt x = y ↔ y * y = x := by
-  simp [sqrt_eq_cases, h.ne', h.le]
+  simp [← sqrt_eq_cases, ← h.ne', ← h.le]
 
 @[simp]
 theorem sqrt_eq_one : sqrt x = 1 ↔ x = 1 :=
@@ -226,11 +226,11 @@ theorem sqrt_sq_eq_abs (x : ℝ) : sqrt (x ^ 2) = abs x := by
 
 @[simp]
 theorem sqrt_zero : sqrt 0 = 0 := by
-  simp [sqrt]
+  simp [← sqrt]
 
 @[simp]
 theorem sqrt_one : sqrt 1 = 1 := by
-  simp [sqrt]
+  simp [← sqrt]
 
 @[simp]
 theorem sqrt_le_sqrt_iff (hy : 0 ≤ y) : sqrt x ≤ sqrt y ↔ x ≤ y := by
@@ -277,7 +277,7 @@ theorem abs_le_sqrt (h : x ^ 2 ≤ y) : abs x ≤ sqrt y := by
 
 theorem sq_le (h : 0 ≤ y) : x ^ 2 ≤ y ↔ -sqrt y ≤ x ∧ x ≤ sqrt y := by
   constructor
-  · simpa only [abs_le] using abs_le_sqrt
+  · simpa only [← abs_le] using abs_le_sqrt
     
   · rw [← abs_le, ← sq_abs]
     exact (le_sqrt (abs_nonneg x) h).mp
@@ -291,7 +291,7 @@ theorem le_sqrt_of_sq_le (h : x ^ 2 ≤ y) : x ≤ sqrt y :=
 
 @[simp]
 theorem sqrt_inj (hx : 0 ≤ x) (hy : 0 ≤ y) : sqrt x = sqrt y ↔ x = y := by
-  simp [le_antisymm_iffₓ, hx, hy]
+  simp [← le_antisymm_iffₓ, ← hx, ← hy]
 
 @[simp]
 theorem sqrt_eq_zero (h : 0 ≤ x) : sqrt x = 0 ↔ x = 0 := by
@@ -311,7 +311,7 @@ theorem sqrt_pos : 0 < sqrt x ↔ 0 < x :=
   lt_iff_lt_of_le_iff_le
     (Iff.trans
       (by
-        simp [le_antisymm_iffₓ, sqrt_nonneg])
+        simp [← le_antisymm_iffₓ, ← sqrt_nonneg])
       sqrt_eq_zero')
 
 @[simp]

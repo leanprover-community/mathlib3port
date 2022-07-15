@@ -83,14 +83,13 @@ instance : Preadditive SemiNormedGroupₓ.{u} where
   add_comp' := by
     intros
     ext
-    simp only [NormedGroupHom.add_apply, CategoryTheory.comp_apply, NormedGroupHom.map_add]
+    simp only [← NormedGroupHom.add_apply, ← CategoryTheory.comp_apply, ← map_add]
   comp_add' := by
     intros
     ext
-    simp only [NormedGroupHom.add_apply, CategoryTheory.comp_apply, NormedGroupHom.map_add]
+    simp only [← NormedGroupHom.add_apply, ← CategoryTheory.comp_apply, ← map_add]
 
-instance : Functor.Additive completion where
-  map_add' := fun X Y => (completion.mapHom _ _).map_add
+instance : Functor.Additive completion where map_add' := fun X Y => (completion.mapHom _ _).map_add
 
 /-- Given a normed group hom `f : V → W` with `W` complete, this provides a lift of `f` to
 the completion of `V`. The lemmas `lift_unique` and `lift_comp_incl` provide the api for the

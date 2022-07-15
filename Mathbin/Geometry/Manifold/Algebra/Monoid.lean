@@ -134,13 +134,13 @@ theorem R_apply : (𝑹 I g) h = h * g :=
 theorem L_mul {G : Type _} [Semigroupₓ G] [TopologicalSpace G] [ChartedSpace H G] [HasSmoothMul I G] (g h : G) :
     𝑳 I (g * h) = (𝑳 I g).comp (𝑳 I h) := by
   ext
-  simp only [ContMdiffMap.comp_apply, L_apply, mul_assoc]
+  simp only [← ContMdiffMap.comp_apply, ← L_apply, ← mul_assoc]
 
 @[simp]
 theorem R_mul {G : Type _} [Semigroupₓ G] [TopologicalSpace G] [ChartedSpace H G] [HasSmoothMul I G] (g h : G) :
     𝑹 I (g * h) = (𝑹 I h).comp (𝑹 I g) := by
   ext
-  simp only [ContMdiffMap.comp_apply, R_apply, mul_assoc]
+  simp only [← ContMdiffMap.comp_apply, ← R_apply, ← mul_assoc]
 
 section
 
@@ -178,10 +178,10 @@ variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [Topological
 
 theorem smooth_pow : ∀ n : ℕ, Smooth I I fun a : G => a ^ n
   | 0 => by
-    simp only [pow_zeroₓ]
+    simp only [← pow_zeroₓ]
     exact smooth_const
   | k + 1 => by
-    simpa [pow_succₓ] using smooth_id.mul (smooth_pow _)
+    simpa [← pow_succₓ] using smooth_id.mul (smooth_pow _)
 
 /-- Morphism of additive smooth monoids. -/
 structure SmoothAddMonoidMorphism (I : ModelWithCorners 𝕜 E H) (I' : ModelWithCorners 𝕜 E' H') (G : Type _)
@@ -227,7 +227,7 @@ theorem smooth_finset_prod' {ι} {s : Finset ι} {f : ι → M → G} (h : ∀, 
 @[to_additive]
 theorem smooth_finset_prod {ι} {s : Finset ι} {f : ι → M → G} (h : ∀, ∀ i ∈ s, ∀, Smooth I' I (f i)) :
     Smooth I' I fun x => ∏ i in s, f i x := by
-  simp only [← Finset.prod_apply]
+  simp only [Finset.prod_apply]
   exact smooth_finset_prod' h
 
 open Function Filter
@@ -242,7 +242,7 @@ theorem smooth_finprod {ι} {f : ι → M → G} (h : ∀ i, Smooth I' I (f i))
 @[to_additive]
 theorem smooth_finprod_cond {ι} {f : ι → M → G} {p : ι → Prop} (hc : ∀ i, p i → Smooth I' I (f i))
     (hf : LocallyFinite fun i => MulSupport (f i)) : Smooth I' I fun x => ∏ᶠ (i) (hi : p i), f i x := by
-  simp only [← finprod_subtype_eq_finprod_cond]
+  simp only [finprod_subtype_eq_finprod_cond]
   exact smooth_finprod (fun i => hc i i.2) (hf.comp_injective Subtype.coe_injective)
 
 end CommMonoidₓ

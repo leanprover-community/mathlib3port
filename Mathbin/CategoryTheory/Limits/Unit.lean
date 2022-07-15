@@ -21,7 +21,7 @@ open CategoryTheory
 
 namespace CategoryTheory.Limits
 
-variable {J : Type v} [SmallCategory J] {F : J ⥤ Discrete PUnit.{v + 1}}
+variable {J : Type v} [SmallCategory J] {F : J ⥤ Discrete PUnit}
 
 /-- A trivial cone for a functor into `punit`. `punit_cone_is_limit` shows it is a limit. -/
 def punitCone : Cone F :=

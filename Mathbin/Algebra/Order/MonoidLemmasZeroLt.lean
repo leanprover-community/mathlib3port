@@ -274,13 +274,13 @@ instance (priority := 100) MulPosStrictMono.to_mul_pos_mono [MulPosStrictMono α
 instance (priority := 100) PosMulMonoRev.to_pos_mul_reflect_lt [PosMulMonoRev α] : PosMulReflectLt α :=
   ⟨fun x a b h =>
     lt_of_le_of_neₓ (le_of_mul_le_mul_left' h.le x.Prop) fun h' => by
-      simpa [h'] using h⟩
+      simpa [← h'] using h⟩
 
 -- see Note [lower instance priority]
 instance (priority := 100) MulPosMonoRev.to_mul_pos_reflect_lt [MulPosMonoRev α] : MulPosReflectLt α :=
   ⟨fun x a b h =>
     lt_of_le_of_neₓ (le_of_mul_le_mul_right' h.le x.Prop) fun h' => by
-      simpa [h'] using h⟩
+      simpa [← h'] using h⟩
 
 end PartialOrderₓ
 
@@ -334,11 +334,11 @@ variable [PartialOrderₓ α]
 
 theorem mul_le_mul_left [PosMulMono α] (bc : b ≤ c) (a0 : 0 ≤ a) : a * b ≤ a * c :=
   a0.lt_or_eq.elim (mul_le_mul_left' bc) fun h => by
-    simp only [← h, zero_mul]
+    simp only [h, ← zero_mul]
 
 theorem mul_le_mul_right [MulPosMono α] (bc : b ≤ c) (a0 : 0 ≤ a) : b * a ≤ c * a :=
   a0.lt_or_eq.elim (mul_le_mul_right' bc) fun h => by
-    simp only [← h, mul_zero]
+    simp only [h, ← mul_zero]
 
 /-- Assumes left covariance. -/
 theorem Left.mul_nonneg [PosMulMono α] (ha : 0 ≤ a) (hb : 0 ≤ b) : 0 ≤ a * b := by
@@ -363,7 +363,7 @@ theorem lt_of_mul_lt_mul_left [PosMulReflectLt α] (bc : a * b < a * c) (a0 : 0 
   · exact
       (lt_irreflₓ (0 : α)
           (by
-            simpa only [a₀, zero_mul] using bc)).elim
+            simpa only [← a₀, ← zero_mul] using bc)).elim
     
   · exact lt_of_mul_lt_mul_left' bc ((Ne.symm a₀).le_iff_lt.mp a0)
     
@@ -376,7 +376,7 @@ theorem lt_of_mul_lt_mul_right [MulPosReflectLt α] (bc : b * a < c * a) (a0 : 0
   · exact
       (lt_irreflₓ (0 : α)
           (by
-            simpa only [a₀, mul_zero] using bc)).elim
+            simpa only [← a₀, ← mul_zero] using bc)).elim
     
   · exact lt_of_mul_lt_mul_right' bc ((Ne.symm a₀).le_iff_lt.mp a0)
     
@@ -872,19 +872,19 @@ theorem le_mul_of_one_le_left [MulPosMono α] (h : 1 ≤ a) (b0 : 0 ≤ b) : b �
 
 theorem le_of_mul_le_of_one_le_left [PosMulMono α] (h : a * b ≤ c) (hle : 1 ≤ b) (a0 : 0 ≤ a) : a ≤ c :=
   a0.lt_or_eq.elim (Preorder.le_of_mul_le_of_one_le_left h hle) fun ha => by
-    simpa only [← ha, zero_mul] using h
+    simpa only [ha, ← zero_mul] using h
 
 theorem le_of_le_mul_of_le_one_left [PosMulMono α] (h : a ≤ b * c) (hle : c ≤ 1) (b0 : 0 ≤ b) : a ≤ b :=
   b0.lt_or_eq.elim (Preorder.le_of_le_mul_of_le_one_left h hle) fun hb => by
-    simpa only [← hb, zero_mul] using h
+    simpa only [hb, ← zero_mul] using h
 
 theorem le_of_mul_le_of_one_le_right [MulPosMono α] (h : a * b ≤ c) (hle : 1 ≤ a) (b0 : 0 ≤ b) : b ≤ c :=
   b0.lt_or_eq.elim (Preorder.le_of_mul_le_of_one_le_right h hle) fun ha => by
-    simpa only [← ha, mul_zero] using h
+    simpa only [ha, ← mul_zero] using h
 
 theorem le_of_le_mul_of_le_one_right [MulPosMono α] (h : a ≤ b * c) (hle : b ≤ 1) (c0 : 0 ≤ c) : a ≤ c :=
   c0.lt_or_eq.elim (le_of_le_mul_of_le_one_right' h hle) fun ha => by
-    simpa only [← ha, mul_zero] using h
+    simpa only [ha, ← mul_zero] using h
 
 end PartialOrderₓ
 

@@ -74,13 +74,11 @@ namespace ProdPreservesConnectedLimits
 
 /-- (Impl). The obvious natural transformation from (X × K -) to K. -/
 @[simps]
-def γ₂ {K : J ⥤ C} (X : C) : K ⋙ prod.functor.obj X ⟶ K where
-  app := fun Y => Limits.prod.snd
+def γ₂ {K : J ⥤ C} (X : C) : K ⋙ prod.functor.obj X ⟶ K where app := fun Y => Limits.prod.snd
 
 /-- (Impl). The obvious natural transformation from (X × K -) to X -/
 @[simps]
-def γ₁ {K : J ⥤ C} (X : C) : K ⋙ prod.functor.obj X ⟶ (Functor.const J).obj X where
-  app := fun Y => Limits.prod.fst
+def γ₁ {K : J ⥤ C} (X : C) : K ⋙ prod.functor.obj X ⟶ (Functor.const J).obj X where app := fun Y => Limits.prod.fst
 
 /-- (Impl).
 Given a cone for (X × K -), produce a cone for K using the natural transformation `γ₂` -/
@@ -99,8 +97,9 @@ Note that this functor does not preserve the two most obvious disconnected limit
 `X ⨯ (A ⨯ B)` and `X ⨯ 1` is not isomorphic to `1`.
 -/
 noncomputable def prodPreservesConnectedLimits [IsConnected J] (X : C) :
-    PreservesLimitsOfShape J (prod.functor.obj X) where
-  PreservesLimit := fun K =>
+    PreservesLimitsOfShape J
+      (prod.functor.obj
+        X) where PreservesLimit := fun K =>
     { preserves := fun c l =>
         { lift := fun s => prod.lift (s.π.app (Classical.arbitrary _) ≫ limits.prod.fst) (l.lift (forgetCone s)),
           fac' := fun s j => by
@@ -108,7 +107,7 @@ noncomputable def prodPreservesConnectedLimits [IsConnected J] (X : C) :
             · erw [assoc, lim_map_π, comp_id, limit.lift_π]
               exact (nat_trans_from_is_connected (s.π ≫ γ₁ X) j (Classical.arbitrary _)).symm
               
-            · simp [← l.fac (forget_cone s) j]
+            · simp [l.fac (forget_cone s) j]
               ,
           uniq' := fun s m L => by
             apply prod.hom_ext
@@ -118,7 +117,7 @@ noncomputable def prodPreservesConnectedLimits [IsConnected J] (X : C) :
             · rw [limit.lift_π]
               apply l.uniq (forget_cone s)
               intro j
-              simp [← L j]
+              simp [L j]
                } }
 
 end CategoryTheory

@@ -258,7 +258,7 @@ def mapMapIso {X Y : Top.{u}} (H : X ≅ Y) : Opens Y ≌ Opens X where
       (fun U =>
         eqToIso
           (by
-            simp [map, Set.preimage_preimage]))
+            simp [← map, ← Set.preimage_preimage]))
       (by
         intro _ _ _
         simp )
@@ -267,7 +267,7 @@ def mapMapIso {X Y : Top.{u}} (H : X ≅ Y) : Opens Y ≌ Opens X where
       (fun U =>
         eqToIso
           (by
-            simp [map, Set.preimage_preimage]))
+            simp [← map, ← Set.preimage_preimage]))
       (by
         intro _ _ _
         simp )
@@ -289,14 +289,13 @@ def IsOpenMap.adjunction {X Y : Top} {f : X ⟶ Y} (hf : IsOpenMap f) :
     { Unit := { app := fun U => hom_of_le fun x hxU => ⟨x, hxU, rfl⟩ },
       counit := { app := fun V => hom_of_le fun y ⟨x, hfxV, hxy⟩ => hxy ▸ hfxV } }
 
-instance IsOpenMap.functorFullOfMono {X Y : Top} {f : X ⟶ Y} (hf : IsOpenMap f) [H : Mono f] : Full hf.Functor where
-  preimage := fun U V i =>
+instance IsOpenMap.functorFullOfMono {X Y : Top} {f : X ⟶ Y} (hf : IsOpenMap f) [H : Mono f] :
+    Full hf.Functor where preimage := fun U V i =>
     homOfLe fun x hx => by
       obtain ⟨y, hy, eq⟩ := i.le ⟨x, hx, rfl⟩
       exact (Top.mono_iff_injective f).mp H Eq ▸ hy
 
-instance IsOpenMap.functor_faithful {X Y : Top} {f : X ⟶ Y} (hf : IsOpenMap f) : Faithful hf.Functor :=
-  {  }
+instance IsOpenMap.functor_faithful {X Y : Top} {f : X ⟶ Y} (hf : IsOpenMap f) : Faithful hf.Functor where
 
 namespace TopologicalSpace.Opens
 

@@ -476,6 +476,10 @@ theorem sdiff_le_iff : y \ x ≤ z ↔ y ≤ x⊔z :=
 theorem sdiff_sdiff_le : x \ (x \ y) ≤ y :=
   sdiff_le_iff.2 le_sdiff_sup
 
+theorem sdiff_triangle (x y z : α) : x \ z ≤ x \ y⊔y \ z := by
+  rw [sdiff_le_iff, sup_left_comm, ← sdiff_le_iff]
+  exact sdiff_sdiff_le.trans (sdiff_le_iff.1 le_rfl)
+
 @[simp]
 theorem le_sdiff_iff : x ≤ y \ x ↔ x = ⊥ :=
   ⟨fun h => disjoint_self.1 (disjoint_sdiff_self_right.mono_right h), fun h => h.le.trans bot_le⟩
@@ -764,14 +768,16 @@ end GeneralizedBooleanAlgebra
 -/
 
 
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1174:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Set / lattice complement -/
-@[notation_class]
+@[«./././Mathport/Syntax/Translate/Basic.lean:1174:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg»]
 class HasCompl (α : Type _) where
-  Compl : α → α
+  compl : α → α
 
-export HasCompl (Compl)
+export HasCompl (compl)
 
--- ././Mathport/Syntax/Translate/Basic.lean:460:9: unsupported: advanced prec syntax «expr + »(max, 1)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:9: unsupported: advanced prec syntax «expr + »(max, 1)
 -- mathport name: «expr ᶜ»
 postfix:999 "ᶜ" => compl
 
@@ -859,6 +865,9 @@ theorem compl_bot : ⊥ᶜ = (⊤ : α) :=
 theorem compl_compl (x : α) : xᶜᶜ = x :=
   is_compl_compl.symm.compl_eq
 
+theorem compl_comp_compl : compl ∘ compl = @id α :=
+  funext compl_compl
+
 @[simp]
 theorem compl_involutive : Function.Involutive (compl : α → α) :=
   compl_compl
@@ -904,10 +913,10 @@ theorem compl_le_compl_iff_le : yᶜ ≤ xᶜ ↔ x ≤ y :=
     have h := compl_le_compl h <;> simp at h <;> assumption, compl_le_compl⟩
 
 theorem le_compl_of_le_compl (h : y ≤ xᶜ) : x ≤ yᶜ := by
-  simpa only [compl_compl] using compl_le_compl h
+  simpa only [← compl_compl] using compl_le_compl h
 
 theorem compl_le_of_compl_le (h : yᶜ ≤ x) : xᶜ ≤ y := by
-  simpa only [compl_compl] using compl_le_compl h
+  simpa only [← compl_compl] using compl_le_compl h
 
 theorem le_compl_iff_le_compl : y ≤ xᶜ ↔ x ≤ yᶜ :=
   ⟨le_compl_of_le_compl, le_compl_of_le_compl⟩
@@ -915,11 +924,25 @@ theorem le_compl_iff_le_compl : y ≤ xᶜ ↔ x ≤ yᶜ :=
 theorem compl_le_iff_compl_le : xᶜ ≤ y ↔ yᶜ ≤ x :=
   ⟨compl_le_of_compl_le, compl_le_of_compl_le⟩
 
-theorem disjoint_iff_le_compl_right : Disjoint x y ↔ x ≤ yᶜ := by
-  rw [IsCompl.disjoint_left_iff is_compl_compl]
+theorem le_compl_iff_disjoint_right : x ≤ yᶜ ↔ Disjoint x y :=
+  is_compl_compl.le_right_iff
 
-theorem disjoint_iff_le_compl_left : Disjoint x y ↔ y ≤ xᶜ := by
-  rw [Disjoint.comm, disjoint_iff_le_compl_right]
+theorem le_compl_iff_disjoint_left : y ≤ xᶜ ↔ Disjoint x y :=
+  le_compl_iff_disjoint_right.trans Disjoint.comm
+
+theorem disjoint_compl_left_iff : Disjoint (xᶜ) y ↔ y ≤ x := by
+  rw [← le_compl_iff_disjoint_left, compl_compl]
+
+theorem disjoint_compl_right_iff : Disjoint x (yᶜ) ↔ x ≤ y := by
+  rw [← le_compl_iff_disjoint_right, compl_compl]
+
+alias le_compl_iff_disjoint_right ↔ _ Disjoint.le_compl_right
+
+alias le_compl_iff_disjoint_left ↔ _ Disjoint.le_compl_left
+
+alias disjoint_compl_left_iff ↔ _ LE.le.disjoint_compl_left
+
+alias disjoint_compl_right_iff ↔ _ LE.le.disjoint_compl_right
 
 namespace BooleanAlgebra
 
@@ -985,7 +1008,7 @@ variable [BooleanAlgebra α]
 --TODO@Yaël: Once we have co-Heyting algebras, we won't need to go through `boolean_algebra.of_core`
 instance : BooleanAlgebra αᵒᵈ :=
   BooleanAlgebra.ofCore
-    { OrderDual.distribLattice α, OrderDual.boundedOrder α with Compl := fun a => toDual (ofDual aᶜ),
+    { OrderDual.distribLattice α, OrderDual.boundedOrder α with compl := fun a => toDual (ofDual aᶜ),
       inf_compl_le_bot := fun _ => sup_compl_eq_top.Ge, top_le_sup_compl := fun _ => inf_compl_eq_bot.Ge }
 
 @[simp]
@@ -1023,7 +1046,7 @@ end BooleanAlgebra
 
 instance Prop.booleanAlgebra : BooleanAlgebra Prop :=
   BooleanAlgebra.ofCore
-    { Prop.distribLattice, Prop.boundedOrder with Compl := Not, inf_compl_le_bot := fun p ⟨Hp, Hpc⟩ => Hpc Hp,
+    { Prop.distribLattice, Prop.boundedOrder with compl := Not, inf_compl_le_bot := fun p ⟨Hp, Hpc⟩ => Hpc Hp,
       top_le_sup_compl := fun p H => Classical.em p }
 
 instance Pi.hasSdiff {ι : Type u} {α : ι → Type v} [∀ i, HasSdiff (α i)] : HasSdiff (∀ i, α i) :=
@@ -1068,7 +1091,19 @@ instance : BooleanAlgebra Bool :=
       inf_le_left := Bool.band_le_left, inf_le_right := Bool.band_le_right, le_inf := fun _ _ _ => Bool.le_band,
       le_sup_inf := by
         decide,
-      Compl := bnot, inf_compl_le_bot := fun a => a.band_bnot_self.le, top_le_sup_compl := fun a => a.bor_bnot_self.Ge }
+      compl := bnot, inf_compl_le_bot := fun a => a.band_bnot_self.le, top_le_sup_compl := fun a => a.bor_bnot_self.Ge }
+
+@[simp]
+theorem Bool.sup_eq_bor : (·⊔·) = bor :=
+  rfl
+
+@[simp]
+theorem Bool.inf_eq_band : (·⊓·) = band :=
+  rfl
+
+@[simp]
+theorem Bool.compl_eq_bnot : HasCompl.compl = bnot :=
+  rfl
 
 section lift
 
@@ -1109,7 +1144,7 @@ protected def Function.Injective.booleanAlgebra [HasSup α] [HasInf α] [HasTop 
     [BooleanAlgebra β] (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b)
     (map_inf : ∀ a b, f (a⊓b) = f a⊓f b) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) (map_compl : ∀ a, f (aᶜ) = f aᶜ)
     (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) : BooleanAlgebra α :=
-  { hf.GeneralizedBooleanAlgebra f map_sup map_inf map_bot map_sdiff with Compl := compl, top := ⊤,
+  { hf.GeneralizedBooleanAlgebra f map_sup map_inf map_bot map_sdiff with compl := compl, top := ⊤,
     le_top := fun a => (@le_top β _ _ _).trans map_top.Ge, bot_le := fun a => map_bot.le.trans bot_le,
     inf_compl_le_bot := fun a =>
       ((map_inf _ _).trans <| by

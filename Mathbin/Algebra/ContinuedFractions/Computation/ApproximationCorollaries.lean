@@ -98,22 +98,22 @@ theorem of_convergence_epsilon : ∀, ∀ ε > (0 : K), ∀, ∃ N : ℕ, ∀, �
     suffices : 1 / (B * nB) < ε
     exact lt_of_le_of_ltₓ abs_v_sub_conv_le this
     -- show that `0 < (B * nB)` and then multiply by `B * nB` to get rid of the division
-    have nB_ineq : (fib (n + 2) : K) ≤ nB :=
+    have nB_ineq : (fib (n + 2) : K) ≤ nB := by
       have : ¬g.terminated_at (n + 1 - 1) := not_terminated_at_n
-      succ_nth_fib_le_of_nth_denom (Or.inr this)
-    have B_ineq : (fib (n + 1) : K) ≤ B :=
+      exact succ_nth_fib_le_of_nth_denom (Or.inr this)
+    have B_ineq : (fib (n + 1) : K) ≤ B := by
       have : ¬g.terminated_at (n - 1) := mt (terminated_stable n.pred_le) not_terminated_at_n
-      succ_nth_fib_le_of_nth_denom (Or.inr this)
-    have zero_lt_B : 0 < B :=
+      exact succ_nth_fib_le_of_nth_denom (Or.inr this)
+    have zero_lt_B : 0 < B := by
       have : (0 : K) < fib (n + 1) := by
         exact_mod_cast fib_pos n.zero_lt_succ
-      lt_of_lt_of_leₓ this B_ineq
+      exact lt_of_lt_of_leₓ this B_ineq
     have zero_lt_mul_conts : 0 < B * nB := by
-      have : 0 < nB :=
+      have : 0 < nB := by
         have : (0 : K) < fib (n + 2) := by
           exact_mod_cast fib_pos (n + 1).zero_lt_succ
-        lt_of_lt_of_leₓ this nB_ineq
-      solve_by_elim [mul_pos]
+        exact lt_of_lt_of_leₓ this nB_ineq
+      solve_by_elim [← mul_pos]
     suffices : 1 < ε * (B * nB)
     exact (div_lt_iff zero_lt_mul_conts).elim_right this
     -- use that `N ≥ n` was obtained from the archimedean property to show the following
@@ -151,7 +151,7 @@ theorem of_convergence_epsilon : ∀, ∀ ε > (0 : K), ∀, ∃ N : ℕ, ∀, �
 attribute [local instance] Preorderₓ.topology
 
 theorem of_convergence [OrderTopology K] : Filter.Tendsto (of v).convergents Filter.atTop <| nhds v := by
-  simpa [LinearOrderedAddCommGroup.tendsto_nhds, abs_sub_comm] using of_convergence_epsilon v
+  simpa [← LinearOrderedAddCommGroup.tendsto_nhds, ← abs_sub_comm] using of_convergence_epsilon v
 
 end Convergence
 

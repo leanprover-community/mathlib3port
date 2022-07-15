@@ -90,7 +90,7 @@ theorem IsSymm.sub {A B : Matrix n n α} [Sub α] (hA : A.IsSymm) (hB : B.IsSymm
   (transpose_sub _ _).trans (hA.symm ▸ hB.symm ▸ rfl)
 
 @[simp]
-theorem IsSymm.smul [HasScalar R α] {A : Matrix n n α} (h : A.IsSymm) (k : R) : (k • A).IsSymm :=
+theorem IsSymm.smul [HasSmul R α] {A : Matrix n n α} (h : A.IsSymm) (k : R) : (k • A).IsSymm :=
   (transpose_smul _ _).trans (congr_arg _ h)
 
 @[simp]

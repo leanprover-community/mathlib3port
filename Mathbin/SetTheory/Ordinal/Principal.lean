@@ -101,7 +101,7 @@ theorem lt_blsub₂ (op : Ordinal → Ordinal → Ordinal) {o : Ordinal} {a b : 
         (enum (· < ·) b
           (by
             rwa [type_lt])))
-  simp only [typein_enum]
+  simp only [← typein_enum]
 
 theorem principal_nfp_blsub₂ (op : Ordinal → Ordinal → Ordinal) (o : Ordinal) :
     Principal op (nfp (blsub₂.{u, u} op) o) := fun a b ha hb => by
@@ -218,10 +218,10 @@ theorem principal_add_omega_opow (o : Ordinal) : Principal (· + ·) (omega^o) :
 /-- The main characterization theorem for additive principal ordinals. -/
 theorem principal_add_iff_zero_or_omega_opow {o : Ordinal} : Principal (· + ·) o ↔ o = 0 ∨ ∃ a, o = (omega^a) := by
   rcases eq_or_ne o 0 with (rfl | ho)
-  · simp only [principal_zero, Or.inl]
+  · simp only [← principal_zero, ← Or.inl]
     
   · rw [principal_add_iff_add_left_eq_self]
-    simp only [ho, false_orₓ]
+    simp only [← ho, ← false_orₓ]
     refine'
       ⟨fun H =>
         ⟨_, ((lt_or_eq_of_leₓ (opow_log_le_self _ (Ordinal.pos_iff_ne_zero.2 ho))).resolve_left fun h => _).symm⟩,
@@ -235,12 +235,12 @@ theorem principal_add_iff_zero_or_omega_opow {o : Ordinal} : Principal (· + ·)
     revert h'
     apply not_lt_of_le
     suffices e : (omega^log omega o) * ↑n + o = o
-    · simpa only [e] using le_add_right ((omega^log omega o) * ↑n) o
+    · simpa only [← e] using le_add_right ((omega^log omega o) * ↑n) o
       
     induction' n with n IH
-    · simp only [Nat.cast_zeroₓ, mul_zero, zero_addₓ]
+    · simp only [← Nat.cast_zeroₓ, ← mul_zero, ← zero_addₓ]
       
-    simp only [Nat.cast_succₓ, mul_add_one, add_assocₓ, this, IH]
+    simp only [← Nat.cast_succₓ, ← mul_add_one, ← add_assocₓ, ← this, ← IH]
     
 
 theorem opow_principal_add_of_principal_add {a} (ha : Principal (· + ·) a) (b : Ordinal) : Principal (· + ·) (a^b) := by
@@ -380,7 +380,7 @@ theorem mul_omega_opow_opow {a b : Ordinal} (a0 : 0 < a) (h : a < (omega^omega^b
   refine'
     le_antisymmₓ _
       (by
-        simpa only [one_mulₓ] using mul_le_mul_right' (one_le_iff_pos.2 a0) (omega^omega^b))
+        simpa only [← one_mulₓ] using mul_le_mul_right' (one_le_iff_pos.2 a0) (omega^omega^b))
   rcases(lt_opow_of_limit omega_ne_zero (opow_is_limit_left omega_is_limit b0)).1 h with ⟨x, xb, ax⟩
   apply (mul_le_mul_right' (le_of_ltₓ ax) _).trans
   rw [← opow_add, add_omega_opow xb]

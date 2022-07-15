@@ -188,8 +188,8 @@ instance toCatFull : Full toCat where
   witness' := fun x y => by
     apply Equivₓ.right_inv
 
-instance to_Cat_faithful : Faithful toCat where
-  map_injective' := fun x y => by
+instance to_Cat_faithful :
+    Faithful toCat where map_injective' := fun x y => by
     apply Equivₓ.injective
 
 end Mon

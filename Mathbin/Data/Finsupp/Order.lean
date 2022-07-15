@@ -117,14 +117,14 @@ variable [CanonicallyOrderedAddMonoid α]
 instance : OrderBot (ι →₀ α) where
   bot := 0
   bot_le := by
-    simp only [le_def, coe_zero, Pi.zero_apply, implies_true_iff, zero_le]
+    simp only [← le_def, ← coe_zero, ← Pi.zero_apply, ← implies_true_iff, ← zero_le]
 
 protected theorem bot_eq_zero : (⊥ : ι →₀ α) = 0 :=
   rfl
 
 @[simp]
 theorem add_eq_zero_iff (f g : ι →₀ α) : f + g = 0 ↔ f = 0 ∧ g = 0 := by
-  simp [ext_iff, forall_and_distrib]
+  simp [← ext_iff, ← forall_and_distrib]
 
 theorem le_iff' (f g : ι →₀ α) {s : Finset ι} (hf : f.Support ⊆ s) : f ≤ g ↔ ∀, ∀ i ∈ s, ∀, f i ≤ g i :=
   ⟨fun h s hs => h s, fun h s =>
@@ -173,11 +173,11 @@ theorem single_tsub : single i (a - b) = single i a - single i b := by
     
 
 theorem support_tsub {f1 f2 : ι →₀ α} : (f1 - f2).Support ⊆ f1.Support := by
-  simp (config := { contextual := true })only [subset_iff, tsub_eq_zero_iff_le, mem_support_iff, Ne.def, coe_tsub,
-    Pi.sub_apply, not_imp_not, zero_le, implies_true_iff]
+  simp (config := { contextual := true })only [← subset_iff, ← tsub_eq_zero_iff_le, ← mem_support_iff, ← Ne.def, ←
+    coe_tsub, ← Pi.sub_apply, ← not_imp_not, ← zero_le, ← implies_true_iff]
 
 theorem subset_support_tsub {f1 f2 : ι →₀ α} : f1.Support \ f2.Support ⊆ (f1 - f2).Support := by
-  simp (config := { contextual := true })[subset_iff]
+  simp (config := { contextual := true })[← subset_iff]
 
 end CanonicallyOrderedAddMonoid
 
@@ -188,13 +188,13 @@ variable [CanonicallyLinearOrderedAddMonoid α] [DecidableEq ι] {f g : ι →�
 @[simp]
 theorem support_inf : (f⊓g).Support = f.Support ∩ g.Support := by
   ext
-  simp only [inf_apply, mem_support_iff, Ne.def, Finset.mem_union, Finset.mem_filter, Finset.mem_inter]
-  simp only [inf_eq_min, ← nonpos_iff_eq_zero, min_le_iff, not_or_distrib]
+  simp only [← inf_apply, ← mem_support_iff, ← Ne.def, ← Finset.mem_union, ← Finset.mem_filter, ← Finset.mem_inter]
+  simp only [← inf_eq_min, nonpos_iff_eq_zero, ← min_le_iff, ← not_or_distrib]
 
 @[simp]
 theorem support_sup : (f⊔g).Support = f.Support ∪ g.Support := by
   ext
-  simp only [Finset.mem_union, mem_support_iff, sup_apply, Ne.def, ← bot_eq_zero]
+  simp only [← Finset.mem_union, ← mem_support_iff, ← sup_apply, ← Ne.def, bot_eq_zero]
   rw [_root_.sup_eq_bot_iff, not_and_distrib]
 
 theorem disjoint_iff : Disjoint f g ↔ Disjoint f.Support g.Support := by

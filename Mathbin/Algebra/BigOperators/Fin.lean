@@ -3,9 +3,8 @@ Copyright (c) 2020 Yury Kudryashov, Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Anne Baanen
 -/
-import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Data.Fintype.Fin
 import Mathbin.Data.Fintype.Card
+import Mathbin.Data.Fintype.Fin
 import Mathbin.Logic.Equiv.Fin
 
 /-!
@@ -39,7 +38,7 @@ namespace Finₓ
 
 @[to_additive]
 theorem prod_univ_def [CommMonoidₓ β] {n : ℕ} (f : Finₓ n → β) : (∏ i, f i) = ((List.finRange n).map f).Prod := by
-  simp [univ_def, Finset.finRange]
+  simp [← univ_def, ← Finset.finRange]
 
 @[to_additive]
 theorem prod_of_fn [CommMonoidₓ β] {n : ℕ} (f : Finₓ n → β) : (List.ofFnₓ f).Prod = ∏ i, f i := by
@@ -74,7 +73,7 @@ is the sum of `f (fin.last n)` plus the remaining sum -/
 @[to_additive]
 theorem prod_univ_cast_succ [CommMonoidₓ β] {n : ℕ} (f : Finₓ (n + 1) → β) :
     (∏ i, f i) = (∏ i : Finₓ n, f i.cast_succ) * f (last n) := by
-  simpa [mul_comm] using prod_univ_succ_above f (last n)
+  simpa [← mul_comm] using prod_univ_succ_above f (last n)
 
 @[to_additive]
 theorem prod_cons [CommMonoidₓ β] {n : ℕ} (x : β) (f : Finₓ n → β) :
@@ -87,7 +86,7 @@ theorem prod_univ_one [CommMonoidₓ β] (f : Finₓ 1 → β) : (∏ i, f i) = 
 
 @[to_additive]
 theorem prod_univ_two [CommMonoidₓ β] (f : Finₓ 2 → β) : (∏ i, f i) = f 0 * f 1 := by
-  simp [prod_univ_succ]
+  simp [← prod_univ_succ]
 
 theorem sum_pow_mul_eq_add_pow {n : ℕ} {R : Type _} [CommSemiringₓ R] (a b : R) :
     (∑ s : Finset (Finₓ n), a ^ s.card * b ^ (n - s.card)) = (a + b) ^ n := by
@@ -100,14 +99,14 @@ theorem sum_const [AddCommMonoidₓ α] (n : ℕ) (x : α) : (∑ i : Finₓ n, 
   simp
 
 @[to_additive]
-theorem prod_filter_zero_lt {M : Type _} [CommMonoidₓ M] {n : ℕ} {v : Finₓ n.succ → M} :
-    (∏ i in univ.filter fun i : Finₓ n.succ => 0 < i, v i) = ∏ j : Finₓ n, v j.succ := by
-  rw [univ_filter_zero_lt, Finset.prod_map, RelEmbedding.coe_fn_to_embedding, coe_succ_embedding]
+theorem prod_Ioi_zero {M : Type _} [CommMonoidₓ M] {n : ℕ} {v : Finₓ n.succ → M} :
+    (∏ i in ioi 0, v i) = ∏ j : Finₓ n, v j.succ := by
+  rw [Ioi_zero_eq_map, Finset.prod_map, RelEmbedding.coe_fn_to_embedding, coe_succ_embedding]
 
 @[to_additive]
-theorem prod_filter_succ_lt {M : Type _} [CommMonoidₓ M] {n : ℕ} (j : Finₓ n) (v : Finₓ n.succ → M) :
-    (∏ i in univ.filter fun i => j.succ < i, v i) = ∏ j in univ.filter fun i => j < i, v j.succ := by
-  rw [univ_filter_succ_lt, Finset.prod_map, RelEmbedding.coe_fn_to_embedding, coe_succ_embedding]
+theorem prod_Ioi_succ {M : Type _} [CommMonoidₓ M] {n : ℕ} (i : Finₓ n) (v : Finₓ n.succ → M) :
+    (∏ j in ioi i.succ, v j) = ∏ j in ioi i, v j.succ := by
+  rw [Ioi_succ, Finset.prod_map, RelEmbedding.coe_fn_to_embedding, coe_succ_embedding]
 
 @[to_additive]
 theorem prod_congr' {M : Type _} [CommMonoidₓ M] {a b : ℕ} (f : Finₓ b → M) (h : a = b) :
@@ -125,7 +124,7 @@ theorem prod_univ_add {M : Type _} [CommMonoidₓ M] {a b : ℕ} (f : Finₓ (a 
   rw [Fintype.prod_equiv fin_sum_fin_equiv.symm f fun i => f (fin_sum_fin_equiv.to_fun i)]
   swap
   · intro x
-    simp only [Equivₓ.to_fun_as_coe, Equivₓ.apply_symm_apply]
+    simp only [← Equivₓ.to_fun_as_coe, ← Equivₓ.apply_symm_apply]
     
   apply prod_on_sum
 
@@ -133,7 +132,7 @@ theorem prod_univ_add {M : Type _} [CommMonoidₓ M] {a b : ℕ} (f : Finₓ (a 
 theorem prod_trunc {M : Type _} [CommMonoidₓ M] {a b : ℕ} (f : Finₓ (a + b) → M)
     (hf : ∀ j : Finₓ b, f (natAdd a j) = 1) :
     (∏ i : Finₓ (a + b), f i) = ∏ i : Finₓ a, f (castLe (Nat.Le.intro rfl) i) := by
-  simpa only [prod_univ_add, Fintype.prod_eq_one _ hf, mul_oneₓ]
+  simpa only [← prod_univ_add, ← Fintype.prod_eq_one _ hf, ← mul_oneₓ]
 
 end Finₓ
 
@@ -144,7 +143,7 @@ theorem prod_take_of_fn [CommMonoidₓ α] {n : ℕ} (f : Finₓ n → α) (i : 
     ((ofFnₓ f).take i).Prod = ∏ j in Finset.univ.filter fun j : Finₓ n => j.val < i, f j := by
   have A : ∀ j : Finₓ n, ¬(j : ℕ) < 0 := fun j => not_lt_bot
   induction' i with i IH
-  · simp [A]
+  · simp [← A]
     
   by_cases' h : i < n
   · have : i < length (of_fn f) := by
@@ -155,7 +154,7 @@ theorem prod_take_of_fn [CommMonoidₓ α] {n : ℕ} (f : Finₓ n → α) (i : 
         ((Finset.univ : Finset (Finₓ n)).filter fun j => j.val < i) ∪ {(⟨i, h⟩ : Finₓ n)} :=
       by
       ext j
-      simp [Nat.lt_succ_iff_lt_or_eq, Finₓ.ext_iff, -add_commₓ]
+      simp [← Nat.lt_succ_iff_lt_or_eq, ← Finₓ.ext_iff, -add_commₓ]
     have B : _root_.disjoint (Finset.filter (fun j : Finₓ n => j.val < i) Finset.univ) (singleton (⟨i, h⟩ : Finₓ n)) :=
       by
       simp
@@ -169,8 +168,8 @@ theorem prod_take_of_fn [CommMonoidₓ α] {n : ℕ} (f : Finₓ n → α) (i : 
     have B : ∀ j : Finₓ n, ((j : ℕ) < i.succ) = ((j : ℕ) < i) := by
       intro j
       have : (j : ℕ) < i := lt_of_lt_of_leₓ j.2 (not_lt.mp h)
-      simp [this, lt_transₓ this (Nat.lt_succ_selfₓ _)]
-    simp [← A, B, IH]
+      simp [← this, ← lt_transₓ this (Nat.lt_succ_selfₓ _)]
+    simp [A, ← B, ← IH]
     
 
 @[to_additive]
@@ -179,7 +178,7 @@ theorem prod_of_fn [CommMonoidₓ α] {n : ℕ} {f : Finₓ n → α} : (ofFnₓ
   · rw [take_all_of_le (le_of_eqₓ (length_of_fn f))]
     
   · have : ∀ j : Finₓ n, (j : ℕ) < n := fun j => j.is_lt
-    simp [this]
+    simp [← this]
     
 
 theorem alternating_sum_eq_finset_sum {G : Type _} [AddCommGroupₓ G] :
@@ -196,7 +195,7 @@ theorem alternating_sum_eq_finset_sum {G : Type _} [AddCommGroupₓ G] :
       _ = ∑ i : Finₓ (L.length + 2), (-1 : ℤ) ^ (i : ℕ) • List.nthLe (g :: h :: L) i _ := by
         rw [Finₓ.sum_univ_succ, Finₓ.sum_univ_succ, add_assocₓ]
         unfold_coes
-        simp [Nat.succ_eq_add_one, pow_addₓ]
+        simp [← Nat.succ_eq_add_one, ← pow_addₓ]
         rfl
       
 
@@ -217,7 +216,7 @@ theorem alternating_prod_eq_finset_prod {G : Type _} [CommGroupₓ G] :
       _ = ∏ i : Finₓ (L.length + 2), List.nthLe (g :: h :: L) i _ ^ (-1 : ℤ) ^ (i : ℕ) := by
         rw [Finₓ.prod_univ_succ, Finₓ.prod_univ_succ, mul_assoc]
         unfold_coes
-        simp [Nat.succ_eq_add_one, pow_addₓ]
+        simp [← Nat.succ_eq_add_one, ← pow_addₓ]
         rfl
       
 

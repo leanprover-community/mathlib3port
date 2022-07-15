@@ -119,10 +119,10 @@ theorem norm_zero_iff (f : PadicSeq p) : f.norm = 0 ↔ f ≈ 0 := by
     exists stationary_point hf
     intro j hj
     have heq := stationary_point_spec hf le_rfl hj
-    simpa [h, HEq]
+    simpa [← h, ← HEq]
     
   · intro h
-    simp [norm, h]
+    simp [← norm, ← h]
     
 
 end
@@ -137,18 +137,18 @@ theorem equiv_zero_of_val_eq_of_equiv_zero {f g : PadicSeq p} (h : ∀ k, padicN
     (hf : f ≈ 0) : g ≈ 0 := fun ε hε =>
   let ⟨i, hi⟩ := hf _ hε
   ⟨i, fun j hj => by
-    simpa [h] using hi _ hj⟩
+    simpa [← h] using hi _ hj⟩
 
 theorem norm_nonzero_of_not_equiv_zero {f : PadicSeq p} (hf : ¬f ≈ 0) : f.norm ≠ 0 :=
   hf ∘ f.norm_zero_iff.1
 
 theorem norm_eq_norm_app_of_nonzero {f : PadicSeq p} (hf : ¬f ≈ 0) : ∃ k, f.norm = padicNorm p k ∧ k ≠ 0 :=
   have heq : f.norm = padicNorm p (f <| stationaryPoint hf) := by
-    simp [norm, hf]
+    simp [← norm, ← hf]
   ⟨f <| stationaryPoint hf, HEq, fun h =>
     norm_nonzero_of_not_equiv_zero hf
       (by
-        simpa [h] using HEq)⟩
+        simpa [← h] using HEq)⟩
 
 theorem not_lim_zero_const_of_nonzero {q : ℚ} (hq : q ≠ 0) : ¬LimZero (const (padicNorm p) q) := fun h' =>
   hq <| const_lim_zero.1 h'
@@ -160,9 +160,9 @@ theorem not_equiv_zero_const_of_nonzero {q : ℚ} (hq : q ≠ 0) : ¬const (padi
 
 theorem norm_nonneg (f : PadicSeq p) : 0 ≤ f.norm :=
   if hf : f ≈ 0 then by
-    simp [hf, norm]
+    simp [← hf, ← norm]
   else by
-    simp [norm, hf, padicNorm.nonneg]
+    simp [← norm, ← hf, ← padicNorm.nonneg]
 
 /-- An auxiliary lemma for manipulating sequence indices. -/
 theorem lift_index_left_left {f : PadicSeq p} (hf : ¬f ≈ 0) (v2 v3 : ℕ) :
@@ -224,7 +224,7 @@ theorem norm_eq_pow_val {f : PadicSeq p} (hf : ¬f ≈ 0) : f.norm = p ^ (-f.Val
   use stationary_point hf
   intro n hn
   rw [stationary_point_spec hf le_rfl hn]
-  simpa [H] using hε
+  simpa [← H] using hε
 
 theorem val_eq_iff_norm_eq {f g : PadicSeq p} (hf : ¬f ≈ 0) (hg : ¬g ≈ 0) :
     f.Valuation = g.Valuation ↔ f.norm = g.norm := by
@@ -276,11 +276,11 @@ include hp
 theorem norm_mul (f g : PadicSeq p) : (f * g).norm = f.norm * g.norm :=
   if hf : f ≈ 0 then by
     have hg : f * g ≈ 0 := mul_equiv_zero' _ hf
-    simp only [hf, hg, norm, dif_pos, zero_mul]
+    simp only [← hf, ← hg, ← norm, ← dif_pos, ← zero_mul]
   else
     if hg : g ≈ 0 then by
       have hf : f * g ≈ 0 := mul_equiv_zero _ hg
-      simp only [hf, hg, norm, dif_pos, mul_zero]
+      simp only [← hf, ← hg, ← norm, ← dif_pos, ← mul_zero]
     else by
       have hfg : ¬f * g ≈ 0 := by
         apply mul_not_equiv_zero <;> assumption
@@ -298,19 +298,19 @@ theorem ne_zero_iff_nequiv_zero (f : PadicSeq p) : mk f ≠ 0 ↔ ¬f ≈ 0 :=
 theorem norm_const (q : ℚ) : norm (const (padicNorm p) q) = padicNorm p q :=
   if hq : q = 0 then by
     have : const (padicNorm p) q ≈ 0 := by
-      simp [hq] <;> apply Setoidₓ.refl (const (padicNorm p) 0)
-    subst hq <;> simp [norm, this]
+      simp [← hq] <;> apply Setoidₓ.refl (const (padicNorm p) 0)
+    subst hq <;> simp [← norm, ← this]
   else by
     have : ¬const (padicNorm p) q ≈ 0 := not_equiv_zero_const_of_nonzero hq
-    simp [norm, this]
+    simp [← norm, ← this]
 
 theorem norm_values_discrete (a : PadicSeq p) (ha : ¬a ≈ 0) : ∃ z : ℤ, a.norm = ↑p ^ -z := by
   let ⟨k, hk, hk'⟩ := norm_eq_norm_app_of_nonzero ha
-  simpa [hk] using padicNorm.values_discrete p hk'
+  simpa [← hk] using padicNorm.values_discrete p hk'
 
 theorem norm_one : norm (1 : PadicSeq p) = 1 := by
   have h1 : ¬(1 : PadicSeq p) ≈ 0 := one_not_equiv_zero _
-  simp [h1, norm, hp.1.one_lt]
+  simp [← h1, ← norm, ← hp.1.one_lt]
 
 private theorem norm_eq_of_equiv_aux {f g : PadicSeq p} (hf : ¬f ≈ 0) (hg : ¬g ≈ 0) (hfg : f ≈ g)
     (h : padicNorm p (f (stationaryPoint hf)) ≠ padicNorm p (g (stationaryPoint hg)))
@@ -348,7 +348,7 @@ private theorem norm_eq_of_equiv {f g : PadicSeq p} (hf : ¬f ≈ 0) (hg : ¬g �
 theorem norm_equiv {f g : PadicSeq p} (hfg : f ≈ g) : f.norm = g.norm :=
   if hf : f ≈ 0 then by
     have hg : g ≈ 0 := Setoidₓ.trans (Setoidₓ.symm hfg) hf
-    simp [norm, hf, hg]
+    simp [← norm, ← hf, ← hg]
   else by
     have hg : ¬g ≈ 0 := hf ∘ Setoidₓ.trans hfg
     unfold norm <;> split_ifs <;> exact norm_eq_of_equiv hf hg hfg
@@ -363,13 +363,13 @@ private theorem norm_nonarchimedean_aux {f g : PadicSeq p} (hfg : ¬f + g ≈ 0)
 theorem norm_nonarchimedean (f g : PadicSeq p) : (f + g).norm ≤ max f.norm g.norm :=
   if hfg : f + g ≈ 0 then by
     have : 0 ≤ max f.norm g.norm := le_max_of_le_left (norm_nonneg _)
-    simpa only [hfg, norm, Ne.def, le_max_iff, CauSeq.add_apply, not_true, dif_pos]
+    simpa only [← hfg, ← norm, ← Ne.def, ← le_max_iff, ← CauSeq.add_apply, ← not_true, ← dif_pos]
   else
     if hf : f ≈ 0 then by
       have hfg' : f + g ≈ g := by
         change lim_zero (f - 0) at hf
         show lim_zero (f + g - g)
-        · simpa only [sub_zero, add_sub_cancel] using hf
+        · simpa only [← sub_zero, ← add_sub_cancel] using hf
           
       have hcfg : (f + g).norm = g.norm := norm_equiv hfg'
       have hcl : f.norm = 0 := (norm_zero_iff f).2 hf
@@ -381,7 +381,7 @@ theorem norm_nonarchimedean (f g : PadicSeq p) : (f + g).norm ≤ max f.norm g.n
         have hfg' : f + g ≈ f := by
           change lim_zero (g - 0) at hg
           show lim_zero (f + g - f)
-          · simpa only [add_sub_cancel', sub_zero] using hg
+          · simpa only [← add_sub_cancel', ← sub_zero] using hg
             
         have hcfg : (f + g).norm = f.norm := norm_equiv hfg'
         have hcl : g.norm = 0 := (norm_zero_iff g).2 hg
@@ -393,15 +393,15 @@ theorem norm_nonarchimedean (f g : PadicSeq p) : (f + g).norm ≤ max f.norm g.n
 theorem norm_eq {f g : PadicSeq p} (h : ∀ k, padicNorm p (f k) = padicNorm p (g k)) : f.norm = g.norm :=
   if hf : f ≈ 0 then by
     have hg : g ≈ 0 := equiv_zero_of_val_eq_of_equiv_zero h hf
-    simp only [hf, hg, norm, dif_pos]
+    simp only [← hf, ← hg, ← norm, ← dif_pos]
   else by
     have hg : ¬g ≈ 0 := fun hg =>
       hf <|
         equiv_zero_of_val_eq_of_equiv_zero
           (by
-            simp only [h, forall_const, eq_self_iff_true])
+            simp only [← h, ← forall_const, ← eq_self_iff_true])
           hg
-    simp only [hg, hf, norm, dif_neg, not_false_iff]
+    simp only [← hg, ← hf, ← norm, ← dif_neg, ← not_false_iff]
     let i := max (stationary_point hf) (stationary_point hg)
     have hpf : padicNorm p (f (stationary_point hf)) = padicNorm p (f i) := by
       apply stationary_point_spec
@@ -421,9 +421,9 @@ theorem norm_eq_of_add_equiv_zero {f g : PadicSeq p} (h : f + g ≈ 0) : f.norm 
   have : LimZero (f + g - 0) := h
   have : f ≈ -g :=
     show LimZero (f - -g) by
-      simpa only [sub_zero, sub_neg_eq_add]
+      simpa only [← sub_zero, ← sub_neg_eq_add]
   have : f.norm = (-g).norm := norm_equiv this
-  simpa only [norm_neg] using this
+  simpa only [← norm_neg] using this
 
 theorem add_eq_max_of_ne {f g : PadicSeq p} (hfgne : f.norm ≠ g.norm) : (f + g).norm = max f.norm g.norm :=
   have hfg : ¬f + g ≈ 0 := mt norm_eq_of_add_equiv_zero hfgne
@@ -431,7 +431,7 @@ theorem add_eq_max_of_ne {f g : PadicSeq p} (hfgne : f.norm ≠ g.norm) : (f + g
     have : LimZero (f - 0) := hf
     have : f + g ≈ g :=
       show LimZero (f + g - g) by
-        simpa only [sub_zero, add_sub_cancel]
+        simpa only [← sub_zero, ← add_sub_cancel]
     have h1 : (f + g).norm = g.norm := norm_equiv this
     have h2 : f.norm = 0 := (norm_zero_iff _).2 hf
     rw [h1, h2] <;> rw [max_eq_rightₓ (norm_nonneg _)]
@@ -440,7 +440,7 @@ theorem add_eq_max_of_ne {f g : PadicSeq p} (hfgne : f.norm ≠ g.norm) : (f + g
       have : LimZero (g - 0) := hg
       have : f + g ≈ f :=
         show LimZero (f + g - f) by
-          rw [add_sub_cancel'] <;> simpa only [sub_zero]
+          rw [add_sub_cancel'] <;> simpa only [← sub_zero]
       have h1 : (f + g).norm = f.norm := norm_equiv this
       have h2 : g.norm = 0 := (norm_zero_iff _).2 hg
       rw [h1, h2] <;> rw [max_eq_leftₓ (norm_nonneg _)]
@@ -555,37 +555,37 @@ theorem cast_eq_of_rat_of_nat (n : ℕ) : (↑n : ℚ_[p]) = ofRat p n := by
     
 
 theorem cast_eq_of_rat_of_int (n : ℤ) : ↑n = ofRat p n := by
-  induction n <;> simp [cast_eq_of_rat_of_nat]
+  induction n <;> simp [← cast_eq_of_rat_of_nat]
 
 theorem cast_eq_of_rat : ∀ q : ℚ, (↑q : ℚ_[p]) = ofRat p q
   | ⟨n, d, h1, h2⟩ =>
     show ↑n / ↑d = _ by
       have : (⟨n, d, h1, h2⟩ : ℚ) = Rat.mk n d := Rat.num_denom'
-      simp [this, Rat.mk_eq_div, of_rat_div, cast_eq_of_rat_of_int, cast_eq_of_rat_of_nat]
+      simp [← this, ← Rat.mk_eq_div, ← of_rat_div, ← cast_eq_of_rat_of_int, ← cast_eq_of_rat_of_nat]
 
 @[norm_cast]
 theorem coe_add : ∀ {x y : ℚ}, (↑(x + y) : ℚ_[p]) = ↑x + ↑y := by
-  simp [cast_eq_of_rat]
+  simp [← cast_eq_of_rat]
 
 @[norm_cast]
 theorem coe_neg : ∀ {x : ℚ}, (↑(-x) : ℚ_[p]) = -↑x := by
-  simp [cast_eq_of_rat]
+  simp [← cast_eq_of_rat]
 
 @[norm_cast]
 theorem coe_mul : ∀ {x y : ℚ}, (↑(x * y) : ℚ_[p]) = ↑x * ↑y := by
-  simp [cast_eq_of_rat]
+  simp [← cast_eq_of_rat]
 
 @[norm_cast]
 theorem coe_sub : ∀ {x y : ℚ}, (↑(x - y) : ℚ_[p]) = ↑x - ↑y := by
-  simp [cast_eq_of_rat]
+  simp [← cast_eq_of_rat]
 
 @[norm_cast]
 theorem coe_div : ∀ {x y : ℚ}, (↑(x / y) : ℚ_[p]) = ↑x / ↑y := by
-  simp [cast_eq_of_rat]
+  simp [← cast_eq_of_rat]
 
 @[norm_cast]
 theorem coe_one : (↑1 : ℚ_[p]) = 1 := by
-  simp [cast_eq_of_rat]
+  simp [← cast_eq_of_rat]
 
 @[norm_cast]
 theorem coe_zero : (↑0 : ℚ_[p]) = 0 :=
@@ -601,7 +601,7 @@ theorem of_rat_eq {q r : ℚ} : ofRat p q = ofRat p r ↔ q = r :=
 
 @[norm_cast]
 theorem coe_inj {q r : ℚ} : (↑q : ℚ_[p]) = ↑r ↔ q = r := by
-  simp [cast_eq_of_rat, of_rat_eq]
+  simp [← cast_eq_of_rat, ← of_rat_eq]
 
 instance : CharZero ℚ_[p] :=
   ⟨fun m n => by
@@ -627,7 +627,7 @@ open PadicSeq
 variable {p : ℕ} [Fact p.Prime]
 
 theorem defn (f : PadicSeq p) {ε : ℚ} (hε : 0 < ε) : ∃ N, ∀, ∀ i ≥ N, ∀, padicNormE (⟦f⟧ - f i) < ε := by
-  simp only [Padic.cast_eq_of_rat]
+  simp only [← Padic.cast_eq_of_rat]
   change ∃ N, ∀, ∀ i ≥ N, ∀, (f - const _ (f i)).norm < ε
   by_contra' h
   cases' cauchy₂ f hε with N hN
@@ -654,7 +654,7 @@ theorem zero_def : (0 : ℚ_[p]) = ⟦0⟧ :=
 
 theorem zero_iff (q : ℚ_[p]) : padicNormE q = 0 ↔ q = 0 :=
   Quotientₓ.induction_on q <| by
-    simpa only [zero_def, Quotientₓ.eq] using norm_zero_iff
+    simpa only [← zero_def, ← Quotientₓ.eq] using norm_zero_iff
 
 @[simp]
 protected theorem zero : padicNormE (0 : ℚ_[p]) = 0 :=
@@ -726,24 +726,24 @@ section Complete
 
 open PadicSeq Padic
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (m n «expr ≥ » N)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (m n «expr ≥ » N)
 theorem rat_dense' {p : ℕ} [Fact p.Prime] (q : ℚ_[p]) {ε : ℚ} (hε : 0 < ε) : ∃ r : ℚ, padicNormE (q - r) < ε :=
   (Quotientₓ.induction_on q) fun q' =>
     have : ∃ N, ∀ m n _ : m ≥ N _ : n ≥ N, padicNorm p (q' m - q' n) < ε := cauchy₂ _ hε
     let ⟨N, hN⟩ := this
     ⟨q' N, by
-      simp only [Padic.cast_eq_of_rat]
+      simp only [← Padic.cast_eq_of_rat]
       change PadicSeq.norm (q' - const _ (q' N)) < ε
       cases' Decidable.em (q' - const (padicNorm p) (q' N) ≈ 0) with heq hne'
-      · simpa only [HEq, PadicSeq.norm, dif_pos]
+      · simpa only [← HEq, ← PadicSeq.norm, ← dif_pos]
         
-      · simp only [PadicSeq.norm, dif_neg hne']
+      · simp only [← PadicSeq.norm, ← dif_neg hne']
         change padicNorm p (q' _ - q' _) < ε
         have := stationary_point_spec hne'
         cases' Decidable.em (stationary_point hne' ≤ N) with hle hle
         · have := Eq.symm (this le_rfl hle)
-          simp only [const_apply, sub_apply, padicNorm.zero, sub_self] at this
-          simpa only [this]
+          simp only [← const_apply, ← sub_apply, ← padicNorm.zero, ← sub_self] at this
+          simpa only [← this]
           
         · exact hN _ (lt_of_not_geₓ hle).le _ le_rfl
           
@@ -801,12 +801,12 @@ theorem exi_rat_seq_conv_cauchy : IsCauSeq (padicNorm p) (limSeq f) := fun ε h�
     · have : (3 : ℚ) ≠ 0 := by
         norm_num
       have : ε = ε / 3 + ε / 3 + ε / 3 := by
-        field_simp [this]
-        simp only [bit0, bit1, mul_addₓ, mul_oneₓ]
+        field_simp [← this]
+        simp only [← bit0, ← bit1, ← mul_addₓ, ← mul_oneₓ]
       rw [this]
       apply add_lt_add
       · suffices padicNormE (↑(lim_seq f j) - f j + (f j - f (max N N2))) < ε / 3 + ε / 3 by
-          simpa only [sub_add_sub_cancel]
+          simpa only [← sub_add_sub_cancel]
         apply lt_of_le_of_ltₓ
         · apply padicNormE.add
           
@@ -877,7 +877,8 @@ instance : HasDist ℚ_[p] :=
 
 instance : MetricSpace ℚ_[p] where
   dist_self := by
-    simp [dist]
+    simp [← dist]
+  dist := dist
   dist_comm := fun x y => by
     unfold dist <;> rw [← padicNormE.neg (x - y)] <;> simp
   dist_triangle := by
@@ -894,17 +895,18 @@ instance : MetricSpace ℚ_[p] where
 instance : HasNorm ℚ_[p] :=
   ⟨fun x => padicNormE x⟩
 
-instance : NormedField ℚ_[p] where
-  dist_eq := fun _ _ => rfl
-  norm_mul' := by
-    simp [HasNorm.norm, padicNormE.mul']
+instance : NormedField ℚ_[p] :=
+  { Padic.field, Padic.metricSpace p with dist_eq := fun _ _ => rfl,
+    norm_mul' := by
+      simp [← HasNorm.norm, ← padicNormE.mul'],
+    norm := norm }
 
 instance is_absolute_value : IsAbsoluteValue fun a : ℚ_[p] => ∥a∥ where
   abv_nonneg := norm_nonneg
   abv_eq_zero := fun _ => norm_eq_zero
   abv_add := norm_add_le
   abv_mul := by
-    simp [HasNorm.norm, padicNormE.mul']
+    simp [← HasNorm.norm, ← padicNormE.mul']
 
 theorem rat_dense {p : ℕ} {hp : Fact p.Prime} (q : ℚ_[p]) {ε : ℝ} (hε : 0 < ε) : ∃ r : ℚ, ∥q - r∥ < ε :=
   let ⟨ε', hε'l, hε'r⟩ := exists_rat_btwn hε
@@ -915,7 +917,7 @@ theorem rat_dense {p : ℕ} {hp : Fact p.Prime} (q : ℚ_[p]) {ε : ℝ} (hε : 
   ⟨r,
     lt_transₓ
       (by
-        simpa [HasNorm.norm] using hr)
+        simpa [← HasNorm.norm] using hr)
       hε'r⟩
 
 end NormedSpace
@@ -932,7 +934,7 @@ include hp
 
 @[simp]
 protected theorem mul (q r : ℚ_[p]) : ∥q * r∥ = ∥q∥ * ∥r∥ := by
-  simp [HasNorm.norm, padicNormE.mul']
+  simp [← HasNorm.norm, ← padicNormE.mul']
 
 protected theorem is_norm (q : ℚ_[p]) : ↑(padicNormE q) = ∥q∥ :=
   rfl
@@ -958,7 +960,7 @@ theorem eq_padic_norm (q : ℚ) : ∥(↑q : ℚ_[p])∥ = padicNorm p q := by
 theorem norm_p : ∥(p : ℚ_[p])∥ = p⁻¹ := by
   have p₀ : p ≠ 0 := hp.1.ne_zero
   have p₁ : p ≠ 1 := hp.1.ne_one
-  simp [p₀, p₁, norm, padicNorm, padicValRat, padicValInt, zpow_neg, Padic.cast_eq_of_rat_of_nat]
+  simp [← p₀, ← p₁, ← norm, ← padicNorm, ← padicValRat, ← padicValInt, ← zpow_neg, ← Padic.cast_eq_of_rat_of_nat]
 
 theorem norm_p_lt_one : ∥(p : ℚ_[p])∥ < 1 := by
   rw [norm_p]
@@ -969,11 +971,12 @@ theorem norm_p_lt_one : ∥(p : ℚ_[p])∥ < 1 := by
 theorem norm_p_pow (n : ℤ) : ∥(p ^ n : ℚ_[p])∥ = p ^ -n := by
   rw [norm_zpow, norm_p] <;> field_simp
 
-instance : NondiscreteNormedField ℚ_[p] where
-  non_trivial :=
-    ⟨p⁻¹, by
-      rw [norm_inv, norm_p, inv_invₓ]
-      exact_mod_cast hp.1.one_lt⟩
+instance : NondiscreteNormedField ℚ_[p] :=
+  { Padic.normedField p with
+    non_trivial :=
+      ⟨p⁻¹, by
+        rw [norm_inv, norm_p, inv_invₓ]
+        exact_mod_cast hp.1.one_lt⟩ }
 
 protected theorem image {q : ℚ_[p]} : q ≠ 0 → ∃ n : ℤ, ∥q∥ = ↑((↑p : ℚ) ^ -n) :=
   (Quotientₓ.induction_on q) fun f hf =>
@@ -984,7 +987,7 @@ protected theorem image {q : ℚ_[p]} : q ≠ 0 → ∃ n : ℤ, ∥q∥ = ↑((
 protected theorem is_rat (q : ℚ_[p]) : ∃ q' : ℚ, ∥q∥ = ↑q' :=
   if h : q = 0 then
     ⟨0, by
-      simp [h]⟩
+      simp [← h]⟩
   else
     let ⟨n, hn⟩ := padicNormE.image h
     ⟨_, hn⟩
@@ -1002,7 +1005,7 @@ theorem norm_rat_le_one : ∀ {q : ℚ} hq : ¬p ∣ q.denom, ∥(q : ℚ_[p])�
   | ⟨n, d, hn, hd⟩ => fun hq : ¬p ∣ d =>
     if hnz : n = 0 then by
       have : (⟨n, d, hn, hd⟩ : ℚ) = 0 := Rat.zero_iff_num_zero.mpr hnz
-      norm_num [this]
+      norm_num [← this]
     else by
       have hnz' : { num := n, denom := d, Pos := hn, cop := hd } ≠ 0 := mt Rat.zero_iff_num_zero.1 hnz
       rw [padicNormE.eq_padic_norm]
@@ -1020,7 +1023,7 @@ theorem norm_int_le_one (z : ℤ) : ∥(z : ℚ_[p])∥ ≤ 1 :=
   suffices ∥((z : ℚ) : ℚ_[p])∥ ≤ 1 by
     simpa
   norm_rat_le_one <| by
-    simp [hp.1.ne_one]
+    simp [← hp.1.ne_one]
 
 theorem norm_int_lt_one_iff_dvd (k : ℤ) : ∥(k : ℚ_[p])∥ < 1 ↔ ↑p ∣ k := by
   constructor
@@ -1094,7 +1097,7 @@ variable {p : ℕ} [hp_prime : Fact p.Prime]
 
 include hp_prime
 
--- ././Mathport/Syntax/Translate/Basic.lean:209:40: warning: unsupported option eqn_compiler.zeta
+-- ./././Mathport/Syntax/Translate/Basic.lean:293:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
 instance complete : CauSeq.IsComplete ℚ_[p] norm := by
@@ -1140,7 +1143,7 @@ instance : CompleteSpace ℚ_[p] := by
   refine' ⟨c.lim, fun s h => _⟩
   rcases Metric.mem_nhds_iff.1 h with ⟨ε, ε0, hε⟩
   have := c.equiv_lim ε ε0
-  simp only [mem_map, mem_at_top_sets, mem_set_of_eq]
+  simp only [← mem_map, ← mem_at_top_sets, ← mem_set_of_eq]
   exact this.imp fun N hN n hn => hε (hN n hn)
 
 /-!
@@ -1154,7 +1157,7 @@ def valuation : ℚ_[p] → ℤ :=
   Quotientₓ.lift (@PadicSeq.valuation p _) fun f g h => by
     by_cases' hf : f ≈ 0
     · have hg : g ≈ 0 := Setoidₓ.trans (Setoidₓ.symm h) hf
-      simp [hf, hg, PadicSeq.valuation]
+      simp [← hf, ← hg, ← PadicSeq.valuation]
       
     · have hg : ¬g ≈ 0 := fun hg => hf (Setoidₓ.trans h hg)
       rw [PadicSeq.val_eq_iff_norm_eq hf hg]
@@ -1196,13 +1199,10 @@ theorem norm_eq_pow_val {x : ℚ_[p]} : x ≠ 0 → ∥x∥ = p ^ -x.Valuation :
 theorem valuation_p : valuation (p : ℚ_[p]) = 1 := by
   have h : (1 : ℝ) < p := by
     exact_mod_cast (Fact.out p.prime).one_lt
-  rw [← neg_inj]
-  apply (zpow_strict_mono h).Injective
-  dsimp' only
-  rw [← norm_eq_pow_val]
-  · simp
-    
+  refine' neg_injective ((zpow_strict_mono h).Injective <| (norm_eq_pow_val _).symm.trans _)
   · exact_mod_cast (Fact.out p.prime).ne_zero
+    
+  · simp
     
 
 theorem valuation_map_add {x y : ℚ_[p]} (hxy : x + y ≠ 0) : min (valuation x) (valuation y) ≤ valuation (x + y) := by
@@ -1241,14 +1241,14 @@ def addValuationDef : ℚ_[p] → WithTop ℤ := fun x => if x = 0 then ⊤ else
 
 @[simp]
 theorem AddValuation.map_zero : addValuationDef (0 : ℚ_[p]) = ⊤ := by
-  simp only [add_valuation_def, if_pos (Eq.refl _)]
+  simp only [← add_valuation_def, ← if_pos (Eq.refl _)]
 
 @[simp]
 theorem AddValuation.map_one : addValuationDef (1 : ℚ_[p]) = 0 := by
-  simp only [add_valuation_def, if_neg one_ne_zero, valuation_one, WithTop.coe_zero]
+  simp only [← add_valuation_def, ← if_neg one_ne_zero, ← valuation_one, ← WithTop.coe_zero]
 
 theorem AddValuation.map_mul (x y : ℚ_[p]) : addValuationDef (x * y) = addValuationDef x + addValuationDef y := by
-  simp only [add_valuation_def]
+  simp only [← add_valuation_def]
   by_cases' hx : x = 0
   · rw [hx, if_pos (Eq.refl _), zero_mul, if_pos (Eq.refl _), WithTop.top_add]
     
@@ -1261,16 +1261,16 @@ theorem AddValuation.map_mul (x y : ℚ_[p]) : addValuationDef (x * y) = addValu
     
 
 theorem AddValuation.map_add (x y : ℚ_[p]) : min (addValuationDef x) (addValuationDef y) ≤ addValuationDef (x + y) := by
-  simp only [add_valuation_def]
+  simp only [← add_valuation_def]
   by_cases' hxy : x + y = 0
   · rw [hxy, if_pos (Eq.refl _)]
     exact le_top
     
   · by_cases' hx : x = 0
-    · simp only [hx, if_pos (Eq.refl _), min_eq_rightₓ, le_top, zero_addₓ, le_reflₓ]
+    · simp only [← hx, ← if_pos (Eq.refl _), ← min_eq_rightₓ, ← le_top, ← zero_addₓ, ← le_reflₓ]
       
     · by_cases' hy : y = 0
-      · simp only [hy, if_pos (Eq.refl _), min_eq_leftₓ, le_top, add_zeroₓ, le_reflₓ]
+      · simp only [← hy, ← if_pos (Eq.refl _), ← min_eq_leftₓ, ← le_top, ← add_zeroₓ, ← le_reflₓ]
         
       · rw [if_neg hx, if_neg hy, if_neg hxy, ← WithTop.coe_min, WithTop.coe_le_coe]
         exact valuation_map_add hxy
@@ -1284,7 +1284,7 @@ def addValuation : AddValuation ℚ_[p] (WithTop ℤ) :=
 
 @[simp]
 theorem addValuation.apply {x : ℚ_[p]} (hx : x ≠ 0) : x.AddValuation = x.Valuation := by
-  simp only [AddValuation, AddValuation.of_apply, add_valuation_def, if_neg hx]
+  simp only [← AddValuation, ← AddValuation.of_apply, ← add_valuation_def, ← if_neg hx]
 
 section NormLeIff
 
@@ -1296,7 +1296,7 @@ theorem norm_le_pow_iff_norm_lt_pow_add_one (x : ℚ_[p]) (n : ℤ) : ∥x∥ �
     apply Nat.zpow_pos_of_pos
     exact hp_prime.1.Pos
   by_cases' hx0 : x = 0
-  · simp [hx0, norm_zero, aux, le_of_ltₓ (aux _)]
+  · simp [← hx0, ← norm_zero, ← aux, ← le_of_ltₓ (aux _)]
     
   rw [norm_eq_pow_val hx0]
   have h1p : 1 < (p : ℝ) := by

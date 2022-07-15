@@ -31,11 +31,10 @@ unsafe def tactic_script.to_string : TacticScript Stringₓ → Stringₓ
   | tactic_script.work n a l c =>
     "work_on_goal " ++ toString (n + 1) ++ " { " ++ ", ".intercalate (a :: l.map tactic_script.to_string) ++ " }"
 
-unsafe instance : HasToString (TacticScript Stringₓ) where
-  toString := fun s => s.toString
+unsafe instance : HasToString (TacticScript Stringₓ) where toString := fun s => s.toString
 
-unsafe instance tactic_script_unit_has_to_string : HasToString (TacticScript Unit) where
-  toString := fun s => "[chain tactic]"
+unsafe instance tactic_script_unit_has_to_string :
+    HasToString (TacticScript Unit) where toString := fun s => "[chain tactic]"
 
 unsafe def abstract_if_success (tac : expr → tactic α) (g : expr) : tactic α := do
   let type ← infer_type g

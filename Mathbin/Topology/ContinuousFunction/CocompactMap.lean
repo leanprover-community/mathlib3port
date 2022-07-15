@@ -147,7 +147,7 @@ theorem compact_preimage [T2Space β] (f : CocompactMap α β) ⦃s : Set β⦄ 
   obtain ⟨t, ht, hts⟩ :=
     mem_cocompact'.mp
       (by
-        simpa only [preimage_image_preimage, preimage_compl] using
+        simpa only [← preimage_image_preimage, ← preimage_compl] using
           mem_map.mp
             (cocompact_tendsto f <| mem_cocompact.mpr ⟨s, hs, compl_subset_compl.mpr (image_preimage_subset f _)⟩))
   exact

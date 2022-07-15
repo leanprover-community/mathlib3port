@@ -165,7 +165,8 @@ variable {x y z}
 theorem IsCoprime.of_add_mul_left_left (h : IsCoprime (x + y * z) y) : IsCoprime x y :=
   let ⟨a, b, H⟩ := h
   ⟨a, a * z + b, by
-    simpa only [add_mulₓ, mul_addₓ, add_assocₓ, add_commₓ, add_left_commₓ, mul_assoc, mul_comm, mul_left_commₓ] using H⟩
+    simpa only [← add_mulₓ, ← mul_addₓ, ← add_assocₓ, ← add_commₓ, ← add_left_commₓ, ← mul_assoc, ← mul_comm, ←
+      mul_left_commₓ] using H⟩
 
 theorem IsCoprime.of_add_mul_right_left (h : IsCoprime (x + z * y) y) : IsCoprime x y := by
   rw [mul_comm] at h
@@ -252,7 +253,7 @@ variable {R : Type u} [CommRingₓ R]
 
 theorem add_mul_left_left {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime (x + y * z) y :=
   @of_add_mul_left_left R _ _ _ (-z) <| by
-    simpa only [mul_neg, add_neg_cancel_rightₓ] using h
+    simpa only [← mul_neg, ← add_neg_cancel_rightₓ] using h
 
 theorem add_mul_right_left {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime (x + z * y) y := by
   rw [mul_comm]

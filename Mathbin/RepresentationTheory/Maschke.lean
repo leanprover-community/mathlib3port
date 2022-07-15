@@ -89,8 +89,8 @@ section
 include h
 
 theorem conjugate_i (g : G) (v : V) : (conjugate π g) (i v) = v := by
-  dsimp' [conjugate]
-  simp only [← i.map_smul, h, ← mul_smul, single_mul_single, mul_oneₓ, mul_left_invₓ]
+  dsimp' [← conjugate]
+  simp only [i.map_smul, ← h, mul_smul, ← single_mul_single, ← mul_oneₓ, ← mul_left_invₓ]
   change (1 : MonoidAlgebra k G) • v = v
   simp
 
@@ -109,12 +109,12 @@ def sumOfConjugates : W →ₗ[k] V :=
 -/
 def sumOfConjugatesEquivariant : W →ₗ[MonoidAlgebra k G] V :=
   MonoidAlgebra.equivariantOfLinearOfComm (π.sumOfConjugates G) fun g v => by
-    dsimp' [sum_of_conjugates]
-    simp only [LinearMap.sum_apply, Finset.smul_sum]
-    dsimp' [conjugate]
-    conv_lhs => rw [← Finset.univ_map_embedding (mulRightEmbedding g⁻¹)]simp only [mulRightEmbedding]
-    simp only [← mul_smul, single_mul_single, mul_inv_rev, mul_oneₓ, Function.Embedding.coe_fn_mk, Finset.sum_map,
-      inv_invₓ, inv_mul_cancel_right]
+    dsimp' [← sum_of_conjugates]
+    simp only [← LinearMap.sum_apply, ← Finset.smul_sum]
+    dsimp' [← conjugate]
+    conv_lhs => rw [← Finset.univ_map_embedding (mulRightEmbedding g⁻¹)]simp only [← mulRightEmbedding]
+    simp only [mul_smul, ← single_mul_single, ← mul_inv_rev, ← mul_oneₓ, ← Function.Embedding.coe_fn_mk, ←
+      Finset.sum_map, ← inv_invₓ, ← inv_mul_cancel_right]
 
 section
 
@@ -134,7 +134,7 @@ theorem equivariant_projection_condition (v : V) : (π.equivariantProjection G) 
   rw [equivariant_projection, smul_apply, sum_of_conjugates_equivariant, equivariant_of_linear_of_comm_apply,
     sum_of_conjugates]
   rw [LinearMap.sum_apply]
-  simp only [conjugate_i π i h]
+  simp only [← conjugate_i π i h]
   rw [Finset.sum_const, Finset.card_univ, nsmul_eq_smul_cast k, ← mul_smul, Invertible.inv_of_mul_self, one_smul]
 
 end
@@ -150,7 +150,7 @@ variable {k : Type u} [Field k] {G : Type u} [Fintype G] [Groupₓ G] [CharZero 
 instance : Invertible (Fintype.card G : k) :=
   invertibleOfRingCharNotDvd
     (by
-      simp [Fintype.card_eq_zero_iff])
+      simp [← Fintype.card_eq_zero_iff])
 
 end CharZero
 
@@ -174,11 +174,11 @@ theorem exists_left_inverse_of_injective (f : V →ₗ[MonoidAlgebra k G] W) (hf
   obtain ⟨φ, hφ⟩ :=
     (f.restrict_scalars k).exists_left_inverse_of_injective
       (by
-        simp only [hf, Submodule.restrict_scalars_bot, LinearMap.ker_restrict_scalars])
+        simp only [← hf, ← Submodule.restrict_scalars_bot, ← LinearMap.ker_restrict_scalars])
   refine' ⟨φ.equivariant_projection G, _⟩
   apply LinearMap.ext
   intro v
-  simp only [LinearMap.id_coe, id.def, LinearMap.comp_apply]
+  simp only [← LinearMap.id_coe, ← id.def, ← LinearMap.comp_apply]
   apply LinearMap.equivariant_projection_condition
   intro v
   have := congr_arg LinearMap.toFun hφ

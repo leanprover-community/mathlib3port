@@ -50,13 +50,14 @@ variable (E : Type _) [SemiNormedGroup E] [NormedSpace 𝕜 E]
 
 variable (F : Type _) [NormedGroup F] [NormedSpace 𝕜 F]
 
--- ././Mathport/Syntax/Translate/Basic.lean:978:9: unsupported derive handler normed_space 𝕜
+-- ./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler normed_space 𝕜
 /-- The topological dual of a seminormed space `E`. -/
 def Dual :=
-  E →L[𝕜] 𝕜 deriving Inhabited, SemiNormedGroup, [anonymous]
+  E →L[𝕜] 𝕜 deriving Inhabited, SemiNormedGroup,
+  «./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler normed_space 𝕜»
 
-instance : AddMonoidHomClass (Dual 𝕜 E) E 𝕜 :=
-  ContinuousLinearMap.addMonoidHomClass
+instance : ContinuousLinearMapClass (Dual 𝕜 E) 𝕜 E 𝕜 :=
+  ContinuousLinearMap.continuousSemilinearMapClass
 
 instance : CoeFun (Dual 𝕜 E) fun _ => E → 𝕜 :=
   ContinuousLinearMap.toFun
@@ -104,13 +105,13 @@ section BidualIsometry
 
 variable (𝕜 : Type v) [IsROrC 𝕜] {E : Type u} [NormedGroup E] [NormedSpace 𝕜 E]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If one controls the norm of every `f x`, then one controls the norm of `x`.
     Compare `continuous_linear_map.op_norm_le_bound`. -/
 theorem norm_le_dual_bound (x : E) {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ f : Dual 𝕜 E, ∥f x∥ ≤ M * ∥f∥) : ∥x∥ ≤ M := by
   classical
   by_cases' h : x = 0
-  · simp only [h, hMp, norm_zero]
+  · simp only [← h, ← hMp, ← norm_zero]
     
   · obtain ⟨f, hf₁, hfx⟩ : ∃ f : E →L[𝕜] 𝕜, ∥f∥ = 1 ∧ f x = ∥x∥ := exists_dual_vector 𝕜 x h
     calc ∥x∥ = ∥(∥x∥ : 𝕜)∥ := is_R_or_C.norm_coe_norm.symm _ = ∥f x∥ := by
@@ -121,16 +122,16 @@ theorem norm_le_dual_bound (x : E) {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ f : Dual 
 theorem eq_zero_of_forall_dual_eq_zero {x : E} (h : ∀ f : Dual 𝕜 E, f x = (0 : 𝕜)) : x = 0 :=
   norm_le_zero_iff.mp
     (norm_le_dual_bound 𝕜 x le_rfl fun f => by
-      simp [h f])
+      simp [← h f])
 
 theorem eq_zero_iff_forall_dual_eq_zero (x : E) : x = 0 ↔ ∀ g : Dual 𝕜 E, g x = 0 :=
   ⟨fun hx => by
-    simp [hx], fun h => eq_zero_of_forall_dual_eq_zero 𝕜 h⟩
+    simp [← hx], fun h => eq_zero_of_forall_dual_eq_zero 𝕜 h⟩
 
 /-- See also `geometric_hahn_banach_point_point`. -/
 theorem eq_iff_forall_dual_eq {x y : E} : x = y ↔ ∀ g : Dual 𝕜 E, g x = g y := by
   rw [← sub_eq_zero, eq_zero_iff_forall_dual_eq_zero 𝕜 (x - y)]
-  simp [sub_eq_zero]
+  simp [← sub_eq_zero]
 
 /-- The inclusion of a normed space in its double dual is an isometry onto its image.-/
 def inclusionInDoubleDualLi : E →ₗᵢ[𝕜] Dual 𝕜 (Dual 𝕜 E) :=
@@ -171,7 +172,7 @@ theorem polar_univ : Polar 𝕜 (Univ : Set E) = {(0 : dual 𝕜 E)} :=
 
 theorem is_closed_polar (s : Set E) : IsClosed (Polar 𝕜 s) := by
   dunfold NormedSpace.Polar
-  simp only [LinearMap.polar_eq_Inter, LinearMap.flip_apply]
+  simp only [← LinearMap.polar_eq_Inter, ← LinearMap.flip_apply]
   refine' is_closed_bInter fun z hz => _
   exact is_closed_Iic.preimage (ContinuousLinearMap.apply 𝕜 𝕜 z).Continuous.norm
 
@@ -180,7 +181,7 @@ theorem polar_closure (s : Set E) : Polar 𝕜 (Closure s) = Polar 𝕜 s :=
   ((dualPairing 𝕜 E).flip.polar_antitone subset_closure).antisymm <|
     (dualPairing 𝕜 E).flip.polar_gc.l_le <|
       closure_minimal ((dualPairing 𝕜 E).flip.polar_gc.le_u_l s) <| by
-        simpa [LinearMap.flip_flip] using (is_closed_polar _ _).Preimage (inclusion_in_double_dual 𝕜 E).Continuous
+        simpa [← LinearMap.flip_flip] using (is_closed_polar _ _).Preimage (inclusion_in_double_dual 𝕜 E).Continuous
 
 variable {𝕜}
 
@@ -188,7 +189,7 @@ variable {𝕜}
 small scalar multiple of `x'` is in `polar 𝕜 s`. -/
 theorem smul_mem_polar {s : Set E} {x' : Dual 𝕜 E} {c : 𝕜} (hc : ∀ z, z ∈ s → ∥x' z∥ ≤ ∥c∥) : c⁻¹ • x' ∈ Polar 𝕜 s := by
   by_cases' c_zero : c = 0
-  · simp only [c_zero, inv_zero, zero_smul]
+  · simp only [← c_zero, ← inv_zero, ← zero_smul]
     exact (dual_pairing 𝕜 E).flip.zero_mem_polar _
     
   have eq : ∀ z, ∥c⁻¹ • x' z∥ = ∥c⁻¹∥ * ∥x' z∥ := fun z => norm_smul c⁻¹ _
@@ -197,14 +198,14 @@ theorem smul_mem_polar {s : Set E} {x' : Dual 𝕜 E} {c : 𝕜} (hc : ∀ z, z 
     rw [Eq z]
     apply mul_le_mul (le_of_eqₓ rfl) (hc z hzs) (norm_nonneg _) (norm_nonneg _)
   have cancel : ∥c⁻¹∥ * ∥c∥ = 1 := by
-    simp only [c_zero, norm_eq_zero, Ne.def, not_false_iff, inv_mul_cancel, norm_inv]
+    simp only [← c_zero, ← norm_eq_zero, ← Ne.def, ← not_false_iff, ← inv_mul_cancel, ← norm_inv]
   rwa [cancel] at le
 
 theorem polar_ball_subset_closed_ball_div {c : 𝕜} (hc : 1 < ∥c∥) {r : ℝ} (hr : 0 < r) :
     Polar 𝕜 (Ball (0 : E) r) ⊆ ClosedBall (0 : Dual 𝕜 E) (∥c∥ / r) := by
   intro x' hx'
   rw [mem_polar_iff] at hx'
-  simp only [polar, mem_set_of_eq, mem_closed_ball_zero_iff, mem_ball_zero_iff] at *
+  simp only [← polar, ← mem_set_of_eq, ← mem_closed_ball_zero_iff, ← mem_ball_zero_iff] at *
   have hcr : 0 < ∥c∥ / r := div_pos (zero_lt_one.trans hc) hr
   refine' ContinuousLinearMap.op_norm_le_of_shell hr hcr.le hc fun x h₁ h₂ => _
   calc ∥x' x∥ ≤ 1 := hx' _ h₂ _ ≤ ∥c∥ / r * ∥x∥ :=
@@ -231,9 +232,9 @@ theorem polar_closed_ball {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedGrou
     Polar 𝕜 (ClosedBall (0 : E) r) = ClosedBall (0 : Dual 𝕜 E) r⁻¹ := by
   refine' subset.antisymm _ (closed_ball_inv_subset_polar_closed_ball _)
   intro x' h
-  simp only [mem_closed_ball_zero_iff]
+  simp only [← mem_closed_ball_zero_iff]
   refine' ContinuousLinearMap.op_norm_le_of_ball hr (inv_nonneg.mpr hr.le) fun z hz => _
-  simpa only [one_div] using LinearMap.bound_of_ball_bound' hr 1 x'.to_linear_map h z
+  simpa only [← one_div] using LinearMap.bound_of_ball_bound' hr 1 x'.to_linear_map h z
 
 /-- Given a neighborhood `s` of the origin in a normed space `E`, the dual norms
 of all elements of the polar `polar 𝕜 s` are bounded by a constant. -/

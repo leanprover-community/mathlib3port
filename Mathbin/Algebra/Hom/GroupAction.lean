@@ -37,11 +37,11 @@ The above types have corresponding classes:
 
 variable (M' : Type _)
 
-variable (X : Type _) [HasScalar M' X]
+variable (X : Type _) [HasSmul M' X]
 
-variable (Y : Type _) [HasScalar M' Y]
+variable (Y : Type _) [HasSmul M' Y]
 
-variable (Z : Type _) [HasScalar M' Z]
+variable (Z : Type _) [HasSmul M' Z]
 
 variable (M : Type _) [Monoidₓ M]
 
@@ -80,7 +80,7 @@ notation:25 X " →[" M:25 "] " Y:0 => MulActionHom M X Y
 scalar multiplication by `M`.
 
 You should extend this class when you extend `mul_action_hom`. -/
-class SmulHomClass (F : Type _) (M X Y : outParam <| Type _) [HasScalar M X] [HasScalar M Y] extends
+class SmulHomClass (F : Type _) (M X Y : outParam <| Type _) [HasSmul M X] [HasSmul M Y] extends
   FunLike F X fun _ => Y where
   map_smul : ∀ f : F c : M x : X, f (c • x) = c • f x
 

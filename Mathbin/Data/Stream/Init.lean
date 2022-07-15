@@ -40,7 +40,7 @@ theorem tail_cons (a : α) (s : Streamₓ α) : tail (a :: s) = s :=
 theorem tail_drop (n : Nat) (s : Streamₓ α) : tail (drop n s) = drop n (tail s) :=
   funext fun i => by
     unfold tail drop
-    simp [nth, Nat.add_comm, Nat.add_left_comm]
+    simp [← nth, ← Nat.add_comm, ← Nat.add_left_comm]
 
 theorem nth_drop (n m : Nat) (s : Streamₓ α) : nth (drop m s) n = nth s (n + m) :=
   rfl
@@ -61,7 +61,7 @@ theorem drop_succ (n : Nat) (s : Streamₓ α) : drop (succ n) s = drop n (tail 
 
 @[simp]
 theorem head_drop {α} (a : Streamₓ α) (n : ℕ) : (a.drop n).head = a.nth n := by
-  simp only [drop, head, Nat.zero_add, Streamₓ.nth]
+  simp only [← drop, ← head, ← Nat.zero_add, ← Streamₓ.nth]
 
 @[ext]
 protected theorem ext {s₁ s₂ : Streamₓ α} : (∀ n, nth s₁ n = nth s₂ n) → s₁ = s₂ := fun h => funext h
@@ -391,12 +391,12 @@ theorem even_interleave (s₁ s₂ : Streamₓ α) : even (s₁ ⋈ s₂) = s₁
 
 theorem interleave_even_odd (s₁ : Streamₓ α) : even s₁ ⋈ odd s₁ = s₁ :=
   eq_of_bisim (fun s' s => s' = even s ⋈ odd s)
-    (fun h : s' = even s ⋈ odd s => by
+    (fun s' s h : s' = even s ⋈ odd s => by
       rw [h]
       constructor
       · rfl
         
-      · simp [odd_eq, odd_eq, tail_interleave, tail_even]
+      · simp [← odd_eq, ← odd_eq, ← tail_interleave, ← tail_even]
         )
     rfl
 
@@ -494,7 +494,7 @@ theorem take_theorem (s₁ s₂ : Streamₓ α) : (∀ n : Nat, take n s₁ = ta
   intro n
   induction' n with n ih
   · have aux := h 1
-    simp [take] at aux
+    simp [← take] at aux
     exact aux
     
   · have h₁ : some (nth s₁ (succ n)) = some (nth s₂ (succ n)) := by

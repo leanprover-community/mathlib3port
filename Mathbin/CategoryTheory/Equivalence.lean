@@ -223,7 +223,7 @@ def adjointifyη : 𝟭 C ≅ F ⋙ G :=
     
 
 theorem adjointify_η_ε (X : C) : F.map ((adjointifyη η ε).Hom.app X) ≫ ε.Hom.app (F.obj X) = 𝟙 (F.obj X) := by
-  dsimp' [adjointify_η]
+  dsimp' [← adjointify_η]
   simp
   have := ε.hom.naturality (F.map (η.inv.app X))
   dsimp'  at this
@@ -294,13 +294,13 @@ def funInvIdAssoc (e : C ≌ D) (F : C ⥤ E) : e.Functor ⋙ e.inverse ⋙ F �
 @[simp]
 theorem fun_inv_id_assoc_hom_app (e : C ≌ D) (F : C ⥤ E) (X : C) :
     (funInvIdAssoc e F).Hom.app X = F.map (e.unitInv.app X) := by
-  dsimp' [fun_inv_id_assoc]
+  dsimp' [← fun_inv_id_assoc]
   tidy
 
 @[simp]
 theorem fun_inv_id_assoc_inv_app (e : C ≌ D) (F : C ⥤ E) (X : C) :
     (funInvIdAssoc e F).inv.app X = F.map (e.Unit.app X) := by
-  dsimp' [fun_inv_id_assoc]
+  dsimp' [← fun_inv_id_assoc]
   tidy
 
 /-- Composing a functor with both functors of an equivalence yields a naturally isomorphic
@@ -311,13 +311,13 @@ def invFunIdAssoc (e : C ≌ D) (F : D ⥤ E) : e.inverse ⋙ e.Functor ⋙ F �
 @[simp]
 theorem inv_fun_id_assoc_hom_app (e : C ≌ D) (F : D ⥤ E) (X : D) :
     (invFunIdAssoc e F).Hom.app X = F.map (e.counit.app X) := by
-  dsimp' [inv_fun_id_assoc]
+  dsimp' [← inv_fun_id_assoc]
   tidy
 
 @[simp]
 theorem inv_fun_id_assoc_inv_app (e : C ≌ D) (F : D ⥤ E) (X : D) :
     (invFunIdAssoc e F).inv.app X = F.map (e.counitInv.app X) := by
-  dsimp' [inv_fun_id_assoc]
+  dsimp' [← inv_fun_id_assoc]
   tidy
 
 /-- If `C` is equivalent to `D`, then `C ⥤ E` is equivalent to `D ⥤ E`. -/
@@ -353,42 +353,42 @@ We also provide the lemmas for length four compositions, since they're occasiona
 (e.g. in proving that equivalences take monos to monos) -/
 @[simp]
 theorem cancel_unit_right {X Y : C} (f f' : X ⟶ Y) : f ≫ e.Unit.app Y = f' ≫ e.Unit.app Y ↔ f = f' := by
-  simp only [cancel_mono]
+  simp only [← cancel_mono]
 
 @[simp]
 theorem cancel_unit_inv_right {X Y : C} (f f' : X ⟶ e.inverse.obj (e.Functor.obj Y)) :
     f ≫ e.unitInv.app Y = f' ≫ e.unitInv.app Y ↔ f = f' := by
-  simp only [cancel_mono]
+  simp only [← cancel_mono]
 
 @[simp]
 theorem cancel_counit_right {X Y : D} (f f' : X ⟶ e.Functor.obj (e.inverse.obj Y)) :
     f ≫ e.counit.app Y = f' ≫ e.counit.app Y ↔ f = f' := by
-  simp only [cancel_mono]
+  simp only [← cancel_mono]
 
 @[simp]
 theorem cancel_counit_inv_right {X Y : D} (f f' : X ⟶ Y) : f ≫ e.counitInv.app Y = f' ≫ e.counitInv.app Y ↔ f = f' := by
-  simp only [cancel_mono]
+  simp only [← cancel_mono]
 
 @[simp]
 theorem cancel_unit_right_assoc {W X X' Y : C} (f : W ⟶ X) (g : X ⟶ Y) (f' : W ⟶ X') (g' : X' ⟶ Y) :
     f ≫ g ≫ e.Unit.app Y = f' ≫ g' ≫ e.Unit.app Y ↔ f ≫ g = f' ≫ g' := by
-  simp only [← category.assoc, cancel_mono]
+  simp only [category.assoc, ← cancel_mono]
 
 @[simp]
 theorem cancel_counit_inv_right_assoc {W X X' Y : D} (f : W ⟶ X) (g : X ⟶ Y) (f' : W ⟶ X') (g' : X' ⟶ Y) :
     f ≫ g ≫ e.counitInv.app Y = f' ≫ g' ≫ e.counitInv.app Y ↔ f ≫ g = f' ≫ g' := by
-  simp only [← category.assoc, cancel_mono]
+  simp only [category.assoc, ← cancel_mono]
 
 @[simp]
 theorem cancel_unit_right_assoc' {W X X' Y Y' Z : C} (f : W ⟶ X) (g : X ⟶ Y) (h : Y ⟶ Z) (f' : W ⟶ X') (g' : X' ⟶ Y')
     (h' : Y' ⟶ Z) : f ≫ g ≫ h ≫ e.Unit.app Z = f' ≫ g' ≫ h' ≫ e.Unit.app Z ↔ f ≫ g ≫ h = f' ≫ g' ≫ h' := by
-  simp only [← category.assoc, cancel_mono]
+  simp only [category.assoc, ← cancel_mono]
 
 @[simp]
 theorem cancel_counit_inv_right_assoc' {W X X' Y Y' Z : D} (f : W ⟶ X) (g : X ⟶ Y) (h : Y ⟶ Z) (f' : W ⟶ X')
     (g' : X' ⟶ Y') (h' : Y' ⟶ Z) :
     f ≫ g ≫ h ≫ e.counitInv.app Z = f' ≫ g' ≫ h' ≫ e.counitInv.app Z ↔ f ≫ g ≫ h = f' ≫ g' ≫ h' := by
-  simp only [← category.assoc, cancel_mono]
+  simp only [category.assoc, ← cancel_mono]
 
 end CancellationLemmas
 
@@ -548,34 +548,34 @@ def ofIso {F G : C ⥤ D} (e : F ≅ G) (hF : IsEquivalence F) : IsEquivalence G
   unitIso := hF.unitIso ≪≫ NatIso.hcomp e (Iso.refl hF.inverse)
   counitIso := NatIso.hcomp (Iso.refl hF.inverse) e.symm ≪≫ hF.counitIso
   functor_unit_iso_comp' := fun X => by
-    dsimp' [nat_iso.hcomp]
+    dsimp' [← nat_iso.hcomp]
     erw [id_comp, F.map_id, comp_id]
     apply (cancel_epi (e.hom.app X)).mp
     slice_lhs 1 2 => rw [← e.hom.naturality]
     slice_lhs 2 3 => rw [← nat_trans.vcomp_app', e.hom_inv_id]
-    simp only [nat_trans.id_app, id_comp, comp_id, F.map_comp, assoc]
+    simp only [← nat_trans.id_app, ← id_comp, ← comp_id, ← F.map_comp, ← assoc]
     erw [hF.counit_iso.hom.naturality]
     slice_lhs 1 2 => rw [functor_unit_iso_comp]
-    simp only [functor.id_map, id_comp]
+    simp only [← functor.id_map, ← id_comp]
 
 /-- Compatibility of `of_iso` with the composition of isomorphisms of functors -/
 theorem of_iso_trans {F G H : C ⥤ D} (e : F ≅ G) (e' : G ≅ H) (hF : IsEquivalence F) :
     ofIso e' (ofIso e hF) = ofIso (e ≪≫ e') hF := by
-  dsimp' [of_iso]
-  congr 1 <;> ext X <;> dsimp' [nat_iso.hcomp]
-  · simp only [id_comp, assoc, functor.map_comp]
+  dsimp' [← of_iso]
+  congr 1 <;> ext X <;> dsimp' [← nat_iso.hcomp]
+  · simp only [← id_comp, ← assoc, ← functor.map_comp]
     
-  · simp only [Functor.map_id, comp_id, id_comp, assoc]
+  · simp only [← Functor.map_id, ← comp_id, ← id_comp, ← assoc]
     
 
 /-- Compatibility of `of_iso` with identity isomorphisms of functors -/
 theorem of_iso_refl (F : C ⥤ D) (hF : IsEquivalence F) : ofIso (Iso.refl F) hF = hF := by
   rcases hF with ⟨Finv, Funit, Fcounit, Fcomp⟩
-  dsimp' [of_iso]
-  congr 1 <;> ext X <;> dsimp' [nat_iso.hcomp]
-  · simp only [comp_id, map_id]
+  dsimp' [← of_iso]
+  congr 1 <;> ext X <;> dsimp' [← nat_iso.hcomp]
+  · simp only [← comp_id, ← map_id]
     
-  · simp only [id_comp, map_id]
+  · simp only [← id_comp, ← map_id]
     
 
 /-- When `F` and `G` are two isomorphic functors, then `F` is an equivalence iff `G` is. -/
@@ -618,10 +618,10 @@ theorem ess_surj_of_equivalence (F : C ⥤ D) [IsEquivalence F] : EssSurj F :=
 See <https://stacks.math.columbia.edu/tag/02C3>.
 -/
 -- see Note [lower instance priority]
-instance (priority := 100) faithful_of_equivalence (F : C ⥤ D) [IsEquivalence F] : Faithful F where
-  map_injective' := fun X Y f g w => by
+instance (priority := 100) faithful_of_equivalence (F : C ⥤ D) [IsEquivalence F] :
+    Faithful F where map_injective' := fun X Y f g w => by
     have p := congr_arg (@CategoryTheory.Functor.map _ _ _ _ F.inv _ _) w
-    simpa only [cancel_epi, cancel_mono, is_equivalence.inv_fun_map] using p
+    simpa only [← cancel_epi, ← cancel_mono, ← is_equivalence.inv_fun_map] using p
 
 /-- An equivalence is full.
 
@@ -632,7 +632,8 @@ instance (priority := 100) fullOfEquivalence (F : C ⥤ D) [IsEquivalence F] : F
   preimage := fun X Y f => F.asEquivalence.Unit.app X ≫ F.inv.map f ≫ F.asEquivalence.unitInv.app Y
   witness' := fun X Y f =>
     F.inv.map_injective <| by
-      simpa only [is_equivalence.inv_fun_map, assoc, iso.inv_hom_id_app_assoc, iso.inv_hom_id_app] using comp_id _
+      simpa only [← is_equivalence.inv_fun_map, ← assoc, ← iso.inv_hom_id_app_assoc, ← iso.inv_hom_id_app] using
+        comp_id _
 
 @[simps]
 private noncomputable def equivalence_inverse (F : C ⥤ D) [Full F] [Faithful F] [EssSurj F] : D ⥤ C where
@@ -666,8 +667,8 @@ theorem functor_map_inj_iff (e : C ≌ D) {X Y : C} (f g : X ⟶ Y) : e.Functor.
 theorem inverse_map_inj_iff (e : C ≌ D) {X Y : D} (f g : X ⟶ Y) : e.inverse.map f = e.inverse.map g ↔ f = g :=
   functor_map_inj_iff e.symm f g
 
-instance ess_surj_induced_functor {C' : Type _} (e : C' ≃ D) : EssSurj (inducedFunctor e) where
-  mem_ess_image := fun Y =>
+instance ess_surj_induced_functor {C' : Type _} (e : C' ≃ D) :
+    EssSurj (inducedFunctor e) where mem_ess_image := fun Y =>
     ⟨e.symm Y, by
       simp ⟩
 

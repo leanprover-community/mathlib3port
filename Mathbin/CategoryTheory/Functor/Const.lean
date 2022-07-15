@@ -104,8 +104,8 @@ def constComp (X : C) (F : C ⥤ D) : (const J).obj X ⋙ F ≅ (const J).obj (F
   inv := { app := fun _ => 𝟙 _ }
 
 /-- If `J` is nonempty, then the constant functor over `J` is faithful. -/
-instance [Nonempty J] : Faithful (const J : C ⥤ J ⥤ C) where
-  map_injective' := fun X Y f g e => NatTrans.congr_app e (Classical.arbitrary J)
+instance [Nonempty J] :
+    Faithful (const J : C ⥤ J ⥤ C) where map_injective' := fun X Y f g e => NatTrans.congr_app e (Classical.arbitrary J)
 
 end
 

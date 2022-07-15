@@ -215,8 +215,7 @@ variable {F G : ∀ i, C i ⥤ D i}
 /-- Assemble an `I`-indexed family of natural transformations into a single natural transformation.
 -/
 @[simps]
-def pi (α : ∀ i, F i ⟶ G i) : Functor.pi F ⟶ Functor.pi G where
-  app := fun f i => (α i).app (f i)
+def pi (α : ∀ i, F i ⟶ G i) : Functor.pi F ⟶ Functor.pi G where app := fun f i => (α i).app (f i)
 
 end NatTrans
 

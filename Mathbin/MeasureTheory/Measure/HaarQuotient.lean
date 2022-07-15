@@ -45,7 +45,7 @@ variable {G : Type _} [Groupₓ G] [MeasurableSpace G] [TopologicalSpace G] [Top
 theorem Subgroup.smul_invariant_measure [μ.IsMulRightInvariant] : SmulInvariantMeasure Γ.opposite G μ :=
   { measure_preimage_smul := by
       rintro ⟨c, hc⟩ s hs
-      dsimp' [(· • ·)]
+      dsimp' [← (· • ·)]
       refine' measure_preimage_mul_right μ (MulOpposite.unop c) s }
 
 /-- Measurability of the action of the topological group `G` on the left-coset space `G/Γ`. -/
@@ -100,8 +100,8 @@ theorem MeasureTheory.IsFundamentalDomain.smul_invariant_measure_map [μ.IsMulLe
       rintro ⟨γ, γ_in_Γ⟩
       ext
       have : π (x * MulOpposite.unop γ) = π x := by
-        simpa [QuotientGroup.eq'] using γ_in_Γ
-      simp [(· • ·), this] }
+        simpa [← QuotientGroup.eq'] using γ_in_Γ
+      simp [← (· • ·), ← this] }
 
 /-- Assuming `Γ` is a normal subgroup of a topological group `G`, the pushforward to the quotient
   group `G ⧸ Γ` of the restriction of a both left- and right-invariant measure on `G` to a

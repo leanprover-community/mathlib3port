@@ -91,7 +91,7 @@ theorem degrees_neg (p : MvPolynomial σ R) : (-p).degrees = p.degrees := by
   rw [degrees, support_neg] <;> rfl
 
 theorem degrees_sub (p q : MvPolynomial σ R) : (p - q).degrees ≤ p.degrees⊔q.degrees := by
-  simpa only [sub_eq_add_neg] using
+  simpa only [← sub_eq_add_neg] using
     le_transₓ (degrees_add p (-q))
       (by
         rw [degrees_neg])
@@ -104,17 +104,17 @@ variable (p q)
 
 @[simp]
 theorem vars_neg : (-p).vars = p.vars := by
-  simp [vars, degrees_neg]
+  simp [← vars, ← degrees_neg]
 
 theorem vars_sub_subset : (p - q).vars ⊆ p.vars ∪ q.vars := by
-  convert vars_add_subset p (-q) using 2 <;> simp [sub_eq_add_neg]
+  convert vars_add_subset p (-q) using 2 <;> simp [← sub_eq_add_neg]
 
 variable {p q}
 
 @[simp]
 theorem vars_sub_of_disjoint (hpq : Disjoint p.vars q.vars) : (p - q).vars = p.vars ∪ q.vars := by
   rw [← vars_neg q] at hpq
-  convert vars_add_of_disjoint hpq using 2 <;> simp [sub_eq_add_neg]
+  convert vars_add_of_disjoint hpq using 2 <;> simp [← sub_eq_add_neg]
 
 end Vars
 
@@ -159,7 +159,7 @@ def homEquiv : (MvPolynomial σ ℤ →+* S) ≃ (σ → S) where
   left_inv := fun f => RingHom.ext <| eval₂_hom_X _ _
   right_inv := fun f =>
     funext fun x => by
-      simp only [coe_eval₂_hom, Function.comp_app, eval₂_X]
+      simp only [← coe_eval₂_hom, ← Function.comp_app, ← eval₂_X]
 
 end Eval₂
 
@@ -171,9 +171,9 @@ theorem degree_of_sub_lt {x : σ} {f g : MvPolynomial σ R} {k : ℕ} (h : 0 < k
   rw [degree_of_lt_iff h]
   intro m hm
   by_contra hc
-  simp only [not_ltₓ] at hc
+  simp only [← not_ltₓ] at hc
   have h := support_sub σ f g hm
-  simp only [mem_support_iff, Ne.def, coeff_sub, sub_eq_zero] at hm
+  simp only [← mem_support_iff, ← Ne.def, ← coeff_sub, ← sub_eq_zero] at hm
   cases' Finset.mem_union.1 h with cf cg
   · exact hm (hf m cf hc)
     
@@ -186,7 +186,7 @@ section TotalDegree
 
 @[simp]
 theorem total_degree_neg (a : MvPolynomial σ R) : (-a).totalDegree = a.totalDegree := by
-  simp only [total_degree, support_neg]
+  simp only [← total_degree, ← support_neg]
 
 theorem total_degree_sub (a b : MvPolynomial σ R) : (a - b).totalDegree ≤ max a.totalDegree b.totalDegree :=
   calc

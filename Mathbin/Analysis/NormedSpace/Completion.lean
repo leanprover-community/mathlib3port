@@ -28,10 +28,10 @@ instance (priority := 100) NormedSpace.to_has_uniform_continuous_const_smul : Ha
   ⟨fun c => (lipschitz_with_smul c).UniformContinuous⟩
 
 instance : NormedSpace 𝕜 (Completion E) :=
-  { Completion.module 𝕜 E with smul := (· • ·),
+  { Completion.module with smul := (· • ·),
     norm_smul_le := fun c x =>
       (induction_on x (is_closed_le (continuous_const_smul _).norm (continuous_const.mul continuous_norm))) fun y => by
-        simp only [← coe_smul, norm_coe, norm_smul] }
+        simp only [coe_smul, ← norm_coe, ← norm_smul] }
 
 variable {𝕜 E}
 

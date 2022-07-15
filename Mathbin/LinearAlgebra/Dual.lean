@@ -48,10 +48,11 @@ variable (R : Type _) (M : Type _)
 
 variable [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
--- ././Mathport/Syntax/Translate/Basic.lean:978:9: unsupported derive handler module R
+-- ./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler module R
 /-- The dual space of an R-module M is the R-module of linear maps `M → R`. -/
 def Dual :=
-  M →ₗ[R] R deriving AddCommMonoidₓ, [anonymous]
+  M →ₗ[R] R deriving AddCommMonoidₓ,
+  «./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler module R»
 
 instance {S : Type _} [CommRingₓ S] {N : Type _} [AddCommGroupₓ N] [Module S N] : AddCommGroupₓ (Dual S N) :=
   LinearMap.addCommGroup
@@ -267,10 +268,10 @@ theorem to_dual_to_dual [Fintype ι] : b.dualBasis.toDual.comp b.toDual = Dual.e
 theorem eval_ker {ι : Type _} (b : Basis ι R M) : (Dual.eval R M).ker = ⊥ := by
   rw [ker_eq_bot']
   intro m hm
-  simp_rw [LinearMap.ext_iff, dual.eval_apply, zero_apply]  at hm
+  simp_rw [LinearMap.ext_iff, dual.eval_apply, zero_apply] at hm
   exact (Basis.forall_coord_eq_zero_iff _).mp fun i => hm (b.coord i)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem eval_range {ι : Type _} [Fintype ι] (b : Basis ι R M) : (eval R M).range = ⊤ := by
   classical
   rw [← b.to_dual_to_dual, range_comp, b.to_dual_range, map_top, to_dual_range _]
@@ -307,13 +308,13 @@ theorem total_coord [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [Fintype ι
   have := Classical.decEq ι
   rw [← coe_dual_basis, total_dual_basis]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- TODO(jmc): generalize to rings, once `module.rank` is generalized
 theorem dual_dim_eq [Field K] [AddCommGroupₓ V] [Module K V] [Fintype ι] (b : Basis ι K V) :
     Cardinal.lift (Module.rank K V) = Module.rank K (Dual K V) := by
   classical
   have := LinearEquiv.lift_dim_eq b.to_dual_equiv
-  simp only [Cardinal.lift_umax] at this
+  simp only [← Cardinal.lift_umax] at this
   rw [this, ← Cardinal.lift_umax]
   apply Cardinal.lift_id
 
@@ -327,7 +328,7 @@ variable [Field K] [AddCommGroupₓ V] [Module K V]
 
 open Module Module.Dual Submodule LinearMap Cardinal Basis FiniteDimensional
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem eval_ker : (eval K V).ker = ⊥ := by
   classical
   exact (Basis.ofVectorSpace K V).eval_ker
@@ -384,9 +385,9 @@ variable {e : ι → M} {ε : ι → Dual R M}
 /-- The coefficients of `v` on the basis `e` -/
 def coeffs [DecidableEq ι] (h : DualPair e ε) (m : M) : ι →₀ R where
   toFun := fun i => ε i m
-  support :=
+  support := by
     have := h.finite m
-    { i : ι | ε i m ≠ 0 }.toFinset
+    exact { i : ι | ε i m ≠ 0 }.toFinset
   mem_support_to_fun := by
     intro i
     rw [Set.mem_to_finset]
@@ -399,7 +400,7 @@ theorem coeffs_apply [DecidableEq ι] (h : DualPair e ε) (m : M) (i : ι) : h.c
 /-- linear combinations of elements of `e`.
 This is a convenient abbreviation for `finsupp.total _ M R e l` -/
 def lc {ι} (e : ι → M) (l : ι →₀ R) : M :=
-  l.Sum fun a : R => a • e i
+  l.Sum fun i : ι a : R => a • e i
 
 theorem lc_def (e : ι → M) (l : ι →₀ R) : lc e l = Finsupp.total _ _ _ e l :=
   rfl
@@ -410,15 +411,15 @@ include h
 
 theorem dual_lc (l : ι →₀ R) (i : ι) : ε i (DualPair.lc e l) = l i := by
   erw [LinearMap.map_sum]
-  simp only [h.eval, map_smul, smul_eq_mul]
+  simp only [← h.eval, ← map_smul, ← smul_eq_mul]
   rw [Finset.sum_eq_single i]
   · simp
     
   · intro q q_in q_ne
-    simp [q_ne.symm]
+    simp [← q_ne.symm]
     
   · intro p_not_in
-    simp [Finsupp.not_mem_support_iff.1 p_not_in]
+    simp [← Finsupp.not_mem_support_iff.1 p_not_in]
     
 
 @[simp]
@@ -431,7 +432,7 @@ theorem coeffs_lc (l : ι →₀ R) : h.coeffs (DualPair.lc e l) = l := by
 theorem lc_coeffs (m : M) : DualPair.lc e (h.coeffs m) = m := by
   refine' eq_of_sub_eq_zero (h.total _)
   intro i
-  simp [-sub_eq_add_neg, LinearMap.map_sub, h.dual_lc, sub_eq_zero]
+  simp [-sub_eq_add_neg, ← LinearMap.map_sub, ← h.dual_lc, ← sub_eq_zero]
 
 /-- `(h : dual_pair e ε).basis` shows the family of vectors `e` forms a basis. -/
 @[simps]
@@ -547,8 +548,8 @@ theorem dual_lift_of_subtype {φ : Module.Dual K W} (w : W) : W.dualLift φ (w :
   erw [of_is_compl_left_apply _ w]
   rfl
 
-theorem dual_lift_of_mem {φ : Module.Dual K W} {w : V} (hw : w ∈ W) : W.dualLift φ w = φ ⟨w, hw⟩ :=
-  dual_lift_of_subtype ⟨w, hw⟩
+theorem dual_lift_of_mem {φ : Module.Dual K W} {w : V} (hw : w ∈ W) : W.dualLift φ w = φ ⟨w, hw⟩ := by
+  convert dual_lift_of_subtype ⟨w, hw⟩
 
 @[simp]
 theorem dual_restrict_comp_dual_lift (W : Subspace K V) : W.dualRestrict.comp W.dualLift = 1 := by
@@ -664,12 +665,12 @@ def LinearEquiv.dualMap (f : M₁ ≃ₗ[R] M₂) : Dual R M₂ ≃ₗ[R] Dual R
     left_inv := by
       intro φ
       ext x
-      simp only [LinearMap.dual_map_apply, LinearEquiv.coe_to_linear_map, LinearMap.to_fun_eq_coe,
+      simp only [← LinearMap.dual_map_apply, ← LinearEquiv.coe_to_linear_map, ← LinearMap.to_fun_eq_coe, ←
         LinearEquiv.apply_symm_apply],
     right_inv := by
       intro φ
       ext x
-      simp only [LinearMap.dual_map_apply, LinearEquiv.coe_to_linear_map, LinearMap.to_fun_eq_coe,
+      simp only [← LinearMap.dual_map_apply, ← LinearEquiv.coe_to_linear_map, ← LinearMap.to_fun_eq_coe, ←
         LinearEquiv.symm_apply_apply] }
 
 @[simp]
@@ -810,8 +811,8 @@ variable {R M N}
 @[simp]
 theorem dual_distrib_apply (f : Dual R M) (g : Dual R N) (m : M) (n : N) :
     dualDistrib R M N (f ⊗ₜ g) (m ⊗ₜ n) = f m * g n := by
-  simp only [dual_distrib, coe_comp, Function.comp_app, hom_tensor_hom_map_apply, comp_right_apply, LinearEquiv.coe_coe,
-    map_tmul, lid_tmul, Algebra.id.smul_eq_mul]
+  simp only [← dual_distrib, ← coe_comp, ← Function.comp_app, ← hom_tensor_hom_map_apply, ← comp_right_apply, ←
+    LinearEquiv.coe_coe, ← map_tmul, ← lid_tmul, ← Algebra.id.smul_eq_mul]
 
 end
 
@@ -821,7 +822,7 @@ variable [CommRingₓ R] [AddCommGroupₓ M] [AddCommGroupₓ N]
 
 variable [Module R M] [Module R N]
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 /-- An inverse to `dual_tensor_dual_map` given bases.
 -/
 noncomputable def dualDistribInvOfBasis (b : Basis ι R M) (c : Basis κ R N) :
@@ -829,11 +830,11 @@ noncomputable def dualDistribInvOfBasis (b : Basis ι R M) (c : Basis κ R N) :
   ∑ (i) (j),
     (ringLmapEquivSelf R ℕ _).symm (b.dualBasis i ⊗ₜ c.dualBasis j) ∘ₗ applyₗ (c j) ∘ₗ applyₗ (b i) ∘ₗ lcurry R M N R
 
--- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
 @[simp]
 theorem dual_distrib_inv_of_basis_apply (b : Basis ι R M) (c : Basis κ R N) (f : Dual R (M ⊗[R] N)) :
     dualDistribInvOfBasis b c f = ∑ (i) (j), f (b i ⊗ₜ c j) • b.dualBasis i ⊗ₜ c.dualBasis j := by
-  simp [dual_distrib_inv_of_basis]
+  simp [← dual_distrib_inv_of_basis]
 
 /-- A linear equivalence between `dual M ⊗ dual N` and `dual (M ⊗ N)` given bases for `M` and `N`.
 It sends `f ⊗ g` to the composition of `tensor_product.map f g` with the natural
@@ -845,13 +846,13 @@ noncomputable def dualDistribEquivOfBasis (b : Basis ι R M) (c : Basis κ R N) 
   refine' LinearEquiv.ofLinear (dual_distrib R M N) (dual_distrib_inv_of_basis b c) _ _
   · ext f m n
     have h : ∀ r s : R, r • s = s • r := IsCommutative.comm
-    simp only [compr₂_apply, mk_apply, comp_apply, id_apply, dual_distrib_inv_of_basis_apply, LinearMap.map_sum,
-      map_smul, sum_apply, smul_apply, dual_distrib_apply, h (f _) _, ← f.map_smul, ← f.map_sum, ← smul_tmul_smul, ←
-      tmul_sum, ← sum_tmul, Basis.coe_dual_basis, Basis.coord_apply, Basis.sum_repr]
+    simp only [← compr₂_apply, ← mk_apply, ← comp_apply, ← id_apply, ← dual_distrib_inv_of_basis_apply, ←
+      LinearMap.map_sum, ← map_smul, ← sum_apply, ← smul_apply, ← dual_distrib_apply, ← h (f _) _, f.map_smul,
+      f.map_sum, smul_tmul_smul, tmul_sum, sum_tmul, ← Basis.coe_dual_basis, ← Basis.coord_apply, ← Basis.sum_repr]
     
   · ext f g
-    simp only [compr₂_apply, mk_apply, comp_apply, id_apply, dual_distrib_inv_of_basis_apply, dual_distrib_apply, ←
-      smul_tmul_smul, ← tmul_sum, ← sum_tmul, Basis.coe_dual_basis, Basis.sum_dual_apply_smul_coord]
+    simp only [← compr₂_apply, ← mk_apply, ← comp_apply, ← id_apply, ← dual_distrib_inv_of_basis_apply, ←
+      dual_distrib_apply, smul_tmul_smul, tmul_sum, sum_tmul, ← Basis.coe_dual_basis, ← Basis.sum_dual_apply_smul_coord]
     
 
 variable (R M N)

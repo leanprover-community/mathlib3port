@@ -34,7 +34,7 @@ namespace Linarith
 
 open Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:209:40: warning: unsupported option eqn_compiler.max_steps
+-- ./././Mathport/Syntax/Translate/Basic.lean:293:40: warning: unsupported option eqn_compiler.max_steps
 set_option eqn_compiler.max_steps 50000
 
 /-- If `prf` is a proof of `¬ e`, where `e` is a comparison,
@@ -169,7 +169,7 @@ unsafe def nat_to_int : global_preprocessor where
     let l ← lock_tactic_state <| l.mmap fun h => (infer_type h >>= guardb ∘ is_nat_prop) >> zify_proof [] h <|> return h
     let nonnegs ←
       l.mfoldl
-          (fun h => do
+          (fun es : expr_set h => do
             let (a, b) ← infer_type h >>= get_rel_sides
             return <| (es (get_nat_comps a)).insert_list (get_nat_comps b))
           mk_rb_set
@@ -241,7 +241,7 @@ unsafe def nlinarith_extras : global_preprocessor where
   transform := fun ls => do
     let s ← ls.mfoldr (fun h s' => infer_type h >>= find_squares s') mk_rb_set
     let new_es ←
-      (s.mfold ([] : List expr)) fun new_es =>
+      (s.mfold ([] : List expr)) fun ⟨e, is_sq⟩ new_es =>
           (do
               let p ← mk_app (if is_sq then `` sq_nonneg else `` mul_self_nonneg) [e]
               return <| p :: new_es) <|>

@@ -124,17 +124,17 @@ theorem append_cons (a : α) (v : Vector3 α m) (w : Vector3 α n) : a :: v +-+ 
 theorem append_left : ∀ {m} i : Fin2 m v : Vector3 α m {n} w : Vector3 α n, (v +-+ w) (left n i) = v i
   | _, @fz m, v, n, w =>
     v.consElim fun a t => by
-      simp [*, left]
+      simp [*, ← left]
   | _, @fs m i, v, n, w =>
     v.consElim fun a t => by
-      simp [*, left]
+      simp [*, ← left]
 
 @[simp]
 theorem append_add : ∀ {m} v : Vector3 α m {n} w : Vector3 α n i : Fin2 n, (v +-+ w) (add i m) = w i
   | 0, v, n, w, i => rfl
   | succ m, v, n, w, i =>
     v.consElim fun a t => by
-      simp [*, add]
+      simp [*, ← add]
 
 /-- Insert `a` into `v` at index `i`. -/
 def insert (a : α) (v : Vector3 α n) (i : Fin2 (succ n)) : Vector3 α (succ n) := fun j => (a :: v) (insertPerm i j)
@@ -147,8 +147,8 @@ theorem insert_fz (a : α) (v : Vector3 α n) : insert a v fz = a :: v := by
 theorem insert_fs (a : α) (b : α) (v : Vector3 α n) (i : Fin2 (succ n)) :
     insert a (b :: v) (fs i) = b :: insert a v i :=
   funext fun j => by
-    refine' j.cases' _ fun j => _ <;> simp [insert, insert_perm]
-    refine' Fin2.cases' _ _ (insert_perm i j) <;> simp [insert_perm]
+    refine' j.cases' _ fun j => _ <;> simp [← insert, ← insert_perm]
+    refine' Fin2.cases' _ _ (insert_perm i j) <;> simp [← insert_perm]
 
 theorem append_insert (a : α) (t : Vector3 α m) (v : Vector3 α n) (i : Fin2 (succ n)) (e : succ n + m = succ (n + m)) :
     insert a (t +-+ v) (Eq.recOnₓ e (i.add m)) = Eq.recOnₓ e (t +-+ insert a v i) := by
@@ -227,7 +227,7 @@ theorem vector_allp_iff_forall (p : α → Prop) (v : Vector3 α n) : VectorAllp
   · simp
     refine' fun n a v IH =>
       (and_congr_right fun _ => IH).trans
-        ⟨fun i => by
+        ⟨fun ⟨pa, h⟩ i => by
           refine' i.cases' _ _
           exacts[pa, h], fun h => ⟨_, fun i => _⟩⟩
     · have h0 := h fz

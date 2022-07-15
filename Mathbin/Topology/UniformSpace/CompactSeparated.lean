@@ -48,7 +48,7 @@ theorem compact_space_uniformity [CompactSpace α] [SeparatedSpace α] : 𝓤 α
   refine' le_antisymmₓ supr_nhds_le_uniformity _
   by_contra H
   obtain ⟨V, hV, h⟩ : ∃ V : Set (α × α), (∀ x : α, V ∈ 𝓝 (x, x)) ∧ 𝓤 α⊓𝓟 (Vᶜ) ≠ ⊥ := by
-    simpa [le_iff_forall_inf_principal_compl] using H
+    simpa [← le_iff_forall_inf_principal_compl] using H
   let F := 𝓤 α⊓𝓟 (Vᶜ)
   have : ne_bot F := ⟨h⟩
   obtain ⟨⟨x, y⟩, hx⟩ : ∃ p : α × α, ClusterPt p F := cluster_point_of_compact F
@@ -78,9 +78,7 @@ theorem unique_uniformity_of_compact_t2 [t : TopologicalSpace γ] [CompactSpace 
     rwa [separated_iff_t2, h']
   rw [compact_space_uniformity, compact_space_uniformity, h, h']
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (U₁ V₁ «expr ∈ » expr𝓝() x)
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (U₂ V₂ «expr ∈ » expr𝓝() y)
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (y «expr ≠ » x)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y «expr ≠ » x)
 /-- The unique uniform structure inducing a given compact Hausdorff topological structure. -/
 def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ] : UniformSpace γ where
   uniformity := ⨆ x, 𝓝 (x, x)
@@ -124,14 +122,12 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
       intro h
       apply this
       apply diag_subset
-      simp [h]
+      simp [← h]
     -- Since γ is compact and Hausdorff, it is normal, hence regular.
     have : NormalSpace γ := normal_of_compact_t2
     -- So there are closed neighboords V₁ and V₂ of x and y contained in disjoint open neighborhoods
     -- U₁ and U₂.
-    obtain ⟨U₁, U₁_in, V₁, V₁_in, U₂, U₂_in₂, V₂, V₂_in, V₁_cl, V₂_cl, U₁_op, U₂_op, VU₁, VU₂, hU₁₂⟩ :
-      ∃ (U₁ V₁ : _)(_ : U₁ ∈ 𝓝 x)(_ : V₁ ∈ 𝓝 x)(U₂ V₂ : _)(_ : U₂ ∈ 𝓝 y)(_ : V₂ ∈ 𝓝 y),
-        IsClosed V₁ ∧ IsClosed V₂ ∧ IsOpen U₁ ∧ IsOpen U₂ ∧ V₁ ⊆ U₁ ∧ V₂ ⊆ U₂ ∧ U₁ ∩ U₂ = ∅ :=
+    obtain ⟨U₁, U₁_in, V₁, V₁_in, U₂, U₂_in₂, V₂, V₂_in, V₁_cl, V₂_cl, U₁_op, U₂_op, VU₁, VU₂, hU₁₂⟩ :=
       disjoint_nested_nhds x_ne_y
     -- We set U₃ := (V₁ ∪ V₂)ᶜ so that W := U₁ ×ˢ U₁ ∪ U₂ ×ˢ U₂ ∪ U₃ ×ˢ U₃ is an open
     -- neighborhood of Δ.
@@ -152,38 +148,26 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
           
         
       all_goals
-        simp only [IsOpen.prod, *]
+        simp only [← IsOpen.prod, *]
     -- So W ○ W ∈ F by definition of F
     have : W ○ W ∈ F := by
       simpa only using mem_lift' W_in
     -- And V₁ ×ˢ V₂ ∈ 𝓝 (x, y)
     have hV₁₂ : V₁ ×ˢ V₂ ∈ 𝓝 (x, y) := ProdIsOpen.mem_nhds V₁_in V₂_in
     -- But (x, y) is also a cluster point of F so (V₁ ×ˢ V₂) ∩ (W ○ W) ≠ ∅
-    have clF : ClusterPt (x, y) F := hxy.of_inf_left
-    obtain ⟨p, p_in⟩ : ∃ p, p ∈ V₁ ×ˢ V₂ ∩ (W ○ W) := cluster_pt_iff.mp clF hV₁₂ this
     -- However the construction of W implies (V₁ ×ˢ V₂) ∩ (W ○ W) = ∅.
     -- Indeed assume for contradiction there is some (u, v) in the intersection.
+    obtain ⟨⟨u, v⟩, ⟨u_in, v_in⟩, w, huw, hwv⟩ := cluster_pt_iff.mp hxy.of_inf_left hV₁₂ this
     -- So u ∈ V₁, v ∈ V₂, and there exists some w such that (u, w) ∈ W and (w ,v) ∈ W.
     -- Because u is in V₁ which is disjoint from U₂ and U₃, (u, w) ∈ W forces (u, w) ∈ U₁ ×ˢ U₁.
+    have uw_in : (u, w) ∈ U₁ ×ˢ U₁ :=
+      (huw.resolve_right fun h => h.1 <| Or.inl u_in).resolve_right fun h => hU₁₂ ⟨VU₁ u_in, h.1⟩
     -- Similarly, because v ∈ V₂, (w ,v) ∈ W forces (w, v) ∈ U₂ ×ˢ U₂.
+    have wv_in : (w, v) ∈ U₂ ×ˢ U₂ :=
+      (hwv.resolve_right fun h => h.2 <| Or.inr v_in).resolve_left fun h => hU₁₂ ⟨h.2, VU₂ v_in⟩
     -- Hence w ∈ U₁ ∩ U₂ which is empty.
-    have inter_empty : V₁ ×ˢ V₂ ∩ (W ○ W) = ∅ := by
-      rw [eq_empty_iff_forall_not_mem]
-      rintro ⟨u, v⟩ ⟨⟨u_in, v_in⟩, w, huw, hwv⟩
-      have uw_in : (u, w) ∈ U₁ ×ˢ U₁ :=
-        Set.mem_prod.2
-          ((huw.resolve_right fun h => h.1 <| Or.inl u_in).resolve_right fun h => by
-            have : u ∈ U₁ ∩ U₂ := ⟨VU₁ u_in, h.1⟩
-            rwa [hU₁₂] at this)
-      have wv_in : (w, v) ∈ U₂ ×ˢ U₂ :=
-        Set.mem_prod.2
-          ((hwv.resolve_right fun h => h.2 <| Or.inr v_in).resolve_left fun h => by
-            have : v ∈ U₁ ∩ U₂ := ⟨h.2, VU₂ v_in⟩
-            rwa [hU₁₂] at this)
-      have : w ∈ U₁ ∩ U₂ := ⟨uw_in.2, wv_in.1⟩
-      rwa [hU₁₂] at this
     -- So we have a contradiction
-    rwa [inter_empty] at p_in
+    exact hU₁₂ ⟨uw_in.2, wv_in.1⟩
   is_open_uniformity := by
     -- Here we need to prove the topology induced by the constructed uniformity is the
     -- topology we started with.
@@ -202,8 +186,8 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     suffices ∀ y _ : y ≠ x, comap (fun y : γ => x) (𝓝 y)⊓𝓝 y ≤ 𝓝 x by
       simpa
     intro y hxy
-    simp
-      [comap_const_of_not_mem (compl_singleton_mem_nhds hxy)
+    simp [←
+      comap_const_of_not_mem (compl_singleton_mem_nhds hxy)
         (by
           simp )]
 

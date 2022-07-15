@@ -53,7 +53,7 @@ theorem Definable.map_expansion {L' : FirstOrder.Language} [L'.Structure M] (h :
   obtain ⟨ψ, rfl⟩ := h
   refine' ⟨(φ.add_constants A).onFormula ψ, _⟩
   ext x
-  simp only [mem_set_of_eq, Lhom.realize_on_formula]
+  simp only [← mem_set_of_eq, ← Lhom.realize_on_formula]
 
 theorem empty_definable_iff : (∅ : Set M).Definable L s ↔ ∃ φ : L.Formula α, s = SetOf φ.realize := by
   rw [definable, Equivₓ.exists_congr_left (Lequiv.add_empty_constants L (∅ : Set M)).onFormula]
@@ -94,7 +94,7 @@ theorem Definable.union {f g : Set (α → M)} (hf : A.Definable L f) (hg : A.De
   ext
   rw [hφ, hθ, mem_set_of_eq, formula.realize_sup, mem_union_eq, mem_set_of_eq, mem_set_of_eq]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem definable_finset_inf {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf : ∀ i, A.Definable L (f i)) (s : Finset ι) :
     A.Definable L (s.inf f) := by
   classical
@@ -102,7 +102,7 @@ theorem definable_finset_inf {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf 
   rw [Finset.inf_insert]
   exact (hf i).inter h
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem definable_finset_sup {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf : ∀ i, A.Definable L (f i)) (s : Finset ι) :
     A.Definable L (s.sup f) := by
   classical
@@ -129,14 +129,14 @@ theorem Definable.compl {s : Set (α → M)} (hf : A.Definable L s) : A.Definabl
 
 @[simp]
 theorem Definable.sdiff {s t : Set (α → M)} (hs : A.Definable L s) (ht : A.Definable L t) : A.Definable L (s \ t) :=
-  hs.inter ht.Compl
+  hs.inter ht.compl
 
 theorem Definable.preimage_comp (f : α → β) {s : Set (α → M)} (h : A.Definable L s) :
     A.Definable L ((fun g : β → M => g ∘ f) ⁻¹' s) := by
   obtain ⟨φ, rfl⟩ := h
   refine' ⟨φ.relabel f, _⟩
   ext
-  simp only [Set.preimage_set_of_eq, mem_set_of_eq, formula.realize_relabel]
+  simp only [← Set.preimage_set_of_eq, ← mem_set_of_eq, ← formula.realize_relabel]
 
 theorem Definable.image_comp_equiv {s : Set (β → M)} (h : A.Definable L s) (f : α ≃ β) :
     A.Definable L ((fun g : β → M => g ∘ f) '' s) := by
@@ -144,7 +144,7 @@ theorem Definable.image_comp_equiv {s : Set (β → M)} (h : A.Definable L s) (f
   rw [image_eq_preimage_of_inverse]
   · intro i
     ext b
-    simp only [Function.comp_app, Equivₓ.apply_symm_apply]
+    simp only [← Function.comp_app, ← Equivₓ.apply_symm_apply]
     
   · intro i
     ext a
@@ -160,8 +160,8 @@ theorem Definable.image_comp_sum_inl_fin (m : ℕ) {s : Set (Sum α (Finₓ m) �
   obtain ⟨φ, rfl⟩ := h
   refine' ⟨(bounded_formula.relabel id φ).exs, _⟩
   ext x
-  simp only [Set.mem_image, mem_set_of_eq, bounded_formula.realize_exs, bounded_formula.realize_relabel,
-    Function.comp.right_id, fin.coe_cast_add_zero]
+  simp only [← Set.mem_image, ← mem_set_of_eq, ← bounded_formula.realize_exs, ← bounded_formula.realize_relabel, ←
+    Function.comp.right_id, ← fin.coe_cast_add_zero]
   constructor
   · rintro ⟨y, hy, rfl⟩
     exact ⟨y ∘ Sum.inr, (congr (congr rfl (Sum.elim_comp_inl_inr y).symm) (funext finZeroElim)).mp hy⟩
@@ -170,7 +170,7 @@ theorem Definable.image_comp_sum_inl_fin (m : ℕ) {s : Set (Sum α (Finₓ m) �
     exact ⟨Sum.elim x y, (congr rfl (funext finZeroElim)).mp hy, Sum.elim_comp_inl _ _⟩
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Shows that definability is closed under finite projections. -/
 theorem Definable.image_comp_embedding {s : Set (β → M)} (h : A.Definable L s) (f : α ↪ β) [Fintype β] :
     A.Definable L ((fun g : β → M => g ∘ f) '' s) := by
@@ -180,11 +180,11 @@ theorem Definable.image_comp_embedding {s : Set (β → M)} (h : A.Definable L s
       (((h.image_comp_equiv (Equivₓ.Set.sumCompl (range f))).image_comp_equiv
             (Equivₓ.sumCongr (Equivₓ.ofInjective f f.injective) (Fintype.equivFin _).symm)).image_comp_sum_inl_fin
         _)
-  simp only [mem_preimage, mem_image, exists_exists_and_eq_and]
+  simp only [← mem_preimage, ← mem_image, ← exists_exists_and_eq_and]
   refine' exists_congr fun y => and_congr_right fun ys => Eq.congr_left (funext fun a => _)
   simp
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Shows that definability is closed under finite projections. -/
 theorem Definable.image_comp {s : Set (β → M)} (h : A.Definable L s) (f : α → β) [Fintype α] [Fintype β] :
     A.Definable L ((fun g : β → M => g ∘ f) '' s) := by
@@ -201,7 +201,8 @@ theorem Definable.image_comp {s : Set (β → M)} (h : A.Definable L s) (f : α 
     refine' (congr rfl (ext _)).mp (definable_finset_bInter h' Finset.univ)
     simp
   refine' (congr rfl (ext fun x => _)).mp (h.inter h')
-  simp only [Equivₓ.coe_trans, mem_inter_eq, mem_preimage, mem_image, exists_exists_and_eq_and, mem_set_of_eq]
+  simp only [← Equivₓ.coe_trans, ← mem_inter_eq, ← mem_preimage, ← mem_image, ← exists_exists_and_eq_and, ←
+    mem_set_of_eq]
   constructor
   · rintro ⟨⟨y, ys, hy⟩, hx⟩
     refine' ⟨y, ys, _⟩
@@ -212,7 +213,7 @@ theorem Definable.image_comp {s : Set (β → M)} (h : A.Definable L s) (f : α 
   · rintro ⟨y, ys, rfl⟩
     refine' ⟨⟨y, ys, _⟩, fun a => _⟩
     · ext
-      simp [Set.apply_range_splitting f]
+      simp [← Set.apply_range_splitting f]
       
     · rw [Function.comp_applyₓ, Function.comp_applyₓ, apply_range_splitting f, range_factorization_coe]
       
@@ -306,13 +307,14 @@ instance : DistribLattice (L.DefinableSet A α) :=
   { DefinableSet.lattice with
     le_sup_inf := by
       intro s t u x
-      simp only [and_imp, mem_inter_eq, SetLike.mem_coe, coe_sup, coe_inf, mem_union_eq, Subtype.val_eq_coe]
+      simp only [← and_imp, ← mem_inter_eq, ← SetLike.mem_coe, ← coe_sup, ← coe_inf, ← mem_union_eq, ←
+        Subtype.val_eq_coe]
       tauto }
 
 /-- The complement of a definable set is also definable. -/
 @[reducible]
 instance : HasCompl (L.DefinableSet A α) :=
-  ⟨fun ⟨s, hs⟩ => ⟨sᶜ, hs.Compl⟩⟩
+  ⟨fun ⟨s, hs⟩ => ⟨sᶜ, hs.compl⟩⟩
 
 @[simp]
 theorem mem_compl {s : L.DefinableSet A α} {x : α → M} : x ∈ sᶜ ↔ ¬x ∈ s := by
@@ -328,17 +330,17 @@ instance : BooleanAlgebra (L.DefinableSet A α) :=
   { DefinableSet.hasCompl, DefinableSet.boundedOrder, DefinableSet.distribLattice with sdiff := fun s t => s⊓tᶜ,
     sdiff_eq := fun s t => rfl,
     sup_inf_sdiff := fun ⟨s, hs⟩ ⟨t, ht⟩ => by
-      apply le_antisymmₓ <;> simp [le_iff],
+      apply le_antisymmₓ <;> simp [← le_iff],
     inf_inf_sdiff := fun ⟨s, hs⟩ ⟨t, ht⟩ => by
       rw [eq_bot_iff]
-      simp only [coe_compl, le_iff, coe_bot, coe_inf, Subtype.coe_mk, le_eq_subset]
+      simp only [← coe_compl, ← le_iff, ← coe_bot, ← coe_inf, ← Subtype.coe_mk, ← le_eq_subset]
       intro x hx
-      simp only [Set.mem_inter_eq, mem_compl_eq] at hx
+      simp only [← Set.mem_inter_eq, ← mem_compl_eq] at hx
       tauto,
     inf_compl_le_bot := fun ⟨s, hs⟩ => by
-      simp [le_iff],
+      simp [← le_iff],
     top_le_sup_compl := fun ⟨s, hs⟩ => by
-      simp [le_iff] }
+      simp [← le_iff] }
 
 end DefinableSet
 

@@ -17,17 +17,17 @@ open CategoryTheory
 
 namespace CategoryTheory.Limits
 
-universe z w v u
+universe v₁ v₂ u₁ u₂ w
 
-variable {C : Type max v u} [Category.{v} C]
+variable {C : Type u₁} [Category.{v₁} C]
 
-variable {D : Type w} [Category.{max z v u} D]
+variable {D : Type u₂} [Category.{v₂} D]
 
-instance functor_category_has_finite_limits [HasFiniteLimits D] : HasFiniteLimits (C ⥤ D) where
-  out := fun J _ _ => inferInstance
+instance functor_category_has_finite_limits [HasFiniteLimits D] :
+    HasFiniteLimits (C ⥤ D) where out := fun J _ _ => inferInstance
 
-instance functor_category_has_finite_colimits [HasFiniteColimits D] : HasFiniteColimits (C ⥤ D) where
-  out := fun J _ _ => inferInstance
+instance functor_category_has_finite_colimits [HasFiniteColimits D] :
+    HasFiniteColimits (C ⥤ D) where out := fun J _ _ => inferInstance
 
 end CategoryTheory.Limits
 

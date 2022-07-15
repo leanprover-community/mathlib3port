@@ -62,10 +62,10 @@ def Homotopy.pi (homotopies : ∀ i, Homotopy (f i) (g i)) : Homotopy (pi f) (pi
   toFun := fun t i => homotopies i t
   map_zero_left' := fun t => by
     ext i
-    simp only [pi_eval, homotopy.apply_zero]
+    simp only [← pi_eval, ← homotopy.apply_zero]
   map_one_left' := fun t => by
     ext i
-    simp only [pi_eval, homotopy.apply_one]
+    simp only [← pi_eval, ← homotopy.apply_one]
 
 /-- The relative product homotopy of `homotopies` between functions `f` and `g` -/
 @[simps]
@@ -73,8 +73,8 @@ def HomotopyRel.pi (homotopies : ∀ i : I, HomotopyRel (f i) (g i) S) : Homotop
   { Homotopy.pi fun i => (homotopies i).toHomotopy with
     prop' := by
       intro t x hx
-      dsimp' only [coe_mk, pi_eval, to_fun_eq_coe, homotopy_with.coe_to_continuous_map]
-      simp only [Function.funext_iffₓ, ← forall_and_distrib]
+      dsimp' only [← coe_mk, ← pi_eval, ← to_fun_eq_coe, ← homotopy_with.coe_to_continuous_map]
+      simp only [← Function.funext_iffₓ, forall_and_distrib]
       intro i
       exact (homotopies i).prop' t x hx }
 
@@ -91,9 +91,9 @@ variable {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {A : Type 
 def Homotopy.prod (F : Homotopy f₀ f₁) (G : Homotopy g₀ g₁) : Homotopy (prodMk f₀ g₀) (prodMk f₁ g₁) where
   toFun := fun t => (F t, G t)
   map_zero_left' := fun x => by
-    simp only [prod_eval, homotopy.apply_zero]
+    simp only [← prod_eval, ← homotopy.apply_zero]
   map_one_left' := fun x => by
-    simp only [prod_eval, homotopy.apply_one]
+    simp only [← prod_eval, ← homotopy.apply_one]
 
 /-- The relative product of homotopies `F` and `G`,
   where `F` takes `f₀` to `f₁`  and `G` takes `g₀` to `g₁` -/
@@ -105,7 +105,7 @@ def HomotopyRel.prod (F : HomotopyRel f₀ f₁ S) (G : HomotopyRel g₀ g₁ S)
       intro t x hx
       have hF := F.prop' t x hx
       have hG := G.prop' t x hx
-      simp only [coe_mk, prod_eval, Prod.mk.inj_iff, homotopy.prod] at hF hG⊢
+      simp only [← coe_mk, ← prod_eval, ← Prod.mk.inj_iff, ← homotopy.prod] at hF hG⊢
       exact ⟨⟨hF.1, hG.1⟩, ⟨hF.2, hG.2⟩⟩ }
 
 end Prod
@@ -144,7 +144,7 @@ theorem comp_pi_eq_pi_comp (γ₀ : ∀ i, Path.Homotopic.Quotient (as i) (bs i)
   apply Quotientₓ.induction_on_pi γ₁
   apply Quotientₓ.induction_on_pi γ₀
   intros
-  simp only [pi_lift]
+  simp only [← pi_lift]
   rw [← Path.Homotopic.comp_lift, Path.trans_pi_eq_pi_trans, ← pi_lift]
   rfl
 
@@ -205,7 +205,7 @@ theorem comp_prod_eq_prod_comp : prod q₁ q₂ ⬝ prod r₁ r₂ = prod (q₁ 
   apply Quotientₓ.induction_on₂ q₁ q₂
   apply Quotientₓ.induction_on₂ r₁ r₂
   intros
-  simp only [prod_lift, ← Path.Homotopic.comp_lift, Path.trans_prod_eq_prod_trans]
+  simp only [← prod_lift, Path.Homotopic.comp_lift, ← Path.trans_prod_eq_prod_trans]
 
 variable {c₁ c₂ : α × β}
 
@@ -247,7 +247,7 @@ theorem prod_proj_left_proj_right (p : Path.Homotopic.Quotient (a₁, b₁) (a�
   intro p'
   unfold proj_left
   unfold proj_right
-  simp only [← Path.Homotopic.map_lift, prod_lift]
+  simp only [Path.Homotopic.map_lift, ← prod_lift]
   congr
   ext <;> rfl
 

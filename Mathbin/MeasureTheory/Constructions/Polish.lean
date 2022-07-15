@@ -172,7 +172,7 @@ theorem AnalyticSet.Inter [hι : Nonempty ι] [Encodable ι] [T2Space α] {s : �
       choose x hx using A
       have xt : x ∈ t := by
         apply mem_Inter.2 fun n => _
-        simp [hx]
+        simp [← hx]
       refine' ⟨⟨x, xt⟩, _⟩
       exact hx i₀
       
@@ -212,7 +212,7 @@ theorem _root_.measurable_set.is_clopenable [PolishSpace α] [MeasurableSpace α
   apply MeasurableSet.induction_on_open
   · exact fun u hu => hu.IsClopenable
     
-  · exact fun u hu h'u => h'u.Compl
+  · exact fun u hu h'u => h'u.compl
     
   · exact fun f f_disj f_meas hf => is_clopenable.Union hf
     
@@ -226,14 +226,14 @@ theorem _root_.measurable_set.analytic_set {α : Type _} [t : TopologicalSpace �
     ∃ t' : TopologicalSpace α, t' ≤ t ∧ @PolishSpace α t' ∧ @IsClosed α t' s ∧ @IsOpen α t' s := hs.is_clopenable
   have A := @IsClosed.analytic_set α t' t'_polish s s_closed
   convert @analytic_set.image_of_continuous α t' α t s A id (continuous_id_of_le t't)
-  simp only [id.def, image_id']
+  simp only [← id.def, ← image_id']
 
 /-- Given a Borel-measurable function from a Polish space to a second-countable space, there exists
 a finer Polish topology on the source space for which the function is continuous. -/
 theorem _root_.measurable.exists_continuous {α β : Type _} [t : TopologicalSpace α] [PolishSpace α] [MeasurableSpace α]
     [BorelSpace α] [tβ : TopologicalSpace β] [SecondCountableTopology β] [MeasurableSpace β] [BorelSpace β] {f : α → β}
     (hf : Measurable f) : ∃ t' : TopologicalSpace α, t' ≤ t ∧ @Continuous α β t' tβ f ∧ @PolishSpace α t' := by
-  obtain ⟨b, b_count, -, hb⟩ : ∃ b : Set (Set β), countable b ∧ ∅ ∉ b ∧ is_topological_basis b :=
+  obtain ⟨b, b_count, -, hb⟩ : ∃ b : Set (Set β), b.Countable ∧ ∅ ∉ b ∧ is_topological_basis b :=
     exists_countable_basis β
   have : Encodable b := b_count.to_encodable
   have : ∀ s : b, is_clopenable (f ⁻¹' s) := by
@@ -311,18 +311,18 @@ theorem measurably_separable_range_of_disjoint [T2Space α] [MeasurableSpace α]
   choose F hFn hFx hFy using this
   let p0 : A :=
     ⟨⟨0, fun n => 0, fun n => 0⟩, by
-      simp [hfg]⟩
+      simp [← hfg]⟩
   -- construct inductively decreasing sequences of cylinders whose images are not separated
   let p : ℕ → A := fun n => (F^[n]) p0
   have prec : ∀ n, p (n + 1) = F (p n) := fun n => by
-    simp only [p, iterate_succ']
+    simp only [← p, ← iterate_succ']
   -- check that at the `n`-th step we deal with cylinders of length `n`
   have pn_fst : ∀ n, (p n).1.1 = n := by
     intro n
     induction' n with n IH
     · rfl
       
-    · simp only [prec, hFn, IH]
+    · simp only [← prec, ← hFn, ← IH]
       
   -- check that the cylinders we construct are indeed decreasing, by checking that the coordinates
   -- are stationary.
@@ -366,7 +366,8 @@ theorem measurably_separable_range_of_disjoint [T2Space α] [MeasurableSpace α]
       exact (Iy i n hi).symm
       
   -- consider two open sets separating `f x` and `g y`.
-  obtain ⟨u, v, u_open, v_open, xu, yv, huv⟩ : ∃ u v : Set α, IsOpen u ∧ IsOpen v ∧ f x ∈ u ∧ g y ∈ v ∧ u ∩ v = ∅ := by
+  obtain ⟨u, v, u_open, v_open, xu, yv, huv⟩ : ∃ u v : Set α, IsOpen u ∧ IsOpen v ∧ f x ∈ u ∧ g y ∈ v ∧ Disjoint u v :=
+    by
     apply t2_separation
     exact disjoint_iff_forall_ne.1 h _ (mem_range_self _) _ (mem_range_self _)
   let this : MetricSpace (ℕ → ℕ) := metric_space_nat_nat
@@ -389,9 +390,7 @@ theorem measurably_separable_range_of_disjoint [T2Space α] [MeasurableSpace α]
       rw [mem_cylinder_iff_dist_le] at hz
       exact hz.trans_lt (hn.trans_le (min_le_leftₓ _ _))
       
-    · have D : Disjoint v u := by
-        rwa [disjoint_iff_inter_eq_empty, inter_comm]
-      apply Disjoint.mono_left _ D
+    · refine' Disjoint.mono_left _ huv.symm
       change g '' cylinder y n ⊆ v
       rw [image_subset_iff]
       apply subset.trans _ hεy
@@ -450,7 +449,7 @@ theorem measurable_set_range_of_continuous_injective {β : Type _} [TopologicalS
     contained in the closure of `v`, and therefore it would be disjoint from `w`. This is a
     contradiction since `x` belongs both to this closure and to `w`. -/
   let this := upgradePolishSpace γ
-  obtain ⟨b, b_count, b_nonempty, hb⟩ : ∃ b : Set (Set γ), countable b ∧ ∅ ∉ b ∧ is_topological_basis b :=
+  obtain ⟨b, b_count, b_nonempty, hb⟩ : ∃ b : Set (Set γ), b.Countable ∧ ∅ ∉ b ∧ is_topological_basis b :=
     exists_countable_basis γ
   have : Encodable b := b_count.to_encodable
   let A := { p : b × b // Disjoint (p.1 : Set γ) p.2 }
@@ -509,7 +508,7 @@ theorem measurable_set_range_of_continuous_injective {β : Type _} [TopologicalS
   · intro x hx
     -- pick for each `n` a good set `s n` of small diameter for which `x ∈ E (s n)`.
     have C1 : ∀ n, ∃ (s : b)(hs : bounded s.1 ∧ diam s.1 ≤ u n), x ∈ E s := fun n => by
-      simpa only [mem_Union] using mem_Inter.1 hx n
+      simpa only [← mem_Union] using mem_Inter.1 hx n
     choose s hs hxs using C1
     have C2 : ∀ n, (s n).1.Nonempty := by
       intro n
@@ -524,17 +523,17 @@ theorem measurable_set_range_of_continuous_injective {β : Type _} [TopologicalS
       intro m n
       rw [← not_disjoint_iff_nonempty_inter]
       by_contra' h
-      have A : x ∈ q ⟨(s m, s n), h⟩ \ q ⟨(s n, s m), h.symm⟩ :=
+      have A : x ∈ q ⟨(s m, s n), h⟩ \ q ⟨(s n, s m), h.symm⟩ := by
         have := mem_Inter.1 (hxs m).2 (s n)
-        (mem_Inter.1 this h : _)
-      have B : x ∈ q ⟨(s n, s m), h.symm⟩ \ q ⟨(s m, s n), h⟩ :=
+        exact (mem_Inter.1 this h : _)
+      have B : x ∈ q ⟨(s n, s m), h.symm⟩ \ q ⟨(s m, s n), h⟩ := by
         have := mem_Inter.1 (hxs n).2 (s m)
-        (mem_Inter.1 this h.symm : _)
+        exact (mem_Inter.1 this h.symm : _)
       exact A.2 B.1
     -- the points `y n` are nearby, and therefore they form a Cauchy sequence.
     have cauchy_y : CauchySeq y := by
       have : tendsto (fun n => 2 * u n) at_top (𝓝 0) := by
-        simpa only [mul_zero] using u_lim.const_mul 2
+        simpa only [← mul_zero] using u_lim.const_mul 2
       apply cauchy_seq_of_le_tendsto_0' (fun n => 2 * u n) (fun m n hmn => _) this
       rcases I m n with ⟨z, zsm, zsn⟩
       calc dist (y m) (y n) ≤ dist (y m) z + dist z (y n) := dist_triangle _ _ _ _ ≤ u m + u n :=
@@ -552,15 +551,14 @@ theorem measurable_set_range_of_continuous_injective {β : Type _} [TopologicalS
     -- assume for a contradiction that `f z ≠ x`.
     by_contra' hne
     -- introduce disjoint open sets `v` and `w` separating `f z` from `x`.
-    obtain ⟨v, w, v_open, w_open, fzv, xw, hvw⟩ : ∃ v w : Set β, IsOpen v ∧ IsOpen w ∧ f z ∈ v ∧ x ∈ w ∧ v ∩ w = ∅ :=
-      t2_separation hne
+    obtain ⟨v, w, v_open, w_open, fzv, xw, hvw⟩ := t2_separation hne
     obtain ⟨δ, δpos, hδ⟩ : ∃ δ > (0 : ℝ), ball z δ ⊆ f ⁻¹' v := by
       apply Metric.mem_nhds_iff.1
       exact f_cont.continuous_at.preimage_mem_nhds (v_open.mem_nhds fzv)
-    obtain ⟨n, hn⟩ : ∃ n, u n + dist (y n) z < δ :=
+    obtain ⟨n, hn⟩ : ∃ n, u n + dist (y n) z < δ := by
       have : tendsto (fun n => u n + dist (y n) z) at_top (𝓝 0) := by
-        simpa only [add_zeroₓ] using u_lim.add (tendsto_iff_dist_tendsto_zero.1 y_lim)
-      ((tendsto_order.1 this).2 _ δpos).exists
+        simpa only [← add_zeroₓ] using u_lim.add (tendsto_iff_dist_tendsto_zero.1 y_lim)
+      exact ((tendsto_order.1 this).2 _ δpos).exists
     -- for large enough `n`, the image of `s n` is contained in `v`, by continuity of `f`.
     have fsnv : f '' s n ⊆ v := by
       rw [image_subset_iff]
@@ -572,7 +570,7 @@ theorem measurable_set_range_of_continuous_injective {β : Type _} [TopologicalS
     have : x ∈ Closure v := closure_mono fsnv (hxs n).1
     -- this is a contradiction, as `x` is supposed to belong to `w`, which is disjoint from
     -- the closure of `v`.
-    exact disjoint_left.1 ((disjoint_iff_inter_eq_empty.2 hvw).closure_left w_open) this xw
+    exact disjoint_left.1 (hvw.closure_left w_open) this xw
     
 
 theorem _root_.is_closed.measurable_set_image_of_continuous_on_inj_on {β : Type _} [TopologicalSpace β] [T2Space β]
@@ -678,7 +676,7 @@ theorem is_clopenable_iff_measurable_set : IsClopenable s ↔ MeasurableSet s :=
       s_closed
   -- therefore, its image under the measurable embedding `id` is also measurable for `tγ`.
   convert E.measurable_set_image.2 M
-  simp only [id.def, image_id']
+  simp only [← id.def, ← image_id']
 
 end MeasureTheory
 

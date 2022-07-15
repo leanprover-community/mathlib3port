@@ -119,8 +119,7 @@ theorem of_conj_act_mul (x y : ConjAct G) : ofConjAct (x * y) = ofConjAct x * of
 theorem to_conj_act_mul (x y : G) : toConjAct (x * y) = toConjAct x * toConjAct y :=
   rfl
 
-instance : HasScalar (ConjAct G) G where
-  smul := fun g h => ofConjAct g * h * (ofConjAct g)⁻¹
+instance : HasSmul (ConjAct G) G where smul := fun g h => ofConjAct g * h * (ofConjAct g)⁻¹
 
 theorem smul_def (g : ConjAct G) (h : G) : g • h = ofConjAct g * h * (ofConjAct g)⁻¹ :=
   rfl
@@ -137,8 +136,7 @@ section Monoidₓ
 
 variable [Monoidₓ M]
 
-instance hasUnitsScalar : HasScalar (ConjAct Mˣ) M where
-  smul := fun g h => ofConjAct g * h * ↑(ofConjAct g)⁻¹
+instance hasUnitsScalar : HasSmul (ConjAct Mˣ) M where smul := fun g h => ofConjAct g * h * ↑(ofConjAct g)⁻¹
 
 theorem units_smul_def (g : ConjAct Mˣ) (h : M) : g • h = ofConjAct g * h * ↑(ofConjAct g)⁻¹ :=
   rfl
@@ -146,13 +144,13 @@ theorem units_smul_def (g : ConjAct Mˣ) (h : M) : g • h = ofConjAct g * h * �
 instance unitsMulDistribMulAction : MulDistribMulAction (ConjAct Mˣ) M where
   smul := (· • ·)
   one_smul := by
-    simp [units_smul_def]
+    simp [← units_smul_def]
   mul_smul := by
-    simp [units_smul_def, mul_assoc, mul_inv_rev]
+    simp [← units_smul_def, ← mul_assoc, ← mul_inv_rev]
   smul_mul := by
-    simp [units_smul_def, mul_assoc]
+    simp [← units_smul_def, ← mul_assoc]
   smul_one := by
-    simp [units_smul_def]
+    simp [← units_smul_def]
 
 end Monoidₓ
 
@@ -163,9 +161,9 @@ variable [Semiringₓ R]
 instance unitsMulSemiringAction : MulSemiringAction (ConjAct Rˣ) R :=
   { ConjAct.unitsMulDistribMulAction with smul := (· • ·),
     smul_zero := by
-      simp [units_smul_def],
+      simp [← units_smul_def],
     smul_add := by
-      simp [units_smul_def, mul_addₓ, add_mulₓ] }
+      simp [← units_smul_def, ← mul_addₓ, ← add_mulₓ] }
 
 end Semiringₓ
 
@@ -186,9 +184,9 @@ theorem to_conj_act_zero : toConjAct (0 : G₀) = 0 :=
 instance mulAction₀ : MulAction (ConjAct G₀) G₀ where
   smul := (· • ·)
   one_smul := by
-    simp [smul_def]
+    simp [← smul_def]
   mul_smul := by
-    simp [smul_def, mul_assoc, mul_inv_rev]
+    simp [← smul_def, ← mul_assoc, ← mul_inv_rev]
 
 end GroupWithZeroₓ
 
@@ -199,9 +197,9 @@ variable [DivisionRing K]
 instance distribMulAction₀ : DistribMulAction (ConjAct K) K :=
   { ConjAct.mulAction₀ with smul := (· • ·),
     smul_zero := by
-      simp [smul_def],
+      simp [← smul_def],
     smul_add := by
-      simp [smul_def, mul_addₓ, add_mulₓ] }
+      simp [← smul_def, ← mul_addₓ, ← add_mulₓ] }
 
 end DivisionRing
 
@@ -210,13 +208,13 @@ variable [Groupₓ G]
 instance : MulDistribMulAction (ConjAct G) G where
   smul := (· • ·)
   smul_mul := by
-    simp [smul_def, mul_assoc]
+    simp [← smul_def, ← mul_assoc]
   smul_one := by
-    simp [smul_def]
+    simp [← smul_def]
   one_smul := by
-    simp [smul_def]
+    simp [← smul_def]
   mul_smul := by
-    simp [smul_def, mul_assoc]
+    simp [← smul_def, ← mul_assoc]
 
 theorem smul_eq_mul_aut_conj (g : ConjAct G) (h : G) : g • h = MulAut.conj (ofConjAct g) h :=
   rfl
@@ -224,11 +222,11 @@ theorem smul_eq_mul_aut_conj (g : ConjAct G) (h : G) : g • h = MulAut.conj (of
 /-- The set of fixed points of the conjugation action of `G` on itself is the center of `G`. -/
 theorem fixed_points_eq_center : FixedPoints (ConjAct G) G = center G := by
   ext x
-  simp [mem_center_iff, smul_def, mul_inv_eq_iff_eq_mul]
+  simp [← mem_center_iff, ← smul_def, ← mul_inv_eq_iff_eq_mul]
 
 /-- As normal subgroups are closed under conjugation, they inherit the conjugation action
   of the underlying group. -/
-instance Subgroup.conjAction {H : Subgroup G} [hH : H.Normal] : HasScalar (ConjAct G) H :=
+instance Subgroup.conjAction {H : Subgroup G} [hH : H.Normal] : HasSmul (ConjAct G) H :=
   ⟨fun g h => ⟨g • h, hH.conj_mem h.1 h.2 (ofConjAct g)⟩⟩
 
 theorem Subgroup.coe_conj_smul {H : Subgroup G} [hH : H.Normal] (g : ConjAct G) (h : H) : ↑(g • h) = g • (h : G) :=

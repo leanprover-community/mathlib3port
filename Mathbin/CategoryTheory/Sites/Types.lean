@@ -34,7 +34,7 @@ def typesGrothendieckTopology : GrothendieckTopology (Type u) where
 @[simps]
 def discreteSieve (α : Type u) : Sieve α where
   Arrows := fun β f => ∃ x, ∀ y, f y = x
-  downward_closed' := fun g => ⟨x, fun y => hx <| g y⟩
+  downward_closed' := fun β γ f ⟨x, hx⟩ g => ⟨x, fun y => hx <| g y⟩
 
 theorem discrete_sieve_mem (α : Type u) : discreteSieve α ∈ typesGrothendieckTopology α := fun x => ⟨x, fun y => rfl⟩
 

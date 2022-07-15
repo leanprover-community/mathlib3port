@@ -41,12 +41,9 @@ protected def Lex (x y : ∀ i, β i) : Prop :=
   ∃ i, (∀ j, r j i → x j = y j) ∧ s (x i) (y i)
 
 -- mathport name: «exprΠₗ , »
-notation3 "Πₗ " (...) ", " r:(scoped
-  p =>/- This unfortunately results in a type that isn't delta-reduced, so we keep the notation out of the
-    basic API, just in case -/
-    Lex
-    ∀ i, p i) =>
-  r
+notation3"Πₗ "/- This unfortunately results in a type that isn't delta-reduced, so we keep the notation out of the
+basic API, just in case -/
+(...)", "r:(scoped p => Lex ∀ i, p i) => r
 
 @[simp]
 theorem to_lex_apply (x : ∀ i, β i) (i : ι) : toLex x i = x i :=

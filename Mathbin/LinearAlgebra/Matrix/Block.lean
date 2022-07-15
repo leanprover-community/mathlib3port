@@ -55,9 +55,9 @@ theorem det_to_block (M : Matrix m m R) (p : m → Prop) [DecidablePred p] :
   generalize hy : σ x = y
   cases x <;>
     cases y <;>
-      simp only [Matrix.reindex_apply, to_block_apply, Equivₓ.symm_symm, Equivₓ.sum_compl_apply_inr,
-        Equivₓ.sum_compl_apply_inl, from_blocks_apply₁₁, from_blocks_apply₁₂, from_blocks_apply₂₁, from_blocks_apply₂₂,
-        Matrix.minor_apply]
+      simp only [← Matrix.reindex_apply, ← to_block_apply, ← Equivₓ.symm_symm, ← Equivₓ.sum_compl_apply_inr, ←
+        Equivₓ.sum_compl_apply_inl, ← from_blocks_apply₁₁, ← from_blocks_apply₁₂, ← from_blocks_apply₂₁, ←
+        from_blocks_apply₂₂, ← Matrix.minor_apply]
 
 theorem det_to_square_block (M : Matrix m m R) {n : Nat} (b : m → Finₓ n) (k : Finₓ n) :
     (toSquareBlock M b k).det = (toSquareBlockProp M fun i => b i = k).det := by
@@ -92,8 +92,8 @@ theorem to_square_block_det'' (M : Matrix m m R) {n : Nat} (b : m → Finₓ n) 
 def BlockTriangularMatrix' {o : Type _} (M : Matrix o o R) {n : ℕ} (b : o → Finₓ n) : Prop :=
   ∀ i j, b j < b i → M i j = 0
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[["using", ident h]]
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[["using", ident h_1]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[["using", ident h]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[["using", ident h_1]]
 theorem upper_two_block_triangular' {m n : Type _} (A : Matrix m m R) (B : Matrix m n R) (D : Matrix n n R) :
     BlockTriangularMatrix' (fromBlocks A B 0 D) (Sum.elim (fun i => (0 : Finₓ 2)) fun j => 1) := by
   intro k1 k2 hk12
@@ -176,25 +176,25 @@ theorem det_of_block_triangular_matrix (M : Matrix m m R) (b : m → ℕ) (h : B
         rw [← Finₓ.prod_univ_eq_prod_range] at h1⊢
         convert h1
         ext k
-        simp only [to_square_block_def', to_square_block_def]
-        let he : { a // b' a = ↑k } ≃ { a // b a = ↑k } :=
+        simp only [← to_square_block_def', ← to_square_block_def]
+        let he : { a // b' a = ↑k } ≃ { a // b a = ↑k } := by
           have hc : ∀ i : m, (fun a => b a = ↑k) i → (fun a => ¬b a = n) i := by
             intro i hbi
             rw [hbi]
             exact ne_of_ltₓ (Finₓ.is_lt k)
-          Equivₓ.subtypeSubtypeEquivSubtype hc
+          exact Equivₓ.subtypeSubtypeEquivSubtype hc
         exact Matrix.det_reindex_self he fun i j : { a // b' a = ↑k } => M ↑i ↑j
         
       · rw [det_to_square_block' M b n]
         have hh : ∀ a, b a = n ↔ ¬(fun i : m => ¬b i = n) a := by
           intro i
-          simp only [not_not]
+          simp only [← not_not]
         exact equiv_block_det M hh
         
       
     · intro i hi j hj
       apply h i
-      simp only [not_not] at hi
+      simp only [← not_not] at hi
       rw [hi]
       exact (Ne.le_iff_lt hj).mp (nat.lt_succ_iff.mp (hn j))
       
@@ -207,7 +207,7 @@ theorem det_of_block_triangular_matrix'' (M : Matrix m m R) (b : m → ℕ) (h :
     have hbi : ∀ i, b i ∈ Finset.image b Finset.univ := by
       simp
     intro i
-    dsimp' only [n]
+    dsimp' only [← n]
     apply nat.lt_succ_iff.mpr
     exact le_cSup (Finset.bdd_above _) (hbi i)
   rw [det_of_block_triangular_matrix M b h n hn]
@@ -222,7 +222,7 @@ theorem det_of_block_triangular_matrix'' (M : Matrix m m R) (b : m → ℕ) (h :
     apply det_eq_one_of_card_eq_zero
     apply fintype.card_eq_zero_iff.mpr
     constructor
-    simp only [Subtype.forall]
+    simp only [← Subtype.forall]
     intro a hba
     apply hbk
     apply finset.mem_image.mpr
@@ -249,12 +249,12 @@ theorem det_of_upper_triangular {n : ℕ} (M : Matrix (Finₓ n) (Finₓ n) R) (
   ext i
   have h2 : ∀ j : { a // id a = i }, j = ⟨i, rfl⟩ := fun j : { a // id a = i } => Subtype.ext j.property
   have : Unique { a // id a = i } := ⟨⟨⟨i, rfl⟩⟩, h2⟩
-  simp [h2 default]
+  simp [← h2 default]
 
 theorem det_of_lower_triangular {n : ℕ} (M : Matrix (Finₓ n) (Finₓ n) R) (h : ∀ i j : Finₓ n, i < j → M i j = 0) :
     M.det = ∏ i : Finₓ n, M i i := by
   rw [← det_transpose]
-  exact det_of_upper_triangular _ fun hji : j < i => h j i hji
+  exact det_of_upper_triangular _ fun i j : Finₓ n hji : j < i => h j i hji
 
 end Matrix
 

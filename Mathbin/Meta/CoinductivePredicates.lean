@@ -461,7 +461,7 @@ unsafe def coinductive_predicate (meta_info : decl_meta_info) (_ : parse <| tk "
       let some doc_string ← pure meta_info | skip
       add_doc_string d doc_string
 
--- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `hs
+-- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `hs
 /-- Prepares coinduction proofs. This tactic constructs the coinduction invariant from
 the quantifiers in the current goal.
 
@@ -514,7 +514,7 @@ unsafe def coinduction (rule : expr) (ns : List Name) : tactic Unit :=
           | e :: eqs => do
             let (hs, h, ns) ← elim_gen_prod eqs h [] ns
             (h :: hs hs.reverse : List _).mfoldl
-                (fun h : expr => do
+                (fun hs : List Name h : expr => do
                   let [(_, hs', σ)] ← cases_core h hs
                   clear (h σ)
                   pure <| hs hs')

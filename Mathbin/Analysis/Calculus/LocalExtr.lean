@@ -98,14 +98,14 @@ theorem mem_pos_tangent_cone_at_of_segment_subset {s : Set E} {x y : E} (h : Seg
   show tendsto (fun n => c n • d n) at_top (𝓝 (y - x))
   · convert tendsto_const_nhds
     ext n
-    simp only [d, smul_smul]
+    simp only [← d, ← smul_smul]
     rw [mul_inv_cancel, one_smul]
     exact pow_ne_zero _ two_ne_zero
     
 
 theorem mem_pos_tangent_cone_at_of_segment_subset' {s : Set E} {x y : E} (h : Segment ℝ x (x + y) ⊆ s) :
     y ∈ PosTangentConeAt s x := by
-  simpa only [add_sub_cancel'] using mem_pos_tangent_cone_at_of_segment_subset h
+  simpa only [← add_sub_cancel'] using mem_pos_tangent_cone_at_of_segment_subset h
 
 theorem pos_tangent_cone_at_univ : PosTangentConeAt Univ a = univ :=
   eq_univ_of_forall fun x => mem_pos_tangent_cone_at_of_segment_subset' (subset_univ _)
@@ -128,7 +128,7 @@ theorem IsLocalMaxOn.has_fderiv_within_at_nonpos {s : Set E} (h : IsLocalMaxOn f
   replace hc : ∀ᶠ n in at_top, 0 ≤ c n
   exact mem_map.1 (hc (mem_at_top (0 : ℝ)))
   filter_upwards [h, hc]
-  simp only [smul_eq_mul, mem_preimage, subset_def]
+  simp only [← smul_eq_mul, ← mem_preimage, ← subset_def]
   intro n hnf hn
   exact mul_nonpos_of_nonneg_of_nonpos hn (sub_nonpos.2 hnf)
 

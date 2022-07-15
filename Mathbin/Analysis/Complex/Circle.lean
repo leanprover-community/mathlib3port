@@ -5,6 +5,7 @@ Authors: Heather Macbeth
 -/
 import Mathbin.Analysis.SpecialFunctions.Exp
 import Mathbin.Topology.ContinuousFunction.Basic
+import Mathbin.Analysis.Normed.Field.UnitBall
 
 /-!
 # The circle
@@ -38,14 +39,8 @@ open Complex Metric
 open ComplexConjugate
 
 /-- The unit circle in `ℂ`, here given the structure of a submonoid of `ℂ`. -/
-def circle : Submonoid ℂ where
-  Carrier := Sphere (0 : ℂ) 1
-  one_mem' := by
-    simp
-  mul_mem' := fun a b => by
-    simp only [norm_eq_abs, mem_sphere_zero_iff_norm]
-    intro ha hb
-    simp [ha, hb]
+def circle : Submonoid ℂ :=
+  Submonoid.unitSphere ℂ
 
 @[simp]
 theorem mem_circle_iff_abs {z : ℂ} : z ∈ circle ↔ abs z = 1 :=
@@ -63,59 +58,48 @@ theorem mem_circle_iff_norm_sq {z : ℂ} : z ∈ circle ↔ normSq z = 1 := by
 
 @[simp]
 theorem norm_sq_eq_of_mem_circle (z : circle) : normSq z = 1 := by
-  simp [norm_sq_eq_abs]
+  simp [← norm_sq_eq_abs]
 
 theorem ne_zero_of_mem_circle (z : circle) : (z : ℂ) ≠ 0 :=
   ne_zero_of_mem_unit_sphere z
 
 instance : CommGroupₓ circle :=
-  { circle.toCommMonoid with
-    inv := fun z =>
-      ⟨conj (z : ℂ), by
-        simp ⟩,
-    mul_left_inv := fun z =>
-      Subtype.ext <| by
-        simp [Inv.inv, ← norm_sq_eq_conj_mul_self, ← mul_self_abs] }
-
-theorem coe_inv_circle_eq_conj (z : circle) : ↑z⁻¹ = conj (z : ℂ) :=
-  rfl
+  Metric.Sphere.commGroup
 
 @[simp]
-theorem coe_inv_circle (z : circle) : ↑z⁻¹ = (z : ℂ)⁻¹ := by
-  rw [coe_inv_circle_eq_conj]
-  apply eq_inv_of_mul_eq_one_right
-  rw [mul_comm, ← Complex.norm_sq_eq_conj_mul_self]
-  simp
+theorem coe_inv_circle (z : circle) : ↑z⁻¹ = (z : ℂ)⁻¹ :=
+  rfl
+
+theorem coe_inv_circle_eq_conj (z : circle) : ↑z⁻¹ = conj (z : ℂ) := by
+  rw [coe_inv_circle, inv_def, norm_sq_eq_of_mem_circle, inv_one, of_real_one, mul_oneₓ]
 
 @[simp]
 theorem coe_div_circle (z w : circle) : ↑(z / w) = (z : ℂ) / w :=
-  show ↑(z * w⁻¹) = (z : ℂ) * w⁻¹ by
-    simp
+  circle.Subtype.map_div z w
 
 /-- The elements of the circle embed into the units. -/
-@[simps]
-def circle.toUnits : circle →* Units ℂ where
-  toFun := fun x => Units.mk0 x <| ne_zero_of_mem_circle _
-  map_one' := Units.ext rfl
-  map_mul' := fun x y => Units.ext rfl
+@[simps apply]
+def circle.toUnits : circle →* Units ℂ :=
+  unitSphereToUnits ℂ
 
 instance : CompactSpace circle :=
   Metric.Sphere.compact_space _ _
 
--- the following result could instead be deduced from the Lie group structure on the circle using
--- `topological_group_of_lie_group`, but that seems a little awkward since one has to first provide
--- and then forget the model space
-instance : TopologicalGroup circle where
-  continuous_mul :=
-    let h : Continuous fun x : circle => (x : ℂ) := continuous_subtype_coe
-    continuous_induced_rng (continuous_mul.comp (h.prod_map h))
-  continuous_inv := continuous_induced_rng <| Complex.conjCle.Continuous.comp continuous_subtype_coe
+instance : TopologicalGroup circle :=
+  Metric.Sphere.topological_group
+
+/-- If `z` is a nonzero complex number, then `conj z / z` belongs to the unit circle. -/
+@[simps]
+def circle.ofConjDivSelf (z : ℂ) (hz : z ≠ 0) : circle :=
+  ⟨conj z / z,
+    mem_circle_iff_abs.2 <| by
+      rw [Complex.abs_div, abs_conj, div_self (abs_ne_zero.2 hz)]⟩
 
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`. -/
-def expMapCircle : C(ℝ, circle) where
-  toFun := fun t =>
+def expMapCircle :
+    C(ℝ, circle) where toFun := fun t =>
     ⟨exp (t * I), by
-      simp [exp_mul_I, abs_cos_add_sin_mul_I]⟩
+      simp [← exp_mul_I, ← abs_cos_add_sin_mul_I]⟩
 
 @[simp]
 theorem exp_map_circle_apply (t : ℝ) : ↑(expMapCircle t) = Complex.exp (t * Complex.i) :=
@@ -129,7 +113,7 @@ theorem exp_map_circle_zero : expMapCircle 0 = 1 :=
 @[simp]
 theorem exp_map_circle_add (x y : ℝ) : expMapCircle (x + y) = expMapCircle x * expMapCircle y :=
   Subtype.ext <| by
-    simp only [exp_map_circle_apply, Submonoid.coe_mul, of_real_add, add_mulₓ, Complex.exp_add]
+    simp only [← exp_map_circle_apply, ← Submonoid.coe_mul, ← of_real_add, ← add_mulₓ, ← Complex.exp_add]
 
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`, considered as a homomorphism of
 groups. -/

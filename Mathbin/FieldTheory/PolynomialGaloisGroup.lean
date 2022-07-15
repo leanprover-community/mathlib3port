@@ -122,7 +122,7 @@ def mapRoots [Fact (p.Splits (algebraMap F E))] : RootSet p p.SplittingField →
   ⟨IsScalarTower.toAlgHom F p.SplittingField E x, by
     have key := Subtype.mem x
     by_cases' p = 0
-    · simp only [h, root_set_zero] at key
+    · simp only [← h, ← root_set_zero] at key
       exact False.ndrec _ key
       
     · rw [mem_root_set h, aeval_alg_hom_apply, (mem_root_set h).mp key, AlgHom.map_zero]
@@ -139,7 +139,7 @@ theorem map_roots_bijective [h : Fact (p.Splits (algebraMap F E))] : Function.Bi
         ((splits_id_iff_splits _).mpr (is_splitting_field.splits p.splitting_field p))
     rw [map_map, AlgHom.comp_algebra_map] at key
     have hy := Subtype.mem y
-    simp only [root_set, Finset.mem_coe, Multiset.mem_to_finset, key, Multiset.mem_map] at hy
+    simp only [← root_set, ← Finset.mem_coe, ← Multiset.mem_to_finset, ← key, ← Multiset.mem_map] at hy
     rcases hy with ⟨x, hx1, hx2⟩
     exact ⟨⟨x, multiset.mem_to_finset.mpr hx1⟩, Subtype.ext hx2⟩
     
@@ -154,7 +154,7 @@ instance galActionAux : MulAction p.Gal (RootSet p p.SplittingField) where
       have key := Subtype.mem x
       --simp only [root_set, finset.mem_coe, multiset.mem_to_finset] at *,
       by_cases' p = 0
-      · simp only [h, root_set_zero] at key
+      · simp only [← h, ← root_set_zero] at key
         exact False.ndrec _ key
         
       · rw [mem_root_set h]
@@ -172,9 +172,9 @@ instance galActionAux : MulAction p.Gal (RootSet p p.SplittingField) where
 instance galAction [Fact (p.Splits (algebraMap F E))] : MulAction p.Gal (RootSet p E) where
   smul := fun ϕ x => rootsEquivRoots p E (ϕ • (rootsEquivRoots p E).symm x)
   one_smul := fun _ => by
-    simp only [Equivₓ.apply_symm_apply, one_smul]
+    simp only [← Equivₓ.apply_symm_apply, ← one_smul]
   mul_smul := fun _ _ _ => by
-    simp only [Equivₓ.apply_symm_apply, Equivₓ.symm_apply_apply, mul_smul]
+    simp only [← Equivₓ.apply_symm_apply, ← Equivₓ.symm_apply_apply, ← mul_smul]
 
 variable {p E}
 
@@ -228,7 +228,7 @@ def restrictDvd (hpq : p ∣ q) : q.Gal →* p.Gal :=
   else @restrict F _ p _ _ _ ⟨splits_of_splits_of_dvd (algebraMap F q.SplittingField) hq (SplittingField.splits q) hpq⟩
 
 theorem restrict_dvd_surjective (hpq : p ∣ q) (hq : q ≠ 0) : Function.Surjective (restrictDvd hpq) := by
-  simp only [restrict_dvd, dif_neg hq, restrict_surjective]
+  simp only [← restrict_dvd, ← dif_neg hq, ← restrict_surjective]
 
 variable (p q)
 
@@ -245,8 +245,8 @@ theorem restrict_prod_injective : Function.Injective (restrictProd p q) := by
     exact fun f g h => Eq.trans (Unique.eq_default f) (Unique.eq_default g).symm
     
   intro f g hfg
-  dsimp' only [restrict_prod, restrict_dvd]  at hfg
-  simp only [dif_neg hpq, MonoidHom.prod_apply, Prod.mk.inj_iff] at hfg
+  dsimp' only [← restrict_prod, ← restrict_dvd]  at hfg
+  simp only [← dif_neg hpq, ← MonoidHom.prod_apply, ← Prod.mk.inj_iff] at hfg
   ext x hx
   rw [root_set, Polynomial.map_mul, Polynomial.roots_mul] at hx
   cases' multiset.mem_add.mp (multiset.mem_to_finset.mp hx) with h h
@@ -344,685 +344,36 @@ def restrictComp (hq : q.natDegree ≠ 0) : (p.comp q).Gal →* p.Gal :=
   @restrict F _ p _ _ _ ⟨splits_in_splitting_field_of_comp p q hq⟩
 
 theorem restrict_comp_surjective (hq : q.natDegree ≠ 0) : Function.Surjective (restrictComp p q hq) := by
-  simp only [restrict_comp, restrict_surjective]
+  simp only [← restrict_comp, ← restrict_surjective]
 
 variable {p q}
 
 /-- For a separable polynomial, its Galois group has cardinality
 equal to the dimension of its splitting field over `F`. -/
-theorem card_of_separable (hp : p.Separable) : Fintype.card p.Gal = finrank F p.SplittingField :=
+theorem card_of_separable (hp : p.Separable) : Fintype.card p.Gal = finrank F p.SplittingField := by
   have : IsGalois F p.splitting_field := IsGalois.of_separable_splitting_field hp
-  IsGalois.card_aut_eq_finrank F p.splitting_field
+  exact IsGalois.card_aut_eq_finrank F p.splitting_field
 
--- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
-/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `prime_degree_dvd_card [])
-  (Command.declSig
-   [(Term.instBinder "[" [] (Term.app `CharZero [`F]) "]")
-    (Term.explicitBinder "(" [`p_irr] [":" (Term.app `Irreducible [`p])] [] ")")
-    (Term.explicitBinder "(" [`p_deg] [":" (Term.proj (Term.proj `p "." `natDegree) "." `Prime)] [] ")")]
-   (Term.typeSpec ":" («term_∣_» (Term.proj `p "." `natDegree) "∣" (Term.app `Fintype.card [(Term.proj `p "." `Gal)]))))
-  (Command.declValSimple
-   ":="
-   (Term.byTactic
-    "by"
-    (Tactic.tacticSeq
-     (Tactic.tacticSeq1Indented
-      [(group
-        (Tactic.rwSeq
-         "rw"
-         []
-         (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `gal.card_of_separable [`p_irr.separable]))] "]")
-         [])
-        [])
-       (group
-        (Tactic.tacticHave_
-         "have"
-         (Term.haveDecl
-          (Term.haveIdDecl
-           [`hp []]
-           [(Term.typeSpec ":" («term_≠_» `p.degree "≠" (num "0")))]
-           ":="
-           (Term.fun
-            "fun"
-            (Term.basicFun
-             [(Term.simpleBinder [`h] [])]
-             "=>"
-             (Term.app
-              `Nat.Prime.ne_zero
-              [`p_deg (Term.app `nat_degree_eq_zero_iff_degree_le_zero.mpr [(Term.app `le_of_eqₓ [`h])])]))))))
-        [])
-       (group
-        (Tactic.tacticLet_
-         "let"
-         (Term.letDecl
-          (Term.letIdDecl
-           `α
-           []
-           [(Term.typeSpec ":" `p.splitting_field)]
-           ":="
-           (Term.app
-            `root_of_splits
-            [(Term.app `algebraMap [`F `p.splitting_field]) (Term.app `splitting_field.splits [`p]) `hp]))))
-        [])
-       (group
-        (Tactic.tacticHave_
-         "have"
-         (Term.haveDecl
-          (Term.haveIdDecl
-           [`hα []]
-           [(Term.typeSpec ":" (Term.app `IsIntegral [`F `α]))]
-           ":="
-           (Term.app `Algebra.is_integral_of_finite [(Term.hole "_") (Term.hole "_") `α]))))
-        [])
-       (group
-        (Mathlib.Tactic.«tacticUse_,,»
-         "use"
-         [(Term.app
-           `FiniteDimensional.finrank
-           [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
-             `F
-             "⟮"
-             (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
-             "⟯")
-            `p.splitting_field])])
-        [])
-       (group
-        (Tactic.tacticSuffices_
-         "suffices"
-         (Term.sufficesDecl
-          []
-          («term_=_» (Term.proj (Term.app `minpoly [`F `α]) "." `natDegree) "=" `p.nat_degree)
-          (Term.byTactic'
-           "by"
-           (Tactic.tacticSeq
-            (Tactic.tacticSeq1Indented
-             [(group
-               (Tactic.rwSeq
-                "rw"
-                []
-                (Tactic.rwRuleSeq
-                 "["
-                 [(Tactic.rwRule
-                   ["←"]
-                   (Term.app
-                    `FiniteDimensional.finrank_mul_finrank
-                    [`F
-                     (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
-                      `F
-                      "⟮"
-                      (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
-                      "⟯")
-                     `p.splitting_field]))
-                  ","
-                  (Tactic.rwRule [] (Term.app `IntermediateField.adjoin.finrank [`hα]))
-                  ","
-                  (Tactic.rwRule [] `this)]
-                 "]")
-                [])
-               [])])))))
-        [])
-       (group
-        (Tactic.tacticSuffices_
-         "suffices"
-         (Term.sufficesDecl
-          []
-          («term_∣_» (Term.app `minpoly [`F `α]) "∣" `p)
-          (Term.byTactic'
-           "by"
-           (Tactic.tacticSeq
-            (Tactic.tacticSeq1Indented
-             [(group
-               (Tactic.tacticHave_
-                "have"
-                (Term.haveDecl
-                 (Term.haveIdDecl
-                  [`key []]
-                  []
-                  ":="
-                  (Term.app (Term.proj (Term.app `minpoly.irreducible [`hα]) "." `dvd_symm) [`p_irr `this]))))
-               [])
-              (group (Tactic.apply "apply" `le_antisymmₓ) [])
-              (group
-               («tactic·.__;_»
-                "·"
-                [(group (Tactic.exact "exact" (Term.app `nat_degree_le_of_dvd [`this `p_irr.ne_zero])) [])])
-               [])
-              (group
-               («tactic·.__;_»
-                "·"
-                [(group
-                  (Tactic.exact "exact" (Term.app `nat_degree_le_of_dvd [`key (Term.app `minpoly.ne_zero [`hα])]))
-                  [])])
-               [])])))))
-        [])
-       (group (Tactic.apply "apply" (Term.app `minpoly.dvd [`F `α])) [])
-       (group
-        (Tactic.rwSeq
-         "rw"
-         []
-         (Tactic.rwRuleSeq
-          "["
-          [(Tactic.rwRule [] `aeval_def)
-           ","
-           (Tactic.rwRule
-            []
-            (Term.app `map_root_of_splits [(Term.hole "_") (Term.app `splitting_field.splits [`p]) `hp]))]
-          "]")
-         [])
-        [])])))
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.rwSeq
-        "rw"
-        []
-        (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `gal.card_of_separable [`p_irr.separable]))] "]")
-        [])
-       [])
-      (group
-       (Tactic.tacticHave_
-        "have"
-        (Term.haveDecl
-         (Term.haveIdDecl
-          [`hp []]
-          [(Term.typeSpec ":" («term_≠_» `p.degree "≠" (num "0")))]
-          ":="
-          (Term.fun
-           "fun"
-           (Term.basicFun
-            [(Term.simpleBinder [`h] [])]
-            "=>"
-            (Term.app
-             `Nat.Prime.ne_zero
-             [`p_deg (Term.app `nat_degree_eq_zero_iff_degree_le_zero.mpr [(Term.app `le_of_eqₓ [`h])])]))))))
-       [])
-      (group
-       (Tactic.tacticLet_
-        "let"
-        (Term.letDecl
-         (Term.letIdDecl
-          `α
-          []
-          [(Term.typeSpec ":" `p.splitting_field)]
-          ":="
-          (Term.app
-           `root_of_splits
-           [(Term.app `algebraMap [`F `p.splitting_field]) (Term.app `splitting_field.splits [`p]) `hp]))))
-       [])
-      (group
-       (Tactic.tacticHave_
-        "have"
-        (Term.haveDecl
-         (Term.haveIdDecl
-          [`hα []]
-          [(Term.typeSpec ":" (Term.app `IsIntegral [`F `α]))]
-          ":="
-          (Term.app `Algebra.is_integral_of_finite [(Term.hole "_") (Term.hole "_") `α]))))
-       [])
-      (group
-       (Mathlib.Tactic.«tacticUse_,,»
-        "use"
-        [(Term.app
-          `FiniteDimensional.finrank
-          [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
-            `F
-            "⟮"
-            (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
-            "⟯")
-           `p.splitting_field])])
-       [])
-      (group
-       (Tactic.tacticSuffices_
-        "suffices"
-        (Term.sufficesDecl
-         []
-         («term_=_» (Term.proj (Term.app `minpoly [`F `α]) "." `natDegree) "=" `p.nat_degree)
-         (Term.byTactic'
-          "by"
-          (Tactic.tacticSeq
-           (Tactic.tacticSeq1Indented
-            [(group
-              (Tactic.rwSeq
-               "rw"
-               []
-               (Tactic.rwRuleSeq
-                "["
-                [(Tactic.rwRule
-                  ["←"]
-                  (Term.app
-                   `FiniteDimensional.finrank_mul_finrank
-                   [`F
-                    (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
-                     `F
-                     "⟮"
-                     (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
-                     "⟯")
-                    `p.splitting_field]))
-                 ","
-                 (Tactic.rwRule [] (Term.app `IntermediateField.adjoin.finrank [`hα]))
-                 ","
-                 (Tactic.rwRule [] `this)]
-                "]")
-               [])
-              [])])))))
-       [])
-      (group
-       (Tactic.tacticSuffices_
-        "suffices"
-        (Term.sufficesDecl
-         []
-         («term_∣_» (Term.app `minpoly [`F `α]) "∣" `p)
-         (Term.byTactic'
-          "by"
-          (Tactic.tacticSeq
-           (Tactic.tacticSeq1Indented
-            [(group
-              (Tactic.tacticHave_
-               "have"
-               (Term.haveDecl
-                (Term.haveIdDecl
-                 [`key []]
-                 []
-                 ":="
-                 (Term.app (Term.proj (Term.app `minpoly.irreducible [`hα]) "." `dvd_symm) [`p_irr `this]))))
-              [])
-             (group (Tactic.apply "apply" `le_antisymmₓ) [])
-             (group
-              («tactic·.__;_»
-               "·"
-               [(group (Tactic.exact "exact" (Term.app `nat_degree_le_of_dvd [`this `p_irr.ne_zero])) [])])
-              [])
-             (group
-              («tactic·.__;_»
-               "·"
-               [(group
-                 (Tactic.exact "exact" (Term.app `nat_degree_le_of_dvd [`key (Term.app `minpoly.ne_zero [`hα])]))
-                 [])])
-              [])])))))
-       [])
-      (group (Tactic.apply "apply" (Term.app `minpoly.dvd [`F `α])) [])
-      (group
-       (Tactic.rwSeq
-        "rw"
-        []
-        (Tactic.rwRuleSeq
-         "["
-         [(Tactic.rwRule [] `aeval_def)
-          ","
-          (Tactic.rwRule
-           []
-           (Term.app `map_root_of_splits [(Term.hole "_") (Term.app `splitting_field.splits [`p]) `hp]))]
-         "]")
-        [])
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.rwSeq
-   "rw"
-   []
-   (Tactic.rwRuleSeq
-    "["
-    [(Tactic.rwRule [] `aeval_def)
-     ","
-     (Tactic.rwRule [] (Term.app `map_root_of_splits [(Term.hole "_") (Term.app `splitting_field.splits [`p]) `hp]))]
-    "]")
-   [])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `map_root_of_splits [(Term.hole "_") (Term.app `splitting_field.splits [`p]) `hp])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `hp
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.app `splitting_field.splits [`p])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `p
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `splitting_field.splits
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `splitting_field.splits [`p]) []] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `map_root_of_splits
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `aeval_def
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.apply "apply" (Term.app `minpoly.dvd [`F `α]))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `minpoly.dvd [`F `α])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `α
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `F
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `minpoly.dvd
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.tacticSuffices_
-   "suffices"
-   (Term.sufficesDecl
-    []
-    («term_∣_» (Term.app `minpoly [`F `α]) "∣" `p)
-    (Term.byTactic'
-     "by"
-     (Tactic.tacticSeq
-      (Tactic.tacticSeq1Indented
-       [(group
-         (Tactic.tacticHave_
-          "have"
-          (Term.haveDecl
-           (Term.haveIdDecl
-            [`key []]
-            []
-            ":="
-            (Term.app (Term.proj (Term.app `minpoly.irreducible [`hα]) "." `dvd_symm) [`p_irr `this]))))
-         [])
-        (group (Tactic.apply "apply" `le_antisymmₓ) [])
-        (group
-         («tactic·.__;_»
-          "·"
-          [(group (Tactic.exact "exact" (Term.app `nat_degree_le_of_dvd [`this `p_irr.ne_zero])) [])])
-         [])
-        (group
-         («tactic·.__;_»
-          "·"
-          [(group (Tactic.exact "exact" (Term.app `nat_degree_le_of_dvd [`key (Term.app `minpoly.ne_zero [`hα])])) [])])
-         [])])))))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic'', expected 'Lean.Parser.Term.fromTerm'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («tactic·.__;_»
-   "·"
-   [(group (Tactic.exact "exact" (Term.app `nat_degree_le_of_dvd [`key (Term.app `minpoly.ne_zero [`hα])])) [])])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.exact "exact" (Term.app `nat_degree_le_of_dvd [`key (Term.app `minpoly.ne_zero [`hα])]))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `nat_degree_le_of_dvd [`key (Term.app `minpoly.ne_zero [`hα])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `minpoly.ne_zero [`hα])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `hα
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `minpoly.ne_zero
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `minpoly.ne_zero [`hα]) []] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `key
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `nat_degree_le_of_dvd
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  («tactic·.__;_» "·" [(group (Tactic.exact "exact" (Term.app `nat_degree_le_of_dvd [`this `p_irr.ne_zero])) [])])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.exact "exact" (Term.app `nat_degree_le_of_dvd [`this `p_irr.ne_zero]))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `nat_degree_le_of_dvd [`this `p_irr.ne_zero])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `p_irr.ne_zero
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `this
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `nat_degree_le_of_dvd
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.apply "apply" `le_antisymmₓ)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `le_antisymmₓ
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.tacticHave_
-   "have"
-   (Term.haveDecl
-    (Term.haveIdDecl
-     [`key []]
-     []
-     ":="
-     (Term.app (Term.proj (Term.app `minpoly.irreducible [`hα]) "." `dvd_symm) [`p_irr `this]))))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app (Term.proj (Term.app `minpoly.irreducible [`hα]) "." `dvd_symm) [`p_irr `this])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `this
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `p_irr
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  (Term.proj (Term.app `minpoly.irreducible [`hα]) "." `dvd_symm)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.app `minpoly.irreducible [`hα])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `hα
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `minpoly.irreducible
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `minpoly.irreducible [`hα]) []] ")")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  («term_∣_» (Term.app `minpoly [`F `α]) "∣" `p)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `p
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-  (Term.app `minpoly [`F `α])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `α
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  `F
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `minpoly
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (some 1023, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.tacticSuffices_
-   "suffices"
-   (Term.sufficesDecl
-    []
-    («term_=_» (Term.proj (Term.app `minpoly [`F `α]) "." `natDegree) "=" `p.nat_degree)
-    (Term.byTactic'
-     "by"
-     (Tactic.tacticSeq
-      (Tactic.tacticSeq1Indented
-       [(group
-         (Tactic.rwSeq
-          "rw"
-          []
-          (Tactic.rwRuleSeq
-           "["
-           [(Tactic.rwRule
-             ["←"]
-             (Term.app
-              `FiniteDimensional.finrank_mul_finrank
-              [`F
-               (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
-                `F
-                "⟮"
-                (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
-                "⟯")
-               `p.splitting_field]))
-            ","
-            (Tactic.rwRule [] (Term.app `IntermediateField.adjoin.finrank [`hα]))
-            ","
-            (Tactic.rwRule [] `this)]
-           "]")
-          [])
-         [])])))))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic'', expected 'Lean.Parser.Term.fromTerm'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.rwSeq
-   "rw"
-   []
-   (Tactic.rwRuleSeq
-    "["
-    [(Tactic.rwRule
-      ["←"]
-      (Term.app
-       `FiniteDimensional.finrank_mul_finrank
-       [`F
-        (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
-         `F
-         "⟮"
-         (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
-         "⟯")
-        `p.splitting_field]))
-     ","
-     (Tactic.rwRule [] (Term.app `IntermediateField.adjoin.finrank [`hα]))
-     ","
-     (Tactic.rwRule [] `this)]
-    "]")
-   [])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `this
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `IntermediateField.adjoin.finrank [`hα])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `hα
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `IntermediateField.adjoin.finrank
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app
-   `FiniteDimensional.finrank_mul_finrank
-   [`F
-    (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
-     `F
-     "⟮"
-     (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
-     "⟯")
-    `p.splitting_field])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `p.splitting_field
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
-   `F
-   "⟮"
-   (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
-   "⟯")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
-theorem
-  prime_degree_dvd_card
-  [ CharZero F ] ( p_irr : Irreducible p ) ( p_deg : p . natDegree . Prime ) : p . natDegree ∣ Fintype.card p . Gal
-  :=
-    by
-      rw [ gal.card_of_separable p_irr.separable ]
-        have hp : p.degree ≠ 0 := fun h => Nat.Prime.ne_zero p_deg nat_degree_eq_zero_iff_degree_le_zero.mpr le_of_eqₓ h
-        let α : p.splitting_field := root_of_splits algebraMap F p.splitting_field splitting_field.splits p hp
-        have hα : IsIntegral F α := Algebra.is_integral_of_finite _ _ α
-        use
-          FiniteDimensional.finrank
-            F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ p.splitting_field
-        suffices
-          minpoly F α . natDegree = p.nat_degree
-            by
-              rw
-                [
-                  ←
-                      FiniteDimensional.finrank_mul_finrank
-                        F
-                          F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯
-                          p.splitting_field
-                    ,
-                    IntermediateField.adjoin.finrank hα
-                    ,
-                    this
-                  ]
-        suffices
-          minpoly F α ∣ p
-            by
-              have key := minpoly.irreducible hα . dvd_symm p_irr this
-                apply le_antisymmₓ
-                · exact nat_degree_le_of_dvd this p_irr.ne_zero
-                · exact nat_degree_le_of_dvd key minpoly.ne_zero hα
-        apply minpoly.dvd F α
-        rw [ aeval_def , map_root_of_splits _ splitting_field.splits p hp ]
+-- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
+theorem prime_degree_dvd_card [CharZero F] (p_irr : Irreducible p) (p_deg : p.natDegree.Prime) :
+    p.natDegree ∣ Fintype.card p.Gal := by
+  rw [gal.card_of_separable p_irr.separable]
+  have hp : p.degree ≠ 0 := fun h => Nat.Prime.ne_zero p_deg (nat_degree_eq_zero_iff_degree_le_zero.mpr (le_of_eqₓ h))
+  let α : p.splitting_field := root_of_splits (algebraMap F p.splitting_field) (splitting_field.splits p) hp
+  have hα : IsIntegral F α := Algebra.is_integral_of_finite _ _ α
+  use FiniteDimensional.finrank F⟮⟯ p.splitting_field
+  suffices (minpoly F α).natDegree = p.nat_degree by
+    rw [← FiniteDimensional.finrank_mul_finrank F F⟮⟯ p.splitting_field, IntermediateField.adjoin.finrank hα, this]
+  suffices minpoly F α ∣ p by
+    have key := (minpoly.irreducible hα).dvd_symm p_irr this
+    apply le_antisymmₓ
+    · exact nat_degree_le_of_dvd this p_irr.ne_zero
+      
+    · exact nat_degree_le_of_dvd key (minpoly.ne_zero hα)
+      
+  apply minpoly.dvd F α
+  rw [aeval_def, map_root_of_splits _ (splitting_field.splits p) hp]
 
 section Rationals
 
@@ -1147,7 +498,7 @@ theorem gal_action_hom_bijective_of_prime_degree' {p : ℚ[X]} (p_irr : Irreduci
           show AlgEquiv.restrictScalars ℚ Complex.conjAe ^ 2 = 1 from AlgEquiv.ext Complex.conj_conj, MonoidHom.map_one,
           MonoidHom.map_one])
   have key := card_complex_roots_eq_card_real_add_card_not_gal_inv p
-  simp_rw [Set.to_finset_card]  at key
+  simp_rw [Set.to_finset_card] at key
   rw [key, add_le_add_iff_left] at p_roots1 p_roots2
   rw [key, add_right_injₓ]
   suffices ∀ m : ℕ, 2 ∣ m → 1 ≤ m → m ≤ 3 → m = 2 by

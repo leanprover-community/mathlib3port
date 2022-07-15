@@ -27,7 +27,7 @@ on `set.pairwise_disjoint`, even though the latter unfolds to something nicer.
 
 open Set Function
 
-variable {α ι ι' : Type _} {r p q : α → α → Prop}
+variable {α β γ ι ι' : Type _} {r p q : α → α → Prop}
 
 section Pairwise
 
@@ -40,7 +40,7 @@ def Pairwise (r : α → α → Prop) :=
 theorem Pairwise.mono (hr : Pairwise r) (h : ∀ ⦃i j⦄, r i j → p i j) : Pairwise p := fun i j hij => h <| hr i j hij
 
 theorem pairwise_on_bool (hr : Symmetric r) {a b : α} : Pairwise (r on fun c => cond c a b) ↔ r a b := by
-  simpa [Pairwise, Function.onFun] using @hr a b
+  simpa [← Pairwise, ← Function.onFun] using @hr a b
 
 theorem pairwise_disjoint_on_bool [SemilatticeInf α] [OrderBot α] {a b : α} :
     Pairwise (Disjoint on fun c => cond c a b) ↔ Disjoint a b :=
@@ -107,7 +107,7 @@ theorem pairwise_singleton (a : α) (r : α → α → Prop) : Set.Pairwise {a} 
 theorem pairwise_iff_of_refl [IsRefl α r] : s.Pairwise r ↔ ∀ ⦃a⦄, a ∈ s → ∀ ⦃b⦄, b ∈ s → r a b :=
   forall₄_congrₓ fun a _ b _ => or_iff_not_imp_left.symm.trans <| or_iff_right_of_imp of_eq
 
-alias pairwise_iff_of_refl ↔ Set.Pairwise.of_refl _
+alias pairwise_iff_of_refl ↔ pairwise.of_refl _
 
 theorem _root_.reflexive.set_pairwise_iff (hr : Reflexive r) : s.Pairwise r ↔ ∀ ⦃a⦄, a ∈ s → ∀ ⦃b⦄, b ∈ s → r a b :=
   forall₄_congrₓ fun a _ b _ => or_iff_not_imp_left.symm.trans <| or_iff_right_of_imp <| Eq.ndrec <| hr a
@@ -153,7 +153,7 @@ theorem pairwise_eq_iff_exists_eq [Nonempty ι] (s : Set α) (f : α → ι) :
 
 theorem pairwise_union :
     (s ∪ t).Pairwise r ↔ s.Pairwise r ∧ t.Pairwise r ∧ ∀, ∀ a ∈ s, ∀, ∀ b ∈ t, ∀, a ≠ b → r a b ∧ r b a := by
-  simp only [Set.Pairwise, mem_union_eq, or_imp_distrib, forall_and_distrib]
+  simp only [← Set.Pairwise, ← mem_union_eq, ← or_imp_distrib, ← forall_and_distrib]
   exact
     ⟨fun H => ⟨H.1.1, H.2.2, H.2.1, fun x hx y hy hne => H.1.2 y hy x hx hne.symm⟩, fun H =>
       ⟨⟨H.1, fun x hx y hy hne => H.2.2.2 y hy x hx hne.symm⟩, H.2.2.1, H.2.1⟩⟩
@@ -161,42 +161,42 @@ theorem pairwise_union :
 theorem pairwise_union_of_symmetric (hr : Symmetric r) :
     (s ∪ t).Pairwise r ↔ s.Pairwise r ∧ t.Pairwise r ∧ ∀, ∀ a ∈ s, ∀, ∀ b ∈ t, ∀, a ≠ b → r a b :=
   pairwise_union.trans <| by
-    simp only [hr.iff, and_selfₓ]
+    simp only [← hr.iff, ← and_selfₓ]
 
 theorem pairwise_insert : (insert a s).Pairwise r ↔ s.Pairwise r ∧ ∀, ∀ b ∈ s, ∀, a ≠ b → r a b ∧ r b a := by
-  simp only [insert_eq, pairwise_union, pairwise_singleton, true_andₓ, mem_singleton_iff, forall_eq]
+  simp only [← insert_eq, ← pairwise_union, ← pairwise_singleton, ← true_andₓ, ← mem_singleton_iff, ← forall_eq]
 
 theorem Pairwise.insert (hs : s.Pairwise r) (h : ∀, ∀ b ∈ s, ∀, a ≠ b → r a b ∧ r b a) : (insert a s).Pairwise r :=
   pairwise_insert.2 ⟨hs, h⟩
 
 theorem pairwise_insert_of_symmetric (hr : Symmetric r) :
     (insert a s).Pairwise r ↔ s.Pairwise r ∧ ∀, ∀ b ∈ s, ∀, a ≠ b → r a b := by
-  simp only [pairwise_insert, hr.iff a, and_selfₓ]
+  simp only [← pairwise_insert, ← hr.iff a, ← and_selfₓ]
 
 theorem Pairwise.insert_of_symmetric (hs : s.Pairwise r) (hr : Symmetric r) (h : ∀, ∀ b ∈ s, ∀, a ≠ b → r a b) :
     (insert a s).Pairwise r :=
   (pairwise_insert_of_symmetric hr).2 ⟨hs, h⟩
 
 theorem pairwise_pair : Set.Pairwise {a, b} r ↔ a ≠ b → r a b ∧ r b a := by
-  simp [pairwise_insert]
+  simp [← pairwise_insert]
 
 theorem pairwise_pair_of_symmetric (hr : Symmetric r) : Set.Pairwise {a, b} r ↔ a ≠ b → r a b := by
-  simp [pairwise_insert_of_symmetric hr]
+  simp [← pairwise_insert_of_symmetric hr]
 
 theorem pairwise_univ : (Univ : Set α).Pairwise r ↔ Pairwise r := by
-  simp only [Set.Pairwise, Pairwise, mem_univ, forall_const]
+  simp only [← Set.Pairwise, ← Pairwise, ← mem_univ, ← forall_const]
 
 @[simp]
 theorem pairwise_bot_iff : s.Pairwise (⊥ : α → α → Prop) ↔ (s : Set α).Subsingleton :=
   ⟨fun h a ha b hb => h.Eq ha hb id, fun h => h.Pairwise _⟩
 
-alias pairwise_bot_iff ↔ Set.Pairwise.subsingleton _
+alias pairwise_bot_iff ↔ pairwise.subsingleton _
 
 theorem Pairwise.on_injective (hs : s.Pairwise r) (hf : Function.Injective f) (hfs : ∀ x, f x ∈ s) :
     Pairwise (r on f) := fun i j hij => hs (hfs i) (hfs j) (hf.Ne hij)
 
 theorem InjOn.pairwise_image {s : Set ι} (h : s.InjOn f) : (f '' s).Pairwise r ↔ s.Pairwise (r on f) := by
-  simp (config := { contextual := true })[h.eq_iff, Set.Pairwise]
+  simp (config := { contextual := true })[← h.eq_iff, ← Set.Pairwise]
 
 theorem pairwise_Union {f : ι → Set α} (h : Directed (· ⊆ ·) f) : (⋃ n, f n).Pairwise r ↔ ∀ n, (f n).Pairwise r := by
   constructor
@@ -222,16 +222,16 @@ theorem Pairwise.set_pairwise (h : Pairwise r) (s : Set α) : s.Pairwise r := fu
 end Pairwise
 
 theorem pairwise_subtype_iff_pairwise_set {α : Type _} (s : Set α) (r : α → α → Prop) :
-    (Pairwise fun y : s => r x y) ↔ s.Pairwise r := by
+    (Pairwise fun x : s y : s => r x y) ↔ s.Pairwise r := by
   constructor
   · intro h x hx y hy hxy
     exact
       h ⟨x, hx⟩ ⟨y, hy⟩
         (by
-          simpa only [Subtype.mk_eq_mk, Ne.def] )
+          simpa only [← Subtype.mk_eq_mk, ← Ne.def] )
     
   · rintro h ⟨x, hx⟩ ⟨y, hy⟩ hxy
-    simp only [Subtype.mk_eq_mk, Ne.def] at hxy
+    simp only [← Subtype.mk_eq_mk, ← Ne.def] at hxy
     exact h hx hy hxy
     
 
@@ -334,7 +334,7 @@ theorem PairwiseDisjoint.bUnion {s : Set ι'} {g : ι' → Set ι} {f : ι → �
     (hs : s.PairwiseDisjoint fun i' : ι' => ⨆ i ∈ g i', f i) (hg : ∀, ∀ i ∈ s, ∀, (g i).PairwiseDisjoint f) :
     (⋃ i ∈ s, g i).PairwiseDisjoint f := by
   rintro a ha b hb hab
-  simp_rw [Set.mem_Union]  at ha hb
+  simp_rw [Set.mem_Union] at ha hb
   obtain ⟨c, hc, ha⟩ := ha
   obtain ⟨d, hd, hb⟩ := hb
   obtain hcd | hcd := eq_or_ne (g c) (g d)
@@ -372,7 +372,48 @@ theorem bUnion_diff_bUnion_eq {s t : Set ι} {f : ι → Set α} (h : (s ∪ t).
 noncomputable def bUnionEqSigmaOfDisjoint {s : Set ι} {f : ι → Set α} (h : s.PairwiseDisjoint f) :
     (⋃ i ∈ s, f i) ≃ Σi : s, f i :=
   (Equivₓ.setCongr (bUnion_eq_Union _ _)).trans <|
-    Union_eq_sigma_of_disjoint fun ne => (h hi hj) fun eq => Ne <| Subtype.eq Eq
+    Union_eq_sigma_of_disjoint fun ⟨i, hi⟩ ⟨j, hj⟩ ne => (h hi hj) fun eq => Ne <| Subtype.eq Eq
+
+/-- The partial images of a binary function `f` whose partial evaluations are injective are pairwise
+disjoint iff `f` is injective . -/
+theorem pairwise_disjoint_image_right_iff {f : α → β → γ} {s : Set α} {t : Set β}
+    (hf : ∀, ∀ a ∈ s, ∀, Injective (f a)) :
+    (s.PairwiseDisjoint fun a => f a '' t) ↔ (s ×ˢ t : Set (α × β)).InjOn fun p => f p.1 p.2 := by
+  refine' ⟨fun hs x hx y hy h : f _ _ = _ => _, fun hs x hx y hy h => _⟩
+  · suffices x.1 = y.1 by
+      exact
+        Prod.extₓ this
+          (hf _ hx.1 <|
+            h.trans <| by
+              rw [this])
+    refine' hs.elim hx.1 hy.1 (not_disjoint_iff.2 ⟨_, mem_image_of_mem _ hx.2, _⟩)
+    rw [h]
+    exact mem_image_of_mem _ hy.2
+    
+  · rintro _ ⟨⟨a, ha, hab⟩, b, hb, rfl⟩
+    exact h (congr_arg Prod.fst <| hs (mk_mem_prod hx ha) (mk_mem_prod hy hb) hab)
+    
+
+/-- The partial images of a binary function `f` whose partial evaluations are injective are pairwise
+disjoint iff `f` is injective . -/
+theorem pairwise_disjoint_image_left_iff {f : α → β → γ} {s : Set α} {t : Set β}
+    (hf : ∀, ∀ b ∈ t, ∀, Injective fun a => f a b) :
+    (t.PairwiseDisjoint fun b => (fun a => f a b) '' s) ↔ (s ×ˢ t : Set (α × β)).InjOn fun p => f p.1 p.2 := by
+  refine' ⟨fun ht x hx y hy h : f _ _ = _ => _, fun ht x hx y hy h => _⟩
+  · suffices x.2 = y.2 by
+      exact
+        Prod.extₓ
+          (hf _ hx.2 <|
+            h.trans <| by
+              rw [this])
+          this
+    refine' ht.elim hx.2 hy.2 (not_disjoint_iff.2 ⟨_, mem_image_of_mem _ hx.1, _⟩)
+    rw [h]
+    exact mem_image_of_mem _ hy.1
+    
+  · rintro _ ⟨⟨a, ha, hab⟩, b, hb, rfl⟩
+    exact h (congr_arg Prod.snd <| ht (mk_mem_prod ha hx) (mk_mem_prod hb hy) hab)
+    
 
 end Set
 

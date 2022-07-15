@@ -46,10 +46,10 @@ this will be enough to generate all sets in the sigma-algebra.
 This construction is very similar to that of the Borel hierarchy. -/
 def GenerateMeasurableRec (s : Set (Set α)) : ω₁ → Set (Set α)
   | i =>
-    let S := ⋃ j : { j // j < i }, generate_measurable_rec j.1
+    let S := ⋃ j : Iio i, generate_measurable_rec j.1
     s ∪ {∅} ∪ compl '' S ∪ Set.Range fun f : ℕ → S => ⋃ n, (f n).1
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 theorem self_subset_generate_measurable_rec (s : Set (Set α)) (i : ω₁) : s ⊆ GenerateMeasurableRec s i := by
   unfold generate_measurable_rec
   apply_rules [subset_union_of_subset_left]
@@ -84,7 +84,7 @@ theorem generate_measurable_rec_subset (s : Set (Set α)) {i j : ω₁} (h : i �
     exact (Union_const x).symm
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 /-- At each step of the inductive construction, the cardinality bound `≤ (max (#s) 2) ^ ℵ₀` holds.
 -/
 theorem cardinal_generate_measurable_rec_le (s : Set (Set α)) (i : ω₁) :
@@ -95,10 +95,9 @@ theorem cardinal_generate_measurable_rec_le (s : Set (Set α)) (i : ω₁) :
   have B : aleph 1 ≤ max (# s) 2 ^ aleph_0.{u} :=
     aleph_one_le_continuum.trans (power_le_power_right (le_max_rightₓ _ _))
   have C : ℵ₀ ≤ max (# s) 2 ^ aleph_0.{u} := A.trans B
-  have J : # (⋃ j : { j // j < i }, generate_measurable_rec s j.1) ≤ max (# s) 2 ^ aleph_0.{u} := by
+  have J : # (⋃ j : Iio i, generate_measurable_rec s j.1) ≤ max (# s) 2 ^ aleph_0.{u} := by
     apply (mk_Union_le _).trans
-    have D : (Cardinal.sup.{u, u} fun j : { j // j < i } => # (generate_measurable_rec s j.1)) ≤ _ :=
-      Cardinal.sup_le fun ⟨j, hj⟩ => IH j hj
+    have D : (⨆ j : Iio i, # (generate_measurable_rec s j)) ≤ _ := csupr_le' fun ⟨j, hj⟩ => IH j hj
     apply (mul_le_mul' ((mk_subtype_le _).trans (aleph 1).mk_ord_out.le) D).trans
     rw [mul_eq_max A C]
     exact max_leₓ B le_rfl
@@ -110,7 +109,7 @@ theorem cardinal_generate_measurable_rec_le (s : Set (Set α)) (i : ω₁) :
     exact one_lt_aleph_0.le.trans C
     
   · apply mk_range_le.trans
-    simp only [mk_pi, Subtype.val_eq_coe, prod_const, lift_uzero, mk_denumerable, lift_aleph_0]
+    simp only [← mk_pi, ← Subtype.val_eq_coe, ← prod_const, ← lift_uzero, ← mk_denumerable, ← lift_aleph_0]
     have := @power_le_power_right _ _ ℵ₀ J
     rwa [← power_mul, aleph_0_mul_aleph_0] at this
     
@@ -172,8 +171,7 @@ theorem cardinal_generate_measurable_le (s : Set (Set α)) :
   rw [generate_measurable_eq_rec]
   apply (mk_Union_le _).trans
   rw [(aleph 1).mk_ord_out]
-  refine'
-    le_transₓ (mul_le_mul' aleph_one_le_continuum (Cardinal.sup_le fun i => cardinal_generate_measurable_rec_le s i)) _
+  refine' le_transₓ (mul_le_mul' aleph_one_le_continuum (csupr_le' fun i => cardinal_generate_measurable_rec_le s i)) _
   have := power_le_power_right (le_max_rightₓ (# s) 2)
   rw [mul_eq_max aleph_0_le_continuum (aleph_0_le_continuum.trans this)]
   exact max_leₓ this le_rfl

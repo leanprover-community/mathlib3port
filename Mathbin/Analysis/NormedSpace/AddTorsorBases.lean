@@ -51,7 +51,7 @@ end Barycentric
 
 open Set
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given a finite-dimensional normed real vector space, the interior of the convex hull of an
 affine basis is the set of points whose barycentric coordinates are strictly positive with respect
 to this basis.
@@ -63,7 +63,7 @@ theorem interior_convex_hull_aff_basis {ι E : Type _} [Fintype ι] [NormedGroup
   cases subsingleton_or_nontrivial ι
   · -- The zero-dimensional case.
     suffices range b.points = univ by
-      simp [this]
+      simp [← this]
     refine' AffineSubspace.eq_univ_of_subsingleton_span_eq_top _ b.tot
     rw [← image_univ]
     exact subsingleton.image subsingleton_of_subsingleton b.points
@@ -78,10 +78,10 @@ theorem interior_convex_hull_aff_basis {ι E : Type _} [Fintype ι] [NormedGroup
       ext
       simp
     ext
-    simp only [this, interior_Inter_of_fintype, ←
+    simp only [← this, ← interior_Inter_of_fintype,
       IsOpenMap.preimage_interior_eq_interior_preimage (is_open_map_barycentric_coord b _)
         (continuous_barycentric_coord b _),
-      interior_Ici, mem_Inter, mem_set_of_eq, mem_Ioi, mem_preimage]
+      ← interior_Ici, ← mem_Inter, ← mem_set_of_eq, ← mem_Ioi, ← mem_preimage]
     
 
 variable {V P : Type _} [NormedGroup V] [NormedSpace ℝ V] [MetricSpace P] [NormedAddTorsor V P]
@@ -90,8 +90,8 @@ include V
 
 open AffineMap
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (y «expr ∉ » s)
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given a set `s` of affine-independent points belonging to an open set `u`, we may extend `s` to
 an affine basis, all of whose elements belong to `u`. -/
 theorem exists_subset_affine_independent_span_eq_top_of_open {s u : Set P} (hu : IsOpen u) (hsu : s ⊆ u)
@@ -104,7 +104,8 @@ theorem exists_subset_affine_independent_span_eq_top_of_open {s u : Set P} (hu :
   have hf : ∀ y, f y ∈ u := by
     intro y
     apply hεu
-    simp only [Metric.mem_ball, f, line_map_apply, dist_vadd_left, norm_smul, Real.norm_eq_abs, dist_eq_norm_vsub V y q]
+    simp only [← Metric.mem_ball, ← f, ← line_map_apply, ← dist_vadd_left, ← norm_smul, ← Real.norm_eq_abs, ←
+      dist_eq_norm_vsub V y q]
     cases' eq_or_ne ∥y -ᵥ q∥ 0 with hyq hyq
     · rwa [hyq, mul_zero]
       
@@ -113,22 +114,22 @@ theorem exists_subset_affine_independent_span_eq_top_of_open {s u : Set P} (hu :
         rw [abs_div, abs_of_pos (half_pos hε), abs_of_pos hyq]_ = ε / 2 := div_mul_cancel _ (ne_of_gtₓ hyq)_ < ε :=
         half_lt_self hε
   have hεyq : ∀ y _ : y ∉ s, ε / 2 / dist y q ≠ 0 := by
-    simp only [Ne.def, div_eq_zero_iff, or_falseₓ, dist_eq_zero, bit0_eq_zero, one_ne_zero, not_or_distrib,
-      ne_of_gtₓ hε, true_andₓ, not_false_iff]
+    simp only [← Ne.def, ← div_eq_zero_iff, ← or_falseₓ, ← dist_eq_zero, ← bit0_eq_zero, ← one_ne_zero, ←
+      not_or_distrib, ← ne_of_gtₓ hε, ← true_andₓ, ← not_false_iff]
     exact fun y h1 h2 => h1 (h2.symm ▸ hq)
   classical
   let w : t → ℝˣ := fun p => if hp : (p : P) ∈ s then 1 else Units.mk0 _ (hεyq (↑p) hp)
   refine' ⟨Set.Range fun p : t => line_map q p (w p : ℝ), _, _, _, _⟩
   · intro p hp
     use ⟨p, ht₁ hp⟩
-    simp [w, hp]
+    simp [← w, ← hp]
     
   · intro y hy
-    simp only [Set.mem_range, SetCoe.exists, Subtype.coe_mk] at hy
+    simp only [← Set.mem_range, ← SetCoe.exists, ← Subtype.coe_mk] at hy
     obtain ⟨p, hp, hyq⟩ := hy
     by_cases' hps : p ∈ s <;>
-      simp only [w, hps, line_map_apply_one, Units.coe_mk0, dif_neg, dif_pos, not_false_iff, Units.coe_one,
-          Subtype.coe_mk] at hyq <;>
+      simp only [← w, ← hps, ← line_map_apply_one, ← Units.coe_mk0, ← dif_neg, ← dif_pos, ← not_false_iff, ←
+          Units.coe_one, ← Subtype.coe_mk] at hyq <;>
         rw [← hyq] <;> [exact hsu hps, exact hf p]
     
   · exact (ht₂.units_line_map ⟨q, ht₁ hq⟩ w).range
@@ -161,11 +162,11 @@ theorem interior_convex_hull_nonempty_iff_aff_span_eq_top [FiniteDimensional ℝ
     let b : AffineBasis t ℝ V := ⟨coe, h_ind, h_tot⟩
     rw [interior_convex_hull_aff_basis b]
     have htne : (Finset.univ : Finset t).Nonempty := by
-      simpa [Finset.univ_nonempty_iff] using AffineSubspace.nonempty_of_affine_span_eq_top ℝ V V h_tot
-    simp [Finset.centroid_def,
+      simpa [← Finset.univ_nonempty_iff] using AffineSubspace.nonempty_of_affine_span_eq_top ℝ V V h_tot
+    simp [← Finset.centroid_def, ←
       b.coord_apply_combination_of_mem (Finset.mem_univ _)
         (Finset.sum_centroid_weights_eq_one_of_nonempty ℝ (Finset.univ : Finset t) htne),
-      Finset.centroid_weights_apply, Nat.cast_pos, inv_pos, finset.card_pos.mpr htne]
+      ← Finset.centroid_weights_apply, ← Nat.cast_pos, ← inv_pos, ← finset.card_pos.mpr htne]
     
 
 theorem Convex.interior_nonempty_iff_affine_span_eq_top [FiniteDimensional ℝ V] {s : Set V} (hs : Convex ℝ s) :

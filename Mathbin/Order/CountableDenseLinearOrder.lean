@@ -64,7 +64,7 @@ theorem exists_between_finsets {α : Type _} [LinearOrderₓ α] [DenselyOrdered
 
 variable (α β : Type _) [LinearOrderₓ α] [LinearOrderₓ β]
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (p q «expr ∈ » f)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (p q «expr ∈ » f)
 /-- The type of partial order isomorphisms between `α` and `β` defined on finite subsets.
     A partial order isomorphism is encoded as a finite subset of `α × β`, consisting
     of pairs which should be identified. -/
@@ -142,7 +142,7 @@ def definedAtLeft [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty 
     refine' ⟨⟨insert (a, b) f.val, fun p hp q hq => _⟩, ⟨b, Finset.mem_insert_self _ _⟩, Finset.subset_insert _ _⟩
     rw [Finset.mem_insert] at hp hq
     rcases hp with (rfl | pf) <;> rcases hq with (rfl | qf)
-    · simp only [cmp_self_eq_eq]
+    · simp only [← cmp_self_eq_eq]
       
     · rw [cmp_eq_cmp_symm]
       exact a_b _ qf

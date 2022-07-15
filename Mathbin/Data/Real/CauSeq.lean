@@ -44,7 +44,7 @@ variable {α : Type _} [LinearOrderedField α] {β : Type _} [Ringₓ β] (abv :
 theorem rat_add_continuous_lemma {ε : α} (ε0 : 0 < ε) :
     ∃ δ > 0, ∀ {a₁ a₂ b₁ b₂ : β}, abv (a₁ - b₁) < δ → abv (a₂ - b₂) < δ → abv (a₁ + a₂ - (b₁ + b₂)) < ε :=
   ⟨ε / 2, half_pos ε0, fun a₁ a₂ b₁ b₂ h₁ h₂ => by
-    simpa [add_halves, sub_eq_add_neg, add_commₓ, add_left_commₓ, add_assocₓ] using
+    simpa [← add_halves, ← sub_eq_add_neg, ← add_commₓ, ← add_left_commₓ, ← add_assocₓ] using
       lt_of_le_of_ltₓ (abv_add abv _ _) (add_lt_add h₁ h₂)⟩
 
 theorem rat_mul_continuous_lemma {ε K₁ K₂ : α} (ε0 : 0 < ε) :
@@ -61,7 +61,8 @@ theorem rat_mul_continuous_lemma {ε K₁ K₂ : α} (ε0 : 0 < ε) :
     add_lt_add (mul_lt_mul' (le_of_ltₓ h₁) hb₂ (abv_nonneg abv _) εK)
       (mul_lt_mul' (le_of_ltₓ h₂) ha₁ (abv_nonneg abv _) εK)
   rw [← abv_mul abv, mul_comm, div_mul_cancel _ (ne_of_gtₓ K0), ← abv_mul abv, add_halves] at this
-  simpa [mul_addₓ, add_mulₓ, sub_eq_add_neg, add_commₓ, add_left_commₓ] using lt_of_le_of_ltₓ (abv_add abv _ _) this
+  simpa [← mul_addₓ, ← add_mulₓ, ← sub_eq_add_neg, ← add_commₓ, ← add_left_commₓ] using
+    lt_of_le_of_ltₓ (abv_add abv _ _) this
 
 theorem rat_inv_continuous_lemma {β : Type _} [Field β] (abv : β → α) [IsAbsoluteValue abv] {ε K : α} (ε0 : 0 < ε)
     (K0 : 0 < K) : ∃ δ > 0, ∀ {a b : β}, K ≤ abv a → K ≤ abv b → abv (a - b) < δ → abv (a⁻¹ - b⁻¹) < ε := by
@@ -84,7 +85,7 @@ namespace IsCauSeq
 
 variable {α : Type _} [LinearOrderedField α] {β : Type _} [Ringₓ β] {abv : β → α} [IsAbsoluteValue abv] {f : ℕ → β}
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (j k «expr ≥ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j k «expr ≥ » i)
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem cauchy₂ (hf : IsCauSeq abv f) {ε : α} (ε0 : 0 < ε) : ∃ i, ∀ j k _ : j ≥ i _ : k ≥ i, abv (f j - f k) < ε := by
@@ -137,7 +138,7 @@ def ofEq (f : CauSeq β abv) (g : ℕ → β) (e : ∀ i, f i = g i) : CauSeq β
 
 variable [IsAbsoluteValue abv]
 
--- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (j k «expr ≥ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j k «expr ≥ » i)
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem cauchy₂ (f : CauSeq β abv) {ε} : 0 < ε → ∃ i, ∀ j k _ : j ≥ i _ : k ≥ i, abv (f j - f k) < ε :=
@@ -190,7 +191,7 @@ variable (abv)
 def const (x : β) : CauSeq β abv :=
   ⟨fun i => x, fun ε ε0 =>
     ⟨0, fun j ij => by
-      simpa [abv_zero abv] using ε0⟩⟩
+      simpa [← abv_zero abv] using ε0⟩⟩
 
 variable {abv}
 
@@ -226,7 +227,7 @@ theorem const_zero : const 0 = 0 :=
   rfl
 
 theorem const_add (x y : β) : const (x + y) = const x + const y :=
-  ext fun i => rfl
+  rfl
 
 instance : Mul (CauSeq β abv) :=
   ⟨fun f g =>
@@ -261,7 +262,7 @@ theorem const_neg (x : β) : const (-x) = -const x :=
 instance : Sub (CauSeq β abv) :=
   ⟨fun f g =>
     ofEq (f + -g) (fun x => f x - g x) fun i => by
-      simp [sub_eq_add_neg]⟩
+      simp [← sub_eq_add_neg]⟩
 
 @[simp]
 theorem sub_apply (f g : CauSeq β abv) (i : ℕ) : (f - g) i = f i - g i :=
@@ -270,20 +271,34 @@ theorem sub_apply (f g : CauSeq β abv) (i : ℕ) : (f - g) i = f i - g i :=
 theorem const_sub (x y : β) : const (x - y) = const x - const y :=
   ext fun i => rfl
 
-instance : Ringₓ (CauSeq β abv) := by
+instance : AddGroupₓ (CauSeq β abv) := by
   refine_struct
-      { neg := Neg.neg, add := (· + ·), zero := (0 : CauSeq β abv), mul := (· * ·), one := 1, sub := Sub.sub,
-        npow := @npowRec (CauSeq β abv) ⟨1⟩ ⟨(· * ·)⟩, nsmul := @nsmulRec (CauSeq β abv) ⟨0⟩ ⟨(· + ·)⟩,
-        zsmul := @zsmulRec (CauSeq β abv) ⟨0⟩ ⟨(· + ·)⟩ ⟨Neg.neg⟩ } <;>
+      { add := (· + ·), neg := Neg.neg, zero := (0 : CauSeq β abv), sub := Sub.sub,
+        zsmul := @zsmulRec (CauSeq β abv) ⟨0⟩ ⟨(· + ·)⟩ ⟨Neg.neg⟩, nsmul := @nsmulRec (CauSeq β abv) ⟨0⟩ ⟨(· + ·)⟩ } <;>
     intros <;>
       try
           rfl <;>
-        apply ext <;> simp [mul_addₓ, mul_assoc, add_mulₓ, add_commₓ, add_left_commₓ, sub_eq_add_neg]
+        apply ext <;> simp [← add_commₓ, ← add_left_commₓ, ← sub_eq_add_neg]
+
+instance : AddGroupWithOneₓ (CauSeq β abv) :=
+  { CauSeq.addGroup with one := 1, natCast := fun n => const n, nat_cast_zero := congr_arg const Nat.cast_zeroₓ,
+    nat_cast_succ := fun n => congr_arg const (Nat.cast_succₓ n), intCast := fun n => const n,
+    int_cast_of_nat := fun n => congr_arg const (Int.cast_of_nat n),
+    int_cast_neg_succ_of_nat := fun n => congr_arg const (Int.cast_neg_succ_of_nat n) }
+
+instance : Ringₓ (CauSeq β abv) := by
+  refine_struct
+      { CauSeq.addGroupWithOne with add := (· + ·), zero := (0 : CauSeq β abv), mul := (· * ·), one := 1,
+        npow := @npowRec (CauSeq β abv) ⟨1⟩ ⟨(· * ·)⟩ } <;>
+    intros <;>
+      try
+          rfl <;>
+        apply ext <;> simp [← mul_addₓ, ← mul_assoc, ← add_mulₓ, ← add_commₓ, ← add_left_commₓ, ← sub_eq_add_neg]
 
 instance {β : Type _} [CommRingₓ β] {abv : β → α} [IsAbsoluteValue abv] : CommRingₓ (CauSeq β abv) :=
   { CauSeq.ring with
     mul_comm := by
-      intros <;> apply ext <;> simp [mul_left_commₓ, mul_comm] }
+      intros <;> apply ext <;> simp [← mul_left_commₓ, ← mul_comm] }
 
 /-- `lim_zero f` holds when `f` approaches 0. -/
 def LimZero {abv : β → α} (f : CauSeq β abv) : Prop :=
@@ -293,7 +308,7 @@ theorem add_lim_zero {f g : CauSeq β abv} (hf : LimZero f) (hg : LimZero g) : L
   | ε, ε0 =>
     (exists_forall_ge_and (hf _ <| half_pos ε0) (hg _ <| half_pos ε0)).imp fun i H j ij => by
       let ⟨H₁, H₂⟩ := H _ ij
-      simpa [add_halves ε] using lt_of_le_of_ltₓ (abv_add abv _ _) (add_lt_add H₁ H₂)
+      simpa [← add_halves ε] using lt_of_le_of_ltₓ (abv_add abv _ _) (add_lt_add H₁ H₂)
 
 theorem mul_lim_zero_right (f : CauSeq β abv) {g} (hg : LimZero g) : LimZero (f * g)
   | ε, ε0 =>
@@ -313,7 +328,7 @@ theorem neg_lim_zero {f : CauSeq β abv} (hf : LimZero f) : LimZero (-f) := by
   rw [← neg_one_mul] <;> exact mul_lim_zero_right _ hf
 
 theorem sub_lim_zero {f g : CauSeq β abv} (hf : LimZero f) (hg : LimZero g) : LimZero (f - g) := by
-  simpa only [sub_eq_add_neg] using add_lim_zero hf (neg_lim_zero hg)
+  simpa only [← sub_eq_add_neg] using add_lim_zero hf (neg_lim_zero hg)
 
 theorem lim_zero_sub_rev {f g : CauSeq β abv} (hfg : LimZero (f - g)) : LimZero (g - f) := by
   simpa using neg_lim_zero hfg
@@ -321,7 +336,7 @@ theorem lim_zero_sub_rev {f g : CauSeq β abv} (hfg : LimZero (f - g)) : LimZero
 theorem zero_lim_zero : LimZero (0 : CauSeq β abv)
   | ε, ε0 =>
     ⟨0, fun j ij => by
-      simpa [abv_zero abv] using ε0⟩
+      simpa [← abv_zero abv] using ε0⟩
 
 theorem const_lim_zero {x : β} : LimZero (const x) ↔ x = 0 :=
   ⟨fun H =>
@@ -334,16 +349,16 @@ theorem const_lim_zero {x : β} : LimZero (const x) ↔ x = 0 :=
 instance equiv : Setoidₓ (CauSeq β abv) :=
   ⟨fun f g => LimZero (f - g),
     ⟨fun f => by
-      simp [zero_lim_zero], fun f g h => by
+      simp [← zero_lim_zero], fun f g h => by
       simpa using neg_lim_zero h, fun f g h fg gh => by
-      simpa [sub_eq_add_neg, add_assocₓ] using add_lim_zero fg gh⟩⟩
+      simpa [← sub_eq_add_neg, ← add_assocₓ] using add_lim_zero fg gh⟩⟩
 
 theorem add_equiv_add {f1 f2 g1 g2 : CauSeq β abv} (hf : f1 ≈ f2) (hg : g1 ≈ g2) : f1 + g1 ≈ f2 + g2 := by
   change lim_zero (f1 + g1 - _)
   convert add_lim_zero hf hg using 1
-  simp only [sub_eq_add_neg, add_assocₓ]
+  simp only [← sub_eq_add_neg, ← add_assocₓ]
   rw [add_commₓ (-f2)]
-  simp only [add_assocₓ]
+  simp only [← add_assocₓ]
   congr 2
   simp
 
@@ -368,7 +383,7 @@ theorem abv_pos_of_not_lim_zero {f : CauSeq β abv} (hf : ¬LimZero f) : ∃ K >
   have := Classical.propDecidable
   by_contra nk
   refine' hf fun ε ε0 => _
-  simp [not_forall] at nk
+  simp [← not_forall] at nk
   cases' f.cauchy₃ (half_pos ε0) with i hi
   rcases nk _ (half_pos ε0) i with ⟨j, ij, hj⟩
   refine' ⟨j, fun k jk => _⟩
@@ -484,7 +499,7 @@ theorem inv_apply {f : CauSeq β abv} hf i : inv f hf i = (f i)⁻¹ :=
 theorem inv_mul_cancel {f : CauSeq β abv} hf : inv f hf * f ≈ 1 := fun ε ε0 =>
   let ⟨K, K0, i, H⟩ := abv_pos_of_not_lim_zero hf
   ⟨i, fun j ij => by
-    simpa [(abv_pos abv).1 (lt_of_lt_of_leₓ K0 (H _ ij)), abv_zero abv] using ε0⟩
+    simpa [← (abv_pos abv).1 (lt_of_lt_of_leₓ K0 (H _ ij)), ← abv_zero abv] using ε0⟩
 
 theorem const_inv {x : β} (hx : x ≠ 0) :
     const abv x⁻¹ =
@@ -492,7 +507,7 @@ theorem const_inv {x : β} (hx : x ≠ 0) :
         (by
           rwa [const_lim_zero]) :=
   ext fun n => by
-    simp [inv_apply, const_apply]
+    simp [← inv_apply, ← const_apply]
 
 end Field
 
@@ -560,20 +575,20 @@ instance : LE (CauSeq α abs) :=
 
 theorem lt_of_lt_of_eq {f g h : CauSeq α abs} (fg : f < g) (gh : g ≈ h) : f < h :=
   show Pos (h - f) by
-    simpa [sub_eq_add_neg, add_commₓ, add_left_commₓ] using pos_add_lim_zero fg (neg_lim_zero gh)
+    simpa [← sub_eq_add_neg, ← add_commₓ, ← add_left_commₓ] using pos_add_lim_zero fg (neg_lim_zero gh)
 
 theorem lt_of_eq_of_lt {f g h : CauSeq α abs} (fg : f ≈ g) (gh : g < h) : f < h := by
   have := pos_add_lim_zero gh (neg_lim_zero fg) <;> rwa [← sub_eq_add_neg, sub_sub_sub_cancel_right] at this
 
 theorem lt_trans {f g h : CauSeq α abs} (fg : f < g) (gh : g < h) : f < h :=
   show Pos (h - f) by
-    simpa [sub_eq_add_neg, add_commₓ, add_left_commₓ] using add_pos fg gh
+    simpa [← sub_eq_add_neg, ← add_commₓ, ← add_left_commₓ] using add_pos fg gh
 
 theorem lt_irrefl {f : CauSeq α abs} : ¬f < f
   | h =>
     not_lim_zero_of_pos h
       (by
-        simp [zero_lim_zero])
+        simp [← zero_lim_zero])
 
 theorem le_of_eq_of_le {f g h : CauSeq α abs} (hfg : f ≈ g) (hgh : g ≤ h) : f ≤ h :=
   hgh.elim (Or.inl ∘ CauSeq.lt_of_eq_of_lt hfg) (Or.inr ∘ Setoidₓ.trans hfg)

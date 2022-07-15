@@ -92,14 +92,14 @@ theorem hom_equiv_left_adjoint_uniq_hom_app {F F' : C ⥤ D} {G : D ⥤ C} (adj1
   swap
   infer_instance
   ext f y
-  simpa [left_adjoint_uniq, left_adjoints_coyoneda_equiv]
+  simpa [← left_adjoint_uniq, ← left_adjoints_coyoneda_equiv]
 
 @[simp, reassoc]
 theorem unit_left_adjoint_uniq_hom {F F' : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F' ⊣ G) :
     adj1.Unit ≫ whiskerRight (leftAdjointUniq adj1 adj2).Hom G = adj2.Unit := by
   ext x
   rw [nat_trans.comp_app, ← hom_equiv_left_adjoint_uniq_hom_app adj1 adj2]
-  simp [-hom_equiv_left_adjoint_uniq_hom_app, ← G.map_comp]
+  simp [-hom_equiv_left_adjoint_uniq_hom_app, G.map_comp]
 
 @[simp, reassoc]
 theorem unit_left_adjoint_uniq_hom_app {F F' : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F' ⊣ G) (x : C) :
@@ -122,7 +122,7 @@ theorem left_adjoint_uniq_hom_counit {F F' : C ⥤ D} {G : D ⥤ C} (adj1 : F �
     by
     erw [← adj1.counit.naturality, ← F.map_comp_assoc]
     simpa
-  simpa [left_adjoint_uniq, left_adjoints_coyoneda_equiv] using this
+  simpa [← left_adjoint_uniq, ← left_adjoints_coyoneda_equiv] using this
 
 @[simp, reassoc]
 theorem left_adjoint_uniq_hom_app_counit {F F' : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F' ⊣ G) (x : D) :
@@ -144,7 +144,7 @@ theorem left_adjoint_uniq_trans {F F' F'' : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣
   swap
   infer_instance
   ext
-  simp [left_adjoints_coyoneda_equiv, left_adjoint_uniq]
+  simp [← left_adjoints_coyoneda_equiv, ← left_adjoint_uniq]
 
 @[simp, reassoc]
 theorem left_adjoint_uniq_trans_app {F F' F'' : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F' ⊣ G) (adj3 : F'' ⊣ G)
@@ -163,7 +163,7 @@ theorem left_adjoint_uniq_refl {F : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣ G) : (l
   swap
   infer_instance
   ext
-  simp [left_adjoints_coyoneda_equiv, left_adjoint_uniq]
+  simp [← left_adjoints_coyoneda_equiv, ← left_adjoint_uniq]
 
 /-- If `G` and `G'` are both right adjoint to `F`, then they are naturally isomorphic. -/
 def rightAdjointUniq {F : C ⥤ D} {G G' : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F ⊣ G') : G ≅ G' :=

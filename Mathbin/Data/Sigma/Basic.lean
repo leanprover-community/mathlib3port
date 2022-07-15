@@ -3,6 +3,7 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
+import Mathbin.Meta.Univs
 import Mathbin.Tactic.Lint.Default
 import Mathbin.Tactic.Ext
 
@@ -151,6 +152,17 @@ theorem Prod.fst_to_sigma {α β} (x : α × β) : (Prod.toSigma x).fst = x.fst 
 theorem Prod.snd_to_sigma {α β} (x : α × β) : (Prod.toSigma x).snd = x.snd := by
   cases x <;> rfl
 
+-- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]
+-- we generate this manually as `@[derive has_reflect]` fails
+@[instance]
+protected unsafe def sigma.reflect.{u, v} [reflected_univ.{u}] [reflected_univ.{v}] {α : Type u} (β : α → Type v)
+    [reflected _ α] [reflected _ β] [hα : has_reflect α] [hβ : ∀ i, has_reflect (β i)] : has_reflect (Σa, β a) :=
+  fun ⟨a, b⟩ =>
+  (by
+        trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]" :
+        reflected _ @Sigma.mk.{u, v}).subst₄
+    (quote.1 α) (quote.1 β) (quote.1 a) (quote.1 b)
+
 end Sigma
 
 section PSigma
@@ -197,6 +209,14 @@ theorem ext_iff {x₀ x₁ : PSigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HE
   cases x₀
   cases x₁
   exact PSigma.mk.inj_iff
+
+@[simp]
+theorem forall {p : (Σ'a, β a) → Prop} : (∀ x, p x) ↔ ∀ a b, p ⟨a, b⟩ :=
+  ⟨fun h a b => h ⟨a, b⟩, fun h ⟨a, b⟩ => h a b⟩
+
+@[simp]
+theorem exists {p : (Σ'a, β a) → Prop} : (∃ x, p x) ↔ ∃ a b, p ⟨a, b⟩ :=
+  ⟨fun ⟨⟨a, b⟩, h⟩ => ⟨a, b, h⟩, fun ⟨a, b, h⟩ => ⟨⟨a, b⟩, h⟩⟩
 
 /-- A specialized ext lemma for equality of psigma types over an indexed subtype. -/
 @[ext]

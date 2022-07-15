@@ -3,12 +3,13 @@ Copyright (c) 2019 Robert A. Spencer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert A. Spencer, Markus Himmel
 -/
-import Mathbin.Algebra.Category.Group.Basic
+import Mathbin.Algebra.Category.Group.Preadditive
 import Mathbin.CategoryTheory.Limits.Shapes.Kernels
 import Mathbin.CategoryTheory.Linear.Default
 import Mathbin.CategoryTheory.Elementwise
 import Mathbin.LinearAlgebra.Basic
 import Mathbin.CategoryTheory.Conj
+import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
 
 /-!
 # The category of `R`-modules
@@ -89,8 +90,10 @@ instance moduleConcreteCategory : ConcreteCategory.{v} (ModuleCat.{v} R) where
   forget := { obj := fun R => R, map := fun R S f => (f : R → S) }
   forget_faithful := {  }
 
-instance hasForgetToAddCommGroup : HasForget₂ (ModuleCat R) AddCommGroupₓₓ where
-  forget₂ := { obj := fun M => AddCommGroupₓₓ.of M, map := fun M₁ M₂ f => LinearMap.toAddMonoidHom f }
+instance hasForgetToAddCommGroup :
+    HasForget₂ (ModuleCat R)
+      AddCommGroupₓₓ where forget₂ :=
+    { obj := fun M => AddCommGroupₓₓ.of M, map := fun M₁ M₂ f => LinearMap.toAddMonoidHom f }
 
 instance (M N : ModuleCat R) : LinearMapClass (M ⟶ N) R M N :=
   { LinearMap.semilinearMapClass with coe := fun f => f }
@@ -295,6 +298,8 @@ instance : Preadditive (ModuleCat.{v} R) where
     show f ≫ (g + g') = f ≫ g + f ≫ g' by
       ext
       simp
+
+instance forget₂_AddCommGroup_additive : (forget₂ (ModuleCat.{v} R) AddCommGroupₓₓ).Additive where
 
 section
 

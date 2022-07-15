@@ -15,7 +15,7 @@ unsafe def with_prefix : Option Name → Name → Name
   | none, n => n
   | some p, n => p ++ n
 
--- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `t
+-- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `t
 /-- similar to `nested_traverse` but for `functor` -/
 unsafe def nested_map (f v : expr) : expr → tactic expr
   | t => do
@@ -46,7 +46,7 @@ unsafe def map_constructor (c n : Name) (f α β : expr) (args₀ : List expr) (
   let g ← target
   let (_, args') ←
     mmapAccuml
-        (fun y : Bool × expr =>
+        (fun x : List expr y : Bool × expr =>
           if y.1 then pure (x.tail, x.head) else Prod.mk rec_call <$> map_field n g.app_fn f α β y.2)
         rec_call args₁
   let constr ← mk_const c
@@ -117,14 +117,14 @@ unsafe def derive_map_equations (pre : Option Name) (n : Name) (vs : List expr) 
   set_goals []
   return ()
 
--- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `d
+-- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `d
 unsafe def derive_functor (pre : Option Name) : tactic Unit := do
   let vs ← local_context
   let quote.1 (Functor (%%ₓf)) ← target
   let env ← get_env
   let n := f.get_app_fn.const_name
   let d ← get_decl n
-  refine (pquote.1 { map := _, .. })
+  refine (pquote.1 { map := _.. })
   let tgt ← target
   extract_def (mkStrName (with_prefix pre n) "map") d <| mk_map n
   when (d d.is_trusted) <| do
@@ -138,7 +138,7 @@ private unsafe def seq_apply_constructor : expr → List (Sum expr expr) → tac
   | e, Sum.inl x :: xs => Prod.map (cons <| pure x) id <$> seq_apply_constructor e xs
   | e, [] => return ([], e)
 
--- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `t
+-- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `t
 /-- ``nested_traverse f α (list (array n (list α)))`` synthesizes the expression
 `traverse (traverse (traverse f))`. `nested_traverse` assumes that `α` appears in
 `(list (array n (list α)))` -/
@@ -174,7 +174,7 @@ unsafe def traverse_constructor (c n : Name) (appl_inst f α β : expr) (args₀
   let args' ← mmapₓ (traverse_field n appl_inst g.app_fn f α) args₀
   let (_, args') ←
     mmapAccuml
-        (fun y : Bool × _ =>
+        (fun x : List expr y : Bool × _ =>
           if y.1 then pure (x.tail, Sum.inr x.head) else Prod.mk x <$> traverse_field n appl_inst g.app_fn f α y.2)
         rec_call args₁
   let constr ← mk_const c
@@ -245,7 +245,7 @@ unsafe def derive_traverse_equations (pre : Option Name) (n : Name) (vs : List e
   set_goals []
   return ()
 
--- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `d
+-- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `d
 unsafe def derive_traverse (pre : Option Name) : tactic Unit := do
   let vs ← local_context
   let quote.1 (Traversable (%%ₓf)) ← target
@@ -275,7 +275,7 @@ unsafe def mk_one_instance (n : Name) (cls : Name) (tac : tactic Unit) (namesp :
   let tgt ← mk_inst cls tgt
   let tgt ←
     params.enum.mfoldr
-        (fun tgt => do
+        (fun ⟨i, param⟩ tgt => do
           let tgt ←
             (-- add typeclass hypothesis for each inductive parameter
                 do

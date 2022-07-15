@@ -65,7 +65,7 @@ instance PiLp.innerProductSpace {ι : Type _} [Fintype ι] (f : ι → Type _) [
   norm_sq_eq_inner := by
     intro x
     have h₂ : 0 ≤ ∑ i : ι, ∥x i∥ ^ (2 : ℝ) := Finset.sum_nonneg fun j hj => rpow_nonneg_of_nonneg (norm_nonneg (x j)) 2
-    simp only [norm, AddMonoidHom.map_sum, ← norm_sq_eq_inner, one_div]
+    simp only [← norm, ← AddMonoidHom.map_sum, norm_sq_eq_inner, ← one_div]
     rw [← rpow_nat_cast ((∑ i : ι, ∥x i∥ ^ (2 : ℝ)) ^ (2 : ℝ)⁻¹) 2, ← rpow_mul h₂]
     norm_num
   conj_sym := by
@@ -77,10 +77,10 @@ instance PiLp.innerProductSpace {ι : Type _} [Fintype ι] (f : ι → Type _) [
     apply inner_conj_sym
   add_left := fun x y z =>
     show (∑ i, inner (x i + y i) (z i)) = (∑ i, inner (x i) (z i)) + ∑ i, inner (y i) (z i) by
-      simp only [inner_add_left, Finset.sum_add_distrib]
+      simp only [← inner_add_left, ← Finset.sum_add_distrib]
   smul_left := fun x y r =>
     show (∑ i : ι, inner (r • x i) (y i)) = conj r * ∑ i, inner (x i) (y i) by
-      simp only [Finset.mul_sum, inner_smul_left]
+      simp only [← Finset.mul_sum, ← inner_smul_left]
 
 @[simp]
 theorem PiLp.inner_apply {ι : Type _} [Fintype ι] {f : ι → Type _} [∀ i, InnerProductSpace 𝕜 (f i)] (x y : PiLp 2 f) :
@@ -147,15 +147,15 @@ def DirectSum.IsInternal.isometryL2OfOrthogonalFamily [DecidableEq ι] {V : ι �
   suffices ∀ v w, ⟪v, w⟫ = ⟪e₂ (e₁.symm v), e₂ (e₁.symm w)⟫ by
     intro v₀ w₀
     convert this (e₁ (e₂.symm v₀)) (e₁ (e₂.symm w₀)) <;>
-      simp only [LinearEquiv.symm_apply_apply, LinearEquiv.apply_symm_apply]
+      simp only [← LinearEquiv.symm_apply_apply, ← LinearEquiv.apply_symm_apply]
   intro v w
   trans ⟪∑ i, (V i).subtypeₗᵢ (v i), ∑ i, (V i).subtypeₗᵢ (w i)⟫
-  · simp only [sum_inner, hV'.inner_right_fintype, PiLp.inner_apply]
+  · simp only [← sum_inner, ← hV'.inner_right_fintype, ← PiLp.inner_apply]
     
   · congr <;> simp
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem DirectSum.IsInternal.isometry_L2_of_orthogonal_family_symm_apply [DecidableEq ι] {V : ι → Submodule 𝕜 E}
     (hV : DirectSum.IsInternal V) (hV' : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ)
@@ -166,7 +166,7 @@ theorem DirectSum.IsInternal.isometry_L2_of_orthogonal_family_symm_apply [Decida
   suffices ∀ v : ⨁ i, V i, e₂ v = ∑ i, e₁ v i by
     exact this (e₁.symm w)
   intro v
-  simp [e₂, DirectSum.coeLinearMap, DirectSum.toModule, Dfinsupp.sum_add_hom_apply]
+  simp [← e₂, ← DirectSum.coeLinearMap, ← DirectSum.toModule, ← Dfinsupp.sum_add_hom_apply]
 
 end
 
@@ -192,11 +192,11 @@ theorem EuclideanSpace.single_apply [DecidableEq ι] (i : ι) (a : 𝕜) (j : ι
 
 theorem EuclideanSpace.inner_single_left [DecidableEq ι] (i : ι) (a : 𝕜) (v : EuclideanSpace 𝕜 ι) :
     ⟪EuclideanSpace.single i (a : 𝕜), v⟫ = conj a * v i := by
-  simp [apply_ite conj]
+  simp [← apply_ite conj]
 
 theorem EuclideanSpace.inner_single_right [DecidableEq ι] (i : ι) (a : 𝕜) (v : EuclideanSpace 𝕜 ι) :
     ⟪v, EuclideanSpace.single i (a : 𝕜)⟫ = a * conj (v i) := by
-  simp [apply_ite conj, mul_comm]
+  simp [← apply_ite conj, ← mul_comm]
 
 variable (ι 𝕜 E)
 
@@ -212,13 +212,13 @@ namespace OrthonormalBasis
 instance : Inhabited (OrthonormalBasis ι 𝕜 (EuclideanSpace 𝕜 ι)) :=
   ⟨of_repr (LinearIsometryEquiv.refl 𝕜 (EuclideanSpace 𝕜 ι))⟩
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- `b i` is the `i`th basis vector. -/
-instance : CoeFun (OrthonormalBasis ι 𝕜 E) fun _ => ι → E where
-  coe := fun b i => by
+instance :
+    CoeFun (OrthonormalBasis ι 𝕜 E) fun _ => ι → E where coe := fun b i => by
     classical <;> exact b.repr.symm (EuclideanSpace.single i (1 : 𝕜))
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 protected theorem repr_symm_single [DecidableEq ι] (b : OrthonormalBasis ι 𝕜 E) (i : ι) :
     b.repr.symm (EuclideanSpace.single i (1 : 𝕜)) = b i := by
@@ -231,13 +231,13 @@ protected theorem repr_self [DecidableEq ι] (b : OrthonormalBasis ι 𝕜 E) (i
     b.repr (b i) = EuclideanSpace.single i (1 : 𝕜) := by
   rw [← b.repr_symm_single i, LinearIsometryEquiv.apply_symm_apply]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 protected theorem repr_apply_apply (b : OrthonormalBasis ι 𝕜 E) (v : E) (i : ι) : b.repr v i = ⟪b i, v⟫ := by
   classical
   rw [← b.repr.inner_map_map (b i) v, b.repr_self i, EuclideanSpace.inner_single_left]
-  simp only [one_mulₓ, eq_self_iff_true, map_one]
+  simp only [← one_mulₓ, ← eq_self_iff_true, ← map_one]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 protected theorem orthonormal (b : OrthonormalBasis ι 𝕜 E) : Orthonormal 𝕜 b := by
   classical
@@ -246,7 +246,7 @@ protected theorem orthonormal (b : OrthonormalBasis ι 𝕜 E) : Orthonormal �
   rw [← b.repr.inner_map_map (b i) (b j), b.repr_self i, b.repr_self j]
   rw [EuclideanSpace.inner_single_left]
   rw [EuclideanSpace.single_apply]
-  simp only [mul_boole, map_one]
+  simp only [← mul_boole, ← map_one]
 
 /-- The `basis ι 𝕜 E` underlying the `orthonormal_basis` --/
 protected def toBasis (b : OrthonormalBasis ι 𝕜 E) : Basis ι 𝕜 E :=
@@ -257,17 +257,17 @@ protected theorem coe_to_basis (b : OrthonormalBasis ι 𝕜 E) : (⇑b.toBasis 
   change ⇑(Basis.ofEquivFun b.repr.to_linear_equiv) = b
   ext j
   rw [Basis.coe_of_equiv_fun]
-  simp only [OrthonormalBasis.repr_symm_single]
+  simp only [← OrthonormalBasis.repr_symm_single]
   congr
 
 @[simp]
 protected theorem coe_to_basis_repr (b : OrthonormalBasis ι 𝕜 E) : b.toBasis.equivFun = b.repr.toLinearEquiv := by
   change (Basis.ofEquivFun b.repr.to_linear_equiv).equivFun = b.repr.to_linear_equiv
   ext x j
-  simp only [Basis.of_equiv_fun_repr_apply, eq_self_iff_true, LinearIsometryEquiv.coe_to_linear_equiv,
+  simp only [← Basis.of_equiv_fun_repr_apply, ← eq_self_iff_true, ← LinearIsometryEquiv.coe_to_linear_equiv, ←
     Basis.equiv_fun_apply]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 protected theorem sum_repr_symm (b : OrthonormalBasis ι 𝕜 E) (v : EuclideanSpace 𝕜 ι) :
     (∑ i, v i • b i) = b.repr.symm v := by
   classical
@@ -284,7 +284,7 @@ def _root_.basis.to_orthonormal_basis (v : Basis ι 𝕜 E) (hv : Orthonormal �
         let p : EuclideanSpace 𝕜 ι := v.equiv_fun x
         let q : EuclideanSpace 𝕜 ι := v.equiv_fun y
         have key : ⟪p, q⟫ = ⟪∑ i, p i • v i, ∑ i, q i • v i⟫ := by
-          simp [sum_inner, inner_smul_left, hv.inner_right_fintype]
+          simp [← sum_inner, ← inner_smul_left, ← hv.inner_right_fintype]
         convert key
         · rw [← v.equiv_fun.symm_apply_apply x, v.equiv_fun_symm_apply]
           
@@ -304,9 +304,9 @@ theorem _root_.basis.coe_to_orthonormal_basis_repr_symm (v : Basis ι 𝕜 E) (h
 @[simp]
 theorem _root_.basis.to_basis_to_orthonormal_basis (v : Basis ι 𝕜 E) (hv : Orthonormal 𝕜 v) :
     (v.toOrthonormalBasis hv).toBasis = v := by
-  simp [Basis.toOrthonormalBasis, OrthonormalBasis.toBasis]
+  simp [← Basis.toOrthonormalBasis, ← OrthonormalBasis.toBasis]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem _root_.basis.coe_to_orthonormal_basis (v : Basis ι 𝕜 E) (hv : Orthonormal 𝕜 v) :
     (v.toOrthonormalBasis hv : ι → E) = (v : ι → E) :=
@@ -324,7 +324,7 @@ protected def mk (hon : Orthonormal 𝕜 v) (hsp : Submodule.span 𝕜 (Set.Rang
     (by
       rwa [Basis.coe_mk])
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 protected theorem coe_mk (hon : Orthonormal 𝕜 v) (hsp : Submodule.span 𝕜 (Set.Range v) = ⊤) :
     ⇑(OrthonormalBasis.mk hon hsp) = v := by
@@ -342,15 +342,15 @@ theorem Basis.map_isometry_euclidean_of_orthonormal (v : Basis ι 𝕜 E) (hv : 
       f.symm.trans (v.toOrthonormalBasis hv).repr :=
   LinearIsometryEquiv.to_linear_equiv_injective <| v.map_equiv_fun _
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 /-- `ℂ` is isometric to `ℝ²` with the Euclidean inner product. -/
 def Complex.isometryEuclidean : ℂ ≃ₗᵢ[ℝ] EuclideanSpace ℝ (Finₓ 2) :=
   (Complex.basisOneI.toOrthonormalBasis
       (by
         rw [orthonormal_iff_ite]
         intro i
-        fin_cases i <;> intro j <;> fin_cases j <;> simp [real_inner_eq_re_inner])).repr
+        fin_cases i <;> intro j <;> fin_cases j <;> simp [← real_inner_eq_re_inner])).repr
 
 @[simp]
 theorem Complex.isometry_euclidean_symm_apply (x : EuclideanSpace ℝ (Finₓ 2)) :
@@ -383,15 +383,15 @@ def Complex.isometryOfOrthonormal {v : Basis (Finₓ 2) ℝ F} (hv : Orthonormal
 @[simp]
 theorem Complex.map_isometry_of_orthonormal {v : Basis (Finₓ 2) ℝ F} (hv : Orthonormal ℝ v) (f : F ≃ₗᵢ[ℝ] F') :
     Complex.isometryOfOrthonormal (hv.map_linear_isometry_equiv f) = (Complex.isometryOfOrthonormal hv).trans f := by
-  simp [Complex.isometryOfOrthonormal, LinearIsometryEquiv.trans_assoc]
+  simp [← Complex.isometryOfOrthonormal, ← LinearIsometryEquiv.trans_assoc]
 
 theorem Complex.isometry_of_orthonormal_symm_apply {v : Basis (Finₓ 2) ℝ F} (hv : Orthonormal ℝ v) (f : F) :
     (Complex.isometryOfOrthonormal hv).symm f = (v.Coord 0 f : ℂ) + (v.Coord 1 f : ℂ) * I := by
-  simp [Complex.isometryOfOrthonormal]
+  simp [← Complex.isometryOfOrthonormal]
 
 theorem Complex.isometry_of_orthonormal_apply {v : Basis (Finₓ 2) ℝ F} (hv : Orthonormal ℝ v) (z : ℂ) :
     Complex.isometryOfOrthonormal hv z = z.re • v 0 + z.im • v 1 := by
-  simp [Complex.isometryOfOrthonormal,
+  simp [← Complex.isometryOfOrthonormal, ←
     (by
       decide : (Finset.univ : Finset (Finₓ 2)) = {0, 1})]
 
@@ -432,9 +432,9 @@ noncomputable def LinearIsometry.extend (L : S →ₗᵢ[𝕜] V) : V →ₗᵢ[
   have E : Sᗮ ≃ₗᵢ[𝕜] LSᗮ := by
     have dim_LS_perp : finrank 𝕜 LSᗮ = d
     calc finrank 𝕜 LSᗮ = finrank 𝕜 V - finrank 𝕜 LS := by
-        simp only [← LS.finrank_add_finrank_orthogonal, add_tsub_cancel_left]_ = finrank 𝕜 V - finrank 𝕜 S := by
-        simp only [LinearMap.finrank_range_of_inj L.injective]_ = finrank 𝕜 Sᗮ := by
-        simp only [← S.finrank_add_finrank_orthogonal, add_tsub_cancel_left]_ = d := dim_S_perp
+        simp only [LS.finrank_add_finrank_orthogonal, ← add_tsub_cancel_left]_ = finrank 𝕜 V - finrank 𝕜 S := by
+        simp only [← LinearMap.finrank_range_of_inj L.injective]_ = finrank 𝕜 Sᗮ := by
+        simp only [S.finrank_add_finrank_orthogonal, ← add_tsub_cancel_left]_ = d := dim_S_perp
     let BS := (finStdOrthonormalBasis dim_S_perp).toOrthonormalBasis (fin_std_orthonormal_basis_orthonormal dim_S_perp)
     let BLS :=
       (finStdOrthonormalBasis dim_LS_perp).toOrthonormalBasis (fin_std_orthonormal_basis_orthonormal dim_LS_perp)
@@ -452,32 +452,33 @@ noncomputable def LinearIsometry.extend (L : S →ₗᵢ[𝕜] V) : V →ₗᵢ[
     intro x
     -- Apply M to the orthogonal decomposition of x
     have Mx_decomp : M x = L (p1 x) + L3 (p2 x) := by
-      simp only [LinearMap.add_apply, LinearMap.comp_apply, LinearMap.comp_apply, LinearIsometry.coe_to_linear_map]
+      simp only [← LinearMap.add_apply, ← LinearMap.comp_apply, ← LinearMap.comp_apply, ←
+        LinearIsometry.coe_to_linear_map]
     -- Mx_decomp is the orthogonal decomposition of M x
     have Mx_orth : ⟪L (p1 x), L3 (p2 x)⟫ = 0 := by
       have Lp1x : L (p1 x) ∈ L.to_linear_map.range := L.to_linear_map.mem_range_self (p1 x)
       have Lp2x : L3 (p2 x) ∈ L.to_linear_map.rangeᗮ := by
-        simp only [L3, LinearIsometry.coe_comp, Function.comp_app, Submodule.coe_subtypeₗᵢ, ←
+        simp only [← L3, ← LinearIsometry.coe_comp, ← Function.comp_app, ← Submodule.coe_subtypeₗᵢ,
           Submodule.range_subtype LSᗮ]
         apply LinearMap.mem_range_self
       apply Submodule.inner_right_of_mem_orthogonal Lp1x Lp2x
     -- Apply the Pythagorean theorem and simplify
     rw [← sq_eq_sq (norm_nonneg _) (norm_nonneg _), norm_sq_eq_add_norm_sq_projection x S]
-    simp only [sq, Mx_decomp]
+    simp only [← sq, ← Mx_decomp]
     rw [norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero (L (p1 x)) (L3 (p2 x)) Mx_orth]
-    simp only [LinearIsometry.norm_map, p1, p2, ContinuousLinearMap.to_linear_map_eq_coe, add_left_injₓ,
-      mul_eq_mul_left_iff, norm_eq_zero, true_orₓ, eq_self_iff_true, ContinuousLinearMap.coe_coe, Submodule.coe_norm,
-      Submodule.coe_eq_zero]
+    simp only [← LinearIsometry.norm_map, ← p1, ← p2, ← ContinuousLinearMap.to_linear_map_eq_coe, ← add_left_injₓ, ←
+      mul_eq_mul_left_iff, ← norm_eq_zero, ← true_orₓ, ← eq_self_iff_true, ← ContinuousLinearMap.coe_coe, ←
+      Submodule.coe_norm, ← Submodule.coe_eq_zero]
   exact { toLinearMap := M, norm_map' := M_norm_map }
 
 theorem LinearIsometry.extend_apply (L : S →ₗᵢ[𝕜] V) (s : S) : L.extend s = L s := by
   have : CompleteSpace S := FiniteDimensional.complete 𝕜 S
-  simp only [LinearIsometry.extend, ContinuousLinearMap.to_linear_map_eq_coe, ← LinearIsometry.coe_to_linear_map]
-  simp only [add_right_eq_selfₓ, LinearIsometry.coe_to_linear_map, LinearIsometryEquiv.coe_to_linear_isometry,
-    LinearIsometry.coe_comp, Function.comp_app, orthogonal_projection_mem_subspace_eq_self, LinearMap.coe_comp,
-    ContinuousLinearMap.coe_coe, Submodule.coe_subtype, LinearMap.add_apply, Submodule.coe_eq_zero,
-    LinearIsometryEquiv.map_eq_zero_iff, Submodule.coe_subtypeₗᵢ,
-    orthogonal_projection_mem_subspace_orthogonal_complement_eq_zero, Submodule.orthogonal_orthogonal,
+  simp only [← LinearIsometry.extend, ← ContinuousLinearMap.to_linear_map_eq_coe, LinearIsometry.coe_to_linear_map]
+  simp only [← add_right_eq_selfₓ, ← LinearIsometry.coe_to_linear_map, ← LinearIsometryEquiv.coe_to_linear_isometry, ←
+    LinearIsometry.coe_comp, ← Function.comp_app, ← orthogonal_projection_mem_subspace_eq_self, ← LinearMap.coe_comp, ←
+    ContinuousLinearMap.coe_coe, ← Submodule.coe_subtype, ← LinearMap.add_apply, ← Submodule.coe_eq_zero, ←
+    LinearIsometryEquiv.map_eq_zero_iff, ← Submodule.coe_subtypeₗᵢ, ←
+    orthogonal_projection_mem_subspace_orthogonal_complement_eq_zero, ← Submodule.orthogonal_orthogonal, ←
     Submodule.coe_mem]
 
 end LinearIsometry
@@ -496,7 +497,7 @@ local notation "⟪" x ", " y "⟫ₙ" => @inner 𝕜 (EuclideanSpace 𝕜 (Fin�
 
 /-- The inner product of a row of A and a row of B is an entry of B ⬝ Aᴴ. -/
 theorem inner_matrix_row_row (A B : Matrix (Finₓ n) (Finₓ m) 𝕜) (i j : Finₓ n) : ⟪A i, B j⟫ₘ = (B ⬝ Aᴴ) j i := by
-  simp only [inner, Matrix.mul_apply, star_ring_end_apply, Matrix.conj_transpose_apply, mul_comm]
+  simp only [← inner, ← Matrix.mul_apply, ← star_ring_end_apply, ← Matrix.conj_transpose_apply, ← mul_comm]
 
 /-- The inner product of a column of A and a column of B is an entry of Aᴴ ⬝ B -/
 theorem inner_matrix_col_col (A B : Matrix (Finₓ n) (Finₓ m) 𝕜) (i j : Finₓ m) : ⟪Aᵀ i, Bᵀ j⟫ₙ = (Aᴴ ⬝ B) i j :=

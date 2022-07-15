@@ -35,7 +35,7 @@ variable [CommMonoidₓ α] {s t : Multiset α} {a : α} {m : Multiset ι} {f g 
 def prod : Multiset α → α :=
   foldr (· * ·)
     (fun x y z => by
-      simp [mul_left_commₓ])
+      simp [← mul_left_commₓ])
     1
 
 @[to_additive]
@@ -43,7 +43,7 @@ theorem prod_eq_foldr (s : Multiset α) :
     prod s =
       foldr (· * ·)
         (fun x y z => by
-          simp [mul_left_commₓ])
+          simp [← mul_left_commₓ])
         1 s :=
   rfl
 
@@ -52,11 +52,11 @@ theorem prod_eq_foldl (s : Multiset α) :
     prod s =
       foldl (· * ·)
         (fun x y z => by
-          simp [mul_right_commₓ])
+          simp [← mul_right_commₓ])
         1 s :=
   (foldr_swap _ _ _ _).trans
     (by
-      simp [mul_comm])
+      simp [← mul_comm])
 
 @[simp, norm_cast, to_additive]
 theorem coe_prod (l : List α) : prod ↑l = l.Prod :=
@@ -81,7 +81,7 @@ theorem prod_erase [DecidableEq α] (h : a ∈ s) : a * (s.erase a).Prod = s.Pro
 
 @[simp, to_additive]
 theorem prod_singleton (a : α) : prod {a} = a := by
-  simp only [mul_oneₓ, prod_cons, singleton_eq_cons, eq_self_iff_true, prod_zero]
+  simp only [← mul_oneₓ, ← prod_cons, ← singleton_eq_cons, ← eq_self_iff_true, ← prod_zero]
 
 @[to_additive]
 theorem prod_pair (a b : α) : ({a, b} : Multiset α).Prod = a * b := by
@@ -101,7 +101,7 @@ theorem prod_nsmul (m : Multiset α) : ∀ n : ℕ, (n • m).Prod = m.Prod ^ n
 
 @[simp, to_additive]
 theorem prod_repeat (a : α) (n : ℕ) : (repeat a n).Prod = a ^ n := by
-  simp [repeat, List.prod_repeat]
+  simp [← repeat, ← List.prod_repeat]
 
 @[to_additive]
 theorem pow_count [DecidableEq α] (a : α) : a ^ s.count a = (s.filter (Eq a)).Prod := by
@@ -111,7 +111,7 @@ theorem pow_count [DecidableEq α] (a : α) : a ^ s.count a = (s.filter (Eq a)).
 theorem prod_hom [CommMonoidₓ β] (s : Multiset α) {F : Type _} [MonoidHomClass F α β] (f : F) :
     (s.map f).Prod = f s.Prod :=
   (Quotientₓ.induction_on s) fun l => by
-    simp only [l.prod_hom f, quot_mk_to_coe, coe_map, coe_prod]
+    simp only [← l.prod_hom f, ← quot_mk_to_coe, ← coe_map, ← coe_prod]
 
 @[to_additive]
 theorem prod_hom' [CommMonoidₓ β] (s : Multiset ι) {F : Type _} [MonoidHomClass F α β] (f : F) (g : ι → α) :
@@ -124,13 +124,13 @@ theorem prod_hom₂ [CommMonoidₓ β] [CommMonoidₓ γ] (s : Multiset ι) (f :
     (hf : ∀ a b c d, f (a * b) (c * d) = f a c * f b d) (hf' : f 1 1 = 1) (f₁ : ι → α) (f₂ : ι → β) :
     (s.map fun i => f (f₁ i) (f₂ i)).Prod = f (s.map f₁).Prod (s.map f₂).Prod :=
   (Quotientₓ.induction_on s) fun l => by
-    simp only [l.prod_hom₂ f hf hf', quot_mk_to_coe, coe_map, coe_prod]
+    simp only [← l.prod_hom₂ f hf hf', ← quot_mk_to_coe, ← coe_map, ← coe_prod]
 
 @[to_additive]
 theorem prod_hom_rel [CommMonoidₓ β] (s : Multiset ι) {r : α → β → Prop} {f : ι → α} {g : ι → β} (h₁ : r 1 1)
     (h₂ : ∀ ⦃a b c⦄, r b c → r (f a * b) (g a * c)) : r (s.map f).Prod (s.map g).Prod :=
   (Quotientₓ.induction_on s) fun l => by
-    simp only [l.prod_hom_rel h₁ h₂, quot_mk_to_coe, coe_map, coe_prod]
+    simp only [← l.prod_hom_rel h₁ h₂, ← quot_mk_to_coe, ← coe_map, ← coe_prod]
 
 @[to_additive]
 theorem prod_map_one : prod (m.map fun i => (1 : α)) = 1 := by
@@ -151,7 +151,7 @@ theorem prod_map_prod_map (m : Multiset β) (n : Multiset γ) {f : β → γ →
     (by
       simp )
     fun a m ih => by
-    simp [ih]
+    simp [← ih]
 
 @[to_additive]
 theorem prod_induction (p : α → Prop) (s : Multiset α) (p_mul : ∀ a b, p a → p b → p (a * b)) (p_one : p 1)
@@ -160,7 +160,7 @@ theorem prod_induction (p : α → Prop) (s : Multiset α) (p_mul : ∀ a b, p a
   exact
     foldr_induction (· * ·)
       (fun x y z => by
-        simp [mul_left_commₓ])
+        simp [← mul_left_commₓ])
       1 p s p_mul p_one p_s
 
 @[to_additive]
@@ -175,7 +175,7 @@ theorem prod_induction_nonempty (p : α → Prop) (p_mul : ∀ a b, p a → p b 
   intro a s hs hsa hpsa
   rw [prod_cons]
   by_cases' hs_empty : s = ∅
-  · simp [hs_empty, hpsa a]
+  · simp [← hs_empty, ← hpsa a]
     
   have hps : ∀ x, x ∈ s → p x := fun x hxs => hpsa x (mem_cons_of_mem hxs)
   exact p_mul a s.prod (hpsa a (mem_cons_self a s)) (hs hs_empty hps)
@@ -188,7 +188,7 @@ theorem dvd_prod : a ∈ s → a ∣ s.Prod :=
 
 theorem prod_dvd_prod_of_le (h : s ≤ t) : s.Prod ∣ t.Prod := by
   obtain ⟨z, rfl⟩ := Multiset.le_iff_exists_add.1 h
-  simp only [prod_add, dvd_mul_right]
+  simp only [← prod_add, ← dvd_mul_right]
 
 end CommMonoidₓ
 
@@ -198,7 +198,7 @@ theorem prod_dvd_prod_of_dvd [CommMonoidₓ β] {S : Multiset α} (g1 g2 : α �
   · simp
     
   intro a T haS _ IH
-  simp [mul_dvd_mul (h a haS) IH]
+  simp [← mul_dvd_mul (h a haS) IH]
 
 section AddCommMonoidₓ
 
@@ -223,7 +223,7 @@ variable [CommMonoidWithZero α]
 
 theorem prod_eq_zero {s : Multiset α} (h : (0 : α) ∈ s) : s.Prod = 0 := by
   rcases Multiset.exists_cons_of_mem h with ⟨s', hs'⟩
-  simp [hs', Multiset.prod_cons]
+  simp [← hs', ← Multiset.prod_cons]
 
 variable [NoZeroDivisors α] [Nontrivial α] {s : Multiset α}
 
@@ -280,14 +280,14 @@ theorem sum_map_mul_left : sum (s.map fun i => a * f i) = a * sum (s.map f) :=
     (by
       simp )
     fun i s ih => by
-    simp [ih, mul_addₓ]
+    simp [← ih, ← mul_addₓ]
 
 theorem sum_map_mul_right : sum (s.map fun i => f i * a) = sum (s.map f) * a :=
   Multiset.induction_on s
     (by
       simp )
     fun a s ih => by
-    simp [ih, add_mulₓ]
+    simp [← ih, ← add_mulₓ]
 
 end NonUnitalNonAssocSemiringₓ
 
@@ -328,7 +328,7 @@ theorem prod_le_pow_card (s : Multiset α) (n : α) (h : ∀, ∀ x ∈ s, ∀, 
 theorem all_one_of_le_one_le_of_prod_eq_one : (∀, ∀ x ∈ s, ∀, (1 : α) ≤ x) → s.Prod = 1 → ∀, ∀ x ∈ s, ∀, x = (1 : α) :=
   by
   apply Quotientₓ.induction_on s
-  simp only [quot_mk_to_coe, coe_prod, mem_coe]
+  simp only [← quot_mk_to_coe, ← coe_prod, ← mem_coe]
   exact fun l => List.all_one_of_le_one_le_of_prod_eq_one
 
 @[to_additive]
@@ -383,7 +383,7 @@ theorem le_prod_of_submultiplicative_on_pred [CommMonoidₓ α] [OrderedCommMono
     (hp_mul : ∀ a b, p a → p b → p (a * b)) (s : Multiset α) (hps : ∀ a, a ∈ s → p a) : f s.Prod ≤ (s.map f).Prod := by
   revert s
   refine' Multiset.induction _ _
-  · simp [le_of_eqₓ h_one]
+  · simp [← le_of_eqₓ h_one]
     
   intro a s hs hpsa
   have hps : ∀ x, x ∈ s → p x := fun x hx => hpsa x (mem_cons_of_mem hx)
@@ -414,7 +414,7 @@ theorem le_prod_nonempty_of_submultiplicative_on_pred [CommMonoidₓ α] [Ordere
   rintro a s hs hsa_nonempty hsa_prop
   rw [prod_cons, map_cons, prod_cons]
   by_cases' hs_empty : s = ∅
-  · simp [hs_empty]
+  · simp [← hs_empty]
     
   have hsa_restrict : ∀ x, x ∈ s → p x := fun x hx => hsa_prop x (mem_cons_of_mem hx)
   have hp_sup : p s.prod := prod_induction_nonempty p hp_mul hs_empty hsa_restrict
@@ -426,7 +426,7 @@ theorem le_prod_nonempty_of_submultiplicative [CommMonoidₓ α] [OrderedCommMon
     (h_mul : ∀ a b, f (a * b) ≤ f a * f b) (s : Multiset α) (hs_nonempty : s ≠ ∅) : f s.Prod ≤ (s.map f).Prod :=
   le_prod_nonempty_of_submultiplicative_on_pred f (fun i => True)
     (by
-      simp [h_mul])
+      simp [← h_mul])
     (by
       simp )
     s hs_nonempty
@@ -439,7 +439,7 @@ theorem sum_map_singleton (s : Multiset α) : (s.map fun a => ({a} : Multiset α
     (by
       simp )
     (by
-      simp [singleton_eq_cons])
+      simp [← singleton_eq_cons])
 
 theorem abs_sum_le_sum_abs [LinearOrderedAddCommGroup α] {s : Multiset α} : abs s.Sum ≤ (s.map abs).Sum :=
   le_sum_of_subadditive _ abs_zero abs_add s

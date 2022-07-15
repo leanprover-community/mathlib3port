@@ -92,27 +92,27 @@ theorem order_embedding_of_set_apply {n : ℕ} : orderEmbeddingOfSet s n = Subty
 
 @[simp]
 theorem Subtype.order_iso_of_nat_apply {n : ℕ} : Subtype.orderIsoOfNat s n = Subtype.ofNat s n := by
-  simp [subtype.order_iso_of_nat]
+  simp [← subtype.order_iso_of_nat]
 
 variable (s)
 
 theorem order_embedding_of_set_range : Set.Range (Nat.orderEmbeddingOfSet s) = s :=
   subtype.coe_comp_of_nat_range
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem exists_subseq_of_forall_mem_union {α : Type _} {s t : Set α} (e : ℕ → α) (he : ∀ n, e n ∈ s ∪ t) :
     ∃ g : ℕ ↪o ℕ, (∀ n, e (g n) ∈ s) ∨ ∀ n, e (g n) ∈ t := by
   classical
   have : Infinite (e ⁻¹' s) ∨ Infinite (e ⁻¹' t) := by
-    simp only [Set.infinite_coe_iff, ← Set.infinite_union, ← Set.preimage_union,
-      Set.eq_univ_of_forall fun n => Set.mem_preimage.2 (he n), Set.infinite_univ]
+    simp only [← Set.infinite_coe_iff, Set.infinite_union, Set.preimage_union, ←
+      Set.eq_univ_of_forall fun n => Set.mem_preimage.2 (he n), ← Set.infinite_univ]
   cases this
   exacts[⟨Nat.orderEmbeddingOfSet (e ⁻¹' s), Or.inl fun n => (Nat.Subtype.ofNat (e ⁻¹' s) _).2⟩,
     ⟨Nat.orderEmbeddingOfSet (e ⁻¹' t), Or.inr fun n => (Nat.Subtype.ofNat (e ⁻¹' t) _).2⟩]
 
 end Nat
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem exists_increasing_or_nonincreasing_subseq' {α : Type _} (r : α → α → Prop) (f : ℕ → α) :
     ∃ g : ℕ ↪o ℕ, (∀ n : ℕ, r (f (g n)) (f (g (n + 1)))) ∨ ∀ m n : ℕ, m < n → ¬r (f (g m)) (f (g n)) := by
   classical
@@ -136,7 +136,7 @@ theorem exists_increasing_or_nonincreasing_subseq' {α : Type _} (r : α → α 
     have h : ∀ n : ℕ, ∃ n' : ℕ, n < n' ∧ r (f (n + m)) (f (n' + m)) := by
       intro n
       have h := hm _ (le_add_of_nonneg_left n.zero_le)
-      simp only [exists_prop, not_not, Set.mem_set_of_eq, not_forall] at h
+      simp only [← exists_prop, ← not_not, ← Set.mem_set_of_eq, ← not_forall] at h
       obtain ⟨n', hn1, hn2⟩ := h
       obtain ⟨x, hpos, rfl⟩ := exists_pos_add_of_lt hn1
       refine' ⟨n + x, add_lt_add_left hpos n, _⟩

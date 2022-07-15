@@ -67,6 +67,14 @@ def fst (x : tsze R M) : R :=
 def snd (x : tsze R M) : M :=
   x.2
 
+@[simp]
+theorem fst_mk (r : R) (m : M) : fst (r, m) = r :=
+  rfl
+
+@[simp]
+theorem snd_mk (r : R) (m : M) : snd (r, m) = m :=
+  rfl
+
 @[ext]
 theorem ext {x y : tsze R M} (h1 : x.fst = y.fst) (h2 : x.snd = y.snd) : x = y :=
   Prod.extₓ h1 h2
@@ -149,19 +157,19 @@ instance [AddCommMonoidₓ R] [AddCommMonoidₓ M] : AddCommMonoidₓ (tsze R M)
 instance [AddCommGroupₓ R] [AddCommGroupₓ M] : AddCommGroupₓ (tsze R M) :=
   Prod.addCommGroup
 
-instance [HasScalar S R] [HasScalar S M] : HasScalar S (tsze R M) :=
-  Prod.hasScalar
+instance [HasSmul S R] [HasSmul S M] : HasSmul S (tsze R M) :=
+  Prod.hasSmul
 
-instance [HasScalar T R] [HasScalar T M] [HasScalar S R] [HasScalar S M] [HasScalar T S] [IsScalarTower T S R]
+instance [HasSmul T R] [HasSmul T M] [HasSmul S R] [HasSmul S M] [HasSmul T S] [IsScalarTower T S R]
     [IsScalarTower T S M] : IsScalarTower T S (tsze R M) :=
   Prod.is_scalar_tower
 
-instance [HasScalar T R] [HasScalar T M] [HasScalar S R] [HasScalar S M] [SmulCommClass T S R] [SmulCommClass T S M] :
+instance [HasSmul T R] [HasSmul T M] [HasSmul S R] [HasSmul S M] [SmulCommClass T S R] [SmulCommClass T S M] :
     SmulCommClass T S (tsze R M) :=
   Prod.smul_comm_class
 
-instance [HasScalar S R] [HasScalar S M] [HasScalar Sᵐᵒᵖ R] [HasScalar Sᵐᵒᵖ M] [IsCentralScalar S R]
-    [IsCentralScalar S M] : IsCentralScalar S (tsze R M) :=
+instance [HasSmul S R] [HasSmul S M] [HasSmul Sᵐᵒᵖ R] [HasSmul Sᵐᵒᵖ M] [IsCentralScalar S R] [IsCentralScalar S M] :
+    IsCentralScalar S (tsze R M) :=
   Prod.is_central_scalar
 
 instance [Monoidₓ S] [MulAction S R] [MulAction S M] : MulAction S (tsze R M) :=
@@ -199,11 +207,11 @@ theorem snd_neg [Neg R] [Neg M] (x : tsze R M) : (-x).snd = -x.snd :=
   rfl
 
 @[simp]
-theorem fst_smul [HasScalar S R] [HasScalar S M] (s : S) (x : tsze R M) : (s • x).fst = s • x.fst :=
+theorem fst_smul [HasSmul S R] [HasSmul S M] (s : S) (x : tsze R M) : (s • x).fst = s • x.fst :=
   rfl
 
 @[simp]
-theorem snd_smul [HasScalar S R] [HasScalar S M] (s : S) (x : tsze R M) : (s • x).snd = s • x.snd :=
+theorem snd_smul [HasSmul S R] [HasSmul S M] (s : S) (x : tsze R M) : (s • x).snd = s • x.snd :=
   rfl
 
 section
@@ -223,7 +231,7 @@ theorem inl_neg [Neg R] [AddGroupₓ M] (r : R) : (inl (-r) : tsze R M) = -inl r
   ext rfl neg_zero.symm
 
 @[simp]
-theorem inl_smul [Monoidₓ S] [AddMonoidₓ M] [HasScalar S R] [DistribMulAction S M] (s : S) (r : R) :
+theorem inl_smul [Monoidₓ S] [AddMonoidₓ M] [HasSmul S R] [DistribMulAction S M] (s : S) (r : R) :
     (inl (s • r) : tsze R M) = s • inl r :=
   ext rfl (smul_zero s).symm
 
@@ -246,7 +254,7 @@ theorem inr_neg [AddGroupₓ R] [Neg M] (m : M) : (inr (-m) : tsze R M) = -inr m
   ext neg_zero.symm rfl
 
 @[simp]
-theorem inr_smul [Zero R] [Zero S] [SmulWithZero S R] [HasScalar S M] (r : S) (m : M) :
+theorem inr_smul [Zero R] [Zero S] [SmulWithZero S R] [HasSmul S M] (r : S) (m : M) :
     (inr (r • m) : tsze R M) = r • inr m :=
   ext (smul_zero' _ _).symm rfl
 
@@ -294,7 +302,7 @@ variable {R : Type u} {M : Type v}
 instance [One R] [Zero M] : One (tsze R M) :=
   ⟨(1, 0)⟩
 
-instance [Mul R] [Add M] [HasScalar R M] : Mul (tsze R M) :=
+instance [Mul R] [Add M] [HasSmul R M] : Mul (tsze R M) :=
   ⟨fun x y => (x.1 * y.1, x.1 • y.2 + y.1 • x.2)⟩
 
 @[simp]
@@ -306,12 +314,11 @@ theorem snd_one [One R] [Zero M] : (1 : tsze R M).snd = 0 :=
   rfl
 
 @[simp]
-theorem fst_mul [Mul R] [Add M] [HasScalar R M] (x₁ x₂ : tsze R M) : (x₁ * x₂).fst = x₁.fst * x₂.fst :=
+theorem fst_mul [Mul R] [Add M] [HasSmul R M] (x₁ x₂ : tsze R M) : (x₁ * x₂).fst = x₁.fst * x₂.fst :=
   rfl
 
 @[simp]
-theorem snd_mul [Mul R] [Add M] [HasScalar R M] (x₁ x₂ : tsze R M) :
-    (x₁ * x₂).snd = x₁.fst • x₂.snd + x₂.fst • x₁.snd :=
+theorem snd_mul [Mul R] [Add M] [HasSmul R M] (x₁ x₂ : tsze R M) : (x₁ * x₂).snd = x₁.fst • x₂.snd + x₂.fst • x₁.snd :=
   rfl
 
 section
@@ -370,8 +377,15 @@ instance [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : MulOneClassₓ 
         show (x.1 • 0 : M) + (1 : R) • x.2 = x.2 by
           rw [smul_zero, zero_addₓ, one_smul] }
 
+instance [AddMonoidWithOneₓ R] [AddMonoidₓ M] : AddMonoidWithOneₓ (tsze R M) :=
+  { TrivSqZeroExt.addMonoid, TrivSqZeroExt.hasOne with natCast := fun n => (n, 0),
+    nat_cast_zero := by
+      simp [← Nat.castₓ],
+    nat_cast_succ := fun _ => by
+      ext <;> simp [← Nat.castₓ] }
+
 instance [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : NonAssocSemiringₓ (tsze R M) :=
-  { TrivSqZeroExt.mulOneClass, TrivSqZeroExt.addCommMonoid with
+  { TrivSqZeroExt.addMonoidWithOne, TrivSqZeroExt.mulOneClass, TrivSqZeroExt.addCommMonoid with
     zero_mul := fun x =>
       ext (zero_mul x.1) <|
         show (0 : R) • x.2 + x.1 • 0 = 0 by
@@ -478,7 +492,7 @@ def liftAux (f : M →ₗ[R] A) (hf : ∀ x y, f x * f y = 0) : tsze R M →ₐ[
     (TrivSqZeroExt.ind fun r₁ m₁ =>
       TrivSqZeroExt.ind fun r₂ m₂ => by
         dsimp'
-        simp only [add_zeroₓ, zero_addₓ, add_mulₓ, mul_addₓ, smul_mul_smul, hf, smul_zero]
+        simp only [← add_zeroₓ, ← zero_addₓ, ← add_mulₓ, ← mul_addₓ, ← smul_mul_smul, ← hf, ← smul_zero]
         rw [← RingHom.map_mul, LinearMap.map_add, ← Algebra.commutes _ (f _), ← Algebra.smul_def, ← Algebra.smul_def,
           add_right_commₓ, add_assocₓ, LinearMap.map_smul, LinearMap.map_smul])
 

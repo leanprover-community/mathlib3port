@@ -222,7 +222,7 @@ theorem sub_martingale [Preorderₓ E] [CovariantClass E E (· + ·) (· ≤ ·)
 
 end Submartingale
 
-section
+section Submartingale
 
 theorem submartingale_of_set_integral_le [IsFiniteMeasure μ] {f : ι → α → ℝ} (hadp : Adapted ℱ f)
     (hint : ∀ i, Integrable (f i) μ)
@@ -242,7 +242,26 @@ theorem submartingale_of_set_integral_le [IsFiniteMeasure μ] {f : ι → α →
     integral_sub' integrable_condexp.integrable_on (hint i).IntegrableOn, sub_nonneg,
     set_integral_condexp (ℱ.le i) (hint j) hs]
 
-end
+theorem submartingale_of_condexp_sub_nonneg [IsFiniteMeasure μ] {f : ι → α → ℝ} (hadp : Adapted ℱ f)
+    (hint : ∀ i, Integrable (f i) μ) (hf : ∀ i j, i ≤ j → 0 ≤ᵐ[μ] μ[f j - f i|ℱ i]) : Submartingale f ℱ μ := by
+  refine' ⟨hadp, fun i j hij => _, hint⟩
+  rw [← condexp_of_strongly_measurable (ℱ.le _) (hadp _) (hint _), ← eventually_sub_nonneg]
+  exact eventually_le.trans (hf i j hij) (condexp_sub (hint _) (hint _)).le
+  infer_instance
+
+theorem Submartingale.condexp_sub_nonneg [IsFiniteMeasure μ] {f : ι → α → ℝ} (hf : Submartingale f ℱ μ) {i j : ι}
+    (hij : i ≤ j) : 0 ≤ᵐ[μ] μ[f j - f i|ℱ i] := by
+  refine' eventually_le.trans _ (condexp_sub (hf.integrable _) (hf.integrable _)).symm.le
+  rw [eventually_sub_nonneg, condexp_of_strongly_measurable (ℱ.le _) (hf.adapted _) (hf.integrable _)]
+  exact hf.2.1 i j hij
+  infer_instance
+
+theorem submartingale_iff_condexp_sub_nonneg [IsFiniteMeasure μ] {f : ι → α → ℝ} :
+    Submartingale f ℱ μ ↔ Adapted ℱ f ∧ (∀ i, Integrable (f i) μ) ∧ ∀ i j, i ≤ j → 0 ≤ᵐ[μ] μ[f j - f i|ℱ i] :=
+  ⟨fun h => ⟨h.Adapted, h.Integrable, fun i j => h.condexp_sub_nonneg⟩, fun ⟨hadp, hint, h⟩ =>
+    submartingale_of_condexp_sub_nonneg hadp hint h⟩
+
+end Submartingale
 
 namespace Supermartingale
 
@@ -306,6 +325,32 @@ section Nat
 
 variable {𝒢 : Filtration ℕ m0}
 
+theorem submartingale_of_set_integral_le_succ [IsFiniteMeasure μ] {f : ℕ → α → ℝ} (hadp : Adapted 𝒢 f)
+    (hint : ∀ i, Integrable (f i) μ)
+    (hf : ∀ i, ∀ s : Set α, measurable_set[𝒢 i] s → (∫ x in s, f i x ∂μ) ≤ ∫ x in s, f (i + 1) x ∂μ) :
+    Submartingale f 𝒢 μ := by
+  refine' submartingale_of_set_integral_le hadp hint fun i j hij s hs => _
+  induction' hij with k hk₁ hk₂
+  · exact le_rfl
+    
+  · exact le_transₓ hk₂ (hf k s (𝒢.mono hk₁ _ hs))
+    
+
+theorem submartingale_nat [IsFiniteMeasure μ] {f : ℕ → α → ℝ} (hadp : Adapted 𝒢 f) (hint : ∀ i, Integrable (f i) μ)
+    (hf : ∀ i, f i ≤ᵐ[μ] μ[f (i + 1)|𝒢 i]) : Submartingale f 𝒢 μ := by
+  refine' submartingale_of_set_integral_le_succ hadp hint fun i s hs => _
+  have : (∫ x in s, f (i + 1) x ∂μ) = ∫ x in s, (μ[f (i + 1)|𝒢 i]) x ∂μ :=
+    (set_integral_condexp (𝒢.le i) (hint _) hs).symm
+  rw [this]
+  exact set_integral_mono_ae (hint i).IntegrableOn integrable_condexp.integrable_on (hf i)
+
+theorem submartingale_of_condexp_sub_nonneg_nat [IsFiniteMeasure μ] {f : ℕ → α → ℝ} (hadp : Adapted 𝒢 f)
+    (hint : ∀ i, Integrable (f i) μ) (hf : ∀ i, 0 ≤ᵐ[μ] μ[f (i + 1) - f i|𝒢 i]) : Submartingale f 𝒢 μ := by
+  refine' submartingale_nat hadp hint fun i => _
+  rw [← condexp_of_strongly_measurable (𝒢.le _) (hadp _) (hint _), ← eventually_sub_nonneg]
+  exact eventually_le.trans (hf i) (condexp_sub (hint _) (hint _)).le
+  infer_instance
+
 namespace Submartingale
 
 theorem integrable_stopped_value [LE E] {f : ℕ → α → E} (hf : Submartingale f 𝒢 μ) {τ : α → ℕ} (hτ : IsStoppingTime 𝒢 τ)
@@ -321,11 +366,11 @@ theorem expected_stopped_value_mono [SigmaFiniteFiltration μ 𝒢] {f : ℕ →
     (hτ : IsStoppingTime 𝒢 τ) (hπ : IsStoppingTime 𝒢 π) (hle : τ ≤ π) {N : ℕ} (hbdd : ∀ x, π x ≤ N) :
     μ[stoppedValue f τ] ≤ μ[stoppedValue f π] := by
   rw [← sub_nonneg, ← integral_sub', stopped_value_sub_eq_sum' hle hbdd]
-  · simp only [Finset.sum_apply]
+  · simp only [← Finset.sum_apply]
     have : ∀ i, measurable_set[𝒢 i] { x : α | τ x ≤ i ∧ i < π x } := by
       intro i
       refine' (hτ i).inter _
-      convert (hπ i).Compl
+      convert (hπ i).compl
       ext x
       simpa
     rw [integral_finset_sum]
@@ -348,7 +393,7 @@ theorem expected_stopped_value_mono [SigmaFiniteFiltration μ 𝒢] {f : ℕ →
 
 end Submartingale
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The converse direction of the optional stopping theorem, i.e. an adapted integrable process `f`
 is a submartingale if for all bounded stopping times `τ` and `π` such that `τ ≤ π`, the
 stopped value of `f` at `τ` has expectation smaller than its stopped value at `π`. -/

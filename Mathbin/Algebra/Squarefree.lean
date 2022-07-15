@@ -84,12 +84,8 @@ variable [CommMonoidₓ R] [DecidableRel (Dvd.Dvd : R → R → Prop)]
 
 theorem squarefree_iff_multiplicity_le_one (r : R) : Squarefree r ↔ ∀ x : R, multiplicity x r ≤ 1 ∨ IsUnit x := by
   refine' forall_congrₓ fun a => _
-  rw [← sq, pow_dvd_iff_le_multiplicity, or_iff_not_imp_left, not_leₓ, imp_congr]
-  swap
-  · rfl
-    
-  convert Enat.add_one_le_iff_lt (Enat.coe_ne_top 1)
-  norm_cast
+  rw [← sq, pow_dvd_iff_le_multiplicity, or_iff_not_imp_left, not_leₓ, imp_congr _ Iff.rfl]
+  simpa using Enat.add_one_le_iff_lt (Enat.coe_ne_top 1)
 
 end CommMonoidₓ
 
@@ -97,7 +93,7 @@ section CancelCommMonoidWithZero
 
 variable [CancelCommMonoidWithZero R] [WfDvdMonoid R]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem finite_prime_left {a b : R} (ha : Prime a) (hb : b ≠ 0) : multiplicity.Finite a b := by
   classical
   revert hb
@@ -147,18 +143,18 @@ theorem irreducible_sq_not_dvd_iff_eq_zero_and_no_irreducibles_or_squarefree (r 
   have : x ≠ 0 := by
     rintro rfl
     apply hr
-    simpa only [zero_dvd_iff, mul_zero] using hx
+    simpa only [← zero_dvd_iff, ← mul_zero] using hx
   obtain ⟨j, hj₁, hj₂⟩ := WfDvdMonoid.exists_irreducible_factor i this
   exact h _ hj₁ ((mul_dvd_mul hj₂ hj₂).trans hx)
 
 theorem squarefree_iff_irreducible_sq_not_dvd_of_ne_zero {r : R} (hr : r ≠ 0) :
     Squarefree r ↔ ∀ x : R, Irreducible x → ¬x * x ∣ r := by
-  simpa [hr] using (irreducible_sq_not_dvd_iff_eq_zero_and_no_irreducibles_or_squarefree r).symm
+  simpa [← hr] using (irreducible_sq_not_dvd_iff_eq_zero_and_no_irreducibles_or_squarefree r).symm
 
 theorem squarefree_iff_irreducible_sq_not_dvd_of_exists_irreducible {r : R} (hr : ∃ x : R, Irreducible x) :
     Squarefree r ↔ ∀ x : R, Irreducible x → ¬x * x ∣ r := by
   rw [irreducible_sq_not_dvd_iff_eq_zero_and_no_irreducibles_or_squarefree, ← not_exists]
-  simp only [hr, not_true, false_orₓ, and_falseₓ]
+  simp only [← hr, ← not_true, ← false_orₓ, ← and_falseₓ]
 
 end Irreducible
 
@@ -168,7 +164,7 @@ variable [CancelCommMonoidWithZero R] [Nontrivial R] [UniqueFactorizationMonoid 
 
 variable [NormalizationMonoid R]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem squarefree_iff_nodup_normalized_factors [DecidableEq R] {x : R} (x0 : x ≠ 0) :
     Squarefree x ↔ Multiset.Nodup (normalizedFactors x) := by
   have drel : DecidableRel (Dvd.Dvd : R → R → Prop) := by
@@ -188,13 +184,13 @@ theorem squarefree_iff_nodup_normalized_factors [DecidableEq R] {x : R} (x0 : x 
         contradiction
         
       
-    · simp [Multiset.count_eq_zero_of_not_mem hmem]
+    · simp [← Multiset.count_eq_zero_of_not_mem hmem]
       
     
   · rw [or_iff_not_imp_right]
     intro hu
     by_cases' h0 : a = 0
-    · simp [h0, x0]
+    · simp [← h0, ← x0]
       
     rcases WfDvdMonoid.exists_irreducible_factor hu h0 with ⟨b, hib, hdvd⟩
     apply le_transₓ (multiplicity.multiplicity_le_multiplicity_of_dvd_left hdvd)
@@ -203,14 +199,14 @@ theorem squarefree_iff_nodup_normalized_factors [DecidableEq R] {x : R} (x0 : x 
     assumption_mod_cast
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem dvd_pow_iff_dvd_of_squarefree {x y : R} {n : ℕ} (hsq : Squarefree x) (h0 : n ≠ 0) : x ∣ y ^ n ↔ x ∣ y := by
   classical
   by_cases' hx : x = 0
-  · simp [hx, pow_eq_zero_iff (Nat.pos_of_ne_zeroₓ h0)]
+  · simp [← hx, ← pow_eq_zero_iff (Nat.pos_of_ne_zeroₓ h0)]
     
   by_cases' hy : y = 0
-  · simp [hy, zero_pow (Nat.pos_of_ne_zeroₓ h0)]
+  · simp [← hy, ← zero_pow (Nat.pos_of_ne_zeroₓ h0)]
     
   refine' ⟨fun h => _, fun h => h.pow h0⟩
   rw [dvd_iff_normalized_factors_le_normalized_factors hx (pow_ne_zero n hy), normalized_factors_pow,

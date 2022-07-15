@@ -149,21 +149,24 @@ open Isocrystal
 def FractionRing.module : Module K(p,k) K(p,k) :=
   Semiringₓ.toModule
 
--- ././Mathport/Syntax/Translate/Basic.lean:978:9: unsupported derive handler module «exprK( , )»(p, k)
+-- ./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler module «exprK( , )»(p, k)
 /-- Type synonym for `K(p, k)` to carry the standard 1-dimensional isocrystal structure
 of slope `m : ℤ`.
 -/
 @[nolint unused_arguments has_inhabited_instance]
 def StandardOneDimIsocrystal (m : ℤ) : Type _ :=
-  K(p,k)deriving AddCommGroupₓ, [anonymous]
+  K(p,k)deriving AddCommGroupₓ,
+  ./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler module «exprK( , )»(p, k)
 
 section PerfectRing
 
 variable [IsDomain k] [CharP k p] [PerfectRing k p]
 
 /-- The standard one-dimensional isocrystal of slope `m : ℤ` is an isocrystal. -/
-instance (m : ℤ) : Isocrystal p k (StandardOneDimIsocrystal p k m) where
-  frob :=
+instance (m : ℤ) :
+    Isocrystal p k
+      (StandardOneDimIsocrystal p k
+        m) where frob :=
     (FractionRing.frobenius p k).toSemilinearEquiv.trans
       (LinearEquiv.smulOfNeZero _ _ _ (zpow_ne_zero m (WittVector.FractionRing.p_nonzero p k)))
 
@@ -174,7 +177,7 @@ theorem StandardOneDimIsocrystal.frobenius_apply (m : ℤ) (x : StandardOneDimIs
 
 end PerfectRing
 
--- ././Mathport/Syntax/Translate/Basic.lean:534:40: in linear_combination: ././Mathport/Syntax/Translate/Basic.lean:222:22: unsupported: too many args
+-- ./././Mathport/Syntax/Translate/Basic.lean:637:40: in linear_combination #[[expr «expr * »(«exprφ( , )»(p, k) c, hmb)], []]: ./././Mathport/Syntax/Translate/Basic.lean:308:22: unsupported: too many args
 /-- A one-dimensional isocrystal over an algebraically closed field
 admits an isomorphism to one of the standard (indexed by `m : ℤ`) one-dimensional isocrystals. -/
 theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP k p] (V : Type _) [AddCommGroupₓ V]
@@ -183,14 +186,14 @@ theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP 
   have : Nontrivial V := FiniteDimensional.nontrivial_of_finrank_eq_succ h_dim
   obtain ⟨x, hx⟩ : ∃ x : V, x ≠ 0 := exists_ne 0
   have : Φ(p,k) x ≠ 0 := by
-    simpa only [map_zero] using Φ(p,k).Injective.Ne hx
+    simpa only [← map_zero] using Φ(p,k).Injective.Ne hx
   obtain ⟨a, ha, hax⟩ : ∃ a : K(p,k), a ≠ 0 ∧ Φ(p,k) x = a • x := by
     rw [finrank_eq_one_iff_of_nonzero' x hx] at h_dim
     obtain ⟨a, ha⟩ := h_dim (Φ(p,k) x)
     refine' ⟨a, _, ha.symm⟩
     intro ha'
     apply this
-    simp only [← ha, ha', zero_smul]
+    simp only [ha, ← ha', ← zero_smul]
   obtain ⟨b, hb, m, hmb⟩ := WittVector.exists_frobenius_solution_fraction_ring p ha
   replace hmb : φ(p,k) b * a = p ^ m * b := by
     convert hmb
@@ -209,11 +212,12 @@ theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP 
   intro c
   rw [LinearEquiv.trans_apply, LinearEquiv.trans_apply, LinearEquiv.smul_of_ne_zero_apply,
     LinearEquiv.smul_of_ne_zero_apply, LinearEquiv.map_smul, LinearEquiv.map_smul]
-  simp only [hax, LinearEquiv.of_bijective_apply, LinearMap.to_span_singleton_apply, LinearEquiv.map_smulₛₗ,
-    standard_one_dim_isocrystal.frobenius_apply, Algebra.id.smul_eq_mul]
-  simp only [← mul_smul]
+  simp only [← hax, ← LinearEquiv.of_bijective_apply, ← LinearMap.to_span_singleton_apply, ← LinearEquiv.map_smulₛₗ, ←
+    standard_one_dim_isocrystal.frobenius_apply, ← Algebra.id.smul_eq_mul]
+  simp only [mul_smul]
   congr 1
-  "././Mathport/Syntax/Translate/Basic.lean:534:40: in linear_combination: ././Mathport/Syntax/Translate/Basic.lean:222:22: unsupported: too many args"
+  trace
+    "./././Mathport/Syntax/Translate/Basic.lean:637:40: in linear_combination #[[expr «expr * »(«exprφ( , )»(p, k) c, hmb)], []]: ./././Mathport/Syntax/Translate/Basic.lean:308:22: unsupported: too many args"
 
 end WittVector
 

@@ -67,11 +67,11 @@ section MulZeroOneClassₓ
 
 variable [MulZeroOneClassₓ R] {a b : α} {e : Sym2 α}
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem inc_matrix_apply_mul_inc_matrix_apply :
     G.incMatrix R a e * G.incMatrix R b e = (G.IncidenceSet a ∩ G.IncidenceSet b).indicator 1 e := by
   classical
-  simp only [inc_matrix, Set.indicator_apply, ← ite_and_mul_zero, Pi.one_apply, mul_oneₓ, Set.mem_inter_eq]
+  simp only [← inc_matrix, ← Set.indicator_apply, ite_and_mul_zero, ← Pi.one_apply, ← mul_oneₓ, ← Set.mem_inter_eq]
 
 theorem inc_matrix_apply_mul_inc_matrix_apply_of_not_adj (hab : a ≠ b) (h : ¬G.Adj a b) :
     G.incMatrix R a e * G.incMatrix R b e = 0 := by
@@ -88,7 +88,7 @@ theorem inc_matrix_of_mem_incidence_set (h : e ∈ G.IncidenceSet a) : G.incMatr
 variable [Nontrivial R]
 
 theorem inc_matrix_apply_eq_zero_iff : G.incMatrix R a e = 0 ↔ e ∉ G.IncidenceSet a := by
-  simp only [inc_matrix_apply, Set.indicator_apply_eq_zero, Pi.one_apply, one_ne_zero]
+  simp only [← inc_matrix_apply, ← Set.indicator_apply_eq_zero, ← Pi.one_apply, ← one_ne_zero]
   exact Iff.rfl
 
 theorem inc_matrix_apply_eq_one_iff : G.incMatrix R a e = 1 ↔ e ∈ G.IncidenceSet a := by
@@ -102,39 +102,40 @@ section NonAssocSemiringₓ
 variable [Fintype α] [NonAssocSemiringₓ R] {a b : α} {e : Sym2 α}
 
 theorem sum_inc_matrix_apply [DecidableEq α] [DecidableRel G.Adj] : (∑ e, G.incMatrix R a e) = G.degree a := by
-  simp [inc_matrix_apply', sum_boole, Set.filter_mem_univ_eq_to_finset]
+  simp [← inc_matrix_apply', ← sum_boole, ← Set.filter_mem_univ_eq_to_finset]
 
 theorem inc_matrix_mul_transpose_diag [DecidableEq α] [DecidableRel G.Adj] :
     (G.incMatrix R ⬝ (G.incMatrix R)ᵀ) a a = G.degree a := by
   rw [← sum_inc_matrix_apply]
-  simp [Matrix.mul_apply, inc_matrix_apply', ← ite_and_mul_zero]
+  simp [← Matrix.mul_apply, ← inc_matrix_apply', ite_and_mul_zero]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem sum_inc_matrix_apply_of_mem_edge_set : e ∈ G.EdgeSet → (∑ a, G.incMatrix R a e) = 2 := by
   classical
   refine' e.ind _
   intro a b h
   rw [mem_edge_set] at h
   rw [← Nat.cast_two, ← card_doubleton h.ne]
-  simp only [inc_matrix_apply', sum_boole, mk_mem_incidence_set_iff, h, true_andₓ]
+  simp only [← inc_matrix_apply', ← sum_boole, ← mk_mem_incidence_set_iff, ← h, ← true_andₓ]
   congr 2
   ext e
-  simp only [mem_filter, mem_univ, true_andₓ, mem_insert, mem_singleton]
+  simp only [← mem_filter, ← mem_univ, ← true_andₓ, ← mem_insert, ← mem_singleton]
 
 theorem sum_inc_matrix_apply_of_not_mem_edge_set (h : e ∉ G.EdgeSet) : (∑ a, G.incMatrix R a e) = 0 :=
   sum_eq_zero fun a _ => G.inc_matrix_of_not_mem_incidence_set fun he => h he.1
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem inc_matrix_transpose_mul_diag [DecidableRel G.Adj] :
     ((G.incMatrix R)ᵀ ⬝ G.incMatrix R) e e = if e ∈ G.EdgeSet then 2 else 0 := by
   classical
-  simp only [Matrix.mul_apply, inc_matrix_apply', transpose_apply, ← ite_and_mul_zero, one_mulₓ, sum_boole, and_selfₓ]
+  simp only [← Matrix.mul_apply, ← inc_matrix_apply', ← transpose_apply, ite_and_mul_zero, ← one_mulₓ, ← sum_boole, ←
+    and_selfₓ]
   split_ifs with h
   · revert h
     refine' e.ind _
     intro v w h
     rw [← Nat.cast_two, ← card_doubleton (G.ne_of_adj h)]
-    simp [mk_mem_incidence_set_iff, G.mem_edge_set.mp h]
+    simp [← mk_mem_incidence_set_iff, ← G.mem_edge_set.mp h]
     congr 2
     ext u
     simp
@@ -142,7 +143,7 @@ theorem inc_matrix_transpose_mul_diag [DecidableRel G.Adj] :
   · revert h
     refine' e.ind _
     intro v w h
-    simp [mk_mem_incidence_set_iff, G.mem_edge_set.not.mp h]
+    simp [← mk_mem_incidence_set_iff, ← G.mem_edge_set.not.mp h]
     
 
 end NonAssocSemiringₓ
@@ -151,7 +152,7 @@ section Semiringₓ
 
 variable [Fintype (Sym2 α)] [Semiringₓ R] {a b : α} {e : Sym2 α}
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem inc_matrix_mul_transpose_apply_of_adj (h : G.Adj a b) : (G.incMatrix R ⬝ (G.incMatrix R)ᵀ) a b = (1 : R) := by
   classical
   simp_rw [Matrix.mul_apply, Matrix.transpose_apply, inc_matrix_apply_mul_inc_matrix_apply, Set.indicator_apply,
@@ -170,8 +171,8 @@ theorem inc_matrix_mul_transpose [Fintype α] [DecidableEq α] [DecidableRel G.A
     
   · exact G.inc_matrix_mul_transpose_apply_of_adj h'
     
-  · simp only [Matrix.mul_apply, Matrix.transpose_apply, G.inc_matrix_apply_mul_inc_matrix_apply_of_not_adj h h',
-      sum_const_zero]
+  · simp only [← Matrix.mul_apply, ← Matrix.transpose_apply, ← G.inc_matrix_apply_mul_inc_matrix_apply_of_not_adj h h',
+      ← sum_const_zero]
     
 
 end Semiringₓ

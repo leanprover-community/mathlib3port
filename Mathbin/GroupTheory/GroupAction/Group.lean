@@ -97,7 +97,7 @@ theorem smul_inv [Groupₓ β] [SmulCommClass α β β] [IsScalarTower α β β]
 
 theorem smul_zpow [Groupₓ β] [SmulCommClass α β β] [IsScalarTower α β β] (c : α) (x : β) (p : ℤ) :
     (c • x) ^ p = c ^ p • x ^ p := by
-  cases p <;> simp [smul_pow, smul_inv]
+  cases p <;> simp [← smul_pow, ← smul_inv]
 
 @[simp]
 theorem Commute.smul_right_iff [Mul β] [SmulCommClass α β β] [IsScalarTower α β β] {a b : β} (r : α) :
@@ -249,15 +249,15 @@ end MulDistribMulAction
 section Arrow
 
 /-- If `G` acts on `A`, then it acts also on `A → B`, by `(g • F) a = F (g⁻¹ • a)`. -/
-@[simps]
-def arrowAction {G A B : Type _} [Groupₓ G] [MulAction G A] : MulAction G (A → B) where
+@[to_additive arrowAddAction "If `G` acts on `A`, then it acts also on `A → B`, by\n`(g +ᵥ F) a = F (g⁻¹ +ᵥ a)`", simps]
+def arrowAction {G A B : Type _} [DivisionMonoid G] [MulAction G A] : MulAction G (A → B) where
   smul := fun g F a => F (g⁻¹ • a)
   one_smul := by
     intro
-    simp only [inv_one, one_smul]
+    simp only [← inv_one, ← one_smul]
   mul_smul := by
     intros
-    simp only [mul_smul, mul_inv_rev]
+    simp only [← mul_smul, ← mul_inv_rev]
 
 attribute [local instance] arrowAction
 

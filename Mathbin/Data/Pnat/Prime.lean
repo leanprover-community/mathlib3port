@@ -157,7 +157,7 @@ theorem Coprime.mul_right {k m n : ℕ+} : k.Coprime m → k.Coprime n → k.Cop
 
 theorem gcd_comm {m n : ℕ+} : m.gcd n = n.gcd m := by
   apply Eq
-  simp only [gcd_coe]
+  simp only [← gcd_coe]
   apply Nat.gcd_commₓ
 
 theorem gcd_eq_left_iff_dvd {m n : ℕ+} : m ∣ n ↔ m.gcd n = m := by
@@ -173,7 +173,7 @@ theorem gcd_eq_right_iff_dvd {m n : ℕ+} : m ∣ n ↔ n.gcd m = m := by
 theorem Coprime.gcd_mul_left_cancel (m : ℕ+) {n k : ℕ+} : k.Coprime n → (k * m).gcd n = m.gcd n := by
   intro h
   apply Eq
-  simp only [gcd_coe, mul_coe]
+  simp only [← gcd_coe, ← mul_coe]
   apply Nat.Coprime.gcd_mul_left_cancel
   simpa
 
@@ -248,19 +248,19 @@ theorem Coprime.factor_eq_gcd_right_right {a b m n : ℕ+} (cop : m.Coprime n) (
 theorem Coprime.gcd_mul (k : ℕ+) {m n : ℕ+} (h : m.Coprime n) : k.gcd (m * n) = k.gcd m * k.gcd n := by
   rw [← coprime_coe] at h
   apply Eq
-  simp only [gcd_coe, mul_coe]
+  simp only [← gcd_coe, ← mul_coe]
   apply Nat.Coprime.gcd_mul k h
 
 theorem gcd_eq_left {m n : ℕ+} : m ∣ n → m.gcd n = m := by
   rw [dvd_iff]
   intro h
   apply Eq
-  simp only [gcd_coe]
+  simp only [← gcd_coe]
   apply Nat.gcd_eq_leftₓ h
 
 theorem Coprime.pow {m n : ℕ+} (k l : ℕ) (h : m.Coprime n) : (m ^ k).Coprime (n ^ l) := by
   rw [← coprime_coe] at *
-  simp only [pow_coe]
+  simp only [← pow_coe]
   apply Nat.Coprime.pow
   apply h
 

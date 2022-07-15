@@ -51,11 +51,11 @@ theorem Chain.iff_mem {a : α} {l : List α} : Chain R a l ↔ Chain (fun x y =>
     Chain.imp fun a b h => h.2.2⟩
 
 theorem chain_singleton {a b : α} : Chain R a [b] ↔ R a b := by
-  simp only [chain_cons, chain.nil, and_trueₓ]
+  simp only [← chain_cons, ← chain.nil, ← and_trueₓ]
 
 theorem chain_split {a b : α} {l₁ l₂ : List α} : Chain R a (l₁ ++ b :: l₂) ↔ Chain R a (l₁ ++ [b]) ∧ Chain R b l₂ := by
   induction' l₁ with x l₁ IH generalizing a <;>
-    simp only [*, nil_append, cons_append, chain.nil, chain_cons, and_trueₓ, and_assoc]
+    simp only [*, ← nil_append, ← cons_append, ← chain.nil, ← chain_cons, ← and_trueₓ, ← and_assoc]
 
 @[simp]
 theorem chain_append_cons_cons {a b c : α} {l₁ l₂ : List α} :
@@ -66,16 +66,16 @@ theorem chain_iff_forall₂ : ∀ {a : α} {l : List α}, Chain R a l ↔ l = []
   | a, [] => by
     simp
   | a, [b] => by
-    simp [init]
+    simp [← init]
   | a, b :: c :: l => by
-    simp [@chain_iff_forall₂ b]
+    simp [← @chain_iff_forall₂ b]
 
 theorem chain_append_singleton_iff_forall₂ : Chain R a (l ++ [b]) ↔ Forall₂ R (a :: l) (l ++ [b]) := by
-  simp [chain_iff_forall₂, init]
+  simp [← chain_iff_forall₂, ← init]
 
 theorem chain_map (f : β → α) {b : β} {l : List β} :
     Chain R (f b) (map f l) ↔ Chain (fun a b : β => R (f a) (f b)) b l := by
-  induction l generalizing b <;> simp only [map, chain.nil, chain_cons, *]
+  induction l generalizing b <;> simp only [← map, ← chain.nil, ← chain_cons, *]
 
 theorem chain_of_chain_map {S : β → β → Prop} (f : α → β) (H : ∀ a b : α, S (f a) (f b) → R a b) {a : α} {l : List α}
     (p : Chain S (f a) (map f l)) : Chain R a l :=
@@ -91,7 +91,7 @@ theorem chain_pmap_of_chain {S : β → β → Prop} {p : α → Prop} {f : ∀ 
   induction' l with lh lt l_ih generalizing a
   · simp
     
-  · simp [H _ _ _ _ (rel_of_chain_cons hl₁), l_ih _ (chain_of_chain_cons hl₁)]
+  · simp [← H _ _ _ _ (rel_of_chain_cons hl₁), ← l_ih _ (chain_of_chain_cons hl₁)]
     
 
 theorem chain_of_chain_pmap {S : β → β → Prop} {p : α → Prop} (f : ∀ a, p a → β) {l : List α} (hl₁ : ∀, ∀ a ∈ l, ∀, p a)
@@ -100,7 +100,7 @@ theorem chain_of_chain_pmap {S : β → β → Prop} {p : α → Prop} (f : ∀ 
   induction' l with lh lt l_ih generalizing a
   · simp
     
-  · simp [H _ _ _ _ (rel_of_chain_cons hl₂), l_ih _ _ (chain_of_chain_cons hl₂)]
+  · simp [← H _ _ _ _ (rel_of_chain_cons hl₂), ← l_ih _ _ (chain_of_chain_cons hl₂)]
     
 
 protected theorem Pairwiseₓ.chain (p : Pairwiseₓ R (a :: l)) : Chain R a l := by
@@ -109,7 +109,7 @@ protected theorem Pairwiseₓ.chain (p : Pairwiseₓ R (a :: l)) : Chain R a l :
   induction' p' with b l r' p IH generalizing a
   · exact chain.nil
     
-  simp only [chain_cons, forall_mem_cons] at r
+  simp only [← chain_cons, ← forall_mem_cons] at r
   exact chain_cons.2 ⟨r.1, IH r'⟩
 
 protected theorem Chain.pairwise (tr : Transitive R) : ∀ {a : α} {l : List α}, Chain R a l → Pairwiseₓ R (a :: l)
@@ -117,7 +117,7 @@ protected theorem Chain.pairwise (tr : Transitive R) : ∀ {a : α} {l : List α
   | a, _, @chain.cons _ _ _ b l h hb =>
     hb.Pairwise.cons
       (by
-        simp only [mem_cons_iff, forall_eq_or_imp, h, true_andₓ]
+        simp only [← mem_cons_iff, ← forall_eq_or_imp, ← h, ← true_andₓ]
         exact fun c hc => tr h (rel_of_pairwise_cons hb.pairwise hc))
 
 theorem chain_iff_pairwise (tr : Transitive R) {a : α} {l : List α} : Chain R a l ↔ Pairwiseₓ R (a :: l) :=
@@ -151,7 +151,7 @@ theorem chain_iff_nth_le {R} :
       · apply h0
         
       convert h i _ using 1
-      simp only [succ_eq_add_one, add_succ_sub_one, add_zeroₓ, length, add_lt_add_iff_right] at w
+      simp only [← succ_eq_add_one, ← add_succ_sub_one, ← add_zeroₓ, ← length, ← add_lt_add_iff_right] at w
       exact lt_pred_iff.mpr w
       
     rintro ⟨h0, h⟩
@@ -260,12 +260,12 @@ theorem Chain'.append :
   | [], l₂, h₁, h₂, h => h₂
   | [a], l₂, h₁, h₂, h => h₂.cons' <| h _ rfl
   | a :: b :: l, l₂, h₁, h₂, h => by
-    simp only [last'] at h
+    simp only [← last'] at h
     have : chain' R (b :: l) := h₁.tail
     exact (this.append h₂ h).cons h₁.rel_head
 
 theorem chain'_pair {x y} : Chain' R [x, y] ↔ R x y := by
-  simp only [chain'_singleton, chain'_cons, and_trueₓ]
+  simp only [← chain'_singleton, ← chain'_cons, ← and_trueₓ]
 
 theorem Chain'.imp_head {x y} (h : ∀ {z}, R x z → R y z) {l} (hl : Chain' R (x :: l)) : Chain' R (y :: l) :=
   hl.tail.cons' fun z hz => h <| hl.rel_head' hz
@@ -273,7 +273,7 @@ theorem Chain'.imp_head {x y} (h : ∀ {z}, R x z → R y z) {l} (hl : Chain' R 
 theorem chain'_reverse : ∀ {l}, Chain' R (reverse l) ↔ Chain' (flip R) l
   | [] => Iff.rfl
   | [a] => by
-    simp only [chain'_singleton, reverse_singleton]
+    simp only [← chain'_singleton, ← reverse_singleton]
   | a :: b :: l => by
     rw [chain'_cons, reverse_cons, reverse_cons, append_assoc, cons_append, nil_append, chain'_split, ← reverse_cons,
       @chain'_reverse (b :: l), and_comm, chain'_pair, flip]
@@ -293,7 +293,7 @@ theorem chain'_iff_nth_le {R} :
       · exact R
         
       · convert h i _ using 1
-        simp only [succ_eq_add_one, add_succ_sub_one, add_zeroₓ, length, add_lt_add_iff_right] at w
+        simp only [← succ_eq_add_one, ← add_succ_sub_one, ← add_zeroₓ, ← length, ← add_lt_add_iff_right] at w
         simpa using w
         
       
@@ -304,7 +304,7 @@ theorem chain'_iff_nth_le {R} :
         
       · intro i w
         convert h (i + 1) _ using 1
-        simp only [add_zeroₓ, length, add_succ_sub_one] at w
+        simp only [← add_zeroₓ, ← length, ← add_succ_sub_one] at w
         simpa using w
         
       
@@ -319,8 +319,8 @@ theorem Chain'.append_overlap :
     simp at *
     tauto
   | a :: b :: l₁, c :: l₂, l₃, h₁, h₂, hn => by
-    simp only [cons_append, chain'_cons] at h₁ h₂⊢
-    simp only [← cons_append] at h₁ h₂⊢
+    simp only [← cons_append, ← chain'_cons] at h₁ h₂⊢
+    simp only [cons_append] at h₁ h₂⊢
     exact ⟨h₁.1, chain'.append_overlap h₁.2 h₂ (cons_ne_nil _ _)⟩
 
 /-- If `a` and `b` are related by the reflexive transitive closure of `r`, then there is a `r`-chain
@@ -346,7 +346,7 @@ theorem Chain.induction (p : α → Prop) (l : List α) (h : Chain r a l) (hb : 
     (carries : ∀ ⦃x y : α⦄, r x y → p y → p x) (final : p b) : ∀, ∀ i ∈ a :: l, ∀, p i := by
   induction l generalizing a
   · cases hb
-    simp [final]
+    simp [← final]
     
   · rw [chain_cons] at h
     rintro _ (rfl | _)

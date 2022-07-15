@@ -85,11 +85,11 @@ def reverse : CliffordAlgebra Q →ₗ[R] CliffordAlgebra Q :=
 
 @[simp]
 theorem reverse_ι (m : M) : reverse (ι Q m) = ι Q m := by
-  simp [reverse]
+  simp [← reverse]
 
 @[simp]
 theorem reverse.commutes (r : R) : reverse (algebraMap R (CliffordAlgebra Q) r) = algebraMap R _ r := by
-  simp [reverse]
+  simp [← reverse]
 
 @[simp]
 theorem reverse.map_one : reverse (1 : CliffordAlgebra Q) = 1 := by
@@ -97,12 +97,12 @@ theorem reverse.map_one : reverse (1 : CliffordAlgebra Q) = 1 := by
 
 @[simp]
 theorem reverse.map_mul (a b : CliffordAlgebra Q) : reverse (a * b) = reverse b * reverse a := by
-  simp [reverse]
+  simp [← reverse]
 
 @[simp]
 theorem reverse_comp_reverse : reverse.comp reverse = (LinearMap.id : _ →ₗ[R] CliffordAlgebra Q) := by
   ext m
-  simp only [LinearMap.id_apply, LinearMap.comp_apply]
+  simp only [← LinearMap.id_apply, ← LinearMap.comp_apply]
   induction m using CliffordAlgebra.induction
   -- simp can close these goals, but is slow
   case h_grade0 =>
@@ -130,16 +130,16 @@ def reverseEquiv : CliffordAlgebra Q ≃ₗ[R] CliffordAlgebra Q :=
 theorem reverse_comp_involute :
     reverse.comp involute.toLinearMap = (involute.toLinearMap.comp reverse : _ →ₗ[R] CliffordAlgebra Q) := by
   ext
-  simp only [LinearMap.comp_apply, AlgHom.to_linear_map_apply]
+  simp only [← LinearMap.comp_apply, ← AlgHom.to_linear_map_apply]
   induction x using CliffordAlgebra.induction
   case h_grade0 =>
     simp
   case h_grade1 =>
     simp
   case h_mul a b ha hb =>
-    simp only [ha, hb, reverse.map_mul, AlgHom.map_mul]
+    simp only [← ha, ← hb, ← reverse.map_mul, ← AlgHom.map_mul]
   case h_add a b ha hb =>
-    simp only [ha, hb, reverse.map_add, AlgHom.map_add]
+    simp only [← ha, ← hb, ← reverse.map_add, ← AlgHom.map_add]
 
 /-- `clifford_algebra.reverse` and `clifford_algebra.inverse` commute. Note that the composition
 is sometimes referred to as the "clifford conjugate". -/
@@ -164,7 +164,7 @@ theorem reverse_prod_map_ι : ∀ l : List M, reverse (l.map <| ι Q).Prod = (l.
   | [] => by
     simp
   | x :: xs => by
-    simp [reverse_prod_map_ι xs]
+    simp [← reverse_prod_map_ι xs]
 
 /-- Taking the involute of the product a list of $n$ vectors lifted via `ι` is equivalent to
 premultiplying by ${-1}^n$. -/
@@ -172,7 +172,7 @@ theorem involute_prod_map_ι : ∀ l : List M, involute (l.map <| ι Q).Prod = (
   | [] => by
     simp
   | x :: xs => by
-    simp [pow_addₓ, involute_prod_map_ι xs]
+    simp [← pow_addₓ, ← involute_prod_map_ι xs]
 
 end List
 

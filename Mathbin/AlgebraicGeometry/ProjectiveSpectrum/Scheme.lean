@@ -128,13 +128,13 @@ def degreeZeroPart {f : A} {m : ℕ} (f_deg : f ∈ 𝒜 m) : Subring (Away f) w
           ⟨⟨a.1 * b.1, (mul_addₓ m n n').symm ▸ mul_mem a.2 b.2⟩, by
             rw [mk_mul]
             congr 1
-            simp only [pow_addₓ]
+            simp only [← pow_addₓ]
             rfl⟩⟩
   one_mem' :=
     ⟨0, ⟨1, (mul_zero m).symm ▸ one_mem⟩, by
       symm
       convert ← mk_self 1
-      simp only [pow_zeroₓ]
+      simp only [← pow_zeroₓ]
       rfl⟩
   add_mem' := fun _ _ ⟨n, ⟨a, h⟩⟩ ⟨n', ⟨b, h'⟩⟩ =>
     h.symm ▸
@@ -156,7 +156,7 @@ def degreeZeroPart {f : A} {m : ℕ} (f_deg : f ∈ 𝒜 m) : Subring (Away f) w
             by
             rw [add_mk]
             congr 1
-            simp only [pow_addₓ]
+            simp only [← pow_addₓ]
             rfl⟩⟩
   zero_mem' := ⟨0, ⟨0, (mk_zero _).symm⟩⟩
   neg_mem' := fun x ⟨n, ⟨a, h⟩⟩ => h.symm ▸ ⟨n, ⟨-a, neg_mk _ _⟩⟩

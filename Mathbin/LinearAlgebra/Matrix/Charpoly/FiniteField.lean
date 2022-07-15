@@ -58,7 +58,7 @@ theorem Zmod.charpoly_pow_card {p : ℕ} [Fact p.Prime] (M : Matrix n n (Zmod p)
 theorem FiniteField.trace_pow_card {K : Type _} [Field K] [Fintype K] (M : Matrix n n K) :
     trace (M ^ Fintype.card K) = trace M ^ Fintype.card K := by
   cases is_empty_or_nonempty n
-  · simp [zero_pow Fintype.card_pos, Matrix.trace]
+  · simp [← zero_pow Fintype.card_pos, ← Matrix.trace]
     
   rw [Matrix.trace_eq_neg_charpoly_coeff, Matrix.trace_eq_neg_charpoly_coeff, FiniteField.Matrix.charpoly_pow_card,
     FiniteField.pow_card]

@@ -62,12 +62,12 @@ theorem is_iso_left_of_is_iso_biprod_map {W X Y Z : C} (f : W ⟶ Y) (g : X ⟶ 
   ⟨⟨biprod.inl ≫ inv (biprod.map f g) ≫ biprod.fst,
       ⟨by
         have t := congr_arg (fun p : W ⊞ X ⟶ W ⊞ X => biprod.inl ≫ p ≫ biprod.fst) (is_iso.hom_inv_id (biprod.map f g))
-        simp only [category.id_comp, category.assoc, biprod.inl_map_assoc] at t
-        simp [t], by
+        simp only [← category.id_comp, ← category.assoc, ← biprod.inl_map_assoc] at t
+        simp [← t], by
         have t := congr_arg (fun p : Y ⊞ Z ⟶ Y ⊞ Z => biprod.inl ≫ p ≫ biprod.fst) (is_iso.inv_hom_id (biprod.map f g))
-        simp only [category.id_comp, category.assoc, biprod.map_fst] at t
-        simp only [category.assoc]
-        simp [t]⟩⟩⟩
+        simp only [← category.id_comp, ← category.assoc, ← biprod.map_fst] at t
+        simp only [← category.assoc]
+        simp [← t]⟩⟩⟩
 
 /-- If
 ```
@@ -101,22 +101,22 @@ def Biprod.ofComponents : X₁ ⊞ X₂ ⟶ Y₁ ⊞ Y₂ :=
 @[simp]
 theorem Biprod.inl_of_components :
     biprod.inl ≫ Biprod.ofComponents f₁₁ f₁₂ f₂₁ f₂₂ = f₁₁ ≫ biprod.inl + f₁₂ ≫ biprod.inr := by
-  simp [biprod.of_components]
+  simp [← biprod.of_components]
 
 @[simp]
 theorem Biprod.inr_of_components :
     biprod.inr ≫ Biprod.ofComponents f₁₁ f₁₂ f₂₁ f₂₂ = f₂₁ ≫ biprod.inl + f₂₂ ≫ biprod.inr := by
-  simp [biprod.of_components]
+  simp [← biprod.of_components]
 
 @[simp]
 theorem Biprod.of_components_fst :
     Biprod.ofComponents f₁₁ f₁₂ f₂₁ f₂₂ ≫ biprod.fst = biprod.fst ≫ f₁₁ + biprod.snd ≫ f₂₁ := by
-  simp [biprod.of_components]
+  simp [← biprod.of_components]
 
 @[simp]
 theorem Biprod.of_components_snd :
     Biprod.ofComponents f₁₁ f₁₂ f₂₁ f₂₂ ≫ biprod.snd = biprod.fst ≫ f₁₂ + biprod.snd ≫ f₂₂ := by
-  simp [biprod.of_components]
+  simp [← biprod.of_components]
 
 @[simp]
 theorem Biprod.of_components_eq (f : X₁ ⊞ X₂ ⟶ Y₁ ⊞ Y₂) :
@@ -133,12 +133,12 @@ theorem Biprod.of_components_comp {X₁ X₂ Y₁ Y₂ Z₁ Z₂ : C} (f₁₁ :
       Biprod.ofComponents (f₁₁ ≫ g₁₁ + f₁₂ ≫ g₂₁) (f₁₁ ≫ g₁₂ + f₁₂ ≫ g₂₂) (f₂₁ ≫ g₁₁ + f₂₂ ≫ g₂₁)
         (f₂₁ ≫ g₁₂ + f₂₂ ≫ g₂₂) :=
   by
-  dsimp' [biprod.of_components]
+  dsimp' [← biprod.of_components]
   apply biprod.hom_ext <;>
     apply biprod.hom_ext' <;>
-      simp only [add_comp, comp_add, add_comp_assoc, add_zeroₓ, zero_addₓ, biprod.inl_fst, biprod.inl_snd,
-        biprod.inr_fst, biprod.inr_snd, biprod.inl_fst_assoc, biprod.inl_snd_assoc, biprod.inr_fst_assoc,
-        biprod.inr_snd_assoc, comp_zero, zero_comp, category.comp_id, category.assoc]
+      simp only [← add_comp, ← comp_add, ← add_comp_assoc, ← add_zeroₓ, ← zero_addₓ, ← biprod.inl_fst, ← biprod.inl_snd,
+        ← biprod.inr_fst, ← biprod.inr_snd, ← biprod.inl_fst_assoc, ← biprod.inl_snd_assoc, ← biprod.inr_fst_assoc, ←
+        biprod.inr_snd_assoc, ← comp_zero, ← zero_comp, ← category.comp_id, ← category.assoc]
 
 /-- The unipotent upper triangular matrix
 ```
@@ -189,7 +189,7 @@ def Biprod.gaussian (f : X₁ ⊞ X₂ ⟶ Y₁ ⊞ Y₂) [IsIso (biprod.inl ≫
   let this :=
     biprod.gaussian' (biprod.inl ≫ f ≫ biprod.fst) (biprod.inl ≫ f ≫ biprod.snd) (biprod.inr ≫ f ≫ biprod.fst)
       (biprod.inr ≫ f ≫ biprod.snd)
-  simpa [biprod.of_components_eq]
+  simpa [← biprod.of_components_eq]
 
 /-- If `X₁ ⊞ X₂ ≅ Y₁ ⊞ Y₂` via a two-by-two matrix whose `X₁ ⟶ Y₁` entry is an isomorphism,
 then we can construct an isomorphism `X₂ ≅ Y₂`, via Gaussian elimination.
@@ -211,7 +211,7 @@ def Biprod.isoElim (f : X₁ ⊞ X₂ ≅ Y₁ ⊞ Y₂) [IsIso (biprod.inl ≫ 
       (biprod.of_components (biprod.inl ≫ f.hom ≫ biprod.fst) (biprod.inl ≫ f.hom ≫ biprod.snd)
         (biprod.inr ≫ f.hom ≫ biprod.fst) (biprod.inr ≫ f.hom ≫ biprod.snd)) :=
     by
-    simp only [biprod.of_components_eq]
+    simp only [← biprod.of_components_eq]
     infer_instance
   exact
     biprod.iso_elim' (biprod.inl ≫ f.hom ≫ biprod.fst) (biprod.inl ≫ f.hom ≫ biprod.snd)
@@ -223,50 +223,50 @@ theorem Biprod.column_nonzero_of_iso {W X Y Z : C} (f : W ⊞ X ⟶ Y ⊞ Z) [Is
   rcases h with ⟨nz, a₁, a₂⟩
   set x := biprod.inl ≫ f ≫ inv f ≫ biprod.fst
   have h₁ : x = 𝟙 W := by
-    simp [x]
+    simp [← x]
   have h₀ : x = 0 := by
-    dsimp' [x]
+    dsimp' [← x]
     rw [← category.id_comp (inv f), category.assoc, ← biprod.total]
     conv_lhs => slice 2 3rw [comp_add]
-    simp only [category.assoc]
+    simp only [← category.assoc]
     rw [comp_add_assoc, add_comp]
     conv_lhs => congr skip slice 1 3rw [a₂]
-    simp only [zero_comp, add_zeroₓ]
+    simp only [← zero_comp, ← add_zeroₓ]
     conv_lhs => slice 1 3rw [a₁]
-    simp only [zero_comp]
+    simp only [← zero_comp]
   exact nz (h₁.symm.trans h₀)
 
 end
 
 variable [Preadditive.{v} C]
 
-theorem Biproduct.column_nonzero_of_iso' {σ τ : Type v} [Fintype τ] {S : σ → C} [HasBiproduct.{v} S] {T : τ → C}
-    [HasBiproduct.{v} T] (s : σ) (f : ⨁ S ⟶ ⨁ T) [IsIso f] :
+theorem Biproduct.column_nonzero_of_iso' {σ τ : Type} [Fintype τ] {S : σ → C} [HasBiproduct S] {T : τ → C}
+    [HasBiproduct T] (s : σ) (f : ⨁ S ⟶ ⨁ T) [IsIso f] :
     (∀ t : τ, biproduct.ι S s ≫ f ≫ biproduct.π T t = 0) → 𝟙 (S s) = 0 := by
   intro z
   set x := biproduct.ι S s ≫ f ≫ inv f ≫ biproduct.π S s
   have h₁ : x = 𝟙 (S s) := by
-    simp [x]
+    simp [← x]
   have h₀ : x = 0 := by
-    dsimp' [x]
+    dsimp' [← x]
     rw [← category.id_comp (inv f), category.assoc, ← biproduct.total]
-    simp only [comp_sum_assoc]
-    conv_lhs => congr apply_congr skip simp only [reassoc_of z]
+    simp only [← comp_sum_assoc]
+    conv_lhs => congr apply_congr skip simp only [← reassoc_of z]
     simp
   exact h₁.symm.trans h₀
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `f : ⨁ S ⟶ ⨁ T` is an isomorphism, and `s` is a non-trivial summand of the source,
 then there is some `t` in the target so that the `s, t` matrix entry of `f` is nonzero.
 -/
-def Biproduct.columnNonzeroOfIso {σ τ : Type v} [Fintype τ] {S : σ → C} [HasBiproduct.{v} S] {T : τ → C}
-    [HasBiproduct.{v} T] (s : σ) (nz : 𝟙 (S s) ≠ 0) (f : ⨁ S ⟶ ⨁ T) [IsIso f] :
-    Trunc (Σ't : τ, biproduct.ι S s ≫ f ≫ biproduct.π T t ≠ 0) := by
+def Biproduct.columnNonzeroOfIso {σ τ : Type} [Fintype τ] {S : σ → C} [HasBiproduct S] {T : τ → C} [HasBiproduct T]
+    (s : σ) (nz : 𝟙 (S s) ≠ 0) (f : ⨁ S ⟶ ⨁ T) [IsIso f] : Trunc (Σ't : τ, biproduct.ι S s ≫ f ≫ biproduct.π T t ≠ 0) :=
+  by
   classical
   apply truncSigmaOfExists
   have t := Biproduct.column_nonzero_of_iso'.{v} s f
   by_contra h
-  simp only [not_exists_not] at h
+  simp only [← not_exists_not] at h
   exact nz (t h)
 
 end CategoryTheory

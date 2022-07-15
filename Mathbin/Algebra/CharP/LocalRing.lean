@@ -56,7 +56,7 @@ theorem char_p_zero_or_prime_power (R : Type _) [CommRingₓ R] [LocalRing R] (q
     have q_eq_rn := Nat.dvd_antisymm ((CharP.cast_eq_zero_iff R q (r ^ n)).mp rn_cast_zero) rn_dvd_q
     have n_pos : n ≠ 0 := by
       by_contra n_zero
-      simp [n_zero] at q_eq_rn
+      simp [← n_zero] at q_eq_rn
       exact absurd q_eq_rn (CharP.char_ne_one R q)
     -- Definition of prime power: `∃ r n, prime r ∧ 0 < n ∧ r ^ n = q`.
     exact ⟨r, ⟨n, ⟨nat.prime_iff.mp r_prime, ⟨pos_iff_ne_zero.mpr n_pos, q_eq_rn.symm⟩⟩⟩⟩

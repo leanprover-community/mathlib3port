@@ -109,14 +109,15 @@ def continuousLinearMapOfTendsto [CompleteSpace E] [T2Space F] (g : ℕ → E �
       intro x
       rcases cauchy_seq_bdd (tendsto_pi_nhds.mp h x).CauchySeq with ⟨C, C_pos, hC⟩
       refine' ⟨C + ∥g 0 x∥, fun n => _⟩
-      simp_rw [dist_eq_norm]  at hC
+      simp_rw [dist_eq_norm] at hC
       calc ∥g n x∥ ≤ ∥g 0 x∥ + ∥g n x - g 0 x∥ := norm_le_insert' _ _ _ ≤ C + ∥g 0 x∥ := by
           linarith [hC n 0]
     cases' banach_steinhaus h_point_bdd with C' hC'
     /- show the uniform bound from `banach_steinhaus` is a norm bound of the limit map
              by allowing "an `ε` of room." -/
     refine'
-      LinearMap.continuous_of_bound (linearMapOfTendsto _ _ h) C' fun x => le_of_forall_pos_lt_add fun ε ε_pos => _
+      AddMonoidHomClass.continuous_of_bound (linearMapOfTendsto _ _ h) C' fun x =>
+        le_of_forall_pos_lt_add fun ε ε_pos => _
     cases' metric.tendsto_at_top.mp (tendsto_pi_nhds.mp h x) ε ε_pos with n hn
     have lt_ε : ∥g n x - f x∥ < ε := by
       rw [← dist_eq_norm]

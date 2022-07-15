@@ -60,7 +60,7 @@ variable [CommRingₓ A] [CommRingₓ B] [Algebra A B] [CommRingₓ C] [Algebra 
 
 section Discr
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given an `A`-algebra `B` and `b`, an `ι`-indexed family of elements of `B`, we define
 `discr A ι b` as the determinant of `trace_matrix A ι b`. -/
 noncomputable def discr (A : Type u) {B : Type v} [CommRingₓ A] [CommRingₓ B] [Algebra A B] [Fintype ι] (b : ι → B) :=
@@ -75,13 +75,13 @@ variable {ι' : Type _} [Fintype ι'] [Fintype ι]
 
 section Basic
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem discr_reindex (b : Basis ι A B) (f : ι ≃ ι') : discr A (b ∘ ⇑f.symm) = discr A b := by
   classical
   rw [← Basis.coe_reindex, discr_def, trace_matrix_reindex, det_reindex_self, ← discr_def]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `b` is not linear independent, then `algebra.discr A b = 0`. -/
 theorem discr_zero_of_not_linear_independent [IsDomain A] {b : ι → B} (hli : ¬LinearIndependent A b) : discr A b = 0 :=
   by
@@ -91,12 +91,12 @@ theorem discr_zero_of_not_linear_independent [IsDomain A] {b : ι → B} (hli : 
     ext i
     have : ∀ j, (trace A B) (b i * b j) * g j = (trace A B) (g j • b j * b i) := by
       intro j
-      simp [mul_comm]
-    simp only [mul_vec, dot_product, trace_matrix, Pi.zero_apply, trace_form_apply, fun j => this j, ←
-      LinearMap.map_sum, ← sum_mul, hg, zero_mul, LinearMap.map_zero]
+      simp [← mul_comm]
+    simp only [← mul_vec, ← dot_product, ← trace_matrix, ← Pi.zero_apply, ← trace_form_apply, ← fun j => this j,
+      LinearMap.map_sum, sum_mul, ← hg, ← zero_mul, ← LinearMap.map_zero]
   by_contra h
   rw [discr_def] at h
-  simpa [Matrix.eq_zero_of_mul_vec_eq_zero h this] using hi
+  simpa [← Matrix.eq_zero_of_mul_vec_eq_zero h this] using hi
 
 variable {A}
 
@@ -127,7 +127,7 @@ variable [Module.Finite K L] [IsAlgClosed E]
 /-- Over a field, if `b` is a basis, then `algebra.discr K b ≠ 0`. -/
 theorem discr_not_zero_of_basis [IsSeparable K L] (b : Basis ι K L) : discr K b ≠ 0 := by
   cases is_empty_or_nonempty ι
-  · simp [discr]
+  · simp [← discr]
     
   · have := span_eq_top_of_linear_independent_of_card_eq_finrank b.linear_independent (finrank_eq_card_basis b).symm
     rw [discr_def, trace_matrix_def]
@@ -153,9 +153,7 @@ theorem discr_eq_det_embeddings_matrix_reindex_pow_two [DecidableEq ι] [IsSepar
 
 /-- The discriminant of a power basis. -/
 theorem discr_power_basis_eq_prod (e : Finₓ pb.dim ≃ (L →ₐ[K] E)) [IsSeparable K L] :
-    algebraMap K E (discr K pb.Basis) =
-      ∏ i : Finₓ pb.dim, ∏ j in Finset.univ.filter fun j => i < j, (e j pb.gen - e i pb.gen) ^ 2 :=
-  by
+    algebraMap K E (discr K pb.Basis) = ∏ i : Finₓ pb.dim, ∏ j in ioi i, (e j pb.gen - e i pb.gen) ^ 2 := by
   rw [discr_eq_det_embeddings_matrix_reindex_pow_two K E pb.basis e, embeddings_matrix_reindex_eq_vandermonde,
     det_transpose, det_vandermonde, ← prod_pow]
   congr
@@ -165,8 +163,7 @@ theorem discr_power_basis_eq_prod (e : Finₓ pb.dim ≃ (L →ₐ[K] E)) [IsSep
 /-- A variation of `of_power_basis_eq_prod`. -/
 theorem discr_power_basis_eq_prod' [IsSeparable K L] (e : Finₓ pb.dim ≃ (L →ₐ[K] E)) :
     algebraMap K E (discr K pb.Basis) =
-      ∏ i : Finₓ pb.dim,
-        ∏ j in Finset.univ.filter fun j => i < j, -((e j pb.gen - e i pb.gen) * (e i pb.gen - e j pb.gen)) :=
+      ∏ i : Finₓ pb.dim, ∏ j in ioi i, -((e j pb.gen - e i pb.gen) * (e i pb.gen - e j pb.gen)) :=
   by
   rw [discr_power_basis_eq_prod _ _ _ e]
   congr
@@ -181,23 +178,19 @@ local notation "n" => finrank K L
 /-- A variation of `of_power_basis_eq_prod`. -/
 theorem discr_power_basis_eq_prod'' [IsSeparable K L] (e : Finₓ pb.dim ≃ (L →ₐ[K] E)) :
     algebraMap K E (discr K pb.Basis) =
-      -1 ^ (n * (n - 1) / 2) *
-        ∏ i : Finₓ pb.dim,
-          ∏ j in Finset.univ.filter fun j => i < j, (e j pb.gen - e i pb.gen) * (e i pb.gen - e j pb.gen) :=
+      -1 ^ (n * (n - 1) / 2) * ∏ i : Finₓ pb.dim, ∏ j in ioi i, (e j pb.gen - e i pb.gen) * (e i pb.gen - e j pb.gen) :=
   by
   rw [discr_power_basis_eq_prod' _ _ _ e]
   simp_rw [fun i j => neg_eq_neg_one_mul ((e j pb.gen - e i pb.gen) * (e i pb.gen - e j pb.gen)), prod_mul_distrib]
   congr
-  simp only [prod_pow_eq_pow_sum, prod_const]
+  simp only [← prod_pow_eq_pow_sum, ← prod_const]
   congr
-  simp_rw [Finₓ.card_filter_lt]
-  apply (@Nat.cast_inj ℚ _ _ _ _ _).1
-  rw [Nat.cast_sum]
+  rw [← @Nat.cast_inj ℚ, Nat.cast_sum]
   have : ∀ x : Finₓ pb.dim, ↑x + 1 ≤ pb.dim := by
-    simp [Nat.succ_le_iff, Finₓ.is_lt]
-  simp_rw [Nat.sub_sub]
-  simp only [Nat.cast_sub, this, Finset.card_fin, nsmul_eq_mul, sum_const, sum_sub_distrib, Nat.cast_addₓ,
-    Nat.cast_oneₓ, sum_add_distrib, mul_oneₓ]
+    simp [← Nat.succ_le_iff, ← Finₓ.is_lt]
+  simp_rw [Finₓ.card_Ioi, Nat.sub_sub, add_commₓ 1]
+  simp only [← Nat.cast_sub, ← this, ← Finset.card_fin, ← nsmul_eq_mul, ← sum_const, ← sum_sub_distrib, ← Nat.cast_addₓ,
+    ← Nat.cast_oneₓ, ← sum_add_distrib, ← mul_oneₓ]
   rw [← Nat.cast_sum, ← @Finset.sum_range ℕ _ pb.dim fun i => i, sum_range_id]
   have hn : n = pb.dim := by
     rw [← AlgHom.card K L E, ← Fintype.card_fin pb.dim]
@@ -227,11 +220,11 @@ theorem discr_power_basis_eq_norm [IsSeparable K L] :
     intro σ
     rw [mem_roots, is_root.def, eval_map, ← aeval_def, aeval_alg_hom_apply]
     repeat'
-      simp [minpoly.ne_zero (IsSeparable.is_integral K pb.gen)]
+      simp [← minpoly.ne_zero (IsSeparable.is_integral K pb.gen)]
   apply (algebraMap K E).Injective
   rw [RingHom.map_mul, RingHom.map_pow, RingHom.map_neg, RingHom.map_one, discr_power_basis_eq_prod'' _ _ _ e]
   congr
-  rw [norm_eq_prod_embeddings, Finₓ.prod_filter_lt_mul_neg_eq_prod_off_diag]
+  rw [norm_eq_prod_embeddings, prod_prod_Ioi_mul_eq_prod_prod_off_diag]
   conv_rhs =>
     congr skip ext
       rw [← aeval_alg_hom_apply,
@@ -244,31 +237,30 @@ theorem discr_power_basis_eq_norm [IsSeparable K L] :
       (fun i hi => by
         simp at hi)
       (fun i j hi hj hij => _) fun σ hσ => _
-  · simp only [true_andₓ, Finset.mem_mk, mem_univ, mem_sigma]
+  · simp only [← true_andₓ, ← Finset.mem_mk, ← mem_univ, ← mem_sigma]
     rw [Multiset.mem_erase_of_ne fun h => _]
     · exact hroots _
       
-    · simp only [true_andₓ, mem_filter, mem_univ, Ne.def, mem_sigma] at hi
-      refine' hi (Equivₓ.injective e (Equivₓ.injective (PowerBasis.liftEquiv pb) _))
+    · simp only [← true_andₓ, ← mem_univ, ← Ne.def, ← mem_sigma, ← mem_compl, ← mem_singleton] at hi
       rw [← PowerBasis.lift_equiv_apply_coe, ← PowerBasis.lift_equiv_apply_coe] at h
-      exact Subtype.eq h
+      exact hi (e.injective <| pb.lift_equiv.injective <| Subtype.eq h.symm)
       
     
-  · simp only [Equivₓ.apply_eq_iff_eq, heq_iff_eq] at hij
+  · simp only [← Equivₓ.apply_eq_iff_eq, ← heq_iff_eq] at hij
     have h := hij.2
     rw [← PowerBasis.lift_equiv_apply_coe, ← PowerBasis.lift_equiv_apply_coe] at h
     refine'
       Sigma.eq (Equivₓ.injective e (Equivₓ.injective _ (Subtype.eq h)))
         (by
-          simp [hij.1])
+          simp [← hij.1])
     
-  · simp only [true_andₓ, Finset.mem_mk, mem_univ, mem_sigma] at hσ
-    simp only [Sigma.exists, true_andₓ, exists_prop, mem_filter, mem_univ, Ne.def, mem_sigma]
+  · simp only [← true_andₓ, ← Finset.mem_mk, ← mem_univ, ← mem_sigma] at hσ⊢
+    simp only [← Sigma.exists, ← exists_prop, ← mem_compl, ← mem_singleton, ← Ne.def]
     refine' ⟨e.symm (PowerBasis.lift pb σ.2 _), e.symm σ.1, ⟨fun h => _, Sigma.eq _ _⟩⟩
     · rw [aeval_def, eval₂_eq_eval_map, ← is_root.def, ← mem_roots]
       · exact Multiset.erase_subset _ _ hσ
         
-      · simp [minpoly.ne_zero (IsSeparable.is_integral K pb.gen)]
+      · simp [← minpoly.ne_zero (IsSeparable.is_integral K pb.gen)]
         
       
     · replace h := AlgHom.congr_fun (Equivₓ.injective _ h) pb.gen
@@ -287,7 +279,7 @@ variable {R : Type z} [CommRingₓ R] [Algebra R K] [Algebra R L] [IsScalarTower
 -- mathport name: «expris_integral»
 local notation "is_integral" => IsIntegral
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `K` and `L` are fields and `is_scalar_tower R K L`, and `b : ι → L` satisfies
 ` ∀ i, is_integral R (b i)`, then `is_integral R (discr K b)`. -/
 theorem discr_is_integral {b : ι → L} (h : ∀ i, is_integral R (b i)) : is_integral R (discr K b) := by
@@ -295,7 +287,7 @@ theorem discr_is_integral {b : ι → L} (h : ∀ i, is_integral R (b i)) : is_i
   rw [discr_def]
   exact IsIntegral.det fun i j => is_integral_trace (is_integral_mul (h i) (h j))
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `b` and `b'` are `ℚ`-bases of a number field `K` such that
 `∀ i j, is_integral ℤ (b.to_matrix b' i j)` and `∀ i j, is_integral ℤ (b'.to_matrix b i j)` then
 `discr ℚ b = discr ℚ b'`. -/
@@ -323,9 +315,9 @@ theorem discr_eq_discr_of_to_matrix_coeff_is_integral [NumberField K] {b : Basis
     rw [RingHom.map_mul, hr, hr', ← det_mul, Basis.to_matrix_mul_to_matrix_flip, det_one]
   rw [← RingHom.map_one (algebraMap ℤ ℚ), ← hr]
   cases' Int.is_unit_iff.1 hunit with hp hm
-  · simp [hp]
+  · simp [← hp]
     
-  · simp [hm]
+  · simp [← hm]
     
 
 /-- Let `K` be the fraction field of an integrally closed domain `R` and let `L` be a finite
@@ -336,7 +328,7 @@ theorem discr_mul_is_integral_mem_adjoin [IsDomain R] [IsSeparable K L] [IsInteg
     {B : PowerBasis K L} (hint : is_integral R B.gen) {z : L} (hz : is_integral R z) :
     discr K B.Basis • z ∈ adjoin R ({B.gen} : Set L) := by
   have hinv : IsUnit (trace_matrix K B.basis).det := by
-    simpa [← discr_def] using discr_is_unit_of_basis _ B.basis
+    simpa [discr_def] using discr_is_unit_of_basis _ B.basis
   have H :
     (trace_matrix K B.basis).det • (trace_matrix K B.basis).mulVec (B.basis.equiv_fun z) =
       (trace_matrix K B.basis).det • fun i => trace K L (z * B.basis i) :=
@@ -363,12 +355,12 @@ theorem discr_mul_is_integral_mem_adjoin [IsDomain R] [IsSeparable K L] [IsInteg
   rw [← congr_fun cramer i, cramer_apply, det_apply]
   refine' Subalgebra.sum_mem _ fun σ _ => Subalgebra.zsmul_mem _ (Subalgebra.prod_mem _ fun j _ => _) _
   by_cases' hji : j = i
-  · simp only [update_column_apply, hji, eq_self_iff_true, PowerBasis.coe_basis]
+  · simp only [← update_column_apply, ← hji, ← eq_self_iff_true, ← PowerBasis.coe_basis]
     exact
       mem_bot.2
         (IsIntegrallyClosed.is_integral_iff.1 <| is_integral_trace <| is_integral_mul hz <| IsIntegral.pow hint _)
     
-  · simp only [update_column_apply, hji, PowerBasis.coe_basis]
+  · simp only [← update_column_apply, ← hji, ← PowerBasis.coe_basis]
     exact
       mem_bot.2
         (IsIntegrallyClosed.is_integral_iff.1 <|

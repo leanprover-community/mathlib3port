@@ -66,9 +66,7 @@ theorem nodup_dedup (s : Multiset α) : Nodup (dedup s) :=
 theorem dedup_eq_self {s : Multiset α} : dedup s = s ↔ Nodup s :=
   ⟨fun e => e ▸ nodup_dedup s, (Quot.induction_on s) fun l h => congr_arg coe h.dedup⟩
 
-alias dedup_eq_self ↔ _ Multiset.Nodup.dedup
-
-alias dedup_eq_self ↔ _ Multiset.Nodup.dedup
+alias dedup_eq_self ↔ _ nodup.dedup
 
 theorem dedup_eq_zero {s : Multiset α} : dedup s = 0 ↔ s = 0 :=
   ⟨fun h => eq_zero_of_subset_zero <| h ▸ subset_dedup _, fun h => h.symm ▸ dedup_zero⟩
@@ -82,26 +80,26 @@ theorem le_dedup {s t : Multiset α} : s ≤ dedup t ↔ s ≤ t ∧ Nodup s :=
     (le_iff_subset d).2 <| Subset.trans (subset_of_le l) (subset_dedup _)⟩
 
 theorem dedup_ext {s t : Multiset α} : dedup s = dedup t ↔ ∀ a, a ∈ s ↔ a ∈ t := by
-  simp [nodup.ext]
+  simp [← nodup.ext]
 
 theorem dedup_map_dedup_eq [DecidableEq β] (f : α → β) (s : Multiset α) : dedup (map f (dedup s)) = dedup (map f s) :=
   by
-  simp [dedup_ext]
+  simp [← dedup_ext]
 
 @[simp]
 theorem dedup_nsmul {s : Multiset α} {n : ℕ} (h0 : n ≠ 0) : (n • s).dedup = s.dedup := by
   ext a
-  by_cases' h : a ∈ s <;> simp [h, h0]
+  by_cases' h : a ∈ s <;> simp [← h, ← h0]
 
 theorem Nodup.le_dedup_iff_le {s t : Multiset α} (hno : s.Nodup) : s ≤ t.dedup ↔ s ≤ t := by
-  simp [le_dedup, hno]
+  simp [← le_dedup, ← hno]
 
 end Multiset
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Multiset.Nodup.le_nsmul_iff_le {α : Type _} {s t : Multiset α} {n : ℕ} (h : s.Nodup) (hn : n ≠ 0) :
     s ≤ n • t ↔ s ≤ t := by
   classical
   rw [← h.le_dedup_iff_le, Iff.comm, ← h.le_dedup_iff_le]
-  simp [hn]
+  simp [← hn]
 

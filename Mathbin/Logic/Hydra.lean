@@ -107,8 +107,6 @@ section Hydra
 
 open GameAdd Multiset
 
-variable (r : α → α → Prop)
-
 /-- The relation that specifies valid moves in our hydra game. `cut_expand r s' s`
   means that `s'` is obtained by removing one head `a ∈ s` and adding back an arbitrary
   multiset `t` of heads such that all `a' ∈ t` satisfy `r a' a`.
@@ -123,25 +121,46 @@ variable (r : α → α → Prop)
 
   The lemma `relation.cut_expand_iff` below converts between this convenient definition
   and the direct translation when `r` is irreflexive. -/
-def CutExpand (s' s : Multiset α) : Prop :=
+def CutExpand (r : α → α → Prop) (s' s : Multiset α) : Prop :=
   ∃ (t : Multiset α)(a : α), (∀, ∀ a' ∈ t, ∀, r a' a) ∧ s' + {a} = s + t
 
-theorem cut_expand_iff [DecidableEq α] {r} (hr : Irreflexive r) {s' s : Multiset α} :
+variable {r : α → α → Prop}
+
+theorem cut_expand_singleton {s x} (h : ∀, ∀ x' ∈ s, ∀, r x' x) : CutExpand r s {x} :=
+  ⟨s, x, h, add_commₓ s _⟩
+
+theorem cut_expand_singleton_singleton {x' x} (h : r x' x) : CutExpand r {x'} {x} :=
+  cut_expand_singleton fun a h => by
+    rwa [mem_singleton.1 h]
+
+theorem cut_expand_add_left {t u} s : CutExpand r (s + t) (s + u) ↔ CutExpand r t u :=
+  exists₂_congrₓ fun _ _ =>
+    and_congr Iff.rfl <| by
+      rw [add_assocₓ, add_assocₓ, add_left_cancel_iffₓ]
+
+theorem cut_expand_iff [DecidableEq α] [IsIrrefl α r] {s' s : Multiset α} :
     CutExpand r s' s ↔ ∃ (t : Multiset α)(a : _), (∀, ∀ a' ∈ t, ∀, r a' a) ∧ a ∈ s ∧ s' = s.erase a + t := by
   simp_rw [cut_expand, add_singleton_eq_iff]
   refine' exists₂_congrₓ fun t a => ⟨_, _⟩
   · rintro ⟨ht, ha, rfl⟩
     obtain h | h := mem_add.1 ha
-    exacts[⟨ht, h, t.erase_add_left_pos h⟩, (hr a <| ht a h).elim]
+    exacts[⟨ht, h, t.erase_add_left_pos h⟩, (@irrefl α r _ a (ht a h)).elim]
     
   · rintro ⟨ht, h, rfl⟩
     exact ⟨ht, mem_add.2 (Or.inl h), (t.erase_add_left_pos h).symm⟩
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+theorem not_cut_expand_zero [IsIrrefl α r] s : ¬CutExpand r s 0 := by
+  classical
+  rw [cut_expand_iff]
+  rintro ⟨_, _, _, ⟨⟩, _⟩
+
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- For any relation `r` on `α`, multiset addition `multiset α × multiset α → multiset α` is a
   fibration between the game sum of `cut_expand r` with itself and `cut_expand r` itself. -/
-theorem cut_expand_fibration : Fibration (GameAdd (CutExpand r) (CutExpand r)) (CutExpand r) fun s => s.1 + s.2 := by
+theorem cut_expand_fibration (r : α → α → Prop) :
+    Fibration (GameAdd (CutExpand r) (CutExpand r)) (CutExpand r) fun s => s.1 + s.2 := by
   rintro ⟨s₁, s₂⟩ s ⟨t, a, hr, he⟩
   dsimp'  at he⊢
   classical
@@ -161,19 +180,12 @@ theorem cut_expand_fibration : Fibration (GameAdd (CutExpand r) (CutExpand r)) (
       
     
 
-variable {r}
-
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A multiset is accessible under `cut_expand` if all its singleton subsets are,
   assuming `r` is irreflexive. -/
-theorem acc_of_singleton (hi : Irreflexive r) {s : Multiset α} :
+theorem acc_of_singleton [IsIrrefl α r] {s : Multiset α} :
     (∀, ∀ a ∈ s, ∀, Acc (CutExpand r) {a}) → Acc (CutExpand r) s := by
   refine' Multiset.induction _ _ s
-  classical
-  · exact fun _ =>
-      (Acc.intro 0) fun s => by
-        rw [cut_expand_iff hi]
-        rintro ⟨_, _, _, ⟨⟩, _⟩
+  · exact fun _ => (Acc.intro 0) fun s h => (not_cut_expand_zero s h).elim
     
   · intro a s ih hacc
     rw [← s.singleton_add a]
@@ -182,22 +194,24 @@ theorem acc_of_singleton (hi : Irreflexive r) {s : Multiset α} :
         (cut_expand_fibration r)
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A singleton `{a}` is accessible under `cut_expand r` if `a` is accessible under `r`,
   assuming `r` is irreflexive. -/
-theorem _root_.acc.cut_expand (hi : Irreflexive r) {a : α} (hacc : Acc r a) : Acc (CutExpand r) {a} := by
+theorem _root_.acc.cut_expand [IsIrrefl α r] {a : α} (hacc : Acc r a) : Acc (CutExpand r) {a} := by
   induction' hacc with a h ih
   refine' Acc.intro _ fun s => _
   classical
-  rw [cut_expand_iff hi]
+  rw [cut_expand_iff]
   rintro ⟨t, a, hr, rfl | ⟨⟨⟩⟩, rfl⟩
-  refine' acc_of_singleton hi fun a' => _
+  refine' acc_of_singleton fun a' => _
   rw [erase_singleton, zero_addₓ]
   exact ih a' ∘ hr a'
 
 /-- `cut_expand r` is well-founded when `r` is. -/
 theorem _root_.well_founded.cut_expand (hr : WellFounded r) : WellFounded (CutExpand r) :=
-  ⟨fun s => (acc_of_singleton hr.IsIrrefl.1) fun a _ => (hr.apply a).CutExpand hr.IsIrrefl.1⟩
+  ⟨by
+    let h := hr.is_irrefl
+    exact fun s => acc_of_singleton fun a _ => (hr.apply a).CutExpand⟩
 
 end Hydra
 

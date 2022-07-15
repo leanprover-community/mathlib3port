@@ -107,15 +107,16 @@ instance function_field_is_scalar_tower [IrreducibleSpace X.Carrier] (U : Opens 
   rw [X.presheaf.germ_stalk_specializes]
   rfl
 
-noncomputable instance (R : CommRingₓₓ) [IsDomain R] : Algebra R (Scheme.spec.obj <| op R).functionField := by
-  apply RingHom.toAlgebra
-  exact structure_sheaf.to_stalk R _
+noncomputable instance (R : CommRingₓₓ) [IsDomain R] : Algebra R (Scheme.spec.obj <| op R).functionField :=
+  RingHom.toAlgebra <| by
+    change CommRingₓₓ.of R ⟶ _
+    apply structure_sheaf.to_stalk
 
 @[simp]
 theorem generic_point_eq_bot_of_affine (R : CommRingₓₓ) [IsDomain R] :
     genericPoint (Scheme.spec.obj <| op R).Carrier = (⟨0, Ideal.bot_prime⟩ : PrimeSpectrum R) := by
   apply (generic_point_spec (Scheme.Spec.obj <| op R).Carrier).Eq
-  simp [is_generic_point_def, ← PrimeSpectrum.zero_locus_vanishing_ideal_eq_closure]
+  simp [← is_generic_point_def, PrimeSpectrum.zero_locus_vanishing_ideal_eq_closure]
 
 instance function_field_is_fraction_ring_of_affine (R : CommRingₓₓ.{u}) [IsDomain R] :
     IsFractionRing R (Scheme.spec.obj <| op R).functionField := by
@@ -127,9 +128,9 @@ instance function_field_is_fraction_ring_of_affine (R : CommRingₓₓ.{u}) [IsD
   exact mem_non_zero_divisors_iff_ne_zero
 
 instance {X : Scheme} [IsIntegral X] {U : Opens X.Carrier} [hU : Nonempty U] :
-    IsIntegral (X.restrict U.OpenEmbedding) :=
+    IsIntegral (X.restrict U.OpenEmbedding) := by
   have : Nonempty (X.restrict U.open_embedding).Carrier := hU
-  is_integral_of_open_immersion (X.of_restrict U.open_embedding)
+  exact is_integral_of_open_immersion (X.of_restrict U.open_embedding)
 
 theorem IsAffineOpen.prime_ideal_of_generic_point {X : Scheme} [IsIntegral X] {U : Opens X.Carrier}
     (hU : IsAffineOpen U) [h : Nonempty U] :

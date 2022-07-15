@@ -16,6 +16,12 @@ scalar multiplication as a homomorphism from `α × β` to `β`.
 
 * `smul_mul_hom`/`smul_monoid_hom`: Scalar multiplication bundled as a multiplicative/monoid
   homomorphism.
+
+## See also
+
+* `group_theory.group_action.pi`
+* `group_theory.group_action.sigma`
+* `group_theory.group_action.sum`
 -/
 
 
@@ -25,10 +31,10 @@ namespace Prod
 
 section
 
-variable [HasScalar M α] [HasScalar M β] [HasScalar N α] [HasScalar N β] (a : M) (x : α × β)
+variable [HasSmul M α] [HasSmul M β] [HasSmul N α] [HasSmul N β] (a : M) (x : α × β)
 
 @[to_additive Prod.hasVadd]
-instance : HasScalar M (α × β) :=
+instance : HasSmul M (α × β) :=
   ⟨fun a p => (a • p.1, a • p.2)⟩
 
 @[simp, to_additive]
@@ -51,15 +57,14 @@ theorem smul_def (a : M) (x : α × β) : a • x = (a • x.1, a • x.2) :=
 theorem smul_swap : (a • x).swap = a • x.swap :=
   rfl
 
-instance [HasScalar M N] [IsScalarTower M N α] [IsScalarTower M N β] : IsScalarTower M N (α × β) :=
+instance [HasSmul M N] [IsScalarTower M N α] [IsScalarTower M N β] : IsScalarTower M N (α × β) :=
   ⟨fun x y z => mk.inj_iff.mpr ⟨smul_assoc _ _ _, smul_assoc _ _ _⟩⟩
 
 @[to_additive]
-instance [SmulCommClass M N α] [SmulCommClass M N β] : SmulCommClass M N (α × β) where
-  smul_comm := fun r s x => mk.inj_iff.mpr ⟨smul_comm _ _ _, smul_comm _ _ _⟩
+instance [SmulCommClass M N α] [SmulCommClass M N β] :
+    SmulCommClass M N (α × β) where smul_comm := fun r s x => mk.inj_iff.mpr ⟨smul_comm _ _ _, smul_comm _ _ _⟩
 
-instance [HasScalar Mᵐᵒᵖ α] [HasScalar Mᵐᵒᵖ β] [IsCentralScalar M α] [IsCentralScalar M β] :
-    IsCentralScalar M (α × β) :=
+instance [HasSmul Mᵐᵒᵖ α] [HasSmul Mᵐᵒᵖ β] [IsCentralScalar M α] [IsCentralScalar M β] : IsCentralScalar M (α × β) :=
   ⟨fun r m => Prod.extₓ (op_smul_eq_smul _ _) (op_smul_eq_smul _ _)⟩
 
 @[to_additive]
@@ -79,15 +84,15 @@ instance has_faithful_smul_right [Nonempty α] [HasFaithfulSmul M β] : HasFaith
 end
 
 @[to_additive]
-instance smul_comm_class_both [Mul N] [Mul P] [HasScalar M N] [HasScalar M P] [SmulCommClass M N N]
-    [SmulCommClass M P P] : SmulCommClass M (N × P) (N × P) :=
+instance smul_comm_class_both [Mul N] [Mul P] [HasSmul M N] [HasSmul M P] [SmulCommClass M N N] [SmulCommClass M P P] :
+    SmulCommClass M (N × P) (N × P) :=
   ⟨fun c x y => by
-    simp [smul_def, mul_def, mul_smul_comm]⟩
+    simp [← smul_def, ← mul_def, ← mul_smul_comm]⟩
 
-instance is_scalar_tower_both [Mul N] [Mul P] [HasScalar M N] [HasScalar M P] [IsScalarTower M N N]
-    [IsScalarTower M P P] : IsScalarTower M (N × P) (N × P) :=
+instance is_scalar_tower_both [Mul N] [Mul P] [HasSmul M N] [HasSmul M P] [IsScalarTower M N N] [IsScalarTower M P P] :
+    IsScalarTower M (N × P) (N × P) :=
   ⟨fun c x y => by
-    simp [smul_def, mul_def, smul_mul_assoc]⟩
+    simp [← smul_def, ← mul_def, ← smul_mul_assoc]⟩
 
 @[to_additive]
 instance {m : Monoidₓ M} [MulAction M α] [MulAction M β] : MulAction M (α × β) where

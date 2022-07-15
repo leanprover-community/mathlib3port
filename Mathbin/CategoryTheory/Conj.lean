@@ -109,7 +109,7 @@ theorem conj_Aut_hom (f : Aut X) : (α.conjAut f).Hom = α.conj f.Hom :=
 
 @[simp]
 theorem trans_conj_Aut {Z : C} (β : Y ≅ Z) (f : Aut X) : (α ≪≫ β).conjAut f = β.conjAut (α.conjAut f) := by
-  simp only [conj_Aut_apply, iso.trans_symm, iso.trans_assoc]
+  simp only [← conj_Aut_apply, ← iso.trans_symm, ← iso.trans_assoc]
 
 @[simp]
 theorem conj_Aut_mul (f g : Aut X) : α.conjAut (f * g) = α.conjAut f * α.conjAut g :=
@@ -144,7 +144,7 @@ theorem map_conj {X Y : C} (α : X ≅ Y) (f : End X) : F.map (α.conj f) = (F.m
 
 theorem map_conj_Aut (F : C ⥤ D) {X Y : C} (α : X ≅ Y) (f : Aut X) :
     F.mapIso (α.conjAut f) = (F.mapIso α).conjAut (F.mapIso f) := by
-  ext <;> simp only [map_iso_hom, iso.conj_Aut_hom, F.map_conj]
+  ext <;> simp only [← map_iso_hom, ← iso.conj_Aut_hom, ← F.map_conj]
 
 -- alternative proof: by simp only [iso.conj_Aut_apply, F.map_iso_trans, F.map_iso_symm]
 end Functor

@@ -24,18 +24,17 @@ open Order Set TopologicalSpace
 variable {α : Type _} [TopologicalSpace α]
 
 instance (priority := 100) DiscreteTopology.first_countable_topology [DiscreteTopology α] :
-    FirstCountableTopology α where
-  nhds_generated_countable := by
+    FirstCountableTopology α where nhds_generated_countable := by
     rw [nhds_discrete]
     exact Filter.is_countably_generated_pure
 
 instance (priority := 100) DiscreteTopology.second_countable_topology_of_encodable [hd : DiscreteTopology α]
-    [Encodable α] : SecondCountableTopology α :=
+    [Encodable α] : SecondCountableTopology α := by
   have : ∀ i : α, second_countable_topology ↥({i} : Set α) := fun i =>
     { is_open_generated_countable :=
         ⟨{univ}, countable_singleton _, by
-          simp only [eq_iff_true_of_subsingleton]⟩ }
-  second_countable_topology_of_countable_cover (singletons_open_iff_discrete.mpr hd) (Union_of_singleton α)
+          simp only [← eq_iff_true_of_subsingleton]⟩ }
+  exact second_countable_topology_of_countable_cover (singletons_open_iff_discrete.mpr hd) (Union_of_singleton α)
 
 instance (priority := 100) DiscreteTopology.order_topology_of_pred_succ' [h : DiscreteTopology α] [PartialOrderₓ α]
     [PredOrder α] [SuccOrder α] [NoMinOrder α] [NoMaxOrder α] : OrderTopology α :=

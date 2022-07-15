@@ -24,12 +24,12 @@ variable {α : Type u} {x y : ULift.{v} α}
 namespace ULift
 
 instance mulZeroClass [MulZeroClassₓ α] : MulZeroClassₓ (ULift α) := by
-  refine_struct { zero := (0 : ULift α), mul := (· * ·), .. } <;>
+  refine_struct { zero := (0 : ULift α), mul := (· * ·).. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 instance distrib [Distribₓ α] : Distribₓ (ULift α) := by
-  refine_struct { add := (· + ·), mul := (· * ·), .. } <;>
+  refine_struct { add := (· + ·), mul := (· * ·).. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
@@ -39,7 +39,9 @@ instance nonUnitalNonAssocSemiring [NonUnitalNonAssocSemiringₓ α] : NonUnital
       tactic.pi_instance_derive_field
 
 instance nonAssocSemiring [NonAssocSemiringₓ α] : NonAssocSemiringₓ (ULift α) := by
-  refine_struct { zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·), nsmul := AddMonoidₓ.nsmul } <;>
+  refine_struct
+      { ULift.addMonoidWithOne with zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·),
+        nsmul := AddMonoidₓ.nsmul } <;>
     run_tac
       tactic.pi_instance_derive_field
 
@@ -50,8 +52,8 @@ instance nonUnitalSemiring [NonUnitalSemiringₓ α] : NonUnitalSemiringₓ (ULi
 
 instance semiring [Semiringₓ α] : Semiringₓ (ULift α) := by
   refine_struct
-      { zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·), nsmul := AddMonoidₓ.nsmul,
-        npow := Monoidₓ.npow } <;>
+      { ULift.addMonoidWithOne with zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·),
+        nsmul := AddMonoidₓ.nsmul, npow := Monoidₓ.npow } <;>
     run_tac
       tactic.pi_instance_derive_field
 
@@ -74,7 +76,7 @@ instance nonUnitalCommSemiring [NonUnitalCommSemiring α] : NonUnitalCommSemirin
 
 instance commSemiring [CommSemiringₓ α] : CommSemiringₓ (ULift α) := by
   refine_struct
-      { zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·), nsmul := AddMonoidₓ.nsmul,
+      { ULift.semiring with zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·), nsmul := AddMonoidₓ.nsmul,
         npow := Monoidₓ.npow } <;>
     run_tac
       tactic.pi_instance_derive_field
@@ -95,15 +97,16 @@ instance nonUnitalRing [NonUnitalRing α] : NonUnitalRing (ULift α) := by
 
 instance nonAssocRing [NonAssocRing α] : NonAssocRing (ULift α) := by
   refine_struct
-      { zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·), sub := Sub.sub, neg := Neg.neg,
-        nsmul := AddMonoidₓ.nsmul, zsmul := SubNegMonoidₓ.zsmul } <;>
+      { ULift.addGroupWithOne with zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·), sub := Sub.sub,
+        neg := Neg.neg, nsmul := AddMonoidₓ.nsmul, zsmul := SubNegMonoidₓ.zsmul } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 instance ring [Ringₓ α] : Ringₓ (ULift α) := by
   refine_struct
-      { zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·), sub := Sub.sub, neg := Neg.neg,
-        nsmul := AddMonoidₓ.nsmul, npow := Monoidₓ.npow, zsmul := SubNegMonoidₓ.zsmul } <;>
+      { ULift.semiring, ULift.addGroupWithOne with zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·),
+        sub := Sub.sub, neg := Neg.neg, nsmul := AddMonoidₓ.nsmul, npow := Monoidₓ.npow,
+        zsmul := SubNegMonoidₓ.zsmul } <;>
     run_tac
       tactic.pi_instance_derive_field
 
@@ -115,17 +118,14 @@ instance nonUnitalCommRing [NonUnitalCommRing α] : NonUnitalCommRing (ULift α)
       tactic.pi_instance_derive_field
 
 instance commRing [CommRingₓ α] : CommRingₓ (ULift α) := by
-  refine_struct
-      { zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·), sub := Sub.sub, neg := Neg.neg,
-        nsmul := AddMonoidₓ.nsmul, npow := Monoidₓ.npow, zsmul := SubNegMonoidₓ.zsmul } <;>
+  refine_struct { ULift.ring with } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 instance field [Field α] : Field (ULift α) := by
   refine_struct
-      { zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·), sub := Sub.sub, neg := Neg.neg,
-        nsmul := AddMonoidₓ.nsmul, npow := Monoidₓ.npow, zsmul := SubNegMonoidₓ.zsmul, inv := Inv.inv, div := Div.div,
-        zpow := fun n a => ULift.up (a.down ^ n), exists_pair_ne := ULift.nontrivial.1 } <;>
+      { @ULift.nontrivial α _, ULift.commRing with zero := (0 : ULift α), inv := Inv.inv, div := Div.div,
+        zpow := fun n a => ULift.up (a.down ^ n) } <;>
     run_tac
       tactic.pi_instance_derive_field
   -- `mul_inv_cancel` requires special attention: it leaves the goal `∀ {a}, a ≠ 0 → a * a⁻¹ = 1`.

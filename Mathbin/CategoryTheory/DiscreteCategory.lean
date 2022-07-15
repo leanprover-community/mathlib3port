@@ -35,7 +35,7 @@ discrete categories.
 namespace CategoryTheory
 
 -- morphism levels before object levels. See note [category_theory universes].
-universe v₁ v₂ v₃ u₁ u₂ u₃
+universe v₁ v₂ v₃ u₁ u₁' u₂ u₃
 
 /-- A wrapper for promoting any type to a category,
 with the only morphisms being equalities.
@@ -95,7 +95,7 @@ instance [Subsingleton α] : Subsingleton (Discrete α) :=
     ext
     apply Subsingleton.elimₓ⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
 /-- A simple tactic to run `cases` on any `discrete α` hypotheses. -/
 unsafe def _root_.tactic.discrete_cases : tactic Unit :=
   sorry
@@ -146,13 +146,13 @@ instance {I : Type u₁} {i j : Discrete I} (f : i ⟶ j) : IsIso f :=
   ⟨⟨eqToHom (eq_of_hom f).symm, by
       tidy⟩⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases
+-- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]
 /-- Any function `I → C` gives a functor `discrete I ⥤ C`.
 -/
 def functor {I : Type u₁} (F : I → C) : Discrete I ⥤ C where
   obj := F ∘ discrete.as
   map := fun X Y f => by
-    "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases"
+    trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]"
     cases f
     exact 𝟙 (F X)
 
@@ -164,7 +164,17 @@ theorem functor_map {I : Type u₁} (F : I → C) {i : Discrete I} (f : i ⟶ i)
   by
   tidy
 
--- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases
+/-- The discrete functor induced by a composition of maps can be written as a
+composition of two discrete functors.
+-/
+@[simps]
+def functorComp {I : Type u₁} {J : Type u₁'} (f : J → C) (g : I → J) :
+    Discrete.functor (f ∘ g) ≅ Discrete.functor (discrete.mk ∘ g) ⋙ Discrete.functor f :=
+  NatIso.ofComponents (fun X => Iso.refl _)
+    (by
+      tidy)
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]
 /-- For functors out of a discrete category,
 a natural transformation is just a collection of maps,
 as the naturality squares are trivial.
@@ -173,11 +183,11 @@ as the naturality squares are trivial.
 def natTrans {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discrete I, F.obj i ⟶ G.obj i) : F ⟶ G where
   app := f
   naturality' := fun X Y g => by
-    "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases"
+    trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]"
     cases g
     simp
 
--- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases
+-- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]
 /-- For functors out of a discrete category,
 a natural isomorphism is just a collection of isomorphisms,
 as the naturality squares are trivial.
@@ -185,7 +195,7 @@ as the naturality squares are trivial.
 @[simps]
 def natIso {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discrete I, F.obj i ≅ G.obj i) : F ≅ G :=
   NatIso.ofComponents f fun X Y g => by
-    "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases"
+    trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]"
     cases g
     simp
 
@@ -194,13 +204,13 @@ theorem nat_iso_app {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discre
     (Discrete.natIso f).app i = f i := by
   tidy
 
--- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases
+-- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]
 /-- Every functor `F` from a discrete category is naturally isomorphic (actually, equal) to
   `discrete.functor (F.obj)`. -/
 @[simp]
 def natIsoFunctor {I : Type u₁} {F : Discrete I ⥤ C} : F ≅ Discrete.functor (F.obj ∘ discrete.mk) :=
   nat_iso fun i => by
-    "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases"
+    trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]"
     rfl
 
 /-- Composing `discrete.functor F` with another functor `G` amounts to composing `F` with `G.obj` -/
@@ -209,8 +219,8 @@ def compNatIsoDiscrete {I : Type u₁} {D : Type u₃} [Category.{v₃} D] (F : 
     Discrete.functor F ⋙ G ≅ Discrete.functor (G.obj ∘ F) :=
   nat_iso fun i => Iso.refl _
 
--- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases
--- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases
+-- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]
 /-- We can promote a type-level `equiv` to
 an equivalence between the corresponding `discrete` categories.
 -/
@@ -222,13 +232,13 @@ def equivalence {I : Type u₁} {J : Type u₂} (e : I ≃ J) : Discrete I ≌ D
     Discrete.natIso fun i =>
       eqToIso
         (by
-          "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases"
+          trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]"
           simp )
   counitIso :=
     Discrete.natIso fun j =>
       eqToIso
         (by
-          "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases"
+          trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]"
           simp )
 
 /-- We can convert an equivalence of `discrete` categories to a type-level `equiv`. -/
@@ -249,8 +259,8 @@ variable {J : Type v₁}
 
 open Opposite
 
--- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases
--- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases
+-- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]
 /-- A discrete category is equivalent to its opposite category. -/
 @[simps functor_obj_as inverse_obj]
 protected def opposite (α : Type u₁) : (Discrete α)ᵒᵖ ≌ Discrete α := by
@@ -258,15 +268,15 @@ protected def opposite (α : Type u₁) : (Discrete α)ᵒᵖ ≌ Discrete α :=
   refine'
     equivalence.mk (functor.left_op F) F _
       (discrete.nat_iso fun X => by
-        "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases"
-        simp [F])
+        trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]"
+        simp [← F])
   refine'
     nat_iso.of_components
       (fun X => by
         run_tac
           tactic.op_induction'
-        "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases"
-        simp [F])
+        trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]"
+        simp [← F])
       _
   tidy
 

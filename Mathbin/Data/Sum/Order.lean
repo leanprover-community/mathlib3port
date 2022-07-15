@@ -100,8 +100,8 @@ instance [IsTrichotomous α r] [IsTrichotomous β s] : IsTrichotomous (Sum α β
     | inr a, inl b => Or.inr (Or.inr <| Lex.sep _ _)
     | inr a, inr b => (trichotomous_of s a b).imp3 Lex.inr (congr_arg _) Lex.inr⟩
 
-instance [IsWellOrder α r] [IsWellOrder β s] : IsWellOrder (Sum α β) (Sum.Lex r s) where
-  wf := Sum.lex_wf IsWellOrder.wf IsWellOrder.wf
+instance [IsWellOrder α r] [IsWellOrder β s] :
+    IsWellOrder (Sum α β) (Sum.Lex r s) where wf := Sum.lex_wf IsWellOrder.wf IsWellOrder.wf
 
 end Lex
 
@@ -271,11 +271,11 @@ theorem densely_ordered_iff [LT α] [LT β] : DenselyOrdered (Sum α β) ↔ Den
 
 @[simp]
 theorem swap_le_swap_iff [LE α] [LE β] {a b : Sum α β} : a.swap ≤ b.swap ↔ a ≤ b := by
-  cases a <;> cases b <;> simp only [swap, inr_le_inr_iff, inl_le_inl_iff, not_inl_le_inr, not_inr_le_inl]
+  cases a <;> cases b <;> simp only [← swap, ← inr_le_inr_iff, ← inl_le_inl_iff, ← not_inl_le_inr, ← not_inr_le_inl]
 
 @[simp]
 theorem swap_lt_swap_iff [LT α] [LT β] {a b : Sum α β} : a.swap < b.swap ↔ a < b := by
-  cases a <;> cases b <;> simp only [swap, inr_lt_inr_iff, inl_lt_inl_iff, not_inl_lt_inr, not_inr_lt_inl]
+  cases a <;> cases b <;> simp only [← swap, ← inr_lt_inr_iff, ← inl_lt_inl_iff, ← not_inl_lt_inr, ← not_inr_lt_inl]
 
 end Disjoint
 
@@ -556,14 +556,14 @@ def sumDualDistrib (α β : Type _) [LE α] [LE β] : (Sum α β)ᵒᵈ ≃o Sum
     map_rel_iff' := by
       rintro (a | a) (b | b)
       · change inl (to_dual a) ≤ inl (to_dual b) ↔ to_dual (inl a) ≤ to_dual (inl b)
-        simp only [to_dual_le_to_dual, inl_le_inl_iff]
+        simp only [← to_dual_le_to_dual, ← inl_le_inl_iff]
         
       · exact iff_of_false not_inl_le_inr not_inr_le_inl
         
       · exact iff_of_false not_inr_le_inl not_inl_le_inr
         
       · change inr (to_dual a) ≤ inr (to_dual b) ↔ to_dual (inr a) ≤ to_dual (inr b)
-        simp only [to_dual_le_to_dual, inr_le_inr_iff]
+        simp only [← to_dual_le_to_dual, ← inr_le_inr_iff]
          }
 
 @[simp]
@@ -635,14 +635,14 @@ def sumLexDualAntidistrib (α β : Type _) [LE α] [LE β] : (α ⊕ₗ β)ᵒ�
       rintro (a | a) (b | b)
       simp
       · change toLex (inr <| to_dual a) ≤ toLex (inr <| to_dual b) ↔ to_dual (toLex <| inl a) ≤ to_dual (toLex <| inl b)
-        simp only [to_dual_le_to_dual, lex.inl_le_inl_iff, lex.inr_le_inr_iff]
+        simp only [← to_dual_le_to_dual, ← lex.inl_le_inl_iff, ← lex.inr_le_inr_iff]
         
       · exact iff_of_false lex.not_inr_le_inl lex.not_inr_le_inl
         
       · exact iff_of_true (lex.inl_le_inr _ _) (lex.inl_le_inr _ _)
         
       · change toLex (inl <| to_dual a) ≤ toLex (inl <| to_dual b) ↔ to_dual (toLex <| inr a) ≤ to_dual (toLex <| inr b)
-        simp only [to_dual_le_to_dual, lex.inl_le_inl_iff, lex.inr_le_inr_iff]
+        simp only [← to_dual_le_to_dual, ← lex.inl_le_inl_iff, ← lex.inr_le_inr_iff]
          }
 
 @[simp]

@@ -43,14 +43,13 @@ open ContinuousMap
 
 open ContinuousMap
 
--- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`hequiv_unit] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`hequiv_unit] []
 /-- A contractible space is one that is homotopy equivalent to `unit`. -/
 class ContractibleSpace (X : Type _) [TopologicalSpace X] : Prop where
   hequiv_unit : Nonempty (X ≃ₕ Unit)
 
-variable (X : Type _) [TopologicalSpace X] [ContractibleSpace X]
-
-theorem id_nullhomotopic : (ContinuousMap.id X).Nullhomotopic := by
+theorem id_nullhomotopic (X : Type _) [TopologicalSpace X] [ContractibleSpace X] : (ContinuousMap.id X).Nullhomotopic :=
+  by
   obtain ⟨hv⟩ := ContractibleSpace.hequiv_unit X
   use hv.inv_fun ()
   convert hv.left_inv.symm
@@ -72,9 +71,29 @@ theorem contractible_iff_id_nullhomotopic (Y : Type _) [TopologicalSpace Y] :
     ext
     
 
+variable {X Y : Type _} [TopologicalSpace X] [TopologicalSpace Y]
+
+protected theorem ContinuousMap.HomotopyEquiv.contractible_space [ContractibleSpace Y] (e : X ≃ₕ Y) :
+    ContractibleSpace X :=
+  ⟨(ContractibleSpace.hequiv_unit Y).map e.trans⟩
+
+protected theorem ContinuousMap.HomotopyEquiv.contractible_space_iff (e : X ≃ₕ Y) :
+    ContractibleSpace X ↔ ContractibleSpace Y :=
+  ⟨by
+    intro h
+    exact e.symm.contractible_space, by
+    intro h
+    exact e.contractible_space⟩
+
+protected theorem Homeomorph.contractible_space [ContractibleSpace Y] (e : X ≃ₜ Y) : ContractibleSpace X :=
+  e.toHomotopyEquiv.ContractibleSpace
+
+protected theorem Homeomorph.contractible_space_iff (e : X ≃ₜ Y) : ContractibleSpace X ↔ ContractibleSpace Y :=
+  e.toHomotopyEquiv.contractible_space_iff
+
 namespace ContractibleSpace
 
-instance (priority := 100) : PathConnectedSpace X := by
+instance (priority := 100) [ContractibleSpace X] : PathConnectedSpace X := by
   obtain ⟨p, ⟨h⟩⟩ := id_nullhomotopic X
   have : ∀ x, Joined p x := fun x => ⟨(h.eval_at x).symm⟩
   rw [path_connected_space_iff_eq]

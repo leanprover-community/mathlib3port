@@ -132,19 +132,19 @@ theorem bij_on_fixed_pts_comp (f : α → β) (g : β → α) : Set.BijOn g (fix
 of `f ∘ g`. This is a particular case of `function.inv_on_fixed_pts_comp`. -/
 theorem Commute.inv_on_fixed_pts_comp (h : Commute f g) :
     Set.InvOn f g (fixed_points <| f ∘ g) (fixed_points <| f ∘ g) := by
-  simpa only [h.comp_eq] using inv_on_fixed_pts_comp f g
+  simpa only [← h.comp_eq] using inv_on_fixed_pts_comp f g
 
 /-- If self-maps `f` and `g` commute, then `f` is bijective on the set of fixed points of `f ∘ g`.
 This is a particular case of `function.bij_on_fixed_pts_comp`. -/
 theorem Commute.left_bij_on_fixed_pts_comp (h : Commute f g) :
     Set.BijOn f (fixed_points <| f ∘ g) (fixed_points <| f ∘ g) := by
-  simpa only [h.comp_eq] using bij_on_fixed_pts_comp g f
+  simpa only [← h.comp_eq] using bij_on_fixed_pts_comp g f
 
 /-- If self-maps `f` and `g` commute, then `g` is bijective on the set of fixed points of `f ∘ g`.
 This is a particular case of `function.bij_on_fixed_pts_comp`. -/
 theorem Commute.right_bij_on_fixed_pts_comp (h : Commute f g) :
     Set.BijOn g (fixed_points <| f ∘ g) (fixed_points <| f ∘ g) := by
-  simpa only [h.comp_eq] using bij_on_fixed_pts_comp f g
+  simpa only [← h.comp_eq] using bij_on_fixed_pts_comp f g
 
 end Function
 

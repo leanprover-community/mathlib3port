@@ -37,7 +37,7 @@ theorem is_Gδ_irrational : IsGδ { x | Irrational x } :=
 
 theorem dense_irrational : Dense { x : ℝ | Irrational x } := by
   refine' real.is_topological_basis_Ioo_rat.dense_iff.2 _
-  simp only [mem_Union, mem_singleton_iff]
+  simp only [← mem_Union, ← mem_singleton_iff]
   rintro _ ⟨a, b, hlt, rfl⟩ hne
   rw [inter_comm]
   exact exists_irrational_btwn (Rat.cast_lt.2 hlt)
@@ -80,7 +80,7 @@ theorem eventually_forall_le_dist_cast_div (hx : Irrational x) (n : ℕ) : ∀�
   refine' (ge_mem_nhds ε0).mono fun δ hδ m => not_ltₓ.1 fun hlt => _
   rw [dist_comm] at hlt
   refine' hε (ball_subset_ball hδ hlt) ⟨m, _⟩
-  simp [div_eq_inv_mul]
+  simp [← div_eq_inv_mul]
 
 theorem eventually_forall_le_dist_cast_div_of_denom_le (hx : Irrational x) (n : ℕ) :
     ∀ᶠ ε : ℝ in 𝓝 0, ∀, ∀ k ≤ n, ∀ m : ℤ, ε ≤ dist x (m / k) :=

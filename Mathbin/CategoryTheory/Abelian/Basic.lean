@@ -145,7 +145,8 @@ def imageMonoFactorisation {X Y : C} (f : X ⟶ Y) : MonoFactorisation f where
 theorem image_mono_factorisation_e' {X Y : C} (f : X ⟶ Y) :
     (imageMonoFactorisation f).e = cokernel.π _ ≫ Abelian.coimageImageComparison f := by
   ext
-  simp only [abelian.coimage_image_comparison, image_mono_factorisation_e, category.assoc, cokernel.π_desc_assoc]
+  simp only [← abelian.coimage_image_comparison, ← image_mono_factorisation_e, ← category.assoc, ←
+    cokernel.π_desc_assoc]
 
 /-- If the coimage-image comparison morphism for a morphism `f` is an isomorphism,
 we obtain an image factorisation of `f`. -/
@@ -154,7 +155,8 @@ def imageFactorisation {X Y : C} (f : X ⟶ Y) [IsIso (Abelian.coimageImageCompa
   IsImage :=
     { lift := fun F => inv (Abelian.coimageImageComparison f) ≫ cokernel.desc _ F.e F.kernel_ι_comp,
       lift_fac' := fun F => by
-        simp only [image_mono_factorisation_m, is_iso.inv_comp_eq, category.assoc, abelian.coimage_image_comparison]
+        simp only [← image_mono_factorisation_m, ← is_iso.inv_comp_eq, ← category.assoc, ←
+          abelian.coimage_image_comparison]
         ext
         rw [limits.coequalizer.π_desc_assoc, limits.coequalizer.π_desc_assoc, F.fac, kernel.lift_ι] }
 
@@ -180,8 +182,8 @@ attribute [local instance] limits.has_finite_biproducts.of_has_finite_products
 /-- A category with finite products in which coimage-image comparisons are all isomorphisms
 is a normal mono category.
 -/
-def normalMonoCategory : NormalMonoCategory C where
-  normalMonoOfMono := fun X Y f m =>
+def normalMonoCategory :
+    NormalMonoCategory C where normalMonoOfMono := fun X Y f m =>
     { z := _, g := cokernel.π f,
       w := by
         simp ,
@@ -196,7 +198,7 @@ def normalMonoCategory : NormalMonoCategory C where
           rw [← cancel_mono f, hg, ← aux, kernel_fork.ι_of_ι]
           
         · intro A
-          simp only [kernel_fork.ι_of_ι, category.assoc]
+          simp only [← kernel_fork.ι_of_ι, ← category.assoc]
           convert limit.lift_π _ _ using 2
           rw [is_iso.inv_comp_eq, eq_comm]
           exact (image_mono_factorisation f).fac
@@ -205,8 +207,9 @@ def normalMonoCategory : NormalMonoCategory C where
 /-- A category with finite products in which coimage-image comparisons are all isomorphisms
 is a normal epi category.
 -/
-def normalEpiCategory : NormalEpiCategory C where
-  normalEpiOfEpi := fun X Y f m =>
+def normalEpiCategory :
+    NormalEpiCategory
+      C where normalEpiOfEpi := fun X Y f m =>
     { w := kernel f, g := kernel.ι _, w := kernel.condition _,
       IsColimit := by
         have : limits.has_images C := has_images
@@ -222,7 +225,7 @@ def normalEpiCategory : NormalEpiCategory C where
           rw [← cancel_epi f, hg, ← aux, cokernel_cofork.π_of_π]
           
         · intro A
-          simp only [cokernel_cofork.π_of_π, ← category.assoc]
+          simp only [← cokernel_cofork.π_of_π, category.assoc]
           convert colimit.ι_desc _ _ using 2
           rw [is_iso.comp_inv_eq, is_iso.comp_inv_eq, eq_comm, ← image_mono_factorisation_e']
           exact (image_mono_factorisation f).fac
@@ -243,8 +246,7 @@ is an abelian category.
 The Stacks project uses this characterisation at the definition of an abelian category.
 See <https://stacks.math.columbia.edu/tag/0109>.
 -/
-def ofCoimageImageComparisonIsIso : Abelian C :=
-  {  }
+def ofCoimageImageComparisonIsIso : Abelian C where
 
 end CategoryTheory.Abelian
 
@@ -319,11 +321,11 @@ variable {f}
 
 theorem image_ι_comp_eq_zero {R : C} {g : Q ⟶ R} (h : f ≫ g = 0) : Abelian.image.ι f ≫ g = 0 :=
   zero_of_epi_comp (Abelian.factorThruImage f) <| by
-    simp [h]
+    simp [← h]
 
 theorem comp_coimage_π_eq_zero {R : C} {g : Q ⟶ R} (h : f ≫ g = 0) : f ≫ Abelian.coimage.π g = 0 :=
   zero_of_comp_mono (Abelian.factorThruCoimage g) <| by
-    simp [h]
+    simp [← h]
 
 end
 
@@ -503,7 +505,7 @@ def isLimitPullbackToBiproduct : IsLimit (pullbackToBiproductFork f g) :=
       · rw [biprod.lift_snd, pullback.lift_snd]
         )
     fun s m h => by
-    ext <;> simp [← h]
+    ext <;> simp [h]
 
 end PullbackToBiproductIsKernel
 
@@ -533,7 +535,7 @@ def isColimitBiproductToPushout : IsColimit (biproductToPushoutCofork f g) :=
     (fun s => by
       ext <;> simp )
     fun s m h => by
-    ext <;> simp [← h]
+    ext <;> simp [h]
 
 end BiproductToPushoutIsCokernel
 

@@ -65,7 +65,8 @@ instance : Add Cauchy :=
   ⟨fun x y =>
     (Quotientₓ.liftOn₂ x y fun f g => mk (f + g)) fun f₁ g₁ f₂ g₂ hf hg =>
       Quotientₓ.sound <| by
-        simpa [(· ≈ ·), Setoidₓ.R, sub_eq_add_neg, add_commₓ, add_left_commₓ, add_assocₓ] using add_lim_zero hf hg⟩
+        simpa [← (· ≈ ·), ← Setoidₓ.R, ← sub_eq_add_neg, ← add_commₓ, ← add_left_commₓ, ← add_assocₓ] using
+          add_lim_zero hf hg⟩
 
 @[simp]
 theorem mk_add (f g : CauSeq β abv) : mk f + mk g = mk (f + g) :=
@@ -75,7 +76,7 @@ instance : Neg Cauchy :=
   ⟨fun x =>
     (Quotientₓ.liftOn x fun f => mk (-f)) fun f₁ f₂ hf =>
       Quotientₓ.sound <| by
-        simpa [neg_sub', (· ≈ ·), Setoidₓ.R] using neg_lim_zero hf⟩
+        simpa [← neg_sub', ← (· ≈ ·), ← Setoidₓ.R] using neg_lim_zero hf⟩
 
 @[simp]
 theorem mk_neg (f : CauSeq β abv) : -mk f = mk (-f) :=
@@ -85,7 +86,7 @@ instance : Mul Cauchy :=
   ⟨fun x y =>
     (Quotientₓ.liftOn₂ x y fun f g => mk (f * g)) fun f₁ g₁ f₂ g₂ hf hg =>
       Quotientₓ.sound <| by
-        simpa [(· ≈ ·), Setoidₓ.R, mul_addₓ, mul_comm, add_assocₓ, sub_eq_add_neg] using
+        simpa [← (· ≈ ·), ← Setoidₓ.R, ← mul_addₓ, ← mul_comm, ← add_assocₓ, ← sub_eq_add_neg] using
           add_lim_zero (mul_lim_zero_right g₁ hf) (mul_lim_zero_right f₂ hg)⟩
 
 @[simp]
@@ -97,7 +98,7 @@ instance : Sub Cauchy :=
     (Quotientₓ.liftOn₂ x y fun f g => mk (f - g)) fun f₁ g₁ f₂ g₂ hf hg =>
       Quotientₓ.sound <|
         show (f₁ - g₁ - (f₂ - g₂)).LimZero by
-          simpa [sub_eq_add_neg, add_assocₓ, add_commₓ, add_left_commₓ] using sub_lim_zero hf hg⟩
+          simpa [← sub_eq_add_neg, ← add_assocₓ, ← add_commₓ, ← add_left_commₓ] using sub_lim_zero hf hg⟩
 
 @[simp]
 theorem mk_sub (f g : CauSeq β abv) : mk f - mk g = mk (f - g) :=
@@ -118,15 +119,33 @@ private theorem zero_def : 0 = mk 0 :=
 private theorem one_def : 1 = mk 1 :=
   rfl
 
-instance : CommRingₓ Cauchy := by
+instance : AddGroupₓ Cauchy := by
   refine'
-      { neg := Neg.neg, sub := Sub.sub, sub_eq_add_neg := _, add := (· + ·), zero := (0 : Cauchy), mul := (· * ·),
-        one := 1, nsmul := nsmulRec, npow := npowRec, zsmul := zsmulRec, .. } <;>
+      { add := (· + ·), zero := (0 : Cauchy), sub := Sub.sub, neg := Neg.neg, sub_eq_add_neg := _, nsmul := nsmulRec,
+        zsmul := zsmulRec.. } <;>
     try
         intros <;> rfl <;>
       · repeat'
           refine' fun a => Quotientₓ.induction_on a fun _ => _
-        simp [zero_def, one_def, mul_left_commₓ, mul_comm, mul_addₓ, add_commₓ, add_left_commₓ, sub_eq_add_neg]
+        simp [← zero_def, ← add_commₓ, ← add_left_commₓ, ← sub_eq_neg_add]
+        
+
+instance : AddGroupWithOneₓ Cauchy :=
+  { Cauchy.add_group with natCast := fun n => mk n, nat_cast_zero := congr_arg mk Nat.cast_zeroₓ,
+    nat_cast_succ := fun n => congr_arg mk (Nat.cast_succₓ n), intCast := fun n => mk n,
+    int_cast_of_nat := fun n => congr_arg mk (Int.cast_of_nat n),
+    int_cast_neg_succ_of_nat := fun n => congr_arg mk (Int.cast_neg_succ_of_nat n), one := 1 }
+
+instance : CommRingₓ Cauchy := by
+  refine'
+      { Cauchy.add_group_with_one with add := (· + ·), zero := (0 : Cauchy), mul := (· * ·), one := 1,
+        npow := npowRec.. } <;>
+    try
+        intros <;> rfl <;>
+      · repeat'
+          refine' fun a => Quotientₓ.induction_on a fun _ => _
+        simp [← zero_def, ← one_def, ← mul_left_commₓ, ← mul_comm, ← mul_addₓ, ← add_commₓ, ← add_left_commₓ, ←
+          sub_eq_add_neg]
         
 
 theorem of_rat_sub (x y : β) : of_rat (x - y) = of_rat x - of_rat y :=
@@ -150,10 +169,10 @@ noncomputable instance : Inv Cauchy :=
     (Quotientₓ.liftOn x fun f => mk <| if h : LimZero f then 0 else inv f h) fun f g fg => by
       have := lim_zero_congr fg
       by_cases' hf : lim_zero f
-      · simp [hf, this.1 hf, Setoidₓ.refl]
+      · simp [← hf, ← this.1 hf, ← Setoidₓ.refl]
         
       · have hg := mt this.2 hf
-        simp [hf, hg]
+        simp [← hf, ← hg]
         have If : mk (inv f hf) * mk f = 1 := mk_eq.2 (inv_mul_cancel hf)
         have Ig : mk (inv g hg) * mk g = 1 := mk_eq.2 (inv_mul_cancel hg)
         rw [mk_eq.2 fg, ← Ig] at If
@@ -182,7 +201,7 @@ theorem zero_ne_one : (0 : Cauchy) ≠ 1 := fun h => cau_seq_zero_ne_one <| mk_e
 protected theorem inv_mul_cancel {x : Cauchy} : x ≠ 0 → x⁻¹ * x = 1 :=
   (Quotientₓ.induction_on x) fun f hf => by
     simp at hf
-    simp [hf]
+    simp [← hf]
     exact Quotientₓ.sound (CauSeq.inv_mul_cancel hf)
 
 /-- The Cauchy completion forms a field.
@@ -198,10 +217,10 @@ attribute [local instance] Field
 
 theorem of_rat_inv (x : β) : ofRat x⁻¹ = ((ofRat x)⁻¹ : Cauchy) :=
   congr_arg mk <| by
-    split_ifs with h <;> [simp [const_lim_zero.1 h], rfl]
+    split_ifs with h <;> [simp [← const_lim_zero.1 h], rfl]
 
 theorem of_rat_div (x y : β) : ofRat (x / y) = (ofRat x / ofRat y : Cauchy) := by
-  simp only [div_eq_inv_mul, of_rat_inv, of_rat_mul]
+  simp only [← div_eq_inv_mul, ← of_rat_inv, ← of_rat_mul]
 
 end
 
@@ -262,7 +281,7 @@ theorem lim_mul_lim (f g : CauSeq β abv) : lim f * lim g = lim (f * g) :=
       have h :
         const abv (lim f * lim g) - f * g = (const abv (lim f) - f) * g + const abv (lim f) * (const abv (lim g) - g) :=
         by
-        simp [const_mul (lim f), mul_addₓ, add_mulₓ, sub_eq_add_neg, add_commₓ, add_left_commₓ]
+        simp [← const_mul (lim f), ← mul_addₓ, ← add_mulₓ, ← sub_eq_add_neg, ← add_commₓ, ← add_left_commₓ]
       rw [h] <;>
         exact
           add_lim_zero (mul_lim_zero_left _ (Setoidₓ.symm (equiv_lim _)))
@@ -281,7 +300,7 @@ theorem lim_eq_zero_iff (f : CauSeq β abv) : lim f = 0 ↔ LimZero f :=
     have hf := equiv_lim f <;> rw [h] at hf <;> exact (lim_zero_congr hf).mpr (const_lim_zero.mpr rfl), fun h => by
     have h₁ : f = f - const abv 0 :=
       ext fun n => by
-        simp [sub_apply, const_apply]
+        simp [← sub_apply, ← const_apply]
     rw [h₁] at h <;> exact lim_eq_of_equiv_const h⟩
 
 end

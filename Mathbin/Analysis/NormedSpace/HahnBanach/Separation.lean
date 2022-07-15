@@ -70,7 +70,7 @@ theorem separate_convex_open_set [SemiNormedGroup E] [NormedSpace ℝ E] {s : Se
   rintro ⟨x, hx⟩
   obtain ⟨y, rfl⟩ := Submodule.mem_span_singleton.1 hx
   rw [LinearPmap.mk_span_singleton'_apply]
-  simp only [mul_oneₓ, Algebra.id.smul_eq_mul, Submodule.coe_mk]
+  simp only [← mul_oneₓ, ← Algebra.id.smul_eq_mul, ← Submodule.coe_mk]
   obtain h | h := le_or_ltₓ y 0
   · exact h.trans (gauge_nonneg _)
     
@@ -109,11 +109,11 @@ theorem geometric_hahn_banach_open (hs₁ : Convex ℝ s) (hs₂ : IsOpen s) (ht
     exact disj.zero_not_mem_sub_set (vadd_mem_vadd_set_iff.1 hx₀)
   obtain ⟨f, hf₁, hf₂⟩ := separate_convex_open_set ‹0 ∈ C› ‹_› (hs₂.sub_right.vadd _) ‹x₀ ∉ C›
   have : f b₀ = f a₀ + 1 := by
-    simp [← hf₁]
+    simp [hf₁]
   have forall_le : ∀, ∀ a ∈ s, ∀, ∀ b ∈ t, ∀, f a ≤ f b := by
     intro a ha b hb
     have := hf₂ (x₀ + (a - b)) (vadd_mem_vadd_set <| sub_mem_sub ha hb)
-    simp only [f.map_add, f.map_sub, hf₁] at this
+    simp only [← f.map_add, ← f.map_sub, ← hf₁] at this
     linarith
   refine' ⟨f, Inf (f '' t), image_subset_iff.1 (_ : f '' s ⊆ Iio (Inf (f '' t))), fun b hb => _⟩
   · rw [← interior_Iic]
