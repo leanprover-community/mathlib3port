@@ -95,13 +95,13 @@ See <https://stacks.math.columbia.edu/tag/0014>.
 -/
 -- type as \gg
 class Category (obj : Type u) extends CategoryStruct.{v} obj : Type max u (v + 1) where
-  id_comp' : ∀ {X Y : obj} f : hom X Y, 𝟙 X ≫ f = f := by
+  id_comp' : ∀ {X Y : obj} (f : hom X Y), 𝟙 X ≫ f = f := by
     run_tac
       obviously
-  comp_id' : ∀ {X Y : obj} f : hom X Y, f ≫ 𝟙 Y = f := by
+  comp_id' : ∀ {X Y : obj} (f : hom X Y), f ≫ 𝟙 Y = f := by
     run_tac
       obviously
-  assoc' : ∀ {W X Y Z : obj} f : hom W X g : hom X Y h : hom Y Z, (f ≫ g) ≫ h = f ≫ g ≫ h := by
+  assoc' : ∀ {W X Y Z : obj} (f : hom W X) (g : hom X Y) (h : hom Y Z), (f ≫ g) ≫ h = f ≫ g ≫ h := by
     run_tac
       obviously
 
@@ -151,29 +151,29 @@ infixr:80 " =≫ " => eq_whisker
 -- mathport name: «expr ≫= »
 infixr:80 " ≫= " => whisker_eq
 
-theorem eq_of_comp_left_eq {f g : X ⟶ Y} (w : ∀ {Z : C} h : Y ⟶ Z, f ≫ h = g ≫ h) : f = g := by
+theorem eq_of_comp_left_eq {f g : X ⟶ Y} (w : ∀ {Z : C} (h : Y ⟶ Z), f ≫ h = g ≫ h) : f = g := by
   convert w (𝟙 Y)
   tidy
 
-theorem eq_of_comp_right_eq {f g : Y ⟶ Z} (w : ∀ {X : C} h : X ⟶ Y, h ≫ f = h ≫ g) : f = g := by
+theorem eq_of_comp_right_eq {f g : Y ⟶ Z} (w : ∀ {X : C} (h : X ⟶ Y), h ≫ f = h ≫ g) : f = g := by
   convert w (𝟙 Y)
   tidy
 
-theorem eq_of_comp_left_eq' (f g : X ⟶ Y) (w : (fun {Z : C} h : Y ⟶ Z => f ≫ h) = fun {Z : C} h : Y ⟶ Z => g ≫ h) :
+theorem eq_of_comp_left_eq' (f g : X ⟶ Y) (w : (fun {Z : C} (h : Y ⟶ Z) => f ≫ h) = fun {Z : C} (h : Y ⟶ Z) => g ≫ h) :
     f = g :=
   eq_of_comp_left_eq fun Z h => by
     convert congr_fun (congr_fun w Z) h
 
-theorem eq_of_comp_right_eq' (f g : Y ⟶ Z) (w : (fun {X : C} h : X ⟶ Y => h ≫ f) = fun {X : C} h : X ⟶ Y => h ≫ g) :
+theorem eq_of_comp_right_eq' (f g : Y ⟶ Z) (w : (fun {X : C} (h : X ⟶ Y) => h ≫ f) = fun {X : C} (h : X ⟶ Y) => h ≫ g) :
     f = g :=
   eq_of_comp_right_eq fun X h => by
     convert congr_fun (congr_fun w X) h
 
-theorem id_of_comp_left_id (f : X ⟶ X) (w : ∀ {Y : C} g : X ⟶ Y, f ≫ g = g) : f = 𝟙 X := by
+theorem id_of_comp_left_id (f : X ⟶ X) (w : ∀ {Y : C} (g : X ⟶ Y), f ≫ g = g) : f = 𝟙 X := by
   convert w (𝟙 X)
   tidy
 
-theorem id_of_comp_right_id (f : X ⟶ X) (w : ∀ {Y : C} g : Y ⟶ X, g ≫ f = g) : f = 𝟙 X := by
+theorem id_of_comp_right_id (f : X ⟶ X) (w : ∀ {Y : C} (g : Y ⟶ X), g ≫ f = g) : f = 𝟙 X := by
   convert w (𝟙 X)
   tidy
 
@@ -199,7 +199,7 @@ theorem dite_comp {P : Prop} [Decidable P] {X Y Z : C} (f : P → (X ⟶ Y)) (f'
 See <https://stacks.math.columbia.edu/tag/003B>.
 -/
 class Epi (f : X ⟶ Y) : Prop where
-  left_cancellation : ∀ {Z : C} g h : Y ⟶ Z w : f ≫ g = f ≫ h, g = h
+  left_cancellation : ∀ {Z : C} (g h : Y ⟶ Z) (w : f ≫ g = f ≫ h), g = h
 
 /-- A morphism `f` is a monomorphism if it can be "cancelled" when postcomposed:
 `g ≫ f = h ≫ f` implies `g = h`.
@@ -207,7 +207,7 @@ class Epi (f : X ⟶ Y) : Prop where
 See <https://stacks.math.columbia.edu/tag/003B>.
 -/
 class Mono (f : X ⟶ Y) : Prop where
-  right_cancellation : ∀ {Z : C} g h : Z ⟶ X w : g ≫ f = h ≫ f, g = h
+  right_cancellation : ∀ {Z : C} (g h : Z ⟶ X) (w : g ≫ f = h ≫ f), g = h
 
 instance (X : C) : Epi (𝟙 X) :=
   ⟨fun Z g h w => by

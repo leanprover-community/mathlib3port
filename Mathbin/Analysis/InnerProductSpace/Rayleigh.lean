@@ -5,6 +5,7 @@ Authors: Heather Macbeth, Frédéric Dupuis
 -/
 import Mathbin.Analysis.InnerProductSpace.Calculus
 import Mathbin.Analysis.InnerProductSpace.Dual
+import Mathbin.Analysis.InnerProductSpace.Adjoint
 import Mathbin.Analysis.Calculus.LagrangeMultipliers
 import Mathbin.LinearAlgebra.Eigenspace
 

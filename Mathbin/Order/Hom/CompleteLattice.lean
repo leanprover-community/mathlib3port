@@ -92,8 +92,8 @@ attribute [simp] map_Sup map_Inf
 theorem map_supr [HasSupₓ α] [HasSupₓ β] [SupHomClassₓ F α β] (f : F) (g : ι → α) : f (⨆ i, g i) = ⨆ i, f (g i) := by
   rw [supr, supr, map_Sup, Set.range_comp]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem map_supr₂ [HasSupₓ α] [HasSupₓ β] [SupHomClassₓ F α β] (f : F) (g : ∀ i, κ i → α) :
     f (⨆ (i) (j), g i j) = ⨆ (i) (j), f (g i j) := by
   simp_rw [map_supr]
@@ -101,8 +101,8 @@ theorem map_supr₂ [HasSupₓ α] [HasSupₓ β] [SupHomClassₓ F α β] (f : 
 theorem map_infi [HasInfₓ α] [HasInfₓ β] [InfHomClassₓ F α β] (f : F) (g : ι → α) : f (⨅ i, g i) = ⨅ i, f (g i) := by
   rw [infi, infi, map_Inf, Set.range_comp]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem map_infi₂ [HasInfₓ α] [HasInfₓ β] [InfHomClassₓ F α β] (f : F) (g : ∀ i, κ i → α) :
     f (⨅ (i) (j), g i j) = ⨅ (i) (j), f (g i j) := by
   simp_rw [map_infi]

@@ -67,7 +67,7 @@ structure LaxMonoidalFunctor extends C ⥤ D where
   ε : 𝟙_ D ⟶ obj (𝟙_ C)
   -- tensorator
   μ : ∀ X Y : C, obj X ⊗ obj Y ⟶ obj (X ⊗ Y)
-  μ_natural' : ∀ {X Y X' Y' : C} f : X ⟶ Y g : X' ⟶ Y', (map f ⊗ map g) ≫ μ Y Y' = μ X X' ≫ map (f ⊗ g) := by
+  μ_natural' : ∀ {X Y X' Y' : C} (f : X ⟶ Y) (g : X' ⟶ Y'), (map f ⊗ map g) ≫ μ Y Y' = μ X X' ≫ map (f ⊗ g) := by
     run_tac
       obviously
   -- associativity of the tensorator

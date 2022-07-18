@@ -7,6 +7,7 @@ import Mathbin.CategoryTheory.Limits.Constructions.Pullbacks
 import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
 import Mathbin.CategoryTheory.Limits.Shapes.Images
 import Mathbin.CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
+import Mathbin.CategoryTheory.Limits.Constructions.EpiMono
 import Mathbin.CategoryTheory.Abelian.NonPreadditive
 
 /-!
@@ -169,7 +170,7 @@ instance [HasZeroObject C] {X Y : C} (f : X ⟶ Y) [Epi f] : IsIso (imageMonoFac
   dsimp'
   infer_instance
 
-variable [∀ {X Y : C} f : X ⟶ Y, IsIso (Abelian.coimageImageComparison f)]
+variable [∀ {X Y : C} (f : X ⟶ Y), IsIso (Abelian.coimageImageComparison f)]
 
 /-- A category in which coimage-image comparisons are all isomorphisms has images. -/
 theorem has_images : HasImages C :=
@@ -233,7 +234,7 @@ def normalEpiCategory :
 
 end OfCoimageImageComparisonIsIso
 
-variable [∀ {X Y : C} f : X ⟶ Y, IsIso (Abelian.coimageImageComparison f)] [Limits.HasFiniteProducts C]
+variable [∀ {X Y : C} (f : X ⟶ Y), IsIso (Abelian.coimageImageComparison f)] [Limits.HasFiniteProducts C]
 
 attribute [local instance] of_coimage_image_comparison_is_iso.normal_mono_category
 

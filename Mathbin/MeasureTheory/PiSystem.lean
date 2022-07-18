@@ -60,12 +60,12 @@ open MeasurableSpace Set
 
 open Classical MeasureTheory
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (s t «expr ∈ » C)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (s t «expr ∈ » C)
 /-- A π-system is a collection of subsets of `α` that is closed under binary intersection of
   non-disjoint sets. Usually it is also required that the collection is nonempty, but we don't do
   that here. -/
 def IsPiSystem {α} (C : Set (Set α)) : Prop :=
-  ∀ s t _ : s ∈ C _ : t ∈ C, (s ∩ t : Set α).Nonempty → s ∩ t ∈ C
+  ∀ (s t) (_ : s ∈ C) (_ : t ∈ C), (s ∩ t : Set α).Nonempty → s ∩ t ∈ C
 
 namespace MeasurableSpace
 
@@ -101,6 +101,16 @@ theorem IsPiSystem.insert_univ {α} {S : Set (Set α)} (h_pi : IsPiSystem S) : I
     · exact Set.mem_insert_of_mem _ (h_pi s hs t ht hst)
       
     
+
+theorem IsPiSystem.comap {α β} {S : Set (Set β)} (h_pi : IsPiSystem S) (f : α → β) :
+    IsPiSystem { s : Set α | ∃ t ∈ S, f ⁻¹' t = s } := by
+  rintro _ ⟨s, hs_mem, rfl⟩ _ ⟨t, ht_mem, rfl⟩ hst
+  rw [← Set.preimage_inter] at hst⊢
+  refine' ⟨s ∩ t, h_pi s hs_mem t ht_mem _, rfl⟩
+  by_contra
+  rw [Set.not_nonempty_iff_eq_empty] at h
+  rw [h] at hst
+  simpa using hst
 
 section Order
 

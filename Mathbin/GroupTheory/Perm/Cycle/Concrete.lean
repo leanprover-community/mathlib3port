@@ -95,7 +95,7 @@ theorem pairwise_same_cycle_form_perm (hl : Nodupₓ l) (hn : 2 ≤ l.length) : 
       (is_cycle_form_perm hl hn).SameCycle ((form_perm_apply_mem_ne_self_iff _ hl _ hx).mpr hn)
         ((form_perm_apply_mem_ne_self_iff _ hl _ hy).mpr hn))
 
-theorem cycle_of_form_perm (hl : Nodupₓ l) (hn : 2 ≤ l.length) x : cycleOf l.attach.formPerm x = l.attach.formPerm :=
+theorem cycle_of_form_perm (hl : Nodupₓ l) (hn : 2 ≤ l.length) (x) : cycleOf l.attach.formPerm x = l.attach.formPerm :=
   have hn : 2 ≤ l.attach.length := by
     rwa [← length_attach] at hn
   have hl : l.attach.Nodup := by
@@ -134,8 +134,8 @@ variable {α : Type _} [DecidableEq α] (s s' : Cycle α)
 /-- A cycle `s : cycle α` , given `nodup s` can be interpreted as a `equiv.perm α`
 where each element in the list is permuted to the next one, defined as `form_perm`.
 -/
-def formPerm : ∀ s : Cycle α h : Nodup s, Equivₓ.Perm α := fun s =>
-  Quot.hrecOn s (fun l h => formPerm l) fun l₁ l₂ h : l₁ ~r l₂ => by
+def formPerm : ∀ (s : Cycle α) (h : Nodup s), Equivₓ.Perm α := fun s =>
+  Quot.hrecOn s (fun l h => formPerm l) fun l₁ l₂ (h : l₁ ~r l₂) => by
     ext
     · exact h.nodup_iff
       
@@ -512,7 +512,7 @@ notation3"c["(l", "* => foldr (h t => List.cons h t) List.nil)"]" =>
 instance reprPerm [HasRepr α] : HasRepr (Perm α) :=
   ⟨fun f =>
     reprₓ
-      (Multiset.pmap (fun g : Perm α hg : g.IsCycle => isoCycle ⟨g, hg⟩)
+      (Multiset.pmap (fun (g : Perm α) (hg : g.IsCycle) => isoCycle ⟨g, hg⟩)
         (-- to_cycle is faster?
             Perm.cycleFactorsFinset
             f).val

@@ -25,7 +25,7 @@ class Functorial (F : C → D) : Type max v₁ v₂ u₁ u₂ where
   map_id' : ∀ X : C, map (𝟙 X) = 𝟙 (F X) := by
     run_tac
       obviously
-  map_comp' : ∀ {X Y Z : C} f : X ⟶ Y g : Y ⟶ Z, map (f ≫ g) = map f ≫ map g := by
+  map_comp' : ∀ {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z), map (f ≫ g) = map f ≫ map g := by
     run_tac
       obviously
 

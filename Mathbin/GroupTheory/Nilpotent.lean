@@ -156,7 +156,7 @@ theorem mem_upper_central_series_succ_iff (n : ℕ) (x : G) :
     x ∈ upperCentralSeries G (n + 1) ↔ ∀ y : G, x * y * x⁻¹ * y⁻¹ ∈ upperCentralSeries G n :=
   Iff.rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`nilpotent] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`nilpotent] []
 /-- A group `G` is nilpotent if its upper central series is eventually `G`. -/
 -- is_nilpotent is already defined in the root namespace (for elements of rings).
 class Groupₓ.IsNilpotent (G : Type _) [Groupₓ G] : Prop where
@@ -169,12 +169,12 @@ variable {G}
 /-- A sequence of subgroups of `G` is an ascending central series if `H 0` is trivial and
   `⁅H (n + 1), G⁆ ⊆ H n` for all `n`. Note that we do not require that `H n = G` for some `n`. -/
 def IsAscendingCentralSeries (H : ℕ → Subgroup G) : Prop :=
-  H 0 = ⊥ ∧ ∀ x : G n : ℕ, x ∈ H (n + 1) → ∀ g, x * g * x⁻¹ * g⁻¹ ∈ H n
+  H 0 = ⊥ ∧ ∀ (x : G) (n : ℕ), x ∈ H (n + 1) → ∀ g, x * g * x⁻¹ * g⁻¹ ∈ H n
 
 /-- A sequence of subgroups of `G` is a descending central series if `H 0` is `G` and
   `⁅H n, G⁆ ⊆ H (n + 1)` for all `n`. Note that we do not requre that `H n = {1}` for some `n`. -/
 def IsDescendingCentralSeries (H : ℕ → Subgroup G) :=
-  H 0 = ⊤ ∧ ∀ x : G n : ℕ, x ∈ H n → ∀ g, x * g * x⁻¹ * g⁻¹ ∈ H (n + 1)
+  H 0 = ⊤ ∧ ∀ (x : G) (n : ℕ), x ∈ H n → ∀ g, x * g * x⁻¹ * g⁻¹ ∈ H (n + 1)
 
 /-- Any ascending central series for a group is bounded above by the upper central series. -/
 theorem ascending_central_series_le_upper (H : ℕ → Subgroup G) (hH : IsAscendingCentralSeries H) :
@@ -629,9 +629,9 @@ theorem of_quotient_center_nilpotent (h : IsNilpotent (G ⧸ center G)) : IsNilp
 (`subsingleton G`), and in the induction step, one can assume the hypothesis for
 the group quotiented by its center. -/
 @[elab_as_eliminator]
-theorem nilpotent_center_quotient_ind {P : ∀ G [Groupₓ G], ∀ [IsNilpotent G], Prop} (G : Type _) [Groupₓ G]
-    [IsNilpotent G] (hbase : ∀ G [Groupₓ G] [Subsingleton G], P G)
-    (hstep : ∀ G [Groupₓ G], ∀ [IsNilpotent G], ∀ ih : P (G ⧸ center G), P G) : P G := by
+theorem nilpotent_center_quotient_ind {P : ∀ (G) [Groupₓ G], ∀ [IsNilpotent G], Prop} (G : Type _) [Groupₓ G]
+    [IsNilpotent G] (hbase : ∀ (G) [Groupₓ G] [Subsingleton G], P G)
+    (hstep : ∀ (G) [Groupₓ G], ∀ [IsNilpotent G], ∀ ih : P (G ⧸ center G), P G) : P G := by
   obtain ⟨n, h⟩ : ∃ n, Groupₓ.nilpotencyClass G = n := ⟨_, rfl⟩
   induction' n with n ih generalizing G
   · have := nilpotency_class_zero_iff_subsingleton.mp h
@@ -806,7 +806,6 @@ variable {G : Type _} [hG : Groupₓ G] [hf : Fintype G]
 
 include hG hf
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A p-group is nilpotent -/
 theorem IsPGroup.is_nilpotent {p : ℕ} [hp : Fact (Nat.Prime p)] (h : IsPGroup p G) : IsNilpotent G := by
   classical
@@ -825,13 +824,12 @@ theorem IsPGroup.is_nilpotent {p : ℕ} [hp : Fact (Nat.Prime p)] (h : IsPGroup 
     exact of_quotient_center_nilpotent hnq
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If a finite group is the direct product of its Sylow groups, it is nilpotent -/
 theorem is_nilpotent_of_product_of_sylow_group
     (e : (∀ p : (Fintype.card G).factorization.support, ∀ P : Sylow p G, (↑P : Subgroup G)) ≃* G) : IsNilpotent G := by
   classical
   let ps := (Fintype.card G).factorization.support
-  have : ∀ p : ps P : Sylow p G, IsNilpotent (↑P : Subgroup G) := by
+  have : ∀ (p : ps) (P : Sylow p G), IsNilpotent (↑P : Subgroup G) := by
     intro p P
     have : Fact (Nat.Prime ↑p) := Fact.mk (Nat.prime_of_mem_factorization (Finset.coe_mem p))
     exact P.is_p_group'.is_nilpotent
@@ -843,7 +841,7 @@ groups. -/
 theorem is_nilpotent_of_finite_tfae :
     Tfae
       [IsNilpotent G, NormalizerCondition G, ∀ H : Subgroup G, IsCoatom H → H.Normal,
-        ∀ p : ℕ hp : Fact p.Prime P : Sylow p G, (↑P : Subgroup G).Normal,
+        ∀ (p : ℕ) (hp : Fact p.Prime) (P : Sylow p G), (↑P : Subgroup G).Normal,
         Nonempty ((∀ p : (card G).factorization.support, ∀ P : Sylow p G, (↑P : Subgroup G)) ≃* G)] :=
   by
   tfae_have 1 → 2

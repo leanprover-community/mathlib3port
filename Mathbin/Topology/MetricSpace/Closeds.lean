@@ -116,7 +116,7 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
     intro n x hx
     obtain ⟨z, hz₀, hz⟩ : ∃ z : ∀ l, s (n + l), (z 0 : α) = x ∧ ∀ k, edist (z k : α) (z (k + 1) : α) ≤ B n / 2 ^ k := by
       -- We prove existence of the sequence by induction.
-      have : ∀ l z : s (n + l), ∃ z' : s (n + l + 1), edist (z : α) z' ≤ B n / 2 ^ l := by
+      have : ∀ (l) (z : s (n + l)), ∃ z' : s (n + l + 1), edist (z : α) z' ≤ B n / 2 ^ l := by
         intro l z
         obtain ⟨z', z'_mem, hz'⟩ : ∃ z' ∈ s (n + l + 1), edist (z : α) z' < B n / 2 ^ l := by
           refine' exists_edist_lt_of_Hausdorff_edist_lt _ _
@@ -189,7 +189,7 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
   exact ((tendsto_order.1 this).2 ε εpos).exists_forall_of_at_top
   exact ⟨N, fun n hn => lt_of_le_of_ltₓ (main n) (hN n hn)⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (v «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (v «expr ⊆ » s)
 /-- In a compact space, the type of closed subsets is compact. -/
 instance Closeds.compact_space [CompactSpace α] : CompactSpace (Closeds α) :=
   ⟨by
@@ -277,7 +277,7 @@ theorem NonemptyCompacts.is_closed_in_closeds [CompleteSpace α] :
     exact nonempty_of_Hausdorff_edist_ne_top ht.1 (ne_of_ltₓ Dst)
     
   · refine' compact_iff_totally_bounded_complete.2 ⟨_, s.closed.is_complete⟩
-    refine' totally_bounded_iff.2 fun ε εpos : 0 < ε => _
+    refine' totally_bounded_iff.2 fun ε (εpos : 0 < ε) => _
     -- we have to show that s is covered by finitely many eballs of radius ε
     -- pick a nonempty compact set t at distance at most ε/2 of s
     rcases mem_closure_iff.1 hs (ε / 2) (Ennreal.half_pos εpos.ne') with ⟨t, ht, Dst⟩
@@ -419,7 +419,7 @@ theorem lipschitz_inf_dist_set (x : α) : LipschitzWith 1 fun s : NonemptyCompac
     exact inf_dist_le_inf_dist_add_Hausdorff_dist (edist_ne_top t s)
 
 theorem lipschitz_inf_dist : LipschitzWith 2 fun p : α × NonemptyCompacts α => infDist p.1 p.2 :=
-  @LipschitzWith.uncurry _ _ _ _ _ _ (fun x : α s : NonemptyCompacts α => infDist x s) 1 1
+  @LipschitzWith.uncurry _ _ _ _ _ _ (fun (x : α) (s : NonemptyCompacts α) => infDist x s) 1 1
     (fun s => lipschitz_inf_dist_pt s) lipschitz_inf_dist_set
 
 theorem uniform_continuous_inf_dist_Hausdorff_dist :

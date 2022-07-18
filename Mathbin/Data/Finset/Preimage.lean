@@ -47,7 +47,7 @@ theorem preimage_empty {f : α → β} :
       simp )
 
 @[simp]
-theorem preimage_univ {f : α → β} [Fintype α] [Fintype β] hf : preimage univ f hf = univ :=
+theorem preimage_univ {f : α → β} [Fintype α] [Fintype β] (hf) : preimage univ f hf = univ :=
   Finset.coe_injective
     (by
       simp )
@@ -62,7 +62,7 @@ theorem preimage_inter [DecidableEq α] [DecidableEq β] {f : α → β} {s t : 
       simp )
 
 @[simp]
-theorem preimage_union [DecidableEq α] [DecidableEq β] {f : α → β} {s t : Finset β} hst :
+theorem preimage_union [DecidableEq α] [DecidableEq β] {f : α → β} {s t : Finset β} (hst) :
     preimage (s ∪ t) f hst =
       (preimage s f fun x₁ hx₁ x₂ hx₂ => hst (mem_union_left _ hx₁) (mem_union_left _ hx₂)) ∪
         preimage t f fun x₁ hx₁ x₂ hx₂ => hst (mem_union_right _ hx₁) (mem_union_right _ hx₂) :=
@@ -85,7 +85,6 @@ theorem image_subset_iff_subset_preimage [DecidableEq β] {f : α → β} {s : F
   image_subset_iff.trans <| by
     simp only [← subset_iff, ← mem_preimage]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem map_subset_iff_subset_preimage {f : α ↪ β} {s : Finset α} {t : Finset β} :
     s.map f ⊆ t ↔ s ⊆ t.Preimage f (f.Injective.InjOn _) := by
   classical <;> rw [map_eq_image, image_subset_iff_subset_preimage]
@@ -103,8 +102,7 @@ theorem image_preimage_of_bij [DecidableEq β] (f : α → β) (s : Finset β) (
 theorem preimage_subset {f : α ↪ β} {s : Finset β} {t : Finset α} (hs : s ⊆ t.map f) :
     s.Preimage f (f.Injective.InjOn _) ⊆ t := fun x hx => (mem_map' f).1 (hs (mem_preimage.1 hx))
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (u «expr ⊆ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (u «expr ⊆ » t)
 theorem subset_map_iff {f : α ↪ β} {s : Finset β} {t : Finset α} : s ⊆ t.map f ↔ ∃ (u : _)(_ : u ⊆ t), s = u.map f := by
   classical
   refine' ⟨fun h => ⟨_, preimage_subset h, _⟩, _⟩
@@ -142,7 +140,6 @@ theorem prod_preimage' [CommMonoidₓ β] (f : α → γ) [DecidablePred fun x =
         by
         rw [image_preimage]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem prod_preimage [CommMonoidₓ β] (f : α → γ) (s : Finset γ) (hf : Set.InjOn f (f ⁻¹' ↑s)) (g : γ → β)
     (hg : ∀, ∀ x ∈ s, ∀, x ∉ Set.Range f → g x = 1) : (∏ x in s.Preimage f hf, g (f x)) = ∏ x in s, g x := by

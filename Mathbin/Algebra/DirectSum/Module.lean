@@ -77,16 +77,16 @@ theorem single_eq_lof (i : ι) (b : M i) : Dfinsupp.single i b = lof R ι M i b 
   rfl
 
 /-- Scalar multiplication commutes with direct sums. -/
-theorem mk_smul (s : Finset ι) (c : R) x : mk M s (c • x) = c • mk M s x :=
+theorem mk_smul (s : Finset ι) (c : R) (x) : mk M s (c • x) = c • mk M s x :=
   (lmk R ι M s).map_smul c x
 
 /-- Scalar multiplication commutes with the inclusion of each component into the direct sum. -/
-theorem of_smul (i : ι) (c : R) x : of M i (c • x) = c • of M i x :=
+theorem of_smul (i : ι) (c : R) (x) : of M i (c • x) = c • of M i x :=
   (lof R ι M i).map_smul c x
 
 variable {R}
 
-theorem support_smul [∀ i : ι x : M i, Decidable (x ≠ 0)] (c : R) (v : ⨁ i, M i) : (c • v).support ⊆ v.support :=
+theorem support_smul [∀ (i : ι) (x : M i), Decidable (x ≠ 0)] (c : R) (v : ⨁ i, M i) : (c • v).support ⊆ v.support :=
   Dfinsupp.support_smul _ _
 
 variable {N : Type u₁} [AddCommMonoidₓ N] [Module R N]
@@ -110,7 +110,7 @@ variable {ι N φ}
 /-- The map constructed using the universal property gives back the original maps when
 restricted to each component. -/
 @[simp]
-theorem to_module_lof i (x : M i) : toModule R ι N φ (lof R ι M i x) = φ i x :=
+theorem to_module_lof (i) (x : M i) : toModule R ι N φ (lof R ι M i x) = φ i x :=
   to_add_monoid_of (fun i => (φ i).toAddMonoidHom) i x
 
 variable (ψ : (⨁ i, M i) →ₗ[R] N)
@@ -234,7 +234,7 @@ variable {α : ι → Type _} {δ : ∀ i, α i → Type w}
 
 variable [∀ i j, AddCommMonoidₓ (δ i j)] [∀ i j, Module R (δ i j)]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 /-- `curry` as a linear map.-/
 noncomputable def sigmaLcurry : (⨁ i : Σi, _, δ i.1 i.2) →ₗ[R] ⨁ (i) (j), δ i j :=
   { sigmaCurry with
@@ -245,17 +245,17 @@ noncomputable def sigmaLcurry : (⨁ i : Σi, _, δ i.1 i.2) →ₗ[R] ⨁ (i) (
 theorem sigma_lcurry_apply (f : ⨁ i : Σi, _, δ i.1 i.2) (i : ι) (j : α i) : sigmaLcurry R f i j = f ⟨i, j⟩ :=
   sigma_curry_apply f i j
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 /-- `uncurry` as a linear map.-/
 noncomputable def sigmaLuncurry : (⨁ (i) (j), δ i j) →ₗ[R] ⨁ i : Σi, _, δ i.1 i.2 :=
   { sigmaUncurry with map_smul' := Dfinsupp.sigma_uncurry_smul }
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 @[simp]
 theorem sigma_luncurry_apply (f : ⨁ (i) (j), δ i j) (i : ι) (j : α i) : sigmaLuncurry R f ⟨i, j⟩ = f i j :=
   sigma_uncurry_apply f i j
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 /-- `curry_equiv` as a linear equiv.-/
 noncomputable def sigmaLcurryEquiv : (⨁ i : Σi, _, δ i.1 i.2) ≃ₗ[R] ⨁ (i) (j), δ i j :=
   { sigmaCurryEquiv, sigmaLcurry R with }

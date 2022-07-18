@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Paulino, Kyle Miller
 -/
 import Mathbin.Combinatorics.SimpleGraph.Subgraph
+import Mathbin.Combinatorics.SimpleGraph.Clique
 import Mathbin.Data.Nat.Lattice
 import Mathbin.Data.Setoid.Partition
 import Mathbin.Order.Antichain
@@ -41,8 +42,6 @@ a complete graph, whose vertices represent the colors.
   * Gather material from:
     * https://github.com/leanprover-community/mathlib/blob/simple_graph_matching/src/combinatorics/simple_graph/coloring.lean
     * https://github.com/kmill/lean-graphcoloring/blob/master/src/graph.lean
-
-  * Lowerbound for cliques
 
   * Trees
 
@@ -113,7 +112,6 @@ theorem Coloring.not_adj_of_mem_color_class {c : α} {v w : V} (hv : v ∈ C.Col
 theorem Coloring.color_classes_independent (c : α) : IsAntichain G.Adj (C.ColorClass c) := fun v hv w hw h =>
   C.not_adj_of_mem_color_class hv hw
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- TODO make this computable
 noncomputable instance [Fintype V] [Fintype α] : Fintype (Coloring G α) := by
   classical
@@ -383,6 +381,37 @@ theorem CompleteBipartiteGraph.chromatic_number {V W : Type _} [Nonempty V] [Non
         simp only [← eq_tt_eq_not_eq_ff, ← eq_ff_eq_not_eq_tt] at he he' <;> rw [he, he'] at hn <;> contradiction
       
     
+
+/-! ### Cliques -/
+
+
+theorem IsClique.card_le_of_coloring {s : Finset V} (h : G.IsClique s) [Fintype α] (C : G.Coloring α) :
+    s.card ≤ Fintype.card α := by
+  rw [is_clique_iff_induce_eq] at h
+  have f : G.induce ↑s ↪g G := embedding.induce ↑s
+  rw [h] at f
+  convert Fintype.card_le_of_injective _ (C.comp f.to_hom).injective_of_top_hom using 1
+  simp
+
+theorem IsClique.card_le_of_colorable {s : Finset V} (h : G.IsClique s) {n : ℕ} (hc : G.Colorable n) : s.card ≤ n := by
+  convert h.card_le_of_coloring hc.some
+  simp
+
+-- TODO eliminate `fintype V` constraint once chromatic numbers are refactored.
+-- This is just to ensure the chromatic number exists.
+theorem IsClique.card_le_chromatic_number [Fintype V] {s : Finset V} (h : G.IsClique s) : s.card ≤ G.chromaticNumber :=
+  h.card_le_of_colorable G.colorable_chromatic_number_of_fintype
+
+protected theorem Colorable.clique_free {n m : ℕ} (hc : G.Colorable n) (hm : n < m) : G.CliqueFree m := by
+  by_contra h
+  simp only [← clique_free, ← is_n_clique_iff, ← not_forall, ← not_not] at h
+  obtain ⟨s, h, rfl⟩ := h
+  exact Nat.lt_le_antisymmₓ hm (h.card_le_of_colorable hc)
+
+-- TODO eliminate `fintype V` constraint once chromatic numbers are refactored.
+-- This is just to ensure the chromatic number exists.
+theorem clique_free_of_chromatic_number_lt [Fintype V] {n : ℕ} (hc : G.chromaticNumber < n) : G.CliqueFree n :=
+  G.colorable_chromatic_number_of_fintype.CliqueFree hc
 
 end SimpleGraph
 

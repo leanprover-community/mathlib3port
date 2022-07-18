@@ -160,8 +160,8 @@ open ContinuousMap
 
 /-- The preimage of polynomials on `[0,1]` under the pullback map by `x ↦ (b-a) * x + a`
 is the polynomials on `[a,b]`. -/
-theorem polynomialFunctions.comap'_comp_right_alg_hom_Icc_homeo_I (a b : ℝ) (h : a < b) :
-    (polynomialFunctions I).comap' (compRightAlgHom ℝ (iccHomeoI a b h).symm.toContinuousMap) =
+theorem polynomialFunctions.comap_comp_right_alg_hom_Icc_homeo_I (a b : ℝ) (h : a < b) :
+    (polynomialFunctions I).comap (compRightAlgHom ℝ (iccHomeoI a b h).symm.toContinuousMap) =
       polynomialFunctions (Set.Icc a b) :=
   by
   ext f
@@ -177,8 +177,8 @@ theorem polynomialFunctions.comap'_comp_right_alg_hom_Icc_homeo_I (a b : ℝ) (h
       simp only [← neg_mul, ← RingHom.map_neg, ← RingHom.map_mul, ← AlgHom.coe_to_ring_hom, ← Polynomial.eval_X, ←
         Polynomial.eval_neg, ← Polynomial.eval_C, ← Polynomial.eval_smul, ← smul_eq_mul, ← Polynomial.eval_mul, ←
         Polynomial.eval_add, ← Polynomial.coe_aeval_eq_eval, ← Polynomial.eval_comp, ←
-        Polynomial.to_continuous_map_on_alg_hom_apply, ← Polynomial.to_continuous_map_on_to_fun, ←
-        Polynomial.to_continuous_map_to_fun]
+        Polynomial.to_continuous_map_on_alg_hom_apply, ← Polynomial.to_continuous_map_on_apply, ←
+        Polynomial.to_continuous_map_apply]
       convert w ⟨_, _⟩ <;> clear w
       · -- why does `comm_ring.add` appear here!?
         change x = (iccHomeoI a b h).symm ⟨_ + _, _⟩

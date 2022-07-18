@@ -254,7 +254,7 @@ theorem prod_congr (h : s₁ = s₂) : (∀, ∀ x ∈ s₂, ∀, f x = g x) →
 attribute [congr] Finset.sum_congr
 
 @[to_additive]
-theorem prod_disj_union h : (∏ x in s₁.disjUnion s₂ h, f x) = (∏ x in s₁, f x) * ∏ x in s₂, f x := by
+theorem prod_disj_union (h) : (∏ x in s₁.disjUnion s₂ h, f x) = (∏ x in s₁, f x) * ∏ x in s₂, f x := by
   refine' Eq.trans _ (fold_disj_union h)
   rw [one_mulₓ]
   rfl
@@ -385,7 +385,6 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
     rw [bUnion_insert, prod_insert hxs, prod_union this, ih hs.1]
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Product over a sigma type equals the product of fiberwise products. For rewriting
 in the reverse direction, use `finset.prod_sigma'`.  -/
 @[to_additive
@@ -522,7 +521,6 @@ theorem prod_product_right' {s : Finset γ} {t : Finset α} {f : γ → α → �
     (∏ x in s.product t, f x.1 x.2) = ∏ y in t, ∏ x in s, f x y :=
   prod_product_right
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Generalization of `finset.prod_comm` to the case when the inner `finset`s depend on the outer
 variable. -/
 @[to_additive "Generalization of `finset.sum_comm` to the case when the inner `finset`s depend on\nthe outer variable."]
@@ -569,7 +567,6 @@ theorem prod_subset (h : s₁ ⊆ s₂) (hf : ∀, ∀ x ∈ s₂, ∀, x ∉ s�
       simpa)
     fun _ _ => rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem prod_filter_of_ne {p : α → Prop} [DecidablePred p] (hp : ∀, ∀ x ∈ s, ∀, f x ≠ 1 → p x) :
     (∏ x in s.filter p, f x) = ∏ x in s, f x :=
@@ -725,7 +722,7 @@ as long as `f` and `g` agree on `s`, and `f = 1` off `s`. -/
 @[to_additive
       "The sum of a function `g` defined only on a set `s` is equal to\nthe sum of a function `f` defined everywhere,\nas long as `f` and `g` agree on `s`, and `f = 0` off `s`."]
 theorem prod_congr_set {α : Type _} [CommMonoidₓ α] {β : Type _} [Fintype β] (s : Set β) [DecidablePred (· ∈ s)]
-    (f : β → α) (g : s → α) (w : ∀ x : β h : x ∈ s, f x = g ⟨x, h⟩) (w' : ∀ x : β, x ∉ s → f x = 1) :
+    (f : β → α) (g : s → α) (w : ∀ (x : β) (h : x ∈ s), f x = g ⟨x, h⟩) (w' : ∀ x : β, x ∉ s → f x = 1) :
     Finset.univ.Prod f = Finset.univ.Prod g := by
   rw [←
     @Finset.prod_subset _ _ s.to_finset Finset.univ f _
@@ -894,7 +891,6 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
     (s : Finset ι) : (∑ j in s, Pi.single j (f j) i) = if i ∈ s then f i else 0 :=
   sum_dite_eq _ _ _
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem prod_bij_ne_one {s : Finset α} {t : Finset γ} {f : α → β} {g : γ → β} (i : ∀, ∀ a ∈ s, ∀, f a ≠ 1 → γ)
     (hi : ∀ a h₁ h₂, i a h₁ h₂ ∈ t) (i_inj : ∀ a₁ a₂ h₁₁ h₁₂ h₂₁ h₂₂, i a₁ h₁₁ h₁₂ = i a₂ h₂₁ h₂₂ → a₁ = a₂)
@@ -948,7 +944,6 @@ theorem prod_dite_of_true {p : α → Prop} {hp : DecidablePred p} (h : ∀, ∀
 theorem nonempty_of_prod_ne_one (h : (∏ x in s, f x) ≠ 1) : s.Nonempty :=
   s.eq_empty_or_nonempty.elim (fun H => False.elim <| h <| H.symm ▸ prod_empty) id
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem exists_ne_one_of_prod_ne_one (h : (∏ x in s, f x) ≠ 1) : ∃ a ∈ s, f a ≠ 1 := by
   classical
@@ -1180,8 +1175,8 @@ theorem prod_flip {n : ℕ} (f : ℕ → β) : (∏ r in range (n + 1), f (n - r
 
 @[to_additive]
 theorem prod_involution {s : Finset α} {f : α → β} :
-    ∀ g : ∀, ∀ a ∈ s, ∀, α h : ∀ a ha, f a * f (g a ha) = 1 g_ne : ∀ a ha, f a ≠ 1 → g a ha ≠ a g_mem :
-      ∀ a ha, g a ha ∈ s g_inv : ∀ a ha, g (g a ha) (g_mem a ha) = a, (∏ x in s, f x) = 1 :=
+    ∀ (g : ∀, ∀ a ∈ s, ∀, α) (h : ∀ a ha, f a * f (g a ha) = 1) (g_ne : ∀ a ha, f a ≠ 1 → g a ha ≠ a)
+      (g_mem : ∀ a ha, g a ha ∈ s) (g_inv : ∀ a ha, g (g a ha) (g_mem a ha) = a), (∏ x in s, f x) = 1 :=
   by
   have := Classical.decEq α <;>
     have := Classical.decEq β <;>
@@ -1213,7 +1208,7 @@ theorem prod_involution {s : Finset α} {f : α → β} :
                 Eq.symm
                   (prod_subset hmem fun y hy hy₁ =>
                     have : y = x ∨ y = g x hx := by
-                      simp [← hy] at hy₁ <;> tauto
+                      simpa [← hy, ← not_and_distrib, ← or_comm] using hy₁
                     this.elim (fun hy => hy.symm ▸ hx1) fun hy => h x hx ▸ hy ▸ hx1.symm ▸ (one_mulₓ _).symm)
             else by
               rw [← insert_erase hx, prod_insert (not_mem_erase _ _), ←
@@ -1279,7 +1274,6 @@ theorem _root_.fintype.prod_eq_prod_compl_mul [DecidableEq α] [Fintype α] (a :
     (∏ i, f i) = (∏ i in {a}ᶜ, f i) * f a :=
   prod_eq_prod_diff_singleton_mul (mem_univ a) f
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem dvd_prod_of_mem (f : α → β) {a : α} {s : Finset α} (ha : a ∈ s) : f a ∣ ∏ i in s, f i := by
   classical
   rw [Finset.prod_eq_mul_prod_diff_singleton ha]
@@ -1370,7 +1364,6 @@ theorem sum_erase_lt_of_pos {γ : Type _} [DecidableEq α] [OrderedAddCommMonoid
   rw [Finset.sum_insert (Finset.not_mem_erase d s)]
   exact lt_add_of_pos_left _ hdf
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If a product is 1 and the function is 1 except possibly at one
 point, it is 1 everywhere on the `finset`. -/
 @[to_additive "If a sum is 0 and the function is 0 except possibly at one\npoint, it is 0 everywhere on the `finset`."]
@@ -1391,7 +1384,6 @@ theorem prod_pow_boole [DecidableEq α] (s : Finset α) (f : α → β) (a : α)
     (∏ x in s, f x ^ ite (a = x) 1 0) = ite (a ∈ s) (f a) 1 := by
   simp
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem prod_dvd_prod_of_dvd {S : Finset α} (g1 g2 : α → β) (h : ∀, ∀ a ∈ S, ∀, g1 a ∣ g2 a) : S.Prod g1 ∣ S.Prod g2 :=
   by
   classical
@@ -1411,7 +1403,6 @@ theorem prod_dvd_prod_of_subset {ι M : Type _} [CommMonoidₓ M] (s t : Finset 
 
 end CommMonoidₓ
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `f = g = h` everywhere but at `i`, where `f i = g i + h i`, then the product of `f` over `s`
   is the sum of the products of `g` and `h`. -/
 theorem prod_add_prod_eq [CommSemiringₓ β] {s : Finset α} {i : α} {f g h : α → β} (hi : i ∈ s) (h1 : g i + h i = f i)
@@ -1538,7 +1529,6 @@ theorem card_eq_sum_card_image [DecidableEq β] (f : α → β) (s : Finset α) 
     s.card = ∑ a in s.Image f, (s.filter fun x => f x = a).card :=
   card_eq_sum_card_fiberwise fun _ => mem_image_of_mem _
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mem_sum {f : α → Multiset β} (s : Finset α) (b : β) : (b ∈ ∑ x in s, f x) ↔ ∃ a ∈ s, b ∈ f a := by
   classical
   refine'
@@ -1573,7 +1563,6 @@ theorem prod_boole {s : Finset α} {p : α → Prop} [DecidablePred p] :
 
 variable [Nontrivial β] [NoZeroDivisors β]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem prod_eq_zero_iff : (∏ x in s, f x) = 0 ↔ ∃ a ∈ s, f a = 0 := by
   classical
   apply Finset.induction_on s
@@ -1639,7 +1628,6 @@ theorem prod_subsingleton {α β : Type _} [CommMonoidₓ β] [Subsingleton α] 
   have : Unique α := uniqueOfSubsingleton a
   convert prod_unique f
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem prod_subtype_mul_prod_subtype {α β : Type _} [Fintype α] [CommMonoidₓ β] (p : α → Prop) (f : α → β)
     [DecidablePred p] : ((∏ i : { x // p x }, f i) * ∏ i : { x // ¬p x }, f i) = ∏ i, f i := by
@@ -1659,7 +1647,7 @@ namespace List
 
 @[to_additive]
 theorem prod_to_finset {M : Type _} [DecidableEq α] [CommMonoidₓ M] (f : α → M) :
-    ∀ {l : List α} hl : l.Nodup, l.toFinset.Prod f = (l.map f).Prod
+    ∀ {l : List α} (hl : l.Nodup), l.toFinset.Prod f = (l.map f).Prod
   | [], _ => by
     simp
   | a :: l, hl => by
@@ -1738,7 +1726,6 @@ theorem to_finset_prod_dvd_prod [CommMonoidₓ α] (S : Multiset α) : S.toFinse
   refine' Multiset.prod_dvd_prod_of_le _
   simp [← Multiset.dedup_le S]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem prod_sum {α : Type _} {ι : Type _} [CommMonoidₓ α] (f : ι → Multiset α) (s : Finset ι) :
     (∑ x in s, f x).Prod = ∏ x in s, (f x).Prod := by
@@ -1812,13 +1799,11 @@ theorem Units.coe_prod {M : Type _} [CommMonoidₓ M] (f : α → Mˣ) (s : Fins
     (↑(∏ i in s, f i) : M) = ∏ i in s, f i :=
   (Units.coeHom M).map_prod _ _
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
-theorem Units.mk0_prod [CommGroupWithZero β] (s : Finset α) (f : α → β) h :
+theorem Units.mk0_prod [CommGroupWithZero β] (s : Finset α) (f : α → β) (h) :
     Units.mk0 (∏ b in s, f b) h = ∏ b in s.attach, Units.mk0 (f b) fun hh => h (Finset.prod_eq_zero b.2 hh) := by
   classical
   induction s using Finset.induction_on <;> simp [*]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem nat_abs_sum_le {ι : Type _} (s : Finset ι) (f : ι → ℤ) : (∑ i in s, f i).natAbs ≤ ∑ i in s, (f i).natAbs := by
   classical
   apply Finset.induction_on s

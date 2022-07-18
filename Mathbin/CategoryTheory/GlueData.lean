@@ -235,7 +235,7 @@ def mapGlueData : GlueData C' where
   U := fun i => F.obj (D.U i)
   V := fun i => F.obj (D.V i)
   f := fun i j => F.map (D.f i j)
-  f_mono := fun i j => CategoryTheory.preserves_mono F (D.f i j)
+  f_mono := fun i j => preserves_mono_of_preserves_limit _ _
   f_id := fun i => inferInstance
   t := fun i j => F.map (D.t i j)
   t_id := fun i => by

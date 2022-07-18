@@ -5,7 +5,6 @@ Authors: Kenny Lau
 -/
 import Mathbin.Data.Fin.VecNotation
 import Mathbin.Logic.Equiv.Basic
-import Mathbin.Tactic.NormNum
 
 /-!
 # Equivalences for `fin n`
@@ -29,21 +28,15 @@ def finOneEquiv : Finₓ 1 ≃ Unit :=
   Equivₓ.equivPunit _
 
 /-- Equivalence between `fin 2` and `bool`. -/
-def finTwoEquiv : Finₓ 2 ≃ Bool :=
-  ⟨@Finₓ.cases 1 (fun _ => Bool) false fun _ => true, fun b => cond b 1 0, by
-    refine' Finₓ.cases _ _
-    · norm_num
-      
-    refine' Finₓ.cases _ _
-    · norm_num
-      
-    exact fun i => finZeroElim i, by
-    rintro ⟨_ | _⟩
-    · rfl
-      
-    · rw [← Finₓ.succ_zero_eq_one]
-      rfl
-      ⟩
+def finTwoEquiv : Finₓ 2 ≃ Bool where
+  toFun := ![false, true]
+  invFun := fun b => cond b 1 0
+  left_inv :=
+    Finₓ.forall_fin_two.2 <| by
+      simp
+  right_inv :=
+    Bool.forall_bool.2 <| by
+      simp
 
 /-- `Π i : fin 2, α i` is equivalent to `α 0 × α 1`. See also `fin_two_arrow_equiv` for a
 non-dependent version and `prod_equiv_pi_fin_two` for a version with inputs `α β : Type u`. -/

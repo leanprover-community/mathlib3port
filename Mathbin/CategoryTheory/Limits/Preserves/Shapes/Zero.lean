@@ -129,12 +129,24 @@ theorem preserves_zero_morphisms_of_map_zero_object (i : F.obj 0 ≅ 0) : Preser
 instance (priority := 100) preserves_zero_morphisms_of_preserves_initial_object
     [PreservesColimit (Functor.empty.{0} C) F] : PreservesZeroMorphisms F :=
   preserves_zero_morphisms_of_map_zero_object <|
-    (F.mapIso HasZeroObject.zeroIsoInitial).trans <| (PreservesInitial.iso F).trans HasZeroObject.zeroIsoInitial.symm
+    F.mapIso HasZeroObject.zeroIsoInitial ≪≫ PreservesInitial.iso F ≪≫ HasZeroObject.zeroIsoInitial.symm
 
 instance (priority := 100) preserves_zero_morphisms_of_preserves_terminal_object
     [PreservesLimit (Functor.empty.{0} C) F] : PreservesZeroMorphisms F :=
   preserves_zero_morphisms_of_map_zero_object <|
-    (F.mapIso HasZeroObject.zeroIsoTerminal).trans <| (PreservesTerminal.iso F).trans HasZeroObject.zeroIsoTerminal.symm
+    F.mapIso HasZeroObject.zeroIsoTerminal ≪≫ PreservesTerminal.iso F ≪≫ HasZeroObject.zeroIsoTerminal.symm
+
+variable (F)
+
+/-- Preserving zero morphisms implies preserving terminal objects. -/
+def preservesTerminalObjectOfPreservesZeroMorphisms [PreservesZeroMorphisms F] : PreservesLimit (Functor.empty C) F :=
+  preservesTerminalOfIso F <|
+    F.mapIso HasZeroObject.zeroIsoTerminal.symm ≪≫ mapZeroObject F ≪≫ has_zero_object.zero_iso_terminal
+
+/-- Preserving zero morphisms implies preserving terminal objects. -/
+def preservesInitialObjectOfPreservesZeroMorphisms [PreservesZeroMorphisms F] : PreservesColimit (Functor.empty C) F :=
+  preservesInitialOfIso F <|
+    HasZeroObject.zeroIsoInitial.symm ≪≫ (mapZeroObject F).symm ≪≫ (F.mapIso HasZeroObject.zeroIsoInitial.symm).symm
 
 end ZeroObject
 

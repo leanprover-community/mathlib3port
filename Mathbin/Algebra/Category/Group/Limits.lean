@@ -32,7 +32,7 @@ variable {J : Type v} [SmallCategory J]
 namespace Groupₓₓ
 
 @[to_additive]
-instance groupObj (F : J ⥤ Groupₓₓ.{max v u}) j : Groupₓ ((F ⋙ forget Groupₓₓ).obj j) := by
+instance groupObj (F : J ⥤ Groupₓₓ.{max v u}) (j) : Groupₓ ((F ⋙ forget Groupₓₓ).obj j) := by
   change Groupₓ (F.obj j)
   infer_instance
 
@@ -133,7 +133,7 @@ end Groupₓₓ
 namespace CommGroupₓₓ
 
 @[to_additive]
-instance commGroupObj (F : J ⥤ CommGroupₓₓ.{max v u}) j : CommGroupₓ ((F ⋙ forget CommGroupₓₓ).obj j) := by
+instance commGroupObj (F : J ⥤ CommGroupₓₓ.{max v u}) (j) : CommGroupₓ ((F ⋙ forget CommGroupₓₓ).obj j) := by
   change CommGroupₓ (F.obj j)
   infer_instance
 

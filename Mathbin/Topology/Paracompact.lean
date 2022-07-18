@@ -59,7 +59,7 @@ class like `paracompact_space.{u v}`. Due to lemma `precise_refinement` below, e
 finite refinement `t : α → set X` indexed on the same type such that each `∀ i, t i ⊆ s i`. -/
 class ParacompactSpace (X : Type v) [TopologicalSpace X] : Prop where
   locally_finite_refinement :
-    ∀ α : Type v s : α → Set X ho : ∀ a, IsOpen (s a) hc : (⋃ a, s a) = univ,
+    ∀ (α : Type v) (s : α → Set X) (ho : ∀ a, IsOpen (s a)) (hc : (⋃ a, s a) = univ),
       ∃ (β : Type v)(t : β → Set X)(ho : ∀ b, IsOpen (t b))(hc : (⋃ b, t b) = univ),
         LocallyFinite t ∧ ∀ b, ∃ a, t b ⊆ s a
 
@@ -118,10 +118,9 @@ instance (priority := 100) paracompact_of_compact [CompactSpace X] : Paracompact
   have := hT
   simp only [← subset_def, ← mem_Union] at this
   choose i hiT hi using fun x => this x (mem_univ x)
-  refine' ⟨(T : Set ι), fun t => s t, fun t => ho _, _, locally_finite_of_fintype _, fun t => ⟨t, subset.rfl⟩⟩
+  refine' ⟨(T : Set ι), fun t => s t, fun t => ho _, _, locally_finite_of_finite _, fun t => ⟨t, subset.rfl⟩⟩
   simpa only [← Union_coe_set, univ_subset_iff]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Let `X` be a locally compact sigma compact Hausdorff topological space, let `s` be a closed set
 in `X`. Suppose that for each `x ∈ s` the sets `B x : ι x → set X` with the predicate
 `p x : ι x → Prop` form a basis of the filter `𝓝 x`. Then there exists a locally finite covering
@@ -160,11 +159,11 @@ theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis_set [LocallyCo
   have Kdiffc : ∀ n, IsCompact (Kdiff n ∩ s) := fun n => ((K.is_compact _).diff is_open_interior).inter_right hs
   -- Next we choose a finite covering `B (c n i) (r n i)` of each
   -- `Kdiff (n + 1) ∩ s` such that `B (c n i) (r n i) ∩ s` is disjoint with `K n`
-  have : ∀ n x : Kdiff (n + 1) ∩ s, K nᶜ ∈ 𝓝 (x : X) := fun n x =>
+  have : ∀ (n) (x : Kdiff (n + 1) ∩ s), K nᶜ ∈ 𝓝 (x : X) := fun n x =>
     IsOpen.mem_nhds (K.is_closed n).is_open_compl fun hx' => x.2.1.2 <| K.subset_interior_succ _ hx'
-  have : ∀ n x : Kdiff n ∩ s, Nonempty (ι x) := fun n x => (hB x x.2.2).Nonempty
-  choose! r hrp hr using fun n x : Kdiff (n + 1) ∩ s => (hB x x.2.2).mem_iff.1 (this n x)
-  have hxr : ∀ n x hx : x ∈ Kdiff (n + 1) ∩ s, B x (r n ⟨x, hx⟩) ∈ 𝓝 x := fun n x hx =>
+  have : ∀ (n) (x : Kdiff n ∩ s), Nonempty (ι x) := fun n x => (hB x x.2.2).Nonempty
+  choose! r hrp hr using fun n (x : Kdiff (n + 1) ∩ s) => (hB x x.2.2).mem_iff.1 (this n x)
+  have hxr : ∀ (n x) (hx : x ∈ Kdiff (n + 1) ∩ s), B x (r n ⟨x, hx⟩) ∈ 𝓝 x := fun n x hx =>
     (hB x hx.2).mem_of_mem (hrp _ ⟨x, hx⟩)
   choose T hT using fun n => (Kdiffc (n + 1)).elim_nhds_subcover' _ (hxr n)
   set T' : ∀ n, Set ↥(Kdiff (n + 1) ∩ s) := fun n => T n

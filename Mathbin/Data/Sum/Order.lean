@@ -270,12 +270,12 @@ theorem densely_ordered_iff [LT α] [LT β] : DenselyOrdered (Sum α β) ↔ Den
     fun h => @Sum.densely_ordered _ _ _ _ h.1 h.2⟩
 
 @[simp]
-theorem swap_le_swap_iff [LE α] [LE β] {a b : Sum α β} : a.swap ≤ b.swap ↔ a ≤ b := by
-  cases a <;> cases b <;> simp only [← swap, ← inr_le_inr_iff, ← inl_le_inl_iff, ← not_inl_le_inr, ← not_inr_le_inl]
+theorem swap_le_swap_iff [LE α] [LE β] {a b : Sum α β} : a.swap ≤ b.swap ↔ a ≤ b :=
+  lift_rel_swap_iff
 
 @[simp]
-theorem swap_lt_swap_iff [LT α] [LT β] {a b : Sum α β} : a.swap < b.swap ↔ a < b := by
-  cases a <;> cases b <;> simp only [← swap, ← inr_lt_inr_iff, ← inl_lt_inl_iff, ← not_inl_lt_inr, ← not_inr_lt_inl]
+theorem swap_lt_swap_iff [LT α] [LT β] {a b : Sum α β} : a.swap < b.swap ↔ a < b :=
+  lift_rel_swap_iff
 
 end Disjoint
 

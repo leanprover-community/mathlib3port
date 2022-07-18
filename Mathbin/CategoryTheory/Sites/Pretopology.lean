@@ -60,11 +60,11 @@ a basis for a topology.
 @[ext]
 structure Pretopology where
   Coverings : ∀ X : C, Set (Presieve X)
-  has_isos : ∀ ⦃X Y⦄ f : Y ⟶ X [IsIso f], Presieve.Singleton f ∈ coverings X
-  pullbacks : ∀ ⦃X Y⦄ f : Y ⟶ X S, S ∈ coverings X → PullbackArrows f S ∈ coverings Y
+  has_isos : ∀ ⦃X Y⦄ (f : Y ⟶ X) [IsIso f], Presieve.Singleton f ∈ coverings X
+  pullbacks : ∀ ⦃X Y⦄ (f : Y ⟶ X) (S), S ∈ coverings X → PullbackArrows f S ∈ coverings Y
   Transitive :
-    ∀ ⦃X : C⦄ S : Presieve X Ti : ∀ ⦃Y⦄ f : Y ⟶ X, S f → Presieve Y,
-      S ∈ coverings X → (∀ ⦃Y⦄ f H : S f, Ti f H ∈ coverings Y) → S.bind Ti ∈ coverings X
+    ∀ ⦃X : C⦄ (S : Presieve X) (Ti : ∀ ⦃Y⦄ (f : Y ⟶ X), S f → Presieve Y),
+      S ∈ coverings X → (∀ ⦃Y⦄ (f) (H : S f), Ti f H ∈ coverings Y) → S.bind Ti ∈ coverings X
 
 namespace Pretopology
 
@@ -115,7 +115,7 @@ def toGrothendieck (K : Pretopology C) : GrothendieckTopology C where
     rintro Y _ ⟨Z, g, f, hg, hf, rfl⟩
     apply t₃ (RS _ hg) _ hf
 
-theorem mem_to_grothendieck (K : Pretopology C) X S : S ∈ toGrothendieck C K X ↔ ∃ R ∈ K X, R ≤ (S : Presieve X) :=
+theorem mem_to_grothendieck (K : Pretopology C) (X S) : S ∈ toGrothendieck C K X ↔ ∃ R ∈ K X, R ≤ (S : Presieve X) :=
   Iff.rfl
 
 /-- The largest pretopology generating the given Grothendieck topology.

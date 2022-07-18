@@ -20,7 +20,7 @@ relation, `functor_map_eq_iff` says that no unnecessary identifications have bee
 
 
 /-- A `hom_rel` on `C` consists of a relation on every hom-set. -/
-def HomRel C [Quiver C] :=
+def HomRel (C) [Quiver C] :=
   ∀ ⦃X Y : C⦄, (X ⟶ Y) → (X ⟶ Y) → Prop deriving Inhabited
 
 namespace CategoryTheory
@@ -33,8 +33,8 @@ include r
 from left and right. -/
 class Congruence : Prop where
   IsEquiv : ∀ {X Y}, IsEquiv _ (@r X Y)
-  compLeft : ∀ {X Y Z} f : X ⟶ Y {g g' : Y ⟶ Z}, r g g' → r (f ≫ g) (f ≫ g')
-  compRight : ∀ {X Y Z} {f f' : X ⟶ Y} g : Y ⟶ Z, r f f' → r (f ≫ g) (f' ≫ g)
+  compLeft : ∀ {X Y Z} (f : X ⟶ Y) {g g' : Y ⟶ Z}, r g g' → r (f ≫ g) (f ≫ g')
+  compRight : ∀ {X Y Z} {f f' : X ⟶ Y} (g : Y ⟶ Z), r f f' → r (f ≫ g) (f' ≫ g)
 
 attribute [instance] congruence.is_equiv
 
@@ -55,11 +55,12 @@ inductive CompClosure ⦃s t : C⦄ : (s ⟶ t) → (s ⟶ t) → Prop
 theorem CompClosure.of {a b} (m₁ m₂ : a ⟶ b) (h : r m₁ m₂) : CompClosure r m₁ m₂ := by
   simpa using comp_closure.intro (𝟙 _) m₁ m₂ (𝟙 _) h
 
-theorem comp_left {a b c : C} (f : a ⟶ b) : ∀ g₁ g₂ : b ⟶ c h : CompClosure r g₁ g₂, CompClosure r (f ≫ g₁) (f ≫ g₂)
+theorem comp_left {a b c : C} (f : a ⟶ b) : ∀ (g₁ g₂ : b ⟶ c) (h : CompClosure r g₁ g₂), CompClosure r (f ≫ g₁) (f ≫ g₂)
   | _, _, ⟨x, m₁, m₂, y, h⟩ => by
     simpa using comp_closure.intro (f ≫ x) m₁ m₂ y h
 
-theorem comp_right {a b c : C} (g : b ⟶ c) : ∀ f₁ f₂ : a ⟶ b h : CompClosure r f₁ f₂, CompClosure r (f₁ ≫ g) (f₂ ≫ g)
+theorem comp_right {a b c : C} (g : b ⟶ c) :
+    ∀ (f₁ f₂ : a ⟶ b) (h : CompClosure r f₁ f₂), CompClosure r (f₁ ≫ g) (f₂ ≫ g)
   | _, _, ⟨x, m₁, m₂, y, h⟩ => by
     simpa using comp_closure.intro x m₁ m₂ (y ≫ g) h
 
@@ -103,7 +104,7 @@ instance :
             rfl)⟩⟩
 
 protected theorem induction {P : ∀ {a b : Quotient r}, (a ⟶ b) → Prop}
-    (h : ∀ {x y : C} f : x ⟶ y, P ((functor r).map f)) : ∀ {a b : Quotient r} f : a ⟶ b, P f := by
+    (h : ∀ {x y : C} (f : x ⟶ y), P ((functor r).map f)) : ∀ {a b : Quotient r} (f : a ⟶ b), P f := by
   rintro ⟨x⟩ ⟨y⟩ ⟨f⟩
   exact h f
 
@@ -132,7 +133,7 @@ theorem functor_map_eq_iff [Congruence r] {X Y : C} (f f' : X ⟶ Y) : (functor 
   · apply Quotientₓ.sound
     
 
-variable {D : Type _} [Category D] (F : C ⥤ D) (H : ∀ x y : C f₁ f₂ : x ⟶ y, r f₁ f₂ → F.map f₁ = F.map f₂)
+variable {D : Type _} [Category D] (F : C ⥤ D) (H : ∀ (x y : C) (f₁ f₂ : x ⟶ y), r f₁ f₂ → F.map f₁ = F.map f₂)
 
 include H
 

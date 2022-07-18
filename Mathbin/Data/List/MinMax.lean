@@ -46,7 +46,7 @@ theorem foldl_arg_aux_eq_none : l.foldl (argAux r) o = none ↔ l = [] ∧ o = n
               split_ifs <;>
             simp
 
-private theorem foldl_arg_aux_mem l : ∀ a m : α, m ∈ foldlₓ (argAux r) (some a) l → m ∈ a :: l :=
+private theorem foldl_arg_aux_mem (l) : ∀ a m : α, m ∈ foldlₓ (argAux r) (some a) l → m ∈ a :: l :=
   List.reverseRecOn l
     (by
       simp [← eq_comm])

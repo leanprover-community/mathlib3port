@@ -59,7 +59,7 @@ A presheaf is a sheaf if `F` sends the cone `(pairwise.cocone U).op` to a limit 
 (Recall `pairwise.cocone U` has cone point `supr U`, mapping down to the `U i` and the `U i ⊓ U j`.)
 -/
 def IsSheafPairwiseIntersections (F : Presheaf C X) : Prop :=
-  ∀ ⦃ι : Type v⦄ U : ι → Opens X, Nonempty (IsLimit (F.mapCone (Pairwise.cocone U).op))
+  ∀ ⦃ι : Type v⦄ (U : ι → Opens X), Nonempty (IsLimit (F.mapCone (Pairwise.cocone U).op))
 
 /-- An alternative formulation of the sheaf condition
 (which we prove equivalent to the usual one below as
@@ -70,7 +70,7 @@ A presheaf is a sheaf if `F` preserves the limit of `pairwise.diagram U`.
 `U i ⊓ U j` mapping into the open sets `U i`. This diagram has limit `supr U`.)
 -/
 def IsSheafPreservesLimitPairwiseIntersections (F : Presheaf C X) : Prop :=
-  ∀ ⦃ι : Type v⦄ U : ι → Opens X, Nonempty (PreservesLimit (Pairwise.diagram U).op F)
+  ∀ ⦃ι : Type v⦄ (U : ι → Opens X), Nonempty (PreservesLimit (Pairwise.diagram U).op F)
 
 /-!
 The remainder of this file shows that these conditions are equivalent
@@ -461,12 +461,13 @@ def interUnionPullbackConeLift : s.x ⟶ F.1.obj (op (U ∪ V)) := by
   let ι : ULift.{v} walking_pair → opens X := fun j => walking_pair.cases_on j.down U V
   have hι : U ∪ V = supr ι := by
     ext
+    rw [opens.coe_supr, Set.mem_Union]
     constructor
     · rintro (h | h)
-      exacts[⟨_, ⟨_, ⟨⟨walking_pair.left⟩, rfl⟩, rfl⟩, h⟩, ⟨_, ⟨_, ⟨⟨walking_pair.right⟩, rfl⟩, rfl⟩, h⟩]
+      exacts[⟨⟨walking_pair.left⟩, h⟩, ⟨⟨walking_pair.right⟩, h⟩]
       
-    · rintro ⟨_, ⟨_, ⟨⟨⟨⟩⟩, ⟨⟩⟩, ⟨⟩⟩, z⟩
-      exacts[Or.inl z, Or.inr z]
+    · rintro ⟨⟨_ | _⟩, h⟩
+      exacts[Or.inl h, Or.inr h]
       
   refine'
     (F.1.is_sheaf_iff_is_sheaf_pairwise_intersections.mp F.2 ι).some.lift ⟨s.X, { app := _, naturality' := _ }⟩ ≫
@@ -512,12 +513,13 @@ def isLimitPullbackCone : IsLimit (interUnionPullbackCone F U V) := by
   let ι : ULift.{v} walking_pair → opens X := fun ⟨j⟩ => walking_pair.cases_on j U V
   have hι : U ∪ V = supr ι := by
     ext
+    rw [opens.coe_supr, Set.mem_Union]
     constructor
     · rintro (h | h)
-      exacts[⟨_, ⟨_, ⟨⟨walking_pair.left⟩, rfl⟩, rfl⟩, h⟩, ⟨_, ⟨_, ⟨⟨walking_pair.right⟩, rfl⟩, rfl⟩, h⟩]
+      exacts[⟨⟨walking_pair.left⟩, h⟩, ⟨⟨walking_pair.right⟩, h⟩]
       
-    · rintro ⟨_, ⟨_, ⟨⟨⟨⟩⟩, ⟨⟩⟩, ⟨⟩⟩, z⟩
-      exacts[Or.inl z, Or.inr z]
+    · rintro ⟨⟨_ | _⟩, h⟩
+      exacts[Or.inl h, Or.inr h]
       
   apply pullback_cone.is_limit_aux'
   intro s

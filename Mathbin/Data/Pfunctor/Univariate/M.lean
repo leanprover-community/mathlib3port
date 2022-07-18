@@ -59,7 +59,7 @@ def head' : ∀ {n}, CofixA F (succ n) → F.A
   | n, cofix_a.intro i _ => i
 
 /-- for a non-trivial approximation, return all the subtrees of the root -/
-def children' : ∀ {n} x : CofixA F (succ n), F.B (head' x) → CofixA F n
+def children' : ∀ {n} (x : CofixA F (succ n)), F.B (head' x) → CofixA F n
   | n, cofix_a.intro a f => f
 
 theorem approx_eta {n : ℕ} (x : CofixA F (n + 1)) : x = CofixA.intro (head' x) (children' x) := by
@@ -111,7 +111,7 @@ variable (f : X → F.Obj X)
 
 /-- `s_corec f i n` creates an approximation of height `n`
 of the final coalgebra of `f` -/
-def sCorec : ∀ i : X n, CofixA F n
+def sCorec : ∀ (i : X) (n), CofixA F n
   | _, 0 => CofixA.continue
   | j, succ n => CofixA.intro (f j).1 fun i => s_corec ((f j).2 i) _
 
@@ -249,10 +249,10 @@ def ichildren [Inhabited (M F)] [DecidableEq F.A] (i : F.Idx) (x : M F) : M F :=
 theorem head_succ (n m : ℕ) (x : M F) : head' (x.approx (succ n)) = head' (x.approx (succ m)) :=
   head_succ' n m _ x.consistent
 
-theorem head_eq_head' : ∀ x : M F n : ℕ, head x = head' (x.approx <| n + 1)
+theorem head_eq_head' : ∀ (x : M F) (n : ℕ), head x = head' (x.approx <| n + 1)
   | ⟨x, h⟩, n => head_succ' _ _ _ h
 
-theorem head'_eq_head : ∀ x : M F n : ℕ, head' (x.approx <| n + 1) = head x
+theorem head'_eq_head : ∀ (x : M F) (n : ℕ), head' (x.approx <| n + 1) = head x
   | ⟨x, h⟩, n => head_succ' _ _ _ h
 
 theorem truncate_approx (x : M F) (n : ℕ) : truncate (x.approx <| n + 1) = x.approx n :=
@@ -419,7 +419,7 @@ theorem cases_on_mk {r : M F → Sort _} (x : F.Obj <| M F) (f : ∀ x : F.Obj <
   cases_mk x f
 
 @[simp]
-theorem cases_on_mk' {r : M F → Sort _} {a} (x : F.B a → M F) (f : ∀ a f : F.B a → M F, r (M.mk ⟨a, f⟩)) :
+theorem cases_on_mk' {r : M F → Sort _} {a} (x : F.B a → M F) (f : ∀ (a) (f : F.B a → M F), r (M.mk ⟨a, f⟩)) :
     Pfunctor.M.casesOn' (M.mk ⟨a, x⟩) f = f a x :=
   cases_mk ⟨_, x⟩ _
 
@@ -619,7 +619,7 @@ structure IsBisimulation : Prop where
   head : ∀ {a a'} {f f'}, M.mk ⟨a, f⟩ ~ M.mk ⟨a', f'⟩ → a = a'
   tail : ∀ {a} {f f' : F.B a → M F}, M.mk ⟨a, f⟩ ~ M.mk ⟨a, f'⟩ → ∀ i : F.B a, f i ~ f' i
 
-theorem nth_of_bisim [Inhabited (M F)] (bisim : IsBisimulation R) s₁ s₂ (ps : Path F) :
+theorem nth_of_bisim [Inhabited (M F)] (bisim : IsBisimulation R) (s₁ s₂) (ps : Path F) :
     s₁ ~ s₂ →
       IsPath ps s₁ ∨ IsPath ps s₂ →
         iselect ps s₁ = iselect ps s₂ ∧
@@ -740,7 +740,7 @@ def corec₁ {α : Type u} (F : ∀ X, (α → X) → α → P.Obj X) : α → M
 of the computation -/
 def corec' {α : Type u} (F : ∀ {X : Type u}, (α → X) → α → Sum (M P) (P.Obj X)) (x : α) : M P :=
   corec₁
-    (fun X rec a : Sum (M P) α =>
+    (fun X rec (a : Sum (M P) α) =>
       let y := a >>= F (rec ∘ Sum.inr)
       match y with
       | Sum.inr y => y

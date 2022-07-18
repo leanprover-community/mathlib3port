@@ -53,6 +53,17 @@ include hb
 def oangle (x y : V) : Real.Angle :=
   Complex.arg ((Complex.isometryOfOrthonormal hb).symm y / (Complex.isometryOfOrthonormal hb).symm x)
 
+/-- Oriented angles are continuous when the vectors involved are nonzero. -/
+theorem continuous_at_oangle {x : V × V} (hx1 : x.1 ≠ 0) (hx2 : x.2 ≠ 0) :
+    ContinuousAt (fun y : V × V => hb.oangle y.1 y.2) x :=
+  (Complex.continuous_at_arg_coe_angle
+        (by
+          simp [← hx1, ← hx2])).comp <|
+    ContinuousAt.div ((Complex.isometryOfOrthonormal hb).symm.Continuous.comp continuous_snd).ContinuousAt
+      ((Complex.isometryOfOrthonormal hb).symm.Continuous.comp continuous_fst).ContinuousAt
+      (by
+        simp [← hx1])
+
 /-- If the first vector passed to `oangle` is 0, the result is 0. -/
 @[simp]
 theorem oangle_zero_left (x : V) : hb.oangle 0 x = 0 := by
@@ -766,6 +777,11 @@ local notation "ob" =>
 See `inner_product_geometry.angle` for the corresponding unoriented angle definition. -/
 def oangle (x y : V) : Real.Angle :=
   ob.oangle x y
+
+/-- Oriented angles are continuous when the vectors involved are nonzero. -/
+theorem continuous_at_oangle {x : V × V} (hx1 : x.1 ≠ 0) (hx2 : x.2 ≠ 0) :
+    ContinuousAt (fun y : V × V => o.oangle y.1 y.2) x :=
+  ob.continuous_at_oangle hx1 hx2
 
 /-- If the first vector passed to `oangle` is 0, the result is 0. -/
 @[simp]

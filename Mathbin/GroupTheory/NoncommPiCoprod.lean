@@ -56,7 +56,7 @@ variable {N : ι → Type _} [∀ i, Monoidₓ (N i)]
 variable (ϕ : ∀ i : ι, N i →* M)
 
 -- We assume that the elements of different morphism commute
-variable (hcomm : ∀ i j : ι, i ≠ j → ∀ x : N i y : N j, Commute (ϕ i x) (ϕ j y))
+variable (hcomm : ∀ i j : ι, i ≠ j → ∀ (x : N i) (y : N j), Commute (ϕ i x) (ϕ j y))
 
 include hcomm
 
@@ -65,7 +65,6 @@ variable (f g : ∀ i : ι, N i)
 
 namespace MonoidHom
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The canonical homomorphism from a family of monoids. -/
 @[to_additive
       "The canonical homomorphism from a family of additive monoids.\n\nSee also `linear_map.lsum` for a linear version without the commutativity assumption."]
@@ -130,7 +129,6 @@ omit hdec
 
 include hcomm
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem noncomm_pi_coprod_mrange : (noncommPiCoprod ϕ hcomm).mrange = ⨆ i : ι, (ϕ i).mrange := by
   classical
@@ -162,7 +160,7 @@ variable {H : ι → Type _} [∀ i, Groupₓ (H i)]
 
 variable (ϕ : ∀ i : ι, H i →* G)
 
-variable {hcomm : ∀ i j : ι, i ≠ j → ∀ x : H i y : H j, Commute (ϕ i x) (ϕ j y)}
+variable {hcomm : ∀ i j : ι, i ≠ j → ∀ (x : H i) (y : H j), Commute (ϕ i x) (ϕ j y)}
 
 include hcomm
 
@@ -173,7 +171,6 @@ include hfin
 
 namespace MonoidHom
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- The subgroup version of `noncomm_pi_coprod_mrange`
 @[to_additive]
 theorem noncomm_pi_coprod_range : (noncommPiCoprod ϕ hcomm).range = ⨆ i : ι, (ϕ i).range := by
@@ -192,7 +189,6 @@ theorem noncomm_pi_coprod_range : (noncommPiCoprod ϕ hcomm).range = ⨆ i : ι,
     refine' ⟨Pi.mulSingle i y, noncomm_pi_coprod_mul_single _ _ _⟩
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem injective_noncomm_pi_coprod_of_independent (hind : CompleteLattice.Independent fun i => (ϕ i).range)
     (hinj : ∀ i, Function.Injective (ϕ i)) : Function.Injective (noncommPiCoprod ϕ hcomm) := by
@@ -213,7 +209,6 @@ theorem injective_noncomm_pi_coprod_of_independent (hind : CompleteLattice.Indep
 
 variable (hcomm)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem independent_range_of_coprime_order [∀ i, Fintype (H i)]
     (hcoprime : ∀ i j, i ≠ j → Nat.Coprime (Fintype.card (H i)) (Fintype.card (H j))) :
@@ -267,7 +262,7 @@ include hcomm
 
 @[to_additive]
 theorem commute_subtype_of_commute (i j : ι) (hne : i ≠ j) :
-    ∀ x : H i y : H j, Commute ((H i).Subtype x) ((H j).Subtype y) := by
+    ∀ (x : H i) (y : H j), Commute ((H i).Subtype x) ((H j).Subtype y) := by
   rintro ⟨x, hx⟩ ⟨y, hy⟩
   exact hcomm i j hne x y hx hy
 

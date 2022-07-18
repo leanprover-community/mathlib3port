@@ -124,7 +124,7 @@ variable (α) {β}
 def Stabilizer.submonoid (b : β) : Submonoid α where
   Carrier := { a | a • b = b }
   one_mem' := one_smul _ b
-  mul_mem' := fun a a' ha : a • b = b hb : a' • b = b =>
+  mul_mem' := fun a a' (ha : a • b = b) (hb : a' • b = b) =>
     show (a * a') • b = b by
       rw [← smul_smul, hb, ha]
 
@@ -168,7 +168,7 @@ A subgroup. -/
       "The stabilizer of an element under an action, i.e. what sends the element to itself.\nAn additive subgroup."]
 def stabilizer (b : β) : Subgroup α :=
   { Stabilizer.submonoid α b with
-    inv_mem' := fun a ha : a • b = b =>
+    inv_mem' := fun a (ha : a • b = b) =>
       show a⁻¹ • b = b by
         rw [inv_smul_eq_iff, ha] }
 

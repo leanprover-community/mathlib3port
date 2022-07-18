@@ -431,7 +431,7 @@ to terminal is a monomorphism, which is the second of Freyd's axioms for an AT c
 TODO: This is a condition satisfied by categories with zero objects and morphisms.
 -/
 class InitialMonoClass (C : Type u₁) [Category.{v₁} C] : Prop where
-  is_initial_mono_from : ∀ {I} X : C hI : IsInitial I, Mono (hI.to X)
+  is_initial_mono_from : ∀ {I} (X : C) (hI : IsInitial I), Mono (hI.to X)
 
 theorem IsInitial.mono_from [InitialMonoClass C] {I} {X : C} (hI : IsInitial I) (f : I ⟶ X) : Mono f := by
   rw [hI.hom_ext f (hI.to X)]
@@ -519,7 +519,8 @@ def limitOfInitial (F : J ⥤ C) [HasInitial J] [HasLimit F] : limit F ≅ F.obj
 provided that the morphisms in the diagram are isomorphisms.
 In `limit_of_diagram_terminal` we show it is a limit cone. -/
 @[simps]
-def coneOfDiagramTerminal {X : J} (hX : IsTerminal X) (F : J ⥤ C) [∀ i j : J f : i ⟶ j, IsIso (F.map f)] : Cone F where
+def coneOfDiagramTerminal {X : J} (hX : IsTerminal X) (F : J ⥤ C) [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] :
+    Cone F where
   x := F.obj X
   π :=
     { app := fun i => inv (F.map (hX.from _)),
@@ -531,14 +532,14 @@ def coneOfDiagramTerminal {X : J} (hX : IsTerminal X) (F : J ⥤ C) [∀ i j : J
 
 /-- From a functor `F : J ⥤ C`, given a terminal object of `J` and that the morphisms in the
 diagram are isomorphisms, show the cone `cone_of_diagram_terminal` is a limit. -/
-def limitOfDiagramTerminal {X : J} (hX : IsTerminal X) (F : J ⥤ C) [∀ i j : J f : i ⟶ j, IsIso (F.map f)] :
+def limitOfDiagramTerminal {X : J} (hX : IsTerminal X) (F : J ⥤ C) [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] :
     IsLimit (coneOfDiagramTerminal hX F) where lift := fun S => S.π.app _
 
 /-- For a functor `F : J ⥤ C`, if `J` has a terminal object and all the morphisms in the diagram
 are isomorphisms, then the image of the terminal object is isomorphic to the limit of `F`. -/
 -- This is reducible to allow usage of lemmas about `cone_point_unique_up_to_iso`.
 @[reducible]
-def limitOfTerminal (F : J ⥤ C) [HasTerminal J] [HasLimit F] [∀ i j : J f : i ⟶ j, IsIso (F.map f)] :
+def limitOfTerminal (F : J ⥤ C) [HasTerminal J] [HasLimit F] [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] :
     limit F ≅ F.obj (⊤_ J) :=
   IsLimit.conePointUniqueUpToIso (limit.isLimit _) (limitOfDiagramTerminal terminalIsTerminal F)
 
@@ -572,7 +573,7 @@ def colimitOfTerminal (F : J ⥤ C) [HasTerminal J] [HasColimit F] : colimit F �
 provided that the morphisms in the diagram are isomorphisms.
 In `colimit_of_diagram_initial` we show it is a colimit cocone. -/
 @[simps]
-def coconeOfDiagramInitial {X : J} (hX : IsInitial X) (F : J ⥤ C) [∀ i j : J f : i ⟶ j, IsIso (F.map f)] :
+def coconeOfDiagramInitial {X : J} (hX : IsInitial X) (F : J ⥤ C) [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] :
     Cocone F where
   x := F.obj X
   ι :=
@@ -585,14 +586,14 @@ def coconeOfDiagramInitial {X : J} (hX : IsInitial X) (F : J ⥤ C) [∀ i j : J
 
 /-- From a functor `F : J ⥤ C`, given an initial object of `J` and that the morphisms in the
 diagram are isomorphisms, show the cone `cocone_of_diagram_initial` is a colimit. -/
-def colimitOfDiagramInitial {X : J} (hX : IsInitial X) (F : J ⥤ C) [∀ i j : J f : i ⟶ j, IsIso (F.map f)] :
+def colimitOfDiagramInitial {X : J} (hX : IsInitial X) (F : J ⥤ C) [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] :
     IsColimit (coconeOfDiagramInitial hX F) where desc := fun S => S.ι.app _
 
 /-- For a functor `F : J ⥤ C`, if `J` has an initial object and all the morphisms in the diagram
 are isomorphisms, then the image of the initial object is isomorphic to the colimit of `F`. -/
 -- This is reducible to allow usage of lemmas about `cocone_point_unique_up_to_iso`.
 @[reducible]
-def colimitOfInitial (F : J ⥤ C) [HasInitial J] [HasColimit F] [∀ i j : J f : i ⟶ j, IsIso (F.map f)] :
+def colimitOfInitial (F : J ⥤ C) [HasInitial J] [HasColimit F] [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] :
     colimit F ≅ F.obj (⊥_ J) :=
   IsColimit.coconePointUniqueUpToIso (colimit.isColimit _) (colimitOfDiagramInitial initialIsInitial _)
 
@@ -609,13 +610,13 @@ instance is_iso_π_initial [HasInitial J] (F : J ⥤ C) [HasLimit F] : IsIso (li
   is_iso_π_of_is_initial initialIsInitial F
 
 theorem is_iso_π_of_is_terminal {j : J} (I : IsTerminal j) (F : J ⥤ C) [HasLimit F]
-    [∀ i j : J f : i ⟶ j, IsIso (F.map f)] : IsIso (limit.π F j) :=
+    [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] : IsIso (limit.π F j) :=
   ⟨⟨limit.lift _ (coneOfDiagramTerminal I F), by
       ext
       simp , by
       simp ⟩⟩
 
-instance is_iso_π_terminal [HasTerminal J] (F : J ⥤ C) [HasLimit F] [∀ i j : J f : i ⟶ j, IsIso (F.map f)] :
+instance is_iso_π_terminal [HasTerminal J] (F : J ⥤ C) [HasLimit F] [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] :
     IsIso (limit.π F (⊤_ J)) :=
   is_iso_π_of_is_terminal terminalIsTerminal F
 
@@ -632,14 +633,14 @@ instance is_iso_ι_terminal [HasTerminal J] (F : J ⥤ C) [HasColimit F] : IsIso
   is_iso_ι_of_is_terminal terminalIsTerminal F
 
 theorem is_iso_ι_of_is_initial {j : J} (I : IsInitial j) (F : J ⥤ C) [HasColimit F]
-    [∀ i j : J f : i ⟶ j, IsIso (F.map f)] : IsIso (colimit.ι F j) :=
+    [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] : IsIso (colimit.ι F j) :=
   ⟨⟨colimit.desc _ (coconeOfDiagramInitial I F),
       ⟨by
         tidy, by
         ext
         simp ⟩⟩⟩
 
-instance is_iso_ι_initial [HasInitial J] (F : J ⥤ C) [HasColimit F] [∀ i j : J f : i ⟶ j, IsIso (F.map f)] :
+instance is_iso_ι_initial [HasInitial J] (F : J ⥤ C) [HasColimit F] [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] :
     IsIso (colimit.ι F (⊥_ J)) :=
   is_iso_ι_of_is_initial initialIsInitial F
 

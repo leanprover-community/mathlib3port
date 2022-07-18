@@ -76,7 +76,7 @@ theorem pushforward_eq' {X Y : Top.{w}} {f g : X ⟶ Y} (h : f = g) (ℱ : X.Pre
   rw [h]
 
 @[simp]
-theorem pushforward_eq_hom_app {X Y : Top.{w}} {f g : X ⟶ Y} (h : f = g) (ℱ : X.Presheaf C) U :
+theorem pushforward_eq_hom_app {X Y : Top.{w}} {f g : X ⟶ Y} (h : f = g) (ℱ : X.Presheaf C) (U) :
     (pushforwardEq h ℱ).Hom.app U =
       ℱ.map
         (by
@@ -87,7 +87,7 @@ theorem pushforward_eq_hom_app {X Y : Top.{w}} {f g : X ⟶ Y} (h : f = g) (ℱ 
   by
   simp [← pushforward_eq]
 
-theorem pushforward_eq'_hom_app {X Y : Top.{w}} {f g : X ⟶ Y} (h : f = g) (ℱ : X.Presheaf C) U :
+theorem pushforward_eq'_hom_app {X Y : Top.{w}} {f g : X ⟶ Y} (h : f = g) (ℱ : X.Presheaf C) (U) :
     NatTrans.app (eqToHom (pushforward_eq' h ℱ)) U =
       ℱ.map
         (eqToHom
@@ -97,7 +97,7 @@ theorem pushforward_eq'_hom_app {X Y : Top.{w}} {f g : X ⟶ Y} (h : f = g) (ℱ
   simpa [← eq_to_hom_map]
 
 @[simp]
-theorem pushforward_eq_rfl {X Y : Top.{w}} (f : X ⟶ Y) (ℱ : X.Presheaf C) U :
+theorem pushforward_eq_rfl {X Y : Top.{w}} (f : X ⟶ Y) (ℱ : X.Presheaf C) (U) :
     (pushforwardEq (rfl : f = f) ℱ).Hom.app (op U) = 𝟙 _ := by
   dsimp' [← pushforward_eq]
   simp
@@ -121,18 +121,18 @@ theorem id_eq : 𝟙 X _* ℱ = ℱ := by
   erw [functor.id_comp]
 
 @[simp]
-theorem id_hom_app' U p : (id ℱ).Hom.app (op ⟨U, p⟩) = ℱ.map (𝟙 (op ⟨U, p⟩)) := by
+theorem id_hom_app' (U) (p) : (id ℱ).Hom.app (op ⟨U, p⟩) = ℱ.map (𝟙 (op ⟨U, p⟩)) := by
   dsimp' [← id]
   simp
 
 attribute [local tidy] tactic.op_induction'
 
 @[simp]
-theorem id_hom_app U : (id ℱ).Hom.app U = ℱ.map (eqToHom (Opens.op_map_id_obj U)) := by
+theorem id_hom_app (U) : (id ℱ).Hom.app U = ℱ.map (eqToHom (Opens.op_map_id_obj U)) := by
   tidy
 
 @[simp]
-theorem id_inv_app' U p : (id ℱ).inv.app (op ⟨U, p⟩) = ℱ.map (𝟙 (op ⟨U, p⟩)) := by
+theorem id_inv_app' (U) (p) : (id ℱ).inv.app (op ⟨U, p⟩) = ℱ.map (𝟙 (op ⟨U, p⟩)) := by
   dsimp' [← id]
   simp
 
@@ -146,12 +146,12 @@ theorem comp_eq {Y Z : Top.{w}} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g) _* ℱ =
   rfl
 
 @[simp]
-theorem comp_hom_app {Y Z : Top.{w}} (f : X ⟶ Y) (g : Y ⟶ Z) U : (comp ℱ f g).Hom.app U = 𝟙 _ := by
+theorem comp_hom_app {Y Z : Top.{w}} (f : X ⟶ Y) (g : Y ⟶ Z) (U) : (comp ℱ f g).Hom.app U = 𝟙 _ := by
   dsimp' [← comp]
   tidy
 
 @[simp]
-theorem comp_inv_app {Y Z : Top.{w}} (f : X ⟶ Y) (g : Y ⟶ Z) U : (comp ℱ f g).inv.app U = 𝟙 _ := by
+theorem comp_inv_app {Y Z : Top.{w}} (f : X ⟶ Y) (g : Y ⟶ Z) (U) : (comp ℱ f g).inv.app U = 𝟙 _ := by
   dsimp' [← comp]
   tidy
 

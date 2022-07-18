@@ -346,7 +346,7 @@ theorem node4_l_size {l x m y r} (hm : Sized m) : size (@node4L α l x m y r) = 
     simp [← node4_l, ← node3_l, ← node', ← add_commₓ, ← add_left_commₓ] <;> [skip, simp [← size, ← hm.1]] <;>
       rw [← add_assocₓ, ← bit0] <;> simp [← add_commₓ, ← add_left_commₓ]
 
-theorem Sized.dual : ∀ {t : Ordnode α} h : Sized t, Sized (dual t)
+theorem Sized.dual : ∀ {t : Ordnode α} (h : Sized t), Sized (dual t)
   | nil, h => ⟨⟩
   | node s l x r, ⟨rfl, sl, sr⟩ =>
     ⟨by
@@ -473,7 +473,7 @@ theorem all_balance' {P l x r} : @All α P (balance' l x r) ↔ All P l ∧ P x 
 /-! ### `to_list` -/
 
 
-theorem foldr_cons_eq_to_list : ∀ t : Ordnode α r : List α, t.foldr List.cons r = toList t ++ r
+theorem foldr_cons_eq_to_list : ∀ (t : Ordnode α) (r : List α), t.foldr List.cons r = toList t ++ r
   | nil, r => rfl
   | node _ l x r, r' => by
     rw [foldr, foldr_cons_eq_to_list, foldr_cons_eq_to_list, ← List.cons_append, ← List.append_assoc, ←
@@ -485,7 +485,7 @@ theorem to_list_nil : toList (@nil α) = [] :=
   rfl
 
 @[simp]
-theorem to_list_node s l x r : toList (@node α s l x r) = toList l ++ x :: toList r := by
+theorem to_list_node (s l x r) : toList (@node α s l x r) = toList l ++ x :: toList r := by
   rw [to_list, foldr, foldr_cons_eq_to_list] <;> rfl
 
 theorem emem_iff_mem_to_list {x : α} {t} : Emem x t ↔ x ∈ toList t := by
@@ -517,11 +517,11 @@ theorem pos_size_of_mem [LE α] [@DecidableRel α (· ≤ ·)] {x : α} {t : Ord
 /-! ### `(find/erase/split)_(min/max)` -/
 
 
-theorem find_min'_dual : ∀ t x : α, findMin' (dual t) x = findMax' x t
+theorem find_min'_dual : ∀ (t) (x : α), findMin' (dual t) x = findMax' x t
   | nil, x => rfl
   | node _ l x r, _ => find_min'_dual r x
 
-theorem find_max'_dual t (x : α) : findMax' x (dual t) = findMin' t x := by
+theorem find_max'_dual (t) (x : α) : findMax' x (dual t) = findMin' t x := by
   rw [← find_min'_dual, dual_dual]
 
 theorem find_min_dual : ∀ t : Ordnode α, findMin (dual t) = findMax t
@@ -540,23 +540,23 @@ theorem dual_erase_min : ∀ t : Ordnode α, dual (eraseMin t) = eraseMax (dual 
 theorem dual_erase_max (t : Ordnode α) : dual (eraseMax t) = eraseMin (dual t) := by
   rw [← dual_dual (erase_min _), dual_erase_min, dual_dual]
 
-theorem split_min_eq : ∀ s l x : α r, splitMin' l x r = (findMin' l x, eraseMin (node s l x r))
+theorem split_min_eq : ∀ (s l) (x : α) (r), splitMin' l x r = (findMin' l x, eraseMin (node s l x r))
   | _, nil, x, r => rfl
   | _, node ls ll lx lr, x, r => by
     rw [split_min', split_min_eq, split_min', find_min', erase_min]
 
-theorem split_max_eq : ∀ s l x : α r, splitMax' l x r = (eraseMax (node s l x r), findMax' x r)
+theorem split_max_eq : ∀ (s l) (x : α) (r), splitMax' l x r = (eraseMax (node s l x r), findMax' x r)
   | _, l, x, nil => rfl
   | _, l, x, node ls ll lx lr => by
     rw [split_max', split_max_eq, split_max', find_max', erase_max]
 
 @[elab_as_eliminator]
-theorem find_min'_all {P : α → Prop} : ∀ t x : α, All P t → P x → P (findMin' t x)
+theorem find_min'_all {P : α → Prop} : ∀ (t) (x : α), All P t → P x → P (findMin' t x)
   | nil, x, h, hx => hx
   | node _ ll lx lr, x, ⟨h₁, h₂, h₃⟩, hx => find_min'_all _ _ h₁ h₂
 
 @[elab_as_eliminator]
-theorem find_max'_all {P : α → Prop} : ∀ x : α t, P x → All P t → P (findMax' x t)
+theorem find_max'_all {P : α → Prop} : ∀ (x : α) (t), P x → All P t → P (findMax' x t)
   | x, nil, hx, h => hx
   | x, node _ ll lx lr, hx, ⟨h₁, h₂, h₃⟩ => find_max'_all _ _ h₂ h₃
 
@@ -800,14 +800,14 @@ theorem Raised.dist_le {n m} (H : Raised n m) : Nat.dist n m ≤ 1 := by
 theorem Raised.dist_le' {n m} (H : Raised n m) : Nat.dist m n ≤ 1 := by
   rw [Nat.dist_comm] <;> exact H.dist_le
 
-theorem Raised.add_left k {n m} (H : Raised n m) : Raised (k + n) (k + m) := by
+theorem Raised.add_left (k) {n m} (H : Raised n m) : Raised (k + n) (k + m) := by
   rcases H with (rfl | rfl)
   · exact Or.inl rfl
     
   · exact Or.inr rfl
     
 
-theorem Raised.add_right k {n m} (H : Raised n m) : Raised (n + k) (m + k) := by
+theorem Raised.add_right (k) {n m} (H : Raised n m) : Raised (n + k) (m + k) := by
   rw [add_commₓ, add_commₓ m] <;> exact H.add_left _
 
 theorem Raised.right {l x₁ x₂ r₁ r₂} (H : Raised (size r₁) (size r₂)) :
@@ -902,7 +902,7 @@ def Bounded : Ordnode α → WithBot α → WithTop α → Prop
   | nil, _, _ => True
   | node _ l x r, o₁, o₂ => bounded l o₁ ↑x ∧ bounded r (↑x) o₂
 
-theorem Bounded.dual : ∀ {t : Ordnode α} {o₁ o₂} h : Bounded t o₁ o₂, @Bounded αᵒᵈ _ (dual t) o₂ o₁
+theorem Bounded.dual : ∀ {t : Ordnode α} {o₁ o₂} (h : Bounded t o₁ o₂), @Bounded αᵒᵈ _ (dual t) o₂ o₁
   | nil, o₁, o₂, h => by
     cases o₁ <;>
       cases o₂ <;>
@@ -1041,7 +1041,7 @@ theorem Valid'.node {s l x r o₁ o₂} (hl : Valid' o₁ l ↑x) (hr : Valid' (
     (hs : s = size l + size r + 1) : Valid' o₁ (@node α s l x r) o₂ :=
   ⟨⟨hl.1, hr.1⟩, ⟨hs, hl.2, hr.2⟩, ⟨H, hl.3, hr.3⟩⟩
 
-theorem Valid'.dual : ∀ {t : Ordnode α} {o₁ o₂} h : Valid' o₁ t o₂, @Valid' αᵒᵈ _ o₂ (dual t) o₁
+theorem Valid'.dual : ∀ {t : Ordnode α} {o₁ o₂} (h : Valid' o₁ t o₂), @Valid' αᵒᵈ _ o₂ (dual t) o₁
   | nil, o₁, o₂, h => valid'_nil h.1.dual
   | node s l x r, o₁, o₂, ⟨⟨ol, Or⟩, ⟨rfl, sl, sr⟩, ⟨b, bl, br⟩⟩ =>
     let ⟨ol', sl', bl'⟩ := valid'.dual ⟨ol, sl, bl⟩
@@ -1476,7 +1476,7 @@ theorem Valid'.erase_min_aux {s l x r o₁ o₂} (H : Valid' o₁ (node s l x r)
   have := H.dual.erase_max_aux <;>
     rwa [← dual_node', size_dual, ← dual_erase_min, size_dual, ← valid'.dual_iff, find_max'_dual] at this
 
-theorem eraseMin.valid : ∀ {t} h : @Valid α _ t, Valid (eraseMin t)
+theorem eraseMin.valid : ∀ {t} (h : @Valid α _ t), Valid (eraseMin t)
   | nil, _ => valid_nil
   | node _ l x r, h => by
     rw [h.2.eq_node'] <;> exact h.erase_min_aux.1.valid

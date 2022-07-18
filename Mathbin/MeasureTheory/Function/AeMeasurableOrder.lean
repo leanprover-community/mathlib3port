@@ -126,7 +126,7 @@ supersets which are disjoint up to measure zero when `p` and `q` are finite numb
 theorem Ennreal.ae_measurable_of_exist_almost_disjoint_supersets {α : Type _} {m : MeasurableSpace α} (μ : Measureₓ α)
     (f : α → ℝ≥0∞)
     (h :
-      ∀ p : ℝ≥0 q : ℝ≥0 ,
+      ∀ (p : ℝ≥0 ) (q : ℝ≥0 ),
         p < q →
           ∃ u v,
             MeasurableSet u ∧ MeasurableSet v ∧ { x | f x < p } ⊆ u ∧ { x | (q : ℝ≥0∞) < f x } ⊆ v ∧ μ (u ∩ v) = 0) :

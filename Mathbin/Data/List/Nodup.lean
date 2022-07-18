@@ -125,7 +125,7 @@ theorem nth_le_eq_of_ne_imp_not_nodup (xs : List α) (n m : ℕ) (hn : n < xs.le
   exact ⟨n, m, ⟨hn, hm, h⟩, hne⟩
 
 @[simp]
-theorem nth_le_index_of [DecidableEq α] {l : List α} (H : Nodupₓ l) n h : indexOfₓ (nthLe l n h) l = n :=
+theorem nth_le_index_of [DecidableEq α] {l : List α} (H : Nodupₓ l) (n h) : indexOfₓ (nthLe l n h) l = n :=
   nodup_iff_nth_le_inj.1 H _ _ _ h <| index_of_nth_le <| index_of_lt_length.2 <| nth_le_mem _ _ _
 
 theorem nodup_iff_count_le_one [DecidableEq α] {l : List α} : Nodupₓ l ↔ ∀ a, count a l ≤ 1 :=
@@ -262,7 +262,7 @@ theorem nodup_bind {l₁ : List α} {f : α → List β} :
   simp only [← List.bind, ← nodup_join, ← pairwise_map, ← and_comm, ← And.left_comm, ← mem_map, ← exists_imp_distrib, ←
       and_imp] <;>
     rw
-      [show (∀ l : List β x : α, f x = l → x ∈ l₁ → nodup l) ↔ ∀ x : α, x ∈ l₁ → nodup (f x) from
+      [show (∀ (l : List β) (x : α), f x = l → x ∈ l₁ → nodup l) ↔ ∀ x : α, x ∈ l₁ → nodup (f x) from
         forall_swap.trans <| forall_congrₓ fun _ => forall_eq']
 
 protected theorem Nodupₓ.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l₂.Nodup) : (l₁.product l₂).Nodup :=
@@ -325,7 +325,7 @@ attribute [protected] nodup.sublists nodup.sublists'
 theorem nodup_sublists_len (n : ℕ) (h : Nodupₓ l) : (sublistsLen n l).Nodup :=
   h.sublists'.Sublist <| sublists_len_sublist_sublists' _ _
 
-theorem Nodupₓ.diff_eq_filter [DecidableEq α] : ∀ {l₁ l₂ : List α} hl₁ : l₁.Nodup, l₁.diff l₂ = l₁.filter (· ∉ l₂)
+theorem Nodupₓ.diff_eq_filter [DecidableEq α] : ∀ {l₁ l₂ : List α} (hl₁ : l₁.Nodup), l₁.diff l₂ = l₁.filter (· ∉ l₂)
   | l₁, [], hl₁ => by
     simp
   | l₁, a :: l₂, hl₁ => by
@@ -335,7 +335,8 @@ theorem Nodupₓ.diff_eq_filter [DecidableEq α] : ∀ {l₁ l₂ : List α} hl�
 theorem Nodupₓ.mem_diff_iff [DecidableEq α] (hl₁ : l₁.Nodup) : a ∈ l₁.diff l₂ ↔ a ∈ l₁ ∧ a ∉ l₂ := by
   rw [hl₁.diff_eq_filter, mem_filter]
 
-protected theorem Nodupₓ.update_nth : ∀ {l : List α} {n : ℕ} {a : α} hl : l.Nodup ha : a ∉ l, (l.updateNth n a).Nodup
+protected theorem Nodupₓ.update_nth :
+    ∀ {l : List α} {n : ℕ} {a : α} (hl : l.Nodup) (ha : a ∉ l), (l.updateNth n a).Nodup
   | [], n, a, hl, ha => nodup_nil
   | b :: l, 0, a, hl, ha => nodup_cons.2 ⟨mt (mem_cons_of_memₓ _) ha, (nodup_cons.1 hl).2⟩
   | b :: l, n + 1, a, hl, ha =>
@@ -357,7 +358,6 @@ theorem Nodupₓ.map_update [DecidableEq α] {l : List α} (hl : l.Nodup) (f : �
   · simp [← Ne.symm H, ← H, ← update_nth, apply_ite (cons (f hd))]
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Nodupₓ.pairwise_of_forall_ne {l : List α} {r : α → α → Prop} (hl : l.Nodup)
     (h : ∀, ∀ a ∈ l, ∀, ∀ b ∈ l, ∀, a ≠ b → r a b) : l.Pairwise r := by
   classical

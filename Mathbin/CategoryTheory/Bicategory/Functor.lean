@@ -135,8 +135,8 @@ of oplax functors because doing so will cause a timeout.
 @[simp]
 def OplaxFunctor.Map₂AssociatorAux (obj : B → C) (map : ∀ {X Y : B}, (X ⟶ Y) → (obj X ⟶ obj Y))
     (map₂ : ∀ {a b : B} {f g : a ⟶ b}, (f ⟶ g) → (map f ⟶ map g))
-    (map_comp : ∀ {a b c : B} f : a ⟶ b g : b ⟶ c, map (f ≫ g) ⟶ map f ≫ map g) {a b c d : B} (f : a ⟶ b) (g : b ⟶ c)
-    (h : c ⟶ d) : Prop :=
+    (map_comp : ∀ {a b c : B} (f : a ⟶ b) (g : b ⟶ c), map (f ≫ g) ⟶ map f ≫ map g) {a b c d : B} (f : a ⟶ b)
+    (g : b ⟶ c) (h : c ⟶ d) : Prop :=
   map₂ (α_ f g h).Hom ≫ map_comp f (g ≫ h) ≫ map f ◁ map_comp g h =
     map_comp (f ≫ g) h ≫ map_comp f g ▷ map h ≫ (α_ (map f) (map g) (map h)).Hom
 
@@ -156,32 +156,32 @@ structure OplaxFunctor (B : Type u₁) [Bicategory.{w₁, v₁} B] (C : Type u�
   map_id (a : B) : map (𝟙 a) ⟶ 𝟙 (obj a)
   map_comp {a b c : B} (f : a ⟶ b) (g : b ⟶ c) : map (f ≫ g) ⟶ map f ≫ map g
   map_comp_naturality_left' :
-    ∀ {a b c : B} {f f' : a ⟶ b} η : f ⟶ f' g : b ⟶ c,
+    ∀ {a b c : B} {f f' : a ⟶ b} (η : f ⟶ f') (g : b ⟶ c),
       map₂ (η ▷ g) ≫ map_comp f' g = map_comp f g ≫ map₂ η ▷ map g := by
     run_tac
       obviously
   map_comp_naturality_right' :
-    ∀ {a b c : B} f : a ⟶ b {g g' : b ⟶ c} η : g ⟶ g',
+    ∀ {a b c : B} (f : a ⟶ b) {g g' : b ⟶ c} (η : g ⟶ g'),
       map₂ (f ◁ η) ≫ map_comp f g' = map_comp f g ≫ map f ◁ map₂ η := by
     run_tac
       obviously
-  map₂_id' : ∀ {a b : B} f : a ⟶ b, map₂ (𝟙 f) = 𝟙 (map f) := by
+  map₂_id' : ∀ {a b : B} (f : a ⟶ b), map₂ (𝟙 f) = 𝟙 (map f) := by
     run_tac
       obviously
-  map₂_comp' : ∀ {a b : B} {f g h : a ⟶ b} η : f ⟶ g θ : g ⟶ h, map₂ (η ≫ θ) = map₂ η ≫ map₂ θ := by
+  map₂_comp' : ∀ {a b : B} {f g h : a ⟶ b} (η : f ⟶ g) (θ : g ⟶ h), map₂ (η ≫ θ) = map₂ η ≫ map₂ θ := by
     run_tac
       obviously
   map₂_associator' :
-    ∀ {a b c d : B} f : a ⟶ b g : b ⟶ c h : c ⟶ d,
+    ∀ {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d),
       OplaxFunctor.Map₂AssociatorAux obj (fun a b => map) (fun a b f g => map₂) (fun a b c => map_comp) f g h := by
     run_tac
       obviously
   map₂_left_unitor' :
-    ∀ {a b : B} f : a ⟶ b, map₂ (λ_ f).Hom = map_comp (𝟙 a) f ≫ map_id a ▷ map f ≫ (λ_ (map f)).Hom := by
+    ∀ {a b : B} (f : a ⟶ b), map₂ (λ_ f).Hom = map_comp (𝟙 a) f ≫ map_id a ▷ map f ≫ (λ_ (map f)).Hom := by
     run_tac
       obviously
   map₂_right_unitor' :
-    ∀ {a b : B} f : a ⟶ b, map₂ (ρ_ f).Hom = map_comp f (𝟙 b) ≫ map f ◁ map_id b ≫ (ρ_ (map f)).Hom := by
+    ∀ {a b : B} (f : a ⟶ b), map₂ (ρ_ f).Hom = map_comp f (𝟙 b) ≫ map f ◁ map_id b ≫ (ρ_ (map f)).Hom := by
     run_tac
       obviously
 
@@ -280,7 +280,7 @@ structure PseudoCore (F : OplaxFunctor B C) where
   map_id_iso_hom' : ∀ {a : B}, (map_id_iso a).Hom = F.map_id a := by
     run_tac
       obviously
-  map_comp_iso_hom' : ∀ {a b c : B} f : a ⟶ b g : b ⟶ c, (map_comp_iso f g).Hom = F.map_comp f g := by
+  map_comp_iso_hom' : ∀ {a b c : B} (f : a ⟶ b) (g : b ⟶ c), (map_comp_iso f g).Hom = F.map_comp f g := by
     run_tac
       obviously
 
@@ -304,8 +304,8 @@ of pseudofunctors because doing so will cause a timeout.
 @[simp]
 def Pseudofunctor.Map₂AssociatorAux (obj : B → C) (map : ∀ {X Y : B}, (X ⟶ Y) → (obj X ⟶ obj Y))
     (map₂ : ∀ {a b : B} {f g : a ⟶ b}, (f ⟶ g) → (map f ⟶ map g))
-    (map_comp : ∀ {a b c : B} f : a ⟶ b g : b ⟶ c, map (f ≫ g) ≅ map f ≫ map g) {a b c d : B} (f : a ⟶ b) (g : b ⟶ c)
-    (h : c ⟶ d) : Prop :=
+    (map_comp : ∀ {a b c : B} (f : a ⟶ b) (g : b ⟶ c), map (f ≫ g) ≅ map f ≫ map g) {a b c d : B} (f : a ⟶ b)
+    (g : b ⟶ c) (h : c ⟶ d) : Prop :=
   map₂ (α_ f g h).Hom =
     (map_comp (f ≫ g) h).Hom ≫
       (map_comp f g).Hom ▷ map h ≫
@@ -326,33 +326,33 @@ structure Pseudofunctor (B : Type u₁) [Bicategory.{w₁, v₁} B] (C : Type u�
   PrelaxFunctor B C where
   map_id (a : B) : map (𝟙 a) ≅ 𝟙 (obj a)
   map_comp {a b c : B} (f : a ⟶ b) (g : b ⟶ c) : map (f ≫ g) ≅ map f ≫ map g
-  map₂_id' : ∀ {a b : B} f : a ⟶ b, map₂ (𝟙 f) = 𝟙 (map f) := by
+  map₂_id' : ∀ {a b : B} (f : a ⟶ b), map₂ (𝟙 f) = 𝟙 (map f) := by
     run_tac
       obviously
-  map₂_comp' : ∀ {a b : B} {f g h : a ⟶ b} η : f ⟶ g θ : g ⟶ h, map₂ (η ≫ θ) = map₂ η ≫ map₂ θ := by
+  map₂_comp' : ∀ {a b : B} {f g h : a ⟶ b} (η : f ⟶ g) (θ : g ⟶ h), map₂ (η ≫ θ) = map₂ η ≫ map₂ θ := by
     run_tac
       obviously
   map₂_whisker_left' :
-    ∀ {a b c : B} f : a ⟶ b {g h : b ⟶ c} η : g ⟶ h,
+    ∀ {a b c : B} (f : a ⟶ b) {g h : b ⟶ c} (η : g ⟶ h),
       map₂ (f ◁ η) = (map_comp f g).Hom ≫ map f ◁ map₂ η ≫ (map_comp f h).inv := by
     run_tac
       obviously
   map₂_whisker_right' :
-    ∀ {a b c : B} {f g : a ⟶ b} η : f ⟶ g h : b ⟶ c,
+    ∀ {a b c : B} {f g : a ⟶ b} (η : f ⟶ g) (h : b ⟶ c),
       map₂ (η ▷ h) = (map_comp f h).Hom ≫ map₂ η ▷ map h ≫ (map_comp g h).inv := by
     run_tac
       obviously
   map₂_associator' :
-    ∀ {a b c d : B} f : a ⟶ b g : b ⟶ c h : c ⟶ d,
+    ∀ {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d),
       Pseudofunctor.Map₂AssociatorAux obj (fun a b => map) (fun a b f g => map₂) (fun a b c => map_comp) f g h := by
     run_tac
       obviously
   map₂_left_unitor' :
-    ∀ {a b : B} f : a ⟶ b, map₂ (λ_ f).Hom = (map_comp (𝟙 a) f).Hom ≫ (map_id a).Hom ▷ map f ≫ (λ_ (map f)).Hom := by
+    ∀ {a b : B} (f : a ⟶ b), map₂ (λ_ f).Hom = (map_comp (𝟙 a) f).Hom ≫ (map_id a).Hom ▷ map f ≫ (λ_ (map f)).Hom := by
     run_tac
       obviously
   map₂_right_unitor' :
-    ∀ {a b : B} f : a ⟶ b, map₂ (ρ_ f).Hom = (map_comp f (𝟙 b)).Hom ≫ map f ◁ (map_id b).Hom ≫ (ρ_ (map f)).Hom := by
+    ∀ {a b : B} (f : a ⟶ b), map₂ (ρ_ f).Hom = (map_comp f (𝟙 b)).Hom ≫ map f ◁ (map_id b).Hom ≫ (ρ_ (map f)).Hom := by
     run_tac
       obviously
 
@@ -478,7 +478,7 @@ def mkOfOplax (F : OplaxFunctor B C) (F' : F.PseudoCore) : Pseudofunctor B C :=
 -/
 @[simps]
 noncomputable def mkOfOplax' (F : OplaxFunctor B C) [∀ a, IsIso (F.map_id a)]
-    [∀ {a b c} f : a ⟶ b g : b ⟶ c, IsIso (F.map_comp f g)] : Pseudofunctor B C :=
+    [∀ {a b c} (f : a ⟶ b) (g : b ⟶ c), IsIso (F.map_comp f g)] : Pseudofunctor B C :=
   { (F : PrelaxFunctor B C) with map_id := fun a => asIso (F.map_id a),
     map_comp := fun a b c f g => asIso (F.map_comp f g),
     map₂_whisker_left' := fun a b c f g h η => by

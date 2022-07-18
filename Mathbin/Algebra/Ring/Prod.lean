@@ -11,7 +11,8 @@ import Mathbin.Algebra.Ring.Equiv
 # Semiring, ring etc structures on `R × S`
 
 In this file we define two-binop (`semiring`, `ring` etc) structures on `R × S`. We also prove
-trivial `simp` lemmas, and define the following operations on `ring_hom`s:
+trivial `simp` lemmas, and define the following operations on `ring_hom`s and similarly for
+`non_unital_ring_hom`s:
 
 * `fst R S : R × S →+* R`, `snd R S : R × S →+* S`: projections `prod.fst` and `prod.snd`
   as `ring_hom`s;
@@ -77,6 +78,81 @@ instance [CommRingₓ R] [CommRingₓ S] : CommRingₓ (R × S) :=
 
 end Prod
 
+namespace NonUnitalRingHom
+
+variable (R S) [NonUnitalNonAssocSemiringₓ R] [NonUnitalNonAssocSemiringₓ S]
+
+/-- Given non-unital semirings `R`, `S`, the natural projection homomorphism from `R × S` to `R`.-/
+def fst : R × S →ₙ+* R :=
+  { MulHom.fst R S, AddMonoidHom.fst R S with toFun := Prod.fst }
+
+/-- Given non-unital semirings `R`, `S`, the natural projection homomorphism from `R × S` to `S`.-/
+def snd : R × S →ₙ+* S :=
+  { MulHom.snd R S, AddMonoidHom.snd R S with toFun := Prod.snd }
+
+variable {R S}
+
+@[simp]
+theorem coe_fst : ⇑(fst R S) = Prod.fst :=
+  rfl
+
+@[simp]
+theorem coe_snd : ⇑(snd R S) = Prod.snd :=
+  rfl
+
+section Prod
+
+variable [NonUnitalNonAssocSemiringₓ T] (f : R →ₙ+* S) (g : R →ₙ+* T)
+
+/-- Combine two non-unital ring homomorphisms `f : R →ₙ+* S`, `g : R →ₙ+* T` into
+`f.prod g : R →ₙ+* S × T` given by `(f.prod g) x = (f x, g x)` -/
+protected def prod (f : R →ₙ+* S) (g : R →ₙ+* T) : R →ₙ+* S × T :=
+  { MulHom.prod (f : MulHom R S) (g : MulHom R T), AddMonoidHom.prod (f : R →+ S) (g : R →+ T) with
+    toFun := fun x => (f x, g x) }
+
+@[simp]
+theorem prod_apply (x) : f.Prod g x = (f x, g x) :=
+  rfl
+
+@[simp]
+theorem fst_comp_prod : (fst S T).comp (f.Prod g) = f :=
+  ext fun x => rfl
+
+@[simp]
+theorem snd_comp_prod : (snd S T).comp (f.Prod g) = g :=
+  ext fun x => rfl
+
+theorem prod_unique (f : R →ₙ+* S × T) : ((fst S T).comp f).Prod ((snd S T).comp f) = f :=
+  ext fun x => by
+    simp only [← prod_apply, ← coe_fst, ← coe_snd, ← comp_apply, ← Prod.mk.eta]
+
+end Prod
+
+section prod_map
+
+variable [NonUnitalNonAssocSemiringₓ R'] [NonUnitalNonAssocSemiringₓ S'] [NonUnitalNonAssocSemiringₓ T]
+
+variable (f : R →ₙ+* R') (g : S →ₙ+* S')
+
+/-- `prod.map` as a `non_unital_ring_hom`. -/
+def prodMap : R × S →ₙ+* R' × S' :=
+  (f.comp (fst R S)).Prod (g.comp (snd R S))
+
+theorem prod_map_def : prodMap f g = (f.comp (fst R S)).Prod (g.comp (snd R S)) :=
+  rfl
+
+@[simp]
+theorem coe_prod_map : ⇑(prodMap f g) = Prod.map f g :=
+  rfl
+
+theorem prod_comp_prod_map (f : T →ₙ+* R) (g : T →ₙ+* S) (f' : R →ₙ+* R') (g' : S →ₙ+* S') :
+    (f'.prod_map g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
+  rfl
+
+end prod_map
+
+end NonUnitalRingHom
+
 namespace RingHom
 
 variable (R S) [NonAssocSemiringₓ R] [NonAssocSemiringₓ S]
@@ -110,7 +186,7 @@ protected def prod (f : R →+* S) (g : R →+* T) : R →+* S × T :=
     toFun := fun x => (f x, g x) }
 
 @[simp]
-theorem prod_apply x : f.Prod g x = (f x, g x) :=
+theorem prod_apply (x) : f.Prod g x = (f x, g x) :=
   rfl
 
 @[simp]

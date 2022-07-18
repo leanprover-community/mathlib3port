@@ -40,7 +40,7 @@ theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι �
       
     
   intro a t hat h ih
-  rw [Finset.coe_cons, Set.pairwise_insert_of_symmetric fun i j h : I i⊔I j = ⊤ => sup_comm.trans h]
+  rw [Finset.coe_cons, Set.pairwise_insert_of_symmetric fun i j (h : I i⊔I j = ⊤) => sup_comm.trans h]
   constructor
   · rintro ⟨μ, hμ⟩
     rw [Finset.sum_cons] at hμ

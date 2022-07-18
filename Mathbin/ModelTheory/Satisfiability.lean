@@ -74,7 +74,6 @@ theorem IsSatisfiable.mono (h : T'.IsSatisfiable) (hs : T ⊆ T') : T.IsSatisfia
 
 theorem IsSatisfiable.is_finitely_satisfiable (h : T.IsSatisfiable) : T.IsFinitelySatisfiable := fun _ => h.mono
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The Compactness Theorem of first-order logic: A theory is satisfiable if and only if it is
 finitely satisfiable. -/
 theorem is_satisfiable_iff_is_finitely_satisfiable {T : L.Theory} : T.IsSatisfiable ↔ T.IsFinitelySatisfiable :=
@@ -121,7 +120,6 @@ theorem is_satisfiable_union_distinct_constants_theory_of_card_le (T : L.Theory)
           (ab.trans (Function.extend_applyₓ Subtype.coe_injective h.some default ⟨b, bs⟩)))
   exact model.is_satisfiable M
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem is_satisfiable_union_distinct_constants_theory_of_infinite (T : L.Theory) (s : Set α) (M : Type w')
     [L.Structure M] [M ⊨ T] [Infinite M] :
     ((L.lhomWithConstants α).OnTheory T ∪ L.DistinctConstantsTheory s).IsSatisfiable := by
@@ -238,7 +236,7 @@ variable (T)
 /-- A theory models a (bounded) formula when any of its nonempty models realizes that formula on all
   inputs.-/
 def ModelsBoundedFormula (φ : L.BoundedFormula α n) : Prop :=
-  ∀ M : ModelCat.{u, v, max u v} T v : α → M xs : Finₓ n → M, φ.realize v xs
+  ∀ (M : ModelCat.{u, v, max u v} T) (v : α → M) (xs : Finₓ n → M), φ.realize v xs
 
 -- mathport name: «expr ⊨ »
 infixl:51 " ⊨ " => ModelsBoundedFormula
@@ -246,7 +244,7 @@ infixl:51 " ⊨ " => ModelsBoundedFormula
 -- input using \|= or \vDash, but not using \models
 variable {T}
 
-theorem models_formula_iff {φ : L.Formula α} : T ⊨ φ ↔ ∀ M : ModelCat.{u, v, max u v} T v : α → M, φ.realize v :=
+theorem models_formula_iff {φ : L.Formula α} : T ⊨ φ ↔ ∀ (M : ModelCat.{u, v, max u v} T) (v : α → M), φ.realize v :=
   forall_congrₓ fun M => forall_congrₓ fun v => Unique.forall_iff
 
 theorem models_sentence_iff {φ : L.Sentence} : T ⊨ φ ↔ ∀ M : ModelCat.{u, v, max u v} T, M ⊨ φ :=
@@ -389,14 +387,14 @@ namespace BoundedFormula
 
 theorem IsQf.induction_on_sup_not {P : L.BoundedFormula α n → Prop} {φ : L.BoundedFormula α n} (h : IsQf φ)
     (hf : P (⊥ : L.BoundedFormula α n)) (ha : ∀ ψ : L.BoundedFormula α n, IsAtomic ψ → P ψ)
-    (hsup : ∀ {φ₁ φ₂} h₁ : P φ₁ h₂ : P φ₂, P (φ₁⊔φ₂)) (hnot : ∀ {φ} h : P φ, P φ.Not)
-    (hse : ∀ {φ₁ φ₂ : L.BoundedFormula α n} h : Theory.SemanticallyEquivalent ∅ φ₁ φ₂, P φ₁ ↔ P φ₂) : P φ :=
+    (hsup : ∀ {φ₁ φ₂} (h₁ : P φ₁) (h₂ : P φ₂), P (φ₁⊔φ₂)) (hnot : ∀ {φ} (h : P φ), P φ.Not)
+    (hse : ∀ {φ₁ φ₂ : L.BoundedFormula α n} (h : Theory.SemanticallyEquivalent ∅ φ₁ φ₂), P φ₁ ↔ P φ₂) : P φ :=
   IsQf.rec_on h hf ha fun φ₁ φ₂ _ _ h1 h2 => (hse (φ₁.imp_semantically_equivalent_not_sup φ₂)).2 (hsup (hnot h1) h2)
 
 theorem IsQf.induction_on_inf_not {P : L.BoundedFormula α n → Prop} {φ : L.BoundedFormula α n} (h : IsQf φ)
     (hf : P (⊥ : L.BoundedFormula α n)) (ha : ∀ ψ : L.BoundedFormula α n, IsAtomic ψ → P ψ)
-    (hinf : ∀ {φ₁ φ₂} h₁ : P φ₁ h₂ : P φ₂, P (φ₁⊓φ₂)) (hnot : ∀ {φ} h : P φ, P φ.Not)
-    (hse : ∀ {φ₁ φ₂ : L.BoundedFormula α n} h : Theory.SemanticallyEquivalent ∅ φ₁ φ₂, P φ₁ ↔ P φ₂) : P φ :=
+    (hinf : ∀ {φ₁ φ₂} (h₁ : P φ₁) (h₂ : P φ₂), P (φ₁⊓φ₂)) (hnot : ∀ {φ} (h : P φ), P φ.Not)
+    (hse : ∀ {φ₁ φ₂ : L.BoundedFormula α n} (h : Theory.SemanticallyEquivalent ∅ φ₁ φ₂), P φ₁ ↔ P φ₂) : P φ :=
   h.induction_on_sup_not hf ha
     (fun φ₁ φ₂ h1 h2 => (hse (φ₁.sup_semantically_equivalent_not_inf_not φ₂)).2 (hnot (hinf (hnot h1) (hnot h2))))
     (fun _ => hnot) fun _ _ => hse
@@ -407,9 +405,9 @@ theorem semantically_equivalent_to_prenex (φ : L.BoundedFormula α n) :
 
 theorem induction_on_all_ex {P : ∀ {m}, L.BoundedFormula α m → Prop} (φ : L.BoundedFormula α n)
     (hqf : ∀ {m} {ψ : L.BoundedFormula α m}, IsQf ψ → P ψ)
-    (hall : ∀ {m} {ψ : L.BoundedFormula α (m + 1)} h : P ψ, P ψ.all)
-    (hex : ∀ {m} {φ : L.BoundedFormula α (m + 1)} h : P φ, P φ.ex)
-    (hse : ∀ {m} {φ₁ φ₂ : L.BoundedFormula α m} h : Theory.SemanticallyEquivalent ∅ φ₁ φ₂, P φ₁ ↔ P φ₂) : P φ := by
+    (hall : ∀ {m} {ψ : L.BoundedFormula α (m + 1)} (h : P ψ), P ψ.all)
+    (hex : ∀ {m} {φ : L.BoundedFormula α (m + 1)} (h : P φ), P φ.ex)
+    (hse : ∀ {m} {φ₁ φ₂ : L.BoundedFormula α m} (h : Theory.SemanticallyEquivalent ∅ φ₁ φ₂), P φ₁ ↔ P φ₂) : P φ := by
   suffices h' : ∀ {m} {φ : L.bounded_formula α m}, φ.IsPrenex → P φ
   · exact (hse φ.semantically_equivalent_to_prenex).2 (h' φ.to_prenex_is_prenex)
     
@@ -423,9 +421,9 @@ theorem induction_on_all_ex {P : ∀ {m}, L.BoundedFormula α m → Prop} (φ : 
     
 
 theorem induction_on_exists_not {P : ∀ {m}, L.BoundedFormula α m → Prop} (φ : L.BoundedFormula α n)
-    (hqf : ∀ {m} {ψ : L.BoundedFormula α m}, IsQf ψ → P ψ) (hnot : ∀ {m} {φ : L.BoundedFormula α m} h : P φ, P φ.Not)
-    (hex : ∀ {m} {φ : L.BoundedFormula α (m + 1)} h : P φ, P φ.ex)
-    (hse : ∀ {m} {φ₁ φ₂ : L.BoundedFormula α m} h : Theory.SemanticallyEquivalent ∅ φ₁ φ₂, P φ₁ ↔ P φ₂) : P φ :=
+    (hqf : ∀ {m} {ψ : L.BoundedFormula α m}, IsQf ψ → P ψ) (hnot : ∀ {m} {φ : L.BoundedFormula α m} (h : P φ), P φ.Not)
+    (hex : ∀ {m} {φ : L.BoundedFormula α (m + 1)} (h : P φ), P φ.ex)
+    (hse : ∀ {m} {φ₁ φ₂ : L.BoundedFormula α m} (h : Theory.SemanticallyEquivalent ∅ φ₁ φ₂), P φ₁ ↔ P φ₂) : P φ :=
   φ.induction_on_all_ex (fun _ _ => hqf)
     (fun _ φ hφ => (hse φ.all_semantically_equivalent_not_ex_not).2 (hnot (hex (hnot hφ)))) (fun _ _ => hex)
     fun _ _ _ => hse

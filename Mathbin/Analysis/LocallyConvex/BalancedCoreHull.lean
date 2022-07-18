@@ -176,7 +176,7 @@ theorem balanced_core_eq_Inter (hs : (0 : E) ∈ s) : BalancedCore 𝕜 s = ⋂ 
   refine' (balanced_core_aux_balanced _).subset_core_of_subset (balanced_core_aux_subset s)
   exact balanced_core_subset_balanced_core_aux (balanced_core_zero_mem hs)
 
-theorem subset_balanced_core (ht : (0 : E) ∈ t) (hst : ∀ a : 𝕜 ha : ∥a∥ ≤ 1, a • s ⊆ t) : s ⊆ BalancedCore 𝕜 t := by
+theorem subset_balanced_core (ht : (0 : E) ∈ t) (hst : ∀ (a : 𝕜) (ha : ∥a∥ ≤ 1), a • s ⊆ t) : s ⊆ BalancedCore 𝕜 t := by
   rw [balanced_core_eq_Inter ht]
   refine' subset_Inter₂ fun a ha => _
   rw [← smul_inv_smul₀ (norm_pos_iff.mp <| zero_lt_one.trans_le ha) s]
@@ -211,37 +211,26 @@ protected theorem IsClosed.balanced_core (hU : IsClosed U) : IsClosed (BalancedC
 
 theorem balanced_core_mem_nhds_zero (hU : U ∈ 𝓝 (0 : E)) : BalancedCore 𝕜 U ∈ 𝓝 (0 : E) := by
   -- Getting neighborhoods of the origin for `0 : 𝕜` and `0 : E`
-  have h : Filter.Tendsto (fun x : 𝕜 × E => x.fst • x.snd) (𝓝 (0, 0)) (𝓝 ((0 : 𝕜) • (0 : E))) :=
-    continuous_iff_continuous_at.mp HasContinuousSmul.continuous_smul (0, 0)
-  rw [smul_zero] at h
-  have h' := Filter.HasBasis.prod (@Metric.nhds_basis_ball 𝕜 _ 0) (Filter.basis_sets (𝓝 (0 : E)))
-  simp_rw [← nhds_prod_eq, id.def] at h'
-  have h'' := Filter.Tendsto.basis_left h h' U hU
-  rcases h'' with ⟨x, hx, h''⟩
-  cases' NormedField.exists_norm_lt 𝕜 hx.left with y hy
-  have hy' : y ≠ 0 := norm_pos_iff.mp hy.1
-  let W := y • x.snd
-  rw [← Filter.exists_mem_subset_iff]
-  refine' ⟨W, (set_smul_mem_nhds_zero_iff hy').mpr hx.2, _⟩
-  -- It remains to show that `W ⊆ balanced_core 𝕜 U`
-  refine' subset_balanced_core (mem_of_mem_nhds hU) fun a ha => _
-  refine' Set.Subset.trans (fun z hz => _) (set.maps_to'.mp h'')
-  rw [Set.image_prod, Set.image2_smul]
-  rw [Set.mem_smul_set] at hz
-  rcases hz with ⟨z', hz', hz⟩
-  rw [← hz, Set.mem_smul]
-  refine' ⟨a • y, y⁻¹ • z', _, _, _⟩
-  · rw [Algebra.id.smul_eq_mul, mem_ball_zero_iff, norm_mul, ← one_mulₓ x.fst]
-    exact mul_lt_mul' ha hy.2 hy.1.le zero_lt_one
-    
-  · convert Set.smul_mem_smul_set hz'
-    rw [← smul_assoc y⁻¹ y x.snd, smul_eq_mul, inv_mul_cancel hy', one_smul]
-    
-  rw [smul_assoc, ← smul_assoc y y⁻¹ z', smul_eq_mul, mul_inv_cancel hy', one_smul]
+  obtain ⟨r, V, hr, hV, hrVU⟩ :
+    ∃ (r : ℝ)(V : Set E), 0 < r ∧ V ∈ 𝓝 (0 : E) ∧ ∀ (c : 𝕜) (y : E), ∥c∥ < r → y ∈ V → c • y ∈ U := by
+    have h : Filter.Tendsto (fun x : 𝕜 × E => x.fst • x.snd) (𝓝 (0, 0)) (𝓝 0) :=
+      continuous_smul.tendsto' (0, 0) _ (smul_zero _)
+    simpa only [Prod.exists', Prod.forall', and_imp, And.assoc, ← exists_prop] using
+      h.basis_left (normed_group.nhds_zero_basis_norm_lt.prod_nhds (𝓝 _).basis_sets) U hU
+  rcases NormedField.exists_norm_lt 𝕜 hr with ⟨y, hy₀, hyr⟩
+  rw [norm_pos_iff] at hy₀
+  have : y • V ∈ 𝓝 (0 : E) := (set_smul_mem_nhds_zero_iff hy₀).mpr hV
+  -- It remains to show that `y • V ⊆ balanced_core 𝕜 U`
+  refine' Filter.mem_of_superset this ((subset_balanced_core (mem_of_mem_nhds hU)) fun a ha => _)
+  rw [smul_smul]
+  rintro _ ⟨z, hz, rfl⟩
+  refine' hrVU _ _ _ hz
+  rw [norm_mul, ← one_mulₓ r]
+  exact mul_lt_mul' ha hyr (norm_nonneg y) one_pos
 
 variable (𝕜 E)
 
-theorem nhds_basis_closed_balanced [RegularSpace E] :
+theorem nhds_basis_closed_balanced [T3Space E] :
     (𝓝 (0 : E)).HasBasis (fun s : Set E => s ∈ 𝓝 (0 : E) ∧ IsClosed s ∧ Balanced 𝕜 s) id := by
   refine' (closed_nhds_basis 0).to_has_basis (fun s hs => _) fun s hs => ⟨s, ⟨hs.1, hs.2.1⟩, rfl.subset⟩
   refine' ⟨BalancedCore 𝕜 s, ⟨balanced_core_mem_nhds_zero hs.1, _⟩, balanced_core_subset s⟩

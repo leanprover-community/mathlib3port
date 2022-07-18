@@ -79,13 +79,13 @@ theorem IsLocalExtr.elim {p : Prop} : IsLocalExtr f a → (IsLocalMin f a → p)
 /-! ### Restriction to (sub)sets -/
 
 
-theorem IsLocalMin.on (h : IsLocalMin f a) s : IsLocalMinOn f s a :=
+theorem IsLocalMin.on (h : IsLocalMin f a) (s) : IsLocalMinOn f s a :=
   h.filter_inf _
 
-theorem IsLocalMax.on (h : IsLocalMax f a) s : IsLocalMaxOn f s a :=
+theorem IsLocalMax.on (h : IsLocalMax f a) (s) : IsLocalMaxOn f s a :=
   h.filter_inf _
 
-theorem IsLocalExtr.on (h : IsLocalExtr f a) s : IsLocalExtrOn f s a :=
+theorem IsLocalExtr.on (h : IsLocalExtr f a) (s) : IsLocalExtrOn f s a :=
   h.filter_inf _
 
 theorem IsLocalMinOn.on_subset {t : Set α} (hf : IsLocalMinOn f t a) (h : s ⊆ t) : IsLocalMinOn f s a :=
@@ -97,13 +97,13 @@ theorem IsLocalMaxOn.on_subset {t : Set α} (hf : IsLocalMaxOn f t a) (h : s ⊆
 theorem IsLocalExtrOn.on_subset {t : Set α} (hf : IsLocalExtrOn f t a) (h : s ⊆ t) : IsLocalExtrOn f s a :=
   hf.filter_mono <| nhds_within_mono a h
 
-theorem IsLocalMinOn.inter (hf : IsLocalMinOn f s a) t : IsLocalMinOn f (s ∩ t) a :=
+theorem IsLocalMinOn.inter (hf : IsLocalMinOn f s a) (t) : IsLocalMinOn f (s ∩ t) a :=
   hf.on_subset (inter_subset_left s t)
 
-theorem IsLocalMaxOn.inter (hf : IsLocalMaxOn f s a) t : IsLocalMaxOn f (s ∩ t) a :=
+theorem IsLocalMaxOn.inter (hf : IsLocalMaxOn f s a) (t) : IsLocalMaxOn f (s ∩ t) a :=
   hf.on_subset (inter_subset_left s t)
 
-theorem IsLocalExtrOn.inter (hf : IsLocalExtrOn f s a) t : IsLocalExtrOn f (s ∩ t) a :=
+theorem IsLocalExtrOn.inter (hf : IsLocalExtrOn f s a) (t) : IsLocalExtrOn f (s ∩ t) a :=
   hf.on_subset (inter_subset_left s t)
 
 theorem IsMinOn.localize (hf : IsMinOn f s a) : IsLocalMinOn f s a :=

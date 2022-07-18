@@ -65,7 +65,7 @@ instance move_left_impartial {G : Pgame} [h : G.Impartial] (i : G.LeftMoves) : (
 instance move_right_impartial {G : Pgame} [h : G.Impartial] (j : G.RightMoves) : (G.moveRight j).Impartial :=
   (impartial_def.1 h).2.2 j
 
-theorem impartial_congr : ∀ {G H : Pgame} e : G ≡r H [G.Impartial], H.Impartial
+theorem impartial_congr : ∀ {G H : Pgame} (e : G ≡r H) [G.Impartial], H.Impartial
   | G, H, e => by
     intro h
     rw [impartial_def]
@@ -77,7 +77,7 @@ theorem impartial_congr : ∀ {G H : Pgame} e : G ≡r H [G.Impartial], H.Impart
     · exact impartial_congr (hR j)
       
 
-instance impartial_add : ∀ G H : Pgame [G.Impartial] [H.Impartial], (G + H).Impartial
+instance impartial_add : ∀ (G H : Pgame) [G.Impartial] [H.Impartial], (G + H).Impartial
   | G, H => by
     intro hG hH
     rw [impartial_def]
@@ -97,7 +97,7 @@ instance impartial_add : ∀ G H : Pgame [G.Impartial] [H.Impartial], (G + H).Im
         apply impartial_add
       
 
-instance impartial_neg : ∀ G : Pgame [G.Impartial], (-G).Impartial
+instance impartial_neg : ∀ (G : Pgame) [G.Impartial], (-G).Impartial
   | G => by
     intro hG
     rw [impartial_def]

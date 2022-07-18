@@ -77,16 +77,19 @@ theorem abs_mul_exp_arg_mul_I (x : ℂ) : ↑(abs x) * exp (arg x * I) = x := by
 theorem abs_mul_cos_add_sin_mul_I (x : ℂ) : (abs x * (cos (arg x) + sin (arg x) * I) : ℂ) = x := by
   rw [← exp_mul_I, abs_mul_exp_arg_mul_I]
 
-@[simp]
-theorem range_exp_mul_I : (Range fun x : ℝ => exp (x * I)) = Metric.Sphere 0 1 := by
-  simp only [← Metric.Sphere, ← dist_eq, ← sub_zero]
-  refine' (range_subset_iff.2 fun x => _).antisymm fun z hz : abs z = 1 => _
-  · exact abs_exp_of_real_mul_I _
-    
-  · refine' ⟨arg z, _⟩
-    calc exp (arg z * I) = abs z * exp (arg z * I) := by
+theorem abs_eq_one_iff (z : ℂ) : abs z = 1 ↔ ∃ θ : ℝ, exp (θ * I) = z := by
+  refine' ⟨fun hz => ⟨arg z, _⟩, _⟩
+  · calc exp (arg z * I) = abs z * exp (arg z * I) := by
         rw [hz, of_real_one, one_mulₓ]_ = z := abs_mul_exp_arg_mul_I z
     
+  · rintro ⟨θ, rfl⟩
+    exact Complex.abs_exp_of_real_mul_I θ
+    
+
+@[simp]
+theorem range_exp_mul_I : (Range fun x : ℝ => exp (x * I)) = Metric.Sphere 0 1 := by
+  ext x
+  simp only [← mem_sphere_zero_iff_norm, ← norm_eq_abs, ← abs_eq_one_iff, ← mem_range]
 
 theorem arg_mul_cos_add_sin_mul_I {r : ℝ} (hr : 0 < r) {θ : ℝ} (hθ : θ ∈ Ioc (-π) π) :
     arg (r * (cos θ + sin θ * I)) = θ := by
@@ -240,6 +243,9 @@ theorem arg_eq_pi_iff {z : ℂ} : arg z = π ↔ z.re < 0 ∧ z.im = 0 := by
     rw [← arg_neg_one, ← arg_real_mul (-1) (neg_pos.2 h)]
     simp [of_real_def]
     
+
+theorem arg_lt_pi_iff {z : ℂ} : arg z < π ↔ 0 ≤ z.re ∨ z.im ≠ 0 := by
+  rw [(arg_le_pi z).lt_iff_ne, not_iff_comm, not_or_distrib, not_leₓ, not_not, arg_eq_pi_iff]
 
 theorem arg_of_real_of_neg {x : ℝ} (hx : x < 0) : arg x = π :=
   arg_eq_pi_iff.2 ⟨hx, rfl⟩
@@ -593,6 +599,27 @@ theorem continuous_within_at_arg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0)
 theorem tendsto_arg_nhds_within_im_nonneg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (him : z.im = 0) :
     Tendsto arg (𝓝[{ z : ℂ | 0 ≤ z.im }] z) (𝓝 π) := by
   simpa only [← arg_eq_pi_iff.2 ⟨hre, him⟩] using (continuous_within_at_arg_of_re_neg_of_im_zero hre him).Tendsto
+
+theorem continuous_at_arg_coe_angle (h : x ≠ 0) : ContinuousAt (coe ∘ arg : ℂ → Real.Angle) x := by
+  by_cases' hs : 0 < x.re ∨ x.im ≠ 0
+  · exact real.angle.continuous_coe.continuous_at.comp (continuous_at_arg hs)
+    
+  · rw [← Function.comp.right_id (coe ∘ arg),
+      (Function.funext_iffₓ.2 fun _ => (neg_negₓ _).symm : (id : ℂ → ℂ) = Neg.neg ∘ Neg.neg), ← Function.comp.assoc]
+    refine' ContinuousAt.comp _ continuous_neg.continuous_at
+    suffices ContinuousAt (Function.update ((coe ∘ arg) ∘ Neg.neg : ℂ → Real.Angle) 0 π) (-x) by
+      rwa [continuous_at_update_of_ne (neg_ne_zero.2 h)] at this
+    have ha : Function.update ((coe ∘ arg) ∘ Neg.neg : ℂ → Real.Angle) 0 π = fun z => (arg z : Real.Angle) + π := by
+      rw [Function.update_eq_iff]
+      exact
+        ⟨by
+          simp , fun z hz => arg_neg_coe_angle hz⟩
+    rw [ha]
+    push_neg  at hs
+    refine' (real.angle.continuous_coe.continuous_at.comp (continuous_at_arg (Or.inl _))).add continuous_at_const
+    rw [neg_re, neg_pos]
+    exact hs.1.lt_of_ne fun h0 => h (ext_iff.2 ⟨h0, hs.2⟩)
+    
 
 end Continuity
 

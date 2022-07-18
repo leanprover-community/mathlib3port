@@ -278,7 +278,7 @@ theorem LinearIndependent.finite_of_is_noetherian [IsNoetherian R M] {v : ι →
 
 theorem LinearIndependent.set_finite_of_is_noetherian [IsNoetherian R M] {s : Set M}
     (hi : LinearIndependent R (coe : s → M)) : s.Finite :=
-  @Set.finite_of_finite _ _ hi.finite_of_is_noetherian
+  @Set.to_finite _ _ hi.finite_of_is_noetherian
 
 /-- Over any nontrivial ring, the existence of a finite spanning set implies that any basis is finite.
 -/
@@ -584,7 +584,7 @@ theorem Basis.le_span {J : Set M} (v : Basis ι R M) (hJ : span R J = ⊤) : # (
     suffices # (⋃ j, S' j) < # (range v) by
       exact not_le_of_lt this ⟨Set.embeddingOfSubset _ _ hs⟩
     refine' lt_of_le_of_ltₓ (le_transₓ Cardinal.mk_Union_le_sum_mk (Cardinal.sum_le_sum _ (fun _ => ℵ₀) _)) _
-    · exact fun j => (Cardinal.lt_aleph_0_of_fintype _).le
+    · exact fun j => (Cardinal.lt_aleph_0_of_finite _).le
       
     · simpa
       
@@ -800,7 +800,7 @@ do induction on adjoining a linear independent element to a submodule. -/
 def Submodule.inductionOnRank [IsDomain R] [Fintype ι] (b : Basis ι R M) (P : Submodule R M → Sort _)
     (ih :
       ∀ N : Submodule R M,
-        (∀, ∀ N' ≤ N, ∀, ∀ x ∈ N, ∀, (∀ c : R, ∀ y ∈ N', ∀, c • x + y = (0 : M) → c = 0) → P N') → P N)
+        (∀, ∀ N' ≤ N, ∀, ∀ x ∈ N, ∀, (∀ (c : R), ∀ y ∈ N', ∀, c • x + y = (0 : M) → c = 0) → P N') → P N)
     (N : Submodule R M) : P N :=
   Submodule.inductionOnRankAux b P ih (Fintype.card ι) N fun s hs hli => by
     simpa using b.card_le_card_of_linear_independent hli
@@ -944,7 +944,6 @@ variable [Field K] [AddCommGroupₓ V] [Module K V] [AddCommGroupₓ V₁] [Modu
 
 variable [AddCommGroupₓ V'] [Module K V']
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem dim_quotient_add_dim (p : Submodule K V) : Module.rank K (V ⧸ p) + Module.rank K p = Module.rank K V := by
   classical <;>
     exact

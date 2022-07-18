@@ -3,11 +3,12 @@ Copyright (c) 2019 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
+import Mathbin.Data.Polynomial.Expand
 import Mathbin.LinearAlgebra.FiniteDimensional
+import Mathbin.LinearAlgebra.Matrix.Determinant
 import Mathbin.RingTheory.Adjoin.Fg
 import Mathbin.RingTheory.Polynomial.ScaleRoots
 import Mathbin.RingTheory.Polynomial.Tower
-import Mathbin.LinearAlgebra.Matrix.Determinant
 
 /-!
 # Integral closure of a subring.
@@ -148,7 +149,7 @@ theorem is_integral_iff_is_integral_closure_finite {r : A} :
     IsIntegral R r ↔ ∃ s : Set R, s.Finite ∧ IsIntegral (Subring.closure s) r := by
   constructor <;> intro hr
   · rcases hr with ⟨p, hmp, hpr⟩
-    refine' ⟨_, Set.finite_mem_finset _, p.restriction, monic_restriction.2 hmp, _⟩
+    refine' ⟨_, Finset.finite_to_set _, p.restriction, monic_restriction.2 hmp, _⟩
     erw [← aeval_def, IsScalarTower.aeval_apply _ R, map_restriction, aeval_def, hpr]
     
   rcases hr with ⟨s, hs, hsr⟩
@@ -361,6 +362,12 @@ theorem is_integral_smul [Algebra S A] [Algebra R S] [IsScalarTower R S A] {x : 
   rw [Algebra.smul_def, IsScalarTower.algebra_map_apply R S A]
   exact is_integral_mul is_integral_algebra_map hx
 
+theorem is_integral_of_pow {x : A} {n : ℕ} (hn : 0 < n) (hx : IsIntegral R <| x ^ n) : IsIntegral R x := by
+  rcases hx with ⟨p, ⟨hmonic, heval⟩⟩
+  exact
+    ⟨expand R n p, monic.expand hn hmonic, by
+      rwa [eval₂_eq_eval_map, map_expand, expand_eval, ← eval₂_eq_eval_map]⟩
+
 variable (R A)
 
 /-- The integral closure of R in an R-algebra A. -/
@@ -416,7 +423,7 @@ theorem integralClosure.is_integral (x : integralClosure R A) : IsIntegral R x :
 theorem RingHom.is_integral_of_is_integral_mul_unit (x y : S) (r : R) (hr : f r * y = 1)
     (hx : f.IsIntegralElem (x * y)) : f.IsIntegralElem x := by
   obtain ⟨p, ⟨p_monic, hp⟩⟩ := hx
-  refine' ⟨scaleRoots p r, ⟨(monic_scale_roots_iff r).2 p_monic, _⟩⟩
+  refine' ⟨scale_roots p r, ⟨(monic_scale_roots_iff r).2 p_monic, _⟩⟩
   convert scale_roots_eval₂_eq_zero f hp
   rw [mul_comm x y, ← mul_assoc, hr, one_mulₓ]
 
@@ -461,6 +468,10 @@ theorem IsIntegral.det {n : Type _} [Fintype n] [DecidableEq n] {M : Matrix n n 
     IsIntegral R M.det := by
   rw [Matrix.det_apply]
   exact IsIntegral.sum _ fun σ hσ => IsIntegral.zsmul (IsIntegral.prod _ fun i hi => h _ _) _
+
+@[simp]
+theorem IsIntegral.pow_iff {x : A} {n : ℕ} (hn : 0 < n) : IsIntegral R (x ^ n) ↔ IsIntegral R x :=
+  ⟨is_integral_of_pow hn, fun hx => IsIntegral.pow hx n⟩
 
 section
 
@@ -572,7 +583,7 @@ end
 
 section IsIntegralClosure
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`algebra_map_injective] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`algebra_map_injective] []
 /-- `is_integral_closure A R B` is the characteristic predicate stating `A` is
 the integral closure of `R` in `B`,
 i.e. that an element of `B` is integral over `R` iff it is an element of (the image of) `A`.

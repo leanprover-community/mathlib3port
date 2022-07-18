@@ -33,10 +33,10 @@ the `order_topology`, then this condition is equivalent to `is_preconnected s`. 
 class OrdConnected (s : Set α) : Prop where
   out' ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s) : Icc x y ⊆ s
 
-theorem OrdConnected.out (h : OrdConnected s) : ∀ ⦃x⦄ hx : x ∈ s ⦃y⦄ hy : y ∈ s, Icc x y ⊆ s :=
+theorem OrdConnected.out (h : OrdConnected s) : ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), Icc x y ⊆ s :=
   h.1
 
-theorem ord_connected_def : OrdConnected s ↔ ∀ ⦃x⦄ hx : x ∈ s ⦃y⦄ hy : y ∈ s, Icc x y ⊆ s :=
+theorem ord_connected_def : OrdConnected s ↔ ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), Icc x y ⊆ s :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
 
 /-- It suffices to prove `[x, y] ⊆ s` for `x y ∈ s`, `x ≤ y`. -/
@@ -53,6 +53,12 @@ theorem ord_connected_of_Ioo {α : Type _} [PartialOrderₓ α] {s : Set α}
     
   rw [← Ioc_insert_left hxy, ← Ioo_insert_right hxy']
   exact insert_subset.2 ⟨hx, insert_subset.2 ⟨hy, hs x hx y hy hxy'⟩⟩
+
+theorem OrdConnected.preimage_mono {f : β → α} (hs : OrdConnected s) (hf : Monotone f) : OrdConnected (f ⁻¹' s) :=
+  ⟨fun x hx y hy z hz => hs.out hx hy ⟨hf hz.1, hf hz.2⟩⟩
+
+theorem OrdConnected.preimage_anti {f : β → α} (hs : OrdConnected s) (hf : Antitone f) : OrdConnected (f ⁻¹' s) :=
+  ⟨fun x hx y hy z hz => hs.out hy hx ⟨hf hz.2, hf hz.1⟩⟩
 
 protected theorem Icc_subset (s : Set α) [hs : OrdConnected s] {x y} (hx : x ∈ s) (hy : y ∈ s) : Icc x y ⊆ s :=
   hs.out hx hy
@@ -79,8 +85,8 @@ theorem ord_connected_Inter {ι : Sort _} {s : ι → Set α} (hs : ∀ i, OrdCo
 instance ord_connected_Inter' {ι : Sort _} {s : ι → Set α} [∀ i, OrdConnected (s i)] : OrdConnected (⋂ i, s i) :=
   ord_connected_Inter ‹_›
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i hi)
-theorem ord_connected_bInter {ι : Sort _} {p : ι → Prop} {s : ∀ i : ι hi : p i, Set α}
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i hi)
+theorem ord_connected_bInter {ι : Sort _} {p : ι → Prop} {s : ∀ (i : ι) (hi : p i), Set α}
     (hs : ∀ i hi, OrdConnected (s i hi)) : OrdConnected (⋂ (i) (hi), s i hi) :=
   ord_connected_Inter fun i => ord_connected_Inter <| hs i
 
@@ -139,7 +145,7 @@ theorem ord_connected_univ : OrdConnected (Univ : Set α) :=
 
 /-- In a dense order `α`, the subtype from an `ord_connected` set is also densely ordered. -/
 instance [DenselyOrdered α] {s : Set α} [hs : OrdConnected s] : DenselyOrdered s :=
-  ⟨fun a b h : (a : α) < b =>
+  ⟨fun a b (h : (a : α) < b) =>
     let ⟨x, H⟩ := exists_between h
     ⟨⟨x, (hs.out a.2 b.2) (Ioo_subset_Icc_self H)⟩, H⟩⟩
 
@@ -168,7 +174,7 @@ theorem ord_connected_interval {a b : α} : OrdConnected (Interval a b) :=
 theorem OrdConnected.interval_subset (hs : OrdConnected s) ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s) : Interval x y ⊆ s := by
   cases le_totalₓ x y <;> simp only [← interval_of_le, ← interval_of_ge, *] <;> apply hs.out <;> assumption
 
-theorem ord_connected_iff_interval_subset : OrdConnected s ↔ ∀ ⦃x⦄ hx : x ∈ s ⦃y⦄ hy : y ∈ s, Interval x y ⊆ s :=
+theorem ord_connected_iff_interval_subset : OrdConnected s ↔ ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), Interval x y ⊆ s :=
   ⟨fun h => h.interval_subset, fun h =>
     ord_connected_iff.2 fun x hx y hy hxy => by
       simpa only [← interval_of_le hxy] using h hx hy⟩

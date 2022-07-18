@@ -65,13 +65,13 @@ open FirstOrder
 
 open Structure Finₓ
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1387:30: infer kinds are unsupported in Lean 4: var {}
--- ./././Mathport/Syntax/Translate/Basic.lean:1387:30: infer kinds are unsupported in Lean 4: func {}
+-- ./././Mathport/Syntax/Translate/Basic.lean:1422:30: infer kinds are unsupported in Lean 4: var {}
+-- ./././Mathport/Syntax/Translate/Basic.lean:1422:30: infer kinds are unsupported in Lean 4: func {}
 /-- A term on `α` is either a variable indexed by an element of `α`
   or a function symbol applied to simpler terms. -/
 inductive Term (α : Type u') : Type max u u'
   | var : ∀ a : α, term
-  | func : ∀ {l : ℕ} f : L.Functions l ts : Finₓ l → term, term
+  | func : ∀ {l : ℕ} (f : L.Functions l) (ts : Finₓ l → term), term
 
 export Term ()
 
@@ -125,12 +125,12 @@ theorem relabel_comp_relabel (f : α → β) (g : β → γ) :
   funext (relabel_relabel f g)
 
 /-- Restricts a term to use only a set of the given variables. -/
-def restrictVarₓ [DecidableEq α] : ∀ t : L.Term α f : t.varFinset → β, L.Term β
+def restrictVarₓ [DecidableEq α] : ∀ (t : L.Term α) (f : t.varFinset → β), L.Term β
   | var a, f => var (f ⟨a, mem_singleton_self a⟩)
   | func F ts, f => func F fun i => (ts i).restrictVar (f ∘ Set.inclusion (subset_bUnion_of_mem _ (mem_univ i)))
 
 /-- Restricts a term to use only a set of the given variables on the left side of a sum. -/
-def restrictVarLeftₓ [DecidableEq α] {γ : Type _} : ∀ t : L.Term (Sum α γ) f : t.varFinsetLeft → β, L.Term (Sum β γ)
+def restrictVarLeftₓ [DecidableEq α] {γ : Type _} : ∀ (t : L.Term (Sum α γ)) (f : t.varFinsetLeft → β), L.Term (Sum β γ)
   | var (Sum.inl a), f => var (Sum.inl (f ⟨a, mem_singleton_self a⟩))
   | var (Sum.inr a), f => var (Sum.inr a)
   | func F ts, f => func F fun i => (ts i).restrictVarLeft (f ∘ Set.inclusion (subset_bUnion_of_mem _ (mem_univ i)))
@@ -215,7 +215,7 @@ def Lequiv.onTerm (φ : L ≃ᴸ L') : L.Term α ≃ L'.Term α where
 
 variable (L) (α)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1387:30: infer kinds are unsupported in Lean 4: falsum {}
+-- ./././Mathport/Syntax/Translate/Basic.lean:1422:30: infer kinds are unsupported in Lean 4: falsum {}
 /-- `bounded_formula α n` is the type of formulas with free variables indexed by `α` and up to `n`
   additional free variables. -/
 inductive BoundedFormula : ℕ → Type max u v u'
@@ -319,7 +319,7 @@ def freeVarFinsetₓ [DecidableEq α] : ∀ {n}, L.BoundedFormula α n → Finse
 
 /-- Casts `L.bounded_formula α m` as `L.bounded_formula α n`, where `m ≤ n`. -/
 @[simp]
-def castLeₓ : ∀ {m n : ℕ} h : m ≤ n, L.BoundedFormula α m → L.BoundedFormula α n
+def castLeₓ : ∀ {m n : ℕ} (h : m ≤ n), L.BoundedFormula α m → L.BoundedFormula α n
   | m, n, h, falsum => falsum
   | m, n, h, equal t₁ t₂ => equal (t₁.relabel (Sum.map id (Finₓ.castLe h))) (t₂.relabel (Sum.map id (Finₓ.castLe h)))
   | m, n, h, rel R ts => rel R (Term.relabelₓ (Sum.map id (Finₓ.castLe h)) ∘ ts)
@@ -365,7 +365,8 @@ theorem cast_le_comp_cast_le {k m n} (km : k ≤ m) (mn : m ≤ n) :
   funext (cast_le_cast_le km mn)
 
 /-- Restricts a bounded formula to only use a particular set of free variables. -/
-def restrictFreeVarₓ [DecidableEq α] : ∀ {n : ℕ} φ : L.BoundedFormula α n f : φ.freeVarFinset → β, L.BoundedFormula β n
+def restrictFreeVarₓ [DecidableEq α] :
+    ∀ {n : ℕ} (φ : L.BoundedFormula α n) (f : φ.freeVarFinset → β), L.BoundedFormula β n
   | n, falsum, f => falsum
   | n, equal t₁ t₂, f =>
     equal (t₁.restrictVarLeft (f ∘ Set.inclusion (subset_union_left _ _)))
@@ -398,7 +399,7 @@ def mapTermRelₓ {g : ℕ → ℕ} (ft : ∀ n, L.Term (Sum α (Finₓ n)) → 
   | n, all φ => (h n φ.mapTermRel).all
 
 /-- Raises all of the `fin`-indexed variables of a formula greater than or equal to `m` by `n'`. -/
-def liftAt : ∀ {n : ℕ} n' m : ℕ, L.BoundedFormula α n → L.BoundedFormula α (n + n') := fun n n' m φ =>
+def liftAt : ∀ {n : ℕ} (n' m : ℕ), L.BoundedFormula α n → L.BoundedFormula α (n + n') := fun n n' m φ =>
   φ.mapTermRel (fun k t => t.liftAt n' m) (fun _ => id) fun _ =>
     castLeₓ
       (by
@@ -888,7 +889,7 @@ section Cardinality
 variable (L)
 
 /-- A sentence indicating that a structure has `n` distinct elements. -/
-protected def Sentence.cardGe n : L.Sentence :=
+protected def Sentence.cardGe (n) : L.Sentence :=
   (((((List.finRange n).product (List.finRange n)).filter fun ij : _ × _ => ij.1 ≠ ij.2).map fun ij : _ × _ =>
           ∼((&ij.1).bdEqual &ij.2)).foldr
       (·⊓·) ⊤).exs
@@ -915,7 +916,6 @@ theorem monotone_distinct_constants_theory : Monotone (L.DistinctConstantsTheory
 theorem directed_distinct_constants_theory : Directed (· ⊆ ·) (L.DistinctConstantsTheory : Set α → L[[α]].Theory) :=
   Monotone.directed_le monotone_distinct_constants_theory
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem distinct_constants_theory_eq_Union (s : Set α) :
     L.DistinctConstantsTheory s =
       ⋃ t : Finset s, L.DistinctConstantsTheory (t.map (Function.Embedding.subtype fun x => x ∈ s)) :=

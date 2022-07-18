@@ -302,7 +302,6 @@ theorem exists_le_of_le {a b : α} {P Q : Finpartition a} (h : P ≤ Q) (hb : b 
   rintro rfl
   exact H _ hc hcd
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem card_mono {a : α} {P Q : Finpartition a} (h : P ≤ Q) : Q.parts.card ≤ P.parts.card := by
   classical
   have : ∀, ∀ b ∈ Q.parts, ∀, ∃ c ∈ P.parts, c ≤ b := fun b => exists_le_of_le h
@@ -386,16 +385,22 @@ end DistribLattice
 
 section GeneralizedBooleanAlgebra
 
-variable [GeneralizedBooleanAlgebra α] [DecidableEq α] {a : α} (P : Finpartition a)
+variable [GeneralizedBooleanAlgebra α] [DecidableEq α] {a b c : α} (P : Finpartition a)
 
 /-- Restricts a finpartition to avoid a given element. -/
 @[simps]
 def avoid (b : α) : Finpartition (a \ b) :=
   ofErase (P.parts.Image (· \ b)) (P.Disjoint.image_finset_of_le fun a => sdiff_le).SupIndep
     (by
-      rw [sup_image, comp.left_id, Finset.sup_sdiff_right]
-      congr
-      exact P.sup_parts)
+      rw [sup_image, comp.left_id, Finset.sup_sdiff_right, ← id_def, P.sup_parts])
+
+@[simp]
+theorem mem_avoid : c ∈ (P.avoid b).parts ↔ ∃ d ∈ P.parts, ¬d ≤ b ∧ d \ b = c := by
+  simp only [← avoid, ← of_erase_parts, ← mem_erase, ← Ne.def, ← mem_image, ← exists_prop, exists_and_distrib_left, ←
+    @And.left_comm (c ≠ ⊥)]
+  refine' exists_congr fun d => and_congr_right' <| and_congr_left _
+  rintro rfl
+  rw [sdiff_eq_bot_iff]
 
 end GeneralizedBooleanAlgebra
 
@@ -497,7 +502,7 @@ def atomise (s : Finset α) (F : Finset (Finset α)) : Finpartition s :=
 
 variable {F : Finset (Finset α)}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (Q «expr ⊆ » F)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (Q «expr ⊆ » F)
 theorem mem_atomise {t : Finset α} :
     t ∈ (atomise s F).parts ↔ t.Nonempty ∧ ∃ (Q : _)(_ : Q ⊆ F), (s.filter fun i => ∀, ∀ u ∈ F, ∀, u ∈ Q ↔ i ∈ u) = t :=
   by
@@ -505,8 +510,8 @@ theorem mem_atomise {t : Finset α} :
     ← and_comm, ← mem_powerset, ← exists_prop]
 
 theorem atomise_empty (hs : s.Nonempty) : (atomise s ∅).parts = {s} := by
-  simp only [← atomise, ← powerset_empty, ← image_singleton, ← not_mem_empty, ← forall_false_left, ← implies_true_iff, ←
-    filter_true]
+  simp only [← atomise, ← powerset_empty, ← image_singleton, ← not_mem_empty, ← IsEmpty.forall_iff, ← implies_true_iff,
+    ← filter_true]
   exact erase_eq_of_not_mem (not_mem_singleton.2 hs.ne_empty.symm)
 
 theorem card_atomise_le : (atomise s F).parts.card ≤ 2 ^ F.card :=

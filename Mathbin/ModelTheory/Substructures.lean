@@ -287,7 +287,7 @@ variable {L} (S)
 is preserved under function symbols, then `p` holds for all elements of the closure of `s`. -/
 @[elab_as_eliminator]
 theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure L s) (Hs : ∀, ∀ x ∈ s, ∀, p x)
-    (Hfun : ∀ {n : ℕ} f : L.Functions n, ClosedUnder f (SetOf p)) : p x :=
+    (Hfun : ∀ {n : ℕ} (f : L.Functions n), ClosedUnder f (SetOf p)) : p x :=
   (@closure_le L M _ ⟨SetOf p, fun n => Hfun⟩ _).2 Hs h
 
 /-- If `s` is a dense set in a structure `M`, `substructure.closure L s = ⊤`, then in order to prove
@@ -295,7 +295,7 @@ that some predicate `p` holds for all `x : M` it suffices to verify `p x` for `x
 that `p` is preserved under function symbols. -/
 @[elab_as_eliminator]
 theorem dense_induction {p : M → Prop} (x : M) {s : Set M} (hs : closure L s = ⊤) (Hs : ∀, ∀ x ∈ s, ∀, p x)
-    (Hfun : ∀ {n : ℕ} f : L.Functions n, ClosedUnder f (SetOf p)) : p x := by
+    (Hfun : ∀ {n : ℕ} (f : L.Functions n), ClosedUnder f (SetOf p)) : p x := by
   have : ∀, ∀ x ∈ closure L s, ∀, p x := fun x hx => closure_induction hx Hs fun n => Hfun
   simpa [← hs] using this x
 
@@ -557,9 +557,10 @@ theorem coe_top_equiv : ⇑(topEquiv : (⊤ : L.Substructure M) ≃[L] M) = coe 
 
 /-- A dependent version of `substructure.closure_induction`. -/
 @[elab_as_eliminator]
-theorem closure_induction' (s : Set M) {p : ∀ x, x ∈ closure L s → Prop} (Hs : ∀ x h : x ∈ s, p x (subset_closure h))
-    (Hfun : ∀ {n : ℕ} f : L.Functions n, ClosedUnder f { x | ∃ hx, p x hx }) {x} (hx : x ∈ closure L s) : p x hx := by
-  refine' Exists.elim _ fun hx : x ∈ closure L s hc : p x hx => hc
+theorem closure_induction' (s : Set M) {p : ∀ x, x ∈ closure L s → Prop}
+    (Hs : ∀ (x) (h : x ∈ s), p x (subset_closure h))
+    (Hfun : ∀ {n : ℕ} (f : L.Functions n), ClosedUnder f { x | ∃ hx, p x hx }) {x} (hx : x ∈ closure L s) : p x hx := by
+  refine' Exists.elim _ fun (hx : x ∈ closure L s) (hc : p x hx) => hc
   exact closure_induction hx (fun x hx => ⟨subset_closure hx, Hs x hx⟩) @Hfun
 
 end Substructure

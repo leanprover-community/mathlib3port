@@ -85,13 +85,13 @@ theorem smul_eq_mul (α : Type _) [Mul α] {a a' : α} : a • a' = a * a' :=
 @[ext, protect_proj]
 class AddAction (G : Type _) (P : Type _) [AddMonoidₓ G] extends HasVadd G P where
   zero_vadd : ∀ p : P, (0 : G) +ᵥ p = p
-  add_vadd : ∀ g₁ g₂ : G p : P, g₁ + g₂ +ᵥ p = g₁ +ᵥ (g₂ +ᵥ p)
+  add_vadd : ∀ (g₁ g₂ : G) (p : P), g₁ + g₂ +ᵥ p = g₁ +ᵥ (g₂ +ᵥ p)
 
 /-- Typeclass for multiplicative actions by monoids. This generalizes group actions. -/
 @[ext, protect_proj, to_additive]
 class MulAction (α : Type _) (β : Type _) [Monoidₓ α] extends HasSmul α β where
   one_smul : ∀ b : β, (1 : α) • b = b
-  mul_smul : ∀ x y : α b : β, (x * y) • b = x • y • b
+  mul_smul : ∀ (x y : α) (b : β), (x * y) • b = x • y • b
 
 instance Additive.addAction [Monoidₓ α] [MulAction α β] : AddAction (Additive α) β where
   vadd := (· • ·) ∘ Additive.toMul
@@ -162,12 +162,12 @@ end MulAction
 
 /-- A typeclass mixin saying that two additive actions on the same space commute. -/
 class VaddCommClass (M N α : Type _) [HasVadd M α] [HasVadd N α] : Prop where
-  vadd_comm : ∀ m : M n : N a : α, m +ᵥ (n +ᵥ a) = n +ᵥ (m +ᵥ a)
+  vadd_comm : ∀ (m : M) (n : N) (a : α), m +ᵥ (n +ᵥ a) = n +ᵥ (m +ᵥ a)
 
 /-- A typeclass mixin saying that two multiplicative actions on the same space commute. -/
 @[to_additive]
 class SmulCommClass (M N α : Type _) [HasSmul M α] [HasSmul N α] : Prop where
-  smul_comm : ∀ m : M n : N a : α, m • n • a = n • m • a
+  smul_comm : ∀ (m : M) (n : N) (a : α), m • n • a = n • m • a
 
 export MulAction (mul_smul)
 
@@ -214,7 +214,7 @@ instance smul_comm_class_self (M α : Type _) [CommMonoidₓ M] [MulAction M α]
 action of `M` on `α` is determined by the multiplicative actions of `M` on `N`
 and `N` on `α`. -/
 class IsScalarTower (M N α : Type _) [HasSmul M N] [HasSmul N α] [HasSmul M α] : Prop where
-  smul_assoc : ∀ x : M y : N z : α, (x • y) • z = x • y • z
+  smul_assoc : ∀ (x : M) (y : N) (z : α), (x • y) • z = x • y • z
 
 @[simp]
 theorem smul_assoc {M N} [HasSmul M N] [HasSmul N α] [HasSmul M α] [IsScalarTower M N α] (x : M) (y : N) (z : α) :
@@ -228,7 +228,7 @@ instance Semigroupₓ.is_scalar_tower [Semigroupₓ α] : IsScalarTower α α α
 equal, that is that `M` acts centrally on `α`. This can be thought of as a version of commutativity
 for `•`. -/
 class IsCentralScalar (M α : Type _) [HasSmul M α] [HasSmul Mᵐᵒᵖ α] : Prop where
-  op_smul_eq_smul : ∀ m : M a : α, MulOpposite.op m • a = m • a
+  op_smul_eq_smul : ∀ (m : M) (a : α), MulOpposite.op m • a = m • a
 
 theorem IsCentralScalar.unop_smul_eq_smul {M α : Type _} [HasSmul M α] [HasSmul Mᵐᵒᵖ α] [IsCentralScalar M α] (m : Mᵐᵒᵖ)
     (a : α) : MulOpposite.unop m • a = m • a :=
@@ -383,7 +383,7 @@ variable {M}
 See note [reducible non-instances]. -/
 @[reducible, to_additive "Pullback an additive action along an injective map respecting `+ᵥ`."]
 protected def Function.Injective.mulAction [HasSmul M β] (f : β → α) (hf : Injective f)
-    (smul : ∀ c : M x, f (c • x) = c • f x) : MulAction M β where
+    (smul : ∀ (c : M) (x), f (c • x) = c • f x) : MulAction M β where
   smul := (· • ·)
   one_smul := fun x => hf <| (smul _ _).trans <| one_smul _ (f x)
   mul_smul := fun c₁ c₂ x =>
@@ -394,7 +394,7 @@ protected def Function.Injective.mulAction [HasSmul M β] (f : β → α) (hf : 
 See note [reducible non-instances]. -/
 @[reducible, to_additive "Pushforward an additive action along a surjective map respecting `+ᵥ`."]
 protected def Function.Surjective.mulAction [HasSmul M β] (f : α → β) (hf : Surjective f)
-    (smul : ∀ c : M x, f (c • x) = c • f x) : MulAction M β where
+    (smul : ∀ (c : M) (x), f (c • x) = c • f x) : MulAction M β where
   smul := (· • ·)
   one_smul := fun y => by
     rcases hf y with ⟨x, rfl⟩
@@ -409,7 +409,7 @@ See also `function.surjective.distrib_mul_action_left` and `function.surjective.
 -/
 @[reducible, to_additive "Push forward the action of `R` on `M` along a compatible\nsurjective map `f : R →+ S`."]
 def Function.Surjective.mulActionLeft {R S M : Type _} [Monoidₓ R] [MulAction R M] [Monoidₓ S] [HasSmul S M]
-    (f : R →* S) (hf : Function.Surjective f) (hsmul : ∀ c x : M, f c • x = c • x) : MulAction S M where
+    (f : R →* S) (hf : Function.Surjective f) (hsmul : ∀ (c) (x : M), f c • x = c • x) : MulAction S M where
   smul := (· • ·)
   one_smul := fun b => by
     rw [← f.map_one, hsmul, one_smul]
@@ -497,7 +497,7 @@ end
 section CompatibleScalar
 
 @[simp]
-theorem smul_one_smul {M} N [Monoidₓ N] [HasSmul M N] [MulAction N α] [HasSmul M α] [IsScalarTower M N α] (x : M)
+theorem smul_one_smul {M} (N) [Monoidₓ N] [HasSmul M N] [MulAction N α] [HasSmul M α] [IsScalarTower M N α] (x : M)
     (y : α) : (x • (1 : N)) • y = x • y := by
   rw [smul_assoc, one_smul]
 
@@ -511,13 +511,13 @@ theorem mul_smul_one {M N} [MulOneClassₓ N] [HasSmul M N] [SmulCommClass M N N
   by
   rw [← smul_eq_mul, ← smul_comm, smul_eq_mul, mul_oneₓ]
 
-theorem IsScalarTower.of_smul_one_mul {M N} [Monoidₓ N] [HasSmul M N] (h : ∀ x : M y : N, x • (1 : N) * y = x • y) :
+theorem IsScalarTower.of_smul_one_mul {M N} [Monoidₓ N] [HasSmul M N] (h : ∀ (x : M) (y : N), x • (1 : N) * y = x • y) :
     IsScalarTower M N N :=
   ⟨fun x y z => by
     rw [← h, smul_eq_mul, mul_assoc, h, smul_eq_mul]⟩
 
 @[to_additive]
-theorem SmulCommClass.of_mul_smul_one {M N} [Monoidₓ N] [HasSmul M N] (H : ∀ x : M y : N, y * x • (1 : N) = x • y) :
+theorem SmulCommClass.of_mul_smul_one {M N} [Monoidₓ N] [HasSmul M N] (H : ∀ (x : M) (y : N), y * x • (1 : N) = x • y) :
     SmulCommClass M N N :=
   ⟨fun x y z => by
     rw [← H x z, smul_eq_mul, ← H, smul_eq_mul, mul_assoc]⟩
@@ -527,7 +527,7 @@ end CompatibleScalar
 /-- Typeclass for multiplicative actions on additive structures. This generalizes group modules. -/
 @[ext]
 class DistribMulAction (M : Type _) (A : Type _) [Monoidₓ M] [AddMonoidₓ A] extends MulAction M A where
-  smul_add : ∀ r : M x y : A, r • (x + y) = r • x + r • y
+  smul_add : ∀ (r : M) (x y : A), r • (x + y) = r • x + r • y
   smul_zero : ∀ r : M, r • (0 : A) = 0
 
 section
@@ -546,7 +546,7 @@ homomorphism.
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.distribMulAction [AddMonoidₓ B] [HasSmul M B] (f : B →+ A) (hf : Injective f)
-    (smul : ∀ c : M x, f (c • x) = c • f x) : DistribMulAction M B :=
+    (smul : ∀ (c : M) (x), f (c • x) = c • f x) : DistribMulAction M B :=
   { hf.MulAction f smul with smul := (· • ·),
     smul_add := fun c x y =>
       hf <| by
@@ -560,7 +560,7 @@ homomorphism.
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.distribMulAction [AddMonoidₓ B] [HasSmul M B] (f : A →+ B) (hf : Surjective f)
-    (smul : ∀ c : M x, f (c • x) = c • f x) : DistribMulAction M B :=
+    (smul : ∀ (c : M) (x), f (c • x) = c • f x) : DistribMulAction M B :=
   { hf.MulAction f smul with smul := (· • ·),
     smul_add := fun c x y => by
       rcases hf x with ⟨x, rfl⟩
@@ -575,7 +575,7 @@ See also `function.surjective.mul_action_left` and `function.surjective.module_l
 -/
 @[reducible]
 def Function.Surjective.distribMulActionLeft {R S M : Type _} [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M]
-    [Monoidₓ S] [HasSmul S M] (f : R →* S) (hf : Function.Surjective f) (hsmul : ∀ c x : M, f c • x = c • x) :
+    [Monoidₓ S] [HasSmul S M] (f : R →* S) (hf : Function.Surjective f) (hsmul : ∀ (c) (x : M), f c • x = c • x) :
     DistribMulAction S M :=
   { hf.mulActionLeft f hsmul with smul := (· • ·),
     smul_zero :=
@@ -644,7 +644,7 @@ end
 conjugation actions. -/
 @[ext]
 class MulDistribMulAction (M : Type _) (A : Type _) [Monoidₓ M] [Monoidₓ A] extends MulAction M A where
-  smul_mul : ∀ r : M x y : A, r • (x * y) = r • x * r • y
+  smul_mul : ∀ (r : M) (x y : A), r • (x * y) = r • x * r • y
   smul_one : ∀ r : M, r • (1 : A) = 1
 
 export MulDistribMulAction (smul_one)
@@ -661,7 +661,7 @@ homomorphism.
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.mulDistribMulAction [Monoidₓ B] [HasSmul M B] (f : B →* A) (hf : Injective f)
-    (smul : ∀ c : M x, f (c • x) = c • f x) : MulDistribMulAction M B :=
+    (smul : ∀ (c : M) (x), f (c • x) = c • f x) : MulDistribMulAction M B :=
   { hf.MulAction f smul with smul := (· • ·),
     smul_mul := fun c x y =>
       hf <| by
@@ -675,7 +675,7 @@ homomorphism.
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.mulDistribMulAction [Monoidₓ B] [HasSmul M B] (f : A →* B) (hf : Surjective f)
-    (smul : ∀ c : M x, f (c • x) = c • f x) : MulDistribMulAction M B :=
+    (smul : ∀ (c : M) (x), f (c • x) = c • f x) : MulDistribMulAction M B :=
   { hf.MulAction f smul with smul := (· • ·),
     smul_mul := fun c x y => by
       rcases hf x with ⟨x, rfl⟩

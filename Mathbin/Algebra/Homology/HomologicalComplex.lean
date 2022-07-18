@@ -758,7 +758,7 @@ section MkHom
 variable {V} (P Q : ChainComplex V ℕ) (zero : P.x 0 ⟶ Q.x 0) (one : P.x 1 ⟶ Q.x 1)
   (one_zero_comm : one ≫ Q.d 1 0 = P.d 1 0 ≫ zero)
   (succ :
-    ∀ n : ℕ p : Σ'(f : P.x n ⟶ Q.x n)(f' : P.x (n + 1) ⟶ Q.x (n + 1)), f' ≫ Q.d (n + 1) n = P.d (n + 1) n ≫ f,
+    ∀ (n : ℕ) (p : Σ'(f : P.x n ⟶ Q.x n)(f' : P.x (n + 1) ⟶ Q.x (n + 1)), f' ≫ Q.d (n + 1) n = P.d (n + 1) n ≫ f),
       Σ'f'' : P.x (n + 2) ⟶ Q.x (n + 2), f'' ≫ Q.d (n + 2) (n + 1) = P.d (n + 2) (n + 1) ≫ p.2.1)
 
 /-- An auxiliary construction for `mk_hom`.
@@ -978,7 +978,7 @@ section MkHom
 variable {V} (P Q : CochainComplex V ℕ) (zero : P.x 0 ⟶ Q.x 0) (one : P.x 1 ⟶ Q.x 1)
   (one_zero_comm : zero ≫ Q.d 0 1 = P.d 0 1 ≫ one)
   (succ :
-    ∀ n : ℕ p : Σ'(f : P.x n ⟶ Q.x n)(f' : P.x (n + 1) ⟶ Q.x (n + 1)), f ≫ Q.d n (n + 1) = P.d n (n + 1) ≫ f',
+    ∀ (n : ℕ) (p : Σ'(f : P.x n ⟶ Q.x n)(f' : P.x (n + 1) ⟶ Q.x (n + 1)), f ≫ Q.d n (n + 1) = P.d n (n + 1) ≫ f'),
       Σ'f'' : P.x (n + 2) ⟶ Q.x (n + 2), p.2.1 ≫ Q.d (n + 1) (n + 2) = P.d (n + 1) (n + 2) ≫ f'')
 
 /-- An auxiliary construction for `mk_hom`.

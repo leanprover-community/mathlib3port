@@ -34,7 +34,7 @@ to make the range of `encode` decidable even when the finiteness of `α` is not.
 
 open Option List Nat Function
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`decode] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`decode] []
 /-- Constructively countable type. Made from an explicit injection `encode : α → ℕ` and a partial
 inverse `decode : ℕ → option α`. Note that finite types *are* countable. See `denumerable` if you
 wish to enforce infiniteness. -/
@@ -67,7 +67,7 @@ theorem surjective_decode_iget (α : Type _) [Encodable α] [Inhabited α] :
 
 /-- An encodable type has decidable equality. Not set as an instance because this is usually not the
 best way to infer decidability. -/
-def decidableEqOfEncodable α [Encodable α] : DecidableEq α
+def decidableEqOfEncodable (α) [Encodable α] : DecidableEq α
   | a, b => decidableOfIff _ encode_inj
 
 /-- If `α` is encodable and there is an injection `f : β → α`, then `β` is encodable as well. -/
@@ -80,7 +80,7 @@ def ofLeftInverse [Encodable α] (f : β → α) (finv : α → β) (linv : ∀ 
   ofLeftInjection f (some ∘ finv) fun b => congr_arg some (linv b)
 
 /-- Encodability is preserved by equivalence. -/
-def ofEquiv α [Encodable α] (e : β ≃ α) : Encodable β :=
+def ofEquiv (α) [Encodable α] (e : β ≃ α) : Encodable β :=
   ofLeftInverse e e.symm e.left_inv
 
 @[simp]
@@ -118,7 +118,7 @@ theorem decode_unit_zero : decode PUnit 0 = some PUnit.unit :=
   rfl
 
 @[simp]
-theorem decode_unit_succ n : decode PUnit (succ n) = none :=
+theorem decode_unit_succ (n) : decode PUnit (succ n) = none :=
   rfl
 
 /-- If `α` is encodable, then so is `option α`. -/
@@ -140,13 +140,13 @@ theorem decode_option_zero [Encodable α] : decode (Option α) 0 = some none :=
   rfl
 
 @[simp]
-theorem decode_option_succ [Encodable α] n : decode (Option α) (succ n) = (decode α n).map some :=
+theorem decode_option_succ [Encodable α] (n) : decode (Option α) (succ n) = (decode α n).map some :=
   rfl
 
 /-- Failsafe variant of `decode`. `decode₂ α n` returns the preimage of `n` under `encode` if it
 exists, and returns `none` if it doesn't. This requirement could be imposed directly on `decode` but
 is not to help make the definition easier to use. -/
-def decode₂ α [Encodable α] (n : ℕ) : Option α :=
+def decode₂ (α) [Encodable α] (n : ℕ) : Option α :=
   (decode α n).bind (Option.guard fun a => encode a = n)
 
 theorem mem_decode₂' [Encodable α] {n : ℕ} {a : α} : a ∈ decode₂ α n ↔ a ∈ decode α n ∧ encode a = n := by
@@ -256,7 +256,7 @@ theorem decode_zero : decode Bool 0 = some false :=
 theorem decode_one : decode Bool 1 = some true :=
   rfl
 
-theorem decode_ge_two n (h : 2 ≤ n) : decode Bool n = none := by
+theorem decode_ge_two (n) (h : 2 ≤ n) : decode Bool n = none := by
   suffices decode_sum n = none by
     change (decode_sum n).map _ = none
     rw [this]
@@ -295,7 +295,7 @@ theorem decode_sigma_val (n : ℕ) :
     cases n.unpair <;> rfl
 
 @[simp]
-theorem encode_sigma_val a b : @encode (Sigma γ) _ ⟨a, b⟩ = mkpair (encode a) (encode b) :=
+theorem encode_sigma_val (a b) : @encode (Sigma γ) _ ⟨a, b⟩ = mkpair (encode a) (encode b) :=
   rfl
 
 end Sigma
@@ -315,7 +315,7 @@ theorem decode_prod_val (n : ℕ) :
     simp <;> cases decode α n.unpair.1 <;> simp <;> cases decode β n.unpair.2 <;> rfl
 
 @[simp]
-theorem encode_prod_val a b : @encode (α × β) _ (a, b) = mkpair (encode a) (encode b) :=
+theorem encode_prod_val (a b) : @encode (α × β) _ (a, b) = mkpair (encode a) (encode b) :=
   rfl
 
 end Prod
@@ -348,7 +348,7 @@ theorem Subtype.encode_eq (a : Subtype P) : encode a = encode a.val := by
 
 end Subtype
 
-instance _root_.fin.encodable n : Encodable (Finₓ n) :=
+instance _root_.fin.encodable (n) : Encodable (Finₓ n) :=
   Subtype.encodable
 
 instance _root_.int.encodable : Encodable ℤ :=
@@ -484,7 +484,7 @@ theorem skolem {α : Type _} {β : α → Type _} {P : ∀ x, β x → Prop} [c 
 /-
 There is a total ordering on the elements of an encodable type, induced by the map to ℕ.
 -/
-def encode' α [Encodable α] : α ↪ ℕ :=
+def encode' (α) [Encodable α] : α ↪ ℕ :=
   ⟨Encodable.encode, Encodable.encode_injective⟩
 
 instance {α} [Encodable α] : IsTrans _ (encode' α ⁻¹'o (· ≤ ·)) :=

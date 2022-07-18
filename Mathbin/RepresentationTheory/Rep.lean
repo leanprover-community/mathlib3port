@@ -28,7 +28,7 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1359:31: unsupported: @[derive] abbrev
+-- ./././Mathport/Syntax/Translate/Basic.lean:1394:31: unsupported: @[derive] abbrev
 /-- The category of `k`-linear representations of a monoid `G`. -/
 abbrev Rep (k G : Type u) [Ringₓ k] [Monoidₓ G] :=
   Action (ModuleCat.{u} k) (Mon.of G)

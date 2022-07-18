@@ -60,7 +60,7 @@ def buildLimit : Cone F where
 
 variable {i}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]
 /-- (Implementation) Show the cone constructed in `build_limit` is limiting, provided the cones used in
 its construction are.
 -/
@@ -72,7 +72,7 @@ def buildIsLimit (t₁ : IsLimit c₁) (t₂ : IsLimit c₂) (hi : IsLimit i) : 
       
     · apply t₂.hom_ext
       intro j
-      trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]"
+      trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]"
       simp [← hs, ← ht]
       
   uniq' := fun q m w =>
@@ -196,7 +196,7 @@ end
 
 /-- If G preserves equalizers and finite products, it preserves finite limits. -/
 def preservesFiniteLimitsOfPreservesEqualizersAndFiniteProducts [HasEqualizers C] [HasFiniteProducts C] (G : C ⥤ D)
-    [PreservesLimitsOfShape WalkingParallelPair G] [∀ J : Type [Fintype J], PreservesLimitsOfShape (Discrete J) G] :
+    [PreservesLimitsOfShape WalkingParallelPair G] [∀ (J : Type) [Fintype J], PreservesLimitsOfShape (Discrete J) G] :
     PreservesFiniteLimits G :=
   ⟨fun _ _ _ => preserves_limit_of_preserves_equalizers_and_product G⟩
 
@@ -234,7 +234,7 @@ def buildColimit : Cocone F where
 
 variable {i}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]
 /-- (Implementation) Show the cocone constructed in `build_colimit` is colimiting,
 provided the cocones used in its construction are.
 -/
@@ -247,7 +247,7 @@ def buildIsColimit (t₁ : IsColimit c₁) (t₂ : IsColimit c₂) (hi : IsColim
       
     · apply t₁.hom_ext
       intro j
-      trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]"
+      trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]"
       simp [← reassoc_of hs, ← reassoc_of ht]
       
   uniq' := fun q m w =>
@@ -375,7 +375,7 @@ end
 /-- If G preserves coequalizers and finite coproducts, it preserves finite colimits. -/
 def preservesFiniteColimitsOfPreservesCoequalizersAndFiniteCoproducts [HasCoequalizers C] [HasFiniteCoproducts C]
     (G : C ⥤ D) [PreservesColimitsOfShape WalkingParallelPair G]
-    [∀ J [Fintype J], PreservesColimitsOfShape (Discrete.{0} J) G] : PreservesFiniteColimits G :=
+    [∀ (J) [Fintype J], PreservesColimitsOfShape (Discrete.{0} J) G] : PreservesFiniteColimits G :=
   ⟨fun _ _ _ => preserves_colimit_of_preserves_coequalizers_and_coproduct G⟩
 
 /-- If G preserves coequalizers and coproducts, it preserves all colimits. -/

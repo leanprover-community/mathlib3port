@@ -24,6 +24,8 @@ open Int
 
 namespace Rat
 
+variable {α : Type _} [LinearOrderedField α] [FloorRing α]
+
 /-- `floor q` is the largest integer `z` such that `z ≤ q` -/
 protected def floor : ℚ → ℤ
   | ⟨n, d, h, c⟩ => n / d
@@ -45,28 +47,39 @@ protected theorem floor_def {q : ℚ} : ⌊q⌋ = q.num / q.denom := by
 
 theorem floor_int_div_nat_eq_div {n : ℤ} {d : ℕ} : ⌊(↑n : ℚ) / (↑d : ℚ)⌋ = n / (↑d : ℤ) := by
   rw [Rat.floor_def]
-  cases' Decidable.em (d = 0) with d_eq_zero d_ne_zero
-  · simp [← d_eq_zero]
+  obtain rfl | hd := @eq_zero_or_pos _ _ d
+  · simp
     
-  · set q := (n : ℚ) / d with q_eq
-    obtain ⟨c, n_eq_c_mul_num, d_eq_c_mul_denom⟩ : ∃ c, n = c * q.num ∧ (d : ℤ) = c * q.denom := by
-      rw [q_eq]
-      exact_mod_cast
-        @Rat.exists_eq_mul_div_num_and_eq_mul_div_denom n d
-          (by
-            exact_mod_cast d_ne_zero)
-    suffices q.num / q.denom = c * q.num / (c * q.denom) by
-      rwa [n_eq_c_mul_num, d_eq_c_mul_denom]
-    suffices c > 0 by
-      solve_by_elim [← Int.mul_div_mul_of_pos]
-    have q_denom_mul_c_pos : (0 : ℤ) < q.denom * c := by
-      have : (d : ℤ) > 0 := by
-        exact_mod_cast pos_iff_ne_zero.elim_right d_ne_zero
-      rwa [d_eq_c_mul_denom, mul_comm] at this
-    suffices : (0 : ℤ) ≤ q.denom
-    exact pos_of_mul_pos_left q_denom_mul_c_pos this
-    exact_mod_cast le_of_ltₓ q.pos
-    
+  set q := (n : ℚ) / d with q_eq
+  obtain ⟨c, n_eq_c_mul_num, d_eq_c_mul_denom⟩ : ∃ c, n = c * q.num ∧ (d : ℤ) = c * q.denom := by
+    rw [q_eq]
+    exact_mod_cast
+      @Rat.exists_eq_mul_div_num_and_eq_mul_div_denom n d
+        (by
+          exact_mod_cast hd.ne')
+  rw [n_eq_c_mul_num, d_eq_c_mul_denom]
+  refine' (Int.mul_div_mul_of_pos _ _ <| pos_of_mul_pos_left _ <| Int.coe_nat_nonneg q.denom).symm
+  rwa [← d_eq_c_mul_denom, Int.coe_nat_pos]
+
+@[simp, norm_cast]
+theorem floor_cast (x : ℚ) : ⌊(x : α)⌋ = ⌊x⌋ :=
+  floor_eq_iff.2
+    (by
+      exact_mod_cast floor_eq_iff.1 (Eq.refl ⌊x⌋))
+
+@[simp, norm_cast]
+theorem ceil_cast (x : ℚ) : ⌈(x : α)⌉ = ⌈x⌉ := by
+  rw [← neg_inj, ← floor_neg, ← floor_neg, ← Rat.cast_neg, Rat.floor_cast]
+
+@[simp, norm_cast]
+theorem round_cast (x : ℚ) : round (x : α) = round x := by
+  have : ((x + 1 / 2 : ℚ) : α) = x + 1 / 2 := by
+    simp
+  rw [round, round, ← this, floor_cast]
+
+@[simp, norm_cast]
+theorem cast_fract (x : ℚ) : (↑(fract x) : α) = fract x := by
+  simp only [← fract, ← cast_sub, ← cast_coe_int, ← floor_cast]
 
 end Rat
 

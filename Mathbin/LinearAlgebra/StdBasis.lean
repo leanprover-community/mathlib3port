@@ -120,7 +120,6 @@ theorem supr_range_std_basis [Fintype ι] : (⨆ i : ι, range (stdBasis R φ i)
   exact infi_emptyset.symm
   exact funext fun i => ((@supr_pos _ _ _ fun h => range (std_basis R φ i)) <| Finset.mem_univ i).symm
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem disjoint_std_basis_std_basis (I J : Set ι) (h : Disjoint I J) :
     Disjoint (⨆ i ∈ I, range (stdBasis R φ i)) (⨆ i ∈ J, range (stdBasis R φ i)) := by
   refine'
@@ -202,7 +201,7 @@ protected noncomputable def basis (s : ∀ j, Basis (ιs j) R (Ms j)) : Basis (�
   exact LinearEquiv.piCongrRight fun j => (s j).repr
 
 @[simp]
-theorem basis_repr_std_basis [DecidableEq η] (s : ∀ j, Basis (ιs j) R (Ms j)) j i :
+theorem basis_repr_std_basis [DecidableEq η] (s : ∀ j, Basis (ιs j) R (Ms j)) (j i) :
     (Pi.basis s).repr (stdBasis R _ j (s j i)) = Finsupp.single ⟨j, i⟩ 1 := by
   ext ⟨j', i'⟩
   by_cases' hj : j = j'
@@ -211,7 +210,8 @@ theorem basis_repr_std_basis [DecidableEq η] (s : ∀ j, Basis (ιs j) R (Ms j)
       LinearEquiv.Pi_congr_right_apply, ← Finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply]
     symm
     exact
-      Basis.Finsupp.single_apply_left (fun i i' h : (⟨j, i⟩ : Σj, ιs j) = ⟨j, i'⟩ => eq_of_heq (Sigma.mk.inj h).2) _ _ _
+      Basis.Finsupp.single_apply_left (fun i i' (h : (⟨j, i⟩ : Σj, ιs j) = ⟨j, i'⟩) => eq_of_heq (Sigma.mk.inj h).2) _ _
+        _
     
   simp only [← Pi.basis, ← LinearEquiv.trans_apply, ← Finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply, ←
     LinearEquiv.Pi_congr_right_apply]
@@ -221,14 +221,14 @@ theorem basis_repr_std_basis [DecidableEq η] (s : ∀ j, Basis (ιs j) R (Ms j)
   contradiction
 
 @[simp]
-theorem basis_apply [DecidableEq η] (s : ∀ j, Basis (ιs j) R (Ms j)) ji :
+theorem basis_apply [DecidableEq η] (s : ∀ j, Basis (ιs j) R (Ms j)) (ji) :
     Pi.basis s ji = stdBasis R _ ji.1 (s ji.1 ji.2) :=
   Basis.apply_eq_iff.mpr
     (by
       simp )
 
 @[simp]
-theorem basis_repr (s : ∀ j, Basis (ιs j) R (Ms j)) x ji : (Pi.basis s).repr x ji = (s ji.1).repr (x ji.1) ji.2 :=
+theorem basis_repr (s : ∀ j, Basis (ιs j) R (Ms j)) (x) (ji) : (Pi.basis s).repr x ji = (s ji.1).repr (x ji.1) ji.2 :=
   rfl
 
 end
@@ -242,7 +242,7 @@ noncomputable def basisFun : Basis η R (∀ j : η, R) :=
   Basis.ofEquivFun (LinearEquiv.refl _ _)
 
 @[simp]
-theorem basis_fun_apply [DecidableEq η] i : basisFun R η i = stdBasis R (fun i : η => R) i 1 := by
+theorem basis_fun_apply [DecidableEq η] (i) : basisFun R η i = stdBasis R (fun i : η => R) i 1 := by
   simp only [← basis_fun, ← Basis.coe_of_equiv_fun, ← LinearEquiv.refl_symm, ← LinearEquiv.refl_apply, ←
     std_basis_apply]
   congr

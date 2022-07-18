@@ -341,7 +341,6 @@ theorem mem_range_embedding_iff {j : Finₓ n} {i : Finₓ c.length} :
       
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The embeddings of different blocks of a composition are disjoint. -/
 theorem disjoint_range {i₁ i₂ : Finₓ c.length} (h : i₁ ≠ i₂) :
     Disjoint (Set.Range (c.Embedding i₁)) (Set.Range (c.Embedding i₂)) := by
@@ -599,11 +598,11 @@ def splitWrtComposition (l : List α) (c : Composition n) : List (List α) :=
 attribute [local simp] split_wrt_composition_aux.equations._eqn_1
 
 @[local simp]
-theorem split_wrt_composition_aux_cons (l : List α) n ns :
+theorem split_wrt_composition_aux_cons (l : List α) (n ns) :
     l.splitWrtCompositionAux (n :: ns) = takeₓ n l :: (dropₓ n l).splitWrtCompositionAux ns := by
   simp [← split_wrt_composition_aux]
 
-theorem length_split_wrt_composition_aux (l : List α) ns : length (l.splitWrtCompositionAux ns) = ns.length := by
+theorem length_split_wrt_composition_aux (l : List α) (ns) : length (l.splitWrtCompositionAux ns) = ns.length := by
   induction ns generalizing l <;> simp [*]
 
 /-- When one splits a list along a composition `c`, the number of sublists thus created is
@@ -638,7 +637,7 @@ theorem sum_take_map_length_split_wrt_composition (l : List α) (c : Composition
   congr
   exact map_length_split_wrt_composition l c
 
-theorem nth_le_split_wrt_composition_aux (l : List α) (ns : List ℕ) {i : ℕ} hi :
+theorem nth_le_split_wrt_composition_aux (l : List α) (ns : List ℕ) {i : ℕ} (hi) :
     nthLe (l.splitWrtCompositionAux ns) i hi = (l.take (ns.take (i + 1)).Sum).drop (ns.take i).Sum := by
   induction' ns with n ns IH generalizing l i
   · cases hi

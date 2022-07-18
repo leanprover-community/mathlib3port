@@ -22,7 +22,7 @@ In this file we define
 
 universe u v
 
-variable {α : Type u} {β : Type v}
+variable {α : Type u} {β : Type v} {γ : Type _}
 
 open Set Filter Function
 
@@ -168,6 +168,18 @@ theorem coe_map (m : α → β) (f : Ultrafilter α) : (map m f : Filter β) = F
 theorem mem_map {m : α → β} {f : Ultrafilter α} {s : Set β} : s ∈ map m f ↔ m ⁻¹' s ∈ f :=
   Iff.rfl
 
+@[simp]
+theorem map_id (f : Ultrafilter α) : f.map id = f :=
+  coe_injective map_id
+
+@[simp]
+theorem map_id' (f : Ultrafilter α) : (f.map fun x => x) = f :=
+  map_id _
+
+@[simp]
+theorem map_map (f : Ultrafilter α) (m : α → β) (n : β → γ) : (f.map m).map n = f.map (n ∘ m) :=
+  coe_injective map_map
+
 /-- The pullback of an ultrafilter along an injection whose range is large with respect to the given
 ultrafilter. -/
 def comap {m : α → β} (u : Ultrafilter β) (inj : Injective m) (large : Set.Range m ∈ u) : Ultrafilter α where
@@ -182,10 +194,27 @@ theorem mem_comap {m : α → β} (u : Ultrafilter β) (inj : Injective m) (larg
     s ∈ u.comap inj large ↔ m '' s ∈ u :=
   mem_comap_iff inj large
 
-@[simp]
+@[simp, norm_cast]
 theorem coe_comap {m : α → β} (u : Ultrafilter β) (inj : Injective m) (large : Set.Range m ∈ u) :
     (u.comap inj large : Filter α) = Filter.comap m u :=
   rfl
+
+@[simp]
+theorem comap_id (f : Ultrafilter α) (h₀ : Injective (id : α → α) := injective_id)
+    (h₁ : Range id ∈ f := by
+      rw [range_id]
+      exact univ_mem) :
+    f.comap h₀ h₁ = f :=
+  coe_injective comap_id
+
+@[simp]
+theorem comap_comap (f : Ultrafilter γ) {m : α → β} {n : β → γ} (inj₀ : Injective n) (large₀ : Range n ∈ f)
+    (inj₁ : Injective m) (large₁ : Range m ∈ f.comap inj₀ large₀) (inj₂ : Injective (n ∘ m) := inj₀.comp inj₁)
+    (large₂ : Range (n ∘ m) ∈ f := by
+      rw [range_comp]
+      exact image_mem_of_mem_comap large₀ large₁) :
+    (f.comap inj₀ large₀).comap inj₁ large₁ = f.comap inj₂ large₂ :=
+  coe_injective comap_comap
 
 /-- The principal ultrafilter associated to a point `x`. -/
 instance : Pure Ultrafilter :=
@@ -197,14 +226,30 @@ instance : Pure Ultrafilter :=
 theorem mem_pure {a : α} {s : Set α} : s ∈ (pure a : Ultrafilter α) ↔ a ∈ s :=
   Iff.rfl
 
+@[simp]
+theorem coe_pure (a : α) : ↑(pure a : Ultrafilter α) = (pure a : Filter α) :=
+  rfl
+
+@[simp]
+theorem map_pure (m : α → β) (a : α) : map m (pure a) = pure (m a) :=
+  rfl
+
+@[simp]
+theorem comap_pure {m : α → β} (a : α) (inj : Injective m) (large) : comap (pure <| m a) inj large = pure a :=
+  coe_injective <|
+    comap_pure.trans <| by
+      rw [coe_pure, ← principal_singleton, ← image_singleton, preimage_image_eq _ inj]
+
+theorem pure_injective : Injective (pure : α → Ultrafilter α) := fun a b h =>
+  Filter.pure_injective (congr_arg Ultrafilter.toFilter h : _)
+
 instance [Inhabited α] : Inhabited (Ultrafilter α) :=
   ⟨pure default⟩
 
 instance [Nonempty α] : Nonempty (Ultrafilter α) :=
   Nonempty.map pure inferInstance
 
-theorem eq_principal_of_finite_mem {f : Ultrafilter α} {s : Set α} (h : s.Finite) (h' : s ∈ f) :
-    ∃ x ∈ s, (f : Filter α) = pure x := by
+theorem eq_pure_of_finite_mem (h : s.Finite) (h' : s ∈ f) : ∃ x ∈ s, (f : Filter α) = pure x := by
   rw [← bUnion_of_singleton s] at h'
   rcases(Ultrafilter.finite_bUnion_mem_iff h).mp h' with ⟨a, has, haf⟩
   use a, has
@@ -212,6 +257,9 @@ theorem eq_principal_of_finite_mem {f : Ultrafilter α} {s : Set α} (h : s.Fini
   rw [Ultrafilter.coe_inj, ← Ultrafilter.coe_le_coe]
   change (f : Filter α) ≤ pure a
   rwa [← principal_singleton, le_principal_iff]
+
+theorem eq_pure_of_fintype [Fintype α] (f : Ultrafilter α) : ∃ a, (f : Filter α) = pure a :=
+  (eq_pure_of_finite_mem finite_univ univ_mem).imp fun a ⟨_, ha⟩ => ha
 
 /-- Monadic bind for ultrafilters, coming from the one on filters
 defined in terms of map and join.-/
@@ -248,7 +296,7 @@ theorem exists_le (f : Filter α) [h : NeBot f] : ∃ u : Ultrafilter α, ↑u �
     ⟨⨅ a : { a : τ // a ∈ insert top c }, a.1,
       infi_ne_bot_of_directed (IsChain.directed <| hc.insert fun ⟨b, _, hb⟩ _ _ => Or.inl hb) fun ⟨⟨a, ha, _⟩, _⟩ => ha,
       infi_le_of_le ⟨top, mem_insert _ _⟩ le_rfl⟩
-  have : ∀ c hc : IsChain r c a ha : a ∈ c, r a (sup c hc) := fun c hc a ha =>
+  have : ∀ (c) (hc : IsChain r c) (a) (ha : a ∈ c), r a (sup c hc) := fun c hc a ha =>
     infi_le_of_le ⟨a, mem_insert_of_mem _ ha⟩ le_rfl
   have : ∃ u : τ, ∀ a : τ, r u a → r a u :=
     exists_maximal_of_chains_bounded (fun c hc => ⟨sup c hc, this c hc⟩) fun f₁ f₂ f₃ h₁ h₂ => le_transₓ h₂ h₁

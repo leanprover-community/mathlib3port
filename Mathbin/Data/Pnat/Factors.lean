@@ -118,31 +118,31 @@ theorem prod_of_prime (p : Nat.Primes) : (ofPrime p).Prod = (p : ℕ+) :=
 def ofNatMultiset (v : Multiset ℕ) (h : ∀ p : ℕ, p ∈ v → p.Prime) : PrimeMultiset :=
   @Multiset.pmap ℕ Nat.Primes Nat.Prime (fun p hp => ⟨p, hp⟩) v h
 
-theorem to_of_nat_multiset (v : Multiset ℕ) h : (ofNatMultiset v h : Multiset ℕ) = v := by
+theorem to_of_nat_multiset (v : Multiset ℕ) (h) : (ofNatMultiset v h : Multiset ℕ) = v := by
   unfold_coes
   dsimp' [← of_nat_multiset, ← to_nat_multiset]
-  have : (fun p : ℕ h : p.Prime => ((⟨p, h⟩ : Nat.Primes) : ℕ)) = fun p h => id p := by
+  have : (fun (p : ℕ) (h : p.Prime) => ((⟨p, h⟩ : Nat.Primes) : ℕ)) = fun p h => id p := by
     funext p h
     rfl
   rw [Multiset.map_pmap, this, Multiset.pmap_eq_map, Multiset.map_id]
 
-theorem prod_of_nat_multiset (v : Multiset ℕ) h : ((ofNatMultiset v h).Prod : ℕ) = (v.Prod : ℕ) := by
+theorem prod_of_nat_multiset (v : Multiset ℕ) (h) : ((ofNatMultiset v h).Prod : ℕ) = (v.Prod : ℕ) := by
   rw [coe_prod, to_of_nat_multiset]
 
 /-- If a `multiset ℕ+` consists only of primes, it can be recast as a `prime_multiset`. -/
 def ofPnatMultiset (v : Multiset ℕ+) (h : ∀ p : ℕ+, p ∈ v → p.Prime) : PrimeMultiset :=
   @Multiset.pmap ℕ+ Nat.Primes Pnat.Prime (fun p hp => ⟨(p : ℕ), hp⟩) v h
 
-theorem to_of_pnat_multiset (v : Multiset ℕ+) h : (ofPnatMultiset v h : Multiset ℕ+) = v := by
+theorem to_of_pnat_multiset (v : Multiset ℕ+) (h) : (ofPnatMultiset v h : Multiset ℕ+) = v := by
   unfold_coes
   dsimp' [← of_pnat_multiset, ← to_pnat_multiset]
-  have : (fun p : ℕ+ h : p.Prime => (coe : Nat.Primes → ℕ+) ⟨p, h⟩) = fun p h => id p := by
+  have : (fun (p : ℕ+) (h : p.Prime) => (coe : Nat.Primes → ℕ+) ⟨p, h⟩) = fun p h => id p := by
     funext p h
     apply Subtype.eq
     rfl
   rw [Multiset.map_pmap, this, Multiset.pmap_eq_map, Multiset.map_id]
 
-theorem prod_of_pnat_multiset (v : Multiset ℕ+) h : ((ofPnatMultiset v h).Prod : ℕ+) = v.Prod := by
+theorem prod_of_pnat_multiset (v : Multiset ℕ+) (h) : ((ofPnatMultiset v h).Prod : ℕ+) = v.Prod := by
   dsimp' [← Prod]
   rw [to_of_pnat_multiset]
 
@@ -151,7 +151,7 @@ about how this interacts with our constructions on multisets. -/
 def ofNatList (l : List ℕ) (h : ∀ p : ℕ, p ∈ l → p.Prime) : PrimeMultiset :=
   ofNatMultiset (l : Multiset ℕ) h
 
-theorem prod_of_nat_list (l : List ℕ) h : ((ofNatList l h).Prod : ℕ) = l.Prod := by
+theorem prod_of_nat_list (l : List ℕ) (h) : ((ofNatList l h).Prod : ℕ) = l.Prod := by
   have := prod_of_nat_multiset (l : Multiset ℕ) h
   rw [Multiset.coe_prod] at this
   exact this
@@ -161,7 +161,7 @@ the coercion from lists to multisets. -/
 def ofPnatList (l : List ℕ+) (h : ∀ p : ℕ+, p ∈ l → p.Prime) : PrimeMultiset :=
   ofPnatMultiset (l : Multiset ℕ+) h
 
-theorem prod_of_pnat_list (l : List ℕ+) h : (ofPnatList l h).Prod = l.Prod := by
+theorem prod_of_pnat_list (l : List ℕ+) (h) : (ofPnatList l h).Prod = l.Prod := by
   have := prod_of_pnat_multiset (l : Multiset ℕ+) h
   rw [Multiset.coe_prod] at this
   exact this

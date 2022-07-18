@@ -125,7 +125,7 @@ theorem teichmuller_coeff_zero (r : R) : (teichmuller p r).coeff 0 = r :=
   rfl
 
 @[simp]
-theorem teichmuller_coeff_pos (r : R) : ∀ n : ℕ hn : 0 < n, (teichmuller p r).coeff n = 0
+theorem teichmuller_coeff_pos (r : R) : ∀ (n : ℕ) (hn : 0 < n), (teichmuller p r).coeff n = 0
   | n + 1, _ => rfl
 
 @[simp]

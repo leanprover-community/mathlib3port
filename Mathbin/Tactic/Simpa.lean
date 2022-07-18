@@ -33,7 +33,7 @@ local postfix:1024 "?" => optionalₓ
 unsafe def simpa (use_iota_eqn : parse <| (tk "!")?) (trace_lemmas : parse <| (tk "?")?) (no_dflt : parse only_flag)
     (hs : parse simp_arg_list) (attr_names : parse with_ident_list) (tgt : parse (tk "using" *> texpr)?)
     (cfg : simp_config_ext := {  }) : tactic Unit :=
-  let simp_at lc (close_tac : tactic Unit) :=
+  let simp_at (lc) (close_tac : tactic Unit) :=
     focus1 <|
       simp use_iota_eqn trace_lemmas no_dflt hs attr_names (Loc.ns lc) { cfg with failIfUnchanged := false } >>
         ((close_tac <|> trivialₓ) >> done <|> fail "simpa failed")

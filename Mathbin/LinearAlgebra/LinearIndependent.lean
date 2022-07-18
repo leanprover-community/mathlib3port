@@ -126,10 +126,10 @@ theorem linear_independent_iff' :
       fun hf l hl =>
       Finsupp.ext fun i => Classical.by_contradiction fun hni => hni <| hf _ _ hl _ <| Finsupp.mem_support_iff.2 hni⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem linear_independent_iff'' :
     LinearIndependent R v ↔
-      ∀ s : Finset ι g : ι → R hg : ∀ i _ : i ∉ s, g i = 0, (∑ i in s, g i • v i) = 0 → ∀ i, g i = 0 :=
+      ∀ (s : Finset ι) (g : ι → R) (hg : ∀ (i) (_ : i ∉ s), g i = 0), (∑ i in s, g i • v i) = 0 → ∀ i, g i = 0 :=
   linear_independent_iff'.trans
     ⟨fun H s g hg hv i => if his : i ∈ s then H s g hv i his else hg i his, fun H s g hg i hi => by
       convert
@@ -257,7 +257,7 @@ theorem linear_independent_span (hs : LinearIndependent R v) :
 
 /-- See `linear_independent.fin_cons` for a family of elements in a vector space. -/
 theorem LinearIndependent.fin_cons' {m : ℕ} (x : M) (v : Finₓ m → M) (hli : LinearIndependent R v)
-    (x_ortho : ∀ c : R y : Submodule.span R (Set.Range v), c • x + y = (0 : M) → c = 0) :
+    (x_ortho : ∀ (c : R) (y : Submodule.span R (Set.Range v)), c • x + y = (0 : M) → c = 0) :
     LinearIndependent R (Finₓ.cons x v : Finₓ m.succ → M) := by
   rw [Fintype.linear_independent_iff] at hli⊢
   rintro g total_eq j
@@ -385,9 +385,9 @@ theorem LinearIndependent.mono {t s : Set M} (h : t ⊆ s) :
   simp only [← linear_independent_subtype_disjoint]
   exact Disjoint.mono_left (Finsupp.supported_mono h)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem linear_independent_of_finite (s : Set M)
-    (H : ∀ t _ : t ⊆ s, Set.Finite t → LinearIndependent R (fun x => x : t → M)) :
+    (H : ∀ (t) (_ : t ⊆ s), Set.Finite t → LinearIndependent R (fun x => x : t → M)) :
     LinearIndependent R (fun x => x : s → M) :=
   linear_independent_subtype.2 fun l hl =>
     linear_independent_subtype.1 (H _ hl (Finset.finite_to_set _)) l (Subset.refl _)
@@ -517,14 +517,14 @@ universe v w
 @[nolint unused_arguments]
 def LinearIndependent.Maximal {ι : Type w} {R : Type u} [Semiringₓ R] {M : Type v} [AddCommMonoidₓ M] [Module R M]
     {v : ι → M} (i : LinearIndependent R v) : Prop :=
-  ∀ s : Set M i' : LinearIndependent R (coe : s → M) h : Range v ≤ s, Range v = s
+  ∀ (s : Set M) (i' : LinearIndependent R (coe : s → M)) (h : Range v ≤ s), Range v = s
 
 /-- An alternative characterization of a maximal linearly independent family,
 quantifying over types (in the same universe as `M`) into which the indexing family injects.
 -/
 theorem LinearIndependent.maximal_iff {ι : Type w} {R : Type u} [Ringₓ R] [Nontrivial R] {M : Type v} [AddCommGroupₓ M]
     [Module R M] {v : ι → M} (i : LinearIndependent R v) :
-    i.Maximal ↔ ∀ κ : Type v w : κ → M i' : LinearIndependent R w j : ι → κ h : w ∘ j = v, Surjective j := by
+    i.Maximal ↔ ∀ (κ : Type v) (w : κ → M) (i' : LinearIndependent R w) (j : ι → κ) (h : w ∘ j = v), Surjective j := by
   fconstructor
   · rintro p κ w i' j rfl
     specialize p (range w) i'.coe_range (range_comp_subset_range _ _)
@@ -727,7 +727,7 @@ def LinearIndependent.repr (hv : LinearIndependent R v) : span R (Range v) →�
   hv.totalEquiv.symm
 
 @[simp]
-theorem LinearIndependent.total_repr x : Finsupp.total ι M R v (hv.repr x) = x :=
+theorem LinearIndependent.total_repr (x) : Finsupp.total ι M R v (hv.repr x) = x :=
   Subtype.ext_iff.1 (LinearEquiv.apply_symm_apply hv.totalEquiv x)
 
 theorem LinearIndependent.total_comp_repr : (Finsupp.total ι M R v).comp hv.repr = Submodule.subtype _ :=
@@ -748,11 +748,11 @@ theorem LinearIndependent.repr_eq {l : ι →₀ R} {x} (eq : Finsupp.total ι M
   rw [← this]
   rfl
 
-theorem LinearIndependent.repr_eq_single i x (hx : ↑x = v i) : hv.repr x = Finsupp.single i 1 := by
+theorem LinearIndependent.repr_eq_single (i) (x) (hx : ↑x = v i) : hv.repr x = Finsupp.single i 1 := by
   apply hv.repr_eq
   simp [← Finsupp.total_single, ← hx]
 
-theorem LinearIndependent.span_repr_eq [Nontrivial R] x :
+theorem LinearIndependent.span_repr_eq [Nontrivial R] (x) :
     Span.repr R (Set.Range v) x = (hv.repr x).equivMapDomain (Equivₓ.ofInjective _ hv.Injective) := by
   have p : (Span.repr R (Set.Range v) x).equivMapDomain (Equivₓ.ofInjective _ hv.injective).symm = hv.repr x := by
     apply (LinearIndependent.totalEquiv hv).Injective
@@ -764,7 +764,7 @@ theorem LinearIndependent.span_repr_eq [Nontrivial R] x :
 
 -- TODO: why is this so slow?
 theorem linear_independent_iff_not_smul_mem_span :
-    LinearIndependent R v ↔ ∀ i : ι a : R, a • v i ∈ span R (v '' (univ \ {i})) → a = 0 :=
+    LinearIndependent R v ↔ ∀ (i : ι) (a : R), a • v i ∈ span R (v '' (univ \ {i})) → a = 0 :=
   ⟨fun hv i a ha => by
     rw [Finsupp.span_image_eq_map_total, mem_map] at ha
     rcases ha with ⟨l, hl, e⟩
@@ -836,10 +836,10 @@ theorem exists_maximal_independent' (s : ι → M) :
       (fun c hc => ⟨⟨⋃ I ∈ c, (I : Set ι), key c hc⟩, fun I => Set.subset_bUnion_of_mem⟩) trans
   exact ⟨I, hli, fun J hsub hli => Set.Subset.antisymm hsub (hmax ⟨J, hli⟩ hsub)⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i «expr ∉ » I)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ∉ » I)
 theorem exists_maximal_independent (s : ι → M) :
-    ∃ I : Set ι, (LinearIndependent R fun x : I => s x) ∧ ∀ i _ : i ∉ I, ∃ a : R, a ≠ 0 ∧ a • s i ∈ span R (s '' I) :=
+    ∃ I : Set ι,
+      (LinearIndependent R fun x : I => s x) ∧ ∀ (i) (_ : i ∉ I), ∃ a : R, a ≠ 0 ∧ a • s i ∈ span R (s '' I) :=
   by
   classical
   rcases exists_maximal_independent' R s with ⟨I, hIlinind, hImaximal⟩
@@ -1203,7 +1203,7 @@ theorem linear_independent_fin2 {f : Finₓ 2 → V} : LinearIndependent K f ↔
     show Finₓ.tail f default = f 1 by
       rw [← Finₓ.succ_zero_eq_one] <;> rfl]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (b «expr ⊆ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (b «expr ⊆ » t)
 theorem exists_linear_independent_extension (hs : LinearIndependent K (coe : s → V)) (hst : s ⊆ t) :
     ∃ (b : _)(_ : b ⊆ t), s ⊆ b ∧ t ⊆ span K b ∧ LinearIndependent K (coe : b → V) := by
   rcases zorn_subset_nonempty { b | b ⊆ t ∧ LinearIndependent K (coe : b → V) } _ _ ⟨hst, hs⟩ with ⟨b, ⟨bt, bi⟩, sb, h⟩
@@ -1224,7 +1224,7 @@ theorem exists_linear_independent_extension (hs : LinearIndependent K (coe : s �
 
 variable (K t)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (b «expr ⊆ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (b «expr ⊆ » t)
 theorem exists_linear_independent : ∃ (b : _)(_ : b ⊆ t), span K b = span K t ∧ LinearIndependent K (coe : b → V) := by
   obtain ⟨b, hb₁, -, hb₂, hb₃⟩ :=
     exists_linear_independent_extension (linear_independent_empty K V) (Set.empty_subset t)

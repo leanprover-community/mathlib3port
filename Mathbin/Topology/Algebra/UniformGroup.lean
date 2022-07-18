@@ -164,6 +164,42 @@ instance (S : Subgroup α) : UniformGroup S :=
 
 end Subgroup
 
+section LatticeOps
+
+variable [Groupₓ β]
+
+@[to_additive]
+theorem uniform_group_Inf {us : Set (UniformSpace β)} (h : ∀, ∀ u ∈ us, ∀, @UniformGroup β u _) :
+    @UniformGroup β (inf us) _ :=
+  { uniform_continuous_div :=
+      uniform_continuous_Inf_rng fun u hu =>
+        uniform_continuous_Inf_dom₂ hu hu (@UniformGroup.uniform_continuous_div β u _ (h u hu)) }
+
+@[to_additive]
+theorem uniform_group_infi {ι : Sort _} {us' : ι → UniformSpace β} (h' : ∀ i, @UniformGroup β (us' i) _) :
+    @UniformGroup β (⨅ i, us' i) _ := by
+  rw [← Inf_range]
+  exact uniform_group_Inf (set.forall_range_iff.mpr h')
+
+@[to_additive]
+theorem uniform_group_inf {u₁ u₂ : UniformSpace β} (h₁ : @UniformGroup β u₁ _) (h₂ : @UniformGroup β u₂ _) :
+    @UniformGroup β (u₁⊓u₂) _ := by
+  rw [inf_eq_infi]
+  refine' uniform_group_infi fun b => _
+  cases b <;> assumption
+
+@[to_additive]
+theorem uniform_group_comap {γ : Type _} [Groupₓ γ] {u : UniformSpace γ} [UniformGroup γ] {F : Type _}
+    [MonoidHomClass F β γ] (f : F) : @UniformGroup β (u.comap f) _ :=
+  { uniform_continuous_div := by
+      let this : UniformSpace β := u.comap f
+      refine' uniform_continuous_comap' _
+      simp_rw [Function.comp, map_div]
+      change UniformContinuous ((fun p : γ × γ => p.1 / p.2) ∘ Prod.map f f)
+      exact uniform_continuous_div.comp (uniform_continuous_comap.prod_map uniform_continuous_comap) }
+
+end LatticeOps
+
 section
 
 variable (α)
@@ -409,7 +445,7 @@ theorem TopologicalGroup.tendsto_uniformly_on_iff {ι α : Type _} (F : ι → �
 theorem TopologicalGroup.tendsto_locally_uniformly_iff {ι α : Type _} [TopologicalSpace α] (F : ι → α → G) (f : α → G)
     (p : Filter ι) :
     @TendstoLocallyUniformly α G ι (TopologicalGroup.toUniformSpace G) _ F f p ↔
-      ∀, ∀ u ∈ 𝓝 (1 : G), ∀ x : α, ∃ t ∈ 𝓝 x, ∀ᶠ i in p, ∀, ∀ a ∈ t, ∀, F i a / f a ∈ u :=
+      ∀, ∀ u ∈ 𝓝 (1 : G), ∀ (x : α), ∃ t ∈ 𝓝 x, ∀ᶠ i in p, ∀, ∀ a ∈ t, ∀, F i a / f a ∈ u :=
   ⟨fun h u hu => h _ ⟨u, hu, fun _ => id⟩, fun h v ⟨u, hu, hv⟩ x =>
     exists_imp_exists (fun a => exists_imp_exists fun ha hp => mem_of_superset hp fun i hi a ha => hv (hi a ha))
       (h u hu x)⟩
@@ -567,9 +603,9 @@ variable {W' : Set G} (W'_nhd : W' ∈ 𝓝 (0 : G))
 
 include W'_nhd
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x x' «expr ∈ » U₂)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x x' «expr ∈ » U₂)
 private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
-    ∃ U₂ ∈ comap e (𝓝 x₀), ∀ x x' _ : x ∈ U₂ _ : x' ∈ U₂, Φ (x' - x, y₁) ∈ W' := by
+    ∃ U₂ ∈ comap e (𝓝 x₀), ∀ (x x') (_ : x ∈ U₂) (_ : x' ∈ U₂), Φ (x' - x, y₁) ∈ W' := by
   let Nx := 𝓝 x₀
   let ee := fun u : β × β => (e u.1, e u.2)
   have lim1 : tendsto (fun a : β × β => (a.2 - a.1, y₁)) (comap e Nx ×ᶠ comap e Nx) (𝓝 (0, y₁)) := by
@@ -585,13 +621,14 @@ private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
   simp_rw [ball_mem_comm]
   exact limₓ W' W'_nhd
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x x' «expr ∈ » U₁)
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y y' «expr ∈ » V₁)
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x x' «expr ∈ » U)
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y y' «expr ∈ » V)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x x' «expr ∈ » U₁)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y y' «expr ∈ » V₁)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x x' «expr ∈ » U)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y y' «expr ∈ » V)
 private theorem extend_Z_bilin_key (x₀ : α) (y₀ : γ) :
     ∃ U ∈ comap e (𝓝 x₀),
-      ∃ V ∈ comap f (𝓝 y₀), ∀ x x' _ : x ∈ U _ : x' ∈ U, ∀ y y' _ : y ∈ V _ : y' ∈ V, Φ (x', y') - Φ (x, y) ∈ W' :=
+      ∃ V ∈ comap f (𝓝 y₀),
+        ∀ (x x') (_ : x ∈ U) (_ : x' ∈ U), ∀ (y y') (_ : y ∈ V) (_ : y' ∈ V), Φ (x', y') - Φ (x, y) ∈ W' :=
   by
   let Nx := 𝓝 x₀
   let Ny := 𝓝 y₀
@@ -615,7 +652,8 @@ private theorem extend_Z_bilin_key (x₀ : α) (y₀ : γ) :
   rcases exists_nhds_zero_quarter W'_nhd with ⟨W, W_nhd, W4⟩
   have :
     ∃ U₁ ∈ comap e (𝓝 x₀),
-      ∃ V₁ ∈ comap f (𝓝 y₀), ∀ x x' _ : x ∈ U₁ _ : x' ∈ U₁, ∀ y y' _ : y ∈ V₁ _ : y' ∈ V₁, Φ (x' - x, y' - y) ∈ W :=
+      ∃ V₁ ∈ comap f (𝓝 y₀),
+        ∀ (x x') (_ : x ∈ U₁) (_ : x' ∈ U₁), ∀ (y y') (_ : y ∈ V₁) (_ : y' ∈ V₁), Φ (x' - x, y' - y) ∈ W :=
     by
     have := tendsto_prod_iff.1 lim_φ_sub_sub W W_nhd
     repeat'

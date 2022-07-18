@@ -59,7 +59,7 @@ open BilinForm Finset LinearMap Matrix
 
 open Matrix
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 /-- The map from `matrix n n R` to bilinear forms on `n → R`.
 
 This is an auxiliary definition for the equivalence `matrix.to_bilin_form'`. -/
@@ -102,16 +102,21 @@ theorem Matrix.to_bilin'_aux_std_basis [Fintype n] [DecidableEq n] (M : Matrix n
 
 This is an auxiliary definition for the equivalence `matrix.to_bilin_form'`. -/
 def BilinForm.toMatrixAux (b : n → M₂) : BilinForm R₂ M₂ →ₗ[R₂] Matrix n n R₂ where
-  toFun := fun B i j => B (b i) (b j)
+  toFun := fun B => of fun i j => B (b i) (b j)
   map_add' := fun f g => rfl
   map_smul' := fun f g => rfl
+
+@[simp]
+theorem BilinForm.to_matrix_aux_apply (B : BilinForm R₂ M₂) (b : n → M₂) (i j : n) :
+    BilinForm.toMatrixAux b B i j = B (b i) (b j) :=
+  rfl
 
 variable [Fintype n] [Fintype o]
 
 theorem to_bilin'_aux_to_matrix_aux [DecidableEq n] (B₂ : BilinForm R₂ (n → R₂)) :
     Matrix.toBilin'Aux (BilinForm.toMatrixAux (fun j => stdBasis R₂ (fun _ => R₂) j 1) B₂) = B₂ := by
   refine' ext_basis (Pi.basisFun R₂ n) fun i j => _
-  rw [BilinForm.toMatrixAux, LinearMap.coe_mk, Pi.basis_fun_apply, Pi.basis_fun_apply, Matrix.to_bilin'_aux_std_basis]
+  rw [Pi.basis_fun_apply, Pi.basis_fun_apply, Matrix.to_bilin'_aux_std_basis, BilinForm.to_matrix_aux_apply]
 
 section ToMatrix'
 
@@ -130,7 +135,7 @@ def BilinForm.toMatrix' : BilinForm R₂ (n → R₂) ≃ₗ[R₂] Matrix n n R�
       convert to_bilin'_aux_to_matrix_aux,
     right_inv := fun M => by
       ext i j
-      simp only [← BilinForm.toMatrixAux, ← Matrix.to_bilin'_aux_std_basis] }
+      simp only [← to_fun_eq_coe, ← BilinForm.to_matrix_aux_apply, ← Matrix.to_bilin'_aux_std_basis] }
 
 @[simp]
 theorem BilinForm.to_matrix_aux_std_basis (B : BilinForm R₂ (n → R₂)) :
@@ -145,7 +150,7 @@ def Matrix.toBilin' : Matrix n n R₂ ≃ₗ[R₂] BilinForm R₂ (n → R₂) :
 theorem Matrix.to_bilin'_aux_eq (M : Matrix n n R₂) : Matrix.toBilin'Aux M = Matrix.toBilin' M :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem Matrix.to_bilin'_apply (M : Matrix n n R₂) (x y : n → R₂) :
     Matrix.toBilin' M x y = ∑ (i) (j), x i * M i j * y j :=
   rfl
@@ -198,7 +203,8 @@ theorem BilinForm.to_matrix'_comp (B : BilinForm R₂ (n → R₂)) (l r : (o �
     rw [Finsupp.sum_fintype]
     · apply sum_congr rfl
       rintro j' -
-      simp only [← smul_eq_mul, ← Pi.basis_fun_repr, ← mul_assoc, ← mul_comm, ← mul_left_commₓ, ← Pi.basis_fun_apply]
+      simp only [← smul_eq_mul, ← Pi.basis_fun_repr, ← mul_assoc, ← mul_comm, ← mul_left_commₓ, ← Pi.basis_fun_apply, ←
+        of_apply]
       
     · intros
       simp only [← zero_smul, ← smul_zero]
@@ -275,7 +281,7 @@ theorem BilinForm.to_matrix_apply (B : BilinForm R₂ M₂) (i j : n) : BilinFor
   rw [BilinForm.toMatrix, LinearEquiv.trans_apply, BilinForm.to_matrix'_apply, congr_apply, b.equiv_fun_symm_std_basis,
     b.equiv_fun_symm_std_basis]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 @[simp]
 theorem Matrix.to_bilin_apply (M : Matrix n n R₂) (x y : M₂) :
     Matrix.toBilin b M x y = ∑ (i) (j), b.repr x i * M i j * b.repr y j := by
@@ -285,7 +291,7 @@ theorem Matrix.to_bilin_apply (M : Matrix n n R₂) (x y : M₂) :
 -- Not a `simp` lemma since `bilin_form.to_matrix` needs an extra argument
 theorem BilinearForm.to_matrix_aux_eq (B : BilinForm R₂ M₂) : BilinForm.toMatrixAux b B = BilinForm.toMatrix b B :=
   ext fun i j => by
-    rw [BilinForm.to_matrix_apply, BilinForm.toMatrixAux, LinearMap.coe_mk]
+    rw [BilinForm.to_matrix_apply, BilinForm.to_matrix_aux_apply]
 
 @[simp]
 theorem BilinForm.to_matrix_symm : (BilinForm.toMatrix b).symm = Matrix.toBilin b :=

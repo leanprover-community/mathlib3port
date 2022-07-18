@@ -7,6 +7,7 @@ import Mathbin.Order.Hom.CompleteLattice
 import Mathbin.Topology.Bases
 import Mathbin.Topology.Homeomorph
 import Mathbin.Topology.ContinuousFunction.Basic
+import Mathbin.Order.CompactlyGenerated
 
 /-!
 # Open sets
@@ -24,7 +25,7 @@ We define the subtype of open sets in a topological space.
 
 open Filter Function Order Set
 
-variable {α β γ : Type _} [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
+variable {ι α β γ : Type _} [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
 namespace TopologicalSpace
 
@@ -58,6 +59,10 @@ theorem subset_coe {U V : Opens α} : ((U : Set α) ⊆ (V : Set α)) = (U ⊆ V
 @[simp]
 theorem mem_coe {x : α} {U : Opens α} : (x ∈ (U : Set α)) = (x ∈ U) :=
   rfl
+
+@[simp]
+theorem mem_mk {x : α} {U : Set α} {h : IsOpen U} : @HasMem.Mem _ _ Opens.hasMem x ⟨U, h⟩ ↔ x ∈ U :=
+  Iff.rfl
 
 @[ext]
 theorem ext {U V : Opens α} (h : (U : Set α) = V) : U = V :=
@@ -100,9 +105,10 @@ instance : CompleteLattice (Opens α) :=
     rfl
     (-- inf
     fun U V => ⟨↑U ∩ ↑V, U.2.inter V.2⟩)
-    (funext fun U => funext fun V => ext (U.2.inter V.2).interior_eq.symm)-- Sup
-    _
-    rfl-- Inf
+    (funext fun U => funext fun V => ext (U.2.inter V.2).interior_eq.symm)
+    (-- Sup
+    fun S => ⟨⋃ s ∈ S, ↑s, is_open_bUnion fun s _ => s.2⟩)
+    (funext fun S => ext Sup_image.symm)-- Inf
     _
     rfl
 
@@ -115,20 +121,32 @@ theorem mk_inf_mk {U V : Set α} {hU : IsOpen U} {hV : IsOpen V} :
   rfl
 
 @[simp, norm_cast]
-theorem coe_inf {U V : Opens α} : ((U⊓V : Opens α) : Set α) = U ∩ V :=
+theorem coe_inf (s t : Opens α) : (↑(s⊓t) : Set α) = s ∩ t :=
   rfl
 
-@[simp]
+@[simp, norm_cast]
+theorem coe_sup (s t : Opens α) : (↑(s⊔t) : Set α) = s ∪ t :=
+  rfl
+
+@[simp, norm_cast]
 theorem coe_bot : ((⊥ : Opens α) : Set α) = ∅ :=
   rfl
 
-@[simp]
+@[simp, norm_cast]
 theorem coe_top : ((⊤ : Opens α) : Set α) = Set.Univ :=
   rfl
 
-@[simp]
+@[simp, norm_cast]
 theorem coe_Sup {S : Set (Opens α)} : (↑(sup S) : Set α) = ⋃ i ∈ S, ↑i :=
-  (@gc α _).l_Sup
+  rfl
+
+@[simp, norm_cast]
+theorem coe_finset_sup (f : ι → Opens α) (s : Finset ι) : (↑(s.sup f) : Set α) = s.sup (coe ∘ f) :=
+  map_finset_sup (⟨⟨coe, coe_sup⟩, coe_bot⟩ : SupBotHom (Opens α) (Set α)) _ _
+
+@[simp, norm_cast]
+theorem coe_finset_inf (f : ι → Opens α) (s : Finset ι) : (↑(s.inf f) : Set α) = s.inf (coe ∘ f) :=
+  map_finset_inf (⟨⟨coe, coe_inf⟩, coe_top⟩ : InfTopHom (Opens α) (Set α)) _ _
 
 instance : HasInter (Opens α) :=
   ⟨fun U V => U⊓V⟩
@@ -165,8 +183,8 @@ theorem supr_mk {ι} (s : ι → Set α) (h : ∀ i, IsOpen (s i)) :
   rw [supr_def]
   simp
 
-@[simp]
-theorem supr_s {ι} (s : ι → Opens α) : ((⨆ i, s i : Opens α) : Set α) = ⋃ i, s i := by
+@[simp, norm_cast]
+theorem coe_supr {ι} (s : ι → Opens α) : ((⨆ i, s i : Opens α) : Set α) = ⋃ i, s i := by
   simp [← supr_def]
 
 @[simp]
@@ -182,7 +200,7 @@ instance : Frame (Opens α) :=
   { Opens.completeLattice with sup := sup,
     inf_Sup_le_supr_inf := fun a s =>
       (ext <| by
-          simp only [← coe_inf, ← supr_s, ← coe_Sup, ← Set.inter_Union₂]).le }
+          simp only [← coe_inf, ← coe_supr, ← coe_Sup, ← Set.inter_Union₂]).le }
 
 theorem open_embedding_of_le {U V : Opens α} (i : U ≤ V) : OpenEmbedding (Set.inclusion i) :=
   { inj := Set.inclusion_injective i, induced := (@induced_compose _ _ _ _ (Set.inclusion i) coe).symm,
@@ -220,7 +238,7 @@ theorem is_basis_iff_nbhd {B : Set (Opens α)} : IsBasis B ↔ ∀ {U : Opens α
       
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (Us «expr ⊆ » B)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (Us «expr ⊆ » B)
 theorem is_basis_iff_cover {B : Set (Opens α)} : IsBasis B ↔ ∀ U : Opens α, ∃ (Us : _)(_ : Us ⊆ B), U = sup Us := by
   constructor
   · intro hB U
@@ -236,6 +254,29 @@ theorem is_basis_iff_cover {B : Set (Opens α)} : IsBasis B ↔ ∀ U : Opens α
     rcases h U with ⟨Us, hUs, rfl⟩
     rcases mem_Sup.1 hx with ⟨U, Us, xU⟩
     exact ⟨U, hUs Us, xU, le_Sup Us⟩
+    
+
+@[simp]
+theorem is_compact_element_iff (s : Opens α) : CompleteLattice.IsCompactElement s ↔ IsCompact (s : Set α) := by
+  rw [is_compact_iff_finite_subcover, CompleteLattice.is_compact_element_iff]
+  refine' ⟨_, fun H ι U hU => _⟩
+  · introv H hU hU'
+    obtain ⟨t, ht⟩ :=
+      H ι (fun i => ⟨U i, hU i⟩)
+        (by
+          simpa)
+    refine' ⟨t, Set.Subset.trans ht _⟩
+    rw [coe_finset_sup, Finset.sup_eq_supr]
+    rfl
+    
+  · obtain ⟨t, ht⟩ :=
+      H (fun i => U i) (fun i => (U i).Prop)
+        (by
+          simpa using show (s : Set α) ⊆ ↑(supr U) from hU)
+    refine' ⟨t, Set.Subset.trans ht _⟩
+    simp only [← Set.Union_subset_iff]
+    show ∀, ∀ i ∈ t, ∀, U i ≤ t.sup U
+    exact fun i => Finset.le_sup
     
 
 /-- The preimage of an open set, as an open set. -/

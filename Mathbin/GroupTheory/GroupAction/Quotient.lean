@@ -36,12 +36,12 @@ variable (β) [Monoidₓ β] [MulAction β α] (H : Subgroup α)
 
 /-- A typeclass for when a `mul_action β α` descends to the quotient `α ⧸ H`. -/
 class QuotientAction : Prop where
-  inv_mul_mem : ∀ b : β {a a' : α}, a⁻¹ * a' ∈ H → (b • a)⁻¹ * b • a' ∈ H
+  inv_mul_mem : ∀ (b : β) {a a' : α}, a⁻¹ * a' ∈ H → (b • a)⁻¹ * b • a' ∈ H
 
 /-- A typeclass for when an `add_action β α` descends to the quotient `α ⧸ H`. -/
 class _root_.add_action.quotient_action {α : Type _} (β : Type _) [AddGroupₓ α] [AddMonoidₓ β] [AddAction β α]
   (H : AddSubgroup α) : Prop where
-  inv_mul_mem : ∀ b : β {a a' : α}, -a + a' ∈ H → -(b +ᵥ a) + (b +ᵥ a') ∈ H
+  inv_mul_mem : ∀ (b : β) {a a' : α}, -a + a' ∈ H → -(b +ᵥ a) + (b +ᵥ a') ∈ H
 
 attribute [to_additive AddAction.QuotientAction] MulAction.QuotientAction
 
@@ -120,7 +120,7 @@ theorem of_quotient_stabilizer_mk (g : α) : ofQuotientStabilizer α x (Quotient
   rfl
 
 @[to_additive]
-theorem of_quotient_stabilizer_mem_orbit g : ofQuotientStabilizer α x g ∈ Orbit α x :=
+theorem of_quotient_stabilizer_mem_orbit (g) : ofQuotientStabilizer α x g ∈ Orbit α x :=
   (Quotientₓ.induction_on' g) fun g => ⟨g, rfl⟩
 
 @[to_additive]
@@ -130,7 +130,7 @@ theorem of_quotient_stabilizer_smul (g : α) (g' : α ⧸ MulAction.stabilizer �
 
 @[to_additive]
 theorem injective_of_quotient_stabilizer : Function.Injective (ofQuotientStabilizer α x) := fun y₁ y₂ =>
-  (Quotientₓ.induction_on₂' y₁ y₂) fun g₁ g₂ H : g₁ • x = g₂ • x =>
+  (Quotientₓ.induction_on₂' y₁ y₂) fun g₁ g₂ (H : g₁ • x = g₂ • x) =>
     Quotientₓ.sound' <| by
       rw [left_rel_apply]
       show (g₁⁻¹ * g₂) • x = x
@@ -188,7 +188,6 @@ noncomputable def selfEquivSigmaOrbitsQuotientStabilizer' {φ : Ω → β} (hφ 
     _ ≃ Σω : Ω, α ⧸ stabilizer α (φ ω) := Equivₓ.sigmaCongrRight fun ω => orbitEquivQuotientStabilizer α (φ ω)
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- **Class formula** for a finite group acting on a finite type. See
 `mul_action.card_eq_sum_card_group_div_card_stabilizer` for a specialized version using
 `quotient.out'`. -/
@@ -231,10 +230,10 @@ noncomputable def sigmaFixedByEquivOrbitsProdGroup : (Σa : α, FixedBy α β a)
   calc
     (Σa : α, FixedBy α β a) ≃ { ab : α × β // ab.1 • ab.2 = ab.2 } := (Equivₓ.subtypeProdEquivSigmaSubtype _).symm
     _ ≃ { ba : β × α // ba.2 • ba.1 = ba.1 } := (Equivₓ.prodComm α β).subtypeEquiv fun ab => Iff.rfl
-    _ ≃ Σb : β, stabilizer α b := Equivₓ.subtypeProdEquivSigmaSubtype fun b : β a => a ∈ stabilizer α b
+    _ ≃ Σb : β, stabilizer α b := Equivₓ.subtypeProdEquivSigmaSubtype fun (b : β) a => a ∈ stabilizer α b
     _ ≃ Σωb : Σω : Ω, Orbit α ω.out', stabilizer α (ωb.2 : β) := (selfEquivSigmaOrbits α β).sigmaCongrLeft'
     _ ≃ Σω : Ω, Σb : Orbit α ω.out', stabilizer α (b : β) :=
-      Equivₓ.sigmaAssoc fun ω : Ω b : Orbit α ω.out' => stabilizer α (b : β)
+      Equivₓ.sigmaAssoc fun (ω : Ω) (b : Orbit α ω.out') => stabilizer α (b : β)
     _ ≃ Σω : Ω, Σb : Orbit α ω.out', stabilizer α ω.out' :=
       Equivₓ.sigmaCongrRight fun ω =>
         Equivₓ.sigmaCongrRight fun ⟨b, hb⟩ => (stabilizerEquivStabilizerOfOrbitRel hb).toEquiv
@@ -252,7 +251,7 @@ theorem sum_card_fixed_by_eq_card_orbits_mul_card_group [Fintype α] [∀ a, Fin
   rw [← Fintype.card_prod, ← Fintype.card_sigma, Fintype.card_congr (sigma_fixed_by_equiv_orbits_prod_group α β)]
 
 @[to_additive]
-instance is_pretransitive_quotient G [Groupₓ G] (H : Subgroup G) :
+instance is_pretransitive_quotient (G) [Groupₓ G] (H : Subgroup G) :
     IsPretransitive G (G ⧸ H) where exists_smul_eq := by
     rintro ⟨x⟩ ⟨y⟩
     refine' ⟨y * x⁻¹, quotient_group.eq.mpr _⟩
@@ -278,7 +277,6 @@ theorem normal_core_eq_ker : H.normalCore = (MulAction.toPermHom G (G ⧸ H)).ke
     exact (MulAction.quotient.smul_mk H g 1).symm.trans (equiv.perm.ext_iff.mp hg (1 : G))
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 noncomputable instance fintypeQuotientNormalCore [Fintype (G ⧸ H)] : Fintype (G ⧸ H.normalCore) := by
   rw [H.normal_core_eq_ker]
   classical

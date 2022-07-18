@@ -33,13 +33,13 @@ constructive analogue of countability. (For the most part, theorems about
 protected def Countable (s : Set α) : Prop :=
   Nonempty (Encodable s)
 
-theorem countable_iff_exists_injective {s : Set α} : s.Countable ↔ ∃ f : s → ℕ, Injective f :=
+protected theorem countable_iff_exists_injective {s : Set α} : s.Countable ↔ ∃ f : s → ℕ, Injective f :=
   ⟨fun ⟨h⟩ => ⟨encode, encode_injective⟩, fun ⟨f, h⟩ => ⟨⟨f, partialInv f, partial_inv_left h⟩⟩⟩
 
 /-- A set `s : set α` is countable if and only if there exists a function `α → ℕ` injective
 on `s`. -/
 theorem countable_iff_exists_inj_on {s : Set α} : s.Countable ↔ ∃ f : α → ℕ, InjOn f s :=
-  countable_iff_exists_injective.trans
+  Set.countable_iff_exists_injective.trans
     ⟨fun ⟨f, hf⟩ =>
       ⟨fun a => if h : a ∈ s then f ⟨a, h⟩ else 0, fun a as b bs h =>
         congr_arg Subtype.val <|
@@ -47,7 +47,8 @@ theorem countable_iff_exists_inj_on {s : Set α} : s.Countable ↔ ∃ f : α �
             simpa [← as, ← bs] using h⟩,
       fun ⟨f, hf⟩ => ⟨_, inj_on_iff_injective.1 hf⟩⟩
 
-theorem countable_iff_exists_surjective [ne : Nonempty α] {s : Set α} : s.Countable ↔ ∃ f : ℕ → α, s ⊆ Range f :=
+protected theorem countable_iff_exists_surjective [ne : Nonempty α] {s : Set α} :
+    s.Countable ↔ ∃ f : ℕ → α, s ⊆ Range f :=
   ⟨fun ⟨h⟩ => by
     inhabit α <;>
       exact
@@ -76,7 +77,7 @@ theorem countable_iff_exists_surjective_to_subtype {s : Set α} (hs : s.Nonempty
   constructor <;> assumption
 
 /-- Convert `set.countable s` to `encodable s` (noncomputable). -/
-def Countable.toEncodable {s : Set α} : s.Countable → Encodable s :=
+protected def Countable.toEncodable {s : Set α} : s.Countable → Encodable s :=
   Classical.choice
 
 theorem countable_encodable' (s : Set α) [H : Encodable s] : s.Countable :=
@@ -92,7 +93,7 @@ theorem Countable.exists_surjective {s : Set α} (hc : s.Countable) (hs : s.None
   let this : Encodable s := countable.to_encodable hc
   let this : Nonempty s := hs.to_subtype
   have : (univ : Set s).Countable := countable_encodable _
-  rcases countable_iff_exists_surjective.1 this with ⟨g, hg⟩
+  rcases Set.countable_iff_exists_surjective.1 this with ⟨g, hg⟩
   have : range g = univ := univ_subset_iff.1 hg
   use coe ∘ g
   simp only [← range_comp, ← this, ← image_univ, ← Subtype.range_coe]

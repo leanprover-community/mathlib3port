@@ -61,7 +61,7 @@ include A
 /-- An `I : ideal A` is homogeneous if for every `r ∈ I`, all homogeneous components
   of `r` are in `I`.-/
 def Ideal.IsHomogeneous : Prop :=
-  ∀ i : ι ⦃r : A⦄, r ∈ I → (DirectSum.decompose 𝒜 r i : A) ∈ I
+  ∀ (i : ι) ⦃r : A⦄, r ∈ I → (DirectSum.decompose 𝒜 r i : A) ∈ I
 
 /-- For any `semiring A`, we collect the homogeneous ideals of `A` into a type. -/
 structure HomogeneousIdeal extends Submodule A A where
@@ -77,7 +77,8 @@ theorem HomogeneousIdeal.is_homogeneous (I : HomogeneousIdeal 𝒜) : I.toIdeal.
   I.is_homogeneous'
 
 theorem HomogeneousIdeal.to_ideal_injective :
-    Function.Injective (HomogeneousIdeal.toIdeal : HomogeneousIdeal 𝒜 → Ideal A) := fun ⟨x, hx⟩ ⟨y, hy⟩ h : x = y => by
+    Function.Injective (HomogeneousIdeal.toIdeal : HomogeneousIdeal 𝒜 → Ideal A) := fun ⟨x, hx⟩ ⟨y, hy⟩ (h : x = y) =>
+  by
   simp [← h]
 
 instance HomogeneousIdeal.setLike : SetLike (HomogeneousIdeal 𝒜) A where
@@ -135,7 +136,6 @@ theorem Ideal.is_homogeneous_iff_forall_subset : I.IsHomogeneous 𝒜 ↔ ∀ i,
 theorem Ideal.is_homogeneous_iff_subset_Inter : I.IsHomogeneous 𝒜 ↔ (I : Set A) ⊆ ⋂ i, GradedRing.proj 𝒜 i ⁻¹' ↑I :=
   subset_Inter_iff.symm
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Ideal.mul_homogeneous_element_mem_of_mem {I : Ideal A} (r x : A) (hx₁ : IsHomogeneous 𝒜 x) (hx₂ : x ∈ I)
     (j : ι) : GradedRing.proj 𝒜 j (r * x) ∈ I := by
   classical
@@ -188,7 +188,6 @@ theorem Ideal.mem_homogeneous_core_of_is_homogeneous_of_mem {x : A} (h : SetLike
     x ∈ I.homogeneousCore 𝒜 :=
   Ideal.subset_span ⟨⟨x, h⟩, hmem, rfl⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Ideal.IsHomogeneous.to_ideal_homogeneous_core_eq_self (h : I.IsHomogeneous 𝒜) :
     (I.homogeneousCore 𝒜).toIdeal = I := by
   apply le_antisymmₓ (I.homogeneous_core'_le 𝒜) _
@@ -267,12 +266,12 @@ protected theorem infi {κ : Sort _} {f : κ → Ideal A} (h : ∀ i, (f i).IsHo
   simp only [← Ideal.mem_infi] at hx⊢
   exact fun j => h _ _ (hx j)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem supr₂ {κ : Sort _} {κ' : κ → Sort _} {f : ∀ i, κ' i → Ideal A} (h : ∀ i j, (f i j).IsHomogeneous 𝒜) :
     (⨆ (i) (j), f i j).IsHomogeneous 𝒜 :=
   is_homogeneous.supr fun i => is_homogeneous.supr <| h i
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem infi₂ {κ : Sort _} {κ' : κ → Sort _} {f : ∀ i, κ' i → Ideal A} (h : ∀ i j, (f i j).IsHomogeneous 𝒜) :
     (⨅ (i) (j), f i j).IsHomogeneous 𝒜 :=
   is_homogeneous.infi fun i => is_homogeneous.infi <| h i
@@ -360,15 +359,15 @@ theorem to_ideal_supr {κ : Sort _} (s : κ → HomogeneousIdeal 𝒜) : (⨆ i,
 theorem to_ideal_infi {κ : Sort _} (s : κ → HomogeneousIdeal 𝒜) : (⨅ i, s i).toIdeal = ⨅ i, (s i).toIdeal := by
   rw [infi, to_ideal_Inf, infi_range]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 @[simp]
 theorem to_ideal_supr₂ {κ : Sort _} {κ' : κ → Sort _} (s : ∀ i, κ' i → HomogeneousIdeal 𝒜) :
     (⨆ (i) (j), s i j).toIdeal = ⨆ (i) (j), (s i j).toIdeal := by
   simp_rw [to_ideal_supr]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 @[simp]
 theorem to_ideal_infi₂ {κ : Sort _} {κ' : κ → Sort _} (s : ∀ i, κ' i → HomogeneousIdeal 𝒜) :
     (⨅ (i) (j), s i j).toIdeal = ⨅ (i) (j), (s i j).toIdeal := by
@@ -498,7 +497,6 @@ def Ideal.homogeneousHull : HomogeneousIdeal 𝒜 :=
     obtain ⟨i, x, rfl⟩ := hx
     apply SetLike.is_homogeneous_coe⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Ideal.le_to_ideal_homogeneous_hull : I ≤ (Ideal.homogeneousHull 𝒜 I).toIdeal := by
   intro r hr
   classical
@@ -606,7 +604,7 @@ of irrelevant ideal makes sense in a more general setting by defining it as the 
 with `0` as i-th coordinate for all `i ≤ 0`, i.e. `{a | ∀ (i : ι), i ≤ 0 → aᵢ = 0}`.
 -/
 def HomogeneousIdeal.irrelevant : HomogeneousIdeal 𝒜 :=
-  ⟨(GradedRing.projZeroRingHom 𝒜).ker, fun i r hr : (decompose 𝒜 r 0 : A) = 0 => by
+  ⟨(GradedRing.projZeroRingHom 𝒜).ker, fun i r (hr : (decompose 𝒜 r 0 : A) = 0) => by
     change (decompose 𝒜 (decompose 𝒜 r _ : A) 0 : A) = 0
     by_cases' h : i = 0
     · rw [h, hr, decompose_zero, zero_apply, AddSubmonoidClass.coe_zero]

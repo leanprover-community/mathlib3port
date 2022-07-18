@@ -26,7 +26,7 @@ open MonadCont
 class IsLawfulMonadCont (m : Type u → Type v) [Monadₓ m] [MonadCont m] extends IsLawfulMonad m where
   call_cc_bind_right {α ω γ} (cmd : m α) (next : Label ω m γ → α → m ω) :
     (callCc fun f => cmd >>= next f) = cmd >>= fun x => callCc fun f => next f x
-  call_cc_bind_left {α} β (x : α) (dead : Label α m β → β → m α) :
+  call_cc_bind_left {α} (β) (x : α) (dead : Label α m β → β → m α) :
     (callCc fun f : Label α m β => goto f x >>= dead f) = pure x
   call_cc_dummy {α β} (dummy : m α) : (callCc fun f : Label α m β => dummy) = dummy
 
@@ -100,7 +100,7 @@ instance : IsLawfulMonadCont (ContT r m) where
   call_cc_dummy := by
     intros <;> ext <;> rfl
 
-instance ε [MonadExcept ε m] : MonadExcept ε (ContT r m) where
+instance (ε) [MonadExcept ε m] : MonadExcept ε (ContT r m) where
   throw := fun x e f => throw e
   catch := fun α act h f => catch (act f) fun e => h e f
 
@@ -183,7 +183,7 @@ def WriterTₓ.callCc [MonadCont m] {α β ω : Type _} [One ω] (f : Label α (
     WriterTₓ ω m α :=
   ⟨callCc (WriterTₓ.run ∘ f ∘ WriterTₓ.mkLabelₓ : Label (α × ω) m β → m (α × ω))⟩
 
-instance ω [Monadₓ m] [One ω] [MonadCont m] : MonadCont (WriterTₓ ω m) where callCc := fun α β => WriterTₓ.callCc
+instance (ω) [Monadₓ m] [One ω] [MonadCont m] : MonadCont (WriterTₓ ω m) where callCc := fun α β => WriterTₓ.callCc
 
 def StateTₓ.mkLabelₓ {α β σ : Type u} : Label (α × σ) m (β × σ) → Label α (StateTₓ σ m) β
   | ⟨f⟩ => ⟨fun a => ⟨fun s => f (a, s)⟩⟩
@@ -216,7 +216,7 @@ instance {σ} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (StateTₓ
     ext
     rfl
 
-def ReaderTₓ.mkLabelₓ {α β} ρ : Label α m β → Label α (ReaderTₓ ρ m) β
+def ReaderTₓ.mkLabelₓ {α β} (ρ) : Label α m β → Label α (ReaderTₓ ρ m) β
   | ⟨f⟩ => ⟨monad_lift ∘ f⟩
 
 theorem ReaderTₓ.goto_mk_label {α ρ β} (x : Label α m β) (i : α) :

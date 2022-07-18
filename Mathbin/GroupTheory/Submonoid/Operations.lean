@@ -474,7 +474,8 @@ instance (priority := 75) toOrderedCommMonoid {M} [OrderedCommMonoid M] {A : Typ
 @[to_additive "An `add_submonoid` of a `linear_ordered_add_comm_monoid` is\na `linear_ordered_add_comm_monoid`."]
 instance (priority := 75) toLinearOrderedCommMonoid {M} [LinearOrderedCommMonoid M] {A : Type _} [SetLike A M]
     [SubmonoidClass A M] (S : A) : LinearOrderedCommMonoid S :=
-  Subtype.coe_injective.LinearOrderedCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.LinearOrderedCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ =>
+    rfl
 
 /-- A submonoid of an `ordered_cancel_comm_monoid` is an `ordered_cancel_comm_monoid`. -/
 -- Prefer subclasses of `monoid` over subclasses of `submonoid_class`.
@@ -490,7 +491,8 @@ instance (priority := 75) toOrderedCancelCommMonoid {M} [OrderedCancelCommMonoid
       "An `add_submonoid` of a `linear_ordered_cancel_add_comm_monoid` is\na `linear_ordered_cancel_add_comm_monoid`."]
 instance (priority := 75) toLinearOrderedCancelCommMonoid {M} [LinearOrderedCancelCommMonoid M] {A : Type _}
     [SetLike A M] [SubmonoidClass A M] (S : A) : LinearOrderedCancelCommMonoid S :=
-  Subtype.coe_injective.LinearOrderedCancelCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.LinearOrderedCancelCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
+    fun _ _ => rfl
 
 include hA
 
@@ -568,7 +570,8 @@ instance toOrderedCommMonoid {M} [OrderedCommMonoid M] (S : Submonoid M) : Order
 /-- A submonoid of a `linear_ordered_comm_monoid` is a `linear_ordered_comm_monoid`. -/
 @[to_additive "An `add_submonoid` of a `linear_ordered_add_comm_monoid` is\na `linear_ordered_add_comm_monoid`."]
 instance toLinearOrderedCommMonoid {M} [LinearOrderedCommMonoid M] (S : Submonoid M) : LinearOrderedCommMonoid S :=
-  Subtype.coe_injective.LinearOrderedCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.LinearOrderedCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ =>
+    rfl
 
 /-- A submonoid of an `ordered_cancel_comm_monoid` is an `ordered_cancel_comm_monoid`. -/
 @[to_additive "An `add_submonoid` of an `ordered_cancel_add_comm_monoid` is\nan `ordered_cancel_add_comm_monoid`."]
@@ -581,7 +584,8 @@ instance toOrderedCancelCommMonoid {M} [OrderedCancelCommMonoid M] (S : Submonoi
       "An `add_submonoid` of a `linear_ordered_cancel_add_comm_monoid` is\na `linear_ordered_cancel_add_comm_monoid`."]
 instance toLinearOrderedCancelCommMonoid {M} [LinearOrderedCancelCommMonoid M] (S : Submonoid M) :
     LinearOrderedCancelCommMonoid S :=
-  Subtype.coe_injective.LinearOrderedCancelCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.LinearOrderedCancelCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
+    fun _ _ => rfl
 
 /-- The natural monoid hom from a submonoid of monoid `M` to `M`. -/
 @[to_additive "The natural monoid hom from an `add_submonoid` of `add_monoid` `M` to `M`."]

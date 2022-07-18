@@ -20,8 +20,9 @@ for some `a : α`, while the domain of `o : part α` doesn't have to be decidabl
 translate back and forth between a partial value with a decidable domain and an option, and
 `option α` and `part α` are classically equivalent. In general, `part α` is bigger than `option α`.
 
-In current mathlib, `part ℕ`, aka `enat`, is used to move decidability of the order to decidability
-of `enat.find` (which is the smallest natural satisfying a predicate, or `∞` if there's none).
+In current mathlib, `part ℕ`, aka `part_enat`, is used to move decidability of the order to
+decidability of `part_enat.find` (which is the smallest natural satisfying a predicate, or `∞` if
+there's none).
 
 ## Main declarations
 
@@ -69,7 +70,7 @@ def toOption (o : Part α) [Decidable o.Dom] : Option α :=
   if h : Dom o then some (o.get h) else none
 
 /-- `part` extensionality -/
-theorem ext' : ∀ {o p : Part α} H1 : o.Dom ↔ p.Dom H2 : ∀ h₁ h₂, o.get h₁ = p.get h₂, o = p
+theorem ext' : ∀ {o p : Part α} (H1 : o.Dom ↔ p.Dom) (H2 : ∀ h₁ h₂, o.get h₁ = p.get h₂), o = p
   | ⟨od, o⟩, ⟨pd, p⟩, H1, H2 => by
     have t : od = pd := propext H1
     cases t <;> rw [show o = p from funext fun p => H2 p p]
@@ -92,7 +93,7 @@ theorem mem_eq (a : α) (o : Part α) : (a ∈ o) = ∃ h, o.get h = a :=
 theorem dom_iff_mem : ∀ {o : Part α}, o.Dom ↔ ∃ y, y ∈ o
   | ⟨p, f⟩ => ⟨fun h => ⟨f h, h, rfl⟩, fun ⟨_, h, rfl⟩ => h⟩
 
-theorem get_mem {o : Part α} h : get o h ∈ o :=
+theorem get_mem {o : Part α} (h) : get o h ∈ o :=
   ⟨_, rfl⟩
 
 @[simp]
@@ -128,7 +129,7 @@ theorem mem_unique : ∀ {a b : α} {o : Part α}, a ∈ o → b ∈ o → a = b
 
 theorem Mem.left_unique : Relator.LeftUnique ((· ∈ ·) : α → Part α → Prop) := fun a o b => mem_unique
 
-theorem get_eq_of_mem {o : Part α} {a} (h : a ∈ o) h' : get o h' = a :=
+theorem get_eq_of_mem {o : Part α} {a} (h : a ∈ o) (h') : get o h' = a :=
   mem_unique ⟨_, rfl⟩ h
 
 protected theorem subsingleton (o : Part α) : Set.Subsingleton { a | a ∈ o } := fun a ha b hb => mem_unique ha hb
@@ -389,7 +390,7 @@ theorem map_none (f : α → β) : map f none = none :=
 theorem map_some (f : α → β) (a : α) : map f (some a) = some (f a) :=
   eq_some_iff.2 <| mem_map f <| mem_some _
 
-theorem mem_assert {p : Prop} {f : p → Part α} : ∀ {a} h : p, a ∈ f h → a ∈ assert p f
+theorem mem_assert {p : Prop} {f : p → Part α} : ∀ {a} (h : p), a ∈ f h → a ∈ assert p f
   | _, x, ⟨h, rfl⟩ => ⟨⟨x, h⟩, rfl⟩
 
 @[simp]
@@ -471,7 +472,7 @@ theorem bind_assoc {γ} (f : Part α) (g : α → Part β) (k : β → Part γ) 
     simp <;> exact ⟨fun ⟨_, ⟨_, h₁, h₂⟩, h₃⟩ => ⟨_, h₁, _, h₂, h₃⟩, fun ⟨_, h₁, _, h₂, h₃⟩ => ⟨_, ⟨_, h₁, h₂⟩, h₃⟩⟩
 
 @[simp]
-theorem bind_map {γ} (f : α → β) x (g : β → Part γ) : (map f x).bind g = x.bind fun y => g (f y) := by
+theorem bind_map {γ} (f : α → β) (x) (g : β → Part γ) : (map f x).bind g = x.bind fun y => g (f y) := by
   rw [← bind_some_eq_map, bind_assoc] <;> simp
 
 @[simp]
@@ -493,7 +494,7 @@ instance : IsLawfulMonad Part where
   pure_bind := @bind_some
   bind_assoc := @bind_assoc
 
-theorem map_id' {f : α → α} (H : ∀ x : α, f x = x) o : map f o = o := by
+theorem map_id' {f : α → α} (H : ∀ x : α, f x = x) (o) : map f o = o := by
   rw [show f = id from funext H] <;> exact id_map o
 
 @[simp]

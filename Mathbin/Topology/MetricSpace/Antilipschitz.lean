@@ -183,7 +183,7 @@ theorem bounded_preimage (hf : AntilipschitzWith K f) {s : Set β} (hs : Bounded
       
 
 theorem tendsto_cobounded (hf : AntilipschitzWith K f) : Tendsto f (cobounded α) (cobounded β) :=
-  compl_surjective.forall.2 fun s hs : IsBounded s =>
+  compl_surjective.forall.2 fun s (hs : IsBounded s) =>
     Metric.is_bounded_iff.2 <| hf.bounded_preimage <| Metric.is_bounded_iff.1 hs
 
 /-- The image of a proper space under an expanding onto map is proper. -/

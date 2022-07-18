@@ -46,7 +46,7 @@ universe u v w x
 structure Pequiv (α : Type u) (β : Type v) where
   toFun : α → Option β
   invFun : β → Option α
-  inv : ∀ a : α b : β, a ∈ inv_fun b ↔ b ∈ to_fun a
+  inv : ∀ (a : α) (b : β), a ∈ inv_fun b ↔ b ∈ to_fun a
 
 -- mathport name: «expr ≃. »
 infixr:25 " ≃. " => Pequiv
@@ -61,11 +61,12 @@ instance : CoeFun (α ≃. β) fun _ => α → Option β :=
   ⟨toFun⟩
 
 @[simp]
-theorem coe_mk_apply (f₁ : α → Option β) (f₂ : β → Option α) h (x : α) : (Pequiv.mk f₁ f₂ h : α → Option β) x = f₁ x :=
+theorem coe_mk_apply (f₁ : α → Option β) (f₂ : β → Option α) (h) (x : α) :
+    (Pequiv.mk f₁ f₂ h : α → Option β) x = f₁ x :=
   rfl
 
 @[ext]
-theorem ext : ∀ {f g : α ≃. β} h : ∀ x, f x = g x, f = g
+theorem ext : ∀ {f g : α ≃. β} (h : ∀ x, f x = g x), f = g
   | ⟨f₁, f₂, hf⟩, ⟨g₁, g₂, hg⟩, h => by
     have h : f₁ = g₁ := funext h
     have : ∀ b, f₂ b = g₂ b := by
@@ -154,7 +155,6 @@ theorem trans_refl (f : α ≃. β) : f.trans (Pequiv.refl β) = f := by
 protected theorem inj (f : α ≃. β) {a₁ a₂ : α} {b : β} (h₁ : b ∈ f a₁) (h₂ : b ∈ f a₂) : a₁ = a₂ := by
   rw [← mem_iff_mem] at * <;> cases h : f.symm b <;> simp_all
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If the domain of a `pequiv` is `α` except a point, its forward direction is injective. -/
 theorem injective_of_forall_ne_is_some (f : α ≃. β) (a₂ : α) (h : ∀ a₁ : α, a₁ ≠ a₂ → isSome (f a₁)) : Injective f :=
   HasLeftInverse.injective
@@ -353,7 +353,7 @@ end Single
 section Order
 
 instance : PartialOrderₓ (α ≃. β) where
-  le := fun f g => ∀ a : α b : β, b ∈ f a → b ∈ g a
+  le := fun f g => ∀ (a : α) (b : β), b ∈ f a → b ∈ g a
   le_refl := fun _ _ _ => id
   le_trans := fun f g h fg gh a b => gh a b ∘ fg a b
   le_antisymm := fun f g fg gf =>
@@ -366,7 +366,7 @@ instance : PartialOrderₓ (α ≃. β) where
         · exact gf _ _ h
           )
 
-theorem le_def {f g : α ≃. β} : f ≤ g ↔ ∀ a : α b : β, b ∈ f a → b ∈ g a :=
+theorem le_def {f g : α ≃. β} : f ≤ g ↔ ∀ (a : α) (b : β), b ∈ f a → b ∈ g a :=
   Iff.rfl
 
 instance : OrderBot (α ≃. β) :=

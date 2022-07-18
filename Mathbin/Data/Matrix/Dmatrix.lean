@@ -108,19 +108,19 @@ instance [∀ i j, Subsingleton (α i j)] : Subsingleton (Dmatrix m n α) :=
   Pi.subsingleton
 
 @[simp]
-theorem zero_apply [∀ i j, Zero (α i j)] i j : (0 : Dmatrix m n α) i j = 0 :=
+theorem zero_apply [∀ i j, Zero (α i j)] (i j) : (0 : Dmatrix m n α) i j = 0 :=
   rfl
 
 @[simp]
-theorem neg_apply [∀ i j, Neg (α i j)] (M : Dmatrix m n α) i j : (-M) i j = -M i j :=
+theorem neg_apply [∀ i j, Neg (α i j)] (M : Dmatrix m n α) (i j) : (-M) i j = -M i j :=
   rfl
 
 @[simp]
-theorem add_apply [∀ i j, Add (α i j)] (M N : Dmatrix m n α) i j : (M + N) i j = M i j + N i j :=
+theorem add_apply [∀ i j, Add (α i j)] (M N : Dmatrix m n α) (i j) : (M + N) i j = M i j + N i j :=
   rfl
 
 @[simp]
-theorem sub_apply [∀ i j, Sub (α i j)] (M N : Dmatrix m n α) i j : (M - N) i j = M i j - N i j :=
+theorem sub_apply [∀ i j, Sub (α i j)] (M N : Dmatrix m n α) (i j) : (M - N) i j = M i j - N i j :=
   rfl
 
 @[simp]

@@ -253,11 +253,11 @@ theorem candidates_b_dist_mem_candidates_b : candidatesBDist X Y ∈ CandidatesB
 private theorem candidates_b_nonempty : (CandidatesB X Y).Nonempty :=
   ⟨_, candidates_b_dist_mem_candidates_b⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (x y)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (x y)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (x y)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (x y z)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (x y)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (x y)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (x y)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (x y)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (x y z)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (x y)
 /-- To apply Arzela-Ascoli, we need to check that the set of candidates is closed and
 equicontinuous. Equicontinuity follows from the Lipschitz control, we check closedness. -/
 private theorem closed_candidates_b : IsClosed (CandidatesB X Y) := by

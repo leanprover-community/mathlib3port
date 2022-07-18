@@ -132,6 +132,7 @@ noncomputable instance : NormedGroup ℝ where
   norm := fun x => abs x
   dist_eq := fun x y => rfl
 
+@[simp]
 theorem Real.norm_eq_abs (r : ℝ) : ∥r∥ = abs r :=
   rfl
 
@@ -728,7 +729,7 @@ theorem AddMonoidHomClass.antilipschitz_of_bound {𝓕 : Type _} [AddMonoidHomCl
     simpa only [← dist_eq_norm, ← map_sub] using h (x - y)
 
 theorem AddMonoidHomClass.bound_of_antilipschitz {𝓕 : Type _} [AddMonoidHomClass 𝓕 E F] (f : 𝓕) {K : ℝ≥0 }
-    (h : AntilipschitzWith K f) x : ∥x∥ ≤ K * ∥f x∥ := by
+    (h : AntilipschitzWith K f) (x) : ∥x∥ ≤ K * ∥f x∥ := by
   simpa only [← dist_zero_right, ← map_zero] using h.le_mul_dist x 0
 
 end Nnnorm

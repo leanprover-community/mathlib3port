@@ -61,9 +61,9 @@ theorem prod_eq_one (f : α → M) (h : ∀ a, f a = 1) : (∏ a, f a) = 1 :=
 theorem prod_congr (f g : α → M) (h : ∀ a, f a = g a) : (∏ a, f a) = ∏ a, g a :=
   (Finset.prod_congr rfl) fun a ha => h a
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » a)
 @[to_additive]
-theorem prod_eq_single {f : α → M} (a : α) (h : ∀ x _ : x ≠ a, f x = 1) : (∏ x, f x) = f a :=
+theorem prod_eq_single {f : α → M} (a : α) (h : ∀ (x) (_ : x ≠ a), f x = 1) : (∏ x, f x) = f a :=
   (Finset.prod_eq_single a fun x _ hx => h x hx) fun ha => (ha (Finset.mem_univ a)).elim
 
 @[to_additive]
@@ -211,8 +211,8 @@ theorem Fintype.prod_fiberwise [Fintype α] [DecidableEq β] [Fintype β] [CommM
   rw [← (Equivₓ.sigmaFiberEquiv f).prod_comp, ← univ_sigma_univ, prod_sigma]
   rfl
 
-theorem Fintype.prod_dite [Fintype α] {p : α → Prop} [DecidablePred p] [CommMonoidₓ β] (f : ∀ a : α ha : p a, β)
-    (g : ∀ a : α ha : ¬p a, β) :
+theorem Fintype.prod_dite [Fintype α] {p : α → Prop} [DecidablePred p] [CommMonoidₓ β] (f : ∀ (a : α) (ha : p a), β)
+    (g : ∀ (a : α) (ha : ¬p a), β) :
     (∏ a, dite (p a) (f a) (g a)) = (∏ a : { a // p a }, f a a.2) * ∏ a : { a // ¬p a }, g a a.2 := by
   simp only [← prod_dite, ← attach_eq_univ]
   congr 1
@@ -229,7 +229,6 @@ open Finset
 
 variable {α₁ : Type _} {α₂ : Type _} {M : Type _} [Fintype α₁] [Fintype α₂] [CommMonoidₓ M]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem Fintype.prod_sum_elim (f : α₁ → M) (g : α₂ → M) : (∏ x, Sum.elim f g x) = (∏ a₁, f a₁) * ∏ a₂, g a₂ := by
   classical

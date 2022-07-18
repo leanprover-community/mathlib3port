@@ -621,7 +621,7 @@ that it is a bijection is not directly possible, but the consequence on sums can
 more easily. -/
 theorem comp_change_of_variables_sum {α : Type _} [AddCommMonoidₓ α] (m M N : ℕ) (f : (Σn : ℕ, Finₓ n → ℕ) → α)
     (g : (Σn, Composition n) → α)
-    (h : ∀ e he : e ∈ compPartialSumSource m M N, f e = g (compChangeOfVariables m M N e he)) :
+    (h : ∀ (e) (he : e ∈ compPartialSumSource m M N), f e = g (compChangeOfVariables m M N e he)) :
     (∑ e in compPartialSumSource m M N, f e) = ∑ e in compPartialSumTarget m M N, g e := by
   apply Finset.sum_bij (comp_change_of_variables m M N)
   -- We should show that the correspondance we have set up is indeed a bijection

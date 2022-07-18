@@ -280,13 +280,13 @@ attribute [local instance] IsCyclotomicExtension.finite_dimensional
 
 attribute [local instance] IsCyclotomicExtension.is_galois
 
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
 /-- If `irreducible (cyclotomic (p ^ (k + 1)) K)` (in particular for `K = ℚ`) and `p` is a prime,
 then the norm of `ζ ^ (p ^ s) - 1` is `p ^ (p ^ s)` if `p ^ (k - s + 1) ≠ 2`. See the next lemmas
 for similar results. -/

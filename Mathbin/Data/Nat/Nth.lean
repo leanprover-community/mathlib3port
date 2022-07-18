@@ -61,7 +61,7 @@ theorem nth_set_card_aux {n : ℕ} (hp : (SetOf p).Finite) (hp' : { i : ℕ | p 
     (hle : n ≤ hp.toFinset.card) : hp'.toFinset.card = hp.toFinset.card - n := by
   induction' n with k hk
   · congr
-    simp only [← forall_false_left, ← Nat.not_lt_zeroₓ, ← forall_const, ← and_trueₓ]
+    simp only [← IsEmpty.forall_iff, ← Nat.not_lt_zeroₓ, ← forall_const, ← and_trueₓ]
     
   have hp'' : { i : ℕ | p i ∧ ∀ t, t < k → nth p t < i }.Finite := by
     refine' hp.subset fun x hx => _
@@ -354,8 +354,8 @@ theorem nth_zero_of_nth_zero (h₀ : ¬p 0) {a b : ℕ} (hab : a ≤ b) (ha : nt
     
 
 /-- When `p` is true infinitely often, `nth` agrees with `nat.subtype.order_iso_of_nat`. -/
-theorem nth_eq_order_iso_of_nat [DecidablePred p] (i : Infinite (SetOf p)) (n : ℕ) :
-    nth p n = Nat.Subtype.orderIsoOfNat (SetOf p) n := by
+theorem nth_eq_order_iso_of_nat (i : Infinite (SetOf p)) (n : ℕ) : nth p n = Nat.Subtype.orderIsoOfNat (SetOf p) n := by
+  classical
   have hi := set.infinite_coe_iff.mp i
   induction' n with k hk <;> simp only [← subtype.order_iso_of_nat_apply, ← subtype.of_nat, ← nat_zero_eq_zero]
   · rw [Nat.Subtype.coe_bot, nth_zero_of_exists]

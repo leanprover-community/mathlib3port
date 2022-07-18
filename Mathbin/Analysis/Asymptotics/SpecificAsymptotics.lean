@@ -47,7 +47,7 @@ theorem pow_div_pow_eventually_eq_at_bot {p q : ℕ} :
 theorem tendsto_zpow_at_top_at_top {n : ℤ} (hn : 0 < n) : Tendsto (fun x : 𝕜 => x ^ n) atTop atTop := by
   lift n to ℕ using hn.le
   simp only [← zpow_coe_nat]
-  exact tendsto_pow_at_top (nat.succ_le_iff.mpr <| int.coe_nat_pos.mp hn)
+  exact tendsto_pow_at_top (nat.cast_pos.mp hn).ne'
 
 theorem tendsto_pow_div_pow_at_top_at_top {p q : ℕ} (hpq : q < p) : Tendsto (fun x : 𝕜 => x ^ p / x ^ q) atTop atTop :=
   by

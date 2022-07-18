@@ -27,7 +27,7 @@ open Order
 
 namespace Ordinal
 
-/-- Proving properties of ordinals by induction over their Cantor normal form. -/
+/-- Inducts on the base `b` expansion of an ordinal. -/
 @[elab_as_eliminator]
 noncomputable def cNFRec {b : Ordinal} (b0 : b ≠ 0) {C : Ordinal → Sort _} (H0 : C 0)
     (H : ∀ o, o ≠ 0 → C (o % b ^ log b o) → C o) : ∀ o, C o
@@ -39,28 +39,32 @@ noncomputable def cNFRec {b : Ordinal} (b0 : b ≠ 0) {C : Ordinal → Sort _} (
       H o o0 (CNF_rec (o % b ^ log b o))
 
 @[simp]
-theorem CNF_rec_zero {b} b0 {C H0 H} : @cNFRec b b0 C H0 H 0 = H0 := by
+theorem CNF_rec_zero {b} (b0) {C H0 H} : @cNFRec b b0 C H0 H 0 = H0 := by
   rw [CNF_rec, dif_pos rfl] <;> rfl
 
 @[simp]
-theorem CNF_rec_ne_zero {b} b0 {C H0 H o} o0 : @cNFRec b b0 C H0 H o = H o o0 (@cNFRec b b0 C H0 H _) := by
+theorem CNF_rec_ne_zero {b} (b0) {C H0 H o} (o0) : @cNFRec b b0 C H0 H o = H o o0 (@cNFRec b b0 C H0 H _) := by
   rw [CNF_rec, dif_neg o0]
 
 /-- The Cantor normal form of an ordinal `o` is the list of coefficients and exponents in the
-    base-`b` expansion of `o`.
+base-`b` expansion of `o`.
 
-    `CNF b (b ^ u₁ * v₁ + b ^ u₂ * v₂) = [(u₁, v₁), (u₂, v₂)]` -/
+We special-case `CNF 0 o = []`, `CNF b 0 = []`, and `CNF 1 o = [(0, o)]` for `o ≠ 0`.
+
+`CNF b (b ^ u₁ * v₁ + b ^ u₂ * v₂) = [(u₁, v₁), (u₂, v₂)]` -/
+@[pp_nodot]
 def cNF (b o : Ordinal) : List (Ordinal × Ordinal) :=
   if b0 : b = 0 then [] else cNFRec b0 [] (fun o o0 IH => (log b o, o / b ^ log b o) :: IH) o
 
 @[simp]
-theorem zero_CNF o : cNF 0 o = [] :=
+theorem zero_CNF (o) : cNF 0 o = [] :=
   dif_pos rfl
 
 @[simp]
-theorem CNF_zero b : cNF b 0 = [] :=
+theorem CNF_zero (b) : cNF b 0 = [] :=
   if b0 : b = 0 then dif_pos b0 else (dif_neg b0).trans <| CNF_rec_zero _
 
+/-- Recursive definition for the Cantor normal form. -/
 theorem CNF_ne_zero {b o : Ordinal} (b0 : b ≠ 0) (o0 : o ≠ 0) :
     cNF b o = (log b o, o / b ^ log b o) :: cNF b (o % b ^ log b o) := by
   unfold CNF <;> rw [dif_neg b0, dif_neg b0, CNF_rec_ne_zero b0 o0]
@@ -69,7 +73,8 @@ theorem CNF_ne_zero {b o : Ordinal} (b0 : b ≠ 0) (o0 : o ≠ 0) :
 theorem one_CNF {o : Ordinal} (o0 : o ≠ 0) : cNF 1 o = [(0, o)] := by
   rw [CNF_ne_zero Ordinal.one_ne_zero o0, log_of_not_one_lt_left (irrefl _), opow_zero, mod_one, CNF_zero, div_one]
 
-theorem CNF_foldr {b : Ordinal} (b0 : b ≠ 0) o : (cNF b o).foldr (fun p r => b ^ p.1 * p.2 + r) 0 = o :=
+/-- Evaluating the Cantor normal form of an ordinal returns the ordinal. -/
+theorem CNF_foldr {b : Ordinal} (b0 : b ≠ 0) (o) : (cNF b o).foldr (fun p r => b ^ p.1 * p.2 + r) 0 = o :=
   cNFRec b0
     (by
       rw [CNF_zero] <;> rfl)
@@ -114,12 +119,15 @@ private theorem CNF_pairwise_aux (b o : Ordinal.{u}) :
     simp only [← List.mem_singletonₓ, ← log_one_left, ← forall_eq, ← le_reflₓ, ← true_andₓ, ← List.pairwise_singleton]
     
 
+/-- The exponents of the Cantor normal form are decreasing. -/
 theorem CNF_pairwise (b o : Ordinal.{u}) : (cNF b o).Pairwise fun p q : Ordinal × Ordinal => q.1 < p.1 :=
   (CNF_pairwise_aux _ _).2
 
+/-- Every exponent in the Cantor normal form `CNF b o` is less or equal to `log b o`. -/
 theorem CNF_fst_le_log {b o : Ordinal.{u}} : ∀ {p : Ordinal × Ordinal}, p ∈ cNF b o → p.1 ≤ log b o :=
   (CNF_pairwise_aux _ _).1
 
+/-- Every exponent in the Cantor normal form `CNF b o` is less or equal to `o`. -/
 theorem CNF_fst_le {b o : Ordinal.{u}} {p : Ordinal × Ordinal} (hp : p ∈ cNF b o) : p.1 ≤ o :=
   (CNF_fst_le_log hp).trans (log_le_self _ _)
 
@@ -140,12 +148,15 @@ private theorem CNF_snd_lt_aux {b o : Ordinal.{u}} (b1 : 1 < b) :
   refine' ⟨lt_opow_succ_log_self b1 _, opow_log_le_self _ _⟩
   rwa [Ordinal.pos_iff_ne_zero]
 
+/-- Every coefficient in the Cantor normal form `CNF b o` is less than `b`. -/
 theorem CNF_snd_lt {b o : Ordinal.{u}} (b1 : 1 < b) {p : Ordinal × Ordinal} (hp : p ∈ cNF b o) : p.2 < b :=
   (CNF_snd_lt_aux b1 hp).1
 
+/-- Every coefficient in a Cantor normal form is positive. -/
 theorem CNF_lt_snd {b o : Ordinal.{u}} (b1 : 1 < b) {p : Ordinal × Ordinal} (hp : p ∈ cNF b o) : 0 < p.2 :=
   (CNF_snd_lt_aux b1 hp).2
 
+/-- The exponents of the Cantor normal form are decreasing. -/
 theorem CNF_sorted (b o : Ordinal) : ((cNF b o).map Prod.fst).Sorted (· > ·) := by
   rw [List.Sorted, List.pairwise_map]
   exact CNF_pairwise b o

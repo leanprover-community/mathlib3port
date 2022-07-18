@@ -153,17 +153,17 @@ theorem of_finsupp_sub {R : Type u} [Ringₓ R] {a b} : (⟨a - b⟩ : R[X]) = �
   rfl
 
 @[simp]
-theorem of_finsupp_mul a b : (⟨a * b⟩ : R[X]) = ⟨a⟩ * ⟨b⟩ :=
+theorem of_finsupp_mul (a b) : (⟨a * b⟩ : R[X]) = ⟨a⟩ * ⟨b⟩ :=
   show _ = mul _ _ by
     rw [mul]
 
 @[simp]
-theorem of_finsupp_smul {S : Type _} [Monoidₓ S] [DistribMulAction S R] (a : S) b :
+theorem of_finsupp_smul {S : Type _} [Monoidₓ S] [DistribMulAction S R] (a : S) (b) :
     (⟨a • b⟩ : R[X]) = (a • ⟨b⟩ : R[X]) :=
   rfl
 
 @[simp]
-theorem of_finsupp_pow a (n : ℕ) : (⟨a ^ n⟩ : R[X]) = ⟨a⟩ ^ n := by
+theorem of_finsupp_pow (a) (n : ℕ) : (⟨a ^ n⟩ : R[X]) = ⟨a⟩ ^ n := by
   change _ = npowRec n _
   induction n
   · simp [← npowRec]
@@ -321,7 +321,7 @@ def support : R[X] → Finset ℕ
   | ⟨p⟩ => p.Support
 
 @[simp]
-theorem support_of_finsupp p : support (⟨p⟩ : R[X]) = p.Support := by
+theorem support_of_finsupp (p) : support (⟨p⟩ : R[X]) = p.Support := by
   rw [support]
 
 @[simp]
@@ -658,10 +658,10 @@ theorem eq_zero_of_eq_zero (h : (0 : R) = (1 : R)) (p : R[X]) : p = 0 := by
 
 section Fewnomials
 
-theorem support_monomial n {a : R} (H : a ≠ 0) : (monomial n a).Support = singleton n := by
+theorem support_monomial (n) {a : R} (H : a ≠ 0) : (monomial n a).Support = singleton n := by
   rw [← of_finsupp_single, support, Finsupp.support_single_ne_zero _ H]
 
-theorem support_monomial' n (a : R) : (monomial n a).Support ⊆ singleton n := by
+theorem support_monomial' (n) (a : R) : (monomial n a).Support ⊆ singleton n := by
   rw [← of_finsupp_single, support]
   exact Finsupp.support_single_subset
 
@@ -690,7 +690,7 @@ theorem support_trinomial' (k m n : ℕ) (x y z : R) : (c x * X ^ k + c y * X ^ 
 
 end Fewnomials
 
-theorem X_pow_eq_monomial n : X ^ n = monomial n (1 : R) := by
+theorem X_pow_eq_monomial (n) : X ^ n = monomial n (1 : R) := by
   induction' n with n hn
   · rw [pow_zeroₓ, monomial_zero_one]
     
@@ -879,7 +879,6 @@ theorem support_update (p : R[X]) (n : ℕ) (a : R) [Decidable (a = 0)] :
 theorem support_update_zero (p : R[X]) (n : ℕ) : support (p.update n 0) = p.Support.erase n := by
   rw [update_zero_eq_erase, support_erase]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem support_update_ne_zero (p : R[X]) (n : ℕ) {a : R} (ha : a ≠ 0) : support (p.update n a) = insert n p.Support :=
   by
   classical <;> rw [support_update, if_neg ha]

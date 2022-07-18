@@ -334,15 +334,15 @@ theorem image_Icc (hab : a ≤ b) (h : ContinuousOn f <| Icc a b) :
   eq_Icc_of_connected_compact ⟨(nonempty_Icc.2 hab).Image f, is_preconnected_Icc.Image f h⟩
     (is_compact_Icc.image_of_continuous_on h)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
 theorem image_interval_eq_Icc
-    (h : ContinuousOn f <| "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)") :
-    f '' "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)" =
-      Icc (inf (f '' "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)"))
-        (sup (f '' "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)")) :=
+    (h : ContinuousOn f <| "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)") :
+    f '' "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)" =
+      Icc (inf (f '' "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)"))
+        (sup (f '' "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)")) :=
   by
   cases' le_totalₓ a b with h2 h2
   · simp_rw [interval_of_le h2] at h⊢
@@ -352,13 +352,13 @@ theorem image_interval_eq_Icc
     exact h.image_Icc h2
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
 theorem image_interval
-    (h : ContinuousOn f <| "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)") :
-    f '' "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)" =
-      "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)" :=
+    (h : ContinuousOn f <| "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)") :
+    f '' "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)" =
+      "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)" :=
   by
   refine' h.image_interval_eq_Icc.trans (interval_of_le _).symm
   refine' cInf_le_cSup _ _ (nonempty_interval.image _) <;> rw [h.image_interval_eq_Icc]

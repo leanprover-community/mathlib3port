@@ -66,7 +66,7 @@ variable (R M N ι)
 /-- An alternating map is a multilinear map that vanishes when two of its arguments are equal.
 -/
 structure AlternatingMap extends MultilinearMap R (fun i : ι => M) N where
-  map_eq_zero_of_eq' : ∀ v : ι → M i j : ι h : v i = v j hij : i ≠ j, to_fun v = 0
+  map_eq_zero_of_eq' : ∀ (v : ι → M) (i j : ι) (h : v i = v j) (hij : i ≠ j), to_fun v = 0
 
 end
 
@@ -100,7 +100,7 @@ theorem to_fun_eq_coe : f.toFun = f :=
   rfl
 
 @[simp]
-theorem coe_mk (f : (ι → M) → N) h₁ h₂ h₃ : ⇑(⟨f, h₁, h₂, h₃⟩ : AlternatingMap R M N ι) = f :=
+theorem coe_mk (f : (ι → M) → N) (h₁ h₂ h₃) : ⇑(⟨f, h₁, h₂, h₃⟩ : AlternatingMap R M N ι) = f :=
   rfl
 
 theorem congr_fun {f g : AlternatingMap R M N ι} (h : f = g) (x : ι → M) : f x = g x :=
@@ -142,7 +142,7 @@ theorem to_multilinear_map_eq_coe : f.toMultilinearMap = f :=
   rfl
 
 @[simp]
-theorem coe_multilinear_map_mk (f : (ι → M) → N) h₁ h₂ h₃ :
+theorem coe_multilinear_map_mk (f : (ι → M) → N) (h₁ h₂ h₃) :
     ((⟨f, h₁, h₂, h₃⟩ : AlternatingMap R M N ι) : MultilinearMap R (fun i : ι => M) N) = ⟨f, h₁, h₂⟩ :=
   rfl
 
@@ -220,6 +220,9 @@ theorem coe_smul (c : S) : ((c • f : AlternatingMap R M N ι) : MultilinearMap
 
 theorem coe_fn_smul (c : S) (f : AlternatingMap R M N ι) : ⇑(c • f) = c • f :=
   rfl
+
+instance [DistribMulAction Sᵐᵒᵖ N] [IsCentralScalar S N] : IsCentralScalar S (AlternatingMap R M N ι) :=
+  ⟨fun c f => ext fun x => op_smul_eq_smul _ _⟩
 
 end HasSmul
 
@@ -373,12 +376,12 @@ theorem comp_alternating_map_apply (g : N →ₗ[R] N₂) (f : AlternatingMap R 
   rfl
 
 @[simp]
-theorem subtype_comp_alternating_map_cod_restrict (f : AlternatingMap R M N ι) (p : Submodule R N) h :
+theorem subtype_comp_alternating_map_cod_restrict (f : AlternatingMap R M N ι) (p : Submodule R N) (h) :
     p.Subtype.compAlternatingMap (f.codRestrict p h) = f :=
   AlternatingMap.ext fun v => rfl
 
 @[simp]
-theorem comp_alternating_map_cod_restrict (g : N →ₗ[R] N₂) (f : AlternatingMap R M N ι) (p : Submodule R N₂) h :
+theorem comp_alternating_map_cod_restrict (g : N →ₗ[R] N₂) (f : AlternatingMap R M N ι) (p : Submodule R N₂) (h) :
     (g.codRestrict p h).compAlternatingMap f = (g.compAlternatingMap f).codRestrict p fun v => h (f v) :=
   AlternatingMap.ext fun v => rfl
 
@@ -922,8 +925,8 @@ theorem MultilinearMap.dom_coprod_alternization (a : MultilinearMap R' (fun _ : 
   simp only [← MonoidHom.mem_range]
   -- needs to be separate from the above `simp only`
   rw [Finset.filter_congr_decidable, Finset.univ_filter_exists (perm.sum_congr_hom ιa ιb),
-    Finset.sum_image fun x _ y _ h : _ = _ => mul_right_injective _ h,
-    Finset.sum_image fun x _ y _ h : _ = _ => perm.sum_congr_hom_injective h]
+    Finset.sum_image fun x _ y _ (h : _ = _) => mul_right_injective _ h,
+    Finset.sum_image fun x _ y _ (h : _ = _) => perm.sum_congr_hom_injective h]
   dsimp' only
   -- now we're ready to clean up the RHS, pulling out the summation
   rw [dom_coprod.summand_mk', MultilinearMap.dom_coprod_alternization_coe, ← Finset.sum_product',

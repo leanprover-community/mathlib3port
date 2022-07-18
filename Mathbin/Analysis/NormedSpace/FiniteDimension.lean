@@ -314,7 +314,7 @@ theorem Basis.op_norm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) {u : E
 
 /-- A weaker version of `basis.op_nnnorm_le` that abstracts away the value of `C`. -/
 theorem Basis.exists_op_nnnorm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) :
-    ∃ C > (0 : ℝ≥0 ), ∀ {u : E →L[𝕜] F} M : ℝ≥0 , (∀ i, ∥u (v i)∥₊ ≤ M) → ∥u∥₊ ≤ C * M :=
+    ∃ C > (0 : ℝ≥0 ), ∀ {u : E →L[𝕜] F} (M : ℝ≥0 ), (∀ i, ∥u (v i)∥₊ ≤ M) → ∥u∥₊ ≤ C * M :=
   ⟨max (Fintype.card ι • ∥v.equivFunL.toContinuousLinearMap∥₊) 1, zero_lt_one.trans_le (le_max_rightₓ _ _),
     fun u M hu => (v.op_nnnorm_le M hu).trans <| mul_le_mul_of_nonneg_right (le_max_leftₓ _ _) (zero_le M)⟩
 
@@ -426,7 +426,7 @@ theorem exists_seq_norm_le_one_le_norm_sub' {c : 𝕜} (hc : 1 < ∥c∥) {R : �
     intro x y hxy
     rw [← norm_neg]
     simpa
-  apply exists_seq_of_forall_finset_exists' (fun x : E => ∥x∥ ≤ R) fun x : E y : E => 1 ≤ ∥x - y∥
+  apply exists_seq_of_forall_finset_exists' (fun x : E => ∥x∥ ≤ R) fun (x : E) (y : E) => 1 ≤ ∥x - y∥
   intro s hs
   exact exists_norm_le_le_norm_sub_of_finset hc hR h s
 
@@ -616,7 +616,7 @@ theorem summable_norm_iff {α E : Type _} [NormedGroup E] [NormedSpace ℝ E] [F
   -- Now we deal with `g : α → fin N → ℝ`
   intro N g hg
   have : ∀ i, Summable fun x => ∥g x i∥ := fun i => (Pi.summable.1 hg i).abs
-  refine' summable_of_norm_bounded _ (summable_sum fun i hi : i ∈ Finset.univ => this i) fun x => _
+  refine' summable_of_norm_bounded _ (summable_sum fun i (hi : i ∈ Finset.univ) => this i) fun x => _
   rw [norm_norm, pi_norm_le_iff]
   · refine' fun i => Finset.single_le_sum (fun i hi => _) (Finset.mem_univ i)
     exact norm_nonneg (g x i)

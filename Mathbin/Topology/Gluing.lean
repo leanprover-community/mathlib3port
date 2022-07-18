@@ -189,7 +189,7 @@ theorem ι_eq_iff_rel (i j : D.J) (x : D.U i) (y : D.U j) : 𝖣.ι i x = 𝖣.�
     generalize (sigmaIsoSigma.{u} D.V).Hom x = x'
     obtain ⟨⟨i, j⟩, y⟩ := x'
     unfold InvImage multispan_index.fst_sigma_map multispan_index.snd_sigma_map
-    simp only [← opens.inclusion_to_fun, ← Top.comp_app, ← sigma_iso_sigma_inv_apply, ←
+    simp only [← opens.inclusion_apply, ← Top.comp_app, ← sigma_iso_sigma_inv_apply, ←
       CategoryTheory.Limits.colimit.ι_desc_apply, ← cofan.mk_ι_app, ← sigma_iso_sigma_hom_ι_apply, ←
       ContinuousMap.to_fun_eq_coe]
     erw [sigma_iso_sigma_hom_ι_apply, sigma_iso_sigma_hom_ι_apply]
@@ -305,9 +305,9 @@ structure MkCore where
   t : ∀ i j, (Opens.toTop _).obj (V i j) ⟶ (Opens.toTop _).obj (V j i)
   V_id : ∀ i, V i i = ⊤
   t_id : ∀ i, ⇑(t i i) = id
-  t_inter : ∀ ⦃i j⦄ k x : V i j, ↑x ∈ V i k → @coe (V j i) (U j) _ (t i j x) ∈ V j k
+  t_inter : ∀ ⦃i j⦄ (k) (x : V i j), ↑x ∈ V i k → @coe (V j i) (U j) _ (t i j x) ∈ V j k
   cocycle :
-    ∀ i j k x : V i j h : ↑x ∈ V i k,
+    ∀ (i j k) (x : V i j) (h : ↑x ∈ V i k),
       @coe (V k j) (U k) _ (t j k ⟨↑(t i j x), t_inter k x h⟩) = @coe (V k i) (U k) _ (t i k ⟨x, h⟩)
 
 theorem MkCore.t_inv (h : MkCore) (i j : h.J) (x : h.V j i) : h.t i j ((h.t j i) x) = x := by

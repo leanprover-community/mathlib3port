@@ -27,7 +27,7 @@ its dimension (as a cardinal) is strictly less than the first infinite cardinal 
 -/
 theorem iff_dim_lt_aleph_0 : IsNoetherian K V ↔ Module.rank K V < ℵ₀ := by
   let b := Basis.ofVectorSpace K V
-  rw [← b.mk_eq_dim'', lt_aleph_0_iff_finite]
+  rw [← b.mk_eq_dim'', lt_aleph_0_iff_set_finite]
   constructor
   · intro
     exact finite_of_linear_independent (Basis.OfVectorSpaceIndex.linear_independent K V)
@@ -104,7 +104,7 @@ theorem iff_fg : IsNoetherian K V ↔ Module.Finite K V := by
     
   · rintro ⟨s, hs⟩
     rw [IsNoetherian.iff_dim_lt_aleph_0, ← dim_top, ← hs]
-    exact lt_of_le_of_ltₓ (dim_span_le _) (lt_aleph_0_iff_finite.2 (Set.finite_mem_finset s))
+    exact lt_of_le_of_ltₓ (dim_span_le _) s.finite_to_set.lt_aleph_0
     
 
 end IsNoetherian

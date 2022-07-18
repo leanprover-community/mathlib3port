@@ -60,8 +60,8 @@ protected theorem comp_map {α β γ : Type u} (g : α → β) (h : β → γ) (
 protected theorem is_lawful_functor : @IsLawfulFunctor _ Equivₓ.functor :=
   { id_map := @Equivₓ.id_map _ _, comp_map := @Equivₓ.comp_map _ _ }
 
-protected theorem is_lawful_functor' [F : Functor t'] (h₀ : ∀ {α β} f : α → β, Functor.map f = Equivₓ.map f)
-    (h₁ : ∀ {α β} f : β, Functor.mapConst f = (Equivₓ.map ∘ Function.const α) f) : IsLawfulFunctor t' := by
+protected theorem is_lawful_functor' [F : Functor t'] (h₀ : ∀ {α β} (f : α → β), Functor.map f = Equivₓ.map f)
+    (h₁ : ∀ {α β} (f : β), Functor.mapConst f = (Equivₓ.map ∘ Function.const α) f) : IsLawfulFunctor t' := by
   have : F = Equivₓ.functor := by
     cases F
     dsimp' [← Equivₓ.functor]
@@ -147,11 +147,11 @@ protected def isLawfulTraversable : @IsLawfulTraversable t' (Equivₓ.traversabl
 carrying the traversable functor structure from `t` over the
 equivalences, then the fact that `t` is a lawful traversable functor
 carries over as well. -/
-protected def isLawfulTraversable' [_i : Traversable t'] (h₀ : ∀ {α β} f : α → β, map f = Equivₓ.map eqv f)
-    (h₁ : ∀ {α β} f : β, mapConst f = (Equivₓ.map eqv ∘ Function.const α) f)
+protected def isLawfulTraversable' [_i : Traversable t'] (h₀ : ∀ {α β} (f : α → β), map f = Equivₓ.map eqv f)
+    (h₁ : ∀ {α β} (f : β), mapConst f = (Equivₓ.map eqv ∘ Function.const α) f)
     (h₂ :
       ∀ {F : Type u → Type u} [Applicativeₓ F],
-        ∀ [IsLawfulApplicative F] {α β} f : α → F β, traverse f = Equivₓ.traverse eqv f) :
+        ∀ [IsLawfulApplicative F] {α β} (f : α → F β), traverse f = Equivₓ.traverse eqv f) :
     IsLawfulTraversable t' := by
   -- we can't use the same approach as for `is_lawful_functor'` because
     -- h₂ needs a `is_lawful_applicative` assumption

@@ -83,10 +83,6 @@ theorem even_xor_odd' (n : ℕ) : ∃ k, Xorₓ (n = 2 * k) (n = 2 * k + 1) := b
       one_ne_zero, ← and_selfₓ]
     
 
-theorem odd_gt_zero (h : Odd n) : 0 < n := by
-  obtain ⟨k, rfl⟩ := h
-  exact succ_pos'
-
 @[simp]
 theorem two_dvd_ne_zero : ¬2 ∣ n ↔ n % 2 = 1 :=
   even_iff_two_dvd.symm.Not.trans not_even_iff
@@ -120,7 +116,7 @@ theorem not_even_bit1 (n : ℕ) : ¬Even (bit1 n) := by
 theorem two_not_dvd_two_mul_add_one (n : ℕ) : ¬2 ∣ 2 * n + 1 := by
   simp [← add_mod]
 
-theorem two_not_dvd_two_mul_sub_one : ∀ {n} w : 0 < n, ¬2 ∣ 2 * n - 1
+theorem two_not_dvd_two_mul_sub_one : ∀ {n} (w : 0 < n), ¬2 ∣ 2 * n - 1
   | n + 1, _ => two_not_dvd_two_mul_add_one n
 
 @[parity_simps]
@@ -206,10 +202,11 @@ theorem even_sub_one_of_prime_ne_two {p : ℕ} (hp : Prime p) (hodd : p ≠ 2) :
 
 theorem two_mul_div_two_of_even : Even n → 2 * (n / 2) = n := fun h => Nat.mul_div_cancel_left' (even_iff_two_dvd.mp h)
 
-theorem div_two_mul_two_of_even : Even n → n / 2 * 2 = n := fun h =>
-  --nat.div_mul_cancel
-    Nat.div_mul_cancelₓ
-    (even_iff_two_dvd.mp h)
+theorem div_two_mul_two_of_even : Even n → n / 2 * 2 = n :=
+  fun
+    --nat.div_mul_cancel
+    h =>
+  Nat.div_mul_cancelₓ (even_iff_two_dvd.mp h)
 
 theorem two_mul_div_two_add_one_of_odd (h : Odd n) : 2 * (n / 2) + 1 = n := by
   rw [mul_comm]
@@ -224,6 +221,20 @@ theorem one_add_div_two_mul_two_of_odd (h : Odd n) : 1 + n / 2 * 2 = n := by
   rw [add_commₓ]
   convert Nat.div_add_mod' n 2
   rw [odd_iff.mp h]
+
+theorem bit0_div_two : bit0 n / 2 = n := by
+  rw [← Nat.bit0_eq_bit0, bit0_eq_two_mul, two_mul_div_two_of_even (even_bit0 n)]
+
+theorem bit1_div_two : bit1 n / 2 = n := by
+  rw [← Nat.bit1_eq_bit1, bit1, bit0_eq_two_mul, Nat.two_mul_div_two_add_one_of_odd (odd_bit1 n)]
+
+@[simp]
+theorem bit0_div_bit0 : bit0 n / bit0 m = n / m := by
+  rw [bit0_eq_two_mul m, ← Nat.div_div_eq_div_mulₓ, bit0_div_two]
+
+@[simp]
+theorem bit1_div_bit0 : bit1 n / bit0 m = n / m := by
+  rw [bit0_eq_two_mul, ← Nat.div_div_eq_div_mulₓ, bit1_div_two]
 
 -- Here are examples of how `parity_simps` can be used with `nat`.
 example (m n : ℕ) (h : Even m) : ¬Even (n + 3) ↔ Even (m ^ 2 + m + n) := by

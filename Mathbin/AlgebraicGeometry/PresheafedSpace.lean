@@ -53,7 +53,7 @@ theorem as_coe (X : PresheafedSpace.{w, v, u} C) : X.Carrier = (X : Top.{w}) :=
   rfl
 
 @[simp]
-theorem mk_coe carrier presheaf : (({ Carrier, Presheaf } : PresheafedSpace.{v} C) : Top.{v}) = carrier :=
+theorem mk_coe (carrier) (presheaf) : (({ Carrier, Presheaf } : PresheafedSpace.{v} C) : Top.{v}) = carrier :=
   rfl
 
 instance (X : PresheafedSpace.{v} C) : TopologicalSpace X :=
@@ -170,7 +170,7 @@ theorem id_c (X : PresheafedSpace.{v, v, u} C) :
   rfl
 
 @[simp]
-theorem id_c_app (X : PresheafedSpace.{v, v, u} C) U :
+theorem id_c_app (X : PresheafedSpace.{v, v, u} C) (U) :
     (𝟙 X : X ⟶ X).c.app U =
       X.Presheaf.map
         (eqToHom
@@ -201,11 +201,11 @@ The lemma `comp_c_app_assoc` is also better suited for rewrites in the opposite 
 -- The `reassoc` attribute was added despite the LHS not being a composition of two homs,
 -- for the reasons explained in the docstring.
 @[reassoc, simp]
-theorem comp_c_app {X Y Z : PresheafedSpace.{v, v, u} C} (α : X ⟶ Y) (β : Y ⟶ Z) U :
+theorem comp_c_app {X Y Z : PresheafedSpace.{v, v, u} C} (α : X ⟶ Y) (β : Y ⟶ Z) (U) :
     (α ≫ β).c.app U = β.c.app U ≫ α.c.app (op ((Opens.map β.base).obj (unop U))) :=
   rfl
 
-theorem congr_app {X Y : PresheafedSpace.{v, v, u} C} {α β : X ⟶ Y} (h : α = β) U :
+theorem congr_app {X Y : PresheafedSpace.{v, v, u} C} {α β : X ⟶ Y} (h : α = β) (U) :
     α.c.app U =
       β.c.app U ≫
         X.Presheaf.map

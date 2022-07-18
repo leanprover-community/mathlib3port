@@ -32,7 +32,7 @@ section RevList
 variable {n : ℕ} {α : Type u} {a : Arrayₓ n α}
 
 theorem rev_list_reverse_aux :
-    ∀ i h : i ≤ n t : List α,
+    ∀ (i) (h : i ≤ n) (t : List α),
       (a.iterateAux (fun _ => (· :: ·)) i h []).reverseCore t = a.revIterateAux (fun _ => (· :: ·)) i h t
   | 0, h, t => rfl
   | i + 1, h, t => rev_list_reverse_aux i _ _
@@ -56,7 +56,7 @@ theorem Mem.def : v ∈ a ↔ ∃ i, a.read i = v :=
   Iff.rfl
 
 theorem mem_rev_list_aux :
-    ∀ {i} h : i ≤ n, (∃ j : Finₓ n, (j : ℕ) < i ∧ read a j = v) ↔ v ∈ a.iterateAux (fun _ => (· :: ·)) i h []
+    ∀ {i} (h : i ≤ n), (∃ j : Finₓ n, (j : ℕ) < i ∧ read a j = v) ↔ v ∈ a.iterateAux (fun _ => (· :: ·)) i h []
   | 0, _ => ⟨fun ⟨i, n, _⟩ => absurd n i.val.not_lt_zero, False.elim⟩
   | i + 1, h =>
     let IH := mem_rev_list_aux (le_of_ltₓ h)
@@ -91,7 +91,8 @@ section Foldr
 variable {n : ℕ} {α : Type u} {β : Type w} {b : β} {f : α → β → β} {a : Arrayₓ n α}
 
 theorem rev_list_foldr_aux :
-    ∀ {i} h : i ≤ n, (DArray.iterateAux a (fun _ => (· :: ·)) i h []).foldr f b = DArray.iterateAux a (fun _ => f) i h b
+    ∀ {i} (h : i ≤ n),
+      (DArray.iterateAux a (fun _ => (· :: ·)) i h []).foldr f b = DArray.iterateAux a (fun _ => f) i h b
   | 0, h => rfl
   | j + 1, h => congr_arg (f (read a ⟨j, h⟩)) (rev_list_foldr_aux _)
 
@@ -115,7 +116,7 @@ section Length
 
 variable {n : ℕ} {α : Type u}
 
-theorem rev_list_length_aux (a : Arrayₓ n α) i h : (a.iterateAux (fun _ => (· :: ·)) i h []).length = i := by
+theorem rev_list_length_aux (a : Arrayₓ n α) (i h) : (a.iterateAux (fun _ => (· :: ·)) i h []).length = i := by
   induction i <;> simp [*, ← DArray.iterateAux]
 
 @[simp]
@@ -134,7 +135,7 @@ section Nth
 variable {n : ℕ} {α : Type u} {a : Arrayₓ n α}
 
 theorem to_list_nth_le_aux (i : ℕ) (ih : i < n) :
-    ∀ j {jh t h'},
+    ∀ (j) {jh t h'},
       (∀ k tl, j + k = i → List.nthLe t k tl = a.read ⟨i, ih⟩) →
         (a.revIterateAux (fun _ => (· :: ·)) j jh t).nthLe i h' = a.read ⟨i, ih⟩
   | 0, _, _, _, al => al i _ <| zero_addₓ _
@@ -152,11 +153,11 @@ theorem to_list_nth_le_aux (i : ℕ) (ih : i < n) :
                 (by
                   simp [← add_commₓ, ← add_assocₓ, *] <;> cc)
 
-theorem to_list_nth_le (i : ℕ) h h' : List.nthLe a.toList i h' = a.read ⟨i, h⟩ :=
+theorem to_list_nth_le (i : ℕ) (h h') : List.nthLe a.toList i h' = a.read ⟨i, h⟩ :=
   to_list_nth_le_aux _ _ _ fun k tl => absurd tl k.not_lt_zero
 
 @[simp]
-theorem to_list_nth_le' (a : Arrayₓ n α) (i : Finₓ n) h' : List.nthLe a.toList i h' = a.read i := by
+theorem to_list_nth_le' (a : Arrayₓ n α) (i : Finₓ n) (h') : List.nthLe a.toList i h' = a.read i := by
   cases i <;> apply to_list_nth_le
 
 theorem to_list_nth {i v} : List.nth a.toList i = some v ↔ ∃ h, a.read ⟨i, h⟩ = v := by
@@ -209,7 +210,7 @@ variable {n : ℕ} {α : Type u}
 theorem to_list_to_array (a : Arrayₓ n α) : HEq a.toList.toArray a :=
   heq_of_heq_of_eq
       (@Eq.drecOn
-        (fun m e : a.toList.length = m =>
+        (fun m (e : a.toList.length = m) =>
           HEq (DArray.mk fun v => a.toList.nthLe v.1 v.2)
             ((@DArray.mk m fun _ => α) fun v => a.toList.nthLe v.1 <| e.symm ▸ v.2))
         a.to_list_length HEq.rfl) <|

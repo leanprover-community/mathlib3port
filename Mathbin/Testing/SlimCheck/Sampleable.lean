@@ -113,7 +113,7 @@ argument of type `α` -/
 def ShrinkFn (α : Type _) [SizeOf α] :=
   ∀ x : α, LazyList { y : α // SizeofLt y x }
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`sample] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`sample] []
 /-- `sampleable α` provides ways of creating examples of type `α`,
 and given such an example `x : α`, gives us a way to shrink it
 and find simpler examples.  -/
@@ -126,24 +126,24 @@ attribute [instance] hasWellFoundedOfHasSizeof defaultHasSizeof
 
 attribute [instance] sampleable.wf
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`sample] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`sample] []
 /-- `sampleable_functor F` makes it possible to create samples of and
 shrink `F α` given a sampling function and a shrinking function for
 arbitrary `α` -/
 class SampleableFunctor (F : Type u → Type v) [Functor F] where
-  [wf : ∀ α [SizeOf α], SizeOf (F α)]
+  [wf : ∀ (α) [SizeOf α], SizeOf (F α)]
   sample : ∀ {α}, Genₓ α → Genₓ (F α)
-  shrink : ∀ α [SizeOf α], ShrinkFn α → ShrinkFn (F α)
+  shrink : ∀ (α) [SizeOf α], ShrinkFn α → ShrinkFn (F α)
   pRepr : ∀ α, HasRepr α → HasRepr (F α)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`sample] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`sample] []
 /-- `sampleable_bifunctor F` makes it possible to create samples of
 and shrink `F α β` given a sampling function and a shrinking function
 for arbitrary `α` and `β` -/
 class SampleableBifunctor (F : Type u → Type v → Type w) [Bifunctor F] where
-  [wf : ∀ α β [SizeOf α] [SizeOf β], SizeOf (F α β)]
+  [wf : ∀ (α β) [SizeOf α] [SizeOf β], SizeOf (F α β)]
   sample : ∀ {α β}, Genₓ α → Genₓ β → Genₓ (F α β)
-  shrink : ∀ α β [SizeOf α] [SizeOf β], ShrinkFn α → ShrinkFn β → ShrinkFn (F α β)
+  shrink : ∀ (α β) [SizeOf α] [SizeOf β], ShrinkFn α → ShrinkFn β → ShrinkFn (F α β)
   pRepr : ∀ α β, HasRepr α → HasRepr β → HasRepr (F α β)
 
 export Sampleable (sample shrink)
@@ -153,8 +153,8 @@ interpretation in `sampleable_ext` instances. -/
 unsafe def sampleable.mk_trivial_interp : tactic Unit :=
   tactic.refine (pquote.1 id)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`interp] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`sample] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`interp] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`sample] []
 /-- `sampleable_ext` generalizes the behavior of `sampleable`
 and makes it possible to express instances for types that
 do not lend themselves to introspection, such as `ℕ → ℕ`.
@@ -182,7 +182,7 @@ section Prio
 
 open SampleableExt
 
--- ./././Mathport/Syntax/Translate/Basic.lean:293:40: warning: unsupported option default_priority
+-- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option default_priority
 set_option default_priority 50
 
 instance SampleableExtₓ.ofSampleable {α} [Sampleable α] [HasRepr α] : SampleableExtₓ α where
@@ -201,7 +201,7 @@ instance Sampleable.bifunctor {α β} {F} [Bifunctor F] [SampleableBifunctor F] 
   sample := SampleableBifunctor.sample F (Sampleable.sample α) (Sampleable.sample β)
   shrink := SampleableBifunctor.shrink α β Sampleable.shrink Sampleable.shrink
 
--- ./././Mathport/Syntax/Translate/Basic.lean:293:40: warning: unsupported option default_priority
+-- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option default_priority
 set_option default_priority 100
 
 instance SampleableExtₓ.functor {α} {F} [Functor F] [SampleableFunctor F] [SampleableExtₓ α] :
@@ -405,7 +405,7 @@ def Sum.shrink {α β} [SizeOf α] [SizeOf β] (shrink_α : ShrinkFn α) (shrink
 
 instance Sum.sampleable : SampleableBifunctor.{u, v} Sum where
   wf := _
-  sample := fun α : Type u β : Type v sam_α sam_β =>
+  sample := fun (α : Type u) (β : Type v) sam_α sam_β =>
     @Uliftable.upMap Genₓ.{u} Genₓ.{max u v} _ _ _ _ (@Sum.inl α β) sam_α <|>
       @Uliftable.upMap Genₓ.{v} Genₓ.{max v u} _ _ _ _ (@Sum.inr α β) sam_β
   shrink := fun α β Iα Iβ shr_α shr_β => @Sum.shrink _ _ Iα Iβ shr_α shr_β
@@ -468,7 +468,6 @@ theorem List.sizeof_drop_lt_sizeof_of_lt_length {xs : List α} {k} (hk : 0 < k) 
     
   have : sizeof xs < sizeof (x :: xs) := by
     unfold_wf
-    linarith
   cases k
   · simp only [← this, ← List.dropₓ]
     
@@ -505,7 +504,7 @@ theorem List.one_le_sizeof (xs : List α) : 1 ≤ sizeof xs := by
 the middle of the list.
 -/
 def List.shrinkRemoves (k : ℕ) (hk : 0 < k) :
-    ∀ xs : List α n, n = xs.length → LazyList { ys : List α // SizeofLt ys xs }
+    ∀ (xs : List α) (n), n = xs.length → LazyList { ys : List α // SizeofLt ys xs }
   | xs, n, hn =>
     if hkn : k > n then LazyList.nil
     else

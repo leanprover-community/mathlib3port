@@ -34,7 +34,7 @@ open MeasureTheory MeasureTheory.Measure Set Function TopologicalSpace Filter
 
 namespace MeasureTheory
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (g «expr ≠ » (0 : G))
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (g «expr ≠ » (0 : G))
 /-- A measurable set `s` is a *fundamental domain* for an additive action of an additive group `G`
 on a measurable space `α` with respect to a measure `α` if the sets `g +ᵥ s`, `g : G`, are pairwise
 a.e. disjoint and cover the whole space. -/
@@ -46,9 +46,9 @@ structure IsAddFundamentalDomain (G : Type _) {α : Type _} [Zero G] [HasVadd G 
   Prop where
   NullMeasurableSet : NullMeasurableSet s μ
   ae_covers : ∀ᵐ x ∂μ, ∃ g : G, g +ᵥ x ∈ s
-  AeDisjoint : ∀ g _ : g ≠ (0 : G), AeDisjoint μ (g +ᵥ s) s
+  AeDisjoint : ∀ (g) (_ : g ≠ (0 : G)), AeDisjoint μ (g +ᵥ s) s
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (g «expr ≠ » (1 : G))
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (g «expr ≠ » (1 : G))
 /-- A measurable set `s` is a *fundamental domain* for an action of a group `G` on a measurable
 space `α` with respect to a measure `α` if the sets `g • s`, `g : G`, are pairwise a.e. disjoint and
 cover the whole space. -/
@@ -60,7 +60,7 @@ structure IsFundamentalDomain (G : Type _) {α : Type _} [One G] [HasSmul G α] 
   Prop where
   NullMeasurableSet : NullMeasurableSet s μ
   ae_covers : ∀ᵐ x ∂μ, ∃ g : G, g • x ∈ s
-  AeDisjoint : ∀ g _ : g ≠ (1 : G), AeDisjoint μ (g • s) s
+  AeDisjoint : ∀ (g) (_ : g ≠ (1 : G)), AeDisjoint μ (g • s) s
 
 namespace IsFundamentalDomain
 
@@ -225,7 +225,7 @@ theorem measure_zero_of_invariant (h : IsFundamentalDomain G s μ) (t : Set α) 
 
 @[to_additive]
 protected theorem set_lintegral_eq (hs : IsFundamentalDomain G s μ) (ht : IsFundamentalDomain G t μ) (f : α → ℝ≥0∞)
-    (hf : ∀ g : G x, f (g • x) = f x) : (∫⁻ x in s, f x ∂μ) = ∫⁻ x in t, f x ∂μ :=
+    (hf : ∀ (g : G) (x), f (g • x) = f x) : (∫⁻ x in s, f x ∂μ) = ∫⁻ x in t, f x ∂μ :=
   calc
     (∫⁻ x in s, f x ∂μ) = ∑' g : G, ∫⁻ x in s ∩ g • t, f x ∂μ := ht.set_lintegral_eq_tsum' _ _
     _ = ∑' g : G, ∫⁻ x in g • t ∩ s, f (g⁻¹ • x) ∂μ := by
@@ -250,7 +250,8 @@ protected theorem measure_eq (hs : IsFundamentalDomain G s μ) (ht : IsFundament
 
 @[to_additive]
 protected theorem ae_strongly_measurable_on_iff {β : Type _} [TopologicalSpace β] [PseudoMetrizableSpace β]
-    (hs : IsFundamentalDomain G s μ) (ht : IsFundamentalDomain G t μ) {f : α → β} (hf : ∀ g : G x, f (g • x) = f x) :
+    (hs : IsFundamentalDomain G s μ) (ht : IsFundamentalDomain G t μ) {f : α → β}
+    (hf : ∀ (g : G) (x), f (g • x) = f x) :
     AeStronglyMeasurable f (μ.restrict s) ↔ AeStronglyMeasurable f (μ.restrict t) :=
   calc
     AeStronglyMeasurable f (μ.restrict s) ↔ AeStronglyMeasurable f (measure.sum fun g : G => μ.restrict (g • t ∩ s)) :=
@@ -273,7 +274,7 @@ protected theorem ae_strongly_measurable_on_iff {β : Type _} [TopologicalSpace 
 
 @[to_additive]
 protected theorem has_finite_integral_on_iff (hs : IsFundamentalDomain G s μ) (ht : IsFundamentalDomain G t μ)
-    {f : α → E} (hf : ∀ g : G x, f (g • x) = f x) :
+    {f : α → E} (hf : ∀ (g : G) (x), f (g • x) = f x) :
     HasFiniteIntegral f (μ.restrict s) ↔ HasFiniteIntegral f (μ.restrict t) := by
   dunfold has_finite_integral
   rw [hs.set_lintegral_eq ht]
@@ -282,14 +283,14 @@ protected theorem has_finite_integral_on_iff (hs : IsFundamentalDomain G s μ) (
 
 @[to_additive]
 protected theorem integrable_on_iff (hs : IsFundamentalDomain G s μ) (ht : IsFundamentalDomain G t μ) {f : α → E}
-    (hf : ∀ g : G x, f (g • x) = f x) : IntegrableOn f s μ ↔ IntegrableOn f t μ :=
+    (hf : ∀ (g : G) (x), f (g • x) = f x) : IntegrableOn f s μ ↔ IntegrableOn f t μ :=
   and_congr (hs.ae_strongly_measurable_on_iff ht hf) (hs.has_finite_integral_on_iff ht hf)
 
 variable [NormedSpace ℝ E] [CompleteSpace E]
 
 @[to_additive]
 protected theorem set_integral_eq (hs : IsFundamentalDomain G s μ) (ht : IsFundamentalDomain G t μ) {f : α → E}
-    (hf : ∀ g : G x, f (g • x) = f x) : (∫ x in s, f x ∂μ) = ∫ x in t, f x ∂μ := by
+    (hf : ∀ (g : G) (x), f (g • x) = f x) : (∫ x in s, f x ∂μ) = ∫ x in t, f x ∂μ := by
   by_cases' hfs : integrable_on f s μ
   · have hft : integrable_on f t μ := by
       rwa [ht.integrable_on_iff hs hf]

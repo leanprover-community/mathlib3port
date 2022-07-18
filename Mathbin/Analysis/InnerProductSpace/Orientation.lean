@@ -3,7 +3,7 @@ Copyright (c) 2022 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
-import Mathbin.Analysis.InnerProductSpace.Projection
+import Mathbin.Analysis.InnerProductSpace.PiL2
 import Mathbin.LinearAlgebra.Orientation
 
 /-!
@@ -38,14 +38,18 @@ protected def Orientation.finOrthonormalBasis {n : ℕ} (hn : 0 < n) (h : finran
     (x : Orientation ℝ E (Finₓ n)) : Basis (Finₓ n) ℝ E := by
   have := Finₓ.pos_iff_nonempty.1 hn
   have := finite_dimensional_of_finrank (h.symm ▸ hn : 0 < finrank ℝ E)
-  exact (finStdOrthonormalBasis h).adjustToOrientation x
+  exact (finStdOrthonormalBasis h).toBasis.adjustToOrientation x
 
 /-- `orientation.fin_orthonormal_basis` is orthonormal. -/
 protected theorem Orientation.fin_orthonormal_basis_orthonormal {n : ℕ} (hn : 0 < n) (h : finrank ℝ E = n)
     (x : Orientation ℝ E (Finₓ n)) : Orthonormal ℝ (x.finOrthonormalBasis hn h) := by
   have := Finₓ.pos_iff_nonempty.1 hn
   have := finite_dimensional_of_finrank (h.symm ▸ hn : 0 < finrank ℝ E)
-  exact (fin_std_orthonormal_basis_orthonormal h).orthonormal_adjust_to_orientation _
+  exact
+    show Orthonormal ℝ (finStdOrthonormalBasis h).toBasis by
+          -- Note sure how to format this
+          simp only [← OrthonormalBasis.coe_to_basis, ← OrthonormalBasis.orthonormal].orthonormal_adjust_to_orientation
+      _
 
 /-- `orientation.fin_orthonormal_basis` gives a basis with the required orientation. -/
 @[simp]

@@ -33,11 +33,6 @@ instances for `Prop` and `fun`.
   `distrib_lattice` when `order_bot`.
 * Bounded and distributive lattice. Notated by `[distrib_lattice α] [bounded_order α]`.
   Typical examples include `Prop` and `set α`.
-
-## Implementation notes
-
-We didn't prove things about `[distrib_lattice α] [order_top α]` because the dual notion of
-`disjoint` isn't really used anywhere.
 -/
 
 
@@ -51,16 +46,16 @@ variable {α : Type u} {β : Type v}
 
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1174:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Typeclass for the `⊤` (`\top`) notation -/
-@[«./././Mathport/Syntax/Translate/Basic.lean:1174:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg»]
+@[«./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg»]
 class HasTop (α : Type u) where
   top : α
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1174:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Typeclass for the `⊥` (`\bot`) notation -/
-@[«./././Mathport/Syntax/Translate/Basic.lean:1174:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg»]
+@[«./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg»]
 class HasBot (α : Type u) where
   bot : α
 
@@ -498,11 +493,13 @@ instance Prop.le_is_total : IsTotal Prop (· ≤ ·) :=
     change (p → q) ∨ (q → p)
     tauto!⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 noncomputable instance Prop.linearOrder : LinearOrderₓ Prop := by
   classical <;> exact Lattice.toLinearOrder Prop
 
--- ./././Mathport/Syntax/Translate/Basic.lean:694:4: warning: unsupported binary notation `«->»
+theorem subrelation_iff_le {r s : α → α → Prop} : Subrelation r s ↔ r ≤ s :=
+  Iff.rfl
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:703:4: warning: unsupported binary notation `«->»
 @[simp]
 theorem le_Prop_eq : ((· ≤ ·) : Prop → Prop → Prop) = («->» · ·) :=
   rfl
@@ -720,6 +717,27 @@ theorem coe_ne_bot : (a : WithBot α) ≠ ⊥ :=
 def recBotCoe {C : WithBot α → Sort _} (h₁ : C ⊥) (h₂ : ∀ a : α, C a) : ∀ n : WithBot α, C n :=
   Option.rec h₁ h₂
 
+@[simp]
+theorem rec_bot_coe_bot {C : WithBot α → Sort _} (d : C ⊥) (f : ∀ a : α, C a) : @recBotCoe _ C d f ⊥ = d :=
+  rfl
+
+@[simp]
+theorem rec_bot_coe_coe {C : WithBot α → Sort _} (d : C ⊥) (f : ∀ a : α, C a) (x : α) : @recBotCoe _ C d f ↑x = f x :=
+  rfl
+
+/-- Specialization of `option.get_or_else` to values in `with_bot α` that respects API boundaries.
+-/
+def unbot' (d : α) (x : WithBot α) : α :=
+  recBotCoe d id x
+
+@[simp]
+theorem unbot'_bot {α} (d : α) : unbot' d ⊥ = d :=
+  rfl
+
+@[simp]
+theorem unbot'_coe {α} (d x : α) : unbot' d x = x :=
+  rfl
+
 @[norm_cast]
 theorem coe_eq_coe : (a : WithBot α) = b ↔ a = b :=
   Option.some_inj
@@ -880,7 +898,16 @@ instance [PartialOrderₓ α] : PartialOrderₓ (WithBot α) :=
         rw [le_antisymmₓ h₁' h₂']
          }
 
-theorem le_coe_get_or_else [Preorderₓ α] : ∀ a : WithBot α b : α, a ≤ a.getOrElse b
+theorem map_le_iff [Preorderₓ α] [Preorderₓ β] (f : α → β) (mono_iff : ∀ {a b}, f a ≤ f b ↔ a ≤ b) :
+    ∀ a b : WithBot α, a.map f ≤ b.map f ↔ a ≤ b
+  | ⊥, _ => by
+    simp only [← map_bot, ← bot_le]
+  | (a : α), ⊥ => by
+    simp only [← map_coe, ← map_bot, ← coe_ne_bot, ← not_coe_le_bot _]
+  | (a : α), (b : α) => by
+    simpa using mono_iff
+
+theorem le_coe_get_or_else [Preorderₓ α] : ∀ (a : WithBot α) (b : α), a ≤ a.getOrElse b
   | some a, b => le_reflₓ a
   | none, b => fun _ h => Option.noConfusion h
 
@@ -1100,6 +1127,27 @@ theorem coe_ne_top : (a : WithTop α) ≠ ⊤ :=
 def recTopCoe {C : WithTop α → Sort _} (h₁ : C ⊤) (h₂ : ∀ a : α, C a) : ∀ n : WithTop α, C n :=
   Option.rec h₁ h₂
 
+@[simp]
+theorem rec_top_coe_top {C : WithTop α → Sort _} (d : C ⊤) (f : ∀ a : α, C a) : @recTopCoe _ C d f ⊤ = d :=
+  rfl
+
+@[simp]
+theorem rec_top_coe_coe {C : WithTop α → Sort _} (d : C ⊤) (f : ∀ a : α, C a) (x : α) : @recTopCoe _ C d f ↑x = f x :=
+  rfl
+
+/-- Specialization of `option.get_or_else` to values in `with_top α` that respects API boundaries.
+-/
+def untop' (d : α) (x : WithTop α) : α :=
+  recTopCoe d id x
+
+@[simp]
+theorem untop'_top {α} (d : α) : untop' d ⊤ = d :=
+  rfl
+
+@[simp]
+theorem untop'_coe {α} (d x : α) : untop' d x = x :=
+  rfl
+
 @[norm_cast]
 theorem coe_eq_coe : (a : WithTop α) = b ↔ a = b :=
   Option.some_inj
@@ -1255,6 +1303,10 @@ instance [PartialOrderₓ α] : PartialOrderₓ (WithTop α) :=
         rcases h₂ a rfl with ⟨_, ⟨⟩, h₂'⟩
         rw [le_antisymmₓ h₁' h₂']
          }
+
+theorem map_le_iff [Preorderₓ α] [Preorderₓ β] (f : α → β) (a b : WithTop α) (mono_iff : ∀ {a b}, f a ≤ f b ↔ a ≤ b) :
+    a.map f ≤ b.map f ↔ a ≤ b :=
+  @WithBot.map_le_iff αᵒᵈ βᵒᵈ _ _ f (fun a b => mono_iff) b a
 
 instance [SemilatticeInf α] : SemilatticeInf (WithTop α) :=
   { WithTop.partialOrder with inf := Option.liftOrGet (·⊓·),
@@ -1645,12 +1697,172 @@ end DistribLatticeBot
 
 end Disjoint
 
+section Codisjoint
+
+section SemilatticeSupTop
+
+variable [SemilatticeSup α] [OrderTop α] {a b c d : α}
+
+/-- Two elements of a lattice are codisjoint if their sup is the top element. -/
+def Codisjoint (a b : α) : Prop :=
+  ⊤ ≤ a⊔b
+
+theorem codisjoint_iff : Codisjoint a b ↔ a⊔b = ⊤ :=
+  top_le_iff
+
+theorem Codisjoint.eq_top : Codisjoint a b → a⊔b = ⊤ :=
+  top_unique
+
+theorem Codisjoint.comm : Codisjoint a b ↔ Codisjoint b a := by
+  rw [Codisjoint, Codisjoint, sup_comm]
+
+@[symm]
+theorem Codisjoint.symm ⦃a b : α⦄ : Codisjoint a b → Codisjoint b a :=
+  Codisjoint.comm.1
+
+theorem symmetric_codisjoint : Symmetric (Codisjoint : α → α → Prop) :=
+  Codisjoint.symm
+
+theorem codisjoint_assoc : Codisjoint (a⊔b) c ↔ Codisjoint a (b⊔c) := by
+  rw [Codisjoint, Codisjoint, sup_assoc]
+
+@[simp]
+theorem codisjoint_top_left : Codisjoint ⊤ a :=
+  le_sup_left
+
+@[simp]
+theorem codisjoint_top_right : Codisjoint a ⊤ :=
+  le_sup_right
+
+theorem Codisjoint.mono (h₁ : a ≤ b) (h₂ : c ≤ d) : Codisjoint a c → Codisjoint b d :=
+  le_trans' <| sup_le_sup h₁ h₂
+
+theorem Codisjoint.mono_left (h : a ≤ b) : Codisjoint a c → Codisjoint b c :=
+  Codisjoint.mono h le_rfl
+
+theorem Codisjoint.mono_right : b ≤ c → Codisjoint a b → Codisjoint a c :=
+  Codisjoint.mono le_rfl
+
+variable (c)
+
+theorem Codisjoint.sup_left (h : Codisjoint a b) : Codisjoint (a⊔c) b :=
+  h.mono_left le_sup_left
+
+theorem Codisjoint.sup_left' (h : Codisjoint a b) : Codisjoint (c⊔a) b :=
+  h.mono_left le_sup_right
+
+theorem Codisjoint.sup_right (h : Codisjoint a b) : Codisjoint a (b⊔c) :=
+  h.mono_right le_sup_left
+
+theorem Codisjoint.sup_right' (h : Codisjoint a b) : Codisjoint a (c⊔b) :=
+  h.mono_right le_sup_right
+
+variable {c}
+
+@[simp]
+theorem codisjoint_self : Codisjoint a a ↔ a = ⊤ := by
+  simp [← Codisjoint]
+
+/- TODO: Rename `codisjoint.eq_top` to `codisjoint.sup_eq` and `codisjoint.eq_top_of_self` to
+`codisjoint.eq_top` -/
+alias codisjoint_self ↔ Codisjoint.eq_top_of_self _
+
+theorem Codisjoint.ne (ha : a ≠ ⊤) (hab : Codisjoint a b) : a ≠ b := fun h =>
+  ha <|
+    codisjoint_self.1 <| by
+      rwa [← h] at hab
+
+theorem Codisjoint.eq_top_of_ge (hab : Codisjoint a b) (h : b ≤ a) : a = ⊤ :=
+  eq_top_iff.2 <| by
+    rwa [← sup_eq_left.2 h]
+
+theorem Codisjoint.eq_top_of_le (hab : Codisjoint a b) : a ≤ b → b = ⊤ :=
+  hab.symm.eq_top_of_ge
+
+theorem Codisjoint.of_codisjoint_sup_of_le (h : Codisjoint (a⊔b) c) (hle : c ≤ a) : Codisjoint a b :=
+  codisjoint_iff.2 <| h.eq_top_of_ge <| le_sup_of_le_left hle
+
+theorem Codisjoint.of_codisjoint_sup_of_le' (h : Codisjoint (a⊔b) c) (hle : c ≤ b) : Codisjoint a b :=
+  codisjoint_iff.2 <| h.eq_top_of_ge <| le_sup_of_le_right hle
+
+end SemilatticeSupTop
+
+section Lattice
+
+variable [Lattice α] [BoundedOrder α] {a : α}
+
+@[simp]
+theorem codisjoint_bot : Codisjoint a ⊥ ↔ a = ⊤ := by
+  simp [← codisjoint_iff]
+
+@[simp]
+theorem bot_codisjoint : Codisjoint ⊥ a ↔ a = ⊤ := by
+  simp [← codisjoint_iff]
+
+end Lattice
+
+section DistribLatticeTop
+
+variable [DistribLattice α] [OrderTop α] {a b c : α}
+
+@[simp]
+theorem codisjoint_inf_left : Codisjoint (a⊓b) c ↔ Codisjoint a c ∧ Codisjoint b c := by
+  simp only [← codisjoint_iff, ← sup_inf_right, ← inf_eq_top_iff]
+
+@[simp]
+theorem codisjoint_inf_right : Codisjoint a (b⊓c) ↔ Codisjoint a b ∧ Codisjoint a c := by
+  simp only [← codisjoint_iff, ← sup_inf_left, ← inf_eq_top_iff]
+
+theorem Codisjoint.inf_left (ha : Codisjoint a c) (hb : Codisjoint b c) : Codisjoint (a⊓b) c :=
+  codisjoint_inf_left.2 ⟨ha, hb⟩
+
+theorem Codisjoint.inf_right (hb : Codisjoint a b) (hc : Codisjoint a c) : Codisjoint a (b⊓c) :=
+  codisjoint_inf_right.2 ⟨hb, hc⟩
+
+theorem Codisjoint.left_le_of_le_inf_right (h : a⊓b ≤ c) (hd : Codisjoint b c) : a ≤ c :=
+  le_of_inf_le_sup_le (le_inf h inf_le_right) <| le_top.trans hd.symm
+
+theorem Codisjoint.left_le_of_le_inf_left (h : b⊓a ≤ c) (hd : Codisjoint b c) : a ≤ c :=
+  hd.left_le_of_le_inf_right <| by
+    rwa [inf_comm]
+
+end DistribLatticeTop
+
+end Codisjoint
+
+theorem Disjoint.dual [SemilatticeInf α] [OrderBot α] {a b : α} : Disjoint a b → Codisjoint (toDual a) (toDual b) :=
+  id
+
+theorem Codisjoint.dual [SemilatticeSup α] [OrderTop α] {a b : α} : Codisjoint a b → Disjoint (toDual a) (toDual b) :=
+  id
+
+@[simp]
+theorem disjoint_to_dual_iff [SemilatticeSup α] [OrderTop α] {a b : α} :
+    Disjoint (toDual a) (toDual b) ↔ Codisjoint a b :=
+  Iff.rfl
+
+@[simp]
+theorem disjoint_of_dual_iff [SemilatticeInf α] [OrderBot α] {a b : αᵒᵈ} :
+    Disjoint (ofDual a) (ofDual b) ↔ Codisjoint a b :=
+  Iff.rfl
+
+@[simp]
+theorem codisjoint_to_dual_iff [SemilatticeInf α] [OrderBot α] {a b : α} :
+    Codisjoint (toDual a) (toDual b) ↔ Disjoint a b :=
+  Iff.rfl
+
+@[simp]
+theorem codisjoint_of_dual_iff [SemilatticeSup α] [OrderTop α] {a b : αᵒᵈ} :
+    Codisjoint (ofDual a) (ofDual b) ↔ Disjoint a b :=
+  Iff.rfl
+
 section IsCompl
 
 /-- Two elements `x` and `y` are complements of each other if `x ⊔ y = ⊤` and `x ⊓ y = ⊥`. -/
+@[protect_proj]
 structure IsCompl [Lattice α] [BoundedOrder α] (x y : α) : Prop where
-  inf_le_bot : x⊓y ≤ ⊥
-  top_le_sup : ⊤ ≤ x⊔y
+  Disjoint : Disjoint x y
+  Codisjoint : Codisjoint x y
 
 namespace IsCompl
 
@@ -1658,25 +1870,18 @@ section BoundedOrder
 
 variable [Lattice α] [BoundedOrder α] {x y z : α}
 
-protected theorem disjoint (h : IsCompl x y) : Disjoint x y :=
-  h.1
-
 @[symm]
 protected theorem symm (h : IsCompl x y) : IsCompl y x :=
-  ⟨by
-    rw [inf_comm]
-    exact h.1, by
-    rw [sup_comm]
-    exact h.2⟩
+  ⟨h.1.symm, h.2.symm⟩
 
 theorem of_eq (h₁ : x⊓y = ⊥) (h₂ : x⊔y = ⊤) : IsCompl x y :=
-  ⟨h₁.le, h₂.Ge⟩
+  ⟨le_of_eqₓ h₁, ge_of_eq h₂⟩
 
 theorem inf_eq_bot (h : IsCompl x y) : x⊓y = ⊥ :=
   h.Disjoint.eq_bot
 
 theorem sup_eq_top (h : IsCompl x y) : x⊔y = ⊤ :=
-  top_unique h.top_le_sup
+  h.Codisjoint.eq_top
 
 theorem dual (h : IsCompl x y) : IsCompl (toDual x) (toDual y) :=
   ⟨h.2, h.1⟩
@@ -1726,7 +1931,7 @@ theorem right_le_iff (h : IsCompl x y) : y ≤ z ↔ ⊤ ≤ z⊔x :=
   h.symm.left_le_iff
 
 protected theorem antitone {x' y'} (h : IsCompl x y) (h' : IsCompl x' y') (hx : x ≤ x') : y' ≤ y :=
-  h'.right_le_iff.2 <| le_transₓ h.symm.top_le_sup (sup_le_sup_left hx _)
+  h'.right_le_iff.2 <| le_transₓ h.symm.Codisjoint (sup_le_sup_left hx _)
 
 theorem right_unique (hxy : IsCompl x y) (hxz : IsCompl x z) : y = z :=
   le_antisymmₓ (hxz.Antitone hxy <| le_reflₓ x) (hxy.Antitone hxz <| le_reflₓ x)

@@ -75,12 +75,12 @@ def LinearMap.mkContinuousOfExistsBound (h : ∃ C, ∀ x, ∥f x∥ ≤ C * ∥
     AddMonoidHomClass.continuous_of_bound f C hC⟩
 
 theorem continuous_of_linear_of_boundₛₗ {f : E → F} (h_add : ∀ x y, f (x + y) = f x + f y)
-    (h_smul : ∀ c : 𝕜 x, f (c • x) = σ c • f x) {C : ℝ} (h_bound : ∀ x, ∥f x∥ ≤ C * ∥x∥) : Continuous f :=
+    (h_smul : ∀ (c : 𝕜) (x), f (c • x) = σ c • f x) {C : ℝ} (h_bound : ∀ x, ∥f x∥ ≤ C * ∥x∥) : Continuous f :=
   let φ : E →ₛₗ[σ] F := { toFun := f, map_add' := h_add, map_smul' := h_smul }
   AddMonoidHomClass.continuous_of_bound φ C h_bound
 
 theorem continuous_of_linear_of_bound {f : E → G} (h_add : ∀ x y, f (x + y) = f x + f y)
-    (h_smul : ∀ c : 𝕜 x, f (c • x) = c • f x) {C : ℝ} (h_bound : ∀ x, ∥f x∥ ≤ C * ∥x∥) : Continuous f :=
+    (h_smul : ∀ (c : 𝕜) (x), f (c • x) = c • f x) {C : ℝ} (h_bound : ∀ x, ∥f x∥ ≤ C * ∥x∥) : Continuous f :=
   let φ : E →ₗ[𝕜] G := { toFun := f, map_add' := h_add, map_smul' := h_smul }
   AddMonoidHomClass.continuous_of_bound φ C h_bound
 
@@ -107,7 +107,7 @@ theorem LinearMap.to_continuous_linear_map₁_coe (f : 𝕜 →ₗ[𝕜] E) : (f
   rfl
 
 @[simp]
-theorem LinearMap.to_continuous_linear_map₁_apply (f : 𝕜 →ₗ[𝕜] E) x : f.toContinuousLinearMap₁ x = f x :=
+theorem LinearMap.to_continuous_linear_map₁_apply (f : 𝕜 →ₗ[𝕜] E) (x) : f.toContinuousLinearMap₁ x = f x :=
   rfl
 
 end NormedField
@@ -195,7 +195,7 @@ theorem to_span_singleton_add (x y : E) : toSpanSingleton 𝕜 (x + y) = toSpanS
   ext1
   simp [← to_span_singleton_apply]
 
-theorem to_span_singleton_smul' 𝕜' [NormedField 𝕜'] [NormedSpace 𝕜' E] [SmulCommClass 𝕜 𝕜' E] (c : 𝕜') (x : E) :
+theorem to_span_singleton_smul' (𝕜') [NormedField 𝕜'] [NormedSpace 𝕜' E] [SmulCommClass 𝕜 𝕜' E] (c : 𝕜') (x : E) :
     toSpanSingleton 𝕜 (c • x) = c • toSpanSingleton 𝕜 x := by
   ext1
   rw [to_span_singleton_apply, smul_apply, to_span_singleton_apply, smul_comm]
@@ -269,7 +269,7 @@ theorem op_norm_neg (f : E →SL[σ₁₂] F) : ∥-f∥ = ∥f∥ := by
 theorem antilipschitz_of_bound (f : E →SL[σ₁₂] F) {K : ℝ≥0 } (h : ∀ x, ∥x∥ ≤ K * ∥f x∥) : AntilipschitzWith K f :=
   AddMonoidHomClass.antilipschitz_of_bound _ h
 
-theorem bound_of_antilipschitz (f : E →SL[σ₁₂] F) {K : ℝ≥0 } (h : AntilipschitzWith K f) x : ∥x∥ ≤ K * ∥f x∥ :=
+theorem bound_of_antilipschitz (f : E →SL[σ₁₂] F) {K : ℝ≥0 } (h : AntilipschitzWith K f) (x) : ∥x∥ ≤ K * ∥f x∥ :=
   AddMonoidHomClass.bound_of_antilipschitz _ h x
 
 section
@@ -1748,12 +1748,12 @@ theorem one_le_norm_mul_norm_symm [RingHomIsometric σ₁₂] [Nontrivial E] (e 
 include σ₂₁
 
 theorem norm_pos [RingHomIsometric σ₁₂] [Nontrivial E] (e : E ≃SL[σ₁₂] F) : 0 < ∥(e : E →SL[σ₁₂] F)∥ :=
-  pos_of_mul_pos_right (lt_of_lt_of_leₓ zero_lt_one e.one_le_norm_mul_norm_symm) (norm_nonneg _)
+  pos_of_mul_pos_left (lt_of_lt_of_leₓ zero_lt_one e.one_le_norm_mul_norm_symm) (norm_nonneg _)
 
 omit σ₂₁
 
 theorem norm_symm_pos [RingHomIsometric σ₁₂] [Nontrivial E] (e : E ≃SL[σ₁₂] F) : 0 < ∥(e.symm : F →SL[σ₂₁] E)∥ :=
-  pos_of_mul_pos_left (lt_of_lt_of_leₓ zero_lt_one e.one_le_norm_mul_norm_symm) (norm_nonneg _)
+  pos_of_mul_pos_right (zero_lt_one.trans_le e.one_le_norm_mul_norm_symm) (norm_nonneg _)
 
 theorem nnnorm_symm_pos [RingHomIsometric σ₁₂] [Nontrivial E] (e : E ≃SL[σ₁₂] F) : 0 < ∥(e.symm : F →SL[σ₂₁] E)∥₊ :=
   e.norm_symm_pos

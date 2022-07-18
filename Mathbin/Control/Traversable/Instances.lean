@@ -117,7 +117,8 @@ theorem traverse_append : ∀ as bs : List α', traverse f (as ++ bs) = (· ++ �
   | a :: as, bs => by
     simp' [← traverse_append as bs] with functor_norm <;> congr
 
-theorem mem_traverse {f : α' → Set β'} : ∀ l : List α' n : List β', n ∈ traverse f l ↔ Forall₂ (fun b a => b ∈ f a) n l
+theorem mem_traverse {f : α' → Set β'} :
+    ∀ (l : List α') (n : List β'), n ∈ traverse f l ↔ Forall₂ (fun b a => b ∈ f a) n l
   | [], [] => by
     simp
   | a :: as, [] => by

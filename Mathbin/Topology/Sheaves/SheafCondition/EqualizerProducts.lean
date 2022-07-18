@@ -248,11 +248,12 @@ def fork.isoOfOpenEmbedding :
           { Hom :=
               hom_of_le
                 (by
-                  simp only [← supr_s, ← supr_mk, ← le_def, ← Subtype.coe_mk, ← Set.le_eq_subset, ← Set.image_Union]),
+                  simp only [← coe_supr, ← supr_mk, ← le_def, ← Subtype.coe_mk, ← Set.le_eq_subset, ← Set.image_Union]),
             inv :=
               hom_of_le
                 (by
-                  simp only [← supr_s, ← supr_mk, ← le_def, ← Subtype.coe_mk, ← Set.le_eq_subset, ← Set.image_Union]) })
+                  simp only [← coe_supr, ← supr_mk, ← le_def, ← Subtype.coe_mk, ← Set.le_eq_subset, ←
+                    Set.image_Union]) })
     
   · ext ⟨j⟩
     dunfold fork.ι

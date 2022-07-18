@@ -251,7 +251,7 @@ instance (priority := 75) toOrderedCommGroup {G : Type _} [OrderedCommGroup G] [
 instance (priority := 75) toLinearOrderedCommGroup {G : Type _} [LinearOrderedCommGroup G] [SetLike S G]
     [SubgroupClass S G] : LinearOrderedCommGroup H :=
   Subtype.coe_injective.LinearOrderedCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
-    fun _ _ => rfl
+    (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
 include hSG
 
@@ -352,15 +352,15 @@ theorem mem_carrier {s : Subgroup G} {x : G} : x ∈ s.Carrier ↔ x ∈ s :=
   Iff.rfl
 
 @[simp, to_additive]
-theorem mem_mk {s : Set G} {x : G} h_one h_mul h_inv : x ∈ mk s h_one h_mul h_inv ↔ x ∈ s :=
+theorem mem_mk {s : Set G} {x : G} (h_one) (h_mul) (h_inv) : x ∈ mk s h_one h_mul h_inv ↔ x ∈ s :=
   Iff.rfl
 
 @[simp, to_additive]
-theorem coe_set_mk {s : Set G} h_one h_mul h_inv : (mk s h_one h_mul h_inv : Set G) = s :=
+theorem coe_set_mk {s : Set G} (h_one) (h_mul) (h_inv) : (mk s h_one h_mul h_inv : Set G) = s :=
   rfl
 
 @[simp, to_additive]
-theorem mk_le_mk {s t : Set G} h_one h_mul h_inv h_one' h_mul' h_inv' :
+theorem mk_le_mk {s t : Set G} (h_one) (h_mul) (h_inv) (h_one') (h_mul') (h_inv') :
     mk s h_one h_mul h_inv ≤ mk t h_one' h_mul' h_inv' ↔ s ⊆ t :=
   Iff.rfl
 
@@ -561,10 +561,10 @@ protected theorem pow_mem {x : G} (hx : x ∈ K) : ∀ n : ℕ, x ^ n ∈ K :=
 protected theorem zpow_mem {x : G} (hx : x ∈ K) : ∀ n : ℤ, x ^ n ∈ K :=
   zpow_mem hx
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » s)
 /-- Construct a subgroup from a nonempty set that is closed under division. -/
 @[to_additive "Construct a subgroup from a nonempty set that is closed under subtraction"]
-def ofDiv (s : Set G) (hsn : s.Nonempty) (hs : ∀ x y _ : x ∈ s _ : y ∈ s, x * y⁻¹ ∈ s) : Subgroup G :=
+def ofDiv (s : Set G) (hsn : s.Nonempty) (hs : ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), x * y⁻¹ ∈ s) : Subgroup G :=
   have one_mem : (1 : G) ∈ s := by
     let ⟨x, hx⟩ := hsn
     simpa using hs x hx x hx
@@ -660,7 +660,7 @@ instance toOrderedCommGroup {G : Type _} [OrderedCommGroup G] (H : Subgroup G) :
 @[to_additive "An `add_subgroup` of a `linear_ordered_add_comm_group` is a\n  `linear_ordered_add_comm_group`."]
 instance toLinearOrderedCommGroup {G : Type _} [LinearOrderedCommGroup G] (H : Subgroup G) : LinearOrderedCommGroup H :=
   Subtype.coe_injective.LinearOrderedCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
-    fun _ _ => rfl
+    (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
 /-- The natural group hom from a subgroup of group `G` to `G`. -/
 @[to_additive "The natural group hom from an `add_subgroup` of `add_group` `G` to `G`."]
@@ -809,7 +809,6 @@ theorem eq_bot_of_card_eq [Fintype H] (h : Fintype.card H = 1) : H = ⊥ :=
 theorem nontrivial_iff_exists_ne_one (H : Subgroup G) : Nontrivial H ↔ ∃ x ∈ H, x ≠ (1 : G) :=
   Subtype.nontrivial_iff_exists_ne (fun x => x ∈ H) (1 : H)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A subgroup is either the trivial subgroup or nontrivial. -/
 @[to_additive]
 theorem bot_or_nontrivial (H : Subgroup G) : H = ⊥ ∨ Nontrivial H := by
@@ -980,10 +979,10 @@ theorem closure_induction {p : G → Prop} {x} (h : x ∈ closure k) (Hk : ∀, 
 
 /-- A dependent version of `subgroup.closure_induction`.  -/
 @[elab_as_eliminator, to_additive "A dependent version of `add_subgroup.closure_induction`. "]
-theorem closure_induction' {p : ∀ x, x ∈ closure k → Prop} (Hs : ∀ x h : x ∈ k, p x (subset_closure h))
+theorem closure_induction' {p : ∀ x, x ∈ closure k → Prop} (Hs : ∀ (x) (h : x ∈ k), p x (subset_closure h))
     (H1 : p 1 (one_mem _)) (Hmul : ∀ x hx y hy, p x hx → p y hy → p (x * y) (mul_mem hx hy))
     (Hinv : ∀ x hx, p x hx → p x⁻¹ (inv_mem hx)) {x} (hx : x ∈ closure k) : p x hx := by
-  refine' Exists.elim _ fun hx : x ∈ closure k hc : p x hx => hc
+  refine' Exists.elim _ fun (hx : x ∈ closure k) (hc : p x hx) => hc
   exact
     closure_induction hx (fun x hx => ⟨_, Hs x hx⟩) ⟨_, H1⟩ (fun x y ⟨hx', hx⟩ ⟨hy', hy⟩ => ⟨_, Hmul _ _ _ _ hx hy⟩)
       fun x ⟨hx', hx⟩ => ⟨_, Hinv _ _ hx⟩
@@ -1133,14 +1132,14 @@ theorem closure_to_submonoid (S : Set G) : (closure S).toSubmonoid = Submonoid.c
 
 @[to_additive]
 theorem closure_induction_left {p : G → Prop} {x : G} (h : x ∈ closure k) (H1 : p 1)
-    (Hmul : ∀, ∀ x ∈ k, ∀ y, p y → p (x * y)) (Hinv : ∀, ∀ x ∈ k, ∀ y, p y → p (x⁻¹ * y)) : p x :=
+    (Hmul : ∀, ∀ x ∈ k, ∀ (y), p y → p (x * y)) (Hinv : ∀, ∀ x ∈ k, ∀ (y), p y → p (x⁻¹ * y)) : p x :=
   let key := le_of_eqₓ (closure_to_submonoid k)
   Submonoid.closure_induction_left (key h) H1 fun x hx =>
     hx.elim (Hmul x) fun hx y hy => (congr_arg _ (inv_invₓ x)).mp (Hinv x⁻¹ hx y hy)
 
 @[to_additive]
 theorem closure_induction_right {p : G → Prop} {x : G} (h : x ∈ closure k) (H1 : p 1)
-    (Hmul : ∀ x, ∀ y ∈ k, ∀, p x → p (x * y)) (Hinv : ∀ x, ∀ y ∈ k, ∀, p x → p (x * y⁻¹)) : p x :=
+    (Hmul : ∀ (x), ∀ y ∈ k, ∀, p x → p (x * y)) (Hinv : ∀ (x), ∀ y ∈ k, ∀, p x → p (x * y⁻¹)) : p x :=
   let key := le_of_eqₓ (closure_to_submonoid k)
   Submonoid.closure_induction_right (key h) H1 fun x y hy =>
     hy.elim (Hmul x y) fun hy hx => (congr_arg _ (inv_invₓ y)).mp (Hinv x y⁻¹ hy hx)
@@ -1161,7 +1160,7 @@ then it holds for all elements of the supremum of `S`. -/
   to_additive
       " An induction principle for elements of `⨆ i, S i`.\nIf `C` holds for `0` and all elements of `S i` for all `i`, and is preserved under addition,\nthen it holds for all elements of the supremum of `S`. "]
 theorem supr_induction {ι : Sort _} (S : ι → Subgroup G) {C : G → Prop} {x : G} (hx : x ∈ ⨆ i, S i)
-    (hp : ∀ i, ∀ x ∈ S i, ∀, C x) (h1 : C 1) (hmul : ∀ x y, C x → C y → C (x * y)) : C x := by
+    (hp : ∀ (i), ∀ x ∈ S i, ∀, C x) (h1 : C 1) (hmul : ∀ x y, C x → C y → C (x * y)) : C x := by
   rw [supr_eq_closure] at hx
   refine' closure_induction'' hx (fun x hx => _) (fun x hx => _) h1 hmul
   · obtain ⟨i, hi⟩ := set.mem_Union.mp hx
@@ -1174,9 +1173,9 @@ theorem supr_induction {ι : Sort _} (S : ι → Subgroup G) {C : G → Prop} {x
 /-- A dependent version of `subgroup.supr_induction`. -/
 @[elab_as_eliminator, to_additive "A dependent version of `add_subgroup.supr_induction`. "]
 theorem supr_induction' {ι : Sort _} (S : ι → Subgroup G) {C : ∀ x, (x ∈ ⨆ i, S i) → Prop}
-    (hp : ∀ i, ∀ x ∈ S i, ∀, C x (mem_supr_of_mem i ‹_›)) (h1 : C 1 (one_mem _))
+    (hp : ∀ (i), ∀ x ∈ S i, ∀, C x (mem_supr_of_mem i ‹_›)) (h1 : C 1 (one_mem _))
     (hmul : ∀ x y hx hy, C x hx → C y hy → C (x * y) (mul_mem ‹_› ‹_›)) {x : G} (hx : x ∈ ⨆ i, S i) : C x hx := by
-  refine' Exists.elim _ fun hx : x ∈ ⨆ i, S i hc : C x hx => hc
+  refine' Exists.elim _ fun (hx : x ∈ ⨆ i, S i) (hc : C x hx) => hc
   refine' supr_induction S hx (fun i x hx => _) _ fun x y => _
   · exact ⟨_, hp _ _ hx⟩
     
@@ -1622,7 +1621,6 @@ theorem pi_le_iff [DecidableEq η] [Fintype η] {H : ∀ i, Subgroup (f i)} {J :
   · exact fun h x hx => pi_mem_of_mul_single_mem x fun i => h i (mem_map_of_mem _ (hx i trivialₓ))
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem pi_eq_bot_iff (H : ∀ i, Subgroup (f i)) : pi Set.Univ H = ⊥ ↔ ∀ i, H i = ⊥ := by
   classical
@@ -1647,7 +1645,7 @@ end Subgroup
 
 namespace AddSubgroup
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`conj_mem] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`conj_mem] []
 /-- An add_subgroup is normal if whenever `n ∈ H`, then `g + n - g ∈ H` for every `g : G` -/
 structure Normal (H : AddSubgroup A) : Prop where
   conj_mem : ∀ n, n ∈ H → ∀ g : A, g + n + -g ∈ H
@@ -1810,10 +1808,10 @@ def normalizer : Subgroup G where
   Carrier := { g : G | ∀ n, n ∈ H ↔ g * n * g⁻¹ ∈ H }
   one_mem' := by
     simp
-  mul_mem' := fun a b ha : ∀ n, n ∈ H ↔ a * n * a⁻¹ ∈ H hb : ∀ n, n ∈ H ↔ b * n * b⁻¹ ∈ H n => by
+  mul_mem' := fun a b (ha : ∀ n, n ∈ H ↔ a * n * a⁻¹ ∈ H) (hb : ∀ n, n ∈ H ↔ b * n * b⁻¹ ∈ H) n => by
     rw [hb, ha]
     simp [← mul_assoc]
-  inv_mem' := fun a ha : ∀ n, n ∈ H ↔ a * n * a⁻¹ ∈ H n => by
+  inv_mem' := fun a (ha : ∀ n, n ∈ H ↔ a * n * a⁻¹ ∈ H) n => by
     rw [ha (a⁻¹ * n * a⁻¹⁻¹)]
     simp [← mul_assoc]
 
@@ -1825,10 +1823,10 @@ def setNormalizer (S : Set G) : Subgroup G where
   Carrier := { g : G | ∀ n, n ∈ S ↔ g * n * g⁻¹ ∈ S }
   one_mem' := by
     simp
-  mul_mem' := fun a b ha : ∀ n, n ∈ S ↔ a * n * a⁻¹ ∈ S hb : ∀ n, n ∈ S ↔ b * n * b⁻¹ ∈ S n => by
+  mul_mem' := fun a b (ha : ∀ n, n ∈ S ↔ a * n * a⁻¹ ∈ S) (hb : ∀ n, n ∈ S ↔ b * n * b⁻¹ ∈ S) n => by
     rw [hb, ha]
     simp [← mul_assoc]
-  inv_mem' := fun a ha : ∀ n, n ∈ S ↔ a * n * a⁻¹ ∈ S n => by
+  inv_mem' := fun a (ha : ∀ n, n ∈ S ↔ a * n * a⁻¹ ∈ S) n => by
     rw [ha (a⁻¹ * n * a⁻¹⁻¹)]
     simp [← mul_assoc]
 
@@ -2002,7 +2000,7 @@ def ConjugatesOfSet (s : Set G) : Set G :=
 theorem mem_conjugates_of_set_iff {x : G} : x ∈ ConjugatesOfSet s ↔ ∃ a ∈ s, IsConj a x :=
   Set.mem_Union₂
 
-theorem subset_conjugates_of_set : s ⊆ ConjugatesOfSet s := fun x : G h : x ∈ s =>
+theorem subset_conjugates_of_set : s ⊆ ConjugatesOfSet s := fun (x : G) (h : x ∈ s) =>
   mem_conjugates_of_set_iff.2 ⟨x, h, IsConj.refl _⟩
 
 theorem conjugates_of_set_mono {s t : Set G} (h : s ⊆ t) : ConjugatesOfSet s ⊆ ConjugatesOfSet t :=
@@ -2254,7 +2252,7 @@ variable {M : Type _} [MulOneClassₓ M]
       "The additive kernel of an `add_monoid` homomorphism is the `add_subgroup` of elements\nsuch that `f x = 0`"]
 def ker (f : G →* M) : Subgroup G :=
   { f.mker with
-    inv_mem' := fun x hx : f x = 1 =>
+    inv_mem' := fun x (hx : f x = 1) =>
       calc
         f x⁻¹ = f x * f x⁻¹ := by
           rw [hx, one_mulₓ]
@@ -2333,7 +2331,7 @@ end Ker
 @[to_additive "The additive subgroup of elements `x : G` such that `f x = g x`"]
 def eqLocus (f g : G →* N) : Subgroup G :=
   { eqMlocus f g with
-    inv_mem' := fun x hx : f x = g x =>
+    inv_mem' := fun x (hx : f x = g x) =>
       show f x⁻¹ = g x⁻¹ by
         rw [f.map_inv, g.map_inv, hx] }
 
@@ -3166,7 +3164,6 @@ theorem disjoint_iff_mul_eq_one {H₁ H₂ : Subgroup G} :
         simpa [← hx1] using hxy⟩,
       fun h x y hx hy hxy => (h hx (H₂.inv_mem hy) (mul_inv_eq_one.mpr hxy)).1⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- `finset.noncomm_prod` is “injective” in `f` if `f` maps into independent subgroups.  This
 generalizes (one direction of) `subgroup.disjoint_iff_mul_eq_one`. -/
 @[to_additive
@@ -3347,11 +3344,11 @@ def Saturated (H : Subgroup G) : Prop :=
   ∀ ⦃n g⦄, g ^ n ∈ H → n = 0 ∨ g ∈ H
 
 @[to_additive]
-theorem saturated_iff_npow {H : Subgroup G} : Saturated H ↔ ∀ n : ℕ g : G, g ^ n ∈ H → n = 0 ∨ g ∈ H :=
+theorem saturated_iff_npow {H : Subgroup G} : Saturated H ↔ ∀ (n : ℕ) (g : G), g ^ n ∈ H → n = 0 ∨ g ∈ H :=
   Iff.rfl
 
 @[to_additive]
-theorem saturated_iff_zpow {H : Subgroup G} : Saturated H ↔ ∀ n : ℤ g : G, g ^ n ∈ H → n = 0 ∨ g ∈ H := by
+theorem saturated_iff_zpow {H : Subgroup G} : Saturated H ↔ ∀ (n : ℤ) (g : G), g ^ n ∈ H → n = 0 ∨ g ∈ H := by
   constructor
   · rintro hH ⟨n⟩ g hgn
     · simp only [← Int.coe_nat_eq_zero, ← Int.of_nat_eq_coe, ← zpow_coe_nat] at hgn⊢
@@ -3359,7 +3356,7 @@ theorem saturated_iff_zpow {H : Subgroup G} : Saturated H ↔ ∀ n : ℤ g : G,
       
     · suffices g ^ (n + 1) ∈ H by
         refine' (hH this).imp _ id
-        simp only [← forall_false_left, ← Nat.succ_ne_zero]
+        simp only [← IsEmpty.forall_iff, ← Nat.succ_ne_zero]
       simpa only [← inv_mem_iff, ← zpow_neg_succ_of_nat] using hgn
       
     

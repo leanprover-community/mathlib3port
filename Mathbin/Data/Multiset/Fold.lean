@@ -51,7 +51,7 @@ theorem fold_zero (b : α) : (0 : Multiset α).fold op b = b :=
   rfl
 
 @[simp]
-theorem fold_cons_left : ∀ b a : α s : Multiset α, (a ::ₘ s).fold op b = a*s.fold op b :=
+theorem fold_cons_left : ∀ (b a : α) (s : Multiset α), (a ::ₘ s).fold op b = a*s.fold op b :=
   foldr_cons _ _
 
 theorem fold_cons_right (b a : α) (s : Multiset α) : (a ::ₘ s).fold op b = s.fold op b*a := by

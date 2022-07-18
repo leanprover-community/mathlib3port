@@ -292,7 +292,6 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
   rw [mul_def]
   simp only [← Finsupp.sum_apply, ← single_apply]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_apply_antidiagonal [Mul G] (f g : MonoidAlgebra k G) (x : G) (s : Finset (G × G))
     (hs : ∀ {p : G × G}, p ∈ s ↔ p.1 * p.2 = x) : (f * g) x = ∑ p in s, f p.1 * g p.2 :=
   let F : G × G → k := fun p => by
@@ -404,7 +403,6 @@ def singleHom [MulOneClassₓ G] : k × G →* MonoidAlgebra k G where
   map_one' := rfl
   map_mul' := fun a b => single_mul_single.symm
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_single_apply_aux [Mul G] (f : MonoidAlgebra k G) {r : k} {x y z : G} (H : ∀ a, a * x = z ↔ a = y) :
     (f * single x r) z = f y * r := by
   classical <;>
@@ -425,7 +423,6 @@ theorem mul_single_one_apply [MulOneClassₓ G] (f : MonoidAlgebra k G) (r : k) 
   f.mul_single_apply_aux fun a => by
     rw [mul_oneₓ]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem support_mul_single [RightCancelSemigroup G] (f : MonoidAlgebra k G) (r : k) (hr : ∀ y, y * r = 0 ↔ y = 0)
     (x : G) : (f * single x r).Support = f.Support.map (mulRightEmbedding x) := by
   ext y
@@ -440,7 +437,6 @@ theorem support_mul_single [RightCancelSemigroup G] (f : MonoidAlgebra k G) (r :
     simp [← mul_apply, ← H]
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem single_mul_apply_aux [Mul G] (f : MonoidAlgebra k G) {r : k} {x y z : G} (H : ∀ a, x * a = y ↔ a = z) :
     (single x r * f) y = r * f z := by
   classical <;>
@@ -461,7 +457,6 @@ theorem single_one_mul_apply [MulOneClassₓ G] (f : MonoidAlgebra k G) (r : k) 
   f.single_mul_apply_aux fun a => by
     rw [one_mulₓ]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem support_single_mul [LeftCancelSemigroup G] (f : MonoidAlgebra k G) (r : k) (hr : ∀ y, r * y = 0 ↔ y = 0)
     (x : G) : (single x r * f).Support = f.Support.map (mulLeftEmbedding x) := by
   ext y
@@ -493,7 +488,6 @@ section NonUnitalNonAssocAlgebra
 
 variable (k) [Monoidₓ R] [Semiringₓ k] [DistribMulAction R k] [Mul G]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 instance is_scalar_tower_self [IsScalarTower R k k] : IsScalarTower R (MonoidAlgebra k G) (MonoidAlgebra k G) :=
   ⟨fun t a b => by
     ext m
@@ -549,7 +543,7 @@ def liftMagma [Module k A] [IsScalarTower k A A] [SmulCommClass k A A] : (G →�
         have h₁ : ∀ m, g m 0 = 0 := by
           intros
           exact zero_smul k (f m)
-        have h₂ : ∀ m t₁ t₂ : k, g m (t₁ + t₂) = g m t₁ + g m t₂ := by
+        have h₂ : ∀ (m) (t₁ t₂ : k), g m (t₁ + t₂) = g m t₁ + g m t₂ := by
           intros
           rw [← add_smul]
         simp_rw [Finsupp.mul_sum, Finsupp.sum_mul, smul_mul_smul, ← f.map_mul, mul_def, sum_comm a₂ a₁,
@@ -650,7 +644,7 @@ theorem single_algebra_map_eq_algebra_map_mul_of {A : Type _} [CommSemiringₓ k
 
 theorem induction_on [Semiringₓ k] [Monoidₓ G] {p : MonoidAlgebra k G → Prop} (f : MonoidAlgebra k G)
     (hM : ∀ g, p (of k G g)) (hadd : ∀ f g : MonoidAlgebra k G, p f → p g → p (f + g))
-    (hsmul : ∀ r : k f, p f → p (r • f)) : p f := by
+    (hsmul : ∀ (r : k) (f), p f → p (r • f)) : p f := by
   refine' Finsupp.induction_linear f _ (fun f g hf hg => hadd f g hf hg) fun g r => _
   · simpa using hsmul 0 (of k G 1) (hM 1)
     
@@ -712,11 +706,11 @@ theorem lift_def (F : G →* A) : ⇑(lift k G A F) = liftNc ((algebraMap k A : 
 theorem lift_symm_apply (F : MonoidAlgebra k G →ₐ[k] A) (x : G) : (lift k G A).symm F x = F (single x 1) :=
   rfl
 
-theorem lift_of (F : G →* A) x : lift k G A F (of k G x) = F x := by
+theorem lift_of (F : G →* A) (x) : lift k G A F (of k G x) = F x := by
   rw [of_apply, ← lift_symm_apply, Equivₓ.symm_apply_apply]
 
 @[simp]
-theorem lift_single (F : G →* A) a b : lift k G A F (single a b) = b • F a := by
+theorem lift_single (F : G →* A) (a b) : lift k G A F (single a b) = b • F a := by
   rw [lift_def, lift_nc_single, Algebra.smul_def, RingHom.coe_add_monoid_hom]
 
 theorem lift_unique' (F : MonoidAlgebra k G →ₐ[k] A) : F = lift k G A ((F : MonoidAlgebra k G →* A).comp (of k G)) :=
@@ -776,7 +770,7 @@ variable {k}
 variable [Monoidₓ G] [CommSemiringₓ k] {V W : Type u₃} [AddCommMonoidₓ V] [Module k V] [Module (MonoidAlgebra k G) V]
   [IsScalarTower k (MonoidAlgebra k G) V] [AddCommMonoidₓ W] [Module k W] [Module (MonoidAlgebra k G) W]
   [IsScalarTower k (MonoidAlgebra k G) W] (f : V →ₗ[k] W)
-  (h : ∀ g : G v : V, f (single g (1 : k) • v : V) = (single g (1 : k) • f v : W))
+  (h : ∀ (g : G) (v : V), f (single g (1 : k) • v : V) = (single g (1 : k) • f v : W))
 
 include h
 
@@ -903,7 +897,7 @@ variable [Module k V] [Module (MonoidAlgebra k G) V] [IsScalarTower k (MonoidAlg
 
 /-- A submodule over `k` which is stable under scalar multiplication by elements of `G` is a
 submodule over `monoid_algebra k G`  -/
-def submoduleOfSmulMem (W : Submodule k V) (h : ∀ g : G v : V, v ∈ W → of k G g • v ∈ W) :
+def submoduleOfSmulMem (W : Submodule k V) (h : ∀ (g : G) (v : V), v ∈ W → of k G g • v ∈ W) :
     Submodule (MonoidAlgebra k G) V where
   Carrier := W
   zero_mem' := W.zero_mem'
@@ -1295,7 +1289,7 @@ theorem lift_nc_smul {R : Type _} [AddZeroClassₓ G] [Semiringₓ R] (f : k →
 
 theorem induction_on [AddMonoidₓ G] {p : AddMonoidAlgebra k G → Prop} (f : AddMonoidAlgebra k G)
     (hM : ∀ g, p (of k G (Multiplicative.ofAdd g))) (hadd : ∀ f g : AddMonoidAlgebra k G, p f → p g → p (f + g))
-    (hsmul : ∀ r : k f, p f → p (r • f)) : p f := by
+    (hsmul : ∀ (r : k) (f), p f → p (r • f)) : p f := by
   refine' Finsupp.induction_linear f _ (fun f g hf hg => hadd f g hf hg) fun g r => _
   · simpa using hsmul 0 (of k G (Multiplicative.ofAdd 0)) (hM 0)
     
@@ -1558,7 +1552,7 @@ theorem lift_of (F : Multiplicative G →* A) (x : Multiplicative G) : lift k G 
   rw [of_apply, ← lift_symm_apply, Equivₓ.symm_apply_apply]
 
 @[simp]
-theorem lift_single (F : Multiplicative G →* A) a b : lift k G A F (single a b) = b • F (Multiplicative.ofAdd a) := by
+theorem lift_single (F : Multiplicative G →* A) (a b) : lift k G A F (single a b) = b • F (Multiplicative.ofAdd a) := by
   rw [lift_def, lift_nc_single, Algebra.smul_def, RingHom.coe_add_monoid_hom]
 
 theorem lift_unique' (F : AddMonoidAlgebra k G →ₐ[k] A) :

@@ -58,11 +58,11 @@ def tsnd {α α'} (f : α → F α') : t β α → F (t β α') :=
 variable [IsLawfulBitraversable t] [IsLawfulApplicative F] [IsLawfulApplicative G]
 
 @[higher_order tfst_id]
-theorem id_tfst : ∀ {α β} x : t α β, tfst id.mk x = id.mk x :=
+theorem id_tfst : ∀ {α β} (x : t α β), tfst id.mk x = id.mk x :=
   @id_bitraverse _ _ _
 
 @[higher_order tsnd_id]
-theorem id_tsnd : ∀ {α β} x : t α β, tsnd id.mk x = id.mk x :=
+theorem id_tsnd : ∀ {α β} (x : t α β), tsnd id.mk x = id.mk x :=
   @id_bitraverse _ _ _
 
 @[higher_order tfst_comp_tfst]

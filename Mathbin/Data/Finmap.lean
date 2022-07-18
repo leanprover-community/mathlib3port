@@ -91,7 +91,7 @@ def liftOn {γ} (s : Finmap β) (f : Alist β → γ) (H : ∀ a b : Alist β, a
     
 
 @[simp]
-theorem lift_on_to_finmap {γ} (s : Alist β) (f : Alist β → γ) H : liftOn ⟦s⟧ f H = f s := by
+theorem lift_on_to_finmap {γ} (s : Alist β) (f : Alist β → γ) (H) : liftOn ⟦s⟧ f H = f s := by
   cases s <;> rfl
 
 /-- Lift a permutation-respecting function on 2 `alist`s to 2 `finmap`s. -/
@@ -103,7 +103,7 @@ def liftOn₂ {γ} (s₁ s₂ : Finmap β) (f : Alist β → Alist β → γ)
     simp only [← H']
 
 @[simp]
-theorem lift_on₂_to_finmap {γ} (s₁ s₂ : Alist β) (f : Alist β → Alist β → γ) H : liftOn₂ ⟦s₁⟧ ⟦s₂⟧ f H = f s₁ s₂ := by
+theorem lift_on₂_to_finmap {γ} (s₁ s₂ : Alist β) (f : Alist β → Alist β → γ) (H) : liftOn₂ ⟦s₁⟧ ⟦s₂⟧ f H = f s₁ s₂ := by
   cases s₁ <;> cases s₂ <;> rfl
 
 /-! ### induction -/
@@ -230,7 +230,7 @@ theorem lookup_list_to_finmap (a : α) (s : List (Sigma β)) : lookup a s.toFinm
   rw [List.toFinmap, lookup_to_finmap, lookup_to_alist]
 
 @[simp]
-theorem lookup_empty a : lookup a (∅ : Finmap β) = none :=
+theorem lookup_empty (a) : lookup a (∅ : Finmap β) = none :=
   rfl
 
 theorem lookup_is_some {a : α} {s : Finmap β} : (s.lookup a).isSome ↔ a ∈ s :=
@@ -341,7 +341,7 @@ theorem not_mem_erase_self {a : α} {s : Finmap β} : ¬a ∈ erase a s := by
   rw [mem_erase, not_and_distrib, not_not] <;> left <;> rfl
 
 @[simp]
-theorem lookup_erase a (s : Finmap β) : lookup a (erase a s) = none :=
+theorem lookup_erase (a) (s : Finmap β) : lookup a (erase a s) = none :=
   induction_on s <| lookup_erase a
 
 @[simp]

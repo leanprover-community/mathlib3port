@@ -252,7 +252,6 @@ section AddCommGroupₓ
 
 variable [AddCommGroupₓ E] [Module 𝕜 E] [NoZeroSmulDivisors 𝕜 E] [HasContinuousConstSmul 𝕜 E] {s : Set E}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem StrictConvex.preimage_smul (hs : StrictConvex 𝕜 s) (c : 𝕜) : StrictConvex 𝕜 ((fun z => c • z) ⁻¹' s) := by
   classical
   obtain rfl | hc := eq_or_ne c 0
@@ -279,7 +278,6 @@ section AddCommGroupₓ
 
 variable [AddCommGroupₓ E] [AddCommGroupₓ F] [Module 𝕜 E] [Module 𝕜 F] {s t : Set E} {x y : E}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem StrictConvex.eq_of_open_segment_subset_frontier [Nontrivial 𝕜] [DenselyOrdered 𝕜] (hs : StrictConvex 𝕜 s)
     (hx : x ∈ s) (hy : y ∈ s) (h : OpenSegment 𝕜 x y ⊆ Frontier s) : x = y := by
   obtain ⟨a, ha₀, ha₁⟩ := DenselyOrdered.dense (0 : 𝕜) 1 zero_lt_one

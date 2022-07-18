@@ -209,7 +209,6 @@ theorem support_esymm (n : ℕ) [DecidableEq σ] [Nontrivial R] :
   rw [support_esymm']
   exact bUnion_singleton
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem degrees_esymm [Nontrivial R] (n : ℕ) (hpos : 0 < n) (hn : n ≤ Fintype.card σ) :
     (esymm σ R n).degrees = (univ : Finset σ).val := by
   classical

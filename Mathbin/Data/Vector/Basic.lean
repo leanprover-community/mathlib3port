@@ -37,7 +37,7 @@ theorem to_list_injective : Function.Injective (@toList α n) :=
 
 /-- Two `v w : vector α n` are equal iff they are equal at every single index. -/
 @[ext]
-theorem ext : ∀ {v w : Vector α n} h : ∀ m : Finₓ n, Vector.nth v m = Vector.nth w m, v = w
+theorem ext : ∀ {v w : Vector α n} (h : ∀ m : Finₓ n, Vector.nth v m = Vector.nth w m), v = w
   | ⟨v, hv⟩, ⟨w, hw⟩, h =>
     Subtype.eq
       (List.ext_le
@@ -62,13 +62,13 @@ theorem cons_tail (a : α) : ∀ v : Vector α n, (a ::ᵥ v).tail = v
   | ⟨_, _⟩ => rfl
 
 @[simp]
-theorem to_list_of_fn : ∀ {n} f : Finₓ n → α, toList (ofFn f) = List.ofFnₓ f
+theorem to_list_of_fn : ∀ {n} (f : Finₓ n → α), toList (ofFn f) = List.ofFnₓ f
   | 0, f => rfl
   | n + 1, f => by
     rw [of_fn, List.of_fn_succ, to_list_cons, to_list_of_fn]
 
 @[simp]
-theorem mk_to_list : ∀ v : Vector α n h, (⟨toList v, h⟩ : Vector α n) = v
+theorem mk_to_list : ∀ (v : Vector α n) (h), (⟨toList v, h⟩ : Vector α n) = v
   | ⟨l, h₁⟩, h₂ => rfl
 
 @[simp]
@@ -80,7 +80,7 @@ theorem to_list_map {β : Type _} (v : Vector α n) (f : α → β) : (v.map f).
   cases v <;> rfl
 
 theorem nth_eq_nth_le :
-    ∀ v : Vector α n i,
+    ∀ (v : Vector α n) (i),
       nth v i =
         v.toList.nthLe i.1
           (by
@@ -96,7 +96,7 @@ theorem nth_map {β : Type _} (v : Vector α n) (f : α → β) (i : Finₓ n) :
   simp [← nth_eq_nth_le]
 
 @[simp]
-theorem nth_of_fn {n} (f : Finₓ n → α) i : nth (ofFn f) i = f i := by
+theorem nth_of_fn {n} (f : Finₓ n → α) (i) : nth (ofFn f) i = f i := by
   rw [nth_eq_nth_le, ← List.nth_le_of_fn f] <;> congr <;> apply to_list_of_fn
 
 @[simp]
@@ -110,11 +110,11 @@ theorem of_fn_nth (v : Vector α n) : ofFn (nth v) = v := by
 def _root_.equiv.vector_equiv_fin (α : Type _) (n : ℕ) : Vector α n ≃ (Finₓ n → α) :=
   ⟨Vector.nth, Vector.ofFn, Vector.of_fn_nth, fun f => funext <| Vector.nth_of_fn f⟩
 
-theorem nth_tail (x : Vector α n) i : x.tail.nth i = x.nth ⟨i.1 + 1, lt_tsub_iff_right.mp i.2⟩ := by
+theorem nth_tail (x : Vector α n) (i) : x.tail.nth i = x.nth ⟨i.1 + 1, lt_tsub_iff_right.mp i.2⟩ := by
   rcases x with ⟨_ | _, h⟩ <;> rfl
 
 @[simp]
-theorem nth_tail_succ : ∀ v : Vector α n.succ i : Finₓ n, nth (tail v) i = nth v i.succ
+theorem nth_tail_succ : ∀ (v : Vector α n.succ) (i : Finₓ n), nth (tail v) i = nth v i.succ
   | ⟨a :: l, e⟩, ⟨i, h⟩ => by
     simp [← nth_eq_nth_le] <;> rfl
 
@@ -347,7 +347,7 @@ def mOfFnₓ {m} [Monadₓ m] {α : Type u} : ∀ {n}, (Finₓ n → m α) → m
     pure (a ::ᵥ v)
 
 theorem m_of_fn_pure {m} [Monadₓ m] [IsLawfulMonad m] {α} :
-    ∀ {n} f : Finₓ n → α, (@mOfFnₓ m _ _ _ fun i => pure (f i)) = pure (ofFn f)
+    ∀ {n} (f : Finₓ n → α), (@mOfFnₓ m _ _ _ fun i => pure (f i)) = pure (ofFn f)
   | 0, f => rfl
   | n + 1, f => by
     simp [← m_of_fn, ← @m_of_fn_pure n, ← of_fn]
@@ -366,8 +366,8 @@ theorem mmap_nil {m} [Monadₓ m] {α β} (f : α → m β) : mmapₓ f nil = pu
   rfl
 
 @[simp]
-theorem mmap_cons {m} [Monadₓ m] {α β} (f : α → m β) a :
-    ∀ {n} v : Vector α n,
+theorem mmap_cons {m} [Monadₓ m] {α β} (f : α → m β) (a) :
+    ∀ {n} (v : Vector α n),
       mmapₓ f (a ::ᵥ v) = do
         let h' ← f a
         let t' ← mmapₓ f v
@@ -377,9 +377,11 @@ theorem mmap_cons {m} [Monadₓ m] {α β} (f : α → m β) a :
 /-- Define `C v` by induction on `v : vector α n`.
 
 This function has two arguments: `h_nil` handles the base case on `C nil`,
-and `h_cons` defines the inductive step using `∀ x : α, C w → C (x ::ᵥ w)`. -/
+and `h_cons` defines the inductive step using `∀ x : α, C w → C (x ::ᵥ w)`.
+
+This can be used as `induction v using vector.induction_on`. -/
 @[elab_as_eliminator]
-def inductionOn {C : ∀ {n : ℕ}, Vector α n → Sort _} (v : Vector α n) (h_nil : C nil)
+def inductionOn {C : ∀ {n : ℕ}, Vector α n → Sort _} {n : ℕ} (v : Vector α n) (h_nil : C nil)
     (h_cons : ∀ {n : ℕ} {x : α} {w : Vector α n}, C w → C (x ::ᵥ w)) : C v := by
   induction' n with n ih generalizing v
   · rcases v with ⟨_ | ⟨-, -⟩, - | -⟩
@@ -390,6 +392,10 @@ def inductionOn {C : ∀ {n : ℕ}, Vector α n → Sort _} (v : Vector α n) (h
     apply @h_cons n _ ⟨v, (add_left_injₓ 1).mp v_property⟩
     apply ih
     
+
+-- check that the above works with `induction ... using`
+example (v : Vector α n) : True := by
+  induction v using Vector.inductionOn <;> trivial
 
 variable {β γ : Type _}
 
@@ -652,18 +658,18 @@ instance : IsLawfulTraversable.{u} (flip Vector n) where
   comp_map := by
     intros <;> cases x <;> simp [← (· <$> ·)]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]
 unsafe instance reflect [reflected_univ.{u}] {α : Type u} [has_reflect α] [reflected _ α] {n : ℕ} :
     has_reflect (Vector α n) := fun v =>
-  @Vector.inductionOn n α (fun n => reflected _) v
+  @Vector.inductionOn α (fun n => reflected _) n v
     ((by
-          trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]" :
+          trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]" :
           reflected _ @Vector.nil.{u}).subst
       (quote.1 α))
     fun n x xs ih =>
     (by
-          trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]" :
+          trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]" :
           reflected _ @Vector.cons.{u}).subst₄
       (quote.1 α) (quote.1 n) (quote.1 x) ih
 

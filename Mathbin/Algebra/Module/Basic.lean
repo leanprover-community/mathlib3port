@@ -52,7 +52,7 @@ variable {α R k S M M₂ M₃ ι : Type _}
   distributivity axioms similar to those on a ring. -/
 @[ext, protect_proj]
 class Module (R : Type u) (M : Type v) [Semiringₓ R] [AddCommMonoidₓ M] extends DistribMulAction R M where
-  add_smul : ∀ r s : R x : M, (r + s) • x = r • x + s • x
+  add_smul : ∀ (r s : R) (x : M), (r + s) • x = r • x + s • x
   zero_smul : ∀ x : M, (0 : R) • x = 0
 
 section AddCommMonoidₓ
@@ -94,7 +94,7 @@ theorem inv_of_two_smul_add_inv_of_two_smul [Invertible (2 : R)] (x : M) : (⅟ 
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.module [AddCommMonoidₓ M₂] [HasSmul R M₂] (f : M₂ →+ M) (hf : Injective f)
-    (smul : ∀ c : R x, f (c • x) = c • f x) : Module R M₂ :=
+    (smul : ∀ (c : R) (x), f (c • x) = c • f x) : Module R M₂ :=
   { hf.DistribMulAction f smul with smul := (· • ·),
     add_smul := fun c₁ c₂ x =>
       hf <| by
@@ -105,7 +105,7 @@ protected def Function.Injective.module [AddCommMonoidₓ M₂] [HasSmul R M₂]
 
 /-- Pushforward a `module` structure along a surjective additive monoid homomorphism. -/
 protected def Function.Surjective.module [AddCommMonoidₓ M₂] [HasSmul R M₂] (f : M →+ M₂) (hf : Surjective f)
-    (smul : ∀ c : R x, f (c • x) = c • f x) : Module R M₂ :=
+    (smul : ∀ (c : R) (x), f (c • x) = c • f x) : Module R M₂ :=
   { hf.DistribMulAction f smul with smul := (· • ·),
     add_smul := fun c₁ c₂ x => by
       rcases hf x with ⟨x, rfl⟩
@@ -120,7 +120,7 @@ See also `function.surjective.mul_action_left` and `function.surjective.distrib_
 -/
 @[reducible]
 def Function.Surjective.moduleLeft {R S M : Type _} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] [Semiringₓ S]
-    [HasSmul S M] (f : R →+* S) (hf : Function.Surjective f) (hsmul : ∀ c x : M, f c • x = c • x) : Module S M :=
+    [HasSmul S M] (f : R →+* S) (hf : Function.Surjective f) (hsmul : ∀ (c) (x : M), f c • x = c • x) : Module S M :=
   { hf.distribMulActionLeft f.toMonoidHom hsmul with smul := (· • ·),
     zero_smul := fun x => by
       rw [← f.map_zero, hsmul, zero_smul],
@@ -213,9 +213,9 @@ this provides a way to construct a module structure by checking less properties,
 `module.of_core`. -/
 @[nolint has_inhabited_instance]
 structure Module.Core extends HasSmul R M where
-  smul_add : ∀ r : R x y : M, r • (x + y) = r • x + r • y
-  add_smul : ∀ r s : R x : M, (r + s) • x = r • x + s • x
-  mul_smul : ∀ r s : R x : M, (r * s) • x = r • s • x
+  smul_add : ∀ (r : R) (x y : M), r • (x + y) = r • x + r • y
+  add_smul : ∀ (r s : R) (x : M), (r + s) • x = r • x + s • x
+  mul_smul : ∀ (r s : R) (x : M), (r * s) • x = r • s • x
   one_smul : ∀ x : M, (1 : R) • x = x
 
 variable {R M}
@@ -234,7 +234,7 @@ end AddCommGroupₓ
 -- We'll later use this to show `module ℕ M` and `module ℤ M` are subsingletons.
 theorem Module.ext' {R : Type _} [Semiringₓ R] {M : Type _} [AddCommMonoidₓ M] (P Q : Module R M)
     (w :
-      ∀ r : R m : M,
+      ∀ (r : R) (m : M),
         by
           have := P
           exact r • m = by
@@ -513,7 +513,7 @@ export NoZeroSmulDivisors (eq_zero_or_eq_zero_of_smul_eq_zero)
 /-- Pullback a `no_zero_smul_divisors` instance along an injective function. -/
 theorem Function.Injective.no_zero_smul_divisors {R M N : Type _} [Zero R] [Zero M] [Zero N] [HasSmul R M] [HasSmul R N]
     [NoZeroSmulDivisors R N] (f : M → N) (hf : Function.Injective f) (h0 : f 0 = 0)
-    (hs : ∀ c : R x : M, f (c • x) = c • f x) : NoZeroSmulDivisors R M :=
+    (hs : ∀ (c : R) (x : M), f (c • x) = c • f x) : NoZeroSmulDivisors R M :=
   ⟨fun c m h =>
     Or.imp_rightₓ (@hf _ _) <|
       h0.symm ▸
@@ -560,7 +560,7 @@ variable (R M)
 
 /-- If `M` is an `R`-module with one and `M` has characteristic zero, then `R` has characteristic
 zero as well. Usually `M` is an `R`-algebra. -/
-theorem CharZero.of_module M [AddCommMonoidWithOne M] [CharZero M] [Module R M] : CharZero R := by
+theorem CharZero.of_module (M) [AddCommMonoidWithOne M] [CharZero M] [Module R M] : CharZero R := by
   refine' ⟨fun m n h => @Nat.cast_injective M _ _ _ _ _⟩
   rw [← nsmul_one, ← nsmul_one, nsmul_eq_smul_cast R m (1 : M), nsmul_eq_smul_cast R n (1 : M), h]
 

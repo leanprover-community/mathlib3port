@@ -126,7 +126,7 @@ def mkHom {M N : SemiNormedGroupₓ} (f : M ⟶ N) (i : f.NormNoninc) : SemiNorm
   ⟨f, i⟩
 
 @[simp]
-theorem mk_hom_apply {M N : SemiNormedGroupₓ} (f : M ⟶ N) (i : f.NormNoninc) x : mkHom f i x = f x :=
+theorem mk_hom_apply {M N : SemiNormedGroupₓ} (f : M ⟶ N) (i : f.NormNoninc) (x) : mkHom f i x = f x :=
   rfl
 
 /-- Promote an isomorphism in `SemiNormedGroup` to an isomorphism in `SemiNormedGroup₁`. -/

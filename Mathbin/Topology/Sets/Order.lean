@@ -49,7 +49,7 @@ protected theorem ext {s t : ClopenUpperSet α} (h : (s : Set α) = t) : s = t :
   SetLike.ext' h
 
 @[simp]
-theorem coe_mk (s : Clopens α) h : (mk s h : Set α) = s :=
+theorem coe_mk (s : Clopens α) (h) : (mk s h : Set α) = s :=
   rfl
 
 instance : HasSup (ClopenUpperSet α) :=

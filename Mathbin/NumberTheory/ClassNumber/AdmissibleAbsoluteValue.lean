@@ -44,7 +44,7 @@ elements whose remainders are pointwise close together. -/
 structure IsAdmissible extends IsEuclidean abv where
   card : ℝ → ℕ
   exists_partition' :
-    ∀ n : ℕ {ε : ℝ} hε : 0 < ε {b : R} hb : b ≠ 0 A : Finₓ n → R,
+    ∀ (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : R} (hb : b ≠ 0) (A : Finₓ n → R),
       ∃ t : Finₓ n → Finₓ (card ε), ∀ i₀ i₁, t i₀ = t i₁ → (abv (A i₁ % b - A i₀ % b) : ℝ) < abv b • ε
 
 attribute [protected] is_admissible.card
@@ -66,7 +66,7 @@ theorem exists_partition {ι : Type _} [Fintype ι] {ε : ℝ} (hε : 0 < ε) {b
 /-- Any large enough family of vectors in `R^n` has a pair of elements
 whose remainders are close together, pointwise. -/
 theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
-    ∀ {ε : ℝ} hε : 0 < ε {b : R} hb : b ≠ 0 A : Finₓ (h.card ε ^ n).succ → Finₓ n → R,
+    ∀ {ε : ℝ} (hε : 0 < ε) {b : R} (hb : b ≠ 0) (A : Finₓ (h.card ε ^ n).succ → Finₓ n → R),
       ∃ i₀ i₁, i₀ ≠ i₁ ∧ ∀ k, (abv (A i₁ k % b - A i₀ k % b) : ℝ) < abv b • ε :=
   by
   have := Classical.decEq R

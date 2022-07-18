@@ -76,7 +76,7 @@ instance [CommRingₓ α] : CommRingₓ αᵐᵒᵖ :=
 
 instance [Zero α] [Mul α] [NoZeroDivisors α] :
     NoZeroDivisors
-      αᵐᵒᵖ where eq_zero_or_eq_zero_of_mul_eq_zero := fun x y H : op (_ * _) = op (0 : α) =>
+      αᵐᵒᵖ where eq_zero_or_eq_zero_of_mul_eq_zero := fun x y (H : op (_ * _) = op (0 : α)) =>
     Or.cases_on (eq_zero_or_eq_zero_of_mul_eq_zero <| op_injective H) (fun hy => Or.inr <| unop_injective <| hy)
       fun hx => Or.inl <| unop_injective <| hx
 
@@ -150,7 +150,7 @@ instance [CommRingₓ α] : CommRingₓ αᵃᵒᵖ :=
 
 instance [Zero α] [Mul α] [NoZeroDivisors α] :
     NoZeroDivisors
-      αᵃᵒᵖ where eq_zero_or_eq_zero_of_mul_eq_zero := fun x y H : op (_ * _) = op (0 : α) =>
+      αᵃᵒᵖ where eq_zero_or_eq_zero_of_mul_eq_zero := fun x y (H : op (_ * _) = op (0 : α)) =>
     Or.imp (fun hx => unop_injective hx) (fun hy => unop_injective hy)
       (@eq_zero_or_eq_zero_of_mul_eq_zero α _ _ _ _ _ <| op_injective H)
 
@@ -165,6 +165,43 @@ instance [GroupWithZeroₓ α] : GroupWithZeroₓ αᵃᵒᵖ :=
 end AddOpposite
 
 open MulOpposite
+
+/-- A non-unital ring homomorphism `f : R →ₙ+* S` such that `f x` commutes with `f y` for all `x, y`
+defines a non-unital ring homomorphism to `Sᵐᵒᵖ`. -/
+@[simps (config := { fullyApplied := false })]
+def NonUnitalRingHom.toOpposite {R S : Type _} [NonUnitalNonAssocSemiringₓ R] [NonUnitalNonAssocSemiringₓ S]
+    (f : R →ₙ+* S) (hf : ∀ x y, Commute (f x) (f y)) : R →ₙ+* Sᵐᵒᵖ :=
+  { ((opAddEquiv : S ≃+ Sᵐᵒᵖ).toAddMonoidHom.comp ↑f : R →+ Sᵐᵒᵖ), f.toMulHom.toOpposite hf with
+    toFun := MulOpposite.op ∘ f }
+
+/-- A non-unital ring homomorphism `f : R →ₙ* S` such that `f x` commutes with `f y` for all `x, y`
+defines a non-unital ring homomorphism from `Rᵐᵒᵖ`. -/
+@[simps (config := { fullyApplied := false })]
+def NonUnitalRingHom.fromOpposite {R S : Type _} [NonUnitalNonAssocSemiringₓ R] [NonUnitalNonAssocSemiringₓ S]
+    (f : R →ₙ+* S) (hf : ∀ x y, Commute (f x) (f y)) : Rᵐᵒᵖ →ₙ+* S :=
+  { (f.toAddMonoidHom.comp (opAddEquiv : R ≃+ Rᵐᵒᵖ).symm.toAddMonoidHom : Rᵐᵒᵖ →+ S), f.toMulHom.fromOpposite hf with
+    toFun := f ∘ MulOpposite.unop }
+
+/-- A non-unital ring hom `α →ₙ+* β` can equivalently be viewed as a non-unital ring hom
+`αᵐᵒᵖ →+* βᵐᵒᵖ`. This is the action of the (fully faithful) `ᵐᵒᵖ`-functor on morphisms. -/
+@[simps]
+def NonUnitalRingHom.op {α β} [NonUnitalNonAssocSemiringₓ α] [NonUnitalNonAssocSemiringₓ β] :
+    (α →ₙ+* β) ≃ (αᵐᵒᵖ →ₙ+* βᵐᵒᵖ) where
+  toFun := fun f => { f.toAddMonoidHom.mulOp, f.toMulHom.op with }
+  invFun := fun f => { f.toAddMonoidHom.mulUnop, f.toMulHom.unop with }
+  left_inv := fun f => by
+    ext
+    rfl
+  right_inv := fun f => by
+    ext
+    simp
+
+/-- The 'unopposite' of a non-unital ring hom `αᵐᵒᵖ →ₙ+* βᵐᵒᵖ`. Inverse to
+`non_unital_ring_hom.op`. -/
+@[simp]
+def NonUnitalRingHom.unop {α β} [NonUnitalNonAssocSemiringₓ α] [NonUnitalNonAssocSemiringₓ β] :
+    (αᵐᵒᵖ →ₙ+* βᵐᵒᵖ) ≃ (α →ₙ+* β) :=
+  NonUnitalRingHom.op.symm
 
 /-- A ring homomorphism `f : R →+* S` such that `f x` commutes with `f y` for all `x, y` defines
 a ring homomorphism to `Sᵐᵒᵖ`. -/

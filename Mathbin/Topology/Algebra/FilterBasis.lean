@@ -247,8 +247,8 @@ end GroupFilterBasis
   topology on `R` which is compatible with the ring structure.  -/
 class RingFilterBasis (R : Type u) [Ringₓ R] extends AddGroupFilterBasis R where
   mul' : ∀ {U}, U ∈ sets → ∃ V ∈ sets, V * V ⊆ U
-  mul_left' : ∀ x₀ : R {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => x₀ * x) ⁻¹' U
-  mul_right' : ∀ x₀ : R {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => x * x₀) ⁻¹' U
+  mul_left' : ∀ (x₀ : R) {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => x₀ * x) ⁻¹' U
+  mul_right' : ∀ (x₀ : R) {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => x * x₀) ⁻¹' U
 
 namespace RingFilterBasis
 
@@ -310,8 +310,8 @@ end RingFilterBasis
 structure ModuleFilterBasis (R M : Type _) [CommRingₓ R] [TopologicalSpace R] [AddCommGroupₓ M] [Module R M] extends
   AddGroupFilterBasis M where
   smul' : ∀ {U}, U ∈ sets → ∃ V ∈ 𝓝 (0 : R), ∃ W ∈ sets, V • W ⊆ U
-  smul_left' : ∀ x₀ : R {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => x₀ • x) ⁻¹' U
-  smul_right' : ∀ m₀ : M {U}, U ∈ sets → ∀ᶠ x in 𝓝 (0 : R), x • m₀ ∈ U
+  smul_left' : ∀ (x₀ : R) {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => x₀ • x) ⁻¹' U
+  smul_right' : ∀ (m₀ : M) {U}, U ∈ sets → ∀ᶠ x in 𝓝 (0 : R), x • m₀ ∈ U
 
 namespace ModuleFilterBasis
 
@@ -391,8 +391,8 @@ instance (priority := 100) has_continuous_smul [TopologicalRing R] : @HasContinu
 /-- Build a module filter basis from compatible ring and additive group filter bases. -/
 def ofBases {R M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Module R M] (BR : RingFilterBasis R)
     (BM : AddGroupFilterBasis M) (smul : ∀ {U}, U ∈ BM → ∃ V ∈ BR, ∃ W ∈ BM, V • W ⊆ U)
-    (smul_left : ∀ x₀ : R {U}, U ∈ BM → ∃ V ∈ BM, V ⊆ (fun x => x₀ • x) ⁻¹' U)
-    (smul_right : ∀ m₀ : M {U}, U ∈ BM → ∃ V ∈ BR, V ⊆ (fun x => x • m₀) ⁻¹' U) :
+    (smul_left : ∀ (x₀ : R) {U}, U ∈ BM → ∃ V ∈ BM, V ⊆ (fun x => x₀ • x) ⁻¹' U)
+    (smul_right : ∀ (m₀ : M) {U}, U ∈ BM → ∃ V ∈ BR, V ⊆ (fun x => x • m₀) ⁻¹' U) :
     @ModuleFilterBasis R M _ BR.topology _ _ :=
   { BM with
     smul' := by

@@ -77,7 +77,7 @@ and that the statement of **Hall's Marriage Theorem** is true for all
 theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
     (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card)
     (ih :
-      ∀ {ι' : Type u} [Fintype ι'] t' : ι' → Finset α,
+      ∀ {ι' : Type u} [Fintype ι'] (t' : ι' → Finset α),
         Fintype.card ι' ≤ n →
           (∀ s' : Finset ι', s'.card ≤ (s'.bUnion t').card) → ∃ f : ι' → α, Function.Injective f ∧ ∀ x, f x ∈ t' x)
     (ha : ∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.bUnion t).card) :
@@ -119,7 +119,6 @@ theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
       
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem hall_cond_of_restrict {ι : Type u} {t : ι → Finset α} {s : Finset ι}
     (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card) (s' : Finset (s : Set ι)) :
     s'.card ≤ (s'.bUnion fun a' => t a').card := by
@@ -166,7 +165,7 @@ and that the statement of **Hall's Marriage Theorem** is true for all
 theorem hall_hard_inductive_step_B {n : ℕ} (hn : Fintype.card ι = n + 1)
     (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card)
     (ih :
-      ∀ {ι' : Type u} [Fintype ι'] t' : ι' → Finset α,
+      ∀ {ι' : Type u} [Fintype ι'] (t' : ι' → Finset α),
         Fintype.card ι' ≤ n →
           (∀ s' : Finset ι', s'.card ≤ (s'.bUnion t').card) → ∃ f : ι' → α, Function.Injective f ∧ ∀ x, f x ∈ t' x)
     (s : Finset ι) (hs : s.Nonempty) (hns : s ≠ univ) (hus : s.card = (s.bUnion t).card) :
@@ -188,16 +187,16 @@ theorem hall_hard_inductive_step_B {n : ℕ} (hn : Fintype.card ι = n + 1)
     rwa [Fintype.card_coe, card_compl_lt_iff_nonempty]
   rcases ih t'' card_ι''_le (hall_cond_of_compl hus ht) with ⟨f'', hf'', hsf''⟩
   -- Put them together
-  have f'_mem_bUnion : ∀ {x'} hx' : x' ∈ s, f' ⟨x', hx'⟩ ∈ s.bUnion t := by
+  have f'_mem_bUnion : ∀ {x'} (hx' : x' ∈ s), f' ⟨x', hx'⟩ ∈ s.bUnion t := by
     intro x' hx'
     rw [mem_bUnion]
     exact ⟨x', hx', hsf' _⟩
-  have f''_not_mem_bUnion : ∀ {x''} hx'' : ¬x'' ∈ s, ¬f'' ⟨x'', hx''⟩ ∈ s.bUnion t := by
+  have f''_not_mem_bUnion : ∀ {x''} (hx'' : ¬x'' ∈ s), ¬f'' ⟨x'', hx''⟩ ∈ s.bUnion t := by
     intro x'' hx''
     have h := hsf'' ⟨x'', hx''⟩
     rw [mem_sdiff] at h
     exact h.2
-  have im_disj : ∀ x' x'' : ι hx' : x' ∈ s hx'' : ¬x'' ∈ s, f' ⟨x', hx'⟩ ≠ f'' ⟨x'', hx''⟩ := by
+  have im_disj : ∀ (x' x'' : ι) (hx' : x' ∈ s) (hx'' : ¬x'' ∈ s), f' ⟨x', hx'⟩ ≠ f'' ⟨x'', hx''⟩ := by
     intro _ _ hx' hx'' h
     apply f''_not_mem_bUnion hx''
     rw [← h]
@@ -224,7 +223,7 @@ theorem hall_hard_inductive (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).car
     exact ⟨isEmptyElim, isEmptyElim, isEmptyElim⟩
     
   · have ih' :
-      ∀ ι' : Type u [Fintype ι'] t' : ι' → Finset α,
+      ∀ (ι' : Type u) [Fintype ι'] (t' : ι' → Finset α),
         Fintype.card ι' ≤ n →
           (∀ s' : Finset ι', s'.card ≤ (s'.bUnion t').card) → ∃ f : ι' → α, Function.Injective f ∧ ∀ x, f x ∈ t' x :=
       by

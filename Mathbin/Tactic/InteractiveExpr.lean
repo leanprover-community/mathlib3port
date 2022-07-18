@@ -223,8 +223,8 @@ unsafe def mk {γ} (tooltip : tc subexpr γ) : tc expr γ :=
   let tooltip_comp :=
     (component.with_should_update fun x y : tactic_state × expr × Expr.Address => x.2.2 ≠ y.2.2) <|
       component.map_action action.on_tooltip_action tooltip
-  (component.filter_map_action fun _ a : Sum γ widget.effect => Sum.casesOn a some fun _ => none) <|
-    (component.with_effects fun _ a : Sum γ widget.effect =>
+  (component.filter_map_action fun _ (a : Sum γ widget.effect) => Sum.casesOn a some fun _ => none) <|
+    (component.with_effects fun _ (a : Sum γ widget.effect) =>
         match a with
         | Sum.inl g => []
         | Sum.inr s => [s]) <|

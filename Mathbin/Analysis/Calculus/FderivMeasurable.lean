@@ -106,12 +106,12 @@ variable {f : E → F} (K : Set (E →L[𝕜] F))
 
 namespace FderivMeasurableAux
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y z «expr ∈ » ball x r')
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y z «expr ∈ » ball x r')
 /-- The set `A f L r ε` is the set of points `x` around which the function `f` is well approximated
 at scale `r` by the linear map `L`, up to an error `ε`. We tweak the definition to make sure that
 this is an open set.-/
 def A (f : E → F) (L : E →L[𝕜] F) (r ε : ℝ) : Set E :=
-  { x | ∃ r' ∈ Ioc (r / 2) r, ∀ y z _ : y ∈ Ball x r' _ : z ∈ Ball x r', ∥f z - f y - L (z - y)∥ ≤ ε * r }
+  { x | ∃ r' ∈ Ioc (r / 2) r, ∀ (y z) (_ : y ∈ Ball x r') (_ : z ∈ Ball x r'), ∥f z - f y - L (z - y)∥ ≤ ε * r }
 
 /-- The set `B f K r s ε` is the set of points `x` around which there exists a continuous linear map
 `L` belonging to `K` (a given set of continuous linear maps) that approximates well the
@@ -514,10 +514,10 @@ theorem measurable_deriv [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜] [Mea
     Measurable (deriv f) := by
   simpa only [← fderiv_deriv] using measurable_fderiv_apply_const 𝕜 f 1
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr F]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr F]]
 theorem strongly_measurable_deriv [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜] [SecondCountableTopology F] (f : 𝕜 → F) :
     StronglyMeasurable (deriv f) := by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr F]]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr F]]"
   exact (measurable_deriv f).StronglyMeasurable
 
 theorem ae_measurable_deriv [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜] [MeasurableSpace F] [BorelSpace F] (f : 𝕜 → F)
@@ -538,12 +538,13 @@ variable {f : ℝ → F} (K : Set F)
 
 namespace RightDerivMeasurableAux
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y z «expr ∈ » Icc x «expr + »(x, r'))
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y z «expr ∈ » Icc x «expr + »(x, r'))
 /-- The set `A f L r ε` is the set of points `x` around which the function `f` is well approximated
 at scale `r` by the linear map `h ↦ h • L`, up to an error `ε`. We tweak the definition to
 make sure that this is open on the right. -/
 def A (f : ℝ → F) (L : F) (r ε : ℝ) : Set ℝ :=
-  { x | ∃ r' ∈ Ioc (r / 2) r, ∀ y z _ : y ∈ Icc x (x + r') _ : z ∈ Icc x (x + r'), ∥f z - f y - (z - y) • L∥ ≤ ε * r }
+  { x |
+    ∃ r' ∈ Ioc (r / 2) r, ∀ (y z) (_ : y ∈ Icc x (x + r')) (_ : z ∈ Icc x (x + r')), ∥f z - f y - (z - y) • L∥ ≤ ε * r }
 
 /-- The set `B f K r s ε` is the set of points `x` around which there exists a vector
 `L` belonging to `K` (a given set of vectors) such that `h • L` approximates well `f (x + h)`
@@ -921,10 +922,10 @@ theorem measurable_deriv_within_Ici [MeasurableSpace F] [BorelSpace F] : Measura
     (measurable_set_of_differentiable_within_at_Ici_of_is_complete _ hs.is_complete).union
       ((measurable_set_of_differentiable_within_at_Ici _).compl.inter (MeasurableSet.const _))
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr F]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr F]]
 theorem strongly_measurable_deriv_within_Ici [SecondCountableTopology F] :
     StronglyMeasurable fun x => derivWithin f (Ici x) x := by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr F]]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr F]]"
   exact (measurable_deriv_within_Ici f).StronglyMeasurable
 
 theorem ae_measurable_deriv_within_Ici [MeasurableSpace F] [BorelSpace F] (μ : Measureₓ ℝ) :
@@ -946,10 +947,10 @@ theorem measurable_deriv_within_Ioi [MeasurableSpace F] [BorelSpace F] : Measura
   by
   simpa [← deriv_within_Ioi_eq_Ici] using measurable_deriv_within_Ici f
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr F]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr F]]
 theorem strongly_measurable_deriv_within_Ioi [SecondCountableTopology F] :
     StronglyMeasurable fun x => derivWithin f (Ioi x) x := by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr F]]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr F]]"
   exact (measurable_deriv_within_Ioi f).StronglyMeasurable
 
 theorem ae_measurable_deriv_within_Ioi [MeasurableSpace F] [BorelSpace F] (μ : Measureₓ ℝ) :

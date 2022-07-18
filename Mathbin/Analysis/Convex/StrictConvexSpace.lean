@@ -204,6 +204,11 @@ inequality for `x` and `y` becomes an equality. -/
 theorem same_ray_iff_norm_add : SameRay ℝ x y ↔ ∥x + y∥ = ∥x∥ + ∥y∥ :=
   ⟨SameRay.norm_add, fun h => not_not.1 fun h' => (norm_add_lt_of_not_same_ray h').Ne h⟩
 
+/-- If `x` and `y` are two vectors in a strictly convex space have the same norm and the norm of
+their sum is equal to the sum of their norms, then they are equal. -/
+theorem eq_of_norm_eq_of_norm_add_eq (h₁ : ∥x∥ = ∥y∥) (h₂ : ∥x + y∥ = ∥x∥ + ∥y∥) : x = y :=
+  (same_ray_iff_norm_add.mpr h₂).eq_of_norm_eq h₁
+
 /-- In a strictly convex space, two vectors `x`, `y` are not in the same ray if and only if the
 triangle inequality for `x` and `y` is strict. -/
 theorem not_same_ray_iff_norm_add_lt : ¬SameRay ℝ x y ↔ ∥x + y∥ < ∥x∥ + ∥y∥ :=

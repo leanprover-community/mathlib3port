@@ -37,9 +37,11 @@ theorem Applicativeₓ.pure_seq_eq_map' (f : α → β) : (· <*> ·) (pure f : 
   ext <;> simp' with functor_norm
 
 theorem Applicativeₓ.ext {F} :
-    ∀ {A1 : Applicativeₓ F} {A2 : Applicativeₓ F} [@IsLawfulApplicative F A1] [@IsLawfulApplicative F A2] H1 :
-      ∀ {α : Type u} x : α, @Pure.pure _ A1.toHasPure _ x = @Pure.pure _ A2.toHasPure _ x H2 :
-      ∀ {α β : Type u} f : F (α → β) x : F α, @Seqₓ.seq _ A1.toHasSeq _ _ f x = @Seqₓ.seq _ A2.toHasSeq _ _ f x, A1 = A2
+    ∀ {A1 : Applicativeₓ F} {A2 : Applicativeₓ F} [@IsLawfulApplicative F A1] [@IsLawfulApplicative F A2]
+      (H1 : ∀ {α : Type u} (x : α), @Pure.pure _ A1.toHasPure _ x = @Pure.pure _ A2.toHasPure _ x)
+      (H2 :
+        ∀ {α β : Type u} (f : F (α → β)) (x : F α), @Seqₓ.seq _ A1.toHasSeq _ _ f x = @Seqₓ.seq _ A2.toHasSeq _ _ f x),
+      A1 = A2
   | { toFunctor := F1, seq := s1, pure := p1, seqLeft := sl1, seqRight := sr1 },
     { toFunctor := F2, seq := s2, pure := p2, seqLeft := sl2, seqRight := sr2 }, L1, L2, H1, H2 => by
     obtain rfl : @p1 = @p2 := by

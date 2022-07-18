@@ -128,7 +128,7 @@ variable {F G : LaxMonoidalFunctor C D}
 and the monoidal naturality in the forward direction.
 -/
 def ofComponents (app : ∀ X : C, F.obj X ≅ G.obj X)
-    (naturality : ∀ {X Y : C} f : X ⟶ Y, F.map f ≫ (app Y).Hom = (app X).Hom ≫ G.map f)
+    (naturality : ∀ {X Y : C} (f : X ⟶ Y), F.map f ≫ (app Y).Hom = (app X).Hom ≫ G.map f)
     (unit : F.ε ≫ (app (𝟙_ C)).Hom = G.ε)
     (tensor : ∀ X Y, F.μ X Y ≫ (app (X ⊗ Y)).Hom = ((app X).Hom ⊗ (app Y).Hom) ≫ G.μ X Y) : F ≅ G where
   Hom := { app := fun X => (app X).Hom }
@@ -142,12 +142,12 @@ def ofComponents (app : ∀ X : C, F.obj X ≅ G.obj X)
         rw [iso.comp_inv_eq, assoc, tensor, ← tensor_comp_assoc, iso.inv_hom_id, iso.inv_hom_id, tensor_id, id_comp] }
 
 @[simp]
-theorem ofComponents.hom_app (app : ∀ X : C, F.obj X ≅ G.obj X) naturality unit tensor X :
+theorem ofComponents.hom_app (app : ∀ X : C, F.obj X ≅ G.obj X) (naturality) (unit) (tensor) (X) :
     (ofComponents app naturality Unit tensor).Hom.app X = (app X).Hom :=
   rfl
 
 @[simp]
-theorem ofComponents.inv_app (app : ∀ X : C, F.obj X ≅ G.obj X) naturality unit tensor X :
+theorem ofComponents.inv_app (app : ∀ X : C, F.obj X ≅ G.obj X) (naturality) (unit) (tensor) (X) :
     (ofComponents app naturality Unit tensor).inv.app X = (app X).inv := by
   simp [← of_components]
 

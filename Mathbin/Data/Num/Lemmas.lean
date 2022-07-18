@@ -104,7 +104,7 @@ theorem bit1_of_bit1 (n : PosNum) : bit1 n = bit1 n :=
     rw [add_one, bit0_of_bit0] <;> rfl
 
 @[norm_cast]
-theorem mul_to_nat m : ∀ n, ((m * n : PosNum) : ℕ) = m * n
+theorem mul_to_nat (m) : ∀ n, ((m * n : PosNum) : ℕ) = m * n
   | 1 => (mul_oneₓ _).symm
   | bit0 p =>
     show (↑(m * p) + ↑(m * p) : ℕ) = ↑m * (p + p) by
@@ -125,7 +125,7 @@ theorem cmp_to_nat_lemma {m n : PosNum} : (m : ℕ) < n → (bit1 m : ℕ) < bit
   show (m : ℕ) < n → (m + m + 1 + 1 : ℕ) ≤ n + n by
     intro h <;> rw [Nat.add_right_comm m m 1, add_assocₓ] <;> exact add_le_add h h
 
-theorem cmp_swap m : ∀ n, (cmp m n).swap = cmp n m := by
+theorem cmp_swap (m) : ∀ n, (cmp m n).swap = cmp n m := by
   induction' m with m IH m IH <;>
     intro n <;>
       cases' n with n n <;>
@@ -249,7 +249,7 @@ theorem bit1_of_bit1 : ∀ n : Num, bit1 n = n.bit1
 theorem of_nat'_zero : Num.ofNat' 0 = 0 := by
   simp [← Num.ofNat']
 
-theorem of_nat'_bit b n : ofNat' (Nat.bit b n) = cond b Num.bit1 Num.bit0 (ofNat' n) :=
+theorem of_nat'_bit (b n) : ofNat' (Nat.bit b n) = cond b Num.bit1 Num.bit0 (ofNat' n) :=
   Nat.binary_rec_eq rfl _ _
 
 @[simp]
@@ -277,7 +277,7 @@ theorem of_nat'_succ : ∀ {n}, ofNat' (n + 1) = ofNat' n + 1 :=
       
 
 @[simp]
-theorem add_of_nat' m n : Num.ofNat' (m + n) = Num.ofNat' m + Num.ofNat' n := by
+theorem add_of_nat' (m n) : Num.ofNat' (m + n) = Num.ofNat' m + Num.ofNat' n := by
   induction n <;> simp [← Nat.add_zero, ← of_nat'_succ, ← add_zeroₓ, ← Nat.add_succ, ← add_one, ← add_succ, *]
 
 @[simp, norm_cast]
@@ -300,7 +300,7 @@ theorem succ'_to_nat : ∀ n, (succ' n : ℕ) = n + 1
   | 0 => (zero_addₓ _).symm
   | Pos p => PosNum.succ_to_nat _
 
-theorem succ_to_nat n : (succ n : ℕ) = n + 1 :=
+theorem succ_to_nat (n) : (succ n : ℕ) = n + 1 :=
   succ'_to_nat n
 
 @[simp, norm_cast]
@@ -376,7 +376,7 @@ theorem of_to_nat' : ∀ n : Num, Num.ofNat' (n : ℕ) = n
 theorem to_nat_inj {m n : Num} : (m : ℕ) = n ↔ m = n :=
   ⟨fun h => Function.LeftInverse.injective of_to_nat' h, congr_arg _⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 /-- This tactic tries to turn an (in)equality about `num`s to one about `nat`s by rewriting.
 ```lean
 example (n : num) (m : num) : n ≤ n + m :=
@@ -389,7 +389,7 @@ end
 unsafe def transfer_rw : tactic Unit :=
   sorry
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 /-- This tactic tries to prove (in)equalities about `num`s by transfering them to the `nat` world and
 then trying to call `simp`.
 ```lean
@@ -488,7 +488,7 @@ instance : LinearOrderedSemiring Num :=
         decide⟩ }
 
 @[simp, norm_cast]
-theorem add_of_nat m n : ((m + n : ℕ) : Num) = m + n :=
+theorem add_of_nat (m n) : ((m + n : ℕ) : Num) = m + n :=
   add_of_nat' _ _
 
 @[simp, norm_cast]
@@ -558,12 +558,12 @@ theorem pred'_to_nat : ∀ n, (pred' n : ℕ) = Nat.pred n
   | bit1 n => rfl
 
 @[simp]
-theorem pred'_succ' n : pred' (succ' n) = n :=
+theorem pred'_succ' (n) : pred' (succ' n) = n :=
   Num.to_nat_inj.1 <| by
     rw [pred'_to_nat, succ'_to_nat, Nat.add_one, Nat.pred_succ]
 
 @[simp]
-theorem succ'_pred' n : succ' (pred' n) = n :=
+theorem succ'_pred' (n) : succ' (pred' n) = n :=
   to_nat_inj.1 <| by
     rw [succ'_to_nat, pred'_to_nat, Nat.add_one, Nat.succ_pred_eq_of_posₓ (to_nat_pos _)]
 
@@ -588,13 +588,13 @@ theorem size_eq_nat_size : ∀ n, (size n : ℕ) = natSize n
   | bit1 n => by
     rw [size, succ_to_nat, nat_size, size_eq_nat_size]
 
-theorem nat_size_to_nat n : natSize n = Nat.size n := by
+theorem nat_size_to_nat (n) : natSize n = Nat.size n := by
   rw [← size_eq_nat_size, size_to_nat]
 
-theorem nat_size_pos n : 0 < natSize n := by
+theorem nat_size_pos (n) : 0 < natSize n := by
   cases n <;> apply Nat.succ_posₓ
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 /-- This tactic tries to turn an (in)equality about `pos_num`s to one about `nat`s by rewriting.
 ```lean
 example (n : pos_num) (m : pos_num) : n ≤ n + m :=
@@ -607,7 +607,7 @@ end
 unsafe def transfer_rw : tactic Unit :=
   sorry
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 /-- This tactic tries to prove (in)equalities about `pos_num`s by transferring them to the `nat` world
 and then trying to call `simp`.
 ```lean
@@ -675,11 +675,11 @@ theorem cast_to_num (n : PosNum) : ↑n = Num.pos n := by
   rw [← cast_to_nat, ← of_to_nat n]
 
 @[simp, norm_cast]
-theorem bit_to_nat b n : (bit b n : ℕ) = Nat.bit b n := by
+theorem bit_to_nat (b n) : (bit b n : ℕ) = Nat.bit b n := by
   cases b <;> rfl
 
 @[simp, norm_cast]
-theorem cast_add [AddMonoidWithOneₓ α] m n : ((m + n : PosNum) : α) = m + n := by
+theorem cast_add [AddMonoidWithOneₓ α] (m n) : ((m + n : PosNum) : α) = m + n := by
   rw [← cast_to_nat, add_to_nat, Nat.cast_addₓ, cast_to_nat, cast_to_nat]
 
 @[simp, norm_cast]
@@ -699,11 +699,11 @@ theorem cast_pos [LinearOrderedSemiring α] (n : PosNum) : 0 < (n : α) :=
   lt_of_lt_of_leₓ zero_lt_one (one_le_cast n)
 
 @[simp, norm_cast]
-theorem cast_mul [Semiringₓ α] m n : ((m * n : PosNum) : α) = m * n := by
+theorem cast_mul [Semiringₓ α] (m n) : ((m * n : PosNum) : α) = m * n := by
   rw [← cast_to_nat, mul_to_nat, Nat.cast_mulₓ, cast_to_nat, cast_to_nat]
 
 @[simp]
-theorem cmp_eq m n : cmp m n = Ordering.eq ↔ m = n := by
+theorem cmp_eq (m n) : cmp m n = Ordering.eq ↔ m = n := by
   have := cmp_to_nat m n
   cases cmp m n <;>
     simp at this⊢ <;>
@@ -730,17 +730,17 @@ variable {α : Type _}
 
 open PosNum
 
-theorem bit_to_nat b n : (bit b n : ℕ) = Nat.bit b n := by
+theorem bit_to_nat (b n) : (bit b n : ℕ) = Nat.bit b n := by
   cases b <;> cases n <;> rfl
 
-theorem cast_succ' [AddMonoidWithOneₓ α] n : (succ' n : α) = n + 1 := by
+theorem cast_succ' [AddMonoidWithOneₓ α] (n) : (succ' n : α) = n + 1 := by
   rw [← PosNum.cast_to_nat, succ'_to_nat, Nat.cast_add_one, cast_to_nat]
 
-theorem cast_succ [AddMonoidWithOneₓ α] n : (succ n : α) = n + 1 :=
+theorem cast_succ [AddMonoidWithOneₓ α] (n) : (succ n : α) = n + 1 :=
   cast_succ' n
 
 @[simp, norm_cast]
-theorem cast_add [Semiringₓ α] m n : ((m + n : Num) : α) = m + n := by
+theorem cast_add [Semiringₓ α] (m n) : ((m + n : Num) : α) = m + n := by
   rw [← cast_to_nat, add_to_nat, Nat.cast_addₓ, cast_to_nat, cast_to_nat]
 
 @[simp, norm_cast]
@@ -766,7 +766,7 @@ theorem size_eq_nat_size : ∀ n, (size n : ℕ) = natSize n
   | 0 => rfl
   | Pos p => p.size_eq_nat_size
 
-theorem nat_size_to_nat n : natSize n = Nat.size n := by
+theorem nat_size_to_nat (n) : natSize n = Nat.size n := by
   rw [← size_eq_nat_size, size_to_nat]
 
 @[simp]
@@ -863,7 +863,7 @@ theorem ppred_to_nat : ∀ n : Num, coe <$> ppred n = Nat.ppred n
     rw [ppred, Option.map_some, Nat.ppred_eq_some.2] <;>
       rw [PosNum.pred'_to_nat, Nat.succ_pred_eq_of_posₓ (PosNum.to_nat_pos _)] <;> rfl
 
-theorem cmp_swap m n : (cmp m n).swap = cmp n m := by
+theorem cmp_swap (m n) : (cmp m n).swap = cmp n m := by
   cases m <;>
     cases n <;>
       try
@@ -872,7 +872,7 @@ theorem cmp_swap m n : (cmp m n).swap = cmp n m := by
             rfl <;>
           apply PosNum.cmp_swap
 
-theorem cmp_eq m n : cmp m n = Ordering.eq ↔ m = n := by
+theorem cmp_eq (m n) : cmp m n = Ordering.eq ↔ m = n := by
   have := cmp_to_nat m n
   cases cmp m n <;>
     simp at this⊢ <;>
@@ -946,7 +946,7 @@ theorem bitwise_to_nat {f : Num → Num → Num} {g : Bool → Bool → Bool} (p
     apply Nat.bitwise_bit_aux gff
     
   · rw [fnn]
-    have : ∀ b n : PosNum, (cond b (↑n) 0 : ℕ) = ↑(cond b (Pos n) 0 : Num) := by
+    have : ∀ (b) (n : PosNum), (cond b (↑n) 0 : ℕ) = ↑(cond b (Pos n) 0 : Num) := by
       intros <;> cases b <;> rfl
     induction' m with m IH m IH generalizing n <;> cases' n with n n
     any_goals {
@@ -1019,7 +1019,7 @@ theorem lxor_to_nat : ∀ m n, (lxor m n : ℕ) = Nat.lxor m n := by
           rfl
 
 @[simp, norm_cast]
-theorem shiftl_to_nat m n : (shiftl m n : ℕ) = Nat.shiftl m n := by
+theorem shiftl_to_nat (m n) : (shiftl m n : ℕ) = Nat.shiftl m n := by
   cases m <;> dunfold shiftl
   · symm
     apply Nat.zero_shiftl
@@ -1032,7 +1032,7 @@ theorem shiftl_to_nat m n : (shiftl m n : ℕ) = Nat.shiftl m n := by
   rw [← IH]
 
 @[simp, norm_cast]
-theorem shiftr_to_nat m n : (shiftr m n : ℕ) = Nat.shiftr m n := by
+theorem shiftr_to_nat (m n) : (shiftr m n : ℕ) = Nat.shiftr m n := by
   cases' m with m <;> dunfold shiftr
   · symm
     apply Nat.zero_shiftr
@@ -1070,7 +1070,7 @@ theorem shiftr_to_nat m n : (shiftr m n : ℕ) = Nat.shiftr m n := by
     
 
 @[simp]
-theorem test_bit_to_nat m n : testBit m n = Nat.testBit m n := by
+theorem test_bit_to_nat (m n) : testBit m n = Nat.testBit m n := by
   cases' m with m <;> unfold test_bit Nat.testBit
   · change (zero : Nat) with 0
     rw [Nat.zero_shiftr]
@@ -1379,7 +1379,7 @@ theorem cast_of_znum [AddGroupWithOneₓ α] (n : Znum) : (ofZnum n : α) = Int.
   rw [← cast_to_nat, of_znum_to_nat]
 
 @[simp, norm_cast]
-theorem sub_to_nat m n : ((m - n : Num) : ℕ) = m - n :=
+theorem sub_to_nat (m n) : ((m - n : Num) : ℕ) = m - n :=
   show (ofZnum _ : ℕ) = _ by
     rw [of_znum_to_nat, cast_sub', ← to_nat_to_int, ← to_nat_to_int, Int.to_nat_sub]
 
@@ -1409,7 +1409,7 @@ theorem cast_add [AddGroupWithOneₓ α] : ∀ m n, ((m + n : Znum) : α) = m + 
         simp [← add_commₓ]
 
 @[simp]
-theorem cast_succ [AddGroupWithOneₓ α] n : ((succ n : Znum) : α) = n + 1 := by
+theorem cast_succ [AddGroupWithOneₓ α] (n) : ((succ n : Znum) : α) = n + 1 := by
   rw [← add_one, cast_add, cast_one]
 
 @[simp, norm_cast]
@@ -1429,7 +1429,7 @@ theorem mul_to_int : ∀ m n, ((m * n : Znum) : ℤ) = m * n
     show ↑(a * b) = -↑a * -↑b by
       rw [PosNum.cast_mul, neg_mul_neg]
 
-theorem cast_mul [Ringₓ α] m n : ((m * n : Znum) : α) = m * n := by
+theorem cast_mul [Ringₓ α] (m n) : ((m * n : Znum) : α) = m * n := by
   rw [← cast_to_int, mul_to_int, Int.cast_mul, cast_to_int, cast_to_int]
 
 theorem of_int'_neg : ∀ n : ℤ, ofInt' (-n) = -ofInt' n
@@ -1502,7 +1502,7 @@ theorem cast_le [LinearOrderedRing α] {m n : Znum} : (m : α) ≤ n ↔ m ≤ n
 theorem cast_inj [LinearOrderedRing α] {m n : Znum} : (m : α) = n ↔ m = n := by
   rw [← cast_to_int m, ← cast_to_int n, Int.cast_inj, to_int_inj]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 /-- This tactic tries to turn an (in)equality about `znum`s to one about `int`s by rewriting.
 ```lean
 example (n : znum) (m : znum) : n ≤ n + m * m :=
@@ -1515,7 +1515,7 @@ end
 unsafe def transfer_rw : tactic Unit :=
   sorry
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 /-- This tactic tries to prove (in)equalities about `znum`s by transfering them to the `int` world and
 then trying to call `simp`.
 ```lean
@@ -1625,7 +1625,7 @@ instance : LinearOrderedCommRing Znum :=
       decide }
 
 @[simp, norm_cast]
-theorem cast_sub [Ringₓ α] m n : ((m - n : Znum) : α) = m - n := by
+theorem cast_sub [Ringₓ α] (m n) : ((m - n : Znum) : α) = m - n := by
   simp [← sub_eq_neg_add]
 
 @[simp, norm_cast]
@@ -1740,11 +1740,11 @@ theorem divmod_to_nat (d n : PosNum) : (n / d : ℕ) = (divmod d n).1 ∧ (n % d
     
 
 @[simp]
-theorem div'_to_nat n d : (div' n d : ℕ) = n / d :=
+theorem div'_to_nat (n d) : (div' n d : ℕ) = n / d :=
   (divmod_to_nat _ _).1.symm
 
 @[simp]
-theorem mod'_to_nat n d : (mod' n d : ℕ) = n % d :=
+theorem mod'_to_nat (n d) : (mod' n d : ℕ) = n % d :=
   (divmod_to_nat _ _).2.symm
 
 end PosNum
@@ -1880,7 +1880,7 @@ theorem mod_to_int : ∀ n d, ((n % d : Znum) : ℤ) = n % d
         rfl
 
 @[simp]
-theorem gcd_to_nat a b : (gcd a b : ℕ) = Int.gcdₓ a b :=
+theorem gcd_to_nat (a b) : (gcd a b : ℕ) = Int.gcdₓ a b :=
   (Num.gcd_to_nat _ _).trans <| by
     simpa
 

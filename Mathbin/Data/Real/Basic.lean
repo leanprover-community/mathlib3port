@@ -87,15 +87,15 @@ theorem of_cauchy_one : (⟨1⟩ : ℝ) = 1 :=
   show _ = one by
     rw [one]
 
-theorem of_cauchy_add a b : (⟨a + b⟩ : ℝ) = ⟨a⟩ + ⟨b⟩ :=
+theorem of_cauchy_add (a b) : (⟨a + b⟩ : ℝ) = ⟨a⟩ + ⟨b⟩ :=
   show _ = add _ _ by
     rw [add]
 
-theorem of_cauchy_neg a : (⟨-a⟩ : ℝ) = -⟨a⟩ :=
+theorem of_cauchy_neg (a) : (⟨-a⟩ : ℝ) = -⟨a⟩ :=
   show _ = neg _ by
     rw [neg]
 
-theorem of_cauchy_mul a b : (⟨a * b⟩ : ℝ) = ⟨a⟩ * ⟨b⟩ :=
+theorem of_cauchy_mul (a b) : (⟨a * b⟩ : ℝ) = ⟨a⟩ * ⟨b⟩ :=
   show _ = mul _ _ by
     rw [mul]
 
@@ -529,7 +529,7 @@ theorem exists_floor (x : ℝ) : ∃ ub : ℤ, (ub : ℝ) ≤ x ∧ ∀ z : ℤ,
     (let ⟨n, hn⟩ := exists_int_lt x
     ⟨n, le_of_ltₓ hn⟩)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε)))
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε)))
 theorem exists_is_lub (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃ x, IsLub S x := by
   rcases hne, hbdd with ⟨⟨L, hL⟩, ⟨U, hU⟩⟩
   have : ∀ d : ℕ, BddAbove { m : ℤ | ∃ y ∈ S, (m : ℝ) ≤ y * d } := by
@@ -552,7 +552,7 @@ theorem exists_is_lub (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃
     exact ne_of_gtₓ (Nat.cast_pos.2 n0)
   have hg : IsCauSeq abs (fun n => f n / n : ℕ → ℚ) := by
     intro ε ε0
-    suffices ∀ j k _ : j ≥ ⌈ε⁻¹⌉₊ _ : k ≥ ⌈ε⁻¹⌉₊, (f j / j - f k / k : ℚ) < ε by
+    suffices ∀ (j k) (_ : j ≥ ⌈ε⁻¹⌉₊) (_ : k ≥ ⌈ε⁻¹⌉₊), (f j / j - f k / k : ℚ) < ε by
       refine' ⟨_, fun j ij => abs_lt.2 ⟨_, this _ ij _ le_rfl⟩⟩
       rw [neg_lt, neg_sub]
       exact this _ le_rfl _ ij

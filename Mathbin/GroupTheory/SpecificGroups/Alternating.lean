@@ -129,7 +129,7 @@ open alternatingGroup
 theorem closure_three_cycles_eq_alternating : closure { σ : Perm α | IsThreeCycle σ } = alternatingGroup α :=
   (closure_eq_of_le _ fun σ hσ => mem_alternating_group.2 hσ.sign) fun σ hσ => by
     suffices hind :
-      ∀ n : ℕ l : List (perm α) hl : ∀ g, g ∈ l → is_swap g hn : l.length = 2 * n,
+      ∀ (n : ℕ) (l : List (perm α)) (hl : ∀ g, g ∈ l → is_swap g) (hn : l.length = 2 * n),
         l.Prod ∈ closure { σ : perm α | is_three_cycle σ }
     · obtain ⟨l, rfl, hl⟩ := trunc_swap_factors σ
       obtain ⟨n, hn⟩ := (prod_list_swap_mem_alternating_group_iff_even_length hl).1 hσ

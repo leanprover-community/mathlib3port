@@ -21,6 +21,8 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
+open Opposite
+
 universe v u
 
 namespace CategoryTheory
@@ -30,7 +32,7 @@ variable {C : Type u} [Category.{v} C]
 /-- An object `J` is injective iff every morphism into `J` can be obtained by extending a monomorphism.
 -/
 class Injective (J : C) : Prop where
-  Factors : ∀ {X Y : C} g : X ⟶ J f : X ⟶ Y [Mono f], ∃ h : Y ⟶ J, f ≫ h = g
+  Factors : ∀ {X Y : C} (g : X ⟶ J) (f : X ⟶ Y) [Mono f], ∃ h : Y ⟶ J, f ≫ h = g
 
 section
 
@@ -88,7 +90,6 @@ theorem of_iso {P Q : C} (i : P ≅ Q) (hP : Injective P) : Injective Q :=
 theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
   ⟨of_iso i, of_iso i.symm⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The axiom of choice says that every nonempty type is an injective object in `Type`. -/
 instance (X : Type u) [Nonempty X] :
     Injective X where Factors := fun Y Z g f mono =>
@@ -149,17 +150,49 @@ instance {β : Type v} (c : β → C) [HasZeroMorphisms C] [HasBiproduct c] [∀
     simp only [← category.assoc, ← biproduct.lift_π, ← comp_factor_thru]
 
 instance {P : Cᵒᵖ} [Projective P] :
-    Injective P.unop where Factors := fun X Y g f mono => by
-    skip
-    refine' ⟨(@projective.factor_thru Cᵒᵖ _ P (Opposite.op X) (Opposite.op Y) _ g.op f.op _).unop, _⟩
-    convert
-      congr_arg Quiver.Hom.unop (@projective.factor_thru_comp Cᵒᵖ _ P (Opposite.op X) (Opposite.op Y) _ g.op f.op _)
+    Injective
+      (unop
+        P) where Factors := fun X Y g f mono =>
+    ⟨(@projective.factor_thru Cᵒᵖ _ P _ _ _ g.op f.op _).unop,
+      Quiver.Hom.op_inj
+        (by
+          simp )⟩
+
+instance {J : Cᵒᵖ} [Injective J] :
+    Projective
+      (unop J) where Factors := fun E X f e he =>
+    ⟨(@factor_thru Cᵒᵖ _ J _ _ _ f.op e.op _).unop,
+      Quiver.Hom.op_inj
+        (by
+          simp )⟩
 
 instance {J : C} [Injective J] :
-    Projective (Opposite.op J) where Factors := fun E X f e epi => by
-    skip
-    refine' ⟨(@factor_thru C _ J _ _ _ f.unop e.unop _).op, _⟩
-    convert congr_arg Quiver.Hom.op (@comp_factor_thru C _ J _ _ _ f.unop e.unop _)
+    Projective
+      (op J) where Factors := fun E X f e epi =>
+    ⟨(@factor_thru C _ J _ _ _ f.unop e.unop _).op,
+      Quiver.Hom.unop_inj
+        (by
+          simp )⟩
+
+instance {P : C} [Projective P] :
+    Injective
+      (op
+        P) where Factors := fun X Y g f mono =>
+    ⟨(@projective.factor_thru C _ P _ _ _ g.unop f.unop _).op,
+      Quiver.Hom.unop_inj
+        (by
+          simp )⟩
+
+theorem injective_iff_projective_op {J : C} : Injective J ↔ Projective (op J) :=
+  ⟨fun h => inferInstance, fun h => show Injective (unop (op J)) from inferInstance⟩
+
+theorem projective_iff_injective_op {P : C} : Projective P ↔ Injective (op P) :=
+  ⟨fun h => inferInstance, fun h => show Projective (unop (op P)) from inferInstance⟩
+
+theorem injective_iff_preserves_epimorphisms_yoneda_obj (J : C) : Injective J ↔ (yoneda.obj J).PreservesEpimorphisms :=
+  by
+  rw [injective_iff_projective_op, projective.projective_iff_preserves_epimorphisms_coyoneda_obj]
+  exact functor.preserves_epimorphisms.iso_iff (coyoneda.obj_op_op _)
 
 section EnoughInjectives
 
@@ -205,6 +238,18 @@ abbrev d : Y ⟶ syzygies f :=
 end
 
 end EnoughInjectives
+
+instance [EnoughInjectives C] : EnoughProjectives Cᵒᵖ :=
+  ⟨fun X => ⟨⟨_, inferInstance, (Injective.ι (unop X)).op, inferInstance⟩⟩⟩
+
+instance [EnoughProjectives C] : EnoughInjectives Cᵒᵖ :=
+  ⟨fun X => ⟨⟨_, inferInstance, (Projective.π (unop X)).op, inferInstance⟩⟩⟩
+
+theorem enough_projectives_of_enough_injectives_op [EnoughInjectives Cᵒᵖ] : EnoughProjectives C :=
+  ⟨fun X => ⟨⟨_, inferInstance, (Injective.ι (op X)).unop, inferInstance⟩⟩⟩
+
+theorem enough_injectives_of_enough_projectives_op [EnoughProjectives Cᵒᵖ] : EnoughInjectives C :=
+  ⟨fun X => ⟨⟨_, inferInstance, (Projective.π (op X)).unop, inferInstance⟩⟩⟩
 
 open Injective
 

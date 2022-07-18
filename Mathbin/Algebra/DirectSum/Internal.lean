@@ -132,7 +132,7 @@ theorem DirectSum.coe_ring_hom_of [AddMonoidₓ ι] [Semiringₓ R] [SetLike σ 
   DirectSum.to_semiring_of _ _ _ _ _
 
 theorem DirectSum.coe_mul_apply [AddMonoidₓ ι] [Semiringₓ R] [SetLike σ R] [AddSubmonoidClass σ R] (A : ι → σ)
-    [SetLike.GradedMonoid A] [∀ i : ι x : A i, Decidable (x ≠ 0)] (r r' : ⨁ i, A i) (i : ι) :
+    [SetLike.GradedMonoid A] [∀ (i : ι) (x : A i), Decidable (x ≠ 0)] (r r' : ⨁ i, A i) (i : ι) :
     ((r * r') i : R) =
       ∑ ij in Finset.filter (fun ij : ι × ι => ij.1 + ij.2 = i) (r.support.product r'.support), r ij.1 * r' ij.2 :=
   by

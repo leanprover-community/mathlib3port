@@ -96,9 +96,7 @@ theorem fg_adjoin_finset (s : Finset A) : (Algebra.adjoin R (↑s : Set A)).Fg :
   ⟨s, rfl⟩
 
 theorem fg_def {S : Subalgebra R A} : S.Fg ↔ ∃ t : Set A, Set.Finite t ∧ Algebra.adjoin R t = S :=
-  ⟨fun ⟨t, ht⟩ => ⟨↑t, Set.finite_mem_finset t, ht⟩, fun ⟨t, ht1, ht2⟩ =>
-    ⟨ht1.toFinset, by
-      rwa [Set.Finite.coe_to_finset]⟩⟩
+  Iff.symm Set.exists_finite_iff_finset
 
 theorem fg_bot : (⊥ : Subalgebra R A).Fg :=
   ⟨∅, Algebra.adjoin_empty R A⟩
@@ -160,9 +158,8 @@ theorem fg_top (S : Subalgebra R A) : (⊤ : Subalgebra R S).Fg ↔ S.Fg :=
       rw [Algebra.map_top, range_val]
       exact h⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem induction_on_adjoin [IsNoetherian R A] (P : Subalgebra R A → Prop) (base : P ⊥)
-    (ih : ∀ S : Subalgebra R A x : A, P S → P (Algebra.adjoin R (insert x S))) (S : Subalgebra R A) : P S := by
+    (ih : ∀ (S : Subalgebra R A) (x : A), P S → P (Algebra.adjoin R (insert x S))) (S : Subalgebra R A) : P S := by
   classical
   obtain ⟨t, rfl⟩ := S.fg_of_noetherian
   refine' Finset.induction_on t _ _

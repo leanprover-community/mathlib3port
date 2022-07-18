@@ -225,6 +225,17 @@ theorem Submodule.topological_closure_mono {s : Submodule R M} {t : Submodule R 
     s.topologicalClosure ≤ t.topologicalClosure :=
   s.topological_closure_minimal (h.trans t.submodule_topological_closure) t.is_closed_topological_closure
 
+/-- The topological closure of a closed submodule `s` is equal to `s`. -/
+theorem IsClosed.submodule_topological_closure_eq {s : Submodule R M} (hs : IsClosed (s : Set M)) :
+    s.topologicalClosure = s :=
+  le_antisymmₓ (s.topological_closure_minimal rfl.le hs) s.submodule_topological_closure
+
+/-- A subspace is dense iff its topological closure is the entire space. -/
+theorem Submodule.dense_iff_topological_closure_eq_top {s : Submodule R M} :
+    Dense (s : Set M) ↔ s.topologicalClosure = ⊤ := by
+  rw [← SetLike.coe_set_eq, dense_iff_closure_eq]
+  simp
+
 end Closure
 
 /-- Continuous linear maps between modules. We only put the type classes that are necessary for the
@@ -374,11 +385,11 @@ instance toFun : CoeFun (M₁ →SL[σ₁₂] M₂) fun _ => M₁ → M₂ :=
   ⟨fun f => f.toFun⟩
 
 @[simp]
-theorem coe_mk (f : M₁ →ₛₗ[σ₁₂] M₂) h : (mk f h : M₁ →ₛₗ[σ₁₂] M₂) = f :=
+theorem coe_mk (f : M₁ →ₛₗ[σ₁₂] M₂) (h) : (mk f h : M₁ →ₛₗ[σ₁₂] M₂) = f :=
   rfl
 
 @[simp]
-theorem coe_mk' (f : M₁ →ₛₗ[σ₁₂] M₂) h : (mk f h : M₁ → M₂) = f :=
+theorem coe_mk' (f : M₁ →ₛₗ[σ₁₂] M₂) (h) : (mk f h : M₁ → M₂) = f :=
   rfl
 
 @[continuity]
@@ -881,7 +892,7 @@ theorem coe_cod_restrict (f : M₁ →SL[σ₁₂] M₂) (p : Submodule R₂ M�
   rfl
 
 @[simp]
-theorem coe_cod_restrict_apply (f : M₁ →SL[σ₁₂] M₂) (p : Submodule R₂ M₂) (h : ∀ x, f x ∈ p) x :
+theorem coe_cod_restrict_apply (f : M₁ →SL[σ₁₂] M₂) (p : Submodule R₂ M₂) (h : ∀ x, f x ∈ p) (x) :
     (f.codRestrict p h x : M₂) = f x :=
   rfl
 
@@ -973,7 +984,7 @@ theorem coe_coprod [Module R₁ M₂] [Module R₁ M₃] [HasContinuousAdd M₃]
   rfl
 
 @[simp]
-theorem coprod_apply [Module R₁ M₂] [Module R₁ M₃] [HasContinuousAdd M₃] (f₁ : M₁ →L[R₁] M₃) (f₂ : M₂ →L[R₁] M₃) x :
+theorem coprod_apply [Module R₁ M₂] [Module R₁ M₃] [HasContinuousAdd M₃] (f₁ : M₁ →L[R₁] M₃) (f₂ : M₂ →L[R₁] M₃) (x) :
     f₁.coprod f₂ x = f₁ x.1 + f₂ x.2 :=
   rfl
 
@@ -997,26 +1008,6 @@ theorem smul_right_apply {c : M₁ →L[R] S} {f : M₂} {x : M₁} : (smulRight
   rfl
 
 end
-
-section Pointwise
-
-open Pointwise
-
-@[simp]
-theorem image_smul_setₛₗ (f : M₁ →SL[σ₁₂] M₂) (c : R₁) (s : Set M₁) : f '' (c • s) = σ₁₂ c • f '' s :=
-  f.toLinearMap.image_smul_setₛₗ c s
-
-theorem image_smul_set (fₗ : M₁ →L[R₁] M'₁) (c : R₁) (s : Set M₁) : fₗ '' (c • s) = c • fₗ '' s :=
-  fₗ.toLinearMap.image_smul_set c s
-
-theorem preimage_smul_setₛₗ (f : M₁ →SL[σ₁₂] M₂) {c : R₁} (hc : IsUnit c) (s : Set M₂) :
-    f ⁻¹' (σ₁₂ c • s) = c • f ⁻¹' s :=
-  f.toLinearMap.preimage_smul_setₛₗ hc s
-
-theorem preimage_smul_set (fₗ : M₁ →L[R₁] M'₁) {c : R₁} (hc : IsUnit c) (s : Set M'₁) : fₗ ⁻¹' (c • s) = c • fₗ ⁻¹' s :=
-  fₗ.toLinearMap.preimage_smul_set hc s
-
-end Pointwise
 
 variable [Module R₁ M₂] [TopologicalSpace R₁] [HasContinuousSmul R₁ M₂]
 
@@ -1690,7 +1681,7 @@ def prod [Module R₁ M₂] [Module R₁ M₃] [Module R₁ M₄] (e : M₁ ≃L
     continuous_inv_fun := e.continuous_inv_fun.prod_map e'.continuous_inv_fun }
 
 @[simp, norm_cast]
-theorem prod_apply [Module R₁ M₂] [Module R₁ M₃] [Module R₁ M₄] (e : M₁ ≃L[R₁] M₂) (e' : M₃ ≃L[R₁] M₄) x :
+theorem prod_apply [Module R₁ M₂] [Module R₁ M₃] [Module R₁ M₄] (e : M₁ ≃L[R₁] M₂) (e' : M₃ ≃L[R₁] M₄) (x) :
     e.Prod e' x = (e x.1, e' x.2) :=
   rfl
 
@@ -1834,41 +1825,15 @@ def equivOfInverse (f₁ : M₁ →SL[σ₁₂] M₂) (f₂ : M₂ →SL[σ₂�
 include σ₂₁
 
 @[simp]
-theorem equiv_of_inverse_apply (f₁ : M₁ →SL[σ₁₂] M₂) f₂ h₁ h₂ x : equivOfInverse f₁ f₂ h₁ h₂ x = f₁ x :=
+theorem equiv_of_inverse_apply (f₁ : M₁ →SL[σ₁₂] M₂) (f₂ h₁ h₂ x) : equivOfInverse f₁ f₂ h₁ h₂ x = f₁ x :=
   rfl
 
 @[simp]
-theorem symm_equiv_of_inverse (f₁ : M₁ →SL[σ₁₂] M₂) f₂ h₁ h₂ :
+theorem symm_equiv_of_inverse (f₁ : M₁ →SL[σ₁₂] M₂) (f₂ h₁ h₂) :
     (equivOfInverse f₁ f₂ h₁ h₂).symm = equivOfInverse f₂ f₁ h₂ h₁ :=
   rfl
 
 omit σ₂₁
-
-section Pointwise
-
-open Pointwise
-
-include σ₂₁
-
-@[simp]
-theorem image_smul_setₛₗ (e : M₁ ≃SL[σ₁₂] M₂) (c : R₁) (s : Set M₁) : e '' (c • s) = σ₁₂ c • e '' s :=
-  e.toLinearEquiv.image_smul_setₛₗ c s
-
-@[simp]
-theorem preimage_smul_setₛₗ (e : M₁ ≃SL[σ₁₂] M₂) (c : R₂) (s : Set M₂) : e ⁻¹' (c • s) = σ₂₁ c • e ⁻¹' s :=
-  e.toLinearEquiv.preimage_smul_setₛₗ c s
-
-omit σ₂₁
-
-@[simp]
-theorem image_smul_set (e : M₁ ≃L[R₁] M'₁) (c : R₁) (s : Set M₁) : e '' (c • s) = c • e '' s :=
-  e.toLinearEquiv.image_smul_set c s
-
-@[simp]
-theorem preimage_smul_set (e : M₁ ≃L[R₁] M'₁) (c : R₁) (s : Set M'₁) : e ⁻¹' (c • s) = c • e ⁻¹' s :=
-  e.toLinearEquiv.preimage_smul_set c s
-
-end Pointwise
 
 variable (M₁)
 
@@ -1932,12 +1897,12 @@ def skewProd (e : M ≃L[R] M₂) (e' : M₃ ≃L[R] M₄) (f : M →L[R] M₄) 
           continuous_snd.sub <| f.Continuous.comp <| e.continuous_inv_fun.comp continuous_fst) }
 
 @[simp]
-theorem skew_prod_apply (e : M ≃L[R] M₂) (e' : M₃ ≃L[R] M₄) (f : M →L[R] M₄) x :
+theorem skew_prod_apply (e : M ≃L[R] M₂) (e' : M₃ ≃L[R] M₄) (f : M →L[R] M₄) (x) :
     e.skewProd e' f x = (e x.1, e' x.2 + f x.1) :=
   rfl
 
 @[simp]
-theorem skew_prod_symm_apply (e : M ≃L[R] M₂) (e' : M₃ ≃L[R] M₄) (f : M →L[R] M₄) x :
+theorem skew_prod_symm_apply (e : M ≃L[R] M₂) (e' : M₃ ≃L[R] M₄) (f : M →L[R] M₄) (x) :
     (e.skewProd e' f).symm x = (e.symm x.1, e'.symm (x.2 - f (e.symm x.1))) :=
   rfl
 
@@ -2278,9 +2243,9 @@ instance has_continuous_smul_quotient [TopologicalSpace R] [TopologicalAddGroup 
   rw [quot.continuous_iff]
   exact continuous_quot_mk.comp continuous_smul
 
-instance regular_quotient_of_is_closed [TopologicalAddGroup M] [IsClosed (S : Set M)] : RegularSpace (M ⧸ S) := by
+instance t3_quotient_of_is_closed [TopologicalAddGroup M] [IsClosed (S : Set M)] : T3Space (M ⧸ S) := by
   let this : IsClosed (S.to_add_subgroup : Set M) := ‹_›
-  exact S.to_add_subgroup.regular_quotient_of_is_closed
+  exact S.to_add_subgroup.t3_quotient_of_is_closed
 
 end Submodule
 

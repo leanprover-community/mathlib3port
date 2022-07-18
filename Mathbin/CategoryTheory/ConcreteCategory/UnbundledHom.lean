@@ -19,15 +19,15 @@ universe v u
 
 namespace CategoryTheory
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`hom_id] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`hom_comp] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`hom_id] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`hom_comp] []
 /-- A class for unbundled homs used to define a category. `hom` must
 take two types `α`, `β` and instances of the corresponding structures,
 and return a predicate on `α → β`. -/
 class UnbundledHom {c : Type u → Type u} (hom : ∀ {α β}, c α → c β → (α → β) → Prop) where
-  hom_id : ∀ {α} ia : c α, hom ia ia id
+  hom_id : ∀ {α} (ia : c α), hom ia ia id
   hom_comp :
-    ∀ {α β γ} {Iα : c α} {Iβ : c β} {Iγ : c γ} {g : β → γ} {f : α → β} hg : hom Iβ Iγ g hf : hom Iα Iβ f,
+    ∀ {α β γ} {Iα : c α} {Iβ : c β} {Iγ : c γ} {g : β → γ} {f : α → β} (hg : hom Iβ Iγ g) (hf : hom Iα Iβ f),
       hom Iα Iγ (g ∘ f)
 
 namespace UnbundledHom
@@ -36,7 +36,7 @@ variable (c : Type u → Type u) (hom : ∀ ⦃α β⦄, c α → c β → (α �
 
 include 𝒞
 
-instance bundledHom : BundledHom fun α β Iα : c α Iβ : c β => Subtype (hom Iα Iβ) where
+instance bundledHom : BundledHom fun α β (Iα : c α) (Iβ : c β) => Subtype (hom Iα Iβ) where
   toFun := fun _ _ _ _ => Subtype.val
   id := fun α Iα => ⟨id, hom_id hom Iα⟩
   id_to_fun := by

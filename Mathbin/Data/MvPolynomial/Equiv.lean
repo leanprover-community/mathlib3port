@@ -468,7 +468,6 @@ theorem degree_fin_succ_equiv {f : MvPolynomial (Finₓ (n + 1)) R} (h : f ≠ 0
   have h' : ((finSuccEquiv R n f).support.sup fun x => x) = degree_of 0 f := by
     rw [degree_of_eq_sup, fin_succ_equiv_support f, Finset.sup_image]
   rw [Polynomial.degree, ← h', Finset.coe_sup_of_nonempty (support_fin_succ_equiv_nonempty h)]
-  congr
 
 theorem nat_degree_fin_succ_equiv (f : MvPolynomial (Finₓ (n + 1)) R) : (finSuccEquiv R n f).natDegree = degreeOf 0 f :=
   by

@@ -3,8 +3,7 @@ Copyright (c) 2021 Eric Rodriguez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 -/
-import Mathbin.Algebra.Algebra.Basic
-import Mathbin.Algebra.CharP.Basic
+import Mathbin.Data.Zmod.Basic
 
 /-!
 # `ne_zero` typeclass
@@ -25,7 +24,7 @@ class NeZero {R} [Zero R] (n : R) : Prop where
 theorem NeZero.ne {R} [Zero R] (n : R) [h : NeZero n] : n ≠ 0 :=
   h.out
 
-theorem NeZero.ne' (n : ℕ) R [AddMonoidWithOneₓ R] [h : NeZero (n : R)] : (n : R) ≠ 0 :=
+theorem NeZero.ne' (n : ℕ) (R) [AddMonoidWithOneₓ R] [h : NeZero (n : R)] : (n : R) ≠ 0 :=
   h.out
 
 theorem ne_zero_iff {R : Type _} [Zero R] {n : R} : NeZero n ↔ n ≠ 0 :=
@@ -114,4 +113,11 @@ end NeZero
 
 theorem eq_zero_or_ne_zero {α} [Zero α] (a : α) : a = 0 ∨ NeZero a :=
   (eq_or_ne a 0).imp_right NeZero.mk
+
+namespace Zmod
+
+instance fintype' (n : ℕ) [NeZero n] : Fintype (Zmod n) :=
+  @Zmod.fintype n ⟨NeZero.pos n⟩
+
+end Zmod
 

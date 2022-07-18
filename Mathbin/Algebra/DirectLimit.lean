@@ -42,12 +42,12 @@ variable [dec_ι : DecidableEq ι] [Preorderₓ ι]
 
 variable (G : ι → Type w)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`map_self] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`map_map] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`map_self] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`map_map] []
 /-- A directed system is a functor from a category (directed poset) to another category. -/
 class DirectedSystem (f : ∀ i j, i ≤ j → G i → G j) : Prop where
   map_self : ∀ i x h, f i i h x = x
-  map_map : ∀ {i j k} hij hjk x, f j k hjk (f i j hij x) = f i k (le_transₓ hij hjk) x
+  map_map : ∀ {i j k} (hij hjk x), f j k hjk (f i j hij x) = f i k (le_transₓ hij hjk) x
 
 namespace Module
 
@@ -57,12 +57,12 @@ variable {G} (f : ∀ i j, i ≤ j → G i →ₗ[R] G j)
 
 /-- A copy of `directed_system.map_self` specialized to linear maps, as otherwise the
 `λ i j h, f i j h` can confuse the simplifier. -/
-theorem DirectedSystem.map_self [DirectedSystem G fun i j h => f i j h] i x h : f i i h x = x :=
+theorem DirectedSystem.map_self [DirectedSystem G fun i j h => f i j h] (i x h) : f i i h x = x :=
   DirectedSystem.map_self (fun i j h => f i j h) i x h
 
 /-- A copy of `directed_system.map_map` specialized to linear maps, as otherwise the
 `λ i j h, f i j h` can confuse the simplifier. -/
-theorem DirectedSystem.map_map [DirectedSystem G fun i j h => f i j h] {i j k} hij hjk x :
+theorem DirectedSystem.map_map [DirectedSystem G fun i j h => f i j h] {i j k} (hij hjk x) :
     f j k hjk (f i j hij x) = f i k (le_transₓ hij hjk) x :=
   DirectedSystem.map_map (fun i j h => f i j h) hij hjk x
 
@@ -89,7 +89,7 @@ instance : Inhabited (DirectLimit G f) :=
 variable (R ι)
 
 /-- The canonical map from a component to the direct limit. -/
-def of i : G i →ₗ[R] DirectLimit G f :=
+def of (i) : G i →ₗ[R] DirectLimit G f :=
   (mkq _).comp <| DirectSum.lof R ι G i
 
 variable {R ι G f}
@@ -138,10 +138,10 @@ variable {R ι G f}
 
 omit Hg
 
-theorem lift_of {i} x : lift R ι G f g Hg (of R ι G f i x) = g i x :=
+theorem lift_of {i} (x) : lift R ι G f g Hg (of R ι G f i x) = g i x :=
   DirectSum.to_module_lof R _ _
 
-theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G f →ₗ[R] P) x :
+theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G f →ₗ[R] P) (x) :
     F x =
       lift R ι G f (fun i => F.comp <| of R ι G f i)
         (fun i j hij x => by
@@ -161,7 +161,7 @@ omit dec_ι
 /-- `totalize G f i j` is a linear map from `G i` to `G j`, for *every* `i` and `j`.
 If `i ≤ j`, then it is the map `f i j` that comes with the directed system `G`,
 and otherwise it is the zero map. -/
-noncomputable def totalize i j : G i →ₗ[R] G j :=
+noncomputable def totalize (i j) : G i →ₗ[R] G j :=
   if h : i ≤ j then f i j h else 0
 
 variable {G f}
@@ -282,13 +282,13 @@ instance : Inhabited (DirectLimit G f) :=
   ⟨0⟩
 
 /-- The canonical map from a component to the direct limit. -/
-def of i : G i →ₗ[ℤ] DirectLimit G f :=
+def of (i) : G i →ₗ[ℤ] DirectLimit G f :=
   Module.DirectLimit.of ℤ ι G (fun i j hij => (f i j hij).toIntLinearMap) i
 
 variable {G f}
 
 @[simp]
-theorem of_f {i j} hij x : of G f j (f i j hij x) = of G f i x :=
+theorem of_f {i j} (hij) (x) : of G f j (f i j hij x) = of G f i x :=
   Module.DirectLimit.of_f
 
 @[elab_as_eliminator]
@@ -298,7 +298,7 @@ protected theorem induction_on [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : Di
 
 /-- A component that corresponds to zero in the direct limit is already zero in some
 bigger module in the directed system. -/
-theorem of.zero_exact [IsDirected ι (· ≤ ·)] [DirectedSystem G fun i j h => f i j h] i x (h : of G f i x = 0) :
+theorem of.zero_exact [IsDirected ι (· ≤ ·)] [DirectedSystem G fun i j h => f i j h] (i x) (h : of G f i x = 0) :
     ∃ j hij, f i j hij x = 0 :=
   Module.DirectLimit.of.zero_exact h
 
@@ -319,10 +319,10 @@ def lift : DirectLimit G f →ₗ[ℤ] P :=
 variable {G f}
 
 @[simp]
-theorem lift_of i x : lift G f P g Hg (of G f i x) = g i x :=
+theorem lift_of (i x) : lift G f P g Hg (of G f i x) = g i x :=
   Module.DirectLimit.lift_of _ _ _
 
-theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G f →+ P) x :
+theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G f →+ P) (x) :
     F x =
       lift G f P (fun i => F.comp (of G f i).toAddMonoidHom)
         (fun i j hij x => by
@@ -367,7 +367,7 @@ instance : Inhabited (DirectLimit G f) :=
   ⟨0⟩
 
 /-- The canonical map from a component to the direct limit. -/
-def of i : G i →+* DirectLimit G f :=
+def of (i) : G i →+* DirectLimit G f :=
   RingHom.mk'
     { toFun := fun x => Ideal.Quotient.mk _ (of (⟨i, x⟩ : Σi, G i)),
       map_one' := Ideal.Quotient.eq.2 <| subset_span <| Or.inr <| Or.inl ⟨i, rfl⟩,
@@ -377,7 +377,7 @@ def of i : G i →+* DirectLimit G f :=
 variable {G f}
 
 @[simp]
-theorem of_f {i j} hij x : of G f j (f i j hij x) = of G f i x :=
+theorem of_f {i j} (hij) (x) : of G f j (f i j hij x) = of G f i x :=
   Ideal.Quotient.eq.2 <| subset_span <| Or.inl ⟨i, j, hij, x, rfl⟩
 
 /-- Every element of the direct limit corresponds to some element in
@@ -603,7 +603,7 @@ variable (f' : ∀ i j, i ≤ j → G i →+* G j)
 /-- If the maps in the directed system are injective, then the canonical maps
 from the components to the direct limits are injective. -/
 theorem of_injective [IsDirected ι (· ≤ ·)] [DirectedSystem G fun i j h => f' i j h]
-    (hf : ∀ i j hij, Function.Injective (f' i j hij)) i : Function.Injective (of G (fun i j h => f' i j h) i) := by
+    (hf : ∀ i j hij, Function.Injective (f' i j hij)) (i) : Function.Injective (of G (fun i j h => f' i j h) i) := by
   suffices ∀ x, of G (fun i j h => f' i j h) i x = 0 → x = 0 by
     intro x y hxy
     rw [← sub_eq_zero]
@@ -648,10 +648,10 @@ variable {G f}
 omit Hg
 
 @[simp]
-theorem lift_of i x : lift G f P g Hg (of G f i x) = g i x :=
+theorem lift_of (i x) : lift G f P g Hg (of G f i x) = g i x :=
   FreeCommRing.lift_of _ _
 
-theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G f →+* P) x :
+theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G f →+* P) (x) :
     F x =
       lift G f P (fun i => F.comp <| of G f i)
         (fun i j hij x => by

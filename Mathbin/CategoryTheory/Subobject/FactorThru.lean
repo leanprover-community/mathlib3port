@@ -125,7 +125,7 @@ theorem factor_thru_arrow {X Y : C} (P : Subobject Y) (f : X ⟶ Y) (h : Factors
   Classical.some_spec ((factors_iff _ _).mp h)
 
 @[simp]
-theorem factor_thru_self {X : C} (P : Subobject X) h : P.factorThru P.arrow h = 𝟙 P := by
+theorem factor_thru_self {X : C} (P : Subobject X) (h) : P.factorThru P.arrow h = 𝟙 P := by
   ext
   simp
 
@@ -135,7 +135,7 @@ theorem factor_thru_mk_self (f : X ⟶ Y) [Mono f] : (mk f).factorThru f (mk_fac
   simp
 
 @[simp]
-theorem factor_thru_comp_arrow {X Y : C} {P : Subobject Y} (f : X ⟶ P) h : P.factorThru (f ≫ P.arrow) h = f := by
+theorem factor_thru_comp_arrow {X Y : C} {P : Subobject Y} (f : X ⟶ P) (h) : P.factorThru (f ≫ P.arrow) h = f := by
   ext
   simp
 

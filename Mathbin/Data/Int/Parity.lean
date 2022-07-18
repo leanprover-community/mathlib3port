@@ -211,10 +211,11 @@ theorem four_dvd_add_or_sub_of_odd {a b : ℤ} (ha : Odd a) (hb : Odd b) : 4 ∣
 
 theorem two_mul_div_two_of_even : Even n → 2 * (n / 2) = n := fun h => Int.mul_div_cancel' (even_iff_two_dvd.mp h)
 
-theorem div_two_mul_two_of_even : Even n → n / 2 * 2 = n := fun h =>
-  --int.div_mul_cancel
-    Int.div_mul_cancel
-    (even_iff_two_dvd.mp h)
+theorem div_two_mul_two_of_even : Even n → n / 2 * 2 = n :=
+  fun
+    --int.div_mul_cancel
+    h =>
+  Int.div_mul_cancel (even_iff_two_dvd.mp h)
 
 theorem two_mul_div_two_add_one_of_odd : Odd n → 2 * (n / 2) + 1 = n := by
   rintro ⟨c, rfl⟩

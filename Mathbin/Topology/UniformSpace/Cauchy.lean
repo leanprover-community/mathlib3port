@@ -31,16 +31,16 @@ has a limit in `s` (formally, it satisfies `f ≤ 𝓝 x` for some `x ∈ s`). -
 def IsComplete (s : Set α) :=
   ∀ f, Cauchy f → f ≤ 𝓟 s → ∃ x ∈ s, f ≤ 𝓝 x
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » t)
 theorem Filter.HasBasis.cauchy_iff {ι} {p : ι → Prop} {s : ι → Set (α × α)} (h : (𝓤 α).HasBasis p s) {f : Filter α} :
-    Cauchy f ↔ NeBot f ∧ ∀ i, p i → ∃ t ∈ f, ∀ x y _ : x ∈ t _ : y ∈ t, (x, y) ∈ s i :=
+    Cauchy f ↔ NeBot f ∧ ∀ i, p i → ∃ t ∈ f, ∀ (x y) (_ : x ∈ t) (_ : y ∈ t), (x, y) ∈ s i :=
   and_congr Iff.rfl <|
     (f.basis_sets.prod_self.le_basis_iff h).trans <| by
       simp only [← subset_def, ← Prod.forall, ← mem_prod_eq, ← and_imp, ← id, ← ball_mem_comm]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » t)
 theorem cauchy_iff' {f : Filter α} :
-    Cauchy f ↔ NeBot f ∧ ∀, ∀ s ∈ 𝓤 α, ∀, ∃ t ∈ f, ∀ x y _ : x ∈ t _ : y ∈ t, (x, y) ∈ s :=
+    Cauchy f ↔ NeBot f ∧ ∀, ∀ s ∈ 𝓤 α, ∀, ∃ t ∈ f, ∀ (x y) (_ : x ∈ t) (_ : y ∈ t), (x, y) ∈ s :=
   (𝓤 α).basis_sets.cauchy_iff
 
 theorem cauchy_iff {f : Filter α} : Cauchy f ↔ NeBot f ∧ ∀, ∀ s ∈ 𝓤 α, ∀, ∃ t ∈ f, t ×ˢ t ⊆ s :=
@@ -233,12 +233,12 @@ theorem tendsto_nhds_of_cauchy_seq_of_subseq [SemilatticeSup β] {u : β → α}
     {p : Filter ι} [NeBot p] (hf : Tendsto f p atTop) {a : α} (ha : Tendsto (u ∘ f) p (𝓝 a)) : Tendsto u atTop (𝓝 a) :=
   le_nhds_of_cauchy_adhp hu (map_cluster_pt_of_comp hf ha)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (m n «expr ≥ » N)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (m n «expr ≥ » N)
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem Filter.HasBasis.cauchy_seq_iff {γ} [Nonempty β] [SemilatticeSup β] {u : β → α} {p : γ → Prop}
     {s : γ → Set (α × α)} (h : (𝓤 α).HasBasis p s) :
-    CauchySeq u ↔ ∀ i, p i → ∃ N, ∀ m n _ : m ≥ N _ : n ≥ N, (u m, u n) ∈ s i := by
+    CauchySeq u ↔ ∀ i, p i → ∃ N, ∀ (m n) (_ : m ≥ N) (_ : n ≥ N), (u m, u n) ∈ s i := by
   rw [cauchy_seq_iff_tendsto, ← prod_at_top_at_top_eq]
   refine' (at_top_basis.prod_self.tendsto_iff h).trans _
   simp only [← exists_prop, ← true_andₓ, ← maps_to, ← preimage, ← subset_def, ← Prod.forall, ← mem_prod_eq, ←
@@ -291,9 +291,9 @@ protected theorem IsComplete.union {s t : Set α} (hs : IsComplete s) (ht : IsCo
     ⟨fun hsl => (hs l hl hsl).imp fun x hx => ⟨Or.inl hx.fst, hx.snd⟩, fun htl =>
       (ht l hl htl).imp fun x hx => ⟨Or.inr hx.fst, hx.snd⟩⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊆ » S)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » S)
 theorem is_complete_Union_separated {ι : Sort _} {s : ι → Set α} (hs : ∀ i, IsComplete (s i)) {U : Set (α × α)}
-    (hU : U ∈ 𝓤 α) (hd : ∀ i j : ι, ∀ x ∈ s i, ∀, ∀ y ∈ s j, ∀, (x, y) ∈ U → i = j) : IsComplete (⋃ i, s i) := by
+    (hU : U ∈ 𝓤 α) (hd : ∀ (i j : ι), ∀ x ∈ s i, ∀, ∀ y ∈ s j, ∀, (x, y) ∈ U → i = j) : IsComplete (⋃ i, s i) := by
   set S := ⋃ i, s i
   intro l hl hls
   rw [le_principal_iff] at hls
@@ -389,7 +389,7 @@ theorem IsClosed.is_complete [CompleteSpace α] {s : Set α} (h : IsClosed s) : 
 def TotallyBounded (s : Set α) : Prop :=
   ∀, ∀ d ∈ 𝓤 α, ∀, ∃ t : Set α, t.Finite ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ d }
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem TotallyBounded.exists_subset {s : Set α} (hs : TotallyBounded s) {U : Set (α × α)} (hU : U ∈ 𝓤 α) :
     ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ U } := by
   rcases comp_symm_of_uniformity hU with ⟨r, hr, rs, rU⟩
@@ -410,7 +410,7 @@ theorem TotallyBounded.exists_subset {s : Set α} (hs : TotallyBounded s) {U : S
     exact ⟨z, rU <| mem_comp_rel.2 ⟨y, xy, rs (hfr z)⟩⟩
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem totally_bounded_iff_subset {s : Set α} :
     TotallyBounded s ↔ ∀, ∀ d ∈ 𝓤 α, ∀, ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ d } :=
   ⟨fun H d hd => H.exists_subset hd, fun H d hd =>

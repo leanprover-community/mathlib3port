@@ -222,7 +222,7 @@ unsafe inductive ex : ExType → Type
 
 /-- Return the proof information associated to the `ex`.
 -/
-unsafe def ex.info : ∀ {et : ExType} ps : ex et, ex_info
+unsafe def ex.info : ∀ {et : ExType} (ps : ex et), ex_info
   | Sum, ex.zero i => i
   | Sum, ex.sum i _ _ => i
   | Prod, ex.coeff i _ => i
@@ -265,7 +265,7 @@ We use this to combine intermediate normalisation proofs.
 Since `pretty` only depends on the subexpressions,
 which do not change, we do not set `pretty`.
 -/
-unsafe def ex.set_info : ∀ {et : ExType} ps : ex et, Option expr → Option expr → ex et
+unsafe def ex.set_info : ∀ {et : ExType} (ps : ex et), Option expr → Option expr → ex et
   | Sum, ex.zero i, o, pf => ex.zero (i.Set o pf)
   | Sum, ex.sum i p ps, o, pf => ex.sum (i.Set o pf) p ps
   | Prod, ex.coeff i x, o, pf => ex.coeff (i.Set o pf) x
@@ -414,7 +414,7 @@ unsafe def mk_app_class (f : Name) (inst : expr) (args : List expr) : ring_exp_m
   let ctx ← get_context
   pure <| (@expr.const tt f [ctx] ctx inst).mk_app args
 
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `ctx
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `ctx
 /-- Specialized version of `mk_app` where the first two arguments are `{α}` `[comm_semiring α]`.
 Should be faster because it can use the cached instances.
  -/

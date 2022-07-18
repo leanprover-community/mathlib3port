@@ -229,7 +229,7 @@ theorem cases_tail : ReflTransGen r a b → b = a ∨ ∃ c, ReflTransGen r a c 
 
 @[elab_as_eliminator]
 theorem head_induction_on {P : ∀ a : α, ReflTransGen r a b → Prop} {a : α} (h : ReflTransGen r a b) (refl : P b refl)
-    (head : ∀ {a c} h' : r a c h : ReflTransGen r c b, P c h → P a (h.head h')) : P a h := by
+    (head : ∀ {a c} (h' : r a c) (h : ReflTransGen r c b), P c h → P a (h.head h')) : P a h := by
   induction h generalizing P
   case refl_trans_gen.refl =>
     exact refl
@@ -242,8 +242,8 @@ theorem head_induction_on {P : ∀ a : α, ReflTransGen r a b → Prop} {a : α}
 
 @[elab_as_eliminator]
 theorem trans_induction_on {P : ∀ {a b : α}, ReflTransGen r a b → Prop} {a b : α} (h : ReflTransGen r a b)
-    (ih₁ : ∀ a, @P a a refl) (ih₂ : ∀ {a b} h : r a b, P (single h))
-    (ih₃ : ∀ {a b c} h₁ : ReflTransGen r a b h₂ : ReflTransGen r b c, P h₁ → P h₂ → P (h₁.trans h₂)) : P h := by
+    (ih₁ : ∀ a, @P a a refl) (ih₂ : ∀ {a b} (h : r a b), P (single h))
+    (ih₃ : ∀ {a b c} (h₁ : ReflTransGen r a b) (h₂ : ReflTransGen r b c), P h₁ → P h₂ → P (h₁.trans h₂)) : P h := by
   induction h
   case refl_trans_gen.refl =>
     exact ih₁ a
@@ -321,8 +321,8 @@ theorem head (hab : r a b) (hbc : TransGen r b c) : TransGen r a c :=
 
 @[elab_as_eliminator]
 theorem head_induction_on {P : ∀ a : α, TransGen r a b → Prop} {a : α} (h : TransGen r a b)
-    (base : ∀ {a} h : r a b, P a (single h)) (ih : ∀ {a c} h' : r a c h : TransGen r c b, P c h → P a (h.head h')) :
-    P a h := by
+    (base : ∀ {a} (h : r a b), P a (single h))
+    (ih : ∀ {a c} (h' : r a c) (h : TransGen r c b), P c h → P a (h.head h')) : P a h := by
   induction h generalizing P
   case single a h =>
     exact base h
@@ -335,8 +335,8 @@ theorem head_induction_on {P : ∀ a : α, TransGen r a b → Prop} {a : α} (h 
 
 @[elab_as_eliminator]
 theorem trans_induction_on {P : ∀ {a b : α}, TransGen r a b → Prop} {a b : α} (h : TransGen r a b)
-    (base : ∀ {a b} h : r a b, P (single h))
-    (ih : ∀ {a b c} h₁ : TransGen r a b h₂ : TransGen r b c, P h₁ → P h₂ → P (h₁.trans h₂)) : P h := by
+    (base : ∀ {a b} (h : r a b), P (single h))
+    (ih : ∀ {a b c} (h₁ : TransGen r a b) (h₂ : TransGen r b c), P h₁ → P h₂ → P (h₁.trans h₂)) : P h := by
   induction h
   case single a h =>
     exact base h

@@ -961,7 +961,7 @@ theorem IsOpen.closure_div (ht : IsOpen t) (s : Set α) : Closure s / t = s / t 
 
 end TopologicalGroup
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`z] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`z] []
 /-- additive group with a neighbourhood around 0.
 Only used to construct a topology and uniform space.
 
@@ -986,7 +986,7 @@ theorem TopologicalGroup.t1_space (h : @IsClosed G _ {1}) : T1Space G :=
     simp ⟩
 
 @[to_additive]
-theorem TopologicalGroup.regular_space [T1Space G] : RegularSpace G :=
+theorem TopologicalGroup.t3_space [T1Space G] : T3Space G :=
   ⟨fun s a hs ha => by
     let f := fun p : G × G => p.1 * p.2⁻¹
     have hf : Continuous f := continuous_fst.mul continuous_snd.inv
@@ -1008,15 +1008,15 @@ theorem TopologicalGroup.regular_space [T1Space G] : RegularSpace G :=
 
 @[to_additive]
 theorem TopologicalGroup.t2_space [T1Space G] : T2Space G :=
-  @RegularSpace.t2_space G _ (TopologicalGroup.regular_space G)
+  @T3Space.t2_space G _ (TopologicalGroup.t3_space G)
 
 variable {G} (S : Subgroup G) [Subgroup.Normal S] [IsClosed (S : Set G)]
 
 @[to_additive]
-instance Subgroup.regular_quotient_of_is_closed (S : Subgroup G) [Subgroup.Normal S] [IsClosed (S : Set G)] :
-    RegularSpace (G ⧸ S) := by
+instance Subgroup.t3_quotient_of_is_closed (S : Subgroup G) [Subgroup.Normal S] [IsClosed (S : Set G)] :
+    T3Space (G ⧸ S) := by
   suffices T1Space (G ⧸ S) by
-    exact @TopologicalGroup.regular_space _ _ _ _ this
+    exact @TopologicalGroup.t3_space _ _ _ _ this
   have hS : IsClosed (S : Set G) := inferInstance
   rw [← QuotientGroup.ker_mk S] at hS
   exact TopologicalGroup.t1_space (G ⧸ S) (quotient_map_quotient_mk.is_closed_preimage.mp hS)

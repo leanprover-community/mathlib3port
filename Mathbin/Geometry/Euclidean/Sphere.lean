@@ -73,9 +73,9 @@ theorem mul_norm_eq_abs_sub_sq_norm {x y z : V} (h₁ : ∃ k : ℝ, k ≠ 1 ∧
       simp [← sub_smul, ← add_smul, ← hxy]_ = ∥r - 1∥ * ∥y∥ * (∥r + 1∥ * ∥y∥) := by
       simp_rw [norm_smul]_ = ∥r - 1∥ * ∥r + 1∥ * ∥y∥ ^ 2 := by
       ring _ = abs ((r - 1) * (r + 1) * ∥y∥ ^ 2) := by
-      simp [← abs_mul, ← norm_eq_abs]_ = abs (r ^ 2 * ∥y∥ ^ 2 - ∥y∥ ^ 2) := by
+      simp [← abs_mul]_ = abs (r ^ 2 * ∥y∥ ^ 2 - ∥y∥ ^ 2) := by
       ring_nf _ = abs (∥x∥ ^ 2 - ∥y∥ ^ 2) := by
-      simp [← hxy, ← norm_smul, ← mul_powₓ, ← norm_eq_abs, ← sq_abs]_ = abs (∥z + y∥ ^ 2 - ∥z - x∥ ^ 2) := by
+      simp [← hxy, ← norm_smul, ← mul_powₓ, ← sq_abs]_ = abs (∥z + y∥ ^ 2 - ∥z - x∥ ^ 2) := by
       simp [← norm_add_sq_real, ← norm_sub_sq_real, ← hzy, ← hzx, ← abs_sub_comm]
 
 end InnerProductGeometry

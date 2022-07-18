@@ -218,7 +218,7 @@ then it holds for all elements of the supremum of `S`. -/
   to_additive
       " An induction principle for elements of `⨆ i, S i`.\nIf `C` holds for `0` and all elements of `S i` for all `i`, and is preserved under addition,\nthen it holds for all elements of the supremum of `S`. "]
 theorem supr_induction {ι : Sort _} (S : ι → Submonoid M) {C : M → Prop} {x : M} (hx : x ∈ ⨆ i, S i)
-    (hp : ∀ i, ∀ x ∈ S i, ∀, C x) (h1 : C 1) (hmul : ∀ x y, C x → C y → C (x * y)) : C x := by
+    (hp : ∀ (i), ∀ x ∈ S i, ∀, C x) (h1 : C 1) (hmul : ∀ x y, C x → C y → C (x * y)) : C x := by
   rw [supr_eq_closure] at hx
   refine' closure_induction hx (fun x hx => _) h1 hmul
   obtain ⟨i, hi⟩ := set.mem_Union.mp hx
@@ -227,9 +227,9 @@ theorem supr_induction {ι : Sort _} (S : ι → Submonoid M) {C : M → Prop} {
 /-- A dependent version of `submonoid.supr_induction`. -/
 @[elab_as_eliminator, to_additive "A dependent version of `add_submonoid.supr_induction`. "]
 theorem supr_induction' {ι : Sort _} (S : ι → Submonoid M) {C : ∀ x, (x ∈ ⨆ i, S i) → Prop}
-    (hp : ∀ i, ∀ x ∈ S i, ∀, C x (mem_supr_of_mem i ‹_›)) (h1 : C 1 (one_mem _))
+    (hp : ∀ (i), ∀ x ∈ S i, ∀, C x (mem_supr_of_mem i ‹_›)) (h1 : C 1 (one_mem _))
     (hmul : ∀ x y hx hy, C x hx → C y hy → C (x * y) (mul_mem ‹_› ‹_›)) {x : M} (hx : x ∈ ⨆ i, S i) : C x hx := by
-  refine' Exists.elim _ fun hx : x ∈ ⨆ i, S i hc : C x hx => hc
+  refine' Exists.elim _ fun (hx : x ∈ ⨆ i, S i) (hc : C x hx) => hc
   refine' supr_induction S hx (fun i x hx => _) _ fun x y => _
   · exact ⟨_, hp _ _ hx⟩
     
@@ -301,7 +301,7 @@ theorem exists_multiset_of_mem_closure {M : Type _} [CommMonoidₓ M] {s : Set M
 
 @[to_additive]
 theorem closure_induction_left {s : Set M} {p : M → Prop} {x : M} (h : x ∈ closure s) (H1 : p 1)
-    (Hmul : ∀, ∀ x ∈ s, ∀ y, p y → p (x * y)) : p x := by
+    (Hmul : ∀, ∀ x ∈ s, ∀ (y), p y → p (x * y)) : p x := by
   rw [closure_eq_mrange] at h
   obtain ⟨l, rfl⟩ := h
   induction' l using FreeMonoid.recOn with x y ih
@@ -312,7 +312,7 @@ theorem closure_induction_left {s : Set M} {p : M → Prop} {x : M} (h : x ∈ c
 
 @[to_additive]
 theorem closure_induction_right {s : Set M} {p : M → Prop} {x : M} (h : x ∈ closure s) (H1 : p 1)
-    (Hmul : ∀ x, ∀ y ∈ s, ∀, p x → p (x * y)) : p x :=
+    (Hmul : ∀ (x), ∀ y ∈ s, ∀, p x → p (x * y)) : p x :=
   @closure_induction_left _ _ (MulOpposite.unop ⁻¹' s) (p ∘ MulOpposite.unop) (MulOpposite.op x)
     (closure_induction h (fun x hx => subset_closure hx) (one_mem _) fun x y hx hy => mul_mem hy hx) H1 fun x hx y =>
     Hmul _ _ hx

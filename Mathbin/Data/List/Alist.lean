@@ -136,7 +136,7 @@ def lookup (a : α) (s : Alist β) : Option (β a) :=
   s.entries.lookup a
 
 @[simp]
-theorem lookup_empty a : lookup a (∅ : Alist β) = none :=
+theorem lookup_empty (a) : lookup a (∅ : Alist β) = none :=
   rfl
 
 theorem lookup_is_some {a : α} {s : Alist β} : (s.lookup a).isSome ↔ a ∈ s :=
@@ -200,7 +200,7 @@ theorem perm_erase {a : α} {s₁ s₂ : Alist β} : s₁.entries ~ s₂.entries
   Perm.kerase s₁.Nodupkeys
 
 @[simp]
-theorem lookup_erase a (s : Alist β) : lookup a (erase a s) = none :=
+theorem lookup_erase (a) (s : Alist β) : lookup a (erase a s) = none :=
   lookup_kerase a s.Nodupkeys
 
 @[simp]

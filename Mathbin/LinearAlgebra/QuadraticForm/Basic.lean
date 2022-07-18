@@ -121,7 +121,7 @@ end Polar
 For a more familiar constructor when `R` is a ring, see `quadratic_form.of_polar`. -/
 structure QuadraticForm (R : Type u) (M : Type v) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] where
   toFun : M → R
-  to_fun_smul : ∀ a : R x : M, to_fun (a • x) = a * a * to_fun x
+  to_fun_smul : ∀ (a : R) (x : M), to_fun (a • x) = a * a * to_fun x
   exists_companion' : ∃ B : BilinForm R M, ∀ x y, to_fun (x + y) = to_fun x + to_fun y + B x y
 
 namespace QuadraticForm
@@ -148,6 +148,9 @@ variable (Q)
 @[simp]
 theorem to_fun_eq_coe : Q.toFun = ⇑Q :=
   rfl
+
+-- this must come after the coe_to_fun definition
+initialize_simps_projections QuadraticForm (toFun → apply)
 
 variable {Q}
 
@@ -287,9 +290,9 @@ theorem polar_smul_right_of_tower (a : S) (x y : M) : polar Q x (a • y) = a �
 
 /-- An alternative constructor to `quadratic_form.mk`, for rings where `polar` can be used. -/
 @[simps]
-def ofPolar (to_fun : M → R) (to_fun_smul : ∀ a : R x : M, to_fun (a • x) = a * a * to_fun x)
+def ofPolar (to_fun : M → R) (to_fun_smul : ∀ (a : R) (x : M), to_fun (a • x) = a * a * to_fun x)
     (polar_add_left : ∀ x x' y : M, polar to_fun (x + x') y = polar to_fun x y + polar to_fun x' y)
-    (polar_smul_left : ∀ a : R x y : M, polar to_fun (a • x) y = a • polar to_fun x y) : QuadraticForm R M :=
+    (polar_smul_left : ∀ (a : R) (x y : M), polar to_fun (a • x) y = a • polar to_fun x y) : QuadraticForm R M :=
   { toFun, to_fun_smul,
     exists_companion' :=
       ⟨{ bilin := polar to_fun, bilin_add_left := polar_add_left, bilin_smul_left := polar_smul_left,
@@ -521,7 +524,7 @@ def linMulLin (f g : M →ₗ[R] R) : QuadraticForm R M where
       ring⟩
 
 @[simp]
-theorem lin_mul_lin_apply (f g : M →ₗ[R] R) x : linMulLin f g x = f x * g x :=
+theorem lin_mul_lin_apply (f g : M →ₗ[R] R) (x) : linMulLin f g x = f x * g x :=
   rfl
 
 @[simp]
@@ -745,7 +748,7 @@ variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 def Anisotropic (Q : QuadraticForm R M) : Prop :=
   ∀ x, Q x = 0 → x = 0
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » 0)
 theorem not_anisotropic_iff_exists (Q : QuadraticForm R M) : ¬Anisotropic Q ↔ ∃ (x : _)(_ : x ≠ 0), Q x = 0 := by
   simp only [← anisotropic, ← not_forall, ← exists_prop, ← and_comm]
 
@@ -776,10 +779,10 @@ variable {R₂ : Type u} [OrderedRing R₂] [AddCommMonoidₓ M] [Module R₂ M]
 
 variable {Q₂ : QuadraticForm R₂ M}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » 0)
 /-- A positive definite quadratic form is positive on nonzero vectors. -/
 def PosDef (Q₂ : QuadraticForm R₂ M) : Prop :=
-  ∀ x _ : x ≠ 0, 0 < Q₂ x
+  ∀ (x) (_ : x ≠ 0), 0 < Q₂ x
 
 theorem PosDef.smul {R} [LinearOrderedCommRing R] [Module R M] {Q : QuadraticForm R M} (h : PosDef Q) {a : R}
     (a_pos : 0 < a) : PosDef (a • Q) := fun x hx => mul_pos a_pos (h x hx)

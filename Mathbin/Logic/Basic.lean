@@ -164,17 +164,6 @@ instance subsingleton_pempty : Subsingleton Pempty :=
 @[simp]
 theorem not_nonempty_pempty : ¬Nonempty Pempty := fun ⟨h⟩ => h.elim
 
-@[simp]
-theorem forall_pempty {P : Pempty → Prop} : (∀ x : Pempty, P x) ↔ True :=
-  ⟨fun h => trivialₓ, fun h x => by
-    cases x⟩
-
-@[simp]
-theorem exists_pempty {P : Pempty → Prop} : (∃ x : Pempty, P x) ↔ False :=
-  ⟨fun h => by
-    cases' h with w
-    cases w, False.elim⟩
-
 theorem congr_heq {α β γ : Sort _} {f : α → γ} {g : β → γ} {x : α} {y : β} (h₁ : HEq f g) (h₂ : HEq x y) : f x = g y :=
   by
   cases h₂
@@ -218,7 +207,7 @@ theorem eq_iff_eq_cancel_right {a b : α} : (∀ {c}, a = c ↔ b = c) ↔ a = b
     rw [h], fun h a => by
     rw [h]⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`out] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`out] []
 /-- Wrapper for adding elementary propositions to the type class systems.
 Warning: this can easily be abused. See the rest of this docstring for details.
 
@@ -521,7 +510,7 @@ theorem xor_false : Xorₓ False = id :=
   funext fun a => by
     simp [← Xorₓ]
 
-theorem xor_comm a b : Xorₓ a b = Xorₓ b a := by
+theorem xor_comm (a b) : Xorₓ a b = Xorₓ b a := by
   simp [← Xorₓ, ← and_comm, ← or_comm]
 
 instance : IsCommutative Prop Xorₓ :=
@@ -917,7 +906,7 @@ def decidableOfIff' (b : Prop) (h : a ↔ b) [D : Decidable b] : Decidable a :=
 
 /-- Prove that `a` is decidable by constructing a boolean `b` and a proof that `b ↔ a`.
 (This is sometimes taken as an alternate definition of decidability.) -/
-def decidableOfBool : ∀ b : Bool h : b ↔ a, Decidable a
+def decidableOfBool : ∀ (b : Bool) (h : b ↔ a), Decidable a
   | tt, h => isTrue (h.1 rfl)
   | ff, h => isFalse (mt h.2 Bool.ff_ne_tt)
 
@@ -1015,9 +1004,9 @@ theorem ball_cond_comm {α} {s : α → Prop} {p : α → α → Prop} :
     (∀ a, s a → ∀ b, s b → p a b) ↔ ∀ a b, s a → s b → p a b :=
   ⟨fun h a b ha hb => h a ha b hb, fun h a ha b hb => h a b ha hb⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (a b «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a b «expr ∈ » s)
 theorem ball_mem_comm {α β} [HasMem α β] {s : β} {p : α → α → Prop} :
-    (∀ a b _ : a ∈ s _ : b ∈ s, p a b) ↔ ∀ a b, a ∈ s → b ∈ s → p a b :=
+    (∀ (a b) (_ : a ∈ s) (_ : b ∈ s), p a b) ↔ ∀ a b, a ∈ s → b ∈ s → p a b :=
   ball_cond_comm
 
 theorem ne_of_apply_ne {α β : Sort _} (f : α → β) {x y : α} (h : f x ≠ f y) : x ≠ y := fun w : x = y =>
@@ -1042,7 +1031,7 @@ theorem eq_mpr_eq_cast {α β : Sort _} (h : α = β) : Eq.mpr h = cast h.symm :
   rfl
 
 @[simp]
-theorem cast_cast : ∀ {α β γ : Sort _} ha : α = β hb : β = γ a : α, cast hb (cast ha a) = cast (ha.trans hb) a
+theorem cast_cast : ∀ {α β γ : Sort _} (ha : α = β) (hb : β = γ) (a : α), cast hb (cast ha a) = cast (ha.trans hb) a
   | _, _, _, rfl, rfl, a => rfl
 
 @[simp]
@@ -1066,7 +1055,7 @@ theorem congr_fun_congr_arg {α β γ : Sort _} (f : α → β → γ) {a a' : �
     congr_fun (congr_arg f p) b = congr_arg (fun a => f a b) p :=
   rfl
 
-theorem heq_of_cast_eq : ∀ {α β : Sort _} {a : α} {a' : β} e : α = β h₂ : cast e a = a', HEq a a'
+theorem heq_of_cast_eq : ∀ {α β : Sort _} {a : α} {a' : β} (e : α = β) (h₂ : cast e a = a'), HEq a a'
   | α, _, a, a', rfl, h => Eq.recOnₓ h (HEq.refl _)
 
 theorem cast_eq_iff_heq {α β : Sort _} {a : α} {a' : β} {e : α = β} : cast e a = a' ↔ HEq a a' :=
@@ -1195,7 +1184,7 @@ theorem exists_swap {p : α → β → Prop} : (∃ x y, p x y) ↔ ∃ y x, p x
   ⟨fun ⟨x, y, h⟩ => ⟨y, x, h⟩, fun ⟨y, x, h⟩ => ⟨x, y, h⟩⟩
 
 @[simp]
-theorem forall_exists_index {q : (∃ x, p x) → Prop} : (∀ h, q h) ↔ ∀ x h : p x, q ⟨x, h⟩ :=
+theorem forall_exists_index {q : (∃ x, p x) → Prop} : (∀ h, q h) ↔ ∀ (x) (h : p x), q ⟨x, h⟩ :=
   ⟨fun h x hpx => h ⟨x, hpx⟩, fun h ⟨x, hpx⟩ => h x hpx⟩
 
 theorem exists_imp_distrib : (∃ x, p x) → b ↔ ∀ x, p x → b :=
@@ -1270,7 +1259,7 @@ theorem forall_2_true_iff {β : α → Sort _} : (∀ a, β a → True) ↔ True
   forall_true_iff' fun _ => forall_true_iff
 
 @[simp]
-theorem forall_3_true_iff {β : α → Sort _} {γ : ∀ a, β a → Sort _} : (∀ a b : β a, γ a b → True) ↔ True :=
+theorem forall_3_true_iff {β : α → Sort _} {γ : ∀ a, β a → Sort _} : (∀ (a) (b : β a), γ a b → True) ↔ True :=
   forall_true_iff' fun _ => forall_2_true_iff
 
 theorem ExistsUnique.exists {α : Sort _} {p : α → Prop} (h : ∃! x, p x) : ∃ x, p x :=
@@ -1283,6 +1272,11 @@ theorem exists_unique_iff_exists {α : Sort _} [Subsingleton α] {p : α → Pro
 @[simp]
 theorem forall_const (α : Sort _) [i : Nonempty α] : α → b ↔ b :=
   ⟨i.elim, fun hb x => hb⟩
+
+/-- For some reason simp doesn't use `forall_const` to simplify in this case. -/
+@[simp]
+theorem forall_forall_const {α β : Type _} (p : β → Prop) [Nonempty α] : (∀ x, α → p x) ↔ ∀ x, p x :=
+  forall_congrₓ fun x => forall_const α
 
 @[simp]
 theorem exists_const (α : Sort _) [i : Nonempty α] : (∃ x : α, b) ↔ b :=
@@ -1314,8 +1308,8 @@ theorem forall_eq {a' : α} : (∀ a, a = a' → p a) ↔ p a' :=
 theorem forall_eq' {a' : α} : (∀ a, a' = a → p a) ↔ p a' := by
   simp [← @eq_comm _ a']
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (b «expr ≠ » a)
-theorem and_forall_ne (a : α) : (p a ∧ ∀ b _ : b ≠ a, p b) ↔ ∀ b, p b := by
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (b «expr ≠ » a)
+theorem and_forall_ne (a : α) : (p a ∧ ∀ (b) (_ : b ≠ a), p b) ↔ ∀ b, p b := by
   simp only [@forall_eq _ p a, forall_and_distrib, or_imp_distrib, ← Classical.em, ← forall_const]
 
 -- this lemma is needed to simplify the output of `list.mem_cons_iff`
@@ -1428,7 +1422,7 @@ theorem exists₂_comm {ι₁ ι₂ : Sort _} {κ₁ : ι₁ → Sort _} {κ₂ 
 theorem And.exists {p q : Prop} {f : p ∧ q → Prop} : (∃ h, f h) ↔ ∃ hp hq, f ⟨hp, hq⟩ :=
   ⟨fun ⟨h, H⟩ => ⟨h.1, h.2, H⟩, fun ⟨hp, hq, H⟩ => ⟨⟨hp, hq⟩, H⟩⟩
 
-theorem forall_or_of_or_forall (h : b ∨ ∀ x, p x) x : b ∨ p x :=
+theorem forall_or_of_or_forall (h : b ∨ ∀ x, p x) (x) : b ∨ p x :=
   h.imp_right fun h₂ => h₂ x
 
 -- See Note [decidable namespace]
@@ -1494,13 +1488,10 @@ theorem exists_prop_congr' {p p' : Prop} {q q' : p → Prop} (hq : ∀ h, q h �
     Exists q = ∃ h : p', q' (hp.2 h) :=
   propext (exists_prop_congr hq _)
 
+/-- See `is_empty.exists_iff` for the `false` version. -/
 @[simp]
 theorem exists_true_left (p : True → Prop) : (∃ x, p x) ↔ p True.intro :=
   exists_prop_of_true _
-
-@[simp]
-theorem exists_false_left (p : False → Prop) : ¬∃ x, p x :=
-  exists_prop_of_false not_false
 
 theorem ExistsUnique.unique {α : Sort _} {p : α → Prop} (h : ∃! x, p x) {y₁ y₂ : α} (py₁ : p y₁) (py₂ : p y₂) :
     y₁ = y₂ :=
@@ -1516,30 +1507,28 @@ theorem forall_prop_congr' {p p' : Prop} {q q' : p → Prop} (hq : ∀ h, q h �
     (∀ h, q h) = ∀ h : p', q' (hp.2 h) :=
   propext (forall_prop_congr hq _)
 
+/-- See `is_empty.forall_iff` for the `false` version. -/
 @[simp]
 theorem forall_true_left (p : True → Prop) : (∀ x, p x) ↔ p True.intro :=
   forall_prop_of_true _
 
-@[simp]
-theorem forall_false_left (p : False → Prop) : (∀ x, p x) ↔ True :=
-  forall_prop_of_false not_false
-
-theorem ExistsUnique.elim2 {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)] {q : ∀ x h : p x, Prop} {b : Prop}
-    (h₂ : ∃! (x : _)(h : p x), q x h) (h₁ : ∀ x h : p x, q x h → (∀ y hy : p y, q y hy → y = x) → b) : b := by
+theorem ExistsUnique.elim2 {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)] {q : ∀ (x) (h : p x), Prop}
+    {b : Prop} (h₂ : ∃! (x : _)(h : p x), q x h)
+    (h₁ : ∀ (x) (h : p x), q x h → (∀ (y) (hy : p y), q y hy → y = x) → b) : b := by
   simp only [← exists_unique_iff_exists] at h₂
   apply h₂.elim
   exact fun x ⟨hxp, hxq⟩ H => h₁ x hxp hxq fun y hyp hyq => H y ⟨hyp, hyq⟩
 
-theorem ExistsUnique.intro2 {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)] {q : ∀ x : α h : p x, Prop} (w : α)
-    (hp : p w) (hq : q w hp) (H : ∀ y hy : p y, q y hy → y = w) : ∃! (x : _)(hx : p x), q x hx := by
+theorem ExistsUnique.intro2 {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)] {q : ∀ (x : α) (h : p x), Prop}
+    (w : α) (hp : p w) (hq : q w hp) (H : ∀ (y) (hy : p y), q y hy → y = w) : ∃! (x : _)(hx : p x), q x hx := by
   simp only [← exists_unique_iff_exists]
   exact ExistsUnique.intro w ⟨hp, hq⟩ fun y ⟨hyp, hyq⟩ => H y hyp hyq
 
-theorem ExistsUnique.exists2 {α : Sort _} {p : α → Sort _} {q : ∀ x : α h : p x, Prop}
+theorem ExistsUnique.exists2 {α : Sort _} {p : α → Sort _} {q : ∀ (x : α) (h : p x), Prop}
     (h : ∃! (x : _)(hx : p x), q x hx) : ∃ (x : _)(hx : p x), q x hx :=
   h.exists.imp fun x hx => hx.exists
 
-theorem ExistsUnique.unique2 {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)] {q : ∀ x : α hx : p x, Prop}
+theorem ExistsUnique.unique2 {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)] {q : ∀ (x : α) (hx : p x), Prop}
     (h : ∃! (x : _)(hx : p x), q x hx) {y₁ y₂ : α} (hpy₁ : p y₁) (hqy₁ : q y₁ hpy₁) (hpy₂ : p y₂) (hqy₂ : q y₂ hpy₂) :
     y₁ = y₂ := by
   simp only [← exists_unique_iff_exists] at h
@@ -1627,22 +1616,22 @@ theorem bex_congr (H : ∀ x h, P x h ↔ Q x h) : (∃ x h, P x h) ↔ ∃ x h,
 theorem bex_eq_left {a : α} : (∃ (x : _)(_ : x = a), p x) ↔ p a := by
   simp only [← exists_prop, ← exists_eq_left]
 
-theorem Ball.imp_right (H : ∀ x h, P x h → Q x h) (h₁ : ∀ x h, P x h) x h : Q x h :=
+theorem Ball.imp_right (H : ∀ x h, P x h → Q x h) (h₁ : ∀ x h, P x h) (x h) : Q x h :=
   H _ _ <| h₁ _ _
 
 theorem Bex.imp_right (H : ∀ x h, P x h → Q x h) : (∃ x h, P x h) → ∃ x h, Q x h
   | ⟨x, h, h'⟩ => ⟨_, _, H _ _ h'⟩
 
-theorem Ball.imp_left (H : ∀ x, p x → q x) (h₁ : ∀ x, q x → r x) x (h : p x) : r x :=
+theorem Ball.imp_left (H : ∀ x, p x → q x) (h₁ : ∀ x, q x → r x) (x) (h : p x) : r x :=
   h₁ _ <| H _ h
 
 theorem Bex.imp_left (H : ∀ x, p x → q x) : (∃ (x : _)(_ : p x), r x) → ∃ (x : _)(_ : q x), r x
   | ⟨x, hp, hr⟩ => ⟨x, H _ hp, hr⟩
 
-theorem ball_of_forall (h : ∀ x, p x) x : p x :=
+theorem ball_of_forall (h : ∀ x, p x) (x) : p x :=
   h x
 
-theorem forall_of_ball (H : ∀ x, p x) (h : ∀ x, p x → q x) x : q x :=
+theorem forall_of_ball (H : ∀ x, p x) (h : ∀ x, p x → q x) (x) : q x :=
   h x <| H x
 
 theorem bex_of_exists (H : ∀ x, p x) : (∃ x, q x) → ∃ (x : _)(_ : p x), q x
@@ -1702,7 +1691,7 @@ variable {α β γ : Sort _} {σ : α → Sort _} (f : α → β) {P Q : Prop} [
   {B : ¬P → α}
 
 theorem dite_eq_iff : dite P A B = c ↔ (∃ h, A h = c) ∨ ∃ h, B h = c := by
-  by_cases' P <;> simp [*]
+  by_cases' P <;> simp [*, ← exists_prop_of_false not_false]
 
 theorem ite_eq_iff : ite P a b = c ↔ P ∧ a = c ∨ ¬P ∧ b = c :=
   dite_eq_iff.trans <| by
@@ -1710,11 +1699,11 @@ theorem ite_eq_iff : ite P a b = c ↔ P ∧ a = c ∨ ¬P ∧ b = c :=
 
 @[simp]
 theorem dite_eq_left_iff : dite P (fun _ => a) B = a ↔ ∀ h, B h = a := by
-  by_cases' P <;> simp [*]
+  by_cases' P <;> simp [*, ← forall_prop_of_false not_false]
 
 @[simp]
 theorem dite_eq_right_iff : (dite P A fun _ => b) = b ↔ ∀ h, A h = b := by
-  by_cases' P <;> simp [*]
+  by_cases' P <;> simp [*, ← forall_prop_of_false not_false]
 
 @[simp]
 theorem ite_eq_left_iff : ite P a b = a ↔ ¬P → b = a :=

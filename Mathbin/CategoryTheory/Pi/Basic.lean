@@ -39,11 +39,11 @@ attribute [instance] pi'
 namespace Pi
 
 @[simp]
-theorem id_apply (X : ∀ i, C i) i : (𝟙 X : ∀ i, X i ⟶ X i) i = 𝟙 (X i) :=
+theorem id_apply (X : ∀ i, C i) (i) : (𝟙 X : ∀ i, X i ⟶ X i) i = 𝟙 (X i) :=
   rfl
 
 @[simp]
-theorem comp_apply {X Y Z : ∀ i, C i} (f : X ⟶ Y) (g : Y ⟶ Z) i : (f ≫ g : ∀ i, X i ⟶ Z i) i = f i ≫ g i :=
+theorem comp_apply {X Y Z : ∀ i, C i} (f : X ⟶ Y) (g : Y ⟶ Z) (i) : (f ≫ g : ∀ i, X i ⟶ Z i) i = f i ≫ g i :=
   rfl
 
 /-- The evaluation functor at `i : I`, sending an `I`-indexed family of objects to the object over `i`.

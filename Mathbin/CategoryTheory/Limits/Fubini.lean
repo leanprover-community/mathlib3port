@@ -53,11 +53,11 @@ variable (F : J ⥤ K ⥤ C)
 -- We could try introducing a "dependent functor type" to handle this?
 structure DiagramOfCones where
   obj : ∀ j : J, Cone (F.obj j)
-  map : ∀ {j j' : J} f : j ⟶ j', (Cones.postcompose (F.map f)).obj (obj j) ⟶ obj j'
+  map : ∀ {j j' : J} (f : j ⟶ j'), (Cones.postcompose (F.map f)).obj (obj j) ⟶ obj j'
   id : ∀ j : J, (map (𝟙 j)).Hom = 𝟙 _ := by
     run_tac
       obviously
-  comp : ∀ {j₁ j₂ j₃ : J} f : j₁ ⟶ j₂ g : j₂ ⟶ j₃, (map (f ≫ g)).Hom = (map f).Hom ≫ (map g).Hom := by
+  comp : ∀ {j₁ j₂ j₃ : J} (f : j₁ ⟶ j₂) (g : j₂ ⟶ j₃), (map (f ≫ g)).Hom = (map f).Hom ≫ (map g).Hom := by
     run_tac
       obviously
 
@@ -218,7 +218,7 @@ noncomputable def limitFlipCompLimIsoLimitCompLim : limit (F.flip ⋙ lim) ≅ l
         limitUncurryIsoLimitCompLim _
 
 @[simp, reassoc]
-theorem limit_flip_comp_lim_iso_limit_comp_lim_hom_π_π j k :
+theorem limit_flip_comp_lim_iso_limit_comp_lim_hom_π_π (j) (k) :
     (limitFlipCompLimIsoLimitCompLim F).Hom ≫ limit.π _ j ≫ limit.π _ k = limit.π _ k ≫ limit.π _ j := by
   dsimp' [← limit_flip_comp_lim_iso_limit_comp_lim]
   simp
@@ -227,7 +227,7 @@ theorem limit_flip_comp_lim_iso_limit_comp_lim_hom_π_π j k :
 
 -- See note [dsimp, simp]
 @[simp, reassoc]
-theorem limit_flip_comp_lim_iso_limit_comp_lim_inv_π_π k j :
+theorem limit_flip_comp_lim_iso_limit_comp_lim_inv_π_π (k) (j) :
     (limitFlipCompLimIsoLimitCompLim F).inv ≫ limit.π _ k ≫ limit.π _ j = limit.π _ j ≫ limit.π _ k := by
   dsimp' [← limit_flip_comp_lim_iso_limit_comp_lim]
   simp

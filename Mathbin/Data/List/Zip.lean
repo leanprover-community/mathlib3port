@@ -37,11 +37,11 @@ theorem zip_cons_cons (a : α) (b : β) (l₁ : List α) (l₂ : List β) : zip�
   rfl
 
 @[simp]
-theorem zip_with_nil_left (f : α → β → γ) l : zipWithₓ f [] l = [] :=
+theorem zip_with_nil_left (f : α → β → γ) (l) : zipWithₓ f [] l = [] :=
   rfl
 
 @[simp]
-theorem zip_with_nil_right (f : α → β → γ) l : zipWithₓ f l [] = [] := by
+theorem zip_with_nil_right (f : α → β → γ) (l) : zipWithₓ f l [] = [] := by
   cases l <;> rfl
 
 @[simp]
@@ -57,7 +57,7 @@ theorem zip_nil_right (l : List α) : zipₓ l ([] : List β) = [] :=
   zip_with_nil_right _ l
 
 @[simp]
-theorem zip_swap : ∀ l₁ : List α l₂ : List β, (zipₓ l₁ l₂).map Prod.swap = zipₓ l₂ l₁
+theorem zip_swap : ∀ (l₁ : List α) (l₂ : List β), (zipₓ l₁ l₂).map Prod.swap = zipₓ l₂ l₁
   | [], l₂ => (zip_nil_right _).symm
   | l₁, [] => by
     rw [zip_nil_right] <;> rfl
@@ -66,7 +66,7 @@ theorem zip_swap : ∀ l₁ : List α l₂ : List β, (zipₓ l₁ l₂).map Pro
 
 @[simp]
 theorem length_zip_with (f : α → β → γ) :
-    ∀ l₁ : List α l₂ : List β, length (zipWithₓ f l₁ l₂) = min (length l₁) (length l₂)
+    ∀ (l₁ : List α) (l₂ : List β), length (zipWithₓ f l₁ l₂) = min (length l₁) (length l₂)
   | [], l₂ => rfl
   | l₁, [] => by
     simp only [← length, ← min_zero, ← zip_with_nil_right]
@@ -74,11 +74,11 @@ theorem length_zip_with (f : α → β → γ) :
     simp [← length, ← zip_cons_cons, ← length_zip_with l₁ l₂, ← min_add_add_right]
 
 @[simp]
-theorem length_zip : ∀ l₁ : List α l₂ : List β, length (zipₓ l₁ l₂) = min (length l₁) (length l₂) :=
+theorem length_zip : ∀ (l₁ : List α) (l₂ : List β), length (zipₓ l₁ l₂) = min (length l₁) (length l₂) :=
   length_zip_with _
 
 theorem all₂_zip_with {f : α → β → γ} {p : γ → Prop} :
-    ∀ {l₁ : List α} {l₂ : List β} h : length l₁ = length l₂,
+    ∀ {l₁ : List α} {l₂ : List β} (h : length l₁ = length l₂),
       All₂ p (zipWithₓ f l₁ l₂) ↔ Forall₂ (fun x y => p (f x y)) l₁ l₂
   | [], [], _ => by
     simp
@@ -103,7 +103,8 @@ theorem lt_length_right_of_zip {i : ℕ} {l : List α} {l' : List β} (h : i < (
   lt_length_right_of_zip_with h
 
 theorem zip_append :
-    ∀ {l₁ r₁ : List α} {l₂ r₂ : List β} h : length l₁ = length l₂, zipₓ (l₁ ++ r₁) (l₂ ++ r₂) = zipₓ l₁ l₂ ++ zipₓ r₁ r₂
+    ∀ {l₁ r₁ : List α} {l₂ r₂ : List β} (h : length l₁ = length l₂),
+      zipₓ (l₁ ++ r₁) (l₂ ++ r₂) = zipₓ l₁ l₂ ++ zipₓ r₁ r₂
   | [], r₁, l₂, r₂, h => by
     simp only [← eq_nil_of_length_eq_zero h.symm] <;> rfl
   | l₁, r₁, [], r₂, h => by
@@ -112,7 +113,7 @@ theorem zip_append :
     simp only [← cons_append, ← zip_cons_cons, ← zip_append (succ.inj h)] <;> constructor <;> rfl
 
 theorem zip_map (f : α → γ) (g : β → δ) :
-    ∀ l₁ : List α l₂ : List β, zipₓ (l₁.map f) (l₂.map g) = (zipₓ l₁ l₂).map (Prod.map f g)
+    ∀ (l₁ : List α) (l₂ : List β), zipₓ (l₁.map f) (l₂.map g) = (zipₓ l₁ l₂).map (Prod.map f g)
   | [], l₂ => rfl
   | l₁, [] => by
     simp only [← map, ← zip_nil_right]
@@ -169,7 +170,7 @@ theorem mem_zip {a b} : ∀ {l₁ : List α} {l₂ : List β}, (a, b) ∈ zipₓ
     constructor <;> simp only [← mem_cons_iff, ← or_trueₓ, ← mem_zip h]
 
 -- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
-theorem map_fst_zip : ∀ l₁ : List α l₂ : List β, l₁.length ≤ l₂.length → map Prod.fst (zipₓ l₁ l₂) = l₁
+theorem map_fst_zip : ∀ (l₁ : List α) (l₂ : List β), l₁.length ≤ l₂.length → map Prod.fst (zipₓ l₁ l₂) = l₁
   | [], bs, _ => rfl
   | a :: as, b :: bs, h => by
     simp at h
@@ -179,7 +180,7 @@ theorem map_fst_zip : ∀ l₁ : List α l₂ : List β, l₁.length ≤ l₂.le
     contradiction
 
 -- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
-theorem map_snd_zip : ∀ l₁ : List α l₂ : List β, l₂.length ≤ l₁.length → map Prod.snd (zipₓ l₁ l₂) = l₂
+theorem map_snd_zip : ∀ (l₁ : List α) (l₂ : List β), l₂.length ≤ l₁.length → map Prod.snd (zipₓ l₁ l₂) = l₂
   | _, [], _ => by
     rw [zip_nil_right]
     rfl

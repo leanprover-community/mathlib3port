@@ -192,13 +192,13 @@ theorem mul_basis_to_matrix [DecidableEq ι] [DecidableEq ι'] (b₁ : Basis ι 
   have := linear_map_to_matrix_mul_basis_to_matrix b₂ b₁ b₃ (Matrix.toLin b₁ b₃ A)
   rwa [LinearMap.to_matrix_to_lin] at this
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem basis_to_matrix_basis_fun_mul (b : Basis ι R (ι → R)) (A : Matrix ι ι R) :
-    b.toMatrix (Pi.basisFun R ι) ⬝ A = fun i j => b.repr (Aᵀ j) i := by
+    b.toMatrix (Pi.basisFun R ι) ⬝ A = of fun i j => b.repr (Aᵀ j) i := by
   classical
   simp only [← basis_to_matrix_mul _ _ (Pi.basisFun R ι), ← Matrix.to_lin_eq_to_lin']
   ext i j
-  rw [LinearMap.to_matrix_apply, Matrix.to_lin'_apply, Pi.basis_fun_apply, Matrix.mul_vec_std_basis_apply]
+  rw [LinearMap.to_matrix_apply, Matrix.to_lin'_apply, Pi.basis_fun_apply, Matrix.mul_vec_std_basis_apply,
+    Matrix.of_apply]
 
 /-- A generalization of `linear_map.to_matrix_id`. -/
 @[simp]

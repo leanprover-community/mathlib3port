@@ -91,17 +91,17 @@ theorem gcd_b_zero_right {s : ℕ} (h : s ≠ 0) : gcdB s 0 = 0 := by
     
 
 @[simp]
-theorem xgcd_aux_fst x y : ∀ s t s' t', (xgcdAux x s t y s' t').1 = gcdₓ x y :=
+theorem xgcd_aux_fst (x y) : ∀ s t s' t', (xgcdAux x s t y s' t').1 = gcdₓ x y :=
   gcdₓ.induction x y
     (by
       simp )
     fun x y h IH s t s' t' => by
     simp [← xgcd_aux_rec, ← h, ← IH] <;> rw [← gcd_rec]
 
-theorem xgcd_aux_val x y : xgcdAux x 1 0 y 0 1 = (gcdₓ x y, xgcd x y) := by
+theorem xgcd_aux_val (x y) : xgcdAux x 1 0 y 0 1 = (gcdₓ x y, xgcd x y) := by
   rw [xgcd, ← xgcd_aux_fst x y 1 0 0 1] <;> cases xgcd_aux x 1 0 y 0 1 <;> rfl
 
-theorem xgcd_val x y : xgcd x y = (gcdA x y, gcdB x y) := by
+theorem xgcd_val (x y) : xgcd x y = (gcdA x y, gcdB x y) := by
   unfold gcd_a gcd_b <;> cases xgcd x y <;> rfl
 
 section

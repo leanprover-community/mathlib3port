@@ -89,7 +89,7 @@ theorem volume_Union_set_of_liouville_with : volume (⋃ (p : ℝ) (hp : 2 < p),
   intro m
   rw [measure_preimage_add_right]
   clear m
-  refine' (measure_bUnion_null_iff <| countable_encodable _).2 fun n hn : 1 ≤ n => _
+  refine' (measure_bUnion_null_iff <| countable_encodable _).2 fun n (hn : 1 ≤ n) => _
   generalize hr : (2 + 1 / n : ℝ) = r
   replace hr : 2 < r
   · simp [hr, ← zero_lt_one.trans_le hn]
@@ -100,9 +100,8 @@ theorem volume_Union_set_of_liouville_with : volume (⋃ (p : ℝ) (hp : 2 < p),
   set B : ℤ → ℕ → Set ℝ := fun a b => ball (a / b) (1 / b ^ r)
   have hB : ∀ a b, volume (B a b) = ↑(2 / b ^ r : ℝ≥0 ) := by
     intro a b
-    simp only [← B, ← Real.volume_ball]
-    rw [Ennreal.ofReal, mul_one_div, to_nnreal_div zero_le_two, to_nnreal_bit0 zero_le_one, to_nnreal_one,
-      to_nnreal_rpow_of_nonneg (Nat.cast_nonneg _), Nnreal.to_nnreal_coe_nat]
+    rw [Real.volume_ball, mul_one_div, ← Nnreal.coe_two, ← Nnreal.coe_nat_cast, ← Nnreal.coe_rpow, ← Nnreal.coe_div,
+      Ennreal.of_real_coe_nnreal]
   have : ∀ b : ℕ, volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ (2 * (b ^ (1 - r) + b ^ -r) : ℝ≥0 ) := by
     intro b
     calc volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ ∑ a in Finset.icc (0 : ℤ) b, volume (B a b) :=

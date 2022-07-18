@@ -18,7 +18,7 @@ universe u v
 
 open Finset
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`Equiv] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`Equiv] []
 /-- `fin_enum α` means that `α` is finite and can be enumerated in some order,
   i.e. `α` has an explicit bijection with `fin n` for some n. -/
 class FinEnum (α : Sort _) where
@@ -33,7 +33,7 @@ namespace FinEnum
 variable {α : Type u} {β : α → Type v}
 
 /-- transport a `fin_enum` instance across an equivalence -/
-def ofEquiv α {β} [FinEnum α] (h : β ≃ α) : FinEnum β where
+def ofEquiv (α) {β} [FinEnum α] (h : β ≃ α) : FinEnum β where
   card := card α
   Equiv := h.trans (equiv α)
   decEq := (h.trans (equiv _)).DecidableEq
@@ -57,7 +57,7 @@ def ofList [DecidableEq α] (xs : List α) (h : ∀ x : α, x ∈ xs) : FinEnum 
     (List.nodup_dedup _)
 
 /-- create an exhaustive list of the values of a given type -/
-def toList α [FinEnum α] : List α :=
+def toList (α) [FinEnum α] : List α :=
   (List.finRange (card α)).map (equiv α).symm
 
 open Function

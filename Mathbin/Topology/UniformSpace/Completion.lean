@@ -115,7 +115,7 @@ private theorem comp_gen : (((𝓤 α).lift' gen).lift' fun s => CompRel s s) �
 instance : UniformSpace (Cauchyₓ α) :=
   UniformSpace.ofCore
     { uniformity := (𝓤 α).lift' gen,
-      refl := principal_le_lift' fun s hs ⟨a, b⟩ a_eq_b : a = b => a_eq_b ▸ a.property.right hs, symm := symm_gen,
+      refl := principal_le_lift' fun s hs ⟨a, b⟩ (a_eq_b : a = b) => a_eq_b ▸ a.property.right hs, symm := symm_gen,
       comp := comp_gen }
 
 theorem mem_uniformity {s : Set (Cauchyₓ α × Cauchyₓ α)} : s ∈ 𝓤 (Cauchyₓ α) ↔ ∃ t ∈ 𝓤 α, gen t ⊆ s :=
@@ -184,7 +184,7 @@ theorem nonempty_Cauchy_iff : Nonempty (Cauchyₓ α) ↔ Nonempty α := by
 
 section
 
--- ./././Mathport/Syntax/Translate/Basic.lean:293:40: warning: unsupported option eqn_compiler.zeta
+-- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
 instance : CompleteSpace (Cauchyₓ α) :=
@@ -266,7 +266,7 @@ theorem Cauchy_eq {α : Type _} [Inhabited α] [UniformSpace α] [CompleteSpace 
     rcases mem_uniformity_is_closed tu with ⟨d, du, dc, dt⟩
     refine' H { p | (lim p.1.1, lim p.2.1) ∈ t } (Cauchyₓ.mem_uniformity'.2 ⟨d, du, fun f g h => _⟩)
     rcases mem_prod_iff.1 h with ⟨x, xf, y, yg, h⟩
-    have limc : ∀ f : Cauchyₓ α, ∀ x ∈ f.1, ∀, lim f.1 ∈ Closure x := by
+    have limc : ∀ (f : Cauchyₓ α), ∀ x ∈ f.1, ∀, lim f.1 ∈ Closure x := by
       intro f x xf
       rw [closure_eq_cluster_pts]
       exact f.2.1.mono (le_inf f.2.le_nhds_Lim (le_principal_iff.2 xf))
@@ -332,8 +332,8 @@ instance : CompleteSpace (Completion α) :=
 instance : SeparatedSpace (Completion α) :=
   UniformSpace.separated_separation
 
-instance : RegularSpace (Completion α) :=
-  separated_regular
+instance : T3Space (Completion α) :=
+  separated_t3
 
 /-- Automatic coercion from `α` to its completion. Not always injective. -/
 instance : CoeTₓ α (Completion α) :=
@@ -423,14 +423,14 @@ theorem induction_on {p : Completion α → Prop} (a : Completion α) (hp : IsCl
 
 @[elab_as_eliminator]
 theorem induction_on₂ {p : Completion α → Completion β → Prop} (a : Completion α) (b : Completion β)
-    (hp : IsClosed { x : Completion α × Completion β | p x.1 x.2 }) (ih : ∀ a : α b : β, p a b) : p a b :=
+    (hp : IsClosed { x : Completion α × Completion β | p x.1 x.2 }) (ih : ∀ (a : α) (b : β), p a b) : p a b :=
   have : ∀ x : Completion α × Completion β, p x.1 x.2 := (is_closed_property dense_range_coe₂ hp) fun ⟨a, b⟩ => ih a b
   this (a, b)
 
 @[elab_as_eliminator]
 theorem induction_on₃ {p : Completion α → Completion β → Completion γ → Prop} (a : Completion α) (b : Completion β)
     (c : Completion γ) (hp : IsClosed { x : Completion α × Completion β × Completion γ | p x.1 x.2.1 x.2.2 })
-    (ih : ∀ a : α b : β c : γ, p a b c) : p a b c :=
+    (ih : ∀ (a : α) (b : β) (c : γ), p a b c) : p a b c :=
   have : ∀ x : Completion α × Completion β × Completion γ, p x.1 x.2.1 x.2.2 :=
     (is_closed_property dense_range_coe₃ hp) fun ⟨a, b, c⟩ => ih a b c
   this (a, b, c)

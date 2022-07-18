@@ -71,7 +71,7 @@ variable (G : Type _) [Groupₓ G] (H : Subgroup G)
 @[nolint has_inhabited_instance]
 structure MulActionHom where
   toFun : X → Y
-  map_smul' : ∀ m : M' x : X, to_fun (m • x) = m • to_fun x
+  map_smul' : ∀ (m : M') (x : X), to_fun (m • x) = m • to_fun x
 
 -- mathport name: «expr →[ ] »
 notation:25 X " →[" M:25 "] " Y:0 => MulActionHom M X Y
@@ -82,7 +82,7 @@ scalar multiplication by `M`.
 You should extend this class when you extend `mul_action_hom`. -/
 class SmulHomClass (F : Type _) (M X Y : outParam <| Type _) [HasSmul M X] [HasSmul M Y] extends
   FunLike F X fun _ => Y where
-  map_smul : ∀ f : F c : M x : X, f (c • x) = c • f x
+  map_smul : ∀ (f : F) (c : M) (x : X), f (c • x) = c • f x
 
 -- `M` becomes a metavariable but it's an `out_param` so it's not a problem.
 attribute [nolint dangerous_instance] SmulHomClass.toFunLike

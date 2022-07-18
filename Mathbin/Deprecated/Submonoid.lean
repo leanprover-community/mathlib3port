@@ -129,7 +129,7 @@ theorem IsSubmonoid.preimage {N : Type _} [Monoidₓ N] {f : M → N} (hf : IsMo
   { one_mem :=
       show f 1 ∈ s by
         rw [IsMonoidHom.map_one hf] <;> exact hs.one_mem,
-    mul_mem := fun a b ha : f a ∈ s hb : f b ∈ s =>
+    mul_mem := fun a b (ha : f a ∈ s) (hb : f b ∈ s) =>
       show f (a * b) ∈ s by
         rw [IsMonoidHom.map_mul hf] <;> exact hs.mul_mem ha hb }
 

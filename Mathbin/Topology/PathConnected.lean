@@ -86,7 +86,7 @@ protected theorem Path.ext : ∀ {γ₁ γ₂ : Path x y}, (γ₁ : I → X) = �
 namespace Path
 
 @[simp]
-theorem coe_mk (f : I → X) h₁ h₂ h₃ : ⇑(mk ⟨f, h₁⟩ h₂ h₃ : Path x y) = f :=
+theorem coe_mk (f : I → X) (h₁ h₂ h₃) : ⇑(mk ⟨f, h₁⟩ h₂ h₃ : Path x y) = f :=
   rfl
 
 variable (γ : Path x y)
@@ -869,14 +869,14 @@ theorem is_path_connected_iff_eq : IsPathConnected F ↔ ∃ x ∈ F, PathCompon
     rwa [← h] at y_in
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » F)
-theorem IsPathConnected.joined_in (h : IsPathConnected F) : ∀ x y _ : x ∈ F _ : y ∈ F, JoinedIn F x y :=
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » F)
+theorem IsPathConnected.joined_in (h : IsPathConnected F) : ∀ (x y) (_ : x ∈ F) (_ : y ∈ F), JoinedIn F x y :=
   fun x x_in x y_in =>
   let ⟨b, b_in, hb⟩ := h
   (hb x_in).symm.trans (hb y_in)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » F)
-theorem is_path_connected_iff : IsPathConnected F ↔ F.Nonempty ∧ ∀ x y _ : x ∈ F _ : y ∈ F, JoinedIn F x y :=
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » F)
+theorem is_path_connected_iff : IsPathConnected F ↔ F.Nonempty ∧ ∀ (x y) (_ : x ∈ F) (_ : y ∈ F), JoinedIn F x y :=
   ⟨fun h =>
     ⟨let ⟨b, b_in, hb⟩ := h
       ⟨b, b_in⟩,

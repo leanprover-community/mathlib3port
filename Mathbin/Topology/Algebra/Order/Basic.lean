@@ -6,7 +6,7 @@ Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 import Mathbin.Algebra.GroupWithZero.Power
 import Mathbin.Data.Set.Intervals.Pi
 import Mathbin.Order.Filter.Interval
-import Mathbin.Topology.Algebra.Group
+import Mathbin.Topology.Algebra.Field
 import Mathbin.Tactic.Linarith.Default
 import Mathbin.Tactic.Tfae
 
@@ -617,7 +617,7 @@ variable [Nonempty α] [TopologicalSpace β]
 /-- A compact set is bounded below -/
 theorem IsCompact.bdd_below {s : Set α} (hs : IsCompact s) : BddBelow s := by
   by_contra H
-  rcases hs.elim_finite_subcover_image (fun x _ : x ∈ s => @is_open_Ioi _ _ _ _ x) _ with ⟨t, st, ft, ht⟩
+  rcases hs.elim_finite_subcover_image (fun x (_ : x ∈ s) => @is_open_Ioi _ _ _ _ x) _ with ⟨t, st, ft, ht⟩
   · refine' H (ft.bdd_below.imp fun C hC y hy => _)
     rcases mem_Union₂.1 (ht hy) with ⟨x, hx, xy⟩
     exact le_transₓ (hC hx) (le_of_ltₓ xy)
@@ -1049,7 +1049,7 @@ instance (priority := 100) OrderTopology.to_order_closed_topology :
     OrderClosedTopology
       α where is_closed_le' :=
     is_open_compl_iff.1 <|
-      is_open_prod_iff.mpr fun a₁ a₂ h : ¬a₁ ≤ a₂ =>
+      is_open_prod_iff.mpr fun a₁ a₂ (h : ¬a₁ ≤ a₂) =>
         have h : a₂ < a₁ := lt_of_not_geₓ h
         let ⟨u, v, hu, hv, ha₁, ha₂, h⟩ := order_separated h
         ⟨v, u, hv, hu, ha₂, ha₁, fun ⟨b₁, b₂⟩ ⟨h₁, h₂⟩ => not_le_of_gtₓ <| h b₂ h₂ b₁ h₁⟩
@@ -1071,7 +1071,7 @@ theorem OrderTopology.t2_space : T2Space α := by
   infer_instance
 
 -- see Note [lower instance priority]
-instance (priority := 100) OrderTopology.regular_space : RegularSpace α :=
+instance (priority := 100) OrderTopology.t3_space : T3Space α :=
   { OrderTopology.t2_space with
     regular := fun s a hs ha =>
       have hs' : sᶜ ∈ 𝓝 a := IsOpen.mem_nhds hs.is_open_compl ha
@@ -1084,12 +1084,12 @@ instance (priority := 100) OrderTopology.regular_space : RegularSpace α :=
               ⟨{ a | a < b }, is_open_gt' _, fun c hcs hca =>
                 show c < b from lt_of_not_geₓ fun hbc => h ⟨lt_of_lt_of_leₓ hb₁ hbc, le_of_ltₓ hca⟩ hcs,
                 inf_principal_eq_bot.2 <|
-                  ((𝓝 a).sets_of_superset ((is_open_lt' _).mem_nhds hb₂)) fun x hx : b < x =>
+                  ((𝓝 a).sets_of_superset ((is_open_lt' _).mem_nhds hb₂)) fun x (hx : b < x) =>
                     show ¬x < b from not_ltₓ.2 <| le_of_ltₓ hx⟩
             | Or.inr ⟨h₁, h₂⟩ =>
               ⟨{ a' | a' < a }, is_open_gt' _, fun b hbs hba => hba,
                 inf_principal_eq_bot.2 <|
-                  ((𝓝 a).sets_of_superset ((is_open_lt' _).mem_nhds hl)) fun x hx : l < x =>
+                  ((𝓝 a).sets_of_superset ((is_open_lt' _).mem_nhds hl)) fun x (hx : l < x) =>
                     show ¬x < a from not_ltₓ.2 <| h₁ _ hx⟩)
           fun this : ¬∃ l, l < a => ⟨∅, is_open_empty, fun l _ hl => (this ⟨l, hl⟩).elim, nhds_within_empty _⟩
       let ⟨t₁, ht₁o, ht₁s, ht₁a⟩ := this
@@ -1102,12 +1102,12 @@ instance (priority := 100) OrderTopology.regular_space : RegularSpace α :=
               ⟨{ a | b < a }, is_open_lt' _, fun c hcs hca =>
                 show c > b from lt_of_not_geₓ fun hbc => h ⟨le_of_ltₓ hca, lt_of_le_of_ltₓ hbc hb₂⟩ hcs,
                 inf_principal_eq_bot.2 <|
-                  ((𝓝 a).sets_of_superset ((is_open_gt' _).mem_nhds hb₁)) fun x hx : b > x =>
+                  ((𝓝 a).sets_of_superset ((is_open_gt' _).mem_nhds hb₁)) fun x (hx : b > x) =>
                     show ¬x > b from not_ltₓ.2 <| le_of_ltₓ hx⟩
             | Or.inr ⟨h₁, h₂⟩ =>
               ⟨{ a' | a' > a }, is_open_lt' _, fun b hbs hba => hba,
                 inf_principal_eq_bot.2 <|
-                  ((𝓝 a).sets_of_superset ((is_open_gt' _).mem_nhds hu)) fun x hx : u > x =>
+                  ((𝓝 a).sets_of_superset ((is_open_gt' _).mem_nhds hu)) fun x (hx : u > x) =>
                     show ¬x > a from not_ltₓ.2 <| h₂ _ hx⟩)
           fun this : ¬∃ u, u > a => ⟨∅, is_open_empty, fun l _ hl => (this ⟨l, hl⟩).elim, nhds_within_empty _⟩
       let ⟨t₂, ht₂o, ht₂s, ht₂a⟩ := this
@@ -1258,23 +1258,23 @@ e.g., `ι → ℝ`.
 -/
 
 
-variable {ι : Type _} {π : ι → Type _} [Fintype ι] [∀ i, LinearOrderₓ (π i)] [∀ i, TopologicalSpace (π i)]
+variable {ι : Type _} {π : ι → Type _} [Finite ι] [∀ i, LinearOrderₓ (π i)] [∀ i, TopologicalSpace (π i)]
   [∀ i, OrderTopology (π i)] {a b x : ∀ i, π i} {a' b' x' : ι → α}
 
 theorem pi_Iic_mem_nhds (ha : ∀ i, x i < a i) : Iic a ∈ 𝓝 x :=
-  pi_univ_Iic a ▸ set_pi_mem_nhds (Finite.of_fintype _) fun i _ => Iic_mem_nhds (ha _)
+  pi_univ_Iic a ▸ set_pi_mem_nhds (Set.to_finite _) fun i _ => Iic_mem_nhds (ha _)
 
 theorem pi_Iic_mem_nhds' (ha : ∀ i, x' i < a' i) : Iic a' ∈ 𝓝 x' :=
   pi_Iic_mem_nhds ha
 
 theorem pi_Ici_mem_nhds (ha : ∀ i, a i < x i) : Ici a ∈ 𝓝 x :=
-  pi_univ_Ici a ▸ set_pi_mem_nhds (Finite.of_fintype _) fun i _ => Ici_mem_nhds (ha _)
+  pi_univ_Ici a ▸ set_pi_mem_nhds (Set.to_finite _) fun i _ => Ici_mem_nhds (ha _)
 
 theorem pi_Ici_mem_nhds' (ha : ∀ i, a' i < x' i) : Ici a' ∈ 𝓝 x' :=
   pi_Ici_mem_nhds ha
 
 theorem pi_Icc_mem_nhds (ha : ∀ i, a i < x i) (hb : ∀ i, x i < b i) : Icc a b ∈ 𝓝 x :=
-  pi_univ_Icc a b ▸ set_pi_mem_nhds (Finite.of_fintype _) fun i _ => Icc_mem_nhds (ha _) (hb _)
+  pi_univ_Icc a b ▸ set_pi_mem_nhds finite_univ fun i _ => Icc_mem_nhds (ha _) (hb _)
 
 theorem pi_Icc_mem_nhds' (ha : ∀ i, a' i < x' i) (hb : ∀ i, x' i < b' i) : Icc a' b' ∈ 𝓝 x' :=
   pi_Icc_mem_nhds ha hb
@@ -1282,7 +1282,7 @@ theorem pi_Icc_mem_nhds' (ha : ∀ i, a' i < x' i) (hb : ∀ i, x' i < b' i) : I
 variable [Nonempty ι]
 
 theorem pi_Iio_mem_nhds (ha : ∀ i, x i < a i) : Iio a ∈ 𝓝 x := by
-  refine' mem_of_superset (set_pi_mem_nhds (finite.of_fintype _) fun i _ => _) (pi_univ_Iio_subset a)
+  refine' mem_of_superset (set_pi_mem_nhds (Set.to_finite _) fun i _ => _) (pi_univ_Iio_subset a)
   exact Iio_mem_nhds (ha i)
 
 theorem pi_Iio_mem_nhds' (ha : ∀ i, x' i < a' i) : Iio a' ∈ 𝓝 x' :=
@@ -1295,21 +1295,21 @@ theorem pi_Ioi_mem_nhds' (ha : ∀ i, a' i < x' i) : Ioi a' ∈ 𝓝 x' :=
   pi_Ioi_mem_nhds ha
 
 theorem pi_Ioc_mem_nhds (ha : ∀ i, a i < x i) (hb : ∀ i, x i < b i) : Ioc a b ∈ 𝓝 x := by
-  refine' mem_of_superset (set_pi_mem_nhds (finite.of_fintype _) fun i _ => _) (pi_univ_Ioc_subset a b)
+  refine' mem_of_superset (set_pi_mem_nhds (Set.to_finite _) fun i _ => _) (pi_univ_Ioc_subset a b)
   exact Ioc_mem_nhds (ha i) (hb i)
 
 theorem pi_Ioc_mem_nhds' (ha : ∀ i, a' i < x' i) (hb : ∀ i, x' i < b' i) : Ioc a' b' ∈ 𝓝 x' :=
   pi_Ioc_mem_nhds ha hb
 
 theorem pi_Ico_mem_nhds (ha : ∀ i, a i < x i) (hb : ∀ i, x i < b i) : Ico a b ∈ 𝓝 x := by
-  refine' mem_of_superset (set_pi_mem_nhds (finite.of_fintype _) fun i _ => _) (pi_univ_Ico_subset a b)
+  refine' mem_of_superset (set_pi_mem_nhds (Set.to_finite _) fun i _ => _) (pi_univ_Ico_subset a b)
   exact Ico_mem_nhds (ha i) (hb i)
 
 theorem pi_Ico_mem_nhds' (ha : ∀ i, a' i < x' i) (hb : ∀ i, x' i < b' i) : Ico a' b' ∈ 𝓝 x' :=
   pi_Ico_mem_nhds ha hb
 
 theorem pi_Ioo_mem_nhds (ha : ∀ i, a i < x i) (hb : ∀ i, x i < b i) : Ioo a b ∈ 𝓝 x := by
-  refine' mem_of_superset (set_pi_mem_nhds (finite.of_fintype _) fun i _ => _) (pi_univ_Ioo_subset a b)
+  refine' mem_of_superset (set_pi_mem_nhds (Set.to_finite _) fun i _ => _) (pi_univ_Ioo_subset a b)
   exact Ioo_mem_nhds (ha i) (hb i)
 
 theorem pi_Ioo_mem_nhds' (ha : ∀ i, a' i < x' i) (hb : ∀ i, x' i < b' i) : Ioo a' b' ∈ 𝓝 x' :=
@@ -1699,7 +1699,7 @@ instance (priority := 100) LinearOrderedAddCommGroup.topological_add_group : Top
     refine' LinearOrderedAddCommGroup.tendsto_nhds.2 fun ε ε0 => _
     rcases dense_or_discrete 0 ε with (⟨δ, δ0, δε⟩ | ⟨h₁, h₂⟩)
     · -- If there exists `δ ∈ (0, ε)`, then we choose `δ`-nhd of `a` and `(ε-δ)`-nhd of `b`
-      filter_upwards [ProdIsOpen.mem_nhds (eventually_abs_sub_lt a δ0) (eventually_abs_sub_lt b (sub_pos.2 δε))]
+      filter_upwards [(eventually_abs_sub_lt a δ0).prod_nhds (eventually_abs_sub_lt b (sub_pos.2 δε))]
       rintro ⟨x, y⟩ ⟨hx : abs (x - a) < δ, hy : abs (y - b) < ε - δ⟩
       rw [add_sub_add_comm]
       calc abs (x - a + (y - b)) ≤ abs (x - a) + abs (y - b) := abs_add _ _ _ < δ + (ε - δ) := add_lt_add hx hy _ = ε :=
@@ -1709,7 +1709,7 @@ instance (priority := 100) LinearOrderedAddCommGroup.topological_add_group : Top
       have hε : ∀ {x y}, abs (x - y) < ε → x = y := by
         intro x y h
         simpa [← sub_eq_zero] using h₂ _ h
-      filter_upwards [ProdIsOpen.mem_nhds (eventually_abs_sub_lt a ε0) (eventually_abs_sub_lt b ε0)]
+      filter_upwards [(eventually_abs_sub_lt a ε0).prod_nhds (eventually_abs_sub_lt b ε0)]
       rintro ⟨x, y⟩ ⟨hx : abs (x - a) < ε, hy : abs (y - b) < ε⟩
       simpa [← hε hx, ← hε hy]
       
@@ -1934,6 +1934,7 @@ theorem mul_tendsto_nhds_one_nhds_one : Tendsto (uncurry ((· * ·) : α → α 
         ring_nf
     
 
+-- see Note [lower instance priority]
 instance (priority := 100) LinearOrderedField.has_continuous_mul : HasContinuousMul α :=
   ⟨by
     rw [continuous_iff_continuous_at]
@@ -2045,50 +2046,37 @@ theorem Filter.Tendsto.inv_tendsto_zero (h : Tendsto f l (𝓝[>] 0)) : Tendsto 
 
 /-- The function `x^(-n)` tends to `0` at `+∞` for any positive natural `n`.
 A version for positive real powers exists as `tendsto_rpow_neg_at_top`. -/
-theorem tendsto_pow_neg_at_top {n : ℕ} (hn : 1 ≤ n) : Tendsto (fun x : α => x ^ -(n : ℤ)) atTop (𝓝 0) :=
-  Tendsto.congr (fun x => (zpow_neg x n).symm)
-    (Filter.Tendsto.inv_tendsto_at_top
-      (by
-        simpa [← zpow_coe_nat] using tendsto_pow_at_top hn))
+theorem tendsto_pow_neg_at_top {n : ℕ} (hn : n ≠ 0) : Tendsto (fun x : α => x ^ -(n : ℤ)) atTop (𝓝 0) := by
+  simpa only [← zpow_neg, ← zpow_coe_nat] using (@tendsto_pow_at_top α _ _ hn).inv_tendsto_at_top
 
 theorem tendsto_zpow_at_top_zero {n : ℤ} (hn : n < 0) : Tendsto (fun x : α => x ^ n) atTop (𝓝 0) := by
-  have : 1 ≤ -n := le_neg.mp (Int.le_of_lt_add_oneₓ (hn.trans_le (neg_add_selfₓ 1).symm.le))
-  apply
-    tendsto.congr
-      (show ∀ x : α, x ^ - -n = x ^ n by
-        simp )
   lift -n to ℕ using le_of_ltₓ (neg_pos.mpr hn) with N
-  exact
-    tendsto_pow_neg_at_top
-      (by
-        exact_mod_cast this)
+  rw [← neg_pos, ← h, Nat.cast_pos] at hn
+  simpa only [← h, ← neg_negₓ] using tendsto_pow_neg_at_top hn.ne'
 
 theorem tendsto_const_mul_zpow_at_top_zero {n : ℤ} {c : α} (hn : n < 0) : Tendsto (fun x => c * x ^ n) atTop (𝓝 0) :=
   mul_zero c ▸ Filter.Tendsto.const_mul c (tendsto_zpow_at_top_zero hn)
 
-theorem tendsto_const_mul_pow_nhds_iff {n : ℕ} {c d : α} (hc : c ≠ 0) :
-    Tendsto (fun x : α => c * x ^ n) atTop (𝓝 d) ↔ n = 0 ∧ c = d := by
-  refine' ⟨fun h => _, fun h => _⟩
-  · have hn : n = 0 := by
-      by_contra hn
-      have hn : 1 ≤ n := Nat.succ_le_iff.2 (lt_of_le_of_neₓ (zero_le _) (Ne.symm hn))
-      by_cases' hc' : 0 < c
-      · have := (tendsto_const_mul_pow_at_top_iff c n).2 ⟨hn, hc'⟩
-        exact not_tendsto_nhds_of_tendsto_at_top this d h
-        
-      · have := (tendsto_neg_const_mul_pow_at_top_iff c n).2 ⟨hn, lt_of_le_of_neₓ (not_ltₓ.1 hc') hc⟩
-        exact not_tendsto_nhds_of_tendsto_at_bot this d h
-        
-    have : (fun x : α => c * x ^ n) = fun x : α => c := by
-      simp [← hn]
-    rw [this, tendsto_const_nhds_iff] at h
-    exact ⟨hn, h⟩
+theorem tendsto_const_mul_pow_nhds_iff' {n : ℕ} {c d : α} :
+    Tendsto (fun x : α => c * x ^ n) atTop (𝓝 d) ↔ (c = 0 ∨ n = 0) ∧ c = d := by
+  rcases eq_or_ne n 0 with (rfl | hn)
+  · simp [← tendsto_const_nhds_iff]
     
-  · obtain ⟨hn, hcd⟩ := h
-    simpa [← hn, ← hcd] using tendsto_const_nhds
+  rcases lt_trichotomyₓ c 0 with (hc | rfl | hc)
+  · have := tendsto_const_mul_pow_at_bot_iff.2 ⟨hn, hc⟩
+    simp [← not_tendsto_nhds_of_tendsto_at_bot this, ← hc.ne, ← hn]
+    
+  · simp [← tendsto_const_nhds_iff]
+    
+  · have := tendsto_const_mul_pow_at_top_iff.2 ⟨hn, hc⟩
+    simp [← not_tendsto_nhds_of_tendsto_at_top this, ← hc.ne', ← hn]
     
 
-theorem tendsto_const_mul_zpow_at_top_zero_iff {n : ℤ} {c d : α} (hc : c ≠ 0) :
+theorem tendsto_const_mul_pow_nhds_iff {n : ℕ} {c d : α} (hc : c ≠ 0) :
+    Tendsto (fun x : α => c * x ^ n) atTop (𝓝 d) ↔ n = 0 ∧ c = d := by
+  simp [← tendsto_const_mul_pow_nhds_iff', ← hc]
+
+theorem tendsto_const_mul_zpow_at_top_nhds_iff {n : ℤ} {c d : α} (hc : c ≠ 0) :
     Tendsto (fun x : α => c * x ^ n) atTop (𝓝 d) ↔ n = 0 ∧ c = d ∨ n < 0 ∧ d = 0 := by
   refine' ⟨fun h => _, fun h => _⟩
   · by_cases' hn : 0 ≤ n
@@ -2108,6 +2096,51 @@ theorem tendsto_const_mul_zpow_at_top_zero_iff {n : ℤ} {c d : α} (hc : c ≠ 
     · exact h.2.symm ▸ tendsto_const_mul_zpow_at_top_zero h.1
       
     
+
+-- TODO: With a different proof, this could be possibly generalised to only require a
+-- `linear_ordered_semifield` instance, which would also remove the need for the
+-- `nnreal` instance of `has_continuous_inv₀`.
+-- see Note [lower instance priority]
+instance (priority := 100) LinearOrderedField.to_topological_division_ring :
+    TopologicalDivisionRing α where continuous_at_inv₀ := by
+    suffices ∀ {x : α}, 0 < x → ContinuousAt Inv.inv x by
+      intro x hx
+      cases hx.symm.lt_or_lt
+      · exact this h
+        
+      convert (this <| neg_pos.mpr h).neg.comp continuous_neg.continuous_at
+      ext
+      simp [← neg_inv]
+    intro t ht
+    rw [ContinuousAt, (nhds_basis_Ioo_pos t).tendsto_iff <| nhds_basis_Ioo_pos_of_pos <| inv_pos.2 ht]
+    rintro ε ⟨hε : ε > 0, hεt : ε ≤ t⁻¹⟩
+    refine'
+      ⟨min (t ^ 2 * ε / 2) (t / 2),
+        lt_minₓ
+            (half_pos <|
+              mul_pos
+                (by
+                  nlinarith)
+                hε) <|
+          by
+          linarith,
+        fun x h => _⟩
+    have hx : t / 2 < x := by
+      rw [Set.mem_Ioo, sub_lt, lt_min_iff] at h
+      nlinarith
+    have hx' : 0 < x := (half_pos ht).trans hx
+    have aux : 0 < 2 / t ^ 2 := div_pos zero_lt_two (sq_pos_of_pos ht)
+    rw [Set.mem_Ioo, ← sub_lt_iff_lt_add', sub_lt, ← abs_sub_lt_iff] at h⊢
+    rw [inv_sub_inv ht.ne' hx'.ne', abs_div, div_eq_mul_inv]
+    suffices (abs (t * x))⁻¹ < 2 / t ^ 2 by
+      rw [← abs_neg, neg_sub]
+      refine' (mul_lt_mul'' h this (abs_nonneg _) <| inv_nonneg.mpr <| abs_nonneg _).trans_le _
+      rw [mul_comm, mul_min_of_nonneg _ _ aux.le]
+      apply min_le_of_left_le
+      rw [← mul_div, ← mul_assoc, div_mul_cancel _ (sq_pos_of_pos ht).ne', mul_div_cancel' ε two_ne_zero]
+    refine' inv_lt_of_inv_lt aux _
+    rw [inv_div, abs_of_pos <| mul_pos ht hx', sq, ← mul_div_assoc']
+    exact mul_lt_mul_of_pos_left hx ht
 
 end LinearOrderedField
 
@@ -2672,7 +2705,7 @@ instance (x : α) [Nontrivial α] : NeBot (𝓝[≠] x) := by
   obtain ⟨z, hz⟩ : ∃ z, a < z ∧ z < x := exists_between hy.1
   exact ⟨z, us ⟨hab ⟨hz.1, hz.2.trans hy.2⟩, hz.2.Ne⟩⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- Let `s` be a dense set in a nontrivial dense linear order `α`. If `s` is a
 separable space (e.g., if `α` has a second countable topology), then there exists a countable
 dense subset `t ⊆ s` such that `t` does not contain bottom/top elements of `α`. -/

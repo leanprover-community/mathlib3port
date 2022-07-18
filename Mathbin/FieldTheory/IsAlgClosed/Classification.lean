@@ -57,7 +57,6 @@ theorem cardinal_mk_le_sigma_polynomial : # L ≤ # (Σp : R[X], { x : L // x �
     refine' (Subtype.heq_iff_coe_eq _).1 h.2
     simp only [← h.1, ← iff_selfₓ, ← forall_true_iff]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The cardinality of an algebraic extension is at most the maximum of the cardinality
 of the base ring or `ℵ₀` -/
 theorem cardinal_mk_le_max : # L ≤ max (# R) ℵ₀ :=
@@ -65,14 +64,7 @@ theorem cardinal_mk_le_max : # L ≤ max (# R) ℵ₀ :=
     # L ≤ # (Σp : R[X], { x : L // x ∈ (p.map (algebraMap R L)).roots }) := cardinal_mk_le_sigma_polynomial R L halg
     _ = Cardinal.sum fun p : R[X] => # { x : L | x ∈ (p.map (algebraMap R L)).roots } := by
       rw [← mk_sigma] <;> rfl
-    _ ≤ Cardinal.sum.{u, u} fun p : R[X] => ℵ₀ :=
-      sum_le_sum _ _ fun p =>
-        le_of_ltₓ
-          (by
-            rw [lt_aleph_0_iff_finite]
-            classical
-            simp only [@Multiset.mem_to_finset _ _ _ (p.map (algebraMap R L)).roots]
-            exact Set.finite_mem_finset _)
+    _ ≤ Cardinal.sum.{u, u} fun p : R[X] => ℵ₀ := (sum_le_sum _ _) fun p => (Multiset.finite_to_set _).lt_aleph_0.le
     _ = # R[X] * ℵ₀ := sum_const' _ _
     _ ≤ max (max (# R[X]) ℵ₀) ℵ₀ := mul_le_max _ _
     _ ≤ max (max (max (# R) ℵ₀) ℵ₀) ℵ₀ := max_le_max (max_le_max Polynomial.cardinal_mk_le_max le_rfl) le_rfl
@@ -209,8 +201,8 @@ private theorem ring_equiv_of_cardinal_eq_of_char_p (p : ℕ) [Fact p.Prime] [Ch
       (show Function.Injective (algebraMap (Zmod p) L) from RingHom.injective _) with
     t ht
   have : # s = # t := by
-    rw [← cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ hs (lt_aleph_0_of_fintype (Zmod p)).le hK, ←
-      cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ ht (lt_aleph_0_of_fintype (Zmod p)).le, hKL]
+    rw [← cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ hs (lt_aleph_0_of_finite (Zmod p)).le hK, ←
+      cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ ht (lt_aleph_0_of_finite (Zmod p)).le, hKL]
     rwa [← hKL]
   cases' Cardinal.eq.1 this with e
   exact ⟨equiv_of_transcendence_basis _ _ e hs ht⟩

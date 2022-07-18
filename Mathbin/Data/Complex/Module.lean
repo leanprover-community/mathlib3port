@@ -268,9 +268,14 @@ theorem conj_ae_coe : ⇑conj_ae = conj :=
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
 /-- The matrix representation of `conj_ae`. -/
 @[simp]
-theorem to_matrix_conj_ae : LinearMap.toMatrix basisOneI basisOneI conjAe.toLinearMap = ![![1, 0], ![0, -1]] := by
+theorem to_matrix_conj_ae :
+    LinearMap.toMatrix basisOneI basisOneI conjAe.toLinearMap =
+      «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation" :=
+  by
   ext i j
   simp [← LinearMap.to_matrix_apply]
   fin_cases i <;> fin_cases j <;> simp
@@ -302,10 +307,10 @@ def liftAux (I' : A) (hf : I' * I' = -1) : ℂ →ₐ[ℝ] A :=
         
 
 @[simp]
-theorem lift_aux_apply (I' : A) hI' (z : ℂ) : liftAux I' hI' z = algebraMap ℝ A z.re + z.im • I' :=
+theorem lift_aux_apply (I' : A) (hI') (z : ℂ) : liftAux I' hI' z = algebraMap ℝ A z.re + z.im • I' :=
   rfl
 
-theorem lift_aux_apply_I (I' : A) hI' : liftAux I' hI' i = I' := by
+theorem lift_aux_apply_I (I' : A) (hI') : liftAux I' hI' i = I' := by
   simp
 
 /-- A universal property of the complex numbers, providing a unique `ℂ →ₐ[ℝ] A` for every element

@@ -211,21 +211,21 @@ theorem Periodic.int_mul_eq [Ringₓ α] (h : Periodic f c) (n : ℤ) : f (n * c
 
 /-- If a function `f` is `periodic` with positive period `c`, then for all `x` there exists some
   `y ∈ Ico 0 c` such that `f x = f y`. -/
-theorem Periodic.exists_mem_Ico₀ [LinearOrderedAddCommGroup α] [Archimedean α] (h : Periodic f c) (hc : 0 < c) x :
+theorem Periodic.exists_mem_Ico₀ [LinearOrderedAddCommGroup α] [Archimedean α] (h : Periodic f c) (hc : 0 < c) (x) :
     ∃ y ∈ Set.Ico 0 c, f x = f y :=
   let ⟨n, H, _⟩ := exists_unique_zsmul_near_of_pos' hc x
   ⟨x - n • c, H, (h.sub_zsmul_eq n).symm⟩
 
 /-- If a function `f` is `periodic` with positive period `c`, then for all `x` there exists some
   `y ∈ Ico a (a + c)` such that `f x = f y`. -/
-theorem Periodic.exists_mem_Ico [LinearOrderedAddCommGroup α] [Archimedean α] (h : Periodic f c) (hc : 0 < c) x a :
+theorem Periodic.exists_mem_Ico [LinearOrderedAddCommGroup α] [Archimedean α] (h : Periodic f c) (hc : 0 < c) (x a) :
     ∃ y ∈ Set.Ico a (a + c), f x = f y :=
   let ⟨n, H, _⟩ := exists_unique_add_zsmul_mem_Ico hc x a
   ⟨x + n • c, H, (h.zsmul n x).symm⟩
 
 /-- If a function `f` is `periodic` with positive period `c`, then for all `x` there exists some
   `y ∈ Ioc a (a + c)` such that `f x = f y`. -/
-theorem Periodic.exists_mem_Ioc [LinearOrderedAddCommGroup α] [Archimedean α] (h : Periodic f c) (hc : 0 < c) x a :
+theorem Periodic.exists_mem_Ioc [LinearOrderedAddCommGroup α] [Archimedean α] (h : Periodic f c) (hc : 0 < c) (x a) :
     ∃ y ∈ Set.Ioc a (a + c), f x = f y :=
   let ⟨n, H, _⟩ := exists_unique_add_zsmul_mem_Ioc hc x a
   ⟨x + n • c, H, (h.zsmul n x).symm⟩

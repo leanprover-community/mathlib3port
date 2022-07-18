@@ -69,7 +69,7 @@ theorem Equivalent.prod {Q₁ : QuadraticForm R M₁} {Q₂ : QuadraticForm R M�
 /-- If a product is anisotropic then its components must be. The converse is not true. -/
 theorem anisotropic_of_prod {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q₁ : QuadraticForm R M₁}
     {Q₂ : QuadraticForm R M₂} (h : (Q₁.Prod Q₂).Anisotropic) : Q₁.Anisotropic ∧ Q₂.Anisotropic := by
-  simp_rw [anisotropic, prod_to_fun, Prod.forall, Prod.mk_eq_zero] at h
+  simp_rw [anisotropic, prod_apply, Prod.forall, Prod.mk_eq_zero] at h
   constructor
   · intro x hx
     refine' (h x 0 _).1
@@ -82,7 +82,7 @@ theorem anisotropic_of_prod {R} [OrderedRing R] [Module R M₁] [Module R M₂] 
 
 theorem nonneg_prod_iff {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q₁ : QuadraticForm R M₁}
     {Q₂ : QuadraticForm R M₂} : (∀ x, 0 ≤ (Q₁.Prod Q₂) x) ↔ (∀ x, 0 ≤ Q₁ x) ∧ ∀ x, 0 ≤ Q₂ x := by
-  simp_rw [Prod.forall, prod_to_fun]
+  simp_rw [Prod.forall, prod_apply]
   constructor
   · intro h
     constructor
@@ -140,7 +140,6 @@ theorem Equivalent.pi [Fintype ι] {Q : ∀ i, QuadraticForm R (Mᵢ i)} {Q' : �
     (e : ∀ i, (Q i).Equivalent (Q' i)) : (pi Q).Equivalent (pi Q') :=
   ⟨Isometry.pi fun i => Classical.choice (e i)⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If a family is anisotropic then its components must be. The converse is not true. -/
 theorem anisotropic_of_pi [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (Mᵢ i)] {Q : ∀ i, QuadraticForm R (Mᵢ i)}
     (h : (pi Q).Anisotropic) : ∀ i, (Q i).Anisotropic := by
@@ -160,7 +159,6 @@ theorem anisotropic_of_pi [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (M�
   · rw [Pi.single_eq_of_ne hji, map_zero]
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem nonneg_pi_iff [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (Mᵢ i)] {Q : ∀ i, QuadraticForm R (Mᵢ i)} :
     (∀ x, 0 ≤ pi Q x) ↔ ∀ i x, 0 ≤ Q i x := by
   simp_rw [pi, sum_apply, comp_apply, LinearMap.proj_apply]

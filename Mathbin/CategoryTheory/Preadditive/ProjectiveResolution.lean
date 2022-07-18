@@ -84,7 +84,7 @@ structure ProjectiveResolution (Z : C) where
 
 attribute [instance] ProjectiveResolution.projective ProjectiveResolution.epi
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`out] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`out] []
 /-- An object admits a projective resolution.
 -/
 class HasProjectiveResolution (Z : C) : Prop where

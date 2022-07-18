@@ -101,7 +101,7 @@ theorem bottom_row_surj {R : Type _} [CommRingₓ R] :
       { cd | IsCoprime (cd 0) (cd 1) } :=
   by
   rintro cd ⟨b₀, a, gcd_eqn⟩
-  let A := ![![a, -b₀], cd]
+  let A := of ![![a, -b₀], cd]
   have det_A_1 : det A = 1 := by
     convert gcd_eqn
     simp [← A, ← det_fin_two, ←
@@ -198,10 +198,11 @@ def lcRow0Extend {cd : Finₓ 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) :
 `[[* , *], [c, d]]`.-/
 theorem tendsto_lc_row0 {cd : Finₓ 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) :
     Tendsto (fun g : { g : SL(2, ℤ) // ↑ₘg 1 = cd } => lcRow0 cd ↑(↑g : SL(2, ℝ))) cofinite (cocompact ℝ) := by
-  let mB : ℝ → Matrix (Finₓ 2) (Finₓ 2) ℝ := fun t => ![![t, (-(1 : ℤ) : ℝ)], coe ∘ cd]
+  let mB : ℝ → Matrix (Finₓ 2) (Finₓ 2) ℝ := fun t => of ![![t, (-(1 : ℤ) : ℝ)], coe ∘ cd]
   have hmB : Continuous mB := by
-    simp only [← continuous_pi_iff, ← Finₓ.forall_fin_two, ← mB, ← continuous_const, ← continuous_id', ← cons_val_zero,
-      ← cons_val_one, ← and_selfₓ]
+    refine' continuous_matrix _
+    simp only [← Finₓ.forall_fin_two, ← mB, ← continuous_const, ← continuous_id', ← of_apply, ← cons_val_zero, ←
+      cons_val_one, ← and_selfₓ]
   refine' Filter.Tendsto.of_tendsto_comp _ (comap_cocompact_le hmB)
   let f₁ : SL(2, ℤ) → Matrix (Finₓ 2) (Finₓ 2) ℝ := fun g => Matrix.map (↑g : Matrix _ _ ℤ) (coe : ℤ → ℝ)
   have cocompact_ℝ_to_cofinite_ℤ_matrix :
@@ -219,14 +220,14 @@ theorem tendsto_lc_row0 {cd : Finₓ 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) 
   · simp only [← mB, ← mul_vec, ← dot_product, ← Finₓ.sum_univ_two, ← _root_.coe_coe, ← coe_matrix_coe, ←
       Int.coe_cast_ring_hom, ← lc_row0_apply, ← Function.comp_app, ← cons_val_zero, ← lc_row0_extend_apply, ←
       LinearMap.GeneralLinearGroup.coe_fn_general_linear_equiv, ← general_linear_group.to_linear_apply, ←
-      coe_plane_conformal_matrix, ← neg_negₓ, ← mul_vec_lin_apply, ← cons_val_one, ← head_cons]
+      coe_plane_conformal_matrix, ← neg_negₓ, ← mul_vec_lin_apply, ← cons_val_one, ← head_cons, ← of_apply]
     
   · convert congr_arg (fun n : ℤ => (-n : ℝ)) g.det_coe.symm using 1
     simp only [← f₁, ← mul_vec, ← dot_product, ← Finₓ.sum_univ_two, ← Matrix.det_fin_two, ← Function.comp_app, ←
       Subtype.coe_mk, ← lc_row0_extend_apply, ← cons_val_zero, ←
       LinearMap.GeneralLinearGroup.coe_fn_general_linear_equiv, ← general_linear_group.to_linear_apply, ←
       coe_plane_conformal_matrix, ← mul_vec_lin_apply, ← cons_val_one, ← head_cons, ← map_apply, ← neg_mul, ←
-      Int.cast_sub, ← Int.cast_mul, ← neg_sub]
+      Int.cast_sub, ← Int.cast_mul, ← neg_sub, ← of_apply]
     ring
     
   · rfl
@@ -280,7 +281,6 @@ section FundamentalDomain
 
 attribute [local simp] coe_smul re_smul
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- For `z : ℍ`, there is a `g : SL(2,ℤ)` maximizing `(g•z).im` -/
 theorem exists_max_im : ∃ g : SL(2, ℤ), ∀ g' : SL(2, ℤ), (g' • z).im ≤ (g • z).im := by
   classical
@@ -315,49 +315,96 @@ theorem exists_row_one_eq_and_min_re {cd : Finₓ 2 → ℤ} (hcd : IsCoprime (c
     exact hg ⟨g1, this⟩
     
 
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
 /-- The matrix `T = [[1,1],[0,1]]` as an element of `SL(2,ℤ)` -/
 def t : SL(2, ℤ) :=
-  ⟨![![1, 1], ![0, 1]], by
-    norm_num [← Matrix.det_fin_two]⟩
+  ⟨«expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation", by
+    norm_num [← Matrix.det_fin_two_of]⟩
 
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
 /-- The matrix `S = [[0,-1],[1,0]]` as an element of `SL(2,ℤ)` -/
 def s : SL(2, ℤ) :=
-  ⟨![![0, -1], ![1, 0]], by
-    norm_num [← Matrix.det_fin_two]⟩
+  ⟨«expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation", by
+    norm_num [← Matrix.det_fin_two_of]⟩
 
-theorem coe_S : ↑ₘS = ![![0, -1], ![1, 0]] :=
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
+theorem coe_S :
+    ↑ₘS = «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation" :=
   rfl
 
-theorem coe_T : ↑ₘT = ![![1, 1], ![0, 1]] :=
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
+theorem coe_T :
+    ↑ₘT = «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation" :=
   rfl
 
-theorem coe_T_inv : ↑ₘT⁻¹ = ![![1, -1], ![0, 1]] := by
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
+theorem coe_T_inv :
+    ↑ₘT⁻¹ =
+      «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation" :=
+  by
   simp [← coe_inv, ← coe_T, ← adjugate_fin_two]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
-theorem coe_T_zpow (n : ℤ) : ↑ₘ(T ^ n) = ![![1, n], ![0, 1]] := by
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
+theorem coe_T_zpow (n : ℤ) :
+    ↑ₘ(T ^ n) =
+      «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation" :=
+  by
   induction' n using Int.induction_on with n h n h
-  · ext i j
-    fin_cases i <;> fin_cases j <;> simp
+  · rw [zpow_zero, coe_one, Matrix.one_fin_two]
     
-  · rw [zpow_add, zpow_one, coe_mul, h, coe_T]
-    ext i j
-    fin_cases i <;> fin_cases j <;> simp [← Matrix.mul_apply, ← Finₓ.sum_univ_succ, ← add_commₓ (1 : ℤ)]
+  · simp_rw [zpow_add, zpow_one, coe_mul, h, coe_T, Matrix.mul_fin_two]
+    trace
+      "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, \",\", expr _, \";\", expr _, \",\", expr _, \"]\"] [])]]"
+    rw [mul_oneₓ, mul_oneₓ, add_commₓ]
     
-  · rw [zpow_sub, zpow_one, coe_mul, h, coe_T_inv]
-    ext i j
-    fin_cases i <;> fin_cases j <;> simp [← Matrix.mul_apply, ← Finₓ.sum_univ_succ, ← neg_add_eq_sub (1 : ℤ)]
+  · simp_rw [zpow_sub, zpow_one, coe_mul, h, coe_T_inv, Matrix.mul_fin_two]
+    trace
+        "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, \",\", expr _, \";\", expr _, \",\", expr _, \"]\"] [])]]" <;>
+      ring
     
 
-variable {z}
+@[simp]
+theorem T_pow_mul_apply_one (n : ℤ) (g : SL(2, ℤ)) : ↑ₘ(T ^ n * g) 1 = ↑ₘg 1 := by
+  simp [← coe_T_zpow, ← Matrix.mul, ← Matrix.dotProduct, ← Finₓ.sum_univ_succ]
+
+@[simp]
+theorem T_mul_apply_one (g : SL(2, ℤ)) : ↑ₘ(T * g) 1 = ↑ₘg 1 := by
+  simpa using T_pow_mul_apply_one 1 g
+
+@[simp]
+theorem T_inv_mul_apply_one (g : SL(2, ℤ)) : ↑ₘ(T⁻¹ * g) 1 = ↑ₘg 1 := by
+  simpa using T_pow_mul_apply_one (-1) g
 
 theorem coe_T_zpow_smul_eq {n : ℤ} : (↑(T ^ n • z) : ℂ) = z + n := by
   simp [← coe_T_zpow]
+
+theorem re_T_zpow_smul (n : ℤ) : (T ^ n • z).re = z.re + n := by
+  rw [← coe_re, coe_T_zpow_smul_eq, add_re, int_cast_re, coe_re]
+
+theorem im_T_zpow_smul (n : ℤ) : (T ^ n • z).im = z.im := by
+  rw [← coe_im, coe_T_zpow_smul_eq, add_im, int_cast_im, add_zeroₓ, coe_im]
+
+theorem re_T_smul : (T • z).re = z.re + 1 := by
+  simpa using re_T_zpow_smul z 1
+
+theorem im_T_smul : (T • z).im = z.im := by
+  simpa using im_T_zpow_smul z 1
+
+theorem re_T_inv_smul : (T⁻¹ • z).re = z.re - 1 := by
+  simpa using re_T_zpow_smul z (-1)
+
+theorem im_T_inv_smul : (T⁻¹ • z).im = z.im := by
+  simpa using im_T_zpow_smul z (-1)
+
+variable {z}
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
@@ -386,8 +433,7 @@ theorem exists_eq_T_zpow_of_c_eq_zero (hc : ↑ₘg 1 0 = 0) : ∃ n : ℤ, ∀ 
     fin_cases i <;> fin_cases j <;> simp [← ha, ← hc, ← hd, ← coe_T_zpow]
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]]
 -- If `c = 1`, then `g` factorises into a product terms involving only `T` and `S`.
 theorem g_eq_of_c_eq_one (hc : ↑ₘg 1 0 = 1) : g = T ^ ↑ₘg 0 0 * S * T ^ ↑ₘg 1 1 := by
   have hg := g.det_coe.symm
@@ -395,8 +441,13 @@ theorem g_eq_of_c_eq_one (hc : ↑ₘg 1 0 = 1) : g = T ^ ↑ₘg 0 0 * S * T ^ 
   · rw [det_fin_two, hc] at hg
     linarith
     
-  ext i j
-  fin_cases i <;> fin_cases j <;> simp [← coe_S, ← coe_T_zpow, ← Matrix.mul_apply, ← Finₓ.sum_univ_succ, ← hg, ← hc]
+  refine' Subtype.ext _
+  conv_lhs => rw [Matrix.eta_fin_two ↑ₘg]
+  rw [hc, hg]
+  simp only [← coe_mul, ← coe_T_zpow, ← coe_S, ← mul_fin_two]
+  trace
+      "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, \",\", expr _, \";\", expr _, \",\", expr _, \"]\"] [])]]" <;>
+    ring
 
 /-- If `1 < |z|`, then `|S • z| < 1`. -/
 theorem norm_sq_S_smul_lt_one (h : 1 < normSq z) : normSq ↑(S • z) < 1 := by
@@ -449,7 +500,7 @@ theorem eq_zero_of_mem_fdo_of_T_zpow_mem_fdo {n : ℤ} (hz : z ∈ 𝒟ᵒ) (hg 
     rwa [← Int.cast_abs, ← Int.cast_oneₓ, Int.cast_lt, Int.abs_lt_one_iff] at this
   have h₁ := hz.2
   have h₂ := hg.2
-  rw [← coe_re, coe_T_zpow_smul_eq, add_re, int_cast_re, coe_re] at h₂
+  rw [re_T_zpow_smul] at h₂
   calc abs (n : ℝ) ≤ abs z.re + abs (z.re + (n : ℝ)) := abs_add' (n : ℝ) z.re _ < 1 / 2 + 1 / 2 :=
       add_lt_add h₁ h₂ _ = 1 := add_halves 1
 
@@ -470,7 +521,7 @@ theorem exists_smul_mem_fd (z : ℍ) : ∃ g : SL(2, ℤ), g • z ∈ 𝒟 := b
   · -- Claim: `1 ≤ ⇑norm_sq ↑(g • z)`. If not, then `S•g•z` has larger imaginary part
     contrapose! hg₀'
     refine' ⟨S * g, _⟩
-    rw [MulAction.mul_smul]
+    rw [mul_smul]
     exact im_lt_im_S_smul hg₀'
     
   · show abs (g • z).re ≤ 1 / 2
@@ -478,24 +529,14 @@ theorem exists_smul_mem_fd (z : ℍ) : ∃ g : SL(2, ℤ), g • z ∈ 𝒟 := b
     rw [abs_le]
     constructor
     · contrapose! hg'
-      refine'
-        ⟨T * g, by
-          simp [← T, ← Matrix.mul, ← Matrix.dotProduct, ← Finₓ.sum_univ_succ], _⟩
-      rw [MulAction.mul_smul]
-      have : abs ((g • z).re + 1) < abs (g • z).re := by
-        cases abs_cases ((g • z).re + 1) <;> cases abs_cases (g • z).re <;> linarith
-      convert this
-      simp [← T]
+      refine' ⟨T * g, (T_mul_apply_one _).symm, _⟩
+      rw [mul_smul, re_T_smul]
+      cases abs_cases ((g • z).re + 1) <;> cases abs_cases (g • z).re <;> linarith
       
     · contrapose! hg'
-      refine'
-        ⟨T⁻¹ * g, by
-          simp [← coe_T_inv, ← Matrix.mul, ← Matrix.dotProduct, ← Finₓ.sum_univ_succ], _⟩
-      rw [MulAction.mul_smul]
-      have : abs ((g • z).re - 1) < abs (g • z).re := by
-        cases abs_cases ((g • z).re - 1) <;> cases abs_cases (g • z).re <;> linarith
-      convert this
-      simp [← coe_T_inv, ← sub_eq_add_neg]
+      refine' ⟨T⁻¹ * g, (T_inv_mul_apply_one _).symm, _⟩
+      rw [mul_smul, re_T_inv_smul]
+      cases abs_cases ((g • z).re - 1) <;> cases abs_cases (g • z).re <;> linarith
       
     
 
@@ -549,7 +590,7 @@ theorem abs_c_le_one (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : abs (↑�
 
 /-- An auxiliary result en route to `modular_group.eq_smul_self_of_mem_fdo_mem_fdo`. -/
 theorem c_eq_zero (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : ↑ₘg 1 0 = 0 := by
-  have hp : ∀ {g' : SL(2, ℤ)} hg' : g' • z ∈ 𝒟ᵒ, ↑ₘg' 1 0 ≠ 1 := by
+  have hp : ∀ {g' : SL(2, ℤ)} (hg' : g' • z ∈ 𝒟ᵒ), ↑ₘg' 1 0 ≠ 1 := by
     intros
     by_contra hc
     let a := ↑ₘg' 0 0

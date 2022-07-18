@@ -205,7 +205,7 @@ theorem admissible_of_one_lt_sum_inv_aux' {p q r : ℕ+} (hpq : p ≤ q) (hqr : 
     
 
 theorem admissible_of_one_lt_sum_inv_aux :
-    ∀ {pqr : List ℕ+} hs : pqr.Sorted (· ≤ ·) hl : pqr.length = 3 H : 1 < sumInv pqr, Admissible pqr
+    ∀ {pqr : List ℕ+} (hs : pqr.Sorted (· ≤ ·)) (hl : pqr.length = 3) (H : 1 < sumInv pqr), Admissible pqr
   | [p, q, r], hs, hl, H => by
     obtain ⟨⟨hpq, -⟩, hqr⟩ : (p ≤ q ∧ p ≤ r) ∧ q ≤ r
     simpa using hs

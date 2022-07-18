@@ -72,7 +72,7 @@ theorem Modeq.dvd : a ≡ b [ZMOD n] → n ∣ b - a :=
 theorem modeq_of_dvd : n ∣ b - a → a ≡ b [ZMOD n] :=
   modeq_iff_dvd.2
 
-theorem mod_modeq a n : a % n ≡ a [ZMOD n] :=
+theorem mod_modeq (a n) : a % n ≡ a [ZMOD n] :=
   mod_mod _ _
 
 namespace Modeq

@@ -18,6 +18,10 @@ import Mathbin.Data.Fintype.Card
 
 This file defines basic properties of matrices.
 
+Matrices with rows indexed by `m`, columns indexed by `n`, and entries of type `α` are represented
+with `matrix m n α`. For the typical approach of counting rows and columns,
+`matrix (fin m) (fin n) α` can be used.
+
 ## Notation
 
 The locale `matrix` gives the following notation:
@@ -26,6 +30,13 @@ The locale `matrix` gives the following notation:
 * `⬝` for `matrix.mul`
 * `ᵀ` for `matrix.transpose`
 * `ᴴ` for `matrix.conj_transpose`
+
+## Implementation notes
+
+For convenience, `matrix m n α` is defined as `m → n → α`, as this allows elements of the matrix
+to be accessed with `A i j`. However, it is not advisable to _construct_ matrices using terms of the
+form `λ i j, _` or even `(λ i j, _ : matrix m n α)`, as these are not recognized by lean as having
+the right type. Instead, `matrix.of` should be used.
 
 ## TODO
 
@@ -63,6 +74,28 @@ theorem ext : (∀ i j, M i j = N i j) → M = N :=
 
 end Ext
 
+/-- Cast a function into a matrix.
+
+The two sides of the equivalence are definitionally equal types. We want to use an explicit cast
+to distinguish the types because `matrix` has different instances to pi types (such as `pi.has_mul`,
+which performs elementwise multiplication, vs `matrix.has_mul`).
+
+If you are defining a matrix, in terms of its entries, either use `of (λ i j, _)`, or use pattern
+matching in a definition as `| i j := _` (which can only be unfolded when fully-applied). The
+purpose of this approach is to ensure that terms of the form `(λ i j, _) * (λ i j, _)` do not
+appear, as the type of `*` can be misleading.
+-/
+def of : (m → n → α) ≃ Matrix m n α :=
+  Equivₓ.refl _
+
+@[simp]
+theorem of_apply (f : m → n → α) (i j) : of f i j = f i j :=
+  rfl
+
+@[simp]
+theorem of_symm_apply (f : Matrix m n α) (i j) : of.symm f i j = f i j :=
+  rfl
+
 /-- `M.map f` is the matrix obtained by applying `f` to each entry of the matrix `M`.
 
 This is available in bundled forms as:
@@ -76,7 +109,8 @@ This is available in bundled forms as:
 * `ring_equiv.map_matrix`
 * `alg_equiv.map_matrix`
 -/
-def map (M : Matrix m n α) (f : α → β) : Matrix m n β := fun i j => f (M i j)
+def map (M : Matrix m n α) (f : α → β) : Matrix m n β :=
+  of fun i j => f (M i j)
 
 @[simp]
 theorem map_apply {M : Matrix m n α} {f : α → β} {i : m} {j : n} : M.map f i j = f (M i j) :=
@@ -182,6 +216,29 @@ instance [Monoidₓ R] [AddMonoidₓ α] [DistribMulAction R α] : DistribMulAct
 
 instance [Semiringₓ R] [AddCommMonoidₓ α] [Module R α] : Module R (Matrix m n α) :=
   Pi.module _ _ _
+
+/-! simp-normal form pulls `of` to the outside. -/
+
+
+@[simp]
+theorem of_zero [Zero α] : of (0 : m → n → α) = 0 :=
+  rfl
+
+@[simp]
+theorem of_add_of [Add α] (f g : m → n → α) : of f + of g = of (f + g) :=
+  rfl
+
+@[simp]
+theorem of_sub_of [Sub α] (f g : m → n → α) : of f - of g = of (f - g) :=
+  rfl
+
+@[simp]
+theorem neg_of [Neg α] (f : m → n → α) : -of f = of (-f) :=
+  rfl
+
+@[simp]
+theorem smul_of [HasSmul R α] (r : R) (f : m → n → α) : r • of f = of (r • f) :=
+  rfl
 
 @[simp]
 protected theorem map_zero [Zero α] [Zero β] (f : α → β) (h : f 0 = 0) : (0 : Matrix m n α).map f = 0 := by
@@ -342,7 +399,7 @@ theorem one_apply {i j} : (1 : Matrix n n α) i j = if i = j then 1 else 0 :=
   rfl
 
 @[simp]
-theorem one_apply_eq i : (1 : Matrix n n α) i i = 1 :=
+theorem one_apply_eq (i) : (1 : Matrix n n α) i i = 1 :=
   diagonal_apply_eq _ i
 
 @[simp]
@@ -530,38 +587,38 @@ section NonUnitalNonAssocSemiringDecidable
 
 variable [DecidableEq m] [NonUnitalNonAssocSemiringₓ α] (u v w : m → α)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem diagonal_dot_product (i : m) : diagonalₓ v i ⬝ᵥ w = v i * w i := by
-  have : ∀ j _ : j ≠ i, diagonalₓ v i j * w j = 0 := fun j hij => by
+  have : ∀ (j) (_ : j ≠ i), diagonalₓ v i j * w j = 0 := fun j hij => by
     simp [← diagonal_apply_ne' _ hij]
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem dot_product_diagonal (i : m) : v ⬝ᵥ diagonalₓ w i = v i * w i := by
-  have : ∀ j _ : j ≠ i, v j * diagonalₓ w i j = 0 := fun j hij => by
+  have : ∀ (j) (_ : j ≠ i), v j * diagonalₓ w i j = 0 := fun j hij => by
     simp [← diagonal_apply_ne' _ hij]
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem dot_product_diagonal' (i : m) : (v ⬝ᵥ fun j => diagonalₓ w j i) = v i * w i := by
-  have : ∀ j _ : j ≠ i, v j * diagonalₓ w j i = 0 := fun j hij => by
+  have : ∀ (j) (_ : j ≠ i), v j * diagonalₓ w j i = 0 := fun j hij => by
     simp [← diagonal_apply_ne _ hij]
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem single_dot_product (x : α) (i : m) : Pi.single i x ⬝ᵥ v = x * v i := by
-  have : ∀ j _ : j ≠ i, Pi.single i x j * v j = 0 := fun j hij => by
+  have : ∀ (j) (_ : j ≠ i), Pi.single i x j * v j = 0 := fun j hij => by
     simp [← Pi.single_eq_of_ne hij]
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem dot_product_single (x : α) (i : m) : v ⬝ᵥ Pi.single i x = v i * x := by
-  have : ∀ j _ : j ≠ i, v j * Pi.single i x j = 0 := fun j hij => by
+  have : ∀ (j) (_ : j ≠ i), v j * Pi.single i x j = 0 := fun j hij => by
     simp [← Pi.single_eq_of_ne hij]
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
@@ -699,12 +756,12 @@ instance [Fintype n] : NonUnitalNonAssocSemiringₓ (Matrix n n α) :=
     zero_mul := Matrix.zero_mul, left_distrib := Matrix.mul_add, right_distrib := Matrix.add_mul }
 
 @[simp]
-theorem diagonal_mul [Fintype m] [DecidableEq m] (d : m → α) (M : Matrix m n α) i j :
+theorem diagonal_mul [Fintype m] [DecidableEq m] (d : m → α) (M : Matrix m n α) (i j) :
     (diagonalₓ d).mul M i j = d i * M i j :=
   diagonal_dot_product _ _ _
 
 @[simp]
-theorem mul_diagonal [Fintype n] [DecidableEq n] (d : n → α) (M : Matrix m n α) i j :
+theorem mul_diagonal [Fintype n] [DecidableEq n] (d : n → α) (M : Matrix m n α) (i j) :
     (M ⬝ diagonalₓ d) i j = M i j * d j := by
   rw [← diagonal_transpose]
   apply dot_product_diagonal
@@ -863,7 +920,7 @@ theorem diagonal_pow [Fintype n] [DecidableEq n] (v : n → α) (k : ℕ) : diag
 
 @[simp]
 theorem mul_mul_left [Fintype n] (M : Matrix m n α) (N : Matrix n o α) (a : α) :
-    (fun i j => a * M i j) ⬝ N = a • M ⬝ N :=
+    (of fun i j => a * M i j) ⬝ N = a • M ⬝ N :=
   smul_mul a M N
 
 /-- The ring homomorphism `α →+* matrix n n α`
@@ -915,7 +972,7 @@ theorem smul_eq_mul_diagonal [DecidableEq n] (M : Matrix m n α) (a : α) : a �
   simp [← mul_comm]
 
 @[simp]
-theorem mul_mul_right (M : Matrix m n α) (N : Matrix n o α) (a : α) : (M ⬝ fun i j => a * N i j) = a • M ⬝ N :=
+theorem mul_mul_right (M : Matrix m n α) (N : Matrix n o α) (a : α) : (M ⬝ of fun i j => a * N i j) = a • M ⬝ N :=
   mul_smul M a N
 
 theorem scalar.commute [DecidableEq n] (r : α) (M : Matrix n n α) : Commute (scalar n r) M := by
@@ -1459,7 +1516,7 @@ open Matrix
   Compare with `mul_apply`, `diagonal_apply_eq`, etc.
 -/
 @[simp]
-theorem transpose_apply (M : Matrix m n α) i j : M.transpose j i = M i j :=
+theorem transpose_apply (M : Matrix m n α) (i j) : M.transpose j i = M i j :=
   rfl
 
 @[simp]
@@ -1562,7 +1619,7 @@ open Matrix
   Compare with `mul_apply`, `diagonal_apply_eq`, etc.
 -/
 @[simp]
-theorem conj_transpose_apply [HasStar α] (M : Matrix m n α) i j : M.conjTranspose j i = star (M i j) :=
+theorem conj_transpose_apply [HasStar α] (M : Matrix m n α) (i j) : M.conjTranspose j i = star (M i j) :=
   rfl
 
 @[simp]
@@ -1608,7 +1665,8 @@ theorem conj_transpose_smul [HasStar R] [HasStar α] [HasSmul R α] [StarModule 
 
 @[simp]
 theorem conj_transpose_smul_non_comm [HasStar R] [HasStar α] [HasSmul R α] [HasSmul Rᵐᵒᵖ α] (c : R) (M : Matrix m n α)
-    (h : ∀ r : R a : α, star (r • a) = MulOpposite.op (star r) • star a) : (c • M)ᴴ = MulOpposite.op (star c) • Mᴴ :=
+    (h : ∀ (r : R) (a : α), star (r • a) = MulOpposite.op (star r) • star a) :
+    (c • M)ᴴ = MulOpposite.op (star c) • Mᴴ :=
   Matrix.ext <| by
     simp [← h]
 
@@ -1674,6 +1732,10 @@ theorem conj_transpose_neg [AddGroupₓ α] [StarAddMonoid α] (M : Matrix m n �
   Matrix.ext <| by
     simp
 
+theorem conj_transpose_map [HasStar α] [HasStar β] {A : Matrix m n α} (f : α → β) (hf : Function.Semiconj f star star) :
+    Aᴴ.map f = (A.map f)ᴴ :=
+  Matrix.ext fun i j => hf _
+
 /-- `matrix.conj_transpose` as an `add_equiv` -/
 @[simps apply]
 def conjTransposeAddEquiv [AddMonoidₓ α] [StarAddMonoid α] : Matrix m n α ≃+ Matrix n m α where
@@ -1732,7 +1794,7 @@ theorem star_eq_conj_transpose [HasStar α] (M : Matrix m m α) : star M = Mᴴ 
   rfl
 
 @[simp]
-theorem star_apply [HasStar α] (M : Matrix n n α) i j : (star M) i j = star (M j i) :=
+theorem star_apply [HasStar α] (M : Matrix n n α) (i j) : (star M) i j = star (M j i) :=
   rfl
 
 instance [HasInvolutiveStar α] : HasInvolutiveStar (Matrix n n α) where star_involutive := conj_transpose_conj_transpose
@@ -1756,11 +1818,11 @@ end Star
 a matrix `M : matrix m n α`, the matrix `M.minor r_reindex c_reindex : matrix l o α` is defined
 by `(M.minor r_reindex c_reindex) i j = M (r_reindex i) (c_reindex j)` for `(i,j) : l × o`.
 Note that the total number of row and columns does not have to be preserved. -/
-def minor (A : Matrix m n α) (r_reindex : l → m) (c_reindex : o → n) : Matrix l o α := fun i j =>
-  A (r_reindex i) (c_reindex j)
+def minor (A : Matrix m n α) (r_reindex : l → m) (c_reindex : o → n) : Matrix l o α :=
+  of fun i j => A (r_reindex i) (c_reindex j)
 
 @[simp]
-theorem minor_apply (A : Matrix m n α) (r_reindex : l → m) (c_reindex : o → n) i j :
+theorem minor_apply (A : Matrix m n α) (r_reindex : l → m) (c_reindex : o → n) (i j) :
     A.minor r_reindex c_reindex i j = A (r_reindex i) (c_reindex j) :=
   rfl
 
@@ -1986,11 +2048,11 @@ theorem row_smul [HasSmul R α] (x : R) (v : m → α) : rowₓ (x • v) = x �
   rfl
 
 @[simp]
-theorem col_apply (v : m → α) i j : Matrix.colₓ v i j = v i :=
+theorem col_apply (v : m → α) (i j) : Matrix.colₓ v i j = v i :=
   rfl
 
 @[simp]
-theorem row_apply (v : m → α) i j : Matrix.rowₓ v i j = v j :=
+theorem row_apply (v : m → α) (i j) : Matrix.rowₓ v i j = v j :=
   rfl
 
 @[simp]
@@ -2034,7 +2096,7 @@ theorem row_mul_vec [Fintype n] [NonUnitalNonAssocSemiringₓ α] (M : Matrix m 
   rfl
 
 @[simp]
-theorem row_mul_col_apply [Fintype m] [Mul α] [AddCommMonoidₓ α] (v w : m → α) i j : (rowₓ v ⬝ colₓ w) i j = v ⬝ᵥ w :=
+theorem row_mul_col_apply [Fintype m] [Mul α] [AddCommMonoidₓ α] (v w : m → α) (i j) : (rowₓ v ⬝ colₓ w) i j = v ⬝ᵥ w :=
   rfl
 
 end RowCol
@@ -2162,7 +2224,7 @@ namespace RingHom
 variable [Fintype n] [NonAssocSemiringₓ α] [NonAssocSemiringₓ β]
 
 theorem map_matrix_mul (M : Matrix m n α) (N : Matrix n o α) (i : m) (j : o) (f : α →+* β) :
-    f (Matrix.mul M N i j) = Matrix.mul (fun i j => f (M i j)) (fun i j => f (N i j)) i j := by
+    f (Matrix.mul M N i j) = Matrix.mul (M.map f) (N.map f) i j := by
   simp [← Matrix.mul_apply, ← RingHom.map_sum]
 
 theorem map_dot_product [NonAssocSemiringₓ R] [NonAssocSemiringₓ S] (f : R →+* S) (v w : n → R) :

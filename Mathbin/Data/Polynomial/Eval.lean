@@ -177,7 +177,7 @@ theorem eval₂_mul_C' (h : Commute (f a) x) : eval₂ f x (p * c a) = eval₂ f
   · simp only [← coeff_C_ne_zero hk, ← RingHom.map_zero, ← Commute.zero_left]
     
 
-theorem eval₂_list_prod_noncomm (ps : List R[X]) (hf : ∀, ∀ p ∈ ps, ∀ k, Commute (f <| coeff p k) x) :
+theorem eval₂_list_prod_noncomm (ps : List R[X]) (hf : ∀, ∀ p ∈ ps, ∀ (k), Commute (f <| coeff p k) x) :
     eval₂ f x ps.Prod = (ps.map (Polynomial.eval₂ f x)).Prod := by
   induction' ps using List.reverseRecOn with ps p ihp
   · simp
@@ -245,7 +245,7 @@ def eval₂RingHom (f : R →+* S) (x : S) : R[X] →+* S :=
   { eval₂AddMonoidHom f x with map_one' := eval₂_one _ _, map_mul' := fun _ _ => eval₂_mul _ _ }
 
 @[simp]
-theorem coe_eval₂_ring_hom (f : R →+* S) x : ⇑(eval₂RingHom f x) = eval₂ f x :=
+theorem coe_eval₂_ring_hom (f : R →+* S) (x) : ⇑(eval₂RingHom f x) = eval₂ f x :=
   rfl
 
 theorem eval₂_pow (n : ℕ) : (p ^ n).eval₂ f x = p.eval₂ f x ^ n :=

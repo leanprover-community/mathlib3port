@@ -49,7 +49,7 @@ theorem lim_le_div (hbdd : BddBelow (Range fun n => u n / n)) {n : ℕ} (hn : n 
     exact zero_lt_iff.2 hn
     
 
-theorem apply_mul_add_le k n r : u (k * n + r) ≤ k * u n + u r := by
+theorem apply_mul_add_le (k n r) : u (k * n + r) ≤ k * u n + u r := by
   induction' k with k IH
   · simp only [← Nat.cast_zeroₓ, ← zero_mul, ← zero_addₓ]
     

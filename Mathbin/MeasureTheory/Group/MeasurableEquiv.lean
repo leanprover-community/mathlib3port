@@ -173,7 +173,7 @@ end Mul
 /-- Inversion as a measurable automorphism of a group or group with zero. -/
 @[to_additive "Negation as a measurable automorphism of an additive group.",
   simps (config := { fullyApplied := false }) toEquiv apply]
-def inv G [MeasurableSpace G] [HasInvolutiveInv G] [HasMeasurableInv G] : G ≃ᵐ G where
+def inv (G) [MeasurableSpace G] [HasInvolutiveInv G] [HasMeasurableInv G] : G ≃ᵐ G where
   toEquiv := Equivₓ.inv G
   measurable_to_fun := measurable_inv
   measurable_inv_fun := measurable_inv

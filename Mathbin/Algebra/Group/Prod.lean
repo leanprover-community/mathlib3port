@@ -265,7 +265,7 @@ theorem coe_prod (f : M →ₙ* N) (g : M →ₙ* P) : ⇑(f.Prod g) = Pi.prod f
   rfl
 
 @[simp, to_additive prod_apply]
-theorem prod_apply (f : M →ₙ* N) (g : M →ₙ* P) x : f.Prod g x = (f x, g x) :=
+theorem prod_apply (f : M →ₙ* N) (g : M →ₙ* P) (x) : f.Prod g x = (f x, g x) :=
   rfl
 
 @[simp, to_additive fst_comp_prod]
@@ -366,11 +366,11 @@ theorem coe_snd : ⇑(snd M N) = Prod.snd :=
   rfl
 
 @[simp, to_additive]
-theorem inl_apply x : inl M N x = (x, 1) :=
+theorem inl_apply (x) : inl M N x = (x, 1) :=
   rfl
 
 @[simp, to_additive]
-theorem inr_apply y : inr M N y = (1, y) :=
+theorem inr_apply (y) : inr M N y = (1, y) :=
   rfl
 
 @[simp, to_additive]
@@ -407,7 +407,7 @@ theorem coe_prod (f : M →* N) (g : M →* P) : ⇑(f.Prod g) = Pi.prod f g :=
   rfl
 
 @[simp, to_additive prod_apply]
-theorem prod_apply (f : M →* N) (g : M →* P) x : f.Prod g x = (f x, g x) :=
+theorem prod_apply (f : M →* N) (g : M →* P) (x) : f.Prod g x = (f x, g x) :=
   rfl
 
 @[simp, to_additive fst_comp_prod]

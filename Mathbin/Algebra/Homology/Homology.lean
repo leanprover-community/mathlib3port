@@ -102,7 +102,7 @@ abbrev boundariesToCycles (C : HomologicalComplex V c) (i : ι) : (C.boundaries 
 
 /-- Prefer `boundaries_to_cycles`. -/
 @[simp]
-theorem image_to_kernel_as_boundaries_to_cycles (C : HomologicalComplex V c) (i : ι) h :
+theorem image_to_kernel_as_boundaries_to_cycles (C : HomologicalComplex V c) (i : ι) (h) :
     (C.boundaries i).ofLe (C.cycles i) h = C.boundariesToCycles i :=
   rfl
 

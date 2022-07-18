@@ -153,7 +153,7 @@ theorem vadd_closed_ball_zero : x +ᵥ ClosedBall 0 δ = ClosedBall x δ := by
 
 theorem add_ball_zero : s + Ball 0 δ = Thickening δ s := by
   rw [thickening_eq_bUnion_ball]
-  convert Union₂_add (fun x _ : x ∈ s => {x}) (ball (0 : E) δ)
+  convert Union₂_add (fun x (_ : x ∈ s) => {x}) (ball (0 : E) δ)
   exact s.bUnion_of_singleton.symm
   ext x y
   simp_rw [singleton_add_ball, add_zeroₓ]

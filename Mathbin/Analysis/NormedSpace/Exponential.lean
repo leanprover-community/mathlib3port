@@ -98,11 +98,11 @@ theorem exp_series_sum_eq (x : 𝔸) : (expSeries 𝕂 𝔸).Sum x = ∑' n : �
 theorem exp_eq_tsum : exp 𝕂 = fun x : 𝔸 => ∑' n : ℕ, (n !⁻¹ : 𝕂) • x ^ n :=
   funext exp_series_sum_eq
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (n «expr ∉ » ({0} : finset exprℕ()))
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (n «expr ∉ » ({0} : finset exprℕ()))
 @[simp]
 theorem exp_zero [T2Space 𝔸] : exp 𝕂 (0 : 𝔸) = 1 := by
   suffices (fun x : 𝔸 => ∑' n : ℕ, (n !⁻¹ : 𝕂) • x ^ n) 0 = ∑' n : ℕ, if n = 0 then 1 else 0 by
-    have key : ∀ n _ : n ∉ ({0} : Finset ℕ), (if n = 0 then (1 : 𝔸) else 0) = 0 := fun n hn =>
+    have key : ∀ (n) (_ : n ∉ ({0} : Finset ℕ)), (if n = 0 then (1 : 𝔸) else 0) = 0 := fun n hn =>
       if_neg (finset.not_mem_singleton.mp hn)
     rw [exp_eq_tsum, this, tsum_eq_sum key, Finset.sum_singleton]
     simp
@@ -399,7 +399,6 @@ theorem Ringₓ.inverse_exp (x : 𝔸) : Ring.inverse (exp 𝕂 x) = exp 𝕂 (-
 
 end
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- In a Banach-algebra `𝔸` over `𝕂 = ℝ` or `𝕂 = ℂ`, if a family of elements `f i` mutually
 commute then `exp 𝕂 (∑ i, f i) = ∏ i, exp 𝕂 (f i)`. -/
 theorem exp_sum_of_commute {ι} (s : Finset ι) (f : ι → 𝔸) (h : ∀, ∀ i ∈ s, ∀, ∀ j ∈ s, ∀, Commute (f i) (f j)) :

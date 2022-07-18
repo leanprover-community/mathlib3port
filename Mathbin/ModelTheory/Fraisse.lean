@@ -92,7 +92,7 @@ def JointEmbedding : Prop :=
   `K` into other structures in `K`, those two structures can be embedded into a fourth structure in
   `K` such that the resulting square of embeddings commutes. -/
 def Amalgamation : Prop :=
-  ∀ M N P : Bundled.{w} L.Structure MN : M ↪[L] N MP : M ↪[L] P,
+  ∀ (M N P : Bundled.{w} L.Structure) (MN : M ↪[L] N) (MP : M ↪[L] P),
     M ∈ K →
       N ∈ K → P ∈ K → ∃ (Q : Bundled.{w} L.Structure)(NQ : N ↪[L] Q)(PQ : P ↪[L] Q), Q ∈ K ∧ NQ.comp MN = PQ.comp MP
 
@@ -163,7 +163,6 @@ theorem Age.countable_quotient (h : (Univ : Set M).Countable) : (Quotientₓ.mk 
     exact ⟨PM.equiv_range.symm⟩
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The age of a direct limit of structures is the union of the ages of the structures. -/
 @[simp]
 theorem age_direct_limit {ι : Type w} [Preorderₓ ι] [IsDirected ι (· ≤ ·)] [Nonempty ι] (G : ι → Type max w w')
@@ -202,7 +201,7 @@ theorem exists_cg_is_age_of (hn : K.Nonempty)
     intro n
     obtain ⟨P, hP1, hP2⟩ := (hF (F n).out).2 ⟨n, Setoidₓ.refl _⟩
     exact (h _ _ hP2).1 hP1
-  choose P hPK hP hFP using fun N : K n : ℕ => jep N N.2 (F (n + 1)).out (hF' _)
+  choose P hPK hP hFP using fun (N : K) (n : ℕ) => jep N N.2 (F (n + 1)).out (hF' _)
   let G : ℕ → K := @Nat.rec (fun _ => K) ⟨(F 0).out, hF' 0⟩ fun n N => ⟨P N n, hPK N n⟩
   let f : ∀ i j, i ≤ j → G i ↪[L] G j := directed_system.nat_le_rec fun n => (hP _ n).some
   refine'
@@ -241,7 +240,7 @@ variable {K} (L) (M)
 /-- A structure `M` is ultrahomogeneous if every embedding of a finitely generated substructure
 into `M` extends to an automorphism of `M`. -/
 def IsUltrahomogeneous : Prop :=
-  ∀ S : L.Substructure M hs : S.Fg f : S ↪[L] M, ∃ g : M ≃[L] M, f = g.toEmbedding.comp S.Subtype
+  ∀ (S : L.Substructure M) (hs : S.Fg) (f : S ↪[L] M), ∃ g : M ≃[L] M, f = g.toEmbedding.comp S.Subtype
 
 variable {L} (K)
 

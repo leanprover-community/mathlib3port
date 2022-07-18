@@ -7,6 +7,7 @@ import Mathbin.Order.Lattice
 import Mathbin.Data.List.Sort
 import Mathbin.Logic.Equiv.Fin
 import Mathbin.Logic.Equiv.Functor
+import Mathbin.Data.Fintype.Basic
 
 /-!
 # Jordan-Hölder Theorem
@@ -142,7 +143,7 @@ theorem step (s : CompositionSeries X) : ∀ i : Finₓ s.length, IsMaximal (s i
   s.step'
 
 @[simp]
-theorem coe_fn_mk (length : ℕ) series step :
+theorem coe_fn_mk (length : ℕ) (series step) :
     (@CompositionSeries.mk X _ _ length series step : Finₓ length.succ → X) = series :=
   rfl
 
@@ -193,7 +194,7 @@ theorem to_list_ne_nil (s : CompositionSeries X) : s.toList ≠ [] := by
   rw [← List.length_pos_iff_ne_nilₓ, length_to_list] <;> exact Nat.succ_posₓ _
 
 theorem to_list_injective : Function.Injective (@CompositionSeries.toList X _ _) :=
-  fun s₁ s₂ h : List.ofFnₓ s₁ = List.ofFnₓ s₂ => by
+  fun s₁ s₂ (h : List.ofFnₓ s₁ = List.ofFnₓ s₂) => by
   have h₁ : s₁.length = s₂.length :=
     Nat.succ_injective ((List.length_of_fn s₁).symm.trans <| (congr_arg List.length h).trans <| List.length_of_fn s₂)
   have h₂ : ∀ i : Finₓ s₁.length.succ, s₁ i = s₂ (Finₓ.cast (congr_arg Nat.succ h₁) i) := by
@@ -223,10 +224,7 @@ theorem to_list_sorted (s : CompositionSeries X) : s.toList.Sorted (· < ·) :=
     exact s.strict_mono hij
 
 theorem to_list_nodup (s : CompositionSeries X) : s.toList.Nodup :=
-  List.nodup_iff_nth_le_inj.2 fun i j hi hj => by
-    delta' to_list
-    rw [List.nth_le_of_fn', List.nth_le_of_fn', s.injective.eq_iff, Finₓ.ext_iff, Finₓ.coe_mk, Finₓ.coe_mk]
-    exact id
+  s.to_list_sorted.Nodup
 
 @[simp]
 theorem mem_to_list {s : CompositionSeries X} {x : X} : x ∈ s.toList ↔ x ∈ s := by
@@ -270,7 +268,6 @@ theorem to_list_of_list (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal
     rfl
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Two `composition_series` are equal if they have the same elements. See also `ext_fun`. -/
 @[ext]
 theorem ext {s₁ s₂ : CompositionSeries X} (h : ∀ x, x ∈ s₁ ↔ x ∈ s₂) : s₁ = s₂ :=

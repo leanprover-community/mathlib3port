@@ -13,6 +13,7 @@ This file defines instances for mul_action and related structures on Pi types.
 
 ## See also
 
+* `group_theory.group_action.option`
 * `group_theory.group_action.prod`
 * `group_theory.group_action.sigma`
 * `group_theory.group_action.sum`
@@ -83,7 +84,6 @@ instance {α : Type _} [∀ i, HasSmul α <| f i] [∀ i, HasSmul αᵐᵒᵖ <|
     IsCentralScalar α (∀ i, f i) :=
   ⟨fun r m => funext fun i => op_smul_eq_smul _ _⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `f i` has a faithful scalar action for a given `i`, then so does `Π i, f i`. This is
 not an instance as `i` cannot be inferred. -/
 @[to_additive Pi.has_faithful_vadd_at]
@@ -102,7 +102,7 @@ instance has_faithful_smul {α : Type _} [Nonempty I] [∀ i, HasSmul α <| f i]
   has_faithful_smul_at i
 
 @[to_additive]
-instance mulAction α {m : Monoidₓ α} [∀ i, MulAction α <| f i] : @MulAction α (∀ i : I, f i) m where
+instance mulAction (α) {m : Monoidₓ α} [∀ i, MulAction α <| f i] : @MulAction α (∀ i : I, f i) m where
   smul := (· • ·)
   mul_smul := fun r s f => funext fun i => mul_smul _ _ _
   one_smul := fun f => funext fun i => one_smul α _
@@ -114,7 +114,7 @@ instance mulAction' {g : I → Type _} {m : ∀ i, Monoidₓ (f i)} [∀ i, MulA
   mul_smul := fun r s f => funext fun i => mul_smul _ _ _
   one_smul := fun f => funext fun i => one_smul _ _
 
-instance distribMulAction α {m : Monoidₓ α} {n : ∀ i, AddMonoidₓ <| f i} [∀ i, DistribMulAction α <| f i] :
+instance distribMulAction (α) {m : Monoidₓ α} {n : ∀ i, AddMonoidₓ <| f i} [∀ i, DistribMulAction α <| f i] :
     @DistribMulAction α (∀ i : I, f i) m (@Pi.addMonoid I f n) :=
   { Pi.mulAction _ with smul_zero := fun c => funext fun i => smul_zero _,
     smul_add := fun c f g => funext fun i => smul_add _ _ _ }
@@ -146,7 +146,7 @@ theorem single_smul₀ {g : I → Type _} [∀ i, MonoidWithZeroₓ (f i)] [∀ 
     single i (r • x) = single i r • single i x :=
   single_op₂ (fun i : I => ((· • ·) : f i → g i → g i)) (fun j => smul_zero _) _ _ _
 
-instance mulDistribMulAction α {m : Monoidₓ α} {n : ∀ i, Monoidₓ <| f i} [∀ i, MulDistribMulAction α <| f i] :
+instance mulDistribMulAction (α) {m : Monoidₓ α} {n : ∀ i, Monoidₓ <| f i} [∀ i, MulDistribMulAction α <| f i] :
     @MulDistribMulAction α (∀ i : I, f i) m (@Pi.monoid I f n) :=
   { Pi.mulAction _ with smul_one := fun c => funext fun i => smul_one _,
     smul_mul := fun c f g => funext fun i => smul_mul' _ _ _ }

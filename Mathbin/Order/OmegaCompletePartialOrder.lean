@@ -102,7 +102,7 @@ instance [Inhabited α] : Inhabited (Chain α) :=
   ⟨⟨default, fun _ _ _ => le_rfl⟩⟩
 
 instance : HasMem α (Chain α) :=
-  ⟨fun a c : ℕ →o α => ∃ i, a = c i⟩
+  ⟨fun a (c : ℕ →o α) => ∃ i, a = c i⟩
 
 variable (c c' : Chain α)
 
@@ -153,7 +153,7 @@ open OmegaCompletePartialOrder
 
 section Prio
 
--- ./././Mathport/Syntax/Translate/Basic.lean:293:40: warning: unsupported option extends_priority
+-- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option extends_priority
 set_option extends_priority 50
 
 /-- An omega-complete partial order is a partial order with a supremum
@@ -165,7 +165,7 @@ See the definition on page 114 of [gunter1992]. -/
 class OmegaCompletePartialOrder (α : Type _) extends PartialOrderₓ α where
   ωSup : Chain α → α
   le_ωSup : ∀ c : Chain α, ∀ i, c i ≤ ωSup c
-  ωSup_le : ∀ c : Chain α x, (∀ i, c i ≤ x) → ωSup c ≤ x
+  ωSup_le : ∀ (c : Chain α) (x), (∀ i, c i ≤ x) → ωSup c ≤ x
 
 end Prio
 
@@ -451,7 +451,7 @@ theorem Sup_continuous (s : Set <| α →o β) (hs : ∀, ∀ f ∈ s, ∀, Cont
   intro c
   apply eq_of_forall_ge_iff
   intro z
-  suffices (∀, ∀ f ∈ s, ∀ n, (f : _) (c n) ≤ z) ↔ ∀ n, ∀ f ∈ s, ∀, (f : _) (c n) ≤ z by
+  suffices (∀, ∀ f ∈ s, ∀ (n), (f : _) (c n) ≤ z) ↔ ∀ (n), ∀ f ∈ s, ∀, (f : _) (c n) ≤ z by
     simpa(config := { contextual := true }) [← ωSup_le_iff, ← hs _ _ _]
   exact ⟨fun H n f hf => H f hf n, fun H f hf n => H n f hf⟩
 

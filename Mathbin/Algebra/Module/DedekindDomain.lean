@@ -30,7 +30,6 @@ variable [IsDedekindDomain R]
 
 open UniqueFactorizationMonoid
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Over a Dedekind domain, a `I`-torsion module is the internal direct sum of its `p i ^ e i`-
 torsion submodules, where `I = ∏ i, p i ^ e i` is its unique decomposition in prime ideals.-/
 theorem is_internal_prime_power_torsion_of_is_torsion_by_ideal {I : Ideal R} (hI : I ≠ ⊥)
@@ -40,7 +39,7 @@ theorem is_internal_prime_power_torsion_of_is_torsion_by_ideal {I : Ideal R} (hI
   by
   classical
   let P := factors I
-  have prime_of_mem := fun p hp : p ∈ P.to_finset => prime_of_factor p (multiset.mem_to_finset.mp hp)
+  have prime_of_mem := fun p (hp : p ∈ P.to_finset) => prime_of_factor p (multiset.mem_to_finset.mp hp)
   refine' ⟨P.to_finset, inferInstance, prime_of_mem, fun i => P.count i, _⟩
   apply @torsion_by_set_is_internal _ _ _ _ _ _ _ _ (fun p => p ^ P.count p) _
   · convert hM

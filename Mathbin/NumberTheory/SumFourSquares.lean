@@ -61,7 +61,7 @@ theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.Prime] :
         simpa [← eq_neg_iff_add_eq_zero] using hab
     let ⟨k, hk⟩ := hab'
     have hk0 : 0 ≤ k :=
-      nonneg_of_mul_nonneg_left
+      nonneg_of_mul_nonneg_right
         (by
           rw [← hk] <;> exact add_nonneg (add_nonneg (sq_nonneg _) (sq_nonneg _)) zero_le_one)
         (Int.coe_nat_pos.2 hp.1.Pos)
@@ -253,7 +253,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c
       let ⟨u, hu⟩ := haybzcwdx
       let ⟨v, hv⟩ := hazbycxdw
       have hn_nonneg : 0 ≤ n :=
-        nonneg_of_mul_nonneg_left
+        nonneg_of_mul_nonneg_right
           (by
             erw [← hn]
             repeat'

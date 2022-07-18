@@ -442,7 +442,7 @@ functions `f`, such that, for all measurable sets `A`, `∫⁻ x in A, f x ∂μ
 
 This is useful for the Lebesgue decomposition theorem. -/
 def MeasurableLe (μ ν : Measure α) : Set (α → ℝ≥0∞) :=
-  { f | Measurable f ∧ ∀ A : Set α hA : MeasurableSet A, (∫⁻ x in A, f x ∂μ) ≤ ν A }
+  { f | Measurable f ∧ ∀ (A : Set α) (hA : MeasurableSet A), (∫⁻ x in A, f x ∂μ) ≤ ν A }
 
 theorem zero_mem_measurable_le : (0 : α → ℝ≥0∞) ∈ MeasurableLe μ ν :=
   ⟨measurable_zero, fun A hA => by
@@ -531,8 +531,8 @@ end LebesgueDecomposition
 
 open LebesgueDecomposition
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (n k)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (n k)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (n k)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (n k)
 /-- Any pair of finite measures `μ` and `ν`, `have_lebesgue_decomposition`. That is to say,
 there exist a measure `ξ` and a measurable function `f`, such that `ξ` is mutually singular
 with respect to `ν` and `μ = ξ + ν.with_density f`.

@@ -154,7 +154,6 @@ theorem convex_join_convex_join_convex_join_comm (s t u v : Set E) :
     ConvexJoin 𝕜 (ConvexJoin 𝕜 s t) (ConvexJoin 𝕜 u v) = ConvexJoin 𝕜 (ConvexJoin 𝕜 s u) (ConvexJoin 𝕜 t v) := by
   simp_rw [← convex_join_assoc, convex_join_right_comm]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem convex_hull_insert (hs : s.Nonempty) : convexHull 𝕜 (insert x s) = ConvexJoin 𝕜 {x} (convexHull 𝕜 s) := by
   classical
   refine'

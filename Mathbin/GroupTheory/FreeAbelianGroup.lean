@@ -167,7 +167,7 @@ theorem lift.add' {α β} [AddCommGroupₓ β] (a : FreeAbelianGroup α) (f g : 
 is the additive group homomorphism sending a function `X → A` to the term of type `A`
 corresponding to the evaluation of the induced map `free_abelian_group X → A` at `g`. -/
 @[simps]
-def liftAddGroupHom {α} β [AddCommGroupₓ β] (a : FreeAbelianGroup α) : (α → β) →+ β :=
+def liftAddGroupHom {α} (β) [AddCommGroupₓ β] (a : FreeAbelianGroup α) : (α → β) →+ β :=
   AddMonoidHom.mk' (fun f => lift f a) (lift.add' a)
 
 theorem lift_neg' {β} [AddCommGroupₓ β] (f : α → β) : lift (-f) = -lift f :=
@@ -211,7 +211,7 @@ theorem map_of (f : α → β) (y : α) : f <$> of y = of (f y) :=
   rfl
 
 @[simp]
-theorem pure_bind (f : α → FreeAbelianGroup β) x : pure x >>= f = f x :=
+theorem pure_bind (f : α → FreeAbelianGroup β) (x) : pure x >>= f = f x :=
   lift.of _ _
 
 @[simp]

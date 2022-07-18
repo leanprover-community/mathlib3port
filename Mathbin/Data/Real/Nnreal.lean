@@ -75,10 +75,8 @@ instance : Coe ℝ≥0 ℝ :=
 theorem val_eq_coe (n : ℝ≥0 ) : n.val = n :=
   rfl
 
-instance : CanLift ℝ ℝ≥0 where
-  coe := coe
-  cond := fun r => 0 ≤ r
-  prf := fun x hx => ⟨⟨x, hx⟩, rfl⟩
+instance : CanLift ℝ ℝ≥0 :=
+  Subtype.canLift _
 
 protected theorem eq {n m : ℝ≥0 } : (n : ℝ) = (m : ℝ) → n = m :=
   Subtype.eq
@@ -89,7 +87,7 @@ protected theorem eq_iff {n m : ℝ≥0 } : (n : ℝ) = (m : ℝ) ↔ n = m :=
 theorem ne_iff {x y : ℝ≥0 } : (x : ℝ) ≠ (y : ℝ) ↔ x ≠ y :=
   not_iff_not_of_iff <| Nnreal.eq_iff
 
-protected theorem forall {p : ℝ≥0 → Prop} : (∀ x : ℝ≥0 , p x) ↔ ∀ x : ℝ hx : 0 ≤ x, p ⟨x, hx⟩ :=
+protected theorem forall {p : ℝ≥0 → Prop} : (∀ x : ℝ≥0 , p x) ↔ ∀ (x : ℝ) (hx : 0 ≤ x), p ⟨x, hx⟩ :=
   Subtype.forall
 
 protected theorem exists {p : ℝ≥0 → Prop} : (∃ x : ℝ≥0 , p x) ↔ ∃ (x : ℝ)(hx : 0 ≤ x), p ⟨x, hx⟩ :=
@@ -109,7 +107,7 @@ theorem coe_nonneg (r : ℝ≥0 ) : (0 : ℝ) ≤ r :=
   r.2
 
 @[norm_cast]
-theorem coe_mk (a : ℝ) ha : ((⟨a, ha⟩ : ℝ≥0 ) : ℝ) = a :=
+theorem coe_mk (a : ℝ) (ha) : ((⟨a, ha⟩ : ℝ≥0 ) : ℝ) = a :=
   rfl
 
 example : Zero ℝ≥0 := by
@@ -601,8 +599,13 @@ theorem lt_to_nnreal_iff_coe_lt {r : ℝ≥0 } {p : ℝ} : r < Real.toNnreal p �
     
 
 @[simp]
-theorem to_nnreal_bit0 {r : ℝ} (hr : 0 ≤ r) : Real.toNnreal (bit0 r) = bit0 (Real.toNnreal r) :=
-  Real.to_nnreal_add hr hr
+theorem to_nnreal_bit0 (r : ℝ) : Real.toNnreal (bit0 r) = bit0 (Real.toNnreal r) := by
+  cases' le_totalₓ r 0 with hr hr
+  · rw [to_nnreal_of_nonpos hr, to_nnreal_of_nonpos, bit0_zero]
+    exact add_nonpos hr hr
+    
+  · exact to_nnreal_add hr hr
+    
 
 @[simp]
 theorem to_nnreal_bit1 {r : ℝ} (hr : 0 ≤ r) : Real.toNnreal (bit1 r) = bit1 (Real.toNnreal r) :=
@@ -611,7 +614,7 @@ theorem to_nnreal_bit1 {r : ℝ} (hr : 0 ≤ r) : Real.toNnreal (bit1 r) = bit1 
           simp [← hr])
         zero_le_one).trans
     (by
-      simp [← to_nnreal_one, ← bit1, ← hr])
+      simp [← bit1])
 
 end ToNnreal
 
@@ -938,6 +941,36 @@ theorem supr_mul_supr_le {a : ℝ≥0 } {g h : ι → ℝ≥0 } (H : ∀ i j, g 
 end Csupr
 
 end Nnreal
+
+namespace Set
+
+namespace OrdConnected
+
+variable {s : Set ℝ} {t : Set ℝ≥0 }
+
+theorem preimage_coe_nnreal_real (h : s.OrdConnected) : (coe ⁻¹' s : Set ℝ≥0 ).OrdConnected :=
+  h.preimage_mono Nnreal.coe_mono
+
+theorem image_coe_nnreal_real (h : t.OrdConnected) : (coe '' t : Set ℝ).OrdConnected :=
+  ⟨ball_image_iff.2 fun x hx => ball_image_iff.2 fun y hy z hz => ⟨⟨z, x.2.trans hz.1⟩, h.out hx hy hz, rfl⟩⟩
+
+theorem image_real_to_nnreal (h : s.OrdConnected) : (Real.toNnreal '' s).OrdConnected := by
+  refine' ⟨ball_image_iff.2 fun x hx => ball_image_iff.2 fun y hy z hz => _⟩
+  cases' le_totalₓ y 0 with hy₀ hy₀
+  · rw [mem_Icc, Real.to_nnreal_of_nonpos hy₀, nonpos_iff_eq_zero] at hz
+    exact ⟨y, hy, (to_nnreal_of_nonpos hy₀).trans hz.2.symm⟩
+    
+  · lift y to ℝ≥0 using hy₀
+    rw [to_nnreal_coe] at hz
+    exact ⟨z, h.out hx hy ⟨to_nnreal_le_iff_le_coe.1 hz.1, hz.2⟩, to_nnreal_coe⟩
+    
+
+theorem preimage_real_to_nnreal (h : t.OrdConnected) : (Real.toNnreal ⁻¹' t).OrdConnected :=
+  h.preimage_mono Real.to_nnreal_mono
+
+end OrdConnected
+
+end Set
 
 namespace Real
 

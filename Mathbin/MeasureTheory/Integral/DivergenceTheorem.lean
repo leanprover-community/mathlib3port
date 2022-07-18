@@ -151,7 +151,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ (I : Bo
   have hJ_sub' : ∀ k, (J k).Icc ⊆ I.Icc := fun k => (hJ_sub k).trans I.Ioo_subset_Icc
   have hJ_le : ∀ k, J k ≤ I := fun k => box.le_iff_Icc.2 (hJ_sub' k)
   have HcJ : ∀ k, ContinuousOn f (J k).Icc := fun k => Hc.mono (hJ_sub' k)
-  have HdJ : ∀ k, ∀ x ∈ (J k).Icc \ s, ∀, HasFderivWithinAt f (f' x) (J k).Icc x := fun k x hx =>
+  have HdJ : ∀ (k), ∀ x ∈ (J k).Icc \ s, ∀, HasFderivWithinAt f (f' x) (J k).Icc x := fun k x hx =>
     (Hd x ⟨hJ_sub k hx.1, hx.2⟩).HasFderivWithinAt
   have HiJ : ∀ k, integrable_on (fun x => ∑ i, f' x (e i) i) (J k).Icc := fun k => Hi.mono_set (hJ_sub' k)
   -- Apply the previous lemma to `J k`.
@@ -170,7 +170,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ (I : Bo
   /- We'll need to prove a similar statement about the integrals over the front sides and the
     integrals over the back sides. In order to avoid repeating ourselves, we formulate a lemma. -/
   suffices
-    ∀ i : Finₓ (n + 1) c : ℕ → ℝ d,
+    ∀ (i : Finₓ (n + 1)) (c : ℕ → ℝ) (d),
       (∀ k, c k ∈ Icc (I.lower i) (I.upper i)) →
         tendsto c at_top (𝓝 d) →
           tendsto (fun k => ∫ x in ((J k).face i).Icc, f (i.insertNth (c k) x) i) at_top
@@ -293,7 +293,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable (hle : a ≤ b
 in terms of a vector-valued function `f : ℝⁿ⁺¹ → Eⁿ⁺¹`. -/
 theorem integral_divergence_of_has_fderiv_within_at_off_countable' (hle : a ≤ b) (f : Finₓ (n + 1) → ℝⁿ⁺¹ → E)
     (f' : Finₓ (n + 1) → ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] E) (s : Set ℝⁿ⁺¹) (hs : s.Countable) (Hc : ∀ i, ContinuousOn (f i) (icc a b))
-    (Hd : ∀, ∀ x ∈ (pi Set.Univ fun i => ioo (a i) (b i)) \ s, ∀ i, HasFderivAt (f i) (f' i x) x)
+    (Hd : ∀, ∀ x ∈ (pi Set.Univ fun i => ioo (a i) (b i)) \ s, ∀ (i), HasFderivAt (f i) (f' i x) x)
     (Hi : IntegrableOn (fun x => ∑ i, f' i x (e i)) (icc a b)) :
     (∫ x in icc a b, ∑ i, f' i x (e i)) =
       ∑ i : Finₓ (n + 1), (∫ x in face i, f i ((front_face(i)) x)) - ∫ x in face i, f i ((back_face(i)) x) :=
@@ -309,7 +309,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_of_equiv {F : 
     [NormedSpace ℝ F] [PartialOrderₓ F] [MeasureSpace F] [BorelSpace F] (eL : F ≃L[ℝ] ℝⁿ⁺¹)
     (he_ord : ∀ x y, eL x ≤ eL y ↔ x ≤ y) (he_vol : MeasurePreserving eL volume volume) (f : Finₓ (n + 1) → F → E)
     (f' : Finₓ (n + 1) → F → F →L[ℝ] E) (s : Set F) (hs : s.Countable) (a b : F) (hle : a ≤ b)
-    (Hc : ∀ i, ContinuousOn (f i) (icc a b)) (Hd : ∀, ∀ x ∈ Interior (icc a b) \ s, ∀ i, HasFderivAt (f i) (f' i x) x)
+    (Hc : ∀ i, ContinuousOn (f i) (icc a b)) (Hd : ∀, ∀ x ∈ Interior (icc a b) \ s, ∀ (i), HasFderivAt (f i) (f' i x) x)
     (DF : F → E) (hDF : ∀ x, DF x = ∑ i, f' i x (eL.symm <| e i)) (Hi : IntegrableOn DF (icc a b)) :
     (∫ x in icc a b, DF x) =
       ∑ i : Finₓ (n + 1),
@@ -341,9 +341,8 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_of_equiv {F : 
       · refine' fun x hx i => (Hd (eL.symm x) ⟨_, hx.2⟩ i).comp x eL.symm.has_fderiv_at
         rw [← hIcc]
         refine' preimage_interior_subset_interior_preimage eL.continuous _
-        simp only [← Set.mem_preimage, ← eL.apply_symm_apply, pi_univ_Icc, ← interior_pi_set (Set.Finite.of_fintype _),
-          ← interior_Icc]
-        exact hx.1
+        simpa only [← Set.mem_preimage, ← eL.apply_symm_apply, pi_univ_Icc, ← interior_pi_set finite_univ, ←
+          interior_Icc] using hx.1
         
       · rw [← he_vol.integrable_on_comp_preimage he_emb, hIcc]
         simp [hDF, ← (· ∘ ·), ← Hi]
@@ -412,7 +411,7 @@ theorem integral_eq_of_has_deriv_within_at_off_countable_of_le (f f' : ℝ → E
       have : ∀ c : ℝ, const (Finₓ 0) c = isEmptyElim := fun c => Subsingleton.elimₓ _ _
       simp [← this, ← volume_pi, ← measure.pi_of_empty fun _ : Finₓ 0 => volume]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
 /-- **Fundamental theorem of calculus, part 2**. This version assumes that `f` is continuous on the
 interval and is differentiable off a countable set `s`.
 
@@ -420,7 +419,7 @@ See also `measure_theory.interval_integral.integral_eq_sub_of_has_deriv_right` f
 only assumes right differentiability of `f`.
 -/
 theorem integral_eq_of_has_deriv_within_at_off_countable (f f' : ℝ → E) {a b : ℝ} {s : Set ℝ} (hs : s.Countable)
-    (Hc : ContinuousOn f "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)")
+    (Hc : ContinuousOn f "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)")
     (Hd : ∀, ∀ x ∈ ioo (min a b) (max a b) \ s, ∀, HasDerivAt f (f' x) x) (Hi : IntervalIntegrable f' volume a b) :
     (∫ x in a..b, f' x) = f b - f a := by
   cases' le_totalₓ a b with hab hab
@@ -478,7 +477,7 @@ theorem integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le
         ((∫ y in icc a.2 b.2, f (b.1, y)) - ∫ y in icc a.2 b.2, f (a.1, y)) +
           ((∫ x in icc a.1 b.1, g (x, b.2)) - ∫ x in icc a.1 b.1, g (x, a.2)) :=
       by
-      have : ∀ a b : ℝ¹ f : ℝ¹ → E, (∫ x in Icc a b, f x) = ∫ x in Icc (a 0) (b 0), f fun _ => x := by
+      have : ∀ (a b : ℝ¹) (f : ℝ¹ → E), (∫ x in Icc a b, f x) = ∫ x in Icc (a 0) (b 0), f fun _ => x := by
         intro a b f
         convert
           (((volume_preserving_fun_unique (Finₓ 1) ℝ).symm _).set_integral_preimage_emb
@@ -495,12 +494,12 @@ theorem integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le
       abel
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
 /-- **Divergence theorem** for functions on the plane. It is formulated in terms of two functions
 `f g : ℝ × ℝ → E` and iterated integral `∫ x in a₁..b₁, ∫ y in a₂..b₂, _`, where
 `a₁ a₂ b₁ b₂ : ℝ`. When thinking of `f` and `g` as the two coordinates of a single function
@@ -514,18 +513,18 @@ theorem integral2_divergence_prod_of_has_fderiv_within_at_off_countable (f g : �
     (f' g' : ℝ × ℝ → ℝ × ℝ →L[ℝ] E) (a₁ a₂ b₁ b₂ : ℝ) (s : Set (ℝ × ℝ)) (hs : s.Countable)
     (Hcf :
       ContinuousOn f
-        ("./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)" ×ˢ
-          "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)"))
+        ("./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)" ×ˢ
+          "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)"))
     (Hcg :
       ContinuousOn g
-        ("./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)" ×ˢ
-          "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)"))
+        ("./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)" ×ˢ
+          "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)"))
     (Hdf : ∀, ∀ x ∈ ioo (min a₁ b₁) (max a₁ b₁) ×ˢ ioo (min a₂ b₂) (max a₂ b₂) \ s, ∀, HasFderivAt f (f' x) x)
     (Hdg : ∀, ∀ x ∈ ioo (min a₁ b₁) (max a₁ b₁) ×ˢ ioo (min a₂ b₂) (max a₂ b₂) \ s, ∀, HasFderivAt g (g' x) x)
     (Hi :
       IntegrableOn (fun x => f' x (1, 0) + g' x (0, 1))
-        ("./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)" ×ˢ
-          "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)")) :
+        ("./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)" ×ˢ
+          "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)")) :
     (∫ x in a₁..b₁, ∫ y in a₂..b₂, f' (x, y) (1, 0) + g' (x, y) (0, 1)) =
       (((∫ x in a₁..b₁, g (x, b₂)) - ∫ x in a₁..b₁, g (x, a₂)) + ∫ y in a₂..b₂, f (b₁, y)) - ∫ y in a₂..b₂, f (a₁, y) :=
   by

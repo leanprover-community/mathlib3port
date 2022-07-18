@@ -44,7 +44,7 @@ class Quiver (V : Type u) where
 -- mathport name: «expr ⟶ »
 infixr:10 " ⟶ " => Quiver.Hom
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`obj] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`obj] []
 /-- A morphism of quivers. As we will later have categorical functors extend this structure,
 we call it a `prefunctor`.
 -/
@@ -93,7 +93,7 @@ def Hom.unop {V} [Quiver V] {X Y : Vᵒᵖ} (f : X ⟶ Y) : unop Y ⟶ unop X :=
 
 /-- A type synonym for a quiver with no arrows. -/
 @[nolint has_inhabited_instance]
-def Empty V : Type u :=
+def Empty (V) : Type u :=
   V
 
 instance emptyQuiver (V : Type u) : Quiver.{u} (Empty V) :=

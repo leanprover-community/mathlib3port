@@ -158,7 +158,7 @@ structure AffineSubspace (k : Type _) {V : Type _} (P : Type _) [Ringₓ k] [Add
   [affine_space V P] where
   Carrier : Set P
   smul_vsub_vadd_mem :
-    ∀ c : k {p1 p2 p3 : P}, p1 ∈ carrier → p2 ∈ carrier → p3 ∈ carrier → c • (p1 -ᵥ p2 : V) +ᵥ p3 ∈ carrier
+    ∀ (c : k) {p1 p2 p3 : P}, p1 ∈ carrier → p2 ∈ carrier → p3 ∈ carrier → c • (p1 -ᵥ p2 : V) +ᵥ p3 ∈ carrier
 
 namespace Submodule
 
@@ -1242,7 +1242,7 @@ namespace AffineSubspace
 /-- The preimage of an affine subspace under an affine map as an affine subspace. -/
 def comap (f : P₁ →ᵃ[k] P₂) (s : AffineSubspace k P₂) : AffineSubspace k P₁ where
   Carrier := f ⁻¹' s
-  smul_vsub_vadd_mem := fun t p₁ p₂ p₃ hp₁ : f p₁ ∈ s hp₂ : f p₂ ∈ s hp₃ : f p₃ ∈ s =>
+  smul_vsub_vadd_mem := fun t p₁ p₂ p₃ (hp₁ : f p₁ ∈ s) (hp₂ : f p₂ ∈ s) (hp₃ : f p₃ ∈ s) =>
     show f _ ∈ s by
       rw [AffineMap.map_vadd, LinearMap.map_smul, AffineMap.linear_map_vsub]
       apply s.smul_vsub_vadd_mem _ hp₁ hp₂ hp₃

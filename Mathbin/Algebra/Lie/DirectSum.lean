@@ -187,7 +187,7 @@ variable {R L ι}
 then this map is a morphism of Lie algebras. -/
 @[simps]
 def toLieAlgebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L'] (f : ∀ i, L i →ₗ⁅R⁆ L')
-    (hf : ∀ i j : ι, i ≠ j → ∀ x : L i y : L j, ⁅f i x,f j y⁆ = 0) : (⨁ i, L i) →ₗ⁅R⁆ L' :=
+    (hf : ∀ i j : ι, i ≠ j → ∀ (x : L i) (y : L j), ⁅f i x,f j y⁆ = 0) : (⨁ i, L i) →ₗ⁅R⁆ L' :=
   { /- The goal is linear in `y`. We can use this to reduce to the case that `y` has only one
               non-zero component. -/
       -- Similarly, we can reduce to the case that `x` has only one non-zero component. 
@@ -199,7 +199,8 @@ def toLieAlgebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L'
     map_lie' := fun x y => by
       let f' := fun i => (f i : L i →ₗ[R] L')
       suffices
-        ∀ i : ι y : L i, to_module R ι L' f' ⁅x,of L i y⁆ = ⁅to_module R ι L' f' x,to_module R ι L' f' (of L i y)⁆ by
+        ∀ (i : ι) (y : L i), to_module R ι L' f' ⁅x,of L i y⁆ = ⁅to_module R ι L' f' x,to_module R ι L' f' (of L i y)⁆
+        by
         simp only [LieAlgebra.ad_apply R]
         rw [← LinearMap.comp_apply, ← LinearMap.comp_apply]
         congr
@@ -207,7 +208,7 @@ def toLieAlgebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L'
         ext i y
         exact this i y
       suffices
-        ∀ i j y : L i x : L j,
+        ∀ (i j) (y : L i) (x : L j),
           to_module R ι L' f' ⁅of L j x,of L i y⁆ = ⁅to_module R ι L' f' (of L j x),to_module R ι L' f' (of L i y)⁆
         by
         intro i y

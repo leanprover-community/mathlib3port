@@ -46,13 +46,15 @@ variable {P Q : C}
     top and a monomorphism at the bottom has a lift. -/
 class StrongEpi (f : P ⟶ Q) : Prop where
   Epi : Epi f
-  HasLift : ∀ {X Y : C} {u : P ⟶ X} {v : Q ⟶ Y} {z : X ⟶ Y} [Mono z] h : u ≫ z = f ≫ v, arrow.has_lift <| Arrow.homMk' h
+  HasLift :
+    ∀ {X Y : C} {u : P ⟶ X} {v : Q ⟶ Y} {z : X ⟶ Y} [Mono z] (h : u ≫ z = f ≫ v), arrow.has_lift <| Arrow.homMk' h
 
 /-- A strong monomorphism `f` is a monomorphism such that every commutative square with `f` at the
     bottom and an epimorphism at the top has a lift. -/
 class StrongMono (f : P ⟶ Q) : Prop where
   mono : Mono f
-  HasLift : ∀ {X Y : C} {u : X ⟶ P} {v : Y ⟶ Q} {z : X ⟶ Y} [Epi z] h : u ≫ f = z ≫ v, arrow.has_lift <| Arrow.homMk' h
+  HasLift :
+    ∀ {X Y : C} {u : X ⟶ P} {v : Y ⟶ Q} {z : X ⟶ Y} [Epi z] (h : u ≫ f = z ≫ v), arrow.has_lift <| Arrow.homMk' h
 
 attribute [instance] strong_epi.has_lift
 
@@ -177,11 +179,11 @@ variable (C)
 
 /-- A strong epi category is a category in which every epimorphism is strong. -/
 class StrongEpiCategory : Prop where
-  strong_epi_of_epi : ∀ {X Y : C} f : X ⟶ Y [Epi f], StrongEpi f
+  strong_epi_of_epi : ∀ {X Y : C} (f : X ⟶ Y) [Epi f], StrongEpi f
 
 /-- A strong mono category is a category in which every monomorphism is strong. -/
 class StrongMonoCategory : Prop where
-  strong_mono_of_mono : ∀ {X Y : C} f : X ⟶ Y [Mono f], StrongMono f
+  strong_mono_of_mono : ∀ {X Y : C} (f : X ⟶ Y) [Mono f], StrongMono f
 
 end
 

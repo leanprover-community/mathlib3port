@@ -64,7 +64,7 @@ theorem is_unit_pow_succ_iff {m : M} {n : ℕ} : IsUnit (m ^ (n + 1)) ↔ IsUnit
   rw [pow_succₓ, ((Commute.refl _).pow_right _).is_unit_mul_iff]
   exact And.left
 
-theorem is_unit_pos_pow_iff {m : M} : ∀ {n : ℕ} h : 0 < n, IsUnit (m ^ n) ↔ IsUnit m
+theorem is_unit_pos_pow_iff {m : M} : ∀ {n : ℕ} (h : 0 < n), IsUnit (m ^ n) ↔ IsUnit m
   | n + 1, _ => is_unit_pow_succ_iff
 
 /-- If `x ^ n.succ = 1` then `x` has an inverse, `x^n`. -/
@@ -308,7 +308,7 @@ theorem zpow_left_injective (hn : n ≠ 0) : Function.Injective ((· ^ n) : α �
   cases hn.symm.lt_or_lt
   · exact (zpow_strict_mono_left α h).Injective
     
-  · refine' fun a b hab : a ^ n = b ^ n => (zpow_strict_mono_left α (neg_pos.mpr h)).Injective _
+  · refine' fun a b (hab : a ^ n = b ^ n) => (zpow_strict_mono_left α (neg_pos.mpr h)).Injective _
     rw [zpow_neg, zpow_neg, hab]
     
 
@@ -541,7 +541,7 @@ theorem sign_cases_of_C_mul_pow_nonneg {C r : R} (h : ∀ n : ℕ, 0 ≤ C * r ^
   have : 0 ≤ C := by
     simpa only [← pow_zeroₓ, ← mul_oneₓ] using h 0
   refine' this.eq_or_lt.elim (fun h => Or.inl h.symm) fun hC => Or.inr ⟨hC, _⟩
-  refine' nonneg_of_mul_nonneg_left _ hC
+  refine' nonneg_of_mul_nonneg_right _ hC
   simpa only [← pow_oneₓ] using h 1
 
 end LinearOrderedSemiring

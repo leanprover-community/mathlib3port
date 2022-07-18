@@ -59,7 +59,7 @@ protected theorem function_field_iff (Fqt : Type _) [Field Fqt] [Algebra Fq[X] F
     [Algebra (Ratfunc Fq) F] [Algebra Fqt F] [Algebra Fq[X] F] [IsScalarTower Fq[X] Fqt F]
     [IsScalarTower Fq[X] (Ratfunc Fq) F] : FunctionField Fq F ↔ FiniteDimensional Fqt F := by
   let e := IsLocalization.algEquiv Fq[X]⁰ (Ratfunc Fq) Fqt
-  have : ∀ c x : F, e c • x = c • x := by
+  have : ∀ (c) (x : F), e c • x = c • x := by
     intro c x
     rw [Algebra.smul_def, Algebra.smul_def]
     congr

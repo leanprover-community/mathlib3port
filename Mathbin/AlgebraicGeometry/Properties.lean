@@ -132,13 +132,13 @@ theorem is_reduced_of_is_affine_is_reduced [IsAffine X] [h : IsReduced (X.Preshe
   the image of `f`.
 3. `P` holds for the entire space of an affine scheme.
 -/
-theorem reduce_to_affine_global (P : ∀ X : Scheme U : Opens X.Carrier, Prop)
-    (h₁ : ∀ X : Scheme U : Opens X.Carrier, (∀ x : U, ∃ (V : _)(h : x.1 ∈ V)(i : V ⟶ U), P X V) → P X U)
+theorem reduce_to_affine_global (P : ∀ (X : Scheme) (U : Opens X.Carrier), Prop)
+    (h₁ : ∀ (X : Scheme) (U : Opens X.Carrier), (∀ x : U, ∃ (V : _)(h : x.1 ∈ V)(i : V ⟶ U), P X V) → P X U)
     (h₂ :
-      ∀ {X Y} f : X ⟶ Y [hf : IsOpenImmersion f],
+      ∀ {X Y} (f : X ⟶ Y) [hf : IsOpenImmersion f],
         ∃ (U : Set X.Carrier)(V : Set Y.Carrier)(hU : U = ⊤)(hV : V = Set.Range f.1.base),
           P X ⟨U, hU.symm ▸ is_open_univ⟩ → P Y ⟨V, hV.symm ▸ hf.base_open.open_range⟩)
-    (h₃ : ∀ R : CommRingₓₓ, P (Scheme.spec.obj <| op R) ⊤) : ∀ X : Scheme U : Opens X.Carrier, P X U := by
+    (h₃ : ∀ R : CommRingₓₓ, P (Scheme.spec.obj <| op R) ⊤) : ∀ (X : Scheme) (U : Opens X.Carrier), P X U := by
   intro X U
   apply h₁
   intro x
@@ -150,10 +150,10 @@ theorem reduce_to_affine_global (P : ∀ X : Scheme U : Opens X.Carrier, Prop)
   apply h₂'
   apply h₃
 
-theorem reduce_to_affine_nbhd (P : ∀ X : Scheme x : X.Carrier, Prop)
-    (h₁ : ∀ R : CommRingₓₓ x : PrimeSpectrum R, P (Scheme.spec.obj <| op R) x)
-    (h₂ : ∀ {X Y} f : X ⟶ Y [IsOpenImmersion f] x : X.Carrier, P X x → P Y (f.1.base x)) :
-    ∀ X : Scheme x : X.Carrier, P X x := by
+theorem reduce_to_affine_nbhd (P : ∀ (X : Scheme) (x : X.Carrier), Prop)
+    (h₁ : ∀ (R : CommRingₓₓ) (x : PrimeSpectrum R), P (Scheme.spec.obj <| op R) x)
+    (h₂ : ∀ {X Y} (f : X ⟶ Y) [IsOpenImmersion f] (x : X.Carrier), P X x → P Y (f.1.base x)) :
+    ∀ (X : Scheme) (x : X.Carrier), P X x := by
   intro X x
   obtain ⟨y, e⟩ := X.affine_cover.covers x
   convert h₂ (X.affine_cover.map (X.affine_cover.f x)) y _
@@ -221,7 +221,7 @@ class IsIntegral : Prop where
   Nonempty : Nonempty X.Carrier := by
     run_tac
       tactic.apply_instance
-  component_integral : ∀ U : Opens X.Carrier [Nonempty U], IsDomain (X.Presheaf.obj (op U)) := by
+  component_integral : ∀ (U : Opens X.Carrier) [Nonempty U], IsDomain (X.Presheaf.obj (op U)) := by
     run_tac
       tactic.apply_instance
 

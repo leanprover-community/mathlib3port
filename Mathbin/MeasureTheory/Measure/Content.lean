@@ -157,7 +157,7 @@ theorem inner_content_exists_compact {U : Opens G} (hU : μ.innerContent U ≠ �
 contents. -/
 theorem inner_content_Sup_nat [T2Space G] (U : ℕ → Opens G) :
     μ.innerContent (⨆ i : ℕ, U i) ≤ ∑' i : ℕ, μ.innerContent (U i) := by
-  have h3 : ∀ t : Finset ℕ K : ℕ → compacts G, μ (t.sup K) ≤ t.Sum fun i => μ (K i) := by
+  have h3 : ∀ (t : Finset ℕ) (K : ℕ → compacts G), μ (t.sup K) ≤ t.Sum fun i => μ (K i) := by
     intro t K
     refine' Finset.induction_on t _ _
     · simp only [← μ.empty, ← nonpos_iff_eq_zero, ← Finset.sum_empty, ← Finset.sup_empty]
@@ -205,13 +205,13 @@ theorem inner_content_comap (f : G ≃ₜ G) (h : ∀ ⦃K : Compacts G⦄, μ (
 
 @[to_additive]
 theorem is_mul_left_invariant_inner_content [Groupₓ G] [TopologicalGroup G]
-    (h : ∀ g : G {K : Compacts G}, μ (K.map _ <| continuous_mul_left g) = μ K) (g : G) (U : Opens G) :
+    (h : ∀ (g : G) {K : Compacts G}, μ (K.map _ <| continuous_mul_left g) = μ K) (g : G) (U : Opens G) :
     μ.innerContent (Opens.comap (Homeomorph.mulLeft g).toContinuousMap U) = μ.innerContent U := by
   convert μ.inner_content_comap (Homeomorph.mulLeft g) (fun K => h g) U
 
 @[to_additive]
 theorem inner_content_pos_of_is_mul_left_invariant [T2Space G] [Groupₓ G] [TopologicalGroup G]
-    (h3 : ∀ g : G {K : Compacts G}, μ (K.map _ <| continuous_mul_left g) = μ K) (K : Compacts G) (hK : μ K ≠ 0)
+    (h3 : ∀ (g : G) {K : Compacts G}, μ (K.map _ <| continuous_mul_left g) = μ K) (K : Compacts G) (hK : μ K ≠ 0)
     (U : Opens G) (hU : (U : Set G).Nonempty) : 0 < μ.innerContent U := by
   have : (Interior (U : Set G)).Nonempty
   rwa [U.prop.interior_eq]
@@ -287,7 +287,7 @@ theorem outer_measure_lt_top_of_is_compact [LocallyCompactSpace G] {K : Set G} (
 
 @[to_additive]
 theorem is_mul_left_invariant_outer_measure [Groupₓ G] [TopologicalGroup G]
-    (h : ∀ g : G {K : Compacts G}, μ (K.map _ <| continuous_mul_left g) = μ K) (g : G) (A : Set G) :
+    (h : ∀ (g : G) {K : Compacts G}, μ (K.map _ <| continuous_mul_left g) = μ K) (g : G) (A : Set G) :
     μ.OuterMeasure ((fun h => g * h) ⁻¹' A) = μ.OuterMeasure A := by
   convert μ.outer_measure_preimage (Homeomorph.mulLeft g) (fun K => h g) A
 
@@ -303,7 +303,7 @@ theorem outer_measure_caratheodory (A : Set G) :
 
 @[to_additive]
 theorem outer_measure_pos_of_is_mul_left_invariant [Groupₓ G] [TopologicalGroup G]
-    (h3 : ∀ g : G {K : Compacts G}, μ (K.map _ <| continuous_mul_left g) = μ K) (K : Compacts G) (hK : μ K ≠ 0)
+    (h3 : ∀ (g : G) {K : Compacts G}, μ (K.map _ <| continuous_mul_left g) = μ K) (K : Compacts G) (hK : μ K ≠ 0)
     {U : Set G} (h1U : IsOpen U) (h2U : U.Nonempty) : 0 < μ.OuterMeasure U := by
   convert μ.inner_content_pos_of_is_mul_left_invariant h3 K hK ⟨U, h1U⟩ h2U
   exact μ.outer_measure_opens ⟨U, h1U⟩
@@ -353,7 +353,7 @@ theorem measure_apply {s : Set G} (hs : MeasurableSet s) : μ.Measure s = μ.Out
 /-- In a locally compact space, any measure constructed from a content is regular. -/
 instance regular [LocallyCompactSpace G] : μ.Measure.regular := by
   have : μ.measure.outer_regular := by
-    refine' ⟨fun A hA r hr : _ < _ => _⟩
+    refine' ⟨fun A hA r (hr : _ < _) => _⟩
     rw [μ.measure_apply hA, outer_measure_eq_infi] at hr
     simp only [← infi_lt_iff] at hr
     rcases hr with ⟨U, hUo, hAU, hr⟩

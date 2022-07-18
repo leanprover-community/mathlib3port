@@ -230,7 +230,7 @@ private theorem cofix.bisim_aux {α : Typevec n} (r : Cofix F α → Cofix F α 
 theorem Cofix.bisim_rel {α : Typevec n} (r : Cofix F α → Cofix F α → Prop)
     (h : ∀ x y, r x y → appendFun id (Quot.mk r) <$$> Cofix.dest x = appendFun id (Quot.mk r) <$$> Cofix.dest y) :
     ∀ x y, r x y → x = y := by
-  let r' x y := x = y ∨ r x y
+  let r' (x y) := x = y ∨ r x y
   intro x y rxy
   apply cofix.bisim_aux r'
   · intro x
@@ -485,7 +485,8 @@ theorem Cofix.dest_corec' {α : Typevec n} {β : Type u} (g : β → F (α.Appen
     
 
 theorem Cofix.dest_corec₁ {α : Typevec n} {β : Type u} (g : ∀ {X}, (Cofix F α → X) → (β → X) → β → F (α.Append1 X))
-    (x : β) (h : ∀ X Y f : Cofix F α → X f' : β → X k : X → Y, g (k ∘ f) (k ∘ f') x = (id ::: k) <$$> g f f' x) :
+    (x : β)
+    (h : ∀ (X Y) (f : Cofix F α → X) (f' : β → X) (k : X → Y), g (k ∘ f) (k ∘ f') x = (id ::: k) <$$> g f f' x) :
     Cofix.dest (Cofix.corec₁ (@g) x) = g id (Cofix.corec₁ @g) x := by
   rw [cofix.corec₁, cofix.dest_corec', ← h] <;> rfl
 

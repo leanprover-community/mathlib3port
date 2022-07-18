@@ -193,7 +193,7 @@ section
 variable {X' Y' Z' : A} (f' : X' ⟶ Y') (g' : Y' ⟶ Z') (w' : f' ≫ g' = 0)
 
 @[simp, reassoc]
-theorem π'_map α β h :
+theorem π'_map (α β h) :
     π' _ _ _ ≫ map w w' α β h =
       kernel.map _ _ α.right β.right
           (by
@@ -232,7 +232,7 @@ theorem π'_map α β h :
     simp
     
 
-theorem map_eq_desc'_lift_left α β h :
+theorem map_eq_desc'_lift_left (α β h) :
     map w w' α β h =
       homology.desc' _ _ _
         (homology.lift _ _ _ (kernel.ι _ ≫ β.left ≫ cokernel.π _)
@@ -252,7 +252,7 @@ theorem map_eq_desc'_lift_left α β h :
   ext
   simp [← h]
 
-theorem map_eq_lift_desc'_left α β h :
+theorem map_eq_lift_desc'_left (α β h) :
     map w w' α β h =
       homology.lift _ _ _
         (homology.desc' _ _ _ (kernel.ι _ ≫ β.left ≫ cokernel.π _)
@@ -268,7 +268,7 @@ theorem map_eq_lift_desc'_left α β h :
   ext
   simp
 
-theorem map_eq_desc'_lift_right α β h :
+theorem map_eq_desc'_lift_right (α β h) :
     map w w' α β h =
       homology.desc' _ _ _
         (homology.lift _ _ _ (kernel.ι _ ≫ α.right ≫ cokernel.π _)
@@ -284,7 +284,7 @@ theorem map_eq_desc'_lift_right α β h :
   ext
   simp [← h]
 
-theorem map_eq_lift_desc'_right α β h :
+theorem map_eq_lift_desc'_right (α β h) :
     map w w' α β h =
       homology.lift _ _ _
         (homology.desc' _ _ _ (kernel.ι _ ≫ α.right ≫ cokernel.π _)
@@ -301,7 +301,7 @@ theorem map_eq_lift_desc'_right α β h :
   simp
 
 @[simp, reassoc]
-theorem map_ι α β h :
+theorem map_ι (α β h) :
     map w w' α β h ≫ ι f' g' w' =
       ι f g w ≫
         cokernel.map f f' α.left β.left

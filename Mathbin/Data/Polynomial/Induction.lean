@@ -39,7 +39,7 @@ theorem sum_monomial_eq (p : R[X]) : (p.Sum fun n a => monomial n a) = p := by
 
 @[elab_as_eliminator]
 protected theorem induction_on {M : R[X] → Prop} (p : R[X]) (h_C : ∀ a, M (c a)) (h_add : ∀ p q, M p → M q → M (p + q))
-    (h_monomial : ∀ n : ℕ a : R, M (c a * X ^ n) → M (c a * X ^ (n + 1))) : M p := by
+    (h_monomial : ∀ (n : ℕ) (a : R), M (c a * X ^ n) → M (c a * X ^ (n + 1))) : M p := by
   have A : ∀ {n : ℕ} {a}, M (C a * X ^ n) := by
     intro n a
     induction' n with n ih
@@ -65,7 +65,7 @@ and it holds for monomials.
 -/
 @[elab_as_eliminator]
 protected theorem induction_on' {M : R[X] → Prop} (p : R[X]) (h_add : ∀ p q, M p → M q → M (p + q))
-    (h_monomial : ∀ n : ℕ a : R, M (monomial n a)) : M p :=
+    (h_monomial : ∀ (n : ℕ) (a : R), M (monomial n a)) : M p :=
   Polynomial.induction_on p (h_monomial 0) h_add fun n a h => by
     rw [← monomial_eq_C_mul_X]
     exact h_monomial _ _

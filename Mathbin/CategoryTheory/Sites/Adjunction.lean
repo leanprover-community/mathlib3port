@@ -34,7 +34,7 @@ variable {E : Type w₂} [Category.{max v u} E]
 
 variable {F : D ⥤ E} {G : E ⥤ D}
 
-variable [∀ X : C S : J.cover X P : Cᵒᵖ ⥤ D, PreservesLimit (S.index P).multicospan F]
+variable [∀ (X : C) (S : J.cover X) (P : Cᵒᵖ ⥤ D), PreservesLimit (S.index P).multicospan F]
 
 variable [ConcreteCategory.{max v u} D] [PreservesLimits (forget D)]
 
@@ -44,7 +44,7 @@ abbrev sheafForget : Sheaf J D ⥤ SheafOfTypes J :=
   sheafCompose J (forget D) ⋙ (sheafEquivSheafOfTypes J).Functor
 
 -- We need to sheafify...
-variable [∀ P : Cᵒᵖ ⥤ D X : C S : J.cover X, HasMultiequalizer (S.index P)]
+variable [∀ (P : Cᵒᵖ ⥤ D) (X : C) (S : J.cover X), HasMultiequalizer (S.index P)]
   [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D] [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)]
   [ReflectsIsomorphisms (forget D)]
 
@@ -105,7 +105,7 @@ abbrev composeAndSheafifyFromTypes (G : Type max v u ⥤ D) : SheafOfTypes J ⥤
 /-- A variant of the adjunction between sheaf categories, in the case where the right adjoint
 is the forgetful functor to sheaves of types. -/
 def adjunctionToTypes {G : Type max v u ⥤ D} (adj : G ⊣ forget D) : composeAndSheafifyFromTypes J G ⊣ sheafForget J :=
-  Adjunction.comp _ _ (sheafEquivSheafOfTypes J).symm.toAdjunction (adjunction J adj)
+  (sheafEquivSheafOfTypes J).symm.toAdjunction.comp (adjunction J adj)
 
 @[simp]
 theorem adjunction_to_types_unit_app_val {G : Type max v u ⥤ D} (adj : G ⊣ forget D) (Y : SheafOfTypes J) :

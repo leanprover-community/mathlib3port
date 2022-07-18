@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
 import Mathbin.Algebra.Order.Field
-import Mathbin.Data.Rat.Defs
+import Mathbin.Data.Rat.Basic
 
 /-!
 # Order for Rational Numbers
@@ -43,11 +43,11 @@ theorem mk_nonneg (a : ℤ) {b : ℤ} (h : 0 < b) : (a /. b).Nonneg ↔ 0 ≤ a 
   have d0 := Int.coe_nat_lt.2 h₁
   have := (mk_eq (ne_of_gtₓ h) (ne_of_gtₓ d0)).1 ha
   constructor <;> intro h₂
-  · apply nonneg_of_mul_nonneg_right _ d0
+  · apply nonneg_of_mul_nonneg_left _ d0
     rw [this]
     exact mul_nonneg h₂ (le_of_ltₓ h)
     
-  · apply nonneg_of_mul_nonneg_right _ h
+  · apply nonneg_of_mul_nonneg_left _ h
     rw [← this]
     exact mul_nonneg h₂ (Int.coe_zero_le _)
     

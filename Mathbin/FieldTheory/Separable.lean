@@ -96,7 +96,7 @@ theorem Separable.is_coprime {f g : R[X]} (h : (f * g).Separable) : IsCoprime f 
   rw [derivative_mul] at this
   exact IsCoprime.of_mul_right_right (IsCoprime.of_add_mul_left_right this)
 
-theorem Separable.of_pow' {f : R[X]} : ∀ {n : ℕ} h : (f ^ n).Separable, IsUnit f ∨ f.Separable ∧ n = 1 ∨ n = 0
+theorem Separable.of_pow' {f : R[X]} : ∀ {n : ℕ} (h : (f ^ n).Separable), IsUnit f ∨ f.Separable ∧ n = 1 ∨ n = 0
   | 0 => fun h => Or.inr <| Or.inr rfl
   | 1 => fun h => Or.inr <| Or.inl ⟨pow_oneₓ f ▸ h, rfl⟩
   | n + 2 => fun h => by
@@ -129,7 +129,7 @@ theorem multiplicity_le_one_of_separable {p q : R[X]} (hq : ¬IsUnit q) (hsep : 
   apply is_unit_of_self_mul_dvd_separable hsep
   rw [← sq]
   apply multiplicity.pow_dvd_of_le_multiplicity
-  simpa only [← Nat.cast_oneₓ, ← Nat.cast_bit0] using Enat.add_one_le_of_lt hq
+  simpa only [← Nat.cast_oneₓ, ← Nat.cast_bit0] using PartEnat.add_one_le_of_lt hq
 
 theorem Separable.squarefree {p : R[X]} (hsep : Separable p) : Squarefree p := by
   rw [multiplicity.squarefree_iff_multiplicity_le_one p]
@@ -208,7 +208,7 @@ theorem root_multiplicity_le_one_of_separable [Nontrivial R] {p : R[X]} (hsep : 
   by_cases' hp : p = 0
   · simp [← hp]
     
-  rw [root_multiplicity_eq_multiplicity, dif_neg hp, ← Enat.coe_le_coe, Enat.coe_get, Nat.cast_oneₓ]
+  rw [root_multiplicity_eq_multiplicity, dif_neg hp, ← PartEnat.coe_le_coe, PartEnat.coe_get, Nat.cast_oneₓ]
   exact multiplicity_le_one_of_separable (not_is_unit_X_sub_C _) hsep
 
 end CommRingₓ

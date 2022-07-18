@@ -47,7 +47,7 @@ protected def listen : WriterTₓ ω m α → WriterTₓ ω m (α × ω)
 
 @[inline]
 protected def pass : WriterTₓ ω m (α × (ω → ω)) → WriterTₓ ω m α
-  | ⟨cmd⟩ => ⟨uncurry (uncurry fun x f : ω → ω w => (x, f w)) <$> cmd⟩
+  | ⟨cmd⟩ => ⟨uncurry (uncurry fun x (f : ω → ω) w => (x, f w)) <$> cmd⟩
 
 @[inline]
 protected def pure [One ω] (a : α) : WriterTₓ ω m α :=
@@ -81,21 +81,21 @@ instance [Monoidₓ ω] [IsLawfulMonad m] : IsLawfulMonad (WriterTₓ ω m) wher
 protected def lift [One ω] (a : m α) : WriterTₓ ω m α :=
   ⟨flip Prod.mk 1 <$> a⟩
 
-instance m [Monadₓ m] [One ω] : HasMonadLift m (WriterTₓ ω m) :=
+instance (m) [Monadₓ m] [One ω] : HasMonadLift m (WriterTₓ ω m) :=
   ⟨fun α => WriterTₓ.lift⟩
 
 @[inline]
 protected def monadMap {m m'} [Monadₓ m] [Monadₓ m'] {α} (f : ∀ {α}, m α → m' α) : WriterTₓ ω m α → WriterTₓ ω m' α :=
   fun x => ⟨f x.run⟩
 
-instance m m' [Monadₓ m] [Monadₓ m'] : MonadFunctorₓ m m' (WriterTₓ ω m) (WriterTₓ ω m') :=
+instance (m m') [Monadₓ m] [Monadₓ m'] : MonadFunctorₓ m m' (WriterTₓ ω m) (WriterTₓ ω m') :=
   ⟨@WriterTₓ.monadMap ω m m' _ _⟩
 
 @[inline]
 protected def adapt {ω' : Type u} {α : Type u} (f : ω → ω') : WriterTₓ ω m α → WriterTₓ ω' m α := fun x =>
   ⟨Prod.map id f <$> x.run⟩
 
-instance ε [One ω] [Monadₓ m] [MonadExcept ε m] : MonadExcept ε (WriterTₓ ω m) where
+instance (ε) [One ω] [Monadₓ m] [MonadExcept ε m] : MonadExcept ε (WriterTₓ ω m) where
   throw := fun α => WriterTₓ.lift ∘ throw
   catch := fun α x c => ⟨catch x.run fun e => (c e).run⟩
 
@@ -200,7 +200,7 @@ instance [Monadₓ m] : MonadWriterAdapter ω ω' (WriterTₓ ω m) (WriterTₓ 
 
 end
 
-instance (ω : Type u) m out [MonadRun out m] : MonadRun (fun α => out (α × ω)) (WriterTₓ ω m) :=
+instance (ω : Type u) (m out) [MonadRun out m] : MonadRun (fun α => out (α × ω)) (WriterTₓ ω m) :=
   ⟨fun α x => run <| x.run⟩
 
 /-- reduce the equivalence between two writer monads to the equivalence between

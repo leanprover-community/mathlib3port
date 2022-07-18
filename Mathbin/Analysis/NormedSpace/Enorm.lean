@@ -43,7 +43,7 @@ structure Enorm (𝕜 : Type _) (V : Type _) [NormedField 𝕜] [AddCommGroupₓ
   toFun : V → ℝ≥0∞
   eq_zero' : ∀ x, to_fun x = 0 → x = 0
   map_add_le' : ∀ x y : V, to_fun (x + y) ≤ to_fun x + to_fun y
-  map_smul_le' : ∀ c : 𝕜 x : V, to_fun (c • x) ≤ ∥c∥₊ * to_fun x
+  map_smul_le' : ∀ (c : 𝕜) (x : V), to_fun (c • x) ≤ ∥c∥₊ * to_fun x
 
 namespace Enorm
 
@@ -199,7 +199,7 @@ def finiteSubspace : Subspace 𝕜 V where
   zero_mem' := by
     simp
   add_mem' := fun x y hx hy => lt_of_le_of_ltₓ (e.map_add_le x y) (Ennreal.add_lt_top.2 ⟨hx, hy⟩)
-  smul_mem' := fun c x hx : _ < _ =>
+  smul_mem' := fun c x (hx : _ < _) =>
     calc
       e (c • x) = ∥c∥₊ * e x := e.map_smul c x
       _ < ⊤ := Ennreal.mul_lt_top Ennreal.coe_ne_top hx.Ne

@@ -795,7 +795,7 @@ variable {ν : Measureₓ G} [SigmaFinite ν] [IsAddRightInvariant ν]
 
 /-- Convolution is associative.
 To do: prove that `hi` follows from simpler conditions. -/
-theorem convolution_assoc (hL : ∀ x : E y : E' z : E'', L₂ (L x y) z = L₃ x (L₄ y z)) {x₀ : G}
+theorem convolution_assoc (hL : ∀ (x : E) (y : E') (z : E''), L₂ (L x y) z = L₃ x (L₄ y z)) {x₀ : G}
     (h₄ : ConvolutionExists g k L₄ ν) (h₁ : ConvolutionExists f g L μ)
     (hi : Integrable (uncurry fun x y => (L₃ (f y)) ((L₄ (g (x - y))) (k (x₀ - x)))) (ν.Prod μ)) :
     ((f ⋆[L, μ] g) ⋆[L₂, ν] k) x₀ = (f ⋆[L₃, μ] g ⋆[L₄, ν] k) x₀ := by

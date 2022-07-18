@@ -33,25 +33,25 @@ namespace Multiset
 
 /-- Fold of a `s : multiset α` with `f : α → β → β`, given a proof that `left_commutative f`
 on all elements `x ∈ s`. -/
-def noncommFoldr (s : Multiset α) (comm : ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀ b, f x (f y b) = f y (f x b)) (b : β) : β :=
+def noncommFoldr (s : Multiset α) (comm : ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀ (b), f x (f y b) = f y (f x b)) (b : β) : β :=
   s.attach.foldr (f ∘ Subtype.val) (fun ⟨x, hx⟩ ⟨y, hy⟩ => comm x hx y hy) b
 
 @[simp]
 theorem noncomm_foldr_coe (l : List α)
-    (comm : ∀, ∀ x ∈ (l : Multiset α), ∀, ∀ y ∈ (l : Multiset α), ∀ b, f x (f y b) = f y (f x b)) (b : β) :
+    (comm : ∀, ∀ x ∈ (l : Multiset α), ∀, ∀ y ∈ (l : Multiset α), ∀ (b), f x (f y b) = f y (f x b)) (b : β) :
     noncommFoldr f (l : Multiset α) comm b = l.foldr f b := by
   simp only [← noncomm_foldr, ← coe_foldr, ← coe_attach, ← List.attach]
   rw [← List.foldr_map]
   simp [← List.map_pmap, ← List.pmap_eq_map]
 
 @[simp]
-theorem noncomm_foldr_empty (h : ∀, ∀ x ∈ (0 : Multiset α), ∀, ∀ y ∈ (0 : Multiset α), ∀ b, f x (f y b) = f y (f x b))
+theorem noncomm_foldr_empty (h : ∀, ∀ x ∈ (0 : Multiset α), ∀, ∀ y ∈ (0 : Multiset α), ∀ (b), f x (f y b) = f y (f x b))
     (b : β) : noncommFoldr f (0 : Multiset α) h b = b :=
   rfl
 
 theorem noncomm_foldr_cons (s : Multiset α) (a : α)
-    (h : ∀, ∀ x ∈ a ::ₘ s, ∀, ∀ y ∈ a ::ₘ s, ∀ b, f x (f y b) = f y (f x b))
-    (h' : ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀ b, f x (f y b) = f y (f x b)) (b : β) :
+    (h : ∀, ∀ x ∈ a ::ₘ s, ∀, ∀ y ∈ a ::ₘ s, ∀ (b), f x (f y b) = f y (f x b))
+    (h' : ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀ (b), f x (f y b) = f y (f x b)) (b : β) :
     noncommFoldr f (a ::ₘ s) h b = f a (noncommFoldr f s h' b) := by
   induction s using Quotientₓ.induction_on
   simp
@@ -270,7 +270,6 @@ theorem noncomm_prod_commute (s : Finset α) (f : α → β) (comm : ∀ x : α,
   rintro ⟨x, ⟨hx, rfl⟩⟩
   exact h x hx
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem noncomm_prod_eq_prod {β : Type _} [CommMonoidₓ β] (s : Finset α) (f : α → β) :
     (noncommProd s f fun _ _ _ _ => Commute.all _ _) = s.Prod f := by
@@ -315,7 +314,6 @@ theorem noncomm_prod_mul_distrib_aux {s : Finset α} {f : α → β} {g : α →
   · exact comm_gg x hx y hy
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The non-commutative version of `finset.prod_mul_distrib` -/
 @[to_additive "The non-commutative version of `finset.sum_add_distrib`"]
 theorem noncomm_prod_mul_distrib {s : Finset α} (f : α → β) (g : α → β)

@@ -81,11 +81,11 @@ section FoldrWithIndex
 def foldrWithIndexAuxSpec (f : ℕ → α → β → β) (start : ℕ) (b : β) (as : List α) : β :=
   foldr (uncurry f) b <| enumFrom start as
 
-theorem foldr_with_index_aux_spec_cons (f : ℕ → α → β → β) start b a as :
+theorem foldr_with_index_aux_spec_cons (f : ℕ → α → β → β) (start b a as) :
     foldrWithIndexAuxSpec f start b (a :: as) = f start a (foldrWithIndexAuxSpec f (start + 1) b as) :=
   rfl
 
-theorem foldr_with_index_aux_eq_foldr_with_index_aux_spec (f : ℕ → α → β → β) start b as :
+theorem foldr_with_index_aux_eq_foldr_with_index_aux_spec (f : ℕ → α → β → β) (start b as) :
     foldrWithIndexAux f start b as = foldrWithIndexAuxSpec f start b as := by
   induction as generalizing start
   · rfl
@@ -113,13 +113,13 @@ section FoldlWithIndex
 
 /-- Specification of `foldl_with_index_aux`. -/
 def foldlWithIndexAuxSpec (f : ℕ → α → β → α) (start : ℕ) (a : α) (bs : List β) : α :=
-  foldlₓ (fun a p : ℕ × β => f p.fst a p.snd) a <| enumFrom start bs
+  foldlₓ (fun a (p : ℕ × β) => f p.fst a p.snd) a <| enumFrom start bs
 
-theorem foldl_with_index_aux_spec_cons (f : ℕ → α → β → α) start a b bs :
+theorem foldl_with_index_aux_spec_cons (f : ℕ → α → β → α) (start a b bs) :
     foldlWithIndexAuxSpec f start a (b :: bs) = foldlWithIndexAuxSpec f (start + 1) (f start a b) bs :=
   rfl
 
-theorem foldl_with_index_aux_eq_foldl_with_index_aux_spec (f : ℕ → α → β → α) start a bs :
+theorem foldl_with_index_aux_eq_foldl_with_index_aux_spec (f : ℕ → α → β → α) (start a bs) :
     foldlWithIndexAux f start a bs = foldlWithIndexAuxSpec f start a bs := by
   induction bs generalizing start a
   · rfl
@@ -128,7 +128,7 @@ theorem foldl_with_index_aux_eq_foldl_with_index_aux_spec (f : ℕ → α → β
     
 
 theorem foldl_with_index_eq_foldl_enum (f : ℕ → α → β → α) (a : α) (bs : List β) :
-    foldlWithIndex f a bs = foldlₓ (fun a p : ℕ × β => f p.fst a p.snd) a (enum bs) := by
+    foldlWithIndex f a bs = foldlₓ (fun a (p : ℕ × β) => f p.fst a p.snd) a (enum bs) := by
   simp only [← foldl_with_index, ← foldl_with_index_aux_spec, ← foldl_with_index_aux_eq_foldl_with_index_aux_spec, ←
     enum]
 
@@ -143,7 +143,7 @@ theorem mfoldr_with_index_eq_mfoldr_enum {α β} (f : ℕ → α → β → m β
   simp only [← mfoldr_with_index, ← mfoldr_eq_foldr, ← foldr_with_index_eq_foldr_enum, ← uncurry]
 
 theorem mfoldl_with_index_eq_mfoldl_enum [IsLawfulMonad m] {α β} (f : ℕ → β → α → m β) (b : β) (as : List α) :
-    mfoldlWithIndex f b as = mfoldl (fun b p : ℕ × α => f p.fst b p.snd) b (enum as) := by
+    mfoldlWithIndex f b as = mfoldl (fun b (p : ℕ × α) => f p.fst b p.snd) b (enum as) := by
   rw [mfoldl_with_index, mfoldl_eq_foldl, foldl_with_index_eq_foldl_enum]
 
 end MfoldWithIndex

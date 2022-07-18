@@ -104,8 +104,8 @@ theorem zorn_nonempty_preorder [Nonempty α] (h : ∀ c : Set α, IsChain (· �
     ∃ m : α, ∀ a, m ≤ a → a ≤ m :=
   exists_maximal_of_nonempty_chains_bounded h fun a b c => le_transₓ
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (c «expr ⊆ » s)
-theorem zorn_preorder₀ (s : Set α) (ih : ∀ c _ : c ⊆ s, IsChain (· ≤ ·) c → ∃ ub ∈ s, ∀, ∀ z ∈ c, ∀, z ≤ ub) :
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (c «expr ⊆ » s)
+theorem zorn_preorder₀ (s : Set α) (ih : ∀ (c) (_ : c ⊆ s), IsChain (· ≤ ·) c → ∃ ub ∈ s, ∀, ∀ z ∈ c, ∀, z ≤ ub) :
     ∃ m ∈ s, ∀, ∀ z ∈ s, ∀, m ≤ z → z ≤ m :=
   let ⟨⟨m, hms⟩, h⟩ :=
     @zorn_preorder s _ fun c hc =>
@@ -116,9 +116,9 @@ theorem zorn_preorder₀ (s : Set α) (ih : ∀ c _ : c ⊆ s, IsChain (· ≤ �
       ⟨⟨ub, hubs⟩, fun ⟨y, hy⟩ hc => hub _ ⟨_, hc, rfl⟩⟩
   ⟨m, hms, fun z hzs hmz => h ⟨z, hzs⟩ hmz⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (c «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (c «expr ⊆ » s)
 theorem zorn_nonempty_preorder₀ (s : Set α)
-    (ih : ∀ c _ : c ⊆ s, IsChain (· ≤ ·) c → ∀, ∀ y ∈ c, ∀, ∃ ub ∈ s, ∀, ∀ z ∈ c, ∀, z ≤ ub) (x : α) (hxs : x ∈ s) :
+    (ih : ∀ (c) (_ : c ⊆ s), IsChain (· ≤ ·) c → ∀, ∀ y ∈ c, ∀, ∃ ub ∈ s, ∀, ∀ z ∈ c, ∀, z ≤ ub) (x : α) (hxs : x ∈ s) :
     ∃ m ∈ s, x ≤ m ∧ ∀, ∀ z ∈ s, ∀, m ≤ z → z ≤ m := by
   rcases zorn_preorder₀ ({ y ∈ s | x ≤ y }) fun c hcs hc => _ with ⟨m, ⟨hms, hxm⟩, hm⟩
   · exact ⟨m, hms, hxm, fun z hzs hmz => hm _ ⟨hzs, hxm.trans hmz⟩ hmz⟩
@@ -146,40 +146,40 @@ theorem zorn_nonempty_partial_order [Nonempty α] (h : ∀ c : Set α, IsChain (
   let ⟨m, hm⟩ := zorn_nonempty_preorder h
   ⟨m, fun a ha => le_antisymmₓ (hm a ha) ha⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (c «expr ⊆ » s)
-theorem zorn_partial_order₀ (s : Set α) (ih : ∀ c _ : c ⊆ s, IsChain (· ≤ ·) c → ∃ ub ∈ s, ∀, ∀ z ∈ c, ∀, z ≤ ub) :
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (c «expr ⊆ » s)
+theorem zorn_partial_order₀ (s : Set α) (ih : ∀ (c) (_ : c ⊆ s), IsChain (· ≤ ·) c → ∃ ub ∈ s, ∀, ∀ z ∈ c, ∀, z ≤ ub) :
     ∃ m ∈ s, ∀, ∀ z ∈ s, ∀, m ≤ z → z = m :=
   let ⟨m, hms, hm⟩ := zorn_preorder₀ s ih
   ⟨m, hms, fun z hzs hmz => (hm z hzs hmz).antisymm hmz⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (c «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (c «expr ⊆ » s)
 theorem zorn_nonempty_partial_order₀ (s : Set α)
-    (ih : ∀ c _ : c ⊆ s, IsChain (· ≤ ·) c → ∀, ∀ y ∈ c, ∀, ∃ ub ∈ s, ∀, ∀ z ∈ c, ∀, z ≤ ub) (x : α) (hxs : x ∈ s) :
+    (ih : ∀ (c) (_ : c ⊆ s), IsChain (· ≤ ·) c → ∀, ∀ y ∈ c, ∀, ∃ ub ∈ s, ∀, ∀ z ∈ c, ∀, z ≤ ub) (x : α) (hxs : x ∈ s) :
     ∃ m ∈ s, x ≤ m ∧ ∀, ∀ z ∈ s, ∀, m ≤ z → z = m :=
   let ⟨m, hms, hxm, hm⟩ := zorn_nonempty_preorder₀ s ih x hxs
   ⟨m, hms, hxm, fun z hzs hmz => (hm z hzs hmz).antisymm hmz⟩
 
 end PartialOrderₓ
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (c «expr ⊆ » S)
-theorem zorn_subset (S : Set (Set α)) (h : ∀ c _ : c ⊆ S, IsChain (· ⊆ ·) c → ∃ ub ∈ S, ∀, ∀ s ∈ c, ∀, s ⊆ ub) :
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (c «expr ⊆ » S)
+theorem zorn_subset (S : Set (Set α)) (h : ∀ (c) (_ : c ⊆ S), IsChain (· ⊆ ·) c → ∃ ub ∈ S, ∀, ∀ s ∈ c, ∀, s ⊆ ub) :
     ∃ m ∈ S, ∀, ∀ a ∈ S, ∀, m ⊆ a → a = m :=
   zorn_partial_order₀ S h
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (c «expr ⊆ » S)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (c «expr ⊆ » S)
 theorem zorn_subset_nonempty (S : Set (Set α))
-    (H : ∀ c _ : c ⊆ S, IsChain (· ⊆ ·) c → c.Nonempty → ∃ ub ∈ S, ∀, ∀ s ∈ c, ∀, s ⊆ ub) x (hx : x ∈ S) :
+    (H : ∀ (c) (_ : c ⊆ S), IsChain (· ⊆ ·) c → c.Nonempty → ∃ ub ∈ S, ∀, ∀ s ∈ c, ∀, s ⊆ ub) (x) (hx : x ∈ S) :
     ∃ m ∈ S, x ⊆ m ∧ ∀, ∀ a ∈ S, ∀, m ⊆ a → a = m :=
   zorn_nonempty_partial_order₀ _ (fun c cS hc y yc => H _ cS hc ⟨y, yc⟩) _ hx
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (c «expr ⊆ » S)
-theorem zorn_superset (S : Set (Set α)) (h : ∀ c _ : c ⊆ S, IsChain (· ⊆ ·) c → ∃ lb ∈ S, ∀, ∀ s ∈ c, ∀, lb ⊆ s) :
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (c «expr ⊆ » S)
+theorem zorn_superset (S : Set (Set α)) (h : ∀ (c) (_ : c ⊆ S), IsChain (· ⊆ ·) c → ∃ lb ∈ S, ∀, ∀ s ∈ c, ∀, lb ⊆ s) :
     ∃ m ∈ S, ∀, ∀ a ∈ S, ∀, a ⊆ m → a = m :=
   (@zorn_partial_order₀ (Set α)ᵒᵈ _ S) fun c cS hc => h c cS hc.symm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (c «expr ⊆ » S)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (c «expr ⊆ » S)
 theorem zorn_superset_nonempty (S : Set (Set α))
-    (H : ∀ c _ : c ⊆ S, IsChain (· ⊆ ·) c → c.Nonempty → ∃ lb ∈ S, ∀, ∀ s ∈ c, ∀, lb ⊆ s) x (hx : x ∈ S) :
+    (H : ∀ (c) (_ : c ⊆ S), IsChain (· ⊆ ·) c → c.Nonempty → ∃ lb ∈ S, ∀, ∀ s ∈ c, ∀, lb ⊆ s) (x) (hx : x ∈ S) :
     ∃ m ∈ S, m ⊆ x ∧ ∀, ∀ a ∈ S, ∀, a ⊆ m → a = m :=
   @zorn_nonempty_partial_order₀ (Set α)ᵒᵈ _ S (fun c cS hc y yc => H _ cS hc.symm ⟨y, yc⟩) _ hx
 

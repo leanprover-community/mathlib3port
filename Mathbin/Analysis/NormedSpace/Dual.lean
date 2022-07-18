@@ -50,11 +50,11 @@ variable (E : Type _) [SemiNormedGroup E] [NormedSpace 𝕜 E]
 
 variable (F : Type _) [NormedGroup F] [NormedSpace 𝕜 F]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler normed_space 𝕜
+-- ./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler normed_space 𝕜
 /-- The topological dual of a seminormed space `E`. -/
 def Dual :=
   E →L[𝕜] 𝕜 deriving Inhabited, SemiNormedGroup,
-  «./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler normed_space 𝕜»
+  «./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler normed_space 𝕜»
 
 instance : ContinuousLinearMapClass (Dual 𝕜 E) 𝕜 E 𝕜 :=
   ContinuousLinearMap.continuousSemilinearMapClass
@@ -105,7 +105,6 @@ section BidualIsometry
 
 variable (𝕜 : Type v) [IsROrC 𝕜] {E : Type u} [NormedGroup E] [NormedSpace 𝕜 E]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If one controls the norm of every `f x`, then one controls the norm of `x`.
     Compare `continuous_linear_map.op_norm_le_bound`. -/
 theorem norm_le_dual_bound (x : E) {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ f : Dual 𝕜 E, ∥f x∥ ≤ M * ∥f∥) : ∥x∥ ≤ M := by

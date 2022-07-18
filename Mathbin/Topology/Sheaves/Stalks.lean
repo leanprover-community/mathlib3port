@@ -101,7 +101,7 @@ theorem germ_res (F : X.Presheaf C) {U V : Opens X} (i : U ⟶ V) (x : U) : F.ma
 composition with the `germ` morphisms.
 -/
 theorem stalk_hom_ext (F : X.Presheaf C) {x} {Y : C} {f₁ f₂ : F.stalk x ⟶ Y}
-    (ih : ∀ U : Opens X hxU : x ∈ U, F.germ ⟨x, hxU⟩ ≫ f₁ = F.germ ⟨x, hxU⟩ ≫ f₂) : f₁ = f₂ :=
+    (ih : ∀ (U : Opens X) (hxU : x ∈ U), F.germ ⟨x, hxU⟩ ≫ f₁ = F.germ ⟨x, hxU⟩ ≫ f₂) : f₁ = f₂ :=
   colimit.hom_ext fun U => by
     induction U using Opposite.rec
     cases' U with U hxU
@@ -422,7 +422,7 @@ agree on `V`. -/
 theorem app_surjective_of_injective_of_locally_surjective {F G : Sheaf C X} (f : F ⟶ G) (U : Opens X)
     (hinj : ∀ x : U, Function.Injective ((stalkFunctor C x.1).map f))
     (hsurj :
-      ∀ t x : U, ∃ (V : Opens X)(m : x.1 ∈ V)(iVU : V ⟶ U)(s : F.1.obj (op V)), f.app (op V) s = G.1.map iVU.op t) :
+      ∀ (t) (x : U), ∃ (V : Opens X)(m : x.1 ∈ V)(iVU : V ⟶ U)(s : F.1.obj (op V)), f.app (op V) s = G.1.map iVU.op t) :
     Function.Surjective (f.app (op U)) := by
   intro t
   -- We use the axiom of choice to pick around each point `x` an open neighborhood `V` and a

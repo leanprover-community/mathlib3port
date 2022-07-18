@@ -84,8 +84,8 @@ the `Inf` of all its nonempty bounded-below subsets.
 See note [reducible non-instances]. -/
 @[reducible]
 noncomputable def subsetConditionallyCompleteLinearOrder [Inhabited s]
-    (h_Sup : ∀ {t : Set s} ht : t.Nonempty h_bdd : BddAbove t, sup (coe '' t : Set α) ∈ s)
-    (h_Inf : ∀ {t : Set s} ht : t.Nonempty h_bdd : BddBelow t, inf (coe '' t : Set α) ∈ s) :
+    (h_Sup : ∀ {t : Set s} (ht : t.Nonempty) (h_bdd : BddAbove t), sup (coe '' t : Set α) ∈ s)
+    (h_Inf : ∀ {t : Set s} (ht : t.Nonempty) (h_bdd : BddBelow t), inf (coe '' t : Set α) ∈ s) :
     ConditionallyCompleteLinearOrder s :=
   { -- The following would be a more natural way to finish, but gives a "deep recursion" error:
       -- simpa [subset_Sup_of_within (h_Sup t)] using

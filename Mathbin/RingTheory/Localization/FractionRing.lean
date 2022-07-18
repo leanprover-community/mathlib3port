@@ -185,14 +185,14 @@ and an injective ring hom `g : A →+* L` where `L` is a field,
 the field hom induced from `K` to `L` maps `x` to `g x` for all
 `x : A`. -/
 @[simp]
-theorem lift_algebra_map (hg : Injective g) x : lift hg (algebraMap A K x) = g x :=
+theorem lift_algebra_map (hg : Injective g) (x) : lift hg (algebraMap A K x) = g x :=
   lift_eq _ _
 
 /-- Given an integral domain `A` with field of fractions `K`,
 and an injective ring hom `g : A →+* L` where `L` is a field,
 field hom induced from `K` to `L` maps `f x / f y` to `g x / g y` for all
 `x : A, y ∈ non_zero_divisors A`. -/
-theorem lift_mk' (hg : Injective g) x (y : nonZeroDivisors A) : lift hg (mk' K x y) = g x / g y := by
+theorem lift_mk' (hg : Injective g) (x) (y : nonZeroDivisors A) : lift hg (mk' K x y) = g x / g y := by
   simp only [← mk'_eq_div, ← RingHom.map_div, ← lift_algebra_map]
 
 /-- Given integral domains `A, B` with fields of fractions `K`, `L`

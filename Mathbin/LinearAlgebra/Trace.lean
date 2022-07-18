@@ -124,7 +124,6 @@ variable (N : Type _) [AddCommGroupₓ N] [Module R N]
 
 variable {ι : Type _} [Fintype ι]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The trace of a linear map correspond to the contraction pairing under the isomorphism
  `End(M) ≃ M* ⊗ M`-/
 theorem trace_eq_contract_of_basis (b : Basis ι R M) : LinearMap.trace R M ∘ₗ dualTensorHom R M M = contractLeft R M :=

@@ -177,7 +177,6 @@ theorem IndepFunₓ.variance_add {X Y : Ω → ℝ} (hX : Memℒp X 2) (hY : Mem
       ring
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The variance of a finite sum of pairwise independent random variables is the sum of the
 variances. -/
 theorem IndepFunₓ.variance_sum {ι : Type _} {X : ι → Ω → ℝ} {s : Finset ι} (hs : ∀, ∀ i ∈ s, ∀, Memℒp (X i) 2)

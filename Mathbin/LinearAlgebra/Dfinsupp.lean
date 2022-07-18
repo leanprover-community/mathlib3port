@@ -52,7 +52,7 @@ def lmk (s : Finset ι) : (∀ i : (↑s : Set ι), M i) →ₗ[R] Π₀ i, M i 
   map_smul' := fun c x => mk_smul c x
 
 /-- `dfinsupp.single` as a `linear_map` -/
-def lsingle i : M i →ₗ[R] Π₀ i, M i :=
+def lsingle (i) : M i →ₗ[R] Π₀ i, M i :=
   { Dfinsupp.singleAddHom _ _ with toFun := single i, map_smul' := single_smul }
 
 /-- Two `R`-linear maps from `Π₀ i, M i` which agree on each `single i x` agree everywhere. -/
@@ -78,7 +78,7 @@ def lapply (i : ι) : (Π₀ i, M i) →ₗ[R] M i where
 include dec_ι
 
 @[simp]
-theorem lmk_apply (s : Finset ι) x : (lmk s : _ →ₗ[R] Π₀ i, M i) x = mk s x :=
+theorem lmk_apply (s : Finset ι) (x) : (lmk s : _ →ₗ[R] Π₀ i, M i) x = mk s x :=
   rfl
 
 @[simp]
@@ -144,7 +144,7 @@ def lsum [Semiringₓ S] [Module S N] [SmulCommClass R S N] : (∀ i, M i →ₗ
 
 /-- While `simp` can prove this, it is often convenient to avoid unfolding `lsum` into `sum_add_hom`
 with `dfinsupp.lsum_apply_apply`. -/
-theorem lsum_single [Semiringₓ S] [Module S N] [SmulCommClass R S N] (F : ∀ i, M i →ₗ[R] N) i (x : M i) :
+theorem lsum_single [Semiringₓ S] [Module S N] [SmulCommClass R S N] (F : ∀ i, M i →ₗ[R] N) (i) (x : M i) :
     lsum S F (single i x) = F i x :=
   sum_add_hom_single _ _ _
 
@@ -186,8 +186,8 @@ theorem mapRange.linear_map_comp (f : ∀ i, β₁ i →ₗ[R] β₂ i) (f₂ : 
 
 include dec_ι
 
-theorem sum_map_range_index.linear_map [∀ i : ι x : β₁ i, Decidable (x ≠ 0)] [∀ i : ι x : β₂ i, Decidable (x ≠ 0)]
-    {f : ∀ i, β₁ i →ₗ[R] β₂ i} {h : ∀ i, β₂ i →ₗ[R] N} {l : Π₀ i, β₁ i} :
+theorem sum_map_range_index.linear_map [∀ (i : ι) (x : β₁ i), Decidable (x ≠ 0)]
+    [∀ (i : ι) (x : β₂ i), Decidable (x ≠ 0)] {f : ∀ i, β₁ i →ₗ[R] β₂ i} {h : ∀ i, β₂ i →ₗ[R] N} {l : Π₀ i, β₁ i} :
     Dfinsupp.lsum ℕ h (mapRange.linearMap f l) = Dfinsupp.lsum ℕ (fun i => (h i).comp (f i)) l := by
   simpa [← Dfinsupp.sum_add_hom_apply] using
     @sum_map_range_index ι N _ _ _ _ _ _ _ _ (fun i => f i)
@@ -241,7 +241,7 @@ variable [Semiringₓ R] [AddCommMonoidₓ N] [Module R N]
 
 open Dfinsupp
 
-theorem dfinsupp_sum_mem {β : ι → Type _} [∀ i, Zero (β i)] [∀ i x : β i, Decidable (x ≠ 0)] (S : Submodule R N)
+theorem dfinsupp_sum_mem {β : ι → Type _} [∀ i, Zero (β i)] [∀ (i) (x : β i), Decidable (x ≠ 0)] (S : Submodule R N)
     (f : Π₀ i, β i) (g : ∀ i, β i → N) (h : ∀ c, f c ≠ 0 → g c (f c) ∈ S) : f.Sum g ∈ S :=
   dfinsupp_sum_mem S f g h
 
@@ -290,7 +290,7 @@ theorem mem_supr_iff_exists_dfinsupp (p : ι → Submodule R N) (x : N) :
   SetLike.ext_iff.mp (supr_eq_range_dfinsupp_lsum p) x
 
 /-- A variant of `submodule.mem_supr_iff_exists_dfinsupp` with the RHS fully unfolded. -/
-theorem mem_supr_iff_exists_dfinsupp' (p : ι → Submodule R N) [∀ i x : p i, Decidable (x ≠ 0)] (x : N) :
+theorem mem_supr_iff_exists_dfinsupp' (p : ι → Submodule R N) [∀ (i) (x : p i), Decidable (x ≠ 0)] (x : N) :
     x ∈ supr p ↔ ∃ f : Π₀ i, p i, (f.Sum fun i xi => ↑xi) = x := by
   rw [mem_supr_iff_exists_dfinsupp]
   simp_rw [Dfinsupp.lsum_apply_apply, Dfinsupp.sum_add_hom_apply]
@@ -304,7 +304,6 @@ open BigOperators
 
 omit dec_ι
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mem_supr_finset_iff_exists_sum {s : Finset ι} (p : ι → Submodule R N) (a : N) :
     (a ∈ ⨆ i ∈ s, p i) ↔ ∃ μ : ∀ i, p i, (∑ i in s, (μ i : N)) = a := by
   classical
@@ -365,7 +364,8 @@ This is an intermediate result used to prove
 `complete_lattice.independent_of_dfinsupp_lsum_injective` and
 `complete_lattice.independent.dfinsupp_lsum_injective`. -/
 theorem independent_iff_forall_dfinsupp (p : ι → Submodule R N) :
-    Independent p ↔ ∀ i x : p i v : Π₀ i : ι, ↥(p i), lsum ℕ (fun i => (p i).Subtype) (erase i v) = x → x = 0 := by
+    Independent p ↔ ∀ (i) (x : p i) (v : Π₀ i : ι, ↥(p i)), lsum ℕ (fun i => (p i).Subtype) (erase i v) = x → x = 0 :=
+  by
   simp_rw [CompleteLattice.independent_def, Submodule.disjoint_def, Submodule.mem_bsupr_iff_exists_dfinsupp,
     exists_imp_distrib, filter_ne_eq_erase]
   apply forall_congrₓ fun i => _
@@ -465,7 +465,6 @@ theorem independent_iff_dfinsupp_sum_add_hom_injective (p : ι → AddSubgroup N
 
 omit dec_ι
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If a family of submodules is `independent`, then a choice of nonzero vector from each submodule
 forms a linearly independent family.
 

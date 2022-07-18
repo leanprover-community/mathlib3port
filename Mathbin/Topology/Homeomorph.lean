@@ -55,7 +55,7 @@ instance : CoeFun (α ≃ₜ β) fun _ => α → β :=
   ⟨fun e => e.toEquiv⟩
 
 @[simp]
-theorem homeomorph_mk_coe (a : Equivₓ α β) b c : (Homeomorph.mk a b c : α → β) = a :=
+theorem homeomorph_mk_coe (a : Equivₓ α β) (b c) : (Homeomorph.mk a b c : α → β) = a :=
   rfl
 
 /-- Inverse of a homeomorphism. -/
@@ -108,7 +108,7 @@ theorem trans_apply (h₁ : α ≃ₜ β) (h₂ : β ≃ₜ γ) (a : α) : h₁.
   rfl
 
 @[simp]
-theorem homeomorph_mk_coe_symm (a : Equivₓ α β) b c : ((Homeomorph.mk a b c).symm : β → α) = a.symm :=
+theorem homeomorph_mk_coe_symm (a : Equivₓ α β) (b c) : ((Homeomorph.mk a b c).symm : β → α) = a.symm :=
   rfl
 
 @[simp]
@@ -242,8 +242,8 @@ protected theorem t1_space [T1Space α] (h : α ≃ₜ β) : T1Space β :=
 protected theorem t2_space [T2Space α] (h : α ≃ₜ β) : T2Space β :=
   h.symm.Embedding.T2Space
 
-protected theorem regular_space [RegularSpace α] (h : α ≃ₜ β) : RegularSpace β :=
-  h.symm.Embedding.RegularSpace
+protected theorem t3_space [T3Space α] (h : α ≃ₜ β) : T3Space β :=
+  h.symm.Embedding.T3Space
 
 protected theorem dense_embedding (h : α ≃ₜ β) : DenseEmbedding h :=
   { h.Embedding with dense := h.Surjective.DenseRange }
@@ -369,14 +369,8 @@ def setCongr {s t : Set α} (h : s = t) : s ≃ₜ t where
 
 /-- Sum of two homeomorphisms. -/
 def sumCongr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : Sum α γ ≃ₜ Sum β δ where
-  continuous_to_fun := by
-    convert continuous_sum_rec (continuous_inl.comp h₁.continuous) (continuous_inr.comp h₂.continuous)
-    ext x
-    cases x <;> rfl
-  continuous_inv_fun := by
-    convert continuous_sum_rec (continuous_inl.comp h₁.symm.continuous) (continuous_inr.comp h₂.symm.continuous)
-    ext x
-    cases x <;> rfl
+  continuous_to_fun := h₁.Continuous.sum_map h₂.Continuous
+  continuous_inv_fun := h₁.symm.Continuous.sum_map h₂.symm.Continuous
   toEquiv := h₁.toEquiv.sumCongr h₂.toEquiv
 
 /-- Product of two homeomorphisms. -/
@@ -445,18 +439,11 @@ def ulift.{u, v} {α : Type u} [TopologicalSpace α] : ULift.{v, u} α ≃ₜ α
 section Distribₓ
 
 /-- `(α ⊕ β) × γ` is homeomorphic to `α × γ ⊕ β × γ`. -/
-def sumProdDistrib : Sum α β × γ ≃ₜ Sum (α × γ) (β × γ) := by
-  refine' (Homeomorph.homeomorphOfContinuousOpen (Equivₓ.sumProdDistrib α β γ).symm _ _).symm
-  · convert
-      continuous_sum_rec ((continuous_inl.comp continuous_fst).prod_mk continuous_snd)
-        ((continuous_inr.comp continuous_fst).prod_mk continuous_snd)
-    ext1 x
-    cases x <;> rfl
-    
-  · exact
-      is_open_map_sum (open_embedding_inl.prod open_embedding_id).IsOpenMap
-        (open_embedding_inr.prod open_embedding_id).IsOpenMap
-    
+def sumProdDistrib : Sum α β × γ ≃ₜ Sum (α × γ) (β × γ) :=
+  Homeomorph.symm <|
+    homeomorphOfContinuousOpen (Equivₓ.sumProdDistrib α β γ).symm
+        ((continuous_inl.prod_map continuous_id).sum_elim (continuous_inr.prod_map continuous_id)) <|
+      is_open_map_sum (open_embedding_inl.IsOpenMap.Prod IsOpenMap.id) (open_embedding_inr.IsOpenMap.Prod IsOpenMap.id)
 
 /-- `α × (β ⊕ γ)` is homeomorphic to `α × β ⊕ α × γ`. -/
 def prodSumDistrib : α × Sum β γ ≃ₜ Sum (α × β) (α × γ) :=

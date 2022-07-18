@@ -85,16 +85,8 @@ normed lattice ordered group.
 -/
 -- see Note [lower instance priority]
 instance (priority := 100) : NormedLatticeAddCommGroup αᵒᵈ where
-  add_le_add_left := by
-    intro a b h₁ c
-    rw [← OrderDual.dual_le]
-    rw [← OrderDual.dual_le] at h₁
-    exact add_le_add_left h₁ _
-  solid := by
-    intro a b h₂
-    apply dual_solid
-    rw [← OrderDual.dual_le] at h₂
-    exact h₂
+  add_le_add_left := fun a b => add_le_add_left
+  solid := dual_solid
 
 theorem norm_abs_eq_norm (a : α) : ∥|a|∥ = ∥a∥ :=
   (solid (abs_abs a).le).antisymm (solid (abs_abs a).symm.le)

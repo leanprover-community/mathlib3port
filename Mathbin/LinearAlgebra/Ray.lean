@@ -229,8 +229,8 @@ protected def rayOfNeZero (v : M) (h : v ≠ 0) : Module.Ray R M :=
   ⟦⟨v, h⟩⟧
 
 /-- An induction principle for `module.ray`, used as `induction x using module.ray.ind`. -/
-theorem Module.Ray.ind {C : Module.Ray R M → Prop} (h : ∀ v hv : v ≠ 0, C (rayOfNeZero R v hv)) (x : Module.Ray R M) :
-    C x :=
+theorem Module.Ray.ind {C : Module.Ray R M → Prop} (h : ∀ (v) (hv : v ≠ 0), C (rayOfNeZero R v hv))
+    (x : Module.Ray R M) : C x :=
   Quotientₓ.ind (Subtype.rec <| h) x
 
 variable {R}
@@ -297,7 +297,7 @@ theorem Module.Ray.linear_equiv_smul_eq_map (e : M ≃ₗ[R] M) (v : Module.Ray 
   rfl
 
 @[simp]
-theorem smul_ray_of_ne_zero (g : G) (v : M) hv :
+theorem smul_ray_of_ne_zero (g : G) (v : M) (hv) :
     g • rayOfNeZero R v hv = rayOfNeZero R (g • v) ((smul_ne_zero_iff_ne _).2 hv) :=
   rfl
 

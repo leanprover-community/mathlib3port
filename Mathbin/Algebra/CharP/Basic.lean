@@ -7,6 +7,7 @@ import Mathbin.Algebra.Hom.Iterate
 import Mathbin.Data.Int.Modeq
 import Mathbin.Data.Nat.Choose.Dvd
 import Mathbin.Data.Nat.Choose.Sum
+import Mathbin.Data.Zmod.Defs
 import Mathbin.GroupTheory.OrderOfElement
 import Mathbin.RingTheory.Nilpotent
 
@@ -19,7 +20,7 @@ universe u v
 
 variable (R : Type u)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`cast_eq_zero_iff] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`cast_eq_zero_iff] []
 /-- The generator of the kernel of the unique homomorphism ℕ → R for a semiring R.
 
 *Warning*: for a semiring `R`, `char_p R 0` and `char_zero R` need not coincide.
@@ -404,10 +405,10 @@ section NoZeroDivisors
 
 variable [NoZeroDivisors R]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (d «expr ∣ » p)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (d «expr ∣ » p)
 theorem char_is_prime_of_two_le (p : ℕ) [hc : CharP R p] (hp : 2 ≤ p) : Nat.Prime p :=
-  suffices ∀ d _ : d ∣ p, d = 1 ∨ d = p from Nat.prime_def_lt''.mpr ⟨hp, this⟩
-  fun d : ℕ hdvd : ∃ e, p = d * e =>
+  suffices ∀ (d) (_ : d ∣ p), d = 1 ∨ d = p from Nat.prime_def_lt''.mpr ⟨hp, this⟩
+  fun (d : ℕ) (hdvd : ∃ e, p = d * e) =>
   let ⟨e, hmul⟩ := hdvd
   have : (p : R) = 0 := (cast_eq_zero_iff R p p).mpr (dvd_refl p)
   have : (d : R) * e = 0 := @cast_mulₓ R _ d e ▸ hmul ▸ this
@@ -543,7 +544,7 @@ theorem char_p_of_ne_zero (hn : Fintype.card R = n) (hR : ∀, ∀ i < n, ∀, (
         rw [Nat.cast_mulₓ, H, zero_mul]
          }
 
-theorem char_p_of_prime_pow_injective R [Ringₓ R] [Fintype R] (p : ℕ) [hp : Fact p.Prime] (n : ℕ)
+theorem char_p_of_prime_pow_injective (R) [Ringₓ R] [Fintype R] (p : ℕ) [hp : Fact p.Prime] (n : ℕ)
     (hn : Fintype.card R = p ^ n) (hR : ∀, ∀ i ≤ n, ∀, (p ^ i : R) = 0 → i = n) : CharP R (p ^ n) := by
   obtain ⟨c, hc⟩ := CharP.exists R
   skip

@@ -315,11 +315,12 @@ def mk' (e : P₁ → P₂) (e' : V₁ ≃ₗᵢ[𝕜] V₂) (p : P₁) (h : ∀
   { AffineEquiv.mk' e e'.toLinearEquiv p h with norm_map := e'.norm_map }
 
 @[simp]
-theorem coe_mk' (e : P₁ → P₂) (e' : V₁ ≃ₗᵢ[𝕜] V₂) p h : ⇑(mk' e e' p h) = e :=
+theorem coe_mk' (e : P₁ → P₂) (e' : V₁ ≃ₗᵢ[𝕜] V₂) (p h) : ⇑(mk' e e' p h) = e :=
   rfl
 
 @[simp]
-theorem linear_isometry_equiv_mk' (e : P₁ → P₂) (e' : V₁ ≃ₗᵢ[𝕜] V₂) p h : (mk' e e' p h).LinearIsometryEquiv = e' := by
+theorem linear_isometry_equiv_mk' (e : P₁ → P₂) (e' : V₁ ≃ₗᵢ[𝕜] V₂) (p h) : (mk' e e' p h).LinearIsometryEquiv = e' :=
+  by
   ext
   rfl
 

@@ -105,9 +105,11 @@ protected theorem prop_iff {p : Prop} : IsEmpty p ↔ ¬p :=
 
 variable [IsEmpty α]
 
+@[simp]
 theorem forall_iff {p : α → Prop} : (∀ a, p a) ↔ True :=
   iff_true_intro isEmptyElim
 
+@[simp]
 theorem exists_iff {p : α → Prop} : (∃ a, p a) ↔ False :=
   iff_false_intro fun ⟨x, hx⟩ => IsEmpty.false x
 
@@ -126,8 +128,24 @@ theorem not_is_empty_iff : ¬IsEmpty α ↔ Nonempty α :=
   not_iff_comm.mp not_nonempty_iff
 
 @[simp]
+theorem is_empty_Prop {p : Prop} : IsEmpty p ↔ ¬p := by
+  simp only [not_nonempty_iff, ← nonempty_Prop]
+
+@[simp]
 theorem is_empty_pi {π : α → Sort _} : IsEmpty (∀ a, π a) ↔ ∃ a, IsEmpty (π a) := by
   simp only [not_nonempty_iff, ← Classical.nonempty_piₓ, ← not_forall]
+
+@[simp]
+theorem is_empty_sigma {α} {E : α → Type _} : IsEmpty (Sigma E) ↔ ∀ a, IsEmpty (E a) := by
+  simp only [not_nonempty_iff, ← nonempty_sigmaₓ, ← not_exists]
+
+@[simp]
+theorem is_empty_psigma {α} {E : α → Sort _} : IsEmpty (PSigma E) ↔ ∀ a, IsEmpty (E a) := by
+  simp only [not_nonempty_iff, ← nonempty_psigmaₓ, ← not_exists]
+
+@[simp]
+theorem is_empty_subtype (p : α → Prop) : IsEmpty (Subtype p) ↔ ∀ x, ¬p x := by
+  simp only [not_nonempty_iff, ← nonempty_subtype, ← not_exists]
 
 @[simp]
 theorem is_empty_prod {α β : Type _} : IsEmpty (α × β) ↔ IsEmpty α ∨ IsEmpty β := by
@@ -144,6 +162,14 @@ theorem is_empty_sum {α β} : IsEmpty (Sum α β) ↔ IsEmpty α ∧ IsEmpty β
 @[simp]
 theorem is_empty_psum {α β} : IsEmpty (PSum α β) ↔ IsEmpty α ∧ IsEmpty β := by
   simp only [not_nonempty_iff, ← nonempty_psum, ← not_or_distrib]
+
+@[simp]
+theorem is_empty_ulift {α} : IsEmpty (ULift α) ↔ IsEmpty α := by
+  simp only [not_nonempty_iff, ← nonempty_ulift]
+
+@[simp]
+theorem is_empty_plift {α} : IsEmpty (Plift α) ↔ IsEmpty α := by
+  simp only [not_nonempty_iff, ← nonempty_pliftₓ]
 
 theorem well_founded_of_empty {α} [IsEmpty α] (r : α → α → Prop) : WellFounded r :=
   ⟨isEmptyElim⟩

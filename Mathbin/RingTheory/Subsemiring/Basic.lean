@@ -127,7 +127,7 @@ instance toOrderedCommSemiring {R} [OrderedCommSemiring R] [SetLike S R] [Subsem
 instance toLinearOrderedSemiring {R} [LinearOrderedSemiring R] [SetLike S R] [SubsemiringClass S R] :
     LinearOrderedSemiring s :=
   Subtype.coe_injective.LinearOrderedSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
-    (fun _ _ => rfl) fun _ => rfl
+    (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
 /-! Note: currently, there is no `linear_ordered_comm_semiring`. -/
 
@@ -363,7 +363,7 @@ instance toOrderedCommSemiring {R} [OrderedCommSemiring R] (s : Subsemiring R) :
 /-- A subsemiring of a `linear_ordered_semiring` is a `linear_ordered_semiring`. -/
 instance toLinearOrderedSemiring {R} [LinearOrderedSemiring R] (s : Subsemiring R) : LinearOrderedSemiring s :=
   Subtype.coe_injective.LinearOrderedSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
-    (fun _ _ => rfl) fun _ => rfl
+    (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
 /-! Note: currently, there is no `linear_ordered_comm_semiring`. -/
 
@@ -552,15 +552,15 @@ theorem eq_top_iff' (A : Subsemiring R) : A = ⊤ ↔ ∀ x : R, x ∈ A :=
 section Center
 
 /-- The center of a semiring `R` is the set of elements that commute with everything in `R` -/
-def center R [Semiringₓ R] : Subsemiring R :=
+def center (R) [Semiringₓ R] : Subsemiring R :=
   { Submonoid.center R with Carrier := Set.Center R, zero_mem' := Set.zero_mem_center R,
     add_mem' := fun a b => Set.add_mem_center }
 
-theorem coe_center R [Semiringₓ R] : ↑(center R) = Set.Center R :=
+theorem coe_center (R) [Semiringₓ R] : ↑(center R) = Set.Center R :=
   rfl
 
 @[simp]
-theorem center_to_submonoid R [Semiringₓ R] : (center R).toSubmonoid = Submonoid.center R :=
+theorem center_to_submonoid (R) [Semiringₓ R] : (center R).toSubmonoid = Submonoid.center R :=
   rfl
 
 theorem mem_center_iff {R} [Semiringₓ R] {z : R} : z ∈ center R ↔ ∀ g, g * z = z * g :=
@@ -570,7 +570,7 @@ instance decidableMemCenter {R} [Semiringₓ R] [DecidableEq R] [Fintype R] : De
   decidableOfIff' _ mem_center_iff
 
 @[simp]
-theorem center_eq_top R [CommSemiringₓ R] : center R = ⊤ :=
+theorem center_eq_top (R) [CommSemiringₓ R] : center R = ⊤ :=
   SetLike.coe_injective (Set.center_eq_univ R)
 
 /-- The center is commutative. -/
@@ -1110,7 +1110,7 @@ end Actions
 def posSubmonoid (R : Type _) [OrderedSemiring R] [Nontrivial R] : Submonoid R where
   Carrier := { x | 0 < x }
   one_mem' := show (0 : R) < 1 from zero_lt_one
-  mul_mem' := fun x y hx : 0 < x hy : 0 < y => mul_pos hx hy
+  mul_mem' := fun x y (hx : 0 < x) (hy : 0 < y) => mul_pos hx hy
 
 @[simp]
 theorem mem_pos_monoid {R : Type _} [OrderedSemiring R] [Nontrivial R] (u : Rˣ) : ↑u ∈ posSubmonoid R ↔ (0 : R) < u :=

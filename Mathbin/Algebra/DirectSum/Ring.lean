@@ -90,10 +90,10 @@ variable (A : ι → Type _)
 
 /-- A graded version of `non_unital_non_assoc_semiring`. -/
 class GnonUnitalNonAssocSemiring [Add ι] [∀ i, AddCommMonoidₓ (A i)] extends GradedMonoid.GhasMul A where
-  mul_zero : ∀ {i j} a : A i, mul a (0 : A j) = 0
-  zero_mul : ∀ {i j} b : A j, mul (0 : A i) b = 0
-  mul_add : ∀ {i j} a : A i b c : A j, mul a (b + c) = mul a b + mul a c
-  add_mul : ∀ {i j} a b : A i c : A j, mul (a + b) c = mul a c + mul b c
+  mul_zero : ∀ {i j} (a : A i), mul a (0 : A j) = 0
+  zero_mul : ∀ {i j} (b : A j), mul (0 : A i) b = 0
+  mul_add : ∀ {i j} (a : A i) (b c : A j), mul a (b + c) = mul a b + mul a c
+  add_mul : ∀ {i j} (a b : A i) (c : A j), mul (a + b) c = mul a c + mul b c
 
 end Defs
 
@@ -259,7 +259,7 @@ theorem list_prod_of_fn_of_eq_dprod (n : ℕ) (fι : Finₓ n → ι) (fA : ∀ 
 open BigOperators
 
 /-- A heavily unfolded version of the definition of multiplication -/
-theorem mul_eq_sum_support_ghas_mul [∀ i : ι x : A i, Decidable (x ≠ 0)] (a a' : ⨁ i, A i) :
+theorem mul_eq_sum_support_ghas_mul [∀ (i : ι) (x : A i), Decidable (x ≠ 0)] (a a' : ⨁ i, A i) :
     a * a' =
       ∑ ij : ι × ι in (Dfinsupp.support a).product (Dfinsupp.support a'),
         DirectSum.of _ _ (GradedMonoid.GhasMul.mul (a ij.fst) (a' ij.snd)) :=
@@ -505,7 +505,7 @@ coercions such as `add_submonoid.subtype (A i)`, and the `[gsemiring A]` structu
 can be discharged by `rfl`. -/
 @[simps]
 def toSemiring (f : ∀ i, A i →+ R) (hone : f _ GradedMonoid.GhasOne.one = 1)
-    (hmul : ∀ {i j} ai : A i aj : A j, f _ (GradedMonoid.GhasMul.mul ai aj) = f _ ai * f _ aj) : (⨁ i, A i) →+* R :=
+    (hmul : ∀ {i j} (ai : A i) (aj : A j), f _ (GradedMonoid.GhasMul.mul ai aj) = f _ ai * f _ aj) : (⨁ i, A i) →+* R :=
   { toAddMonoid f with toFun := toAddMonoid f,
     map_one' := by
       change (to_add_monoid f) (of _ 0 _) = 1
@@ -519,11 +519,11 @@ def toSemiring (f : ∀ i, A i →+ R) (hone : f _ GradedMonoid.GhasOne.one = 1)
       exact hmul _ _ }
 
 @[simp]
-theorem to_semiring_of (f : ∀ i, A i →+ R) hone hmul (i : ι) (x : A i) : toSemiring f hone hmul (of _ i x) = f _ x :=
+theorem to_semiring_of (f : ∀ i, A i →+ R) (hone hmul) (i : ι) (x : A i) : toSemiring f hone hmul (of _ i x) = f _ x :=
   to_add_monoid_of f i x
 
 @[simp]
-theorem to_semiring_coe_add_monoid_hom (f : ∀ i, A i →+ R) hone hmul :
+theorem to_semiring_coe_add_monoid_hom (f : ∀ i, A i →+ R) (hone hmul) :
     (toSemiring f hone hmul : (⨁ i, A i) →+ R) = toAddMonoid f :=
   rfl
 
@@ -533,7 +533,8 @@ are isomorphic to `ring_hom`s on `⨁ i, A i`. This is a stronger version of `df
 @[simps]
 def liftRingHom :
     { f : ∀ {i}, A i →+ R //
-        f GradedMonoid.GhasOne.one = 1 ∧ ∀ {i j} ai : A i aj : A j, f (GradedMonoid.GhasMul.mul ai aj) = f ai * f aj } ≃
+        f GradedMonoid.GhasOne.one = 1 ∧
+          ∀ {i j} (ai : A i) (aj : A j), f (GradedMonoid.GhasMul.mul ai aj) = f ai * f aj } ≃
       ((⨁ i, A i) →+* R) where
   toFun := fun f => toSemiring f.1 f.2.1 f.2.2
   invFun := fun F =>

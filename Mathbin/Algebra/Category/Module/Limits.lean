@@ -30,11 +30,11 @@ variable {R : Type u} [Ringₓ R]
 
 variable {J : Type v} [SmallCategory J]
 
-instance addCommGroupObj (F : J ⥤ ModuleCat.{max v w} R) j : AddCommGroupₓ ((F ⋙ forget (ModuleCat R)).obj j) := by
+instance addCommGroupObj (F : J ⥤ ModuleCat.{max v w} R) (j) : AddCommGroupₓ ((F ⋙ forget (ModuleCat R)).obj j) := by
   change AddCommGroupₓ (F.obj j)
   infer_instance
 
-instance moduleObj (F : J ⥤ ModuleCat.{max v w} R) j : Module R ((F ⋙ forget (ModuleCat R)).obj j) := by
+instance moduleObj (F : J ⥤ ModuleCat.{max v w} R) (j) : Module R ((F ⋙ forget (ModuleCat R)).obj j) := by
   change Module R (F.obj j)
   infer_instance
 
@@ -66,7 +66,7 @@ instance limitModule (F : J ⥤ ModuleCat R) : Module R (Types.limitCone (F ⋙ 
     infer_instance
 
 /-- `limit.π (F ⋙ forget Ring) j` as a `ring_hom`. -/
-def limitπLinearMap (F : J ⥤ ModuleCat R) j :
+def limitπLinearMap (F : J ⥤ ModuleCat R) (j) :
     (Types.limitCone (F ⋙ forget (ModuleCat.{max v w} R))).x →ₗ[R] (F ⋙ forget (ModuleCat R)).obj j where
   toFun := (Types.limitCone (F ⋙ forget (ModuleCat R))).π.app j
   map_smul' := fun x y => rfl
@@ -102,7 +102,7 @@ end HasLimits
 
 open HasLimits
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1354:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Basic.lean:1389:38: unsupported irreducible non-definition
 /-- The category of R-modules has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} (ModuleCat.{max v w} R) :=
   { HasLimitsOfShape := fun J 𝒥 =>

@@ -60,13 +60,14 @@ theorem comp_nil {a b : V} (p : Path a b) : p.comp Path.nil = p :=
   rfl
 
 @[simp]
-theorem nil_comp {a : V} : ∀ {b} p : Path a b, Path.nil.comp p = p
+theorem nil_comp {a : V} : ∀ {b} (p : Path a b), Path.nil.comp p = p
   | a, path.nil => rfl
   | b, path.cons p e => by
     rw [comp_cons, nil_comp]
 
 @[simp]
-theorem comp_assoc {a b c : V} : ∀ {d} p : Path a b q : Path b c r : Path c d, (p.comp q).comp r = p.comp (q.comp r)
+theorem comp_assoc {a b c : V} :
+    ∀ {d} (p : Path a b) (q : Path b c) (r : Path c d), (p.comp q).comp r = p.comp (q.comp r)
   | c, p, q, path.nil => rfl
   | d, p, q, path.cons r e => by
     rw [comp_cons, comp_cons, comp_cons, comp_assoc]
@@ -97,7 +98,7 @@ theorem map_path_cons {a b c : V} (p : Path a b) (e : b ⟶ c) :
 
 @[simp]
 theorem map_path_comp {a b : V} (p : Path a b) :
-    ∀ {c : V} q : Path b c, F.mapPath (p.comp q) = (F.mapPath p).comp (F.mapPath q)
+    ∀ {c : V} (q : Path b c), F.mapPath (p.comp q) = (F.mapPath p).comp (F.mapPath q)
   | _, path.nil => rfl
   | _, path.cons p e => by
     dsimp'

@@ -45,7 +45,7 @@ to allow affine equivalences with good definitional equalities. -/
 structure AffineEquiv (k P₁ P₂ : Type _) {V₁ V₂ : Type _} [Ringₓ k] [AddCommGroupₓ V₁] [Module k V₁] [AddTorsor V₁ P₁]
   [AddCommGroupₓ V₂] [Module k V₂] [AddTorsor V₂ P₂] extends P₁ ≃ P₂ where
   linear : V₁ ≃ₗ[k] V₂
-  map_vadd' : ∀ p : P₁ v : V₁, to_equiv (v +ᵥ p) = linear v +ᵥ to_equiv p
+  map_vadd' : ∀ (p : P₁) (v : V₁), to_equiv (v +ᵥ p) = linear v +ᵥ to_equiv p
 
 -- mathport name: «expr ≃ᵃ[ ] »
 notation:25 P₁ " ≃ᵃ[" k:25 "] " P₂:0 => AffineEquiv k P₁ P₂
@@ -86,7 +86,7 @@ theorem coe_to_affine_map (e : P₁ ≃ᵃ[k] P₂) : (e.toAffineMap : P₁ → 
   rfl
 
 @[simp]
-theorem to_affine_map_mk (f : P₁ ≃ P₂) (f' : V₁ ≃ₗ[k] V₂) h : toAffineMap (mk f f' h) = ⟨f, f', h⟩ :=
+theorem to_affine_map_mk (f : P₁ ≃ P₂) (f' : V₁ ≃ₗ[k] V₂) (h) : toAffineMap (mk f f' h) = ⟨f, f', h⟩ :=
   rfl
 
 @[norm_cast, simp]
@@ -124,7 +124,7 @@ theorem to_equiv_inj {e e' : P₁ ≃ᵃ[k] P₂} : e.toEquiv = e'.toEquiv ↔ e
   to_equiv_injective.eq_iff
 
 @[simp]
-theorem coe_mk (e : P₁ ≃ P₂) (e' : V₁ ≃ₗ[k] V₂) h : ((⟨e, e', h⟩ : P₁ ≃ᵃ[k] P₂) : P₁ → P₂) = e :=
+theorem coe_mk (e : P₁ ≃ P₂) (e' : V₁ ≃ₗ[k] V₂) (h) : ((⟨e, e', h⟩ : P₁ ≃ᵃ[k] P₂) : P₁ → P₂) = e :=
   rfl
 
 /-- Construct an affine equivalence by verifying the relation between the map and its linear part at
@@ -143,11 +143,11 @@ def mk' (e : P₁ → P₂) (e' : V₁ ≃ₗ[k] V₂) (p : P₁) (h : ∀ p' : 
     simp [← h p', ← h (v +ᵥ p'), ← vadd_vsub_assoc, ← vadd_vadd]
 
 @[simp]
-theorem coe_mk' (e : P₁ ≃ P₂) (e' : V₁ ≃ₗ[k] V₂) p h : ⇑(mk' e e' p h) = e :=
+theorem coe_mk' (e : P₁ ≃ P₂) (e' : V₁ ≃ₗ[k] V₂) (p h) : ⇑(mk' e e' p h) = e :=
   rfl
 
 @[simp]
-theorem linear_mk' (e : P₁ ≃ P₂) (e' : V₁ ≃ₗ[k] V₂) p h : (mk' e e' p h).linear = e' :=
+theorem linear_mk' (e : P₁ ≃ P₂) (e' : V₁ ≃ₗ[k] V₂) (p h) : (mk' e e' p h).linear = e' :=
   rfl
 
 /-- Inverse of an affine equivalence as an affine equivalence. -/

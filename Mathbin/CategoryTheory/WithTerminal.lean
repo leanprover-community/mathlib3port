@@ -120,7 +120,7 @@ def starTerminal : Limits.IsTerminal (star : WithTerminal C) :=
 /-- Lift a functor `F : C ⥤ D` to `with_term C ⥤ D`. -/
 @[simps]
 def lift {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
-    (hM : ∀ x y : C f : x ⟶ y, F.map f ≫ M y = M x) : WithTerminal C ⥤ D where
+    (hM : ∀ (x y : C) (f : x ⟶ y), F.map f ≫ M y = M x) : WithTerminal C ⥤ D where
   obj := fun X =>
     match X with
     | of x => F.obj x
@@ -134,18 +134,18 @@ def lift {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x
 /-- The isomorphism between `incl ⋙ lift F _ _` with `F`. -/
 @[simps]
 def inclLift {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
-    (hM : ∀ x y : C f : x ⟶ y, F.map f ≫ M y = M x) : incl ⋙ lift F M hM ≅ F where
+    (hM : ∀ (x y : C) (f : x ⟶ y), F.map f ≫ M y = M x) : incl ⋙ lift F M hM ≅ F where
   Hom := { app := fun X => 𝟙 _ }
   inv := { app := fun X => 𝟙 _ }
 
 /-- The isomorphism between `(lift F _ _).obj with_terminal.star` with `Z`. -/
 @[simps]
 def liftStar {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
-    (hM : ∀ x y : C f : x ⟶ y, F.map f ≫ M y = M x) : (lift F M hM).obj star ≅ Z :=
+    (hM : ∀ (x y : C) (f : x ⟶ y), F.map f ≫ M y = M x) : (lift F M hM).obj star ≅ Z :=
   eqToIso rfl
 
 theorem lift_map_lift_star {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
-    (hM : ∀ x y : C f : x ⟶ y, F.map f ≫ M y = M x) (x : C) :
+    (hM : ∀ (x y : C) (f : x ⟶ y), F.map f ≫ M y = M x) (x : C) :
     (lift F M hM).map (starTerminal.from (incl.obj x)) ≫ (liftStar F M hM).Hom = (inclLift F M hM).Hom.app x ≫ M x := by
   erw [category.id_comp, category.comp_id]
   rfl
@@ -153,8 +153,9 @@ theorem lift_map_lift_star {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : 
 /-- The uniqueness of `lift`. -/
 @[simp]
 def liftUnique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
-    (hM : ∀ x y : C f : x ⟶ y, F.map f ≫ M y = M x) (G : WithTerminal C ⥤ D) (h : incl ⋙ G ≅ F) (hG : G.obj star ≅ Z)
-    (hh : ∀ x : C, G.map (starTerminal.from (incl.obj x)) ≫ hG.Hom = h.Hom.app x ≫ M x) : G ≅ lift F M hM :=
+    (hM : ∀ (x y : C) (f : x ⟶ y), F.map f ≫ M y = M x) (G : WithTerminal C ⥤ D) (h : incl ⋙ G ≅ F)
+    (hG : G.obj star ≅ Z) (hh : ∀ x : C, G.map (starTerminal.from (incl.obj x)) ≫ hG.Hom = h.Hom.app x ≫ M x) :
+    G ≅ lift F M hM :=
   NatIso.ofComponents
     (fun X =>
       match X with
@@ -270,7 +271,7 @@ def starInitial : Limits.IsInitial (star : WithInitial C) :=
 /-- Lift a functor `F : C ⥤ D` to `with_initial C ⥤ D`. -/
 @[simps]
 def lift {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
-    (hM : ∀ x y : C f : x ⟶ y, M x ≫ F.map f = M y) : WithInitial C ⥤ D where
+    (hM : ∀ (x y : C) (f : x ⟶ y), M x ≫ F.map f = M y) : WithInitial C ⥤ D where
   obj := fun X =>
     match X with
     | of x => F.obj x
@@ -284,18 +285,18 @@ def lift {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F
 /-- The isomorphism between `incl ⋙ lift F _ _` with `F`. -/
 @[simps]
 def inclLift {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
-    (hM : ∀ x y : C f : x ⟶ y, M x ≫ F.map f = M y) : incl ⋙ lift F M hM ≅ F where
+    (hM : ∀ (x y : C) (f : x ⟶ y), M x ≫ F.map f = M y) : incl ⋙ lift F M hM ≅ F where
   Hom := { app := fun X => 𝟙 _ }
   inv := { app := fun X => 𝟙 _ }
 
 /-- The isomorphism between `(lift F _ _).obj with_term.star` with `Z`. -/
 @[simps]
 def liftStar {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
-    (hM : ∀ x y : C f : x ⟶ y, M x ≫ F.map f = M y) : (lift F M hM).obj star ≅ Z :=
+    (hM : ∀ (x y : C) (f : x ⟶ y), M x ≫ F.map f = M y) : (lift F M hM).obj star ≅ Z :=
   eqToIso rfl
 
 theorem lift_star_lift_map {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
-    (hM : ∀ x y : C f : x ⟶ y, M x ≫ F.map f = M y) (x : C) :
+    (hM : ∀ (x y : C) (f : x ⟶ y), M x ≫ F.map f = M y) (x : C) :
     (liftStar F M hM).Hom ≫ (lift F M hM).map (starInitial.to (incl.obj x)) = M x ≫ (inclLift F M hM).Hom.app x := by
   erw [category.id_comp, category.comp_id]
   rfl
@@ -303,7 +304,7 @@ theorem lift_star_lift_map {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : 
 /-- The uniqueness of `lift`. -/
 @[simp]
 def liftUnique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
-    (hM : ∀ x y : C f : x ⟶ y, M x ≫ F.map f = M y) (G : WithInitial C ⥤ D) (h : incl ⋙ G ≅ F) (hG : G.obj star ≅ Z)
+    (hM : ∀ (x y : C) (f : x ⟶ y), M x ≫ F.map f = M y) (G : WithInitial C ⥤ D) (h : incl ⋙ G ≅ F) (hG : G.obj star ≅ Z)
     (hh : ∀ x : C, hG.symm.Hom ≫ G.map (starInitial.to (incl.obj x)) = M x ≫ h.symm.Hom.app x) : G ≅ lift F M hM :=
   NatIso.ofComponents
     (fun X =>

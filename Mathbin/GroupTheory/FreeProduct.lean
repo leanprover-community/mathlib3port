@@ -141,7 +141,7 @@ theorem lift_of {N} [Monoidₓ N] (fi : ∀ i, M i →* N) {i} (m : M i) : lift 
   conv_rhs => rw [← lift.symm_apply_apply fi, lift_symm_apply, MonoidHom.comp_apply]
 
 @[elab_as_eliminator]
-theorem induction_on {C : FreeProduct M → Prop} (m : FreeProduct M) (h_one : C 1) (h_of : ∀ i m : M i, C (of m))
+theorem induction_on {C : FreeProduct M → Prop} (m : FreeProduct M) (h_one : C 1) (h_of : ∀ (i) (m : M i), C (of m))
     (h_mul : ∀ x y, C x → C y → C (x * y)) : C m := by
   let S : Submonoid (FreeProduct M) := Submonoid.mk (SetOf C) h_mul h_one
   convert Subtype.prop (lift (fun i => of.cod_restrict S (h_of i)) m)
@@ -154,7 +154,6 @@ theorem of_left_inverse [DecidableEq ι] (i : ι) :
     Function.LeftInverse (lift <| Pi.mulSingle i (MonoidHom.id (M i))) of := fun x => by
   simp only [← lift_of, ← Pi.mul_single_eq_same, ← MonoidHom.id_apply]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem of_injective (i : ι) : Function.Injective ⇑(of : M i →* _) := by
   classical
   exact (of_left_inverse i).Injective
@@ -340,7 +339,7 @@ variable [DecidableEq ι]
 /-- Given `i : ι`, any reduced word can be decomposed into a pair `p` such that `w = rcons p`. -/
 -- This definition is computable but not very nice to look at. Thankfully we don't have to inspect
 -- it, since `rcons` is known to be injective.
-private def equiv_pair_aux i : ∀ w : Word M, { p : Pair M i // rcons p = w }
+private def equiv_pair_aux (i) : ∀ w : Word M, { p : Pair M i // rcons p = w }
   | w@⟨[], _, _⟩ =>
     ⟨⟨1, w, by
         rintro ⟨⟩⟩,
@@ -357,19 +356,19 @@ private def equiv_pair_aux i : ∀ w : Word M, { p : Pair M i // rcons p = w }
 
 /-- The equivalence between words and pairs. Given a word, it decomposes it as a pair by removing
 the first letter if it comes from `M i`. Given a pair, it prepends the head to the tail. -/
-def equivPair i : Word M ≃ Pair M i where
+def equivPair (i) : Word M ≃ Pair M i where
   toFun := fun w => (equivPairAux i w).val
   invFun := rcons
   left_inv := fun w => (equivPairAux i w).property
   right_inv := fun p => rcons_inj (equivPairAux i _).property
 
-theorem equiv_pair_symm i (p : Pair M i) : (equivPair i).symm p = rcons p :=
+theorem equiv_pair_symm (i) (p : Pair M i) : (equivPair i).symm p = rcons p :=
   rfl
 
 theorem equiv_pair_eq_of_fst_idx_ne {i} {w : Word M} (h : fstIdx w ≠ some i) : equivPair i w = ⟨1, w, h⟩ :=
   (equivPair i).apply_eq_iff_eq_symm_apply.mpr <| Eq.symm (dif_pos rfl)
 
-instance summandAction i : MulAction (M i) (Word M) where
+instance summandAction (i) : MulAction (M i) (Word M) where
   smul := fun m w => rcons { equivPair i w with head := m * (equivPair i w).head }
   one_smul := fun w => by
     simp_rw [one_mulₓ]
@@ -381,14 +380,14 @@ instance summandAction i : MulAction (M i) (Word M) where
 instance : MulAction (FreeProduct M) (Word M) :=
   MulAction.ofEndHom (lift fun i => MulAction.toEndHom)
 
-theorem of_smul_def i (w : Word M) (m : M i) :
+theorem of_smul_def (i) (w : Word M) (m : M i) :
     of m • w = rcons { equivPair i w with head := m * (equivPair i w).head } :=
   rfl
 
 theorem cons_eq_smul {i} {m : M i} {ls h1 h2} : Word.mk (⟨i, m⟩ :: ls) h1 h2 = of m • mkAux ls h1 h2 := by
   rw [cons_eq_rcons, of_smul_def, equiv_pair_eq_of_fst_idx_ne _] <;> simp only [← mul_oneₓ]
 
-theorem smul_induction {C : Word M → Prop} (h_empty : C empty) (h_smul : ∀ i m : M i w, C w → C (of m • w))
+theorem smul_induction {C : Word M → Prop} (h_empty : C empty) (h_smul : ∀ (i) (m : M i) (w), C w → C (of m • w))
     (w : Word M) : C w := by
   cases' w with ls h1 h2
   induction' ls with l ls ih
@@ -399,7 +398,7 @@ theorem smul_induction {C : Word M → Prop} (h_empty : C empty) (h_smul : ∀ i
   exact h_smul _ _ _ (ih _ _)
 
 @[simp]
-theorem prod_smul m : ∀ w : Word M, prod (m • w) = m * prod w := by
+theorem prod_smul (m) : ∀ w : Word M, prod (m • w) = m * prod w := by
   apply m.induction_on
   · intro
     rw [one_smul, one_mulₓ]
@@ -442,8 +441,8 @@ from `M i` and the last letter comes from `M j`. It can be constructed from sing
 concatentation, and thus provides a useful induction principle. -/
 @[nolint has_inhabited_instance]
 inductive Neword : ι → ι → Type max u_1 u_2
-  | singleton : ∀ {i} x : M i hne1 : x ≠ 1, neword i i
-  | append : ∀ {i j k l} w₁ : neword i j hne : j ≠ k w₂ : neword k l, neword i l
+  | singleton : ∀ {i} (x : M i) (hne1 : x ≠ 1), neword i i
+  | append : ∀ {i j k l} (w₁ : neword i j) (hne : j ≠ k) (w₂ : neword k l), neword i l
 
 variable {M}
 
@@ -453,7 +452,7 @@ open Word
 
 /-- The list represented by a given `neword` -/
 @[simp]
-def toList : ∀ {i j} w : Neword M i j, List (Σi, M i)
+def toList : ∀ {i j} (w : Neword M i j), List (Σi, M i)
   | i, _, singleton x hne1 => [⟨i, x⟩]
   | _, _, append w₁ hne w₂ => w₁.toList ++ w₂.toList
 
@@ -467,13 +466,13 @@ theorem to_list_ne_nil {i j} (w : Neword M i j) : w.toList ≠ List.nil := by
 
 /-- The first letter of a `neword` -/
 @[simp]
-def head : ∀ {i j} w : Neword M i j, M i
+def head : ∀ {i j} (w : Neword M i j), M i
   | i, _, singleton x hne1 => x
   | _, _, append w₁ hne w₂ => w₁.head
 
 /-- The last letter of a `neword` -/
 @[simp]
-def last : ∀ {i j} w : Neword M i j, M j
+def last : ∀ {i j} (w : Neword M i j), M j
   | i, _, singleton x hne1 => x
   | _, _, append w₁ hne w₂ => w₂.last
 
@@ -591,7 +590,7 @@ theorem append_prod {i j k l} {w₁ : Neword M i j} {hne : j ≠ k} {w₂ : Newo
 
 /-- One can replace the first letter in a non-empty reduced word by an element of the same
 group -/
-def replaceHead : ∀ {i j : ι} x : M i hnotone : x ≠ 1 w : Neword M i j, Neword M i j
+def replaceHead : ∀ {i j : ι} (x : M i) (hnotone : x ≠ 1) (w : Neword M i j), Neword M i j
   | _, _, x, h, singleton _ _ => singleton x h
   | _, _, x, h, append w₁ hne w₂ => append (replace_head x h w₁) hne w₂
 
@@ -632,7 +631,7 @@ section Groupₓ
 variable {G : ι → Type _} [∀ i, Groupₓ (G i)]
 
 /-- The inverse of a non-empty reduced word -/
-def inv : ∀ {i j} w : Neword G i j, Neword G j i
+def inv : ∀ {i j} (w : Neword G i j), Neword G j i
   | _, _, singleton x h => singleton x⁻¹ (mt inv_eq_one.mp h)
   | _, _, append w₁ h w₂ => append w₂.inv h.symm w₁.inv
 
@@ -723,7 +722,6 @@ theorem lift_word_prod_nontrivial_of_head_card {i j} (w : Neword H i j) (hcard :
 
 include hcard
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem lift_word_prod_nontrivial_of_not_empty {i j} (w : Neword H i j) : lift f w.Prod ≠ 1 := by
   classical
   cases hcard
@@ -765,7 +763,6 @@ theorem empty_of_word_prod_eq_one {w : Word H} (h : lift f w.Prod = 1) : w = wor
   obtain ⟨i, j, w, rfl⟩ := neword.of_word w hnotempty
   exact lift_word_prod_nontrivial_of_not_empty f hcard X hXnonempty hXdisj hpp w h
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The Ping-Pong-Lemma.
 
 Given a group action of `G` on `X` so that the `H i` acts in a specific way on disjoint subsets

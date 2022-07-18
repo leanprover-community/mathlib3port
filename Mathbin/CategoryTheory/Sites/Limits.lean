@@ -179,7 +179,7 @@ variable {K : Type max v u} [SmallCategory K]
 -- Now we need a handful of instances to obtain sheafification...
 variable [ConcreteCategory.{max v u} D]
 
-variable [∀ P : Cᵒᵖ ⥤ D X : C S : J.cover X, HasMultiequalizer (S.index P)]
+variable [∀ (P : Cᵒᵖ ⥤ D) (X : C) (S : J.cover X), HasMultiequalizer (S.index P)]
 
 variable [PreservesLimits (forget D)]
 

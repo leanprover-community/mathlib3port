@@ -30,7 +30,6 @@ open Set
 
 namespace Emetric
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 /-- A `pseudo_emetric_space` is always a paracompact space. Formalization is based
 on [MR0236876]. -/
@@ -66,12 +65,12 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
     -/
   set D : ℕ → ι → Set α := fun n =>
     Nat.strongRecOn' n fun n D' i =>
-      ⋃ (x : α) (hxs : ind x = i) (hb : ball x (3 * 2⁻¹ ^ n) ⊆ s i) (hlt : ∀, ∀ m < n, ∀ j : ι, x ∉ D' m ‹_› j),
+      ⋃ (x : α) (hxs : ind x = i) (hb : ball x (3 * 2⁻¹ ^ n) ⊆ s i) (hlt : ∀, ∀ m < n, ∀ (j : ι), x ∉ D' m ‹_› j),
         ball x (2⁻¹ ^ n)
   have Dn :
     ∀ n i,
       D n i =
-        ⋃ (x : α) (hxs : ind x = i) (hb : ball x (3 * 2⁻¹ ^ n) ⊆ s i) (hlt : ∀, ∀ m < n, ∀ j : ι, x ∉ D m j),
+        ⋃ (x : α) (hxs : ind x = i) (hb : ball x (3 * 2⁻¹ ^ n) ⊆ s i) (hlt : ∀, ∀ m < n, ∀ (j : ι), x ∉ D m j),
           ball x (2⁻¹ ^ n) :=
     fun n s => by
     simp only [← D]
@@ -79,7 +78,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
   have memD :
     ∀ {n i y},
       y ∈ D n i ↔
-        ∃ (x : _)(hi : ind x = i)(hb : ball x (3 * 2⁻¹ ^ n) ⊆ s i)(hlt : ∀, ∀ m < n, ∀ j : ι, x ∉ D m j),
+        ∃ (x : _)(hi : ind x = i)(hb : ball x (3 * 2⁻¹ ^ n) ⊆ s i)(hlt : ∀, ∀ m < n, ∀ (j : ι), x ∉ D m j),
           edist y x < 2⁻¹ ^ n :=
     by
     intro n i y
@@ -138,7 +137,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
     set B := ball x (2⁻¹ ^ (n + k + 1))
     refine' ⟨B, ball_mem_nhds _ (pow_pos _), _⟩
     -- The sets `D m i`, `m > n + k`, are disjoint with `B`
-    have Hgt : ∀, ∀ m ≥ n + k + 1, ∀ i : ι, Disjoint (D m i) B := by
+    have Hgt : ∀, ∀ m ≥ n + k + 1, ∀ (i : ι), Disjoint (D m i) B := by
       rintro m hm i y ⟨hym, hyx⟩
       rcases memD.1 hym with ⟨z, rfl, hzi, H, hz⟩
       have : z ∉ ball x (2⁻¹ ^ k) := fun hz =>

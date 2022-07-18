@@ -40,7 +40,7 @@ private theorem log_eq_zero_aux {b n : ℕ} (hnb : n < b ∨ b ≤ 1) : log b n 
 theorem log_of_lt {b n : ℕ} (hb : n < b) : log b n = 0 :=
   log_eq_zero_aux (Or.inl hb)
 
-theorem log_of_left_le_one {b : ℕ} (hb : b ≤ 1) n : log b n = 0 :=
+theorem log_of_left_le_one {b : ℕ} (hb : b ≤ 1) (n) : log b n = 0 :=
   log_eq_zero_aux (Or.inr hb)
 
 theorem log_of_one_lt_of_le {b n : ℕ} (h : 1 < b) (hn : b ≤ n) : log b n = log b (n / b) + 1 := by

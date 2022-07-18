@@ -57,11 +57,15 @@ namespace Set
 
 /-- `s.well_founded_on r` indicates that the relation `r` is well-founded when restricted to `s`. -/
 def WellFoundedOn (s : Set α) (r : α → α → Prop) : Prop :=
-  WellFounded fun a : s b : s => r a b
+  WellFounded fun (a : s) (b : s) => r a b
+
+@[simp]
+theorem well_founded_on_empty (r : α → α → Prop) : WellFoundedOn ∅ r :=
+  well_founded_of_empty _
 
 theorem well_founded_on_iff {s : Set α} {r : α → α → Prop} :
     s.WellFoundedOn r ↔ WellFounded fun a b : α => r a b ∧ a ∈ s ∧ b ∈ s := by
-  have f : RelEmbedding (fun a : s b : s => r a b) fun a b : α => r a b ∧ a ∈ s ∧ b ∈ s :=
+  have f : RelEmbedding (fun (a : s) (b : s) => r a b) fun a b : α => r a b ∧ a ∈ s ∧ b ∈ s :=
     ⟨⟨coe, Subtype.coe_injective⟩, fun a b => by
       simp ⟩
   refine' ⟨fun h => _, f.well_founded⟩
@@ -69,7 +73,7 @@ theorem well_founded_on_iff {s : Set α} {r : α → α → Prop} :
   intro t ht
   by_cases' hst : (s ∩ t).Nonempty
   · rw [← Subtype.preimage_coe_nonempty] at hst
-    rcases WellFounded.well_founded_iff_has_min.1 h (coe ⁻¹' t) hst with ⟨⟨m, ms⟩, mt, hm⟩
+    rcases h.has_min (coe ⁻¹' t) hst with ⟨⟨m, ms⟩, mt, hm⟩
     exact ⟨m, mt, fun x xt ⟨xm, xs, ms⟩ => hm ⟨x, xs⟩ xt xm⟩
     
   · rcases ht with ⟨m, mt⟩
@@ -117,6 +121,10 @@ variable [LT α]
 def IsWf (s : Set α) : Prop :=
   WellFoundedOn s (· < ·)
 
+@[simp]
+theorem is_wf_empty : IsWf (∅ : Set α) :=
+  well_founded_of_empty _
+
 theorem is_wf_univ_iff : IsWf (Univ : Set α) ↔ WellFounded ((· < ·) : α → α → Prop) := by
   simp [← is_wf, ← well_founded_on_iff]
 
@@ -140,7 +148,6 @@ theorem is_wf_iff_no_descending_seq : IsWf s ↔ ∀ f : ℕᵒᵈ ↪o α, ¬Ra
   rw [is_wf, well_founded_on_iff_no_descending_seq]
   exact ⟨fun h f => h f.ltEmbedding, fun h f => h (OrderEmbedding.ofStrictMono f fun _ _ => f.map_rel_iff.2)⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem IsWf.union (hs : IsWf s) (ht : IsWf t) : IsWf (s ∪ t) := by
   classical
   rw [is_wf_iff_no_descending_seq] at *
@@ -177,13 +184,22 @@ namespace Set
 
 /-- A subset is partially well-ordered by a relation `r` when any infinite sequence contains
   two elements where the first is related to the second by `r`. -/
-def PartiallyWellOrderedOn s (r : α → α → Prop) : Prop :=
+def PartiallyWellOrderedOn (s) (r : α → α → Prop) : Prop :=
   ∀ f : ℕ → α, Range f ⊆ s → ∃ m n : ℕ, m < n ∧ r (f m) (f n)
+
+@[simp]
+theorem partially_well_ordered_on_empty (r : α → α → Prop) : PartiallyWellOrderedOn (∅ : Set α) r := fun f h => by
+  rw [subset_empty_iff] at h
+  exact ((range_nonempty f).ne_empty h).elim
 
 /-- A subset of a preorder is partially well-ordered when any infinite sequence contains
   a monotone subsequence of length 2 (or equivalently, an infinite monotone subsequence). -/
-def IsPwo [Preorderₓ α] s : Prop :=
+def IsPwo [Preorderₓ α] (s) : Prop :=
   PartiallyWellOrderedOn s ((· ≤ ·) : α → α → Prop)
+
+@[simp]
+theorem is_pwo_empty [Preorderₓ α] : IsPwo (∅ : Set α) :=
+  partially_well_ordered_on_empty _
 
 theorem PartiallyWellOrderedOn.mono {s t : Set α} {r : α → α → Prop} (ht : t.PartiallyWellOrderedOn r) (hsub : s ⊆ t) :
     s.PartiallyWellOrderedOn r := fun f hf => ht f (Set.Subset.trans hf hsub)
@@ -223,9 +239,9 @@ theorem _root_.is_antichain.partially_well_ordered_on_iff {s : Set α} {r : α �
     (hs : IsAntichain r s) : s.PartiallyWellOrderedOn r ↔ s.Finite :=
   ⟨hs.finite_of_partially_well_ordered_on, Finite.partially_well_ordered_on⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem partially_well_ordered_on_iff_finite_antichains {s : Set α} {r : α → α → Prop} [IsRefl α r] [IsSymm α r] :
-    s.PartiallyWellOrderedOn r ↔ ∀ t _ : t ⊆ s, IsAntichain r t → t.Finite := by
+    s.PartiallyWellOrderedOn r ↔ ∀ (t) (_ : t ⊆ s), IsAntichain r t → t.Finite := by
   refine' ⟨fun h t ht hrt => hrt.finite_of_partially_well_ordered_on (h.mono ht), _⟩
   rintro hs f hf
   by_contra' H
@@ -269,7 +285,6 @@ theorem PartiallyWellOrderedOn.exists_monotone_subseq [IsRefl α r] [IsTrans α 
     exact h2 m n hlt hle
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem partially_well_ordered_on_iff_exists_monotone_subseq [IsRefl α r] [IsTrans α r] :
     s.PartiallyWellOrderedOn r ↔ ∀ f : ℕ → α, Range f ⊆ s → ∃ g : ℕ ↪o ℕ, ∀ m n : ℕ, m ≤ n → r (f (g m)) (f (g n)) := by
   classical
@@ -304,7 +319,6 @@ theorem IsPwo.exists_monotone_subseq (h : s.IsPwo) (f : ℕ → α) (hf : Range 
 theorem is_pwo_iff_exists_monotone_subseq : s.IsPwo ↔ ∀ f : ℕ → α, Range f ⊆ s → ∃ g : ℕ ↪o ℕ, Monotone (f ∘ g) :=
   partially_well_ordered_on_iff_exists_monotone_subseq
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem IsPwo.prod (hs : s.IsPwo) (ht : t.IsPwo) : (s ×ˢ t : Set _).IsPwo := by
   classical
   rw [is_pwo_iff_exists_monotone_subseq] at *
@@ -331,7 +345,6 @@ theorem IsPwo.image_of_monotone {β : Type _} [PartialOrderₓ β] (hs : s.IsPwo
     IsPwo (f '' s) :=
   hs.image_of_monotone_on fun _ _ _ _ ab => hf ab
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem IsPwo.union (hs : IsPwo s) (ht : IsPwo t) : IsPwo (s ∪ t) := by
   classical
   rw [is_pwo_iff_exists_monotone_subseq] at *
@@ -416,17 +429,13 @@ theorem Finite.is_pwo (h : s.Finite) : s.IsPwo := by
 
 @[simp]
 theorem fintype.is_pwo [Fintype α] : s.IsPwo :=
-  (Finite.of_fintype s).IsPwo
+  s.to_finite.IsPwo
 
 @[simp]
-theorem is_pwo_empty : IsPwo (∅ : Set α) :=
-  finite_empty.IsPwo
-
-@[simp]
-theorem is_pwo_singleton a : IsPwo ({a} : Set α) :=
+theorem is_pwo_singleton (a) : IsPwo ({a} : Set α) :=
   (finite_singleton a).IsPwo
 
-theorem IsPwo.insert a (hs : IsPwo s) : IsPwo (insert a s) := by
+theorem IsPwo.insert (a) (hs : IsPwo s) : IsPwo (insert a s) := by
   rw [← union_singleton]
   exact hs.union (is_pwo_singleton a)
 
@@ -441,7 +450,7 @@ theorem IsWf.not_lt_min (hs : IsWf s) (hn : s.Nonempty) (ha : a ∈ s) : ¬a < h
   hs.not_lt_min Univ (nonempty_iff_univ_nonempty.1 hn.to_subtype) (mem_univ (⟨a, ha⟩ : s))
 
 @[simp]
-theorem is_wf_min_singleton a {hs : IsWf ({a} : Set α)} {hn : ({a} : Set α).Nonempty} : hs.min hn = a :=
+theorem is_wf_min_singleton (a) {hs : IsWf ({a} : Set α)} {hn : ({a} : Set α).Nonempty} : hs.min hn = a :=
   eq_of_mem_singleton (IsWf.min_mem hs hn)
 
 end Set
@@ -528,7 +537,6 @@ theorem iff_forall_not_is_bad_seq (r : α → α → Prop) (s : Set α) : s.Part
 def IsMinBadSeq (r : α → α → Prop) (rk : α → ℕ) (s : Set α) (n : ℕ) (f : ℕ → α) : Prop :=
   ∀ g : ℕ → α, (∀ m : ℕ, m < n → f m = g m) → rk (g n) < rk (f n) → ¬IsBadSeq r s g
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given a bad sequence `f`, this constructs a bad sequence that agrees with `f` on the first `n`
   terms and is minimal at `n`.
 -/
@@ -732,7 +740,7 @@ theorem eq_of_fst_le_fst_of_snd_le_snd {x y : MulAntidiagonal s t a} (h1 : (x : 
 variable {s} {t}
 
 @[to_additive]
-theorem finite_of_is_pwo (hs : s.IsPwo) (ht : t.IsPwo) a : (MulAntidiagonal s t a).Finite := by
+theorem finite_of_is_pwo (hs : s.IsPwo) (ht : t.IsPwo) (a) : (MulAntidiagonal s t a).Finite := by
   by_contra h
   rw [← Set.Infinite] at h
   have h1 : (mul_antidiagonal s t a).PartiallyWellOrderedOn (Prod.fst ⁻¹'o (· ≤ ·)) := by
@@ -763,7 +771,7 @@ theorem finite_of_is_pwo (hs : s.IsPwo) (ht : t.IsPwo) a : (MulAntidiagonal s t 
 end OrderedCancelCommMonoid
 
 @[to_additive]
-theorem finite_of_is_wf [LinearOrderedCancelCommMonoid α] {s t : Set α} (hs : s.IsWf) (ht : t.IsWf) a :
+theorem finite_of_is_wf [LinearOrderedCancelCommMonoid α] {s t : Set α} (hs : s.IsWf) (ht : t.IsWf) (a) :
     (MulAntidiagonal s t a).Finite :=
   finite_of_is_pwo hs.IsPwo ht.IsPwo a
 
@@ -840,7 +848,6 @@ end Finset
 theorem WellFounded.is_wf [LT α] (h : WellFounded ((· < ·) : α → α → Prop)) (s : Set α) : s.IsWf :=
   (Set.is_wf_univ_iff.2 h).mono (Set.subset_univ s)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A version of **Dickson's lemma** any subset of functions `Π s : σ, α s` is partially well
 ordered, when `σ` is a `fintype` and each `α s` is a linear well order.
 This includes the classical case of Dickson's lemma that `ℕ ^ n` is a well partial order.
@@ -856,13 +863,13 @@ theorem Pi.is_pwo {σ : Type _} {α : σ → Type _} [∀ s, LinearOrderₓ (α 
   suffices
     ∀ s : Finset σ,
       ∀ f : ℕ → ∀ s, α s,
-        Set.Range f ⊆ Set.Univ → ∃ g : ℕ ↪o ℕ, ∀ ⦃a b : ℕ⦄, a ≤ b → ∀ x : σ hs : x ∈ s, (f ∘ g) a x ≤ (f ∘ g) b x
+        Set.Range f ⊆ Set.Univ → ∃ g : ℕ ↪o ℕ, ∀ ⦃a b : ℕ⦄, a ≤ b → ∀ (x : σ) (hs : x ∈ s), (f ∘ g) a x ≤ (f ∘ g) b x
     by
     simpa only [← forall_true_left, ← Finset.mem_univ] using this Finset.univ
   apply' Finset.induction
   · intro f hf
     exists RelEmbedding.refl (· ≤ ·)
-    simp only [← forall_false_left, ← implies_true_iff, ← forall_const, ← Finset.not_mem_empty]
+    simp only [← IsEmpty.forall_iff, ← implies_true_iff, ← forall_const, ← Finset.not_mem_empty]
     
   · intro x s hx ih f hf
     obtain ⟨g, hg⟩ :=

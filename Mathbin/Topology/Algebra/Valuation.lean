@@ -143,9 +143,9 @@ theorem loc_const {x : R} (h : (v x : Γ₀) ≠ 0) : { y : R | v y = v x } ∈ 
 instance (priority := 100) : TopologicalRing R :=
   (to_uniform_space_eq R Γ₀).symm ▸ v.subgroups_basis.toRingFilterBasis.is_topological_ring
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » M)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » M)
 theorem cauchy_iff {F : Filter R} :
-    Cauchy F ↔ F.ne_bot ∧ ∀ γ : Γ₀ˣ, ∃ M ∈ F, ∀ x y _ : x ∈ M _ : y ∈ M, (v (y - x) : Γ₀) < γ := by
+    Cauchy F ↔ F.ne_bot ∧ ∀ γ : Γ₀ˣ, ∃ M ∈ F, ∀ (x y) (_ : x ∈ M) (_ : y ∈ M), (v (y - x) : Γ₀) < γ := by
   rw [to_uniform_space_eq, AddGroupFilterBasis.cauchy_iff]
   apply and_congr Iff.rfl
   simp_rw [valued.v.subgroups_basis.mem_add_group_filter_basis_iff]

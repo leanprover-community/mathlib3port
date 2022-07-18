@@ -127,7 +127,7 @@ def unitCompPartialBijective [Reflective i] (A : C) {B : C} (hB : B ∈ i.EssIma
     
 
 @[simp]
-theorem unit_comp_partial_bijective_symm_apply [Reflective i] (A : C) {B : C} (hB : B ∈ i.EssImage) f :
+theorem unit_comp_partial_bijective_symm_apply [Reflective i] (A : C) {B : C} (hB : B ∈ i.EssImage) (f) :
     (unitCompPartialBijective A hB).symm f = (ofRightAdjoint i).Unit.app A ≫ f := by
   simp [← unit_comp_partial_bijective, ← unit_comp_partial_bijective_aux_symm_apply]
 

@@ -37,7 +37,7 @@ noncomputable instance : DecidableEq ℂ :=
   Classical.decEq _
 
 /-- The equivalence between the complex numbers and `ℝ × ℝ`. -/
-@[simps]
+@[simps apply]
 def equivRealProd : ℂ ≃ ℝ × ℝ where
   toFun := fun z => ⟨z.re, z.im⟩
   invFun := fun p => ⟨p.1, p.2⟩
@@ -284,6 +284,10 @@ theorem I_mul_re (z : ℂ) : (I * z).re = -z.im := by
 
 theorem I_mul_im (z : ℂ) : (I * z).im = z.re := by
   simp
+
+@[simp]
+theorem equiv_real_prod_symm_apply (p : ℝ × ℝ) : equivRealProd.symm p = p.1 + p.2 * I := by
+  ext <;> simp [← equiv_real_prod]
 
 /-! ### Commutative ring instance and lemmas -/
 

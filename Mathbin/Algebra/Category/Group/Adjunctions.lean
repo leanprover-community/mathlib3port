@@ -68,6 +68,9 @@ def adj : free ⊣ forget AddCommGroupₓₓ.{u} :=
         ext
         rfl }
 
+instance : IsRightAdjoint (forget AddCommGroupₓₓ.{u}) :=
+  ⟨_, adj⟩
+
 /-- As an example, we now give a high-powered proof that
 the monomorphisms in `AddCommGroup` are just the injective functions.
 
@@ -75,12 +78,8 @@ the monomorphisms in `AddCommGroup` are just the injective functions.
 -/
 example {G H : AddCommGroupₓₓ.{u}} (f : G ⟶ H) [Mono f] : Function.Injective f :=
   (mono_iff_injective f).1
-    (right_adjoint_preserves_mono adj
-      (by
-        infer_instance : Mono f))
-
-instance : IsRightAdjoint (forget AddCommGroupₓₓ.{u}) :=
-  ⟨_, adj⟩
+    (show Mono ((forget AddCommGroupₓₓ.{u}).map f) by
+      infer_instance)
 
 end AddCommGroupₓₓ
 
@@ -150,4 +149,50 @@ def abelianizeAdj : abelianize ⊣ forget₂ CommGroupₓₓ.{u} Groupₓₓ.{u}
         rfl }
 
 end Abelianization
+
+/-- The functor taking a monoid to its subgroup of units. -/
+@[simps]
+def Mon.units : Mon.{u} ⥤ Groupₓₓ.{u} where
+  obj := fun R => Groupₓₓ.of Rˣ
+  map := fun R S f => Groupₓₓ.ofHom <| Units.map f
+  map_id' := fun X => MonoidHom.ext fun x => Units.ext rfl
+  map_comp' := fun X Y Z f g => MonoidHom.ext fun x => Units.ext rfl
+
+/-- The forgetful-units adjunction between `Group` and `Mon`. -/
+def Groupₓₓ.forget₂MonAdj : forget₂ Groupₓₓ Mon ⊣ Mon.units.{u} where
+  homEquiv := fun X Y =>
+    { toFun := fun f => MonoidHom.toHomUnits f, invFun := fun f => (Units.coeHom Y).comp f,
+      left_inv := fun f => MonoidHom.ext fun _ => rfl, right_inv := fun f => MonoidHom.ext fun _ => Units.ext rfl }
+  Unit :=
+    { app := fun X => { (@toUnits X _).toMonoidHom with },
+      naturality' := fun X Y f => MonoidHom.ext fun x => Units.ext rfl }
+  counit := { app := fun X => Units.coeHom X, naturality' := fun X Y f => MonoidHom.ext fun x => rfl }
+  hom_equiv_unit' := fun X Y f => MonoidHom.ext fun _ => Units.ext rfl
+  hom_equiv_counit' := fun X Y f => MonoidHom.ext fun _ => rfl
+
+instance : IsRightAdjoint Mon.units.{u} :=
+  ⟨_, Groupₓₓ.forget₂MonAdj⟩
+
+/-- The functor taking a monoid to its subgroup of units. -/
+@[simps]
+def CommMon.units : CommMon.{u} ⥤ CommGroupₓₓ.{u} where
+  obj := fun R => CommGroupₓₓ.of Rˣ
+  map := fun R S f => CommGroupₓₓ.ofHom <| Units.map f
+  map_id' := fun X => MonoidHom.ext fun x => Units.ext rfl
+  map_comp' := fun X Y Z f g => MonoidHom.ext fun x => Units.ext rfl
+
+/-- The forgetful-units adjunction between `CommGroup` and `CommMon`. -/
+def CommGroupₓₓ.forget₂CommMonAdj : forget₂ CommGroupₓₓ CommMon ⊣ CommMon.units.{u} where
+  homEquiv := fun X Y =>
+    { toFun := fun f => MonoidHom.toHomUnits f, invFun := fun f => (Units.coeHom Y).comp f,
+      left_inv := fun f => MonoidHom.ext fun _ => rfl, right_inv := fun f => MonoidHom.ext fun _ => Units.ext rfl }
+  Unit :=
+    { app := fun X => { (@toUnits X _).toMonoidHom with },
+      naturality' := fun X Y f => MonoidHom.ext fun x => Units.ext rfl }
+  counit := { app := fun X => Units.coeHom X, naturality' := fun X Y f => MonoidHom.ext fun x => rfl }
+  hom_equiv_unit' := fun X Y f => MonoidHom.ext fun _ => Units.ext rfl
+  hom_equiv_counit' := fun X Y f => MonoidHom.ext fun _ => rfl
+
+instance : IsRightAdjoint CommMon.units.{u} :=
+  ⟨_, CommGroupₓₓ.forget₂CommMonAdj⟩
 

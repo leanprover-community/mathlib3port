@@ -1,41 +1,170 @@
 /-
 Copyright (c) 2020 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Aaron Anderson
+Authors: Aaron Anderson, Yaël Dillies
 -/
-import Mathbin.Order.RelIso
+import Mathbin.Order.Cover
 import Mathbin.Order.LatticeIntervals
-import Mathbin.Order.GaloisConnection
 
 /-!
 # Modular Lattices
-This file defines Modular Lattices, a kind of lattice useful in algebra.
+
+This file defines (semi)modular lattices, a kind of lattice useful in algebra.
 For examples, look to the subobject lattices of abelian groups, submodules, and ideals, or consider
 any distributive lattice.
 
+## Typeclasses
+
+We define (semi)modularity typeclasses as Prop-valued mixins.
+
+* `is_weak_upper_modular_lattice`: Weakly upper modular lattices. Lattice where `a ⊔ b` covers `a`
+  and `b` if `a` and `b` both cover `a ⊓ b`.
+* `is_weak_lower_modular_lattice`: Weakly lower modular lattices. Lattice where `a` and `b` cover
+  `a ⊓ b` if `a ⊔ b` covers both `a` and `b`
+* `is_upper_modular_lattice`: Upper modular lattices. Lattices where `a ⊔ b` covers `a` if `b`
+  covers `a ⊓ b`.
+* `is_lower_modular_lattice`: Lower modular lattices. Lattices where `a` covers `a ⊓ b` if `a ⊔ b`
+  covers `b`.
+- `is_modular_lattice`: Modular lattices. Lattices where `a ≤ c → (a ⊔ b) ⊓ c = a ⊔ (b ⊓ c)`. We
+  only require an inequality because the other direction holds in all lattices.
+
 ## Main Definitions
-- `is_modular_lattice` defines a modular lattice to be one such that
-  `x ≤ z → (x ⊔ y) ⊓ z ≤ x ⊔ (y ⊓ z)`
+
 - `inf_Icc_order_iso_Icc_sup` gives an order isomorphism between the intervals
   `[a ⊓ b, a]` and `[b, a ⊔ b]`.
   This corresponds to the diamond (or second) isomorphism theorems of algebra.
 
 ## Main Results
+
 - `is_modular_lattice_iff_inf_sup_inf_assoc`:
   Modularity is equivalent to the `inf_sup_inf_assoc`: `(x ⊓ z) ⊔ (y ⊓ z) = ((x ⊓ z) ⊔ y) ⊓ z`
 - `distrib_lattice.is_modular_lattice`: Distributive lattices are modular.
 
-## To do
-- Relate atoms and coatoms in modular lattices
+## References
 
+* [Manfred Stern, *Semimodular lattices. {Theory} and applications*][stern2009]
+* [Wikipedia, *Modular Lattice*][https://en.wikipedia.org/wiki/Modular_lattice]
+
+## TODO
+
+- Relate atoms and coatoms in modular lattices
+- Prove that a modular lattice is both upper and lower modular.
 -/
 
 
 variable {α : Type _}
 
+/-- A weakly upper modular lattice is a lattice where `a ⊔ b` covers `a` and `b` if `a` and `b` both
+cover `a ⊓ b`. -/
+class IsWeakUpperModularLattice (α : Type _) [Lattice α] : Prop where
+  covby_sup_of_inf_covby_covby {a b : α} : a⊓b ⋖ a → a⊓b ⋖ b → a ⋖ a⊔b
+
+/-- A weakly lower modular lattice is a lattice where `a` and `b` cover `a ⊓ b` if `a ⊔ b` covers
+both `a` and `b`. -/
+class IsWeakLowerModularLattice (α : Type _) [Lattice α] : Prop where
+  inf_covby_of_covby_covby_sup {a b : α} : a ⋖ a⊔b → b ⋖ a⊔b → a⊓b ⋖ a
+
+/-- An upper modular lattice, aka semimodular lattice, is a lattice where `a ⊔ b` covers `a` and `b`
+if either `a` or `b` covers `a ⊓ b`. -/
+class IsUpperModularLattice (α : Type _) [Lattice α] : Prop where
+  covby_sup_of_inf_covby {a b : α} : a⊓b ⋖ a → b ⋖ a⊔b
+
+/-- A lower modular lattice is a lattice where `a` and `b` both cover `a ⊓ b` if `a ⊔ b` covers
+either `a` or `b`. -/
+class IsLowerModularLattice (α : Type _) [Lattice α] : Prop where
+  inf_covby_of_covby_sup {a b : α} : a ⋖ a⊔b → a⊓b ⋖ b
+
 /-- A modular lattice is one with a limited associativity between `⊓` and `⊔`. -/
-class IsModularLattice (α) [Lattice α] : Prop where
-  sup_inf_le_assoc_of_le : ∀ {x : α} y : α {z : α}, x ≤ z → (x⊔y)⊓z ≤ x⊔y⊓z
+class IsModularLattice (α : Type _) [Lattice α] : Prop where
+  sup_inf_le_assoc_of_le : ∀ {x : α} (y : α) {z : α}, x ≤ z → (x⊔y)⊓z ≤ x⊔y⊓z
+
+section WeakUpperModular
+
+variable [Lattice α] [IsWeakUpperModularLattice α] {a b : α}
+
+theorem covby_sup_of_inf_covby_of_inf_covby_left : a⊓b ⋖ a → a⊓b ⋖ b → a ⋖ a⊔b :=
+  IsWeakUpperModularLattice.covby_sup_of_inf_covby_covby
+
+theorem covby_sup_of_inf_covby_of_inf_covby_right : a⊓b ⋖ a → a⊓b ⋖ b → b ⋖ a⊔b := by
+  rw [inf_comm, sup_comm]
+  exact fun ha hb => covby_sup_of_inf_covby_of_inf_covby_left hb ha
+
+alias covby_sup_of_inf_covby_of_inf_covby_left ← Covby.sup_of_inf_of_inf_left
+
+alias covby_sup_of_inf_covby_of_inf_covby_right ← Covby.sup_of_inf_of_inf_right
+
+instance : IsWeakLowerModularLattice (OrderDual α) :=
+  ⟨fun a b ha hb => (ha.ofDual.sup_of_inf_of_inf_left hb.ofDual).toDual⟩
+
+end WeakUpperModular
+
+section WeakLowerModular
+
+variable [Lattice α] [IsWeakLowerModularLattice α] {a b : α}
+
+theorem inf_covby_of_covby_sup_of_covby_sup_left : a ⋖ a⊔b → b ⋖ a⊔b → a⊓b ⋖ a :=
+  IsWeakLowerModularLattice.inf_covby_of_covby_covby_sup
+
+theorem inf_covby_of_covby_sup_of_covby_sup_right : a ⋖ a⊔b → b ⋖ a⊔b → a⊓b ⋖ b := by
+  rw [sup_comm, inf_comm]
+  exact fun ha hb => inf_covby_of_covby_sup_of_covby_sup_left hb ha
+
+alias inf_covby_of_covby_sup_of_covby_sup_left ← Covby.inf_of_sup_of_sup_left
+
+alias inf_covby_of_covby_sup_of_covby_sup_right ← Covby.inf_of_sup_of_sup_right
+
+instance : IsWeakUpperModularLattice (OrderDual α) :=
+  ⟨fun a b ha hb => (ha.ofDual.inf_of_sup_of_sup_left hb.ofDual).toDual⟩
+
+end WeakLowerModular
+
+section UpperModular
+
+variable [Lattice α] [IsUpperModularLattice α] {a b : α}
+
+theorem covby_sup_of_inf_covby_left : a⊓b ⋖ a → b ⋖ a⊔b :=
+  IsUpperModularLattice.covby_sup_of_inf_covby
+
+theorem covby_sup_of_inf_covby_right : a⊓b ⋖ b → a ⋖ a⊔b := by
+  rw [sup_comm, inf_comm]
+  exact covby_sup_of_inf_covby_left
+
+alias covby_sup_of_inf_covby_left ← Covby.sup_of_inf_left
+
+alias covby_sup_of_inf_covby_right ← Covby.sup_of_inf_right
+
+-- See note [lower instance priority]
+instance (priority := 100) IsUpperModularLattice.to_is_weak_upper_modular_lattice : IsWeakUpperModularLattice α :=
+  ⟨fun a b _ => Covby.sup_of_inf_right⟩
+
+instance : IsLowerModularLattice (OrderDual α) :=
+  ⟨fun a b h => h.ofDual.sup_of_inf_left.toDual⟩
+
+end UpperModular
+
+section LowerModular
+
+variable [Lattice α] [IsLowerModularLattice α] {a b : α}
+
+theorem inf_covby_of_covby_sup_left : a ⋖ a⊔b → a⊓b ⋖ b :=
+  IsLowerModularLattice.inf_covby_of_covby_sup
+
+theorem inf_covby_of_covby_sup_right : b ⋖ a⊔b → a⊓b ⋖ a := by
+  rw [inf_comm, sup_comm]
+  exact inf_covby_of_covby_sup_left
+
+alias inf_covby_of_covby_sup_left ← Covby.inf_of_sup_left
+
+alias inf_covby_of_covby_sup_right ← Covby.inf_of_sup_right
+
+-- See note [lower instance priority]
+instance (priority := 100) IsLowerModularLattice.to_is_weak_lower_modular_lattice : IsWeakLowerModularLattice α :=
+  ⟨fun a b _ => Covby.inf_of_sup_right⟩
+
+instance : IsUpperModularLattice (OrderDual α) :=
+  ⟨fun a b h => h.ofDual.inf_of_sup_left.toDual⟩
+
+end LowerModular
 
 section IsModularLattice
 
@@ -56,7 +185,7 @@ instance : IsModularLattice αᵒᵈ :=
     le_of_eqₓ
       (by
         rw [inf_comm, sup_comm, eq_comm, inf_comm, sup_comm]
-        convert sup_inf_assoc_of_le (OrderDual.ofDual y) (OrderDual.dual_le.2 xz))⟩
+        exact @sup_inf_assoc_of_le α _ _ _ y _ xz)⟩
 
 variable {x y z : α}
 

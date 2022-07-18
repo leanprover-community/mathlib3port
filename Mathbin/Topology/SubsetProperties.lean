@@ -263,7 +263,7 @@ theorem IsCompact.nonempty_Inter_of_sequence_nonempty_compact_closed (Z : ℕ �
   have hZc : ∀ i, IsCompact (Z i) := fun i => compact_of_is_closed_subset hZ0 (hZcl i) (this i)
   IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed Z hZd hZn hZc hZcl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (b' «expr ⊆ » b)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (b' «expr ⊆ » b)
 /-- For every open cover of a compact set, there exists a finite subcover. -/
 theorem IsCompact.elim_finite_subcover_image {b : Set ι} {c : ι → Set α} (hs : IsCompact s)
     (hc₁ : ∀, ∀ i ∈ b, ∀, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i ∈ b, c i) :
@@ -280,7 +280,7 @@ theorem IsCompact.elim_finite_subcover_image {b : Set ι} {c : ι → Set α} (h
 there exists a finite subfamily whose intersection avoids `s`. -/
 theorem is_compact_of_finite_subfamily_closed
     (h :
-      ∀ {ι : Type u} Z : ι → Set α,
+      ∀ {ι : Type u} (Z : ι → Set α),
         (∀ i, IsClosed (Z i)) → (s ∩ ⋂ i, Z i) = ∅ → ∃ t : Finset ι, (s ∩ ⋂ i ∈ t, Z i) = ∅) :
     IsCompact s := fun f hfn hfs =>
   Classical.by_contradiction fun this : ¬∃ x ∈ s, ClusterPt x f =>
@@ -320,7 +320,7 @@ theorem is_compact_of_finite_subfamily_closed
 
 /-- A set `s` is compact if for every open cover of `s`, there exists a finite subcover. -/
 theorem is_compact_of_finite_subcover
-    (h : ∀ {ι : Type u} U : ι → Set α, (∀ i, IsOpen (U i)) → (s ⊆ ⋃ i, U i) → ∃ t : Finset ι, s ⊆ ⋃ i ∈ t, U i) :
+    (h : ∀ {ι : Type u} (U : ι → Set α), (∀ i, IsOpen (U i)) → (s ⊆ ⋃ i, U i) → ∃ t : Finset ι, s ⊆ ⋃ i ∈ t, U i) :
     IsCompact s :=
   is_compact_of_finite_subfamily_closed fun ι Z hZc hsZ =>
     let ⟨t, ht⟩ :=
@@ -336,7 +336,7 @@ theorem is_compact_of_finite_subcover
 for every open cover of `s`, there exists a finite subcover. -/
 theorem is_compact_iff_finite_subcover :
     IsCompact s ↔
-      ∀ {ι : Type u} U : ι → Set α, (∀ i, IsOpen (U i)) → (s ⊆ ⋃ i, U i) → ∃ t : Finset ι, s ⊆ ⋃ i ∈ t, U i :=
+      ∀ {ι : Type u} (U : ι → Set α), (∀ i, IsOpen (U i)) → (s ⊆ ⋃ i, U i) → ∃ t : Finset ι, s ⊆ ⋃ i ∈ t, U i :=
   ⟨fun hs ι => hs.elim_finite_subcover, is_compact_of_finite_subcover⟩
 
 /-- A set `s` is compact if and only if
@@ -344,7 +344,7 @@ for every family of closed sets whose intersection avoids `s`,
 there exists a finite subfamily whose intersection avoids `s`. -/
 theorem is_compact_iff_finite_subfamily_closed :
     IsCompact s ↔
-      ∀ {ι : Type u} Z : ι → Set α,
+      ∀ {ι : Type u} (Z : ι → Set α),
         (∀ i, IsClosed (Z i)) → (s ∩ ⋂ i, Z i) = ∅ → ∃ t : Finset ι, (s ∩ ⋂ i ∈ t, Z i) = ∅ :=
   ⟨fun hs ι => hs.elim_finite_subfamily_closed, is_compact_of_finite_subfamily_closed⟩
 
@@ -436,7 +436,7 @@ theorem IsCompact.union (hs : IsCompact s) (ht : IsCompact t) : IsCompact (s ∪
       compact_Union fun b => by
         cases b <;> assumption
 
-theorem IsCompact.insert (hs : IsCompact s) a : IsCompact (insert a s) :=
+theorem IsCompact.insert (hs : IsCompact s) (a) : IsCompact (insert a s) :=
   is_compact_singleton.union hs
 
 /-- If `V : ι → set α` is a decreasing family of closed compact sets then any neighborhood of
@@ -574,7 +574,7 @@ section TubeLemma
 /-- `nhds_contain_boxes s t` means that any open neighborhood of `s × t` in `α × β` includes
 a product of an open neighborhood of `s` by an open neighborhood of `t`. -/
 def NhdsContainBoxes (s : Set α) (t : Set β) : Prop :=
-  ∀ n : Set (α × β) hn : IsOpen n hp : s ×ˢ t ⊆ n,
+  ∀ (n : Set (α × β)) (hn : IsOpen n) (hp : s ×ˢ t ⊆ n),
     ∃ (u : Set α)(v : Set β), IsOpen u ∧ IsOpen v ∧ s ⊆ u ∧ t ⊆ v ∧ u ×ˢ v ⊆ n
 
 theorem NhdsContainBoxes.symm {s : Set α} {t : Set β} : NhdsContainBoxes s t → NhdsContainBoxes t s := fun H n hn hp =>
@@ -669,7 +669,7 @@ theorem CompactSpace.elim_nhds_subcover [CompactSpace α] (U : α → Set α) (h
       exact s⟩
 
 theorem compact_space_of_finite_subfamily_closed
-    (h : ∀ {ι : Type u} Z : ι → Set α, (∀ i, IsClosed (Z i)) → (⋂ i, Z i) = ∅ → ∃ t : Finset ι, (⋂ i ∈ t, Z i) = ∅) :
+    (h : ∀ {ι : Type u} (Z : ι → Set α), (∀ i, IsClosed (Z i)) → (⋂ i, Z i) = ∅ → ∃ t : Finset ι, (⋂ i ∈ t, Z i) = ∅) :
     CompactSpace α :=
   { compact_univ := by
       apply is_compact_of_finite_subfamily_closed
@@ -680,7 +680,7 @@ theorem compact_space_of_finite_subfamily_closed
 theorem IsClosed.is_compact [CompactSpace α] {s : Set α} (h : IsClosed s) : IsCompact s :=
   compact_of_is_closed_subset compact_univ h (subset_univ _)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`noncompact_univ] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`noncompact_univ] []
 /-- `α` is a noncompact topological space if it not a compact space. -/
 class NoncompactSpace (α : Type _) [TopologicalSpace α] : Prop where
   noncompact_univ : ¬IsCompact (Univ : Set α)
@@ -985,7 +985,7 @@ Hausdorff spaces but not in general. This one is the precise condition on X need
 evaluation `map C(X, Y) × X → Y` to be continuous for all `Y` when `C(X, Y)` is given the
 compact-open topology. -/
 class LocallyCompactSpace (α : Type _) [TopologicalSpace α] : Prop where
-  local_compact_nhds : ∀ x : α, ∀ n ∈ 𝓝 x, ∀, ∃ s ∈ 𝓝 x, s ⊆ n ∧ IsCompact s
+  local_compact_nhds : ∀ (x : α), ∀ n ∈ 𝓝 x, ∀, ∃ s ∈ 𝓝 x, s ⊆ n ∧ IsCompact s
 
 theorem compact_basis_nhds [LocallyCompactSpace α] (x : α) :
     (𝓝 x).HasBasis (fun s => s ∈ 𝓝 x ∧ IsCompact s) fun s => s :=
@@ -1174,7 +1174,7 @@ protected noncomputable def LocallyFinite.encodable {ι : Type _} {f : ι → Se
     (hne : ∀ i, (f i).Nonempty) : Encodable ι :=
   @Encodable.ofEquiv _ _ (hf.countable_univ hne).toEncodable (Equivₓ.Set.univ _).symm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- In a topological space with sigma compact topology, if `f` is a function that sends each point
 `x` of a closed set `s` to a neighborhood of `x` within `s`, then for some countable set `t ⊆ s`,
 the neighborhoods `f x`, `x ∈ t`, cover the whole set `s`. -/
@@ -1334,27 +1334,30 @@ theorem is_clopen_compl_iff {s : Set α} : IsClopen (sᶜ) ↔ IsClopen s :=
 theorem IsClopen.diff {s t : Set α} (hs : IsClopen s) (ht : IsClopen t) : IsClopen (s \ t) :=
   hs.inter ht.compl
 
+theorem IsClopen.prod {s : Set α} {t : Set β} (hs : IsClopen s) (ht : IsClopen t) : IsClopen (s ×ˢ t) :=
+  ⟨hs.1.Prod ht.1, hs.2.Prod ht.2⟩
+
 theorem is_clopen_Union {β : Type _} [Fintype β] {s : β → Set α} (h : ∀ i, IsClopen (s i)) : IsClopen (⋃ i, s i) :=
   ⟨is_open_Union (forall_and_distrib.1 h).1, is_closed_Union (forall_and_distrib.1 h).2⟩
 
-theorem is_clopen_bUnion {β : Type _} {s : Finset β} {f : β → Set α} (h : ∀, ∀ i ∈ s, ∀, IsClopen <| f i) :
-    IsClopen (⋃ i ∈ s, f i) := by
-  refine' ⟨is_open_bUnion fun i hi => (h i hi).1, _⟩
-  show IsClosed (⋃ (i : β) (H : i ∈ (s : Set β)), f i)
-  rw [bUnion_eq_Union]
-  exact is_closed_Union fun ⟨i, hi⟩ => (h i hi).2
+theorem is_clopen_bUnion {β : Type _} {s : Set β} {f : β → Set α} (hs : s.Finite) (h : ∀, ∀ i ∈ s, ∀, IsClopen <| f i) :
+    IsClopen (⋃ i ∈ s, f i) :=
+  ⟨is_open_bUnion fun i hi => (h i hi).1, is_closed_bUnion hs fun i hi => (h i hi).2⟩
+
+theorem is_clopen_bUnion_finset {β : Type _} {s : Finset β} {f : β → Set α} (h : ∀, ∀ i ∈ s, ∀, IsClopen <| f i) :
+    IsClopen (⋃ i ∈ s, f i) :=
+  is_clopen_bUnion s.finite_to_set h
 
 theorem is_clopen_Inter {β : Type _} [Fintype β] {s : β → Set α} (h : ∀ i, IsClopen (s i)) : IsClopen (⋂ i, s i) :=
   ⟨is_open_Inter (forall_and_distrib.1 h).1, is_closed_Inter (forall_and_distrib.1 h).2⟩
 
-theorem is_clopen_bInter {β : Type _} {s : Finset β} {f : β → Set α} (h : ∀, ∀ i ∈ s, ∀, IsClopen (f i)) :
+theorem is_clopen_bInter {β : Type _} {s : Set β} (hs : s.Finite) {f : β → Set α} (h : ∀, ∀ i ∈ s, ∀, IsClopen (f i)) :
     IsClopen (⋂ i ∈ s, f i) :=
-  ⟨is_open_bInter ⟨FinsetCoe.fintype s⟩ fun i hi => (h i hi).1, by
-    show IsClosed (⋂ (i : β) (H : i ∈ (↑s : Set β)), f i)
-    rw [bInter_eq_Inter]
-    apply is_closed_Inter
-    rintro ⟨i, hi⟩
-    exact (h i hi).2⟩
+  ⟨is_open_bInter hs fun i hi => (h i hi).1, is_closed_bInter fun i hi => (h i hi).2⟩
+
+theorem is_clopen_bInter_finset {β : Type _} {s : Finset β} {f : β → Set α} (h : ∀, ∀ i ∈ s, ∀, IsClopen (f i)) :
+    IsClopen (⋂ i ∈ s, f i) :=
+  is_clopen_bInter s.finite_to_set h
 
 theorem ContinuousOn.preimage_clopen_of_clopen {f : α → β} {s : Set α} {t : Set β} (hf : ContinuousOn f s)
     (hs : IsClopen s) (ht : IsClopen t) : IsClopen (s ∩ f ⁻¹' t) :=
@@ -1465,12 +1468,12 @@ theorem is_closed_irreducible_component {x : α} : IsClosed (IrreducibleComponen
   closure_eq_iff_is_closed.1 <|
     eq_irreducible_component is_irreducible_irreducible_component.IsPreirreducible.closure subset_closure
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`is_preirreducible_univ] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`is_preirreducible_univ] []
 /-- A preirreducible space is one where there is no non-trivial pair of disjoint opens. -/
 class PreirreducibleSpace (α : Type u) [TopologicalSpace α] : Prop where
   is_preirreducible_univ : IsPreirreducible (Univ : Set α)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`to_nonempty] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`to_nonempty] []
 /-- An irreducible space is one that is nonempty
 and where there is no non-trivial pair of disjoint opens. -/
 class IrreducibleSpace (α : Type u) [TopologicalSpace α] extends PreirreducibleSpace α : Prop where
@@ -1535,7 +1538,8 @@ for every finite collection of open sets all of whose members intersect `s`,
 (i.e., there is an element of `s` contained in every member of the collection). -/
 theorem is_irreducible_iff_sInter {s : Set α} :
     IsIrreducible s ↔
-      ∀ U : Finset (Set α) hU : ∀, ∀ u ∈ U, ∀, IsOpen u H : ∀, ∀ u ∈ U, ∀, (s ∩ u).Nonempty, (s ∩ ⋂₀ ↑U).Nonempty :=
+      ∀ (U : Finset (Set α)) (hU : ∀, ∀ u ∈ U, ∀, IsOpen u) (H : ∀, ∀ u ∈ U, ∀, (s ∩ u).Nonempty),
+        (s ∩ ⋂₀ ↑U).Nonempty :=
   by
   constructor <;> intro h
   · intro U
@@ -1606,7 +1610,7 @@ theorem is_preirreducible_iff_closed_union_closed {s : Set α} :
 for every cover by a finite collection of closed sets,
 it is contained in one of the members of the collection. -/
 theorem is_irreducible_iff_sUnion_closed {s : Set α} :
-    IsIrreducible s ↔ ∀ Z : Finset (Set α) hZ : ∀, ∀ z ∈ Z, ∀, IsClosed z H : s ⊆ ⋃₀↑Z, ∃ z ∈ Z, s ⊆ z := by
+    IsIrreducible s ↔ ∀ (Z : Finset (Set α)) (hZ : ∀, ∀ z ∈ Z, ∀, IsClosed z) (H : s ⊆ ⋃₀↑Z), ∃ z ∈ Z, s ⊆ z := by
   rw [IsIrreducible, is_preirreducible_iff_closed_union_closed]
   constructor <;> intro h
   · intro Z
@@ -1670,7 +1674,6 @@ theorem subset_closure_inter_of_is_preirreducible_of_is_open {S U : Set α} (hS 
     hS _ (Closure (S ∩ U)ᶜ) hU (is_open_compl_iff.mpr is_closed_closure) h (set.inter_compl_nonempty_iff.mpr h')
   exact h₃ (subset_closure ⟨h₁, h₂⟩)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `∅ ≠ U ⊆ S ⊆ Z` such that `U` is open and `Z` is preirreducible, then `S` is irreducible. -/
 theorem IsPreirreducible.subset_irreducible {S U Z : Set α} (hZ : IsPreirreducible Z) (hU : U.Nonempty) (hU' : IsOpen U)
     (h₁ : U ⊆ S) (h₂ : S ⊆ Z) : IsIrreducible S := by

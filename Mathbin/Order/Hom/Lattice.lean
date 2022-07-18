@@ -214,10 +214,11 @@ include β
 theorem Disjoint.map (h : Disjoint a b) : Disjoint (f a) (f b) := by
   rw [disjoint_iff, ← map_inf, h.eq_bot, map_bot]
 
+theorem Codisjoint.map (h : Codisjoint a b) : Codisjoint (f a) (f b) := by
+  rw [codisjoint_iff, ← map_sup, h.eq_top, map_top]
+
 theorem IsCompl.map (h : IsCompl a b) : IsCompl (f a) (f b) :=
-  { inf_le_bot := h.Disjoint.map _,
-    top_le_sup := by
-      rw [← map_sup, h.sup_eq_top, map_top] }
+  ⟨h.1.map _, h.2.map _⟩
 
 end BoundedLattice
 

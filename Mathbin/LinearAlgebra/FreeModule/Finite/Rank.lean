@@ -101,7 +101,6 @@ variable [AddCommGroupₓ M] [Module R M] [Module.Free R M] [Module.Finite R M]
 
 variable [AddCommGroupₓ N] [Module R N] [Module.Free R N] [Module.Finite R N]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The finrank of `M →ₗ[R] N` is `(finrank R M) * (finrank R N)`. -/
 --TODO: this should follow from `linear_equiv.finrank_eq`, that is over a field.
 theorem finrank_linear_hom : finrank R (M →ₗ[R] N) = finrank R M * finrank R N := by

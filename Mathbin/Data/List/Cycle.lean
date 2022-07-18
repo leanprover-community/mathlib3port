@@ -28,7 +28,7 @@ namespace List
 variable {α : Type _} [DecidableEq α]
 
 /-- Return the `z` such that `x :: z :: _` appears in `xs`, or `default` if there is no such `z`. -/
-def nextOr : ∀ xs : List α x default : α, α
+def nextOr : ∀ (xs : List α) (x default : α), α
   | [], x, default => default
   | [y], x, default => default
   |-- Handles the not-found and the wraparound case
@@ -96,7 +96,7 @@ theorem next_or_concat {xs : List α} {x : α} (d : α) (h : x ∉ xs) : nextOr 
 
 theorem next_or_mem {xs : List α} {x d : α} (hd : d ∈ xs) : nextOr xs x d ∈ xs := by
   revert hd
-  suffices ∀ xs' : List α h : ∀, ∀ x ∈ xs, ∀, x ∈ xs' hd : d ∈ xs', next_or xs x d ∈ xs' by
+  suffices ∀ (xs' : List α) (h : ∀, ∀ x ∈ xs, ∀, x ∈ xs') (hd : d ∈ xs'), next_or xs x d ∈ xs' by
     exact this xs fun _ => id
   intro xs' hxs' hd
   induction' xs with y ys ih
@@ -136,7 +136,7 @@ so it will match on first hit, ignoring later duplicates.
  * `prev [1, 2, 3, 4, 2] 2 _ = 1`
  * `prev [1, 1, 2] 1 _ = 2`
 -/
-def prev : ∀ l : List α x : α h : x ∈ l, α
+def prev : ∀ (l : List α) (x : α) (h : x ∈ l), α
   | [], _, h => by
     simpa using h
   | [y], _, _ => y
@@ -517,7 +517,8 @@ instance : Inhabited (Cycle α) :=
 
 /-- An induction principle for `cycle`. Use as `induction s using cycle.induction_on`. -/
 @[elab_as_eliminator]
-theorem induction_on {C : Cycle α → Prop} (s : Cycle α) (H0 : C nil) (HI : ∀ a l : List α, C ↑l → C ↑(a :: l)) : C s :=
+theorem induction_on {C : Cycle α → Prop} (s : Cycle α) (H0 : C nil) (HI : ∀ (a) (l : List α), C ↑l → C ↑(a :: l)) :
+    C s :=
   (Quotientₓ.induction_on' s) fun l => by
     apply List.recOn l <;> simp
     assumption'
@@ -594,7 +595,7 @@ theorem length_subsingleton_iff {s : Cycle α} : Subsingleton s ↔ length s ≤
 theorem subsingleton_reverse_iff {s : Cycle α} : s.reverse.Subsingleton ↔ s.Subsingleton := by
   simp [← length_subsingleton_iff]
 
-theorem Subsingleton.congr {s : Cycle α} (h : Subsingleton s) : ∀ ⦃x⦄ hx : x ∈ s ⦃y⦄ hy : y ∈ s, x = y := by
+theorem Subsingleton.congr {s : Cycle α} (h : Subsingleton s) : ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), x = y := by
   induction' s using Quot.induction_on with l
   simp only [← length_subsingleton_iff, ← length_coe, ← mk_eq_coe, ← le_iff_lt_or_eqₓ, ← Nat.lt_add_one_iff, ←
     length_eq_zero, ← length_eq_one, ← Nat.not_lt_zeroₓ, ← false_orₓ] at h
@@ -804,7 +805,7 @@ theorem to_finset_eq_nil {s : Cycle α} : s.toFinset = ∅ ↔ s = Cycle.nil :=
       simp )
 
 /-- Given a `s : cycle α` such that `nodup s`, retrieve the next element after `x ∈ s`. -/
-def next : ∀ s : Cycle α hs : Nodup s x : α hx : x ∈ s, α := fun s =>
+def next : ∀ (s : Cycle α) (hs : Nodup s) (x : α) (hx : x ∈ s), α := fun s =>
   Quot.hrecOn s (fun l hn x hx => next l x hx) fun l₁ l₂ h =>
     Function.hfunext (propext h.nodup_iff) fun h₁ h₂ he =>
       Function.hfunext rfl fun x y hxy =>
@@ -818,7 +819,7 @@ def next : ∀ s : Cycle α hs : Nodup s x : α hx : x ∈ s, α := fun s =>
               simpa [← eq_of_heq hxy] using is_rotated_next_eq h h₁ _)
 
 /-- Given a `s : cycle α` such that `nodup s`, retrieve the previous element before `x ∈ s`. -/
-def prev : ∀ s : Cycle α hs : Nodup s x : α hx : x ∈ s, α := fun s =>
+def prev : ∀ (s : Cycle α) (hs : Nodup s) (x : α) (hx : x ∈ s), α := fun s =>
   Quot.hrecOn s (fun l hn x hx => prev l x hx) fun l₁ l₂ h =>
     Function.hfunext (propext h.nodup_iff) fun h₁ h₂ he =>
       Function.hfunext rfl fun x y hxy =>
@@ -945,7 +946,7 @@ theorem chain_of_pairwise : (∀, ∀ a ∈ s, ∀, ∀ b ∈ s, ∀, r a b) →
   intro hs
   have Ha : a ∈ (a :: l : Cycle α) := by
     simp
-  have Hl : ∀ {b} hb : b ∈ l, b ∈ (a :: l : Cycle α) := fun b hb => by
+  have Hl : ∀ {b} (hb : b ∈ l), b ∈ (a :: l : Cycle α) := fun b hb => by
     simp [← hb]
   rw [Cycle.chain_coe_cons]
   apply pairwise.chain
@@ -976,7 +977,7 @@ theorem chain_iff_pairwise (hr : Transitive r) : Chain r s ↔ ∀, ∀ a ∈ s,
     intro hs b hb c hc
     rw [Cycle.chain_coe_cons, chain_iff_pairwise hr] at hs
     simp only [← pairwise_append, ← pairwise_cons, ← mem_append, ← mem_singleton, ← List.not_mem_nilₓ, ←
-      forall_false_left, ← implies_true_iff, ← pairwise.nil, ← forall_eq, ← true_andₓ] at hs
+      IsEmpty.forall_iff, ← implies_true_iff, ← pairwise.nil, ← forall_eq, ← true_andₓ] at hs
     simp only [← mem_coe_iff, ← mem_cons_iff] at hb hc
     rcases hb with (rfl | hb) <;> rcases hc with (rfl | hc)
     · exact hs.1 c (Or.inr rfl)

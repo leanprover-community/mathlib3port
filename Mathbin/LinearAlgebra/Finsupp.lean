@@ -134,7 +134,6 @@ theorem supr_lsingle_range : (⨆ a, (lsingle a : M →ₗ[R] α →₀ M).range
   rw [← sum_single f]
   exact sum_mem fun a ha => Submodule.mem_supr_of_mem a ⟨_, rfl⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem disjoint_lsingle_lsingle (s t : Set α) (hs : Disjoint s t) :
     Disjoint (⨆ a ∈ s, (lsingle a : M →ₗ[R] α →₀ M).range) (⨆ a ∈ t, (lsingle a).range) := by
   refine'
@@ -175,8 +174,8 @@ variable {M}
 theorem mem_supported {s : Set α} (p : α →₀ M) : p ∈ supported M R s ↔ ↑p.Support ⊆ s :=
   Iff.rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ∉ » s)
-theorem mem_supported' {s : Set α} (p : α →₀ M) : p ∈ supported M R s ↔ ∀ x _ : x ∉ s, p x = 0 := by
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ∉ » s)
+theorem mem_supported' {s : Set α} (p : α →₀ M) : p ∈ supported M R s ↔ ∀ (x) (_ : x ∉ s), p x = 0 := by
   have := Classical.decPred fun x : α => x ∈ s <;> simp [← mem_supported, ← Set.subset_def, ← not_imp_comm]
 
 theorem mem_supported_support (p : α →₀ M) : p ∈ Finsupp.supported M R (p.Support : Set α) := by
@@ -343,11 +342,11 @@ noncomputable def lift : (X → M) ≃+ ((X →₀ R) →ₗ[R] M) :=
   (AddEquiv.arrowCongr (Equivₓ.refl X) (ringLmapEquivSelf R ℕ M).toAddEquiv.symm).trans (lsum _ : _ ≃ₗ[ℕ] _).toAddEquiv
 
 @[simp]
-theorem lift_symm_apply f x : ((lift M R X).symm f) x = f (single x 1) :=
+theorem lift_symm_apply (f) (x) : ((lift M R X).symm f) x = f (single x 1) :=
   rfl
 
 @[simp]
-theorem lift_apply f g : ((lift M R X) f) g = g.Sum fun x r => r • f x :=
+theorem lift_apply (f) (g) : ((lift M R X) f) g = g.Sum fun x r => r • f x :=
   rfl
 
 end
@@ -375,7 +374,7 @@ theorem lmap_domain_comp (f : α → α') (g : α' → α'') :
   LinearMap.ext fun l => map_domain_comp
 
 theorem supported_comap_lmap_domain (f : α → α') (s : Set α') :
-    supported M R (f ⁻¹' s) ≤ (supported M R s).comap (lmapDomain M R f) := fun l hl : ↑l.Support ⊆ f ⁻¹' s =>
+    supported M R (f ⁻¹' s) ≤ (supported M R s).comap (lmapDomain M R f) := fun l (hl : ↑l.Support ⊆ f ⁻¹' s) =>
   show ↑(mapDomain f l).Support ⊆ s by
     rw [← Set.image_subset_iff, ← Finset.coe_image] at hl
     exact Set.Subset.trans map_domain_support hl
@@ -404,8 +403,8 @@ theorem lmap_domain_supported [Nonempty α] (f : α → α') (s : Set α) :
           simpa using hl hc)
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (a b «expr ∈ » s)
-theorem lmap_domain_disjoint_ker (f : α → α') {s : Set α} (H : ∀ a b _ : a ∈ s _ : b ∈ s, f a = f b → a = b) :
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a b «expr ∈ » s)
+theorem lmap_domain_disjoint_ker (f : α → α') {s : Set α} (H : ∀ (a b) (_ : a ∈ s) (_ : b ∈ s), f a = f b → a = b) :
     Disjoint (supported M R s) (lmapDomain M R f).ker := by
   rintro l ⟨h₁, h₂⟩
   rw [SetLike.mem_coe, mem_ker, lmap_domain_apply, map_domain] at h₂
@@ -455,10 +454,11 @@ theorem total_apply_of_mem_supported {l : α →₀ R} {s : Finset α} (hs : l �
 theorem total_single (c : R) (a : α) : Finsupp.total α M R v (single a c) = c • v a := by
   simp [← total_apply, ← sum_single_index]
 
-theorem apply_total (f : M →ₗ[R] M') v (l : α →₀ R) : f (Finsupp.total α M R v l) = Finsupp.total α M' R (f ∘ v) l := by
+theorem apply_total (f : M →ₗ[R] M') (v) (l : α →₀ R) : f (Finsupp.total α M R v l) = Finsupp.total α M' R (f ∘ v) l :=
+  by
   apply Finsupp.induction_linear l <;> simp (config := { contextual := true })
 
-theorem total_unique [Unique α] (l : α →₀ R) v : Finsupp.total α M R v l = l default • v default := by
+theorem total_unique [Unique α] (l : α →₀ R) (v) : Finsupp.total α M R v l = l default • v default := by
   rw [← total_single, ← unique_single l]
 
 theorem total_surjective (h : Function.Surjective v) : Function.Surjective (Finsupp.total α M R v) := by
@@ -473,7 +473,7 @@ theorem total_range (h : Function.Surjective v) : (Finsupp.total α M R v).range
 
 /-- Any module is a quotient of a free module. This is stated as surjectivity of
 `finsupp.total M M R id : (M →₀ R) →ₗ[R] M`. -/
-theorem total_id_surjective M [AddCommMonoidₓ M] [Module R M] : Function.Surjective (Finsupp.total M M R id) :=
+theorem total_id_surjective (M) [AddCommMonoidₓ M] [Module R M] : Function.Surjective (Finsupp.total M M R id) :=
   total_surjective R Function.surjective_id
 
 theorem range_total : (Finsupp.total α M R v).range = span R (range v) := by
@@ -786,12 +786,12 @@ noncomputable def sigmaFinsuppLequivPiFinsupp {M : Type _} {ιs : η → Type _}
 
 @[simp]
 theorem sigma_finsupp_lequiv_pi_finsupp_apply {M : Type _} {ιs : η → Type _} [AddCommMonoidₓ M] [Module R M]
-    (f : (Σj, ιs j) →₀ M) j i : sigmaFinsuppLequivPiFinsupp R f j i = f ⟨j, i⟩ :=
+    (f : (Σj, ιs j) →₀ M) (j i) : sigmaFinsuppLequivPiFinsupp R f j i = f ⟨j, i⟩ :=
   rfl
 
 @[simp]
 theorem sigma_finsupp_lequiv_pi_finsupp_symm_apply {M : Type _} {ιs : η → Type _} [AddCommMonoidₓ M] [Module R M]
-    (f : ∀ j, ιs j →₀ M) ji : (Finsupp.sigmaFinsuppLequivPiFinsupp R).symm f ji = f ji.1 ji.2 :=
+    (f : ∀ j, ιs j →₀ M) (ji) : (Finsupp.sigmaFinsuppLequivPiFinsupp R).symm f ji = f ji.1 ji.2 :=
   rfl
 
 end Sigma
@@ -813,12 +813,12 @@ noncomputable def finsuppProdLequiv {α β : Type _} (R : Type _) {M : Type _} [
 
 @[simp]
 theorem finsupp_prod_lequiv_apply {α β R M : Type _} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] (f : α × β →₀ M)
-    x y : finsuppProdLequiv R f x y = f (x, y) := by
+    (x y) : finsuppProdLequiv R f x y = f (x, y) := by
   rw [finsupp_prod_lequiv, LinearEquiv.coe_mk, finsupp_prod_equiv, Finsupp.curry_apply]
 
 @[simp]
 theorem finsupp_prod_lequiv_symm_apply {α β R M : Type _} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
-    (f : α →₀ β →₀ M) xy : (finsuppProdLequiv R).symm f xy = f xy.1 xy.2 := by
+    (f : α →₀ β →₀ M) (xy) : (finsuppProdLequiv R).symm f xy = f xy.1 xy.2 := by
   conv_rhs => rw [← (finsupp_prod_lequiv R).apply_symm_apply f, finsupp_prod_lequiv_apply, Prod.mk.eta]
 
 end Prod

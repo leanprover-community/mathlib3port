@@ -117,7 +117,7 @@ theorem bounded_formula_realize_cast {β : Type _} {n : ℕ} (φ : L.BoundedForm
     · exact forall_quotient_iff
       
     have h' :
-      ∀ m : ∀ a, M a a : α,
+      ∀ (m : ∀ a, M a) (a : α),
         (fun i : Finₓ (k + 1) => (Finₓ.snoc v m : _ → ∀ a, M a) i a) = Finₓ.snoc (fun i : Finₓ k => v i a) (m a) :=
       by
       refine' fun m a => funext (Finₓ.reverseInduction _ fun i hi => _)

@@ -133,30 +133,30 @@ unsafe def normal_expr.refl_conv (e : normal_expr) : tactic (normal_expr × expr
   let p ← mk_eq_refl e
   return (e, p)
 
-theorem const_add_term {α} [AddCommMonoidₓ α] k n x a a' (h : k + a = a') : k + @term α _ n x a = term n x a' := by
+theorem const_add_term {α} [AddCommMonoidₓ α] (k n x a a') (h : k + a = a') : k + @term α _ n x a = term n x a' := by
   simp [← h.symm, ← term] <;> ac_rfl
 
-theorem const_add_termg {α} [AddCommGroupₓ α] k n x a a' (h : k + a = a') : k + @termg α _ n x a = termg n x a' := by
+theorem const_add_termg {α} [AddCommGroupₓ α] (k n x a a') (h : k + a = a') : k + @termg α _ n x a = termg n x a' := by
   simp [← h.symm, ← termg] <;> ac_rfl
 
-theorem term_add_const {α} [AddCommMonoidₓ α] n x a k a' (h : a + k = a') : @term α _ n x a + k = term n x a' := by
+theorem term_add_const {α} [AddCommMonoidₓ α] (n x a k a') (h : a + k = a') : @term α _ n x a + k = term n x a' := by
   simp [← h.symm, ← term, ← add_assocₓ]
 
-theorem term_add_constg {α} [AddCommGroupₓ α] n x a k a' (h : a + k = a') : @termg α _ n x a + k = termg n x a' := by
+theorem term_add_constg {α} [AddCommGroupₓ α] (n x a k a') (h : a + k = a') : @termg α _ n x a + k = termg n x a' := by
   simp [← h.symm, ← termg, ← add_assocₓ]
 
-theorem term_add_term {α} [AddCommMonoidₓ α] n₁ x a₁ n₂ a₂ n' a' (h₁ : n₁ + n₂ = n') (h₂ : a₁ + a₂ = a') :
+theorem term_add_term {α} [AddCommMonoidₓ α] (n₁ x a₁ n₂ a₂ n' a') (h₁ : n₁ + n₂ = n') (h₂ : a₁ + a₂ = a') :
     @term α _ n₁ x a₁ + @term α _ n₂ x a₂ = term n' x a' := by
   simp [← h₁.symm, ← h₂.symm, ← term, ← add_nsmul] <;> ac_rfl
 
-theorem term_add_termg {α} [AddCommGroupₓ α] n₁ x a₁ n₂ a₂ n' a' (h₁ : n₁ + n₂ = n') (h₂ : a₁ + a₂ = a') :
+theorem term_add_termg {α} [AddCommGroupₓ α] (n₁ x a₁ n₂ a₂ n' a') (h₁ : n₁ + n₂ = n') (h₂ : a₁ + a₂ = a') :
     @termg α _ n₁ x a₁ + @termg α _ n₂ x a₂ = termg n' x a' := by
   simp [← h₁.symm, ← h₂.symm, ← termg, ← add_zsmul] <;> ac_rfl
 
-theorem zero_term {α} [AddCommMonoidₓ α] x a : @term α _ 0 x a = a := by
+theorem zero_term {α} [AddCommMonoidₓ α] (x a) : @term α _ 0 x a = a := by
   simp [← term, ← zero_nsmul, ← one_nsmul]
 
-theorem zero_termg {α} [AddCommGroupₓ α] x a : @termg α _ 0 x a = a := by
+theorem zero_termg {α} [AddCommGroupₓ α] (x a) : @termg α _ 0 x a = a := by
   simp [← termg]
 
 unsafe def eval_add (c : context) : normal_expr → normal_expr → tactic (normal_expr × expr)
@@ -184,8 +184,8 @@ unsafe def eval_add (c : context) : normal_expr → normal_expr → tactic (norm
         let (a', h) ← eval_add he₁ a₂
         return (term' c n₂ x₂ a', c `` const_add_term [e₁, n₂.1, x₂, a₂, a', h])
 
-theorem term_neg {α} [AddCommGroupₓ α] n x a n' a' (h₁ : -n = n') (h₂ : -a = a') : -@termg α _ n x a = termg n' x a' :=
-  by
+theorem term_neg {α} [AddCommGroupₓ α] (n x a n' a') (h₁ : -n = n') (h₂ : -a = a') :
+    -@termg α _ n x a = termg n' x a' := by
   simp [← h₂.symm, ← h₁.symm, ← termg] <;> ac_rfl
 
 unsafe def eval_neg (c : context) : normal_expr → tactic (normal_expr × expr)
@@ -203,17 +203,17 @@ def smul {α} [AddCommMonoidₓ α] (n : ℕ) (x : α) : α :=
 def smulg {α} [AddCommGroupₓ α] (n : ℤ) (x : α) : α :=
   n • x
 
-theorem zero_smul {α} [AddCommMonoidₓ α] c : smul c (0 : α) = 0 := by
+theorem zero_smul {α} [AddCommMonoidₓ α] (c) : smul c (0 : α) = 0 := by
   simp [← smul, ← nsmul_zero]
 
-theorem zero_smulg {α} [AddCommGroupₓ α] c : smulg c (0 : α) = 0 := by
+theorem zero_smulg {α} [AddCommGroupₓ α] (c) : smulg c (0 : α) = 0 := by
   simp [← smulg, ← zsmul_zero]
 
-theorem term_smul {α} [AddCommMonoidₓ α] c n x a n' a' (h₁ : c * n = n') (h₂ : smul c a = a') :
+theorem term_smul {α} [AddCommMonoidₓ α] (c n x a n' a') (h₁ : c * n = n') (h₂ : smul c a = a') :
     smul c (@term α _ n x a) = term n' x a' := by
   simp [← h₂.symm, ← h₁.symm, ← term, ← smul, ← nsmul_add, ← mul_nsmul]
 
-theorem term_smulg {α} [AddCommGroupₓ α] c n x a n' a' (h₁ : c * n = n') (h₂ : smulg c a = a') :
+theorem term_smulg {α} [AddCommGroupₓ α] (c n x a n' a') (h₁ : c * n = n') (h₂ : smulg c a = a') :
     smulg c (@termg α _ n x a) = termg n' x a' := by
   simp [← h₂.symm, ← h₁.symm, ← termg, ← smulg, ← zsmul_add, ← mul_zsmul]
 
@@ -237,7 +237,7 @@ unsafe def eval_atom (c : context) (e : expr) : tactic (normal_expr × expr) := 
 theorem unfold_sub {α} [SubtractionMonoid α] (a b c : α) (h : a + -b = c) : a - b = c := by
   rw [sub_eq_add_neg, h]
 
-theorem unfold_smul {α} [AddCommMonoidₓ α] n (x y : α) (h : smul n x = y) : n • x = y :=
+theorem unfold_smul {α} [AddCommMonoidₓ α] (n) (x y : α) (h : smul n x = y) : n • x = y :=
   h
 
 theorem unfold_smulg {α} [AddCommGroupₓ α] (n : ℕ) (x y : α) (h : smulg (Int.ofNat n) x = y) : (n : ℤ) • x = y :=
@@ -246,15 +246,15 @@ theorem unfold_smulg {α} [AddCommGroupₓ α] (n : ℕ) (x y : α) (h : smulg (
 theorem unfold_zsmul {α} [AddCommGroupₓ α] (n : ℤ) (x y : α) (h : smulg n x = y) : n • x = y :=
   h
 
-theorem subst_into_smul {α} [AddCommMonoidₓ α] l r tl tr t (prl : l = tl) (prr : r = tr) (prt : @smul α _ tl tr = t) :
+theorem subst_into_smul {α} [AddCommMonoidₓ α] (l r tl tr t) (prl : l = tl) (prr : r = tr) (prt : @smul α _ tl tr = t) :
     smul l r = t := by
   simp [← prl, ← prr, ← prt]
 
-theorem subst_into_smulg {α} [AddCommGroupₓ α] l r tl tr t (prl : l = tl) (prr : r = tr) (prt : @smulg α _ tl tr = t) :
-    smulg l r = t := by
+theorem subst_into_smulg {α} [AddCommGroupₓ α] (l r tl tr t) (prl : l = tl) (prr : r = tr)
+    (prt : @smulg α _ tl tr = t) : smulg l r = t := by
   simp [← prl, ← prr, ← prt]
 
-theorem subst_into_smul_upcast {α} [AddCommGroupₓ α] l r tl zl tr t (prl₁ : l = tl) (prl₂ : ↑tl = zl) (prr : r = tr)
+theorem subst_into_smul_upcast {α} [AddCommGroupₓ α] (l r tl zl tr t) (prl₁ : l = tl) (prl₂ : ↑tl = zl) (prr : r = tr)
     (prt : @smulg α _ zl tr = t) : smul l r = t := by
   simp [prt, ← prl₁, prl₂, ← prr, ← smul, ← smulg]
 

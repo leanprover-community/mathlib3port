@@ -55,7 +55,6 @@ only that there are finitely many objects.
 
 variable [Fintype J]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- This follows this proof from
 * Borceux, Handbook of categorical algebra 1, Theorem 2.13.4
 -/
@@ -150,7 +149,6 @@ end
 
 variable [FinCategory J]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- This follows this proof from
 * Borceux, Handbook of categorical algebra 1, Theorem 2.13.4
 although with different names.
@@ -187,7 +185,7 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
   -- the images of `y j` and `y j'`, when mapped to `F.obj (j', k')` respectively by
   -- `(f, g j)` and `(𝟙 j', g j')`, both represent the same element in the colimit.
   have w :
-    ∀ {j j' : J} f : j ⟶ j',
+    ∀ {j j' : J} (f : j ⟶ j'),
       colimit.ι ((curry.obj F).obj j') k' (F.map ((𝟙 j', g j') : (j', k j') ⟶ (j', k')) (y j')) =
         colimit.ι ((curry.obj F).obj j') k' (F.map ((f, g j) : (j, k j) ⟶ (j', k')) (y j)) :=
     by
@@ -201,11 +199,11 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
   -- where these images of `y j` and `y j'` become equal.
   simp_rw [colimit_eq_iff.{v, v}] at w
   -- We take a moment to restate `w` more conveniently.
-  let kf : ∀ {j j'} f : j ⟶ j', K := fun _ _ f => (w f).some
-  let gf : ∀ {j j'} f : j ⟶ j', k' ⟶ kf f := fun _ _ f => (w f).some_spec.some
-  let hf : ∀ {j j'} f : j ⟶ j', k' ⟶ kf f := fun _ _ f => (w f).some_spec.some_spec.some
+  let kf : ∀ {j j'} (f : j ⟶ j'), K := fun _ _ f => (w f).some
+  let gf : ∀ {j j'} (f : j ⟶ j'), k' ⟶ kf f := fun _ _ f => (w f).some_spec.some
+  let hf : ∀ {j j'} (f : j ⟶ j'), k' ⟶ kf f := fun _ _ f => (w f).some_spec.some_spec.some
   have wf :
-    ∀ {j j'} f : j ⟶ j',
+    ∀ {j j'} (f : j ⟶ j'),
       F.map ((𝟙 j', g j' ≫ gf f) : (j', k j') ⟶ (j', kf f)) (y j') =
         F.map ((f, g j ≫ hf f) : (j, k j) ⟶ (j', kf f)) (y j) :=
     fun j j' f => by
@@ -222,7 +220,7 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
   -- the morphisms `gf f : k' ⟶ kh f` and `hf f : k' ⟶ kf f`.
   -- At this point we're relying on there being only finitely morphisms in `J`.
   let O := (finset.univ.bUnion fun j => finset.univ.bUnion fun j' => finset.univ.image (@kf j j')) ∪ {k'}
-  have kfO : ∀ {j j'} f : j ⟶ j', kf f ∈ O := fun j j' f =>
+  have kfO : ∀ {j j'} (f : j ⟶ j'), kf f ∈ O := fun j j' f =>
     finset.mem_union.mpr
       (Or.inl
         (by
@@ -241,8 +239,8 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
   obtain ⟨k'', i', s'⟩ := is_filtered.sup_exists O H
   -- We then restate this slightly more conveniently, as a family of morphism `i f : kf f ⟶ k''`,
   -- satisfying `gf f ≫ i f = hf f' ≫ i f'`.
-  let i : ∀ {j j'} f : j ⟶ j', kf f ⟶ k'' := fun j j' f => i' (kfO f)
-  have s : ∀ {j₁ j₂ j₃ j₄} f : j₁ ⟶ j₂ f' : j₃ ⟶ j₄, gf f ≫ i f = hf f' ≫ i f' := by
+  let i : ∀ {j j'} (f : j ⟶ j'), kf f ⟶ k'' := fun j j' f => i' (kfO f)
+  have s : ∀ {j₁ j₂ j₃ j₄} (f : j₁ ⟶ j₂) (f' : j₃ ⟶ j₄), gf f ≫ i f = hf f' ≫ i f' := by
     intros
     rw [s', s']
     swap
@@ -381,7 +379,7 @@ noncomputable def colimitLimitIso (F : J ⥤ K ⥤ C) : colimit (limit F) ≅ li
     HasLimit.isoOfNatIso (colimitFlipIsoCompColim _).symm
 
 @[simp, reassoc]
-theorem ι_colimit_limit_iso_limit_π (F : J ⥤ K ⥤ C) a b :
+theorem ι_colimit_limit_iso_limit_π (F : J ⥤ K ⥤ C) (a) (b) :
     colimit.ι (limit F) a ≫ (colimitLimitIso F).Hom ≫ limit.π (colimit F.flip) b =
       (limit.π F b).app a ≫ (colimit.ι F.flip a).app b :=
   by

@@ -6,7 +6,7 @@ Authors: Johan Commelin, Bhavik Mehta
 import Mathbin.CategoryTheory.StructuredArrow
 import Mathbin.CategoryTheory.Punit
 import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
-import Mathbin.CategoryTheory.EpiMono
+import Mathbin.CategoryTheory.Functor.EpiMono
 
 /-!
 # Over and under categories
@@ -191,7 +191,7 @@ The converse does not hold without additional assumptions on the underlying cate
 -/
 -- TODO: Show the converse holds if `T` has binary products or pushouts.
 theorem epi_of_epi_left {f g : Over X} (k : f ⟶ g) [hk : Epi k.left] : Epi k :=
-  faithful_reflects_epi (forget X) hk
+  (forget X).epi_of_epi_map hk
 
 /-- If `k.left` is a monomorphism, then `k` is a monomorphism. In other words, `over.forget X` reflects
 monomorphisms.
@@ -200,14 +200,14 @@ The converse of `category_theory.over.mono_left_of_mono`.
 This lemma is not an instance, to avoid loops in type class inference.
 -/
 theorem mono_of_mono_left {f g : Over X} (k : f ⟶ g) [hk : Mono k.left] : Mono k :=
-  faithful_reflects_mono (forget X) hk
+  (forget X).mono_of_mono_map hk
 
 /-- If `k` is a monomorphism, then `k.left` is a monomorphism. In other words, `over.forget X` preserves
 monomorphisms.
 The converse of `category_theory.over.mono_of_mono_left`.
 -/
 instance mono_left_of_mono {f g : Over X} (k : f ⟶ g) [Mono k] : Mono k.left := by
-  refine' ⟨fun Y : T l m a => _⟩
+  refine' ⟨fun (Y : T) l m a => _⟩
   let l' : mk (m ≫ f.hom) ⟶ f :=
     hom_mk l
       (by

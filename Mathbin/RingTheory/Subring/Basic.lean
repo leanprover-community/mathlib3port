@@ -129,14 +129,15 @@ instance (priority := 75) toOrderedCommRing {R} [OrderedCommRing R] [SetLike S R
 instance (priority := 75) toLinearOrderedRing {R} [LinearOrderedRing R] [SetLike S R] [SubringClass S R] :
     LinearOrderedRing s :=
   Subtype.coe_injective.LinearOrderedRing coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
-    (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) fun _ => rfl
+    (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
 /-- A subring of a `linear_ordered_comm_ring` is a `linear_ordered_comm_ring`. -/
 -- Prefer subclasses of `ring` over subclasses of `subring_class`.
 instance (priority := 75) toLinearOrderedCommRing {R} [LinearOrderedCommRing R] [SetLike S R] [SubringClass S R] :
     LinearOrderedCommRing s :=
   Subtype.coe_injective.LinearOrderedCommRing coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl)
-    (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) fun _ => rfl
+    (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+    fun _ _ => rfl
 
 include hSR
 
@@ -196,15 +197,15 @@ theorem mem_carrier {s : Subring R} {x : R} : x ∈ s.Carrier ↔ x ∈ s :=
   Iff.rfl
 
 @[simp]
-theorem mem_mk {S : Set R} {x : R} h₁ h₂ h₃ h₄ h₅ : x ∈ (⟨S, h₁, h₂, h₃, h₄, h₅⟩ : Subring R) ↔ x ∈ S :=
+theorem mem_mk {S : Set R} {x : R} (h₁ h₂ h₃ h₄ h₅) : x ∈ (⟨S, h₁, h₂, h₃, h₄, h₅⟩ : Subring R) ↔ x ∈ S :=
   Iff.rfl
 
 @[simp]
-theorem coe_set_mk (S : Set R) h₁ h₂ h₃ h₄ h₅ : ((⟨S, h₁, h₂, h₃, h₄, h₅⟩ : Subring R) : Set R) = S :=
+theorem coe_set_mk (S : Set R) (h₁ h₂ h₃ h₄ h₅) : ((⟨S, h₁, h₂, h₃, h₄, h₅⟩ : Subring R) : Set R) = S :=
   rfl
 
 @[simp]
-theorem mk_le_mk {S S' : Set R} h₁ h₂ h₃ h₄ h₅ h₁' h₂' h₃' h₄' h₅' :
+theorem mk_le_mk {S S' : Set R} (h₁ h₂ h₃ h₄ h₅ h₁' h₂' h₃' h₄' h₅') :
     (⟨S, h₁, h₂, h₃, h₄, h₅⟩ : Subring R) ≤ (⟨S', h₁', h₂', h₃', h₄', h₅'⟩ : Subring R) ↔ S ⊆ S' :=
   Iff.rfl
 
@@ -428,12 +429,13 @@ instance toOrderedCommRing {R} [OrderedCommRing R] (s : Subring R) : OrderedComm
 /-- A subring of a `linear_ordered_ring` is a `linear_ordered_ring`. -/
 instance toLinearOrderedRing {R} [LinearOrderedRing R] (s : Subring R) : LinearOrderedRing s :=
   Subtype.coe_injective.LinearOrderedRing coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
-    (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) fun _ => rfl
+    (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
 /-- A subring of a `linear_ordered_comm_ring` is a `linear_ordered_comm_ring`. -/
 instance toLinearOrderedCommRing {R} [LinearOrderedCommRing R] (s : Subring R) : LinearOrderedCommRing s :=
   Subtype.coe_injective.LinearOrderedCommRing coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl)
-    (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) fun _ => rfl
+    (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+    fun _ _ => rfl
 
 /-- The natural ring hom from a subring of ring `R` to `R`. -/
 def subtype (s : Subring R) : s →+* R :=
@@ -675,7 +677,7 @@ instance decidableMemCenter [DecidableEq R] [Fintype R] : DecidablePred (· ∈ 
   decidableOfIff' _ mem_center_iff
 
 @[simp]
-theorem center_eq_top R [CommRingₓ R] : center R = ⊤ :=
+theorem center_eq_top (R) [CommRingₓ R] : center R = ⊤ :=
   SetLike.coe_injective (Set.center_eq_univ R)
 
 /-- The center is commutative. -/

@@ -27,7 +27,9 @@ classes and allows to transfer order instances.
 
 ### Extra class
 
-- `densely_ordered`: An order with no gap, i.e. for any two elements `a < b` there exists `c` such
+* `has_sup`: type class for the `⊔` notation
+* `has_inf`: type class for the `⊓` notation
+* `densely_ordered`: An order with no gap, i.e. for any two elements `a < b` there exists `c` such
   that `a < c < b`.
 
 ## Notes
@@ -412,6 +414,11 @@ theorem forall_lt_iff_le' [LinearOrderₓ α] {a b : α} : (∀ ⦃c⦄, a < c �
 theorem eq_of_forall_ge_iff [PartialOrderₓ α] {a b : α} (H : ∀ c, a ≤ c ↔ b ≤ c) : a = b :=
   ((H _).2 le_rfl).antisymm ((H _).1 le_rfl)
 
+/-- A symmetric relation implies two values are equal, when it implies they're less-equal.  -/
+theorem rel_imp_eq_of_rel_imp_le [PartialOrderₓ β] (r : α → α → Prop) [IsSymm α r] {f : α → β}
+    (h : ∀ a b, r a b → f a ≤ f b) {a b : α} : r a b → f a = f b := fun hab =>
+  le_antisymmₓ (h a b hab) (h b a <| symm hab)
+
 /-- monotonicity of `≤` with respect to `→` -/
 theorem le_implies_le_of_le_of_le {a b c d : α} [Preorderₓ α] (hca : c ≤ a) (hbd : b ≤ d) : a ≤ b → c ≤ d := fun hab =>
   (hca.trans hab).trans hbd
@@ -520,14 +527,6 @@ instance (α : Type _) [LT α] : LT αᵒᵈ :=
 instance (α : Type _) [Zero α] : Zero αᵒᵈ :=
   ⟨(0 : α)⟩
 
--- `dual_le` and `dual_lt` should not be simp lemmas:
--- they cause a loop since `α` and `αᵒᵈ` are definitionally equal
-theorem dual_le [LE α] {a b : α} : @LE.le αᵒᵈ _ a b ↔ @LE.le α _ b a :=
-  Iff.rfl
-
-theorem dual_lt [LT α] {a b : α} : @LT.lt αᵒᵈ _ a b ↔ @LT.lt α _ b a :=
-  Iff.rfl
-
 instance (α : Type _) [Preorderₓ α] : Preorderₓ αᵒᵈ :=
   { OrderDual.hasLe α, OrderDual.hasLt α with le_refl := le_reflₓ, le_trans := fun a b c hab hbc => hbc.trans hab,
     lt_iff_le_not_le := fun _ _ => lt_iff_le_not_leₓ }
@@ -570,23 +569,67 @@ theorem Pi.lt_def {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)]
     x < y ↔ x ≤ y ∧ ∃ i, x i < y i := by
   simp (config := { contextual := true })[← lt_iff_le_not_leₓ, ← Pi.le_def]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem le_update_iff {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] [DecidableEq ι] {x y : ∀ i, α i} {i : ι}
-    {a : α i} : x ≤ Function.update y i a ↔ x i ≤ a ∧ ∀ j _ : j ≠ i, x j ≤ y j :=
+    {a : α i} : x ≤ Function.update y i a ↔ x i ≤ a ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j :=
   Function.forall_update_iff _ fun j z => x j ≤ z
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem update_le_iff {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] [DecidableEq ι] {x y : ∀ i, α i} {i : ι}
-    {a : α i} : Function.update x i a ≤ y ↔ a ≤ y i ∧ ∀ j _ : j ≠ i, x j ≤ y j :=
+    {a : α i} : Function.update x i a ≤ y ↔ a ≤ y i ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j :=
   Function.forall_update_iff _ fun j z => z ≤ y j
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem update_le_update_iff {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] [DecidableEq ι] {x y : ∀ i, α i}
-    {i : ι} {a b : α i} : Function.update x i a ≤ Function.update y i b ↔ a ≤ b ∧ ∀ j _ : j ≠ i, x j ≤ y j := by
+    {i : ι} {a b : α i} : Function.update x i a ≤ Function.update y i b ↔ a ≤ b ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j := by
   simp (config := { contextual := true })[← update_le_iff]
 
 instance Pi.partialOrder {ι : Type u} {α : ι → Type v} [∀ i, PartialOrderₓ (α i)] : PartialOrderₓ (∀ i, α i) :=
   { Pi.preorder with le_antisymm := fun f g h1 h2 => funext fun b => (h1 b).antisymm (h2 b) }
+
+/-! ### `min`/`max` recursors -/
+
+
+section MinMaxRec
+
+variable [LinearOrderₓ α] {p : α → Prop} {x y : α}
+
+theorem min_rec (hx : x ≤ y → p x) (hy : y ≤ x → p y) : p (min x y) :=
+  (le_totalₓ x y).rec (fun h => (min_eq_leftₓ h).symm.subst (hx h)) fun h => (min_eq_rightₓ h).symm.subst (hy h)
+
+theorem max_rec (hx : y ≤ x → p x) (hy : x ≤ y → p y) : p (max x y) :=
+  @min_rec αᵒᵈ _ _ _ _ hx hy
+
+theorem min_rec' (p : α → Prop) (hx : p x) (hy : p y) : p (min x y) :=
+  min_rec (fun _ => hx) fun _ => hy
+
+theorem max_rec' (p : α → Prop) (hx : p x) (hy : p y) : p (max x y) :=
+  max_rec (fun _ => hx) fun _ => hy
+
+end MinMaxRec
+
+/-! ### `has_sup` and `has_inf` -/
+
+
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-- Typeclass for the `⊔` (`\lub`) notation -/
+@[«./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg»]
+class HasSup (α : Type u) where
+  sup : α → α → α
+
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-- Typeclass for the `⊓` (`\glb`) notation -/
+@[«./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg»]
+class HasInf (α : Type u) where
+  inf : α → α → α
+
+-- mathport name: «expr ⊔ »
+infixl:68 "⊔" => HasSup.sup
+
+-- mathport name: «expr ⊓ »
+infixl:69 "⊓" => HasInf.inf
 
 /-! ### Lifts of order instances -/
 
@@ -608,13 +651,35 @@ def PartialOrderₓ.lift {α β} [PartialOrderₓ β] (f : α → β) (inj : Inj
   { Preorderₓ.lift f with le_antisymm := fun a b h₁ h₂ => inj (h₁.antisymm h₂) }
 
 /-- Transfer a `linear_order` on `β` to a `linear_order` on `α` using an injective
-function `f : α → β`. See note [reducible non-instances]. -/
+function `f : α → β`. This version takes `[has_sup α]` and `[has_inf α]` as arguments, then uses
+them for `max` and `min` fields. See `linear_order.lift'` for a version that autogenerates `min` and
+`max` fields. See note [reducible non-instances]. -/
 @[reducible]
-def LinearOrderₓ.lift {α β} [LinearOrderₓ β] (f : α → β) (inj : Injective f) : LinearOrderₓ α :=
+def LinearOrderₓ.lift {α β} [LinearOrderₓ β] [HasSup α] [HasInf α] (f : α → β) (inj : Injective f)
+    (hsup : ∀ x y, f (x⊔y) = max (f x) (f y)) (hinf : ∀ x y, f (x⊓y) = min (f x) (f y)) : LinearOrderₓ α :=
   { PartialOrderₓ.lift f inj with le_total := fun x y => le_totalₓ (f x) (f y),
     decidableLe := fun x y => (inferInstance : Decidable (f x ≤ f y)),
     decidableLt := fun x y => (inferInstance : Decidable (f x < f y)),
-    DecidableEq := fun x y => decidableOfIff _ inj.eq_iff }
+    DecidableEq := fun x y => decidableOfIff (f x = f y) inj.eq_iff, min := (·⊓·), max := (·⊔·),
+    min_def := by
+      ext x y
+      apply inj
+      rw [hinf, min_def, minDefault, apply_ite f]
+      rfl,
+    max_def := by
+      ext x y
+      apply inj
+      rw [hsup, max_def, maxDefault, apply_ite f]
+      rfl }
+
+/-- Transfer a `linear_order` on `β` to a `linear_order` on `α` using an injective
+function `f : α → β`. This version autogenerates `min` and `max` fields. See `linear_order.lift`
+for a version that takes `[has_sup α]` and `[has_inf α]`, then uses them as `max` and `min`.
+See note [reducible non-instances]. -/
+@[reducible]
+def LinearOrderₓ.lift' {α β} [LinearOrderₓ β] (f : α → β) (inj : Injective f) : LinearOrderₓ α :=
+  @LinearOrderₓ.lift α β _ ⟨fun x y => if f y ≤ f x then x else y⟩ ⟨fun x y => if f x ≤ f y then x else y⟩ f inj
+    (fun x y => (apply_ite f _ _ _).trans (max_def _ _).symm) fun x y => (apply_ite f _ _ _).trans (min_def _ _).symm
 
 /-! ### Subtype of an order -/
 
@@ -649,24 +714,18 @@ instance [Preorderₓ α] (p : α → Prop) : Preorderₓ (Subtype p) :=
 instance partialOrder [PartialOrderₓ α] (p : α → Prop) : PartialOrderₓ (Subtype p) :=
   PartialOrderₓ.lift coe Subtype.coe_injective
 
-instance decidableLe [Preorderₓ α] [@DecidableRel α (· ≤ ·)] {p : α → Prop} : @DecidableRel (Subtype p) (· ≤ ·) :=
-  fun a b => decidableOfIff _ Subtype.coe_le_coe
+instance decidableLe [Preorderₓ α] [h : @DecidableRel α (· ≤ ·)] {p : α → Prop} : @DecidableRel (Subtype p) (· ≤ ·) :=
+  fun a b => h a b
 
-instance decidableLt [Preorderₓ α] [@DecidableRel α (· < ·)] {p : α → Prop} : @DecidableRel (Subtype p) (· < ·) :=
-  fun a b => decidableOfIff _ Subtype.coe_lt_coe
+instance decidableLt [Preorderₓ α] [h : @DecidableRel α (· < ·)] {p : α → Prop} : @DecidableRel (Subtype p) (· < ·) :=
+  fun a b => h a b
 
 /-- A subtype of a linear order is a linear order. We explicitly give the proofs of decidable
 equality and decidable order in order to ensure the decidability instances are all definitionally
 equal. -/
 instance [LinearOrderₓ α] (p : α → Prop) : LinearOrderₓ (Subtype p) :=
-  { LinearOrderₓ.lift coe Subtype.coe_injective with DecidableEq := Subtype.decidableEq,
-    decidableLe := Subtype.decidableLe, decidableLt := Subtype.decidableLt,
-    max_def := by
-      ext a b
-      convert rfl,
-    min_def := by
-      ext a b
-      convert rfl }
+  @LinearOrderₓ.lift (Subtype p) _ _ ⟨fun x y => ⟨max x y, max_rec' _ x.2 y.2⟩⟩
+    ⟨fun x y => ⟨min x y, min_rec' _ x.2 y.2⟩⟩ coe Subtype.coe_injective (fun _ _ => rfl) fun _ _ => rfl
 
 end Subtype
 

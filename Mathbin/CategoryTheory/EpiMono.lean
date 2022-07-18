@@ -33,43 +33,6 @@ instance op_mono_of_epi {A B : C} (f : A ⟶ B) [Epi f] : Mono f.op :=
 instance op_epi_of_mono {A B : C} (f : A ⟶ B) [Mono f] : Epi f.op :=
   ⟨fun Z g h eq => Quiver.Hom.unop_inj ((cancel_mono f).1 (Quiver.Hom.op_inj Eq))⟩
 
-section
-
-variable {D : Type u₂} [Category.{v₂} D]
-
-theorem left_adjoint_preserves_epi {F : C ⥤ D} {G : D ⥤ C} (adj : F ⊣ G) {X Y : C} {f : X ⟶ Y} (hf : Epi f) :
-    Epi (F.map f) := by
-  constructor
-  intro Z g h H
-  replace H := congr_arg (adj.hom_equiv X Z) H
-  rwa [adj.hom_equiv_naturality_left, adj.hom_equiv_naturality_left, cancel_epi, Equivₓ.apply_eq_iff_eq] at H
-
-theorem right_adjoint_preserves_mono {F : C ⥤ D} {G : D ⥤ C} (adj : F ⊣ G) {X Y : D} {f : X ⟶ Y} (hf : Mono f) :
-    Mono (G.map f) := by
-  constructor
-  intro Z g h H
-  replace H := congr_arg (adj.hom_equiv Z Y).symm H
-  rwa [adj.hom_equiv_naturality_right_symm, adj.hom_equiv_naturality_right_symm, cancel_mono, Equivₓ.apply_eq_iff_eq] at
-    H
-
-instance IsEquivalence.epi_map {F : C ⥤ D} [IsLeftAdjoint F] {X Y : C} {f : X ⟶ Y} [h : Epi f] : Epi (F.map f) :=
-  left_adjoint_preserves_epi (Adjunction.ofLeftAdjoint F) h
-
-instance IsEquivalence.mono_map {F : C ⥤ D} [IsRightAdjoint F] {X Y : C} {f : X ⟶ Y} [h : Mono f] : Mono (F.map f) :=
-  right_adjoint_preserves_mono (Adjunction.ofRightAdjoint F) h
-
-theorem faithful_reflects_epi (F : C ⥤ D) [Faithful F] {X Y : C} {f : X ⟶ Y} (hf : Epi (F.map f)) : Epi f :=
-  ⟨fun Z g h H =>
-    F.map_injective <| by
-      rw [← cancel_epi (F.map f), ← F.map_comp, ← F.map_comp, H]⟩
-
-theorem faithful_reflects_mono (F : C ⥤ D) [Faithful F] {X Y : C} {f : X ⟶ Y} (hf : Mono (F.map f)) : Mono f :=
-  ⟨fun Z g h H =>
-    F.map_injective <| by
-      rw [← cancel_mono (F.map f), ← F.map_comp, ← F.map_comp, H]⟩
-
-end
-
 /-- A split monomorphism is a morphism `f : X ⟶ Y` admitting a retraction `retraction f : Y ⟶ X`
 such that `f ≫ retraction f = 𝟙 X`.
 
@@ -171,7 +134,7 @@ theorem IsIso.of_epi_section {X Y : C} {f : X ⟶ Y} [SplitEpi f] [epi <| sectio
 
 /-- A category where every morphism has a `trunc` retraction is computably a groupoid. -/
 -- FIXME this has unnecessarily become noncomputable!
-noncomputable def Groupoid.ofTruncSplitMono (all_split_mono : ∀ {X Y : C} f : X ⟶ Y, Trunc (SplitMono f)) :
+noncomputable def Groupoid.ofTruncSplitMono (all_split_mono : ∀ {X Y : C} (f : X ⟶ Y), Trunc (SplitMono f)) :
     Groupoid.{v₁} C := by
   apply groupoid.of_is_iso
   intro X Y f
@@ -185,11 +148,11 @@ variable (C)
 
 /-- A split mono category is a category in which every monomorphism is split. -/
 class SplitMonoCategory where
-  splitMonoOfMono : ∀ {X Y : C} f : X ⟶ Y [Mono f], SplitMono f
+  splitMonoOfMono : ∀ {X Y : C} (f : X ⟶ Y) [Mono f], SplitMono f
 
 /-- A split epi category is a category in which every epimorphism is split. -/
 class SplitEpiCategory where
-  splitEpiOfEpi : ∀ {X Y : C} f : X ⟶ Y [Epi f], SplitEpi f
+  splitEpiOfEpi : ∀ {X Y : C} (f : X ⟶ Y) [Epi f], SplitEpi f
 
 end
 

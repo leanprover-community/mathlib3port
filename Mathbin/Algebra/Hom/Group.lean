@@ -109,7 +109,7 @@ structure AddHom (M : Type _) (N : Type _) [Add M] [Add N] where
 You should declare an instance of this typeclass when you extend `add_hom`.
 -/
 class AddHomClass (F : Type _) (M N : outParam <| Type _) [Add M] [Add N] extends FunLike F M fun _ => N where
-  map_add : ∀ f : F x y : M, f (x + y) = f x + f y
+  map_add : ∀ (f : F) (x y : M), f (x + y) = f x + f y
 
 -- Instances and lemmas are defined below through `@[to_additive]`.
 end Add
@@ -226,7 +226,7 @@ You should declare an instance of this typeclass when you extend `mul_hom`.
 -/
 @[to_additive]
 class MulHomClass (F : Type _) (M N : outParam <| Type _) [Mul M] [Mul N] extends FunLike F M fun _ => N where
-  map_mul : ∀ f : F x y : M, f (x * y) = f x * f y
+  map_mul : ∀ (f : F) (x y : M), f (x * y) = f x * f y
 
 @[to_additive]
 instance MulHom.mulHomClass : MulHomClass (M →ₙ* N) M N where
@@ -493,19 +493,20 @@ theorem MonoidWithZeroHom.to_fun_eq_coe [MulZeroOneClassₓ M] [MulZeroOneClass�
   rfl
 
 @[simp, to_additive]
-theorem OneHom.coe_mk [One M] [One N] (f : M → N) h1 : (OneHom.mk f h1 : M → N) = f :=
+theorem OneHom.coe_mk [One M] [One N] (f : M → N) (h1) : (OneHom.mk f h1 : M → N) = f :=
   rfl
 
 @[simp, to_additive]
-theorem MulHom.coe_mk [Mul M] [Mul N] (f : M → N) hmul : (MulHom.mk f hmul : M → N) = f :=
+theorem MulHom.coe_mk [Mul M] [Mul N] (f : M → N) (hmul) : (MulHom.mk f hmul : M → N) = f :=
   rfl
 
 @[simp, to_additive]
-theorem MonoidHom.coe_mk [MulOneClassₓ M] [MulOneClassₓ N] (f : M → N) h1 hmul : (MonoidHom.mk f h1 hmul : M → N) = f :=
+theorem MonoidHom.coe_mk [MulOneClassₓ M] [MulOneClassₓ N] (f : M → N) (h1 hmul) :
+    (MonoidHom.mk f h1 hmul : M → N) = f :=
   rfl
 
 @[simp]
-theorem MonoidWithZeroHom.coe_mk [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] (f : M → N) h0 h1 hmul :
+theorem MonoidWithZeroHom.coe_mk [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] (f : M → N) (h0 h1 hmul) :
     (MonoidWithZeroHom.mk f h0 h1 hmul : M → N) = f :=
   rfl
 
@@ -627,19 +628,19 @@ theorem MonoidWithZeroHom.ext_iff [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] 
 end Deprecated
 
 @[simp, to_additive]
-theorem OneHom.mk_coe [One M] [One N] (f : OneHom M N) h1 : OneHom.mk f h1 = f :=
+theorem OneHom.mk_coe [One M] [One N] (f : OneHom M N) (h1) : OneHom.mk f h1 = f :=
   OneHom.ext fun _ => rfl
 
 @[simp, to_additive]
-theorem MulHom.mk_coe [Mul M] [Mul N] (f : M →ₙ* N) hmul : MulHom.mk f hmul = f :=
+theorem MulHom.mk_coe [Mul M] [Mul N] (f : M →ₙ* N) (hmul) : MulHom.mk f hmul = f :=
   MulHom.ext fun _ => rfl
 
 @[simp, to_additive]
-theorem MonoidHom.mk_coe [MulOneClassₓ M] [MulOneClassₓ N] (f : M →* N) h1 hmul : MonoidHom.mk f h1 hmul = f :=
+theorem MonoidHom.mk_coe [MulOneClassₓ M] [MulOneClassₓ N] (f : M →* N) (h1 hmul) : MonoidHom.mk f h1 hmul = f :=
   MonoidHom.ext fun _ => rfl
 
 @[simp]
-theorem MonoidWithZeroHom.mk_coe [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] (f : M →*₀ N) h0 h1 hmul :
+theorem MonoidWithZeroHom.mk_coe [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] (f : M →*₀ N) (h0 h1 hmul) :
     MonoidWithZeroHom.mk f h0 h1 hmul = f :=
   MonoidWithZeroHom.ext fun _ => rfl
 
@@ -1031,7 +1032,7 @@ theorem coe_one : ((1 : Monoidₓ.End M) : M → M) = id :=
   rfl
 
 @[simp]
-theorem coe_mul f g : ((f * g : Monoidₓ.End M) : M → M) = f ∘ g :=
+theorem coe_mul (f g) : ((f * g : Monoidₓ.End M) : M → M) = f ∘ g :=
   rfl
 
 end Monoidₓ
@@ -1066,7 +1067,7 @@ theorem coe_one : ((1 : AddMonoidₓ.End A) : A → A) = id :=
   rfl
 
 @[simp]
-theorem coe_mul f g : ((f * g : AddMonoidₓ.End A) : A → A) = f ∘ g :=
+theorem coe_mul (f g) : ((f * g : AddMonoidₓ.End A) : A → A) = f ∘ g :=
   rfl
 
 end AddMonoidₓ

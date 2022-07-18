@@ -27,7 +27,7 @@ Finally, we use this to show unique factorization domains are integrally closed.
 
 open Polynomial
 
-section scaleRoots
+section ScaleRoots
 
 variable {A K R S : Type _} [CommRingₓ A] [Field K] [CommRingₓ R] [CommRingₓ S]
 
@@ -49,7 +49,7 @@ theorem num_is_root_scale_roots_of_aeval_eq_zero [UniqueFactorizationMonoid A] {
   rw [mk'_num_denom]
   exact hr
 
-end scaleRoots
+end ScaleRoots
 
 section RationalRootTheorem
 
@@ -63,7 +63,7 @@ open IsFractionRing IsLocalization Polynomial UniqueFactorizationMonoid
 if `r : f.codomain` is a root of a polynomial over the ufd `A`,
 then the numerator of `r` divides the constant coefficient -/
 theorem num_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) : Num A r ∣ p.coeff 0 := by
-  suffices Num A r ∣ (scaleRoots p (denom A r)).coeff 0 by
+  suffices Num A r ∣ (scale_roots p (denom A r)).coeff 0 by
     simp only [← coeff_scale_roots, ← tsub_zero] at this
     have := Classical.propDecidable
     by_cases' hr : Num A r = 0

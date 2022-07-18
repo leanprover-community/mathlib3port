@@ -61,7 +61,7 @@ add_decl_doc RingEquiv.toMulEquiv
 You should extend this class when you extend `ring_equiv`. -/
 class RingEquivClass (F : Type _) (R S : outParam (Type _)) [Mul R] [Add R] [Mul S] [Add S] extends
   MulEquivClass F R S where
-  map_add : ∀ f : F a b, f (a + b) = f a + f b
+  map_add : ∀ (f : F) (a b), f (a + b) = f a + f b
 
 namespace RingEquivClass
 
@@ -135,11 +135,11 @@ theorem ext {f g : R ≃+* S} (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext f g h
 
 @[simp]
-theorem coe_mk e e' h₁ h₂ h₃ h₄ : ⇑(⟨e, e', h₁, h₂, h₃, h₄⟩ : R ≃+* S) = e :=
+theorem coe_mk (e e' h₁ h₂ h₃ h₄) : ⇑(⟨e, e', h₁, h₂, h₃, h₄⟩ : R ≃+* S) = e :=
   rfl
 
 @[simp]
-theorem mk_coe (e : R ≃+* S) e' h₁ h₂ h₃ h₄ : (⟨e, e', h₁, h₂, h₃, h₄⟩ : R ≃+* S) = e :=
+theorem mk_coe (e : R ≃+* S) (e' h₁ h₂ h₃ h₄) : (⟨e, e', h₁, h₂, h₃, h₄⟩ : R ≃+* S) = e :=
   ext fun _ => rfl
 
 protected theorem congr_arg {f : R ≃+* S} {x x' : R} : x = x' → f x = f x' :=
@@ -222,11 +222,11 @@ theorem symm_bijective : Function.Bijective (RingEquiv.symm : R ≃+* S → S �
   Equivₓ.bijective ⟨RingEquiv.symm, RingEquiv.symm, symm_symm, symm_symm⟩
 
 @[simp]
-theorem mk_coe' (e : R ≃+* S) f h₁ h₂ h₃ h₄ : (RingEquiv.mk f (⇑e) h₁ h₂ h₃ h₄ : S ≃+* R) = e.symm :=
+theorem mk_coe' (e : R ≃+* S) (f h₁ h₂ h₃ h₄) : (RingEquiv.mk f (⇑e) h₁ h₂ h₃ h₄ : S ≃+* R) = e.symm :=
   symm_bijective.Injective <| ext fun x => rfl
 
 @[simp]
-theorem symm_mk (f : R → S) g h₁ h₂ h₃ h₄ :
+theorem symm_mk (f : R → S) (g h₁ h₂ h₃ h₄) :
     (mk f g h₁ h₂ h₃ h₄).symm = { (mk f g h₁ h₂ h₃ h₄).symm with toFun := g, invFun := f } :=
   rfl
 
@@ -624,7 +624,7 @@ section GroupPower
 
 variable [Semiringₓ R] [Semiringₓ S]
 
-protected theorem map_pow (f : R ≃+* S) a : ∀ n : ℕ, f (a ^ n) = f a ^ n :=
+protected theorem map_pow (f : R ≃+* S) (a) : ∀ n : ℕ, f (a ^ n) = f a ^ n :=
   map_pow f a
 
 end GroupPower

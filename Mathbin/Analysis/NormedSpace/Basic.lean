@@ -28,7 +28,7 @@ section SemiNormedGroup
 
 section Prio
 
--- ./././Mathport/Syntax/Translate/Basic.lean:293:40: warning: unsupported option extends_priority
+-- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option extends_priority
 set_option extends_priority 920
 
 /-- A normed space over a normed field is a vector space endowed with a norm which satisfies the
@@ -41,7 +41,7 @@ used for "semi normed spaces" too, just as `module` can be used for "semi module
 -- to take precedence over `semiring.to_module` as this leads to instance paths with better
 -- unification properties.
 class NormedSpace (α : Type _) (β : Type _) [NormedField α] [SemiNormedGroup β] extends Module α β where
-  norm_smul_le : ∀ a : α b : β, ∥a • b∥ ≤ ∥a∥ * ∥b∥
+  norm_smul_le : ∀ (a : α) (b : β), ∥a • b∥ ≤ ∥a∥ * ∥b∥
 
 end Prio
 
@@ -172,12 +172,12 @@ def homeomorphUnitBall {E : Type _} [SemiNormedGroup E] [NormedSpace ℝ E] : E 
   invFun := fun x => (1 - ∥(x : E)∥)⁻¹ • (x : E)
   left_inv := fun x => by
     have : 0 < 1 + ∥x∥ := (norm_nonneg x).trans_lt (lt_one_add _)
-    field_simp [← this.ne', ← abs_of_pos this, ← norm_smul, ← smul_smul, ← Real.norm_eq_abs, ← abs_div]
+    field_simp [← this.ne', ← abs_of_pos this, ← norm_smul, ← smul_smul, ← abs_div]
   right_inv := fun x =>
     Subtype.ext
       (by
         have : 0 < 1 - ∥(x : E)∥ := sub_pos.2 (mem_ball_zero_iff.1 x.2)
-        field_simp [← norm_smul, ← smul_smul, ← Real.norm_eq_abs, ← abs_div, ← abs_of_pos this, ← this.ne'])
+        field_simp [← norm_smul, ← smul_smul, ← abs_div, ← abs_of_pos this, ← this.ne'])
   continuous_to_fun :=
     continuous_subtype_mk _ <|
       ((continuous_const.add continuous_norm).inv₀ fun x => ((norm_nonneg x).trans_lt (lt_one_add _)).ne').smul
@@ -370,7 +370,7 @@ variables [normed_module 𝕜 𝕜'] [smul_comm_class 𝕜 𝕜' 𝕜'] [is_scal
 ```
 -/
 class NormedAlgebra (𝕜 : Type _) (𝕜' : Type _) [NormedField 𝕜] [SemiNormedRing 𝕜'] extends Algebra 𝕜 𝕜' where
-  norm_smul_le : ∀ r : 𝕜 x : 𝕜', ∥r • x∥ ≤ ∥r∥ * ∥x∥
+  norm_smul_le : ∀ (r : 𝕜) (x : 𝕜'), ∥r • x∥ ≤ ∥r∥ * ∥x∥
 
 variable {𝕜 : Type _} (𝕜' : Type _) [NormedField 𝕜] [SemiNormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜']
 

@@ -84,15 +84,16 @@ def leTop (U : Opens X) : U ⟶ ⊤ :=
 
 -- We do not mark this as a simp lemma because it breaks open `x`.
 -- Nevertheless, it is useful in `sheaf_of_functions`.
-theorem inf_le_left_apply (U V : Opens X) x : (infLeLeft U V) x = ⟨x.1, (@inf_le_left _ _ U V : _ ≤ _) x.2⟩ :=
+theorem inf_le_left_apply (U V : Opens X) (x) : (infLeLeft U V) x = ⟨x.1, (@inf_le_left _ _ U V : _ ≤ _) x.2⟩ :=
   rfl
 
 @[simp]
-theorem inf_le_left_apply_mk (U V : Opens X) x m : (infLeLeft U V) ⟨x, m⟩ = ⟨x, (@inf_le_left _ _ U V : _ ≤ _) m⟩ :=
+theorem inf_le_left_apply_mk (U V : Opens X) (x) (m) : (infLeLeft U V) ⟨x, m⟩ = ⟨x, (@inf_le_left _ _ U V : _ ≤ _) m⟩ :=
   rfl
 
 @[simp]
-theorem le_supr_apply_mk {ι : Type _} (U : ι → Opens X) (i : ι) x m : (leSupr U i) ⟨x, m⟩ = ⟨x, (le_supr U i : _) m⟩ :=
+theorem le_supr_apply_mk {ι : Type _} (U : ι → Opens X) (i : ι) (x) (m) :
+    (leSupr U i) ⟨x, m⟩ = ⟨x, (le_supr U i : _) m⟩ :=
   rfl
 
 /-- The functor from open sets in `X` to `Top`,
@@ -130,7 +131,7 @@ def map (f : X ⟶ Y) : Opens Y ⥤ Opens X where
   map := fun U V i => ⟨⟨fun x h => i.le h⟩⟩
 
 @[simp]
-theorem map_obj (f : X ⟶ Y) U p : (map f).obj ⟨U, p⟩ = ⟨f ⁻¹' U, p.preimage f.Continuous⟩ :=
+theorem map_obj (f : X ⟶ Y) (U) (p) : (map f).obj ⟨U, p⟩ = ⟨f ⁻¹' U, p.preimage f.Continuous⟩ :=
   rfl
 
 @[simp]
@@ -139,7 +140,7 @@ theorem map_id_obj (U : Opens X) : (map (𝟙 X)).obj U = U :=
   rfl
 
 @[simp]
-theorem map_id_obj' U p : (map (𝟙 X)).obj ⟨U, p⟩ = ⟨U, p⟩ :=
+theorem map_id_obj' (U) (p) : (map (𝟙 X)).obj ⟨U, p⟩ = ⟨U, p⟩ :=
   rfl
 
 @[simp]
@@ -157,11 +158,11 @@ def leMapTop (f : X ⟶ Y) (U : Opens X) : U ⟶ (map f).obj ⊤ :=
   leTop U
 
 @[simp]
-theorem map_comp_obj (f : X ⟶ Y) (g : Y ⟶ Z) U : (map (f ≫ g)).obj U = (map f).obj ((map g).obj U) :=
+theorem map_comp_obj (f : X ⟶ Y) (g : Y ⟶ Z) (U) : (map (f ≫ g)).obj U = (map f).obj ((map g).obj U) :=
   rfl
 
 @[simp]
-theorem map_comp_obj' (f : X ⟶ Y) (g : Y ⟶ Z) U p : (map (f ≫ g)).obj ⟨U, p⟩ = (map f).obj ((map g).obj ⟨U, p⟩) :=
+theorem map_comp_obj' (f : X ⟶ Y) (g : Y ⟶ Z) (U) (p) : (map (f ≫ g)).obj ⟨U, p⟩ = (map f).obj ((map g).obj ⟨U, p⟩) :=
   rfl
 
 @[simp]
@@ -169,11 +170,12 @@ theorem map_comp_map (f : X ⟶ Y) (g : Y ⟶ Z) {U V} (i : U ⟶ V) : (map (f �
   rfl
 
 @[simp]
-theorem map_comp_obj_unop (f : X ⟶ Y) (g : Y ⟶ Z) U : (map (f ≫ g)).obj (unop U) = (map f).obj ((map g).obj (unop U)) :=
+theorem map_comp_obj_unop (f : X ⟶ Y) (g : Y ⟶ Z) (U) :
+    (map (f ≫ g)).obj (unop U) = (map f).obj ((map g).obj (unop U)) :=
   rfl
 
 @[simp]
-theorem op_map_comp_obj (f : X ⟶ Y) (g : Y ⟶ Z) U : (map (f ≫ g)).op.obj U = (map f).op.obj ((map g).op.obj U) :=
+theorem op_map_comp_obj (f : X ⟶ Y) (g : Y ⟶ Z) (U) : (map (f ≫ g)).op.obj U = (map f).op.obj ((map g).op.obj U) :=
   rfl
 
 theorem map_supr (f : X ⟶ Y) {ι : Type _} (U : ι → Opens Y) : (map f).obj (supr U) = supr ((map f).obj ∘ U) := by
@@ -235,7 +237,7 @@ theorem map_eq (f g : X ⟶ Y) (h : f = g) : map f = map g := by
   assumption'
 
 @[simp]
-theorem map_iso_refl (f : X ⟶ Y) h : mapIso f f h = Iso.refl (map _) :=
+theorem map_iso_refl (f : X ⟶ Y) (h) : mapIso f f h = Iso.refl (map _) :=
   rfl
 
 @[simp]

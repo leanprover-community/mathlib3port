@@ -66,7 +66,7 @@ variable (C : Type u) [Category.{v} C]
 -/
 class IsFilteredOrEmpty : Prop where
   cocone_objs : ∀ X Y : C, ∃ (Z : _)(f : X ⟶ Z)(g : Y ⟶ Z), True
-  cocone_maps : ∀ ⦃X Y : C⦄ f g : X ⟶ Y, ∃ (Z : _)(h : Y ⟶ Z), f ≫ h = g ≫ h
+  cocone_maps : ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), ∃ (Z : _)(h : Y ⟶ Z), f ≫ h = g ≫ h
 
 /-- A category `is_filtered` if
 1. for every pair of objects there exists another object "to the right",
@@ -155,7 +155,6 @@ theorem coeq_condition {j j' : C} (f f' : j ⟶ j') : f ≫ coeqHom f f' = f' �
 
 open CategoryTheory.Limits
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Any finite collection of objects in a filtered category has an object "to the right".
 -/
 theorem sup_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempty (X ⟶ S) := by
@@ -177,7 +176,6 @@ theorem sup_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempt
 
 variable (O : Finset C) (H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y))
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given any `finset` of objects `{X, ...}` and
 indexed collection of `finset`s of morphisms `{f, ...}` in `C`,
 there exists an object `S`, with a morphism `T X : X ⟶ S` from each `X`,
@@ -185,7 +183,7 @@ such that the triangles commute: `f ≫ T Y = T X`, for `f : X ⟶ Y` in the `fi
 -/
 theorem sup_exists :
     ∃ (S : C)(T : ∀ {X : C}, X ∈ O → (X ⟶ S)),
-      ∀ {X Y : C} mX : X ∈ O mY : Y ∈ O {f : X ⟶ Y},
+      ∀ {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y},
         (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H → f ≫ T mY = T mX :=
   by
   classical
@@ -239,7 +237,6 @@ theorem to_sup_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
 
 variable {J : Type v} [SmallCategory J] [FinCategory J]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If we have `is_filtered C`, then for any functor `F : J ⥤ C` with `fin_category J`,
 there exists a cocone over `F`.
 -/
@@ -444,7 +441,7 @@ end IsFiltered
 -/
 class IsCofilteredOrEmpty : Prop where
   cocone_objs : ∀ X Y : C, ∃ (W : _)(f : W ⟶ X)(g : W ⟶ Y), True
-  cocone_maps : ∀ ⦃X Y : C⦄ f g : X ⟶ Y, ∃ (W : _)(h : W ⟶ X), h ≫ f = h ≫ g
+  cocone_maps : ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), ∃ (W : _)(h : W ⟶ X), h ≫ f = h ≫ g
 
 /-- A category `is_cofiltered` if
 1. for every pair of objects there exists another object "to the left",
@@ -533,7 +530,6 @@ theorem eq_condition {j j' : C} (f f' : j ⟶ j') : eqHom f f' ≫ f = eqHom f f
 
 open CategoryTheory.Limits
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Any finite collection of objects in a cofiltered category has an object "to the left".
 -/
 theorem inf_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempty (S ⟶ X) := by
@@ -555,7 +551,6 @@ theorem inf_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempt
 
 variable (O : Finset C) (H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y))
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given any `finset` of objects `{X, ...}` and
 indexed collection of `finset`s of morphisms `{f, ...}` in `C`,
 there exists an object `S`, with a morphism `T X : S ⟶ X` from each `X`,
@@ -563,7 +558,7 @@ such that the triangles commute: `T X ≫ f = T Y`, for `f : X ⟶ Y` in the `fi
 -/
 theorem inf_exists :
     ∃ (S : C)(T : ∀ {X : C}, X ∈ O → (S ⟶ X)),
-      ∀ {X Y : C} mX : X ∈ O mY : Y ∈ O {f : X ⟶ Y},
+      ∀ {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y},
         (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H → T mX ≫ f = T mY :=
   by
   classical
@@ -617,7 +612,6 @@ theorem inf_to_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
 
 variable {J : Type w} [SmallCategory J] [FinCategory J]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If we have `is_cofiltered C`, then for any functor `F : J ⥤ C` with `fin_category J`,
 there exists a cone over `F`.
 -/

@@ -61,8 +61,8 @@ theorem polynomial_comp_attach_bound (A : Subalgebra ℝ C(X, ℝ)) (f : A) (g :
     (g.toContinuousMapOn (Set.Icc (-∥f∥) ∥f∥)).comp (f : C(X, ℝ)).attachBound = Polynomial.aeval f g := by
   ext
   simp only [← ContinuousMap.coe_comp, ← Function.comp_app, ← ContinuousMap.attach_bound_apply_coe, ←
-    Polynomial.to_continuous_map_on_to_fun, ← Polynomial.aeval_subalgebra_coe, ← Polynomial.aeval_continuous_map_apply,
-    ← Polynomial.to_continuous_map_to_fun]
+    Polynomial.to_continuous_map_on_apply, ← Polynomial.aeval_subalgebra_coe, ← Polynomial.aeval_continuous_map_apply, ←
+    Polynomial.to_continuous_map_apply]
 
 /-- Given a continuous function `f` in a subalgebra of `C(X, ℝ)`, postcomposing by a polynomial
 gives another function in `A`.
@@ -146,11 +146,12 @@ theorem sup_mem_closed_subalgebra (A : Subalgebra ℝ C(X, ℝ)) (h : IsClosed (
 
 open TopologicalSpace
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (f g «expr ∈ » L)
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (f g «expr ∈ » L)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (f g «expr ∈ » L)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (f g «expr ∈ » L)
 -- Here's the fun part of Stone-Weierstrass!
-theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty) (inf_mem : ∀ f g _ : f ∈ L _ : g ∈ L, f⊓g ∈ L)
-    (sup_mem : ∀ f g _ : f ∈ L _ : g ∈ L, f⊔g ∈ L) (sep : L.SeparatesPointsStrongly) : Closure L = ⊤ := by
+theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
+    (inf_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f⊓g ∈ L) (sup_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f⊔g ∈ L)
+    (sep : L.SeparatesPointsStrongly) : Closure L = ⊤ := by
   -- We start by boiling down to a statement about close approximation.
   apply eq_top_iff.mpr
   rintro f -
@@ -334,7 +335,7 @@ open ContinuousMap
 of its purely real-valued elements also separates points. -/
 theorem Subalgebra.SeparatesPoints.is_R_or_C_to_real {A : Subalgebra 𝕜 C(X, 𝕜)} (hA : A.SeparatesPoints)
     (hA' : ConjInvariantSubalgebra (A.restrictScalars ℝ)) :
-    ((A.restrictScalars ℝ).comap' (ofRealAm.compLeftContinuous ℝ continuous_of_real)).SeparatesPoints := by
+    ((A.restrictScalars ℝ).comap (ofRealAm.compLeftContinuous ℝ continuous_of_real)).SeparatesPoints := by
   intro x₁ x₂ hx
   -- Let `f` in the subalgebra `A` separate the points `x₁`, `x₂`
   obtain ⟨_, ⟨f, hfA, rfl⟩, hf⟩ := hA hx

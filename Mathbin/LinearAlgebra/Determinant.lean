@@ -202,10 +202,14 @@ theorem det_to_matrix' {ι : Type _} [Fintype ι] [DecidableEq ι] (f : (ι → 
   by
   simp [to_matrix_eq_to_matrix']
 
+@[simp]
+theorem det_to_lin (b : Basis ι R M) (f : Matrix ι ι R) : LinearMap.det (Matrix.toLin b b f) = f.det := by
+  rw [← LinearMap.det_to_matrix b, LinearMap.to_matrix_to_lin]
+
 /-- To show `P f.det` it suffices to consider `P (to_matrix _ _ f).det` and `P 1`. -/
 @[elab_as_eliminator]
 theorem det_cases [DecidableEq M] {P : A → Prop} (f : M →ₗ[A] M)
-    (hb : ∀ s : Finset M b : Basis s A M, P (toMatrix b b f).det) (h1 : P 1) : P f.det := by
+    (hb : ∀ (s : Finset M) (b : Basis s A M), P (toMatrix b b f).det) (h1 : P 1) : P f.det := by
   unfold LinearMap.det
   split_ifs with h
   · convert hb _ h.some_spec.some
@@ -222,7 +226,6 @@ theorem det_comp (f g : M →ₗ[A] M) : (f.comp g).det = f.det * g.det :=
 theorem det_id : (LinearMap.id : M →ₗ[A] M).det = 1 :=
   LinearMap.det.map_one
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Multiplying a map by a scalar `c` multiplies its determinant by `c ^ dim M`. -/
 @[simp]
 theorem det_smul {𝕜 : Type _} [Field 𝕜] {M : Type _} [AddCommGroupₓ M] [Module 𝕜 M] (c : 𝕜) (f : M →ₗ[𝕜] M) :
@@ -251,7 +254,6 @@ theorem det_zero {𝕜 : Type _} [Field 𝕜] {M : Type _} [AddCommGroupₓ M] [
     LinearMap.det (0 : M →ₗ[𝕜] M) = (0 : 𝕜) ^ FiniteDimensional.finrank 𝕜 M := by
   simp only [zero_smul 𝕜 (1 : M →ₗ[𝕜] M), ← det_smul, ← mul_oneₓ, ← MonoidHom.map_one]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Conjugating a linear map by a linear equiv does not change its determinant. -/
 @[simp]
 theorem det_conj {N : Type _} [AddCommGroupₓ N] [Module A N] (f : M →ₗ[A] M) (e : M ≃ₗ[A] N) :
@@ -280,7 +282,6 @@ theorem is_unit_det {A : Type _} [CommRingₓ A] [Module A M] (f : M →ₗ[A] M
     simp only [LinearMap.det_comp, ← hg, ← MonoidHom.map_one]
   exact is_unit_of_mul_eq_one _ _ this
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If a linear map has determinant different from `1`, then the space is finite-dimensional. -/
 theorem finite_dimensional_of_det_ne_one {𝕜 : Type _} [Field 𝕜] [Module 𝕜 M] (f : M →ₗ[𝕜] M) (hf : f.det ≠ 1) :
     FiniteDimensional 𝕜 M := by

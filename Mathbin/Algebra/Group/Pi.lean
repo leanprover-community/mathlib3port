@@ -331,7 +331,7 @@ For injections of commuting elements at the same index, see `commute.map` -/
 @[to_additive
       "The injection into an additive pi group at different indices commutes.\n\nFor injections of commuting elements at the same index, see `add_commute.map`"]
 theorem Pi.mul_single_commute [∀ i, MulOneClassₓ <| f i] :
-    Pairwise fun i j => ∀ x : f i y : f j, Commute (mulSingle i x) (mulSingle j y) := by
+    Pairwise fun i j => ∀ (x : f i) (y : f j), Commute (mulSingle i x) (mulSingle j y) := by
   intro i j hij x y
   ext k
   by_cases' h1 : i = k

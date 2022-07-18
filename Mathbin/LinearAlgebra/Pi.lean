@@ -116,7 +116,7 @@ variable (R φ)
 /-- The linear equivalence between linear functions on a finite product of modules and
 families of functions on these modules. See note [bundled maps over different rings]. -/
 @[simps]
-def lsum S [AddCommMonoidₓ M] [Module R M] [Fintype ι] [DecidableEq ι] [Semiringₓ S] [Module S M]
+def lsum (S) [AddCommMonoidₓ M] [Module R M] [Fintype ι] [DecidableEq ι] [Semiringₓ S] [Module S M]
     [SmulCommClass R S M] : (∀ i, φ i →ₗ[R] M) ≃ₗ[S] (∀ i, φ i) →ₗ[R] M where
   toFun := fun f => ∑ i : ι, (f i).comp (proj i)
   invFun := fun f i => f.comp (single i)

@@ -333,8 +333,8 @@ theorem is_unit_iff_forall_dvd {x : α} : IsUnit x ↔ ∀ y, x ∣ y :=
 theorem is_unit_of_dvd_unit {x y : α} (xy : x ∣ y) (hu : IsUnit y) : IsUnit x :=
   is_unit_iff_dvd_one.2 <| xy.trans <| is_unit_iff_dvd_one.1 hu
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (a «expr ∣ » 1)
-theorem is_unit_of_dvd_one : ∀ a _ : a ∣ 1, IsUnit (a : α)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a «expr ∣ » 1)
+theorem is_unit_of_dvd_one : ∀ (a) (_ : a ∣ 1), IsUnit (a : α)
   | a, ⟨b, Eq⟩ => ⟨Units.mkOfMulEqOne a b Eq.symm, rfl⟩
 
 theorem not_is_unit_of_not_is_unit_dvd {a b : α} (ha : ¬IsUnit a) (hb : a ∣ b) : ¬IsUnit b :=

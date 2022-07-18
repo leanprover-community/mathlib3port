@@ -49,7 +49,7 @@ theorem size_nil : (@nil α).size = 0 := by
 theorem to_list_nil : toList (@nil α) = [] :=
   rfl
 
-instance α [DecidableEq α] : DecidableEq (Buffer α) := by
+instance (α) [DecidableEq α] : DecidableEq (Buffer α) := by
   run_tac
     tactic.mk_dec_eq_instance
 
@@ -214,7 +214,7 @@ theorem read_to_buffer' (l : List α) {i : ℕ} (h : i < l.toBuffer.size) (h' : 
     
 
 @[simp]
-theorem read_to_buffer (l : List α) i :
+theorem read_to_buffer (l : List α) (i) :
     l.toBuffer.read i =
       l.nthLe i
         (by
@@ -227,7 +227,7 @@ theorem read_to_buffer (l : List α) i :
   · simpa using i.property
     
 
-theorem nth_le_to_list' (b : Buffer α) {i : ℕ} h h' : b.toList.nthLe i h = b.read ⟨i, h'⟩ := by
+theorem nth_le_to_list' (b : Buffer α) {i : ℕ} (h h') : b.toList.nthLe i h = b.read ⟨i, h'⟩ := by
   have :
     b.to_list.to_buffer.read
         ⟨i, by
@@ -237,14 +237,14 @@ theorem nth_le_to_list' (b : Buffer α) {i : ℕ} h h' : b.toList.nthLe i h = b.
     congr 1 <;> simp [← Finₓ.heq_ext_iff]
   simp [this]
 
-theorem nth_le_to_list (b : Buffer α) {i : ℕ} h :
+theorem nth_le_to_list (b : Buffer α) {i : ℕ} (h) :
     b.toList.nthLe i h =
       b.read
         ⟨i, by
           simpa using h⟩ :=
   nth_le_to_list' _ _ _
 
-theorem read_eq_nth_le_to_list (b : Buffer α) i :
+theorem read_eq_nth_le_to_list (b : Buffer α) (i) :
     b.read i =
       b.toList.nthLe i
         (by

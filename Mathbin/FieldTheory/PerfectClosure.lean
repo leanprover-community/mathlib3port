@@ -172,7 +172,7 @@ instance : Mul (PerfectClosure K p) :=
       (fun x : ℕ × K =>
         Quot.lift (fun y : ℕ × K => mk K p (x.1 + y.1, (frobenius K p^[y.1]) x.2 * (frobenius K p^[x.1]) y.2))
           (mul_aux_right K p x))
-      fun x1 x2 H : R K p x1 x2 => funext fun e => (Quot.induction_on e) fun y => mul_aux_left K p x1 x2 y H⟩
+      fun x1 x2 (H : R K p x1 x2) => funext fun e => (Quot.induction_on e) fun y => mul_aux_left K p x1 x2 y H⟩
 
 @[simp]
 theorem mk_mul_mk (x y : ℕ × K) :
@@ -230,7 +230,7 @@ instance : Add (PerfectClosure K p) :=
       (fun x : ℕ × K =>
         Quot.lift (fun y : ℕ × K => mk K p (x.1 + y.1, (frobenius K p^[y.1]) x.2 + (frobenius K p^[x.1]) y.2))
           (add_aux_right K p x))
-      fun x1 x2 H : R K p x1 x2 => funext fun e => (Quot.induction_on e) fun y => add_aux_left K p x1 x2 y H⟩
+      fun x1 x2 (H : R K p x1 x2) => funext fun e => (Quot.induction_on e) fun y => add_aux_left K p x1 x2 y H⟩
 
 @[simp]
 theorem mk_add_mk (x y : ℕ × K) :
@@ -238,7 +238,7 @@ theorem mk_add_mk (x y : ℕ × K) :
   rfl
 
 instance : Neg (PerfectClosure K p) :=
-  ⟨Quot.lift (fun x : ℕ × K => mk K p (x.1, -x.2)) fun x y H : R K p x y =>
+  ⟨Quot.lift (fun x : ℕ × K => mk K p (x.1, -x.2)) fun x y (H : R K p x y) =>
       match x, y, H with
       | _, _, r.intro n x =>
         Quot.sound <| by
@@ -421,7 +421,7 @@ section Field
 variable [Field K] (p : ℕ) [Fact p.Prime] [CharP K p]
 
 instance : Inv (PerfectClosure K p) :=
-  ⟨Quot.lift (fun x : ℕ × K => Quot.mk (R K p) (x.1, x.2⁻¹)) fun x y H : R K p x y =>
+  ⟨Quot.lift (fun x : ℕ × K => Quot.mk (R K p) (x.1, x.2⁻¹)) fun x y (H : R K p x y) =>
       match x, y, H with
       | _, _, r.intro n x =>
         Quot.sound <| by

@@ -54,11 +54,5 @@ theorem any_iff_exists_prop : (any l fun a => p a) ↔ ∃ a ∈ l, p a := by
 theorem any_of_mem {p : α → Bool} (h₁ : a ∈ l) (h₂ : p a) : any l p :=
   any_iff_exists.2 ⟨_, h₁, h₂⟩
 
-instance (priority := 500) decidableForallMem (l : List α) : Decidable (∀, ∀ x ∈ l, ∀, p x) :=
-  decidableOfIff _ all_iff_forall_prop
-
-instance decidableExistsMem (l : List α) : Decidable (∃ x ∈ l, p x) :=
-  decidableOfIff _ any_iff_exists_prop
-
 end List
 

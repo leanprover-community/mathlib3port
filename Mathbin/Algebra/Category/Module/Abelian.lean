@@ -21,7 +21,7 @@ open CategoryTheory.Limits
 
 noncomputable section
 
-universe v u
+universe w v u
 
 namespace ModuleCat
 
@@ -79,6 +79,25 @@ instance : Abelian (ModuleCat R) where
   HasCokernels := has_cokernels_Module
   normalMonoOfMono := fun X Y => normalMono
   normalEpiOfEpi := fun X Y => normalEpi
+
+section ReflectsLimits
+
+/- We need to put this in this weird spot because we need to know that the category of modules
+    is balanced. -/
+instance forgetReflectsLimitsOfSize : ReflectsLimitsOfSize.{v, v} (forget (ModuleCat.{max v w} R)) :=
+  reflects_limits_of_reflects_isomorphisms
+
+instance forget₂ReflectsLimitsOfSize :
+    ReflectsLimitsOfSize.{v, v} (forget₂ (ModuleCat.{max v w} R) AddCommGroupₓₓ.{max v w}) :=
+  reflects_limits_of_reflects_isomorphisms
+
+instance forgetReflectsLimits : ReflectsLimits (forget (ModuleCat.{v} R)) :=
+  ModuleCat.forgetReflectsLimitsOfSize.{v, v}
+
+instance forget₂ReflectsLimits : ReflectsLimits (forget₂ (ModuleCat.{v} R) AddCommGroupₓₓ.{v}) :=
+  ModuleCat.forget₂ReflectsLimitsOfSize.{v, v}
+
+end ReflectsLimits
 
 variable {O : ModuleCat.{v} R} (g : N ⟶ O)
 

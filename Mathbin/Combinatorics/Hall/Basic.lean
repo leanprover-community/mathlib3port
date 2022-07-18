@@ -67,7 +67,6 @@ def HallMatchingsOn.restrict {ι : Type u} {α : Type v} (t : ι → Finset α) 
   rintro ⟨i, hi⟩ ⟨j, hj⟩ hh
   simpa only [← Subtype.mk_eq_mk] using hinj hh
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- When the Hall condition is satisfied, the set of matchings on a finite set is nonempty.
 This is where `finset.all_card_le_bUnion_card_iff_exists_injective'` comes into the argument. -/
 theorem HallMatchingsOn.nonempty {ι : Type u} {α : Type v} [DecidableEq α] (t : ι → Finset α)
@@ -87,7 +86,6 @@ def hallMatchingsFunctor {ι : Type u} {α : Type v} (t : ι → Finset α) : (F
   obj := fun ι' => HallMatchingsOn t ι'.unop
   map := fun ι' ι'' g f => HallMatchingsOn.restrict t (CategoryTheory.le_of_hom g.unop) f
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 noncomputable instance HallMatchingsOn.fintype {ι : Type u} {α : Type v} (t : ι → Finset α) (ι' : Finset ι) :
     Fintype (HallMatchingsOn t ι') := by
   classical
@@ -103,7 +101,6 @@ noncomputable instance HallMatchingsOn.fintype {ι : Type u} {α : Type v} (t : 
   ext a
   exact h a
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- This is the version of **Hall's Marriage Theorem** in terms of indexed
 families of finite sets `t : ι → finset α`.  It states that there is a
 set of distinct representatives if and only if every union of `k` of the
@@ -193,7 +190,7 @@ theorem Fintype.all_card_le_rel_image_card_iff_exists_injective {α : Type u} {�
     apply congr_arg
     ext b
     simp [← Rel.Image]
-  have h' : ∀ f : α → β x, r x (f x) ↔ f x ∈ r' x := by
+  have h' : ∀ (f : α → β) (x), r x (f x) ↔ f x ∈ r' x := by
     simp [← Rel.Image]
   simp only [← h, ← h']
   apply Finset.all_card_le_bUnion_card_iff_exists_injective
@@ -217,7 +214,7 @@ theorem Fintype.all_card_le_filter_rel_iff_exists_injective {α : Type u} {β : 
     intro A
     ext b
     simp
-  have h' : ∀ f : α → β x, r x (f x) ↔ f x ∈ r' x := by
+  have h' : ∀ (f : α → β) (x), r x (f x) ↔ f x ∈ r' x := by
     simp
   simp_rw [h, h']
   apply Finset.all_card_le_bUnion_card_iff_exists_injective

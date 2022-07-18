@@ -92,11 +92,11 @@ theorem continuous_on_symm : ContinuousOn e.symm e.Target :=
   e.continuous_inv_fun
 
 @[simp, mfld_simps]
-theorem mk_coe (e : LocalEquiv α β) a b c d : (LocalHomeomorph.mk e a b c d : α → β) = e :=
+theorem mk_coe (e : LocalEquiv α β) (a b c d) : (LocalHomeomorph.mk e a b c d : α → β) = e :=
   rfl
 
 @[simp, mfld_simps]
-theorem mk_coe_symm (e : LocalEquiv α β) a b c d : ((LocalHomeomorph.mk e a b c d).symm : β → α) = e.symm :=
+theorem mk_coe_symm (e : LocalEquiv α β) (a b c d) : ((LocalHomeomorph.mk e a b c d).symm : β → α) = e.symm :=
   rfl
 
 theorem to_local_equiv_injective : Injective (toLocalEquiv : LocalHomeomorph α β → LocalEquiv α β)
@@ -244,6 +244,12 @@ theorem target_inter_inv_preimage_preimage (s : Set β) : e.Target ∩ e.symm �
 theorem source_inter_preimage_target_inter (s : Set β) : e.Source ∩ e ⁻¹' (e.Target ∩ s) = e.Source ∩ e ⁻¹' s :=
   e.toLocalEquiv.source_inter_preimage_target_inter s
 
+theorem image_source_eq_target (e : LocalHomeomorph α β) : e '' e.Source = e.Target :=
+  e.toLocalEquiv.image_source_eq_target
+
+theorem symm_image_target_eq_source (e : LocalHomeomorph α β) : e.symm '' e.Target = e.Source :=
+  e.symm.image_source_eq_target
+
 /-- Two local homeomorphisms are equal when they have equal `to_fun`, `inv_fun` and `source`.
 It is not sufficient to have equal `to_fun` and `source`, as this only determines `inv_fun` on
 the target. This would only be true for a weaker notion of equality, arguably the right one,
@@ -252,6 +258,12 @@ called `eq_on_source`. -/
 protected theorem ext (e' : LocalHomeomorph α β) (h : ∀ x, e x = e' x) (hinv : ∀ x, e.symm x = e'.symm x)
     (hs : e.Source = e'.Source) : e = e' :=
   eq_of_local_equiv_eq (LocalEquiv.ext h hinv hs)
+
+protected theorem ext_iff {e e' : LocalHomeomorph α β} :
+    e = e' ↔ (∀ x, e x = e' x) ∧ (∀ x, e.symm x = e'.symm x) ∧ e.Source = e'.Source :=
+  ⟨by
+    rintro rfl
+    exact ⟨fun x => rfl, fun x => rfl, rfl⟩, fun h => e.ext e' h.1 h.2.1 h.2.2⟩
 
 @[simp, mfld_simps]
 theorem symm_to_local_equiv : e.symm.toLocalEquiv = e.toLocalEquiv.symm :=
@@ -271,7 +283,7 @@ theorem symm_symm : e.symm.symm = e :=
 
 /-- A local homeomorphism is continuous at any point of its source -/
 protected theorem continuous_at {x : α} (h : x ∈ e.Source) : ContinuousAt e x :=
-  (e.ContinuousOn x h).ContinuousAt (IsOpen.mem_nhds e.open_source h)
+  (e.ContinuousOn x h).ContinuousAt (e.open_source.mem_nhds h)
 
 /-- A local homeomorphism inverse is continuous at any point of its target -/
 theorem continuous_at_symm {x : β} (h : x ∈ e.Target) : ContinuousAt e.symm x :=
@@ -303,6 +315,43 @@ theorem map_nhds_within_preimage_eq (e : LocalHomeomorph α β) {x} (hx : x ∈ 
     map e (𝓝[e ⁻¹' s] x) = 𝓝[s] e x := by
   rw [e.map_nhds_within_eq hx, e.image_source_inter_eq', e.target_inter_inv_preimage_preimage,
     e.nhds_within_target_inter (e.map_source hx)]
+
+theorem eventually_nhds (e : LocalHomeomorph α β) {x : α} (p : β → Prop) (hx : x ∈ e.Source) :
+    (∀ᶠ y in 𝓝 (e x), p y) ↔ ∀ᶠ x in 𝓝 x, p (e x) :=
+  Iff.trans
+    (by
+      rw [e.map_nhds_eq hx])
+    eventually_map
+
+theorem eventually_nhds' (e : LocalHomeomorph α β) {x : α} (p : α → Prop) (hx : x ∈ e.Source) :
+    (∀ᶠ y in 𝓝 (e x), p (e.symm y)) ↔ ∀ᶠ x in 𝓝 x, p x := by
+  rw [e.eventually_nhds _ hx]
+  refine' eventually_congr ((e.eventually_left_inverse hx).mono fun y hy => _)
+  rw [hy]
+
+theorem eventually_nhds_within (e : LocalHomeomorph α β) {x : α} (p : β → Prop) {s : Set α} (hx : x ∈ e.Source) :
+    (∀ᶠ y in 𝓝[e.symm ⁻¹' s] e x, p y) ↔ ∀ᶠ x in 𝓝[s] x, p (e x) := by
+  refine' Iff.trans _ eventually_map
+  rw [e.map_nhds_within_eq hx, e.image_source_inter_eq', e.nhds_within_target_inter (e.maps_to hx)]
+
+theorem eventually_nhds_within' (e : LocalHomeomorph α β) {x : α} (p : α → Prop) {s : Set α} (hx : x ∈ e.Source) :
+    (∀ᶠ y in 𝓝[e.symm ⁻¹' s] e x, p (e.symm y)) ↔ ∀ᶠ x in 𝓝[s] x, p x := by
+  rw [e.eventually_nhds_within _ hx]
+  refine'
+    eventually_congr ((eventually_nhds_within_of_eventually_nhds <| e.eventually_left_inverse hx).mono fun y hy => _)
+  rw [hy]
+
+/-- This lemma is useful in the manifold library in the case that `e` is a chart. It states that
+  locally around `e x` the set `e.symm ⁻¹' s` is the same as the set intersected with the target
+  of `e` and some other neighborhood of `f x` (which will be the source of a chart on `γ`).  -/
+theorem preimage_eventually_eq_target_inter_preimage_inter {e : LocalHomeomorph α β} {s : Set α} {t : Set γ} {x : α}
+    {f : α → γ} (hf : ContinuousWithinAt f s x) (hxe : x ∈ e.Source) (ht : t ∈ 𝓝 (f x)) :
+    e.symm ⁻¹' s =ᶠ[𝓝 (e x)] (e.Target ∩ e.symm ⁻¹' (s ∩ f ⁻¹' t) : Set β) := by
+  rw [eventually_eq_set, e.eventually_nhds _ hxe]
+  filter_upwards [e.open_source.mem_nhds hxe, mem_nhds_within_iff_eventually.mp (hf.preimage_mem_nhds_within ht)]
+  intro y hy hyu
+  simp_rw [mem_inter_iff, mem_preimage, mem_inter_iff, e.maps_to hy, true_andₓ, iff_self_and, e.left_inv hy,
+    iff_true_intro hyu]
 
 theorem preimage_open_of_open {s : Set β} (hs : IsOpen s) : IsOpen (e.Source ∩ e ⁻¹' s) :=
   e.ContinuousOn.preimage_open_of_open e.open_source hs
@@ -604,6 +653,9 @@ theorem coe_trans : (e.trans e' : α → γ) = e' ∘ e :=
 theorem coe_trans_symm : ((e.trans e').symm : γ → α) = e.symm ∘ e'.symm :=
   rfl
 
+theorem trans_apply {x : α} : (e.trans e') x = e' (e x) :=
+  rfl
+
 theorem trans_symm_eq_symm_trans_symm : (e.trans e').symm = e'.symm.trans e.symm := by
   cases e <;> cases e' <;> rfl
 
@@ -776,6 +828,21 @@ theorem prod_trans {η : Type _} {ε : Type _} [TopologicalSpace η] [Topologica
     (e.Prod e').trans (f.Prod f') = (e.trans f).Prod (e'.trans f') :=
   LocalHomeomorph.eq_of_local_equiv_eq <| by
     dsimp' only [← trans_to_local_equiv, ← prod_to_local_equiv] <;> apply LocalEquiv.prod_trans
+
+theorem prod_eq_prod_of_nonempty {e₁ e₁' : LocalHomeomorph α β} {e₂ e₂' : LocalHomeomorph γ δ}
+    (h : (e₁.Prod e₂).Source.Nonempty) : e₁.Prod e₂ = e₁'.Prod e₂' ↔ e₁ = e₁' ∧ e₂ = e₂' := by
+  obtain ⟨⟨x, y⟩, -⟩ := id h
+  have : Nonempty α := ⟨x⟩
+  have : Nonempty β := ⟨e₁ x⟩
+  have : Nonempty γ := ⟨y⟩
+  have : Nonempty δ := ⟨e₂ y⟩
+  simp_rw [LocalHomeomorph.ext_iff, prod_apply, prod_symm_apply, prod_source, Prod.ext_iff,
+    Set.prod_eq_prod_iff_of_nonempty h, forall_and_distrib, Prod.forall, forall_const, forall_forall_const, and_assoc,
+    And.left_comm]
+
+theorem prod_eq_prod_of_nonempty' {e₁ e₁' : LocalHomeomorph α β} {e₂ e₂' : LocalHomeomorph γ δ}
+    (h : (e₁'.Prod e₂').Source.Nonempty) : e₁.Prod e₂ = e₁'.Prod e₂' ↔ e₁ = e₁' ∧ e₂ = e₂' := by
+  rw [eq_comm, prod_eq_prod_of_nonempty h, eq_comm, @eq_comm _ e₂']
 
 end Prod
 

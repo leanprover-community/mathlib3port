@@ -28,7 +28,6 @@ theorem lt_of_mul_lt_mul_neg_right {a b c : α} [LinearOrderedRing α] (h : a * 
       
   lt_of_mul_lt_mul_right h3 nhc
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[mono]
 theorem mul_mono_nonpos {x y z : α} [LinearOrderedRing α] (h' : z ≤ 0) (h : y ≤ x) : x * z ≤ y * z := by
   classical
@@ -62,7 +61,7 @@ theorem Nat.sub_mono_right_strict {x y z : ℕ} (h' : x ≤ z) (h : y < x) : z -
 open Set
 
 attribute [mono]
-  inter_subset_inter union_subset_union sUnion_mono Union₂_mono sInter_subset_sInter Inter₂_mono image_subset preimage_mono prod_mono monotone_prod seq_mono image2_subset OrderEmbedding.monotone
+  inter_subset_inter union_subset_union sUnion_mono Union₂_mono sInter_subset_sInter Inter₂_mono image_subset preimage_mono prod_mono Monotone.set_prod seq_mono image2_subset OrderEmbedding.monotone
 
 attribute [mono]
   upper_bounds_mono_set lower_bounds_mono_set upper_bounds_mono_mem lower_bounds_mono_mem upper_bounds_mono lower_bounds_mono BddAbove.mono BddBelow.mono

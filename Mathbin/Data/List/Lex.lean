@@ -118,7 +118,7 @@ instance decidableRel [DecidableEq α] (r : α → α → Prop) [DecidableRel r]
         
       
 
-theorem append_right (r : α → α → Prop) : ∀ {s₁ s₂} t, Lex r s₁ s₂ → Lex r s₁ (s₂ ++ t)
+theorem append_right (r : α → α → Prop) : ∀ {s₁ s₂} (t), Lex r s₁ s₂ → Lex r s₁ (s₂ ++ t)
   | _, _, t, nil => nil
   | _, _, t, cons h => cons (append_right _ h)
   | _, _, t, rel r => rel r
@@ -155,7 +155,6 @@ theorem _root_.decidable.list.lex.ne_iff [DecidableEq α] {l₁ l₂ : List α} 
         
       ⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem ne_iff {l₁ l₂ : List α} (H : length l₁ ≤ length l₂) : Lex (· ≠ ·) l₁ l₂ ↔ l₁ ≠ l₂ := by
   classical <;> exact Decidable.List.Lex.ne_iff H
 

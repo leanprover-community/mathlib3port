@@ -118,7 +118,7 @@ theorem find_insert_of_eqv [IsStrictWeakOrder α lt] (t : Rbtree α lt) {x y} : 
   apply Rbnode.is_searchable_of_well_formed
   assumption
 
-theorem find_insert [IsStrictWeakOrder α lt] (t : Rbtree α lt) x : (t.insert x).find x = some x :=
+theorem find_insert [IsStrictWeakOrder α lt] (t : Rbtree α lt) (x) : (t.insert x).find x = some x :=
   find_insert_of_eqv t (refl x)
 
 theorem find_insert_of_disj [IsStrictWeakOrder α lt] {x y : α} (t : Rbtree α lt) :
@@ -196,7 +196,7 @@ theorem mem_insert_of_incomp {a b : α} (t : Rbtree α lt) : ¬lt a b ∧ ¬lt b
   cases t
   apply Rbnode.mem_insert_of_incomp
 
-theorem mem_insert [IsIrrefl α lt] : ∀ a : α t : Rbtree α lt, a ∈ t.insert a := by
+theorem mem_insert [IsIrrefl α lt] : ∀ (a : α) (t : Rbtree α lt), a ∈ t.insert a := by
   intros
   apply mem_insert_of_incomp
   constructor <;> apply irrefl_of lt
@@ -246,7 +246,6 @@ theorem eq_leaf_of_max_eq_none {t : Rbtree α lt} : t.max = none → t = mkRbtre
   congr
   apply Rbnode.eq_leaf_of_max_eq_none h
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem min_is_minimal [IsStrictWeakOrder α lt] {a : α} {t : Rbtree α lt} :
     t.min = some a → ∀ {b}, b ∈ t → a ≈[lt]b ∨ lt a b := by
   classical

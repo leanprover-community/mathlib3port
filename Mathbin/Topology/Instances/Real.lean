@@ -61,7 +61,7 @@ instance :
 instance : SecondCountableTopology ℝ :=
   second_countable_of_proper
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (a b)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (a b)
 theorem Real.is_topological_basis_Ioo_rat : @IsTopologicalBasis ℝ _ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) :=
   is_topological_basis_of_open_of_nhds
     (by

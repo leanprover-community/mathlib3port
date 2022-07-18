@@ -50,14 +50,14 @@ theorem measurable_coe {s : Set α} (hs : MeasurableSet s) : Measurable fun μ :
   Measurable.of_comap_le <| le_supr_of_le s <| le_supr_of_le hs <| le_rfl
 
 theorem measurable_of_measurable_coe (f : β → Measure α)
-    (h : ∀ s : Set α hs : MeasurableSet s, Measurable fun b => f b s) : Measurable f :=
+    (h : ∀ (s : Set α) (hs : MeasurableSet s), Measurable fun b => f b s) : Measurable f :=
   Measurable.of_le_map <|
     supr₂_le fun s hs =>
       MeasurableSpace.comap_le_iff_le_map.2 <| by
         rw [MeasurableSpace.map_comp] <;> exact h s hs
 
 theorem measurable_measure {μ : α → Measure β} :
-    Measurable μ ↔ ∀ s : Set β hs : MeasurableSet s, Measurable fun b => μ b s :=
+    Measurable μ ↔ ∀ (s : Set β) (hs : MeasurableSet s), Measurable fun b => μ b s :=
   ⟨fun hμ s hs => (measurable_coe hs).comp hμ, measurable_of_measurable_coe μ⟩
 
 theorem measurable_map (f : α → β) (hf : Measurable f) : Measurable fun μ : Measure α => map f μ :=
@@ -114,8 +114,8 @@ theorem lintegral_join {m : Measure (Measure α)} {f : α → ℝ≥0∞} (hf : 
   simp only [← simple_func.lintegral, ← this]
   trans
   have :
-    ∀ s : ℕ → Finset ℝ≥0∞ f : ℕ → ℝ≥0∞ → Measureₓ α → ℝ≥0∞ hf : ∀ n r, Measurable (f n r) hm :
-      Monotone fun n μ => ∑ r in s n, r * f n r μ,
+    ∀ (s : ℕ → Finset ℝ≥0∞) (f : ℕ → ℝ≥0∞ → Measureₓ α → ℝ≥0∞) (hf : ∀ n r, Measurable (f n r))
+      (hm : Monotone fun n μ => ∑ r in s n, r * f n r μ),
       (⨆ n : ℕ, ∑ r in s n, r * ∫⁻ μ, f n r μ ∂m) = ∫⁻ μ, ⨆ n : ℕ, ∑ r in s n, r * f n r μ ∂m :=
     by
     intro s f hf hm

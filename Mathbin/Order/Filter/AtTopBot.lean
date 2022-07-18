@@ -74,6 +74,20 @@ theorem disjoint_at_top_principal_Iic [Preorderₓ α] [NoMaxOrder α] (x : α) 
 theorem disjoint_at_bot_principal_Ici [Preorderₓ α] [NoMinOrder α] (x : α) : Disjoint atBot (𝓟 (Ici x)) :=
   @disjoint_at_top_principal_Iic αᵒᵈ _ _ _
 
+theorem disjoint_pure_at_top [Preorderₓ α] [NoMaxOrder α] (x : α) : Disjoint (pure x) atTop :=
+  Disjoint.symm ((disjoint_at_top_principal_Iic x).mono_right <| le_principal_iff.2 le_rfl)
+
+theorem disjoint_pure_at_bot [Preorderₓ α] [NoMinOrder α] (x : α) : Disjoint (pure x) atBot :=
+  @disjoint_pure_at_top αᵒᵈ _ _ _
+
+theorem not_tendsto_const_at_top [Preorderₓ α] [NoMaxOrder α] (x : α) (l : Filter β) [l.ne_bot] :
+    ¬Tendsto (fun _ => x) l atTop :=
+  tendsto_const_pure.not_tendsto (disjoint_pure_at_top x)
+
+theorem not_tendsto_const_at_bot [Preorderₓ α] [NoMinOrder α] (x : α) (l : Filter β) [l.ne_bot] :
+    ¬Tendsto (fun _ => x) l atBot :=
+  tendsto_const_pure.not_tendsto (disjoint_pure_at_bot x)
+
 theorem disjoint_at_bot_at_top [PartialOrderₓ α] [Nontrivial α] : Disjoint (atBot : Filter α) atTop := by
   rcases exists_pair_ne α with ⟨x, y, hne⟩
   by_cases' hle : x ≤ y
@@ -192,22 +206,22 @@ instance (priority := 200) atBot.is_countably_generated [Preorderₓ α] [Encoda
     (atBot : Filter <| α).IsCountablyGenerated :=
   is_countably_generated_seq _
 
-theorem OrderTop.at_top_eq α [PartialOrderₓ α] [OrderTop α] : (atTop : Filter α) = pure ⊤ :=
+theorem OrderTop.at_top_eq (α) [PartialOrderₓ α] [OrderTop α] : (atTop : Filter α) = pure ⊤ :=
   le_antisymmₓ (le_pure_iff.2 <| (eventually_ge_at_top ⊤).mono fun b => top_unique)
     (le_infi fun b => le_principal_iff.2 le_top)
 
-theorem OrderBot.at_bot_eq α [PartialOrderₓ α] [OrderBot α] : (atBot : Filter α) = pure ⊥ :=
+theorem OrderBot.at_bot_eq (α) [PartialOrderₓ α] [OrderBot α] : (atBot : Filter α) = pure ⊥ :=
   @OrderTop.at_top_eq αᵒᵈ _ _
 
 @[nontriviality]
-theorem Subsingleton.at_top_eq α [Subsingleton α] [Preorderₓ α] : (atTop : Filter α) = ⊤ := by
+theorem Subsingleton.at_top_eq (α) [Subsingleton α] [Preorderₓ α] : (atTop : Filter α) = ⊤ := by
   refine' top_unique fun s hs x => _
   let this : Unique α := ⟨⟨x⟩, fun y => Subsingleton.elimₓ y x⟩
   rw [at_top, infi_unique, Unique.default_eq x, mem_principal] at hs
   exact hs left_mem_Ici
 
 @[nontriviality]
-theorem Subsingleton.at_bot_eq α [Subsingleton α] [Preorderₓ α] : (atBot : Filter α) = ⊤ :=
+theorem Subsingleton.at_bot_eq (α) [Subsingleton α] [Preorderₓ α] : (atBot : Filter α) = ⊤ :=
   @Subsingleton.at_top_eq αᵒᵈ _ _
 
 theorem tendsto_at_top_pure [PartialOrderₓ α] [OrderTop α] (f : α → β) : Tendsto f atTop (pure <| f ⊤) :=
@@ -274,6 +288,50 @@ theorem tendsto_at_top_mono [Preorderₓ β] {l : Filter α} {f g : α → β} (
 theorem tendsto_at_bot_mono [Preorderₓ β] {l : Filter α} {f g : α → β} (h : ∀ n, f n ≤ g n) :
     Tendsto g l atBot → Tendsto f l atBot :=
   @tendsto_at_top_mono _ βᵒᵈ _ _ _ _ h
+
+end Filter
+
+namespace OrderIso
+
+open Filter
+
+variable [Preorderₓ α] [Preorderₓ β]
+
+@[simp]
+theorem comap_at_top (e : α ≃o β) : comap e atTop = at_top := by
+  simp [← at_top, e.surjective.infi_comp]
+
+@[simp]
+theorem comap_at_bot (e : α ≃o β) : comap e atBot = at_bot :=
+  e.dual.comap_at_top
+
+@[simp]
+theorem map_at_top (e : α ≃o β) : map (e : α → β) atTop = at_top := by
+  rw [← e.comap_at_top, map_comap_of_surjective e.surjective]
+
+@[simp]
+theorem map_at_bot (e : α ≃o β) : map (e : α → β) atBot = at_bot :=
+  e.dual.map_at_top
+
+theorem tendsto_at_top (e : α ≃o β) : Tendsto e atTop atTop :=
+  e.map_at_top.le
+
+theorem tendsto_at_bot (e : α ≃o β) : Tendsto e atBot atBot :=
+  e.map_at_bot.le
+
+@[simp]
+theorem tendsto_at_top_iff {l : Filter γ} {f : γ → α} (e : α ≃o β) :
+    Tendsto (fun x => e (f x)) l atTop ↔ Tendsto f l atTop := by
+  rw [← e.comap_at_top, tendsto_comap_iff]
+
+@[simp]
+theorem tendsto_at_bot_iff {l : Filter γ} {f : γ → α} (e : α ≃o β) :
+    Tendsto (fun x => e (f x)) l atBot ↔ Tendsto f l atBot :=
+  e.dual.tendsto_at_top_iff
+
+end OrderIso
+
+namespace Filter
 
 /-!
 ### Sequences
@@ -489,35 +547,35 @@ theorem tendsto_at_top_of_add_const_right (C : β) (hf : Tendsto (fun x => f x +
 theorem tendsto_at_bot_of_add_const_right (C : β) (hf : Tendsto (fun x => f x + C) l atBot) : Tendsto f l atBot :=
   @tendsto_at_top_of_add_const_right _ βᵒᵈ _ _ _ C hf
 
-theorem tendsto_at_top_of_add_bdd_above_left' C (hC : ∀ᶠ x in l, f x ≤ C) (h : Tendsto (fun x => f x + g x) l atTop) :
+theorem tendsto_at_top_of_add_bdd_above_left' (C) (hC : ∀ᶠ x in l, f x ≤ C) (h : Tendsto (fun x => f x + g x) l atTop) :
     Tendsto g l atTop :=
   tendsto_at_top_of_add_const_left C (tendsto_at_top_mono' l (hC.mono fun x hx => add_le_add_right hx (g x)) h)
 
-theorem tendsto_at_bot_of_add_bdd_below_left' C (hC : ∀ᶠ x in l, C ≤ f x) (h : Tendsto (fun x => f x + g x) l atBot) :
+theorem tendsto_at_bot_of_add_bdd_below_left' (C) (hC : ∀ᶠ x in l, C ≤ f x) (h : Tendsto (fun x => f x + g x) l atBot) :
     Tendsto g l atBot :=
   @tendsto_at_top_of_add_bdd_above_left' _ βᵒᵈ _ _ _ _ C hC h
 
-theorem tendsto_at_top_of_add_bdd_above_left C (hC : ∀ x, f x ≤ C) :
+theorem tendsto_at_top_of_add_bdd_above_left (C) (hC : ∀ x, f x ≤ C) :
     Tendsto (fun x => f x + g x) l atTop → Tendsto g l atTop :=
   tendsto_at_top_of_add_bdd_above_left' C (univ_mem' hC)
 
-theorem tendsto_at_bot_of_add_bdd_below_left C (hC : ∀ x, C ≤ f x) :
+theorem tendsto_at_bot_of_add_bdd_below_left (C) (hC : ∀ x, C ≤ f x) :
     Tendsto (fun x => f x + g x) l atBot → Tendsto g l atBot :=
   @tendsto_at_top_of_add_bdd_above_left _ βᵒᵈ _ _ _ _ C hC
 
-theorem tendsto_at_top_of_add_bdd_above_right' C (hC : ∀ᶠ x in l, g x ≤ C) (h : Tendsto (fun x => f x + g x) l atTop) :
-    Tendsto f l atTop :=
+theorem tendsto_at_top_of_add_bdd_above_right' (C) (hC : ∀ᶠ x in l, g x ≤ C)
+    (h : Tendsto (fun x => f x + g x) l atTop) : Tendsto f l atTop :=
   tendsto_at_top_of_add_const_right C (tendsto_at_top_mono' l (hC.mono fun x hx => add_le_add_left hx (f x)) h)
 
-theorem tendsto_at_bot_of_add_bdd_below_right' C (hC : ∀ᶠ x in l, C ≤ g x) (h : Tendsto (fun x => f x + g x) l atBot) :
-    Tendsto f l atBot :=
+theorem tendsto_at_bot_of_add_bdd_below_right' (C) (hC : ∀ᶠ x in l, C ≤ g x)
+    (h : Tendsto (fun x => f x + g x) l atBot) : Tendsto f l atBot :=
   @tendsto_at_top_of_add_bdd_above_right' _ βᵒᵈ _ _ _ _ C hC h
 
-theorem tendsto_at_top_of_add_bdd_above_right C (hC : ∀ x, g x ≤ C) :
+theorem tendsto_at_top_of_add_bdd_above_right (C) (hC : ∀ x, g x ≤ C) :
     Tendsto (fun x => f x + g x) l atTop → Tendsto f l atTop :=
   tendsto_at_top_of_add_bdd_above_right' C (univ_mem' hC)
 
-theorem tendsto_at_bot_of_add_bdd_below_right C (hC : ∀ x, C ≤ g x) :
+theorem tendsto_at_bot_of_add_bdd_below_right (C) (hC : ∀ x, C ≤ g x) :
     Tendsto (fun x => f x + g x) l atBot → Tendsto f l atBot :=
   @tendsto_at_top_of_add_bdd_above_right _ βᵒᵈ _ _ _ _ C hC
 
@@ -579,21 +637,33 @@ theorem tendsto_at_top_add_const_right (C : β) (hf : Tendsto f l atTop) : Tends
 theorem tendsto_at_bot_add_const_right (C : β) (hf : Tendsto f l atBot) : Tendsto (fun x => f x + C) l atBot :=
   @tendsto_at_top_add_const_right _ βᵒᵈ _ _ _ C hf
 
-theorem tendsto_neg_at_top_at_bot : Tendsto (Neg.neg : β → β) atTop atBot := by
-  simp only [← tendsto_at_bot, ← neg_le]
-  exact fun b => eventually_ge_at_top _
+theorem map_neg_at_bot : map (Neg.neg : β → β) atBot = at_top :=
+  (OrderIso.neg β).map_at_bot
+
+theorem map_neg_at_top : map (Neg.neg : β → β) atTop = at_bot :=
+  (OrderIso.neg β).map_at_top
+
+@[simp]
+theorem comap_neg_at_bot : comap (Neg.neg : β → β) atBot = at_top :=
+  (OrderIso.neg β).comap_at_top
+
+@[simp]
+theorem comap_neg_at_top : comap (Neg.neg : β → β) atTop = at_bot :=
+  (OrderIso.neg β).comap_at_bot
+
+theorem tendsto_neg_at_top_at_bot : Tendsto (Neg.neg : β → β) atTop atBot :=
+  (OrderIso.neg β).tendsto_at_top
 
 theorem tendsto_neg_at_bot_at_top : Tendsto (Neg.neg : β → β) atBot atTop :=
   @tendsto_neg_at_top_at_bot βᵒᵈ _
 
-theorem tendsto_at_top_iff_tends_to_neg_at_bot : Tendsto f l atTop ↔ Tendsto (-f) l atBot :=
-  have hf : f = Neg.neg ∘ -f := by
-    ext
-    simp
-  ⟨tendsto_neg_at_top_at_bot.comp, fun h => hf.symm ▸ tendsto_neg_at_bot_at_top.comp h⟩
+@[simp]
+theorem tendsto_neg_at_top_iff : Tendsto (fun x => -f x) l atTop ↔ Tendsto f l atBot :=
+  (OrderIso.neg β).tendsto_at_bot_iff
 
-theorem tendsto_at_bot_iff_tends_to_neg_at_top : Tendsto f l atBot ↔ Tendsto (-f) l atTop :=
-  @tendsto_at_top_iff_tends_to_neg_at_bot α βᵒᵈ _ l f
+@[simp]
+theorem tendsto_neg_at_bot_iff : Tendsto (fun x => -f x) l atBot ↔ Tendsto f l atTop :=
+  (OrderIso.neg β).tendsto_at_top_iff
 
 end OrderedGroup
 
@@ -615,7 +685,8 @@ theorem tendsto_mul_self_at_top : Tendsto (fun x : α => x * x) atTop atTop :=
 
 /-- The monomial function `x^n` tends to `+∞` at `+∞` for any positive natural `n`.
 A version for positive real powers exists as `tendsto_rpow_at_top`. -/
-theorem tendsto_pow_at_top {n : ℕ} (hn : 1 ≤ n) : Tendsto (fun x : α => x ^ n) atTop atTop := by
+theorem tendsto_pow_at_top {n : ℕ} (hn : n ≠ 0) : Tendsto (fun x : α => x ^ n) atTop atTop := by
+  rw [← pos_iff_ne_zero, ← Nat.succ_le_iff] at hn
   refine' tendsto_at_top_mono' _ ((eventually_ge_at_top 1).mono fun x hx => _) tendsto_id
   simpa only [← pow_oneₓ] using pow_le_pow hx hn
 
@@ -748,44 +819,27 @@ a negative constant (on the right) tends to positive infinity. -/
 theorem Tendsto.at_bot_mul_neg_const (hr : r < 0) (hf : Tendsto f l atBot) : Tendsto (fun x => f x * r) l atTop := by
   simpa only [← mul_comm] using hf.neg_const_mul_at_bot hr
 
-theorem tendsto_const_mul_pow_at_top {c : α} {n : ℕ} (hn : 1 ≤ n) (hc : 0 < c) :
+theorem tendsto_const_mul_pow_at_top {c : α} {n : ℕ} (hn : n ≠ 0) (hc : 0 < c) :
     Tendsto (fun x => c * x ^ n) atTop atTop :=
   Tendsto.const_mul_at_top hc (tendsto_pow_at_top hn)
 
-theorem tendsto_const_mul_pow_at_top_iff (c : α) (n : ℕ) : Tendsto (fun x => c * x ^ n) atTop atTop ↔ 1 ≤ n ∧ 0 < c :=
+theorem tendsto_const_mul_pow_at_top_iff {c : α} {n : ℕ} : Tendsto (fun x => c * x ^ n) atTop atTop ↔ n ≠ 0 ∧ 0 < c :=
   by
-  refine' ⟨fun h => _, fun h => tendsto_const_mul_pow_at_top h.1 h.2⟩
-  simp only [← tendsto_at_top, ← eventually_at_top] at h
-  have : 0 < c :=
-    let ⟨x, hx⟩ := h 1
-    pos_of_mul_pos_right (lt_of_lt_of_leₓ zero_lt_one (hx (max x 1) (le_max_leftₓ x 1)))
-      (pow_nonneg (le_transₓ zero_le_one (le_max_rightₓ x 1)) n)
-  refine' ⟨nat.succ_le_iff.mp (lt_of_le_of_neₓ (zero_le n) (Ne.symm fun hn => _)), this⟩
-  obtain ⟨x, hx⟩ := h (c + 1)
-  specialize hx x le_rfl
-  rw [hn, pow_zeroₓ, mul_oneₓ, add_le_iff_nonpos_right] at hx
-  exact absurd hx (not_le.mpr zero_lt_one)
+  refine' ⟨fun h => ⟨_, _⟩, fun h => tendsto_const_mul_pow_at_top h.1 h.2⟩
+  · rintro rfl
+    simpa only [← pow_zeroₓ, ← not_tendsto_const_at_top] using h
+    
+  · rcases((h.eventually_gt_at_top 0).And (eventually_ge_at_top 0)).exists with ⟨k, hck, hk⟩
+    exact pos_of_mul_pos_left hck (pow_nonneg hk _)
+    
 
-theorem tendsto_neg_const_mul_pow_at_top {c : α} {n : ℕ} (hn : 1 ≤ n) (hc : c < 0) :
+theorem tendsto_neg_const_mul_pow_at_top {c : α} {n : ℕ} (hn : n ≠ 0) (hc : c < 0) :
     Tendsto (fun x => c * x ^ n) atTop atBot :=
   Tendsto.neg_const_mul_at_top hc (tendsto_pow_at_top hn)
 
-theorem tendsto_neg_const_mul_pow_at_top_iff (c : α) (n : ℕ) :
-    Tendsto (fun x => c * x ^ n) atTop atBot ↔ 1 ≤ n ∧ c < 0 := by
-  refine' ⟨fun h => _, fun h => tendsto_neg_const_mul_pow_at_top h.1 h.2⟩
-  simp only [← tendsto_at_bot, ← eventually_at_top] at h
-  have : c < 0 :=
-    let ⟨x, hx⟩ := h (-1)
-    neg_of_mul_neg_right
-      (lt_of_le_of_ltₓ (hx (max x 1) (le_max_leftₓ x 1))
-        (by
-          simp [← zero_lt_one]))
-      (pow_nonneg (le_transₓ zero_le_one (le_max_rightₓ x 1)) n)
-  refine' ⟨nat.succ_le_iff.mp (lt_of_le_of_neₓ (zero_le n) (Ne.symm fun hn => _)), this⟩
-  obtain ⟨x, hx⟩ := h (c - 1)
-  specialize hx x le_rfl
-  rw [hn, pow_zeroₓ, mul_oneₓ, le_sub, sub_self] at hx
-  exact absurd hx (not_le.mpr zero_lt_one)
+theorem tendsto_const_mul_pow_at_bot_iff {c : α} {n : ℕ} : Tendsto (fun x => c * x ^ n) atTop atBot ↔ n ≠ 0 ∧ c < 0 :=
+  by
+  simp only [tendsto_neg_at_top_iff, neg_mul, ← tendsto_const_mul_pow_at_top_iff, ← neg_pos]
 
 end LinearOrderedField
 
@@ -1389,45 +1443,7 @@ theorem exists_le_mul_self (a : R) : ∃ x ≥ 0, a ≤ x * x :=
 
 end
 
-namespace OrderIso
-
-variable [Preorderₓ α] [Preorderₓ β]
-
-@[simp]
-theorem comap_at_top (e : α ≃o β) : comap e atTop = at_top := by
-  simp [← at_top, e.surjective.infi_comp]
-
-@[simp]
-theorem comap_at_bot (e : α ≃o β) : comap e atBot = at_bot :=
-  e.dual.comap_at_top
-
-@[simp]
-theorem map_at_top (e : α ≃o β) : map (e : α → β) atTop = at_top := by
-  rw [← e.comap_at_top, map_comap_of_surjective e.surjective]
-
-@[simp]
-theorem map_at_bot (e : α ≃o β) : map (e : α → β) atBot = at_bot :=
-  e.dual.map_at_top
-
-theorem tendsto_at_top (e : α ≃o β) : Tendsto e atTop atTop :=
-  e.map_at_top.le
-
-theorem tendsto_at_bot (e : α ≃o β) : Tendsto e atBot atBot :=
-  e.map_at_bot.le
-
-@[simp]
-theorem tendsto_at_top_iff {l : Filter γ} {f : γ → α} (e : α ≃o β) :
-    Tendsto (fun x => e (f x)) l atTop ↔ Tendsto f l atTop := by
-  rw [← e.comap_at_top, tendsto_comap_iff]
-
-@[simp]
-theorem tendsto_at_bot_iff {l : Filter γ} {f : γ → α} (e : α ≃o β) :
-    Tendsto (fun x => e (f x)) l atBot ↔ Tendsto f l atBot :=
-  e.dual.tendsto_at_top_iff
-
-end OrderIso
-
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ∉ » set.range g)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ∉ » set.range g)
 /-- Let `g : γ → β` be an injective function and `f : β → α` be a function from the codomain of `g`
 to a commutative monoid. Suppose that `f x = 1` outside of the range of `g`. Then the filters
 `at_top.map (λ s, ∏ i in s, f (g i))` and `at_top.map (λ s, ∏ i in s, f i)` coincide.
@@ -1436,7 +1452,7 @@ The additive version of this lemma is used to prove the equality `∑' x, f (g x
 the same assumptions.-/
 @[to_additive]
 theorem Function.Injective.map_at_top_finset_prod_eq [CommMonoidₓ α] {g : γ → β} (hg : Function.Injective g) {f : β → α}
-    (hf : ∀ x _ : x ∉ Set.Range g, f x = 1) :
+    (hf : ∀ (x) (_ : x ∉ Set.Range g), f x = 1) :
     map (fun s => ∏ i in s, f (g i)) atTop = map (fun s => ∏ i in s, f i) atTop := by
   apply le_antisymmₓ <;> refine' map_at_top_finset_prod_le_of_prod_eq fun s => _
   · refine' ⟨s.preimage g (hg.inj_on _), fun t ht => _⟩

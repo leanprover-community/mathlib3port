@@ -26,7 +26,7 @@ def Tfae (l : List Prop) : Prop :=
 theorem tfae_nil : Tfae [] :=
   forall_mem_nilₓ _
 
-theorem tfae_singleton p : Tfae [p] := by
+theorem tfae_singleton (p) : Tfae [p] := by
   simp [← tfae, -eq_iff_iff]
 
 theorem tfae_cons_of_mem {a b} {l : List Prop} (h : b ∈ l) : Tfae (a :: l) ↔ (a ↔ b) ∧ Tfae l :=
@@ -53,7 +53,7 @@ theorem tfae_cons_cons {a b} {l : List Prop} : Tfae (a :: b :: l) ↔ (a ↔ b) 
 theorem tfae_of_forall (b : Prop) (l : List Prop) (h : ∀, ∀ a ∈ l, ∀, a ↔ b) : Tfae l := fun a₁ h₁ a₂ h₂ =>
   (h _ h₁).trans (h _ h₂).symm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:694:4: warning: unsupported binary notation `«->»
+-- ./././Mathport/Syntax/Translate/Basic.lean:703:4: warning: unsupported binary notation `«->»
 theorem tfae_of_cycle {a b} {l : List Prop} :
     List.Chain («->» · ·) a (b :: l) → (ilast' b l → a) → Tfae (a :: b :: l) := by
   induction' l with c l IH generalizing a b <;>
@@ -65,7 +65,7 @@ theorem tfae_of_cycle {a b} {l : List Prop} :
   have := IH ⟨bc, ch⟩ (ab ∘ la)
   exact ⟨⟨ab, la ∘ (this.2 c (Or.inl rfl) _ (ilast'_mem _ _)).1 ∘ bc⟩, this⟩
 
-theorem Tfae.out {l} (h : Tfae l) n₁ n₂ {a b}
+theorem Tfae.out {l} (h : Tfae l) (n₁ n₂) {a b}
     (h₁ : List.nth l n₁ = some a := by
       run_tac
         tactic.interactive.refl)

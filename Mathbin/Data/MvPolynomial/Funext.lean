@@ -78,7 +78,6 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Finₓ n) R} (h : ∀ x 
       
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Two multivariate polynomials over an infinite integral domain are equal
 if they are equal upon evaluating them on an arbitrary assignment of the variables. -/
 theorem funext {σ : Type _} {p q : MvPolynomial σ R} (h : ∀ x : σ → R, eval x p = eval x q) : p = q := by

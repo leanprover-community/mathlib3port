@@ -14,13 +14,11 @@ be the polynomial with root `r * s` for each root `r` of `p` and proves some bas
 -/
 
 
-section scaleRoots
-
 variable {A K R S : Type _} [CommRingₓ A] [IsDomain A] [Field K] [CommRingₓ R] [CommRingₓ S]
 
 variable {M : Submonoid A}
 
-open Polynomial
+namespace Polynomial
 
 open BigOperators Polynomial
 
@@ -31,7 +29,7 @@ noncomputable def scaleRoots (p : R[X]) (s : R) : R[X] :=
 @[simp]
 theorem coeff_scale_roots (p : R[X]) (s : R) (i : ℕ) : (scaleRoots p s).coeff i = coeff p i * s ^ (p.natDegree - i) :=
   by
-  simp (config := { contextual := true })[← scaleRoots, ← coeff_monomial]
+  simp (config := { contextual := true })[← scale_roots, ← coeff_monomial]
 
 theorem coeff_scale_roots_nat_degree (p : R[X]) (s : R) : (scaleRoots p s).coeff p.natDegree = p.leadingCoeff := by
   rw [leading_coeff, coeff_scale_roots, tsub_self, pow_zeroₓ, mul_oneₓ]
@@ -44,7 +42,7 @@ theorem zero_scale_roots (s : R) : scaleRoots 0 s = 0 := by
 theorem scale_roots_ne_zero {p : R[X]} (hp : p ≠ 0) (s : R) : scaleRoots p s ≠ 0 := by
   intro h
   have : p.coeff p.nat_degree ≠ 0 := mt leading_coeff_eq_zero.mp hp
-  have : (scaleRoots p s).coeff p.nat_degree = 0 := congr_fun (congr_arg (coeff : R[X] → ℕ → R) h) p.nat_degree
+  have : (scale_roots p s).coeff p.nat_degree = 0 := congr_fun (congr_arg (coeff : R[X] → ℕ → R) h) p.nat_degree
   rw [coeff_scale_roots_nat_degree] at this
   contradiction
 
@@ -122,5 +120,5 @@ theorem scale_roots_aeval_eq_zero_of_aeval_div_eq_zero [Algebra A K] (inj : Func
     aeval (algebraMap A K r) (scaleRoots p s) = 0 :=
   scale_roots_eval₂_eq_zero_of_eval₂_div_eq_zero inj hr hs
 
-end scaleRoots
+end Polynomial
 

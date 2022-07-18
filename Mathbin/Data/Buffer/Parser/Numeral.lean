@@ -99,5 +99,22 @@ def numeral.char.ofFintype [Fintype α] (fromc : Charₓ) : Parser α := do
         (sat fun c => fromc ≤ c ∧ c.toNat - Fintype.card α < fromc.toNat)
   pure <| Nat.binCast (c - fromc)deriving Mono, Bounded, ErrStatic, Step
 
+/-! ## Specific numeral types -/
+
+
+/-- Matches an integer, like `43` or `-2`.
+Large numbers may cause performance issues, so don't run this parser on untrusted input.
+-/
+unsafe def int : Parser Int :=
+  coe <$> Nat <|> ch '-' >> Neg.neg <$> coe <$> Nat
+
+/-- Matches an rational number, like `43/1` or `-2/3`.
+Requires that the negation is in the numerator,
+and that both a numerator and denominator are provided (e.g. will not match `43`).
+Large numbers may cause performance issues, so don't run this parser on untrusted input.
+-/
+unsafe def rat : Parser Rat :=
+  (fun x y => ↑x / ↑y) <$> Int <*> (ch '/' >> Nat)
+
 end Parser
 

@@ -115,7 +115,7 @@ theorem right_le_mkpair (a b : ℕ) : b ≤ mkpair a b := by
 theorem unpair_right_le (n : ℕ) : (unpair n).2 ≤ n := by
   simpa using right_le_mkpair n.unpair.1 n.unpair.2
 
-theorem mkpair_lt_mkpair_left {a₁ a₂} b (h : a₁ < a₂) : mkpair a₁ b < mkpair a₂ b := by
+theorem mkpair_lt_mkpair_left {a₁ a₂} (b) (h : a₁ < a₂) : mkpair a₁ b < mkpair a₂ b := by
   by_cases' h₁ : a₁ < b <;> simp [← mkpair, ← h₁, ← add_assocₓ]
   · by_cases' h₂ : a₂ < b <;> simp [← mkpair, ← h₂, ← h]
     simp at h₂
@@ -130,7 +130,7 @@ theorem mkpair_lt_mkpair_left {a₁ a₂} b (h : a₁ < a₂) : mkpair a₁ b < 
     apply add_lt_add_right <;> assumption
     
 
-theorem mkpair_lt_mkpair_right a {b₁ b₂} (h : b₁ < b₂) : mkpair a b₁ < mkpair a b₂ := by
+theorem mkpair_lt_mkpair_right (a) {b₁ b₂} (h : b₁ < b₂) : mkpair a b₁ < mkpair a b₂ := by
   by_cases' h₁ : a < b₁ <;> simp [← mkpair, ← h₁, ← add_assocₓ]
   · simp [← mkpair, ← lt_transₓ h₁ h, ← h]
     exact mul_self_lt_mul_self h
@@ -148,12 +148,12 @@ open Nat
 
 section CompleteLattice
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem supr_unpair {α} [CompleteLattice α] (f : ℕ → ℕ → α) :
     (⨆ n : ℕ, f n.unpair.1 n.unpair.2) = ⨆ (i : ℕ) (j : ℕ), f i j := by
   rw [← (supr_prod : (⨆ i : ℕ × ℕ, f i.1 i.2) = _), ← nat.surjective_unpair.supr_comp]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem infi_unpair {α} [CompleteLattice α] (f : ℕ → ℕ → α) :
     (⨅ n : ℕ, f n.unpair.1 n.unpair.2) = ⨅ (i : ℕ) (j : ℕ), f i j :=
   supr_unpair (show ℕ → ℕ → αᵒᵈ from f)
@@ -168,11 +168,11 @@ theorem Union_unpair_prod {α β} {s : ℕ → Set α} {t : ℕ → Set β} :
   convert surjective_unpair.Union_comp _
   rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem Union_unpair {α} (f : ℕ → ℕ → Set α) : (⋃ n : ℕ, f n.unpair.1 n.unpair.2) = ⋃ (i : ℕ) (j : ℕ), f i j :=
   supr_unpair f
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem Inter_unpair {α} (f : ℕ → ℕ → Set α) : (⋂ n : ℕ, f n.unpair.1 n.unpair.2) = ⋂ (i : ℕ) (j : ℕ), f i j :=
   infi_unpair f
 

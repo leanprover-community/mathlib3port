@@ -233,7 +233,6 @@ theorem range_mem_right_transversals {f : Quotientₓ (QuotientGroup.rightRel H)
       rintro ⟨-, q₁, rfl⟩ ⟨-, q₂, rfl⟩ h <;> exact congr_arg _ (((hf q₁).symm.trans h).trans (hf q₂)), fun q =>
       ⟨⟨f q, q, rfl⟩, hf q⟩⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem exists_left_transversal (g : G) : ∃ S ∈ LeftTransversals (H : Set G), g ∈ S := by
   classical
@@ -246,7 +245,6 @@ theorem exists_left_transversal (g : G) : ∃ S ∈ LeftTransversals (H : Set G)
   · exact Eq.trans (congr_arg _ (Function.update_noteq hq g Quotientₓ.out')) q.out_eq'
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem exists_right_transversal (g : G) : ∃ S ∈ RightTransversals (H : Set G), g ∈ S := by
   classical

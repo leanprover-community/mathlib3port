@@ -75,10 +75,10 @@ def Fintype.divisionRingOfIsDomain (R : Type _) [Ringₓ R] [IsDomain R] [Decida
 
 TODO: Prove Wedderburn's little theorem, which shows a finite domain is automatically commutative,
 dropping one assumption from this theorem. -/
-def Fintype.fieldOfDomain R [CommRingₓ R] [IsDomain R] [DecidableEq R] [Fintype R] : Field R :=
+def Fintype.fieldOfDomain (R) [CommRingₓ R] [IsDomain R] [DecidableEq R] [Fintype R] : Field R :=
   { Fintype.groupWithZeroOfCancel R, ‹CommRingₓ R› with }
 
-theorem Fintype.is_field_of_domain R [CommRingₓ R] [IsDomain R] [Fintype R] : IsField R :=
+theorem Fintype.is_field_of_domain (R) [CommRingₓ R] [IsDomain R] [Fintype R] : IsField R :=
   @Field.to_is_field R <| @Fintype.fieldOfDomain R _ _ (Classical.decEq R) _
 
 end Ringₓ
@@ -99,7 +99,6 @@ theorem card_nth_roots_subgroup_units (f : G →* R) (hf : Injective f) {n : ℕ
     assumption
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A finite subgroup of the unit group of an integral domain is cyclic. -/
 theorem is_cyclic_of_subgroup_is_domain (f : G →* R) (hf : Injective f) : IsCyclic G := by
   classical
@@ -144,7 +143,6 @@ theorem card_fiber_eq_of_mem_range {H : Type _} [Groupₓ H] [DecidableEq H] (f 
       exists_prop_of_true, ← MonoidHom.map_mul_inv, ← and_selfₓ, ← mul_inv_cancel_rightₓ, ← inv_mul_cancel_right]
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- In an integral domain, a sum indexed by a nontrivial homomorphism from a finite group is zero.
 -/
 theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) = 0 := by

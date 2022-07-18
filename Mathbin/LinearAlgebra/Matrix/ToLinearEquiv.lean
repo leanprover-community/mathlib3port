@@ -99,7 +99,7 @@ section Nondegenerate
 
 open Matrix
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (v «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (v «expr ≠ » 0)
 /-- This holds for all integral domains (see `matrix.exists_mul_vec_eq_zero_iff`),
 not just fields, but it's easier to prove it for the field of fractions first. -/
 theorem exists_mul_vec_eq_zero_iff_aux {K : Type _} [DecidableEq n] [Field K] {M : Matrix n n K} :
@@ -120,8 +120,8 @@ theorem exists_mul_vec_eq_zero_iff_aux {K : Type _} [DecidableEq n] [Field K] {M
     exact Matrix.det_ne_zero_of_right_inverse this
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (v «expr ≠ » 0)
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (v «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (v «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (v «expr ≠ » 0)
 theorem exists_mul_vec_eq_zero_iff' {A : Type _} (K : Type _) [DecidableEq n] [CommRingₓ A] [Nontrivial A] [Field K]
     [Algebra A K] [IsFractionRing A K] {M : Matrix n n A} : (∃ (v : _)(_ : v ≠ 0), M.mulVec v = 0) ↔ M.det = 0 := by
   have : (∃ (v : _)(_ : v ≠ 0), mul_vec ((algebraMap A K).mapMatrix M) v = 0) ↔ _ := exists_mul_vec_eq_zero_iff_aux
@@ -160,12 +160,12 @@ theorem exists_mul_vec_eq_zero_iff' {A : Type _} (K : Type _) [DecidableEq n] [C
       
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (v «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (v «expr ≠ » 0)
 theorem exists_mul_vec_eq_zero_iff {A : Type _} [DecidableEq n] [CommRingₓ A] [IsDomain A] {M : Matrix n n A} :
     (∃ (v : _)(_ : v ≠ 0), M.mulVec v = 0) ↔ M.det = 0 :=
   exists_mul_vec_eq_zero_iff' (FractionRing A)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (v «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (v «expr ≠ » 0)
 theorem exists_vec_mul_eq_zero_iff {A : Type _} [DecidableEq n] [CommRingₓ A] [IsDomain A] {M : Matrix n n A} :
     (∃ (v : _)(_ : v ≠ 0), M.vecMul v = 0) ↔ M.det = 0 := by
   simpa only [M.det_transpose, mul_vec_transpose] using exists_mul_vec_eq_zero_iff

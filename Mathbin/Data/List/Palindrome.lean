@@ -38,7 +38,7 @@ namespace List
 inductive Palindrome : List α → Prop
   | nil : palindrome []
   | singleton : ∀ x, palindrome [x]
-  | cons_concat : ∀ x {l}, palindrome l → palindrome (x :: (l ++ [x]))
+  | cons_concat : ∀ (x) {l}, palindrome l → palindrome (x :: (l ++ [x]))
 
 namespace Palindrome
 

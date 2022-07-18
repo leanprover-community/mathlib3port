@@ -99,7 +99,7 @@ where the first morphism is `F' U F ι_UX`, the second is `F' U ε_RF'UX`, and t
 We will show that this coequalizer exists and that it forms the object map for a left adjoint to
 `R`.
 -/
-def otherMap X : F'.obj (U.obj (F.obj (U.obj X))) ⟶ F'.obj (U.obj X) :=
+def otherMap (X) : F'.obj (U.obj (F.obj (U.obj X))) ⟶ F'.obj (U.obj X) :=
   F'.map (U.map (F.map (adj₂.Unit.app _) ≫ adj₁.counit.app _)) ≫ adj₂.counit.app _
 
 /-- `(F'Uε_X, other_map X)` is a reflexive pair: in particular if `A` has reflexive coequalizers then

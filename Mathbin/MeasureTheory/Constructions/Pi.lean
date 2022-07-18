@@ -366,7 +366,7 @@ def FiniteSpanningSetsIn.pi {C : ∀ i, Set (Set (α i))} (hμ : ∀ i, (μ i).F
 theorem pi_eq_generate_from {C : ∀ i, Set (Set (α i))} (hC : ∀ i, generateFrom (C i) = _inst_3 i)
     (h2C : ∀ i, IsPiSystem (C i)) (h3C : ∀ i, (μ i).FiniteSpanningSetsIn (C i)) {μν : Measure (∀ i, α i)}
     (h₁ : ∀ s : ∀ i, Set (α i), (∀ i, s i ∈ C i) → μν (pi Univ s) = ∏ i, μ i (s i)) : Measure.pi μ = μν := by
-  have h4C : ∀ i s : Set (α i), s ∈ C i → MeasurableSet s := by
+  have h4C : ∀ (i) (s : Set (α i)), s ∈ C i → MeasurableSet s := by
     intro i s hs
     rw [← hC]
     exact measurable_set_generate_from hs
@@ -444,17 +444,17 @@ theorem ae_pi_le_pi : (Measure.pi μ).ae ≤ Filter.pi fun i => (μ i).ae :=
   le_infi fun i => tendsto_eval_ae_ae.le_comap
 
 theorem ae_eq_pi {β : ι → Type _} {f f' : ∀ i, α i → β i} (h : ∀ i, f i =ᵐ[μ i] f' i) :
-    (fun x : ∀ i, α i i => f i (x i)) =ᵐ[Measure.pi μ] fun x i => f' i (x i) :=
+    (fun (x : ∀ i, α i) i => f i (x i)) =ᵐ[Measure.pi μ] fun x i => f' i (x i) :=
   (eventually_all.2 fun i => tendsto_eval_ae_ae.Eventually (h i)).mono fun x hx => funext hx
 
 theorem ae_le_pi {β : ι → Type _} [∀ i, Preorderₓ (β i)] {f f' : ∀ i, α i → β i} (h : ∀ i, f i ≤ᵐ[μ i] f' i) :
-    (fun x : ∀ i, α i i => f i (x i)) ≤ᵐ[Measure.pi μ] fun x i => f' i (x i) :=
+    (fun (x : ∀ i, α i) i => f i (x i)) ≤ᵐ[Measure.pi μ] fun x i => f' i (x i) :=
   (eventually_all.2 fun i => tendsto_eval_ae_ae.Eventually (h i)).mono fun x hx => hx
 
 theorem ae_le_set_pi {I : Set ι} {s t : ∀ i, Set (α i)} (h : ∀, ∀ i ∈ I, ∀, s i ≤ᵐ[μ i] t i) :
     Set.Pi I s ≤ᵐ[Measure.pi μ] Set.Pi I t :=
-  ((eventually_all_finite (Set.Finite.of_fintype I)).2 fun i hi => tendsto_eval_ae_ae.Eventually (h i hi)).mono
-    fun x hst hx i hi => hst i hi <| hx i hi
+  ((eventually_all_finite I.to_finite).2 fun i hi => tendsto_eval_ae_ae.Eventually (h i hi)).mono fun x hst hx i hi =>
+    hst i hi <| hx i hi
 
 theorem ae_eq_set_pi {I : Set ι} {s t : ∀ i, Set (α i)} (h : ∀, ∀ i ∈ I, ∀, s i =ᵐ[μ i] t i) :
     Set.Pi I s =ᵐ[Measure.pi μ] Set.Pi I t :=

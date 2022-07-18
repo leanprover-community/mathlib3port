@@ -123,12 +123,12 @@ theorem induction_on (f : Germ l β) {p : Germ l β → Prop} (h : ∀ f : α �
 
 @[elab_as_eliminator]
 theorem induction_on₂ (f : Germ l β) (g : Germ l γ) {p : Germ l β → Germ l γ → Prop}
-    (h : ∀ f : α → β g : α → γ, p f g) : p f g :=
+    (h : ∀ (f : α → β) (g : α → γ), p f g) : p f g :=
   Quotientₓ.induction_on₂' f g h
 
 @[elab_as_eliminator]
 theorem induction_on₃ (f : Germ l β) (g : Germ l γ) (h : Germ l δ) {p : Germ l β → Germ l γ → Germ l δ → Prop}
-    (H : ∀ f : α → β g : α → γ h : α → δ, p f g h) : p f g h :=
+    (H : ∀ (f : α → β) (g : α → γ) (h : α → δ), p f g h) : p f g h :=
   Quotientₓ.induction_on₃' f g h H
 
 /-- Given a map `F : (α → β) → (γ → δ)` that sends functions eventually equal at `l` to functions

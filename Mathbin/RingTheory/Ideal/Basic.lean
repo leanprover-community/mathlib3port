@@ -122,7 +122,7 @@ theorem span_union (s t : Set α) : span (s ∪ t) = span s⊔span t :=
 theorem span_Union {ι} (s : ι → Set α) : span (⋃ i, s i) = ⨆ i, span (s i) :=
   Submodule.span_Union _
 
-theorem mem_span {s : Set α} x : x ∈ span s ↔ ∀ p : Ideal α, s ⊆ p → x ∈ p :=
+theorem mem_span {s : Set α} (x) : x ∈ span s ↔ ∀ p : Ideal α, s ⊆ p → x ∈ p :=
   mem_Inter₂
 
 theorem subset_span {s : Set α} : s ⊆ span s :=
@@ -148,7 +148,7 @@ theorem mem_span_insert {s : Set α} {x y} : x ∈ span (insert y s) ↔ ∃ a, 
 theorem mem_span_singleton' {x y : α} : x ∈ span ({y} : Set α) ↔ ∃ a, a * y = x :=
   Submodule.mem_span_singleton
 
-theorem span_insert x (s : Set α) : span (insert x s) = span ({x} : Set α)⊔span s :=
+theorem span_insert (x) (s : Set α) : span (insert x s) = span ({x} : Set α)⊔span s :=
   Submodule.span_insert x s
 
 theorem span_eq_bot {s : Set α} : span s = ⊥ ↔ ∀, ∀ x ∈ s, ∀, (x : α) = 0 :=
@@ -201,8 +201,8 @@ theorem IsPrime.mem_of_pow_mem {I : Ideal α} (hI : I.IsPrime) {r : α} (n : ℕ
     exact Or.cases_on (hI.mem_or_mem H) id ih
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ∉ » I)
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y «expr ∉ » I)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ∉ » I)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y «expr ∉ » I)
 theorem not_is_prime_iff {I : Ideal α} : ¬I.IsPrime ↔ I = ⊤ ∨ ∃ (x : _)(_ : x ∉ I)(y : _)(_ : y ∉ I), x * y ∈ I := by
   simp_rw [Ideal.is_prime_iff, not_and_distrib, Ne.def, not_not, not_forall, not_or_distrib]
   exact
@@ -232,7 +232,7 @@ theorem IsMaximal.ne_top {I : Ideal α} (h : I.IsMaximal) : I ≠ ⊤ :=
   (is_maximal_def.1 h).1
 
 theorem is_maximal_iff {I : Ideal α} :
-    I.IsMaximal ↔ (1 : α) ∉ I ∧ ∀ J : Ideal α x, I ≤ J → x ∉ I → x ∈ J → (1 : α) ∈ J :=
+    I.IsMaximal ↔ (1 : α) ∉ I ∧ ∀ (J : Ideal α) (x), I ≤ J → x ∉ I → x ∈ J → (1 : α) ∈ J :=
   is_maximal_def.trans <|
     and_congr I.ne_top_iff_one <|
       forall_congrₓ fun J => by
@@ -588,7 +588,7 @@ variable {R : Type _} [CommRingₓ R]
 theorem not_is_field_of_subsingleton {R : Type _} [Ringₓ R] [Subsingleton R] : ¬IsField R := fun ⟨⟨x, y, hxy⟩, _, _⟩ =>
   hxy (Subsingleton.elimₓ x y)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ≠ » (0 : R))
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » (0 : R))
 theorem exists_not_is_unit_of_not_is_field [Nontrivial R] (hf : ¬IsField R) : ∃ (x : _)(_ : x ≠ (0 : R)), ¬IsUnit x :=
   by
   have : ¬_ := fun h => hf ⟨exists_pair_ne R, mul_comm, h⟩

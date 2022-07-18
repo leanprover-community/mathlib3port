@@ -55,7 +55,7 @@ theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : 
 
 /-- `pi m t` constructs the Cartesian product over `t` indexed by `m`. -/
 def pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : Multiset (∀, ∀ a ∈ m, ∀, δ a) :=
-  m.recOn {Pi.emptyₓ δ} (fun a m p : Multiset (∀, ∀ a ∈ m, ∀, δ a) => (t a).bind fun b => p.map <| Pi.cons m a b)
+  m.recOn {Pi.emptyₓ δ} (fun a m (p : Multiset (∀, ∀ a ∈ m, ∀, δ a)) => (t a).bind fun b => p.map <| Pi.cons m a b)
     (by
       intro a a' m n
       by_cases' eq : a = a'
@@ -140,7 +140,7 @@ theorem pi.cons_ext {m : Multiset α} {a : α} (f : ∀, ∀ a' ∈ a ::ₘ m, �
     
 
 theorem mem_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) :
-    ∀ f : ∀, ∀ a ∈ m, ∀, δ a, f ∈ pi m t ↔ ∀ a h : a ∈ m, f a h ∈ t a := by
+    ∀ f : ∀, ∀ a ∈ m, ∀, δ a, f ∈ pi m t ↔ ∀ (a) (h : a ∈ m), f a h ∈ t a := by
   intro f
   induction' m using Multiset.induction_on with a m ih
   · simpa using

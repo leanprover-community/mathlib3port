@@ -234,8 +234,8 @@ theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 
       _ = ∑ i in range N, ∑ j in range (min (i + 1) K), ∫ x in i..(i + 1 : ℕ), (1 : ℝ) ∂ρ := by
         simp_rw [sum_sigma']
         refine'
-          sum_bij' (fun p : Σi : ℕ, ℕ hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ (fun a ha => rfl)
-            (fun p : Σi : ℕ, ℕ hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ _ _
+          sum_bij' (fun (p : Σi : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ (fun a ha => rfl)
+            (fun (p : Σi : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ _ _
         · rintro ⟨i, j⟩ hij
           simp only [← mem_sigma, ← mem_range, ← mem_Ico] at hij
           simp only [← hij, ← Nat.lt_succ_iffₓ.2 hij.2.1, ← mem_sigma, ← mem_range, ← lt_min_iff, ← and_selfₓ]
@@ -369,8 +369,8 @@ theorem sum_variance_truncation_le {X : Ω → ℝ} (hint : Integrable X) (hnonn
       by
       simp_rw [mul_sum, sum_mul, sum_sigma']
       refine'
-        sum_bij' (fun p : Σi : ℕ, ℕ hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ (fun a ha => rfl)
-          (fun p : Σi : ℕ, ℕ hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ _ _
+        sum_bij' (fun (p : Σi : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ (fun a ha => rfl)
+          (fun (p : Σi : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ _ _
       · rintro ⟨i, j⟩ hij
         simp only [← mem_sigma, ← mem_range, ← mem_filter] at hij
         simp [← hij, ← mem_sigma, ← mem_range, ← and_selfₓ, ← hij.2.trans hij.1]
@@ -492,8 +492,8 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
         by
         simp_rw [mul_sum, sum_mul, sum_sigma']
         refine'
-          sum_bij' (fun p : Σi : ℕ, ℕ hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ (fun a ha => rfl)
-            (fun p : Σi : ℕ, ℕ hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ _ _
+          sum_bij' (fun (p : Σi : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ (fun a ha => rfl)
+            (fun (p : Σi : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ _ _
         · rintro ⟨i, j⟩ hij
           simp only [← mem_sigma, ← mem_range] at hij
           simp only [← hij.1, ← hij.2, ← mem_sigma, ← mem_range, ← mem_filter, ← and_trueₓ]

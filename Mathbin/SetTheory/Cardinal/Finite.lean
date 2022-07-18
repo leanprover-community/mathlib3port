@@ -12,9 +12,8 @@ import Mathbin.SetTheory.Cardinal.Basic
 
 * `nat.card α` is the cardinality of `α` as a natural number.
   If `α` is infinite, `nat.card α = 0`.
-* `enat.card α` is the cardinality of `α` as an extended natural number.
-  If `α` is infinite, `enat.card α = ⊤`.
-
+* `part_enat.card α` is the cardinality of `α` as an extended natural number
+  (`part ℕ` implementation). If `α` is infinite, `part_enat.card α = ⊤`.
 -/
 
 
@@ -85,20 +84,20 @@ theorem card_plift (α : Type _) : Nat.card (Plift α) = Nat.card α :=
 
 end Nat
 
-namespace Enat
+namespace PartEnat
 
-/-- `enat.card α` is the cardinality of `α` as an extended natural number.
-  If `α` is infinite, `enat.card α = ⊤`. -/
-def card (α : Type _) : Enat :=
-  (mk α).toEnat
+/-- `part_enat.card α` is the cardinality of `α` as an extended natural number.
+  If `α` is infinite, `part_enat.card α = ⊤`. -/
+def card (α : Type _) : PartEnat :=
+  (mk α).toPartEnat
 
 @[simp]
 theorem card_eq_coe_fintype_card [Fintype α] : card α = Fintype.card α :=
-  mk_to_enat_eq_coe_card
+  mk_to_part_enat_eq_coe_card
 
 @[simp]
 theorem card_eq_top_of_infinite [Infinite α] : card α = ⊤ :=
-  mk_to_enat_of_infinite
+  mk_to_part_enat_of_infinite
 
-end Enat
+end PartEnat
 

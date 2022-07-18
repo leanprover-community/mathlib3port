@@ -25,11 +25,11 @@ run_cmd
 attribute [sugar_nat]
   Ne not_leₓ not_ltₓ Nat.lt_iff_add_one_le Nat.succ_eq_add_one or_falseₓ false_orₓ and_trueₓ true_andₓ Ge Gt mul_addₓ add_mulₓ mul_comm one_mulₓ mul_oneₓ imp_iff_not_or iff_iff_not_or_and_or_not
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 unsafe def desugar :=
   sorry
 
-theorem univ_close_of_unsat_neg_elim_not m (p : Preform) : (negElim (¬* p)).Unsat → UnivClose p (fun _ => 0) m := by
+theorem univ_close_of_unsat_neg_elim_not (m) (p : Preform) : (negElim (¬* p)).Unsat → UnivClose p (fun _ => 0) m := by
   intro h1
   apply univ_close_of_valid
   apply valid_of_unsat_not

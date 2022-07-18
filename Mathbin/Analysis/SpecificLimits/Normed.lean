@@ -54,7 +54,7 @@ theorem tendsto_norm_zpow_nhds_within_0_at_top {𝕜 : Type _} [NormedField 𝕜
   lift m to ℕ using hm.le
   rw [Int.coe_nat_pos] at hm
   simp only [← norm_pow, ← zpow_neg, ← zpow_coe_nat, inv_pow]
-  exact (tendsto_pow_at_top hm).comp NormedField.tendsto_norm_inverse_nhds_within_0_at_top
+  exact (tendsto_pow_at_top hm.ne').comp NormedField.tendsto_norm_inverse_nhds_within_0_at_top
 
 /-- The (scalar) product of a sequence that tends to zero with a bounded one also tends to zero. -/
 theorem tendsto_zero_smul_of_tendsto_zero_of_bounded {ι 𝕜 𝔸 : Type _} [NormedField 𝕜] [NormedGroup 𝔸] [NormedSpace 𝕜 𝔸]

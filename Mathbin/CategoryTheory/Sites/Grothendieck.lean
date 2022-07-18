@@ -71,9 +71,10 @@ Definition 1.
 structure GrothendieckTopology where
   Sieves : ∀ X : C, Set (Sieve X)
   top_mem' : ∀ X, ⊤ ∈ sieves X
-  pullback_stable' : ∀ ⦃X Y : C⦄ ⦃S : Sieve X⦄ f : Y ⟶ X, S ∈ sieves X → S.pullback f ∈ sieves Y
+  pullback_stable' : ∀ ⦃X Y : C⦄ ⦃S : Sieve X⦄ (f : Y ⟶ X), S ∈ sieves X → S.pullback f ∈ sieves Y
   transitive' :
-    ∀ ⦃X⦄ ⦃S : Sieve X⦄ hS : S ∈ sieves X R : Sieve X, (∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄, S f → R.pullback f ∈ sieves Y) → R ∈ sieves X
+    ∀ ⦃X⦄ ⦃S : Sieve X⦄ (hS : S ∈ sieves X) (R : Sieve X),
+      (∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄, S f → R.pullback f ∈ sieves Y) → R ∈ sieves X
 
 namespace GrothendieckTopology
 
@@ -141,7 +142,7 @@ theorem intersection_covering_iff : R⊓S ∈ J X ↔ R ∈ J X ∧ S ∈ J X :=
     intersection_covering _ t.1 t.2⟩
 
 theorem bind_covering {S : Sieve X} {R : ∀ ⦃Y : C⦄ ⦃f : Y ⟶ X⦄, S f → Sieve Y} (hS : S ∈ J X)
-    (hR : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ H : S f, R H ∈ J Y) : Sieve.bind S R ∈ J X :=
+    (hR : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (H : S f), R H ∈ J Y) : Sieve.bind S R ∈ J X :=
   J.Transitive hS _ fun Y f hf => superset_covering J (Sieve.le_pullback_bind S R f hf) (hR hf)
 
 /-- The sieve `S` on `X` `J`-covers an arrow `f` to `X` if `S.pullback f ∈ J Y`.
@@ -170,7 +171,7 @@ theorem arrow_stable (f : Y ⟶ X) (S : Sieve X) (h : J.Covers S f) {Z : C} (g :
 `R`, then `R` covers `f`.
 -/
 theorem arrow_trans (f : Y ⟶ X) (S R : Sieve X) (h : J.Covers S f) :
-    (∀ {Z : C} g : Z ⟶ X, S g → J.Covers R g) → J.Covers R f := by
+    (∀ {Z : C} (g : Z ⟶ X), S g → J.Covers R g) → J.Covers R f := by
   intro k
   apply J.transitive h
   intro Z g hg
@@ -306,7 +307,7 @@ theorem top_covers (S : Sieve X) (f : Y ⟶ X) : (⊤ : GrothendieckTopology C).
 See https://ncatlab.org/nlab/show/dense+topology, or [MM92] Chapter III, Section 2, example (e).
 -/
 def dense : GrothendieckTopology C where
-  Sieves := fun X S => ∀ {Y : C} f : Y ⟶ X, ∃ (Z : _)(g : Z ⟶ Y), S (g ≫ f)
+  Sieves := fun X S => ∀ {Y : C} (f : Y ⟶ X), ∃ (Z : _)(g : Z ⟶ Y), S (g ≫ f)
   top_mem' := fun X Y f => ⟨Y, 𝟙 Y, ⟨⟩⟩
   pullback_stable' := by
     intro X Y S h H Z f
@@ -322,7 +323,7 @@ def dense : GrothendieckTopology C where
       ⟨W, h ≫ g, by
         simpa using H₄⟩
 
-theorem dense_covering : S ∈ dense X ↔ ∀ {Y} f : Y ⟶ X, ∃ (Z : _)(g : Z ⟶ Y), S (g ≫ f) :=
+theorem dense_covering : S ∈ dense X ↔ ∀ {Y} (f : Y ⟶ X), ∃ (Z : _)(g : Z ⟶ Y), S (g ≫ f) :=
   Iff.rfl
 
 /-- A category satisfies the right Ore condition if any span can be completed to a commutative square.
@@ -330,7 +331,7 @@ NB. Any category with pullbacks obviously satisfies the right Ore condition, see
 `right_ore_of_pullbacks`.
 -/
 def RightOreCondition (C : Type u) [Category.{v} C] : Prop :=
-  ∀ {X Y Z : C} yx : Y ⟶ X zx : Z ⟶ X, ∃ (W : _)(wy : W ⟶ Y)(wz : W ⟶ Z), wy ≫ yx = wz ≫ zx
+  ∀ {X Y Z : C} (yx : Y ⟶ X) (zx : Z ⟶ X), ∃ (W : _)(wy : W ⟶ Y)(wz : W ⟶ Z), wy ≫ yx = wz ≫ zx
 
 theorem right_ore_of_pullbacks [Limits.HasPullbacks C] : RightOreCondition C := fun X Y Z yx zx =>
   ⟨_, _, _, Limits.pullback.condition⟩
@@ -365,7 +366,7 @@ variable {J}
 instance : Coe (J.cover X) (Sieve X) :=
   ⟨fun S => S.1⟩
 
-instance : CoeFun (J.cover X) fun S => ∀ ⦃Y⦄ f : Y ⟶ X, Prop :=
+instance : CoeFun (J.cover X) fun S => ∀ ⦃Y⦄ (f : Y ⟶ X), Prop :=
   ⟨fun S Y f => (S : Sieve X) f⟩
 
 @[simp]
@@ -376,7 +377,7 @@ theorem condition (S : J.cover X) : (S : Sieve X) ∈ J X :=
   S.2
 
 @[ext]
-theorem ext (S T : J.cover X) (h : ∀ ⦃Y⦄ f : Y ⟶ X, S f ↔ T f) : S = T :=
+theorem ext (S T : J.cover X) (h : ∀ ⦃Y⦄ (f : Y ⟶ X), S f ↔ T f) : S = T :=
   Subtype.ext <| Sieve.ext h
 
 instance : OrderTop (J.cover X) :=

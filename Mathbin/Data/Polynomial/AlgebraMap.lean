@@ -223,7 +223,7 @@ theorem aeval_alg_hom (f : A →ₐ[R] B) (x : A) : aeval (f x) = f.comp (aeval 
 theorem aeval_X_left : aeval (x : R[X]) = AlgHom.id R R[X] :=
   alg_hom_ext <| aeval_X x
 
-theorem eval_unique (φ : R[X] →ₐ[R] A) p : φ p = eval₂ (algebraMap R A) (φ x) p := by
+theorem eval_unique (φ : R[X] →ₐ[R] A) (p) : φ p = eval₂ (algebraMap R A) (φ x) p := by
   rw [← aeval_def, aeval_alg_hom, aeval_X_left, AlgHom.comp_id]
 
 theorem aeval_alg_hom_apply (f : A →ₐ[R] B) (x : A) (p : R[X]) : aeval (f x) p = f (aeval x p) :=
@@ -345,9 +345,9 @@ section CommRingₓ
 
 variable [CommRingₓ S] {f : R →+* S}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem dvd_term_of_dvd_eval_of_dvd_terms {z p : S} {f : S[X]} (i : ℕ) (dvd_eval : p ∣ f.eval z)
-    (dvd_terms : ∀ j _ : j ≠ i, p ∣ f.coeff j * z ^ j) : p ∣ f.coeff i * z ^ i := by
+    (dvd_terms : ∀ (j) (_ : j ≠ i), p ∣ f.coeff j * z ^ j) : p ∣ f.coeff i * z ^ i := by
   by_cases' hi : i ∈ f.support
   · rw [eval, eval₂, Sum] at dvd_eval
     rw [← Finset.insert_erase hi, Finset.sum_insert (Finset.not_mem_erase _ _)] at dvd_eval
@@ -361,9 +361,9 @@ theorem dvd_term_of_dvd_eval_of_dvd_terms {z p : S} {f : S[X]} (i : ℕ) (dvd_ev
     simp [← hi]
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem dvd_term_of_is_root_of_dvd_terms {r p : S} {f : S[X]} (i : ℕ) (hr : f.IsRoot r)
-    (h : ∀ j _ : j ≠ i, p ∣ f.coeff j * r ^ j) : p ∣ f.coeff i * r ^ i :=
+    (h : ∀ (j) (_ : j ≠ i), p ∣ f.coeff j * r ^ j) : p ∣ f.coeff i * r ^ i :=
   dvd_term_of_dvd_eval_of_dvd_terms i (Eq.symm hr ▸ dvd_zero p) h
 
 end CommRingₓ

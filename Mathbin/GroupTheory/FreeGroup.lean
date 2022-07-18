@@ -195,7 +195,7 @@ theorem church_rosser : Red L₁ L₂ → Red L₁ L₃ → Join Red L₂ L₃ :
 theorem cons_cons {p} : Red L₁ L₂ → Red (p :: L₁) (p :: L₂) :=
   ReflTransGen.lift (List.cons p) fun a b => Step.cons
 
-theorem cons_cons_iff p : Red (p :: L₁) (p :: L₂) ↔ Red L₁ L₂ :=
+theorem cons_cons_iff (p) : Red (p :: L₁) (p :: L₂) ↔ Red L₁ L₂ :=
   Iff.intro
     (by
       generalize eq₁ : (p :: L₁ : List _) = LL₁
@@ -377,7 +377,7 @@ namespace FreeGroup
 variable {α} {L L₁ L₂ L₃ L₄ : List (α × Bool)}
 
 /-- The canonical map from `list (α × bool)` to the free group on `α`. -/
-def mk L : FreeGroup α :=
+def mk (L) : FreeGroup α :=
   Quot.mk Red.Step L
 
 @[simp]
@@ -571,7 +571,7 @@ theorem map.id (x : FreeGroup α) : map id x = x := by
 theorem map.id' (x : FreeGroup α) : map (fun z => z) x = x :=
   map.id x
 
-theorem map.comp {γ : Type w} (f : α → β) (g : β → γ) x : map g (map f x) = map (g ∘ f) x := by
+theorem map.comp {γ : Type w} (f : α → β) (g : β → γ) (x) : map g (map f x) = map (g ∘ f) x := by
   rcases x with ⟨L⟩ <;> simp
 
 @[simp]
@@ -581,7 +581,7 @@ theorem map.of {x} : map f (of x) = of (f x) :=
 theorem map.unique (g : FreeGroup α →* FreeGroup β) (hg : ∀ x, g (of x) = of (f x)) : ∀ {x}, g x = map f x := by
   rintro ⟨L⟩ <;>
     exact
-      List.recOn L g.map_one fun ⟨x, b⟩ t ih : g (mk t) = map f (mk t) =>
+      List.recOn L g.map_one fun ⟨x, b⟩ t (ih : g (mk t) = map f (mk t)) =>
         Bool.recOn b
           (show g ((of x)⁻¹ * mk t) = map f ((of x)⁻¹ * mk t) by
             simp [← g.map_mul, ← g.map_inv, ← hg, ← ih])
@@ -755,7 +755,7 @@ theorem map_inv (f : α → β) (x : FreeGroup α) : f <$> x⁻¹ = (f <$> x)⁻
   (map f).map_inv x
 
 @[simp]
-theorem pure_bind (f : α → FreeGroup β) x : pure x >>= f = f x :=
+theorem pure_bind (f : α → FreeGroup β) (x) : pure x >>= f = f x :=
   lift.of
 
 @[simp]
@@ -818,7 +818,7 @@ def reduce (L : List (α × Bool)) : List (α × Bool) :=
     (List.casesOn ih [hd1]) fun hd2 tl2 => if hd1.1 = hd2.1 ∧ hd1.2 = bnot hd2.2 then tl2 else hd1 :: hd2 :: tl2
 
 @[simp]
-theorem reduce.cons x :
+theorem reduce.cons (x) :
     reduce (x :: L) =
       List.casesOn (reduce L) [x] fun hd tl => if x.1 = hd.1 ∧ x.2 = bnot hd.2 then tl else x :: hd :: tl :=
   rfl

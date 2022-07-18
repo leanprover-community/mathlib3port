@@ -92,7 +92,7 @@ theorem sum_measure [Encodable ι] {μ : ι → Measureₓ α} (h : ∀ i, AeMea
       exact fun h => ⟨i, h, hi⟩
       
     
-  · refine' measure_mono_null (fun x hx : f x ≠ g x => _) (hsμ i)
+  · refine' measure_mono_null (fun x (hx : f x ≠ g x) => _) (hsμ i)
     contrapose! hx
     refine' (piecewise_eq_of_not_mem _ _ _ _).symm
     exact fun h => hx (mem_Inter.1 h i)
@@ -194,6 +194,11 @@ theorem exists_ae_eq_range_subset (H : AeMeasurable f μ) {t : Set β} (ht : ∀
     simp only [← hx, ← mem_compl_eq, ← mem_set_of_eq, ← false_andₓ, ← not_false_iff]
     
 
+theorem exists_measurable_nonneg {β} [Preorderₓ β] [Zero β] {mβ : MeasurableSpace β} {f : α → β} (hf : AeMeasurable f μ)
+    (f_nn : ∀ᵐ t ∂μ, 0 ≤ f t) : ∃ g, Measurable g ∧ 0 ≤ g ∧ f =ᵐ[μ] g := by
+  obtain ⟨G, hG_meas, hG_mem, hG_ae_eq⟩ := hf.exists_ae_eq_range_subset f_nn ⟨0, le_rfl⟩
+  exact ⟨G, hG_meas, fun x => hG_mem (mem_range_self x), hG_ae_eq⟩
+
 theorem subtype_mk (h : AeMeasurable f μ) {s : Set β} {hfs : ∀ x, f x ∈ s} : AeMeasurable (codRestrict f s hfs) μ := by
   nontriviality α
   inhabit α
@@ -260,6 +265,26 @@ end
 
 theorem AeMeasurable.restrict (hfm : AeMeasurable f μ) {s} : AeMeasurable f (μ.restrict s) :=
   ⟨AeMeasurable.mk f hfm, hfm.measurable_mk, ae_restrict_of_ae hfm.ae_eq_mk⟩
+
+theorem ae_measurable_Ioi_of_forall_Ioc {β} {mβ : MeasurableSpace β} [LinearOrderₓ α]
+    [(atTop : Filter α).IsCountablyGenerated] {x : α} {g : α → β}
+    (g_meas : ∀, ∀ t > x, ∀, AeMeasurable g (μ.restrict (Ioc x t))) : AeMeasurable g (μ.restrict (Ioi x)) := by
+  have : Nonempty α := ⟨x⟩
+  have : (at_top : Filter α).ne_bot := at_top_ne_bot
+  obtain ⟨u, hu_tendsto⟩ := exists_seq_tendsto (at_top : Filter α)
+  have Ioi_eq_Union : Ioi x = ⋃ n : ℕ, Ioc x (u n) := by
+    rw [Union_Ioc_eq_Ioi_self_iff.mpr _]
+    rw [tendsto_at_top_at_top] at hu_tendsto
+    exact fun y _ => ⟨(hu_tendsto y).some, (hu_tendsto y).some_spec (hu_tendsto y).some le_rfl⟩
+  rw [Ioi_eq_Union, ae_measurable_Union_iff]
+  intro n
+  cases lt_or_leₓ x (u n)
+  · exact g_meas (u n) h
+    
+  · rw [Ioc_eq_empty (not_lt.mpr h)]
+    simp only [← measure.restrict_empty]
+    exact ae_measurable_zero_measure
+    
 
 variable [Zero β]
 

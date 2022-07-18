@@ -97,15 +97,15 @@ theorem to_fun_eq_coe : f.toFun = f :=
   rfl
 
 @[simp]
-theorem coe_mk f h₁ h₂ h₃ : ⇑(⟨f, h₁, h₂, h₃⟩ : NormedGroupHom V₁ V₂) = f :=
+theorem coe_mk (f) (h₁) (h₂) (h₃) : ⇑(⟨f, h₁, h₂, h₃⟩ : NormedGroupHom V₁ V₂) = f :=
   rfl
 
 @[simp]
-theorem coe_mk_normed_group_hom (f : V₁ →+ V₂) C hC : ⇑(f.mkNormedGroupHom C hC) = f :=
+theorem coe_mk_normed_group_hom (f : V₁ →+ V₂) (C) (hC) : ⇑(f.mkNormedGroupHom C hC) = f :=
   rfl
 
 @[simp]
-theorem coe_mk_normed_group_hom' (f : V₁ →+ V₂) C hC : ⇑(f.mkNormedGroupHom' C hC) = f :=
+theorem coe_mk_normed_group_hom' (f : V₁ →+ V₂) (C) (hC) : ⇑(f.mkNormedGroupHom' C hC) = f :=
   rfl
 
 /-- The group homomorphism underlying a bounded group homomorphism. -/
@@ -123,7 +123,8 @@ theorem to_add_monoid_hom_injective : Function.Injective (@NormedGroupHom.toAddM
       rfl
 
 @[simp]
-theorem mk_to_add_monoid_hom f h₁ h₂ : (⟨f, h₁, h₂⟩ : NormedGroupHom V₁ V₂).toAddMonoidHom = AddMonoidHom.mk' f h₁ :=
+theorem mk_to_add_monoid_hom (f) (h₁) (h₂) :
+    (⟨f, h₁, h₂⟩ : NormedGroupHom V₁ V₂).toAddMonoidHom = AddMonoidHom.mk' f h₁ :=
   rfl
 
 instance : AddMonoidHomClass (NormedGroupHom V₁ V₂) V₁ V₂ where

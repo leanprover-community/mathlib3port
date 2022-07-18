@@ -39,13 +39,13 @@ namespace Setoidₓ
 
 variable {α : Type _}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (b «expr ∈ » c)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (b «expr ∈ » c)
 /-- If x ∈ α is in 2 elements of a set of sets partitioning α, those 2 sets are equal. -/
 theorem eq_of_mem_eqv_class {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) {x b b'} (hc : b ∈ c) (hb : x ∈ b)
     (hc' : b' ∈ c) (hb' : x ∈ b') : b = b' :=
   (H x).unique2 hc hb hc' hb'
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (b «expr ∈ » c)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (b «expr ∈ » c)
 /-- Makes an equivalence relation from a set of sets partitioning α. -/
 def mkClasses (c : Set (Set α)) (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) : Setoidₓ α :=
   ⟨fun x y => ∀, ∀ s ∈ c, ∀, x ∈ s → y ∈ s,
@@ -64,7 +64,7 @@ def mkClasses (c : Set (Set α)) (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b)
 def Classes (r : Setoidₓ α) : Set (Set α) :=
   { s | ∃ y, s = { x | r.Rel x y } }
 
-theorem mem_classes (r : Setoidₓ α) y : { x | r.Rel x y } ∈ r.Classes :=
+theorem mem_classes (r : Setoidₓ α) (y) : { x | r.Rel x y } ∈ r.Classes :=
   ⟨y, rfl⟩
 
 theorem classes_ker_subset_fiber_set {β : Type _} (f : α → β) :
@@ -73,13 +73,11 @@ theorem classes_ker_subset_fiber_set {β : Type _} (f : α → β) :
   rw [Set.mem_range]
   exact ⟨f x, rfl⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem nonempty_fintype_classes_ker {α β : Type _} [Fintype β] (f : α → β) :
     Nonempty (Fintype (Setoidₓ.ker f).Classes) := by
   classical
   exact ⟨Set.fintypeSubset _ (classes_ker_subset_fiber_set f)⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem card_classes_ker_le {α β : Type _} [Fintype β] (f : α → β) [Fintype (Setoidₓ.ker f).Classes] :
     Fintype.card (Setoidₓ.ker f).Classes ≤ Fintype.card β := by
   classical
@@ -104,9 +102,9 @@ theorem classes_inj {r₁ r₂ : Setoidₓ α} : r₁ = r₂ ↔ r₁.Classes = 
 theorem empty_not_mem_classes {r : Setoidₓ α} : ∅ ∉ r.Classes := fun ⟨y, hy⟩ =>
   Set.not_mem_empty y <| hy.symm ▸ r.refl' y
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (b «expr ∈ » r.classes)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (b «expr ∈ » r.classes)
 /-- Equivalence classes partition the type. -/
-theorem classes_eqv_classes {r : Setoidₓ α} a : ∃! (b : _)(_ : b ∈ r.Classes), a ∈ b :=
+theorem classes_eqv_classes {r : Setoidₓ α} (a) : ∃! (b : _)(_ : b ∈ r.Classes), a ∈ b :=
   ExistsUnique.intro2 { x | r.Rel x a } (r.mem_classes a) (r.refl' _) <| by
     rintro _ ⟨y, rfl⟩ ha
     ext x
@@ -117,7 +115,7 @@ theorem eq_of_mem_classes {r : Setoidₓ α} {x b} (hc : b ∈ r.Classes) (hb : 
     (hb' : x ∈ b') : b = b' :=
   eq_of_mem_eqv_class classes_eqv_classes hc hb hc' hb'
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (b «expr ∈ » c)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (b «expr ∈ » c)
 /-- The elements of a set of sets partitioning α are the equivalence classes of the
     equivalence relation defined by the set of sets. -/
 theorem eq_eqv_class_of_mem {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) {s y} (hs : s ∈ c) (hy : y ∈ s) :
@@ -126,30 +124,30 @@ theorem eq_eqv_class_of_mem {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b �
     ⟨fun hs' => (symm' (mkClasses c H)) fun b' hb' h' => eq_of_mem_eqv_class H hs hy hb' h' ▸ hs', fun hx =>
       (H x).elim2 fun b' hc' hb' h' => (eq_of_mem_eqv_class H hs hy hc' <| hx b' hc' hb').symm ▸ hb'⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (b «expr ∈ » c)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (b «expr ∈ » c)
 /-- The equivalence classes of the equivalence relation defined by a set of sets
     partitioning α are elements of the set of sets. -/
 theorem eqv_class_mem {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) {y} :
     { x | (mkClasses c H).Rel x y } ∈ c :=
   (H y).elim2 fun b hc hy hb => eq_eqv_class_of_mem H hc hy ▸ hc
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (b «expr ∈ » c)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (b «expr ∈ » c)
 theorem eqv_class_mem' {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) {x} :
     { y : α | (mkClasses c H).Rel x y } ∈ c := by
   convert Setoidₓ.eqv_class_mem H
   ext
   rw [Setoidₓ.comm']
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (b «expr ∈ » c)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (b «expr ∈ » c)
 /-- Distinct elements of a set of sets partitioning α are disjoint. -/
 theorem eqv_classes_disjoint {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) : c.PairwiseDisjoint id :=
   fun b₁ h₁ b₂ h₂ h =>
   Set.disjoint_left.2 fun x hx1 hx2 => (H x).elim2 fun b hc hx hb => h <| eq_of_mem_eqv_class H h₁ hx1 h₂ hx2
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (b «expr ∈ » c)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (b «expr ∈ » c)
 /-- A set of disjoint sets covering α partition α (classical). -/
 theorem eqv_classes_of_disjoint_union {c : Set (Set α)} (hu : Set.SUnion c = @Set.Univ α) (H : c.PairwiseDisjoint id)
-    a : ∃! (b : _)(_ : b ∈ c), a ∈ b :=
+    (a) : ∃! (b : _)(_ : b ∈ c), a ∈ b :=
   let ⟨b, hc, ha⟩ :=
     Set.mem_sUnion.1 <|
       show a ∈ _ by
@@ -173,7 +171,7 @@ theorem sUnion_classes (r : Setoidₓ α) : ⋃₀r.Classes = Set.Univ :=
 
 section Partition
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (b «expr ∈ » c)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (b «expr ∈ » c)
 /-- A collection `c : set (set α)` of sets is a partition of `α` into pairwise
 disjoint sets if `∅ ∉ c` and each element `a : α` belongs to a unique set `b ∈ c`. -/
 def IsPartition (c : Set (Set α)) :=
@@ -326,7 +324,7 @@ theorem disjoint : ∀ {i j}, i ≠ j → Disjoint (s i) (s j) := fun i j h x �
 theorem mem_iff_index_eq {x i} : x ∈ s i ↔ hs.index x = i :=
   ⟨fun hxi => (hs.eq_of_mem hxi (hs.mem_index x)).symm, fun h => h ▸ hs.mem_index _⟩
 
-theorem eq i : s i = { x | hs.index x = i } :=
+theorem eq (i) : s i = { x | hs.index x = i } :=
   Set.ext fun _ => hs.mem_iff_index_eq
 
 /-- The equivalence relation associated to an indexed partition. Two

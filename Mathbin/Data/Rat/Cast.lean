@@ -105,7 +105,7 @@ theorem cast_mk_of_ne_zero (a b : ℤ) (b0 : (b : α) ≠ 0) : (a /. b : α) = a
 
 @[norm_cast]
 theorem cast_add_of_ne_zero : ∀ {m n : ℚ}, (m.denom : α) ≠ 0 → (n.denom : α) ≠ 0 → ((m + n : ℚ) : α) = m + n
-  | ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ => fun d₁0 : (d₁ : α) ≠ 0 d₂0 : (d₂ : α) ≠ 0 => by
+  | ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ => fun (d₁0 : (d₁ : α) ≠ 0) (d₂0 : (d₂ : α) ≠ 0) => by
     have d₁0' : (d₁ : ℤ) ≠ 0 :=
       Int.coe_nat_ne_zero.2 fun e => by
         rw [e] at d₁0 <;> exact d₁0 Nat.cast_zeroₓ
@@ -137,7 +137,7 @@ theorem cast_sub_of_ne_zero {m n : ℚ} (m0 : (m.denom : α) ≠ 0) (n0 : (n.den
 
 @[norm_cast]
 theorem cast_mul_of_ne_zero : ∀ {m n : ℚ}, (m.denom : α) ≠ 0 → (n.denom : α) ≠ 0 → ((m * n : ℚ) : α) = m * n
-  | ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ => fun d₁0 : (d₁ : α) ≠ 0 d₂0 : (d₂ : α) ≠ 0 => by
+  | ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ => fun (d₁0 : (d₁ : α) ≠ 0) (d₂0 : (d₂ : α) ≠ 0) => by
     have d₁0' : (d₁ : ℤ) ≠ 0 :=
       Int.coe_nat_ne_zero.2 fun e => by
         rw [e] at d₁0 <;> exact d₁0 Nat.cast_zeroₓ
@@ -171,7 +171,7 @@ theorem cast_inv_int (n : ℤ) : ((n⁻¹ : ℚ) : α) = n⁻¹ := by
 
 @[norm_cast]
 theorem cast_inv_of_ne_zero : ∀ {n : ℚ}, (n.num : α) ≠ 0 → (n.denom : α) ≠ 0 → ((n⁻¹ : ℚ) : α) = n⁻¹
-  | ⟨n, d, h, c⟩ => fun n0 : (n : α) ≠ 0 d0 : (d : α) ≠ 0 => by
+  | ⟨n, d, h, c⟩ => fun (n0 : (n : α) ≠ 0) (d0 : (d : α) ≠ 0) => by
     have n0' : (n : ℤ) ≠ 0 := fun e => by
       rw [e] at n0 <;> exact n0 Int.cast_zeroₓ
     have d0' : (d : ℤ) ≠ 0 :=
@@ -216,15 +216,15 @@ theorem cast_ne_zero [CharZero α] {n : ℚ} : (n : α) ≠ 0 ↔ n ≠ 0 :=
   not_congr cast_eq_zero
 
 @[simp, norm_cast]
-theorem cast_add [CharZero α] m n : ((m + n : ℚ) : α) = m + n :=
+theorem cast_add [CharZero α] (m n) : ((m + n : ℚ) : α) = m + n :=
   cast_add_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gtₓ m.Pos) (Nat.cast_ne_zero.2 <| ne_of_gtₓ n.Pos)
 
 @[simp, norm_cast]
-theorem cast_sub [CharZero α] m n : ((m - n : ℚ) : α) = m - n :=
+theorem cast_sub [CharZero α] (m n) : ((m - n : ℚ) : α) = m - n :=
   cast_sub_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gtₓ m.Pos) (Nat.cast_ne_zero.2 <| ne_of_gtₓ n.Pos)
 
 @[simp, norm_cast]
-theorem cast_mul [CharZero α] m n : ((m * n : ℚ) : α) = m * n :=
+theorem cast_mul [CharZero α] (m n) : ((m * n : ℚ) : α) = m * n :=
   cast_mul_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gtₓ m.Pos) (Nat.cast_ne_zero.2 <| ne_of_gtₓ n.Pos)
 
 @[simp, norm_cast]
@@ -248,11 +248,11 @@ theorem coe_cast_hom : ⇑(castHom α) = coe :=
   rfl
 
 @[simp, norm_cast]
-theorem cast_inv n : ((n⁻¹ : ℚ) : α) = n⁻¹ :=
+theorem cast_inv (n) : ((n⁻¹ : ℚ) : α) = n⁻¹ :=
   (castHom α).map_inv _
 
 @[simp, norm_cast]
-theorem cast_div m n : ((m / n : ℚ) : α) = m / n :=
+theorem cast_div (m n) : ((m / n : ℚ) : α) = m / n :=
   (castHom α).map_div _ _
 
 @[norm_cast]
@@ -260,7 +260,7 @@ theorem cast_mk (a b : ℤ) : (a /. b : α) = a / b := by
   simp only [← mk_eq_div, ← cast_div, ← cast_coe_int]
 
 @[simp, norm_cast]
-theorem cast_pow q (k : ℕ) : ((q ^ k : ℚ) : α) = q ^ k :=
+theorem cast_pow (q) (k : ℕ) : ((q ^ k : ℚ) : α) = q ^ k :=
   (castHom α).map_pow q k
 
 @[simp, norm_cast]

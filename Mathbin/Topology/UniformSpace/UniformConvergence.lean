@@ -92,7 +92,7 @@ def TendstoUniformly (F : ι → α → β) (f : α → β) (p : Filter ι) :=
   ∀, ∀ u ∈ 𝓤 β, ∀, ∀ᶠ n in p, ∀ x, (f x, F n x) ∈ u
 
 theorem tendsto_uniformly_on_iff_tendsto_uniformly_comp_coe :
-    TendstoUniformlyOn F f p s ↔ TendstoUniformly (fun i x : s => F i x) (f ∘ coe) p :=
+    TendstoUniformlyOn F f p s ↔ TendstoUniformly (fun i (x : s) => F i x) (f ∘ coe) p :=
   forall₂_congrₓ fun V hV => by
     simp
 
@@ -162,12 +162,12 @@ theorem TendstoUniformly.prod_map {ι' α' β' : Type _} [UniformSpace β'] {F' 
 
 theorem TendstoUniformlyOn.prod {ι' β' : Type _} [UniformSpace β'] {F' : ι' → α → β'} {f' : α → β'} {p' : Filter ι'}
     (h : TendstoUniformlyOn F f p s) (h' : TendstoUniformlyOn F' f' p' s) :
-    TendstoUniformlyOn (fun i : ι × ι' a => (F i.1 a, F' i.2 a)) (fun a => (f a, f' a)) (p.Prod p') s :=
+    TendstoUniformlyOn (fun (i : ι × ι') a => (F i.1 a, F' i.2 a)) (fun a => (f a, f' a)) (p.Prod p') s :=
   (congr_arg _ s.inter_self).mp ((h.prod_map h').comp fun a => (a, a))
 
 theorem TendstoUniformly.prod {ι' β' : Type _} [UniformSpace β'] {F' : ι' → α → β'} {f' : α → β'} {p' : Filter ι'}
     (h : TendstoUniformly F f p) (h' : TendstoUniformly F' f' p') :
-    TendstoUniformly (fun i : ι × ι' a => (F i.1 a, F' i.2 a)) (fun a => (f a, f' a)) (p.Prod p') :=
+    TendstoUniformly (fun (i : ι × ι') a => (F i.1 a, F' i.2 a)) (fun a => (f a, f' a)) (p.Prod p') :=
   (h.prod_map h').comp fun a => (a, a)
 
 /-- Uniform convergence on a set `s` to a constant function is equivalent to convergence in
@@ -285,11 +285,11 @@ theorem UniformCauchySeqOn.prod_map {ι' α' β' : Type _} [UniformSpace β'] {F
 
 theorem UniformCauchySeqOn.prod {ι' β' : Type _} [UniformSpace β'] {F' : ι' → α → β'} {p' : Filter ι'}
     (h : UniformCauchySeqOn F p s) (h' : UniformCauchySeqOn F' p' s) :
-    UniformCauchySeqOn (fun i : ι × ι' a => (F i.fst a, F' i.snd a)) (p ×ᶠ p') s :=
+    UniformCauchySeqOn (fun (i : ι × ι') a => (F i.fst a, F' i.snd a)) (p ×ᶠ p') s :=
   (congr_arg _ s.inter_self).mp ((h.prod_map h').comp fun a => (a, a))
 
 theorem UniformCauchySeqOn.prod' {β' : Type _} [UniformSpace β'] {F' : ι → α → β'} (h : UniformCauchySeqOn F p s)
-    (h' : UniformCauchySeqOn F' p s) : UniformCauchySeqOn (fun i : ι a => (F i a, F' i a)) p s := by
+    (h' : UniformCauchySeqOn F' p s) : UniformCauchySeqOn (fun (i : ι) a => (F i a, F' i a)) p s := by
   intro u hu
   have hh : tendsto (fun x : ι => (x, x)) p (p ×ᶠ p) := tendsto_diag
   exact (hh.prod_map hh).Eventually ((h.prod h') u hu)
@@ -355,7 +355,7 @@ def TendstoLocallyUniformly (F : ι → α → β) (f : α → β) (p : Filter �
   ∀, ∀ u ∈ 𝓤 β, ∀, ∀ x : α, ∃ t ∈ 𝓝 x, ∀ᶠ n in p, ∀, ∀ y ∈ t, ∀, (f y, F n y) ∈ u
 
 theorem tendsto_locally_uniformly_on_iff_tendsto_locally_uniformly_comp_coe :
-    TendstoLocallyUniformlyOn F f p s ↔ TendstoLocallyUniformly (fun i x : s => F i x) (f ∘ coe) p := by
+    TendstoLocallyUniformlyOn F f p s ↔ TendstoLocallyUniformly (fun i (x : s) => F i x) (f ∘ coe) p := by
   refine' forall₂_congrₓ fun V hV => _
   simp only [← exists_prop, ← Function.comp_app, ← SetCoe.forall, ← Subtype.coe_mk]
   refine' forall₂_congrₓ fun x hx => ⟨_, _⟩

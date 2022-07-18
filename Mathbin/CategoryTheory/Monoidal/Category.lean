@@ -58,58 +58,58 @@ open CategoryTheory.Iso
 
 namespace CategoryTheory
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1418:24: unsupported: (notation) in structure
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗ »
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1418:24: unsupported: (notation) in structure
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗' »
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗ »
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗' »
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗' »
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗' »
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`tensorUnit] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1418:24: unsupported: (notation) in structure
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗ »
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗ »
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗ »
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1418:24: unsupported: (notation) in structure
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗' »
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗' »
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `exprα_
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `exprα_
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗' »
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗' »
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗ »
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr𝟙_»
--- ./././Mathport/Syntax/Translate/Basic.lean:1418:24: unsupported: (notation) in structure
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗' »
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr𝟙_»
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«exprλ_»
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«exprλ_»
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗ »
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr𝟙_»
--- ./././Mathport/Syntax/Translate/Basic.lean:1418:24: unsupported: (notation) in structure
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗' »
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr𝟙_»
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `exprρ_
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `exprρ_
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗' »
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `exprα_
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `exprα_
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗ »
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗' »
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `exprα_
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `exprα_
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗ »
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `exprα_
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗ »
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `exprα_
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr𝟙_»
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗' »
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«exprλ_»
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ⊗' »
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `exprρ_
+-- ./././Mathport/Syntax/Translate/Basic.lean:1453:24: unsupported: (notation) in structure
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1453:24: unsupported: (notation) in structure
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗' »
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗' »
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗' »
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗' »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`tensorUnit] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1453:24: unsupported: (notation) in structure
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1453:24: unsupported: (notation) in structure
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗' »
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗' »
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `exprα_
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `exprα_
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗' »
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗' »
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr𝟙_»
+-- ./././Mathport/Syntax/Translate/Basic.lean:1453:24: unsupported: (notation) in structure
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗' »
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr𝟙_»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«exprλ_»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«exprλ_»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr𝟙_»
+-- ./././Mathport/Syntax/Translate/Basic.lean:1453:24: unsupported: (notation) in structure
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗' »
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr𝟙_»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `exprρ_
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `exprρ_
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗' »
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `exprα_
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `exprα_
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗' »
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `exprα_
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `exprα_
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `exprα_
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `exprα_
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr𝟙_»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗' »
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«exprλ_»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⊗' »
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `exprρ_
 /-- In a monoidal category, we can take the tensor product of objects, `X ⊗ Y` and of morphisms `f ⊗ g`.
 Tensor product does not need to be strictly associative on objects, but there is a
 specified associator, `α_ X Y Z : (X ⊗ Y) ⊗ Z ≅ X ⊗ (Y ⊗ Z)`. There is a tensor unit `𝟙_ C`,
@@ -130,7 +130,7 @@ class MonoidalCategory (C : Type u) [𝒞 : Category.{v} C] where
     run_tac
       obviously
   tensor_comp' :
-    ∀ {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : C} f₁ : X₁ ⟶ Y₁ f₂ : X₂ ⟶ Y₂ g₁ : Y₁ ⟶ Z₁ g₂ : Y₂ ⟶ Z₂,
+    ∀ {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : C} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (g₁ : Y₁ ⟶ Z₁) (g₂ : Y₂ ⟶ Z₂),
       «expr ⊗' » (f₁ ≫ g₁) (f₂ ≫ g₂) = «expr ⊗' » f₁ f₂ ≫ «expr ⊗' » g₁ g₂ := by
     run_tac
       obviously
@@ -139,7 +139,7 @@ class MonoidalCategory (C : Type u) [𝒞 : Category.{v} C] where
   -- associator:
   associator : ∀ X Y Z : C, «expr ⊗ » («expr ⊗ » X Y) Z ≅ «expr ⊗ » X («expr ⊗ » Y Z)
   associator_naturality' :
-    ∀ {X₁ X₂ X₃ Y₁ Y₂ Y₃ : C} f₁ : X₁ ⟶ Y₁ f₂ : X₂ ⟶ Y₂ f₃ : X₃ ⟶ Y₃,
+    ∀ {X₁ X₂ X₃ Y₁ Y₂ Y₃ : C} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (f₃ : X₃ ⟶ Y₃),
       «expr ⊗' » («expr ⊗' » f₁ f₂) f₃ ≫ ((exprα_) Y₁ Y₂ Y₃).Hom =
         ((exprα_) X₁ X₂ X₃).Hom ≫ «expr ⊗' » f₁ («expr ⊗' » f₂ f₃) := by
     run_tac
@@ -147,13 +147,13 @@ class MonoidalCategory (C : Type u) [𝒞 : Category.{v} C] where
   -- left unitor:
   leftUnitor : ∀ X : C, «expr ⊗ » («expr𝟙_») X ≅ X
   left_unitor_naturality' :
-    ∀ {X Y : C} f : X ⟶ Y, «expr ⊗' » (𝟙 («expr𝟙_»)) f ≫ ((«exprλ_») Y).Hom = ((«exprλ_») X).Hom ≫ f := by
+    ∀ {X Y : C} (f : X ⟶ Y), «expr ⊗' » (𝟙 («expr𝟙_»)) f ≫ ((«exprλ_») Y).Hom = ((«exprλ_») X).Hom ≫ f := by
     run_tac
       obviously
   -- right unitor:
   rightUnitor : ∀ X : C, «expr ⊗ » X («expr𝟙_») ≅ X
   right_unitor_naturality' :
-    ∀ {X Y : C} f : X ⟶ Y, «expr ⊗' » f (𝟙 («expr𝟙_»)) ≫ ((exprρ_) Y).Hom = ((exprρ_) X).Hom ≫ f := by
+    ∀ {X Y : C} (f : X ⟶ Y), «expr ⊗' » f (𝟙 («expr𝟙_»)) ≫ ((exprρ_) Y).Hom = ((exprρ_) X).Hom ≫ f := by
     run_tac
       obviously
   -- pentagon identity:
@@ -417,15 +417,15 @@ variable (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C]
 @[simps]
 def tensor : C × C ⥤ C where
   obj := fun X => X.1 ⊗ X.2
-  map := fun {X Y : C × C} f : X ⟶ Y => f.1 ⊗ f.2
+  map := fun {X Y : C × C} (f : X ⟶ Y) => f.1 ⊗ f.2
 
 /-- The left-associated triple tensor product as a functor. -/
 def leftAssocTensor : C × C × C ⥤ C where
   obj := fun X => (X.1 ⊗ X.2.1) ⊗ X.2.2
-  map := fun {X Y : C × C × C} f : X ⟶ Y => (f.1 ⊗ f.2.1) ⊗ f.2.2
+  map := fun {X Y : C × C × C} (f : X ⟶ Y) => (f.1 ⊗ f.2.1) ⊗ f.2.2
 
 @[simp]
-theorem left_assoc_tensor_obj X : (leftAssocTensor C).obj X = (X.1 ⊗ X.2.1) ⊗ X.2.2 :=
+theorem left_assoc_tensor_obj (X) : (leftAssocTensor C).obj X = (X.1 ⊗ X.2.1) ⊗ X.2.2 :=
   rfl
 
 @[simp]
@@ -435,10 +435,10 @@ theorem left_assoc_tensor_map {X Y} (f : X ⟶ Y) : (leftAssocTensor C).map f = 
 /-- The right-associated triple tensor product as a functor. -/
 def rightAssocTensor : C × C × C ⥤ C where
   obj := fun X => X.1 ⊗ X.2.1 ⊗ X.2.2
-  map := fun {X Y : C × C × C} f : X ⟶ Y => f.1 ⊗ f.2.1 ⊗ f.2.2
+  map := fun {X Y : C × C × C} (f : X ⟶ Y) => f.1 ⊗ f.2.1 ⊗ f.2.2
 
 @[simp]
-theorem right_assoc_tensor_obj X : (rightAssocTensor C).obj X = X.1 ⊗ X.2.1 ⊗ X.2.2 :=
+theorem right_assoc_tensor_obj (X) : (rightAssocTensor C).obj X = X.1 ⊗ X.2.1 ⊗ X.2.2 :=
   rfl
 
 @[simp]
@@ -448,12 +448,12 @@ theorem right_assoc_tensor_map {X Y} (f : X ⟶ Y) : (rightAssocTensor C).map f 
 /-- The functor `λ X, 𝟙_ C ⊗ X`. -/
 def tensorUnitLeft : C ⥤ C where
   obj := fun X => 𝟙_ C ⊗ X
-  map := fun {X Y : C} f : X ⟶ Y => 𝟙 (𝟙_ C) ⊗ f
+  map := fun {X Y : C} (f : X ⟶ Y) => 𝟙 (𝟙_ C) ⊗ f
 
 /-- The functor `λ X, X ⊗ 𝟙_ C`. -/
 def tensorUnitRight : C ⥤ C where
   obj := fun X => X ⊗ 𝟙_ C
-  map := fun {X Y : C} f : X ⟶ Y => f ⊗ 𝟙 (𝟙_ C)
+  map := fun {X Y : C} (f : X ⟶ Y) => f ⊗ 𝟙 (𝟙_ C)
 
 /-- The associator as a natural isomorphism. -/
 -- We can express the associator and the unitors, given componentwise above,

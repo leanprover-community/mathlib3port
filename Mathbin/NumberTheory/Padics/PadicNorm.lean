@@ -300,7 +300,7 @@ theorem dvd_iff_norm_le {n : ℕ} {z : ℤ} : ↑(p ^ n) ∣ z ↔ padicNorm p z
     
   · rw [zpow_le_iff_le, neg_le_neg_iff, padicValRat.of_int, padicValInt.of_ne_one_ne_zero hp.1.ne_one _]
     · norm_cast
-      rw [← Enat.coe_le_coe, Enat.coe_get, ← multiplicity.pow_dvd_iff_le_multiplicity]
+      rw [← PartEnat.coe_le_coe, PartEnat.coe_get, ← multiplicity.pow_dvd_iff_le_multiplicity]
       simp
       
     · exact_mod_cast hz

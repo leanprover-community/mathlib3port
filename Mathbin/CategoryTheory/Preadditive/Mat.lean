@@ -123,7 +123,7 @@ theorem comp_def {M N K : Mat_ C} (f : M ⟶ N) (g : N ⟶ K) : f ≫ g = fun i 
   rfl
 
 @[simp]
-theorem comp_apply {M N K : Mat_ C} (f : M ⟶ N) (g : N ⟶ K) i k : (f ≫ g) i k = ∑ j : N.ι, f i j ≫ g j k :=
+theorem comp_apply {M N K : Mat_ C} (f : M ⟶ N) (g : N ⟶ K) (i k) : (f ≫ g) i k = ∑ j : N.ι, f i j ≫ g j k :=
   rfl
 
 instance (M N : Mat_ C) : Inhabited (M ⟶ N) :=
@@ -143,7 +143,7 @@ instance : Preadditive (Mat_ C) where
     simp [← Finset.sum_add_distrib]
 
 @[simp]
-theorem add_apply {M N : Mat_ C} (f g : M ⟶ N) i j : (f + g) i j = f i j + g i j :=
+theorem add_apply {M N : Mat_ C} (f g : M ⟶ N) (i j) : (f + g) i j = f i j + g i j :=
   rfl
 
 open CategoryTheory.Limits
@@ -520,11 +520,11 @@ theorem comp_def {M N K : Mat R} (f : M ⟶ N) (g : N ⟶ K) : f ≫ g = fun i k
   rfl
 
 @[simp]
-theorem comp_apply {M N K : Mat R} (f : M ⟶ N) (g : N ⟶ K) i k : (f ≫ g) i k = ∑ j : N, f i j * g j k :=
+theorem comp_apply {M N K : Mat R} (f : M ⟶ N) (g : N ⟶ K) (i k) : (f ≫ g) i k = ∑ j : N, f i j * g j k :=
   rfl
 
 instance (M N : Mat R) : Inhabited (M ⟶ N) :=
-  ⟨fun i : M j : N => (0 : R)⟩
+  ⟨fun (i : M) (j : N) => (0 : R)⟩
 
 end
 

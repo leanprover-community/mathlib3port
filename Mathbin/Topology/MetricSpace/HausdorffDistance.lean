@@ -1066,6 +1066,16 @@ theorem _root_.disjoint.exists_cthickenings (hst : Disjoint s t) (hs : IsCompact
   obtain ⟨δ, hδ, h⟩ := hst.exists_thickenings hs ht
   refine' ⟨δ / 2, half_pos hδ, h.mono _ _⟩ <;> exact cthickening_subset_thickening' hδ (half_lt_self hδ) _
 
+theorem _root_.is_compact.exists_thickening_subset_open (hs : IsCompact s) (ht : IsOpen t) (hst : s ⊆ t) :
+    ∃ δ, 0 < δ ∧ Thickening δ s ⊆ t :=
+  (hst.disjoint_compl_right.exists_thickenings hs ht.is_closed_compl).imp fun δ h =>
+    ⟨h.1, disjoint_compl_right_iff_subset.1 <| h.2.mono_right <| self_subset_thickening h.1 _⟩
+
+theorem _root_.is_compact.exists_cthickening_subset_open (hs : IsCompact s) (ht : IsOpen t) (hst : s ⊆ t) :
+    ∃ δ, 0 < δ ∧ Cthickening δ s ⊆ t :=
+  (hst.disjoint_compl_right.exists_cthickenings hs ht.is_closed_compl).imp fun δ h =>
+    ⟨h.1, disjoint_compl_right_iff_subset.1 <| h.2.mono_right <| self_subset_cthickening _⟩
+
 theorem cthickening_eq_Inter_cthickening' {δ : ℝ} (s : Set ℝ) (hsδ : s ⊆ Ioi δ)
     (hs : ∀ ε, δ < ε → (s ∩ Ioc δ ε).Nonempty) (E : Set α) : Cthickening δ E = ⋂ ε ∈ s, Cthickening ε E := by
   apply subset.antisymm

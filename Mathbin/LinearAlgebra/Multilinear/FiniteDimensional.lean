@@ -38,7 +38,7 @@ private theorem free_and_finite : Module.Free R (MultilinearMap R M₁ M₂) ∧
   by
   -- the `fin n` case is sufficient
   suffices
-    ∀ n N : Finₓ n → Type _ [∀ i, AddCommGroupₓ (N i)],
+    ∀ (n) (N : Finₓ n → Type _) [∀ i, AddCommGroupₓ (N i)],
       ∀ [∀ i, Module R (N i)],
         ∀ [∀ i, Module.Finite R (N i)] [∀ i, Module.Free R (N i)],
           Module.Free R (MultilinearMap R N M₂) ∧ Module.Finite R (MultilinearMap R N M₂)

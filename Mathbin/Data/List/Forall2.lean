@@ -158,7 +158,7 @@ theorem forall₂_iff_zip {R : α → β → Prop} {l₁ l₂} :
       exact forall₂.cons (h₂ <| Or.inl rfl) ((IH h₁) fun a b h => h₂ <| Or.inr h)
       ⟩
 
-theorem forall₂_take {R : α → β → Prop} : ∀ n {l₁ l₂}, Forall₂ R l₁ l₂ → Forall₂ R (takeₓ n l₁) (takeₓ n l₂)
+theorem forall₂_take {R : α → β → Prop} : ∀ (n) {l₁ l₂}, Forall₂ R l₁ l₂ → Forall₂ R (takeₓ n l₁) (takeₓ n l₂)
   | 0, _, _, _ => by
     simp only [← forall₂.nil, ← take]
   | n + 1, _, _, forall₂.nil => by
@@ -166,7 +166,7 @@ theorem forall₂_take {R : α → β → Prop} : ∀ n {l₁ l₂}, Forall₂ R
   | n + 1, _, _, forall₂.cons h₁ h₂ => by
     simp [← And.intro h₁ h₂, ← forall₂_take n]
 
-theorem forall₂_drop {R : α → β → Prop} : ∀ n {l₁ l₂}, Forall₂ R l₁ l₂ → Forall₂ R (dropₓ n l₁) (dropₓ n l₂)
+theorem forall₂_drop {R : α → β → Prop} : ∀ (n) {l₁ l₂}, Forall₂ R l₁ l₂ → Forall₂ R (dropₓ n l₁) (dropₓ n l₂)
   | 0, _, _, h => by
     simp only [← drop, ← h]
   | n + 1, _, _, forall₂.nil => by

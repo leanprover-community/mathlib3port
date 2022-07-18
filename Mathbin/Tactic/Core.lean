@@ -564,7 +564,7 @@ unsafe def extract_def (n : Name) (trusted : Bool) (elab_def : tactic Unit) : ta
   add_decl <| declaration.defn n univ t' d' (ReducibilityHints.regular 1 tt) trusted
   applyc n
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 /-- Attempts to close the goal with `dec_trivial`. -/
 unsafe def exact_dec_trivial : tactic Unit :=
   sorry
@@ -1059,7 +1059,7 @@ unsafe def iff_mpr (e : expr) : tactic expr := do
 try applying both directions separately.
 -/
 unsafe def apply_iff (e : expr) : tactic (List (Name × expr)) :=
-  let ap e := tactic.apply e { NewGoals := NewGoals.non_dep_only }
+  let ap (e) := tactic.apply e { NewGoals := NewGoals.non_dep_only }
   ap e <|> iff_mp e >>= ap <|> iff_mpr e >>= ap
 
 /-- Configuration options for `apply_any`:
@@ -1273,7 +1273,7 @@ add_tactic_doc
   { Name := "fsplit", category := DocCategory.tactic, declNames := [`tactic.interactive.fsplit],
     tags := ["logic", "goal management"] }
 
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `results
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `results
 /-- Calls `injection` on each hypothesis, and then, for each hypothesis on which `injection`
 succeeds, clears the old hypothesis. -/
 unsafe def injections_and_clear : tactic Unit := do
@@ -1288,7 +1288,7 @@ add_tactic_doc
   { Name := "injections_and_clear", category := DocCategory.tactic,
     declNames := [`tactic.interactive.injections_and_clear], tags := ["context management"] }
 
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `r
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `r
 /-- Calls `cases` on every local hypothesis, succeeding if
 it succeeds on at least one hypothesis. -/
 unsafe def case_bash : tactic Unit := do
@@ -1343,6 +1343,21 @@ end Tactic
 namespace Lean.Parser
 
 open Tactic InteractionMonad
+
+/-- A version of `lean.parser.many` that requires at least `n` items -/
+unsafe def repeat_at_least {α : Type} (p : lean.parser α) : ℕ → lean.parser (List α)
+  | 0 => many p
+  | n + 1 => List.cons <$> p <*> repeat_at_least n
+
+/-- A version of `lean.parser.sep_by` that allows trailing delimiters, but requires at least one
+item. Like `lean.parser.sep_by`, as a result of the `lean.parser` monad not being pure, this is only
+well-behaved if `p` and `s` are backtrackable; which in practice means they must not consume the
+input when they do not have a match. -/
+unsafe def sep_by_trailing {α : Type} (s : lean.parser Unit) (p : lean.parser α) : lean.parser (List α) := do
+  let fst ← p
+  let some () ← optionalₓ s | pure [fst]
+  let some rest ← optionalₓ sep_by_trailing | pure [fst]
+  pure (fst :: rest)
 
 /-- `emit_command_here str` behaves as if the string `str` were placed as a user command at the
 current line. -/
@@ -2214,7 +2229,7 @@ unsafe def trace_macro (_ : parse <| tk "trace!") (s : Stringₓ) : parser pexpr
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- A hackish way to get the `src` directory of any project.
   Requires as argument any declaration name `n` in that project, and `k`, the number of characters
   in the path of the file where `n` is declared not part of the `src` directory.
@@ -2224,7 +2239,7 @@ unsafe def get_project_dir (n : Name) (k : ℕ) : tactic Stringₓ := do
   let e ← get_env
   let s ←
     e.decl_olean n <|>
-        "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   return <| s k
 
 /-- A hackish way to get the `src` directory of mathlib. -/
@@ -2241,7 +2256,7 @@ unsafe def is_in_mathlib (n : Name) : tactic Bool := do
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Runs a tactic by name.
 If it is a `tactic string`, return whatever string it returns.
 If it is a `tactic unit`, return the name.
@@ -2256,7 +2271,7 @@ unsafe def name_to_tactic (n : Name) : tactic Stringₓ := do
     else
       if expr.alpha_eqv t (quote.1 (tactic Stringₓ)) then eval_expr (tactic Stringₓ) e >>= fun t => t
       else
-        "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
 
 /-- auxiliary function for `apply_under_n_pis` -/
 private unsafe def apply_under_n_pis_aux (func arg : pexpr) : ℕ → ℕ → expr → pexpr
@@ -2380,7 +2395,7 @@ add_tactic_doc
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Given a user attribute name `attr_name`, `get_user_attribute_name attr_name` returns
 the name of the declaration that defines this attribute.
 Fails if there is no user attribute with this name.
@@ -2393,21 +2408,21 @@ unsafe def get_user_attribute_name (attr_name : Name) : tactic Name := do
         let attr_nm ← eval_expr Name e
         guardₓ <| attr_nm = attr_name
         return nm) <|>
-      "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- A tactic to set either a basic attribute or a user attribute.
   If the user attribute has a parameter, the default value will be used.
   This tactic raises an error if there is no `inhabited` instance for the parameter type. -/
 unsafe def set_attribute (attr_name : Name) (c_name : Name) (persistent := true) (prio : Option Nat := none) :
     tactic Unit := do
   get_decl c_name <|>
-      "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   let s ← try_or_report_error (set_basic_attribute attr_name c_name persistent prio)
   let Sum.inr msg ← return s | skip
   if msg = (f! "set_basic_attribute tactic failed, '{attr_name}' is not a basic attribute").toString then do
@@ -2417,7 +2432,7 @@ unsafe def set_attribute (attr_name : Name) (c_name : Name) (persistent := true)
         eval_pexpr (tactic Unit)
               (pquote.1
                 (user_attribute.set (%%ₓuser_attr_const) (%%ₓquote.1 c_name) default (%%ₓquote.1 persistent))) <|>
-            "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+            "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
       tac
     else fail msg
 

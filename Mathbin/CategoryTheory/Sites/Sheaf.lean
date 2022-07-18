@@ -173,7 +173,7 @@ theorem subsingleton_iff_is_separated_for :
 /-- A presheaf `P` is a sheaf for the Grothendieck topology `J` iff for every covering sieve
     `S` of `J`, the natural cone associated to `P` and `S` is a limit cone. -/
 theorem is_sheaf_iff_is_limit :
-    IsSheaf J P ↔ ∀ ⦃X : C⦄ S : Sieve X, S ∈ J X → Nonempty (IsLimit (P.mapCone S.Arrows.Cocone.op)) :=
+    IsSheaf J P ↔ ∀ ⦃X : C⦄ (S : Sieve X), S ∈ J X → Nonempty (IsLimit (P.mapCone S.Arrows.Cocone.op)) :=
   ⟨fun h X S hS => (is_limit_iff_is_sheaf_for P S).2 fun E => h E.unop S hS, fun h E X S hS =>
     (is_limit_iff_is_sheaf_for P S).1 (h S hS) (op E)⟩
 
@@ -182,7 +182,7 @@ theorem is_sheaf_iff_is_limit :
     cone in the same category. -/
 theorem is_separated_iff_subsingleton :
     (∀ E : A, IsSeparated J (P ⋙ coyoneda.obj (op E))) ↔
-      ∀ ⦃X : C⦄ S : Sieve X, S ∈ J X → ∀ c, Subsingleton (c ⟶ P.mapCone S.Arrows.Cocone.op) :=
+      ∀ ⦃X : C⦄ (S : Sieve X), S ∈ J X → ∀ c, Subsingleton (c ⟶ P.mapCone S.Arrows.Cocone.op) :=
   ⟨fun h X S hS => (subsingleton_iff_is_separated_for P S).2 fun E => h E.unop S hS, fun h E X S hS =>
     (subsingleton_iff_is_separated_for P S).1 (h S hS) (op E)⟩
 
@@ -198,7 +198,7 @@ theorem is_limit_iff_is_sheaf_for_presieve :
     `sieve.generate R` is a limit cone. -/
 theorem is_sheaf_iff_is_limit_pretopology [HasPullbacks C] (K : Pretopology C) :
     IsSheaf (K.toGrothendieck C) P ↔
-      ∀ ⦃X : C⦄ R : Presieve X, R ∈ K X → Nonempty (IsLimit (P.mapCone (generate R).Arrows.Cocone.op)) :=
+      ∀ ⦃X : C⦄ (R : Presieve X), R ∈ K X → Nonempty (IsLimit (P.mapCone (generate R).Arrows.Cocone.op)) :=
   by
   dsimp' [← is_sheaf]
   simp_rw [is_sheaf_pretopology]
@@ -400,7 +400,7 @@ def isLimitOfIsSheaf {X : C} (S : J.cover X) (hP : IsSheaf J P) : IsLimit (S.Mul
     symm
     apply hP.amalgamate_map
 
-theorem is_sheaf_iff_multifork : IsSheaf J P ↔ ∀ X : C S : J.cover X, Nonempty (IsLimit (S.Multifork P)) := by
+theorem is_sheaf_iff_multifork : IsSheaf J P ↔ ∀ (X : C) (S : J.cover X), Nonempty (IsLimit (S.Multifork P)) := by
   refine' ⟨fun hP X S => ⟨is_limit_of_is_sheaf _ _ _ hP⟩, _⟩
   intro h E X S hS x hx
   let T : J.cover X := ⟨S, hS⟩
@@ -423,8 +423,8 @@ theorem is_sheaf_iff_multifork : IsSheaf J P ↔ ∀ X : C S : J.cover X, Nonemp
       
     
 
-theorem is_sheaf_iff_multiequalizer [∀ X : C S : J.cover X, HasMultiequalizer (S.index P)] :
-    IsSheaf J P ↔ ∀ X : C S : J.cover X, IsIso (S.toMultiequalizer P) := by
+theorem is_sheaf_iff_multiequalizer [∀ (X : C) (S : J.cover X), HasMultiequalizer (S.index P)] :
+    IsSheaf J P ↔ ∀ (X : C) (S : J.cover X), IsIso (S.toMultiequalizer P) := by
   rw [is_sheaf_iff_multifork]
   refine' forall₂_congrₓ fun X S => ⟨_, _⟩
   · rintro ⟨h⟩
@@ -489,7 +489,7 @@ theorem w : forkMap R P ≫ firstMap R P = forkMap R P ≫ secondMap R P := by
 equivalent in `category_theory.presheaf.is_sheaf_iff_is_sheaf'`.
 -/
 def IsSheaf' (P : Cᵒᵖ ⥤ A) : Prop :=
-  ∀ U : C R : Presieve U hR : generate R ∈ J U, Nonempty (IsLimit (Fork.ofι _ (w R P)))
+  ∀ (U : C) (R : Presieve U) (hR : generate R ∈ J U), Nonempty (IsLimit (Fork.ofι _ (w R P)))
 
 /-- (Implementation). An auxiliary lemma to convert between sheaf conditions. -/
 def isSheafForIsSheafFor' (P : Cᵒᵖ ⥤ A) (s : A ⥤ Type max v₁ u₁)

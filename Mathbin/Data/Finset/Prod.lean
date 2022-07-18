@@ -78,7 +78,6 @@ theorem product_eq_bUnion_right [DecidableEq α] [DecidableEq β] (s : Finset α
     simp only [← mem_product, ← mem_bUnion, ← mem_image, ← exists_prop, ← Prod.mk.inj_iff, ← And.left_comm, ←
       exists_and_distrib_left, ← exists_eq_right, ← exists_eq_left]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- See also `finset.sup_product_left`. -/
 @[simp]
 theorem product_bUnion [DecidableEq γ] (s : Finset α) (t : Finset β) (f : α × β → Finset γ) :
@@ -96,7 +95,6 @@ theorem filter_product (p : α → Prop) (q : β → Prop) [DecidablePred p] [De
   simp only [← mem_filter, ← mem_product]
   exact and_and_and_comm (a ∈ s) (b ∈ t) (p a) (q b)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem filter_product_card (s : Finset α) (t : Finset β) (p : α → Prop) (q : β → Prop) [DecidablePred p]
     [DecidablePred q] :
     ((s.product t).filter fun x : α × β => p x.1 ↔ q x.2).card =

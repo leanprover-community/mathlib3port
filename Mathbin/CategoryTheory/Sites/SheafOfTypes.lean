@@ -111,7 +111,7 @@ version of the elements of the middle object in https://stacks.math.columbia.edu
 more useful for direct calculations. It is also used implicitly in Definition C2.1.2 in [Elephant].
 -/
 def FamilyOfElements (P : Cᵒᵖ ⥤ Type w) (R : Presieve X) :=
-  ∀ ⦃Y : C⦄ f : Y ⟶ X, R f → P.obj (op Y)
+  ∀ ⦃Y : C⦄ (f : Y ⟶ X), R f → P.obj (op Y)
 
 instance : Inhabited (FamilyOfElements P (⊥ : Presieve X)) :=
   ⟨fun Y f => False.elim⟩
@@ -134,7 +134,7 @@ This is referred to as a "compatible family" in Definition C2.1.2 of [Elephant],
 https://ncatlab.org/nlab/show/sheaf#GeneralDefinitionInComponents
 -/
 def FamilyOfElements.Compatible (x : FamilyOfElements P R) : Prop :=
-  ∀ ⦃Y₁ Y₂ Z⦄ g₁ : Z ⟶ Y₁ g₂ : Z ⟶ Y₂ ⦃f₁ : Y₁ ⟶ X⦄ ⦃f₂ : Y₂ ⟶ X⦄ h₁ : R f₁ h₂ : R f₂,
+  ∀ ⦃Y₁ Y₂ Z⦄ (g₁ : Z ⟶ Y₁) (g₂ : Z ⟶ Y₂) ⦃f₁ : Y₁ ⟶ X⦄ ⦃f₂ : Y₂ ⟶ X⦄ (h₁ : R f₁) (h₂ : R f₂),
     g₁ ≫ f₁ = g₂ ≫ f₂ → P.map g₁.op (x f₁ h₁) = P.map g₂.op (x f₂ h₂)
 
 /-- If the category `C` has pullbacks, this is an alternative condition for a family of elements to be
@@ -149,7 +149,7 @@ https://stacks.math.columbia.edu/tag/00VM, this condition expresses that `pr₀*
 using the notation defined there.
 -/
 def FamilyOfElements.PullbackCompatible (x : FamilyOfElements P R) [HasPullbacks C] : Prop :=
-  ∀ ⦃Y₁ Y₂⦄ ⦃f₁ : Y₁ ⟶ X⦄ ⦃f₂ : Y₂ ⟶ X⦄ h₁ : R f₁ h₂ : R f₂,
+  ∀ ⦃Y₁ Y₂⦄ ⦃f₁ : Y₁ ⟶ X⦄ ⦃f₂ : Y₂ ⟶ X⦄ (h₁ : R f₁) (h₂ : R f₂),
     P.map (pullback.fst : pullback f₁ f₂ ⟶ _).op (x f₁ h₁) = P.map pullback.snd.op (x f₂ h₂)
 
 theorem pullback_compatible_iff (x : FamilyOfElements P R) [HasPullbacks C] : x.Compatible ↔ x.PullbackCompatible := by
@@ -210,7 +210,7 @@ Section 4, Equation 1, and nlab: https://ncatlab.org/nlab/show/matching+family.
 See also the discussion before Lemma C2.1.4 of [Elephant].
 -/
 def FamilyOfElements.SieveCompatible (x : FamilyOfElements P S) : Prop :=
-  ∀ ⦃Y Z⦄ f : Y ⟶ X g : Z ⟶ Y hf, x (g ≫ f) (S.downward_closed hf g) = P.map g.op (x f hf)
+  ∀ ⦃Y Z⦄ (f : Y ⟶ X) (g : Z ⟶ Y) (hf), x (g ≫ f) (S.downward_closed hf g) = P.map g.op (x f hf)
 
 theorem compatible_iff_sieve_compatible (x : FamilyOfElements P S) : x.Compatible ↔ x.SieveCompatible := by
   constructor
@@ -339,7 +339,7 @@ and https://ncatlab.org/nlab/show/matching+family, as well as [MM92], Chapter II
 equation (2).
 -/
 def FamilyOfElements.IsAmalgamation (x : FamilyOfElements P R) (t : P.obj (op X)) : Prop :=
-  ∀ ⦃Y : C⦄ f : Y ⟶ X h : R f, P.map f.op t = x f h
+  ∀ ⦃Y : C⦄ (f : Y ⟶ X) (h : R f), P.map f.op t = x f h
 
 theorem FamilyOfElements.IsAmalgamation.comp_presheaf_map {x : FamilyOfElements P R} {t} (f : P ⟶ Q)
     (h : x.IsAmalgamation t) : (x.compPresheafMap f).IsAmalgamation (f.app (op X) t) := by
@@ -366,10 +366,10 @@ theorem is_amalgamation_sieve_extend {R : Presieve X} (x : FamilyOfElements P R)
 
 /-- A presheaf is separated for a presieve if there is at most one amalgamation. -/
 def IsSeparatedFor (P : Cᵒᵖ ⥤ Type w) (R : Presieve X) : Prop :=
-  ∀ x : FamilyOfElements P R t₁ t₂, x.IsAmalgamation t₁ → x.IsAmalgamation t₂ → t₁ = t₂
+  ∀ (x : FamilyOfElements P R) (t₁ t₂), x.IsAmalgamation t₁ → x.IsAmalgamation t₂ → t₁ = t₂
 
 theorem IsSeparatedFor.ext {R : Presieve X} (hR : IsSeparatedFor P R) {t₁ t₂ : P.obj (op X)}
-    (h : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ hf : R f, P.map f.op t₁ = P.map f.op t₂) : t₁ = t₂ :=
+    (h : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (hf : R f), P.map f.op t₁ = P.map f.op t₂) : t₁ = t₂ :=
   hR (fun Y f hf => P.map f.op t₂) t₁ t₂ (fun Y f hf => h hf) fun Y f hf => rfl
 
 theorem is_separated_for_iff_generate : IsSeparatedFor P R ↔ IsSeparatedFor P (generate R) := by
@@ -459,7 +459,7 @@ def natTransEquivCompatibleFamily {P : Cᵒᵖ ⥤ Type v₁} :
 /-- (Implementation). A lemma useful to prove `yoneda_condition_iff_sheaf_condition`. -/
 theorem extension_iff_amalgamation {P : Cᵒᵖ ⥤ Type v₁} (x : S.Functor ⟶ P) (g : yoneda.obj X ⟶ P) :
     S.functorInclusion ≫ g = x ↔ (natTransEquivCompatibleFamily x).1.IsAmalgamation (yonedaEquiv g) := by
-  change _ ↔ ∀ ⦃Y : C⦄ f : Y ⟶ X h : S f, P.map f.op (yoneda_equiv g) = x.app (op Y) ⟨f, h⟩
+  change _ ↔ ∀ ⦃Y : C⦄ (f : Y ⟶ X) (h : S f), P.map f.op (yoneda_equiv g) = x.app (op Y) ⟨f, h⟩
   constructor
   · rintro rfl Y f hf
     rw [yoneda_equiv_naturality]
@@ -664,7 +664,7 @@ contains `S`.
 This is closely related to [Elephant] C2.1.6.
 -/
 theorem is_sheaf_for_subsieve (P : Cᵒᵖ ⥤ Type w) {S : Sieve X} {R : Presieve X} (h : (S : Presieve X) ≤ R)
-    (trans : ∀ ⦃Y⦄ f : Y ⟶ X, IsSheafFor P (S.pullback f)) : IsSheafFor P R :=
+    (trans : ∀ ⦃Y⦄ (f : Y ⟶ X), IsSheafFor P (S.pullback f)) : IsSheafFor P R :=
   is_sheaf_for_subsieve_aux P h
     (by
       simpa using trans (𝟙 _))
@@ -672,7 +672,7 @@ theorem is_sheaf_for_subsieve (P : Cᵒᵖ ⥤ Type w) {S : Sieve X} {R : Presie
 
 /-- A presheaf is separated for a topology if it is separated for every sieve in the topology. -/
 def IsSeparated (P : Cᵒᵖ ⥤ Type w) : Prop :=
-  ∀ {X} S : Sieve X, S ∈ J X → IsSeparatedFor P S
+  ∀ {X} (S : Sieve X), S ∈ J X → IsSeparatedFor P S
 
 /-- A presheaf is a sheaf for a topology if it is a sheaf for every sieve in the topology.
 
@@ -680,7 +680,7 @@ If the given topology is given by a pretopology, `is_sheaf_for_pretopology` show
 check the sheaf condition at presieves in the pretopology.
 -/
 def IsSheaf (P : Cᵒᵖ ⥤ Type w) : Prop :=
-  ∀ ⦃X⦄ S : Sieve X, S ∈ J X → IsSheafFor P S
+  ∀ ⦃X⦄ (S : Sieve X), S ∈ J X → IsSheafFor P S
 
 theorem IsSheaf.is_sheaf_for {P : Cᵒᵖ ⥤ Type w} (hp : IsSheaf J P) (R : Presieve X) (hr : generate R ∈ J X) :
     IsSheafFor P R :=
@@ -696,14 +696,14 @@ theorem is_separated_of_is_sheaf (P : Cᵒᵖ ⥤ Type w) (h : IsSheaf J P) : Is
 theorem is_sheaf_iso {P' : Cᵒᵖ ⥤ Type w} (i : P ≅ P') (h : IsSheaf J P) : IsSheaf J P' := fun X S hS =>
   is_sheaf_for_iso i (h S hS)
 
-theorem is_sheaf_of_yoneda {P : Cᵒᵖ ⥤ Type v₁} (h : ∀ {X} S : Sieve X, S ∈ J X → YonedaSheafCondition P S) :
+theorem is_sheaf_of_yoneda {P : Cᵒᵖ ⥤ Type v₁} (h : ∀ {X} (S : Sieve X), S ∈ J X → YonedaSheafCondition P S) :
     IsSheaf J P := fun X S hS => is_sheaf_for_iff_yoneda_sheaf_condition.2 (h _ hS)
 
 /-- For a topology generated by a basis, it suffices to check the sheaf condition on the basis
 presieves only.
 -/
 theorem is_sheaf_pretopology [HasPullbacks C] (K : Pretopology C) :
-    IsSheaf (K.toGrothendieck C) P ↔ ∀ {X : C} R : Presieve X, R ∈ K X → IsSheafFor P R := by
+    IsSheaf (K.toGrothendieck C) P ↔ ∀ {X : C} (R : Presieve X), R ∈ K X → IsSheafFor P R := by
   constructor
   · intro PJ X R hR
     rw [is_sheaf_for_iff_generate]

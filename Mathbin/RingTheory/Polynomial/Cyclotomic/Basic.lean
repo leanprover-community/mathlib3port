@@ -381,7 +381,7 @@ open BigOperators
 
 open Finset
 
-theorem prod_cyclotomic_eq_geom_sum {n : ℕ} (h : 0 < n) R [CommRingₓ R] [IsDomain R] :
+theorem prod_cyclotomic_eq_geom_sum {n : ℕ} (h : 0 < n) (R) [CommRingₓ R] [IsDomain R] :
     (∏ i in n.divisors \ {1}, cyclotomic i R) = ∑ i in range n, X ^ i := by
   apply_fun (· * cyclotomic 1 R) using mul_left_injective₀ (cyclotomic_ne_zero 1 R)
   have : (∏ i in {1}, cyclotomic i R) = cyclotomic 1 R := Finset.prod_singleton
@@ -391,7 +391,7 @@ theorem prod_cyclotomic_eq_geom_sum {n : ℕ} (h : 0 < n) R [CommRingₓ R] [IsD
         simp [← h.ne'],
     this, cyclotomic_one, geom_sum_mul, prod_cyclotomic_eq_X_pow_sub_one h]
 
-theorem cyclotomic_dvd_geom_sum_of_dvd R [CommRingₓ R] {d n : ℕ} (hdn : d ∣ n) (hd : d ≠ 1) :
+theorem cyclotomic_dvd_geom_sum_of_dvd (R) [CommRingₓ R] {d n : ℕ} (hdn : d ∣ n) (hd : d ≠ 1) :
     cyclotomic d R ∣ ∑ i in range n, X ^ i := by
   suffices (cyclotomic d ℤ).map (Int.castRingHom R) ∣ (∑ i in range n, X ^ i).map (Int.castRingHom R) by
     have key := (map_ring_hom (Int.castRingHom R)).map_geom_sum X n
@@ -405,8 +405,8 @@ theorem cyclotomic_dvd_geom_sum_of_dvd R [CommRingₓ R] {d n : ℕ} (hdn : d �
   apply Finset.dvd_prod_of_mem
   simp [← hd, ← hdn, ← hn.ne']
 
-theorem X_pow_sub_one_mul_prod_cyclotomic_eq_X_pow_sub_one_of_dvd R [CommRingₓ R] {d n : ℕ} (h : d ∈ n.properDivisors) :
-    ((X ^ d - 1) * ∏ x in n.divisors \ d.divisors, cyclotomic x R) = X ^ n - 1 := by
+theorem X_pow_sub_one_mul_prod_cyclotomic_eq_X_pow_sub_one_of_dvd (R) [CommRingₓ R] {d n : ℕ}
+    (h : d ∈ n.properDivisors) : ((X ^ d - 1) * ∏ x in n.divisors \ d.divisors, cyclotomic x R) = X ^ n - 1 := by
   obtain ⟨hd, hdn⟩ := nat.mem_proper_divisors.mp h
   have h0n := pos_of_gt hdn
   rcases d.eq_zero_or_pos with (rfl | h0d)
@@ -416,7 +416,7 @@ theorem X_pow_sub_one_mul_prod_cyclotomic_eq_X_pow_sub_one_of_dvd R [CommRingₓ
   rw [← prod_cyclotomic_eq_X_pow_sub_one h0d, ← prod_cyclotomic_eq_X_pow_sub_one h0n, mul_comm,
     Finset.prod_sdiff (Nat.divisors_subset_of_dvd h0n.ne' hd)]
 
-theorem X_pow_sub_one_mul_cyclotomic_dvd_X_pow_sub_one_of_dvd R [CommRingₓ R] {d n : ℕ} (h : d ∈ n.properDivisors) :
+theorem X_pow_sub_one_mul_cyclotomic_dvd_X_pow_sub_one_of_dvd (R) [CommRingₓ R] {d n : ℕ} (h : d ∈ n.properDivisors) :
     (X ^ d - 1) * cyclotomic n R ∣ X ^ n - 1 := by
   have hdn := (nat.mem_proper_divisors.mp h).2
   use ∏ x in n.proper_divisors \ d.divisors, cyclotomic x R

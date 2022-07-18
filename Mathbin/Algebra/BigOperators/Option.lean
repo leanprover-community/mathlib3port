@@ -27,7 +27,6 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
     (∏ x in s.insertNone, f x) = f none * ∏ x in s, f (some x) := by
   simp [← insert_none]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem prod_erase_none (f : α → M) (s : Finset (Option α)) :
     (∏ x in s.eraseNone, f x) = ∏ x in s, Option.elimₓ 1 f x := by

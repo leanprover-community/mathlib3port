@@ -62,7 +62,11 @@ protected theorem ext {s t : Compacts α} (h : (s : Set α) = t) : s = t :=
   SetLike.ext' h
 
 @[simp]
-theorem coe_mk (s : Set α) h : (mk s h : Set α) = s :=
+theorem coe_mk (s : Set α) (h) : (mk s h : Set α) = s :=
+  rfl
+
+@[simp]
+theorem carrier_eq_coe (s : Compacts α) : s.Carrier = s :=
   rfl
 
 instance : HasSup (Compacts α) :=
@@ -109,7 +113,6 @@ theorem coe_top [CompactSpace α] : (↑(⊤ : Compacts α) : Set α) = univ :=
 theorem coe_bot : (↑(⊥ : Compacts α) : Set α) = ∅ :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem coe_finset_sup {ι : Type _} {s : Finset ι} {f : ι → Compacts α} : (↑(s.sup f) : Set α) = s.sup fun i => f i :=
   by
@@ -141,6 +144,15 @@ protected def equiv (f : α ≃ₜ β) : Compacts α ≃ Compacts β where
 /-- The image of a compact set under a homeomorphism can also be expressed as a preimage. -/
 theorem equiv_to_fun_val (f : α ≃ₜ β) (K : Compacts α) : (Compacts.equiv f K).1 = f.symm ⁻¹' K.1 :=
   congr_fun (image_eq_preimage_of_inverse f.left_inv f.right_inv) K.1
+
+/-- The product of two `compacts`, as a `compacts` in the product space. -/
+protected def prod (K : Compacts α) (L : Compacts β) : Compacts (α × β) where
+  Carrier := (K : Set α) ×ˢ (L : Set β)
+  compact' := IsCompact.prod K.2 L.2
+
+@[simp]
+theorem coe_prod (K : Compacts α) (L : Compacts β) : (K.Prod L : Set (α × β)) = (K : Set α) ×ˢ (L : Set β) :=
+  rfl
 
 end Compacts
 
@@ -175,7 +187,11 @@ protected theorem ext {s t : NonemptyCompacts α} (h : (s : Set α) = t) : s = t
   SetLike.ext' h
 
 @[simp]
-theorem coe_mk (s : Compacts α) h : (mk s h : Set α) = s :=
+theorem coe_mk (s : Compacts α) (h) : (mk s h : Set α) = s :=
+  rfl
+
+@[simp]
+theorem carrier_eq_coe (s : NonemptyCompacts α) : s.Carrier = s :=
   rfl
 
 instance : HasSup (NonemptyCompacts α) :=
@@ -208,6 +224,15 @@ instance to_compact_space {s : NonemptyCompacts α} : CompactSpace s :=
 
 instance to_nonempty {s : NonemptyCompacts α} : Nonempty s :=
   s.Nonempty.to_subtype
+
+/-- The product of two `nonempty_compacts`, as a `nonempty_compacts` in the product space. -/
+protected def prod (K : NonemptyCompacts α) (L : NonemptyCompacts β) : NonemptyCompacts (α × β) :=
+  { K.toCompacts.Prod L.toCompacts with nonempty' := K.Nonempty.Prod L.Nonempty }
+
+@[simp]
+theorem coe_prod (K : NonemptyCompacts α) (L : NonemptyCompacts β) :
+    (K.Prod L : Set (α × β)) = (K : Set α) ×ˢ (L : Set β) :=
+  rfl
 
 end NonemptyCompacts
 
@@ -246,7 +271,11 @@ protected theorem ext {s t : PositiveCompacts α} (h : (s : Set α) = t) : s = t
   SetLike.ext' h
 
 @[simp]
-theorem coe_mk (s : Compacts α) h : (mk s h : Set α) = s :=
+theorem coe_mk (s : Compacts α) (h) : (mk s h : Set α) = s :=
+  rfl
+
+@[simp]
+theorem carrier_eq_coe (s : PositiveCompacts α) : s.Carrier = s :=
   rfl
 
 instance : HasSup (PositiveCompacts α) :=
@@ -281,6 +310,18 @@ instance [CompactSpace α] [Nonempty α] : Inhabited (PositiveCompacts α) :=
 /-- In a nonempty locally compact space, there exists a compact set with nonempty interior. -/
 instance nonempty' [LocallyCompactSpace α] [Nonempty α] : Nonempty (PositiveCompacts α) :=
   nonempty_of_exists <| exists_positive_compacts_subset is_open_univ univ_nonempty
+
+/-- The product of two `positive_compacts`, as a `positive_compacts` in the product space. -/
+protected def prod (K : PositiveCompacts α) (L : PositiveCompacts β) : PositiveCompacts (α × β) :=
+  { K.toCompacts.Prod L.toCompacts with
+    interior_nonempty' := by
+      simp only [← compacts.carrier_eq_coe, ← compacts.coe_prod, ← interior_prod_eq]
+      exact K.interior_nonempty.prod L.interior_nonempty }
+
+@[simp]
+theorem coe_prod (K : PositiveCompacts α) (L : PositiveCompacts β) :
+    (K.Prod L : Set (α × β)) = (K : Set α) ×ˢ (L : Set β) :=
+  rfl
 
 end PositiveCompacts
 
@@ -322,7 +363,7 @@ protected theorem ext {s t : CompactOpens α} (h : (s : Set α) = t) : s = t :=
   SetLike.ext' h
 
 @[simp]
-theorem coe_mk (s : Compacts α) h : (mk s h : Set α) = s :=
+theorem coe_mk (s : Compacts α) (h) : (mk s h : Set α) = s :=
   rfl
 
 instance : HasSup (CompactOpens α) :=
@@ -393,6 +434,14 @@ def map (f : α → β) (hf : Continuous f) (hf' : IsOpenMap f) (s : CompactOpen
 @[simp]
 theorem coe_map {f : α → β} (hf : Continuous f) (hf' : IsOpenMap f) (s : CompactOpens α) :
     (s.map f hf hf' : Set β) = f '' s :=
+  rfl
+
+/-- The product of two `compact_opens`, as a `compact_opens` in the product space. -/
+protected def prod (K : CompactOpens α) (L : CompactOpens β) : CompactOpens (α × β) :=
+  { K.toCompacts.Prod L.toCompacts with open' := K.open.Prod L.open }
+
+@[simp]
+theorem coe_prod (K : CompactOpens α) (L : CompactOpens β) : (K.Prod L : Set (α × β)) = (K : Set α) ×ˢ (L : Set β) :=
   rfl
 
 end CompactOpens

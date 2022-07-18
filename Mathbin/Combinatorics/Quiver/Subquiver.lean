@@ -21,13 +21,13 @@ universe v u
     for every pair of vertices `a b`.
 
     NB: this does not work for `Prop`-valued quivers. It requires `G : quiver.{v+1} V`. -/
-def WideSubquiver V [Quiver.{v + 1} V] :=
+def WideSubquiver (V) [Quiver.{v + 1} V] :=
   ∀ a b : V, Set (a ⟶ b)
 
 /-- A type synonym for `V`, when thought of as a quiver having only the arrows from
 some `wide_subquiver`. -/
 @[nolint unused_arguments has_inhabited_instance]
-def WideSubquiver.ToType V [Quiver V] (H : WideSubquiver V) : Type u :=
+def WideSubquiver.ToType (V) [Quiver V] (H : WideSubquiver V) : Type u :=
   V
 
 instance wideSubquiverHasCoeToSort {V} [Quiver V] :
@@ -71,7 +71,7 @@ def wideSubquiverEquivSetTotal {V} [Quiver V] : WideSubquiver V ≃ Set (Total V
 def Labelling (V : Type u) [Quiver V] (L : Sort _) :=
   ∀ ⦃a b : V⦄, (a ⟶ b) → L
 
-instance {V : Type u} [Quiver V] L [Inhabited L] : Inhabited (Labelling V L) :=
+instance {V : Type u} [Quiver V] (L) [Inhabited L] : Inhabited (Labelling V L) :=
   ⟨fun a b e => default⟩
 
 end Quiver

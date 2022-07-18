@@ -591,8 +591,8 @@ See note [reducible non-instances]. -/
   to_additive Function.Injective.orderedAddCommGroup "Pullback an `ordered_add_comm_group` under an injective map."]
 def Function.Injective.orderedCommGroup [OrderedCommGroup α] {β : Type _} [One β] [Mul β] [Inv β] [Div β] [Pow β ℕ]
     [Pow β ℤ] (f : β → α) (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
-    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n)
-    (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) : OrderedCommGroup β :=
+    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
+    (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) : OrderedCommGroup β :=
   { PartialOrderₓ.lift f hf, hf.OrderedCommMonoid f one mul npow, hf.CommGroup f one mul inv div npow zpow with }
 
 --  Most of the lemmas that are primed in this section appear in ordered_field. 
@@ -979,10 +979,11 @@ See note [reducible non-instances]. -/
   to_additive Function.Injective.linearOrderedAddCommGroup
       "Pullback a `linear_ordered_add_comm_group` under an injective map."]
 def Function.Injective.linearOrderedCommGroup {β : Type _} [One β] [Mul β] [Inv β] [Div β] [Pow β ℕ] [Pow β ℤ]
-    (f : β → α) (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
-    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n)
-    (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) : LinearOrderedCommGroup β :=
-  { LinearOrderₓ.lift f hf, hf.OrderedCommGroup f one mul inv div npow zpow with }
+    [HasSup β] [HasInf β] (f : β → α) (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
+    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
+    (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) (hsup : ∀ x y, f (x⊔y) = max (f x) (f y))
+    (hinf : ∀ x y, f (x⊓y) = min (f x) (f y)) : LinearOrderedCommGroup β :=
+  { LinearOrderₓ.lift f hf hsup hinf, hf.OrderedCommGroup f one mul inv div npow zpow with }
 
 @[to_additive LinearOrderedAddCommGroup.add_lt_add_left]
 theorem LinearOrderedCommGroup.mul_lt_mul_left' (a b : α) (h : a < b) (c : α) : c * a < c * b :=
@@ -1167,6 +1168,7 @@ theorem add_abs_nonneg (a : α) : 0 ≤ a + abs a := by
 theorem neg_abs_le_neg (a : α) : -abs a ≤ -a := by
   simpa using neg_abs_le_self (-a)
 
+@[simp]
 theorem abs_nonneg (a : α) : 0 ≤ abs a :=
   (le_totalₓ 0 a).elim (fun h => h.trans (le_abs_self a)) fun h => (neg_nonneg.2 h).trans <| neg_le_abs_self a
 

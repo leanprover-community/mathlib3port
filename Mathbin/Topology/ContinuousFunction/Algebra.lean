@@ -625,7 +625,7 @@ writing it this way avoids having to deal with casts inside the set.
 where the functions would be continuous functions vanishing at infinity.)
 -/
 def Set.SeparatesPointsStrongly (s : Set C(α, 𝕜)) : Prop :=
-  ∀ v : α → 𝕜 x y : α, ∃ f : s, (f x : 𝕜) = v x ∧ f y = v y
+  ∀ (v : α → 𝕜) (x y : α), ∃ f : s, (f x : 𝕜) = v x ∧ f y = v y
 
 variable [Field 𝕜] [TopologicalRing 𝕜]
 

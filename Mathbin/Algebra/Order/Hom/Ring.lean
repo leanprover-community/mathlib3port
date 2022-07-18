@@ -297,11 +297,11 @@ theorem ext {f g : α ≃+*o β} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
 
 @[simp]
-theorem coe_mk (e : α ≃+* β) h : ⇑(⟨e, h⟩ : α ≃+*o β) = e :=
+theorem coe_mk (e : α ≃+* β) (h) : ⇑(⟨e, h⟩ : α ≃+*o β) = e :=
   rfl
 
 @[simp]
-theorem mk_coe (e : α ≃+*o β) h : (⟨e, h⟩ : α ≃+*o β) = e :=
+theorem mk_coe (e : α ≃+*o β) (h) : (⟨e, h⟩ : α ≃+*o β) = e :=
   ext fun _ => rfl
 
 @[simp]

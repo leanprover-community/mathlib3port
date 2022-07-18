@@ -95,7 +95,7 @@ initialize_simps_projections Units (val → coe as_prefix, inv → coeInv as_pre
 initialize_simps_projections AddUnits (val → coe as_prefix, neg → coeNeg as_prefix)
 
 @[simp, to_additive]
-theorem coe_mk (a : α) b h₁ h₂ : ↑(Units.mk a b h₁ h₂) = a :=
+theorem coe_mk (a : α) (b h₁ h₂) : ↑(Units.mk a b h₁ h₂) = a :=
   rfl
 
 @[ext, to_additive]
@@ -116,7 +116,7 @@ theorem ext_iff {a b : αˣ} : a = b ↔ (a : α) = b :=
 instance [DecidableEq α] : DecidableEq αˣ := fun a b => decidableOfIff' _ ext_iff
 
 @[simp, to_additive]
-theorem mk_coe (u : αˣ) y h₁ h₂ : mk (u : α) y h₁ h₂ = u :=
+theorem mk_coe (u : αˣ) (y h₁ h₂) : mk (u : α) y h₁ h₂ = u :=
   ext rfl
 
 /-- Copy a unit, adjusting definition equalities. -/
@@ -125,22 +125,24 @@ def copy (u : αˣ) (val : α) (hv : val = u) (inv : α) (hi : inv = ↑u⁻¹) 
   { val, inv, inv_val := hv.symm ▸ hi.symm ▸ u.inv_val, val_inv := hv.symm ▸ hi.symm ▸ u.val_inv }
 
 @[to_additive]
-theorem copy_eq (u : αˣ) val hv inv hi : u.copy val hv inv hi = u :=
+theorem copy_eq (u : αˣ) (val hv inv hi) : u.copy val hv inv hi = u :=
   ext hv
 
-/-- Units of a monoid form a group. -/
-@[to_additive "Additive units of an additive monoid form an additive group."]
-instance : Groupₓ αˣ where
+@[to_additive]
+instance : MulOneClassₓ αˣ where
   mul := fun u₁ u₂ =>
     ⟨u₁.val * u₂.val, u₂.inv * u₁.inv, by
       rw [mul_assoc, ← mul_assoc u₂.val, val_inv, one_mulₓ, val_inv], by
       rw [mul_assoc, ← mul_assoc u₁.inv, inv_val, one_mulₓ, inv_val]⟩
   one := ⟨1, 1, one_mulₓ 1, one_mulₓ 1⟩
-  mul_one := fun u => ext <| mul_oneₓ u
   one_mul := fun u => ext <| one_mulₓ u
-  mul_assoc := fun u₁ u₂ u₃ => ext <| mul_assoc u₁ u₂ u₃
-  inv := Inv.inv
-  mul_left_inv := fun u => ext u.inv_val
+  mul_one := fun u => ext <| mul_oneₓ u
+
+/-- Units of a monoid form a group. -/
+@[to_additive "Additive units of an additive monoid form an additive group."]
+instance : Groupₓ αˣ :=
+  { Units.mulOneClass with mul := (· * ·), one := 1, mul_assoc := fun u₁ u₂ u₃ => ext <| mul_assoc u₁ u₂ u₃,
+    inv := Inv.inv, mul_left_inv := fun u => ext u.inv_val }
 
 @[to_additive]
 instance {α} [CommMonoidₓ α] : CommGroupₓ αˣ :=
@@ -169,7 +171,7 @@ theorem coe_eq_one {a : αˣ} : (a : α) = 1 ↔ a = 1 := by
   rw [← Units.coe_one, eq_iff]
 
 @[simp, to_additive]
-theorem inv_mk (x y : α) h₁ h₂ : (mk x y h₁ h₂)⁻¹ = mk y x h₂ h₁ :=
+theorem inv_mk (x y : α) (h₁ h₂) : (mk x y h₁ h₂)⁻¹ = mk y x h₂ h₁ :=
   rfl
 
 @[simp, to_additive]
@@ -310,7 +312,7 @@ variable [Monoidₓ α] {a b c : α}
 /-- Partial division. It is defined when the
   second argument is invertible, and unlike the division operator
   in `division_ring` it is not totalized at zero. -/
-def divp (a : α) u : α :=
+def divp (a : α) (u) : α :=
   a * (u⁻¹ : αˣ)
 
 -- mathport name: «expr /ₚ »

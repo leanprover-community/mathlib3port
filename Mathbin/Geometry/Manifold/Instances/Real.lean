@@ -84,7 +84,7 @@ theorem range_quadrant (n : ℕ) : (Range fun x : EuclideanQuadrant n => x.val) 
 
 end
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i «expr ∈ » ({0} : set (fin n)))
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ∈ » ({0} : set (fin n)))
 /-- Definition of the model with corners `(euclidean_space ℝ (fin n), euclidean_half_space n)`, used as
 a model for manifolds with boundary. In the locale `manifold`, use the shortcut `𝓡∂ n`.
 -/
@@ -105,7 +105,7 @@ def modelWithCornersEuclideanHalfSpace (n : ℕ) [Zero (Finₓ n)] :
   source_eq := rfl
   unique_diff' := by
     have this : UniqueDiffOn ℝ _ :=
-      UniqueDiffOn.pi (Finₓ n) (fun _ => ℝ) _ _ fun i _ : i ∈ ({0} : Set (Finₓ n)) => unique_diff_on_Ici 0
+      UniqueDiffOn.pi (Finₓ n) (fun _ => ℝ) _ _ fun i (_ : i ∈ ({0} : Set (Finₓ n))) => unique_diff_on_Ici 0
     simpa only [← singleton_pi] using this
   continuous_to_fun := continuous_subtype_val
   continuous_inv_fun := continuous_subtype_mk _ <| continuous_id.update 0 <| (continuous_apply 0).max continuous_const
@@ -190,7 +190,7 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclide
   continuous_to_fun := by
     apply Continuous.continuous_on
     apply continuous_subtype_mk
-    have : Continuous fun z : ℝ i : Finₓ 1 => z - x :=
+    have : Continuous fun (z : ℝ) (i : Finₓ 1) => z - x :=
       Continuous.sub (continuous_pi fun i => continuous_id) continuous_const
     exact this.comp continuous_subtype_val
   continuous_inv_fun := by
@@ -242,7 +242,7 @@ def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclid
   continuous_to_fun := by
     apply Continuous.continuous_on
     apply continuous_subtype_mk
-    have : Continuous fun z : ℝ i : Finₓ 1 => y - z := continuous_const.sub (continuous_pi fun i => continuous_id)
+    have : Continuous fun (z : ℝ) (i : Finₓ 1) => y - z := continuous_const.sub (continuous_pi fun i => continuous_id)
     exact this.comp continuous_subtype_val
   continuous_inv_fun := by
     apply Continuous.continuous_on

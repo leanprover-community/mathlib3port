@@ -131,16 +131,16 @@ theorem Continuous.integrable_on_Ioc [Preorderₓ X] [CompactIccSpace X] (hf : C
     IntegrableOn f (Ioc a b) μ :=
   hf.integrable_on_Icc.mono_set Ioc_subset_Icc_self
 
--- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
 theorem ContinuousOn.integrable_on_interval [LinearOrderₓ X] [CompactIccSpace X]
-    (hf : ContinuousOn f "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)") :
-    IntegrableOn f "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)" μ :=
+    (hf : ContinuousOn f "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)") :
+    IntegrableOn f "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)" μ :=
   hf.integrable_on_Icc
 
--- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
 theorem Continuous.integrable_on_interval [LinearOrderₓ X] [CompactIccSpace X] (hf : Continuous f) :
-    IntegrableOn f "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)" μ :=
+    IntegrableOn f "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)" μ :=
   hf.integrable_on_Icc
 
 theorem Continuous.integrable_on_interval_oc [LinearOrderₓ X] [CompactIccSpace X] (hf : Continuous f) :
@@ -159,9 +159,9 @@ section Monotone
 variable [BorelSpace X] [MetrizableSpace X] [ConditionallyCompleteLinearOrder X] [ConditionallyCompleteLinearOrder E]
   [OrderTopology X] [OrderTopology E] [SecondCountableTopology E] [IsLocallyFiniteMeasure μ] {s : Set X}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr E]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr E]]
 theorem MonotoneOn.integrable_on_compact (hs : IsCompact s) (hmono : MonotoneOn f s) : IntegrableOn f s μ := by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr E]]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr E]]"
   obtain rfl | h := s.eq_empty_or_nonempty
   · exact integrable_on_empty
     

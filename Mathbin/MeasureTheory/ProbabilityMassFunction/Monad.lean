@@ -112,7 +112,7 @@ theorem coe_bind_apply (b : β) : (p.bind f b : ℝ≥0∞) = ∑' a, p a * f a 
     simp
 
 @[simp]
-theorem pure_bind (a : α) : (pure a).bind f = f a := by
+theorem pure_bind (a : α) (f : α → Pmf β) : (pure a).bind f = f a := by
   have : ∀ b a', ite (a' = a) 1 0 * f a' b = ite (a' = a) (f a b) 0 := fun b a' => by
     split_ifs <;> simp <;> subst h <;> simp
   ext b <;> simp [← this]
@@ -263,13 +263,13 @@ theorem coe_bind_on_support_apply (b : β) :
   simp only [← bind_on_support_apply, ← Ennreal.coe_tsum (bind_on_support.summable p f b), ← dite_cast, ←
     Ennreal.coe_mul, ← Ennreal.coe_zero]
 
-theorem bind_on_support_eq_zero_iff (b : β) : p.bindOnSupport f b = 0 ↔ ∀ a ha : p a ≠ 0, f a ha b = 0 := by
+theorem bind_on_support_eq_zero_iff (b : β) : p.bindOnSupport f b = 0 ↔ ∀ (a) (ha : p a ≠ 0), f a ha b = 0 := by
   simp only [← bind_on_support_apply, ← tsum_eq_zero_iff (bind_on_support.summable p f b), ← mul_eq_zero, ←
     or_iff_not_imp_left]
   exact ⟨fun h a ha => trans (dif_neg ha).symm (h a ha), fun h a ha => trans (dif_neg ha) (h a ha)⟩
 
 @[simp]
-theorem pure_bind_on_support (a : α) (f : ∀ a' : α ha : a' ∈ (pure a).Support, Pmf β) :
+theorem pure_bind_on_support (a : α) (f : ∀ (a' : α) (ha : a' ∈ (pure a).Support), Pmf β) :
     (pure a).bindOnSupport f = f a ((mem_support_pure_iff a a).mpr rfl) := by
   refine' Pmf.ext fun b => _
   simp only [← Nnreal.coe_eq, ← bind_on_support_apply, ← pure_apply]

@@ -382,8 +382,12 @@ instance [DiscreteTopology α] [DiscreteTopology β] : DiscreteTopology (α × �
 theorem prod_mem_nhds_iff {s : Set α} {t : Set β} {a : α} {b : β} : s ×ˢ t ∈ 𝓝 (a, b) ↔ s ∈ 𝓝 a ∧ t ∈ 𝓝 b := by
   rw [nhds_prod_eq, prod_mem_prod_iff]
 
-theorem ProdIsOpen.mem_nhds {s : Set α} {t : Set β} {a : α} {b : β} (ha : s ∈ 𝓝 a) (hb : t ∈ 𝓝 b) : s ×ˢ t ∈ 𝓝 (a, b) :=
+theorem prod_mem_nhds {s : Set α} {t : Set β} {a : α} {b : β} (ha : s ∈ 𝓝 a) (hb : t ∈ 𝓝 b) : s ×ˢ t ∈ 𝓝 (a, b) :=
   prod_mem_nhds_iff.2 ⟨ha, hb⟩
+
+theorem Filter.Eventually.prod_nhds {p : α → Prop} {q : β → Prop} {a : α} {b : β} (ha : ∀ᶠ x in 𝓝 a, p x)
+    (hb : ∀ᶠ y in 𝓝 b, q y) : ∀ᶠ z : α × β in 𝓝 (a, b), p z.1 ∧ q z.2 :=
+  prod_mem_nhds ha hb
 
 theorem nhds_swap (a : α) (b : β) : 𝓝 (a, b) = (𝓝 (b, a)).map Prod.swap := by
   rw [nhds_prod_eq, Filter.prod_comm, nhds_prod_eq] <;> rfl
@@ -609,7 +613,7 @@ section Sum
 
 open Sum
 
-variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
+variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] [TopologicalSpace δ]
 
 @[continuity]
 theorem continuous_inl : Continuous (@inl α β) :=
@@ -620,9 +624,13 @@ theorem continuous_inr : Continuous (@inr α β) :=
   continuous_sup_rng_right continuous_coinduced_rng
 
 @[continuity]
-theorem continuous_sum_rec {f : α → γ} {g : β → γ} (hf : Continuous f) (hg : Continuous g) :
-    @Continuous (Sum α β) γ _ _ (@Sum.rec α β (fun _ => γ) f g) := by
+theorem Continuous.sum_elim {f : α → γ} {g : β → γ} (hf : Continuous f) (hg : Continuous g) :
+    Continuous (Sum.elim f g) := by
   apply continuous_sup_dom <;> rw [continuous_def] at hf hg⊢ <;> assumption
+
+@[continuity]
+theorem Continuous.sum_map {f : α → β} {g : γ → δ} (hf : Continuous f) (hg : Continuous g) : Continuous (Sum.map f g) :=
+  (continuous_inl.comp hf).sum_elim (continuous_inr.comp hg)
 
 theorem is_open_sum_iff {s : Set (Sum α β)} : IsOpen s ↔ IsOpen (inl ⁻¹' s) ∧ IsOpen (inr ⁻¹' s) :=
   Iff.rfl

@@ -116,7 +116,7 @@ theorem nhds_mk_of_nhds (n : α → Filter α) (a : α) (h₀ : pure ≤ n)
   refine' le_antisymmₓ (fun s hs => _) fun s hs => _
   · have h₀ : { b | s ∈ n b } ⊆ s := fun b hb => mem_pure.1 <| h₀ b hb
     have h₁ : { b | s ∈ n b } ∈ 𝓝 a := by
-      refine' IsOpen.mem_nhds (fun b hb : s ∈ n b => _) hs
+      refine' IsOpen.mem_nhds (fun b (hb : s ∈ n b) => _) hs
       rcases h₁ hb with ⟨t, ht, hts, h⟩
       exact mem_of_superset ht h
     exact mem_of_superset h₁ h₀
@@ -125,8 +125,8 @@ theorem nhds_mk_of_nhds (n : α → Filter α) (a : α) (h₀ : pure ≤ n)
     exact (n a).sets_of_superset (ht _ hat) hts
     
 
-theorem nhds_mk_of_nhds_filter_basis (B : α → FilterBasis α) (a : α) (h₀ : ∀ x, ∀ n ∈ B x, ∀, x ∈ n)
-    (h₁ : ∀ x, ∀ n ∈ B x, ∀, ∃ n₁ ∈ B x, n₁ ⊆ n ∧ ∀, ∀ x' ∈ n₁, ∀, ∃ n₂ ∈ B x', n₂ ⊆ n) :
+theorem nhds_mk_of_nhds_filter_basis (B : α → FilterBasis α) (a : α) (h₀ : ∀ (x), ∀ n ∈ B x, ∀, x ∈ n)
+    (h₁ : ∀ (x), ∀ n ∈ B x, ∀, ∃ n₁ ∈ B x, n₁ ⊆ n ∧ ∀, ∀ x' ∈ n₁, ∀, ∃ n₂ ∈ B x', n₂ ⊆ n) :
     @nhds α (TopologicalSpace.mkOfNhds fun x => (B x).filter) a = (B a).filter := by
   rw [TopologicalSpace.nhds_mk_of_nhds] <;> intro x n hn <;> obtain ⟨m, hm₁, hm₂⟩ := (B x).mem_filter_iff.mp hn
   · exact hm₂ (h₀ _ _ hm₁)
@@ -233,7 +233,7 @@ instance : CompleteLattice (TopologicalSpace α) :=
 theorem is_open_implies_is_open_iff {a b : TopologicalSpace α} : (∀ s, a.IsOpen s → b.IsOpen s) ↔ b ≤ a :=
   Iff.rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`eq_bot] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`eq_bot] []
 /-- A topological space is discrete if every set is open, that is,
   its topology equals the discrete topology `⊥`. -/
 class DiscreteTopology (α : Type _) [t : TopologicalSpace α] : Prop where
@@ -561,9 +561,9 @@ theorem is_open_singleton_nhds_adjoint {α : Type _} {a b : α} (f : Filter α) 
   rw [is_open_singleton_iff_nhds_eq_pure]
   exact nhds_adjoint_nhds_of_ne a f hb
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (b «expr ≠ » a)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (b «expr ≠ » a)
 theorem le_nhds_adjoint_iff' {α : Type _} (a : α) (f : Filter α) (t : TopologicalSpace α) :
-    t ≤ nhdsAdjoint a f ↔ @nhds α t a ≤ pure a⊔f ∧ ∀ b _ : b ≠ a, @nhds α t b = pure b := by
+    t ≤ nhdsAdjoint a f ↔ @nhds α t a ≤ pure a⊔f ∧ ∀ (b) (_ : b ≠ a), @nhds α t b = pure b := by
   rw [le_iff_nhds]
   constructor
   · intro h
@@ -809,7 +809,7 @@ theorem continuous_Prop {p : α → Prop} : Continuous p ↔ IsOpen { x | p x } 
   ⟨fun h : Continuous p => by
     have : IsOpen (p ⁻¹' {True}) := is_open_singleton_true.Preimage h
     simpa [← preimage, ← eq_trueₓ] using this, fun h : IsOpen { x | p x } =>
-    continuous_generated_from fun s hs : s = {True} => by
+    continuous_generated_from fun s (hs : s = {True}) => by
       simp [← hs, ← preimage, ← eq_trueₓ, ← h]⟩
 
 theorem is_open_iff_continuous_mem {s : Set α} : IsOpen s ↔ Continuous fun x => x ∈ s :=

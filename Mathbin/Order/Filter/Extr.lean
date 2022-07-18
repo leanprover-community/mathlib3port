@@ -219,13 +219,13 @@ theorem IsMaxFilter.filter_mono (h : IsMaxFilter f l a) (hl : l' ≤ l) : IsMaxF
 theorem IsExtrFilter.filter_mono (h : IsExtrFilter f l a) (hl : l' ≤ l) : IsExtrFilter f l' a :=
   h.elim (fun h => (h.filter_mono hl).is_extr) fun h => (h.filter_mono hl).is_extr
 
-theorem IsMinFilter.filter_inf (h : IsMinFilter f l a) l' : IsMinFilter f (l⊓l') a :=
+theorem IsMinFilter.filter_inf (h : IsMinFilter f l a) (l') : IsMinFilter f (l⊓l') a :=
   h.filter_mono inf_le_left
 
-theorem IsMaxFilter.filter_inf (h : IsMaxFilter f l a) l' : IsMaxFilter f (l⊓l') a :=
+theorem IsMaxFilter.filter_inf (h : IsMaxFilter f l a) (l') : IsMaxFilter f (l⊓l') a :=
   h.filter_mono inf_le_left
 
-theorem IsExtrFilter.filter_inf (h : IsExtrFilter f l a) l' : IsExtrFilter f (l⊓l') a :=
+theorem IsExtrFilter.filter_inf (h : IsExtrFilter f l a) (l') : IsExtrFilter f (l⊓l') a :=
   h.filter_mono inf_le_left
 
 theorem IsMinOn.on_subset (hf : IsMinOn f t a) (h : s ⊆ t) : IsMinOn f s a :=
@@ -237,13 +237,13 @@ theorem IsMaxOn.on_subset (hf : IsMaxOn f t a) (h : s ⊆ t) : IsMaxOn f s a :=
 theorem IsExtrOn.on_subset (hf : IsExtrOn f t a) (h : s ⊆ t) : IsExtrOn f s a :=
   hf.filter_mono <| principal_mono.2 h
 
-theorem IsMinOn.inter (hf : IsMinOn f s a) t : IsMinOn f (s ∩ t) a :=
+theorem IsMinOn.inter (hf : IsMinOn f s a) (t) : IsMinOn f (s ∩ t) a :=
   hf.on_subset (inter_subset_left s t)
 
-theorem IsMaxOn.inter (hf : IsMaxOn f s a) t : IsMaxOn f (s ∩ t) a :=
+theorem IsMaxOn.inter (hf : IsMaxOn f s a) (t) : IsMaxOn f (s ∩ t) a :=
   hf.on_subset (inter_subset_left s t)
 
-theorem IsExtrOn.inter (hf : IsExtrOn f s a) t : IsExtrOn f (s ∩ t) a :=
+theorem IsExtrOn.inter (hf : IsExtrOn f s a) (t) : IsExtrOn f (s ∩ t) a :=
   hf.on_subset (inter_subset_left s t)
 
 /-! ### Composition with (anti)monotone functions -/

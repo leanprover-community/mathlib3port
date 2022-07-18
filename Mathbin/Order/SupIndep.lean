@@ -119,12 +119,11 @@ theorem sup_indep_univ_fin_two (f : Finₓ 2 → α) : (Finset.univ : Finset (Fi
     simp
   exact sup_indep_pair this
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem SupIndep.attach (hs : s.SupIndep f) : s.attach.SupIndep (f ∘ Subtype.val) := by
   intro t ht i _ hi
   classical
   rw [← Finset.sup_image]
-  refine' hs (image_subset_iff.2 fun j : { x // x ∈ s } _ => j.2) i.2 fun hi' => hi _
+  refine' hs (image_subset_iff.2 fun (j : { x // x ∈ s }) _ => j.2) i.2 fun hi' => hi _
   rw [mem_image] at hi'
   obtain ⟨j, hj, hji⟩ := hi'
   rwa [Subtype.ext hji] at hj
@@ -210,7 +209,7 @@ theorem SetIndependent.disjoint_Sup {x : α} {y : Set α} (hx : x ∈ s) (hy : y
 
 omit hs
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
 /-- An independent indexed family of elements in a complete lattice is one in which every element
   is disjoint from the `supr` of the rest.
 
@@ -233,7 +232,7 @@ theorem set_independent_iff {α : Type _} [CompleteLattice α] (s : Set α) :
 
 variable {t : ι → α} (ht : Independent t)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem independent_def : Independent t ↔ ∀ i : ι, Disjoint (t i) (⨆ (j) (_ : j ≠ i), t j) :=
   Iff.rfl
 
@@ -241,7 +240,7 @@ theorem independent_def' : Independent t ↔ ∀ i, Disjoint (t i) (sup (t '' { 
   simp_rw [Sup_image]
   rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem independent_def'' : Independent t ↔ ∀ i, Disjoint (t i) (sup { a | ∃ (j : _)(_ : j ≠ i), t j = a }) := by
   rw [independent_def']
   tidy
@@ -331,7 +330,6 @@ theorem Independent.disjoint_bsupr {ι : Type _} {α : Type _} [CompleteLattice 
 
 end CompleteLattice
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem CompleteLattice.independent_iff_sup_indep [CompleteLattice α] {s : Finset ι} {f : ι → α} :
     CompleteLattice.Independent (f ∘ (coe : s → ι)) ↔ s.SupIndep f := by
   classical
@@ -345,7 +343,6 @@ theorem CompleteLattice.independent_iff_sup_indep [CompleteLattice α] {s : Fins
 
 alias CompleteLattice.independent_iff_sup_indep ↔ CompleteLattice.Independent.sup_indep Finset.SupIndep.independent
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A variant of `complete_lattice.independent_iff_sup_indep` for `fintype`s. -/
 theorem CompleteLattice.independent_iff_sup_indep_univ [CompleteLattice α] [Fintype ι] {f : ι → α} :
     CompleteLattice.Independent f ↔ Finset.univ.SupIndep f := by

@@ -153,6 +153,7 @@ theorem coord_change_smooth (i j : Atlas H M) :
   exact A.comp_cont_diff_on B
 
 /-- Vector bundle core associated to a basic smooth bundle core -/
+@[simps coordChange indexAt]
 def toTopologicalVectorBundleCore : TopologicalVectorBundleCore 𝕜 M F (Atlas H M) where
   BaseSet := fun i => i.1.Source
   is_open_base_set := fun i => i.1.open_source
@@ -201,6 +202,7 @@ theorem chart_target (e : LocalHomeomorph M H) (he : e ∈ Atlas H M) :
 
 /-- The total space of a basic smooth bundle is endowed with a charted space structure, where the
 charts are in bijection with the charts of the basis. -/
+@[simps (config := lemmasOnly) chartAt]
 instance toChartedSpace : ChartedSpace (ModelProd H F) Z.toTopologicalVectorBundleCore.TotalSpace where
   Atlas := ⋃ (e : LocalHomeomorph M H) (he : e ∈ Atlas H M), {Z.chart he}
   chartAt := fun p => Z.chart (chart_mem_atlas H p.1)
@@ -244,7 +246,7 @@ instance to_smooth_manifold : SmoothManifoldWithCorners (I.Prod 𝓘(𝕜, F)) Z
     suffices to prove the first statement in A below, and then glue back the pieces at the end. -/
   let J := ModelWithCorners.toLocalEquiv (I.prod 𝓘(𝕜, F))
   have A :
-    ∀ e e' : LocalHomeomorph M H he : e ∈ atlas H M he' : e' ∈ atlas H M,
+    ∀ (e e' : LocalHomeomorph M H) (he : e ∈ atlas H M) (he' : e' ∈ atlas H M),
       ContDiffOn 𝕜 ∞ (J ∘ (Z.chart he).symm.trans (Z.chart he') ∘ J.symm)
         (J.symm ⁻¹' ((Z.chart he).symm.trans (Z.chart he')).Source ∩ range J) :=
     by
@@ -311,6 +313,7 @@ variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup
 /-- Basic smooth bundle core version of the tangent bundle of a smooth manifold `M` modelled over a
 model with corners `I` on `(E, H)`. The fibers are equal to `E`, and the coordinate change in the
 fiber corresponds to the derivative of the coordinate change in `M`. -/
+@[simps]
 def tangentBundleCore : BasicSmoothVectorBundleCore I M E where
   coordChange := fun i j x => fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (Range I) (I x)
   coord_change_smooth_clm := fun i j => by

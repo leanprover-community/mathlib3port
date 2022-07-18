@@ -130,7 +130,7 @@ theorem coe_injective : Function.Injective (coe : ℕ+ → ℕ) :=
   Subtype.coe_injective
 
 @[simp]
-theorem mk_coe n h : ((⟨n, h⟩ : ℕ+) : ℕ) = n :=
+theorem mk_coe (n h) : ((⟨n, h⟩ : ℕ+) : ℕ) = n :=
   rfl
 
 instance : Add ℕ+ :=
@@ -153,6 +153,16 @@ instance : AddLeftCancelSemigroup ℕ+ :=
 
 instance : AddRightCancelSemigroup ℕ+ :=
   coe_injective.AddRightCancelSemigroup coe fun _ _ => rfl
+
+/-- The order isomorphism between ℕ and ℕ+ given by `succ`. -/
+@[simps]
+def succOrderIso : ℕ ≃o ℕ+ where
+  toFun := fun n => ⟨_, succ_posₓ n⟩
+  invFun := fun n => pred (n : ℕ)
+  left_inv := pred_succ
+  right_inv := fun ⟨x, hx⟩ => by
+    simpa using succ_pred_eq_of_pos hx
+  map_rel_iff' := @succ_le_succ_iff
 
 instance (priority := 10) : CovariantClass ℕ+ ℕ+ (· + ·) (· ≤ ·) :=
   ⟨by
@@ -211,11 +221,11 @@ theorem mk_one {h} : (⟨1, h⟩ : ℕ+) = (1 : ℕ+) :=
   rfl
 
 @[simp]
-theorem mk_bit0 n {h} : (⟨bit0 n, h⟩ : ℕ+) = (bit0 ⟨n, pos_of_bit0_pos h⟩ : ℕ+) :=
+theorem mk_bit0 (n) {h} : (⟨bit0 n, h⟩ : ℕ+) = (bit0 ⟨n, pos_of_bit0_pos h⟩ : ℕ+) :=
   rfl
 
 @[simp]
-theorem mk_bit1 n {h} {k} : (⟨bit1 n, h⟩ : ℕ+) = (bit1 ⟨n, k⟩ : ℕ+) :=
+theorem mk_bit1 (n) {h} {k} : (⟨bit1 n, h⟩ : ℕ+) = (bit1 ⟨n, k⟩ : ℕ+) :=
   rfl
 
 -- Some lemmas that rewrite inequalities between explicit numerals in `ℕ+`
@@ -337,11 +347,11 @@ instance : HasWellFounded ℕ+ :=
   ⟨(· < ·), measure_wf coe⟩
 
 /-- Strong induction on `ℕ+`. -/
-def strongInductionOn {p : ℕ+ → Sort _} : ∀ n : ℕ+ h : ∀ k, (∀ m, m < k → p m) → p k, p n
+def strongInductionOn {p : ℕ+ → Sort _} : ∀ (n : ℕ+) (h : ∀ k, (∀ m, m < k → p m) → p k), p n
   | n => fun IH => IH _ fun a h => strong_induction_on a IH
 
 /-- If `n : ℕ+` is different from `1`, then it is the successor of some `k : ℕ+`. -/
-theorem exists_eq_succ_of_ne_one : ∀ {n : ℕ+} h1 : n ≠ 1, ∃ k : ℕ+, n = k + 1
+theorem exists_eq_succ_of_ne_one : ∀ {n : ℕ+} (h1 : n ≠ 1), ∃ k : ℕ+, n = k + 1
   | ⟨1, _⟩, h1 => False.elim <| h1 rfl
   | ⟨n + 2, _⟩, _ =>
     ⟨⟨n + 1, by
@@ -379,11 +389,12 @@ def recOn (n : ℕ+) {p : ℕ+ → Sort _} (p1 : p 1) (hp : ∀ n, p n → p (n 
     
 
 @[simp]
-theorem rec_on_one {p} p1 hp : @Pnat.recOn 1 p p1 hp = p1 :=
+theorem rec_on_one {p} (p1 hp) : @Pnat.recOn 1 p p1 hp = p1 :=
   rfl
 
 @[simp]
-theorem rec_on_succ (n : ℕ+) {p : ℕ+ → Sort _} p1 hp : @Pnat.recOn (n + 1) p p1 hp = hp n (@Pnat.recOn n p p1 hp) := by
+theorem rec_on_succ (n : ℕ+) {p : ℕ+ → Sort _} (p1 hp) : @Pnat.recOn (n + 1) p p1 hp = hp n (@Pnat.recOn n p p1 hp) :=
+  by
   cases' n with n h
   cases n <;>
     [exact
@@ -404,7 +415,7 @@ def modDivAux : ℕ+ → ℕ → ℕ → ℕ+ × ℕ
   | k, r + 1, q => ⟨⟨r + 1, Nat.succ_posₓ r⟩, q⟩
 
 theorem mod_div_aux_spec :
-    ∀ k : ℕ+ r q : ℕ h : ¬(r = 0 ∧ q = 0), ((modDivAux k r q).1 : ℕ) + k * (modDivAux k r q).2 = r + k * q
+    ∀ (k : ℕ+) (r q : ℕ) (h : ¬(r = 0 ∧ q = 0)), ((modDivAux k r q).1 : ℕ) + k * (modDivAux k r q).2 = r + k * q
   | k, 0, 0, h => (h ⟨rfl, rfl⟩).elim
   | k, 0, q + 1, h => by
     change (k : ℕ) + (k : ℕ) * (q + 1).pred = 0 + (k : ℕ) * (q + 1)

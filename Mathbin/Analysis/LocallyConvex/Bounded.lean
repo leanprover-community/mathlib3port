@@ -64,7 +64,7 @@ theorem is_vonN_bounded_iff (s : Set E) : IsVonNBounded 𝕜 s ↔ ∀, ∀ V �
   Iff.rfl
 
 theorem _root_.filter.has_basis.is_vonN_bounded_basis_iff {q : ι → Prop} {s : ι → Set E} {A : Set E}
-    (h : (𝓝 (0 : E)).HasBasis q s) : IsVonNBounded 𝕜 A ↔ ∀ i hi : q i, Absorbs 𝕜 (s i) A := by
+    (h : (𝓝 (0 : E)).HasBasis q s) : IsVonNBounded 𝕜 A ↔ ∀ (i) (hi : q i), Absorbs 𝕜 (s i) A := by
   refine' ⟨fun hA i hi => hA (h.mem_of_mem hi), fun hA V hV => _⟩
   rcases h.mem_iff.mp hV with ⟨i, hi, hV⟩
   exact (hA i hi).mono_left hV
@@ -113,7 +113,7 @@ theorem IsVonNBounded.image {σ : 𝕜₁ →+* 𝕜₂} [RingHomSurjective σ] 
   have hanz : a ≠ 0 := norm_pos_iff.mp (hrpos.trans_le ha)
   have : σ'.symm a ≠ 0 := (RingHom.map_ne_zero σ'.symm.to_ring_hom).mpr hanz
   change _ ⊆ σ _ • _
-  rw [Set.image_subset_iff, f.preimage_smul_setₛₗ this.is_unit]
+  rw [Set.image_subset_iff, preimage_smul_setₛₗ _ _ _ f this.is_unit]
   refine' hr (σ'.symm a) _
   rwa [σ'_symm_iso.norm_map_of_map_zero (map_zero _)]
 
@@ -161,7 +161,7 @@ variable [NondiscreteNormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E]
 
 variable [UniformSpace E] [UniformAddGroup E] [HasContinuousSmul 𝕜 E]
 
-variable [RegularSpace E]
+variable [T3Space E]
 
 theorem TotallyBounded.is_vonN_bounded {s : Set E} (hs : TotallyBounded s) : Bornology.IsVonNBounded 𝕜 s := by
   rw [totally_bounded_iff_subset_finite_Union_nhds_zero] at hs

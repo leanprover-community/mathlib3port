@@ -58,11 +58,11 @@ variable {s t : Set E} {a : ℝ} {x : E}
 theorem gauge_def : gauge s x = inf ({ r ∈ Set.Ioi 0 | x ∈ r • s }) :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `congrm #[[expr Inf (λ r, _)]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr Inf (λ r, _)]]
 /-- An alternative definition of the gauge using scalar multiplication on the element rather than on
 the set. -/
 theorem gauge_def' : gauge s x = inf ({ r ∈ Set.Ioi 0 | r⁻¹ • x ∈ s }) := by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `congrm #[[expr Inf (λ r, _)]]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr Inf (λ r, _)]]"
   exact and_congr_right fun hr => mem_smul_set_iff_inv_smul_mem₀ hr.ne' _ _
 
 private theorem gauge_set_bdd_below : BddBelow { r : ℝ | 0 < r ∧ x ∈ r • s } :=

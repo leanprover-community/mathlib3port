@@ -13,9 +13,8 @@ import Mathbin.Meta.Univs
 
 This file defines notation for vectors and matrices. Given `a b c d : α`,
 the notation allows us to write `![a, b, c, d] : fin 4 → α`.
-Nesting vectors gives a matrix, so `![![a, b], ![c, d]] : fin 2 → fin 2 → α`.
-Later we will define `matrix m n α` to be `m → n → α`, so the type of `![![a, b], ![c, d]]`
-can be written as `matrix (fin 2) (fin 2) α`.
+Nesting vectors gives coefficients of a matrix, so `![![a, b], ![c, d]] : fin 2 → fin 2 → α`.
+In later files we introduce `!![a, b; c, d]` as notation for `matrix.of ![![a, b], ![c, d]]`.
 
 ## Main definitions
 
@@ -163,22 +162,27 @@ theorem cons_val_fin_one (x : α) (u : Finₓ 0 → α) (i : Finₓ 1) : vecCons
 theorem cons_fin_one (x : α) (u : Finₓ 0 → α) : vecCons x u = fun _ => x :=
   funext (cons_val_fin_one x u)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]
 unsafe instance _root_.pi_fin.reflect [reflected_univ.{u}] [reflected _ α] [has_reflect α] :
     ∀ {n}, has_reflect (Finₓ n → α)
   | 0, v =>
     (Subsingleton.elimₓ vecEmpty v).rec
       ((by
-            trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]" :
+            trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]" :
             reflected _ @vecEmpty.{u}).subst
         (quote.1 α))
   | n + 1, v =>
     (cons_head_tail v).rec <|
       (by
-            trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]" :
+            trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]" :
             reflected _ @vecCons.{u}).subst₄
         (quote.1 α) (quote.1 n) (quote.1 _) (_root_.pi_fin.reflect _)
+
+/-- Convert a vector of pexprs to the pexpr constructing that vector.-/
+unsafe def _root_.pi_fin.to_pexpr : ∀ {n}, (Finₓ n → pexpr) → pexpr
+  | 0, v => pquote.1 ![]
+  | n + 1, v => pquote.1 (vecCons (%%ₓv 0) (%%ₓ_root_.pi_fin.to_pexpr <| vecTail v))
 
 /-! ### Numeral (`bit0` and `bit1`) indices
 The following definitions and `simp` lemmas are to allow any
@@ -309,7 +313,7 @@ theorem cons_vec_alt0 (h : m + 1 + 1 = n + 1 + (n + 1)) (x y : α) (u : Finₓ m
 -- Although proved by simp, extracting element 8 of a five-element
 -- vector does not work by simp unless this lemma is present.
 @[simp]
-theorem empty_vec_alt0 α {h} : vecAlt0 h (![] : Finₓ 0 → α) = ![] := by
+theorem empty_vec_alt0 (α) {h} : vecAlt0 h (![] : Finₓ 0 → α) = ![] := by
   simp
 
 @[simp]
@@ -333,7 +337,7 @@ theorem cons_vec_alt1 (h : m + 1 + 1 = n + 1 + (n + 1)) (x y : α) (u : Finₓ m
 -- Although proved by simp, extracting element 9 of a five-element
 -- vector does not work by simp unless this lemma is present.
 @[simp]
-theorem empty_vec_alt1 α {h} : vecAlt1 h (![] : Finₓ 0 → α) = ![] := by
+theorem empty_vec_alt1 (α) {h} : vecAlt1 h (![] : Finₓ 0 → α) = ![] := by
   simp
 
 end Val

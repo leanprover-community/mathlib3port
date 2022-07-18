@@ -97,7 +97,7 @@ parameter {ι : Type u}(β : ι → Type v)
 
 @[reducible]
 private def sets :=
-  { s : Set (∀ i, β i) | ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀ i, (x : ∀ i, β i) i = y i → x = y }
+  { s : Set (∀ i, β i) | ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀ (i), (x : ∀ i, β i) i = y i → x = y }
 
 /-- The cardinals are well-ordered. We express it here by the fact that in any set of cardinals
 there is an element that injects into the others. See `cardinal.linear_order` for (one of) the

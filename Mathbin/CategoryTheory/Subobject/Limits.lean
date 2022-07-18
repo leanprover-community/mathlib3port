@@ -254,13 +254,13 @@ theorem image_subobject_factors_comp_self {W : C} (k : W ⟶ X) : (imageSubobjec
     simp ⟩
 
 @[simp]
-theorem factor_thru_image_subobject_comp_self {W : C} (k : W ⟶ X) h :
+theorem factor_thru_image_subobject_comp_self {W : C} (k : W ⟶ X) (h) :
     (imageSubobject f).factorThru (k ≫ f) h = k ≫ factorThruImageSubobject f := by
   ext
   simp
 
 @[simp]
-theorem factor_thru_image_subobject_comp_self_assoc {W W' : C} (k : W ⟶ W') (k' : W' ⟶ X) h :
+theorem factor_thru_image_subobject_comp_self_assoc {W W' : C} (k : W ⟶ W') (k' : W' ⟶ X) (h) :
     (imageSubobject f).factorThru (k ≫ k' ≫ f) h = k ≫ k' ≫ factorThruImageSubobject f := by
   ext
   simp

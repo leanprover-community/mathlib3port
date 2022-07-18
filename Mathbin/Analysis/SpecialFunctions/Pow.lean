@@ -847,6 +847,14 @@ theorem continuous_at_rpow_of_pos (p : ℝ × ℝ) (hp : 0 < p.2) : ContinuousAt
 theorem continuous_at_rpow (p : ℝ × ℝ) (h : p.1 ≠ 0 ∨ 0 < p.2) : ContinuousAt (fun p : ℝ × ℝ => p.1 ^ p.2) p :=
   h.elim (fun h => continuous_at_rpow_of_ne p h) fun h => continuous_at_rpow_of_pos p h
 
+theorem continuous_at_rpow_const (x : ℝ) (q : ℝ) (h : x ≠ 0 ∨ 0 < q) : ContinuousAt (fun x : ℝ => x ^ q) x := by
+  change ContinuousAt ((fun p : ℝ × ℝ => p.1 ^ p.2) ∘ fun y : ℝ => (y, q)) x
+  apply ContinuousAt.comp
+  · exact continuous_at_rpow (x, q) h
+    
+  · exact (continuous_id'.prod_mk continuous_const).ContinuousAt
+    
+
 end Real
 
 section
@@ -983,14 +991,14 @@ theorem tendsto_exp_mul_div_rpow_at_top (s : ℝ) (b : ℝ) (hb : 0 < b) :
   filter_upwards [eventually_ge_at_top (0 : ℝ)] with x hx₀
   simp [← div_rpow, ← (exp_pos x).le, ← rpow_nonneg_of_nonneg, rpow_mul, exp_mul, ← mul_comm x, ← hb.ne', *]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:637:40: in filter_upwards #[[], ["with", ident x],
-  ["using", expr by simp [] [] [] ["[", expr exp_neg, ",", expr inv_div, ",", expr div_eq_mul_inv _ (exp _), "]"] [] []]]: ./././Mathport/Syntax/Translate/Basic.lean:308:22: unsupported: parse error
+-- ./././Mathport/Syntax/Translate/Basic.lean:646:40: in filter_upwards #[[], ["with", ident x],
+  ["using", expr by simp [] [] [] ["[", expr exp_neg, ",", expr inv_div, ",", expr div_eq_mul_inv _ (exp _), "]"] [] []]]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: parse error
 /-- The function `x ^ s * exp (-b * x)` tends to `0` at `+∞`, for any real `s` and `b > 0`. -/
 theorem tendsto_rpow_mul_exp_neg_mul_at_top_nhds_0 (s : ℝ) (b : ℝ) (hb : 0 < b) :
     Tendsto (fun x : ℝ => x ^ s * exp (-b * x)) atTop (𝓝 0) := by
   refine' (tendsto_exp_mul_div_rpow_at_top s b hb).inv_tendsto_at_top.congr' _
   trace
-    "./././Mathport/Syntax/Translate/Basic.lean:637:40: in filter_upwards #[[], [\"with\", ident x],\n  [\"using\", expr by simp [] [] [] [\"[\", expr exp_neg, \",\", expr inv_div, \",\", expr div_eq_mul_inv _ (exp _), \"]\"] [] []]]: ./././Mathport/Syntax/Translate/Basic.lean:308:22: unsupported: parse error"
+    "./././Mathport/Syntax/Translate/Basic.lean:646:40: in filter_upwards #[[], [\"with\", ident x],\n  [\"using\", expr by simp [] [] [] [\"[\", expr exp_neg, \",\", expr inv_div, \",\", expr div_eq_mul_inv _ (exp _), \"]\"] [] []]]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: parse error"
 
 namespace Asymptotics
 
@@ -1045,16 +1053,45 @@ theorem is_o_log_rpow_at_top {r : ℝ} (hr : 0 < r) : log =o[at_top] fun x => x 
     _ =o[at_top] fun x => x ^ r := is_o_log_id_at_top.comp_tendsto (tendsto_rpow_at_top hr)
     
 
-theorem is_o_log_rpow_rpow_at_top {r s : ℝ} (hr : 0 < r) (hs : 0 < s) :
-    (fun x => log x ^ r) =o[at_top] fun x => x ^ s :=
-  have H : 0 < s / r := div_pos hs hr
+theorem is_o_log_rpow_rpow_at_top {s : ℝ} (r : ℝ) (hs : 0 < s) : (fun x => log x ^ r) =o[at_top] fun x => x ^ s :=
+  let r' := max r 1
+  have hr : 0 < r' := lt_max_iff.2 <| Or.inr one_pos
+  have H : 0 < s / r' := div_pos hs hr
   calc
-    (fun x => log x ^ r) =o[at_top] fun x => (x ^ (s / r)) ^ r :=
+    (fun x => log x ^ r) =O[at_top] fun x => log x ^ r' :=
+      IsO.of_bound 1 <|
+        (tendsto_log_at_top.eventually_ge_at_top 1).mono fun x hx => by
+          have hx₀ : 0 ≤ log x := zero_le_one.trans hx
+          simp [← norm_eq_abs, ← abs_rpow_of_nonneg, ← abs_rpow_of_nonneg hx₀, ←
+            rpow_le_rpow_of_exponent_le (hx.trans (le_abs_self _))]
+    _ =o[at_top] fun x => (x ^ (s / r')) ^ r' :=
       (is_o_log_rpow_at_top H).rpow hr <| (tendsto_rpow_at_top H).Eventually <| eventually_ge_at_top 0
     _ =ᶠ[at_top] fun x => x ^ s :=
       (eventually_ge_at_top 0).mono fun x hx => by
         simp only [rpow_mul hx, ← div_mul_cancel _ hr.ne']
     
+
+theorem is_o_abs_log_rpow_rpow_nhds_zero {s : ℝ} (r : ℝ) (hs : s < 0) :
+    (fun x => abs (log x) ^ r) =o[𝓝[>] 0] fun x => x ^ s :=
+  ((is_o_log_rpow_rpow_at_top r (neg_pos.2 hs)).comp_tendsto tendsto_inv_zero_at_top).congr'
+    ((mem_of_superset (Icc_mem_nhds_within_Ioi <| Set.left_mem_Ico.2 one_pos)) fun x hx => by
+      simp [← abs_of_nonpos, ← log_nonpos hx.1 hx.2])
+    (eventually_mem_nhds_within.mono fun x hx => by
+      rw [Function.comp_app, inv_rpow hx.out.le, rpow_neg hx.out.le, inv_invₓ])
+
+theorem is_o_log_rpow_nhds_zero {r : ℝ} (hr : r < 0) : log =o[𝓝[>] 0] fun x => x ^ r :=
+  (is_o_abs_log_rpow_rpow_nhds_zero 1 hr).neg_left.congr'
+    ((mem_of_superset (Icc_mem_nhds_within_Ioi <| Set.left_mem_Ico.2 one_pos)) fun x hx => by
+      simp [← abs_of_nonpos (log_nonpos hx.1 hx.2)])
+    EventuallyEq.rfl
+
+theorem tendsto_log_div_rpow_nhds_zero {r : ℝ} (hr : r < 0) : Tendsto (fun x => log x / x ^ r) (𝓝[>] 0) (𝓝 0) :=
+  (is_o_log_rpow_nhds_zero hr).tendsto_div_nhds_zero
+
+theorem tensdto_log_mul_rpow_nhds_zero {r : ℝ} (hr : 0 < r) : Tendsto (fun x => log x * x ^ r) (𝓝[>] 0) (𝓝 0) :=
+  (tendsto_log_div_rpow_nhds_zero <| neg_lt_zero.2 hr).congr' <|
+    eventually_mem_nhds_within.mono fun x hx => by
+      rw [rpow_neg hx.out.le, div_inv_eq_mul]
 
 end Limits
 
@@ -1334,6 +1371,44 @@ theorem _root_.real.to_nnreal_rpow_of_nonneg {x y : ℝ} (hx : 0 ≤ x) : Real.t
   rw [← Nnreal.coe_rpow, Real.to_nnreal_coe]
 
 end Nnreal
+
+namespace Real
+
+variable {n : ℕ}
+
+theorem exists_rat_pow_btwn_rat_aux (hn : n ≠ 0) (x y : ℝ) (h : x < y) (hy : 0 < y) :
+    ∃ q : ℚ, 0 < q ∧ x < q ^ n ∧ ↑q ^ n < y := by
+  have hn' : 0 < (n : ℝ) := by
+    exact_mod_cast hn.bot_lt
+  obtain ⟨q, hxq, hqy⟩ := exists_rat_btwn (rpow_lt_rpow (le_max_leftₓ 0 x) (max_ltₓ hy h) <| inv_pos.mpr hn')
+  have := rpow_nonneg_of_nonneg (le_max_leftₓ 0 x) n⁻¹
+  have hq := this.trans_lt hxq
+  replace hxq := rpow_lt_rpow this hxq hn'
+  replace hqy := rpow_lt_rpow hq.le hqy hn'
+  rw [rpow_nat_cast, rpow_nat_cast, rpow_nat_inv_pow_nat _ hn.bot_lt] at hxq hqy
+  exact
+    ⟨q, by
+      exact_mod_cast hq, (le_max_rightₓ _ _).trans_lt hxq, hqy⟩
+  · exact le_max_leftₓ _ _
+    
+  · exact hy.le
+    
+
+theorem exists_rat_pow_btwn_rat (hn : n ≠ 0) {x y : ℚ} (h : x < y) (hy : 0 < y) :
+    ∃ q : ℚ, 0 < q ∧ x < q ^ n ∧ q ^ n < y := by
+  apply_mod_cast exists_rat_pow_btwn_rat_aux hn x y <;> assumption
+
+/-- There is a rational power between any two positive elements of an archimedean ordered field. -/
+theorem exists_rat_pow_btwn {α : Type _} [LinearOrderedField α] [Archimedean α] (hn : n ≠ 0) {x y : α} (h : x < y)
+    (hy : 0 < y) : ∃ q : ℚ, 0 < q ∧ x < q ^ n ∧ (q ^ n : α) < y := by
+  obtain ⟨q₂, hx₂, hy₂⟩ := exists_rat_btwn (max_ltₓ h hy)
+  obtain ⟨q₁, hx₁, hq₁₂⟩ := exists_rat_btwn hx₂
+  have : (0 : α) < q₂ := (le_max_rightₓ _ _).trans_lt hx₂
+  norm_cast  at hq₁₂ this
+  obtain ⟨q, hq, hq₁, hq₂⟩ := exists_rat_pow_btwn_rat hn hq₁₂ this
+  refine' ⟨q, hq, (le_max_leftₓ _ _).trans_lt <| hx₁.trans _, hy₂.trans' _⟩ <;> assumption_mod_cast
+
+end Real
 
 open Filter
 

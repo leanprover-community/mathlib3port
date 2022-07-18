@@ -60,8 +60,7 @@ theorem ker_diagonal_to_lin' [DecidableEq m] (w : m → K) :
   simp only [← comap_infi, this, ← proj_diagonal, ← ker_smul']
   have : univ ⊆ { i : m | w i = 0 } ∪ { i : m | w i = 0 }ᶜ := by
     rw [Set.union_compl_self]
-  exact
-    (supr_range_std_basis_eq_infi_ker_proj K (fun i : m => K) disjoint_compl_right this (Set.Finite.of_fintype _)).symm
+  exact (supr_range_std_basis_eq_infi_ker_proj K (fun i : m => K) disjoint_compl_right this (Set.to_finite _)).symm
 
 theorem range_diagonal [DecidableEq m] (w : m → K) :
     (diagonalₓ w).toLin'.range = ⨆ i ∈ { i | w i ≠ 0 }, (LinearMap.stdBasis K (fun i => K) i).range := by
@@ -76,7 +75,7 @@ theorem rank_diagonal [DecidableEq m] [DecidableEq K] (w : m → K) :
   have hu : univ ⊆ { i : m | w i = 0 }ᶜ ∪ { i : m | w i = 0 } := by
     rw [Set.compl_union_self]
   have hd : Disjoint { i : m | w i ≠ 0 } { i : m | w i = 0 } := disjoint_compl_left
-  have B₁ := supr_range_std_basis_eq_infi_ker_proj K (fun i : m => K) hd hu (Set.Finite.of_fintype _)
+  have B₁ := supr_range_std_basis_eq_infi_ker_proj K (fun i : m => K) hd hu (Set.to_finite _)
   have B₂ :=
     @infi_ker_proj_equiv K _ _ (fun i : m => K) _ _ _ _
       (by

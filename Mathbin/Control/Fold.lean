@@ -368,7 +368,7 @@ theorem length_to_list {xs : t α} : length xs = List.length (toList xs) := by
   unfold length
   rw [foldl_to_list]
   generalize to_list xs = ys
-  let f := fun n : ℕ a : α => n + 1
+  let f := fun (n : ℕ) (a : α) => n + 1
   trans List.foldlₓ f 0 ys
   · generalize 0 = n
     induction' ys with _ _ ih generalizing n

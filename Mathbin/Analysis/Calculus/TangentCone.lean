@@ -178,16 +178,17 @@ theorem subset_tangent_cone_prod_right {t : Set F} {y : F} (hs : x ∈ Closure s
     exact tendsto_pow_at_top_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j «expr ≠ » i)
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
 /-- The tangent cone of a product contains the tangent cone of each factor. -/
 theorem maps_to_tangent_cone_pi {ι : Type _} [DecidableEq ι] {E : ι → Type _} [∀ i, NormedGroup (E i)]
-    [∀ i, NormedSpace 𝕜 (E i)] {s : ∀ i, Set (E i)} {x : ∀ i, E i} {i : ι} (hi : ∀ j _ : j ≠ i, x j ∈ Closure (s j)) :
+    [∀ i, NormedSpace 𝕜 (E i)] {s : ∀ i, Set (E i)} {x : ∀ i, E i} {i : ι}
+    (hi : ∀ (j) (_ : j ≠ i), x j ∈ Closure (s j)) :
     MapsTo (LinearMap.single i : E i →ₗ[𝕜] ∀ j, E j) (TangentConeAt 𝕜 (s i) (x i))
       (TangentConeAt 𝕜 (Set.Pi Univ s) x) :=
   by
   rintro w ⟨c, d, hd, hc, hy⟩
-  have : ∀ n j _ : j ≠ i, ∃ d', x j + d' ∈ s j ∧ ∥c n • d'∥ < (1 / 2 : ℝ) ^ n := by
+  have : ∀ (n) (j) (_ : j ≠ i), ∃ d', x j + d' ∈ s j ∧ ∥c n • d'∥ < (1 / 2 : ℝ) ^ n := by
     intro n j hj
     rcases mem_closure_iff_nhds.1 (hi j hj) _
         (eventually_nhds_norm_smul_sub_lt (c n) (x j) (pow_pos one_half_pos n)) with
@@ -337,7 +338,6 @@ theorem UniqueDiffWithinAt.prod {t : Set F} {y : F} (hs : UniqueDiffWithinAt �
   rw [LinearMap.span_inl_union_inr, SetLike.le_def] at this
   exact (hs.1.Prod ht.1).mono this
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem UniqueDiffWithinAt.univ_pi (ι : Type _) [Fintype ι] (E : ι → Type _) [∀ i, NormedGroup (E i)]
     [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i)) (x : ∀ i, E i) (h : ∀ i, UniqueDiffWithinAt 𝕜 (s i) (x i)) :
     UniqueDiffWithinAt 𝕜 (Set.Pi Univ s) x := by
@@ -348,7 +348,6 @@ theorem UniqueDiffWithinAt.univ_pi (ι : Type _) [Fintype ι] (E : ι → Type _
   simp only [Submodule.supr_map_single, ← supr_le_iff, ← LinearMap.map_span, ← Submodule.span_le, maps_to']
   exact fun i => (maps_to_tangent_cone_pi fun j hj => (h j).2).mono subset.rfl Submodule.subset_span
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem UniqueDiffWithinAt.pi (ι : Type _) [Fintype ι] (E : ι → Type _) [∀ i, NormedGroup (E i)]
     [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i)) (x : ∀ i, E i) (I : Set ι)
     (h : ∀, ∀ i ∈ I, ∀, UniqueDiffWithinAt 𝕜 (s i) (x i)) : UniqueDiffWithinAt 𝕜 (Set.Pi I s) x := by

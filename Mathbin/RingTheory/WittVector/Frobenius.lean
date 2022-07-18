@@ -133,8 +133,8 @@ theorem MapFrobeniusPoly.key₁ (n j : ℕ) (hj : j < p ^ n) : p ^ (n - v p ⟨j
   have aux : (multiplicity p ((p ^ n).choose (j + 1))).Dom := by
     rw [← multiplicity.finite_iff_dom, multiplicity.finite_nat_iff]
     exact ⟨hp.1.ne_one, Nat.choose_pos hj⟩
-  rw [← Enat.coe_get aux, Enat.coe_le_coe, tsub_le_iff_left, ← Enat.coe_le_coe, Nat.cast_addₓ, pnat_multiplicity,
-    Enat.coe_get, Enat.coe_get, add_commₓ]
+  rw [← PartEnat.coe_get aux, PartEnat.coe_le_coe, tsub_le_iff_left, ← PartEnat.coe_le_coe, Nat.cast_addₓ,
+    pnat_multiplicity, PartEnat.coe_get, PartEnat.coe_get, add_commₓ]
   exact (hp.1.multiplicity_choose_prime_pow hj j.succ_pos).Ge
 
 /-- A key numerical identity needed for the proof of `witt_vector.map_frobenius_poly`. -/
@@ -146,7 +146,8 @@ theorem MapFrobeniusPoly.key₂ {n i j : ℕ} (hi : i < n) (hj : j < p ^ (n - i)
       tsub_right_comm, add_commₓ i,
       tsub_add_cancel_of_le (le_tsub_of_add_le_right ((le_tsub_iff_left hi.le).mp this.1))]
   constructor
-  · rw [← h, ← Enat.coe_le_coe, pnat_multiplicity, Enat.coe_get, ← hp.1.multiplicity_choose_prime_pow hj j.succ_pos]
+  · rw [← h, ← PartEnat.coe_le_coe, pnat_multiplicity, PartEnat.coe_get, ←
+      hp.1.multiplicity_choose_prime_pow hj j.succ_pos]
     apply le_add_left
     rfl
     

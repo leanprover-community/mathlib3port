@@ -1,9 +1,10 @@
 /-
 Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Scott Morrison
+Authors: Scott Morrison, Joël Riou
 -/
 import Mathbin.Algebra.Homology.Homology
+import Mathbin.Algebra.Homology.Homotopy
 
 /-!
 # Quasi-isomorphisms
@@ -52,4 +53,14 @@ theorem quasi_iso_of_comp_left (f : C ⟶ D) [QuasiIso f] (g : D ⟶ E) [QuasiIs
 
 theorem quasi_iso_of_comp_right (f : C ⟶ D) (g : D ⟶ E) [QuasiIso g] [QuasiIso (f ≫ g)] : QuasiIso f :=
   { IsIso := fun i => IsIso.of_is_iso_fac_right ((homologyFunctor V c i).map_comp f g).symm }
+
+/-- An homotopy equivalence is a quasi-isomorphism. -/
+theorem HomotopyEquiv.to_quasi_iso {W : Type _} [Category W] [Preadditive W] [HasCokernels W] [HasImages W]
+    [HasEqualizers W] [HasZeroObject W] [HasImageMaps W] {C D : HomologicalComplex W c} (e : HomotopyEquiv C D) :
+    QuasiIso e.Hom :=
+  ⟨fun i => by
+    refine' ⟨⟨(homologyFunctor W c i).map e.inv, _⟩⟩
+    simp only [functor.map_comp, (homologyFunctor W c i).map_id]
+    constructor <;> apply homology_map_eq_of_homotopy
+    exacts[e.homotopy_hom_inv_id, e.homotopy_inv_hom_id]⟩
 

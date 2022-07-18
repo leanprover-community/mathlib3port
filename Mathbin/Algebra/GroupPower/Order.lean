@@ -146,6 +146,12 @@ section OrderedSemiring
 
 variable [OrderedSemiring R] {a x y : R} {n m : ℕ}
 
+theorem zero_pow_le_one : ∀ n : ℕ, (0 : R) ^ n ≤ 1
+  | 0 => (pow_zeroₓ _).le
+  | n + 1 => by
+    rw [zero_pow n.succ_pos]
+    exact zero_le_one
+
 theorem pow_add_pow_le (hx : 0 ≤ x) (hy : 0 ≤ y) (hn : n ≠ 0) : x ^ n + y ^ n ≤ (x + y) ^ n := by
   rcases Nat.exists_eq_succ_of_ne_zero hn with ⟨k, rfl⟩
   induction' k with k ih
@@ -238,7 +244,7 @@ theorem pow_le_pow_of_le_left {a b : R} (ha : 0 ≤ a) (hab : a ≤ b) : ∀ i :
 theorem one_lt_pow (ha : 1 < a) {n : ℕ} (hn : n ≠ 0) : 1 < a ^ n :=
   pow_zeroₓ a ▸ pow_lt_pow ha (pos_iff_ne_zero.2 hn)
 
-theorem pow_le_one : ∀ n : ℕ h₀ : 0 ≤ a h₁ : a ≤ 1, a ^ n ≤ 1
+theorem pow_le_one : ∀ (n : ℕ) (h₀ : 0 ≤ a) (h₁ : a ≤ 1), a ^ n ≤ 1
   | 0, h₀, h₁ => (pow_zeroₓ a).le
   | n + 1, h₀, h₁ => (pow_succ'ₓ a n).le.trans (mul_le_one (pow_le_one n h₀ h₁) h₀ h₁)
 
@@ -268,7 +274,7 @@ end OrderedRing
 
 section LinearOrderedSemiring
 
-variable [LinearOrderedSemiring R]
+variable [LinearOrderedSemiring R] {a b : R}
 
 theorem pow_le_one_iff_of_nonneg {a : R} (ha : 0 ≤ a) {n : ℕ} (hn : n ≠ 0) : a ^ n ≤ 1 ↔ a ≤ 1 := by
   refine' ⟨_, pow_le_one n ha⟩
@@ -313,6 +319,10 @@ theorem sq_eq_sq {a b : R} (ha : 0 ≤ a) (hb : 0 ≤ b) : a ^ 2 = b ^ 2 ↔ a =
   pow_left_inj ha hb
     (by
       decide)
+
+theorem lt_of_mul_self_lt_mul_self (hb : 0 ≤ b) : a * a < b * b → a < b := by
+  simp_rw [← sq]
+  exact lt_of_pow_lt_pow _ hb
 
 end LinearOrderedSemiring
 

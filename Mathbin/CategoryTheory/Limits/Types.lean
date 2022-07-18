@@ -103,18 +103,18 @@ theorem limit_equiv_sections_symm_apply' (F : J ⥤ Type v) (x : F.sections) (j 
 which are "coherent": `∀ (j j') (f : j ⟶ j'), F.map f (x j) = x j'`.
 -/
 @[ext]
-noncomputable def Limit.mk (F : J ⥤ Type max v u) (x : ∀ j, F.obj j) (h : ∀ j j' f : j ⟶ j', F.map f (x j) = x j') :
+noncomputable def Limit.mk (F : J ⥤ Type max v u) (x : ∀ j, F.obj j) (h : ∀ (j j') (f : j ⟶ j'), F.map f (x j) = x j') :
     (limit F : Type max v u) :=
   (limitEquivSections F).symm ⟨x, h⟩
 
 @[simp]
-theorem Limit.π_mk (F : J ⥤ Type max v u) (x : ∀ j, F.obj j) (h : ∀ j j' f : j ⟶ j', F.map f (x j) = x j') j :
+theorem Limit.π_mk (F : J ⥤ Type max v u) (x : ∀ j, F.obj j) (h : ∀ (j j') (f : j ⟶ j'), F.map f (x j) = x j') (j) :
     limit.π F j (Limit.mk F x h) = x j := by
   dsimp' [← limit.mk]
   simp
 
 @[simp]
-theorem Limit.π_mk' (F : J ⥤ Type v) (x : ∀ j, F.obj j) (h : ∀ j j' f : j ⟶ j', F.map f (x j) = x j') j :
+theorem Limit.π_mk' (F : J ⥤ Type v) (x : ∀ j, F.obj j) (h : ∀ (j j') (f : j ⟶ j'), F.map f (x j) = x j') (j) :
     limit.π F j (Limit.mk.{v, v} F x h) = x j := by
   dsimp' [← limit.mk]
   simp
@@ -152,7 +152,7 @@ theorem Limit.lift_π_apply (F : J ⥤ Type max v u) (s : Cone F) (j : J) (x : s
   congr_fun (limit.lift_π s j) x
 
 @[simp]
-theorem Limit.map_π_apply {F G : J ⥤ Type max v u} (α : F ⟶ G) (j : J) x :
+theorem Limit.map_π_apply {F G : J ⥤ Type max v u} (α : F ⟶ G) (j : J) (x) :
     limit.π G j (limMap α x) = α.app j (limit.π F j x) :=
   congr_fun (lim_map_π α j) x
 
@@ -167,7 +167,7 @@ theorem Limit.lift_π_apply' (F : J ⥤ Type v) (s : Cone F) (j : J) (x : s.x) :
   congr_fun (limit.lift_π s j) x
 
 @[simp]
-theorem Limit.map_π_apply' {F G : J ⥤ Type v} (α : F ⟶ G) (j : J) x :
+theorem Limit.map_π_apply' {F G : J ⥤ Type v} (α : F ⟶ G) (j : J) (x) :
     limit.π G j (limMap α x) = α.app j (limit.π F j x) :=
   congr_fun (lim_map_π α j) x
 
@@ -245,7 +245,7 @@ theorem Colimit.ι_desc_apply (F : J ⥤ Type max v u) (s : Cocone F) (j : J) (x
   congr_fun (colimit.ι_desc s j) x
 
 @[simp]
-theorem Colimit.ι_map_apply {F G : J ⥤ Type max v u} (α : F ⟶ G) (j : J) x :
+theorem Colimit.ι_map_apply {F G : J ⥤ Type max v u} (α : F ⟶ G) (j : J) (x) :
     colim.map α (colimit.ι F j x) = colimit.ι G j (α.app j x) :=
   congr_fun (colimit.ι_map α j) x
 
@@ -260,7 +260,7 @@ theorem Colimit.ι_desc_apply' (F : J ⥤ Type v) (s : Cocone F) (j : J) (x : F.
   congr_fun (colimit.ι_desc s j) x
 
 @[simp]
-theorem Colimit.ι_map_apply' {F G : J ⥤ Type v} (α : F ⟶ G) (j : J) x :
+theorem Colimit.ι_map_apply' {F G : J ⥤ Type v} (α : F ⟶ G) (j : J) (x) :
     colim.map α (colimit.ι F j x) = colimit.ι G j (α.app j x) :=
   congr_fun (colimit.ι_map α j) x
 

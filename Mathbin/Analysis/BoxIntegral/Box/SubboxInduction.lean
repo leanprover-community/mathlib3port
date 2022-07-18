@@ -116,7 +116,7 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι) (H_ind : ∀, �
             ∃ U ∈ 𝓝[I.Icc] z,
               ∀,
                 ∀ J ≤ I,
-                  ∀ m : ℕ,
+                  ∀ (m : ℕ),
                     z ∈ J.Icc → J.Icc ⊆ U → (∀ i, J.upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) → p J) :
     p I := by
   by_contra hpI

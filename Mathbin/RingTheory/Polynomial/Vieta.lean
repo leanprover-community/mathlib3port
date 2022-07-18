@@ -32,7 +32,6 @@ variable {R : Type _} [CommSemiringₓ R]
 
 variable (σ : Type _) [Fintype σ]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A sum version of Vieta's formula. Viewing `X i` as variables,
 the product of linear terms `λ + X i` is equal to a linear combination of
 the symmetric polynomials `esymm σ R j`. -/
@@ -55,7 +54,6 @@ theorem prod_X_add_C_eq_sum_esymm :
     exact (mem_powerset_len.mp ht).2
   rw [map_prod, prod_const, ← h]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A fully expanded sum version of Vieta's formula, evaluated at the roots.
 The product of linear terms `X + r i` is equal to `∑ j in range (n + 1), e_j * X ^ (n - j)`,
 where `e_j` is the `j`th symmetric polynomial of the constant terms `r i`. -/

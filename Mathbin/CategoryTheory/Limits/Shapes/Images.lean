@@ -324,6 +324,10 @@ theorem image.lift_fac (F' : MonoFactorisation f) : image.lift F' ≫ F'.m = ima
 theorem image.fac_lift (F' : MonoFactorisation f) : factorThruImage f ≫ image.lift F' = F'.e :=
   (Image.isImage f).fac_lift F'
 
+@[simp]
+theorem image.is_image_lift (F : MonoFactorisation f) : (Image.isImage f).lift F = image.lift F :=
+  rfl
+
 @[simp, reassoc]
 theorem IsImage.lift_ι {F : MonoFactorisation f} (hF : IsImage F) :
     hF.lift (Image.monoFactorisation f) ≫ image.ι f = F.m :=
@@ -359,7 +363,7 @@ variable (C)
 
 /-- `has_images` asserts that every morphism has an image. -/
 class HasImages : Prop where
-  HasImage : ∀ {X Y : C} f : X ⟶ Y, HasImage f
+  HasImage : ∀ {X Y : C} (f : X ⟶ Y), HasImage f
 
 attribute [instance] has_images.has_image
 
@@ -412,7 +416,7 @@ theorem image.ext [HasImage f] {W : C} {g h : image f ⟶ W} [HasLimit (parallel
       rw [← category.assoc, t]_ = h := by
       rw [category.id_comp]
 
-instance [HasImage f] [∀ {Z : C} g h : image f ⟶ Z, HasLimit (parallelPair g h)] : Epi (factorThruImage f) :=
+instance [HasImage f] [∀ {Z : C} (g h : image f ⟶ Z), HasLimit (parallelPair g h)] : Epi (factorThruImage f) :=
   ⟨fun Z g h w => image.ext f w⟩
 
 theorem epi_image_of_epi {X Y : C} (f : X ⟶ Y) [HasImage f] [E : Epi f] : Epi (image.ι f) := by
@@ -694,7 +698,7 @@ variable (C) [HasImages C]
 
 /-- If a category `has_image_maps`, then all commutative squares induce morphisms on images. -/
 class HasImageMaps where
-  HasImageMap : ∀ {f g : Arrow C} st : f ⟶ g, HasImageMap st
+  HasImageMap : ∀ {f g : Arrow C} (st : f ⟶ g), HasImageMap st
 
 attribute [instance] has_image_maps.has_image_map
 
@@ -742,11 +746,11 @@ variable (C)
 /-- A category has strong epi-mono factorisations if every morphism admits a strong epi-mono
     factorisation. -/
 class HasStrongEpiMonoFactorisations : Prop where mk' ::
-  has_fac : ∀ {X Y : C} f : X ⟶ Y, Nonempty (StrongEpiMonoFactorisation f)
+  has_fac : ∀ {X Y : C} (f : X ⟶ Y), Nonempty (StrongEpiMonoFactorisation f)
 
 variable {C}
 
-theorem HasStrongEpiMonoFactorisations.mk (d : ∀ {X Y : C} f : X ⟶ Y, StrongEpiMonoFactorisation f) :
+theorem HasStrongEpiMonoFactorisations.mk (d : ∀ {X Y : C} (f : X ⟶ Y), StrongEpiMonoFactorisation f) :
     HasStrongEpiMonoFactorisations C :=
   ⟨fun X Y f => Nonempty.intro <| d f⟩
 
@@ -764,7 +768,7 @@ variable (C) [HasImages C]
 /-- A category has strong epi images if it has all images and `factor_thru_image f` is a strong
     epimorphism for all `f`. -/
 class HasStrongEpiImages : Prop where
-  strong_factor_thru_image : ∀ {X Y : C} f : X ⟶ Y, StrongEpi (factorThruImage f)
+  strong_factor_thru_image : ∀ {X Y : C} (f : X ⟶ Y), StrongEpi (factorThruImage f)
 
 attribute [instance] has_strong_epi_images.strong_factor_thru_image
 
@@ -826,7 +830,7 @@ instance (priority := 100) has_strong_epi_images_of_has_pullbacks_of_has_equaliz
 
 end HasStrongEpiImages
 
-variable [HasStrongEpiMonoFactorisations.{v} C]
+variable [HasStrongEpiMonoFactorisations C]
 
 variable {X Y : C} {f : X ⟶ Y}
 

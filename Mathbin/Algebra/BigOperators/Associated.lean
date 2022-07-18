@@ -87,7 +87,6 @@ theorem Multiset.prod_primes_dvd [CancelCommMonoidWithZero α] [∀ a : α, Deci
       
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Finset.prod_primes_dvd [CancelCommMonoidWithZero α] [Unique αˣ] {s : Finset α} (n : α)
     (h : ∀, ∀ a ∈ s, ∀, Prime a) (div : ∀, ∀ a ∈ s, ∀, a ∣ n) : (∏ p in s, p) ∣ n := by
   classical

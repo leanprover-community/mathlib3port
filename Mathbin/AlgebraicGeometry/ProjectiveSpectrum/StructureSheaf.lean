@@ -287,7 +287,7 @@ def sectionInBasicOpen (x : ProjectiveSpectrum.top 𝒜) :
     ⟨ProjectiveSpectrum.basicOpen 𝒜 f.denom, y.2,
       ⟨𝟙 _, ⟨f.deg, ⟨⟨f.num, f.num_mem⟩, ⟨f.denom, f.denom_mem⟩, fun z => ⟨z.2, rfl⟩⟩⟩⟩⟩⟩
 
-/-- Given any point `x` and `f` in the homogeneous localizatoin at `x`, there is an element in the
+/-- Given any point `x` and `f` in the homogeneous localization at `x`, there is an element in the
 stalk at `x` obtained by `section_in_basic_open`. This is the inverse of `stalk_to_fiber_ring_hom`.
 -/
 def homogeneousLocalizationToStalk (x : ProjectiveSpectrum.top 𝒜) : (at x) → (Proj.structureSheaf 𝒜).1.stalk x :=
@@ -316,8 +316,9 @@ def Proj.stalkIso' (x : ProjectiveSpectrum.top 𝒜) : (Proj.structureSheaf 𝒜
       obtain ⟨⟨c, hc⟩, eq3⟩ := eq3
       simp only [Subtype.val_eq_coe] at eq3
       have eq3' :
-        ∀ y : ProjectiveSpectrum.top 𝒜 hy :
-          y ∈ ProjectiveSpectrum.basicOpen 𝒜 b1⊓ProjectiveSpectrum.basicOpen 𝒜 b2⊓ProjectiveSpectrum.basicOpen 𝒜 c,
+        ∀ (y : ProjectiveSpectrum.top 𝒜)
+          (hy :
+            y ∈ ProjectiveSpectrum.basicOpen 𝒜 b1⊓ProjectiveSpectrum.basicOpen 𝒜 b2⊓ProjectiveSpectrum.basicOpen 𝒜 c),
           (Localization.mk a1
               ⟨b1,
                 show b1 ∉ y.asHomogeneousIdeal by

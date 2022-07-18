@@ -85,6 +85,37 @@ theorem nhds_of_nhds_within_of_nhds {s t : Set α} {a : α} (h1 : s ∈ 𝓝 a) 
   rcases mem_nhds_within_iff_exists_mem_nhds_inter.mp h2 with ⟨_, Hw, hw⟩
   exact (nhds a).sets_of_superset ((nhds a).inter_sets Hw h1) hw
 
+theorem mem_nhds_within_iff_eventually {s t : Set α} {x : α} : t ∈ 𝓝[s] x ↔ ∀ᶠ y in 𝓝 x, y ∈ s → y ∈ t := by
+  rw [mem_nhds_within_iff_exists_mem_nhds_inter]
+  constructor
+  · rintro ⟨u, hu, hut⟩
+    exact eventually_of_mem hu fun x hxu hxs => hut ⟨hxu, hxs⟩
+    
+  · refine' fun h => ⟨_, h, fun y hy => hy.1 hy.2⟩
+    
+
+theorem mem_nhds_within_iff_eventually_eq {s t : Set α} {x : α} : t ∈ 𝓝[s] x ↔ s =ᶠ[𝓝 x] (s ∩ t : Set α) := by
+  simp_rw [mem_nhds_within_iff_eventually, eventually_eq_set, mem_inter_iff, iff_self_and]
+
+theorem nhds_within_eq_iff_eventually_eq {s t : Set α} {x : α} : 𝓝[s] x = 𝓝[t] x ↔ s =ᶠ[𝓝 x] t := by
+  simp_rw [Filter.ext_iff, mem_nhds_within_iff_eventually, eventually_eq_set]
+  constructor
+  · intro h
+    filter_upwards [(h t).mpr (eventually_of_forall fun x => id), (h s).mp (eventually_of_forall fun x => id)]
+    exact fun x => Iff.intro
+    
+  · refine' fun h u => eventually_congr (h.mono fun x h => _)
+    rw [h]
+    
+
+theorem nhds_within_le_iff {s t : Set α} {x : α} : 𝓝[s] x ≤ 𝓝[t] x ↔ t ∈ 𝓝[s] x := by
+  simp_rw [Filter.le_def, mem_nhds_within_iff_eventually]
+  constructor
+  · exact fun h => (h t <| eventually_of_forall fun x => id).mono fun x => id
+    
+  · exact fun h u hu => (h.And hu).mono fun x hx h => hx.2 <| hx.1 h
+    
+
 theorem preimage_nhds_within_coinduced' {π : α → β} {s : Set β} {t : Set α} {a : α} (h : a ∈ t) (ht : IsOpen t)
     (hs : s ∈ @nhds β (TopologicalSpace.coinduced (fun x : t => π x) Subtype.topologicalSpace) (π a)) :
     π ⁻¹' s ∈ 𝓝[t] a := by
@@ -104,6 +135,9 @@ theorem mem_nhds_within_of_mem_nhds {s t : Set α} {a : α} (h : s ∈ 𝓝 a) :
 
 theorem self_mem_nhds_within {a : α} {s : Set α} : s ∈ 𝓝[s] a :=
   mem_inf_of_right (mem_principal_self s)
+
+theorem eventually_mem_nhds_within {a : α} {s : Set α} : ∀ᶠ x in 𝓝[s] a, x ∈ s :=
+  self_mem_nhds_within
 
 theorem inter_mem_nhds_within (s : Set α) {t : Set α} {a : α} (h : t ∈ 𝓝 a) : s ∩ t ∈ 𝓝[s] a :=
   inter_mem self_mem_nhds_within (mem_inf_of_left h)
@@ -135,11 +169,8 @@ theorem nhds_within_restrict' {a : α} (s : Set α) {t : Set α} (h : t ∈ 𝓝
 theorem nhds_within_restrict {a : α} (s : Set α) {t : Set α} (h₀ : a ∈ t) (h₁ : IsOpen t) : 𝓝[s] a = 𝓝[s ∩ t] a :=
   nhds_within_restrict' s (IsOpen.mem_nhds h₁ h₀)
 
-theorem nhds_within_le_of_mem {a : α} {s t : Set α} (h : s ∈ 𝓝[t] a) : 𝓝[t] a ≤ 𝓝[s] a := by
-  rcases mem_nhds_within.1 h with ⟨u, u_open, au, uts⟩
-  have : 𝓝[t] a = 𝓝[t ∩ u] a := nhds_within_restrict _ au u_open
-  rw [this, inter_comm]
-  exact nhds_within_mono _ uts
+theorem nhds_within_le_of_mem {a : α} {s t : Set α} (h : s ∈ 𝓝[t] a) : 𝓝[t] a ≤ 𝓝[s] a :=
+  nhds_within_le_iff.mpr h
 
 theorem nhds_within_le_nhds {a : α} {s : Set α} : 𝓝[s] a ≤ 𝓝 a := by
   rw [← nhds_within_univ]
@@ -219,7 +250,7 @@ theorem nhds_within_pi_eq' {ι : Type _} {α : ι → Type _} [∀ i, Topologica
   simp only [← nhdsWithin, ← nhds_pi, ← Filter.pi, ← comap_inf, ← comap_infi, ← pi_def, ← comap_principal,
     infi_principal_finite hI, infi_inf_eq]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i «expr ∉ » I)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ∉ » I)
 theorem nhds_within_pi_eq {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {I : Set ι} (hI : I.Finite)
     (s : ∀ i, Set (α i)) (x : ∀ i, α i) :
     𝓝[pi I s] x = (⨅ i ∈ I, comap (fun x => x i) (𝓝[s i] x i))⊓⨅ (i) (_ : i ∉ I), comap (fun x => x i) (𝓝 (x i)) := by
@@ -936,7 +967,6 @@ theorem Continuous.piecewise {s : Set α} {f g : α → β} [∀ a, Decidable (a
     (hf : Continuous f) (hg : Continuous g) : Continuous (piecewise s f g) :=
   hf.if hs hg
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem IsOpen.ite' {s s' t : Set α} (hs : IsOpen s) (hs' : IsOpen s') (ht : ∀, ∀ x ∈ Frontier t, ∀, x ∈ s ↔ x ∈ s') :
     IsOpen (t.ite s s') := by
   classical

@@ -215,7 +215,7 @@ instance : CoeFun (SmoothBumpCovering ι I M s) fun x => ∀ i : ι, SmoothBumpF
   ⟨toFun⟩
 
 @[simp]
-theorem coe_mk (c : ι → M) (to_fun : ∀ i, SmoothBumpFunction I (c i)) h₁ h₂ h₃ :
+theorem coe_mk (c : ι → M) (to_fun : ∀ i, SmoothBumpFunction I (c i)) (h₁ h₂ h₃) :
     ⇑(mk c to_fun h₁ h₂ h₃ : SmoothBumpCovering ι I M s) = to_fun :=
   rfl
 

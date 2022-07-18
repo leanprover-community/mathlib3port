@@ -57,7 +57,7 @@ attribute [local ext] Functor.ext
 @[ext]
 theorem ext_functor {C} [Category C] {F G : Paths V ⥤ C} (h_obj : F.obj = G.obj)
     (h :
-      ∀ a b : V e : a ⟶ b,
+      ∀ (a b : V) (e : a ⟶ b),
         F.map e.toPath = eqToHom (congr_fun h_obj a) ≫ G.map e.toPath ≫ eqToHom (congr_fun h_obj.symm b)) :
     F = G := by
   ext X Y f
@@ -92,7 +92,7 @@ open Quiver
 
 /-- A path in a category can be composed to a single morphism. -/
 @[simp]
-def composePathₓ {X : C} : ∀ {Y : C} p : Path X Y, X ⟶ Y
+def composePathₓ {X : C} : ∀ {Y : C} (p : Path X Y), X ⟶ Y
   | _, path.nil => 𝟙 X
   | _, path.cons p e => compose_path p ≫ e
 

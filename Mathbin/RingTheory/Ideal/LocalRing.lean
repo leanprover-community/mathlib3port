@@ -124,7 +124,7 @@ theorem le_maximal_ideal {J : Ideal R} (hJ : J ≠ ⊤) : J ≤ maximalIdeal R :
   rwa [← eq_maximal_ideal hM1]
 
 @[simp]
-theorem mem_maximal_ideal x : x ∈ maximalIdeal R ↔ x ∈ Nonunits R :=
+theorem mem_maximal_ideal (x) : x ∈ maximalIdeal R ↔ x ∈ Nonunits R :=
   Iff.rfl
 
 end LocalRing
@@ -178,11 +178,11 @@ instance is_local_ring_hom_id (R : Type _) [Semiringₓ R] :
     IsLocalRingHom (RingHom.id R) where map_nonunit := fun a => id
 
 @[simp]
-theorem is_unit_map_iff (f : R →+* S) [IsLocalRingHom f] a : IsUnit (f a) ↔ IsUnit a :=
+theorem is_unit_map_iff (f : R →+* S) [IsLocalRingHom f] (a) : IsUnit (f a) ↔ IsUnit a :=
   ⟨IsLocalRingHom.map_nonunit a, f.is_unit_map⟩
 
 @[simp]
-theorem map_mem_nonunits_iff (f : R →+* S) [IsLocalRingHom f] a : f a ∈ Nonunits S ↔ a ∈ Nonunits R :=
+theorem map_mem_nonunits_iff (f : R →+* S) [IsLocalRingHom f] (a) : f a ∈ Nonunits S ↔ a ∈ Nonunits R :=
   ⟨fun h ha => h <| (is_unit_map_iff f a).mpr ha, fun h ha => h <| (is_unit_map_iff f a).mp ha⟩
 
 instance is_local_ring_hom_comp (g : S →+* T) (f : R →+* S) [IsLocalRingHom g] [IsLocalRingHom f] :
@@ -195,7 +195,7 @@ instance is_local_ring_hom_equiv (f : R ≃+* S) :
     exact (RingEquiv.symm_apply_apply f a).symm
 
 @[simp]
-theorem is_unit_of_map_unit (f : R →+* S) [IsLocalRingHom f] a (h : IsUnit (f a)) : IsUnit a :=
+theorem is_unit_of_map_unit (f : R →+* S) [IsLocalRingHom f] (a) (h : IsUnit (f a)) : IsUnit a :=
   IsLocalRingHom.map_nonunit a h
 
 theorem of_irreducible_map (f : R →+* S) [h : IsLocalRingHom f] {x} (hfx : Irreducible (f x)) : Irreducible x :=

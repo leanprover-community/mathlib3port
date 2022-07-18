@@ -704,7 +704,8 @@ theorem exists_nat_nat_continuous_surjective_of_complete_space (α : Type _) [Me
   rcases exists_dense_seq α with ⟨u, hu⟩
   let s : Set (ℕ → ℕ) := { x | (⋂ n : ℕ, closed_ball (u (x n)) ((1 / 2) ^ n)).Nonempty }
   let g : s → α := fun x => x.2.some
-  have A : ∀ x : s n : ℕ, dist (g x) (u ((x : ℕ → ℕ) n)) ≤ (1 / 2) ^ n := fun x n => (mem_Inter.1 x.2.some_mem n : _)
+  have A : ∀ (x : s) (n : ℕ), dist (g x) (u ((x : ℕ → ℕ) n)) ≤ (1 / 2) ^ n := fun x n =>
+    (mem_Inter.1 x.2.some_mem n : _)
   have g_cont : Continuous g := by
     apply continuous_iff_continuous_at.2 fun y => _
     apply continuous_at_of_locally_lipschitz zero_lt_one 4 fun x hxy => _

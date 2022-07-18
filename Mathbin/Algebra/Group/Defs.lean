@@ -356,7 +356,7 @@ analysis](https://hal.inria.fr/hal-02463336).
 -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 /-- `try_refl_tac` solves goals of the form `∀ a b, f a b = g a b`,
 if they hold by definition. -/
 unsafe def try_refl_tac : tactic Unit :=
@@ -404,7 +404,7 @@ class AddMonoidₓ (M : Type u) extends AddSemigroupₓ M, AddZeroClassₓ M whe
   nsmul_zero' : ∀ x, nsmul 0 x = 0 := by
     run_tac
       try_refl_tac
-  nsmul_succ' : ∀ n : ℕ x, nsmul n.succ x = x + nsmul n x := by
+  nsmul_succ' : ∀ (n : ℕ) (x), nsmul n.succ x = x + nsmul n x := by
     run_tac
       try_refl_tac
 
@@ -415,7 +415,7 @@ class Monoidₓ (M : Type u) extends Semigroupₓ M, MulOneClassₓ M where
   npow_zero' : ∀ x, npow 0 x = 1 := by
     run_tac
       try_refl_tac
-  npow_succ' : ∀ n : ℕ x, npow n.succ x = x * npow n x := by
+  npow_succ' : ∀ (n : ℕ) (x), npow n.succ x = x * npow n x := by
     run_tac
       try_refl_tac
 
@@ -538,7 +538,7 @@ attribute [to_additive] zpowRec
 
 section HasInvolutiveInv
 
--- ./././Mathport/Syntax/Translate/Basic.lean:293:40: warning: unsupported option extends_priority
+-- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option extends_priority
 -- ensure that we don't go via these typeclasses to find `has_inv` on groups and groups with zero
 set_option extends_priority 50
 
@@ -621,10 +621,10 @@ class DivInvMonoidₓ (G : Type u) extends Monoidₓ G, Inv G, Div G where
   zpow_zero' : ∀ a : G, zpow 0 a = 1 := by
     run_tac
       try_refl_tac
-  zpow_succ' : ∀ n : ℕ a : G, zpow (Int.ofNat n.succ) a = a * zpow (Int.ofNat n) a := by
+  zpow_succ' : ∀ (n : ℕ) (a : G), zpow (Int.ofNat n.succ) a = a * zpow (Int.ofNat n) a := by
     run_tac
       try_refl_tac
-  zpow_neg' : ∀ n : ℕ a : G, zpow -[1+ n] a = (zpow n.succ a)⁻¹ := by
+  zpow_neg' : ∀ (n : ℕ) (a : G), zpow -[1+ n] a = (zpow n.succ a)⁻¹ := by
     run_tac
       try_refl_tac
 
@@ -655,10 +655,10 @@ class SubNegMonoidₓ (G : Type u) extends AddMonoidₓ G, Neg G, Sub G where
   zsmul_zero' : ∀ a : G, zsmul 0 a = 0 := by
     run_tac
       try_refl_tac
-  zsmul_succ' : ∀ n : ℕ a : G, zsmul (Int.ofNat n.succ) a = a + zsmul (Int.ofNat n) a := by
+  zsmul_succ' : ∀ (n : ℕ) (a : G), zsmul (Int.ofNat n.succ) a = a + zsmul (Int.ofNat n) a := by
     run_tac
       try_refl_tac
-  zsmul_neg' : ∀ n : ℕ a : G, zsmul -[1+ n] a = -zsmul n.succ a := by
+  zsmul_neg' : ∀ (n : ℕ) (a : G), zsmul -[1+ n] a = -zsmul n.succ a := by
     run_tac
       try_refl_tac
 

@@ -78,7 +78,7 @@ theorem is_jacobson_iff_Inf_maximal :
 
 theorem is_jacobson_iff_Inf_maximal' :
     IsJacobson R ↔
-      ∀ {I : Ideal R}, I.IsPrime → ∃ M : Set (Ideal R), (∀, ∀ J ∈ M, ∀ K : Ideal R, J < K → K = ⊤) ∧ I = inf M :=
+      ∀ {I : Ideal R}, I.IsPrime → ∃ M : Set (Ideal R), (∀, ∀ J ∈ M, ∀ (K : Ideal R), J < K → K = ⊤) ∧ I = inf M :=
   ⟨fun H I h => eq_jacobson_iff_Inf_maximal'.1 (H.out (IsPrime.radical h)), fun H =>
     is_jacobson_iff_prime_eq.2 fun P hP => eq_jacobson_iff_Inf_maximal'.2 (H hP)⟩
 
@@ -490,8 +490,7 @@ theorem is_maximal_comap_C_of_is_maximal [Nontrivial R] (hP' : ∀ x : R, c x �
     rw
       [le_antisymmₓ bot_le
         (comap_bot_le_of_injective _
-          (IsLocalization.map_injective_of_injective M (Localization M) (Localization M') quotient_map_injective
-            (le_non_zero_divisors_of_no_zero_divisors hM')))]
+          (IsLocalization.map_injective_of_injective M (Localization M) (Localization M') quotient_map_injective))]
     refine' is_maximal_comap_of_is_integral_of_is_maximal' _ _ ⊥ this
     apply is_integral_is_localization_polynomial_quotient P _ (Submodule.coe_mem m)
   rw [(map_bot.symm : (⊥ : Ideal (Localization M')) = map (algebraMap (R[X] ⧸ P) (Localization M')) ⊥)]

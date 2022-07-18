@@ -249,7 +249,7 @@ theorem one_sub_K_pos (hf : ContractingWith K f) : (0 : ℝ) < 1 - K :=
 theorem dist_le_mul (x y : α) : dist (f x) (f y) ≤ K * dist x y :=
   hf.to_lipschitz_with.dist_le_mul x y
 
-theorem dist_inequality x y : dist x y ≤ (dist x (f x) + dist y (f y)) / (1 - K) :=
+theorem dist_inequality (x y) : dist x y ≤ (dist x (f x) + dist y (f y)) / (1 - K) :=
   suffices dist x y ≤ dist x (f x) + dist y (f y) + K * dist x y by
     rwa [le_div_iff hf.one_sub_K_pos, mul_comm, sub_mul, one_mulₓ, sub_le_iff_le_add]
   calc
@@ -257,7 +257,7 @@ theorem dist_inequality x y : dist x y ≤ (dist x (f x) + dist y (f y)) / (1 - 
     _ ≤ dist x (f x) + dist y (f y) + K * dist x y := add_le_add_left (hf.dist_le_mul _ _) _
     
 
-theorem dist_le_of_fixed_point x {y} (hy : IsFixedPt f y) : dist x y ≤ dist x (f x) / (1 - K) := by
+theorem dist_le_of_fixed_point (x) {y} (hy : IsFixedPt f y) : dist x y ≤ dist x (f x) / (1 - K) := by
   simpa only [← hy.eq, ← dist_self, ← add_zeroₓ] using hf.dist_inequality x y
 
 theorem fixed_point_unique' {x y} (hx : IsFixedPt f x) (hy : IsFixedPt f y) : x = y :=
@@ -294,20 +294,21 @@ theorem fixed_point_is_fixed_pt : IsFixedPt f (fixedPoint f hf) :=
 theorem fixed_point_unique {x} (hx : IsFixedPt f x) : x = fixedPoint f hf :=
   hf.fixed_point_unique' hx hf.fixed_point_is_fixed_pt
 
-theorem dist_fixed_point_le x : dist x (fixedPoint f hf) ≤ dist x (f x) / (1 - K) :=
+theorem dist_fixed_point_le (x) : dist x (fixedPoint f hf) ≤ dist x (f x) / (1 - K) :=
   hf.dist_le_of_fixed_point x hf.fixed_point_is_fixed_pt
 
 /-- Aposteriori estimates on the convergence of iterates to the fixed point. -/
-theorem aposteriori_dist_iterate_fixed_point_le x n :
+theorem aposteriori_dist_iterate_fixed_point_le (x n) :
     dist ((f^[n]) x) (fixedPoint f hf) ≤ dist ((f^[n]) x) ((f^[n + 1]) x) / (1 - K) := by
   rw [iterate_succ']
   apply hf.dist_fixed_point_le
 
-theorem apriori_dist_iterate_fixed_point_le x n : dist ((f^[n]) x) (fixedPoint f hf) ≤ dist x (f x) * K ^ n / (1 - K) :=
+theorem apriori_dist_iterate_fixed_point_le (x n) :
+    dist ((f^[n]) x) (fixedPoint f hf) ≤ dist x (f x) * K ^ n / (1 - K) :=
   le_transₓ (hf.aposteriori_dist_iterate_fixed_point_le x n) <|
     (div_le_div_right hf.one_sub_K_pos).2 <| hf.to_lipschitz_with.dist_iterate_succ_le_geometric x n
 
-theorem tendsto_iterate_fixed_point x : Tendsto (fun n => (f^[n]) x) atTop (𝓝 <| fixedPoint f hf) := by
+theorem tendsto_iterate_fixed_point (x) : Tendsto (fun n => (f^[n]) x) atTop (𝓝 <| fixedPoint f hf) := by
   convert tendsto_iterate_efixed_point hf (edist_ne_top x _)
   refine' (fixed_point_unique _ _).symm
   apply efixed_point_is_fixed_pt

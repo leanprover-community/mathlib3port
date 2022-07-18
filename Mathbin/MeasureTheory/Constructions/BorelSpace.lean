@@ -73,7 +73,7 @@ theorem borel_eq_top_of_encodable [TopologicalSpace α] [T1Space α] [Encodable 
 theorem borel_eq_generate_from_of_subbasis {s : Set (Set α)} [t : TopologicalSpace α] [SecondCountableTopology α]
     (hs : t = generateFrom s) : borel α = generateFrom s :=
   le_antisymmₓ
-    (generate_from_le fun u hu : t.IsOpen u => by
+    (generate_from_le fun u (hu : t.IsOpen u) => by
       rw [hs] at hu
       induction hu
       case generate_open.basic u hu =>
@@ -465,9 +465,9 @@ instance nhds_within_Ioi_is_measurably_generated : (𝓝[Ioi b] a).IsMeasurablyG
 instance nhds_within_Iio_is_measurably_generated : (𝓝[Iio b] a).IsMeasurablyGenerated :=
   measurable_set_Iio.nhds_within_is_measurably_generated _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
 instance nhds_within_interval_is_measurably_generated :
-    IsMeasurablyGenerated (𝓝["./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)"] x) :=
+    IsMeasurablyGenerated (𝓝["./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)"] x) :=
   nhds_within_Icc_is_measurably_generated
 
 @[measurability]
@@ -494,11 +494,11 @@ theorem Set.OrdConnected.measurable_set (h : OrdConnected s) : MeasurableSet s :
 theorem IsPreconnected.measurable_set (h : IsPreconnected s) : MeasurableSet s :=
   h.OrdConnected.MeasurableSet
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr α]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr α]]
 theorem generate_from_Ico_mem_le_borel {α : Type _} [TopologicalSpace α] [LinearOrderₓ α] [OrderClosedTopology α]
     (s t : Set α) : MeasurableSpace.generateFrom { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l < u, Ico l u = S } ≤ borel α := by
   apply generate_from_le
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr α]]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr α]]"
   rintro _ ⟨a, -, b, -, -, rfl⟩
   exact measurable_set_Ico
 
@@ -1057,7 +1057,7 @@ protected theorem Monotone.measurable [LinearOrderₓ β] [OrderClosedTopology �
 
 theorem ae_measurable_restrict_of_monotone_on [LinearOrderₓ β] [OrderClosedTopology β] {μ : Measureₓ β} {s : Set β}
     (hs : MeasurableSet s) {f : β → α} (hf : MonotoneOn f s) : AeMeasurable f (μ.restrict s) :=
-  have this : Monotone (f ∘ coe : s → α) := fun ⟨x, hx⟩ ⟨y, hy⟩ hxy : x ≤ y => hf hx hy hxy
+  have this : Monotone (f ∘ coe : s → α) := fun ⟨x, hx⟩ ⟨y, hy⟩ (hxy : x ≤ y) => hf hx hy hxy
   ae_measurable_restrict_of_measurable_subtype hs this.Measurable
 
 protected theorem Antitone.measurable [LinearOrderₓ β] [OrderClosedTopology β] {f : β → α} (hf : Antitone f) :
@@ -1516,17 +1516,17 @@ namespace Real
 
 open MeasurableSpace MeasureTheory
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (a b)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (a b)
 theorem borel_eq_generate_from_Ioo_rat : borel ℝ = generateFrom (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) :=
   is_topological_basis_Ioo_rat.borel_eq_generate_from
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (a b)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (a b)
 theorem is_pi_system_Ioo_rat : @IsPiSystem ℝ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) := by
   convert is_pi_system_Ioo (coe : ℚ → ℝ) (coe : ℚ → ℝ)
   ext x
   simp [← eq_comm]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (a b)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (a b)
 /-- The intervals `(-(n + 1), (n + 1))` form a finite spanning sets in the set of open intervals
 with rational endpoints for a locally finite measure `μ` on `ℝ`. -/
 def finiteSpanningSetsInIooRat (μ : Measureₓ ℝ) [IsLocallyFiniteMeasure μ] :
@@ -2026,11 +2026,11 @@ theorem measurable_apply [MeasurableSpace F] [BorelSpace F] (x : E) : Measurable
 
 @[measurability]
 theorem measurable_apply' [MeasurableSpace E] [OpensMeasurableSpace E] [MeasurableSpace F] [BorelSpace F] :
-    Measurable fun x : E f : E →L[𝕜] F => f x :=
+    Measurable fun (x : E) (f : E →L[𝕜] F) => f x :=
   (measurable_pi_lambda _) fun f => f.Measurable
 
 @[measurability]
-theorem measurable_coe [MeasurableSpace F] [BorelSpace F] : Measurable fun f : E →L[𝕜] F x : E => f x :=
+theorem measurable_coe [MeasurableSpace F] [BorelSpace F] : Measurable fun (f : E →L[𝕜] F) (x : E) => f x :=
   measurable_pi_lambda _ measurable_apply
 
 end ContinuousLinearMap

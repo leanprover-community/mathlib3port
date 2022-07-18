@@ -159,7 +159,7 @@ instance (priority := 100) baire_category_theorem_locally_compact [TopologicalSp
   apply dense_iff_inter_open.2
   intro U U_open U_nonempty
   rcases exists_positive_compacts_subset U_open U_nonempty with ⟨K₀, hK₀⟩
-  have : ∀ n K : positive_compacts α, ∃ K' : positive_compacts α, ↑K' ⊆ f n ∩ Interior K := by
+  have : ∀ (n) (K : positive_compacts α), ∃ K' : positive_compacts α, ↑K' ⊆ f n ∩ Interior K := by
     refine' fun n K => exists_positive_compacts_subset ((ho n).inter is_open_interior) _
     rw [inter_comm]
     exact (hd n).inter_open_nonempty _ is_open_interior K.interior_nonempty
@@ -283,7 +283,7 @@ theorem eventually_residual {p : α → Prop} :
       simp [← and_assoc]
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- A set is residual (comeagre) if and only if it includes a dense `Gδ` set. -/
 theorem mem_residual {s : Set α} : s ∈ residual α ↔ ∃ (t : _)(_ : t ⊆ s), IsGδ t ∧ Dense t :=
   (@eventually_residual α _ _ fun x => x ∈ s).trans <|

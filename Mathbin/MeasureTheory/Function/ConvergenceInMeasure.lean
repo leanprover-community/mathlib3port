@@ -48,10 +48,10 @@ variable {α ι E : Type _} {m : MeasurableSpace α} {μ : Measure α}
 some given filter `l`. -/
 def TendstoInMeasure [HasDist E] {m : MeasurableSpace α} (μ : Measure α) (f : ι → α → E) (l : Filter ι) (g : α → E) :
     Prop :=
-  ∀ ε hε : 0 < ε, Tendsto (fun i => μ { x | ε ≤ dist (f i x) (g x) }) l (𝓝 0)
+  ∀ (ε) (hε : 0 < ε), Tendsto (fun i => μ { x | ε ≤ dist (f i x) (g x) }) l (𝓝 0)
 
 theorem tendsto_in_measure_iff_norm [SemiNormedGroup E] {l : Filter ι} {f : ι → α → E} {g : α → E} :
-    TendstoInMeasure μ f l g ↔ ∀ ε hε : 0 < ε, Tendsto (fun i => μ { x | ε ≤ ∥f i x - g x∥ }) l (𝓝 0) := by
+    TendstoInMeasure μ f l g ↔ ∀ (ε) (hε : 0 < ε), Tendsto (fun i => μ { x | ε ≤ ∥f i x - g x∥ }) l (𝓝 0) := by
   simp_rw [tendsto_in_measure, dist_eq_norm]
 
 namespace TendstoInMeasure
@@ -179,7 +179,7 @@ theorem TendstoInMeasure.exists_seq_tendsto_ae (hfg : TendstoInMeasure μ f atTo
   
     On the other hand, as `s` is precisely the set for which `f (ns k)`
     doesn't converge to `g`, `f (ns k)` converges almost everywhere to `g` as required. -/
-  have h_lt_ε_real : ∀ ε : ℝ hε : 0 < ε, ∃ k : ℕ, 2 * 2⁻¹ ^ k < ε := by
+  have h_lt_ε_real : ∀ (ε : ℝ) (hε : 0 < ε), ∃ k : ℕ, 2 * 2⁻¹ ^ k < ε := by
     intro ε hε
     obtain ⟨k, h_k⟩ : ∃ k : ℕ, 2⁻¹ ^ k < ε :=
       exists_pow_lt_of_lt_one hε

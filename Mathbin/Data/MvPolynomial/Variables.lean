@@ -550,7 +550,6 @@ theorem total_degree_add (a b : MvPolynomial σ R) : (a + b).totalDegree ≤ max
     · exact le_max_of_le_right (Finset.le_sup this)
       
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem total_degree_add_eq_left_of_total_degree_lt {p q : MvPolynomial σ R} (h : q.totalDegree < p.totalDegree) :
     (p + q).totalDegree = p.totalDegree := by
   classical
@@ -651,7 +650,6 @@ theorem exists_degree_lt [Fintype σ] (f : MvPolynomial σ R) (n : ℕ) (h : f.t
       intros
       rfl _ ≤ f.total_degree := Finset.le_sup hd
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem coeff_eq_zero_of_total_degree_lt {f : MvPolynomial σ R} {d : σ →₀ ℕ}
     (h : f.totalDegree < ∑ i in d.support, d i) : coeff d f = 0 := by
   classical

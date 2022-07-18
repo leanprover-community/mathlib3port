@@ -82,7 +82,7 @@ protected theorem right_comm (h : Commute b c) (a : S) : a * b * c = a * c * b :
   simp only [← mul_assoc, ← h.eq]
 
 @[to_additive]
-protected theorem left_comm (h : Commute a b) c : a * (b * c) = b * (a * c) := by
+protected theorem left_comm (h : Commute a b) (c) : a * (b * c) = b * (a * c) := by
   simp only [mul_assoc, ← h.eq]
 
 end Semigroupₓ

@@ -30,10 +30,10 @@ theorem gcd_dvd_leftₓ (m n : ℕ) : gcdₓ m n ∣ m :=
 theorem gcd_dvd_rightₓ (m n : ℕ) : gcdₓ m n ∣ n :=
   (gcd_dvdₓ m n).right
 
-theorem gcd_le_leftₓ {m} n (h : 0 < m) : gcdₓ m n ≤ m :=
+theorem gcd_le_leftₓ {m} (n) (h : 0 < m) : gcdₓ m n ≤ m :=
   le_of_dvdₓ h <| gcd_dvd_leftₓ m n
 
-theorem gcd_le_rightₓ m {n} (h : 0 < n) : gcdₓ m n ≤ n :=
+theorem gcd_le_rightₓ (m) {n} (h : 0 < n) : gcdₓ m n ≤ n :=
   le_of_dvdₓ h <| gcd_dvd_rightₓ m n
 
 theorem dvd_gcdₓ {m n k : ℕ} : k ∣ m → k ∣ n → k ∣ gcdₓ m n :=

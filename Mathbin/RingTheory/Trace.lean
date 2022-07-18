@@ -94,7 +94,7 @@ variable {S}
 
 -- Not a `simp` lemma since there are more interesting ways to rewrite `trace R S x`,
 -- for example `trace_trace`
-theorem trace_apply x : trace R S x = LinearMap.trace R S (lmul R S x) :=
+theorem trace_apply (x) : trace R S x = LinearMap.trace R S (lmul R S x) :=
   rfl
 
 theorem trace_eq_zero_of_not_exists_basis (h : ¬∃ s : Finset S, Nonempty (Basis s R S)) : trace R S = 0 := by
@@ -178,14 +178,14 @@ theorem trace_form_apply (x y : S) : traceForm R S x y = trace R S (x * y) :=
 
 theorem trace_form_is_symm : (traceForm R S).IsSymm := fun x y => congr_arg (trace R S) (mul_comm _ _)
 
-theorem trace_form_to_matrix [DecidableEq ι] i j : BilinForm.toMatrix b (traceForm R S) i j = trace R S (b i * b j) :=
+theorem trace_form_to_matrix [DecidableEq ι] (i j) : BilinForm.toMatrix b (traceForm R S) i j = trace R S (b i * b j) :=
   by
   rw [BilinForm.to_matrix_apply, trace_form_apply]
 
 theorem trace_form_to_matrix_power_basis (h : PowerBasis R S) :
-    BilinForm.toMatrix h.Basis (traceForm R S) = fun i j => trace R S (h.gen ^ (i + j : ℕ)) := by
+    BilinForm.toMatrix h.Basis (traceForm R S) = of fun i j => trace R S (h.gen ^ (↑i + ↑j : ℕ)) := by
   ext
-  rw [trace_form_to_matrix, pow_addₓ, h.basis_eq_pow, h.basis_eq_pow]
+  rw [trace_form_to_matrix, of_apply, pow_addₓ, h.basis_eq_pow, h.basis_eq_pow]
 
 end TraceForm
 
@@ -223,8 +223,8 @@ namespace IntermediateField.AdjoinSimple
 
 open IntermediateField
 
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
 theorem trace_gen_eq_zero {x : L} (hx : ¬IsIntegral K x) : Algebra.trace K K⟮⟯ (AdjoinSimple.gen K x) = 0 := by
   rw [trace_eq_zero_of_not_exists_basis, LinearMap.zero_apply]
   contrapose! hx
@@ -235,8 +235,8 @@ theorem trace_gen_eq_zero {x : L} (hx : ¬IsIntegral K x) : Algebra.trace K K⟮
   · exact subset_adjoin K _ (Set.mem_singleton x)
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
 theorem trace_gen_eq_sum_roots (x : L) (hf : (minpoly K x).Splits (algebraMap K F)) :
     algebraMap K F (trace K K⟮⟯ (AdjoinSimple.gen K x)) = ((minpoly K x).map (algebraMap K F)).roots.Sum := by
   have injKxL := (algebraMap K⟮⟯ L).Injective
@@ -259,9 +259,9 @@ open IntermediateField
 
 variable (K)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
 theorem trace_eq_trace_adjoin [FiniteDimensional K L] (x : L) :
     Algebra.trace K L x = finrank K⟮⟯ L • trace K K⟮⟯ (AdjoinSimple.gen K x) := by
   rw [← @trace_trace _ _ K K⟮⟯ _ _ _ _ _ _ _ _ x]
@@ -270,7 +270,7 @@ theorem trace_eq_trace_adjoin [FiniteDimensional K L] (x : L) :
 
 variable {K}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
 theorem trace_eq_sum_roots [FiniteDimensional K L] {x : L} (hF : (minpoly K x).Splits (algebraMap K F)) :
     algebraMap K F (Algebra.trace K L x) = finrank K⟮⟯ L • ((minpoly K x).map (algebraMap K _)).roots.Sum := by
   rw [trace_eq_trace_adjoin K x, Algebra.smul_def, RingHom.map_mul, ← Algebra.smul_def,
@@ -347,7 +347,7 @@ theorem sum_embeddings_eq_finrank_mul [FiniteDimensional K F] [IsSeparable K F] 
       IsScalarTower.coe_to_alg_hom']
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
 theorem trace_eq_sum_embeddings [FiniteDimensional K L] [IsSeparable K L] {x : L} :
     algebraMap K E (Algebra.trace K L x) = ∑ σ : L →ₐ[K] E, σ x := by
   have hx := IsSeparable.is_integral K x
@@ -394,7 +394,7 @@ open Finset
 noncomputable def traceMatrix (b : κ → B) : Matrix κ κ A
   | i, j => traceForm A B (b i) (b j)
 
-theorem trace_matrix_def (b : κ → B) : traceMatrix A b = fun i j => traceForm A B (b i) (b j) :=
+theorem trace_matrix_def (b : κ → B) : traceMatrix A b = of fun i j => traceForm A B (b i) (b j) :=
   rfl
 
 theorem trace_matrix_reindex {κ' : Type _} (b : Basis κ A B) (f : κ ≃ κ') :
@@ -441,7 +441,7 @@ theorem trace_matrix_of_basis_mul_vec (b : Basis ι A B) (z : B) :
   rw [← col_apply ((trace_matrix A b).mulVec (b.equiv_fun z)) i Unit.star, col_mul_vec, Matrix.mul_apply,
     trace_matrix_def]
   simp only [← col_apply, ← trace_form_apply]
-  conv_lhs => congr skip ext rw [mul_comm _ (b.equiv_fun z _), ← smul_eq_mul, ← LinearMap.map_smul]
+  conv_lhs => congr skip ext rw [mul_comm _ (b.equiv_fun z _), ← smul_eq_mul, of_apply, ← LinearMap.map_smul]
   rw [← LinearMap.map_sum]
   congr
   conv_lhs => congr skip ext rw [← mul_smul_comm]

@@ -189,8 +189,8 @@ structure HasFtaylorSeriesUpToOn (n : WithTop ℕ) (f : E → F) (p : E → Form
   Prop where
   zero_eq : ∀, ∀ x ∈ s, ∀, (p x 0).uncurry0 = f x
   fderivWithin :
-    ∀ m : ℕ hm : (m : WithTop ℕ) < n, ∀, ∀ x ∈ s, ∀, HasFderivWithinAt (fun y => p y m) (p x m.succ).curryLeft s x
-  cont : ∀ m : ℕ hm : (m : WithTop ℕ) ≤ n, ContinuousOn (fun x => p x m) s
+    ∀ (m : ℕ) (hm : (m : WithTop ℕ) < n), ∀, ∀ x ∈ s, ∀, HasFderivWithinAt (fun y => p y m) (p x m.succ).curryLeft s x
+  cont : ∀ (m : ℕ) (hm : (m : WithTop ℕ) ≤ n), ContinuousOn (fun x => p x m) s
 
 theorem HasFtaylorSeriesUpToOn.zero_eq' (h : HasFtaylorSeriesUpToOn n f p s) {x : E} (hx : x ∈ s) :
     p x 0 = (continuousMultilinearCurryFin0 𝕜 E F).symm (f x) := by
@@ -453,6 +453,10 @@ theorem ContDiffWithinAt.congr_of_eventually_eq (h : ContDiffWithinAt 𝕜 n f s
   ⟨{ x ∈ u | f₁ x = f x }, Filter.inter_mem hu (mem_nhds_within_insert.2 ⟨hx, h₁⟩), p,
     (H.mono (sep_subset _ _)).congr fun _ => And.right⟩
 
+theorem ContDiffWithinAt.congr_of_eventually_eq_insert (h : ContDiffWithinAt 𝕜 n f s x)
+    (h₁ : f₁ =ᶠ[𝓝[insert x s] x] f) : ContDiffWithinAt 𝕜 n f₁ s x :=
+  h.congr_of_eventually_eq (nhds_within_mono x (subset_insert x s) h₁) (mem_of_mem_nhds_within (mem_insert x s) h₁ : _)
+
 theorem ContDiffWithinAt.congr_of_eventually_eq' (h : ContDiffWithinAt 𝕜 n f s x) (h₁ : f₁ =ᶠ[𝓝[s] x] f) (hx : x ∈ s) :
     ContDiffWithinAt 𝕜 n f₁ s x :=
   h.congr_of_eventually_eq h₁ <| h₁.self_of_nhds_within hx
@@ -564,6 +568,39 @@ theorem cont_diff_within_at_succ_iff_has_fderiv_within_at {n : ℕ} :
         
       
     
+
+/-- One direction of `cont_diff_within_at_succ_iff_has_fderiv_within_at`, but where all derivatives
+  are taken within the same set. -/
+theorem ContDiffWithinAt.has_fderiv_within_at_nhds {n : ℕ} (hf : ContDiffWithinAt 𝕜 (n + 1 : ℕ) f s x) :
+    ∃ u ∈ 𝓝[insert x s] x,
+      u ⊆ insert x s ∧
+        ∃ f' : E → E →L[𝕜] F, (∀, ∀ x ∈ u, ∀, HasFderivWithinAt f (f' x) s x) ∧ ContDiffWithinAt 𝕜 n f' s x :=
+  by
+  obtain ⟨u, hu, f', huf', hf'⟩ := cont_diff_within_at_succ_iff_has_fderiv_within_at.mp hf
+  obtain ⟨w, hw, hxw, hwu⟩ := mem_nhds_within.mp hu
+  rw [inter_comm] at hwu
+  refine' ⟨insert x s ∩ w, inter_mem_nhds_within _ (hw.mem_nhds hxw), inter_subset_left _ _, f', fun y hy => _, _⟩
+  · refine' ((huf' y <| hwu hy).mono hwu).mono_of_mem _
+    refine' mem_of_superset _ (inter_subset_inter_left _ (subset_insert _ _))
+    refine' inter_mem_nhds_within _ (hw.mem_nhds hy.2)
+    
+  · exact hf'.mono_of_mem (nhds_within_mono _ (subset_insert _ _) hu)
+    
+
+/-- A version of `cont_diff_within_at_succ_iff_has_fderiv_within_at` where all derivatives
+  are taken within the same set. This lemma assumes `x ∈ s`. -/
+theorem cont_diff_within_at_succ_iff_has_fderiv_within_at_of_mem {n : ℕ} (hx : x ∈ s) :
+    ContDiffWithinAt 𝕜 (n + 1 : ℕ) f s x ↔
+      ∃ u ∈ 𝓝[s] x,
+        u ⊆ s ∧ ∃ f' : E → E →L[𝕜] F, (∀, ∀ x ∈ u, ∀, HasFderivWithinAt f (f' x) s x) ∧ ContDiffWithinAt 𝕜 n f' s x :=
+  by
+  constructor
+  · intro hf
+    simpa only [← insert_eq_of_mem hx] using hf.has_fderiv_within_at_nhds
+    
+  rw [cont_diff_within_at_succ_iff_has_fderiv_within_at, insert_eq_of_mem hx]
+  rintro ⟨u, hu, hus, f', huf', hf'⟩
+  exact ⟨u, hu, f', fun y hy => (huf' y hy).mono hus, hf'.mono hus⟩
 
 /-! ### Smooth functions within a set -/
 
@@ -1000,13 +1037,13 @@ theorem cont_diff_on_succ_iff_fderiv_within {n : ℕ} (hs : UniqueDiffOn 𝕜 s)
   have A : fderivWithin 𝕜 f (s ∩ o) y = f' y := ((hff' y (ho hy)).mono ho).fderivWithin (hs.inter o_open y hy)
   rwa [fderiv_within_inter (IsOpen.mem_nhds o_open hy.2) (hs y hy.1)] at A
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]
 /-- A function is `C^(n + 1)` on an open domain if and only if it is
 differentiable there, and its derivative (expressed with `fderiv`) is `C^n`. -/
 theorem cont_diff_on_succ_iff_fderiv_of_open {n : ℕ} (hs : IsOpen s) :
     ContDiffOn 𝕜 (n + 1 : ℕ) f s ↔ DifferentiableOn 𝕜 f s ∧ ContDiffOn 𝕜 n (fun y => fderiv 𝕜 f y) s := by
   rw [cont_diff_on_succ_iff_fderiv_within hs.unique_diff_on]
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
   apply cont_diff_on_congr
   intro x hx
   exact fderiv_within_of_open hs hx
@@ -1028,13 +1065,13 @@ theorem cont_diff_on_top_iff_fderiv_within (hs : UniqueDiffOn 𝕜 s) :
     exact WithTop.coe_le_coe.2 (Nat.le_succₓ n)
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]
 /-- A function is `C^∞` on an open domain if and only if it is differentiable there, and its
 derivative (expressed with `fderiv`) is `C^∞`. -/
 theorem cont_diff_on_top_iff_fderiv_of_open (hs : IsOpen s) :
     ContDiffOn 𝕜 ∞ f s ↔ DifferentiableOn 𝕜 f s ∧ ContDiffOn 𝕜 ∞ (fun y => fderiv 𝕜 f y) s := by
   rw [cont_diff_on_top_iff_fderiv_within hs.unique_diff_on]
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
   apply cont_diff_on_congr
   intro x hx
   exact fderiv_within_of_open hs hx
@@ -1064,6 +1101,30 @@ theorem ContDiffOn.continuous_on_fderiv_of_open (h : ContDiffOn 𝕜 n f s) (hs 
     ContinuousOn (fun x => fderiv 𝕜 f x) s :=
   ((cont_diff_on_succ_iff_fderiv_of_open hs).1 (h.of_le hn)).2.ContinuousOn
 
+theorem ContDiffWithinAt.fderiv_within' (hf : ContDiffWithinAt 𝕜 n f s x)
+    (hs : ∀ᶠ y in 𝓝[insert x s] x, UniqueDiffWithinAt 𝕜 s y) (hmn : m + 1 ≤ n) :
+    ContDiffWithinAt 𝕜 m (fderivWithin 𝕜 f s) s x := by
+  have : ∀ k : ℕ, (k + 1 : WithTop ℕ) ≤ n → ContDiffWithinAt 𝕜 k (fderivWithin 𝕜 f s) s x := by
+    intro k hkn
+    obtain ⟨v, hv, -, f', hvf', hf'⟩ := (hf.of_le hkn).has_fderiv_within_at_nhds
+    apply hf'.congr_of_eventually_eq_insert
+    filter_upwards [hv, hs]
+    exact fun y hy h2y => (hvf' y hy).fderivWithin h2y
+  induction m using WithTop.recTopCoe
+  · obtain rfl := eq_top_iff.mpr hmn
+    rw [cont_diff_within_at_top]
+    exact fun m => this m le_top
+    
+  exact this m hmn
+
+theorem ContDiffWithinAt.fderiv_within (hf : ContDiffWithinAt 𝕜 n f s x) (hs : UniqueDiffOn 𝕜 s)
+    (hmn : (m + 1 : WithTop ℕ) ≤ n) (hxs : x ∈ s) : ContDiffWithinAt 𝕜 m (fderivWithin 𝕜 f s) s x :=
+  hf.fderiv_within'
+    (by
+      rw [insert_eq_of_mem hxs]
+      exact eventually_of_mem self_mem_nhds_within hs)
+    hmn
+
 /-- If a function is at least `C^1`, its bundled derivative (mapping `(x, v)` to `Df(x) v`) is
 continuous. -/
 theorem ContDiffOn.continuous_on_fderiv_within_apply (h : ContDiffOn 𝕜 n f s) (hs : UniqueDiffOn 𝕜 s) (hn : 1 ≤ n) :
@@ -1084,8 +1145,8 @@ derivative of `p m` for `m < n`, and is continuous for `m ≤ n`. This is a pred
 `has_fderiv_at` but for higher order derivatives. -/
 structure HasFtaylorSeriesUpTo (n : WithTop ℕ) (f : E → F) (p : E → FormalMultilinearSeries 𝕜 E F) : Prop where
   zero_eq : ∀ x, (p x 0).uncurry0 = f x
-  fderiv : ∀ m : ℕ hm : (m : WithTop ℕ) < n, ∀ x, HasFderivAt (fun y => p y m) (p x m.succ).curryLeft x
-  cont : ∀ m : ℕ hm : (m : WithTop ℕ) ≤ n, Continuous fun x => p x m
+  fderiv : ∀ (m : ℕ) (hm : (m : WithTop ℕ) < n), ∀ x, HasFderivAt (fun y => p y m) (p x m.succ).curryLeft x
+  cont : ∀ (m : ℕ) (hm : (m : WithTop ℕ) ≤ n), Continuous fun x => p x m
 
 theorem HasFtaylorSeriesUpTo.zero_eq' (h : HasFtaylorSeriesUpTo n f p) (x : E) :
     p x 0 = (continuousMultilinearCurryFin0 𝕜 E F).symm (f x) := by
@@ -2087,7 +2148,7 @@ theorem has_ftaylor_series_up_to_on_pi :
       ∀ i, HasFtaylorSeriesUpToOn n (φ i) (p' i) s :=
   by
   set pr := @ContinuousLinearMap.proj 𝕜 _ ι F' _ _ _
-  let this : ∀ m : ℕ i : ι, NormedSpace 𝕜 (E[×m]→L[𝕜] F' i) := fun m i => inferInstance
+  let this : ∀ (m : ℕ) (i : ι), NormedSpace 𝕜 (E[×m]→L[𝕜] F' i) := fun m i => inferInstance
   set L : ∀ m : ℕ, (∀ i, E[×m]→L[𝕜] F' i) ≃ₗᵢ[𝕜] E[×m]→L[𝕜] ∀ i, F' i := fun m => ContinuousMultilinearMap.piₗᵢ _ _
   refine' ⟨fun h i => _, fun h => ⟨fun x hx => _, _, _⟩⟩
   · convert h.continuous_linear_map_comp (pr i)
@@ -2221,7 +2282,6 @@ theorem ContDiff.sub {f g : E → F} (hf : ContDiff 𝕜 n f) (hg : ContDiff �
 /-! ### Sum of finitely many functions -/
 
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem ContDiffWithinAt.sum {ι : Type _} {f : ι → E → F} {s : Finset ι} {t : Set E} {x : E}
     (h : ∀, ∀ i ∈ s, ∀, ContDiffWithinAt 𝕜 n (fun x => f i x) t x) :
     ContDiffWithinAt 𝕜 n (fun x => ∑ i in s, f i x) t x := by
@@ -2808,13 +2868,13 @@ theorem cont_diff_on_succ_iff_deriv_within {n : ℕ} (hs : UniqueDiffOn 𝕜 s�
     exact (this.is_bounded_linear_map_right _).ContDiff
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]
 /-- A function is `C^(n + 1)` on an open domain if and only if it is
 differentiable there, and its derivative (formulated with `deriv`) is `C^n`. -/
 theorem cont_diff_on_succ_iff_deriv_of_open {n : ℕ} (hs : IsOpen s₂) :
     ContDiffOn 𝕜 (n + 1 : ℕ) f₂ s₂ ↔ DifferentiableOn 𝕜 f₂ s₂ ∧ ContDiffOn 𝕜 n (deriv f₂) s₂ := by
   rw [cont_diff_on_succ_iff_deriv_within hs.unique_diff_on]
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
   apply cont_diff_on_congr
   intro x hx
   exact deriv_within_of_open hs hx
@@ -2836,13 +2896,13 @@ theorem cont_diff_on_top_iff_deriv_within (hs : UniqueDiffOn 𝕜 s₂) :
     exact WithTop.coe_le_coe.2 (Nat.le_succₓ n)
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]
 /-- A function is `C^∞` on an open domain if and only if it is differentiable
 there, and its derivative (formulated with `deriv`) is `C^∞`. -/
 theorem cont_diff_on_top_iff_deriv_of_open (hs : IsOpen s₂) :
     ContDiffOn 𝕜 ∞ f₂ s₂ ↔ DifferentiableOn 𝕜 f₂ s₂ ∧ ContDiffOn 𝕜 ∞ (deriv f₂) s₂ := by
   rw [cont_diff_on_top_iff_deriv_within hs.unique_diff_on]
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
   apply cont_diff_on_congr
   intro x hx
   exact deriv_within_of_open hs hx

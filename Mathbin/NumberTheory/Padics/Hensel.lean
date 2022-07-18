@@ -128,35 +128,24 @@ private theorem deriv_norm_pos : 0 < ∥F.derivative.eval a∥ :=
 private theorem deriv_ne_zero : F.derivative.eval a ≠ 0 :=
   mt norm_eq_zero.2 deriv_norm_ne_zero
 
-private theorem T_def : T = ∥F.eval a∥ / ∥F.derivative.eval a∥ ^ 2 :=
-  calc
-    T = ∥F.eval a∥ / ∥(F.derivative.eval a ^ 2 : ℚ_[p])∥ := norm_div _ _
-    _ = ∥F.eval a∥ / ∥F.derivative.eval a ^ 2∥ := by
-      simp [← norm, ← PadicInt.norm_def]
-    _ = ∥F.eval a∥ / ∥F.derivative.eval a∥ ^ 2 := by
-      simp
-    
+private theorem T_def : T = ∥F.eval a∥ / ∥F.derivative.eval a∥ ^ 2 := by
+  simp [← T, PadicInt.norm_def]
 
 private theorem T_lt_one : T < 1 := by
   let h := (div_lt_one deriv_sq_norm_pos).2 hnorm
   rw [T_def] <;> apply h
 
-private theorem T_pow {n : ℕ} (hn : n > 0) : T ^ n < 1 :=
-  have : T ^ n ≤ T ^ 1 := pow_le_pow_of_le_one (norm_nonneg _) (le_of_ltₓ T_lt_one) (succ_le_of_ltₓ hn)
-  lt_of_le_of_ltₓ
-    (by
-      simpa)
-    T_lt_one
-
-private theorem T_pow' (n : ℕ) : T ^ 2 ^ n < 1 :=
-  T_pow
-    (pow_pos
-      (by
-        norm_num)
-      _)
+private theorem T_nonneg : 0 ≤ T :=
+  norm_nonneg _
 
 private theorem T_pow_nonneg (n : ℕ) : 0 ≤ T ^ n :=
-  pow_nonneg (norm_nonneg _) _
+  pow_nonneg T_nonneg _
+
+private theorem T_pow {n : ℕ} (hn : n ≠ 0) : T ^ n < 1 :=
+  pow_lt_one T_nonneg T_lt_one hn
+
+private theorem T_pow' (n : ℕ) : T ^ 2 ^ n < 1 :=
+  T_pow (pow_ne_zero _ two_ne_zero)
 
 /-- We will construct a sequence of elements of ℤ_p satisfying successive values of `ih`. -/
 private def ih (n : ℕ) (z : ℤ_[p]) : Prop :=
@@ -187,13 +176,7 @@ private theorem calc_deriv_dist {z z' z1 : ℤ_[p]} (hz' : z' = z - z1) (hz1 : �
     _ = ∥F.eval z∥ / ∥F.derivative.eval a∥ := hz1
     _ ≤ ∥F.derivative.eval a∥ ^ 2 * T ^ 2 ^ n / ∥F.derivative.eval a∥ := (div_le_div_right deriv_norm_pos).2 hz.2
     _ = ∥F.derivative.eval a∥ * T ^ 2 ^ n := div_sq_cancel _ _
-    _ < ∥F.derivative.eval a∥ :=
-      (mul_lt_iff_lt_one_right deriv_norm_pos).2
-        (T_pow
-          (pow_pos
-            (by
-              norm_num)
-            _))
+    _ < ∥F.derivative.eval a∥ := (mul_lt_iff_lt_one_right deriv_norm_pos).2 (T_pow' _)
     
 
 private def calc_eval_z' {z z' z1 : ℤ_[p]} (hz' : z' = z - z1) {n} (hz : ih n z)
@@ -243,7 +226,7 @@ private def calc_eval_z'_norm {z z' z1 : ℤ_[p]} {n} (hz : ih n z) {q} (heq : F
       rw [← pow_mulₓ, pow_succ'ₓ 2]
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:293:40: warning: unsupported option eqn_compiler.zeta
+-- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
 /-- Given `z : ℤ_[p]` satisfying `ih n z`, construct `z' : ℤ_[p]` satisfying `ih (n+1) z'`. We need
@@ -266,7 +249,7 @@ private def ih_n {n : ℕ} {z : ℤ_[p]} (hz : ih n z) : { z' : ℤ_[p] // ih (n
     have hnle : ∥F.eval z'∥ ≤ ∥F.derivative.eval a∥ ^ 2 * T ^ 2 ^ (n + 1) := calc_eval_z'_norm hz HEq h1 rfl
     ⟨hfeq, hnle⟩⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:293:40: warning: unsupported option eqn_compiler.zeta
+-- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta false
 
 -- why doesn't "noncomputable theory" stick here?
@@ -385,15 +368,13 @@ private theorem bound' : Tendsto (fun n : ℕ => ∥F.derivative.eval a∥ * T ^
             norm_num)))
 
 private theorem bound : ∀ {ε}, ε > 0 → ∃ N : ℕ, ∀ {n}, n ≥ N → ∥F.derivative.eval a∥ * T ^ 2 ^ n < ε := by
-  have mtn : ∀ n : ℕ, ∥Polynomial.eval a (Polynomial.derivative F)∥ * T ^ 2 ^ n ≥ 0 := fun n =>
-    mul_nonneg (norm_nonneg _) (T_pow_nonneg _)
   have := bound' hnorm hnsol
   simp [← tendsto, ← nhds] at this
   intro ε hε
   cases' this (ball 0 ε) (mem_ball_self hε) is_open_ball with N hN
   exists N
   intro n hn
-  simpa [← norm_mul, ← Real.norm_eq_abs, ← abs_of_nonneg (mtn n)] using hN _ hn
+  simpa [← abs_of_nonneg (T_nonneg _)] using hN _ hn
 
 private theorem bound'_sq : Tendsto (fun n : ℕ => ∥F.derivative.eval a∥ ^ 2 * T ^ 2 ^ n) atTop (𝓝 0) := by
   rw [← mul_zero ∥F.derivative.eval a∥, sq]

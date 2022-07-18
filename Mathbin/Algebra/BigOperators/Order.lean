@@ -96,7 +96,6 @@ add_decl_doc le_sum_of_subadditive
 
 variable {f g : ι → N} {s t : Finset ι}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- In an ordered commutative monoid, if each factor `f i` of one finite product is less than or
 equal to the corresponding factor `g i` of another finite product, then
 `∏ i in s, f i ≤ ∏ i in s, g i`. -/
@@ -132,7 +131,6 @@ theorem prod_le_one' (h : ∀, ∀ i ∈ s, ∀, f i ≤ 1) : (∏ i in s, f i) 
     (by
       rw [prod_const_one])
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive sum_le_sum_of_subset_of_nonneg]
 theorem prod_le_prod_of_subset_of_one_le' (h : s ⊆ t) (hf : ∀, ∀ i ∈ t, ∀, i ∉ s → 1 ≤ f i) :
     (∏ i in s, f i) ≤ ∏ i in t, f i := by
@@ -152,7 +150,6 @@ theorem prod_mono_set_of_one_le' (hf : ∀ x, 1 ≤ f x) : Monotone fun s => ∏
 theorem prod_le_univ_prod_of_one_le' [Fintype ι] {s : Finset ι} (w : ∀ x, 1 ≤ f x) : (∏ x in s, f x) ≤ ∏ x, f x :=
   prod_le_prod_of_subset_of_one_le' (subset_univ s) fun a _ _ => w a
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive sum_eq_zero_iff_of_nonneg]
 theorem prod_eq_one_iff_of_one_le' : (∀, ∀ i ∈ s, ∀, 1 ≤ f i) → ((∏ i in s, f i) = 1 ↔ ∀, ∀ i ∈ s, ∀, f i = 1) := by
   classical
@@ -191,10 +188,10 @@ theorem card_bUnion_le_card_mul [DecidableEq β] (s : Finset ι) (f : ι → Fin
 
 variable {ι' : Type _} [DecidableEq ι']
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y «expr ∉ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y «expr ∉ » t)
 @[to_additive sum_fiberwise_le_sum_of_sum_fiber_nonneg]
 theorem prod_fiberwise_le_prod_of_one_le_prod_fiber' {t : Finset ι'} {g : ι → ι'} {f : ι → N}
-    (h : ∀ y _ : y ∉ t, (1 : N) ≤ ∏ x in s.filter fun x => g x = y, f x) :
+    (h : ∀ (y) (_ : y ∉ t), (1 : N) ≤ ∏ x in s.filter fun x => g x = y, f x) :
     (∏ y in t, ∏ x in s.filter fun x => g x = y, f x) ≤ ∏ x in s, f x :=
   calc
     (∏ y in t, ∏ x in s.filter fun x => g x = y, f x) ≤ ∏ y in t ∪ s.Image g, ∏ x in s.filter fun x => g x = y, f x :=
@@ -202,10 +199,10 @@ theorem prod_fiberwise_le_prod_of_one_le_prod_fiber' {t : Finset ι'} {g : ι �
     _ = ∏ x in s, f x := prod_fiberwise_of_maps_to (fun x hx => mem_union.2 <| Or.inr <| mem_image_of_mem _ hx) _
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y «expr ∉ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y «expr ∉ » t)
 @[to_additive sum_le_sum_fiberwise_of_sum_fiber_nonpos]
 theorem prod_le_prod_fiberwise_of_prod_fiber_le_one' {t : Finset ι'} {g : ι → ι'} {f : ι → N}
-    (h : ∀ y _ : y ∉ t, (∏ x in s.filter fun x => g x = y, f x) ≤ 1) :
+    (h : ∀ (y) (_ : y ∉ t), (∏ x in s.filter fun x => g x = y, f x) ≤ 1) :
     (∏ x in s, f x) ≤ ∏ y in t, ∏ x in s.filter fun x => g x = y, f x :=
   @prod_fiberwise_le_prod_of_one_le_prod_fiber' _ Nᵒᵈ _ _ _ _ _ _ _ h
 
@@ -345,7 +342,6 @@ theorem prod_le_prod_of_subset' (h : s ⊆ t) : (∏ x in s, f x) ≤ ∏ x in t
 @[to_additive sum_mono_set]
 theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun s₁ s₂ hs => prod_le_prod_of_subset' hs
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive sum_le_sum_of_ne_zero]
 theorem prod_le_prod_of_ne_one' (h : ∀, ∀ x ∈ s, ∀, f x ≠ 1 → x ∈ t) : (∏ x in s, f x) ≤ ∏ x in t, f x := by
   classical <;>
@@ -364,7 +360,6 @@ section OrderedCancelCommMonoid
 
 variable [OrderedCancelCommMonoid M] {f g : ι → M} {s t : Finset ι}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive sum_lt_sum]
 theorem prod_lt_prod' (Hle : ∀, ∀ i ∈ s, ∀, f i ≤ g i) (Hlt : ∃ i ∈ s, f i < g i) : (∏ i in s, f i) < ∏ i in s, g i :=
   by
@@ -383,7 +378,6 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀, ∀ i ∈ s, ∀
   cases' hs with i hi
   exact ⟨i, hi, Hlt i hi⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive sum_lt_sum_of_subset]
 theorem prod_lt_prod_of_subset' (h : s ⊆ t) {i : ι} (ht : i ∈ t) (hs : i ∉ s) (hlt : 1 < f i)
     (hle : ∀, ∀ j ∈ t, ∀, j ∉ s → 1 ≤ f j) : (∏ j in s, f j) < ∏ j in t, f j := by
@@ -422,7 +416,6 @@ theorem prod_lt_one (h : ∀, ∀ i ∈ s, ∀, f i < 1) (hs : s.Nonempty) : (�
     (by
       rw [prod_const_one])
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem prod_eq_prod_iff_of_le {f g : ι → M} (h : ∀, ∀ i ∈ s, ∀, f i ≤ g i) :
     ((∏ i in s, f i) = ∏ i in s, g i) ↔ ∀, ∀ i ∈ s, ∀, f i = g i := by
@@ -500,6 +493,7 @@ theorem prod_le_one (h0 : ∀, ∀ i ∈ s, ∀, 0 ≤ f i) (h1 : ∀, ∀ i ∈
   convert ← prod_le_prod h0 h1
   exact Finset.prod_const_one
 
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 /-- If `g, h ≤ f` and `g i + h i ≤ f i`, then the product of `f` over `s` is at least the
   sum of the products of `g` and `h`. This is the version for `ordered_comm_semiring`. -/
 theorem prod_add_prod_le {i : ι} {f g h : ι → R} (hi : i ∈ s) (h2i : g i + h i ≤ f i)
@@ -526,7 +520,6 @@ section CanonicallyOrderedCommSemiring
 
 variable [CanonicallyOrderedCommSemiring R] {f g h : ι → R} {s : Finset ι} {i : ι}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem prod_le_prod' (h : ∀, ∀ i ∈ s, ∀, f i ≤ g i) : (∏ i in s, f i) ≤ ∏ i in s, g i := by
   classical
   induction' s using Finset.induction with a s has ih h
@@ -540,7 +533,7 @@ theorem prod_le_prod' (h : ∀, ∀ i ∈ s, ∀, f i ≤ g i) : (∏ i in s, f 
       
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 /-- If `g, h ≤ f` and `g i + h i ≤ f i`, then the product of `f` over `s` is at least the
   sum of the products of `g` and `h`. This is the version for `canonically_ordered_comm_semiring`.
 -/
@@ -592,7 +585,6 @@ theorem sum_lt_top [OrderedAddCommMonoid M] {s : Finset ι} {f : ι → WithTop 
   (sum_induction f (fun a => a < ⊤) (fun a b h₁ h₂ => add_lt_top.2 ⟨h₁, h₂⟩) zero_lt_top) fun i hi =>
     lt_top_iff_ne_top.2 (h i hi)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A sum of numbers is infinite iff one of them is infinite -/
 theorem sum_eq_top_iff [OrderedAddCommMonoid M] {s : Finset ι} {f : ι → WithTop M} :
     (∑ i in s, f i) = ⊤ ↔ ∃ i ∈ s, f i = ⊤ := by

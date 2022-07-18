@@ -23,7 +23,7 @@ Show the analogous results for functors which reflect or create (co)limits.
 -/
 
 
-universe v u u'
+universe v v' u u'
 
 noncomputable section
 
@@ -35,7 +35,7 @@ variable {J : Type v} [SmallCategory J]
 
 variable {C : Type u} [Category.{v} C]
 
-variable {D : Type u'} [Category.{v} D]
+variable {D : Type u'} [Category.{v'} D]
 
 /-- Given `n+1` objects of `C`, a fan for the last `n` with point `c₁.X` and a binary fan on `c₁.X` and
 `f 0`, we can build a fan for all `n+1`.
@@ -96,7 +96,7 @@ variable [HasBinaryProducts C] [HasTerminal C]
 This is a helper lemma for `has_finite_products_of_has_binary_and_terminal`, which is more general
 than this.
 -/
-private theorem has_product_fin : ∀ n : ℕ f : Finₓ n → C, HasProduct f
+private theorem has_product_fin : ∀ (n : ℕ) (f : Finₓ n → C), HasProduct f
   | 0 => fun f => by
     let this : has_limits_of_shape (discrete (Finₓ 0)) C :=
       has_limits_of_shape_of_equivalence (Discrete.equivalence.{0} fin_zero_equiv'.symm)
@@ -139,7 +139,7 @@ variable [HasFiniteProducts.{v} C]
 `fin n` for any `n`.
 -/
 noncomputable def preservesFinOfPreservesBinaryAndTerminalₓ :
-    ∀ n : ℕ f : Finₓ n → C, PreservesLimit (Discrete.functor f) F
+    ∀ (n : ℕ) (f : Finₓ n → C), PreservesLimit (Discrete.functor f) F
   | 0 => fun f => by
     let this : preserves_limits_of_shape (discrete (Finₓ 0)) F :=
       preservesLimitsOfShapeOfEquiv.{0, 0} (discrete.equivalence fin_zero_equiv'.symm) _
@@ -176,7 +176,6 @@ def preservesShapeFinOfPreservesBinaryAndTerminal (n : ℕ) :
     have := preserves_fin_of_preserves_binary_and_terminal F n fun n => K.obj ⟨n⟩
     apply preserves_limit_of_iso_diagram F this
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `F` preserves the terminal object and binary products then it preserves finite products. -/
 def preservesFiniteProductsOfPreservesBinaryAndTerminal (J : Type) [Fintype J] :
     PreservesLimitsOfShape (Discrete J) F := by
@@ -246,7 +245,7 @@ variable [HasBinaryCoproducts C] [HasInitial C]
 This is a helper lemma for `has_cofinite_products_of_has_binary_and_terminal`, which is more general
 than this.
 -/
-private theorem has_coproduct_fin : ∀ n : ℕ f : Finₓ n → C, HasCoproduct f
+private theorem has_coproduct_fin : ∀ (n : ℕ) (f : Finₓ n → C), HasCoproduct f
   | 0 => fun f => by
     let this : has_colimits_of_shape (discrete (Finₓ 0)) C :=
       has_colimits_of_shape_of_equivalence (Discrete.equivalence.{0} fin_zero_equiv'.symm)
@@ -289,7 +288,7 @@ variable [HasFiniteCoproducts.{v} C]
 `fin n` for any `n`.
 -/
 noncomputable def preservesFinOfPreservesBinaryAndInitialₓ :
-    ∀ n : ℕ f : Finₓ n → C, PreservesColimit (Discrete.functor f) F
+    ∀ (n : ℕ) (f : Finₓ n → C), PreservesColimit (Discrete.functor f) F
   | 0 => fun f => by
     let this : preserves_colimits_of_shape (discrete (Finₓ 0)) F :=
       preservesColimitsOfShapeOfEquiv.{0, 0} (discrete.equivalence fin_zero_equiv'.symm) _
@@ -327,7 +326,6 @@ def preservesShapeFinOfPreservesBinaryAndInitial (n : ℕ) :
     have := preserves_fin_of_preserves_binary_and_initial F n fun n => K.obj ⟨n⟩
     apply preserves_colimit_of_iso_diagram F this
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `F` preserves the initial object and binary coproducts then it preserves finite products. -/
 def preservesFiniteCoproductsOfPreservesBinaryAndInitial (J : Type) [Fintype J] :
     PreservesColimitsOfShape (Discrete J) F := by

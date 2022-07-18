@@ -20,8 +20,6 @@ number `n` such that `x ≤ n • y`.
   property.
 * `archimedean.floor_ring` defines a floor function on an archimedean linearly ordered ring making
   it into a `floor_ring`.
-* `round` defines a function rounding to the nearest integer for a linearly ordered field which is
-  also a floor ring.
 
 ## Main statements
 
@@ -36,7 +34,7 @@ variable {α : Type _}
 /-- An ordered additive commutative monoid is called `archimedean` if for any two elements `x`, `y`
 such that `0 < y` there exists a natural number `n` such that `x ≤ n • y`. -/
 class Archimedean (α) [OrderedAddCommMonoid α] : Prop where
-  arch : ∀ x : α {y}, 0 < y → ∃ n : ℕ, x ≤ n • y
+  arch : ∀ (x : α) {y}, 0 < y → ∃ n : ℕ, x ≤ n • y
 
 instance OrderDual.archimedean [OrderedAddCommGroup α] [Archimedean α] : Archimedean αᵒᵈ :=
   ⟨fun x y hy =>
@@ -119,7 +117,6 @@ variable [LinearOrderedRing α] [Archimedean α]
 theorem pow_unbounded_of_one_lt (x : α) {y : α} (hy1 : 1 < y) : ∃ n : ℕ, x < y ^ n :=
   sub_add_cancel y 1 ▸ add_one_pow_unbounded_of_pos _ (sub_pos.2 hy1)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Every x greater than or equal to 1 is between two successive
 natural-number powers of every y greater than one. -/
 theorem exists_nat_pow_near {x : α} {y : α} (hx : 1 ≤ x) (hy : 1 < y) : ∃ n : ℕ, y ^ n ≤ x ∧ x < y ^ (n + 1) := by
@@ -162,14 +159,12 @@ end LinearOrderedRing
 
 section LinearOrderedField
 
-variable [LinearOrderedField α]
+variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Every positive `x` is between two successive integer powers of
 another `y` greater than one. This is the same as `exists_mem_Ioc_zpow`,
 but with ≤ and < the other way around. -/
-theorem exists_mem_Ico_zpow [Archimedean α] {x : α} {y : α} (hx : 0 < x) (hy : 1 < y) :
-    ∃ n : ℤ, x ∈ Set.Ico (y ^ n) (y ^ (n + 1)) := by
+theorem exists_mem_Ico_zpow (hx : 0 < x) (hy : 1 < y) : ∃ n : ℤ, x ∈ Ico (y ^ n) (y ^ (n + 1)) := by
   classical <;>
     exact
       let ⟨N, hN⟩ := pow_unbounded_of_one_lt x⁻¹ hy
@@ -193,8 +188,7 @@ theorem exists_mem_Ico_zpow [Archimedean α] {x : α} {y : α} (hx : 0 < x) (hy 
 /-- Every positive `x` is between two successive integer powers of
 another `y` greater than one. This is the same as `exists_mem_Ico_zpow`,
 but with ≤ and < the other way around. -/
-theorem exists_mem_Ioc_zpow [Archimedean α] {x : α} {y : α} (hx : 0 < x) (hy : 1 < y) :
-    ∃ n : ℤ, x ∈ Set.Ioc (y ^ n) (y ^ (n + 1)) :=
+theorem exists_mem_Ioc_zpow (hx : 0 < x) (hy : 1 < y) : ∃ n : ℤ, x ∈ Ioc (y ^ n) (y ^ (n + 1)) :=
   let ⟨m, hle, hlt⟩ := exists_mem_Ico_zpow (inv_pos.2 hx) hy
   have hyp : 0 < y := lt_transₓ zero_lt_one hy
   ⟨-(m + 1), by
@@ -202,7 +196,7 @@ theorem exists_mem_Ioc_zpow [Archimedean α] {x : α} {y : α} (hx : 0 < x) (hy 
     rwa [neg_add, neg_add_cancel_right, zpow_neg, le_inv hx (zpow_pos_of_pos hyp _)]⟩
 
 /-- For any `y < 1` and any positive `x`, there exists `n : ℕ` with `y ^ n < x`. -/
-theorem exists_pow_lt_of_lt_one [Archimedean α] {x y : α} (hx : 0 < x) (hy : y < 1) : ∃ n : ℕ, y ^ n < x := by
+theorem exists_pow_lt_of_lt_one (hx : 0 < x) (hy : y < 1) : ∃ n : ℕ, y ^ n < x := by
   by_cases' y_pos : y ≤ 0
   · use 1
     simp only [← pow_oneₓ]
@@ -216,8 +210,8 @@ theorem exists_pow_lt_of_lt_one [Archimedean α] {x y : α} (hx : 0 < x) (hy : y
 
 /-- Given `x` and `y` between `0` and `1`, `x` is between two successive powers of `y`.
 This is the same as `exists_nat_pow_near`, but for elements between `0` and `1` -/
-theorem exists_nat_pow_near_of_lt_one [Archimedean α] {x : α} {y : α} (xpos : 0 < x) (hx : x ≤ 1) (ypos : 0 < y)
-    (hy : y < 1) : ∃ n : ℕ, y ^ (n + 1) < x ∧ x ≤ y ^ n := by
+theorem exists_nat_pow_near_of_lt_one (xpos : 0 < x) (hx : x ≤ 1) (ypos : 0 < y) (hy : y < 1) :
+    ∃ n : ℕ, y ^ (n + 1) < x ∧ x ≤ y ^ n := by
   rcases exists_nat_pow_near (one_le_inv_iff.2 ⟨xpos, hx⟩) (one_lt_inv_iff.2 ⟨ypos, hy⟩) with ⟨n, hn, h'n⟩
   refine' ⟨n, _, _⟩
   · rwa [inv_pow, inv_lt_inv xpos (pow_pos ypos _)] at h'n
@@ -225,81 +219,10 @@ theorem exists_nat_pow_near_of_lt_one [Archimedean α] {x : α} {y : α} (xpos :
   · rwa [inv_pow, inv_le_inv (pow_pos ypos _) xpos] at hn
     
 
-variable [FloorRing α]
-
-theorem sub_floor_div_mul_nonneg (x : α) {y : α} (hy : 0 < y) : 0 ≤ x - ⌊x / y⌋ * y := by
-  conv in x => rw [← div_mul_cancel x (ne_of_ltₓ hy).symm]
-  rw [← sub_mul]
-  exact mul_nonneg (sub_nonneg.2 (floor_le _)) (le_of_ltₓ hy)
-
-theorem sub_floor_div_mul_lt (x : α) {y : α} (hy : 0 < y) : x - ⌊x / y⌋ * y < y :=
-  sub_lt_iff_lt_add.2
-    (by
-      conv in y => rw [← one_mulₓ y]
-      conv in x => rw [← div_mul_cancel x (ne_of_ltₓ hy).symm]
-      rw [← add_mulₓ]
-      exact
-        (mul_lt_mul_right hy).2
-          (by
-            rw [add_commₓ] <;> exact lt_floor_add_one _))
-
-end LinearOrderedField
-
-instance : Archimedean ℕ :=
-  ⟨fun n m m0 =>
-    ⟨n, by
-      simpa only [← mul_oneₓ, ← Nat.nsmul_eq_mul] using Nat.mul_le_mul_leftₓ n m0⟩⟩
-
-instance : Archimedean ℤ :=
-  ⟨fun n m m0 =>
-    ⟨n.toNat,
-      le_transₓ (Int.le_to_nat _) <| by
-        simpa only [← nsmul_eq_mul, ← zero_addₓ, ← mul_oneₓ] using
-          mul_le_mul_of_nonneg_left (Int.add_one_le_iff.2 m0) (Int.coe_zero_le n.to_nat)⟩⟩
-
-/-- A linear ordered archimedean ring is a floor ring. This is not an `instance` because in some
-cases we have a computable `floor` function. -/
-noncomputable def Archimedean.floorRing α [LinearOrderedRing α] [Archimedean α] : FloorRing α :=
-  FloorRing.ofFloor α (fun a => Classical.some (exists_floor a)) fun z a =>
-    (Classical.some_spec (exists_floor a) z).symm
-
-section LinearOrderedField
-
-variable [LinearOrderedField α]
-
-theorem archimedean_iff_nat_lt : Archimedean α ↔ ∀ x : α, ∃ n : ℕ, x < n :=
-  ⟨@exists_nat_gt α _ _, fun H =>
-    ⟨fun x y y0 =>
-      (H (x / y)).imp fun n h =>
-        le_of_ltₓ <| by
-          rwa [div_lt_iff y0, ← nsmul_eq_mul] at h⟩⟩
-
-theorem archimedean_iff_nat_le : Archimedean α ↔ ∀ x : α, ∃ n : ℕ, x ≤ n :=
-  archimedean_iff_nat_lt.trans
-    ⟨fun H x => (H x).imp fun _ => le_of_ltₓ, fun H x =>
-      let ⟨n, h⟩ := H x
-      ⟨n + 1, lt_of_le_of_ltₓ h (Nat.cast_lt.2 (lt_add_one _))⟩⟩
-
-theorem exists_rat_gt [Archimedean α] (x : α) : ∃ q : ℚ, x < q :=
+theorem exists_rat_gt (x : α) : ∃ q : ℚ, x < q :=
   let ⟨n, h⟩ := exists_nat_gt x
   ⟨n, by
     rwa [Rat.cast_coe_nat]⟩
-
-theorem archimedean_iff_rat_lt : Archimedean α ↔ ∀ x : α, ∃ q : ℚ, x < q :=
-  ⟨@exists_rat_gt α _, fun H =>
-    archimedean_iff_nat_lt.2 fun x =>
-      let ⟨q, h⟩ := H x
-      ⟨⌈q⌉₊,
-        lt_of_lt_of_leₓ h <| by
-          simpa only [← Rat.cast_coe_nat] using (@Rat.cast_le α _ _ _).2 (Nat.le_ceil _)⟩⟩
-
-theorem archimedean_iff_rat_le : Archimedean α ↔ ∀ x : α, ∃ q : ℚ, x ≤ q :=
-  archimedean_iff_rat_lt.trans
-    ⟨fun H x => (H x).imp fun _ => le_of_ltₓ, fun H x =>
-      let ⟨n, h⟩ := H x
-      ⟨n + 1, lt_of_le_of_ltₓ h (Rat.cast_lt.2 (lt_add_one _))⟩⟩
-
-variable [Archimedean α] {x y : α}
 
 theorem exists_rat_lt (x : α) : ∃ q : ℚ, (q : α) < x :=
   let ⟨n, h⟩ := exists_int_lt x
@@ -360,69 +283,65 @@ theorem exists_nat_one_div_lt {ε : α} (hε : 0 < ε) : ∃ n : ℕ, 1 / (n + 1
 theorem exists_pos_rat_lt {x : α} (x0 : 0 < x) : ∃ q : ℚ, 0 < q ∧ (q : α) < x := by
   simpa only [← Rat.cast_pos] using exists_rat_btwn x0
 
+theorem exists_rat_near (x : α) (ε0 : 0 < ε) : ∃ q : ℚ, abs (x - q) < ε :=
+  let ⟨q, h₁, h₂⟩ := exists_rat_btwn <| ((sub_lt_self_iff x).2 ε0).trans ((lt_add_iff_pos_left x).2 ε0)
+  ⟨q, abs_sub_lt_iff.2 ⟨sub_lt.1 h₁, sub_lt_iff_lt_add.2 h₂⟩⟩
+
 end LinearOrderedField
 
-section
+section LinearOrderedField
 
-variable [LinearOrderedField α] [FloorRing α]
+variable [LinearOrderedField α]
 
-/-- `round` rounds a number to the nearest integer. `round (1 / 2) = 1` -/
-def round (x : α) : ℤ :=
-  ⌊x + 1 / 2⌋
+theorem archimedean_iff_nat_lt : Archimedean α ↔ ∀ x : α, ∃ n : ℕ, x < n :=
+  ⟨@exists_nat_gt α _ _, fun H =>
+    ⟨fun x y y0 =>
+      (H (x / y)).imp fun n h =>
+        le_of_ltₓ <| by
+          rwa [div_lt_iff y0, ← nsmul_eq_mul] at h⟩⟩
 
-@[simp]
-theorem round_zero : round (0 : α) = 0 :=
-  floor_eq_iff.2
-    (by
-      norm_num)
+theorem archimedean_iff_nat_le : Archimedean α ↔ ∀ x : α, ∃ n : ℕ, x ≤ n :=
+  archimedean_iff_nat_lt.trans
+    ⟨fun H x => (H x).imp fun _ => le_of_ltₓ, fun H x =>
+      let ⟨n, h⟩ := H x
+      ⟨n + 1, lt_of_le_of_ltₓ h (Nat.cast_lt.2 (lt_add_one _))⟩⟩
 
-@[simp]
-theorem round_one : round (1 : α) = 1 :=
-  floor_eq_iff.2
-    (by
-      norm_num)
+theorem archimedean_iff_rat_lt : Archimedean α ↔ ∀ x : α, ∃ q : ℚ, x < q :=
+  ⟨@exists_rat_gt α _, fun H =>
+    archimedean_iff_nat_lt.2 fun x =>
+      let ⟨q, h⟩ := H x
+      ⟨⌈q⌉₊,
+        lt_of_lt_of_leₓ h <| by
+          simpa only [← Rat.cast_coe_nat] using (@Rat.cast_le α _ _ _).2 (Nat.le_ceil _)⟩⟩
 
-theorem abs_sub_round (x : α) : abs (x - round x) ≤ 1 / 2 := by
-  rw [round, abs_sub_le_iff]
-  have := floor_le (x + 1 / 2)
-  have := lt_floor_add_one (x + 1 / 2)
-  constructor <;> linarith
+theorem archimedean_iff_rat_le : Archimedean α ↔ ∀ x : α, ∃ q : ℚ, x ≤ q :=
+  archimedean_iff_rat_lt.trans
+    ⟨fun H x => (H x).imp fun _ => le_of_ltₓ, fun H x =>
+      let ⟨n, h⟩ := H x
+      ⟨n + 1, lt_of_le_of_ltₓ h (Rat.cast_lt.2 (lt_add_one _))⟩⟩
 
-@[simp, norm_cast]
-theorem Rat.floor_cast (x : ℚ) : ⌊(x : α)⌋ = ⌊x⌋ :=
-  floor_eq_iff.2
-    (by
-      exact_mod_cast floor_eq_iff.1 (Eq.refl ⌊x⌋))
+end LinearOrderedField
 
-@[simp, norm_cast]
-theorem Rat.ceil_cast (x : ℚ) : ⌈(x : α)⌉ = ⌈x⌉ := by
-  rw [← neg_inj, ← floor_neg, ← floor_neg, ← Rat.cast_neg, Rat.floor_cast]
+instance : Archimedean ℕ :=
+  ⟨fun n m m0 =>
+    ⟨n, by
+      simpa only [← mul_oneₓ, ← Nat.nsmul_eq_mul] using Nat.mul_le_mul_leftₓ n m0⟩⟩
 
-@[simp, norm_cast]
-theorem Rat.round_cast (x : ℚ) : round (x : α) = round x := by
-  have : ((x + 1 / 2 : ℚ) : α) = x + 1 / 2 := by
-    simp
-  rw [round, round, ← this, Rat.floor_cast]
-
-@[simp, norm_cast]
-theorem Rat.cast_fract (x : ℚ) : (↑(fract x) : α) = fract x := by
-  simp only [← fract, ← Rat.cast_sub]
-  simp
-
-end
-
-section
-
-variable [LinearOrderedField α] [Archimedean α]
-
-theorem exists_rat_near (x : α) {ε : α} (ε0 : 0 < ε) : ∃ q : ℚ, abs (x - q) < ε :=
-  let ⟨q, h₁, h₂⟩ := exists_rat_btwn <| lt_transₓ ((sub_lt_self_iff x).2 ε0) ((lt_add_iff_pos_left x).2 ε0)
-  ⟨q, abs_sub_lt_iff.2 ⟨sub_lt.1 h₁, sub_lt_iff_lt_add.2 h₂⟩⟩
+instance : Archimedean ℤ :=
+  ⟨fun n m m0 =>
+    ⟨n.toNat,
+      le_transₓ (Int.le_to_nat _) <| by
+        simpa only [← nsmul_eq_mul, ← zero_addₓ, ← mul_oneₓ] using
+          mul_le_mul_of_nonneg_left (Int.add_one_le_iff.2 m0) (Int.coe_zero_le n.to_nat)⟩⟩
 
 instance : Archimedean ℚ :=
   archimedean_iff_rat_le.2 fun q =>
     ⟨q, by
       rw [Rat.cast_id]⟩
 
-end
+/-- A linear ordered archimedean ring is a floor ring. This is not an `instance` because in some
+cases we have a computable `floor` function. -/
+noncomputable def Archimedean.floorRing (α) [LinearOrderedRing α] [Archimedean α] : FloorRing α :=
+  FloorRing.ofFloor α (fun a => Classical.some (exists_floor a)) fun z a =>
+    (Classical.some_spec (exists_floor a) z).symm
 

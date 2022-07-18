@@ -98,7 +98,7 @@ protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (
         simp only [← coe_mk, ← smul_apply, ← LinearEquiv.map_smul, ← RingHom.id_apply] }
 
 @[simp]
-theorem basis_repr {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) (g : ι →₀ M) ix :
+theorem basis_repr {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) (g : ι →₀ M) (ix) :
     (Finsupp.basis b).repr g ix = (b ix.1).repr (g ix.1) ix.2 :=
   rfl
 
@@ -167,7 +167,6 @@ theorem equiv_of_dim_eq_lift_dim (h : Cardinal.lift.{w} (Module.rank K V) = Card
   let e := (equiv.ulift.symm.trans e).trans Equivₓ.ulift
   exact ⟨m.repr ≪≫ₗ Finsupp.domLcongr e ≪≫ₗ m'.repr.symm⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Two `K`-vector spaces are equivalent if their dimension is the same. -/
 def equivOfDimEqDim (h : Module.rank K V₁ = Module.rank K V₂) : V₁ ≃ₗ[K] V₂ := by
   classical
@@ -200,7 +199,7 @@ theorem cardinal_mk_eq_cardinal_mk_field_pow_dim [FiniteDimensional K V] : # V =
 theorem cardinal_lt_aleph_0_of_finite_dimensional [Fintype K] [FiniteDimensional K V] : # V < ℵ₀ := by
   let this : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance
   rw [cardinal_mk_eq_cardinal_mk_field_pow_dim K V]
-  exact Cardinal.power_lt_aleph_0 (Cardinal.lt_aleph_0_of_fintype K) (IsNoetherian.dim_lt_aleph_0 K V)
+  exact Cardinal.power_lt_aleph_0 (Cardinal.lt_aleph_0_of_finite K) (IsNoetherian.dim_lt_aleph_0 K V)
 
 end Module
 

@@ -70,10 +70,10 @@ theorem to_fun_eq_coe (f : ι →ᵇᵃ[I₀] M) : f.toFun = f :=
   rfl
 
 @[simp]
-theorem coe_mk f h : ⇑(mk f h : ι →ᵇᵃ[I₀] M) = f :=
+theorem coe_mk (f h) : ⇑(mk f h : ι →ᵇᵃ[I₀] M) = f :=
   rfl
 
-theorem coe_injective : Injective fun f : ι →ᵇᵃ[I₀] M x => f x := by
+theorem coe_injective : Injective fun (f : ι →ᵇᵃ[I₀] M) x => f x := by
   rintro ⟨f, hf⟩ ⟨g, hg⟩ (rfl : f = g)
   rfl
 
@@ -194,7 +194,7 @@ end ToSmul
 @[simps]
 def upperSubLower.{u} {G : Type u} [AddCommGroupₓ G] (I₀ : Box (Finₓ (n + 1))) (i : Finₓ (n + 1))
     (f : ℝ → Box (Finₓ n) → G) (fb : icc (I₀.lower i) (I₀.upper i) → Finₓ n →ᵇᵃ[I₀.face i] G)
-    (hf : ∀ x hx : x ∈ icc (I₀.lower i) (I₀.upper i) J, f x J = fb ⟨x, hx⟩ J) : Finₓ (n + 1) →ᵇᵃ[I₀] G :=
+    (hf : ∀ (x) (hx : x ∈ icc (I₀.lower i) (I₀.upper i)) (J), f x J = fb ⟨x, hx⟩ J) : Finₓ (n + 1) →ᵇᵃ[I₀] G :=
   ofMapSplitAdd (fun J : Box (Finₓ (n + 1)) => f (J.upper i) (J.face i) - f (J.lower i) (J.face i)) I₀
     (by
       intro J hJ j

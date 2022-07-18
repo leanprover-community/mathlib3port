@@ -355,7 +355,7 @@ theorem fiber_le_of_le {A B : DiscreteQuotient X} (h : A ≤ B) (a : A) : A.proj
   tidy
 
 theorem exists_of_compat [CompactSpace X] (Qs : ∀ Q : DiscreteQuotient X, Q)
-    (compat : ∀ A B : DiscreteQuotient X h : A ≤ B, ofLe h (Qs _) = Qs _) :
+    (compat : ∀ (A B : DiscreteQuotient X) (h : A ≤ B), ofLe h (Qs _) = Qs _) :
     ∃ x : X, ∀ Q : DiscreteQuotient X, Q.proj x = Qs _ := by
   obtain ⟨x, hx⟩ :=
     IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed (fun Q : DiscreteQuotient X => Q.proj ⁻¹' {Qs _})

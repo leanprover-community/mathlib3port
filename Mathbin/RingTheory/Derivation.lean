@@ -81,7 +81,7 @@ theorem to_linear_map_eq_coe : D.toLinearMap = D :=
   rfl
 
 @[simp]
-theorem mk_coe (f : A →ₗ[R] M) h₁ h₂ : ((⟨f, h₁, h₂⟩ : Derivation R A M) : A → M) = f :=
+theorem mk_coe (f : A →ₗ[R] M) (h₁ h₂) : ((⟨f, h₁, h₂⟩ : Derivation R A M) : A → M) = f :=
   rfl
 
 @[simp, norm_cast]
@@ -295,11 +295,11 @@ def mk' (D : A →ₗ[R] M) (h : ∀ a b, D (a * b) = a • D b + b • D a) : D
   leibniz' := h
 
 @[simp]
-theorem coe_mk' (D : A →ₗ[R] M) h : ⇑(mk' D h) = D :=
+theorem coe_mk' (D : A →ₗ[R] M) (h) : ⇑(mk' D h) = D :=
   rfl
 
 @[simp]
-theorem coe_mk'_linear_map (D : A →ₗ[R] M) h : (mk' D h : A →ₗ[R] M) = D :=
+theorem coe_mk'_linear_map (D : A →ₗ[R] M) (h) : (mk' D h : A →ₗ[R] M) = D :=
   rfl
 
 end Cancel

@@ -3,7 +3,7 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 -/
-import Mathbin.Data.Nat.Enat
+import Mathbin.Data.Nat.PartEnat
 import Mathbin.Data.Set.Countable
 import Mathbin.Logic.Small
 import Mathbin.Order.ConditionallyCompleteLattice
@@ -20,7 +20,6 @@ We define cardinal numbers as a quotient of types under the equivalence relation
 * `cardinal` the type of cardinal numbers (in a given universe).
 * `cardinal.mk α` or `#α` is the cardinality of `α`. The notation `#` lives in the locale
   `cardinal`.
-* There is an instance that `cardinal` forms a `canonically_ordered_comm_semiring`.
 * Addition `c₁ + c₂` is defined by `cardinal.add_def α β : #α + #β = #(α ⊕ β)`.
 * Multiplication `c₁ * c₂` is defined by `cardinal.mul_def : #α * #β = #(α × β)`.
 * The order `c₁ ≤ c₂` is defined by `cardinal.le_def α β : #α ≤ #β ↔ nonempty (α ↪ β)`.
@@ -28,10 +27,21 @@ We define cardinal numbers as a quotient of types under the equivalence relation
 * `cardinal.aleph_0` or `ℵ₀` is the cardinality of `ℕ`. This definition is universe polymorphic:
   `cardinal.aleph_0.{u} : cardinal.{u}` (contrast with `ℕ : Type`, which lives in a specific
   universe). In some cases the universe level has to be given explicitly.
-* `cardinal.min (I : nonempty ι) (c : ι → cardinal)` is the minimal cardinal in the range of `c`.
-* `order.succ c` is the successor cardinal, the smallest cardinal larger than `c`.
-* `cardinal.sum` is the sum of a collection of cardinals.
+* `cardinal.sum` is the sum of an indexed family of cardinals, i.e. the cardinality of the
+  corresponding sigma type.
+* `cardinal.prod` is the product of an indexed family of cardinals, i.e. the cardinality of the
+  corresponding pi type.
 * `cardinal.powerlt a b` or `a ^< b` is defined as the supremum of `a ^ c` for `c < b`.
+
+## Main instances
+
+* Cardinals form a `canonically_ordered_comm_semiring` with the aforementioned sum and product.
+* Cardinals form a `succ_order`. Use `order.succ c` for the smallest cardinal greater than `c`.
+* The less than relation on cardinals forms a well-order.
+* Cardinals form a `conditionally_complete_linear_order_bot`. Bounded sets for cardinals in universe
+  `u` are precisely the sets indexed by some type in universe `u`, see
+  `cardinal.bdd_above_iff_small`. One can use `Sup` for the cardinal supremum, and `Inf` for the
+  minimum of a set of cardinals.
 
 ## Main Statements
 
@@ -155,7 +165,7 @@ def lift (c : Cardinal.{v}) : Cardinal.{max v u} :=
   map ULift (fun α β e => Equivₓ.ulift.trans <| e.trans Equivₓ.ulift.symm) c
 
 @[simp]
-theorem mk_ulift α : # (ULift.{v, u} α) = lift.{v} (# α) :=
+theorem mk_ulift (α) : # (ULift.{v, u} α) = lift.{v} (# α) :=
   rfl
 
 /-- `lift.{(max u v) u}` equals `lift.{v u}`. Using `set_option pp.universes true` will make it much
@@ -383,14 +393,14 @@ local infixr:0 "^" => @Pow.pow Cardinal Cardinal Cardinal.hasPow
 -- mathport name: «expr ^ℕ »
 local infixr:80 " ^ℕ " => @Pow.pow Cardinal ℕ Monoidₓ.hasPow
 
-theorem power_def α β : (# α^# β) = # (β → α) :=
+theorem power_def (α β) : (# α^# β) = # (β → α) :=
   rfl
 
 theorem mk_arrow (α : Type u) (β : Type v) : # (α → β) = (lift.{u} (# β)^lift.{v} (# α)) :=
   mk_congr (Equivₓ.ulift.symm.arrowCongr Equivₓ.ulift.symm)
 
 @[simp]
-theorem lift_power a b : lift (a^b) = (lift a^lift b) :=
+theorem lift_power (a b) : lift (a^b) = (lift a^lift b) :=
   (induction_on₂ a b) fun α β => mk_congr <| Equivₓ.ulift.trans (Equivₓ.ulift.arrowCongr Equivₓ.ulift).symm
 
 @[simp]
@@ -453,7 +463,7 @@ theorem zero_power {a : Cardinal} : a ≠ 0 → (0^a) = 0 :=
         let ⟨a⟩ := mk_ne_zero_iff.1 HEq
         ⟨a, Pempty.is_empty⟩
 
-theorem power_ne_zero {a : Cardinal} b : a ≠ 0 → (a^b) ≠ 0 :=
+theorem power_ne_zero {a : Cardinal} (b) : a ≠ 0 → (a^b) ≠ 0 :=
   (induction_on₂ a b) fun α β h =>
     let ⟨a⟩ := mk_ne_zero_iff.1 h
     mk_ne_zero_iff.2 ⟨fun _ => a⟩
@@ -474,11 +484,11 @@ theorem lift_one : lift 1 = 1 :=
   mk_congr <| Equivₓ.ulift.trans Equivₓ.punitEquivPunit
 
 @[simp]
-theorem lift_add a b : lift (a + b) = lift a + lift b :=
+theorem lift_add (a b) : lift (a + b) = lift a + lift b :=
   (induction_on₂ a b) fun α β => mk_congr <| Equivₓ.ulift.trans (Equivₓ.sumCongr Equivₓ.ulift Equivₓ.ulift).symm
 
 @[simp]
-theorem lift_mul a b : lift (a * b) = lift a * lift b :=
+theorem lift_mul (a b) : lift (a * b) = lift a * lift b :=
   (induction_on₂ a b) fun α β => mk_congr <| Equivₓ.ulift.trans (Equivₓ.prodCongr Equivₓ.ulift Equivₓ.ulift).symm
 
 @[simp]
@@ -501,7 +511,7 @@ theorem mk_set {α : Type u} : # (Set α) = (2^# α) := by
 theorem mk_powerset {α : Type u} (s : Set α) : # ↥(𝒫 s) = (2^# ↥s) :=
   (mk_congr (Equivₓ.Set.powerset s)).trans mk_set
 
-theorem lift_two_power a : lift (2^a) = (2^lift a) := by
+theorem lift_two_power (a) : lift (2^a) = (2^lift a) := by
   simp
 
 section OrderProperties
@@ -644,7 +654,7 @@ theorem succ_ne_zero (c : Cardinal) : succ c ≠ 0 :=
 def sum {ι} (f : ι → Cardinal) : Cardinal :=
   mk (Σi, (f i).out)
 
-theorem le_sum {ι} (f : ι → Cardinal) i : f i ≤ sum f := by
+theorem le_sum {ι} (f : ι → Cardinal) (i) : f i ≤ sum f := by
   rw [← Quotientₓ.out_eq (f i)] <;>
     exact
       ⟨⟨fun a => ⟨i, a⟩, fun a b h =>
@@ -838,7 +848,7 @@ theorem lt_lift_iff {a : Cardinal.{u}} {b : Cardinal.{max u v}} : b < lift a ↔
     fun ⟨a', e, h⟩ => e ▸ lift_lt.2 h⟩
 
 @[simp]
-theorem lift_succ a : lift (succ a) = succ (lift a) :=
+theorem lift_succ (a) : lift (succ a) = succ (lift a) :=
   le_antisymmₓ
     (le_of_not_gtₓ fun h => by
       rcases lt_lift_iff.1 h with ⟨b, e, h⟩
@@ -1011,7 +1021,7 @@ theorem card_le_of {α : Type u} {n : ℕ} (H : ∀ s : Finset α, s.card ≤ n)
   rw [Finset.card_map, ← Fintype.card, Fintype.card_ulift, Fintype.card_fin]
   exact n.lt_succ_self
 
-theorem cantor' a {b : Cardinal} (hb : 1 < b) : a < (b^a) := by
+theorem cantor' (a) {b : Cardinal} (hb : 1 < b) : a < (b^a) := by
   rw [← succ_le_iff,
     (by
       norm_cast : succ (1 : Cardinal) = 2)] at
@@ -1054,18 +1064,22 @@ theorem aleph_0_le {c : Cardinal} : ℵ₀ ≤ c ↔ ∀ n : ℕ, ↑n ≤ c :=
       rcases lt_aleph_0.1 hn with ⟨n, rfl⟩
       exact (Nat.lt_succ_selfₓ _).not_le (nat_cast_le.1 (h (n + 1)))⟩
 
+theorem mk_eq_nat_iff {α : Type u} {n : ℕ} : # α = n ↔ Nonempty (α ≃ Finₓ n) := by
+  rw [← lift_mk_fin, ← lift_uzero (# α), lift_mk_eq']
+
+theorem lt_aleph_0_iff_finite {α : Type u} : # α < ℵ₀ ↔ Finite α := by
+  simp only [← lt_aleph_0, ← mk_eq_nat_iff, ← finite_iff_exists_equiv_fin]
+
 theorem lt_aleph_0_iff_fintype {α : Type u} : # α < ℵ₀ ↔ Nonempty (Fintype α) :=
-  lt_aleph_0.trans
-    ⟨fun ⟨n, e⟩ => by
-      rw [← lift_mk_fin n] at e
-      cases' Quotientₓ.exact e with f
-      exact ⟨Fintype.ofEquiv _ f.symm⟩, fun ⟨_⟩ => ⟨_, mk_fintype _⟩⟩
+  lt_aleph_0_iff_finite.trans (finite_iff_nonempty_fintype _)
 
-theorem lt_aleph_0_of_fintype (α : Type u) [Fintype α] : # α < ℵ₀ :=
-  lt_aleph_0_iff_fintype.2 ⟨inferInstance⟩
+theorem lt_aleph_0_of_finite (α : Type u) [Finite α] : # α < ℵ₀ :=
+  lt_aleph_0_iff_finite.2 ‹_›
 
-theorem lt_aleph_0_iff_finite {α} {S : Set α} : # S < ℵ₀ ↔ S.Finite :=
-  lt_aleph_0_iff_fintype.trans finite_def.symm
+theorem lt_aleph_0_iff_set_finite {α} {S : Set α} : # S < ℵ₀ ↔ S.Finite :=
+  lt_aleph_0_iff_finite.trans finite_coe_iff
+
+alias lt_aleph_0_iff_set_finite ↔ _ _root_.set.finite.lt_aleph_0
 
 instance canLiftCardinalNat : CanLift Cardinal ℕ :=
   ⟨coe, fun x => x < ℵ₀, fun x hx =>
@@ -1151,7 +1165,7 @@ theorem eq_one_iff_unique {α : Type _} : # α = 1 ↔ Subsingleton α ∧ Nonem
     
 
 theorem infinite_iff {α : Type u} : Infinite α ↔ ℵ₀ ≤ # α := by
-  rw [← not_ltₓ, lt_aleph_0_iff_fintype, not_nonempty_iff, is_empty_fintype]
+  rw [← not_ltₓ, lt_aleph_0_iff_finite, not_finite_iff_infinite]
 
 @[simp]
 theorem aleph_0_le_mk (α : Type u) [Infinite α] : ℵ₀ ≤ # α :=
@@ -1176,7 +1190,7 @@ theorem mk_denumerable (α : Type u) [Denumerable α] : # α = ℵ₀ :=
 
 @[simp]
 theorem mk_set_le_aleph_0 (s : Set α) : # s ≤ ℵ₀ ↔ s.Countable := by
-  rw [countable_iff_exists_injective]
+  rw [Set.countable_iff_exists_injective]
   constructor
   · rintro ⟨f'⟩
     cases' embedding.trans f' equiv.ulift.to_embedding with f hf
@@ -1324,7 +1338,7 @@ theorem to_nat_add_of_lt_aleph_0 {a : Cardinal.{u}} {b : Cardinal.{v}} (ha : a <
 
 /-- This function sends finite cardinals to the corresponding natural, and infinite cardinals
   to `⊤`. -/
-def toEnat : Cardinal →+ Enat where
+def toPartEnat : Cardinal →+ PartEnat where
   toFun := fun c => if c < ℵ₀ then c.toNat else ⊤
   map_zero' := by
     simp [← if_pos (zero_lt_one.trans one_lt_aleph_0)]
@@ -1336,38 +1350,38 @@ def toEnat : Cardinal →+ Enat where
         simp only [← add_lt_aleph_0 hx hy, ← hx, ← hy, ← to_nat_cast, ← if_true]
         rw [← Nat.cast_addₓ, to_nat_cast, Nat.cast_addₓ]
         
-      · rw [if_neg hy, if_neg, Enat.add_top]
+      · rw [if_neg hy, if_neg, PartEnat.add_top]
         contrapose! hy
         apply le_add_self.trans_lt hy
         
       
-    · rw [if_neg hx, if_neg, Enat.top_add]
+    · rw [if_neg hx, if_neg, PartEnat.top_add]
       contrapose! hx
       apply le_self_add.trans_lt hx
       
 
-theorem to_enat_apply_of_lt_aleph_0 {c : Cardinal} (h : c < ℵ₀) : c.toEnat = c.toNat :=
+theorem to_part_enat_apply_of_lt_aleph_0 {c : Cardinal} (h : c < ℵ₀) : c.toPartEnat = c.toNat :=
   if_pos h
 
-theorem to_enat_apply_of_aleph_0_le {c : Cardinal} (h : ℵ₀ ≤ c) : c.toEnat = ⊤ :=
+theorem to_part_enat_apply_of_aleph_0_le {c : Cardinal} (h : ℵ₀ ≤ c) : c.toPartEnat = ⊤ :=
   if_neg h.not_lt
 
 @[simp]
-theorem to_enat_cast (n : ℕ) : Cardinal.toEnat n = n := by
-  rw [to_enat_apply_of_lt_aleph_0 (nat_lt_aleph_0 n), to_nat_cast]
+theorem to_part_enat_cast (n : ℕ) : Cardinal.toPartEnat n = n := by
+  rw [to_part_enat_apply_of_lt_aleph_0 (nat_lt_aleph_0 n), to_nat_cast]
 
 @[simp]
-theorem mk_to_enat_of_infinite [h : Infinite α] : (# α).toEnat = ⊤ :=
-  to_enat_apply_of_aleph_0_le (infinite_iff.1 h)
+theorem mk_to_part_enat_of_infinite [h : Infinite α] : (# α).toPartEnat = ⊤ :=
+  to_part_enat_apply_of_aleph_0_le (infinite_iff.1 h)
 
 @[simp]
-theorem aleph_0_to_enat : toEnat ℵ₀ = ⊤ :=
-  to_enat_apply_of_aleph_0_le le_rfl
+theorem aleph_0_to_part_enat : toPartEnat ℵ₀ = ⊤ :=
+  to_part_enat_apply_of_aleph_0_le le_rfl
 
-theorem to_enat_surjective : Surjective toEnat := fun x =>
-  (Enat.cases_on x ⟨ℵ₀, to_enat_apply_of_aleph_0_le le_rfl⟩) fun n => ⟨n, to_enat_cast n⟩
+theorem to_part_enat_surjective : Surjective toPartEnat := fun x =>
+  (PartEnat.cases_on x ⟨ℵ₀, to_part_enat_apply_of_aleph_0_le le_rfl⟩) fun n => ⟨n, to_part_enat_cast n⟩
 
-theorem mk_to_enat_eq_coe_card [Fintype α] : (# α).toEnat = Fintype.card α := by
+theorem mk_to_part_enat_eq_coe_card [Fintype α] : (# α).toPartEnat = Fintype.card α := by
   simp
 
 theorem mk_int : # ℤ = ℵ₀ :=
@@ -1512,14 +1526,13 @@ theorem mk_bUnion_le {ι α : Type u} (A : ι → Set α) (s : Set ι) : # (⋃ 
   rw [bUnion_eq_Union]
   apply mk_Union_le
 
-theorem finset_card_lt_aleph_0 (s : Finset α) : # (↑s : Set α) < ℵ₀ := by
-  rw [lt_aleph_0_iff_fintype]
-  exact ⟨Finset.subtype.fintype s⟩
+theorem finset_card_lt_aleph_0 (s : Finset α) : # (↑s : Set α) < ℵ₀ :=
+  lt_aleph_0_of_finite _
 
 theorem mk_eq_nat_iff_finset {α} {s : Set α} {n : ℕ} : # s = n ↔ ∃ t : Finset α, (t : Set α) = s ∧ t.card = n := by
   constructor
   · intro h
-    lift s to Finset α using lt_aleph_0_iff_finite.1 (h.symm ▸ nat_lt_aleph_0 n)
+    lift s to Finset α using lt_aleph_0_iff_set_finite.1 (h.symm ▸ nat_lt_aleph_0 n)
     simpa using h
     
   · rintro ⟨t, rfl, rfl⟩
@@ -1675,7 +1688,7 @@ def powerlt (a b : Cardinal.{u}) : Cardinal.{u} :=
 -- mathport name: «expr ^< »
 infixl:80 " ^< " => powerlt
 
-theorem le_powerlt {b c : Cardinal.{u}} a (h : c < b) : (a^c) ≤ a ^< b := by
+theorem le_powerlt {b c : Cardinal.{u}} (a) (h : c < b) : (a^c) ≤ a ^< b := by
   apply @le_csupr _ _ _ (fun y : Iio b => a^y) _ ⟨c, h⟩
   rw [← image_eq_range]
   exact bdd_above_image.{u, u} _ bdd_above_Iio
@@ -1691,7 +1704,7 @@ theorem powerlt_le {a b c : Cardinal.{u}} : a ^< b ≤ c ↔ ∀, ∀ x < b, ∀
 theorem powerlt_le_powerlt_left {a b c : Cardinal} (h : b ≤ c) : a ^< b ≤ a ^< c :=
   powerlt_le.2 fun x hx => le_powerlt a <| hx.trans_le h
 
-theorem powerlt_mono_left a : Monotone fun c => a ^< c := fun b c => powerlt_le_powerlt_left
+theorem powerlt_mono_left (a) : Monotone fun c => a ^< c := fun b c => powerlt_le_powerlt_left
 
 theorem powerlt_succ {a b : Cardinal} (h : a ≠ 0) : a ^< succ b = (a^b) :=
   (powerlt_le.2 fun c h' => power_le_power_left h <| le_of_lt_succ h').antisymm <| le_powerlt a (lt_succ b)

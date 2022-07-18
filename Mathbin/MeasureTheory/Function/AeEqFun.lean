@@ -132,7 +132,7 @@ protected theorem ae_measurable [PseudoMetrizableSpace β] [MeasurableSpace β] 
   f.Measurable.AeMeasurable
 
 @[simp]
-theorem quot_mk_eq_mk (f : α → β) hf : (Quot.mk (@Setoidₓ.R _ <| μ.aeEqSetoid β) ⟨f, hf⟩ : α →ₘ[μ] β) = mk f hf :=
+theorem quot_mk_eq_mk (f : α → β) (hf) : (Quot.mk (@Setoidₓ.R _ <| μ.aeEqSetoid β) ⟨f, hf⟩ : α →ₘ[μ] β) = mk f hf :=
   rfl
 
 @[simp]
@@ -155,7 +155,7 @@ theorem ext_iff {f g : α →ₘ[μ] β} : f = g ↔ f =ᵐ[μ] g :=
   ⟨fun h => by
     rw [h], fun h => ext h⟩
 
-theorem coe_fn_mk (f : α → β) hf : (mk f hf : α →ₘ[μ] β) =ᵐ[μ] f := by
+theorem coe_fn_mk (f : α → β) (hf) : (mk f hf : α →ₘ[μ] β) =ᵐ[μ] f := by
   apply (ae_strongly_measurable.ae_eq_mk _).symm.trans
   exact @Quotientₓ.mk_out' _ (μ.ae_eq_setoid β) (⟨f, hf⟩ : { f // ae_strongly_measurable f μ })
 
@@ -184,7 +184,7 @@ def comp (g : β → γ) (hg : Continuous g) (f : α →ₘ[μ] β) : α →ₘ[
     mk_eq_mk.2 <| H.fun_comp g
 
 @[simp]
-theorem comp_mk (g : β → γ) (hg : Continuous g) (f : α → β) hf :
+theorem comp_mk (g : β → γ) (hg : Continuous g) (f : α → β) (hf) :
     comp g hg (mk f hf : α →ₘ[μ] β) = mk (g ∘ f) (hg.comp_ae_strongly_measurable hf) :=
   rfl
 
@@ -230,7 +230,7 @@ def pair (f : α →ₘ[μ] β) (g : α →ₘ[μ] γ) : α →ₘ[μ] β × γ 
     mk_eq_mk.2 <| Hf.prod_mk Hg
 
 @[simp]
-theorem pair_mk_mk (f : α → β) hf (g : α → γ) hg :
+theorem pair_mk_mk (f : α → β) (hf) (g : α → γ) (hg) :
     (mk f hf : α →ₘ[μ] β).pair (mk g hg) = mk (fun x => (f x, g x)) (hf.prod_mk hg) :=
   rfl
 
@@ -250,7 +250,7 @@ def comp₂ (g : β → γ → δ) (hg : Continuous (uncurry g)) (f₁ : α →�
   comp _ hg (f₁.pair f₂)
 
 @[simp]
-theorem comp₂_mk_mk (g : β → γ → δ) (hg : Continuous (uncurry g)) (f₁ : α → β) (f₂ : α → γ) hf₁ hf₂ :
+theorem comp₂_mk_mk (g : β → γ → δ) (hg : Continuous (uncurry g)) (f₁ : α → β) (f₂ : α → γ) (hf₁ hf₂) :
     comp₂ g hg (mk f₁ hf₁ : α →ₘ[μ] β) (mk f₂ hf₂) =
       mk (fun a => g (f₁ a) (f₂ a)) (hg.comp_ae_strongly_measurable (hf₁.prod_mk hf₂)) :=
   rfl
@@ -285,7 +285,7 @@ def comp₂Measurable (g : β → γ → δ) (hg : Measurable (uncurry g)) (f₁
   compMeasurable _ hg (f₁.pair f₂)
 
 @[simp]
-theorem comp₂_measurable_mk_mk (g : β → γ → δ) (hg : Measurable (uncurry g)) (f₁ : α → β) (f₂ : α → γ) hf₁ hf₂ :
+theorem comp₂_measurable_mk_mk (g : β → γ → δ) (hg : Measurable (uncurry g)) (f₁ : α → β) (f₂ : α → γ) (hf₁ hf₂) :
     comp₂Measurable g hg (mk f₁ hf₁ : α →ₘ[μ] β) (mk f₂ hf₂) =
       mk (fun a => g (f₁ a) (f₂ a))
         (hg.comp_ae_measurable (hf₁.AeMeasurable.prod_mk hf₂.AeMeasurable)).AeStronglyMeasurable :=
@@ -315,7 +315,7 @@ def toGerm (f : α →ₘ[μ] β) : Germ μ.ae β :=
   (Quotientₓ.liftOn' f fun f => ((f : α → β) : Germ μ.ae β)) fun f g H => Germ.coe_eq.2 H
 
 @[simp]
-theorem mk_to_germ (f : α → β) hf : (mk f hf : α →ₘ[μ] β).toGerm = f :=
+theorem mk_to_germ (f : α → β) (hf) : (mk f hf : α →ₘ[μ] β).toGerm = f :=
   rfl
 
 theorem to_germ_eq (f : α →ₘ[μ] β) : f.toGerm = (f : α → β) := by
@@ -373,7 +373,7 @@ instance [Preorderₓ β] : Preorderₓ (α →ₘ[μ] β) :=
   Preorderₓ.lift toGerm
 
 @[simp]
-theorem mk_le_mk [Preorderₓ β] {f g : α → β} hf hg : (mk f hf : α →ₘ[μ] β) ≤ mk g hg ↔ f ≤ᵐ[μ] g :=
+theorem mk_le_mk [Preorderₓ β] {f g : α → β} (hf hg) : (mk f hf : α →ₘ[μ] β) ≤ mk g hg ↔ f ≤ᵐ[μ] g :=
   Iff.rfl
 
 @[simp, norm_cast]
@@ -561,7 +561,7 @@ instance : Pow (α →ₘ[μ] γ) ℕ :=
   ⟨fun f n => comp _ (continuous_pow n) f⟩
 
 @[simp]
-theorem mk_pow (f : α → γ) hf (n : ℕ) :
+theorem mk_pow (f : α → γ) (hf) (n : ℕ) :
     (mk f hf : α →ₘ[μ] γ) ^ n = mk (f ^ n) ((continuous_pow n).comp_ae_strongly_measurable hf) :=
   rfl
 
@@ -600,7 +600,7 @@ instance : Inv (α →ₘ[μ] γ) :=
   ⟨comp Inv.inv continuous_inv⟩
 
 @[simp, to_additive]
-theorem inv_mk (f : α → γ) hf : (mk f hf : α →ₘ[μ] γ)⁻¹ = mk f⁻¹ hf.inv :=
+theorem inv_mk (f : α → γ) (hf) : (mk f hf : α →ₘ[μ] γ)⁻¹ = mk f⁻¹ hf.inv :=
   rfl
 
 @[to_additive]
@@ -640,7 +640,7 @@ instance hasIntPow : Pow (α →ₘ[μ] γ) ℤ :=
   ⟨fun f n => comp _ (continuous_zpow n) f⟩
 
 @[simp]
-theorem mk_zpow (f : α → γ) hf (n : ℤ) :
+theorem mk_zpow (f : α → γ) (hf) (n : ℤ) :
     (mk f hf : α →ₘ[μ] γ) ^ n = mk (f ^ n) ((continuous_zpow n).comp_ae_strongly_measurable hf) :=
   rfl
 
@@ -695,7 +695,7 @@ def lintegral (f : α →ₘ[μ] ℝ≥0∞) : ℝ≥0∞ :=
   Quotientₓ.liftOn' f (fun f => ∫⁻ a, (f : α → ℝ≥0∞) a ∂μ) fun f g => lintegral_congr_ae
 
 @[simp]
-theorem lintegral_mk (f : α → ℝ≥0∞) hf : (mk f hf : α →ₘ[μ] ℝ≥0∞).lintegral = ∫⁻ a, f a ∂μ :=
+theorem lintegral_mk (f : α → ℝ≥0∞) (hf) : (mk f hf : α →ₘ[μ] ℝ≥0∞).lintegral = ∫⁻ a, f a ∂μ :=
   rfl
 
 theorem lintegral_coe_fn (f : α →ₘ[μ] ℝ≥0∞) : (∫⁻ a, f a ∂μ) = f.lintegral := by
@@ -735,7 +735,7 @@ def posPart (f : α →ₘ[μ] γ) : α →ₘ[μ] γ :=
   comp (fun x => max x 0) (continuous_id.max continuous_const) f
 
 @[simp]
-theorem pos_part_mk (f : α → γ) hf :
+theorem pos_part_mk (f : α → γ) (hf) :
     posPart (mk f hf : α →ₘ[μ] γ) =
       mk (fun x => max (f x) 0) ((continuous_id.max continuous_const).comp_ae_strongly_measurable hf) :=
   rfl

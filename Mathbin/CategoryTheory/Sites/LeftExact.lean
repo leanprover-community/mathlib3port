@@ -26,7 +26,7 @@ variable {C : Type max v u} [Category.{v} C] {J : GrothendieckTopology C}
 
 variable {D : Type w} [Category.{max v u} D]
 
-variable [∀ P : Cᵒᵖ ⥤ D X : C S : J.cover X, HasMultiequalizer (S.index P)]
+variable [∀ (P : Cᵒᵖ ⥤ D) (X : C) (S : J.cover X), HasMultiequalizer (S.index P)]
 
 noncomputable section
 
@@ -137,7 +137,7 @@ def liftToPlusObjLimitObj {K : Type max v u} [SmallCategory K] [FinCategory K] [
 -- evaluation preserves limits.
 theorem lift_to_plus_obj_limit_obj_fac {K : Type max v u} [SmallCategory K] [FinCategory K] [HasLimitsOfShape K D]
     [PreservesLimitsOfShape K (forget D)] [ReflectsLimitsOfShape K (forget D)] (F : K ⥤ Cᵒᵖ ⥤ D) (X : C)
-    (S : Cone (F ⋙ J.plusFunctor D ⋙ (evaluation Cᵒᵖ D).obj (op X))) k :
+    (S : Cone (F ⋙ J.plusFunctor D ⋙ (evaluation Cᵒᵖ D).obj (op X))) (k) :
     liftToPlusObjLimitObj F X S ≫ (J.plusMap (limit.π F k)).app (op X) = S.π.app k := by
   dsimp' only [← lift_to_plus_obj_limit_obj]
   rw [← (limit.is_limit (F ⋙ J.plus_functor D ⋙ (evaluation Cᵒᵖ D).obj (op X))).fac S k, category.assoc]

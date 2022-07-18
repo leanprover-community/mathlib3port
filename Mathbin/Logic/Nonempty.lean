@@ -43,6 +43,10 @@ theorem nonempty_sigmaₓ : Nonempty (Σa : α, γ a) ↔ ∃ a : α, Nonempty (
   Iff.intro (fun ⟨⟨a, c⟩⟩ => ⟨a, ⟨c⟩⟩) fun ⟨a, ⟨c⟩⟩ => ⟨⟨a, c⟩⟩
 
 @[simp]
+theorem nonempty_psigmaₓ {α} {β : α → Sort _} : Nonempty (PSigma β) ↔ ∃ a : α, Nonempty (β a) :=
+  Iff.intro (fun ⟨⟨a, c⟩⟩ => ⟨a, ⟨c⟩⟩) fun ⟨a, ⟨c⟩⟩ => ⟨⟨a, c⟩⟩
+
+@[simp]
 theorem nonempty_subtype {α} {p : α → Prop} : Nonempty (Subtype p) ↔ ∃ a : α, p a :=
   Iff.intro (fun ⟨⟨a, h⟩⟩ => ⟨a, h⟩) fun ⟨a, h⟩ => ⟨⟨a, h⟩⟩
 
@@ -77,10 +81,6 @@ theorem nonempty_psum {α β} : Nonempty (PSum α β) ↔ Nonempty α ∨ Nonemp
     match h with
     | Or.inl ⟨a⟩ => ⟨PSum.inl a⟩
     | Or.inr ⟨b⟩ => ⟨PSum.inr b⟩
-
-@[simp]
-theorem nonempty_psigmaₓ {α} {β : α → Sort _} : Nonempty (PSigma β) ↔ ∃ a : α, Nonempty (β a) :=
-  Iff.intro (fun ⟨⟨a, c⟩⟩ => ⟨a, ⟨c⟩⟩) fun ⟨a, ⟨c⟩⟩ => ⟨⟨a, c⟩⟩
 
 @[simp]
 theorem nonempty_empty : ¬Nonempty Empty := fun ⟨h⟩ => h.elim
@@ -118,7 +118,7 @@ protected noncomputable def Nonempty.some {α} (h : Nonempty α) : α :=
 
 /-- Using `classical.choice`, extracts a term from a `nonempty` type. -/
 @[reducible]
-protected noncomputable def Classical.arbitrary α [h : Nonempty α] : α :=
+protected noncomputable def Classical.arbitrary (α) [h : Nonempty α] : α :=
   Classical.choice h
 
 /-- Given `f : α → β`, if `α` is nonempty then `β` is also nonempty.

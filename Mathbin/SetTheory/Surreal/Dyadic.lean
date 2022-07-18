@@ -44,30 +44,30 @@ def powHalf : ℕ → Pgame
 theorem pow_half_zero : powHalf 0 = 1 :=
   rfl
 
-theorem pow_half_left_moves n : (powHalf n).LeftMoves = PUnit := by
+theorem pow_half_left_moves (n) : (powHalf n).LeftMoves = PUnit := by
   cases n <;> rfl
 
 theorem pow_half_zero_right_moves : (powHalf 0).RightMoves = Pempty :=
   rfl
 
-theorem pow_half_succ_right_moves n : (powHalf (n + 1)).RightMoves = PUnit :=
+theorem pow_half_succ_right_moves (n) : (powHalf (n + 1)).RightMoves = PUnit :=
   rfl
 
 @[simp]
-theorem pow_half_move_left n i : (powHalf n).moveLeft i = 0 := by
+theorem pow_half_move_left (n i) : (powHalf n).moveLeft i = 0 := by
   cases n <;> cases i <;> rfl
 
 @[simp]
-theorem pow_half_succ_move_right n i : (powHalf (n + 1)).moveRight i = powHalf n :=
+theorem pow_half_succ_move_right (n i) : (powHalf (n + 1)).moveRight i = powHalf n :=
   rfl
 
-instance uniquePowHalfLeftMoves n : Unique (powHalf n).LeftMoves := by
+instance uniquePowHalfLeftMoves (n) : Unique (powHalf n).LeftMoves := by
   cases n <;> exact PUnit.unique
 
 instance is_empty_pow_half_zero_right_moves : IsEmpty (powHalf 0).RightMoves :=
   Pempty.is_empty
 
-instance uniquePowHalfSuccRightMoves n : Unique (powHalf (n + 1)).RightMoves :=
+instance uniquePowHalfSuccRightMoves (n) : Unique (powHalf (n + 1)).RightMoves :=
   PUnit.unique
 
 @[simp]
@@ -77,7 +77,7 @@ theorem birthday_half : birthday (powHalf 1) = 2 := by
   simpa using Order.le_succ (1 : Ordinal)
 
 /-- For all natural numbers `n`, the pre-games `pow_half n` are numeric. -/
-theorem numeric_pow_half n : (powHalf n).Numeric := by
+theorem numeric_pow_half (n) : (powHalf n).Numeric := by
   induction' n with n hn
   · exact numeric_one
     
@@ -111,7 +111,7 @@ theorem pow_half_pos (n : ℕ) : 0 < powHalf n := by
 theorem zero_le_pow_half (n : ℕ) : 0 ≤ powHalf n :=
   (pow_half_pos n).le
 
-theorem add_pow_half_succ_self_eq_pow_half n : powHalf (n + 1) + powHalf (n + 1) ≈ powHalf n := by
+theorem add_pow_half_succ_self_eq_pow_half (n) : powHalf (n + 1) + powHalf (n + 1) ≈ powHalf n := by
   induction' n using Nat.strong_induction_onₓ with n hn
   · constructor <;> rw [le_iff_forall_lf] <;> constructor
     · rintro (⟨⟨⟩⟩ | ⟨⟨⟩⟩) <;> apply lf_of_lt

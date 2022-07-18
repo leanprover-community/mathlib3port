@@ -124,7 +124,7 @@ variable (C)
 
 /-- A normal mono category is a category in which every monomorphism is normal. -/
 class NormalMonoCategory where
-  normalMonoOfMono : ∀ {X Y : C} f : X ⟶ Y [Mono f], NormalMono f
+  normalMonoOfMono : ∀ {X Y : C} (f : X ⟶ Y) [Mono f], NormalMono f
 
 end
 
@@ -234,7 +234,8 @@ def normalEpiOfNormalMonoUnop {X Y : Cᵒᵖ} (f : X ⟶ Y) (m : NormalMono f.un
   g := m.g.op
   w := congr_arg Quiver.Hom.op m.w
   IsColimit :=
-    IsColimit.ofπ _ _ (fun Z' g' w' => (KernelFork.IsLimit.lift' m.IsLimit g'.unop (congr_arg Quiver.Hom.unop w')).1.op)
+    CokernelCofork.IsColimit.ofπ _ _
+      (fun Z' g' w' => (KernelFork.IsLimit.lift' m.IsLimit g'.unop (congr_arg Quiver.Hom.unop w')).1.op)
       (fun Z' g' w' =>
         congr_arg Quiver.Hom.op (KernelFork.IsLimit.lift' m.IsLimit g'.unop (congr_arg Quiver.Hom.unop w')).2)
       (by
@@ -249,7 +250,7 @@ def normalMonoOfNormalEpiUnop {X Y : Cᵒᵖ} (f : X ⟶ Y) (m : NormalEpi f.uno
   g := m.g.op
   w := congr_arg Quiver.Hom.op m.w
   IsLimit :=
-    IsLimit.ofι _ _
+    KernelFork.IsLimit.ofι _ _
       (fun Z' g' w' => (CokernelCofork.IsColimit.desc' m.IsColimit g'.unop (congr_arg Quiver.Hom.unop w')).1.op)
       (fun Z' g' w' =>
         congr_arg Quiver.Hom.op (CokernelCofork.IsColimit.desc' m.IsColimit g'.unop (congr_arg Quiver.Hom.unop w')).2)
@@ -265,7 +266,7 @@ variable (C)
 
 /-- A normal epi category is a category in which every epimorphism is normal. -/
 class NormalEpiCategory where
-  normalEpiOfEpi : ∀ {X Y : C} f : X ⟶ Y [Epi f], NormalEpi f
+  normalEpiOfEpi : ∀ {X Y : C} (f : X ⟶ Y) [Epi f], NormalEpi f
 
 end
 

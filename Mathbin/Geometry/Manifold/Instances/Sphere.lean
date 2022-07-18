@@ -196,7 +196,7 @@ theorem stereo_left_inv (hv : ∥v∥ = 1) {x : Sphere (0 : E) 1} (hx : (x : E) 
     convert norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero _ _ hvy' using 2
     · simp [split]
       
-    · simp [← norm_smul, ← hv, ← Real.norm_eq_abs, sq, ← sq_abs]
+    · simp [← norm_smul, ← hv, sq, ← sq_abs]
       
     · exact sq _
       
@@ -324,7 +324,7 @@ from `(ℝ ∙ v)ᗮ` to the Euclidean space. -/
 def stereographic' (n : ℕ) [Fact (finrank ℝ E = n + 1)] (v : Sphere (0 : E) 1) :
     LocalHomeomorph (Sphere (0 : E) 1) (EuclideanSpace ℝ (Finₓ n)) :=
   stereographic (norm_eq_of_mem_sphere v) ≫ₕ
-    (LinearIsometryEquiv.fromOrthogonalSpanSingleton n (ne_zero_of_mem_unit_sphere v)).toHomeomorph.toLocalHomeomorph
+    (OrthonormalBasis.fromOrthogonalSpanSingleton n (ne_zero_of_mem_unit_sphere v)).repr.toHomeomorph.toLocalHomeomorph
 
 @[simp]
 theorem stereographic'_source {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : Sphere (0 : E) 1) :
@@ -356,7 +356,7 @@ theorem stereographic'_symm_apply {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : 
     (x : EuclideanSpace ℝ (Finₓ n)) :
     ((stereographic' n v).symm x : E) =
       let U : (ℝ∙(v : E))ᗮ ≃ₗᵢ[ℝ] EuclideanSpace ℝ (Finₓ n) :=
-        LinearIsometryEquiv.fromOrthogonalSpanSingleton n (ne_zero_of_mem_unit_sphere v)
+        (OrthonormalBasis.fromOrthogonalSpanSingleton n (ne_zero_of_mem_unit_sphere v)).repr
       (∥(U.symm x : E)∥ ^ 2 + 4)⁻¹ • (4 : ℝ) • (U.symm x : E) +
         (∥(U.symm x : E)∥ ^ 2 + 4)⁻¹ • (∥(U.symm x : E)∥ ^ 2 - 4) • v :=
   by
@@ -371,10 +371,19 @@ instance {n : ℕ} [Fact (finrank ℝ E = n + 1)] : SmoothManifoldWithCorners (�
   smooth_manifold_with_corners_of_cont_diff_on (𝓡 n) (Sphere (0 : E) 1)
     (by
       rintro _ _ ⟨v, rfl⟩ ⟨v', rfl⟩
-      let U : (ℝ∙(v : E))ᗮ ≃ₗᵢ[ℝ] EuclideanSpace ℝ (Finₓ n) :=
-        LinearIsometryEquiv.fromOrthogonalSpanSingleton n (ne_zero_of_mem_unit_sphere v)
-      let U' : (ℝ∙(v' : E))ᗮ ≃ₗᵢ[ℝ] EuclideanSpace ℝ (Finₓ n) :=
-        LinearIsometryEquiv.fromOrthogonalSpanSingleton n (ne_zero_of_mem_unit_sphere v')
+      let U :=
+        (-- Removed type ascription, and this helped for some reason with timeout issues?
+            OrthonormalBasis.fromOrthogonalSpanSingleton
+            n (ne_zero_of_mem_unit_sphere v)).repr
+      let U' :=
+        (-- Removed type ascription, and this helped for some reason with timeout issues?
+            OrthonormalBasis.fromOrthogonalSpanSingleton
+            n (ne_zero_of_mem_unit_sphere v')).repr
+      have hUv : stereographic' n v = stereographic (norm_eq_of_mem_sphere v) ≫ₕ U.to_homeomorph.to_local_homeomorph :=
+        rfl
+      have hU'v' :
+        stereographic' n v' = (stereographic (norm_eq_of_mem_sphere v')).trans U'.to_homeomorph.to_local_homeomorph :=
+        rfl
       have H₁ := U'.cont_diff.comp_cont_diff_on cont_diff_on_stereo_to_fun
       have H₂ := (cont_diff_stereo_inv_fun_aux.comp (ℝ∙(v : E))ᗮ.subtypeL.ContDiff).comp U.symm.cont_diff
       convert H₁.comp' (H₂.cont_diff_on : ContDiffOn ℝ ⊤ _ Set.Univ) using 1
@@ -389,8 +398,10 @@ theorem cont_mdiff_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
   · exact continuous_subtype_coe
     
   · intro v _
-    let U : (ℝ∙(-v : E))ᗮ ≃ₗᵢ[ℝ] EuclideanSpace ℝ (Finₓ n) :=
-      LinearIsometryEquiv.fromOrthogonalSpanSingleton n (ne_zero_of_mem_unit_sphere (-v))
+    let U :=
+      (-- Again, removing type ascription...
+          OrthonormalBasis.fromOrthogonalSpanSingleton
+          n (ne_zero_of_mem_unit_sphere (-v))).repr
     exact ((cont_diff_stereo_inv_fun_aux.comp (ℝ∙(-v : E))ᗮ.subtypeL.ContDiff).comp U.symm.cont_diff).ContDiffOn
     
 
@@ -408,8 +419,10 @@ theorem ContMdiff.cod_restrict_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] {
   rw [cont_mdiff_iff_target]
   refine' ⟨continuous_induced_rng hf.continuous, _⟩
   intro v
-  let U : (ℝ∙(-v : E))ᗮ ≃ₗᵢ[ℝ] EuclideanSpace ℝ (Finₓ n) :=
-    LinearIsometryEquiv.fromOrthogonalSpanSingleton n (ne_zero_of_mem_unit_sphere (-v))
+  let U :=
+    (-- Again, removing type ascription... Weird that this helps!
+        OrthonormalBasis.fromOrthogonalSpanSingleton
+        n (ne_zero_of_mem_unit_sphere (-v))).repr
   have h : ContDiffOn ℝ ⊤ _ Set.Univ := U.cont_diff.cont_diff_on
   have H₁ := (h.comp' cont_diff_on_stereo_to_fun).ContMdiffOn
   have H₂ : ContMdiffOn _ _ _ _ Set.Univ := hf.cont_mdiff_on

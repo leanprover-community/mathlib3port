@@ -62,9 +62,9 @@ instance : Mul SignType :=
 
 /-- The less-than relation on signs. -/
 inductive Le : SignType → SignType → Prop
-  | of_neg a : le neg a
+  | of_neg (a) : le neg a
   | zero : le zero zero
-  | of_pos a : le a pos
+  | of_pos (a) : le a pos
 
 instance : LE SignType :=
   ⟨Le⟩

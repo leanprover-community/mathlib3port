@@ -42,11 +42,11 @@ def Antivary (f : ι → α) (g : ι → β) : Prop :=
 
 /-- `f` monovaries with `g` on `s` if `g i < g j` implies `f i ≤ f j` for all `i, j ∈ s`. -/
 def MonovaryOn (f : ι → α) (g : ι → β) (s : Set ι) : Prop :=
-  ∀ ⦃i⦄ hi : i ∈ s ⦃j⦄ hj : j ∈ s, g i < g j → f i ≤ f j
+  ∀ ⦃i⦄ (hi : i ∈ s) ⦃j⦄ (hj : j ∈ s), g i < g j → f i ≤ f j
 
 /-- `f` antivaries with `g` on `s` if `g i < g j` implies `f j ≤ f i` for all `i, j ∈ s`. -/
 def AntivaryOn (f : ι → α) (g : ι → β) (s : Set ι) : Prop :=
-  ∀ ⦃i⦄ hi : i ∈ s ⦃j⦄ hj : j ∈ s, g i < g j → f j ≤ f i
+  ∀ ⦃i⦄ (hi : i ∈ s) ⦃j⦄ (hj : j ∈ s), g i < g j → f j ≤ f i
 
 protected theorem Monovary.monovary_on (h : Monovary f g) (s : Set ι) : MonovaryOn f g s := fun i _ j _ hij => h hij
 

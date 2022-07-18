@@ -43,7 +43,7 @@ def emin : ℤ :=
 def ValidFinite (e : ℤ) (m : ℕ) : Prop :=
   emin ≤ e + prec - 1 ∧ e + prec - 1 ≤ emax ∧ e = max (e + m.size - prec) emin
 
-instance decValidFinite e m : Decidable (ValidFinite e m) := by
+instance decValidFinite (e m) : Decidable (ValidFinite e m) := by
   unfold valid_finite <;> infer_instance
 
 inductive Float
@@ -123,7 +123,7 @@ unsafe def of_pos_rat_dn (n : ℕ+) (d : ℕ+) : float × Bool := by
   · exact undefined
     
 
-unsafe def next_up_pos e m (v : ValidFinite e m) : Float :=
+unsafe def next_up_pos (e m) (v : ValidFinite e m) : Float :=
   let m' := m.succ
   if ss : m'.size = m.size then
     Float.finite false e m'
@@ -131,7 +131,7 @@ unsafe def next_up_pos e m (v : ValidFinite e m) : Float :=
         unfold valid_finite  at * <;> rw [ss] <;> exact v)
   else if h : e = emax then Float.inf false else Float.finite false e.succ (Nat.div2 m') undefined
 
-unsafe def next_dn_pos e m (v : ValidFinite e m) : Float :=
+unsafe def next_dn_pos (e m) (v : ValidFinite e m) : Float :=
   match m with
   | 0 => next_up_pos _ _ Float.Zero.valid
   | Nat.succ m' =>

@@ -99,12 +99,12 @@ theorem Ico_map_val_min_abs_nat_abs_eq_Ico_map_id (p : ℕ) [hp : Fact p.Prime] 
           decide))
   have hpe : ∀ {x}, x ∈ Ico 1 (p / 2).succ → ¬p ∣ x := fun x hx hpx =>
     not_lt_of_geₓ (le_of_dvd (Nat.pos_of_ne_zeroₓ (he hx).1) hpx) (hep hx)
-  have hmem : ∀ x : ℕ hx : x ∈ Ico 1 (p / 2).succ, (a * x : Zmod p).valMinAbs.natAbs ∈ Ico 1 (p / 2).succ := by
+  have hmem : ∀ (x : ℕ) (hx : x ∈ Ico 1 (p / 2).succ), (a * x : Zmod p).valMinAbs.natAbs ∈ Ico 1 (p / 2).succ := by
     intro x hx
     simp [← hap, ← CharP.cast_eq_zero_iff (Zmod p) p, ← hpe hx, ← lt_succ_iff, ← succ_le_iff, ← pos_iff_ne_zero, ←
       nat_abs_val_min_abs_le _]
-  have hsurj : ∀ b : ℕ hb : b ∈ Ico 1 (p / 2).succ, ∃ x ∈ Ico 1 (p / 2).succ, b = (a * x : Zmod p).valMinAbs.natAbs :=
-    by
+  have hsurj :
+    ∀ (b : ℕ) (hb : b ∈ Ico 1 (p / 2).succ), ∃ x ∈ Ico 1 (p / 2).succ, b = (a * x : Zmod p).valMinAbs.natAbs := by
     intro b hb
     refine' ⟨(b / a : Zmod p).valMinAbs.natAbs, mem_Ico.mpr ⟨_, _⟩, _⟩
     · apply Nat.pos_of_ne_zeroₓ

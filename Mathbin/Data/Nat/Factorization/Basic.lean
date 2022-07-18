@@ -178,7 +178,6 @@ theorem prod_factorization_eq_prod_factors {n : ℕ} {β : Type _} [CommMonoid�
   apply prod_congr support_factorization
   simp
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- For any `p : ℕ` and any function `g : α → ℕ` that's non-zero on `S : finset α`,
 the power of `p` in `S.prod g` equals the sum over `x ∈ S` of the powers of `p` in `g x`.
 Generalises `factorization_mul`, which is the special case where `S.card = 2` and `g = id`. -/

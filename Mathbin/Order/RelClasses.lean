@@ -55,54 +55,54 @@ This lemma matches the lemmas from lean core in `init.algebra.classes`, but is m
 theorem comm_of (r : α → α → Prop) [IsSymm α r] {a b : α} : r a b ↔ r b a :=
   comm
 
-theorem IsRefl.swap r [IsRefl α r] : IsRefl α (swap r) :=
+theorem IsRefl.swap (r) [IsRefl α r] : IsRefl α (swap r) :=
   ⟨refl_of r⟩
 
-theorem IsIrrefl.swap r [IsIrrefl α r] : IsIrrefl α (swap r) :=
+theorem IsIrrefl.swap (r) [IsIrrefl α r] : IsIrrefl α (swap r) :=
   ⟨irrefl_of r⟩
 
-theorem IsTrans.swap r [IsTrans α r] : IsTrans α (swap r) :=
+theorem IsTrans.swap (r) [IsTrans α r] : IsTrans α (swap r) :=
   ⟨fun a b c h₁ h₂ => trans_of r h₂ h₁⟩
 
-theorem IsAntisymm.swap r [IsAntisymm α r] : IsAntisymm α (swap r) :=
+theorem IsAntisymm.swap (r) [IsAntisymm α r] : IsAntisymm α (swap r) :=
   ⟨fun a b h₁ h₂ => antisymm h₂ h₁⟩
 
-theorem IsAsymm.swap r [IsAsymm α r] : IsAsymm α (swap r) :=
+theorem IsAsymm.swap (r) [IsAsymm α r] : IsAsymm α (swap r) :=
   ⟨fun a b h₁ h₂ => asymm_of r h₂ h₁⟩
 
-theorem IsTotal.swap r [IsTotal α r] : IsTotal α (swap r) :=
+theorem IsTotal.swap (r) [IsTotal α r] : IsTotal α (swap r) :=
   ⟨fun a b => (total_of r a b).swap⟩
 
-theorem IsTrichotomous.swap r [IsTrichotomous α r] : IsTrichotomous α (swap r) :=
+theorem IsTrichotomous.swap (r) [IsTrichotomous α r] : IsTrichotomous α (swap r) :=
   ⟨fun a b => by
     simpa [← swap, ← Or.comm, ← Or.left_comm] using trichotomous_of r a b⟩
 
-theorem IsPreorder.swap r [IsPreorder α r] : IsPreorder α (swap r) :=
+theorem IsPreorder.swap (r) [IsPreorder α r] : IsPreorder α (swap r) :=
   { @IsRefl.swap α r _, @IsTrans.swap α r _ with }
 
-theorem IsStrictOrder.swap r [IsStrictOrder α r] : IsStrictOrder α (swap r) :=
+theorem IsStrictOrder.swap (r) [IsStrictOrder α r] : IsStrictOrder α (swap r) :=
   { @IsIrrefl.swap α r _, @IsTrans.swap α r _ with }
 
-theorem IsPartialOrder.swap r [IsPartialOrder α r] : IsPartialOrder α (swap r) :=
+theorem IsPartialOrder.swap (r) [IsPartialOrder α r] : IsPartialOrder α (swap r) :=
   { @IsPreorder.swap α r _, @IsAntisymm.swap α r _ with }
 
-theorem IsTotalPreorder.swap r [IsTotalPreorder α r] : IsTotalPreorder α (swap r) :=
+theorem IsTotalPreorder.swap (r) [IsTotalPreorder α r] : IsTotalPreorder α (swap r) :=
   { @IsPreorder.swap α r _, @IsTotal.swap α r _ with }
 
-theorem IsLinearOrder.swap r [IsLinearOrder α r] : IsLinearOrder α (swap r) :=
+theorem IsLinearOrder.swap (r) [IsLinearOrder α r] : IsLinearOrder α (swap r) :=
   { @IsPartialOrder.swap α r _, @IsTotal.swap α r _ with }
 
-protected theorem IsAsymm.is_antisymm r [IsAsymm α r] : IsAntisymm α r :=
+protected theorem IsAsymm.is_antisymm (r) [IsAsymm α r] : IsAntisymm α r :=
   ⟨fun x y h₁ h₂ => (asymm h₁ h₂).elim⟩
 
 protected theorem IsAsymm.is_irrefl [IsAsymm α r] : IsIrrefl α r :=
   ⟨fun a h => asymm h h⟩
 
-protected theorem IsTotal.is_trichotomous r [IsTotal α r] : IsTrichotomous α r :=
+protected theorem IsTotal.is_trichotomous (r) [IsTotal α r] : IsTrichotomous α r :=
   ⟨fun a b => Or.left_comm.1 (Or.inr <| total_of r a b)⟩
 
 -- see Note [lower instance priority]
-instance (priority := 100) IsTotal.to_is_refl r [IsTotal α r] : IsRefl α r :=
+instance (priority := 100) IsTotal.to_is_refl (r) [IsTotal α r] : IsRefl α r :=
   ⟨fun a => (or_selfₓ _).1 <| total_of r a a⟩
 
 theorem ne_of_irrefl {r} [IsIrrefl α r] : ∀ {x y : α}, r x y → x ≠ y
@@ -111,16 +111,19 @@ theorem ne_of_irrefl {r} [IsIrrefl α r] : ∀ {x y : α}, r x y → x ≠ y
 theorem ne_of_irrefl' {r} [IsIrrefl α r] : ∀ {x y : α}, r x y → y ≠ x
   | _, _, h, rfl => irrefl _ h
 
-theorem not_rel r [IsIrrefl α r] [Subsingleton α] x y : ¬r x y :=
+theorem not_rel_of_subsingleton (r) [IsIrrefl α r] [Subsingleton α] (x y) : ¬r x y :=
   Subsingleton.elimₓ x y ▸ irrefl x
+
+theorem rel_of_subsingleton (r) [IsRefl α r] [Subsingleton α] (x y) : r x y :=
+  Subsingleton.elimₓ x y ▸ refl x
 
 @[simp]
 theorem empty_relation_apply (a b : α) : EmptyRelation a b ↔ False :=
   Iff.rfl
 
-theorem eq_empty_relation r [IsIrrefl α r] [Subsingleton α] : r = EmptyRelation :=
+theorem eq_empty_relation (r) [IsIrrefl α r] [Subsingleton α] : r = EmptyRelation :=
   funext₂ <| by
-    simpa using not_rel r
+    simpa using not_rel_of_subsingleton r
 
 instance : IsIrrefl α EmptyRelation :=
   ⟨fun a => id⟩
@@ -149,7 +152,7 @@ theorem transitive_of_trans (r : α → α → Prop) [IsTrans α r] : Transitive
 
 See note [reducible non-instances]. -/
 @[reducible]
-def partialOrderOfSO r [IsStrictOrder α r] : PartialOrderₓ α where
+def partialOrderOfSO (r) [IsStrictOrder α r] : PartialOrderₓ α where
   le := fun x y => x = y ∨ r x y
   lt := r
   le_refl := fun x => Or.inl rfl
@@ -181,7 +184,7 @@ class IsStrictTotalOrder' (α : Type u) (lt : α → α → Prop) extends IsTric
 
 See note [reducible non-instances]. -/
 @[reducible]
-def linearOrderOfSTO' r [IsStrictTotalOrder' α r] [∀ x y, Decidable ¬r x y] : LinearOrderₓ α :=
+def linearOrderOfSTO' (r) [IsStrictTotalOrder' α r] [∀ x y, Decidable ¬r x y] : LinearOrderₓ α :=
   { partialOrderOfSO r with
     le_total := fun x y =>
       match y, trichotomous_of r x y with
@@ -193,7 +196,7 @@ def linearOrderOfSTO' r [IsStrictTotalOrder' α r] [∀ x y, Decidable ¬r x y] 
         ⟨fun h => ((trichotomous_of r y x).resolve_left h).imp Eq.symm id, fun h =>
           h.elim (fun h => h ▸ irrefl_of _ _) (asymm_of r)⟩ }
 
-theorem IsStrictTotalOrder'.swap r [IsStrictTotalOrder' α r] : IsStrictTotalOrder' α (swap r) :=
+theorem IsStrictTotalOrder'.swap (r) [IsStrictTotalOrder' α r] : IsStrictTotalOrder' α (swap r) :=
   { IsTrichotomous.swap r, IsStrictOrder.swap r with }
 
 /-! ### Order connection -/
@@ -289,7 +292,8 @@ def IsWellOrder.toHasWellFounded [LT α] [hwo : IsWellOrder α (· < ·)] : HasW
 -- This isn't made into an instance as it loops with `is_irrefl α r`.
 theorem Subsingleton.is_well_order [Subsingleton α] (r : α → α → Prop) [hr : IsIrrefl α r] : IsWellOrder α r :=
   { hr with trichotomous := fun a b => Or.inr <| Or.inl <| Subsingleton.elimₓ a b,
-    trans := fun a b c h => (not_rel r a b h).elim, wf := ⟨fun a => ⟨_, fun y h => (not_rel r y a h).elim⟩⟩ }
+    trans := fun a b c h => (not_rel_of_subsingleton r a b h).elim,
+    wf := ⟨fun a => ⟨_, fun y h => (not_rel_of_subsingleton r y a h).elim⟩⟩ }
 
 instance EmptyRelation.is_well_order [Subsingleton α] : IsWellOrder α EmptyRelation :=
   Subsingleton.is_well_order _

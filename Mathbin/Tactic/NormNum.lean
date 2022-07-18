@@ -47,10 +47,12 @@ namespace NormNum
 
 variable {α : Type u}
 
-theorem subst_into_add {α} [Add α] l r tl tr t (prl : (l : α) = tl) (prr : r = tr) (prt : tl + tr = t) : l + r = t := by
+theorem subst_into_add {α} [Add α] (l r tl tr t) (prl : (l : α) = tl) (prr : r = tr) (prt : tl + tr = t) : l + r = t :=
+  by
   rw [prl, prr, prt]
 
-theorem subst_into_mul {α} [Mul α] l r tl tr t (prl : (l : α) = tl) (prr : r = tr) (prt : tl * tr = t) : l * r = t := by
+theorem subst_into_mul {α} [Mul α] (l r tl tr t) (prl : (l : α) = tl) (prr : r = tr) (prt : tl * tr = t) : l * r = t :=
+  by
   rw [prl, prr, prt]
 
 theorem subst_into_neg {α} [Neg α] (a ta t : α) (pra : a = ta) (prt : -ta = t) : -a = t := by
@@ -1277,12 +1279,12 @@ theorem not_refl_false_intro {α} (a : α) : (a ≠ a) = False :=
 
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
-theorem gt_intro {α} [LT α] (a b : α) c (h : (a < b) = c) : (b > a) = c :=
+theorem gt_intro {α} [LT α] (a b : α) (c) (h : (a < b) = c) : (b > a) = c :=
   h
 
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
-theorem ge_intro {α} [LE α] (a b : α) c (h : (a ≤ b) = c) : (b ≥ a) = c :=
+theorem ge_intro {α} [LE α] (a b : α) (c) (h : (a ≤ b) = c) : (b ≥ a) = c :=
   h
 
 /-- Evaluates the inequality operations `=`,`<`,`>`,`≤`,`≥`,`≠` on numerals. -/
@@ -1407,12 +1409,12 @@ unsafe def prove_div_mod (ic : instance_cache) : expr → expr → Bool → tact
               else return (ic, q, (quote.1 int_div).mk_app [a, b, q, r, m, pm, p, p₀, p'])
           else failed
 
-theorem dvd_eq_nat (a b c : ℕ) p (h₁ : b % a = c) (h₂ : (c = 0) = p) : (a ∣ b) = p :=
+theorem dvd_eq_nat (a b c : ℕ) (p) (h₁ : b % a = c) (h₂ : (c = 0) = p) : (a ∣ b) = p :=
   (propext <| by
         rw [← h₁, Nat.dvd_iff_mod_eq_zeroₓ]).trans
     h₂
 
-theorem dvd_eq_int (a b c : ℤ) p (h₁ : b % a = c) (h₂ : (c = 0) = p) : (a ∣ b) = p :=
+theorem dvd_eq_int (a b c : ℤ) (p) (h₁ : b % a = c) (h₂ : (c = 0) = p) : (a ∣ b) = p :=
   (propext <| by
         rw [← h₁, Int.dvd_iff_mod_eq_zero]).trans
     h₂
@@ -1594,7 +1596,7 @@ protected unsafe def attr : user_attribute (expr → tactic (expr × expr)) Unit
     { mk_cache := fun ns => do
         let t ←
           ns.mfoldl
-              (fun t : expr → tactic (expr × expr) n => do
+              (fun (t : expr → tactic (expr × expr)) n => do
                 let t' ← eval_expr (expr → tactic (expr × expr)) (expr.const n [])
                 pure fun e => t' e <|> t e)
               fun _ => failed

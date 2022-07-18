@@ -345,7 +345,6 @@ theorem card_compl_support_modeq [DecidableEq α] {p n : ℕ} [hp : Fact p.Prime
       (one_lt_of_mem_cycle_type hk).Ne <| by
         rw [h, pow_zeroₓ]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem exists_fixed_point_of_prime {p n : ℕ} [hp : Fact p.Prime] (hα : ¬p ∣ Fintype.card α) {σ : Perm α}
     (hσ : σ ^ p ^ n = 1) : ∃ a : α, σ a = a := by
   classical
@@ -356,7 +355,6 @@ theorem exists_fixed_point_of_prime {p n : ℕ} [hp : Fact p.Prime] (hα : ¬p �
       ((congr_arg _ (finset.card_eq_zero.mpr (compl_eq_bot.mpr (finset.eq_univ_iff_forall.mpr hα)))).mp
         (card_compl_support_modeq hσ).symm)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem exists_fixed_point_of_prime' {p n : ℕ} [hp : Fact p.Prime] (hα : p ∣ Fintype.card α) {σ : Perm α}
     (hσ : σ ^ p ^ n = 1) {a : α} (ha : σ a = a) : ∃ b : α, σ b = b ∧ b ≠ a := by
   classical
@@ -370,13 +368,11 @@ theorem exists_fixed_point_of_prime' {p n : ℕ} [hp : Fact p.Prime] (hα : p �
       a
   exact ⟨b, (h b).mp hb1, hb2⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem is_cycle_of_prime_order' {σ : Perm α} (h1 : (orderOf σ).Prime) (h2 : Fintype.card α < 2 * orderOf σ) :
     σ.IsCycle := by
   classical
   exact is_cycle_of_prime_order h1 (lt_of_le_of_ltₓ σ.support.card_le_univ h2)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem is_cycle_of_prime_order'' {σ : Perm α} (h1 : (Fintype.card α).Prime) (h2 : orderOf σ = Fintype.card α) :
     σ.IsCycle :=
   is_cycle_of_prime_order' ((congr_arg Nat.Prime h2).mpr h1)

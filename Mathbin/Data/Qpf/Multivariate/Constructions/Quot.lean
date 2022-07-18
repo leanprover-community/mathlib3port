@@ -37,8 +37,8 @@ variable {FG_repr : ∀ {α}, G α → F α}
 /-- If `F` is a QPF then `G` is a QPF as well. Can be used to
 construct `mvqpf` instances by transporting them across
 surjective functions -/
-def quotientQpf (FG_abs_repr : ∀ {α} x : G α, FG_abs (FG_repr x) = x)
-    (FG_abs_map : ∀ {α β} f : α ⟹ β x : F α, FG_abs (f <$$> x) = f <$$> FG_abs x) : Mvqpf G where
+def quotientQpf (FG_abs_repr : ∀ {α} (x : G α), FG_abs (FG_repr x) = x)
+    (FG_abs_map : ∀ {α β} (f : α ⟹ β) (x : F α), FG_abs (f <$$> x) = f <$$> FG_abs x) : Mvqpf G where
   p := q.p
   abs := fun α p => FG_abs (abs p)
   repr := fun α x => repr (FG_repr x)
@@ -62,7 +62,7 @@ instance Quot1.inhabited {α : Typevec n} [Inhabited <| F α] : Inhabited (Quot1
 
 variable [Mvfunctor F] [q : Mvqpf F]
 
-variable (Hfunc : ∀ ⦃α β⦄ a b : F α f : α ⟹ β, R a b → R (f <$$> a) (f <$$> b))
+variable (Hfunc : ∀ ⦃α β⦄ (a b : F α) (f : α ⟹ β), R a b → R (f <$$> a) (f <$$> b))
 
 /-- `map` of the `quot1` functor -/
 def Quot1.map ⦃α β⦄ (f : α ⟹ β) : Quot1.{u} R α → Quot1.{u} R β :=

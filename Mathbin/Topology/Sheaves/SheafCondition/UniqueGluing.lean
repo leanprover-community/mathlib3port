@@ -87,7 +87,7 @@ We prove this to be equivalent to the usual one below in
 `is_sheaf_iff_is_sheaf_unique_gluing`
 -/
 def IsSheafUniqueGluing : Prop :=
-  ∀ ⦃ι : Type v⦄ U : ι → Opens X sf : ∀ i : ι, F.obj (op (U i)),
+  ∀ ⦃ι : Type v⦄ (U : ι → Opens X) (sf : ∀ i : ι, F.obj (op (U i))),
     IsCompatible F U sf → ∃! s : F.obj (op (supr U)), IsGluing F U sf s
 
 end

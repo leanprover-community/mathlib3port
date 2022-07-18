@@ -188,16 +188,16 @@ noncomputable def Basis.smul {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R 
         ((finsuppProdLequiv R).symm ≪≫ₗ Finsupp.lcongr (Equivₓ.prodComm ι' ι) (LinearEquiv.refl _ _))))
 
 @[simp]
-theorem Basis.smul_repr {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) x ij :
+theorem Basis.smul_repr {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) (x ij) :
     (b.smul c).repr x ij = b.repr (c.repr x ij.2) ij.1 := by
   simp [← Basis.smul]
 
-theorem Basis.smul_repr_mk {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) x i j :
+theorem Basis.smul_repr_mk {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) (x i j) :
     (b.smul c).repr x (i, j) = b.repr (c.repr x j) i :=
   b.smul_repr c x (i, j)
 
 @[simp]
-theorem Basis.smul_apply {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) ij :
+theorem Basis.smul_apply {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) (ij) :
     (b.smul c) ij = b ij.1 • c ij.2 := by
   obtain ⟨i, j⟩ := ij
   rw [Basis.apply_eq_iff]
@@ -239,7 +239,7 @@ open Finset Submodule
 
 open Classical
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (yi yj yk «expr ∈ » y)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (yi yj yk «expr ∈ » y)
 theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : Submodule B C).Fg) :
     ∃ B₀ : Subalgebra A B, B₀.Fg ∧ (⊤ : Submodule B₀ C).Fg := by
   cases' hAC with x hx
@@ -250,7 +250,7 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : 
   let s : Finset B := (Finset.product (x ∪ y * y) y).Image (Function.uncurry f)
   have hsx : ∀, ∀ xi ∈ x, ∀, ∀ yj ∈ y, ∀, f xi yj ∈ s := fun xi hxi yj hyj =>
     show Function.uncurry f (xi, yj) ∈ s from mem_image_of_mem _ <| mem_product.2 ⟨mem_union_left _ hxi, hyj⟩
-  have hsy : ∀ yi yj yk _ : yi ∈ y _ : yj ∈ y _ : yk ∈ y, f (yi * yj) yk ∈ s := fun yi hyi yj hyj yk hyk =>
+  have hsy : ∀ (yi yj yk) (_ : yi ∈ y) (_ : yj ∈ y) (_ : yk ∈ y), f (yi * yj) yk ∈ s := fun yi hyi yj hyj yk hyk =>
     show Function.uncurry f (yi * yj, yk) ∈ s from
       mem_image_of_mem _ <| mem_product.2 ⟨mem_union_right _ <| Finset.mul_mem_mul hyi hyj, hyk⟩
   have hxy : ∀, ∀ xi ∈ x, ∀, xi ∈ span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) :=

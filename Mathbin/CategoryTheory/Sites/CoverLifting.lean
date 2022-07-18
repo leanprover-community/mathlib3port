@@ -71,7 +71,7 @@ if for all covering sieves `R` in `D`, `R.pullback G` is a covering sieve in `C`
 -/
 @[nolint has_inhabited_instance]
 structure CoverLifting (G : C ⥤ D) : Prop where
-  cover_lift : ∀ {U : C} {S : Sieve (G.obj U)} hS : S ∈ K (G.obj U), S.FunctorPullback G ∈ J U
+  cover_lift : ∀ {U : C} {S : Sieve (G.obj U)} (hS : S ∈ K (G.obj U)), S.FunctorPullback G ∈ J U
 
 /-- The identity functor on a site is cover-lifting. -/
 theorem id_cover_lifting : CoverLifting J J (𝟭 _) :=
@@ -135,7 +135,7 @@ def pulledbackFamily (Y : StructuredArrow (op U) G.op) :=
     (show _ ⟶ _ from whiskerRight ((ran.adjunction A G.op).counit.app ℱ.val) (coyoneda.obj (op X)))
 
 @[simp]
-theorem pulledback_family_apply (Y : StructuredArrow (op U) G.op) {W} {f : W ⟶ _} Hf :
+theorem pulledback_family_apply (Y : StructuredArrow (op U) G.op) {W} {f : W ⟶ _} (Hf) :
     pulledbackFamily ℱ S x Y f Hf =
       x (G.map f ≫ Y.Hom.unop) Hf ≫ ((ran.adjunction A G.op).counit.app ℱ.val).app (op W) :=
   rfl
@@ -192,7 +192,7 @@ def gluedLimitCone : Limits.Cone (Ran.diagram G.op ℱ.val (op U)) :=
           tidy } }
 
 @[simp]
-theorem glued_limit_cone_π_app W : (gluedLimitCone hu ℱ hS hx).π.app W = getSection hu ℱ hS hx W :=
+theorem glued_limit_cone_π_app (W) : (gluedLimitCone hu ℱ hS hx).π.app W = getSection hu ℱ hS hx W :=
   rfl
 
 /-- The section obtained by passing `glued_limit_cone` into `category_theory.limits.limit.lift`. -/
@@ -204,8 +204,8 @@ coincides with `x` on `G(V')` for all `G(V') ⊆ V ∈ S`, then `X ⟶ 𝒢(V) �
 section obtained in `get_sections`. That said, this is littered with some more categorical jargon
 in order to be applied in the following lemmas easier.
 -/
-theorem helper {V} (f : V ⟶ U) (y : X ⟶ ((ran G.op).obj ℱ.val).obj (op V)) W
-    (H : ∀ {V'} {fV : G.obj V' ⟶ V} hV, y ≫ ((ran G.op).obj ℱ.val).map fV.op = x (fV ≫ f) hV) :
+theorem helper {V} (f : V ⟶ U) (y : X ⟶ ((ran G.op).obj ℱ.val).obj (op V)) (W)
+    (H : ∀ {V'} {fV : G.obj V' ⟶ V} (hV), y ≫ ((ran G.op).obj ℱ.val).map fV.op = x (fV ≫ f) hV) :
     y ≫ limit.π (Ran.diagram G.op ℱ.val (op V)) W =
       (gluedLimitCone hu ℱ hS hx).π.app ((StructuredArrow.map f.op).obj W) :=
   by
@@ -251,7 +251,7 @@ theorem glued_section_is_amalgamation : x.IsAmalgamation (gluedSection hu ℱ hS
   simp only [← op_id, ← functor_to_types.map_id_apply]
 
 /-- Verify that the amalgamation is indeed unique. -/
-theorem glued_section_is_unique y (hy : x.IsAmalgamation y) : y = gluedSection hu ℱ hS hx := by
+theorem glued_section_is_unique (y) (hy : x.IsAmalgamation y) : y = gluedSection hu ℱ hS hx := by
   unfold glued_section limit.lift
   ext W
   erw [limit.lift_π]

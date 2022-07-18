@@ -9,7 +9,7 @@ import Mathbin.Data.Set.UnionLift
 /-!
 # Subalgebras over Commutative Semiring
 
-In this file we define `subalgebra`s and the usual operations on them (`map`, `comap'`).
+In this file we define `subalgebra`s and the usual operations on them (`map`, `comap`).
 
 More lemmas about `adjoin` can be found in `ring_theory.adjoin`.
 -/
@@ -403,21 +403,21 @@ theorem coe_map (S : Subalgebra R A) (f : A →ₐ[R] B) : (S.map f : Set B) = f
   rfl
 
 /-- Preimage of a subalgebra under an algebra homomorphism. -/
-def comap' (S : Subalgebra R B) (f : A →ₐ[R] B) : Subalgebra R A :=
+def comap (S : Subalgebra R B) (f : A →ₐ[R] B) : Subalgebra R A :=
   { S.toSubsemiring.comap (f : A →+* B) with
     algebra_map_mem' := fun r => show f (algebraMap R A r) ∈ S from (f.commutes r).symm ▸ S.algebra_map_mem r }
 
-theorem map_le {S : Subalgebra R A} {f : A →ₐ[R] B} {U : Subalgebra R B} : map S f ≤ U ↔ S ≤ comap' U f :=
+theorem map_le {S : Subalgebra R A} {f : A →ₐ[R] B} {U : Subalgebra R B} : map S f ≤ U ↔ S ≤ comap U f :=
   Set.image_subset_iff
 
-theorem gc_map_comap (f : A →ₐ[R] B) : GaloisConnection (fun S => map S f) fun S => comap' S f := fun S U => map_le
+theorem gc_map_comap (f : A →ₐ[R] B) : GaloisConnection (fun S => map S f) fun S => comap S f := fun S U => map_le
 
 @[simp]
-theorem mem_comap (S : Subalgebra R B) (f : A →ₐ[R] B) (x : A) : x ∈ S.comap' f ↔ f x ∈ S :=
+theorem mem_comap (S : Subalgebra R B) (f : A →ₐ[R] B) (x : A) : x ∈ S.comap f ↔ f x ∈ S :=
   Iff.rfl
 
 @[simp, norm_cast]
-theorem coe_comap (S : Subalgebra R B) (f : A →ₐ[R] B) : (S.comap' f : Set A) = f ⁻¹' (S : Set B) :=
+theorem coe_comap (S : Subalgebra R B) (f : A →ₐ[R] B) : (S.comap f : Set A) = f ⁻¹' (S : Set B) :=
   rfl
 
 instance no_zero_divisors {R A : Type _} [CommSemiringₓ R] [Semiringₓ A] [NoZeroDivisors A] [Algebra R A]
@@ -449,11 +449,11 @@ theorem mem_to_subalgebra {p : Submodule R A} {h_one h_mul} {x} : x ∈ p.toSuba
   Iff.rfl
 
 @[simp]
-theorem coe_to_subalgebra (p : Submodule R A) h_one h_mul : (p.toSubalgebra h_one h_mul : Set A) = p :=
+theorem coe_to_subalgebra (p : Submodule R A) (h_one h_mul) : (p.toSubalgebra h_one h_mul : Set A) = p :=
   rfl
 
 @[simp]
-theorem to_subalgebra_mk (s : Set A) h0 hadd hsmul h1 hmul :
+theorem to_subalgebra_mk (s : Set A) (h0 hadd hsmul h1 hmul) :
     (Submodule.mk s hadd h0 hsmul : Submodule R A).toSubalgebra h1 hmul =
       Subalgebra.mk s (@hmul) h1 (@hadd) h0 fun r => by
         rw [Algebra.algebra_map_eq_smul_one]
@@ -461,7 +461,7 @@ theorem to_subalgebra_mk (s : Set A) h0 hadd hsmul h1 hmul :
   rfl
 
 @[simp]
-theorem to_subalgebra_to_submodule (p : Submodule R A) h_one h_mul : (p.toSubalgebra h_one h_mul).toSubmodule = p :=
+theorem to_subalgebra_to_submodule (p : Submodule R A) (h_one h_mul) : (p.toSubalgebra h_one h_mul).toSubmodule = p :=
   SetLike.coe_injective rfl
 
 @[simp]
@@ -532,9 +532,9 @@ def rangeRestrict (f : A →ₐ[R] B) : A →ₐ[R] f.range :=
 /-- The equalizer of two R-algebra homomorphisms -/
 def equalizer (ϕ ψ : A →ₐ[R] B) : Subalgebra R A where
   Carrier := { a | ϕ a = ψ a }
-  add_mem' := fun x y hx : ϕ x = ψ x hy : ϕ y = ψ y => by
+  add_mem' := fun x y (hx : ϕ x = ψ x) (hy : ϕ y = ψ y) => by
     rw [Set.mem_set_of_eq, ϕ.map_add, ψ.map_add, hx, hy]
-  mul_mem' := fun x y hx : ϕ x = ψ x hy : ϕ y = ψ y => by
+  mul_mem' := fun x y (hx : ϕ x = ψ x) (hy : ϕ y = ψ y) => by
     rw [Set.mem_set_of_eq, ϕ.map_mul, ψ.map_mul, hx, hy]
   algebra_map_mem' := fun x => by
     rw [Set.mem_set_of_eq, AlgHom.commutes, AlgHom.commutes]
@@ -756,7 +756,7 @@ theorem map_bot (f : A →ₐ[R] B) : Subalgebra.map (⊥ : Subalgebra R A) f = 
     simp only [Set.range_comp, ← (· ∘ ·), ← Algebra.coe_bot, ← Subalgebra.coe_map, ← f.commutes]
 
 @[simp]
-theorem comap_top (f : A →ₐ[R] B) : Subalgebra.comap' (⊤ : Subalgebra R B) f = ⊤ :=
+theorem comap_top (f : A →ₐ[R] B) : Subalgebra.comap (⊤ : Subalgebra R B) f = ⊤ :=
   eq_top_iff.2 fun x => mem_top
 
 /-- `alg_hom` to `⊤ : subalgebra R A`. -/
@@ -969,7 +969,7 @@ theorem coe_supr_of_directed [Nonempty ι] {S : ι → Subalgebra R A} (dir : Di
 /-- Define an algebra homomorphism on a directed supremum of subalgebras by defining
 it on each subalgebra, and proving that it agrees on the intersection of subalgebras. -/
 noncomputable def suprLift [Nonempty ι] (K : ι → Subalgebra R A) (dir : Directed (· ≤ ·) K) (f : ∀ i, K i →ₐ[R] B)
-    (hf : ∀ i j : ι h : K i ≤ K j, f i = (f j).comp (inclusion h)) (T : Subalgebra R A) (hT : T = supr K) :
+    (hf : ∀ (i j : ι) (h : K i ≤ K j), f i = (f j).comp (inclusion h)) (T : Subalgebra R A) (hT : T = supr K) :
     ↥T →ₐ[R] B := by
   subst hT <;>
     exact
@@ -1003,7 +1003,7 @@ noncomputable def suprLift [Nonempty ι] (K : ι → Subalgebra R A) (dir : Dire
             erw [AlgHom.commutes (f i)] }
 
 variable [Nonempty ι] {K : ι → Subalgebra R A} {dir : Directed (· ≤ ·) K} {f : ∀ i, K i →ₐ[R] B}
-  {hf : ∀ i j : ι h : K i ≤ K j, f i = (f j).comp (inclusion h)} {T : Subalgebra R A} {hT : T = supr K}
+  {hf : ∀ (i j : ι) (h : K i ≤ K j), f i = (f j).comp (inclusion h)} {T : Subalgebra R A} {hT : T = supr K}
 
 @[simp]
 theorem supr_lift_inclusion {i : ι} (x : K i) (h : K i ≤ T) : suprLift K dir f hf T hT (inclusion h x) = f i x := by

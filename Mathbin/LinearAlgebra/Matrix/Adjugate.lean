@@ -232,7 +232,7 @@ theorem cramer_eq_adjugate_mul_vec (A : Matrix n n α) (b : n → α) : cramer A
   ext k
   simp [← mul_vec, ← dot_product, ← mul_comm]
 
-theorem mul_adjugate_apply (A : Matrix n n α) i j k : A i k * adjugate A k j = cramer Aᵀ (Pi.single k (A i k)) j := by
+theorem mul_adjugate_apply (A : Matrix n n α) (i j k) : A i k * adjugate A k j = cramer Aᵀ (Pi.single k (A i k)) j := by
   erw [← smul_eq_mul, ← Pi.smul_apply, ← LinearMap.map_smul, ← Pi.single_smul', smul_eq_mul, mul_oneₓ]
 
 theorem mul_adjugate (A : Matrix n n α) : A ⬝ adjugate A = A.det • 1 := by
@@ -339,17 +339,29 @@ theorem adjugate_fin_one (A : Matrix (Finₓ 1) (Finₓ 1) α) : adjugate A = 1 
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
-theorem adjugate_fin_two (A : Matrix (Finₓ 2) (Finₓ 2) α) : adjugate A = ![![A 1 1, -A 0 1], ![-A 1 0, A 0 0]] := by
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
+theorem adjugate_fin_two (A : Matrix (Finₓ 2) (Finₓ 2) α) :
+    adjugate A =
+      «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation" :=
+  by
   ext i j
   rw [adjugate_apply, det_fin_two]
   fin_cases i with [0, 1] <;>
     fin_cases j with [0, 1] <;>
       simp only [← Nat.one_ne_zero, ← one_mulₓ, ← Finₓ.one_eq_zero_iff, ← Pi.single_eq_same, ← zero_mul, ←
         Finₓ.zero_eq_one_iff, ← sub_zero, ← Pi.single_eq_of_ne, ← Ne.def, ← not_false_iff, ← update_row_self, ←
-        update_row_ne, ← cons_val_zero, ← mul_zero, ← mul_oneₓ, ← zero_sub, ← cons_val_one, ← head_cons]
+        update_row_ne, ← cons_val_zero, ← mul_zero, ← mul_oneₓ, ← zero_sub, ← cons_val_one, ← head_cons, ← of_apply]
 
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
 @[simp]
-theorem adjugate_fin_two' (a b c d : α) : adjugate ![![a, b], ![c, d]] = ![![d, -b], ![-c, a]] :=
+theorem adjugate_fin_two_of (a b c d : α) :
+    adjugate
+        («expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation") =
+      «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation" :=
   adjugate_fin_two _
 
 theorem adjugate_conj_transpose [StarRing α] (A : Matrix n n α) : A.adjugateᴴ = adjugate Aᴴ := by

@@ -268,7 +268,7 @@ theorem lipschitz_evalx (x : α) : LipschitzWith 1 fun f : α →ᵇ β => f x :
 theorem uniform_continuous_coe : @UniformContinuous (α →ᵇ β) (α → β) _ _ coeFn :=
   uniform_continuous_pi.2 fun x => (lipschitz_evalx x).UniformContinuous
 
-theorem continuous_coe : Continuous fun f : α →ᵇ β x => f x :=
+theorem continuous_coe : Continuous fun (f : α →ᵇ β) x => f x :=
   UniformContinuous.continuous uniform_continuous_coe
 
 /-- When `x` is fixed, `(f : α →ᵇ β) ↦ f x` is continuous -/
@@ -283,7 +283,7 @@ theorem continuous_eval : Continuous fun p : (α →ᵇ β) × α => p.1 p.2 :=
 
 /-- Bounded continuous functions taking values in a complete space form a complete space. -/
 instance [CompleteSpace β] : CompleteSpace (α →ᵇ β) :=
-  complete_of_cauchy_seq_tendsto fun f : ℕ → α →ᵇ β hf : CauchySeq f => by
+  complete_of_cauchy_seq_tendsto fun (f : ℕ → α →ᵇ β) (hf : CauchySeq f) => by
     /- We have to show that `f n` converges to a bounded continuous function.
       For this, we prove pointwise convergence to define the limit, then check
       it is a continuous bounded function, and then check the norm convergence. -/
@@ -438,15 +438,15 @@ variable [TopologicalSpace α] [CompactSpace α] [PseudoMetricSpace β]
 
 variable {f g : α →ᵇ β} {x : α} {C : ℝ}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y z «expr ∈ » U)
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y z «expr ∈ » U)
 /-- First version, with pointwise equicontinuity and range in a compact space -/
 /- Arzela-Ascoli theorem asserts that, on a compact space, a set of functions sharing
 a common modulus of continuity and taking values in a compact set forms a compact
 subset for the topology of uniform convergence. In this section, we prove this theorem
 and several useful variations around it. -/
 theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : IsClosed A)
-    (H : ∀ x : α, ∀ ε > 0, ∀, ∃ U ∈ 𝓝 x, ∀ y z _ : y ∈ U _ : z ∈ U f : α →ᵇ β, f ∈ A → dist (f y) (f z) < ε) :
+    (H : ∀ (x : α), ∀ ε > 0, ∀, ∃ U ∈ 𝓝 x, ∀ (y z) (_ : y ∈ U) (_ : z ∈ U) (f : α →ᵇ β), f ∈ A → dist (f y) (f z) < ε) :
     IsCompact A := by
   refine' compact_of_totally_bounded_is_closed _ closed
   refine' totally_bounded_of_finite_discretization fun ε ε0 => _
@@ -460,7 +460,7 @@ theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : Is
     data determine the function up to ε, one uses the control on the modulus of
     continuity to extend the closeness on tα to closeness everywhere. -/
   have ε₂0 : ε₂ > 0 := half_pos (half_pos ε₁0)
-  have : ∀ x : α, ∃ U, x ∈ U ∧ IsOpen U ∧ ∀ y z _ : y ∈ U _ : z ∈ U {f : α →ᵇ β}, f ∈ A → dist (f y) (f z) < ε₂ :=
+  have : ∀ x : α, ∃ U, x ∈ U ∧ IsOpen U ∧ ∀ (y z) (_ : y ∈ U) (_ : z ∈ U) {f : α →ᵇ β}, f ∈ A → dist (f y) (f z) < ε₂ :=
     fun x =>
     let ⟨U, nhdsU, hU⟩ := H x _ ε₂0
     let ⟨V, VU, openV, xV⟩ := _root_.mem_nhds_iff.1 nhdsU
@@ -503,11 +503,11 @@ theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : Is
         rw [F_f_g]_ < ε₂ + ε₂ := add_lt_add (hF (f x')).2 (hF (g x')).2_ = ε₁ / 2 := add_halves _
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y z «expr ∈ » U)
 /-- Second version, with pointwise equicontinuity and range in a compact subset -/
 theorem arzela_ascoli₂ (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)) (closed : IsClosed A)
-    (in_s : ∀ f : α →ᵇ β x : α, f ∈ A → f x ∈ s)
-    (H : ∀ x : α, ∀ ε > 0, ∀, ∃ U ∈ 𝓝 x, ∀ y z _ : y ∈ U _ : z ∈ U f : α →ᵇ β, f ∈ A → dist (f y) (f z) < ε) :
+    (in_s : ∀ (f : α →ᵇ β) (x : α), f ∈ A → f x ∈ s)
+    (H : ∀ (x : α), ∀ ε > 0, ∀, ∃ U ∈ 𝓝 x, ∀ (y z) (_ : y ∈ U) (_ : z ∈ U) (f : α →ᵇ β), f ∈ A → dist (f y) (f z) < ε) :
     IsCompact A := by
   /- This version is deduced from the previous one by restricting to the compact type in the target,
   using compactness there and then lifting everything to the original space. -/
@@ -528,13 +528,13 @@ theorem arzela_ascoli₂ (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)
     exact ⟨g, hf, rfl⟩
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y z «expr ∈ » U)
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y z «expr ∈ » U)
 /-- Third (main) version, with pointwise equicontinuity and range in a compact subset, but
 without closedness. The closure is then compact -/
 theorem arzela_ascoli [T2Space β] (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β))
-    (in_s : ∀ f : α →ᵇ β x : α, f ∈ A → f x ∈ s)
-    (H : ∀ x : α, ∀ ε > 0, ∀, ∃ U ∈ 𝓝 x, ∀ y z _ : y ∈ U _ : z ∈ U f : α →ᵇ β, f ∈ A → dist (f y) (f z) < ε) :
+    (in_s : ∀ (f : α →ᵇ β) (x : α), f ∈ A → f x ∈ s)
+    (H : ∀ (x : α), ∀ ε > 0, ∀, ∃ U ∈ 𝓝 x, ∀ (y z) (_ : y ∈ U) (_ : z ∈ U) (f : α →ᵇ β), f ∈ A → dist (f y) (f z) < ε) :
     IsCompact (Closure A) :=
   /- This version is deduced from the previous one by checking that the closure of A, in
     addition to being closed, still satisfies the properties of compact range and equicontinuity -/
@@ -545,7 +545,7 @@ theorem arzela_ascoli [T2Space β] (s : Set β) (hs : IsCompact s) (A : Set (α 
         let ⟨g, gA, dist_fg⟩ := Metric.mem_closure_iff.1 hf ε ε0
         ⟨g x, in_s g x gA, lt_of_le_of_ltₓ (dist_coe_le_dist _) dist_fg⟩)
     fun x ε ε0 =>
-    show ∃ U ∈ 𝓝 x, ∀ y z _ : y ∈ U _ : z ∈ U, ∀ f : α →ᵇ β, f ∈ Closure A → dist (f y) (f z) < ε by
+    show ∃ U ∈ 𝓝 x, ∀ (y z) (_ : y ∈ U) (_ : z ∈ U), ∀ f : α →ᵇ β, f ∈ Closure A → dist (f y) (f z) < ε by
       refine' Bex.imp_right (fun U U_set hU y hy z hz f hf => _) (H x (ε / 2) (half_pos ε0))
       rcases Metric.mem_closure_iff.1 hf (ε / 2 / 2) (half_pos (half_pos ε0)) with ⟨g, gA, dist_fg⟩
       replace dist_fg := fun x => lt_of_le_of_ltₓ (dist_coe_le_dist x) dist_fg
@@ -554,14 +554,14 @@ theorem arzela_ascoli [T2Space β] (s : Set β) (hs : IsCompact s) (A : Set (α 
           add_lt_add (add_lt_add (dist_fg y) (dist_fg z)) (hU y hy z hz g gA)_ = ε := by
           rw [add_halves, add_halves]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y z «expr ∈ » U)
 /- To apply the previous theorems, one needs to check the equicontinuity. An important
 instance is when the source space is a metric space, and there is a fixed modulus of continuity
 for all the functions in the set A -/
 theorem equicontinuous_of_continuity_modulus {α : Type u} [PseudoMetricSpace α] (b : ℝ → ℝ)
     (b_lim : Tendsto b (𝓝 0) (𝓝 0)) (A : Set (α →ᵇ β))
-    (H : ∀ x y : α f : α →ᵇ β, f ∈ A → dist (f x) (f y) ≤ b (dist x y)) (x : α) (ε : ℝ) (ε0 : 0 < ε) :
-    ∃ U ∈ 𝓝 x, ∀ y z _ : y ∈ U _ : z ∈ U f : α →ᵇ β, f ∈ A → dist (f y) (f z) < ε := by
+    (H : ∀ (x y : α) (f : α →ᵇ β), f ∈ A → dist (f x) (f y) ≤ b (dist x y)) (x : α) (ε : ℝ) (ε0 : 0 < ε) :
+    ∃ U ∈ 𝓝 x, ∀ (y z) (_ : y ∈ U) (_ : z ∈ U) (f : α →ᵇ β), f ∈ A → dist (f y) (f z) < ε := by
   rcases tendsto_nhds_nhds.1 b_lim ε ε0 with ⟨δ, δ0, hδ⟩
   refine' ⟨ball x (δ / 2), ball_mem_nhds x (half_pos δ0), fun y hy z hz f hf => _⟩
   have : dist y z < δ :=
@@ -1300,7 +1300,7 @@ functions from `α` to `𝕜`. -/
 
 
 instance hasSmul' : HasSmul (α →ᵇ 𝕜) (α →ᵇ β) :=
-  ⟨fun f : α →ᵇ 𝕜 g : α →ᵇ β =>
+  ⟨fun (f : α →ᵇ 𝕜) (g : α →ᵇ β) =>
     ofNormedGroup (fun x => f x • g x) (f.Continuous.smul g.Continuous) (∥f∥ * ∥g∥) fun x =>
       calc
         ∥f x • g x∥ ≤ ∥f x∥ * ∥g x∥ := NormedSpace.norm_smul_le _ _

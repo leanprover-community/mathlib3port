@@ -39,7 +39,7 @@ in the definition, then prove it for any `f` in `tendsto_at_top_is_lub`.
 
 This property holds for linear orders with order topology as well as their products. -/
 class SupConvergenceClass (α : Type _) [Preorderₓ α] [TopologicalSpace α] : Prop where
-  tendsto_coe_at_top_is_lub : ∀ a : α s : Set α, IsLub s a → Tendsto (coe : s → α) atTop (𝓝 a)
+  tendsto_coe_at_top_is_lub : ∀ (a : α) (s : Set α), IsLub s a → Tendsto (coe : s → α) atTop (𝓝 a)
 
 /-- We say that `α` is an `Inf_convergence_class` if the following holds. Let `f : ι → α` be a
 monotone function, let `a : α` be a greatest lower bound of `set.range f`. Then `f x` tends to `𝓝 a`
@@ -48,7 +48,7 @@ as `x → -∞` (formally, at the filter `filter.at_bot`). We require this for `
 
 This property holds for linear orders with order topology as well as their products. -/
 class InfConvergenceClass (α : Type _) [Preorderₓ α] [TopologicalSpace α] : Prop where
-  tendsto_coe_at_bot_is_glb : ∀ a : α s : Set α, IsGlb s a → Tendsto (coe : s → α) atBot (𝓝 a)
+  tendsto_coe_at_bot_is_glb : ∀ (a : α) (s : Set α), IsGlb s a → Tendsto (coe : s → α) atBot (𝓝 a)
 
 instance OrderDual.Sup_convergence_class [Preorderₓ α] [TopologicalSpace α] [InfConvergenceClass α] :
     SupConvergenceClass αᵒᵈ :=
@@ -266,7 +266,7 @@ theorem supr_eq_supr_subseq_of_monotone {ι₁ ι₂ α : Type _} [Preorderₓ �
     {f : ι₂ → α} {φ : ι₁ → ι₂} (hf : Monotone f) (hφ : Tendsto φ l atTop) : (⨆ i, f i) = ⨆ i, f (φ i) :=
   le_antisymmₓ
     (supr_mono' fun i =>
-      exists_imp_exists (fun j hj : i ≤ φ j => hf hj) (hφ.Eventually <| eventually_ge_at_top i).exists)
+      exists_imp_exists (fun j (hj : i ≤ φ j) => hf hj) (hφ.Eventually <| eventually_ge_at_top i).exists)
     (supr_mono' fun i => ⟨φ i, le_rfl⟩)
 
 theorem infi_eq_infi_subseq_of_monotone {ι₁ ι₂ α : Type _} [Preorderₓ ι₂] [CompleteLattice α] {l : Filter ι₁} [l.ne_bot]

@@ -29,7 +29,7 @@ probability mass function, discrete probability measure
 
 noncomputable section
 
-variable {α : Type _} {β : Type _} {γ : Type _}
+variable {α β γ : Type _}
 
 open Classical BigOperators Nnreal Ennreal
 
@@ -201,8 +201,7 @@ theorem to_measure_apply_of_finite (hs : s.Finite) : p.toMeasure s = ↑(∑' x,
 
 @[simp]
 theorem to_measure_apply_fintype [Fintype α] : p.toMeasure s = ↑(∑ x, s.indicator p x) :=
-  (p.to_measure_apply_eq_to_outer_measure_apply s (Set.Finite.of_fintype s).MeasurableSet).trans
-    (p.to_outer_measure_apply_fintype s)
+  (p.to_measure_apply_eq_to_outer_measure_apply s s.to_finite.MeasurableSet).trans (p.to_outer_measure_apply_fintype s)
 
 end MeasurableSingletonClass
 

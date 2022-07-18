@@ -61,7 +61,7 @@ theorem has_deriv_at_arcsin {x : ℝ} (h₁ : x ≠ -1) (h₂ : x ≠ 1) : HasDe
   (has_strict_deriv_at_arcsin h₁ h₂).HasDerivAt
 
 theorem cont_diff_at_arcsin {x : ℝ} (h₁ : x ≠ -1) (h₂ : x ≠ 1) {n : WithTop ℕ} : ContDiffAt ℝ n arcsin x :=
-  (deriv_arcsin_aux h₁ h₂).2.of_le le_top
+  (deriv_arcsin_aux h₁ h₂).2.ofLe le_top
 
 theorem has_deriv_within_at_arcsin_Ici {x : ℝ} (h : x ≠ -1) :
     HasDerivWithinAt arcsin (1 / sqrt (1 - x ^ 2)) (Ici x) x := by

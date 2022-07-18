@@ -68,7 +68,7 @@ is the equalizer of the two morphisms
 `∏ F.obj (U i) ⟶ ∏ F.obj (U i) ⊓ (U j)`.
 -/
 def IsSheaf (F : Presheaf.{w, v, u} C X) : Prop :=
-  ∀ ⦃ι : Type v⦄ U : ι → Opens X, Nonempty (IsLimit (SheafConditionEqualizerProducts.fork F U))
+  ∀ ⦃ι : Type v⦄ (U : ι → Opens X), Nonempty (IsLimit (SheafConditionEqualizerProducts.fork F U))
 
 /-- The presheaf valued in `unit` over any topological space is a sheaf.
 -/
@@ -105,11 +105,11 @@ def forget : Top.Sheaf C X ⥤ Top.Presheaf C X :=
   fullSubcategoryInclusion Presheaf.IsSheaf deriving Full, Faithful
 
 @[simp]
-theorem id_app (F : Sheaf C X) t : (𝟙 F : F ⟶ F).app t = 𝟙 _ :=
+theorem id_app (F : Sheaf C X) (t) : (𝟙 F : F ⟶ F).app t = 𝟙 _ :=
   rfl
 
 @[simp]
-theorem comp_app {F G H : Sheaf C X} (f : F ⟶ G) (g : G ⟶ H) t : (f ≫ g).app t = f.app t ≫ g.app t :=
+theorem comp_app {F G H : Sheaf C X} (f : F ⟶ G) (g : G ⟶ H) (t) : (f ≫ g).app t = f.app t ≫ g.app t :=
   rfl
 
 end Sheaf

@@ -175,7 +175,7 @@ See note [reducible non-instances]. -/
 protected noncomputable def field (I : Ideal R) [hI : I.IsMaximal] : Field (R ⧸ I) :=
   { Quotient.commRing I, Quotient.is_domain I with
     inv := fun a => if ha : a = 0 then 0 else Classical.some (exists_inv ha),
-    mul_inv_cancel := fun a ha : a ≠ 0 =>
+    mul_inv_cancel := fun a (ha : a ≠ 0) =>
       show a * dite _ _ _ = _ by
         rw [dif_neg ha] <;> exact Classical.some_spec (exists_inv ha),
     inv_zero := dif_pos rfl }
@@ -313,7 +313,6 @@ noncomputable def piQuotEquiv : ((ι → R) ⧸ I.pi ι) ≃ₗ[R ⧸ I] ι → 
     simp_rw [← hr]
     convert Quotientₓ.out_eq' _
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `f : R^n → R^m` is an `R`-linear map and `I ⊆ R` is an ideal, then the image of `I^n` is
     contained in `I^m`. -/
 theorem map_pi {ι} [Fintype ι] {ι' : Type w} (x : ι → R) (hi : ∀ i, x i ∈ I) (f : (ι → R) →ₗ[R] ι' → R) (i : ι') :
@@ -329,7 +328,6 @@ section ChineseRemainder
 
 variable {ι : Type v}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem exists_sub_one_mem_and_mem (s : Finset ι) {f : ι → Ideal R}
     (hf : ∀, ∀ i ∈ s, ∀, ∀, ∀ j ∈ s, ∀, i ≠ j → f i⊔f j = ⊤) (i : ι) (his : i ∈ s) :
     ∃ r : R, r - 1 ∈ f i ∧ ∀, ∀ j ∈ s, ∀, j ≠ i → r ∈ f j := by

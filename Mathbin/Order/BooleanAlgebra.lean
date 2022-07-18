@@ -317,6 +317,9 @@ theorem le_iff_eq_sup_sdiff (hz : z ≤ y) (hx : x ≤ y) : x ≤ z ↔ y = z⊔
     rw [inf_sdiff_self_right]
     exact bot_le⟩
 
+theorem sup_sdiff_eq_sup (h : z ≤ x) : x⊔y \ z = x⊔y :=
+  sup_congr_left (sdiff_le.trans le_sup_right) <| le_sup_sdiff.trans <| sup_le_sup_right h _
+
 -- cf. `set.union_diff_cancel'`
 theorem sup_sdiff_cancel' (hx : x ≤ z) (hz : z ≤ y) : z⊔y \ x = y :=
   ((le_iff_eq_sup_sdiff hz (hx.trans hz)).1 hx).symm
@@ -769,15 +772,15 @@ end GeneralizedBooleanAlgebra
 
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1174:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Set / lattice complement -/
-@[«./././Mathport/Syntax/Translate/Basic.lean:1174:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg»]
+@[«./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg»]
 class HasCompl (α : Type _) where
   compl : α → α
 
 export HasCompl (compl)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:9: unsupported: advanced prec syntax «expr + »(max, 1)
+-- ./././Mathport/Syntax/Translate/Basic.lean:565:9: unsupported: advanced prec syntax «expr + »(max, 1)
 -- mathport name: «expr ᶜ»
 postfix:999 "ᶜ" => compl
 
@@ -1067,10 +1070,10 @@ instance Pi.hasCompl {ι : Type u} {α : ι → Type v} [∀ i, HasCompl (α i)]
 theorem Pi.compl_def {ι : Type u} {α : ι → Type v} [∀ i, HasCompl (α i)] (x : ∀ i, α i) : xᶜ = fun i => x iᶜ :=
   rfl
 
-instance IsIrrefl.compl r [IsIrrefl α r] : IsRefl α (rᶜ) :=
+instance IsIrrefl.compl (r) [IsIrrefl α r] : IsRefl α (rᶜ) :=
   ⟨@irrefl α r _⟩
 
-instance IsRefl.compl r [IsRefl α r] : IsIrrefl α (rᶜ) :=
+instance IsRefl.compl (r) [IsRefl α r] : IsIrrefl α (rᶜ) :=
   ⟨fun a => not_not_intro (refl a)⟩
 
 @[simp]

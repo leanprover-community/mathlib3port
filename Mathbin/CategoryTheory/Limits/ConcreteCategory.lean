@@ -28,7 +28,7 @@ variable {C : Type u} [Category.{v} C] [ConcreteCategory.{max w v} C] {J : Type 
   [PreservesLimit F (forget C)]
 
 theorem Concrete.to_product_injective_of_is_limit {D : Cone F} (hD : IsLimit D) :
-    Function.Injective fun x : D.x j : J => D.π.app j x := by
+    Function.Injective fun (x : D.x) (j : J) => D.π.app j x := by
   let E := (forget C).mapCone D
   let hE : is_limit E := is_limit_of_preserves _ hD
   let G := Types.limitCone.{w, v} (F ⋙ forget C)
@@ -40,7 +40,7 @@ theorem Concrete.to_product_injective_of_is_limit {D : Cone F} (hD : IsLimit D) 
     suffices T.inv (T.hom a) = T.inv (T.hom b) by
       simpa
     rw [h]
-  suffices Function.Injective fun x : G.X j => G.π.app j x by
+  suffices Function.Injective fun (x : G.X) j => G.π.app j x by
     exact this.comp h
   apply Subtype.ext
 
@@ -240,7 +240,7 @@ theorem Concrete.is_colimit_exists_of_rep_eq {D : Cocone F} {i j : J} (hD : IsCo
   erw [T.hom.w, T.hom.w] at h
   replace h := Quot.exact _ h
   suffices
-    ∀ a b : Σj, F.obj j h : EqvGen (Limits.Types.Quot.Rel.{v, v} (F ⋙ forget C)) a b,
+    ∀ (a b : Σj, F.obj j) (h : EqvGen (Limits.Types.Quot.Rel.{v, v} (F ⋙ forget C)) a b),
       ∃ (k : _)(f : a.1 ⟶ k)(g : b.1 ⟶ k), F.map f a.2 = F.map g b.2
     by
     exact this ⟨i, x⟩ ⟨j, y⟩ h

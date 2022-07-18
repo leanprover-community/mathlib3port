@@ -67,7 +67,7 @@ def id : ∀ o : Pairwise ι, Hom o o
   | pair i j => id_pair i j
 
 /-- Composition of morphisms in `pairwise ι`. -/
-def comp : ∀ {o₁ o₂ o₃ : Pairwise ι} f : Hom o₁ o₂ g : Hom o₂ o₃, Hom o₁ o₃
+def comp : ∀ {o₁ o₂ o₃ : Pairwise ι} (f : Hom o₁ o₂) (g : Hom o₂ o₃), Hom o₁ o₃
   | _, _, _, id_single i, g => g
   | _, _, _, id_pair i j, g => g
   | _, _, _, left i j, id_single _ => left i j
@@ -98,7 +98,7 @@ def diagramObj : Pairwise ι → α
 
 /-- Auxiliary definition for `diagram`. -/
 @[simp]
-def diagramMap : ∀ {o₁ o₂ : Pairwise ι} f : o₁ ⟶ o₂, diagramObj U o₁ ⟶ diagramObj U o₂
+def diagramMap : ∀ {o₁ o₂ : Pairwise ι} (f : o₁ ⟶ o₂), diagramObj U o₁ ⟶ diagramObj U o₂
   | _, _, id_single i => 𝟙 _
   | _, _, id_pair i j => 𝟙 _
   | _, _, left i j => homOfLe inf_le_left

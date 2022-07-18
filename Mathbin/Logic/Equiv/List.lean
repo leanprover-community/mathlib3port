@@ -111,7 +111,6 @@ def _root_.fintype.trunc_encodable (α : Type _) [DecidableEq α] [Fintype α] :
   @Quot.recOnSubsingleton _ (fun s : Multiset α => (∀ x : α, x ∈ s) → Trunc (Encodable α)) _ Finset.univ.1
     (fun l H => Trunc.mk <| encodableOfList l H) Finset.mem_univ
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A noncomputable way to arbitrarily choose an ordering on a finite type.
 It is not made into a global instance, since it involves an arbitrary choice.
 This can be locally made into an instance with `local attribute [instance] fintype.to_encodable`. -/
@@ -127,7 +126,7 @@ instance _root_.vector.encodable [Encodable α] {n} : Encodable (Vector α n) :=
 instance finArrow [Encodable α] {n} : Encodable (Finₓ n → α) :=
   ofEquiv _ (Equivₓ.vectorEquivFin _ _).symm
 
-instance finPi n (π : Finₓ n → Type _) [∀ i, Encodable (π i)] : Encodable (∀ i, π i) :=
+instance finPi (n) (π : Finₓ n → Type _) [∀ i, Encodable (π i)] : Encodable (∀ i, π i) :=
   ofEquiv _ (Equivₓ.piEquivSubtypeSigma (Finₓ n) π)
 
 /-- If `α` is encodable, then so is `array n α`. -/
@@ -156,7 +155,7 @@ def fintypePi (α : Type _) (π : α → Type _) [DecidableEq α] [Fintype α] [
       Trunc.mk <| @Encodable.ofEquiv _ _ (@Subtype.encodable _ _ f _) (Equivₓ.piEquivSubtypeSigma α π)
 
 /-- The elements of a `fintype` as a sorted list. -/
-def sortedUniv α [Fintype α] [Encodable α] : List α :=
+def sortedUniv (α) [Fintype α] [Encodable α] : List α :=
   Finset.univ.sort (Encodable.encode' α ⁻¹'o (· ≤ ·))
 
 @[simp]
@@ -164,15 +163,15 @@ theorem mem_sorted_univ {α} [Fintype α] [Encodable α] (x : α) : x ∈ sorted
   (Finset.mem_sort _).2 (Finset.mem_univ _)
 
 @[simp]
-theorem length_sorted_univ α [Fintype α] [Encodable α] : (sortedUniv α).length = Fintype.card α :=
+theorem length_sorted_univ (α) [Fintype α] [Encodable α] : (sortedUniv α).length = Fintype.card α :=
   Finset.length_sort _
 
 @[simp]
-theorem sorted_univ_nodup α [Fintype α] [Encodable α] : (sortedUniv α).Nodup :=
+theorem sorted_univ_nodup (α) [Fintype α] [Encodable α] : (sortedUniv α).Nodup :=
   Finset.sort_nodup _ _
 
 @[simp]
-theorem sorted_univ_to_finset α [Fintype α] [Encodable α] [DecidableEq α] : (sortedUniv α).toFinset = Finset.univ :=
+theorem sorted_univ_to_finset (α) [Fintype α] [Encodable α] [DecidableEq α] : (sortedUniv α).toFinset = Finset.univ :=
   Finset.sort_to_finset _ _
 
 /-- An encodable `fintype` is equivalent to the same size `fin`. -/
@@ -303,7 +302,7 @@ theorem raise_lower' : ∀ {l n}, (∀, ∀ m ∈ l, ∀, n ≤ m) → List.Sort
     simp [← raise', ← lower', ← tsub_add_cancel_of_le this, ←
       raise_lower' (List.rel_of_sorted_cons h₂ : ∀, ∀ a ∈ l, ∀, m < a) h₂.of_cons]
 
-theorem raise'_chain : ∀ l {m n}, m < n → List.Chain (· < ·) m (raise' l n)
+theorem raise'_chain : ∀ (l) {m n}, m < n → List.Chain (· < ·) m (raise' l n)
   | [], m, n, h => List.Chain.nil
   | a :: l, m, n, h => List.Chain.cons (lt_of_lt_of_leₓ h (Nat.le_add_leftₓ _ _)) (raise'_chain _ (lt_succ_selfₓ _))
 

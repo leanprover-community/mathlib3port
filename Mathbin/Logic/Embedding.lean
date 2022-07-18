@@ -115,11 +115,11 @@ theorem to_fun_eq_coe {α β} (f : α ↪ β) : toFun f = f :=
   rfl
 
 @[simp]
-theorem coe_fn_mk {α β} (f : α → β) i : (@mk _ _ f i : α → β) = f :=
+theorem coe_fn_mk {α β} (f : α → β) (i) : (@mk _ _ f i : α → β) = f :=
   rfl
 
 @[simp]
-theorem mk_coe {α β : Type _} (f : α ↪ β) inj : (⟨f, inj⟩ : α ↪ β) = f := by
+theorem mk_coe {α β : Type _} (f : α ↪ β) (inj) : (⟨f, inj⟩ : α ↪ β) = f := by
   ext
   simp
 
@@ -208,7 +208,7 @@ def optionElim {α β} (f : α ↪ β) (x : β) (h : x ∉ Set.Range f) : Option
 
 /-- Equivalence between embeddings of `option α` and a sigma type over the embeddings of `α`. -/
 @[simps]
-def optionEmbeddingEquiv α β : (Option α ↪ β) ≃ Σf : α ↪ β, ↥(Set.Range fᶜ) where
+def optionEmbeddingEquiv (α β) : (Option α ↪ β) ≃ Σf : α ↪ β, ↥(Set.Range fᶜ) where
   toFun := fun f => ⟨coeOption.trans f, f none, fun ⟨x, hx⟩ => Option.some_ne_none x <| f.Injective hx⟩
   invFun := fun f => f.1.optionElim f.2 f.2.2
   left_inv := fun f =>
@@ -251,7 +251,7 @@ def codRestrict {α β} (p : Set β) (f : α ↪ β) (H : ∀ a, f a ∈ p) : α
   ⟨fun a => ⟨f a, H a⟩, fun a b h => f.Injective (@congr_arg _ _ _ _ Subtype.val h)⟩
 
 @[simp]
-theorem cod_restrict_apply {α β} p (f : α ↪ β) H a : codRestrict p f H a = ⟨f a, H a⟩ :=
+theorem cod_restrict_apply {α β} (p) (f : α ↪ β) (H a) : codRestrict p f H a = ⟨f a, H a⟩ :=
   rfl
 
 /-- If `e₁` and `e₂` are embeddings, then so is `prod.map e₁ e₂ : (a, b) ↦ (e₁ a, e₂ b)`. -/

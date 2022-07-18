@@ -105,18 +105,21 @@ theorem Function.Injective.sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β�
     obtain rfl : i = j
     exact h₁ (sigma.mk.inj_iff.mp h).1
     obtain rfl : x = y
-    exact h₂ i (eq_of_heq (sigma.mk.inj_iff.mp h).2)
+    exact h₂ i (sigma_mk_injective h)
     rfl
+
+theorem Function.Injective.of_sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β₁ a → β₂ (f₁ a)}
+    (h : Function.Injective (Sigma.map f₁ f₂)) (a : α₁) : Function.Injective (f₂ a) := fun x y hxy =>
+  sigma_mk_injective <| @h ⟨a, x⟩ ⟨a, y⟩ (Sigma.ext rfl (heq_iff_eq.2 hxy))
+
+theorem Function.Injective.sigma_map_iff {f₁ : α₁ → α₂} {f₂ : ∀ a, β₁ a → β₂ (f₁ a)} (h₁ : Function.Injective f₁) :
+    Function.Injective (Sigma.map f₁ f₂) ↔ ∀ a, Function.Injective (f₂ a) :=
+  ⟨fun h => h.of_sigma_map, h₁.sigma_map⟩
 
 theorem Function.Surjective.sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β₁ a → β₂ (f₁ a)} (h₁ : Function.Surjective f₁)
     (h₂ : ∀ a, Function.Surjective (f₂ a)) : Function.Surjective (Sigma.map f₁ f₂) := by
-  intro y
-  cases' y with j y
-  cases' h₁ j with i hi
-  subst j
-  cases' h₂ i y with x hx
-  subst y
-  exact ⟨⟨i, x⟩, rfl⟩
+  simp only [← Function.Surjective, ← Sigma.forall, ← h₁.forall]
+  exact fun i => (h₂ _).forall.2 fun x => ⟨⟨i, x⟩, rfl⟩
 
 /-- Interpret a function on `Σ x : α, β x` as a dependent function with two arguments.
 
@@ -127,7 +130,7 @@ def Sigma.curry {γ : ∀ a, β a → Type _} (f : ∀ x : Sigma β, γ x.1 x.2)
 /-- Interpret a dependent function with two arguments as a function on `Σ x : α, β x`.
 
 This also exists as an `equiv` as `(equiv.Pi_curry γ).symm`. -/
-def Sigma.uncurry {γ : ∀ a, β a → Type _} (f : ∀ x y : β x, γ x y) (x : Sigma β) : γ x.1 x.2 :=
+def Sigma.uncurry {γ : ∀ a, β a → Type _} (f : ∀ (x) (y : β x), γ x y) (x : Sigma β) : γ x.1 x.2 :=
   f x.1 x.2
 
 @[simp]
@@ -136,30 +139,33 @@ theorem Sigma.uncurry_curry {γ : ∀ a, β a → Type _} (f : ∀ x : Sigma β,
   funext fun ⟨i, j⟩ => rfl
 
 @[simp]
-theorem Sigma.curry_uncurry {γ : ∀ a, β a → Type _} (f : ∀ x y : β x, γ x y) : Sigma.curry (Sigma.uncurry f) = f :=
+theorem Sigma.curry_uncurry {γ : ∀ a, β a → Type _} (f : ∀ (x) (y : β x), γ x y) : Sigma.curry (Sigma.uncurry f) = f :=
   rfl
 
 /-- Convert a product type to a Σ-type. -/
-@[simp]
-def Prod.toSigma {α β} : α × β → Σ_ : α, β
-  | ⟨x, y⟩ => ⟨x, y⟩
+def Prod.toSigma {α β} (p : α × β) : Σ_ : α, β :=
+  ⟨p.1, p.2⟩
 
 @[simp]
-theorem Prod.fst_to_sigma {α β} (x : α × β) : (Prod.toSigma x).fst = x.fst := by
-  cases x <;> rfl
+theorem Prod.fst_to_sigma {α β} (x : α × β) : (Prod.toSigma x).fst = x.fst :=
+  rfl
 
 @[simp]
-theorem Prod.snd_to_sigma {α β} (x : α × β) : (Prod.toSigma x).snd = x.snd := by
-  cases x <;> rfl
+theorem Prod.snd_to_sigma {α β} (x : α × β) : (Prod.toSigma x).snd = x.snd :=
+  rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]
+@[simp]
+theorem Prod.to_sigma_mk {α β} (x : α) (y : β) : (x, y).toSigma = ⟨x, y⟩ :=
+  rfl
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]
 -- we generate this manually as `@[derive has_reflect]` fails
 @[instance]
 protected unsafe def sigma.reflect.{u, v} [reflected_univ.{u}] [reflected_univ.{v}] {α : Type u} (β : α → Type v)
     [reflected _ α] [reflected _ β] [hα : has_reflect α] [hβ : ∀ i, has_reflect (β i)] : has_reflect (Σa, β a) :=
   fun ⟨a, b⟩ =>
   (by
-        trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]" :
+        trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]" :
         reflected _ @Sigma.mk.{u, v}).subst₄
     (quote.1 α) (quote.1 β) (quote.1 a) (quote.1 b)
 
@@ -176,7 +182,7 @@ def elim {γ} (f : ∀ a, β a → γ) (a : PSigma β) : γ :=
   PSigma.casesOn a f
 
 @[simp]
-theorem elim_val {γ} (f : ∀ a, β a → γ) a b : PSigma.elim f ⟨a, b⟩ = f a b :=
+theorem elim_val {γ} (f : ∀ a, β a → γ) (a b) : PSigma.elim f ⟨a, b⟩ = f a b :=
   rfl
 
 instance [Inhabited α] [Inhabited (β default)] : Inhabited (PSigma β) :=

@@ -148,7 +148,7 @@ theorem Set.coe_set_of (p : α → Prop) : ↥{ x | p x } = { x // p x } :=
   rfl
 
 @[simp]
-theorem SetCoe.forall {s : Set α} {p : s → Prop} : (∀ x : s, p x) ↔ ∀ x h : x ∈ s, p ⟨x, h⟩ :=
+theorem SetCoe.forall {s : Set α} {p : s → Prop} : (∀ x : s, p x) ↔ ∀ (x) (h : x ∈ s), p ⟨x, h⟩ :=
   Subtype.forall
 
 @[simp]
@@ -158,11 +158,11 @@ theorem SetCoe.exists {s : Set α} {p : s → Prop} : (∃ x : s, p x) ↔ ∃ (
 theorem SetCoe.exists' {s : Set α} {p : ∀ x, x ∈ s → Prop} : (∃ (x : _)(h : x ∈ s), p x h) ↔ ∃ x : s, p x x.2 :=
   ((@SetCoe.exists _ _) fun x => p x.1 x.2).symm
 
-theorem SetCoe.forall' {s : Set α} {p : ∀ x, x ∈ s → Prop} : (∀ x h : x ∈ s, p x h) ↔ ∀ x : s, p x x.2 :=
+theorem SetCoe.forall' {s : Set α} {p : ∀ x, x ∈ s → Prop} : (∀ (x) (h : x ∈ s), p x h) ↔ ∀ x : s, p x x.2 :=
   ((@SetCoe.forall _ _) fun x => p x.1 x.2).symm
 
 @[simp]
-theorem set_coe_cast : ∀ {s t : Set α} H' : s = t H : ↥s = ↥t x : s, cast H x = ⟨x.1, H' ▸ x.2⟩
+theorem set_coe_cast : ∀ {s t : Set α} (H' : s = t) (H : ↥s = ↥t) (x : s), cast H x = ⟨x.1, H' ▸ x.2⟩
   | s, _, rfl, _, ⟨x, h⟩ => rfl
 
 theorem SetCoe.ext {s : Set α} {a b : s} : (↑a : α) = ↑b → a = b :=
@@ -184,7 +184,7 @@ theorem Eq.subset {α} {s t : Set α} : s = t → s ⊆ t := by
 
 namespace Set
 
-variable {α : Type u} {β : Type v} {γ : Type w} {ι : Sort x} {a b : α} {s t : Set α}
+variable {α : Type u} {β : Type v} {γ : Type w} {ι : Sort x} {a b : α} {s t u : Set α}
 
 instance : Inhabited (Set α) :=
   ⟨∅⟩
@@ -201,7 +201,7 @@ theorem ext_iff {s t : Set α} : s = t ↔ ∀ x, x ∈ s ↔ x ∈ t :=
 theorem mem_of_mem_of_subset {x : α} {s t : Set α} (hx : x ∈ s) (h : s ⊆ t) : x ∈ t :=
   h hx
 
-theorem forall_in_swap {p : α → β → Prop} : (∀, ∀ a ∈ s, ∀ b, p a b) ↔ ∀ b, ∀ a ∈ s, ∀, p a b := by
+theorem forall_in_swap {p : α → β → Prop} : (∀, ∀ a ∈ s, ∀ (b), p a b) ↔ ∀ (b), ∀ a ∈ s, ∀, p a b := by
   tauto
 
 /-! ### Lemmas about `mem` and `set_of` -/
@@ -547,7 +547,7 @@ theorem eq_univ_of_forall {s : Set α} : (∀ x, x ∈ s) → s = univ :=
 theorem eq_univ_of_subset {s t : Set α} (h : s ⊆ t) (hs : s = univ) : t = univ :=
   eq_univ_of_univ_subset <| hs ▸ h
 
-theorem exists_mem_of_nonempty α : ∀ [Nonempty α], ∃ x : α, x ∈ (Univ : Set α)
+theorem exists_mem_of_nonempty (α) : ∀ [Nonempty α], ∃ x : α, x ∈ (Univ : Set α)
   | ⟨x⟩ => ⟨x, trivialₓ⟩
 
 theorem ne_univ_iff_exists_not_mem {α : Type _} (s : Set α) : s ≠ univ ↔ ∃ a, a ∉ s := by
@@ -643,10 +643,10 @@ theorem union_subset_iff {s t u : Set α} : s ∪ t ⊆ u ↔ s ⊆ u ∧ t ⊆ 
 theorem union_subset_union {s₁ s₂ t₁ t₂ : Set α} (h₁ : s₁ ⊆ s₂) (h₂ : t₁ ⊆ t₂) : s₁ ∪ t₁ ⊆ s₂ ∪ t₂ := fun x =>
   Or.imp (@h₁ _) (@h₂ _)
 
-theorem union_subset_union_left {s₁ s₂ : Set α} t (h : s₁ ⊆ s₂) : s₁ ∪ t ⊆ s₂ ∪ t :=
+theorem union_subset_union_left {s₁ s₂ : Set α} (t) (h : s₁ ⊆ s₂) : s₁ ∪ t ⊆ s₂ ∪ t :=
   union_subset_union h Subset.rfl
 
-theorem union_subset_union_right s {t₁ t₂ : Set α} (h : t₁ ⊆ t₂) : s ∪ t₁ ⊆ s ∪ t₂ :=
+theorem union_subset_union_right (s) {t₁ t₂ : Set α} (h : t₁ ⊆ t₂) : s ∪ t₁ ⊆ s ∪ t₂ :=
   union_subset_union Subset.rfl h
 
 theorem subset_union_of_subset_left {s t : Set α} (h : s ⊆ t) (u : Set α) : s ⊆ t ∪ u :=
@@ -655,11 +655,17 @@ theorem subset_union_of_subset_left {s t : Set α} (h : s ⊆ t) (u : Set α) : 
 theorem subset_union_of_subset_right {s u : Set α} (h : s ⊆ u) (t : Set α) : s ⊆ t ∪ u :=
   Subset.trans h (subset_union_right t u)
 
-theorem union_eq_union_of_subset_of_subset {s t a : Set α} (h1 : s ⊆ t ∪ a) (h2 : t ⊆ s ∪ a) : s ∪ a = t ∪ a :=
-  sup_eq_sup_of_le_of_le h1 h2
+theorem union_congr_left (ht : t ⊆ s ∪ u) (hu : u ⊆ s ∪ t) : s ∪ t = s⊔u :=
+  sup_congr_left ht hu
 
-theorem union_eq_union_iff_subset_subset {s t a : Set α} : s ∪ a = t ∪ a ↔ s ⊆ t ∪ a ∧ t ⊆ s ∪ a :=
-  sup_eq_sup_iff_le_le
+theorem union_congr_right (hs : s ⊆ t ∪ u) (ht : t ⊆ s ∪ u) : s ∪ u = t ∪ u :=
+  sup_congr_right hs ht
+
+theorem union_eq_union_iff_left : s ∪ t = s ∪ u ↔ t ⊆ s ∪ u ∧ u ⊆ s ∪ t :=
+  sup_eq_sup_iff_left
+
+theorem union_eq_union_iff_right : s ∪ u = t ∪ u ↔ s ⊆ t ∪ u ∧ t ⊆ s ∪ u :=
+  sup_eq_sup_iff_right
 
 @[simp]
 theorem union_empty_iff {s t : Set α} : s ∪ t = ∅ ↔ s = ∅ ∧ t = ∅ := by
@@ -751,11 +757,17 @@ theorem inter_eq_self_of_subset_left {s t : Set α} : s ⊆ t → s ∩ t = s :=
 theorem inter_eq_self_of_subset_right {s t : Set α} : t ⊆ s → s ∩ t = t :=
   inter_eq_right_iff_subset.mpr
 
-theorem inter_eq_inter_of_subset_of_subset {s t a : Set α} (h1 : t ∩ a ⊆ s) (h2 : s ∩ a ⊆ t) : s ∩ a = t ∩ a :=
-  inf_eq_inf_of_le_of_le h1 h2
+theorem inter_congr_left (ht : s ∩ u ⊆ t) (hu : s ∩ t ⊆ u) : s ∩ t = s ∩ u :=
+  inf_congr_left ht hu
 
-theorem inter_eq_inter_iff_subset_subset {s t a : Set α} : s ∩ a = t ∩ a ↔ t ∩ a ⊆ s ∧ s ∩ a ⊆ t :=
-  inf_eq_inf_iff_le_le
+theorem inter_congr_right (hs : t ∩ u ⊆ s) (ht : s ∩ u ⊆ t) : s ∩ u = t ∩ u :=
+  inf_congr_right hs ht
+
+theorem inter_eq_inter_iff_left : s ∩ t = s ∩ u ↔ s ∩ u ⊆ t ∧ s ∩ t ⊆ u :=
+  inf_eq_inf_iff_left
+
+theorem inter_eq_inter_iff_right : s ∩ u = t ∩ u ↔ t ∩ u ⊆ s ∧ s ∩ u ⊆ t :=
+  inf_eq_inf_iff_right
 
 @[simp]
 theorem inter_univ (a : Set α) : a ∩ univ = a :=
@@ -874,7 +886,7 @@ theorem insert_subset_insert_iff (ha : a ∉ s) : insert a s ⊆ insert a t ↔ 
   rcases h (subset_insert _ _ hx) with (rfl | hxt)
   exacts[(ha hx).elim, hxt]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a «expr ∉ » s)
 theorem ssubset_iff_insert {s t : Set α} : s ⊂ t ↔ ∃ (a : _)(_ : a ∉ s), insert a s ⊆ t := by
   simp only [← insert_subset, ← exists_and_distrib_right, ← ssubset_def, ← not_subset]
   simp only [← exists_prop, ← and_comm]
@@ -913,11 +925,11 @@ theorem insert_inj (ha : a ∉ s) : insert a s = insert b s ↔ a = b :=
   ⟨fun h => eq_of_not_mem_of_mem_insert (h.subst <| mem_insert a s) ha, congr_arg _⟩
 
 -- useful in proofs by induction
-theorem forall_of_forall_insert {P : α → Prop} {a : α} {s : Set α} (H : ∀ x, x ∈ insert a s → P x) x (h : x ∈ s) :
+theorem forall_of_forall_insert {P : α → Prop} {a : α} {s : Set α} (H : ∀ x, x ∈ insert a s → P x) (x) (h : x ∈ s) :
     P x :=
   H _ (Or.inr h)
 
-theorem forall_insert_of_forall {P : α → Prop} {a : α} {s : Set α} (H : ∀ x, x ∈ s → P x) (ha : P a) x
+theorem forall_insert_of_forall {P : α → Prop} {a : α} {s : Set α} (H : ∀ x, x ∈ s → P x) (ha : P a) (x)
     (h : x ∈ insert a s) : P x :=
   h.elim (fun e => e.symm ▸ ha) (H _)
 
@@ -1052,7 +1064,7 @@ theorem sep_empty (p : α → Prop) : { x ∈ (∅ : Set α) | p x } = ∅ := by
   ext
   exact false_andₓ _
 
-theorem forall_not_of_sep_empty {s : Set α} {p : α → Prop} (H : { x ∈ s | p x } = ∅) x : x ∈ s → ¬p x :=
+theorem forall_not_of_sep_empty {s : Set α} {p : α → Prop} (H : { x ∈ s | p x } = ∅) (x) : x ∈ s → ¬p x :=
   not_and.1 (eq_empty_iff_forall_not_mem.1 H x : _)
 
 @[simp]
@@ -1383,12 +1395,11 @@ theorem diff_diff_right {s t u : Set α} : s \ (t \ u) = s \ t ∪ s ∩ u :=
   sdiff_sdiff_right'
 
 @[simp]
-theorem insert_diff_of_mem s (h : a ∈ t) : insert a s \ t = s \ t := by
+theorem insert_diff_of_mem (s) (h : a ∈ t) : insert a s \ t = s \ t := by
   ext
   constructor <;> simp (config := { contextual := true })[← or_imp_distrib, ← h]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
-theorem insert_diff_of_not_mem s (h : a ∉ t) : insert a s \ t = insert a (s \ t) := by
+theorem insert_diff_of_not_mem (s) (h : a ∉ t) : insert a s \ t = insert a (s \ t) := by
   classical
   ext x
   by_cases' h' : x ∈ t
@@ -1615,6 +1626,7 @@ theorem preimage_empty : f ⁻¹' ∅ = ∅ :=
 theorem mem_preimage {s : Set β} {a : α} : a ∈ f ⁻¹' s ↔ f a ∈ s :=
   Iff.rfl
 
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 theorem preimage_congr {f g : α → β} {s : Set β} (h : ∀ x : α, f x = g x) : f ⁻¹' s = g ⁻¹' s := by
   congr with x
   apply_assumption
@@ -1680,7 +1692,7 @@ theorem preimage_preimage {g : β → γ} {f : α → β} {s : Set γ} : f ⁻¹
   preimage_comp.symm
 
 theorem eq_preimage_subtype_val_iff {p : α → Prop} {s : Set (Subtype p)} {t : Set α} :
-    s = Subtype.val ⁻¹' t ↔ ∀ x h : p x, (⟨x, h⟩ : Subtype p) ∈ s ↔ x ∈ t :=
+    s = Subtype.val ⁻¹' t ↔ ∀ (x) (h : p x), (⟨x, h⟩ : Subtype p) ∈ s ↔ x ∈ t :=
   ⟨fun s_eq x h => by
     rw [s_eq]
     simp , fun h =>
@@ -1763,6 +1775,13 @@ theorem image_image (g : β → γ) (f : α → β) (s : Set α) : g '' (f '' s)
 theorem image_comm {β'} {f : β → γ} {g : α → β} {f' : α → β'} {g' : β' → γ} (h_comm : ∀ a, f (g a) = g' (f' a)) :
     (s.Image g).Image f = (s.Image f').Image g' := by
   simp_rw [image_image, h_comm]
+
+theorem _root_.function.semiconj.set_image {f : α → β} {ga : α → α} {gb : β → β} (h : Function.Semiconj f ga gb) :
+    Function.Semiconj (Image f) (Image ga) (Image gb) := fun s => image_comm h
+
+theorem _root_.function.commute.set_image {f g : α → α} (h : Function.Commute f g) :
+    Function.Commute (Image f) (Image g) :=
+  h.set_image
 
 /-- Image is monotone with respect to `⊆`. See `set.monotone_image` for the statement in
 terms of `≤`. -/
@@ -2010,7 +2029,7 @@ end Image
 
 /-- A set `s` is a `subsingleton`, if it has at most one element. -/
 protected def Subsingleton (s : Set α) : Prop :=
-  ∀ ⦃x⦄ hx : x ∈ s ⦃y⦄ hy : y ∈ s, x = y
+  ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), x = y
 
 theorem Subsingleton.mono (ht : t.Subsingleton) (hst : s ⊆ t) : s.Subsingleton := fun x hx y hy => ht (hst hx) (hst hy)
 
@@ -2157,10 +2176,10 @@ theorem image_univ {f : α → β} : f '' univ = Range f := by
   ext
   simp [← image, ← range]
 
-theorem image_subset_range (f : α → β) s : f '' s ⊆ Range f := by
+theorem image_subset_range (f : α → β) (s) : f '' s ⊆ Range f := by
   rw [← image_univ] <;> exact image_subset _ (subset_univ _)
 
-theorem mem_range_of_mem_image (f : α → β) s {x : β} (h : x ∈ f '' s) : x ∈ Range f :=
+theorem mem_range_of_mem_image (f : α → β) (s) {x : β} (h : x ∈ f '' s) : x ∈ Range f :=
   image_subset_range f s h
 
 theorem Nonempty.preimage' {s : Set β} (hs : s.Nonempty) {f : α → β} (hf : s ⊆ Set.Range f) : (f ⁻¹' s).Nonempty :=
@@ -2380,16 +2399,6 @@ theorem range_subset_singleton {f : ι → α} {x : α} : Range f ⊆ {x} ↔ f 
 
 theorem image_compl_preimage {f : α → β} {s : Set β} : f '' (f ⁻¹' s)ᶜ = Range f \ s := by
   rw [compl_eq_univ_diff, image_diff_preimage, image_univ]
-
-@[simp]
-theorem range_sigma_mk {β : α → Type _} (a : α) : Range (Sigma.mk a : β a → Σa, β a) = Sigma.fst ⁻¹' {a} := by
-  apply subset.antisymm
-  · rintro _ ⟨b, rfl⟩
-    simp
-    
-  · rintro ⟨x, y⟩ (rfl | _)
-    exact mem_range_self y
-    
 
 /-- Any map `f : ι → β` factors through a map `range_factorization f : ι → range f`. -/
 def rangeFactorization (f : ι → β) : ι → Range f := fun i => ⟨f i, mem_range_self i⟩
@@ -3120,7 +3129,7 @@ theorem eq_univ_of_nonempty {s : Set α} : s.Nonempty → s = univ := fun ⟨x, 
   eq_univ_of_forall fun y => Subsingleton.elimₓ x y ▸ hx
 
 @[elab_as_eliminator]
-theorem set_cases {p : Set α → Prop} (h0 : p ∅) (h1 : p Univ) s : p s :=
+theorem set_cases {p : Set α → Prop} (h0 : p ∅) (h1 : p Univ) (s) : p s :=
   (s.eq_empty_or_nonempty.elim fun h => h.symm ▸ h0) fun h => (eq_univ_of_nonempty h).symm ▸ h1
 
 theorem mem_iff_nonempty {α : Type _} [Subsingleton α] {s : Set α} {x : α} : x ∈ s ↔ s.Nonempty :=

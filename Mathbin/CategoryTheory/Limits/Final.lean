@@ -177,10 +177,10 @@ it suffices to perform that construction for some other pair of choices
 and to show how to transport such a construction
 *both* directions along a morphism between such choices.
 -/
-def induction {d : D} (Z : ∀ X : C k : d ⟶ F.obj X, Sort _)
-    (h₁ : ∀ X₁ X₂ k₁ : d ⟶ F.obj X₁ k₂ : d ⟶ F.obj X₂ f : X₁ ⟶ X₂, k₁ ≫ F.map f = k₂ → Z X₁ k₁ → Z X₂ k₂)
-    (h₂ : ∀ X₁ X₂ k₁ : d ⟶ F.obj X₁ k₂ : d ⟶ F.obj X₂ f : X₁ ⟶ X₂, k₁ ≫ F.map f = k₂ → Z X₂ k₂ → Z X₁ k₁) {X₀ : C}
-    {k₀ : d ⟶ F.obj X₀} (z : Z X₀ k₀) : Z (lift F d) (homToLift F d) := by
+def induction {d : D} (Z : ∀ (X : C) (k : d ⟶ F.obj X), Sort _)
+    (h₁ : ∀ (X₁ X₂) (k₁ : d ⟶ F.obj X₁) (k₂ : d ⟶ F.obj X₂) (f : X₁ ⟶ X₂), k₁ ≫ F.map f = k₂ → Z X₁ k₁ → Z X₂ k₂)
+    (h₂ : ∀ (X₁ X₂) (k₁ : d ⟶ F.obj X₁) (k₂ : d ⟶ F.obj X₂) (f : X₁ ⟶ X₂), k₁ ≫ F.map f = k₂ → Z X₂ k₂ → Z X₁ k₁)
+    {X₀ : C} {k₀ : d ⟶ F.obj X₀} (z : Z X₀ k₀) : Z (lift F d) (homToLift F d) := by
   apply Nonempty.some
   apply
     @is_preconnected_induction _ _ _ (fun Y : structured_arrow d F => Z Y.right Y.Hom) _ _ { right := X₀, Hom := k₀ } z
@@ -434,10 +434,10 @@ it suffices to perform that construction for some other pair of choices
 and to show how to transport such a construction
 *both* directions along a morphism between such choices.
 -/
-def induction {d : D} (Z : ∀ X : C k : F.obj X ⟶ d, Sort _)
-    (h₁ : ∀ X₁ X₂ k₁ : F.obj X₁ ⟶ d k₂ : F.obj X₂ ⟶ d f : X₁ ⟶ X₂, F.map f ≫ k₂ = k₁ → Z X₁ k₁ → Z X₂ k₂)
-    (h₂ : ∀ X₁ X₂ k₁ : F.obj X₁ ⟶ d k₂ : F.obj X₂ ⟶ d f : X₁ ⟶ X₂, F.map f ≫ k₂ = k₁ → Z X₂ k₂ → Z X₁ k₁) {X₀ : C}
-    {k₀ : F.obj X₀ ⟶ d} (z : Z X₀ k₀) : Z (lift F d) (homToLift F d) := by
+def induction {d : D} (Z : ∀ (X : C) (k : F.obj X ⟶ d), Sort _)
+    (h₁ : ∀ (X₁ X₂) (k₁ : F.obj X₁ ⟶ d) (k₂ : F.obj X₂ ⟶ d) (f : X₁ ⟶ X₂), F.map f ≫ k₂ = k₁ → Z X₁ k₁ → Z X₂ k₂)
+    (h₂ : ∀ (X₁ X₂) (k₁ : F.obj X₁ ⟶ d) (k₂ : F.obj X₂ ⟶ d) (f : X₁ ⟶ X₂), F.map f ≫ k₂ = k₁ → Z X₂ k₂ → Z X₁ k₁)
+    {X₀ : C} {k₀ : F.obj X₀ ⟶ d} (z : Z X₀ k₀) : Z (lift F d) (homToLift F d) := by
   apply Nonempty.some
   apply
     @is_preconnected_induction _ _ _ (fun Y : costructured_arrow F d => Z Y.left Y.Hom) _ _ { left := X₀, Hom := k₀ } z

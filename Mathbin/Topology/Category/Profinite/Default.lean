@@ -269,7 +269,6 @@ def isoEquivHomeo : (X ≅ Y) ≃ (X ≃ₜ Y) where
     ext
     rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Function.Surjective f := by
   constructor
   · contrapose!
@@ -304,7 +303,7 @@ theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Funct
     exact top_ne_bot H
     
   · rw [← CategoryTheory.epi_iff_surjective]
-    apply faithful_reflects_epi (forget Profinite)
+    apply (forget Profinite).epi_of_epi_map
     
 
 theorem mono_iff_injective {X Y : Profinite.{u}} (f : X ⟶ Y) : Mono f ↔ Function.Injective f := by
@@ -315,7 +314,7 @@ theorem mono_iff_injective {X Y : Profinite.{u}} (f : X ⟶ Y) : Mono f ↔ Func
     rwa [← CompHaus.mono_iff_injective]
     
   · rw [← CategoryTheory.mono_iff_injective]
-    apply faithful_reflects_mono (forget Profinite)
+    apply (forget Profinite).mono_of_mono_map
     
 
 end Profinite

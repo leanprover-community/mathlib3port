@@ -102,7 +102,7 @@ variable {A : Type _} [Category A] {G : C ⥤ D} (H : CoverDense K G)
 
 -- this is not marked with `@[ext]` because `H` can not be inferred from the type
 theorem ext (H : CoverDense K G) (ℱ : SheafOfTypes K) (X : D) {s t : ℱ.val.obj (op X)}
-    (h : ∀ ⦃Y : C⦄ f : G.obj Y ⟶ X, ℱ.val.map f.op s = ℱ.val.map f.op t) : s = t := by
+    (h : ∀ ⦃Y : C⦄ (f : G.obj Y ⟶ X), ℱ.val.map f.op s = ℱ.val.map f.op t) : s = t := by
   apply (ℱ.cond (sieve.cover_by_image G X) (H.is_cover X)).IsSeparatedFor.ext
   rintro Y _ ⟨Z, f₁, f₂, ⟨rfl⟩⟩
   simp [← h f₂]
@@ -136,7 +136,7 @@ def isoOver {ℱ ℱ' : Sheaf K A} (α : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val)
     G.op ⋙ (sheafOver ℱ X).val ≅ G.op ⋙ (sheafOver ℱ' X).val :=
   isoWhiskerRight α (coyoneda.obj (op X))
 
-theorem sheaf_eq_amalgamation (ℱ : Sheaf K A) {X : A} {U : D} {T : Sieve U} hT (x : FamilyOfElements _ T) hx t
+theorem sheaf_eq_amalgamation (ℱ : Sheaf K A) {X : A} {U : D} {T : Sieve U} (hT) (x : FamilyOfElements _ T) (hx) (t)
     (h : x.IsAmalgamation t) : t = (ℱ.cond X T hT).amalgamate x hx :=
   (ℱ.cond X T hT).IsSeparatedFor x t _ h ((ℱ.cond X T hT).IsAmalgamation hx)
 
@@ -187,7 +187,7 @@ theorem pushforward_family_apply {X} (x : ℱ.obj (op X)) {Y : C} (f : G.obj Y �
     op_comp, ← presieve.cover_by_image_structure.fac]
 
 @[simp]
-theorem app_hom_restrict {X : D} {Y : C} (f : op X ⟶ op (G.obj Y)) x :
+theorem app_hom_restrict {X : D} {Y : C} (f : op X ⟶ op (G.obj Y)) (x) :
     ℱ'.val.map f (appHom H α X x) = α.app (op Y) (ℱ.map f x) := by
   refine'
     ((ℱ'.cond _ (H.is_cover X)).valid_glue (pushforward_family_compatible H α x) f.unop

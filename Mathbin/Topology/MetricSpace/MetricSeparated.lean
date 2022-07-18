@@ -20,7 +20,7 @@ open Emetric Set
 
 noncomputable section
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (r «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (r «expr ≠ » 0)
 /-- Two sets in an (extended) metric space are called *metric separated* if the (extended) distance
 between `x ∈ s` and `y ∈ t` is bounded from below by a positive constant. -/
 def IsMetricSeparated {X : Type _} [EmetricSpace X] (s t : Set X) :=

@@ -143,7 +143,7 @@ theorem coe_mk (f : α → β)
   rfl
 
 @[simp, to_additive]
-theorem mk_coe (f : A →*[n] β) h : mk f h = f :=
+theorem mk_coe (f : A →*[n] β) (h) : mk f h = f :=
   ext fun _ => rfl
 
 /-- The identity map from a commutative monoid to itself. -/

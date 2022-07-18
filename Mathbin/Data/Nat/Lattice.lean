@@ -3,7 +3,7 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Floris van Doorn, Gabriel Ebner, Yury Kudryashov
 -/
-import Mathbin.Data.Nat.Enat
+import Mathbin.Data.Nat.PartEnat
 import Mathbin.Order.ConditionallyCompleteLattice
 
 /-!
@@ -12,7 +12,7 @@ import Mathbin.Order.ConditionallyCompleteLattice
 In this file we
 
 * define a `conditionally_complete_linear_order_bot` structure on `ℕ`;
-* define a `complete_linear_order` structure on `enat`;
+* define a `complete_linear_order` structure on `part_enat`;
 * prove a few lemmas about `supr`/`infi`/`set.Union`/`set.Inter` and natural numbers.
 -/
 
@@ -202,13 +202,13 @@ theorem bInter_lt_succ' (u : ℕ → Set α) (n : ℕ) : (⋂ k < n + 1, u k) = 
 
 end Set
 
-namespace Enat
+namespace PartEnat
 
 open Classical
 
-noncomputable instance : CompleteLinearOrder Enat :=
-  { Enat.lattice, withTopOrderIso.symm.toGaloisInsertion.liftCompleteLattice, Enat.linearOrder with inf := (·⊓·),
-    sup := (·⊔·), top := ⊤, bot := ⊥, le := (· ≤ ·), lt := (· < ·) }
+noncomputable instance : CompleteLinearOrder PartEnat :=
+  { PartEnat.lattice, withTopOrderIso.symm.toGaloisInsertion.liftCompleteLattice, PartEnat.linearOrder with
+    inf := (·⊓·), sup := (·⊔·), top := ⊤, bot := ⊥, le := (· ≤ ·), lt := (· < ·) }
 
-end Enat
+end PartEnat
 

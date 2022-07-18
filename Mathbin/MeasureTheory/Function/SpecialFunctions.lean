@@ -269,7 +269,7 @@ instance Real.hasMeasurablePow : HasMeasurablePow ℝ ℝ :=
       (Complex.measurable_of_real.comp measurable_fst).pow (Complex.measurable_of_real.comp measurable_snd)⟩
 
 instance Nnreal.hasMeasurablePow : HasMeasurablePow ℝ≥0 ℝ :=
-  ⟨(measurable_fst.coe_nnreal_real.pow measurable_snd).subtype_mk⟩
+  ⟨(measurable_fst.coeNnrealReal.pow measurable_snd).subtype_mk⟩
 
 instance Ennreal.hasMeasurablePow : HasMeasurablePow ℝ≥0∞ ℝ := by
   refine' ⟨Ennreal.measurable_of_measurable_nnreal_prod _ _⟩

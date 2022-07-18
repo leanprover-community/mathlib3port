@@ -49,7 +49,7 @@ def traverse : Multiset α' → F (Multiset β') :=
         simpa with functor_norm
       case perm.swap =>
         have :
-          (fun a b l : List β' => (↑(a :: b :: l) : Multiset β')) <$> f p_y <*> f p_x =
+          (fun a b (l : List β') => (↑(a :: b :: l) : Multiset β')) <$> f p_y <*> f p_x =
             (fun a b l => ↑(a :: b :: l)) <$> f p_x <*> f p_y :=
           by
           rw [IsCommApplicative.commutative_map]

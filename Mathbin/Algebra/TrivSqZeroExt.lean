@@ -267,8 +267,8 @@ theorem inl_fst_add_inr_snd_eq [AddZeroClassₓ R] [AddZeroClassₓ M] (x : tsze
 on terms of the form `inl r + inr m`.
 
 This can be used as `induction x using triv_sq_zero_ext.ind`. -/
-theorem ind {R M} [AddZeroClassₓ R] [AddZeroClassₓ M] {P : TrivSqZeroExt R M → Prop} (h : ∀ r m, P (inl r + inr m)) x :
-    P x :=
+theorem ind {R M} [AddZeroClassₓ R] [AddZeroClassₓ M] {P : TrivSqZeroExt R M → Prop} (h : ∀ r m, P (inl r + inr m))
+    (x) : P x :=
   inl_fst_add_inr_snd_eq x ▸ h x.1 x.2
 
 /-- This cannot be marked `@[ext]` as it ends up being used instead of `linear_map.prod_ext` when

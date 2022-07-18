@@ -65,7 +65,7 @@ when `μ ≤ ν` and `ν ≤ μ`, a more general application lemma can be writte
 theorem sub_apply [IsFiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ μ) : (μ - ν) s = μ s - ν s := by
   -- We begin by defining `measure_sub`, which will be equal to `(μ - ν)`.
   let measure_sub : Measureₓ α :=
-    @MeasureTheory.Measure.ofMeasurable α _ (fun t : Set α h_t_measurable_set : MeasurableSet t => μ t - ν t)
+    @MeasureTheory.Measure.ofMeasurable α _ (fun (t : Set α) (h_t_measurable_set : MeasurableSet t) => μ t - ν t)
       (by
         simp )
       (by

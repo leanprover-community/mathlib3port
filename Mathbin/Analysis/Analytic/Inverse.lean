@@ -182,7 +182,7 @@ theorem right_inv_coeff_one (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[�
     p.right_inv i 1 = (continuousMultilinearCurryFin1 𝕜 F E).symm i.symm := by
   rw [right_inv]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `congrm #[[expr i.symm.to_continuous_linear_map.comp_continuous_multilinear_map (p.comp (λ k, _) _)]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr i.symm.to_continuous_linear_map.comp_continuous_multilinear_map (p.comp (λ k, _) _)]]
 /-- The right inverse does not depend on the zeroth coefficient of a formal multilinear
 series. -/
 theorem right_inv_remove_zero (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F) :
@@ -197,7 +197,7 @@ theorem right_inv_remove_zero (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L
   simp only [← right_inv, ← neg_inj]
   rw [remove_zero_comp_of_pos _ _ (add_pos_of_nonneg_of_pos n.zero_le zero_lt_two)]
   trace
-    "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `congrm #[[expr i.symm.to_continuous_linear_map.comp_continuous_multilinear_map (p.comp (λ k, _) _)]]"
+    "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr i.symm.to_continuous_linear_map.comp_continuous_multilinear_map (p.comp (λ k, _) _)]]"
   by_cases' hk : k < n + 2 <;> simp [← hk, ← IH]
 
 theorem comp_right_inv_aux1 {n : ℕ} (hn : 0 < n) (p : FormalMultilinearSeries 𝕜 E F) (q : FormalMultilinearSeries 𝕜 F E)
@@ -443,7 +443,7 @@ theorem radius_right_inv_pos_of_radius_pos_aux1 (n : ℕ) (p : ℕ → ℝ) (hp 
       apply sum_congr rfl fun j hj => _
       simp only [@MultilinearMap.mk_pi_algebra_apply ℝ (Finₓ j) _ _ ℝ]
       simp only
-        [MultilinearMap.map_sum_finset (MultilinearMap.mkPiAlgebra ℝ (Finₓ j) ℝ) fun k m : ℕ => r * (a ^ m * p m)]
+        [MultilinearMap.map_sum_finset (MultilinearMap.mkPiAlgebra ℝ (Finₓ j) ℝ) fun k (m : ℕ) => r * (a ^ m * p m)]
       simp only [← MultilinearMap.mk_pi_algebra_apply]
       dsimp'
       simp [← prod_const, mul_sum, ← mul_powₓ]

@@ -111,11 +111,11 @@ theorem append1_drop_last (α : Typevec (n + 1)) : Append1 (Drop α) (Last α) =
 
 /-- cases on `(n+1)-length` vectors -/
 @[elab_as_eliminator]
-def append1Cases {C : Typevec (n + 1) → Sort u} (H : ∀ α β, C (Append1 α β)) γ : C γ := by
+def append1Cases {C : Typevec (n + 1) → Sort u} (H : ∀ α β, C (Append1 α β)) (γ) : C γ := by
   rw [← @append1_drop_last _ γ] <;> apply H
 
 @[simp]
-theorem append1_cases_append1 {C : Typevec (n + 1) → Sort u} (H : ∀ α β, C (Append1 α β)) α β :
+theorem append1_cases_append1 {C : Typevec (n + 1) → Sort u} (H : ∀ α β, C (Append1 α β)) (α β) :
     @append1Cases _ C H (Append1 α β) = H α β :=
   rfl
 
@@ -143,6 +143,7 @@ def lastFun {α β : Typevec (n + 1)} (f : α ⟹ β) : Last α → Last β :=
 /-- arrow in the category of `0-length` vectors -/
 def nilFun {α : Typevec 0} {β : Typevec 0} : α ⟹ β := fun i => Fin2.elim0 i
 
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 theorem eq_of_drop_last_eq {α β : Typevec (n + 1)} {f g : α ⟹ β} (h₀ : dropFun f = dropFun g)
     (h₁ : lastFun f = lastFun g) : f = g := by
   replace h₀ := congr_fun h₀ <;> ext1 (ieq | ⟨j, ieq⟩) <;> apply_assumption
@@ -255,14 +256,14 @@ local prefix:0 "♯" =>
 protected def casesNil {β : Typevec 0 → Sort _} (f : β Fin2.elim0) : ∀ v, β v := fun v => ♯f
 
 /-- cases distinction for (n+1)-length type vector -/
-protected def casesCons (n : ℕ) {β : Typevec (n + 1) → Sort _} (f : ∀ t v : Typevec n, β (v ::: t)) : ∀ v, β v :=
+protected def casesCons (n : ℕ) {β : Typevec (n + 1) → Sort _} (f : ∀ (t) (v : Typevec n), β (v ::: t)) : ∀ v, β v :=
   fun v : Typevec (n + 1) => ♯f v.last v.drop
 
 protected theorem cases_nil_append1 {β : Typevec 0 → Sort _} (f : β Fin2.elim0) : Typevec.casesNil f Fin2.elim0 = f :=
   rfl
 
-protected theorem cases_cons_append1 (n : ℕ) {β : Typevec (n + 1) → Sort _} (f : ∀ t v : Typevec n, β (v ::: t))
-    (v : Typevec n) α : Typevec.casesCons n f (v ::: α) = f α v :=
+protected theorem cases_cons_append1 (n : ℕ) {β : Typevec (n + 1) → Sort _} (f : ∀ (t) (v : Typevec n), β (v ::: t))
+    (v : Typevec n) (α) : Typevec.casesCons n f (v ::: α) = f α v :=
   rfl
 
 /-- cases distinction for an arrow in the category of 0-length type vectors -/
@@ -277,8 +278,8 @@ def typevecCasesNil₃ {β : ∀ v v' : Typevec 0, v ⟹ v' → Sort _} (f : β 
 
 /-- cases distinction for an arrow in the category of (n+1)-length type vectors -/
 def typevecCasesCons₃ (n : ℕ) {β : ∀ v v' : Typevec (n + 1), v ⟹ v' → Sort _}
-    (F : ∀ t t' f : t → t' v v' : Typevec n fs : v ⟹ v', β (v ::: t) (v' ::: t') (fs ::: f)) : ∀ v v' fs, β v v' fs :=
-  by
+    (F : ∀ (t t') (f : t → t') (v v' : Typevec n) (fs : v ⟹ v'), β (v ::: t) (v' ::: t') (fs ::: f)) :
+    ∀ v v' fs, β v v' fs := by
   intro v v'
   rw [← append1_drop_last v, ← append1_drop_last v']
   intro fs
@@ -295,7 +296,7 @@ def typevecCasesNil₂ {β : Fin2.elim0 ⟹ Fin2.elim0 → Sort _} (f : β nilFu
 
 /-- specialized cases distinction for an arrow in the category of (n+1)-length type vectors -/
 def typevecCasesCons₂ (n : ℕ) (t t' : Type _) (v v' : Typevec n) {β : (v ::: t) ⟹ (v' ::: t') → Sort _}
-    (F : ∀ f : t → t' fs : v ⟹ v', β (fs ::: f)) : ∀ fs, β fs := by
+    (F : ∀ (f : t → t') (fs : v ⟹ v'), β (fs ::: f)) : ∀ fs, β fs := by
   intro fs
   rw [← split_drop_fun_last_fun fs]
   apply F
@@ -305,7 +306,7 @@ theorem typevec_cases_nil₂_append_fun {β : Fin2.elim0 ⟹ Fin2.elim0 → Sort
   rfl
 
 theorem typevec_cases_cons₂_append_fun (n : ℕ) (t t' : Type _) (v v' : Typevec n) {β : (v ::: t) ⟹ (v' ::: t') → Sort _}
-    (F : ∀ f : t → t' fs : v ⟹ v', β (fs ::: f)) f fs : typevecCasesCons₂ n t t' v v' F (fs ::: f) = F f fs :=
+    (F : ∀ (f : t → t') (fs : v ⟹ v'), β (fs ::: f)) (f fs) : typevecCasesCons₂ n t t' v v' F (fs ::: f) = F f fs :=
   rfl
 
 /-- `pred_last α p x` predicates `p` of the last element of `x : α.append1 β`. -/
@@ -325,12 +326,12 @@ section Liftp'
 open Nat
 
 /-- `repeat n t` is a `n-length` type vector that contains `n` occurences of `t` -/
-def Repeat : ∀ n : ℕ t : Sort _, Typevec n
+def Repeat : ∀ (n : ℕ) (t : Sort _), Typevec n
   | 0, t => Fin2.elim0
   | Nat.succ i, t => Append1 (repeat i t) t
 
 /-- `prod α β` is the pointwise product of the components of `α` and `β` -/
-def Prod : ∀ {n} α β : Typevec.{u} n, Typevec n
+def Prod : ∀ {n} (α β : Typevec.{u} n), Typevec n
   | 0, α, β => Fin2.elim0
   | n + 1, α, β => Prod (Drop α) (Drop β) ::: Last α × Last β
 
@@ -339,14 +340,14 @@ localized [Mvfunctor] infixl:45 " ⊗ " => Typevec.Prod
 
 /-- `const x α` is an arrow that ignores its source and constructs a `typevec` that
 contains nothing but `x` -/
-protected def constₓ {β} (x : β) : ∀ {n} α : Typevec n, α ⟹ Repeat _ β
+protected def constₓ {β} (x : β) : ∀ {n} (α : Typevec n), α ⟹ Repeat _ β
   | succ n, α, Fin2.fs i => const (Drop α) _
   | succ n, α, Fin2.fz => fun _ => x
 
 open Function (uncurry)
 
 /-- vector of equality on a product of vectors -/
-def repeatEq : ∀ {n} α : Typevec n, α ⊗ α ⟹ Repeat _ Prop
+def repeatEq : ∀ {n} (α : Typevec n), α ⊗ α ⟹ Repeat _ Prop
   | 0, α => nilFun
   | succ n, α => repeat_eq (Drop α) ::: uncurry Eq
 
@@ -422,7 +423,7 @@ def Prod.diag : ∀ {n} {α : Typevec.{u} n}, α ⟹ α ⊗ α
   | succ n, α, Fin2.fz, x => (x, x)
 
 /-- constructor for `prod` -/
-def Prod.mk : ∀ {n} {α β : Typevec.{u} n} i : Fin2 n, α i → β i → (α ⊗ β) i
+def Prod.mk : ∀ {n} {α β : Typevec.{u} n} (i : Fin2 n), α i → β i → (α ⊗ β) i
   | succ n, α, β, Fin2.fs i => Prod.mk i
   | succ n, α, β, Fin2.fz => Prod.mk
 
@@ -462,32 +463,32 @@ theorem repeat_eq_iff_eq {α : Typevec n} {i x y} : ofRepeat (repeatEq α i (Pro
 
 /-- given a predicate vector `p` over vector `α`, `subtype_ p` is the type of vectors
 that contain an `α` that satisfies `p` -/
-def Subtype_ : ∀ {n} {α : Typevec.{u} n} p : α ⟹ Repeat n Prop, Typevec n
+def Subtype_ : ∀ {n} {α : Typevec.{u} n} (p : α ⟹ Repeat n Prop), Typevec n
   | _, α, p, Fin2.fz => Subtype fun x => p Fin2.fz x
   | _, α, p, Fin2.fs i => subtype_ (dropFun p) i
 
 /-- projection on `subtype_` -/
-def subtypeVal : ∀ {n} {α : Typevec.{u} n} p : α ⟹ Repeat n Prop, Subtype_ p ⟹ α
+def subtypeVal : ∀ {n} {α : Typevec.{u} n} (p : α ⟹ Repeat n Prop), Subtype_ p ⟹ α
   | succ n, α, p, Fin2.fs i => @subtype_val n _ _ i
   | succ n, α, p, Fin2.fz => Subtype.val
 
 /-- arrow that rearranges the type of `subtype_` to turn a subtype of vector into
 a vector of subtypes -/
 def toSubtype :
-    ∀ {n} {α : Typevec.{u} n} p : α ⟹ Repeat n Prop, (fun i : Fin2 n => { x // of_repeat <| p i x }) ⟹ Subtype_ p
+    ∀ {n} {α : Typevec.{u} n} (p : α ⟹ Repeat n Prop), (fun i : Fin2 n => { x // of_repeat <| p i x }) ⟹ Subtype_ p
   | succ n, α, p, Fin2.fs i, x => to_subtype (dropFun p) i x
   | succ n, α, p, Fin2.fz, x => x
 
 /-- arrow that rearranges the type of `subtype_` to turn a vector of subtypes
 into a subtype of vector -/
 def ofSubtype :
-    ∀ {n} {α : Typevec.{u} n} p : α ⟹ Repeat n Prop, Subtype_ p ⟹ fun i : Fin2 n => { x // of_repeat <| p i x }
+    ∀ {n} {α : Typevec.{u} n} (p : α ⟹ Repeat n Prop), Subtype_ p ⟹ fun i : Fin2 n => { x // of_repeat <| p i x }
   | succ n, α, p, Fin2.fs i, x => of_subtype _ i x
   | succ n, α, p, Fin2.fz, x => x
 
 /-- similar to `to_subtype` adapted to relations (i.e. predicate on product) -/
 def toSubtype' :
-    ∀ {n} {α : Typevec.{u} n} p : α ⊗ α ⟹ Repeat n Prop,
+    ∀ {n} {α : Typevec.{u} n} (p : α ⊗ α ⟹ Repeat n Prop),
       (fun i : Fin2 n => { x : α i × α i // of_repeat <| p i (Prod.mk _ x.1 x.2) }) ⟹ Subtype_ p
   | succ n, α, p, Fin2.fs i, x => to_subtype' (dropFun p) i x
   | succ n, α, p, Fin2.fz, x =>
@@ -499,7 +500,7 @@ def toSubtype' :
 
 /-- similar to `of_subtype` adapted to relations (i.e. predicate on product) -/
 def ofSubtype' :
-    ∀ {n} {α : Typevec.{u} n} p : α ⊗ α ⟹ Repeat n Prop,
+    ∀ {n} {α : Typevec.{u} n} (p : α ⊗ α ⟹ Repeat n Prop),
       Subtype_ p ⟹ fun i : Fin2 n => { x : α i × α i // of_repeat <| p i (Prod.mk _ x.1 x.2) }
   | _, α, p, Fin2.fs i, x => of_subtype' _ i x
   | _, α, p, Fin2.fz, x =>

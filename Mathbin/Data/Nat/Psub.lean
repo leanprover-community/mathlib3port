@@ -85,7 +85,7 @@ theorem ppred_eq_pred {n} (h : 0 < n) : ppred n = some (pred n) :=
 theorem psub_eq_sub {m n} (h : n ≤ m) : psub m n = some (m - n) :=
   psub_eq_some.2 <| tsub_add_cancel_of_le h
 
-theorem psub_add m n k :
+theorem psub_add (m n k) :
     psub m (n + k) = do
       let x ← psub m n
       psub x k :=
@@ -97,7 +97,7 @@ theorem psub_add m n k :
 def psub' (m n : ℕ) : Option ℕ :=
   if n ≤ m then some (m - n) else none
 
-theorem psub'_eq_psub m n : psub' m n = psub m n := by
+theorem psub'_eq_psub (m n) : psub' m n = psub m n := by
   rw [psub'] <;> split_ifs <;> [exact (psub_eq_sub h).symm, exact (psub_eq_none.2 (not_leₓ.1 h)).symm]
 
 end Nat

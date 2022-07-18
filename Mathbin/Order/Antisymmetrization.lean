@@ -116,10 +116,10 @@ theorem AntisymmRel.image {a b : α} (h : AntisymmRel (· ≤ ·) a b) {f : α �
 
 instance : PartialOrderₓ (Antisymmetrization α (· ≤ ·)) where
   le := fun a b =>
-    (Quotientₓ.liftOn₂' a b (· ≤ ·)) fun a₁ a₂ b₁ b₂ : α h₁ h₂ =>
+    (Quotientₓ.liftOn₂' a b (· ≤ ·)) fun (a₁ a₂ b₁ b₂ : α) h₁ h₂ =>
       propext ⟨fun h => h₁.2.trans <| h.trans h₂.1, fun h => h₁.1.trans <| h.trans h₂.2⟩
   lt := fun a b =>
-    (Quotientₓ.liftOn₂' a b (· < ·)) fun a₁ a₂ b₁ b₂ : α h₁ h₂ =>
+    (Quotientₓ.liftOn₂' a b (· < ·)) fun (a₁ a₂ b₁ b₂ : α) h₁ h₂ =>
       propext ⟨fun h => h₁.2.trans_lt <| h.trans_le h₂.1, fun h => h₁.1.trans_lt <| h.trans_le h₂.2⟩
   le_refl := fun a => Quotientₓ.induction_on' a <| le_reflₓ
   le_trans := fun a b c => (Quotientₓ.induction_on₃' a b c) fun a b c => le_transₓ

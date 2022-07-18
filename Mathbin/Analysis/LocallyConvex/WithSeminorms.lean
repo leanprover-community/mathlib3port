@@ -75,7 +75,6 @@ theorem basis_sets_nonempty [Nonempty ι] : p.basis_sets.Nonempty := by
   refine' set.nonempty_def.mpr ⟨(p i).ball 0 1, _⟩
   exact p.basis_sets_singleton_mem i zero_lt_one
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem basis_sets_intersect (U V : Set E) (hU : U ∈ p.basis_sets) (hV : V ∈ p.basis_sets) :
     ∃ (z : Set E)(H : z ∈ p.basis_sets), z ⊆ U ∩ V := by
   classical
@@ -89,20 +88,20 @@ theorem basis_sets_intersect (U V : Set E) (hU : U ∈ p.basis_sets) (hV : V ∈
     Set.subset_inter (Set.Inter₂_mono' fun i hi => ⟨i, Finset.subset_union_left _ _ hi, ball_mono <| min_le_leftₓ _ _⟩)
       (Set.Inter₂_mono' fun i hi => ⟨i, Finset.subset_union_right _ _ hi, ball_mono <| min_le_rightₓ _ _⟩)
 
-theorem basis_sets_zero U (hU : U ∈ p.basis_sets) : (0 : E) ∈ U := by
+theorem basis_sets_zero (U) (hU : U ∈ p.basis_sets) : (0 : E) ∈ U := by
   rcases p.basis_sets_iff.mp hU with ⟨ι', r, hr, hU⟩
   rw [hU, mem_ball_zero, map_zero]
   exact hr
 
-theorem basis_sets_add U (hU : U ∈ p.basis_sets) : ∃ (V : Set E)(H : V ∈ p.basis_sets), V + V ⊆ U := by
+theorem basis_sets_add (U) (hU : U ∈ p.basis_sets) : ∃ (V : Set E)(H : V ∈ p.basis_sets), V + V ⊆ U := by
   rcases p.basis_sets_iff.mp hU with ⟨s, r, hr, hU⟩
   use (s.sup p).ball 0 (r / 2)
   refine' ⟨p.basis_sets_mem s (div_pos hr zero_lt_two), _⟩
   refine' Set.Subset.trans (ball_add_ball_subset (s.sup p) (r / 2) (r / 2) 0 0) _
   rw [hU, add_zeroₓ, add_halves']
 
-theorem basis_sets_neg U (hU' : U ∈ p.basis_sets) : ∃ (V : Set E)(H : V ∈ p.basis_sets), V ⊆ (fun x : E => -x) ⁻¹' U :=
-  by
+theorem basis_sets_neg (U) (hU' : U ∈ p.basis_sets) :
+    ∃ (V : Set E)(H : V ∈ p.basis_sets), V ⊆ (fun x : E => -x) ⁻¹' U := by
   rcases p.basis_sets_iff.mp hU' with ⟨s, r, hr, hU⟩
   rw [hU, neg_preimage, neg_ball (s.sup p), neg_zero]
   exact ⟨U, hU', Eq.subset hU⟩
@@ -126,7 +125,7 @@ theorem basis_sets_smul_right (v : E) (U : Set E) (hU : U ∈ p.basis_sets) : �
 
 variable [Nonempty ι]
 
-theorem basis_sets_smul U (hU : U ∈ p.basis_sets) :
+theorem basis_sets_smul (U) (hU : U ∈ p.basis_sets) :
     ∃ (V : Set 𝕜)(H : V ∈ 𝓝 (0 : 𝕜))(W : Set E)(H : W ∈ p.AddGroupFilterBasis.Sets), V • W ⊆ U := by
   rcases p.basis_sets_iff.mp hU with ⟨s, r, hr, hU⟩
   refine' ⟨Metric.Ball 0 r.sqrt, Metric.ball_mem_nhds 0 (real.sqrt_pos.mpr hr), _⟩
@@ -203,7 +202,6 @@ theorem const_is_bounded (ι : Type _) [Nonempty ι] {p : Seminorm 𝕜 E} {q : 
   use {Classical.arbitrary ι}
   simp only [← h, ← Finset.sup_singleton]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem is_bounded_sup {p : ι → Seminorm 𝕜 E} {q : ι' → Seminorm 𝕜 F} {f : E →ₗ[𝕜] F} (hf : IsBounded p q f)
     (s' : Finset ι') : ∃ (C : ℝ≥0 )(s : Finset ι), 0 < C ∧ (s'.sup q).comp f ≤ C • s.sup p := by
   classical
@@ -290,7 +288,7 @@ end TopologicalAddGroup
 section NormedSpace
 
 /-- The topology of a `normed_space 𝕜 E` is induced by the seminorm `norm_seminorm 𝕜 E`. -/
-instance norm_with_seminorms 𝕜 E [NormedField 𝕜] [SemiNormedGroup E] [NormedSpace 𝕜 E] :
+instance norm_with_seminorms (𝕜 E) [NormedField 𝕜] [SemiNormedGroup E] [NormedSpace 𝕜 E] :
     WithSeminorms fun _ : Finₓ 1 => normSeminorm 𝕜 E := by
   let p : SeminormFamily 𝕜 E (Finₓ 1) := fun _ => normSeminorm 𝕜 E
   refine' ⟨TopologicalAddGroup.ext normed_top_group p.add_group_filter_basis.is_topological_add_group _⟩
@@ -393,14 +391,14 @@ theorem continuous_from_bounded (p : SeminormFamily 𝕜 E ι) (q : SeminormFami
   refine' subset.trans _ (ball_antitone hf)
   rw [ball_smul (s₁.sup p) hC]
 
-theorem cont_with_seminorms_normed_space F [SemiNormedGroup F] [NormedSpace 𝕜 F] [UniformSpace E] [UniformAddGroup E]
+theorem cont_with_seminorms_normed_space (F) [SemiNormedGroup F] [NormedSpace 𝕜 F] [UniformSpace E] [UniformAddGroup E]
     (p : ι → Seminorm 𝕜 E) [WithSeminorms p] (f : E →ₗ[𝕜] F)
     (hf : ∃ (s : Finset ι)(C : ℝ≥0 ), C ≠ 0 ∧ (normSeminorm 𝕜 F).comp f ≤ C • s.sup p) : Continuous f := by
   rw [← Seminorm.is_bounded_const (Finₓ 1)] at hf
   exact continuous_from_bounded p (fun _ : Finₓ 1 => normSeminorm 𝕜 F) f hf
 
-theorem cont_normed_space_to_with_seminorms E [SemiNormedGroup E] [NormedSpace 𝕜 E] [UniformSpace F] [UniformAddGroup F]
-    (q : ι → Seminorm 𝕜 F) [WithSeminorms q] (f : E →ₗ[𝕜] F)
+theorem cont_normed_space_to_with_seminorms (E) [SemiNormedGroup E] [NormedSpace 𝕜 E] [UniformSpace F]
+    [UniformAddGroup F] (q : ι → Seminorm 𝕜 F) [WithSeminorms q] (f : E →ₗ[𝕜] F)
     (hf : ∀ i : ι, ∃ C : ℝ≥0 , C ≠ 0 ∧ (q i).comp f ≤ C • normSeminorm 𝕜 E) : Continuous f := by
   rw [← Seminorm.const_is_bounded (Finₓ 1)] at hf
   exact continuous_from_bounded (fun _ : Finₓ 1 => normSeminorm 𝕜 E) q f hf

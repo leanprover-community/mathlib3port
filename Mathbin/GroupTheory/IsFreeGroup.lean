@@ -32,7 +32,7 @@ For the explicit construction of free groups, see `group_theory/free_group`.
 
 universe u
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`MulEquiv] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`MulEquiv] []
 /-- `is_free_group G` means that `G` isomorphic to a free group. -/
 class IsFreeGroup (G : Type u) [Groupₓ G] where
   Generators : Type u
@@ -102,7 +102,7 @@ theorem unique_lift (f : Generators G → H) : ∃! F : G →* H, ∀ a, F (of a
 /-- If a group satisfies the universal property of a free group, then it is a free group, where
 the universal property is expressed as in `is_free_group.lift` and its properties. -/
 def ofLift {G : Type u} [Groupₓ G] (X : Type u) (of : X → G) (lift : ∀ {H : Type u} [Groupₓ H], (X → H) ≃ (G →* H))
-    (lift_of : ∀ {H : Type u} [Groupₓ H], ∀ f : X → H a, lift f (of a) = f a) : IsFreeGroup G where
+    (lift_of : ∀ {H : Type u} [Groupₓ H], ∀ (f : X → H) (a), lift f (of a) = f a) : IsFreeGroup G where
   Generators := X
   MulEquiv :=
     MonoidHom.toMulEquiv (FreeGroup.lift of) (lift FreeGroup.of)
@@ -111,7 +111,7 @@ def ofLift {G : Type u} [Groupₓ G] (X : Type u) (of : X → G) (lift : ∀ {H 
         intro x
         simp only [← MonoidHom.coe_comp, ← Function.comp_app, ← MonoidHom.id_apply, ← FreeGroup.lift.of, ← lift_of])
       (by
-        let lift_symm_of : ∀ {H : Type u} [Groupₓ H], ∀ f : G →* H a, lift.symm f a = f (of a) := by
+        let lift_symm_of : ∀ {H : Type u} [Groupₓ H], ∀ (f : G →* H) (a), lift.symm f a = f (of a) := by
           intro H _ f a <;> simp [lift_of (lift.symm f)]
         apply lift.symm.injective
         ext x
@@ -121,7 +121,7 @@ def ofLift {G : Type u} [Groupₓ G] (X : Type u) (of : X → G) (lift : ∀ {H 
 /-- If a group satisfies the universal property of a free group, then it is a free group, where
 the universal property is expressed as in `is_free_group.unique_lift`.  -/
 noncomputable def ofUniqueLift {G : Type u} [Groupₓ G] (X : Type u) (of : X → G)
-    (h : ∀ {H : Type u} [Groupₓ H] f : X → H, ∃! F : G →* H, ∀ a, F (of a) = f a) : IsFreeGroup G :=
+    (h : ∀ {H : Type u} [Groupₓ H] (f : X → H), ∃! F : G →* H, ∀ a, F (of a) = f a) : IsFreeGroup G :=
   let lift {H : Type u} [Groupₓ H] : (X → H) ≃ (G →* H) :=
     { toFun := fun f => Classical.some (h f), invFun := fun F => F ∘ of,
       left_inv := fun f => funext (Classical.some_spec (h f)).left,

@@ -80,7 +80,7 @@ theorem modeq_of_dvd : (n : ℤ) ∣ b - a → a ≡ b [MOD n] :=
 theorem modeq_iff_dvd' (h : a ≤ b) : a ≡ b [MOD n] ↔ n ∣ b - a := by
   rw [modeq_iff_dvd, ← Int.coe_nat_dvd, Int.coe_nat_subₓ h]
 
-theorem mod_modeq a n : a % n ≡ a [MOD n] :=
+theorem mod_modeq (a n) : a % n ≡ a [MOD n] :=
   mod_modₓ _ _
 
 namespace Modeq
@@ -487,7 +487,7 @@ namespace List
 
 variable {α : Type _}
 
-theorem nth_rotate : ∀ {l : List α} {n m : ℕ} hml : m < l.length, (l.rotate n).nth m = l.nth ((m + n) % l.length)
+theorem nth_rotate : ∀ {l : List α} {n m : ℕ} (hml : m < l.length), (l.rotate n).nth m = l.nth ((m + n) % l.length)
   | [], n, m, hml => (Nat.not_lt_zeroₓ _ hml).elim
   | l, 0, m, hml => by
     simp [← Nat.mod_eq_of_ltₓ hml]

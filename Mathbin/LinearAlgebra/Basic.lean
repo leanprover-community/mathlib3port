@@ -930,11 +930,9 @@ theorem map_smul (f : V →ₗ[K] V₂) (p : Submodule K V) (a : K) (h : a ≠ 0
       rw [map_le_iff_le_comap, ← comap_smul f _ a h, ← map_le_iff_le_comap]
       exact le_rfl)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem comap_smul' (f : V →ₗ[K] V₂) (p : Submodule K V₂) (a : K) : p.comap (a • f) = ⨅ h : a ≠ 0, p.comap f := by
   classical <;> by_cases' a = 0 <;> simp [← h, ← comap_smul]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem map_smul' (f : V →ₗ[K] V₂) (p : Submodule K V) (a : K) : p.map (a • f) = ⨆ h : a ≠ 0, p.map f := by
   classical <;> by_cases' a = 0 <;> simp [← h, ← map_smul]
 
@@ -986,7 +984,7 @@ variable {γ : ι → Type _} [DecidableEq ι]
 
 section Sum
 
-variable [∀ i, Zero (γ i)] [∀ i x : γ i, Decidable (x ≠ 0)]
+variable [∀ i, Zero (γ i)] [∀ (i) (x : γ i), Decidable (x ≠ 0)]
 
 @[simp]
 theorem map_dfinsupp_sum (f : M →ₛₗ[σ₁₂] M₂) {t : Π₀ i, γ i} {g : ∀ i, γ i → M} :
@@ -1020,12 +1018,12 @@ variable {σ₂₁ : R₂ →+* R} {τ₁₂ : R →+* R₂} {τ₂₃ : R₂ �
 
 variable [RingHomCompTriple τ₁₂ τ₂₃ τ₁₃]
 
-theorem map_cod_restrict [RingHomSurjective σ₂₁] (p : Submodule R M) (f : M₂ →ₛₗ[σ₂₁] M) h p' :
+theorem map_cod_restrict [RingHomSurjective σ₂₁] (p : Submodule R M) (f : M₂ →ₛₗ[σ₂₁] M) (h p') :
     Submodule.map (codRestrict p f h) p' = comap p.Subtype (p'.map f) :=
   Submodule.ext fun ⟨x, hx⟩ => by
     simp [← Subtype.ext_iff_val]
 
-theorem comap_cod_restrict (p : Submodule R M) (f : M₂ →ₛₗ[σ₂₁] M) hf p' :
+theorem comap_cod_restrict (p : Submodule R M) (f : M₂ →ₛₗ[σ₂₁] M) (hf p') :
     Submodule.comap (codRestrict p f hf) p' = Submodule.comap f (map p.Subtype p') :=
   Submodule.ext fun x =>
     ⟨fun h => ⟨⟨_, hf x⟩, h, rfl⟩, by
@@ -1158,11 +1156,11 @@ theorem ker_eq_bot_of_inverse {τ₂₁ : R₂ →+* R} [RingHomInvPair τ₁₂
 theorem le_ker_iff_map [RingHomSurjective τ₁₂] {f : M →ₛₗ[τ₁₂] M₂} {p : Submodule R M} : p ≤ ker f ↔ map f p = ⊥ := by
   rw [ker, eq_bot_iff, map_le_iff_le_comap]
 
-theorem ker_cod_restrict {τ₂₁ : R₂ →+* R} (p : Submodule R M) (f : M₂ →ₛₗ[τ₂₁] M) hf :
+theorem ker_cod_restrict {τ₂₁ : R₂ →+* R} (p : Submodule R M) (f : M₂ →ₛₗ[τ₂₁] M) (hf) :
     ker (codRestrict p f hf) = ker f := by
   rw [ker, comap_cod_restrict, map_bot] <;> rfl
 
-theorem range_cod_restrict {τ₂₁ : R₂ →+* R} [RingHomSurjective τ₂₁] (p : Submodule R M) (f : M₂ →ₛₗ[τ₂₁] M) hf :
+theorem range_cod_restrict {τ₂₁ : R₂ →+* R} [RingHomSurjective τ₂₁] (p : Submodule R M) (f : M₂ →ₛₗ[τ₂₁] M) (hf) :
     range (codRestrict p f hf) = comap p.Subtype f.range := by
   simpa only [← range_eq_map] using map_cod_restrict _ _ _ _
 
@@ -1261,8 +1259,8 @@ theorem ker_to_add_subgroup (f : M →ₛₗ[τ₁₂] M₂) : f.ker.toAddSubgro
 theorem sub_mem_ker_iff {x y} : x - y ∈ f.ker ↔ f x = f y := by
   rw [mem_ker, map_sub, sub_eq_zero]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » p)
-theorem disjoint_ker' {p : Submodule R M} : Disjoint p (ker f) ↔ ∀ x y _ : x ∈ p _ : y ∈ p, f x = f y → x = y :=
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » p)
+theorem disjoint_ker' {p : Submodule R M} : Disjoint p (ker f) ↔ ∀ (x y) (_ : x ∈ p) (_ : y ∈ p), f x = f y → x = y :=
   disjoint_ker.trans
     ⟨fun H x hx y hy h =>
       eq_of_sub_eq_zero <|
@@ -1274,9 +1272,9 @@ theorem disjoint_ker' {p : Submodule R M} : Disjoint p (ker f) ↔ ∀ x y _ : x
         (by
           simpa using h₂)⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem inj_of_disjoint_ker {p : Submodule R M} {s : Set M} (h : s ⊆ p) (hd : Disjoint p (ker f)) :
-    ∀ x y _ : x ∈ s _ : y ∈ s, f x = f y → x = y := fun x hx y hy => disjoint_ker'.1 hd _ (h hx) _ (h hy)
+    ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), f x = f y → x = y := fun x hx y hy => disjoint_ker'.1 hd _ (h hx) _ (h hy)
 
 theorem ker_eq_bot : ker f = ⊥ ↔ Injective f := by
   simpa [← Disjoint] using @disjoint_ker' _ _ _ _ _ _ _ _ _ _ _ f ⊤
@@ -1674,7 +1672,7 @@ variable {γ : ι → Type _} [DecidableEq ι]
 include τ₂₁
 
 @[simp]
-theorem map_dfinsupp_sum [∀ i, Zero (γ i)] [∀ i x : γ i, Decidable (x ≠ 0)] (f : M ≃ₛₗ[τ₁₂] M₂) (t : Π₀ i, γ i)
+theorem map_dfinsupp_sum [∀ i, Zero (γ i)] [∀ (i) (x : γ i), Decidable (x ≠ 0)] (f : M ≃ₛₗ[τ₁₂] M₂) (t : Π₀ i, γ i)
     (g : ∀ i, γ i → M) : f (t.Sum g) = t.Sum fun i d => f (g i d) :=
   f.map_sum _
 
@@ -2243,7 +2241,6 @@ theorem fun_left_id (g : n → M) : funLeft R M id g = g :=
 theorem fun_left_comp (f₁ : n → p) (f₂ : m → n) : funLeft R M (f₁ ∘ f₂) = (funLeft R M f₂).comp (funLeft R M f₁) :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem fun_left_surjective_of_injective (f : m → n) (hf : Injective f) : Surjective (funLeft R M f) := by
   classical
   intro g

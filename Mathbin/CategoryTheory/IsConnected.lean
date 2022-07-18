@@ -55,7 +55,7 @@ namespace CategoryTheory
 /-- A possibly empty category for which every functor to a discrete category is constant.
 -/
 class IsPreconnected (J : Type u₁) [Category.{v₁} J] : Prop where
-  iso_constant : ∀ {α : Type u₁} F : J ⥤ Discrete α j : J, Nonempty (F ≅ (Functor.const J).obj (F.obj j))
+  iso_constant : ∀ {α : Type u₁} (F : J ⥤ Discrete α) (j : J), Nonempty (F ≅ (Functor.const J).obj (F.obj j))
 
 /-- We define a connected category as a _nonempty_ category for which every
 functor to a discrete category is constant.
@@ -95,7 +95,7 @@ theorem any_functor_const_on_obj [IsPreconnected J] {α : Type u₁} (F : J ⥤ 
 The converse of `any_functor_const_on_obj`.
 -/
 theorem IsConnected.of_any_functor_const_on_obj [Nonempty J]
-    (h : ∀ {α : Type u₁} F : J ⥤ Discrete α, ∀ j j' : J, F.obj j = F.obj j') : IsConnected J :=
+    (h : ∀ {α : Type u₁} (F : J ⥤ Discrete α), ∀ j j' : J, F.obj j = F.obj j') : IsConnected J :=
   { iso_constant := fun α F j' =>
       ⟨NatIso.ofComponents (fun j => eqToIso (h F j j')) fun _ _ _ => Subsingleton.elimₓ _ _⟩ }
 
@@ -106,7 +106,7 @@ This can be thought of as a local-to-global property.
 The converse is shown in `is_connected.of_constant_of_preserves_morphisms`
 -/
 theorem constant_of_preserves_morphisms [IsPreconnected J] {α : Type u₁} (F : J → α)
-    (h : ∀ j₁ j₂ : J f : j₁ ⟶ j₂, F j₁ = F j₂) (j j' : J) : F j = F j' := by
+    (h : ∀ (j₁ j₂ : J) (f : j₁ ⟶ j₂), F j₁ = F j₂) (j j' : J) : F j = F j' := by
   simpa using
     any_functor_const_on_obj
       { obj := discrete.mk ∘ F,
@@ -124,7 +124,7 @@ This can be thought of as a local-to-global property.
 The converse of `constant_of_preserves_morphisms`.
 -/
 theorem IsConnected.of_constant_of_preserves_morphisms [Nonempty J]
-    (h : ∀ {α : Type u₁} F : J → α, (∀ {j₁ j₂ : J} f : j₁ ⟶ j₂, F j₁ = F j₂) → ∀ j j' : J, F j = F j') :
+    (h : ∀ {α : Type u₁} (F : J → α), (∀ {j₁ j₂ : J} (f : j₁ ⟶ j₂), F j₁ = F j₂) → ∀ j j' : J, F j = F j') :
     IsConnected J :=
   IsConnected.of_any_functor_const_on_obj fun _ F =>
     h F.obj fun _ _ f => by
@@ -138,7 +138,7 @@ then `p` contains all of `J`.
 The converse is given in `is_connected.of_induct`.
 -/
 theorem induct_on_objects [IsPreconnected J] (p : Set J) {j₀ : J} (h0 : j₀ ∈ p)
-    (h1 : ∀ {j₁ j₂ : J} f : j₁ ⟶ j₂, j₁ ∈ p ↔ j₂ ∈ p) (j : J) : j ∈ p := by
+    (h1 : ∀ {j₁ j₂ : J} (f : j₁ ⟶ j₂), j₁ ∈ p ↔ j₂ ∈ p) (j : J) : j ∈ p := by
   injection constant_of_preserves_morphisms (fun k => ULift.up (k ∈ p)) (fun j₁ j₂ f => _) j j₀ with i
   rwa [i]
   dsimp'
@@ -149,7 +149,7 @@ theorem induct_on_objects [IsPreconnected J] (p : Set J) {j₀ : J} (h0 : j₀ �
 The converse of `induct_on_objects`.
 -/
 theorem IsConnected.of_induct [Nonempty J] {j₀ : J}
-    (h : ∀ p : Set J, j₀ ∈ p → (∀ {j₁ j₂ : J} f : j₁ ⟶ j₂, j₁ ∈ p ↔ j₂ ∈ p) → ∀ j : J, j ∈ p) : IsConnected J :=
+    (h : ∀ p : Set J, j₀ ∈ p → (∀ {j₁ j₂ : J} (f : j₁ ⟶ j₂), j₁ ∈ p ↔ j₂ ∈ p) → ∀ j : J, j ∈ p) : IsConnected J :=
   IsConnected.of_constant_of_preserves_morphisms fun α F a => by
     have w :=
       h { j | F j = F j₀ } rfl fun _ _ f => by
@@ -177,8 +177,8 @@ given a type family `Z : J → Sort*` and
 a rule for transporting in *both* directions along a morphism in `J`,
 we can transport an `x : Z j₀` to a point in `Z j` for any `j`.
 -/
-theorem is_preconnected_induction [IsPreconnected J] (Z : J → Sort _) (h₁ : ∀ {j₁ j₂ : J} f : j₁ ⟶ j₂, Z j₁ → Z j₂)
-    (h₂ : ∀ {j₁ j₂ : J} f : j₁ ⟶ j₂, Z j₂ → Z j₁) {j₀ : J} (x : Z j₀) (j : J) : Nonempty (Z j) :=
+theorem is_preconnected_induction [IsPreconnected J] (Z : J → Sort _) (h₁ : ∀ {j₁ j₂ : J} (f : j₁ ⟶ j₂), Z j₁ → Z j₂)
+    (h₂ : ∀ {j₁ j₂ : J} (f : j₁ ⟶ j₂), Z j₂ → Z j₁) {j₀ : J} (x : Z j₀) (j : J) : Nonempty (Z j) :=
   (induct_on_objects { j | Nonempty (Z j) } ⟨x⟩
     (fun j₁ j₂ f =>
       ⟨by
@@ -275,7 +275,7 @@ theorem zag_of_zag_obj (F : J ⥤ K) [Full F] {j₁ j₂ : J} (h : Zag (F.obj j�
 
 /-- Any equivalence relation containing (⟶) holds for all pairs of a connected category. -/
 theorem equiv_relation [IsConnected J] (r : J → J → Prop) (hr : Equivalenceₓ r)
-    (h : ∀ {j₁ j₂ : J} f : j₁ ⟶ j₂, r j₁ j₂) : ∀ j₁ j₂ : J, r j₁ j₂ := by
+    (h : ∀ {j₁ j₂ : J} (f : j₁ ⟶ j₂), r j₁ j₂) : ∀ j₁ j₂ : J, r j₁ j₂ := by
   have z : ∀ j : J, r (Classical.arbitrary J) j :=
     induct_on_objects (fun k => r (Classical.arbitrary J) k) (hr.1 (Classical.arbitrary J)) fun _ _ f =>
       ⟨fun t => hr.2.2 t (h f), fun t => hr.2.2 t (hr.2.1 (h f))⟩

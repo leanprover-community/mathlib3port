@@ -223,20 +223,19 @@ theorem coe_fin_le {n : ℕ} {a b : Finₓ n} : (a : ℕ) ≤ (b : ℕ) ↔ a �
   Iff.rfl
 
 instance {n : ℕ} : LinearOrderₓ (Finₓ n) :=
-  { LinearOrderₓ.lift (coe : Finₓ n → ℕ) (@Finₓ.eq_of_veq _) with le := (· ≤ ·), lt := (· < ·),
-    decidableLe := Finₓ.decidableLe, decidableLt := Finₓ.decidableLt, DecidableEq := Finₓ.decidableEq _ }
+  Subtype.linearOrder _
 
 instance {n : ℕ} : PartialOrderₓ (Finₓ n) :=
-  LinearOrderₓ.toPartialOrder (Finₓ n)
+  Subtype.partialOrder _
 
 theorem coe_strict_mono : StrictMono (coe : Finₓ n → ℕ) := fun _ _ => id
 
 /-- The inclusion map `fin n → ℕ` is a relation embedding. -/
-def coeEmbedding n : Finₓ n ↪o ℕ :=
+def coeEmbedding (n) : Finₓ n ↪o ℕ :=
   ⟨⟨coe, @Finₓ.eq_of_veq _⟩, fun a b => Iff.rfl⟩
 
 /-- The ordering on `fin n` is a well order. -/
-instance Fin.Lt.is_well_order n : IsWellOrder (Finₓ n) (· < ·) :=
+instance Fin.Lt.is_well_order (n) : IsWellOrder (Finₓ n) (· < ·) :=
   (coeEmbedding n).IsWellOrder
 
 /-- Use the ordering on `fin n` for checking recursive definitions.
@@ -259,7 +258,7 @@ theorem coe_zero {n : ℕ} : ((0 : Finₓ (n + 1)) : ℕ) = 0 :=
 attribute [simp] val_zero
 
 @[simp]
-theorem val_zero' n : (0 : Finₓ (n + 1)).val = 0 :=
+theorem val_zero' (n) : (0 : Finₓ (n + 1)).val = 0 :=
   rfl
 
 @[simp]
@@ -540,7 +539,7 @@ value. -/
 theorem coe_coe_eq_self {n : ℕ} (a : Finₓ (n + 1)) : ((a : ℕ) : Finₓ (n + 1)) = a :=
   coe_val_eq_self a
 
-theorem coe_nat_eq_last n : (n : Finₓ (n + 1)) = Finₓ.last n := by
+theorem coe_nat_eq_last (n) : (n : Finₓ (n + 1)) = Finₓ.last n := by
   rw [← Finₓ.of_nat_eq_coe, Finₓ.ofNat, Finₓ.last]
   simp only [← Nat.mod_eq_of_ltₓ n.lt_succ_self]
 
@@ -686,7 +685,7 @@ theorem range_cast_le {n k : ℕ} (h : n ≤ k) : Set.Range (castLe h) = { i | (
   Set.ext fun x => ⟨fun ⟨y, hy⟩ => hy ▸ y.2, fun hx => ⟨⟨x, hx⟩, Finₓ.ext rfl⟩⟩
 
 @[simp]
-theorem coe_of_injective_cast_le_symm {n k : ℕ} (h : n ≤ k) (i : Finₓ k) hi :
+theorem coe_of_injective_cast_le_symm {n k : ℕ} (h : n ≤ k) (i : Finₓ k) (hi) :
     ((Equivₓ.ofInjective _ (castLe h).Injective).symm ⟨i, hi⟩ : ℕ) = i := by
   rw [← coe_cast_le]
   exact congr_arg coe (Equivₓ.apply_of_injective_symm _ _)
@@ -763,7 +762,7 @@ theorem cast_eq_cast (h : n = m) : (cast h : Finₓ n → Finₓ m) = cast (h �
   simp
 
 /-- `cast_add m i` embeds `i : fin n` in `fin (n+m)`. See also `fin.nat_add` and `fin.add_nat`. -/
-def castAdd m : Finₓ n ↪o Finₓ (n + m) :=
+def castAdd (m) : Finₓ n ↪o Finₓ (n + m) :=
   cast_le <| Nat.le_add_rightₓ n m
 
 @[simp]
@@ -920,7 +919,7 @@ theorem range_cast_succ {n : ℕ} : Set.Range (castSucc : Finₓ n → Finₓ n.
   range_cast_le _
 
 @[simp]
-theorem coe_of_injective_cast_succ_symm {n : ℕ} (i : Finₓ n.succ) hi :
+theorem coe_of_injective_cast_succ_symm {n : ℕ} (i : Finₓ n.succ) (hi) :
     ((Equivₓ.ofInjective castSucc (cast_succ_injective _)).symm ⟨i, hi⟩ : ℕ) = i := by
   rw [← coe_cast_succ]
   exact congr_arg coe (Equivₓ.apply_of_injective_symm _ _)
@@ -931,7 +930,7 @@ theorem succ_cast_succ {n : ℕ} (i : Finₓ n) : i.cast_succ.succ = i.succ.cast
       simp )
 
 /-- `add_nat m i` adds `m` to `i`, generalizes `fin.succ`. -/
-def addNat m : Finₓ n ↪o Finₓ (n + m) :=
+def addNat (m) : Finₓ n ↪o Finₓ (n + m) :=
   (OrderEmbedding.ofStrictMono fun i => ⟨(i : ℕ) + m, add_lt_add_right i.2 _⟩) fun i j h =>
     lt_iff_coe_lt_coe.2 <| add_lt_add_right h _
 
@@ -970,7 +969,7 @@ theorem cast_add_nat_right {n m m' : ℕ} (i : Finₓ n) (h : n + m' = n + m) : 
   ext <| (congr_arg ((· + ·) (i : ℕ)) (add_left_cancelₓ h) : _)
 
 /-- `nat_add n i` adds `n` to `i` "on the left". -/
-def natAdd n {m} : Finₓ m ↪o Finₓ (n + m) :=
+def natAdd (n) {m} : Finₓ m ↪o Finₓ (n + m) :=
   (OrderEmbedding.ofStrictMono fun i => ⟨n + (i : ℕ), add_lt_add_left i.2 _⟩) fun i j h =>
     lt_iff_coe_lt_coe.2 <| add_lt_add_left h _
 
@@ -1037,7 +1036,7 @@ theorem coe_pred (j : Finₓ (n + 1)) (h : j ≠ 0) : (j.pred h : ℕ) = j - 1 :
   rfl
 
 @[simp]
-theorem succ_pred : ∀ i : Finₓ (n + 1) h : i ≠ 0, (i.pred h).succ = i
+theorem succ_pred : ∀ (i : Finₓ (n + 1)) (h : i ≠ 0), (i.pred h).succ = i
   | ⟨0, h⟩, hi => by
     contradiction
   | ⟨n + 1, h⟩, hi => rfl
@@ -1053,7 +1052,7 @@ theorem pred_mk_succ (i : ℕ) (h : i < n + 1) :
   simp only [← ext_iff, ← coe_pred, ← coe_mk, ← add_tsub_cancel_right]
 
 -- This is not a simp lemma by default, because `pred_mk_succ` is nicer when it applies.
-theorem pred_mk {n : ℕ} (i : ℕ) (h : i < n + 1) w :
+theorem pred_mk {n : ℕ} (i : ℕ) (h : i < n + 1) (w) :
     Finₓ.pred ⟨i, h⟩ w =
       ⟨i - 1, by
         rwa [tsub_lt_iff_right (Nat.succ_le_of_ltₓ <| Nat.pos_of_ne_zeroₓ (Finₓ.vne_of_ne w))]⟩ :=
@@ -1086,7 +1085,7 @@ theorem pred_add_one (i : Finₓ (n + 2)) (h : (i : ℕ) < n + 1) :
   exact add_lt_add_right h 1
 
 /-- `sub_nat i h` subtracts `m` from `i`, generalizes `fin.pred`. -/
-def subNat m (i : Finₓ (n + m)) (h : m ≤ (i : ℕ)) : Finₓ n :=
+def subNat (m) (i : Finₓ (n + m)) (h : m ≤ (i : ℕ)) : Finₓ n :=
   ⟨(i : ℕ) - m, by
     rw [tsub_lt_iff_right h]
     exact i.is_lt⟩
@@ -1130,7 +1129,7 @@ theorem coe_div_nat (i : Finₓ (m * n)) : (i.divNat : ℕ) = i / n :=
 
 /-- Compute `i % n`, where `n` is a `nat` and inferred the type of `i`. -/
 def modNat (i : Finₓ (m * n)) : Finₓ n :=
-  ⟨i % n, Nat.mod_ltₓ _ <| pos_of_mul_pos_left ((Nat.zero_leₓ i).trans_lt i.is_lt) m.zero_le⟩
+  ⟨i % n, Nat.mod_ltₓ _ <| pos_of_mul_pos_right ((Nat.zero_leₓ i).trans_lt i.is_lt) m.zero_le⟩
 
 @[simp]
 theorem coe_mod_nat (i : Finₓ (m * n)) : (i.modNat : ℕ) = i % n :=
@@ -1151,7 +1150,7 @@ and `Hs n i` defines `(i+1)`-st element of `(n+1)`-tuple based on `n`, `i`, and 
 of `n`-tuple. -/
 @[elab_as_eliminator]
 def succRec {C : ∀ n, Finₓ n → Sort _} (H0 : ∀ n, C (succ n) 0) (Hs : ∀ n i, C n i → C (succ n) i.succ) :
-    ∀ {n : ℕ} i : Finₓ n, C n i
+    ∀ {n : ℕ} (i : Finₓ n), C n i
   | 0, i => i.elim0
   | succ n, ⟨0, _⟩ => H0 _
   | succ n, ⟨succ i, h⟩ => Hs _ _ (succ_rec ⟨i, lt_of_succ_lt_succₓ h⟩)
@@ -1168,7 +1167,7 @@ def succRecOn {n : ℕ} (i : Finₓ n) {C : ∀ n, Finₓ n → Sort _} (H0 : �
   i.succRec H0 Hs
 
 @[simp]
-theorem succ_rec_on_zero {C : ∀ n, Finₓ n → Sort _} {H0 Hs} n : @Finₓ.succRecOn (succ n) 0 C H0 Hs = H0 n :=
+theorem succ_rec_on_zero {C : ∀ n, Finₓ n → Sort _} {H0 Hs} (n) : @Finₓ.succRecOn (succ n) 0 C H0 Hs = H0 n :=
   rfl
 
 @[simp]
@@ -1444,10 +1443,10 @@ def _root_.order_iso.fin_equiv : ∀ {n}, (Finₓ n)ᵒᵈ ≃o Finₓ n
           intro x
           rw [add_commₓ, tsub_add_eq_add_tsub x.is_lt.le, add_tsub_assoc_of_le x.is_le, Nat.add_mod_leftₓ] }
 
-theorem _root_.order_iso.fin_equiv_apply a : OrderIso.finEquiv a = last n - a.ofDual :=
+theorem _root_.order_iso.fin_equiv_apply (a) : OrderIso.finEquiv a = last n - a.ofDual :=
   rfl
 
-theorem _root_.order_iso.fin_equiv_symm_apply a : OrderIso.finEquiv.symm a = OrderDual.toDual (last n - a) :=
+theorem _root_.order_iso.fin_equiv_symm_apply (a) : OrderIso.finEquiv.symm a = OrderDual.toDual (last n - a) :=
   rfl
 
 end AddGroupₓ
@@ -1912,6 +1911,30 @@ protected theorem zero_mul (k : Finₓ (n + 1)) : (0 : Finₓ (n + 1)) * k = 0 :
   simp [← eq_iff_veq, ← mul_def]
 
 end Mul
+
+section
+
+-- Note that here we are disabling the "safety" of reflected, to allow us to reuse `nat.mk_numeral`.
+-- The usual way to provide the required `reflected` instance would be via rewriting to prove that
+-- the expression we use here is equivalent.
+attribute [local semireducible] reflected
+
+unsafe instance reflect : ∀ n, has_reflect (Finₓ n)
+  | 0 => finZeroElim
+  | n + 1 =>
+    nat.mk_numeral (quote.1 (Finₓ n.succ))
+        (quote.1
+          (by
+            infer_instance : Zero (Finₓ n.succ)))
+        (quote.1
+          (by
+            infer_instance : One (Finₓ n.succ)))
+        (quote.1
+          (by
+            infer_instance : Add (Finₓ n.succ))) ∘
+      Subtype.val
+
+end
 
 end Finₓ
 

@@ -232,7 +232,6 @@ def _root_.set.fintype_of_mem_bounds {s : Set α} [DecidablePred (· ∈ s)] (ha
     (hb : b ∈ UpperBounds s) : Fintype s :=
   (Set.fintypeSubset (Set.Icc a b)) fun x hx => ⟨ha hx, hb hx⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem _root_.bdd_below.finite_of_bdd_above {s : Set α} (h₀ : BddBelow s) (h₁ : BddAbove s) : s.Finite := by
   let ⟨a, ha⟩ := h₀
   let ⟨b, hb⟩ := h₁
@@ -474,13 +473,11 @@ theorem Ico_disjoint_Ico_consecutive (a b c : α) : Disjoint (ico a b) (ico b c)
 
 end DecidableEq
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- Those lemmas are purposefully the other way around
 theorem Icc_eq_cons_Ico (h : a ≤ b) : icc a b = (ico a b).cons b right_not_mem_Ico := by
   classical
   rw [cons_eq_insert, Ico_insert_right h]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Icc_eq_cons_Ioc (h : a ≤ b) : icc a b = (ioc a b).cons a left_not_mem_Ioc := by
   classical
   rw [cons_eq_insert, Ioc_insert_left h]
@@ -491,7 +488,6 @@ theorem Ico_filter_le_left {a b : α} [DecidablePred (· ≤ a)] (hab : a < b) :
   rw [mem_filter, mem_Ico, mem_singleton, And.right_comm, ← le_antisymm_iffₓ, eq_comm]
   exact and_iff_left_of_imp fun h => h.le.trans_lt hab
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem card_Ico_eq_card_Icc_sub_one (a b : α) : (ico a b).card = (icc a b).card - 1 := by
   classical
   by_cases' h : a ≤ b
@@ -504,7 +500,6 @@ theorem card_Ico_eq_card_Icc_sub_one (a b : α) : (ico a b).card = (icc a b).car
 theorem card_Ioc_eq_card_Icc_sub_one (a b : α) : (ioc a b).card = (icc a b).card - 1 :=
   @card_Ico_eq_card_Icc_sub_one αᵒᵈ _ _ _ _
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem card_Ioo_eq_card_Ico_sub_one (a b : α) : (ioo a b).card = (ico a b).card - 1 := by
   classical
   by_cases' h : a ≤ b
@@ -536,7 +531,6 @@ theorem Ici_erase [DecidableEq α] (a : α) : (ici a).erase a = ioi a :=
 theorem Ioi_insert [DecidableEq α] (a : α) : insert a (ioi a) = ici a :=
   Ioc_insert_left le_top
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- Purposefully written the other way around
 theorem Ici_eq_cons_Ioi (a : α) : ici a = (ioi a).cons a left_not_mem_Ioc := by
   classical
@@ -556,7 +550,6 @@ theorem Iic_erase [DecidableEq α] (b : α) : (iic b).erase b = iio b :=
 theorem Iio_insert [DecidableEq α] (b : α) : insert b (iio b) = iic b :=
   Ico_insert_right bot_le
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- Purposefully written the other way around
 theorem Iic_eq_cons_Iio (b : α) : iic b = (iio b).cons b right_not_mem_Ico := by
   classical

@@ -336,7 +336,7 @@ theorem ContinuousOn.ae_measurable [TopologicalSpace α] [OpensMeasurableSpace �
   rw [piecewise_preimage, Set.Ite, hu]
   exact (u_open.measurable_set.inter hs).union ((measurable_const ht.measurable_set).diff hs)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr β]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr β]]
 /-- A function which is continuous on a separable set `s` is almost everywhere strongly measurable
 with respect to `μ.restrict s`. -/
 theorem ContinuousOn.ae_strongly_measurable_of_is_separable [TopologicalSpace α] [PseudoMetrizableSpace α]
@@ -344,18 +344,18 @@ theorem ContinuousOn.ae_strongly_measurable_of_is_separable [TopologicalSpace α
     (hf : ContinuousOn f s) (hs : MeasurableSet s) (h's : TopologicalSpace.IsSeparable s) :
     AeStronglyMeasurable f (μ.restrict s) := by
   let this := pseudo_metrizable_space_pseudo_metric α
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr β]]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr β]]"
   rw [ae_strongly_measurable_iff_ae_measurable_separable]
   refine' ⟨hf.ae_measurable hs, f '' s, hf.is_separable_image h's, _⟩
   exact mem_of_superset (self_mem_ae_restrict hs) (subset_preimage_image _ _)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr β]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr β]]
 /-- A function which is continuous on a set `s` is almost everywhere strongly measurable with
 respect to `μ.restrict s` when either the source space or the target space is second-countable. -/
 theorem ContinuousOn.ae_strongly_measurable [TopologicalSpace α] [TopologicalSpace β]
     [h : SecondCountableTopologyEither α β] [OpensMeasurableSpace α] [PseudoMetrizableSpace β] {f : α → β} {s : Set α}
     {μ : Measureₓ α} (hf : ContinuousOn f s) (hs : MeasurableSet s) : AeStronglyMeasurable f (μ.restrict s) := by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr β]]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr β]]"
   refine'
     ae_strongly_measurable_iff_ae_measurable_separable.2
       ⟨hf.ae_measurable hs, f '' s, _, mem_of_superset (self_mem_ae_restrict hs) (subset_preimage_image _ _)⟩

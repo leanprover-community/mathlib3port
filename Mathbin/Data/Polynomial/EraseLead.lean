@@ -3,6 +3,7 @@ Copyright (c) 2020 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
+import Mathbin.Algebra.BigOperators.Fin
 import Mathbin.Data.Polynomial.Degree.Definitions
 
 /-!
@@ -277,22 +278,93 @@ theorem map_nat_degree_eq_sub {S F : Type _} [Semiringₓ S] [AddMonoidHomClass 
       simp )
     (fun m n h => (tsub_lt_tsub_iff_right h).mpr) φ_k φ_mon
 
-theorem map_nat_degree_eq_nat_degree {S F : Type _} [Semiringₓ S] [AddMonoidHomClass F R[X] S[X]] {φ : F} p
+theorem map_nat_degree_eq_nat_degree {S F : Type _} [Semiringₓ S] [AddMonoidHomClass F R[X] S[X]] {φ : F} (p)
     (φ_mon_nat : ∀ n c, c ≠ 0 → (φ (monomial n c)).natDegree = n) : (φ p).natDegree = p.natDegree :=
   (map_nat_degree_eq_sub (fun f h => (Nat.not_lt_zeroₓ _ h).elim)
         (by
           simpa)).trans
     p.natDegree.sub_zero
 
+open BigOperators
+
+theorem card_support_eq' {n : ℕ} (k : Finₓ n → ℕ) (x : Finₓ n → R) (hk : Function.Injective k) (hx : ∀ i, x i ≠ 0) :
+    (∑ i, c (x i) * X ^ k i).Support.card = n := by
+  suffices (∑ i, C (x i) * X ^ k i).Support = image k univ by
+    rw [this, univ.card_image_of_injective hk, card_fin]
+  simp_rw [Finset.ext_iff, mem_support_iff, finset_sum_coeff, coeff_C_mul_X_pow, mem_image, mem_univ, exists_true_left]
+  refine' fun i => ⟨fun h => _, _⟩
+  · obtain ⟨j, hj, h⟩ := exists_ne_zero_of_sum_ne_zero h
+    exact ⟨j, (ite_ne_right_iff.mp h).1.symm⟩
+    
+  · rintro ⟨j, rfl⟩
+    rw [sum_eq_single_of_mem j (mem_univ j), if_pos rfl]
+    · exact hx j
+      
+    · exact fun m hm hmj => if_neg fun h => hmj.symm (hk h)
+      
+    
+
+theorem card_support_eq {n : ℕ} :
+    f.Support.card = n ↔
+      ∃ (k : Finₓ n → ℕ)(x : Finₓ n → R)(hk : StrictMono k)(hx : ∀ i, x i ≠ 0), f = ∑ i, c (x i) * X ^ k i :=
+  by
+  refine' ⟨_, fun ⟨k, x, hk, hx, hf⟩ => hf.symm ▸ card_support_eq' k x hk.Injective hx⟩
+  induction' n with n hn generalizing f
+  · exact fun hf => ⟨0, 0, isEmptyElim, isEmptyElim, card_support_eq_zero.mp hf⟩
+    
+  · intro h
+    obtain ⟨k, x, hk, hx, hf⟩ := hn (erase_lead_card_support' h)
+    have H : ¬∃ k : Finₓ n, k.cast_succ = Finₓ.last n := by
+      rintro ⟨i, hi⟩
+      exact i.cast_succ_lt_last.Ne hi
+    refine'
+      ⟨Function.extendₓ Finₓ.castSucc k fun _ => f.nat_degree,
+        Function.extendₓ Finₓ.castSucc x fun _ => f.leading_coeff, _, _, _⟩
+    · intro i j hij
+      have hi : i ∈ Set.Range (Finₓ.castSucc : Finₓ n ↪o Finₓ (n + 1)) := by
+        rw [Finₓ.range_cast_succ, Set.mem_def]
+        exact lt_of_lt_of_leₓ hij (nat.lt_succ_iff.mp j.2)
+      obtain ⟨i, rfl⟩ := hi
+      rw [Function.extend_applyₓ fin.cast_succ.injective]
+      by_cases' hj : ∃ j₀, Finₓ.castSucc j₀ = j
+      · obtain ⟨j, rfl⟩ := hj
+        rwa [Function.extend_applyₓ fin.cast_succ.injective, hk.lt_iff_lt, ← Finₓ.cast_succ_lt_cast_succ_iff]
+        
+      · rw [Function.extend_apply' _ _ _ hj]
+        apply lt_nat_degree_of_mem_erase_lead_support
+        rw [mem_support_iff, hf, finset_sum_coeff]
+        rw [sum_eq_single, coeff_C_mul, coeff_X_pow_self, mul_oneₓ]
+        · exact hx i
+          
+        · intro j hj hji
+          rw [coeff_C_mul, coeff_X_pow, if_neg (hk.injective.ne hji.symm), mul_zero]
+          
+        · exact fun hi => (hi (mem_univ i)).elim
+          
+        
+      
+    · intro i
+      by_cases' hi : ∃ i₀, Finₓ.castSucc i₀ = i
+      · obtain ⟨i, rfl⟩ := hi
+        rw [Function.extend_applyₓ fin.cast_succ.injective]
+        exact hx i
+        
+      · rw [Function.extend_apply' _ _ _ hi, Ne, leading_coeff_eq_zero, ← card_support_eq_zero, h]
+        exact n.succ_ne_zero
+        
+      
+    · rw [Finₓ.sum_univ_cast_succ]
+      simp only [← Function.extend_applyₓ fin.cast_succ.injective]
+      rw [← hf, Function.extend_apply', Function.extend_apply', erase_lead_add_C_mul_X_pow]
+      all_goals
+        exact H
+      
+    
+
 theorem card_support_eq_one : f.Support.card = 1 ↔ ∃ (k : ℕ)(x : R)(hx : x ≠ 0), f = c x * X ^ k := by
   refine' ⟨fun h => _, _⟩
-  · obtain hf := card_support_eq_zero.mp (erase_lead_card_support h)
-    refine' ⟨f.nat_degree, f.leading_coeff, _, _⟩
-    · rw [Ne, leading_coeff_eq_zero, ← card_support_eq_zero, h]
-      exact one_ne_zero
-      
-    · conv_lhs => rw [← f.erase_lead_add_C_mul_X_pow, hf, zero_addₓ]
-      
+  · obtain ⟨k, x, hk, hx, rfl⟩ := card_support_eq.mp h
+    exact ⟨k 0, x 0, hx 0, Finₓ.sum_univ_one _⟩
     
   · rintro ⟨k, x, hx, rfl⟩
     rw [support_C_mul_X_pow k hx, card_singleton]
@@ -301,16 +373,10 @@ theorem card_support_eq_one : f.Support.card = 1 ↔ ∃ (k : ℕ)(x : R)(hx : x
 theorem card_support_eq_two :
     f.Support.card = 2 ↔ ∃ (k m : ℕ)(hkm : k < m)(x y : R)(hx : x ≠ 0)(hy : y ≠ 0), f = c x * X ^ k + c y * X ^ m := by
   refine' ⟨fun h => _, _⟩
-  · obtain ⟨k, x, hx, hf⟩ := card_support_eq_one.mp (erase_lead_card_support h)
-    refine' ⟨k, f.nat_degree, _, x, f.leading_coeff, hx, _, _⟩
-    · refine' lt_of_le_of_ltₓ _ (erase_lead_nat_degree_lt h.ge)
-      rw [hf, nat_degree_C_mul_X_pow k x hx]
-      
-    · rw [Ne, leading_coeff_eq_zero, ← card_support_eq_zero, h]
-      exact two_ne_zero
-      
-    · rw [← hf, erase_lead_add_C_mul_X_pow]
-      
+  · obtain ⟨k, x, hk, hx, rfl⟩ := card_support_eq.mp h
+    refine' ⟨k 0, k 1, hk Nat.zero_lt_oneₓ, x 0, x 1, hx 0, hx 1, _⟩
+    rw [Finₓ.sum_univ_cast_succ, Finₓ.sum_univ_one]
+    rfl
     
   · rintro ⟨k, m, hkm, x, y, hx, hy, rfl⟩
     exact card_support_binomial hkm.ne hx hy
@@ -322,17 +388,10 @@ theorem card_support_eq_three :
         f = c x * X ^ k + c y * X ^ m + c z * X ^ n :=
   by
   refine' ⟨fun h => _, _⟩
-  · obtain ⟨k, m, hkm, x, y, hx, hy, hf⟩ := card_support_eq_two.mp (erase_lead_card_support h)
-    refine' ⟨k, m, f.nat_degree, hkm, _, x, y, f.leading_coeff, hx, hy, _, _⟩
-    · refine' lt_of_le_of_ltₓ _ (erase_lead_nat_degree_lt (le_transₓ (Nat.le_succₓ 2) h.ge))
-      rw [hf, nat_degree_add_eq_right_of_nat_degree_lt, nat_degree_C_mul_X_pow m y hy]
-      rwa [nat_degree_C_mul_X_pow k x hx, nat_degree_C_mul_X_pow m y hy]
-      
-    · rw [Ne, leading_coeff_eq_zero, ← card_support_eq_zero, h]
-      exact three_ne_zero
-      
-    · rw [← hf, erase_lead_add_C_mul_X_pow]
-      
+  · obtain ⟨k, x, hk, hx, rfl⟩ := card_support_eq.mp h
+    refine' ⟨k 0, k 1, k 2, hk Nat.zero_lt_oneₓ, hk (Nat.lt_succ_selfₓ 1), x 0, x 1, x 2, hx 0, hx 1, hx 2, _⟩
+    rw [Finₓ.sum_univ_cast_succ, Finₓ.sum_univ_cast_succ, Finₓ.sum_univ_one]
+    rfl
     
   · rintro ⟨k, m, n, hkm, hmn, x, y, z, hx, hy, hz, rfl⟩
     exact card_support_trinomial hkm hmn hx hy hz

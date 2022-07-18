@@ -62,7 +62,7 @@ def castRingHom (α : Type _) [NonAssocRing α] : ℤ →+* α :=
 theorem coe_cast_ring_hom [NonAssocRing α] : ⇑(castRingHom α) = coe :=
   rfl
 
-theorem cast_commute [NonAssocRing α] : ∀ m : ℤ x : α, Commute (↑m) x
+theorem cast_commute [NonAssocRing α] : ∀ (m : ℤ) (x : α), Commute (↑m) x
   | (n : ℕ), x => by
     simpa using n.cast_commute x
   | -[1+ n], x => by

@@ -140,7 +140,7 @@ theorem norm_le_gronwall_bound_of_norm_deriv_right_le {f f' : ℝ → E} {δ K �
   le_gronwall_bound_of_liminf_deriv_right_le (continuous_norm.comp_continuous_on hf)
     (fun x hx r hr => (hf' x hx).liminf_right_slope_norm_le hr) ha bound
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » s t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » s t)
 /-- If `f` and `g` are two approximate solutions of the same ODE, then the distance between them
 can't grow faster than exponentially. This is a simple corollary of Grönwall's inequality, and some
 people call this Grönwall's inequality too.
@@ -148,7 +148,7 @@ people call this Grönwall's inequality too.
 This version assumes all inequalities to be true in some time-dependent set `s t`,
 and assumes that the solutions never leave this set. -/
 theorem dist_le_of_approx_trajectories_ODE_of_mem_set {v : ℝ → E → E} {s : ℝ → Set E} {K : ℝ}
-    (hv : ∀ t, ∀ x y _ : x ∈ s t _ : y ∈ s t, dist (v t x) (v t y) ≤ K * dist x y) {f g f' g' : ℝ → E} {a b : ℝ}
+    (hv : ∀ t, ∀ (x y) (_ : x ∈ s t) (_ : y ∈ s t), dist (v t x) (v t y) ≤ K * dist x y) {f g f' g' : ℝ → E} {a b : ℝ}
     {εf εg δ : ℝ} (hf : ContinuousOn f (Icc a b)) (hf' : ∀, ∀ t ∈ Ico a b, ∀, HasDerivWithinAt f (f' t) (Ici t) t)
     (f_bound : ∀, ∀ t ∈ Ico a b, ∀, dist (f' t) (v t (f t)) ≤ εf) (hfs : ∀, ∀ t ∈ Ico a b, ∀, f t ∈ s t)
     (hg : ContinuousOn g (Icc a b)) (hg' : ∀, ∀ t ∈ Ico a b, ∀, HasDerivWithinAt g (g' t) (Ici t) t)
@@ -182,7 +182,7 @@ theorem dist_le_of_approx_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0 } 
   dist_le_of_approx_trajectories_ODE_of_mem_set (fun t x hx y hy => (hv t).dist_le_mul x y) hf hf' f_bound hfs hg hg'
     g_bound (fun t ht => trivialₓ) ha
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » s t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » s t)
 /-- If `f` and `g` are two exact solutions of the same ODE, then the distance between them
 can't grow faster than exponentially. This is a simple corollary of Grönwall's inequality, and some
 people call this Grönwall's inequality too.
@@ -190,7 +190,7 @@ people call this Grönwall's inequality too.
 This version assumes all inequalities to be true in some time-dependent set `s t`,
 and assumes that the solutions never leave this set. -/
 theorem dist_le_of_trajectories_ODE_of_mem_set {v : ℝ → E → E} {s : ℝ → Set E} {K : ℝ}
-    (hv : ∀ t, ∀ x y _ : x ∈ s t _ : y ∈ s t, dist (v t x) (v t y) ≤ K * dist x y) {f g : ℝ → E} {a b : ℝ} {δ : ℝ}
+    (hv : ∀ t, ∀ (x y) (_ : x ∈ s t) (_ : y ∈ s t), dist (v t x) (v t y) ≤ K * dist x y) {f g : ℝ → E} {a b : ℝ} {δ : ℝ}
     (hf : ContinuousOn f (Icc a b)) (hf' : ∀, ∀ t ∈ Ico a b, ∀, HasDerivWithinAt f (v t (f t)) (Ici t) t)
     (hfs : ∀, ∀ t ∈ Ico a b, ∀, f t ∈ s t) (hg : ContinuousOn g (Icc a b))
     (hg' : ∀, ∀ t ∈ Ico a b, ∀, HasDerivWithinAt g (v t (g t)) (Ici t) t) (hgs : ∀, ∀ t ∈ Ico a b, ∀, g t ∈ s t)
@@ -218,12 +218,12 @@ theorem dist_le_of_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0 } (hv : �
   dist_le_of_trajectories_ODE_of_mem_set (fun t x hx y hy => (hv t).dist_le_mul x y) hf hf' hfs hg hg'
     (fun t ht => trivialₓ) ha
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » s t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » s t)
 /-- There exists only one solution of an ODE \(\dot x=v(t, x)\) in a set `s ⊆ ℝ × E` with
 a given initial value provided that RHS is Lipschitz continuous in `x` within `s`,
 and we consider only solutions included in `s`. -/
 theorem ODE_solution_unique_of_mem_set {v : ℝ → E → E} {s : ℝ → Set E} {K : ℝ}
-    (hv : ∀ t, ∀ x y _ : x ∈ s t _ : y ∈ s t, dist (v t x) (v t y) ≤ K * dist x y) {f g : ℝ → E} {a b : ℝ}
+    (hv : ∀ t, ∀ (x y) (_ : x ∈ s t) (_ : y ∈ s t), dist (v t x) (v t y) ≤ K * dist x y) {f g : ℝ → E} {a b : ℝ}
     (hf : ContinuousOn f (Icc a b)) (hf' : ∀, ∀ t ∈ Ico a b, ∀, HasDerivWithinAt f (v t (f t)) (Ici t) t)
     (hfs : ∀, ∀ t ∈ Ico a b, ∀, f t ∈ s t) (hg : ContinuousOn g (Icc a b))
     (hg' : ∀, ∀ t ∈ Ico a b, ∀, HasDerivWithinAt g (v t (g t)) (Ici t) t) (hgs : ∀, ∀ t ∈ Ico a b, ∀, g t ∈ s t)

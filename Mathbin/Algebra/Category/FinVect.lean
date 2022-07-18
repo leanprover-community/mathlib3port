@@ -34,11 +34,11 @@ instance monoidalPredicateFiniteDimensional :
   prop_id' := FiniteDimensional.finite_dimensional_self K
   prop_tensor' := fun X Y hX hY => Module.Finite.tensor_product K X Y
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler λ α, has_coe_to_sort α (Sort*)
+-- ./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler λ α, has_coe_to_sort α (Sort*)
 /-- Define `FinVect` as the subtype of `Module.{u} K` of finite dimensional vector spaces. -/
 def FinVect :=
   { V : ModuleCat.{u} K // FiniteDimensional K V }deriving LargeCategory,
-  «./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler λ α, has_coe_to_sort α (Sort*)»,
+  «./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler λ α, has_coe_to_sort α (Sort*)»,
   ConcreteCategory, MonoidalCategory, SymmetricCategory
 
 namespace FinVect

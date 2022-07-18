@@ -286,10 +286,10 @@ def trivialUnitStructure : L.Structure Unit :=
   tuples in the second structure where that relation is still true. -/
 structure Hom where
   toFun : M → N
-  map_fun' : ∀ {n} f : L.Functions n x, to_fun (funMap f x) = funMap f (to_fun ∘ x) := by
+  map_fun' : ∀ {n} (f : L.Functions n) (x), to_fun (funMap f x) = funMap f (to_fun ∘ x) := by
     run_tac
       obviously
-  map_rel' : ∀ {n} r : L.Relations n x, RelMap r x → RelMap r (to_fun ∘ x) := by
+  map_rel' : ∀ {n} (r : L.Relations n) (x), RelMap r x → RelMap r (to_fun ∘ x) := by
     run_tac
       obviously
 
@@ -300,10 +300,10 @@ localized [FirstOrder] notation:25 A " →[" L "] " B => FirstOrder.Language.Hom
   interpretations of functions and relations. -/
 @[ancestor Function.Embedding]
 structure Embedding extends M ↪ N where
-  map_fun' : ∀ {n} f : L.Functions n x, to_fun (funMap f x) = funMap f (to_fun ∘ x) := by
+  map_fun' : ∀ {n} (f : L.Functions n) (x), to_fun (funMap f x) = funMap f (to_fun ∘ x) := by
     run_tac
       obviously
-  map_rel' : ∀ {n} r : L.Relations n x, RelMap r (to_fun ∘ x) ↔ RelMap r x := by
+  map_rel' : ∀ {n} (r : L.Relations n) (x), RelMap r (to_fun ∘ x) ↔ RelMap r x := by
     run_tac
       obviously
 
@@ -313,10 +313,10 @@ localized [FirstOrder] notation:25 A " ↪[" L "] " B => FirstOrder.Language.Emb
 /-- An equivalence of first-order structures is an equivalence that commutes with the
   interpretations of functions and relations. -/
 structure Equiv extends M ≃ N where
-  map_fun' : ∀ {n} f : L.Functions n x, to_fun (funMap f x) = funMap f (to_fun ∘ x) := by
+  map_fun' : ∀ {n} (f : L.Functions n) (x), to_fun (funMap f x) = funMap f (to_fun ∘ x) := by
     run_tac
       obviously
-  map_rel' : ∀ {n} r : L.Relations n x, RelMap r (to_fun ∘ x) ↔ RelMap r x := by
+  map_rel' : ∀ {n} (r : L.Relations n) (x), RelMap r (to_fun ∘ x) ↔ RelMap r x := by
     run_tac
       obviously
 
@@ -395,15 +395,15 @@ end Structure
   typeclass when you extend `first_order.language.hom`. -/
 class HomClass (L : outParam Language) (F : Type _) (M N : outParam <| Type _) [FunLike F M fun _ => N] [L.Structure M]
   [L.Structure N] where
-  map_fun : ∀ φ : F {n} f : L.Functions n x, φ (funMap f x) = funMap f (φ ∘ x)
-  map_rel : ∀ φ : F {n} r : L.Relations n x, RelMap r x → RelMap r (φ ∘ x)
+  map_fun : ∀ (φ : F) {n} (f : L.Functions n) (x), φ (funMap f x) = funMap f (φ ∘ x)
+  map_rel : ∀ (φ : F) {n} (r : L.Relations n) (x), RelMap r x → RelMap r (φ ∘ x)
 
 /-- `strong_hom_class L F M N` states that `F` is a type of `L`-homomorphisms which preserve
   relations in both directions. -/
 class StrongHomClass (L : outParam Language) (F : Type _) (M N : outParam <| Type _) [FunLike F M fun _ => N]
   [L.Structure M] [L.Structure N] where
-  map_fun : ∀ φ : F {n} f : L.Functions n x, φ (funMap f x) = funMap f (φ ∘ x)
-  map_rel : ∀ φ : F {n} r : L.Relations n x, RelMap r (φ ∘ x) ↔ RelMap r x
+  map_fun : ∀ (φ : F) {n} (f : L.Functions n) (x), φ (funMap f x) = funMap f (φ ∘ x)
+  map_rel : ∀ (φ : F) {n} (r : L.Relations n) (x), RelMap r (φ ∘ x) ↔ RelMap r x
 
 instance (priority := 100) StrongHomClass.homClass {F M N} [L.Structure M] [L.Structure N] [FunLike F M fun _ => N]
     [StrongHomClass L F M N] : HomClass L F M N where

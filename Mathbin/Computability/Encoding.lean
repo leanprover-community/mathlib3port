@@ -164,7 +164,7 @@ def unaryDecodeNat : List Bool → Nat :=
   List.length
 
 theorem unary_decode_encode_nat : ∀ n, unaryDecodeNat (unaryEncodeNat n) = n := fun n =>
-  Nat.rec rfl (fun m : ℕ hm => (congr_arg Nat.succ hm.symm).symm) n
+  Nat.rec rfl (fun (m : ℕ) hm => (congr_arg Nat.succ hm.symm).symm) n
 
 /-- A unary fin_encoding of ℕ. -/
 def unaryFinEncodingNat : FinEncoding ℕ where

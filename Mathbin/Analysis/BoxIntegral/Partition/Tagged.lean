@@ -52,7 +52,7 @@ theorem mem_to_prepartition {π : TaggedPrepartition I} : J ∈ π.toPrepartitio
   Iff.rfl
 
 @[simp]
-theorem mem_mk (π : Prepartition I) f h : J ∈ mk π f h ↔ J ∈ π :=
+theorem mem_mk (π : Prepartition I) (f h) : J ∈ mk π f h ↔ J ∈ π :=
   Iff.rfl
 
 /-- Union of all boxes of a tagged prepartition. -/
@@ -63,7 +63,7 @@ theorem Union_def : π.Union = ⋃ J ∈ π, ↑J :=
   rfl
 
 @[simp]
-theorem Union_mk (π : Prepartition I) f h : (mk π f h).Union = π.Union :=
+theorem Union_mk (π : Prepartition I) (f h) : (mk π f h).Union = π.Union :=
   rfl
 
 @[simp]

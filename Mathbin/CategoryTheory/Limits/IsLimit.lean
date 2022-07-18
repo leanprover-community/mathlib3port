@@ -54,10 +54,10 @@ See <https://stacks.math.columbia.edu/tag/002E>.
 @[nolint has_inhabited_instance]
 structure IsLimit (t : Cone F) where
   lift : ∀ s : Cone F, s.x ⟶ t.x
-  fac' : ∀ s : Cone F j : J, lift s ≫ t.π.app j = s.π.app j := by
+  fac' : ∀ (s : Cone F) (j : J), lift s ≫ t.π.app j = s.π.app j := by
     run_tac
       obviously
-  uniq' : ∀ s : Cone F m : s.x ⟶ t.x w : ∀ j : J, m ≫ t.π.app j = s.π.app j, m = lift s := by
+  uniq' : ∀ (s : Cone F) (m : s.x ⟶ t.x) (w : ∀ j : J, m ≫ t.π.app j = s.π.app j), m = lift s := by
     run_tac
       obviously
 
@@ -110,7 +110,7 @@ providing a morphism of cones rather than a morphism between the cone points
 and separately the factorisation condition.
 -/
 @[simps]
-def mkConeMorphism {t : Cone F} (lift : ∀ s : Cone F, s ⟶ t) (uniq' : ∀ s : Cone F m : s ⟶ t, m = lift s) :
+def mkConeMorphism {t : Cone F} (lift : ∀ s : Cone F, s ⟶ t) (uniq' : ∀ (s : Cone F) (m : s ⟶ t), m = lift s) :
     IsLimit t where
   lift := fun s => (lift s).Hom
   uniq' := fun s m w =>
@@ -164,7 +164,7 @@ def ofIsoLimit {r t : Cone F} (P : IsLimit r) (i : r ≅ t) : IsLimit t :=
     rw [← i.comp_inv_eq] <;> apply P.uniq_cone_morphism
 
 @[simp]
-theorem of_iso_limit_lift {r t : Cone F} (P : IsLimit r) (i : r ≅ t) s :
+theorem of_iso_limit_lift {r t : Cone F} (P : IsLimit r) (i : r ≅ t) (s) :
     (P.ofIsoLimit i).lift s = P.lift s ≫ i.Hom.Hom :=
   rfl
 
@@ -230,7 +230,7 @@ def ofConeEquiv {D : Type u₄} [Category.{v₄} D] {G : K ⥤ D} (h : Cone G �
 
 @[simp]
 theorem of_cone_equiv_apply_desc {D : Type u₄} [Category.{v₄} D] {G : K ⥤ D} (h : Cone G ≌ Cone F) {c : Cone G}
-    (P : IsLimit (h.Functor.obj c)) s :
+    (P : IsLimit (h.Functor.obj c)) (s) :
     (ofConeEquiv h P).lift s =
       ((h.unitIso.Hom.app s).Hom ≫ (h.Functor.inv.map (P.liftConeMorphism (h.Functor.obj s))).Hom) ≫
         (h.unitIso.inv.app c).Hom :=
@@ -238,7 +238,7 @@ theorem of_cone_equiv_apply_desc {D : Type u₄} [Category.{v₄} D] {G : K ⥤ 
 
 @[simp]
 theorem of_cone_equiv_symm_apply_desc {D : Type u₄} [Category.{v₄} D] {G : K ⥤ D} (h : Cone G ≌ Cone F) {c : Cone G}
-    (P : IsLimit c) s :
+    (P : IsLimit c) (s) :
     ((ofConeEquiv h).symm P).lift s =
       (h.counitIso.inv.app s).Hom ≫ (h.Functor.map (P.liftConeMorphism (h.inverse.obj s))).Hom :=
   rfl
@@ -379,7 +379,7 @@ def natIso (h : IsLimit t) : yoneda.obj t.x ⋙ ulift_functor.{u₁} ≅ F.cones
 See also `hom_iso`.
 -/
 def homIso' (h : IsLimit t) (W : C) :
-    ULift.{u₁} (W ⟶ t.x : Type v₃) ≅ { p : ∀ j, W ⟶ F.obj j // ∀ {j j'} f : j ⟶ j', p j ≫ F.map f = p j' } :=
+    ULift.{u₁} (W ⟶ t.x : Type v₃) ≅ { p : ∀ j, W ⟶ F.obj j // ∀ {j j'} (f : j ⟶ j'), p j ≫ F.map f = p j' } :=
   h.homIso W ≪≫
     { Hom := fun π =>
         ⟨fun j => π.app j, fun j j' f => by
@@ -511,10 +511,10 @@ See <https://stacks.math.columbia.edu/tag/002F>.
 @[nolint has_inhabited_instance]
 structure IsColimit (t : Cocone F) where
   desc : ∀ s : Cocone F, t.x ⟶ s.x
-  fac' : ∀ s : Cocone F j : J, t.ι.app j ≫ desc s = s.ι.app j := by
+  fac' : ∀ (s : Cocone F) (j : J), t.ι.app j ≫ desc s = s.ι.app j := by
     run_tac
       obviously
-  uniq' : ∀ s : Cocone F m : t.x ⟶ s.x w : ∀ j : J, t.ι.app j ≫ m = s.ι.app j, m = desc s := by
+  uniq' : ∀ (s : Cocone F) (m : t.x ⟶ s.x) (w : ∀ j : J, t.ι.app j ≫ m = s.ι.app j), m = desc s := by
     run_tac
       obviously
 
@@ -570,7 +570,7 @@ providing a morphism of cocones rather than a morphism between the cocone points
 and separately the factorisation condition.
 -/
 @[simps]
-def mkCoconeMorphism {t : Cocone F} (desc : ∀ s : Cocone F, t ⟶ s) (uniq' : ∀ s : Cocone F m : t ⟶ s, m = desc s) :
+def mkCoconeMorphism {t : Cocone F} (desc : ∀ s : Cocone F, t ⟶ s) (uniq' : ∀ (s : Cocone F) (m : t ⟶ s), m = desc s) :
     IsColimit t where
   desc := fun s => (desc s).Hom
   uniq' := fun s m w =>
@@ -624,7 +624,7 @@ def ofIsoColimit {r t : Cocone F} (P : IsColimit r) (i : r ≅ t) : IsColimit t 
     rw [i.eq_inv_comp] <;> apply P.uniq_cocone_morphism
 
 @[simp]
-theorem of_iso_colimit_desc {r t : Cocone F} (P : IsColimit r) (i : r ≅ t) s :
+theorem of_iso_colimit_desc {r t : Cocone F} (P : IsColimit r) (i : r ≅ t) (s) :
     (P.ofIsoColimit i).desc s = i.inv.Hom ≫ P.desc s :=
   rfl
 
@@ -696,14 +696,14 @@ def ofCoconeEquiv {D : Type u₄} [Category.{v₄} D] {G : K ⥤ D} (h : Cocone 
 
 @[simp]
 theorem of_cocone_equiv_apply_desc {D : Type u₄} [Category.{v₄} D] {G : K ⥤ D} (h : Cocone G ≌ Cocone F) {c : Cocone G}
-    (P : IsColimit (h.Functor.obj c)) s :
+    (P : IsColimit (h.Functor.obj c)) (s) :
     (ofCoconeEquiv h P).desc s =
       (h.Unit.app c).Hom ≫ (h.inverse.map (P.descCoconeMorphism (h.Functor.obj s))).Hom ≫ (h.unitInv.app s).Hom :=
   rfl
 
 @[simp]
 theorem of_cocone_equiv_symm_apply_desc {D : Type u₄} [Category.{v₄} D] {G : K ⥤ D} (h : Cocone G ≌ Cocone F)
-    {c : Cocone G} (P : IsColimit c) s :
+    {c : Cocone G} (P : IsColimit c) (s) :
     ((ofCoconeEquiv h).symm P).desc s =
       (h.Functor.map (P.descCoconeMorphism (h.inverse.obj s))).Hom ≫ (h.counit.app s).Hom :=
   rfl
@@ -848,7 +848,7 @@ def natIso (h : IsColimit t) : coyoneda.obj (op t.x) ⋙ ulift_functor.{u₁} �
 See also `hom_iso`.
 -/
 def homIso' (h : IsColimit t) (W : C) :
-    ULift.{u₁} (t.x ⟶ W : Type v₃) ≅ { p : ∀ j, F.obj j ⟶ W // ∀ {j j' : J} f : j ⟶ j', F.map f ≫ p j' = p j } :=
+    ULift.{u₁} (t.x ⟶ W : Type v₃) ≅ { p : ∀ j, F.obj j ⟶ W // ∀ {j j' : J} (f : j ⟶ j'), F.map f ≫ p j' = p j } :=
   h.homIso W ≪≫
     { Hom := fun ι =>
         ⟨fun j => ι.app j, fun j j' f => by

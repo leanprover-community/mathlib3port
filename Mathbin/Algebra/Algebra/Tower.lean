@@ -111,7 +111,7 @@ instance subalgebra' (S₀ : Subalgebra R S) : IsScalarTower R S₀ A :=
 @[ext]
 theorem Algebra.ext {S : Type u} {A : Type v} [CommSemiringₓ S] [Semiringₓ A] (h1 h2 : Algebra S A)
     (h :
-      ∀ r : S x : A,
+      ∀ (r : S) (x : A),
         (have := h1
           r • x) =
           r • x) :
@@ -242,8 +242,8 @@ variable [Algebra R S] [Algebra S A] [Algebra R A] [Algebra S B] [Algebra R B]
 
 variable [IsScalarTower R S A] [IsScalarTower R S B]
 
-/-- Given a scalar tower `R`, `S`, `A` of algebras, reinterpret an `S`-subalgebra of `A` an as an
-`R`-subalgebra. -/
+/-- Given a tower `A / ↥U / S / R` of algebras, where `U` is an `S`-subalgebra of `A`, reinterpret
+`U` as an `R`-subalgebra of `A`. -/
 def restrictScalars (U : Subalgebra S A) : Subalgebra R A :=
   { U with
     algebra_map_mem' := fun x => by

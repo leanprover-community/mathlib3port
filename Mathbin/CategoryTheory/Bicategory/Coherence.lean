@@ -118,7 +118,7 @@ by { induction f, refl, refl,
 -/
 @[simp]
 def normalizeIsoₓ {a : B} :
-    ∀ {b c : B} p : Path a b f : Hom b c, (preinclusion B).map ⟨p⟩ ≫ f ≅ (preinclusion B).map ⟨normalizeAuxₓ p f⟩
+    ∀ {b c : B} (p : Path a b) (f : Hom b c), (preinclusion B).map ⟨p⟩ ≫ f ≅ (preinclusion B).map ⟨normalizeAuxₓ p f⟩
   | _, _, p, hom.of f => Iso.refl _
   | _, _, p, hom.id b => ρ_ _
   | _, _, p, hom.comp f g =>
@@ -217,7 +217,7 @@ instance locally_thin {a b : FreeBicategory B} (f g : a ⟶ b) : Subsingleton (f
 
 /-- Auxiliary definition for `inclusion`. -/
 def inclusionMapCompAuxₓ {a b : B} :
-    ∀ {c : B} f : Path a b g : Path b c,
+    ∀ {c : B} (f : Path a b) (g : Path b c),
       (preinclusion _).map (⟨f⟩ ≫ ⟨g⟩) ≅ (preinclusion _).map ⟨f⟩ ≫ (preinclusion _).map ⟨g⟩
   | _, f, nil => (ρ_ ((preinclusion _).map ⟨f⟩)).symm
   | _, f, cons g₁ g₂ => whiskerRightIso (inclusion_map_comp_aux f g₁) (Hom.of g₂) ≪≫ α_ _ _ _

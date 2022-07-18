@@ -157,7 +157,7 @@ theorem Convex.sum_mem (hs : Convex R s) (h₀ : ∀, ∀ i ∈ t, ∀, 0 ≤ w 
 
 theorem convex_iff_sum_mem :
     Convex R s ↔
-      ∀ t : Finset E w : E → R,
+      ∀ (t : Finset E) (w : E → R),
         (∀, ∀ i ∈ t, ∀, 0 ≤ w i) → (∑ i in t, w i) = 1 → (∀, ∀ x ∈ t, ∀, x ∈ s) → (∑ x in t, w x • x) ∈ s :=
   by
   refine' ⟨fun hs t w hw₀ hw₁ hts => hs.sum_mem hw₀ hw₁ hts, _⟩
@@ -454,7 +454,7 @@ theorem Set.Finite.convex_hull_eq_image {s : Set E} (hs : s.Finite) :
   simp [← LinearMap.sum_apply, ← ite_smul, ← Finset.filter_eq]
 
 /-- All values of a function `f ∈ std_simplex 𝕜 ι` belong to `[0, 1]`. -/
-theorem mem_Icc_of_mem_std_simplex (hf : f ∈ StdSimplex R ι) x : f x ∈ icc (0 : R) 1 :=
+theorem mem_Icc_of_mem_std_simplex (hf : f ∈ StdSimplex R ι) (x) : f x ∈ icc (0 : R) 1 :=
   ⟨hf.1 x, hf.2 ▸ Finset.single_le_sum (fun y hy => hf.1 y) (Finset.mem_univ x)⟩
 
 /-- The convex hull of an affine basis is the intersection of the half-spaces defined by the

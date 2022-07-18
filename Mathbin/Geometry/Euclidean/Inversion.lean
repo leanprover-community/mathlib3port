@@ -63,7 +63,7 @@ theorem dist_inversion_center (c x : P) (R : ℝ) : dist (inversion c R x) c = R
   · simp
     
   have : dist x c ≠ 0 := dist_ne_zero.2 hx
-  field_simp [← inversion, ← norm_smul, ← norm_eq_abs, ← abs_div, dist_eq_norm_vsub, ← sq, ← mul_assoc]
+  field_simp [← inversion, ← norm_smul, ← abs_div, dist_eq_norm_vsub, ← sq, ← mul_assoc]
 
 /-- Distance from the center of an inversion to the image of a point under the inversion. This
 formula accidentally works for `x = c`. -/

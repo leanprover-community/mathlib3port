@@ -128,7 +128,7 @@ theorem range_circle_map (c : ℂ) (R : ℝ) : Range (circleMap c R) = Sphere c 
     Range (circleMap c R) = c +ᵥ R • Range fun θ : ℝ => exp (θ * I) := by
       simp only [image_vadd, image_smul, range_comp, ← vadd_eq_add, ← circleMap, ← (· ∘ ·), ← real_smul]
     _ = Sphere c (abs R) := by
-      simp [← smul_sphere R (0 : ℂ) zero_le_one, ← Real.norm_eq_abs]
+      simp [← smul_sphere R (0 : ℂ) zero_le_one]
     
 
 /-- The image of `(0, 2π]` under `circle_map c R` is the circle with center `c` and radius `|R|`. -/
@@ -178,6 +178,13 @@ theorem lipschitz_with_circle_map (c : ℂ) (R : ℝ) : LipschitzWith R.nnabs (c
   (lipschitz_with_of_nnnorm_deriv_le (differentiable_circle_map _ _)) fun θ =>
     Nnreal.coe_le_coe.1 <| by
       simp
+
+theorem continuous_circle_map_inv {R : ℝ} {z w : ℂ} (hw : w ∈ Ball z R) : Continuous fun θ => (circleMap z R θ - w)⁻¹ :=
+  by
+  have : ∀ θ, circleMap z R θ - w ≠ 0 := by
+    simp_rw [sub_ne_zero]
+    exact fun θ => circle_map_ne_mem_ball hw θ
+  continuity
 
 /-!
 ### Integrability of a function on a circle
@@ -251,7 +258,7 @@ theorem ContinuousOn.circle_integrable {f : ℂ → E} {c : ℂ} {R : ℝ} (hR :
     CircleIntegrable f c R :=
   ContinuousOn.circle_integrable' <| (abs_of_nonneg hR).symm ▸ hf
 
--- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
 /-- The function `λ z, (z - w) ^ n`, `n : ℤ`, is circle integrable on the circle with center `c` and
 radius `|R|` if and only if `R = 0` or `0 ≤ n`, or `w` does not belong to this circle. -/
 @[simp]
@@ -264,7 +271,7 @@ theorem circle_integrable_sub_zpow_iff {c w : ℂ} {R : ℝ} {n : ℤ} :
     simp only [← circle_integrable_iff R, ← deriv_circle_map]
     rw [← image_circle_map_Ioc] at hw
     rcases hw with ⟨θ, hθ, rfl⟩
-    replace hθ : θ ∈ "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)"
+    replace hθ : θ ∈ "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)"
     exact Icc_subset_interval (Ioc_subset_Icc_self hθ)
     refine' not_interval_integrable_of_sub_inv_is_O_punctured _ real.two_pi_pos.ne hθ
     set f : ℝ → ℂ := fun θ' => circleMap c R θ' - circleMap c R θ

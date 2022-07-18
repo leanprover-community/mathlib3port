@@ -179,7 +179,6 @@ protected theorem summable_of_lp (f : lp G 2) : Summable fun i => V i (f i) := b
   · norm_num
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A mutually orthogonal family of subspaces of `E` induce a linear isometry from `lp 2` of the
 subspaces into `E`. -/
 protected def linearIsometry : lp G 2 →ₗᵢ[𝕜] E where
@@ -373,7 +372,6 @@ protected theorem has_sum_repr_symm (b : HilbertBasis ι 𝕜 E) (f : ℓ²(ι,�
 protected theorem has_sum_repr (b : HilbertBasis ι 𝕜 E) (x : E) : HasSum (fun i => b.repr x i • b i) x := by
   simpa using b.has_sum_repr_symm (b.repr x)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 protected theorem dense_span (b : HilbertBasis ι 𝕜 E) : (span 𝕜 (Set.Range b)).topologicalClosure = ⊤ := by
   classical
@@ -399,11 +397,13 @@ protected def mk (hsp : (span 𝕜 (Set.Range v)).topologicalClosure = ⊤) : Hi
         convert hsp
         simp [LinearMap.span_singleton_eq_range, Submodule.span_Union])
 
+theorem _root_.orthonormal.linear_isometry_equiv_symm_apply_single_one (h i) :
+    (hv.OrthogonalFamily.LinearIsometryEquiv h).symm (lp.single 2 i 1) = v i := by
+  rw [OrthogonalFamily.linear_isometry_equiv_symm_apply_single, LinearIsometry.to_span_singleton_apply, one_smul]
+
 @[simp]
-protected theorem coe_mk (hsp : (span 𝕜 (Set.Range v)).topologicalClosure = ⊤) : ⇑(HilbertBasis.mk hv hsp) = v := by
-  ext i
-  show (HilbertBasis.mk hv hsp).repr.symm _ = v i
-  simp [← HilbertBasis.mk]
+protected theorem coe_mk (hsp : (span 𝕜 (Set.Range v)).topologicalClosure = ⊤) : ⇑(HilbertBasis.mk hv hsp) = v :=
+  funext <| Orthonormal.linear_isometry_equiv_symm_apply_single_one hv _
 
 /-- An orthonormal family of vectors whose span has trivial orthogonal complement is a Hilbert
 basis. -/

@@ -37,7 +37,7 @@ variable {J : Type v} [SmallCategory J] {K : J ⥤ C}
 `J` is a filtered category.
 -/
 class PreservesFilteredColimits (F : C ⥤ D) : Type max u₁ u₂ (v + 1) where
-  PreservesFilteredColimits : ∀ J : Type v [SmallCategory J] [IsFiltered J], PreservesColimitsOfShape J F
+  PreservesFilteredColimits : ∀ (J : Type v) [SmallCategory J] [IsFiltered J], PreservesColimitsOfShape J F
 
 attribute [instance] preserves_filtered_colimits.preserves_filtered_colimits
 
@@ -52,7 +52,7 @@ instance compPreservesFilteredColimits (F : C ⥤ D) (G : D ⥤ E) [PreservesFil
 `J` is a cofiltered category.
 -/
 class PreservesCofilteredLimits (F : C ⥤ D) : Type max u₁ u₂ (v + 1) where
-  PreservesCofilteredLimits : ∀ J : Type v [SmallCategory J] [IsCofiltered J], PreservesLimitsOfShape J F
+  PreservesCofilteredLimits : ∀ (J : Type v) [SmallCategory J] [IsCofiltered J], PreservesLimitsOfShape J F
 
 attribute [instance] preserves_cofiltered_limits.preserves_cofiltered_limits
 

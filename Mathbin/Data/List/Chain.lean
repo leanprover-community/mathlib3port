@@ -135,7 +135,7 @@ theorem chain_iff_nth_le {R} :
     ∀ {a : α} {l : List α},
       Chain R a l ↔
         (∀ h : 0 < length l, R a (nthLe l 0 h)) ∧
-          ∀ i h : i < length l - 1, R (nthLe l i (lt_of_lt_pred h)) (nthLe l (i + 1) (lt_pred_iff.mp h))
+          ∀ (i) (h : i < length l - 1), R (nthLe l i (lt_of_lt_pred h)) (nthLe l (i + 1) (lt_pred_iff.mp h))
   | a, [] => by
     simp
   | a, b :: t => by
@@ -224,7 +224,7 @@ protected theorem Chain'.sublist [IsTrans α R] (hl : l₂.Chain' R) (h : l₁ <
 theorem Chain'.cons {x y l} (h₁ : R x y) (h₂ : Chain' R (y :: l)) : Chain' R (x :: y :: l) :=
   chain'_cons.2 ⟨h₁, h₂⟩
 
-theorem Chain'.tail : ∀ {l} h : Chain' R l, Chain' R l.tail
+theorem Chain'.tail : ∀ {l} (h : Chain' R l), Chain' R l.tail
   | [], _ => trivialₓ
   | [x], _ => trivialₓ
   | x :: y :: l, h => (chain'_cons.mp h).right
@@ -243,7 +243,7 @@ theorem Chain'.cons' {x} : ∀ {l : List α}, Chain' R l → (∀, ∀ y ∈ l.h
 theorem chain'_cons' {x l} : Chain' R (x :: l) ↔ (∀, ∀ y ∈ head' l, ∀, R x y) ∧ Chain' R l :=
   ⟨fun h => ⟨h.rel_head', h.tail⟩, fun ⟨h₁, h₂⟩ => h₂.cons' h₁⟩
 
-theorem Chain'.drop : ∀ n {l} h : Chain' R l, Chain' R (dropₓ n l)
+theorem Chain'.drop : ∀ (n) {l} (h : Chain' R l), Chain' R (dropₓ n l)
   | 0, _, h => h
   | _, [], _ => by
     rw [drop_nil]
@@ -255,7 +255,7 @@ theorem Chain'.drop : ∀ n {l} h : Chain' R l, Chain' R (dropₓ n l)
   | n + 1, a :: b :: l, h => chain'.drop n (chain'_cons'.mp h).right
 
 theorem Chain'.append :
-    ∀ {l₁ l₂ : List α} h₁ : Chain' R l₁ h₂ : Chain' R l₂ h : ∀, ∀ x ∈ l₁.last', ∀, ∀ y ∈ l₂.head', ∀, R x y,
+    ∀ {l₁ l₂ : List α} (h₁ : Chain' R l₁) (h₂ : Chain' R l₂) (h : ∀, ∀ x ∈ l₁.last', ∀, ∀ y ∈ l₂.head', ∀, R x y),
       Chain' R (l₁ ++ l₂)
   | [], l₂, h₁, h₂, h => h₂
   | [a], l₂, h₁, h₂, h => h₂.cons' <| h _ rfl
@@ -280,7 +280,7 @@ theorem chain'_reverse : ∀ {l}, Chain' R (reverse l) ↔ Chain' (flip R) l
 
 theorem chain'_iff_nth_le {R} :
     ∀ {l : List α},
-      Chain' R l ↔ ∀ i h : i < length l - 1, R (nthLe l i (lt_of_lt_pred h)) (nthLe l (i + 1) (lt_pred_iff.mp h))
+      Chain' R l ↔ ∀ (i) (h : i < length l - 1), R (nthLe l i (lt_of_lt_pred h)) (nthLe l (i + 1) (lt_pred_iff.mp h))
   | [] => by
     simp
   | [a] => by
@@ -312,7 +312,8 @@ theorem chain'_iff_nth_le {R} :
 /-- If `l₁ l₂` and `l₃` are lists and `l₁ ++ l₂` and `l₂ ++ l₃` both satisfy
   `chain' R`, then so does `l₁ ++ l₂ ++ l₃` provided `l₂ ≠ []` -/
 theorem Chain'.append_overlap :
-    ∀ {l₁ l₂ l₃ : List α} h₁ : Chain' R (l₁ ++ l₂) h₂ : Chain' R (l₂ ++ l₃) hn : l₂ ≠ [], Chain' R (l₁ ++ l₂ ++ l₃)
+    ∀ {l₁ l₂ l₃ : List α} (h₁ : Chain' R (l₁ ++ l₂)) (h₂ : Chain' R (l₂ ++ l₃)) (hn : l₂ ≠ []),
+      Chain' R (l₁ ++ l₂ ++ l₃)
   | [], l₂, l₃, h₁, h₂, hn => h₂
   | l₁, [], l₃, h₁, h₂, hn => (hn rfl).elim
   | [a], b :: l₂, l₃, h₁, h₂, hn => by
@@ -366,7 +367,7 @@ theorem Chain.induction_head (p : α → Prop) (l : List α) (h : Chain r a l) (
 /-- If there is an `r`-chain starting from `a` and ending at `b`, then `a` and `b` are related by the
 reflexive transitive closure of `r`. The converse of `exists_chain_of_relation_refl_trans_gen`.
 -/
-theorem relation_refl_trans_gen_of_exists_chain l (hl₁ : Chain r a l) (hl₂ : last (a :: l) (cons_ne_nil _ _) = b) :
+theorem relation_refl_trans_gen_of_exists_chain (l) (hl₁ : Chain r a l) (hl₂ : last (a :: l) (cons_ne_nil _ _) = b) :
     Relation.ReflTransGen r a b :=
   Chain.induction_head _ l hl₁ hl₂ (fun x y => Relation.ReflTransGen.head) Relation.ReflTransGen.refl
 

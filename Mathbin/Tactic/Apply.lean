@@ -54,7 +54,8 @@ private unsafe def try_apply_opt_auto_param_instance_for_apply (cfg : ApplyCfg) 
           ((set_goals [m.2] >> try apply_instance) >> when cfg (try apply_opt_param)) >> when cfg (try apply_auto_param)
     set_goals gs
 
-private unsafe def retry_apply_aux : ∀ e : expr cfg : ApplyCfg, List (Bool × Name × expr) → tactic (List (Name × expr))
+private unsafe def retry_apply_aux :
+    ∀ (e : expr) (cfg : ApplyCfg), List (Bool × Name × expr) → tactic (List (Name × expr))
   | e, cfg, gs =>
     (focus1 do
         let tgt : expr ← target
@@ -183,7 +184,7 @@ unsafe def symmetry' : parse location → tactic Unit
   | l@loc.wildcard => l.try_apply symmetry_hyp tactic.symmetry'
   | loc.ns hs => (Loc.ns hs.reverse).apply symmetry_hyp tactic.symmetry'
 
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
 /-- Similar to `transitivity` with the difference that `apply'` is used instead of `apply`.
 -/
 unsafe def transitivity' (q : parse («expr ?» texpr)) : tactic Unit :=

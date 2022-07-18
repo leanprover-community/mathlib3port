@@ -37,15 +37,15 @@ def associator : Sum (Sum C D) E ⥤ Sum C (Sum D E) where
     | inr X, inr Y, f => f
 
 @[simp]
-theorem associator_obj_inl_inl X : (associator C D E).obj (inl (inl X)) = inl X :=
+theorem associator_obj_inl_inl (X) : (associator C D E).obj (inl (inl X)) = inl X :=
   rfl
 
 @[simp]
-theorem associator_obj_inl_inr X : (associator C D E).obj (inl (inr X)) = inr (inl X) :=
+theorem associator_obj_inl_inr (X) : (associator C D E).obj (inl (inr X)) = inr (inl X) :=
   rfl
 
 @[simp]
-theorem associator_obj_inr X : (associator C D E).obj (inr X) = inr (inr X) :=
+theorem associator_obj_inr (X) : (associator C D E).obj (inr X) = inr (inr X) :=
   rfl
 
 @[simp]
@@ -75,15 +75,15 @@ def inverseAssociator : Sum C (Sum D E) ⥤ Sum (Sum C D) E where
     | inr (inr X), inr (inr Y), f => f
 
 @[simp]
-theorem inverse_associator_obj_inl X : (inverseAssociator C D E).obj (inl X) = inl (inl X) :=
+theorem inverse_associator_obj_inl (X) : (inverseAssociator C D E).obj (inl X) = inl (inl X) :=
   rfl
 
 @[simp]
-theorem inverse_associator_obj_inr_inl X : (inverseAssociator C D E).obj (inr (inl X)) = inl (inr X) :=
+theorem inverse_associator_obj_inr_inl (X) : (inverseAssociator C D E).obj (inr (inl X)) = inl (inr X) :=
   rfl
 
 @[simp]
-theorem inverse_associator_obj_inr_inr X : (inverseAssociator C D E).obj (inr (inr X)) = inr X :=
+theorem inverse_associator_obj_inr_inr (X) : (inverseAssociator C D E).obj (inr (inr X)) = inr X :=
   rfl
 
 @[simp]

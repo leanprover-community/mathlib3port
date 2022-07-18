@@ -86,7 +86,7 @@ def inclusion (x : X) : OpenNhds x ⥤ Opens X :=
   fullSubcategoryInclusion _
 
 @[simp]
-theorem inclusion_obj (x : X) U p : (inclusion x).obj ⟨U, p⟩ = U :=
+theorem inclusion_obj (x : X) (U) (p) : (inclusion x).obj ⟨U, p⟩ = U :=
   rfl
 
 theorem open_embedding {x : X} (U : OpenNhds x) : OpenEmbedding U.1.inclusion :=
@@ -99,18 +99,18 @@ def map (x : X) : OpenNhds (f x) ⥤ OpenNhds x where
   map := fun U V i => (Opens.map f).map i
 
 @[simp]
-theorem map_obj (x : X) U q :
+theorem map_obj (x : X) (U) (q) :
     (map f x).obj ⟨U, q⟩ =
       ⟨(Opens.map f).obj U, by
         tidy⟩ :=
   rfl
 
 @[simp]
-theorem map_id_obj (x : X) U : (map (𝟙 X) x).obj U = U := by
+theorem map_id_obj (x : X) (U) : (map (𝟙 X) x).obj U = U := by
   tidy
 
 @[simp]
-theorem map_id_obj' (x : X) U p q : (map (𝟙 X) x).obj ⟨⟨U, p⟩, q⟩ = ⟨⟨U, p⟩, q⟩ :=
+theorem map_id_obj' (x : X) (U) (p) (q) : (map (𝟙 X) x).obj ⟨⟨U, p⟩, q⟩ = ⟨⟨U, p⟩, q⟩ :=
   rfl
 
 @[simp]

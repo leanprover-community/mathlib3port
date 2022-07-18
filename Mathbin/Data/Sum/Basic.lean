@@ -96,34 +96,6 @@ theorem get_right_eq_none_iff : x.getRight = none ↔ x.isLeft := by
 
 end get
 
-/-- Map `α ⊕ β` to `α' ⊕ β'` sending `α` to `α'` and `β` to `β'`. -/
-protected def map (f : α → α') (g : β → β') : Sum α β → Sum α' β'
-  | inl x => inl (f x)
-  | inr x => inr (g x)
-
-@[simp]
-theorem map_inl (f : α → α') (g : β → β') (x : α) : (inl x).map f g = inl (f x) :=
-  rfl
-
-@[simp]
-theorem map_inr (f : α → α') (g : β → β') (x : β) : (inr x).map f g = inr (g x) :=
-  rfl
-
-@[simp]
-theorem map_map {α'' β''} (f' : α' → α'') (g' : β' → β'') (f : α → α') (g : β → β') :
-    ∀ x : Sum α β, (x.map f g).map f' g' = x.map (f' ∘ f) (g' ∘ g)
-  | inl a => rfl
-  | inr b => rfl
-
-@[simp]
-theorem map_comp_map {α'' β''} (f' : α' → α'') (g' : β' → β'') (f : α → α') (g : β → β') :
-    Sum.map f' g' ∘ Sum.map f g = Sum.map (f' ∘ f) (g' ∘ g) :=
-  funext <| map_map f' g' f g
-
-@[simp]
-theorem map_id_id α β : Sum.map (@id α) (@id β) = id :=
-  funext fun x => Sum.recOn x (fun _ => rfl) fun _ => rfl
-
 theorem inl.inj_iff {a b} : (inl a : Sum α β) = inl b ↔ a = b :=
   ⟨inl.injₓ, congr_arg _⟩
 
@@ -167,13 +139,36 @@ theorem comp_elim {α β γ δ : Sort _} (f : γ → δ) (g : α → γ) (h : β
 theorem elim_comp_inl_inr {α β γ : Sort _} (f : Sum α β → γ) : Sum.elim (f ∘ inl) (f ∘ inr) = f :=
   funext fun x => Sum.casesOn x (fun _ => rfl) fun _ => rfl
 
+/-- Map `α ⊕ β` to `α' ⊕ β'` sending `α` to `α'` and `β` to `β'`. -/
+protected def map (f : α → α') (g : β → β') : Sum α β → Sum α' β' :=
+  Sum.elim (inl ∘ f) (inr ∘ g)
+
+@[simp]
+theorem map_inl (f : α → α') (g : β → β') (x : α) : (inl x).map f g = inl (f x) :=
+  rfl
+
+@[simp]
+theorem map_inr (f : α → α') (g : β → β') (x : β) : (inr x).map f g = inr (g x) :=
+  rfl
+
+@[simp]
+theorem map_map {α'' β''} (f' : α' → α'') (g' : β' → β'') (f : α → α') (g : β → β') :
+    ∀ x : Sum α β, (x.map f g).map f' g' = x.map (f' ∘ f) (g' ∘ g)
+  | inl a => rfl
+  | inr b => rfl
+
+@[simp]
+theorem map_comp_map {α'' β''} (f' : α' → α'') (g' : β' → β'') (f : α → α') (g : β → β') :
+    Sum.map f' g' ∘ Sum.map f g = Sum.map (f' ∘ f) (g' ∘ g) :=
+  funext <| map_map f' g' f g
+
+@[simp]
+theorem map_id_id (α β) : Sum.map (@id α) (@id β) = id :=
+  funext fun x => Sum.recOn x (fun _ => rfl) fun _ => rfl
+
 theorem elim_comp_map {α β γ δ ε : Sort _} {f₁ : α → β} {f₂ : β → ε} {g₁ : γ → δ} {g₂ : δ → ε} :
     Sum.elim f₂ g₂ ∘ Sum.map f₁ g₁ = Sum.elim (f₂ ∘ f₁) (g₂ ∘ g₁) := by
-  ext (_ | _)
-  · rw [Function.comp_app, map_inl, elim_inl, elim_inl]
-    
-  · rw [Function.comp_app, map_inr, elim_inr, elim_inr]
-    
+  ext (_ | _) <;> rfl
 
 open Function (update update_eq_iff update_comp_eq_of_injective update_comp_eq_of_forall_ne)
 
@@ -234,10 +229,16 @@ theorem update_inr_apply_inr [DecidableEq β] [DecidableEq (Sum α β)] {f : Sum
   rw [← update_inr_comp_inr]
 
 /-- Swap the factors of a sum type -/
+def swap : Sum α β → Sum β α :=
+  Sum.elim inr inl
+
 @[simp]
-def swap : Sum α β → Sum β α
-  | inl a => inr a
-  | inr b => inl b
+theorem swap_inl (x : α) : swap (inl x : Sum α β) = inr x :=
+  rfl
+
+@[simp]
+theorem swap_inr (x : β) : swap (inr x : Sum α β) = inl x :=
+  rfl
 
 @[simp]
 theorem swap_swap (x : Sum α β) : swap (swap x) = x := by
@@ -288,7 +289,7 @@ theorem lift_rel_inr_inr : LiftRel r s (inr b) (inr d) ↔ s b d :=
     assumption, LiftRel.inr⟩
 
 instance [∀ a c, Decidable (r a c)] [∀ b d, Decidable (s b d)] :
-    ∀ ab : Sum α β cd : Sum γ δ, Decidable (LiftRel r s ab cd)
+    ∀ (ab : Sum α β) (cd : Sum γ δ), Decidable (LiftRel r s ab cd)
   | inl a, inl c => decidableOfIff' _ lift_rel_inl_inl
   | inl a, inr d => Decidable.isFalse not_lift_rel_inl_inr
   | inr b, inl c => Decidable.isFalse not_lift_rel_inr_inl
@@ -324,7 +325,7 @@ respective order on `α` or `β`. -/
 inductive Lex (r : α → α → Prop) (s : β → β → Prop) : Sum α β → Sum α β → Prop
   | inl {a₁ a₂} (h : r a₁ a₂) : lex (inl a₁) (inl a₂)
   | inr {b₁ b₂} (h : s b₁ b₂) : lex (inr b₁) (inr b₂)
-  | sep a b : lex (inl a) (inr b)
+  | sep (a b) : lex (inl a) (inr b)
 
 attribute [protected] Sum.Lex.inl Sum.Lex.inr
 
@@ -357,6 +358,8 @@ instance [DecidableRel r] [DecidableRel s] : DecidableRel (Lex r s)
 protected theorem LiftRel.lex {a b : Sum α β} (h : LiftRel r s a b) : Lex r s a b := by
   cases h
   exacts[lex.inl ‹_›, lex.inr ‹_›]
+
+theorem lift_rel_subrelation_lex : Subrelation (LiftRel r s) (Lex r s) := fun a b => LiftRel.lex
 
 theorem Lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ a b, s₁ a b → s₂ a b) (h : Lex r₁ s₁ x y) : Lex r₂ s₂ x y := by
   cases h
@@ -429,17 +432,17 @@ namespace Sum3
 
 /-- The map from the first summand into a ternary sum. -/
 @[matchPattern, simp, reducible]
-def in₀ a : Sum α (Sum β γ) :=
+def in₀ (a) : Sum α (Sum β γ) :=
   inl a
 
 /-- The map from the second summand into a ternary sum. -/
 @[matchPattern, simp, reducible]
-def in₁ b : Sum α (Sum β γ) :=
+def in₁ (b) : Sum α (Sum β γ) :=
   inr <| inl b
 
 /-- The map from the third summand into a ternary sum. -/
 @[matchPattern, simp, reducible]
-def in₂ c : Sum α (Sum β γ) :=
+def in₂ (c) : Sum α (Sum β γ) :=
   inr <| inr c
 
 end Sum3

@@ -73,7 +73,7 @@ theorem coe_cont_linear_eq_linear (f : P →A[R] Q) : (f.contLinear : V →ₗ[R
   rfl
 
 @[simp]
-theorem coe_mk_const_linear_eq_linear (f : P →ᵃ[R] Q) h : ((⟨f, h⟩ : P →A[R] Q).contLinear : V → W) = f.linear :=
+theorem coe_mk_const_linear_eq_linear (f : P →ᵃ[R] Q) (h) : ((⟨f, h⟩ : P →A[R] Q).contLinear : V → W) = f.linear :=
   rfl
 
 theorem coe_linear_eq_coe_cont_linear (f : P →A[R] Q) : ((f : P →ᵃ[R] Q).linear : V → W) = (⇑f.contLinear : V → W) :=

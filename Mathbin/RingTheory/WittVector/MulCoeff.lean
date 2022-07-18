@@ -226,7 +226,7 @@ theorem peval_poly_of_interest (n : ℕ) (x y : 𝕎 k) :
   rw [sub_sub, add_commₓ (_ * _), ← sub_sub]
   have mvpz : (p : MvPolynomial ℕ ℤ) = MvPolynomial.c ↑p := by
     rw [RingHom.eq_int_cast, Int.cast_coe_nat]
-  have : ∀ f : ℤ →+* k g : ℕ → k, eval₂ f g p = f p := by
+  have : ∀ (f : ℤ →+* k) (g : ℕ → k), eval₂ f g p = f p := by
     intros
     rw [mvpz, MvPolynomial.eval₂_C]
   simp [← witt_polynomial_eq_sum_C_mul_X_pow, ← aeval, ← eval₂_rename, ← this, ← mul_coeff, ← peval, ← map_nat_cast, ←

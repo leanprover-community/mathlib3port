@@ -68,10 +68,10 @@ namespace CategoryTheory
 
 variable {C : Type u₁} [Category.{v₁} C] [MonoidalCategory C]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`coevaluation] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`evaluation] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`coevaluation_evaluation'] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`evaluation_coevaluation'] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`coevaluation] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`evaluation] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`coevaluation_evaluation'] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`evaluation_coevaluation'] []
 /-- An exact pairing is a pair of objects `X Y : C` which admit
   a coevaluation and evaluation morphism which fulfill two triangle equalities. -/
 class ExactPairing (X Y : C) where
@@ -100,15 +100,15 @@ restate_axiom evaluation_coevaluation'
 
 attribute [simp, reassoc] exact_pairing.evaluation_coevaluation
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]
 instance exactPairingUnit : ExactPairing (𝟙_ C) (𝟙_ C) where
   coevaluation := (ρ_ _).inv
   evaluation := (ρ_ _).Hom
   coevaluation_evaluation' := by
-    trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]"
+    trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]"
   evaluation_coevaluation' := by
-    trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]"
+    trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]"
 
 /-- A class of objects which have a right dual. -/
 class HasRightDual (X : C) where
@@ -259,10 +259,10 @@ theorem comp_left_adjoint_mate {X Y Z : C} [HasLeftDual X] [HasLeftDual Y] [HasL
     category.assoc, ← category.assoc]
   simp
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `pure_coherence #[]
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `pure_coherence #[]
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `pure_coherence #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `pure_coherence #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]
 /-- Given an exact pairing on `Y Y'`,
 we get a bijection on hom-sets `(Y' ⊗ X ⟶ Z) ≃ (X ⟶ Y ⊗ Z)`
 by "pulling the string on the left" up or down.
@@ -284,11 +284,11 @@ def tensorLeftHomEquiv (X Y Y' Z : C) [ExactPairing Y Y'] : (Y' ⊗ X ⟶ Z) ≃
     have c :
       (α_ Y' (Y ⊗ Y') X).Hom ≫ (𝟙 Y' ⊗ (α_ Y Y' X).Hom) ≫ (α_ Y' Y (Y' ⊗ X)).inv ≫ (α_ (Y' ⊗ Y) Y' X).inv =
         (α_ _ _ _).inv ⊗ 𝟙 _
-    trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `pure_coherence #[]"
+    trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `pure_coherence #[]"
     slice_lhs 4 7 => rw [c]
     slice_lhs 3 5 => rw [← comp_tensor_id, ← comp_tensor_id, coevaluation_evaluation]
     simp only [← left_unitor_conjugation]
-    trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]"
+    trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]"
   right_inv := fun f => by
     dsimp'
     simp only [← id_tensor_comp]
@@ -298,16 +298,16 @@ def tensorLeftHomEquiv (X Y Y' Z : C) [ExactPairing Y Y'] : (Y' ⊗ X ⟶ Z) ≃
     have c :
       (α_ (Y ⊗ Y') Y Z).Hom ≫ (α_ Y Y' (Y ⊗ Z)).Hom ≫ (𝟙 Y ⊗ (α_ Y' Y Z).inv) ≫ (α_ Y (Y' ⊗ Y) Z).inv =
         (α_ _ _ _).Hom ⊗ 𝟙 Z
-    trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `pure_coherence #[]"
+    trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `pure_coherence #[]"
     slice_lhs 5 8 => rw [c]
     slice_lhs 4 6 => rw [← comp_tensor_id, ← comp_tensor_id, evaluation_coevaluation]
     simp only [← left_unitor_conjugation]
-    trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]"
+    trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]"
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `pure_coherence #[]
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `pure_coherence #[]
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `pure_coherence #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `pure_coherence #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]
 /-- Given an exact pairing on `Y Y'`,
 we get a bijection on hom-sets `(X ⊗ Y ⟶ Z) ≃ (X ⟶ Z ⊗ Y')`
 by "pulling the string on the right" up or down.
@@ -324,11 +324,11 @@ def tensorRightHomEquiv (X Y Y' Z : C) [ExactPairing Y Y'] : (X ⊗ Y ⟶ Z) ≃
     have c :
       (α_ X (Y ⊗ Y') Y).inv ≫ ((α_ X Y Y').inv ⊗ 𝟙 Y) ≫ (α_ (X ⊗ Y) Y' Y).Hom ≫ (α_ X Y (Y' ⊗ Y)).Hom =
         𝟙 _ ⊗ (α_ _ _ _).Hom
-    trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `pure_coherence #[]"
+    trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `pure_coherence #[]"
     slice_lhs 4 7 => rw [c]
     slice_lhs 3 5 => rw [← id_tensor_comp, ← id_tensor_comp, evaluation_coevaluation]
     simp only [← right_unitor_conjugation]
-    trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]"
+    trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]"
   right_inv := fun f => by
     dsimp'
     simp only [← comp_tensor_id]
@@ -338,11 +338,11 @@ def tensorRightHomEquiv (X Y Y' Z : C) [ExactPairing Y Y'] : (X ⊗ Y ⟶ Z) ≃
     have c :
       (α_ Z Y' (Y ⊗ Y')).inv ≫ (α_ (Z ⊗ Y') Y Y').inv ≫ ((α_ Z Y' Y).Hom ⊗ 𝟙 Y') ≫ (α_ Z (Y' ⊗ Y) Y').Hom =
         𝟙 _ ⊗ (α_ _ _ _).inv
-    trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `pure_coherence #[]"
+    trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `pure_coherence #[]"
     slice_lhs 5 8 => rw [c]
     slice_lhs 4 6 => rw [← id_tensor_comp, ← id_tensor_comp, coevaluation_evaluation]
     simp only [← right_unitor_conjugation]
-    trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]"
+    trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]"
 
 theorem tensor_left_hom_equiv_naturality {X Y Y' Z Z' : C} [ExactPairing Y Y'] (f : Y' ⊗ X ⟶ Z) (g : Z ⟶ Z') :
     (tensorLeftHomEquiv X Y Y' Z') (f ≫ g) = (tensorLeftHomEquiv X Y Y' Z) f ≫ (𝟙 Y ⊗ g) := by
@@ -385,7 +385,7 @@ def tensorRightAdjunction (Y Y' : C) [ExactPairing Y Y'] : tensorRight Y ⊣ ten
 instance (priority := 100) closedOfHasLeftDual (Y : C) [HasLeftDual Y] :
     Closed Y where isAdj := ⟨_, tensorLeftAdjunction (ᘁY) Y⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]
 /-- `tensor_left_hom_equiv` commutes with tensoring on the right -/
 theorem tensor_left_hom_equiv_tensor {X X' Y Y' Z Z' : C} [ExactPairing Y Y'] (f : X ⟶ Y ⊗ Z) (g : X' ⟶ Z') :
     (tensorLeftHomEquiv (X ⊗ X') Y Y' (Z ⊗ Z')).symm ((f ⊗ g) ≫ (α_ _ _ _).Hom) =
@@ -397,9 +397,9 @@ theorem tensor_left_hom_equiv_tensor {X X' Y Y' Z Z' : C} [ExactPairing Y Y'] (f
   slice_lhs 2 2 => rw [← id_tensor_comp_tensor_id]
   conv_rhs => rw [← id_tensor_comp_tensor_id, comp_tensor_id, comp_tensor_id]
   simp
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]"
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]
 /-- `tensor_right_hom_equiv` commutes with tensoring on the left -/
 theorem tensor_right_hom_equiv_tensor {X X' Y Y' Z Z' : C} [ExactPairing Y Y'] (f : X ⟶ Z ⊗ Y') (g : X' ⟶ Z') :
     (tensorRightHomEquiv (X' ⊗ X) Y Y' (Z' ⊗ Z)).symm ((g ⊗ f) ≫ (α_ _ _ _).inv) =
@@ -412,7 +412,7 @@ theorem tensor_right_hom_equiv_tensor {X X' Y Y' Z Z' : C} [ExactPairing Y Y'] (
   conv_rhs => rw [← tensor_id_comp_id_tensor, id_tensor_comp, id_tensor_comp]
   simp only [tensor_id, ← associator_conjugation]
   simp
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]"
 
 @[simp]
 theorem tensor_left_hom_equiv_symm_coevaluation_comp_id_tensor {Y Y' Z : C} [ExactPairing Y Y'] (f : Y' ⟶ Z) :

@@ -326,7 +326,7 @@ unsafe def linter.inhabited_nonempty : linter where
   errors_found := "USES OF `inhabited` SHOULD BE REPLACED WITH `nonempty`."
 
 /-- Checks whether a declaration is `Prop`-valued and takes a `decidable* _`
-hypothesis that is unused lsewhere in the type.
+hypothesis that is unused elsewhere in the type.
 In this case, that hypothesis can be replaced with `classical` in the proof.
 Theorems in the `decidable` namespace are exempt from the check. -/
 private unsafe def decidable_classical (d : declaration) : tactic (Option Stringₓ) := do
@@ -357,6 +357,29 @@ unsafe def linter.decidable_classical : linter where
 and non-classical logic. It makes little sense to make all these lemmas classical, so we add them
 to the list of lemmas which are not checked by the linter `decidable_classical`. -/
 attribute [nolint decidable_classical] dec_em dec_em' Not.decidable_imp_symm
+
+/-- Checks whether a declaration is `Prop`-valued and takes a `fintype _`
+hypothesis that is unused elsewhere in the type.
+In this case, that hypothesis can be replaced with `casesI nonempty_fintype _` in the proof. -/
+unsafe def linter.fintype_finite_fun (d : declaration) : tactic (Option Stringₓ) := do
+  let tt ← is_prop d.type | return none
+  let (binders, _) ← get_pi_binders_nondep d.type
+  let fintype_binders := binders.filter fun pr => pr.2.type.is_app_of `fintype
+  if fintype_binders = 0 then return none
+    else
+      (fun s =>
+          some <|
+            "The following `fintype` hypotheses should be replaced with\n                      `casesI nonempty_fintype _` in the proof. " ++
+              s) <$>
+        print_arguments fintype_binders
+
+/-- A linter object for `fintype` vs `finite`. -/
+@[linter]
+unsafe def linter.fintype_finite : linter where
+  test := linter.fintype_finite_fun
+  auto_decls := false
+  no_errors_found := "No uses of `fintype` arguments should be replaced with `casesI nonempty_fintype _`."
+  errors_found := "USES OF `fintype` SHOULD BE REPLACED WITH `casesI nonempty_fintype _` IN THE PROOF."
 
 private unsafe def has_coe_to_fun_linter (d : declaration) : tactic (Option Stringₓ) :=
   retrieve <| do

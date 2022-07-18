@@ -106,9 +106,9 @@ but we don't have those, so we use the clunky approach of talking about
 an algebra homomorphism, and a separate homeomorphism,
 along with a witness that as functions they are the same.
 -/
-theorem Subalgebra.topological_closure_comap'_homeomorph (s : Subalgebra R A) {B : Type _} [TopologicalSpace B]
-    [Ringₓ B] [TopologicalRing B] [Algebra R B] (f : B →ₐ[R] A) (f' : B ≃ₜ A) (w : (f : B → A) = f') :
-    s.topologicalClosure.comap' f = (s.comap' f).topologicalClosure := by
+theorem Subalgebra.topological_closure_comap_homeomorph (s : Subalgebra R A) {B : Type _} [TopologicalSpace B] [Ringₓ B]
+    [TopologicalRing B] [Algebra R B] (f : B →ₐ[R] A) (f' : B ≃ₜ A) (w : (f : B → A) = f') :
+    s.topologicalClosure.comap f = (s.comap f).topologicalClosure := by
   apply SetLike.ext'
   simp only [← Subalgebra.topological_closure_coe]
   simp only [← Subalgebra.coe_comap, ← Subsemiring.coe_comap, ← AlgHom.coe_to_ring_hom]

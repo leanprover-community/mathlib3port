@@ -400,7 +400,7 @@ theorem comp_coe [Module R M] [Module R M₂] [Module R M₃] (f : M ≃ₗ[R] M
   rfl
 
 @[simp]
-theorem mk_coe h₁ h₂ f h₃ h₄ : (LinearEquiv.mk e h₁ h₂ f h₃ h₄ : M ≃ₛₗ[σ] M₂) = e :=
+theorem mk_coe (h₁ h₂ f h₃ h₄) : (LinearEquiv.mk e h₁ h₂ f h₃ h₄ : M ≃ₛₗ[σ] M₂) = e :=
   ext fun _ => rfl
 
 protected theorem map_add (a b : M) : e (a + b) = e a + e b :=
@@ -446,11 +446,11 @@ theorem symm_bijective [Module R M] [Module S M₂] [RingHomInvPair σ' σ] [Rin
   Equivₓ.bijective ⟨(symm : (M ≃ₛₗ[σ] M₂) → M₂ ≃ₛₗ[σ'] M), (symm : (M₂ ≃ₛₗ[σ'] M) → M ≃ₛₗ[σ] M₂), symm_symm, symm_symm⟩
 
 @[simp]
-theorem mk_coe' f h₁ h₂ h₃ h₄ : (LinearEquiv.mk f h₁ h₂ (⇑e) h₃ h₄ : M₂ ≃ₛₗ[σ'] M) = e.symm :=
+theorem mk_coe' (f h₁ h₂ h₃ h₄) : (LinearEquiv.mk f h₁ h₂ (⇑e) h₃ h₄ : M₂ ≃ₛₗ[σ'] M) = e.symm :=
   symm_bijective.Injective <| ext fun x => rfl
 
 @[simp]
-theorem symm_mk f h₁ h₂ h₃ h₄ :
+theorem symm_mk (f h₁ h₂ h₃ h₄) :
     (⟨e, h₁, h₂, f, h₃, h₄⟩ : M ≃ₛₗ[σ] M₂).symm =
       { (⟨e, h₁, h₂, f, h₃, h₄⟩ : M ≃ₛₗ[σ] M₂).symm with toFun := f, invFun := e } :=
   rfl
@@ -474,30 +474,6 @@ protected theorem image_eq_preimage (s : Set M) : e '' s = e.symm ⁻¹' s :=
 
 protected theorem image_symm_eq_preimage (s : Set M₂) : e.symm '' s = e ⁻¹' s :=
   e.toEquiv.symm.image_eq_preimage s
-
-section Pointwise
-
-open Pointwise
-
-@[simp]
-theorem image_smul_setₛₗ (c : R) (s : Set M) : e '' (c • s) = σ c • e '' s :=
-  LinearMap.image_smul_setₛₗ e.toLinearMap c s
-
-@[simp]
-theorem preimage_smul_setₛₗ (c : S) (s : Set M₂) : e ⁻¹' (c • s) = σ' c • e ⁻¹' s := by
-  rw [← LinearEquiv.image_symm_eq_preimage, ← LinearEquiv.image_symm_eq_preimage, image_smul_setₛₗ]
-
-include module_M₁ module_N₁
-
-@[simp]
-theorem image_smul_set (e : M₁ ≃ₗ[R₁] N₁) (c : R₁) (s : Set M₁) : e '' (c • s) = c • e '' s :=
-  LinearMap.image_smul_set e.toLinearMap c s
-
-@[simp]
-theorem preimage_smul_set (e : M₁ ≃ₗ[R₁] N₁) (c : R₁) (s : Set N₁) : e ⁻¹' (c • s) = c • e ⁻¹' s :=
-  e.preimage_smul_setₛₗ c s
-
-end Pointwise
 
 end
 
@@ -640,15 +616,15 @@ variable [Module R M] [Module R M₂]
 variable (e : M ≃+ M₂)
 
 /-- An additive equivalence whose underlying function preserves `smul` is a linear equivalence. -/
-def toLinearEquiv (h : ∀ c : R x, e (c • x) = c • e x) : M ≃ₗ[R] M₂ :=
+def toLinearEquiv (h : ∀ (c : R) (x), e (c • x) = c • e x) : M ≃ₗ[R] M₂ :=
   { e with map_smul' := h }
 
 @[simp]
-theorem coe_to_linear_equiv (h : ∀ c : R x, e (c • x) = c • e x) : ⇑(e.toLinearEquiv h) = e :=
+theorem coe_to_linear_equiv (h : ∀ (c : R) (x), e (c • x) = c • e x) : ⇑(e.toLinearEquiv h) = e :=
   rfl
 
 @[simp]
-theorem coe_to_linear_equiv_symm (h : ∀ c : R x, e (c • x) = c • e x) : ⇑(e.toLinearEquiv h).symm = e.symm :=
+theorem coe_to_linear_equiv_symm (h : ∀ (c : R) (x), e (c • x) = c • e x) : ⇑(e.toLinearEquiv h).symm = e.symm :=
   rfl
 
 /-- An additive equivalence between commutative additive monoids is a linear equivalence between

@@ -5,6 +5,6 @@ import Mathbin.Algebra.BigOperators.Ring
 import Mathbin.Algebra.BigOperators.Pi
 import Mathbin.Algebra.BigOperators.Finsupp
 import Mathbin.Algebra.BigOperators.NatAntidiagonal
-import Mathbin.Algebra.BigOperators.Enat
+import Mathbin.Algebra.BigOperators.PartEnat
 
 -- When preparing a contribution to mathlib, it is best to minimize the imports you use.

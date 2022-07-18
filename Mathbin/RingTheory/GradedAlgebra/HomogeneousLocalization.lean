@@ -301,7 +301,7 @@ theorem val_injective : Function.Injective (@HomogeneousLocalization.val _ _ _ _
 instance hasPow :
     Pow (HomogeneousLocalization 𝒜 x)
       ℕ where pow := fun z n =>
-    (Quotientₓ.map' (· ^ n) fun c1 c2 h : Localization.mk _ _ = Localization.mk _ _ => by
+    (Quotientₓ.map' (· ^ n) fun c1 c2 (h : Localization.mk _ _ = Localization.mk _ _) => by
         change Localization.mk _ _ = Localization.mk _ _
         simp only [← num_pow, ← denom_pow]
         convert congr_arg (fun z => z ^ n) h <;> erw [Localization.mk_pow] <;> rfl :
@@ -318,7 +318,7 @@ instance :
     HasSmul α
       (HomogeneousLocalization 𝒜
         x) where smul := fun m =>
-    Quotientₓ.map' ((· • ·) m) fun c1 c2 h : Localization.mk _ _ = Localization.mk _ _ => by
+    Quotientₓ.map' ((· • ·) m) fun c1 c2 (h : Localization.mk _ _ = Localization.mk _ _) => by
       change Localization.mk _ _ = Localization.mk _ _
       simp only [← num_smul, ← denom_smul]
       convert congr_arg (fun z : at x => m • z) h <;> rw [Localization.smul_mk] <;> rfl
@@ -339,7 +339,7 @@ instance :
     Neg
       (HomogeneousLocalization 𝒜
         x) where neg :=
-    Quotientₓ.map' Neg.neg fun c1 c2 h : Localization.mk _ _ = Localization.mk _ _ => by
+    Quotientₓ.map' Neg.neg fun c1 c2 (h : Localization.mk _ _ = Localization.mk _ _) => by
       change Localization.mk _ _ = Localization.mk _ _
       simp only [← num_neg, ← denom_neg, Localization.neg_mk]
       exact congr_arg (fun c => -c) h
@@ -349,7 +349,9 @@ instance :
       (HomogeneousLocalization 𝒜
         x) where add :=
     Quotientₓ.map₂' (· + ·)
-      fun c1 c2 h : Localization.mk _ _ = Localization.mk _ _ c3 c4 h' : Localization.mk _ _ = Localization.mk _ _ => by
+      fun c1 c2 (h : Localization.mk _ _ = Localization.mk _ _) c3 c4
+        (h' : Localization.mk _ _ = Localization.mk _ _) =>
+      by
       change Localization.mk _ _ = Localization.mk _ _
       simp only [← num_add, ← denom_add, Localization.add_mk]
       convert congr_arg2ₓ (· + ·) h h' <;> erw [Localization.add_mk] <;> rfl
@@ -361,7 +363,9 @@ instance :
       (HomogeneousLocalization 𝒜
         x) where mul :=
     Quotientₓ.map₂' (· * ·)
-      fun c1 c2 h : Localization.mk _ _ = Localization.mk _ _ c3 c4 h' : Localization.mk _ _ = Localization.mk _ _ => by
+      fun c1 c2 (h : Localization.mk _ _ = Localization.mk _ _) c3 c4
+        (h' : Localization.mk _ _ = Localization.mk _ _) =>
+      by
       change Localization.mk _ _ = Localization.mk _ _
       simp only [← num_mul, ← denom_mul]
       convert congr_arg2ₓ (· * ·) h h' <;> erw [Localization.mk_mul] <;> rfl

@@ -98,22 +98,23 @@ Note that when `p = q`, `equiv.perm.subtype_congr e (equiv.refl _)` can be used 
 noncomputable abbrev extendSubtype (e : { x // p x } ≃ { x // q x }) : Perm α :=
   subtypeCongr e e.toCompl
 
-theorem extend_subtype_apply_of_mem (e : { x // p x } ≃ { x // q x }) x (hx : p x) : e.extendSubtype x = e ⟨x, hx⟩ := by
+theorem extend_subtype_apply_of_mem (e : { x // p x } ≃ { x // q x }) (x) (hx : p x) : e.extendSubtype x = e ⟨x, hx⟩ :=
+  by
   dunfold extend_subtype
   simp only [← subtype_congr, ← Equivₓ.trans_apply, ← Equivₓ.sum_congr_apply]
   rw [sum_compl_apply_symm_of_pos _ _ hx, Sum.map_inl, sum_compl_apply_inl]
 
-theorem extend_subtype_mem (e : { x // p x } ≃ { x // q x }) x (hx : p x) : q (e.extendSubtype x) := by
+theorem extend_subtype_mem (e : { x // p x } ≃ { x // q x }) (x) (hx : p x) : q (e.extendSubtype x) := by
   convert (e ⟨x, hx⟩).2
   rw [e.extend_subtype_apply_of_mem _ hx, Subtype.val_eq_coe]
 
-theorem extend_subtype_apply_of_not_mem (e : { x // p x } ≃ { x // q x }) x (hx : ¬p x) :
+theorem extend_subtype_apply_of_not_mem (e : { x // p x } ≃ { x // q x }) (x) (hx : ¬p x) :
     e.extendSubtype x = e.toCompl ⟨x, hx⟩ := by
   dunfold extend_subtype
   simp only [← subtype_congr, ← Equivₓ.trans_apply, ← Equivₓ.sum_congr_apply]
   rw [sum_compl_apply_symm_of_neg _ _ hx, Sum.map_inr, sum_compl_apply_inr]
 
-theorem extend_subtype_not_mem (e : { x // p x } ≃ { x // q x }) x (hx : ¬p x) : ¬q (e.extendSubtype x) := by
+theorem extend_subtype_not_mem (e : { x // p x } ≃ { x // q x }) (x) (hx : ¬p x) : ¬q (e.extendSubtype x) := by
   convert (e.to_compl ⟨x, hx⟩).2
   rw [e.extend_subtype_apply_of_not_mem _ hx, Subtype.val_eq_coe]
 

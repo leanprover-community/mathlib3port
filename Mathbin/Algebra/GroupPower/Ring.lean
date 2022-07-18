@@ -133,7 +133,7 @@ section Semiringₓ
 
 variable [Semiringₓ R] [Semiringₓ S]
 
-protected theorem RingHom.map_pow (f : R →+* S) a : ∀ n : ℕ, f (a ^ n) = f a ^ n :=
+protected theorem RingHom.map_pow (f : R →+* S) (a) : ∀ n : ℕ, f (a ^ n) = f a ^ n :=
   map_pow f a
 
 theorem min_pow_dvd_add {n m : ℕ} {a b c : R} (ha : c ^ n ∣ a) (hb : c ^ m ∣ b) : c ^ min n m ∣ a + b := by

@@ -149,7 +149,7 @@ theorem pow_bit0' (a : M) (n : ℕ) : a ^ bit0 n = (a * a) ^ n := by
 theorem pow_bit1' (a : M) (n : ℕ) : a ^ bit1 n = (a * a) ^ n * a := by
   rw [bit1, pow_succ'ₓ, pow_bit0']
 
-theorem dvd_pow {x y : M} (hxy : x ∣ y) : ∀ {n : ℕ} hn : n ≠ 0, x ∣ y ^ n
+theorem dvd_pow {x y : M} (hxy : x ∣ y) : ∀ {n : ℕ} (hn : n ≠ 0), x ∣ y ^ n
   | 0, hn => (hn rfl).elim
   | n + 1, hn => by
     rw [pow_succₓ]

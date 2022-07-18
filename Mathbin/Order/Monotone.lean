@@ -77,11 +77,11 @@ def Antitone (f : α → β) : Prop :=
 
 /-- A function `f` is monotone on `s` if, for all `a, b ∈ s`, `a ≤ b` implies `f a ≤ f b`. -/
 def MonotoneOn (f : α → β) (s : Set α) : Prop :=
-  ∀ ⦃a⦄ ha : a ∈ s ⦃b⦄ hb : b ∈ s, a ≤ b → f a ≤ f b
+  ∀ ⦃a⦄ (ha : a ∈ s) ⦃b⦄ (hb : b ∈ s), a ≤ b → f a ≤ f b
 
 /-- A function `f` is antitone on `s` if, for all `a, b ∈ s`, `a ≤ b` implies `f b ≤ f a`. -/
 def AntitoneOn (f : α → β) (s : Set α) : Prop :=
-  ∀ ⦃a⦄ ha : a ∈ s ⦃b⦄ hb : b ∈ s, a ≤ b → f b ≤ f a
+  ∀ ⦃a⦄ (ha : a ∈ s) ⦃b⦄ (hb : b ∈ s), a ≤ b → f b ≤ f a
 
 /-- A function `f` is strictly monotone if `a < b` implies `f a < f b`. -/
 def StrictMono (f : α → β) : Prop :=
@@ -94,12 +94,12 @@ def StrictAnti (f : α → β) : Prop :=
 /-- A function `f` is strictly monotone on `s` if, for all `a, b ∈ s`, `a < b` implies
 `f a < f b`. -/
 def StrictMonoOn (f : α → β) (s : Set α) : Prop :=
-  ∀ ⦃a⦄ ha : a ∈ s ⦃b⦄ hb : b ∈ s, a < b → f a < f b
+  ∀ ⦃a⦄ (ha : a ∈ s) ⦃b⦄ (hb : b ∈ s), a < b → f a < f b
 
 /-- A function `f` is strictly antitone on `s` if, for all `a, b ∈ s`, `a < b` implies
 `f b < f a`. -/
 def StrictAntiOn (f : α → β) (s : Set α) : Prop :=
-  ∀ ⦃a⦄ ha : a ∈ s ⦃b⦄ hb : b ∈ s, a < b → f b < f a
+  ∀ ⦃a⦄ (ha : a ∈ s) ⦃b⦄ (hb : b ∈ s), a < b → f b < f a
 
 end MonotoneDef
 
@@ -341,10 +341,10 @@ theorem monotone_iff_forall_lt : Monotone f ↔ ∀ ⦃a b⦄, a < b → f a ≤
 theorem antitone_iff_forall_lt : Antitone f ↔ ∀ ⦃a b⦄, a < b → f b ≤ f a :=
   forall₂_congrₓ fun a b => ⟨fun hf h => hf h.le, fun hf h => h.eq_or_lt.elim (fun H => (congr_arg _ H).Ge) hf⟩
 
-theorem monotone_on_iff_forall_lt : MonotoneOn f s ↔ ∀ ⦃a⦄ ha : a ∈ s ⦃b⦄ hb : b ∈ s, a < b → f a ≤ f b :=
+theorem monotone_on_iff_forall_lt : MonotoneOn f s ↔ ∀ ⦃a⦄ (ha : a ∈ s) ⦃b⦄ (hb : b ∈ s), a < b → f a ≤ f b :=
   ⟨fun hf a ha b hb h => hf ha hb h.le, fun hf a ha b hb h => h.eq_or_lt.elim (fun H => (congr_arg _ H).le) (hf ha hb)⟩
 
-theorem antitone_on_iff_forall_lt : AntitoneOn f s ↔ ∀ ⦃a⦄ ha : a ∈ s ⦃b⦄ hb : b ∈ s, a < b → f b ≤ f a :=
+theorem antitone_on_iff_forall_lt : AntitoneOn f s ↔ ∀ ⦃a⦄ (ha : a ∈ s) ⦃b⦄ (hb : b ∈ s), a < b → f b ≤ f a :=
   ⟨fun hf a ha b hb h => hf ha hb h.le, fun hf a ha b hb h => h.eq_or_lt.elim (fun H => (congr_arg _ H).Ge) (hf ha hb)⟩
 
 -- `preorder α` isn't strong enough: if the preorder on `α` is an equivalence relation,
@@ -393,14 +393,27 @@ end Subsingleton
 
 theorem monotone_id [Preorderₓ α] : Monotone (id : α → α) := fun a b => id
 
+theorem monotone_on_id [Preorderₓ α] {s : Set α} : MonotoneOn id s := fun a ha b hb => id
+
 theorem strict_mono_id [Preorderₓ α] : StrictMono (id : α → α) := fun a b => id
 
-theorem monotone_const [Preorderₓ α] [Preorderₓ β] {c : β} : Monotone fun a : α => c := fun a b _ => le_reflₓ c
+theorem strict_mono_on_id [Preorderₓ α] {s : Set α} : StrictMonoOn id s := fun a ha b hb => id
+
+theorem monotone_const [Preorderₓ α] [Preorderₓ β] {c : β} : Monotone fun a : α => c := fun a b _ => le_rfl
+
+theorem monotone_on_const [Preorderₓ α] [Preorderₓ β] {c : β} {s : Set α} : MonotoneOn (fun a : α => c) s :=
+  fun a _ b _ _ => le_rfl
 
 theorem antitone_const [Preorderₓ α] [Preorderₓ β] {c : β} : Antitone fun a : α => c := fun a b _ => le_reflₓ c
 
+theorem antitone_on_const [Preorderₓ α] [Preorderₓ β] {c : β} {s : Set α} : AntitoneOn (fun a : α => c) s :=
+  fun a _ b _ _ => le_rfl
+
 theorem strict_mono_of_le_iff_le [Preorderₓ α] [Preorderₓ β] {f : α → β} (h : ∀ x y, x ≤ y ↔ f x ≤ f y) :
     StrictMono f := fun a b => (lt_iff_lt_of_le_iff_le' (h _ _) (h _ _)).1
+
+theorem strict_anti_of_le_iff_le [Preorderₓ α] [Preorderₓ β] {f : α → β} (h : ∀ x y, x ≤ y ↔ f y ≤ f x) :
+    StrictAnti f := fun a b => (lt_iff_lt_of_le_iff_le' (h _ _) (h _ _)).1
 
 theorem injective_of_lt_imp_ne [LinearOrderₓ α] {f : α → β} (h : ∀ x y, x < y → f x ≠ f y) : Injective f := by
   intro x y hxy

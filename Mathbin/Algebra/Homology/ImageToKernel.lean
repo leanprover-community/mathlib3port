@@ -46,7 +46,7 @@ def imageToKernel (w : f ≫ g = 0) : (imageSubobject f : V) ⟶ (kernelSubobjec
 
 /-- Prefer `image_to_kernel`. -/
 @[simp]
-theorem subobject_of_le_as_image_to_kernel (w : f ≫ g = 0) h :
+theorem subobject_of_le_as_image_to_kernel (w : f ≫ g = 0) (h) :
     Subobject.ofLe (imageSubobject f) (kernelSubobject g) h = imageToKernel f g w :=
   rfl
 
@@ -101,7 +101,7 @@ theorem image_to_kernel_comp_left {Z : V} (h : Z ⟶ A) (w : f ≫ g = 0) :
   simp
 
 @[simp]
-theorem image_to_kernel_comp_mono {D : V} (h : C ⟶ D) [Mono h] w :
+theorem image_to_kernel_comp_mono {D : V} (h : C ⟶ D) [Mono h] (w) :
     imageToKernel f (g ≫ h) w =
       imageToKernel f g
           ((cancel_mono h).mp
@@ -113,7 +113,7 @@ theorem image_to_kernel_comp_mono {D : V} (h : C ⟶ D) [Mono h] w :
   simp
 
 @[simp]
-theorem image_to_kernel_epi_comp {Z : V} (h : Z ⟶ A) [Epi h] w :
+theorem image_to_kernel_epi_comp {Z : V} (h : Z ⟶ A) [Epi h] (w) :
     imageToKernel (h ≫ f) g w =
       Subobject.ofLe _ _ (image_subobject_comp_le h f) ≫
         imageToKernel f g
@@ -127,7 +127,7 @@ theorem image_to_kernel_epi_comp {Z : V} (h : Z ⟶ A) [Epi h] w :
 end
 
 @[simp]
-theorem image_to_kernel_comp_hom_inv_comp [HasEqualizers V] [HasImages V] {Z : V} {i : B ≅ Z} w :
+theorem image_to_kernel_comp_hom_inv_comp [HasEqualizers V] [HasImages V] {Z : V} {i : B ≅ Z} (w) :
     imageToKernel (f ≫ i.Hom) (i.inv ≫ g) w =
       (imageSubobjectCompIso _ _).Hom ≫
         imageToKernel f g
@@ -325,7 +325,7 @@ section
 variable {A B C : V} {f : A ⟶ B} {g : B ⟶ C} (w : f ≫ g = 0) {f' : A ⟶ B} {g' : B ⟶ C} (w' : f' ≫ g' = 0) [HasKernels V]
   [HasCokernels V] [HasImages V] [HasImageMaps V]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 /-- Custom tactic to golf and speedup boring proofs in `homology.congr`. -/
 private unsafe def aux_tac : tactic Unit :=
   sorry

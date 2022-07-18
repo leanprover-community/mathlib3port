@@ -116,22 +116,22 @@ abbrev counitInv (e : C ≌ D) : 𝟭 D ⟶ e.inverse ⋙ e.Functor :=
 /- While these abbreviations are convenient, they also cause some trouble,
 preventing structure projections from unfolding. -/
 @[simp]
-theorem equivalence_mk'_unit functor inverse unit_iso counit_iso f :
+theorem equivalence_mk'_unit (functor inverse unit_iso counit_iso f) :
     (⟨Functor, inverse, unit_iso, counit_iso, f⟩ : C ≌ D).Unit = unit_iso.Hom :=
   rfl
 
 @[simp]
-theorem equivalence_mk'_counit functor inverse unit_iso counit_iso f :
+theorem equivalence_mk'_counit (functor inverse unit_iso counit_iso f) :
     (⟨Functor, inverse, unit_iso, counit_iso, f⟩ : C ≌ D).counit = counit_iso.Hom :=
   rfl
 
 @[simp]
-theorem equivalence_mk'_unit_inv functor inverse unit_iso counit_iso f :
+theorem equivalence_mk'_unit_inv (functor inverse unit_iso counit_iso f) :
     (⟨Functor, inverse, unit_iso, counit_iso, f⟩ : C ≌ D).unitInv = unit_iso.inv :=
   rfl
 
 @[simp]
-theorem equivalence_mk'_counit_inv functor inverse unit_iso counit_iso f :
+theorem equivalence_mk'_counit_inv (functor inverse unit_iso counit_iso f) :
     (⟨Functor, inverse, unit_iso, counit_iso, f⟩ : C ≌ D).counitInv = counit_iso.inv :=
   rfl
 

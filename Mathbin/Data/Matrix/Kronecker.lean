@@ -188,7 +188,7 @@ def kronecker [Mul α] : Matrix l m α → Matrix n p α → Matrix (l × n) (m 
 localized [Kronecker] infixl:100 " ⊗ₖ " => Matrix.kroneckerMapₓ (· * ·)
 
 @[simp]
-theorem kronecker_apply [Mul α] (A : Matrix l m α) (B : Matrix n p α) i₁ i₂ j₁ j₂ :
+theorem kronecker_apply [Mul α] (A : Matrix l m α) (B : Matrix n p α) (i₁ i₂ j₁ j₂) :
     (A ⊗ₖ B) (i₁, i₂) (j₁, j₂) = A i₁ j₁ * B i₂ j₂ :=
   rfl
 
@@ -273,7 +273,7 @@ localized [Kronecker] infixl:100 " ⊗ₖₜ " => Matrix.kroneckerMapₓ (· ⊗
 localized [Kronecker] notation:100 x " ⊗ₖₜ[" R "] " y:100 => Matrix.kroneckerMapₓ (TensorProduct.tmul R) x y
 
 @[simp]
-theorem kronecker_tmul_apply (A : Matrix l m α) (B : Matrix n p β) i₁ i₂ j₁ j₂ :
+theorem kronecker_tmul_apply (A : Matrix l m α) (B : Matrix n p β) (i₁ i₂ j₁ j₂) :
     (A ⊗ₖₜ B) (i₁, i₂) (j₁, j₂) = A i₁ j₁ ⊗ₜ[R] B i₂ j₂ :=
   rfl
 

@@ -221,7 +221,7 @@ def createsLimitOfReflectsIso {K : J ⥤ C} {F : C ⥤ D} [ReflectsIsomorphisms 
     CreatesLimit K F where
   lifts := fun c t => (h c t).toLiftableCone
   toReflectsLimit :=
-    { reflects := fun d : Cone K hd : IsLimit (F.mapCone d) => by
+    { reflects := fun (d : Cone K) (hd : IsLimit (F.mapCone d)) => by
         let d' : cone K := (h (F.map_cone d) hd).toLiftableCone.liftedCone
         let i : F.map_cone d' ≅ F.map_cone d := (h (F.map_cone d) hd).toLiftableCone.validLift
         let hd' : is_limit d' := (h (F.map_cone d) hd).makesLimit
@@ -299,7 +299,7 @@ def createsColimitOfReflectsIso {K : J ⥤ C} {F : C ⥤ D} [ReflectsIsomorphism
     CreatesColimit K F where
   lifts := fun c t => (h c t).toLiftableCocone
   toReflectsColimit :=
-    { reflects := fun d : Cocone K hd : IsColimit (F.mapCocone d) => by
+    { reflects := fun (d : Cocone K) (hd : IsColimit (F.mapCocone d)) => by
         let d' : cocone K := (h (F.map_cocone d) hd).toLiftableCocone.liftedCocone
         let i : F.map_cocone d' ≅ F.map_cocone d := (h (F.map_cocone d) hd).toLiftableCocone.validLift
         let hd' : is_colimit d' := (h (F.map_cocone d) hd).makesColimit

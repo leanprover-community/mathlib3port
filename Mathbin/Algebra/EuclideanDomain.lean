@@ -73,8 +73,8 @@ class EuclideanDomain (R : Type u) extends CommRingₓ R, Nontrivial R where
   quotient_mul_add_remainder_eq : ∀ a b, b * Quotientₓ a b + remainder a b = a
   R : R → R → Prop
   r_well_founded : WellFounded r
-  remainder_lt : ∀ a {b}, b ≠ 0 → r (remainder a b) b
-  mul_left_not_lt : ∀ a {b}, b ≠ 0 → ¬r (a * b) a
+  remainder_lt : ∀ (a) {b}, b ≠ 0 → r (remainder a b) b
+  mul_left_not_lt : ∀ (a) {b}, b ≠ 0 → ¬r (a * b) a
 
 namespace EuclideanDomain
 
@@ -114,14 +114,14 @@ theorem mod_eq_sub_mul_div {R : Type _} [EuclideanDomain R] (a b : R) : a % b = 
       rw [div_add_mod]
     
 
-theorem mod_lt : ∀ a {b : R}, b ≠ 0 → a % b ≺ b :=
+theorem mod_lt : ∀ (a) {b : R}, b ≠ 0 → a % b ≺ b :=
   EuclideanDomain.remainder_lt
 
-theorem mul_right_not_lt {a : R} b (h : a ≠ 0) : ¬a * b ≺ b := by
+theorem mul_right_not_lt {a : R} (b) (h : a ≠ 0) : ¬a * b ≺ b := by
   rw [mul_comm]
   exact mul_left_not_lt b h
 
-theorem mul_div_cancel_left {a : R} b (a0 : a ≠ 0) : a * b / a = b :=
+theorem mul_div_cancel_left {a : R} (b) (a0 : a ≠ 0) : a * b / a = b :=
   Eq.symm <|
     eq_of_sub_eq_zero <|
       Classical.by_contradiction fun h => by
@@ -129,7 +129,7 @@ theorem mul_div_cancel_left {a : R} b (a0 : a ≠ 0) : a * b / a = b :=
         rw [mul_sub, sub_eq_iff_eq_add'.2 (div_add_mod (a * b) a).symm] at this
         exact this (mod_lt _ a0)
 
-theorem mul_div_cancel a {b : R} (b0 : b ≠ 0) : a * b / b = a := by
+theorem mul_div_cancel (a) {b : R} (b0 : b ≠ 0) : a * b / b = a := by
   rw [mul_comm]
   exact mul_div_cancel_left a b0
 
@@ -199,7 +199,6 @@ theorem eq_div_of_mul_eq_left {a b c : R} (hb : b ≠ 0) (h : a * b = c) : a = c
 theorem eq_div_of_mul_eq_right {a b c : R} (ha : a ≠ 0) (h : a * b = c) : b = c / a := by
   rw [← h, mul_div_cancel_left _ ha]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_div_assoc (x : R) {y z : R} (h : z ∣ y) : x * y / z = x * (y / z) := by
   classical
   by_cases' hz : z = 0
@@ -567,7 +566,6 @@ instance Int.euclideanDomain : EuclideanDomain ℤ :=
         rw [← mul_oneₓ a.nat_abs, Int.nat_abs_mul]
         exact mul_le_mul_of_nonneg_left (Int.nat_abs_pos_of_ne_zero b0) (Nat.zero_leₓ _) }
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- see Note [lower instance priority]
 instance (priority := 100) Field.toEuclideanDomain {K : Type u} [Field K] : EuclideanDomain K :=
   { ‹Field K› with add := (· + ·), mul := (· * ·), one := 1, zero := 0, neg := Neg.neg, Quotient := (· / ·),

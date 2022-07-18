@@ -37,7 +37,7 @@ namespace Matrix
 def vandermonde {n : ℕ} (v : Finₓ n → R) : Matrix (Finₓ n) (Finₓ n) R := fun i j => v i ^ (j : ℕ)
 
 @[simp]
-theorem vandermonde_apply {n : ℕ} (v : Finₓ n → R) i j : vandermonde v i j = v i ^ (j : ℕ) :=
+theorem vandermonde_apply {n : ℕ} (v : Finₓ n → R) (i j) : vandermonde v i j = v i ^ (j : ℕ) :=
   rfl
 
 @[simp]
@@ -65,11 +65,11 @@ theorem vandermonde_succ {n : ℕ} (v : Finₓ n.succ → R) :
   conv_lhs => rw [← Finₓ.cons_self_tail v, vandermonde_cons]
   simp only [← Finₓ.tail]
 
-theorem vandermonde_mul_vandermonde_transpose {n : ℕ} (v w : Finₓ n → R) i j :
+theorem vandermonde_mul_vandermonde_transpose {n : ℕ} (v w : Finₓ n → R) (i j) :
     (vandermonde v ⬝ (vandermonde w)ᵀ) i j = ∑ k : Finₓ n, (v i * w j) ^ (k : ℕ) := by
   simp only [← vandermonde_apply, ← Matrix.mul_apply, ← Matrix.transpose_apply, ← mul_powₓ]
 
-theorem vandermonde_transpose_mul_vandermonde {n : ℕ} (v : Finₓ n → R) i j :
+theorem vandermonde_transpose_mul_vandermonde {n : ℕ} (v : Finₓ n → R) (i j) :
     ((vandermonde v)ᵀ ⬝ vandermonde v) i j = ∑ k : Finₓ n, v k ^ (i + j : ℕ) := by
   simp only [← vandermonde_apply, ← Matrix.mul_apply, ← Matrix.transpose_apply, ← pow_addₓ]
 
@@ -79,24 +79,28 @@ theorem det_vandermonde {n : ℕ} (v : Finₓ n → R) : det (vandermonde v) = �
   · exact det_eq_one_of_card_eq_zero (Fintype.card_fin 0)
     
   calc
-    (det fun i j : Finₓ n.succ => v i ^ (j : ℕ)) =
-        det fun i j : Finₓ n.succ =>
-          @Finₓ.cons _ (fun _ => R) (v 0 ^ (j : ℕ)) (fun i => v (Finₓ.succ i) ^ (j : ℕ) - v 0 ^ (j : ℕ)) i :=
-      det_eq_of_forall_row_eq_smul_add_const (Finₓ.cons 0 1) 0 (Finₓ.cons_zero _ _)
+    det (of fun i j : Finₓ n.succ => v i ^ (j : ℕ)) =
+        det
+          (of fun i j : Finₓ n.succ =>
+            Matrix.vecCons (v 0 ^ (j : ℕ)) (fun i => v (Finₓ.succ i) ^ (j : ℕ) - v 0 ^ (j : ℕ)) i) :=
+      det_eq_of_forall_row_eq_smul_add_const (Matrix.vecCons 0 1) 0 (Finₓ.cons_zero _ _)
         _ _ =
-        det fun i j : Finₓ n =>
-          @Finₓ.cons _ (fun _ => R) (v 0 ^ (j.succ : ℕ))
-            (fun i : Finₓ n => v (Finₓ.succ i) ^ (j.succ : ℕ) - v 0 ^ (j.succ : ℕ)) (Finₓ.succAbove 0 i) :=
+        det
+          (of fun i j : Finₓ n =>
+            Matrix.vecCons (v 0 ^ (j.succ : ℕ)) (fun i : Finₓ n => v (Finₓ.succ i) ^ (j.succ : ℕ) - v 0 ^ (j.succ : ℕ))
+              (Finₓ.succAbove 0 i)) :=
       by
-      simp_rw [det_succ_column_zero, Finₓ.sum_univ_succ, Finₓ.cons_zero, minor, Finₓ.cons_succ, Finₓ.coe_zero,
-        pow_zeroₓ, one_mulₓ, sub_self, mul_zero, zero_mul, Finset.sum_const_zero,
+      simp_rw [det_succ_column_zero, Finₓ.sum_univ_succ, of_apply, Matrix.cons_val_zero, minor, of_apply,
+        Matrix.cons_val_succ, Finₓ.coe_zero, pow_zeroₓ, one_mulₓ, sub_self, mul_zero, zero_mul, Finset.sum_const_zero,
         add_zeroₓ]_ =
-        det fun i j : Finₓ n =>
-          (v (Finₓ.succ i) - v 0) * ∑ k in Finset.range (j + 1 : ℕ), v i.succ ^ k * v 0 ^ (j - k : ℕ) :=
+        det
+          (of fun i j : Finₓ n =>
+            (v (Finₓ.succ i) - v 0) * ∑ k in Finset.range (j + 1 : ℕ), v i.succ ^ k * v 0 ^ (j - k : ℕ) :
+            Matrix _ _ R) :=
       by
       congr
       ext i j
-      rw [Finₓ.succ_above_zero, Finₓ.cons_succ, Finₓ.coe_succ, mul_comm]
+      rw [Finₓ.succ_above_zero, Matrix.cons_val_succ, Finₓ.coe_succ, mul_comm]
       exact
         (geom_sum₂_mul (v i.succ) (v 0)
             (j + 1 :
@@ -108,11 +112,12 @@ theorem det_vandermonde {n : ℕ} (v : Finₓ n → R) : det (vandermonde v) = �
       congr_arg ((· * ·) _) _ _ = ∏ i : Finₓ n.succ, ∏ j in Ioi i, v j - v i := by
       simp_rw [ih (v ∘ Finₓ.succ), Finₓ.prod_univ_succ, Finₓ.prod_Ioi_zero, Finₓ.prod_Ioi_succ]
   · intro i j
-    rw [Finₓ.cons_zero]
+    simp_rw [of_apply]
+    rw [Matrix.cons_val_zero]
     refine' Finₓ.cases _ (fun i => _) i
     · simp
       
-    rw [Finₓ.cons_succ, Finₓ.cons_succ, Pi.one_apply]
+    rw [Matrix.cons_val_succ, Matrix.cons_val_succ, Pi.one_apply]
     ring
     
   · cases n

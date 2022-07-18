@@ -97,7 +97,7 @@ end Numeric
 @[elab_as_eliminator]
 theorem numeric_rec {C : Pgame → Prop}
     (H :
-      ∀ l r L : l → Pgame R : r → Pgame,
+      ∀ (l r) (L : l → Pgame) (R : r → Pgame),
         (∀ i j, L i < R j) →
           (∀ i, Numeric (L i)) → (∀ i, Numeric (R i)) → (∀ i, C (L i)) → (∀ i, C (R i)) → C ⟨l, r, L, R⟩) :
     ∀ x, Numeric x → C x
@@ -181,24 +181,24 @@ theorem numeric_zero : Numeric 0 :=
 theorem numeric_one : Numeric 1 :=
   (numeric_of_is_empty_right_moves 1) fun _ => numeric_zero
 
-theorem Numeric.neg : ∀ {x : Pgame} o : Numeric x, Numeric (-x)
+theorem Numeric.neg : ∀ {x : Pgame} (o : Numeric x), Numeric (-x)
   | ⟨l, r, L, R⟩, o => ⟨fun j i => neg_lt_neg_iff.2 (o.1 i j), fun j => (o.2.2 j).neg, fun i => (o.2.1 i).neg⟩
 
 namespace Numeric
 
-theorem move_left_lt {x : Pgame} (o : Numeric x) i : x.moveLeft i < x :=
+theorem move_left_lt {x : Pgame} (o : Numeric x) (i) : x.moveLeft i < x :=
   (Pgame.move_left_lf i).lt (o.moveLeft i) o
 
-theorem move_left_le {x : Pgame} (o : Numeric x) i : x.moveLeft i ≤ x :=
+theorem move_left_le {x : Pgame} (o : Numeric x) (i) : x.moveLeft i ≤ x :=
   (o.move_left_lt i).le
 
-theorem lt_move_right {x : Pgame} (o : Numeric x) j : x < x.moveRight j :=
+theorem lt_move_right {x : Pgame} (o : Numeric x) (j) : x < x.moveRight j :=
   (Pgame.lf_move_right j).lt o (o.moveRight j)
 
-theorem le_move_right {x : Pgame} (o : Numeric x) j : x ≤ x.moveRight j :=
+theorem le_move_right {x : Pgame} (o : Numeric x) (j) : x ≤ x.moveRight j :=
   (o.lt_move_right j).le
 
-theorem add : ∀ {x y : Pgame} ox : Numeric x oy : Numeric y, Numeric (x + y)
+theorem add : ∀ {x y : Pgame} (ox : Numeric x) (oy : Numeric y), Numeric (x + y)
   | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩, ox, oy =>
     ⟨by
       rintro (ix | iy) (jx | jy)
@@ -278,14 +278,14 @@ instance : Inhabited Surreal :=
   ⟨0⟩
 
 /-- Lift an equivalence-respecting function on pre-games to surreals. -/
-def lift {α} (f : ∀ x, Numeric x → α) (H : ∀ {x y} hx : Numeric x hy : Numeric y, x.Equiv y → f x hx = f y hy) :
+def lift {α} (f : ∀ x, Numeric x → α) (H : ∀ {x y} (hx : Numeric x) (hy : Numeric y), x.Equiv y → f x hx = f y hy) :
     Surreal → α :=
   Quotientₓ.lift (fun x : { x // Numeric x } => f x.1 x.2) fun x y => H x.2 y.2
 
 /-- Lift a binary equivalence-respecting function on pre-games to surreals. -/
 def lift₂ {α} (f : ∀ x y, Numeric x → Numeric y → α)
     (H :
-      ∀ {x₁ y₁ x₂ y₂} ox₁ : Numeric x₁ oy₁ : Numeric y₁ ox₂ : Numeric x₂ oy₂ : Numeric y₂,
+      ∀ {x₁ y₁ x₂ y₂} (ox₁ : Numeric x₁) (oy₁ : Numeric y₁) (ox₂ : Numeric x₂) (oy₂ : Numeric y₂),
         x₁.Equiv x₂ → y₁.Equiv y₂ → f x₁ y₁ ox₁ oy₁ = f x₂ y₂ ox₂ oy₂) :
     Surreal → Surreal → α :=
   lift (fun x ox => lift (fun y oy => f x y ox oy) fun y₁ y₂ oy₁ oy₂ => H _ _ _ _ equiv_rfl) fun x₁ x₂ ox₁ ox₂ h =>
@@ -300,7 +300,7 @@ instance : LT Surreal :=
 /-- Addition on surreals is inherited from pre-game addition:
 the sum of `x = {xL | xR}` and `y = {yL | yR}` is `{xL + y, x + yL | xR + y, x + yR}`. -/
 instance : Add Surreal :=
-  ⟨Surreal.lift₂ (fun x y : Pgame ox oy => ⟦⟨x + y, ox.add oy⟩⟧) fun x₁ y₁ x₂ y₂ _ _ _ _ hx hy =>
+  ⟨Surreal.lift₂ (fun (x y : Pgame) ox oy => ⟦⟨x + y, ox.add oy⟩⟧) fun x₁ y₁ x₂ y₂ _ _ _ _ hx hy =>
       Quotientₓ.sound (Pgame.add_congr hx hy)⟩
 
 /-- Negation for surreal numbers is inherited from pre-game negation:
@@ -345,7 +345,6 @@ instance : OrderedAddCommGroup Surreal where
     rintro ⟨_⟩ ⟨_⟩ hx ⟨_⟩
     exact @add_le_add_left Pgame _ _ _ _ _ hx _
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 noncomputable instance : LinearOrderedAddCommGroup Surreal :=
   { Surreal.orderedAddCommGroup with
     le_total := by

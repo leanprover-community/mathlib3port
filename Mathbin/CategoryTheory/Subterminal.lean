@@ -39,9 +39,9 @@ variable {C : Type u₁} [Category.{v₁} C] {A : C}
 
 /-- An object `A` is subterminal iff for any `Z`, there is at most one morphism `Z ⟶ A`. -/
 def IsSubterminal (A : C) : Prop :=
-  ∀ ⦃Z : C⦄ f g : Z ⟶ A, f = g
+  ∀ ⦃Z : C⦄ (f g : Z ⟶ A), f = g
 
-theorem IsSubterminal.def : IsSubterminal A ↔ ∀ ⦃Z : C⦄ f g : Z ⟶ A, f = g :=
+theorem IsSubterminal.def : IsSubterminal A ↔ ∀ ⦃Z : C⦄ (f g : Z ⟶ A), f = g :=
   Iff.rfl
 
 /-- If `A` is subterminal, the unique morphism from it to a terminal object is a monomorphism.

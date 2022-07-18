@@ -37,7 +37,7 @@ theorem succ_eq {n : ℕ} : SuccOrder.succ = fun a => if a < Finₓ.last n then 
   rfl
 
 @[simp]
-theorem succ_apply {n : ℕ} a : SuccOrder.succ a = if a < Finₓ.last n then a + 1 else a :=
+theorem succ_apply {n : ℕ} (a) : SuccOrder.succ a = if a < Finₓ.last n then a + 1 else a :=
   rfl
 
 instance : ∀ {n : ℕ}, PredOrder (Finₓ n)

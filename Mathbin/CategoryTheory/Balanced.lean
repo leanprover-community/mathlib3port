@@ -29,7 +29,7 @@ variable (C)
 
 /-- A category is called balanced if any morphism that is both monic and epic is an isomorphism. -/
 class Balanced : Prop where
-  is_iso_of_mono_of_epi : ∀ {X Y : C} f : X ⟶ Y [Mono f] [Epi f], IsIso f
+  is_iso_of_mono_of_epi : ∀ {X Y : C} (f : X ⟶ Y) [Mono f] [Epi f], IsIso f
 
 end
 

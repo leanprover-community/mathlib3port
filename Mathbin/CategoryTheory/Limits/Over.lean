@@ -106,7 +106,7 @@ def pullbackId {A : C} : pullback (𝟙 A) ≅ 𝟭 _ :=
 /-- pullback commutes with composition (up to natural isomorphism). -/
 def pullbackComp {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : pullback (f ≫ g) ≅ pullback g ⋙ pullback f :=
   Adjunction.rightAdjointUniq (mapPullbackAdj _)
-    (((mapPullbackAdj _).comp _ _ (mapPullbackAdj _)).ofNatIsoLeft (Over.mapComp _ _).symm)
+    (((mapPullbackAdj _).comp (mapPullbackAdj _)).ofNatIsoLeft (Over.mapComp _ _).symm)
 
 instance pullbackIsRightAdjoint {A B : C} (f : A ⟶ B) : IsRightAdjoint (pullback f) :=
   ⟨_, mapPullbackAdj f⟩

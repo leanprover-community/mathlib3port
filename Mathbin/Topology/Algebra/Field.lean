@@ -93,10 +93,9 @@ variable [TopologicalDivisionRing K]
 theorem units_top_group : TopologicalGroup Kˣ :=
   { TopologicalRing.top_monoid_units K with
     continuous_inv := by
-      have : (coe : Kˣ → K) ∘ (fun x => x⁻¹ : Kˣ → Kˣ) = (fun x => x⁻¹ : K → K) ∘ (coe : Kˣ → K) := funext Units.coe_inv
       rw [continuous_iff_continuous_at]
       intro x
-      rw [ContinuousAt, nhds_induced, nhds_induced, tendsto_iff_comap, comap_comm this]
+      rw [ContinuousAt, nhds_induced, nhds_induced, tendsto_iff_comap, ← Function.Semiconj.filter_comap Units.coe_inv _]
       apply comap_mono
       rw [← tendsto_iff_comap, Units.coe_inv]
       exact continuous_at_inv₀ x.ne_zero }

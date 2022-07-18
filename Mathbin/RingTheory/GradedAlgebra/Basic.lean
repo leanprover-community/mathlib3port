@@ -108,7 +108,7 @@ theorem GradedRing.proj_recompose (a : ⨁ i, 𝒜 i) (i : ι) :
     GradedRing.proj 𝒜 i ((decompose 𝒜).symm a) = (decompose 𝒜).symm (DirectSum.of _ i (a i)) := by
   rw [GradedRing.proj_apply, decompose_symm_of, Equivₓ.apply_symm_apply]
 
-theorem GradedRing.mem_support_iff [∀ i x : 𝒜 i, Decidable (x ≠ 0)] (r : A) (i : ι) :
+theorem GradedRing.mem_support_iff [∀ (i) (x : 𝒜 i), Decidable (x ≠ 0)] (r : A) (i : ι) :
     i ∈ (decompose 𝒜 r).support ↔ GradedRing.proj 𝒜 i r ≠ 0 :=
   Dfinsupp.mem_support_iff.trans AddSubmonoidClass.coe_eq_zero.Not.symm
 
@@ -134,7 +134,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 def GradedAlgebra.ofAlgHom [SetLike.GradedMonoid 𝒜] (decompose : A →ₐ[R] ⨁ i, 𝒜 i)
     (right_inv : (DirectSum.coeAlgHom 𝒜).comp decompose = AlgHom.id R A)
-    (left_inv : ∀ i x : 𝒜 i, decompose (x : A) = DirectSum.of (fun i => ↥(𝒜 i)) i x) : GradedAlgebra 𝒜 where
+    (left_inv : ∀ (i) (x : 𝒜 i), decompose (x : A) = DirectSum.of (fun i => ↥(𝒜 i)) i x) : GradedAlgebra 𝒜 where
   decompose' := decompose
   left_inv := AlgHom.congr_fun right_inv
   right_inv := by

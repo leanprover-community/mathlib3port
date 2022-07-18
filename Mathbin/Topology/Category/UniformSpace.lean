@@ -152,7 +152,7 @@ def completionHom (X : UniformSpaceₓ) :
   property := Completion.uniform_continuous_coe X
 
 @[simp]
-theorem completion_hom_val (X : UniformSpaceₓ) x : (completionHom X) x = (x : Completion X) :=
+theorem completion_hom_val (X : UniformSpaceₓ) (x) : (completionHom X) x = (x : Completion X) :=
   rfl
 
 /-- The mate of a morphism from a `UniformSpace` to a `CpltSepUniformSpace`. -/
@@ -162,7 +162,7 @@ noncomputable def extensionHom {X : UniformSpaceₓ} {Y : CpltSepUniformSpace}
   property := Completion.uniform_continuous_extension
 
 @[simp]
-theorem extension_hom_val {X : UniformSpaceₓ} {Y : CpltSepUniformSpace} (f : X ⟶ (forget₂ _ _).obj Y) x :
+theorem extension_hom_val {X : UniformSpaceₓ} {Y : CpltSepUniformSpace} (f : X ⟶ (forget₂ _ _).obj Y) (x) :
     (extensionHom f) x = Completion.extension f x :=
   rfl
 

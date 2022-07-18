@@ -38,12 +38,12 @@ namespace DirectedSystem
 
 /-- A copy of `directed_system.map_self` specialized to `L`-embeddings, as otherwise the
 `λ i j h, f i j h` can confuse the simplifier. -/
-theorem map_self [DirectedSystem G fun i j h => f i j h] i x h : f i i h x = x :=
+theorem map_self [DirectedSystem G fun i j h => f i j h] (i x h) : f i i h x = x :=
   DirectedSystem.map_self (fun i j h => f i j h) i x h
 
 /-- A copy of `directed_system.map_map` specialized to `L`-embeddings, as otherwise the
 `λ i j h, f i j h` can confuse the simplifier. -/
-theorem map_map [DirectedSystem G fun i j h => f i j h] {i j k} hij hjk x :
+theorem map_map [DirectedSystem G fun i j h => f i j h] {i j k} (hij hjk x) :
     f j k hjk (f i j hij x) = f i k (le_transₓ hij hjk) x :=
   DirectedSystem.map_map (fun i j h => f i j h) hij hjk x
 
@@ -307,7 +307,7 @@ theorem lift_quotient_mk_sigma_mk {i} (x : G i) : lift L ι G f g Hg ⟦⟨i, x�
 theorem lift_of {i} (x : G i) : lift L ι G f g Hg (of L ι G f i x) = g i x := by
   simp
 
-theorem lift_unique (F : DirectLimit G f ↪[L] P) x :
+theorem lift_unique (F : DirectLimit G f ↪[L] P) (x) :
     F x =
       lift L ι G f (fun i => F.comp <| of L ι G f i)
         (fun i j hij x => by

@@ -246,7 +246,7 @@ theorem mk_bijective : Function.Bijective (@ConjClasses.mk α _) :=
 
 /-- The bijection between a `comm_group` and its `conj_classes`. -/
 def mkEquiv : α ≃ ConjClasses α :=
-  ⟨ConjClasses.mk, Quotientₓ.lift id fun a : α b => is_conj_iff_eq.1, Quotientₓ.lift_mk _ _, by
+  ⟨ConjClasses.mk, Quotientₓ.lift id fun (a : α) b => is_conj_iff_eq.1, Quotientₓ.lift_mk _ _, by
     rw [Function.RightInverse, Function.LeftInverse, forall_is_conj]
     intro x
     rw [← quotient_mk_eq_mk, ← quotient_mk_eq_mk, Quotientₓ.lift_mk, id.def]⟩
@@ -287,7 +287,7 @@ attribute [local instance] IsConj.setoid
 
 /-- Given a conjugacy class `a`, `carrier a` is the set it represents. -/
 def Carrier : ConjClasses α → Set α :=
-  Quotientₓ.lift ConjugatesOf fun a : α b ab => IsConj.conjugates_of_eq ab
+  Quotientₓ.lift ConjugatesOf fun (a : α) b ab => IsConj.conjugates_of_eq ab
 
 theorem mem_carrier_mk {a : α} : a ∈ Carrier (ConjClasses.mk a) :=
   IsConj.refl _

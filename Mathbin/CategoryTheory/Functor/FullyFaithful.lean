@@ -36,8 +36,8 @@ specifying a particular preimage of each `f : F.obj X ⟶ F.obj Y`.
 See <https://stacks.math.columbia.edu/tag/001C>.
 -/
 class Full (F : C ⥤ D) where
-  preimage : ∀ {X Y : C} f : F.obj X ⟶ F.obj Y, X ⟶ Y
-  witness' : ∀ {X Y : C} f : F.obj X ⟶ F.obj Y, F.map (preimage f) = f := by
+  preimage : ∀ {X Y : C} (f : F.obj X ⟶ F.obj Y), X ⟶ Y
+  witness' : ∀ {X Y : C} (f : F.obj X ⟶ F.obj Y), F.map (preimage f) = f := by
     run_tac
       obviously
 
@@ -45,7 +45,7 @@ restate_axiom full.witness'
 
 attribute [simp] full.witness
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`map_injective'] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`map_injective'] []
 /-- A functor `F : C ⥤ D` is faithful if for each `X Y : C`, `F.map` is injective.
 
 See <https://stacks.math.columbia.edu/tag/001C>.

@@ -106,7 +106,7 @@ such that `F.map f (u j) = u j` for every morphism `f : j ⟶ j'`.
 We later use these to define limits in `Type` and in many concrete categories.
 -/
 def Sections (F : J ⥤ Type w) : Set (∀ j, F.obj j) :=
-  { u | ∀ {j j'} f : j ⟶ j', F.map f (u j) = u j' }
+  { u | ∀ {j j'} (f : j ⟶ j'), F.map f (u j) = u j' }
 
 end Functor
 
@@ -146,11 +146,11 @@ theorem map_hom_map_inv_apply (f : X ≅ Y) (y : F.obj Y) : F.map f.Hom (F.map f
   congr_fun (F.mapIso f).inv_hom_id y
 
 @[simp]
-theorem hom_inv_id_app_apply (α : F ≅ G) X x : α.inv.app X (α.Hom.app X x) = x :=
+theorem hom_inv_id_app_apply (α : F ≅ G) (X) (x) : α.inv.app X (α.Hom.app X x) = x :=
   congr_fun (α.hom_inv_id_app X) x
 
 @[simp]
-theorem inv_hom_id_app_apply (α : F ≅ G) X x : α.Hom.app X (α.inv.app X x) = x :=
+theorem inv_hom_id_app_apply (α : F ≅ G) (X) (x) : α.Hom.app X (α.inv.app X x) = x :=
   congr_fun (α.inv_hom_id_app X) x
 
 end FunctorToTypes

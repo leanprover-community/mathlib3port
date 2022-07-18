@@ -173,7 +173,7 @@ theorem sublist_iff_exists_fin_order_embedding_nth_le_eq {l l' : List α} :
   rw [sublist_iff_exists_order_embedding_nth_eq]
   constructor
   · rintro ⟨f, hf⟩
-    have h : ∀ {i : ℕ} h : i < l.length, f i < l'.length := by
+    have h : ∀ {i : ℕ} (h : i < l.length), f i < l'.length := by
       intro i hi
       specialize hf i
       rw [nth_le_nth hi, eq_comm, nth_eq_some] at hf
@@ -217,7 +217,6 @@ theorem sublist_iff_exists_fin_order_embedding_nth_le_eq {l l' : List α} :
       
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- An element `x : α` of `l : list α` is a duplicate iff it can be found
 at two distinct indices `n m : ℕ` inside the list `l`.
 -/

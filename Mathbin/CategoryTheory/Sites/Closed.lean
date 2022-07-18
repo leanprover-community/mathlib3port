@@ -72,7 +72,7 @@ every open set which it covers.
 Note this has no relation to a closed subset of a topological space.
 -/
 def IsClosed {X : C} (S : Sieve X) : Prop :=
-  ∀ ⦃Y : C⦄ f : Y ⟶ X, J₁.Covers S f → S f
+  ∀ ⦃Y : C⦄ (f : Y ⟶ X), J₁.Covers S f → S f
 
 /-- If `S` is `J₁`-closed, then `S` covers exactly the arrows it contains. -/
 theorem covers_iff_mem_of_closed {X : C} {S : Sieve X} (h : J₁.IsClosed S) {Y : C} (f : Y ⟶ X) : J₁.Covers S f ↔ S f :=
@@ -184,7 +184,7 @@ theorem classifier_is_sheaf : Presieve.IsSheaf J₁ (Functor.closedSieves J₁) 
     ext
     dsimp' only [← Subtype.coe_mk]
     rw [← J₁.covers_iff_mem_of_closed hM, ← J₁.covers_iff_mem_of_closed hN]
-    have q : ∀ ⦃Z : C⦄ g : Z ⟶ X hg : S g, M.pullback g = N.pullback g := by
+    have q : ∀ ⦃Z : C⦄ (g : Z ⟶ X) (hg : S g), M.pullback g = N.pullback g := by
       intro Z g hg
       apply congr_arg Subtype.val ((hM₂ g hg).trans (hN₂ g hg).symm)
     have MSNS : M⊓S = N⊓S := by
@@ -210,7 +210,7 @@ theorem classifier_is_sheaf : Presieve.IsSheaf J₁ (Functor.closedSieves J₁) 
   · intro x hx
     rw [presieve.compatible_iff_sieve_compatible] at hx
     let M := sieve.bind S fun Y f hf => (x f hf).1
-    have : ∀ ⦃Y⦄ f : Y ⟶ X hf : S f, M.pullback f = (x f hf).1 := by
+    have : ∀ ⦃Y⦄ (f : Y ⟶ X) (hf : S f), M.pullback f = (x f hf).1 := by
       intro Y f hf
       apply le_antisymmₓ
       · rintro Z u ⟨W, g, f', hf', hg : (x f' hf').1 _, c⟩
@@ -277,7 +277,7 @@ In fact, such operations are in bijection with Grothendieck topologies.
 -/
 @[simps]
 def topologyOfClosureOperator (c : ∀ X : C, ClosureOperator (Sieve X))
-    (hc : ∀ ⦃X Y : C⦄ f : Y ⟶ X S : Sieve X, c _ (S.pullback f) = (c _ S).pullback f) : GrothendieckTopology C where
+    (hc : ∀ ⦃X Y : C⦄ (f : Y ⟶ X) (S : Sieve X), c _ (S.pullback f) = (c _ S).pullback f) : GrothendieckTopology C where
   Sieves := fun X => { S | c X S = ⊤ }
   top_mem' := fun X => top_unique ((c X).le_closure _)
   pullback_stable' := fun X Y S f hS => by
@@ -298,7 +298,7 @@ theorem topology_of_closure_operator_self :
   apply grothendieck_topology.close_eq_top_iff_mem
 
 theorem topology_of_closure_operator_close (c : ∀ X : C, ClosureOperator (Sieve X))
-    (pb : ∀ ⦃X Y : C⦄ f : Y ⟶ X S : Sieve X, c Y (S.pullback f) = (c X S).pullback f) (X : C) (S : Sieve X) :
+    (pb : ∀ ⦃X Y : C⦄ (f : Y ⟶ X) (S : Sieve X), c Y (S.pullback f) = (c X S).pullback f) (X : C) (S : Sieve X) :
     (topologyOfClosureOperator c pb).close S = c X S := by
   ext
   change c _ (sieve.pullback f S) = ⊤ ↔ c _ S f

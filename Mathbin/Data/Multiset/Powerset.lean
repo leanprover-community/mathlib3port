@@ -90,7 +90,7 @@ theorem powerset_zero : @powerset α 0 = {0} :=
   rfl
 
 @[simp]
-theorem powerset_cons (a : α) s : powerset (a ::ₘ s) = powerset s + map (cons a) (powerset s) :=
+theorem powerset_cons (a : α) (s) : powerset (a ::ₘ s) = powerset s + map (cons a) (powerset s) :=
   (Quotientₓ.induction_on s) fun l => by
     simp <;> rfl
 
@@ -126,7 +126,7 @@ theorem revzip_powerset_aux' {l : List α} ⦃x⦄ (h : x ∈ revzipₓ (powerse
 theorem revzip_powerset_aux_lemma [DecidableEq α] (l : List α) {l' : List (Multiset α)}
     (H : ∀ ⦃x : _ × _⦄, x ∈ revzipₓ l' → x.1 + x.2 = ↑l) : revzipₓ l' = l'.map fun x => (x, ↑l - x) := by
   have :
-    forall₂ (fun p : Multiset α × Multiset α s : Multiset α => p = (s, ↑l - s)) (revzip l')
+    forall₂ (fun (p : Multiset α × Multiset α) (s : Multiset α) => p = (s, ↑l - s)) (revzip l')
       ((revzip l').map Prod.fst) :=
     by
     rw [forall₂_map_right_iff, forall₂_same]
@@ -209,10 +209,10 @@ def powersetLen (n : ℕ) (s : Multiset α) : Multiset (Multiset α) :=
   Quot.liftOn s (fun l => (powersetLenAux n l : Multiset (Multiset α))) fun l₁ l₂ h =>
     Quot.sound (powerset_len_aux_perm h)
 
-theorem powerset_len_coe' n (l : List α) : @powersetLen α n l = powersetLenAux n l :=
+theorem powerset_len_coe' (n) (l : List α) : @powersetLen α n l = powersetLenAux n l :=
   rfl
 
-theorem powerset_len_coe n (l : List α) : @powersetLen α n l = ((sublistsLen n l).map coe : List (Multiset α)) :=
+theorem powerset_len_coe (n) (l : List α) : @powersetLen α n l = ((sublistsLen n l).map coe : List (Multiset α)) :=
   congr_arg coe powerset_len_aux_eq_map_coe
 
 @[simp]
@@ -224,7 +224,7 @@ theorem powerset_len_zero_right (n : ℕ) : @powersetLen α (n + 1) 0 = 0 :=
   rfl
 
 @[simp]
-theorem powerset_len_cons (n : ℕ) (a : α) s :
+theorem powerset_len_cons (n : ℕ) (a : α) (s) :
     powersetLen (n + 1) (a ::ₘ s) = powersetLen (n + 1) s + map (cons a) (powersetLen n s) :=
   (Quotientₓ.induction_on s) fun l => by
     simp [← powerset_len_coe'] <;> rfl

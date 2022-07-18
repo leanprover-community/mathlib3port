@@ -68,7 +68,7 @@ theorem det_to_square_block' (M : Matrix m m R) (b : m → ℕ) (k : ℕ) :
   simp
 
 theorem two_block_triangular_det (M : Matrix m m R) (p : m → Prop) [DecidablePred p]
-    (h : ∀ i h1 : ¬p i j h2 : p j, M i j = 0) :
+    (h : ∀ (i) (h1 : ¬p i) (j) (h2 : p j), M i j = 0) :
     M.det = (toSquareBlockProp M p).det * (toSquareBlockProp M fun i => ¬p i).det := by
   rw [det_to_block M p]
   convert
@@ -149,7 +149,7 @@ theorem upper_two_block_triangular {m n : Type _} (A : Matrix m m R) (B : Matrix
     
 
 theorem det_of_block_triangular_matrix (M : Matrix m m R) (b : m → ℕ) (h : BlockTriangularMatrix M b) :
-    ∀ n : ℕ hn : ∀ i, b i < n, M.det = ∏ k in Finset.range n, (toSquareBlock' M b k).det := by
+    ∀ (n : ℕ) (hn : ∀ i, b i < n), M.det = ∏ k in Finset.range n, (toSquareBlock' M b k).det := by
   intro n hn
   induction' n with n hi generalizing m M b
   · rw [Finset.prod_range_zero]
@@ -254,7 +254,7 @@ theorem det_of_upper_triangular {n : ℕ} (M : Matrix (Finₓ n) (Finₓ n) R) (
 theorem det_of_lower_triangular {n : ℕ} (M : Matrix (Finₓ n) (Finₓ n) R) (h : ∀ i j : Finₓ n, i < j → M i j = 0) :
     M.det = ∏ i : Finₓ n, M i i := by
   rw [← det_transpose]
-  exact det_of_upper_triangular _ fun i j : Finₓ n hji : j < i => h j i hji
+  exact det_of_upper_triangular _ fun (i j : Finₓ n) (hji : j < i) => h j i hji
 
 end Matrix
 

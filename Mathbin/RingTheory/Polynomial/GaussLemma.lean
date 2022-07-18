@@ -93,7 +93,6 @@ theorem is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part {p : K[X]}
   · apply Units.ne_zero _ Con
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- **Gauss's Lemma** states that a primitive polynomial is irreducible iff it is irreducible in the
   fraction field. -/
 theorem IsPrimitive.irreducible_iff_irreducible_map_fraction_map {p : R[X]} (hp : p.IsPrimitive) :

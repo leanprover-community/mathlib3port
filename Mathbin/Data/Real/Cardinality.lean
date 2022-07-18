@@ -153,7 +153,6 @@ theorem increasing_cantor_function (h1 : 0 < c) (h2 : c < 1 / 2) {n : ℕ} {f g 
   rw [mul_lt_mul_left h1]
   exact ih (fun k hk => hn _ <| Nat.succ_lt_succₓ hk) fn gn
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- `cantor_function c` is injective if `0 < c < 1/2`. -/
 theorem cantor_function_injective (h1 : 0 < c) (h2 : c < 1 / 2) : Function.Injective (cantorFunction c) := by
   intro f g hfg

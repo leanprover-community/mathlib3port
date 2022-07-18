@@ -87,7 +87,7 @@ theorem mem_carrier {x : M} : x ∈ N.Carrier ↔ x ∈ (N : Set M) :=
   Iff.rfl
 
 @[simp]
-theorem mem_mk_iff (S : Set M) h₁ h₂ h₃ h₄ {x : M} : x ∈ (⟨S, h₁, h₂, h₃, h₄⟩ : LieSubmodule R L M) ↔ x ∈ S :=
+theorem mem_mk_iff (S : Set M) (h₁ h₂ h₃ h₄) {x : M} : x ∈ (⟨S, h₁, h₂, h₃, h₄⟩ : LieSubmodule R L M) ↔ x ∈ S :=
   Iff.rfl
 
 @[simp]
@@ -106,11 +106,11 @@ theorem mk_eq_zero {x} (h : x ∈ N) : (⟨x, h⟩ : N) = 0 ↔ x = 0 :=
   Subtype.ext_iff_val
 
 @[simp]
-theorem coe_to_set_mk (S : Set M) h₁ h₂ h₃ h₄ : ((⟨S, h₁, h₂, h₃, h₄⟩ : LieSubmodule R L M) : Set M) = S :=
+theorem coe_to_set_mk (S : Set M) (h₁ h₂ h₃ h₄) : ((⟨S, h₁, h₂, h₃, h₄⟩ : LieSubmodule R L M) : Set M) = S :=
   rfl
 
 @[simp]
-theorem coe_to_submodule_mk (p : Submodule R M) h :
+theorem coe_to_submodule_mk (p : Submodule R M) (h) :
     (({ p with lie_mem := h } : LieSubmodule R L M) : Submodule R M) = p := by
   cases p
   rfl
@@ -147,7 +147,7 @@ theorem copy_eq (S : LieSubmodule R L M) (s : Set M) (hs : s = ↑S) : S.copy s 
   coe_submodule_injective (SetLike.coe_injective hs)
 
 instance : LieRingModule L N where
-  bracket := fun x : L m : N => ⟨⁅x,m.val⁆, N.lie_mem m.property⟩
+  bracket := fun (x : L) (m : N) => ⟨⁅x,m.val⁆, N.lie_mem m.property⟩
   add_lie := by
     intro x y m
     apply SetCoe.ext
@@ -248,7 +248,7 @@ end LieIdeal
 variable {R M}
 
 theorem Submodule.exists_lie_submodule_coe_eq_iff (p : Submodule R M) :
-    (∃ N : LieSubmodule R L M, ↑N = p) ↔ ∀ x : L m : M, m ∈ p → ⁅x,m⁆ ∈ p := by
+    (∃ N : LieSubmodule R L M, ↑N = p) ↔ ∀ (x : L) (m : M), m ∈ p → ⁅x,m⁆ ∈ p := by
   constructor
   · rintro ⟨N, rfl⟩
     exact N.lie_mem
@@ -352,11 +352,11 @@ theorem mem_top (x : M) : x ∈ (⊤ : LieSubmodule R L M) :=
 instance : HasInf (LieSubmodule R L M) :=
   ⟨fun N N' => { (N⊓N' : Submodule R M) with lie_mem := fun x m h => mem_inter (N.lie_mem h.1) (N'.lie_mem h.2) }⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}
+-- ./././Mathport/Syntax/Translate/Basic.lean:1122:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}
 instance : HasInfₓ (LieSubmodule R L M) :=
   ⟨fun S =>
     { inf
-        "./././Mathport/Syntax/Translate/Basic.lean:1087:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" with
+        "./././Mathport/Syntax/Translate/Basic.lean:1122:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" with
       lie_mem := fun x m h => by
         simp only [← Submodule.mem_carrier, ← mem_Inter, ← Submodule.Inf_coe, ← mem_set_of_eq, ←
           forall_apply_eq_imp_iff₂, ← exists_imp_distrib] at *
@@ -367,12 +367,12 @@ instance : HasInfₓ (LieSubmodule R L M) :=
 theorem inf_coe : (↑(N⊓N') : Set M) = N ∩ N' :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}
+-- ./././Mathport/Syntax/Translate/Basic.lean:1122:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}
 @[simp]
 theorem Inf_coe_to_submodule (S : Set (LieSubmodule R L M)) :
     (↑(inf S) : Submodule R M) =
       inf
-        "./././Mathport/Syntax/Translate/Basic.lean:1087:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" :=
+        "./././Mathport/Syntax/Translate/Basic.lean:1122:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" :=
   rfl
 
 @[simp]
@@ -416,7 +416,7 @@ theorem add_eq_sup : N + N' = N⊔N' :=
 
 @[norm_cast, simp]
 theorem sup_coe_to_submodule : (↑(N⊔N') : Submodule R M) = (N : Submodule R M)⊔(N' : Submodule R M) := by
-  have aux : ∀ x : L m, m ∈ (N⊔N' : Submodule R M) → ⁅x,m⁆ ∈ (N⊔N' : Submodule R M) := by
+  have aux : ∀ (x : L) (m), m ∈ (N⊔N' : Submodule R M) → ⁅x,m⁆ ∈ (N⊔N' : Submodule R M) := by
     simp only [← Submodule.mem_sup]
     rintro x m ⟨y, hy, z, hz, rfl⟩
     refine' ⟨⁅x,y⁆, N.lie_mem hy, ⁅x,z⁆, N'.lie_mem hz, (lie_add _ _ _).symm⟩
@@ -685,6 +685,10 @@ theorem comap_incl_eq_top : N₂.comap N.incl = ⊤ ↔ N ≤ N₂ := by
   simpa only [LieSubmodule.coe_to_submodule_eq_iff, ← LieSubmodule.coe_submodule_comap, ← LieSubmodule.incl_coe, ←
     LieSubmodule.top_coe_submodule, ← Submodule.comap_subtype_eq_top]
 
+theorem comap_incl_eq_bot : N₂.comap N.incl = ⊥ ↔ N⊓N₂ = ⊥ := by
+  simpa only [← _root_.eq_bot_iff, LieSubmodule.coe_to_submodule_eq_iff, ← LieSubmodule.coe_submodule_comap, ←
+    LieSubmodule.incl_coe, ← LieSubmodule.bot_coe_submodule, Submodule.disjoint_iff_comap_eq_bot]
+
 end LieSubmodule
 
 namespace LieIdeal
@@ -824,7 +828,7 @@ def IsIdealMorphism : Prop :=
 theorem is_ideal_morphism_def : f.IsIdealMorphism ↔ (f.idealRange : LieSubalgebra R L') = f.range :=
   Iff.rfl
 
-theorem is_ideal_morphism_iff : f.IsIdealMorphism ↔ ∀ x : L' y : L, ∃ z : L, ⁅x,f y⁆ = f z := by
+theorem is_ideal_morphism_iff : f.IsIdealMorphism ↔ ∀ (x : L') (y : L), ∃ z : L, ⁅x,f y⁆ = f z := by
   simp only [← is_ideal_morphism_def, ← ideal_range_eq_lie_span_range, LieSubalgebra.coe_to_submodule_eq_iff,
     f.range.coe_to_submodule, ← LieIdeal.coe_to_lie_subalgebra_to_submodule, ←
     LieSubmodule.coe_lie_span_submodule_eq_iff, ← LieSubalgebra.mem_coe_submodule, ← mem_range, ← exists_imp_distrib, ←

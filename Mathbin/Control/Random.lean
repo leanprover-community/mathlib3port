@@ -72,12 +72,12 @@ open Streamₓ
 
 /-- `bounded_random α` gives us machinery to generate values of type `α` between certain bounds -/
 class BoundedRandomₓ (α : Type u) [Preorderₓ α] where
-  randomR : ∀ g [RandomGen g] x y : α, x ≤ y → RandGₓ g (x .. y)
+  randomR : ∀ (g) [RandomGen g] (x y : α), x ≤ y → RandGₓ g (x .. y)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`Random] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`Random] []
 /-- `random α` gives us machinery to generate values of type `α` -/
 class Randomₓ (α : Type u) where
-  Random : ∀ g : Type [RandomGen g], RandGₓ g α
+  Random : ∀ (g : Type) [RandomGen g], RandGₓ g α
 
 /-- shift_31_left = 2^31; multiplying by it shifts the binary
 representation of a number left by 31 bits, dividing by it shifts it
@@ -267,13 +267,13 @@ instance intBoundedRandom :
 instance finRandom (n : ℕ) [Fact (0 < n)] : Randomₓ (Finₓ n) where Random := fun g inst => @Finₓ.random g inst _ _
 
 instance finBoundedRandom (n : ℕ) :
-    BoundedRandomₓ (Finₓ n) where randomR := fun g inst x y : Finₓ n p => do
+    BoundedRandomₓ (Finₓ n) where randomR := fun g inst (x y : Finₓ n) p => do
     let ⟨r, h, h'⟩ ← @Randₓ.randomR ℕ g inst _ _ x.val y.val p
     pure ⟨⟨r, lt_of_le_of_ltₓ h' y⟩, h, h'⟩
 
 /-- A shortcut for creating a `random (fin n)` instance from
 a proof that `0 < n` rather than on matching on `fin (succ n)`  -/
-def randomFinOfPos : ∀ {n : ℕ} h : 0 < n, Randomₓ (Finₓ n)
+def randomFinOfPos : ∀ {n : ℕ} (h : 0 < n), Randomₓ (Finₓ n)
   | succ n, _ => finRandom _
   | 0, h => False.elim (Nat.not_lt_zeroₓ _ h)
 

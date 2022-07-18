@@ -115,19 +115,19 @@ theorem ext {f g : Poly α} : (∀ x, f x = g x) → f = g :=
   FunLike.ext _ _
 
 /-- The `i`th projection function, `x_i`. -/
-def proj i : Poly α :=
+def proj (i) : Poly α :=
   ⟨_, IsPoly.proj i⟩
 
 @[simp]
-theorem proj_apply (i : α) x : proj i x = x i :=
+theorem proj_apply (i : α) (x) : proj i x = x i :=
   rfl
 
 /-- The constant function with value `n : ℤ`. -/
-def const n : Poly α :=
+def const (n) : Poly α :=
   ⟨_, IsPoly.const n⟩
 
 @[simp]
-theorem const_apply n (x : α → ℕ) : const n x = n :=
+theorem const_apply (n) (x : α → ℕ) : const n x = n :=
   rfl
 
 instance : Zero (Poly α) :=
@@ -173,15 +173,15 @@ theorem coe_mul (f g : Poly α) : ⇑(f * g) = f * g :=
   rfl
 
 @[simp]
-theorem zero_apply x : (0 : Poly α) x = 0 :=
+theorem zero_apply (x) : (0 : Poly α) x = 0 :=
   rfl
 
 @[simp]
-theorem one_apply x : (1 : Poly α) x = 1 :=
+theorem one_apply (x) : (1 : Poly α) x = 1 :=
   rfl
 
 @[simp]
-theorem neg_apply (f : Poly α) x : (-f) x = -f x :=
+theorem neg_apply (f : Poly α) (x) : (-f) x = -f x :=
   rfl
 
 @[simp]
@@ -243,7 +243,7 @@ theorem sumsq_nonneg (x : α → ℕ) : ∀ l, 0 ≤ sumsq l x
   | p :: ps => by
     rw [sumsq] <;> simp [-add_commₓ] <;> exact add_nonneg (mul_self_nonneg _) (sumsq_nonneg ps)
 
-theorem sumsq_eq_zero x : ∀ l, sumsq l x = 0 ↔ l.All₂ fun a : Poly α => a x = 0
+theorem sumsq_eq_zero (x) : ∀ l, sumsq l x = 0 ↔ l.All₂ fun a : Poly α => a x = 0
   | [] => eq_self_iff_true _
   | p :: ps => by
     rw [List.all₂_cons, ← sumsq_eq_zero ps] <;>
@@ -278,7 +278,7 @@ def map {α β} (f : α → β) (g : Poly α) : Poly β :=
       simp <;> apply IsPoly.mul pf pg⟩
 
 @[simp]
-theorem map_apply {α β} (f : α → β) (g : Poly α) v : map f g v = g (v ∘ f) :=
+theorem map_apply {α β} (f : α → β) (g : Poly α) (v) : map f g v = g (v ∘ f) :=
   rfl
 
 end Poly
@@ -400,7 +400,7 @@ theorem DiophList.all₂ (l : List (Set <| α → ℕ)) (d : l.All₂ Dioph) :
 theorem inter (d : Dioph S) (d' : Dioph S') : Dioph (S ∩ S') :=
   DiophList.all₂ [S, S'] ⟨d, d'⟩
 
-theorem union : ∀ d : Dioph S d' : Dioph S', Dioph (S ∪ S')
+theorem union : ∀ (d : Dioph S) (d' : Dioph S'), Dioph (S ∪ S')
   | ⟨β, p, pe⟩, ⟨γ, q, qe⟩ =>
     ⟨Sum β γ, p.map (inl ⊗ inr ∘ inl) * q.map (inl ⊗ inr ∘ inr), fun v => by
       refine'
@@ -529,7 +529,7 @@ theorem dioph_fn_vec_comp1 {S : Set (Vector3 ℕ (succ n))} (d : Dioph S) {f : V
     ext x
     cases x <;> rfl
 
-theorem vec_ex1_dioph n {S : Set (Vector3 ℕ (succ n))} (d : Dioph S) : Dioph { v : Fin2 n → ℕ | ∃ x, x :: v ∈ S } :=
+theorem vec_ex1_dioph (n) {S : Set (Vector3 ℕ (succ n))} (d : Dioph S) : Dioph { v : Fin2 n → ℕ | ∃ x, x :: v ∈ S } :=
   (ext (ex1_dioph <| reindex_dioph _ (none :: some) d)) fun v =>
     exists_congr fun x => by
       dsimp'
@@ -545,7 +545,7 @@ theorem dioph_pfun_vec (f : Vector3 ℕ n →. ℕ) : DiophPfun f ↔ Dioph { v 
   ⟨reindex_dioph _ (fz ::ₒ fs), reindex_dioph _ (none :: some)⟩
 
 theorem dioph_fn_compn :
-    ∀ {n} {S : Set (Sum α (Fin2 n) → ℕ)} d : Dioph S {f : Vector3 ((α → ℕ) → ℕ) n} df : VectorAllp DiophFn f,
+    ∀ {n} {S : Set (Sum α (Fin2 n) → ℕ)} (d : Dioph S) {f : Vector3 ((α → ℕ) → ℕ) n} (df : VectorAllp DiophFn f),
       Dioph { v : α → ℕ | (v ⊗ fun i => f i v) ∈ S }
   | 0, S, d, f => fun df =>
     (ext (reindex_dioph _ (id ⊗ Fin2.elim0) d)) fun v => by

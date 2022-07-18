@@ -155,6 +155,36 @@ end CommRingₓ
 
 end IsWeaklyEisensteinAt
 
+section ScaleRoots
+
+variable {A : Type _} [CommRingₓ R] [CommRingₓ A]
+
+theorem scaleRoots.is_weakly_eisenstein_at (p : R[X]) {x : R} {P : Ideal R} (hP : x ∈ P) :
+    (scaleRoots p x).IsWeaklyEisensteinAt P := by
+  refine' ⟨fun i hi => _⟩
+  rw [coeff_scale_roots]
+  rw [nat_degree_scale_roots, ← tsub_pos_iff_lt] at hi
+  exact Ideal.mul_mem_left _ _ (Ideal.pow_mem_of_mem P hP _ hi)
+
+theorem dvd_pow_nat_degree_of_eval₂_eq_zero {f : R →+* A} (hf : Function.Injective f) {p : R[X]} (hp : p.Monic)
+    (x y : R) (z : A) (h : p.eval₂ f z = 0) (hz : f x * z = f y) : x ∣ y ^ p.natDegree := by
+  rw [← nat_degree_scale_roots p x, ← Ideal.mem_span_singleton]
+  refine'
+    (scale_roots.is_weakly_eisenstein_at _
+          (ideal.mem_span_singleton.mpr <| dvd_refl x)).pow_nat_degree_le_of_root_of_monic_mem
+      _ ((monic_scale_roots_iff x).mpr hp) _ le_rfl
+  rw [injective_iff_map_eq_zero'] at hf
+  have := scale_roots_eval₂_eq_zero f h
+  rwa [hz, Polynomial.eval₂_at_apply, hf] at this
+
+theorem dvd_pow_nat_degree_of_aeval_eq_zero [Algebra R A] [Nontrivial A] [NoZeroSmulDivisors R A] {p : R[X]}
+    (hp : p.Monic) (x y : R) (z : A) (h : Polynomial.aeval z p = 0) (hz : z * algebraMap R A x = algebraMap R A y) :
+    x ∣ y ^ p.natDegree :=
+  dvd_pow_nat_degree_of_eval₂_eq_zero (NoZeroSmulDivisors.algebra_map_injective R A) hp x y z h
+    ((mul_comm _ _).trans hz)
+
+end ScaleRoots
+
 namespace IsEisensteinAt
 
 section CommSemiringₓ

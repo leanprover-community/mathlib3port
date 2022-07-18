@@ -373,6 +373,44 @@ theorem smul_apply : (c • x) i = c • x i :=
 theorem neg_apply : (-x) i = -x i :=
   rfl
 
+variable {ι' : Type _}
+
+variable [Fintype ι']
+
+variable (p 𝕜) (E : Type _) [NormedGroup E] [NormedSpace 𝕜 E]
+
+/-- An equivalence of finite domains induces a linearly isometric equivalence of finitely supported
+functions-/
+def _root_.linear_isometry_equiv.pi_Lp_congr_left (e : ι ≃ ι') :
+    (PiLp p fun i : ι => E) ≃ₗᵢ[𝕜] PiLp p fun i : ι' => E where
+  toLinearEquiv := LinearEquiv.piCongrLeft' 𝕜 (fun i : ι => E) e
+  norm_map' := by
+    intro x
+    simp only [← norm]
+    simp_rw [LinearEquiv.Pi_congr_left'_apply 𝕜 (fun i : ι => E) e x _]
+    congr
+    rw [Fintype.sum_equiv e.symm]
+    exact fun i => rfl
+
+variable {p 𝕜 E}
+
+@[simp]
+theorem _root_.linear_isometry_equiv.pi_Lp_congr_left_apply (e : ι ≃ ι') (v : PiLp p fun i : ι => E) :
+    LinearIsometryEquiv.piLpCongrLeft p 𝕜 E e v = Equivₓ.piCongrLeft' (fun i : ι => E) e v :=
+  rfl
+
+@[simp]
+theorem _root_.linear_isometry_equiv.pi_Lp_congr_left_symm (e : ι ≃ ι') :
+    (LinearIsometryEquiv.piLpCongrLeft p 𝕜 E e).symm = LinearIsometryEquiv.piLpCongrLeft p 𝕜 E e.symm :=
+  LinearIsometryEquiv.ext fun x => rfl
+
+@[simp]
+theorem _root_.linear_isometry_equiv.pi_Lp_congr_left_single [DecidableEq ι] [DecidableEq ι'] (e : ι ≃ ι') (i : ι)
+    (v : E) : LinearIsometryEquiv.piLpCongrLeft p 𝕜 E e (Pi.single i v) = Pi.single (e i) v := by
+  funext x
+  simp [← LinearIsometryEquiv.piLpCongrLeft, ← LinearEquiv.piCongrLeft', ← Equivₓ.piCongrLeft', ← Pi.single, ←
+    Function.update, ← Equivₓ.symm_apply_eq]
+
 @[simp]
 theorem equiv_zero : PiLp.equiv p β 0 = 0 :=
   rfl

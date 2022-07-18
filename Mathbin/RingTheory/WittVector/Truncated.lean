@@ -204,7 +204,7 @@ theorem coeff_zero (i : Finₓ n) : (0 : TruncatedWittVector p n R).coeff i = 0 
 
 end TruncatedWittVector
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 /-- A macro tactic used to prove that `truncate_fun` respects ring operations. -/
 unsafe def tactic.interactive.witt_truncate_fun_tac : tactic Unit :=
   sorry
@@ -416,7 +416,7 @@ variable {S : Type _} [Semiringₓ S]
 
 variable (f : ∀ k : ℕ, S →+* TruncatedWittVector p k R)
 
-variable (f_compat : ∀ k₁ k₂ : ℕ hk : k₁ ≤ k₂, (TruncatedWittVector.truncate hk).comp (f k₂) = f k₁)
+variable (f_compat : ∀ (k₁ k₂ : ℕ) (hk : k₁ ≤ k₂), (TruncatedWittVector.truncate hk).comp (f k₂) = f k₁)
 
 variable {p R}
 
@@ -481,7 +481,7 @@ include hp
 @[simps]
 def liftEquiv :
     { f : ∀ k, S →+* TruncatedWittVector p k R //
-        ∀ k₁ k₂ hk : k₁ ≤ k₂, (TruncatedWittVector.truncate hk).comp (f k₂) = f k₁ } ≃
+        ∀ (k₁ k₂) (hk : k₁ ≤ k₂), (TruncatedWittVector.truncate hk).comp (f k₂) = f k₁ } ≃
       (S →+* 𝕎 R) where
   toFun := fun f => lift f.1 f.2
   invFun := fun g =>

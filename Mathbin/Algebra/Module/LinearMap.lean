@@ -75,7 +75,7 @@ property. A bundled version is available with `linear_map`, and should be favore
 structure IsLinearMap (R : Type u) {M : Type v} {M₂ : Type w} [Semiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ M₂]
   [Module R M] [Module R M₂] (f : M → M₂) : Prop where
   map_add : ∀ x y, f (x + y) = f x + f y
-  map_smul : ∀ c : R x, f (c • x) = c • f x
+  map_smul : ∀ (c : R) (x), f (c • x) = c • f x
 
 section
 
@@ -87,7 +87,7 @@ is semilinear if it satisfies the two properties `f (x + y) = f x + f y` and
 maps is available with the predicate `is_linear_map`, but it should be avoided most of the time. -/
 structure LinearMap {R : Type _} {S : Type _} [Semiringₓ R] [Semiringₓ S] (σ : R →+* S) (M : Type _) (M₂ : Type _)
   [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [Module R M] [Module S M₂] extends AddHom M M₂ where
-  map_smul' : ∀ r : R x : M, to_fun (r • x) = σ r • to_fun x
+  map_smul' : ∀ (r : R) (x : M), to_fun (r • x) = σ r • to_fun x
 
 /-- The `add_hom` underlying a `linear_map`. -/
 add_decl_doc LinearMap.toAddHom
@@ -111,7 +111,7 @@ is semilinear if it satisfies the two properties `f (x + y) = f x + f y` and
 class SemilinearMapClass (F : Type _) {R S : outParam (Type _)} [Semiringₓ R] [Semiringₓ S] (σ : outParam <| R →+* S)
   (M M₂ : outParam (Type _)) [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [Module R M] [Module S M₂] extends
   AddHomClass F M M₂ where
-  map_smulₛₗ : ∀ f : F r : R x : M, f (r • x) = σ r • f x
+  map_smulₛₗ : ∀ (f : F) (r : R) (x : M), f (r • x) = σ r • f x
 
 end
 
@@ -225,7 +225,7 @@ protected def Simps.apply {R S : Type _} [Semiringₓ R] [Semiringₓ S] (σ : R
 initialize_simps_projections LinearMap (toFun → apply)
 
 @[simp]
-theorem coe_mk {σ : R →+* S} (f : M → M₃) h₁ h₂ : ((LinearMap.mk f h₁ h₂ : M →ₛₗ[σ] M₃) : M → M₃) = f :=
+theorem coe_mk {σ : R →+* S} (f : M → M₃) (h₁ h₂) : ((LinearMap.mk f h₁ h₂ : M →ₛₗ[σ] M₃) : M → M₃) = f :=
   rfl
 
 /-- Identity map as a `linear_map` -/
@@ -272,7 +272,7 @@ theorem ext_iff : f = g ↔ ∀ x, f x = g x :=
   FunLike.ext_iff
 
 @[simp]
-theorem mk_coe (f : M →ₛₗ[σ] M₃) h₁ h₂ : (LinearMap.mk f h₁ h₂ : M →ₛₗ[σ] M₃) = f :=
+theorem mk_coe (f : M →ₛₗ[σ] M₃) (h₁ h₂) : (LinearMap.mk f h₁ h₂ : M →ₛₗ[σ] M₃) = f :=
   ext fun _ => rfl
 
 variable (fₗ gₗ f g)
@@ -307,24 +307,24 @@ section Pointwise
 
 open Pointwise
 
+variable (M M₃ σ) {F : Type _} (h : F)
+
 @[simp]
-theorem image_smul_setₛₗ (c : R) (s : Set M) : f '' (c • s) = σ c • f '' s := by
+theorem _root_.image_smul_setₛₗ [SemilinearMapClass F σ M M₃] (c : R) (s : Set M) : h '' (c • s) = σ c • h '' s := by
   apply Set.Subset.antisymm
   · rintro x ⟨y, ⟨z, zs, rfl⟩, rfl⟩
-    exact ⟨f z, Set.mem_image_of_mem _ zs, (f.map_smulₛₗ _ _).symm⟩
+    exact ⟨h z, Set.mem_image_of_mem _ zs, (map_smulₛₗ _ _ _).symm⟩
     
   · rintro x ⟨y, ⟨z, hz, rfl⟩, rfl⟩
-    exact (Set.mem_image _ _ _).2 ⟨c • z, Set.smul_mem_smul_set hz, f.map_smulₛₗ _ _⟩
+    exact (Set.mem_image _ _ _).2 ⟨c • z, Set.smul_mem_smul_set hz, map_smulₛₗ _ _ _⟩
     
 
-theorem image_smul_set (c : R) (s : Set M) : fₗ '' (c • s) = c • fₗ '' s := by
-  simp
-
-theorem preimage_smul_setₛₗ {c : R} (hc : IsUnit c) (s : Set M₃) : f ⁻¹' (σ c • s) = c • f ⁻¹' s := by
+theorem _root_.preimage_smul_setₛₗ [SemilinearMapClass F σ M M₃] {c : R} (hc : IsUnit c) (s : Set M₃) :
+    h ⁻¹' (σ c • s) = c • h ⁻¹' s := by
   apply Set.Subset.antisymm
   · rintro x ⟨y, ys, hy⟩
     refine' ⟨(hc.unit.inv : R) • x, _, _⟩
-    · simp only [hy, ← smul_smul, ← Set.mem_preimage, ← Units.inv_eq_coe_inv, ← map_smulₛₗ f, map_mul, ←
+    · simp only [hy, ← smul_smul, ← Set.mem_preimage, ← Units.inv_eq_coe_inv, ← map_smulₛₗ h, map_mul, ←
         IsUnit.coe_inv_mul, ← one_smul, ← map_one, ← ys]
       
     · simp only [← smul_smul, ← IsUnit.mul_coe_inv, ← one_smul, ← Units.inv_eq_coe_inv]
@@ -332,12 +332,18 @@ theorem preimage_smul_setₛₗ {c : R} (hc : IsUnit c) (s : Set M₃) : f ⁻¹
     
   · rintro x ⟨y, hy, rfl⟩
     refine'
-      ⟨f y, hy, by
-        simp only [← RingHom.id_apply, ← map_smulₛₗ f]⟩
+      ⟨h y, hy, by
+        simp only [← RingHom.id_apply, ← map_smulₛₗ h]⟩
     
 
-theorem preimage_smul_set {c : R} (hc : IsUnit c) (s : Set M₂) : fₗ ⁻¹' (c • s) = c • fₗ ⁻¹' s :=
-  fₗ.preimage_smul_setₛₗ hc s
+variable (R M₂)
+
+theorem _root_.image_smul_set [LinearMapClass F R M M₂] (c : R) (s : Set M) : h '' (c • s) = c • h '' s :=
+  image_smul_setₛₗ _ _ _ h c s
+
+theorem _root_.preimage_smul_set [LinearMapClass F R M M₂] {c : R} (hc : IsUnit c) (s : Set M₂) :
+    h ⁻¹' (c • s) = c • h ⁻¹' s :=
+  preimage_smul_setₛₗ _ _ _ h hc s
 
 end Pointwise
 
@@ -349,7 +355,7 @@ we can also add an instance for `add_comm_group.int_module`, allowing `z •` to
 `R` does not support negation.
 -/
 class CompatibleSmul (R S : Type _) [Semiringₓ S] [HasSmul R M] [Module S M] [HasSmul R M₂] [Module S M₂] where
-  map_smul : ∀ fₗ : M →ₗ[S] M₂ c : R x : M, fₗ (c • x) = c • fₗ x
+  map_smul : ∀ (fₗ : M →ₗ[S] M₂) (c : R) (x : M), fₗ (c • x) = c • fₗ x
 
 variable {M M₂}
 
@@ -391,7 +397,7 @@ def restrictScalars (fₗ : M →ₗ[S] M₂) : M →ₗ[R] M₂ where
 theorem coe_restrict_scalars (fₗ : M →ₗ[S] M₂) : ⇑(restrictScalars R fₗ) = fₗ :=
   rfl
 
-theorem restrict_scalars_apply (fₗ : M →ₗ[S] M₂) x : restrictScalars R fₗ x = fₗ x :=
+theorem restrict_scalars_apply (fₗ : M →ₗ[S] M₂) (x) : restrictScalars R fₗ x = fₗ x :=
   rfl
 
 theorem restrict_scalars_injective : Function.Injective (restrictScalars R : (M →ₗ[S] M₂) → M →ₗ[R] M₂) :=
@@ -647,7 +653,7 @@ include M M₂ lin
 theorem map_neg (x : M) : f (-x) = -f x :=
   (lin.mk' f).map_neg x
 
-theorem map_sub x y : f (x - y) = f x - f y :=
+theorem map_sub (x y) : f (x - y) = f x - f y :=
   (lin.mk' f).map_sub x y
 
 end AddCommGroupₓ

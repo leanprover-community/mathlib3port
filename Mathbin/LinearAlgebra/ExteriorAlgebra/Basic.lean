@@ -95,7 +95,7 @@ theorem ι_comp_lift (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = 0) : (lift R
   CliffordAlgebra.ι_comp_lift f _
 
 @[simp]
-theorem lift_ι_apply (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = 0) x : lift R ⟨f, cond⟩ (ι R x) = f x :=
+theorem lift_ι_apply (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = 0) (x) : lift R ⟨f, cond⟩ (ι R x) = f x :=
   CliffordAlgebra.lift_ι_apply f _ x
 
 @[simp]

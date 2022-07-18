@@ -34,8 +34,8 @@ def cofinite : Filter α where
   Sets := { s | sᶜ.Finite }
   univ_sets := by
     simp only [← compl_univ, ← finite_empty, ← mem_set_of_eq]
-  sets_of_superset := fun s t hs : sᶜ.Finite st : s ⊆ t => hs.Subset <| compl_subset_compl.2 st
-  inter_sets := fun s t hs : sᶜ.Finite ht : tᶜ.Finite => by
+  sets_of_superset := fun s t (hs : sᶜ.Finite) (st : s ⊆ t) => hs.Subset <| compl_subset_compl.2 st
+  inter_sets := fun s t (hs : sᶜ.Finite) (ht : tᶜ.Finite) => by
     simp only [← compl_inter, ← finite.union, ← ht, ← hs, ← mem_set_of_eq]
 
 @[simp]
@@ -71,7 +71,7 @@ theorem eventually_cofinite_ne (x : α) : ∀ᶠ a in cofinite, a ≠ x :=
   (Set.finite_singleton x).eventually_cofinite_nmem
 
 theorem le_cofinite_iff_compl_singleton_mem {l : Filter α} : l ≤ cofinite ↔ ∀ x, {x}ᶜ ∈ l := by
-  refine' ⟨fun h x => h (finite_singleton x).compl_mem_cofinite, fun h s hs : sᶜ.Finite => _⟩
+  refine' ⟨fun h x => h (finite_singleton x).compl_mem_cofinite, fun h s (hs : sᶜ.Finite) => _⟩
   rw [← compl_compl s, ← bUnion_of_singleton (sᶜ), compl_Union₂, Filter.bInter_mem hs]
   exact fun x _ => h x
 

@@ -1,9 +1,10 @@
 /-
 Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Markus Himmel, Adam Topaz, Johan Commelin
+Authors: Markus Himmel, Adam Topaz, Johan Commelin, Jakob von Raumer
 -/
 import Mathbin.CategoryTheory.Abelian.Opposite
+import Mathbin.CategoryTheory.Limits.Constructions.FiniteProductsOfBinaryProducts
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Zero
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Kernels
 import Mathbin.CategoryTheory.Adjunction.Limits
@@ -27,7 +28,8 @@ true in more general settings.
   sequences.
 * `X ⟶ Y ⟶ Z ⟶ 0` is exact if and only if the second map is a cokernel of the first, and
   `0 ⟶ X ⟶ Y ⟶ Z` is exact if and only if the first map is a kernel of the second.
-
+* An exact functor preserves exactness, more specifically, if `F` preserves finite colimits and
+  limits, then `exact f g` implies `exact (F.map f) (F.map g)`
 -/
 
 
@@ -84,7 +86,7 @@ theorem exact_iff : Exact f g ↔ f ≫ g = 0 ∧ kernel.ι g ≫ cokernel.π f 
       rw [this]
       infer_instance
       
-    refine' is_limit.of_ι _ _ _ _ _
+    refine' kernel_fork.is_limit.of_ι _ _ _ _ _
     · refine' fun W u hu => kernel.lift (cokernel.π f) u _ ≫ (image_iso_image f).Hom ≫ (image_subobject_iso _).inv
       rw [← kernel.lift_ι g u hu, category.assoc, h.2, has_zero_morphisms.comp_zero]
       
@@ -145,7 +147,7 @@ theorem exact_epi_comp_iff {W : C} (h : W ⟶ X) [Epi h] : Exact (h ≫ f) g ↔
 def isLimitImage (h : Exact f g) :
     IsLimit (KernelFork.ofι (Abelian.image.ι f) (image_ι_comp_eq_zero h.1) : KernelFork g) := by
   rw [exact_iff] at h
-  refine' is_limit.of_ι _ _ _ _ _
+  refine' kernel_fork.is_limit.of_ι _ _ _ _ _
   · refine' fun W u hu => kernel.lift (cokernel.π f) u _
     rw [← kernel.lift_ι g u hu, category.assoc, h.2, has_zero_morphisms.comp_zero]
     
@@ -159,7 +161,7 @@ def isLimitImage' (h : Exact f g) : IsLimit (KernelFork.ofι (Limits.image.ι f)
 def isColimitCoimage (h : Exact f g) :
     IsColimit (CokernelCofork.ofπ (Abelian.coimage.π g) (Abelian.comp_coimage_π_eq_zero h.1) : CokernelCofork f) := by
   rw [exact_iff] at h
-  refine' is_colimit.of_π _ _ _ _ _
+  refine' cokernel_cofork.is_colimit.of_π _ _ _ _ _
   · refine' fun W u hu => cokernel.desc (kernel.ι g) u _
     rw [← cokernel.π_desc f u hu, ← category.assoc, h.2, has_zero_morphisms.zero_comp]
     
@@ -318,10 +320,13 @@ end Abelian
 
 namespace Functor
 
+section
+
 variable {D : Type u₂} [Category.{v₂} D] [Abelian D]
 
-instance (priority := 100) reflectsExactSequencesOfPreservesZeroMorphismsOfFaithful (F : C ⥤ D)
-    [PreservesZeroMorphisms F] [Faithful F] :
+variable (F : C ⥤ D) [PreservesZeroMorphisms F]
+
+instance (priority := 100) reflectsExactSequencesOfPreservesZeroMorphismsOfFaithful [Faithful F] :
     ReflectsExactSequences F where reflects := fun X Y Z f g hfg => by
     rw [abelian.exact_iff, ← F.map_comp, F.map_eq_zero_iff] at hfg
     refine' (abelian.exact_iff _ _).2 ⟨hfg.1, F.zero_of_map_zero _ _⟩
@@ -334,6 +339,31 @@ instance (priority := 100) reflectsExactSequencesOfPreservesZeroMorphismsOfFaith
         (by
           simp only [F.map_comp, ← cokernel.condition, ← CategoryTheory.Functor.map_zero])
     rw [F.map_comp, ← hk, ← hl, category.assoc, reassoc_of hfg.2, zero_comp, comp_zero]
+
+end
+
+end Functor
+
+namespace Functor
+
+open Limits Abelian
+
+variable {A : Type u₁} {B : Type u₂} [Category.{v₁} A] [Category.{v₂} B]
+
+variable [HasZeroObject A] [HasZeroMorphisms A] [HasImages A] [HasEqualizers A]
+
+variable [has_cokernels A] [Abelian B]
+
+variable (L : A ⥤ B) [PreservesFiniteLimits L] [PreservesFiniteColimits L]
+
+theorem map_exact {X Y Z : A} (f : X ⟶ Y) (g : Y ⟶ Z) (e1 : Exact f g) : Exact (L.map f) (L.map g) := by
+  let hcoker := is_colimit_of_has_cokernel_of_preserves_colimit L f
+  let hker := is_limit_of_has_kernel_of_preserves_limit L g
+  refine'
+    (exact_iff' _ _ hker hcoker).2
+      ⟨by
+        simp [L.map_comp, ← e1.1], _⟩
+  rw [fork.ι_of_ι, cofork.π_of_π, ← L.map_comp, kernel_comp_cokernel _ _ e1, L.map_zero]
 
 end Functor
 

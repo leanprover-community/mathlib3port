@@ -85,10 +85,11 @@ namespace IsCauSeq
 
 variable {α : Type _} [LinearOrderedField α] {β : Type _} [Ringₓ β] {abv : β → α} [IsAbsoluteValue abv] {f : ℕ → β}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j k «expr ≥ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j k «expr ≥ » i)
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
-theorem cauchy₂ (hf : IsCauSeq abv f) {ε : α} (ε0 : 0 < ε) : ∃ i, ∀ j k _ : j ≥ i _ : k ≥ i, abv (f j - f k) < ε := by
+theorem cauchy₂ (hf : IsCauSeq abv f) {ε : α} (ε0 : 0 < ε) :
+    ∃ i, ∀ (j k) (_ : j ≥ i) (_ : k ≥ i), abv (f j - f k) < ε := by
   refine' (hf _ (half_pos ε0)).imp fun i hi j ij k ik => _
   rw [← add_halves ε]
   refine' lt_of_le_of_ltₓ (abv_sub_le abv _ _ _) (add_lt_add (hi _ ij) _)
@@ -118,7 +119,7 @@ instance : CoeFun (CauSeq β abv) fun _ => ℕ → β :=
   ⟨Subtype.val⟩
 
 @[simp]
-theorem mk_to_fun f (hf : IsCauSeq abv f) : @coeFn (CauSeq β abv) _ _ ⟨f, hf⟩ = f :=
+theorem mk_to_fun (f) (hf : IsCauSeq abv f) : @coeFn (CauSeq β abv) _ _ ⟨f, hf⟩ = f :=
   rfl
 
 theorem ext {f g : CauSeq β abv} (h : ∀ i, f i = g i) : f = g :=
@@ -138,10 +139,10 @@ def ofEq (f : CauSeq β abv) (g : ℕ → β) (e : ∀ i, f i = g i) : CauSeq β
 
 variable [IsAbsoluteValue abv]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j k «expr ≥ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j k «expr ≥ » i)
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
-theorem cauchy₂ (f : CauSeq β abv) {ε} : 0 < ε → ∃ i, ∀ j k _ : j ≥ i _ : k ≥ i, abv (f j - f k) < ε :=
+theorem cauchy₂ (f : CauSeq β abv) {ε} : 0 < ε → ∃ i, ∀ (j k) (_ : j ≥ i) (_ : k ≥ i), abv (f j - f k) < ε :=
   f.2.cauchy₂
 
 theorem cauchy₃ (f : CauSeq β abv) {ε} : 0 < ε → ∃ i, ∀, ∀ j ≥ i, ∀, ∀, ∀ k ≥ j, ∀, abv (f k - f j) < ε :=
@@ -215,11 +216,11 @@ instance : Inhabited (CauSeq β abv) :=
   ⟨0⟩
 
 @[simp]
-theorem zero_apply i : (0 : CauSeq β abv) i = 0 :=
+theorem zero_apply (i) : (0 : CauSeq β abv) i = 0 :=
   rfl
 
 @[simp]
-theorem one_apply i : (1 : CauSeq β abv) i = 1 :=
+theorem one_apply (i) : (1 : CauSeq β abv) i = 1 :=
   rfl
 
 @[simp]
@@ -253,7 +254,7 @@ instance : Neg (CauSeq β abv) :=
       simp ⟩
 
 @[simp]
-theorem neg_apply (f : CauSeq β abv) i : (-f) i = -f i :=
+theorem neg_apply (f : CauSeq β abv) (i) : (-f) i = -f i :=
   rfl
 
 theorem const_neg (x : β) : const (-x) = -const x :=
@@ -493,10 +494,10 @@ def inv (f : CauSeq β abv) (hf : ¬LimZero f) : CauSeq β abv :=
   ⟨_, inv_aux hf⟩
 
 @[simp]
-theorem inv_apply {f : CauSeq β abv} hf i : inv f hf i = (f i)⁻¹ :=
+theorem inv_apply {f : CauSeq β abv} (hf i) : inv f hf i = (f i)⁻¹ :=
   rfl
 
-theorem inv_mul_cancel {f : CauSeq β abv} hf : inv f hf * f ≈ 1 := fun ε ε0 =>
+theorem inv_mul_cancel {f : CauSeq β abv} (hf) : inv f hf * f ≈ 1 := fun ε ε0 =>
   let ⟨K, K0, i, H⟩ := abv_pos_of_not_lim_zero hf
   ⟨i, fun j ij => by
     simpa [← (abv_pos abv).1 (lt_of_lt_of_leₓ K0 (H _ ij)), ← abv_zero abv] using ε0⟩

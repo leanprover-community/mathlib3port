@@ -93,7 +93,6 @@ include dec
 
 include hp hM
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem _root_.ideal.torsion_of_eq_span_pow_p_order (x : M) : torsionOf R M x = span {p ^ pOrder hM x} := by
   dunfold p_order
   rw [← (torsion_of R M x).span_singleton_generator, Ideal.span_singleton_eq_span_singleton, ←
@@ -159,7 +158,6 @@ open Finset Multiset
 
 omit dec hM
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A finitely generated `p ^ ∞`-torsion module over a PID is isomorphic to a direct sum of some
   `R ⧸ R ∙ (p ^ e i)` for some `e i`.-/
 theorem torsion_by_prime_power_decomposition (hN : Module.IsTorsion' N (Submonoid.powers p)) [h' : Module.Finite R N] :

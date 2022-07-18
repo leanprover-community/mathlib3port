@@ -193,6 +193,16 @@ class IsNilpotent : Prop where
 theorem is_nilpotent_iff : IsNilpotent R L M ↔ ∃ k, lowerCentralSeries R L M k = ⊥ :=
   ⟨fun h => h.nilpotent, fun h => ⟨h⟩⟩
 
+variable {R L M}
+
+theorem _root_.lie_submodule.is_nilpotent_iff_exists_lcs_eq_bot (N : LieSubmodule R L M) :
+    LieModule.IsNilpotent R L N ↔ ∃ k, N.lcs k = ⊥ := by
+  rw [is_nilpotent_iff]
+  refine' exists_congr fun k => _
+  rw [N.lower_central_series_eq_lcs_comap k, LieSubmodule.comap_incl_eq_bot, inf_eq_right.mpr (N.lcs_le_self k)]
+
+variable (R L M)
+
 instance (priority := 100) trivial_is_nilpotent [IsTrivial L M] : IsNilpotent R L M :=
   ⟨by
     use 1
@@ -346,6 +356,9 @@ theorem ucs_zero : N.ucs 0 = N :=
 @[simp]
 theorem ucs_succ (k : ℕ) : N.ucs (k + 1) = (N.ucs k).Centralizer :=
   Function.iterate_succ_apply' centralizer k N
+
+theorem ucs_add (k l : ℕ) : N.ucs (k + l) = (N.ucs l).ucs k :=
+  Function.iterate_add_apply centralizer k l N
 
 @[mono]
 theorem ucs_mono (k : ℕ) (h : N₁ ≤ N₂) : N₁.ucs k ≤ N₂.ucs k := by

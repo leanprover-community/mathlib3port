@@ -3,8 +3,7 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Algebra.EuclideanDomain
-import Mathbin.Data.Int.Cast
+import Mathbin.Data.Int.Basic
 import Mathbin.Data.Nat.Gcd
 import Mathbin.Logic.Encodable.Basic
 
@@ -19,8 +18,9 @@ We define a rational number `q` as a structure `{ num, denom, pos, cop }`, where
 - `pos` is a proof that `denom > 0`, and
 - `cop` is a proof `num` and `denom` are coprime.
 
-We then define the expected (discrete) field structure on `ℚ` and prove basic lemmas about it.
-Moreoever, we provide the expected casts from `ℕ` and `ℤ` into `ℚ`, i.e. `(↑n : ℚ) = n / 1`.
+We then define the integral domain structure on `ℚ` and prove basic lemmas about it.
+The definition of the field structure on `ℚ` will be done in `data.rat.basic` once the
+`field` class has been defined.
 
 ## Main Definitions
 
@@ -127,28 +127,28 @@ def mk : ℤ → ℤ → ℚ
 -- mathport name: «expr /. »
 localized [Rat] infixl:70 " /. " => Rat.mk
 
-theorem mk_pnat_eq n d h : mkPnat n ⟨d, h⟩ = n /. d := by
+theorem mk_pnat_eq (n d h) : mkPnat n ⟨d, h⟩ = n /. d := by
   change n /. d with dite _ _ _ <;> simp [← ne_of_gtₓ h]
 
-theorem mk_nat_eq n d : mkNat n d = n /. d :=
+theorem mk_nat_eq (n d) : mkNat n d = n /. d :=
   rfl
 
 @[simp]
-theorem mk_zero n : n /. 0 = 0 :=
+theorem mk_zero (n) : n /. 0 = 0 :=
   rfl
 
 @[simp]
-theorem zero_mk_pnat n : mkPnat 0 n = 0 := by
+theorem zero_mk_pnat (n) : mkPnat 0 n = 0 := by
   cases' n with n npos
   simp only [← mk_pnat, ← Int.nat_abs_zero, ← Nat.div_selfₓ npos, ← Nat.gcd_zero_leftₓ, ← Int.zero_div]
   rfl
 
 @[simp]
-theorem zero_mk_nat n : mkNat 0 n = 0 := by
+theorem zero_mk_nat (n) : mkNat 0 n = 0 := by
   by_cases' n = 0 <;> simp [*, ← mk_nat]
 
 @[simp]
-theorem zero_mk n : 0 /. n = 0 := by
+theorem zero_mk (n) : 0 /. n = 0 := by
   cases n <;> simp [← mk]
 
 private theorem gcd_abs_dvd_left {a b} : (Nat.gcdₓ (Int.natAbs a) b : ℤ) ∣ a :=
@@ -175,7 +175,7 @@ theorem mk_eq_zero {a b : ℤ} (b0 : b ≠ 0) : a /. b = 0 ↔ a = 0 := by
 theorem mk_ne_zero {a b : ℤ} (b0 : b ≠ 0) : a /. b ≠ 0 ↔ a ≠ 0 :=
   (mk_eq_zero b0).Not
 
-theorem mk_eq : ∀ {a b c d : ℤ} hb : b ≠ 0 hd : d ≠ 0, a /. b = c /. d ↔ a * d = c * b := by
+theorem mk_eq : ∀ {a b c d : ℤ} (hb : b ≠ 0) (hd : d ≠ 0), a /. b = c /. d ↔ a * d = c * b := by
   suffices ∀ a b c d hb hd, mkPnat a ⟨b, hb⟩ = mkPnat c ⟨d, hd⟩ ↔ a * d = c * b by
     intros
     cases' b with b b <;> simp [← mk, ← mk_nat, ← Nat.succPnat]
@@ -282,17 +282,17 @@ theorem of_int_eq_mk (z : ℤ) : ofInt z = z /. 1 :=
 /-- Define a (dependent) function or prove `∀ r : ℚ, p r` by dealing with rational
 numbers of the form `n /. d` with `0 < d` and coprime `n`, `d`. -/
 @[elab_as_eliminator]
-def numDenomCasesOn.{u} {C : ℚ → Sort u} : ∀ a : ℚ H : ∀ n d, 0 < d → (Int.natAbs n).Coprime d → C (n /. d), C a
+def numDenomCasesOn.{u} {C : ℚ → Sort u} : ∀ (a : ℚ) (H : ∀ n d, 0 < d → (Int.natAbs n).Coprime d → C (n /. d)), C a
   | ⟨n, d, h, c⟩, H => by
     rw [num_denom'] <;> exact H n d h c
 
 /-- Define a (dependent) function or prove `∀ r : ℚ, p r` by dealing with rational
 numbers of the form `n /. d` with `d ≠ 0`. -/
 @[elab_as_eliminator]
-def numDenomCasesOn'.{u} {C : ℚ → Sort u} (a : ℚ) (H : ∀ n : ℤ d : ℕ, d ≠ 0 → C (n /. d)) : C a :=
+def numDenomCasesOn'.{u} {C : ℚ → Sort u} (a : ℚ) (H : ∀ (n : ℤ) (d : ℕ), d ≠ 0 → C (n /. d)) : C a :=
   (numDenomCasesOn a) fun n d h c => H n d h.ne'
 
-theorem num_dvd a {b : ℤ} (b0 : b ≠ 0) : (a /. b).num ∣ a := by
+theorem num_dvd (a) {b : ℤ} (b0 : b ≠ 0) : (a /. b).num ∣ a := by
   cases' e : a /. b with n d h c
   rw [Rat.num_denom', Rat.mk_eq b0 (ne_of_gtₓ (Int.coe_nat_pos.2 h))] at e
   refine' Int.nat_abs_dvd.1 <| Int.dvd_nat_abs.1 <| Int.coe_nat_dvd.2 <| c.dvd_of_dvd_mul_right _
@@ -319,9 +319,9 @@ instance : Add ℚ :=
 
 theorem lift_binop_eq (f : ℚ → ℚ → ℚ) (f₁ : ℤ → ℤ → ℤ → ℤ → ℤ) (f₂ : ℤ → ℤ → ℤ → ℤ → ℤ)
     (fv : ∀ {n₁ d₁ h₁ c₁ n₂ d₂ h₂ c₂}, f ⟨n₁, d₁, h₁, c₁⟩ ⟨n₂, d₂, h₂, c₂⟩ = f₁ n₁ d₁ n₂ d₂ /. f₂ n₁ d₁ n₂ d₂)
-    (f0 : ∀ {n₁ d₁ n₂ d₂} d₁0 : d₁ ≠ 0 d₂0 : d₂ ≠ 0, f₂ n₁ d₁ n₂ d₂ ≠ 0) (a b c d : ℤ) (b0 : b ≠ 0) (d0 : d ≠ 0)
+    (f0 : ∀ {n₁ d₁ n₂ d₂} (d₁0 : d₁ ≠ 0) (d₂0 : d₂ ≠ 0), f₂ n₁ d₁ n₂ d₂ ≠ 0) (a b c d : ℤ) (b0 : b ≠ 0) (d0 : d ≠ 0)
     (H :
-      ∀ {n₁ d₁ n₂ d₂} h₁ : a * d₁ = n₁ * b h₂ : c * d₂ = n₂ * d,
+      ∀ {n₁ d₁ n₂ d₂} (h₁ : a * d₁ = n₁ * b) (h₂ : c * d₂ = n₂ * d),
         f₁ n₁ d₁ n₂ d₂ * f₂ a b c d = f₁ a b c d * f₂ n₁ d₁ n₂ d₂) :
     f (a /. b) (c /. d) = f₁ a b c d /. f₂ a b c d := by
   generalize ha : a /. b = x
@@ -409,6 +409,9 @@ protected def inv : ℚ → ℚ
 
 instance : Inv ℚ :=
   ⟨Rat.inv⟩
+
+instance : Div ℚ :=
+  ⟨fun a b => a * b⁻¹⟩
 
 @[simp]
 theorem inv_def {a b : ℤ} : (a /. b)⁻¹ = b /. a := by
@@ -546,13 +549,18 @@ instance : DecidableEq ℚ := by
   run_tac
     tactic.mk_dec_eq_instance
 
-instance : Field ℚ where
+/-! At this point in the import hierarchy we have not defined the `field` typeclass.
+Instead we'll instantiate `comm_ring` and `comm_group_with_zero` at this point.
+The `rat.field` instance and any field-specific lemmas can be found in `data.rat.basic`.
+-/
+
+
+instance : CommRingₓ ℚ where
   zero := 0
-  add := Rat.add
-  neg := Rat.neg
+  add := (· + ·)
+  neg := Neg.neg
   one := 1
-  mul := Rat.mul
-  inv := Rat.inv
+  mul := (· * ·)
   zero_add := Rat.zero_add
   add_zero := Rat.add_zero
   add_comm := Rat.add_comm
@@ -564,27 +572,23 @@ instance : Field ℚ where
   mul_assoc := Rat.mul_assoc
   left_distrib := Rat.mul_add
   right_distrib := Rat.add_mul
-  exists_pair_ne := ⟨0, 1, Rat.zero_ne_one⟩
   natCast := fun n => Rat.ofInt n
   nat_cast_zero := rfl
   nat_cast_succ := fun n =>
     show ofInt _ = ofInt _ + 1 by
       simp only [← of_int_eq_mk, ← add_def one_ne_zero one_ne_zero, mk_one_one] <;> simp
-  mul_inv_cancel := Rat.mul_inv_cancel
-  inv_zero := rfl
 
--- Extra instances to short-circuit type class resolution
-instance : DivisionRing ℚ := by
-  infer_instance
+instance : CommGroupWithZero ℚ :=
+  { Rat.commRing with zero := 0, one := 1, mul := (· * ·), inv := Inv.inv, div := (· / ·),
+    exists_pair_ne := ⟨0, 1, Rat.zero_ne_one⟩, inv_zero := rfl, mul_inv_cancel := Rat.mul_inv_cancel,
+    mul_zero := mul_zero, zero_mul := zero_mul }
 
-instance : IsDomain ℚ := by
-  infer_instance
+instance : IsDomain ℚ :=
+  { Rat.commGroupWithZero, (inferInstance : NoZeroDivisors ℚ) with }
 
+-- Extra instances to short-circuit type class resolution 
 -- TODO(Mario): this instance slows down data.real.basic
 instance : Nontrivial ℚ := by
-  infer_instance
-
-instance : CommRingₓ ℚ := by
   infer_instance
 
 --instance : ring ℚ             := by apply_instance
@@ -741,7 +745,8 @@ theorem mk_pnat_denom (n : ℤ) (d : ℕ+) : (mkPnat n d).denom = d / Nat.gcdₓ
 
 theorem num_mk (n d : ℤ) : (n /. d).num = d.sign * n / n.gcd d := by
   rcases d with ((_ | _) | _) <;>
-    simp [← Rat.mk, ← mk_nat, ← mk_pnat, ← Nat.succPnat, ← Int.sign, ← Int.gcdₓ, -Nat.cast_succₓ, -Int.coe_nat_succ]
+    simp [← Rat.mk, ← mk_nat, ← mk_pnat, ← Nat.succPnat, ← Int.sign, ← Int.gcdₓ, -Nat.cast_succₓ, -Int.coe_nat_succ, ←
+      Int.zero_div]
 
 theorem denom_mk (n d : ℤ) : (n /. d).denom = if d = 0 then 1 else d.natAbs / n.gcd d := by
   rcases d with ((_ | _) | _) <;>
@@ -923,14 +928,14 @@ theorem inv_def' {q : ℚ} : q⁻¹ = (q.denom : ℚ) / q.num := by
   simp [← div_num_denom]
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:637:40: in rw #[["<-", expr @num_denom q]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:646:40: in rw #[["<-", expr @num_denom q]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp]
 theorem mul_denom_eq_num {q : ℚ} : q * q.denom = q.num := by
   suffices mk q.num ↑q.denom * mk (↑q.denom) 1 = mk q.num 1 by
     conv =>
       for q [1] =>
         trace
-          "./././Mathport/Syntax/Translate/Basic.lean:637:40: in rw #[[\"<-\", expr @num_denom q]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+          "./././Mathport/Syntax/Translate/Basic.lean:646:40: in rw #[[\"<-\", expr @num_denom q]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
     rwa [coe_int_eq_mk, coe_nat_eq_mk]
   have : (q.denom : ℤ) ≠ 0 :=
     ne_of_gtₓ
@@ -976,7 +981,7 @@ theorem div_int_inj {a b c d : ℤ} (hb0 : 0 < b) (hd0 : 0 < d) (h1 : Nat.Coprim
 theorem coe_int_div_self (n : ℤ) : ((n / n : ℤ) : ℚ) = n / n := by
   by_cases' hn : n = 0
   · subst hn
-    simp only [← Int.cast_zeroₓ, ← EuclideanDomain.zero_div]
+    simp only [← Int.cast_zeroₓ, ← Int.zero_div, ← zero_div]
     
   · have : (n : ℚ) ≠ 0 := by
       rwa [← coe_int_inj] at hn
@@ -1027,6 +1032,30 @@ protected theorem exists {p : ℚ → Prop} : (∃ r, p r) ↔ ∃ a b : ℤ, p 
     ⟨r.num, r.denom, by
       rwa [← mk_eq_div, num_denom]⟩,
     fun ⟨a, b, h⟩ => ⟨_, h⟩⟩
+
+/-!
+### Denominator as `ℕ+`
+-/
+
+
+section PnatDenom
+
+/-- Denominator as `ℕ+`. -/
+def pnatDenom (x : ℚ) : ℕ+ :=
+  ⟨x.denom, x.Pos⟩
+
+@[simp]
+theorem coe_pnat_denom (x : ℚ) : (x.pnatDenom : ℕ) = x.denom :=
+  rfl
+
+@[simp]
+theorem mk_pnat_pnat_denom_eq (x : ℚ) : mkPnat x.num x.pnatDenom = x := by
+  rw [pnat_denom, mk_pnat_eq, num_denom]
+
+theorem pnat_denom_eq_iff_denom_eq {x : ℚ} {n : ℕ+} : x.pnatDenom = n ↔ x.denom = ↑n :=
+  Subtype.ext_iff
+
+end PnatDenom
 
 end Rat
 

@@ -115,7 +115,7 @@ theorem cast_neg : ∀ n, ((-n : ℤ) : R) = -n
     erw [cast_of_nat, cast_neg_succ_of_nat, neg_negₓ]
 
 @[simp]
-theorem cast_sub_nat_nat m n : ((Int.subNatNat m n : ℤ) : R) = m - n := by
+theorem cast_sub_nat_nat (m n) : ((Int.subNatNat m n : ℤ) : R) = m - n := by
   unfold sub_nat_nat
   cases e : n - m
   · simp only [← sub_nat_nat, ← cast_of_nat]
@@ -147,7 +147,7 @@ theorem cast_add : ∀ m n, ((m + n : ℤ) : R) = m + n
         Nat.add_right_comm m n 1, Nat.add_assoc, Nat.add_comm]
 
 @[simp, norm_cast]
-theorem cast_sub m n : ((m - n : ℤ) : R) = m - n := by
+theorem cast_sub (m n) : ((m - n : ℤ) : R) = m - n := by
   simp [← Int.sub_eq_add_neg, ← sub_eq_add_neg]
 
 @[simp, norm_cast]

@@ -374,7 +374,7 @@ theorem nonempty_Inter_cl_prehaar (K₀ : PositiveCompacts G) :
   let V₀ := ⋂ V ∈ t, (V : open_nhds_of 1).1
   have h1V₀ : IsOpen V₀ := by
     apply is_open_bInter
-    apply finite_mem_finset
+    apply Finset.finite_to_set
     rintro ⟨V, hV⟩ h2V
     exact hV.1
   have h2V₀ : (1 : G) ∈ V₀ := by
@@ -828,6 +828,12 @@ theorem haar_preimage_inv {G : Type _} [CommGroupₓ G] [TopologicalSpace G] [To
     _ = μ s := by
       rw [map_haar_inv]
     
+
+@[to_additive]
+theorem measure_preserving_inv {G : Type _} [CommGroupₓ G] [TopologicalSpace G] [TopologicalGroup G] [T2Space G]
+    [MeasurableSpace G] [BorelSpace G] [LocallyCompactSpace G] [SecondCountableTopology G] (μ : Measure G)
+    [IsHaarMeasure μ] : MeasurePreserving Inv.inv μ μ :=
+  ⟨measurable_inv, map_haar_inv μ⟩
 
 end Measureₓ
 

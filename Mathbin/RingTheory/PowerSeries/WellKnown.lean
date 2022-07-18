@@ -86,6 +86,24 @@ theorem constant_coeff_exp : constantCoeff A (exp A) = 1 := by
   simp
 
 @[simp]
+theorem coeff_sin_bit0 : coeff A (bit0 n) (sin A) = 0 := by
+  rw [sin, coeff_mk, if_pos (even_bit0 n)]
+
+@[simp]
+theorem coeff_sin_bit1 : coeff A (bit1 n) (sin A) = -1 ^ n * coeff A (bit1 n) (exp A) := by
+  rw [sin, coeff_mk, if_neg n.not_even_bit1, Nat.bit1_div_two, ← mul_one_div, map_mul, map_pow, map_neg, map_one,
+    coeff_exp]
+
+@[simp]
+theorem coeff_cos_bit0 : coeff A (bit0 n) (cos A) = -1 ^ n * coeff A (bit0 n) (exp A) := by
+  rw [cos, coeff_mk, if_pos (even_bit0 n), Nat.bit0_div_two, ← mul_one_div, map_mul, map_pow, map_neg, map_one,
+    coeff_exp]
+
+@[simp]
+theorem coeff_cos_bit1 : coeff A (bit1 n) (cos A) = 0 := by
+  rw [cos, coeff_mk, if_neg n.not_even_bit1]
+
+@[simp]
 theorem map_exp : map (f : A →+* A') (exp A) = exp A' := by
   ext
   simp

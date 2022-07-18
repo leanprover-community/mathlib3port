@@ -59,10 +59,10 @@ class Preadditive where
   homGroup : ∀ P Q : C, AddCommGroupₓ (P ⟶ Q) := by
     run_tac
       tactic.apply_instance
-  add_comp' : ∀ P Q R : C f f' : P ⟶ Q g : Q ⟶ R, (f + f') ≫ g = f ≫ g + f' ≫ g := by
+  add_comp' : ∀ (P Q R : C) (f f' : P ⟶ Q) (g : Q ⟶ R), (f + f') ≫ g = f ≫ g + f' ≫ g := by
     run_tac
       obviously
-  comp_add' : ∀ P Q R : C f : P ⟶ Q g g' : Q ⟶ R, f ≫ (g + g') = f ≫ g + f ≫ g' := by
+  comp_add' : ∀ (P Q R : C) (f : P ⟶ Q) (g g' : Q ⟶ R), f ≫ (g + g') = f ≫ g + f ≫ g' := by
     run_tac
       obviously
 
@@ -194,20 +194,20 @@ instance moduleEndRight {X Y : C} : Module (End Y) (X ⟶ Y) where
   add_smul := fun r s f => comp_add _ _ _ _ _ _
   zero_smul := fun r => comp_zero
 
-theorem mono_of_cancel_zero {Q R : C} (f : Q ⟶ R) (h : ∀ {P : C} g : P ⟶ Q, g ≫ f = 0 → g = 0) : Mono f :=
+theorem mono_of_cancel_zero {Q R : C} (f : Q ⟶ R) (h : ∀ {P : C} (g : P ⟶ Q), g ≫ f = 0 → g = 0) : Mono f :=
   ⟨fun P g g' hg => sub_eq_zero.1 <| h _ <| (map_sub (rightComp P f) g g').trans <| sub_eq_zero.2 hg⟩
 
-theorem mono_iff_cancel_zero {Q R : C} (f : Q ⟶ R) : Mono f ↔ ∀ P : C g : P ⟶ Q, g ≫ f = 0 → g = 0 :=
+theorem mono_iff_cancel_zero {Q R : C} (f : Q ⟶ R) : Mono f ↔ ∀ (P : C) (g : P ⟶ Q), g ≫ f = 0 → g = 0 :=
   ⟨fun m P g => zero_of_comp_mono _, mono_of_cancel_zero f⟩
 
 theorem mono_of_kernel_zero {X Y : C} {f : X ⟶ Y} [HasLimit (parallelPair f 0)] (w : kernel.ι f = 0) : Mono f :=
   mono_of_cancel_zero f fun P g h => by
     rw [← kernel.lift_ι f g h, w, limits.comp_zero]
 
-theorem epi_of_cancel_zero {P Q : C} (f : P ⟶ Q) (h : ∀ {R : C} g : Q ⟶ R, f ≫ g = 0 → g = 0) : Epi f :=
+theorem epi_of_cancel_zero {P Q : C} (f : P ⟶ Q) (h : ∀ {R : C} (g : Q ⟶ R), f ≫ g = 0 → g = 0) : Epi f :=
   ⟨fun R g g' hg => sub_eq_zero.1 <| h _ <| (map_sub (leftComp R f) g g').trans <| sub_eq_zero.2 hg⟩
 
-theorem epi_iff_cancel_zero {P Q : C} (f : P ⟶ Q) : Epi f ↔ ∀ R : C g : Q ⟶ R, f ≫ g = 0 → g = 0 :=
+theorem epi_iff_cancel_zero {P Q : C} (f : P ⟶ Q) : Epi f ↔ ∀ (R : C) (g : Q ⟶ R), f ≫ g = 0 → g = 0 :=
   ⟨fun e R g => zero_of_epi_comp _, epi_of_cancel_zero f⟩
 
 theorem epi_of_cokernel_zero {X Y : C} {f : X ⟶ Y} [HasColimit (parallelPair f 0)] (w : cokernel.π f = 0) : Epi f :=
@@ -247,9 +247,14 @@ section
 variable {X Y : C} {f : X ⟶ Y} {g : X ⟶ Y}
 
 /-- Map a kernel cone on the difference of two morphisms to the equalizer fork. -/
+@[simps x]
 def forkOfKernelFork (c : KernelFork (f - g)) : Fork f g :=
   Fork.ofι c.ι <| by
     rw [← sub_eq_zero, ← comp_sub, c.condition]
+
+@[simp]
+theorem fork_of_kernel_fork_ι (c : KernelFork (f - g)) : (forkOfKernelFork c).ι = c.ι :=
+  rfl
 
 /-- Map any equalizer fork to a cone on the difference of the two morphisms. -/
 def kernelForkOfFork (c : Fork f g) : KernelFork (f - g) :=
@@ -300,9 +305,14 @@ theorem has_kernel_of_has_equalizer [HasEqualizer f g] : HasKernel (f - g) :=
 variable {f g}
 
 /-- Map a cokernel cocone on the difference of two morphisms to the coequalizer cofork. -/
+@[simps x]
 def coforkOfCokernelCofork (c : CokernelCofork (f - g)) : Cofork f g :=
   Cofork.ofπ c.π <| by
     rw [← sub_eq_zero, ← sub_comp, c.condition]
+
+@[simp]
+theorem cofork_of_cokernel_cofork_π (c : CokernelCofork (f - g)) : (coforkOfCokernelCofork c).π = c.π :=
+  rfl
 
 /-- Map any coequalizer cofork to a cocone on the difference of the two morphisms. -/
 def cokernelCoforkOfCofork (c : Cofork f g) : CokernelCofork (f - g) :=

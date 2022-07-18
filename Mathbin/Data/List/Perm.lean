@@ -33,8 +33,8 @@ variable {α : Type uu} {β : Type vv} {l₁ l₂ : List α}
   of each other. This is defined by induction using pairwise swaps. -/
 inductive Perm : List α → List α → Prop
   | nil : perm [] []
-  | cons : ∀ x : α {l₁ l₂ : List α}, perm l₁ l₂ → perm (x :: l₁) (x :: l₂)
-  | swap : ∀ x y : α l : List α, perm (y :: x :: l) (x :: y :: l)
+  | cons : ∀ (x : α) {l₁ l₂ : List α}, perm l₁ l₂ → perm (x :: l₁) (x :: l₂)
+  | swap : ∀ (x y : α) (l : List α), perm (y :: x :: l) (x :: y :: l)
   | trans : ∀ {l₁ l₂ l₃ : List α}, perm l₁ l₂ → perm l₂ l₃ → perm l₁ l₃
 
 open Perm (swap)
@@ -60,10 +60,10 @@ theorem Perm.swap' (x y : α) {l₁ l₂ : List α} (p : l₁ ~ l₂) : y :: x :
 
 attribute [trans] perm.trans
 
-theorem Perm.eqv α : Equivalenceₓ (@Perm α) :=
+theorem Perm.eqv (α) : Equivalenceₓ (@Perm α) :=
   mk_equivalence (@Perm α) (@Perm.refl α) (@Perm.symm α) (@Perm.trans α)
 
-instance isSetoid α : Setoidₓ (List α) :=
+instance isSetoid (α) : Setoidₓ (List α) :=
   Setoidₓ.mk (@Perm α) (Perm.eqv α)
 
 theorem Perm.subsetₓ {l₁ l₂ : List α} (p : l₁ ~ l₂) : l₁ ⊆ l₂ := fun a =>
@@ -242,7 +242,7 @@ theorem filter_append_perm (p : α → Prop) [DecidablePred p] (l : List α) :
       
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (l₁' «expr ~ » l₁)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (l₁' «expr ~ » l₁)
 theorem exists_perm_sublist {l₁ l₂ l₂' : List α} (s : l₁ <+ l₂) (p : l₂ ~ l₂') :
     ∃ (l₁' : _)(_ : l₁' ~ l₁), l₁' <+ l₂' := by
   induction' p with x l₂ l₂' p IH x y l₂ l₂ m₂ r₂ p₁ p₂ IH₁ IH₂ generalizing l₁ s
@@ -349,7 +349,7 @@ end Rel
 
 section Subperm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (l «expr ~ » l₁)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (l «expr ~ » l₁)
 /-- `subperm l₁ l₂`, denoted `l₁ <+~ l₂`, means that `l₁` is a sublist of
   a permutation of `l₂`. This is an analogue of `l₁ ⊆ l₂` which respects
   multiplicities of elements, and is used for the `≤` relation on multisets. -/
@@ -440,14 +440,14 @@ theorem countp_eq_countp_filter_add (l : List α) (p q : α → Prop) [Decidable
   rw [← countp_append]
   exact perm.countp_eq _ (filter_append_perm _ _).symm
 
-theorem Perm.count_eq [DecidableEq α] {l₁ l₂ : List α} (p : l₁ ~ l₂) a : count a l₁ = count a l₂ :=
+theorem Perm.count_eq [DecidableEq α] {l₁ l₂ : List α} (p : l₁ ~ l₂) (a) : count a l₁ = count a l₂ :=
   p.countp_eq _
 
-theorem Subperm.count_le [DecidableEq α] {l₁ l₂ : List α} (s : l₁ <+~ l₂) a : count a l₁ ≤ count a l₂ :=
+theorem Subperm.count_le [DecidableEq α] {l₁ l₂ : List α} (s : l₁ <+~ l₂) (a) : count a l₁ ≤ count a l₂ :=
   s.countp_le _
 
 theorem Perm.foldl_eq' {f : β → α → β} {l₁ l₂ : List α} (p : l₁ ~ l₂) :
-    (∀, ∀ x ∈ l₁, ∀, ∀ y ∈ l₁, ∀ z, f (f z x) y = f (f z y) x) → ∀ b, foldlₓ f b l₁ = foldlₓ f b l₂ :=
+    (∀, ∀ x ∈ l₁, ∀, ∀ y ∈ l₁, ∀ (z), f (f z x) y = f (f z y) x) → ∀ b, foldlₓ f b l₁ = foldlₓ f b l₂ :=
   perm_induction_on p (fun H b => rfl) (fun x t₁ t₂ p r H b => r (fun x hx y hy => H _ (Or.inr hx) _ (Or.inr hy)) _)
     (fun x y t₁ t₂ p r H b => by
       simp only [← foldl]
@@ -599,7 +599,7 @@ theorem perm_append_left_iff {l₁ l₂ : List α} : ∀ l, l ++ l₁ ~ l ++ l�
   | [] => Iff.rfl
   | a :: l => (perm_cons a).trans (perm_append_left_iff l)
 
-theorem perm_append_right_iff {l₁ l₂ : List α} l : l₁ ++ l ~ l₂ ++ l ↔ l₁ ~ l₂ :=
+theorem perm_append_right_iff {l₁ l₂ : List α} (l) : l₁ ++ l ~ l₂ ++ l ↔ l₁ ~ l₂ :=
   ⟨fun p => (perm_append_left_iff _).1 <| perm_append_comm.trans <| p.trans perm_append_comm, Perm.append_right _⟩
 
 theorem perm_option_to_list {o₁ o₂ : Option α} : o₁.toList ~ o₂.toList ↔ o₁ = o₂ := by
@@ -658,7 +658,7 @@ theorem subperm_append_left {l₁ l₂ : List α} : ∀ l, l ++ l₁ <+~ l ++ l�
   | [] => Iff.rfl
   | a :: l => (subperm_cons a).trans (subperm_append_left l)
 
-theorem subperm_append_right {l₁ l₂ : List α} l : l₁ ++ l <+~ l₂ ++ l ↔ l₁ <+~ l₂ :=
+theorem subperm_append_right {l₁ l₂ : List α} (l) : l₁ ++ l <+~ l₂ ++ l ↔ l₁ <+~ l₂ :=
   (perm_append_comm.subperm_left.trans perm_append_comm.subperm_right).trans (subperm_append_left l)
 
 theorem Subperm.exists_of_length_lt {l₁ l₂ : List α} : l₁ <+~ l₂ → length l₁ < length l₂ → ∃ a, a :: l₁ <+~ l₂
@@ -994,7 +994,7 @@ theorem Perm.inter_append {l t₁ t₂ : List α} (h : Disjoint t₁ t₂) : l �
 end
 
 theorem Perm.pairwise_iff {R : α → α → Prop} (S : Symmetric R) :
-    ∀ {l₁ l₂ : List α} p : l₁ ~ l₂, Pairwiseₓ R l₁ ↔ Pairwiseₓ R l₂ :=
+    ∀ {l₁ l₂ : List α} (p : l₁ ~ l₂), Pairwiseₓ R l₁ ↔ Pairwiseₓ R l₂ :=
   suffices ∀ {l₁ l₂}, l₁ ~ l₂ → Pairwiseₓ R l₁ → Pairwiseₓ R l₂ from fun l₁ l₂ p => ⟨this p, this p.symm⟩
   fun l₁ l₂ p d => by
   induction' d with a l₁ h d IH generalizing l₂
@@ -1288,13 +1288,13 @@ theorem length_permutations_aux :
 theorem length_permutations (l : List α) : length (permutations l) = (length l)! :=
   length_permutations_aux l []
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (ts' «expr ~ » «expr[ ,]»([]))
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (ts' «expr ~ » «expr[ ,]»([]))
 theorem mem_permutations_of_perm_lemma {is l : List α}
     (H : l ~ [] ++ is → (∃ (ts' : _)(_ : ts' ~ []), l = ts' ++ is) ∨ l ∈ permutationsAux is []) :
     l ~ is → l ∈ permutations is := by
   simpa [← permutations, ← perm_nil] using H
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (is' «expr ~ » is)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (is' «expr ~ » is)
 theorem mem_permutations_aux_of_perm :
     ∀ {ts is l : List α}, l ~ is ++ ts → (∃ (is' : _)(_ : is' ~ is), l = is' ++ ts) ∨ l ∈ permutationsAux ts is := by
   refine'

@@ -24,6 +24,40 @@ class CanLift (α β : Sort _) where
   cond : α → Prop
   prf : ∀ x : α, cond x → ∃ y : β, coe y = x
 
+instance : CanLift ℤ ℕ :=
+  ⟨coe, fun n => 0 ≤ n, fun n hn => ⟨n.natAbs, Int.nat_abs_of_nonneg hn⟩⟩
+
+/-- Enable automatic handling of pi types in `can_lift`. -/
+instance Pi.canLift (ι : Sort _) (α β : ι → Sort _) [∀ i : ι, CanLift (α i) (β i)] :
+    CanLift (∀ i : ι, α i) (∀ i : ι, β i) where
+  coe := fun f i => CanLift.coe (f i)
+  cond := fun f => ∀ i, CanLift.Cond (β i) (f i)
+  prf := fun f hf =>
+    ⟨fun i => Classical.some (CanLift.prf (f i) (hf i)), funext fun i => Classical.some_spec (CanLift.prf (f i) (hf i))⟩
+
+theorem Subtype.exists_pi_extension {ι : Sort _} {α : ι → Sort _} [ne : ∀ i, Nonempty (α i)] {p : ι → Prop}
+    (f : ∀ i : Subtype p, α i) : ∃ g : ∀ i : ι, α i, (fun i : Subtype p => g i) = f := by
+  run_tac
+    tactic.classical
+  refine' ⟨fun i => if hi : p i then f ⟨i, hi⟩ else Classical.choice (Ne i), funext _⟩
+  rintro ⟨i, hi⟩
+  exact dif_pos hi
+
+instance PiSubtype.canLift (ι : Sort _) (α : ι → Sort _) [ne : ∀ i, Nonempty (α i)] (p : ι → Prop) :
+    CanLift (∀ i : Subtype p, α i) (∀ i, α i) where
+  coe := fun f i => f i
+  cond := fun _ => True
+  prf := fun f _ => Subtype.exists_pi_extension f
+
+instance PiSubtype.canLift' (ι : Sort _) (α : Sort _) [ne : Nonempty α] (p : ι → Prop) :
+    CanLift (Subtype p → α) (ι → α) :=
+  PiSubtype.canLift ι (fun _ => α) p
+
+instance Subtype.canLift {α : Sort _} (p : α → Prop) : CanLift α { x // p x } where
+  coe := coe
+  cond := p
+  prf := fun a ha => ⟨⟨a, ha⟩, rfl⟩
+
 open Tactic
 
 /-- A user attribute used internally by the `lift` tactic.
@@ -41,37 +75,6 @@ unsafe def can_lift_attr : user_attribute (List Name) where
             let (_, t) ← mk_const l >>= infer_type >>= open_pis
             return <| t `can_lift,
       dependencies := [`instance] }
-
-instance : CanLift ℤ ℕ :=
-  ⟨coe, fun n => 0 ≤ n, fun n hn => ⟨n.natAbs, Int.nat_abs_of_nonneg hn⟩⟩
-
-/-- Enable automatic handling of pi types in `can_lift`. -/
-instance Pi.canLift (ι : Sort _) (α : ∀ i : ι, Sort _) (β : ∀ i : ι, Sort _) [∀ i : ι, CanLift (α i) (β i)] :
-    CanLift (∀ i : ι, α i) (∀ i : ι, β i) where
-  coe := fun f i => CanLift.coe (f i)
-  cond := fun f => ∀ i, CanLift.Cond (β i) (f i)
-  prf := fun f hf =>
-    ⟨fun i => Classical.some (CanLift.prf (f i) (hf i)), funext fun i => Classical.some_spec (CanLift.prf (f i) (hf i))⟩
-
-instance PiSubtype.canLift (ι : Sort _) (α : ∀ i : ι, Sort _) [ne : ∀ i, Nonempty (α i)] (p : ι → Prop) :
-    CanLift (∀ i : Subtype p, α i) (∀ i, α i) where
-  coe := fun f i => f i
-  cond := fun _ => True
-  prf := by
-    run_tac
-      classical
-    refine' fun f _ => ⟨fun i => if hi : p i then f ⟨i, hi⟩ else Classical.choice (Ne i), funext _⟩
-    rintro ⟨i, hi⟩
-    exact dif_pos hi
-
-instance PiSubtype.canLift' (ι : Sort _) (α : Sort _) [ne : Nonempty α] (p : ι → Prop) :
-    CanLift (Subtype p → α) (ι → α) :=
-  PiSubtype.canLift ι (fun _ => α) p
-
-instance Subtype.canLift {α : Sort _} (p : α → Prop) : CanLift α { x // p x } where
-  coe := coe
-  cond := p
-  prf := fun a ha => ⟨⟨a, ha⟩, rfl⟩
 
 namespace Tactic
 
@@ -158,7 +161,7 @@ unsafe def lift (p : pexpr) (t : pexpr) (h : Option pexpr) (n : List Name) : tac
 
 setup_tactic_parser
 
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
 /-- Parses an optional token "using" followed by a trailing `pexpr`. -/
 unsafe def using_texpr :=
   «expr ?» (tk "using" *> texpr)

@@ -64,24 +64,24 @@ class LieRing (L : Type v) extends AddCommGroupₓ L, HasBracket L L where
 identity. Forgetting the scalar multiplication, every Lie algebra is a Lie ring. -/
 @[protect_proj]
 class LieAlgebra (R : Type u) (L : Type v) [CommRingₓ R] [LieRing L] extends Module R L where
-  lie_smul : ∀ t : R x y : L, ⁅x,t • y⁆ = t • ⁅x,y⁆
+  lie_smul : ∀ (t : R) (x y : L), ⁅x,t • y⁆ = t • ⁅x,y⁆
 
 /-- A Lie ring module is an additive group, together with an additive action of a
 Lie ring on this group, such that the Lie bracket acts as the commutator of endomorphisms.
 (For representations of Lie *algebras* see `lie_module`.) -/
 @[protect_proj]
 class LieRingModule (L : Type v) (M : Type w) [LieRing L] [AddCommGroupₓ M] extends HasBracket L M where
-  add_lie : ∀ x y : L m : M, ⁅x + y,m⁆ = ⁅x,m⁆ + ⁅y,m⁆
-  lie_add : ∀ x : L m n : M, ⁅x,m + n⁆ = ⁅x,m⁆ + ⁅x,n⁆
-  leibniz_lie : ∀ x y : L m : M, ⁅x,⁅y,m⁆⁆ = ⁅⁅x,y⁆,m⁆ + ⁅y,⁅x,m⁆⁆
+  add_lie : ∀ (x y : L) (m : M), ⁅x + y,m⁆ = ⁅x,m⁆ + ⁅y,m⁆
+  lie_add : ∀ (x : L) (m n : M), ⁅x,m + n⁆ = ⁅x,m⁆ + ⁅x,n⁆
+  leibniz_lie : ∀ (x y : L) (m : M), ⁅x,⁅y,m⁆⁆ = ⁅⁅x,y⁆,m⁆ + ⁅y,⁅x,m⁆⁆
 
 /-- A Lie module is a module over a commutative ring, together with a linear action of a Lie
 algebra on this module, such that the Lie bracket acts as the commutator of endomorphisms. -/
 @[protect_proj]
 class LieModule (R : Type u) (L : Type v) (M : Type w) [CommRingₓ R] [LieRing L] [LieAlgebra R L] [AddCommGroupₓ M]
   [Module R M] [LieRingModule L M] where
-  smul_lie : ∀ t : R x : L m : M, ⁅t • x,m⁆ = t • ⁅x,m⁆
-  lie_smul : ∀ t : R x : L m : M, ⁅x,t • m⁆ = t • ⁅x,m⁆
+  smul_lie : ∀ (t : R) (x : L) (m : M), ⁅t • x,m⁆ = t • ⁅x,m⁆
+  lie_smul : ∀ (t : R) (x : L) (m : M), ⁅x,t • m⁆ = t • ⁅x,m⁆
 
 section BasicProperties
 
@@ -344,12 +344,12 @@ theorem congr_fun {f g : L₁ →ₗ⁅R⁆ L₂} (h : f = g) (x : L₁) : f x =
   h ▸ rfl
 
 @[simp]
-theorem mk_coe (f : L₁ →ₗ⁅R⁆ L₂) h₁ h₂ h₃ : (⟨⟨f, h₁, h₂⟩, h₃⟩ : L₁ →ₗ⁅R⁆ L₂) = f := by
+theorem mk_coe (f : L₁ →ₗ⁅R⁆ L₂) (h₁ h₂ h₃) : (⟨⟨f, h₁, h₂⟩, h₃⟩ : L₁ →ₗ⁅R⁆ L₂) = f := by
   ext
   rfl
 
 @[simp]
-theorem coe_mk (f : L₁ → L₂) h₁ h₂ h₃ : ((⟨⟨f, h₁, h₂⟩, h₃⟩ : L₁ →ₗ⁅R⁆ L₂) : L₁ → L₂) = f :=
+theorem coe_mk (f : L₁ → L₂) (h₁ h₂ h₃) : ((⟨⟨f, h₁, h₂⟩, h₃⟩ : L₁ →ₗ⁅R⁆ L₂) : L₁ → L₂) = f :=
   rfl
 
 /-- The composition of morphisms is a morphism. -/
@@ -483,7 +483,7 @@ theorem coe_to_linear_equiv (e : L₁ ≃ₗ⁅R⁆ L₂) : ((e : L₁ ≃ₗ[R]
   rfl
 
 @[simp]
-theorem to_linear_equiv_mk (f : L₁ →ₗ⁅R⁆ L₂) g h₁ h₂ :
+theorem to_linear_equiv_mk (f : L₁ →ₗ⁅R⁆ L₂) (g h₁ h₂) :
     (mk f g h₁ h₂ : L₁ ≃ₗ[R] L₂) = { f with invFun := g, left_inv := h₁, right_inv := h₂ } :=
   rfl
 
@@ -696,17 +696,17 @@ theorem congr_fun {f g : M →ₗ⁅R,L⁆ N} (h : f = g) (x : M) : f x = g x :=
   h ▸ rfl
 
 @[simp]
-theorem mk_coe (f : M →ₗ⁅R,L⁆ N) h : (⟨f, h⟩ : M →ₗ⁅R,L⁆ N) = f := by
+theorem mk_coe (f : M →ₗ⁅R,L⁆ N) (h) : (⟨f, h⟩ : M →ₗ⁅R,L⁆ N) = f := by
   ext
   rfl
 
 @[simp]
-theorem coe_mk (f : M →ₗ[R] N) h : ((⟨f, h⟩ : M →ₗ⁅R,L⁆ N) : M → N) = f := by
+theorem coe_mk (f : M →ₗ[R] N) (h) : ((⟨f, h⟩ : M →ₗ⁅R,L⁆ N) : M → N) = f := by
   ext
   rfl
 
 @[norm_cast, simp]
-theorem coe_linear_mk (f : M →ₗ[R] N) h : ((⟨f, h⟩ : M →ₗ⁅R,L⁆ N) : M →ₗ[R] N) = f := by
+theorem coe_linear_mk (f : M →ₗ[R] N) (h) : ((⟨f, h⟩ : M →ₗ⁅R,L⁆ N) : M →ₗ[R] N) = f := by
   ext
   rfl
 
@@ -871,7 +871,7 @@ theorem injective (e : M ≃ₗ⁅R,L⁆ N) : Function.Injective e :=
   e.toEquiv.Injective
 
 @[simp]
-theorem coe_mk (f : M →ₗ⁅R,L⁆ N) inv_fun h₁ h₂ : ((⟨f, inv_fun, h₁, h₂⟩ : M ≃ₗ⁅R,L⁆ N) : M → N) = f :=
+theorem coe_mk (f : M →ₗ⁅R,L⁆ N) (inv_fun h₁ h₂) : ((⟨f, inv_fun, h₁, h₂⟩ : M ≃ₗ⁅R,L⁆ N) : M → N) = f :=
   rfl
 
 @[simp, norm_cast]

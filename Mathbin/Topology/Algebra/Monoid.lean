@@ -207,7 +207,7 @@ homomorphisms that has a `monoid_hom_class` instance) to `M₁ → M₂`. -/
 @[to_additive
       "Construct a bundled additive monoid homomorphism `M₁ →+ M₂` from a function `f`\nand a proof that it belongs to the closure of the range of the coercion from `M₁ →+ M₂` (or another\ntype of bundled homomorphisms that has a `add_monoid_hom_class` instance) to `M₁ → M₂`.",
   simps (config := { fullyApplied := false })]
-def monoidHomOfMemClosureRangeCoe (f : M₁ → M₂) (hf : f ∈ Closure (Range fun f : F x : M₁ => f x)) : M₁ →* M₂ where
+def monoidHomOfMemClosureRangeCoe (f : M₁ → M₂) (hf : f ∈ Closure (Range fun (f : F) (x : M₁) => f x)) : M₁ →* M₂ where
   toFun := f
   map_one' := (is_closed_set_of_map_one M₁ M₂).closure_subset_iff.2 (range_subset_iff.2 map_one) hf
   map_mul' := (is_closed_set_of_map_mul M₁ M₂).closure_subset_iff.2 (range_subset_iff.2 map_mul) hf

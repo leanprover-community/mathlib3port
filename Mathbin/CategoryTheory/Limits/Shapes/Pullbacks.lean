@@ -523,7 +523,7 @@ theorem condition_one (t : PullbackCone f g) : t.π.app WalkingCospan.one = t.fs
 def isLimitAux (t : PullbackCone f g) (lift : ∀ s : PullbackCone f g, s.x ⟶ t.x)
     (fac_left : ∀ s : PullbackCone f g, lift s ≫ t.fst = s.fst)
     (fac_right : ∀ s : PullbackCone f g, lift s ≫ t.snd = s.snd)
-    (uniq : ∀ s : PullbackCone f g m : s.x ⟶ t.x w : ∀ j : WalkingCospan, m ≫ t.π.app j = s.π.app j, m = lift s) :
+    (uniq : ∀ (s : PullbackCone f g) (m : s.x ⟶ t.x) (w : ∀ j : WalkingCospan, m ≫ t.π.app j = s.π.app j), m = lift s) :
     IsLimit t :=
   { lift,
     fac' := fun s j =>
@@ -623,7 +623,7 @@ def IsLimit.lift' {t : PullbackCone f g} (ht : IsLimit t) {W : C} (h : W ⟶ X) 
 -/
 def IsLimit.mk {W : C} {fst : W ⟶ X} {snd : W ⟶ Y} (eq : fst ≫ f = snd ≫ g) (lift : ∀ s : PullbackCone f g, s.x ⟶ W)
     (fac_left : ∀ s : PullbackCone f g, lift s ≫ fst = s.fst) (fac_right : ∀ s : PullbackCone f g, lift s ≫ snd = s.snd)
-    (uniq : ∀ s : PullbackCone f g m : s.x ⟶ W w_fst : m ≫ fst = s.fst w_snd : m ≫ snd = s.snd, m = lift s) :
+    (uniq : ∀ (s : PullbackCone f g) (m : s.x ⟶ W) (w_fst : m ≫ fst = s.fst) (w_snd : m ≫ snd = s.snd), m = lift s) :
     IsLimit (mk fst snd Eq) :=
   isLimitAux _ lift fac_left fac_right fun s m w => uniq s m (w WalkingCospan.left) (w WalkingCospan.right)
 
@@ -727,7 +727,7 @@ theorem condition_zero (t : PushoutCocone f g) : t.ι.app WalkingSpan.zero = f �
 def isColimitAux (t : PushoutCocone f g) (desc : ∀ s : PushoutCocone f g, t.x ⟶ s.x)
     (fac_left : ∀ s : PushoutCocone f g, t.inl ≫ desc s = s.inl)
     (fac_right : ∀ s : PushoutCocone f g, t.inr ≫ desc s = s.inr)
-    (uniq : ∀ s : PushoutCocone f g m : t.x ⟶ s.x w : ∀ j : WalkingSpan, t.ι.app j ≫ m = s.ι.app j, m = desc s) :
+    (uniq : ∀ (s : PushoutCocone f g) (m : t.x ⟶ s.x) (w : ∀ j : WalkingSpan, t.ι.app j ≫ m = s.ι.app j), m = desc s) :
     IsColimit t :=
   { desc,
     fac' := fun s j =>
@@ -826,7 +826,7 @@ def ext {s t : PushoutCocone f g} (i : s.x ≅ t.x) (w₁ : s.inl ≫ i.Hom = t.
 def IsColimit.mk {W : C} {inl : Y ⟶ W} {inr : Z ⟶ W} (eq : f ≫ inl = g ≫ inr) (desc : ∀ s : PushoutCocone f g, W ⟶ s.x)
     (fac_left : ∀ s : PushoutCocone f g, inl ≫ desc s = s.inl)
     (fac_right : ∀ s : PushoutCocone f g, inr ≫ desc s = s.inr)
-    (uniq : ∀ s : PushoutCocone f g m : W ⟶ s.x w_inl : inl ≫ m = s.inl w_inr : inr ≫ m = s.inr, m = desc s) :
+    (uniq : ∀ (s : PushoutCocone f g) (m : W ⟶ s.x) (w_inl : inl ≫ m = s.inl) (w_inr : inr ≫ m = s.inr), m = desc s) :
     IsColimit (mk inl inr Eq) :=
   isColimitAux _ desc fac_left fac_right fun s m w => uniq s m (w WalkingCospan.left) (w WalkingCospan.right)
 
@@ -2468,10 +2468,12 @@ theorem has_pushouts_of_has_colimit_span [∀ {X Y Z : C} {f : X ⟶ Y} {g : X �
   { HasColimit := fun F => has_colimit_of_iso (diagramIsoSpan F) }
 
 /-- The duality equivalence `walking_spanᵒᵖ ≌ walking_cospan` -/
+@[simps]
 def walkingSpanOpEquiv : walking_spanᵒᵖ ≌ walking_cospan :=
   widePushoutShapeOpEquiv _
 
 /-- The duality equivalence `walking_cospanᵒᵖ ≌ walking_span` -/
+@[simps]
 def walkingCospanOpEquiv : walking_cospanᵒᵖ ≌ walking_span :=
   widePullbackShapeOpEquiv _
 

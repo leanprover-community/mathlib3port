@@ -354,8 +354,8 @@ theorem card_of_separable (hp : p.Separable) : Fintype.card p.Gal = finrank F p.
   have : IsGalois F p.splitting_field := IsGalois.of_separable_splitting_field hp
   exact IsGalois.card_aut_eq_finrank F p.splitting_field
 
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
 theorem prime_degree_dvd_card [CharZero F] (p_irr : Irreducible p) (p_deg : p.natDegree.Prime) :
     p.natDegree ∣ Fintype.card p.Gal := by
   rw [gal.card_of_separable p_irr.separable]
@@ -386,7 +386,7 @@ attribute [local instance] splits_ℚ_ℂ
     the number of roots not fixed by complex conjugation (i.e. with some imaginary component). -/
 theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
     (p.RootSet ℂ).toFinset.card =
-      (p.RootSet ℝ).toFinset.card + (galActionHom p ℂ (restrict p ℂ (Complex.conjAe.restrictScalars ℚ))).Support.card :=
+      (p.RootSet ℝ).toFinset.card + (galActionHom p ℂ (restrict p ℂ (Complex.conjAe.restrictScalars ℚ))).support.card :=
   by
   by_cases' hp : p = 0
   · simp_rw [hp, root_set_zero, set.to_finset_eq_empty_iff.mpr rfl, Finset.card_empty, zero_addₓ]
@@ -490,7 +490,7 @@ theorem gal_action_hom_bijective_of_prime_degree' {p : ℚ[X]} (p_irr : Irreduci
     (p_roots2 : Fintype.card (p.RootSet ℂ) ≤ Fintype.card (p.RootSet ℝ) + 3) : Function.Bijective (galActionHom p ℂ) :=
   by
   apply gal_action_hom_bijective_of_prime_degree p_irr p_deg
-  let n := (gal_action_hom p ℂ (restrict p ℂ (complex.conj_ae.restrict_scalars ℚ))).Support.card
+  let n := (gal_action_hom p ℂ (restrict p ℂ (complex.conj_ae.restrict_scalars ℚ))).support.card
   have hn : 2 ∣ n :=
     Equivₓ.Perm.two_dvd_card_support
       (by

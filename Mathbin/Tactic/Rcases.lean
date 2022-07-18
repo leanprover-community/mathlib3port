@@ -364,7 +364,7 @@ mutual
       -- as some constructors may be impossible for type reasons. (See its
       -- documentation.) Match up the new goals with our remaining work
       -- by constructor name.
-      ls := align (fun a : Name × _ b : _ × Name × _ => a.1 = b.2.1) r (gs.zip l)
+      ls := align (fun (a : Name × _) (b : _ × Name × _) => a.1 = b.2.1) r (gs.zip l)
       List.join <$> ls fun ⟨⟨_, ps⟩, g, _, hs, _⟩ => set_goals [g] >> rcases.continue (ps hs)
   /-- * `rcases_core p e` will match a pattern `p` against a local hypothesis `e`.
     It returns the list of subgoals that were produced.
@@ -576,7 +576,7 @@ mutual
       let (p, gs) ← rcases_hint_core depth e
       let (ps, gs') ←
         gs.mfoldl
-            (fun r : listΠ rcases_patt × List expr g => do
+            (fun (r : listΠ rcases_patt × List expr) g => do
               let (ps, gs') ← set_goals [g] >> rcases_hint.continue depth es
               pure (merge_list rcases_patt.merge r.1 ps, r.2 ++ gs'))
             ([], [])
@@ -773,7 +773,7 @@ patt_med ::= (patt_hi "|")* patt_hi
 unsafe def rcases_patt_parse_list :=
   with_desc "patt_med" rcases_patt_parse_list'
 
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
 /-- Parse the optional depth argument `(: n)?` of `rcases?` and `rintro?`, with default depth 5. -/
 unsafe def rcases_parse_depth : parser Nat := do
   let o ← «expr ?» (tk ":" *> small_nat)
@@ -791,8 +791,8 @@ unsafe inductive rcases_args
   | rcases_many (tgt : listΠ pexpr) (pat : rcases_patt)
   deriving has_reflect
 
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
 /-- Syntax for a `rcases` pattern:
 * `rcases? expr (: n)?`
 * `rcases (h :)? expr (with patt_list (: expr)?)?`. -/
@@ -818,7 +818,7 @@ unsafe def rcases_parse : parser rcases_args :=
         let depth ← rcases_parse_depth
         pure <| rcases_args.hint p depth
 
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr *»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr *»
 mutual
   /-- `rintro_patt_parse_hi` and `rintro_patt_parse` are like `rcases_patt_parse`, but is used for
   parsing top level `rintro` patterns, which allow sequences like `(x y : t)` in addition to simple
@@ -1021,8 +1021,8 @@ add_tactic_doc
 
 setup_tactic_parser
 
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
 /-- Parses `patt? (: expr)? (:= expr)?`, the arguments for `obtain`.
  (This is almost the same as `rcases_patt_parse`,
 but it allows the pattern part to be empty.) -/

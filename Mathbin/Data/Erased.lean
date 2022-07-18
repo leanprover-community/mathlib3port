@@ -63,7 +63,7 @@ theorem out_inj {α} (a b : Erased α) (h : a.out = b.out) : a = b := by
   simpa using congr_arg mk h
 
 /-- Equivalence between `erased α` and `α`. -/
-noncomputable def equiv α : Erased α ≃ α :=
+noncomputable def equiv (α) : Erased α ≃ α :=
   ⟨out, mk, mk_out, out_mk⟩
 
 instance (α : Type u) : HasRepr (Erased α) :=
@@ -95,7 +95,7 @@ def bind {α β} (a : Erased α) (f : α → Erased β) : Erased β :=
   ⟨fun b => (f a.out).1 b, (f a.out).2⟩
 
 @[simp]
-theorem bind_eq_out {α β} a f : @bind α β a f = f a.out := by
+theorem bind_eq_out {α β} (a f) : @bind α β a f = f a.out := by
   delta' bind bind._proof_1 <;> cases f a.out <;> rfl
 
 /-- Collapses two levels of erasure.
@@ -104,7 +104,7 @@ def join {α} (a : Erased (Erased α)) : Erased α :=
   bind a id
 
 @[simp]
-theorem join_eq_out {α} a : @join α a = a.out :=
+theorem join_eq_out {α} (a) : @join α a = a.out :=
   bind_eq_out _ _
 
 /-- `(<$>)` operation on `erased`.

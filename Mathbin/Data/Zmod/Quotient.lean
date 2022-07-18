@@ -3,7 +3,7 @@ Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.Data.Zmod.Basic
+import Mathbin.Algebra.NeZero
 import Mathbin.GroupTheory.GroupAction.Quotient
 import Mathbin.RingTheory.Int.Basic
 

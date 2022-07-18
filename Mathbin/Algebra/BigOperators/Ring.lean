@@ -146,13 +146,13 @@ theorem prod_add (f g : α → β) (s : Finset α) :
         erw [prod_ite (fun a : { a // a ∈ s } => f a.1) fun a : { a // a ∈ s } => g a.1]
         refine'
             congr_arg2ₓ _
-              (prod_bij (fun a : α ha : a ∈ t => ⟨a, mem_powerset.1 ht ha⟩) _ _ _ fun b hb =>
+              (prod_bij (fun (a : α) (ha : a ∈ t) => ⟨a, mem_powerset.1 ht ha⟩) _ _ _ fun b hb =>
                 ⟨b, by
                   cases b <;>
                     simpa only [← true_andₓ, ← exists_prop, ← mem_filter, ← and_trueₓ, ← mem_attach, ← eq_self_iff_true,
                       ← Subtype.coe_mk] using hb⟩)
               (prod_bij
-                (fun a : α ha : a ∈ s \ t =>
+                (fun (a : α) (ha : a ∈ s \ t) =>
                   ⟨a, by
                     simp_all ⟩)
                 _ _ _ fun b hb =>
@@ -271,7 +271,6 @@ theorem prod_powerset_insert [DecidableEq α] [CommMonoidₓ β] {s : Finset α}
     exact ne_insert_of_not_mem _ _ (not_mem_of_mem_powerset_of_not_mem h₁ h)
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A product over `powerset s` is equal to the double product over sets of subsets of `s` with
 `card s = k`, for `k = 1, ..., card s`. -/
 @[to_additive

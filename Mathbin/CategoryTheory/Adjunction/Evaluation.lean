@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
 import Mathbin.CategoryTheory.Limits.Shapes.Products
-import Mathbin.CategoryTheory.EpiMono
+import Mathbin.CategoryTheory.Functor.EpiMono
 
 /-!
 
@@ -104,7 +104,7 @@ instance evaluationIsRightAdjoint (c : C) : IsRightAdjoint ((evaluation _ D).obj
 theorem NatTrans.mono_iff_app_mono {F G : C ⥤ D} (η : F ⟶ G) : Mono η ↔ ∀ c, Mono (η.app c) := by
   constructor
   · intro h c
-    exact right_adjoint_preserves_mono (evaluation_adjunction_right D c) h
+    exact (inferInstance : mono (((evaluation _ _).obj c).map η))
     
   · intro _
     apply nat_trans.mono_app_of_mono
@@ -192,7 +192,7 @@ instance evaluationIsLeftAdjoint (c : C) : IsLeftAdjoint ((evaluation _ D).obj c
 theorem NatTrans.epi_iff_app_epi {F G : C ⥤ D} (η : F ⟶ G) : Epi η ↔ ∀ c, Epi (η.app c) := by
   constructor
   · intro h c
-    exact left_adjoint_preserves_epi (evaluation_adjunction_left D c) h
+    exact (inferInstance : epi (((evaluation _ _).obj c).map η))
     
   · intros
     apply nat_trans.epi_app_of_epi

@@ -34,7 +34,7 @@ variable {ι α β : Type _}
 /-- A filter `l` has the countable intersection property if for any countable collection
 of sets `s ∈ l` their intersection belongs to `l` as well. -/
 class CountableInterFilter (l : Filter α) : Prop where
-  countable_sInter_mem' : ∀ {S : Set (Set α)} hSc : S.Countable hS : ∀, ∀ s ∈ S, ∀, s ∈ l, ⋂₀ S ∈ l
+  countable_sInter_mem' : ∀ {S : Set (Set α)} (hSc : S.Countable) (hS : ∀, ∀ s ∈ S, ∀, s ∈ l), ⋂₀ S ∈ l
 
 variable {l : Filter α} [CountableInterFilter l]
 
@@ -54,7 +54,7 @@ theorem eventually_countable_forall [Encodable ι] {p : α → ι → Prop} :
     (∀ᶠ x in l, ∀ i, p x i) ↔ ∀ i, ∀ᶠ x in l, p x i := by
   simpa only [← Filter.Eventually, ← set_of_forall] using @countable_Inter_mem _ _ l _ _ fun i => { x | p x i }
 
-theorem eventually_countable_ball {S : Set ι} (hS : S.Countable) {p : ∀ x : α, ∀ i ∈ S, ∀, Prop} :
+theorem eventually_countable_ball {S : Set ι} (hS : S.Countable) {p : ∀ (x : α), ∀ i ∈ S, ∀, Prop} :
     (∀ᶠ x in l, ∀, ∀ i ∈ S, ∀, p x i ‹_›) ↔ ∀, ∀ i ∈ S, ∀, ∀ᶠ x in l, p x i ‹_› := by
   simpa only [← Filter.Eventually, ← set_of_forall] using
     @countable_bInter_mem _ _ l _ _ hS fun i hi => { x | p x i hi }

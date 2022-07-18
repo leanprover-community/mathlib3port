@@ -46,26 +46,27 @@ namespace Function
 -- See note [reducible non-instances]
 @[reducible]
 def Injective.linearOrderedSemifield [LinearOrderedSemifield α] [Zero β] [One β] [Add β] [Mul β] [Pow β ℕ] [HasSmul ℕ β]
-    [HasNatCast β] [Inv β] [Div β] [Pow β ℤ] (f : β → α) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
-    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
-    (div : ∀ x y, f (x / y) = f x / f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) :
+    [HasNatCast β] [Inv β] [Div β] [Pow β ℤ] [HasSup β] [HasInf β] (f : β → α) (hf : Injective f) (zero : f 0 = 0)
+    (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
+    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
+    (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n)
+    (nat_cast : ∀ n : ℕ, f n = n) (hsup : ∀ x y, f (x⊔y) = max (f x) (f y)) (hinf : ∀ x y, f (x⊓y) = min (f x) (f y)) :
     LinearOrderedSemifield β :=
-  { hf.LinearOrderedSemiring f zero one add mul nsmul npow nat_cast,
+  { hf.LinearOrderedSemiring f zero one add mul nsmul npow nat_cast hsup hinf,
     hf.Semifield f zero one add mul inv div nsmul npow zpow nat_cast with }
 
 /-- Pullback a `linear_ordered_field` under an injective map. -/
 -- See note [reducible non-instances]
 @[reducible]
 def Injective.linearOrderedField [LinearOrderedField α] [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [Pow β ℕ]
-    [HasSmul ℕ β] [HasSmul ℤ β] [HasNatCast β] [HasIntCast β] [Inv β] [Div β] [Pow β ℤ] (f : β → α) (hf : Injective f)
-    (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
-    (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
-    (div : ∀ x y, f (x / y) = f x / f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n)
-    (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) :
-    LinearOrderedField β :=
-  { hf.LinearOrderedRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast,
+    [HasSmul ℕ β] [HasSmul ℤ β] [HasNatCast β] [HasIntCast β] [Inv β] [Div β] [Pow β ℤ] [HasSup β] [HasInf β]
+    (f : β → α) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
+    (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y)
+    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
+    (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
+    (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n)
+    (hsup : ∀ x y, f (x⊔y) = max (f x) (f y)) (hinf : ∀ x y, f (x⊓y) = min (f x) (f y)) : LinearOrderedField β :=
+  { hf.LinearOrderedRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast hsup hinf,
     hf.Field f zero one add mul neg sub inv div nsmul zsmul npow zpow nat_cast int_cast with }
 
 end Function

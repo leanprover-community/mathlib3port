@@ -146,7 +146,7 @@ end Rbnode
 
 open Rbnode
 
--- ./././Mathport/Syntax/Translate/Basic.lean:293:40: warning: unsupported option auto_param.check_exists
+-- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option auto_param.check_exists
 set_option auto_param.check_exists false
 
 def Rbtree (α : Type u)

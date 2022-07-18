@@ -132,11 +132,17 @@ def coimageIsoImage {X Y : C} (f : X ⟶ Y) : Abelian.coimage f ≅ Abelian.imag
 attribute [local simp] cokernel_iso coimage_iso_image coimage_iso_image_aux
 
 -- The account of this proof in the Stacks project omits this calculation.
--- Happily it's little effort: our `[ext]` and `[simp]` lemmas only need a little guidance.
 theorem coimage_iso_image_hom {X Y : C} (f : X ⟶ Y) :
     (coimageIsoImage F G i adj f).Hom = Abelian.coimageImageComparison f := by
   ext
-  simpa [-functor.map_comp, G.map_comp_assoc] using nat_iso.naturality_1 i f
+  simpa only [G.map_comp_assoc, ← coimage_iso_image, ← nat_iso.inv_inv_app, ← cokernel_iso, ← coimage_iso_image_aux, ←
+    iso.trans_symm, ← iso.symm_symm_eq, ← iso.refl_trans, ← iso.trans_refl, ← iso.trans_hom, ← iso.symm_hom, ←
+    cokernel_comp_is_iso_inv, ← cokernel_epi_comp_inv, ← as_iso_hom, ← functor.map_iso_hom, ← cokernel_epi_comp_hom, ←
+    preserves_kernel.iso_hom, ← kernel_comp_mono_hom, ← kernel_is_iso_comp_hom, ←
+    cokernel_iso_of_eq_hom_comp_desc_assoc, ← cokernel.π_desc_assoc, ← category.assoc, ←
+    π_comp_cokernel_iso_of_eq_inv_assoc, ← π_comp_cokernel_comparison_assoc, ← kernel.lift_ι, ← kernel.lift_ι_assoc, ←
+    kernel_iso_of_eq_hom_comp_ι_assoc, ← kernel_comparison_comp_ι_assoc, ← abelian.coimage_image_factorisation] using
+    nat_iso.naturality_1 i f
 
 end AbelianOfAdjunction
 
@@ -155,7 +161,7 @@ def abelianOfAdjunction {C : Type u₁} [Category.{v} C] [Preadditive C] [HasFin
     [Functor.PreservesZeroMorphisms G] [PreservesFiniteLimits G] (i : F ⋙ G ≅ 𝟭 C) (adj : G ⊣ F) : Abelian C := by
   have := has_kernels F G i
   have := has_cokernels F G i adj
-  have : ∀ {X Y : C} f : X ⟶ Y, is_iso (abelian.coimage_image_comparison f) := by
+  have : ∀ {X Y : C} (f : X ⟶ Y), is_iso (abelian.coimage_image_comparison f) := by
     intro X Y f
     rw [← coimage_iso_image_hom F G i adj f]
     infer_instance

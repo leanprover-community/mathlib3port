@@ -70,8 +70,8 @@ theorem continuum_to_nat : continuum.toNat = 0 :=
   to_nat_apply_of_aleph_0_le aleph_0_le_continuum
 
 @[simp]
-theorem continuum_to_enat : continuum.toEnat = ⊤ :=
-  to_enat_apply_of_aleph_0_le aleph_0_le_continuum
+theorem continuum_to_part_enat : continuum.toPartEnat = ⊤ :=
+  to_part_enat_apply_of_aleph_0_le aleph_0_le_continuum
 
 /-!
 ### Addition

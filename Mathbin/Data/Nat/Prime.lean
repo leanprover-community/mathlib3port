@@ -80,8 +80,8 @@ theorem Prime.eq_one_or_self_of_dvd {p : ℕ} (pp : p.Prime) (m : ℕ) (hm : m �
   rintro rfl
   rw [hn, mul_oneₓ]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (m «expr ∣ » p)
-theorem prime_def_lt'' {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ m _ : m ∣ p, m = 1 ∨ m = p := by
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (m «expr ∣ » p)
+theorem prime_def_lt'' {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ (m) (_ : m ∣ p), m = 1 ∨ m = p := by
   refine' ⟨fun h => ⟨h.two_le, h.eq_one_or_self_of_dvd⟩, fun h => _⟩
   have h1 := one_lt_two.trans_le h.1
   refine' ⟨mt nat.is_unit_iff.mp h1.ne', fun a b hab => _⟩
@@ -355,7 +355,7 @@ theorem le_min_fac {m n : ℕ} : n = 1 ∨ m ≤ minFac n ↔ ∀ p, Prime p →
     fun H => or_iff_not_imp_left.2 fun n1 => H _ (min_fac_prime n1) (min_fac_dvd _)⟩
 
 theorem le_min_fac' {m n : ℕ} : n = 1 ∨ m ≤ minFac n ↔ ∀ p, 2 ≤ p → p ∣ n → m ≤ p :=
-  ⟨fun h p pp : 1 < p d =>
+  ⟨fun h p (pp : 1 < p) d =>
     h.elim
       (by
         rintro rfl <;>
@@ -615,10 +615,10 @@ theorem factors_chain : ∀ {n a}, (∀ p, Prime p → p ∣ n → a ≤ p) → 
         (factors_chain _)
     exact fun p pp d => min_fac_le_of_dvd pp.two_le (d.trans <| div_dvd_of_dvd <| min_fac_dvd _)
 
-theorem factors_chain_2 n : List.Chain (· ≤ ·) 2 (factors n) :=
+theorem factors_chain_2 (n) : List.Chain (· ≤ ·) 2 (factors n) :=
   factors_chain fun p pp _ => pp.two_le
 
-theorem factors_chain' n : List.Chain' (· ≤ ·) (factors n) :=
+theorem factors_chain' (n) : List.Chain' (· ≤ ·) (factors n) :=
   @List.Chain'.tail _ _ (_ :: _) (factors_chain_2 _)
 
 theorem factors_sorted (n : ℕ) : List.Sorted (· ≤ ·) (factors n) :=
@@ -751,7 +751,7 @@ theorem Prime.mul_eq_prime_sq_iff {x y p : ℕ} (hp : p.Prime) (hx : x ≠ 1) (h
             Nat.mul_right_eq_self_iff hp.pos],
     fun ⟨h₁, h₂⟩ => h₁.symm ▸ h₂.symm ▸ (sq _).symm⟩
 
-theorem Prime.dvd_factorial : ∀ {n p : ℕ} hp : Prime p, p ∣ n ! ↔ p ≤ n
+theorem Prime.dvd_factorial : ∀ {n p : ℕ} (hp : Prime p), p ∣ n ! ↔ p ≤ n
   | 0, p, hp => iff_of_false hp.not_dvd_one (not_le_of_lt hp.Pos)
   | n + 1, p, hp => by
     rw [factorial_succ, hp.dvd_mul, prime.dvd_factorial hp]

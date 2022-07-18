@@ -86,14 +86,14 @@ noncomputable def typesGlue (S : Type uᵒᵖ ⥤ Type u) (hs : IsSheaf typesGro
       simp_rw [← functor_to_types.map_comp_apply, this, ← op_comp]
       rfl
 
-theorem eval_types_glue {S hs α} f : eval.{u} S α (typesGlue S hs α f) = f :=
+theorem eval_types_glue {S hs α} (f) : eval.{u} S α (typesGlue S hs α f) = f :=
   funext fun x =>
     (IsSheafFor.valid_glue _ _ _ <| ⟨PUnit.unit, fun _ => Subsingleton.elimₓ _ _⟩).trans <| by
       convert functor_to_types.map_id_apply _ _
       rw [← op_id]
       congr
 
-theorem types_glue_eval {S hs α} s : typesGlue.{u} S hs α (eval S α s) = s :=
+theorem types_glue_eval {S hs α} (s) : typesGlue.{u} S hs α (eval S α s) = s :=
   (hs.IsSheafFor _ _ (generate_discrete_presieve_mem α)).IsSeparatedFor.ext fun β f hf =>
     (IsSheafFor.valid_glue _ _ _ hf).trans <|
       (FunctorToTypes.map_comp_apply _ _ _ _).symm.trans <| by
@@ -110,7 +110,7 @@ noncomputable def evalEquiv (S : Type uᵒᵖ ⥤ Type u) (hs : IsSheaf typesGro
   left_inv := types_glue_eval
   right_inv := eval_types_glue
 
-theorem eval_map (S : Type uᵒᵖ ⥤ Type u) α β (f : β ⟶ α) s x : eval S β (S.map f.op s) x = eval S α s (f x) := by
+theorem eval_map (S : Type uᵒᵖ ⥤ Type u) (α β) (f : β ⟶ α) (s x) : eval S β (S.map f.op s) x = eval S α s (f x) := by
   simp_rw [eval, ← functor_to_types.map_comp_apply, ← op_comp]
   rfl
 

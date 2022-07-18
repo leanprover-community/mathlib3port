@@ -30,7 +30,7 @@ class EquivFunctor (f : Type u₀ → Type u₁) where
   map_refl' : ∀ α, map (Equivₓ.refl α) = @id (f α) := by
     run_tac
       obviously
-  map_trans' : ∀ {α β γ} k : α ≃ β h : β ≃ γ, map (k.trans h) = map h ∘ map k := by
+  map_trans' : ∀ {α β γ} (k : α ≃ β) (h : β ≃ γ), map (k.trans h) = map h ∘ map k := by
     run_tac
       obviously
 
@@ -65,7 +65,7 @@ theorem map_equiv_symm_apply (y : f β) : (mapEquiv f e).symm y = EquivFunctor.m
   rfl
 
 @[simp]
-theorem map_equiv_refl α : mapEquiv f (Equivₓ.refl α) = Equivₓ.refl (f α) := by
+theorem map_equiv_refl (α) : mapEquiv f (Equivₓ.refl α) = Equivₓ.refl (f α) := by
   simpa [← EquivFunctor.mapEquiv]
 
 @[simp]

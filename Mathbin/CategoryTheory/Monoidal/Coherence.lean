@@ -73,7 +73,7 @@ instance liftHomComp {X Y Z : C} [LiftObj X] [LiftObj Y] [LiftObj Z] (f : X ⟶ 
 instance liftHomTensor {W X Y Z : C} [LiftObj W] [LiftObj X] [LiftObj Y] [LiftObj Z] (f : W ⟶ X) (g : Y ⟶ Z) [LiftHom f]
     [LiftHom g] : LiftHom (f ⊗ g) where lift := LiftHom.lift f ⊗ LiftHom.lift g
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`Hom] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`Hom] []
 /-- A typeclass carrying a choice of monoidal structural isomorphism between two objects.
 Used by the `⊗≫` monoidal composition operator, and the `coherence` tactic.
 -/
@@ -195,7 +195,7 @@ unsafe def mk_project_map_expr (e : expr) : tactic expr :=
     (pquote.1
       (CategoryTheory.FreeMonoidalCategory.projectMap id _ _ (CategoryTheory.MonoidalCategory.LiftHom.lift (%%ₓe))))
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 /-- Coherence tactic for monoidal categories. -/
 unsafe def monoidal_coherence : tactic Unit := do
   let o ← get_options
@@ -243,9 +243,9 @@ theorem assoc_lift_hom {W X Y Z : C} [LiftObj W] [LiftObj X] [LiftObj Y] (f : W 
     [LiftHom g] : f ≫ g ≫ h = (f ≫ g) ≫ h :=
   (Category.assoc _ _ _).symm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 /-- Internal tactic used in `coherence`.
 
 Rewrites an equation `f = g` as `f₀ ≫ f₁ = g₀ ≫ g₁`,
@@ -257,7 +257,7 @@ unsafe def liftable_prefixes : tactic Unit := do
   set_options <| o `class.instance_max_depth 128
   (try sorry >> sorry) >> try sorry
 
-example {W X Y Z : C} (f : Y ⟶ Z) g (w : False) : (λ_ _).Hom ≫ f = g := by
+example {W X Y Z : C} (f : Y ⟶ Z) (g) (w : False) : (λ_ _).Hom ≫ f = g := by
   run_tac
     liftable_prefixes
   guard_target =ₐ (𝟙 _ ≫ (λ_ _).Hom) ≫ f = 𝟙 _ ≫ g
@@ -273,8 +273,8 @@ end Coherence
 
 open Coherence
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 /-- The main part of `coherence` tactic. -/
 unsafe def coherence_loop : tactic Unit := do
   -- To prove an equality `f = g` in a monoidal category,
@@ -313,8 +313,8 @@ unsafe def coherence_loop : tactic Unit := do
           -- and whose second terms can be identified by recursively called `coherence`.
             coherence_loop
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 /-- Use the coherence theorem for monoidal categories to solve equations in a monoidal equation,
 where the two sides only differ by replacing strings of monoidal structural morphisms
 (that is, associators, unitors, and identities)
@@ -343,26 +343,26 @@ add_tactic_doc
   { Name := "coherence", category := DocCategory.tactic, declNames := [`tactic.interactive.coherence],
     tags := ["category theory"] }
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]
-example f : (λ_ (𝟙_ C)).Hom ≫ f ≫ (λ_ (𝟙_ C)).Hom = (ρ_ (𝟙_ C)).Hom ≫ f ≫ (ρ_ (𝟙_ C)).Hom := by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]"
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]
+example (f) : (λ_ (𝟙_ C)).Hom ≫ f ≫ (λ_ (𝟙_ C)).Hom = (ρ_ (𝟙_ C)).Hom ≫ f ≫ (ρ_ (𝟙_ C)).Hom := by
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]"
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]
 example {U V W X Y : C} (f : U ⟶ V ⊗ W ⊗ X) (g : (V ⊗ W) ⊗ X ⟶ Y) : f ⊗≫ g = f ≫ (α_ _ _ _).inv ≫ g := by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]"
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]
 example {U : C} (f : U ⟶ 𝟙_ C) : f ≫ (ρ_ (𝟙_ C)).inv ≫ (λ_ (𝟙_ C)).Hom = f := by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]"
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]
-example (W X Y Z : C) f :
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]
+example (W X Y Z : C) (f) :
     ((α_ W X Y).Hom ⊗ 𝟙 Z) ≫
         (α_ W (X ⊗ Y) Z).Hom ≫ (𝟙 W ⊗ (α_ X Y Z).Hom) ≫ f ≫ (α_ (W ⊗ X) Y Z).Hom ≫ (α_ W X (Y ⊗ Z)).Hom =
       (α_ (W ⊗ X) Y Z).Hom ≫
         (α_ W X (Y ⊗ Z)).Hom ≫ f ≫ ((α_ W X Y).Hom ⊗ 𝟙 Z) ≫ (α_ W (X ⊗ Y) Z).Hom ≫ (𝟙 W ⊗ (α_ X Y Z).Hom) :=
   by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]"
 
 end Tactic
 

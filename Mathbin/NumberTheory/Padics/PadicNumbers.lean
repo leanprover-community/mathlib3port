@@ -726,10 +726,10 @@ section Complete
 
 open PadicSeq Padic
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (m n «expr ≥ » N)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (m n «expr ≥ » N)
 theorem rat_dense' {p : ℕ} [Fact p.Prime] (q : ℚ_[p]) {ε : ℚ} (hε : 0 < ε) : ∃ r : ℚ, padicNormE (q - r) < ε :=
   (Quotientₓ.induction_on q) fun q' =>
-    have : ∃ N, ∀ m n _ : m ≥ N _ : n ≥ N, padicNorm p (q' m - q' n) < ε := cauchy₂ _ hε
+    have : ∃ N, ∀ (m n) (_ : m ≥ N) (_ : n ≥ N), padicNorm p (q' m - q' n) < ε := cauchy₂ _ hε
     let ⟨N, hN⟩ := this
     ⟨q' N, by
       simp only [← Padic.cast_eq_of_rat]
@@ -1001,7 +1001,7 @@ def ratNorm (q : ℚ_[p]) : ℚ :=
 theorem eq_rat_norm (q : ℚ_[p]) : ∥q∥ = ratNorm q :=
   Classical.some_spec (padicNormE.is_rat q)
 
-theorem norm_rat_le_one : ∀ {q : ℚ} hq : ¬p ∣ q.denom, ∥(q : ℚ_[p])∥ ≤ 1
+theorem norm_rat_le_one : ∀ {q : ℚ} (hq : ¬p ∣ q.denom), ∥(q : ℚ_[p])∥ ≤ 1
   | ⟨n, d, hn, hd⟩ => fun hq : ¬p ∣ d =>
     if hnz : n = 0 then by
       have : (⟨n, d, hn, hd⟩ : ℚ) = 0 := Rat.zero_iff_num_zero.mpr hnz
@@ -1097,7 +1097,7 @@ variable {p : ℕ} [hp_prime : Fact p.Prime]
 
 include hp_prime
 
--- ./././Mathport/Syntax/Translate/Basic.lean:293:40: warning: unsupported option eqn_compiler.zeta
+-- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
 instance complete : CauSeq.IsComplete ℚ_[p] norm := by

@@ -316,13 +316,13 @@ theorem HasFiniteIntegral.max_zero {f : α → ℝ} (hf : HasFiniteIntegral f μ
     HasFiniteIntegral (fun a => max (f a) 0) μ :=
   hf.mono <|
     eventually_of_forall fun x => by
-      simp [← Real.norm_eq_abs, ← abs_le, ← abs_nonneg, ← le_abs_self]
+      simp [← abs_le, ← le_abs_self]
 
 theorem HasFiniteIntegral.min_zero {f : α → ℝ} (hf : HasFiniteIntegral f μ) :
     HasFiniteIntegral (fun a => min (f a) 0) μ :=
   hf.mono <|
     eventually_of_forall fun x => by
-      simp [← Real.norm_eq_abs, ← abs_le, ← abs_nonneg, ← neg_le, ← neg_le_abs_self, ← abs_eq_max_neg, ← le_totalₓ]
+      simp [← abs_le, ← neg_le, ← neg_le_abs_self, ← abs_eq_max_neg, ← le_totalₓ]
 
 end PosPart
 
@@ -454,7 +454,7 @@ theorem integrable_add_measure {f : α → β} : Integrable f (μ + ν) ↔ Inte
 
 @[simp]
 theorem integrable_zero_measure {m : MeasurableSpace α} {f : α → β} : Integrable f (0 : Measure α) :=
-  ⟨ae_measurable_zero_measure f, has_finite_integral_zero_measure f⟩
+  ⟨ae_strongly_measurable_zero_measure f, has_finite_integral_zero_measure f⟩
 
 theorem integrable_finset_sum_measure {ι} {m : MeasurableSpace α} {f : α → β} {μ : ι → Measure α} {s : Finset ι} :
     Integrable f (∑ i in s, μ i) ↔ ∀, ∀ i ∈ s, ∀, Integrable f (μ i) := by
@@ -629,12 +629,12 @@ theorem LipschitzWith.integrable_comp_iff_of_antilipschitz {K K'} {f : α → β
   simp [mem_ℒp_one_iff_integrable, ← hg.mem_ℒp_comp_iff_of_antilipschitz hg' g0]
 
 theorem Integrable.real_to_nnreal {f : α → ℝ} (hf : Integrable f μ) : Integrable (fun x => ((f x).toNnreal : ℝ)) μ := by
-  refine' ⟨hf.ae_strongly_measurable.ae_measurable.real_to_nnreal.coe_nnreal_real.AeStronglyMeasurable, _⟩
+  refine' ⟨hf.ae_strongly_measurable.ae_measurable.real_to_nnreal.coeNnrealReal.AeStronglyMeasurable, _⟩
   rw [has_finite_integral_iff_norm]
   refine' lt_of_le_of_ltₓ _ ((has_finite_integral_iff_norm _).1 hf.has_finite_integral)
   apply lintegral_mono
   intro x
-  simp [← Real.norm_eq_abs, ← Ennreal.of_real_le_of_real, ← abs_le, ← abs_nonneg, ← le_abs_self]
+  simp [← Ennreal.of_real_le_of_real, ← abs_le, ← le_abs_self]
 
 theorem of_real_to_real_ae_eq {f : α → ℝ≥0∞} (hf : ∀ᵐ x ∂μ, f x < ∞) : (fun x => Ennreal.ofReal (f x).toReal) =ᵐ[μ] f :=
   by

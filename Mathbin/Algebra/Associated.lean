@@ -183,7 +183,7 @@ theorem of_irreducible_mul {α} [Monoidₓ α] {x y : α} : Irreducible (x * y) 
 
 theorem of_irreducible_pow {α} [Monoidₓ α] {x : α} {n : ℕ} (hn : n ≠ 1) : Irreducible (x ^ n) → IsUnit x := by
   obtain hn | hn := hn.lt_or_lt
-  · simp only [← nat.lt_one_iff.mp hn, ← forall_false_left, ← not_irreducible_one, ← pow_zeroₓ]
+  · simp only [← nat.lt_one_iff.mp hn, ← IsEmpty.forall_iff, ← not_irreducible_one, ← pow_zeroₓ]
     
   intro h
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_lt hn

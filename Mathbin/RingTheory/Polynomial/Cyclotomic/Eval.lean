@@ -82,7 +82,7 @@ theorem cyclotomic_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] (x :
   · simpa only [← mem_singleton] using hn''.ne'
     
   rcases lt_trichotomyₓ 0 (∑ i in range n, x ^ i) with (h | h | h)
-  · apply pos_of_mul_pos_right
+  · apply pos_of_mul_pos_left
     · rwa [this]
       
     rw [eval_prod]

@@ -222,11 +222,11 @@ is an order embedding from `fin k` to `α` whose image is contained in `s`. Spec
 def orderEmbOfCardLe (s : Finset α) {k : ℕ} (h : k ≤ s.card) : Finₓ k ↪o α :=
   (Finₓ.castLe h).trans (s.orderEmbOfFin rfl)
 
-theorem order_emb_of_card_le_mem (s : Finset α) {k : ℕ} (h : k ≤ s.card) a : orderEmbOfCardLe s h a ∈ s := by
+theorem order_emb_of_card_le_mem (s : Finset α) {k : ℕ} (h : k ≤ s.card) (a) : orderEmbOfCardLe s h a ∈ s := by
   simp only [← order_emb_of_card_le, ← RelEmbedding.coe_trans, ← Finset.order_emb_of_fin_mem]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » s)
-theorem card_le_of_interleaved {s t : Finset α} (h : ∀ x y _ : x ∈ s _ : y ∈ s, x < y → ∃ z ∈ t, x < z ∧ z < y) :
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » s)
+theorem card_le_of_interleaved {s t : Finset α} (h : ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), x < y → ∃ z ∈ t, x < z ∧ z < y) :
     s.card ≤ t.card + 1 := by
   have h1 : ∀ i : Finₓ (s.card - 1), ↑i + 1 < (s.sort (· ≤ ·)).length := by
     intro i

@@ -52,7 +52,6 @@ section Semiringₓ
 variable {ι 𝕜 F : Type _} [Fintype ι] [Semiringₓ 𝕜] [TopologicalSpace 𝕜] [AddCommMonoidₓ F] [Module 𝕜 F]
   [TopologicalSpace F] [HasContinuousAdd F] [HasContinuousSmul 𝕜 F]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A linear map on `ι → 𝕜` (where `ι` is a fintype) is continuous -/
 theorem LinearMap.continuous_on_pi (f : (ι → 𝕜) →ₗ[𝕜] F) : Continuous f := by
   classical
@@ -297,6 +296,10 @@ theorem coe_to_continuous_linear_map (f : E →ₗ[𝕜] F') : (f.toContinuousLi
 theorem coe_to_continuous_linear_map_symm : ⇑(toContinuousLinearMap : (E →ₗ[𝕜] F') ≃ₗ[𝕜] E →L[𝕜] F').symm = coe :=
   rfl
 
+@[simp]
+theorem det_to_continuous_linear_map (f : E →ₗ[𝕜] E) : f.toContinuousLinearMap.det = f.det :=
+  rfl
+
 end LinearMap
 
 namespace LinearEquiv
@@ -359,6 +362,16 @@ theorem coe_to_continuous_linear_equiv_of_det_ne_zero (f : E →L[𝕜] E) (hf :
 theorem to_continuous_linear_equiv_of_det_ne_zero_apply (f : E →L[𝕜] E) (hf : f.det ≠ 0) (x : E) :
     f.toContinuousLinearEquivOfDetNeZero hf x = f x :=
   rfl
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
+theorem _root_.matrix.to_lin_fin_two_prod_to_continuous_linear_map (a b c d : 𝕜) :
+    (Matrix.toLin (Basis.finTwoProd 𝕜) (Basis.finTwoProd 𝕜)
+          («expr!![ »
+            "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation")).toContinuousLinearMap =
+      (a • ContinuousLinearMap.fst 𝕜 𝕜 𝕜 + b • ContinuousLinearMap.snd 𝕜 𝕜 𝕜).Prod
+        (c • ContinuousLinearMap.fst 𝕜 𝕜 𝕜 + d • ContinuousLinearMap.snd 𝕜 𝕜 𝕜) :=
+  ContinuousLinearMap.ext <| Matrix.to_lin_fin_two_prod_apply _ _ _ _
 
 end ContinuousLinearMap
 

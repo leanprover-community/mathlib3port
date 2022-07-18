@@ -49,7 +49,7 @@ class ExponentialIdeal : Prop where
 /-- To show `i` is an exponential ideal it suffices to show that `A ⟹ iB` is "in" `D` for any `A` in
 `C` and `B` in `D`.
 -/
-theorem ExponentialIdeal.mk' (h : ∀ B : D A : C, (A ⟹ i.obj B) ∈ i.EssImage) : ExponentialIdeal i :=
+theorem ExponentialIdeal.mk' (h : ∀ (B : D) (A : C), (A ⟹ i.obj B) ∈ i.EssImage) : ExponentialIdeal i :=
   ⟨fun B hB A => by
     rcases hB with ⟨B', ⟨iB'⟩⟩
     exact functor.ess_image.of_iso ((exp A).mapIso iB') (h B' A)⟩

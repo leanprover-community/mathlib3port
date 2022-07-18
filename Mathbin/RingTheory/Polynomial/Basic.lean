@@ -87,7 +87,7 @@ theorem degree_le_eq_span_X_pow {n : ℕ} :
 
 theorem mem_degree_lt {n : ℕ} {f : R[X]} : f ∈ degreeLt R n ↔ degree f < n := by
   simp_rw [degree_lt, Submodule.mem_infi, LinearMap.mem_ker, degree, Finset.sup_lt_iff (WithBot.bot_lt_coe n),
-    mem_support_iff, WithBot.some_eq_coe, WithBot.coe_lt_coe, lt_iff_not_le, Ne, not_imp_not]
+    mem_support_iff, WithBot.coe_lt_coe, lt_iff_not_le, Ne, not_imp_not]
   rfl
 
 @[mono]
@@ -114,7 +114,7 @@ theorem degree_lt_eq_span_X_pow {n : ℕ} :
   exact lt_of_le_of_ltₓ (degree_X_pow_le _) (WithBot.coe_lt_coe.2 <| Finset.mem_range.1 hk)
 
 /-- The first `n` coefficients on `degree_lt n` form a linear equivalence with `fin n → R`. -/
-def degreeLtEquiv R [Semiringₓ R] (n : ℕ) : degreeLt R n ≃ₗ[R] Finₓ n → R where
+def degreeLtEquiv (R) [Semiringₓ R] (n : ℕ) : degreeLt R n ≃ₗ[R] Finₓ n → R where
   toFun := fun p n => (↑p : R[X]).coeff n
   invFun := fun f =>
     ⟨∑ i : Finₓ n, monomial i (f i),
@@ -445,7 +445,7 @@ def ofPolynomial (I : Ideal R[X]) : Submodule R R[X] where
 
 variable {I : Ideal R[X]}
 
-theorem mem_of_polynomial x : x ∈ I.ofPolynomial ↔ x ∈ I :=
+theorem mem_of_polynomial (x) : x ∈ I.ofPolynomial ↔ x ∈ I :=
   Iff.rfl
 
 variable (I)
@@ -518,7 +518,7 @@ theorem _root_.polynomial.ker_map_ring_hom (f : R →+* S) : (Polynomial.mapRing
 
 variable (I : Ideal R[X])
 
-theorem mem_leading_coeff_nth (n : ℕ) x : x ∈ I.leadingCoeffNth n ↔ ∃ p ∈ I, degree p ≤ n ∧ p.leadingCoeff = x := by
+theorem mem_leading_coeff_nth (n : ℕ) (x) : x ∈ I.leadingCoeffNth n ↔ ∃ p ∈ I, degree p ≤ n ∧ p.leadingCoeff = x := by
   simp only [← leading_coeff_nth, ← degree_le, ← Submodule.mem_map, ← lcoeff_apply, ← Submodule.mem_inf, ←
     mem_degree_le]
   constructor
@@ -545,7 +545,7 @@ theorem mem_leading_coeff_nth (n : ℕ) x : x ∈ I.leadingCoeffNth n ↔ ∃ p 
       
     
 
-theorem mem_leading_coeff_nth_zero x : x ∈ I.leadingCoeffNth 0 ↔ c x ∈ I :=
+theorem mem_leading_coeff_nth_zero (x) : x ∈ I.leadingCoeffNth 0 ↔ c x ∈ I :=
   (mem_leading_coeff_nth _ _ _).trans
     ⟨fun ⟨p, hpI, hpdeg, hpx⟩ => by
       rwa [← hpx, Polynomial.leadingCoeff, Nat.eq_zero_of_le_zeroₓ (nat_degree_le_of_degree_le hpdeg), ←
@@ -562,7 +562,7 @@ theorem leading_coeff_nth_mono {m n : ℕ} (H : m ≤ n) : I.leadingCoeffNth m �
   rw [← WithBot.coe_add, add_tsub_cancel_of_le H]
   exact le_rfl
 
-theorem mem_leading_coeff x : x ∈ I.leadingCoeff ↔ ∃ p ∈ I, Polynomial.leadingCoeff p = x := by
+theorem mem_leading_coeff (x) : x ∈ I.leadingCoeff ↔ ∃ p ∈ I, Polynomial.leadingCoeff p = x := by
   rw [leading_coeff, Submodule.mem_supr_of_directed]
   simp only [← mem_leading_coeff_nth]
   · constructor
@@ -574,6 +574,28 @@ theorem mem_leading_coeff x : x ∈ I.leadingCoeff ↔ ∃ p ∈ I, Polynomial.l
     
   intro i j
   exact ⟨i + j, I.leading_coeff_nth_mono (Nat.le_add_rightₓ _ _), I.leading_coeff_nth_mono (Nat.le_add_leftₓ _ _)⟩
+
+/-- If `I` is an ideal, and `pᵢ` is a finite family of polynomials each satisfying
+`∀ k, (pᵢ)ₖ ∈ Iⁿⁱ⁻ᵏ` for some `nᵢ`, then `p = ∏ pᵢ` also satisfies `∀ k, pₖ ∈ Iⁿ⁻ᵏ` with `n = ∑ nᵢ`.
+-/
+theorem _root_.polynomial.coeff_prod_mem_ideal_pow_tsub {ι : Type _} (s : Finset ι) (f : ι → R[X]) (I : Ideal R)
+    (n : ι → ℕ) (h : ∀, ∀ i ∈ s, ∀ (k), (f i).coeff k ∈ I ^ (n i - k)) (k : ℕ) :
+    (s.Prod f).coeff k ∈ I ^ (s.Sum n - k) := by
+  classical
+  induction' s using Finset.induction with a s ha hs generalizing k
+  · rw [sum_empty, prod_empty, coeff_one, zero_tsub, pow_zeroₓ, Ideal.one_eq_top]
+    exact Submodule.mem_top
+    
+  · rw [sum_insert ha, prod_insert ha, coeff_mul]
+    apply sum_mem
+    rintro ⟨i, j⟩ e
+    obtain rfl : i + j = k := nat.mem_antidiagonal.mp e
+    apply Ideal.pow_le_pow add_tsub_add_le_tsub_add_tsub
+    rw [pow_addₓ]
+    exact
+      Ideal.mul_mem_mul (h _ (finset.mem_insert.mpr <| Or.inl rfl) _)
+        (hs (fun i hi k => h _ (finset.mem_insert.mpr <| Or.inr hi) _) j)
+    
 
 end CommSemiringₓ
 
@@ -786,7 +808,6 @@ theorem prime_C_iff : Prime (c r : MvPolynomial σ R) ↔ Prime r :=
 
 variable {σ}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem prime_rename_iff (s : Set σ) {p : MvPolynomial s R} : Prime (rename (coe : s → σ) p) ↔ Prime p := by
   classical
   symm
@@ -814,7 +835,6 @@ end Prime
 
 namespace Polynomial
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 instance (priority := 100) {R : Type _} [CommRingₓ R] [IsDomain R] [WfDvdMonoid R] :
     WfDvdMonoid R[X] where well_founded_dvd_not_unit := by
     classical

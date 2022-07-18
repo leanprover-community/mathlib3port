@@ -3,7 +3,7 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Combinatorics.SimpleGraph.Connectivity
+import Mathbin.Combinatorics.SimpleGraph.Prod
 import Mathbin.Data.Fin.SuccPred
 import Mathbin.Order.SuccPred.Relation
 
@@ -57,6 +57,17 @@ theorem hasse_dual_iso_symm_apply (a : α) : hasseDualIso.symm a = toDual a :=
   rfl
 
 end Preorderₓ
+
+section PartialOrderₓ
+
+variable [PartialOrderₓ α] [PartialOrderₓ β]
+
+@[simp]
+theorem hasse_prod : hasse (α × β) = hasse α □ hasse β := by
+  ext x y
+  simp_rw [box_prod_adj, hasse_adj, Prod.covby_iff, or_and_distrib_right, @eq_comm _ y.1, @eq_comm _ y.2, or_or_or_comm]
+
+end PartialOrderₓ
 
 section LinearOrderₓ
 

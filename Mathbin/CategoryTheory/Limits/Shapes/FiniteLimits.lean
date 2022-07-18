@@ -55,7 +55,7 @@ instance (priority := 100) has_finite_limits_of_has_limits [HasLimits C] : HasFi
 arbitrary universe. -/
 theorem has_finite_limits_of_has_finite_limits_of_size
     (h :
-      ∀ J : Type w {𝒥 : SmallCategory J} hJ : @FinCategory J 𝒥, by
+      ∀ (J : Type w) {𝒥 : SmallCategory J} (hJ : @FinCategory J 𝒥), by
         skip
         exact has_limits_of_shape J C) :
     HasFiniteLimits C :=
@@ -90,7 +90,7 @@ instance (priority := 100) has_finite_colimits_of_has_colimits_of_size [HasColim
 arbitrary universe. -/
 theorem has_finite_colimits_of_has_finite_colimits_of_size
     (h :
-      ∀ J : Type w {𝒥 : SmallCategory J} hJ : @FinCategory J 𝒥, by
+      ∀ (J : Type w) {𝒥 : SmallCategory J} (hJ : @FinCategory J 𝒥), by
         skip
         exact has_colimits_of_shape J C) :
     HasFiniteColimits C :=

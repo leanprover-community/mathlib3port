@@ -5,6 +5,7 @@ Authors: Scott Morrison, Bhavik Mehta
 -/
 import Mathbin.CategoryTheory.Monad.Basic
 import Mathbin.CategoryTheory.Adjunction.Basic
+import Mathbin.CategoryTheory.Functor.EpiMono
 
 /-!
 # Eilenberg-Moore (co)algebras for a (co)monad
@@ -171,6 +172,16 @@ theorem algebra_iso_of_iso {A B : Algebra T} (f : A ⟶ B) [IsIso f.f] : IsIso f
 instance forget_reflects_iso : ReflectsIsomorphisms T.forget where reflects := fun A B => algebra_iso_of_iso T
 
 instance forget_faithful : Faithful T.forget where
+
+/-- Given an algebra morphism whose carrier part is an epimorphism, we get an algebra epimorphism.
+-/
+theorem algebra_epi_of_epi {X Y : Algebra T} (f : X ⟶ Y) [h : Epi f.f] : Epi f :=
+  (forget T).epi_of_epi_map h
+
+/-- Given an algebra morphism whose carrier part is a monomorphism, we get an algebra monomorphism.
+-/
+theorem algebra_mono_of_mono {X Y : Algebra T} (f : X ⟶ Y) [h : Mono f.f] : Mono f :=
+  (forget T).mono_of_mono_map h
 
 instance : IsRightAdjoint T.forget :=
   ⟨T.free, T.adj⟩
@@ -413,6 +424,16 @@ theorem coalgebra_iso_of_iso {A B : Coalgebra G} (f : A ⟶ B) [IsIso f.f] : IsI
 instance forget_reflects_iso : ReflectsIsomorphisms G.forget where reflects := fun A B => coalgebra_iso_of_iso G
 
 instance forget_faithful : Faithful (forget G) where
+
+/-- Given a coalgebra morphism whose carrier part is an epimorphism, we get an algebra epimorphism.
+-/
+theorem algebra_epi_of_epi {X Y : Coalgebra G} (f : X ⟶ Y) [h : Epi f.f] : Epi f :=
+  (forget G).epi_of_epi_map h
+
+/-- Given a coalgebra morphism whose carrier part is a monomorphism, we get an algebra monomorphism.
+-/
+theorem algebra_mono_of_mono {X Y : Coalgebra G} (f : X ⟶ Y) [h : Mono f.f] : Mono f :=
+  (forget G).mono_of_mono_map h
 
 instance : IsLeftAdjoint G.forget :=
   ⟨_, G.adj⟩

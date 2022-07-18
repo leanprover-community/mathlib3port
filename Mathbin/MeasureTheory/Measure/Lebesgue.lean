@@ -48,7 +48,7 @@ variable {ι : Type _} [Fintype ι]
 
 open TopologicalSpace
 
-theorem volume_val s : volume s = StieltjesFunction.id.Measure s :=
+theorem volume_val (s) : volume s = StieltjesFunction.id.Measure s :=
   rfl
 
 @[simp]
@@ -401,7 +401,6 @@ theorem map_matrix_volume_pi_eq_smul_volume_pi [DecidableEq ι] {M : Matrix ι �
       
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Any invertible linear map rescales Lebesgue measure through the absolute value of its
 determinant. -/
 theorem map_linear_map_volume_pi_eq_smul_volume_pi {f : (ι → ℝ) →ₗ[ℝ] ι → ℝ} (hf : f.det ≠ 0) :
@@ -451,6 +450,43 @@ theorem measurable_set_region_between (hf : Measurable f) (hg : Measurable g) (h
       ((measurable_set_lt (hf.comp measurable_fst) measurable_snd).inter
         (measurable_set_lt measurable_snd (hg.comp measurable_fst)))
   exact measurable_fst hs
+
+/-- The region between two measurable functions on a measurable set is measurable;
+a version for the region together with the graph of the upper function. -/
+theorem measurable_set_region_between_oc (hf : Measurable f) (hg : Measurable g) (hs : MeasurableSet s) :
+    MeasurableSet { p : α × ℝ | p.fst ∈ s ∧ p.snd ∈ Ioc (f p.fst) (g p.fst) } := by
+  dsimp' only [← RegionBetween, ← Ioc, ← mem_set_of_eq, ← set_of_and]
+  refine'
+    MeasurableSet.inter _
+      ((measurable_set_lt (hf.comp measurable_fst) measurable_snd).inter
+        (measurable_set_le measurable_snd (hg.comp measurable_fst)))
+  exact measurable_fst hs
+
+/-- The region between two measurable functions on a measurable set is measurable;
+a version for the region together with the graph of the lower function. -/
+theorem measurable_set_region_between_co (hf : Measurable f) (hg : Measurable g) (hs : MeasurableSet s) :
+    MeasurableSet { p : α × ℝ | p.fst ∈ s ∧ p.snd ∈ Ico (f p.fst) (g p.fst) } := by
+  dsimp' only [← RegionBetween, ← Ico, ← mem_set_of_eq, ← set_of_and]
+  refine'
+    MeasurableSet.inter _
+      ((measurable_set_le (hf.comp measurable_fst) measurable_snd).inter
+        (measurable_set_lt measurable_snd (hg.comp measurable_fst)))
+  exact measurable_fst hs
+
+/-- The region between two measurable functions on a measurable set is measurable;
+a version for the region together with the graphs of both functions. -/
+theorem measurable_set_region_between_cc (hf : Measurable f) (hg : Measurable g) (hs : MeasurableSet s) :
+    MeasurableSet { p : α × ℝ | p.fst ∈ s ∧ p.snd ∈ Icc (f p.fst) (g p.fst) } := by
+  dsimp' only [← RegionBetween, ← Icc, ← mem_set_of_eq, ← set_of_and]
+  refine'
+    MeasurableSet.inter _
+      ((measurable_set_le (hf.comp measurable_fst) measurable_snd).inter
+        (measurable_set_le measurable_snd (hg.comp measurable_fst)))
+  exact measurable_fst hs
+
+/-- The graph of a measurable function is a measurable set. -/
+theorem measurable_set_graph (hf : Measurable f) : MeasurableSet { p : α × ℝ | p.snd = f p.fst } := by
+  simpa using measurable_set_region_between_cc hf hf MeasurableSet.univ
 
 theorem volume_region_between_eq_lintegral' (hf : Measurable f) (hg : Measurable g) (hs : MeasurableSet s) :
     μ.Prod volume (RegionBetween f g s) = ∫⁻ y in s, Ennreal.ofReal ((g - f) y) ∂μ := by

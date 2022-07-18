@@ -179,7 +179,7 @@ equal to one.
 
 -/
 def GeneralizedContinuedFraction.IsSimpleContinuedFraction (g : GeneralizedContinuedFraction α) [One α] : Prop :=
-  ∀ n : ℕ aₙ : α, g.partialNumerators.nth n = some aₙ → aₙ = 1
+  ∀ (n : ℕ) (aₙ : α), g.partialNumerators.nth n = some aₙ → aₙ = 1
 
 variable (α)
 
@@ -233,7 +233,7 @@ end SimpleContinuedFraction
 `bᵢ` are positive, i.e. `0 < bᵢ`.
 -/
 def SimpleContinuedFraction.IsContinuedFraction [One α] [Zero α] [LT α] (s : SimpleContinuedFraction α) : Prop :=
-  ∀ n : ℕ bₙ : α, (↑s : GeneralizedContinuedFraction α).partialDenominators.nth n = some bₙ → 0 < bₙ
+  ∀ (n : ℕ) (bₙ : α), (↑s : GeneralizedContinuedFraction α).partialDenominators.nth n = some bₙ → 0 < bₙ
 
 variable (α)
 

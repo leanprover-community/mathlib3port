@@ -689,7 +689,7 @@ lemmas instead. -/
 theorem has_integral_of_bRiemann_eq_ff_of_forall_is_o (hl : l.bRiemann = ff) (B : ι →ᵇᵃ[I] ℝ) (hB0 : ∀ J, 0 ≤ B J)
     (g : ι →ᵇᵃ[I] F) (s : Set ℝⁿ) (hs : s.Countable) (hlH : s.Nonempty → l.bHenstock = tt)
     (H₁ :
-      ∀ c : ℝ≥0 ,
+      ∀ (c : ℝ≥0 ),
         ∀ x ∈ I.Icc ∩ s,
           ∀,
             ∀ ε > (0 : ℝ),
@@ -701,7 +701,7 @@ theorem has_integral_of_bRiemann_eq_ff_of_forall_is_o (hl : l.bRiemann = ff) (B 
                         J.Icc ⊆ Metric.ClosedBall x δ →
                           x ∈ J.Icc → (l.bDistortion → J.distortion ≤ c) → dist (vol J (f x)) (g J) ≤ ε)
     (H₂ :
-      ∀ c : ℝ≥0 ,
+      ∀ (c : ℝ≥0 ),
         ∀ x ∈ I.Icc \ s,
           ∀,
             ∀ ε > (0 : ℝ),
@@ -810,7 +810,7 @@ Then `f` is integrable on `I along `l` with integral `g I`. -/
 theorem has_integral_of_le_Henstock_of_forall_is_o (hl : l ≤ Henstock) (B : ι →ᵇᵃ[I] ℝ) (hB0 : ∀ J, 0 ≤ B J)
     (g : ι →ᵇᵃ[I] F) (s : Set ℝⁿ) (hs : s.Countable)
     (H₁ :
-      ∀ c : ℝ≥0 ,
+      ∀ (c : ℝ≥0 ),
         ∀ x ∈ I.Icc ∩ s,
           ∀,
             ∀ ε > (0 : ℝ),
@@ -822,7 +822,7 @@ theorem has_integral_of_le_Henstock_of_forall_is_o (hl : l ≤ Henstock) (B : ι
                         J.Icc ⊆ Metric.ClosedBall x δ →
                           x ∈ J.Icc → (l.bDistortion → J.distortion ≤ c) → dist (vol J (f x)) (g J) ≤ ε)
     (H₂ :
-      ∀ c : ℝ≥0 ,
+      ∀ (c : ℝ≥0 ),
         ∀ x ∈ I.Icc \ s,
           ∀,
             ∀ ε > (0 : ℝ),
@@ -860,7 +860,7 @@ less than or equal to `ε * B J`.
 Then `f` is McShane integrable on `I` with integral `g I`. -/
 theorem has_integral_McShane_of_forall_is_o (B : ι →ᵇᵃ[I] ℝ) (hB0 : ∀ J, 0 ≤ B J) (g : ι →ᵇᵃ[I] F)
     (H :
-      ∀ c : ℝ≥0 ,
+      ∀ (c : ℝ≥0 ),
         ∀ x ∈ I.Icc,
           ∀,
             ∀ ε > (0 : ℝ),

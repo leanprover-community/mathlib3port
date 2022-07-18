@@ -41,15 +41,15 @@ theorem join_zero : @join α 0 = 0 :=
   rfl
 
 @[simp]
-theorem join_cons s S : @join α (s ::ₘ S) = s + join S :=
+theorem join_cons (s S) : @join α (s ::ₘ S) = s + join S :=
   sum_cons _ _
 
 @[simp]
-theorem join_add S T : @join α (S + T) = join S + join T :=
+theorem join_add (S T) : @join α (S + T) = join S + join T :=
   sum_add _ _
 
 @[simp]
-theorem singleton_join a : join ({a} : Multiset (Multiset α)) = a :=
+theorem singleton_join (a) : join ({a} : Multiset (Multiset α)) = a :=
   sum_singleton _
 
 @[simp]
@@ -61,7 +61,7 @@ theorem mem_join {a S} : a ∈ @join α S ↔ ∃ s ∈ S, a ∈ s :=
     simp (config := { contextual := true })[← or_and_distrib_right, ← exists_or_distrib]
 
 @[simp]
-theorem card_join S : card (@join α S) = sum (map card S) :=
+theorem card_join (S) : card (@join α S) = sum (map card S) :=
   Multiset.induction_on S
     (by
       simp )
@@ -214,7 +214,6 @@ theorem count_bind [DecidableEq α] {m : Multiset β} {f : β → Multiset α} {
     count a (bind m f) = sum (m.map fun b => count a <| f b) :=
   count_sum
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem le_bind {α β : Type _} {f : α → Multiset β} (S : Multiset α) {x : α} (hx : x ∈ S) : f x ≤ S.bind f := by
   classical
   rw [le_iff_count]

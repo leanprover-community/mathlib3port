@@ -89,8 +89,8 @@ abbrev HasCoproduct (f : β → C) :=
   just a convenience lemma to avoid having to go through `discrete` -/
 @[simps]
 def mkFanLimit {f : β → C} (t : Fan f) (lift : ∀ s : Fan f, s.x ⟶ t.x)
-    (fac : ∀ s : Fan f j : β, lift s ≫ t.proj j = s.proj j)
-    (uniq : ∀ s : Fan f m : s.x ⟶ t.x w : ∀ j : β, m ≫ t.proj j = s.proj j, m = lift s) : IsLimit t :=
+    (fac : ∀ (s : Fan f) (j : β), lift s ≫ t.proj j = s.proj j)
+    (uniq : ∀ (s : Fan f) (m : s.x ⟶ t.x) (w : ∀ j : β, m ≫ t.proj j = s.proj j), m = lift s) : IsLimit t :=
   { lift,
     fac' := fun s j => by
       convert fac s j.as <;> simp ,
@@ -198,12 +198,12 @@ theorem pi_comparison_comp_π [HasProduct f] [HasProduct fun b => G.obj (f b)] (
     piComparison G f ≫ Pi.π _ b = G.map (Pi.π f b) :=
   limit.lift_π _ (Discrete.mk b)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]
 @[simp, reassoc]
 theorem map_lift_pi_comparison [HasProduct f] [HasProduct fun b => G.obj (f b)] (P : C) (g : ∀ j, P ⟶ f j) :
     G.map (Pi.lift g) ≫ piComparison G f = Pi.lift fun j => G.map (g j) := by
   ext
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]"
   simp [G.map_comp]
 
 /-- The comparison morphism for the coproduct of `f`. This is an iso iff `G` preserves the coproduct
@@ -216,12 +216,12 @@ theorem ι_comp_sigma_comparison [HasCoproduct f] [HasCoproduct fun b => G.obj (
     Sigma.ι _ b ≫ sigmaComparison G f = G.map (Sigma.ι f b) :=
   colimit.ι_desc _ (Discrete.mk b)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]
 @[simp, reassoc]
 theorem sigma_comparison_map_desc [HasCoproduct f] [HasCoproduct fun b => G.obj (f b)] (P : C) (g : ∀ j, f j ⟶ P) :
     sigmaComparison G f ≫ G.map (Sigma.desc g) = Sigma.desc fun j => G.map (g j) := by
   ext
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]"
   simp [G.map_comp]
 
 end Comparison
@@ -244,8 +244,8 @@ theorem has_smallest_products_of_has_products [HasProducts.{w} C] : HasProducts.
 theorem has_smallest_coproducts_of_has_coproducts [HasCoproducts.{w} C] : HasCoproducts.{0} C := fun J =>
   has_colimits_of_shape_of_equivalence (Discrete.equivalence Equivₓ.ulift : Discrete (ULift.{w} J) ≌ _)
 
-theorem has_products_of_limit_fans (lf : ∀ {J : Type w} f : J → C, Fan f)
-    (lf_is_limit : ∀ {J : Type w} f : J → C, IsLimit (lf f)) : HasProducts.{w} C := fun J : Type w =>
+theorem has_products_of_limit_fans (lf : ∀ {J : Type w} (f : J → C), Fan f)
+    (lf_is_limit : ∀ {J : Type w} (f : J → C), IsLimit (lf f)) : HasProducts.{w} C := fun J : Type w =>
   { HasLimit := fun F =>
       HasLimit.mk
         ⟨(Cones.postcompose Discrete.natIsoFunctor.inv).obj (lf fun j => F.obj ⟨j⟩),
@@ -290,7 +290,7 @@ instance (priority := 100) has_product_unique : HasProduct f :=
 def productUniqueIso : ∏ f ≅ f default :=
   IsLimit.conePointUniqueUpToIso (limit.isLimit _) (limitConeOfUnique f).IsLimit
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]
 /-- The colimit cocone for the coproduct over an index type with exactly one term. -/
 @[simps]
 def colimitCoconeOfUnique : ColimitCocone (Discrete.functor f) where
@@ -300,7 +300,7 @@ def colimitCoconeOfUnique : ColimitCocone (Discrete.functor f) where
         { app := fun j =>
             eqToHom
               (by
-                trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]"
+                trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]"
                 dsimp'
                 congr) } }
   IsColimit :=

@@ -50,7 +50,7 @@ theorem iterate_map_one (f : M →* M) (n : ℕ) : (f^[n]) 1 = 1 :=
   iterate_fixed f.map_one n
 
 @[simp, to_additive]
-theorem iterate_map_mul (f : M →* M) (n : ℕ) x y : (f^[n]) (x * y) = (f^[n]) x * (f^[n]) y :=
+theorem iterate_map_mul (f : M →* M) (n : ℕ) (x y) : (f^[n]) (x * y) = (f^[n]) x * (f^[n]) y :=
   Semiconj₂.iterate f.map_mul n x y
 
 end
@@ -58,17 +58,17 @@ end
 variable [Monoidₓ M] [Monoidₓ N] [Groupₓ G] [Groupₓ H]
 
 @[simp, to_additive]
-theorem iterate_map_inv (f : G →* G) (n : ℕ) x : (f^[n]) x⁻¹ = ((f^[n]) x)⁻¹ :=
+theorem iterate_map_inv (f : G →* G) (n : ℕ) (x) : (f^[n]) x⁻¹ = ((f^[n]) x)⁻¹ :=
   Commute.iterate_left f.map_inv n x
 
 @[simp, to_additive]
-theorem iterate_map_div (f : G →* G) (n : ℕ) x y : (f^[n]) (x / y) = (f^[n]) x / (f^[n]) y :=
+theorem iterate_map_div (f : G →* G) (n : ℕ) (x y) : (f^[n]) (x / y) = (f^[n]) x / (f^[n]) y :=
   Semiconj₂.iterate f.map_div n x y
 
-theorem iterate_map_pow (f : M →* M) (n : ℕ) a (m : ℕ) : (f^[n]) (a ^ m) = (f^[n]) a ^ m :=
+theorem iterate_map_pow (f : M →* M) (n : ℕ) (a) (m : ℕ) : (f^[n]) (a ^ m) = (f^[n]) a ^ m :=
   Commute.iterate_left (fun x => f.map_pow x m) n a
 
-theorem iterate_map_zpow (f : G →* G) (n : ℕ) a (m : ℤ) : (f^[n]) (a ^ m) = (f^[n]) a ^ m :=
+theorem iterate_map_zpow (f : G →* G) (n : ℕ) (a) (m : ℤ) : (f^[n]) (a ^ m) = (f^[n]) a ^ m :=
   Commute.iterate_left (fun x => f.map_zpow x m) n a
 
 theorem coe_pow {M} [CommMonoidₓ M] (f : Monoidₓ.End M) (n : ℕ) : ⇑(f ^ n) = f^[n] :=
@@ -120,7 +120,7 @@ theorem iterate_map_add : (f^[n]) (x + y) = (f^[n]) x + (f^[n]) y :=
 theorem iterate_map_mul : (f^[n]) (x * y) = (f^[n]) x * (f^[n]) y :=
   f.toMonoidHom.iterate_map_mul n x y
 
-theorem iterate_map_pow a (n m : ℕ) : (f^[n]) (a ^ m) = (f^[n]) a ^ m :=
+theorem iterate_map_pow (a) (n m : ℕ) : (f^[n]) (a ^ m) = (f^[n]) a ^ m :=
   f.toMonoidHom.iterate_map_pow n a m
 
 theorem iterate_map_smul (n m : ℕ) (x : R) : (f^[n]) (m • x) = m • (f^[n]) x :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
 import Mathbin.Data.Set.Pointwise
-import Mathbin.GroupTheory.Submonoid.Operations
+import Mathbin.GroupTheory.Submonoid.Membership
 
 /-! # Pointwise instances on `submonoid`s and `add_submonoid`s
 
@@ -22,8 +22,13 @@ which matches the action of `mul_action_set`.
 
 These are all available in the `pointwise` locale.
 
-Additionally, it provides `add_submonoid.has_mul`, which is available globally to match
-`submodule.has_mul`.
+Additionally, it provides various degrees of monoid structure:
+* `add_submonoid.has_one`
+* `add_submonoid.has_mul`
+* `add_submonoid.mul_one_class`
+* `add_submonoid.semigroup`
+* `add_submonoid.monoid`
+which is available globally to match the monoid structure implied by `submodule.semiring`.
 
 ## Implementation notes
 
@@ -56,7 +61,7 @@ protected def hasInv :
         show (1 : G)⁻¹ ∈ S by
           rw [inv_one]
           exact S.one_mem,
-      mul_mem' := fun a b ha : a⁻¹ ∈ S hb : b⁻¹ ∈ S =>
+      mul_mem' := fun a b (ha : a⁻¹ ∈ S) (hb : b⁻¹ ∈ S) =>
         show (a * b)⁻¹ ∈ S by
           rw [mul_inv_rev]
           exact S.mul_mem hb ha }
@@ -321,17 +326,46 @@ theorem le_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) {S T : AddSubmonoid A} 
 
 end GroupWithZeroₓ
 
-open Pointwise
-
 end AddSubmonoid
 
-/-! ### Elementwise multiplication of two additive submonoids
+/-! ### Elementwise monoid structure of additive submonoids
 
 These definitions are a cut-down versions of the ones around `submodule.has_mul`, as that API is
 usually more useful. -/
 
 
 namespace AddSubmonoid
+
+open Pointwise
+
+section AddMonoidWithOneₓ
+
+variable [AddMonoidWithOneₓ R]
+
+instance : One (AddSubmonoid R) :=
+  ⟨(Nat.castAddMonoidHom R).mrange⟩
+
+theorem one_eq_mrange : (1 : AddSubmonoid R) = (Nat.castAddMonoidHom R).mrange :=
+  rfl
+
+theorem nat_cast_mem_one (n : ℕ) : (n : R) ∈ (1 : AddSubmonoid R) :=
+  ⟨_, rfl⟩
+
+@[simp]
+theorem mem_one {x : R} : x ∈ (1 : AddSubmonoid R) ↔ ∃ n : ℕ, ↑n = x :=
+  Iff.rfl
+
+theorem one_eq_closure : (1 : AddSubmonoid R) = closure {1} := by
+  simp only [← closure_singleton_eq, ← mul_oneₓ, ← one_eq_mrange]
+  congr 1 with n
+  simp
+
+theorem one_eq_closure_one_set : (1 : AddSubmonoid R) = closure 1 :=
+  one_eq_closure
+
+end AddMonoidWithOneₓ
+
+section NonUnitalNonAssocSemiringₓ
 
 variable [NonUnitalNonAssocSemiringₓ R]
 
@@ -357,8 +391,6 @@ protected theorem mul_induction_on {M N : AddSubmonoid R} {C : R → Prop} {r : 
 
 open Pointwise
 
-variable (R)
-
 -- this proof is copied directly from `submodule.span_mul_span`
 theorem closure_mul_closure (S T : Set R) : closure S * closure T = closure (S * T) := by
   apply le_antisymmₓ
@@ -381,7 +413,8 @@ theorem closure_mul_closure (S T : Set R) : closure S * closure T = closure (S *
     exact mul_mem_mul (subset_closure ha) (subset_closure hb)
     
 
-variable {R}
+theorem mul_eq_closure_mul_set (M N : AddSubmonoid R) : M * N = closure (M * N) := by
+  rw [← closure_mul_closure, closure_eq, closure_eq]
 
 @[simp]
 theorem mul_bot (S : AddSubmonoid R) : S * ⊥ = ⊥ :=
@@ -408,6 +441,92 @@ theorem mul_le_mul_right {M N P : AddSubmonoid R} (h : N ≤ P) : M * N ≤ M * 
 theorem mul_subset_mul {M N : AddSubmonoid R} : (↑M : Set R) * (↑N : Set R) ⊆ (↑(M * N) : Set R) := by
   rintro _ ⟨i, j, hi, hj, rfl⟩
   exact mul_mem_mul hi hj
+
+end NonUnitalNonAssocSemiringₓ
+
+section NonUnitalNonAssocRing
+
+variable [NonUnitalNonAssocRing R]
+
+/-- `add_submonoid.has_pointwise_neg` distributes over multiplication.
+
+This is available as an instance in the `pointwise` locale. -/
+protected def hasDistribNeg : HasDistribNeg (AddSubmonoid R) :=
+  { AddSubmonoid.hasInvolutiveNeg with neg := Neg.neg,
+    neg_mul := fun x y => by
+      refine'
+          le_antisymmₓ (mul_le.2 fun m hm n hn => _) ((AddSubmonoid.neg_le _ _).2 <| mul_le.2 fun m hm n hn => _) <;>
+        simp only [← AddSubmonoid.mem_neg, neg_mul] at *
+      · exact mul_mem_mul hm hn
+        
+      · exact mul_mem_mul (neg_mem_neg.2 hm) hn
+        ,
+    mul_neg := fun x y => by
+      refine'
+          le_antisymmₓ (mul_le.2 fun m hm n hn => _) ((AddSubmonoid.neg_le _ _).2 <| mul_le.2 fun m hm n hn => _) <;>
+        simp only [← AddSubmonoid.mem_neg, mul_neg] at *
+      · exact mul_mem_mul hm hn
+        
+      · exact mul_mem_mul hm (neg_mem_neg.2 hn)
+         }
+
+localized [Pointwise] attribute [instance] AddSubmonoid.hasDistribNeg
+
+end NonUnitalNonAssocRing
+
+section NonAssocSemiringₓ
+
+variable [NonAssocSemiringₓ R]
+
+instance : MulOneClassₓ (AddSubmonoid R) where
+  one := 1
+  mul := (· * ·)
+  one_mul := fun M => by
+    rw [one_eq_closure_one_set, ← closure_eq M, closure_mul_closure, one_mulₓ]
+  mul_one := fun M => by
+    rw [one_eq_closure_one_set, ← closure_eq M, closure_mul_closure, mul_oneₓ]
+
+end NonAssocSemiringₓ
+
+section NonUnitalSemiringₓ
+
+variable [NonUnitalSemiringₓ R]
+
+instance : Semigroupₓ (AddSubmonoid R) where
+  mul := (· * ·)
+  mul_assoc := fun M N P =>
+    le_antisymmₓ
+      (mul_le.2 fun mn hmn p hp =>
+        suffices M * N ≤ (M * (N * P)).comap (AddMonoidHom.mulRight p) from this hmn
+        mul_le.2 fun m hm n hn =>
+          show m * n * p ∈ M * (N * P) from (mul_assoc m n p).symm ▸ mul_mem_mul hm (mul_mem_mul hn hp))
+      (mul_le.2 fun m hm np hnp =>
+        suffices N * P ≤ (M * N * P).comap (AddMonoidHom.mulLeft m) from this hnp
+        mul_le.2 fun n hn p hp =>
+          show m * (n * p) ∈ M * N * P from mul_assoc m n p ▸ mul_mem_mul (mul_mem_mul hm hn) hp)
+
+end NonUnitalSemiringₓ
+
+section Semiringₓ
+
+variable [Semiringₓ R]
+
+instance : Monoidₓ (AddSubmonoid R) :=
+  { AddSubmonoid.semigroup, AddSubmonoid.mulOneClass with one := 1, mul := (· * ·) }
+
+theorem closure_pow (s : Set R) : ∀ n : ℕ, closure s ^ n = closure (s ^ n)
+  | 0 => by
+    rw [pow_zeroₓ, pow_zeroₓ, one_eq_closure_one_set]
+  | n + 1 => by
+    rw [pow_succₓ, pow_succₓ, closure_pow, closure_mul_closure]
+
+theorem pow_eq_closure_pow_set (s : AddSubmonoid R) (n : ℕ) : s ^ n = closure ((s : Set R) ^ n) := by
+  rw [← closure_pow, closure_eq]
+
+theorem pow_subset_pow {s : AddSubmonoid R} {n : ℕ} : (↑s : Set R) ^ n ⊆ ↑(s ^ n) :=
+  (pow_eq_closure_pow_set s n).symm ▸ subset_closure
+
+end Semiringₓ
 
 end AddSubmonoid
 

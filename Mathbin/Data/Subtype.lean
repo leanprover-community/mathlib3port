@@ -90,7 +90,7 @@ theorem coe_eta (a : { a // p a }) (h : p a) : mk (↑a) h = a :=
   Subtype.ext rfl
 
 @[simp]
-theorem coe_mk a h : (@mk α p a h : α) = a :=
+theorem coe_mk (a h) : (@mk α p a h : α) = a :=
   rfl
 
 -- built-in reduction doesn't always work

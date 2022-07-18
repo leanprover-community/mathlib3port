@@ -50,7 +50,7 @@ class Galgebra where
   map_one : to_fun 1 = GradedMonoid.GhasOne.one
   map_mul : ∀ r s, GradedMonoid.mk _ (to_fun (r * s)) = ⟨_, GradedMonoid.GhasMul.mul (to_fun r) (to_fun s)⟩
   commutes : ∀ r x, GradedMonoid.mk _ (to_fun r) * x = x * ⟨_, to_fun r⟩
-  smul_def : ∀ r x : GradedMonoid A, GradedMonoid.mk x.1 (r • x.2) = ⟨_, to_fun r⟩ * x
+  smul_def : ∀ (r) (x : GradedMonoid A), GradedMonoid.mk x.1 (r • x.2) = ⟨_, to_fun r⟩ * x
 
 end
 
@@ -96,7 +96,7 @@ coercions such as `submodule.subtype (A i)`, and the `[gmonoid A]` structure ori
 can be discharged by `rfl`. -/
 @[simps]
 def toAlgebra (f : ∀ i, A i →ₗ[R] B) (hone : f _ GradedMonoid.GhasOne.one = 1)
-    (hmul : ∀ {i j} ai : A i aj : A j, f _ (GradedMonoid.GhasMul.mul ai aj) = f _ ai * f _ aj)
+    (hmul : ∀ {i j} (ai : A i) (aj : A j), f _ (GradedMonoid.GhasMul.mul ai aj) = f _ ai * f _ aj)
     (hcommutes : ∀ r, (f 0) (Galgebra.toFun r) = (algebraMap R B) r) : (⨁ i, A i) →ₐ[R] B :=
   { toSemiring (fun i => (f i).toAddMonoidHom) hone @hmul with
     toFun := toSemiring (fun i => (f i).toAddMonoidHom) hone @hmul,

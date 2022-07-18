@@ -96,9 +96,9 @@ section
 -- To talk about preservation of biproducts we need to specify universes explicitly.
 noncomputable section
 
-universe v u₁ u₂
+universe v₁ v₂ u₁ u₂
 
-variable {C : Type u₁} {D : Type u₂} [Category.{v} C] [Category.{v} D] [Preadditive C] [Preadditive D] (F : C ⥤ D)
+variable {C : Type u₁} {D : Type u₂} [Category.{v₁} C] [Category.{v₂} D] [Preadditive C] [Preadditive D] (F : C ⥤ D)
 
 open CategoryTheory.Limits
 

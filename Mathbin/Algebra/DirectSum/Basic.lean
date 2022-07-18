@@ -95,17 +95,17 @@ theorem of_eq_of_ne (i j : ι) (x : β i) (h : i ≠ j) : (of _ i x) j = 0 :=
   Dfinsupp.single_eq_of_ne h
 
 @[simp]
-theorem support_zero [∀ i : ι x : β i, Decidable (x ≠ 0)] : (0 : ⨁ i, β i).support = ∅ :=
+theorem support_zero [∀ (i : ι) (x : β i), Decidable (x ≠ 0)] : (0 : ⨁ i, β i).support = ∅ :=
   Dfinsupp.support_zero
 
 @[simp]
-theorem support_of [∀ i : ι x : β i, Decidable (x ≠ 0)] (i : ι) (x : β i) (h : x ≠ 0) : (of _ i x).support = {i} :=
+theorem support_of [∀ (i : ι) (x : β i), Decidable (x ≠ 0)] (i : ι) (x : β i) (h : x ≠ 0) : (of _ i x).support = {i} :=
   Dfinsupp.support_single_ne_zero h
 
-theorem support_of_subset [∀ i : ι x : β i, Decidable (x ≠ 0)] {i : ι} {b : β i} : (of _ i b).support ⊆ {i} :=
+theorem support_of_subset [∀ (i : ι) (x : β i), Decidable (x ≠ 0)] {i : ι} {b : β i} : (of _ i b).support ⊆ {i} :=
   Dfinsupp.support_single_subset
 
-theorem sum_support_of [∀ i : ι x : β i, Decidable (x ≠ 0)] (x : ⨁ i, β i) : (∑ i in x.support, of β i (x i)) = x :=
+theorem sum_support_of [∀ (i : ι) (x : β i), Decidable (x ≠ 0)] (x : ⨁ i, β i) : (∑ i in x.support, of β i (x i)) = x :=
   Dfinsupp.sum_single
 
 variable {β}
@@ -118,7 +118,7 @@ theorem of_injective (i : ι) : Function.Injective (of β i) :=
 
 @[elab_as_eliminator]
 protected theorem induction_on {C : (⨁ i, β i) → Prop} (x : ⨁ i, β i) (H_zero : C 0)
-    (H_basic : ∀ i : ι x : β i, C (of β i x)) (H_plus : ∀ x y, C x → C y → C (x + y)) : C x := by
+    (H_basic : ∀ (i : ι) (x : β i), C (of β i x)) (H_plus : ∀ x y, C x → C y → C (x + y)) : C x := by
   apply Dfinsupp.induction x H_zero
   intro i b f h1 h2 ih
   solve_by_elim
@@ -126,7 +126,7 @@ protected theorem induction_on {C : (⨁ i, β i) → Prop} (x : ⨁ i, β i) (H
 /-- If two additive homomorphisms from `⨁ i, β i` are equal on each `of β i y`,
 then they are equal. -/
 theorem add_hom_ext {γ : Type _} [AddMonoidₓ γ] ⦃f g : (⨁ i, β i) →+ γ⦄
-    (H : ∀ i : ι y : β i, f (of _ i y) = g (of _ i y)) : f = g :=
+    (H : ∀ (i : ι) (y : β i), f (of _ i y) = g (of _ i y)) : f = g :=
   Dfinsupp.add_hom_ext H
 
 /-- If two additive homomorphisms from `⨁ i, β i` are equal on each `of β i y`,
@@ -150,7 +150,7 @@ def toAddMonoid : (⨁ i, β i) →+ γ :=
   Dfinsupp.liftAddHom φ
 
 @[simp]
-theorem to_add_monoid_of i (x : β i) : toAddMonoid φ (of β i x) = φ i x :=
+theorem to_add_monoid_of (i) (x : β i) : toAddMonoid φ (of β i x) = φ i x :=
   Dfinsupp.lift_add_hom_apply_single φ i x
 
 theorem toAddMonoid.unique (f : ⨁ i, β i) : ψ f = toAddMonoid (fun i => ψ.comp (of β i)) f := by
@@ -240,7 +240,7 @@ section Sigma
 
 variable {α : ι → Type u} {δ : ∀ i, α i → Type w} [∀ i j, AddCommMonoidₓ (δ i j)]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 /-- The natural map between `⨁ (i : Σ i, α i), δ i.1 i.2` and `⨁ i (j : α i), δ i j`.-/
 noncomputable def sigmaCurry : (⨁ i : Σi, _, δ i.1 i.2) →+ ⨁ (i) (j), δ i j where
   toFun := @Dfinsupp.sigmaCurry _ _ δ _
@@ -251,7 +251,7 @@ noncomputable def sigmaCurry : (⨁ i : Σi, _, δ i.1 i.2) →+ ⨁ (i) (j), δ
 theorem sigma_curry_apply (f : ⨁ i : Σi, _, δ i.1 i.2) (i : ι) (j : α i) : sigmaCurry f i j = f ⟨i, j⟩ :=
   Dfinsupp.sigma_curry_apply f i j
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 /-- The natural map between `⨁ i (j : α i), δ i j` and `Π₀ (i : Σ i, α i), δ i.1 i.2`, inverse of
 `curry`.-/
 noncomputable def sigmaUncurry : (⨁ (i) (j), δ i j) →+ ⨁ i : Σi, _, δ i.1 i.2 where
@@ -259,12 +259,12 @@ noncomputable def sigmaUncurry : (⨁ (i) (j), δ i j) →+ ⨁ i : Σi, _, δ i
   map_zero' := Dfinsupp.sigma_uncurry_zero
   map_add' := Dfinsupp.sigma_uncurry_add
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 @[simp]
 theorem sigma_uncurry_apply (f : ⨁ (i) (j), δ i j) (i : ι) (j : α i) : sigmaUncurry f ⟨i, j⟩ = f i j :=
   Dfinsupp.sigma_uncurry_apply f i j
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 /-- The natural map between `⨁ (i : Σ i, α i), δ i.1 i.2` and `⨁ i (j : α i), δ i j`.-/
 noncomputable def sigmaCurryEquiv : (⨁ i : Σi, _, δ i.1 i.2) ≃+ ⨁ (i) (j), δ i j :=
   { sigmaCurry, Dfinsupp.sigmaCurryEquiv with }

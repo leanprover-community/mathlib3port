@@ -49,17 +49,17 @@ protected theorem exists {p : Option α → Prop} : (∃ x, p x) ↔ p none ∨ 
     h.elim (fun h => ⟨_, h⟩) fun ⟨x, hx⟩ => ⟨_, hx⟩⟩
 
 @[simp]
-theorem get_memₓ : ∀ {o : Option α} h : isSome o, Option.getₓ h ∈ o
+theorem get_memₓ : ∀ {o : Option α} (h : isSome o), Option.getₓ h ∈ o
   | some a, _ => rfl
 
-theorem get_of_memₓ {a : α} : ∀ {o : Option α} h : isSome o, a ∈ o → Option.getₓ h = a
+theorem get_of_memₓ {a : α} : ∀ {o : Option α} (h : isSome o), a ∈ o → Option.getₓ h = a
   | _, _, rfl => rfl
 
 @[simp]
 theorem not_mem_none (a : α) : a ∉ (none : Option α) := fun h => Option.noConfusion h
 
 @[simp]
-theorem some_getₓ : ∀ {x : Option α} h : isSome x, some (Option.getₓ h) = x
+theorem some_getₓ : ∀ {x : Option α} (h : isSome x), some (Option.getₓ h) = x
   | some x, hx => rfl
 
 @[simp]
@@ -292,23 +292,24 @@ theorem mem_pmem {a : α} (h : ∀, ∀ a ∈ x, ∀, p a) (ha : a ∈ x) : f a 
   subst ha
   rfl
 
-theorem pmap_map (g : γ → α) (x : Option γ) H :
+theorem pmap_map (g : γ → α) (x : Option γ) (H) :
     pmap f (x.map g) H = pmap (fun a h => f (g a) h) x fun a h => H _ (mem_map_of_mem _ h) := by
   cases x <;> simp only [← map_none', ← map_some', ← pmap]
 
-theorem map_pmap (g : β → γ) (f : ∀ a, p a → β) x H : Option.map g (pmap f x H) = pmap (fun a h => g (f a h)) x H := by
+theorem map_pmap (g : β → γ) (f : ∀ a, p a → β) (x H) : Option.map g (pmap f x H) = pmap (fun a h => g (f a h)) x H :=
+  by
   cases x <;> simp only [← map_none', ← map_some', ← pmap]
 
 @[simp]
-theorem pmap_eq_map (p : α → Prop) (f : α → β) x H : @pmap _ _ p (fun a _ => f a) x H = Option.map f x := by
+theorem pmap_eq_map (p : α → Prop) (f : α → β) (x H) : @pmap _ _ p (fun a _ => f a) x H = Option.map f x := by
   cases x <;> simp only [← map_none', ← map_some', ← pmap]
 
-theorem pmap_bind {α β γ} {x : Option α} {g : α → Option β} {p : β → Prop} {f : ∀ b, p b → γ} H
-    (H' : ∀ a : α, ∀ b ∈ g a, ∀, b ∈ x >>= g) :
+theorem pmap_bind {α β γ} {x : Option α} {g : α → Option β} {p : β → Prop} {f : ∀ b, p b → γ} (H)
+    (H' : ∀ (a : α), ∀ b ∈ g a, ∀, b ∈ x >>= g) :
     pmap f (x >>= g) H = x >>= fun a => pmap f (g a) fun b h => H _ (H' a _ h) := by
   cases x <;> simp only [← pmap, ← none_bind, ← some_bind]
 
-theorem bind_pmap {α β γ} {p : α → Prop} (f : ∀ a, p a → β) (x : Option α) (g : β → Option γ) H :
+theorem bind_pmap {α β γ} {p : α → Prop} (f : ∀ a, p a → β) (x : Option α) (g : β → Option γ) (H) :
     pmap f x H >>= g = x.pbind fun a h => g (f a (H _ h)) := by
   cases x <;> simp only [← pmap, ← none_bind, ← some_bind, ← pbind]
 
@@ -361,7 +362,7 @@ theorem pmap_eq_some_iff {hf} {y : β} : pmap f x hf = some y ↔ ∃ (a : α)(H
     
 
 @[simp]
-theorem join_pmap_eq_pmap_join {f : ∀ a, p a → β} {x : Option (Option α)} H :
+theorem join_pmap_eq_pmap_join {f : ∀ a, p a → β} {x : Option (Option α)} (H) :
     (pmap (pmap f) x H).join = pmap f x.join fun a h => H (some a) (mem_of_mem_join h) _ rfl := by
   rcases x with (_ | _ | x) <;> simp
 
@@ -433,15 +434,15 @@ theorem ne_none_iff_exists {o : Option α} : o ≠ none ↔ ∃ x : α, some x =
 theorem ne_none_iff_exists' {o : Option α} : o ≠ none ↔ ∃ x : α, o = some x :=
   ne_none_iff_exists.trans <| exists_congr fun _ => eq_comm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ≠ » none)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » none)
 theorem bex_ne_none {p : Option α → Prop} : (∃ (x : _)(_ : x ≠ none), p x) ↔ ∃ x, p (some x) :=
   ⟨fun ⟨x, hx, hp⟩ =>
     ⟨get <| ne_none_iff_is_some.1 hx, by
       rwa [some_get]⟩,
     fun ⟨x, hx⟩ => ⟨some x, some_ne_none x, hx⟩⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ≠ » none)
-theorem ball_ne_none {p : Option α → Prop} : (∀ x _ : x ≠ none, p x) ↔ ∀ x, p (some x) :=
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » none)
+theorem ball_ne_none {p : Option α → Prop} : (∀ (x) (_ : x ≠ none), p x) ↔ ∀ x, p (some x) :=
   ⟨fun h x => h (some x) (some_ne_none x), fun h x hx => by
     simpa only [← some_get] using h (get <| ne_none_iff_is_some.1 hx)⟩
 
@@ -456,7 +457,7 @@ theorem guard_eq_some {p : α → Prop} [DecidablePred p] {a b : α} : guard p a
   by_cases' p a <;> simp [← Option.guard, ← h] <;> intro <;> contradiction
 
 @[simp]
-theorem guard_eq_some' {p : Prop} [Decidable p] u : guardₓ p = some u ↔ p := by
+theorem guard_eq_some' {p : Prop} [Decidable p] (u) : guardₓ p = some u ↔ p := by
   cases u
   by_cases' p <;>
     simp [← _root_.guard, ← h] <;>

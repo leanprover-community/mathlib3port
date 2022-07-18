@@ -58,9 +58,9 @@ theorem mem_mul_support {f : α → M} {x : α} : x ∈ MulSupport f ↔ f x ≠
 theorem mul_support_subset_iff {f : α → M} {s : Set α} : MulSupport f ⊆ s ↔ ∀ x, f x ≠ 1 → x ∈ s :=
   Iff.rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ∉ » s)
 @[to_additive]
-theorem mul_support_subset_iff' {f : α → M} {s : Set α} : MulSupport f ⊆ s ↔ ∀ x _ : x ∉ s, f x = 1 :=
+theorem mul_support_subset_iff' {f : α → M} {s : Set α} : MulSupport f ⊆ s ↔ ∀ (x) (_ : x ∉ s), f x = 1 :=
   forall_congrₓ fun x => not_imp_comm
 
 @[to_additive]
@@ -339,7 +339,6 @@ theorem support_single_of_ne (h : b ≠ 0) : Function.Support (Pi.single a b) = 
 theorem support_single [DecidableEq B] : Function.Support (Pi.single a b) = if b = 0 then ∅ else {a} := by
   split_ifs with h <;> simp [← h]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem support_single_subset : Function.Support (Pi.single a b) ⊆ {a} := by
   classical
   rw [support_single]

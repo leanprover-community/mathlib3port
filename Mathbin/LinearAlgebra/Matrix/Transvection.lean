@@ -579,18 +579,16 @@ theorem exists_is_two_block_diagonal_list_transvec_mul_mul_list_transvec
   -- last column, we will first put this nonzero coefficient in last position, and then argue as
   -- above.
   push_neg  at hM
-  simp [← not_and_distrib, ← is_two_block_diagonal, ← to_blocks₁₂, ← to_blocks₂₁] at H
+  simp [← not_and_distrib, ← is_two_block_diagonal, ← to_blocks₁₂, ← to_blocks₂₁, Matrix.ext_iff] at H
   have : ∃ i : Finₓ r, M (inl i) (inr star) ≠ 0 ∨ M (inr star) (inl i) ≠ 0 := by
     cases H
     · contrapose! H
-      ext i j
-      convert (H i).1
-      simp only [← eq_iff_true_of_subsingleton]
+      rintro i ⟨⟩
+      exact (H i).1
       
     · contrapose! H
-      ext i j
-      convert (H j).2
-      simp only [← eq_iff_true_of_subsingleton]
+      rintro ⟨⟩ j
+      exact (H j).2
       
   rcases this with ⟨i, h | h⟩
   · let M' := transvection (inr Unit.star) (inl i) 1 ⬝ M
@@ -651,9 +649,9 @@ theorem exists_list_transvec_mul_mul_list_transvec_eq_diagonal_induction
       
     · exact hM.2
       
-    · ext i j
-      rw [hc, to_blocks₂₂]
-      congr
+    · ext ⟨⟩ ⟨⟩
+      rw [hc, to_blocks₂₂, of_apply]
+      rfl
       
   rw [this]
   simp [← h₀]
@@ -756,7 +754,7 @@ theorem diagonal_transvection_induction (P : Matrix n n 𝕜 → Prop) (M : Matr
       (by
         simp [← h])
   suffices H :
-    ∀ L₁ L₂ : List (transvection_struct n 𝕜) E : Matrix n n 𝕜,
+    ∀ (L₁ L₂ : List (transvection_struct n 𝕜)) (E : Matrix n n 𝕜),
       P E → P ((L₁.map to_matrix).Prod ⬝ E ⬝ (L₂.map to_matrix).Prod)
   · rw [h]
     apply H L L'

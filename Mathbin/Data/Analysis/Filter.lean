@@ -31,7 +31,7 @@ instance : CoeFun (Cfilter α σ) fun _ => σ → α :=
   ⟨Cfilter.f⟩
 
 @[simp]
-theorem coe_mk f pt inf h₁ h₂ a : (@Cfilter.mk α σ _ f pt inf h₁ h₂) a = f a :=
+theorem coe_mk (f pt inf h₁ h₂ a) : (@Cfilter.mk α σ _ f pt inf h₁ h₂) a = f a :=
   rfl
 
 /-- Map a cfilter to an equivalent representation type. -/
@@ -166,7 +166,7 @@ theorem map_σ (m : α → β) {f : Filter α} (F : f.Realizer) : (F.map m).σ =
   rfl
 
 @[simp]
-theorem map_F (m : α → β) {f : Filter α} (F : f.Realizer) s : (F.map m).f s = Image m (F.f s) :=
+theorem map_F (m : α → β) {f : Filter α} (F : f.Realizer) (s) : (F.map m).f s = Image m (F.f s) :=
   rfl
 
 /-- Construct a realizer for `comap m f` given a realizer for `f` -/
@@ -285,7 +285,6 @@ theorem tendsto_iff (f : α → β) {l₁ : Filter α} {l₂ : Filter β} (L₁ 
     Tendsto f l₁ l₂ ↔ ∀ b, ∃ a, ∀, ∀ x ∈ L₁.f a, ∀, f x ∈ L₂.f b :=
   (le_iff (L₁.map f) L₂).trans <| forall_congrₓ fun b => exists_congr fun a => image_subset_iff
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem ne_bot_iff {f : Filter α} (F : f.Realizer) : f ≠ ⊥ ↔ ∀ a : F.σ, (F.f a).Nonempty := by
   classical
   rw [not_iff_comm, ← le_bot_iff, F.le_iff realizer.bot, not_forall]

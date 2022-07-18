@@ -82,8 +82,7 @@ theorem nat_trailing_degree_zero : natTrailingDegree (0 : R[X]) = 0 :=
   rfl
 
 theorem trailing_degree_eq_top : trailingDegree p = ⊤ ↔ p = 0 :=
-  ⟨fun h => by
-    rw [trailing_degree, ← min_eq_inf_with_top] at h <;> exact support_eq_empty.1 (min_eq_none.1 h), fun h => by
+  ⟨fun h => support_eq_empty.1 (Finset.min_eq_top.1 h), fun h => by
     simp [← h]⟩
 
 theorem trailing_degree_eq_nat_trailing_degree (hp : p ≠ 0) : trailingDegree p = (natTrailingDegree p : WithTop ℕ) := by

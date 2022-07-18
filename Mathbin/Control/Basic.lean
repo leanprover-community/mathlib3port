@@ -37,7 +37,7 @@ section Applicativeₓ
 
 variable {F : Type u → Type v} [Applicativeₓ F]
 
-def mzipWith {α₁ α₂ φ : Type u} (f : α₁ → α₂ → F φ) : ∀ ma₁ : List α₁ ma₂ : List α₂, F (List φ)
+def mzipWith {α₁ α₂ φ : Type u} (f : α₁ → α₂ → F φ) : ∀ (ma₁ : List α₁) (ma₂ : List α₂), F (List φ)
   | x :: xs, y :: ys => (· :: ·) <$> f x y <*> mzipWith xs ys
   | _, _ => pure []
 
@@ -208,7 +208,7 @@ instance : IsLawfulMonad (Sum.{v, u} e) where
 end Sum
 
 class IsCommApplicative (m : Type _ → Type _) [Applicativeₓ m] extends IsLawfulApplicative m : Prop where
-  commutative_prod : ∀ {α β} a : m α b : m β, Prod.mk <$> a <*> b = (fun b a => (a, b)) <$> b <*> a
+  commutative_prod : ∀ {α β} (a : m α) (b : m β), Prod.mk <$> a <*> b = (fun b a => (a, b)) <$> b <*> a
 
 open Functor
 

@@ -686,7 +686,7 @@ include β
 
 @[to_additive]
 theorem map_inv' : f⁻¹.map m = (f.map m)⁻¹ :=
-  map_comm (funext <| map_inv m) _
+  Semiconj.filter_map (map_inv m) f
 
 @[to_additive]
 theorem Tendsto.inv_inv : Tendsto m f₁ f₂ → Tendsto m f₁⁻¹ f₂⁻¹ := fun hf =>

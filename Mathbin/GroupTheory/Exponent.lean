@@ -140,7 +140,7 @@ theorem order_dvd_exponent (g : G) : orderOf g ∣ exponent G :=
 variable (G)
 
 @[to_additive]
-theorem exponent_dvd_of_forall_pow_eq_one G [Monoidₓ G] (n : ℕ) (hG : ∀ g : G, g ^ n = 1) : exponent G ∣ n := by
+theorem exponent_dvd_of_forall_pow_eq_one (G) [Monoidₓ G] (n : ℕ) (hG : ∀ g : G, g ^ n = 1) : exponent G ∣ n := by
   rcases n.eq_zero_or_pos with (rfl | hpos)
   · exact dvd_zero _
     

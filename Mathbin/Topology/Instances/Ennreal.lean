@@ -151,7 +151,7 @@ def ltTopHomeomorphNnreal : { a | a < ∞ } ≃ₜ ℝ≥0 := by
   refine' (Homeomorph.setCongr <| Set.ext fun x => _).trans ne_top_homeomorph_nnreal <;>
     simp only [← mem_set_of_eq, ← lt_top_iff_ne_top]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (a «expr ≠ » «expr∞»())
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a «expr ≠ » «expr∞»())
 theorem nhds_top : 𝓝 ∞ = ⨅ (a) (_ : a ≠ ∞), 𝓟 (Ioi a) :=
   nhds_top_order.trans <| by
     simp [← lt_top_iff_ne_top, ← Ioi]
@@ -186,7 +186,7 @@ theorem tendsto_coe_nhds_top {f : α → ℝ≥0 } {l : Filter α} :
     Tendsto (fun x => (f x : ℝ≥0∞)) l (𝓝 ∞) ↔ Tendsto f l atTop := by
   rw [tendsto_nhds_top_iff_nnreal, at_top_basis_Ioi.tendsto_right_iff] <;> [simp , infer_instance, infer_instance]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (a «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a «expr ≠ » 0)
 theorem nhds_zero : 𝓝 (0 : ℝ≥0∞) = ⨅ (a) (_ : a ≠ 0), 𝓟 (Iio a) :=
   nhds_bot_order.trans <| by
     simp [← bot_lt_iff_ne_bot, ← Iio]
@@ -345,13 +345,10 @@ protected theorem tendsto_mul (ha : a ≠ 0 ∨ b ≠ ⊤) (hb : b ≠ 0 ∨ a �
   have ht : ∀ b : ℝ≥0∞, b ≠ 0 → Tendsto (fun p : ℝ≥0∞ × ℝ≥0∞ => p.1 * p.2) (𝓝 ((⊤ : ℝ≥0∞), b)) (𝓝 ⊤) := by
     refine' fun b hb => tendsto_nhds_top_iff_nnreal.2 fun n => _
     rcases lt_iff_exists_nnreal_btwn.1 (pos_iff_ne_zero.2 hb) with ⟨ε, hε, hεb⟩
-    replace hε : 0 < ε
-    exact coe_pos.1 hε
-    filter_upwards [ProdIsOpen.mem_nhds (lt_mem_nhds <| @coe_lt_top (n / ε)) (lt_mem_nhds hεb)]
-    rintro ⟨a₁, a₂⟩ ⟨h₁, h₂⟩
-    dsimp'  at h₁ h₂⊢
-    rw [← div_mul_cancel n hε.ne', coe_mul]
-    exact mul_lt_mul h₁ h₂
+    have : ∀ᶠ c : ℝ≥0∞ × ℝ≥0∞ in 𝓝 (∞, b), ↑n / ↑ε < c.1 ∧ ↑ε < c.2 :=
+      (lt_mem_nhds <| div_lt_top coe_ne_top hε.ne').prod_nhds (lt_mem_nhds hεb)
+    refine' this.mono fun c hc => _
+    exact (div_mul_cancel hε.ne' coe_ne_top).symm.trans_lt (mul_lt_mul hc.1 hc.2)
   cases a
   · simp [← none_eq_top] at hb
     simp [← none_eq_top, ← ht b hb, ← top_mul, ← hb]
@@ -578,7 +575,7 @@ theorem supr_add_supr_le {ι ι' : Sort _} [Nonempty ι] [Nonempty ι'] {f : ι 
   simpa only [← add_supr, ← supr_add] using supr₂_le h
 
 theorem bsupr_add_bsupr_le' {ι ι'} {p : ι → Prop} {q : ι' → Prop} (hp : ∃ i, p i) (hq : ∃ j, q j) {f : ι → ℝ≥0∞}
-    {g : ι' → ℝ≥0∞} {a : ℝ≥0∞} (h : ∀ i hi : p i j hj : q j, f i + g j ≤ a) :
+    {g : ι' → ℝ≥0∞} {a : ℝ≥0∞} (h : ∀ (i) (hi : p i) (j) (hj : q j), f i + g j ≤ a) :
     ((⨆ (i) (hi : p i), f i) + ⨆ (j) (hj : q j), g j) ≤ a := by
   simp_rw [bsupr_add' hp, add_bsupr' hq]
   exact supr₂_le fun i hi => supr₂_le (h i hi)
@@ -725,11 +722,11 @@ protected theorem tsum_eq_supr_sum' {ι : Type _} (s : ι → Finset α) (hs : �
   change (⨆ i : ι, (fun t : Finset α => ∑ a in t, f a) (s i)) = ⨆ s : Finset α, ∑ a in s, f a
   exact (Finset.sum_mono_set f).supr_comp_eq hs
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (a b)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (a b)
 protected theorem tsum_sigma {β : α → Type _} (f : ∀ a, β a → ℝ≥0∞) : (∑' p : Σa, β a, f p.1 p.2) = ∑' (a) (b), f a b :=
   tsum_sigma' (fun b => Ennreal.summable) Ennreal.summable
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (a b)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (a b)
 protected theorem tsum_sigma' {β : α → Type _} (f : (Σa, β a) → ℝ≥0∞) : (∑' p : Σa, β a, f p) = ∑' (a) (b), f ⟨a, b⟩ :=
   tsum_sigma' (fun b => Ennreal.summable) Ennreal.summable
 
@@ -910,7 +907,6 @@ theorem tsum_union_le (f : α → ℝ≥0∞) (s t : Set α) : (∑' x : s ∪ t
     _ ≤ (∑' x : s, f x) + ∑' x : t, f x := add_le_add le_rfl (tsum_mono_subtype _ (diff_subset _ _))
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem tsum_bUnion_le {ι : Type _} (f : α → ℝ≥0∞) (s : Finset ι) (t : ι → Set α) :
     (∑' x : ⋃ i ∈ s, t i, f x) ≤ ∑ i in s, ∑' x : t i, f x := by
   classical
@@ -924,7 +920,6 @@ theorem tsum_bUnion_le {ι : Type _} (f : α → ℝ≥0∞) (s : Finset ι) (t 
       tsum_union_le _ _ _ _ ≤ (∑' x : t i, f x) + ∑ i in s, ∑' x : t i, f x :=
       add_le_add le_rfl ihs _ = ∑ j in insert i s, ∑' x : t j, f x := (Finset.sum_insert hi).symm
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem tsum_Union_le {ι : Type _} [Fintype ι] (f : α → ℝ≥0∞) (t : ι → Set α) :
     (∑' x : ⋃ i, t i, f x) ≤ ∑ i, ∑' x : t i, f x := by
   classical
@@ -1261,15 +1256,15 @@ theorem continuous_of_le_add_edist {f : α → ℝ≥0∞} (C : ℝ≥0∞) (hC 
     by_cases' hx : f x = ∞
     · have : f =ᶠ[𝓝 x] fun _ => ∞ := by
         filter_upwards [Emetric.ball_mem_nhds x Ennreal.coe_lt_top]
-        refine' fun y hy : edist y x < ⊤ => _
+        refine' fun y (hy : edist y x < ⊤) => _
         rw [edist_comm] at hy
         simpa [← hx, ← hC, ← hy.ne] using h x y
       exact this.continuous_at
       
-    · refine' (Ennreal.tendsto_nhds hx).2 fun ε ε0 : 0 < ε => _
+    · refine' (Ennreal.tendsto_nhds hx).2 fun ε (ε0 : 0 < ε) => _
       filter_upwards [Emetric.closed_ball_mem_nhds x (Ennreal.div_pos_iff.2 ⟨ε0.ne', hC⟩)]
       have hεC : C * (ε / C) = ε := Ennreal.mul_div_cancel' C0 hC
-      refine' fun y hy : edist y x ≤ ε / C => ⟨tsub_le_iff_right.2 _, _⟩
+      refine' fun y (hy : edist y x ≤ ε / C) => ⟨tsub_le_iff_right.2 _, _⟩
       · rw [edist_comm] at hy
         calc f x ≤ f y + C * edist x y := h x y _ ≤ f y + C * (ε / C) :=
             add_le_add_left (mul_le_mul_left' hy C) (f y)_ = f y + ε := by

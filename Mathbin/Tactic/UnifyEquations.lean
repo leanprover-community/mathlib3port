@@ -56,7 +56,7 @@ So `equ : @eq.{u} lhs_type lhs rhs` or `equ : @heq.{u} lhs_type lhs rhs_type rhs
 -/
 @[reducible]
 unsafe def unification_step : Type :=
-  ∀ equ lhs_type rhs_type lhs rhs lhs_whnf rhs_whnf : expr u : level, tactic unification_step_result
+  ∀ (equ lhs_type rhs_type lhs rhs lhs_whnf rhs_whnf : expr) (u : level), tactic unification_step_result
 
 /-- For `equ : t == u` with `t : T` and `u : U`, if `T` and `U` are defeq,
 we replace `equ` with `equ : t = u`.
@@ -192,7 +192,7 @@ It returns `n` plus the number of `succ` constructors and `e'`. The matching is
 performed up to normalisation with transparency `md`.
 -/
 -- Linarith could prove this, but I want to avoid that dependency.
-unsafe def match_n_plus_m md : ℕ → expr → tactic (ℕ × expr) := fun n e => do
+unsafe def match_n_plus_m (md) : ℕ → expr → tactic (ℕ × expr) := fun n e => do
   let e ← whnf e md
   match e with
     | quote.1 (Nat.succ (%%ₓe)) => match_n_plus_m (n + 1) e
@@ -273,7 +273,7 @@ open UnifyEquations
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- If `equ` is the display name of a local constant with type `t = u` or `t == u`,
 then `unify_equation_once equ` simplifies it once using
 `unify_equations.unify_homogeneous` or `unify_equations.unify_heterogeneous`.
@@ -293,7 +293,7 @@ unsafe def unify_equation_once (equ : Name) : tactic unification_step_result := 
       let rhs_whnf ← whnf_ginductive rhs
       unify_heterogeneous eque lhs_type rhs_type lhs rhs lhs_whnf rhs_whnf u
     | _ =>
-      "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
 
 /-- Given a list of display names of local hypotheses that are (homogeneous or
 heterogeneous) equations, `unify_equations` performs first-order unification on

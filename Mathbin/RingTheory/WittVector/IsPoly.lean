@@ -212,7 +212,7 @@ For the most part, users are not expected to treat `is_poly` as a class.
 -- Ideally, we would generalise this to n-ary functions
 -- But we don't have a good theory of n-ary compositions in mathlib
 class IsPoly (f : ∀ ⦃R⦄ [CommRingₓ R], WittVector p R → 𝕎 R) : Prop where mk' ::
-  poly : ∃ φ : ℕ → MvPolynomial ℕ ℤ, ∀ ⦃R⦄ [CommRingₓ R] x : 𝕎 R, (f x).coeff = fun n => aeval x.coeff (φ n)
+  poly : ∃ φ : ℕ → MvPolynomial ℕ ℤ, ∀ ⦃R⦄ [CommRingₓ R] (x : 𝕎 R), (f x).coeff = fun n => aeval x.coeff (φ n)
 
 /-- The identity function on Witt vectors is a polynomial function. -/
 instance id_is_poly : IsPoly p fun _ _ => id :=
@@ -233,8 +233,8 @@ variable {p}
 include hp
 
 theorem ext {f g} (hf : IsPoly p f) (hg : IsPoly p g)
-    (h : ∀ R : Type u [_Rcr : CommRingₓ R] x : 𝕎 R n : ℕ, ghost_component n (f x) = ghost_component n (g x)) :
-    ∀ R : Type u [_Rcr : CommRingₓ R] x : 𝕎 R, f x = g x := by
+    (h : ∀ (R : Type u) [_Rcr : CommRingₓ R] (x : 𝕎 R) (n : ℕ), ghost_component n (f x) = ghost_component n (g x)) :
+    ∀ (R : Type u) [_Rcr : CommRingₓ R] (x : 𝕎 R), f x = g x := by
   obtain ⟨φ, hf⟩ := hf
   obtain ⟨ψ, hg⟩ := hg
   intros
@@ -284,7 +284,7 @@ For the most part, users are not expected to treat `is_poly₂` as a class.
 class IsPoly₂ (f : ∀ ⦃R⦄ [CommRingₓ R], WittVector p R → 𝕎 R → 𝕎 R) : Prop where mk' ::
   poly :
     ∃ φ : ℕ → MvPolynomial (Finₓ 2 × ℕ) ℤ,
-      ∀ ⦃R⦄ [CommRingₓ R] x y : 𝕎 R, (f x y).coeff = fun n => peval (φ n) ![x.coeff, y.coeff]
+      ∀ ⦃R⦄ [CommRingₓ R] (x y : 𝕎 R), (f x y).coeff = fun n => peval (φ n) ![x.coeff, y.coeff]
 
 variable {p}
 
@@ -557,8 +557,9 @@ include hp
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 theorem ext {f g} (hf : IsPoly₂ p f) (hg : IsPoly₂ p g)
-    (h : ∀ R : Type u [_Rcr : CommRingₓ R] x y : 𝕎 R n : ℕ, ghost_component n (f x y) = ghost_component n (g x y)) :
-    ∀ R [_Rcr : CommRingₓ R] x y : 𝕎 R, f x y = g x y := by
+    (h :
+      ∀ (R : Type u) [_Rcr : CommRingₓ R] (x y : 𝕎 R) (n : ℕ), ghost_component n (f x y) = ghost_component n (g x y)) :
+    ∀ (R) [_Rcr : CommRingₓ R] (x y : 𝕎 R), f x y = g x y := by
   obtain ⟨φ, hf⟩ := hf
   obtain ⟨ψ, hg⟩ := hg
   intros

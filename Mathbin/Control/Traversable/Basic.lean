@@ -69,8 +69,8 @@ transformation such that `app` preserves the `has_pure.pure` and
 `applicative_transformation.preserves_map` for naturality. -/
 structure ApplicativeTransformation : Type max (u + 1) v w where
   app : ∀ α : Type u, F α → G α
-  preserves_pure' : ∀ {α : Type u} x : α, app _ (pure x) = pure x
-  preserves_seq' : ∀ {α β : Type u} x : F (α → β) y : F α, app _ (x <*> y) = app _ x <*> app _ y
+  preserves_pure' : ∀ {α : Type u} (x : α), app _ (pure x) = pure x
+  preserves_seq' : ∀ {α β : Type u} (x : F (α → β)) (y : F α), app _ (x <*> y) = app _ x <*> app _ y
 
 end ApplicativeTransformation
 
@@ -90,7 +90,7 @@ theorem app_eq_coe (η : ApplicativeTransformation F G) : η.app = η :=
   rfl
 
 @[simp]
-theorem coe_mk (f : ∀ α : Type u, F α → G α) pp ps : ⇑(ApplicativeTransformation.mk f pp ps) = f :=
+theorem coe_mk (f : ∀ α : Type u, F α → G α) (pp ps) : ⇑(ApplicativeTransformation.mk f pp ps) = f :=
   rfl
 
 protected theorem congr_fun (η η' : ApplicativeTransformation F G) (h : η = η') {α : Type u} (x : F α) : η x = η' x :=
@@ -106,12 +106,12 @@ theorem coe_inj ⦃η η' : ApplicativeTransformation F G⦄ (h : (η : ∀ α, 
   exact h
 
 @[ext]
-theorem ext ⦃η η' : ApplicativeTransformation F G⦄ (h : ∀ α : Type u x : F α, η x = η' x) : η = η' := by
+theorem ext ⦃η η' : ApplicativeTransformation F G⦄ (h : ∀ (α : Type u) (x : F α), η x = η' x) : η = η' := by
   apply coe_inj
   ext1 α
   exact funext (h α)
 
-theorem ext_iff {η η' : ApplicativeTransformation F G} : η = η' ↔ ∀ α : Type u x : F α, η x = η' x :=
+theorem ext_iff {η η' : ApplicativeTransformation F G} : η = η' ↔ ∀ (α : Type u) (x : F α), η x = η' x :=
   ⟨fun h α x => h ▸ rfl, fun h => ext h⟩
 
 section Preserves
@@ -119,11 +119,11 @@ section Preserves
 variable (η : ApplicativeTransformation F G)
 
 @[functor_norm]
-theorem preserves_pure : ∀ {α} x : α, η (pure x) = pure x :=
+theorem preserves_pure : ∀ {α} (x : α), η (pure x) = pure x :=
   η.preserves_pure'
 
 @[functor_norm]
-theorem preserves_seq : ∀ {α β : Type u} x : F (α → β) y : F α, η (x <*> y) = η x <*> η y :=
+theorem preserves_seq : ∀ {α β : Type u} (x : F (α → β)) (y : F α), η (x <*> y) = η x <*> η y :=
   η.preserves_seq'
 
 @[functor_norm]
@@ -216,14 +216,14 @@ send the composition of applicative functors to the composition of the
 satisfy a naturality condition with respect to applicative
 transformations. -/
 class IsLawfulTraversable (t : Type u → Type u) [Traversable t] extends IsLawfulFunctor t : Type (u + 1) where
-  id_traverse : ∀ {α} x : t α, traverse id.mk x = x
+  id_traverse : ∀ {α} (x : t α), traverse id.mk x = x
   comp_traverse :
-    ∀ {F G} [Applicativeₓ F] [Applicativeₓ G] [IsLawfulApplicative F] [IsLawfulApplicative G] {α β γ} f : β → F γ g :
-      α → G β x : t α, traverse (comp.mk ∘ map f ∘ g) x = Comp.mk (map (traverse f) (traverse g x))
-  traverse_eq_map_id : ∀ {α β} f : α → β x : t α, traverse (id.mk ∘ f) x = id.mk (f <$> x)
+    ∀ {F G} [Applicativeₓ F] [Applicativeₓ G] [IsLawfulApplicative F] [IsLawfulApplicative G] {α β γ} (f : β → F γ)
+      (g : α → G β) (x : t α), traverse (comp.mk ∘ map f ∘ g) x = Comp.mk (map (traverse f) (traverse g x))
+  traverse_eq_map_id : ∀ {α β} (f : α → β) (x : t α), traverse (id.mk ∘ f) x = id.mk (f <$> x)
   naturality :
-    ∀ {F G} [Applicativeₓ F] [Applicativeₓ G] [IsLawfulApplicative F] [IsLawfulApplicative G] η :
-      ApplicativeTransformation F G {α β} f : α → F β x : t α, η (traverse f x) = traverse (@η _ ∘ f) x
+    ∀ {F G} [Applicativeₓ F] [Applicativeₓ G] [IsLawfulApplicative F] [IsLawfulApplicative G]
+      (η : ApplicativeTransformation F G) {α β} (f : α → F β) (x : t α), η (traverse f x) = traverse (@η _ ∘ f) x
 
 instance : Traversable id :=
   ⟨fun _ _ _ _ => id⟩

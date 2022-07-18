@@ -56,7 +56,8 @@ theorem as_coe (X : SheafedSpace.{v} C) : X.Carrier = (X : Top.{v}) :=
   rfl
 
 @[simp]
-theorem mk_coe carrier presheaf h : (({ Carrier, Presheaf, IsSheaf := h } : SheafedSpace.{v} C) : Top.{v}) = carrier :=
+theorem mk_coe (carrier) (presheaf) (h) :
+    (({ Carrier, Presheaf, IsSheaf := h } : SheafedSpace.{v} C) : Top.{v}) = carrier :=
   rfl
 
 instance (X : SheafedSpace.{v} C) : TopologicalSpace X :=
@@ -94,7 +95,7 @@ theorem id_c (X : SheafedSpace C) : (𝟙 X : X ⟶ X).c = eqToHom (Presheaf.Pus
   rfl
 
 @[simp]
-theorem id_c_app (X : SheafedSpace C) U :
+theorem id_c_app (X : SheafedSpace C) (U) :
     (𝟙 X : X ⟶ X).c.app U =
       eqToHom
         (by
@@ -113,15 +114,15 @@ theorem comp_base {X Y Z : SheafedSpace C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ 
   rfl
 
 @[simp]
-theorem comp_c_app {X Y Z : SheafedSpace C} (α : X ⟶ Y) (β : Y ⟶ Z) U :
+theorem comp_c_app {X Y Z : SheafedSpace C} (α : X ⟶ Y) (β : Y ⟶ Z) (U) :
     (α ≫ β).c.app U = β.c.app U ≫ α.c.app (op ((Opens.map β.base).obj (unop U))) :=
   rfl
 
-theorem comp_c_app' {X Y Z : SheafedSpace C} (α : X ⟶ Y) (β : Y ⟶ Z) U :
+theorem comp_c_app' {X Y Z : SheafedSpace C} (α : X ⟶ Y) (β : Y ⟶ Z) (U) :
     (α ≫ β).c.app (op U) = β.c.app (op U) ≫ α.c.app (op ((Opens.map β.base).obj U)) :=
   rfl
 
-theorem congr_app {X Y : SheafedSpace C} {α β : X ⟶ Y} (h : α = β) U :
+theorem congr_app {X Y : SheafedSpace C} {α β : X ⟶ Y} (h : α = β) (U) :
     α.c.app U =
       β.c.app U ≫
         X.Presheaf.map

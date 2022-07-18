@@ -45,7 +45,7 @@ sub-relation of the adjacency relation of the simple graph.
 -/
 
 
-universe u
+universe u v
 
 namespace SimpleGraph
 
@@ -66,7 +66,7 @@ structure Subgraph {V : Type u} (G : SimpleGraph V) where
 
 namespace Subgraph
 
-variable {V : Type u} {G : SimpleGraph V}
+variable {V : Type u} {W : Type v} {G : SimpleGraph V}
 
 protected theorem loopless (G' : Subgraph G) : Irreflexive G'.Adj := fun v h => G.loopless v (G'.adj_sub h)
 
@@ -75,6 +75,9 @@ theorem adj_comm (G' : Subgraph G) (v w : V) : G'.Adj v w ↔ G'.Adj w v :=
 
 @[symm]
 theorem adj_symm (G' : Subgraph G) {u v : V} (h : G'.Adj u v) : G'.Adj v u :=
+  G'.symm h
+
+protected theorem Adj.symm {G' : Subgraph G} {u v : V} (h : G'.Adj u v) : G'.Adj v u :=
   G'.symm h
 
 /-- Coercion from `G' : subgraph G` to a `simple_graph ↥G'.verts`. -/
@@ -374,35 +377,105 @@ theorem edge_set_mono {H₁ H₂ : Subgraph G} (h : H₁ ≤ H₂) : H₁.EdgeSe
 theorem _root_.disjoint.edge_set {H₁ H₂ : Subgraph G} (h : Disjoint H₁ H₂) : Disjoint H₁.EdgeSet H₂.EdgeSet := by
   simpa using edge_set_mono h
 
+/-- Graph homomorphisms induce a covariant function on subgraphs. -/
+@[simps]
+protected def map {G' : SimpleGraph W} (f : G →g G') (H : G.Subgraph) : G'.Subgraph where
+  Verts := f '' H.Verts
+  Adj := Relation.Map H.Adj f f
+  adj_sub := by
+    rintro _ _ ⟨u, v, h, rfl, rfl⟩
+    exact f.map_rel (H.adj_sub h)
+  edge_vert := by
+    rintro _ _ ⟨u, v, h, rfl, rfl⟩
+    exact Set.mem_image_of_mem _ (H.edge_vert h)
+  symm := by
+    rintro _ _ ⟨u, v, h, rfl, rfl⟩
+    exact ⟨v, u, H.symm h, rfl, rfl⟩
+
+theorem map_monotone {G' : SimpleGraph W} (f : G →g G') : Monotone (Subgraph.map f) := by
+  intro H H' h
+  constructor
+  · intro
+    simp only [← map_verts, ← Set.mem_image, ← forall_exists_index, ← and_imp]
+    rintro v hv rfl
+    exact ⟨_, h.1 hv, rfl⟩
+    
+  · rintro _ _ ⟨u, v, ha, rfl, rfl⟩
+    exact ⟨_, _, h.2 ha, rfl, rfl⟩
+    
+
+/-- Graph homomorphisms induce a contravariant function on subgraphs. -/
+@[simps]
+protected def comap {G' : SimpleGraph W} (f : G →g G') (H : G'.Subgraph) : G.Subgraph where
+  Verts := f ⁻¹' H.Verts
+  Adj := fun u v => G.Adj u v ∧ H.Adj (f u) (f v)
+  adj_sub := by
+    rintro v w ⟨ga, ha⟩
+    exact ga
+  edge_vert := by
+    rintro v w ⟨ga, ha⟩
+    simp [← H.edge_vert ha]
+
+theorem comap_monotone {G' : SimpleGraph W} (f : G →g G') : Monotone (Subgraph.comap f) := by
+  intro H H' h
+  constructor
+  · intro
+    simp only [← comap_verts, ← Set.mem_preimage]
+    apply h.1
+    
+  · intro v w
+    simp (config := { contextual := true })only [← comap_adj, ← and_imp, ← true_andₓ]
+    intro
+    apply h.2
+    
+
+theorem map_le_iff_le_comap {G' : SimpleGraph W} (f : G →g G') (H : G.Subgraph) (H' : G'.Subgraph) :
+    H.map f ≤ H' ↔ H ≤ H'.comap f := by
+  refine' ⟨fun h => ⟨fun v hv => _, fun v w hvw => _⟩, fun h => ⟨fun v => _, fun v w => _⟩⟩
+  · simp only [← comap_verts, ← Set.mem_preimage]
+    exact h.1 ⟨v, hv, rfl⟩
+    
+  · simp only [← H.adj_sub hvw, ← comap_adj, ← true_andₓ]
+    exact h.2 ⟨v, w, hvw, rfl, rfl⟩
+    
+  · simp only [← map_verts, ← Set.mem_image, ← forall_exists_index, ← and_imp]
+    rintro w hw rfl
+    exact h.1 hw
+    
+  · simp only [← Relation.Map, ← map_adj, ← forall_exists_index, ← and_imp]
+    rintro u u' hu rfl rfl
+    have := h.2 hu
+    simp only [← comap_adj] at this
+    exact this.2
+    
+
 /-- Given two subgraphs, one a subgraph of the other, there is an induced injective homomorphism of
 the subgraphs as graphs. -/
-def map {x y : Subgraph G} (h : x ≤ y) : x.coe →g y.coe where
+@[simps]
+def inclusion {x y : Subgraph G} (h : x ≤ y) : x.coe →g y.coe where
   toFun := fun v => ⟨↑v, And.left h v.property⟩
   map_rel' := fun v w hvw => h.2 hvw
 
-theorem map.injective {x y : Subgraph G} (h : x ≤ y) : Function.Injective (map h) := fun v w h => by
-  simp only [← map, ← RelHom.coe_fn_mk, ← Subtype.mk_eq_mk] at h
+theorem inclusion.injective {x y : Subgraph G} (h : x ≤ y) : Function.Injective (inclusion h) := fun v w h => by
+  simp only [← inclusion, ← RelHom.coe_fn_mk, ← Subtype.mk_eq_mk] at h
   exact Subtype.ext h
 
 /-- There is an induced injective homomorphism of a subgraph of `G` into `G`. -/
-def mapTop (x : Subgraph G) : x.coe →g G where
+@[simps]
+protected def hom (x : Subgraph G) : x.coe →g G where
   toFun := fun v => v
   map_rel' := fun v w hvw => x.adj_sub hvw
 
-theorem mapTop.injective {x : Subgraph G} : Function.Injective x.map_top := fun v w h => Subtype.ext h
-
-@[simp]
-theorem map_top_to_fun {x : Subgraph G} (v : x.Verts) : x.map_top v = v :=
-  rfl
+theorem hom.injective {x : Subgraph G} : Function.Injective x.hom := fun v w h => Subtype.ext h
 
 /-- There is an induced injective homomorphism of a subgraph of `G` as
 a spanning subgraph into `G`. -/
 @[simps]
-def mapSpanningTop (x : Subgraph G) : x.spanningCoe →g G where
+def spanningHom (x : Subgraph G) : x.spanningCoe →g G where
   toFun := id
   map_rel' := fun v w hvw => x.adj_sub hvw
 
-theorem mapSpanningTop.injective {x : Subgraph G} : Function.Injective x.mapSpanningTop := fun v w h => h
+theorem spanningHom.injective {x : Subgraph G} : Function.Injective x.spanningHom := fun v w h => h
 
 theorem neighbor_set_subset_of_subgraph {x y : Subgraph G} (h : x ≤ y) (v : V) : x.NeighborSet v ⊆ y.NeighborSet v :=
   fun w h' => h.2 h'
@@ -468,6 +541,34 @@ theorem degree_eq_one_iff_unique_adj {G' : Subgraph G} {v : V} [Fintype (G'.Neig
     G'.degree v = 1 ↔ ∃! w : V, G'.Adj v w := by
   rw [← finset_card_neighbor_set_eq_degree, Finset.card_eq_one, Finset.singleton_iff_unique_mem]
   simp only [← Set.mem_to_finset, ← mem_neighbor_set]
+
+/-! ## Subgraphs of subgraphs -/
+
+
+/-- Given a subgraph of a subgraph of `G`, construct a subgraph of `G`. -/
+@[reducible]
+protected def coeSubgraph {G' : G.Subgraph} : G'.coe.Subgraph → G.Subgraph :=
+  Subgraph.map G'.hom
+
+/-- Given a subgraph of `G`, restrict it to being a subgraph of another subgraph `G'` by
+taking the portion of `G` that intersects `G'`. -/
+@[reducible]
+protected def restrict {G' : G.Subgraph} : G.Subgraph → G'.coe.Subgraph :=
+  Subgraph.comap G'.hom
+
+theorem restrict_coe_subgraph {G' : G.Subgraph} (G'' : G'.coe.Subgraph) : G''.coeSubgraph.restrict = G'' := by
+  ext
+  · simp
+    
+  · simp only [← Relation.Map, ← comap_adj, ← coe_adj, ← Subtype.coe_prop, ← hom_apply, ← map_adj, ← SetCoe.exists, ←
+      Subtype.coe_mk, ← exists_and_distrib_right, ← exists_eq_right_rightₓ, ← Subtype.coe_eta, ← exists_true_left, ←
+      exists_eq_right, ← and_iff_right_iff_imp]
+    apply G''.adj_sub
+    
+
+theorem coe_subgraph_injective (G' : G.Subgraph) :
+    Function.Injective (Subgraph.coeSubgraph : G'.coe.Subgraph → G.Subgraph) :=
+  Function.LeftInverse.injective restrict_coe_subgraph
 
 /-! ## Edge deletion -/
 
@@ -556,6 +657,62 @@ theorem spanning_coe_delete_edges_le (G' : G.Subgraph) (s : Set (Sym2 V)) :
   spanning_coe_le_of_le (delete_edges_le s)
 
 end DeleteEdges
+
+/-! ## Induced subgraphs -/
+
+
+/-- The induced subgraph of a subgraph. The expectation is that `s ⊆ G'.verts` for the usual
+notion of an induced subgraph, but, in general, `s` is taken to be the new vertex set and edges
+are induced from the subgraph `G'`. -/
+/- Given a subgraph, we can change its vertex set while removing any invalid edges, which
+gives induced subgraphs. See also `simple_graph.induce` for the `simple_graph` version, which,
+unlike for subgraphs, results in a graph with a different vertex type. -/
+@[simps]
+def induce (G' : G.Subgraph) (s : Set V) : G.Subgraph where
+  Verts := s
+  Adj := fun u v => u ∈ s ∧ v ∈ s ∧ G'.Adj u v
+  adj_sub := fun u v => by
+    rintro ⟨-, -, ha⟩
+    exact G'.adj_sub ha
+  edge_vert := fun u v => by
+    rintro ⟨h, -, -⟩
+    exact h
+
+theorem _root_.simple_graph.induce_eq_coe_induce_top (s : Set V) : G.induce s = ((⊤ : G.Subgraph).induce s).coe := by
+  ext v w
+  simp
+
+section Induce
+
+variable {G' G'' : G.Subgraph} {s s' : Set V}
+
+theorem induce_mono (hg : G' ≤ G'') (hs : s ⊆ s') : G'.induce s ≤ G''.induce s' := by
+  constructor
+  · simp [← hs]
+    
+  · simp (config := { contextual := true })only [← induce_adj, ← true_andₓ, ← and_imp]
+    intro v w hv hw ha
+    exact ⟨hs hv, hs hw, hg.2 ha⟩
+    
+
+@[mono]
+theorem induce_mono_left (hg : G' ≤ G'') : G'.induce s ≤ G''.induce s :=
+  induce_mono hg
+    (by
+      rfl)
+
+@[mono]
+theorem induce_mono_right (hs : s ⊆ s') : G'.induce s ≤ G'.induce s' :=
+  induce_mono
+    (by
+      rfl)
+    hs
+
+@[simp]
+theorem induce_empty : G'.induce ∅ = ⊥ := by
+  ext <;> simp
+
+end Induce
 
 end Subgraph
 

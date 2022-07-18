@@ -78,7 +78,7 @@ natural properties. -/
 @[elab_as_eliminator]
 theorem adjoin_induction₂ {p : A → A → Prop} {a b : A} (ha : a ∈ adjoin R s) (hb : b ∈ adjoin R s)
     (Hs : ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀, p x y) (Halg : ∀ r₁ r₂, p (algebraMap R A r₁) (algebraMap R A r₂))
-    (Halg_left : ∀ r, ∀ x ∈ s, ∀, p (algebraMap R A r) x) (Halg_right : ∀ r, ∀ x ∈ s, ∀, p x (algebraMap R A r))
+    (Halg_left : ∀ (r), ∀ x ∈ s, ∀, p (algebraMap R A r) x) (Halg_right : ∀ (r), ∀ x ∈ s, ∀, p x (algebraMap R A r))
     (Hadd_left : ∀ x₁ x₂ y, p x₁ y → p x₂ y → p (x₁ + x₂) y) (Hadd_right : ∀ x y₁ y₂, p x y₁ → p x y₂ → p x (y₁ + y₂))
     (Hmul_left : ∀ x₁ x₂ y, p x₁ y → p x₂ y → p (x₁ * x₂) y) (Hmul_right : ∀ x y₁ y₂, p x y₁ → p x y₂ → p x (y₁ * y₂)) :
     p a b := by
@@ -93,11 +93,11 @@ theorem adjoin_induction₂ {p : A → A → Prop} {a b : A} (ha : a ∈ adjoin 
     
 
 /-- The difference with `algebra.adjoin_induction` is that this acts on the subtype. -/
-theorem adjoin_induction' {p : adjoin R s → Prop} (Hs : ∀ x h : x ∈ s, p ⟨x, subset_adjoin h⟩)
+theorem adjoin_induction' {p : adjoin R s → Prop} (Hs : ∀ (x) (h : x ∈ s), p ⟨x, subset_adjoin h⟩)
     (Halg : ∀ r, p (algebraMap R _ r)) (Hadd : ∀ x y, p x → p y → p (x + y)) (Hmul : ∀ x y, p x → p y → p (x * y))
     (x : adjoin R s) : p x :=
   (Subtype.recOn x) fun x hx => by
-    refine' Exists.elim _ fun hx : x ∈ adjoin R s hc : p ⟨x, hx⟩ => hc
+    refine' Exists.elim _ fun (hx : x ∈ adjoin R s) (hc : p ⟨x, hx⟩) => hc
     exact
       adjoin_induction hx (fun x hx => ⟨subset_adjoin hx, Hs x hx⟩) (fun r => ⟨Subalgebra.algebra_map_mem _ r, Halg r⟩)
         (fun x y hx hy =>
@@ -211,7 +211,7 @@ theorem mem_adjoin_of_map_mul {s} {x : A} {f : A →ₗ[R] B} (hf : ∀ a₁ a�
   rw [algebra_map_eq_smul_one]
   exact f.map_smul _ _
 
-theorem adjoin_inl_union_inr_eq_prod s t :
+theorem adjoin_inl_union_inr_eq_prod (s) (t) :
     adjoin R (LinearMap.inl R A B '' (s ∪ {1}) ∪ LinearMap.inr R A B '' (t ∪ {1})) = (adjoin R s).Prod (adjoin R t) :=
   by
   apply le_antisymmₓ
@@ -289,7 +289,7 @@ theorem pow_smul_mem_adjoin_smul (r : R) (s : Set A) {x : A} (hx : x ∈ adjoin 
     ∃ n₀ : ℕ, ∀, ∀ n ≥ n₀, ∀, r ^ n • x ∈ adjoin R (r • s) := by
   change x ∈ (adjoin R s).toSubmodule at hx
   rw [adjoin_eq_span, Finsupp.mem_span_iff_total] at hx
-  rcases hx with ⟨l, rfl : (l.sum fun i : Submonoid.closure s c : R => c • ↑i) = x⟩
+  rcases hx with ⟨l, rfl : (l.sum fun (i : Submonoid.closure s) (c : R) => c • ↑i) = x⟩
   choose n₁ n₂ using fun x : Submonoid.closure s => Submonoid.pow_smul_mem_closure_smul r s x.Prop
   use l.support.sup n₁
   intro n hn

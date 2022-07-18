@@ -50,7 +50,6 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
     apply id_nonzero X
     simp only [is_iso.hom_inv_id f, ← h, ← zero_comp], fun w => is_iso_of_hom_simple w⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- In any preadditive category with kernels,
 the endomorphisms of a simple object form a division ring.
 -/
@@ -144,7 +143,6 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
     ∃ c : 𝕜, c • 𝟙 X = f :=
   (finrank_eq_one_iff_of_nonzero' (𝟙 X) (id_nonzero X)).mp (finrank_endomorphism_simple_eq_one 𝕜 X) f
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Endomorphisms of a simple object form a field if they are finite dimensional.
 This can't be an instance as `𝕜` would be undetermined.
 -/

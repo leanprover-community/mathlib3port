@@ -52,17 +52,17 @@ variable [CommSemiringₓ R] [CommSemiringₓ R₁] [AddCommMonoidₓ M₁] [Mod
   [Module R₂ M₂] {I₁ : R₁ →+* R} {I₂ : R₂ →+* R} {I₁' : R₁ →+* R}
 
 /-- The proposition that two elements of a sesquilinear form space are orthogonal -/
-def IsOrtho (B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R) x y : Prop :=
+def IsOrtho (B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R) (x y) : Prop :=
   B x y = 0
 
 theorem is_ortho_def {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} {x y} : B.IsOrtho x y ↔ B x y = 0 :=
   Iff.rfl
 
-theorem is_ortho_zero_left (B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R) x : IsOrtho B (0 : M₁) x := by
+theorem is_ortho_zero_left (B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R) (x) : IsOrtho B (0 : M₁) x := by
   dunfold is_ortho
   rw [map_zero B, zero_apply]
 
-theorem is_ortho_zero_right (B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R) x : IsOrtho B x (0 : M₂) :=
+theorem is_ortho_zero_right (B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R) (x) : IsOrtho B x (0 : M₂) :=
   map_zero (B x)
 
 theorem is_ortho_flip {B : M₁ →ₛₗ[I₁] M₁ →ₛₗ[I₁'] R} {x y} : B.IsOrtho x y ↔ B.flip.IsOrtho y x := by
@@ -126,7 +126,6 @@ theorem ortho_smul_right {B : V₁ →ₛₗ[I₁] V₂ →ₛₗ[I₂] K} {x y}
       
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A set of orthogonal vectors `v` with respect to some sesquilinear form `B` is linearly
   independent if for all `i`, `B (v i) (v i) ≠ 0`. -/
 theorem linear_independent_of_is_Ortho {B : V₁ →ₛₗ[I₁] V₁ →ₛₗ[I₁'] K} {v : n → V₁} (hv₁ : B.IsOrtho v)
@@ -201,7 +200,7 @@ def IsSymm (B : M →ₛₗ[I] M →ₗ[R] R) : Prop :=
 
 namespace IsSymm
 
-protected theorem eq (H : B.IsSymm) x y : I (B x y) = B y x :=
+protected theorem eq (H : B.IsSymm) (x y) : I (B x y) = B y x :=
   H x y
 
 theorem is_refl (H : B.IsSymm) : B.IsRefl := fun x y H1 => by
@@ -246,10 +245,10 @@ variable (H : B.IsAlt)
 
 include H
 
-theorem self_eq_zero x : B x x = 0 :=
+theorem self_eq_zero (x) : B x x = 0 :=
   H x
 
-theorem neg x y : -B x y = B y x := by
+theorem neg (x y) : -B x y = B y x := by
   have H1 : B (y + x) (y + x) = 0 := self_eq_zero H (y + x)
   simp [← map_add, ← self_eq_zero H] at H1
   rw [add_eq_zero_iff_neg_eq] at H1
@@ -369,8 +368,8 @@ theorem span_singleton_sup_orthogonal_eq_top {B : V →ₗ[K] V →ₗ[K] K} {x 
 -- todo: Generalize this to sesquilinear maps
 theorem is_compl_span_singleton_orthogonal {B : V →ₗ[K] V →ₗ[K] K} {x : V} (hx : ¬B.IsOrtho x x) :
     IsCompl (K∙x) (Submodule.orthogonalBilin (K∙x) B) :=
-  { inf_le_bot := eq_bot_iff.1 <| span_singleton_inf_orthogonal_eq_bot B x hx,
-    top_le_sup := eq_top_iff.1 <| span_singleton_sup_orthogonal_eq_top hx }
+  { Disjoint := eq_bot_iff.1 <| span_singleton_inf_orthogonal_eq_bot B x hx,
+    Codisjoint := eq_top_iff.1 <| span_singleton_sup_orthogonal_eq_top hx }
 
 end Orthogonal
 

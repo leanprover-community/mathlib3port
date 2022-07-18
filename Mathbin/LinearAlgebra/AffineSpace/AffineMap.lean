@@ -53,7 +53,7 @@ structure AffineMap (k : Type _) {V1 : Type _} (P1 : Type _) {V2 : Type _} (P2 :
   [Module k V1] [affine_space V1 P1] [AddCommGroupₓ V2] [Module k V2] [affine_space V2 P2] where
   toFun : P1 → P2
   linear : V1 →ₗ[k] V2
-  map_vadd' : ∀ p : P1 v : V1, to_fun (v +ᵥ p) = linear v +ᵥ to_fun p
+  map_vadd' : ∀ (p : P1) (v : V1), to_fun (v +ᵥ p) = linear v +ᵥ to_fun p
 
 -- mathport name: «expr →ᵃ[ ] »
 notation:25 P1 " →ᵃ[" k:25 "] " P2:0 => AffineMap k P1 P2
@@ -96,7 +96,7 @@ include V1 V2
 /-- Constructing an affine map and coercing back to a function
 produces the same map. -/
 @[simp]
-theorem coe_mk (f : P1 → P2) linear add : ((mk f linear add : P1 →ᵃ[k] P2) : P1 → P2) = f :=
+theorem coe_mk (f : P1 → P2) (linear add) : ((mk f linear add : P1 →ᵃ[k] P2) : P1 → P2) = f :=
   rfl
 
 /-- `to_fun` is the same as the result of coercing to a function. -/
@@ -182,11 +182,11 @@ def mk' (f : P1 → P2) (f' : V1 →ₗ[k] V2) (p : P1) (h : ∀ p' : P1, f p' =
     rw [h, h p', vadd_vsub_assoc, f'.map_add, vadd_vadd]
 
 @[simp]
-theorem coe_mk' (f : P1 → P2) (f' : V1 →ₗ[k] V2) p h : ⇑(mk' f f' p h) = f :=
+theorem coe_mk' (f : P1 → P2) (f' : V1 →ₗ[k] V2) (p h) : ⇑(mk' f f' p h) = f :=
   rfl
 
 @[simp]
-theorem mk'_linear (f : P1 → P2) (f' : V1 →ₗ[k] V2) p h : (mk' f f' p h).linear = f' :=
+theorem mk'_linear (f : P1 → P2) (f' : V1 →ₗ[k] V2) (p h) : (mk' f f' p h).linear = f' :=
   rfl
 
 section HasSmul

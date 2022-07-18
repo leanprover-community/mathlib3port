@@ -81,7 +81,7 @@ structure Line (α ι : Type _) where
 namespace Line
 
 -- This lets us treat a line `l : line α ι` as a function `α → ι → α`.
-instance α ι : CoeFun (Line α ι) fun _ => α → ι → α :=
+instance (α ι) : CoeFun (Line α ι) fun _ => α → ι → α :=
   ⟨fun l x i => (l.idxFun i).getOrElse x⟩
 
 /-- A line is monochromatic if all its points are the same color. -/
@@ -89,11 +89,11 @@ def IsMono {α ι κ} (C : (ι → α) → κ) (l : Line α ι) : Prop :=
   ∃ c, ∀ x, C (l x) = c
 
 /-- The diagonal line. It is the identity at every coordinate. -/
-def diagonal α ι [Nonempty ι] : Line α ι where
+def diagonal (α ι) [Nonempty ι] : Line α ι where
   idxFun := fun _ => none
   proper := ⟨Classical.arbitrary ι, rfl⟩
 
-instance α ι [Nonempty ι] : Inhabited (Line α ι) :=
+instance (α ι) [Nonempty ι] : Inhabited (Line α ι) :=
   ⟨diagonal α ι⟩
 
 /-- The type of lines that are only one color except possibly at their endpoints. -/
@@ -177,7 +177,7 @@ theorem diagonal_apply {α ι} [Nonempty ι] (x : α) : Line.diagonal α ι x = 
 /-- The Hales-Jewett theorem. This version has a restriction on universe levels which is necessary
 for the proof. See `exists_mono_in_high_dimension` for a fully universe-polymorphic version. -/
 private theorem exists_mono_in_high_dimension' :
-    ∀ α : Type u [Fintype α] κ : Type max v u [Fintype κ],
+    ∀ (α : Type u) [Fintype α] (κ : Type max v u) [Fintype κ],
       ∃ (ι : Type)(_ : Fintype ι), ∀ C : (ι → α) → κ, ∃ l : Line α ι, l.IsMono C :=
   -- The proof proceeds by induction on `α`.
     Fintype.induction_empty_option

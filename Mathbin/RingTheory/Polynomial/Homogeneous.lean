@@ -83,7 +83,6 @@ theorem homogeneous_submodule_eq_finsupp_supported [CommSemiringₓ R] (n : ℕ)
 
 variable {σ R}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem homogeneous_submodule_mul [CommSemiringₓ R] (m n : ℕ) :
     homogeneousSubmodule σ R m * homogeneousSubmodule σ R n ≤ homogeneousSubmodule σ R (m + n) := by
   rw [Submodule.mul_le]
@@ -113,7 +112,6 @@ variable [CommSemiringₓ R]
 
 variable {σ R}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem is_homogeneous_monomial (d : σ →₀ ℕ) (r : R) (n : ℕ) (hn : (∑ i in d.support, d i) = n) :
     IsHomogeneous (monomial d r) n := by
   intro c hc
@@ -159,7 +157,6 @@ namespace IsHomogeneous
 
 variable [CommSemiringₓ R] {φ ψ : MvPolynomial σ R} {m n : ℕ}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem coeff_eq_zero (hφ : IsHomogeneous φ n) (d : σ →₀ ℕ) (hd : (∑ i in d.support, d i) ≠ n) : coeff d φ = 0 := by
   have aux := mt (@hφ d) hd
   classical
@@ -179,7 +176,6 @@ theorem sum {ι : Type _} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : �
 theorem mul (hφ : IsHomogeneous φ m) (hψ : IsHomogeneous ψ n) : IsHomogeneous (φ * ψ) (m + n) :=
   homogeneous_submodule_mul m n <| Submodule.mul_mem_mul hφ hψ
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem prod {ι : Type _} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : ι → ℕ)
     (h : ∀, ∀ i ∈ s, ∀, IsHomogeneous (φ i) (n i)) : IsHomogeneous (∏ i in s, φ i) (∑ i in s, n i) := by
   classical

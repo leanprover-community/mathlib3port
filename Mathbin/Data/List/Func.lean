@@ -103,7 +103,7 @@ theorem length_set : ∀ {m : ℕ} {as : List α}, as {m ↦ a}.length = max as.
 theorem get_nil {k : ℕ} : (get k [] : α) = default := by
   cases k <;> rfl
 
-theorem get_eq_default_of_le : ∀ k : ℕ {as : List α}, as.length ≤ k → get k as = default
+theorem get_eq_default_of_le : ∀ (k : ℕ) {as : List α}, as.length ≤ k → get k as = default
   | 0, [], h1 => rfl
   | 0, a :: as, h1 => by
     cases h1
@@ -156,7 +156,7 @@ theorem mem_get_of_ne_zero : ∀ {n : ℕ} {as : List α}, get n as ≠ default 
     apply Or.inr (mem_get_of_ne_zero _)
     apply h1
 
-theorem get_set_eq_of_ne {a : α} : ∀ {as : List α} k : ℕ m : ℕ, m ≠ k → get m (as {k ↦ a}) = get m as
+theorem get_set_eq_of_ne {a : α} : ∀ {as : List α} (k : ℕ) (m : ℕ), m ≠ k → get m (as {k ↦ a}) = get m as
   | as, 0, m, h1 => by
     cases m
     contradiction
@@ -269,7 +269,7 @@ theorem pointwise_nil {f : α → β → γ} : ∀ as : List α, pointwise f as 
     simp only [← pointwise_nil as, ← pointwise, ← eq_self_iff_true, ← and_selfₓ, ← List.map]
 
 theorem get_pointwise [Inhabited γ] {f : α → β → γ} (h1 : f default default = default) :
-    ∀ k : Nat as : List α bs : List β, get k (pointwise f as bs) = f (get k as) (get k bs)
+    ∀ (k : Nat) (as : List α) (bs : List β), get k (pointwise f as bs) = f (get k as) (get k bs)
   | k, [], [] => by
     simp only [← h1, ← get_nil, ← pointwise, ← get]
   | 0, [], b :: bs => by

@@ -104,7 +104,6 @@ theorem exists_factors (a : α) : a ≠ 0 → ∃ f : Multiset α, (∀, ∀ b �
       rw [s.prod_cons i]
       exact hs.2.mul_left i⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem not_unit_iff_exists_factors_eq (a : α) (hn0 : a ≠ 0) :
     ¬IsUnit a ↔ ∃ f : Multiset α, (∀, ∀ b ∈ f, ∀, Irreducible b) ∧ f.Prod = a ∧ f ≠ ∅ :=
   ⟨fun hnu => by
@@ -141,7 +140,7 @@ theorem WfDvdMonoid.iff_well_founded_associates [CancelCommMonoidWithZero α] :
 
 section Prio
 
--- ./././Mathport/Syntax/Translate/Basic.lean:293:40: warning: unsupported option default_priority
+-- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option default_priority
 set_option default_priority 100
 
 /-- unique factorization monoids.
@@ -227,7 +226,7 @@ theorem prime_factors_unique [CancelCommMonoidWithZero α] :
             hf _
               (by
                 simp [← hq]))
-          (fun q hq : q ∈ g.erase b => hg q (Multiset.mem_of_mem_erase hq))
+          (fun q (hq : q ∈ g.erase b) => hg q (Multiset.mem_of_mem_erase hq))
           (Associated.of_mul_left
             (by
               rwa [← Multiset.prod_cons, ← Multiset.prod_cons, Multiset.cons_erase hbg])
@@ -282,7 +281,6 @@ variable (pf : ∀ a : α, a ≠ 0 → ∃ f : Multiset α, (∀, ∀ b ∈ f, �
 
 include pf
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem WfDvdMonoid.of_exists_prime_factors : WfDvdMonoid α :=
   ⟨by
     classical
@@ -764,11 +762,11 @@ theorem dvd_of_dvd_mul_right_of_no_prime_factors {a b c : R} (ha : a ≠ 0)
     (no_factors : ∀ {d}, d ∣ a → d ∣ b → ¬Prime d) : a ∣ b * c → a ∣ c := by
   simpa [← mul_comm b c] using dvd_of_dvd_mul_left_of_no_prime_factors ha @no_factors
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (a «expr ≠ » (0 : R))
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a «expr ≠ » (0 : R))
 /-- If `a ≠ 0, b` are elements of a unique factorization domain, then dividing
 out their common factor `c'` gives `a'` and `b'` with no factors in common. -/
 theorem exists_reduced_factors :
-    ∀ a _ : a ≠ (0 : R) b, ∃ a' b' c', (∀ {d}, d ∣ a' → d ∣ b' → IsUnit d) ∧ c' * a' = a ∧ c' * b' = b := by
+    ∀ (a) (_ : a ≠ (0 : R)) (b), ∃ a' b' c', (∀ {d}, d ∣ a' → d ∣ b' → IsUnit d) ∧ c' * a' = a ∧ c' * b' = b := by
   have := Classical.propDecidable
   intro a
   refine' induction_on_prime a _ _ _
@@ -850,7 +848,7 @@ to produce a specification for `count (normalized_factors _) _`..
 theorem multiplicity_eq_count_normalized_factors {a b : R} (ha : Irreducible a) (hb : b ≠ 0) :
     multiplicity a b = (normalizedFactors b).count (normalize a) := by
   apply le_antisymmₓ
-  · apply Enat.le_of_lt_add_one
+  · apply PartEnat.le_of_lt_add_one
     rw [← Nat.cast_oneₓ, ← Nat.cast_addₓ, lt_iff_not_geₓ, ge_iff_le,
       le_multiplicity_iff_repeat_le_normalized_factors ha hb, ← le_count_iff_repeat_le]
     simp
@@ -871,7 +869,7 @@ theorem count_normalized_factors_eq {p x : R} (hp : Irreducible p) (hnorm : norm
   · simp [← hx0] at hlt
     contradiction
     
-  rw [← Enat.coe_inj]
+  rw [← PartEnat.coe_inj]
   convert (multiplicity_eq_count_normalized_factors hp hx0).symm
   · exact hnorm.symm
     
@@ -1084,7 +1082,6 @@ theorem FactorSet.unique [Nontrivial α] {p q : FactorSet α} (h : p.Prod = q.Pr
         
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem prod_le_prod_iff_le [Nontrivial α] {p q : Multiset (Associates α)} (hp : ∀, ∀ a ∈ p, ∀, Irreducible a)
     (hq : ∀, ∀ a ∈ q, ∀, Irreducible a) : p.Prod ≤ q.Prod ↔ p ≤ q :=
   Iff.intro
@@ -1152,7 +1149,6 @@ noncomputable def factors (a : Associates α) : FactorSet α := by
 theorem factors_0 : (0 : Associates α).factors = ⊤ :=
   dif_pos rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem factors_mk (a : α) (h : a ≠ 0) : (Associates.mk a).factors = factors' a := by
   classical
@@ -1194,7 +1190,6 @@ theorem eq_of_factors_eq_factors {a b : Associates α} (h : a.factors = b.factor
 
 omit dec dec'
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem eq_of_prod_eq_prod [Nontrivial α] {a b : FactorSet α} (h : a.Prod = b.Prod) : a = b := by
   classical
   have : a.prod.factors = b.prod.factors := by
@@ -1204,12 +1199,12 @@ theorem eq_of_prod_eq_prod [Nontrivial α] {a b : FactorSet α} (h : a.Prod = b.
 include dec dec' dec_irr
 
 theorem eq_factors_of_eq_counts {a b : Associates α} (ha : a ≠ 0) (hb : b ≠ 0)
-    (h : ∀ p : Associates α hp : Irreducible p, p.count a.factors = p.count b.factors) : a.factors = b.factors := by
+    (h : ∀ (p : Associates α) (hp : Irreducible p), p.count a.factors = p.count b.factors) : a.factors = b.factors := by
   obtain ⟨sa, h_sa⟩ := factors_eq_some_iff_ne_zero.mpr ha
   obtain ⟨sb, h_sb⟩ := factors_eq_some_iff_ne_zero.mpr hb
   rw [h_sa, h_sb] at h⊢
   rw [Option.some_inj]
-  have h_count : ∀ p : Associates α hp : Irreducible p, sa.count ⟨p, hp⟩ = sb.count ⟨p, hp⟩ := by
+  have h_count : ∀ (p : Associates α) (hp : Irreducible p), sa.count ⟨p, hp⟩ = sb.count ⟨p, hp⟩ := by
     intro p hp
     rw [← count_some, ← count_some, h p hp]
   apply multiset.to_finsupp.injective
@@ -1261,7 +1256,6 @@ theorem count_le_count_of_le {a b p : Associates α} (hb : b ≠ 0) (hp : Irredu
 
 omit dec dec' dec_irr
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem prod_le [Nontrivial α] {a b : FactorSet α} : a.Prod ≤ b.Prod ↔ a ≤ b := by
   classical
   exact
@@ -1540,7 +1534,7 @@ theorem dvd_count_pow [Nontrivial α] {a : Associates α} (ha : a ≠ 0) {p : As
   apply dvd_mul_right
 
 theorem is_pow_of_dvd_count [Nontrivial α] {a : Associates α} (ha : a ≠ 0) {k : ℕ}
-    (hk : ∀ p : Associates α hp : Irreducible p, k ∣ count p a.factors) : ∃ b : Associates α, a = b ^ k := by
+    (hk : ∀ (p : Associates α) (hp : Irreducible p), k ∣ count p a.factors) : ∃ b : Associates α, a = b ^ k := by
   obtain ⟨a0, hz, rfl⟩ := exists_non_zero_rep ha
   rw [factors_mk a0 hz] at hk
   have hk' : ∀ p, p ∈ factors' a0 → k ∣ (factors' a0).count p := by
@@ -1598,7 +1592,6 @@ omit dec_irr
 
 omit dec'
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem eq_pow_of_mul_eq_pow [Nontrivial α] {a b c : Associates α} (ha : a ≠ 0) (hb : b ≠ 0)
     (hab : ∀ d, d ∣ a → d ∣ b → ¬Prime d) {k : ℕ} (h : a * b = c ^ k) : ∃ d : Associates α, a = d ^ k := by
   classical
@@ -1617,7 +1610,6 @@ theorem eq_pow_of_mul_eq_pow [Nontrivial α] {a b c : Associates α} (ha : a ≠
     cases mul_eq_zero.mp h <;> contradiction
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The only divisors of prime powers are prime powers. -/
 theorem eq_pow_find_of_dvd_irreducible_pow {a p : Associates α} (hp : Irreducible p) [∀ n : ℕ, Decidable (a ∣ p ^ n)]
     {n : ℕ} (h : a ∣ p ^ n) : a = p ^ Nat.findₓ ⟨n, h⟩ := by

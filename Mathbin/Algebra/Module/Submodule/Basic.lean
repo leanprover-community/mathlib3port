@@ -64,15 +64,15 @@ theorem mem_to_add_submonoid (p : Submodule R M) (x : M) : x ∈ p.toAddSubmonoi
 variable {p q : Submodule R M}
 
 @[simp]
-theorem mem_mk {S : Set M} {x : M} h₁ h₂ h₃ : x ∈ (⟨S, h₁, h₂, h₃⟩ : Submodule R M) ↔ x ∈ S :=
+theorem mem_mk {S : Set M} {x : M} (h₁ h₂ h₃) : x ∈ (⟨S, h₁, h₂, h₃⟩ : Submodule R M) ↔ x ∈ S :=
   Iff.rfl
 
 @[simp]
-theorem coe_set_mk (S : Set M) h₁ h₂ h₃ : ((⟨S, h₁, h₂, h₃⟩ : Submodule R M) : Set M) = S :=
+theorem coe_set_mk (S : Set M) (h₁ h₂ h₃) : ((⟨S, h₁, h₂, h₃⟩ : Submodule R M) : Set M) = S :=
   rfl
 
 @[simp]
-theorem mk_le_mk {S S' : Set M} h₁ h₂ h₃ h₁' h₂' h₃' :
+theorem mk_le_mk {S S' : Set M} (h₁ h₂ h₃ h₁' h₂' h₃') :
     (⟨S, h₁, h₂, h₃⟩ : Submodule R M) ≤ (⟨S', h₁', h₂', h₃'⟩ : Submodule R M) ↔ S ⊆ S' :=
   Iff.rfl
 
@@ -421,12 +421,12 @@ variable [Ringₓ R] [IsDomain R]
 
 variable [AddCommGroupₓ M] [Module R M] {b : ι → M}
 
-theorem not_mem_of_ortho {x : M} {N : Submodule R M} (ortho : ∀ c : R, ∀ y ∈ N, ∀, c • x + y = (0 : M) → c = 0) :
+theorem not_mem_of_ortho {x : M} {N : Submodule R M} (ortho : ∀ (c : R), ∀ y ∈ N, ∀, c • x + y = (0 : M) → c = 0) :
     x ∉ N := by
   intro hx
   simpa using ortho (-1) x hx
 
-theorem ne_zero_of_ortho {x : M} {N : Submodule R M} (ortho : ∀ c : R, ∀ y ∈ N, ∀, c • x + y = (0 : M) → c = 0) :
+theorem ne_zero_of_ortho {x : M} {N : Submodule R M} (ortho : ∀ (c : R), ∀ y ∈ N, ∀, c • x + y = (0 : M) → c = 0) :
     x ≠ 0 :=
   mt (fun h => show x ∈ N from h.symm ▸ N.zero_mem) (not_mem_of_ortho ortho)
 
@@ -444,7 +444,8 @@ instance toOrderedAddCommMonoid {M} [OrderedAddCommMonoid M] [Module R M] (S : S
 /-- A submodule of a `linear_ordered_add_comm_monoid` is a `linear_ordered_add_comm_monoid`. -/
 instance toLinearOrderedAddCommMonoid {M} [LinearOrderedAddCommMonoid M] [Module R M] (S : Submodule R M) :
     LinearOrderedAddCommMonoid S :=
-  Subtype.coe_injective.LinearOrderedAddCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.LinearOrderedAddCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ =>
+    rfl
 
 /-- A submodule of an `ordered_cancel_add_comm_monoid` is an `ordered_cancel_add_comm_monoid`. -/
 instance toOrderedCancelAddCommMonoid {M} [OrderedCancelAddCommMonoid M] [Module R M] (S : Submodule R M) :
@@ -455,7 +456,8 @@ instance toOrderedCancelAddCommMonoid {M} [OrderedCancelAddCommMonoid M] [Module
 `linear_ordered_cancel_add_comm_monoid`. -/
 instance toLinearOrderedCancelAddCommMonoid {M} [LinearOrderedCancelAddCommMonoid M] [Module R M] (S : Submodule R M) :
     LinearOrderedCancelAddCommMonoid S :=
-  Subtype.coe_injective.LinearOrderedCancelAddCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.LinearOrderedCancelAddCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
+    fun _ _ => rfl
 
 end OrderedMonoid
 
@@ -473,7 +475,7 @@ instance toOrderedAddCommGroup {M} [OrderedAddCommGroup M] [Module R M] (S : Sub
 instance toLinearOrderedAddCommGroup {M} [LinearOrderedAddCommGroup M] [Module R M] (S : Submodule R M) :
     LinearOrderedAddCommGroup S :=
   Subtype.coe_injective.LinearOrderedAddCommGroup coe rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
-    (fun _ _ => rfl) fun _ _ => rfl
+    (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
 end OrderedGroup
 

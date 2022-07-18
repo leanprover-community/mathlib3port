@@ -36,10 +36,10 @@ universe v v₂ u u₂
 -- morphism levels before object levels. See note [category_theory universes].
 class Groupoid (obj : Type u) extends Category.{v} obj : Type max u (v + 1) where
   inv : ∀ {X Y : obj}, (X ⟶ Y) → (Y ⟶ X)
-  inv_comp' : ∀ {X Y : obj} f : X ⟶ Y, comp (inv f) f = id Y := by
+  inv_comp' : ∀ {X Y : obj} (f : X ⟶ Y), comp (inv f) f = id Y := by
     run_tac
       obviously
-  comp_inv' : ∀ {X Y : obj} f : X ⟶ Y, comp f (inv f) = id X := by
+  comp_inv' : ∀ {X Y : obj} (f : X ⟶ Y), comp f (inv f) = id X := by
     run_tac
       obviously
 
@@ -86,7 +86,7 @@ section
 variable {C : Type u} [Category.{v} C]
 
 /-- A category where every morphism `is_iso` is a groupoid. -/
-noncomputable def Groupoid.ofIsIso (all_is_iso : ∀ {X Y : C} f : X ⟶ Y, IsIso f) :
+noncomputable def Groupoid.ofIsIso (all_is_iso : ∀ {X Y : C} (f : X ⟶ Y), IsIso f) :
     Groupoid.{v} C where inv := fun X Y f => inv f
 
 /-- A category with a unique morphism between any two objects is a groupoid -/
@@ -104,10 +104,10 @@ section
 
 instance groupoidPi {I : Type u} {J : I → Type u₂} [∀ i, Groupoid.{v} (J i)] :
     Groupoid.{max u v}
-      (∀ i : I, J i) where inv := fun x y : ∀ i, J i f : ∀ i, x i ⟶ y i => fun i : I => Groupoid.inv (f i)
+      (∀ i : I, J i) where inv := fun (x y : ∀ i, J i) (f : ∀ i, x i ⟶ y i) => fun i : I => Groupoid.inv (f i)
 
 instance groupoidProd {α : Type u} {β : Type v} [Groupoid.{u₂} α] [Groupoid.{v₂} β] :
-    Groupoid.{max u₂ v₂} (α × β) where inv := fun x y : α × β f : x ⟶ y => (Groupoid.inv f.1, Groupoid.inv f.2)
+    Groupoid.{max u₂ v₂} (α × β) where inv := fun (x y : α × β) (f : x ⟶ y) => (Groupoid.inv f.1, Groupoid.inv f.2)
 
 end
 

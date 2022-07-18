@@ -55,7 +55,7 @@ def sqrt (n : ℕ) : ℕ :=
   | 0 => 0
   | succ s => sqrtAux (shiftl 1 (bit0 (div2 s))) 0 n
 
-theorem sqrt_aux_0 r n : sqrtAux 0 r n = r := by
+theorem sqrt_aux_0 (r n) : sqrtAux 0 r n = r := by
   rw [sqrt_aux] <;> simp
 
 attribute [local simp] sqrt_aux_0
@@ -76,7 +76,7 @@ private def is_sqrt (n q : ℕ) : Prop :=
 
 attribute [-simp] mul_eq_mul_left_iff mul_eq_mul_right_iff
 
-private theorem sqrt_aux_is_sqrt_lemma (m r n : ℕ) (h₁ : r * r ≤ n) m' (hm : shiftr (2 ^ m * 2 ^ m) 2 = m')
+private theorem sqrt_aux_is_sqrt_lemma (m r n : ℕ) (h₁ : r * r ≤ n) (m') (hm : shiftr (2 ^ m * 2 ^ m) 2 = m')
     (H1 : n < (r + 2 ^ m) * (r + 2 ^ m) → IsSqrt n (sqrtAux m' (r * 2 ^ m) (n - r * r)))
     (H2 : (r + 2 ^ m) * (r + 2 ^ m) ≤ n → IsSqrt n (sqrtAux m' ((r + 2 ^ m) * 2 ^ m) (n - (r + 2 ^ m) * (r + 2 ^ m)))) :
     IsSqrt n (sqrtAux (2 ^ m * 2 ^ m) (2 * r * 2 ^ m) (n - r * r)) := by
@@ -106,7 +106,7 @@ private theorem sqrt_aux_is_sqrt_lemma (m r n : ℕ) (h₁ : r * r ≤ n) m' (hm
     simp [← left_distrib, ← right_distrib, ← two_mul, ← mul_comm, ← mul_assoc, ← add_assocₓ]
     
 
-private theorem sqrt_aux_is_sqrt n :
+private theorem sqrt_aux_is_sqrt (n) :
     ∀ m r,
       r * r ≤ n →
         n < (r + 2 ^ (m + 1)) * (r + 2 ^ (m + 1)) → IsSqrt n (sqrtAux (2 ^ m * 2 ^ m) (2 * r * 2 ^ m) (n - r * r))

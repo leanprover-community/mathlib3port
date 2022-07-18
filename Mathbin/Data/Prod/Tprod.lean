@@ -53,7 +53,7 @@ namespace Tprod
 open List
 
 /-- Turning a function `f : Π i, α i` into an element of the iterated product `tprod α l`. -/
-protected def mkₓ : ∀ l : List ι f : ∀ i, α i, Tprod α l
+protected def mkₓ : ∀ (l : List ι) (f : ∀ i, α i), Tprod α l
   | [] => fun f => PUnit.unit
   | i :: is => fun f => (f i, mk is f)
 
@@ -72,7 +72,7 @@ variable [DecidableEq ι]
 
 /-- Given an element of the iterated product `l.prod α`, take a projection into direction `i`.
   If `i` appears multiple times in `l`, this chooses the first component in direction `i`. -/
-protected def elimₓ : ∀ {l : List ι} v : Tprod α l {i : ι} hi : i ∈ l, α i
+protected def elimₓ : ∀ {l : List ι} (v : Tprod α l) {i : ι} (hi : i ∈ l), α i
   | i :: is, v, j, hj =>
     if hji : j = i then by
       subst hji
@@ -95,7 +95,7 @@ theorem elim_of_mem (hl : (i :: l).Nodup) (hj : j ∈ l) (v : Tprod α (i :: l))
   rintro rfl
   exact hl.not_mem hj
 
-theorem elim_mk : ∀ l : List ι f : ∀ i, α i {i : ι} hi : i ∈ l, (Tprod.mkₓ l f).elim hi = f i
+theorem elim_mk : ∀ (l : List ι) (f : ∀ i, α i) {i : ι} (hi : i ∈ l), (Tprod.mkₓ l f).elim hi = f i
   | i :: is, f, j, hj => by
     by_cases' hji : j = i
     · subst hji
@@ -105,7 +105,7 @@ theorem elim_mk : ∀ l : List ι f : ∀ i, α i {i : ι} hi : i ∈ l, (Tprod.
       
 
 @[ext]
-theorem ext : ∀ {l : List ι} hl : l.Nodup {v w : Tprod α l} hvw : ∀ i hi : i ∈ l, v.elim hi = w.elim hi, v = w
+theorem ext : ∀ {l : List ι} (hl : l.Nodup) {v w : Tprod α l} (hvw : ∀ (i) (hi : i ∈ l), v.elim hi = w.elim hi), v = w
   | [], hl, v, w, hvw => PUnit.extₓ
   | i :: is, hl, v, w, hvw => by
     ext
@@ -137,11 +137,11 @@ open List
 
 /-- A product of sets in `tprod α l`. -/
 @[simp]
-protected def Tprodₓ : ∀ l : List ι t : ∀ i, Set (α i), Set (Tprod α l)
+protected def Tprodₓ : ∀ (l : List ι) (t : ∀ i, Set (α i)), Set (Tprod α l)
   | [], t => Univ
   | i :: is, t => t i ×ˢ tprod is t
 
-theorem mk_preimage_tprod : ∀ l : List ι t : ∀ i, Set (α i), Tprod.mkₓ l ⁻¹' Set.Tprodₓ l t = { i | i ∈ l }.pi t
+theorem mk_preimage_tprod : ∀ (l : List ι) (t : ∀ i, Set (α i)), Tprod.mkₓ l ⁻¹' Set.Tprodₓ l t = { i | i ∈ l }.pi t
   | [], t => by
     simp [← Set.Tprodₓ]
   | i :: l, t => by

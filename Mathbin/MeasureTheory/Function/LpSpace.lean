@@ -1441,7 +1441,7 @@ theorem coe_fn_add (f g : lp E p μ) : ⇑(f + g) =ᵐ[μ] f + g :=
 theorem coe_fn_sub (f g : lp E p μ) : ⇑(f - g) =ᵐ[μ] f - g :=
   AeEqFun.coe_fn_sub _ _
 
-theorem mem_Lp_const α {m : MeasurableSpace α} (μ : Measure α) (c : E) [IsFiniteMeasure μ] :
+theorem mem_Lp_const (α) {m : MeasurableSpace α} (μ : Measure α) (c : E) [IsFiniteMeasure μ] :
     @AeEqFun.const α _ _ μ _ c ∈ lp E p μ :=
   (mem_ℒp_const c).snorm_mk_lt_top
 
@@ -1815,10 +1815,10 @@ theorem indicator_const_empty :
   convert indicator_const_Lp_coe_fn
   simp [← Set.indicator_empty']
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr E]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr E]]
 theorem mem_ℒp_add_of_disjoint {f g : α → E} (h : Disjoint (Support f) (Support g)) (hf : StronglyMeasurable f)
     (hg : StronglyMeasurable g) : Memℒp (f + g) p μ ↔ Memℒp f p μ ∧ Memℒp g p μ := by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr E]]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr E]]"
   refine' ⟨fun hfg => ⟨_, _⟩, fun h => h.1.add h.2⟩
   · rw [← indicator_add_eq_left h]
     exact hfg.indicator (measurable_set_support hf.measurable)
@@ -2272,8 +2272,8 @@ theorem cauchy_seq_Lp_iff_cauchy_seq_ℒp {ι} [Nonempty ι] [SemilatticeSup ι]
 
 theorem complete_space_Lp_of_cauchy_complete_ℒp [hp : Fact (1 ≤ p)]
     (H :
-      ∀ f : ℕ → α → E hf : ∀ n, Memℒp (f n) p μ B : ℕ → ℝ≥0∞ hB : (∑' i, B i) < ∞ h_cau :
-        ∀ N n m : ℕ, N ≤ n → N ≤ m → snorm (f n - f m) p μ < B N,
+      ∀ (f : ℕ → α → E) (hf : ∀ n, Memℒp (f n) p μ) (B : ℕ → ℝ≥0∞) (hB : (∑' i, B i) < ∞)
+        (h_cau : ∀ N n m : ℕ, N ≤ n → N ≤ m → snorm (f n - f m) p μ < B N),
         ∃ (f_lim : α → E)(hf_lim_meas : Memℒp f_lim p μ), atTop.Tendsto (fun n => snorm (f n - f_lim) p μ) (𝓝 0)) :
     CompleteSpace (lp E p μ) := by
   let B := fun n : ℕ => ((1 : ℝ) / 2) ^ n

@@ -129,14 +129,16 @@ instance orderedAddCommMonoid [OrderedAddCommMonoid α] : OrderedAddCommMonoid {
   Subtype.coe_injective.OrderedAddCommMonoid _ rfl (fun x y => rfl) fun _ _ => rfl
 
 instance linearOrderedAddCommMonoid [LinearOrderedAddCommMonoid α] : LinearOrderedAddCommMonoid { x : α // 0 ≤ x } :=
-  Subtype.coe_injective.LinearOrderedAddCommMonoid _ rfl (fun x y => rfl) fun _ _ => rfl
+  Subtype.coe_injective.LinearOrderedAddCommMonoid _ rfl (fun x y => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ =>
+    rfl
 
 instance orderedCancelAddCommMonoid [OrderedCancelAddCommMonoid α] : OrderedCancelAddCommMonoid { x : α // 0 ≤ x } :=
   Subtype.coe_injective.OrderedCancelAddCommMonoid _ rfl (fun x y => rfl) fun _ _ => rfl
 
 instance linearOrderedCancelAddCommMonoid [LinearOrderedCancelAddCommMonoid α] :
     LinearOrderedCancelAddCommMonoid { x : α // 0 ≤ x } :=
-  Subtype.coe_injective.LinearOrderedCancelAddCommMonoid _ rfl (fun x y => rfl) fun _ _ => rfl
+  Subtype.coe_injective.LinearOrderedCancelAddCommMonoid _ rfl (fun x y => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
+    fun _ _ => rfl
 
 /-- Coercion `{x : α // 0 ≤ x} → α` as a `add_monoid_hom`. -/
 def coeAddMonoidHom [OrderedAddCommMonoid α] : { x : α // 0 ≤ x } →+ α :=
@@ -214,7 +216,7 @@ instance nontrivial [LinearOrderedSemiring α] : Nontrivial { x : α // 0 ≤ x 
 
 instance linearOrderedSemiring [LinearOrderedSemiring α] : LinearOrderedSemiring { x : α // 0 ≤ x } :=
   Subtype.coe_injective.LinearOrderedSemiring _ rfl rfl (fun x y => rfl) (fun x y => rfl) (fun _ _ => rfl)
-    (fun _ _ => rfl) fun _ => rfl
+    (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
 instance linearOrderedCommMonoidWithZero [LinearOrderedCommRing α] :
     LinearOrderedCommMonoidWithZero { x : α // 0 ≤ x } :=

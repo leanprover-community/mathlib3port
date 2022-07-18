@@ -67,9 +67,9 @@ structure VitaliFamily {m : MeasurableSpace α} (μ : Measureₓ α) where
   SetsAt : ∀ x : α, Set (Set α)
   MeasurableSet' : ∀ x : α, ∀ a : Set α, a ∈ sets_at x → MeasurableSet a
   nonempty_interior : ∀ x : α, ∀ y : Set α, y ∈ sets_at x → (Interior y).Nonempty
-  Nontrivial : ∀ x : α, ∀ ε > (0 : ℝ), ∀, ∃ y ∈ sets_at x, y ⊆ ClosedBall x ε
+  Nontrivial : ∀ (x : α), ∀ ε > (0 : ℝ), ∀, ∃ y ∈ sets_at x, y ⊆ ClosedBall x ε
   covering :
-    ∀ s : Set α f : ∀ x : α, Set (Set α),
+    ∀ (s : Set α) (f : ∀ x : α, Set (Set α)),
       (∀, ∀ x ∈ s, ∀, f x ⊆ sets_at x) →
         (∀, ∀ x ∈ s, ∀, ∀ ε > (0 : ℝ), ∀, ∃ a ∈ f x, a ⊆ ClosedBall x ε) →
           ∃ (t : Set α)(u : α → Set α),

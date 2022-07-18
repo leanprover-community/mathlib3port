@@ -54,7 +54,7 @@ theorem pi_lift_π_apply {β : Type u} (f : β → Type u) {P : Type u} (s : ∀
 
 /-- A restatement of `types.map_π_apply` that uses `pi.π` and `pi.map`. -/
 @[simp]
-theorem pi_map_π_apply {β : Type u} {f g : β → Type u} (α : ∀ j, f j ⟶ g j) (b : β) x :
+theorem pi_map_π_apply {β : Type u} {f g : β → Type u} (α : ∀ j, f j ⟶ g j) (b : β) (x) :
     (Pi.π g b : (∏ g) → g b) (Pi.map α x) = α b ((Pi.π f b : (∏ f) → f b) x) :=
   Limit.map_π_apply _ _ _
 
@@ -104,7 +104,7 @@ theorem binary_product_cone_snd (X Y : Type u) : (binaryProductCone X Y).snd = P
 /-- The product type `X × Y` is a binary product for `X` and `Y`. -/
 @[simps]
 def binaryProductLimit (X Y : Type u) : IsLimit (binaryProductCone X Y) where
-  lift := fun s : BinaryFan X Y x => (s.fst x, s.snd x)
+  lift := fun (s : BinaryFan X Y) x => (s.fst x, s.snd x)
   fac' := fun s j => Discrete.recOn j fun j => WalkingPair.casesOn j rfl rfl
   uniq' := fun s m w => funext fun x => Prod.extₓ (congr_fun (w ⟨left⟩) x) (congr_fun (w ⟨right⟩) x)
 
@@ -328,7 +328,7 @@ def coequalizerColimit : Limits.ColimitCocone (parallelPair f g) where
   Cocone := Cofork.ofπ (Quot.mk (CoequalizerRel f g)) (funext fun x => Quot.sound (CoequalizerRel.rel x))
   IsColimit :=
     (Cofork.IsColimit.mk' _) fun s =>
-      ⟨Quot.lift s.π fun a b h : CoequalizerRel f g a b => by
+      ⟨Quot.lift s.π fun a b (h : CoequalizerRel f g a b) => by
           cases h
           exact congr_fun s.condition h_1,
         rfl, fun m hm => funext fun x => Quot.induction_on x (congr_fun hm : _)⟩

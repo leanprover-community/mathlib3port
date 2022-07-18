@@ -61,15 +61,15 @@ theorem range_restrict (f : α → β) (s : Set α) : Set.Range (s.restrict f) =
 theorem image_restrict (f : α → β) (s t : Set α) : s.restrict f '' (coe ⁻¹' t) = f '' (t ∩ s) := by
   rw [restrict, image_comp, image_preimage_eq_inter_range, Subtype.range_coe]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a «expr ∉ » s)
 @[simp]
-theorem restrict_dite {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀, ∀ a ∈ s, ∀, β) (g : ∀ a _ : a ∉ s, β) :
+theorem restrict_dite {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀, ∀ a ∈ s, ∀, β) (g : ∀ (a) (_ : a ∉ s), β) :
     (s.restrict fun a => if h : a ∈ s then f a h else g a h) = fun a => f a a.2 :=
   funext fun a => dif_pos a.2
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a «expr ∉ » s)
 @[simp]
-theorem restrict_dite_compl {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀, ∀ a ∈ s, ∀, β) (g : ∀ a _ : a ∉ s, β) :
+theorem restrict_dite_compl {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀, ∀ a ∈ s, ∀, β) (g : ∀ (a) (_ : a ∉ s), β) :
     (sᶜ.restrict fun a => if h : a ∈ s then f a h else g a h) = fun a => g a a.2 :=
   funext fun a => dif_neg a.2
 
@@ -102,7 +102,6 @@ theorem restrict_extend_compl_range (f : α → β) (g : α → γ) (g' : β →
     Range fᶜ.restrict (extendₓ f g g') = g' ∘ coe := by
   convert restrict_dite_compl _ _
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem range_extend_subset (f : α → β) (g : α → γ) (g' : β → γ) : Range (extendₓ f g g') ⊆ Range g ∪ g' '' Range fᶜ :=
   by
   classical
@@ -119,25 +118,26 @@ theorem range_extend {f : α → β} (hf : Injective f) (g : α → γ) (g' : β
 
 /-- Restrict codomain of a function `f` to a set `s`. Same as `subtype.coind` but this version
 has codomain `↥s` instead of `subtype s`. -/
-def codRestrict (f : α → β) (s : Set β) (h : ∀ x, f x ∈ s) : α → s := fun x => ⟨f x, h x⟩
+def codRestrict (f : ι → α) (s : Set α) (h : ∀ x, f x ∈ s) : ι → s := fun x => ⟨f x, h x⟩
 
 @[simp]
-theorem coe_cod_restrict_apply (f : α → β) (s : Set β) (h : ∀ x, f x ∈ s) (x : α) : (codRestrict f s h x : β) = f x :=
+theorem coe_cod_restrict_apply (f : ι → α) (s : Set α) (h : ∀ x, f x ∈ s) (x : ι) : (codRestrict f s h x : α) = f x :=
   rfl
 
 @[simp]
-theorem restrict_comp_cod_restrict {f : α → β} {g : β → γ} {b : Set β} (h : ∀ x, f x ∈ b) :
+theorem restrict_comp_cod_restrict {f : ι → α} {g : α → β} {b : Set α} (h : ∀ x, f x ∈ b) :
     b.restrict g ∘ b.codRestrict f h = g ∘ f :=
   rfl
 
-variable {s s₁ s₂ : Set α} {t t₁ t₂ : Set β} {p : Set γ} {f f₁ f₂ f₃ : α → β} {g g₁ g₂ : β → γ} {f' f₁' f₂' : β → α}
-  {g' : γ → β}
-
 @[simp]
-theorem injective_cod_restrict (h : ∀ x, f x ∈ t) : Injective (codRestrict f t h) ↔ Injective f := by
+theorem injective_cod_restrict {f : ι → α} {s : Set α} (h : ∀ x, f x ∈ s) :
+    Injective (codRestrict f s h) ↔ Injective f := by
   simp only [← injective, ← Subtype.ext_iff, ← coe_cod_restrict_apply]
 
 alias injective_cod_restrict ↔ _ _root_.function.injective.cod_restrict
+
+variable {s s₁ s₂ : Set α} {t t₁ t₂ : Set β} {p : Set γ} {f f₁ f₂ f₃ : α → β} {g g₁ g₂ : β → γ} {f' f₁' f₂' : β → α}
+  {g' : γ → β}
 
 /-! ### Equality on a set -/
 
@@ -802,7 +802,7 @@ theorem SurjOn.bij_on_subset [Nonempty α] (h : SurjOn f s t) : BijOn f (invFunO
   rintro _ ⟨y, hy, rfl⟩
   rwa [h.right_inv_on_inv_fun_on hy]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (s' «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (s' «expr ⊆ » s)
 theorem surj_on_iff_exists_bij_on_subset : SurjOn f s t ↔ ∃ (s' : _)(_ : s' ⊆ s), BijOn f s' t := by
   constructor
   · rcases eq_empty_or_nonempty t with (rfl | ht)
@@ -914,22 +914,22 @@ theorem piecewise_eq_on (f g : α → β) : EqOn (s.piecewise f g) f s := fun _ 
 
 theorem piecewise_eq_on_compl (f g : α → β) : EqOn (s.piecewise f g) g (sᶜ) := fun _ => piecewise_eq_of_not_mem _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem piecewise_le {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g : ∀ i, δ i}
-    (h₁ : ∀, ∀ i ∈ s, ∀, f₁ i ≤ g i) (h₂ : ∀ i _ : i ∉ s, f₂ i ≤ g i) : s.piecewise f₁ f₂ ≤ g := fun i =>
+    (h₁ : ∀, ∀ i ∈ s, ∀, f₁ i ≤ g i) (h₂ : ∀ (i) (_ : i ∉ s), f₂ i ≤ g i) : s.piecewise f₁ f₂ ≤ g := fun i =>
   if h : i ∈ s then by
     simp [*]
   else by
     simp [*]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem le_piecewise {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g : ∀ i, δ i}
-    (h₁ : ∀, ∀ i ∈ s, ∀, g i ≤ f₁ i) (h₂ : ∀ i _ : i ∉ s, g i ≤ f₂ i) : g ≤ s.piecewise f₁ f₂ :=
+    (h₁ : ∀, ∀ i ∈ s, ∀, g i ≤ f₁ i) (h₂ : ∀ (i) (_ : i ∉ s), g i ≤ f₂ i) : g ≤ s.piecewise f₁ f₂ :=
   @piecewise_le α (fun i => (δ i)ᵒᵈ) _ s _ _ _ _ h₁ h₂
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem piecewise_le_piecewise {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)]
-    {f₁ f₂ g₁ g₂ : ∀ i, δ i} (h₁ : ∀, ∀ i ∈ s, ∀, f₁ i ≤ g₁ i) (h₂ : ∀ i _ : i ∉ s, f₂ i ≤ g₂ i) :
+    {f₁ f₂ g₁ g₂ : ∀ i, δ i} (h₁ : ∀, ∀ i ∈ s, ∀, f₁ i ≤ g₁ i) (h₂ : ∀ (i) (_ : i ∉ s), f₂ i ≤ g₂ i) :
     s.piecewise f₁ f₂ ≤ s.piecewise g₁ g₂ := by
   apply piecewise_le <;> intros <;> simp [*]
 
@@ -971,7 +971,7 @@ theorem EqOn.piecewise_ite {f f' g : α → β} {t t'} (h : EqOn f g t) (h' : Eq
     EqOn (s.piecewise f f') g (s.ite t t') :=
   (h.mono (inter_subset_left _ _)).piecewise_ite' s (h'.mono (inter_subset_left _ _))
 
-theorem piecewise_preimage (f g : α → β) t : s.piecewise f g ⁻¹' t = s.ite (f ⁻¹' t) (g ⁻¹' t) :=
+theorem piecewise_preimage (f g : α → β) (t) : s.piecewise f g ⁻¹' t = s.ite (f ⁻¹' t) (g ⁻¹' t) :=
   ext fun x => by
     by_cases' x ∈ s <;> simp [*, ← Set.Ite]
 
@@ -1008,9 +1008,9 @@ theorem range_piecewise (f g : α → β) : Range (s.piecewise f g) = f '' s ∪
   · rintro (⟨x, hx, rfl⟩ | ⟨x, hx, rfl⟩) <;> use x <;> simp_all
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y «expr ∉ » s)
 theorem injective_piecewise_iff {f g : α → β} :
-    Injective (s.piecewise f g) ↔ InjOn f s ∧ InjOn g (sᶜ) ∧ ∀, ∀ x ∈ s, ∀ y _ : y ∉ s, f x ≠ g y := by
+    Injective (s.piecewise f g) ↔ InjOn f s ∧ InjOn g (sᶜ) ∧ ∀, ∀ x ∈ s, ∀ (y) (_ : y ∉ s), f x ≠ g y := by
   rw [injective_iff_inj_on_univ, ← union_compl_self s, inj_on_union (@disjoint_compl_right _ s _),
     (piecewise_eq_on s f g).inj_on_iff, (piecewise_eq_on_compl s f g).inj_on_iff]
   refine' and_congr Iff.rfl (and_congr Iff.rfl <| forall₄_congrₓ fun x hx y hy => _)

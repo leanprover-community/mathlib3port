@@ -57,7 +57,7 @@ protected def hrecOn₂ (qa : Quot ra) (qb : Quot rb) (f : ∀ a b, φ ⟦a⟧ �
 /-- Map a function `f : α → β` such that `ra x y` implies `rb (f x) (f y)`
 to a map `quot ra → quot rb`. -/
 protected def map (f : α → β) (h : (ra⇒rb) f f) : Quot ra → Quot rb :=
-  (Quot.lift fun x => ⟦f x⟧) fun x y h₁ : ra x y => Quot.sound <| h h₁
+  (Quot.lift fun x => ⟦f x⟧) fun x y (h₁ : ra x y) => Quot.sound <| h h₁
 
 /-- If `ra` is a subrelation of `ra'`, then we have a natural map `quot ra → quot ra'`. -/
 protected def mapRight {ra' : α → α → Prop} (h : ∀ a₁ a₂, ra a₁ a₂ → ra' a₁ a₂) : Quot ra → Quot ra' :=
@@ -167,6 +167,11 @@ instance (s : Setoidₓ α) [Inhabited α] : Inhabited (Quotientₓ s) :=
 instance (s : Setoidₓ α) [Subsingleton α] : Subsingleton (Quotientₓ s) :=
   Quot.subsingleton
 
+instance {α : Type _} [Setoidₓ α] : IsEquiv α (· ≈ ·) where
+  refl := Setoidₓ.refl
+  symm := fun a b => Setoidₓ.symm
+  trans := fun a b c => Setoidₓ.trans
+
 /-- Induction on two `quotient` arguments `a` and `b`, result type depends on `⟦a⟧` and `⟦b⟧`. -/
 protected def hrecOn₂ (qa : Quotientₓ sa) (qb : Quotientₓ sb) (f : ∀ a b, φ ⟦a⟧ ⟦b⟧)
     (c : ∀ a₁ b₁ a₂ b₂, a₁ ≈ a₂ → b₁ ≈ b₂ → HEq (f a₁ b₁) (f a₂ b₂)) : φ qa qb :=
@@ -242,7 +247,7 @@ theorem Quotientₓ.lift_comp_mk [Setoidₓ α] (f : α → β) (h : ∀ a b : �
 
 @[simp]
 theorem Quotientₓ.lift₂_mk {α : Sort _} {β : Sort _} {γ : Sort _} [Setoidₓ α] [Setoidₓ β] (f : α → β → γ)
-    (h : ∀ a₁ : α a₂ : β b₁ : α b₂ : β, a₁ ≈ b₁ → a₂ ≈ b₂ → f a₁ a₂ = f b₁ b₂) (a : α) (b : β) :
+    (h : ∀ (a₁ : α) (a₂ : β) (b₁ : α) (b₂ : β), a₁ ≈ b₁ → a₂ ≈ b₂ → f a₁ a₂ = f b₁ b₂) (a : α) (b : β) :
     Quotientₓ.lift₂ f h (Quotientₓ.mk a) (Quotientₓ.mk b) = f a b :=
   rfl
 
@@ -371,7 +376,7 @@ def lift (f : α → β) (c : ∀ a b : α, f a = f b) : Trunc α → β :=
 theorem ind {β : Trunc α → Prop} : (∀ a : α, β (mk a)) → ∀ q : Trunc α, β q :=
   Quot.ind
 
-protected theorem lift_mk (f : α → β) c (a : α) : lift f c (mk a) = f a :=
+protected theorem lift_mk (f : α → β) (c) (a : α) : lift f c (mk a) = f a :=
   rfl
 
 /-- Lift a constant function on `q : trunc α`. -/
@@ -474,7 +479,7 @@ protected def liftOn' (q : Quotientₓ s₁) (f : α → φ) (h : ∀ a b, @Seto
   Quotientₓ.liftOn q f h
 
 @[simp]
-protected theorem lift_on'_mk' (f : α → φ) h (x : α) : Quotientₓ.liftOn' (@Quotientₓ.mk' _ s₁ x) f h = f x :=
+protected theorem lift_on'_mk' (f : α → φ) (h) (x : α) : Quotientₓ.liftOn' (@Quotientₓ.mk' _ s₁ x) f h = f x :=
   rfl
 
 /-- A version of `quotient.lift_on₂` taking `{s₁ : setoid α} {s₂ : setoid β}` as implicit arguments
@@ -485,7 +490,7 @@ protected def liftOn₂' (q₁ : Quotientₓ s₁) (q₂ : Quotientₓ s₂) (f 
   Quotientₓ.liftOn₂ q₁ q₂ f h
 
 @[simp]
-protected theorem lift_on₂'_mk' (f : α → β → γ) h (a : α) (b : β) :
+protected theorem lift_on₂'_mk' (f : α → β → γ) (h) (a : α) (b : β) :
     Quotientₓ.liftOn₂' (@Quotientₓ.mk' _ s₁ a) (@Quotientₓ.mk' _ s₂ b) f h = f a b :=
   rfl
 
@@ -565,7 +570,7 @@ protected def map' (f : α → β) (h : (s₁.R⇒s₂.R) f f) : Quotientₓ s�
   Quot.map f h
 
 @[simp]
-theorem map'_mk' (f : α → β) h (x : α) :
+theorem map'_mk' (f : α → β) (h) (x : α) :
     (Quotientₓ.mk' x : Quotientₓ s₁).map' f h = (Quotientₓ.mk' (f x) : Quotientₓ s₂) :=
   rfl
 
@@ -574,7 +579,7 @@ protected def map₂' (f : α → β → γ) (h : (s₁.R⇒s₂.R⇒s₃.R) f f
   Quotientₓ.map₂ f h
 
 @[simp]
-theorem map₂'_mk' (f : α → β → γ) h (x : α) :
+theorem map₂'_mk' (f : α → β → γ) (h) (x : α) :
     (Quotientₓ.mk' x : Quotientₓ s₁).map₂' f h =
       (Quotientₓ.map' (f x) (h (Setoidₓ.refl x)) : Quotientₓ s₂ → Quotientₓ s₃) :=
   rfl
@@ -609,15 +614,16 @@ protected theorem mk'_eq_mk (x : α) : Quotientₓ.mk' x = ⟦x⟧ :=
   rfl
 
 @[simp]
-protected theorem lift_on'_mk (x : α) (f : α → β) h : ⟦x⟧.liftOn' f h = f x :=
+protected theorem lift_on'_mk (x : α) (f : α → β) (h) : ⟦x⟧.liftOn' f h = f x :=
   rfl
 
 @[simp]
-protected theorem lift_on₂'_mk [Setoidₓ β] (f : α → β → γ) h (a : α) (b : β) : Quotientₓ.liftOn₂' ⟦a⟧ ⟦b⟧ f h = f a b :=
+protected theorem lift_on₂'_mk [Setoidₓ β] (f : α → β → γ) (h) (a : α) (b : β) :
+    Quotientₓ.liftOn₂' ⟦a⟧ ⟦b⟧ f h = f a b :=
   Quotientₓ.lift_on₂'_mk' _ _ _ _
 
 @[simp]
-theorem map'_mk [Setoidₓ β] (f : α → β) h (x : α) : ⟦x⟧.map' f h = ⟦f x⟧ :=
+theorem map'_mk [Setoidₓ β] (f : α → β) (h) (x : α) : ⟦x⟧.map' f h = ⟦f x⟧ :=
   rfl
 
 end

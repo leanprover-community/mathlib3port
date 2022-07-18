@@ -356,10 +356,10 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
       
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
 /-- An auxiliary induction lemma, which is generalized by `solvable_by_rad.is_solvable`. -/
 theorem induction2 {α β γ : solvableByRad F E} (hγ : γ ∈ F⟮⟯) (hα : P α) (hβ : P β) : P γ := by
   let p := minpoly F α
@@ -389,7 +389,7 @@ theorem induction2 {α β γ : solvableByRad F E} (hγ : γ ∈ F⟮⟯) (hα : 
   rw [P, key]
   exact gal_is_solvable_of_splits ⟨Normal.splits (splitting_field.normal _) _⟩ (gal_mul_is_solvable hα hβ)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
 /-- An auxiliary induction lemma, which is generalized by `solvable_by_rad.is_solvable`. -/
 theorem induction1 {α β : solvableByRad F E} (hβ : β ∈ F⟮⟯) (hα : P α) : P β :=
   induction2 (adjoin.mono F _ _ (ge_of_eq (Set.pair_eq_singleton α)) hβ) hα hα

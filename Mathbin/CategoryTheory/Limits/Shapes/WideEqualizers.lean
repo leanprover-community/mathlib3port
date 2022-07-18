@@ -84,7 +84,7 @@ open WalkingParallelFamily.Hom
 
 /-- Composition of morphisms in the indexing diagram for wide (co)equalizers. -/
 def WalkingParallelFamily.Hom.comp :
-    ∀ X Y Z : WalkingParallelFamily J f : WalkingParallelFamily.Hom J X Y g : WalkingParallelFamily.Hom J Y Z,
+    ∀ (X Y Z : WalkingParallelFamily J) (f : WalkingParallelFamily.Hom J X Y) (g : WalkingParallelFamily.Hom J Y Z),
       WalkingParallelFamily.Hom J X Z
   | _, _, _, id _, h => h
   | _, _, _, line j, id one => line j
@@ -292,7 +292,8 @@ def Cotrident.IsColimit.desc' [Nonempty J] {s : Cotrident f} (hs : IsColimit s) 
     only asks for a proof of facts that carry any mathematical content -/
 def Trident.IsLimit.mk [Nonempty J] (t : Trident f) (lift : ∀ s : Trident f, s.x ⟶ t.x)
     (fac : ∀ s : Trident f, lift s ≫ t.ι = s.ι)
-    (uniq : ∀ s : Trident f m : s.x ⟶ t.x w : ∀ j : WalkingParallelFamily J, m ≫ t.π.app j = s.π.app j, m = lift s) :
+    (uniq :
+      ∀ (s : Trident f) (m : s.x ⟶ t.x) (w : ∀ j : WalkingParallelFamily J, m ≫ t.π.app j = s.π.app j), m = lift s) :
     IsLimit t :=
   { lift,
     fac' := fun s j =>
@@ -312,7 +313,8 @@ def Trident.IsLimit.mk' [Nonempty J] (t : Trident f)
     only asks for a proof of facts that carry any mathematical content -/
 def Cotrident.IsColimit.mk [Nonempty J] (t : Cotrident f) (desc : ∀ s : Cotrident f, t.x ⟶ s.x)
     (fac : ∀ s : Cotrident f, t.π ≫ desc s = s.π)
-    (uniq : ∀ s : Cotrident f m : t.x ⟶ s.x w : ∀ j : WalkingParallelFamily J, t.ι.app j ≫ m = s.ι.app j, m = desc s) :
+    (uniq :
+      ∀ (s : Cotrident f) (m : t.x ⟶ s.x) (w : ∀ j : WalkingParallelFamily J, t.ι.app j ≫ m = s.ι.app j), m = desc s) :
     IsColimit t :=
   { desc,
     fac' := fun s j =>
@@ -411,7 +413,7 @@ def Cocone.ofCotrident {F : WalkingParallelFamily J ⥤ C} (t : Cotrident fun j 
         cases g <;> dsimp' <;> simp [← cotrident.app_one t] }
 
 @[simp]
-theorem Cone.of_trident_π {F : WalkingParallelFamily J ⥤ C} (t : Trident fun j => F.map (line j)) j :
+theorem Cone.of_trident_π {F : WalkingParallelFamily J ⥤ C} (t : Trident fun j => F.map (line j)) (j) :
     (Cone.ofTrident t).π.app j =
       t.π.app j ≫
         eqToHom
@@ -420,7 +422,7 @@ theorem Cone.of_trident_π {F : WalkingParallelFamily J ⥤ C} (t : Trident fun 
   rfl
 
 @[simp]
-theorem Cocone.of_cotrident_ι {F : WalkingParallelFamily J ⥤ C} (t : Cotrident fun j => F.map (line j)) j :
+theorem Cocone.of_cotrident_ι {F : WalkingParallelFamily J ⥤ C} (t : Cotrident fun j => F.map (line j)) (j) :
     (Cocone.ofCotrident t).ι.app j =
       eqToHom
           (by
@@ -453,7 +455,7 @@ def Cotrident.ofCocone {F : WalkingParallelFamily J ⥤ C} (t : Cocone F) : Cotr
           t.ι.app X }
 
 @[simp]
-theorem Trident.of_cone_π {F : WalkingParallelFamily J ⥤ C} (t : Cone F) j :
+theorem Trident.of_cone_π {F : WalkingParallelFamily J ⥤ C} (t : Cone F) (j) :
     (Trident.ofCone t).π.app j =
       t.π.app j ≫
         eqToHom
@@ -462,7 +464,7 @@ theorem Trident.of_cone_π {F : WalkingParallelFamily J ⥤ C} (t : Cone F) j :
   rfl
 
 @[simp]
-theorem Cotrident.of_cocone_ι {F : WalkingParallelFamily J ⥤ C} (t : Cocone F) j :
+theorem Cotrident.of_cocone_ι {F : WalkingParallelFamily J ⥤ C} (t : Cocone F) (j) :
     (Cotrident.ofCocone t).ι.app j =
       eqToHom
           (by

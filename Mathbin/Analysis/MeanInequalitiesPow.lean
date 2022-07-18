@@ -192,7 +192,7 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ≥0∞) (hw' : (∑
     simp [← hp_pos]
   have hp_not_neg : ¬p < 0 := by
     simp [← hp_nonneg]
-  have h_top_iff_rpow_top : ∀ i : ι hi : i ∈ s, w i * z i = ⊤ ↔ w i * z i ^ p = ⊤ := by
+  have h_top_iff_rpow_top : ∀ (i : ι) (hi : i ∈ s), w i * z i = ⊤ ↔ w i * z i ^ p = ⊤ := by
     simp [← hp_pos, ← hp_nonneg, ← hp_not_nonpos, ← hp_not_neg]
   refine' le_of_top_imp_top_of_to_nnreal_le _ _
   · -- first, prove `(∑ i in s, w i * z i) ^ p = ⊤ → ∑ i in s, (w i * z i ^ p) = ⊤`
@@ -268,7 +268,7 @@ theorem rpow_add_rpow_le_add {p : ℝ} (a b : ℝ≥0∞) (hp1 : 1 ≤ p) : (a ^
 theorem rpow_add_rpow_le {p q : ℝ} (a b : ℝ≥0∞) (hp_pos : 0 < p) (hpq : p ≤ q) :
     (a ^ q + b ^ q) ^ (1 / q) ≤ (a ^ p + b ^ p) ^ (1 / p) := by
   have h_rpow : ∀ a : ℝ≥0∞, a ^ q = (a ^ p) ^ (q / p) := fun a => by
-    rw [← Ennreal.rpow_mul, div_eq_inv_mul, ← mul_assoc, _root_.mul_inv_cancel hp_pos.ne.symm, one_mulₓ]
+    rw [← Ennreal.rpow_mul, _root_.mul_div_cancel' _ hp_pos.ne']
   have h_rpow_add_rpow_le_add : ((a ^ p) ^ (q / p) + (b ^ p) ^ (q / p)) ^ (1 / (q / p)) ≤ a ^ p + b ^ p := by
     refine' rpow_add_rpow_le_add (a ^ p) (b ^ p) _
     rwa [one_le_div hp_pos]

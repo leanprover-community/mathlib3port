@@ -176,7 +176,7 @@ open ContinuousLinearMap
 /-- Continuous linear map version of the real part function, from `ℂ` to `ℝ`. -/
 def reClm : ℂ →L[ℝ] ℝ :=
   reLm.mkContinuous 1 fun x => by
-    simp [← Real.norm_eq_abs, ← abs_re_le_abs]
+    simp [← abs_re_le_abs]
 
 @[continuity]
 theorem continuous_re : Continuous re :=
@@ -209,7 +209,7 @@ theorem re_clm_nnnorm : ∥re_clm∥₊ = 1 :=
 /-- Continuous linear map version of the real part function, from `ℂ` to `ℝ`. -/
 def imClm : ℂ →L[ℝ] ℝ :=
   imLm.mkContinuous 1 fun x => by
-    simp [← Real.norm_eq_abs, ← abs_im_le_abs]
+    simp [← abs_im_le_abs]
 
 @[continuity]
 theorem continuous_im : Continuous im :=

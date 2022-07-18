@@ -60,14 +60,14 @@ theorem NormalizeFinLt.lt {n a b} (h : NormalizeFinLt n a b) : b < n := by
 theorem NormalizeFinLt.of {n a b} (h : NormalizeFinLt n a b) : NormalizeFin n a b :=
   h.trans <| Eq.symm <| Nat.mod_eq_of_ltₓ h.lt
 
-theorem NormalizeFin.zero n : NormalizeFin (n + 1) 0 0 := by
+theorem NormalizeFin.zero (n) : NormalizeFin (n + 1) 0 0 := by
   rw [normalize_fin]
   norm_num
 
-theorem NormalizeFinLt.zero n : NormalizeFinLt (n + 1) 0 0 :=
+theorem NormalizeFinLt.zero (n) : NormalizeFinLt (n + 1) 0 0 :=
   refl _
 
-theorem NormalizeFin.one n : NormalizeFin (n + 1) 1 1 :=
+theorem NormalizeFin.one (n) : NormalizeFin (n + 1) 1 1 :=
   refl _
 
 theorem NormalizeFin.add {n} {a b : Finₓ n} {a' b' c' : ℕ} (ha : NormalizeFin n a a') (hb : NormalizeFin n b b')

@@ -73,7 +73,7 @@ if for all covering sieves `R` in `C`, `R.pushforward_functor G` is a covering s
 -/
 @[nolint has_inhabited_instance]
 structure CoverPreserving (G : C ⥤ D) : Prop where
-  cover_preserve : ∀ {U : C} {S : Sieve U} hS : S ∈ J U, S.FunctorPushforward G ∈ K (G.obj U)
+  cover_preserve : ∀ {U : C} {S : Sieve U} (hS : S ∈ J U), S.FunctorPushforward G ∈ K (G.obj U)
 
 /-- The identity functor on a site is cover-preserving. -/
 theorem id_cover_preserving : CoverPreserving J J (𝟭 _) :=
@@ -98,9 +98,9 @@ This is actually stronger than merely preserving compatible families because of 
 @[nolint has_inhabited_instance]
 structure CompatiblePreserving (K : GrothendieckTopology D) (G : C ⥤ D) : Prop where
   Compatible :
-    ∀ ℱ : SheafOfTypes.{w} K {Z} {T : Presieve Z} {x : FamilyOfElements (G.op ⋙ ℱ.val) T} h : x.Compatible {Y₁ Y₂} {X}
-      f₁ : X ⟶ G.obj Y₁ f₂ : X ⟶ G.obj Y₂ {g₁ : Y₁ ⟶ Z} {g₂ : Y₂ ⟶ Z} hg₁ : T g₁ hg₂ : T g₂ eq :
-      f₁ ≫ G.map g₁ = f₂ ≫ G.map g₂, ℱ.val.map f₁.op (x g₁ hg₁) = ℱ.val.map f₂.op (x g₂ hg₂)
+    ∀ (ℱ : SheafOfTypes.{w} K) {Z} {T : Presieve Z} {x : FamilyOfElements (G.op ⋙ ℱ.val) T} (h : x.Compatible) {Y₁ Y₂}
+      {X} (f₁ : X ⟶ G.obj Y₁) (f₂ : X ⟶ G.obj Y₂) {g₁ : Y₁ ⟶ Z} {g₂ : Y₂ ⟶ Z} (hg₁ : T g₁) (hg₂ : T g₂)
+      (eq : f₁ ≫ G.map g₁ = f₂ ≫ G.map g₂), ℱ.val.map f₁.op (x g₁ hg₁) = ℱ.val.map f₂.op (x g₂ hg₂)
 
 variable {J K} {G : C ⥤ D} (hG : CompatiblePreserving.{w} K G) (ℱ : SheafOfTypes.{w} K) {Z : C}
 
@@ -272,7 +272,7 @@ instance (G : C ⥤ D) [RepresentablyFlat G] : PreservesFiniteLimits (Sites.push
 /-- The pushforward functor is left adjoint to the pullback functor. -/
 def Sites.pullbackPushforwardAdjunction {G : C ⥤ D} (hG₁ : CompatiblePreserving K G) (hG₂ : CoverPreserving J K G) :
     Sites.pushforward A J K G ⊣ Sites.pullback A hG₁ hG₂ :=
-  ((lan.adjunction A G.op).comp _ _ (sheafificationAdjunction K A)).restrictFullyFaithful (sheafToPresheaf J A) (𝟭 _)
+  ((lan.adjunction A G.op).comp (sheafificationAdjunction K A)).restrictFullyFaithful (sheafToPresheaf J A) (𝟭 _)
     (NatIso.ofComponents (fun _ => Iso.refl _) fun _ _ _ => (Category.comp_id _).trans (Category.id_comp _).symm)
     (NatIso.ofComponents (fun _ => Iso.refl _) fun _ _ _ => (Category.comp_id _).trans (Category.id_comp _).symm)
 

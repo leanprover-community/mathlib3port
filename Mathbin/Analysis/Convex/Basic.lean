@@ -566,7 +566,7 @@ theorem convex_empty : Convex 𝕜 (∅ : Set E) := fun x y => False.elim
 theorem convex_univ : Convex 𝕜 (Set.Univ : Set E) := fun _ _ _ _ _ _ _ _ _ => trivialₓ
 
 theorem Convex.inter {t : Set E} (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) : Convex 𝕜 (s ∩ t) :=
-  fun x y hx : x ∈ s ∩ t hy : y ∈ s ∩ t a b ha : 0 ≤ a hb : 0 ≤ b hab : a + b = 1 =>
+  fun x y (hx : x ∈ s ∩ t) (hy : y ∈ s ∩ t) a b (ha : 0 ≤ a) (hb : 0 ≤ b) (hab : a + b = 1) =>
   ⟨hs hx.left hy.left ha hb hab, ht hx.right hy.right ha hb hab⟩
 
 theorem convex_sInter {S : Set (Set E)} (h : ∀, ∀ s ∈ S, ∀, Convex 𝕜 s) : Convex 𝕜 (⋂₀ S) :=
@@ -575,7 +575,7 @@ theorem convex_sInter {S : Set (Set E)} (h : ∀, ∀ s ∈ S, ∀, Convex 𝕜 
 theorem convex_Inter {ι : Sort _} {s : ι → Set E} (h : ∀ i, Convex 𝕜 (s i)) : Convex 𝕜 (⋂ i, s i) :=
   sInter_range s ▸ convex_sInter <| forall_range_iff.2 h
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem convex_Inter₂ {ι : Sort _} {κ : ι → Sort _} {s : ∀ i, κ i → Set E} (h : ∀ i j, Convex 𝕜 (s i j)) :
     Convex 𝕜 (⋂ (i) (j), s i j) :=
   convex_Inter fun i => convex_Inter <| h i

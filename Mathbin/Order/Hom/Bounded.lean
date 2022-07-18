@@ -145,6 +145,9 @@ instance : CoeFun (TopHom α β) fun _ => α → β :=
 theorem to_fun_eq_coe {f : TopHom α β} : f.toFun = (f : α → β) :=
   rfl
 
+-- this must come after the coe_to_fun definition
+initialize_simps_projections TopHom (toFun → apply)
+
 @[ext]
 theorem ext {f g : TopHom α β} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
@@ -312,6 +315,9 @@ instance : CoeFun (BotHom α β) fun _ => α → β :=
 @[simp]
 theorem to_fun_eq_coe {f : BotHom α β} : f.toFun = (f : α → β) :=
   rfl
+
+-- this must come after the coe_to_fun definition
+initialize_simps_projections BotHom (toFun → apply)
 
 @[ext]
 theorem ext {f g : BotHom α β} (h : ∀ a, f a = g a) : f = g :=

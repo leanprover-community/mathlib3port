@@ -183,7 +183,7 @@ theorem to_padic_int_comp_from_padic_int : (toPadicInt p).comp (fromPadicInt p) 
   rw [RingHom.comp_assoc, truncate_comp_lift, ← RingHom.comp_assoc]
   simp only [← RingEquiv.symm_to_ring_hom_comp_to_ring_hom, ← RingHom.id_comp]
 
-theorem to_padic_int_comp_from_padic_int_ext x : (toPadicInt p).comp (fromPadicInt p) x = RingHom.id ℤ_[p] x := by
+theorem to_padic_int_comp_from_padic_int_ext (x) : (toPadicInt p).comp (fromPadicInt p) x = RingHom.id ℤ_[p] x := by
   rw [to_padic_int_comp_from_padic_int]
 
 theorem from_padic_int_comp_to_padic_int : (fromPadicInt p).comp (toPadicInt p) = RingHom.id (𝕎 (Zmod p)) := by
@@ -193,7 +193,7 @@ theorem from_padic_int_comp_to_padic_int : (fromPadicInt p).comp (toPadicInt p) 
   simp only [← to_padic_int, ← to_zmod_pow, ← RingHom.comp_id, ← PadicInt.lift_spec, ← RingHom.id_comp,
     RingHom.comp_assoc, ← RingEquiv.to_ring_hom_comp_symm_to_ring_hom]
 
-theorem from_padic_int_comp_to_padic_int_ext x : (fromPadicInt p).comp (toPadicInt p) x = RingHom.id (𝕎 (Zmod p)) x :=
+theorem from_padic_int_comp_to_padic_int_ext (x) : (fromPadicInt p).comp (toPadicInt p) x = RingHom.id (𝕎 (Zmod p)) x :=
   by
   rw [from_padic_int_comp_to_padic_int]
 

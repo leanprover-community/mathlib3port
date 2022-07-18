@@ -82,22 +82,28 @@ definition. -/
 def angle (x y : V) : ℝ :=
   Real.arccos (inner x y / (∥x∥ * ∥y∥))
 
+theorem continuous_at_angle {x : V × V} (hx1 : x.1 ≠ 0) (hx2 : x.2 ≠ 0) :
+    ContinuousAt (fun y : V × V => angle y.1 y.2) x :=
+  Real.continuous_arccos.ContinuousAt.comp <|
+    continuous_inner.ContinuousAt.div
+      ((continuous_norm.comp continuous_fst).mul (continuous_norm.comp continuous_snd)).ContinuousAt
+      (by
+        simp [← hx1, ← hx2])
+
+theorem angle_smul_smul {c : ℝ} (hc : c ≠ 0) (x y : V) : angle (c • x) (c • y) = angle x y := by
+  have : c * c ≠ 0 := mul_ne_zero hc hc
+  rw [angle, angle, real_inner_smul_left, inner_smul_right, norm_smul, norm_smul, Real.norm_eq_abs,
+    mul_mul_mul_commₓ _ ∥x∥, abs_mul_abs_self, ← mul_assoc c c, mul_div_mul_left _ _ this]
+
+@[simp]
+theorem _root_.linear_isometry.angle_map {E F : Type _} [InnerProductSpace ℝ E] [InnerProductSpace ℝ F] (f : E →ₗᵢ[ℝ] F)
+    (u v : E) : angle (f u) (f v) = angle u v := by
+  rw [angle, angle, f.inner_map_map, f.norm_map, f.norm_map]
+
 theorem IsConformalMap.preserves_angle {E F : Type _} [InnerProductSpace ℝ E] [InnerProductSpace ℝ F] {f' : E →L[ℝ] F}
     (h : IsConformalMap f') (u v : E) : angle (f' u) (f' v) = angle u v := by
-  obtain ⟨c, hc, li, hcf⟩ := h
-  suffices c * (c * inner u v) / (∥c∥ * ∥u∥ * (∥c∥ * ∥v∥)) = inner u v / (∥u∥ * ∥v∥) by
-    simp [← this, ← angle, ← hcf, ← norm_smul, ← inner_smul_left, ← inner_smul_right]
-  by_cases' hu : ∥u∥ = 0
-  · simp [← norm_eq_zero.mp hu]
-    
-  by_cases' hv : ∥v∥ = 0
-  · simp [← norm_eq_zero.mp hv]
-    
-  have hc : ∥c∥ ≠ 0 := fun w => hc (norm_eq_zero.mp w)
-  field_simp
-  have : c * c = ∥c∥ * ∥c∥ := by
-    simp [← Real.norm_eq_abs, ← abs_mul_abs_self]
-  convert congr_arg (fun x => x * ⟪u, v⟫ * ∥u∥ * ∥v∥) this using 1 <;> ring
+  obtain ⟨c, hc, li, rfl⟩ := h
+  exact (angle_smul_smul hc _ _).trans (li.angle_map _ _)
 
 /-- If a real differentiable map `f` is conformal at a point `x`,
     then it preserves the angles at that point. -/
@@ -369,6 +375,17 @@ def angle (p1 p2 p3 : P) : ℝ :=
 
 -- mathport name: «expr∠»
 localized [EuclideanGeometry] notation "∠" => EuclideanGeometry.angle
+
+theorem continuous_at_angle {x : P × P × P} (hx12 : x.1 ≠ x.2.1) (hx32 : x.2.2 ≠ x.2.1) :
+    ContinuousAt (fun y : P × P × P => ∠ y.1 y.2.1 y.2.2) x := by
+  let f : P × P × P → V × V := fun y => (y.1 -ᵥ y.2.1, y.2.2 -ᵥ y.2.1)
+  have hf1 : (f x).1 ≠ 0 := by
+    simp [← hx12]
+  have hf2 : (f x).2 ≠ 0 := by
+    simp [← hx32]
+  exact
+    (InnerProductGeometry.continuous_at_angle hf1 hf2).comp
+      ((continuous_fst.vsub continuous_snd.fst).prod_mk (continuous_snd.snd.vsub continuous_snd.fst)).ContinuousAt
 
 /-- The angle at a point does not depend on the order of the other two
 points. -/

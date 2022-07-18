@@ -35,7 +35,7 @@ section
 variable {α F : Type _} {m : MeasurableSpace α} {μ : Measure α} [NormedGroup F]
 
 theorem Memℒp.integrable_sq {f : α → ℝ} (h : Memℒp f 2 μ) : Integrable (fun x => f x ^ 2) μ := by
-  simpa [← Real.norm_eq_abs, mem_ℒp_one_iff_integrable] using h.norm_rpow Ennreal.two_ne_zero Ennreal.two_ne_top
+  simpa [mem_ℒp_one_iff_integrable] using h.norm_rpow Ennreal.two_ne_zero Ennreal.two_ne_top
 
 theorem mem_ℒp_two_iff_integrable_sq_norm {f : α → F} (hf : AeStronglyMeasurable f μ) :
     Memℒp f 2 μ ↔ Integrable (fun x => ∥f x∥ ^ 2) μ := by
@@ -50,7 +50,7 @@ theorem mem_ℒp_two_iff_integrable_sq {f : α → ℝ} (hf : AeStronglyMeasurab
     Memℒp f 2 μ ↔ Integrable (fun x => f x ^ 2) μ := by
   convert mem_ℒp_two_iff_integrable_sq_norm hf
   ext x
-  simp [← Real.norm_eq_abs]
+  simp
 
 end
 

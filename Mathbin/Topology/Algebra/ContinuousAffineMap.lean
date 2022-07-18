@@ -109,19 +109,19 @@ theorem to_continuous_map_injective {f g : P →A[R] Q} (h : (f : C(P, Q)) = (g 
   exact ContinuousMap.congr_fun h a
 
 @[norm_cast]
-theorem coe_affine_map_mk (f : P →ᵃ[R] Q) h : ((⟨f, h⟩ : P →A[R] Q) : P →ᵃ[R] Q) = f :=
+theorem coe_affine_map_mk (f : P →ᵃ[R] Q) (h) : ((⟨f, h⟩ : P →A[R] Q) : P →ᵃ[R] Q) = f :=
   rfl
 
 @[norm_cast]
-theorem coe_continuous_map_mk (f : P →ᵃ[R] Q) h : ((⟨f, h⟩ : P →A[R] Q) : C(P, Q)) = ⟨f, h⟩ :=
+theorem coe_continuous_map_mk (f : P →ᵃ[R] Q) (h) : ((⟨f, h⟩ : P →A[R] Q) : C(P, Q)) = ⟨f, h⟩ :=
   rfl
 
 @[simp]
-theorem coe_mk (f : P →ᵃ[R] Q) h : ((⟨f, h⟩ : P →A[R] Q) : P → Q) = f :=
+theorem coe_mk (f : P →ᵃ[R] Q) (h) : ((⟨f, h⟩ : P →A[R] Q) : P → Q) = f :=
   rfl
 
 @[simp]
-theorem mk_coe (f : P →A[R] Q) h : (⟨(f : P →ᵃ[R] Q), h⟩ : P →A[R] Q) = f := by
+theorem mk_coe (f : P →A[R] Q) (h) : (⟨(f : P →ᵃ[R] Q), h⟩ : P →A[R] Q) = f := by
   ext
   rfl
 

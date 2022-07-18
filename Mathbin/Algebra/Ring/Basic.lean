@@ -141,7 +141,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.nonUnitalNonAssocSemiring {α : Type u} [NonUnitalNonAssocSemiringₓ α] (f : β → α)
     (hf : Injective f) (zero : f 0 = 0) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
-    (nsmul : ∀ x n : ℕ, f (n • x) = n • f x) : NonUnitalNonAssocSemiringₓ β :=
+    (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) : NonUnitalNonAssocSemiringₓ β :=
   { hf.MulZeroClass f zero mul, hf.AddCommMonoid f zero add nsmul, hf.Distrib f add mul with }
 
 /-- Pullback a `non_unital_semiring` instance along an injective function.
@@ -149,7 +149,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.nonUnitalSemiring {α : Type u} [NonUnitalSemiringₓ α] (f : β → α) (hf : Injective f)
     (zero : f 0 = 0) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
-    (nsmul : ∀ x n : ℕ, f (n • x) = n • f x) : NonUnitalSemiringₓ β :=
+    (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) : NonUnitalSemiringₓ β :=
   { hf.NonUnitalNonAssocSemiring f zero add mul nsmul, hf.SemigroupWithZero f zero mul with }
 
 /-- Pullback a `non_assoc_semiring` instance along an injective function.
@@ -157,8 +157,8 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.nonAssocSemiring {α : Type u} [NonAssocSemiringₓ α] {β : Type v} [Zero β] [One β]
     [Mul β] [Add β] [HasSmul ℕ β] [HasNatCast β] (f : β → α) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
-    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (nat_cast : ∀ n : ℕ, f n = n) : NonAssocSemiringₓ β :=
+    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
+    (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (nat_cast : ∀ n : ℕ, f n = n) : NonAssocSemiringₓ β :=
   { hf.AddMonoidWithOne f zero one add nsmul nat_cast, hf.NonUnitalNonAssocSemiring f zero add mul nsmul,
     hf.MulOneClass f one mul with }
 
@@ -167,8 +167,9 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.semiring {α : Type u} [Semiringₓ α] {β : Type v} [Zero β] [One β] [Add β] [Mul β]
     [Pow β ℕ] [HasSmul ℕ β] [HasNatCast β] (f : β → α) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
-    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) : Semiringₓ β :=
+    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
+    (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
+    (nat_cast : ∀ n : ℕ, f n = n) : Semiringₓ β :=
   { hf.NonAssocSemiring f zero one add mul nsmul nat_cast, hf.MonoidWithZero f zero one mul npow,
     hf.Distrib f add mul with }
 
@@ -177,7 +178,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.nonUnitalNonAssocSemiring {α : Type u} [NonUnitalNonAssocSemiringₓ α] (f : α → β)
     (hf : Surjective f) (zero : f 0 = 0) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
-    (nsmul : ∀ x n : ℕ, f (n • x) = n • f x) : NonUnitalNonAssocSemiringₓ β :=
+    (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) : NonUnitalNonAssocSemiringₓ β :=
   { hf.MulZeroClass f zero mul, hf.AddCommMonoid f zero add nsmul, hf.Distrib f add mul with }
 
 /-- Pushforward a `non_unital_semiring` instance along a surjective function.
@@ -185,7 +186,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.nonUnitalSemiring {α : Type u} [NonUnitalSemiringₓ α] (f : α → β) (hf : Surjective f)
     (zero : f 0 = 0) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
-    (nsmul : ∀ x n : ℕ, f (n • x) = n • f x) : NonUnitalSemiringₓ β :=
+    (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) : NonUnitalSemiringₓ β :=
   { hf.NonUnitalNonAssocSemiring f zero add mul nsmul, hf.SemigroupWithZero f zero mul with }
 
 /-- Pushforward a `non_assoc_semiring` instance along a surjective function.
@@ -193,8 +194,8 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.nonAssocSemiring {α : Type u} [NonAssocSemiringₓ α] {β : Type v} [Zero β] [One β]
     [Add β] [Mul β] [HasSmul ℕ β] [HasNatCast β] (f : α → β) (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
-    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (nat_cast : ∀ n : ℕ, f n = n) : NonAssocSemiringₓ β :=
+    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
+    (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (nat_cast : ∀ n : ℕ, f n = n) : NonAssocSemiringₓ β :=
   { hf.AddMonoidWithOne f zero one add nsmul nat_cast, hf.NonUnitalNonAssocSemiring f zero add mul nsmul,
     hf.MulOneClass f one mul with }
 
@@ -203,8 +204,9 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.semiring {α : Type u} [Semiringₓ α] {β : Type v} [Zero β] [One β] [Add β] [Mul β]
     [Pow β ℕ] [HasSmul ℕ β] [HasNatCast β] (f : α → β) (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
-    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) : Semiringₓ β :=
+    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
+    (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
+    (nat_cast : ∀ n : ℕ, f n = n) : Semiringₓ β :=
   { hf.NonAssocSemiring f zero one add mul nsmul nat_cast, hf.MonoidWithZero f zero one mul npow,
     hf.AddCommMonoid f zero add nsmul, hf.Distrib f add mul with }
 
@@ -383,7 +385,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.nonUnitalCommSemiring [Zero γ] [Add γ] [Mul γ] [HasSmul ℕ γ] (f : γ → α)
     (hf : Injective f) (zero : f 0 = 0) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
-    (nsmul : ∀ x n : ℕ, f (n • x) = n • f x) : NonUnitalCommSemiring γ :=
+    (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) : NonUnitalCommSemiring γ :=
   { hf.NonUnitalSemiring f zero add mul nsmul, hf.CommSemigroup f mul with }
 
 /-- Pushforward a `non_unital_semiring` instance along a surjective function.
@@ -391,7 +393,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.nonUnitalCommSemiring [Zero γ] [Add γ] [Mul γ] [HasSmul ℕ γ] (f : α → γ)
     (hf : Surjective f) (zero : f 0 = 0) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
-    (nsmul : ∀ x n : ℕ, f (n • x) = n • f x) : NonUnitalCommSemiring γ :=
+    (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) : NonUnitalCommSemiring γ :=
   { hf.NonUnitalSemiring f zero add mul nsmul, hf.CommSemigroup f mul with }
 
 theorem Dvd.Dvd.linear_comb {d x y : α} (hdx : d ∣ x) (hdy : d ∣ y) (a b : α) : d ∣ a * x + b * y :=
@@ -423,8 +425,8 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.commSemiring [Zero γ] [One γ] [Add γ] [Mul γ] [HasSmul ℕ γ] [HasNatCast γ] [Pow γ ℕ]
     (f : γ → α) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
-    (mul : ∀ x y, f (x * y) = f x * f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) : CommSemiringₓ γ :=
+    (mul : ∀ x y, f (x * y) = f x * f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
+    (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) : CommSemiringₓ γ :=
   { hf.Semiring f zero one add mul nsmul npow nat_cast, hf.CommSemigroup f mul with }
 
 /-- Pushforward a `semiring` instance along a surjective function.
@@ -432,8 +434,8 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.commSemiring [Zero γ] [One γ] [Add γ] [Mul γ] [HasSmul ℕ γ] [HasNatCast γ] [Pow γ ℕ]
     (f : α → γ) (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
-    (mul : ∀ x y, f (x * y) = f x * f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) : CommSemiringₓ γ :=
+    (mul : ∀ x y, f (x * y) = f x * f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
+    (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) : CommSemiringₓ γ :=
   { hf.Semiring f zero one add mul nsmul npow nat_cast, hf.CommSemigroup f mul with }
 
 theorem add_mul_self_eq (a b : α) : (a + b) * (a + b) = a * a + 2 * a * b + b * b := by
@@ -617,7 +619,8 @@ See note [reducible non-instances]. -/
 protected def Function.Injective.nonUnitalNonAssocRing [Zero β] [Add β] [Mul β] [Neg β] [Sub β] [HasSmul ℕ β]
     [HasSmul ℤ β] (f : β → α) (hf : Injective f) (zero : f 0 = 0) (add : ∀ x y, f (x + y) = f x + f y)
     (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y)
-    (nsmul : ∀ x n : ℕ, f (n • x) = n • f x) (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) : NonUnitalNonAssocRing β :=
+    (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) :
+    NonUnitalNonAssocRing β :=
   { hf.AddCommGroup f zero add neg sub nsmul zsmul, hf.MulZeroClass f zero mul, hf.Distrib f add mul with }
 
 /-- Pushforward a `non_unital_non_assoc_ring` instance along a surjective function.
@@ -626,7 +629,8 @@ See note [reducible non-instances]. -/
 protected def Function.Surjective.nonUnitalNonAssocRing [Zero β] [Add β] [Mul β] [Neg β] [Sub β] [HasSmul ℕ β]
     [HasSmul ℤ β] (f : α → β) (hf : Surjective f) (zero : f 0 = 0) (add : ∀ x y, f (x + y) = f x + f y)
     (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y)
-    (nsmul : ∀ x n : ℕ, f (n • x) = n • f x) (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) : NonUnitalNonAssocRing β :=
+    (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) :
+    NonUnitalNonAssocRing β :=
   { hf.AddCommGroup f zero add neg sub nsmul zsmul, hf.MulZeroClass f zero mul, hf.Distrib f add mul with }
 
 instance (priority := 100) NonUnitalNonAssocRing.toHasDistribNeg : HasDistribNeg α where
@@ -696,7 +700,7 @@ See note [reducible non-instances]. -/
 protected def Function.Injective.nonUnitalRing [Zero β] [Add β] [Mul β] [Neg β] [Sub β] [HasSmul ℕ β] [HasSmul ℤ β]
     (f : β → α) (hf : Injective f) (zero : f 0 = 0) (add : ∀ x y, f (x + y) = f x + f y)
     (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y)
-    (nsmul : ∀ x n : ℕ, f (n • x) = n • f x) (gsmul : ∀ x n : ℤ, f (n • x) = n • f x) : NonUnitalRing β :=
+    (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (gsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) : NonUnitalRing β :=
   { hf.AddCommGroup f zero add neg sub nsmul gsmul, hf.MulZeroClass f zero mul, hf.Distrib f add mul,
     hf.Semigroup f mul with }
 
@@ -706,7 +710,7 @@ See note [reducible non-instances]. -/
 protected def Function.Surjective.nonUnitalRing [Zero β] [Add β] [Mul β] [Neg β] [Sub β] [HasSmul ℕ β] [HasSmul ℤ β]
     (f : α → β) (hf : Surjective f) (zero : f 0 = 0) (add : ∀ x y, f (x + y) = f x + f y)
     (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y)
-    (nsmul : ∀ x n : ℕ, f (n • x) = n • f x) (gsmul : ∀ x n : ℤ, f (n • x) = n • f x) : NonUnitalRing β :=
+    (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (gsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) : NonUnitalRing β :=
   { hf.AddCommGroup f zero add neg sub nsmul gsmul, hf.MulZeroClass f zero mul, hf.Distrib f add mul,
     hf.Semigroup f mul with }
 
@@ -726,8 +730,8 @@ See note [reducible non-instances]. -/
 protected def Function.Injective.nonAssocRing [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [HasSmul ℕ β]
     [HasSmul ℤ β] [HasNatCast β] [HasIntCast β] (f : β → α) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
-    (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (gsmul : ∀ x n : ℤ, f (n • x) = n • f x) (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) :
+    (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
+    (gsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) :
     NonAssocRing β :=
   { hf.AddCommGroup f zero add neg sub nsmul gsmul,
     hf.AddGroupWithOne f zero one add neg sub nsmul gsmul nat_cast int_cast, hf.MulZeroClass f zero mul,
@@ -739,8 +743,8 @@ See note [reducible non-instances]. -/
 protected def Function.Surjective.nonAssocRing [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [HasSmul ℕ β]
     [HasSmul ℤ β] [HasNatCast β] [HasIntCast β] (f : α → β) (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
-    (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (gsmul : ∀ x n : ℤ, f (n • x) = n • f x) (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) :
+    (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
+    (gsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) :
     NonAssocRing β :=
   { hf.AddCommGroup f zero add neg sub nsmul gsmul, hf.MulZeroClass f zero mul,
     hf.AddGroupWithOne f zero one add neg sub nsmul gsmul nat_cast int_cast, hf.Distrib f add mul,
@@ -809,9 +813,9 @@ See note [reducible non-instances]. -/
 protected def Function.Injective.ring [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [HasSmul ℕ β] [HasSmul ℤ β]
     [Pow β ℕ] [HasNatCast β] [HasIntCast β] (f : β → α) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
-    (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n)
-    (int_cast : ∀ n : ℤ, f n = n) : Ringₓ β :=
+    (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
+    (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
+    (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) : Ringₓ β :=
   { hf.AddGroupWithOne f zero one add neg sub nsmul zsmul nat_cast int_cast,
     hf.AddCommGroup f zero add neg sub nsmul zsmul, hf.Monoid f one mul npow, hf.Distrib f add mul with }
 
@@ -821,9 +825,9 @@ See note [reducible non-instances]. -/
 protected def Function.Surjective.ring [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [HasSmul ℕ β] [HasSmul ℤ β]
     [Pow β ℕ] [HasNatCast β] [HasIntCast β] (f : α → β) (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
-    (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n)
-    (int_cast : ∀ n : ℤ, f n = n) : Ringₓ β :=
+    (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
+    (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
+    (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) : Ringₓ β :=
   { hf.AddGroupWithOne f zero one add neg sub nsmul zsmul nat_cast int_cast,
     hf.AddCommGroup f zero add neg sub nsmul zsmul, hf.Monoid f one mul npow, hf.Distrib f add mul with }
 
@@ -956,7 +960,7 @@ See note [reducible non-instances]. -/
 protected def Function.Injective.nonUnitalCommRing [Zero β] [Add β] [Mul β] [Neg β] [Sub β] [HasSmul ℕ β] [HasSmul ℤ β]
     (f : β → α) (hf : Injective f) (zero : f 0 = 0) (add : ∀ x y, f (x + y) = f x + f y)
     (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y)
-    (nsmul : ∀ x n : ℕ, f (n • x) = n • f x) (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) : NonUnitalCommRing β :=
+    (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) : NonUnitalCommRing β :=
   { hf.NonUnitalRing f zero add mul neg sub nsmul zsmul, hf.CommSemigroup f mul with }
 
 /-- Pushforward a `non_unital_comm_ring` instance along a surjective function.
@@ -965,7 +969,7 @@ See note [reducible non-instances]. -/
 protected def Function.Surjective.nonUnitalCommRing [Zero β] [Add β] [Mul β] [Neg β] [Sub β] [HasSmul ℕ β] [HasSmul ℤ β]
     (f : α → β) (hf : Surjective f) (zero : f 0 = 0) (add : ∀ x y, f (x + y) = f x + f y)
     (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y)
-    (nsmul : ∀ x n : ℕ, f (n • x) = n • f x) (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) : NonUnitalCommRing β :=
+    (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) : NonUnitalCommRing β :=
   { hf.NonUnitalRing f zero add mul neg sub nsmul zsmul, hf.CommSemigroup f mul with }
 
 attribute [local simp] add_assocₓ add_commₓ add_left_commₓ mul_comm
@@ -1003,9 +1007,9 @@ See note [reducible non-instances]. -/
 protected def Function.Injective.commRing [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [HasSmul ℕ β] [HasSmul ℤ β]
     [Pow β ℕ] [HasNatCast β] [HasIntCast β] (f : β → α) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
-    (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n)
-    (int_cast : ∀ n : ℤ, f n = n) : CommRingₓ β :=
+    (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
+    (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
+    (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) : CommRingₓ β :=
   { hf.Ring f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast, hf.CommSemigroup f mul with }
 
 /-- Pushforward a `comm_ring` instance along a surjective function.
@@ -1014,9 +1018,9 @@ See note [reducible non-instances]. -/
 protected def Function.Surjective.commRing [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [HasSmul ℕ β] [HasSmul ℤ β]
     [Pow β ℕ] [HasNatCast β] [HasIntCast β] (f : α → β) (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
-    (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n)
-    (int_cast : ∀ n : ℤ, f n = n) : CommRingₓ β :=
+    (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
+    (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
+    (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) : CommRingₓ β :=
   { hf.Ring f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast, hf.CommSemigroup f mul with }
 
 end CommRingₓ
@@ -1038,14 +1042,14 @@ theorem pred_ne_self [NonAssocRing α] [Nontrivial α] (a : α) : a - 1 ≠ a :=
 The typeclass that restricts all terms of `α` to have this property is `no_zero_divisors`. -/
 theorem is_left_regular_of_non_zero_divisor [NonUnitalNonAssocRing α] (k : α) (h : ∀ x : α, k * x = 0 → x = 0) :
     IsLeftRegular k := by
-  refine' fun x y h' : k * x = k * y => sub_eq_zero.mp (h _ _)
+  refine' fun x y (h' : k * x = k * y) => sub_eq_zero.mp (h _ _)
   rw [mul_sub, sub_eq_zero, h']
 
 /-- Right `mul` by a `k : α` over `[ring α]` is injective, if `k` is not a zero divisor.
 The typeclass that restricts all terms of `α` to have this property is `no_zero_divisors`. -/
 theorem is_right_regular_of_non_zero_divisor [NonUnitalNonAssocRing α] (k : α) (h : ∀ x : α, x * k = 0 → x = 0) :
     IsRightRegular k := by
-  refine' fun x y h' : x * k = y * k => sub_eq_zero.mp (h _ _)
+  refine' fun x y (h' : x * k = y * k) => sub_eq_zero.mp (h _ _)
   rw [sub_mul, sub_eq_zero, h']
 
 theorem is_regular_of_ne_zero' [NonUnitalNonAssocRing α] [NoZeroDivisors α] {k : α} (hk : k ≠ 0) : IsRegular k :=

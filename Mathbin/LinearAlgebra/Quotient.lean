@@ -233,7 +233,7 @@ theorem liftq_apply (f : M →ₛₗ[τ₁₂] M₂) {h} (x : M) : p.liftq f h (
   rfl
 
 @[simp]
-theorem liftq_mkq (f : M →ₛₗ[τ₁₂] M₂) h : (p.liftq f h).comp p.mkq = f := by
+theorem liftq_mkq (f : M →ₛₗ[τ₁₂] M₂) (h) : (p.liftq f h).comp p.mkq = f := by
   ext <;> rfl
 
 /-- Special case of `liftq` when `p` is the span of `x`. In this case, the condition on `f` simply
@@ -321,14 +321,14 @@ theorem mapq_pow {f : M →ₗ[R] M} (h : p ≤ p.comap f) (k : ℕ)
     apply p.mapq_comp
     
 
-theorem comap_liftq (f : M →ₛₗ[τ₁₂] M₂) h : q.comap (p.liftq f h) = (q.comap f).map (mkq p) :=
+theorem comap_liftq (f : M →ₛₗ[τ₁₂] M₂) (h) : q.comap (p.liftq f h) = (q.comap f).map (mkq p) :=
   le_antisymmₓ
     (by
       rintro ⟨x⟩ hx <;> exact ⟨_, hx, rfl⟩)
     (by
       rw [map_le_iff_le_comap, ← comap_comp, liftq_mkq] <;> exact le_rfl)
 
-theorem map_liftq [RingHomSurjective τ₁₂] (f : M →ₛₗ[τ₁₂] M₂) h (q : Submodule R (M ⧸ p)) :
+theorem map_liftq [RingHomSurjective τ₁₂] (f : M →ₛₗ[τ₁₂] M₂) (h) (q : Submodule R (M ⧸ p)) :
     q.map (p.liftq f h) = (q.comap p.mkq).map f :=
   le_antisymmₓ
     (by
@@ -336,13 +336,13 @@ theorem map_liftq [RingHomSurjective τ₁₂] (f : M →ₛₗ[τ₁₂] M₂) 
     (by
       rintro _ ⟨x, hxq, rfl⟩ <;> exact ⟨Quotientₓ.mk x, hxq, rfl⟩)
 
-theorem ker_liftq (f : M →ₛₗ[τ₁₂] M₂) h : ker (p.liftq f h) = (ker f).map (mkq p) :=
+theorem ker_liftq (f : M →ₛₗ[τ₁₂] M₂) (h) : ker (p.liftq f h) = (ker f).map (mkq p) :=
   comap_liftq _ _ _ _
 
-theorem range_liftq [RingHomSurjective τ₁₂] (f : M →ₛₗ[τ₁₂] M₂) h : range (p.liftq f h) = range f := by
+theorem range_liftq [RingHomSurjective τ₁₂] (f : M →ₛₗ[τ₁₂] M₂) (h) : range (p.liftq f h) = range f := by
   simpa only [← range_eq_map] using map_liftq _ _ _ _
 
-theorem ker_liftq_eq_bot (f : M →ₛₗ[τ₁₂] M₂) h (h' : ker f ≤ p) : ker (p.liftq f h) = ⊥ := by
+theorem ker_liftq_eq_bot (f : M →ₛₗ[τ₁₂] M₂) (h) (h' : ker f ≤ p) : ker (p.liftq f h) = ⊥ := by
   rw [ker_liftq, le_antisymmₓ h h', mkq_map_self]
 
 /-- The correspondence theorem for modules: there is an order isomorphism between submodules of the

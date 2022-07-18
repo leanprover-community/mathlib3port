@@ -72,7 +72,7 @@ class NonPreadditiveAbelian extends HasZeroMorphisms C, NormalMonoCategory C, No
   [HasFiniteProducts : HasFiniteProducts C]
   [HasFiniteCoproducts : HasFiniteCoproducts C]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:293:40: warning: unsupported option default_priority
+-- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option default_priority
 set_option default_priority 100
 
 attribute [instance] non_preadditive_abelian.has_zero_object
@@ -109,7 +109,7 @@ instance : Epi (Abelian.factorThruImage f) :=
   (-- It will suffice to consider some g : I ⟶ R such that p ≫ g = 0 and show that g = 0.
       NormalMonoCategory.epi_of_zero_cancel
       _)
-    fun R g : I ⟶ R hpg : p ≫ g = 0 => by
+    fun R (g : I ⟶ R) (hpg : p ≫ g = 0) => by
     -- Since C is abelian, u := ker g ≫ i is the kernel of some morphism h.
     let u := kernel.ι g ≫ i
     have : mono u := mono_comp _ _
@@ -143,7 +143,7 @@ instance : Mono (Abelian.factorThruCoimage f) :=
   let I := Abelian.coimage f
   let i := Abelian.factorThruCoimage f
   let p := cokernel.π (kernel.ι f)
-  (NormalEpiCategory.mono_of_cancel_zero _) fun R g : R ⟶ I hgi : g ≫ i = 0 => by
+  (NormalEpiCategory.mono_of_cancel_zero _) fun R (g : R ⟶ I) (hgi : g ≫ i = 0) => by
     -- Since C is abelian, u := p ≫ coker g is the cokernel of some morphism h.
     let u := p ≫ cokernel.π g
     have : epi u := epi_comp _ _

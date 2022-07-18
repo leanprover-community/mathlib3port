@@ -47,12 +47,12 @@ noncomputable def LinearMap.extendTo𝕜' [Module ℝ F] [IsScalarTower ℝ 𝕜
     simp only [← smul_add, ← LinearMap.map_add, ← of_real_add]
     rw [mul_addₓ]
     abel
-  have A : ∀ c : ℝ x : F, (fr ((c : 𝕜) • x) : 𝕜) = (c : 𝕜) * (fr x : 𝕜) := by
+  have A : ∀ (c : ℝ) (x : F), (fr ((c : 𝕜) • x) : 𝕜) = (c : 𝕜) * (fr x : 𝕜) := by
     intro c x
     rw [← of_real_mul]
     congr 1
     rw [IsROrC.of_real_alg, smul_assoc, fr.map_smul, Algebra.id.smul_eq_mul, one_smul]
-  have smul_ℝ : ∀ c : ℝ x : F, fc ((c : 𝕜) • x) = (c : 𝕜) * fc x := by
+  have smul_ℝ : ∀ (c : ℝ) (x : F), fc ((c : 𝕜) • x) = (c : 𝕜) * fc x := by
     intro c x
     simp only [← fc, ← A]
     rw [A c x]
@@ -67,7 +67,7 @@ noncomputable def LinearMap.extendTo𝕜' [Module ℝ F] [IsScalarTower ℝ 𝕜
     rw [mul_sub, ← mul_assoc, smul_smul, h]
     simp only [← neg_mul, ← LinearMap.map_neg, ← one_mulₓ, ← one_smul, ← mul_neg, ← of_real_neg, ← neg_smul, ←
       sub_neg_eq_add, ← add_commₓ]
-  have smul_𝕜 : ∀ c : 𝕜 x : F, fc (c • x) = c • fc x := by
+  have smul_𝕜 : ∀ (c : 𝕜) (x : F), fc (c • x) = c • fc x := by
     intro c x
     rw [← re_add_im c, add_smul, add_smul, add, smul_ℝ, ← smul_smul, smul_ℝ, smul_I, ← mul_assoc]
     rfl
@@ -77,7 +77,6 @@ theorem LinearMap.extend_to_𝕜'_apply [Module ℝ F] [IsScalarTower ℝ 𝕜 F
     fr.extendTo𝕜' x = (fr x : 𝕜) - (i : 𝕜) * fr ((i : 𝕜) • x) :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The norm of the extension is bounded by `∥fr∥`. -/
 theorem norm_bound [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[ℝ] ℝ) (x : F) :
     ∥(fr.toLinearMap.extendTo𝕜' x : 𝕜)∥ ≤ ∥fr∥ * ∥x∥ := by

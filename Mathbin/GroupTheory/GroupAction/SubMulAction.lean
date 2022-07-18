@@ -39,7 +39,7 @@ variable {S : Type u'} {T : Type u''} {R : Type u} {M : Type v}
 /-- A sub_mul_action is a set which is closed under scalar multiplication.  -/
 structure SubMulAction (R : Type u) (M : Type v) [HasSmul R M] : Type v where
   Carrier : Set M
-  smul_mem' : ∀ c : R {x : M}, x ∈ carrier → c • x ∈ carrier
+  smul_mem' : ∀ (c : R) {x : M}, x ∈ carrier → c • x ∈ carrier
 
 namespace SubMulAction
 

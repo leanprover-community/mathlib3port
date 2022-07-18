@@ -30,11 +30,11 @@ variable {R : Type u} [CommRingₓ R]
 
 variable {J : Type v} [SmallCategory J]
 
-instance semiringObj (F : J ⥤ AlgebraCat.{max v w} R) j : Semiringₓ ((F ⋙ forget (AlgebraCat R)).obj j) := by
+instance semiringObj (F : J ⥤ AlgebraCat.{max v w} R) (j) : Semiringₓ ((F ⋙ forget (AlgebraCat R)).obj j) := by
   change Semiringₓ (F.obj j)
   infer_instance
 
-instance algebraObj (F : J ⥤ AlgebraCat.{max v w} R) j : Algebra R ((F ⋙ forget (AlgebraCat R)).obj j) := by
+instance algebraObj (F : J ⥤ AlgebraCat.{max v w} R) (j) : Algebra R ((F ⋙ forget (AlgebraCat R)).obj j) := by
   change Algebra R (F.obj j)
   infer_instance
 
@@ -57,7 +57,7 @@ instance limitAlgebra (F : J ⥤ AlgebraCat.{max v w} R) :
   infer_instance
 
 /-- `limit.π (F ⋙ forget (Algebra R)) j` as a `alg_hom`. -/
-def limitπAlgHom (F : J ⥤ AlgebraCat.{max v w} R) j :
+def limitπAlgHom (F : J ⥤ AlgebraCat.{max v w} R) (j) :
     (Types.limitCone (F ⋙ forget (AlgebraCat R))).x →ₐ[R] (F ⋙ forget (AlgebraCat.{max v w} R)).obj j :=
   { SemiRing.limitπRingHom (F ⋙ forget₂ (AlgebraCat R) Ringₓₓ.{max v w} ⋙ forget₂ Ringₓₓ SemiRing.{max v w}) j with
     commutes' := fun r => rfl }
@@ -104,7 +104,7 @@ end HasLimits
 
 open HasLimits
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1354:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Basic.lean:1389:38: unsupported irreducible non-definition
 /-- The category of R-algebras has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} (AlgebraCat.{max v w} R) :=
   { HasLimitsOfShape := fun J 𝒥 =>

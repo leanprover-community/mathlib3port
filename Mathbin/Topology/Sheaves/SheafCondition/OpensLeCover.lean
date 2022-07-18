@@ -98,7 +98,7 @@ A presheaf is a sheaf if `F` sends the cone `(opens_le_cover_cocone U).op` to a 
 mapping down to any `V` which is contained in some `U i`.)
 -/
 def IsSheafOpensLeCover : Prop :=
-  ∀ ⦃ι : Type v⦄ U : ι → Opens X, Nonempty (IsLimit (F.mapCone (opensLeCoverCocone U).op))
+  ∀ ⦃ι : Type v⦄ (U : ι → Opens X), Nonempty (IsLimit (F.mapCone (opensLeCoverCocone U).op))
 
 namespace SheafCondition
 

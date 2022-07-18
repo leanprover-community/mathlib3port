@@ -62,7 +62,7 @@ def listDecodeₓ : List (Sum α (Σi, L.Functions i)) → List (Option (L.Term 
 
 theorem list_decode_encode_list (l : List (L.Term α)) : listDecodeₓ (l.bind listEncodeₓ) = l.map Option.some := by
   suffices h :
-    ∀ t : L.term α l : List (Sum α (Σi, L.functions i)), list_decode (t.listEncode ++ l) = some t :: list_decode l
+    ∀ (t : L.term α) (l : List (Sum α (Σi, L.functions i))), list_decode (t.listEncode ++ l) = some t :: list_decode l
   · induction' l with t l lih
     · rfl
       
@@ -271,7 +271,7 @@ def listDecodeₓ :
 theorem list_decode_encode_list (l : List (Σn, L.BoundedFormula α n)) :
     (listDecodeₓ (l.bind fun φ => φ.2.listEncode)).1 = l.head := by
   suffices h :
-    ∀ φ : Σn, L.bounded_formula α n l,
+    ∀ (φ : Σn, L.bounded_formula α n) (l),
       (list_decode (list_encode φ.2 ++ l)).1 = φ ∧ (list_decode (list_encode φ.2 ++ l)).2.1 = l
   · induction' l with φ l lih
     · rw [List.nil_bind]

@@ -327,7 +327,8 @@ theorem padic_val_rat_le_padic_val_rat_iff {n₁ n₂ d₁ d₂ : ℤ} (hn₁ : 
     lhs rw [padicValRat.defn p (Rat.mk_ne_zero_of_ne_zero hn₁ hd₁) rfl,
       padicValRat.defn p (Rat.mk_ne_zero_of_ne_zero hn₂ hd₂) rfl, sub_le_iff_le_add', ← add_sub_assoc,
       le_sub_iff_add_le]norm_cast rw [← multiplicity.mul' (Nat.prime_iff_prime_int.1 p_prime.1) hf1, add_commₓ, ←
-      multiplicity.mul' (Nat.prime_iff_prime_int.1 p_prime.1) hf2, Enat.get_le_get, multiplicity_le_multiplicity_iff]
+      multiplicity.mul' (Nat.prime_iff_prime_int.1 p_prime.1) hf2, PartEnat.get_le_get,
+      multiplicity_le_multiplicity_iff]
 
 /-- Sufficient conditions to show that the p-adic valuation of `q` is less than or equal to the
 p-adic vlauation of `q + r`.
@@ -466,9 +467,9 @@ theorem pow_succ_padic_val_nat_not_dvd {p n : ℕ} [hp : Fact (Nat.Prime p)] (hn
     ¬p ^ (padicValNat p n + 1) ∣ n := by
   rw [multiplicity.pow_dvd_iff_le_multiplicity]
   rw [padic_val_nat_def hn]
-  · rw [Nat.cast_addₓ, Enat.coe_get]
+  · rw [Nat.cast_addₓ, PartEnat.coe_get]
     simp only [← Nat.cast_oneₓ, ← not_leₓ]
-    exact Enat.lt_add_one (ne_top_iff_finite.mpr (finite_nat_iff.mpr ⟨(Fact.elim hp).ne_one, hn⟩))
+    exact PartEnat.lt_add_one (ne_top_iff_finite.mpr (finite_nat_iff.mpr ⟨(Fact.elim hp).ne_one, hn⟩))
     
   · infer_instance
     
@@ -478,7 +479,7 @@ theorem padic_val_nat_dvd_iff (p : ℕ) [hp : Fact p.Prime] (n : ℕ) (a : ℕ) 
   constructor
   · rw [pow_dvd_iff_le_multiplicity, padicValNat]
     split_ifs
-    · rw [Enat.coe_le_iff]
+    · rw [PartEnat.coe_le_iff]
       exact fun hn => Or.inr (hn _)
       
     · simp only [← true_andₓ, ← not_ltₓ, ← Ne.def, ← not_false_iff, ← Nat.le_zero_iffₓ, ← hp.out.ne_one] at h
@@ -497,7 +498,7 @@ theorem padic_val_nat_primes {p q : ℕ} [p_prime : Fact p.Prime] [q_prime : Fac
   @padicValNat.eq_zero_of_not_dvd p q <| (not_congr (Iff.symm (prime_dvd_prime_iff_eq p_prime.1 q_prime.1))).mp neq
 
 protected theorem padicValNat.div' {p : ℕ} [p_prime : Fact p.Prime] :
-    ∀ {m : ℕ} cpm : Coprime p m {b : ℕ} dvd : m ∣ b, padicValNat p (b / m) = padicValNat p b
+    ∀ {m : ℕ} (cpm : Coprime p m) {b : ℕ} (dvd : m ∣ b), padicValNat p (b / m) = padicValNat p b
   | 0 => fun cpm b dvd => by
     rw [zero_dvd_iff] at dvd
     rw [dvd, Nat.zero_divₓ]

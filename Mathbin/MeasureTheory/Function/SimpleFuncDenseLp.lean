@@ -325,8 +325,8 @@ theorem measure_preimage_lt_top_of_mem_ℒp (hp_pos : p ≠ 0) (hp_ne_top : p �
   · simp [← hf_snorm]
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y «expr ≠ » 0)
-theorem mem_ℒp_of_finite_measure_preimage (p : ℝ≥0∞) {f : α →ₛ E} (hf : ∀ y _ : y ≠ 0, μ (f ⁻¹' {y}) < ∞) :
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y «expr ≠ » 0)
+theorem mem_ℒp_of_finite_measure_preimage (p : ℝ≥0∞) {f : α →ₛ E} (hf : ∀ (y) (_ : y ≠ 0), μ (f ⁻¹' {y}) < ∞) :
     Memℒp f p μ := by
   by_cases' hp0 : p = 0
   · rw [hp0, mem_ℒp_zero_iff_ae_strongly_measurable]
@@ -350,12 +350,13 @@ theorem mem_ℒp_of_finite_measure_preimage (p : ℝ≥0∞) {f : α →ₛ E} (
     exact (Ennreal.rpow_lt_top_of_nonneg Ennreal.to_real_nonneg Ennreal.coe_ne_top).Ne
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y «expr ≠ » 0)
-theorem mem_ℒp_iff {f : α →ₛ E} (hp_pos : p ≠ 0) (hp_ne_top : p ≠ ∞) : Memℒp f p μ ↔ ∀ y _ : y ≠ 0, μ (f ⁻¹' {y}) < ∞ :=
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y «expr ≠ » 0)
+theorem mem_ℒp_iff {f : α →ₛ E} (hp_pos : p ≠ 0) (hp_ne_top : p ≠ ∞) :
+    Memℒp f p μ ↔ ∀ (y) (_ : y ≠ 0), μ (f ⁻¹' {y}) < ∞ :=
   ⟨fun h => measure_preimage_lt_top_of_mem_ℒp hp_pos hp_ne_top f h, fun h => mem_ℒp_of_finite_measure_preimage p h⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y «expr ≠ » 0)
-theorem integrable_iff {f : α →ₛ E} : Integrable f μ ↔ ∀ y _ : y ≠ 0, μ (f ⁻¹' {y}) < ∞ :=
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y «expr ≠ » 0)
+theorem integrable_iff {f : α →ₛ E} : Integrable f μ ↔ ∀ (y) (_ : y ≠ 0), μ (f ⁻¹' {y}) < ∞ :=
   mem_ℒp_one_iff_integrable.symm.trans <| mem_ℒp_iff Ennreal.zero_lt_one.ne' Ennreal.coe_ne_top
 
 theorem mem_ℒp_iff_integrable {f : α →ₛ E} (hp_pos : p ≠ 0) (hp_ne_top : p ≠ ∞) : Memℒp f p μ ↔ Integrable f μ :=
@@ -384,8 +385,9 @@ theorem measure_preimage_lt_top_of_integrable (f : α →ₛ E) (hf : Integrable
     μ (f ⁻¹' {x}) < ∞ :=
   integrable_iff.mp hf x hx
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y «expr ≠ » 0)
-theorem measure_support_lt_top [Zero β] (f : α →ₛ β) (hf : ∀ y _ : y ≠ 0, μ (f ⁻¹' {y}) < ∞) : μ (Support f) < ∞ := by
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y «expr ≠ » 0)
+theorem measure_support_lt_top [Zero β] (f : α →ₛ β) (hf : ∀ (y) (_ : y ≠ 0), μ (f ⁻¹' {y}) < ∞) : μ (Support f) < ∞ :=
+  by
   rw [support_eq]
   refine' (measure_bUnion_finset_le _ _).trans_lt (ennreal.sum_lt_top_iff.mpr fun y hy => _)
   rw [Finset.mem_filter] at hy
@@ -655,7 +657,8 @@ that the property holds for (multiples of) characteristic functions of finite-me
 sets and is closed under addition (of functions with disjoint support). -/
 @[elab_as_eliminator]
 protected theorem induction (hp_pos : p ≠ 0) (hp_ne_top : p ≠ ∞) {P : lp.simpleFunc E p μ → Prop}
-    (h_ind : ∀ c : E {s : Set α} hs : MeasurableSet s hμs : μ s < ∞, P (lp.simpleFunc.indicatorConst p hs hμs.Ne c))
+    (h_ind :
+      ∀ (c : E) {s : Set α} (hs : MeasurableSet s) (hμs : μ s < ∞), P (lp.simpleFunc.indicatorConst p hs hμs.Ne c))
     (h_add :
       ∀ ⦃f g : α →ₛ E⦄,
         ∀ hf : Memℒp f p μ,
@@ -702,9 +705,9 @@ protected theorem uniform_embedding : UniformEmbedding (coe : lp.simpleFunc E p 
 protected theorem uniform_inducing : UniformInducing (coe : lp.simpleFunc E p μ → lp E p μ) :=
   simpleFunc.uniform_embedding.to_uniform_inducing
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr E]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr E]]
 protected theorem dense_embedding (hp_ne_top : p ≠ ∞) : DenseEmbedding (coe : lp.simpleFunc E p μ → lp E p μ) := by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr E]]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr E]]"
   apply simple_func.uniform_embedding.dense_embedding
   intro f
   rw [mem_closure_iff_seq_limit]
@@ -815,10 +818,10 @@ variable (p μ G)
 def coeSimpleFuncNonnegToLpNonneg : { g : lp.simpleFunc G p μ // 0 ≤ g } → { g : lp G p μ // 0 ≤ g } := fun g =>
   ⟨g, g.2⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr G]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr G]]
 theorem dense_range_coe_simple_func_nonneg_to_Lp_nonneg [hp : Fact (1 ≤ p)] (hp_ne_top : p ≠ ∞) :
     DenseRange (coeSimpleFuncNonnegToLpNonneg p μ G) := by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr G]]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr G]]"
   intro g
   rw [mem_closure_iff_seq_limit]
   have hg_mem_ℒp : mem_ℒp g p μ := Lp.mem_ℒp g
@@ -892,7 +895,8 @@ suffices to show that
 -/
 @[elab_as_eliminator]
 theorem lp.induction [_i : Fact (1 ≤ p)] (hp_ne_top : p ≠ ∞) (P : lp E p μ → Prop)
-    (h_ind : ∀ c : E {s : Set α} hs : MeasurableSet s hμs : μ s < ∞, P (lp.simpleFunc.indicatorConst p hs hμs.Ne c))
+    (h_ind :
+      ∀ (c : E) {s : Set α} (hs : MeasurableSet s) (hμs : μ s < ∞), P (lp.simpleFunc.indicatorConst p hs hμs.Ne c))
     (h_add :
       ∀ ⦃f g⦄,
         ∀ hf : Memℒp f p μ,
@@ -920,10 +924,10 @@ of their images is a subset of `{0}`).
 -/
 @[elab_as_eliminator]
 theorem Memℒp.induction [_i : Fact (1 ≤ p)] (hp_ne_top : p ≠ ∞) (P : (α → E) → Prop)
-    (h_ind : ∀ c : E ⦃s⦄, MeasurableSet s → μ s < ∞ → P (s.indicator fun _ => c))
+    (h_ind : ∀ (c : E) ⦃s⦄, MeasurableSet s → μ s < ∞ → P (s.indicator fun _ => c))
     (h_add : ∀ ⦃f g : α → E⦄, Disjoint (Support f) (Support g) → Memℒp f p μ → Memℒp g p μ → P f → P g → P (f + g))
     (h_closed : IsClosed { f : lp E p μ | P f }) (h_ae : ∀ ⦃f g⦄, f =ᵐ[μ] g → Memℒp f p μ → P f → P g) :
-    ∀ ⦃f : α → E⦄ hf : Memℒp f p μ, P f := by
+    ∀ ⦃f : α → E⦄ (hf : Memℒp f p μ), P f := by
   have : ∀ f : simple_func α E, mem_ℒp f p μ → P f := by
     refine' simple_func.induction _ _
     · intro c s hs h
@@ -979,11 +983,11 @@ of their images is a subset of `{0}`).
 -/
 @[elab_as_eliminator]
 theorem Integrable.induction (P : (α → E) → Prop)
-    (h_ind : ∀ c : E ⦃s⦄, MeasurableSet s → μ s < ∞ → P (s.indicator fun _ => c))
+    (h_ind : ∀ (c : E) ⦃s⦄, MeasurableSet s → μ s < ∞ → P (s.indicator fun _ => c))
     (h_add :
       ∀ ⦃f g : α → E⦄, Disjoint (Support f) (Support g) → Integrable f μ → Integrable g μ → P f → P g → P (f + g))
     (h_closed : IsClosed { f : α →₁[μ] E | P f }) (h_ae : ∀ ⦃f g⦄, f =ᵐ[μ] g → Integrable f μ → P f → P g) :
-    ∀ ⦃f : α → E⦄ hf : Integrable f μ, P f := by
+    ∀ ⦃f : α → E⦄ (hf : Integrable f μ), P f := by
   simp only [mem_ℒp_one_iff_integrable] at *
   exact mem_ℒp.induction one_ne_top P h_ind h_add h_closed h_ae
 

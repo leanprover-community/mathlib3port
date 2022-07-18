@@ -195,7 +195,7 @@ theorem to_fun_eq_coe (f : LocallyConstant X Y) : f.toFun = f :=
   rfl
 
 @[simp]
-theorem coe_mk (f : X → Y) h : ⇑(⟨f, h⟩ : LocallyConstant X Y) = f :=
+theorem coe_mk (f : X → Y) (h) : ⇑(⟨f, h⟩ : LocallyConstant X Y) = f :=
   rfl
 
 theorem congr_fun {f g : LocallyConstant X Y} (h : f = g) (x : X) : f x = g x :=
@@ -351,7 +351,7 @@ def unflip {X α β : Type _} [Fintype α] [TopologicalSpace X] (f : α → Loca
   IsLocallyConstant := by
     rw [(IsLocallyConstant.tfae fun x a => f a x).out 0 3]
     intro g
-    have : (fun x : X a : α => f a x) ⁻¹' {g} = ⋂ a : α, f a ⁻¹' {g a} := by
+    have : (fun (x : X) (a : α) => f a x) ⁻¹' {g} = ⋂ a : α, f a ⁻¹' {g a} := by
       tidy
     rw [this]
     apply is_open_Inter

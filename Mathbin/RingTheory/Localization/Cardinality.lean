@@ -34,7 +34,6 @@ variable {R : Type u} [CommRingₓ R] (S : Submonoid R) {L : Type u} [CommRing�
 
 include S
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Localizing a finite ring can only reduce the amount of elements. -/
 theorem algebra_map_surjective_of_fintype [Fintype R] : Function.Surjective (algebraMap R L) := by
   classical
@@ -47,7 +46,6 @@ theorem algebra_map_surjective_of_fintype [Fintype R] : Function.Surjective (alg
     ⟨r * s ^ (n - 1), by
       erw [map_mul, map_pow, ← h, mul_assoc, hp, mul_oneₓ]⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A localization always has cardinality less than or equal to the base ring. -/
 theorem card_le : # L ≤ # R := by
   classical

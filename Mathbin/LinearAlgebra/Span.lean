@@ -120,14 +120,14 @@ preserved under addition and scalar multiplication, then `p` holds for all eleme
 `s`. -/
 @[elab_as_eliminator]
 theorem span_induction {p : M → Prop} (h : x ∈ span R s) (Hs : ∀, ∀ x ∈ s, ∀, p x) (H0 : p 0)
-    (H1 : ∀ x y, p x → p y → p (x + y)) (H2 : ∀ a : R x, p x → p (a • x)) : p x :=
+    (H1 : ∀ x y, p x → p y → p (x + y)) (H2 : ∀ (a : R) (x), p x → p (a • x)) : p x :=
   (@span_le _ _ _ _ _ _ ⟨p, H1, H0, H2⟩).2 Hs h
 
 /-- A dependent version of `submodule.span_induction`. -/
-theorem span_induction' {p : ∀ x, x ∈ span R s → Prop} (Hs : ∀ x h : x ∈ s, p x (subset_span h))
+theorem span_induction' {p : ∀ x, x ∈ span R s → Prop} (Hs : ∀ (x) (h : x ∈ s), p x (subset_span h))
     (H0 : p 0 (Submodule.zero_mem _)) (H1 : ∀ x hx y hy, p x hx → p y hy → p (x + y) (Submodule.add_mem _ ‹_› ‹_›))
-    (H2 : ∀ a : R x hx, p x hx → p (a • x) (Submodule.smul_mem _ _ ‹_›)) {x} (hx : x ∈ span R s) : p x hx := by
-  refine' Exists.elim _ fun hx : x ∈ span R s hc : p x hx => hc
+    (H2 : ∀ (a : R) (x hx), p x hx → p (a • x) (Submodule.smul_mem _ _ ‹_›)) {x} (hx : x ∈ span R s) : p x hx := by
+  refine' Exists.elim _ fun (hx : x ∈ span R s) (hc : p x hx) => hc
   refine'
     span_induction hx (fun m hm => ⟨subset_span hm, Hs m hm⟩) ⟨zero_mem _, H0⟩
       (fun x y hx hy =>
@@ -196,8 +196,8 @@ theorem span_union (s t : Set M) : span R (s ∪ t) = span R s⊔span R t :=
 theorem span_Union {ι} (s : ι → Set M) : span R (⋃ i, s i) = ⨆ i, span R (s i) :=
   (Submodule.gi R M).gc.l_supr
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem span_Union₂ {ι} {κ : ι → Sort _} (s : ∀ i, κ i → Set M) :
     span R (⋃ (i) (j), s i j) = ⨆ (i) (j), span R (s i j) :=
   (Submodule.gi R M).gc.l_supr₂
@@ -447,7 +447,7 @@ theorem mem_span_insert {y} : x ∈ span R (insert y s) ↔ ∃ a : R, ∃ z ∈
   rw [exists_comm]
   simp only [← eq_comm, ← add_commₓ, ← exists_and_distrib_left]
 
-theorem span_insert x (s : Set M) : span R (insert x s) = span R ({x} : Set M)⊔span R s := by
+theorem span_insert (x) (s : Set M) : span R (insert x s) = span R ({x} : Set M)⊔span R s := by
   rw [insert_eq, span_union]
 
 theorem span_insert_eq_span (h : x ∈ span R s) : span R (insert x s) = span R s :=
@@ -588,16 +588,16 @@ If `C` holds for `0` and all elements of `p i` for all `i`, and is preserved und
 then it holds for all elements of the supremum of `p`. -/
 @[elab_as_eliminator]
 theorem supr_induction {ι : Sort _} (p : ι → Submodule R M) {C : M → Prop} {x : M} (hx : x ∈ ⨆ i, p i)
-    (hp : ∀ i, ∀ x ∈ p i, ∀, C x) (h0 : C 0) (hadd : ∀ x y, C x → C y → C (x + y)) : C x := by
+    (hp : ∀ (i), ∀ x ∈ p i, ∀, C x) (h0 : C 0) (hadd : ∀ x y, C x → C y → C (x + y)) : C x := by
   rw [← mem_to_add_submonoid, supr_to_add_submonoid] at hx
   exact AddSubmonoid.supr_induction _ hx hp h0 hadd
 
 /-- A dependent version of `submodule.supr_induction`. -/
 @[elab_as_eliminator]
 theorem supr_induction' {ι : Sort _} (p : ι → Submodule R M) {C : ∀ x, (x ∈ ⨆ i, p i) → Prop}
-    (hp : ∀ i, ∀ x ∈ p i, ∀, C x (mem_supr_of_mem i ‹_›)) (h0 : C 0 (zero_mem _))
+    (hp : ∀ (i), ∀ x ∈ p i, ∀, C x (mem_supr_of_mem i ‹_›)) (h0 : C 0 (zero_mem _))
     (hadd : ∀ x y hx hy, C x hx → C y hy → C (x + y) (add_mem ‹_› ‹_›)) {x : M} (hx : x ∈ ⨆ i, p i) : C x hx := by
-  refine' Exists.elim _ fun hx : x ∈ ⨆ i, p i hc : C x hx => hc
+  refine' Exists.elim _ fun (hx : x ∈ ⨆ i, p i) (hc : C x hx) => hc
   refine' supr_induction p hx (fun i x hx => _) _ fun x y => _
   · exact ⟨_, hp _ _ hx⟩
     

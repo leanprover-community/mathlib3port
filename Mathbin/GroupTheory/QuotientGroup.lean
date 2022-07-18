@@ -204,7 +204,7 @@ theorem ker_lift_mk' (g : G) : (kerLift φ) (mk g) = φ g :=
 
 @[to_additive QuotientAddGroup.ker_lift_injective]
 theorem ker_lift_injective : Injective (kerLift φ) := fun a b =>
-  (Quotientₓ.induction_on₂' a b) fun a b h : φ a = φ b =>
+  (Quotientₓ.induction_on₂' a b) fun a b (h : φ a = φ b) =>
     Quotientₓ.sound' <| by
       rw [left_rel_apply, mem_ker, φ.map_mul, ← h, φ.map_inv, inv_mul_selfₓ]
 
@@ -219,7 +219,7 @@ def rangeKerLift : G ⧸ ker φ →* φ.range :=
 
 @[to_additive QuotientAddGroup.range_ker_lift_injective]
 theorem range_ker_lift_injective : Injective (rangeKerLift φ) := fun a b =>
-  (Quotientₓ.induction_on₂' a b) fun a b h : φ.range_restrict a = φ.range_restrict b =>
+  (Quotientₓ.induction_on₂' a b) fun a b (h : φ.range_restrict a = φ.range_restrict b) =>
     Quotientₓ.sound' <| by
       rw [left_rel_apply, ← range_restrict_ker, mem_ker, φ.range_restrict.map_mul, ← h, φ.range_restrict.map_inv,
         inv_mul_selfₓ]
@@ -487,13 +487,8 @@ theorem comap_comap_center {H₁ : Subgroup G} [H₁.Normal] {H₂ : Subgroup (G
       (Subgroup.center (G ⧸ H₂.comap (mk' H₁))).comap (mk' (H₂.comap (mk' H₁))) :=
   by
   ext x
-  simp only [← mk'_apply, ← Subgroup.mem_comap, ← Subgroup.mem_center_iff, ← forall_coe]
-  apply forall_congrₓ
-  change ∀ y : G, ↑↑(y * x) = ↑↑(x * y) ↔ ↑(y * x) = ↑(x * y)
-  intro y
-  repeat'
-    rw [eq_iff_div_mem]
-  simp
+  simp only [← mk'_apply, ← Subgroup.mem_comap, ← Subgroup.mem_center_iff, ← forall_coe, coe_mul, ← eq_iff_div_mem, ←
+    coe_div]
 
 end QuotientGroup
 

@@ -165,7 +165,7 @@ theorem cos_eq_iff_quadratic {z w : ℂ} : cos z = w ↔ exp (z * I) ^ 2 - 2 * w
   refine' Eq.congr _ rfl
   ring
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (w «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (w «expr ≠ » 0)
 theorem cos_surjective : Function.Surjective cos := by
   intro x
   obtain ⟨w, w₀, hw⟩ : ∃ (w : _)(_ : w ≠ 0), 1 * w * w + -2 * x * w + 1 = 0 := by

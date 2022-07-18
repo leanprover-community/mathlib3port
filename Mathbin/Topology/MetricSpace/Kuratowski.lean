@@ -102,7 +102,7 @@ theorem exists_isometric_embedding (α : Type u) [MetricSpace α] [SeparableSpac
     have : Inhabited α := ⟨basepoint⟩
     have : ∃ s : Set α, s.Countable ∧ Dense s := exists_countable_dense α
     rcases this with ⟨S, ⟨S_countable, S_dense⟩⟩
-    rcases countable_iff_exists_surjective.1 S_countable with ⟨x, x_range⟩
+    rcases Set.countable_iff_exists_surjective.1 S_countable with ⟨x, x_range⟩
     -- Use embedding_of_subset to construct the desired isometry
     exact ⟨embedding_of_subset x, embedding_of_subset_isometry x (S_dense.mono x_range)⟩
     

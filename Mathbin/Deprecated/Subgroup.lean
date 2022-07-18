@@ -246,9 +246,9 @@ def Normalizer (s : Set G) : Set G :=
 theorem normalizer_is_subgroup (s : Set G) : IsSubgroup (Normalizer s) :=
   { one_mem := by
       simp [← normalizer],
-    mul_mem := fun a b ha : ∀ n, n ∈ s ↔ a * n * a⁻¹ ∈ s hb : ∀ n, n ∈ s ↔ b * n * b⁻¹ ∈ s n => by
+    mul_mem := fun a b (ha : ∀ n, n ∈ s ↔ a * n * a⁻¹ ∈ s) (hb : ∀ n, n ∈ s ↔ b * n * b⁻¹ ∈ s) n => by
       rw [mul_inv_rev, ← mul_assoc, mul_assoc a, mul_assoc a, ← ha, ← hb],
-    inv_mem := fun a ha : ∀ n, n ∈ s ↔ a * n * a⁻¹ ∈ s n => by
+    inv_mem := fun a (ha : ∀ n, n ∈ s ↔ a * n * a⁻¹ ∈ s) n => by
       rw [ha (a⁻¹ * n * a⁻¹⁻¹)] <;> simp [← mul_assoc] }
 
 @[to_additive subset_add_normalizer]

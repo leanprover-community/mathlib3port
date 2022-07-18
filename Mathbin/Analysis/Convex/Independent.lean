@@ -53,7 +53,7 @@ variable (𝕜) [OrderedSemiring 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {s t 
 /-- An indexed family is said to be convex independent if every point only belongs to convex hulls
 of sets containing it. -/
 def ConvexIndependent (p : ι → E) : Prop :=
-  ∀ s : Set ι x : ι, p x ∈ convexHull 𝕜 (p '' s) → x ∈ s
+  ∀ (s : Set ι) (x : ι), p x ∈ convexHull 𝕜 (p '' s) → x ∈ s
 
 variable {𝕜}
 
@@ -165,7 +165,7 @@ variable [LinearOrderedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {s : Set 
 
 /-- To check convex independence, one only has to check finsets thanks to Carathéodory's theorem. -/
 theorem convex_independent_iff_finset {p : ι → E} :
-    ConvexIndependent 𝕜 p ↔ ∀ s : Finset ι x : ι, p x ∈ convexHull 𝕜 (s.Image p : Set E) → x ∈ s := by
+    ConvexIndependent 𝕜 p ↔ ∀ (s : Finset ι) (x : ι), p x ∈ convexHull 𝕜 (s.Image p : Set E) → x ∈ s := by
   refine' ⟨fun hc s x hx => hc s x _, fun h s x hx => _⟩
   · rwa [Finset.coe_image] at hx
     

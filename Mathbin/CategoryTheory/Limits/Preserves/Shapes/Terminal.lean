@@ -17,7 +17,7 @@ objects.
 -/
 
 
-universe v v₁ v₂ u u₁ u₂
+universe w v v₁ v₂ u u₁ u₂
 
 noncomputable section
 
@@ -37,7 +37,7 @@ section Terminal
 
 /-- The map of an empty cone is a limit iff the mapped object is terminal.
 -/
-def isLimitMapConeEmptyConeEquiv : IsLimit (G.mapCone (asEmptyCone.{v₁} X)) ≃ IsTerminal (G.obj X) :=
+def isLimitMapConeEmptyConeEquiv : IsLimit (G.mapCone (asEmptyCone X)) ≃ IsTerminal (G.obj X) :=
   isLimitEmptyConeEquiv D _ _ (eqToIso rfl)
 
 /-- The property of preserving terminal objects expressed in terms of `is_terminal`. -/
@@ -47,6 +47,11 @@ def IsTerminal.isTerminalObj [PreservesLimit (Functor.empty.{0} C) G] (l : IsTer
 /-- The property of reflecting terminal objects expressed in terms of `is_terminal`. -/
 def IsTerminal.isTerminalOfObj [ReflectsLimit (Functor.empty.{0} C) G] (l : IsTerminal (G.obj X)) : IsTerminal X :=
   ReflectsLimit.reflects ((isLimitMapConeEmptyConeEquiv G X).symm l)
+
+/-- Preserving the terminal object implies preserving all limits of the empty diagram. -/
+def preservesLimitsOfShapePemptyOfPreservesTerminal [PreservesLimit (Functor.empty.{0} C) G] :
+    PreservesLimitsOfShape (Discrete Pempty)
+      G where PreservesLimit := fun K => preservesLimitOfIsoDiagram G (Functor.emptyExt (Functor.empty.{0} C) _)
 
 variable [HasTerminal C]
 
@@ -117,6 +122,11 @@ def IsInitial.isInitialObj [PreservesColimit (Functor.empty.{0} C) G] (l : IsIni
 /-- The property of reflecting initial objects expressed in terms of `is_initial`. -/
 def IsInitial.isInitialOfObj [ReflectsColimit (Functor.empty.{0} C) G] (l : IsInitial (G.obj X)) : IsInitial X :=
   ReflectsColimit.reflects ((isColimitMapCoconeEmptyCoconeEquiv G X).symm l)
+
+/-- Preserving the initial object implies preserving all colimits of the empty diagram. -/
+def preservesColimitsOfShapePemptyOfPreservesInitial [PreservesColimit (Functor.empty.{0} C) G] :
+    PreservesColimitsOfShape (Discrete Pempty)
+      G where PreservesColimit := fun K => preservesColimitOfIsoDiagram G (Functor.emptyExt (Functor.empty.{0} C) _)
 
 variable [HasInitial C]
 

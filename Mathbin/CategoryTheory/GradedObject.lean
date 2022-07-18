@@ -216,7 +216,6 @@ end
 
 variable [HasZeroMorphisms C]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The `total` functor taking a graded object to the coproduct of its graded components is faithful.
 To prove this, we need to know that the coprojections into the coproduct are monomorphisms,
 which follows from the fact we have zero morphisms and decidable equality for the grading.

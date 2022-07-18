@@ -78,7 +78,7 @@ def toList : ∀ {b}, Lists' α b → List (Lists α)
   | _, cons' a l => ⟨_, a⟩ :: l.toList
 
 @[simp]
-theorem to_list_cons (a : Lists α) l : toList (cons a l) = a :: l.toList := by
+theorem to_list_cons (a : Lists α) (l) : toList (cons a l) = a :: l.toList := by
   cases a <;> simp [← cons]
 
 /-- Converts a `list` of ZFA lists to a proper ZFA prelist. -/
@@ -94,7 +94,7 @@ theorem to_of_list (l : List (Lists α)) : toList (ofList l) = l := by
 @[simp]
 theorem of_to_list : ∀ l : Lists' α true, ofList (toList l) = l :=
   suffices
-    ∀ b h : tt = b l : Lists' α b,
+    ∀ (b) (h : tt = b) (l : Lists' α b),
       let l' : Lists' α true := by
         rw [h] <;> exact l
       ofList (toList l') = l'
@@ -114,7 +114,7 @@ end Lists'
 
 mutual
   inductive Lists.Equiv : Lists α → Lists α → Prop
-    | refl l : Lists.Equiv l l
+    | refl (l) : Lists.Equiv l l
     | antisymm {l₁ l₂ : Lists' α true} : Lists'.Subset l₁ l₂ → Lists'.Subset l₂ l₁ → Lists.Equiv ⟨_, l₁⟩ ⟨_, l₂⟩
   inductive Lists'.Subset : Lists' α true → Lists' α true → Prop
     | nil {l} : Lists'.Subset Lists'.nil l
@@ -248,7 +248,7 @@ instance [SizeOf α] : SizeOf (Lists α) := by
 def inductionMut (C : Lists α → Sort _) (D : Lists' α true → Sort _) (C0 : ∀ a, C (atom a)) (C1 : ∀ l, D l → C (of' l))
     (D0 : D Lists'.nil) (D1 : ∀ a l, C a → D l → D (Lists'.cons a l)) : PProd (∀ l, C l) (∀ l, D l) := by
   suffices
-    ∀ {b} l : Lists' α b,
+    ∀ {b} (l : Lists' α b),
       PProd (C ⟨_, l⟩)
         (match b, l with
         | tt, l => D l
@@ -299,7 +299,7 @@ theorem Equiv.symm {l₁ l₂ : Lists α} (h : l₁ ~ l₂) : l₂ ~ l₁ := by
 
 theorem Equiv.trans : ∀ {l₁ l₂ l₃ : Lists α}, l₁ ~ l₂ → l₂ ~ l₃ → l₁ ~ l₃ := by
   let trans := fun l₁ : Lists α => ∀ ⦃l₂ l₃⦄, l₁ ~ l₂ → l₂ ~ l₃ → l₁ ~ l₃
-  suffices PProd (∀ l₁, trans l₁) (∀ l : Lists' α tt, ∀ l' ∈ l.toList, ∀, trans l') by
+  suffices PProd (∀ l₁, trans l₁) (∀ (l : Lists' α tt), ∀ l' ∈ l.toList, ∀, trans l') by
     exact this.1
   apply induction_mut
   · intro a l₂ l₃ h₁ h₂
@@ -351,7 +351,7 @@ theorem sizeof_pos {b} (l : Lists' α b) : 0 < sizeof l := by
     run_tac
       andthen unfold_sizeof trivial_nat_lt
 
-theorem lt_sizeof_cons' {b} (a : Lists' α b) l : sizeof (⟨b, a⟩ : Lists α) < sizeof (Lists'.cons' a l) := by
+theorem lt_sizeof_cons' {b} (a : Lists' α b) (l) : sizeof (⟨b, a⟩ : Lists α) < sizeof (Lists'.cons' a l) := by
   run_tac
     unfold_sizeof
   apply sizeof_pos
@@ -399,7 +399,7 @@ mutual
         subset.decidable l₁ l₂
       exact decidableOfIff' _ (@Lists'.cons_subset _ ⟨_, _⟩ _ _)
   @[instance]
-  def Mem.decidable [DecidableEq α] : ∀ a : Lists α l : Lists' α true, Decidable (a ∈ l)
+  def Mem.decidable [DecidableEq α] : ∀ (a : Lists α) (l : Lists' α true), Decidable (a ∈ l)
     | a, Lists'.nil =>
       is_false <| by
         rintro ⟨_, ⟨⟩, _⟩

@@ -163,13 +163,13 @@ theorem naturality_2' (α : F ⟶ G) (f : X ⟶ Y) [IsIso (α.app Y)] : α.app X
 
 /-- The components of a natural isomorphism are isomorphisms.
 -/
-instance is_iso_app_of_is_iso (α : F ⟶ G) [IsIso α] X : IsIso (α.app X) :=
+instance is_iso_app_of_is_iso (α : F ⟶ G) [IsIso α] (X) : IsIso (α.app X) :=
   ⟨⟨(inv α).app X,
       ⟨congr_fun (congr_arg NatTrans.app (IsIso.hom_inv_id α)) X,
         congr_fun (congr_arg NatTrans.app (IsIso.inv_hom_id α)) X⟩⟩⟩
 
 @[simp]
-theorem is_iso_inv_app (α : F ⟶ G) [IsIso α] X : (inv α).app X = inv (α.app X) := by
+theorem is_iso_inv_app (α : F ⟶ G) [IsIso α] (X) : (inv α).app X = inv (α.app X) := by
   ext
   rw [← nat_trans.comp_app]
   simp
@@ -184,7 +184,7 @@ theorem inv_map_inv_app (F : C ⥤ D ⥤ E) {X Y : C} (e : X ≅ Y) (Z : D) :
 and checking naturality only in the forward direction.
 -/
 def ofComponents (app : ∀ X : C, F.obj X ≅ G.obj X)
-    (naturality : ∀ {X Y : C} f : X ⟶ Y, F.map f ≫ (app Y).Hom = (app X).Hom ≫ G.map f) : F ≅ G where
+    (naturality : ∀ {X Y : C} (f : X ⟶ Y), F.map f ≫ (app Y).Hom = (app X).Hom ≫ G.map f) : F ≅ G where
   Hom := { app := fun X => (app X).Hom }
   inv :=
     { app := fun X => (app X).inv,
@@ -194,17 +194,17 @@ def ofComponents (app : ∀ X : C, F.obj X ≅ G.obj X)
         exact h }
 
 @[simp]
-theorem ofComponents.app (app' : ∀ X : C, F.obj X ≅ G.obj X) naturality X :
+theorem ofComponents.app (app' : ∀ X : C, F.obj X ≅ G.obj X) (naturality) (X) :
     (ofComponents app' naturality).app X = app' X := by
   tidy
 
 @[simp]
-theorem ofComponents.hom_app (app : ∀ X : C, F.obj X ≅ G.obj X) naturality X :
+theorem ofComponents.hom_app (app : ∀ X : C, F.obj X ≅ G.obj X) (naturality) (X) :
     (ofComponents app naturality).Hom.app X = (app X).Hom :=
   rfl
 
 @[simp]
-theorem ofComponents.inv_app (app : ∀ X : C, F.obj X ≅ G.obj X) naturality X :
+theorem ofComponents.inv_app (app : ∀ X : C, F.obj X ≅ G.obj X) (naturality) (X) :
     (ofComponents app naturality).inv.app X = (app X).inv := by
   simp [← of_components]
 

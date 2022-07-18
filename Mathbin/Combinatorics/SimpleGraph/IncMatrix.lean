@@ -67,7 +67,6 @@ section MulZeroOneClassₓ
 
 variable [MulZeroOneClassₓ R] {a b : α} {e : Sym2 α}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem inc_matrix_apply_mul_inc_matrix_apply :
     G.incMatrix R a e * G.incMatrix R b e = (G.IncidenceSet a ∩ G.IncidenceSet b).indicator 1 e := by
   classical
@@ -109,7 +108,6 @@ theorem inc_matrix_mul_transpose_diag [DecidableEq α] [DecidableRel G.Adj] :
   rw [← sum_inc_matrix_apply]
   simp [← Matrix.mul_apply, ← inc_matrix_apply', ite_and_mul_zero]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem sum_inc_matrix_apply_of_mem_edge_set : e ∈ G.EdgeSet → (∑ a, G.incMatrix R a e) = 2 := by
   classical
   refine' e.ind _
@@ -124,7 +122,6 @@ theorem sum_inc_matrix_apply_of_mem_edge_set : e ∈ G.EdgeSet → (∑ a, G.inc
 theorem sum_inc_matrix_apply_of_not_mem_edge_set (h : e ∉ G.EdgeSet) : (∑ a, G.incMatrix R a e) = 0 :=
   sum_eq_zero fun a _ => G.inc_matrix_of_not_mem_incidence_set fun he => h he.1
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem inc_matrix_transpose_mul_diag [DecidableRel G.Adj] :
     ((G.incMatrix R)ᵀ ⬝ G.incMatrix R) e e = if e ∈ G.EdgeSet then 2 else 0 := by
   classical
@@ -152,7 +149,6 @@ section Semiringₓ
 
 variable [Fintype (Sym2 α)] [Semiringₓ R] {a b : α} {e : Sym2 α}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem inc_matrix_mul_transpose_apply_of_adj (h : G.Adj a b) : (G.incMatrix R ⬝ (G.incMatrix R)ᵀ) a b = (1 : R) := by
   classical
   simp_rw [Matrix.mul_apply, Matrix.transpose_apply, inc_matrix_apply_mul_inc_matrix_apply, Set.indicator_apply,

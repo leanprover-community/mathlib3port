@@ -180,7 +180,7 @@ namespace BoundedFormula
 open Term
 
 /-- A bounded formula can be evaluated as true or false by giving values to each free variable. -/
-def Realizeₓ : ∀ {l} f : L.BoundedFormula α l v : α → M xs : Finₓ l → M, Prop
+def Realizeₓ : ∀ {l} (f : L.BoundedFormula α l) (v : α → M) (xs : Finₓ l → M), Prop
   | _, falsum, v, xs => False
   | _, bounded_formula.equal t₁ t₂, v, xs => t₁.realize (Sum.elim v xs) = t₂.realize (Sum.elim v xs)
   | _, bounded_formula.rel R ts, v, xs => RelMap R fun i => (ts i).realize (Sum.elim v xs)
@@ -283,8 +283,9 @@ theorem realize_cast_le_of_eq {m n : ℕ} (h : m = n) {h' : m ≤ n} {φ : L.Bou
 theorem realize_map_term_rel_id [L'.Structure M] {ft : ∀ n, L.Term (Sum α (Finₓ n)) → L'.Term (Sum β (Finₓ n))}
     {fr : ∀ n, L.Relations n → L'.Relations n} {n} {φ : L.BoundedFormula α n} {v : α → M} {v' : β → M} {xs : Finₓ n → M}
     (h1 :
-      ∀ n t : L.Term (Sum α (Finₓ n)) xs : Finₓ n → M, (ft n t).realize (Sum.elim v' xs) = t.realize (Sum.elim v xs))
-    (h2 : ∀ n R : L.Relations n x : Finₓ n → M, RelMap (fr n R) x = RelMap R x) :
+      ∀ (n) (t : L.Term (Sum α (Finₓ n))) (xs : Finₓ n → M),
+        (ft n t).realize (Sum.elim v' xs) = t.realize (Sum.elim v xs))
+    (h2 : ∀ (n) (R : L.Relations n) (x : Finₓ n → M), RelMap (fr n R) x = RelMap R x) :
     (φ.mapTermRel ft fr fun _ => id).realize v' xs ↔ φ.realize v xs := by
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih
   · rfl
@@ -302,10 +303,10 @@ theorem realize_map_term_rel_add_cast_le [L'.Structure M] {k : ℕ}
     {ft : ∀ n, L.Term (Sum α (Finₓ n)) → L'.Term (Sum β (Finₓ (k + n)))} {fr : ∀ n, L.Relations n → L'.Relations n} {n}
     {φ : L.BoundedFormula α n} (v : ∀ {n}, (Finₓ (k + n) → M) → α → M) {v' : β → M} (xs : Finₓ (k + n) → M)
     (h1 :
-      ∀ n t : L.Term (Sum α (Finₓ n)) xs' : Finₓ (k + n) → M,
+      ∀ (n) (t : L.Term (Sum α (Finₓ n))) (xs' : Finₓ (k + n) → M),
         (ft n t).realize (Sum.elim v' xs') = t.realize (Sum.elim (v xs') (xs' ∘ Finₓ.natAdd _)))
-    (h2 : ∀ n R : L.Relations n x : Finₓ n → M, RelMap (fr n R) x = RelMap R x)
-    (hv : ∀ n xs : Finₓ (k + n) → M x : M, @v (n + 1) (snoc xs x : Finₓ _ → M) = v xs) :
+    (h2 : ∀ (n) (R : L.Relations n) (x : Finₓ n → M), RelMap (fr n R) x = RelMap R x)
+    (hv : ∀ (n) (xs : Finₓ (k + n) → M) (x : M), @v (n + 1) (snoc xs x : Finₓ _ → M) = v xs) :
     (φ.mapTermRel ft fr fun n => castLeₓ (add_assocₓ _ _ _).symm.le).realize v' xs ↔
       φ.realize (v xs) (xs ∘ Finₓ.natAdd _) :=
   by
@@ -865,7 +866,7 @@ section Cardinality
 variable (L)
 
 @[simp]
-theorem Sentence.realize_card_ge n : M ⊨ Sentence.cardGe L n ↔ ↑n ≤ # M := by
+theorem Sentence.realize_card_ge (n) : M ⊨ Sentence.cardGe L n ↔ ↑n ≤ # M := by
   rw [← lift_mk_fin, ← lift_le, lift_lift, lift_mk_le, sentence.card_ge, sentence.realize, bounded_formula.realize_exs]
   simp_rw [bounded_formula.realize_foldr_inf]
   simp only [← Function.comp_app, ← List.mem_mapₓ, ← Prod.exists, ← Ne.def, ← List.mem_product, ← List.mem_fin_range, ←

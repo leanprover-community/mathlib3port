@@ -126,7 +126,7 @@ theorem exists_embedding_euclidean_of_compact [T2Space M] [CompactSpace M] :
     ∃ (n : ℕ)(e : M → EuclideanSpace ℝ (Finₓ n)),
       Smooth I (𝓡 n) e ∧ ClosedEmbedding e ∧ ∀ x : M, Injective (mfderiv I (𝓡 n) e x) :=
   by
-  rcases SmoothBumpCovering.exists_is_subordinate I is_closed_univ fun x : M _ => univ_mem with ⟨ι, f, -⟩
+  rcases SmoothBumpCovering.exists_is_subordinate I is_closed_univ fun (x : M) _ => univ_mem with ⟨ι, f, -⟩
   have := f.fintype
   rcases f.exists_immersion_euclidean with ⟨n, e, hsmooth, hinj, hinj_mfderiv⟩
   exact ⟨n, e, hsmooth, hsmooth.continuous.closed_embedding hinj, hinj_mfderiv⟩

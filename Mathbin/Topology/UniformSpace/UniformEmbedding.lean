@@ -222,7 +222,7 @@ theorem closure_image_mem_nhds_of_uniform_inducing {s : Set (α × α)} {e : α 
   have : Preimage e { b' | (b, b') ∈ t₂ } ∈ comap e (𝓝 b) := preimage_mem_comap <| mem_nhds_left b ht₂u
   let ⟨a, (ha : (b, e a) ∈ t₂)⟩ := (he₂.comap_nhds_ne_bot _).nonempty_of_mem this
   have :
-    ∀ b' s' : Set (β × β),
+    ∀ (b') (s' : Set (β × β)),
       (b, b') ∈ t → s' ∈ 𝓤 β → ({ y : β | (b', y) ∈ s' } ∩ e '' { a' : α | (a, a') ∈ s }).Nonempty :=
     fun b' s' hb' hs' =>
     have : Preimage e { b'' | (b', b'') ∈ s' ∩ t } ∈ comap e (𝓝 b') :=

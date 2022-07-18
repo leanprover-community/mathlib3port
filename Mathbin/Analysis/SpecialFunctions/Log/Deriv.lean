@@ -224,7 +224,7 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : abs x < 1) (n : ℕ) :
       have : 1 - y ≠ 0 := sub_ne_zero_of_ne (ne_of_gtₓ (lt_of_le_of_ltₓ hy.2 h))
       simp [← F, ← this]
     apply Convex.norm_image_sub_le_of_norm_deriv_le this B (convex_Icc _ _) _ _
-    · simpa using abs_nonneg x
+    · simp
       
     · simp [← le_abs_self x, ← neg_le.mp (neg_le_abs_self x)]
       

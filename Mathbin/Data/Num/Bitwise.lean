@@ -276,10 +276,10 @@ def bit0 : Snum → Snum :=
 def bit1 : Snum → Snum :=
   bit true
 
-theorem bit_zero b : b :: zero b = zero b := by
+theorem bit_zero (b) : b :: zero b = zero b := by
   cases b <;> rfl
 
-theorem bit_one b : b :: zero (bnot b) = msb b := by
+theorem bit_one (b) : b :: zero (bnot b) = msb b := by
   cases b <;> rfl
 
 end Snum

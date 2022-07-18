@@ -69,6 +69,16 @@ theorem trans [FiniteDimensional F K] [FiniteDimensional K A] : FiniteDimensiona
   let c := Basis.ofVectorSpace K A
   of_fintype_basis <| b.smul c
 
+/-- In a tower of field extensions `L / K / F`, if `L / F` is finite, so is `K / F`.
+
+(In fact, it suffices that `L` is a nontrivial ring.)
+
+Note this cannot be an instance as Lean cannot infer `L`.
+-/
+theorem left (L : Type _) [Ringₓ L] [Nontrivial L] [Algebra F L] [Algebra K L] [IsScalarTower F K L]
+    [FiniteDimensional F L] : FiniteDimensional F K :=
+  FiniteDimensional.of_injective (IsScalarTower.toAlgHom F K L).toLinearMap (RingHom.injective _)
+
 theorem right [hf : FiniteDimensional F A] : FiniteDimensional K A :=
   let ⟨⟨b, hb⟩⟩ := hf
   ⟨⟨b,

@@ -120,7 +120,7 @@ def legendreSym (p : ℕ) [Fact p.Prime] (a : ℤ) : ℤ :=
 theorem legendre_sym_eq_pow (p : ℕ) (a : ℤ) [hp : Fact p.Prime] : (legendreSym p a : Zmod p) = a ^ (p / 2) := by
   rw [legendre_sym]
   by_cases' ha : (a : Zmod p) = 0
-  · simp only [← ha, ← zero_pow (Nat.div_pos hp.1.two_le (succ_pos 1)), ← quadratic_char_zero, ← Int.cast_zeroₓ]
+  · simp only [← ha, ← zero_pow (Nat.div_pos hp.1.two_le (succ_pos 1)), ← MulChar.map_zero, ← Int.cast_zeroₓ]
     
   by_cases' hp₁ : p = 2
   · subst p
@@ -157,15 +157,15 @@ theorem legendre_sym_eq_neg_one_iff_not_one {a : ℤ} (ha : (a : Zmod p) ≠ 0) 
 
 /-- The Legendre symbol of `p` and `a` is zero iff `p ∣ a`. -/
 theorem legendre_sym_eq_zero_iff (p : ℕ) [Fact p.Prime] (a : ℤ) : legendreSym p a = 0 ↔ (a : Zmod p) = 0 :=
-  quadratic_char_eq_zero_iff a
+  quadratic_char_eq_zero_iff
 
 @[simp]
 theorem legendre_sym_zero (p : ℕ) [Fact p.Prime] : legendreSym p 0 = 0 := by
-  rw [legendre_sym, Int.cast_zeroₓ, quadratic_char_zero]
+  rw [legendre_sym, Int.cast_zeroₓ, MulChar.map_zero]
 
 @[simp]
 theorem legendre_sym_one (p : ℕ) [Fact p.Prime] : legendreSym p 1 = 1 := by
-  rw [legendre_sym, Int.cast_oneₓ, quadratic_char_one]
+  rw [legendre_sym, Int.cast_oneₓ, MulChar.map_one]
 
 /-- The Legendre symbol is multiplicative in `a` for `p` fixed. -/
 theorem legendre_sym_mul (p : ℕ) [Fact p.Prime] (a b : ℤ) : legendreSym p (a * b) = legendreSym p a * legendreSym p b :=

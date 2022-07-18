@@ -20,7 +20,7 @@ namespace Complex
 /-- The determinant of `conj_ae`, as a linear map. -/
 @[simp]
 theorem det_conj_ae : conjAe.toLinearMap.det = -1 := by
-  rw [← LinearMap.det_to_matrix basis_one_I, to_matrix_conj_ae, Matrix.det_fin_two]
+  rw [← LinearMap.det_to_matrix basis_one_I, to_matrix_conj_ae, Matrix.det_fin_two_of]
   simp
 
 /-- The determinant of `conj_ae`, as a linear equiv. -/

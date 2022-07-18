@@ -275,6 +275,10 @@ theorem lt_aleph_0_of_linear_independent {ι : Type w} [FiniteDimensional K V] {
   rw [← finrank_eq_dim, Cardinal.lift_aleph_0, Cardinal.lift_nat_cast]
   apply Cardinal.nat_lt_aleph_0
 
+theorem _root_.linear_independent.finite {K : Type _} {V : Type _} [DivisionRing K] [AddCommGroupₓ V] [Module K V]
+    [FiniteDimensional K V] {b : Set V} (h : LinearIndependent K fun x : b => (x : V)) : b.Finite :=
+  Cardinal.lt_aleph_0_iff_set_finite.mp (FiniteDimensional.lt_aleph_0_of_linear_independent h)
+
 theorem not_linear_independent_of_infinite {ι : Type w} [inf : Infinite ι] [FiniteDimensional K V] (v : ι → V) :
     ¬LinearIndependent K v := by
   intro h_lin_indep
@@ -1242,7 +1246,7 @@ protected noncomputable def Set.finrank (s : Set V) : ℕ :=
 variable {K}
 
 theorem finrank_span_le_card (s : Set V) [Fintype s] : finrank K (span K s) ≤ s.toFinset.card := by
-  have := span_of_finite K (Set.finite_of_fintype s)
+  have := span_of_finite K s.to_finite
   have : Module.rank K (span K s) ≤ # s := dim_span_le s
   rw [← finrank_eq_dim, Cardinal.mk_fintype, ← Set.to_finset_card] at this
   exact_mod_cast this
@@ -1263,7 +1267,7 @@ theorem finrank_span_eq_card {ι : Type _} [Fintype ι] {b : ι → V} (hb : Lin
 
 theorem finrank_span_set_eq_card (s : Set V) [Fintype s] (hs : LinearIndependent K (coe : s → V)) :
     finrank K (span K s) = s.toFinset.card := by
-  have := span_of_finite K (Set.finite_of_fintype s)
+  have := span_of_finite K s.to_finite
   have : Module.rank K (span K s) = # s := dim_span_set hs
   rw [← finrank_eq_dim, Cardinal.mk_fintype, ← Set.to_finset_card] at this
   exact_mod_cast this
@@ -1679,7 +1683,6 @@ namespace End
 
 variable [Field K] [AddCommGroupₓ V] [Module K V]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem exists_ker_pow_eq_ker_pow_succ [FiniteDimensional K V] (f : End K V) :
     ∃ k : ℕ, k ≤ finrank K V ∧ (f ^ k).ker = (f ^ k.succ).ker := by
   classical

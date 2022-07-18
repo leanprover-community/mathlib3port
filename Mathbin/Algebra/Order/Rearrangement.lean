@@ -54,7 +54,6 @@ section Smul
 variable [LinearOrderedRing α] [LinearOrderedAddCommGroup β] [Module α β] [OrderedSmul α β] {s : Finset ι} {σ : Perm ι}
   {f : ι → α} {g : ι → β}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- **Rearrangement Inequality**: Pointwise scalar multiplication of `f` and `g` is maximized when
 `f` and `g` monovary together. Stated by permuting the entries of `g`. -/
 theorem MonovaryOn.sum_smul_comp_perm_le_sum_smul (hfg : MonovaryOn f g s) (hσ : { x | σ x ≠ x } ⊆ s) :
@@ -116,7 +115,6 @@ theorem MonovaryOn.sum_smul_comp_perm_le_sum_smul (hfg : MonovaryOn f g s) (hσ 
     exact has hx.2
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- **Equality case of Rearrangement Inequality**: Pointwise scalar multiplication of `f` and `g`,
 which monovary together, is unchanged by a permutation if and only if `f` and `g ∘ σ` monovary
 together. Stated by permuting the entries of `g`. -/

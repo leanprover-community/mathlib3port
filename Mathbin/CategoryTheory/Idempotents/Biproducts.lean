@@ -71,7 +71,6 @@ def bicone [HasFiniteBiproducts C] {J : Type} [Fintype J] (F : J → Karoubi C) 
 
 end Biproducts
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem karoubi_has_finite_biproducts [HasFiniteBiproducts C] : HasFiniteBiproducts (Karoubi C) :=
   { HasBiproductsOfShape := fun J hJ =>
       { HasBiproduct := fun F => by

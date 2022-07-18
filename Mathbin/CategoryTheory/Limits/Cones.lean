@@ -930,7 +930,8 @@ def coconeOfConeLeftOp (c : Cone F.leftOp) : Cocone F where
   ι := NatTrans.removeLeftOp c.π
 
 @[simp]
-theorem cocone_of_cone_left_op_ι_app (c : Cone F.leftOp) j : (coconeOfConeLeftOp c).ι.app j = (c.π.app (op j)).op := by
+theorem cocone_of_cone_left_op_ι_app (c : Cone F.leftOp) (j) : (coconeOfConeLeftOp c).ι.app j = (c.π.app (op j)).op :=
+  by
   dsimp' only [← cocone_of_cone_left_op]
   simp
 

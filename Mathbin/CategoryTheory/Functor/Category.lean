@@ -136,7 +136,7 @@ protected def flip (F : C ⥤ D ⥤ E) : D ⥤ C ⥤ E where
   map := fun c c' f => { app := fun j => (F.obj j).map f }
 
 @[simp]
-theorem flip_obj_obj (F : C ⥤ D ⥤ E) c d : (F.flip.obj d).obj c = (F.obj c).obj d :=
+theorem flip_obj_obj (F : C ⥤ D ⥤ E) (c) (d) : (F.flip.obj d).obj c = (F.obj c).obj d :=
   rfl
 
 @[simp]

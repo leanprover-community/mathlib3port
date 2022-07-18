@@ -80,7 +80,7 @@ class ConditionallyCompleteLattice (α : Type _) extends Lattice α, HasSupₓ �
   cInf_le : ∀ s a, BddBelow s → a ∈ s → Inf s ≤ a
   le_cInf : ∀ s a, Set.Nonempty s → a ∈ LowerBounds s → a ≤ Inf s
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1432:11: unsupported: advanced extends in structure
+-- ./././Mathport/Syntax/Translate/Basic.lean:1467:11: unsupported: advanced extends in structure
 /-- A conditionally complete linear order is a linear order in which
 every nonempty subset which is bounded above has a supremum, and
 every nonempty subset which is bounded below has an infimum.
@@ -91,7 +91,7 @@ complete linear orders, we prefix Inf and Sup by a c everywhere. The same statem
 hold in both worlds, sometimes with additional assumptions of nonemptiness or
 boundedness.-/
 class ConditionallyCompleteLinearOrder (α : Type _) extends ConditionallyCompleteLattice α,
-  "./././Mathport/Syntax/Translate/Basic.lean:1432:11: unsupported: advanced extends in structure"
+  "./././Mathport/Syntax/Translate/Basic.lean:1467:11: unsupported: advanced extends in structure"
 
 /-- A conditionally complete linear order with `bot` is a linear order with least element, in which
 every nonempty subset which is bounded above has a supremum, and every nonempty subset (necessarily
@@ -812,7 +812,6 @@ theorem is_lub_Sup (s : Set (WithTop α)) : IsLub s (sup s) := by
     
   exact is_lub_Sup' hs
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The Inf of a bounded-below set is its greatest lower bound for a conditionally
 complete lattice with a top. -/
 theorem is_glb_Inf' {β : Type _} [ConditionallyCompleteLattice β] {s : Set (WithTop β)} (hs : BddBelow s) :
@@ -1071,8 +1070,8 @@ non-empty. As a result, we can translate between the two.
 
 namespace Finset
 
-theorem sup'_eq_cSup_image [ConditionallyCompleteLattice β] (s : Finset α) H (f : α → β) : s.sup' H f = sup (f '' s) :=
-  by
+theorem sup'_eq_cSup_image [ConditionallyCompleteLattice β] (s : Finset α) (H) (f : α → β) :
+    s.sup' H f = sup (f '' s) := by
   apply le_antisymmₓ
   · refine' (Finset.sup'_le _ _) fun a ha => _
     refine' le_cSup ⟨s.sup' H f, _⟩ ⟨a, ha, rfl⟩
@@ -1084,13 +1083,14 @@ theorem sup'_eq_cSup_image [ConditionallyCompleteLattice β] (s : Finset α) H (
     exact Finset.le_sup' _ ha
     
 
-theorem inf'_eq_cInf_image [ConditionallyCompleteLattice β] (s : Finset α) H (f : α → β) : s.inf' H f = inf (f '' s) :=
+theorem inf'_eq_cInf_image [ConditionallyCompleteLattice β] (s : Finset α) (H) (f : α → β) :
+    s.inf' H f = inf (f '' s) :=
   @sup'_eq_cSup_image _ βᵒᵈ _ _ _ _
 
-theorem sup'_id_eq_cSup [ConditionallyCompleteLattice α] (s : Finset α) H : s.sup' H id = sup s := by
+theorem sup'_id_eq_cSup [ConditionallyCompleteLattice α] (s : Finset α) (H) : s.sup' H id = sup s := by
   rw [sup'_eq_cSup_image s H, Set.image_id]
 
-theorem inf'_id_eq_cInf [ConditionallyCompleteLattice α] (s : Finset α) H : s.inf' H id = inf s :=
+theorem inf'_id_eq_cInf [ConditionallyCompleteLattice α] (s : Finset α) (H) : s.inf' H id = inf s :=
   @sup'_id_eq_cSup αᵒᵈ _ _ _
 
 end Finset

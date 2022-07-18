@@ -81,7 +81,7 @@ theorem one_le_m_coe [Nonempty α] (hPα : P.parts.card * 16 ^ P.parts.card ≤ 
   Nat.one_le_cast.2 <| m_pos hPα
 
 theorem eps_pow_five_pos (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5) : 0 < ε ^ 5 :=
-  pos_of_mul_pos_left
+  pos_of_mul_pos_right
       ((by
             norm_num : (0 : ℝ) < 100).trans_le
         hPε) <|

@@ -22,14 +22,14 @@ universe v
 
 variable {α β γ : Type _}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler has_mem (list α)
--- ./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler has_singleton (list α)
--- ./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler has_insert (list α)
+-- ./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler has_mem (list α)
+-- ./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler has_singleton (list α)
+-- ./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler has_insert (list α)
 /-- A language is a set of strings over an alphabet. -/
-def Language α :=
-  Set (List α)deriving «./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler has_mem (list α)»,
-  «./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler has_singleton (list α)»,
-  «./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler has_insert (list α)»,
+def Language (α) :=
+  Set (List α)deriving «./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler has_mem (list α)»,
+  «./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler has_singleton (list α)»,
+  «./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler has_insert (list α)»,
   CompleteBooleanAlgebra
 
 namespace Language

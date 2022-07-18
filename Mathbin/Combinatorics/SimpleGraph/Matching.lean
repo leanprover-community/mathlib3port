@@ -86,7 +86,6 @@ theorem is_matching_iff_forall_degree {M : Subgraph G} [∀ v : V, Fintype (M.Ne
     M.IsMatching ↔ ∀ v : V, v ∈ M.Verts → M.degree v = 1 := by
   simpa [← degree_eq_one_iff_unique_adj]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem IsMatching.even_card {M : Subgraph G} [Fintype M.Verts] (h : M.IsMatching) : Even M.Verts.toFinset.card := by
   classical
   rw [is_matching_iff_forall_degree] at h
@@ -107,7 +106,6 @@ theorem is_perfect_matching_iff_forall_degree {M : Subgraph G} [∀ v, Fintype (
     M.IsPerfectMatching ↔ ∀ v, M.degree v = 1 := by
   simp [← degree_eq_one_iff_unique_adj, ← is_perfect_matching_iff]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem IsPerfectMatching.even_card {M : Subgraph G} [Fintype V] (h : M.IsPerfectMatching) : Even (Fintype.card V) := by
   classical
   simpa [← h.2.card_verts] using is_matching.even_card h.1

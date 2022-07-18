@@ -49,7 +49,7 @@ for each covering sieve `T` in `D`, `T ∩ mor(C)` generates a covering sieve in
 -/
 -- variables (A) [full G] [faithful G]
 def LocallyCoverDense (K : GrothendieckTopology D) (G : C ⥤ D) : Prop :=
-  ∀ ⦃X⦄ T : K (G.obj X), (T.val.FunctorPullback G).FunctorPushforward G ∈ K (G.obj X)
+  ∀ ⦃X⦄ (T : K (G.obj X)), (T.val.FunctorPullback G).FunctorPushforward G ∈ K (G.obj X)
 
 namespace LocallyCoverDense
 

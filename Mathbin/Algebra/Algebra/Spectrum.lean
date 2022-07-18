@@ -222,21 +222,21 @@ theorem unit_mem_mul_iff_mem_swap_mul {a b : A} {r : Rˣ} : ↑r ∈ σ (a * b) 
   have coe_smul_eq : ↑r • 1 = r • (1 : A) := rfl
   rw [coe_smul_eq]
   simp only [← IsUnit.smul_sub_iff_sub_inv_smul]
-  have right_inv_of_swap : ∀ {x y z : A} h : (1 - x * y) * z = 1, (1 - y * x) * (1 + y * z * x) = 1 := fun x y z h =>
+  have right_inv_of_swap : ∀ {x y z : A} (h : (1 - x * y) * z = 1), (1 - y * x) * (1 + y * z * x) = 1 := fun x y z h =>
     calc
       (1 - y * x) * (1 + y * z * x) = 1 - y * x + y * ((1 - x * y) * z) * x := by
         noncomm_ring
       _ = 1 := by
         simp [← h]
       
-  have left_inv_of_swap : ∀ {x y z : A} h : z * (1 - x * y) = 1, (1 + y * z * x) * (1 - y * x) = 1 := fun x y z h =>
+  have left_inv_of_swap : ∀ {x y z : A} (h : z * (1 - x * y) = 1), (1 + y * z * x) * (1 - y * x) = 1 := fun x y z h =>
     calc
       (1 + y * z * x) * (1 - y * x) = 1 - y * x + y * (z * (1 - x * y)) * x := by
         noncomm_ring
       _ = 1 := by
         simp [← h]
       
-  have is_unit_one_sub_mul_of_swap : ∀ {x y : A} h : IsUnit (1 - x * y), IsUnit (1 - y * x) := fun x y h => by
+  have is_unit_one_sub_mul_of_swap : ∀ {x y : A} (h : IsUnit (1 - x * y)), IsUnit (1 - y * x) := fun x y h => by
     let h₁ := right_inv_of_swap h.unit.val_inv
     let h₂ := left_inv_of_swap h.unit.inv_val
     exact ⟨⟨1 - y * x, 1 + y * h.unit.inv * x, h₁, h₂⟩, rfl⟩

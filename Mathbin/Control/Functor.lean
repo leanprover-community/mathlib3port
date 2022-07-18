@@ -44,8 +44,8 @@ theorem Functor.map_comp_map (f : α → β) (g : β → γ) : ((· <$> ·) g �
   apply funext <;> intro <;> rw [comp_map]
 
 theorem Functor.ext {F} :
-    ∀ {F1 : Functor F} {F2 : Functor F} [@IsLawfulFunctor F F1] [@IsLawfulFunctor F F2] H :
-      ∀ α β f : α → β x : F α, @Functor.map _ F1 _ _ f x = @Functor.map _ F2 _ _ f x, F1 = F2
+    ∀ {F1 : Functor F} {F2 : Functor F} [@IsLawfulFunctor F F1] [@IsLawfulFunctor F F2]
+      (H : ∀ (α β) (f : α → β) (x : F α), @Functor.map _ F1 _ _ f x = @Functor.map _ F2 _ _ f x), F1 = F2
   | ⟨m, mc⟩, ⟨m', mc'⟩, H1, H2, H => by
     cases
       show @m = @m' by

@@ -158,7 +158,7 @@ theorem exists_FP_of_large {M} [Semigroupₓ M] (U : Ultrafilter M) (U_idem : U 
   let `s₁` be the intersection `s₀ ∩ { m | a₀ * m ∈ s₀ }`. By choice of `a₀`, this is again `U`-large,
   so we can repeat the argument starting from `s₁`, obtaining `a₁`, `s₂`, etc. This gives the desired
   infinite sequence. -/
-  have exists_elem : ∀ {s : Set M} hs : s ∈ U, (s ∩ { m | ∀ᶠ m' in U, m * m' ∈ s }).Nonempty := fun s hs =>
+  have exists_elem : ∀ {s : Set M} (hs : s ∈ U), (s ∩ { m | ∀ᶠ m' in U, m * m' ∈ s }).Nonempty := fun s hs =>
     Ultrafilter.nonempty_of_mem
       (inter_mem hs <| by
         rw [← U_idem] at hs
@@ -168,7 +168,7 @@ theorem exists_FP_of_large {M} [Semigroupₓ M] (U : Ultrafilter M) (U_idem : U 
     ⟨p.val ∩ { m | elem p * m ∈ p.val },
       inter_mem p.2 <| show _ from Set.inter_subset_right _ _ (exists_elem p.2).some_mem⟩
   use Streamₓ.corec elem succ (Subtype.mk s₀ sU)
-  suffices ∀ a : Streamₓ M, ∀ m ∈ FP a, ∀, ∀ p, a = Streamₓ.corec elem succ p → m ∈ p.val by
+  suffices ∀ (a : Streamₓ M), ∀ m ∈ FP a, ∀, ∀ p, a = Streamₓ.corec elem succ p → m ∈ p.val by
     intro m hm
     exact this _ m hm ⟨s₀, sU⟩ rfl
   clear sU s₀

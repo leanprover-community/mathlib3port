@@ -33,7 +33,7 @@ variable {D : Type w} [Category.{max v u} D]
 
 noncomputable section
 
-variable [∀ P : Cᵒᵖ ⥤ D X : C S : J.cover X, HasMultiequalizer (S.index P)]
+variable [∀ (P : Cᵒᵖ ⥤ D) (X : C) (S : J.cover X), HasMultiequalizer (S.index P)]
 
 variable (P : Cᵒᵖ ⥤ D)
 
@@ -275,7 +275,7 @@ theorem is_iso_to_plus_of_is_sheaf (hP : Presheaf.IsSheaf J P) : IsIso (J.toPlus
   suffices is_iso (colimit.ι (J.diagram P X.unop) (op ⊤)) by
     skip
     apply is_iso.comp_is_iso
-  suffices ∀ S T : (J.cover X.unop)ᵒᵖ f : S ⟶ T, is_iso ((J.diagram P X.unop).map f) by
+  suffices ∀ (S T : (J.cover X.unop)ᵒᵖ) (f : S ⟶ T), is_iso ((J.diagram P X.unop).map f) by
     skip
     apply is_iso_ι_of_is_initial (initial_op_of_terminal is_terminal_top)
   intro S T e

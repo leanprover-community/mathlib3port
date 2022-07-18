@@ -183,7 +183,7 @@ open Finsupp
 instance categoryFree : Category (Free R C) where
   Hom := fun X Y : C => (X ⟶ Y) →₀ R
   id := fun X : C => Finsupp.single (𝟙 X) 1
-  comp := fun X Y Z : C f g => f.Sum fun f' s => g.Sum fun g' t => Finsupp.single (f' ≫ g') (s * t)
+  comp := fun (X Y Z : C) f g => f.Sum fun f' s => g.Sum fun g' t => Finsupp.single (f' ≫ g') (s * t)
   assoc' := fun W X Y Z f g h => by
     dsimp'
     -- This imitates the proof of associativity for `monoid_algebra`.

@@ -270,7 +270,7 @@ theorem is_integral_root' (hg : g.Monic) : IsIntegral R (root g) :=
 
 This is a well-defined right inverse to `adjoin_root.mk`, see `adjoin_root.mk_left_inverse`. -/
 def modByMonicHom (hg : g.Monic) : AdjoinRoot g →ₗ[R] R[X] :=
-  (Submodule.liftq _ (Polynomial.modByMonicHom g) fun f hf : f ∈ (Ideal.span {g}).restrictScalars R =>
+  (Submodule.liftq _ (Polynomial.modByMonicHom g) fun f (hf : f ∈ (Ideal.span {g}).restrictScalars R) =>
         (mem_ker_mod_by_monic hg).mpr (Ideal.mem_span_singleton.mp hf)).comp <|
     (Submodule.Quotient.restrictScalarsEquiv R (Ideal.span {g} : Ideal R[X])).symm.toLinearMap
 

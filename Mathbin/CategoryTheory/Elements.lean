@@ -125,7 +125,8 @@ def toStructuredArrow : F.Elements ⥤ StructuredArrow PUnit F where
         tidy)
 
 @[simp]
-theorem to_structured_arrow_obj X : (toStructuredArrow F).obj X = { left := ⟨⟨⟩⟩, right := X.1, Hom := fun _ => X.2 } :=
+theorem to_structured_arrow_obj (X) :
+    (toStructuredArrow F).obj X = { left := ⟨⟨⟩⟩, right := X.1, Hom := fun _ => X.2 } :=
   rfl
 
 @[simp]
@@ -138,7 +139,7 @@ def fromStructuredArrow : StructuredArrow PUnit F ⥤ F.Elements where
   map := fun X Y f => ⟨f.right, congr_fun f.w'.symm PUnit.unit⟩
 
 @[simp]
-theorem from_structured_arrow_obj X : (fromStructuredArrow F).obj X = ⟨X.right, X.Hom PUnit.unit⟩ :=
+theorem from_structured_arrow_obj (X) : (fromStructuredArrow F).obj X = ⟨X.right, X.Hom PUnit.unit⟩ :=
   rfl
 
 @[simp]
@@ -208,7 +209,7 @@ theorem from_to_costructured_arrow_eq (F : Cᵒᵖ ⥤ Type v) :
   apply Functor.ext
   intro X Y f
   have :
-    ∀ {a b : F.elements} H : a = b,
+    ∀ {a b : F.elements} (H : a = b),
       ↑(eq_to_hom H) =
         eq_to_hom
           (show a.fst = b.fst by
@@ -276,7 +277,7 @@ theorem costructured_arrow_yoneda_equivalence_naturality {F₁ F₂ : Cᵒᵖ �
   · intro X Y f
     ext
     have :
-      ∀ {F : Cᵒᵖ ⥤ Type v} {a b : costructured_arrow yoneda F} H : a = b,
+      ∀ {F : Cᵒᵖ ⥤ Type v} {a b : costructured_arrow yoneda F} (H : a = b),
         comma_morphism.left (eq_to_hom H) =
           eq_to_hom
             (show a.left = b.left by

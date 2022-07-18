@@ -422,7 +422,7 @@ theorem is_unit_constant_coeff (φ : MvPowerSeries σ R) (h : IsUnit φ) : IsUni
   h.map _
 
 @[simp]
-theorem coeff_smul (f : MvPowerSeries σ R) n (a : R) : coeff _ n (a • f) = a * coeff _ n f :=
+theorem coeff_smul (f : MvPowerSeries σ R) (n) (a : R) : coeff _ n (a • f) = a * coeff _ n f :=
   rfl
 
 theorem smul_eq_C_mul (f : MvPowerSeries σ R) (a : R) : a • f = c σ R a * f := by
@@ -617,7 +617,6 @@ section CommSemiringₓ
 
 variable [CommSemiringₓ R]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem X_pow_dvd_iff {s : σ} {n : ℕ} {φ : MvPowerSeries σ R} :
     (x s : MvPowerSeries σ R) ^ n ∣ φ ↔ ∀ m : σ →₀ ℕ, m s < n → coeff R m φ = 0 := by
   constructor
@@ -1241,7 +1240,7 @@ theorem coeff_zero_one : coeff R 0 (1 : PowerSeries R) = 1 :=
 theorem coeff_mul (n : ℕ) (φ ψ : PowerSeries R) :
     coeff R n (φ * ψ) = ∑ p in Finset.Nat.antidiagonal n, coeff R p.1 φ * coeff R p.2 ψ := by
   symm
-  apply Finset.sum_bij fun p : ℕ × ℕ h => (single () p.1, single () p.2)
+  apply Finset.sum_bij fun (p : ℕ × ℕ) h => (single () p.1, single () p.2)
   · rintro ⟨i, j⟩ hij
     rw [Finset.Nat.mem_antidiagonal] at hij
     rw [Finsupp.mem_antidiagonal, ← Finsupp.single_add, hij]
@@ -1440,7 +1439,6 @@ section CommSemiringₓ
 
 variable [CommSemiringₓ R]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem X_pow_dvd_iff {n : ℕ} {φ : PowerSeries R} : (x : PowerSeries R) ^ n ∣ φ ↔ ∀ m, m < n → coeff R m φ = 0 := by
   convert @MvPowerSeries.X_pow_dvd_iff Unit R _ () n φ
   apply propext
@@ -1532,17 +1530,17 @@ section Trunc
 def trunc (n : ℕ) (φ : PowerSeries R) : R[X] :=
   ∑ m in ico 0 n, Polynomial.monomial m (coeff R m φ)
 
-theorem coeff_trunc m n (φ : PowerSeries R) : (trunc n φ).coeff m = if m < n then coeff R m φ else 0 := by
+theorem coeff_trunc (m) (n) (φ : PowerSeries R) : (trunc n φ).coeff m = if m < n then coeff R m φ else 0 := by
   simp [← Trunc, ← Polynomial.coeff_sum, ← Polynomial.coeff_monomial, ← Nat.lt_succ_iffₓ]
 
 @[simp]
-theorem trunc_zero n : trunc n (0 : PowerSeries R) = 0 :=
+theorem trunc_zero (n) : trunc n (0 : PowerSeries R) = 0 :=
   Polynomial.ext fun m => by
     rw [coeff_trunc, LinearMap.map_zero, Polynomial.coeff_zero]
     split_ifs <;> rfl
 
 @[simp]
-theorem trunc_one n : trunc (n + 1) (1 : PowerSeries R) = 1 :=
+theorem trunc_one (n) : trunc (n + 1) (1 : PowerSeries R) = 1 :=
   Polynomial.ext fun m => by
     rw [coeff_trunc, coeff_one]
     split_ifs with H H' H' <;> rw [Polynomial.coeff_one]
@@ -1560,7 +1558,7 @@ theorem trunc_one n : trunc (n + 1) (1 : PowerSeries R) = 1 :=
       
 
 @[simp]
-theorem trunc_C n (a : R) : trunc (n + 1) (c R a) = Polynomial.c a :=
+theorem trunc_C (n) (a : R) : trunc (n + 1) (c R a) = Polynomial.c a :=
   Polynomial.ext fun m => by
     rw [coeff_trunc, coeff_C, Polynomial.coeff_C]
     split_ifs with H <;>
@@ -1570,7 +1568,7 @@ theorem trunc_C n (a : R) : trunc (n + 1) (c R a) = Polynomial.c a :=
           simp_all
 
 @[simp]
-theorem trunc_add n (φ ψ : PowerSeries R) : trunc n (φ + ψ) = trunc n φ + trunc n ψ :=
+theorem trunc_add (n) (φ ψ : PowerSeries R) : trunc n (φ + ψ) = trunc n φ + trunc n ψ :=
   Polynomial.ext fun m => by
     simp only [← coeff_trunc, ← AddMonoidHom.map_add, ← Polynomial.coeff_add]
     split_ifs with H
@@ -1603,7 +1601,7 @@ theorem coeff_inv_aux (n : ℕ) (a : R) (φ : PowerSeries R) :
     
   congr 1
   symm
-  apply Finset.sum_bij fun p : ℕ × ℕ h => (single () p.1, single () p.2)
+  apply Finset.sum_bij fun (p : ℕ × ℕ) h => (single () p.1, single () p.2)
   · rintro ⟨i, j⟩ hij
     rw [Finset.Nat.mem_antidiagonal] at hij
     rw [Finsupp.mem_antidiagonal, ← Finsupp.single_add, hij]
@@ -1678,10 +1676,13 @@ section CommRingₓ
 variable {A : Type _} [CommRingₓ A]
 
 @[simp]
-theorem rescale_neg_one_X : rescale (-1 : A) x = -X := by
+theorem rescale_X (a : A) : rescale a x = c A a * X := by
   ext
-  simp only [← LinearMap.map_neg, ← coeff_rescale, ← coeff_X]
+  simp only [← coeff_rescale, ← coeff_C_mul, ← coeff_X]
   split_ifs with h <;> simp [← h]
+
+theorem rescale_neg_one_X : rescale (-1 : A) x = -X := by
+  rw [rescale_X, map_neg, map_one, neg_one_mul]
 
 /-- The ring homomorphism taking a power series `f(X)` to `f(-X)`. -/
 noncomputable def evalNegHom : PowerSeries A →+* PowerSeries A :=
@@ -1824,7 +1825,7 @@ instance : Inv (PowerSeries k) :=
 theorem inv_eq_inv_aux (φ : PowerSeries k) : φ⁻¹ = Inv.aux (constantCoeff k φ)⁻¹ φ :=
   rfl
 
-theorem coeff_inv n (φ : PowerSeries k) :
+theorem coeff_inv (n) (φ : PowerSeries k) :
     coeff k n φ⁻¹ =
       if n = 0 then (constantCoeff k φ)⁻¹
       else
@@ -1912,9 +1913,9 @@ theorem exists_coeff_ne_zero_iff_ne_zero : (∃ n : ℕ, coeff R n φ ≠ 0) ↔
   push_neg
   simp [← PowerSeries.ext_iff]
 
-/-- The order of a formal power series `φ` is the greatest `n : enat`
+/-- The order of a formal power series `φ` is the greatest `n : part_enat`
 such that `X^n` divides `φ`. The order is `⊤` if and only if `φ = 0`. -/
-def order (φ : PowerSeries R) : Enat :=
+def order (φ : PowerSeries R) : PartEnat :=
   if h : φ = 0 then ⊤ else Nat.findₓ (exists_coeff_ne_zero_iff_ne_zero.mpr h)
 
 /-- The order of the `0` power series is infinite.-/
@@ -1939,7 +1940,7 @@ theorem order_finite_iff_ne_zero : (order φ).Dom ↔ φ ≠ 0 := by
 /-- If the order of a formal power series is finite,
 then the coefficient indexed by the order is nonzero.-/
 theorem coeff_order (h : (order φ).Dom) : coeff R (φ.order.get h) φ ≠ 0 := by
-  simp only [← order, ← order_finite_iff_ne_zero.mp h, ← not_false_iff, ← dif_neg, ← Enat.get_coe']
+  simp only [← order, ← order_finite_iff_ne_zero.mp h, ← not_false_iff, ← dif_neg, ← PartEnat.get_coe']
   generalize_proofs h
   exact Nat.find_specₓ h
 
@@ -1948,7 +1949,7 @@ then the order of the power series is less than or equal to `n`.-/
 theorem order_le (n : ℕ) (h : coeff R n φ ≠ 0) : order φ ≤ n := by
   have := Exists.introₓ n h
   rw [order, dif_neg]
-  · simp only [← Enat.coe_le_coe, ← Nat.find_le_iff]
+  · simp only [← PartEnat.coe_le_coe, ← Nat.find_le_iff]
     exact ⟨n, le_rfl, h⟩
     
   · exact exists_coeff_ne_zero_iff_ne_zero.mp ⟨n, h⟩
@@ -1978,52 +1979,52 @@ the `i`th coefficient is `0` for all `i < n`.-/
 theorem nat_le_order (φ : PowerSeries R) (n : ℕ) (h : ∀, ∀ i < n, ∀, coeff R i φ = 0) : ↑n ≤ order φ := by
   by_contra H
   rw [not_leₓ] at H
-  have : (order φ).Dom := Enat.dom_of_le_coe H.le
-  rw [← Enat.coe_get this, Enat.coe_lt_coe] at H
+  have : (order φ).Dom := PartEnat.dom_of_le_coe H.le
+  rw [← PartEnat.coe_get this, PartEnat.coe_lt_coe] at H
   exact coeff_order this (h _ H)
 
 /-- The order of a formal power series is at least `n` if
 the `i`th coefficient is `0` for all `i < n`.-/
-theorem le_order (φ : PowerSeries R) (n : Enat) (h : ∀ i : ℕ, ↑i < n → coeff R i φ = 0) : n ≤ order φ := by
-  induction n using Enat.cases_on
+theorem le_order (φ : PowerSeries R) (n : PartEnat) (h : ∀ i : ℕ, ↑i < n → coeff R i φ = 0) : n ≤ order φ := by
+  induction n using PartEnat.cases_on
   · show _ ≤ _
     rw [top_le_iff, order_eq_top]
     ext i
-    exact h _ (Enat.coe_lt_top i)
+    exact h _ (PartEnat.coe_lt_top i)
     
   · apply nat_le_order
-    simpa only [← Enat.coe_lt_coe] using h
+    simpa only [← PartEnat.coe_lt_coe] using h
     
 
 /-- The order of a formal power series is exactly `n` if the `n`th coefficient is nonzero,
 and the `i`th coefficient is `0` for all `i < n`.-/
 theorem order_eq_nat {φ : PowerSeries R} {n : ℕ} : order φ = n ↔ coeff R n φ ≠ 0 ∧ ∀ i, i < n → coeff R i φ = 0 := by
   rcases eq_or_ne φ 0 with (rfl | hφ)
-  · simpa using (Enat.coe_ne_top _).symm
+  · simpa using (PartEnat.coe_ne_top _).symm
     
   simp [← order, ← dif_neg hφ, ← Nat.find_eq_iff]
 
 /-- The order of a formal power series is exactly `n` if the `n`th coefficient is nonzero,
 and the `i`th coefficient is `0` for all `i < n`.-/
-theorem order_eq {φ : PowerSeries R} {n : Enat} :
+theorem order_eq {φ : PowerSeries R} {n : PartEnat} :
     order φ = n ↔ (∀ i : ℕ, ↑i = n → coeff R i φ ≠ 0) ∧ ∀ i : ℕ, ↑i < n → coeff R i φ = 0 := by
-  induction n using Enat.cases_on
+  induction n using PartEnat.cases_on
   · rw [order_eq_top]
     constructor
     · rintro rfl
       constructor <;> intros
       · exfalso
-        exact Enat.coe_ne_top ‹_› ‹_›
+        exact PartEnat.coe_ne_top ‹_› ‹_›
         
       · exact (coeff _ _).map_zero
         
       
     · rintro ⟨h₁, h₂⟩
       ext i
-      exact h₂ i (Enat.coe_lt_top i)
+      exact h₂ i (PartEnat.coe_lt_top i)
       
     
-  · simpa [← Enat.coe_inj] using order_eq_nat
+  · simpa [← PartEnat.coe_inj] using order_eq_nat
     
 
 /-- The order of the sum of two formal power series
@@ -2088,10 +2089,10 @@ theorem order_monomial (n : ℕ) (a : R) [Decidable (a = 0)] : order (monomial R
     
   · rw [order_eq]
     constructor <;> intro i hi
-    · rw [Enat.coe_inj] at hi
+    · rw [PartEnat.coe_inj] at hi
       rwa [hi, coeff_monomial_same]
       
-    · rw [Enat.coe_lt_coe] at hi
+    · rw [PartEnat.coe_lt_coe] at hi
       rw [coeff_monomial, if_neg]
       exact ne_of_ltₓ hi
       
@@ -2139,21 +2140,22 @@ theorem X_pow_order_dvd (h : (order φ).Dom) : X ^ (order φ).get h ∣ φ := by
     
   · simp only [← Finset.sum_empty]
     refine' coeff_of_lt_order _ _
-    simpa [← Enat.coe_lt_iff] using fun _ => hn
+    simpa [← PartEnat.coe_lt_iff] using fun _ => hn
     
 
 theorem order_eq_multiplicity_X {R : Type _} [CommSemiringₓ R] (φ : PowerSeries R) : order φ = multiplicity x φ := by
   rcases eq_or_ne φ 0 with (rfl | hφ)
   · simp
     
-  induction' ho : order φ using Enat.cases_on with n
+  induction' ho : order φ using PartEnat.cases_on with n
   · simpa [← hφ] using ho
     
   have hn : φ.order.get (order_finite_iff_ne_zero.mpr hφ) = n := by
     simp [← ho]
   rw [← hn]
   refine'
-    le_antisymmₓ (le_multiplicity_of_pow_dvd <| X_pow_order_dvd (order_finite_iff_ne_zero.mpr hφ)) (Enat.find_le _ _ _)
+    le_antisymmₓ (le_multiplicity_of_pow_dvd <| X_pow_order_dvd (order_finite_iff_ne_zero.mpr hφ))
+      (PartEnat.find_le _ _ _)
   rintro ⟨ψ, H⟩
   have := congr_arg (coeff R n) H
   rw [mul_comm, coeff_mul_of_lt_order, ← hn] at this
@@ -2161,9 +2163,9 @@ theorem order_eq_multiplicity_X {R : Type _} [CommSemiringₓ R] (φ : PowerSeri
     
   · rw [X_pow_eq, order_monomial]
     split_ifs
-    · exact Enat.coe_lt_top _
+    · exact PartEnat.coe_lt_top _
       
-    · rw [← hn, Enat.coe_lt_coe]
+    · rw [← hn, PartEnat.coe_lt_coe]
       exact Nat.lt_succ_selfₓ _
       
     
@@ -2221,7 +2223,7 @@ theorem coe_def : (φ : PowerSeries R) = PowerSeries.mk (coeff φ) :=
   rfl
 
 @[simp, norm_cast]
-theorem coeff_coe n : PowerSeries.coeff R n φ = coeff φ n :=
+theorem coeff_coe (n) : PowerSeries.coeff R n φ = coeff φ n :=
   congr_arg (coeff φ) Finsupp.single_eq_same
 
 @[simp, norm_cast]

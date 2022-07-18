@@ -71,6 +71,14 @@ theorem range_eq_image_mul_tsupport_or (f : X → α) :
     Range f = f '' MulTsupport f ∨ Range f = insert 1 (f '' MulTsupport f) :=
   (wcovby_insert _ _).eq_or_eq (image_subset_range _ _) (range_subset_insert_image_mul_tsupport f)
 
+theorem tsupport_mul_subset_left {α : Type _} [MulZeroClassₓ α] {f g : X → α} :
+    (Tsupport fun x => f x * g x) ⊆ Tsupport f :=
+  closure_mono (support_mul_subset_left _ _)
+
+theorem tsupport_mul_subset_right {α : Type _} [MulZeroClassₓ α] {f g : X → α} :
+    (Tsupport fun x => f x * g x) ⊆ Tsupport g :=
+  closure_mono (support_mul_subset_right _ _)
+
 end One
 
 section
@@ -98,16 +106,16 @@ def HasCompactMulSupport (f : α → β) : Prop :=
 theorem has_compact_mul_support_def : HasCompactMulSupport f ↔ IsCompact (Closure (MulSupport f)) := by
   rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ∉ » K)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ∉ » K)
 @[to_additive]
 theorem exists_compact_iff_has_compact_mul_support [T2Space α] :
-    (∃ K : Set α, IsCompact K ∧ ∀ x _ : x ∉ K, f x = 1) ↔ HasCompactMulSupport f := by
+    (∃ K : Set α, IsCompact K ∧ ∀ (x) (_ : x ∉ K), f x = 1) ↔ HasCompactMulSupport f := by
   simp_rw [← nmem_mul_support, ← mem_compl_iff, ← subset_def, compl_subset_compl, has_compact_mul_support_def,
     exists_compact_superset_iff]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ∉ » K)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ∉ » K)
 @[to_additive]
-theorem HasCompactMulSupport.intro [T2Space α] {K : Set α} (hK : IsCompact K) (hfK : ∀ x _ : x ∉ K, f x = 1) :
+theorem HasCompactMulSupport.intro [T2Space α] {K : Set α} (hK : IsCompact K) (hfK : ∀ (x) (_ : x ∉ K), f x = 1) :
     HasCompactMulSupport f :=
   exists_compact_iff_has_compact_mul_support.mp ⟨K, hK, hfK⟩
 
@@ -238,7 +246,6 @@ namespace LocallyFinite
 
 variable {ι : Type _} {U : ι → Set X} [TopologicalSpace X] [One R]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If a family of functions `f` has locally-finite multiplicative support, subordinate to a family
 of open sets, then for any point we can find a neighbourhood on which only finitely-many members of
 `f` are not equal to 1. -/

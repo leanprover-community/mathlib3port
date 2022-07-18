@@ -62,28 +62,29 @@ def multicospanComp : (S.index (P ⋙ F)).multicospan ≅ (S.index P).multicospa
       })
 
 @[simp]
-theorem multicospan_comp_app_left a : (S.multicospanComp F P).app (WalkingMulticospan.left a) = eqToIso rfl :=
+theorem multicospan_comp_app_left (a) : (S.multicospanComp F P).app (WalkingMulticospan.left a) = eqToIso rfl :=
   rfl
 
 @[simp]
-theorem multicospan_comp_app_right b : (S.multicospanComp F P).app (WalkingMulticospan.right b) = eqToIso rfl :=
+theorem multicospan_comp_app_right (b) : (S.multicospanComp F P).app (WalkingMulticospan.right b) = eqToIso rfl :=
   rfl
 
 @[simp]
-theorem multicospan_comp_hom_app_left a : (S.multicospanComp F P).Hom.app (WalkingMulticospan.left a) = eqToHom rfl :=
+theorem multicospan_comp_hom_app_left (a) : (S.multicospanComp F P).Hom.app (WalkingMulticospan.left a) = eqToHom rfl :=
   rfl
 
 @[simp]
-theorem multicospan_comp_hom_app_right b : (S.multicospanComp F P).Hom.app (WalkingMulticospan.right b) = eqToHom rfl :=
+theorem multicospan_comp_hom_app_right (b) :
+    (S.multicospanComp F P).Hom.app (WalkingMulticospan.right b) = eqToHom rfl :=
   rfl
 
 @[simp]
-theorem multicospan_comp_hom_inv_left (P : Cᵒᵖ ⥤ A) {X : C} (S : J.cover X) a :
+theorem multicospan_comp_hom_inv_left (P : Cᵒᵖ ⥤ A) {X : C} (S : J.cover X) (a) :
     (S.multicospanComp F P).inv.app (WalkingMulticospan.left a) = eqToHom rfl :=
   rfl
 
 @[simp]
-theorem multicospan_comp_hom_inv_right (P : Cᵒᵖ ⥤ A) {X : C} (S : J.cover X) b :
+theorem multicospan_comp_hom_inv_right (P : Cᵒᵖ ⥤ A) {X : C} (S : J.cover X) (b) :
     (S.multicospanComp F P).inv.app (WalkingMulticospan.right b) = eqToHom rfl :=
   rfl
 
@@ -106,7 +107,7 @@ def mapMultifork :
 
 end GrothendieckTopology.Cover
 
-variable [∀ X : C S : J.cover X P : Cᵒᵖ ⥤ A, PreservesLimit (S.index P).multicospan F]
+variable [∀ (X : C) (S : J.cover X) (P : Cᵒᵖ ⥤ A), PreservesLimit (S.index P).multicospan F]
 
 theorem Presheaf.IsSheaf.comp {P : Cᵒᵖ ⥤ A} (hP : Presheaf.IsSheaf J P) : Presheaf.IsSheaf J (P ⋙ F) := by
   rw [presheaf.is_sheaf_iff_multifork] at hP⊢

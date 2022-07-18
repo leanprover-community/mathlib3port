@@ -44,10 +44,10 @@ are mono.
 -/
 class CoproductDisjoint (X₁ X₂ : C) where
   isInitialOfIsPullbackOfIsCoproduct :
-    ∀ {X Z} {pX₁ : X₁ ⟶ X} {pX₂ : X₂ ⟶ X} {f : Z ⟶ X₁} {g : Z ⟶ X₂} cX : IsColimit (BinaryCofan.mk pX₁ pX₂)
+    ∀ {X Z} {pX₁ : X₁ ⟶ X} {pX₂ : X₂ ⟶ X} {f : Z ⟶ X₁} {g : Z ⟶ X₂} (cX : IsColimit (BinaryCofan.mk pX₁ pX₂))
       {comm : f ≫ pX₁ = g ≫ pX₂}, IsLimit (PullbackCone.mk _ _ comm) → IsInitial Z
-  mono_inl : ∀ X X₁ : X₁ ⟶ X X₂ : X₂ ⟶ X cX : IsColimit (BinaryCofan.mk X₁ X₂), Mono X₁
-  mono_inr : ∀ X X₁ : X₁ ⟶ X X₂ : X₂ ⟶ X cX : IsColimit (BinaryCofan.mk X₁ X₂), Mono X₂
+  mono_inl : ∀ (X) (X₁ : X₁ ⟶ X) (X₂ : X₂ ⟶ X) (cX : IsColimit (BinaryCofan.mk X₁ X₂)), Mono X₁
+  mono_inr : ∀ (X) (X₁ : X₁ ⟶ X) (X₂ : X₂ ⟶ X) (cX : IsColimit (BinaryCofan.mk X₁ X₂)), Mono X₂
 
 /-- If the coproduct of `X₁` and `X₂` is disjoint, then given any pullback square
 
@@ -113,7 +113,7 @@ theorem initial_mono_class_of_disjoint_coproducts [CoproductsDisjoint C] : Initi
       CoproductDisjoint.mono_inl _ _ (𝟙 X)
         { desc := fun s : BinaryCofan _ _ => s.inr,
           fac' := fun s j => Discrete.casesOn j fun j => WalkingPair.casesOn j (hI.hom_ext _ _) (id_comp _),
-          uniq' := fun s : BinaryCofan _ _ m w => (id_comp _).symm.trans (w ⟨WalkingPair.right⟩) } }
+          uniq' := fun (s : BinaryCofan _ _) m w => (id_comp _).symm.trans (w ⟨WalkingPair.right⟩) } }
 
 end Limits
 

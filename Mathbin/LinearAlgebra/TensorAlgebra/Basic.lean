@@ -54,12 +54,12 @@ inductive Rel : FreeAlgebra R M → FreeAlgebra R M → Prop-- force `ι` to be 
 
 end TensorAlgebra
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler algebra R
+-- ./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler algebra R
 /-- The tensor algebra of the module `M` over the commutative semiring `R`.
 -/
 def TensorAlgebra :=
   RingQuot (TensorAlgebra.Rel R M)deriving Inhabited, Semiringₓ,
-  «./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler algebra R»
+  «./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler algebra R»
 
 namespace TensorAlgebra
 
@@ -89,7 +89,7 @@ of `f` to a morphism of `R`-algebras `tensor_algebra R M → A`.
 def lift {A : Type _} [Semiringₓ A] [Algebra R A] : (M →ₗ[R] A) ≃ (TensorAlgebra R M →ₐ[R] A) where
   toFun :=
     RingQuot.liftAlgHom R ∘ fun f =>
-      ⟨FreeAlgebra.lift R ⇑f, fun x y h : Rel R M x y => by
+      ⟨FreeAlgebra.lift R ⇑f, fun x y (h : Rel R M x y) => by
         induction h <;> simp [← Algebra.smul_def]⟩
   invFun := fun F => F.toLinearMap.comp (ι R)
   left_inv := fun f =>
@@ -106,7 +106,7 @@ theorem ι_comp_lift {A : Type _} [Semiringₓ A] [Algebra R A] (f : M →ₗ[R]
   (lift R).symm_apply_apply f
 
 @[simp]
-theorem lift_ι_apply {A : Type _} [Semiringₓ A] [Algebra R A] (f : M →ₗ[R] A) x : lift R f (ι R x) = f x := by
+theorem lift_ι_apply {A : Type _} [Semiringₓ A] [Algebra R A] (f : M →ₗ[R] A) (x) : lift R f (ι R x) = f x := by
   dsimp' [← lift, ← ι]
   rfl
 

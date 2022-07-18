@@ -133,7 +133,7 @@ theorem to_equiv_inj {h h' : M ≃ₘ^n⟮I,I'⟯ M'} : h.toEquiv = h'.toEquiv �
   to_equiv_injective.eq_iff
 
 /-- Coercion to function `λ h : M ≃ₘ^n⟮I, I'⟯ M', (h : M → M')` is injective. -/
-theorem coe_fn_injective : Injective fun h : M ≃ₘ^n⟮I,I'⟯ M' x : M => h x :=
+theorem coe_fn_injective : Injective fun (h : M ≃ₘ^n⟮I,I'⟯ M') (x : M) => h x :=
   Equivₓ.coe_fn_injective.comp to_equiv_injective
 
 @[ext]
@@ -465,7 +465,7 @@ with model `I.trans_diffeomorph e`. -/
 def toTransDiffeomorph (e : E ≃ₘ[𝕜] F) : M ≃ₘ⟮I,I.transDiffeomorph e⟯ M where
   toEquiv := Equivₓ.refl M
   cont_mdiff_to_fun := fun x => by
-    refine' cont_mdiff_within_at_iff.2 ⟨continuous_within_at_id, _⟩
+    refine' cont_mdiff_within_at_iff'.2 ⟨continuous_within_at_id, _⟩
     refine' e.cont_diff.cont_diff_within_at.congr' (fun y hy => _) _
     · simp only [← Equivₓ.coe_refl, ← id, ← (· ∘ ·), ← I.coe_ext_chart_at_trans_diffeomorph, ←
         (extChartAt I x).right_inv hy.1]
@@ -474,7 +474,7 @@ def toTransDiffeomorph (e : E ≃ₘ[𝕜] F) : M ≃ₘ⟮I,I.transDiffeomorph 
       ⟨(extChartAt I x).map_source (mem_ext_chart_source I x), trivialₓ, by
         simp' only with mfld_simps⟩
   cont_mdiff_inv_fun := fun x => by
-    refine' cont_mdiff_within_at_iff.2 ⟨continuous_within_at_id, _⟩
+    refine' cont_mdiff_within_at_iff'.2 ⟨continuous_within_at_id, _⟩
     refine' e.symm.cont_diff.cont_diff_within_at.congr' (fun y hy => _) _
     · simp only [← mem_inter_eq, ← I.ext_chart_at_trans_diffeomorph_target] at hy
       simp only [← Equivₓ.coe_refl, ← Equivₓ.refl_symm, ← id, ← (· ∘ ·), ← I.coe_ext_chart_at_trans_diffeomorph_symm, ←

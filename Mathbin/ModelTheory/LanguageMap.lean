@@ -193,8 +193,8 @@ protected structure Injective : Prop where
 /-- A language homomorphism is an expansion on a structure if it commutes with the interpretation of
 all symbols on that structure. -/
 class IsExpansionOn (M : Type _) [L.Structure M] [L'.Structure M] : Prop where
-  map_on_function : ∀ {n} f : L.Functions n x : Finₓ n → M, funMap (ϕ.onFunction f) x = funMap f x
-  map_on_relation : ∀ {n} R : L.Relations n x : Finₓ n → M, RelMap (ϕ.onRelation R) x = RelMap R x
+  map_on_function : ∀ {n} (f : L.Functions n) (x : Finₓ n → M), funMap (ϕ.onFunction f) x = funMap f x
+  map_on_relation : ∀ {n} (R : L.Relations n) (x : Finₓ n → M), RelMap (ϕ.onRelation R) x = RelMap R x
 
 attribute [simp] is_expansion_on.map_on_function is_expansion_on.map_on_relation
 

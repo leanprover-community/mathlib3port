@@ -353,7 +353,7 @@ theorem coe_ennreal_zero : ((0 : ℝ≥0∞) : Ereal) = 0 :=
 /-! ### Order -/
 
 
-theorem exists_rat_btwn_of_lt : ∀ {a b : Ereal} hab : a < b, ∃ x : ℚ, a < (x : ℝ) ∧ ((x : ℝ) : Ereal) < b
+theorem exists_rat_btwn_of_lt : ∀ {a b : Ereal} (hab : a < b), ∃ x : ℚ, a < (x : ℝ) ∧ ((x : ℝ) : Ereal) < b
   | ⊤, b, h => (not_top_lt h).elim
   | (a : ℝ), ⊥, h => (lt_irreflₓ _ ((bot_lt_coe a).trans h)).elim
   | (a : ℝ), (b : ℝ), h => by
@@ -418,7 +418,7 @@ theorem coe_add_bot (x : ℝ) : (x : Ereal) + ⊥ = ⊥ :=
   rfl
 
 theorem to_real_add :
-    ∀ {x y : Ereal} hx : x ≠ ⊤ h'x : x ≠ ⊥ hy : y ≠ ⊤ h'y : y ≠ ⊥, toReal (x + y) = toReal x + toReal y
+    ∀ {x y : Ereal} (hx : x ≠ ⊤) (h'x : x ≠ ⊥) (hy : y ≠ ⊤) (h'y : y ≠ ⊥), toReal (x + y) = toReal x + toReal y
   | ⊥, y, hx, h'x, hy, h'y => (h'x rfl).elim
   | ⊤, y, hx, h'x, hy, h'y => (hx rfl).elim
   | x, ⊤, hx, h'x, hy, h'y => (hy rfl).elim
@@ -541,7 +541,7 @@ theorem neg_eg_zero_iff {x : Ereal} : -x = 0 ↔ x = 0 := by
   simp [← eq_comm]
 
 /-- if `-a ≤ b` then `-b ≤ a` on `ereal`. -/
-protected theorem neg_le_of_neg_le : ∀ {a b : Ereal} h : -a ≤ b, -b ≤ a
+protected theorem neg_le_of_neg_le : ∀ {a b : Ereal} (h : -a ≤ b), -b ≤ a
   | ⊥, ⊥, h => h
   | ⊥, some b, h => by
     cases top_le_iff.1 h

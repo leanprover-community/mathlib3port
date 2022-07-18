@@ -299,7 +299,7 @@ theorem map_witt_structure_int (Φ : MvPolynomial idx ℤ) (n : ℕ) :
 
 variable (p)
 
-theorem witt_structure_int_prop (Φ : MvPolynomial idx ℤ) n :
+theorem witt_structure_int_prop (Φ : MvPolynomial idx ℤ) (n) :
     bind₁ (wittStructureInt p Φ) (wittPolynomial p ℤ n) = bind₁ (fun i => rename (Prod.mk i) (W_ ℤ n)) Φ := by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   have := witt_structure_rat_prop p (map (Int.castRingHom ℚ) Φ) n
@@ -329,7 +329,7 @@ theorem witt_structure_int_exists_unique (Φ : MvPolynomial idx ℤ) :
       ∀ n : ℕ, bind₁ φ (wittPolynomial p ℤ n) = bind₁ (fun i : idx => rename (Prod.mk i) (W_ ℤ n)) Φ :=
   ⟨wittStructureInt p Φ, witt_structure_int_prop _ _, eq_witt_structure_int _ _⟩
 
-theorem witt_structure_prop (Φ : MvPolynomial idx ℤ) n :
+theorem witt_structure_prop (Φ : MvPolynomial idx ℤ) (n) :
     aeval (fun i => map (Int.castRingHom R) (wittStructureInt p Φ i)) (wittPolynomial p ℤ n) =
       aeval (fun i => rename (Prod.mk i) (W n)) Φ :=
   by

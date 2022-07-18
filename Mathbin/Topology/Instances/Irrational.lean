@@ -83,7 +83,7 @@ theorem eventually_forall_le_dist_cast_div (hx : Irrational x) (n : ℕ) : ∀�
   simp [← div_eq_inv_mul]
 
 theorem eventually_forall_le_dist_cast_div_of_denom_le (hx : Irrational x) (n : ℕ) :
-    ∀ᶠ ε : ℝ in 𝓝 0, ∀, ∀ k ≤ n, ∀ m : ℤ, ε ≤ dist x (m / k) :=
+    ∀ᶠ ε : ℝ in 𝓝 0, ∀, ∀ k ≤ n, ∀ (m : ℤ), ε ≤ dist x (m / k) :=
   (finite_le_nat n).eventually_all.2 fun k hk => hx.eventually_forall_le_dist_cast_div k
 
 theorem eventually_forall_le_dist_cast_rat_of_denom_le (hx : Irrational x) (n : ℕ) :

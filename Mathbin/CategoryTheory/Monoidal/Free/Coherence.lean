@@ -183,7 +183,7 @@ def tensorFunc : F C ⥤ N C ⥤ F C where
       rintro ⟨X⟩ ⟨Y⟩
       tidy⟩
 
-theorem tensor_func_map_app {X Y : F C} (f : X ⟶ Y) n : ((tensorFunc C).map f).app n = 𝟙 _ ⊗ f :=
+theorem tensor_func_map_app {X Y : F C} (f : X ⟶ Y) (n) : ((tensorFunc C).map f).app n = 𝟙 _ ⊗ f :=
   rfl
 
 theorem tensor_func_obj_map (Z : F C) {n n' : N C} (f : n ⟶ n') :
@@ -195,7 +195,7 @@ theorem tensor_func_obj_map (Z : F C) {n n' : N C} (f : n ⟶ n') :
 /-- Auxiliary definition for `normalize_iso`. Here we construct the isomorphism between
     `n ⊗ X` and `normalize X n`. -/
 @[simp]
-def normalizeIsoApp : ∀ X : F C n : N C, ((tensorFunc C).obj X).obj n ≅ ((normalize' C).obj X).obj n
+def normalizeIsoApp : ∀ (X : F C) (n : N C), ((tensorFunc C).obj X).obj n ≅ ((normalize' C).obj X).obj n
   | of X, n => Iso.refl _
   | Unit, n => ρ_ _
   | tensor X Y, n => (α_ _ _ _).symm ≪≫ tensorIso (normalize_iso_app X n) (Iso.refl _) ≪≫ normalize_iso_app _ _

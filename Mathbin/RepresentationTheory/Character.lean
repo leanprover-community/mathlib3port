@@ -6,6 +6,7 @@ Authors: Antoine Labelle
 import Mathbin.RepresentationTheory.FdRep
 import Mathbin.LinearAlgebra.Trace
 import Mathbin.RepresentationTheory.Basic
+import Mathbin.RepresentationTheory.Invariants
 
 /-!
 # Characters of representations
@@ -23,7 +24,9 @@ noncomputable section
 
 universe u
 
-open LinearMap CategoryTheory.MonoidalCategory Representation
+open LinearMap CategoryTheory.MonoidalCategory Representation FiniteDimensional
+
+open BigOperators
 
 variable {k G : Type u} [Field k]
 
@@ -77,6 +80,13 @@ theorem char_lin_hom (V W : FdRep k G) (g : G) : (of (linHom V.ρ W.ρ)).charact
   by
   rw [← char_iso (dual_tensor_iso_lin_hom _ _), char_tensor, Pi.mul_apply, char_dual]
   rfl
+
+variable [Fintype G] [Invertible (Fintype.card G : k)]
+
+theorem average_char_eq_finrank_invariants (V : FdRep k G) :
+    (⅟ (Fintype.card G : k) • ∑ g : G, V.character g) = finrank k (invariants V.ρ) := by
+  rw [← (is_proj_average_map V.ρ).trace]
+  simp [← character, ← GroupAlgebra.average, ← _root_.map_sum]
 
 end Groupₓ
 

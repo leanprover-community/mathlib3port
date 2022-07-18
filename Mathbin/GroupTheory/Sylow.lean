@@ -229,7 +229,6 @@ theorem IsPGroup.sylow_mem_fixed_points_iff {P : Subgroup G} (hP : IsPGroup p P)
     Q ∈ FixedPoints P (Sylow p G) ↔ P ≤ Q := by
   rw [P.sylow_mem_fixed_points_iff, ← inf_eq_left, hP.inf_normalizer_sylow, inf_eq_left]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A generalization of **Sylow's second theorem**.
   If the number of Sylow `p`-subgroups is finite, then all Sylow `p`-subgroups are conjugate. -/
 instance [hp : Fact p.Prime] [Fintype (Sylow p G)] : IsPretransitive G (Sylow p G) :=
@@ -393,7 +392,7 @@ theorem mem_fixed_points_mul_left_cosets_iff_mem_normalizer {H : Subgroup G} [Fi
   ⟨fun hx =>
     have ha : ∀ {y : G ⧸ H}, y ∈ Orbit H (x : G ⧸ H) → y = x := fun _ => (mem_fixed_points' _).1 hx _
     inv_mem_iff.1
-      (@mem_normalizer_fintype _ _ _ _inst_2 _ fun n hn : n ∈ H =>
+      (@mem_normalizer_fintype _ _ _ _inst_2 _ fun n (hn : n ∈ H) =>
         have : (n⁻¹ * x)⁻¹ * x ∈ H := QuotientGroup.eq.1 (ha (mem_orbit _ ⟨n⁻¹, H.inv_mem hn⟩))
         show _ ∈ H by
           rw [mul_inv_rev, inv_invₓ] at this
@@ -505,7 +504,7 @@ theorem exists_subgroup_card_pow_succ [Fintype G] {p : ℕ} {n : ℕ} [hp : Fact
   then `H` is contained in a subgroup of cardinality `p ^ m`
   if `n ≤ m` and `p ^ m` divides the cardinality of `G` -/
 theorem exists_subgroup_card_pow_prime_le [Fintype G] (p : ℕ) :
-    ∀ {n m : ℕ} [hp : Fact p.Prime] hdvd : p ^ m ∣ card G H : Subgroup G hH : card H = p ^ n hnm : n ≤ m,
+    ∀ {n m : ℕ} [hp : Fact p.Prime] (hdvd : p ^ m ∣ card G) (H : Subgroup G) (hH : card H = p ^ n) (hnm : n ≤ m),
       ∃ K : Subgroup G, card K = p ^ m ∧ H ≤ K
   | n, m => fun hp hdvd H hH hnm =>
     (lt_or_eq_of_leₓ hnm).elim
@@ -631,7 +630,7 @@ open BigOperators
 of these sylow groups.
 -/
 noncomputable def directProductOfNormal [Fintype G]
-    (hn : ∀ {p : ℕ} [Fact p.Prime] P : Sylow p G, (↑P : Subgroup G).Normal) :
+    (hn : ∀ {p : ℕ} [Fact p.Prime] (P : Sylow p G), (↑P : Subgroup G).Normal) :
     (∀ p : (card G).factorization.support, ∀ P : Sylow p G, (↑P : Subgroup G)) ≃* G := by
   set ps := (Fintype.card G).factorization.support
   -- “The” sylow group for p

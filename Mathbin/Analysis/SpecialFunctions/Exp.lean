@@ -194,17 +194,14 @@ theorem tendsto_pow_mul_exp_neg_at_top_nhds_0 (n : ℕ) : Tendsto (fun x => x ^ 
 `n` and any real numbers `b` and `c` such that `b` is positive. -/
 theorem tendsto_mul_exp_add_div_pow_at_top (b c : ℝ) (n : ℕ) (hb : 0 < b) :
     Tendsto (fun x => (b * exp x + c) / x ^ n) atTop atTop := by
-  rcases n.eq_zero_or_pos with (rfl | hn)
+  rcases eq_or_ne n 0 with (rfl | hn)
   · simp only [← pow_zeroₓ, ← div_one]
     exact (tendsto_exp_at_top.const_mul_at_top hb).at_top_add tendsto_const_nhds
     
-  refine'
-    tendsto.congr' (eventually_eq_of_mem (Ioi_mem_at_top 0) _)
-      (((tendsto_exp_div_pow_at_top n).const_mul_at_top hb).at_top_add
-        ((tendsto_pow_neg_at_top hn).mul (@tendsto_const_nhds _ _ _ c _)))
-  intro x hx
-  simp only [← zpow_neg x n]
-  ring
+  simp only [← add_div, ← mul_div_assoc]
+  exact
+    ((tendsto_exp_div_pow_at_top n).const_mul_at_top hb).at_top_add
+      (tendsto_const_nhds.div_at_top (tendsto_pow_at_top hn))
 
 /-- The function `(x ^ n) / (b * exp x + c)` tends to `0` at `+∞`, for any natural number
 `n` and any real numbers `b` and `c` such that `b` is nonzero. -/

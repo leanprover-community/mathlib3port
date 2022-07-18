@@ -15,7 +15,7 @@ This file studies uniform spaces whose underlying topological spaces are separat
 (also known as Hausdorff or T₂).
 This turns out to be equivalent to asking that the intersection of all entourages
 is the diagonal only. This condition actually implies the stronger separation property
-that the space is regular (T₃), hence those conditions are equivalent for topologies coming from
+that the space is T₃, hence those conditions are equivalent for topologies coming from
 a uniform structure.
 
 More generally, the intersection `𝓢 X` of all entourages of `X`, which has type `set (X × X)` is an
@@ -73,7 +73,7 @@ open Classical TopologicalSpace uniformity Filter
 
 noncomputable section
 
--- ./././Mathport/Syntax/Translate/Basic.lean:293:40: warning: unsupported option eqn_compiler.zeta
+-- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
 universe u v w
@@ -97,10 +97,10 @@ protected def SeparationRel (α : Type u) [u : UniformSpace α] :=
 localized [uniformity] notation "𝓢" => SeparationRel
 
 theorem separated_equiv : Equivalenceₓ fun x y => (x, y) ∈ 𝓢 α :=
-  ⟨fun x => fun s => refl_mem_uniformity, fun x y => fun h s : Set (α × α) hs =>
+  ⟨fun x => fun s => refl_mem_uniformity, fun x y => fun h (s : Set (α × α)) hs =>
     have : Preimage Prod.swap s ∈ 𝓤 α := symm_le_uniformity hs
     h _ this,
-    fun x y z hxy : (x, y) ∈ 𝓢 α hyz : (y, z) ∈ 𝓢 α s hs : s ∈ 𝓤 α =>
+    fun x y z (hxy : (x, y) ∈ 𝓢 α) (hyz : (y, z) ∈ 𝓢 α) s (hs : s ∈ 𝓤 α) =>
     let ⟨t, ht, (h_ts : CompRel t t ⊆ s)⟩ := comp_mem_uniformity_sets hs
     h_ts <| show (x, z) ∈ CompRel t t from ⟨y, hxy t ht, hyz t ht⟩⟩
 
@@ -171,7 +171,6 @@ theorem is_closed_separation_rel : IsClosed (𝓢 α) := by
   rintro _ ⟨t, t_in, rfl⟩
   exact is_closed_closure
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem separated_iff_t2 : SeparatedSpace α ↔ T2Space α := by
   classical
   constructor <;> intro h
@@ -186,11 +185,11 @@ theorem separated_iff_t2 : SeparatedSpace α ↔ T2Space α := by
     
 
 -- see Note [lower instance priority]
-instance (priority := 100) separated_regular [SeparatedSpace α] : RegularSpace α :=
+instance (priority := 100) separated_t3 [SeparatedSpace α] : T3Space α :=
   { @T2Space.t1_space _ _ (separated_iff_t2.mp ‹_›) with
-    t0 := by
+    to_t0_space := by
       have := separated_iff_t2.mp ‹_›
-      exact t1_space.t0_space.t0,
+      exact T1Space.t0_space,
     regular := fun s a hs ha =>
       have : sᶜ ∈ 𝓝 a := IsOpen.mem_nhds hs.is_open_compl ha
       have : { p : α × α | p.1 = a → p.2 ∈ sᶜ } ∈ 𝓤 α := mem_nhds_uniformity_iff_right.mp this
@@ -237,14 +236,14 @@ theorem is_closed_range_of_spaced_out {ι} [SeparatedSpace α] {V₀ : Set (α �
 -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » s)
 /-- A set `s` in a uniform space `α` is separated if the separation relation `𝓢 α`
 induces the trivial relation on `s`. -/
 def IsSeparated (s : Set α) : Prop :=
-  ∀ x y _ : x ∈ s _ : y ∈ s, (x, y) ∈ 𝓢 α → x = y
+  ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), (x, y) ∈ 𝓢 α → x = y
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » s)
-theorem is_separated_def (s : Set α) : IsSeparated s ↔ ∀ x y _ : x ∈ s _ : y ∈ s, (x, y) ∈ 𝓢 α → x = y :=
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » s)
+theorem is_separated_def (s : Set α) : IsSeparated s ↔ ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), (x, y) ∈ 𝓢 α → x = y :=
   Iff.rfl
 
 theorem is_separated_def' (s : Set α) : IsSeparated s ↔ s ×ˢ s ∩ 𝓢 α ⊆ IdRel := by

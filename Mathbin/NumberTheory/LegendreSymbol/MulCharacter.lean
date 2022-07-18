@@ -57,7 +57,7 @@ structure MulChar extends MonoidHom R R' where
 /-- This is the corresponding extension of `monoid_hom_class`. -/
 class MulCharClass (F : Type _) (R R' : outParam <| Type _) [CommMonoidₓ R] [CommMonoidWithZero R'] extends
   MonoidHomClass F R R' where
-  map_nonunit : ∀ χ : F {a : R} ha : ¬IsUnit a, χ a = 0
+  map_nonunit : ∀ (χ : F) {a : R} (ha : ¬IsUnit a), χ a = 0
 
 attribute [simp] MulCharClass.map_nonunit
 
@@ -86,7 +86,6 @@ section trivialₓ
 
 variable (R R')
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The trivial multiplicative character. It takes the value `0` on non-units and
 the value `1` on units. -/
 @[simps]
@@ -115,7 +114,7 @@ theorem to_fun_eq_coe (χ : MulChar R R') : χ.toFun = χ :=
   rfl
 
 @[simp]
-theorem coe_mk (f : R →* R') hf : (MulChar.mk f hf : R → R') = f :=
+theorem coe_mk (f : R →* R') (hf) : (MulChar.mk f hf : R → R') = f :=
   rfl
 
 /-- Extensionality. See `ext` below for the version that will actually be used. -/
@@ -167,7 +166,6 @@ def toUnitHom (χ : MulChar R R') : Rˣ →* R'ˣ :=
 theorem coe_to_unit_hom (χ : MulChar R R') (a : Rˣ) : ↑(χ.toUnitHom a) = χ a :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Turn a homomorphism between unit groups into a `mul_char`. -/
 noncomputable def ofUnitHom (f : Rˣ →* R'ˣ) : MulChar R R' where
   toFun := by

@@ -27,7 +27,7 @@ def Seqₓₓ (α : Type u) : Type u :=
   { f : Streamₓ (Option α) // f.IsSeq }
 
 /-- `seq1 α` is the type of nonempty sequences. -/
-def Seq1 α :=
+def Seq1 (α) :=
   α × Seqₓₓ α
 
 namespace Seqₓₓ
@@ -181,7 +181,7 @@ theorem head_nil : head (nil : Seqₓₓ α) = none :=
   rfl
 
 @[simp]
-theorem head_cons (a : α) s : head (cons a s) = some a := by
+theorem head_cons (a : α) (s) : head (cons a s) = some a := by
   rw [head_eq_destruct, destruct_cons] <;> rfl
 
 @[simp]
@@ -189,7 +189,7 @@ theorem tail_nil : tail (nil : Seqₓₓ α) = nil :=
   rfl
 
 @[simp]
-theorem tail_cons (a : α) s : tail (cons a s) = s := by
+theorem tail_cons (a : α) (s) : tail (cons a s) = s := by
   cases' s with f al <;> apply Subtype.eq <;> dsimp' [← tail, ← cons] <;> rw [Streamₓ.tail_cons]
 
 def casesOn {C : Seqₓₓ α → Sort v} (s : Seqₓₓ α) (h1 : C nil) (h2 : ∀ x s, C (cons x s)) : C s := by
@@ -350,10 +350,10 @@ end Bisim
 
 theorem coinduction :
     ∀ {s₁ s₂ : Seqₓₓ α},
-      head s₁ = head s₂ → (∀ β : Type u fr : Seqₓₓ α → β, fr s₁ = fr s₂ → fr (tail s₁) = fr (tail s₂)) → s₁ = s₂
+      head s₁ = head s₂ → (∀ (β : Type u) (fr : Seqₓₓ α → β), fr s₁ = fr s₂ → fr (tail s₁) = fr (tail s₂)) → s₁ = s₂
   | ⟨f₁, a₁⟩, ⟨f₂, a₂⟩, hh, ht => Subtype.eq (Streamₓ.coinduction hh fun β fr => ht β fun s => fr s.1)
 
-theorem coinduction2 s (f g : Seqₓₓ α → Seqₓₓ β)
+theorem coinduction2 (s) (f g : Seqₓₓ α → Seqₓₓ β)
     (H : ∀ s, BisimO (fun s1 s2 : Seqₓₓ β => ∃ s : Seqₓₓ α, s1 = f s ∧ s2 = g s) (destruct (f s)) (destruct (g s))) :
     f s = g s := by
   refine' eq_of_bisim (fun s1 s2 => ∃ s, s1 = f s ∧ s2 = g s) _ ⟨s, rfl, rfl⟩
@@ -552,7 +552,7 @@ theorem nil_append (s : Seqₓₓ α) : append nil s = s := by
     
 
 @[simp]
-theorem cons_append (a : α) s t : append (cons a s) t = cons a (append s t) :=
+theorem cons_append (a : α) (s t) : append (cons a s) t = cons a (append s t) :=
   destruct_eq_cons <| by
     dsimp' [← append]
     rw [corec_eq]
@@ -604,7 +604,7 @@ theorem map_nil (f : α → β) : map f nil = nil :=
   rfl
 
 @[simp]
-theorem map_cons (f : α → β) a : ∀ s, map f (cons a s) = cons (f a) (map f s)
+theorem map_cons (f : α → β) (a) : ∀ s, map f (cons a s) = cons (f a) (map f s)
   | ⟨s, al⟩ => by
     apply Subtype.eq <;> dsimp' [← cons, ← map] <;> rw [Streamₓ.map_cons] <;> rfl
 
@@ -627,7 +627,7 @@ theorem map_comp (f : α → β) (g : β → γ) : ∀ s : Seqₓₓ α, map (g 
     ext ⟨⟩ <;> rfl
 
 @[simp]
-theorem map_append (f : α → β) s t : map f (append s t) = append (map f s) (map f t) := by
+theorem map_append (f : α → β) (s t) : map f (append s t) = append (map f s) (map f t) := by
   apply eq_of_bisim (fun s1 s2 => ∃ s t, s1 = map f (append s t) ∧ s2 = append (map f s) (map f t)) _ ⟨s, t, rfl, rfl⟩
   intro s1 s2 h
   exact
@@ -658,17 +658,17 @@ theorem join_nil : join nil = (nil : Seqₓₓ α) :=
   destruct_eq_nil rfl
 
 @[simp]
-theorem join_cons_nil (a : α) S : join (cons (a, nil) S) = cons a (join S) :=
+theorem join_cons_nil (a : α) (S) : join (cons (a, nil) S) = cons a (join S) :=
   destruct_eq_cons <| by
     simp [← join]
 
 @[simp]
-theorem join_cons_cons (a b : α) s S : join (cons (a, cons b s) S) = cons a (join (cons (b, s) S)) :=
+theorem join_cons_cons (a b : α) (s S) : join (cons (a, cons b s) S) = cons a (join (cons (b, s) S)) :=
   destruct_eq_cons <| by
     simp [← join]
 
 @[simp]
-theorem join_cons (a : α) s S : join (cons (a, s) S) = cons a (append s (join S)) := by
+theorem join_cons (a : α) (s S) : join (cons (a, s) S) = cons a (append s (join S)) := by
   apply
     eq_of_bisim (fun s1 s2 => s1 = s2 ∨ ∃ a s S, s1 = join (cons (a, s) S) ∧ s2 = cons a (append s (join S))) _
       (Or.inr ⟨a, s, S, rfl, rfl⟩)
@@ -726,11 +726,11 @@ theorem of_list_nil : ofList [] = (nil : Seqₓₓ α) :=
   rfl
 
 @[simp]
-theorem of_list_cons (a : α) l : ofList (a :: l) = cons a (ofList l) := by
+theorem of_list_cons (a : α) (l) : ofList (a :: l) = cons a (ofList l) := by
   ext (_ | n) : 2 <;> simp [← of_list, ← cons, ← Streamₓ.nth, ← Streamₓ.cons]
 
 @[simp]
-theorem of_stream_cons (a : α) s : ofStream (a :: s) = cons a (ofStream s) := by
+theorem of_stream_cons (a : α) (s) : ofStream (a :: s) = cons a (ofStream s) := by
   apply Subtype.eq <;> simp [← of_stream, ← cons] <;> rw [Streamₓ.map_cons]
 
 @[simp]
@@ -752,14 +752,14 @@ def toList' {α} (s : Seqₓₓ α) : Computation (List α) :=
       | some (a, s') => Sum.inr (a :: l, s'))
     ([], s)
 
-theorem dropn_add (s : Seqₓₓ α) m : ∀ n, drop s (m + n) = drop (drop s m) n
+theorem dropn_add (s : Seqₓₓ α) (m) : ∀ n, drop s (m + n) = drop (drop s m) n
   | 0 => rfl
   | n + 1 => congr_arg tail (dropn_add n)
 
-theorem dropn_tail (s : Seqₓₓ α) n : drop (tail s) n = drop s (n + 1) := by
+theorem dropn_tail (s : Seqₓₓ α) (n) : drop (tail s) n = drop s (n + 1) := by
   rw [add_commₓ] <;> symm <;> apply dropn_add
 
-theorem nth_tail : ∀ s : Seqₓₓ α n, nth (tail s) n = nth s (n + 1)
+theorem nth_tail : ∀ (s : Seqₓₓ α) (n), nth (tail s) n = nth s (n + 1)
   | ⟨f, al⟩, n => rfl
 
 @[ext]
@@ -783,7 +783,7 @@ protected theorem ext (s s' : Seqₓₓ α) (hyp : ∀ n : ℕ, s.nth n = s'.nth
     
 
 @[simp]
-theorem head_dropn (s : Seqₓₓ α) n : head (drop s n) = nth s n := by
+theorem head_dropn (s : Seqₓₓ α) (n) : head (drop s n) = nth s n := by
   induction' n with n IH generalizing s
   · rfl
     
@@ -863,11 +863,11 @@ def join : Seq1 (Seq1 α) → Seq1 α
     | some s' => (a, Seqₓₓ.join (cons s' S))
 
 @[simp]
-theorem join_nil (a : α) S : join ((a, nil), S) = (a, Seqₓₓ.join S) :=
+theorem join_nil (a : α) (S) : join ((a, nil), S) = (a, Seqₓₓ.join S) :=
   rfl
 
 @[simp]
-theorem join_cons (a b : α) s S : join ((a, cons b s), S) = (a, Seqₓₓ.join (cons (b, s) S)) := by
+theorem join_cons (a b : α) (s S) : join ((a, cons b s), S) = (a, Seqₓₓ.join (cons (b, s) S)) := by
   dsimp' [← join] <;> rw [destruct_cons] <;> rfl
 
 /-- The `return` operator for the `seq1` monad,
@@ -904,7 +904,7 @@ theorem ret_bind (a : α) (f : α → Seq1 β) : bind (ret a) f = f a := by
   apply cases_on s <;> intros <;> simp
 
 @[simp]
-theorem map_join' (f : α → β) S : Seqₓₓ.map f (Seqₓₓ.join S) = Seqₓₓ.join (Seqₓₓ.map (map f) S) := by
+theorem map_join' (f : α → β) (S) : Seqₓₓ.map f (Seqₓₓ.join S) = Seqₓₓ.join (Seqₓₓ.map (map f) S) := by
   apply
     eq_of_bisim fun s1 s2 =>
       ∃ s S, s1 = append s (Seqₓₓ.map f (Seqₓₓ.join S)) ∧ s2 = append s (Seqₓₓ.join (Seqₓₓ.map (map f) S))

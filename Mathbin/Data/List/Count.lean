@@ -29,24 +29,24 @@ theorem countp_nil : countp p [] = 0 :=
   rfl
 
 @[simp]
-theorem countp_cons_of_pos {a : α} l (pa : p a) : countp p (a :: l) = countp p l + 1 :=
+theorem countp_cons_of_pos {a : α} (l) (pa : p a) : countp p (a :: l) = countp p l + 1 :=
   if_pos pa
 
 @[simp]
-theorem countp_cons_of_neg {a : α} l (pa : ¬p a) : countp p (a :: l) = countp p l :=
+theorem countp_cons_of_neg {a : α} (l) (pa : ¬p a) : countp p (a :: l) = countp p l :=
   if_neg pa
 
-theorem countp_cons (a : α) l : countp p (a :: l) = countp p l + ite (p a) 1 0 := by
+theorem countp_cons (a : α) (l) : countp p (a :: l) = countp p l + ite (p a) 1 0 := by
   by_cases' h : p a <;> simp [← h]
 
-theorem length_eq_countp_add_countp l : length l = countp p l + countp (fun a => ¬p a) l := by
+theorem length_eq_countp_add_countp (l) : length l = countp p l + countp (fun a => ¬p a) l := by
   induction' l with x h ih <;> [rfl, by_cases' p x] <;>
       [simp only [← countp_cons_of_pos _ _ h, ← countp_cons_of_neg (fun a => ¬p a) _ (Decidable.not_not.2 h), ← ih, ←
         length],
       simp only [← countp_cons_of_pos (fun a => ¬p a) _ h, ← countp_cons_of_neg _ _ h, ← ih, ← length]] <;>
     ac_rfl
 
-theorem countp_eq_length_filter l : countp p l = length (filterₓ p l) := by
+theorem countp_eq_length_filter (l) : countp p l = length (filterₓ p l) := by
   induction' l with x l ih <;> [rfl, by_cases' p x] <;>
       [simp only [← filter_cons_of_pos _ h, ← countp, ← ih, ← if_pos h],
       simp only [← countp_cons_of_neg _ _ h, ← ih, ← filter_cons_of_neg _ h]] <;>
@@ -56,7 +56,7 @@ theorem countp_le_length : countp p l ≤ l.length := by
   simpa only [← countp_eq_length_filter] using length_le_of_sublist (filter_sublist _)
 
 @[simp]
-theorem countp_append l₁ l₂ : countp p (l₁ ++ l₂) = countp p l₁ + countp p l₂ := by
+theorem countp_append (l₁ l₂) : countp p (l₁ ++ l₂) = countp p l₁ + countp p l₂ := by
   simp only [← countp_eq_length_filter, ← filter_append, ← length_append]
 
 theorem countp_pos {l} : 0 < countp p l ↔ ∃ a ∈ l, p a := by
@@ -69,7 +69,7 @@ theorem countp_eq_zero {l} : countp p l = 0 ↔ ∀, ∀ a ∈ l, ∀, ¬p a := 
 theorem countp_eq_length {l} : countp p l = l.length ↔ ∀, ∀ a ∈ l, ∀, p a := by
   rw [countp_eq_length_filter, filter_length_eq_length]
 
-theorem length_filter_lt_length_iff_exists l : length (filterₓ p l) < length l ↔ ∃ x ∈ l, ¬p x := by
+theorem length_filter_lt_length_iff_exists (l) : length (filterₓ p l) < length l ↔ ∃ x ∈ l, ¬p x := by
   rw [length_eq_countp_add_countp p l, ← countp_pos, countp_eq_length_filter, lt_add_iff_pos_right]
 
 theorem Sublist.countp_le (s : l₁ <+ l₂) : countp p l₁ ≤ countp p l₂ := by
@@ -115,7 +115,8 @@ theorem count_cons_self (a : α) (l : List α) : count a (a :: l) = succ (count 
 theorem count_cons_of_ne {a b : α} (h : a ≠ b) (l : List α) : count a (b :: l) = count a l :=
   if_neg h
 
-theorem count_tail : ∀ l : List α a : α h : 0 < l.length, l.tail.count a = l.count a - ite (a = List.nthLe l 0 h) 1 0
+theorem count_tail :
+    ∀ (l : List α) (a : α) (h : 0 < l.length), l.tail.count a = l.count a - ite (a = List.nthLe l 0 h) 1 0
   | _ :: _, a, h => by
     rw [count_cons]
     split_ifs <;> simp

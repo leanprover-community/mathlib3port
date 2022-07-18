@@ -535,9 +535,8 @@ protected def dual : αᵒᵈ ↪o βᵒᵈ :=
 /-- A version of `with_bot.map` for order embeddings. -/
 @[simps (config := { fullyApplied := false })]
 protected def withBotMap (f : α ↪o β) : WithBot α ↪o WithBot β :=
-  { f.toEmbedding.optionMap with toFun := WithBot.map f,
-    map_rel_iff' := fun a b => by
-      cases a <;> cases b <;> simp [← WithBot.none_eq_bot, ← WithBot.some_eq_coe, ← WithBot.not_coe_le_bot] }
+  { f.toEmbedding.option_map with toFun := WithBot.map f,
+    map_rel_iff' := WithBot.map_le_iff f fun a b => f.map_rel_iff }
 
 /-- A version of `with_top.map` for order embeddings. -/
 @[simps (config := { fullyApplied := false })]
@@ -551,7 +550,7 @@ def ofMapLeIff {α β} [PartialOrderₓ α] [Preorderₓ β] (f : α → β) (hf
   RelEmbedding.ofMapRelIff f hf
 
 @[simp]
-theorem coe_of_map_le_iff {α β} [PartialOrderₓ α] [Preorderₓ β] {f : α → β} h : ⇑(ofMapLeIff f h) = f :=
+theorem coe_of_map_le_iff {α β} [PartialOrderₓ α] [Preorderₓ β] {f : α → β} (h) : ⇑(ofMapLeIff f h) = f :=
   rfl
 
 /-- A strictly monotone map from a linear order is an order embedding. --/
@@ -819,10 +818,50 @@ protected theorem strict_mono (e : α ≃o β) : StrictMono e :=
 theorem lt_iff_lt (e : α ≃o β) {x y : α} : e x < e y ↔ x < y :=
   e.toOrderEmbedding.lt_iff_lt
 
+/-- Converts an `order_iso` into a `rel_iso (<) (<)`. -/
+def toRelIsoLt (e : α ≃o β) : ((· < ·) : α → α → Prop) ≃r ((· < ·) : β → β → Prop) :=
+  ⟨e.toEquiv, fun x y => lt_iff_lt e⟩
+
+@[simp]
+theorem to_rel_iso_lt_apply (e : α ≃o β) (x : α) : e.toRelIsoLt x = e x :=
+  rfl
+
+@[simp]
+theorem to_rel_iso_lt_symm (e : α ≃o β) : e.toRelIsoLt.symm = e.symm.toRelIsoLt :=
+  rfl
+
+/-- Converts a `rel_iso (<) (<)` into an `order_iso`. -/
+def ofRelIsoLt {α β} [PartialOrderₓ α] [PartialOrderₓ β] (e : ((· < ·) : α → α → Prop) ≃r ((· < ·) : β → β → Prop)) :
+    α ≃o β :=
+  ⟨e.toEquiv, fun x y => by
+    simp [← le_iff_eq_or_lt, ← e.map_rel_iff]⟩
+
+@[simp]
+theorem of_rel_iso_lt_apply {α β} [PartialOrderₓ α] [PartialOrderₓ β]
+    (e : ((· < ·) : α → α → Prop) ≃r ((· < ·) : β → β → Prop)) (x : α) : ofRelIsoLt e x = e x :=
+  rfl
+
+@[simp]
+theorem of_rel_iso_lt_symm {α β} [PartialOrderₓ α] [PartialOrderₓ β]
+    (e : ((· < ·) : α → α → Prop) ≃r ((· < ·) : β → β → Prop)) : (ofRelIsoLt e).symm = ofRelIsoLt e.symm :=
+  rfl
+
+@[simp]
+theorem of_rel_iso_lt_to_rel_iso_lt {α β} [PartialOrderₓ α] [PartialOrderₓ β] (e : α ≃o β) :
+    ofRelIsoLt (toRelIsoLt e) = e := by
+  ext
+  simp
+
+@[simp]
+theorem to_rel_iso_lt_of_rel_iso_lt {α β} [PartialOrderₓ α] [PartialOrderₓ β]
+    (e : ((· < ·) : α → α → Prop) ≃r ((· < ·) : β → β → Prop)) : toRelIsoLt (ofRelIsoLt e) = e := by
+  ext
+  simp
+
 /-- To show that `f : α → β`, `g : β → α` make up an order isomorphism of linear orders,
     it suffices to prove `cmp a (g b) = cmp (f a) b`. --/
 def ofCmpEqCmp {α β} [LinearOrderₓ α] [LinearOrderₓ β] (f : α → β) (g : β → α)
-    (h : ∀ a : α b : β, cmp a (g b) = cmp (f a) b) : α ≃o β :=
+    (h : ∀ (a : α) (b : β), cmp a (g b) = cmp (f a) b) : α ≃o β :=
   have gf : ∀ a : α, a = g (f a) := by
     intro
     rw [← cmp_eq_eq_iff, h, cmp_self_eq_eq]
@@ -965,9 +1004,15 @@ theorem OrderIso.map_top [LE α] [PartialOrderₓ β] [OrderTop α] [OrderTop β
 theorem OrderEmbedding.map_inf_le [SemilatticeInf α] [SemilatticeInf β] (f : α ↪o β) (x y : α) : f (x⊓y) ≤ f x⊓f y :=
   f.Monotone.map_inf_le x y
 
+theorem OrderEmbedding.le_map_sup [SemilatticeSup α] [SemilatticeSup β] (f : α ↪o β) (x y : α) : f x⊔f y ≤ f (x⊔y) :=
+  f.Monotone.le_map_sup x y
+
 theorem OrderIso.map_inf [SemilatticeInf α] [SemilatticeInf β] (f : α ≃o β) (x y : α) : f (x⊓y) = f x⊓f y := by
   refine' (f.to_order_embedding.map_inf_le x y).antisymm _
   simpa [f.symm.le_iff_le] using f.symm.to_order_embedding.map_inf_le (f x) (f y)
+
+theorem OrderIso.map_sup [SemilatticeSup α] [SemilatticeSup β] (f : α ≃o β) (x y : α) : f (x⊔y) = f x⊔f y :=
+  f.dual.map_inf x y
 
 /-- Note that this goal could also be stated `(disjoint on f) a b` -/
 theorem Disjoint.map_order_iso [SemilatticeInf α] [OrderBot α] [SemilatticeInf β] [OrderBot β] {a b : α} (f : α ≃o β)
@@ -975,16 +1020,21 @@ theorem Disjoint.map_order_iso [SemilatticeInf α] [OrderBot α] [SemilatticeInf
   rw [Disjoint, ← f.map_inf, ← f.map_bot]
   exact f.monotone ha
 
+/-- Note that this goal could also be stated `(codisjoint on f) a b` -/
+theorem Codisjoint.map_order_iso [SemilatticeSup α] [OrderTop α] [SemilatticeSup β] [OrderTop β] {a b : α} (f : α ≃o β)
+    (ha : Codisjoint a b) : Codisjoint (f a) (f b) := by
+  rw [Codisjoint, ← f.map_sup, ← f.map_top]
+  exact f.monotone ha
+
 @[simp]
 theorem disjoint_map_order_iso_iff [SemilatticeInf α] [OrderBot α] [SemilatticeInf β] [OrderBot β] {a b : α}
     (f : α ≃o β) : Disjoint (f a) (f b) ↔ Disjoint a b :=
   ⟨fun h => f.symm_apply_apply a ▸ f.symm_apply_apply b ▸ h.map_order_iso f.symm, fun h => h.map_order_iso f⟩
 
-theorem OrderEmbedding.le_map_sup [SemilatticeSup α] [SemilatticeSup β] (f : α ↪o β) (x y : α) : f x⊔f y ≤ f (x⊔y) :=
-  f.Monotone.le_map_sup x y
-
-theorem OrderIso.map_sup [SemilatticeSup α] [SemilatticeSup β] (f : α ≃o β) (x y : α) : f (x⊔y) = f x⊔f y :=
-  f.dual.map_inf x y
+@[simp]
+theorem codisjoint_map_order_iso_iff [SemilatticeSup α] [OrderTop α] [SemilatticeSup β] [OrderTop β] {a b : α}
+    (f : α ≃o β) : Codisjoint (f a) (f b) ↔ Codisjoint a b :=
+  ⟨fun h => f.symm_apply_apply a ▸ f.symm_apply_apply b ▸ h.map_order_iso f.symm, fun h => h.map_order_iso f⟩
 
 namespace WithBot
 
@@ -1067,16 +1117,10 @@ variable [Lattice α] [Lattice β] [BoundedOrder α] [BoundedOrder β] (f : α �
 include f
 
 theorem OrderIso.is_compl {x y : α} (h : IsCompl x y) : IsCompl (f x) (f y) :=
-  ⟨by
-    rw [← f.map_bot, ← f.map_inf, f.map_rel_iff]
-    exact h.1, by
-    rw [← f.map_top, ← f.map_sup, f.map_rel_iff]
-    exact h.2⟩
+  ⟨h.1.map_order_iso _, h.2.map_order_iso _⟩
 
 theorem OrderIso.is_compl_iff {x y : α} : IsCompl x y ↔ IsCompl (f x) (f y) :=
-  ⟨f.IsCompl, fun h => by
-    rw [← f.symm_apply_apply x, ← f.symm_apply_apply y]
-    exact f.symm.is_compl h⟩
+  ⟨f.IsCompl, fun h => f.symm_apply_apply x ▸ f.symm_apply_apply y ▸ f.symm.IsCompl h⟩
 
 theorem OrderIso.is_complemented [IsComplemented α] : IsComplemented β :=
   ⟨fun x => by

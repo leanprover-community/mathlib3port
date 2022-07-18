@@ -379,7 +379,7 @@ theorem summable_one_div_pow_of_le {m : ℝ} {f : ℕ → ℕ} (hm : 1 < m) (fi 
 
 
 /-- For any positive `ε`, define on an encodable type a positive sequence with sum less than `ε` -/
-def posSumOfEncodable {ε : ℝ} (hε : 0 < ε) ι [Encodable ι] :
+def posSumOfEncodable {ε : ℝ} (hε : 0 < ε) (ι) [Encodable ι] :
     { ε' : ι → ℝ // (∀ i, 0 < ε' i) ∧ ∃ c, HasSum ε' c ∧ c ≤ ε } := by
   let f := fun n => ε / 2 / 2 ^ n
   have hf : HasSum f ε := has_sum_geometric_two' _
@@ -415,7 +415,7 @@ theorem Set.Countable.exists_pos_forall_sum_le {ι : Type _} {s : Set ι} (hs : 
 
 namespace Nnreal
 
-theorem exists_pos_sum_of_encodable {ε : ℝ≥0 } (hε : ε ≠ 0) ι [Encodable ι] :
+theorem exists_pos_sum_of_encodable {ε : ℝ≥0 } (hε : ε ≠ 0) (ι) [Encodable ι] :
     ∃ ε' : ι → ℝ≥0 , (∀ i, 0 < ε' i) ∧ ∃ c, HasSum ε' c ∧ c < ε :=
   let ⟨a, a0, aε⟩ := exists_between (pos_iff_ne_zero.2 hε)
   let ⟨ε', hε', c, hc, hcε⟩ := posSumOfEncodable a0 ι
@@ -427,14 +427,14 @@ end Nnreal
 
 namespace Ennreal
 
-theorem exists_pos_sum_of_encodable {ε : ℝ≥0∞} (hε : ε ≠ 0) ι [Encodable ι] :
+theorem exists_pos_sum_of_encodable {ε : ℝ≥0∞} (hε : ε ≠ 0) (ι) [Encodable ι] :
     ∃ ε' : ι → ℝ≥0 , (∀ i, 0 < ε' i) ∧ (∑' i, (ε' i : ℝ≥0∞)) < ε := by
   rcases exists_between (pos_iff_ne_zero.2 hε) with ⟨r, h0r, hrε⟩
   rcases lt_iff_exists_coe.1 hrε with ⟨x, rfl, hx⟩
   rcases Nnreal.exists_pos_sum_of_encodable (coe_pos.1 h0r).ne' ι with ⟨ε', hp, c, hc, hcr⟩
   exact ⟨ε', hp, (Ennreal.tsum_coe_eq hc).symm ▸ lt_transₓ (coe_lt_coe.2 hcr) hrε⟩
 
-theorem exists_pos_sum_of_encodable' {ε : ℝ≥0∞} (hε : ε ≠ 0) ι [Encodable ι] :
+theorem exists_pos_sum_of_encodable' {ε : ℝ≥0∞} (hε : ε ≠ 0) (ι) [Encodable ι] :
     ∃ ε' : ι → ℝ≥0∞, (∀ i, 0 < ε' i) ∧ (∑' i, ε' i) < ε :=
   let ⟨δ, δpos, hδ⟩ := exists_pos_sum_of_encodable hε ι
   ⟨fun i => δ i, fun i => Ennreal.coe_pos.2 (δpos i), hδ⟩

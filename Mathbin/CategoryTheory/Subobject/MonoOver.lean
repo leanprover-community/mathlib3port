@@ -140,11 +140,11 @@ def lift {Y : D} (F : Over Y ⥤ Over X) (h : ∀ f : MonoOver Y, Mono (F.obj ((
 
 /-- Isomorphic functors `over Y ⥤ over X` lift to isomorphic functors `mono_over Y ⥤ mono_over X`.
 -/
-def liftIso {Y : D} {F₁ F₂ : Over Y ⥤ Over X} h₁ h₂ (i : F₁ ≅ F₂) : lift F₁ h₁ ≅ lift F₂ h₂ :=
+def liftIso {Y : D} {F₁ F₂ : Over Y ⥤ Over X} (h₁ h₂) (i : F₁ ≅ F₂) : lift F₁ h₁ ≅ lift F₂ h₂ :=
   fullyFaithfulCancelRight (MonoOver.forget X) (isoWhiskerLeft (MonoOver.forget Y) i)
 
 /-- `mono_over.lift` commutes with composition of functors. -/
-def liftComp {X Z : C} {Y : D} (F : Over X ⥤ Over Y) (G : Over Y ⥤ Over Z) h₁ h₂ :
+def liftComp {X Z : C} {Y : D} (F : Over X ⥤ Over Y) (G : Over Y ⥤ Over Z) (h₁ h₂) :
     lift F h₁ ⋙ lift G h₂ ≅ lift (F ⋙ G) fun f => h₂ ⟨_, h₁ f⟩ :=
   fullyFaithfulCancelRight (MonoOver.forget _) (Iso.refl _)
 
@@ -166,7 +166,7 @@ theorem lift_obj_arrow {Y : D} (F : Over Y ⥤ Over X)
 /-- Monomorphisms over an object `f : over A` in an over category
 are equivalent to monomorphisms over the source of `f`.
 -/
-def slice {A : C} {f : Over A} h₁ h₂ : MonoOver f ≌ MonoOver f.left where
+def slice {A : C} {f : Over A} (h₁ h₂) : MonoOver f ≌ MonoOver f.left where
   Functor := MonoOver.lift f.iteratedSliceEquiv.Functor h₁
   inverse := MonoOver.lift f.iteratedSliceEquiv.inverse h₂
   unitIso :=
@@ -412,7 +412,7 @@ def existsIsoMap (f : X ⟶ Y) [Mono f] : exists f ≅ map f :=
 
 /-- `exists` is adjoint to `pullback` when images exist -/
 def existsPullbackAdj (f : X ⟶ Y) [HasPullbacks C] : exists f ⊣ pullback f :=
-  Adjunction.restrictFullyFaithful (forget X) (𝟭 _) ((Over.mapPullbackAdj f).comp _ _ imageForgetAdj) (Iso.refl _)
+  Adjunction.restrictFullyFaithful (forget X) (𝟭 _) ((Over.mapPullbackAdj f).comp imageForgetAdj) (Iso.refl _)
     (Iso.refl _)
 
 end Exists

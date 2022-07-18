@@ -103,7 +103,7 @@ structure ShiftMkCore where
   ε : 𝟭 C ≅ F 0
   μ : ∀ n m : A, F n ⋙ F m ≅ F (n + m)
   associativity :
-    ∀ m₁ m₂ m₃ : A X : C,
+    ∀ (m₁ m₂ m₃ : A) (X : C),
       (F m₃).map ((μ m₁ m₂).Hom.app X) ≫
           (μ (m₁ + m₂) m₃).Hom.app X ≫
             eqToHom
@@ -114,7 +114,7 @@ structure ShiftMkCore where
     run_tac
       obviously
   left_unitality :
-    ∀ n : A X : C,
+    ∀ (n : A) (X : C),
       (F n).map (ε.Hom.app X) ≫ (μ 0 n).Hom.app X =
         eqToHom
           (by
@@ -123,7 +123,7 @@ structure ShiftMkCore where
     run_tac
       obviously
   right_unitality :
-    ∀ n : A X : C,
+    ∀ (n : A) (X : C),
       ε.Hom.app ((F n).obj X) ≫ (μ n 0).Hom.app X =
         eqToHom
           (by

@@ -237,8 +237,8 @@ theorem closure_supr_closure (f : ι → α) : c (⨆ i, c (f i)) = c (⨆ i, f 
   le_antisymmₓ ((c.le_closure_iff _ _).1 <| supr_le fun i => c.Monotone <| le_supr f i) <|
     c.Monotone <| supr_mono fun i => c.le_closure _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 @[simp]
 theorem closure_supr₂_closure (f : ∀ i, κ i → α) : c (⨆ (i) (j), c (f i j)) = c (⨆ (i) (j), f i j) :=
   le_antisymmₓ ((c.le_closure_iff _ _).1 <| supr₂_le fun i j => c.Monotone <| le_supr₂ i j) <|
@@ -398,8 +398,8 @@ variable [CompleteLattice α] [Preorderₓ β] {u : β → α} (l : LowerAdjoint
 theorem closure_supr_closure (f : ι → α) : u (l (⨆ i, u (l (f i)))) = u (l (⨆ i, f i)) :=
   l.ClosureOperator.closure_supr_closure _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem closure_supr₂_closure (f : ∀ i, κ i → α) : u (l <| ⨆ (i) (j), u (l <| f i j)) = u (l <| ⨆ (i) (j), f i j) :=
   l.ClosureOperator.closure_supr₂_closure _
 
@@ -444,8 +444,8 @@ theorem closure_union_closure (x y : α) : l (l x ∪ l y) = l (x ∪ y) :=
 theorem closure_Union_closure (f : ι → α) : l (⋃ i, l (f i)) = l (⋃ i, f i) :=
   SetLike.coe_injective <| l.closure_supr_closure _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 @[simp]
 theorem closure_Union₂_closure (f : ∀ i, κ i → α) : l (⋃ (i) (j), l (f i j)) = l (⋃ (i) (j), f i j) :=
   SetLike.coe_injective <| l.closure_supr₂_closure _

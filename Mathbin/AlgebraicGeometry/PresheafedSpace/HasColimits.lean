@@ -63,7 +63,7 @@ namespace PresheafedSpace
 attribute [local simp] eq_to_hom_map
 
 @[simp]
-theorem map_id_c_app (F : J ⥤ PresheafedSpace.{v} C) j U :
+theorem map_id_c_app (F : J ⥤ PresheafedSpace.{v} C) (j) (U) :
     (F.map (𝟙 j)).c.app (op U) =
       (Pushforward.id (F.obj j).Presheaf).inv.app (op U) ≫
         (pushforwardEq
@@ -79,7 +79,7 @@ theorem map_id_c_app (F : J ⥤ PresheafedSpace.{v} C) j U :
   rfl
 
 @[simp]
-theorem map_comp_c_app (F : J ⥤ PresheafedSpace.{v} C) {j₁ j₂ j₃} (f : j₁ ⟶ j₂) (g : j₂ ⟶ j₃) U :
+theorem map_comp_c_app (F : J ⥤ PresheafedSpace.{v} C) {j₁ j₂ j₃} (f : j₁ ⟶ j₂) (g : j₂ ⟶ j₃) (U) :
     (F.map (f ≫ g)).c.app (op U) =
       (F.map g).c.app (op U) ≫
         (pushforwardMap (F.map g).base (F.map f).c).app (op U) ≫

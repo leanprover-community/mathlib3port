@@ -237,9 +237,9 @@ section BeckMonadicity
 /-- To show `G` is a monadic right adjoint, we can show it preserves and reflects `G`-split
 coequalizers, and `C` has them.
 -/
-def monadicOfHasPreservesReflectsGSplitCoequalizers [∀ ⦃A B⦄ f g : A ⟶ B [G.IsSplitPair f g], HasCoequalizer f g]
-    [∀ ⦃A B⦄ f g : A ⟶ B [G.IsSplitPair f g], PreservesColimit (parallelPair f g) G]
-    [∀ ⦃A B⦄ f g : A ⟶ B [G.IsSplitPair f g], ReflectsColimit (parallelPair f g) G] : MonadicRightAdjoint G := by
+def monadicOfHasPreservesReflectsGSplitCoequalizers [∀ ⦃A B⦄ (f g : A ⟶ B) [G.IsSplitPair f g], HasCoequalizer f g]
+    [∀ ⦃A B⦄ (f g : A ⟶ B) [G.IsSplitPair f g], PreservesColimit (parallelPair f g) G]
+    [∀ ⦃A B⦄ (f g : A ⟶ B) [G.IsSplitPair f g], ReflectsColimit (parallelPair f g) G] : MonadicRightAdjoint G := by
   let L : (adjunction.of_right_adjoint G).toMonad.Algebra ⥤ D := left_adjoint_comparison
   let i : is_right_adjoint (comparison (of_right_adjoint G)) := ⟨_, comparison_adjunction⟩
   constructor
@@ -274,9 +274,9 @@ def monadicOfHasPreservesReflectsGSplitCoequalizers [∀ ⦃A B⦄ f g : A ⟶ B
 then it is monadic.
 This is the converse of `creates_G_split_of_monadic`.
 -/
-def monadicOfCreatesGSplitCoequalizers [∀ ⦃A B⦄ f g : A ⟶ B [G.IsSplitPair f g], CreatesColimit (parallelPair f g) G] :
-    MonadicRightAdjoint G := by
-  let this : ∀ ⦃A B⦄ f g : A ⟶ B [G.is_split_pair f g], has_colimit (parallel_pair f g ⋙ G) := by
+def monadicOfCreatesGSplitCoequalizers
+    [∀ ⦃A B⦄ (f g : A ⟶ B) [G.IsSplitPair f g], CreatesColimit (parallelPair f g) G] : MonadicRightAdjoint G := by
+  let this : ∀ ⦃A B⦄ (f g : A ⟶ B) [G.is_split_pair f g], has_colimit (parallel_pair f g ⋙ G) := by
     intro A B f g i
     apply has_colimit_of_iso (diagramIsoParallelPair.{v₁} _)
     change has_coequalizer (G.map f) (G.map g)
@@ -298,8 +298,8 @@ def monadicOfCreatesGSplitCoequalizers [∀ ⦃A B⦄ f g : A ⟶ B [G.IsSplitPa
 coequalizers of `G`-split pairs and `C` has coequalizers of `G`-split pairs, then it is monadic.
 -/
 def monadicOfHasPreservesGSplitCoequalizersOfReflectsIsomorphisms [ReflectsIsomorphisms G]
-    [∀ ⦃A B⦄ f g : A ⟶ B [G.IsSplitPair f g], HasCoequalizer f g]
-    [∀ ⦃A B⦄ f g : A ⟶ B [G.IsSplitPair f g], PreservesColimit (parallelPair f g) G] : MonadicRightAdjoint G := by
+    [∀ ⦃A B⦄ (f g : A ⟶ B) [G.IsSplitPair f g], HasCoequalizer f g]
+    [∀ ⦃A B⦄ (f g : A ⟶ B) [G.IsSplitPair f g], PreservesColimit (parallelPair f g) G] : MonadicRightAdjoint G := by
   apply monadic_of_has_preserves_reflects_G_split_coequalizers _
   · infer_instance
     
@@ -317,7 +317,7 @@ section ReflexiveMonadicity
 
 variable [HasReflexiveCoequalizers D] [ReflectsIsomorphisms G]
 
-variable [∀ ⦃A B⦄ f g : A ⟶ B [IsReflexivePair f g], PreservesColimit (parallelPair f g) G]
+variable [∀ ⦃A B⦄ (f g : A ⟶ B) [IsReflexivePair f g], PreservesColimit (parallelPair f g) G]
 
 /-- Reflexive (crude) monadicity theorem. If `G` has a right adjoint, `D` has and `G` preserves
 reflexive coequalizers and `G` reflects isomorphisms, then `G` is monadic.

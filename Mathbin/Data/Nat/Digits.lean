@@ -89,7 +89,7 @@ theorem digits_zero_zero : digits 0 0 = [] :=
 theorem digits_zero_succ (n : ℕ) : digits 0 n.succ = [n + 1] :=
   rfl
 
-theorem digits_zero_succ' : ∀ {n : ℕ} w : 0 < n, digits 0 n = [n]
+theorem digits_zero_succ' : ∀ {n : ℕ} (w : 0 < n), digits 0 n = [n]
   | 0, h =>
     absurd h
       (by
@@ -110,7 +110,7 @@ theorem digits_add_two_add_one (b n : ℕ) :
   rw [digits, digits_aux_def]
   exact succ_pos n
 
-theorem digits_def' : ∀ {b : ℕ} h : 2 ≤ b {n : ℕ} w : 0 < n, digits b n = n % b :: digits b (n / b)
+theorem digits_def' : ∀ {b : ℕ} (h : 2 ≤ b) {n : ℕ} (w : 0 < n), digits b n = n % b :: digits b (n / b)
   | 0, h =>
     absurd h
       (by
@@ -373,7 +373,7 @@ theorem digits_eq_cons_digits_div {b n : ℕ} (h : 2 ≤ b) (w : 0 < n) : digits
     
   simp
 
-theorem digits_last {b : ℕ} (m : ℕ) (h : 2 ≤ b) p q : (digits b m).last p = (digits b (m / b)).last q := by
+theorem digits_last {b : ℕ} (m : ℕ) (h : 2 ≤ b) (p q) : (digits b m).last p = (digits b (m / b)).last q := by
   by_cases' hm : m = 0
   · simp [← hm]
     
@@ -703,7 +703,7 @@ theorem eleven_dvd_of_palindrome (p : (digits 10 n).Palindrome) (h : Even (digit
 
 namespace NormDigits
 
-theorem digits_succ b n m r l (e : r + b * m = n) (hr : r < b) (h : Nat.digits b m = l ∧ 2 ≤ b ∧ 0 < m) :
+theorem digits_succ (b n m r l) (e : r + b * m = n) (hr : r < b) (h : Nat.digits b m = l ∧ 2 ≤ b ∧ 0 < m) :
     Nat.digits b n = r :: l ∧ 2 ≤ b ∧ 0 < n := by
   rcases h with ⟨h, b2, m0⟩
   have b0 : 0 < b := by
@@ -715,7 +715,7 @@ theorem digits_succ b n m r l (e : r + b * m = n) (hr : r < b) (h : Nat.digits b
   subst h
   exact Nat.digits_def' b2 n0
 
-theorem digits_one b n (n0 : 0 < n) (nb : n < b) : Nat.digits b n = [n] ∧ 2 ≤ b ∧ 0 < n := by
+theorem digits_one (b n) (n0 : 0 < n) (nb : n < b) : Nat.digits b n = [n] ∧ 2 ≤ b ∧ 0 < n := by
   have b2 : 2 ≤ b := by
     linarith
   refine' ⟨_, b2, n0⟩

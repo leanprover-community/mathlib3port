@@ -55,13 +55,13 @@ section TopologicalVectorSpace
 variable [Semiringₓ R] [∀ x, AddCommMonoidₓ (E x)] [∀ x, Module R (E x)] [TopologicalSpace F] [AddCommMonoidₓ F]
   [Module R F] [TopologicalSpace B]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1432:11: unsupported: advanced extends in structure
+-- ./././Mathport/Syntax/Translate/Basic.lean:1467:11: unsupported: advanced extends in structure
 /-- A pretrivialization for a (yet to be defined) topological vector bundle `total_space E` is a
 local equiv between sets of the form `proj ⁻¹' base_set` and `base_set × F` which respects the
 first coordinate, and is linear in each fiber. -/
-@[nolint has_inhabited_instance]
+@[ext, nolint has_inhabited_instance]
 structure TopologicalVectorBundle.Pretrivialization extends
-  "./././Mathport/Syntax/Translate/Basic.lean:1432:11: unsupported: advanced extends in structure" where
+  "./././Mathport/Syntax/Translate/Basic.lean:1467:11: unsupported: advanced extends in structure" where
   linear' : ∀, ∀ x ∈ base_set, ∀, IsLinearMap R fun y : E x => (to_fun (totalSpaceMk x y)).2
 
 instance : CoeFun (TopologicalVectorBundle.Pretrivialization R F E) _ :=
@@ -240,15 +240,15 @@ end TopologicalVectorBundle.Pretrivialization
 
 variable [TopologicalSpace (TotalSpace E)]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1432:11: unsupported: advanced extends in structure
+-- ./././Mathport/Syntax/Translate/Basic.lean:1467:11: unsupported: advanced extends in structure
 /-- A structure extending local homeomorphisms, defining a local trivialization of the projection
 `proj : total_space E → B` with fiber `F`, as a local homeomorphism between `total_space E`
 and `B × F` defined between two sets of the form `proj ⁻¹' base_set` and `base_set × F`,
 acting trivially on the first coordinate and linear in the fibers.
 -/
-@[nolint has_inhabited_instance]
+@[ext, nolint has_inhabited_instance]
 structure TopologicalVectorBundle.Trivialization extends
-  "./././Mathport/Syntax/Translate/Basic.lean:1432:11: unsupported: advanced extends in structure" where
+  "./././Mathport/Syntax/Translate/Basic.lean:1467:11: unsupported: advanced extends in structure" where
   linear' : ∀, ∀ x ∈ base_set, ∀, IsLinearMap R fun y : E x => (to_fun (totalSpaceMk x y)).2
 
 open TopologicalVectorBundle
@@ -272,6 +272,12 @@ protected theorem linear (hb : b ∈ e.BaseSet) : IsLinearMap R fun y : E b => (
 
 protected theorem continuous_on : ContinuousOn e e.Source :=
   e.continuous_to_fun
+
+theorem to_pretrivialization_injective : Function.Injective fun e : Trivialization R F E => e.toPretrivialization := by
+  intro e e'
+  rw [pretrivialization.ext_iff, trivialization.ext_iff, ←
+    topological_fiber_bundle.trivialization.to_pretrivialization_injective.eq_iff]
+  exact id
 
 @[simp, mfld_simps]
 theorem coe_coe : ⇑e.toLocalHomeomorph = e :=
@@ -369,7 +375,7 @@ theorem apply_mk_symm (e : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet) 
 theorem continuous_on_symm (e : Trivialization R F E) :
     ContinuousOn (fun z : B × F => totalSpaceMk z.1 (e.symm z.1 z.2)) (e.BaseSet ×ˢ (Univ : Set F)) := by
   have :
-    ∀ z : B × F hz : z ∈ e.base_set ×ˢ (univ : Set F),
+    ∀ (z : B × F) (hz : z ∈ e.base_set ×ˢ (univ : Set F)),
       total_space_mk z.1 (e.symm z.1 z.2) = e.to_local_homeomorph.symm z :=
     by
     rintro x ⟨hx : x.1 ∈ e.base_set, _⟩
@@ -511,13 +517,13 @@ def ContinuousTransitions (e : LocalEquiv (B × F) (B × F)) : Prop :=
 
 variable {B}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`total_space_mk_inducing] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`TrivializationAtlas] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`trivializationAt] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`mem_base_set_trivialization_at] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`trivialization_mem_atlas] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`continuous_on_coord_change] []
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (e e' «expr ∈ » trivialization_atlas)
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`total_space_mk_inducing] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`TrivializationAtlas] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`trivializationAt] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`mem_base_set_trivialization_at] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`trivialization_mem_atlas] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`continuous_on_coord_change] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (e e' «expr ∈ » trivialization_atlas)
 /-- The space `total_space E` (for `E : B → Type*` such that each `E x` is a topological vector
 space) has a topological vector space structure with fiber `F` (denoted with
 `topological_vector_bundle R F E`) if around every point there is a fiber bundle trivialization
@@ -529,7 +535,7 @@ class TopologicalVectorBundle where
   mem_base_set_trivialization_at : ∀ b : B, b ∈ (trivialization_at b).BaseSet
   trivialization_mem_atlas : ∀ b : B, trivialization_at b ∈ trivialization_atlas
   continuous_on_coord_change :
-    ∀ e e' _ : e ∈ trivialization_atlas _ : e' ∈ trivialization_atlas,
+    ∀ (e e') (_ : e ∈ trivialization_atlas) (_ : e' ∈ trivialization_atlas),
       ContinuousOn (fun b => Trivialization.coordChange e e' b : B → F →L[R] F) (e.BaseSet ∩ e'.BaseSet)
 
 export
@@ -991,7 +997,7 @@ open TopologicalSpace
 
 open TopologicalVectorBundle
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas)
 /-- This structure permits to define a vector bundle when trivializations are given as local
 equivalences but there is not yet a topology on the total space or the fibers.
 The total space is hence given a topology in such a way that there is a fiber bundle structure for
@@ -1009,10 +1015,10 @@ structure TopologicalVectorPrebundle where
   mem_base_pretrivialization_at : ∀ x : B, x ∈ (pretrivialization_at x).BaseSet
   pretrivialization_mem_atlas : ∀ x : B, pretrivialization_at x ∈ pretrivialization_atlas
   exists_coord_change :
-    ∀ e e' _ : e ∈ pretrivialization_atlas _ : e' ∈ pretrivialization_atlas,
+    ∀ (e e') (_ : e ∈ pretrivialization_atlas) (_ : e' ∈ pretrivialization_atlas),
       ∃ f : B → F →L[R] F,
         ContinuousOn f (e.BaseSet ∩ e'.BaseSet) ∧
-          ∀ b : B hb : b ∈ e.BaseSet ∩ e'.BaseSet v : F, f b v = (e' (totalSpaceMk b (e.symm b v))).2
+          ∀ (b : B) (hb : b ∈ e.BaseSet ∩ e'.BaseSet) (v : F), f b v = (e' (totalSpaceMk b (e.symm b v))).2
 
 namespace TopologicalVectorPrebundle
 

@@ -584,7 +584,7 @@ protected theorem complete_space [∀ i, CompleteSpace (E i)] : CompleteSpace (�
     intro i
     simp only [← s, range_sigma_mk]
     exact (isometry_mk i).UniformInducing.is_complete_range
-  have hd : ∀ i j, ∀ x ∈ s i, ∀, ∀ y ∈ s j, ∀, (x, y) ∈ U → i = j := fun i j x hx y hy hxy =>
+  have hd : ∀ (i j), ∀ x ∈ s i, ∀, ∀ y ∈ s j, ∀, (x, y) ∈ U → i = j := fun i j x hx y hy hxy =>
     (Eq.symm hx).trans ((fst_eq_of_dist_lt_one _ _ hxy).trans hy)
   refine' complete_space_of_is_complete_univ _
   convert is_complete_Union_separated hc (dist_mem_uniformity zero_lt_one) hd

@@ -124,11 +124,11 @@ theorem congr_fun {f g : A →ₙₐ[R] B} (h : f = g) (x : A) : f x = g x :=
   h ▸ rfl
 
 @[simp]
-theorem coe_mk (f : A → B) h₁ h₂ h₃ h₄ : ((⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) : A → B) = f :=
+theorem coe_mk (f : A → B) (h₁ h₂ h₃ h₄) : ((⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) : A → B) = f :=
   rfl
 
 @[simp]
-theorem mk_coe (f : A →ₙₐ[R] B) h₁ h₂ h₃ h₄ : (⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) = f := by
+theorem mk_coe (f : A →ₙₐ[R] B) (h₁ h₂ h₃ h₄) : (⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) = f := by
   ext
   rfl
 
@@ -163,13 +163,13 @@ theorem to_mul_hom_injective {f g : A →ₙₐ[R] B} (h : (f : A →ₙ* B) = (
   exact MulHom.congr_fun h a
 
 @[norm_cast]
-theorem coe_distrib_mul_action_hom_mk (f : A →ₙₐ[R] B) h₁ h₂ h₃ h₄ :
+theorem coe_distrib_mul_action_hom_mk (f : A →ₙₐ[R] B) (h₁ h₂ h₃ h₄) :
     ((⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) : A →+[R] B) = ⟨f, h₁, h₂, h₃⟩ := by
   ext
   rfl
 
 @[norm_cast]
-theorem coe_mul_hom_mk (f : A →ₙₐ[R] B) h₁ h₂ h₃ h₄ : ((⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) : A →ₙ* B) = ⟨f, h₄⟩ := by
+theorem coe_mul_hom_mk (f : A →ₙₐ[R] B) (h₁ h₂ h₃ h₄) : ((⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) : A →ₙ* B) = ⟨f, h₄⟩ := by
   ext
   rfl
 

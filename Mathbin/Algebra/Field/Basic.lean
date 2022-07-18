@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 -/
 import Mathbin.Algebra.Hom.Ring
+import Mathbin.Data.Rat.Defs
 
 /-!
 # Division (semi)rings and (semi)fields
@@ -376,9 +377,9 @@ end NoncomputableDefs
 protected def Function.Injective.divisionSemiring [DivisionSemiring β] [Zero α] [Mul α] [Add α] [One α] [Inv α] [Div α]
     [HasSmul ℕ α] [Pow α ℕ] [Pow α ℤ] [HasNatCast α] (f : α → β) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
-    (div : ∀ x y, f (x / y) = f x / f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) :
-    DivisionSemiring α :=
+    (div : ∀ x y, f (x / y) = f x / f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
+    (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n)
+    (nat_cast : ∀ n : ℕ, f n = n) : DivisionSemiring α :=
   { hf.GroupWithZero f zero one mul inv div npow zpow, hf.Semiring f zero one add mul nsmul npow nat_cast with }
 
 /-- Pullback a `division_ring` along an injective function.
@@ -388,9 +389,9 @@ protected def Function.Injective.divisionRing [DivisionRing K] {K'} [Zero K'] [O
     [Sub K'] [Inv K'] [Div K'] [HasSmul ℕ K'] [HasSmul ℤ K'] [Pow K' ℕ] [Pow K' ℤ] [HasNatCast K'] [HasIntCast K']
     (f : K' → K) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
     (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y)
-    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n)
-    (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) :
+    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
+    (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
+    (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) :
     DivisionRing K' :=
   { hf.GroupWithZero f zero one mul inv div npow zpow,
     hf.Ring f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with }
@@ -401,9 +402,9 @@ protected def Function.Injective.divisionRing [DivisionRing K] {K'} [Zero K'] [O
 protected def Function.Injective.semifield [Semifield β] [Zero α] [Mul α] [Add α] [One α] [Inv α] [Div α] [HasSmul ℕ α]
     [Pow α ℕ] [Pow α ℤ] [HasNatCast α] (f : α → β) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
-    (div : ∀ x y, f (x / y) = f x / f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) :
-    Semifield α :=
+    (div : ∀ x y, f (x / y) = f x / f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
+    (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n)
+    (nat_cast : ∀ n : ℕ, f n = n) : Semifield α :=
   { hf.CommGroupWithZero f zero one mul inv div npow zpow, hf.CommSemiring f zero one add mul nsmul npow nat_cast with }
 
 /-- Pullback a `field` along an injective function.
@@ -413,9 +414,10 @@ protected def Function.Injective.field [Field K] {K'} [Zero K'] [Mul K'] [Add K'
     [Div K'] [HasSmul ℕ K'] [HasSmul ℤ K'] [Pow K' ℕ] [Pow K' ℤ] [HasNatCast K'] [HasIntCast K'] (f : K' → K)
     (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
     (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y)
-    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
-    (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n)
-    (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) : Field K' :=
+    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
+    (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
+    (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) :
+    Field K' :=
   { hf.CommGroupWithZero f zero one mul inv div npow zpow,
     hf.CommRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with }
 

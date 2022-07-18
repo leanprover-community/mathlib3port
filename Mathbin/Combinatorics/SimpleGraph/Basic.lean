@@ -94,7 +94,6 @@ structure SimpleGraph (V : Type u) where
     run_tac
       obviously
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 noncomputable instance {V : Type u} [Fintype V] : Fintype (SimpleGraph V) := by
   classical
   exact Fintype.ofInjective SimpleGraph.Adj SimpleGraph.ext
@@ -384,6 +383,9 @@ abbrev Dart.fst (d : G.Dart) : V :=
 abbrev Dart.snd (d : G.Dart) : V :=
   d.snd
 
+theorem Dart.to_prod_injective : Function.Injective (Dart.toProd : G.Dart → V × V) :=
+  dart.ext
+
 instance Dart.fintype [Fintype V] [DecidableRel G.Adj] : Fintype G.Dart :=
   Fintype.ofEquiv (Σv, G.NeighborSet v)
     { toFun := fun s => ⟨(s.fst, s.snd), s.snd.property⟩, invFun := fun d => ⟨d.fst, d.snd, d.is_adj⟩,
@@ -566,7 +568,6 @@ theorem neighbor_set_union_compl_neighbor_set_eq (G : SimpleGraph V) (v : V) :
   simp_rw [Set.mem_union, mem_neighbor_set, compl_adj, Set.mem_compl_eq, Set.mem_singleton_iff]
   tauto
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- TODO find out why TC inference has `h` failing a defeq check for `to_finset`
 theorem card_neighbor_set_union_compl_neighbor_set [Fintype V] (G : SimpleGraph V) (v : V)
     [h : Fintype (G.NeighborSet v ∪ Gᶜ.NeighborSet v : Set V)] :
@@ -701,6 +702,85 @@ theorem delete_edges_eq_inter_edge_set (s : Set (Sym2 V)) : G.deleteEdges s = G.
   ext
   simp (config := { contextual := true })[← imp_false]
 
+/-! ## Map and comap -/
+
+
+/-- Given an injective function, there is an covariant induced map on graphs by pushing forward
+the adjacency relation.
+
+This is injective (see `simple_graph.map_injective`). -/
+protected def map (f : V ↪ W) (G : SimpleGraph V) : SimpleGraph W where Adj := Relation.Map G.Adj f f
+
+@[simp]
+theorem map_adj (f : V ↪ W) (G : SimpleGraph V) (u v : W) :
+    (G.map f).Adj u v ↔ ∃ u' v' : V, G.Adj u' v' ∧ f u' = u ∧ f v' = v :=
+  Iff.rfl
+
+theorem map_monotone (f : V ↪ W) : Monotone (SimpleGraph.map f) := by
+  rintro G G' h _ _ ⟨u, v, ha, rfl, rfl⟩
+  exact ⟨_, _, h ha, rfl, rfl⟩
+
+/-- Given a function, there is a contravariant induced map on graphs by pulling back the
+adjacency relation.
+This is one of the ways of creating induced graphs. See `simple_graph.induce` for a wrapper.
+
+This is surjective when `f` is injective (see `simple_graph.comap_surjective`).-/
+@[simps]
+protected def comap (f : V → W) (G : SimpleGraph W) : SimpleGraph V where Adj := fun u v => G.Adj (f u) (f v)
+
+theorem comap_monotone (f : V ↪ W) : Monotone (SimpleGraph.comap f) := by
+  intro G G' h _ _ ha
+  exact h ha
+
+@[simp]
+theorem comap_map_eq (f : V ↪ W) (G : SimpleGraph V) : (G.map f).comap f = G := by
+  ext
+  simp
+
+theorem left_inverse_comap_map (f : V ↪ W) : Function.LeftInverse (SimpleGraph.comap f) (SimpleGraph.map f) :=
+  comap_map_eq f
+
+theorem map_injective (f : V ↪ W) : Function.Injective (SimpleGraph.map f) :=
+  (left_inverse_comap_map f).Injective
+
+theorem comap_surjective (f : V ↪ W) : Function.Surjective (SimpleGraph.comap f) :=
+  (left_inverse_comap_map f).Surjective
+
+theorem map_le_iff_le_comap (f : V ↪ W) (G : SimpleGraph V) (G' : SimpleGraph W) : G.map f ≤ G' ↔ G ≤ G'.comap f :=
+  ⟨fun h u v ha => h ⟨_, _, ha, rfl, rfl⟩, by
+    rintro h _ _ ⟨u, v, ha, rfl, rfl⟩
+    exact h ha⟩
+
+theorem map_comap_le (f : V ↪ W) (G : SimpleGraph W) : (G.comap f).map f ≤ G := by
+  rw [map_le_iff_le_comap]
+  exact le_reflₓ _
+
+/-! ## Induced graphs -/
+
+
+/-- Restrict a graph to the vertices in the set `s`, deleting all edges incident to vertices
+outside the set. This is a wrapper around `simple_graph.comap`. -/
+/- Given a set `s` of vertices, we can restrict a graph to those vertices by restricting its
+adjacency relation. This gives a map between `simple_graph V` and `simple_graph s`.
+
+There is also a notion of induced subgraphs (see `simple_graph.subgraph.induce`). -/
+@[reducible]
+def induce (s : Set V) (G : SimpleGraph V) : SimpleGraph s :=
+  G.comap (Function.Embedding.subtype _)
+
+/-- Given a graph on a set of vertices, we can make it be a `simple_graph V` by
+adding in the remaining vertices without adding in any additional edges.
+This is a wrapper around `simple_graph.map`. -/
+@[reducible]
+def spanningCoe {s : Set V} (G : SimpleGraph s) : SimpleGraph V :=
+  G.map (Function.Embedding.subtype _)
+
+theorem induce_spanning_coe {s : Set V} {G : SimpleGraph s} : G.spanningCoe.induce s = G :=
+  comap_map_eq _ _
+
+theorem spanning_coe_induce_le (s : Set V) : (G.induce s).spanningCoe ≤ G :=
+  map_comap_le _ _
+
 section FiniteAt
 
 /-!
@@ -742,7 +822,6 @@ theorem card_neighbor_set_eq_degree : Fintype.card (G.NeighborSet v) = G.degree 
 theorem degree_pos_iff_exists_adj : 0 < G.degree v ↔ ∃ w, G.Adj v w := by
   simp only [← degree, ← card_pos, ← Finset.Nonempty, ← mem_neighbor_finset]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem degree_compl [Fintype (Gᶜ.NeighborSet v)] [Fintype V] : Gᶜ.degree v = Fintype.card V - 1 - G.degree v := by
   classical
   rw [← card_neighbor_set_union_compl_neighbor_set G v, Set.to_finset_union]
@@ -836,7 +915,7 @@ The key properties of this are given in `exists_minimal_degree_vertex`, `min_deg
 and `le_min_degree_of_forall_le_degree`.
 -/
 def minDegree [DecidableRel G.Adj] : ℕ :=
-  Option.getOrElse (univ.Image fun v => G.degree v).min 0
+  WithTop.untop' 0 (univ.Image fun v => G.degree v).min
 
 /-- There exists a vertex of minimal degree. Note the assumption of being nonempty is necessary, as
 the lemma implies there exists a vertex.
@@ -852,8 +931,7 @@ theorem exists_minimal_degree_vertex [DecidableRel G.Adj] [Nonempty V] : ∃ v, 
 theorem min_degree_le_degree [DecidableRel G.Adj] (v : V) : G.minDegree ≤ G.degree v := by
   obtain ⟨t, ht⟩ := Finset.min_of_mem (mem_image_of_mem (fun v => G.degree v) (mem_univ v))
   have := Finset.min_le_of_mem (mem_image_of_mem _ (mem_univ v)) ht
-  rw [Option.mem_def] at ht
-  rwa [min_degree, ht, Option.get_or_else_some]
+  rwa [min_degree, ht]
 
 /-- In a nonempty graph, if `k` is at most the degree of every vertex, it is at most the minimum
 degree. Note the assumption that the graph is nonempty is necessary as long as `G.min_degree` is
@@ -880,7 +958,6 @@ theorem exists_maximal_degree_vertex [DecidableRel G.Adj] [Nonempty V] : ∃ v, 
   have ht₂ := mem_of_max ht
   simp only [← mem_image, ← mem_univ, ← exists_prop_of_true] at ht₂
   rcases ht₂ with ⟨v, rfl⟩
-  rw [Option.mem_def] at ht
   refine' ⟨v, _⟩
   rw [max_degree, ht]
   rfl
@@ -889,7 +966,7 @@ theorem exists_maximal_degree_vertex [DecidableRel G.Adj] [Nonempty V] : ∃ v, 
 theorem degree_le_max_degree [DecidableRel G.Adj] (v : V) : G.degree v ≤ G.maxDegree := by
   obtain ⟨t, ht : _ = _⟩ := Finset.max_of_mem (mem_image_of_mem (fun v => G.degree v) (mem_univ v))
   have := Finset.le_max_of_mem (mem_image_of_mem _ (mem_univ v)) ht
-  rwa [max_degree, ht, Option.get_or_else_some]
+  rwa [max_degree, ht]
 
 /-- In a graph, if `k` is at least the degree of every vertex, then it is at least the maximum
 degree.
@@ -906,7 +983,6 @@ theorem max_degree_le_of_forall_degree_le [DecidableRel G.Adj] (k : ℕ) (h : �
     exact zero_le k
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem degree_lt_card_verts [DecidableRel G.Adj] (v : V) : G.degree v < Fintype.card V := by
   classical
   apply Finset.card_lt_card
@@ -937,7 +1013,6 @@ theorem card_common_neighbors_lt_card_verts [DecidableRel G.Adj] (v w : V) :
     Fintype.card (G.CommonNeighbors v w) < Fintype.card V :=
   Nat.lt_of_le_of_ltₓ (G.card_common_neighbors_le_degree_left _ _) (G.degree_lt_card_verts v)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If the condition `G.adj v w` fails, then `card_common_neighbors_le_degree` is
 the best we can do in general.
 -/
@@ -1054,6 +1129,20 @@ theorem mapEdgeSet.injective (hinj : Function.Injective f) : Function.Injective 
     rw [Subtype.mk_eq_mk]
   apply Sym2.map.injective hinj
 
+/-- Every graph homomomorphism from a complete graph is injective. -/
+theorem injective_of_top_hom (f : (⊤ : SimpleGraph V) →g G') : Function.Injective f := by
+  intro v w h
+  contrapose! h
+  exact G'.ne_of_adj (map_adj _ ((top_adj _ _).mpr h))
+
+/-- There is a homomorphism to a graph from a comapped graph.
+When the function is injective, this is an embedding (see `simple_graph.embedding.comap`). -/
+@[simps]
+protected def comap (f : V → W) (G : SimpleGraph W) : G.comap f →g G where
+  toFun := f
+  map_rel' := by
+    simp
+
 variable {G'' : SimpleGraph X}
 
 /-- Composition of graph homomorphisms. -/
@@ -1102,12 +1191,39 @@ def mapNeighborSet (v : V) : G.NeighborSet v ↪ G'.NeighborSet (f v) where
     rw [Subtype.mk_eq_mk] at h⊢
     exact f.inj' h
 
+/-- Given an injective function, there is an embedding from the comapped graph into the original
+graph. -/
+@[simps]
+protected def comap (f : V ↪ W) (G : SimpleGraph W) : G.comap f ↪g G :=
+  { f with
+    map_rel_iff' := by
+      simp }
+
+/-- Given an injective function, there is an embedding from a graph into the mapped graph. -/
+@[simps]
+protected def map (f : V ↪ W) (G : SimpleGraph V) : G ↪g G.map f :=
+  { f with
+    map_rel_iff' := by
+      simp }
+
+/-- Induced graphs embed in the original graph.
+
+Note that if `G.induce s = ⊤` (i.e., if `s` is a clique) then this gives the embedding of a
+complete graph. -/
+@[reducible]
+protected def induce (s : Set V) : G.induce s ↪g G :=
+  SimpleGraph.Embedding.comap (Function.Embedding.subtype _) G
+
+/-- Graphs on a set of vertices embed in their `spanning_coe`. -/
+@[reducible]
+protected def spanningCoe {s : Set V} (G : SimpleGraph s) : G ↪g G.spanningCoe :=
+  SimpleGraph.Embedding.map (Function.Embedding.subtype _) G
+
 /-- Embeddings of types induce embeddings of complete graphs on those types. -/
-protected def completeGraph {α β : Type _} (f : α ↪ β) : (⊤ : SimpleGraph α) ↪g (⊤ : SimpleGraph β) where
-  toFun := f
-  inj' := f.inj'
-  map_rel_iff' := by
-    simp
+protected def completeGraph {α β : Type _} (f : α ↪ β) : (⊤ : SimpleGraph α) ↪g (⊤ : SimpleGraph β) :=
+  { f with
+    map_rel_iff' := by
+      simp }
 
 variable {G'' : SimpleGraph X}
 
@@ -1185,6 +1301,31 @@ def mapNeighborSet (v : V) : G.NeighborSet v ≃ G'.NeighborSet (f v) where
 
 theorem card_eq_of_iso [Fintype V] [Fintype W] (f : G ≃g G') : Fintype.card V = Fintype.card W := by
   convert (Fintype.of_equiv_card f.to_equiv).symm
+
+/-- Given a bijection, there is an embedding from the comapped graph into the original
+graph. -/
+@[simps]
+protected def comap (f : V ≃ W) (G : SimpleGraph W) : G.comap f.toEmbedding ≃g G :=
+  { f with
+    map_rel_iff' := by
+      simp }
+
+/-- Given an injective function, there is an embedding from a graph into the mapped graph. -/
+@[simps]
+protected def map (f : V ≃ W) (G : SimpleGraph V) : G ≃g G.map f.toEmbedding :=
+  { f with
+    map_rel_iff' := by
+      simp }
+
+/-- Equivalences of types induce isomorphisms of complete graphs on those types. -/
+protected def completeGraph {α β : Type _} (f : α ≃ β) : (⊤ : SimpleGraph α) ≃g (⊤ : SimpleGraph β) :=
+  { f with
+    map_rel_iff' := by
+      simp }
+
+theorem to_embedding_complete_graph {α β : Type _} (f : α ≃ β) :
+    (Iso.completeGraph f).toEmbedding = Embedding.completeGraph f.toEmbedding :=
+  rfl
 
 variable {G'' : SimpleGraph X}
 

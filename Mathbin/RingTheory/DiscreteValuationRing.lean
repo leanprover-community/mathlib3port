@@ -29,7 +29,7 @@ Let R be an integral domain, assumed to be a principal ideal ring and a local ri
 
 ### Definitions
 
-* `add_val R : add_valuation R enat` : the additive valuation on a DVR.
+* `add_val R : add_valuation R part_enat` : the additive valuation on a DVR.
 
 ## Implementation notes
 
@@ -163,7 +163,7 @@ include hR
 
 theorem unique_irreducible ⦃p q : R⦄ (hp : Irreducible p) (hq : Irreducible q) : Associated p q := by
   rcases hR with ⟨ϖ, hϖ, hR⟩
-  suffices ∀ {p : R} hp : Irreducible p, Associated p ϖ by
+  suffices ∀ {p : R} (hp : Irreducible p), Associated p ϖ by
     apply Associated.trans (this hp) (this hq).symm
   clear hp hq p q
   intro p hp
@@ -396,8 +396,8 @@ theorem unit_mul_pow_congr_unit {ϖ : R} (hirr : Irreducible ϖ) (u v : Rˣ) (m 
 
 open multiplicity
 
-/-- The `enat`-valued additive valuation on a DVR -/
-noncomputable def addVal (R : Type u) [CommRingₓ R] [IsDomain R] [DiscreteValuationRing R] : AddValuation R Enat :=
+/-- The `part_enat`-valued additive valuation on a DVR -/
+noncomputable def addVal (R : Type u) [CommRingₓ R] [IsDomain R] [DiscreteValuationRing R] : AddValuation R PartEnat :=
   AddValuation (Classical.some_spec (exists_prime R))
 
 theorem add_val_def (r : R) (u : Rˣ) {ϖ : R} (hϖ : Irreducible ϖ) (n : ℕ) (hr : r = u * ϖ ^ n) : addVal R r = n := by
@@ -440,7 +440,7 @@ theorem add_val_eq_top_iff {a : R} : addVal R a = ⊤ ↔ a = 0 := by
     obtain ⟨n, ha⟩ := associated_pow_irreducible h hi
     obtain ⟨u, rfl⟩ := ha.symm
     rw [mul_comm, add_val_def' u hi n]
-    exact Enat.coe_ne_top _
+    exact PartEnat.coe_ne_top _
     
   · rintro rfl
     exact add_val_zero
@@ -472,7 +472,7 @@ instance (R : Type _) [CommRingₓ R] [IsDomain R] [DiscreteValuationRing R] :
     obtain ⟨ϖ, hϖ⟩ := exists_irreducible R
     simp only [Ideal.one_eq_top, ← smul_eq_mul, ← mul_oneₓ, ← Smodeq.zero, ← hϖ.maximal_ideal_eq, ←
       Ideal.span_singleton_pow, ← Ideal.mem_span_singleton, add_val_le_iff_dvd, ← hϖ.add_val_pow] at hx
-    rwa [← add_val_eq_top_iff, Enat.eq_top_iff_forall_le]
+    rwa [← add_val_eq_top_iff, PartEnat.eq_top_iff_forall_le]
 
 end DiscreteValuationRing
 

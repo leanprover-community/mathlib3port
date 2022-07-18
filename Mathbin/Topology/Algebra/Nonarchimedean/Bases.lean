@@ -99,7 +99,7 @@ variable [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgroupsBasis B)
 theorem mem_add_group_filter_basis_iff {V : Set A} : V ∈ hB.toRingFilterBasis.toAddGroupFilterBasis ↔ ∃ i, V = B i :=
   Iff.rfl
 
-theorem mem_add_group_filter_basis i : (B i : Set A) ∈ hB.toRingFilterBasis.toAddGroupFilterBasis :=
+theorem mem_add_group_filter_basis (i) : (B i : Set A) ∈ hB.toRingFilterBasis.toAddGroupFilterBasis :=
   ⟨i, rfl⟩
 
 /-- The topology defined from a subgroups basis, admitting the given subgroups as a basis
@@ -176,7 +176,7 @@ some axioms ensuring there is a topology on `A` which is compatible with the rin
 admits this family as a basis of neighborhoods of zero. -/
 structure SubmodulesRingBasis (B : ι → Submodule R A) : Prop where
   inter : ∀ i j, ∃ k, B k ≤ B i⊓B j
-  leftMul : ∀ a : A i, ∃ j, a • B j ≤ B i
+  leftMul : ∀ (a : A) (i), ∃ j, a • B j ≤ B i
   mul : ∀ i, ∃ j, (B j : Set A) * B j ⊆ B i
 
 namespace SubmodulesRingBasis
@@ -204,7 +204,7 @@ some axioms ensuring there is a topology on `M` which is compatible with the mod
 admits this family as a basis of neighborhoods of zero. -/
 structure SubmodulesBasis [TopologicalSpace R] (B : ι → Submodule R M) : Prop where
   inter : ∀ i j, ∃ k, B k ≤ B i⊓B j
-  smul : ∀ m : M i : ι, ∀ᶠ a in 𝓝 (0 : R), a • m ∈ B i
+  smul : ∀ (m : M) (i : ι), ∀ᶠ a in 𝓝 (0 : R), a • m ∈ B i
 
 namespace SubmodulesBasis
 
@@ -297,7 +297,7 @@ in the sense of `R`-modules (forgetting about the ring structure on `A`) and tho
 view definitionaly gives the same topology on `A`.
 -/
 variable [TopologicalSpace R] {B : ι → Submodule R A} (hB : SubmodulesRingBasis B)
-  (hsmul : ∀ m : A i : ι, ∀ᶠ a : R in 𝓝 0, a • m ∈ B i)
+  (hsmul : ∀ (m : A) (i : ι), ∀ᶠ a : R in 𝓝 0, a • m ∈ B i)
 
 theorem SubmodulesRingBasis.to_submodules_basis : SubmodulesBasis B :=
   { inter := hB.inter, smul := hsmul }
@@ -312,7 +312,7 @@ on a family of submodules of a `R`-module `M`. This compatibility condition allo
 a topological module structure. -/
 structure RingFilterBasis.SubmodulesBasis (BR : RingFilterBasis R) (B : ι → Submodule R M) : Prop where
   inter : ∀ i j, ∃ k, B k ≤ B i⊓B j
-  smul : ∀ m : M i : ι, ∃ U ∈ BR, U ⊆ (fun a => a • m) ⁻¹' B i
+  smul : ∀ (m : M) (i : ι), ∃ U ∈ BR, U ⊆ (fun a => a • m) ⁻¹' B i
 
 theorem RingFilterBasis.submodules_basis_is_basis (BR : RingFilterBasis R) {B : ι → Submodule R M}
     (hB : BR.SubmodulesBasis B) : @SubmodulesBasis ι R _ M _ _ BR.topology B :=

@@ -58,8 +58,8 @@ namespace MeasureTheory.lp
 
 variable [NormedSpace ℝ E]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (u «expr ⊇ » s)
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (F «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (u «expr ⊇ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (F «expr ⊆ » s)
 /-- A function in `Lp` can be approximated in `Lp` by continuous functions. -/
 theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     (boundedContinuousFunction E p μ).topologicalClosure = ⊤ := by
@@ -70,7 +70,7 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
   -- It suffices to prove that scalar multiples of the indicator function of a finite-measure
   -- measurable set can be approximated by continuous functions
   suffices
-    ∀ c : E {s : Set α} hs : MeasurableSet s hμs : μ s < ⊤,
+    ∀ (c : E) {s : Set α} (hs : MeasurableSet s) (hμs : μ s < ⊤),
       (Lp.simple_func.indicator_const p hs hμs.Ne c : Lp E p μ) ∈ (BoundedContinuousFunction E p μ).topologicalClosure
     by
     rw [AddSubgroup.eq_top_iff']

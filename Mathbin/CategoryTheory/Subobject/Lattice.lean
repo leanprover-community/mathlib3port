@@ -397,7 +397,6 @@ theorem inf_arrow_factors_right {B : C} (X Y : Subobject B) : Y.Factors (X⊓Y).
     ⟨ofLe (X⊓Y) Y (inf_le_right X Y), by
       simp ⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem finset_inf_factors {I : Type _} {A B : C} {s : Finset I} {P : I → Subobject B} (f : A ⟶ B) :
     (s.inf P).Factors f ↔ ∀, ∀ i ∈ s, ∀, (P i).Factors f := by
@@ -409,7 +408,6 @@ theorem finset_inf_factors {I : Type _} {A B : C} {s : Finset I} {P : I → Subo
     simp [← ih]
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- `i` is explicit here because often we'd like to defer a proof of `m`
 theorem finset_inf_arrow_factors {I : Type _} {B : C} (s : Finset I) (P : I → Subobject B) (i : I) (m : i ∈ s) :
     (P i).Factors (s.inf P).arrow := by
@@ -450,8 +448,8 @@ theorem inf_def {B : C} (m m' : Subobject B) : m⊓m' = (inf.obj m).obj m' :=
   rfl
 
 /-- `⊓` commutes with pullback. -/
-theorem inf_pullback {X Y : C} (g : X ⟶ Y) f₁ f₂ : (pullback g).obj (f₁⊓f₂) = (pullback g).obj f₁⊓(pullback g).obj f₂ :=
-  by
+theorem inf_pullback {X Y : C} (g : X ⟶ Y) (f₁ f₂) :
+    (pullback g).obj (f₁⊓f₂) = (pullback g).obj f₁⊓(pullback g).obj f₂ := by
   revert f₁
   apply Quotientₓ.ind'
   intro f₁
@@ -460,7 +458,7 @@ theorem inf_pullback {X Y : C} (g : X ⟶ Y) f₁ f₂ : (pullback g).obj (f₁�
   rfl
 
 /-- `⊓` commutes with map. -/
-theorem inf_map {X Y : C} (g : Y ⟶ X) [Mono g] f₁ f₂ : (map g).obj (f₁⊓f₂) = (map g).obj f₁⊓(map g).obj f₂ := by
+theorem inf_map {X Y : C} (g : Y ⟶ X) [Mono g] (f₁ f₂) : (map g).obj (f₁⊓f₂) = (map g).obj f₁⊓(map g).obj f₂ := by
   revert f₁
   apply Quotientₓ.ind'
   intro f₁
@@ -492,7 +490,6 @@ theorem sup_factors_of_factors_right {A B : C} {X Y : Subobject B} {f : A ⟶ B}
 
 variable [HasInitial C] [InitialMonoClass C]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem finset_sup_factors {I : Type _} {A B : C} {s : Finset I} {P : I → Subobject B} {f : A ⟶ B}
     (h : ∃ i ∈ s, (P i).Factors f) : (s.sup P).Factors f := by
   classical
@@ -537,7 +534,7 @@ def wideCospan {A : C} (s : Set (Subobject A)) : WidePullbackShape (equivShrink 
     ((equivShrink (Subobject A)).symm j).arrow
 
 @[simp]
-theorem wide_cospan_map_term {A : C} (s : Set (Subobject A)) j :
+theorem wide_cospan_map_term {A : C} (s : Set (Subobject A)) (j) :
     (wideCospan s).map (WidePullbackShape.Hom.term j) = ((equivShrink (Subobject A)).symm j).arrow :=
   rfl
 
@@ -588,8 +585,8 @@ instance wide_pullback_ι_mono {A : C} (s : Set (Subobject A)) : Mono (widePullb
 def infₓ {A : C} (s : Set (Subobject A)) : Subobject A :=
   Subobject.mk (widePullbackι s)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (f «expr ∈ » s)
-theorem Inf_le {A : C} (s : Set (Subobject A)) f (_ : f ∈ s) : infₓ s ≤ f := by
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (f «expr ∈ » s)
+theorem Inf_le {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : infₓ s ≤ f := by
   fapply le_of_comm
   · refine'
       (underlying_iso _).Hom ≫
@@ -634,8 +631,8 @@ variable [HasImages C]
 def supₓ {A : C} (s : Set (Subobject A)) : Subobject A :=
   Subobject.mk (image.ι (smallCoproductDesc s))
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (f «expr ∈ » s)
-theorem le_Sup {A : C} (s : Set (Subobject A)) f (_ : f ∈ s) : f ≤ supₓ s := by
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (f «expr ∈ » s)
+theorem le_Sup {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : f ≤ supₓ s := by
   fapply le_of_comm
   · dsimp' [← Sup]
     refine' _ ≫ factor_thru_image _ ≫ (underlying_iso _).inv

@@ -48,11 +48,11 @@ variable (R : Type _) (M : Type _)
 
 variable [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler module R
+-- ./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler module R
 /-- The dual space of an R-module M is the R-module of linear maps `M → R`. -/
 def Dual :=
   M →ₗ[R] R deriving AddCommMonoidₓ,
-  «./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler module R»
+  «./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler module R»
 
 instance {S : Type _} [CommRingₓ S] {N : Type _} [AddCommGroupₓ N] [Module S N] : AddCommGroupₓ (Dual S N) :=
   LinearMap.addCommGroup
@@ -61,11 +61,11 @@ instance : LinearMapClass (Dual R M) R M R :=
   LinearMap.semilinearMapClass
 
 /-- The canonical pairing of a vector space and its algebraic dual. -/
-def dualPairing R M [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module.Dual R M →ₗ[R] M →ₗ[R] R :=
+def dualPairing (R M) [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module.Dual R M →ₗ[R] M →ₗ[R] R :=
   LinearMap.id
 
 @[simp]
-theorem dual_pairing_apply v x : dualPairing R M v x = v x :=
+theorem dual_pairing_apply (v x) : dualPairing R M v x = v x :=
   rfl
 
 namespace Dual
@@ -271,7 +271,6 @@ theorem eval_ker {ι : Type _} (b : Basis ι R M) : (Dual.eval R M).ker = ⊥ :=
   simp_rw [LinearMap.ext_iff, dual.eval_apply, zero_apply] at hm
   exact (Basis.forall_coord_eq_zero_iff _).mp fun i => hm (b.coord i)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem eval_range {ι : Type _} [Fintype ι] (b : Basis ι R M) : (eval R M).range = ⊤ := by
   classical
   rw [← b.to_dual_to_dual, range_comp, b.to_dual_range, map_top, to_dual_range _]
@@ -308,7 +307,6 @@ theorem total_coord [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [Fintype ι
   have := Classical.decEq ι
   rw [← coe_dual_basis, total_dual_basis]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- TODO(jmc): generalize to rings, once `module.rank` is generalized
 theorem dual_dim_eq [Field K] [AddCommGroupₓ V] [Module K V] [Fintype ι] (b : Basis ι K V) :
     Cardinal.lift (Module.rank K V) = Module.rank K (Dual K V) := by
@@ -328,7 +326,6 @@ variable [Field K] [AddCommGroupₓ V] [Module K V]
 
 open Module Module.Dual Submodule LinearMap Cardinal Basis FiniteDimensional
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem eval_ker : (eval K V).ker = ⊥ := by
   classical
   exact (Basis.ofVectorSpace K V).eval_ker
@@ -400,7 +397,7 @@ theorem coeffs_apply [DecidableEq ι] (h : DualPair e ε) (m : M) (i : ι) : h.c
 /-- linear combinations of elements of `e`.
 This is a convenient abbreviation for `finsupp.total _ M R e l` -/
 def lc {ι} (e : ι → M) (l : ι →₀ R) : M :=
-  l.Sum fun i : ι a : R => a • e i
+  l.Sum fun (i : ι) (a : R) => a • e i
 
 theorem lc_def (e : ι → M) (l : ι →₀ R) : lc e l = Finsupp.total _ _ _ e l :=
   rfl
@@ -822,7 +819,7 @@ variable [CommRingₓ R] [AddCommGroupₓ M] [AddCommGroupₓ N]
 
 variable [Module R M] [Module R N]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 /-- An inverse to `dual_tensor_dual_map` given bases.
 -/
 noncomputable def dualDistribInvOfBasis (b : Basis ι R M) (c : Basis κ R N) :
@@ -830,7 +827,7 @@ noncomputable def dualDistribInvOfBasis (b : Basis ι R M) (c : Basis κ R N) :
   ∑ (i) (j),
     (ringLmapEquivSelf R ℕ _).symm (b.dualBasis i ⊗ₜ c.dualBasis j) ∘ₗ applyₗ (c j) ∘ₗ applyₗ (b i) ∘ₗ lcurry R M N R
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 @[simp]
 theorem dual_distrib_inv_of_basis_apply (b : Basis ι R M) (c : Basis κ R N) (f : Dual R (M ⊗[R] N)) :
     dualDistribInvOfBasis b c f = ∑ (i) (j), f (b i ⊗ₜ c j) • b.dualBasis i ⊗ₜ c.dualBasis j := by

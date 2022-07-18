@@ -67,10 +67,10 @@ inductive Eqv : FreeAddMonoid (M × N) → FreeAddMonoid (M × N) → Prop
   | of_zero_left : ∀ n : N, eqv (FreeAddMonoid.of (0, n)) 0
   | of_zero_right : ∀ m : M, eqv (FreeAddMonoid.of (m, 0)) 0
   | of_add_left :
-    ∀ m₁ m₂ : M n : N, eqv (FreeAddMonoid.of (m₁, n) + FreeAddMonoid.of (m₂, n)) (FreeAddMonoid.of (m₁ + m₂, n))
+    ∀ (m₁ m₂ : M) (n : N), eqv (FreeAddMonoid.of (m₁, n) + FreeAddMonoid.of (m₂, n)) (FreeAddMonoid.of (m₁ + m₂, n))
   | of_add_right :
-    ∀ m : M n₁ n₂ : N, eqv (FreeAddMonoid.of (m, n₁) + FreeAddMonoid.of (m, n₂)) (FreeAddMonoid.of (m, n₁ + n₂))
-  | of_smul : ∀ r : R m : M n : N, eqv (FreeAddMonoid.of (r • m, n)) (FreeAddMonoid.of (m, r • n))
+    ∀ (m : M) (n₁ n₂ : N), eqv (FreeAddMonoid.of (m, n₁) + FreeAddMonoid.of (m, n₂)) (FreeAddMonoid.of (m, n₁ + n₂))
+  | of_smul : ∀ (r : R) (m : M) (n : N), eqv (FreeAddMonoid.of (r • m, n)) (FreeAddMonoid.of (m, r • n))
   | add_commₓ : ∀ x y, eqv (x + y) (y + x)
 
 end
@@ -167,7 +167,7 @@ needed if `tensor_product.smul_tmul`, `tensor_product.smul_tmul'`, or `tensor_pr
 used.
 -/
 class CompatibleSmul [DistribMulAction R' N] where
-  smul_tmul : ∀ r : R' m : M n : N, (r • m) ⊗ₜ n = m ⊗ₜ[R] (r • n)
+  smul_tmul : ∀ (r : R') (m : M) (n : N), (r • m) ⊗ₜ n = m ⊗ₜ[R] (r • n)
 
 end
 
@@ -244,7 +244,7 @@ protected theorem smul_add (r : R') (x y : M ⊗[R] N) : r • (x + y) = r • x
   AddMonoidHom.map_add _ _ _
 
 protected theorem zero_smul (x : M ⊗[R] N) : (0 : R'') • x = 0 :=
-  have : ∀ r : R'' m : M n : N, r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl
+  have : ∀ (r : R'') (m : M) (n : N), r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl
   TensorProduct.induction_on x
     (by
       rw [TensorProduct.smul_zero])
@@ -254,7 +254,7 @@ protected theorem zero_smul (x : M ⊗[R] N) : (0 : R'') • x = 0 :=
     rw [TensorProduct.smul_add, ihx, ihy, add_zeroₓ]
 
 protected theorem one_smul (x : M ⊗[R] N) : (1 : R') • x = x :=
-  have : ∀ r : R' m : M n : N, r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl
+  have : ∀ (r : R') (m : M) (n : N), r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl
   TensorProduct.induction_on x
     (by
       rw [TensorProduct.smul_zero])
@@ -264,7 +264,7 @@ protected theorem one_smul (x : M ⊗[R] N) : (1 : R') • x = x :=
     rw [TensorProduct.smul_add, ihx, ihy]
 
 protected theorem add_smul (r s : R'') (x : M ⊗[R] N) : (r + s) • x = r • x + s • x :=
-  have : ∀ r : R'' m : M n : N, r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl
+  have : ∀ (r : R'') (m : M) (n : N), r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl
   TensorProduct.induction_on x
     (by
       simp_rw [TensorProduct.smul_zero, add_zeroₓ])
@@ -282,7 +282,7 @@ instance : AddCommMonoidₓ (M ⊗[R] N) :=
       simp [← Nat.succ_eq_one_add, ← TensorProduct.one_smul, ← TensorProduct.add_smul] }
 
 instance leftDistribMulAction : DistribMulAction R' (M ⊗[R] N) :=
-  have : ∀ r : R' m : M n : N, r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl
+  have : ∀ (r : R') (m : M) (n : N), r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl
   { smul := (· • ·), smul_add := fun r x y => TensorProduct.smul_add r x y,
     mul_smul := fun r s x =>
       TensorProduct.induction_on x
@@ -394,7 +394,6 @@ section
 
 open BigOperators
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem sum_tmul {α : Type _} (s : Finset α) (m : α → M) (n : N) : (∑ a in s, m a) ⊗ₜ[R] n = ∑ a in s, m a ⊗ₜ[R] n := by
   classical
   induction' s using Finset.induction with a s has ih h
@@ -403,7 +402,6 @@ theorem sum_tmul {α : Type _} (s : Finset α) (m : α → M) (n : N) : (∑ a i
   · simp [← Finset.sum_insert has, ← add_tmul, ← ih]
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem tmul_sum (m : M) {α : Type _} (s : Finset α) (n : α → N) : (m ⊗ₜ[R] ∑ a in s, n a) = ∑ a in s, m ⊗ₜ[R] n a := by
   classical
   induction' s using Finset.induction with a s has ih h
@@ -470,13 +468,13 @@ def liftAux : M ⊗[R] N →+ P :=
         (AddCon.ker_rel _).2 <| by
           simp_rw [AddMonoidHom.map_add, add_commₓ]
 
-theorem lift_aux_tmul m n : liftAux f (m ⊗ₜ n) = f m n :=
+theorem lift_aux_tmul (m n) : liftAux f (m ⊗ₜ n) = f m n :=
   zero_addₓ _
 
 variable {f}
 
 @[simp]
-theorem liftAux.smul (r : R) x : liftAux f (r • x) = r • liftAux f x :=
+theorem liftAux.smul (r : R) (x) : liftAux f (r • x) = r • liftAux f x :=
   TensorProduct.induction_on x (smul_zero _).symm
     (fun p q => by
       rw [← tmul_smul, lift_aux_tmul, lift_aux_tmul, (f p).map_smul])
@@ -494,11 +492,11 @@ def lift : M ⊗ N →ₗ[R] P :=
 variable {f}
 
 @[simp]
-theorem lift.tmul x y : lift f (x ⊗ₜ y) = f x y :=
+theorem lift.tmul (x y) : lift f (x ⊗ₜ y) = f x y :=
   zero_addₓ _
 
 @[simp]
-theorem lift.tmul' x y : (lift f).1 (x ⊗ₜ y) = f x y :=
+theorem lift.tmul' (x y) : (lift f).1 (x ⊗ₜ y) = f x y :=
   lift.tmul _ _
 
 theorem ext' {g h : M ⊗[R] N →ₗ[R] P} (H : ∀ x y, g (x ⊗ₜ y) = h (x ⊗ₜ y)) : g = h :=

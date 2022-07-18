@@ -206,7 +206,7 @@ theorem sub_zmod_repr_mem : x - zmodRepr x ∈ maximalIdeal ℤ_[p] :=
 -/
 def toZmodHom (v : ℕ) (f : ℤ_[p] → ℕ) (f_spec : ∀ x, x - f x ∈ (Ideal.span {v} : Ideal ℤ_[p]))
     (f_congr :
-      ∀ x : ℤ_[p] a b : ℕ,
+      ∀ (x : ℤ_[p]) (a b : ℕ),
         x - a ∈ (Ideal.span {v} : Ideal ℤ_[p]) → x - b ∈ (Ideal.span {v} : Ideal ℤ_[p]) → (a : Zmod v) = b) :
     ℤ_[p] →+* Zmod v where
   toFun := fun x => f x
@@ -479,7 +479,7 @@ section lift
 open CauSeq PadicSeq
 
 variable {R : Type _} [NonAssocSemiringₓ R] (f : ∀ k : ℕ, R →+* Zmod (p ^ k))
-  (f_compat : ∀ k1 k2 hk : k1 ≤ k2, (Zmod.castHom (pow_dvd_pow p hk) _).comp (f k2) = f k1)
+  (f_compat : ∀ (k1 k2) (hk : k1 ≤ k2), (Zmod.castHom (pow_dvd_pow p hk) _).comp (f k2) = f k1)
 
 omit hp_prime
 

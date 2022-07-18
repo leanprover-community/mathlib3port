@@ -57,6 +57,15 @@ theorem exp_log_of_neg (hx : x < 0) : exp (log x) = -x := by
   rw [exp_log_eq_abs (ne_of_ltₓ hx)]
   exact abs_of_neg hx
 
+theorem le_exp_log (x : ℝ) : x ≤ exp (log x) := by
+  by_cases' h_zero : x = 0
+  · rw [h_zero, log, dif_pos rfl, exp_zero]
+    exact zero_le_one
+    
+  · rw [exp_log_eq_abs h_zero]
+    exact le_abs_self _
+    
+
 @[simp]
 theorem log_exp (x : ℝ) : log (exp x) = x :=
   exp_injective <| exp_log (exp_pos x)

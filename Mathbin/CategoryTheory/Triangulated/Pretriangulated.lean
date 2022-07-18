@@ -42,8 +42,8 @@ We work in a preadditive category `C` equipped with an additive shift.
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ] [Preadditive C]
   [∀ n : ℤ, Functor.Additive (shiftFunctor C n)]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`DistinguishedTriangles] []
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (T₂ «expr ≅ » T₁)
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`DistinguishedTriangles] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (T₂ «expr ≅ » T₁)
 /-- A preadditive category `C` with an additive shift, and a class of "distinguished triangles"
 relative to that shift is called pretriangulated if the following hold:
 * Any triangle that is isomorphic to a distinguished triangle is also distinguished.
@@ -67,14 +67,14 @@ See <https://stacks.math.columbia.edu/tag/0145>
 -/
 class Pretriangulated where
   DistinguishedTriangles : Set (Triangle C)
-  isomorphic_distinguished : ∀, ∀ T₁ ∈ distinguished_triangles, ∀ T₂ _ : T₂ ≅ T₁, T₂ ∈ distinguished_triangles
+  isomorphic_distinguished : ∀, ∀ T₁ ∈ distinguished_triangles, ∀ (T₂) (_ : T₂ ≅ T₁), T₂ ∈ distinguished_triangles
   contractible_distinguished : ∀ X : C, contractibleTriangle C X ∈ distinguished_triangles
   distinguished_cocone_triangle :
-    ∀ X Y : C f : X ⟶ Y, ∃ (Z : C)(g : Y ⟶ Z)(h : Z ⟶ X⟦(1 : ℤ)⟧), Triangle.mk _ f g h ∈ distinguished_triangles
+    ∀ (X Y : C) (f : X ⟶ Y), ∃ (Z : C)(g : Y ⟶ Z)(h : Z ⟶ X⟦(1 : ℤ)⟧), Triangle.mk _ f g h ∈ distinguished_triangles
   rotate_distinguished_triangle : ∀ T : Triangle C, T ∈ distinguished_triangles ↔ T.rotate ∈ distinguished_triangles
   complete_distinguished_triangle_morphism :
-    ∀ T₁ T₂ : Triangle C h₁ : T₁ ∈ distinguished_triangles h₂ : T₂ ∈ distinguished_triangles a : T₁.obj₁ ⟶ T₂.obj₁ b :
-      T₁.obj₂ ⟶ T₂.obj₂ comm₁ : T₁.mor₁ ≫ b = a ≫ T₂.mor₁,
+    ∀ (T₁ T₂ : Triangle C) (h₁ : T₁ ∈ distinguished_triangles) (h₂ : T₂ ∈ distinguished_triangles)
+      (a : T₁.obj₁ ⟶ T₂.obj₁) (b : T₁.obj₂ ⟶ T₂.obj₂) (comm₁ : T₁.mor₁ ≫ b = a ≫ T₂.mor₁),
       ∃ c : T₁.obj₃ ⟶ T₂.obj₃, T₁.mor₂ ≫ c = b ≫ T₂.mor₂ ∧ T₁.mor₃ ≫ a⟦1⟧' = c ≫ T₂.mor₃
 
 namespace Pretriangulated
@@ -84,20 +84,20 @@ variable [Pretriangulated C]
 -- mathport name: «exprdist_triang »
 notation:20 "dist_triang " C => DistinguishedTriangles C
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
 /-- Given any distinguished triangle `T`, then we know `T.rotate` is also distinguished.
 -/
-theorem rot_of_dist_triangle T (_ : T ∈ (dist_triang C)) : T.rotate ∈ (dist_triang C) :=
+theorem rot_of_dist_triangle (T) (_ : T ∈ (dist_triang C)) : T.rotate ∈ (dist_triang C) :=
   (rotate_distinguished_triangle T).mp H
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
 /-- Given any distinguished triangle `T`, then we know `T.inv_rotate` is also distinguished.
 -/
-theorem inv_rot_of_dist_triangle T (_ : T ∈ (dist_triang C)) : T.invRotate ∈ (dist_triang C) :=
+theorem inv_rot_of_dist_triangle (T) (_ : T ∈ (dist_triang C)) : T.invRotate ∈ (dist_triang C) :=
   (rotate_distinguished_triangle T.invRotate).mpr
     (isomorphic_distinguished T H T.invRotate.rotate (invRotCompRot.app T))
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
 /-- Given any distinguished triangle
 ```
       f       g       h
@@ -106,7 +106,7 @@ theorem inv_rot_of_dist_triangle T (_ : T ∈ (dist_triang C)) : T.invRotate ∈
 the composition `f ≫ g = 0`.
 See <https://stacks.math.columbia.edu/tag/0146>
 -/
-theorem comp_dist_triangle_mor_zero₁₂ T (_ : T ∈ (dist_triang C)) : T.mor₁ ≫ T.mor₂ = 0 := by
+theorem comp_dist_triangle_mor_zero₁₂ (T) (_ : T ∈ (dist_triang C)) : T.mor₁ ≫ T.mor₂ = 0 := by
   have h := contractible_distinguished T.obj₁
   have f := complete_distinguished_triangle_morphism
   specialize f (contractible_triangle C T.obj₁) T h H (𝟙 T.obj₁) T.mor₁
@@ -117,7 +117,7 @@ theorem comp_dist_triangle_mor_zero₁₂ T (_ : T ∈ (dist_triang C)) : T.mor�
   rw [← f.left]
   simp only [← limits.zero_comp, ← contractible_triangle_mor₂]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
 /-- Given any distinguished triangle
 ```
       f       g       h
@@ -127,10 +127,10 @@ the composition `g ≫ h = 0`.
 See <https://stacks.math.columbia.edu/tag/0146>
 -/
 -- TODO : tidy this proof up
-theorem comp_dist_triangle_mor_zero₂₃ T (_ : T ∈ (dist_triang C)) : T.mor₂ ≫ T.mor₃ = 0 :=
+theorem comp_dist_triangle_mor_zero₂₃ (T) (_ : T ∈ (dist_triang C)) : T.mor₂ ≫ T.mor₃ = 0 :=
   comp_dist_triangle_mor_zero₁₂ C T.rotate (rot_of_dist_triangle C T H)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
 /-- Given any distinguished triangle
 ```
       f       g       h
@@ -139,8 +139,8 @@ theorem comp_dist_triangle_mor_zero₂₃ T (_ : T ∈ (dist_triang C)) : T.mor�
 the composition `h ≫ f⟦1⟧ = 0`.
 See <https://stacks.math.columbia.edu/tag/0146>
 -/
-theorem comp_dist_triangle_mor_zero₃₁ T (_ : T ∈ (dist_triang C)) : T.mor₃ ≫ (shiftEquiv C 1).Functor.map T.mor₁ = 0 :=
-  by
+theorem comp_dist_triangle_mor_zero₃₁ (T) (_ : T ∈ (dist_triang C)) :
+    T.mor₃ ≫ (shiftEquiv C 1).Functor.map T.mor₁ = 0 := by
   have H₂ := rot_of_dist_triangle C T.rotate (rot_of_dist_triangle C T H)
   simpa using comp_dist_triangle_mor_zero₁₂ C T.rotate.rotate H₂
 

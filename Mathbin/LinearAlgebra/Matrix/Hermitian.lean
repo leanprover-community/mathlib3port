@@ -70,15 +70,10 @@ theorem is_hermitian_transpose_add_self (A : Matrix n n α) : (Aᴴ + A).IsHermi
 theorem is_hermitian_zero : (0 : Matrix n n α).IsHermitian :=
   conj_transpose_zero
 
--- TODO: move
-theorem conj_transpose_map {A : Matrix n n α} (f : α → β) (hf : f ∘ star = star ∘ f) : Aᴴ.map f = (A.map f)ᴴ := by
-  rw [conj_transpose, conj_transpose, ← transpose_map, map_map, map_map, hf]
-
 @[simp]
-theorem IsHermitian.map {A : Matrix n n α} (h : A.IsHermitian) (f : α → β) (hf : f ∘ star = star ∘ f) :
-    (A.map f).IsHermitian := by
-  refine' (conj_transpose_map f hf).symm.trans _
-  rw [h.eq]
+theorem IsHermitian.map {A : Matrix n n α} (h : A.IsHermitian) (f : α → β) (hf : Function.Semiconj f star star) :
+    (A.map f).IsHermitian :=
+  (conj_transpose_map f hf).symm.trans <| h.Eq.symm ▸ rfl
 
 @[simp]
 theorem IsHermitian.transpose {A : Matrix n n α} (h : A.IsHermitian) : Aᵀ.IsHermitian := by
@@ -88,7 +83,7 @@ theorem IsHermitian.transpose {A : Matrix n n α} (h : A.IsHermitian) : Aᵀ.IsH
 
 @[simp]
 theorem IsHermitian.conj_transpose {A : Matrix n n α} (h : A.IsHermitian) : Aᴴ.IsHermitian :=
-  h.transpose.map _ rfl
+  (h.transpose.map _) fun _ => rfl
 
 @[simp]
 theorem IsHermitian.add {A B : Matrix n n α} (hA : A.IsHermitian) (hB : B.IsHermitian) : (A + B).IsHermitian :=

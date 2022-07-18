@@ -60,7 +60,7 @@ restricted on `s` is less than `ε`.
 
 Uniform integrablility is also known as uniformly absolutely continuous integrals. -/
 def UnifIntegrable {m : MeasurableSpace α} (f : ι → α → β) (p : ℝ≥0∞) (μ : Measure α) : Prop :=
-  ∀ ⦃ε : ℝ⦄ hε : 0 < ε,
+  ∀ ⦃ε : ℝ⦄ (hε : 0 < ε),
     ∃ (δ : ℝ)(hδ : 0 < δ),
       ∀ i s, MeasurableSet s → μ s ≤ Ennreal.ofReal δ → snorm (s.indicator (f i)) p μ ≤ Ennreal.ofReal ε
 
@@ -293,7 +293,7 @@ theorem Memℒp.snorm_indicator_norm_ge_pos_le (hf : Memℒp f p μ) (hmeas : St
 
 end
 
--- ./././Mathport/Syntax/Translate/Basic.lean:637:40: in filter_upwards #[[], [], []]: ./././Mathport/Syntax/Translate/Basic.lean:308:22: unsupported: parse error
+-- ./././Mathport/Syntax/Translate/Basic.lean:646:40: in filter_upwards #[[], [], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: parse error
 theorem snorm_indicator_le_of_bound {f : α → β} (hp_top : p ≠ ∞) {ε : ℝ} (hε : 0 < ε) {M : ℝ} (hf : ∀ x, ∥f x∥ < M) :
     ∃ (δ : ℝ)(hδ : 0 < δ),
       ∀ s, MeasurableSet s → μ s ≤ Ennreal.ofReal δ → snorm (s.indicator f) p μ ≤ Ennreal.ofReal ε :=
@@ -316,7 +316,7 @@ theorem snorm_indicator_le_of_bound {f : α → β} (hp_top : p ≠ ∞) {ε : �
   rw [snorm_indicator_eq_snorm_restrict hs]
   have haebdd : ∀ᵐ x ∂μ.restrict s, ∥f x∥ ≤ M := by
     trace
-      "./././Mathport/Syntax/Translate/Basic.lean:637:40: in filter_upwards #[[], [], []]: ./././Mathport/Syntax/Translate/Basic.lean:308:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Basic.lean:646:40: in filter_upwards #[[], [], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: parse error"
     exact fun x => (hf x).le
   refine' le_transₓ (snorm_le_of_ae_bound haebdd) _
   rw [measure.restrict_apply MeasurableSet.univ, univ_inter, ←
@@ -714,7 +714,7 @@ theorem unif_integrable_of' (hp : 1 ≤ p) (hp' : p ≠ ∞) {f : ι → α → 
       have : ∀ᵐ x ∂μ.restrict s, ∥{ x : α | ∥f i x∥₊ < C }.indicator (f i) x∥ ≤ C := by
         refine' ae_of_all _ _
         simp_rw [norm_indicator_eq_indicator_norm]
-        exact indicator_le' (fun x hx : _ < _ => hx.le) fun _ _ => Nnreal.coe_nonneg _
+        exact indicator_le' (fun x (hx : _ < _) => hx.le) fun _ _ => Nnreal.coe_nonneg _
       refine' le_transₓ (snorm_le_of_ae_bound this) _
       rw [mul_comm, measure.restrict_apply' hs, univ_inter, Ennreal.of_real_coe_nnreal, one_div]
       exacts[le_rfl, hs]_ ≤ Ennreal.ofReal (ε / 2) + C * Ennreal.ofReal (ε / (2 * C)) := by
@@ -838,7 +838,7 @@ theorem uniform_integrable_of [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp' : p ≠ �
       have : ∀ᵐ x ∂μ, ∥{ x : α | ∥f i x∥₊ < C }.indicator (f i) x∥₊ ≤ C := by
         refine' eventually_of_forall _
         simp_rw [nnnorm_indicator_eq_indicator_nnnorm]
-        exact indicator_le fun x hx : _ < _ => hx.le
+        exact indicator_le fun x (hx : _ < _) => hx.le
       refine' add_le_add (le_transₓ (snorm_le_of_ae_bound this) _) (Ennreal.of_real_one ▸ hC i)
       rw [Ennreal.of_real_coe_nnreal, mul_comm]
       exact le_rfl _ = (C * μ univ ^ p.to_real⁻¹ + 1 : ℝ≥0∞).toNnreal := by

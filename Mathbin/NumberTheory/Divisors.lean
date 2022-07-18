@@ -258,7 +258,6 @@ theorem divisors_prime_pow {p : ℕ} (pp : p.Prime) (k : ℕ) :
   ext
   simp [← mem_divisors_prime_pow, ← pp, ← Nat.lt_succ_iffₓ, ← @eq_comm _ a]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem eq_proper_divisors_of_subset_of_sum_eq_sum {s : Finset ℕ} (hsub : s ⊆ n.properDivisors) :
     ((∑ x in s, x) = ∑ x in n.properDivisors, x) → s = n.properDivisors := by
   cases n

@@ -309,7 +309,7 @@ theorem const_apply' (f g : R) (U : Opens (PrimeSpectrum.top R))
     (const R f g U hu).1 x = IsLocalization.mk' _ f ⟨g, hx⟩ :=
   rfl
 
-theorem exists_const U (s : (structureSheaf R).1.obj (op U)) (x : PrimeSpectrum.top R) (hx : x ∈ U) :
+theorem exists_const (U) (s : (structureSheaf R).1.obj (op U)) (x : PrimeSpectrum.top R) (hx : x ∈ U) :
     ∃ (V : Opens (PrimeSpectrum.top R))(hxV : x ∈ V)(i : V ⟶ U)(f g : R)(hg : _),
       const R f g V hg = (structureSheaf R).1.map i.op s :=
   let ⟨V, hxV, iVU, f, g, hfg⟩ := s.2 ⟨x, hx⟩
@@ -317,26 +317,26 @@ theorem exists_const U (s : (structureSheaf R).1.obj (op U)) (x : PrimeSpectrum.
     Subtype.eq <| funext fun y => IsLocalization.mk'_eq_iff_eq_mul.2 <| Eq.symm <| (hfg y).2⟩
 
 @[simp]
-theorem res_const (f g : R) U hu V hv i : (structureSheaf R).1.map i (const R f g U hu) = const R f g V hv :=
+theorem res_const (f g : R) (U hu V hv i) : (structureSheaf R).1.map i (const R f g U hu) = const R f g V hv :=
   rfl
 
-theorem res_const' (f g : R) V hv :
+theorem res_const' (f g : R) (V hv) :
     (structureSheaf R).1.map (homOfLe hv).op (const R f g (basicOpen g) fun _ => id) = const R f g V hv :=
   rfl
 
-theorem const_zero (f : R) U hu : const R 0 f U hu = 0 :=
+theorem const_zero (f : R) (U hu) : const R 0 f U hu = 0 :=
   Subtype.eq <|
     funext fun x =>
       IsLocalization.mk'_eq_iff_eq_mul.2 <| by
         erw [RingHom.map_zero, Subtype.val_eq_coe, Subring.coe_zero, Pi.zero_apply, zero_mul]
 
-theorem const_self (f : R) U hu : const R f f U hu = 1 :=
+theorem const_self (f : R) (U hu) : const R f f U hu = 1 :=
   Subtype.eq <| funext fun x => IsLocalization.mk'_self _ _
 
-theorem const_one U : (const R 1 1 U fun p _ => Submonoid.one_mem _) = 1 :=
+theorem const_one (U) : (const R 1 1 U fun p _ => Submonoid.one_mem _) = 1 :=
   const_self R 1 U _
 
-theorem const_add (f₁ f₂ g₁ g₂ : R) U hu₁ hu₂ :
+theorem const_add (f₁ f₂ g₁ g₂ : R) (U hu₁ hu₂) :
     const R f₁ g₁ U hu₁ + const R f₂ g₂ U hu₂ =
       const R (f₁ * g₂ + f₂ * g₁) (g₁ * g₂) U fun x hx => Submonoid.mul_mem _ (hu₁ x hx) (hu₂ x hx) :=
   Subtype.eq <|
@@ -344,7 +344,7 @@ theorem const_add (f₁ f₂ g₁ g₂ : R) U hu₁ hu₂ :
       Eq.symm <| by
         convert IsLocalization.mk'_add f₁ f₂ ⟨g₁, hu₁ x x.2⟩ ⟨g₂, hu₂ x x.2⟩
 
-theorem const_mul (f₁ f₂ g₁ g₂ : R) U hu₁ hu₂ :
+theorem const_mul (f₁ f₂ g₁ g₂ : R) (U hu₁ hu₂) :
     const R f₁ g₁ U hu₁ * const R f₂ g₂ U hu₂ =
       const R (f₁ * f₂) (g₁ * g₂) U fun x hx => Submonoid.mul_mem _ (hu₁ x hx) (hu₂ x hx) :=
   Subtype.eq <|
@@ -359,14 +359,15 @@ theorem const_congr {f₁ f₂ g₁ g₂ : R} {U hu} (hf : f₁ = f₂) (hg : g�
     const R f₁ g₁ U hu = const R f₂ g₂ U (hg ▸ hu) := by
   substs hf hg
 
-theorem const_mul_rev (f g : R) U hu₁ hu₂ : const R f g U hu₁ * const R g f U hu₂ = 1 := by
+theorem const_mul_rev (f g : R) (U hu₁ hu₂) : const R f g U hu₁ * const R g f U hu₂ = 1 := by
   rw [const_mul, const_congr R rfl (mul_comm g f), const_self]
 
-theorem const_mul_cancel (f g₁ g₂ : R) U hu₁ hu₂ : const R f g₁ U hu₁ * const R g₁ g₂ U hu₂ = const R f g₂ U hu₂ := by
+theorem const_mul_cancel (f g₁ g₂ : R) (U hu₁ hu₂) : const R f g₁ U hu₁ * const R g₁ g₂ U hu₂ = const R f g₂ U hu₂ := by
   rw [const_mul, const_ext]
   rw [mul_assoc]
 
-theorem const_mul_cancel' (f g₁ g₂ : R) U hu₁ hu₂ : const R g₁ g₂ U hu₂ * const R f g₁ U hu₁ = const R f g₂ U hu₂ := by
+theorem const_mul_cancel' (f g₁ g₂ : R) (U hu₁ hu₂) : const R g₁ g₂ U hu₂ * const R f g₁ U hu₁ = const R f g₂ U hu₂ :=
+  by
   rw [mul_comm, const_mul_cancel]
 
 /-- The canonical ring homomorphism interpreting an element of `R` as
@@ -640,7 +641,7 @@ theorem locally_const_basic_open (U : Opens (PrimeSpectrum.top R)) (s : (structu
   apply const_ext
   rw [mul_assoc f c g, hc]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i j «expr ∈ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i j «expr ∈ » t)
 /-
 Auxiliary lemma for surjectivity of `to_basic_open`.
 A local representation of a section `s` as fractions `a i / h i` on finitely many basic opens
@@ -652,7 +653,7 @@ theorem normalize_finite_fraction_representation (U : Opens (PrimeSpectrum.top R
     (hs : ∀ i : ι, (const R (a i) (h i) (basicOpen (h i)) fun y hy => hy) = (structureSheaf R).1.map (iDh i).op s) :
     ∃ (a' h' : ι → R)(iDh' : ∀ i : ι, basicOpen (h' i) ⟶ U),
       (U.1 ⊆ ⋃ i ∈ t, (basicOpen (h' i)).1) ∧
-        (∀ i j _ : i ∈ t _ : j ∈ t, a' i * h' j = h' i * a' j) ∧
+        (∀ (i j) (_ : i ∈ t) (_ : j ∈ t), a' i * h' j = h' i * a' j) ∧
           ∀,
             ∀ i ∈ t,
               ∀, (structureSheaf R).1.map (iDh' i).op s = const R (a' i) (h' i) (basicOpen (h' i)) fun y hy => hy :=

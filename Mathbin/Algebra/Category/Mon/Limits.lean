@@ -31,7 +31,7 @@ namespace Mon
 variable {J : Type v} [SmallCategory J]
 
 @[to_additive]
-instance monoidObj (F : J ⥤ Mon.{max v u}) j : Monoidₓ ((F ⋙ forget Mon).obj j) := by
+instance monoidObj (F : J ⥤ Mon.{max v u}) (j) : Monoidₓ ((F ⋙ forget Mon).obj j) := by
   change Monoidₓ (F.obj j)
   infer_instance
 
@@ -53,7 +53,7 @@ instance limitMonoid (F : J ⥤ Mon.{max v u}) : Monoidₓ (Types.limitCone (F �
 
 /-- `limit.π (F ⋙ forget Mon) j` as a `monoid_hom`. -/
 @[to_additive "`limit.π (F ⋙ forget AddMon) j` as an `add_monoid_hom`."]
-def limitπMonoidHom (F : J ⥤ Mon.{max v u}) j : (Types.limitCone (F ⋙ forget Mon)).x →* (F ⋙ forget Mon).obj j where
+def limitπMonoidHom (F : J ⥤ Mon.{max v u}) (j) : (Types.limitCone (F ⋙ forget Mon)).x →* (F ⋙ forget Mon).obj j where
   toFun := (Types.limitCone (F ⋙ forget Mon)).π.app j
   map_one' := rfl
   map_mul' := fun x y => rfl
@@ -120,7 +120,7 @@ namespace CommMon
 variable {J : Type v} [SmallCategory J]
 
 @[to_additive]
-instance commMonoidObj (F : J ⥤ CommMon.{max v u}) j : CommMonoidₓ ((F ⋙ forget CommMon).obj j) := by
+instance commMonoidObj (F : J ⥤ CommMon.{max v u}) (j) : CommMonoidₓ ((F ⋙ forget CommMon).obj j) := by
   change CommMonoidₓ (F.obj j)
   infer_instance
 

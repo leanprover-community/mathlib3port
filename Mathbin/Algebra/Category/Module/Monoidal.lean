@@ -28,7 +28,7 @@ use this as an interface and not need to interact much with the implementation d
 -/
 
 
-universe u
+universe v w x u
 
 open CategoryTheory
 
@@ -53,16 +53,19 @@ def tensorObj (M N : ModuleCat R) : ModuleCat R :=
 def tensorHom {M N M' N' : ModuleCat R} (f : M ⟶ N) (g : M' ⟶ N') : tensorObj M M' ⟶ tensorObj N N' :=
   TensorProduct.map f g
 
-theorem tensor_id (M N : ModuleCat R) : tensorHom (𝟙 M) (𝟙 N) = 𝟙 (ModuleCat.of R (↥M ⊗ ↥N)) := by
-  tidy
+theorem tensor_id (M N : ModuleCat R) : tensorHom (𝟙 M) (𝟙 N) = 𝟙 (ModuleCat.of R (M ⊗ N)) := by
+  ext1
+  rfl
 
 theorem tensor_comp {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : ModuleCat R} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (g₁ : Y₁ ⟶ Z₁) (g₂ : Y₂ ⟶ Z₂) :
     tensorHom (f₁ ≫ g₁) (f₂ ≫ g₂) = tensorHom f₁ f₂ ≫ tensorHom g₁ g₂ := by
-  tidy
+  ext1
+  rfl
 
 /-- (implementation) the associator for R-modules -/
-def associator (M N K : ModuleCat R) : tensorObj (tensorObj M N) K ≅ tensorObj M (tensorObj N K) :=
-  LinearEquiv.toModuleIso (TensorProduct.assoc R M N K)
+def associator (M : ModuleCat.{v} R) (N : ModuleCat.{w} R) (K : ModuleCat.{x} R) :
+    tensorObj (tensorObj M N) K ≅ tensorObj M (tensorObj N K) :=
+  (TensorProduct.assoc R M N K).toModuleIso
 
 section
 
@@ -117,7 +120,7 @@ def leftUnitor (M : ModuleCat.{u} R) : ModuleCat.of R (R ⊗[R] M) ≅ M :=
 theorem left_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
     tensorHom (𝟙 (ModuleCat.of R R)) f ≫ (leftUnitor N).Hom = (leftUnitor M).Hom ≫ f := by
   ext x y
-  simp
+  dsimp'
   erw [TensorProduct.lid_tmul, TensorProduct.lid_tmul]
   rw [LinearMap.map_smul]
   rfl
@@ -129,7 +132,7 @@ def rightUnitor (M : ModuleCat.{u} R) : ModuleCat.of R (M ⊗[R] R) ≅ M :=
 theorem right_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
     tensorHom f (𝟙 (ModuleCat.of R R)) ≫ (rightUnitor N).Hom = (rightUnitor M).Hom ≫ f := by
   ext x y
-  simp
+  dsimp'
   erw [TensorProduct.rid_tmul, TensorProduct.rid_tmul]
   rw [LinearMap.map_smul]
   rfl

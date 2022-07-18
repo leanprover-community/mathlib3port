@@ -97,7 +97,7 @@ theorem div_wf_lemma (h : degree q ≤ degree p ∧ p ≠ 0) (hq : Monic q) :
       rw [leading_coeff_mul_monic hq, leading_coeff_mul_X_pow, leading_coeff_C])
 
 /-- See `div_by_monic`. -/
-noncomputable def divModByMonicAux : ∀ p : R[X] {q : R[X]}, Monic q → R[X] × R[X]
+noncomputable def divModByMonicAux : ∀ (p : R[X]) {q : R[X]}, Monic q → R[X] × R[X]
   | p => fun q hq =>
     if h : degree q ≤ degree p ∧ p ≠ 0 then
       let z := c (leadingCoeff p) * X ^ (natDegree p - natDegree q)
@@ -120,7 +120,7 @@ infixl:70 " /ₘ " => divByMonic
 -- mathport name: «expr %ₘ »
 infixl:70 " %ₘ " => modByMonic
 
-theorem degree_mod_by_monic_lt [Nontrivial R] : ∀ p : R[X] {q : R[X]} hq : Monic q, degree (p %ₘ q) < degree q
+theorem degree_mod_by_monic_lt [Nontrivial R] : ∀ (p : R[X]) {q : R[X]} (hq : Monic q), degree (p %ₘ q) < degree q
   | p => fun q hq =>
     if h : degree q ≤ degree p ∧ p ≠ 0 then by
       have wf := div_wf_lemma ⟨h.1, h.2⟩ hq
@@ -194,7 +194,7 @@ section CommRingₓ
 
 variable [CommRingₓ R] {p q : R[X]}
 
-theorem mod_by_monic_eq_sub_mul_div : ∀ p : R[X] {q : R[X]} hq : Monic q, p %ₘ q = p - q * (p /ₘ q)
+theorem mod_by_monic_eq_sub_mul_div : ∀ (p : R[X]) {q : R[X]} (hq : Monic q), p %ₘ q = p - q * (p /ₘ q)
   | p => fun q hq =>
     if h : degree q ≤ degree p ∧ p ≠ 0 then by
       have wf := div_wf_lemma h hq
@@ -488,12 +488,12 @@ theorem root_multiplicity_eq_zero {p : R[X]} {x : R} (h : ¬IsRoot p x) : rootMu
   split_ifs
   · rfl
     
-  rw [← Enat.coe_inj, Enat.coe_get, multiplicity.multiplicity_eq_zero_of_not_dvd, Nat.cast_zeroₓ]
+  rw [← PartEnat.coe_inj, PartEnat.coe_get, multiplicity.multiplicity_eq_zero_of_not_dvd, Nat.cast_zeroₓ]
   intro hdvd
   exact h (dvd_iff_is_root.mp hdvd)
 
 theorem root_multiplicity_pos {p : R[X]} (hp : p ≠ 0) {x : R} : 0 < rootMultiplicity x p ↔ IsRoot p x := by
-  rw [← dvd_iff_is_root, root_multiplicity_eq_multiplicity, dif_neg hp, ← Enat.coe_lt_coe, Enat.coe_get]
+  rw [← dvd_iff_is_root, root_multiplicity_eq_multiplicity, dif_neg hp, ← PartEnat.coe_lt_coe, PartEnat.coe_get]
   exact multiplicity.dvd_iff_multiplicity_pos
 
 @[simp]

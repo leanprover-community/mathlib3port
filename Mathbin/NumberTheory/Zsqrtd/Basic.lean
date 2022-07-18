@@ -112,19 +112,19 @@ theorem add_im (z w : ℤ√d) : (z + w).im = z.im + w.im :=
   rfl
 
 @[simp]
-theorem bit0_re z : (bit0 z : ℤ√d).re = bit0 z.re :=
+theorem bit0_re (z) : (bit0 z : ℤ√d).re = bit0 z.re :=
   rfl
 
 @[simp]
-theorem bit0_im z : (bit0 z : ℤ√d).im = bit0 z.im :=
+theorem bit0_im (z) : (bit0 z : ℤ√d).im = bit0 z.im :=
   rfl
 
 @[simp]
-theorem bit1_re z : (bit1 z : ℤ√d).re = bit1 z.re :=
+theorem bit1_re (z) : (bit1 z : ℤ√d).re = bit1 z.re :=
   rfl
 
 @[simp]
-theorem bit1_im z : (bit1 z : ℤ√d).im = bit0 z.im := by
+theorem bit1_im (z) : (bit1 z : ℤ√d).im = bit0 z.im := by
   simp [← bit1]
 
 /-- Negation in `ℤ√d` -/
@@ -593,7 +593,7 @@ instance : LE (ℤ√d) :=
 instance : LT (ℤ√d) :=
   ⟨fun a b => ¬b ≤ a⟩
 
-instance decidableNonnegg c d a b : Decidable (Nonnegg c d a b) := by
+instance decidableNonnegg (c d a b) : Decidable (Nonnegg c d a b) := by
   cases a <;>
     cases b <;>
       repeat'
@@ -750,7 +750,7 @@ protected theorem add_le_add_left (a b : ℤ√d) (ab : a ≤ b) (c : ℤ√d) :
 protected theorem le_of_add_le_add_left (a b c : ℤ√d) (h : c + a ≤ c + b) : a ≤ b := by
   simpa using Zsqrtd.add_le_add_left _ _ h (-c)
 
-protected theorem add_lt_add_left (a b : ℤ√d) (h : a < b) c : c + a < c + b := fun h' =>
+protected theorem add_lt_add_left (a b : ℤ√d) (h : a < b) (c) : c + a < c + b := fun h' =>
   h (Zsqrtd.le_of_add_le_add_left _ _ _ h')
 
 theorem nonneg_smul {a : ℤ√d} {n : ℕ} (ha : nonneg a) : nonneg (n * a) := by
@@ -829,10 +829,10 @@ protected theorem mul_nonneg (a b : ℤ√d) : 0 ≤ a → 0 ≤ b → 0 ≤ a *
       rw [← nonneg_iff_zero_le] <;>
     exact nonneg_mul
 
-theorem not_sq_le_succ c d y (h : 0 < c) : ¬SqLe (y + 1) c 0 d :=
+theorem not_sq_le_succ (c d y) (h : 0 < c) : ¬SqLe (y + 1) c 0 d :=
   not_le_of_gtₓ <| mul_pos (mul_pos h <| Nat.succ_posₓ _) <| Nat.succ_posₓ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`ns] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`ns] []
 /-- A nonsquare is a natural number that is not equal to the square of an
   integer. This is implemented as a typeclass because it's a necessary condition
   for much of the Pell equation theory. -/
@@ -874,7 +874,7 @@ theorem divides_sq_eq_zero_z {x y : ℤ} (h : x * x = d * y * y) : x = 0 ∧ y =
       let ⟨h1, h2⟩ := divides_sq_eq_zero (Int.coe_nat_inj h)
       ⟨Int.eq_zero_of_nat_abs_eq_zero h1, Int.eq_zero_of_nat_abs_eq_zero h2⟩
 
-theorem not_divides_sq x y : (x + 1) * (x + 1) ≠ d * (y + 1) * (y + 1) := fun e => by
+theorem not_divides_sq (x y) : (x + 1) * (x + 1) ≠ d * (y + 1) * (y + 1) := fun e => by
   have t := (divides_sq_eq_zero e).left <;> contradiction
 
 theorem nonneg_antisymm : ∀ {a : ℤ√d}, nonneg a → nonneg (-a) → a = 0

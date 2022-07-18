@@ -275,7 +275,7 @@ def prodMap (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₄) : M × M₂ →ₗ[
   (f.comp (fst R M M₂)).Prod (g.comp (snd R M M₂))
 
 @[simp]
-theorem prod_map_apply (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₄) x : f.prod_map g x = (f x.1, g x.2) :=
+theorem prod_map_apply (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₄) (x) : f.prod_map g x = (f x.1, g x.2) :=
   rfl
 
 theorem prod_map_comap_prod (f : M →ₗ[R] M₂) (g : M₃ →ₗ[R] M₄) (S : Submodule R M₂) (S' : Submodule R M₄) :
@@ -689,7 +689,7 @@ theorem prod_symm : (e₁.Prod e₂).symm = e₁.symm.Prod e₂.symm :=
   rfl
 
 @[simp]
-theorem prod_apply p : e₁.Prod e₂ p = (e₁ p.1, e₂ p.2) :=
+theorem prod_apply (p) : e₁.Prod e₂ p = (e₁ p.1, e₂ p.2) :=
   rfl
 
 @[simp, norm_cast]
@@ -722,11 +722,11 @@ protected def skewProd (f : M →ₗ[R] M₄) : (M × M₃) ≃ₗ[R] M₂ × M�
       simp }
 
 @[simp]
-theorem skew_prod_apply (f : M →ₗ[R] M₄) x : e₁.skewProd e₂ f x = (e₁ x.1, e₂ x.2 + f x.1) :=
+theorem skew_prod_apply (f : M →ₗ[R] M₄) (x) : e₁.skewProd e₂ f x = (e₁ x.1, e₂ x.2 + f x.1) :=
   rfl
 
 @[simp]
-theorem skew_prod_symm_apply (f : M →ₗ[R] M₄) x :
+theorem skew_prod_symm_apply (f : M →ₗ[R] M₄) (x) :
     (e₁.skewProd e₂ f).symm x = (e₁.symm x.1, e₂.symm (x.2 - f (e₁.symm x.1))) :=
   rfl
 
@@ -896,11 +896,11 @@ variable [Semiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommGr
 /-- Graph of a linear map. -/
 def graph : Submodule R (M × M₂) where
   Carrier := { p | p.2 = f p.1 }
-  add_mem' := fun a b ha : _ = _ hb : _ = _ => by
+  add_mem' := fun a b (ha : _ = _) (hb : _ = _) => by
     change _ + _ = f (_ + _)
     rw [map_add, ha, hb]
   zero_mem' := Eq.symm (map_zero f)
-  smul_mem' := fun c x hx : _ = _ => by
+  smul_mem' := fun c x (hx : _ = _) => by
     change _ • _ = f (_ • _)
     rw [map_smul, hx]
 

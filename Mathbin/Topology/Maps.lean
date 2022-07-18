@@ -53,6 +53,7 @@ section Inducing
 /-- A function `f : α → β` between topological spaces is inducing if the topology on `α` is induced
 by the topology on `β` through `f`, meaning that a set `s : set α` is open iff it is the preimage
 under `f` of some open set `t : set β`. -/
+@[mk_iff]
 structure Inducing [tα : TopologicalSpace α] [tβ : TopologicalSpace β] (f : α → β) : Prop where
   induced : tα = tβ.induced f
 
@@ -74,8 +75,11 @@ theorem inducing_of_inducing_compose {f : α → β} {g : β → γ} (hf : Conti
         rw [hgf.induced, ← continuous_iff_le_induced]
         apply hg.comp continuous_induced_dom)⟩
 
+theorem inducing_iff_nhds {f : α → β} : Inducing f ↔ ∀ a, 𝓝 a = comap f (𝓝 (f a)) :=
+  (inducing_iff _).trans (induced_iff_nhds_eq f)
+
 theorem Inducing.nhds_eq_comap {f : α → β} (hf : Inducing f) : ∀ a : α, 𝓝 a = comap f (𝓝 <| f a) :=
-  (induced_iff_nhds_eq f).1 hf.induced
+  inducing_iff_nhds.1 hf
 
 theorem Inducing.map_nhds_eq {f : α → β} (hf : Inducing f) (a : α) : (𝓝 a).map f = 𝓝[Range f] f a :=
   hf.induced.symm ▸ map_nhds_induced_eq a
@@ -136,6 +140,7 @@ section Embedding
 
 /-- A function between topological spaces is an embedding if it is injective,
   and for all `s : set α`, `s` is open iff it is the preimage of an open set. -/
+@[mk_iff]
 structure Embedding [tα : TopologicalSpace α] [tβ : TopologicalSpace β] (f : α → β) extends Inducing f : Prop where
   inj : Function.Injective f
 
@@ -146,7 +151,7 @@ theorem Function.Injective.embedding_induced [t : TopologicalSpace β] {f : α �
 variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
 theorem Embedding.mk' (f : α → β) (inj : Function.Injective f) (induced : ∀ a, comap f (𝓝 (f a)) = 𝓝 a) : Embedding f :=
-  ⟨⟨(induced_iff_nhds_eq f).2 fun a => (induced a).symm⟩, inj⟩
+  ⟨inducing_iff_nhds.2 fun a => (induced a).symm, inj⟩
 
 theorem embedding_id : Embedding (@id α) :=
   ⟨inducing_id, fun a₁ a₂ h => h⟩
@@ -440,15 +445,17 @@ theorem OpenEmbedding.open_iff_preimage_open {f : α → β} (hf : OpenEmbedding
 theorem open_embedding_of_embedding_open {f : α → β} (h₁ : Embedding f) (h₂ : IsOpenMap f) : OpenEmbedding f :=
   ⟨h₁, h₂.is_open_range⟩
 
+theorem open_embedding_iff_embedding_open {f : α → β} : OpenEmbedding f ↔ Embedding f ∧ IsOpenMap f :=
+  ⟨fun h => ⟨h.1, h.IsOpenMap⟩, fun h => open_embedding_of_embedding_open h.1 h.2⟩
+
 theorem open_embedding_of_continuous_injective_open {f : α → β} (h₁ : Continuous f) (h₂ : Function.Injective f)
     (h₃ : IsOpenMap f) : OpenEmbedding f := by
-  refine' open_embedding_of_embedding_open ⟨⟨_⟩, h₂⟩ h₃
-  apply le_antisymmₓ (continuous_iff_le_induced.mp h₁) _
-  intro s
-  change IsOpen _ → IsOpen _
-  rw [is_open_induced_iff]
-  refine' fun hs => ⟨f '' s, h₃ s hs, _⟩
-  rw [preimage_image_eq _ h₂]
+  simp only [← open_embedding_iff_embedding_open, ← embedding_iff, ← inducing_iff_nhds, *, ← and_trueₓ]
+  exact fun a => le_antisymmₓ (h₁.tendsto _).le_comap (@comap_map _ _ (𝓝 a) _ h₂ ▸ comap_mono (h₃.nhds_le _))
+
+theorem open_embedding_iff_continuous_injective_open {f : α → β} :
+    OpenEmbedding f ↔ Continuous f ∧ Function.Injective f ∧ IsOpenMap f :=
+  ⟨fun h => ⟨h.Continuous, h.inj, h.IsOpenMap⟩, fun h => open_embedding_of_continuous_injective_open h.1 h.2.1 h.2.2⟩
 
 theorem open_embedding_id : OpenEmbedding (@id α) :=
   ⟨embedding_id, IsOpenMap.id.is_open_range⟩
@@ -457,20 +464,18 @@ theorem OpenEmbedding.comp {g : β → γ} {f : α → β} (hg : OpenEmbedding g
     OpenEmbedding (g ∘ f) :=
   ⟨hg.1.comp hf.1, (hg.IsOpenMap.comp hf.IsOpenMap).is_open_range⟩
 
-theorem open_embedding_of_open_embedding_compose {α β γ : Type _} [TopologicalSpace α] [TopologicalSpace β]
-    [TopologicalSpace γ] (f : α → β) {g : β → γ} (hg : OpenEmbedding g) (h : OpenEmbedding (g ∘ f)) : OpenEmbedding f :=
-  by
-  have hf := hg.to_embedding.continuous_iff.mpr h.continuous
-  constructor
-  · exact embedding_of_embedding_compose hf hg.continuous h.to_embedding
-    
-  · rw [hg.open_iff_image_open, ← Set.image_univ, ← Set.image_comp, ← h.open_iff_image_open]
-    exact is_open_univ
-    
+theorem OpenEmbedding.is_open_map_iff {g : β → γ} {f : α → β} (hg : OpenEmbedding g) :
+    IsOpenMap f ↔ IsOpenMap (g ∘ f) := by
+  simp only [← is_open_map_iff_nhds_le, @map_map _ _ _ _ f g, hg.map_nhds_eq, ← map_le_map_iff hg.inj]
 
-theorem open_embedding_iff_open_embedding_compose {α β γ : Type _} [TopologicalSpace α] [TopologicalSpace β]
-    [TopologicalSpace γ] (f : α → β) {g : β → γ} (hg : OpenEmbedding g) : OpenEmbedding (g ∘ f) ↔ OpenEmbedding f :=
-  ⟨open_embedding_of_open_embedding_compose f hg, hg.comp⟩
+theorem OpenEmbedding.of_comp_iff (f : α → β) {g : β → γ} (hg : OpenEmbedding g) :
+    OpenEmbedding (g ∘ f) ↔ OpenEmbedding f := by
+  simp only [← open_embedding_iff_continuous_injective_open, hg.is_open_map_iff, hg.1.continuous_iff, ←
+    hg.inj.of_comp_iff]
+
+theorem OpenEmbedding.of_comp (f : α → β) {g : β → γ} (hg : OpenEmbedding g) (h : OpenEmbedding (g ∘ f)) :
+    OpenEmbedding f :=
+  (OpenEmbedding.of_comp_iff f hg).1 h
 
 end OpenEmbedding
 

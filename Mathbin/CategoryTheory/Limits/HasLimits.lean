@@ -99,7 +99,7 @@ class HasLimitsOfShape : Prop where
 if it has limits of every shape `J : Type u₁` with `[category.{v₁} J]`.
 -/
 class HasLimitsOfSize (C : Type u) [Category.{v} C] : Prop where
-  HasLimitsOfShape : ∀ J : Type u₁ [𝒥 : Category.{v₁} J], HasLimitsOfShape J C := by
+  HasLimitsOfShape : ∀ (J : Type u₁) [𝒥 : Category.{v₁} J], HasLimitsOfShape J C := by
     run_tac
       tactic.apply_instance
 
@@ -254,7 +254,7 @@ morphisms from a specified object `W` to the limit object,
 and an explicit componentwise description of cones with cone point `W`.
 -/
 def limit.homIso' (F : J ⥤ C) [HasLimit F] (W : C) :
-    ULift.{u₁} (W ⟶ limit F : Type v) ≅ { p : ∀ j, W ⟶ F.obj j // ∀ {j j' : J} f : j ⟶ j', p j ≫ F.map f = p j' } :=
+    ULift.{u₁} (W ⟶ limit F : Type v) ≅ { p : ∀ j, W ⟶ F.obj j // ∀ {j j' : J} (f : j ⟶ j'), p j ≫ F.map f = p j' } :=
   (limit.isLimit F).homIso' W
 
 theorem limit.lift_extend {F : J ⥤ C} [HasLimit F] (c : Cone F) {X : C} (f : X ⟶ c.x) :
@@ -557,7 +557,7 @@ class HasColimitsOfShape : Prop where
 if it has colimits of every shape `J : Type u₁` with `[category.{v₁} J]`.
 -/
 class HasColimitsOfSize (C : Type u) [Category.{v} C] : Prop where
-  HasColimitsOfShape : ∀ J : Type u₁ [𝒥 : Category.{v₁} J], HasColimitsOfShape J C := by
+  HasColimitsOfShape : ∀ (J : Type u₁) [𝒥 : Category.{v₁} J], HasColimitsOfShape J C := by
     run_tac
       tactic.apply_instance
 
@@ -718,7 +718,7 @@ morphisms from the colimit object to a specified object `W`,
 and an explicit componentwise description of cocones with cone point `W`.
 -/
 def colimit.homIso' (F : J ⥤ C) [HasColimit F] (W : C) :
-    ULift.{u₁} (colimit F ⟶ W : Type v) ≅ { p : ∀ j, F.obj j ⟶ W // ∀ {j j'} f : j ⟶ j', F.map f ≫ p j' = p j } :=
+    ULift.{u₁} (colimit F ⟶ W : Type v) ≅ { p : ∀ j, F.obj j ⟶ W // ∀ {j j'} (f : j ⟶ j'), F.map f ≫ p j' = p j } :=
   (colimit.isColimit F).homIso' W
 
 theorem colimit.desc_extend (F : J ⥤ C) [HasColimit F] (c : Cocone F) {X : C} (f : c.x ⟶ X) :

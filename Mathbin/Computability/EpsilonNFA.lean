@@ -39,7 +39,7 @@ namespace εNFA
 ε-transitions from an element of the set. -/
 inductive εClosure (S : Set σ) : Set σ
   | base : ∀, ∀ s ∈ S, ∀, ε_closure s
-  | step : ∀ s, ∀ t ∈ M.step s none, ∀, ε_closure s → ε_closure t
+  | step : ∀ (s), ∀ t ∈ M.step s none, ∀, ε_closure s → ε_closure t
 
 @[simp]
 theorem subset_ε_closure (S : Set σ) : S ⊆ M.εClosure S :=
@@ -201,11 +201,11 @@ instance : Inhabited (εNFA α σ) :=
 variable (P : εNFA α σ) (Q : εNFA α σ')
 
 @[simp]
-theorem step_zero s a : (0 : εNFA α σ).step s a = ∅ :=
+theorem step_zero (s a) : (0 : εNFA α σ).step s a = ∅ :=
   rfl
 
 @[simp]
-theorem step_one s a : (1 : εNFA α σ).step s a = ∅ :=
+theorem step_one (s a) : (1 : εNFA α σ).step s a = ∅ :=
   rfl
 
 @[simp]

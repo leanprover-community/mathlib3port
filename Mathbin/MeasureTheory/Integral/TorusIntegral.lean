@@ -223,7 +223,7 @@ theorem torus_integral_dim0 (f : ℂ⁰ → E) (c : ℂ⁰) (R : ℝ⁰) : (∯ 
 (up to the natural equivalence between `ℂ` and `fin 1 → ℂ`). -/
 theorem torus_integral_dim1 (f : ℂ¹ → E) (c : ℂ¹) (R : ℝ¹) : (∯ x in T(c, R), f x) = ∮ z in C(c 0, R 0), f fun _ => z :=
   by
-  have : ((fun x : ℝ b : Finₓ 1 => x) ⁻¹' Icc 0 fun _ => 2 * π) = Icc 0 (2 * π) :=
+  have : ((fun (x : ℝ) (b : Finₓ 1) => x) ⁻¹' Icc 0 fun _ => 2 * π) = Icc 0 (2 * π) :=
     (OrderIso.funUnique (Finₓ 1) ℝ).symm.preimage_Icc _ _
   simp only [← torusIntegral, ← circleIntegral, ← intervalIntegral.integral_of_le real.two_pi_pos.le, ←
     measure.restrict_congr_set Ioc_ae_eq_Icc, ← deriv_circle_map, ← Finₓ.prod_univ_one,

@@ -41,7 +41,7 @@ open Pointwise Convex
 theorem Real.convex_iff_is_preconnected {s : Set ℝ} : Convex ℝ s ↔ IsPreconnected s :=
   convex_iff_ord_connected.trans is_preconnected_iff_ord_connected.symm
 
-alias Real.convex_iff_is_preconnected ↔ Convex.is_preconnected IsPreconnected.convex
+alias Real.convex_iff_is_preconnected ↔ _ IsPreconnected.convex
 
 /-! ### Standard simplex -/
 
@@ -242,6 +242,7 @@ theorem Convex.subset_interior_image_homothety_of_one_lt {s : Set E} (hs : Conve
     (t : ℝ) (ht : 1 < t) : s ⊆ Interior (homothety x t '' s) :=
   subset_closure.trans <| hs.closure_subset_interior_image_homothety_of_one_lt hx t ht
 
+/-- A nonempty convex set is path connected. -/
 protected theorem Convex.is_path_connected {s : Set E} (hconv : Convex ℝ s) (hne : s.Nonempty) : IsPathConnected s := by
   refine' is_path_connected_iff.mpr ⟨hne, _⟩
   intro x x_in y y_in
@@ -249,6 +250,14 @@ protected theorem Convex.is_path_connected {s : Set E} (hconv : Convex ℝ s) (h
   rw [segment_eq_image_line_map] at H
   exact
     JoinedIn.of_line affine_map.line_map_continuous.continuous_on (line_map_apply_zero _ _) (line_map_apply_one _ _) H
+
+/-- A nonempty convex set is connected. -/
+protected theorem Convex.is_connected {s : Set E} (h : Convex ℝ s) (hne : s.Nonempty) : IsConnected s :=
+  (h.IsPathConnected hne).IsConnected
+
+/-- A convex set is preconnected. -/
+protected theorem Convex.is_preconnected {s : Set E} (h : Convex ℝ s) : IsPreconnected s :=
+  s.eq_empty_or_nonempty.elim (fun h => h.symm ▸ is_preconnected_empty) fun hne => (h.IsConnected hne).IsPreconnected
 
 /-- Every topological vector space over ℝ is path connected.
 

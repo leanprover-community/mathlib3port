@@ -51,24 +51,24 @@ def foldr (f : M →ₗ[R] N →ₗ[R] N) (hf : ∀ m x, f m (f m x) = Q m • x
   (CliffordAlgebra.lift Q ⟨f, fun v => LinearMap.ext <| hf v⟩).toLinearMap.flip
 
 @[simp]
-theorem foldr_ι (f : M →ₗ[R] N →ₗ[R] N) hf (n : N) (m : M) : foldr Q f hf n (ι Q m) = f m n :=
+theorem foldr_ι (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) (m : M) : foldr Q f hf n (ι Q m) = f m n :=
   LinearMap.congr_fun (lift_ι_apply _ _ _) n
 
 @[simp]
-theorem foldr_algebra_map (f : M →ₗ[R] N →ₗ[R] N) hf (n : N) (r : R) : foldr Q f hf n (algebraMap R _ r) = r • n :=
+theorem foldr_algebra_map (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) (r : R) : foldr Q f hf n (algebraMap R _ r) = r • n :=
   LinearMap.congr_fun (AlgHom.commutes _ r) n
 
 @[simp]
-theorem foldr_one (f : M →ₗ[R] N →ₗ[R] N) hf (n : N) : foldr Q f hf n 1 = n :=
+theorem foldr_one (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) : foldr Q f hf n 1 = n :=
   LinearMap.congr_fun (AlgHom.map_one _) n
 
 @[simp]
-theorem foldr_mul (f : M →ₗ[R] N →ₗ[R] N) hf (n : N) (a b : CliffordAlgebra Q) :
+theorem foldr_mul (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) (a b : CliffordAlgebra Q) :
     foldr Q f hf n (a * b) = foldr Q f hf (foldr Q f hf n b) a :=
   LinearMap.congr_fun (AlgHom.map_mul _ _ _) n
 
 /-- This lemma demonstrates the origin of the `foldr` name. -/
-theorem foldr_prod_map_ι (l : List M) (f : M →ₗ[R] N →ₗ[R] N) hf (n : N) :
+theorem foldr_prod_map_ι (l : List M) (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) :
     foldr Q f hf n (l.map <| ι Q).Prod = List.foldr (fun m n => f m n) n l := by
   induction' l with hd tl ih
   · rw [List.map_nil, List.prod_nil, List.foldr_nil, foldr_one]
@@ -88,34 +88,34 @@ def foldl (f : M →ₗ[R] N →ₗ[R] N) (hf : ∀ m x, f m (f m x) = Q m • x
   LinearMap.compl₂ (foldr Q f hf) reverse
 
 @[simp]
-theorem foldl_reverse (f : M →ₗ[R] N →ₗ[R] N) hf (n : N) (x : CliffordAlgebra Q) :
+theorem foldl_reverse (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) (x : CliffordAlgebra Q) :
     foldl Q f hf n (reverse x) = foldr Q f hf n x :=
   FunLike.congr_arg (foldr Q f hf n) <| reverse_reverse _
 
 @[simp]
-theorem foldr_reverse (f : M →ₗ[R] N →ₗ[R] N) hf (n : N) (x : CliffordAlgebra Q) :
+theorem foldr_reverse (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) (x : CliffordAlgebra Q) :
     foldr Q f hf n (reverse x) = foldl Q f hf n x :=
   rfl
 
 @[simp]
-theorem foldl_ι (f : M →ₗ[R] N →ₗ[R] N) hf (n : N) (m : M) : foldl Q f hf n (ι Q m) = f m n := by
+theorem foldl_ι (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) (m : M) : foldl Q f hf n (ι Q m) = f m n := by
   rw [← foldr_reverse, reverse_ι, foldr_ι]
 
 @[simp]
-theorem foldl_algebra_map (f : M →ₗ[R] N →ₗ[R] N) hf (n : N) (r : R) : foldl Q f hf n (algebraMap R _ r) = r • n := by
+theorem foldl_algebra_map (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) (r : R) : foldl Q f hf n (algebraMap R _ r) = r • n := by
   rw [← foldr_reverse, reverse.commutes, foldr_algebra_map]
 
 @[simp]
-theorem foldl_one (f : M →ₗ[R] N →ₗ[R] N) hf (n : N) : foldl Q f hf n 1 = n := by
+theorem foldl_one (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) : foldl Q f hf n 1 = n := by
   rw [← foldr_reverse, reverse.map_one, foldr_one]
 
 @[simp]
-theorem foldl_mul (f : M →ₗ[R] N →ₗ[R] N) hf (n : N) (a b : CliffordAlgebra Q) :
+theorem foldl_mul (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) (a b : CliffordAlgebra Q) :
     foldl Q f hf n (a * b) = foldl Q f hf (foldl Q f hf n a) b := by
   rw [← foldr_reverse, ← foldr_reverse, ← foldr_reverse, reverse.map_mul, foldr_mul]
 
 /-- This lemma demonstrates the origin of the `foldl` name. -/
-theorem foldl_prod_map_ι (l : List M) (f : M →ₗ[R] N →ₗ[R] N) hf (n : N) :
+theorem foldl_prod_map_ι (l : List M) (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) :
     foldl Q f hf n (l.map <| ι Q).Prod = List.foldlₓ (fun m n => f n m) n l := by
   rw [← foldr_reverse, reverse_prod_map_ι, ← List.map_reverse, foldr_prod_map_ι, List.foldr_reverse]
 

@@ -107,7 +107,7 @@ theorem Compares.inj [Preorderₓ α] {o₁} : ∀ {o₂} {a b : α}, Compares o
   | Gt, a, b, h₁, h₂ => h₁.eq_gt.2 h₂
 
 theorem compares_iff_of_compares_impl {β : Type _} [LinearOrderₓ α] [Preorderₓ β] {a b : α} {a' b' : β}
-    (h : ∀ {o}, Compares o a b → Compares o a' b') o : Compares o a b ↔ Compares o a' b' := by
+    (h : ∀ {o}, Compares o a b → Compares o a' b') (o) : Compares o a b ↔ Compares o a' b' := by
   refine' ⟨h, fun ho => _⟩
   cases' lt_trichotomyₓ a b with hab hab
   · change compares Ordering.lt a b at hab
@@ -122,13 +122,13 @@ theorem compares_iff_of_compares_impl {β : Type _} [LinearOrderₓ α] [Preorde
       
     
 
-theorem swap_or_else o₁ o₂ : (orElse o₁ o₂).swap = orElse o₁.swap o₂.swap := by
+theorem swap_or_else (o₁ o₂) : (orElse o₁ o₂).swap = orElse o₁.swap o₂.swap := by
   cases o₁ <;>
     try
         rfl <;>
       cases o₂ <;> rfl
 
-theorem or_else_eq_lt o₁ o₂ : orElse o₁ o₂ = lt ↔ o₁ = lt ∨ o₁ = Eq ∧ o₂ = lt := by
+theorem or_else_eq_lt (o₁ o₂) : orElse o₁ o₂ = lt ↔ o₁ = lt ∨ o₁ = Eq ∧ o₂ = lt := by
   cases o₁ <;>
     cases o₂ <;>
       exact by

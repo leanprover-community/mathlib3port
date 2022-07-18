@@ -29,8 +29,8 @@ universe v₁ u₁
 -- morphism levels before object levels. See note [category_theory universes].
 variable (C : Type u₁) [Category.{v₁} C]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`η'] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`μ'] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`η'] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`μ'] []
 /-- The data of a monad on C consists of an endofunctor T together with natural transformations
 η : 𝟭 C ⟶ T and μ : T ⋙ T ⟶ T satisfying three equations:
 - T μ_X ≫ μ_X = μ_(TX) ≫ μ_X (associativity)
@@ -50,8 +50,8 @@ structure Monad extends C ⥤ C where
     run_tac
       obviously
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`ε'] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`δ'] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`ε'] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`δ'] []
 /-- The data of a comonad on C consists of an endofunctor G together with natural transformations
 ε : G ⟶ 𝟭 C and δ : G ⟶ G ⋙ G satisfying three equations:
 - δ_X ≫ G δ_X = δ_X ≫ δ_(GX) (coassociativity)
@@ -225,7 +225,7 @@ theorem comp_to_nat_trans {T₁ T₂ T₃ : Comonad C} (f : T₁ ⟶ T₂) (g : 
 /-- Construct a monad isomorphism from a natural isomorphism of functors where the forward
 direction is a monad morphism. -/
 @[simps]
-def MonadIso.mk {M N : Monad C} (f : (M : C ⥤ C) ≅ N) f_η f_μ : M ≅ N where
+def MonadIso.mk {M N : Monad C} (f : (M : C ⥤ C) ≅ N) (f_η f_μ) : M ≅ N where
   Hom := { toNatTrans := f.Hom, app_η' := f_η, app_μ' := f_μ }
   inv :=
     { toNatTrans := f.inv,
@@ -240,7 +240,7 @@ def MonadIso.mk {M N : Monad C} (f : (M : C ⥤ C) ≅ N) f_η f_μ : M ≅ N wh
 /-- Construct a comonad isomorphism from a natural isomorphism of functors where the forward
 direction is a comonad morphism. -/
 @[simps]
-def ComonadIso.mk {M N : Comonad C} (f : (M : C ⥤ C) ≅ N) f_ε f_δ : M ≅ N where
+def ComonadIso.mk {M N : Comonad C} (f : (M : C ⥤ C) ≅ N) (f_ε f_δ) : M ≅ N where
   Hom := { toNatTrans := f.Hom, app_ε' := f_ε, app_δ' := f_δ }
   inv :=
     { toNatTrans := f.inv,
@@ -264,7 +264,7 @@ def monadToFunctor : Monad C ⥤ C ⥤ C where
 instance : Faithful (monadToFunctor C) where
 
 @[simp]
-theorem monad_to_functor_map_iso_monad_iso_mk {M N : Monad C} (f : (M : C ⥤ C) ≅ N) f_η f_μ :
+theorem monad_to_functor_map_iso_monad_iso_mk {M N : Monad C} (f : (M : C ⥤ C) ≅ N) (f_η f_μ) :
     (monadToFunctor _).mapIso (MonadIso.mk f f_η f_μ) = f := by
   ext
   rfl
@@ -285,7 +285,7 @@ def comonadToFunctor : Comonad C ⥤ C ⥤ C where
 instance : Faithful (comonadToFunctor C) where
 
 @[simp]
-theorem comonad_to_functor_map_iso_comonad_iso_mk {M N : Comonad C} (f : (M : C ⥤ C) ≅ N) f_ε f_δ :
+theorem comonad_to_functor_map_iso_comonad_iso_mk {M N : Comonad C} (f : (M : C ⥤ C) ≅ N) (f_ε f_δ) :
     (comonadToFunctor _).mapIso (ComonadIso.mk f f_ε f_δ) = f := by
   ext
   rfl

@@ -177,13 +177,13 @@ theorem forall_comm.{u, v} {α : Sort u} {β : Sort v} (p : α → β → Prop) 
   ⟨fun h b a => h a b, fun h b a => h a b⟩
 
 theorem forall_elim_eq_left.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a' = a → Prop) :
-    (∀ a' : α h : a' = a, p a' h) ↔ p a rfl :=
+    (∀ (a' : α) (h : a' = a), p a' h) ↔ p a rfl :=
   ⟨fun h => h a rfl, fun h a' h_eq =>
     match a', h_eq with
     | _, rfl => h⟩
 
 theorem forall_elim_eq_right.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a = a' → Prop) :
-    (∀ a' : α h : a = a', p a' h) ↔ p a rfl :=
+    (∀ (a' : α) (h : a = a'), p a' h) ↔ p a rfl :=
   ⟨fun h => h a rfl, fun h a' h_eq =>
     match a', h_eq with
     | _, rfl => h⟩

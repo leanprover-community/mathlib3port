@@ -167,7 +167,7 @@ below as `trivialization F proj`) if the total space has not been given a topolo
 have a topology on both the fiber and the base space. Through the construction
 `topological_fiber_prebundle F proj` it will be possible to promote a
 `pretrivialization F proj` to a `trivialization F proj`. -/
-@[nolint has_inhabited_instance]
+@[ext, nolint has_inhabited_instance]
 structure TopologicalFiberBundle.Pretrivialization (proj : Z → B) extends LocalEquiv Z (B × F) where
   open_target : IsOpen target
   BaseSet : Set B
@@ -282,7 +282,7 @@ variable [TopologicalSpace Z]
 `proj : Z → B` with fiber `F`, as a local homeomorphism between `Z` and `B × F` defined between two
 sets of the form `proj ⁻¹' base_set` and `base_set × F`, acting trivially on the first coordinate.
 -/
-@[nolint has_inhabited_instance]
+@[ext, nolint has_inhabited_instance]
 structure TopologicalFiberBundle.Trivialization (proj : Z → B) extends LocalHomeomorph Z (B × F) where
   BaseSet : Set B
   open_base_set : IsOpen base_set
@@ -305,6 +305,11 @@ instance : CoeFun (Trivialization F proj) fun _ => Z → B × F :=
 
 instance : Coe (Trivialization F proj) (Pretrivialization F proj) :=
   ⟨toPretrivialization⟩
+
+theorem to_pretrivialization_injective : Function.Injective fun e : Trivialization F proj => e.toPretrivialization := by
+  intro e e'
+  rw [pretrivialization.ext_iff, trivialization.ext_iff, ← local_homeomorph.to_local_equiv_injective.eq_iff]
+  exact id
 
 @[simp, mfld_simps]
 theorem coe_coe : ⇑e.toLocalHomeomorph = e :=
@@ -332,7 +337,7 @@ theorem source_inter_preimage_target_inter (s : Set (B × F)) : e.Source ∩ e �
   e.toLocalHomeomorph.source_inter_preimage_target_inter s
 
 @[simp, mfld_simps]
-theorem coe_mk (e : LocalHomeomorph Z (B × F)) i j k l m (x : Z) :
+theorem coe_mk (e : LocalHomeomorph Z (B × F)) (i j k l m) (x : Z) :
     (Trivialization.mk e i j k l m : Trivialization F proj) x = e x :=
   rfl
 
@@ -594,14 +599,14 @@ noncomputable def TopologicalFiberBundle.Trivialization.comap (e : Trivializatio
   Source := { p | f (p : B' × Z).1 ∈ e.BaseSet }
   Target := { p | f p.1 ∈ e.BaseSet }
   map_source' := fun p hp => hp
-  map_target' := fun p hp : f p.1 ∈ e.BaseSet => by
+  map_target' := fun p (hp : f p.1 ∈ e.BaseSet) => by
     simp [← hp]
   left_inv' := by
     rintro ⟨⟨b, x⟩, hbx⟩ hb
     dsimp'  at *
     have hx : x ∈ e.source := e.mem_source.2 (hbx ▸ hb)
     ext <;> simp [*]
-  right_inv' := fun p hp : f p.1 ∈ e.BaseSet => by
+  right_inv' := fun p (hp : f p.1 ∈ e.BaseSet) => by
     simp [*, ← e.apply_symm_apply']
   open_source := e.open_base_set.Preimage (hf.comp <| continuous_fst.comp continuous_subtype_coe)
   open_target := e.open_base_set.Preimage (hf.comp continuous_fst)
@@ -618,7 +623,7 @@ noncomputable def TopologicalFiberBundle.Trivialization.comap (e : Trivializatio
       ContinuousOn (fun p : B' × F => (p.1, e.to_local_homeomorph.symm (f p.1, p.2)))
         { p : B' × F | f p.1 ∈ e.base_set }
       by
-      refine' this.congr fun p hp : f p.1 ∈ e.base_set => _
+      refine' this.congr fun p (hp : f p.1 ∈ e.base_set) => _
       simp [← hp]
     · refine' continuous_on_fst.prod (e.to_local_homeomorph.symm.continuous_on.comp _ _)
       · exact ((hf.comp continuous_fst).prod_mk continuous_snd).ContinuousOn
@@ -750,7 +755,6 @@ noncomputable def disjointUnion (e e' : Trivialization F proj) (H : Disjoint e.B
       exact fun h => H ⟨h, hp'⟩
       
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `h` is a topological fiber bundle over a conditionally complete linear order,
 then it is trivial over any closed interval. -/
 theorem _root_.is_topological_fiber_bundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinearOrder B]
@@ -1218,7 +1222,7 @@ variable (F) {Z : Type _} [TopologicalSpace B] [TopologicalSpace F] {proj : Z �
 
 open TopologicalFiberBundle
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas)
 /-- This structure permits to define a fiber bundle when trivializations are given as local
 equivalences but there is not yet a topology on the total space. The total space is hence given a
 topology in such a way that there is a fiber bundle structure for which the local equivalences
@@ -1230,7 +1234,7 @@ structure TopologicalFiberPrebundle (proj : Z → B) where
   mem_base_pretrivialization_at : ∀ x : B, x ∈ (pretrivialization_at x).BaseSet
   pretrivialization_mem_atlas : ∀ x : B, pretrivialization_at x ∈ pretrivialization_atlas
   continuous_triv_change :
-    ∀ e e' _ : e ∈ pretrivialization_atlas _ : e' ∈ pretrivialization_atlas,
+    ∀ (e e') (_ : e ∈ pretrivialization_atlas) (_ : e' ∈ pretrivialization_atlas),
       ContinuousOn (e ∘ e'.toLocalEquiv.symm) (e'.Target ∩ e'.toLocalEquiv.symm ⁻¹' e.Source)
 
 namespace TopologicalFiberPrebundle

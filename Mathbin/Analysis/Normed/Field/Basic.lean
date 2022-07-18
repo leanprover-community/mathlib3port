@@ -155,12 +155,12 @@ theorem norm_mul_le (a b : α) : ∥a * b∥ ≤ ∥a∥ * ∥b∥ :=
 theorem nnnorm_mul_le (a b : α) : ∥a * b∥₊ ≤ ∥a∥₊ * ∥b∥₊ := by
   simpa only [norm_to_nnreal, Real.to_nnreal_mul (norm_nonneg _)] using Real.to_nnreal_mono (norm_mul_le _ _)
 
-theorem one_le_norm_one β [NormedRing β] [Nontrivial β] : 1 ≤ ∥(1 : β)∥ :=
+theorem one_le_norm_one (β) [NormedRing β] [Nontrivial β] : 1 ≤ ∥(1 : β)∥ :=
   (le_mul_iff_one_le_left <| norm_pos_iff.mpr (one_ne_zero : (1 : β) ≠ 0)).mp
     (by
       simpa only [← mul_oneₓ] using norm_mul_le (1 : β) 1)
 
-theorem one_le_nnnorm_one β [NormedRing β] [Nontrivial β] : 1 ≤ ∥(1 : β)∥₊ :=
+theorem one_le_nnnorm_one (β) [NormedRing β] [Nontrivial β] : 1 ≤ ∥(1 : β)∥₊ :=
   one_le_norm_one β
 
 theorem Filter.Tendsto.zero_mul_is_bounded_under_le {f g : ι → α} {l : Filter ι} (hf : Tendsto f l (𝓝 0))
@@ -454,11 +454,11 @@ theorem nnnorm_inv (a : α) : ∥a⁻¹∥₊ = ∥a∥₊⁻¹ :=
     simp
 
 @[simp]
-theorem norm_zpow : ∀ a : α n : ℤ, ∥a ^ n∥ = ∥a∥ ^ n :=
+theorem norm_zpow : ∀ (a : α) (n : ℤ), ∥a ^ n∥ = ∥a∥ ^ n :=
   (normHom : α →*₀ ℝ).map_zpow
 
 @[simp]
-theorem nnnorm_zpow : ∀ a : α n : ℤ, ∥a ^ n∥₊ = ∥a∥₊ ^ n :=
+theorem nnnorm_zpow : ∀ (a : α) (n : ℤ), ∥a ^ n∥₊ = ∥a∥₊ ^ n :=
   (nnnormHom : α →*₀ ℝ≥0 ).map_zpow
 
 /-- Multiplication on the left by a nonzero element of a normed division ring tends to infinity at

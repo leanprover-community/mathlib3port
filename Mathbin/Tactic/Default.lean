@@ -37,6 +37,7 @@ import Mathbin.Tactic.Transport
 import Mathbin.Tactic.UnfoldCases
 import Mathbin.Tactic.FieldSimp
 import Mathbin.Tactic.LinearCombination
+import Mathbin.Tactic.Polyrith
 
 -- ensure basic tactics are available
 -- ensure basic tactics are available

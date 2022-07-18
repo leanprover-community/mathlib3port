@@ -18,7 +18,7 @@ In particular the topology is the following:
 `γ₀ ∈ Γ₀ such that {γ | γ < γ₀} ⊆ U`", but this fact is not proven here since the neighborhoods
 description is what is actually useful.
 
-We prove this topology is ordered and regular (in addition to be compatible with the monoid
+We prove this topology is ordered and T₃ (in addition to be compatible with the monoid
 structure).
 
 All this is useful to extend a valuation to a completion. This is an abstract version of how the
@@ -29,7 +29,7 @@ absolute value (resp. `p`-adic absolute value) on `ℚ` is extended to `ℝ` (re
 This topology is not defined as an instance since it may not be the desired topology on
 a linearly ordered commutative group with zero. You can locally activate this topology using
 `local attribute [instance] linear_ordered_comm_group_with_zero.topological_space`
-All other instances will (`ordered_topology`, `regular_space`, `has_continuous_mul`) then follow.
+All other instances will (`ordered_topology`, `t3_space`, `has_continuous_mul`) then follow.
 
 -/
 
@@ -204,8 +204,8 @@ instance (priority := 100) ordered_topology :
       rwa [h1, h2]
       
 
-/-- The topology on a linearly ordered group with zero element adjoined is T₃ (aka regular). -/
-instance (priority := 100) regular_space : RegularSpace Γ₀ := by
+/-- The topology on a linearly ordered group with zero element adjoined is T₃. -/
+instance (priority := 100) t3_space : T3Space Γ₀ := by
   have : T1Space Γ₀ := T2Space.t1_space
   constructor
   intro s x s_closed x_not_in_s
@@ -236,12 +236,12 @@ instance (priority := 100) regular_space : RegularSpace Γ₀ := by
         simp [← subset.refl]⟩
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y «expr ≠ » (0 : Γ₀))
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y «expr ≠ » (0 : Γ₀))
 /-- The topology on a linearly ordered group with zero element adjoined makes it a topological
 monoid. -/
 instance (priority := 100) : HasContinuousMul Γ₀ :=
   ⟨by
-    have common : ∀ y _ : y ≠ (0 : Γ₀), ContinuousAt (fun p : Γ₀ × Γ₀ => p.fst * p.snd) (0, y) := by
+    have common : ∀ (y) (_ : y ≠ (0 : Γ₀)), ContinuousAt (fun p : Γ₀ × Γ₀ => p.fst * p.snd) (0, y) := by
       intro y hy
       set γ := Units.mk0 y hy
       suffices tendsto (fun p : Γ₀ × Γ₀ => p.fst * p.snd) ((𝓝 0).Prod (𝓝 γ)) (𝓝 0) by

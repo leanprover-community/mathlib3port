@@ -34,7 +34,7 @@ universe u v w w₁ w₂
 
 /-- A Lie (ring) module is trivial iff all brackets vanish. -/
 class LieModule.IsTrivial (L : Type v) (M : Type w) [HasBracket L M] [Zero M] : Prop where
-  trivial : ∀ x : L m : M, ⁅x,m⁆ = 0
+  trivial : ∀ (x : L) (m : M), ⁅x,m⁆ = 0
 
 @[simp]
 theorem trivial_lie_zero (L : Type v) (M : Type w) [HasBracket L M] [Zero M] [LieModule.IsTrivial L M] (x : L) (m : M) :

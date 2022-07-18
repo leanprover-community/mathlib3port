@@ -35,15 +35,15 @@ variable {α : Type _} {β : Type _} [Denumerable α] [Denumerable β]
 
 open Encodable
 
-theorem decode_is_some α [Denumerable α] (n : ℕ) : (decode α n).isSome :=
+theorem decode_is_some (α) [Denumerable α] (n : ℕ) : (decode α n).isSome :=
   Option.is_some_iff_exists.2 <| (decode_inv n).imp fun a => Exists.fst
 
 /-- Returns the `n`-th element of `α` indexed by the decoding. -/
-def ofNat α [f : Denumerable α] (n : ℕ) : α :=
+def ofNat (α) [f : Denumerable α] (n : ℕ) : α :=
   Option.getₓ (decode_is_some α n)
 
 @[simp]
-theorem decode_eq_of_nat α [Denumerable α] (n : ℕ) : decode α n = some (ofNat α n) :=
+theorem decode_eq_of_nat (α) [Denumerable α] (n : ℕ) : decode α n = some (ofNat α n) :=
   Option.eq_some_of_is_some _
 
 @[simp]
@@ -51,16 +51,16 @@ theorem of_nat_of_decode {n b} (h : decode α n = some b) : ofNat α n = b :=
   Option.some.injₓ <| (decode_eq_of_nat _ _).symm.trans h
 
 @[simp]
-theorem encode_of_nat n : encode (ofNat α n) = n := by
+theorem encode_of_nat (n) : encode (ofNat α n) = n := by
   let ⟨a, h, e⟩ := decode_inv n
   rwa [of_nat_of_decode h]
 
 @[simp]
-theorem of_nat_encode a : ofNat α (encode a) = a :=
+theorem of_nat_encode (a) : ofNat α (encode a) = a :=
   of_nat_of_decode (encodek _)
 
 /-- A denumerable type is equivalent to `ℕ`. -/
-def eqv α [Denumerable α] : α ≃ ℕ :=
+def eqv (α) [Denumerable α] : α ≃ ℕ :=
   ⟨encode, ofNat α, of_nat_encode, encode_of_nat⟩
 
 -- See Note [lower instance priority]
@@ -76,24 +76,24 @@ def mk' {α} (e : α ≃ ℕ) : Denumerable α where
 
 /-- Denumerability is conserved by equivalences. This is transitivity of equivalence the denumerable
 way. -/
-def ofEquiv α {β} [Denumerable α] (e : β ≃ α) : Denumerable β :=
+def ofEquiv (α) {β} [Denumerable α] (e : β ≃ α) : Denumerable β :=
   { Encodable.ofEquiv _ e with
     decode_inv := fun n => by
       simp }
 
 @[simp]
-theorem of_equiv_of_nat α {β} [Denumerable α] (e : β ≃ α) n : @ofNat β (ofEquiv _ e) n = e.symm (ofNat α n) := by
+theorem of_equiv_of_nat (α) {β} [Denumerable α] (e : β ≃ α) (n) : @ofNat β (ofEquiv _ e) n = e.symm (ofNat α n) := by
   apply of_nat_of_decode <;> show Option.map _ _ = _ <;> simp
 
 /-- All denumerable types are equivalent. -/
-def equiv₂ α β [Denumerable α] [Denumerable β] : α ≃ β :=
+def equiv₂ (α β) [Denumerable α] [Denumerable β] : α ≃ β :=
   (eqv α).trans (eqv β).symm
 
 instance nat : Denumerable ℕ :=
   ⟨fun n => ⟨_, rfl, rfl⟩⟩
 
 @[simp]
-theorem of_nat_nat n : ofNat ℕ n = n :=
+theorem of_nat_nat (n) : ofNat ℕ n = n :=
   rfl
 
 /-- If `α` is denumerable, then so is `option α`. -/
@@ -183,13 +183,13 @@ open Classical
 
 theorem exists_succ (x : s) : ∃ n, ↑x + n + 1 ∈ s :=
   Classical.by_contradiction fun h =>
-    have : ∀ a : ℕ ha : a ∈ s, a < succ x := fun a ha =>
+    have : ∀ (a : ℕ) (ha : a ∈ s), a < succ x := fun a ha =>
       lt_of_not_geₓ fun hax =>
         h
           ⟨a - (x + 1), by
             rwa [add_right_commₓ, add_tsub_cancel_of_le hax]⟩
     Fintype.false
-      ⟨(((Multiset.range (succ x)).filter (· ∈ s)).pmap (fun y : ℕ hy : y ∈ s => Subtype.mk y hy)
+      ⟨(((Multiset.range (succ x)).filter (· ∈ s)).pmap (fun (y : ℕ) (hy : y ∈ s) => Subtype.mk y hy)
             (by
               simp [-Multiset.range_succ])).toFinset,
         by
@@ -235,10 +235,10 @@ def ofNat (s : Set ℕ) [DecidablePred (· ∈ s)] [Infinite s] : ℕ → s
   | 0 => ⊥
   | n + 1 => succ (of_nat n)
 
-theorem of_nat_surjective_aux : ∀ {x : ℕ} hx : x ∈ s, ∃ n, ofNat s n = ⟨x, hx⟩
+theorem of_nat_surjective_aux : ∀ {x : ℕ} (hx : x ∈ s), ∃ n, ofNat s n = ⟨x, hx⟩
   | x => fun hx => by
     let t : List s :=
-      ((List.range x).filter fun y => y ∈ s).pmap (fun y : ℕ hy : y ∈ s => ⟨y, hy⟩)
+      ((List.range x).filter fun y => y ∈ s).pmap (fun (y : ℕ) (hy : y ∈ s) => ⟨y, hy⟩)
         (by
           simp )
     have hmt : ∀ {y : s}, y ∈ t ↔ y < ⟨x, hx⟩ := by

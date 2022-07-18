@@ -153,10 +153,10 @@ protected theorem Nodup.filter_map (f : α → Option β) (H : ∀ a a' b, b ∈
 theorem nodup_range (n : ℕ) : Nodup (range n) :=
   nodup_range _
 
-theorem Nodup.inter_left [DecidableEq α] t : Nodup s → Nodup (s ∩ t) :=
+theorem Nodup.inter_left [DecidableEq α] (t) : Nodup s → Nodup (s ∩ t) :=
   nodup_of_le <| inter_le_left _ _
 
-theorem Nodup.inter_right [DecidableEq α] s : Nodup t → Nodup (s ∩ t) :=
+theorem Nodup.inter_right [DecidableEq α] (s) : Nodup t → Nodup (s ∩ t) :=
   nodup_of_le <| inter_le_right _ _
 
 @[simp]

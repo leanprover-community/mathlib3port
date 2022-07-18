@@ -7,12 +7,12 @@ import Mathbin.Topology.UrysohnsLemma
 import Mathbin.Topology.ContinuousFunction.Bounded
 
 /-!
-# Metrizability of a regular topological space with second countable topology
+# Metrizability of a T₃ topological space with second countable topology
 
 In this file we define metrizable topological spaces, i.e., topological spaces for which there
 exists a metric space structure that generates the same topology.
 
-We also show that a regular topological space with second countable topology `X` is metrizable.
+We also show that a T₃ topological space with second countable topology `X` is metrizable.
 
 First we prove that `X` can be embedded into `l^∞`, then use this embedding to pull back the metric
 space structure.
@@ -104,12 +104,12 @@ instance metrizable_space_pi [∀ i, MetrizableSpace (π i)] : MetrizableSpace (
   let this := fun i => metrizable_space_metric (π i)
   infer_instance
 
-variable (X) [RegularSpace X] [SecondCountableTopology X]
+variable (X) [T3Space X] [SecondCountableTopology X]
 
-/-- A regular topological space with second countable topology can be embedded into `l^∞ = ℕ →ᵇ ℝ`.
+/-- A T₃ topological space with second countable topology can be embedded into `l^∞ = ℕ →ᵇ ℝ`.
 -/
 theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := by
-  have : NormalSpace X := normal_space_of_regular_second_countable X
+  have : NormalSpace X := normal_space_of_t3_second_countable X
   -- Choose a countable basis, and consider the set `s` of pairs of set `(U, V)` such that `U ∈ B`,
   -- `V ∈ B`, and `closure U ⊆ V`.
   rcases exists_countable_basis X with ⟨B, hBc, -, hB⟩
@@ -170,7 +170,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
     rintro V ⟨hVB, hxV⟩
     rcases hB.exists_closure_subset (hB.mem_nhds hVB hxV) with ⟨U, hUB, hxU, hUV⟩
     set UV : ↥s := ⟨(U, V), ⟨hUB, hVB⟩, hUV⟩
-    refine' ⟨ε UV, (ε01 UV).1, fun y hy : dist (F y) (F x) < ε UV => _⟩
+    refine' ⟨ε UV, (ε01 UV).1, fun y (hy : dist (F y) (F x) < ε UV) => _⟩
     replace hy : dist (F y UV) (F x UV) < ε UV
     exact (BoundedContinuousFunction.dist_coe_le_dist _).trans_lt hy
     contrapose! hy
@@ -196,15 +196,15 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
           rwa [sub_zero])]
     
 
-/-- *Urysohn's metrization theorem* (Tychonoff's version): a regular topological space with second
+/-- *Urysohn's metrization theorem* (Tychonoff's version): a T₃ topological space with second
 countable topology `X` is metrizable, i.e., there exists a metric space structure that generates the
 same topology. -/
-theorem metrizable_space_of_regular_second_countable : MetrizableSpace X :=
+theorem metrizable_space_of_t3_second_countable : MetrizableSpace X :=
   let ⟨f, hf⟩ := exists_embedding_l_infty X
   hf.MetrizableSpace
 
 instance : MetrizableSpace Ennreal :=
-  metrizable_space_of_regular_second_countable Ennreal
+  metrizable_space_of_t3_second_countable Ennreal
 
 end TopologicalSpace
 

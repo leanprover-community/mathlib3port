@@ -83,16 +83,17 @@ variable (R) (s)
 /-- The relation on `free_add_monoid (R × Π i, s i)` that generates a congruence whose quotient is
 the tensor product. -/
 inductive Eqv : FreeAddMonoid (R × ∀ i, s i) → FreeAddMonoid (R × ∀ i, s i) → Prop
-  | of_zero : ∀ r : R f : ∀ i, s i i : ι hf : f i = 0, eqv (FreeAddMonoid.of (r, f)) 0
+  | of_zero : ∀ (r : R) (f : ∀ i, s i) (i : ι) (hf : f i = 0), eqv (FreeAddMonoid.of (r, f)) 0
   | of_zero_scalar : ∀ f : ∀ i, s i, eqv (FreeAddMonoid.of (0, f)) 0
   | of_add :
-    ∀ r : R f : ∀ i, s i i : ι m₁ m₂ : s i,
+    ∀ (r : R) (f : ∀ i, s i) (i : ι) (m₁ m₂ : s i),
       eqv (FreeAddMonoid.of (r, update f i m₁) + FreeAddMonoid.of (r, update f i m₂))
         (FreeAddMonoid.of (r, update f i (m₁ + m₂)))
   | of_add_scalar :
-    ∀ r r' : R f : ∀ i, s i, eqv (FreeAddMonoid.of (r, f) + FreeAddMonoid.of (r', f)) (FreeAddMonoid.of (r + r', f))
+    ∀ (r r' : R) (f : ∀ i, s i), eqv (FreeAddMonoid.of (r, f) + FreeAddMonoid.of (r', f)) (FreeAddMonoid.of (r + r', f))
   | of_smul :
-    ∀ r : R f : ∀ i, s i i : ι r' : R, eqv (FreeAddMonoid.of (r, update f i (r' • f i))) (FreeAddMonoid.of (r' * r, f))
+    ∀ (r : R) (f : ∀ i, s i) (i : ι) (r' : R),
+      eqv (FreeAddMonoid.of (r, update f i (r' • f i))) (FreeAddMonoid.of (r' * r, f))
   | add_commₓ : ∀ x y, eqv (x + y) (y + x)
 
 end PiTensorProduct
@@ -162,12 +163,14 @@ theorem smul_tprod_coeff (z : R) (f : ∀ i, s i) (i : ι) (r : R₁) [HasSmul R
 
 /-- Construct an `add_monoid_hom` from `(⨂[R] i, s i)` to some space `F` from a function
 `φ : (R × Π i, s i) → F` with the appropriate properties. -/
-def liftAddHom (φ : (R × ∀ i, s i) → F) (C0 : ∀ r : R f : ∀ i, s i i : ι hf : f i = 0, φ (r, f) = 0)
+def liftAddHom (φ : (R × ∀ i, s i) → F) (C0 : ∀ (r : R) (f : ∀ i, s i) (i : ι) (hf : f i = 0), φ (r, f) = 0)
     (C0' : ∀ f : ∀ i, s i, φ (0, f) = 0)
     (C_add :
-      ∀ r : R f : ∀ i, s i i : ι m₁ m₂ : s i, φ (r, update f i m₁) + φ (r, update f i m₂) = φ (r, update f i (m₁ + m₂)))
-    (C_add_scalar : ∀ r r' : R f : ∀ i, s i, φ (r, f) + φ (r', f) = φ (r + r', f))
-    (C_smul : ∀ r : R f : ∀ i, s i i : ι r' : R, φ (r, update f i (r' • f i)) = φ (r' * r, f)) : (⨂[R] i, s i) →+ F :=
+      ∀ (r : R) (f : ∀ i, s i) (i : ι) (m₁ m₂ : s i),
+        φ (r, update f i m₁) + φ (r, update f i m₂) = φ (r, update f i (m₁ + m₂)))
+    (C_add_scalar : ∀ (r r' : R) (f : ∀ i, s i), φ (r, f) + φ (r', f) = φ (r + r', f))
+    (C_smul : ∀ (r : R) (f : ∀ i, s i) (i : ι) (r' : R), φ (r, update f i (r' • f i)) = φ (r' * r, f)) :
+    (⨂[R] i, s i) →+ F :=
   (addConGen (PiTensorProduct.Eqv R s)).lift (FreeAddMonoid.lift φ) <|
     AddCon.add_con_gen_le fun x y hxy =>
       match x, y, hxy with
@@ -523,7 +526,7 @@ def subsingletonEquiv [Subsingleton ι] (i₀ : ι) : (⨂[R] i : ι, M) ≃ₗ[
   invFun := fun m => tprod R fun v => m
   left_inv := fun x => by
     dsimp' only
-    have : ∀ f : ι → M z : M, (fun i : ι => z) = update f i₀ z := by
+    have : ∀ (f : ι → M) (z : M), (fun i : ι => z) = update f i₀ z := by
       intro f z
       ext i
       rw [Subsingleton.elimₓ i i₀, Function.update_same]

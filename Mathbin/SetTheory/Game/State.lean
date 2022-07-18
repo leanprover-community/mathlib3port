@@ -37,8 +37,8 @@ class State (S : Type u) where
   turnBound : S → ℕ
   l : S → Finset S
   r : S → Finset S
-  left_bound : ∀ {s t : S} m : t ∈ L s, turn_bound t < turn_bound s
-  right_bound : ∀ {s t : S} m : t ∈ R s, turn_bound t < turn_bound s
+  left_bound : ∀ {s t : S} (m : t ∈ L s), turn_bound t < turn_bound s
+  right_bound : ∀ {s t : S} (m : t ∈ R s), turn_bound t < turn_bound s
 
 open State
 
@@ -65,7 +65,7 @@ theorem turn_bound_of_right {s t : S} (m : t ∈ r s) (n : ℕ) (h : turnBound s
 /-- Construct a `pgame` from a state and a (not necessarily optimal) bound on the number of
 turns remaining.
 -/
-def ofStateAux : ∀ n : ℕ s : S h : turnBound s ≤ n, Pgame
+def ofStateAux : ∀ (n : ℕ) (s : S) (h : turnBound s ≤ n), Pgame
   | 0, s, h =>
     Pgame.mk { t // t ∈ l s } { t // t ∈ r s }
       (fun t => by
@@ -80,7 +80,8 @@ def ofStateAux : ∀ n : ℕ s : S h : turnBound s ≤ n, Pgame
 
 /-- Two different (valid) turn bounds give equivalent games. -/
 def ofStateAuxRelabelling :
-    ∀ s : S n m : ℕ hn : turnBound s ≤ n hm : turnBound s ≤ m, Relabelling (ofStateAux n s hn) (ofStateAux m s hm)
+    ∀ (s : S) (n m : ℕ) (hn : turnBound s ≤ n) (hm : turnBound s ≤ m),
+      Relabelling (ofStateAux n s hn) (ofStateAux m s hm)
   | s, 0, 0, hn, hm => by
     dsimp' [← Pgame.ofStateAux]
     fconstructor
@@ -220,7 +221,7 @@ instance fintypeRightMovesOfStateAux (n : ℕ) (s : S) (h : turnBound s ≤ n) :
   apply Fintype.ofEquiv _ (right_moves_of_state_aux _ _).symm
   infer_instance
 
-instance shortOfStateAux : ∀ n : ℕ {s : S} h : turnBound s ≤ n, Short (ofStateAux n s h)
+instance shortOfStateAux : ∀ (n : ℕ) {s : S} (h : turnBound s ≤ n), Short (ofStateAux n s h)
   | 0, s, h =>
     Short.mk'
       (fun i => by

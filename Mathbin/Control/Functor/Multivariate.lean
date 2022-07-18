@@ -45,8 +45,8 @@ def Liftp {α : Typevec n} (p : ∀ i, α i → Prop) (x : F α) : Prop :=
 /-- relational lifting over multivariate functors -/
 def Liftr {α : Typevec n} (r : ∀ {i}, α i → α i → Prop) (x y : F α) : Prop :=
   ∃ u : F fun i => { p : α i × α i // r p.fst p.snd },
-    (fun i t : { p : α i × α i // r p.fst p.snd } => t.val.fst) <$$> u = x ∧
-      (fun i t : { p : α i × α i // r p.fst p.snd } => t.val.snd) <$$> u = y
+    (fun i (t : { p : α i × α i // r p.fst p.snd }) => t.val.fst) <$$> u = x ∧
+      (fun i (t : { p : α i × α i // r p.fst p.snd }) => t.val.snd) <$$> u = y
 
 /-- given `x : F α` and a projection `i` of type vector `α`, `supp x i` is the set
 of `α.i` contained in `x` -/
@@ -60,8 +60,8 @@ end Mvfunctor
 
 /-- laws for `mvfunctor` -/
 class IsLawfulMvfunctor {n : ℕ} (F : Typevec n → Type _) [Mvfunctor F] : Prop where
-  id_map : ∀ {α : Typevec n} x : F α, Typevec.id <$$> x = x
-  comp_map : ∀ {α β γ : Typevec n} g : α ⟹ β h : β ⟹ γ x : F α, (h ⊚ g) <$$> x = h <$$> g <$$> x
+  id_map : ∀ {α : Typevec n} (x : F α), Typevec.id <$$> x = x
+  comp_map : ∀ {α β γ : Typevec n} (g : α ⟹ β) (h : β ⟹ γ) (x : F α), (h ⊚ g) <$$> x = h <$$> g <$$> x
 
 open Nat Typevec
 

@@ -18,7 +18,7 @@ This is analoguous to the way `dense_inducing.extend` "extends" a function
 The main theorem we prove about this definition is `continuous_on_extend_from`
 which states that, for `extend_from A f` to be continuous on a set `B ⊆ closure A`,
 it suffices that `f` converges within `A` at any point of `B`, provided that
-`f` is a function to a regular space.
+`f` is a function to a T₃ space.
 
 -/
 
@@ -50,9 +50,9 @@ theorem extend_from_eq [T2Space Y] {A : Set X} {f : X → Y} {x : X} {y : Y} (hx
 theorem extend_from_extends [T2Space Y] {f : X → Y} {A : Set X} (hf : ContinuousOn f A) :
     ∀, ∀ x ∈ A, ∀, extendFrom A f x = f x := fun x x_in => extend_from_eq (subset_closure x_in) (hf x x_in)
 
-/-- If `f` is a function to a regular space `Y` which has a limit within `A` at any
+/-- If `f` is a function to a T₃ space `Y` which has a limit within `A` at any
 point of a set `B ⊆ closure A`, then `extend_from A f` is continuous on `B`. -/
-theorem continuous_on_extend_from [RegularSpace Y] {f : X → Y} {A B : Set X} (hB : B ⊆ Closure A)
+theorem continuous_on_extend_from [T3Space Y] {f : X → Y} {A B : Set X} (hB : B ⊆ Closure A)
     (hf : ∀, ∀ x ∈ B, ∀, ∃ y, Tendsto f (𝓝[A] x) (𝓝 y)) : ContinuousOn (extendFrom A f) B := by
   set φ := extendFrom A f
   intro x x_in
@@ -73,9 +73,9 @@ theorem continuous_on_extend_from [RegularSpace Y] {f : X → Y} {A B : Set X} (
     simpa [← inter_comm] using inter_mem_nhds_within _ hVy
   exact V'_closed.mem_of_tendsto limy (mem_of_superset this hV)
 
-/-- If a function `f` to a regular space `Y` has a limit within a
+/-- If a function `f` to a T₃ space `Y` has a limit within a
 dense set `A` for any `x`, then `extend_from A f` is continuous. -/
-theorem continuous_extend_from [RegularSpace Y] {f : X → Y} {A : Set X} (hA : Dense A)
+theorem continuous_extend_from [T3Space Y] {f : X → Y} {A : Set X} (hA : Dense A)
     (hf : ∀ x, ∃ y, Tendsto f (𝓝[A] x) (𝓝 y)) : Continuous (extendFrom A f) := by
   rw [continuous_iff_continuous_on_univ]
   exact

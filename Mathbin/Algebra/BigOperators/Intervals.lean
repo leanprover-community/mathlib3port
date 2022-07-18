@@ -28,7 +28,6 @@ variable {α : Type u} {β : Type v} {γ : Type w} {s₂ s₁ s : Finset α} {a 
 
 variable [CommMonoidₓ β]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem prod_Ico_add' [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] [LocallyFiniteOrder α] (f : α → β)
     (a b c : α) : (∏ x in ico a b, f (x + c)) = ∏ x in ico (a + c) (b + c), f x := by
@@ -109,8 +108,8 @@ theorem sum_Ico_Ico_comm {M : Type _} [AddCommMonoidₓ M] (a b : ℕ) (f : ℕ 
   by
   rw [Finset.sum_sigma', Finset.sum_sigma']
   refine'
-      Finset.sum_bij' (fun x : Σi : ℕ, ℕ _ => (⟨x.2, x.1⟩ : Σi : ℕ, ℕ)) _ (fun _ _ => rfl)
-        (fun x : Σi : ℕ, ℕ _ => (⟨x.2, x.1⟩ : Σi : ℕ, ℕ)) _
+      Finset.sum_bij' (fun (x : Σi : ℕ, ℕ) _ => (⟨x.2, x.1⟩ : Σi : ℕ, ℕ)) _ (fun _ _ => rfl)
+        (fun (x : Σi : ℕ, ℕ) _ => (⟨x.2, x.1⟩ : Σi : ℕ, ℕ)) _
         (by
           rintro ⟨⟩ _ <;> rfl)
         (by
@@ -237,7 +236,7 @@ open Finset
 local notation "G" n:80 => ∑ i in range n, g i
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:637:40: in rw #[["<-", expr sum_range_succ_sub_sum g]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:646:40: in rw #[["<-", expr sum_range_succ_sub_sum g]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- **Summation by parts**, also known as **Abel's lemma** or an **Abel transformation** -/
 theorem sum_Ico_by_parts (hmn : m < n) :
     (∑ i in ico m n, f i • g i) = f (n - 1) • G n - f m • G m - ∑ i in ico m (n - 1), (f (i + 1) - f i) • G(i + 1) := by
@@ -254,7 +253,7 @@ theorem sum_Ico_by_parts (hmn : m < n) :
   conv =>
     for (f _ • g _) [2] =>
       trace
-        "./././Mathport/Syntax/Translate/Basic.lean:637:40: in rw #[[\"<-\", expr sum_range_succ_sub_sum g]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        "./././Mathport/Syntax/Translate/Basic.lean:646:40: in rw #[[\"<-\", expr sum_range_succ_sub_sum g]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   simp_rw [smul_sub, sum_sub_distrib, h₂, h₁]
   conv_lhs => congr skip rw [← add_sub, add_commₓ, ← add_sub, ← sum_sub_distrib]
   have : ∀ i, f i • G(i + 1) - f (i + 1) • G(i + 1) = -((f (i + 1) - f i) • G(i + 1)) := by

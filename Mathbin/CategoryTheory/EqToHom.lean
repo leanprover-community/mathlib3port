@@ -147,12 +147,12 @@ theorem conj_eq_to_hom_iff_heq {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) (h : W 
   simp
 
 /-- Proving equality between functors using heterogeneous equality. -/
-theorem hext {F G : C ⥤ D} (h_obj : ∀ X, F.obj X = G.obj X) (h_map : ∀ X Y f : X ⟶ Y, HEq (F.map f) (G.map f)) :
+theorem hext {F G : C ⥤ D} (h_obj : ∀ X, F.obj X = G.obj X) (h_map : ∀ (X Y) (f : X ⟶ Y), HEq (F.map f) (G.map f)) :
     F = G :=
   Functor.ext h_obj fun _ _ f => (conj_eq_to_hom_iff_heq _ _ (h_obj _) (h_obj _)).2 <| h_map _ _ f
 
 -- Using equalities between functors.
-theorem congr_obj {F G : C ⥤ D} (h : F = G) X : F.obj X = G.obj X := by
+theorem congr_obj {F G : C ⥤ D} (h : F = G) (X) : F.obj X = G.obj X := by
   subst h
 
 theorem congr_hom {F G : C ⥤ D} (h : F = G) {X Y} (f : X ⟶ Y) :
@@ -169,11 +169,11 @@ theorem map_comp_heq (hx : F.obj X = G.obj X) (hy : F.obj Y = G.obj Y) (hz : F.o
   rw [F.map_comp, G.map_comp]
   congr
 
-theorem map_comp_heq' (hobj : ∀ X : C, F.obj X = G.obj X) (hmap : ∀ {X Y} f : X ⟶ Y, HEq (F.map f) (G.map f)) :
+theorem map_comp_heq' (hobj : ∀ X : C, F.obj X = G.obj X) (hmap : ∀ {X Y} (f : X ⟶ Y), HEq (F.map f) (G.map f)) :
     HEq (F.map (f ≫ g)) (G.map (f ≫ g)) := by
   rw [functor.hext hobj fun _ _ => hmap]
 
-theorem precomp_map_heq (H : E ⥤ C) (hmap : ∀ {X Y} f : X ⟶ Y, HEq (F.map f) (G.map f)) {X Y : E} (f : X ⟶ Y) :
+theorem precomp_map_heq (H : E ⥤ C) (hmap : ∀ {X Y} (f : X ⟶ Y), HEq (F.map f) (G.map f)) {X Y : E} (f : X ⟶ Y) :
     HEq ((H ⋙ F).map f) ((H ⋙ G).map f) :=
   hmap _
 
@@ -183,7 +183,7 @@ theorem postcomp_map_heq (H : D ⥤ E) (hx : F.obj X = G.obj X) (hy : F.obj Y = 
   congr
 
 theorem postcomp_map_heq' (H : D ⥤ E) (hobj : ∀ X : C, F.obj X = G.obj X)
-    (hmap : ∀ {X Y} f : X ⟶ Y, HEq (F.map f) (G.map f)) : HEq ((F ⋙ H).map f) ((G ⋙ H).map f) := by
+    (hmap : ∀ {X Y} (f : X ⟶ Y), HEq (F.map f) (G.map f)) : HEq ((F ⋙ H).map f) ((G ⋙ H).map f) := by
   rw [functor.hext hobj fun _ _ => hmap]
 
 theorem hcongr_hom {F G : C ⥤ D} (h : F = G) {X Y} (f : X ⟶ Y) : HEq (F.map f) (G.map f) := by

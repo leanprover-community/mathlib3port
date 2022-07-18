@@ -154,13 +154,13 @@ theorem Submodule.basis_of_pid_aux [Fintype ι] {O : Type _} [AddCommGroupₓ O]
       ∃ (a : R)(hay : a • y ∈ N),
         ∃ M' ≤ M,
           ∃ N' ≤ N,
-            ∃ (N'_le_M' : N' ≤ M')(y_ortho_M' : ∀ c : R z : O, z ∈ M' → c • y + z = 0 → c = 0)(ay_ortho_N' :
-              ∀ c : R z : O, z ∈ N' → c • a • y + z = 0 → c = 0),
-              ∀ n' bN' : Basis (Finₓ n') R N',
+            ∃ (N'_le_M' : N' ≤ M')(y_ortho_M' : ∀ (c : R) (z : O), z ∈ M' → c • y + z = 0 → c = 0)(ay_ortho_N' :
+              ∀ (c : R) (z : O), z ∈ N' → c • a • y + z = 0 → c = 0),
+              ∀ (n') (bN' : Basis (Finₓ n') R N'),
                 ∃ bN : Basis (Finₓ (n' + 1)) R N,
-                  ∀ m' hn'm' : n' ≤ m' bM' : Basis (Finₓ m') R M',
+                  ∀ (m') (hn'm' : n' ≤ m') (bM' : Basis (Finₓ m') R M'),
                     ∃ (hnm : n' + 1 ≤ m' + 1)(bM : Basis (Finₓ (m' + 1)) R M),
-                      ∀ as : Finₓ n' → R h : ∀ i : Finₓ n', (bN' i : O) = as i • (bM' (Finₓ.castLe hn'm' i) : O),
+                      ∀ (as : Finₓ n' → R) (h : ∀ i : Finₓ n', (bN' i : O) = as i • (bM' (Finₓ.castLe hn'm' i) : O)),
                         ∃ as' : Finₓ (n' + 1) → R,
                           ∀ i : Finₓ (n' + 1), (bN i : O) = as' i • (bM (Finₓ.castLe hnm i) : O) :=
   by
@@ -232,7 +232,7 @@ theorem Submodule.basis_of_pid_aux [Fintype ι] {O : Type _} [AddCommGroupₓ O]
   -- So fill in those results as well.
   refine' ⟨M', M'_le_M, N', N'_le_N, N'_le_M', _⟩
   -- Note that `y'` is orthogonal to `M'`.
-  have y'_ortho_M' : ∀ c : R, ∀ z ∈ M', ∀, c • y' + z = 0 → c = 0 := by
+  have y'_ortho_M' : ∀ (c : R), ∀ z ∈ M', ∀, c • y' + z = 0 → c = 0 := by
     intro c x xM' hc
     obtain ⟨⟨x, xM⟩, hx', rfl⟩ := submodule.mem_map.mp xM'
     rw [LinearMap.mem_ker] at hx'
@@ -240,7 +240,7 @@ theorem Submodule.basis_of_pid_aux [Fintype ι] {O : Type _} [AddCommGroupₓ O]
     simpa only [← LinearMap.map_add, ← LinearMap.map_zero, ← LinearMap.map_smul, ← smul_eq_mul, ← add_zeroₓ, ←
       mul_eq_zero, ← ϕy'_ne_zero, ← hx', ← or_falseₓ] using congr_arg ϕ hc'
   -- And `a • y'` is orthogonal to `N'`.
-  have ay'_ortho_N' : ∀ c : R, ∀ z ∈ N', ∀, c • a • y' + z = 0 → c = 0 := by
+  have ay'_ortho_N' : ∀ (c : R), ∀ z ∈ N', ∀, c • a • y' + z = 0 → c = 0 := by
     intro c z zN' hc
     refine' (mul_eq_zero.mp (y'_ortho_M' (a * c) z (N'_le_M' zN') _)).resolve_left a_zero
     rw [mul_comm, mul_smul, hc]
@@ -345,8 +345,7 @@ noncomputable def Submodule.basisOfPidOfLeSpan {ι : Type _} [Fintype ι] {b : �
 
 variable {M}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i «expr ∉ » I)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ∉ » I)
 /-- A finite type torsion free module over a PID is free. -/
 noncomputable def Module.freeOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M} (hs : span R (Range s) = ⊤)
     [NoZeroSmulDivisors R M] : Σn : ℕ, Basis (Finₓ n) R M := by
@@ -355,7 +354,8 @@ noncomputable def Module.freeOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M}
   have := exists_maximal_independent R s
   let I : Set ι := this.some
   obtain
-    ⟨indepI : LinearIndependent R (s ∘ coe : I → M), hI : ∀ i _ : i ∉ I, ∃ a : R, a ≠ 0 ∧ a • s i ∈ span R (s '' I)⟩ :=
+    ⟨indepI : LinearIndependent R (s ∘ coe : I → M), hI :
+      ∀ (i) (_ : i ∉ I), ∃ a : R, a ≠ 0 ∧ a • s i ∈ span R (s '' I)⟩ :=
     this.some_spec
   let N := span R (range <| (s ∘ coe : I → M))
   -- same as `span R (s '' I)` but more convenient

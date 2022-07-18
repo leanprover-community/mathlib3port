@@ -55,7 +55,7 @@ theorem measurable_set_Icc : MeasurableSet I.Icc :=
   measurable_set_Icc
 
 theorem measurable_set_Ioo : MeasurableSet I.Ioo :=
-  (measurable_set_pi (Set.Finite.of_fintype _).Countable).2 <| Or.inl fun i hi => measurable_set_Ioo
+  (measurable_set_pi (Set.to_finite _).Countable).2 <| Or.inl fun i hi => measurable_set_Ioo
 
 theorem coe_ae_eq_Icc : (I : Set (ι → ℝ)) =ᵐ[volume] I.Icc := by
   rw [coe_eq_pi]

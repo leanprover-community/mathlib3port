@@ -161,11 +161,11 @@ instance covariant_class_swap_add_lt : CovariantClass Game Game (swap (· + ·))
     rintro ⟨a⟩ ⟨b⟩ ⟨c⟩ h
     exact @add_lt_add_right _ _ _ _ b c h a⟩
 
-theorem add_lf_add_right : ∀ {b c : Game} h : b ⧏ c a, b + a ⧏ c + a := by
+theorem add_lf_add_right : ∀ {b c : Game} (h : b ⧏ c) (a), b + a ⧏ c + a := by
   rintro ⟨b⟩ ⟨c⟩ h ⟨a⟩
   apply add_lf_add_right h
 
-theorem add_lf_add_left : ∀ {b c : Game} h : b ⧏ c a, a + b ⧏ a + c := by
+theorem add_lf_add_left : ∀ {b c : Game} (h : b ⧏ c) (a), a + b ⧏ a + c := by
   rintro ⟨b⟩ ⟨c⟩ h ⟨a⟩
   apply add_lf_add_left h
 
@@ -300,7 +300,7 @@ theorem mul_move_right_inr {x y : Pgame} {i j} :
   cases y
   rfl
 
-theorem left_moves_mul_cases {x y : Pgame} k {P : (x * y).LeftMoves → Prop}
+theorem left_moves_mul_cases {x y : Pgame} (k) {P : (x * y).LeftMoves → Prop}
     (hl : ∀ ix iy, P <| toLeftMovesMul (Sum.inl ⟨ix, iy⟩)) (hr : ∀ jx jy, P <| toLeftMovesMul (Sum.inr ⟨jx, jy⟩)) :
     P k := by
   rw [← to_left_moves_mul.apply_symm_apply k]
@@ -310,7 +310,7 @@ theorem left_moves_mul_cases {x y : Pgame} k {P : (x * y).LeftMoves → Prop}
   · apply hr
     
 
-theorem right_moves_mul_cases {x y : Pgame} k {P : (x * y).RightMoves → Prop}
+theorem right_moves_mul_cases {x y : Pgame} (k) {P : (x * y).RightMoves → Prop}
     (hl : ∀ ix jy, P <| toRightMovesMul (Sum.inl ⟨ix, jy⟩)) (hr : ∀ jx iy, P <| toRightMovesMul (Sum.inr ⟨jx, iy⟩)) :
     P k := by
   rw [← to_right_moves_mul.apply_symm_apply k]
@@ -678,7 +678,7 @@ def invVal {l r} (L : l → Pgame) (R : r → Pgame) (IHl : l → Pgame) (IHr : 
   | _, inv_ty.right₂ i j => (1 + (R i - mk l r L R) * inv_val j) * IHr i
 
 @[simp]
-theorem inv_val_is_empty {l r : Type u} {b} L R IHl IHr (i : InvTy l r b) [IsEmpty l] [IsEmpty r] :
+theorem inv_val_is_empty {l r : Type u} {b} (L R IHl IHr) (i : InvTy l r b) [IsEmpty l] [IsEmpty r] :
     invVal L R IHl IHr i = 0 := by
   cases' i with a _ a _ a _ a
   · rfl
@@ -736,7 +736,6 @@ def inv'One : inv' 1 ≡r (1 : Pgame.{u}) := by
 theorem inv'_one_equiv : inv' 1 ≈ 1 :=
   inv'One.Equiv
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The inverse of a pre-game in terms of the inverse on positive pre-games. -/
 noncomputable instance : Inv Pgame :=
   ⟨by

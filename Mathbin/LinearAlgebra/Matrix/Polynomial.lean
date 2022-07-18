@@ -53,7 +53,7 @@ theorem nat_degree_det_X_add_C_le (A B : Matrix n n α) :
         _ ≤ ∑ i : n, nat_degree (((X : α[X]) • A.map C + B.map C) (g i) i) :=
       nat_degree_prod_le (Finset.univ : Finset n) fun i : n =>
         (X • A.map C + B.map C) (g i) i _ ≤ finset.univ.card • 1 :=
-      Finset.sum_le_card_nsmul _ _ 1 fun i : n _ => _ _ ≤ Fintype.card n := by
+      Finset.sum_le_card_nsmul _ _ 1 fun (i : n) _ => _ _ ≤ Fintype.card n := by
       simpa
   calc
     nat_degree (((X : α[X]) • A.map C + B.map C) (g i) i) = nat_degree ((X : α[X]) * C (A (g i) i) + C (B (g i) i)) :=

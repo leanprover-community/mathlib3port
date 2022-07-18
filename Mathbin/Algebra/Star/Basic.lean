@@ -369,7 +369,7 @@ If used as `[comm_ring R] [star_ring R] [semiring A] [star_ring A] [algebra R A]
 star algebra.
 -/
 class StarModule (R : Type u) (A : Type v) [HasStar R] [HasStar A] [HasSmul R A] : Prop where
-  star_smul : ∀ r : R a : A, star (r • a) = star r • star a
+  star_smul : ∀ (r : R) (a : A), star (r • a) = star r • star a
 
 export StarModule (star_smul)
 

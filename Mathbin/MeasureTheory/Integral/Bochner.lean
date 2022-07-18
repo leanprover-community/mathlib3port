@@ -317,7 +317,6 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
   rw [simple_func.mem_range] at hx
   rw [preimage_eq_empty] <;> simp [← Set.disjoint_singleton_left, ← hx]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem integral_const {m : MeasurableSpace α} (μ : Measure α) (y : F) : (const α y).integral μ = (μ univ).toReal • y :=
   by
@@ -326,7 +325,6 @@ theorem integral_const {m : MeasurableSpace α} (μ : Measure α) (y : F) : (con
         integral_eq_sum_of_subset <| (filter_subset _ _).trans (range_const_subset _ _)_ = (μ univ).toReal • y := by
         simp
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem integral_piecewise_zero {m : MeasurableSpace α} (f : α →ₛ F) (μ : Measure α) {s : Set α}
     (hs : MeasurableSet s) : (piecewise s hs f 0).integral μ = f.integral (μ.restrict s) := by
@@ -851,15 +849,8 @@ theorem Integrable.tendsto_set_integral_nhds_zero {ι} {f : α → E} (hf : Inte
 /-- If `F i → f` in `L1`, then `∫ x, F i x ∂μ → ∫ x, f x ∂μ`. -/
 theorem tendsto_integral_of_L1 {ι} (f : α → E) (hfi : Integrable f μ) {F : ι → α → E} {l : Filter ι}
     (hFi : ∀ᶠ i in l, Integrable (F i) μ) (hF : Tendsto (fun i => ∫⁻ x, ∥F i x - f x∥₊ ∂μ) l (𝓝 0)) :
-    Tendsto (fun i => ∫ x, F i x ∂μ) l (𝓝 <| ∫ x, f x ∂μ) := by
-  rw [tendsto_iff_norm_tendsto_zero]
-  replace hF : tendsto (fun i => Ennreal.toReal <| ∫⁻ x, ∥F i x - f x∥₊ ∂μ) l (𝓝 0) :=
-    (Ennreal.tendsto_to_real zero_ne_top).comp hF
-  refine' squeeze_zero_norm' (hFi.mp <| hFi.mono fun i hFi hFm => _) hF
-  simp only [← norm_norm, integral_sub hFi hfi]
-  convert norm_integral_le_lintegral_norm fun x => F i x - f x
-  ext1 x
-  exact coe_nnreal_eq _
+    Tendsto (fun i => ∫ x, F i x ∂μ) l (𝓝 <| ∫ x, f x ∂μ) :=
+  tendsto_set_to_fun_of_L1 (dominated_fin_meas_additive_weighted_smul μ) f hfi hFi hF
 
 /-- Lebesgue dominated convergence theorem provides sufficient conditions under which almost
   everywhere convergence of a sequence of functions implies the convergence of their integrals.
@@ -1136,7 +1127,7 @@ theorem integral_mono_of_nonneg {f g : α → ℝ} (hf : 0 ≤ᵐ[μ] f) (hgi : 
   by_cases' hfm : ae_strongly_measurable f μ
   · refine' integral_mono_ae ⟨hfm, _⟩ hgi h
     refine' hgi.has_finite_integral.mono <| h.mp <| hf.mono fun x hf hfg => _
-    simpa [← Real.norm_eq_abs, ← abs_of_nonneg hf, ← abs_of_nonneg (le_transₓ hf hfg)]
+    simpa [← abs_of_nonneg hf, ← abs_of_nonneg (le_transₓ hf hfg)]
     
   · rw [integral_non_ae_strongly_measurable hfm]
     exact integral_nonneg_of_ae (hf.trans h)
@@ -1210,9 +1201,7 @@ theorem tendsto_integral_approx_on_of_measurable [MeasurableSpace E] [BorelSpace
     Tendsto (fun n => (SimpleFunc.approxOn f hfm s y₀ h₀ n).integral μ) atTop (𝓝 <| ∫ x, f x ∂μ) := by
   have hfi' := simple_func.integrable_approx_on hfm hfi h₀ h₀i
   simp only [← simple_func.integral_eq_integral _ (hfi' _)]
-  exact
-    tendsto_integral_of_L1 _ hfi (eventually_of_forall hfi')
-      (simple_func.tendsto_approx_on_L1_nnnorm hfm _ hs (hfi.sub h₀i).2)
+  exact tendsto_set_to_fun_approx_on_of_measurable (dominated_fin_meas_additive_weighted_smul μ) hfi hfm hs h₀ h₀i
 
 theorem tendsto_integral_approx_on_of_measurable_of_range_subset [MeasurableSpace E] [BorelSpace E] {f : α → E}
     (fmeas : Measurable f) (hf : Integrable f μ) (s : Set E) [SeparableSpace s] (hs : range f ∪ {0} ⊆ s) :
@@ -1226,10 +1215,7 @@ theorem tendsto_integral_approx_on_of_measurable_of_range_subset [MeasurableSpac
       atTop (𝓝 <| ∫ x, f x ∂μ) :=
   by
   apply tendsto_integral_approx_on_of_measurable hf fmeas _ _ (integrable_zero _ _ _)
-  apply eventually_of_forall fun x => _
-  apply subset_closure
-  apply hs
-  simp
+  exact eventually_of_forall fun x => subset_closure (hs (Set.mem_union_left _ (mem_range_self _)))
 
 variable {ν : Measure α}
 
@@ -1252,7 +1238,6 @@ theorem integral_add_measure {f : α → E} (hμ : Integrable f μ) (hν : Integ
 theorem integral_zero_measure {m : MeasurableSpace α} (f : α → E) : (∫ x, f x ∂(0 : Measure α)) = 0 :=
   set_to_fun_measure_zero (dominated_fin_meas_additive_weighted_smul _) rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem integral_finset_sum_measure {ι} {m : MeasurableSpace α} {f : α → E} {μ : ι → Measure α} {s : Finset ι}
     (hf : ∀, ∀ i ∈ s, ∀, Integrable f (μ i)) : (∫ a, f a ∂∑ i in s, μ i) = ∑ i in s, ∫ a, f a ∂μ i := by
   classical
@@ -1308,7 +1293,7 @@ theorem integral_smul_measure (f : α → E) (c : ℝ≥0∞) : (∫ x, f x ∂c
   rw [← set_to_fun_congr_smul_measure c hc hdfma hdfma_smul f]
   exact set_to_fun_congr_left' _ _ (fun s hs hμs => weighted_smul_smul_measure μ c) f
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr E]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr E]]
 theorem integral_map_of_strongly_measurable {β} [MeasurableSpace β] {φ : α → β} (hφ : Measurable φ) {f : β → E}
     (hfm : StronglyMeasurable f) : (∫ y, f y ∂Measure.map φ μ) = ∫ x, f (φ x) ∂μ := by
   by_cases' hfi : integrable f (measure.map φ μ)
@@ -1316,7 +1301,7 @@ theorem integral_map_of_strongly_measurable {β} [MeasurableSpace β] {φ : α �
   · rw [integral_undef hfi, integral_undef]
     rwa [← integrable_map_measure hfm.ae_strongly_measurable hφ.ae_measurable]
     
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr E]]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr E]]"
   have : separable_space (range f ∪ {0} : Set E) := hfm.separable_space_range_union_singleton
   refine'
     tendsto_nhds_unique (tendsto_integral_approx_on_of_measurable_of_range_subset hfm.measurable hfi _ subset.rfl) _
@@ -1374,11 +1359,11 @@ theorem set_integral_eq_subtype {α} [MeasureSpace α] {s : Set α} (hs : Measur
   rw [← map_comap_subtype_coe hs]
   exact (MeasurableEmbedding.subtype_coe hs).integral_map _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr E]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr E]]
 @[simp]
 theorem integral_dirac' [MeasurableSpace α] (f : α → E) (a : α) (hfm : StronglyMeasurable f) :
     (∫ x, f x ∂Measure.dirac a) = f a := by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr E]]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr E]]"
   calc (∫ x, f x ∂measure.dirac a) = ∫ x, f a ∂measure.dirac a :=
       integral_congr_ae <| ae_eq_dirac' hfm.measurable _ = f a := by
       simp [← measure.dirac_apply_of_mem]
@@ -1390,6 +1375,36 @@ theorem integral_dirac [MeasurableSpace α] [MeasurableSingletonClass α] (f : �
     (∫ x, f x ∂Measure.dirac a) = ∫ x, f a ∂Measure.dirac a := integral_congr_ae <| ae_eq_dirac f
     _ = f a := by
       simp [← measure.dirac_apply_of_mem]
+    
+
+theorem mul_meas_ge_le_integral_of_nonneg [IsFiniteMeasure μ] {f : α → ℝ} (hf_nonneg : 0 ≤ f) (hf_int : Integrable f μ)
+    (ε : ℝ) : ε * (μ { x | ε ≤ f x }).toReal ≤ ∫ x, f x ∂μ := by
+  cases' lt_or_leₓ ε 0 with hε hε
+  · exact (mul_nonpos_of_nonpos_of_nonneg hε.le Ennreal.to_real_nonneg).trans (integral_nonneg hf_nonneg)
+    
+  rw [integral_eq_lintegral_of_nonneg_ae (eventually_of_forall fun x => hf_nonneg x) hf_int.ae_strongly_measurable, ←
+    Ennreal.to_real_of_real hε, ← Ennreal.to_real_mul]
+  have :
+    { x : α | (Ennreal.ofReal ε).toReal ≤ f x } = { x : α | Ennreal.ofReal ε ≤ (fun x => Ennreal.ofReal (f x)) x } := by
+    ext1 x
+    rw [Set.mem_set_of_eq, Set.mem_set_of_eq, ← Ennreal.to_real_of_real (hf_nonneg x)]
+    exact Ennreal.to_real_le_to_real Ennreal.of_real_ne_top Ennreal.of_real_ne_top
+  rw [this]
+  have h_meas : AeMeasurable (fun x => Ennreal.ofReal (f x)) μ :=
+    measurable_id'.ennreal_of_real.comp_ae_measurable hf_int.ae_measurable
+  have h_mul_meas_le := @mul_meas_ge_le_lintegral₀ _ _ μ _ h_meas (Ennreal.ofReal ε)
+  rw [Ennreal.to_real_le_to_real _ _]
+  · exact h_mul_meas_le
+    
+  · simp only [← Ne.def, ← WithTop.mul_eq_top_iff, ← Ennreal.of_real_eq_zero, ← not_leₓ, ← Ennreal.of_real_ne_top, ←
+      false_andₓ, ← or_falseₓ, ← not_and]
+    exact fun _ => measure_ne_top _ _
+    
+  · have h_lt_top : (∫⁻ a, ∥f a∥₊ ∂μ) < ∞ := hf_int.has_finite_integral
+    simp_rw [← of_real_norm_eq_coe_nnnorm, Real.norm_eq_abs] at h_lt_top
+    convert h_lt_top.ne
+    ext1 x
+    rw [abs_of_nonneg (hf_nonneg x)]
     
 
 end Properties
@@ -1427,10 +1442,10 @@ theorem integral_trim_simple_func (hm : m ≤ m0) (f : @SimpleFunc β m F) (hf_i
   congr
   exact (trim_measurable_set_eq hm (@simple_func.measurable_set_fiber β F m f x)).symm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr F]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr F]]
 theorem integral_trim (hm : m ≤ m0) {f : β → F} (hf : strongly_measurable[m] f) : (∫ x, f x ∂μ) = ∫ x, f x ∂μ.trim hm :=
   by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr F]]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr F]]"
   by_cases' hf_int : integrable f μ
   swap
   · have hf_int_m : ¬integrable f (μ.trim hm) := fun hf_int_m => hf_int (integrable_of_integrable_trim hm hf_int_m)

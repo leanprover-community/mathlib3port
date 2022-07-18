@@ -580,13 +580,13 @@ theorem centroid_eq_affine_combination_fintype [Fintype ι] (p : ι → P) :
     s.centroid k p = univ.affineCombination p (s.centroidWeightsIndicator k) :=
   affine_combination_indicator_subset _ _ (subset_univ _)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i j «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i j «expr ∈ » s)
 /-- An indexed family of points that is injective on the given
 `finset` has the same centroid as the image of that `finset`.  This is
 stated in terms of a set equal to the image to provide control of
 definitional equality for the index type used for the centroid of the
 image. -/
-theorem centroid_eq_centroid_image_of_inj_on {p : ι → P} (hi : ∀ i j _ : i ∈ s _ : j ∈ s, p i = p j → i = j)
+theorem centroid_eq_centroid_image_of_inj_on {p : ι → P} (hi : ∀ (i j) (_ : i ∈ s) (_ : j ∈ s), p i = p j → i = j)
     {ps : Set P} [Fintype ps] (hps : ps = p '' ↑s) : s.centroid k p = (univ : Finset ps).centroid k fun x => x := by
   let f : p '' ↑s → ι := fun x => x.property.some
   have hf : ∀ x, f x ∈ s ∧ p (f x) = x := fun x => x.property.some_spec
@@ -614,13 +614,13 @@ theorem centroid_eq_centroid_image_of_inj_on {p : ι → P} (hi : ∀ i j _ : i 
   change p (f' x) = ↑x
   rw [(hf' x).2]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i j «expr ∈ » s)
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i j «expr ∈ » s₂)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i j «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i j «expr ∈ » s₂)
 /-- Two indexed families of points that are injective on the given
 `finset`s and with the same points in the image of those `finset`s
 have the same centroid. -/
-theorem centroid_eq_of_inj_on_of_image_eq {p : ι → P} (hi : ∀ i j _ : i ∈ s _ : j ∈ s, p i = p j → i = j) {p₂ : ι₂ → P}
-    (hi₂ : ∀ i j _ : i ∈ s₂ _ : j ∈ s₂, p₂ i = p₂ j → i = j) (he : p '' ↑s = p₂ '' ↑s₂) :
+theorem centroid_eq_of_inj_on_of_image_eq {p : ι → P} (hi : ∀ (i j) (_ : i ∈ s) (_ : j ∈ s), p i = p j → i = j)
+    {p₂ : ι₂ → P} (hi₂ : ∀ (i j) (_ : i ∈ s₂) (_ : j ∈ s₂), p₂ i = p₂ j → i = j) (he : p '' ↑s = p₂ '' ↑s₂) :
     s.centroid k p = s₂.centroid k p₂ := by
   rw [s.centroid_eq_centroid_image_of_inj_on k hi rfl, s₂.centroid_eq_centroid_image_of_inj_on k hi₂ he]
 
@@ -778,7 +778,6 @@ theorem mem_affine_span_iff_eq_affine_combination [Nontrivial k] {p1 : P} {p : �
     exact affine_combination_mem_affine_span hw p
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given a family of points together with a chosen base point in that family, membership of the
 affine span of this family corresponds to an identity in terms of `weighted_vsub_of_point`, with
 weights that are not required to sum to 1. -/

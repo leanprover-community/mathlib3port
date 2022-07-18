@@ -176,7 +176,6 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0 ) (dist_self : ∀
 
 end PseudoMetricSpace
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `X` is a uniform space with countably generated uniformity filter, there exists a
 `pseudo_metric_space` structure compatible with the `uniform_space` structure. Use
 `uniform_space.pseudo_metric_space` or `uniform_space.metric_space` instead. -/

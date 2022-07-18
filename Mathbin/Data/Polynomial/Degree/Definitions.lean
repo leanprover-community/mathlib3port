@@ -40,7 +40,7 @@ variable [Semiringₓ R] {p q r : R[X]}
 `degree p = some n` when `p ≠ 0` and `n` is the highest power of `X` that appears in `p`, otherwise
 `degree 0 = ⊥`. -/
 def degree (p : R[X]) : WithBot ℕ :=
-  p.Support.sup some
+  p.Support.sup coe
 
 theorem degree_lt_wf : WellFounded fun p q : R[X] => degree p < degree q :=
   InvImage.wfₓ degree (WithBot.well_founded_lt Nat.lt_wf)
@@ -90,8 +90,7 @@ theorem coeff_nat_degree : coeff p (natDegree p) = leadingCoeff p :=
   rfl
 
 theorem degree_eq_bot : degree p = ⊥ ↔ p = 0 :=
-  ⟨fun h => by
-    rw [degree, ← max_eq_sup_with_bot] at h <;> exact support_eq_empty.1 (max_eq_none.1 h), fun h => h.symm ▸ rfl⟩
+  ⟨fun h => support_eq_empty.1 (Finset.max_eq_bot.1 h), fun h => h.symm ▸ rfl⟩
 
 @[nontriviality]
 theorem degree_of_subsingleton [Subsingleton R] : degree p = ⊥ := by
@@ -439,6 +438,10 @@ theorem nat_degree_neg (p : R[X]) : natDegree (-p) = natDegree p := by
 theorem nat_degree_int_cast (n : ℤ) : natDegree (n : R[X]) = 0 := by
   simp only [C_eq_int_cast, ← nat_degree_C]
 
+@[simp]
+theorem leading_coeff_neg (p : R[X]) : (-p).leadingCoeff = -p.leadingCoeff := by
+  rw [leading_coeff, leading_coeff, nat_degree_neg, coeff_neg]
+
 end Ringₓ
 
 section Semiringₓ
@@ -597,13 +600,12 @@ theorem degree_erase_lt (hp : p ≠ 0) : degree (p.erase (natDegree p)) < degree
   exact fun h => not_mem_erase _ _ (mem_of_max h)
 
 theorem degree_update_le (p : R[X]) (n : ℕ) (a : R) : degree (p.update n a) ≤ max (degree p) n := by
-  simp only [← degree, ← coeff_update_apply, ← le_max_iff, ← Finset.sup_le_iff, ← mem_support_iff]
-  intro b hb
-  split_ifs  at hb with h
-  · subst b
-    exact Or.inr le_rfl
+  rw [degree, support_update]
+  split_ifs
+  · exact (Finset.max_mono (erase_subset _ _)).trans (le_max_leftₓ _ _)
     
-  · exact Or.inl (le_degree_of_ne_zero hb)
+  · rw [sup_insert, max_commₓ]
+    exact le_rfl
     
 
 theorem degree_sum_le (s : Finset ι) (f : ι → R[X]) : degree (∑ i in s, f i) ≤ s.sup fun b => degree (f b) :=
@@ -911,26 +913,14 @@ theorem zero_le_degree_iff {p : R[X]} : 0 ≤ degree p ↔ p ≠ 0 := by
       exact by
         decide
 
-theorem degree_nonneg_iff_ne_zero : 0 ≤ degree p ↔ p ≠ 0 :=
-  ⟨fun h0p hp0 =>
-    absurd h0p
-      (by
-        rw [hp0, degree_zero] <;>
-          exact by
-            decide),
-    fun hp0 =>
-    le_of_not_gtₓ fun h => by
-      simp_all [← Gt, ← degree_eq_bot]⟩
+theorem degree_nonneg_iff_ne_zero : 0 ≤ degree p ↔ p ≠ 0 := by
+  simp [← degree_eq_bot, not_ltₓ]
 
 theorem nat_degree_eq_zero_iff_degree_le_zero : p.natDegree = 0 ↔ p.degree ≤ 0 := by
   rw [← nonpos_iff_eq_zero, nat_degree_le_iff_degree_le, WithBot.coe_zero]
 
-theorem degree_le_iff_coeff_zero (f : R[X]) (n : WithBot ℕ) : degree f ≤ n ↔ ∀ m : ℕ, n < m → coeff f m = 0 :=
-  ⟨fun H : Finset.sup f.Support some ≤ n m Hm : n < (m : WithBot ℕ) =>
-    Decidable.of_not_not fun H4 =>
-      have H1 : m ∉ f.Support := fun H2 => not_lt_of_geₓ ((Finset.sup_le_iff.1 H) m H2 : (m : WithBot ℕ) ≤ n) Hm
-      H1 <| mem_support_iff.2 H4,
-    fun H => Finset.sup_le fun b Hb => Decidable.of_not_not fun Hn => mem_support_iff.1 Hb <| H b <| lt_of_not_geₓ Hn⟩
+theorem degree_le_iff_coeff_zero (f : R[X]) (n : WithBot ℕ) : degree f ≤ n ↔ ∀ m : ℕ, n < m → coeff f m = 0 := by
+  simp only [← degree, ← Finset.sup_le_iff, ← mem_support_iff, ← Ne.def, not_leₓ, ← not_imp_comm]
 
 theorem degree_lt_iff_coeff_zero (f : R[X]) (n : ℕ) : degree f < n ↔ ∀ m : ℕ, n ≤ m → coeff f m = 0 := by
   refine' ⟨fun hf m hm => coeff_eq_zero_of_degree_lt (lt_of_lt_of_leₓ hf (WithBot.coe_le_coe.2 hm)), _⟩

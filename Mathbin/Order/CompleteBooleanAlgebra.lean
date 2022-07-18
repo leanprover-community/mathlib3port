@@ -81,13 +81,13 @@ theorem supr_inf_eq (f : ι → α) (a : α) : (⨆ i, f i)⊓a = ⨆ i, f i⊓a
 theorem inf_supr_eq (a : α) (f : ι → α) : (a⊓⨆ i, f i) = ⨆ i, a⊓f i := by
   simpa only [← inf_comm] using supr_inf_eq f a
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem bsupr_inf_eq {f : ∀ i, κ i → α} (a : α) : (⨆ (i) (j), f i j)⊓a = ⨆ (i) (j), f i j⊓a := by
   simp only [← supr_inf_eq]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem inf_bsupr_eq {f : ∀ i, κ i → α} (a : α) : (a⊓⨆ (i) (j), f i j) = ⨆ (i) (j), a⊓f i j := by
   simp only [← inf_supr_eq]
 
@@ -108,11 +108,11 @@ theorem supr_disjoint_iff {f : ι → α} : Disjoint (⨆ i, f i) a ↔ ∀ i, D
 theorem disjoint_supr_iff {f : ι → α} : Disjoint a (⨆ i, f i) ↔ ∀ i, Disjoint a (f i) := by
   simpa only [← Disjoint.comm] using supr_disjoint_iff
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem supr₂_disjoint_iff {f : ∀ i, κ i → α} : Disjoint (⨆ (i) (j), f i j) a ↔ ∀ i j, Disjoint (f i j) a := by
   simp_rw [supr_disjoint_iff]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem disjoint_supr₂_iff {f : ∀ i, κ i → α} : Disjoint a (⨆ (i) (j), f i j) ↔ ∀ i j, Disjoint a (f i j) := by
   simp_rw [disjoint_supr_iff]
 
@@ -139,6 +139,11 @@ instance Pi.frame {ι : Type _} {π : ι → Type _} [∀ i, Frame (π i)] : Fra
     inf_Sup_le_supr_inf := fun a s i => by
       simp only [← CompleteLattice.supₓ, ← Sup_apply, ← supr_apply, ← Pi.inf_apply, ← inf_supr_eq, supr_subtype''] }
 
+-- see Note [lower instance priority]
+instance (priority := 100) Frame.toDistribLattice : DistribLattice α :=
+  DistribLattice.ofInfSupLe fun a b c => by
+    rw [← Sup_pair, ← Sup_pair, inf_Sup_eq, ← Sup_image, image_pair]
+
 end Frame
 
 section Coframe
@@ -160,13 +165,13 @@ theorem infi_sup_eq (f : ι → α) (a : α) : (⨅ i, f i)⊔a = ⨅ i, f i⊔a
 theorem sup_infi_eq (a : α) (f : ι → α) : (a⊔⨅ i, f i) = ⨅ i, a⊔f i :=
   @inf_supr_eq αᵒᵈ _ _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem binfi_sup_eq {f : ∀ i, κ i → α} (a : α) : (⨅ (i) (j), f i j)⊔a = ⨅ (i) (j), f i j⊔a :=
   @bsupr_inf_eq αᵒᵈ _ _ _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem sup_binfi_eq {f : ∀ i, κ i → α} (a : α) : (a⊔⨅ (i) (j), f i j) = ⨅ (i) (j), a⊔f i j :=
   @inf_bsupr_eq αᵒᵈ _ _ _ _ _
 
@@ -193,6 +198,12 @@ instance Pi.coframe {ι : Type _} {π : ι → Type _} [∀ i, Coframe (π i)] :
     infi_sup_le_sup_Inf := fun a s i => by
       simp only [sup_infi_eq, ← Inf_apply, infi_subtype'', ← infi_apply, ← Pi.sup_apply] }
 
+-- see Note [lower instance priority]
+instance (priority := 100) Coframe.toDistribLattice : DistribLattice α :=
+  { ‹Coframe α› with
+    le_sup_inf := fun a b c => by
+      rw [← Inf_pair, ← Inf_pair, sup_Inf_eq, ← Inf_image, image_pair] }
+
 end Coframe
 
 section CompleteDistribLattice
@@ -207,12 +218,6 @@ instance Pi.completeDistribLattice {ι : Type _} {π : ι → Type _} [∀ i, Co
   { Pi.frame, Pi.coframe with }
 
 end CompleteDistribLattice
-
--- see Note [lower instance priority]
-instance (priority := 100) CompleteDistribLattice.toDistribLattice [d : CompleteDistribLattice α] : DistribLattice α :=
-  { d with
-    le_sup_inf := fun x y z => by
-      rw [← Inf_pair, ← Inf_pair, sup_Inf_eq, ← Inf_image, Set.image_pair] }
 
 /-- A complete Boolean algebra is a completely distributive Boolean algebra. -/
 class CompleteBooleanAlgebra (α) extends BooleanAlgebra α, CompleteDistribLattice α

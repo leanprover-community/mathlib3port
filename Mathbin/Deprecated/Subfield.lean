@@ -55,7 +55,7 @@ theorem Univ.is_subfield : IsSubfield (@Set.Univ F) :=
 theorem Preimage.is_subfield {K : Type _} [Field K] (f : F →+* K) {s : Set K} (hs : IsSubfield s) :
     IsSubfield (f ⁻¹' s) :=
   { f.is_subring_preimage hs.to_is_subring with
-    inv_mem := fun a ha : f a ∈ s =>
+    inv_mem := fun a (ha : f a ∈ s) =>
       show f a⁻¹ ∈ s by
         rw [f.map_inv]
         exact hs.inv_mem ha }
@@ -87,7 +87,6 @@ theorem Closure.is_submonoid : IsSubmonoid (Closure S) :=
             IsSubmonoid.mul_mem ring.closure.is_subring.to_is_submonoid hq hs, (div_mul_div_comm _ _ _ _).symm⟩,
     one_mem := ring_closure_subset <| IsSubmonoid.one_mem Ringₓ.Closure.is_subring.to_is_submonoid }
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Closure.is_subfield : IsSubfield (Closure S) :=
   have h0 : (0 : F) ∈ Closure S :=
     ring_closure_subset <| Ringₓ.Closure.is_subring.to_is_add_subgroup.to_is_add_submonoid.zero_mem

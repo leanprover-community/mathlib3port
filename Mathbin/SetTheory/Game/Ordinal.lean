@@ -30,7 +30,7 @@ open NaturalOps Pgame
 namespace Ordinal
 
 /-- Converts an ordinal into the corresponding pre-game. -/
-noncomputable def toPgame : ∀ o : Ordinal.{u}, Pgame.{u}
+noncomputable def toPgame : Ordinal.{u} → Pgame.{u}
   | o =>
     ⟨o.out.α, Pempty, fun x =>
       let hwf := Ordinal.typein_lt_self x
@@ -72,10 +72,10 @@ theorem to_pgame_move_left_heq {o : Ordinal} : HEq o.toPgame.moveLeft fun x : o.
   rfl
 
 @[simp]
-theorem to_pgame_move_left' {o : Ordinal} i : o.toPgame.moveLeft i = (toLeftMovesToPgame.symm i).val.toPgame :=
+theorem to_pgame_move_left' {o : Ordinal} (i) : o.toPgame.moveLeft i = (toLeftMovesToPgame.symm i).val.toPgame :=
   (congr_heq to_pgame_move_left_heq.symm (cast_heq _ i)).symm
 
-theorem to_pgame_move_left {o : Ordinal} i : o.toPgame.moveLeft (toLeftMovesToPgame i) = i.val.toPgame := by
+theorem to_pgame_move_left {o : Ordinal} (i) : o.toPgame.moveLeft (toLeftMovesToPgame i) = i.val.toPgame := by
   simp
 
 theorem to_pgame_lf {a b : Ordinal} (h : a < b) : a.toPgame ⧏ b.toPgame := by

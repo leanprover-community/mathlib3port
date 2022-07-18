@@ -196,3 +196,30 @@ end MeasurableInf₂
 
 end Inf
 
+section SemilatticeSup
+
+open Finset
+
+variable {δ : Type _} [MeasurableSpace δ] [SemilatticeSup α] [HasMeasurableSup₂ α]
+
+@[measurability]
+theorem Finset.measurable_sup' {ι : Type _} {s : Finset ι} (hs : s.Nonempty) {f : ι → δ → α}
+    (hf : ∀, ∀ n ∈ s, ∀, Measurable (f n)) : Measurable (s.sup' hs f) :=
+  Finset.sup'_induction hs _ (fun f hf g hg => hf.sup hg) fun n hn => hf n hn
+
+@[measurability]
+theorem Finset.measurable_range_sup' {f : ℕ → δ → α} {n : ℕ} (hf : ∀, ∀ k ≤ n, ∀, Measurable (f k)) :
+    Measurable ((range (n + 1)).sup' nonempty_range_succ f) := by
+  simp_rw [← Nat.lt_succ_iffₓ] at hf
+  refine' Finset.measurable_sup' _ _
+  simpa [← Finset.mem_range]
+
+@[measurability]
+theorem Finset.measurable_range_sup'' {f : ℕ → δ → α} {n : ℕ} (hf : ∀, ∀ k ≤ n, ∀, Measurable (f k)) :
+    Measurable fun x => (range (n + 1)).sup' nonempty_range_succ fun k => f k x := by
+  convert Finset.measurable_range_sup' hf
+  ext x
+  simp
+
+end SemilatticeSup
+

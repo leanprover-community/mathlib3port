@@ -47,11 +47,11 @@ theorem mem_range' {m : ℕ} : ∀ {s n : ℕ}, m ∈ range' s n ↔ s ≤ m ∧
     (mem_cons_iff _ _ _).trans <| by
       simp only [← mem_range', ← or_and_distrib_left, ← or_iff_right_of_imp this, ← l, ← add_right_commₓ] <;> rfl
 
-theorem map_add_range' a : ∀ s n : ℕ, map ((· + ·) a) (range' s n) = range' (a + s) n
+theorem map_add_range' (a) : ∀ s n : ℕ, map ((· + ·) a) (range' s n) = range' (a + s) n
   | s, 0 => rfl
   | s, n + 1 => congr_arg (cons _) (map_add_range' (s + 1) n)
 
-theorem map_sub_range' a : ∀ s n : ℕ h : a ≤ s, map (fun x => x - a) (range' s n) = range' (s - a) n
+theorem map_sub_range' (a) : ∀ (s n : ℕ) (h : a ≤ s), map (fun x => x - a) (range' s n) = range' (s - a) n
   | s, 0, _ => rfl
   | s, n + 1, h => by
     convert congr_arg (cons (s - a)) (map_sub_range' (s + 1) n (Nat.le_succ_of_leₓ h))
@@ -90,14 +90,14 @@ theorem range'_subset_right {s m n : ℕ} : range' s m ⊆ range' s n ↔ m ≤ 
       lt_irreflₓ (s + n) <| (mem_range'.1 <| h <| mem_range'.2 ⟨Nat.le_add_rightₓ _ _, Nat.add_lt_add_leftₓ hn s⟩).2,
     fun h => (range'_sublist_right.2 h).Subset⟩
 
-theorem nth_range' : ∀ s {m n : ℕ}, m < n → nth (range' s n) m = some (s + m)
+theorem nth_range' : ∀ (s) {m n : ℕ}, m < n → nth (range' s n) m = some (s + m)
   | s, 0, n + 1, _ => rfl
   | s, m + 1, n + 1, h =>
     (nth_range' (s + 1) (lt_of_add_lt_add_right h)).trans <| by
       rw [add_right_commₓ] <;> rfl
 
 @[simp]
-theorem nth_le_range' {n m} i (H : i < (range' n m).length) : nthLe (range' n m) i H = n + i :=
+theorem nth_le_range' {n m} (i) (H : i < (range' n m).length) : nthLe (range' n m) i H = n + i :=
   Option.some.injₓ <| by
     rw [← nth_le_nth _,
       nth_range' _
@@ -263,7 +263,7 @@ theorem prod_range_succ' {α : Type u} [Monoidₓ α] (f : ℕ → α) (n : ℕ)
     rw [List.prod_range_succ, hd, mul_assoc, ← List.prod_range_succ]
 
 @[simp]
-theorem enum_from_map_fst : ∀ n l : List α, map Prod.fst (enumFrom n l) = range' n l.length
+theorem enum_from_map_fst : ∀ (n) (l : List α), map Prod.fst (enumFrom n l) = range' n l.length
   | n, [] => rfl
   | n, a :: l => congr_arg (cons _) (enum_from_map_fst _ _)
 
@@ -286,7 +286,7 @@ theorem unzip_enum_from_eq_prod (l : List α) {n : ℕ} : (l.enumFrom n).unzip =
   simp only [← enum_from_eq_zip_range', ← unzip_zip, ← length_range']
 
 @[simp]
-theorem nth_le_range {n} i (H : i < (range n).length) : nthLe (range n) i H = i :=
+theorem nth_le_range {n} (i) (H : i < (range n).length) : nthLe (range n) i H = i :=
   Option.some.injₓ <| by
     rw [← nth_le_nth _,
       nth_range
@@ -294,7 +294,7 @@ theorem nth_le_range {n} i (H : i < (range n).length) : nthLe (range n) i H = i 
           simpa using H)]
 
 @[simp]
-theorem nth_le_fin_range {n : ℕ} {i : ℕ} h : (finRange n).nthLe i h = ⟨i, length_fin_range n ▸ h⟩ := by
+theorem nth_le_fin_range {n : ℕ} {i : ℕ} (h) : (finRange n).nthLe i h = ⟨i, length_fin_range n ▸ h⟩ := by
   simp only [← fin_range, ← nth_le_range, ← nth_le_pmap, ← Finₓ.mk_eq_subtype_mk]
 
 theorem of_fn_eq_pmap {α n} {f : Finₓ n → α} : ofFnₓ f = pmap (fun i hi => f ⟨i, hi⟩) (range n) fun _ => mem_range.1 :=
@@ -308,7 +308,7 @@ theorem of_fn_eq_pmap {α n} {f : Finₓ n → α} : ofFnₓ f = pmap (fun i hi 
         simp at hi1
         simp [← nth_le_of_fn f ⟨i, hi1⟩, -Subtype.val_eq_coe]
 
-theorem of_fn_id n : ofFnₓ id = finRange n :=
+theorem of_fn_id (n) : ofFnₓ id = finRange n :=
   of_fn_eq_pmap
 
 theorem of_fn_eq_map {α n} {f : Finₓ n → α} : ofFnₓ f = (finRange n).map f := by

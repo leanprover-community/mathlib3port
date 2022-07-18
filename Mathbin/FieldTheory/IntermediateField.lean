@@ -17,15 +17,14 @@ i.e. it is a `subfield L` and a `subalgebra K L`.
 
 ## Main definitions
 
- * `intermediate_field K L` : the type of intermediate fields between `K` and `L`.
-
- * `subalgebra.to_intermediate_field`: turns a subalgebra closed under `⁻¹`
-   into an intermediate field
-
- * `subfield.to_intermediate_field`: turns a subfield containing the image of `K`
-   into an intermediate field
-
+* `intermediate_field K L` : the type of intermediate fields between `K` and `L`.
+* `subalgebra.to_intermediate_field`: turns a subalgebra closed under `⁻¹`
+  into an intermediate field
+* `subfield.to_intermediate_field`: turns a subfield containing the image of `K`
+  into an intermediate field
 * `intermediate_field.map`: map an intermediate field along an `alg_hom`
+* `intermediate_field.restrict_scalars`: restrict the scalars of an intermediate field to a smaller
+  field in a tower of fields.
 
 ## Implementation notes
 
@@ -91,7 +90,7 @@ theorem coe_to_subfield : (S.toSubfield : Set L) = S :=
   rfl
 
 @[simp]
-theorem mem_mk (s : Set L) (hK : ∀ x, algebraMap K L x ∈ s) ho hm hz ha hn hi (x : L) :
+theorem mem_mk (s : Set L) (hK : ∀ x, algebraMap K L x ∈ s) (ho hm hz ha hn hi) (x : L) :
     x ∈ IntermediateField.mk (Subalgebra.mk s ho hm hz ha hK) hn hi ↔ x ∈ s :=
   Iff.rfl
 
@@ -261,7 +260,6 @@ namespace IntermediateField
 instance toField : Field S :=
   S.toSubfield.toField
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp, norm_cast]
 theorem coe_sum {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∑ i, f i) : L) = ∑ i, (f i : L) := by
   classical
@@ -271,7 +269,6 @@ theorem coe_sum {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∑ i, f i) : L
   · rw [Finset.sum_insert hi, AddMemClass.coe_add, H, Finset.sum_insert hi]
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp, norm_cast]
 theorem coe_prod {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∏ i, f i) : L) = ∏ i, (f i : L) := by
   classical
@@ -442,45 +439,48 @@ variable {S}
 section Tower
 
 /-- Lift an intermediate_field of an intermediate_field -/
-def lift1 {F : IntermediateField K L} (E : IntermediateField K F) : IntermediateField K L :=
+def lift {F : IntermediateField K L} (E : IntermediateField K F) : IntermediateField K L :=
   map E (val F)
 
-/-- Lift an intermediate_field of an intermediate_field -/
-def lift2 {F : IntermediateField K L} (E : IntermediateField F L) : IntermediateField K L where
-  Carrier := E.Carrier
-  zero_mem' := zero_mem E
-  add_mem' := fun x y hx : x ∈ E => add_mem hx
-  neg_mem' := fun x hx : x ∈ E => neg_mem hx
-  one_mem' := one_mem E
-  mul_mem' := fun x y hx : x ∈ E => mul_mem hx
-  inv_mem' := fun x hx : x ∈ E => inv_mem hx
-  algebra_map_mem' := fun x => algebra_map_mem E (algebraMap K F x)
+instance hasLift {F : IntermediateField K L} : HasLiftT (IntermediateField K F) (IntermediateField K L) :=
+  ⟨lift⟩
 
-instance hasLift1 {F : IntermediateField K L} : HasLiftT (IntermediateField K F) (IntermediateField K L) :=
-  ⟨lift1⟩
+section RestrictScalars
 
-instance hasLift2 {F : IntermediateField K L} : HasLiftT (IntermediateField F L) (IntermediateField K L) :=
-  ⟨lift2⟩
+variable (K) [Algebra L' L] [IsScalarTower K L' L]
+
+/-- Given a tower `L / ↥E / L' / K` of field extensions, where `E` is an `L'`-intermediate field of
+`L`, reinterpret `E` as a `K`-intermediate field of `L`. -/
+def restrictScalars (E : IntermediateField L' L) : IntermediateField K L :=
+  { E.toSubfield, E.toSubalgebra.restrictScalars K with Carrier := E.Carrier }
 
 @[simp]
-theorem mem_lift2 {F : IntermediateField K L} {E : IntermediateField F L} {x : L} :
-    x ∈ (↑E : IntermediateField K L) ↔ x ∈ E :=
+theorem coe_restrict_scalars {E : IntermediateField L' L} : (restrictScalars K E : Set L) = (E : Set L) :=
+  rfl
+
+@[simp]
+theorem restrict_scalars_to_subalgebra {E : IntermediateField L' L} :
+    (E.restrictScalars K).toSubalgebra = E.toSubalgebra.restrictScalars K :=
+  SetLike.coe_injective rfl
+
+@[simp]
+theorem restrict_scalars_to_subfield {E : IntermediateField L' L} : (E.restrictScalars K).toSubfield = E.toSubfield :=
+  SetLike.coe_injective rfl
+
+@[simp]
+theorem mem_restrict_scalars {E : IntermediateField L' L} {x : L} : x ∈ restrictScalars K E ↔ x ∈ E :=
   Iff.rfl
+
+theorem restrict_scalars_injective :
+    Function.Injective (restrictScalars K : IntermediateField L' L → IntermediateField K L) := fun U V H =>
+  ext fun x => by
+    rw [← mem_restrict_scalars K, H, mem_restrict_scalars]
+
+end RestrictScalars
 
 /-- This was formerly an instance called `lift2_alg`, but an instance above already provides it. -/
 example {F : IntermediateField K L} {E : IntermediateField F L} : Algebra K E := by
   infer_instance
-
-theorem lift2_algebra_map {F : IntermediateField K L} {E : IntermediateField F L} :
-    algebraMap K E = (algebraMap F E).comp (algebraMap K F) :=
-  rfl
-
-instance lift2_tower {F : IntermediateField K L} {E : IntermediateField F L} : IsScalarTower K F E :=
-  E.IsScalarTower
-
-/-- `lift2` is isomorphic to the original `intermediate_field`. -/
-def lift2AlgEquiv {F : IntermediateField K L} (E : IntermediateField F L) : (↑E : IntermediateField K L) ≃ₐ[K] E :=
-  AlgEquiv.refl
 
 end Tower
 
@@ -489,7 +489,7 @@ section FiniteDimensional
 variable (F E : IntermediateField K L)
 
 instance finite_dimensional_left [FiniteDimensional K L] : FiniteDimensional K F :=
-  FiniteDimensional.finite_dimensional_submodule F.toSubalgebra.toSubmodule
+  left K F L
 
 instance finite_dimensional_right [FiniteDimensional K L] : FiniteDimensional F L :=
   right K F L

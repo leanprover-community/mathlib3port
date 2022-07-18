@@ -47,10 +47,10 @@ variable (D : Type u') [Category.{v'} D]
 and compositions of zero morphisms with anything give the zero morphism. -/
 class HasZeroMorphisms where
   [HasZero : ∀ X Y : C, Zero (X ⟶ Y)]
-  comp_zero' : ∀ {X Y : C} f : X ⟶ Y Z : C, f ≫ (0 : Y ⟶ Z) = (0 : X ⟶ Z) := by
+  comp_zero' : ∀ {X Y : C} (f : X ⟶ Y) (Z : C), f ≫ (0 : Y ⟶ Z) = (0 : X ⟶ Z) := by
     run_tac
       obviously
-  zero_comp' : ∀ X : C {Y Z : C} f : Y ⟶ Z, (0 : X ⟶ Y) ≫ f = (0 : X ⟶ Z) := by
+  zero_comp' : ∀ (X : C) {Y Z : C} (f : Y ⟶ Z), (0 : X ⟶ Y) ≫ f = (0 : X ⟶ Z) := by
     run_tac
       obviously
 
@@ -588,11 +588,11 @@ end Image
 
 /-- In the presence of zero morphisms, coprojections into a coproduct are (split) monomorphisms. -/
 instance splitMonoSigmaι {β : Type u'} [HasZeroMorphisms C] (f : β → C) [HasColimit (Discrete.functor f)] (b : β) :
-    SplitMono (Sigma.ι f b) where retraction := Sigma.desc fun b' => if h : b' = b then eqToHom (congr_arg f h) else 0
+    SplitMono (Sigma.ι f b) where retraction := sigma.desc <| Pi.single b (𝟙 _)
 
 /-- In the presence of zero morphisms, projections into a product are (split) epimorphisms. -/
 instance splitEpiPiπ {β : Type u'} [HasZeroMorphisms C] (f : β → C) [HasLimit (Discrete.functor f)] (b : β) :
-    SplitEpi (Pi.π f b) where section_ := Pi.lift fun b' => if h : b = b' then eqToHom (congr_arg f h) else 0
+    SplitEpi (Pi.π f b) where section_ := pi.lift <| Pi.single b (𝟙 _)
 
 /-- In the presence of zero morphisms, coprojections into a coproduct are (split) monomorphisms. -/
 instance splitMonoCoprodInl [HasZeroMorphisms C] {X Y : C} [HasColimit (pair X Y)] :

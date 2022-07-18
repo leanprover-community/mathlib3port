@@ -238,9 +238,9 @@ theorem filter_card_eq {p : α → Prop} [DecidablePred p] (h : (s.filter p).car
 theorem card_lt_card (h : s ⊂ t) : s.card < t.card :=
   card_lt_of_lt <| val_lt_iff.2 h
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀, ∀ a ∈ s, ∀, ∃ i, ∃ h : i < n, f i h = a)
-    (hf' : ∀ i h : i < n, f i h ∈ s) (f_inj : ∀ i j hi : i < n hj : j < n, f i hi = f j hj → i = j) : s.card = n := by
+    (hf' : ∀ (i) (h : i < n), f i h ∈ s) (f_inj : ∀ (i j) (hi : i < n) (hj : j < n), f i hi = f j hj → i = j) :
+    s.card = n := by
   classical
   have : ∀ a : α, a ∈ s ↔ ∃ (i : _)(hi : i ∈ range n), f i (mem_range.1 hi) = a := fun a =>
     ⟨fun ha =>
@@ -255,7 +255,6 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀, ∀ a ∈ s, �
         Subtype.eq <| f_inj i j (mem_range.1 hi) (mem_range.1 hj) Eq _ = card (range n) :=
       card_attach _ = n := card_range n
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem card_congr {t : Finset β} (f : ∀, ∀ a ∈ s, ∀, β) (h₁ : ∀ a ha, f a ha ∈ t)
     (h₂ : ∀ a b ha hb, f a ha = f b hb → a = b) (h₃ : ∀, ∀ b ∈ t, ∀, ∃ a ha, f a ha = b) : s.card = t.card := by
   classical <;>
@@ -272,14 +271,12 @@ theorem card_congr {t : Finset β} (f : ∀, ∀ a ∈ s, ∀, β) (h₁ : ∀ a
                 ⟨⟨a, ha₁⟩, by
                   simp [← ha₂]⟩⟩)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem card_le_card_of_inj_on {t : Finset β} (f : α → β) (hf : ∀, ∀ a ∈ s, ∀, f a ∈ t)
     (f_inj : ∀, ∀ a₁ ∈ s, ∀, ∀, ∀ a₂ ∈ s, ∀, f a₁ = f a₂ → a₁ = a₂) : s.card ≤ t.card := by
   classical <;>
     calc s.card = (s.image f).card := (card_image_of_inj_on f_inj).symm _ ≤ t.card :=
         card_le_of_subset <| image_subset_iff.2 hf
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If there are more pigeons than pigeonholes, then there are two pigeons in the same pigeonhole.
 -/
 theorem exists_ne_map_eq_of_card_lt_of_maps_to {t : Finset β} (hc : t.card < s.card) {f : α → β}
@@ -303,7 +300,6 @@ theorem le_card_of_inj_on_range (f : ℕ → α) (hf : ∀, ∀ i < n, ∀, f i 
           simpa only [← mem_range] )
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem surj_on_of_inj_on_of_card_le {t : Finset β} (f : ∀, ∀ a ∈ s, ∀, β) (hf : ∀ a ha, f a ha ∈ t)
     (hinj : ∀ a₁ a₂ ha₁ ha₂, f a₁ ha₁ = f a₂ ha₂ → a₁ = a₂) (hst : t.card ≤ s.card) :
     ∀, ∀ b ∈ t, ∀, ∃ a ha, b = f a ha := by
@@ -334,7 +330,7 @@ theorem inj_on_of_surj_on_of_card_le {t : Finset β} (f : ∀, ∀ a ∈ s, ∀,
   have hg : injective g := injective_surj_inv _
   have hsg : surjective g := fun x =>
     let ⟨y, hy⟩ :=
-      surj_on_of_inj_on_of_card_le (fun x : { x // x ∈ t } hx : x ∈ t.attach => g x)
+      surj_on_of_inj_on_of_card_le (fun (x : { x // x ∈ t }) (hx : x ∈ t.attach) => g x)
         (fun x _ => show g x ∈ s.attach from mem_attach _ _) (fun x y _ _ hxy => hg hxy)
         (by
           simpa)
@@ -344,7 +340,7 @@ theorem inj_on_of_surj_on_of_card_le {t : Finset β} (f : ∀, ∀ a ∈ s, ∀,
   Subtype.ext_iff_val.1 (@hif ⟨a₁, ha₁⟩ ⟨a₂, ha₂⟩ (Subtype.eq ha₁a₂))
 
 @[simp]
-theorem card_disj_union (s t : Finset α) h : (s.disjUnion t h).card = s.card + t.card :=
+theorem card_disj_union (s t : Finset α) (h) : (s.disjUnion t h).card = s.card + t.card :=
   Multiset.card_add _ _
 
 /-! ### Lattice structure -/
@@ -392,13 +388,11 @@ theorem card_sdiff_add_card : (s \ t).card + t.card = (s ∪ t).card := by
 
 end Lattice
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem filter_card_add_filter_neg_card_eq_card (p : α → Prop) [DecidablePred p] :
     (s.filter p).card + (s.filter (Not ∘ p)).card = s.card := by
   classical
   simp [card_union_eq, ← filter_union_filter_neg_eq, ← disjoint_filter]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given a set `A` and a set `B` inside it, we can shrink `A` to any appropriate size, and keep `B`
 inside it. -/
 theorem exists_intermediate_set {A B : Finset α} (i : ℕ) (h₁ : i + card B ≤ card A) (h₂ : B ⊆ A) :
@@ -452,7 +446,7 @@ theorem exists_subset_or_subset_of_two_mul_lt_card [DecidableEq α] {X Y : Finse
 theorem card_eq_one : s.card = 1 ↔ ∃ a, s = {a} := by
   cases s <;> simp only [← Multiset.card_eq_one, ← Finset.card, val_inj, ← singleton_val]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a «expr ∉ » s)
 theorem exists_eq_insert_iff [DecidableEq α] {s t : Finset α} :
     (∃ (a : _)(_ : a ∉ s), insert a s = t) ↔ s ⊆ t ∧ s.card + 1 = t.card := by
   constructor
@@ -514,7 +508,6 @@ theorem one_lt_card_iff : 1 < s.card ↔ ∃ a b, a ∈ s ∧ b ∈ s ∧ a ≠ 
   rw [one_lt_card]
   simp only [← exists_prop, ← exists_and_distrib_left]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem two_lt_card_iff : 2 < s.card ↔ ∃ a b c, a ∈ s ∧ b ∈ s ∧ c ∈ s ∧ a ≠ b ∧ a ≠ c ∧ b ≠ c := by
   classical
   refine' ⟨fun h => _, _⟩
@@ -575,37 +568,37 @@ theorem card_eq_three [DecidableEq α] : s.card = 3 ↔ ∃ x y z, x ≠ y ∧ x
 /-! ### Inductions -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊂ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊂ » s)
 /-- Suppose that, given objects defined on all strict subsets of any finset `s`, one knows how to
 define an object on `s`. Then one can inductively define an object on all finsets, starting from
 the empty set and iterating. This can be used either to define data, or to prove properties. -/
-def strongInductionₓ {p : Finset α → Sort _} (H : ∀ s, (∀ t _ : t ⊂ s, p t) → p s) : ∀ s : Finset α, p s
+def strongInductionₓ {p : Finset α → Sort _} (H : ∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s) : ∀ s : Finset α, p s
   | s =>
     H s fun t h =>
       have : t.card < s.card := card_lt_card h
       strong_induction t
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊂ » s)
-theorem strong_induction_eq {p : Finset α → Sort _} (H : ∀ s, (∀ t _ : t ⊂ s, p t) → p s) (s : Finset α) :
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊂ » s)
+theorem strong_induction_eq {p : Finset α → Sort _} (H : ∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s) (s : Finset α) :
     strongInductionₓ H s = H s fun t h => strongInductionₓ H t := by
   rw [strong_induction]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊂ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊂ » s)
 /-- Analogue of `strong_induction` with order of arguments swapped. -/
 @[elab_as_eliminator]
-def strongInductionOn {p : Finset α → Sort _} (s : Finset α) : (∀ s, (∀ t _ : t ⊂ s, p t) → p s) → p s := fun H =>
+def strongInductionOn {p : Finset α → Sort _} (s : Finset α) : (∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s) → p s := fun H =>
   strongInductionₓ H s
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊂ » s)
-theorem strong_induction_on_eq {p : Finset α → Sort _} (s : Finset α) (H : ∀ s, (∀ t _ : t ⊂ s, p t) → p s) :
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊂ » s)
+theorem strong_induction_on_eq {p : Finset α → Sort _} (s : Finset α) (H : ∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s) :
     s.strong_induction_on H = H s fun t h => t.strong_induction_on H := by
   dunfold strong_induction_on
   rw [strong_induction]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
 @[elab_as_eliminator]
 theorem case_strong_induction_on [DecidableEq α] {p : Finset α → Prop} (s : Finset α) (h₀ : p ∅)
-    (h₁ : ∀ a s, a ∉ s → (∀ t _ : t ⊆ s, p t) → p (insert a s)) : p s :=
+    (h₁ : ∀ a s, a ∉ s → (∀ (t) (_ : t ⊆ s), p t) → p (insert a s)) : p s :=
   (Finset.strongInductionOn s) fun s =>
     (Finset.induction_on s fun _ => h₀) fun a s n _ ih =>
       (h₁ a s n) fun t ss => ih _ (lt_of_le_of_ltₓ ss (ssubset_insert n) : t < _)

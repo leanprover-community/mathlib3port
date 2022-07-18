@@ -63,7 +63,7 @@ theorem antidiagonal_zero : @antidiagonal α 0 = {(0, 0)} :=
   rfl
 
 @[simp]
-theorem antidiagonal_cons (a : α) s :
+theorem antidiagonal_cons (a : α) (s) :
     antidiagonal (a ::ₘ s) =
       map (Prod.map id (cons a)) (antidiagonal s) + map (Prod.map (cons a) id) (antidiagonal s) :=
   (Quotientₓ.induction_on s) fun l => by

@@ -36,14 +36,11 @@ variable [Fintype G] [Invertible (Fintype.card G : k)]
 noncomputable def average : MonoidAlgebra k G :=
   ⅟ (Fintype.card G : k) • ∑ g : G, of k G g
 
-theorem average_def : average k G = ⅟ (Fintype.card G : k) • ∑ g : G, of k G g :=
-  rfl
-
 /-- `average k G` is invariant under left multiplication by elements of `G`.
 -/
 @[simp]
 theorem mul_average_left (g : G) : (Finsupp.single g 1 * average k G : MonoidAlgebra k G) = average k G := by
-  simp only [← mul_oneₓ, ← Finset.mul_sum, ← Algebra.mul_smul_comm, ← average_def, ← MonoidAlgebra.of_apply, ←
+  simp only [← mul_oneₓ, ← Finset.mul_sum, ← Algebra.mul_smul_comm, ← average, ← MonoidAlgebra.of_apply, ←
     Finset.sum_congr, ← MonoidAlgebra.single_mul_single]
   set f : G → MonoidAlgebra k G := fun x => Finsupp.single x 1
   show (⅟ ↑(Fintype.card G) • ∑ x : G, f (g * x)) = ⅟ ↑(Fintype.card G) • ∑ x : G, f x
@@ -53,7 +50,7 @@ theorem mul_average_left (g : G) : (Finsupp.single g 1 * average k G : MonoidAlg
 -/
 @[simp]
 theorem mul_average_right (g : G) : average k G * Finsupp.single g 1 = average k G := by
-  simp only [← mul_oneₓ, ← Finset.sum_mul, ← Algebra.smul_mul_assoc, ← average_def, ← MonoidAlgebra.of_apply, ←
+  simp only [← mul_oneₓ, ← Finset.sum_mul, ← Algebra.smul_mul_assoc, ← average, ← MonoidAlgebra.of_apply, ←
     Finset.sum_congr, ← MonoidAlgebra.single_mul_single]
   set f : G → MonoidAlgebra k G := fun x => Finsupp.single x 1
   show (⅟ ↑(Fintype.card G) • ∑ x : G, f (x * g)) = ⅟ ↑(Fintype.card G) • ∑ x : G, f x
@@ -107,7 +104,7 @@ theorem average_map_invariant (v : V) : averageMap ρ v ∈ invariants ρ := fun
 -/
 theorem average_map_id (v : V) (hv : v ∈ invariants ρ) : averageMap ρ v = v := by
   rw [mem_invariants] at hv
-  simp [← average_def, ← map_sum, ← hv, ← Finset.card_univ, ← nsmul_eq_smul_cast k _ v, ← smul_smul]
+  simp [← average, ← map_sum, ← hv, ← Finset.card_univ, ← nsmul_eq_smul_cast k _ v, ← smul_smul]
 
 theorem is_proj_average_map : LinearMap.IsProj ρ.invariants ρ.averageMap :=
   ⟨ρ.average_map_invariant, ρ.average_map_id⟩

@@ -113,7 +113,6 @@ attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
 
 open Valued
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Valued.continuous_valuation [Valued K Γ₀] : Continuous (v : K → Γ₀) := by
   rw [continuous_iff_continuous_at]
   intro x
@@ -210,7 +209,7 @@ attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
 noncomputable def extension : hat K → Γ₀ :=
   Completion.dense_inducing_coe.extend (v : K → Γ₀)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » V')
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » V')
 theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) := by
   refine' completion.dense_inducing_coe.continuous_extend _
   intro x₀
@@ -235,7 +234,7 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
       rw [Valuation.map_one, mem_preimage, mem_singleton_iff, mem_set_of_eq]
     obtain ⟨V, V_in, hV⟩ : ∃ V ∈ 𝓝 (1 : hat K), ∀ x : K, (x : hat K) ∈ V → (v x : Γ₀) = 1 := by
       rwa [completion.dense_inducing_coe.nhds_eq_comap, mem_comap] at preimage_one
-    have : ∃ V' ∈ 𝓝 (1 : hat K), (0 : hat K) ∉ V' ∧ ∀ x y _ : x ∈ V' _ : y ∈ V', x * y⁻¹ ∈ V := by
+    have : ∃ V' ∈ 𝓝 (1 : hat K), (0 : hat K) ∉ V' ∧ ∀ (x y) (_ : x ∈ V') (_ : y ∈ V'), x * y⁻¹ ∈ V := by
       have : tendsto (fun p : hat K × hat K => p.1 * p.2⁻¹) ((𝓝 1).Prod (𝓝 1)) (𝓝 1) := by
         rw [← nhds_prod_eq]
         conv => congr skip skip rw [← one_mulₓ (1 : hat K)]
@@ -294,7 +293,7 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
 
 @[simp, norm_cast]
 theorem extension_extends (x : K) : extension (x : hat K) = v x := by
-  have : T2Space Γ₀ := RegularSpace.t2_space _
+  have : T2Space Γ₀ := T3Space.t2_space _
   refine' completion.dense_inducing_coe.extend_eq_of_tendsto _
   rw [← completion.dense_inducing_coe.nhds_eq_comap]
   exact valued.continuous_valuation.continuous_at

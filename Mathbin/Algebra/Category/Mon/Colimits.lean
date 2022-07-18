@@ -52,7 +52,7 @@ on a collection of types indexed by the objects of `J`.
 -/
 inductive Prequotient-- There's always `of`
 
-  | of : ∀ j : J x : F.obj j, prequotient-- Then one generator for each operation
+  | of : ∀ (j : J) (x : F.obj j), prequotient-- Then one generator for each operation
 
   | one : prequotient
   | mul : prequotient → prequotient → prequotient
@@ -69,18 +69,18 @@ because one element is mapped to another by a morphism in the diagram.
 inductive Relation : Prequotient F → Prequotient F → Prop-- Make it an equivalence relation:
 
   | refl : ∀ x, relation x x
-  | symm : ∀ x y h : relation x y, relation y x
-  | trans : ∀ x y z h : relation x y k : relation y z, relation x z-- There's always a `map` relation
+  | symm : ∀ (x y) (h : relation x y), relation y x
+  | trans : ∀ (x y z) (h : relation x y) (k : relation y z), relation x z-- There's always a `map` relation
 
   | map :
-    ∀ j j' : J f : j ⟶ j' x : F.obj j,
+    ∀ (j j' : J) (f : j ⟶ j') (x : F.obj j),
       relation (of j' ((F.map f) x)) (of j x)-- Then one relation per operation, describing the interaction with `of`
 
-  | mul : ∀ j x y : F.obj j, relation (of j (x * y)) (mul (of j x) (of j y))
+  | mul : ∀ (j) (x y : F.obj j), relation (of j (x * y)) (mul (of j x) (of j y))
   | one : ∀ j, relation (of j 1) one-- Then one relation per argument of each operation
 
-  | mul_1 : ∀ x x' y r : relation x x', relation (mul x y) (mul x' y)
-  | mul_2 : ∀ x y y' r : relation y y', relation (mul x y) (mul x y')-- And one relation per axiom
+  | mul_1 : ∀ (x x' y) (r : relation x x'), relation (mul x y) (mul x' y)
+  | mul_2 : ∀ (x y y') (r : relation y y'), relation (mul x y) (mul x y')-- And one relation per axiom
 
   | mul_assoc : ∀ x y z, relation (mul (mul x y) z) (mul x (mul y z))
   | one_mulₓ : ∀ x, relation (mul one x) x
@@ -151,7 +151,7 @@ theorem quot_one : Quot.mk Setoidₓ.R one = (1 : ColimitType F) :=
   rfl
 
 @[simp]
-theorem quot_mul x y : Quot.mk Setoidₓ.R (mul x y) = (Quot.mk Setoidₓ.R x * Quot.mk Setoidₓ.R y : ColimitType F) :=
+theorem quot_mul (x y) : Quot.mk Setoidₓ.R (mul x y) = (Quot.mk Setoidₓ.R x * Quot.mk Setoidₓ.R y : ColimitType F) :=
   rfl
 
 /-- The bundled monoid giving the colimit of a diagram. -/

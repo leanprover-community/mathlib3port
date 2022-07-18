@@ -61,7 +61,7 @@ def toSplittingField (s : Finset (MonicIrreducible k)) :
   MvPolynomial.aeval fun f =>
     if hf : f ∈ s then
       rootOfSplits _
-        (((splits_prod_iff _) fun j : MonicIrreducible k _ => j.2.2.ne_zero).1 (SplittingField.splits _) f hf)
+        (((splits_prod_iff _) fun (j : MonicIrreducible k) _ => j.2.2.ne_zero).1 (SplittingField.splits _) f hf)
         (mt is_unit_iff_degree_eq_zero.2 f.2.2.not_unit)
     else 37
 
@@ -137,7 +137,7 @@ def Step (n : ℕ) : Type u :=
 instance Step.field (n : ℕ) : Field (Step k n) :=
   (stepAux k n).2
 
-instance Step.inhabited n : Inhabited (Step k n) :=
+instance Step.inhabited (n) : Inhabited (Step k n) :=
   ⟨37⟩
 
 /-- The canonical inclusion to the `0`th step. -/
@@ -148,7 +148,7 @@ def toStepZero : k →+* Step k 0 :=
 def toStepSucc (n : ℕ) : Step k n →+* Step k (n + 1) :=
   @toAdjoinMonic (Step k n) (Step.field k n)
 
-instance Step.algebraSucc n : Algebra (Step k n) (Step k (n + 1)) :=
+instance Step.algebraSucc (n) : Algebra (Step k n) (Step k (n + 1)) :=
   (toStepSucc k n).toAlgebra
 
 theorem toStepSucc.exists_root {n} {f : Polynomial (Step k n)} (hfm : f.Monic) (hfi : Irreducible f) :
@@ -184,14 +184,14 @@ theorem coe_to_step_of_le (m n : ℕ) (h : m ≤ n) :
     (toStepOfLe k m n h : Step k m → Step k n) = Nat.leRecOn h fun n => toStepSucc k n :=
   rfl
 
-instance Step.algebra n : Algebra k (Step k n) :=
+instance Step.algebra (n) : Algebra k (Step k n) :=
   (toStepOfLe k 0 n n.zero_le).toAlgebra
 
-instance Step.scalar_tower n : IsScalarTower k (Step k n) (Step k (n + 1)) :=
+instance Step.scalar_tower (n) : IsScalarTower k (Step k n) (Step k (n + 1)) :=
   IsScalarTower.of_algebra_map_eq fun z =>
     @Nat.le_rec_on_succ (Step k) 0 n n.zero_le (n + 1).zero_le (fun n => toStepSucc k n) z
 
-theorem Step.is_integral n : ∀ z : Step k n, IsIntegral k z :=
+theorem Step.is_integral (n) : ∀ z : Step k n, IsIntegral k z :=
   (Nat.recOn n fun z => is_integral_algebra_map) fun n ih z =>
     is_integral_trans ih _ (AdjoinMonic.is_integral (Step k n) z : _)
 
@@ -217,7 +217,7 @@ instance : Inhabited (AlgebraicClosure k) :=
 def ofStep (n : ℕ) : Step k n →+* AlgebraicClosure k :=
   Ringₓ.DirectLimit.of _ _ _
 
-instance algebraOfStep n : Algebra (Step k n) (AlgebraicClosure k) :=
+instance algebraOfStep (n) : Algebra (Step k n) (AlgebraicClosure k) :=
   (ofStep k n).toAlgebra
 
 theorem of_step_succ (n : ℕ) : (ofStep k (n + 1)).comp (toStepSucc k n) = ofStep k n :=
@@ -257,7 +257,7 @@ instance {R S : Type _} [CommSemiringₓ R] [CommSemiringₓ S] [Algebra R S] [A
   IsScalarTower.of_algebra_map_eq fun x => RingHom.congr_arg _ (IsScalarTower.algebra_map_apply R S k x : _)
 
 /-- Canonical algebra embedding from the `n`th step to the algebraic closure. -/
-def ofStepHom n : Step k n →ₐ[k] AlgebraicClosure k :=
+def ofStepHom (n) : Step k n →ₐ[k] AlgebraicClosure k :=
   { ofStep k n with commutes' := fun x => Ringₓ.DirectLimit.of_f n.zero_le x }
 
 theorem is_algebraic : Algebra.IsAlgebraic k (AlgebraicClosure k) := fun z =>

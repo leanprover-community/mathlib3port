@@ -485,6 +485,19 @@ theorem IsTorsionBySet.mk_smul (b : R) (x : M) :
 def IsTorsionBySet.module : Module (R ⧸ I) M :=
   @Function.Surjective.moduleLeft _ _ _ _ _ _ _ hM.HasSmul _ Ideal.Quotient.mk_surjective (IsTorsionBySet.mk_smul hM)
 
+instance IsTorsionBySet.is_scalar_tower {S : Type _} [HasSmul S R] [HasSmul S M] [IsScalarTower S R M]
+    [IsScalarTower S R R] :
+    @IsScalarTower S (R ⧸ I) M _ (IsTorsionBySet.module hM).toHasSmul
+      _ where smul_assoc := fun b d x => (Quotientₓ.induction_on' d) fun c => (smul_assoc b c x : _)
+
+omit hM
+
+instance : Module (R ⧸ I) (M ⧸ I • (⊤ : Submodule R M)) :=
+  IsTorsionBySet.module fun x r => by
+    induction x using Quotientₓ.induction_on
+    refine' (Submodule.Quotient.mk_eq_zero _).mpr (Submodule.smul_mem_smul r.prop _)
+    trivial
+
 end Module
 
 namespace Submodule
@@ -497,8 +510,8 @@ theorem torsionBySet.mk_smul (I : Ideal R) (b : R) (x : torsionBySet R M I) : Id
   rfl
 
 instance (I : Ideal R) {S : Type _} [HasSmul S R] [HasSmul S M] [IsScalarTower S R M] [IsScalarTower S R R] :
-    IsScalarTower S (R ⧸ I)
-      (torsionBySet R M I) where smul_assoc := fun b d x => (Quotientₓ.induction_on' d) fun c => (smul_assoc b c x : _)
+    IsScalarTower S (R ⧸ I) (torsionBySet R M I) :=
+  inferInstance
 
 /-- The `a`-torsion submodule as a `(R ⧸ R∙a)`-module. -/
 instance (a : R) : Module (R ⧸ R∙a) (torsionBy R M a) :=
@@ -509,8 +522,8 @@ theorem torsionBy.mk_smul (a b : R) (x : torsionBy R M a) : Ideal.Quotient.mk (R
   rfl
 
 instance (a : R) {S : Type _} [HasSmul S R] [HasSmul S M] [IsScalarTower S R M] [IsScalarTower S R R] :
-    IsScalarTower S (R ⧸ R∙a)
-      (torsionBy R M a) where smul_assoc := fun b d x => (Quotientₓ.induction_on' d) fun c => (smul_assoc b c x : _)
+    IsScalarTower S (R ⧸ R∙a) (torsionBy R M a) :=
+  inferInstance
 
 end Submodule
 
@@ -544,7 +557,7 @@ instance : HasSmul S (torsion' R M S) :=
       rw [smul_comm, h, smul_zero]⟩⟩
 
 instance : DistribMulAction S (torsion' R M S) :=
-  Subtype.coe_injective.DistribMulAction (torsion' R M S).Subtype.toAddMonoidHom fun c : S x => rfl
+  Subtype.coe_injective.DistribMulAction (torsion' R M S).Subtype.toAddMonoidHom fun (c : S) x => rfl
 
 instance : SmulCommClass S R (torsion' R M S) :=
   ⟨fun s a x => Subtype.ext <| smul_comm _ _ _⟩

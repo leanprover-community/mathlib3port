@@ -80,7 +80,7 @@ def chooseNat' (x y : ℕ) (p : x < y) : Genₓ (Set.Ico x y) :=
   have : ∀ i, x < i → i ≤ y → i.pred < y := fun i h₀ h₁ =>
     show i.pred.succ ≤ y by
       rwa [succ_pred_eq_of_pos] <;> apply lt_of_le_of_ltₓ (Nat.zero_leₓ _) h₀
-  (Subtype.map pred fun i h : x + 1 ≤ i ∧ i ≤ y => ⟨le_pred_of_ltₓ h.1, this _ h.1 h.2⟩) <$> choose (x + 1) y p
+  (Subtype.map pred fun i (h : x + 1 ≤ i ∧ i ≤ y) => ⟨le_pred_of_ltₓ h.1, this _ h.1 h.2⟩) <$> choose (x + 1) y p
 
 open Nat
 
@@ -105,7 +105,7 @@ def resize (f : ℕ → ℕ) (cmd : Genₓ α) : Genₓ α :=
   ⟨fun ⟨sz⟩ => ReaderTₓ.run cmd ⟨f sz⟩⟩
 
 /-- Create `n` examples using `cmd`. -/
-def vectorOf : ∀ n : ℕ cmd : Genₓ α, Genₓ (Vector α n)
+def vectorOf : ∀ (n : ℕ) (cmd : Genₓ α), Genₓ (Vector α n)
   | 0, _ => return Vector.nil
   | succ n, cmd => Vector.cons <$> cmd <*> vector_of n cmd
 
@@ -141,7 +141,7 @@ If we consider `freq_aux [(1, gena), (3, genb), (5, genc)] 4 _`, we choose a gen
 the interval 1-9 into 1-1, 2-4, 5-9 so that the width of each interval corresponds to one of the
 number in the list of generators. Then, we check which interval 4 falls into: it selects `genb`.
 -/
-def freqAux : ∀ xs : List (ℕ+ × Genₓ α) i, i < (xs.map (Subtype.val ∘ Prod.fst)).Sum → Genₓ α
+def freqAux : ∀ (xs : List (ℕ+ × Genₓ α)) (i), i < (xs.map (Subtype.val ∘ Prod.fst)).Sum → Genₓ α
   | [], i, h => False.elim (Nat.not_lt_zeroₓ _ h)
   | (i, x) :: xs, j, h =>
     if h' : j < i then x

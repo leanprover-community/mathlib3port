@@ -563,9 +563,10 @@ theorem d_next_zero_chain_complex (f : ∀ i j, P.x i ⟶ Q.x j) : dNext 0 f = 0
 variable (e : P ⟶ Q) (zero : P.x 0 ⟶ Q.x 1) (comm_zero : e.f 0 = zero ≫ Q.d 1 0) (one : P.x 1 ⟶ Q.x 2)
   (comm_one : e.f 1 = P.d 1 0 ≫ zero + one ≫ Q.d 2 1)
   (succ :
-    ∀ n : ℕ p :
-      Σ'(f : P.x n ⟶ Q.x (n + 1))(f' : P.x (n + 1) ⟶ Q.x (n + 2)),
-        e.f (n + 1) = P.d (n + 1) n ≫ f + f' ≫ Q.d (n + 2) (n + 1),
+    ∀ (n : ℕ)
+      (p :
+        Σ'(f : P.x n ⟶ Q.x (n + 1))(f' : P.x (n + 1) ⟶ Q.x (n + 2)),
+          e.f (n + 1) = P.d (n + 1) n ≫ f + f' ≫ Q.d (n + 2) (n + 1)),
       Σ'f'' : P.x (n + 2) ⟶ Q.x (n + 3), e.f (n + 2) = P.d (n + 2) (n + 1) ≫ p.2.1 + f'' ≫ Q.d (n + 3) (n + 2))
 
 include comm_one comm_zero
@@ -690,9 +691,10 @@ theorem prev_d_zero_cochain_complex (f : ∀ i j, P.x i ⟶ Q.x j) : prevD 0 f =
 variable (e : P ⟶ Q) (zero : P.x 1 ⟶ Q.x 0) (comm_zero : e.f 0 = P.d 0 1 ≫ zero) (one : P.x 2 ⟶ Q.x 1)
   (comm_one : e.f 1 = zero ≫ Q.d 0 1 + P.d 1 2 ≫ one)
   (succ :
-    ∀ n : ℕ p :
-      Σ'(f : P.x (n + 1) ⟶ Q.x n)(f' : P.x (n + 2) ⟶ Q.x (n + 1)),
-        e.f (n + 1) = f ≫ Q.d n (n + 1) + P.d (n + 1) (n + 2) ≫ f',
+    ∀ (n : ℕ)
+      (p :
+        Σ'(f : P.x (n + 1) ⟶ Q.x n)(f' : P.x (n + 2) ⟶ Q.x (n + 1)),
+          e.f (n + 1) = f ≫ Q.d n (n + 1) + P.d (n + 1) (n + 2) ≫ f'),
       Σ'f'' : P.x (n + 3) ⟶ Q.x (n + 2), e.f (n + 2) = p.2.1 ≫ Q.d (n + 1) (n + 2) + P.d (n + 2) (n + 3) ≫ f'')
 
 include comm_one comm_zero succ

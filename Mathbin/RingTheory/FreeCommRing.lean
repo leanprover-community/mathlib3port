@@ -194,7 +194,7 @@ section Restriction
 variable (s : Set α) [DecidablePred (· ∈ s)] (x y : FreeCommRing α)
 
 @[simp]
-theorem restriction_of p : restriction s (of p) = if H : p ∈ s then of ⟨p, H⟩ else 0 :=
+theorem restriction_of (p) : restriction s (of p) = if H : p ∈ s then of ⟨p, H⟩ else 0 :=
   lift_of _ _
 
 end Restriction

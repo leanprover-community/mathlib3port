@@ -80,7 +80,7 @@ theorem surjective (f : α → β) (hf : Surjective f) : Surjective (mapFun f : 
 
 variable (f : R →+* S) (x y : 𝕎 R)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 /-- Auxiliary tactic for showing that `map_fun` respects the ring operations. -/
 unsafe def map_fun_tac : tactic Unit :=
   sorry
@@ -142,9 +142,9 @@ setup_tactic_parser
 
 open Tactic
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 /-- An auxiliary tactic for proving that `ghost_fun` respects the ring operations. -/
 unsafe def tactic.interactive.ghost_fun_tac (φ fn : parse parser.pexpr) : tactic Unit := do
   let fn ← to_expr (ppquote.1 (%%ₓfn : Finₓ _ → ℕ → R))
@@ -176,7 +176,7 @@ variable (x y : 𝕎 R)
 omit hp
 
 @[local simp]
-theorem matrix_vec_empty_coeff {R} i j : @coeff p R (Matrix.vecEmpty i) j = (Matrix.vecEmpty i : ℕ → R) j := by
+theorem matrix_vec_empty_coeff {R} (i j) : @coeff p R (Matrix.vecEmpty i) j = (Matrix.vecEmpty i : ℕ → R) j := by
   rcases i with ⟨_ | _ | _ | _ | i_val, ⟨⟩⟩
 
 include hp

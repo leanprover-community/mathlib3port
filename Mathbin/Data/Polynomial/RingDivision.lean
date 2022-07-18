@@ -277,7 +277,7 @@ theorem root_multiplicity_add {p q : R[X]} (a : R) (hzero : p + q ≠ 0) :
   exact min_pow_dvd_add hdivp hdivq
 
 theorem exists_multiset_roots :
-    ∀ {p : R[X]} hp : p ≠ 0, ∃ s : Multiset R, (s.card : WithBot ℕ) ≤ degree p ∧ ∀ a, s.count a = rootMultiplicity a p
+    ∀ {p : R[X]} (hp : p ≠ 0), ∃ s : Multiset R, (s.card : WithBot ℕ) ≤ degree p ∧ ∀ a, s.count a = rootMultiplicity a p
   | p => fun hp =>
     have := Classical.propDecidable (∃ x, is_root p x)
     if h : ∃ x, is_root p x then
@@ -431,7 +431,7 @@ theorem roots_list_prod (L : List R[X]) : (0 : R[X]) ∉ L → L.Prod.roots = (L
 
 theorem roots_multiset_prod (m : Multiset R[X]) : (0 : R[X]) ∉ m → m.Prod.roots = m.bind roots := by
   rcases m with ⟨L⟩
-  simpa only [← coe_prod, ← quot_mk_to_coe''] using roots_list_prod L
+  simpa only [← Multiset.coe_prod, ← quot_mk_to_coe''] using roots_list_prod L
 
 theorem roots_prod {ι : Type _} (f : ι → R[X]) (s : Finset ι) :
     s.Prod f ≠ 0 → (s.Prod f).roots = s.val.bind fun i => roots (f i) := by
@@ -619,7 +619,6 @@ theorem comp_eq_zero_iff : p.comp q = 0 ↔ p = 0 ∨ p.eval (q.coeff 0) = 0 ∧
         h
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem zero_of_eval_zero [Infinite R] (p : R[X]) (h : ∀ x, p.eval x = 0) : p = 0 := by
   classical <;>
     by_contra hp <;>
@@ -637,15 +636,15 @@ variable [CommRingₓ T]
 
 If you have a non-separable polynomial, use `polynomial.roots` for the multiset
 where multiple roots have the appropriate multiplicity. -/
-def RootSet (p : T[X]) S [CommRingₓ S] [IsDomain S] [Algebra T S] : Set S :=
+def RootSet (p : T[X]) (S) [CommRingₓ S] [IsDomain S] [Algebra T S] : Set S :=
   (p.map (algebraMap T S)).roots.toFinset
 
-theorem root_set_def (p : T[X]) S [CommRingₓ S] [IsDomain S] [Algebra T S] :
+theorem root_set_def (p : T[X]) (S) [CommRingₓ S] [IsDomain S] [Algebra T S] :
     p.RootSet S = (p.map (algebraMap T S)).roots.toFinset :=
   rfl
 
 @[simp]
-theorem root_set_zero S [CommRingₓ S] [IsDomain S] [Algebra T S] : (0 : T[X]).RootSet S = ∅ := by
+theorem root_set_zero (S) [CommRingₓ S] [IsDomain S] [Algebra T S] : (0 : T[X]).RootSet S = ∅ := by
   rw [root_set_def, Polynomial.map_zero, roots_zero, to_finset_zero, Finset.coe_empty]
 
 @[simp]
@@ -656,7 +655,7 @@ instance rootSetFintype (p : T[X]) (S : Type _) [CommRingₓ S] [IsDomain S] [Al
   FinsetCoe.fintype _
 
 theorem root_set_finite (p : T[X]) (S : Type _) [CommRingₓ S] [IsDomain S] [Algebra T S] : (p.RootSet S).Finite :=
-  Set.finite_of_fintype _
+  Set.to_finite _
 
 theorem mem_root_set_iff' {p : T[X]} {S : Type _} [CommRingₓ S] [IsDomain S] [Algebra T S]
     (hp : p.map (algebraMap T S) ≠ 0) (a : S) : a ∈ p.RootSet S ↔ (p.map (algebraMap T S)).eval a = 0 := by

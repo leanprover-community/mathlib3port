@@ -255,8 +255,8 @@ theorem aleph_to_nat (o : Ordinal) : (aleph o).toNat = 0 :=
   to_nat_apply_of_aleph_0_le <| aleph_0_le_aleph o
 
 @[simp]
-theorem aleph_to_enat (o : Ordinal) : (aleph o).toEnat = ⊤ :=
-  to_enat_apply_of_aleph_0_le <| aleph_0_le_aleph o
+theorem aleph_to_part_enat (o : Ordinal) : (aleph o).toPartEnat = ⊤ :=
+  to_part_enat_apply_of_aleph_0_le <| aleph_0_le_aleph o
 
 instance nonempty_out_aleph (o : Ordinal) : Nonempty (aleph o).ord.out.α := by
   rw [out_nonempty_iff_ne_zero, ← ord_zero]
@@ -900,7 +900,6 @@ theorem mk_compl_eq_mk_compl_infinite {α : Type _} [Infinite α] {s t : Set α}
     # (sᶜ : Set α) = # (tᶜ : Set α) := by
   rw [mk_compl_of_infinite s hs, mk_compl_of_infinite t ht]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mk_compl_eq_mk_compl_finite_lift {α : Type u} {β : Type v} [Fintype α] {s : Set α} {t : Set β}
     (h1 : lift.{max v w} (# α) = lift.{max u w} (# β)) (h2 : lift.{max v w} (# s) = lift.{max u w} (# t)) :
     lift.{max v w} (# (sᶜ : Set α)) = lift.{max u w} (# (tᶜ : Set β)) := by
@@ -908,8 +907,8 @@ theorem mk_compl_eq_mk_compl_finite_lift {α : Type u} {β : Type v} [Fintype α
   let this : Fintype β := Fintype.ofEquiv α e
   replace h1 : Fintype.card α = Fintype.card β := (Fintype.of_equiv_card _).symm
   classical
-  lift s to Finset α using finite.of_fintype s
-  lift t to Finset β using finite.of_fintype t
+  lift s to Finset α using s.to_finite
+  lift t to Finset β using t.to_finite
   simp only [← Finset.coe_sort_coe, ← mk_coe_finset, ← lift_nat_cast, ← Nat.cast_inj] at h2
   simp only [Finset.coe_compl, ← Finset.coe_sort_coe, ← mk_coe_finset, ← Finset.card_compl, ← lift_nat_cast, ←
     Nat.cast_inj, ← h1, ← h2]

@@ -128,7 +128,7 @@ variable [PreservesLimits (forget D)]
 
 variable [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
 
-variable [∀ P : Cᵒᵖ ⥤ D X : C S : J.cover X, HasMultiequalizer (S.index P)]
+variable [∀ (P : Cᵒᵖ ⥤ D) (X : C) (S : J.cover X), HasMultiequalizer (S.index P)]
 
 noncomputable section
 
@@ -290,7 +290,7 @@ theorem sep {X : C} (P : Cᵒᵖ ⥤ D) (S : J.cover X) (x y : (J.plusObj P).obj
     
 
 theorem inj_of_sep (P : Cᵒᵖ ⥤ D)
-    (hsep : ∀ X : C S : J.cover X x y : P.obj (op X), (∀ I : S.arrow, P.map I.f.op x = P.map I.f.op y) → x = y)
+    (hsep : ∀ (X : C) (S : J.cover X) (x y : P.obj (op X)), (∀ I : S.arrow, P.map I.f.op x = P.map I.f.op y) → x = y)
     (X : C) : Function.Injective ((J.toPlus P).app (op X)) := by
   intro x y h
   simp only [← to_plus_eq_mk] at h
@@ -307,8 +307,8 @@ theorem inj_of_sep (P : Cᵒᵖ ⥤ D)
   associated to the representatives.
   The separatedness condition is used to prove compatibility among these local sections of `P`. -/
 def meqOfSep (P : Cᵒᵖ ⥤ D)
-    (hsep : ∀ X : C S : J.cover X x y : P.obj (op X), (∀ I : S.arrow, P.map I.f.op x = P.map I.f.op y) → x = y) (X : C)
-    (S : J.cover X) (s : Meq (J.plusObj P) S) (T : ∀ I : S.arrow, J.cover I.y) (t : ∀ I : S.arrow, Meq P (T I))
+    (hsep : ∀ (X : C) (S : J.cover X) (x y : P.obj (op X)), (∀ I : S.arrow, P.map I.f.op x = P.map I.f.op y) → x = y)
+    (X : C) (S : J.cover X) (s : Meq (J.plusObj P) S) (T : ∀ I : S.arrow, J.cover I.y) (t : ∀ I : S.arrow, Meq P (T I))
     (ht : ∀ I : S.arrow, s I = mk (t I)) : Meq P (S.bind T) where
   val := fun I => t I.fromMiddle I.toMiddle
   property := by
@@ -329,8 +329,8 @@ def meqOfSep (P : Cᵒᵖ ⥤ D)
     exact s.condition IR
 
 theorem exists_of_sep (P : Cᵒᵖ ⥤ D)
-    (hsep : ∀ X : C S : J.cover X x y : P.obj (op X), (∀ I : S.arrow, P.map I.f.op x = P.map I.f.op y) → x = y) (X : C)
-    (S : J.cover X) (s : Meq (J.plusObj P) S) : ∃ t : (J.plusObj P).obj (op X), Meq.mk S t = s := by
+    (hsep : ∀ (X : C) (S : J.cover X) (x y : P.obj (op X)), (∀ I : S.arrow, P.map I.f.op x = P.map I.f.op y) → x = y)
+    (X : C) (S : J.cover X) (s : Meq (J.plusObj P) S) : ∃ t : (J.plusObj P).obj (op X), Meq.mk S t = s := by
   have inj : ∀ X : C, Function.Injective ((J.to_plus P).app (op X)) := inj_of_sep _ hsep
   -- Choose representatives for the given local sections.
   choose T t ht using fun I => exists_rep (s I)
@@ -389,7 +389,7 @@ variable [ReflectsIsomorphisms (forget D)]
 
 /-- If `P` is separated, then `P⁺` is a sheaf. -/
 theorem is_sheaf_of_sep (P : Cᵒᵖ ⥤ D)
-    (hsep : ∀ X : C S : J.cover X x y : P.obj (op X), (∀ I : S.arrow, P.map I.f.op x = P.map I.f.op y) → x = y) :
+    (hsep : ∀ (X : C) (S : J.cover X) (x y : P.obj (op X)), (∀ I : S.arrow, P.map I.f.op x = P.map I.f.op y) → x = y) :
     Presheaf.IsSheaf J (J.plusObj P) := by
   rw [presheaf.is_sheaf_iff_multiequalizer]
   intro X S
@@ -433,7 +433,7 @@ end Plus
 
 variable (J)
 
-variable [∀ P : Cᵒᵖ ⥤ D X : C S : J.cover X, HasMultiequalizer (S.index P)]
+variable [∀ (P : Cᵒᵖ ⥤ D) (X : C) (S : J.cover X), HasMultiequalizer (S.index P)]
   [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
 
 /-- The sheafification of a presheaf `P`.
@@ -550,7 +550,7 @@ end GrothendieckTopology
 variable (J)
 
 variable [ConcreteCategory.{max v u} D] [PreservesLimits (forget D)]
-  [∀ P : Cᵒᵖ ⥤ D X : C S : J.cover X, HasMultiequalizer (S.index P)] [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
+  [∀ (P : Cᵒᵖ ⥤ D) (X : C) (S : J.cover X), HasMultiequalizer (S.index P)] [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
   [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)] [ReflectsIsomorphisms (forget D)]
 
 theorem GrothendieckTopology.sheafify_is_sheaf (P : Cᵒᵖ ⥤ D) : Presheaf.IsSheaf J (J.sheafify P) :=

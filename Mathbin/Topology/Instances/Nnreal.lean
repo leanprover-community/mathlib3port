@@ -85,6 +85,16 @@ theorem _root_.continuous_real_to_nnreal : Continuous Real.toNnreal :=
 theorem continuous_coe : Continuous (coe : ℝ≥0 → ℝ) :=
   continuous_subtype_val
 
+/-- Embedding of `ℝ≥0` to `ℝ` as a bundled continuous map. -/
+@[simps (config := { fullyApplied := false })]
+def _root_.continuous_map.coe_nnreal_real : C( ℝ≥0 , ℝ) :=
+  ⟨coe, continuous_coe⟩
+
+instance {X : Type _} [TopologicalSpace X] : CanLift C(X, ℝ) C(X, ℝ≥0 ) where
+  coe := ContinuousMap.coeNnrealReal.comp
+  cond := fun f => ∀ x, 0 ≤ f x
+  prf := fun f hf => ⟨⟨fun x => ⟨f x, hf x⟩, continuous_subtype_mk _ f.2⟩, FunLike.ext' rfl⟩
+
 @[simp, norm_cast]
 theorem tendsto_coe {f : Filter α} {m : α → ℝ≥0 } {x : ℝ≥0 } :
     Tendsto (fun a => (m a : ℝ)) f (𝓝 (x : ℝ)) ↔ Tendsto m f (𝓝 x) :=
@@ -109,7 +119,7 @@ theorem tendsto_real_to_nnreal {f : Filter α} {m : α → ℝ} {x : ℝ} (h : T
     Tendsto (fun a => Real.toNnreal (m a)) f (𝓝 (Real.toNnreal x)) :=
   (continuous_real_to_nnreal.Tendsto _).comp h
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (a «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a «expr ≠ » 0)
 theorem nhds_zero : 𝓝 (0 : ℝ≥0 ) = ⨅ (a) (_ : a ≠ 0), 𝓟 (iio a) :=
   nhds_bot_order.trans <| by
     simp [← bot_lt_iff_ne_bot]

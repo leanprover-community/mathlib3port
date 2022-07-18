@@ -82,7 +82,7 @@ theorem remove_zero_of_pos (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ} (h :
 /-- Convenience congruence lemma stating in a dependent setting that, if the arguments to a formal
 multilinear series are equal, then the values are also equal. -/
 theorem congr (p : FormalMultilinearSeries 𝕜 E F) {m n : ℕ} {v : Finₓ m → E} {w : Finₓ n → E} (h1 : m = n)
-    (h2 : ∀ i : ℕ him : i < m hin : i < n, v ⟨i, him⟩ = w ⟨i, hin⟩) : p m v = p n w := by
+    (h2 : ∀ (i : ℕ) (him : i < m) (hin : i < n), v ⟨i, him⟩ = w ⟨i, hin⟩) : p m v = p n w := by
   cases h1
   congr with ⟨i, hi⟩
   exact h2 i hi hi

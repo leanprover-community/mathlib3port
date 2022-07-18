@@ -78,7 +78,7 @@ theorem unique_uniformity_of_compact_t2 [t : TopologicalSpace γ] [CompactSpace 
     rwa [separated_iff_t2, h']
   rw [compact_space_uniformity, compact_space_uniformity, h, h']
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y «expr ≠ » x)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y «expr ≠ » x)
 /-- The unique uniform structure inducing a given compact Hausdorff topological structure. -/
 def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ] : UniformSpace γ where
   uniformity := ⨆ x, 𝓝 (x, x)
@@ -123,7 +123,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
       apply this
       apply diag_subset
       simp [← h]
-    -- Since γ is compact and Hausdorff, it is normal, hence regular.
+    -- Since γ is compact and Hausdorff, it is normal, hence T₃.
     have : NormalSpace γ := normal_of_compact_t2
     -- So there are closed neighboords V₁ and V₂ of x and y contained in disjoint open neighborhoods
     -- U₁ and U₂.
@@ -153,7 +153,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     have : W ○ W ∈ F := by
       simpa only using mem_lift' W_in
     -- And V₁ ×ˢ V₂ ∈ 𝓝 (x, y)
-    have hV₁₂ : V₁ ×ˢ V₂ ∈ 𝓝 (x, y) := ProdIsOpen.mem_nhds V₁_in V₂_in
+    have hV₁₂ : V₁ ×ˢ V₂ ∈ 𝓝 (x, y) := prod_mem_nhds V₁_in V₂_in
     -- But (x, y) is also a cluster point of F so (V₁ ×ˢ V₂) ∩ (W ○ W) ≠ ∅
     -- However the construction of W implies (V₁ ×ˢ V₂) ∩ (W ○ W) = ∅.
     -- Indeed assume for contradiction there is some (u, v) in the intersection.
@@ -183,7 +183,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
         ext <;> rfl,
       comap_id]
     rw [supr_split_single _ x, comap_const_of_mem fun V => mem_of_mem_nhds]
-    suffices ∀ y _ : y ≠ x, comap (fun y : γ => x) (𝓝 y)⊓𝓝 y ≤ 𝓝 x by
+    suffices ∀ (y) (_ : y ≠ x), comap (fun y : γ => x) (𝓝 y)⊓𝓝 y ≤ 𝓝 x by
       simpa
     intro y hxy
     simp [←

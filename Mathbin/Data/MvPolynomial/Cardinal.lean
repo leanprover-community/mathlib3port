@@ -93,7 +93,7 @@ private theorem cardinal_mv_polynomial_fun_le : # (MvPolynomialFun σ R) ≤ max
       max_le_max (max_le_max (add_le_max _ _) le_rfl) le_rfl
     _ ≤ _ := by
       simp only [← max_commₓ ℵ₀, ← max_assocₓ, ← max_left_commₓ ℵ₀, ← max_selfₓ, ←
-        max_eq_leftₓ (lt_aleph_0_of_fintype (ULift.{u} Bool)).le]
+        max_eq_leftₓ (lt_aleph_0_of_finite (ULift.{u} Bool)).le]
     
 
 namespace MvPolynomial
@@ -103,7 +103,7 @@ of `#R`, `#σ` and `ℵ₀` -/
 theorem cardinal_mk_le_max {σ R : Type u} [CommSemiringₓ R] : # (MvPolynomial σ R) ≤ max (max (# R) (# σ)) ℵ₀ :=
   calc
     # (MvPolynomial σ R) ≤ # (WType (Arity σ R)) := Cardinal.mk_le_of_surjective to_mv_polynomial_surjective
-    _ ≤ max (# (MvPolynomialFun σ R)) ℵ₀ := WType.cardinal_mk_le_max_aleph_0_of_fintype
+    _ ≤ max (# (MvPolynomialFun σ R)) ℵ₀ := WType.cardinal_mk_le_max_aleph_0_of_finite
     _ ≤ _ := max_le_max cardinal_mv_polynomial_fun_le le_rfl
     _ ≤ _ := by
       simp only [← max_assocₓ, ← max_selfₓ]

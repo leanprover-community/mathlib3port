@@ -67,7 +67,7 @@ on a collection of types indexed by the objects of `J`.
 -/
 inductive Prequotient-- There's always `of`
 
-  | of : ∀ j : J x : F.obj j, prequotient-- Then one generator for each operation
+  | of : ∀ (j : J) (x : F.obj j), prequotient-- Then one generator for each operation
 
   | zero : prequotient
   | one : prequotient
@@ -87,26 +87,26 @@ because one element is mapped to another by a morphism in the diagram.
 inductive Relation : Prequotient F → Prequotient F → Prop-- Make it an equivalence relation:
 
   | refl : ∀ x, relation x x
-  | symm : ∀ x y h : relation x y, relation y x
-  | trans : ∀ x y z h : relation x y k : relation y z, relation x z-- There's always a `map` relation
+  | symm : ∀ (x y) (h : relation x y), relation y x
+  | trans : ∀ (x y z) (h : relation x y) (k : relation y z), relation x z-- There's always a `map` relation
 
   | map :
-    ∀ j j' : J f : j ⟶ j' x : F.obj j,
+    ∀ (j j' : J) (f : j ⟶ j') (x : F.obj j),
       relation (of j' (F.map f x)) (of j x)-- Then one relation per operation, describing the interaction with `of`
 
   | zero : ∀ j, relation (of j 0) zero
   | one : ∀ j, relation (of j 1) one
-  | neg : ∀ j x : F.obj j, relation (of j (-x)) (neg (of j x))
-  | add : ∀ j x y : F.obj j, relation (of j (x + y)) (add (of j x) (of j y))
+  | neg : ∀ (j) (x : F.obj j), relation (of j (-x)) (neg (of j x))
+  | add : ∀ (j) (x y : F.obj j), relation (of j (x + y)) (add (of j x) (of j y))
   | mul :
-    ∀ j x y : F.obj j,
+    ∀ (j) (x y : F.obj j),
       relation (of j (x * y)) (mul (of j x) (of j y))-- Then one relation per argument of each operation
 
-  | neg_1 : ∀ x x' r : relation x x', relation (neg x) (neg x')
-  | add_1 : ∀ x x' y r : relation x x', relation (add x y) (add x' y)
-  | add_2 : ∀ x y y' r : relation y y', relation (add x y) (add x y')
-  | mul_1 : ∀ x x' y r : relation x x', relation (mul x y) (mul x' y)
-  | mul_2 : ∀ x y y' r : relation y y', relation (mul x y) (mul x y')-- And one relation per axiom
+  | neg_1 : ∀ (x x') (r : relation x x'), relation (neg x) (neg x')
+  | add_1 : ∀ (x x' y) (r : relation x x'), relation (add x y) (add x' y)
+  | add_2 : ∀ (x y y') (r : relation y y'), relation (add x y) (add x y')
+  | mul_1 : ∀ (x x' y) (r : relation x x'), relation (mul x y) (mul x' y)
+  | mul_2 : ∀ (x y y') (r : relation y y'), relation (mul x y) (mul x y')-- And one relation per axiom
 
   | zero_addₓ : ∀ x, relation (add zero x) x
   | add_zeroₓ : ∀ x, relation (add x zero) x
@@ -300,15 +300,15 @@ theorem quot_one : Quot.mk Setoidₓ.R one = (1 : ColimitType F) :=
   rfl
 
 @[simp]
-theorem quot_neg x : Quot.mk Setoidₓ.R (neg x) = (-Quot.mk Setoidₓ.R x : ColimitType F) :=
+theorem quot_neg (x) : Quot.mk Setoidₓ.R (neg x) = (-Quot.mk Setoidₓ.R x : ColimitType F) :=
   rfl
 
 @[simp]
-theorem quot_add x y : Quot.mk Setoidₓ.R (add x y) = (Quot.mk Setoidₓ.R x + Quot.mk Setoidₓ.R y : ColimitType F) :=
+theorem quot_add (x y) : Quot.mk Setoidₓ.R (add x y) = (Quot.mk Setoidₓ.R x + Quot.mk Setoidₓ.R y : ColimitType F) :=
   rfl
 
 @[simp]
-theorem quot_mul x y : Quot.mk Setoidₓ.R (mul x y) = (Quot.mk Setoidₓ.R x * Quot.mk Setoidₓ.R y : ColimitType F) :=
+theorem quot_mul (x y) : Quot.mk Setoidₓ.R (mul x y) = (Quot.mk Setoidₓ.R x * Quot.mk Setoidₓ.R y : ColimitType F) :=
   rfl
 
 /-- The bundled commutative ring giving the colimit of a diagram. -/

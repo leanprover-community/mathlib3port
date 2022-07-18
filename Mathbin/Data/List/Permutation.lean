@@ -50,7 +50,7 @@ variable {α β : Type _}
 namespace List
 
 theorem permutations_aux2_fst (t : α) (ts : List α) (r : List β) :
-    ∀ ys : List α f : List α → β, (permutationsAux2 t ts r ys f).1 = ys ++ ts
+    ∀ (ys : List α) (f : List α → β), (permutationsAux2 t ts r ys f).1 = ys ++ ts
   | [], f => rfl
   | y :: ys, f =>
     match _, permutations_aux2_fst ys _ with
@@ -200,7 +200,7 @@ theorem length_foldr_permutations_aux2 (t : α) (ts : List α) (r L : List (List
     length (foldr (fun y r => (permutationsAux2 t ts r y id).2) r L) = sum (map length L) + length r := by
   simp [← foldr_permutations_aux2, ← (· ∘ ·), ← length_permutations_aux2]
 
-theorem length_foldr_permutations_aux2' (t : α) (ts : List α) (r L : List (List α)) n
+theorem length_foldr_permutations_aux2' (t : α) (ts : List α) (r L : List (List α)) (n)
     (H : ∀, ∀ l ∈ L, ∀, length l = n) :
     length (foldr (fun y r => (permutationsAux2 t ts r y id).2) r L) = n * length L + length r := by
   rw [length_foldr_permutations_aux2, (_ : Sum (map length L) = n * length L)]

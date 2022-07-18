@@ -36,7 +36,7 @@ open BigOperators
 This combines `distrib_mul_action` with `mul_distrib_mul_action`. -/
 class MulSemiringAction (M : Type u) (R : Type v) [Monoidₓ M] [Semiringₓ R] extends DistribMulAction M R where
   smul_one : ∀ g : M, (g • 1 : R) = 1
-  smul_mul : ∀ g : M x y : R, g • (x * y) = g • x * g • y
+  smul_mul : ∀ (g : M) (x y : R), g • (x * y) = g • x * g • y
 
 section Semiringₓ
 
@@ -112,7 +112,7 @@ open MulAction
 
 /-- A typeclass for subrings invariant under a `mul_semiring_action`. -/
 class IsInvariantSubring : Prop where
-  smul_mem : ∀ m : M {x : R}, x ∈ S → m • x ∈ S
+  smul_mem : ∀ (m : M) {x : R}, x ∈ S → m • x ∈ S
 
 instance IsInvariantSubring.toMulSemiringAction [IsInvariantSubring M S] : MulSemiringAction M S where
   smul := fun m x => ⟨m • x, IsInvariantSubring.smul_mem m x.2⟩

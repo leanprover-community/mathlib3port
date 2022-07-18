@@ -29,6 +29,8 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
+open Opposite
+
 universe v u
 
 namespace CategoryTheory
@@ -38,7 +40,7 @@ variable {C : Type u} [Category.{v} C]
 /-- An object `P` is called projective if every morphism out of `P` factors through every epimorphism.
 -/
 class Projective (P : C) : Prop where
-  Factors : ∀ {E X : C} f : P ⟶ X e : E ⟶ X [Epi e], ∃ f', f' ≫ e = f
+  Factors : ∀ {E X : C} (f : P ⟶ X) (e : E ⟶ X) [Epi e], ∃ f', f' ≫ e = f
 
 section
 
@@ -137,6 +139,15 @@ instance {β : Type v} (g : β → C) [HasZeroMorphisms C] [HasBiproduct g] [∀
       (⨁ g) where Factors := fun E X' f e epi =>
     ⟨biproduct.desc fun b => factor_thru (biproduct.ι g b ≫ f) e, by
       tidy⟩
+
+theorem projective_iff_preserves_epimorphisms_coyoneda_obj (P : C) :
+    Projective P ↔ (coyoneda.obj (op P)).PreservesEpimorphisms :=
+  ⟨fun hP =>
+    ⟨fun X Y f hf =>
+      (epi_iff_surjective _).2 fun g =>
+        have : Projective (unop (op P)) := hP
+        ⟨factor_thru g f, factor_thru_comp _ _⟩⟩,
+    fun h => ⟨fun E X f e he => (epi_iff_surjective _).1 (inferInstance : epi ((coyoneda.obj (op P)).map e)) f⟩⟩
 
 section EnoughProjectives
 

@@ -32,7 +32,7 @@ def mk : CauSeq _ abv → Cauchy :=
   Quotientₓ.mk
 
 @[simp]
-theorem mk_eq_mk f : @Eq Cauchy ⟦f⟧ (mk f) :=
+theorem mk_eq_mk (f) : @Eq Cauchy ⟦f⟧ (mk f) :=
   rfl
 
 theorem mk_eq {f g} : mk f = mk g ↔ f ≈ g :=
@@ -186,7 +186,7 @@ theorem inv_zero : (0 : Cauchy)⁻¹ = 0 :=
     rw [dif_pos] <;> [rfl, exact zero_lim_zero]
 
 @[simp]
-theorem inv_mk {f} hf : (@mk α _ β _ abv _ f)⁻¹ = mk (inv f hf) :=
+theorem inv_mk {f} (hf) : (@mk α _ β _ abv _ f)⁻¹ = mk (inv f hf) :=
   congr_arg mk <| by
     rw [dif_neg]
 
@@ -314,7 +314,7 @@ theorem lim_inv {f : CauSeq β abv} (hf : ¬LimZero f) : lim (inv f hf) = (lim f
     rwa [← lim_eq_zero_iff] at hf
   lim_eq_of_equiv_const <|
     show LimZero (inv f hf - const abv (lim f)⁻¹) from
-      have h₁ : ∀ g f : CauSeq β abv hf : ¬LimZero f, LimZero (g - f * inv f hf * g) := fun g f hf => by
+      have h₁ : ∀ (g f : CauSeq β abv) (hf : ¬LimZero f), LimZero (g - f * inv f hf * g) := fun g f hf => by
         rw [← one_mulₓ g, ← mul_assoc, ← sub_mul, mul_oneₓ, mul_comm, mul_comm f] <;>
           exact mul_lim_zero_right _ (Setoidₓ.symm (CauSeq.inv_mul_cancel _))
       have h₂ : LimZero (inv f hf - const abv (lim f)⁻¹ - (const abv (lim f) - f) * (inv f hf * const abv (lim f)⁻¹)) :=

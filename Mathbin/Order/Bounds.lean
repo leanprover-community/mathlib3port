@@ -735,20 +735,20 @@ theorem bdd_below_insert [SemilatticeInf γ] (a : γ) {s : Set γ} : BddBelow (i
 theorem BddBelow.insert [SemilatticeInf γ] (a : γ) {s : Set γ} (hs : BddBelow s) : BddBelow (insert a s) :=
   (bdd_below_insert a).2 hs
 
-theorem IsLub.insert [SemilatticeSup γ] a {b} {s : Set γ} (hs : IsLub s b) : IsLub (insert a s) (a⊔b) := by
+theorem IsLub.insert [SemilatticeSup γ] (a) {b} {s : Set γ} (hs : IsLub s b) : IsLub (insert a s) (a⊔b) := by
   rw [insert_eq]
   exact is_lub_singleton.union hs
 
-theorem IsGlb.insert [SemilatticeInf γ] a {b} {s : Set γ} (hs : IsGlb s b) : IsGlb (insert a s) (a⊓b) := by
+theorem IsGlb.insert [SemilatticeInf γ] (a) {b} {s : Set γ} (hs : IsGlb s b) : IsGlb (insert a s) (a⊓b) := by
   rw [insert_eq]
   exact is_glb_singleton.union hs
 
-theorem IsGreatest.insert [LinearOrderₓ γ] a {b} {s : Set γ} (hs : IsGreatest s b) :
+theorem IsGreatest.insert [LinearOrderₓ γ] (a) {b} {s : Set γ} (hs : IsGreatest s b) :
     IsGreatest (insert a s) (max a b) := by
   rw [insert_eq]
   exact is_greatest_singleton.union hs
 
-theorem IsLeast.insert [LinearOrderₓ γ] a {b} {s : Set γ} (hs : IsLeast s b) : IsLeast (insert a s) (min a b) := by
+theorem IsLeast.insert [LinearOrderₓ γ] (a) {b} {s : Set γ} (hs : IsLeast s b) : IsLeast (insert a s) (min a b) := by
   rw [insert_eq]
   exact is_least_singleton.union hs
 
@@ -1264,7 +1264,6 @@ theorem IsLub.of_image [Preorderₓ α] [Preorderₓ β] {f : α → β} (hf : �
     (hx : IsLub (f '' s) (f x)) : IsLub s x :=
   @IsGlb.of_image αᵒᵈ βᵒᵈ _ _ f (fun x y => hf) _ _ hx
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem is_lub_pi {π : α → Type _} [∀ a, Preorderₓ (π a)] {s : Set (∀ a, π a)} {f : ∀ a, π a} :
     IsLub s f ↔ ∀ a, IsLub (Function.eval a '' s) (f a) := by
   classical

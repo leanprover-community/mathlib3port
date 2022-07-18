@@ -48,7 +48,6 @@ variable [SetLike σ A] [AddSubmonoidClass σ A] {𝒜 : ι → σ} [GradedRing 
 
 include A
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Ideal.IsHomogeneous.is_prime_of_homogeneous_mem_or_mem {I : Ideal A} (hI : I.IsHomogeneous 𝒜) (I_ne_top : I ≠ ⊤)
     (homogeneous_mem_or_mem : ∀ {x y : A}, IsHomogeneous 𝒜 x → IsHomogeneous 𝒜 y → x * y ∈ I → x ∈ I ∨ y ∈ I) :
     Ideal.IsPrime I :=

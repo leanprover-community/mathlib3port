@@ -66,7 +66,7 @@ theorem Finset.univ_sum_single [Fintype I] (f : ∀ i, Z i) : (∑ i, Pi.single 
   simp
 
 theorem AddMonoidHom.functions_ext [Fintype I] (G : Type _) [AddCommMonoidₓ G] (g h : (∀ i, Z i) →+ G)
-    (w : ∀ i : I x : Z i, g (Pi.single i x) = h (Pi.single i x)) : g = h := by
+    (w : ∀ (i : I) (x : Z i), g (Pi.single i x) = h (Pi.single i x)) : g = h := by
   ext k
   rw [← Finset.univ_sum_single k, g.map_sum, h.map_sum]
   simp only [← w]
@@ -93,7 +93,7 @@ variable [∀ i, NonAssocSemiringₓ (f i)]
 
 @[ext]
 theorem RingHom.functions_ext [Fintype I] (G : Type _) [NonAssocSemiringₓ G] (g h : (∀ i, f i) →+* G)
-    (w : ∀ i : I x : f i, g (single i x) = h (single i x)) : g = h :=
+    (w : ∀ (i : I) (x : f i), g (single i x) = h (single i x)) : g = h :=
   RingHom.coe_add_monoid_hom_injective <| @AddMonoidHom.functions_ext I _ f _ _ G _ (g : (∀ i, f i) →+ G) h w
 
 end RingHom

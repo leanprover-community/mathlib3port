@@ -47,6 +47,9 @@ The determinant of this matrix is the characteristic polynomial.
 def charmatrix (M : Matrix n n R) : Matrix n n R[X] :=
   Matrix.scalar n (x : R[X]) - (c : R →+* R[X]).mapMatrix M
 
+theorem charmatrix_apply (M : Matrix n n R) (i j : n) : charmatrix M i j = X * (1 : Matrix n n R[X]) i j - c (M i j) :=
+  rfl
+
 @[simp]
 theorem charmatrix_apply_eq (M : Matrix n n R) (i : n) : charmatrix M i i = (x : R[X]) - c (M i i) := by
   simp only [← charmatrix, ← sub_left_inj, ← Pi.sub_apply, ← scalar_apply_eq, ← RingHom.map_matrix_apply, ← map_apply, ←

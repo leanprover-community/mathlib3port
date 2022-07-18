@@ -220,7 +220,7 @@ noncomputable def coequalizerCofork : Cofork f g :=
   @Cofork.ofπ _ _ _ _ f g (coequalizer f g) ⟨coequalizer.π f.1 g.1, inferInstance⟩
     (Subtype.eq (coequalizer.condition f.1 g.1))
 
-theorem is_local_ring_hom_stalk_map_congr {X Y : RingedSpace} (f g : X ⟶ Y) (H : f = g) x
+theorem is_local_ring_hom_stalk_map_congr {X Y : RingedSpace} (f g : X ⟶ Y) (H : f = g) (x)
     (h : IsLocalRingHom (PresheafedSpace.stalkMap f x)) : IsLocalRingHom (PresheafedSpace.stalkMap g x) := by
   rw [PresheafedSpace.stalk_map.congr_hom _ _ H.symm x]
   infer_instance

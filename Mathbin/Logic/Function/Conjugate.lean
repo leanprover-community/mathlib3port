@@ -52,6 +52,11 @@ theorem inverses_right (h : Semiconj f ga gb) (ha : RightInverse ga' ga) (hb : L
     Semiconj f ga' gb' := fun x => by
   rw [← hb (f (ga' x)), ← h.eq, ha x]
 
+theorem option_map {f : α → β} {ga : α → α} {gb : β → β} (h : Semiconj f ga gb) :
+    Semiconj (Option.map f) (Option.map ga) (Option.map gb)
+  | none => rfl
+  | some a => congr_arg some <| h _
+
 end Semiconj
 
 /-- Two maps `f g : α → α` commute if `f (g x) = g (f x)` for all `x : α`.
@@ -84,6 +89,9 @@ theorem id_right : Commute f id :=
 
 theorem id_left : Commute id f :=
   semiconj.id_left
+
+theorem option_map {f g : α → α} : Commute f g → Commute (Option.map f) (Option.map g) :=
+  semiconj.option_map
 
 end Commute
 

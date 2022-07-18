@@ -40,7 +40,7 @@ theorem length_of_fn_aux {n} (f : Finₓ n → α) : ∀ m h l, length (ofFnAux�
 theorem length_of_fn {n} (f : Finₓ n → α) : length (ofFnₓ f) = n :=
   (length_of_fn_aux f _ _ _).trans (zero_addₓ _)
 
-theorem nth_of_fn_aux {n} (f : Finₓ n → α) i :
+theorem nth_of_fn_aux {n} (f : Finₓ n → α) (i) :
     ∀ m h l, (∀ i, nth l i = ofFnNthValₓ f (i + m)) → nth (ofFnAuxₓ f m h l) i = ofFnNthValₓ f i
   | 0, h, l, H => H i
   | succ m, h, l, H =>
@@ -55,7 +55,7 @@ theorem nth_of_fn_aux {n} (f : Finₓ n → α) i :
 
 /-- The `n`th element of a list -/
 @[simp]
-theorem nth_of_fn {n} (f : Finₓ n → α) i : nth (ofFnₓ f) i = ofFnNthValₓ f i :=
+theorem nth_of_fn {n} (f : Finₓ n → α) (i) : nth (ofFnₓ f) i = ofFnNthValₓ f i :=
   (nth_of_fn_aux f _ _ _ _) fun i => by
     simp only [← of_fn_nth_val, ← dif_neg (not_ltₓ.2 (Nat.le_add_leftₓ n i))] <;> rfl
 

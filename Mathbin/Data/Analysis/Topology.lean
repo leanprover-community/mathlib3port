@@ -21,7 +21,7 @@ structure Ctop (α σ : Type _) where
   f : σ → Set α
   top : α → σ
   top_mem : ∀ x : α, x ∈ f (top x)
-  inter : ∀ a b x : α, x ∈ f a ∩ f b → σ
+  inter : ∀ (a b) (x : α), x ∈ f a ∩ f b → σ
   inter_mem : ∀ a b x h, x ∈ f (inter a b x h)
   inter_sub : ∀ a b x h, f (inter a b x h) ⊆ f a ∩ f b
 
@@ -37,7 +37,7 @@ instance : CoeFun (Ctop α σ) fun _ => σ → Set α :=
   ⟨Ctop.F⟩
 
 @[simp]
-theorem coe_mk f T h₁ I h₂ h₃ a : (@Ctop.mk α σ f T h₁ I h₂ h₃) a = f a :=
+theorem coe_mk (f T h₁ I h₂ h₃ a) : (@Ctop.mk α σ f T h₁ I h₂ h₃) a = f a :=
   rfl
 
 /-- Map a ctop to an equivalent representation type. -/
@@ -175,7 +175,7 @@ theorem nhds_σ (m : α → β) (F : Realizer α) (a : α) : (F.nhds a).σ = { s
   rfl
 
 @[simp]
-theorem nhds_F (m : α → β) (F : Realizer α) (a : α) s : (F.nhds a).f s = F.f s.1 :=
+theorem nhds_F (m : α → β) (F : Realizer α) (a : α) (s) : (F.nhds a).f s = F.f s.1 :=
   rfl
 
 theorem tendsto_nhds_iff {m : β → α} {f : Filter β} (F : f.Realizer) (R : Realizer α) {a : α} :
@@ -208,5 +208,5 @@ theorem locally_finite_iff_exists_realizer [TopologicalSpace α] (F : Realizer �
     fun ⟨R⟩ => R.to_locally_finite⟩
 
 def Compact.Realizer [TopologicalSpace α] (R : Realizer α) (s : Set α) :=
-  ∀ {f : Filter α} F : f.Realizer x : F.σ, f ≠ ⊥ → F.f x ⊆ s → { a // a ∈ s ∧ 𝓝 a⊓f ≠ ⊥ }
+  ∀ {f : Filter α} (F : f.Realizer) (x : F.σ), f ≠ ⊥ → F.f x ⊆ s → { a // a ∈ s ∧ 𝓝 a⊓f ≠ ⊥ }
 

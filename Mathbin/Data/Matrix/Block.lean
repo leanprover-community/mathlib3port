@@ -37,7 +37,7 @@ dimensions. -/
 @[pp_nodot]
 def fromBlocks (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α) (D : Matrix o m α) :
     Matrix (Sum n o) (Sum l m) α :=
-  Sum.elim (fun i => Sum.elim (A i) (B i)) fun i => Sum.elim (C i) (D i)
+  of <| Sum.elim (fun i => Sum.elim (A i) (B i)) fun i => Sum.elim (C i) (D i)
 
 @[simp]
 theorem from_blocks_apply₁₁ (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α) (D : Matrix o m α) (i : n)
@@ -61,19 +61,23 @@ theorem from_blocks_apply₂₂ (A : Matrix n l α) (B : Matrix n m α) (C : Mat
 
 /-- Given a matrix whose row and column indexes are sum types, we can extract the corresponding
 "top left" submatrix. -/
-def toBlocks₁₁ (M : Matrix (Sum n o) (Sum l m) α) : Matrix n l α := fun i j => M (Sum.inl i) (Sum.inl j)
+def toBlocks₁₁ (M : Matrix (Sum n o) (Sum l m) α) : Matrix n l α :=
+  of fun i j => M (Sum.inl i) (Sum.inl j)
 
 /-- Given a matrix whose row and column indexes are sum types, we can extract the corresponding
 "top right" submatrix. -/
-def toBlocks₁₂ (M : Matrix (Sum n o) (Sum l m) α) : Matrix n m α := fun i j => M (Sum.inl i) (Sum.inr j)
+def toBlocks₁₂ (M : Matrix (Sum n o) (Sum l m) α) : Matrix n m α :=
+  of fun i j => M (Sum.inl i) (Sum.inr j)
 
 /-- Given a matrix whose row and column indexes are sum types, we can extract the corresponding
 "bottom left" submatrix. -/
-def toBlocks₂₁ (M : Matrix (Sum n o) (Sum l m) α) : Matrix o l α := fun i j => M (Sum.inr i) (Sum.inl j)
+def toBlocks₂₁ (M : Matrix (Sum n o) (Sum l m) α) : Matrix o l α :=
+  of fun i j => M (Sum.inr i) (Sum.inl j)
 
 /-- Given a matrix whose row and column indexes are sum types, we can extract the corresponding
 "bottom right" submatrix. -/
-def toBlocks₂₂ (M : Matrix (Sum n o) (Sum l m) α) : Matrix o m α := fun i j => M (Sum.inr i) (Sum.inr j)
+def toBlocks₂₂ (M : Matrix (Sum n o) (Sum l m) α) : Matrix o m α :=
+  of fun i j => M (Sum.inr i) (Sum.inr j)
 
 theorem from_blocks_to_blocks (M : Matrix (Sum n o) (Sum l m) α) :
     fromBlocks M.toBlocks₁₁ M.toBlocks₁₂ M.toBlocks₂₁ M.toBlocks₂₂ = M := by
@@ -113,6 +117,22 @@ theorem from_blocks_transpose (A : Matrix n l α) (B : Matrix n m α) (C : Matri
 theorem from_blocks_conj_transpose [HasStar α] (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α)
     (D : Matrix o m α) : (fromBlocks A B C D)ᴴ = fromBlocks Aᴴ Cᴴ Bᴴ Dᴴ := by
   simp only [← conj_transpose, ← from_blocks_transpose, ← from_blocks_map]
+
+@[simp]
+theorem from_blocks_minor_sum_swap_left (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α) (D : Matrix o m α)
+    (f : p → Sum l m) : (fromBlocks A B C D).minor Sum.swap f = (fromBlocks C D A B).minor id f := by
+  ext i j
+  cases i <;> dsimp' <;> cases f j <;> rfl
+
+@[simp]
+theorem from_blocks_minor_sum_swap_right (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α) (D : Matrix o m α)
+    (f : p → Sum n o) : (fromBlocks A B C D).minor f Sum.swap = (fromBlocks B A D C).minor f id := by
+  ext i j
+  cases j <;> dsimp' <;> cases f i <;> rfl
+
+theorem from_blocks_minor_sum_swap_sum_swap {l m n o α : Type _} (A : Matrix n l α) (B : Matrix n m α)
+    (C : Matrix o l α) (D : Matrix o m α) : (fromBlocks A B C D).minor Sum.swap Sum.swap = fromBlocks D C B A := by
+  simp
 
 /-- A 2x2 block matrix is block diagonal if the blocks outside of the diagonal vanish -/
 def IsTwoBlockDiagonal [Zero α] (A : Matrix (Sum n o) (Sum l m) α) : Prop :=
@@ -177,7 +197,8 @@ theorem from_blocks_multiply [Fintype l] [Fintype m] [NonUnitalNonAssocSemiring�
   ext i j
   rcases i with ⟨⟩ <;>
     rcases j with ⟨⟩ <;>
-      simp only [← from_blocks, ← mul_apply, ← Fintype.sum_sum_type, ← Sum.elim_inl, ← Sum.elim_inr, ← Pi.add_apply]
+      simp only [← from_blocks, ← mul_apply, ← Fintype.sum_sum_type, ← Sum.elim_inl, ← Sum.elim_inr, ← Pi.add_apply, ←
+        of_apply]
 
 theorem from_blocks_mul_vec [Fintype l] [Fintype m] [NonUnitalNonAssocSemiringₓ α] (A : Matrix n l α) (B : Matrix n m α)
     (C : Matrix o l α) (D : Matrix o m α) (x : Sum l m → α) :
@@ -229,17 +250,18 @@ See also `matrix.block_diagonal'` if the matrices may not have the same size eve
 def blockDiagonalₓ (M : o → Matrix m n α) : Matrix (m × o) (n × o) α
   | ⟨i, k⟩, ⟨j, k'⟩ => if k = k' then M k i j else 0
 
-theorem block_diagonal_apply (M : o → Matrix m n α) ik jk :
+theorem block_diagonal_apply (M : o → Matrix m n α) (ik jk) :
     blockDiagonalₓ M ik jk = if ik.2 = jk.2 then M ik.2 ik.1 jk.1 else 0 := by
   cases ik
   cases jk
   rfl
 
 @[simp]
-theorem block_diagonal_apply_eq (M : o → Matrix m n α) i j k : blockDiagonalₓ M (i, k) (j, k) = M k i j :=
+theorem block_diagonal_apply_eq (M : o → Matrix m n α) (i j k) : blockDiagonalₓ M (i, k) (j, k) = M k i j :=
   if_pos rfl
 
-theorem block_diagonal_apply_ne (M : o → Matrix m n α) i j {k k'} (h : k ≠ k') : blockDiagonalₓ M (i, k) (j, k') = 0 :=
+theorem block_diagonal_apply_ne (M : o → Matrix m n α) (i j) {k k'} (h : k ≠ k') :
+    blockDiagonalₓ M (i, k) (j, k') = 0 :=
   if_neg h
 
 theorem block_diagonal_map (M : o → Matrix m n α) (f : α → β) (hf : f 0 = 0) :
@@ -447,7 +469,7 @@ This is the dependently-typed version of `matrix.block_diagonal`. -/
 def blockDiagonal'ₓ (M : ∀ i, Matrix (m' i) (n' i) α) : Matrix (Σi, m' i) (Σi, n' i) α
   | ⟨k, i⟩, ⟨k', j⟩ => if h : k = k' then M k i (cast (congr_arg n' h.symm) j) else 0
 
-theorem block_diagonal'_eq_block_diagonal (M : o → Matrix m n α) {k k'} i j :
+theorem block_diagonal'_eq_block_diagonal (M : o → Matrix m n α) {k k'} (i j) :
     blockDiagonalₓ M (i, k) (j, k') = blockDiagonal'ₓ M ⟨k, i⟩ ⟨k', j⟩ :=
   rfl
 
@@ -455,17 +477,18 @@ theorem block_diagonal'_minor_eq_block_diagonal (M : o → Matrix m n α) :
     (blockDiagonal'ₓ M).minor (Prod.toSigma ∘ Prod.swap) (Prod.toSigma ∘ Prod.swap) = blockDiagonalₓ M :=
   Matrix.ext fun ⟨k, i⟩ ⟨k', j⟩ => rfl
 
-theorem block_diagonal'_apply (M : ∀ i, Matrix (m' i) (n' i) α) ik jk :
+theorem block_diagonal'_apply (M : ∀ i, Matrix (m' i) (n' i) α) (ik jk) :
     blockDiagonal'ₓ M ik jk = if h : ik.1 = jk.1 then M ik.1 ik.2 (cast (congr_arg n' h.symm) jk.2) else 0 := by
   cases ik
   cases jk
   rfl
 
 @[simp]
-theorem block_diagonal'_apply_eq (M : ∀ i, Matrix (m' i) (n' i) α) k i j : blockDiagonal'ₓ M ⟨k, i⟩ ⟨k, j⟩ = M k i j :=
+theorem block_diagonal'_apply_eq (M : ∀ i, Matrix (m' i) (n' i) α) (k i j) :
+    blockDiagonal'ₓ M ⟨k, i⟩ ⟨k, j⟩ = M k i j :=
   dif_pos rfl
 
-theorem block_diagonal'_apply_ne (M : ∀ i, Matrix (m' i) (n' i) α) {k k'} i j (h : k ≠ k') :
+theorem block_diagonal'_apply_ne (M : ∀ i, Matrix (m' i) (n' i) α) {k k'} (i j) (h : k ≠ k') :
     blockDiagonal'ₓ M ⟨k, i⟩ ⟨k', j⟩ = 0 :=
   dif_neg h
 

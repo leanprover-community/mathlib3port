@@ -17,17 +17,18 @@ are defined.
 -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1685:35: warning: unsupported: precedence command
--- ./././Mathport/Syntax/Translate/Basic.lean:1585:11: warning: suppressing unsupported reserve notation
--- ./././Mathport/Syntax/Translate/Basic.lean:1585:11: warning: suppressing unsupported reserve notation
--- ./././Mathport/Syntax/Translate/Basic.lean:1585:11: warning: suppressing unsupported reserve notation
--- ./././Mathport/Syntax/Translate/Basic.lean:1585:11: warning: suppressing unsupported reserve notation
--- ./././Mathport/Syntax/Translate/Basic.lean:1585:11: warning: suppressing unsupported reserve notation
--- ./././Mathport/Syntax/Translate/Basic.lean:1585:11: warning: suppressing unsupported reserve notation
--- ./././Mathport/Syntax/Translate/Basic.lean:1585:11: warning: suppressing unsupported reserve notation
--- ./././Mathport/Syntax/Translate/Basic.lean:1585:11: warning: suppressing unsupported reserve notation
--- ./././Mathport/Syntax/Translate/Basic.lean:1685:35: warning: unsupported: precedence command
--- ./././Mathport/Syntax/Translate/Basic.lean:1685:35: warning: unsupported: precedence command
+-- ./././Mathport/Syntax/Translate/Basic.lean:1720:35: warning: unsupported: precedence command
+-- ./././Mathport/Syntax/Translate/Basic.lean:1620:11: warning: suppressing unsupported reserve notation
+-- ./././Mathport/Syntax/Translate/Basic.lean:1620:11: warning: suppressing unsupported reserve notation
+-- ./././Mathport/Syntax/Translate/Basic.lean:1620:11: warning: suppressing unsupported reserve notation
+-- ./././Mathport/Syntax/Translate/Basic.lean:1620:11: warning: suppressing unsupported reserve notation
+-- ./././Mathport/Syntax/Translate/Basic.lean:1620:11: warning: suppressing unsupported reserve notation
+-- ./././Mathport/Syntax/Translate/Basic.lean:1620:11: warning: suppressing unsupported reserve notation
+-- ./././Mathport/Syntax/Translate/Basic.lean:1620:11: warning: suppressing unsupported reserve notation
+-- ./././Mathport/Syntax/Translate/Basic.lean:1620:11: warning: suppressing unsupported reserve notation
+-- ./././Mathport/Syntax/Translate/Basic.lean:1720:35: warning: unsupported: precedence command
+-- ./././Mathport/Syntax/Translate/Basic.lean:1720:35: warning: unsupported: precedence command
+-- ./././Mathport/Syntax/Translate/Basic.lean:1620:11: warning: suppressing unsupported reserve notation
 -- used in `logic/relator.lean`
 -- used in `tactic/core.lean`
 -- used in `tactic/localized.lean`
@@ -41,3 +42,4 @@ are defined.
 -- These priorities are chosen to be above `+`, `∑`, and `∏`, but below `*`. There is no particular
 -- reason for this choice.
 -- used in `algebra/module/linear_map.lean`
+-- used in `data/matrix/notation.lean`

@@ -457,10 +457,10 @@ theorem sin_eq_zero_iff_of_lt_of_lt {x : ℝ} (hx₁ : -π < x) (hx₂ : x < π)
 theorem sin_eq_zero_iff {x : ℝ} : sin x = 0 ↔ ∃ n : ℤ, (n : ℝ) * π = x :=
   ⟨fun h =>
     ⟨⌊x / π⌋,
-      le_antisymmₓ (sub_nonneg.1 (sub_floor_div_mul_nonneg _ pi_pos))
+      le_antisymmₓ (sub_nonneg.1 (Int.sub_floor_div_mul_nonneg _ pi_pos))
         (sub_nonpos.1 <|
           le_of_not_gtₓ fun h₃ =>
-            (sin_pos_of_pos_of_lt_pi h₃ (sub_floor_div_mul_lt _ pi_pos)).Ne
+            (sin_pos_of_pos_of_lt_pi h₃ (Int.sub_floor_div_mul_lt _ pi_pos)).Ne
               (by
                 simp [← sub_eq_add_neg, ← sin_add, ← h, ← sin_int_mul_pi]))⟩,
     fun ⟨n, hn⟩ => hn ▸ sin_int_mul_pi _⟩

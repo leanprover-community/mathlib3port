@@ -245,7 +245,7 @@ theorem constr_pow_aeval (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A
     apply nat_degree_lt_nat_degree hf
     exact degree_mod_by_monic_lt _ (minpoly.monic pb.is_integral_gen)
   rw [aeval_eq_sum_range' this, aeval_eq_sum_range' this, LinearMap.map_sum]
-  refine' Finset.sum_congr rfl fun i hi : i ∈ Finset.range pb.dim => _
+  refine' Finset.sum_congr rfl fun i (hi : i ∈ Finset.range pb.dim) => _
   rw [Finset.mem_range] at hi
   rw [LinearMap.map_smul]
   congr
@@ -473,7 +473,7 @@ theorem minpoly_gen_map (pb : PowerBasis A S) (e : S ≃ₐ[A] S') : (pb.map e).
 variable [IsDomain A]
 
 @[simp]
-theorem equiv_of_root_map (pb : PowerBasis A S) (e : S ≃ₐ[A] S') h₁ h₂ : pb.equivOfRoot (pb.map e) h₁ h₂ = e := by
+theorem equiv_of_root_map (pb : PowerBasis A S) (e : S ≃ₐ[A] S') (h₁ h₂) : pb.equivOfRoot (pb.map e) h₁ h₂ = e := by
   ext x
   obtain ⟨f, rfl⟩ := pb.exists_eq_aeval' x
   simp [← aeval_alg_equiv]

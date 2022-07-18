@@ -188,7 +188,7 @@ theorem M.bisim {α : Typevec n} (R : P.M α → P.M α → Prop)
     (h :
       ∀ x y,
         R x y → ∃ a f f₁ f₂, M.dest P x = ⟨a, splitFun f f₁⟩ ∧ M.dest P y = ⟨a, splitFun f f₂⟩ ∧ ∀ i, R (f₁ i) (f₂ i))
-    x y (r : R x y) : x = y := by
+    (x y) (r : R x y) : x = y := by
   cases' x with a₁ f₁
   cases' y with a₂ f₂
   dsimp' [← Mp]  at *
@@ -215,7 +215,7 @@ theorem M.bisim {α : Typevec n} (R : P.M α → P.M α → Prop)
     
 
 theorem M.bisim₀ {α : Typevec n} (R : P.M α → P.M α → Prop) (h₀ : Equivalenceₓ R)
-    (h : ∀ x y, R x y → (id ::: Quot.mk R) <$$> M.dest _ x = (id ::: Quot.mk R) <$$> M.dest _ y) x y (r : R x y) :
+    (h : ∀ x y, R x y → (id ::: Quot.mk R) <$$> M.dest _ x = (id ::: Quot.mk R) <$$> M.dest _ y) (x y) (r : R x y) :
     x = y := by
   apply M.bisim P R _ _ _ r
   clear r x y
@@ -244,7 +244,7 @@ theorem M.bisim₀ {α : Typevec n} (R : P.M α → P.M α → Prop) (h₀ : Equ
   exact h₁
 
 theorem M.bisim' {α : Typevec n} (R : P.M α → P.M α → Prop)
-    (h : ∀ x y, R x y → (id ::: Quot.mk R) <$$> M.dest _ x = (id ::: Quot.mk R) <$$> M.dest _ y) x y (r : R x y) :
+    (h : ∀ x y, R x y → (id ::: Quot.mk R) <$$> M.dest _ x = (id ::: Quot.mk R) <$$> M.dest _ y) (x y) (r : R x y) :
     x = y := by
   have := M.bisim₀ P (EqvGen R) _ _
   · solve_by_elim [← EqvGen.rel]

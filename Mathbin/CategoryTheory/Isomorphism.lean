@@ -103,7 +103,7 @@ theorem symm_inv (α : X ≅ Y) : α.symm.inv = α.Hom :=
   rfl
 
 @[simp]
-theorem symm_mk {X Y : C} (hom : X ⟶ Y) (inv : Y ⟶ X) hom_inv_id inv_hom_id :
+theorem symm_mk {X Y : C} (hom : X ⟶ Y) (inv : Y ⟶ X) (hom_inv_id) (inv_hom_id) :
     Iso.symm { Hom, inv, hom_inv_id' := hom_inv_id, inv_hom_id' := inv_hom_id } =
       { Hom := inv, inv := hom, hom_inv_id' := inv_hom_id, inv_hom_id' := hom_inv_id } :=
   rfl
@@ -140,8 +140,8 @@ infixr:80 " ≪≫ " => Iso.trans
 
 -- type as `\ll \gg`.
 @[simp]
-theorem trans_mk {X Y Z : C} (hom : X ⟶ Y) (inv : Y ⟶ X) hom_inv_id inv_hom_id (hom' : Y ⟶ Z) (inv' : Z ⟶ Y) hom_inv_id'
-    inv_hom_id' hom_inv_id'' inv_hom_id'' :
+theorem trans_mk {X Y Z : C} (hom : X ⟶ Y) (inv : Y ⟶ X) (hom_inv_id) (inv_hom_id) (hom' : Y ⟶ Z) (inv' : Z ⟶ Y)
+    (hom_inv_id') (inv_hom_id') (hom_inv_id'') (inv_hom_id'') :
     Iso.trans { Hom, inv, hom_inv_id' := hom_inv_id, inv_hom_id' := inv_hom_id }
         { Hom := hom', inv := inv', hom_inv_id', inv_hom_id' } =
       { Hom := hom ≫ hom', inv := inv' ≫ inv, hom_inv_id' := hom_inv_id'', inv_hom_id' := inv_hom_id'' } :=
@@ -196,7 +196,7 @@ theorem eq_comp_inv (α : X ≅ Y) {f : Z ⟶ Y} {g : Z ⟶ X} : g = f ≫ α.in
   (comp_inv_eq α.symm).symm
 
 theorem inv_eq_inv (f g : X ≅ Y) : f.inv = g.inv ↔ f.Hom = g.Hom :=
-  have : ∀ {X Y : C} f g : X ≅ Y, f.Hom = g.Hom → f.inv = g.inv := fun X Y f g h => by
+  have : ∀ {X Y : C} (f g : X ≅ Y), f.Hom = g.Hom → f.inv = g.inv := fun X Y f g h => by
     rw [ext h]
   ⟨this f.symm g.symm, this f g⟩
 

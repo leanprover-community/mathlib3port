@@ -41,7 +41,7 @@ Generally you should just use `limit.cone F`, unless you need the actual definit
 (which is in terms of `types.limit_cone`).
 -/
 def limitCone (F : J ⥤ Top.{max v u}) : Cone F where
-  x := Top.of { u : ∀ j : J, F.obj j | ∀ {i j : J} f : i ⟶ j, F.map f (u i) = u j }
+  x := Top.of { u : ∀ j : J, F.obj j | ∀ {i j : J} (f : i ⟶ j), F.map f (u i) = u j }
   π :=
     { app := fun j =>
         { toFun := fun u => u.val j,
@@ -743,14 +743,13 @@ variable {J : Type v} [SmallCategory J] [IsCofiltered J] (F : J ⥤ Top.{max v u
 
 include hC
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given a *compatible* collection of topological bases for the factors in a cofiltered limit
 which contain `set.univ` and are closed under intersections, the induced *naive* collection
 of sets in the limit is, in fact, a topological basis.
 -/
 theorem is_topological_basis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j))) (hT : ∀ j, IsTopologicalBasis (T j))
-    (univ : ∀ i : J, Set.Univ ∈ T i) (inter : ∀ i U1 U2 : Set (F.obj i), U1 ∈ T i → U2 ∈ T i → U1 ∩ U2 ∈ T i)
-    (compat : ∀ i j : J f : i ⟶ j V : Set (F.obj j) hV : V ∈ T j, F.map f ⁻¹' V ∈ T i) :
+    (univ : ∀ i : J, Set.Univ ∈ T i) (inter : ∀ (i) (U1 U2 : Set (F.obj i)), U1 ∈ T i → U2 ∈ T i → U1 ∩ U2 ∈ T i)
+    (compat : ∀ (i j : J) (f : i ⟶ j) (V : Set (F.obj j)) (hV : V ∈ T j), F.map f ⁻¹' V ∈ T i) :
     IsTopologicalBasis { U : Set C.x | ∃ (j : _)(V : Set (F.obj j)), V ∈ T j ∧ U = C.π.app j ⁻¹' V } := by
   classical
   -- The limit cone for `F` whose topology is defined as an infimum.
@@ -771,7 +770,7 @@ theorem is_topological_basis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j))) (
       
   -- Using `D`, we can apply the characterization of the topological basis of a
   -- topology defined as an infimum...
-  convert is_topological_basis_infi hT fun j x : D.X => D.π.app j x
+  convert is_topological_basis_infi hT fun j (x : D.X) => D.π.app j x
   ext U0
   constructor
   · rintro ⟨j, V, hV, rfl⟩
@@ -794,14 +793,14 @@ theorem is_topological_basis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j))) (
     
   · rintro ⟨U, G, h1, h2⟩
     obtain ⟨j, hj⟩ := is_cofiltered.inf_objs_exists G
-    let g : ∀ e he : e ∈ G, j ⟶ e := fun _ he => (hj he).some
+    let g : ∀ (e) (he : e ∈ G), j ⟶ e := fun _ he => (hj he).some
     let Vs : J → Set (F.obj j) := fun e => if h : e ∈ G then F.map (g e h) ⁻¹' U e else Set.Univ
     let V : Set (F.obj j) := ⋂ (e : J) (he : e ∈ G), Vs e
     refine' ⟨j, V, _, _⟩
     · -- An intermediate claim used to apply induction along `G : finset J` later on.
       have :
-        ∀ S : Set (Set (F.obj j)) E : Finset J P : J → Set (F.obj j) univ : Set.Univ ∈ S inter :
-          ∀ A B : Set (F.obj j), A ∈ S → B ∈ S → A ∩ B ∈ S cond : ∀ e : J he : e ∈ E, P e ∈ S,
+        ∀ (S : Set (Set (F.obj j))) (E : Finset J) (P : J → Set (F.obj j)) (univ : Set.Univ ∈ S)
+          (inter : ∀ A B : Set (F.obj j), A ∈ S → B ∈ S → A ∩ B ∈ S) (cond : ∀ (e : J) (he : e ∈ E), P e ∈ S),
           (⋂ (e) (he : e ∈ E), P e) ∈ S :=
         by
         intro S E
@@ -882,9 +881,8 @@ a finite subset of objects and morphisms of `J`.
 -/
 def PartialSections {J : Type u} [SmallCategory J] (F : J ⥤ Top.{u}) {G : Finset J}
     (H : Finset (FiniteDiagramArrow G)) : Set (∀ j, F.obj j) :=
-  { u | ∀ {f : FiniteDiagramArrow G} hf : f ∈ H, F.map f.2.2.2.2 (u f.1) = u f.2.1 }
+  { u | ∀ {f : FiniteDiagramArrow G} (hf : f ∈ H), F.map f.2.2.2.2 (u f.1) = u f.2.1 }
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem PartialSections.nonempty [IsCofiltered J] [h : ∀ j : J, Nonempty (F.obj j)] {G : Finset J}
     (H : Finset (FiniteDiagramArrow G)) : (PartialSections F H).Nonempty := by
   classical
@@ -894,7 +892,6 @@ theorem PartialSections.nonempty [IsCofiltered J] [h : ∀ j : J, Nonempty (F.ob
   dsimp' only
   rwa [dif_pos hX, dif_pos hY, ← comp_app, ← F.map_comp, @is_cofiltered.inf_to_commutes _ _ _ G H]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem PartialSections.directed : Directed Superset fun G : FiniteDiagram J => PartialSections F G.2 := by
   classical
   intro A B
@@ -931,7 +928,6 @@ theorem PartialSections.closed [∀ j : J, T2Space (F.obj j)] {G : Finset J} (H 
   apply is_closed_eq
   continuity
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Cofiltered limits of nonempty compact Hausdorff spaces are nonempty topological spaces.
 --/
 theorem nonempty_limit_cone_of_compact_t2_cofiltered_system [IsCofiltered J] [∀ j : J, Nonempty (F.obj j)]

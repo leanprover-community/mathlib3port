@@ -114,7 +114,7 @@ theorem TerminatesParallel.aux :
 theorem terminates_parallel {S : Wseq (Computation α)} {c} (h : c ∈ S) [T : Terminates c] : Terminates (parallel S) :=
   by
   suffices
-    ∀ n l : List (Computation α) S c,
+    ∀ (n) (l : List (Computation α)) (S c),
       c ∈ l ∨ some (some c) = Seqₓₓ.nth S n → Terminates c → Terminates (corec Parallel.aux1 (l, S))
     from
     let ⟨n, h⟩ := h
@@ -196,7 +196,8 @@ theorem terminates_parallel {S : Wseq (Computation α)} {c} (h : c ∈ S) [T : T
     
 
 theorem exists_of_mem_parallel {S : Wseq (Computation α)} {a} (h : a ∈ parallel S) : ∃ c ∈ S, a ∈ c := by
-  suffices ∀ C, a ∈ C → ∀ l : List (Computation α) S, corec Parallel.aux1 (l, S) = C → ∃ c, (c ∈ l ∨ c ∈ S) ∧ a ∈ c from
+  suffices ∀ C, a ∈ C → ∀ (l : List (Computation α)) (S), corec Parallel.aux1 (l, S) = C → ∃ c, (c ∈ l ∨ c ∈ S) ∧ a ∈ c
+    from
     let ⟨c, h1, h2⟩ := this _ h [] S rfl
     ⟨c, h1.resolve_left id, h2⟩
   let F : List (Computation α) → Sum α (List (Computation α)) → Prop := by
@@ -281,7 +282,7 @@ theorem exists_of_mem_parallel {S : Wseq (Computation α)} {a} (h : a ∈ parall
       
     
 
-theorem map_parallel (f : α → β) S : map f (parallel S) = parallel (S.map (map f)) := by
+theorem map_parallel (f : α → β) (S) : map f (parallel S) = parallel (S.map (map f)) := by
   refine'
     eq_of_bisim
       (fun c1 c2 =>

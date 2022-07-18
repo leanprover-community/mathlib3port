@@ -201,8 +201,8 @@ variable (α : Type u) [TopologicalSpace α]
 
 instance stoneCechSetoid : Setoidₓ (Ultrafilter α) where
   R := fun x y =>
-    ∀ γ : Type u [TopologicalSpace γ],
-      ∀ [T2Space γ] [CompactSpace γ] f : α → γ hf : Continuous f, Ultrafilter.extend f x = Ultrafilter.extend f y
+    ∀ (γ : Type u) [TopologicalSpace γ],
+      ∀ [T2Space γ] [CompactSpace γ] (f : α → γ) (hf : Continuous f), Ultrafilter.extend f x = Ultrafilter.extend f y
   iseqv :=
     ⟨fun x γ tγ h₁ h₂ f hf => rfl, fun x y xy γ tγ h₁ h₂ f hf => (xy γ f hf).symm, fun x y z xy yz γ tγ h₁ h₂ f hf =>
       (xy γ f hf).trans (yz γ f hf)⟩
@@ -285,7 +285,7 @@ instance StoneCech.t2_space : T2Space (StoneCech α) := by
   skip
   let ff := stoneCechExtend hf
   change ff ⟦x⟧ = ff ⟦y⟧
-  have lim := fun z : Ultrafilter α gz : (g : Filter (StoneCech α)) ≤ 𝓝 ⟦z⟧ =>
+  have lim := fun (z : Ultrafilter α) (gz : (g : Filter (StoneCech α)) ≤ 𝓝 ⟦z⟧) =>
     ((continuous_stone_cech_extend hf).Tendsto _).mono_left gz
   exact tendsto_nhds_unique (limₓ x gx) (limₓ y gy)
 

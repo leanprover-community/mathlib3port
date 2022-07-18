@@ -583,7 +583,6 @@ theorem map_mul_of_coprime {f : ArithmeticFunction R} (hf : f.IsMultiplicative) 
 
 end MonoidWithZeroₓ
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem map_prod {ι : Type _} [CommMonoidWithZero R] (g : ι → ℕ) {f : Nat.ArithmeticFunction R}
     (hf : f.IsMultiplicative) (s : Finset ι) (hs : (s : Set ι).Pairwise (coprime on g)) :
     f (∏ i in s, g i) = ∏ i in s, f (g i) := by
@@ -615,7 +614,7 @@ theorem mul [CommSemiringₓ R] {f g : ArithmeticFunction R} (hf : f.IsMultiplic
     intro m n cop
     rw [sum_mul_sum]
     symm
-    apply sum_bij fun x : (ℕ × ℕ) × ℕ × ℕ h => (x.1.1 * x.2.1, x.1.2 * x.2.2)
+    apply sum_bij fun (x : (ℕ × ℕ) × ℕ × ℕ) h => (x.1.1 * x.2.1, x.1.2 * x.2.2)
     · rintro ⟨⟨a1, a2⟩, ⟨b1, b2⟩⟩ h
       simp only [← mem_divisors_antidiagonal, ← Ne.def, ← mem_product] at h
       rcases h with ⟨⟨rfl, ha⟩, ⟨rfl, hb⟩⟩

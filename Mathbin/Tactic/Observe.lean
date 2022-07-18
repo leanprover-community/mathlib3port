@@ -17,7 +17,7 @@ open Tactic Tactic.Interactive
 
 setup_tactic_parser
 
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
 /-- `observe hp : p` asserts the proposition `p`, and tries to prove it using `library_search`.
 If no proof is found, the tactic fails.
 In other words, this tactic is equivalent to `have hp : p, { library_search }`.

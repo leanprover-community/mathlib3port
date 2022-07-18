@@ -386,7 +386,6 @@ theorem basic_open_pow (f : A) (n : ℕ) (hn : 0 < n) : basicOpen 𝒜 (f ^ n) =
   TopologicalSpace.Opens.ext <| by
     simpa using zero_locus_singleton_pow 𝒜 f n hn
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem basic_open_eq_union_of_projection (f : A) : basicOpen 𝒜 f = ⨆ i : ℕ, basicOpen 𝒜 (GradedAlgebra.proj 𝒜 i f) :=
   TopologicalSpace.Opens.ext <|
     Set.ext fun z => by

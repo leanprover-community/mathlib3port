@@ -38,7 +38,7 @@ namespace Upto
 variable {p : ℕ → Prop}
 
 /-- Lift the "greater than" relation on natural numbers to `nat.upto`. -/
-protected def Gt p (x y : Upto p) : Prop :=
+protected def Gt (p) (x y : Upto p) : Prop :=
   x.1 > y.1
 
 instance : LT (Upto p) :=

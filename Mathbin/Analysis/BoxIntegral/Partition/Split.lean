@@ -126,7 +126,7 @@ theorem disjoint_split_lower_split_upper (I : Box ι) (i : ι) (x : ℝ) : Disjo
   by
   rw [← disjoint_with_bot_coe, coe_split_lower, coe_split_upper]
   refine' (Disjoint.inf_left' _ _).inf_right' _
-  exact fun y hy : y i ≤ x ∧ x < y i => not_lt_of_le hy.1 hy.2
+  exact fun y (hy : y i ≤ x ∧ x < y i) => not_lt_of_le hy.1 hy.2
 
 theorem split_lower_ne_split_upper (I : Box ι) (i : ι) (x : ℝ) : I.splitLower i x ≠ I.splitUpper i x := by
   cases le_or_ltₓ x (I.lower i)
@@ -280,7 +280,7 @@ Let `J'` be one of them, and let `J` be one of the boxes in `s`. If these boxes 
 intersection, then `J' ≤ J`. -/
 theorem eventually_not_disjoint_imp_le_of_mem_split_many (s : Finset (Box ι)) :
     ∀ᶠ t : Finset (ι × ℝ) in at_top,
-      ∀ I : Box ι, ∀ J ∈ s, ∀, ∀ J' ∈ splitMany I t, ∀, ¬Disjoint (J : WithBot (Box ι)) J' → J' ≤ J :=
+      ∀ (I : Box ι), ∀ J ∈ s, ∀, ∀ J' ∈ splitMany I t, ∀, ¬Disjoint (J : WithBot (Box ι)) J' → J' ≤ J :=
   by
   refine'
     eventually_at_top.2
@@ -306,7 +306,7 @@ theorem eventually_split_many_inf_eq_filter (π : Prepartition I) :
 
 theorem exists_split_many_inf_eq_filter_of_finite (s : Set (Prepartition I)) (hs : s.Finite) :
     ∃ t : Finset (ι × ℝ), ∀, ∀ π ∈ s, ∀, π⊓splitMany I t = (splitMany I t).filter fun J => ↑J ⊆ π.Union := by
-  have := fun π hπ : π ∈ s => eventually_split_many_inf_eq_filter π
+  have := fun π (hπ : π ∈ s) => eventually_split_many_inf_eq_filter π
   exact (hs.eventually_all.2 this).exists
 
 /-- If `π` is a partition of `I`, then there exists a finite set `s` of hyperplanes such that

@@ -41,8 +41,8 @@ open Set Filter
 
 variable {ι α β : Type _}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`cobounded] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`le_cofinite] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`cobounded] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`le_cofinite] []
 /-- A **bornology** on a type `α` is a filter of cobounded sets which contains the cofinite filter.
 Such spaces are equivalently specified by their bounded sets, see `bornology.of_bounded`
 and `bornology.ext_iff_is_bounded`-/
@@ -51,13 +51,13 @@ class Bornology (α : Type _) where
   cobounded : Filter α
   le_cofinite : cobounded ≤ cofinite
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B)
 /-- A constructor for bornologies by specifying the bounded sets,
 and showing that they satisfy the appropriate conditions. -/
 @[simps]
 def Bornology.ofBounded {α : Type _} (B : Set (Set α)) (empty_mem : ∅ ∈ B)
     (subset_mem : ∀, ∀ s₁ ∈ B, ∀, ∀ s₂ : Set α, s₂ ⊆ s₁ → s₂ ∈ B)
-    (union_mem : ∀ s₁ s₂ _ : s₁ ∈ B _ : s₂ ∈ B, s₁ ∪ s₂ ∈ B) (singleton_mem : ∀ x, {x} ∈ B) : Bornology α where
+    (union_mem : ∀ (s₁ s₂) (_ : s₁ ∈ B) (_ : s₂ ∈ B), s₁ ∪ s₂ ∈ B) (singleton_mem : ∀ x, {x} ∈ B) : Bornology α where
   cobounded :=
     { Sets := { s : Set α | sᶜ ∈ B },
       univ_sets := by
@@ -72,13 +72,13 @@ def Bornology.ofBounded {α : Type _} (B : Set (Set α)) (empty_mem : ∅ ∈ B)
     rw [compl_compl]
     exact singleton_mem x
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B)
 /-- A constructor for bornologies by specifying the bounded sets,
 and showing that they satisfy the appropriate conditions. -/
 @[simps]
 def Bornology.ofBounded' {α : Type _} (B : Set (Set α)) (empty_mem : ∅ ∈ B)
     (subset_mem : ∀, ∀ s₁ ∈ B, ∀, ∀ s₂ : Set α, s₂ ⊆ s₁ → s₂ ∈ B)
-    (union_mem : ∀ s₁ s₂ _ : s₁ ∈ B _ : s₂ ∈ B, s₁ ∪ s₂ ∈ B) (sUnion_univ : ⋃₀B = univ) : Bornology α :=
+    (union_mem : ∀ (s₁ s₂) (_ : s₁ ∈ B) (_ : s₂ ∈ B), s₁ ∪ s₂ ∈ B) (sUnion_univ : ⋃₀B = univ) : Bornology α :=
   (Bornology.ofBounded B empty_mem subset_mem union_mem) fun x => by
     rw [sUnion_eq_univ_iff] at sUnion_univ
     rcases sUnion_univ x with ⟨s, hs, hxs⟩

@@ -323,11 +323,10 @@ theorem content_mul_aux {p q : R[X]} :
     leading_coeff_mul, RingHom.map_mul, mul_assoc, mul_assoc]
   apply dvd_sub (Dvd.intro _ rfl) (Dvd.intro _ rfl)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem content_mul {p q : R[X]} : (p * q).content = p.content * q.content := by
   classical
-  suffices h : ∀ n : ℕ p q : R[X], (p * q).degree < n → (p * q).content = p.content * q.content
+  suffices h : ∀ (n : ℕ) (p q : R[X]), (p * q).degree < n → (p * q).content = p.content * q.content
   · apply h
     apply lt_of_le_of_ltₓ degree_le_nat_degree (WithBot.coe_lt_coe.2 (Nat.lt_succ_selfₓ _))
     
@@ -400,7 +399,6 @@ theorem IsPrimitive.dvd_prim_part_iff_dvd {p q : R[X]} (hp : p.IsPrimitive) (hq 
   apply Dvd.intro _
   rw [prim_part_mul hq, hp.prim_part_eq]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem exists_primitive_lcm_of_is_primitive {p q : R[X]} (hp : p.IsPrimitive) (hq : q.IsPrimitive) :
     ∃ r : R[X], r.IsPrimitive ∧ ∀ s : R[X], p ∣ s ∧ q ∣ s ↔ r ∣ s := by
   classical
@@ -408,7 +406,7 @@ theorem exists_primitive_lcm_of_is_primitive {p q : R[X]} (hp : p.IsPrimitive) (
     ⟨(p * q).natDegree, p * q, rfl, hp.mul hq, dvd_mul_right _ _, dvd_mul_left _ _⟩
   rcases Nat.find_specₓ h with ⟨r, rdeg, rprim, pr, qr⟩
   refine' ⟨r, rprim, fun s => ⟨_, fun rs => ⟨pr.trans rs, qr.trans rs⟩⟩⟩
-  suffices hs : ∀ n : ℕ s : R[X], s.natDegree = n → p ∣ s ∧ q ∣ s → r ∣ s
+  suffices hs : ∀ (n : ℕ) (s : R[X]), s.natDegree = n → p ∣ s ∧ q ∣ s → r ∣ s
   · apply hs s.nat_degree s rfl
     
   clear s
@@ -471,11 +469,11 @@ instance (priority := 100) normalizedGcdMonoid : NormalizedGcdMonoid R[X] :=
       IsUnit.mul_left_dvd _ _ _ (is_unit_prim_part_C (lcm p.content q.content)), ← hr s.prim_part]
     tauto
 
-theorem degree_gcd_le_left {p : R[X]} (hp : p ≠ 0) q : (gcd p q).degree ≤ p.degree := by
+theorem degree_gcd_le_left {p : R[X]} (hp : p ≠ 0) (q) : (gcd p q).degree ≤ p.degree := by
   have := nat_degree_le_iff_degree_le.mp (nat_degree_le_of_dvd (gcd_dvd_left p q) hp)
   rwa [degree_eq_nat_degree hp]
 
-theorem degree_gcd_le_right p {q : R[X]} (hq : q ≠ 0) : (gcd p q).degree ≤ q.degree := by
+theorem degree_gcd_le_right (p) {q : R[X]} (hq : q ≠ 0) : (gcd p q).degree ≤ q.degree := by
   rw [gcd_comm]
   exact degree_gcd_le_left hq p
 

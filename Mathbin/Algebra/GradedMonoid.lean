@@ -129,7 +129,7 @@ variable {A} [AddMonoidₓ ι] [GhasMul A] [GhasOne A]
 
 /-- A default implementation of power on a graded monoid, like `npow_rec`.
 `gmonoid.gnpow` should be used instead. -/
-def gnpowRec : ∀ n : ℕ {i}, A i → A (n • i)
+def gnpowRec : ∀ (n : ℕ) {i}, A i → A (n • i)
   | 0, i, a => cast (congr_arg A (zero_nsmul i).symm) GhasOne.one
   | n + 1, i, a => cast (congr_arg A (succ_nsmul i n).symm) (GhasMul.mul a <| gnpow_rec _ a)
 
@@ -137,7 +137,7 @@ def gnpowRec : ∀ n : ℕ {i}, A i → A (n • i)
 theorem gnpow_rec_zero (a : GradedMonoid A) : GradedMonoid.mk _ (gnpowRec 0 a.snd) = 1 :=
   Sigma.ext (zero_nsmul _) (heq_of_cast_eq _ rfl).symm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic used to autofill `graded_monoid.gmonoid.gnpow_zero'` when the default
 `graded_monoid.gmonoid.gnpow_rec` is used. -/
 unsafe def apply_gnpow_rec_zero_tac : tactic Unit :=
@@ -148,7 +148,7 @@ theorem gnpow_rec_succ (n : ℕ) (a : GradedMonoid A) :
     (GradedMonoid.mk _ <| gnpowRec n.succ a.snd) = a * ⟨_, gnpowRec n a.snd⟩ :=
   Sigma.ext (succ_nsmul _ _) (heq_of_cast_eq _ rfl).symm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic used to autofill `graded_monoid.gmonoid.gnpow_succ'` when the default
 `graded_monoid.gmonoid.gnpow_rec` is used. -/
 unsafe def apply_gnpow_rec_succ_tac : tactic Unit :=
@@ -164,11 +164,11 @@ class Gmonoid [AddMonoidₓ ι] extends GhasMul A, GhasOne A where
   one_mul (a : GradedMonoid A) : 1 * a = a
   mul_one (a : GradedMonoid A) : a * 1 = a
   mul_assoc (a b c : GradedMonoid A) : a * b * c = a * (b * c)
-  gnpow : ∀ n : ℕ {i}, A i → A (n • i) := Gmonoid.gnpowRec
+  gnpow : ∀ (n : ℕ) {i}, A i → A (n • i) := Gmonoid.gnpowRec
   gnpow_zero' : ∀ a : GradedMonoid A, GradedMonoid.mk _ (gnpow 0 a.snd) = 1 := by
     run_tac
       gmonoid.apply_gnpow_rec_zero_tac
-  gnpow_succ' : ∀ n : ℕ a : GradedMonoid A, (GradedMonoid.mk _ <| gnpow n.succ a.snd) = a * ⟨_, gnpow n a.snd⟩ := by
+  gnpow_succ' : ∀ (n : ℕ) (a : GradedMonoid A), (GradedMonoid.mk _ <| gnpow n.succ a.snd) = a * ⟨_, gnpow n a.snd⟩ := by
     run_tac
       gmonoid.apply_gnpow_rec_succ_tac
 

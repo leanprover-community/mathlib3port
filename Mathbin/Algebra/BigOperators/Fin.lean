@@ -84,7 +84,7 @@ theorem prod_cons [CommMonoidₓ β] {n : ℕ} (x : β) (f : Finₓ n → β) :
 theorem prod_univ_one [CommMonoidₓ β] (f : Finₓ 1 → β) : (∏ i, f i) = f 0 := by
   simp
 
-@[to_additive]
+@[simp, to_additive]
 theorem prod_univ_two [CommMonoidₓ β] (f : Finₓ 2 → β) : (∏ i, f i) = f 0 * f 1 := by
   simp [← prod_univ_succ]
 
@@ -134,12 +134,40 @@ theorem prod_trunc {M : Type _} [CommMonoidₓ M] {a b : ℕ} (f : Finₓ (a + b
     (∏ i : Finₓ (a + b), f i) = ∏ i : Finₓ a, f (castLe (Nat.Le.intro rfl) i) := by
   simpa only [← prod_univ_add, ← Fintype.prod_eq_one _ hf, ← mul_oneₓ]
 
+section PartialProd
+
+variable [Monoidₓ α] {n : ℕ}
+
+/-- For `f = (a₁, ..., aₙ)` in `αⁿ`, `partial_prod f` is `(1, a₁, a₁a₂, ..., a₁...aₙ)` in `αⁿ⁺¹`. -/
+@[to_additive "For `f = (a₁, ..., aₙ)` in `αⁿ`, `partial_sum f` is\n`(0, a₁, a₁ + a₂, ..., a₁ + ... + aₙ)` in `αⁿ⁺¹`."]
+def partialProd (f : Finₓ n → α) (i : Finₓ (n + 1)) : α :=
+  ((List.ofFnₓ f).take i).Prod
+
+@[simp, to_additive]
+theorem partial_prod_zero (f : Finₓ n → α) : partialProd f 0 = 1 := by
+  simp [← partial_prod]
+
+@[to_additive]
+theorem partial_prod_succ (f : Finₓ n → α) (j : Finₓ n) : partialProd f j.succ = partialProd f j.cast_succ * f j := by
+  simp [← partial_prod, ← List.take_succ, ← List.ofFnNthValₓ, ← dif_pos j.is_lt, Option.coe_def]
+
+@[to_additive]
+theorem partial_prod_succ' (f : Finₓ (n + 1) → α) (j : Finₓ (n + 1)) :
+    partialProd f j.succ = f 0 * partialProd (Finₓ.tail f) j := by
+  simpa [← partial_prod]
+
+end PartialProd
+
 end Finₓ
 
 namespace List
 
+section CommMonoidₓ
+
+variable [CommMonoidₓ α]
+
 @[to_additive]
-theorem prod_take_of_fn [CommMonoidₓ α] {n : ℕ} (f : Finₓ n → α) (i : ℕ) :
+theorem prod_take_of_fn {n : ℕ} (f : Finₓ n → α) (i : ℕ) :
     ((ofFnₓ f).take i).Prod = ∏ j in Finset.univ.filter fun j : Finₓ n => j.val < i, f j := by
   have A : ∀ j : Finₓ n, ¬(j : ℕ) < 0 := fun j => not_lt_bot
   induction' i with i IH
@@ -173,13 +201,15 @@ theorem prod_take_of_fn [CommMonoidₓ α] {n : ℕ} (f : Finₓ n → α) (i : 
     
 
 @[to_additive]
-theorem prod_of_fn [CommMonoidₓ α] {n : ℕ} {f : Finₓ n → α} : (ofFnₓ f).Prod = ∏ i, f i := by
+theorem prod_of_fn {n : ℕ} {f : Finₓ n → α} : (ofFnₓ f).Prod = ∏ i, f i := by
   convert prod_take_of_fn f n
   · rw [take_all_of_le (le_of_eqₓ (length_of_fn f))]
     
   · have : ∀ j : Finₓ n, (j : ℕ) < n := fun j => j.is_lt
     simp [← this]
     
+
+end CommMonoidₓ
 
 theorem alternating_sum_eq_finset_sum {G : Type _} [AddCommGroupₓ G] :
     ∀ L : List G, alternatingSum L = ∑ i : Finₓ L.length, (-1 : ℤ) ^ (i : ℕ) • L.nthLe i i.is_lt

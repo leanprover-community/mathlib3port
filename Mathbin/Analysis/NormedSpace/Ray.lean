@@ -83,6 +83,7 @@ theorem same_ray_iff_inv_norm_smul_eq : SameRay ℝ x y ↔ x = 0 ∨ y = 0 ∨ 
     
   simp only [← same_ray_iff_inv_norm_smul_eq_of_ne hx hy, *, ← false_orₓ]
 
+/-- Two vectors of the same norm are on the same ray if and only if they are equal. -/
 theorem same_ray_iff_of_norm_eq (h : ∥x∥ = ∥y∥) : SameRay ℝ x y ↔ x = y := by
   obtain rfl | hy := eq_or_ne y 0
   · rw [norm_zero, norm_eq_zero] at h
@@ -93,4 +94,12 @@ theorem same_ray_iff_of_norm_eq (h : ∥x∥ = ∥y∥) : SameRay ℝ x y ↔ x 
 
 theorem not_same_ray_iff_of_norm_eq (h : ∥x∥ = ∥y∥) : ¬SameRay ℝ x y ↔ x ≠ y :=
   (same_ray_iff_of_norm_eq h).Not
+
+/-- If two points on the same ray have the same norm, then they are equal. -/
+theorem SameRay.eq_of_norm_eq (h : SameRay ℝ x y) (hn : ∥x∥ = ∥y∥) : x = y :=
+  (same_ray_iff_of_norm_eq hn).mp h
+
+/-- The norms of two vectors on the same ray are equal if and only if they are equal. -/
+theorem SameRay.norm_eq_iff (h : SameRay ℝ x y) : ∥x∥ = ∥y∥ ↔ x = y :=
+  ⟨h.eq_of_norm_eq, fun h => h ▸ rfl⟩
 

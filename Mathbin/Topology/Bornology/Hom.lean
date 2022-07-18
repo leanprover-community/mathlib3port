@@ -80,7 +80,7 @@ protected def copy (f : LocallyBoundedMap α β) (f' : α → β) (h : f' = f) :
 
 /-- Construct a `locally_bounded_map` from the fact that the function maps bounded sets to bounded
 sets. -/
-def ofMapBounded (f : α → β) h : LocallyBoundedMap α β :=
+def ofMapBounded (f : α → β) (h) : LocallyBoundedMap α β :=
   ⟨f, comap_cobounded_le_iff.2 h⟩
 
 @[simp]

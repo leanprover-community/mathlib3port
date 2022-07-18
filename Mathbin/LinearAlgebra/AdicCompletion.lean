@@ -81,7 +81,7 @@ In fact, this is only complete if the ideal is finitely generated. -/
 def adicCompletion : Submodule R (∀ n : ℕ, M ⧸ (I ^ n • ⊤ : Submodule R M)) where
   Carrier :=
     { f |
-      ∀ {m n} h : m ≤ n,
+      ∀ {m n} (h : m ≤ n),
         liftq _ (mkq _)
             (by
               rw [ker_mkq]

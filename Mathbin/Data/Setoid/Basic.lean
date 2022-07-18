@@ -67,7 +67,7 @@ theorem le_def {r s : Setoidₓ α} : r ≤ s ↔ ∀ {x y}, r.Rel x y → s.Rel
   Iff.rfl
 
 @[refl]
-theorem refl' (r : Setoidₓ α) x : r.Rel x x :=
+theorem refl' (r : Setoidₓ α) (x) : r.Rel x x :=
   r.2.1 x
 
 @[symm]
@@ -314,7 +314,7 @@ def map (r : Setoidₓ α) (f : α → β) : Setoidₓ β :=
 /-- Given a surjective function f whose kernel is contained in an equivalence relation r, the
     equivalence relation on f's codomain defined by x ≈ y ↔ the elements of f⁻¹(x) are related to
     the elements of f⁻¹(y) by r. -/
-def mapOfSurjective r (f : α → β) (h : ker f ≤ r) (hf : Surjective f) : Setoidₓ β :=
+def mapOfSurjective (r) (f : α → β) (h : ker f ≤ r) (hf : Surjective f) : Setoidₓ β :=
   ⟨fun x y => ∃ a b, f a = x ∧ f b = y ∧ r.Rel a b,
     ⟨fun x =>
       let ⟨y, hy⟩ := hf x

@@ -71,7 +71,7 @@ theorem BiTotal.rel_exists (h : BiTotal R) : ((R⇒Iff)⇒Iff) (fun p => ∃ i, 
     (h.right b).imp fun a Rab => (Hrel Rab).2 qb⟩
 
 theorem left_unique_of_rel_eq {eq' : β → β → Prop} (he : (R⇒R⇒Iff) Eq eq') : LeftUnique R :=
-  fun a b c ac : R a c bc : R b c => (he ac bc).mpr ((he bc bc).mp rfl)
+  fun a b c (ac : R a c) (bc : R b c) => (he ac bc).mpr ((he bc bc).mp rfl)
 
 end
 

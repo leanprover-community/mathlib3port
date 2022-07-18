@@ -55,11 +55,11 @@ namespace CompleteLattice
 
 variable (α)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (a b «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a b «expr ∈ » s)
 /-- A compactness property for a complete lattice is that any `sup`-closed non-empty subset
 contains its `Sup`. -/
 def IsSupClosedCompact : Prop :=
-  ∀ s : Set α h : s.Nonempty, (∀ a b _ : a ∈ s _ : b ∈ s, a⊔b ∈ s) → sup s ∈ s
+  ∀ (s : Set α) (h : s.Nonempty), (∀ (a b) (_ : a ∈ s) (_ : b ∈ s), a⊔b ∈ s) → sup s ∈ s
 
 /-- A compactness property for a complete lattice is that any subset has a finite subset with the
 same `Sup`. -/
@@ -72,7 +72,34 @@ above `k` has a finite subset with `Sup` above `k`.  Such an element is also cal
 def IsCompactElement {α : Type _} [CompleteLattice α] (k : α) :=
   ∀ s : Set α, k ≤ sup s → ∃ t : Finset α, ↑t ⊆ s ∧ k ≤ t.sup id
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+theorem is_compact_element_iff.{u} {α : Type u} [CompleteLattice α] (k : α) :
+    CompleteLattice.IsCompactElement k ↔ ∀ (ι : Type u) (s : ι → α), k ≤ supr s → ∃ t : Finset ι, k ≤ t.sup s := by
+  classical
+  constructor
+  · intro H ι s hs
+    obtain ⟨t, ht, ht'⟩ := H (Set.Range s) hs
+    have : ∀ x : t, ∃ i, s i = x := fun x => ht x.Prop
+    choose f hf using this
+    refine' ⟨finset.univ.image f, ht'.trans _⟩
+    · rw [Finset.sup_le_iff]
+      intro b hb
+      rw [← show s (f ⟨b, hb⟩) = id b from hf _]
+      exact Finset.le_sup (Finset.mem_image_of_mem f <| Finset.mem_univ ⟨b, hb⟩)
+      
+    
+  · intro H s hs
+    obtain ⟨t, ht⟩ :=
+      H s coe
+        (by
+          delta' supr
+          rwa [Subtype.range_coe])
+    refine'
+      ⟨t.image coe, by
+        simp , ht.trans _⟩
+    rw [Finset.sup_le_iff]
+    exact fun x hx => @Finset.le_sup _ _ _ _ _ id _ (Finset.mem_image_of_mem coe hx)
+    
+
 /-- An element `k` is compact if and only if any directed set with `Sup` above
 `k` already got above `k` at some point in the set. -/
 theorem is_compact_element_iff_le_of_directed_Sup_le (k : α) :
@@ -134,7 +161,6 @@ theorem IsCompactElement.directed_Sup_lt_of_lt {α : Type _} [CompleteLattice α
   obtain hxk := hbelow x hxs
   exact hxk.ne (hxk.le.antisymm hkx)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem finset_sup_compact_of_compact {α β : Type _} [CompleteLattice α] {f : β → α} (s : Finset β)
     (h : ∀, ∀ x ∈ s, ∀, IsCompactElement (f x)) : IsCompactElement (s.sup f) := by
   classical
@@ -150,7 +176,6 @@ theorem finset_sup_compact_of_compact {α β : Type _} [CompleteLattice α] {f :
   specialize h d hemp hdir (le_transₓ (Finset.le_sup hps) hsup)
   simpa only [← exists_prop]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem WellFounded.is_Sup_finite_compact (h : WellFounded ((· > ·) : α → α → Prop)) : IsSupFiniteCompact α := by
   intro s
   let p : Set α := { x | ∃ t : Finset α, ↑t ⊆ s ∧ t.sup id = x }
@@ -268,7 +293,6 @@ alias is_sup_closed_compact_iff_well_founded ↔ _ _root_.well_founded.is_sup_cl
 
 variable {α}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem WellFounded.finite_of_set_independent (h : WellFounded ((· > ·) : α → α → Prop)) {s : Set α}
     (hs : SetIndependent s) : s.Finite := by
   classical
@@ -297,7 +321,7 @@ theorem WellFounded.finite_of_set_independent (h : WellFounded ((· > ·) : α �
 
 theorem WellFounded.finite_of_independent (hwf : WellFounded ((· > ·) : α → α → Prop)) {ι : Type _} {t : ι → α}
     (ht : Independent t) (h_ne_bot : ∀ i, t i ≠ ⊥) : Finite ι := by
-  have := (well_founded.finite_of_set_independent hwf ht.set_independent_range).Finite
+  have := (well_founded.finite_of_set_independent hwf ht.set_independent_range).to_subtype
   exact Finite.of_injective_finite_range (ht.injective h_ne_bot)
 
 end CompleteLattice
@@ -312,7 +336,7 @@ section
 variable {α} [IsCompactlyGenerated α] {a b : α} {s : Set α}
 
 @[simp]
-theorem Sup_compact_le_eq b : sup { c : α | CompleteLattice.IsCompactElement c ∧ c ≤ b } = b := by
+theorem Sup_compact_le_eq (b) : sup { c : α | CompleteLattice.IsCompactElement c ∧ c ≤ b } = b := by
   rcases IsCompactlyGenerated.exists_Sup_eq b with ⟨s, hs, rfl⟩
   exact le_antisymmₓ (Sup_le fun c hc => hc.2) (Sup_le_Sup fun c cs => ⟨hs c cs, le_Sup cs⟩)
 
@@ -354,7 +378,6 @@ theorem inf_Sup_eq_supr_inf_sup_finset : a⊓sup s = ⨆ (t : Finset α) (H : �
       exact (le_inf hcinf.1 ht2).trans (le_supr₂ t ht1))
     (supr_le fun t => supr_le fun h => inf_le_inf_left _ ((Finset.sup_id_eq_Sup t).symm ▸ Sup_le_Sup h))
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem CompleteLattice.set_independent_iff_finite {s : Set α} :
     CompleteLattice.SetIndependent s ↔ ∀ t : Finset α, ↑t ⊆ s → CompleteLattice.SetIndependent (↑t : Set α) :=
   ⟨fun hs t ht => hs.mono ht, fun h a ha => by
@@ -483,9 +506,7 @@ theorem is_complemented_of_Sup_atoms_eq_top (h : sup { a : α | IsAtom a } = ⊤
   ⟨fun b => by
     obtain ⟨s, ⟨s_ind, b_inf_Sup_s, s_atoms⟩, s_max⟩ :=
       zorn_subset { s : Set α | CompleteLattice.SetIndependent s ∧ b⊓Sup s = ⊥ ∧ ∀, ∀ a ∈ s, ∀, IsAtom a } _
-    · refine' ⟨Sup s, le_of_eqₓ b_inf_Sup_s, _⟩
-      rw [← h, Sup_le_iff]
-      intro a ha
+    · refine' ⟨Sup s, le_of_eqₓ b_inf_Sup_s, h.symm.trans_le <| Sup_le_iff.2 fun a ha => _⟩
       rw [← inf_eq_left]
       refine' (ha.le_iff.mp inf_le_left).resolve_left fun con => ha.1 _
       rw [eq_bot_iff, ← con]

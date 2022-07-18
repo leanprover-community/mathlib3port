@@ -100,6 +100,19 @@ variable (K)
 theorem mk_eq_mk_iff (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) : mk K v hv = mk K w hw ↔ ∃ a : Kˣ, a • w = v :=
   Quotientₓ.eq'
 
+/-- Two nonzero vectors go to the same point in projective space if and only if one is
+a scalar multiple of the other. -/
+theorem mk_eq_mk_iff' (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) : mk K v hv = mk K w hw ↔ ∃ a : K, a • w = v := by
+  rw [mk_eq_mk_iff K v w hv hw]
+  constructor
+  · rintro ⟨a, ha⟩
+    exact ⟨a, ha⟩
+    
+  · rintro ⟨a, ha⟩
+    refine' ⟨Units.mk0 a fun c => hv.symm _, ha⟩
+    rwa [c, zero_smul] at ha
+    
+
 theorem exists_smul_eq_mk_rep (v : V) (hv : v ≠ 0) : ∃ a : Kˣ, a • v = (mk K v hv).rep :=
   show (projectivizationSetoid K V).Rel _ _ from Quotientₓ.mk_out' ⟨v, hv⟩
 
@@ -108,7 +121,7 @@ variable {K}
 /-- An induction principle for `projectivization`.
 Use as `induction v using projectivization.ind`. -/
 @[elab_as_eliminator]
-theorem ind {P : ℙ K V → Prop} (h : ∀ v : V h : v ≠ 0, P (mk K v h)) : ∀ p, P p :=
+theorem ind {P : ℙ K V → Prop} (h : ∀ (v : V) (h : v ≠ 0), P (mk K v h)) : ∀ p, P p :=
   Quotientₓ.ind' <| Subtype.rec <| h
 
 @[simp]

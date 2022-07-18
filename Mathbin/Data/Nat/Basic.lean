@@ -853,6 +853,26 @@ theorem diag_induction (P : ℕ → ℕ → Prop) (ha : ∀ a, P (a + 1) (a + 1)
     apply diag_induction a (b + 1)
     apply lt_of_le_of_ltₓ (Nat.le_succₓ _) h
 
+/-- Given `P : ℕ → ℕ → Sort*`, if for all `a b : ℕ` we can extend `P` from the rectangle
+strictly below `(a,b)` to `P a b`, then we have `P n m` for all `n m : ℕ`.
+Note that for non-`Prop` output it is preferable to use the equation compiler directly if possible,
+since this produces equation lemmas. -/
+@[elab_as_eliminator]
+def strongSubRecursion {P : ℕ → ℕ → Sort _} (H : ∀ a b, (∀ x y, x < a → y < b → P x y) → P a b) : ∀ n m : ℕ, P n m
+  | n, m => H n m fun x y hx hy => strong_sub_recursion x y
+
+/-- Given `P : ℕ → ℕ → Sort*`, if we have `P i 0` and `P 0 i` for all `i : ℕ`,
+and for any `x y : ℕ` we can extend `P` from `(x,y+1)` and `(x+1,y)` to `(x+1,y+1)`
+then we have `P n m` for all `n m : ℕ`.
+Note that for non-`Prop` output it is preferable to use the equation compiler directly if possible,
+since this produces equation lemmas. -/
+@[elab_as_eliminator]
+def pincerRecursion {P : ℕ → ℕ → Sort _} (Ha0 : ∀ a : ℕ, P a 0) (H0b : ∀ b : ℕ, P 0 b)
+    (H : ∀ x y : ℕ, P x y.succ → P x.succ y → P x.succ y.succ) : ∀ n m : ℕ, P n m
+  | a, 0 => Ha0 a
+  | 0, b => H0b b
+  | Nat.succ a, Nat.succ b => H _ _ (pincer_recursion _ _) (pincer_recursion _ _)
+
 /-- Recursion starting at a non-zero number: given a map `C k → C (k+1)` for each `k ≥ n`,
 there is a map from `C n` to each `C m`, `n ≤ m`. -/
 @[elab_as_eliminator]
@@ -1329,7 +1349,7 @@ theorem div_mul_div_comm {a b c d : ℕ} (hab : b ∣ a) (hcd : d ∣ c) : a / b
       cc
 
 @[simp]
-theorem div_div_div_eq_div : ∀ {a b c : ℕ} dvd : b ∣ a dvd2 : a ∣ c, c / (a / b) / b = c / a
+theorem div_div_div_eq_div : ∀ {a b c : ℕ} (dvd : b ∣ a) (dvd2 : a ∣ c), c / (a / b) / b = c / a
   | 0, _ => by
     simp
   | a + 1, 0 => fun _ dvd _ => by
@@ -1418,28 +1438,25 @@ theorem mod_div_self (m n : ℕ) : m % n / n = 0 := by
   · exact Nat.div_eq_zero (m.mod_lt n.succ_pos)
     
 
-/-- `m` is not divisible by `n` iff it is between `n * k` and `n * (k + 1)` for some `k`. -/
-theorem exists_lt_and_lt_iff_not_dvd (m : ℕ) {n : ℕ} (hn : 0 < n) : (∃ k, n * k < m ∧ m < n * (k + 1)) ↔ ¬n ∣ m := by
-  constructor
-  · rintro ⟨k, h1k, h2k⟩ ⟨l, rfl⟩
-    rw [mul_lt_mul_left hn] at h1k h2k
-    rw [lt_succ_iff, ← not_ltₓ] at h2k
-    exact h2k h1k
-    
-  · intro h
-    rw [dvd_iff_mod_eq_zero, ← Ne.def, ← pos_iff_ne_zero] at h
-    simp (config := { singlePass := true })only [mod_add_div m n]
-    refine' ⟨m / n, lt_add_of_pos_left _ h, _⟩
-    rw [add_commₓ _ 1, left_distrib, mul_oneₓ]
-    exact add_lt_add_right (mod_lt _ hn) _
-    
+/-- `n` is not divisible by `a` if it is between `a * k` and `a * (k + 1)` for some `k`. -/
+theorem not_dvd_of_between_consec_multiples {n a k : ℕ} (h1 : a * k < n) (h2 : n < a * (k + 1)) : ¬a ∣ n := by
+  rintro ⟨d, rfl⟩
+  exact Monotone.ne_of_lt_of_lt_nat (Covariant.monotone_of_const a) k h1 h2 d rfl
 
-/-- Two natural numbers are equal if and only if the have the same multiples. -/
+/-- `n` is not divisible by `a` iff it is between `a * k` and `a * (k + 1)` for some `k`. -/
+theorem not_dvd_iff_between_consec_multiples (n : ℕ) {a : ℕ} (ha : 0 < a) :
+    (∃ k : ℕ, a * k < n ∧ n < a * (k + 1)) ↔ ¬a ∣ n := by
+  refine'
+    ⟨fun ⟨k, hk1, hk2⟩ => not_dvd_of_between_consec_multiples hk1 hk2, fun han =>
+      ⟨n / a, ⟨lt_of_le_of_neₓ (mul_div_le n a) _, lt_mul_div_succ _ ha⟩⟩⟩
+  exact mt (Dvd.intro (n / a)) han
+
+/-- Two natural numbers are equal if and only if they have the same multiples. -/
 theorem dvd_right_iff_eq {m n : ℕ} : (∀ a : ℕ, m ∣ a ↔ n ∣ a) ↔ m = n :=
   ⟨fun h => dvd_antisymm ((h _).mpr dvd_rfl) ((h _).mp dvd_rfl), fun h n => by
     rw [h]⟩
 
-/-- Two natural numbers are equal if and only if the have the same divisors. -/
+/-- Two natural numbers are equal if and only if they have the same divisors. -/
 theorem dvd_left_iff_eq {m n : ℕ} : (∀ a : ℕ, a ∣ m ↔ a ∣ n) ↔ m = n :=
   ⟨fun h => dvd_antisymm ((h _).mp dvd_rfl) ((h _).mpr dvd_rfl), fun h n => by
     rw [h]⟩
@@ -1649,19 +1666,19 @@ theorem bodd_div2_eq (n : ℕ) : boddDiv2 n = (bodd n, div2 n) := by
   unfold bodd div2 <;> cases bodd_div2 n <;> rfl
 
 @[simp]
-theorem bodd_bit0 n : bodd (bit0 n) = ff :=
+theorem bodd_bit0 (n) : bodd (bit0 n) = ff :=
   bodd_bit false n
 
 @[simp]
-theorem bodd_bit1 n : bodd (bit1 n) = tt :=
+theorem bodd_bit1 (n) : bodd (bit1 n) = tt :=
   bodd_bit true n
 
 @[simp]
-theorem div2_bit0 n : div2 (bit0 n) = n :=
+theorem div2_bit0 (n) : div2 (bit0 n) = n :=
   div2_bit false n
 
 @[simp]
-theorem div2_bit1 n : div2 (bit1 n) = n :=
+theorem div2_bit1 (n) : div2 (bit1 n) = n :=
   div2_bit true n
 
 /-! ### `bit0` and `bit1` -/
@@ -1692,11 +1709,11 @@ theorem one_eq_bit1 {n : ℕ} : 1 = bit1 n ↔ n = 0 :=
   ⟨fun h => (@Nat.bit1_inj 0 n h).symm, fun h => by
     subst h⟩
 
-theorem bit_add : ∀ b : Bool n m : ℕ, bit b (n + m) = bit false n + bit b m
+theorem bit_add : ∀ (b : Bool) (n m : ℕ), bit b (n + m) = bit false n + bit b m
   | tt => bit1_add
   | ff => bit0_add
 
-theorem bit_add' : ∀ b : Bool n m : ℕ, bit b (n + m) = bit b n + bit false m
+theorem bit_add' : ∀ (b : Bool) (n m : ℕ), bit b (n + m) = bit b n + bit false m
   | tt => bit1_add'
   | ff => bit0_add
 
@@ -1706,26 +1723,26 @@ protected theorem bit0_le {n m : ℕ} (h : n ≤ m) : bit0 n ≤ bit0 m :=
 protected theorem bit1_le {n m : ℕ} (h : n ≤ m) : bit1 n ≤ bit1 m :=
   succ_le_succₓ (add_le_add h h)
 
-theorem bit_le : ∀ b : Bool {n m : ℕ}, n ≤ m → bit b n ≤ bit b m
+theorem bit_le : ∀ (b : Bool) {n m : ℕ}, n ≤ m → bit b n ≤ bit b m
   | tt, n, m, h => Nat.bit1_le h
   | ff, n, m, h => Nat.bit0_le h
 
-theorem bit_ne_zero b {n} (h : n ≠ 0) : bit b n ≠ 0 := by
+theorem bit_ne_zero (b) {n} (h : n ≠ 0) : bit b n ≠ 0 := by
   cases b <;> [exact Nat.bit0_ne_zero h, exact Nat.bit1_ne_zero _]
 
-theorem bit0_le_bit : ∀ b {m n : ℕ}, m ≤ n → bit0 m ≤ bit b n
+theorem bit0_le_bit : ∀ (b) {m n : ℕ}, m ≤ n → bit0 m ≤ bit b n
   | tt, m, n, h => le_of_ltₓ <| Nat.bit0_lt_bit1 h
   | ff, m, n, h => Nat.bit0_le h
 
-theorem bit_le_bit1 : ∀ b {m n : ℕ}, m ≤ n → bit b m ≤ bit1 n
+theorem bit_le_bit1 : ∀ (b) {m n : ℕ}, m ≤ n → bit b m ≤ bit1 n
   | ff, m, n, h => le_of_ltₓ <| Nat.bit0_lt_bit1 h
   | tt, m, n, h => Nat.bit1_le h
 
-theorem bit_lt_bit0 : ∀ b {n m : ℕ}, n < m → bit b n < bit0 m
+theorem bit_lt_bit0 : ∀ (b) {n m : ℕ}, n < m → bit b n < bit0 m
   | tt, n, m, h => Nat.bit1_lt_bit0 h
   | ff, n, m, h => Nat.bit0_lt h
 
-theorem bit_lt_bit a b {n m : ℕ} (h : n < m) : bit a n < bit b m :=
+theorem bit_lt_bit (a b) {n m : ℕ} (h : n < m) : bit a n < bit b m :=
   lt_of_lt_of_leₓ (bit_lt_bit0 _ h) (bit0_le_bit _ le_rfl)
 
 @[simp]
@@ -1842,7 +1859,8 @@ instance decidableForallFin {n : ℕ} (P : Finₓ n → Prop) [H : DecidablePred
   decidableOfIff (∀ k h, P ⟨k, h⟩) ⟨fun a ⟨k, h⟩ => a k h, fun a k h => a ⟨k, h⟩⟩
 
 instance decidableBallLe (n : ℕ) (P : ∀, ∀ k ≤ n, ∀, Prop) [H : ∀ n h, Decidable (P n h)] : Decidable (∀ n h, P n h) :=
-  decidableOfIff (∀ k h : k < succ n, P k (le_of_lt_succₓ h)) ⟨fun a k h => a k (lt_succ_of_leₓ h), fun a k h => a k _⟩
+  decidableOfIff (∀ (k) (h : k < succ n), P k (le_of_lt_succₓ h))
+    ⟨fun a k h => a k (lt_succ_of_leₓ h), fun a k h => a k _⟩
 
 instance decidableLoHi (lo hi : ℕ) (P : ℕ → Prop) [H : DecidablePred P] : Decidable (∀ x, lo ≤ x → x < hi → P x) :=
   decidableOfIff (∀, ∀ x < hi - lo, ∀, P (lo + x))

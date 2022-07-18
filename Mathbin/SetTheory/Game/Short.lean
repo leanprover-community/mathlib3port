@@ -29,7 +29,7 @@ namespace Pgame
 /-- A short game is a game with a finite set of moves at every turn. -/
 inductive Short : Pgame.{u} → Type (u + 1)
   | mk :
-    ∀ {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} sL : ∀ i : α, short (L i) sR : ∀ j : β, short (R j)
+    ∀ {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} (sL : ∀ i : α, short (L i)) (sR : ∀ j : β, short (R j))
       [Fintype α] [Fintype β], short ⟨α, β, L, R⟩
 
 instance subsingleton_short : ∀ x : Pgame, Subsingleton (Short x)
@@ -91,7 +91,7 @@ instance moveLeftShort (x : Pgame) [S : Short x] (i : x.LeftMoves) : Short (x.mo
 This would be a dangerous instance potentially introducing new metavariables
 in typeclass search, so we only make it an instance locally.
 -/
-def moveLeftShort' {xl xr} xL xR [S : Short (mk xl xr xL xR)] (i : xl) : Short (xL i) := by
+def moveLeftShort' {xl xr} (xL xR) [S : Short (mk xl xr xL xR)] (i : xl) : Short (xL i) := by
   cases' S with _ _ _ _ L _ _ _
   apply L
 
@@ -105,13 +105,13 @@ instance moveRightShort (x : Pgame) [S : Short x] (j : x.RightMoves) : Short (x.
 This would be a dangerous instance potentially introducing new metavariables
 in typeclass search, so we only make it an instance locally.
 -/
-def moveRightShort' {xl xr} xL xR [S : Short (mk xl xr xL xR)] (j : xr) : Short (xR j) := by
+def moveRightShort' {xl xr} (xL xR) [S : Short (mk xl xr xL xR)] (j : xr) : Short (xR j) := by
   cases' S with _ _ _ _ _ R _ _
   apply R
 
 attribute [local instance] move_right_short'
 
-theorem short_birthday : ∀ x : Pgame.{u} [Short x], x.birthday < Ordinal.omega
+theorem short_birthday : ∀ (x : Pgame.{u}) [Short x], x.birthday < Ordinal.omega
   | ⟨xl, xr, xL, xR⟩, hs => by
     have := hs
     rcases hs with ⟨_, _, _, _, sL, sR, hl, hr⟩
@@ -120,8 +120,8 @@ theorem short_birthday : ∀ x : Pgame.{u} [Short x], x.birthday < Ordinal.omega
     all_goals
       rw [← Cardinal.ord_aleph_0]
       refine'
-        Cardinal.lsub_lt_ord_of_is_regular.{u, u} Cardinal.is_regular_aleph_0 (Cardinal.lt_aleph_0_of_fintype _)
-          fun i => _
+        Cardinal.lsub_lt_ord_of_is_regular.{u, u} Cardinal.is_regular_aleph_0 (Cardinal.lt_aleph_0_of_finite _) fun i =>
+          _
       rw [Cardinal.ord_aleph_0]
       apply short_birthday _
     · exact move_left_short' xL xR i
@@ -147,20 +147,21 @@ instance short1 : Short 1 :=
 /-- Evidence that every `pgame` in a list is `short`. -/
 inductive ListShort : List Pgame.{u} → Type (u + 1)
   | nil : list_short []
-  | cons : ∀ hd : Pgame.{u} [Short hd] tl : List Pgame.{u} [list_short tl], list_short (hd :: tl)
+  | cons : ∀ (hd : Pgame.{u}) [Short hd] (tl : List Pgame.{u}) [list_short tl], list_short (hd :: tl)
 
 attribute [class] list_short
 
 attribute [instance] list_short.nil list_short.cons
 
-instance listShortNthLe : ∀ L : List Pgame.{u} [ListShort L] i : Finₓ (List.length L), Short (List.nthLe L i i.is_lt)
+instance listShortNthLe :
+    ∀ (L : List Pgame.{u}) [ListShort L] (i : Finₓ (List.length L)), Short (List.nthLe L i i.is_lt)
   | [], _, n => by
     exfalso
     rcases n with ⟨_, ⟨⟩⟩
   | hd :: tl, @list_short.cons _ S _ _, ⟨0, _⟩ => S
   | hd :: tl, @list_short.cons _ _ _ S, ⟨n + 1, h⟩ => @list_short_nth_le tl S ⟨n, (add_lt_add_iff_right 1).mp h⟩
 
-instance shortOfLists : ∀ L R : List Pgame [ListShort L] [ListShort R], Short (Pgame.ofLists L R)
+instance shortOfLists : ∀ (L R : List Pgame) [ListShort L] [ListShort R], Short (Pgame.ofLists L R)
   | L, R, _, _ => by
     skip
     apply short.mk
@@ -173,7 +174,7 @@ instance shortOfLists : ∀ L R : List Pgame [ListShort L] [ListShort R], Short 
 
 /-- If `x` is a short game, and `y` is a relabelling of `x`, then `y` is also short. -/
 -- where does the subtype.val come from?
-def shortOfRelabelling : ∀ {x y : Pgame.{u}} R : Relabelling x y S : Short x, Short y
+def shortOfRelabelling : ∀ {x y : Pgame.{u}} (R : Relabelling x y) (S : Short x), Short y
   | x, y, ⟨L, R, rL, rR⟩, S => by
     skip
     have := Fintype.ofEquiv _ L
@@ -185,12 +186,12 @@ def shortOfRelabelling : ∀ {x y : Pgame.{u}} R : Relabelling x y S : Short x, 
           apply short_of_relabelling (rL (L.symm i)) inferInstance)
         fun j => short_of_relabelling (rR j) inferInstance
 
-instance shortNeg : ∀ x : Pgame.{u} [Short x], Short (-x)
+instance shortNeg : ∀ (x : Pgame.{u}) [Short x], Short (-x)
   | mk xl xr xL xR, _ => by
     skip
     exact short.mk (fun i => short_neg _) fun i => short_neg _
 
-instance shortAdd : ∀ x y : Pgame.{u} [Short x] [Short y], Short (x + y)
+instance shortAdd : ∀ (x y : Pgame.{u}) [Short x] [Short y], Short (x + y)
   | mk xl xr xL xR, mk yl yr yL yR, _, _ => by
     skip
     apply short.mk
@@ -218,7 +219,7 @@ instance shortBit1 (x : Pgame.{u}) [Short x] : Short (bit1 x) := by
 We build `decidable (x ≤ y)` and `decidable (x ⧏ y)` in a simultaneous induction.
 Instances for the two projections separately are provided below.
 -/
-def leLfDecidable : ∀ x y : Pgame.{u} [Short x] [Short y], Decidable (x ≤ y) × Decidable (x ⧏ y)
+def leLfDecidable : ∀ (x y : Pgame.{u}) [Short x] [Short y], Decidable (x ≤ y) × Decidable (x ⧏ y)
   | mk xl xr xL xR, mk yl yr yL yR, shortx, shorty => by
     skip
     constructor

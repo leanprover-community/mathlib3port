@@ -159,6 +159,26 @@ theorem ennreal_mass {μ : FiniteMeasure α} : (μ.mass : ℝ≥0∞) = (μ : Me
 
 instance hasZero : Zero (FiniteMeasure α) where zero := ⟨0, MeasureTheory.is_finite_measure_zero⟩
 
+@[simp]
+theorem Zero.mass : (0 : FiniteMeasure α).mass = 0 := by
+  simp only [← mass]
+  rfl
+
+@[simp]
+theorem mass_zero_iff (μ : FiniteMeasure α) : μ.mass = 0 ↔ μ = 0 := by
+  refine'
+    ⟨fun μ_mass => _, fun hμ => by
+      simp only [← hμ, ← zero.mass]⟩
+  ext1
+  apply measure.measure_univ_eq_zero.mp
+  rwa [← ennreal_mass, Ennreal.coe_eq_zero]
+
+@[ext]
+theorem extensionality (μ ν : FiniteMeasure α) (h : ∀ s : Set α, MeasurableSet s → μ s = ν s) : μ = ν := by
+  ext1
+  ext1 s s_mble
+  simpa [← ennreal_coe_fn_eq_coe_fn_to_measure] using congr_arg (coe : ℝ≥0 → ℝ≥0∞) (h s s_mble)
+
 instance : Inhabited (FiniteMeasure α) :=
   ⟨0⟩
 
@@ -168,7 +188,7 @@ variable {R : Type _} [HasSmul R ℝ≥0 ] [HasSmul R ℝ≥0∞] [IsScalarTower
 
 instance :
     HasSmul R
-      (FiniteMeasure α) where smul := fun c : R μ => ⟨c • μ, MeasureTheory.is_finite_measure_smul_of_nnreal_tower⟩
+      (FiniteMeasure α) where smul := fun (c : R) μ => ⟨c • μ, MeasureTheory.is_finite_measure_smul_of_nnreal_tower⟩
 
 @[simp, norm_cast]
 theorem coe_zero : (coe : FiniteMeasure α → Measure α) 0 = 0 :=
@@ -199,7 +219,7 @@ theorem coe_fn_smul [IsScalarTower R ℝ≥0 ℝ≥0 ] (c : R) (μ : FiniteMeasu
   simp [Ennreal.coe_eq_coe, ← Ennreal.coe_smul]
 
 instance : AddCommMonoidₓ (FiniteMeasure α) :=
-  FiniteMeasure.coe_injective.AddCommMonoid coe coe_zero coe_add fun _ _ => coe_smul _ _
+  coe_injective.AddCommMonoid coe coe_zero coe_add fun _ _ => coe_smul _ _
 
 /-- Coercion is an `add_monoid_hom`. -/
 @[simps]
@@ -209,7 +229,12 @@ def coeAddMonoidHom : FiniteMeasure α →+ Measure α where
   map_add' := coe_add
 
 instance {α : Type _} [MeasurableSpace α] : Module ℝ≥0 (FiniteMeasure α) :=
-  Function.Injective.module _ coeAddMonoidHom FiniteMeasure.coe_injective coe_smul
+  Function.Injective.module _ coeAddMonoidHom coe_injective coe_smul
+
+@[simp]
+theorem coe_fn_smul_apply [IsScalarTower R ℝ≥0 ℝ≥0 ] (c : R) (μ : FiniteMeasure α) (s : Set α) : (c • μ) s = c • μ s :=
+  by
+  simp only [← coe_fn_smul, ← Pi.smul_apply]
 
 variable [TopologicalSpace α]
 
@@ -249,6 +274,25 @@ theorem test_against_nn_mono (μ : FiniteMeasure α) {f g : α →ᵇ ℝ≥0 } 
   simp only [Ennreal.coe_le_coe, ← test_against_nn_coe_eq]
   apply lintegral_mono
   exact fun x => Ennreal.coe_mono (f_le_g x)
+
+@[simp]
+theorem Zero.test_against_nn_apply (f : α →ᵇ ℝ≥0 ) : (0 : FiniteMeasure α).testAgainstNn f = 0 := by
+  simp only [← test_against_nn, ← coe_zero, ← lintegral_zero_measure, ← Ennreal.zero_to_nnreal]
+
+theorem Zero.test_against_nn : (0 : FiniteMeasure α).testAgainstNn = 0 := by
+  funext
+  simp only [← zero.test_against_nn_apply, ← Pi.zero_apply]
+
+@[simp]
+theorem smul_test_against_nn_apply (c : ℝ≥0 ) (μ : FiniteMeasure α) (f : α →ᵇ ℝ≥0 ) :
+    (c • μ).testAgainstNn f = c • μ.testAgainstNn f := by
+  simp only [← test_against_nn, ← coe_smul, ← smul_eq_mul ℝ≥0 , Ennreal.smul_to_nnreal]
+  congr
+  rw
+    [show c • (μ : Measureₓ α) = (c : ℝ≥0∞) • (μ : Measureₓ α) by
+      rfl,
+    lintegral_smul_measure]
+  rfl
 
 variable [OpensMeasurableSpace α]
 
@@ -327,7 +371,7 @@ topology on `weak_dual ℝ≥0 (α →ᵇ ℝ≥0)` via the function `finite_mea
 instance : TopologicalSpace (FiniteMeasure α) :=
   TopologicalSpace.induced toWeakDualBcnn inferInstance
 
-theorem to_weak_dual_bcnn_continuous : Continuous (@FiniteMeasure.toWeakDualBcnn α _ _ _) :=
+theorem to_weak_dual_bcnn_continuous : Continuous (@toWeakDualBcnn α _ _ _) :=
   continuous_induced_dom
 
 /- Integration of (nonnegative bounded continuous) test functions against finite Borel measures
@@ -486,7 +530,7 @@ theorem lintegral_lt_top_of_bounded_continuous_to_real {α : Type _} [Measurable
 theorem tendsto_of_forall_integral_tendsto {γ : Type _} {F : Filter γ} {μs : γ → FiniteMeasure α} {μ : FiniteMeasure α}
     (h : ∀ f : α →ᵇ ℝ, Tendsto (fun i => ∫ x, f x ∂(μs i : Measure α)) F (𝓝 (∫ x, f x ∂(μ : Measure α)))) :
     Tendsto μs F (𝓝 μ) := by
-  apply (@finite_measure.tendsto_iff_forall_lintegral_tendsto α _ _ _ γ F μs μ).mpr
+  apply (@tendsto_iff_forall_lintegral_tendsto α _ _ _ γ F μs μ).mpr
   intro f
   have key :=
     @Ennreal.tendsto_to_real_iff _ F _
@@ -524,7 +568,7 @@ theorem tendsto_iff_forall_integral_tendsto {γ : Type _} {F : Filter γ} {μs :
       ∀ f : α →ᵇ ℝ, Tendsto (fun i => ∫ x, f x ∂(μs i : Measure α)) F (𝓝 (∫ x, f x ∂(μ : Measure α))) :=
   by
   refine' ⟨_, tendsto_of_forall_integral_tendsto⟩
-  rw [finite_measure.tendsto_iff_forall_lintegral_tendsto]
+  rw [tendsto_iff_forall_lintegral_tendsto]
   intro h f
   simp_rw [BoundedContinuousFunction.integral_eq_integral_nnreal_part_sub]
   set f_pos := f.nnreal_part with def_f_pos
@@ -620,6 +664,12 @@ theorem ennreal_coe_fn_eq_coe_fn_to_measure (ν : ProbabilityMeasure α) (s : Se
   rw [← coe_fn_comp_to_finite_measure_eq_coe_fn, finite_measure.ennreal_coe_fn_eq_coe_fn_to_measure]
   rfl
 
+@[ext]
+theorem extensionality (μ ν : ProbabilityMeasure α) (h : ∀ s : Set α, MeasurableSet s → μ s = ν s) : μ = ν := by
+  ext1
+  ext1 s s_mble
+  simpa [← ennreal_coe_fn_eq_coe_fn_to_measure] using congr_arg (coe : ℝ≥0 → ℝ≥0∞) (h s s_mble)
+
 @[simp]
 theorem mass_to_finite_measure (μ : ProbabilityMeasure α) : μ.toFiniteMeasure.mass = 1 :=
   μ.coe_fn_univ
@@ -673,7 +723,7 @@ theorem to_finite_measure_embedding (α : Type _) [MeasurableSpace α] [Topologi
 
 theorem tendsto_nhds_iff_to_finite_measures_tendsto_nhds {δ : Type _} (F : Filter δ) {μs : δ → ProbabilityMeasure α}
     {μ₀ : ProbabilityMeasure α} : Tendsto μs F (𝓝 μ₀) ↔ Tendsto (to_finite_measure ∘ μs) F (𝓝 μ₀.toFiniteMeasure) :=
-  Embedding.tendsto_nhds_iff (ProbabilityMeasure.to_finite_measure_embedding α)
+  Embedding.tendsto_nhds_iff (to_finite_measure_embedding α)
 
 /-- A characterization of weak convergence of probability measures by the condition that the
 integrals of every continuous bounded nonnegative function converge to the integral of the function

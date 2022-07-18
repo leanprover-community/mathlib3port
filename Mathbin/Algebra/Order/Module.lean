@@ -164,7 +164,8 @@ variable {M} [OrderedAddCommGroup N] [Module k N] [OrderedSmul k N]
 
 -- TODO: solve `prod.has_lt` and `prod.has_le` misalignment issue
 instance Prod.ordered_smul : OrderedSmul k (M × N) :=
-  OrderedSmul.mk' fun v u : M × N c : k h hc => ⟨smul_le_smul_of_nonneg h.1.1 hc.le, smul_le_smul_of_nonneg h.1.2 hc.le⟩
+  OrderedSmul.mk' fun (v u : M × N) (c : k) h hc =>
+    ⟨smul_le_smul_of_nonneg h.1.1 hc.le, smul_le_smul_of_nonneg h.1.2 hc.le⟩
 
 instance Pi.smulWithZero'' {ι : Type _} {M : ι → Type _} [∀ i, OrderedAddCommGroup (M i)]
     [∀ i, MulActionWithZero k (M i)] : SmulWithZero k (∀ i : ι, M i) := by

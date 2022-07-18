@@ -48,14 +48,14 @@ variable (C : Type _) [Category C]
 /-- A category is idempotent complete iff all idempotent endomorphisms `p`
 split as a composition `p = e ≫ i` with `i ≫ e = 𝟙 _` -/
 class IsIdempotentComplete : Prop where
-  idempotents_split : ∀ X : C p : X ⟶ X, p ≫ p = p → ∃ (Y : C)(i : Y ⟶ X)(e : X ⟶ Y), i ≫ e = 𝟙 Y ∧ e ≫ i = p
+  idempotents_split : ∀ (X : C) (p : X ⟶ X), p ≫ p = p → ∃ (Y : C)(i : Y ⟶ X)(e : X ⟶ Y), i ≫ e = 𝟙 Y ∧ e ≫ i = p
 
 namespace Idempotents
 
 /-- A category is idempotent complete iff for all idempotent endomorphisms,
 the equalizer of the identity and this idempotent exists. -/
 theorem is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent :
-    IsIdempotentComplete C ↔ ∀ X : C p : X ⟶ X, p ≫ p = p → HasEqualizer (𝟙 X) p := by
+    IsIdempotentComplete C ↔ ∀ (X : C) (p : X ⟶ X), p ≫ p = p → HasEqualizer (𝟙 X) p := by
   constructor
   · intro
     intro X p hp
@@ -111,7 +111,7 @@ variable (C)
 
 /-- A preadditive category is pseudoabelian iff all idempotent endomorphisms have a kernel. -/
 theorem is_idempotent_complete_iff_idempotents_have_kernels [Preadditive C] :
-    IsIdempotentComplete C ↔ ∀ X : C p : X ⟶ X, p ≫ p = p → HasKernel p := by
+    IsIdempotentComplete C ↔ ∀ (X : C) (p : X ⟶ X), p ≫ p = p → HasKernel p := by
   rw [is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent]
   constructor
   · intro h X p hp

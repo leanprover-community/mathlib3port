@@ -49,8 +49,8 @@ class Qpf (F : Type u → Type u) [Functor F] where
   p : Pfunctor.{u}
   abs : ∀ {α}, P.Obj α → F α
   repr : ∀ {α}, F α → P.Obj α
-  abs_repr : ∀ {α} x : F α, abs (reprₓ x) = x
-  abs_map : ∀ {α β} f : α → β p : P.Obj α, abs (f <$> p) = f <$> abs p
+  abs_repr : ∀ {α} (x : F α), abs (reprₓ x) = x
+  abs_map : ∀ {α β} (f : α → β) (p : P.Obj α), abs (f <$> p) = f <$> abs p
 
 namespace Qpf
 
@@ -428,7 +428,7 @@ private theorem cofix.bisim_aux (r : Cofix F → Cofix F → Prop) (h' : ∀ x, 
 
 theorem Cofix.bisim_rel (r : Cofix F → Cofix F → Prop)
     (h : ∀ x y, r x y → Quot.mk r <$> Cofix.dest x = Quot.mk r <$> Cofix.dest y) : ∀ x y, r x y → x = y := by
-  let r' x y := x = y ∨ r x y
+  let r' (x y) := x = y ∨ r x y
   intro x y rxy
   apply cofix.bisim_aux r'
   · intro x
@@ -555,8 +555,8 @@ variable {FG_repr : ∀ {α}, G α → F α}
 functor G α, `G` is a qpf. We can consider `G` a quotient on `F` where
 elements `x y : F α` are in the same equivalence class if
 `FG_abs x = FG_abs y`  -/
-def quotientQpf (FG_abs_repr : ∀ {α} x : G α, FG_abs (FG_repr x) = x)
-    (FG_abs_map : ∀ {α β} f : α → β x : F α, FG_abs (f <$> x) = f <$> FG_abs x) : Qpf G where
+def quotientQpf (FG_abs_repr : ∀ {α} (x : G α), FG_abs (FG_repr x) = x)
+    (FG_abs_map : ∀ {α β} (f : α → β) (x : F α), FG_abs (f <$> x) = f <$> FG_abs x) : Qpf G where
   p := q.p
   abs := fun {α} p => FG_abs (abs p)
   repr := fun {α} x => repr (FG_repr x)
@@ -639,15 +639,16 @@ variable (q)
 /-- A qpf is said to be uniform if every polynomial functor
 representing a single value all have the same range. -/
 def IsUniform : Prop :=
-  ∀ ⦃α : Type u⦄ a a' : q.p.A f : q.p.B a → α f' : q.p.B a' → α, abs ⟨a, f⟩ = abs ⟨a', f'⟩ → f '' univ = f' '' univ
+  ∀ ⦃α : Type u⦄ (a a' : q.p.A) (f : q.p.B a → α) (f' : q.p.B a' → α),
+    abs ⟨a, f⟩ = abs ⟨a', f'⟩ → f '' univ = f' '' univ
 
 /-- does `abs` preserve `liftp`? -/
 def LiftpPreservation : Prop :=
-  ∀ ⦃α⦄ p : α → Prop x : q.p.Obj α, Liftp p (abs x) ↔ Liftp p x
+  ∀ ⦃α⦄ (p : α → Prop) (x : q.p.Obj α), Liftp p (abs x) ↔ Liftp p x
 
 /-- does `abs` preserve `supp`? -/
 def SuppPreservation : Prop :=
-  ∀ ⦃α⦄ x : q.p.Obj α, Supp (abs x) = Supp x
+  ∀ ⦃α⦄ (x : q.p.Obj α), Supp (abs x) = Supp x
 
 variable (q)
 

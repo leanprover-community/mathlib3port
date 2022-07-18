@@ -126,8 +126,8 @@ unsafe def simps_str_attr : user_attribute Unit (List Name × List projection_da
   descr := "An attribute specifying the projection of the given structure."
   parser := failed
 
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
 /-- The `@[notation_class]` attribute specifies that this is a notation class,
   and this notation should be used instead of projections by @[simps].
   * The first argument `tt` for notation classes and `ff` for classes applied to the structure,
@@ -142,19 +142,19 @@ unsafe def notation_class_attr : user_attribute Unit (Bool × Option Name) where
   parser := Prod.mk <$> Option.isNone <$> «expr ?» (tk "*") <*> «expr ?» ident
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1174:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 attribute
-  [«./././Mathport/Syntax/Translate/Basic.lean:1174:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg»]
+  [«./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg»]
   Zero One Add Mul Inv Neg Sub Div Dvd Mod LE LT Append HasAndthen HasUnion HasInter HasSdiff HasEquivₓ HasSubset HasSsubset HasEmptyc HasInsert HasSingleton HasSep HasMem Pow
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1174:19: in notation_class: ./././Mathport/Syntax/Translate/Basic.lean:308:22: unsupported: too many args
+-- ./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args
 attribute
-  [«./././Mathport/Syntax/Translate/Basic.lean:1174:19: in notation_class: ./././Mathport/Syntax/Translate/Basic.lean:308:22: unsupported: too many args»]
+  [«./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args»]
   CoeSort
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1174:19: in notation_class: ./././Mathport/Syntax/Translate/Basic.lean:308:22: unsupported: too many args
+-- ./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args
 attribute
-  [«./././Mathport/Syntax/Translate/Basic.lean:1174:19: in notation_class: ./././Mathport/Syntax/Translate/Basic.lean:308:22: unsupported: too many args»]
+  [«./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args»]
   CoeFun
 
 /-- Returns the projection information of a structure. -/
@@ -176,16 +176,16 @@ unsafe def projections_info (l : List projection_data) (pref : Stringₓ) (str :
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Auxiliary function of `get_composite_of_projections`. -/
 unsafe def get_composite_of_projections_aux :
-    ∀ str : Name proj : Stringₓ x : expr pos : List ℕ args : List expr, tactic (expr × List ℕ)
+    ∀ (str : Name) (proj : Stringₓ) (x : expr) (pos : List ℕ) (args : List expr), tactic (expr × List ℕ)
   | str, proj, x, Pos, args => do
     let e ← get_env
     let projs ← e.structure_fields str
     let proj_info := projs.mapWithIndex fun n p => (fun x => (x, n, p)) <$> proj.getRest ("_" ++ p.last)
     when (proj_info id = []) <|
-        "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
     let (proj_rest, index, proj_nm) ← return (proj_info.filterMap id).ilast
     let str_d ← e.get str
     let proj_e : expr := const (str ++ proj_nm) str_d.univ_levels
@@ -217,10 +217,10 @@ unsafe def get_composite_of_projections (str : Name) (proj : Stringₓ) : tactic
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Get the projections used by `simps` associated to a given structure `str`.
 
   The returned information is also stored in a parameter of the attribute `@[_simps_str]`, which
@@ -347,9 +347,9 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_ex
                 let raw_expr_type ← infer_type raw_expr
                 let b ← succeeds (is_def_eq custom_proj_type raw_expr_type)
                 if b then
-                    "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+                    "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
                   else
-                    "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+                    "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
             return (custom_proj, nrs)
       let raw_exprs := raw_exprs_and_nrs Prod.fst
       let-- Check for other coercions and type-class arguments to use as projections instead.
@@ -359,7 +359,7 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_ex
       let automatic_projs ← attribute.get_instances `notation_class
       let raw_exprs ←
         automatic_projs
-            (fun raw_exprs : List expr class_nm =>
+            (fun (raw_exprs : List expr) class_nm =>
               (/- For this class, find the projection. `raw_expr` is the projection found applied to `args`,
                         and `lambda_raw_expr` has the arguments `args` abstracted. -/
                 -- Note: `expr.bind_lambda` doesn't give the correct type
@@ -413,7 +413,7 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_ex
               {← (raw_univs, projs)}")
       return (raw_univs, projs)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
 /-- Parse a rule for `initialize_simps_projections`. It is either `<name>→<name>` or `-<name>`,
   possibly following by `as_prefix`.-/
 unsafe def simps_parse_rule : parser ProjectionRule :=
@@ -439,9 +439,9 @@ composite of multiple projections).
 -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr *»
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr *»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
 /-- This command specifies custom names and custom projections for the simp attribute `simps_attr`.
 * You can specify custom names by writing e.g.
   `initialize_simps_projections equiv (to_fun → apply, inv_fun → symm_apply)`.
@@ -676,29 +676,29 @@ unsafe def simps_add_projection (nm : Name) (type lhs rhs : expr) (args : List e
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Derive lemmas specifying the projections of the declaration.
   If `todo` is non-empty, it will generate exactly the names in `todo`.
   `to_apply` is non-empty after a custom projection that is a composition of multiple projections
   was just used. In that case we need to apply these projections before we continue changing lhs. -/
 unsafe def simps_add_projections :
-    ∀ e : environment nm : Name type lhs rhs : expr args : List expr univs : List Name must_be_str : Bool cfg : SimpsCfg
-      todo : List Stringₓ to_apply : List ℕ, tactic Unit
+    ∀ (e : environment) (nm : Name) (type lhs rhs : expr) (args : List expr) (univs : List Name) (must_be_str : Bool)
+      (cfg : SimpsCfg) (todo : List Stringₓ) (to_apply : List ℕ), tactic Unit
   | e, nm, type, lhs, rhs, args, univs, must_be_str, cfg, todo, to_apply => do
     -- we don't want to unfold non-reducible definitions (like `set`) to apply more arguments
         when_tracing
@@ -781,7 +781,7 @@ unsafe def simps_add_projections :
                     let x := (todo fun x => projs fun proj => ¬("_" ++ proj).isPrefixOf x).iget
                     let simp_lemma := nm x
                     let needed_proj := (x '_').tail.head
-                    "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+                    "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
                 proj_info fun proj_nr ⟨new_rhs, proj, proj_expr, proj_nrs, is_default, is_prefix⟩ => do
                     let new_type ← infer_type new_rhs
                     let new_todo := todo fun x => x ("_" ++ proj)
@@ -810,19 +810,19 @@ unsafe def simps_add_projections :
                   { cfg with rhsMd := semireducible, simpRhs := tt } todo to_apply
             else do
               when (to_apply ≠ []) <|
-                  "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+                  "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
               when must_be_str <|
-                  "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+                  "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
               when (todo_next ≠ []) <|
-                  "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+                  "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
               if cfg then simps_add_projection nm tgt lhs_ap rhs_ap new_args univs cfg
                 else simps_add_projection nm type lhs rhs args univs cfg
       else do
         when must_be_str <|
-            "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+            "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
         when (todo_next ≠ [] ∧ str ∉ cfg) <|
             let first_todo := todo_next
-            "./././Mathport/Syntax/Translate/Basic.lean:1108:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+            "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
         if cfg then simps_add_projection nm tgt lhs_ap rhs_ap new_args univs cfg
           else simps_add_projection nm type lhs rhs args univs cfg
 
@@ -847,8 +847,8 @@ unsafe def simps_tac (nm : Name) (cfg : SimpsCfg := {  }) (todo : List Stringₓ
       else return cfg
   simps_add_projections e nm d lhs d [] d tt cfg todo []
 
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
 /-- The parser for the `@[simps]` attribute. -/
 unsafe def simps_parser : parser (Bool × List Stringₓ × SimpsCfg) := do
   -- note: we don't check whether the user has written a nonsense namespace in an argument.

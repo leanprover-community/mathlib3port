@@ -73,14 +73,14 @@ action of a Type on another one and a relation on the acted-upon Type.
 
 See the `covariant_class` doc-string for its meaning. -/
 def Covariant : Prop :=
-  ∀ m {n₁ n₂}, r n₁ n₂ → r (μ m n₁) (μ m n₂)
+  ∀ (m) {n₁ n₂}, r n₁ n₂ → r (μ m n₁) (μ m n₂)
 
 /-- `contravariant` is useful to formulate succintly statements about the interactions between an
 action of a Type on another one and a relation on the acted-upon Type.
 
 See the `contravariant_class` doc-string for its meaning. -/
 def Contravariant : Prop :=
-  ∀ m {n₁ n₂}, r (μ m n₁) (μ m n₂) → r n₁ n₂
+  ∀ (m) {n₁ n₂}, r (μ m n₁) (μ m n₂) → r n₁ n₂
 
 /-- Given an action `μ` of a Type `M` on a Type `N` and a relation `r` on `N`, informally, the
 `covariant_class` says that "the action `μ` preserves the relation `r`."

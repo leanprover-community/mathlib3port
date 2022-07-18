@@ -51,7 +51,6 @@ end Barycentric
 
 open Set
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given a finite-dimensional normed real vector space, the interior of the convex hull of an
 affine basis is the set of points whose barycentric coordinates are strictly positive with respect
 to this basis.
@@ -90,8 +89,7 @@ include V
 
 open AffineMap
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y «expr ∉ » s)
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y «expr ∉ » s)
 /-- Given a set `s` of affine-independent points belonging to an open set `u`, we may extend `s` to
 an affine basis, all of whose elements belong to `u`. -/
 theorem exists_subset_affine_independent_span_eq_top_of_open {s u : Set P} (hu : IsOpen u) (hsu : s ⊆ u)
@@ -113,7 +111,7 @@ theorem exists_subset_affine_independent_span_eq_top_of_open {s u : Set P} (hu :
     calc abs (ε / 2 / ∥y -ᵥ q∥) * ∥y -ᵥ q∥ = ε / 2 / ∥y -ᵥ q∥ * ∥y -ᵥ q∥ := by
         rw [abs_div, abs_of_pos (half_pos hε), abs_of_pos hyq]_ = ε / 2 := div_mul_cancel _ (ne_of_gtₓ hyq)_ < ε :=
         half_lt_self hε
-  have hεyq : ∀ y _ : y ∉ s, ε / 2 / dist y q ≠ 0 := by
+  have hεyq : ∀ (y) (_ : y ∉ s), ε / 2 / dist y q ≠ 0 := by
     simp only [← Ne.def, ← div_eq_zero_iff, ← or_falseₓ, ← dist_eq_zero, ← bit0_eq_zero, ← one_ne_zero, ←
       not_or_distrib, ← ne_of_gtₓ hε, ← true_andₓ, ← not_false_iff]
     exact fun y h1 h2 => h1 (h2.symm ▸ hq)

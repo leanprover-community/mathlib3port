@@ -193,11 +193,11 @@ This structure won't typically be used anywhere else.
 structure CoreHomEquiv (F : C ⥤ D) (G : D ⥤ C) where
   homEquiv : ∀ X Y, (F.obj X ⟶ Y) ≃ (X ⟶ G.obj Y)
   hom_equiv_naturality_left_symm' :
-    ∀ {X' X Y} f : X' ⟶ X g : X ⟶ G.obj Y, (hom_equiv X' Y).symm (f ≫ g) = F.map f ≫ (hom_equiv X Y).symm g := by
+    ∀ {X' X Y} (f : X' ⟶ X) (g : X ⟶ G.obj Y), (hom_equiv X' Y).symm (f ≫ g) = F.map f ≫ (hom_equiv X Y).symm g := by
     run_tac
       obviously
   hom_equiv_naturality_right' :
-    ∀ {X Y Y'} f : F.obj X ⟶ Y g : Y ⟶ Y', (hom_equiv X Y') (f ≫ g) = (hom_equiv X Y) f ≫ G.map g := by
+    ∀ {X Y Y'} (f : F.obj X ⟶ Y) (g : Y ⟶ Y'), (hom_equiv X Y') (f ≫ g) = (hom_equiv X Y) f ≫ G.map g := by
     run_tac
       obviously
 
@@ -351,7 +351,7 @@ def leftAdjointOfNatIso {F G : C ⥤ D} (h : F ≅ G) [r : IsLeftAdjoint F] : Is
 
 section
 
-variable {E : Type u₃} [ℰ : Category.{v₃} E] (H : D ⥤ E) (I : E ⥤ D)
+variable {E : Type u₃} [ℰ : Category.{v₃} E] {H : D ⥤ E} {I : E ⥤ D}
 
 /-- Composition of adjunctions.
 
@@ -366,13 +366,13 @@ def comp (adj₁ : F ⊣ G) (adj₂ : H ⊣ I) : F ⋙ H ⊣ I ⋙ G where
 instance leftAdjointOfComp {E : Type u₃} [ℰ : Category.{v₃} E] (F : C ⥤ D) (G : D ⥤ E) [Fl : IsLeftAdjoint F]
     [Gl : IsLeftAdjoint G] : IsLeftAdjoint (F ⋙ G) where
   right := Gl.right ⋙ Fl.right
-  adj := comp _ _ Fl.adj Gl.adj
+  adj := Fl.adj.comp Gl.adj
 
 /-- If `F` and `G` are right adjoints then `F ⋙ G` is a right adjoint too. -/
 instance rightAdjointOfComp {E : Type u₃} [ℰ : Category.{v₃} E] {F : C ⥤ D} {G : D ⥤ E} [Fr : IsRightAdjoint F]
     [Gr : IsRightAdjoint G] : IsRightAdjoint (F ⋙ G) where
   left := Gr.left ⋙ Fr.left
-  adj := comp _ _ Gr.adj Fr.adj
+  adj := Gr.adj.comp Fr.adj
 
 end
 
@@ -391,7 +391,7 @@ variable (he : ∀ X Y Y' g h, e X Y' (h ≫ g) = e X Y h ≫ G.map g)
 
 include he
 
-private theorem he' {X Y Y'} f g : (e X Y').symm (f ≫ G.map g) = (e X Y).symm f ≫ g := by
+private theorem he' {X Y Y'} (f g) : (e X Y').symm (f ≫ G.map g) = (e X Y).symm f ≫ g := by
   intros <;> rw [Equivₓ.symm_apply_eq, he] <;> simp
 
 /-- Construct a left adjoint functor to `G`, given the functor's value on objects `F_obj` and
@@ -431,7 +431,7 @@ variable (he : ∀ X' X Y f g, e X' Y (F.map f ≫ g) = f ≫ e X Y g)
 
 include he
 
-private theorem he' {X' X Y} f g : F.map f ≫ (e X Y).symm g = (e X' Y).symm (f ≫ g) := by
+private theorem he' {X' X Y} (f g) : F.map f ≫ (e X Y).symm g = (e X' Y).symm (f ≫ g) := by
   intros <;> rw [Equivₓ.eq_symm_apply, he] <;> simp
 
 /-- Construct a right adjoint functor to `F`, given the functor's value on objects `G_obj` and

@@ -3,6 +3,8 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
+import Mathbin.CategoryTheory.Balanced
+import Mathbin.CategoryTheory.Functor.EpiMono
 import Mathbin.CategoryTheory.Functor.FullyFaithful
 
 /-!
@@ -16,7 +18,7 @@ Any fully faithful functor reflects isomorphisms.
 -/
 
 
-open CategoryTheory
+open CategoryTheory CategoryTheory.Functor
 
 namespace CategoryTheory
 
@@ -35,7 +37,7 @@ morphism `f : A ⟶ B`, if `F.map f` is an isomorphism then `f` is as well.
 Note that we do not assume or require that `F` is faithful.
 -/
 class ReflectsIsomorphisms (F : C ⥤ D) : Prop where
-  reflects : ∀ {A B : C} f : A ⟶ B [IsIso (F.map f)], IsIso f
+  reflects : ∀ {A B : C} (f : A ⟶ B) [IsIso (F.map f)], IsIso f
 
 /-- If `F` reflects isos and `F.map f` is an iso, then `f` is an iso. -/
 theorem is_iso_of_reflects_iso {A B : C} (f : A ⟶ B) (F : C ⥤ D) [IsIso (F.map f)] [ReflectsIsomorphisms F] : IsIso f :=
@@ -52,10 +54,18 @@ instance (priority := 100) of_full_and_faithful (F : C ⥤ D) [Full F] [Faithful
               simp )⟩⟩⟩
 
 instance (F : C ⥤ D) (G : D ⥤ E) [ReflectsIsomorphisms F] [ReflectsIsomorphisms G] : ReflectsIsomorphisms (F ⋙ G) :=
-  ⟨fun _ _ f hf : IsIso (G.map _) => by
+  ⟨fun _ _ f (hf : IsIso (G.map _)) => by
     skip
     have := is_iso_of_reflects_iso (F.map f) G
     exact is_iso_of_reflects_iso f F⟩
+
+instance (priority := 100) reflects_isomorphisms_of_reflects_monomorphisms_of_reflects_epimorphisms [Balanced C]
+    (F : C ⥤ D) [ReflectsMonomorphisms F] [ReflectsEpimorphisms F] :
+    ReflectsIsomorphisms F where reflects := fun A B f hf => by
+    skip
+    have : epi f := epi_of_epi_map F inferInstance
+    have : mono f := mono_of_mono_map F inferInstance
+    exact is_iso_of_mono_of_epi f
 
 end ReflectsIso
 

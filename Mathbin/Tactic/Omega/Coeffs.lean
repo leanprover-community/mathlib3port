@@ -169,13 +169,14 @@ theorem val_sub {is js : List Int} : val v (sub is js) = val v is - val v js := 
 /-- `val_except k v as` is the value (under valuation `v`) of the term
     obtained taking the term represented by `(0, as)` and dropping the
     subterm that includes the `k`th variable. -/
-def valExcept (k : Nat) (v : Nat → Int) as :=
+def valExcept (k : Nat) (v : Nat → Int) (as) :=
   valBetween v as 0 k + valBetween v as (k + 1) (as.length - (k + 1))
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ≠ » k)
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ≠ » k)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » k)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » k)
 theorem val_except_eq_val_except {k : Nat} {is js : List Int} {v w : Nat → Int} :
-    (∀ x _ : x ≠ k, v x = w x) → (∀ x _ : x ≠ k, get x is = get x js) → valExcept k v is = valExcept k w js := by
+    (∀ (x) (_ : x ≠ k), v x = w x) → (∀ (x) (_ : x ≠ k), get x is = get x js) → valExcept k v is = valExcept k w js :=
+  by
   intro h1 h2
   unfold val_except
   apply fun_mono_2

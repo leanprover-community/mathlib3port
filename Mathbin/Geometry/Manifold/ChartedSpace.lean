@@ -180,7 +180,7 @@ structure StructureGroupoid (H : Type u) [TopologicalSpace H] where
 variable [TopologicalSpace H]
 
 instance : HasMem (LocalHomeomorph H H) (StructureGroupoid H) :=
-  ⟨fun e : LocalHomeomorph H H G : StructureGroupoid H => e ∈ G.Members⟩
+  ⟨fun (e : LocalHomeomorph H H) (G : StructureGroupoid H) => e ∈ G.Members⟩
 
 theorem StructureGroupoid.trans (G : StructureGroupoid H) {e e' : LocalHomeomorph H H} (he : e ∈ G) (he' : e' ∈ G) :
     e ≫ₕ e' ∈ G :=
@@ -487,10 +487,10 @@ end Groupoid
 /-! ### Charted spaces -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`Atlas] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`chartAt] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`mem_chart_source] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`chart_mem_atlas] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`Atlas] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`chartAt] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`mem_chart_source] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`chart_mem_atlas] []
 /-- A charted space is a topological space endowed with an atlas, i.e., a set of local
 homeomorphisms taking value in a model space `H`, called charts, such that the domains of the charts
 cover the whole space. We express the covering property by chosing for each `x` a member
@@ -537,6 +537,12 @@ variable (H) [TopologicalSpace H] [TopologicalSpace M] [ChartedSpace H M]
 theorem mem_chart_target (x : M) : chartAt H x x ∈ (chartAt H x).Target :=
   (chartAt H x).map_source (mem_chart_source _ _)
 
+theorem chart_source_mem_nhds (x : M) : (chartAt H x).Source ∈ 𝓝 x :=
+  (chartAt H x).open_source.mem_nhds <| mem_chart_source H x
+
+theorem chart_target_mem_nhds (x : M) : (chartAt H x).Target ∈ 𝓝 (chartAt H x x) :=
+  (chartAt H x).open_target.mem_nhds <| mem_chart_target H x
+
 open TopologicalSpace
 
 theorem ChartedSpace.second_countable_of_countable_cover [SecondCountableTopology H] {s : Set M}
@@ -547,13 +553,13 @@ theorem ChartedSpace.second_countable_of_countable_cover [SecondCountableTopolog
   rw [bUnion_eq_Union] at hs
   exact second_countable_topology_of_countable_cover (fun x : s => (chart_at H (x : M)).open_source) hs
 
+variable (M)
+
 theorem ChartedSpace.second_countable_of_sigma_compact [SecondCountableTopology H] [SigmaCompactSpace M] :
     SecondCountableTopology M := by
   obtain ⟨s, hsc, hsU⟩ : ∃ s, Set.Countable s ∧ (⋃ (x) (hx : x ∈ s), (chart_at H x).Source) = univ :=
-    countable_cover_nhds_of_sigma_compact fun x : M => IsOpen.mem_nhds (chart_at H x).open_source (mem_chart_source H x)
+    countable_cover_nhds_of_sigma_compact fun x : M => chart_source_mem_nhds H x
   exact ChartedSpace.second_countable_of_countable_cover H hsU hsc
-
-variable (M)
 
 /-- If a topological space admits an atlas with locally compact charts, then the space itself
 is locally compact. -/
@@ -565,10 +571,7 @@ theorem ChartedSpace.locally_compact [LocallyCompactSpace H] : LocallyCompactSpa
     by
     intro x
     rw [← (chart_at H x).symm_map_nhds_eq (mem_chart_source H x)]
-    exact
-      ((compact_basis_nhds (chart_at H x x)).has_basis_self_subset
-            (IsOpen.mem_nhds (chart_at H x).open_target (mem_chart_target H x))).map
-        _
+    exact ((compact_basis_nhds (chart_at H x x)).has_basis_self_subset (chart_target_mem_nhds H x)).map _
   refine' locally_compact_space_of_has_basis this _
   rintro x s ⟨h₁, h₂, h₃⟩
   exact h₂.image_of_continuous_on ((chart_at H x).continuous_on_symm.mono h₃)
@@ -761,7 +764,7 @@ section HasGroupoid
 
 variable [TopologicalSpace H] [TopologicalSpace M] [ChartedSpace H M]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`compatible] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`compatible] []
 /-- A charted space has an atlas in a groupoid `G` if the change of coordinates belong to the
 groupoid -/
 class HasGroupoid {H : Type _} [TopologicalSpace H] (M : Type _) [TopologicalSpace M] [ChartedSpace H M]

@@ -15,7 +15,7 @@ meaning is defined incrementally through attributes.
 
 namespace Tactic
 
-unsafe def replacer_core {α : Type} [reflected _ α] (ntac : Name) (eval : ∀ β [reflected _ β], expr → tactic β) :
+unsafe def replacer_core {α : Type} [reflected _ α] (ntac : Name) (eval : ∀ (β) [reflected _ β], expr → tactic β) :
     List Name → tactic α
   | [] => fail ("no implementation defined for " ++ toString ntac)
   | n :: ns => do

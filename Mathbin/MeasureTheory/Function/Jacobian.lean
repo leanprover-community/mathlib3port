@@ -195,7 +195,7 @@ theorem exists_closed_cover_approximates_linear_on_of_has_fderiv_within_at [Seco
   -- `closed_ball (d p) (u n / 3)`.
   let K : ℕ → T → ℕ → Set E := fun n z p => Closure (M n z) ∩ closed_ball (d p) (u n / 3)
   -- on the sets `K n z p`, the map `f` is well approximated by `f' z` by design.
-  have K_approx : ∀ n z : T p, ApproximatesLinearOn f (f' z) (s ∩ K n z p) (r (f' z)) := by
+  have K_approx : ∀ (n) (z : T) (p), ApproximatesLinearOn f (f' z) (s ∩ K n z p) (r (f' z)) := by
     intro n z p x hx y hy
     have yM : y ∈ M n z := closure_M_subset _ _ ⟨hy.1, hy.2.1⟩
     refine' yM.2 _ ⟨hx.1, _⟩
@@ -203,7 +203,7 @@ theorem exists_closed_cover_approximates_linear_on_of_has_fderiv_within_at [Seco
         add_le_add hx.2.2 hy.2.2_ < u n := by
         linarith [u_pos n]
   -- the sets `K n z p` are also closed, again by design.
-  have K_closed : ∀ n z : T p, IsClosed (K n z p) := fun n z p => is_closed_closure.inter is_closed_ball
+  have K_closed : ∀ (n) (z : T) (p), IsClosed (K n z p) := fun n z p => is_closed_closure.inter is_closed_ball
   -- reindex the sets `K n z p`, to let them only depend on an integer parameter `q`.
   obtain ⟨F, hF⟩ : ∃ F : ℕ → ℕ × T × ℕ, Function.Surjective F := by
     have : Encodable T := T_count.to_encodable
@@ -276,7 +276,7 @@ to the approximating linear map.
 /-- Let `f` be a function which is sufficiently close (in the Lipschitz sense) to a given linear
 map `A`. Then it expands the volume of any set by at most `m` for any `m > det A`. -/
 theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0 } (hm : Ennreal.ofReal (abs A.det) < m) :
-    ∀ᶠ δ in 𝓝[>] (0 : ℝ≥0 ), ∀ s : Set E f : E → E hf : ApproximatesLinearOn f A s δ, μ (f '' s) ≤ m * μ s := by
+    ∀ᶠ δ in 𝓝[>] (0 : ℝ≥0 ), ∀ (s : Set E) (f : E → E) (hf : ApproximatesLinearOn f A s δ), μ (f '' s) ≤ m * μ s := by
   apply nhds_within_le_nhds
   let d := Ennreal.ofReal (abs A.det)
   -- construct a small neighborhood of `A '' (closed_ball 0 1)` with measure comparable to
@@ -323,7 +323,7 @@ theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0 } (hm :
         
     have : A '' closed_ball 0 r + closed_ball (f x) (ε * r) = {f x} + r • (A '' closed_ball 0 1 + closed_ball 0 ε) := by
       rw [smul_add, ← add_assocₓ, add_commₓ {f x}, add_assocₓ, smul_closed_ball _ _ εpos.le, smul_zero,
-        singleton_add_closed_ball_zero, ← A.image_smul_set, smul_closed_ball _ _ zero_le_one, smul_zero,
+        singleton_add_closed_ball_zero, ← image_smul_set ℝ E E A, smul_closed_ball _ _ zero_le_one, smul_zero,
         Real.norm_eq_abs, abs_of_nonneg r0, mul_oneₓ, mul_comm]
     rw [this] at K
     calc μ (f '' (s ∩ closed_ball x r)) ≤ μ ({f x} + r • (A '' closed_ball 0 1 + closed_ball 0 ε)) :=
@@ -370,7 +370,8 @@ theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0 } (hm :
 /-- Let `f` be a function which is sufficiently close (in the Lipschitz sense) to a given linear
 map `A`. Then it expands the volume of any set by at least `m` for any `m < det A`. -/
 theorem mul_le_add_haar_image_of_lt_det (A : E →L[ℝ] E) {m : ℝ≥0 } (hm : (m : ℝ≥0∞) < Ennreal.ofReal (abs A.det)) :
-    ∀ᶠ δ in 𝓝[>] (0 : ℝ≥0 ), ∀ s : Set E f : E → E hf : ApproximatesLinearOn f A s δ, (m : ℝ≥0∞) * μ s ≤ μ (f '' s) :=
+    ∀ᶠ δ in 𝓝[>] (0 : ℝ≥0 ),
+      ∀ (s : Set E) (f : E → E) (hf : ApproximatesLinearOn f A s δ), (m : ℝ≥0∞) * μ s ≤ μ (f '' s) :=
   by
   apply nhds_within_le_nhds
   -- The assumption `hm` implies that `A` is invertible. If `f` is close enough to `A`, it is also
@@ -394,11 +395,11 @@ theorem mul_le_add_haar_image_of_lt_det (A : E →L[ℝ] E) {m : ℝ≥0 } (hm :
   -- therefore, we may apply `add_haar_image_le_mul_of_det_lt` to `B.symm` and `m⁻¹`.
   obtain ⟨δ₀, δ₀pos, hδ₀⟩ :
     ∃ δ : ℝ≥0 ,
-      0 < δ ∧ ∀ t : Set E g : E → E, ApproximatesLinearOn g (B.symm : E →L[ℝ] E) t δ → μ (g '' t) ≤ ↑m⁻¹ * μ t :=
+      0 < δ ∧ ∀ (t : Set E) (g : E → E), ApproximatesLinearOn g (B.symm : E →L[ℝ] E) t δ → μ (g '' t) ≤ ↑m⁻¹ * μ t :=
     by
     have :
       ∀ᶠ δ : ℝ≥0 in 𝓝[>] 0,
-        ∀ t : Set E g : E → E, ApproximatesLinearOn g (B.symm : E →L[ℝ] E) t δ → μ (g '' t) ≤ ↑m⁻¹ * μ t :=
+        ∀ (t : Set E) (g : E → E), ApproximatesLinearOn g (B.symm : E →L[ℝ] E) t δ → μ (g '' t) ≤ ↑m⁻¹ * μ t :=
       add_haar_image_le_mul_of_det_lt μ B.symm I
     rcases(this.and self_mem_nhds_within).exists with ⟨δ₀, h, h'⟩
     exact ⟨δ₀, h', h⟩
@@ -562,7 +563,8 @@ theorem add_haar_image_eq_zero_of_differentiable_on_of_add_haar_eq_zero (hf : Di
     ∀ A : E →L[ℝ] E,
       ∃ δ : ℝ≥0 ,
         0 < δ ∧
-          ∀ t : Set E hf : ApproximatesLinearOn f A t δ, μ (f '' t) ≤ (Real.toNnreal (abs A.det) + 1 : ℝ≥0 ) * μ t :=
+          ∀ (t : Set E) (hf : ApproximatesLinearOn f A t δ),
+            μ (f '' t) ≤ (Real.toNnreal (abs A.det) + 1 : ℝ≥0 ) * μ t :=
     by
     intro A
     let m : ℝ≥0 := Real.toNnreal (abs A.det) + 1
@@ -605,7 +607,8 @@ theorem add_haar_image_eq_zero_of_det_fderiv_within_eq_zero_aux (hf' : ∀, ∀ 
     ∀ A : E →L[ℝ] E,
       ∃ δ : ℝ≥0 ,
         0 < δ ∧
-          ∀ t : Set E hf : ApproximatesLinearOn f A t δ, μ (f '' t) ≤ (Real.toNnreal (abs A.det) + ε : ℝ≥0 ) * μ t :=
+          ∀ (t : Set E) (hf : ApproximatesLinearOn f A t δ),
+            μ (f '' t) ≤ (Real.toNnreal (abs A.det) + ε : ℝ≥0 ) * μ t :=
     by
     intro A
     let m : ℝ≥0 := Real.toNnreal (abs A.det) + ε
@@ -660,7 +663,7 @@ theorem add_haar_image_eq_zero_of_det_fderiv_within_eq_zero (hf' : ∀, ∀ x �
         simp only [← H, ← tsum_zero, ← nonpos_iff_eq_zero]
     
   intro R
-  have A : ∀ ε : ℝ≥0 εpos : 0 < ε, μ (f '' (s ∩ closed_ball 0 R)) ≤ ε * μ (closed_ball 0 R) := fun ε εpos =>
+  have A : ∀ (ε : ℝ≥0 ) (εpos : 0 < ε), μ (f '' (s ∩ closed_ball 0 R)) ≤ ε * μ (closed_ball 0 R) := fun ε εpos =>
     add_haar_image_eq_zero_of_det_fderiv_within_eq_zero_aux μ (fun x hx => (hf' x hx.1).mono (inter_subset_left _ _)) R
       (inter_subset_right _ _) ε εpos fun x hx => h'f' x hx.1
   have B : tendsto (fun ε : ℝ≥0 => (ε : ℝ≥0∞) * μ (closed_ball 0 R)) (𝓝[>] 0) (𝓝 0) := by
@@ -707,7 +710,7 @@ theorem ae_measurable_fderiv_within (hs : MeasurableSet s) (hf' : ∀, ∀ x ∈
             (∀ n : ℕ, ApproximatesLinearOn f (A n) (s ∩ t n) δ) ∧ (s.nonempty → ∀ n, ∃ y ∈ s, A n = f' y) :=
     exists_partition_approximates_linear_on_of_has_fderiv_within_at f s f' hf' (fun A => δ) fun A => δpos.ne'
   -- define a measurable function `g` which coincides with `A n` on `t n`.
-  obtain ⟨g, g_meas, hg⟩ : ∃ g : E → E →L[ℝ] E, Measurable g ∧ ∀ n : ℕ x : E, x ∈ t n → g x = A n :=
+  obtain ⟨g, g_meas, hg⟩ : ∃ g : E → E →L[ℝ] E, Measurable g ∧ ∀ (n : ℕ) (x : E), x ∈ t n → g x = A n :=
     exists_measurable_piecewise_nat t t_meas t_disj (fun n x => A n) fun n => measurable_const
   refine' ⟨g, g_meas.ae_measurable, _⟩
   -- reduce to checking that `f'` and `g` are close on almost all of `s ∩ t n`, for all `n`.
@@ -788,7 +791,7 @@ theorem add_haar_image_le_lintegral_abs_det_fderiv_aux1 (hs : MeasurableSet s)
       ∃ δ : ℝ≥0 ,
         0 < δ ∧
           (∀ B : E →L[ℝ] E, ∥B - A∥ ≤ δ → abs (B.det - A.det) ≤ ε) ∧
-            ∀ t : Set E g : E → E hf : ApproximatesLinearOn g A t δ,
+            ∀ (t : Set E) (g : E → E) (hf : ApproximatesLinearOn g A t δ),
               μ (g '' t) ≤ (Ennreal.ofReal (abs A.det) + ε) * μ t :=
     by
     intro A
@@ -921,7 +924,7 @@ theorem lintegral_abs_det_fderiv_le_add_haar_image_aux1 (hs : MeasurableSet s)
       ∃ δ : ℝ≥0 ,
         0 < δ ∧
           (∀ B : E →L[ℝ] E, ∥B - A∥ ≤ δ → abs (B.det - A.det) ≤ ε) ∧
-            ∀ t : Set E g : E → E hf : ApproximatesLinearOn g A t δ,
+            ∀ (t : Set E) (g : E → E) (hf : ApproximatesLinearOn g A t δ),
               Ennreal.ofReal (abs A.det) * μ t ≤ μ (g '' t) + ε * μ t :=
     by
     intro A
@@ -1106,7 +1109,6 @@ theorem map_with_density_abs_det_fderiv_eq_add_haar (hs : MeasurableSet s)
       (fun x hx => (hf' x hx.2).mono (inter_subset_right _ _)) (hf.mono (inter_subset_right _ _)),
     image_preimage_inter]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Change of variable formula for differentiable functions, set version: if a function `f` is
 injective and differentiable on a measurable set `s`, then the pushforward of the measure with
 density `|(f' x).det|` on `s` is the Lebesgue measure on the image set. This version is expressed
@@ -1195,6 +1197,15 @@ theorem integral_image_eq_integral_abs_det_fderiv_smul [CompleteSpace F] (hs : M
   congr with x
   conv_rhs => rw [← Real.coe_to_nnreal _ (abs_nonneg (f' x).det)]
   rfl
+
+theorem integral_target_eq_integral_abs_det_fderiv_smul [CompleteSpace F] {f : LocalHomeomorph E E}
+    (hf' : ∀, ∀ x ∈ f.Source, ∀, HasFderivAt f (f' x) x) (g : E → F) :
+    (∫ x in f.Target, g x ∂μ) = ∫ x in f.Source, abs (f' x).det • g (f x) ∂μ := by
+  have : f '' f.source = f.target := LocalEquiv.image_source_eq_target f.to_local_equiv
+  rw [← this]
+  apply integral_image_eq_integral_abs_det_fderiv_smul μ f.open_source.measurable_set _ f.inj_on
+  intro x hx
+  exact (hf' x hx).HasFderivWithinAt
 
 end MeasureTheory
 

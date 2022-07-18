@@ -141,8 +141,8 @@ variable [MonoidalCategory.{v₁} C]
 
 open Opposite MonoidalCategory
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]
 instance monoidalCategoryOp : MonoidalCategory Cᵒᵖ where
   tensorObj := fun X Y => op (unop X ⊗ unop Y)
   tensorHom := fun X₁ Y₁ X₂ Y₂ f g => (f.unop ⊗ g.unop).op
@@ -165,11 +165,11 @@ instance monoidalCategoryOp : MonoidalCategory Cᵒᵖ where
   triangle' := by
     intros
     apply Quiver.Hom.unop_inj
-    trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]"
+    trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]"
   pentagon' := by
     intros
     apply Quiver.Hom.unop_inj
-    trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]"
+    trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]"
 
 theorem op_tensor_obj (X Y : Cᵒᵖ) : X ⊗ Y = op (unop X ⊗ unop Y) :=
   rfl
@@ -177,8 +177,8 @@ theorem op_tensor_obj (X Y : Cᵒᵖ) : X ⊗ Y = op (unop X ⊗ unop Y) :=
 theorem op_tensor_unit : 𝟙_ Cᵒᵖ = op (𝟙_ C) :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]
 instance monoidalCategoryMop : MonoidalCategory Cᴹᵒᵖ where
   tensorObj := fun X Y => mop (unmop Y ⊗ unmop X)
   tensorHom := fun X₁ Y₁ X₂ Y₂ f g => (g.unmop ⊗ f.unmop).mop
@@ -201,11 +201,11 @@ instance monoidalCategoryMop : MonoidalCategory Cᴹᵒᵖ where
   triangle' := by
     intros
     apply unmop_inj
-    trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]"
+    trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]"
   pentagon' := by
     intros
     apply unmop_inj
-    trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `coherence #[]"
+    trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]"
 
 theorem mop_tensor_obj (X Y : Cᴹᵒᵖ) : X ⊗ Y = mop (unmop Y ⊗ unmop X) :=
   rfl

@@ -363,20 +363,19 @@ section Prod
 variable {f : Filter α}
 
 theorem prod_def {f : Filter α} {g : Filter β} : f ×ᶠ g = f.lift fun s => g.lift' fun t => s ×ˢ t := by
-  have : ∀ s : Set α t : Set β, 𝓟 (s ×ˢ t) = (𝓟 s).comap Prod.fst⊓(𝓟 t).comap Prod.snd := by
+  have : ∀ (s : Set α) (t : Set β), 𝓟 (s ×ˢ t) = (𝓟 s).comap Prod.fst⊓(𝓟 t).comap Prod.snd := by
     simp only [← principal_eq_iff_eq, ← comap_principal, ← inf_principal] <;> intros <;> rfl
   simp only [← Filter.lift', ← Function.comp, ← this, ← lift_inf, ← lift_const, ← lift_inf]
   rw [← comap_lift_eq, ← comap_lift_eq]
   simp only [← Filter.prod, ← lift_principal2]
 
-theorem prod_same_eq : f ×ᶠ f = f.lift' fun t : Set α => t ×ˢ t := by
-  rw [prod_def] <;>
-    exact
-      lift_lift'_same_eq_lift' (fun s => Set.monotone_prod monotone_const monotone_id) fun t =>
-        Set.monotone_prod monotone_id monotone_const
+theorem prod_same_eq : f ×ᶠ f = f.lift' fun t : Set α => t ×ˢ t :=
+  prod_def.trans <|
+    lift_lift'_same_eq_lift' (fun s => monotone_const.set_prod monotone_id) fun t => monotone_id.set_prod monotone_const
 
 theorem mem_prod_same_iff {s : Set (α × α)} : s ∈ f ×ᶠ f ↔ ∃ t ∈ f, t ×ˢ t ⊆ s := by
-  rw [prod_same_eq, mem_lift'_sets] <;> exact Set.monotone_prod monotone_id monotone_id
+  rw [prod_same_eq, mem_lift'_sets]
+  exact monotone_id.set_prod monotone_id
 
 theorem tendsto_prod_self_iff {f : α × α → β} {x : Filter α} {y : Filter β} :
     Filter.Tendsto f (x ×ᶠ x) y ↔ ∀, ∀ W ∈ y, ∀, ∃ U ∈ x, ∀ x x' : α, x ∈ U → x' ∈ U → f (x, x') ∈ W := by
@@ -387,28 +386,23 @@ variable {α₁ : Type _} {α₂ : Type _} {β₁ : Type _} {β₂ : Type _}
 theorem prod_lift_lift {f₁ : Filter α₁} {f₂ : Filter α₂} {g₁ : Set α₁ → Filter β₁} {g₂ : Set α₂ → Filter β₂}
     (hg₁ : Monotone g₁) (hg₂ : Monotone g₂) :
     f₁.lift g₁ ×ᶠ f₂.lift g₂ = f₁.lift fun s => f₂.lift fun t => g₁ s ×ᶠ g₂ t := by
-  simp only [← prod_def]
-  rw [lift_assoc]
+  simp only [← prod_def, ← lift_assoc hg₁]
   apply congr_arg
   funext x
   rw [lift_comm]
   apply congr_arg
   funext y
-  rw [lift'_lift_assoc]
-  exact hg₂
-  exact hg₁
+  apply lift'_lift_assoc hg₂
 
 theorem prod_lift'_lift' {f₁ : Filter α₁} {f₂ : Filter α₂} {g₁ : Set α₁ → Set β₁} {g₂ : Set α₂ → Set β₂}
     (hg₁ : Monotone g₁) (hg₂ : Monotone g₂) :
-    f₁.lift' g₁ ×ᶠ f₂.lift' g₂ = f₁.lift fun s => f₂.lift' fun t => g₁ s ×ˢ g₂ t := by
-  rw [prod_def, lift_lift'_assoc]
-  apply congr_arg
-  funext x
-  rw [lift'_lift'_assoc]
-  exact hg₂
-  exact Set.monotone_prod monotone_const monotone_id
-  exact hg₁
-  exact monotone_lift' monotone_const <| monotone_lam fun x => Set.monotone_prod monotone_id monotone_const
+    f₁.lift' g₁ ×ᶠ f₂.lift' g₂ = f₁.lift fun s => f₂.lift' fun t => g₁ s ×ˢ g₂ t :=
+  calc
+    f₁.lift' g₁ ×ᶠ f₂.lift' g₂ = f₁.lift fun s => f₂.lift fun t => 𝓟 (g₁ s) ×ᶠ 𝓟 (g₂ t) :=
+      prod_lift_lift (monotone_principal.comp hg₁) (monotone_principal.comp hg₂)
+    _ = f₁.lift fun s => f₂.lift fun t => 𝓟 (g₁ s ×ˢ g₂ t) := by
+      simp only [← prod_principal_principal]
+    
 
 end Prod
 

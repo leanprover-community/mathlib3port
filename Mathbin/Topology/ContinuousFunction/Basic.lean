@@ -84,6 +84,9 @@ instance : CoeFun C(α, β) fun _ => α → β :=
 theorem to_fun_eq_coe {f : C(α, β)} : f.toFun = (f : α → β) :=
   rfl
 
+-- this must come after the coe_to_fun definition
+initialize_simps_projections ContinuousMap (toFun → apply)
+
 @[ext]
 theorem ext {f g : C(α, β)} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext _ _ h
@@ -229,6 +232,7 @@ def prodMk (f : C(α, β₁)) (g : C(α, β₂)) : C(α, β₁ × β₂) where
   continuous_to_fun := Continuous.prod_mk f.Continuous g.Continuous
 
 /-- Given two continuous maps `f` and `g`, this is the continuous map `(x, y) ↦ (f x, g y)`. -/
+@[simps]
 def prodMap (f : C(α₁, α₂)) (g : C(β₁, β₂)) : C(α₁ × β₁, α₂ × β₂) where
   toFun := Prod.map f g
   continuous_to_fun := Continuous.prod_map f.Continuous g.Continuous
@@ -244,7 +248,7 @@ section Pi
 variable {I A : Type _} {X : I → Type _} [TopologicalSpace A] [∀ i, TopologicalSpace (X i)]
 
 /-- Abbreviation for product of continuous maps, which is continuous -/
-def pi (f : ∀ i, C(A, X i)) : C(A, ∀ i, X i) where toFun := fun a : A i : I => f i a
+def pi (f : ∀ i, C(A, X i)) : C(A, ∀ i, X i) where toFun := fun (a : A) (i : I) => f i a
 
 @[simp]
 theorem pi_eval (f : ∀ i, C(A, X i)) (a : A) : (pi f) a = fun i : I => (f i) a :=
@@ -269,7 +273,7 @@ end Restrict
 section Gluing
 
 variable {ι : Type _} (S : ι → Set α) (φ : ∀ i : ι, C(S i, β))
-  (hφ : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, φ i ⟨x, hxi⟩ = φ j ⟨x, hxj⟩) (hS : ∀ x : α, ∃ i, S i ∈ nhds x)
+  (hφ : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), φ i ⟨x, hxi⟩ = φ j ⟨x, hxj⟩) (hS : ∀ x : α, ∃ i, S i ∈ nhds x)
 
 include hφ hS
 
@@ -301,8 +305,8 @@ theorem lift_cover_restrict {i : ι} : (liftCover S φ hφ hS).restrict (S i) = 
 
 omit hφ hS
 
-variable (A : Set (Set α)) (F : ∀ s : Set α hi : s ∈ A, C(s, β))
-  (hF : ∀ s hs : s ∈ A t ht : t ∈ A x : α hxi : x ∈ s hxj : x ∈ t, F s hs ⟨x, hxi⟩ = F t ht ⟨x, hxj⟩)
+variable (A : Set (Set α)) (F : ∀ (s : Set α) (hi : s ∈ A), C(s, β))
+  (hF : ∀ (s) (hs : s ∈ A) (t) (ht : t ∈ A) (x : α) (hxi : x ∈ s) (hxj : x ∈ t), F s hs ⟨x, hxi⟩ = F t ht ⟨x, hxj⟩)
   (hA : ∀ x : α, ∃ i ∈ A, i ∈ nhds x)
 
 include hF hA

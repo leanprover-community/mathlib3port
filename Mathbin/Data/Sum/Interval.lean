@@ -31,7 +31,7 @@ variable (f f₁ g₁ : α₁ → β₁ → Finset γ₁) (g f₂ g₂ : α₂ �
 `α₁ ⊕ α₂ → β₁ ⊕ β₂ → finset (γ₁ ⊕ γ₂)`. Could be generalized to `alternative` functors if we can
 make sure to keep computability and universe polymorphism. -/
 @[simp]
-def sumLift₂ : ∀ a : Sum α₁ α₂ b : Sum β₁ β₂, Finset (Sum γ₁ γ₂)
+def sumLift₂ : ∀ (a : Sum α₁ α₂) (b : Sum β₁ β₂), Finset (Sum γ₁ γ₂)
   | inl a, inl b => (f a b).map Embedding.inl
   | inl a, inr b => ∅
   | inr a, inl b => ∅

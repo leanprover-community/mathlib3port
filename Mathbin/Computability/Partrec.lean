@@ -347,7 +347,7 @@ theorem list_nth : Computable₂ (@List.nth α) :=
 theorem list_append : Computable₂ ((· ++ ·) : List α → List α → List α) :=
   Primrec.list_append.to_comp
 
-theorem list_concat : Computable₂ fun l a : α => l ++ [a] :=
+theorem list_concat : Computable₂ fun l (a : α) => l ++ [a] :=
   Primrec.list_concat.to_comp
 
 theorem list_length : Computable (@List.length α) :=
@@ -386,7 +386,7 @@ protected theorem encode : Computable (@encode α _) :=
 protected theorem decode : Computable (decode α) :=
   Primrec.decode.to_comp
 
-protected theorem of_nat α [Denumerable α] : Computable (ofNat α) :=
+protected theorem of_nat (α) [Denumerable α] : Computable (ofNat α) :=
   (Primrec.of_nat _).to_comp
 
 theorem encode_iff {f : α → σ} : (Computable fun a => encode (f a)) ↔ Computable f :=
@@ -727,7 +727,7 @@ theorem fix_aux {α σ} (f : α →. Sum σ α) (a : α) (b : σ) :
   intro
   refine' ⟨fun h => _, fun h => _⟩
   · rcases h with ⟨n, ⟨_x, h₁⟩, h₂⟩
-    have : ∀ m a' _ : Sum.inr a' ∈ F a m _ : b ∈ Pfun.fix f a', b ∈ Pfun.fix f a := by
+    have : ∀ (m a') (_ : Sum.inr a' ∈ F a m) (_ : b ∈ Pfun.fix f a'), b ∈ Pfun.fix f a := by
       intro m a' am ba
       induction' m with m IH generalizing a' <;> simp [← F] at am
       · rwa [← am]
@@ -745,8 +745,8 @@ theorem fix_aux {α σ} (f : α →. Sum σ α) (a : α) (b : σ) :
       
     
   · suffices
-      ∀ a' _ : b ∈ Pfun.fix f a' k _ : Sum.inr a' ∈ F a k,
-        ∃ n, Sum.inl b ∈ F a n ∧ ∀, ∀ m < n, ∀ _ : k ≤ m, ∃ a₂, Sum.inr a₂ ∈ F a m
+      ∀ (a') (_ : b ∈ Pfun.fix f a') (k) (_ : Sum.inr a' ∈ F a k),
+        ∃ n, Sum.inl b ∈ F a n ∧ ∀, ∀ m < n, ∀ (_ : k ≤ m), ∃ a₂, Sum.inr a₂ ∈ F a m
       by
       rcases this _ h 0
           (by

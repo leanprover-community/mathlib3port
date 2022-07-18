@@ -90,7 +90,7 @@ theorem IsDiag.smul [Monoidₓ R] [AddMonoidₓ α] [DistribMulAction R α] (k :
   simp [← ha h]
 
 @[simp]
-theorem is_diag_smul_one n [Semiringₓ α] [DecidableEq n] (k : α) : (k • (1 : Matrix n n α)).IsDiag :=
+theorem is_diag_smul_one (n) [Semiringₓ α] [DecidableEq n] (k : α) : (k • (1 : Matrix n n α)).IsDiag :=
   is_diag_one.smul k
 
 theorem IsDiag.transpose [Zero α] {A : Matrix n n α} (ha : A.IsDiag) : Aᵀ.IsDiag := fun i j h => ha h.symm

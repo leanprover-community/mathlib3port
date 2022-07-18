@@ -221,8 +221,8 @@ theorem is_unit_T (n : ℤ) : IsUnit (t n : R[T;T⁻¹]) :=
 
 @[elab_as_eliminator]
 protected theorem induction_on {M : R[T;T⁻¹] → Prop} (p : R[T;T⁻¹]) (h_C : ∀ a, M (c a))
-    (h_add : ∀ {p q}, M p → M q → M (p + q)) (h_C_mul_T : ∀ n : ℕ a : R, M (c a * t n) → M (c a * t (n + 1)))
-    (h_C_mul_T_Z : ∀ n : ℕ a : R, M (c a * t (-n)) → M (c a * t (-n - 1))) : M p := by
+    (h_add : ∀ {p q}, M p → M q → M (p + q)) (h_C_mul_T : ∀ (n : ℕ) (a : R), M (c a * t n) → M (c a * t (n + 1)))
+    (h_C_mul_T_Z : ∀ (n : ℕ) (a : R), M (c a * t (-n)) → M (c a * t (-n - 1))) : M p := by
   have A : ∀ {n : ℤ} {a : R}, M (C a * T n) := by
     intro n a
     apply n.induction_on
@@ -256,7 +256,7 @@ protected theorem induction_on {M : R[T;T⁻¹] → Prop} (p : R[T;T⁻¹]) (h_C
 -/
 @[elab_as_eliminator]
 protected theorem induction_on' {M : R[T;T⁻¹] → Prop} (p : R[T;T⁻¹]) (h_add : ∀ p q, M p → M q → M (p + q))
-    (h_C_mul_T : ∀ n : ℤ a : R, M (c a * t n)) : M p := by
+    (h_C_mul_T : ∀ (n : ℤ) (a : R), M (c a * t n)) : M p := by
   refine' p.induction_on (fun a => _) h_add _ _ <;>
     try
       exact fun n f _ => h_C_mul_T _ f
@@ -295,7 +295,7 @@ theorem trunc_C_mul_T (n : ℤ) (r : R) : trunc (c r * t n) = ite (0 ≤ n) (mon
     ext a
     have := ((not_le.mp n0).trans_le (Int.coe_zero_le a)).ne'
     simp only [← coeff, ← comap_domain_apply, ← Int.of_nat_eq_coe, ← coeff_zero, ← single_apply_eq_zero, ← this, ←
-      forall_false_left]
+      IsEmpty.forall_iff]
     
 
 @[simp]
@@ -319,6 +319,9 @@ theorem _root_.polynomial.to_laurent_injective : Function.Injective (Polynomial.
 @[simp]
 theorem _root_.polynomial.to_laurent_inj (f g : R[X]) : f.toLaurent = g.toLaurent ↔ f = g :=
   ⟨fun h => Polynomial.to_laurent_injective h, congr_arg _⟩
+
+theorem _root_.polynomial.to_laurent_ne_zero {f : R[X]} : f ≠ 0 ↔ f.toLaurent ≠ 0 :=
+  (map_ne_zero_iff _ Polynomial.to_laurent_injective).symm
 
 theorem exists_T_pow (f : R[T;T⁻¹]) : ∃ (n : ℕ)(f' : R[X]), f'.toLaurent = f * t n := by
   apply f.induction_on' _ fun n a => _ <;> clear f
@@ -359,6 +362,127 @@ theorem reduce_to_polynomial_of_mul_T (f : R[T;T⁻¹]) {Q : R[T;T⁻¹] → Pro
   · convert QT _ _
     simpa using hn
     
+
+section Support
+
+theorem support_C_mul_T (a : R) (n : ℤ) : (c a * t n).support ⊆ {n} := by
+  simpa only [single_eq_C_mul_T] using support_single_subset
+
+theorem support_C_mul_T_of_ne_zero {a : R} (a0 : a ≠ 0) (n : ℤ) : (c a * t n).support = {n} := by
+  rw [← single_eq_C_mul_T]
+  exact support_single_ne_zero _ a0
+
+/-- The support of a polynomial `f` is a finset in `ℕ`.  The lemma `to_laurent_support f`
+shows that the support of `f.to_laurent` is the same finset, but viewed in `ℤ` under the natural
+inclusion `ℕ ↪ ℤ`. -/
+theorem to_laurent_support (f : R[X]) : f.toLaurent.support = f.support.map Nat.castEmbedding := by
+  generalize hd : f.support = s
+  revert f
+  refine' Finset.induction_on s _ _ <;> clear s
+  · simp (config := { contextual := true })only [← Polynomial.support_eq_empty, ← map_zero, ← Finsupp.support_zero, ←
+      eq_self_iff_true, ← implies_true_iff, ← Finset.map_empty]
+    
+  · intro a s as hf f fs
+    have : (erase a f).toLaurent.support = s.map Nat.castEmbedding :=
+      hf (f.erase a)
+        (by
+          simp only [← fs, ← Finset.erase_eq_of_not_mem as, ← Polynomial.support_erase, ← Finset.erase_insert_eq_erase])
+    rw [← monomial_add_erase f a, Finset.map_insert, ← this, map_add, Polynomial.to_laurent_C_mul_T, support_add_eq,
+      Finset.insert_eq]
+    · congr
+      exact
+        support_C_mul_T_of_ne_zero
+          (polynomial.mem_support_iff.mp
+            (by
+              simp [← fs]))
+          _
+      
+    · rw [this]
+      exact
+        Disjoint.mono_left (support_C_mul_T _ _)
+          (by
+            simpa)
+      
+    
+
+end Support
+
+section Degrees
+
+/-- The degree of a Laurent polynomial takes values in `with_bot ℤ`.
+If `f : R[T;T⁻¹]` is a Laurent polynomial, then `f.degree` is the maximum of its support of `f`,
+or `⊥`, if `f = 0`. -/
+def degree (f : R[T;T⁻¹]) : WithBot ℤ :=
+  f.support.max
+
+@[simp]
+theorem degree_zero : degree (0 : R[T;T⁻¹]) = ⊥ :=
+  rfl
+
+@[simp]
+theorem degree_eq_bot_iff {f : R[T;T⁻¹]} : f.degree = ⊥ ↔ f = 0 := by
+  refine'
+    ⟨fun h => _, fun h => by
+      rw [h, degree_zero]⟩
+  rw [degree, Finset.max_eq_sup_with_bot] at h
+  ext n
+  refine' not_not.mp fun f0 => _
+  simp_rw [Finset.sup_eq_bot_iff, Finsupp.mem_support_iff, Ne.def, WithBot.coe_ne_bot] at h
+  exact h n f0
+
+section ExactDegrees
+
+open Classical
+
+@[simp]
+theorem degree_C_mul_T (n : ℤ) (a : R) (a0 : a ≠ 0) : (c a * t n).degree = n := by
+  rw [degree]
+  convert Finset.max_singleton
+  refine' support_eq_singleton.mpr _
+  simp only [single_eq_C_mul_T, ← single_eq_same, ← a0, ← Ne.def, ← not_false_iff, ← eq_self_iff_true, ← and_selfₓ]
+
+theorem degree_C_mul_T_ite (n : ℤ) (a : R) : (c a * t n).degree = ite (a = 0) ⊥ n := by
+  split_ifs with h h <;>
+    simp only [← h, ← map_zero, ← zero_mul, ← degree_zero, ← degree_C_mul_T, ← Ne.def, ← not_false_iff]
+
+@[simp]
+theorem degree_T [Nontrivial R] (n : ℤ) : (t n : R[T;T⁻¹]).degree = n := by
+  rw [← one_mulₓ (T n), ← map_one C]
+  exact degree_C_mul_T n 1 (one_ne_zero : (1 : R) ≠ 0)
+
+theorem degree_C {a : R} (a0 : a ≠ 0) : (c a).degree = 0 := by
+  rw [← mul_oneₓ (C a), ← T_zero]
+  exact degree_C_mul_T 0 a a0
+
+theorem degree_C_ite (a : R) : (c a).degree = ite (a = 0) ⊥ 0 := by
+  split_ifs with h h <;> simp only [← h, ← map_zero, ← degree_zero, ← degree_C, ← Ne.def, ← not_false_iff]
+
+end ExactDegrees
+
+section DegreeBounds
+
+theorem degree_C_mul_T_le (n : ℤ) (a : R) : (c a * t n).degree ≤ n := by
+  by_cases' a0 : a = 0
+  · simp only [← a0, ← map_zero, ← zero_mul, ← degree_zero, ← bot_le]
+    
+  · exact (degree_C_mul_T n a a0).le
+    
+
+theorem degree_T_le (n : ℤ) : (t n : R[T;T⁻¹]).degree ≤ n :=
+  (le_of_eqₓ
+        (by
+          rw [map_one, one_mulₓ])).trans
+    (degree_C_mul_T_le n (1 : R))
+
+theorem degree_C_le (a : R) : (c a).degree ≤ 0 :=
+  (le_of_eqₓ
+        (by
+          rw [T_zero, mul_oneₓ])).trans
+    (degree_C_mul_T_le 0 a)
+
+end DegreeBounds
+
+end Degrees
 
 instance : Module R[X] R[T;T⁻¹] :=
   Module.compHom _ Polynomial.toLaurent

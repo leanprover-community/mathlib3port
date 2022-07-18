@@ -38,5 +38,8 @@ def adj₂ : forget Top.{u} ⊣ trivialₓ :=
 instance : IsRightAdjoint (forget Top.{u}) :=
   ⟨_, adj₁⟩
 
+instance : IsLeftAdjoint (forget Top.{u}) :=
+  ⟨_, adj₂⟩
+
 end Top
 

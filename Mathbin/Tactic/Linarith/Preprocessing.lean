@@ -34,7 +34,7 @@ namespace Linarith
 
 open Tactic
 
--- ./././Mathport/Syntax/Translate/Basic.lean:293:40: warning: unsupported option eqn_compiler.max_steps
+-- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option eqn_compiler.max_steps
 set_option eqn_compiler.max_steps 50000
 
 /-- If `prf` is a proof of `¬ e`, where `e` is a comparison,
@@ -169,7 +169,7 @@ unsafe def nat_to_int : global_preprocessor where
     let l ← lock_tactic_state <| l.mmap fun h => (infer_type h >>= guardb ∘ is_nat_prop) >> zify_proof [] h <|> return h
     let nonnegs ←
       l.mfoldl
-          (fun es : expr_set h => do
+          (fun (es : expr_set) h => do
             let (a, b) ← infer_type h >>= get_rel_sides
             return <| (es (get_nat_comps a)).insert_list (get_nat_comps b))
           mk_rb_set

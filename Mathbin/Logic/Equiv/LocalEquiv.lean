@@ -81,8 +81,8 @@ def mfldCfg : SimpsCfg where
 
 namespace Tactic.Interactive
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 /-- A very basic tactic to show that sets showing up in manifolds coincide or are included in
 one another. -/
 unsafe def mfld_set_tac : tactic Unit := do
@@ -140,11 +140,11 @@ def Simps.symmApply (e : LocalEquiv α β) : β → α :=
 initialize_simps_projections LocalEquiv (toFun → apply, invFun → symmApply)
 
 @[simp, mfld_simps]
-theorem coe_mk (f : α → β) g s t ml mr il ir : (LocalEquiv.mk f g s t ml mr il ir : α → β) = f :=
+theorem coe_mk (f : α → β) (g s t ml mr il ir) : (LocalEquiv.mk f g s t ml mr il ir : α → β) = f :=
   rfl
 
 @[simp, mfld_simps]
-theorem coe_symm_mk (f : α → β) g s t ml mr il ir : ((LocalEquiv.mk f g s t ml mr il ir).symm : β → α) = g :=
+theorem coe_symm_mk (f : α → β) (g s t ml mr il ir) : ((LocalEquiv.mk f g s t ml mr il ir).symm : β → α) = g :=
   rfl
 
 @[simp, mfld_simps]
@@ -539,6 +539,9 @@ theorem coe_trans : (e.trans e' : α → γ) = e' ∘ e :=
 theorem coe_trans_symm : ((e.trans e').symm : γ → α) = e.symm ∘ e'.symm :=
   rfl
 
+theorem trans_apply {x : α} : (e.trans e') x = e' (e x) :=
+  rfl
+
 theorem trans_symm_eq_symm_trans_symm : (e.trans e').symm = e'.symm.trans e.symm := by
   cases e <;> cases e' <;> rfl
 
@@ -599,6 +602,12 @@ theorem restr_trans (s : Set α) : (e.restr s).trans e' = (e.trans e').restr s :
   (LocalEquiv.ext (fun x => rfl) fun x => rfl) <| by
     simp [← trans_source, ← inter_comm]
     rwa [inter_assoc]
+
+/-- A lemma commonly useful when `e` and `e'` are charts of a manifold. -/
+theorem mem_symm_trans_source {e' : LocalEquiv α γ} {x : α} (he : x ∈ e.Source) (he' : x ∈ e'.Source) :
+    e x ∈ (e.symm.trans e').Source :=
+  ⟨e.MapsTo he, by
+    rwa [mem_preimage, LocalEquiv.symm_symm, e.left_inv he]⟩
 
 /-- Postcompose a local equivalence with an equivalence.
 We modify the source and target to have better definitional behavior. -/

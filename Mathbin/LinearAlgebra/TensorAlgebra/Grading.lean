@@ -40,11 +40,11 @@ variable {R M}
 
 /-- The tensor algebra is graded by the powers of the submodule `(tensor_algebra.ι R).range`. -/
 instance gradedAlgebra : GradedAlgebra ((· ^ ·) (ι R : M →ₗ[R] TensorAlgebra R M).range : ℕ → Submodule R _) :=
-  GradedAlgebra.ofAlgHom _ (lift _ <| GradedAlgebra.ι R M)
+  GradedAlgebra.ofAlgHom _ (lift R <| GradedAlgebra.ι R M)
     (by
       ext m
       dsimp' only [← LinearMap.comp_apply, ← AlgHom.to_linear_map_apply, ← AlgHom.comp_apply, ← AlgHom.id_apply]
-      rw [lift_ι_apply, graded_algebra.ι_apply, DirectSum.coe_alg_hom_of, Subtype.coe_mk])
+      rw [lift_ι_apply, graded_algebra.ι_apply R M, DirectSum.coe_alg_hom_of, Subtype.coe_mk])
     fun i x => by
     cases' x with x hx
     dsimp' only [← Subtype.coe_mk, ← DirectSum.lof_eq_of]
@@ -56,7 +56,7 @@ instance gradedAlgebra : GradedAlgebra ((· ^ ·) (ι R : M →ₗ[R] TensorAlge
       rfl
       
     · obtain ⟨_, rfl⟩ := hm
-      rw [AlgHom.map_mul, ih, lift_ι_apply, graded_algebra.ι_apply, DirectSum.of_mul_of]
+      rw [AlgHom.map_mul, ih, lift_ι_apply, graded_algebra.ι_apply R M, DirectSum.of_mul_of]
       exact DirectSum.of_eq_of_graded_monoid_eq (Sigma.subtype_ext (add_commₓ _ _) rfl)
       
 

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Calle Sönne
 -/
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Basic
+import Mathbin.Algebra.CharZero.Quotient
 
 /-!
 # The type of angles
@@ -109,6 +110,27 @@ theorem two_zsmul_coe_pi : (2 : ℤ) • (π : Angle) = 0 := by
 @[simp]
 theorem coe_pi_add_coe_pi : (π : Real.Angle) + π = 0 := by
   rw [← two_nsmul, two_nsmul_coe_pi]
+
+theorem zsmul_eq_iff {ψ θ : Angle} {z : ℤ} (hz : z ≠ 0) :
+    z • ψ = z • θ ↔ ∃ k : Finₓ z.natAbs, ψ = θ + (k : ℕ) • (2 * π / z : ℝ) :=
+  QuotientAddGroup.zmultiples_zsmul_eq_zsmul_iff hz
+
+theorem nsmul_eq_iff {ψ θ : Angle} {n : ℕ} (hz : n ≠ 0) :
+    n • ψ = n • θ ↔ ∃ k : Finₓ n, ψ = θ + (k : ℕ) • (2 * π / n : ℝ) :=
+  QuotientAddGroup.zmultiples_nsmul_eq_nsmul_iff hz
+
+theorem two_zsmul_eq_iff {ψ θ : Angle} : (2 : ℤ) • ψ = (2 : ℤ) • θ ↔ ψ = θ ∨ ψ = θ + π := by
+  rw [zsmul_eq_iff two_ne_zero, Int.nat_abs_bit0, Int.nat_abs_one, Finₓ.exists_fin_two, Finₓ.coe_zero, Finₓ.coe_one,
+    zero_smul, add_zeroₓ, one_smul, Int.cast_two, mul_div_cancel_left (_ : ℝ) two_ne_zero]
+
+theorem two_nsmul_eq_iff {ψ θ : Angle} : (2 : ℕ) • ψ = (2 : ℕ) • θ ↔ ψ = θ ∨ ψ = θ + π := by
+  simp_rw [← coe_nat_zsmul, Int.coe_nat_bit0, Int.coe_nat_one, two_zsmul_eq_iff]
+
+theorem two_nsmul_eq_zero_iff {θ : Angle} : (2 : ℕ) • θ = 0 ↔ θ = 0 ∨ θ = π := by
+  convert two_nsmul_eq_iff <;> simp
+
+theorem two_zsmul_eq_zero_iff {θ : Angle} : (2 : ℤ) • θ = 0 ↔ θ = 0 ∨ θ = π := by
+  simp_rw [two_zsmul, ← two_nsmul, two_nsmul_eq_zero_iff]
 
 theorem cos_eq_iff_eq_or_eq_neg {θ ψ : ℝ} : cos θ = cos ψ ↔ (θ : Angle) = ψ ∨ (θ : Angle) = -ψ := by
   constructor

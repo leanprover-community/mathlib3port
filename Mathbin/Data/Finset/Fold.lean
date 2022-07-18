@@ -70,7 +70,6 @@ theorem fold_op_distrib {f g : α → β} {b₁ b₂ : β} :
     (s.fold op (b₁*b₂) fun x => f x*g x) = s.fold op b₁ f*s.fold op b₂ g := by
   simp only [← fold, ← fold_distrib]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem fold_const [Decidable (s = ∅)] (c : β) (h : op c (op b c) = op b c) :
     Finset.fold op b (fun _ => c) s = if s = ∅ then b else op b c := by
   classical
@@ -89,7 +88,7 @@ theorem fold_hom {op' : γ → γ → γ} [IsCommutative γ op'] [IsAssociative 
     (hm : ∀ x y, m (op x y) = op' (m x) (m y)) : (s.fold op' (m b) fun x => m (f x)) = m (s.fold op b f) := by
   rw [fold, fold, ← fold_hom op hm, Multiset.map_map]
 
-theorem fold_disj_union {s₁ s₂ : Finset α} {b₁ b₂ : β} h :
+theorem fold_disj_union {s₁ s₂ : Finset α} {b₁ b₂ : β} (h) :
     (s₁.disjUnion s₂ h).fold op (b₁*b₂) f = s₁.fold op b₁ f*s₂.fold op b₂ f :=
   (congr_arg _ <| Multiset.map_add _ _ _).trans (Multiset.fold_add _ _ _ _ _)
 
@@ -116,7 +115,6 @@ theorem fold_image_idem [DecidableEq α] {g : γ → α} {s : Finset γ} [hi : I
     rw [fold_cons, cons_eq_insert, image_insert, fold_insert_idem, ih]
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A stronger version of `finset.fold_ite`, but relies on
 an explicit proof of idempotency on the seed element, rather
 than relying on typeclass idempotency over the whole type. -/
@@ -149,7 +147,6 @@ theorem fold_ite [IsIdempotent β op] {g : α → β} (p : α → Prop) [Decidab
       op (Finset.fold op b f (s.filter p)) (Finset.fold op b g (s.filter fun i => ¬p i)) :=
   fold_ite' (IsIdempotent.idempotent _) _
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem fold_op_rel_iff_and {r : β → β → Prop} (hr : ∀ {x y z}, r x (op y z) ↔ r x y ∧ r x z) {c : β} :
     r c (s.fold op b f) ↔ r c b ∧ ∀, ∀ x ∈ s, ∀, r c (f x) := by
   classical
@@ -178,7 +175,6 @@ theorem fold_op_rel_iff_and {r : β → β → Prop} (hr : ∀ {x y z}, r x (op 
       
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem fold_op_rel_iff_or {r : β → β → Prop} (hr : ∀ {x y z}, r x (op y z) ↔ r x y ∨ r x z) {c : β} :
     r c (s.fold op b f) ↔ r c b ∨ ∃ x ∈ s, r c (f x) := by
   classical
@@ -267,6 +263,11 @@ theorem fold_max_lt : s.fold max b f < c ↔ b < c ∧ ∀, ∀ x ∈ s, ∀, f 
 
 theorem lt_fold_max : c < s.fold max b f ↔ c < b ∨ ∃ x ∈ s, c < f x :=
   fold_op_rel_iff_or fun x y z => lt_max_iff
+
+theorem fold_max_add [Add β] [CovariantClass β β (Function.swap (· + ·)) (· ≤ ·)] (n : WithBot β) (s : Finset α) :
+    (s.fold max ⊥ fun x : α => ↑(f x) + n) = s.fold max ⊥ (coe ∘ f) + n := by
+  classical
+  apply s.induction_on <;> simp (config := { contextual := true })[← max_add_add_right]
 
 end Order
 

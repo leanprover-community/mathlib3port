@@ -109,7 +109,7 @@ theorem projective_of_lifting_property'
     (huniv :
       ∀ {M : Type max v u} {N : Type max u v} [AddCommMonoidₓ M] [AddCommMonoidₓ N],
         ∀ [Module R M] [Module R N],
-          ∀ f : M →ₗ[R] N g : P →ₗ[R] N,
+          ∀ (f : M →ₗ[R] N) (g : P →ₗ[R] N),
             Function.Surjective f → ∃ h : P →ₗ[R] M, f.comp h = g) :-- then `P` is projective.
       Projective
       R P :=
@@ -139,7 +139,7 @@ theorem projective_of_lifting_property
     (huniv :
       ∀ {M : Type max v u} {N : Type max u v} [AddCommGroupₓ M] [AddCommGroupₓ N],
         ∀ [Module R M] [Module R N],
-          ∀ f : M →ₗ[R] N g : P →ₗ[R] N,
+          ∀ (f : M →ₗ[R] N) (g : P →ₗ[R] N),
             Function.Surjective f → ∃ h : P →ₗ[R] M, f.comp h = g) :-- then `P` is projective.
       Projective
       R P :=

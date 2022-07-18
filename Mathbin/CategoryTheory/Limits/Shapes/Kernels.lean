@@ -135,7 +135,7 @@ def KernelFork.IsLimit.lift' {s : KernelFork f} (hs : IsLimit s) {W : C} (k : W 
 /-- This is a slightly more convenient method to verify that a kernel fork is a limit cone. It
     only asks for a proof of facts that carry any mathematical content -/
 def isLimitAux (t : KernelFork f) (lift : ∀ s : KernelFork f, s.x ⟶ t.x) (fac : ∀ s : KernelFork f, lift s ≫ t.ι = s.ι)
-    (uniq : ∀ s : KernelFork f m : s.x ⟶ t.x w : m ≫ t.ι = s.ι, m = lift s) : IsLimit t :=
+    (uniq : ∀ (s : KernelFork f) (m : s.x ⟶ t.x) (w : m ≫ t.ι = s.ι), m = lift s) : IsLimit t :=
   { lift,
     fac' := fun s j => by
       cases j
@@ -148,9 +148,10 @@ def isLimitAux (t : KernelFork f) (lift : ∀ s : KernelFork f, s.x ⟶ t.x) (fa
 /-- This is a more convenient formulation to show that a `kernel_fork` constructed using
 `kernel_fork.of_ι` is a limit cone.
 -/
-def IsLimit.ofι {W : C} (g : W ⟶ X) (eq : g ≫ f = 0) (lift : ∀ {W' : C} g' : W' ⟶ X eq' : g' ≫ f = 0, W' ⟶ W)
-    (fac : ∀ {W' : C} g' : W' ⟶ X eq' : g' ≫ f = 0, lift g' eq' ≫ g = g')
-    (uniq : ∀ {W' : C} g' : W' ⟶ X eq' : g' ≫ f = 0 m : W' ⟶ W w : m ≫ g = g', m = lift g' eq') :
+def KernelFork.IsLimit.ofι {W : C} (g : W ⟶ X) (eq : g ≫ f = 0)
+    (lift : ∀ {W' : C} (g' : W' ⟶ X) (eq' : g' ≫ f = 0), W' ⟶ W)
+    (fac : ∀ {W' : C} (g' : W' ⟶ X) (eq' : g' ≫ f = 0), lift g' eq' ≫ g = g')
+    (uniq : ∀ {W' : C} (g' : W' ⟶ X) (eq' : g' ≫ f = 0) (m : W' ⟶ W) (w : m ≫ g = g'), m = lift g' eq') :
     IsLimit (KernelFork.ofι g Eq) :=
   isLimitAux _ (fun s => lift s.ι s.condition) (fun s => fac s.ι s.condition) fun s => uniq s.ι s.condition
 
@@ -339,7 +340,7 @@ theorem kernel_iso_of_eq_inv_comp_ι {f g : X ⟶ Y} [HasKernel f] [HasKernel g]
   simp
 
 @[simp, reassoc]
-theorem lift_comp_kernel_iso_of_eq_hom {Z} {f g : X ⟶ Y} [HasKernel f] [HasKernel g] (h : f = g) (e : Z ⟶ X) he :
+theorem lift_comp_kernel_iso_of_eq_hom {Z} {f g : X ⟶ Y} [HasKernel f] [HasKernel g] (h : f = g) (e : Z ⟶ X) (he) :
     kernel.lift _ e he ≫ (kernelIsoOfEq h).Hom =
       kernel.lift _ e
         (by
@@ -349,7 +350,7 @@ theorem lift_comp_kernel_iso_of_eq_hom {Z} {f g : X ⟶ Y} [HasKernel f] [HasKer
   simp
 
 @[simp, reassoc]
-theorem lift_comp_kernel_iso_of_eq_inv {Z} {f g : X ⟶ Y} [HasKernel f] [HasKernel g] (h : f = g) (e : Z ⟶ X) he :
+theorem lift_comp_kernel_iso_of_eq_inv {Z} {f g : X ⟶ Y} [HasKernel f] [HasKernel g] (h : f = g) (e : Z ⟶ X) (he) :
     kernel.lift _ e he ≫ (kernelIsoOfEq h).inv =
       kernel.lift _ e
         (by
@@ -456,7 +457,7 @@ theorem kernel.ι_of_mono [HasKernel f] [Mono f] : kernel.ι f = 0 :=
   zero_of_source_iso_zero _ (kernel.ofMono f)
 
 /-- If `g ≫ f = 0` implies `g = 0` for all `g`, then `0 : 0 ⟶ X` is a kernel of `f`. -/
-def zeroKernelOfCancelZero {X Y : C} (f : X ⟶ Y) (hf : ∀ Z : C g : Z ⟶ X hgf : g ≫ f = 0, g = 0) :
+def zeroKernelOfCancelZero {X Y : C} (f : X ⟶ Y) (hf : ∀ (Z : C) (g : Z ⟶ X) (hgf : g ≫ f = 0), g = 0) :
     IsLimit
       (KernelFork.ofι (0 : 0 ⟶ X)
         (show 0 ≫ f = 0 by
@@ -581,7 +582,7 @@ def CokernelCofork.IsColimit.desc' {s : CokernelCofork f} (hs : IsColimit s) {W 
 It only asks for a proof of facts that carry any mathematical content -/
 def isColimitAux (t : CokernelCofork f) (desc : ∀ s : CokernelCofork f, t.x ⟶ s.x)
     (fac : ∀ s : CokernelCofork f, t.π ≫ desc s = s.π)
-    (uniq : ∀ s : CokernelCofork f m : t.x ⟶ s.x w : t.π ≫ m = s.π, m = desc s) : IsColimit t :=
+    (uniq : ∀ (s : CokernelCofork f) (m : t.x ⟶ s.x) (w : t.π ≫ m = s.π), m = desc s) : IsColimit t :=
   { desc,
     fac' := fun s j => by
       cases j
@@ -594,9 +595,10 @@ def isColimitAux (t : CokernelCofork f) (desc : ∀ s : CokernelCofork f, t.x �
 /-- This is a more convenient formulation to show that a `cokernel_cofork` constructed using
 `cokernel_cofork.of_π` is a limit cone.
 -/
-def IsColimit.ofπ {Z : C} (g : Y ⟶ Z) (eq : f ≫ g = 0) (desc : ∀ {Z' : C} g' : Y ⟶ Z' eq' : f ≫ g' = 0, Z ⟶ Z')
-    (fac : ∀ {Z' : C} g' : Y ⟶ Z' eq' : f ≫ g' = 0, g ≫ desc g' eq' = g')
-    (uniq : ∀ {Z' : C} g' : Y ⟶ Z' eq' : f ≫ g' = 0 m : Z ⟶ Z' w : g ≫ m = g', m = desc g' eq') :
+def CokernelCofork.IsColimit.ofπ {Z : C} (g : Y ⟶ Z) (eq : f ≫ g = 0)
+    (desc : ∀ {Z' : C} (g' : Y ⟶ Z') (eq' : f ≫ g' = 0), Z ⟶ Z')
+    (fac : ∀ {Z' : C} (g' : Y ⟶ Z') (eq' : f ≫ g' = 0), g ≫ desc g' eq' = g')
+    (uniq : ∀ {Z' : C} (g' : Y ⟶ Z') (eq' : f ≫ g' = 0) (m : Z ⟶ Z') (w : g ≫ m = g'), m = desc g' eq') :
     IsColimit (CokernelCofork.ofπ g Eq) :=
   isColimitAux _ (fun s => desc s.π s.condition) (fun s => fac s.π s.condition) fun s => uniq s.π s.condition
 
@@ -789,7 +791,8 @@ theorem π_comp_cokernel_iso_of_eq_inv {f g : X ⟶ Y} [HasCokernel f] [HasCoker
   simp
 
 @[simp, reassoc]
-theorem cokernel_iso_of_eq_hom_comp_desc {Z} {f g : X ⟶ Y} [HasCokernel f] [HasCokernel g] (h : f = g) (e : Y ⟶ Z) he :
+theorem cokernel_iso_of_eq_hom_comp_desc {Z} {f g : X ⟶ Y} [HasCokernel f] [HasCokernel g] (h : f = g) (e : Y ⟶ Z)
+    (he) :
     (cokernelIsoOfEq h).Hom ≫ cokernel.desc _ e he =
       cokernel.desc _ e
         (by
@@ -799,7 +802,8 @@ theorem cokernel_iso_of_eq_hom_comp_desc {Z} {f g : X ⟶ Y} [HasCokernel f] [Ha
   simp
 
 @[simp, reassoc]
-theorem cokernel_iso_of_eq_inv_comp_desc {Z} {f g : X ⟶ Y} [HasCokernel f] [HasCokernel g] (h : f = g) (e : Y ⟶ Z) he :
+theorem cokernel_iso_of_eq_inv_comp_desc {Z} {f g : X ⟶ Y} [HasCokernel f] [HasCokernel g] (h : f = g) (e : Y ⟶ Z)
+    (he) :
     (cokernelIsoOfEq h).inv ≫ cokernel.desc _ e he =
       cokernel.desc _ e
         (by
@@ -971,7 +975,7 @@ instance cokernel.of_kernel_of_mono [HasKernel f] [HasCokernel (kernel.ι f)] [M
   coequalizer.π_of_eq <| kernel.ι_of_mono f
 
 /-- If `f ≫ g = 0` implies `g = 0` for all `g`, then `0 : Y ⟶ 0` is a cokernel of `f`. -/
-def zeroCokernelOfZeroCancel {X Y : C} (f : X ⟶ Y) (hf : ∀ Z : C g : Y ⟶ Z hgf : f ≫ g = 0, g = 0) :
+def zeroCokernelOfZeroCancel {X Y : C} (f : X ⟶ Y) (hf : ∀ (Z : C) (g : Y ⟶ Z) (hgf : f ≫ g = 0), g = 0) :
     IsColimit
       (CokernelCofork.ofπ (0 : Y ⟶ 0)
         (show f ≫ 0 = 0 by
@@ -1101,13 +1105,13 @@ variable [HasZeroMorphisms C]
 
 /-- `has_kernels` represents the existence of kernels for every morphism. -/
 class HasKernels : Prop where
-  HasLimit : ∀ {X Y : C} f : X ⟶ Y, HasKernel f := by
+  HasLimit : ∀ {X Y : C} (f : X ⟶ Y), HasKernel f := by
     run_tac
       tactic.apply_instance
 
 /-- `has_cokernels` represents the existence of cokernels for every morphism. -/
 class HasCokernels : Prop where
-  HasColimit : ∀ {X Y : C} f : X ⟶ Y, HasCokernel f := by
+  HasColimit : ∀ {X Y : C} (f : X ⟶ Y), HasCokernel f := by
     run_tac
       tactic.apply_instance
 

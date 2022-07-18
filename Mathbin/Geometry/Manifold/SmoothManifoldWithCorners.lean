@@ -173,13 +173,27 @@ instance : CoeFun (ModelWithCorners 𝕜 E H) fun _ => H → E :=
 protected def symm : LocalEquiv E H :=
   I.toLocalEquiv.symm
 
+/-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
+  because it is a composition of multiple projections. -/
+def Simps.apply (𝕜 : Type _) [NondiscreteNormedField 𝕜] (E : Type _) [NormedGroup E] [NormedSpace 𝕜 E] (H : Type _)
+    [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) : H → E :=
+  I
+
+/-- See Note [custom simps projection] -/
+def Simps.symmApply (𝕜 : Type _) [NondiscreteNormedField 𝕜] (E : Type _) [NormedGroup E] [NormedSpace 𝕜 E] (H : Type _)
+    [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) : E → H :=
+  I.symm
+
+initialize_simps_projections ModelWithCorners (to_local_equiv_to_fun → apply, to_local_equiv_inv_fun → symmApply,
+  to_local_equiv_source → Source, to_local_equiv_target → Target, -toLocalEquiv)
+
 -- Register a few lemmas to make sure that `simp` puts expressions in normal form
 @[simp, mfld_simps]
 theorem to_local_equiv_coe : (I.toLocalEquiv : H → E) = I :=
   rfl
 
 @[simp, mfld_simps]
-theorem mk_coe (e : LocalEquiv H E) a b c d :
+theorem mk_coe (e : LocalEquiv H E) (a b c d) :
     ((ModelWithCorners.mk e a b c d : ModelWithCorners 𝕜 E H) : H → E) = (e : H → E) :=
   rfl
 
@@ -188,7 +202,8 @@ theorem to_local_equiv_coe_symm : (I.toLocalEquiv.symm : E → H) = I.symm :=
   rfl
 
 @[simp, mfld_simps]
-theorem mk_symm (e : LocalEquiv H E) a b c d : (ModelWithCorners.mk e a b c d : ModelWithCorners 𝕜 E H).symm = e.symm :=
+theorem mk_symm (e : LocalEquiv H E) (a b c d) :
+    (ModelWithCorners.mk e a b c d : ModelWithCorners 𝕜 E H).symm = e.symm :=
   rfl
 
 @[continuity]
@@ -320,6 +335,7 @@ corners `I.prod I'` on `(E × E', model_prod H H')`. This appears in particular 
 structure on the tangent bundle to a manifold modelled on `(E, H)`: it will be modelled on
 `(E × E, H × E)`. See note [Manifold type tags] for explanation about `model_prod H H'`
 vs `H × H'`. -/
+@[simps (config := lemmasOnly)]
 def ModelWithCorners.prod {𝕜 : Type u} [NondiscreteNormedField 𝕜] {E : Type v} [NormedGroup E] [NormedSpace 𝕜 E]
     {H : Type w} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {E' : Type v'} [NormedGroup E'] [NormedSpace 𝕜 E']
     {H' : Type w'} [TopologicalSpace H'] (I' : ModelWithCorners 𝕜 E' H') :

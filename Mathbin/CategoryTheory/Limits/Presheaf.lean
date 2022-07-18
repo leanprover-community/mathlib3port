@@ -192,7 +192,7 @@ instance : PreservesColimits (extendAlongYoneda A) :=
 This follows from `category_theory.category_of_elements.costructured_arrow_yoneda_equivalence`.
 -/
 @[simps]
-def extendAlongYonedaIsoKanApp X : (extendAlongYoneda A).obj X ≅ ((lan yoneda : (_ ⥤ ℰ) ⥤ _).obj A).obj X :=
+def extendAlongYonedaIsoKanApp (X) : (extendAlongYoneda A).obj X ≅ ((lan yoneda : (_ ⥤ ℰ) ⥤ _).obj A).obj X :=
   let eq := categoryOfElements.costructuredArrowYonedaEquivalence X
   { Hom := colimit.pre (Lan.diagram (yoneda : C ⥤ _ ⥤ Type u₁) A X) Eq.Functor,
     inv := colimit.pre ((categoryOfElements.π X).leftOp ⋙ A) Eq.inverse,

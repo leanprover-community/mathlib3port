@@ -252,7 +252,7 @@ end NatTrans
 
 /-- `F.flip` composed with evaluation is the same as evaluating `F`. -/
 @[simps]
-def flipCompEvaluation (F : A ⥤ B ⥤ C) a : F.flip ⋙ (evaluation _ _).obj a ≅ F.obj a :=
+def flipCompEvaluation (F : A ⥤ B ⥤ C) (a) : F.flip ⋙ (evaluation _ _).obj a ≅ F.obj a :=
   (NatIso.ofComponents fun b => eqToIso rfl) <| by
     tidy
 

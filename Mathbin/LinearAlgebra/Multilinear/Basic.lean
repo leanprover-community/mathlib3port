@@ -68,8 +68,8 @@ structure MultilinearMap (R : Type u) {ι : Type u'} (M₁ : ι → Type v) (M�
   [∀ i, AddCommMonoidₓ (M₁ i)] [AddCommMonoidₓ M₂] [∀ i, Module R (M₁ i)] [Module R M₂] where
   toFun : (∀ i, M₁ i) → M₂
   map_add' :
-    ∀ m : ∀ i, M₁ i i : ι x y : M₁ i, to_fun (update m i (x + y)) = to_fun (update m i x) + to_fun (update m i y)
-  map_smul' : ∀ m : ∀ i, M₁ i i : ι c : R x : M₁ i, to_fun (update m i (c • x)) = c • to_fun (update m i x)
+    ∀ (m : ∀ i, M₁ i) (i : ι) (x y : M₁ i), to_fun (update m i (x + y)) = to_fun (update m i x) + to_fun (update m i y)
+  map_smul' : ∀ (m : ∀ i, M₁ i) (i : ι) (c : R) (x : M₁ i), to_fun (update m i (c • x)) = c • to_fun (update m i x)
 
 namespace MultilinearMap
 
@@ -89,7 +89,7 @@ theorem to_fun_eq_coe : f.toFun = f :=
   rfl
 
 @[simp]
-theorem coe_mk (f : (∀ i, M₁ i) → M₂) h₁ h₂ : ⇑(⟨f, h₁, h₂⟩ : MultilinearMap R M₁ M₂) = f :=
+theorem coe_mk (f : (∀ i, M₁ i) → M₂) (h₁ h₂) : ⇑(⟨f, h₁, h₂⟩ : MultilinearMap R M₁ M₂) = f :=
   rfl
 
 theorem congr_fun {f g : MultilinearMap R M₁ M₂} (h : f = g) (x : ∀ i, M₁ i) : f x = g x :=
@@ -117,7 +117,7 @@ theorem ext_iff {f g : MultilinearMap R M₁ M₂} : f = g ↔ ∀ x, f x = g x 
   ⟨fun h x => h ▸ rfl, fun h => ext h⟩
 
 @[simp]
-theorem mk_coe (f : MultilinearMap R M₁ M₂) h₁ h₂ : (⟨f, h₁, h₂⟩ : MultilinearMap R M₁ M₂) = f := by
+theorem mk_coe (f : MultilinearMap R M₁ M₂) (h₁ h₂) : (⟨f, h₁, h₂⟩ : MultilinearMap R M₁ M₂) = f := by
   ext
   rfl
 
@@ -189,7 +189,6 @@ end HasSmul
 instance : AddCommMonoidₓ (MultilinearMap R M₁ M₂) :=
   coe_injective.AddCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem sum_apply {α : Type _} (f : α → MultilinearMap R M₁ M₂) (m : ∀ i, M₁ i) :
     ∀ {s : Finset α}, (∑ a in s, f a) m = ∑ a in s, f a m := by
@@ -717,13 +716,13 @@ theorem comp_multilinear_map_apply (g : M₂ →ₗ[R] M₃) (f : MultilinearMap
 
 /-- The multilinear version of `linear_map.subtype_comp_cod_restrict` -/
 @[simp]
-theorem subtype_comp_multilinear_map_cod_restrict (f : MultilinearMap R M₁ M₂) (p : Submodule R M₂) h :
+theorem subtype_comp_multilinear_map_cod_restrict (f : MultilinearMap R M₁ M₂) (p : Submodule R M₂) (h) :
     p.Subtype.compMultilinearMap (f.codRestrict p h) = f :=
   MultilinearMap.ext fun v => rfl
 
 /-- The multilinear version of `linear_map.comp_cod_restrict` -/
 @[simp]
-theorem comp_multilinear_map_cod_restrict (g : M₂ →ₗ[R] M₃) (f : MultilinearMap R M₁ M₂) (p : Submodule R M₃) h :
+theorem comp_multilinear_map_cod_restrict (g : M₂ →ₗ[R] M₃) (f : MultilinearMap R M₁ M₂) (p : Submodule R M₃) (h) :
     (g.codRestrict p h).compMultilinearMap f = (g.compMultilinearMap f).codRestrict p fun v => h (f v) :=
   MultilinearMap.ext fun v => rfl
 

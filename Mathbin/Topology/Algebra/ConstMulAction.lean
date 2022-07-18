@@ -340,7 +340,7 @@ variable {Γ : Type _} [Groupₓ Γ] {T : Type _} [TopologicalSpace T] [MulActio
 -/
 @[to_additive]
 instance (priority := 100) Fintype.properly_discontinuous_smul [Fintype Γ] :
-    ProperlyDiscontinuousSmul Γ T where finite_disjoint_inter_image := fun _ _ _ _ => Set.Finite.of_fintype _
+    ProperlyDiscontinuousSmul Γ T where finite_disjoint_inter_image := fun _ _ _ _ => Set.to_finite _
 
 export ProperlyDiscontinuousSmul (finite_disjoint_inter_image)
 

@@ -334,12 +334,12 @@ end AddGroupSeminorm
 semidefinite, positive homogeneous, and subadditive. -/
 structure Seminorm (𝕜 : Type _) (E : Type _) [SemiNormedRing 𝕜] [AddGroupₓ E] [HasSmul 𝕜 E] extends
   AddGroupSeminorm E where
-  smul' : ∀ a : 𝕜 x : E, to_fun (a • x) = ∥a∥ * to_fun x
+  smul' : ∀ (a : 𝕜) (x : E), to_fun (a • x) = ∥a∥ * to_fun x
 
 attribute [nolint doc_blame] Seminorm.toAddGroupSeminorm
 
 private theorem map_zero.of_smul {𝕜 : Type _} {E : Type _} [SemiNormedRing 𝕜] [AddGroupₓ E] [SmulWithZero 𝕜 E]
-    {f : E → ℝ} (smul : ∀ a : 𝕜 x : E, f (a • x) = ∥a∥ * f x) : f 0 = 0 :=
+    {f : E → ℝ} (smul : ∀ (a : 𝕜) (x : E), f (a • x) = ∥a∥ * f x) : f 0 = 0 :=
   calc
     f 0 = f ((0 : 𝕜) • 0) := by
       rw [zero_smul]
@@ -348,11 +348,11 @@ private theorem map_zero.of_smul {𝕜 : Type _} {E : Type _} [SemiNormedRing �
     
 
 private theorem neg.of_smul {𝕜 : Type _} {E : Type _} [SemiNormedRing 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {f : E → ℝ}
-    (smul : ∀ a : 𝕜 x : E, f (a • x) = ∥a∥ * f x) (x : E) : f (-x) = f x := by
+    (smul : ∀ (a : 𝕜) (x : E), f (a • x) = ∥a∥ * f x) (x : E) : f (-x) = f x := by
   rw [← neg_one_smul 𝕜, smul, norm_neg, ← smul, one_smul]
 
 private theorem nonneg.of {𝕜 : Type _} {E : Type _} [SemiNormedRing 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {f : E → ℝ}
-    (add_le : ∀ x y : E, f (x + y) ≤ f x + f y) (smul : ∀ a : 𝕜 x : E, f (a • x) = ∥a∥ * f x) (x : E) : 0 ≤ f x :=
+    (add_le : ∀ x y : E, f (x + y) ≤ f x + f y) (smul : ∀ (a : 𝕜) (x : E), f (a • x) = ∥a∥ * f x) (x : E) : 0 ≤ f x :=
   have h : 0 ≤ 2 * f x :=
     calc
       0 = f (x + -x) := by
@@ -361,12 +361,12 @@ private theorem nonneg.of {𝕜 : Type _} {E : Type _} [SemiNormedRing 𝕜] [Ad
       _ = 2 * f x := by
         rw [neg.of_smul smul, two_mul]
       
-  nonneg_of_mul_nonneg_left h zero_lt_two
+  nonneg_of_mul_nonneg_right h zero_lt_two
 
 /-- Alternative constructor for a `seminorm` on an `add_comm_group E` that is a module over a
 `semi_norm_ring 𝕜`. -/
 def Seminorm.of {𝕜 : Type _} {E : Type _} [SemiNormedRing 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] (f : E → ℝ)
-    (add_le : ∀ x y : E, f (x + y) ≤ f x + f y) (smul : ∀ a : 𝕜 x : E, f (a • x) = ∥a∥ * f x) : Seminorm 𝕜 E where
+    (add_le : ∀ x y : E, f (x + y) ≤ f x + f y) (smul : ∀ (a : 𝕜) (x : E), f (a • x) = ∥a∥ * f x) : Seminorm 𝕜 E where
   toFun := f
   map_zero' := MapZero.of_smul smul
   nonneg' := Nonneg.of add_le smul
@@ -647,7 +647,6 @@ theorem finset_sup_apply (p : ι → Seminorm 𝕜 E) (s : Finset ι) (x : E) :
       ih]
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem finset_sup_le_sum (p : ι → Seminorm 𝕜 E) (s : Finset ι) : s.sup p ≤ ∑ i in s, p i := by
   classical
   refine' finset.sup_le_iff.mpr _
@@ -781,7 +780,6 @@ theorem ball_smul (p : Seminorm 𝕜 E) {c : Nnreal} (hc : 0 < c) (r : ℝ) (x :
 theorem ball_sup (p : Seminorm 𝕜 E) (q : Seminorm 𝕜 E) (e : E) (r : ℝ) : Ball (p⊔q) e r = Ball p e r ∩ Ball q e r := by
   simp_rw [ball, ← Set.set_of_and, coe_sup, Pi.sup_apply, sup_lt_iff]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem ball_finset_sup' (p : ι → Seminorm 𝕜 E) (s : Finset ι) (H : s.Nonempty) (e : E) (r : ℝ) :
     Ball (s.sup' H p) e r = s.inf' H fun i => Ball (p i) e r := by
   induction' H using Finset.Nonempty.cons_induction with a a s ha hs ih
@@ -791,7 +789,7 @@ theorem ball_finset_sup' (p : ι → Seminorm 𝕜 E) (s : Finset ι) (H : s.Non
   · rw [Finset.sup'_cons hs, Finset.inf'_cons hs, ball_sup, inf_eq_inter, ih]
     
 
-theorem ball_mono {p : Seminorm 𝕜 E} {r₁ r₂ : ℝ} (h : r₁ ≤ r₂) : p.ball x r₁ ⊆ p.ball x r₂ := fun _ hx : _ < _ =>
+theorem ball_mono {p : Seminorm 𝕜 E} {r₁ r₂ : ℝ} (h : r₁ ≤ r₂) : p.ball x r₁ ⊆ p.ball x r₂ := fun _ (hx : _ < _) =>
   hx.trans_le h
 
 theorem ball_antitone {p q : Seminorm 𝕜 E} (h : q ≤ p) : p.ball x r ⊆ q.ball x r := fun _ => (h _).trans_lt

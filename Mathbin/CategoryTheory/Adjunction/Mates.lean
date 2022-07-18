@@ -144,7 +144,7 @@ def transferNatTransSelf : (L₂ ⟶ L₁) ≃ (R₁ ⟶ R₂) :=
     _ ≃ (R₁ ⟶ R₂) := R₁.rightUnitor.homCongr R₂.leftUnitor
     
 
-theorem transfer_nat_trans_self_counit (f : L₂ ⟶ L₁) X :
+theorem transfer_nat_trans_self_counit (f : L₂ ⟶ L₁) (X) :
     L₂.map ((transferNatTransSelf adj₁ adj₂ f).app _) ≫ adj₂.counit.app X = f.app _ ≫ adj₁.counit.app X := by
   dsimp' [← transfer_nat_trans_self]
   rw [id_comp, comp_id]
@@ -153,7 +153,7 @@ theorem transfer_nat_trans_self_counit (f : L₂ ⟶ L₁) X :
   rw [this]
   simp
 
-theorem unit_transfer_nat_trans_self (f : L₂ ⟶ L₁) X :
+theorem unit_transfer_nat_trans_self (f : L₂ ⟶ L₁) (X) :
     adj₁.Unit.app _ ≫ (transferNatTransSelf adj₁ adj₂ f).app _ = adj₂.Unit.app X ≫ Functor.map _ (f.app _) := by
   dsimp' [← transfer_nat_trans_self]
   rw [id_comp, comp_id]
@@ -174,7 +174,7 @@ theorem transfer_nat_trans_self_symm_id : (transferNatTransSelf adj₁ adj₁).s
   rw [Equivₓ.symm_apply_eq]
   simp
 
-theorem transfer_nat_trans_self_comp f g :
+theorem transfer_nat_trans_self_comp (f g) :
     transferNatTransSelf adj₁ adj₂ f ≫ transferNatTransSelf adj₂ adj₃ g = transferNatTransSelf adj₁ adj₃ (g ≫ f) := by
   ext
   dsimp' [← transfer_nat_trans_self, ← transfer_nat_trans]
@@ -182,7 +182,17 @@ theorem transfer_nat_trans_self_comp f g :
   rw [← adj₃.unit_naturality_assoc, ← R₃.map_comp, g.naturality_assoc, L₂.map_comp, assoc, adj₂.counit_naturality,
     adj₂.left_triangle_components_assoc, assoc]
 
-theorem transfer_nat_trans_self_symm_comp f g :
+theorem transfer_nat_trans_self_adjunction_id {L R : C ⥤ C} (adj : L ⊣ R) (f : 𝟭 C ⟶ L) (X : C) :
+    (transferNatTransSelf adj Adjunction.id f).app X = f.app (R.obj X) ≫ adj.counit.app X := by
+  dsimp' [← transfer_nat_trans_self, ← transfer_nat_trans, ← adjunction.id]
+  simp only [← comp_id, ← id_comp]
+
+theorem transfer_nat_trans_self_adjunction_id_symm {L R : C ⥤ C} (adj : L ⊣ R) (g : R ⟶ 𝟭 C) (X : C) :
+    ((transferNatTransSelf adj Adjunction.id).symm g).app X = adj.Unit.app X ≫ g.app (L.obj X) := by
+  dsimp' [← transfer_nat_trans_self, ← transfer_nat_trans, ← adjunction.id]
+  simp only [← comp_id, ← id_comp]
+
+theorem transfer_nat_trans_self_symm_comp (f g) :
     (transferNatTransSelf adj₂ adj₁).symm f ≫ (transferNatTransSelf adj₃ adj₂).symm g =
       (transferNatTransSelf adj₃ adj₁).symm (g ≫ f) :=
   by

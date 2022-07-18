@@ -16,7 +16,7 @@ This file defines three properties of functions:
 * `dense_embedding e`  means `e` is also an `embedding`.
 
 The main theorem `continuous_extend` gives a criterion for a function
-`f : X → Z` to a regular (T₃) space Z to extend along a dense embedding
+`f : X → Z` to a T₃ space Z to extend along a dense embedding
 `i : X → Y` to a continuous function `g : Y → Z`. Actually `i` only
 has to be `dense_inducing` (not necessarily injective).
 
@@ -161,7 +161,7 @@ theorem extend_unique [T2Space γ] {f : α → γ} {g : β → γ} (di : DenseIn
     (hg : Continuous g) : di.extend f = g :=
   funext fun b => extend_unique_at di (eventually_of_forall hf) hg.ContinuousAt
 
-theorem continuous_at_extend [RegularSpace γ] {b : β} {f : α → γ} (di : DenseInducing i)
+theorem continuous_at_extend [T3Space γ] {b : β} {f : α → γ} (di : DenseInducing i)
     (hf : ∀ᶠ x in 𝓝 b, ∃ c, Tendsto f (comap i <| 𝓝 x) (𝓝 c)) : ContinuousAt (di.extend f) b := by
   set φ := di.extend f
   have := di.comap_nhds_ne_bot
@@ -185,12 +185,12 @@ theorem continuous_at_extend [RegularSpace γ] {b : β} {f : α → γ} (di : De
   use V₂
   tauto
 
-theorem continuous_extend [RegularSpace γ] {f : α → γ} (di : DenseInducing i)
+theorem continuous_extend [T3Space γ] {f : α → γ} (di : DenseInducing i)
     (hf : ∀ b, ∃ c, Tendsto f (comap i (𝓝 b)) (𝓝 c)) : Continuous (di.extend f) :=
   continuous_iff_continuous_at.mpr fun b => di.continuous_at_extend <| univ_mem' hf
 
 theorem mk' (i : α → β) (c : Continuous i) (dense : ∀ x, x ∈ Closure (Range i))
-    (H : ∀ a : α, ∀ s ∈ 𝓝 a, ∀, ∃ t ∈ 𝓝 (i a), ∀ b, i b ∈ t → b ∈ s) : DenseInducing i :=
+    (H : ∀ (a : α), ∀ s ∈ 𝓝 a, ∀, ∃ t ∈ 𝓝 (i a), ∀ b, i b ∈ t → b ∈ s) : DenseInducing i :=
   { induced :=
       (induced_iff_nhds_eq i).2 fun a =>
         le_antisymmₓ (tendsto_iff_comap.1 <| c.Tendsto _)
@@ -206,7 +206,7 @@ structure DenseEmbedding [TopologicalSpace α] [TopologicalSpace β] (e : α →
 
 theorem DenseEmbedding.mk' [TopologicalSpace α] [TopologicalSpace β] (e : α → β) (c : Continuous e)
     (dense : DenseRange e) (inj : Function.Injective e)
-    (H : ∀ a : α, ∀ s ∈ 𝓝 a, ∀, ∃ t ∈ 𝓝 (e a), ∀ b, e b ∈ t → b ∈ s) : DenseEmbedding e :=
+    (H : ∀ (a : α), ∀ s ∈ 𝓝 a, ∀, ∃ t ∈ 𝓝 (e a), ∀ b, e b ∈ t → b ∈ s) : DenseEmbedding e :=
   { DenseInducing.mk' e c Dense H with inj }
 
 namespace DenseEmbedding
@@ -308,9 +308,9 @@ theorem DenseRange.equalizer (hfd : DenseRange f) {g h : β → γ} (hg : Contin
 
 end
 
--- Bourbaki GT III §3 no.4 Proposition 7 (generalised to any dense-inducing map to a regular space)
-theorem Filter.HasBasis.has_basis_of_dense_inducing [TopologicalSpace α] [TopologicalSpace β] [RegularSpace β]
-    {ι : Type _} {s : ι → Set α} {p : ι → Prop} {x : α} (h : (𝓝 x).HasBasis p s) {f : α → β} (hf : DenseInducing f) :
+-- Bourbaki GT III §3 no.4 Proposition 7 (generalised to any dense-inducing map to a T₃ space)
+theorem Filter.HasBasis.has_basis_of_dense_inducing [TopologicalSpace α] [TopologicalSpace β] [T3Space β] {ι : Type _}
+    {s : ι → Set α} {p : ι → Prop} {x : α} (h : (𝓝 x).HasBasis p s) {f : α → β} (hf : DenseInducing f) :
     ((𝓝 (f x)).HasBasis p) fun i => Closure <| f '' s i := by
   rw [Filter.has_basis_iff] at h⊢
   intro T

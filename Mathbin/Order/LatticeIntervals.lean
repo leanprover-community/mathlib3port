@@ -32,14 +32,12 @@ namespace Set
 
 namespace Ico
 
-variable {a b : α}
-
-instance [SemilatticeInf α] : SemilatticeInf (Ico a b) :=
+instance [SemilatticeInf α] {a b : α} : SemilatticeInf (Ico a b) :=
   Subtype.semilatticeInf fun x y hx hy => ⟨le_inf hx.1 hy.1, lt_of_le_of_ltₓ inf_le_left hx.2⟩
 
 /-- `Ico a b` has a bottom element whenever `a < b`. -/
 @[reducible]
-protected def orderBot [PartialOrderₓ α] (h : a < b) : OrderBot (Ico a b) :=
+protected def orderBot [PartialOrderₓ α] {a b : α} (h : a < b) : OrderBot (Ico a b) :=
   (is_least_Ico h).OrderBot
 
 end Ico
@@ -53,39 +51,35 @@ end Iio
 
 namespace Ioc
 
-variable {a b : α}
-
-instance [SemilatticeSup α] : SemilatticeSup (Ioc a b) :=
+instance [SemilatticeSup α] {a b : α} : SemilatticeSup (Ioc a b) :=
   Subtype.semilatticeSup fun x y hx hy => ⟨lt_of_lt_of_leₓ hx.1 le_sup_left, sup_le hx.2 hy.2⟩
 
 /-- `Ioc a b` has a top element whenever `a < b`. -/
 @[reducible]
-protected def orderTop [PartialOrderₓ α] (h : a < b) : OrderTop (Ioc a b) :=
+protected def orderTop [PartialOrderₓ α] {a b : α} (h : a < b) : OrderTop (Ioc a b) :=
   (is_greatest_Ioc h).OrderTop
 
 end Ioc
 
-namespace Iio
+namespace Ioi
 
 instance [SemilatticeSup α] {a : α} : SemilatticeSup (Ioi a) :=
   Subtype.semilatticeSup fun x y hx hy => lt_of_lt_of_leₓ hx le_sup_left
 
-end Iio
+end Ioi
 
 namespace Iic
 
-variable {a : α}
-
-instance [SemilatticeInf α] : SemilatticeInf (Iic a) :=
+instance [SemilatticeInf α] {a : α} : SemilatticeInf (Iic a) :=
   Subtype.semilatticeInf fun x y hx hy => le_transₓ inf_le_left hx
 
-instance [SemilatticeSup α] : SemilatticeSup (Iic a) :=
+instance [SemilatticeSup α] {a : α} : SemilatticeSup (Iic a) :=
   Subtype.semilatticeSup fun x y hx hy => sup_le hx hy
 
-instance [Lattice α] : Lattice (Iic a) :=
+instance [Lattice α] {a : α} : Lattice (Iic a) :=
   { Iic.semilatticeInf, Iic.semilatticeSup with }
 
-instance [Preorderₓ α] : OrderTop (Iic a) where
+instance [Preorderₓ α] {a : α} : OrderTop (Iic a) where
   top := ⟨a, le_reflₓ a⟩
   le_top := fun x => x.Prop
 
@@ -93,7 +87,7 @@ instance [Preorderₓ α] : OrderTop (Iic a) where
 theorem coe_top [Preorderₓ α] {a : α} : ↑(⊤ : Iic a) = a :=
   rfl
 
-instance [Preorderₓ α] [OrderBot α] : OrderBot (Iic a) where
+instance [Preorderₓ α] [OrderBot α] {a : α} : OrderBot (Iic a) where
   bot := ⟨⊥, bot_le⟩
   bot_le := fun ⟨_, _⟩ => Subtype.mk_le_mk.2 bot_le
 
@@ -101,25 +95,23 @@ instance [Preorderₓ α] [OrderBot α] : OrderBot (Iic a) where
 theorem coe_bot [Preorderₓ α] [OrderBot α] {a : α} : ↑(⊥ : Iic a) = (⊥ : α) :=
   rfl
 
-instance [Preorderₓ α] [OrderBot α] : BoundedOrder (Iic a) :=
+instance [Preorderₓ α] [OrderBot α] {a : α} : BoundedOrder (Iic a) :=
   { Iic.orderTop, Iic.orderBot with }
 
 end Iic
 
 namespace Ici
 
-variable {a : α}
-
-instance [SemilatticeInf α] : SemilatticeInf (Ici a) :=
+instance [SemilatticeInf α] {a : α} : SemilatticeInf (Ici a) :=
   Subtype.semilatticeInf fun x y hx hy => le_inf hx hy
 
-instance [SemilatticeSup α] : SemilatticeSup (Ici a) :=
+instance [SemilatticeSup α] {a : α} : SemilatticeSup (Ici a) :=
   Subtype.semilatticeSup fun x y hx hy => le_transₓ hx le_sup_left
 
-instance [Lattice α] : Lattice (Ici a) :=
+instance [Lattice α] {a : α} : Lattice (Ici a) :=
   { Ici.semilatticeInf, Ici.semilatticeSup with }
 
-instance [Preorderₓ α] : OrderBot (Ici a) where
+instance [Preorderₓ α] {a : α} : OrderBot (Ici a) where
   bot := ⟨a, le_reflₓ a⟩
   bot_le := fun x => x.Prop
 
@@ -127,7 +119,7 @@ instance [Preorderₓ α] : OrderBot (Ici a) where
 theorem coe_bot [Preorderₓ α] {a : α} : ↑(⊥ : Ici a) = a :=
   rfl
 
-instance [Preorderₓ α] [OrderTop α] : OrderTop (Ici a) where
+instance [Preorderₓ α] [OrderTop α] {a : α} : OrderTop (Ici a) where
   top := ⟨⊤, le_top⟩
   le_top := fun ⟨_, _⟩ => Subtype.mk_le_mk.2 le_top
 
@@ -135,7 +127,7 @@ instance [Preorderₓ α] [OrderTop α] : OrderTop (Ici a) where
 theorem coe_top [Preorderₓ α] [OrderTop α] {a : α} : ↑(⊤ : Ici a) = (⊤ : α) :=
   rfl
 
-instance [Preorderₓ α] [OrderTop α] : BoundedOrder (Ici a) :=
+instance [Preorderₓ α] [OrderTop α] {a : α} : BoundedOrder (Ici a) :=
   { Ici.orderTop, Ici.orderBot with }
 
 end Ici

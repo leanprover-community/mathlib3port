@@ -6,6 +6,7 @@ Authors: Andrew Yang
 import Mathbin.AlgebraicGeometry.GammaSpecAdjunction
 import Mathbin.AlgebraicGeometry.OpenImmersion
 import Mathbin.CategoryTheory.Limits.Opposites
+import Mathbin.RingTheory.Localization.InvSubmonoid
 
 /-!
 # Affine schemes
@@ -178,7 +179,7 @@ theorem IsAffineOpen.from_Spec_base_preimage {X : Scheme} {U : Opens X.Carrier} 
   rw [← hU.from_Spec_range, ← Set.image_univ]
   exact Set.preimage_image_eq _ PresheafedSpace.is_open_immersion.base_open.inj
 
-theorem Scheme.Spec_map_presheaf_map_eq_to_hom {X : Scheme} {U V : Opens X.Carrier} (h : U = V) W :
+theorem Scheme.Spec_map_presheaf_map_eq_to_hom {X : Scheme} {U V : Opens X.Carrier} (h : U = V) (W) :
     (Scheme.spec.map (X.Presheaf.map (eqToHom h).op).op).val.c.app W =
       eqToHom
         (by
@@ -304,6 +305,112 @@ theorem is_basis_basic_open (X : Scheme) [IsAffine X] :
     refine' ⟨_, ⟨x, rfl⟩, _⟩
     exact congr_arg Subtype.val (X.map_prime_spectrum_basic_open_of_affine x).symm
     
+
+theorem IsAffineOpen.exists_basic_open_subset {X : Scheme} {U : Opens X.Carrier} (hU : IsAffineOpen U)
+    {V : Opens X.Carrier} (x : V) (h : ↑x ∈ U) : ∃ f : X.Presheaf.obj (op U), X.basicOpen f ⊆ V ∧ ↑x ∈ X.basicOpen f :=
+  by
+  have : is_affine _ := hU
+  obtain ⟨_, ⟨_, ⟨r, rfl⟩, rfl⟩, h₁, h₂⟩ :=
+    (is_basis_basic_open (X.restrict U.open_embedding)).exists_subset_of_mem_open _ ((opens.map U.inclusion).obj V).Prop
+  swap
+  exact ⟨x, h⟩
+  have :
+    U.open_embedding.is_open_map.functor.obj ((X.restrict U.open_embedding).basicOpen r) =
+      X.basic_open (X.presheaf.map (eq_to_hom U.open_embedding_obj_top.symm).op r) :=
+    by
+    refine' (is_open_immersion.image_basic_open (X.of_restrict U.open_embedding) r).trans _
+    erw [← Scheme.basic_open_res_eq _ _ (eq_to_hom U.open_embedding_obj_top).op]
+    rw [← comp_apply, ← CategoryTheory.Functor.map_comp, ← op_comp, eq_to_hom_trans, eq_to_hom_refl, op_id,
+      CategoryTheory.Functor.map_id]
+    erw [PresheafedSpace.is_open_immersion.of_restrict_inv_app]
+    congr
+  use X.presheaf.map (eq_to_hom U.open_embedding_obj_top.symm).op r
+  rw [← this]
+  exact ⟨set.image_subset_iff.mpr h₂, Set.mem_image_of_mem _ h₁⟩
+  exact x.prop
+
+instance {X : Scheme} {U : Opens X.Carrier} (f : X.Presheaf.obj (op U)) :
+    Algebra (X.Presheaf.obj (op U)) (X.Presheaf.obj (op <| X.basicOpen f)) :=
+  (X.Presheaf.map (hom_of_le <| RingedSpace.basic_open_subset _ f : _ ⟶ U).op).toAlgebra
+
+theorem IsAffineOpen.opens_map_from_Spec_basic_open {X : Scheme} {U : Opens X.Carrier} (hU : IsAffineOpen U)
+    (f : X.Presheaf.obj (op U)) :
+    (Opens.map hU.fromSpec.val.base).obj (X.basicOpen f) =
+      RingedSpace.basicOpen _ (specΓIdentity.inv.app (X.Presheaf.obj <| op U) f) :=
+  by
+  erw [LocallyRingedSpace.preimage_basic_open]
+  refine'
+    Eq.trans _
+      (RingedSpace.basic_open_res_eq (Scheme.Spec.obj <| op <| X.presheaf.obj (op U)).toLocallyRingedSpace.toRingedSpace
+        (eq_to_hom hU.from_Spec_base_preimage).op _)
+  congr
+  rw [← comp_apply]
+  congr
+  erw [← hU.Spec_Γ_identity_hom_app_from_Spec]
+  rw [iso.inv_hom_id_app_assoc]
+
+/-- The canonical map `Γ(𝒪ₓ, D(f)) ⟶ Γ(Spec 𝒪ₓ(U), D(Spec_Γ_identity.inv f))`
+This is an isomorphism, as witnessed by an `is_iso` instance. -/
+def basicOpenSectionsToAffine {X : Scheme} {U : Opens X.Carrier} (hU : IsAffineOpen U) (f : X.Presheaf.obj (op U)) :
+    X.Presheaf.obj (op <| X.basicOpen f) ⟶
+      (Scheme.spec.obj <| op <| X.Presheaf.obj (op U)).Presheaf.obj
+        (op <| Scheme.basicOpen _ <| specΓIdentity.inv.app (X.Presheaf.obj (op U)) f) :=
+  hU.fromSpec.1.c.app (op <| X.basicOpen f) ≫
+    (Scheme.spec.obj <| op <| X.Presheaf.obj (op U)).Presheaf.map
+      (eq_to_hom <| (hU.opens_map_from_Spec_basic_open f).symm).op
+
+instance {X : Scheme} {U : Opens X.Carrier} (hU : IsAffineOpen U) (f : X.Presheaf.obj (op U)) :
+    IsIso (basicOpenSectionsToAffine hU f) := by
+  delta' basic_open_sections_to_affine
+  apply is_iso.comp_is_iso with { instances := false }
+  · apply PresheafedSpace.is_open_immersion.is_iso_of_subset
+    rw [hU.from_Spec_range]
+    exact RingedSpace.basic_open_subset _ _
+    
+  infer_instance
+
+theorem is_localization_basic_open {X : Scheme} {U : Opens X.Carrier} (hU : IsAffineOpen U)
+    (f : X.Presheaf.obj (op U)) : IsLocalization.Away f (X.Presheaf.obj (op <| X.basicOpen f)) := by
+  apply
+    (IsLocalization.is_localization_iff_of_ring_equiv (Submonoid.powers f)
+        (as_iso <|
+            basic_open_sections_to_affine hU f ≫
+              (Scheme.Spec.obj _).Presheaf.map
+                (eq_to_hom (basic_open_eq_of_affine _).symm).op).commRingIsoToRingEquiv).mpr
+  convert structure_sheaf.is_localization.to_basic_open _ f
+  change _ ≫ basic_open_sections_to_affine hU f ≫ _ = _
+  delta' basic_open_sections_to_affine
+  erw [RingHom.algebra_map_to_algebra]
+  simp only [← Scheme.comp_val_c_app, ← category.assoc]
+  erw [hU.from_Spec.val.c.naturality_assoc]
+  rw [hU.from_Spec_app_eq]
+  dsimp'
+  simp only [← category.assoc, functor.map_comp, op_comp]
+  apply structure_sheaf.to_open_res
+
+theorem basic_open_basic_open_is_basic_open {X : Scheme} {U : Opens X.Carrier} (hU : IsAffineOpen U)
+    (f : X.Presheaf.obj (op U)) (g : X.Presheaf.obj (op <| X.basicOpen f)) :
+    ∃ f' : X.Presheaf.obj (op U), X.basicOpen f' = X.basicOpen g := by
+  have := is_localization_basic_open hU f
+  obtain ⟨x, ⟨_, n, rfl⟩, rfl⟩ := IsLocalization.surj' (Submonoid.powers f) g
+  use f * x
+  rw [Algebra.smul_def, Scheme.basic_open_mul, Scheme.basic_open_mul]
+  erw [Scheme.basic_open_res]
+  refine' (inf_eq_left.mpr _).symm
+  convert inf_le_left using 1
+  apply Scheme.basic_open_of_is_unit
+  apply
+    Submonoid.left_inv_le_is_unit _
+      (IsLocalization.toInvSubmonoid (Submonoid.powers f) (X.presheaf.obj (op <| X.basic_open f)) _).Prop
+
+theorem exists_basic_open_subset_affine_inter {X : Scheme} {U V : Opens X.Carrier} (hU : IsAffineOpen U)
+    (hV : IsAffineOpen V) (x : X.Carrier) (hx : x ∈ U ∩ V) :
+    ∃ (f : X.Presheaf.obj <| op U)(g : X.Presheaf.obj <| op V), X.basicOpen f = X.basicOpen g ∧ x ∈ X.basicOpen f := by
+  obtain ⟨f, hf₁, hf₂⟩ := hU.exists_basic_open_subset ⟨x, hx.2⟩ hx.1
+  obtain ⟨g, hg₁, hg₂⟩ := hV.exists_basic_open_subset ⟨x, hf₂⟩ hx.2
+  obtain ⟨f', hf'⟩ := basic_open_basic_open_is_basic_open hU f (X.presheaf.map (hom_of_le hf₁ : _ ⟶ V).op g)
+  replace hf' := (hf'.trans (RingedSpace.basic_open_res _ _ _)).trans (inf_eq_right.mpr hg₁)
+  exact ⟨f', g, hf', hf'.symm ▸ hg₂⟩
 
 /-- The prime ideal of `𝒪ₓ(U)` corresponding to a point `x : U`. -/
 noncomputable def IsAffineOpen.primeIdealOf {X : Scheme} {U : Opens X.Carrier} (hU : IsAffineOpen U) (x : U) :

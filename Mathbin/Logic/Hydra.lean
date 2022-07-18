@@ -133,7 +133,7 @@ theorem cut_expand_singleton_singleton {x' x} (h : r x' x) : CutExpand r {x'} {x
   cut_expand_singleton fun a h => by
     rwa [mem_singleton.1 h]
 
-theorem cut_expand_add_left {t u} s : CutExpand r (s + t) (s + u) ↔ CutExpand r t u :=
+theorem cut_expand_add_left {t u} (s) : CutExpand r (s + t) (s + u) ↔ CutExpand r t u :=
   exists₂_congrₓ fun _ _ =>
     and_congr Iff.rfl <| by
       rw [add_assocₓ, add_assocₓ, add_left_cancel_iffₓ]
@@ -150,13 +150,11 @@ theorem cut_expand_iff [DecidableEq α] [IsIrrefl α r] {s' s : Multiset α} :
     exact ⟨ht, mem_add.2 (Or.inl h), (t.erase_add_left_pos h).symm⟩
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
-theorem not_cut_expand_zero [IsIrrefl α r] s : ¬CutExpand r s 0 := by
+theorem not_cut_expand_zero [IsIrrefl α r] (s) : ¬CutExpand r s 0 := by
   classical
   rw [cut_expand_iff]
   rintro ⟨_, _, _, ⟨⟩, _⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- For any relation `r` on `α`, multiset addition `multiset α × multiset α → multiset α` is a
   fibration between the game sum of `cut_expand r` with itself and `cut_expand r` itself. -/
 theorem cut_expand_fibration (r : α → α → Prop) :
@@ -194,7 +192,6 @@ theorem acc_of_singleton [IsIrrefl α r] {s : Multiset α} :
         (cut_expand_fibration r)
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A singleton `{a}` is accessible under `cut_expand r` if `a` is accessible under `r`,
   assuming `r` is irreflexive. -/
 theorem _root_.acc.cut_expand [IsIrrefl α r] {a : α} (hacc : Acc r a) : Acc (CutExpand r) {a} := by

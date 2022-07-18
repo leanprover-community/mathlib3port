@@ -47,11 +47,11 @@ theorem continuous_im : Continuous im :=
 instance : TopologicalSpace.SecondCountableTopology ℍ :=
   TopologicalSpace.Subtype.second_countable_topology _ _
 
-instance : RegularSpace ℍ :=
-  Subtype.regular_space
+instance : T3Space ℍ :=
+  Subtype.t3_space
 
 instance : NormalSpace ℍ :=
-  normal_space_of_regular_second_countable ℍ
+  normal_space_of_t3_second_countable ℍ
 
 instance : ContractibleSpace ℍ :=
   (convex_halfspace_im_gt 0).ContractibleSpace ⟨i, one_pos.trans_eq I_im.symm⟩

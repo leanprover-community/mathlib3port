@@ -105,8 +105,8 @@ unsafe def mk {γ} (tooltip : tc subexpr γ) : tc expr γ :=
   let tooltip_comp :=
     (component.with_should_update fun x y : tactic_state × expr × Expr.Address => x.2.2 ≠ y.2.2) <|
       component.map_action action.on_tooltip_action tooltip
-  (component.filter_map_action fun _ a : Sum γ widget.effect => Sum.casesOn a some fun _ => none) <|
-    (component.with_effects fun _ a : Sum γ widget.effect =>
+  (component.filter_map_action fun _ (a : Sum γ widget.effect) => Sum.casesOn a some fun _ => none) <|
+    (component.with_effects fun _ (a : Sum γ widget.effect) =>
         match a with
         | Sum.inl g => []
         | Sum.inr s => [s]) <|
@@ -197,7 +197,7 @@ unsafe def proof_row {γ} (args : List (html γ)) : List (html γ) :=
 
 /-- Combine the goal row, id row, rule row and proof row to make them a table.
 -/
-unsafe def assemble_table {γ} gr ir rr : List (html γ) → html γ
+unsafe def assemble_table {γ} (gr ir rr) : List (html γ) → html γ
   | [] => h "table" [cn "collapse"] [h "tbody" [] [h "tr" [] gr, h "tr" [] ir, h "tr" [] rr]]
   | pr => h "table" [cn "collapse"] [h "tbody" [] [h "tr" [] gr, h "tr" [] ir, h "tr" [] rr, h "tr" [] pr]]
 

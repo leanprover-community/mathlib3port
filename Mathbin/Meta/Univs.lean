@@ -100,33 +100,33 @@ unsafe def reflected.subst₄ {α : Sort u} {β : α → Sort v} {γ : ∀ a, β
 /-! ### Universe-polymorphic `has_reflect` instances -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]
 /-- Universe polymorphic version of the builtin `punit.reflect`. -/
 unsafe instance punit.reflect' [reflected_univ.{u}] : has_reflect PUnit.{u}
   | PUnit.unit => by
-    trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]"
+    trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]"
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]
 /-- Universe polymorphic version of the builtin `list.reflect`. -/
 unsafe instance list.reflect' [reflected_univ.{u}] {α : Type u} [has_reflect α] [reflected _ α] : has_reflect (List α)
   | [] =>
     (by
-          trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]" :
+          trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]" :
           reflected _ @List.nil.{u}).subst
       (quote.1 α)
   | h :: t =>
     (by
-          trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]" :
+          trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]" :
           reflected _ @List.cons.{u}).subst₃
       (quote.1 α) (quote.1 h) (list.reflect' t)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]
 unsafe instance ulift.reflect' [reflected_univ.{u}] [reflected_univ.{v}] {α : Type v} [reflected _ α] [has_reflect α] :
     has_reflect (ULift.{u, v} α)
   | ULift.up x =>
     (by
-          trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `reflect_name #[]" :
+          trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]" :
           reflected _ @ULift.up.{u, v}).subst₂
       (quote.1 α) (quote.1 x)
 

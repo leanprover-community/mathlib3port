@@ -65,6 +65,9 @@ theorem essentially_small_congr {C : Type u} [Category.{v} C] {D : Type u'} [Cat
     exact essentially_small.mk' (e.trans f)
     
 
+theorem Discrete.essentially_small_of_small {α : Type u} [Small.{w} α] : EssentiallySmall.{w} (Discrete α) :=
+  ⟨⟨Discrete (Shrink α), ⟨inferInstance, ⟨Discrete.equivalence (equivShrink _)⟩⟩⟩⟩
+
 /-- A category is `w`-locally small if every hom set is `w`-small.
 
 See `shrink_homs C` for a category instance where every hom set has been replaced by a small model.

@@ -162,7 +162,7 @@ open TopologicalSpace
 
 theorem ae_le_of_forall_set_lintegral_le_of_sigma_finite [SigmaFinite μ] {f g : α → ℝ≥0∞} (hf : Measurable f)
     (hg : Measurable g) (h : ∀ s, MeasurableSet s → μ s < ∞ → (∫⁻ x in s, f x ∂μ) ≤ ∫⁻ x in s, g x ∂μ) : f ≤ᵐ[μ] g := by
-  have A : ∀ ε N : ℝ≥0 p : ℕ, 0 < ε → μ ({ x | g x + ε ≤ f x ∧ g x ≤ N } ∩ spanning_sets μ p) = 0 := by
+  have A : ∀ (ε N : ℝ≥0 ) (p : ℕ), 0 < ε → μ ({ x | g x + ε ≤ f x ∧ g x ≤ N } ∩ spanning_sets μ p) = 0 := by
     intro ε N p εpos
     let s := { x | g x + ε ≤ f x ∧ g x ≤ N } ∩ spanning_sets μ p
     have s_meas : MeasurableSet s := by
@@ -267,6 +267,13 @@ theorem ae_nonneg_of_forall_set_integral_nonneg_of_finite_measure (hf : Integrab
     (ae_nonneg_of_forall_set_integral_nonneg_of_finite_measure_of_strongly_measurable hf'_meas hf'_integrable
           hf'_zero).trans
       hf_ae.symm.le
+
+theorem ae_le_of_forall_set_integral_le {f g : α → ℝ} (hf : Integrable f μ) (hg : Integrable g μ)
+    (hf_le : ∀ s, MeasurableSet s → (∫ x in s, f x ∂μ) ≤ ∫ x in s, g x ∂μ) : f ≤ᵐ[μ] g := by
+  rw [← eventually_sub_nonneg]
+  refine' ae_nonneg_of_forall_set_integral_nonneg_of_finite_measure (hg.sub hf) fun s hs => _
+  rw [integral_sub' hg.integrable_on hf.integrable_on, sub_nonneg]
+  exact hf_le s hs
 
 end RealFiniteMeasure
 

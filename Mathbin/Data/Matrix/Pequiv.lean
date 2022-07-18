@@ -50,7 +50,7 @@ open Matrix
 def toMatrixₓ [DecidableEq n] [Zero α] [One α] (f : m ≃. n) : Matrix m n α
   | i, j => if j ∈ f i then 1 else 0
 
-theorem mul_matrix_apply [Fintype m] [DecidableEq m] [Semiringₓ α] (f : l ≃. m) (M : Matrix m n α) i j :
+theorem mul_matrix_apply [Fintype m] [DecidableEq m] [Semiringₓ α] (f : l ≃. m) (M : Matrix m n α) (i j) :
     (f.toMatrix ⬝ M) i j = Option.casesOn (f i) 0 fun fi => M fi j := by
   dsimp' [← to_matrix, ← Matrix.mul_apply]
   cases' h : f i with fi
@@ -67,7 +67,7 @@ theorem to_matrix_symm [DecidableEq m] [DecidableEq n] [Zero α] [One α] (f : m
 theorem to_matrix_refl [DecidableEq n] [Zero α] [One α] : ((Pequiv.refl n).toMatrix : Matrix n n α) = 1 := by
   ext <;> simp [← to_matrix, ← one_apply] <;> congr
 
-theorem matrix_mul_apply [Fintype m] [Semiringₓ α] [DecidableEq n] (M : Matrix l m α) (f : m ≃. n) i j :
+theorem matrix_mul_apply [Fintype m] [Semiringₓ α] [DecidableEq n] (M : Matrix l m α) (f : m ≃. n) (i j) :
     (M ⬝ f.toMatrix) i j = Option.casesOn (f.symm j) 0 fun fj => M i fj := by
   dsimp' [← to_matrix, ← Matrix.mul_apply]
   cases' h : f.symm j with fj
@@ -99,7 +99,6 @@ theorem to_matrix_trans [Fintype m] [DecidableEq m] [DecidableEq n] [Semiringₓ
 theorem to_matrix_bot [DecidableEq n] [Zero α] [One α] : ((⊥ : Pequiv m n).toMatrix : Matrix m n α) = 0 :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem to_matrix_injective [DecidableEq n] [MonoidWithZeroₓ α] [Nontrivial α] :
     Function.Injective (@toMatrixₓ m n α _ _ _) := by
   classical

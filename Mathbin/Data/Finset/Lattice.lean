@@ -193,7 +193,6 @@ theorem sup_induction {p : α → Prop} (hb : p ⊥) (hp : ∀ a₁, p a₁ → 
       
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem sup_le_of_le_directed {α : Type _} [SemilatticeSup α] [OrderBot α] (s : Set α) (hs : s.Nonempty)
     (hdir : DirectedOn (· ≤ ·) s) (t : Finset α) : (∀, ∀ x ∈ t, ∀, ∃ y ∈ s, x ≤ y) → ∃ x, x ∈ s ∧ t.sup id ≤ x := by
   classical
@@ -216,14 +215,13 @@ theorem sup_le_of_le_directed {α : Type _} [SemilatticeSup α] [OrderBot α] (s
     exact ⟨le_transₓ hay hyz, le_transₓ hsx_sup hxz⟩
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » s)
 -- If we acquire sublattices
 -- the hypotheses should be reformulated as `s : subsemilattice_sup_bot`
-theorem sup_mem (s : Set α) (w₁ : ⊥ ∈ s) (w₂ : ∀ x y _ : x ∈ s _ : y ∈ s, x⊔y ∈ s) {ι : Type _} (t : Finset ι)
+theorem sup_mem (s : Set α) (w₁ : ⊥ ∈ s) (w₂ : ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), x⊔y ∈ s) {ι : Type _} (t : Finset ι)
     (p : ι → α) (h : ∀, ∀ i ∈ t, ∀, p i ∈ s) : t.sup p ∈ s :=
   @sup_induction _ _ _ _ _ _ (· ∈ s) w₁ w₂ h
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem sup_eq_bot_iff (f : β → α) (S : Finset β) : S.sup f = ⊥ ↔ ∀, ∀ s ∈ S, ∀, f s = ⊥ := by
   classical
@@ -245,7 +243,6 @@ theorem sup_id_set_eq_sUnion (s : Finset (Set α)) : s.sup id = ⋃₀↑s :=
 theorem sup_set_eq_bUnion (s : Finset α) (f : α → Set β) : s.sup f = ⋃ x ∈ s, f x :=
   sup_eq_supr _ _
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem sup_eq_Sup_image [CompleteLattice β] (s : Finset α) (f : α → β) : s.sup f = sup (f '' s) := by
   classical
   rw [← Finset.coe_image, ← sup_id_eq_Sup, sup_image, Function.comp.left_id]
@@ -383,8 +380,8 @@ theorem inf_induction {p : α → Prop} (ht : p ⊤) (hp : ∀ a₁, p a₁ → 
     (hs : ∀, ∀ b ∈ s, ∀, p (f b)) : p (s.inf f) :=
   @sup_induction αᵒᵈ _ _ _ _ _ _ ht hp hs
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » s)
-theorem inf_mem (s : Set α) (w₁ : ⊤ ∈ s) (w₂ : ∀ x y _ : x ∈ s _ : y ∈ s, x⊓y ∈ s) {ι : Type _} (t : Finset ι)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » s)
+theorem inf_mem (s : Set α) (w₁ : ⊤ ∈ s) (w₂ : ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), x⊓y ∈ s) {ι : Type _} (t : Finset ι)
     (p : ι → α) (h : ∀, ∀ i ∈ t, ∀, p i ∈ s) : t.inf p ∈ s :=
   @inf_induction _ _ _ _ _ _ (· ∈ s) w₁ w₂ h
 
@@ -624,8 +621,8 @@ theorem sup'_induction {p : α → Prop} (hp : ∀ a₁, p a₁ → ∀ a₂, p 
   cases a₂
   exacts[h₁, hp a₁ h₁ a₂ h₂]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » s)
-theorem sup'_mem (s : Set α) (w : ∀ x y _ : x ∈ s _ : y ∈ s, x⊔y ∈ s) {ι : Type _} (t : Finset ι) (H : t.Nonempty)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » s)
+theorem sup'_mem (s : Set α) (w : ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), x⊔y ∈ s) {ι : Type _} (t : Finset ι) (H : t.Nonempty)
     (p : ι → α) (h : ∀, ∀ i ∈ t, ∀, p i ∈ s) : t.sup' H p ∈ s :=
   sup'_induction H p w h
 
@@ -695,8 +692,8 @@ theorem inf'_induction {p : α → Prop} (hp : ∀ a₁, p a₁ → ∀ a₂, p 
     p (s.inf' H f) :=
   @sup'_induction αᵒᵈ _ _ _ H f _ hp hs
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x y «expr ∈ » s)
-theorem inf'_mem (s : Set α) (w : ∀ x y _ : x ∈ s _ : y ∈ s, x⊓y ∈ s) {ι : Type _} (t : Finset ι) (H : t.Nonempty)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » s)
+theorem inf'_mem (s : Set α) (w : ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), x⊓y ∈ s) {ι : Type _} (t : Finset ι) (H : t.Nonempty)
     (p : ι → α) (h : ∀, ∀ i ∈ t, ∀, p i ∈ s) : t.inf' H p ∈ s :=
   inf'_induction H p w h
 
@@ -714,9 +711,9 @@ variable [SemilatticeSup α] [OrderBot α]
 theorem sup'_eq_sup {s : Finset β} (H : s.Nonempty) (f : β → α) : s.sup' H f = s.sup f :=
   le_antisymmₓ (sup'_le H f fun b => le_sup) (sup_le fun b => le_sup' f)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (a b «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a b «expr ∈ » s)
 theorem sup_closed_of_sup_closed {s : Set α} (t : Finset α) (htne : t.Nonempty) (h_subset : ↑t ⊆ s)
-    (h : ∀ a b _ : a ∈ s _ : b ∈ s, a⊔b ∈ s) : t.sup id ∈ s :=
+    (h : ∀ (a b) (_ : a ∈ s) (_ : b ∈ s), a⊔b ∈ s) : t.sup id ∈ s :=
   sup'_eq_sup htne id ▸ sup'_induction _ _ h h_subset
 
 theorem coe_sup_of_nonempty {s : Finset β} (h : s.Nonempty) (f : β → α) : (↑(s.sup f) : WithBot α) = s.sup (coe ∘ f) :=
@@ -732,9 +729,9 @@ variable [SemilatticeInf α] [OrderTop α]
 theorem inf'_eq_inf {s : Finset β} (H : s.Nonempty) (f : β → α) : s.inf' H f = s.inf f :=
   @sup'_eq_sup αᵒᵈ _ _ _ _ H f
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (a b «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a b «expr ∈ » s)
 theorem inf_closed_of_inf_closed {s : Set α} (t : Finset α) (htne : t.Nonempty) (h_subset : ↑t ⊆ s)
-    (h : ∀ a b _ : a ∈ s _ : b ∈ s, a⊓b ∈ s) : t.inf id ∈ s :=
+    (h : ∀ (a b) (_ : a ∈ s) (_ : b ∈ s), a⊓b ∈ s) : t.inf id ∈ s :=
   @sup_closed_of_sup_closed αᵒᵈ _ _ _ t htne h_subset h
 
 theorem coe_inf_of_nonempty {s : Finset β} (h : s.Nonempty) (f : β → α) :
@@ -868,51 +865,51 @@ section MaxMin
 variable [LinearOrderₓ α]
 
 /-- Let `s` be a finset in a linear order. Then `s.max` is the maximum of `s` if `s` is not empty,
-and `none` otherwise. It belongs to `option α`. If you want to get an element of `α`, see
+and `⊥` otherwise. It belongs to `with_bot α`. If you want to get an element of `α`, see
 `s.max'`. -/
-protected def max : Finset α → Option α :=
-  fold (Option.liftOrGet max) none some
+protected def max (s : Finset α) : WithBot α :=
+  sup s coe
 
-theorem max_eq_sup_with_bot (s : Finset α) : s.max = @sup (WithBot α) α _ _ s some :=
+theorem max_eq_sup_with_bot (s : Finset α) : s.max = sup s coe :=
   rfl
 
 @[simp]
-theorem max_empty : (∅ : Finset α).max = none :=
+theorem max_empty : (∅ : Finset α).max = ⊥ :=
   rfl
 
 @[simp]
-theorem max_insert {a : α} {s : Finset α} : (insert a s).max = Option.liftOrGet max (some a) s.max :=
+theorem max_insert {a : α} {s : Finset α} : (insert a s).max = max a s.max :=
   fold_insert_idem
 
 @[simp]
-theorem max_singleton {a : α} : Finset.max {a} = some a := by
+theorem max_singleton {a : α} : Finset.max {a} = (a : WithBot α) := by
   rw [← insert_emptyc_eq]
   exact max_insert
 
-theorem max_of_mem {s : Finset α} {a : α} (h : a ∈ s) : ∃ b, b ∈ s.max :=
+theorem max_of_mem {s : Finset α} {a : α} (h : a ∈ s) : ∃ b : α, s.max = b :=
   (@le_sup (WithBot α) _ _ _ _ _ _ h _ rfl).imp fun b => Exists.fst
 
-theorem max_of_nonempty {s : Finset α} (h : s.Nonempty) : ∃ a, a ∈ s.max :=
+theorem max_of_nonempty {s : Finset α} (h : s.Nonempty) : ∃ a : α, s.max = a :=
   let ⟨a, ha⟩ := h
   max_of_mem ha
 
-theorem max_eq_none {s : Finset α} : s.max = none ↔ s = ∅ :=
+theorem max_eq_bot {s : Finset α} : s.max = ⊥ ↔ s = ∅ :=
   ⟨fun h =>
     s.eq_empty_or_nonempty.elim id fun H => by
       let ⟨a, ha⟩ := max_of_nonempty H
       rw [h] at ha <;> cases ha,
     fun h => h.symm ▸ max_empty⟩
 
-theorem mem_of_max {s : Finset α} : ∀ {a : α}, a ∈ s.max → a ∈ s :=
+theorem mem_of_max {s : Finset α} : ∀ {a : α}, s.max = a → a ∈ s :=
   Finset.induction_on s
     (fun _ H => by
       cases H)
-    fun b s _ ih : ∀ {a}, a ∈ s.max → a ∈ s a h : a ∈ (insert b s).max => by
+    fun b s _ (ih : ∀ {a : α}, s.max = a → a ∈ s) a (h : (insert b s).max = a) => by
     by_cases' p : b = a
     · induction p
       exact mem_insert_self b s
       
-    · cases' Option.lift_or_get_choice max_choice (some b) s.max with q q <;> rw [max_insert, q] at h
+    · cases' max_choice (↑b) s.max with q q <;> rw [max_insert, q] at h
       · cases h
         cases p rfl
         
@@ -920,68 +917,83 @@ theorem mem_of_max {s : Finset α} : ∀ {a : α}, a ∈ s.max → a ∈ s :=
         
       
 
-theorem le_max_of_mem {s : Finset α} {a b : α} (h₁ : a ∈ s) (h₂ : b ∈ s.max) : a ≤ b := by
-  rcases@le_sup (WithBot α) _ _ _ _ _ _ h₁ _ rfl with ⟨b', hb, ab⟩ <;> cases h₂.symm.trans hb <;> assumption
+theorem coe_le_max_of_mem {a : α} {s : Finset α} (as : a ∈ s) : ↑a ≤ s.max :=
+  le_sup as
+
+theorem le_max_of_mem {s : Finset α} {a b : α} (h₁ : a ∈ s) (h₂ : s.max = b) : a ≤ b :=
+  WithBot.coe_le_coe.mp <| (coe_le_max_of_mem h₁).trans h₂.le
+
+theorem max_mono {s t : Finset α} (st : s ⊆ t) : s.max ≤ t.max :=
+  sup_mono st
+
+theorem max_le {M : WithBot α} {s : Finset α} (st : ∀ a : α, a ∈ s → (a : WithBot α) ≤ M) : s.max ≤ M :=
+  sup_le st
 
 /-- Let `s` be a finset in a linear order. Then `s.min` is the minimum of `s` if `s` is not empty,
-and `none` otherwise. It belongs to `option α`. If you want to get an element of `α`, see
+and `⊤` otherwise. It belongs to `with_top α`. If you want to get an element of `α`, see
 `s.min'`. -/
-protected def min : Finset α → Option α :=
-  fold (Option.liftOrGet min) none some
+protected def min (s : Finset α) : WithTop α :=
+  inf s coe
 
-theorem min_eq_inf_with_top (s : Finset α) : s.min = @inf (WithTop α) α _ _ s some :=
+theorem min_eq_inf_with_top (s : Finset α) : s.min = inf s coe :=
   rfl
 
 @[simp]
-theorem min_empty : (∅ : Finset α).min = none :=
+theorem min_empty : (∅ : Finset α).min = ⊤ :=
   rfl
 
 @[simp]
-theorem min_insert {a : α} {s : Finset α} : (insert a s).min = Option.liftOrGet min (some a) s.min :=
+theorem min_insert {a : α} {s : Finset α} : (insert a s).min = min (↑a) s.min :=
   fold_insert_idem
 
 @[simp]
-theorem min_singleton {a : α} : Finset.min {a} = some a := by
+theorem min_singleton {a : α} : Finset.min {a} = (a : WithTop α) := by
   rw [← insert_emptyc_eq]
   exact min_insert
 
-theorem min_of_mem {s : Finset α} {a : α} (h : a ∈ s) : ∃ b, b ∈ s.min :=
+theorem min_of_mem {s : Finset α} {a : α} (h : a ∈ s) : ∃ b : α, s.min = b :=
   (@inf_le (WithTop α) _ _ _ _ _ _ h _ rfl).imp fun b => Exists.fst
 
-theorem min_of_nonempty {s : Finset α} (h : s.Nonempty) : ∃ a, a ∈ s.min :=
+theorem min_of_nonempty {s : Finset α} (h : s.Nonempty) : ∃ a : α, s.min = a :=
   let ⟨a, ha⟩ := h
   min_of_mem ha
 
-theorem min_eq_none {s : Finset α} : s.min = none ↔ s = ∅ :=
+theorem min_eq_top {s : Finset α} : s.min = ⊤ ↔ s = ∅ :=
   ⟨fun h =>
     s.eq_empty_or_nonempty.elim id fun H => by
       let ⟨a, ha⟩ := min_of_nonempty H
       rw [h] at ha <;> cases ha,
     fun h => h.symm ▸ min_empty⟩
 
-theorem mem_of_min {s : Finset α} : ∀ {a : α}, a ∈ s.min → a ∈ s :=
+theorem mem_of_min {s : Finset α} : ∀ {a : α}, s.min = a → a ∈ s :=
   @mem_of_max αᵒᵈ _ s
 
-theorem min_le_of_mem {s : Finset α} {a b : α} (h₁ : b ∈ s) (h₂ : a ∈ s.min) : a ≤ b := by
-  rcases@inf_le (WithTop α) _ _ _ _ _ _ h₁ _ rfl with ⟨b', hb, ab⟩ <;> cases h₂.symm.trans hb <;> assumption
+theorem min_le_coe_of_mem {a : α} {s : Finset α} (as : a ∈ s) : s.min ≤ a :=
+  inf_le as
+
+theorem min_le_of_mem {s : Finset α} {a b : α} (h₁ : b ∈ s) (h₂ : s.min = a) : a ≤ b :=
+  WithTop.coe_le_coe.mp <| h₂.Ge.trans (min_le_coe_of_mem h₁)
+
+theorem min_mono {s t : Finset α} (st : s ⊆ t) : t.min ≤ s.min :=
+  inf_mono st
+
+theorem le_min {m : WithTop α} {s : Finset α} (st : ∀ a : α, a ∈ s → m ≤ a) : m ≤ s.min :=
+  le_inf st
 
 /-- Given a nonempty finset `s` in a linear order `α `, then `s.min' h` is its minimum, as an
 element of `α`, where `h` is a proof of nonemptiness. Without this assumption, use instead `s.min`,
-taking values in `option α`. -/
+taking values in `with_top α`. -/
 def min' (s : Finset α) (H : s.Nonempty) : α :=
-  @Option.getₓ _ s.min <| by
-    let ⟨k, hk⟩ := H
-    let ⟨b, hb⟩ := min_of_mem hk
-    simp at hb <;> simp [← hb]
+  WithTop.untop s.min <| mt min_eq_top.1 H.ne_empty
 
 /-- Given a nonempty finset `s` in a linear order `α `, then `s.max' h` is its maximum, as an
 element of `α`, where `h` is a proof of nonemptiness. Without this assumption, use instead `s.max`,
-taking values in `option α`. -/
+taking values in `with_bot α`. -/
 def max' (s : Finset α) (H : s.Nonempty) : α :=
-  @Option.getₓ _ s.max <| by
+  WithBot.unbot s.max <| by
     let ⟨k, hk⟩ := H
     let ⟨b, hb⟩ := max_of_mem hk
-    simp at hb <;> simp [← hb]
+    simp [← hb]
 
 variable (s : Finset α) (H : s.Nonempty) {x : α}
 
@@ -989,10 +1001,10 @@ theorem min'_mem : s.min' H ∈ s :=
   mem_of_min <| by
     simp [← min']
 
-theorem min'_le x (H2 : x ∈ s) : s.min' ⟨x, H2⟩ ≤ x :=
-  min_le_of_mem H2 <| Option.get_memₓ _
+theorem min'_le (x) (H2 : x ∈ s) : s.min' ⟨x, H2⟩ ≤ x :=
+  min_le_of_mem H2 (WithTop.coe_untop _ _).symm
 
-theorem le_min' x (H2 : ∀, ∀ y ∈ s, ∀, x ≤ y) : x ≤ s.min' H :=
+theorem le_min' (x) (H2 : ∀, ∀ y ∈ s, ∀, x ≤ y) : x ≤ s.min' H :=
   H2 _ <| min'_mem _ _
 
 theorem is_least_min' : IsLeast (↑s) (s.min' H) :=
@@ -1011,10 +1023,10 @@ theorem max'_mem : s.max' H ∈ s :=
   mem_of_max <| by
     simp [← max']
 
-theorem le_max' x (H2 : x ∈ s) : x ≤ s.max' ⟨x, H2⟩ :=
-  le_max_of_mem H2 <| Option.get_memₓ _
+theorem le_max' (x) (H2 : x ∈ s) : x ≤ s.max' ⟨x, H2⟩ :=
+  le_max_of_mem H2 (WithBot.coe_unbot _ _).symm
 
-theorem max'_le x (H2 : ∀, ∀ y ∈ s, ∀, y ≤ x) : s.max' H ≤ x :=
+theorem max'_le (x) (H2 : ∀, ∀ y ∈ s, ∀, y ≤ x) : s.max' H ≤ x :=
   H2 _ <| max'_mem _ _
 
 theorem is_greatest_max' : IsGreatest (↑s) (s.max' H) :=
@@ -1229,7 +1241,6 @@ theorem count_finset_sup [DecidableEq β] (s : Finset α) (f : α → Multiset �
     rfl
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mem_sup {α β} [DecidableEq β] {s : Finset α} {f : α → Multiset β} {x : β} : x ∈ s.sup f ↔ ∃ v ∈ s, x ∈ f v := by
   classical
   apply s.induction_on
@@ -1287,7 +1298,6 @@ section Lattice
 
 variable {ι' : Sort _} [CompleteLattice α]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Supremum of `s i`, `i : ι`, is equal to the supremum over `t : finset ι` of suprema
 `⨆ i ∈ t, s i`. This version assumes `ι` is a `Type*`. See `supr_eq_supr_finset'` for a version
 that works for `ι : Sort*`. -/
@@ -1421,7 +1431,6 @@ theorem infi_insert (a : α) (s : Finset α) (t : α → β) : (⨅ x ∈ insert
 theorem supr_finset_image {f : γ → α} {g : α → β} {s : Finset γ} : (⨆ x ∈ s.Image f, g x) = ⨆ y ∈ s, g (f y) := by
   rw [← supr_coe, coe_image, supr_image, supr_coe]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem sup_finset_image {β γ : Type _} [SemilatticeSup β] [OrderBot β] (f : γ → α) (g : α → β) (s : Finset γ) :
     (s.Image f).sup g = s.sup (g ∘ f) := by
   classical

@@ -693,7 +693,7 @@ unsafe def itauto (use_dec use_classical : Bool) (extra_dec : List expr) : tacti
       let hyps ← local_context
       let (Γ, decs) ←
         hyps.mfoldl
-            (fun Γ : Except (Prop → Proof) context × native.rb_map Prop (Bool × expr) h => do
+            (fun (Γ : Except (Prop → Proof) context × native.rb_map Prop (Bool × expr)) h => do
               let e ← infer_type h
               mcond (is_prop e)
                   (do
@@ -752,8 +752,8 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
 /-- A decision procedure for intuitionistic propositional logic. Unlike `finish` and `tauto!` this
 tactic never uses the law of excluded middle (without the `!` option), and the proof search is
 tailored for this use case. (`itauto!` will work as a classical SAT solver, but the algorithm is

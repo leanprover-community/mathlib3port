@@ -139,7 +139,7 @@ variable (C)
 
 /-- A regular mono category is a category in which every monomorphism is regular. -/
 class RegularMonoCategory where
-  regularMonoOfMono : ∀ {X Y : C} f : X ⟶ Y [Mono f], RegularMono f
+  regularMonoOfMono : ∀ {X Y : C} (f : X ⟶ Y) [Mono f], RegularMono f
 
 end
 
@@ -264,7 +264,7 @@ variable (C)
 
 /-- A regular epi category is a category in which every epimorphism is regular. -/
 class RegularEpiCategory where
-  regularEpiOfEpi : ∀ {X Y : C} f : X ⟶ Y [Epi f], RegularEpi f
+  regularEpiOfEpi : ∀ {X Y : C} (f : X ⟶ Y) [Epi f], RegularEpi f
 
 end
 

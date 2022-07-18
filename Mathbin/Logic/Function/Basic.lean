@@ -215,7 +215,7 @@ theorem Bijective.exists_unique_iff {f : α → β} (hf : Bijective f) {p : β �
   ⟨fun ⟨y, hpy, hy⟩ =>
     let ⟨x, hx⟩ := hf.Surjective y
     ⟨x, by
-      rwa [hx], fun z hz : p (f z) => hf.Injective <| hx.symm ▸ hy _ hz⟩,
+      rwa [hx], fun z (hz : p (f z)) => hf.Injective <| hx.symm ▸ hy _ hz⟩,
     fun ⟨x, hpx, hx⟩ =>
     ⟨f x, hpx, fun y hy =>
       let ⟨z, hz⟩ := hf.Surjective y
@@ -267,13 +267,13 @@ theorem not_surjective_Type {α : Type u} (f : α → Type max u v) : ¬Surjecti
 def IsPartialInv {α β} (f : α → β) (g : β → Option α) : Prop :=
   ∀ x y, g y = some x ↔ f x = y
 
-theorem is_partial_inv_left {α β} {f : α → β} {g} (H : IsPartialInv f g) x : g (f x) = some x :=
+theorem is_partial_inv_left {α β} {f : α → β} {g} (H : IsPartialInv f g) (x) : g (f x) = some x :=
   (H _ _).2 rfl
 
 theorem injective_of_partial_inv {α β} {f : α → β} {g} (H : IsPartialInv f g) : Injective f := fun a b h =>
   Option.some.injₓ <| ((H _ _).2 h).symm.trans ((H _ _).2 rfl)
 
-theorem injective_of_partial_inv_right {α β} {f : α → β} {g} (H : IsPartialInv f g) x y b (h₁ : b ∈ g x)
+theorem injective_of_partial_inv_right {α β} {f : α → β} {g} (H : IsPartialInv f g) (x y b) (h₁ : b ∈ g x)
     (h₂ : b ∈ g y) : x = y :=
   ((H _ _).1 h₁).symm.trans ((H _ _).1 h₂)
 
@@ -413,7 +413,7 @@ variable {α : Sort u} {β : Sort v} {γ : Sort w} {f : α → β}
 noncomputable def surjInv {f : α → β} (h : Surjective f) (b : β) : α :=
   Classical.some (h b)
 
-theorem surj_inv_eq (h : Surjective f) b : f (surjInv h b) = b :=
+theorem surj_inv_eq (h : Surjective f) (b) : f (surjInv h b) = b :=
   Classical.some_spec (h b)
 
 theorem right_inverse_surj_inv (hf : Surjective f) : RightInverse (surjInv hf) f :=
@@ -481,24 +481,24 @@ theorem update_injective (f : ∀ a, β a) (a' : α) : Injective (update f a') :
 theorem update_noteq {a a' : α} (h : a ≠ a') (v : β a') (f : ∀ a, β a) : update f a' v a = f a :=
   dif_neg h
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem forall_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a → Prop) :
-    (∀ x, p x (update f a b x)) ↔ p a b ∧ ∀ x _ : x ≠ a, p x (f x) := by
+    (∀ x, p x (update f a b x)) ↔ p a b ∧ ∀ (x) (_ : x ≠ a), p x (f x) := by
   rw [← and_forall_ne a, update_same]
   simp (config := { contextual := true })
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem exists_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a → Prop) :
     (∃ x, p x (update f a b x)) ↔ p a b ∨ ∃ (x : _)(_ : x ≠ a), p x (f x) := by
   rw [← not_forall_not, forall_update_iff f fun a b => ¬p a b]
   simp [← not_and_distrib]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ≠ » a)
-theorem update_eq_iff {a : α} {b : β a} {f g : ∀ a, β a} : update f a b = g ↔ b = g a ∧ ∀ x _ : x ≠ a, f x = g x :=
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » a)
+theorem update_eq_iff {a : α} {b : β a} {f g : ∀ a, β a} : update f a b = g ↔ b = g a ∧ ∀ (x) (_ : x ≠ a), f x = g x :=
   funext_iffₓ.trans <| forall_update_iff _ fun x y => y = g x
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ≠ » a)
-theorem eq_update_iff {a : α} {b : β a} {f g : ∀ a, β a} : g = update f a b ↔ g a = b ∧ ∀ x _ : x ≠ a, g x = f x :=
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » a)
+theorem eq_update_iff {a : α} {b : β a} {f g : ∀ a, β a} : g = update f a b ↔ g a = b ∧ ∀ (x) (_ : x ≠ a), g x = f x :=
   funext_iffₓ.trans <| forall_update_iff _ fun x y => g x = y
 
 @[simp]
@@ -646,11 +646,11 @@ variable {α β γ δ ε : Type _}
 
 /-- Compose a binary function `f` with a pair of unary functions `g` and `h`.
 If both arguments of `f` have the same type and `g = h`, then `bicompl f g g = f on g`. -/
-def bicompl (f : γ → δ → ε) (g : α → γ) (h : β → δ) a b :=
+def bicompl (f : γ → δ → ε) (g : α → γ) (h : β → δ) (a b) :=
   f (g a) (h b)
 
 /-- Compose an unary function `f` with a binary function `g`. -/
-def bicompr (f : γ → δ) (g : α → β → γ) a b :=
+def bicompr (f : γ → δ) (g : α → β → γ) (a b) :=
   f (g a b)
 
 -- mathport name: «expr ∘₂ »
@@ -795,7 +795,7 @@ def Set.piecewise {α : Type u} {β : α → Sort v} (s : Set α) (f g : ∀ i, 
 
 
 theorem eq_rec_on_bijective {α : Sort _} {C : α → Sort _} :
-    ∀ {a a' : α} h : a = a', Function.Bijective (@Eq.recOnₓ _ _ C _ h)
+    ∀ {a a' : α} (h : a = a'), Function.Bijective (@Eq.recOnₓ _ _ C _ h)
   | _, _, rfl => ⟨fun x y => id, fun x => ⟨x, rfl⟩⟩
 
 theorem eq_mp_bijective {α β : Sort _} (h : α = β) : Function.Bijective (Eq.mp h) :=
@@ -825,7 +825,7 @@ if for each pair of distinct points there is a function taking different values 
 def Set.SeparatesPoints {α β : Type _} (A : Set (α → β)) : Prop :=
   ∀ ⦃x y : α⦄, x ≠ y → ∃ f ∈ A, (f x : β) ≠ f y
 
-theorem IsSymmOp.flip_eq {α β} op [IsSymmOp α β op] : flip op = op :=
+theorem IsSymmOp.flip_eq {α β} (op) [IsSymmOp α β op] : flip op = op :=
   funext fun a => funext fun b => (IsSymmOp.symm_op a b).symm
 
 theorem InvImage.equivalence {α : Sort u} {β : Sort v} (r : β → β → Prop) (f : α → β) (h : Equivalenceₓ r) :

@@ -80,13 +80,13 @@ instance of_fixed_field (G : Type _) [Groupₓ G] [Fintype G] [MulSemiringAction
     IsGalois (FixedPoints.subfield G E) E :=
   ⟨⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
 theorem IntermediateField.AdjoinSimple.card_aut_eq_finrank [FiniteDimensional F E] {α : E} (hα : IsIntegral F α)
     (h_sep : (minpoly F α).Separable) (h_splits : (minpoly F α).Splits (algebraMap F F⟮⟯)) :
     Fintype.card (F⟮⟯ ≃ₐ[F] F⟮⟯) = finrank F F⟮⟯ := by
@@ -95,9 +95,9 @@ theorem IntermediateField.AdjoinSimple.card_aut_eq_finrank [FiniteDimensional F 
   rw [← IntermediateField.card_alg_hom_adjoin_integral F hα h_sep h_splits]
   exact Fintype.card_congr (algEquivEquivAlgHom F F⟮⟯)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
 theorem card_aut_eq_finrank [FiniteDimensional F E] [IsGalois F E] : Fintype.card (E ≃ₐ[F] E) = finrank F E := by
   cases' Field.exists_primitive_element F E with α hα
   let iso : F⟮⟯ ≃ₐ[F] E :=
@@ -220,7 +220,6 @@ def fixingSubgroupEquiv : fixingSubgroup K ≃* E ≃ₐ[K] E where
     ext
     rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem fixing_subgroup_fixed_field [FiniteDimensional F E] : fixingSubgroup (fixedField H) = H := by
   have H_le : H ≤ fixingSubgroup (fixed_field H) := (le_iff_le _ _).mp le_rfl
   classical
@@ -254,7 +253,6 @@ end IntermediateField
 
 namespace IsGalois
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem fixed_field_fixing_subgroup [FiniteDimensional F E] [h : IsGalois F E] :
     IntermediateField.fixedField (IntermediateField.fixingSubgroup K) = K := by
   have K_le : K ≤ IntermediateField.fixedField (IntermediateField.fixingSubgroup K) :=
@@ -278,8 +276,7 @@ def intermediateFieldEquivSubgroup [FiniteDimensional F E] [IsGalois F E] :
   left_inv := fun K => fixed_field_fixing_subgroup K
   right_inv := fun H => IntermediateField.fixing_subgroup_fixed_field H
   map_rel_iff' := fun K L => by
-    rw [← fixed_field_fixing_subgroup L, IntermediateField.le_iff_le, fixed_field_fixing_subgroup L, ←
-      OrderDual.dual_le]
+    rw [← fixed_field_fixing_subgroup L, IntermediateField.le_iff_le, fixed_field_fixing_subgroup L]
     rfl
 
 /-- The Galois correspondence as a galois_insertion -/
@@ -327,14 +324,12 @@ theorem is_separable_splitting_field [FiniteDimensional F E] [IsGalois F E] :
   · exact Polynomial.map_ne_zero (minpoly.ne_zero (integral F α))
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem of_fixed_field_eq_bot [FiniteDimensional F E]
     (h : IntermediateField.fixedField (⊤ : Subgroup (E ≃ₐ[F] E)) = ⊥) : IsGalois F E := by
   rw [← is_galois_iff_is_galois_bot, ← h]
   classical
   exact IsGalois.of_fixed_field E (⊤ : Subgroup (E ≃ₐ[F] E))
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem of_card_aut_eq_finrank [FiniteDimensional F E] (h : Fintype.card (E ≃ₐ[F] E) = finrank F E) : IsGalois F E := by
   apply of_fixed_field_eq_bot
   have p : 0 < finrank (IntermediateField.fixedField (⊤ : Subgroup (E ≃ₐ[F] E))) E := finrank_pos
@@ -350,25 +345,30 @@ theorem of_card_aut_eq_finrank [FiniteDimensional F E] (h : Fintype.card (E ≃�
 
 variable {F} {E} {p : F[X]}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:934:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
 theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.IsSplittingField F E] (hp : p.Separable)
-    (K : IntermediateField F E) {x : E} (hx : x ∈ (p.map (algebraMap F E)).roots) :
-    Fintype.card ((↑K⟮⟯ : IntermediateField F E) →ₐ[F] E) = Fintype.card (K →ₐ[F] E) * finrank K K⟮⟯ := by
+    (K : Type _) [Field K] [Algebra F K] [Algebra K E] [IsScalarTower F K E] {x : E}
+    (hx : x ∈ (p.map (algebraMap F E)).roots)
+    -- these are both implied by `hFE`, but as they carry data this makes the lemma more general
+    [Fintype (K →ₐ[F] E)]
+    [Fintype (K⟮⟯.restrictScalars F →ₐ[F] E)] :
+    Fintype.card (K⟮⟯.restrictScalars F →ₐ[F] E) = Fintype.card (K →ₐ[F] E) * finrank K K⟮⟯ := by
   have h : IsIntegral K x := is_integral_of_is_scalar_tower x (is_integral_of_noetherian (IsNoetherian.iff_fg.2 hFE) x)
   have h1 : p ≠ 0 := fun hp => by
     rwa [hp, Polynomial.map_zero, Polynomial.roots_zero] at hx
   have h2 : minpoly K x ∣ p.map (algebraMap F K) := by
     apply minpoly.dvd
-    rw [Polynomial.aeval_def, Polynomial.eval₂_map, ← Polynomial.eval_map]
+    rw [Polynomial.aeval_def, Polynomial.eval₂_map, ← Polynomial.eval_map, ← IsScalarTower.algebra_map_eq]
     exact (Polynomial.mem_roots (Polynomial.map_ne_zero h1)).mp hx
-  let key_equiv :
-    ((↑K⟮⟯ : IntermediateField F E) →ₐ[F] E) ≃ Σf : K →ₐ[F] E, @AlgHom K K⟮⟯ E _ _ _ _ (RingHom.toAlgebra f) :=
-    Equivₓ.trans (AlgEquiv.arrowCongr (IntermediateField.lift2AlgEquiv K⟮⟯) AlgEquiv.refl) algHomEquivSigma
+  let key_equiv : (K⟮⟯.restrictScalars F →ₐ[F] E) ≃ Σf : K →ₐ[F] E, @AlgHom K K⟮⟯ E _ _ _ _ (RingHom.toAlgebra f) := by
+    change (K⟮⟯ →ₐ[F] E) ≃ Σf : K →ₐ[F] E, _
+    exact algHomEquivSigma
   have : ∀ f : K →ₐ[F] E, Fintype (@AlgHom K K⟮⟯ E _ _ _ _ (RingHom.toAlgebra f)) := fun f => by
     apply Fintype.ofInjective (Sigma.mk f) fun _ _ H => eq_of_heq (Sigma.mk.inj H).2
     exact Fintype.ofEquiv _ key_equiv
@@ -415,7 +415,8 @@ theorem of_separable_splitting_field [sp : p.IsSplittingField F E] (hp : p.Separ
   simp only [← P] at *
   rw [of_separable_splitting_field_aux hp K (multiset.mem_to_finset.mp hx), hK, finrank_mul_finrank]
   symm
-  exact LinearEquiv.finrank_eq (AlgEquiv.toLinearEquiv (IntermediateField.lift2AlgEquiv _))
+  refine' LinearEquiv.finrank_eq _
+  rfl
 
 /-- Equivalent characterizations of a Galois extension of finite degree-/
 theorem tfae [FiniteDimensional F E] :

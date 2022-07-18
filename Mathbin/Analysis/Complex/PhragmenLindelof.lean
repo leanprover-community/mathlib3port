@@ -419,8 +419,7 @@ theorem quadrant_I (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
         refine' (hd.continuous_on _ _).mono subset_closure
         simp [← closure_re_prod_im, ← mem_re_prod_im]
       refine'
-        (is_O_one_of_tendsto ℝ (hc.tendsto.comp <| tendsto_exp_comap_re_at_bot.inf H.tendsto)).trans
-          (is_O_of_le _ fun w => _)
+        ((hc.tendsto.comp <| tendsto_exp_comap_re_at_bot.inf H.tendsto).is_O_one ℝ).trans (is_O_of_le _ fun w => _)
       rw [norm_one, Real.norm_of_nonneg (Real.exp_pos _).le, Real.one_le_exp_iff]
       exact mul_nonneg (le_max_rightₓ _ _) (Real.exp_pos _).le
       
@@ -831,7 +830,7 @@ theorem eq_zero_on_right_half_plane_of_superexponential_decay (hd : DiffContOnCl
   intro n
   -- This estimate follows from the Phragmen-Lindelöf principle in the right half-plane.
   refine'
-    right_half_plane_of_tendsto_zero_on_real (differentiable_exp.pow.diff_cont_on_cl.smul hd) _ _ (fun y => _) hz.le
+    right_half_plane_of_tendsto_zero_on_real ((differentiable_exp.pow n).DiffContOnCl.smul hd) _ _ (fun y => _) hz.le
   · rcases hexp with ⟨c, hc, B, hO⟩
     refine' ⟨max c 1, max_ltₓ hc one_lt_two, n + max B 0, is_O.of_norm_left _⟩
     simp only [← hg]

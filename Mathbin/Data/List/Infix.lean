@@ -94,7 +94,7 @@ theorem infix_rfl : l <:+: l :=
 theorem suffix_cons (a : α) : ∀ l, l <:+ a :: l :=
   suffix_append [a]
 
-theorem prefix_concat (a : α) l : l <+: concat l a := by
+theorem prefix_concat (a : α) (l) : l <+: concat l a := by
   simp
 
 theorem infix_cons : l₁ <:+: l₂ → l₁ <:+: a :: l₂ := fun ⟨L₁, L₂, h⟩ => ⟨a :: L₁, L₂, h ▸ rfl⟩
@@ -267,29 +267,29 @@ theorem infix_of_mem_join : ∀ {L : List (List α)}, l ∈ L → l <:+: join L
   | _ :: L, Or.inl rfl => infix_append [] _ _
   | l' :: L, Or.inr h => IsInfix.trans (infix_of_mem_join h) <| (suffix_append _ _).IsInfix
 
-theorem prefix_append_right_inj l : l ++ l₁ <+: l ++ l₂ ↔ l₁ <+: l₂ :=
+theorem prefix_append_right_inj (l) : l ++ l₁ <+: l ++ l₂ ↔ l₁ <+: l₂ :=
   exists_congr fun r => by
     rw [append_assoc, append_right_inj]
 
-theorem prefix_cons_inj a : a :: l₁ <+: a :: l₂ ↔ l₁ <+: l₂ :=
+theorem prefix_cons_inj (a) : a :: l₁ <+: a :: l₂ ↔ l₁ <+: l₂ :=
   prefix_append_right_inj [a]
 
-theorem take_prefix n (l : List α) : takeₓ n l <+: l :=
+theorem take_prefix (n) (l : List α) : takeₓ n l <+: l :=
   ⟨_, take_append_dropₓ _ _⟩
 
-theorem drop_suffix n (l : List α) : dropₓ n l <:+ l :=
+theorem drop_suffix (n) (l : List α) : dropₓ n l <:+ l :=
   ⟨_, take_append_dropₓ _ _⟩
 
-theorem take_sublist n (l : List α) : takeₓ n l <+ l :=
+theorem take_sublist (n) (l : List α) : takeₓ n l <+ l :=
   (take_prefix n l).Sublist
 
-theorem drop_sublist n (l : List α) : dropₓ n l <+ l :=
+theorem drop_sublist (n) (l : List α) : dropₓ n l <+ l :=
   (drop_suffix n l).Sublist
 
-theorem take_subset n (l : List α) : takeₓ n l ⊆ l :=
+theorem take_subset (n) (l : List α) : takeₓ n l ⊆ l :=
   (take_sublist n l).Subset
 
-theorem drop_subset n (l : List α) : dropₓ n l ⊆ l :=
+theorem drop_subset (n) (l : List α) : dropₓ n l ⊆ l :=
   (drop_sublist n l).Subset
 
 theorem mem_of_mem_take (h : a ∈ l.take n) : a ∈ l :=
@@ -490,7 +490,7 @@ theorem mem_inits : ∀ s t : List α, s ∈ inits t ↔ s <+: t
       match s, mi with
       | [], ⟨_, rfl⟩ => Or.inl rfl
       | b :: s, ⟨r, hr⟩ =>
-        (List.noConfusion hr) fun ba st : s ++ r = t =>
+        (List.noConfusion hr) fun ba (st : s ++ r = t) =>
           Or.inr <| by
             rw [ba] <;> exact ⟨_, (mem_inits _ _).2 ⟨_, st⟩, rfl⟩⟩
 

@@ -149,14 +149,14 @@ open Isocrystal
 def FractionRing.module : Module K(p,k) K(p,k) :=
   Semiringₓ.toModule
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler module «exprK( , )»(p, k)
+-- ./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler module «exprK( , )»(p, k)
 /-- Type synonym for `K(p, k)` to carry the standard 1-dimensional isocrystal structure
 of slope `m : ℤ`.
 -/
 @[nolint unused_arguments has_inhabited_instance]
 def StandardOneDimIsocrystal (m : ℤ) : Type _ :=
   K(p,k)deriving AddCommGroupₓ,
-  ./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler module «exprK( , )»(p, k)
+  ./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler module «exprK( , )»(p, k)
 
 section PerfectRing
 
@@ -177,7 +177,7 @@ theorem StandardOneDimIsocrystal.frobenius_apply (m : ℤ) (x : StandardOneDimIs
 
 end PerfectRing
 
--- ./././Mathport/Syntax/Translate/Basic.lean:637:40: in linear_combination #[[expr «expr * »(«exprφ( , )»(p, k) c, hmb)], []]: ./././Mathport/Syntax/Translate/Basic.lean:308:22: unsupported: too many args
+-- ./././Mathport/Syntax/Translate/Basic.lean:646:40: in linear_combination #[[expr «expr * »(«exprφ( , )»(p, k) c, hmb)], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args
 /-- A one-dimensional isocrystal over an algebraically closed field
 admits an isomorphism to one of the standard (indexed by `m : ℤ`) one-dimensional isocrystals. -/
 theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP k p] (V : Type _) [AddCommGroupₓ V]
@@ -217,7 +217,7 @@ theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP 
   simp only [mul_smul]
   congr 1
   trace
-    "./././Mathport/Syntax/Translate/Basic.lean:637:40: in linear_combination #[[expr «expr * »(«exprφ( , )»(p, k) c, hmb)], []]: ./././Mathport/Syntax/Translate/Basic.lean:308:22: unsupported: too many args"
+    "./././Mathport/Syntax/Translate/Basic.lean:646:40: in linear_combination #[[expr «expr * »(«exprφ( , )»(p, k) c, hmb)], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args"
 
 end WittVector
 

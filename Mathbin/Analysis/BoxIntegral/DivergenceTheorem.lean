@@ -151,7 +151,7 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
       rw [← measure.to_box_additive_apply, box.volume_apply, ← I.volume_face_mul i]
       ac_rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y₁ y₂ «expr ∈ » «expr ∩ »(closed_ball x δ, I.Icc))
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y₁ y₂ «expr ∈ » «expr ∩ »(closed_ball x δ, I.Icc))
 /-- If `f : ℝⁿ⁺¹ → E` is differentiable on a closed rectangular box `I` with derivative `f'`, then
 the partial derivative `λ x, f' x (pi.single i 1)` is Henstock-Kurzweil integrable with integral
 equal to the difference of integrals of `f` over the faces `x i = I.upper i` and `x i = I.lower i`.
@@ -197,7 +197,7 @@ theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → �
     have :
       ∀ᶠ δ in 𝓝[>] (0 : ℝ),
         δ ∈ Ioc (0 : ℝ) (1 / 2) ∧
-          (∀ y₁ y₂ _ : y₁ ∈ closed_ball x δ ∩ I.Icc _ : y₂ ∈ closed_ball x δ ∩ I.Icc, ∥f y₁ - f y₂∥ ≤ ε / 2) ∧
+          (∀ (y₁ y₂) (_ : y₁ ∈ closed_ball x δ ∩ I.Icc) (_ : y₂ ∈ closed_ball x δ ∩ I.Icc), ∥f y₁ - f y₂∥ ≤ ε / 2) ∧
             (2 * δ) ^ (n + 1) * ∥f' x (Pi.single i 1)∥ ≤ ε / 2 :=
       by
       refine' eventually.and _ (eventually.and _ _)

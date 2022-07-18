@@ -64,7 +64,7 @@ a `P : prelocal_predicate T` consists of:
 -/
 structure PrelocalPredicate where
   pred : ∀ {U : Opens X}, (∀ x : U, T x) → Prop
-  res : ∀ {U V : Opens X} i : U ⟶ V f : ∀ x : V, T x h : pred f, pred fun x : U => f (i x)
+  res : ∀ {U V : Opens X} (i : U ⟶ V) (f : ∀ x : V, T x) (h : pred f), pred fun x : U => f (i x)
 
 variable (X)
 
@@ -93,8 +93,8 @@ a `P : local_predicate T` consists of:
 -/
 structure LocalPredicate extends PrelocalPredicate T where
   locality :
-    ∀ {U : Opens X} f : ∀ x : U, T x w :
-      ∀ x : U, ∃ (V : Opens X)(m : x.1 ∈ V)(i : V ⟶ U), pred fun x : V => f (i x : U), pred f
+    ∀ {U : Opens X} (f : ∀ x : U, T x)
+      (w : ∀ x : U, ∃ (V : Opens X)(m : x.1 ∈ V)(i : V ⟶ U), pred fun x : V => f (i x : U)), pred f
 
 variable (X)
 
@@ -215,7 +215,7 @@ def stalkToFiber (P : LocalPredicate T) (x : X) : (subsheafToTypes P).1.stalk x 
     
 
 @[simp]
-theorem stalk_to_fiber_germ (P : LocalPredicate T) (U : Opens X) (x : U) f :
+theorem stalk_to_fiber_germ (P : LocalPredicate T) (U : Opens X) (x : U) (f) :
     stalkToFiber P x ((subsheafToTypes P).1.germ x f) = f.1 x := by
   dsimp' [← presheaf.germ, ← stalk_to_fiber]
   cases x
@@ -240,8 +240,8 @@ agree on some neighborhood of `x`.
 -/
 theorem stalk_to_fiber_injective (P : LocalPredicate T) (x : X)
     (w :
-      ∀ U V : OpenNhds x fU : ∀ y : U.1, T y hU : P.pred fU fV : ∀ y : V.1, T y hV : P.pred fV e :
-        fU ⟨x, U.2⟩ = fV ⟨x, V.2⟩,
+      ∀ (U V : OpenNhds x) (fU : ∀ y : U.1, T y) (hU : P.pred fU) (fV : ∀ y : V.1, T y) (hV : P.pred fV)
+        (e : fU ⟨x, U.2⟩ = fV ⟨x, V.2⟩),
         ∃ (W : OpenNhds x)(iU : W ⟶ U)(iV : W ⟶ V), ∀ w : W.1, fU (iU w : U.1) = fV (iV w : V.1)) :
     Function.Injective (stalkToFiber P x) := fun tU tV h => by
   -- We promise to provide all the ingredients of the proof later:

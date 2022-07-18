@@ -57,18 +57,18 @@ Adapted from [Elephant], Lemma C2.1.7(i) with suggestions as mentioned in
 https://math.stackexchange.com/a/358709/
 -/
 theorem is_sheaf_for_bind (P : Cᵒᵖ ⥤ Type v) (U : Sieve X) (B : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄, U f → Sieve Y)
-    (hU : Presieve.IsSheafFor P U) (hB : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ hf : U f, Presieve.IsSheafFor P (B hf))
-    (hB' : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ h : U f ⦃Z⦄ g : Z ⟶ Y, Presieve.IsSeparatedFor P ((B h).pullback g)) :
+    (hU : Presieve.IsSheafFor P U) (hB : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (hf : U f), Presieve.IsSheafFor P (B hf))
+    (hB' : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (h : U f) ⦃Z⦄ (g : Z ⟶ Y), Presieve.IsSeparatedFor P ((B h).pullback g)) :
     Presieve.IsSheafFor P (Sieve.bind U B) := by
   intro s hs
-  let y : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ hf : U f, presieve.family_of_elements P (B hf) := fun Y f hf Z g hg =>
+  let y : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (hf : U f), presieve.family_of_elements P (B hf) := fun Y f hf Z g hg =>
     s _ (presieve.bind_comp _ _ hg)
-  have hy : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ hf : U f, (y hf).Compatible := by
+  have hy : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (hf : U f), (y hf).Compatible := by
     intro Y f H Y₁ Y₂ Z g₁ g₂ f₁ f₂ hf₁ hf₂ comm
     apply hs
     apply reassoc_of comm
   let t : presieve.family_of_elements P U := fun Y f hf => (hB hf).amalgamate (y hf) (hy hf)
-  have ht : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ hf : U f, (y hf).IsAmalgamation (t f hf) := fun Y f hf => (hB hf).IsAmalgamation _
+  have ht : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (hf : U f), (y hf).IsAmalgamation (t f hf) := fun Y f hf => (hB hf).IsAmalgamation _
   have hT : t.compatible := by
     rw [presieve.compatible_iff_sieve_compatible]
     intro Z W f h hf
@@ -115,8 +115,8 @@ Adapted from [Elephant], Lemma C2.1.7(ii) with suggestions as mentioned in
 https://math.stackexchange.com/a/358709
 -/
 theorem is_sheaf_for_trans (P : Cᵒᵖ ⥤ Type v) (R S : Sieve X) (hR : Presieve.IsSheafFor P R)
-    (hR' : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ hf : S f, Presieve.IsSeparatedFor P (R.pullback f))
-    (hS : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ hf : R f, Presieve.IsSheafFor P (S.pullback f)) : Presieve.IsSheafFor P S := by
+    (hR' : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (hf : S f), Presieve.IsSeparatedFor P (R.pullback f))
+    (hS : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (hf : R f), Presieve.IsSheafFor P (S.pullback f)) : Presieve.IsSheafFor P S := by
   have : (bind R fun Y f hf => S.pullback f : presieve X) ≤ S := by
     rintro Z f ⟨W, f, g, hg, hf : S _, rfl⟩
     apply hf
@@ -128,7 +128,7 @@ theorem is_sheaf_for_trans (P : Cᵒᵖ ⥤ Type v) (R S : Sieve X) (hR : Presie
     apply (hS (R.downward_closed hf _)).IsSeparatedFor
     
   · intro Y f hf
-    have : sieve.pullback f (bind R fun T k : T ⟶ X hf : R k => pullback k S) = R.pullback f := by
+    have : sieve.pullback f (bind R fun T (k : T ⟶ X) (hf : R k) => pullback k S) = R.pullback f := by
       ext Z g
       constructor
       · rintro ⟨W, k, l, hl, _, comm⟩
@@ -149,7 +149,7 @@ This is a special case of https://stacks.math.columbia.edu/tag/00Z9, but followi
 proof (see the comments there).
 -/
 def finestTopologySingle (P : Cᵒᵖ ⥤ Type v) : GrothendieckTopology C where
-  Sieves := fun X S => ∀ Y f : Y ⟶ X, Presieve.IsSheafFor P (S.pullback f)
+  Sieves := fun X S => ∀ (Y) (f : Y ⟶ X), Presieve.IsSheafFor P (S.pullback f)
   top_mem' := fun X Y f => by
     rw [sieve.pullback_top]
     exact presieve.is_sheaf_for_top_sieve P

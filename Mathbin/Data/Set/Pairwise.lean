@@ -222,7 +222,7 @@ theorem Pairwise.set_pairwise (h : Pairwise r) (s : Set α) : s.Pairwise r := fu
 end Pairwise
 
 theorem pairwise_subtype_iff_pairwise_set {α : Type _} (s : Set α) (r : α → α → Prop) :
-    (Pairwise fun x : s y : s => r x y) ↔ s.Pairwise r := by
+    (Pairwise fun (x : s) (y : s) => r x y) ↔ s.Pairwise r := by
   constructor
   · intro h x hx y hy hxy
     exact
@@ -379,7 +379,7 @@ disjoint iff `f` is injective . -/
 theorem pairwise_disjoint_image_right_iff {f : α → β → γ} {s : Set α} {t : Set β}
     (hf : ∀, ∀ a ∈ s, ∀, Injective (f a)) :
     (s.PairwiseDisjoint fun a => f a '' t) ↔ (s ×ˢ t : Set (α × β)).InjOn fun p => f p.1 p.2 := by
-  refine' ⟨fun hs x hx y hy h : f _ _ = _ => _, fun hs x hx y hy h => _⟩
+  refine' ⟨fun hs x hx y hy (h : f _ _ = _) => _, fun hs x hx y hy h => _⟩
   · suffices x.1 = y.1 by
       exact
         Prod.extₓ this
@@ -399,7 +399,7 @@ disjoint iff `f` is injective . -/
 theorem pairwise_disjoint_image_left_iff {f : α → β → γ} {s : Set α} {t : Set β}
     (hf : ∀, ∀ b ∈ t, ∀, Injective fun a => f a b) :
     (t.PairwiseDisjoint fun b => (fun a => f a b) '' s) ↔ (s ×ˢ t : Set (α × β)).InjOn fun p => f p.1 p.2 := by
-  refine' ⟨fun ht x hx y hy h : f _ _ = _ => _, fun ht x hx y hy h => _⟩
+  refine' ⟨fun ht x hx y hy (h : f _ _ = _) => _, fun ht x hx y hy h => _⟩
   · suffices x.2 = y.2 by
       exact
         Prod.extₓ

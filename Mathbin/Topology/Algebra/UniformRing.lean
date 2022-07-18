@@ -165,7 +165,7 @@ namespace UniformSpace
 
 variable {α : Type _}
 
-theorem ring_sep_rel α [CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
+theorem ring_sep_rel (α) [CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     separationSetoid α = Submodule.quotientRel (Ideal.closure ⊥) :=
   Setoidₓ.ext fun x y =>
     (add_group_separation_rel x y).trans <|
@@ -181,7 +181,7 @@ theorem ring_sep_quot (α : Type u) [r : CommRingₓ α] [UniformSpace α] [Unif
 /-- Given a topological ring `α` equipped with a uniform structure that makes subtraction uniformly
 continuous, get an equivalence between the separated quotient of `α` and the quotient ring
 corresponding to the closure of zero. -/
-def sepQuotEquivRingQuot α [r : CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
+def sepQuotEquivRingQuot (α) [r : CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     Quotientₓ (separationSetoid α) ≃ α ⧸ (⊥ : Ideal α).closure :=
   Quotientₓ.congrRight fun x y =>
     (add_group_separation_rel x y).trans <|

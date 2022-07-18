@@ -176,7 +176,7 @@ theorem mod_pow_succ {b : ℕ} (w m : ℕ) : m % b ^ succ w = b * (m / b % b ^ w
     rw [Eq.symm (mod_eq_sub_mod p_b_ge)]
     
 
-theorem pow_dvd_pow_iff_pow_le_pow {k l : ℕ} : ∀ {x : ℕ} w : 0 < x, x ^ k ∣ x ^ l ↔ x ^ k ≤ x ^ l
+theorem pow_dvd_pow_iff_pow_le_pow {k l : ℕ} : ∀ {x : ℕ} (w : 0 < x), x ^ k ∣ x ^ l ↔ x ^ k ≤ x ^ l
   | x + 1, w => by
     constructor
     · intro a
@@ -199,7 +199,7 @@ theorem pow_dvd_pow_iff_le_right {x k l : ℕ} (w : 1 < x) : x ^ k ∣ x ^ l ↔
 theorem pow_dvd_pow_iff_le_right' {b k l : ℕ} : (b + 2) ^ k ∣ (b + 2) ^ l ↔ k ≤ l :=
   pow_dvd_pow_iff_le_right (Nat.lt_of_sub_eq_succₓ rfl)
 
-theorem not_pos_pow_dvd : ∀ {p k : ℕ} hp : 1 < p hk : 1 < k, ¬p ^ k ∣ p
+theorem not_pos_pow_dvd : ∀ {p k : ℕ} (hp : 1 < p) (hk : 1 < k), ¬p ^ k ∣ p
   | succ p, succ k, hp, hk, h =>
     have : succ p * succ p ^ k ∣ succ p * 1 := by
       simpa [← pow_succₓ] using h
@@ -227,13 +227,13 @@ theorem pow_div {x m n : ℕ} (h : n ≤ m) (hx : 0 < x) : x ^ m / x ^ n = x ^ (
 /-! ### `shiftl` and `shiftr` -/
 
 
-theorem shiftl_eq_mul_pow m : ∀ n, shiftl m n = m * 2 ^ n
+theorem shiftl_eq_mul_pow (m) : ∀ n, shiftl m n = m * 2 ^ n
   | 0 => (Nat.mul_one _).symm
   | k + 1 =>
     show bit0 (shiftl m k) = m * (2 * 2 ^ k) by
       rw [bit0_val, shiftl_eq_mul_pow, mul_left_commₓ, mul_comm 2]
 
-theorem shiftl'_tt_eq_mul_pow m : ∀ n, shiftl' true m n + 1 = (m + 1) * 2 ^ n
+theorem shiftl'_tt_eq_mul_pow (m) : ∀ n, shiftl' true m n + 1 = (m + 1) * 2 ^ n
   | 0 => by
     simp [← shiftl, ← shiftl', ← pow_zeroₓ, ← Nat.one_mul]
   | k + 1 => by
@@ -242,27 +242,27 @@ theorem shiftl'_tt_eq_mul_pow m : ∀ n, shiftl' true m n + 1 = (m + 1) * 2 ^ n
     change 2 * (shiftl' tt m k + 1) = _
     rw [shiftl'_tt_eq_mul_pow, mul_left_commₓ, mul_comm 2]
 
-theorem one_shiftl n : shiftl 1 n = 2 ^ n :=
+theorem one_shiftl (n) : shiftl 1 n = 2 ^ n :=
   (shiftl_eq_mul_pow _ _).trans (Nat.one_mul _)
 
 @[simp]
-theorem zero_shiftl n : shiftl 0 n = 0 :=
+theorem zero_shiftl (n) : shiftl 0 n = 0 :=
   (shiftl_eq_mul_pow _ _).trans (Nat.zero_mul _)
 
-theorem shiftr_eq_div_pow m : ∀ n, shiftr m n = m / 2 ^ n
+theorem shiftr_eq_div_pow (m) : ∀ n, shiftr m n = m / 2 ^ n
   | 0 => (Nat.div_oneₓ _).symm
   | k + 1 =>
     (congr_arg div2 (shiftr_eq_div_pow k)).trans <| by
       rw [div2_val, Nat.div_div_eq_div_mulₓ, mul_comm] <;> rfl
 
 @[simp]
-theorem zero_shiftr n : shiftr 0 n = 0 :=
+theorem zero_shiftr (n) : shiftr 0 n = 0 :=
   (shiftr_eq_div_pow _ _).trans (Nat.zero_divₓ _)
 
-theorem shiftl'_ne_zero_left b {m} (h : m ≠ 0) n : shiftl' b m n ≠ 0 := by
+theorem shiftl'_ne_zero_left (b) {m} (h : m ≠ 0) (n) : shiftl' b m n ≠ 0 := by
   induction n <;> simp [← shiftl', ← bit_ne_zero, *]
 
-theorem shiftl'_tt_ne_zero m : ∀ {n} h : n ≠ 0, shiftl' true m n ≠ 0
+theorem shiftl'_tt_ne_zero (m) : ∀ {n} (h : n ≠ 0), shiftl' true m n ≠ 0
   | 0, h => absurd rfl h
   | succ n, _ => Nat.bit1_ne_zero _
 
@@ -284,7 +284,7 @@ theorem size_bit0 {n} (h : n ≠ 0) : size (bit0 n) = succ (size n) :=
   @size_bit false n (Nat.bit0_ne_zero h)
 
 @[simp]
-theorem size_bit1 n : size (bit1 n) = succ (size n) :=
+theorem size_bit1 (n) : size (bit1 n) = succ (size n) :=
   @size_bit true n (Nat.bit1_ne_zero n)
 
 @[simp]
@@ -317,7 +317,7 @@ theorem size_shiftl' {b m n} (h : shiftl' b m n ≠ 0) : size (shiftl' b m n) = 
   rfl
 
 @[simp]
-theorem size_shiftl {m} (h : m ≠ 0) n : size (shiftl m n) = size m + n :=
+theorem size_shiftl {m} (h : m ≠ 0) (n) : size (shiftl m n) = size m + n :=
   size_shiftl' (shiftl'_ne_zero_left _ h _)
 
 theorem lt_size_self (n : ℕ) : n < 2 ^ size n := by

@@ -265,7 +265,7 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
               let (args, t') ← open_pis i.local_type
               let Name.mk_string sub p ← return i.local_uniq_name
               let loc_args :=
-                args.map fun e => (fs₁.zip preds).foldl (fun e : expr ⟨f, c, _⟩ => e.replace_with (pred_g c) f) e
+                args.map fun e => (fs₁.zip preds).foldl (fun (e : expr) ⟨f, c, _⟩ => e.replace_with (pred_g c) f) e
               let t' := t'.replace_with (pred_g c) f₂
               return
                   { orig_nm := i, func_nm := p ++ "functional" ++ sub, type := i, loc_type := t' loc_args, concl := t',
@@ -461,7 +461,7 @@ unsafe def coinductive_predicate (meta_info : decl_meta_info) (_ : parse <| tk "
       let some doc_string ← pure meta_info | skip
       add_doc_string d doc_string
 
--- ./././Mathport/Syntax/Translate/Basic.lean:949:4: warning: unsupported notation `hs
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `hs
 /-- Prepares coinduction proofs. This tactic constructs the coinduction invariant from
 the quantifiers in the current goal.
 
@@ -514,7 +514,7 @@ unsafe def coinduction (rule : expr) (ns : List Name) : tactic Unit :=
           | e :: eqs => do
             let (hs, h, ns) ← elim_gen_prod eqs h [] ns
             (h :: hs hs.reverse : List _).mfoldl
-                (fun hs : List Name h : expr => do
+                (fun (hs : List Name) (h : expr) => do
                   let [(_, hs', σ)] ← cases_core h hs
                   clear (h σ)
                   pure <| hs hs')

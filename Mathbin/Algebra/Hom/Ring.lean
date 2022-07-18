@@ -114,7 +114,7 @@ theorem to_fun_eq_coe (f : α →ₙ+* β) : f.toFun = f :=
   rfl
 
 @[simp]
-theorem coe_mk (f : α → β) h₁ h₂ h₃ : ⇑(⟨f, h₁, h₂, h₃⟩ : α →ₙ+* β) = f :=
+theorem coe_mk (f : α → β) (h₁ h₂ h₃) : ⇑(⟨f, h₁, h₂, h₃⟩ : α →ₙ+* β) = f :=
   rfl
 
 @[simp]
@@ -126,7 +126,7 @@ theorem coe_to_mul_hom (f : α →ₙ+* β) : ⇑f.toMulHom = f :=
   rfl
 
 @[simp]
-theorem coe_mul_hom_mk (f : α → β) h₁ h₂ h₃ : ((⟨f, h₁, h₂, h₃⟩ : α →ₙ+* β) : α →ₙ* β) = ⟨f, h₁⟩ :=
+theorem coe_mul_hom_mk (f : α → β) (h₁ h₂ h₃) : ((⟨f, h₁, h₂, h₃⟩ : α →ₙ+* β) : α →ₙ* β) = ⟨f, h₁⟩ :=
   rfl
 
 @[simp]
@@ -134,7 +134,7 @@ theorem coe_to_add_monoid_hom (f : α →ₙ+* β) : ⇑f.toAddMonoidHom = f :=
   rfl
 
 @[simp]
-theorem coe_add_monoid_hom_mk (f : α → β) h₁ h₂ h₃ : ((⟨f, h₁, h₂, h₃⟩ : α →ₙ+* β) : α →+ β) = ⟨f, h₂, h₃⟩ :=
+theorem coe_add_monoid_hom_mk (f : α → β) (h₁ h₂ h₃) : ((⟨f, h₁, h₂, h₃⟩ : α →ₙ+* β) : α →+ β) = ⟨f, h₂, h₃⟩ :=
   rfl
 
 /-- Copy of a `ring_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
@@ -160,7 +160,7 @@ theorem ext_iff {f g : α →ₙ+* β} : f = g ↔ ∀ x, f x = g x :=
   FunLike.ext_iff
 
 @[simp]
-theorem mk_coe (f : α →ₙ+* β) h₁ h₂ h₃ : NonUnitalRingHom.mk f h₁ h₂ h₃ = f :=
+theorem mk_coe (f : α →ₙ+* β) (h₁ h₂ h₃) : NonUnitalRingHom.mk f h₁ h₂ h₃ = f :=
   ext fun _ => rfl
 
 theorem coe_add_monoid_hom_injective : Injective (coe : (α →ₙ+* β) → α →+ β) := fun f g h =>
@@ -385,7 +385,7 @@ theorem to_fun_eq_coe (f : α →+* β) : f.toFun = f :=
   rfl
 
 @[simp]
-theorem coe_mk (f : α → β) h₁ h₂ h₃ h₄ : ⇑(⟨f, h₁, h₂, h₃, h₄⟩ : α →+* β) = f :=
+theorem coe_mk (f : α → β) (h₁ h₂ h₃ h₄) : ⇑(⟨f, h₁, h₂, h₃, h₄⟩ : α →+* β) = f :=
   rfl
 
 @[simp]
@@ -408,7 +408,7 @@ theorem to_monoid_with_zero_hom_eq_coe (f : α →+* β) : (f.toMonoidWithZeroHo
   rfl
 
 @[simp]
-theorem coe_monoid_hom_mk (f : α → β) h₁ h₂ h₃ h₄ : ((⟨f, h₁, h₂, h₃, h₄⟩ : α →+* β) : α →* β) = ⟨f, h₁, h₂⟩ :=
+theorem coe_monoid_hom_mk (f : α → β) (h₁ h₂ h₃ h₄) : ((⟨f, h₁, h₂, h₃, h₄⟩ : α →+* β) : α →* β) = ⟨f, h₁, h₂⟩ :=
   rfl
 
 @[simp, norm_cast]
@@ -420,7 +420,7 @@ theorem to_add_monoid_hom_eq_coe (f : α →+* β) : f.toAddMonoidHom = f :=
   rfl
 
 @[simp]
-theorem coe_add_monoid_hom_mk (f : α → β) h₁ h₂ h₃ h₄ : ((⟨f, h₁, h₂, h₃, h₄⟩ : α →+* β) : α →+ β) = ⟨f, h₃, h₄⟩ :=
+theorem coe_add_monoid_hom_mk (f : α → β) (h₁ h₂ h₃ h₄) : ((⟨f, h₁, h₂, h₃, h₄⟩ : α →+* β) : α →+ β) = ⟨f, h₃, h₄⟩ :=
   rfl
 
 /-- Copy of a `ring_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
@@ -455,7 +455,7 @@ theorem ext_iff {f g : α →+* β} : f = g ↔ ∀ x, f x = g x :=
   FunLike.ext_iff
 
 @[simp]
-theorem mk_coe (f : α →+* β) h₁ h₂ h₃ h₄ : RingHom.mk f h₁ h₂ h₃ h₄ = f :=
+theorem mk_coe (f : α →+* β) (h₁ h₂ h₃ h₄) : RingHom.mk f h₁ h₂ h₃ h₄ = f :=
   ext fun _ => rfl
 
 theorem coe_add_monoid_hom_injective : Injective (coe : (α →+* β) → α →+ β) := fun f g h =>
@@ -661,12 +661,12 @@ def mkRingHomOfMulSelfOfTwoNeZero (h : ∀ x, f (x * x) = f x * f x) (h_two : (2
       exact hxy h_two }
 
 @[simp]
-theorem coe_fn_mk_ring_hom_of_mul_self_of_two_ne_zero h h_two h_one :
+theorem coe_fn_mk_ring_hom_of_mul_self_of_two_ne_zero (h h_two h_one) :
     (f.mkRingHomOfMulSelfOfTwoNeZero h h_two h_one : β → α) = f :=
   rfl
 
 @[simp]
-theorem coe_add_monoid_hom_mk_ring_hom_of_mul_self_of_two_ne_zero h h_two h_one :
+theorem coe_add_monoid_hom_mk_ring_hom_of_mul_self_of_two_ne_zero (h h_two h_one) :
     (f.mkRingHomOfMulSelfOfTwoNeZero h h_two h_one : β →+ α) = f := by
   ext
   rfl

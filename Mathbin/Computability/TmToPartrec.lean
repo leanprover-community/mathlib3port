@@ -126,7 +126,7 @@ def nil : Code :=
   tail.comp succ
 
 @[simp]
-theorem nil_eval v : nil.eval v = pure [] := by
+theorem nil_eval (v) : nil.eval v = pure [] := by
   simp [← nil]
 
 /-- `id` is the identity function: `id v = v`. -/
@@ -134,7 +134,7 @@ def id : Code :=
   tail.comp zero'
 
 @[simp]
-theorem id_eval v : id.eval v = pure v := by
+theorem id_eval (v) : id.eval v = pure v := by
   simp [← id]
 
 /-- `head` gets the head of the input list: `head [] = [0]`, `head (n :: v) = [n]`. -/
@@ -142,7 +142,7 @@ def head : Code :=
   cons id nil
 
 @[simp]
-theorem head_eval v : head.eval v = pure [v.head] := by
+theorem head_eval (v) : head.eval v = pure [v.head] := by
   simp [← head]
 
 /-- `zero` is the constant zero function: `zero v = [0]`. -/
@@ -150,7 +150,7 @@ def zero : Code :=
   cons zero' nil
 
 @[simp]
-theorem zero_eval v : zero.eval v = pure [0] := by
+theorem zero_eval (v) : zero.eval v = pure [0] := by
   simp [← zero]
 
 /-- `pred` returns the predecessor of the head of the input:
@@ -159,7 +159,7 @@ def pred : Code :=
   case zero head
 
 @[simp]
-theorem pred_eval v : pred.eval v = pure [v.head.pred] := by
+theorem pred_eval (v) : pred.eval v = pure [v.head.pred] := by
   simp [← pred] <;> cases v.head <;> simp
 
 /-- `rfind f` performs the function of the `rfind` primitive of partial recursive functions.
@@ -536,7 +536,7 @@ def Cfg.then : Cfg → Cont → Cfg
 /-- The `step_normal` function respects the `then k'` homomorphism. Note that this is an exact
 equality, not a simulation; the original and embedded machines move in lock-step until the
 embedded machine reaches the halt state. -/
-theorem step_normal_then c (k k' : Cont) v : stepNormal c (k.then k') v = (stepNormal c k v).then k' := by
+theorem step_normal_then (c) (k k' : Cont) (v) : stepNormal c (k.then k') v = (stepNormal c k v).then k' := by
   induction c generalizing k v <;> simp only [← cont.then, ← step_normal, ← cfg.then, *]
   case turing.to_partrec.code.cons c c' ih ih' =>
     rw [← ih, cont.then]
@@ -581,7 +581,7 @@ theorem Code.Ok.zero {c} (h : Code.Ok c) {v} : eval step (stepNormal c Cont.halt
   funext v
   exact Part.eq_some_iff.2 (mem_eval.2 ⟨refl_trans_gen.single rfl, rfl⟩)
 
-theorem stepNormal.is_ret c k v : ∃ k' v', stepNormal c k v = Cfg.ret k' v' := by
+theorem stepNormal.is_ret (c k v) : ∃ k' v', stepNormal c k v = Cfg.ret k' v' := by
   induction c generalizing k v
   iterate 3 
     exact ⟨_, _, rfl⟩
@@ -661,7 +661,7 @@ theorem cont_eval_fix {f k v} (fok : Code.Ok f) :
     rw [reaches_eval] at hr
     swap
     exact refl_trans_gen.single rfl
-    refine' Pfun.fixInduction he fun v he : v' ∈ f.fix.eval v IH => _
+    refine' Pfun.fixInduction he fun v (he : v' ∈ f.fix.eval v) IH => _
     rw [fok, Part.bind_eq_bind, Part.mem_bind_iff]
     obtain he | ⟨v'', he₁', _⟩ := Pfun.mem_fix_iff.1 he
     · obtain ⟨v', he₁, he₂⟩ := (Part.mem_map_iff _).1 he
@@ -684,7 +684,7 @@ theorem cont_eval_fix {f k v} (fok : Code.Ok f) :
       
     
 
-theorem code_is_ok c : Code.Ok c := by
+theorem code_is_ok (c) : Code.Ok c := by
   induction c <;> intro k v <;> rw [step_normal]
   iterate 3 
     simp only [← code.eval, ← pure_bind]
@@ -717,7 +717,7 @@ theorem code_is_ok c : Code.Ok c := by
   case fix f IHf =>
     rw [cont_eval_fix IHf]
 
-theorem step_normal_eval c v : eval step (stepNormal c Cont.halt v) = cfg.halt <$> c.eval v :=
+theorem step_normal_eval (c v) : eval step (stepNormal c Cont.halt v) = cfg.halt <$> c.eval v :=
   (code_is_ok c).zero
 
 theorem step_ret_eval {k v} : eval step (stepRet k v) = cfg.halt <$> k.eval v := by
@@ -978,12 +978,12 @@ def unrev :=
   Λ'.move (fun _ => false) rev main
 
 /-- Move elements from `k₁` to `k₂` while `p` holds, with the last element being left on `k₁`. -/
-def moveExcl p k₁ k₂ q :=
+def moveExcl (p k₁ k₂ q) :=
   Λ'.move p k₁ k₂ <| Λ'.push k₁ id q
 
 /-- Move elements from `k₁` to `k₂` without reversion, by performing a double move via the `rev`
 stack. -/
-def move₂ p k₁ k₂ q :=
+def move₂ (p k₁ k₂ q) :=
   moveExcl p k₁ rev <| Λ'.move (fun _ => false) rev k₂ q
 
 /-- Assuming `tr_list v` is on the front of stack `k`, remove it, and push `v.head` onto `main`.
@@ -1322,7 +1322,7 @@ theorem clear_ok {p k q s L₁ o L₂} {S : K' → List Γ'} (e : splitAtPred p 
     convert @IH (update S k Sk) _ _ using 2 <;> simp [← e₃]
     
 
-theorem copy_ok q s a b c d :
+theorem copy_ok (q s a b c d) :
     Reaches₁ (TM2.step tr) ⟨some (Λ'.copy q), s, K'.elim a b c d⟩
       ⟨some q, none, K'.elim (List.reverseCore b a) [] c (List.reverseCore b d)⟩ :=
   by
@@ -1335,20 +1335,20 @@ theorem copy_ok q s a b c d :
   simp
   exact IH _ _ _
 
-theorem tr_pos_num_nat_end : ∀ n, ∀ x ∈ trPosNum n, ∀, natEnd x = ff
+theorem tr_pos_num_nat_end : ∀ (n), ∀ x ∈ trPosNum n, ∀, natEnd x = ff
   | PosNum.one, _, Or.inl rfl => rfl
   | PosNum.bit0 n, _, Or.inl rfl => rfl
   | PosNum.bit0 n, _, Or.inr h => tr_pos_num_nat_end n _ h
   | PosNum.bit1 n, _, Or.inl rfl => rfl
   | PosNum.bit1 n, _, Or.inr h => tr_pos_num_nat_end n _ h
 
-theorem tr_num_nat_end : ∀ n, ∀ x ∈ trNum n, ∀, natEnd x = ff
+theorem tr_num_nat_end : ∀ (n), ∀ x ∈ trNum n, ∀, natEnd x = ff
   | Num.pos n, x, h => tr_pos_num_nat_end n x h
 
-theorem tr_nat_nat_end n : ∀, ∀ x ∈ trNat n, ∀, natEnd x = ff :=
+theorem tr_nat_nat_end (n) : ∀, ∀ x ∈ trNat n, ∀, natEnd x = ff :=
   tr_num_nat_end _
 
-theorem tr_list_ne_Cons : ∀ l, ∀ x ∈ trList l, ∀, x ≠ Γ'.Cons
+theorem tr_list_ne_Cons : ∀ (l), ∀ x ∈ trList l, ∀, x ≠ Γ'.Cons
   | a :: l, x, h => by
     simp [← tr_list] at h
     obtain h | rfl | h := h
@@ -1469,7 +1469,7 @@ theorem succ_ok {q s n} {c d : List Γ'} :
     rfl
     
 
-theorem pred_ok q₁ q₂ s v (c d : List Γ') :
+theorem pred_ok (q₁ q₂ s v) (c d : List Γ') :
     ∃ s',
       Reaches₁ (TM2.step tr) ⟨some (Λ'.pred q₁ q₂), s, K'.elim (trList v) [] c d⟩
         (v.head.elim ⟨some q₁, s', K'.elim (trList v.tail) [] c d⟩ fun n _ =>
@@ -1522,7 +1522,7 @@ theorem pred_ok q₁ q₂ s v (c d : List Γ') :
         decide]
     
 
-theorem tr_normal_respects c k v s :
+theorem tr_normal_respects (c k v s) :
     ∃ b₂,
       TrCfg (stepNormal c k v) b₂ ∧
         Reaches₁ (TM2.step tr) ⟨some (trNormal c (trCont k)), s, K'.elim (trList v) [] [] (trContStack k)⟩ b₂ :=
@@ -1570,7 +1570,7 @@ theorem tr_normal_respects c k v s :
   case fix f IH =>
     apply IH
 
-theorem tr_ret_respects k v s :
+theorem tr_ret_respects (k v s) :
     ∃ b₂,
       TrCfg (stepRet k v) b₂ ∧
         Reaches₁ (TM2.step tr) ⟨some (Λ'.ret (trCont k)), s, K'.elim (trList v) [] [] (trContStack k)⟩ b₂ :=
@@ -1660,10 +1660,10 @@ theorem tr_respects : Respects step (TM2.step tr) TrCfg
 def init (c : Code) (v : List ℕ) : Cfg' :=
   ⟨some (trNormal c Cont'.halt), none, K'.elim (trList v) [] [] []⟩
 
-theorem tr_init c v : ∃ b, TrCfg (stepNormal c Cont.halt v) b ∧ Reaches₁ (TM2.step tr) (init c v) b :=
+theorem tr_init (c v) : ∃ b, TrCfg (stepNormal c Cont.halt v) b ∧ Reaches₁ (TM2.step tr) (init c v) b :=
   tr_normal_respects _ _ _ _
 
-theorem tr_eval c v : eval (TM2.step tr) (init c v) = halt <$> Code.eval c v := by
+theorem tr_eval (c v) : eval (TM2.step tr) (init c v) = halt <$> Code.eval c v := by
   obtain ⟨i, h₁, h₂⟩ := tr_init c v
   refine' Part.ext fun x => _
   rw [reaches_eval h₂.to_refl]
@@ -1721,7 +1721,7 @@ theorem tr_stmts₁_trans {q q'} : q' ∈ trStmts₁ q → trStmts₁ q' ⊆ trS
       
     
 
-theorem tr_stmts₁_self q : q ∈ trStmts₁ q := by
+theorem tr_stmts₁_self (q) : q ∈ trStmts₁ q := by
   induction q <;>
     · first |
         apply Finset.mem_singleton_self|
@@ -1751,7 +1751,7 @@ def codeSupp' : Code → Cont' → Finset Λ'
       (code_supp' f (Cont'.fix f k) ∪ (trStmts₁ (Λ'.clear natEnd main <| trNormal f (Cont'.fix f k)) ∪ {Λ'.ret k}))
 
 @[simp]
-theorem code_supp'_self c k : trStmts₁ (trNormal c k) ⊆ codeSupp' c k := by
+theorem code_supp'_self (c k) : trStmts₁ (trNormal c k) ⊆ codeSupp' c k := by
   cases c <;>
     first |
       rfl|
@@ -1778,45 +1778,45 @@ def codeSupp (c : Code) (k : Cont') : Finset Λ' :=
   codeSupp' c k ∪ contSupp k
 
 @[simp]
-theorem code_supp_self c k : trStmts₁ (trNormal c k) ⊆ codeSupp c k :=
+theorem code_supp_self (c k) : trStmts₁ (trNormal c k) ⊆ codeSupp c k :=
   Finset.Subset.trans (code_supp'_self _ _) (Finset.subset_union_left _ _)
 
 @[simp]
-theorem code_supp_zero k : codeSupp Code.zero' k = trStmts₁ (trNormal Code.zero' k) ∪ contSupp k :=
+theorem code_supp_zero (k) : codeSupp Code.zero' k = trStmts₁ (trNormal Code.zero' k) ∪ contSupp k :=
   rfl
 
 @[simp]
-theorem code_supp_succ k : codeSupp Code.succ k = trStmts₁ (trNormal Code.succ k) ∪ contSupp k :=
+theorem code_supp_succ (k) : codeSupp Code.succ k = trStmts₁ (trNormal Code.succ k) ∪ contSupp k :=
   rfl
 
 @[simp]
-theorem code_supp_tail k : codeSupp Code.tail k = trStmts₁ (trNormal Code.tail k) ∪ contSupp k :=
+theorem code_supp_tail (k) : codeSupp Code.tail k = trStmts₁ (trNormal Code.tail k) ∪ contSupp k :=
   rfl
 
 @[simp]
-theorem code_supp_cons f fs k :
+theorem code_supp_cons (f fs k) :
     codeSupp (Code.cons f fs) k = trStmts₁ (trNormal (Code.cons f fs) k) ∪ codeSupp f (Cont'.cons₁ fs k) := by
   simp [← code_supp, ← code_supp', ← cont_supp, ← Finset.union_assoc]
 
 @[simp]
-theorem code_supp_comp f g k :
+theorem code_supp_comp (f g k) :
     codeSupp (Code.comp f g) k = trStmts₁ (trNormal (Code.comp f g) k) ∪ codeSupp g (Cont'.comp f k) := by
   simp [← code_supp, ← code_supp', ← cont_supp, ← Finset.union_assoc]
   rw [← Finset.union_assoc _ _ (cont_supp k), Finset.union_eq_right_iff_subset.2 (code_supp'_self _ _)]
 
 @[simp]
-theorem code_supp_case f g k :
+theorem code_supp_case (f g k) :
     codeSupp (Code.case f g) k = trStmts₁ (trNormal (Code.case f g) k) ∪ (codeSupp f k ∪ codeSupp g k) := by
   simp [← code_supp, ← code_supp', ← cont_supp, ← Finset.union_assoc, ← Finset.union_left_comm]
 
 @[simp]
-theorem code_supp_fix f k : codeSupp (Code.fix f) k = trStmts₁ (trNormal (Code.fix f) k) ∪ codeSupp f (Cont'.fix f k) :=
-  by
+theorem code_supp_fix (f k) :
+    codeSupp (Code.fix f) k = trStmts₁ (trNormal (Code.fix f) k) ∪ codeSupp f (Cont'.fix f k) := by
   simp [← code_supp, ← code_supp', ← cont_supp, ← Finset.union_assoc, ← Finset.union_left_comm, ←
     Finset.union_left_idem]
 
 @[simp]
-theorem cont_supp_cons₁ fs k :
+theorem cont_supp_cons₁ (fs k) :
     contSupp (Cont'.cons₁ fs k) =
       trStmts₁
           (move₂ (fun _ => false) main aux <|
@@ -1827,14 +1827,14 @@ theorem cont_supp_cons₁ fs k :
   simp [← code_supp, ← code_supp', ← cont_supp, ← Finset.union_assoc]
 
 @[simp]
-theorem cont_supp_cons₂ k : contSupp (Cont'.cons₂ k) = trStmts₁ (head stack <| Λ'.ret k) ∪ contSupp k :=
+theorem cont_supp_cons₂ (k) : contSupp (Cont'.cons₂ k) = trStmts₁ (head stack <| Λ'.ret k) ∪ contSupp k :=
   rfl
 
 @[simp]
-theorem cont_supp_comp f k : contSupp (Cont'.comp f k) = codeSupp f k :=
+theorem cont_supp_comp (f k) : contSupp (Cont'.comp f k) = codeSupp f k :=
   rfl
 
-theorem cont_supp_fix f k : contSupp (Cont'.fix f k) = codeSupp f (Cont'.fix f k) := by
+theorem cont_supp_fix (f k) : contSupp (Cont'.fix f k) = codeSupp f (Cont'.fix f k) := by
   simp (config := { contextual := true })[← code_supp, ← code_supp', ← cont_supp, ← Finset.union_assoc, ←
     Finset.subset_iff]
 
@@ -2054,7 +2054,7 @@ Turing machine. Starting from the initial state `tr_normal c k`, forward simulat
 states in `code_supp c k`, so this is a finite state machine. Even though the underlying type of
 state labels `Λ'` is infinite, for a given partial recursive function `c` and continuation `k`,
 only finitely many states are accessed, corresponding roughly to subterms of `c`. -/
-theorem tr_supports c k : @TM2.Supports _ _ _ _ _ ⟨trNormal c k⟩ tr (codeSupp c k) :=
+theorem tr_supports (c k) : @TM2.Supports _ _ _ _ _ ⟨trNormal c k⟩ tr (codeSupp c k) :=
   ⟨code_supp_self _ _ (tr_stmts₁_self _), fun l' => code_supp_supports (Finset.Subset.refl _) _⟩
 
 end

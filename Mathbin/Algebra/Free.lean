@@ -60,7 +60,7 @@ theorem mul_eq (x y : FreeMagma α) : mul x y = x * y :=
 
 /-- Recursor for `free_magma` using `x * y` instead of `free_magma.mul x y`. -/
 @[elab_as_eliminator, to_additive "Recursor for `free_add_magma` using `x + y` instead of `free_add_magma.add x y`."]
-def recOnMul {C : FreeMagma α → Sort l} x (ih1 : ∀ x, C (of x)) (ih2 : ∀ x y, C x → C y → C (x * y)) : C x :=
+def recOnMul {C : FreeMagma α → Sort l} (x) (ih1 : ∀ x, C (of x)) (ih2 : ∀ x y, C x → C y → C (x * y)) : C x :=
   FreeMagma.recOn x ih1 ih2
 
 end FreeMagma
@@ -100,7 +100,7 @@ def lift : (α → β) ≃ (FreeMagma α →ₙ* β) where
     rw [MulHom.coe_mk, lift_aux_unique]
 
 @[simp, to_additive]
-theorem lift_of x : lift f (of x) = f x :=
+theorem lift_of (x) : lift f (of x) = f x :=
   rfl
 
 end FreeMagma
@@ -128,11 +128,11 @@ section Map
 variable {β : Type v} (f : α → β)
 
 @[simp, to_additive]
-theorem map_of x : map f (of x) = of (f x) :=
+theorem map_of (x) : map f (of x) = of (f x) :=
   rfl
 
 @[simp, to_additive]
-theorem map_mul x y : map f (x * y) = map f x * map f y :=
+theorem map_mul (x y) : map f (x * y) = map f x * map f y :=
   rfl
 
 end Map
@@ -146,14 +146,14 @@ instance : Monadₓ FreeMagma where
 
 /-- Recursor on `free_magma` using `pure` instead of `of`. -/
 @[elab_as_eliminator, to_additive "Recursor on `free_add_magma` using `pure` instead of `of`."]
-protected def recOnPure {C : FreeMagma α → Sort l} x (ih1 : ∀ x, C (pure x)) (ih2 : ∀ x y, C x → C y → C (x * y)) :
+protected def recOnPure {C : FreeMagma α → Sort l} (x) (ih1 : ∀ x, C (pure x)) (ih2 : ∀ x y, C x → C y → C (x * y)) :
     C x :=
   FreeMagma.recOnMul x ih1 ih2
 
 variable {β : Type u}
 
 @[simp, to_additive]
-theorem map_pure (f : α → β) x : (f <$> pure x : FreeMagma β) = pure (f x) :=
+theorem map_pure (f : α → β) (x) : (f <$> pure x : FreeMagma β) = pure (f x) :=
   rfl
 
 @[simp, to_additive]
@@ -161,7 +161,7 @@ theorem map_mul' (f : α → β) (x y : FreeMagma α) : f <$> (x * y) = f <$> x 
   rfl
 
 @[simp, to_additive]
-theorem pure_bind (f : α → FreeMagma β) x : pure x >>= f = f x :=
+theorem pure_bind (f : α → FreeMagma β) (x) : pure x >>= f = f x :=
   rfl
 
 @[simp, to_additive]
@@ -219,7 +219,7 @@ instance : Traversable FreeMagma :=
 variable {m : Type u → Type u} [Applicativeₓ m] (F : α → m β)
 
 @[simp, to_additive]
-theorem traverse_pure x : traverse F (pure x : FreeMagma α) = pure <$> F x :=
+theorem traverse_pure (x) : traverse F (pure x : FreeMagma α) = pure <$> F x :=
   rfl
 
 @[simp, to_additive]
@@ -236,7 +236,7 @@ theorem traverse_mul' :
   rfl
 
 @[simp, to_additive]
-theorem traverse_eq x : FreeMagma.traverse F x = traverse F x :=
+theorem traverse_eq (x) : FreeMagma.traverse F x = traverse F x :=
   rfl
 
 @[simp, to_additive]
@@ -387,7 +387,7 @@ theorem lift_of {hf} (x : α) : lift f hf (of x) = f x :=
   rfl
 
 @[simp, to_additive]
-theorem lift_mul {hf} x y : lift f hf (x * y) = lift f hf x * lift f hf y :=
+theorem lift_mul {hf} (x y) : lift f hf (x * y) = lift f hf x * lift f hf y :=
   (Quot.induction_on x) fun p => (Quot.induction_on y) fun q => hf p q
 
 @[to_additive]
@@ -407,11 +407,11 @@ def map (hf : ∀ x y, f (x * y) = f x * f y) : FreeSemigroup α → FreeSemigro
   lift (of ∘ f) fun x y => congr_arg of <| hf x y
 
 @[simp, to_additive]
-theorem map_of {hf} x : map f hf (of x) = of (f x) :=
+theorem map_of {hf} (x) : map f hf (of x) = of (f x) :=
   rfl
 
 @[simp, to_additive]
-theorem map_mul {hf} x y : map f hf (x * y) = map f hf x * map f hf y :=
+theorem map_mul {hf} (x y) : map f hf (x * y) = map f hf x * map f hf y :=
   lift_mul _ _ _
 
 end FreeSemigroup
@@ -444,7 +444,7 @@ instance [Inhabited α] : Inhabited (FreeSemigroup α) :=
 
 /-- Recursor for free semigroup using `of` and `*`. -/
 @[elab_as_eliminator, to_additive "Recursor for free additive semigroup using `of` and `+`."]
-protected def recOn {C : FreeSemigroup α → Sort l} x (ih1 : ∀ x, C (of x))
+protected def recOn {C : FreeSemigroup α → Sort l} (x) (ih1 : ∀ x, C (of x))
     (ih2 : ∀ x y, C (of x) → C y → C (of x * y)) : C x :=
   (Prod.recOn x) fun f s => List.recOn s ih1 (fun hd tl ih f => ih2 f (hd, tl) (ih1 f) (ih hd)) f
 
@@ -482,11 +482,11 @@ theorem lift_of (x : α) : lift f (of x) = f x :=
   rfl
 
 @[to_additive]
-theorem lift_of_mul x y : lift f (of x * y) = f x * lift f y :=
+theorem lift_of_mul (x y) : lift f (of x * y) = f x * lift f y :=
   rfl
 
 @[simp, to_additive]
-theorem lift_mul x y : lift f (x * y) = lift f x * lift f y :=
+theorem lift_mul (x y) : lift f (x * y) = lift f x * lift f y :=
   FreeSemigroup.recOn x (fun p => rfl) fun p x ih1 ih2 => by
     rw [mul_assoc, lift_of_mul, lift_of_mul, mul_assoc, ih2]
 
@@ -507,11 +507,11 @@ def map : FreeSemigroup α → FreeSemigroup β :=
   lift <| of ∘ f
 
 @[simp, to_additive]
-theorem map_of x : map f (of x) = of (f x) :=
+theorem map_of (x) : map f (of x) = of (f x) :=
   rfl
 
 @[simp, to_additive]
-theorem map_mul x y : map f (x * y) = map f x * map f y :=
+theorem map_mul (x y) : map f (x * y) = map f x * map f y :=
   lift_mul _ _ _
 
 end Map
@@ -527,12 +527,12 @@ instance : Monadₓ FreeSemigroup where
 
 /-- Recursor that uses `pure` instead of `of`. -/
 @[elab_as_eliminator, to_additive "Recursor that uses `pure` instead of `of`."]
-def recOnPure {C : FreeSemigroup α → Sort l} x (ih1 : ∀ x, C (pure x))
+def recOnPure {C : FreeSemigroup α → Sort l} (x) (ih1 : ∀ x, C (pure x))
     (ih2 : ∀ x y, C (pure x) → C y → C (pure x * y)) : C x :=
   FreeSemigroup.recOn x ih1 ih2
 
 @[simp, to_additive]
-theorem map_pure (f : α → β) x : (f <$> pure x : FreeSemigroup β) = pure (f x) :=
+theorem map_pure (f : α → β) (x) : (f <$> pure x : FreeSemigroup β) = pure (f x) :=
   rfl
 
 @[simp, to_additive]
@@ -540,7 +540,7 @@ theorem map_mul' (f : α → β) (x y : FreeSemigroup α) : f <$> (x * y) = f <$
   map_mul _ _ _
 
 @[simp, to_additive]
-theorem pure_bind (f : α → FreeSemigroup β) x : pure x >>= f = f x :=
+theorem pure_bind (f : α → FreeSemigroup β) (x) : pure x >>= f = f x :=
   rfl
 
 @[simp, to_additive]
@@ -578,7 +578,7 @@ instance : Traversable FreeSemigroup :=
 variable {m : Type u → Type u} [Applicativeₓ m] (F : α → m β)
 
 @[simp, to_additive]
-theorem traverse_pure x : traverse F (pure x : FreeSemigroup α) = pure <$> F x :=
+theorem traverse_pure (x) : traverse F (pure x : FreeSemigroup α) = pure <$> F x :=
   rfl
 
 @[simp, to_additive]
@@ -610,7 +610,7 @@ theorem traverse_mul' :
 end
 
 @[simp, to_additive]
-theorem traverse_eq x : FreeSemigroup.traverse F x = traverse F x :=
+theorem traverse_eq (x) : FreeSemigroup.traverse F x = traverse F x :=
   rfl
 
 @[simp, to_additive]
@@ -670,7 +670,7 @@ def freeSemigroupFreeMagma (α : Type u) : Magma.FreeSemigroup (FreeMagma α) �
       rw [FreeSemigroup.lift_mul, Magma.FreeSemigroup.lift_mul, ihx, ihy]
 
 @[simp, to_additive]
-theorem free_semigroup_free_magma_mul {α : Type u} x y :
+theorem free_semigroup_free_magma_mul {α : Type u} (x y) :
     freeSemigroupFreeMagma α (x * y) = freeSemigroupFreeMagma α x * freeSemigroupFreeMagma α y :=
   Magma.FreeSemigroup.lift_mul _ _ _
 

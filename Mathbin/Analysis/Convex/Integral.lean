@@ -47,13 +47,13 @@ variable {α E F : Type _} {m0 : MeasurableSpace α} [NormedGroup E] [NormedSpac
 -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr E]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr E]]
 /-- If `μ` is a probability measure on `α`, `s` is a convex closed set in `E`, and `f` is an
 integrable function sending `μ`-a.e. points to `s`, then the expected value of `f` belongs to `s`:
 `∫ x, f x ∂μ ∈ s`. See also `convex.sum_mem` for a finite sum version of this lemma. -/
 theorem Convex.integral_mem [IsProbabilityMeasure μ] (hs : Convex ℝ s) (hsc : IsClosed s) (hf : ∀ᵐ x ∂μ, f x ∈ s)
     (hfi : Integrable f μ) : (∫ x, f x ∂μ) ∈ s := by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `borelize #[[expr E]]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr E]]"
   rcases hfi.ae_strongly_measurable with ⟨g, hgm, hfg⟩
   have : separable_space (range g ∩ s : Set E) := (hgm.is_separable_range.mono (inter_subset_left _ _)).SeparableSpace
   obtain ⟨y₀, h₀⟩ : (range g ∩ s).Nonempty := by

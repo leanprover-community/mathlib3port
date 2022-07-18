@@ -216,7 +216,8 @@ theorem tendsto_compact_open_restrict {ι : Type _} {l : Filter ι} {F : ι → 
   (continuous_restrict s).ContinuousAt.Tendsto.comp hFf
 
 theorem tendsto_compact_open_iff_forall {ι : Type _} {l : Filter ι} (F : ι → C(α, β)) (f : C(α, β)) :
-    Filter.Tendsto F l (𝓝 f) ↔ ∀ s hs : IsCompact s, Filter.Tendsto (fun i => (F i).restrict s) l (𝓝 (f.restrict s)) :=
+    Filter.Tendsto F l (𝓝 f) ↔
+      ∀ (s) (hs : IsCompact s), Filter.Tendsto (fun i => (F i).restrict s) l (𝓝 (f.restrict s)) :=
   by
   rw [compact_open_eq_Inf_induced]
   simp [← nhds_infi, ← nhds_induced, ← Filter.tendsto_comap_iff]
@@ -226,7 +227,7 @@ it converges in the compact-open topology on each compact subset of `α`. -/
 theorem exists_tendsto_compact_open_iff_forall [LocallyCompactSpace α] [T2Space α] [T2Space β] {ι : Type _}
     {l : Filter ι} [Filter.NeBot l] (F : ι → C(α, β)) :
     (∃ f, Filter.Tendsto F l (𝓝 f)) ↔
-      ∀ s : Set α hs : IsCompact s, ∃ f, Filter.Tendsto (fun i => (F i).restrict s) l (𝓝 f) :=
+      ∀ (s : Set α) (hs : IsCompact s), ∃ f, Filter.Tendsto (fun i => (F i).restrict s) l (𝓝 f) :=
   by
   constructor
   · rintro ⟨f, hf⟩ s hs
@@ -237,7 +238,7 @@ theorem exists_tendsto_compact_open_iff_forall [LocallyCompactSpace α] [T2Space
     -- By uniqueness of limits in a `t2_space`, since `λ i, F i x` tends to both `f s₁ hs₁ x` and
     -- `f s₂ hs₂ x`, we have `f s₁ hs₁ x = f s₂ hs₂ x`
     have h :
-      ∀ s₁ hs₁ : IsCompact s₁ s₂ hs₂ : IsCompact s₂ x : α hxs₁ : x ∈ s₁ hxs₂ : x ∈ s₂,
+      ∀ (s₁) (hs₁ : IsCompact s₁) (s₂) (hs₂ : IsCompact s₂) (x : α) (hxs₁ : x ∈ s₁) (hxs₂ : x ∈ s₂),
         f s₁ hs₁ ⟨x, hxs₁⟩ = f s₂ hs₂ ⟨x, hxs₂⟩ :=
       by
       rintro s₁ hs₁ s₂ hs₂ x hxs₁ hxs₂
@@ -338,6 +339,7 @@ theorem continuous_uncurry_of_continuous [LocallyCompactSpace β] (f : C(α, C(�
 /-- The uncurried form of a continuous map `α → C(β, γ)` as a continuous map `α × β → γ` (if `β` is
     locally compact). If `α` is also locally compact, then this is a homeomorphism between the two
     function spaces, see `homeomorph.curry`. -/
+@[simps]
 def uncurry [LocallyCompactSpace β] (f : C(α, C(β, γ))) : C(α × β, γ) :=
   ⟨_, continuous_uncurry_of_continuous f⟩
 

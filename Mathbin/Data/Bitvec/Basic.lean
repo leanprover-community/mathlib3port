@@ -49,7 +49,7 @@ theorem to_nat_lt {n : ℕ} (v : Bitvec n) : v.toNat < 2 ^ n := by
     
   · simp only [h, ← pow_addₓ, ← flip, ← List.length, ← List.foldr, ← pow_oneₓ]
     rw [add_lsb_eq_twice_add_one]
-    trans 2 * List.foldr (fun x : Bool y : ℕ => add_lsb y x) 0 ys_tl + 2 * 1
+    trans 2 * List.foldr (fun (x : Bool) (y : ℕ) => add_lsb y x) 0 ys_tl + 2 * 1
     · ac_mono
       rw [two_mul]
       mono

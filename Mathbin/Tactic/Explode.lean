@@ -51,7 +51,7 @@ unsafe structure entry : Type where
   deps : List Nat
 
 unsafe def pad_right (l : List Stringₓ) : List Stringₓ :=
-  let n := l.foldl (fun r s : Stringₓ => max r s.length) 0
+  let n := l.foldl (fun r (s : Stringₓ) => max r s.length) 0
   l.map fun s => Nat.iterate (fun s => s.push ' ') (n - s.length) s
 
 unsafe structure entries : Type where mk' ::

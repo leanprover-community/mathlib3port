@@ -189,10 +189,10 @@ theorem Equivₓ.Computable.trans {α β γ} [Primcodable α] [Primcodable β] [
     e₁.Computable → e₂.Computable → (e₁.trans e₂).Computable
   | ⟨l₁, r₁⟩, ⟨l₂, r₂⟩ => ⟨l₂.comp l₁, r₁.comp r₂⟩
 
-theorem Computable.eqv α [Denumerable α] : (Denumerable.eqv α).Computable :=
+theorem Computable.eqv (α) [Denumerable α] : (Denumerable.eqv α).Computable :=
   ⟨Computable.encode, Computable.of_nat _⟩
 
-theorem Computable.equiv₂ α β [Denumerable α] [Denumerable β] : (Denumerable.equiv₂ α β).Computable :=
+theorem Computable.equiv₂ (α β) [Denumerable α] [Denumerable β] : (Denumerable.equiv₂ α β).Computable :=
   (Computable.eqv _).trans (Computable.eqv _).symm
 
 theorem OneOneEquiv.of_equiv {α β} [Primcodable α] [Primcodable β] {e : α ≃ β} (h : e.Computable) {p} :

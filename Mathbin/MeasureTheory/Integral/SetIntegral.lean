@@ -139,6 +139,9 @@ theorem integral_indicator (hs : MeasurableSet s) : (∫ x, indicatorₓ s f x �
       by
       simp
 
+theorem set_integral_indicator (ht : MeasurableSet t) : (∫ x in s, t.indicator f x ∂μ) = ∫ x in s ∩ t, f x ∂μ := by
+  rw [integral_indicator ht, measure.restrict_restrict ht, Set.inter_comm]
+
 theorem of_real_set_integral_one_of_measure_ne_top {α : Type _} {m : MeasurableSpace α} {μ : Measure α} {s : Set α}
     (hs : μ s ≠ ∞) : Ennreal.ofReal (∫ x in s, (1 : ℝ) ∂μ) = μ s :=
   calc
@@ -409,6 +412,11 @@ theorem set_integral_mono_set (hfi : IntegrableOn f t μ) (hf : 0 ≤ᵐ[μ.rest
     (∫ x in s, f x ∂μ) ≤ ∫ x in t, f x ∂μ :=
   integral_mono_measure (Measure.restrict_mono_ae hst) hf hfi
 
+theorem set_integral_ge_of_const_le {c : ℝ} (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (hf : ∀, ∀ x ∈ s, ∀, c ≤ f x)
+    (hfint : IntegrableOn (fun x : α => f x) s μ) : c * (μ s).toReal ≤ ∫ x in s, f x ∂μ := by
+  rw [mul_comm, ← smul_eq_mul, ← set_integral_const c]
+  exact set_integral_mono_on (integrable_on_const.2 (Or.inr hμs.lt_top)) hfint hs hf
+
 end Mono
 
 section Nonneg
@@ -461,7 +469,7 @@ section TendstoMono
 
 variable {μ : Measure α} [NormedGroup E] [CompleteSpace E] [NormedSpace ℝ E] {s : ℕ → Set α} {f : α → E}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:637:40: in filter_upwards #[[], ["with", ident a], ["using", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:308:22: unsupported: parse error
+-- ./././Mathport/Syntax/Translate/Basic.lean:646:40: in filter_upwards #[[], ["with", ident a], ["using", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: parse error
 theorem _root_.antitone.tendsto_set_integral (hsm : ∀ i, MeasurableSet (s i)) (h_anti : Antitone s)
     (hfi : IntegrableOn f (s 0) μ) : Tendsto (fun i => ∫ a in s i, f a ∂μ) atTop (𝓝 (∫ a in ⋂ n, s n, f a ∂μ)) := by
   let bound : α → ℝ := indicator (s 0) fun a => ∥f a∥
@@ -482,7 +490,7 @@ theorem _root_.antitone.tendsto_set_integral (hsm : ∀ i, MeasurableSet (s i)) 
     exact indicator_le_indicator_of_subset (h_anti (zero_le n)) (fun a => norm_nonneg _) _
     
   · trace
-      "./././Mathport/Syntax/Translate/Basic.lean:637:40: in filter_upwards #[[], [\"with\", ident a], [\"using\", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:308:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Basic.lean:646:40: in filter_upwards #[[], [\"with\", ident a], [\"using\", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: parse error"
     
 
 end TendstoMono

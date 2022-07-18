@@ -22,7 +22,7 @@ variable {α : Type _} {β : Type _} {γ : Type _} {M : Type _} [Monoidₓ M] {N
 
 /-- Free monoid over a given alphabet. -/
 @[to_additive "Free nonabelian additive monoid over a given alphabet"]
-def FreeMonoid α :=
+def FreeMonoid (α) :=
   List α
 
 namespace FreeMonoid

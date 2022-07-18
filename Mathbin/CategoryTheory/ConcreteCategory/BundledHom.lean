@@ -21,22 +21,22 @@ universe u
 
 namespace CategoryTheory
 
-variable {c : Type u → Type u} (hom : ∀ ⦃α β : Type u⦄ Iα : c α Iβ : c β, Type u)
+variable {c : Type u → Type u} (hom : ∀ ⦃α β : Type u⦄ (Iα : c α) (Iβ : c β), Type u)
 
 /-- Class for bundled homs. Note that the arguments order follows that of lemmas for `monoid_hom`.
 This way we can use `⟨@monoid_hom.to_fun, @monoid_hom.id ...⟩` in an instance. -/
 structure BundledHom where
-  toFun : ∀ {α β : Type u} Iα : c α Iβ : c β, hom Iα Iβ → α → β
-  id : ∀ {α : Type u} I : c α, hom I I
-  comp : ∀ {α β γ : Type u} Iα : c α Iβ : c β Iγ : c γ, hom Iβ Iγ → hom Iα Iβ → hom Iα Iγ
-  hom_ext : ∀ {α β : Type u} Iα : c α Iβ : c β, Function.Injective (to_fun Iα Iβ) := by
+  toFun : ∀ {α β : Type u} (Iα : c α) (Iβ : c β), hom Iα Iβ → α → β
+  id : ∀ {α : Type u} (I : c α), hom I I
+  comp : ∀ {α β γ : Type u} (Iα : c α) (Iβ : c β) (Iγ : c γ), hom Iβ Iγ → hom Iα Iβ → hom Iα Iγ
+  hom_ext : ∀ {α β : Type u} (Iα : c α) (Iβ : c β), Function.Injective (to_fun Iα Iβ) := by
     run_tac
       obviously
-  id_to_fun : ∀ {α : Type u} I : c α, to_fun I I (id I) = _root_.id := by
+  id_to_fun : ∀ {α : Type u} (I : c α), to_fun I I (id I) = _root_.id := by
     run_tac
       obviously
   comp_to_fun :
-    ∀ {α β γ : Type u} Iα : c α Iβ : c β Iγ : c γ f : hom Iα Iβ g : hom Iβ Iγ,
+    ∀ {α β γ : Type u} (Iα : c α) (Iβ : c β) (Iγ : c γ) (f : hom Iα Iβ) (g : hom Iβ Iγ),
       to_fun Iα Iγ (comp Iα Iβ Iγ g f) = to_fun Iβ Iγ g ∘ to_fun Iα Iβ f := by
     run_tac
       obviously
@@ -82,9 +82,9 @@ variable {hom}
 attribute [local instance] concrete_category.has_coe_to_fun
 
 /-- A version of `has_forget₂.mk'` for categories defined using `@bundled_hom`. -/
-def mkHasForget₂ {d : Type u → Type u} {hom_d : ∀ ⦃α β : Type u⦄ Iα : d α Iβ : d β, Type u} [BundledHom hom_d]
+def mkHasForget₂ {d : Type u → Type u} {hom_d : ∀ ⦃α β : Type u⦄ (Iα : d α) (Iβ : d β), Type u} [BundledHom hom_d]
     (obj : ∀ ⦃α⦄, c α → d α) (map : ∀ {X Y : Bundled c}, (X ⟶ Y) → (Bundled.map obj X ⟶ Bundled.map obj Y))
-    (h_map : ∀ {X Y : Bundled c} f : X ⟶ Y, (map f : X → Y) = f) : HasForget₂ (Bundled c) (Bundled d) :=
+    (h_map : ∀ {X Y : Bundled c} (f : X ⟶ Y), (map f : X → Y) = f) : HasForget₂ (Bundled c) (Bundled d) :=
   HasForget₂.mk' (Bundled.map @obj) (fun _ => rfl) (@map)
     (by
       intros <;> apply heq_of_eq <;> apply h_map)
@@ -102,7 +102,7 @@ omit 𝒞
 For typical usage, see the construction of `CommMon` from `Mon`.
 -/
 @[reducible]
-def MapHom (F : ∀ {α}, d α → c α) : ∀ ⦃α β : Type u⦄ Iα : d α Iβ : d β, Type u := fun α β iα iβ => hom (F iα) (F iβ)
+def MapHom (F : ∀ {α}, d α → c α) : ∀ ⦃α β : Type u⦄ (Iα : d α) (Iβ : d β), Type u := fun α β iα iβ => hom (F iα) (F iβ)
 
 end
 

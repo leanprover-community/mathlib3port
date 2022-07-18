@@ -24,11 +24,11 @@ section DivisionRing
 variable [DivisionRing α] [DivisionRing β]
 
 @[simp]
-theorem RingHom.map_zpow (f : α →+* β) : ∀ a : α n : ℤ, f (a ^ n) = f a ^ n :=
+theorem RingHom.map_zpow (f : α →+* β) : ∀ (a : α) (n : ℤ), f (a ^ n) = f a ^ n :=
   f.toMonoidWithZeroHom.map_zpow
 
 @[simp]
-theorem RingEquiv.map_zpow (f : α ≃+* β) : ∀ a : α n : ℤ, f (a ^ n) = f a ^ n :=
+theorem RingEquiv.map_zpow (f : α ≃+* β) : ∀ (a : α) (n : ℤ), f (a ^ n) = f a ^ n :=
   f.toRingHom.map_zpow
 
 @[simp]

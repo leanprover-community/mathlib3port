@@ -292,17 +292,35 @@ theorem prod_subset_prod_iff : s ×ˢ t ⊆ s₁ ×ˢ t₁ ↔ s ⊆ s₁ ∧ t 
     exact prod_mono H.1 H.2
     
 
-@[simp]
-theorem prod_eq_iff_eq (ht : t.Nonempty) : s ×ˢ t = s₁ ×ˢ t ↔ s = s₁ := by
-  obtain ⟨b, hb⟩ := ht
+theorem prod_eq_prod_iff_of_nonempty (h : (s ×ˢ t : Set _).Nonempty) : s ×ˢ t = s₁ ×ˢ t₁ ↔ s = s₁ ∧ t = t₁ := by
   constructor
-  · simp only [← Set.ext_iff]
-    intro h a
-    simpa [← hb, ← Set.mem_prod] using h (a, b)
+  · intro heq
+    have h₁ : (s₁ ×ˢ t₁ : Set _).Nonempty := by
+      rwa [← HEq]
+    rw [prod_nonempty_iff] at h h₁
+    rw [← fst_image_prod s h.2, ← fst_image_prod s₁ h₁.2, HEq, eq_self_iff_true, true_andₓ, ← snd_image_prod h.1 t, ←
+      snd_image_prod h₁.1 t₁, HEq]
     
-  · rintro rfl
+  · rintro ⟨rfl, rfl⟩
     rfl
     
+
+theorem prod_eq_prod_iff : s ×ˢ t = s₁ ×ˢ t₁ ↔ s = s₁ ∧ t = t₁ ∨ (s = ∅ ∨ t = ∅) ∧ (s₁ = ∅ ∨ t₁ = ∅) := by
+  symm
+  cases' eq_empty_or_nonempty (s ×ˢ t) with h h
+  · simp_rw [h, @eq_comm _ ∅, prod_eq_empty_iff, prod_eq_empty_iff.mp h, true_andₓ, or_iff_right_iff_imp]
+    rintro ⟨rfl, rfl⟩
+    exact prod_eq_empty_iff.mp h
+    
+  rw [prod_eq_prod_iff_of_nonempty h]
+  rw [← ne_empty_iff_nonempty, Ne.def, prod_eq_empty_iff] at h
+  simp_rw [h, false_andₓ, or_falseₓ]
+
+@[simp]
+theorem prod_eq_iff_eq (ht : t.Nonempty) : s ×ˢ t = s₁ ×ˢ t ↔ s = s₁ := by
+  simp_rw [prod_eq_prod_iff, ht.ne_empty, eq_self_iff_true, and_trueₓ, or_iff_left_iff_imp, or_falseₓ]
+  rintro ⟨rfl, rfl⟩
+  rfl
 
 @[simp]
 theorem image_prod (f : α → β → γ) : (fun x : α × β => f x.1 x.2) '' s ×ˢ t = Image2 f s t :=
@@ -318,6 +336,24 @@ theorem image2_mk_eq_prod : Image2 Prod.mk s t = s ×ˢ t :=
   ext <| by
     simp
 
+section Mono
+
+variable [Preorderₓ α] {f : α → Set β} {g : α → Set γ}
+
+theorem _root_.monotone.set_prod (hf : Monotone f) (hg : Monotone g) : Monotone fun x => f x ×ˢ g x := fun a b h =>
+  prod_mono (hf h) (hg h)
+
+theorem _root_.antitone.set_prod (hf : Antitone f) (hg : Antitone g) : Antitone fun x => f x ×ˢ g x := fun a b h =>
+  prod_mono (hf h) (hg h)
+
+theorem _root_.monotone_on.set_prod (hf : MonotoneOn f s) (hg : MonotoneOn g s) : MonotoneOn (fun x => f x ×ˢ g x) s :=
+  fun a ha b hb h => prod_mono (hf ha hb h) (hg ha hb h)
+
+theorem _root_.antitone_on.set_prod (hf : AntitoneOn f s) (hg : AntitoneOn g s) : AntitoneOn (fun x => f x ×ˢ g x) s :=
+  fun a ha b hb h => prod_mono (hf ha hb h) (hg ha hb h)
+
+end Mono
+
 end Prod
 
 /-! ### Diagonal -/
@@ -331,9 +367,12 @@ variable {α : Type _} {s t : Set α}
 def Diagonal (α : Type _) : Set (α × α) :=
   { p | p.1 = p.2 }
 
-@[simp]
 theorem mem_diagonal (x : α) : (x, x) ∈ Diagonal α := by
   simp [← diagonal]
+
+@[simp]
+theorem mem_diagonal_iff {x : α × α} : x ∈ Diagonal α ↔ x.1 = x.2 :=
+  Iff.rfl
 
 theorem preimage_coe_coe_diagonal (s : Set α) : Prod.map coe coe ⁻¹' Diagonal α = Diagonal s := by
   ext ⟨⟨x, hx⟩, ⟨y, hy⟩⟩
@@ -343,6 +382,7 @@ theorem diagonal_eq_range : Diagonal α = Range fun x => (x, x) := by
   ext ⟨x, y⟩
   simp [← diagonal, ← eq_comm]
 
+@[simp]
 theorem prod_subset_compl_diagonal_iff_disjoint : s ×ˢ t ⊆ Diagonal αᶜ ↔ Disjoint s t :=
   subset_compl_comm.trans <| by
     simp_rw [diagonal_eq_range, range_subset_iff, disjoint_left, mem_compl_iff, prod_mk_mem_set_prod_eq, not_and]
@@ -505,7 +545,6 @@ theorem eval_image_pi_subset (hs : i ∈ s) : eval i '' s.pi t ⊆ t i :=
 theorem eval_image_univ_pi_subset : eval i '' Pi Univ t ⊆ t i :=
   eval_image_pi_subset (mem_univ i)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem eval_image_pi (hs : i ∈ s) (ht : (s.pi t).Nonempty) : eval i '' s.pi t = t i := by
   refine' (eval_image_pi_subset hs).antisymm _
   classical
@@ -540,8 +579,8 @@ theorem update_preimage_pi [DecidableEq ι] {f : ∀ i, α i} (hi : i ∈ s) (hf
       
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j «expr ≠ » i)
-theorem update_preimage_univ_pi [DecidableEq ι] {f : ∀ i, α i} (hf : ∀ j _ : j ≠ i, f j ∈ t j) :
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
+theorem update_preimage_univ_pi [DecidableEq ι] {f : ∀ i, α i} (hf : ∀ (j) (_ : j ≠ i), f j ∈ t j) :
     update f i ⁻¹' Pi Univ t = t i :=
   update_preimage_pi (mem_univ i) fun j _ => hf j
 

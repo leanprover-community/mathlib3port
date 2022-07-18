@@ -6,11 +6,14 @@ Authors: Michael Stoll
 import Mathbin.Tactic.Basic
 import Mathbin.Data.Int.Range
 import Mathbin.Data.Zmod.Basic
+import Mathbin.NumberTheory.LegendreSymbol.MulCharacter
 
 /-!
 # Quadratic characters on ℤ/nℤ
 
 This file defines some quadratic characters on the rings ℤ/4ℤ and ℤ/8ℤ.
+
+We set them up to be of type `mul_char (zmod n) ℤ`, where `n` is `4` or `8`.
 
 ## Tags
 
@@ -33,15 +36,17 @@ section QuadCharModP
 /-- Define the nontrivial quadratic character on `zmod 4`, `χ₄`.
 It corresponds to the extension `ℚ(√-1)/ℚ`. -/
 @[simps]
-def χ₄ : Zmod 4 →*₀ ℤ where
+def χ₄ : MulChar (Zmod 4) ℤ where
   toFun := (![0, 1, 0, -1] : Zmod 4 → ℤ)
-  map_zero' := rfl
   map_one' := rfl
   map_mul' := by
     decide
+  map_nonunit' := by
+    decide
 
 /-- `χ₄` takes values in `{0, 1, -1}` -/
-theorem χ₄_trichotomy (a : Zmod 4) : χ₄ a = 0 ∨ χ₄ a = 1 ∨ χ₄ a = -1 := by
+theorem is_quadratic_χ₄ : χ₄.IsQuadratic := by
+  intro a
   decide!
 
 /-- An explicit description of `χ₄` on integers / naturals -/
@@ -93,15 +98,17 @@ theorem χ₄_eq_neg_one_pow {n : ℕ} (hn : n % 2 = 1) : χ₄ n = -1 ^ (n / 2)
 /-- Define the first primitive quadratic character on `zmod 8`, `χ₈`.
 It corresponds to the extension `ℚ(√2)/ℚ`. -/
 @[simps]
-def χ₈ : Zmod 8 →*₀ ℤ where
+def χ₈ : MulChar (Zmod 8) ℤ where
   toFun := (![0, 1, 0, -1, 0, -1, 0, 1] : Zmod 8 → ℤ)
-  map_zero' := rfl
   map_one' := rfl
   map_mul' := by
     decide
+  map_nonunit' := by
+    decide
 
 /-- `χ₈` takes values in `{0, 1, -1}` -/
-theorem χ₈_trichotomy (a : Zmod 8) : χ₈ a = 0 ∨ χ₈ a = 1 ∨ χ₈ a = -1 := by
+theorem is_quadratic_χ₈ : χ₈.IsQuadratic := by
+  intro a
   decide!
 
 /-- An explicit description of `χ₈` on integers / naturals -/
@@ -128,15 +135,17 @@ theorem χ₈_nat_eq_if_mod_eight (n : ℕ) : χ₈ n = if n % 2 = 0 then 0 else
 /-- Define the second primitive quadratic character on `zmod 8`, `χ₈'`.
 It corresponds to the extension `ℚ(√-2)/ℚ`. -/
 @[simps]
-def χ₈' : Zmod 8 →*₀ ℤ where
+def χ₈' : MulChar (Zmod 8) ℤ where
   toFun := (![0, 1, 0, 1, 0, -1, 0, -1] : Zmod 8 → ℤ)
-  map_zero' := rfl
   map_one' := rfl
   map_mul' := by
     decide
+  map_nonunit' := by
+    decide
 
 /-- `χ₈'` takes values in `{0, 1, -1}` -/
-theorem χ₈'_trichotomy (a : Zmod 8) : χ₈' a = 0 ∨ χ₈' a = 1 ∨ χ₈' a = -1 := by
+theorem is_quadratic_χ₈' : χ₈'.IsQuadratic := by
+  intro a
   decide!
 
 /-- An explicit description of `χ₈'` on integers / naturals -/

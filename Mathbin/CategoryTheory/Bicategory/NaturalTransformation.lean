@@ -43,7 +43,7 @@ structure OplaxNatTrans (F G : OplaxFunctor B C) where
   app (a : B) : F.obj a ⟶ G.obj a
   naturality {a b : B} (f : a ⟶ b) : F.map f ≫ app b ⟶ app a ≫ G.map f
   naturality_naturality' :
-    ∀ {a b : B} {f g : a ⟶ b} η : f ⟶ g, F.map₂ η ▷ app b ≫ naturality g = naturality f ≫ app a ◁ G.map₂ η := by
+    ∀ {a b : B} {f g : a ⟶ b} (η : f ⟶ g), F.map₂ η ▷ app b ≫ naturality g = naturality f ≫ app a ◁ G.map₂ η := by
     run_tac
       obviously
   naturality_id' :
@@ -51,7 +51,7 @@ structure OplaxNatTrans (F G : OplaxFunctor B C) where
     run_tac
       obviously
   naturality_comp' :
-    ∀ {a b c : B} f : a ⟶ b g : b ⟶ c,
+    ∀ {a b c : B} (f : a ⟶ b) (g : b ⟶ c),
       naturality (f ≫ g) ≫ app a ◁ G.map_comp f g =
         F.map_comp f g ▷ app c ≫
           (α_ _ _ _).Hom ≫ F.map f ◁ naturality g ≫ (α_ _ _ _).inv ≫ naturality f ▷ G.map g ≫ (α_ _ _ _).Hom := by
@@ -189,7 +189,7 @@ for each 1-morphism `f : a ⟶ b`.
 @[ext]
 structure Modification (η θ : F ⟶ G) where
   app (a : B) : η.app a ⟶ θ.app a
-  naturality' : ∀ {a b : B} f : a ⟶ b, F.map f ◁ app b ≫ θ.naturality f = η.naturality f ≫ app a ▷ G.map f := by
+  naturality' : ∀ {a b : B} (f : a ⟶ b), F.map f ◁ app b ≫ θ.naturality f = η.naturality f ≫ app a ▷ G.map f := by
     run_tac
       obviously
 
@@ -248,7 +248,8 @@ by giving object level isomorphisms, and checking naturality only in the forward
 -/
 @[simps]
 def ModificationIso.ofComponents (app : ∀ a, η.app a ≅ θ.app a)
-    (naturality : ∀ {a b} f : a ⟶ b, F.map f ◁ (app b).Hom ≫ θ.naturality f = η.naturality f ≫ (app a).Hom ▷ G.map f) :
+    (naturality :
+      ∀ {a b} (f : a ⟶ b), F.map f ◁ (app b).Hom ≫ θ.naturality f = η.naturality f ≫ (app a).Hom ▷ G.map f) :
     η ≅ θ where
   Hom := { app := fun a => (app a).Hom }
   inv :=

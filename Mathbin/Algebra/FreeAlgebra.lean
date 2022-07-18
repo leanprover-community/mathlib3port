@@ -324,7 +324,7 @@ theorem ι_comp_lift (f : X → A) : (lift R f : FreeAlgebra R X → A) ∘ ι R
   rfl
 
 @[simp]
-theorem lift_ι_apply (f : X → A) x : lift R f (ι R x) = f x :=
+theorem lift_ι_apply (f : X → A) (x) : lift R f (ι R x) = f x :=
   rfl
 
 @[simp]
@@ -404,7 +404,6 @@ theorem algebra_map_eq_zero_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 0 �
 theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 ↔ x = 1 :=
   map_eq_one_iff (algebraMap _ _) algebra_map_left_inverse.Injective
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- this proof is copied from the approach in `free_abelian_group.of_injective`
 theorem ι_injective [Nontrivial R] : Function.Injective (ι R : X → FreeAlgebra R X) := fun x y hoxy =>
   Classical.by_contradiction fun hxy : x ≠ y =>

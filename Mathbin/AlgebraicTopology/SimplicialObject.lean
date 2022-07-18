@@ -243,7 +243,8 @@ open Simplicial
 /-- Aaugment a simplicial object with an object. -/
 @[simps]
 def augment (X : SimplicialObject C) (X₀ : C) (f : X _[0] ⟶ X₀)
-    (w : ∀ i : SimplexCategory g₁ g₂ : [0] ⟶ i, X.map g₁.op ≫ f = X.map g₂.op ≫ f) : SimplicialObject.Augmented C where
+    (w : ∀ (i : SimplexCategory) (g₁ g₂ : [0] ⟶ i), X.map g₁.op ≫ f = X.map g₂.op ≫ f) :
+    SimplicialObject.Augmented C where
   left := X
   right := X₀
   Hom :=
@@ -255,7 +256,7 @@ def augment (X : SimplicialObject C) (X₀ : C) (f : X _[0] ⟶ X₀)
         simpa only [X.map_comp, category.assoc, ← category.comp_id, op_comp] using w _ _ _ }
 
 @[simp]
-theorem augment_hom_zero (X : SimplicialObject C) (X₀ : C) (f : X _[0] ⟶ X₀) w :
+theorem augment_hom_zero (X : SimplicialObject C) (X₀ : C) (f : X _[0] ⟶ X₀) (w) :
     (X.augment X₀ f w).Hom.app (op [0]) = f := by
   dsimp'
   rw [SimplexCategory.hom_zero_zero ([0].const 0), op_id, X.map_id, category.id_comp]
@@ -472,7 +473,7 @@ open Simplicial
 /-- Augment a cosimplicial object with an object. -/
 @[simps]
 def augment (X : CosimplicialObject C) (X₀ : C) (f : X₀ ⟶ X.obj [0])
-    (w : ∀ i : SimplexCategory g₁ g₂ : [0] ⟶ i, f ≫ X.map g₁ = f ≫ X.map g₂) : CosimplicialObject.Augmented C where
+    (w : ∀ (i : SimplexCategory) (g₁ g₂ : [0] ⟶ i), f ≫ X.map g₁ = f ≫ X.map g₂) : CosimplicialObject.Augmented C where
   left := X₀
   right := X
   Hom :=
@@ -483,7 +484,7 @@ def augment (X : CosimplicialObject C) (X₀ : C) (f : X₀ ⟶ X.obj [0])
         simpa [X.map_comp] using w _ _ _ }
 
 @[simp]
-theorem augment_hom_zero (X : CosimplicialObject C) (X₀ : C) (f : X₀ ⟶ X.obj [0]) w :
+theorem augment_hom_zero (X : CosimplicialObject C) (X₀ : C) (f : X₀ ⟶ X.obj [0]) (w) :
     (X.augment X₀ f w).Hom.app [0] = f := by
   dsimp'
   rw [SimplexCategory.hom_zero_zero ([0].const 0), X.map_id, category.comp_id]

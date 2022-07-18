@@ -3,15 +3,15 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Data.Polynomial.RingDivision
-import Mathbin.Tactic.Zify
-import Mathbin.FieldTheory.Separable
-import Mathbin.Data.Zmod.Basic
-import Mathbin.RingTheory.IntegralDomain
-import Mathbin.NumberTheory.Divisors
-import Mathbin.FieldTheory.Finite.Basic
-import Mathbin.GroupTheory.SpecificGroups.Cyclic
 import Mathbin.Algebra.CharP.Two
+import Mathbin.Algebra.NeZero
+import Mathbin.Data.Polynomial.RingDivision
+import Mathbin.FieldTheory.Finite.Basic
+import Mathbin.FieldTheory.Separable
+import Mathbin.GroupTheory.SpecificGroups.Cyclic
+import Mathbin.NumberTheory.Divisors
+import Mathbin.RingTheory.IntegralDomain
+import Mathbin.Tactic.Zify
 
 /-!
 # Roots of unity and primitive roots of unity
@@ -1081,7 +1081,7 @@ theorem minpoly_eq_pow {p : ℕ} [hprime : Fact p.Prime] (hdiv : ¬p ∣ n) : mi
   have habs : map (Int.castRingHom (Zmod p)) P ^ 2 ∣ map (Int.castRingHom (Zmod p)) P ^ 2 * R := by
     use R
   replace habs :=
-    lt_of_lt_of_leₓ (Enat.coe_lt_coe.2 one_lt_two) (multiplicity.le_multiplicity_of_pow_dvd (dvd_trans habs Prod))
+    lt_of_lt_of_leₓ (PartEnat.coe_lt_coe.2 one_lt_two) (multiplicity.le_multiplicity_of_pow_dvd (dvd_trans habs Prod))
   have hfree : Squarefree (X ^ n - 1 : (Zmod p)[X]) :=
     (separable_X_pow_sub_C 1 (fun h => hdiv <| (Zmod.nat_coe_zmod_eq_zero_iff_dvd n p).1 h) one_ne_zero).Squarefree
   cases' (multiplicity.squarefree_iff_multiplicity_le_one (X ^ n - 1)).1 hfree (map (Int.castRingHom (Zmod p)) P) with

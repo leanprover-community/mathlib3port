@@ -29,14 +29,12 @@ attribute [instance] NonemptyFinLinOrd.nonempty
 instance (priority := 100) NonemptyFinLinOrd.toBoundedOrder (α : Type _) [NonemptyFinLinOrd α] : BoundedOrder α :=
   Fintype.toBoundedOrder α
 
-instance PUnit.nonemptyFinLinOrd : NonemptyFinLinOrd PUnit :=
-  { PUnit.linearOrderedCancelAddCommMonoid, PUnit.fintype with }
+instance PUnit.nonemptyFinLinOrd : NonemptyFinLinOrd PUnit where
 
-instance Finₓ.nonemptyFinLinOrd (n : ℕ) : NonemptyFinLinOrd (Finₓ (n + 1)) :=
-  { Finₓ.fintype _, Finₓ.linearOrder with }
+instance Finₓ.nonemptyFinLinOrd (n : ℕ) : NonemptyFinLinOrd (Finₓ (n + 1)) where
 
 instance ULift.nonemptyFinLinOrd (α : Type u) [NonemptyFinLinOrd α] : NonemptyFinLinOrd (ULift.{v} α) :=
-  { LinearOrderₓ.lift Equivₓ.ulift (Equivₓ.injective _), ULift.fintype _ with Nonempty := ⟨ULift.up ⊥⟩ }
+  { LinearOrderₓ.lift' Equivₓ.ulift (Equivₓ.injective _) with }
 
 instance (α : Type _) [NonemptyFinLinOrd α] : NonemptyFinLinOrd αᵒᵈ :=
   { OrderDual.fintype α with }

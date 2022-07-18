@@ -94,7 +94,7 @@ private irreducible_def sub {R : Type u₁} [Ringₓ R] (r : R → R → Prop) :
 private irreducible_def npow (n : ℕ) : RingQuot r → RingQuot r
   | ⟨a⟩ =>
     ⟨Quot.lift (fun a => Quot.mk (RingQuot.Rel r) (a ^ n))
-        (fun a b h : Rel r a b => by
+        (fun a b (h : Rel r a b) => by
           -- note we can't define a `rel.pow` as `rel` isn't reflexive so `rel r 1 1` isn't true
           dsimp' only
           induction n
@@ -352,7 +352,7 @@ def lift {r : R → R → Prop} : { f : R →+* T // ∀ ⦃x y⦄, r x y → f 
     rfl
 
 @[simp]
-theorem lift_mk_ring_hom_apply (f : R →+* T) {r : R → R → Prop} (w : ∀ ⦃x y⦄, r x y → f x = f y) x :
+theorem lift_mk_ring_hom_apply (f : R →+* T) {r : R → R → Prop} (w : ∀ ⦃x y⦄, r x y → f x = f y) (x) :
     lift ⟨f, w⟩ (mkRingHom r x) = f x :=
   rfl
 
@@ -551,7 +551,7 @@ def liftAlgHom {s : A → A → Prop} : { f : A →ₐ[S] B // ∀ ⦃x y⦄, s 
     rfl
 
 @[simp]
-theorem lift_alg_hom_mk_alg_hom_apply (f : A →ₐ[S] B) {s : A → A → Prop} (w : ∀ ⦃x y⦄, s x y → f x = f y) x :
+theorem lift_alg_hom_mk_alg_hom_apply (f : A →ₐ[S] B) {s : A → A → Prop} (w : ∀ ⦃x y⦄, s x y → f x = f y) (x) :
     (liftAlgHom S ⟨f, w⟩) ((mkAlgHom S s) x) = f x :=
   rfl
 

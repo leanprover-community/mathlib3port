@@ -49,7 +49,7 @@ localized [Omega.Nat] notation t " -* " s => Omega.Nat.Preterm.sub t s
 
 namespace Preterm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 /-- Helper tactic for proof by induction over preterms -/
 unsafe def induce (tac : tactic Unit := tactic.skip) : tactic Unit :=
   sorry

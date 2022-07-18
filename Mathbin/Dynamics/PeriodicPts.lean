@@ -321,7 +321,7 @@ theorem IsPeriodicPt.eq_zero_of_lt_minimal_period (hx : IsPeriodicPt f n x) (hn 
   Eq.symm <| (eq_or_lt_of_le <| n.zero_le).resolve_right fun hn0 => not_ltₓ.2 (hx.minimal_period_le hn0) hn
 
 theorem not_is_periodic_pt_of_pos_of_lt_minimal_period :
-    ∀ {n : ℕ} n0 : n ≠ 0 hn : n < minimalPeriod f x, ¬IsPeriodicPt f n x
+    ∀ {n : ℕ} (n0 : n ≠ 0) (hn : n < minimalPeriod f x), ¬IsPeriodicPt f n x
   | 0, n0, _ => (n0 rfl).elim
   | n + 1, _, hn => fun hp => Nat.succ_ne_zero _ (hp.eq_zero_of_lt_minimal_period hn)
 

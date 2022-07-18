@@ -5,6 +5,7 @@ Authors: Kenny Lau, Chris Hughes, Tim Baanen
 -/
 import Mathbin.Data.Matrix.Pequiv
 import Mathbin.Data.Matrix.Block
+import Mathbin.Data.Matrix.Notation
 import Mathbin.Data.Fintype.Card
 import Mathbin.GroupTheory.Perm.Fin
 import Mathbin.GroupTheory.Perm.Sign
@@ -272,9 +273,9 @@ theorem det_neg_eq_smul (A : Matrix n n R) : det (-A) = (-1 : Units ℤ) ^ Finty
 
 /-- Multiplying each row by a fixed `v i` multiplies the determinant by
 the product of the `v`s. -/
-theorem det_mul_row (v : n → R) (A : Matrix n n R) : (det fun i j => v j * A i j) = (∏ i, v i) * det A :=
+theorem det_mul_row (v : n → R) (A : Matrix n n R) : det (of fun i j => v j * A i j) = (∏ i, v i) * det A :=
   calc
-    (det fun i j => v j * A i j) = det (A ⬝ diagonalₓ v) :=
+    det (of fun i j => v j * A i j) = det (A ⬝ diagonalₓ v) :=
       congr_arg det <| by
         ext
         simp [← mul_comm]
@@ -284,7 +285,7 @@ theorem det_mul_row (v : n → R) (A : Matrix n n R) : (det fun i j => v j * A i
 
 /-- Multiplying each column by a fixed `v j` multiplies the determinant by
 the product of the `v`s. -/
-theorem det_mul_column (v : n → R) (A : Matrix n n R) : (det fun i j => v i * A i j) = (∏ i, v i) * det A :=
+theorem det_mul_column (v : n → R) (A : Matrix n n R) : det (of fun i j => v i * A i j) = (∏ i, v i) * det A :=
   MultilinearMap.map_smul_univ _ v A
 
 @[simp]
@@ -417,7 +418,8 @@ theorem det_update_column_add_smul_self (A : Matrix n n R) {i j : n} (hij : i �
   exact det_update_row_add_smul_self Aᵀ hij c
 
 theorem det_eq_of_forall_row_eq_smul_add_const_aux {A B : Matrix n n R} {s : Finset n} :
-    ∀ c : n → R hs : ∀ i, i ∉ s → c i = 0 k : n hk : k ∉ s A_eq : ∀ i j, A i j = B i j + c i * B k j, det A = det B :=
+    ∀ (c : n → R) (hs : ∀ i, i ∉ s → c i = 0) (k : n) (hk : k ∉ s) (A_eq : ∀ i j, A i j = B i j + c i * B k j),
+      det A = det B :=
   by
   revert B
   refine' s.induction_on _ _
@@ -465,8 +467,9 @@ theorem det_eq_of_forall_row_eq_smul_add_const {A B : Matrix n n R} (c : n → R
     k (Finset.not_mem_erase k Finset.univ) A_eq
 
 theorem det_eq_of_forall_row_eq_smul_add_pred_aux {n : ℕ} (k : Finₓ (n + 1)) :
-    ∀ c : Finₓ n → R hc : ∀ i : Finₓ n, k < i.succ → c i = 0 {M N : Matrix (Finₓ n.succ) (Finₓ n.succ) R} h0 :
-      ∀ j, M 0 j = N 0 j hsucc : ∀ i : Finₓ n j, M i.succ j = N i.succ j + c i * M i.cast_succ j, det M = det N :=
+    ∀ (c : Finₓ n → R) (hc : ∀ i : Finₓ n, k < i.succ → c i = 0) {M N : Matrix (Finₓ n.succ) (Finₓ n.succ) R}
+      (h0 : ∀ j, M 0 j = N 0 j) (hsucc : ∀ (i : Finₓ n) (j), M i.succ j = N i.succ j + c i * M i.cast_succ j),
+      det M = det N :=
   by
   refine' Finₓ.induction _ (fun k ih => _) k <;> intro c hc M N h0 hsucc
   · congr
@@ -509,14 +512,14 @@ theorem det_eq_of_forall_row_eq_smul_add_pred_aux {n : ℕ} (k : Finₓ (n + 1))
 
 /-- If you add multiples of previous rows to the next row, the determinant doesn't change. -/
 theorem det_eq_of_forall_row_eq_smul_add_pred {n : ℕ} {A B : Matrix (Finₓ (n + 1)) (Finₓ (n + 1)) R} (c : Finₓ n → R)
-    (A_zero : ∀ j, A 0 j = B 0 j) (A_succ : ∀ i : Finₓ n j, A i.succ j = B i.succ j + c i * A i.cast_succ j) :
+    (A_zero : ∀ j, A 0 j = B 0 j) (A_succ : ∀ (i : Finₓ n) (j), A i.succ j = B i.succ j + c i * A i.cast_succ j) :
     det A = det B :=
   det_eq_of_forall_row_eq_smul_add_pred_aux (Finₓ.last _) c (fun i hi => absurd hi (not_lt_of_geₓ (Finₓ.le_last _)))
     A_zero A_succ
 
 /-- If you add multiples of previous columns to the next columns, the determinant doesn't change. -/
 theorem det_eq_of_forall_col_eq_smul_add_pred {n : ℕ} {A B : Matrix (Finₓ (n + 1)) (Finₓ (n + 1)) R} (c : Finₓ n → R)
-    (A_zero : ∀ i, A i 0 = B i 0) (A_succ : ∀ i j : Finₓ n, A i j.succ = B i j.succ + c j * A i j.cast_succ) :
+    (A_zero : ∀ i, A i 0 = B i 0) (A_succ : ∀ (i) (j : Finₓ n), A i j.succ = B i j.succ + c j * A i j.cast_succ) :
     det A = det B := by
   rw [← det_transpose A, ← det_transpose B]
   exact det_eq_of_forall_row_eq_smul_add_pred c A_zero fun i j => A_succ j i
@@ -540,7 +543,7 @@ theorem det_block_diagonal {o : Type _} [Fintype o] [DecidableEq o] (M : o → M
   -- And that these are in bijection with `o → equiv.perm m`.
   rw
     [(Finset.sum_bij
-        (fun σ : ∀ k : o, k ∈ Finset.univ → Equivₓ.Perm n _ => prod_congr_left fun k => σ k (Finset.mem_univ k)) _ _ _
+        (fun (σ : ∀ k : o, k ∈ Finset.univ → Equivₓ.Perm n) _ => prod_congr_left fun k => σ k (Finset.mem_univ k)) _ _ _
         _).symm]
   · intro σ _
     rw [mem_preserving_snd]
@@ -608,7 +611,6 @@ theorem det_block_diagonal {o : Type _} [Fintype o] [DecidableEq o] (M : o → M
     exact hkx
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The determinant of a 2×2 block matrix with the lower-left block equal to zero is the product of
 the determinants of the diagonal blocks. For the generalization to any number of blocks, see
 `matrix.det_of_upper_triangular`. -/
@@ -620,7 +622,7 @@ theorem det_from_blocks_zero₂₁ (A : Matrix m m R) (B : Matrix m n R) (D : Ma
   convert (sum_subset (subset_univ ((sum_congr_hom m n).range : Set (perm (Sum m n))).toFinset) _).symm
   rw [sum_mul_sum]
   simp_rw [univ_product_univ]
-  rw [(sum_bij (fun σ : perm m × perm n _ => Equivₓ.sumCongr σ.fst σ.snd) _ _ _ _).symm]
+  rw [(sum_bij (fun (σ : perm m × perm n) _ => Equivₓ.sumCongr σ.fst σ.snd) _ _ _ _).symm]
   · intro σ₁₂ h
     simp only
     erw [Set.mem_to_finset, MonoidHom.mem_range]
@@ -691,7 +693,7 @@ theorem det_succ_column_zero {n : ℕ} (A : Matrix (Finₓ n.succ) (Finₓ n.suc
   · simp only [← Finₓ.prod_univ_succ, ← Matrix.det_apply, ← Finset.mul_sum, ← Equivₓ.Perm.decompose_fin_symm_apply_zero,
       ← Finₓ.coe_zero, ← one_mulₓ, ← Equivₓ.Perm.decomposeFin.symm_sign, ← Equivₓ.swap_self, ← if_true, ← id.def, ←
       eq_self_iff_true, ← Equivₓ.Perm.decompose_fin_symm_apply_succ, ← Finₓ.succ_above_zero, ← Equivₓ.coe_refl, ←
-      pow_zeroₓ, ← mul_smul_comm]
+      pow_zeroₓ, ← mul_smul_comm, ← of_apply]
     
   -- `univ_perm_fin_succ` gives a different embedding of `perm (fin n)` into
   -- `perm (fin n.succ)` than the determinant of the submatrix we want,
@@ -760,10 +762,26 @@ theorem det_fin_zero {A : Matrix (Finₓ 0) (Finₓ 0) R} : det A = 1 :=
 theorem det_fin_one (A : Matrix (Finₓ 1) (Finₓ 1) R) : det A = A 0 0 :=
   det_unique A
 
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
+theorem det_fin_one_of (a : R) :
+    det («expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation") =
+      a :=
+  det_fin_one _
+
 /-- Determinant of 2x2 matrix -/
 theorem det_fin_two (A : Matrix (Finₓ 2) (Finₓ 2) R) : det A = A 0 0 * A 1 1 - A 0 1 * A 1 0 := by
   simp [← Matrix.det_succ_row_zero, ← Finₓ.sum_univ_succ]
   ring
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
+@[simp]
+theorem det_fin_two_of (a b c d : R) :
+    Matrix.det
+        («expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation") =
+      a * d - b * c :=
+  det_fin_two _
 
 /-- Determinant of 3x3 matrix -/
 theorem det_fin_three (A : Matrix (Finₓ 3) (Finₓ 3) R) :

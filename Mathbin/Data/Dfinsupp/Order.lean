@@ -162,7 +162,7 @@ theorem add_eq_zero_iff (f g : Π₀ i, α i) : f + g = 0 ↔ f = 0 ∧ g = 0 :=
 
 section Le
 
-variable [DecidableEq ι] [∀ i x : α i, Decidable (x ≠ 0)] {f g : Π₀ i, α i} {s : Finset ι}
+variable [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠ 0)] {f g : Π₀ i, α i} {s : Finset ι}
 
 theorem le_iff' (hf : f.support ⊆ s) : f ≤ g ↔ ∀, ∀ i ∈ s, ∀, f i ≤ g i :=
   ⟨fun h s hs => h s, fun h s =>
@@ -232,7 +232,7 @@ theorem single_tsub : single i (a - b) = single i a - single i b := by
   · rw [tsub_apply, single_eq_of_ne h, single_eq_of_ne h, single_eq_of_ne h, tsub_self]
     
 
-variable [∀ i x : α i, Decidable (x ≠ 0)]
+variable [∀ (i) (x : α i), Decidable (x ≠ 0)]
 
 theorem support_tsub : (f - g).support ⊆ f.support := by
   simp (config := { contextual := true })only [← subset_iff, ← tsub_eq_zero_iff_le, ← mem_support_iff, ← Ne.def, ←

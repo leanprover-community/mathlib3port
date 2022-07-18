@@ -230,7 +230,7 @@ theorem measurable_const' {f : β → α} (hf : ∀ x y, f x = f y) : Measurable
     
 
 theorem measurable_of_fintype [Fintype α] [MeasurableSingletonClass α] (f : α → β) : Measurable f := fun s hs =>
-  (Set.Finite.of_fintype (f ⁻¹' s)).MeasurableSet
+  (f ⁻¹' s).to_finite.MeasurableSet
 
 end TypeclassMeasurableSpace
 
@@ -626,7 +626,6 @@ theorem Measurable.find {m : MeasurableSpace α} {f : ℕ → α → β} {p : �
   have : Measurable fun p : α × ℕ => f p.2 p.1 := measurable_from_prod_encodable fun n => hf n
   exact this.comp (Measurable.prod_mk measurable_id (measurable_find h hp))
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given countably many disjoint measurable sets `t n` and countably many measurable
 functions `g n`, one can construct a measurable function that coincides with `g n` on `t n`. -/
 theorem exists_measurable_piecewise_nat {m : MeasurableSpace α} (t : ℕ → Set β) (t_meas : ∀ n, MeasurableSet (t n))
@@ -716,7 +715,6 @@ theorem MeasurableSet.univ_pi [Encodable δ] {t : ∀ i : δ, Set (π i)} (ht : 
     MeasurableSet (Pi Univ t) :=
   MeasurableSet.pi (countable_encodable _) fun i _ => ht i
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem measurable_set_pi_of_nonempty {s : Set δ} {t : ∀ i, Set (π i)} (hs : s.Countable) (h : (Pi s t).Nonempty) :
     MeasurableSet (Pi s t) ↔ ∀, ∀ i ∈ s, ∀, MeasurableSet (t i) := by
   classical
@@ -798,7 +796,7 @@ theorem measurable_tprod_mk (l : List δ) : Measurable (@Tprod.mkₓ δ π l) :=
     
 
 theorem measurable_tprod_elim [DecidableEq δ] :
-    ∀ {l : List δ} {i : δ} hi : i ∈ l, Measurable fun v : Tprod π l => v.elim hi
+    ∀ {l : List δ} {i : δ} (hi : i ∈ l), Measurable fun v : Tprod π l => v.elim hi
   | i :: is, j, hj => by
     by_cases' hji : j = i
     · subst hji
@@ -1221,7 +1219,7 @@ def Set.rangeInl : (Range Sum.inl : Set (Sum α β)) ≃ᵐ α where
     rintro ⟨ab, a, rfl⟩
     rfl
   right_inv := fun a => rfl
-  measurable_to_fun := fun s hs : MeasurableSet s => by
+  measurable_to_fun := fun s (hs : MeasurableSet s) => by
     refine' ⟨_, hs.inl_image, Set.ext _⟩
     rintro ⟨ab, a, rfl⟩
     simp [← set.range_inl._match_1]
@@ -1242,14 +1240,14 @@ def Set.rangeInr : (Range Sum.inr : Set (Sum α β)) ≃ᵐ β where
     rintro ⟨ab, b, rfl⟩
     rfl
   right_inv := fun b => rfl
-  measurable_to_fun := fun s hs : MeasurableSet s => by
+  measurable_to_fun := fun s (hs : MeasurableSet s) => by
     refine' ⟨_, measurable_set_inr_image hs, Set.ext _⟩
     rintro ⟨ab, b, rfl⟩
     simp [← set.range_inr._match_1]
   measurable_inv_fun := Measurable.subtype_mk measurable_inr
 
 /-- Products distribute over sums (on the right) as measurable spaces. -/
-def sumProdDistrib α β γ [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] :
+def sumProdDistrib (α β γ) [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] :
     Sum α β × γ ≃ᵐ Sum (α × γ) (β × γ) where
   toEquiv := sumProdDistrib α β γ
   measurable_to_fun := by
@@ -1278,12 +1276,12 @@ def sumProdDistrib α β γ [MeasurableSpace α] [MeasurableSpace β] [Measurabl
       ((measurable_inr.comp measurable_fst).prod_mk measurable_snd)
 
 /-- Products distribute over sums (on the left) as measurable spaces. -/
-def prodSumDistrib α β γ [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] :
+def prodSumDistrib (α β γ) [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] :
     α × Sum β γ ≃ᵐ Sum (α × β) (α × γ) :=
   prodComm.trans <| (sumProdDistrib _ _ _).trans <| sumCongr prodComm prodComm
 
 /-- Products distribute over sums as measurable spaces. -/
-def sumProdSum α β γ δ [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] [MeasurableSpace δ] :
+def sumProdSum (α β γ δ) [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] [MeasurableSpace δ] :
     Sum α β × Sum γ δ ≃ᵐ Sum (Sum (α × γ) (α × δ)) (Sum (β × γ) (β × δ)) :=
   (sumProdDistrib _ _ _).trans <| sumCongr (prodSumDistrib _ _ _) (prodSumDistrib _ _ _)
 

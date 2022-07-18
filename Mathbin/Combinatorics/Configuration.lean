@@ -67,13 +67,13 @@ class Nondegenerate : Prop where
 
 /-- A nondegenerate configuration in which every pair of lines has an intersection point. -/
 class HasPoints extends Nondegenerate P L : Type u where
-  mkPoint : ∀ {l₁ l₂ : L} h : l₁ ≠ l₂, P
-  mk_point_ax : ∀ {l₁ l₂ : L} h : l₁ ≠ l₂, mk_point h ∈ l₁ ∧ mk_point h ∈ l₂
+  mkPoint : ∀ {l₁ l₂ : L} (h : l₁ ≠ l₂), P
+  mk_point_ax : ∀ {l₁ l₂ : L} (h : l₁ ≠ l₂), mk_point h ∈ l₁ ∧ mk_point h ∈ l₂
 
 /-- A nondegenerate configuration in which every pair of points has a line through them. -/
 class HasLines extends Nondegenerate P L : Type u where
-  mkLine : ∀ {p₁ p₂ : P} h : p₁ ≠ p₂, L
-  mk_line_ax : ∀ {p₁ p₂ : P} h : p₁ ≠ p₂, p₁ ∈ mk_line h ∧ p₂ ∈ mk_line h
+  mkLine : ∀ {p₁ p₂ : P} (h : p₁ ≠ p₂), L
+  mk_line_ax : ∀ {p₁ p₂ : P} (h : p₁ ≠ p₂), p₁ ∈ mk_line h ∧ p₂ ∈ mk_line h
 
 open Nondegenerate HasPoints HasLines
 
@@ -98,7 +98,6 @@ theorem HasLines.exists_unique_line [HasLines P L] (p₁ p₂ : P) (hp : p₁ �
 
 variable {P L}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If a nondegenerate configuration has at least as many points as lines, then there exists
   an injective function `f` from lines to points, such that `f l` does not lie on `l`. -/
 theorem Nondegenerate.exists_injective_of_card_le [Nondegenerate P L] [Fintype P] [Fintype L]
@@ -162,7 +161,6 @@ noncomputable def pointCount (l : L) : ℕ :=
 
 variable (P L)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem sum_line_count_eq_sum_point_count [Fintype P] [Fintype L] :
     (∑ p : P, lineCount L p) = ∑ l : L, pointCount P l := by
   classical
@@ -171,7 +169,7 @@ theorem sum_line_count_eq_sum_point_count [Fintype P] [Fintype L] :
   calc (Σp, { l : L // p ∈ l }) ≃ { x : P × L // x.1 ∈ x.2 } :=
       (Equivₓ.subtypeProdEquivSigmaSubtype (· ∈ ·)).symm _ ≃ { x : L × P // x.2 ∈ x.1 } :=
       (Equivₓ.prodComm P L).subtypeEquiv fun x => Iff.rfl _ ≃ Σl, { p // p ∈ l } :=
-      Equivₓ.subtypeProdEquivSigmaSubtype fun l : L p : P => p ∈ l
+      Equivₓ.subtypeProdEquivSigmaSubtype fun (l : L) (p : P) => p ∈ l
 
 variable {P L}
 
@@ -196,7 +194,6 @@ theorem HasPoints.line_count_le_point_count [HasPoints P L] {p : P} {l : L} (h :
 
 variable (P L)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If a nondegenerate configuration has a unique line through any two points, then `|P| ≤ |L|`. -/
 theorem HasLines.card_le [HasLines P L] [Fintype P] [Fintype L] : Fintype.card P ≤ Fintype.card L := by
   classical
@@ -234,7 +231,6 @@ theorem HasPoints.card_le [HasPoints P L] [Fintype P] [Fintype L] : Fintype.card
 
 variable {P L}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem HasLines.exists_bijective_of_card_eq [HasLines P L] [Fintype P] [Fintype L]
     (h : Fintype.card P = Fintype.card L) :
     ∃ f : L → P, Function.Bijective f ∧ ∀ l, pointCount P l = lineCount L (f l) := by
@@ -251,7 +247,6 @@ theorem HasLines.exists_bijective_of_card_eq [HasLines P L] [Fintype P] [Fintype
   obtain ⟨l, rfl⟩ := hf3.2 p
   exact ⟨l, Finset.mem_univ l, rfl⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem HasLines.line_count_eq_point_count [HasLines P L] [Fintype P] [Fintype L]
     (hPL : Fintype.card P = Fintype.card L) {p : P} {l : L} (hpl : p ∉ l) : lineCount L p = pointCount P l := by
   classical
@@ -287,7 +282,6 @@ theorem HasPoints.line_count_eq_point_count [HasPoints P L] [Fintype P] [Fintype
     (hPL : Fintype.card P = Fintype.card L) {p : P} {l : L} (hpl : p ∉ l) : lineCount L p = pointCount P l :=
   (@HasLines.line_count_eq_point_count (Dual L) (Dual P) _ _ _ _ hPL.symm l p hpl).symm
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If a nondegenerate configuration has a unique line through any two points, and if `|P| = |L|`,
   then there is a unique point on any two lines. -/
 noncomputable def HasLines.hasPoints [HasLines P L] [Fintype P] [Fintype L] (h : Fintype.card P = Fintype.card L) :
@@ -332,10 +326,10 @@ variable (P L)
   an intersection point, every pair of points has a line through them,
   and which has three points in general position. -/
 class ProjectivePlane extends Nondegenerate P L : Type u where
-  mkPoint : ∀ {l₁ l₂ : L} h : l₁ ≠ l₂, P
-  mk_point_ax : ∀ {l₁ l₂ : L} h : l₁ ≠ l₂, mk_point h ∈ l₁ ∧ mk_point h ∈ l₂
-  mkLine : ∀ {p₁ p₂ : P} h : p₁ ≠ p₂, L
-  mk_line_ax : ∀ {p₁ p₂ : P} h : p₁ ≠ p₂, p₁ ∈ mk_line h ∧ p₂ ∈ mk_line h
+  mkPoint : ∀ {l₁ l₂ : L} (h : l₁ ≠ l₂), P
+  mk_point_ax : ∀ {l₁ l₂ : L} (h : l₁ ≠ l₂), mk_point h ∈ l₁ ∧ mk_point h ∈ l₂
+  mkLine : ∀ {p₁ p₂ : P} (h : p₁ ≠ p₂), L
+  mk_line_ax : ∀ {p₁ p₂ : P} (h : p₁ ≠ p₂), p₁ ∈ mk_line h ∧ p₂ ∈ mk_line h
   exists_config :
     ∃ (p₁ p₂ p₃ : P)(l₁ l₂ l₃ : L), p₁ ∉ l₂ ∧ p₁ ∉ l₃ ∧ p₂ ∉ l₁ ∧ p₂ ∈ l₂ ∧ p₂ ∈ l₃ ∧ p₃ ∉ l₁ ∧ p₃ ∈ l₂ ∧ p₃ ∉ l₃
 
@@ -402,7 +396,6 @@ theorem Dual.order [ProjectivePlane P L] : order (Dual L) (Dual P) = order P L :
 
 variable {P} (L)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem line_count_eq [ProjectivePlane P L] (p : P) : lineCount L p = order P L + 1 := by
   classical
   obtain ⟨q, -, -, l, -, -, -, -, h, -⟩ := Classical.some_spec (@exists_config P L _ _)
@@ -417,7 +410,6 @@ theorem point_count_eq [ProjectivePlane P L] (l : L) : pointCount P l = order P 
 
 variable (P L)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem one_lt_order [ProjectivePlane P L] : 1 < order P L := by
   obtain ⟨p₁, p₂, p₃, l₁, l₂, l₃, -, -, h₂₁, h₂₂, h₂₃, h₃₁, h₃₂, h₃₃⟩ := @exists_config P L _ _
   classical
@@ -440,7 +432,6 @@ theorem two_lt_point_count [ProjectivePlane P L] (l : L) : 2 < pointCount P l :=
 
 variable (P) (L)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem card_points [ProjectivePlane P L] : Fintype.card P = order P L ^ 2 + order P L + 1 := by
   obtain ⟨p, -⟩ := @exists_config P L _ _
   let ϕ : { q // q ≠ p } ≃ Σl : { l : L // p ∈ l }, { q // q ∈ l.1 ∧ q ≠ p } :=

@@ -135,12 +135,12 @@ def ofLimitCone {f : J → C} {t : Cone (Discrete.functor f)} (ht : IsLimit t) :
   ι_π := fun j j' => by
     simp
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]
 theorem ι_of_is_limit {f : J → C} {t : Bicone f} (ht : IsLimit t.toCone) (j : J) :
     t.ι j = ht.lift (Fan.mk _ fun j' => if h : j = j' then eqToHom (congr_arg f h) else 0) :=
   ht.hom_ext fun j' => by
     rw [ht.fac]
-    trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]"
+    trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]"
     simp [← t.ι_π]
 
 /-- We can turn any colimit cocone over a discrete collection of objects into a bicone. -/
@@ -152,12 +152,12 @@ def ofColimitCocone {f : J → C} {t : Cocone (Discrete.functor f)} (ht : IsColi
   ι_π := fun j j' => by
     simp
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]
 theorem π_of_is_colimit {f : J → C} {t : Bicone f} (ht : IsColimit t.toCocone) (j : J) :
     t.π j = ht.desc (Cofan.mk _ fun j' => if h : j' = j then eqToHom (congr_arg f h) else 0) :=
   ht.hom_ext fun j' => by
     rw [ht.fac]
-    trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]"
+    trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]"
     simp [← t.ι_π]
 
 /-- Structure witnessing that a bicone is both a limit cone and a colimit cocone. -/
@@ -286,7 +286,7 @@ attribute [instance] has_biproducts_of_shape.has_biproduct
 /-- `has_finite_biproducts C` represents a choice of biproduct for every family of objects in `C`
 indexed by a finite type. -/
 class HasFiniteBiproducts : Prop where
-  HasBiproductsOfShape : ∀ J : Type [Fintype J], HasBiproductsOfShape J C
+  HasBiproductsOfShape : ∀ (J : Type) [Fintype J], HasBiproductsOfShape J C
 
 attribute [instance] has_finite_biproducts.has_biproducts_of_shape
 
@@ -648,28 +648,22 @@ end FiniteBiproducts
 variable {J : Type w} {C : Type u} [Category.{v} C] [HasZeroMorphisms C]
 
 instance biproduct.ιMono (f : J → C) [HasBiproduct f] (b : J) :
-    SplitMono
-      (biproduct.ι f
-        b) where retraction :=
-    biproduct.desc fun b' => if h : b' = b then eqToHom (congr_arg f h) else biproduct.ι f b' ≫ biproduct.π f b
+    SplitMono (biproduct.ι f b) where retraction := biproduct.desc <| Pi.single b _
 
 instance biproduct.πEpi (f : J → C) [HasBiproduct f] (b : J) :
-    SplitEpi
-      (biproduct.π f
-        b) where section_ :=
-    biproduct.lift fun b' => if h : b = b' then eqToHom (congr_arg f h) else biproduct.ι f b ≫ biproduct.π f b'
+    SplitEpi (biproduct.π f b) where section_ := biproduct.lift <| Pi.single b _
 
 /-- Auxiliary lemma for `biproduct.unique_up_to_iso`. -/
 theorem biproduct.cone_point_unique_up_to_iso_hom (f : J → C) [HasBiproduct f] {b : Bicone f} (hb : b.IsBilimit) :
     (hb.IsLimit.conePointUniqueUpToIso (Biproduct.isLimit _)).Hom = biproduct.lift b.π :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]
 /-- Auxiliary lemma for `biproduct.unique_up_to_iso`. -/
 theorem biproduct.cone_point_unique_up_to_iso_inv (f : J → C) [HasBiproduct f] {b : Bicone f} (hb : b.IsBilimit) :
     (hb.IsLimit.conePointUniqueUpToIso (Biproduct.isLimit _)).inv = biproduct.desc b.ι := by
   refine' biproduct.hom_ext' _ _ fun j => hb.is_limit.hom_ext fun j' => _
-  trace "./././Mathport/Syntax/Translate/Basic.lean:638:16: unsupported tactic `discrete_cases #[]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]"
   rw [category.assoc, is_limit.cone_point_unique_up_to_iso_inv_comp, bicone.to_cone_π_app, biproduct.bicone_π,
     biproduct.ι_desc, biproduct.ι_π, b.to_cone_π_app, b.ι_π]
 
@@ -812,6 +806,22 @@ theorem binary_cofan_inl_to_cocone (c : BinaryBicone P Q) : BinaryCofan.inl c.to
 @[simp]
 theorem binary_cofan_inr_to_cocone (c : BinaryBicone P Q) : BinaryCofan.inr c.toCocone = c.inr :=
   rfl
+
+instance (c : BinaryBicone P Q) : SplitMono c.inl where
+  retraction := c.fst
+  id' := c.inl_fst
+
+instance (c : BinaryBicone P Q) : SplitMono c.inr where
+  retraction := c.snd
+  id' := c.inr_snd
+
+instance (c : BinaryBicone P Q) : SplitEpi c.fst where
+  section_ := c.inl
+  id' := c.inl_fst
+
+instance (c : BinaryBicone P Q) : SplitEpi c.snd where
+  section_ := c.inr
+  id' := c.inr_snd
 
 /-- Convert a `binary_bicone` into a `bicone` over a pair. -/
 @[simps]
@@ -1247,12 +1257,86 @@ end
 
 section BiprodKernel
 
+section BinaryBicone
+
+variable {X Y : C} (c : BinaryBicone X Y)
+
+/-- A kernel fork for the kernel of `binary_bicone.fst`. It consists of the morphism
+`binary_bicone.inr`. -/
+def BinaryBicone.fstKernelFork : KernelFork c.fst :=
+  KernelFork.ofι c.inr c.inr_fst
+
+@[simp]
+theorem BinaryBicone.fst_kernel_fork_ι : (BinaryBicone.fstKernelFork c).ι = c.inr :=
+  rfl
+
+/-- A kernel fork for the kernel of `binary_bicone.snd`. It consists of the morphism
+`binary_bicone.inl`. -/
+def BinaryBicone.sndKernelFork : KernelFork c.snd :=
+  KernelFork.ofι c.inl c.inl_snd
+
+@[simp]
+theorem BinaryBicone.snd_kernel_fork_ι : (BinaryBicone.sndKernelFork c).ι = c.inl :=
+  rfl
+
+/-- A cokernel cofork for the cokernel of `binary_bicone.inl`. It consists of the morphism
+`binary_bicone.snd`. -/
+def BinaryBicone.inlCokernelCofork : CokernelCofork c.inl :=
+  CokernelCofork.ofπ c.snd c.inl_snd
+
+@[simp]
+theorem BinaryBicone.inl_cokernel_cofork_π : (BinaryBicone.inlCokernelCofork c).π = c.snd :=
+  rfl
+
+/-- A cokernel cofork for the cokernel of `binary_bicone.inr`. It consists of the morphism
+`binary_bicone.fst`. -/
+def BinaryBicone.inrCokernelCofork : CokernelCofork c.inr :=
+  CokernelCofork.ofπ c.fst c.inr_fst
+
+@[simp]
+theorem BinaryBicone.inr_cokernel_cofork_π : (BinaryBicone.inrCokernelCofork c).π = c.fst :=
+  rfl
+
+variable {c}
+
+/-- The fork defined in `binary_bicone.fst_kernel_fork` is indeed a kernel. -/
+def BinaryBicone.isLimitFstKernelFork (i : IsLimit c.toCone) : IsLimit c.fstKernelFork :=
+  (Fork.IsLimit.mk' _) fun s =>
+    ⟨s.ι ≫ c.snd, by
+      apply binary_fan.is_limit.hom_ext i <;> simp , fun m hm => by
+      simp [hm]⟩
+
+/-- The fork defined in `binary_bicone.snd_kernel_fork` is indeed a kernel. -/
+def BinaryBicone.isLimitSndKernelFork (i : IsLimit c.toCone) : IsLimit c.sndKernelFork :=
+  (Fork.IsLimit.mk' _) fun s =>
+    ⟨s.ι ≫ c.fst, by
+      apply binary_fan.is_limit.hom_ext i <;> simp , fun m hm => by
+      simp [hm]⟩
+
+/-- The cofork defined in `binary_bicone.inl_cokernel_cofork` is indeed a cokernel. -/
+def BinaryBicone.isColimitInlCokernelCofork (i : IsColimit c.toCocone) : IsColimit c.inlCokernelCofork :=
+  (Cofork.IsColimit.mk' _) fun s =>
+    ⟨c.inr ≫ s.π, by
+      apply binary_cofan.is_colimit.hom_ext i <;> simp , fun m hm => by
+      simp [hm]⟩
+
+/-- The cofork defined in `binary_bicone.inr_cokernel_cofork` is indeed a cokernel. -/
+def BinaryBicone.isColimitInrCokernelCofork (i : IsColimit c.toCocone) : IsColimit c.inrCokernelCofork :=
+  (Cofork.IsColimit.mk' _) fun s =>
+    ⟨c.inl ≫ s.π, by
+      apply binary_cofan.is_colimit.hom_ext i <;> simp , fun m hm => by
+      simp [hm]⟩
+
+end BinaryBicone
+
+section HasBinaryBiproduct
+
 variable (X Y : C) [HasBinaryBiproduct X Y]
 
 /-- A kernel fork for the kernel of `biprod.fst`. It consists of the
 morphism `biprod.inr`. -/
 def biprod.fstKernelFork : KernelFork (biprod.fst : X ⊞ Y ⟶ X) :=
-  KernelFork.ofι biprod.inr biprod.inr_fst
+  BinaryBicone.fstKernelFork _
 
 @[simp]
 theorem biprod.fst_kernel_fork_ι : Fork.ι (biprod.fstKernelFork X Y) = biprod.inr :=
@@ -1260,15 +1344,12 @@ theorem biprod.fst_kernel_fork_ι : Fork.ι (biprod.fstKernelFork X Y) = biprod.
 
 /-- The fork `biprod.fst_kernel_fork` is indeed a limit.  -/
 def biprod.isKernelFstKernelFork : IsLimit (biprod.fstKernelFork X Y) :=
-  (Fork.IsLimit.mk' _) fun s =>
-    ⟨s.ι ≫ biprod.snd, by
-      ext <;> simp , fun m hm => by
-      simp [hm]⟩
+  BinaryBicone.isLimitFstKernelFork (BinaryBiproduct.isLimit _ _)
 
 /-- A kernel fork for the kernel of `biprod.snd`. It consists of the
 morphism `biprod.inl`. -/
 def biprod.sndKernelFork : KernelFork (biprod.snd : X ⊞ Y ⟶ Y) :=
-  KernelFork.ofι biprod.inl biprod.inl_snd
+  BinaryBicone.sndKernelFork _
 
 @[simp]
 theorem biprod.snd_kernel_fork_ι : Fork.ι (biprod.sndKernelFork X Y) = biprod.inl :=
@@ -1276,42 +1357,35 @@ theorem biprod.snd_kernel_fork_ι : Fork.ι (biprod.sndKernelFork X Y) = biprod.
 
 /-- The fork `biprod.snd_kernel_fork` is indeed a limit.  -/
 def biprod.isKernelSndKernelFork : IsLimit (biprod.sndKernelFork X Y) :=
-  (Fork.IsLimit.mk' _) fun s =>
-    ⟨s.ι ≫ biprod.fst, by
-      ext <;> simp , fun m hm => by
-      simp [hm]⟩
+  BinaryBicone.isLimitSndKernelFork (BinaryBiproduct.isLimit _ _)
 
 /-- A cokernel cofork for the cokernel of `biprod.inl`. It consists of the
 morphism `biprod.snd`. -/
-def biprod.inlCokernelFork : CokernelCofork (biprod.inl : X ⟶ X ⊞ Y) :=
-  CokernelCofork.ofπ biprod.snd biprod.inl_snd
+def biprod.inlCokernelCofork : CokernelCofork (biprod.inl : X ⟶ X ⊞ Y) :=
+  BinaryBicone.inlCokernelCofork _
 
 @[simp]
-theorem biprod.inl_cokernel_fork_π : Cofork.π (biprod.inlCokernelFork X Y) = biprod.snd :=
+theorem biprod.inl_cokernel_cofork_π : Cofork.π (biprod.inlCokernelCofork X Y) = biprod.snd :=
   rfl
 
 /-- The cofork `biprod.inl_cokernel_fork` is indeed a colimit.  -/
-def biprod.isCokernelInlCokernelFork : IsColimit (biprod.inlCokernelFork X Y) :=
-  (Cofork.IsColimit.mk' _) fun s =>
-    ⟨biprod.inr ≫ s.π, by
-      ext <;> simp , fun m hm => by
-      simp [hm]⟩
+def biprod.isCokernelInlCokernelFork : IsColimit (biprod.inlCokernelCofork X Y) :=
+  BinaryBicone.isColimitInlCokernelCofork (BinaryBiproduct.isColimit _ _)
 
 /-- A cokernel cofork for the cokernel of `biprod.inr`. It consists of the
 morphism `biprod.fst`. -/
-def biprod.inrCokernelFork : CokernelCofork (biprod.inr : Y ⟶ X ⊞ Y) :=
-  CokernelCofork.ofπ biprod.fst biprod.inr_fst
+def biprod.inrCokernelCofork : CokernelCofork (biprod.inr : Y ⟶ X ⊞ Y) :=
+  BinaryBicone.inrCokernelCofork _
 
 @[simp]
-theorem biprod.inr_cokernel_fork_π : Cofork.π (biprod.inrCokernelFork X Y) = biprod.fst :=
+theorem biprod.inr_cokernel_cofork_π : Cofork.π (biprod.inrCokernelCofork X Y) = biprod.fst :=
   rfl
 
 /-- The cofork `biprod.inr_cokernel_fork` is indeed a colimit.  -/
-def biprod.isCokernelInrCokernelFork : IsColimit (biprod.inrCokernelFork X Y) :=
-  (Cofork.IsColimit.mk' _) fun s =>
-    ⟨biprod.inl ≫ s.π, by
-      ext <;> simp , fun m hm => by
-      simp [hm]⟩
+def biprod.isCokernelInrCokernelFork : IsColimit (biprod.inrCokernelCofork X Y) :=
+  BinaryBicone.isColimitInrCokernelCofork (BinaryBiproduct.isColimit _ _)
+
+end HasBinaryBiproduct
 
 end BiprodKernel
 
@@ -1628,16 +1702,12 @@ def BinaryBicone.ofLimitCone {X Y : C} {t : Cone (pair X Y)} (ht : IsLimit t) : 
   inr := ht.lift (BinaryFan.mk 0 (𝟙 Y))
 
 theorem inl_of_is_limit {X Y : C} {t : BinaryBicone X Y} (ht : IsLimit t.toCone) :
-    t.inl = ht.lift (BinaryFan.mk (𝟙 X) 0) :=
-  ht.hom_ext fun j => by
-    rw [ht.fac]
-    rcases j with ⟨⟨⟩⟩ <;> simp
+    t.inl = ht.lift (BinaryFan.mk (𝟙 X) 0) := by
+  apply ht.uniq (binary_fan.mk (𝟙 X) 0) <;> rintro ⟨⟨⟩⟩ <;> dsimp' <;> simp
 
 theorem inr_of_is_limit {X Y : C} {t : BinaryBicone X Y} (ht : IsLimit t.toCone) :
-    t.inr = ht.lift (BinaryFan.mk 0 (𝟙 Y)) :=
-  ht.hom_ext fun j => by
-    rw [ht.fac]
-    rcases j with ⟨⟨⟩⟩ <;> simp
+    t.inr = ht.lift (BinaryFan.mk 0 (𝟙 Y)) := by
+  apply ht.uniq (binary_fan.mk 0 (𝟙 Y)) <;> rintro ⟨⟨⟩⟩ <;> dsimp' <;> simp
 
 /-- In a preadditive category, any binary bicone which is a limit cone is in fact a bilimit
     bicone. -/
@@ -1676,23 +1746,13 @@ def BinaryBicone.ofColimitCocone {X Y : C} {t : Cocone (pair X Y)} (ht : IsColim
 
 theorem fst_of_is_colimit {X Y : C} {t : BinaryBicone X Y} (ht : IsColimit t.toCocone) :
     t.fst = ht.desc (BinaryCofan.mk (𝟙 X) 0) := by
-  refine' ht.hom_ext fun j => _
-  rw [ht.fac]
-  rcases j with ⟨⟨⟩⟩
-  all_goals
-    simp only [← binary_bicone.to_cocone_ι_app_left, ← binary_bicone.inl_fst, ← binary_cofan.mk_ι_app_left, ←
-      binary_bicone.to_cocone_ι_app_right, ← binary_bicone.inr_fst, ← binary_cofan.mk_ι_app_right]
-  rfl
+  apply ht.uniq (binary_cofan.mk (𝟙 X) 0)
+  rintro ⟨⟨⟩⟩ <;> dsimp' <;> simp
 
 theorem snd_of_is_colimit {X Y : C} {t : BinaryBicone X Y} (ht : IsColimit t.toCocone) :
     t.snd = ht.desc (BinaryCofan.mk 0 (𝟙 Y)) := by
-  refine' ht.hom_ext fun j => _
-  rw [ht.fac]
-  rcases j with ⟨⟨⟩⟩
-  all_goals
-    simp only [← binary_bicone.to_cocone_ι_app_left, ← binary_bicone.inl_snd, ← binary_cofan.mk_ι_app_left, ←
-      binary_bicone.to_cocone_ι_app_right, ← binary_bicone.inr_snd, ← binary_cofan.mk_ι_app_right]
-  rfl
+  apply ht.uniq (binary_cofan.mk 0 (𝟙 Y))
+  rintro ⟨⟨⟩⟩ <;> dsimp' <;> simp
 
 /-- In a preadditive category, any binary bicone which is a colimit cocone is in fact a
     bilimit bicone. -/
@@ -1808,8 +1868,7 @@ def isBilimitBinaryBiconeOfSplitMonoOfCokernel {X Y : C} {f : X ⟶ Y} [SplitMon
 
 /-- If `b` is a binary bicone such that `b.inl` is a kernel of `b.snd`, then `b` is a bilimit
     bicone. -/
-def BinaryBicone.isBilimitOfKernelInl {X Y : C} (b : BinaryBicone X Y) (hb : IsLimit (KernelFork.ofι _ b.inl_snd)) :
-    b.IsBilimit :=
+def BinaryBicone.isBilimitOfKernelInl {X Y : C} (b : BinaryBicone X Y) (hb : IsLimit b.sndKernelFork) : b.IsBilimit :=
   isBinaryBilimitOfIsLimit _ <|
     (BinaryFan.IsLimit.mk _ (fun T f g => f ≫ b.inl + g ≫ b.inr)
         (fun T f g => by
@@ -1826,8 +1885,7 @@ def BinaryBicone.isBilimitOfKernelInl {X Y : C} (b : BinaryBicone X Y) (hb : IsL
 
 /-- If `b` is a binary bicone such that `b.inr` is a kernel of `b.fst`, then `b` is a bilimit
     bicone. -/
-def BinaryBicone.isBilimitOfKernelInr {X Y : C} (b : BinaryBicone X Y) (hb : IsLimit (KernelFork.ofι _ b.inr_fst)) :
-    b.IsBilimit :=
+def BinaryBicone.isBilimitOfKernelInr {X Y : C} (b : BinaryBicone X Y) (hb : IsLimit b.fstKernelFork) : b.IsBilimit :=
   isBinaryBilimitOfIsLimit _ <|
     (BinaryFan.IsLimit.mk _ (fun T f g => f ≫ b.inl + g ≫ b.inr)
         (fun t f g => by
@@ -1844,8 +1902,8 @@ def BinaryBicone.isBilimitOfKernelInr {X Y : C} (b : BinaryBicone X Y) (hb : IsL
 
 /-- If `b` is a binary bicone such that `b.fst` is a cokernel of `b.inr`, then `b` is a bilimit
     bicone. -/
-def BinaryBicone.isBilimitOfCokernelFst {X Y : C} (b : BinaryBicone X Y)
-    (hb : IsColimit (CokernelCofork.ofπ _ b.inr_fst)) : b.IsBilimit :=
+def BinaryBicone.isBilimitOfCokernelFst {X Y : C} (b : BinaryBicone X Y) (hb : IsColimit b.inrCokernelCofork) :
+    b.IsBilimit :=
   isBinaryBilimitOfIsColimit _ <|
     (BinaryCofan.IsColimit.mk _ (fun T f g => b.fst ≫ f + b.snd ≫ g)
         (fun T f g => by
@@ -1862,8 +1920,8 @@ def BinaryBicone.isBilimitOfCokernelFst {X Y : C} (b : BinaryBicone X Y)
 
 /-- If `b` is a binary bicone such that `b.snd` is a cokernel of `b.inl`, then `b` is a bilimit
     bicone. -/
-def BinaryBicone.isBilimitOfCokernelSnd {X Y : C} (b : BinaryBicone X Y)
-    (hb : IsColimit (CokernelCofork.ofπ _ b.inl_snd)) : b.IsBilimit :=
+def BinaryBicone.isBilimitOfCokernelSnd {X Y : C} (b : BinaryBicone X Y) (hb : IsColimit b.inlCokernelCofork) :
+    b.IsBilimit :=
   isBinaryBilimitOfIsColimit _ <|
     (BinaryCofan.IsColimit.mk _ (fun T f g => b.fst ≫ f + b.snd ≫ g)
         (fun T f g => by

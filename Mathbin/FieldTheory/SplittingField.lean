@@ -232,7 +232,7 @@ theorem roots_ne_zero_of_splits {f : K[X]} (hs : Splits i f) (hf0 : natDegree f 
 def rootOfSplits {f : K[X]} (hf : f.Splits i) (hfd : f.degree ≠ 0) : L :=
   Classical.some <| exists_root_of_splits i hf hfd
 
-theorem map_root_of_splits {f : K[X]} (hf : f.Splits i) hfd : f.eval₂ i (rootOfSplits i hf hfd) = 0 :=
+theorem map_root_of_splits {f : K[X]} (hf : f.Splits i) (hfd) : f.eval₂ i (rootOfSplits i hf hfd) = 0 :=
   Classical.some_spec <| exists_root_of_splits i hf hfd
 
 theorem nat_degree_eq_card_roots {p : K[X]} {i : K →+* L} (hsplit : Splits i p) : p.natDegree = (p.map i).roots.card :=
@@ -430,8 +430,7 @@ theorem lift_of_splits {F K L : Type _} [Field F] [Field K] [Field L] [Algebra F
   rw [coe_insert, Set.insert_eq, Set.union_comm, Algebra.adjoin_union_eq_adjoin_adjoin]
   let this := (f : Algebra.adjoin F (↑s : Set K) →+* L).toAlgebra
   have : FiniteDimensional F (Algebra.adjoin F (↑s : Set K)) :=
-    ((Submodule.fg_iff_finite_dimensional _).1
-        (fg_adjoin_of_finite (Set.finite_mem_finset s) H3)).of_subalgebra_to_submodule
+    ((Submodule.fg_iff_finite_dimensional _).1 (fg_adjoin_of_finite s.finite_to_set H3)).of_subalgebra_to_submodule
   let this := fieldOfFiniteDimensional F (Algebra.adjoin F (↑s : Set K))
   have H5 : IsIntegral (Algebra.adjoin F (↑s : Set K)) a := is_integral_of_is_scalar_tower a H1
   have H6 : (minpoly (Algebra.adjoin F (↑s : Set K)) a).Splits (algebraMap (Algebra.adjoin F (↑s : Set K)) L) := by
@@ -518,7 +517,7 @@ theorem succ (n : ℕ) (f : K[X]) (hfn : f.natDegree = n + 1) :
   rfl
 
 instance field (n : ℕ) :
-    ∀ {K : Type u} [Field K], ∀ {f : K[X]} hfn : f.natDegree = n, Field (splitting_field_aux n f hfn) :=
+    ∀ {K : Type u} [Field K], ∀ {f : K[X]} (hfn : f.natDegree = n), Field (splitting_field_aux n f hfn) :=
   (Nat.recOn n fun K _ _ _ => ‹Field K›) fun n ih K _ f hf => ih _
 
 instance inhabited {n : ℕ} {f : K[X]} (hfn : f.natDegree = n) : Inhabited (SplittingFieldAux n f hfn) :=
@@ -545,14 +544,15 @@ example (x : ℕ) {α} (a₀ aₙ : α) : (cases_twice a₀ aₙ x).1 = (cases_t
 We don't really care at this point because this is an implementation detail (which is why this is
 not a docstring), but we do in `splitting_field.algebra'` below. -/
 instance algebra (n : ℕ) :
-    ∀ R : Type _ {K : Type u} [CommSemiringₓ R] [Field K],
-      ∀ [Algebra R K] {f : K[X]} hfn : f.natDegree = n, Algebra R (splitting_field_aux n f hfn) :=
+    ∀ (R : Type _) {K : Type u} [CommSemiringₓ R] [Field K],
+      ∀ [Algebra R K] {f : K[X]} (hfn : f.natDegree = n), Algebra R (splitting_field_aux n f hfn) :=
   (Nat.recOn n fun R K _ _ _ _ _ => ‹Algebra R K›) fun n ih R K _ _ _ f hfn => ih R (nat_degree_remove_factor' hfn)
 
 instance is_scalar_tower (n : ℕ) :
-    ∀ R₁ R₂ : Type _ {K : Type u} [CommSemiringₓ R₁] [CommSemiringₓ R₂] [HasSmul R₁ R₂] [Field K],
+    ∀ (R₁ R₂ : Type _) {K : Type u} [CommSemiringₓ R₁] [CommSemiringₓ R₂] [HasSmul R₁ R₂] [Field K],
       ∀ [Algebra R₁ K] [Algebra R₂ K],
-        ∀ [IsScalarTower R₁ R₂ K] {f : K[X]} hfn : f.natDegree = n, IsScalarTower R₁ R₂ (splitting_field_aux n f hfn) :=
+        ∀ [IsScalarTower R₁ R₂ K] {f : K[X]} (hfn : f.natDegree = n),
+          IsScalarTower R₁ R₂ (splitting_field_aux n f hfn) :=
   (Nat.recOn n fun R₁ R₂ K _ _ _ _ _ _ _ _ _ => ‹IsScalarTower R₁ R₂ K›) fun n ih R₁ R₂ K _ _ _ _ _ _ _ f hfn =>
     ih R₁ R₂ (nat_degree_remove_factor' hfn)
 
@@ -586,7 +586,7 @@ theorem algebra_map_succ (n : ℕ) (f : K[X]) (hfn : f.natDegree = n + 1) :
 
 protected theorem splits (n : ℕ) :
     ∀ {K : Type u} [Field K],
-      ∀ f : K[X] hfn : f.natDegree = n, splits (algebraMap K <| splitting_field_aux n f hfn) f :=
+      ∀ (f : K[X]) (hfn : f.natDegree = n), splits (algebraMap K <| splitting_field_aux n f hfn) f :=
   (Nat.recOn n fun K _ _ hf =>
       splits_of_degree_le_one _ (le_transₓ degree_le_nat_degree <| hf.symm ▸ WithBot.coe_le_coe.2 zero_le_one))
     fun n ih K _ f hf => by
@@ -599,8 +599,8 @@ protected theorem splits (n : ℕ) :
 
 theorem exists_lift (n : ℕ) :
     ∀ {K : Type u} [Field K],
-      ∀ f : K[X] hfn : f.natDegree = n {L : Type _} [Field L],
-        ∀ j : K →+* L hf : splits j f, ∃ k : splitting_field_aux n f hfn →+* L, k.comp (algebraMap _ _) = j :=
+      ∀ (f : K[X]) (hfn : f.natDegree = n) {L : Type _} [Field L],
+        ∀ (j : K →+* L) (hf : splits j f), ∃ k : splitting_field_aux n f hfn →+* L, k.comp (algebraMap _ _) = j :=
   (Nat.recOn n fun K _ _ _ L _ j _ => ⟨j, j.comp_id⟩) fun n ih K _ f hf L _ j hj =>
     have hndf : f.nat_degree ≠ 0 := by
       intro h
@@ -625,7 +625,7 @@ theorem exists_lift (n : ℕ) :
 
 theorem adjoin_roots (n : ℕ) :
     ∀ {K : Type u} [Field K],
-      ∀ f : K[X] hfn : f.natDegree = n,
+      ∀ (f : K[X]) (hfn : f.natDegree = n),
         Algebra.adjoin K
             (↑(f.map <| algebraMap K <| splitting_field_aux n f hfn).roots.toFinset :
               Set (splitting_field_aux n f hfn)) =
@@ -717,8 +717,8 @@ end SplittingField
 
 variable (K L) [Algebra K L]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`Splits] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`adjoin_roots] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`Splits] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`adjoin_roots] []
 /-- Typeclass characterising splitting fields. -/
 class IsSplittingField (f : K[X]) : Prop where
   Splits : Splits (algebraMap K L) f
@@ -804,7 +804,7 @@ def lift [Algebra K F] (f : K[X]) [IsSplittingField K L f] (hf : Polynomial.Spli
 theorem finite_dimensional (f : K[X]) [IsSplittingField K L f] : FiniteDimensional K L :=
   ⟨@Algebra.top_to_submodule K L _ _ _ ▸
       adjoin_roots L f ▸
-        fg_adjoin_of_finite (Set.finite_mem_finset _) fun y hy =>
+        fg_adjoin_of_finite (Finset.finite_to_set _) fun y hy =>
           if hf : f = 0 then by
             rw [hf, Polynomial.map_zero, roots_zero] at hy
             cases hy

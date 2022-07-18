@@ -418,7 +418,7 @@ end
     their "difference" `z`. This pseudoelement has the properties that `f z = 0` and for all
     morphisms `g`, if `g y = 0` then `g z = g x`. -/
 theorem sub_of_eq_image {P Q : C} (f : P ⟶ Q) (x y : P) :
-    f x = f y → ∃ z, f z = 0 ∧ ∀ R : C g : P ⟶ R, (g : P ⟶ R) y = 0 → g z = g x :=
+    f x = f y → ∃ z, f z = 0 ∧ ∀ (R : C) (g : P ⟶ R), (g : P ⟶ R) y = 0 → g z = g x :=
   (Quotientₓ.induction_on₂ x y) fun a a' h =>
     match Quotientₓ.exact h with
     | ⟨R, p, q, ep, Eq, comm⟩ =>

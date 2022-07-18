@@ -180,7 +180,7 @@ theorem inv_one : (1⁻¹ : FractionalIdeal R₁⁰ K) = 1 :=
 
 end FractionalIdeal
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal «expr ⁰»(A) (fraction_ring A)))
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal «expr ⁰»(A) (fraction_ring A)))
 /-- A Dedekind domain is an integral domain such that every fractional ideal has an inverse.
 
 This is equivalent to `is_dedekind_domain`.
@@ -189,15 +189,15 @@ assuming `is_dedekind_domain A`, which implies `is_dedekind_domain_inv`. For **i
 `is_dedekind_domain`(`_inv`) implies only `ideal.cancel_comm_monoid_with_zero`.
 -/
 def IsDedekindDomainInv : Prop :=
-  ∀ I _ : I ≠ (⊥ : FractionalIdeal A⁰ (FractionRing A)), I * I⁻¹ = 1
+  ∀ (I) (_ : I ≠ (⊥ : FractionalIdeal A⁰ (FractionRing A))), I * I⁻¹ = 1
 
 open FractionalIdeal
 
 variable {R A K}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal «expr ⁰»(A) K))
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal «expr ⁰»(A) K))
 theorem is_dedekind_domain_inv_iff [Algebra A K] [IsFractionRing A K] :
-    IsDedekindDomainInv A ↔ ∀ I _ : I ≠ (⊥ : FractionalIdeal A⁰ K), I * I⁻¹ = 1 := by
+    IsDedekindDomainInv A ↔ ∀ (I) (_ : I ≠ (⊥ : FractionalIdeal A⁰ K)), I * I⁻¹ = 1 := by
   let h := FractionalIdeal.mapEquiv (FractionRing.algEquiv A K)
   refine' h.to_equiv.forall_congr fun I => _
   rw [← h.to_equiv.apply_eq_iff_eq]
@@ -342,8 +342,8 @@ open Ideal
 theorem exists_not_mem_one_of_ne_bot [IsDedekindDomain A] (hNF : ¬IsField A) {I : Ideal A} (hI0 : I ≠ ⊥) (hI1 : I ≠ ⊤) :
     ∃ x : K, x ∈ (I⁻¹ : FractionalIdeal A⁰ K) ∧ x ∉ (1 : FractionalIdeal A⁰ K) := by
   -- WLOG, let `I` be maximal.
-  suffices ∀ {M : Ideal A} hM : M.IsMaximal, ∃ x : K, x ∈ (M⁻¹ : FractionalIdeal A⁰ K) ∧ x ∉ (1 : FractionalIdeal A⁰ K)
-    by
+  suffices
+    ∀ {M : Ideal A} (hM : M.IsMaximal), ∃ x : K, x ∈ (M⁻¹ : FractionalIdeal A⁰ K) ∧ x ∉ (1 : FractionalIdeal A⁰ K) by
     obtain ⟨M, hM, hIM⟩ : ∃ M : Ideal A, is_maximal M ∧ I ≤ M := Ideal.exists_le_maximal I hI1
     skip
     have hM0 := (M.bot_lt_of_maximal hNF).ne'
@@ -790,15 +790,15 @@ theorem irreducible_pow_sup_of_le (hJ : Irreducible J) (n : ℕ) (hn : ↑n ≤ 
   · simp_all
     
   rw [irreducible_pow_sup hI hJ, min_eq_rightₓ]
-  rwa [multiplicity_eq_count_normalized_factors hJ hI, Enat.coe_le_coe, normalize_eq J] at hn
+  rwa [multiplicity_eq_count_normalized_factors hJ hI, PartEnat.coe_le_coe, normalize_eq J] at hn
 
 theorem irreducible_pow_sup_of_ge (hI : I ≠ ⊥) (hJ : Irreducible J) (n : ℕ) (hn : multiplicity J I ≤ n) :
-    J ^ n⊔I = J ^ (multiplicity J I).get (Enat.dom_of_le_coe hn) := by
+    J ^ n⊔I = J ^ (multiplicity J I).get (PartEnat.dom_of_le_coe hn) := by
   rw [irreducible_pow_sup hI hJ, min_eq_leftₓ]
   congr
-  · rw [← Enat.coe_inj, Enat.coe_get, multiplicity_eq_count_normalized_factors hJ hI, normalize_eq J]
+  · rw [← PartEnat.coe_inj, PartEnat.coe_get, multiplicity_eq_count_normalized_factors hJ hI, normalize_eq J]
     
-  · rwa [multiplicity_eq_count_normalized_factors hJ hI, Enat.coe_le_coe, normalize_eq J] at hn
+  · rwa [multiplicity_eq_count_normalized_factors hJ hI, PartEnat.coe_le_coe, normalize_eq J] at hn
     
 
 end IsDedekindDomain
@@ -996,11 +996,11 @@ theorem Ideal.prod_le_prime {ι : Type _} {s : Finset ι} {f : ι → Ideal R} {
   simp only [Ideal.dvd_iff_le]
   exact ((Ideal.prime_iff_is_prime hP0).mpr hP).dvd_finset_prod_iff _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i j «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i j «expr ∈ » s)
 /-- The intersection of distinct prime powers in a Dedekind domain is the product of these
 prime powers. -/
 theorem IsDedekindDomain.inf_prime_pow_eq_prod {ι : Type _} (s : Finset ι) (f : ι → Ideal R) (e : ι → ℕ)
-    (prime : ∀, ∀ i ∈ s, ∀, Prime (f i)) (coprime : ∀ i j _ : i ∈ s _ : j ∈ s, i ≠ j → f i ≠ f j) :
+    (prime : ∀, ∀ i ∈ s, ∀, Prime (f i)) (coprime : ∀ (i j) (_ : i ∈ s) (_ : j ∈ s), i ≠ j → f i ≠ f j) :
     (s.inf fun i => f i ^ e i) = ∏ i in s, f i ^ e i := by
   let this := Classical.decEq ι
   revert prime coprime

@@ -82,7 +82,7 @@ instance : Inhabited (Box ι) :=
 
 theorem lower_le_upper : I.lower ≤ I.upper := fun i => (I.lower_lt_upper i).le
 
-theorem lower_ne_upper i : I.lower i ≠ I.upper i :=
+theorem lower_ne_upper (i) : I.lower i ≠ I.upper i :=
   (I.lower_lt_upper i).Ne
 
 instance : HasMem (ι → ℝ) (Box ι) :=

@@ -134,13 +134,14 @@ theorem map_empty_eq_zero {β} [AddCancelMonoid β] {T : Set α → β} (hT : Fi
   nth_rw 0[← add_zeroₓ (T ∅)]  at hT
   exact (add_left_cancelₓ hT).symm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i j «expr ∈ » sι)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i j «expr ∈ » sι)
 theorem map_Union_fin_meas_set_eq_sum (T : Set α → β) (T_empty : T ∅ = 0) (h_add : FinMeasAdditive μ T) {ι}
     (S : ι → Set α) (sι : Finset ι) (hS_meas : ∀ i, MeasurableSet (S i)) (hSp : ∀, ∀ i ∈ sι, ∀, μ (S i) ≠ ∞)
-    (h_disj : ∀ i j _ : i ∈ sι _ : j ∈ sι, i ≠ j → Disjoint (S i) (S j)) : T (⋃ i ∈ sι, S i) = ∑ i in sι, T (S i) := by
+    (h_disj : ∀ (i j) (_ : i ∈ sι) (_ : j ∈ sι), i ≠ j → Disjoint (S i) (S j)) :
+    T (⋃ i ∈ sι, S i) = ∑ i in sι, T (S i) := by
   revert hSp h_disj
   refine' Finset.induction_on sι _ _
-  · simp only [← Finset.not_mem_empty, ← forall_false_left, ← Union_false, ← Union_empty, ← sum_empty, ←
+  · simp only [← Finset.not_mem_empty, ← IsEmpty.forall_iff, ← Union_false, ← Union_empty, ← sum_empty, ←
       forall_2_true_iff, ← implies_true_iff, ← forall_true_left, ← not_false_iff, ← T_empty]
     
   intro a s has h hps h_disj
@@ -1436,6 +1437,54 @@ theorem continuous_set_to_fun (hT : DominatedFinMeasAdditive μ T C) :
     Continuous fun f : α →₁[μ] E => setToFun μ T hT f := by
   simp_rw [L1.set_to_fun_eq_set_to_L1 hT]
   exact ContinuousLinearMap.continuous _
+
+/-- If `F i → f` in `L1`, then `set_to_fun μ T hT (F i) → set_to_fun μ T hT f`. -/
+theorem tendsto_set_to_fun_of_L1 (hT : DominatedFinMeasAdditive μ T C) {ι} (f : α → E) (hfi : Integrable f μ)
+    {fs : ι → α → E} {l : Filter ι} (hfsi : ∀ᶠ i in l, Integrable (fs i) μ)
+    (hfs : Tendsto (fun i => ∫⁻ x, ∥fs i x - f x∥₊ ∂μ) l (𝓝 0)) :
+    Tendsto (fun i => setToFun μ T hT (fs i)) l (𝓝 <| setToFun μ T hT f) := by
+  classical
+  let f_lp := hfi.to_L1 f
+  let F_lp := fun i => if hFi : integrable (fs i) μ then hFi.toL1 (fs i) else 0
+  have tendsto_L1 : tendsto F_lp l (𝓝 f_lp) := by
+    rw [Lp.tendsto_Lp_iff_tendsto_ℒp']
+    simp_rw [snorm_one_eq_lintegral_nnnorm, Pi.sub_apply]
+    refine' (tendsto_congr' _).mp hfs
+    filter_upwards [hfsi] with i hi
+    refine' lintegral_congr_ae _
+    filter_upwards [hi.coe_fn_to_L1, hfi.coe_fn_to_L1] with x hxi hxf
+    simp_rw [F_lp, dif_pos hi, hxi, hxf]
+  suffices tendsto (fun i => set_to_fun μ T hT (F_lp i)) l (𝓝 (set_to_fun μ T hT f)) by
+    refine' (tendsto_congr' _).mp this
+    filter_upwards [hfsi] with i hi
+    suffices h_ae_eq : F_lp i =ᵐ[μ] fs i
+    exact set_to_fun_congr_ae hT h_ae_eq
+    simp_rw [F_lp, dif_pos hi]
+    exact hi.coe_fn_to_L1
+  rw [set_to_fun_congr_ae hT hfi.coe_fn_to_L1.symm]
+  exact ((continuous_set_to_fun hT).Tendsto f_lp).comp tendsto_L1
+
+theorem tendsto_set_to_fun_approx_on_of_measurable (hT : DominatedFinMeasAdditive μ T C) [MeasurableSpace E]
+    [BorelSpace E] {f : α → E} {s : Set E} [SeparableSpace s] (hfi : Integrable f μ) (hfm : Measurable f)
+    (hs : ∀ᵐ x ∂μ, f x ∈ Closure s) {y₀ : E} (h₀ : y₀ ∈ s) (h₀i : Integrable (fun x => y₀) μ) :
+    Tendsto (fun n => setToFun μ T hT (SimpleFunc.approxOn f hfm s y₀ h₀ n)) atTop (𝓝 <| setToFun μ T hT f) :=
+  tendsto_set_to_fun_of_L1 hT _ hfi (eventually_of_forall (SimpleFunc.integrable_approx_on hfm hfi h₀ h₀i))
+    (SimpleFunc.tendsto_approx_on_L1_nnnorm hfm _ hs (hfi.sub h₀i).2)
+
+theorem tendsto_set_to_fun_approx_on_of_measurable_of_range_subset (hT : DominatedFinMeasAdditive μ T C)
+    [MeasurableSpace E] [BorelSpace E] {f : α → E} (fmeas : Measurable f) (hf : Integrable f μ) (s : Set E)
+    [SeparableSpace s] (hs : range f ∪ {0} ⊆ s) :
+    Tendsto
+      (fun n =>
+        setToFun μ T hT
+          (SimpleFunc.approxOn f fmeas s 0
+            (hs <| by
+              simp )
+            n))
+      atTop (𝓝 <| setToFun μ T hT f) :=
+  by
+  refine' tendsto_set_to_fun_approx_on_of_measurable hT hf fmeas _ _ (integrable_zero _ _ _)
+  exact eventually_of_forall fun x => subset_closure (hs (Set.mem_union_left _ (mem_range_self _)))
 
 /-- Auxiliary lemma for `set_to_fun_congr_measure`: the function sending `f : α →₁[μ] G` to
 `f : α →₁[μ'] G` is continuous when `μ' ≤ c' • μ` for `c' ≠ ∞`. -/

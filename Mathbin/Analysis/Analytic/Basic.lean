@@ -131,7 +131,7 @@ theorem le_radius_of_bound_nnreal (C : ℝ≥0 ) {r : ℝ≥0 } (h : ∀ n : ℕ
 theorem le_radius_of_is_O (h : (fun n => ∥p n∥ * r ^ n) =O[at_top] fun n => (1 : ℝ)) : ↑r ≤ p.radius :=
   (Exists.elim (is_O_one_nat_at_top_iff.1 h)) fun C hC => (p.le_radius_of_bound C) fun n => (le_abs_self _).trans (hC n)
 
-theorem le_radius_of_eventually_le C (h : ∀ᶠ n in at_top, ∥p n∥ * r ^ n ≤ C) : ↑r ≤ p.radius :=
+theorem le_radius_of_eventually_le (C) (h : ∀ᶠ n in at_top, ∥p n∥ * r ^ n ≤ C) : ↑r ≤ p.radius :=
   p.le_radius_of_is_O <|
     IsO.of_bound C <|
       h.mono fun n hn => by
@@ -220,7 +220,7 @@ theorem nnnorm_mul_pow_le_of_lt_radius (p : FormalMultilinearSeries 𝕜 E F) {r
 
 theorem le_radius_of_tendsto (p : FormalMultilinearSeries 𝕜 E F) {l : ℝ}
     (h : Tendsto (fun n => ∥p n∥ * r ^ n) atTop (𝓝 l)) : ↑r ≤ p.radius :=
-  p.le_radius_of_is_O (is_O_one_of_tendsto _ h)
+  p.le_radius_of_is_O (h.is_O_one _)
 
 theorem le_radius_of_summable_norm (p : FormalMultilinearSeries 𝕜 E F) (hs : Summable fun n => ∥p n∥ * r ^ n) :
     ↑r ≤ p.radius :=
@@ -436,12 +436,12 @@ theorem HasFpowerSeriesAt.sub (hf : HasFpowerSeriesAt f pf x) (hg : HasFpowerSer
 theorem AnalyticAt.sub (hf : AnalyticAt 𝕜 f x) (hg : AnalyticAt 𝕜 g x) : AnalyticAt 𝕜 (f - g) x := by
   simpa only [← sub_eq_add_neg] using hf.add hg.neg
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ≠ » 0)
 theorem HasFpowerSeriesOnBall.coeff_zero (hf : HasFpowerSeriesOnBall f pf x r) (v : Finₓ 0 → E) : pf 0 v = f x := by
   have v_eq : v = fun i => 0 := Subsingleton.elimₓ _ _
   have zero_mem : (0 : E) ∈ Emetric.Ball (0 : E) r := by
     simp [← hf.r_pos]
-  have : ∀ i _ : i ≠ 0, (pf i fun j => 0) = 0 := by
+  have : ∀ (i) (_ : i ≠ 0), (pf i fun j => 0) = 0 := by
     intro i hi
     have : 0 < i := pos_iff_ne_zero.2 hi
     exact ContinuousMultilinearMap.map_coord_zero _ (⟨0, this⟩ : Finₓ i) rfl
@@ -601,13 +601,13 @@ theorem HasFpowerSeriesOnBall.is_O_image_sub_image_sub_deriv_principal (hf : Has
   simp_rw [L, mul_right_commₓ _ (_ * _)]
   exact (is_O_refl _ _).const_mul_left _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball x r')
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball x r')
 /-- If `f` has formal power series `∑ n, pₙ` on a ball of radius `r`, then for `y, z` in any smaller
 ball, the norm of the difference `f y - f z - p 1 (λ _, y - z)` is bounded above by
 `C * (max ∥y - x∥ ∥z - x∥) * ∥y - z∥`. -/
 theorem HasFpowerSeriesOnBall.image_sub_sub_deriv_le (hf : HasFpowerSeriesOnBall f p x r) (hr : r' < r) :
     ∃ C,
-      ∀ y z _ : y ∈ Emetric.Ball x r' _ : z ∈ Emetric.Ball x r',
+      ∀ (y z) (_ : y ∈ Emetric.Ball x r') (_ : z ∈ Emetric.Ball x r'),
         ∥f y - f z - p 1 fun _ => y - z∥ ≤ C * max ∥y - x∥ ∥z - x∥ * ∥y - z∥ :=
   by
   simpa only [← is_O_principal, ← mul_assoc, ← norm_mul, ← norm_norm, ← Prod.forall, ← Emetric.mem_ball, ←
@@ -830,7 +830,7 @@ each positive radius it has some power series representation, then `p` converges
 `𝕜`. -/
 theorem HasFpowerSeriesOnBall.r_eq_top_of_exists {f : 𝕜 → E} {r : ℝ≥0∞} {x : 𝕜} {p : FormalMultilinearSeries 𝕜 𝕜 E}
     (h : HasFpowerSeriesOnBall f p x r)
-    (h' : ∀ r' : ℝ≥0 hr : 0 < r', ∃ p' : FormalMultilinearSeries 𝕜 𝕜 E, HasFpowerSeriesOnBall f p' x r') :
+    (h' : ∀ (r' : ℝ≥0 ) (hr : 0 < r'), ∃ p' : FormalMultilinearSeries 𝕜 𝕜 E, HasFpowerSeriesOnBall f p' x r') :
     HasFpowerSeriesOnBall f p x ∞ :=
   { r_le :=
       Ennreal.le_of_forall_pos_nnreal_lt fun r hr hr' =>
@@ -957,7 +957,7 @@ def changeOriginIndexEquiv : (Σk l : ℕ, { s : Finset (Finₓ (k + l)) // s.ca
       ∀ k' l',
         k' = k →
           l' = l →
-            ∀ hkl : k + l = k' + l' hs',
+            ∀ (hkl : k + l = k' + l') (hs'),
               (⟨k', l', ⟨Finset.map (Finₓ.cast hkl).toEquiv.toEmbedding s, hs'⟩⟩ :
                   Σk l : ℕ, { s : Finset (Finₓ (k + l)) // s.card = l }) =
                 ⟨k, l, ⟨s, hs⟩⟩
@@ -1088,7 +1088,7 @@ theorem change_origin_eval (h : (∥x∥₊ + ∥y∥₊ : ℝ≥0∞) < p.radiu
     change_origin_index_equiv_symm_apply_snd_fst, ← change_origin_index_equiv_symm_apply_snd_snd_coe]
   rw [ContinuousMultilinearMap.curry_fin_finset_apply_const]
   have :
-    ∀ m hm : n = m,
+    ∀ (m) (hm : n = m),
       p n (s.piecewise (fun _ => x) fun _ => y) =
         p m ((s.map (Finₓ.cast hm).toEquiv.toEmbedding).piecewise (fun _ => x) fun _ => y) :=
     by

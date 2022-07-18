@@ -103,10 +103,10 @@ theorem image_subset {α β} (e : α ≃ β) (s t : Set α) : e '' s ⊆ e '' t 
 theorem image_eq_iff_eq {α β} (e : α ≃ β) (s t : Set α) : e '' s = e '' t ↔ s = t :=
   image_eq_image e.Injective
 
-theorem preimage_eq_iff_eq_image {α β} (e : α ≃ β) s t : e ⁻¹' s = t ↔ s = e '' t :=
+theorem preimage_eq_iff_eq_image {α β} (e : α ≃ β) (s t) : e ⁻¹' s = t ↔ s = e '' t :=
   preimage_eq_iff_eq_image e.Bijective
 
-theorem eq_preimage_iff_image_eq {α β} (e : α ≃ β) s t : s = e ⁻¹' t ↔ e '' s = t :=
+theorem eq_preimage_iff_image_eq {α β} (e : α ≃ β) (s t) : s = e ⁻¹' t ↔ e '' s = t :=
   eq_preimage_iff_image_eq e.Bijective
 
 @[simp]
@@ -174,15 +174,15 @@ namespace Set
 
 /-- `univ α` is equivalent to `α`. -/
 @[simps apply symmApply]
-protected def univ α : @Univ α ≃ α :=
+protected def univ (α) : @Univ α ≃ α :=
   ⟨coe, fun a => ⟨a, trivialₓ⟩, fun ⟨a, _⟩ => rfl, fun a => rfl⟩
 
 /-- An empty set is equivalent to the `empty` type. -/
-protected def empty α : (∅ : Set α) ≃ Empty :=
+protected def empty (α) : (∅ : Set α) ≃ Empty :=
   equivEmpty _
 
 /-- An empty set is equivalent to a `pempty` type. -/
-protected def pempty α : (∅ : Set α) ≃ Pempty :=
+protected def pempty (α) : (∅ : Set α) ≃ Pempty :=
   equivPempty _
 
 /-- If sets `s` and `t` are separated by a decidable predicate, then `s ∪ t` is equivalent to
@@ -410,6 +410,18 @@ protected def compl {α : Type u} {β : Type v} {s : Set α} {t : Set β} [Decid
 /-- The set product of two sets is equivalent to the type product of their coercions to types. -/
 protected def prod {α β} (s : Set α) (t : Set β) : ↥(s ×ˢ t) ≃ s × t :=
   @subtypeProdEquivProd α β s t
+
+/-- The set `set.pi set.univ s` is equivalent to `Π a, s a`. -/
+@[simps]
+protected def univPi {α : Type _} {β : α → Type _} (s : ∀ a, Set (β a)) : Pi Univ s ≃ ∀ a, s a where
+  toFun := fun f a => ⟨(f : ∀ a, β a) a, f.2 a (mem_univ a)⟩
+  invFun := fun f => ⟨fun a => f a, fun a ha => (f a).2⟩
+  left_inv := fun ⟨f, hf⟩ => by
+    ext a
+    rfl
+  right_inv := fun f => by
+    ext a
+    rfl
 
 /-- If a function `f` is injective on a set `s`, then `s` is equivalent to `f '' s`. -/
 protected noncomputable def imageOfInjOn {α β} (f : α → β) (s : Set α) (H : InjOn f s) : s ≃ f '' s :=

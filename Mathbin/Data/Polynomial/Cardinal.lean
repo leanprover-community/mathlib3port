@@ -27,7 +27,7 @@ theorem cardinal_mk_le_max {R : Type u} [CommSemiringₓ R] : # R[X] ≤ max (# 
     # R[X] = # (MvPolynomial PUnit.{u + 1} R) := Cardinal.eq.2 ⟨(MvPolynomial.punitAlgEquiv.{u, u} R).toEquiv.symm⟩
     _ ≤ _ := MvPolynomial.cardinal_mk_le_max
     _ ≤ _ := by
-      rw [max_assocₓ, max_eq_rightₓ (lt_aleph_0_of_fintype PUnit).le]
+      rw [max_assocₓ, max_eq_rightₓ (lt_aleph_0_of_finite PUnit).le]
     
 
 end Polynomial

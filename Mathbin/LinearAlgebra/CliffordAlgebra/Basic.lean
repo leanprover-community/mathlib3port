@@ -65,12 +65,12 @@ inductive Rel : TensorAlgebra R M → TensorAlgebra R M → Prop
 
 end CliffordAlgebra
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler algebra R
+-- ./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler algebra R
 /-- The Clifford algebra of an `R`-module `M` equipped with a quadratic_form `Q`.
 -/
 def CliffordAlgebra :=
   RingQuot (CliffordAlgebra.Rel Q)deriving Inhabited, Ringₓ,
-  «./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler algebra R»
+  «./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler algebra R»
 
 namespace CliffordAlgebra
 
@@ -101,7 +101,7 @@ from `clifford_algebra Q` to `A`.
 def lift : { f : M →ₗ[R] A // ∀ m, f m * f m = algebraMap _ _ (Q m) } ≃ (CliffordAlgebra Q →ₐ[R] A) where
   toFun := fun f =>
     RingQuot.liftAlgHom R
-      ⟨TensorAlgebra.lift R (f : M →ₗ[R] A), fun x y h : Rel Q x y => by
+      ⟨TensorAlgebra.lift R (f : M →ₗ[R] A), fun x y (h : Rel Q x y) => by
         induction h
         rw [AlgHom.commutes, AlgHom.map_mul, TensorAlgebra.lift_ι_apply, f.prop]⟩
   invFun := fun F =>
@@ -124,7 +124,7 @@ theorem ι_comp_lift (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = algebraMap _
   Subtype.mk_eq_mk.mp <| (lift Q).symm_apply_apply ⟨f, cond⟩
 
 @[simp]
-theorem lift_ι_apply (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = algebraMap _ _ (Q m)) x :
+theorem lift_ι_apply (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = algebraMap _ _ (Q m)) (x) :
     lift Q ⟨f, cond⟩ (ι Q x) = f x :=
   (LinearMap.ext_iff.mp <| ι_comp_lift f cond) x
 
@@ -209,11 +209,11 @@ def map (f : M₁ →ₗ[R] M₂) (hf : ∀ m, Q₂ (f m) = Q₁ m) : CliffordAl
     ⟨(CliffordAlgebra.ι Q₂).comp f, fun m => (ι_sq_scalar _ _).trans <| RingHom.congr_arg _ <| hf m⟩
 
 @[simp]
-theorem map_comp_ι (f : M₁ →ₗ[R] M₂) hf : (map Q₁ Q₂ f hf).toLinearMap.comp (ι Q₁) = (ι Q₂).comp f :=
+theorem map_comp_ι (f : M₁ →ₗ[R] M₂) (hf) : (map Q₁ Q₂ f hf).toLinearMap.comp (ι Q₁) = (ι Q₂).comp f :=
   ι_comp_lift _ _
 
 @[simp]
-theorem map_apply_ι (f : M₁ →ₗ[R] M₂) hf (m : M₁) : map Q₁ Q₂ f hf (ι Q₁ m) = ι Q₂ (f m) :=
+theorem map_apply_ι (f : M₁ →ₗ[R] M₂) (hf) (m : M₁) : map Q₁ Q₂ f hf (ι Q₁ m) = ι Q₂ (f m) :=
   lift_ι_apply _ _ m
 
 @[simp]
@@ -222,7 +222,7 @@ theorem map_id : (map Q₁ Q₁ (LinearMap.id : M₁ →ₗ[R] M₁) fun m => rf
   exact map_apply_ι _ _ _ _ m
 
 @[simp]
-theorem map_comp_map (f : M₂ →ₗ[R] M₃) hf (g : M₁ →ₗ[R] M₂) hg :
+theorem map_comp_map (f : M₂ →ₗ[R] M₃) (hf) (g : M₁ →ₗ[R] M₂) (hg) :
     (map Q₂ Q₃ f hf).comp (map Q₁ Q₂ g hg) = map Q₁ Q₃ (f.comp g) fun m => (hf _).trans <| hg m := by
   ext m
   dsimp' only [← LinearMap.comp_apply, ← AlgHom.comp_apply, ← AlgHom.to_linear_map_apply, ← AlgHom.id_apply]

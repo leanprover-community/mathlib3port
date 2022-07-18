@@ -185,7 +185,7 @@ theorem map_sum_lt' {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg
   v.map_sum_lt (ne_of_gtₓ hg) hf
 
 @[simp]
-theorem map_pow : ∀ x n : ℕ, v (x ^ n) = v x ^ n :=
+theorem map_pow : ∀ (x) (n : ℕ), v (x ^ n) = v x ^ n :=
   v.toMonoidWithZeroHom.toMonoidHom.map_pow
 
 /-- Deprecated. Use `fun_like.ext_iff`. -/
@@ -683,7 +683,7 @@ theorem map_lt_sum' {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg
   v.map_sum_lt' hg hf
 
 @[simp]
-theorem map_pow : ∀ x n : ℕ, v (x ^ n) = n • v x :=
+theorem map_pow : ∀ (x) (n : ℕ), v (x ^ n) = n • v x :=
   v.map_pow
 
 @[ext]

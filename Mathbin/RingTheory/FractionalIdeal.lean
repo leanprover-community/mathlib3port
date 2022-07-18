@@ -758,7 +758,8 @@ noncomputable irreducible_def canonicalEquiv : FractionalIdeal S P ≃+* Fractio
 @[simp]
 theorem mem_canonical_equiv_apply {I : FractionalIdeal S P} {x : P'} :
     x ∈ canonicalEquiv S P P' I ↔
-      ∃ y ∈ I, IsLocalization.map P' (RingHom.id R) (fun y hy : y ∈ S => show RingHom.id R y ∈ S from hy) (y : P) = x :=
+      ∃ y ∈ I,
+        IsLocalization.map P' (RingHom.id R) (fun y (hy : y ∈ S) => show RingHom.id R y ∈ S from hy) (y : P) = x :=
   by
   rw [canonical_equiv, map_equiv_apply, mem_map]
   exact ⟨fun ⟨y, mem, Eq⟩ => ⟨y, mem, Eq⟩, fun ⟨y, mem, Eq⟩ => ⟨y, mem, Eq⟩⟩
@@ -771,7 +772,7 @@ theorem canonical_equiv_symm : (canonicalEquiv S P P').symm = canonicalEquiv S P
       exact ⟨fun ⟨y, mem, Eq⟩ => ⟨y, mem, Eq⟩, fun ⟨y, mem, Eq⟩ => ⟨y, mem, Eq⟩⟩
 
 @[simp]
-theorem canonical_equiv_flip I : canonicalEquiv S P P' (canonicalEquiv S P' P I) = I := by
+theorem canonical_equiv_flip (I) : canonicalEquiv S P P' (canonicalEquiv S P' P I) = I := by
   rw [← canonical_equiv_symm, RingEquiv.symm_apply_apply]
 
 end Semiringₓ
@@ -792,7 +793,7 @@ variable [Algebra R K] [IsFractionRing R K] [Algebra R K'] [IsFractionRing R K']
 
 variable {I J : FractionalIdeal R⁰ K} (h : K →ₐ[R] K')
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (x «expr ≠ » (0 : R))
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » (0 : R))
 /-- Nonzero fractional ideals contain a nonzero integer. -/
 theorem exists_ne_zero_mem_is_integer [Nontrivial R] (hI : I ≠ 0) : ∃ (x : _)(_ : x ≠ (0 : R)), algebraMap R K x ∈ I :=
   by
@@ -1185,7 +1186,8 @@ theorem coe_ideal_span_singleton (x : R) :
 @[simp]
 theorem canonical_equiv_span_singleton {P'} [CommRingₓ P'] [Algebra R P'] [IsLocalization S P'] (x : P) :
     canonicalEquiv S P P' (spanSingleton S x) =
-      spanSingleton S (IsLocalization.map P' (RingHom.id R) (fun y hy : y ∈ S => show RingHom.id R y ∈ S from hy) x) :=
+      spanSingleton S
+        (IsLocalization.map P' (RingHom.id R) (fun y (hy : y ∈ S) => show RingHom.id R y ∈ S from hy) x) :=
   by
   apply set_like.ext_iff.mpr
   intro y
@@ -1319,7 +1321,7 @@ include loc
 
 theorem le_span_singleton_mul_iff {x : P} {I J : FractionalIdeal S P} :
     I ≤ spanSingleton S x * J ↔ ∀, ∀ zI ∈ I, ∀, ∃ zJ ∈ J, x * zJ = zI :=
-  show (∀ {zI} hzI : zI ∈ I, zI ∈ spanSingleton _ x * J) ↔ ∀, ∀ zI ∈ I, ∀, ∃ zJ ∈ J, x * zJ = zI by
+  show (∀ {zI} (hzI : zI ∈ I), zI ∈ spanSingleton _ x * J) ↔ ∀, ∀ zI ∈ I, ∀, ∃ zJ ∈ J, x * zJ = zI by
     simp only [← FractionalIdeal.mem_singleton_mul, ← eq_comm]
 
 theorem span_singleton_mul_le_iff {x : P} {I J : FractionalIdeal S P} :
@@ -1348,7 +1350,7 @@ variable {K : Type _} [Field K] [Algebra R₁ K] [frac : IsFractionRing R₁ K]
 attribute [local instance] Classical.propDecidable
 
 theorem is_noetherian_zero : IsNoetherian R₁ (0 : FractionalIdeal R₁⁰ K) :=
-  is_noetherian_submodule.mpr fun I hI : I ≤ (0 : FractionalIdeal R₁⁰ K) => by
+  is_noetherian_submodule.mpr fun I (hI : I ≤ (0 : FractionalIdeal R₁⁰ K)) => by
     rw [coe_zero] at hI
     rw [le_bot_iff.mp hI]
     exact fg_bot

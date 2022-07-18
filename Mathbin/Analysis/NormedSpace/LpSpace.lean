@@ -30,7 +30,7 @@ The space `lp E p` is the subtype of elements of `Π i : α, E i` which satisfy 
 * `lp E p` : elements of `Π i : α, E i` such that `mem_ℓp f p`. Defined as an `add_subgroup` of
   a type synonym `pre_lp` for `Π i : α, E i`, and equipped with a `normed_group` structure.
   Under appropriate conditions, this is also equipped with the instances `lp.normed_space`,
-  `lp.complete_space`, and `lp.normed_ring`.
+  `lp.complete_space`. For `p=∞`, there is also `lp.infty_normed_ring`, `lp.infty_normed_algebra`.
 
 ## Main results
 
@@ -175,7 +175,7 @@ theorem neg {f : ∀ i, E i} (hf : Memℓp f p) : Memℓp (-f) p := by
 theorem neg_iff {f : ∀ i, E i} : Memℓp (-f) p ↔ Memℓp f p :=
   ⟨fun h => neg_negₓ f ▸ h.neg, Memℓp.neg⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i «expr ∉ » hfq.finite_dsupport.to_finset)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ∉ » hfq.finite_dsupport.to_finset)
 theorem of_exponent_ge {p q : ℝ≥0∞} {f : ∀ i, E i} (hfq : Memℓp f q) (hpq : q ≤ p) : Memℓp f p := by
   rcases Ennreal.trichotomy₂ hpq with (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ | ⟨rfl, hp⟩ | ⟨rfl, rfl⟩ | ⟨hq, rfl⟩ | ⟨hq, hp, hpq'⟩)
   · exact hfq
@@ -191,7 +191,7 @@ theorem of_exponent_ge {p q : ℝ≥0∞} {f : ∀ i, E i} (hfq : Memℓp f q) (
       
     
   · apply mem_ℓp_gen
-    have : ∀ i _ : i ∉ hfq.finite_dsupport.to_finset, ∥f i∥ ^ p.to_real = 0 := by
+    have : ∀ (i) (_ : i ∉ hfq.finite_dsupport.to_finset), ∥f i∥ ^ p.to_real = 0 := by
       intro i hi
       have : f i = 0 := by
         simpa using hi
@@ -372,7 +372,6 @@ theorem coe_fn_neg (f : lp E p) : ⇑(-f) = -f :=
 theorem coe_fn_add (f g : lp E p) : ⇑(f + g) = f + g :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem coe_fn_sum {ι : Type _} (f : ι → lp E p) (s : Finset ι) : ⇑(∑ i in s, f i) = ∑ i in s, ⇑(f i) := by
   classical
@@ -449,7 +448,6 @@ theorem norm_zero : ∥(0 : lp E p)∥ = 0 := by
     simpa [← Real.zero_rpow hp.ne'] using Real.zero_rpow hp'
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem norm_eq_zero_iff ⦃f : lp E p⦄ : ∥f∥ = 0 ↔ f = 0 := by
   classical
   refine'
@@ -612,7 +610,7 @@ variable (E p 𝕜)
 
 /-- The `𝕜`-submodule of elements of `Π i : α, E i` whose `lp` norm is finite.  This is `lp E p`,
 with extra structure. -/
-def lpSubmodule : Submodule 𝕜 (PreLp E) :=
+def _root_.lp_submodule : Submodule 𝕜 (PreLp E) :=
   { lp E p with
     smul_mem' := fun c f hf => by
       simpa using mem_lp_const_smul c ⟨f, hf⟩ }
@@ -703,78 +701,74 @@ instance : NonUnitalNormedRing (lp B ∞) :=
            }
 
 -- we also want a `non_unital_normed_comm_ring` instance, but this has to wait for #13719
+instance infty_is_scalar_tower {𝕜} [NormedField 𝕜] [∀ i, NormedSpace 𝕜 (B i)] [∀ i, IsScalarTower 𝕜 (B i) (B i)] :
+    IsScalarTower 𝕜 (lp B ∞) (lp B ∞) :=
+  ⟨fun r f g => lp.ext <| smul_assoc r (⇑f) ⇑g⟩
+
+instance infty_smul_comm_class {𝕜} [NormedField 𝕜] [∀ i, NormedSpace 𝕜 (B i)] [∀ i, SmulCommClass 𝕜 (B i) (B i)] :
+    SmulCommClass 𝕜 (lp B ∞) (lp B ∞) :=
+  ⟨fun r f g => lp.ext <| smul_comm r (⇑f) ⇑g⟩
+
 end NonUnitalNormedRing
 
 section NormedRing
 
-variable {I : Type _} {B : I → Type _} [∀ i, NormedRing (B i)] [∀ i, NormOneClass (B i)]
+variable {I : Type _} {B : I → Type _} [∀ i, NormedRing (B i)]
+
+instance _root_.pre_lp.ring : Ringₓ (PreLp B) :=
+  Pi.ring
+
+variable [∀ i, NormOneClass (B i)]
 
 theorem _root_.one_mem_ℓp_infty : Memℓp (1 : ∀ i, B i) ∞ :=
   ⟨1, by
     rintro i ⟨i, rfl⟩
     exact norm_one.le⟩
 
-instance : One (lp B ∞) where one := ⟨(1 : ∀ i, B i), one_mem_ℓp_infty⟩
+variable (B)
+
+/-- The `𝕜`-subring of elements of `Π i : α, B i` whose `lp` norm is finite. This is `lp E ∞`,
+with extra structure. -/
+def _root_.lp_infty_subring : Subring (PreLp B) :=
+  { lp B ∞ with Carrier := { f | Memℓp f ∞ }, one_mem' := one_mem_ℓp_infty,
+    mul_mem' := fun f g hf hg => hf.infty_mul hg }
+
+variable {B}
+
+instance inftyRing : Ringₓ (lp B ∞) :=
+  (lpInftySubring B).toRing
+
+theorem _root_.mem_ℓp.infty_pow {f : ∀ i, B i} (hf : Memℓp f ∞) (n : ℕ) : Memℓp (f ^ n) ∞ :=
+  (lpInftySubring B).pow_mem hf n
+
+theorem _root_.nat_cast_mem_ℓp_infty (n : ℕ) : Memℓp (n : ∀ i, B i) ∞ :=
+  nat_cast_mem (lpInftySubring B) n
+
+theorem _root_.int_cast_mem_ℓp_infty (z : ℤ) : Memℓp (z : ∀ i, B i) ∞ :=
+  coe_int_mem (lpInftySubring B) z
 
 @[simp]
 theorem infty_coe_fn_one : ⇑(1 : lp B ∞) = 1 :=
   rfl
 
-theorem _root_.mem_ℓp.infty_pow {f : ∀ i, B i} (hf : Memℓp f ∞) (n : ℕ) : Memℓp (f ^ n) ∞ := by
-  induction' n with n hn
-  · rw [pow_zeroₓ]
-    exact one_mem_ℓp_infty
-    
-  · rw [pow_succₓ]
-    exact hf.infty_mul hn
-    
-
-instance [Nonempty I] :
-    NormOneClass (lp B ∞) where norm_one := by
-    simp_rw [lp.norm_eq_csupr, infty_coe_fn_one, Pi.one_apply, norm_one, csupr_const]
-
-instance : Pow (lp B ∞) ℕ where pow := fun f n => ⟨_, f.Prop.infty_pow n⟩
-
 @[simp]
 theorem infty_coe_fn_pow (f : lp B ∞) (n : ℕ) : ⇑(f ^ n) = f ^ n :=
   rfl
-
-theorem _root_.nat_cast_mem_ℓp_infty : ∀ n : ℕ, Memℓp (n : ∀ i, B i) ∞
-  | 0 => by
-    rw [Nat.cast_zeroₓ]
-    exact zero_mem_ℓp
-  | n + 1 => by
-    rw [Nat.cast_succₓ]
-    exact (_root_.nat_cast_mem_ℓp_infty n).add one_mem_ℓp_infty
-
-instance : HasNatCast (lp B ∞) where natCast := fun n => ⟨(↑n : ∀ i, B i), nat_cast_mem_ℓp_infty _⟩
 
 @[simp]
 theorem infty_coe_fn_nat_cast (n : ℕ) : ⇑(n : lp B ∞) = n :=
   rfl
 
-theorem _root_.int_cast_mem_ℓp_infty (z : ℤ) : Memℓp (z : ∀ i, B i) ∞ := by
-  obtain ⟨n, rfl | rfl⟩ := z.eq_coe_or_neg
-  · rw [Int.cast_coe_nat]
-    exact nat_cast_mem_ℓp_infty n
-    
-  · rw [Int.cast_neg, Int.cast_coe_nat]
-    exact (nat_cast_mem_ℓp_infty n).neg
-    
-
-instance : HasIntCast (lp B ∞) where intCast := fun z => ⟨(↑z : ∀ i, B i), int_cast_mem_ℓp_infty _⟩
-
 @[simp]
 theorem infty_coe_fn_int_cast (z : ℤ) : ⇑(z : lp B ∞) = z :=
   rfl
 
-instance : Ringₓ (lp B ∞) :=
-  Function.Injective.ring lp.hasCoeToFun.coe Subtype.coe_injective (lp.coe_fn_zero B ∞) infty_coe_fn_one lp.coe_fn_add
-    infty_coe_fn_mul lp.coe_fn_neg lp.coe_fn_sub (fun _ _ => rfl) (fun _ _ => rfl) infty_coe_fn_pow
-    infty_coe_fn_nat_cast infty_coe_fn_int_cast
+instance [Nonempty I] :
+    NormOneClass (lp B ∞) where norm_one := by
+    simp_rw [lp.norm_eq_csupr, infty_coe_fn_one, Pi.one_apply, norm_one, csupr_const]
 
-instance : NormedRing (lp B ∞) :=
-  { lp.ring, lp.nonUnitalNormedRing with }
+instance inftyNormedRing : NormedRing (lp B ∞) :=
+  { lp.inftyRing, lp.nonUnitalNormedRing with }
 
 end NormedRing
 
@@ -782,16 +776,49 @@ section NormedCommRing
 
 variable {I : Type _} {B : I → Type _} [∀ i, NormedCommRing (B i)] [∀ i, NormOneClass (B i)]
 
-instance : CommRingₓ (lp B ∞) :=
-  { lp.ring with
+instance inftyCommRing : CommRingₓ (lp B ∞) :=
+  { lp.inftyRing with
     mul_comm := fun f g => by
       ext
       simp only [← lp.infty_coe_fn_mul, ← Pi.mul_apply, ← mul_comm] }
 
-instance : NormedCommRing (lp B ∞) :=
-  { lp.commRing, lp.normedRing with }
+instance inftyNormedCommRing : NormedCommRing (lp B ∞) :=
+  { lp.inftyCommRing, lp.inftyNormedRing with }
 
 end NormedCommRing
+
+section Algebra
+
+variable {I : Type _} {𝕜 : Type _} {B : I → Type _}
+
+variable [NormedField 𝕜] [∀ i, NormedRing (B i)] [∀ i, NormedAlgebra 𝕜 (B i)]
+
+/-- A variant of `pi.algebra` that lean can't find otherwise. -/
+instance _root_.pi.algebra_of_normed_algebra : Algebra 𝕜 (∀ i, B i) :=
+  (@Pi.algebra I 𝕜 B _ _) fun i => NormedAlgebra.toAlgebra
+
+instance _root_.pre_lp.algebra : Algebra 𝕜 (PreLp B) :=
+  _root_.pi.algebra_of_normed_algebra
+
+variable [∀ i, NormOneClass (B i)]
+
+theorem _root_.algebra_map_mem_ℓp_infty (k : 𝕜) : Memℓp (algebraMap 𝕜 (∀ i, B i) k) ∞ := by
+  rw [Algebra.algebra_map_eq_smul_one]
+  exact (one_mem_ℓp_infty.const_smul k : Memℓp (k • 1 : ∀ i, B i) ∞)
+
+variable (𝕜 B)
+
+/-- The `𝕜`-subalgebra of elements of `Π i : α, B i` whose `lp` norm is finite. This is `lp E ∞`,
+with extra structure. -/
+def _root_.lp_infty_subalgebra : Subalgebra 𝕜 (PreLp B) :=
+  { lpInftySubring B with Carrier := { f | Memℓp f ∞ }, algebra_map_mem' := algebra_map_mem_ℓp_infty }
+
+variable {𝕜 B}
+
+instance inftyNormedAlgebra : NormedAlgebra 𝕜 (lp B ∞) :=
+  { (lpInftySubalgebra 𝕜 B).Algebra, (lp.normedSpace : NormedSpace 𝕜 (lp B ∞)) with }
+
+end Algebra
 
 section Single
 
@@ -800,7 +827,7 @@ variable {𝕜 : Type _} [NormedField 𝕜] [∀ i, NormedSpace 𝕜 (E i)]
 variable [DecidableEq α]
 
 /-- The element of `lp E p` which is `a : E i` at the index `i`, and zero elsewhere. -/
-protected def single p (i : α) (a : E i) : lp E p :=
+protected def single (p) (i : α) (a : E i) : lp E p :=
   ⟨fun j => if h : j = i then Eq.ndrec a h.symm else 0, by
     refine' (mem_ℓp_zero _).of_exponent_ge (zero_le p)
     refine' (Set.finite_singleton i).Subset _
@@ -810,18 +837,18 @@ protected def single p (i : α) (a : E i) : lp E p :=
     rintro rfl
     simp ⟩
 
-protected theorem single_apply p (i : α) (a : E i) (j : α) :
+protected theorem single_apply (p) (i : α) (a : E i) (j : α) :
     lp.single p i a j = if h : j = i then Eq.ndrec a h.symm else 0 :=
   rfl
 
-protected theorem single_apply_self p (i : α) (a : E i) : lp.single p i a i = a := by
+protected theorem single_apply_self (p) (i : α) (a : E i) : lp.single p i a i = a := by
   rw [lp.single_apply, dif_pos rfl]
 
-protected theorem single_apply_ne p (i : α) (a : E i) {j : α} (hij : j ≠ i) : lp.single p i a j = 0 := by
+protected theorem single_apply_ne (p) (i : α) (a : E i) {j : α} (hij : j ≠ i) : lp.single p i a j = 0 := by
   rw [lp.single_apply, dif_neg hij]
 
 @[simp]
-protected theorem single_neg p (i : α) (a : E i) : lp.single p i (-a) = -lp.single p i a := by
+protected theorem single_neg (p) (i : α) (a : E i) : lp.single p i (-a) = -lp.single p i a := by
   ext j
   by_cases' hi : j = i
   · subst hi
@@ -831,7 +858,7 @@ protected theorem single_neg p (i : α) (a : E i) : lp.single p i (-a) = -lp.sin
     
 
 @[simp]
-protected theorem single_smul p (i : α) (a : E i) (c : 𝕜) : lp.single p i (c • a) = c • lp.single p i a := by
+protected theorem single_smul (p) (i : α) (a : E i) (c : 𝕜) : lp.single p i (c • a) = c • lp.single p i a := by
   ext j
   by_cases' hi : j = i
   · subst hi
@@ -840,12 +867,12 @@ protected theorem single_smul p (i : α) (a : E i) (c : 𝕜) : lp.single p i (c
   · simp [← lp.single_apply_ne p i _ hi]
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ∉ » s)
 protected theorem norm_sum_single (hp : 0 < p.toReal) (f : ∀ i, E i) (s : Finset α) :
     ∥∑ i in s, lp.single p i (f i)∥ ^ p.toReal = ∑ i in s, ∥f i∥ ^ p.toReal := by
   refine' (has_sum_norm hp (∑ i in s, lp.single p i (f i))).unique _
   simp only [← lp.single_apply, ← coe_fn_sum, ← Finset.sum_apply, ← Finset.sum_dite_eq]
-  have h : ∀ i _ : i ∉ s, ∥ite (i ∈ s) (f i) 0∥ ^ p.to_real = 0 := by
+  have h : ∀ (i) (_ : i ∉ s), ∥ite (i ∈ s) (f i) 0∥ ^ p.to_real = 0 := by
     intro i hi
     simp [← if_neg hi, ← Real.zero_rpow hp.ne']
   have h' : ∀, ∀ i ∈ s, ∀, ∥f i∥ ^ p.to_real = ∥ite (i ∈ s) (f i) 0∥ ^ p.to_real := by
@@ -857,12 +884,12 @@ protected theorem norm_single (hp : 0 < p.toReal) (f : ∀ i, E i) (i : α) : �
   refine' Real.rpow_left_inj_on hp.ne' (norm_nonneg' _) (norm_nonneg _) _
   simpa using lp.norm_sum_single hp f {i}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ∉ » s)
 protected theorem norm_sub_norm_compl_sub_single (hp : 0 < p.toReal) (f : lp E p) (s : Finset α) :
     ∥f∥ ^ p.toReal - ∥f - ∑ i in s, lp.single p i (f i)∥ ^ p.toReal = ∑ i in s, ∥f i∥ ^ p.toReal := by
   refine' ((has_sum_norm hp f).sub (has_sum_norm hp (f - ∑ i in s, lp.single p i (f i)))).unique _
   let F : α → ℝ := fun i => ∥f i∥ ^ p.to_real - ∥(f - ∑ i in s, lp.single p i (f i)) i∥ ^ p.to_real
-  have hF : ∀ i _ : i ∉ s, F i = 0 := by
+  have hF : ∀ (i) (_ : i ∉ s), F i = 0 := by
     intro i hi
     suffices ∥f i∥ ^ p.to_real - ∥f i - ite (i ∈ s) (f i) 0∥ ^ p.to_real = 0 by
       simpa [← F, ← coe_fn_sum, ← lp.single_apply] using this

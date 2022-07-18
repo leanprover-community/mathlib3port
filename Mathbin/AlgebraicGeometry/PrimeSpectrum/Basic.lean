@@ -748,8 +748,13 @@ theorem le_iff_mem_closure (x y : PrimeSpectrum R) : x ≤ y ↔ y ∈ Closure (
 theorem le_iff_specializes (x y : PrimeSpectrum R) : x ≤ y ↔ x ⤳ y :=
   (le_iff_mem_closure x y).trans specializes_iff_mem_closure.symm
 
-instance : T0Space (PrimeSpectrum R) := by
-  simp [← t0_space_iff_or_not_mem_closure, le_iff_mem_closure, not_and_distrib, le_antisymm_iffₓ, ← eq_comm]
+/-- `nhds` as an order embedding. -/
+@[simps (config := { fullyApplied := true })]
+def nhdsOrderEmbedding : PrimeSpectrum R ↪o Filter (PrimeSpectrum R) :=
+  (OrderEmbedding.ofMapLeIff nhds) fun a b => (le_iff_specializes a b).symm
+
+instance : T0Space (PrimeSpectrum R) :=
+  ⟨nhdsOrderEmbedding.Injective⟩
 
 end Order
 

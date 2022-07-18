@@ -237,7 +237,7 @@ theorem continuous_of_bound (C : ℝ) (H : ∀ m, ∥f m∥ ≤ C * ∏ i, ∥m 
   replace H : ∀ m, ∥f m∥ ≤ D * ∏ i, ∥m i∥
   · intro m
     apply le_transₓ (H m) (mul_le_mul_of_nonneg_right (le_max_leftₓ _ _) _)
-    exact prod_nonneg fun i : ι hi => norm_nonneg (m i)
+    exact prod_nonneg fun (i : ι) hi => norm_nonneg (m i)
     
   refine' continuous_iff_continuous_at.2 fun m => _
   refine'

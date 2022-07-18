@@ -196,11 +196,11 @@ theorem even_two : Even (2 : α) :=
   ⟨1, rfl⟩
 
 @[simp]
-theorem Even.mul_left (hm : Even m) n : Even (n * m) :=
+theorem Even.mul_left (hm : Even m) (n) : Even (n * m) :=
   hm.map (AddMonoidHom.mulLeft n)
 
 @[simp]
-theorem Even.mul_right (hm : Even m) n : Even (m * n) :=
+theorem Even.mul_right (hm : Even m) (n) : Even (m * n) :=
   hm.map (AddMonoidHom.mulRight n)
 
 theorem even_two_mul (m : α) : Even (2 * m) :=
@@ -295,6 +295,19 @@ theorem Odd.neg_one_pow (h : Odd n) : (-1 : α) ^ n = -1 := by
   rw [h.neg_pow, one_pow]
 
 end Monoidₓ
+
+section CanonicallyOrderedCommSemiring
+
+variable [CanonicallyOrderedCommSemiring α]
+
+-- this holds more generally in a `canonically_ordered_add_monoid` if we refactor `odd` to use
+-- either `2 • t` or `t + t` instead of `2 * t`.
+theorem Odd.pos [Nontrivial α] {n : α} (hn : Odd n) : 0 < n := by
+  obtain ⟨k, rfl⟩ := hn
+  rw [pos_iff_ne_zero, Ne.def, add_eq_zero_iff, not_and']
+  exact fun h => (one_ne_zero h).elim
+
+end CanonicallyOrderedCommSemiring
 
 section Ringₓ
 

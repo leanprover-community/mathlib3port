@@ -236,8 +236,7 @@ theorem HasFderivWithinAt.lim (h : HasFderivWithinAt f f' s x) {α : Type _} (l 
   have : (fun n => f (x + d n) - f x - f' (d n)) =o[l] d := by
     simpa only [← add_sub_cancel']
   have : (fun n => c n • (f (x + d n) - f x - f' (d n))) =o[l] fun n => c n • d n := (is_O_refl c l).smul_is_o this
-  have : (fun n => c n • (f (x + d n) - f x - f' (d n))) =o[l] fun n => (1 : ℝ) :=
-    this.trans_is_O (is_O_one_of_tendsto ℝ cdlim)
+  have : (fun n => c n • (f (x + d n) - f x - f' (d n))) =o[l] fun n => (1 : ℝ) := this.trans_is_O (cdlim.is_O_one ℝ)
   have L1 : tendsto (fun n => c n • (f (x + d n) - f x - f' (d n))) l (𝓝 0) := (is_o_one_iff ℝ).1 this
   have L2 : tendsto (fun n => f' (c n • d n)) l (𝓝 (f' v)) := tendsto.comp f'.cont.continuous_at cdlim
   have L3 : tendsto (fun n => c n • (f (x + d n) - f x - f' (d n)) + f' (c n • d n)) l (𝓝 (0 + f' v)) := L1.add L2
@@ -313,8 +312,12 @@ theorem HasFderivAt.le_of_lip {f : E → F} {f' : E →L[𝕜] F} {x₀ : E} (hf
 theorem HasFderivAtFilter.mono (h : HasFderivAtFilter f f' x L₂) (hst : L₁ ≤ L₂) : HasFderivAtFilter f f' x L₁ :=
   h.mono hst
 
+theorem HasFderivWithinAt.mono_of_mem (h : HasFderivWithinAt f f' t x) (hst : t ∈ 𝓝[s] x) :
+    HasFderivWithinAt f f' s x :=
+  h.mono <| nhds_within_le_iff.mpr hst
+
 theorem HasFderivWithinAt.mono (h : HasFderivWithinAt f f' t x) (hst : s ⊆ t) : HasFderivWithinAt f f' s x :=
-  h.mono (nhds_within_mono _ hst)
+  h.mono <| nhds_within_mono _ hst
 
 theorem HasFderivAt.has_fderiv_at_filter (h : HasFderivAt f f' x) (hL : L ≤ 𝓝 x) : HasFderivAtFilter f f' x L :=
   h.mono hL
@@ -717,6 +720,10 @@ theorem Filter.EventuallyEq.fderiv_within_eq (hs : UniqueDiffWithinAt 𝕜 s x) 
       mt (fun h => h.congr_of_eventually_eq (hL.mono fun x => Eq.symm) hx.symm) h
     rw [fderiv_within_zero_of_not_differentiable_within_at h, fderiv_within_zero_of_not_differentiable_within_at h']
 
+theorem Filter.EventuallyEq.fderiv_within_eq_nhds (hs : UniqueDiffWithinAt 𝕜 s x) (hL : f₁ =ᶠ[𝓝 x] f) :
+    fderivWithin 𝕜 f₁ s x = fderivWithin 𝕜 f s x :=
+  (show f₁ =ᶠ[𝓝[s] x] f from nhds_within_le_nhds hL).fderiv_within_eq hs (mem_of_mem_nhds hL : _)
+
 theorem fderiv_within_congr (hs : UniqueDiffWithinAt 𝕜 s x) (hL : ∀, ∀ y ∈ s, ∀, f₁ y = f y) (hx : f₁ x = f x) :
     fderivWithin 𝕜 f₁ s x = fderivWithin 𝕜 f s x := by
   apply Filter.EventuallyEq.fderiv_within_eq hs _ hx
@@ -999,6 +1006,20 @@ theorem fderivWithin.comp {g : F → G} {t : Set F} (hg : DifferentiableWithinAt
     (hf : DifferentiableWithinAt 𝕜 f s x) (h : MapsTo f s t) (hxs : UniqueDiffWithinAt 𝕜 s x) :
     fderivWithin 𝕜 (g ∘ f) s x = (fderivWithin 𝕜 g t (f x)).comp (fderivWithin 𝕜 f s x) :=
   (hg.HasFderivWithinAt.comp x hf.HasFderivWithinAt h).fderivWithin hxs
+
+/-- Ternary version of `fderiv_within.comp`, with equality assumptions of basepoints added, in
+  order to apply more easily as a rewrite from right-to-left. -/
+theorem fderivWithin.comp₃ {g' : G → G'} {g : F → G} {t : Set F} {u : Set G} {y : F} {y' : G}
+    (hg' : DifferentiableWithinAt 𝕜 g' u y') (hg : DifferentiableWithinAt 𝕜 g t y) (hf : DifferentiableWithinAt 𝕜 f s x)
+    (h2g : MapsTo g t u) (h2f : MapsTo f s t) (h3g : g y = y') (h3f : f x = y) (hxs : UniqueDiffWithinAt 𝕜 s x) :
+    fderivWithin 𝕜 (g' ∘ g ∘ f) s x =
+      (fderivWithin 𝕜 g' u y').comp ((fderivWithin 𝕜 g t y).comp (fderivWithin 𝕜 f s x)) :=
+  by
+  substs h3g h3f
+  exact
+    (hg'.has_fderiv_within_at.comp x (hg.has_fderiv_within_at.comp x hf.has_fderiv_within_at h2f) <|
+          h2g.comp h2f).fderivWithin
+      hxs
 
 theorem fderiv.comp {g : F → G} (hg : DifferentiableAt 𝕜 g (f x)) (hf : DifferentiableAt 𝕜 f x) :
     fderiv 𝕜 (g ∘ f) x = (fderiv 𝕜 g (f x)).comp (fderiv 𝕜 f x) :=
@@ -2576,7 +2597,7 @@ theorem has_fderiv_at_filter_real_equiv {L : Filter E} :
   rw [tendsto_iff_norm_tendsto_zero]
   refine' tendsto_congr fun x' => _
   have : ∥x' - x∥⁻¹ ≥ 0 := inv_nonneg.mpr (norm_nonneg _)
-  simp [← norm_smul, ← Real.norm_eq_abs, ← abs_of_nonneg this]
+  simp [← norm_smul, ← abs_of_nonneg this]
 
 theorem HasFderivAt.lim_real (hf : HasFderivAt f f' x) (v : E) :
     Tendsto (fun c : ℝ => c • (f (x + c⁻¹ • v) - f x)) atTop (𝓝 (f' v)) := by

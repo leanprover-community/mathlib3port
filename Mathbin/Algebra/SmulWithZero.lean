@@ -78,7 +78,7 @@ variable {R M} [Zero R'] [Zero M'] [HasSmul R M']
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.smulWithZero (f : ZeroHom M' M) (hf : Function.Injective f)
-    (smul : ∀ a : R b, f (a • b) = a • f b) : SmulWithZero R M' where
+    (smul : ∀ (a : R) (b), f (a • b) = a • f b) : SmulWithZero R M' where
   smul := (· • ·)
   zero_smul := fun a =>
     hf <| by
@@ -91,7 +91,7 @@ protected def Function.Injective.smulWithZero (f : ZeroHom M' M) (hf : Function.
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.smulWithZero (f : ZeroHom M M') (hf : Function.Surjective f)
-    (smul : ∀ a : R b, f (a • b) = a • f b) : SmulWithZero R M' where
+    (smul : ∀ (a : R) (b), f (a • b) = a • f b) : SmulWithZero R M' where
   smul := (· • ·)
   zero_smul := fun m => by
     rcases hf m with ⟨x, rfl⟩
@@ -152,14 +152,14 @@ variable {R M} [MulActionWithZero R M] [Zero M'] [HasSmul R M']
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.mulActionWithZero (f : ZeroHom M' M) (hf : Function.Injective f)
-    (smul : ∀ a : R b, f (a • b) = a • f b) : MulActionWithZero R M' :=
+    (smul : ∀ (a : R) (b), f (a • b) = a • f b) : MulActionWithZero R M' :=
   { hf.MulAction f smul, hf.SmulWithZero f smul with }
 
 /-- Pushforward a `mul_action_with_zero` structure along a surjective zero-preserving homomorphism.
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.mulActionWithZero (f : ZeroHom M M') (hf : Function.Surjective f)
-    (smul : ∀ a : R b, f (a • b) = a • f b) : MulActionWithZero R M' :=
+    (smul : ∀ (a : R) (b), f (a • b) = a • f b) : MulActionWithZero R M' :=
   { hf.MulAction f smul, hf.SmulWithZero f smul with }
 
 variable (M)

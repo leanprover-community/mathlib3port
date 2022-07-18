@@ -93,11 +93,44 @@ noncomputable def asModule : Module (MonoidAlgebra k G) V :=
 
 end MonoidAlgebra
 
+section MulAction
+
+variable (k : Type _) [CommSemiringₓ k] (G : Type _) [Monoidₓ G] (H : Type _) [MulAction G H]
+
+/-- A `G`-action on `H` induces a representation `G →* End(k[H])` in the natural way. -/
+noncomputable def ofMulAction : Representation k G (H →₀ k) where
+  toFun := fun g => Finsupp.lmapDomain k k ((· • ·) g)
+  map_one' := by
+    ext x y
+    dsimp'
+    simp
+  map_mul' := fun x y => by
+    ext z w
+    simp [← mul_smul]
+
+variable {k G H}
+
+theorem of_mul_action_def (g : G) : ofMulAction k G H g = Finsupp.lmapDomain k k ((· • ·) g) :=
+  rfl
+
+end MulAction
+
 section Groupₓ
 
 variable {k G V : Type _} [CommSemiringₓ k] [Groupₓ G] [AddCommMonoidₓ V] [Module k V]
 
 variable (ρ : Representation k G V)
+
+@[simp]
+theorem of_mul_action_apply {H : Type _} [MulAction G H] (g : G) (f : H →₀ k) (h : H) :
+    ofMulAction k G H g f h = f (g⁻¹ • h) := by
+  conv_lhs => rw [← smul_inv_smul g h]
+  let h' := g⁻¹ • h
+  change of_mul_action k G H g f (g • h') = f h'
+  have hg : Function.Injective ((· • ·) g : H → H) := by
+    intro h₁ h₂
+    simp
+  simp only [← of_mul_action_def, ← Finsupp.lmap_domain_apply, ← Finsupp.map_domain_apply, ← hg]
 
 /-- When `G` is a group, a `k`-linear representation of `G` on `V` can be thought of as
 a group homomorphism from `G` into the invertible `k`-linear endomorphisms of `V`.

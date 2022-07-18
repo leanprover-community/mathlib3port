@@ -43,10 +43,10 @@ variable (R : Type _) {A : Type _}
 def selfAdjoint [AddGroupₓ R] [StarAddMonoid R] : AddSubgroup R where
   Carrier := { x | star x = x }
   zero_mem' := star_zero R
-  add_mem' := fun x y hx : star x = x hy : star y = y =>
+  add_mem' := fun x y (hx : star x = x) (hy : star y = y) =>
     show star (x + y) = x + y by
       simp only [← star_add x y, ← hx, ← hy]
-  neg_mem' := fun x hx : star x = x =>
+  neg_mem' := fun x (hx : star x = x) =>
     show star (-x) = -x by
       simp only [← hx, ← star_neg]
 
@@ -56,10 +56,10 @@ def skewAdjoint [AddCommGroupₓ R] [StarAddMonoid R] : AddSubgroup R where
   zero_mem' :=
     show star (0 : R) = -0 by
       simp only [← star_zero, ← neg_zero]
-  add_mem' := fun x y hx : star x = -x hy : star y = -y =>
+  add_mem' := fun x y (hx : star x = -x) (hy : star y = -y) =>
     show star (x + y) = -(x + y) by
       rw [star_add x y, hx, hy, neg_add]
-  neg_mem' := fun x hx : star x = -x =>
+  neg_mem' := fun x (hx : star x = -x) =>
     show star (-x) = - -x by
       simp only [← hx, ← star_neg]
 

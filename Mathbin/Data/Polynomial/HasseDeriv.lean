@@ -190,7 +190,6 @@ theorem hasse_deriv_comp (k l : ℕ) : (@hasseDeriv R _ k).comp (hasseDeriv l) =
   all_goals
     apply_rules [mul_ne_zero, H]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem nat_degree_hasse_deriv_le (p : R[X]) (n : ℕ) : natDegree (hasseDeriv n p) ≤ natDegree p - n := by
   classical
   rw [hasse_deriv_apply, sum_def]
@@ -209,7 +208,6 @@ theorem nat_degree_hasse_deriv_le (p : R[X]) (n : ℕ) : natDegree (hasseDeriv n
   · simp
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem nat_degree_hasse_deriv [NoZeroSmulDivisors ℕ R] (p : R[X]) (n : ℕ) :
     natDegree (hasseDeriv n p) = natDegree p - n := by
   cases' lt_or_leₓ p.nat_degree n with hn hn

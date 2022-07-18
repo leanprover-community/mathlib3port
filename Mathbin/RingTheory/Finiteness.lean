@@ -371,7 +371,6 @@ theorem iff_quotient_mv_polynomial' :
     exact RingHom.ker_coe_equiv equiv.symm.to_ring_equiv
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `A` is a finitely presented `R`-algebra, then `mv_polynomial (fin n) A` is finitely presented
 as `R`-algebra. -/
 theorem mv_polynomial_of_finite_presentation (hfp : FinitePresentation R A) (ι : Type _) [Fintype ι] :

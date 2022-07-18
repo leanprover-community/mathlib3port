@@ -15,7 +15,36 @@ This file defines `set.sigma`, the indexed sum of sets.
 namespace Set
 
 variable {ι ι' : Type _} {α β : ι → Type _} {s s₁ s₂ : Set ι} {t t₁ t₂ : ∀ i, Set (α i)} {u : Set (Σi, α i)}
-  {x : Σi, α i} {i : ι} {a : α i}
+  {x : Σi, α i} {i j : ι} {a : α i}
+
+@[simp]
+theorem range_sigma_mk (i : ι) : Range (Sigma.mk i : α i → Sigma α) = Sigma.fst ⁻¹' {i} := by
+  apply subset.antisymm
+  · rintro _ ⟨b, rfl⟩
+    simp
+    
+  · rintro ⟨x, y⟩ (rfl | _)
+    exact mem_range_self y
+    
+
+theorem preimage_image_sigma_mk_of_ne (h : i ≠ j) (s : Set (α j)) : Sigma.mk i ⁻¹' (Sigma.mk j '' s) = ∅ := by
+  ext x
+  simp [← h.symm]
+
+theorem image_sigma_mk_preimage_sigma_map_subset {β : ι' → Type _} (f : ι → ι') (g : ∀ i, α i → β (f i)) (i : ι)
+    (s : Set (β (f i))) : Sigma.mk i '' (g i ⁻¹' s) ⊆ Sigma.map f g ⁻¹' (Sigma.mk (f i) '' s) :=
+  image_subset_iff.2 fun x hx => ⟨g i x, hx, rfl⟩
+
+theorem image_sigma_mk_preimage_sigma_map {β : ι' → Type _} {f : ι → ι'} (hf : Function.Injective f)
+    (g : ∀ i, α i → β (f i)) (i : ι) (s : Set (β (f i))) :
+    Sigma.mk i '' (g i ⁻¹' s) = Sigma.map f g ⁻¹' (Sigma.mk (f i) '' s) := by
+  refine' (image_sigma_mk_preimage_sigma_map_subset f g i s).antisymm _
+  rintro ⟨j, x⟩ ⟨y, hys, hxy⟩
+  simp only [← hf.eq_iff, ← Sigma.map] at hxy
+  rcases hxy with ⟨rfl, hxy⟩
+  rw [heq_iff_eq] at hxy
+  subst y
+  exact ⟨x, hys, rfl⟩
 
 /-- Indexed sum of sets. `s.sigma t` is the set of dependent pairs `⟨i, a⟩` such that `i ∈ s` and
 `a ∈ t i`.-/

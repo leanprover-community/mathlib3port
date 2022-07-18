@@ -45,8 +45,8 @@ open MonoidalCategory
 variable {C : Type u₁} [Category.{v₁} C] [MonoidalCategory.{v₁} C] {D : Type u₂} [Category.{v₂} D]
   [MonoidalCategory.{v₂} D]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`ε] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`μ] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`ε] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`μ] []
 /-- An unbundled description of lax monoidal functors. -/
 -- Perhaps in the future we'll redefine `lax_monoidal_functor` in terms of this,
 -- but that isn't the immediate plan.
@@ -55,7 +55,7 @@ class LaxMonoidal (F : C → D) [Functorial.{v₁, v₂} F] where
   ε : 𝟙_ D ⟶ F (𝟙_ C)
   -- tensorator
   μ : ∀ X Y : C, F X ⊗ F Y ⟶ F (X ⊗ Y)
-  μ_natural' : ∀ {X Y X' Y' : C} f : X ⟶ Y g : X' ⟶ Y', (map F f ⊗ map F g) ≫ μ Y Y' = μ X X' ≫ map F (f ⊗ g) := by
+  μ_natural' : ∀ {X Y X' Y' : C} (f : X ⟶ Y) (g : X' ⟶ Y'), (map F f ⊗ map F g) ≫ μ Y Y' = μ X X' ≫ map F (f ⊗ g) := by
     run_tac
       obviously
   -- associativity of the tensorator

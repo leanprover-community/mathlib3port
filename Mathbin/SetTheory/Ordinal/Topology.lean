@@ -68,7 +68,6 @@ theorem is_open_singleton_iff : IsOpen ({a} : Set Ordinal) ↔ ¬IsLimit a := by
       
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem is_open_iff : IsOpen s ↔ ∀, ∀ o ∈ s, ∀, IsLimit o → ∃ a < o, Set.Ioo a o ⊆ s := by
   classical
   refine' ⟨_, fun h => _⟩
@@ -138,7 +137,7 @@ theorem mem_closure_iff_sup :
         ⟨PUnit, by
           infer_instance, fun _ => a, fun _ => has, sup_const a⟩
       
-    · have H := fun b hba : b < a => h _ (@is_open_Ioo _ _ _ _ b (a + 1)) ⟨hba, lt_succ a⟩
+    · have H := fun b (hba : b < a) => h _ (@is_open_Ioo _ _ _ _ b (a + 1)) ⟨hba, lt_succ a⟩
       let f : a.out.α → Ordinal := fun i => Classical.some (H (typein (· < ·) i) (typein_lt_self i))
       have hf : ∀ i, f i ∈ Set.Ioo (typein (· < ·) i) (a + 1) ∩ s := fun i => Classical.some_spec (H _ _)
       rcases eq_zero_or_pos a with (rfl | ha₀)
@@ -204,7 +203,7 @@ theorem mem_closed_iff_bsup (hs : IsClosed s) :
   rw [← mem_closure_iff_bsup, hs.closure_eq]
 
 theorem is_closed_iff_sup :
-    IsClosed s ↔ ∀ {ι : Type u} hι : Nonempty ι f : ι → Ordinal, (∀ i, f i ∈ s) → sup.{u, u} f ∈ s := by
+    IsClosed s ↔ ∀ {ι : Type u} (hι : Nonempty ι) (f : ι → Ordinal), (∀ i, f i ∈ s) → sup.{u, u} f ∈ s := by
   use fun hs ι hι f hf => (mem_closed_iff_sup hs).2 ⟨ι, hι, f, hf, rfl⟩
   rw [← closure_subset_iff_is_closed]
   intro h x hx
@@ -212,7 +211,9 @@ theorem is_closed_iff_sup :
   exact h hι f hf
 
 theorem is_closed_iff_bsup :
-    IsClosed s ↔ ∀ {o : Ordinal} ho : o ≠ 0 f : ∀, ∀ a < o, ∀, Ordinal, (∀ i hi, f i hi ∈ s) → bsup.{u, u} o f ∈ s := by
+    IsClosed s ↔
+      ∀ {o : Ordinal} (ho : o ≠ 0) (f : ∀, ∀ a < o, ∀, Ordinal), (∀ i hi, f i hi ∈ s) → bsup.{u, u} o f ∈ s :=
+  by
   rw [is_closed_iff_sup]
   refine' ⟨fun H o ho f hf => H (out_nonempty_iff_ne_zero.2 ho) _ _, fun H ι hι f hf => _⟩
   · exact fun i => hf _ _
@@ -254,7 +255,7 @@ theorem is_normal_iff_strict_mono_and_continuous (f : Ordinal.{u} → Ordinal.{u
     exact ⟨_, out_nonempty_iff_ne_zero.2 ho.1, typein (· < ·), fun i => h _ (typein_lt_self i), sup_typein_limit ho.2⟩
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (b «expr < » a)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (b «expr < » a)
 theorem enum_ord_is_normal_iff_is_closed (hs : s.Unbounded (· < ·)) : IsNormal (enumOrd s) ↔ IsClosed s := by
   have Hs := enum_ord_strict_mono hs
   refine'
@@ -271,7 +272,7 @@ theorem enum_ord_is_normal_iff_is_closed (hs : s.Unbounded (· < ·)) : IsNormal
     rw [OrderIso.apply_symm_apply]
     
   · rw [is_closed_iff_bsup] at h
-    suffices : enum_ord s a ≤ bsup.{u, u} a fun b _ : b < a => enum_ord s b
+    suffices : enum_ord s a ≤ bsup.{u, u} a fun b (_ : b < a) => enum_ord s b
     exact this.trans (bsup_le H)
     cases' enum_ord_surjective hs _ (h ha.1 (fun b hb => enum_ord s b) fun b hb => enum_ord_mem hs b) with b hb
     rw [← hb]

@@ -46,10 +46,10 @@ class Linear (R : Type w) [Semiringₓ R] (C : Type u) [Category.{v} C] [Preaddi
   homModule : ∀ X Y : C, Module R (X ⟶ Y) := by
     run_tac
       tactic.apply_instance
-  smul_comp' : ∀ X Y Z : C r : R f : X ⟶ Y g : Y ⟶ Z, (r • f) ≫ g = r • f ≫ g := by
+  smul_comp' : ∀ (X Y Z : C) (r : R) (f : X ⟶ Y) (g : Y ⟶ Z), (r • f) ≫ g = r • f ≫ g := by
     run_tac
       obviously
-  comp_smul' : ∀ X Y Z : C f : X ⟶ Y r : R g : Y ⟶ Z, f ≫ (r • g) = r • f ≫ g := by
+  comp_smul' : ∀ (X Y Z : C) (f : X ⟶ Y) (r : R) (g : Y ⟶ Z), f ≫ (r • g) = r • f ≫ g := by
     run_tac
       obviously
 

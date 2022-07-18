@@ -191,7 +191,8 @@ theorem transcendental {x : ℝ} (lx : Liouville x) : Transcendental ℤ x := by
     
   -- There is a "large" real number `A` such that `(b + 1) ^ (deg f) * |f (x - a / (b + 1))| * A`
   -- is at least one.  This is obtained from lemma `exists_pos_real_of_irrational_root`.
-  obtain ⟨A, hA, h⟩ : ∃ A : ℝ, 0 < A ∧ ∀ a : ℤ b : ℕ, (1 : ℝ) ≤ (b + 1) ^ f.nat_degree * (abs (x - a / (b + 1)) * A) :=
+  obtain ⟨A, hA, h⟩ :
+    ∃ A : ℝ, 0 < A ∧ ∀ (a : ℤ) (b : ℕ), (1 : ℝ) ≤ (b + 1) ^ f.nat_degree * (abs (x - a / (b + 1)) * A) :=
     exists_pos_real_of_irrational_root lx.irrational f0 ef0
   -- Since the real numbers are Archimedean, a power of `2` exceeds `A`: `hn : A < 2 ^ r`.
   rcases pow_unbounded_of_one_lt A (lt_add_one 1) with ⟨r, hn⟩

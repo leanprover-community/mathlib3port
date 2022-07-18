@@ -37,7 +37,7 @@ namespace SemiRing
 
 variable {J : Type v} [SmallCategory J]
 
-instance semiringObj (F : J ⥤ SemiRing.{max v u}) j : Semiringₓ ((F ⋙ forget SemiRing).obj j) := by
+instance semiringObj (F : J ⥤ SemiRing.{max v u}) (j) : Semiringₓ ((F ⋙ forget SemiRing).obj j) := by
   change Semiringₓ (F.obj j)
   infer_instance
 
@@ -51,7 +51,7 @@ instance limitSemiring (F : J ⥤ SemiRing.{max v u}) : Semiringₓ (Types.limit
   (sectionsSubsemiring F).toSemiring
 
 /-- `limit.π (F ⋙ forget SemiRing) j` as a `ring_hom`. -/
-def limitπRingHom (F : J ⥤ SemiRing.{max v u}) j :
+def limitπRingHom (F : J ⥤ SemiRing.{max v u}) (j) :
     (Types.limitCone (F ⋙ forget SemiRing)).x →+* (F ⋙ forget SemiRing).obj j :=
   { AddMon.limitπAddMonoidHom (F ⋙ forget₂ SemiRing AddCommMon.{max v u} ⋙ forget₂ AddCommMon AddMon.{max v u}) j,
     Mon.limitπMonoidHom (F ⋙ forget₂ SemiRing Mon.{max v u}) j with
@@ -83,7 +83,7 @@ end HasLimits
 
 open HasLimits
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1354:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Basic.lean:1389:38: unsupported irreducible non-definition
 /-- The category of rings has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v} SemiRing.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 =>
@@ -149,7 +149,7 @@ namespace CommSemiRing
 
 variable {J : Type v} [SmallCategory J]
 
-instance commSemiringObj (F : J ⥤ CommSemiRing.{max v u}) j : CommSemiringₓ ((F ⋙ forget CommSemiRing).obj j) := by
+instance commSemiringObj (F : J ⥤ CommSemiRing.{max v u}) (j) : CommSemiringₓ ((F ⋙ forget CommSemiRing).obj j) := by
   change CommSemiringₓ (F.obj j)
   infer_instance
 
@@ -192,7 +192,7 @@ def limitCone (F : J ⥤ CommSemiRing.{max v u}) : Cone F :=
 def limitConeIsLimit (F : J ⥤ CommSemiRing.{max v u}) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1354:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Basic.lean:1389:38: unsupported irreducible non-definition
 /-- The category of rings has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} CommSemiRing.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 =>
@@ -232,7 +232,7 @@ namespace Ringₓₓ
 
 variable {J : Type v} [SmallCategory J]
 
-instance ringObj (F : J ⥤ Ringₓₓ.{max v u}) j : Ringₓ ((F ⋙ forget Ringₓₓ).obj j) := by
+instance ringObj (F : J ⥤ Ringₓₓ.{max v u}) (j) : Ringₓ ((F ⋙ forget Ringₓₓ).obj j) := by
   change Ringₓ (F.obj j)
   infer_instance
 
@@ -279,7 +279,7 @@ def limitCone (F : J ⥤ Ringₓₓ.{max v u}) : Cone F :=
 def limitConeIsLimit (F : J ⥤ Ringₓₓ.{max v u}) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1354:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Basic.lean:1389:38: unsupported irreducible non-definition
 /-- The category of rings has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} Ringₓₓ.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 => { HasLimit := fun F => has_limit_of_created F (forget₂ Ringₓₓ SemiRing.{max v u}) } }
@@ -336,7 +336,7 @@ namespace CommRingₓₓ
 
 variable {J : Type v} [SmallCategory J]
 
-instance commRingObj (F : J ⥤ CommRingₓₓ.{max v u}) j : CommRingₓ ((F ⋙ forget CommRingₓₓ).obj j) := by
+instance commRingObj (F : J ⥤ CommRingₓₓ.{max v u}) (j) : CommRingₓ ((F ⋙ forget CommRingₓₓ).obj j) := by
   change CommRingₓ (F.obj j)
   infer_instance
 
@@ -388,7 +388,7 @@ def limitCone (F : J ⥤ CommRingₓₓ.{max v u}) : Cone F :=
 def limitConeIsLimit (F : J ⥤ CommRingₓₓ.{max v u}) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1354:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Basic.lean:1389:38: unsupported irreducible non-definition
 /-- The category of commutative rings has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} CommRingₓₓ.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 =>

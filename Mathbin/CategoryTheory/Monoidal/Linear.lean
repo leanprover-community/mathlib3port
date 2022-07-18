@@ -29,10 +29,10 @@ variable [MonoidalCategory C] [MonoidalPreadditive C]
 /-- A category is `monoidal_linear R` if tensoring is `R`-linear in both factors.
 -/
 class MonoidalLinear where
-  tensor_smul' : ∀ {W X Y Z : C} f : W ⟶ X r : R g : Y ⟶ Z, f ⊗ r • g = r • (f ⊗ g) := by
+  tensor_smul' : ∀ {W X Y Z : C} (f : W ⟶ X) (r : R) (g : Y ⟶ Z), f ⊗ r • g = r • (f ⊗ g) := by
     run_tac
       obviously
-  smul_tensor' : ∀ {W X Y Z : C} r : R f : W ⟶ X g : Y ⟶ Z, r • f ⊗ g = r • (f ⊗ g) := by
+  smul_tensor' : ∀ {W X Y Z : C} (r : R) (f : W ⟶ X) (g : Y ⟶ Z), r • f ⊗ g = r • (f ⊗ g) := by
     run_tac
       obviously
 

@@ -105,7 +105,7 @@ namespace CategoryTheory
 
 namespace SimplicialObject
 
-variable [∀ n : ℕ f : Arrow C, HasWidePullback f.right (fun i : Finₓ (n + 1) => f.left) fun i => f.Hom]
+variable [∀ (n : ℕ) (f : Arrow C), HasWidePullback f.right (fun i : Finₓ (n + 1) => f.left) fun i => f.Hom]
 
 /-- The Čech nerve construction, as a functor from `arrow C`. -/
 @[simps]
@@ -322,7 +322,7 @@ namespace CategoryTheory
 
 namespace CosimplicialObject
 
-variable [∀ n : ℕ f : Arrow C, HasWidePushout f.left (fun i : Finₓ (n + 1) => f.right) fun i => f.Hom]
+variable [∀ (n : ℕ) (f : Arrow C), HasWidePushout f.left (fun i : Finₓ (n + 1) => f.right) fun i => f.Hom]
 
 /-- The Čech conerve construction, as a functor from `arrow C`. -/
 @[simps]

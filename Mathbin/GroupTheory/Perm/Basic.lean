@@ -31,18 +31,18 @@ instance permGroup : Groupₓ (Perm α) where
   mul_one := refl_trans
   mul_left_inv := self_trans_symm
 
-theorem mul_apply (f g : Perm α) x : (f * g) x = f (g x) :=
+theorem mul_apply (f g : Perm α) (x) : (f * g) x = f (g x) :=
   Equivₓ.trans_apply _ _ _
 
-theorem one_apply x : (1 : Perm α) x = x :=
+theorem one_apply (x) : (1 : Perm α) x = x :=
   rfl
 
 @[simp]
-theorem inv_apply_self (f : Perm α) x : f⁻¹ (f x) = x :=
+theorem inv_apply_self (f : Perm α) (x) : f⁻¹ (f x) = x :=
   f.symm_apply_apply x
 
 @[simp]
-theorem apply_inv_self (f : Perm α) x : f (f⁻¹ x) = x :=
+theorem apply_inv_self (f : Perm α) (x) : f (f⁻¹ x) = x :=
   f.apply_symm_apply x
 
 theorem one_def : (1 : Perm α) = Equivₓ.refl α :=

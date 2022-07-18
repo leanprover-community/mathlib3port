@@ -27,7 +27,7 @@ variable {α : Type u} {β : Type v} {γ : Type w}
 
 /-- Add an extra element `1` to a type -/
 @[to_additive "Add an extra element `0` to a type"]
-def WithOne α :=
+def WithOne (α) :=
   Option α
 
 namespace WithOne
@@ -84,6 +84,19 @@ instance : CoeTₓ α (WithOne α) :=
 @[elab_as_eliminator, to_additive "Recursor for `with_zero` using the preferred forms `0` and `↑a`."]
 def recOneCoe {C : WithOne α → Sort _} (h₁ : C 1) (h₂ : ∀ a : α, C a) : ∀ n : WithOne α, C n :=
   Option.rec h₁ h₂
+
+/-- Deconstruct a `x : with_one α` to the underlying value in `α`, given a proof that `x ≠ 1`. -/
+@[to_additive unzero "Deconstruct a `x : with_zero α` to the underlying value in `α`, given a proof that `x ≠ 0`."]
+def unone {x : WithOne α} (hx : x ≠ 1) : α :=
+  WithBot.unbot x hx
+
+@[simp, to_additive unzero_coe]
+theorem unone_coe {x : α} (hx : (x : WithOne α) ≠ 1) : unone hx = x :=
+  rfl
+
+@[simp, to_additive coe_unzero]
+theorem coe_unone {x : WithOne α} (hx : x ≠ 1) : ↑(unone hx) = x :=
+  WithBot.coe_unbot x hx
 
 @[to_additive]
 theorem some_eq_coe {a : α} : (some a : WithOne α) = ↑a :=
@@ -209,7 +222,7 @@ theorem map_id : map (MulHom.id α) = MonoidHom.id (WithOne α) := by
   induction x using WithOne.cases_on <;> rfl
 
 @[to_additive]
-theorem map_map (f : α →ₙ* β) (g : β →ₙ* γ) x : map g (map f x) = map (g.comp f) x := by
+theorem map_map (f : α →ₙ* β) (g : β →ₙ* γ) (x) : map g (map f x) = map (g.comp f) x := by
   induction x using WithOne.cases_on <;> rfl
 
 @[simp, to_additive]
@@ -474,6 +487,18 @@ instance [Semiringₓ α] : Semiringₓ (WithZero α) :=
           try
             rfl
       exact congr_arg some (right_distrib _ _ _) }
+
+/-- Any group is isomorphic to the units of itself adjoined with `0`. -/
+def unitsWithZeroEquiv [Groupₓ α] : (WithZero α)ˣ ≃* α where
+  toFun := fun a => unzero a.ne_zero
+  invFun := fun a => Units.mk0 a coe_ne_zero
+  left_inv := fun _ =>
+    Units.ext <| by
+      simpa only [← coe_unzero]
+  right_inv := fun _ => rfl
+  map_mul' := fun _ _ =>
+    coe_inj.mp <| by
+      simpa only [← coe_unzero, ← coe_mul]
 
 end WithZero
 

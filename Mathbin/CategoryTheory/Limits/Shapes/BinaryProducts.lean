@@ -190,10 +190,10 @@ theorem BinaryFan.π_app_right {X Y : C} (s : BinaryFan X Y) : s.π.app ⟨Walki
   rfl
 
 /-- A convenient way to show that a binary fan is a limit. -/
-def BinaryFan.IsLimit.mk {X Y : C} (s : BinaryFan X Y) (lift : ∀ {T : C} f : T ⟶ X g : T ⟶ Y, T ⟶ s.x)
-    (hl₁ : ∀ {T : C} f : T ⟶ X g : T ⟶ Y, lift f g ≫ s.fst = f)
-    (hl₂ : ∀ {T : C} f : T ⟶ X g : T ⟶ Y, lift f g ≫ s.snd = g)
-    (uniq : ∀ {T : C} f : T ⟶ X g : T ⟶ Y m : T ⟶ s.x h₁ : m ≫ s.fst = f h₂ : m ≫ s.snd = g, m = lift f g) :
+def BinaryFan.IsLimit.mk {X Y : C} (s : BinaryFan X Y) (lift : ∀ {T : C} (f : T ⟶ X) (g : T ⟶ Y), T ⟶ s.x)
+    (hl₁ : ∀ {T : C} (f : T ⟶ X) (g : T ⟶ Y), lift f g ≫ s.fst = f)
+    (hl₂ : ∀ {T : C} (f : T ⟶ X) (g : T ⟶ Y), lift f g ≫ s.snd = g)
+    (uniq : ∀ {T : C} (f : T ⟶ X) (g : T ⟶ Y) (m : T ⟶ s.x) (h₁ : m ≫ s.fst = f) (h₂ : m ≫ s.snd = g), m = lift f g) :
     IsLimit s :=
   IsLimit.mk (fun t => lift (BinaryFan.fst t) (BinaryFan.snd t))
     (by
@@ -229,10 +229,10 @@ theorem BinaryCofan.ι_app_right {X Y : C} (s : BinaryCofan X Y) : s.ι.app ⟨W
   rfl
 
 /-- A convenient way to show that a binary cofan is a colimit. -/
-def BinaryCofan.IsColimit.mk {X Y : C} (s : BinaryCofan X Y) (desc : ∀ {T : C} f : X ⟶ T g : Y ⟶ T, s.x ⟶ T)
-    (hd₁ : ∀ {T : C} f : X ⟶ T g : Y ⟶ T, s.inl ≫ desc f g = f)
-    (hd₂ : ∀ {T : C} f : X ⟶ T g : Y ⟶ T, s.inr ≫ desc f g = g)
-    (uniq : ∀ {T : C} f : X ⟶ T g : Y ⟶ T m : s.x ⟶ T h₁ : s.inl ≫ m = f h₂ : s.inr ≫ m = g, m = desc f g) :
+def BinaryCofan.IsColimit.mk {X Y : C} (s : BinaryCofan X Y) (desc : ∀ {T : C} (f : X ⟶ T) (g : Y ⟶ T), s.x ⟶ T)
+    (hd₁ : ∀ {T : C} (f : X ⟶ T) (g : Y ⟶ T), s.inl ≫ desc f g = f)
+    (hd₂ : ∀ {T : C} (f : X ⟶ T) (g : Y ⟶ T), s.inr ≫ desc f g = g)
+    (uniq : ∀ {T : C} (f : X ⟶ T) (g : Y ⟶ T) (m : s.x ⟶ T) (h₁ : s.inl ≫ m = f) (h₂ : s.inr ≫ m = g), m = desc f g) :
     IsColimit s :=
   IsColimit.mk (fun t => desc (BinaryCofan.inl t) (BinaryCofan.inr t))
     (by
@@ -268,24 +268,34 @@ def BinaryCofan.mk {P : C} (ι₁ : X ⟶ P) (ι₂ : Y ⟶ P) : BinaryCofan X Y
 end
 
 @[simp]
-theorem BinaryFan.mk_π_app_left {P : C} (π₁ : P ⟶ X) (π₂ : P ⟶ Y) :
-    (BinaryFan.mk π₁ π₂).π.app ⟨WalkingPair.left⟩ = π₁ :=
+theorem BinaryFan.mk_fst {P : C} (π₁ : P ⟶ X) (π₂ : P ⟶ Y) : (BinaryFan.mk π₁ π₂).fst = π₁ :=
   rfl
 
 @[simp]
-theorem BinaryFan.mk_π_app_right {P : C} (π₁ : P ⟶ X) (π₂ : P ⟶ Y) :
-    (BinaryFan.mk π₁ π₂).π.app ⟨WalkingPair.right⟩ = π₂ :=
+theorem BinaryFan.mk_snd {P : C} (π₁ : P ⟶ X) (π₂ : P ⟶ Y) : (BinaryFan.mk π₁ π₂).snd = π₂ :=
   rfl
 
 @[simp]
-theorem BinaryCofan.mk_ι_app_left {P : C} (ι₁ : X ⟶ P) (ι₂ : Y ⟶ P) :
-    (BinaryCofan.mk ι₁ ι₂).ι.app ⟨WalkingPair.left⟩ = ι₁ :=
+theorem BinaryCofan.mk_inl {P : C} (ι₁ : X ⟶ P) (ι₂ : Y ⟶ P) : (BinaryCofan.mk ι₁ ι₂).inl = ι₁ :=
   rfl
 
 @[simp]
-theorem BinaryCofan.mk_ι_app_right {P : C} (ι₁ : X ⟶ P) (ι₂ : Y ⟶ P) :
-    (BinaryCofan.mk ι₁ ι₂).ι.app ⟨WalkingPair.right⟩ = ι₂ :=
+theorem BinaryCofan.mk_inr {P : C} (ι₁ : X ⟶ P) (ι₂ : Y ⟶ P) : (BinaryCofan.mk ι₁ ι₂).inr = ι₂ :=
   rfl
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]
+/-- Every `binary_fan` is isomorphic to an application of `binary_fan.mk`. -/
+def isoBinaryFanMk {X Y : C} (c : BinaryFan X Y) : c ≅ BinaryFan.mk c.fst c.snd :=
+  Cones.ext (Iso.refl _) fun j => by
+    trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]" <;>
+      cases j <;> tidy
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]
+/-- Every `binary_fan` is isomorphic to an application of `binary_fan.mk`. -/
+def isoBinaryCofanMk {X Y : C} (c : BinaryCofan X Y) : c ≅ BinaryCofan.mk c.inl c.inr :=
+  Cocones.ext (Iso.refl _) fun j => by
+    trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]" <;>
+      cases j <;> tidy
 
 /-- If `s` is a limit binary fan over `X` and `Y`, then every pair of morphisms `f : W ⟶ X` and
     `g : W ⟶ Y` induces a morphism `l : W ⟶ s.X` satisfying `l ≫ s.fst = f` and `l ≫ s.snd = g`.

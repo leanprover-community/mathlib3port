@@ -59,7 +59,7 @@ theorem hitting_of_lt {m : ι} (h : m < n) : hitting u s n m x = m := by
     push_neg
     intro j
     rw [Set.Icc_eq_empty_of_lt h]
-    simp only [← Set.mem_empty_eq, ← forall_false_left]
+    simp only [← Set.mem_empty_eq, ← IsEmpty.forall_iff]
   simp only [← h_not, ← if_false]
 
 theorem hitting_le {m : ι} (x : α) : hitting u s n m x ≤ m := by
@@ -172,6 +172,14 @@ theorem hitting_is_stopping_time [ConditionallyCompleteLinearOrder ι] [IsWellOr
     rw [h_set_eq_Union]
     exact MeasurableSet.Union fun j => MeasurableSet.Union_Prop fun hj => f.mono hj.2 _ ((hu j).Measurable hs)
     
+
+theorem stopped_value_hitting_mem [ConditionallyCompleteLinearOrder ι] [IsWellOrder ι (· < ·)] {u : ι → α → β}
+    {s : Set β} {n m : ι} {x : α} (h : ∃ j ∈ Set.Icc n m, u j x ∈ s) : stoppedValue u (hitting u s n m) x ∈ s := by
+  simp only [← stopped_value, ← hitting, ← if_pos h]
+  obtain ⟨j, hj₁, hj₂⟩ := h
+  have : Inf (Set.Icc n m ∩ { i | u i x ∈ s }) ∈ Set.Icc n m ∩ { i | u i x ∈ s } :=
+    Inf_mem (Set.nonempty_of_mem ⟨hj₁, hj₂⟩)
+  exact this.2
 
 section CompleteLattice
 

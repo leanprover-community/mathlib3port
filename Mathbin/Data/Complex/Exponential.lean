@@ -1630,16 +1630,16 @@ def expNear (n : ℕ) (x r : ℝ) : ℝ :=
   (∑ m in range n, x ^ m / m !) + x ^ n / n ! * r
 
 @[simp]
-theorem exp_near_zero x r : expNear 0 x r = r := by
+theorem exp_near_zero (x r) : expNear 0 x r = r := by
   simp [← exp_near]
 
 @[simp]
-theorem exp_near_succ n x r : expNear (n + 1) x r = expNear n x (1 + x / (n + 1) * r) := by
+theorem exp_near_succ (n x r) : expNear (n + 1) x r = expNear n x (1 + x / (n + 1) * r) := by
   simp [← exp_near, ← range_succ, ← mul_addₓ, ← add_left_commₓ, ← add_assocₓ, ← pow_succₓ, ← div_eq_mul_inv, ←
       mul_inv] <;>
     ac_rfl
 
-theorem exp_near_sub n x r₁ r₂ : expNear n x r₁ - expNear n x r₂ = x ^ n / n ! * (r₁ - r₂) := by
+theorem exp_near_sub (n x r₁ r₂) : expNear n x r₁ - expNear n x r₂ = x ^ n / n ! * (r₁ - r₂) := by
   simp [← exp_near, ← mul_sub]
 
 theorem exp_approx_end (n m : ℕ) (x : ℝ) (e₁ : n + 1 = m) (h : abs x ≤ 1) :

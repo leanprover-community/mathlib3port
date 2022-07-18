@@ -525,16 +525,16 @@ theorem HasBasis.inf_principal (hl : l.HasBasis p s) (s' : Set α) : (l⊓𝓟 s
     simp only [← mem_inf_principal, ← hl.mem_iff, ← subset_def, ← mem_set_of_eq, ← mem_inter_iff, ← and_imp]⟩
 
 theorem HasBasis.inf_basis_ne_bot_iff (hl : l.HasBasis p s) (hl' : l'.HasBasis p' s') :
-    NeBot (l⊓l') ↔ ∀ ⦃i⦄ hi : p i ⦃i'⦄ hi' : p' i', (s i ∩ s' i').Nonempty :=
+    NeBot (l⊓l') ↔ ∀ ⦃i⦄ (hi : p i) ⦃i'⦄ (hi' : p' i'), (s i ∩ s' i').Nonempty :=
   (hl.inf' hl').ne_bot_iff.trans <| by
     simp [← @forall_swap _ ι']
 
 theorem HasBasis.inf_ne_bot_iff (hl : l.HasBasis p s) :
-    NeBot (l⊓l') ↔ ∀ ⦃i⦄ hi : p i ⦃s'⦄ hs' : s' ∈ l', (s i ∩ s').Nonempty :=
+    NeBot (l⊓l') ↔ ∀ ⦃i⦄ (hi : p i) ⦃s'⦄ (hs' : s' ∈ l'), (s i ∩ s').Nonempty :=
   hl.inf_basis_ne_bot_iff l'.basis_sets
 
 theorem HasBasis.inf_principal_ne_bot_iff (hl : l.HasBasis p s) {t : Set α} :
-    NeBot (l⊓𝓟 t) ↔ ∀ ⦃i⦄ hi : p i, (s i ∩ t).Nonempty :=
+    NeBot (l⊓𝓟 t) ↔ ∀ ⦃i⦄ (hi : p i), (s i ∩ t).Nonempty :=
   (hl.inf_principal t).ne_bot_iff
 
 theorem HasBasis.disjoint_basis_iff (hl : l.HasBasis p s) (hl' : l'.HasBasis p' s') :
@@ -543,7 +543,7 @@ theorem HasBasis.disjoint_basis_iff (hl : l.HasBasis p s) (hl' : l'.HasBasis p' 
     simp only [← disjoint_iff, Ne.def, ne_bot_iff, ← hl.inf_basis_ne_bot_iff hl', ← not_exists, ← bot_eq_empty, ←
       ne_empty_iff_nonempty, ← inf_eq_inter]
 
-theorem inf_ne_bot_iff : NeBot (l⊓l') ↔ ∀ ⦃s : Set α⦄ hs : s ∈ l ⦃s'⦄ hs' : s' ∈ l', (s ∩ s').Nonempty :=
+theorem inf_ne_bot_iff : NeBot (l⊓l') ↔ ∀ ⦃s : Set α⦄ (hs : s ∈ l) ⦃s'⦄ (hs' : s' ∈ l'), (s ∩ s').Nonempty :=
   l.basis_sets.inf_ne_bot_iff
 
 theorem inf_principal_ne_bot_iff {s : Set α} : NeBot (l⊓𝓟 s) ↔ ∀, ∀ U ∈ l, ∀, (U ∩ s).Nonempty :=
@@ -576,6 +576,10 @@ alias disjoint_principal_principal ↔ _ _root_.disjoint.filter_principal
 @[simp]
 theorem disjoint_pure_pure {x y : α} : Disjoint (pure x : Filter α) (pure y) ↔ x ≠ y := by
   simp only [principal_singleton, ← disjoint_principal_principal, ← disjoint_singleton]
+
+@[simp]
+theorem compl_diagonal_mem_prod {l₁ l₂ : Filter α} : Diagonal αᶜ ∈ l₁ ×ᶠ l₂ ↔ Disjoint l₁ l₂ := by
+  simp only [← mem_prod_iff, ← Filter.disjoint_iff, ← prod_subset_compl_diagonal_iff_disjoint]
 
 theorem le_iff_forall_inf_principal_compl {f g : Filter α} : f ≤ g ↔ ∀, ∀ V ∈ g, ∀, f⊓𝓟 (Vᶜ) = ⊥ :=
   forall₂_congrₓ fun _ _ => mem_iff_inf_principal_compl
@@ -695,22 +699,23 @@ theorem HasBasis.tendsto_left_iff (hla : la.HasBasis pa sa) :
   rfl
 
 theorem HasBasis.tendsto_right_iff (hlb : lb.HasBasis pb sb) :
-    Tendsto f la lb ↔ ∀ i hi : pb i, ∀ᶠ x in la, f x ∈ sb i := by
+    Tendsto f la lb ↔ ∀ (i) (hi : pb i), ∀ᶠ x in la, f x ∈ sb i := by
   simpa only [← tendsto, ← hlb.ge_iff, ← mem_map, ← Filter.Eventually]
 
 theorem HasBasis.tendsto_iff (hla : la.HasBasis pa sa) (hlb : lb.HasBasis pb sb) :
-    Tendsto f la lb ↔ ∀ ib hib : pb ib, ∃ (ia : _)(hia : pa ia), ∀, ∀ x ∈ sa ia, ∀, f x ∈ sb ib := by
+    Tendsto f la lb ↔ ∀ (ib) (hib : pb ib), ∃ (ia : _)(hia : pa ia), ∀, ∀ x ∈ sa ia, ∀, f x ∈ sb ib := by
   simp [← hlb.tendsto_right_iff, ← hla.eventually_iff]
 
 theorem Tendsto.basis_left (H : Tendsto f la lb) (hla : la.HasBasis pa sa) :
     ∀, ∀ t ∈ lb, ∀, ∃ (i : _)(hi : pa i), MapsTo f (sa i) t :=
   hla.tendsto_left_iff.1 H
 
-theorem Tendsto.basis_right (H : Tendsto f la lb) (hlb : lb.HasBasis pb sb) : ∀ i hi : pb i, ∀ᶠ x in la, f x ∈ sb i :=
+theorem Tendsto.basis_right (H : Tendsto f la lb) (hlb : lb.HasBasis pb sb) :
+    ∀ (i) (hi : pb i), ∀ᶠ x in la, f x ∈ sb i :=
   hlb.tendsto_right_iff.1 H
 
 theorem Tendsto.basis_both (H : Tendsto f la lb) (hla : la.HasBasis pa sa) (hlb : lb.HasBasis pb sb) :
-    ∀ ib hib : pb ib, ∃ (ia : _)(hia : pa ia), ∀, ∀ x ∈ sa ia, ∀, f x ∈ sb ib :=
+    ∀ (ib) (hib : pb ib), ∃ (ia : _)(hia : pa ia), ∀, ∀ x ∈ sa ia, ∀, f x ∈ sb ib :=
   (hla.tendsto_iff hlb).1 H
 
 theorem HasBasis.prod'' (hla : la.HasBasis pa sa) (hlb : lb.HasBasis pb sb) :
@@ -754,6 +759,14 @@ theorem HasBasis.coprod {ι ι' : Type _} {pa : ι → Prop} {sa : ι → Set α
 
 end TwoTypes
 
+theorem map_sigma_mk_comap {π : α → Type _} {π' : β → Type _} {f : α → β} (hf : Function.Injective f)
+    (g : ∀ a, π a → π' (f a)) (a : α) (l : Filter (π' (f a))) :
+    map (Sigma.mk a) (comap (g a) l) = comap (Sigma.map f g) (map (Sigma.mk (f a)) l) := by
+  refine' (((basis_sets _).comap _).map _).eq_of_same_basis _
+  convert ((basis_sets _).map _).comap _
+  ext1 s
+  apply image_sigma_mk_preimage_sigma_map hf
+
 end Filter
 
 end Sort
@@ -762,7 +775,7 @@ namespace Filter
 
 variable {α β γ ι : Type _} {ι' : Sort _}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`out] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`out] []
 /-- `is_countably_generated f` means `f = generate s` for some countable `s`. -/
 class IsCountablyGenerated (f : Filter α) : Prop where
   out : ∃ s : Set (Set α), s.Countable ∧ f = generate s

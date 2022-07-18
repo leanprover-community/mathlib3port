@@ -43,7 +43,7 @@ variable [L.Structure M] [L.Structure N] [L.Structure P] [L.Structure Q]
   realizations of formulas. -/
 structure ElementaryEmbedding where
   toFun : M → N
-  map_formula' : ∀ {n} φ : L.Formula (Finₓ n) x : Finₓ n → M, φ.realize (to_fun ∘ x) ↔ φ.realize x := by
+  map_formula' : ∀ {n} (φ : L.Formula (Finₓ n)) (x : Finₓ n → M), φ.realize (to_fun ∘ x) ↔ φ.realize x := by
     run_tac
       obviously
 
@@ -66,7 +66,6 @@ instance funLike : FunLike (M ↪ₑ[L] N) M fun _ => N where
 instance : CoeFun (M ↪ₑ[L] N) fun _ => M → N :=
   FunLike.hasCoeToFun
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem map_bounded_formula (f : M ↪ₑ[L] N) {α : Type} {n : ℕ} (φ : L.BoundedFormula α n) (v : α → M)
     (xs : Finₓ n → M) : φ.realize (f ∘ v) (f ∘ xs) ↔ φ.realize v xs := by
@@ -222,12 +221,12 @@ namespace Embedding
 /-- The Tarski-Vaught test for elementarity of an embedding. -/
 theorem is_elementary_of_exists (f : M ↪[L] N)
     (htv :
-      ∀ n : ℕ φ : L.BoundedFormula Empty (n + 1) x : Finₓ n → M a : N,
+      ∀ (n : ℕ) (φ : L.BoundedFormula Empty (n + 1)) (x : Finₓ n → M) (a : N),
         φ.realize default (Finₓ.snoc (f ∘ x) a : _ → N) →
           ∃ b : M, φ.realize default (Finₓ.snoc (f ∘ x) (f b) : _ → N)) :
-    ∀ {n} φ : L.Formula (Finₓ n) x : Finₓ n → M, φ.realize (f ∘ x) ↔ φ.realize x := by
+    ∀ {n} (φ : L.Formula (Finₓ n)) (x : Finₓ n → M), φ.realize (f ∘ x) ↔ φ.realize x := by
   suffices h :
-    ∀ n : ℕ φ : L.bounded_formula Empty n xs : Finₓ n → M, φ.realize (f ∘ default) (f ∘ xs) ↔ φ.realize default xs
+    ∀ (n : ℕ) (φ : L.bounded_formula Empty n) (xs : Finₓ n → M), φ.realize (f ∘ default) (f ∘ xs) ↔ φ.realize default xs
   · intro n φ x
     refine' φ.realize_relabel_sum_inr.symm.trans (trans (h n _ _) φ.realize_relabel_sum_inr)
     
@@ -265,7 +264,7 @@ theorem is_elementary_of_exists (f : M ↪[L] N)
 @[simps]
 def toElementaryEmbedding (f : M ↪[L] N)
     (htv :
-      ∀ n : ℕ φ : L.BoundedFormula Empty (n + 1) x : Finₓ n → M a : N,
+      ∀ (n : ℕ) (φ : L.BoundedFormula Empty (n + 1)) (x : Finₓ n → M) (a : N),
         φ.realize default (Finₓ.snoc (f ∘ x) a : _ → N) →
           ∃ b : M, φ.realize default (Finₓ.snoc (f ∘ x) (f b) : _ → N)) :
     M ↪ₑ[L] N :=
@@ -310,7 +309,7 @@ theorem realize_formula_top {α : Type _} {φ : L.Formula α} {v : α → (⊤ :
 /-- A substructure is elementary when every formula applied to a tuple in the subtructure
   agrees with its value in the overall structure. -/
 def IsElementary (S : L.Substructure M) : Prop :=
-  ∀ {n} φ : L.Formula (Finₓ n) x : Finₓ n → S, φ.realize ((coe : _ → M) ∘ x) ↔ φ.realize x
+  ∀ {n} (φ : L.Formula (Finₓ n)) (x : Finₓ n → S), φ.realize ((coe : _ → M) ∘ x) ↔ φ.realize x
 
 end Substructure
 
@@ -386,7 +385,7 @@ namespace Substructure
 /-- The Tarski-Vaught test for elementarity of a substructure. -/
 theorem is_elementary_of_exists (S : L.Substructure M)
     (htv :
-      ∀ n : ℕ φ : L.BoundedFormula Empty (n + 1) x : Finₓ n → S a : M,
+      ∀ (n : ℕ) (φ : L.BoundedFormula Empty (n + 1)) (x : Finₓ n → S) (a : M),
         φ.realize default (Finₓ.snoc (coe ∘ x) a : _ → M) →
           ∃ b : S, φ.realize default (Finₓ.snoc (coe ∘ x) b : _ → M)) :
     S.IsElementary := fun n => S.Subtype.is_elementary_of_exists htv
@@ -395,7 +394,7 @@ theorem is_elementary_of_exists (S : L.Substructure M)
 @[simps]
 def toElementarySubstructure (S : L.Substructure M)
     (htv :
-      ∀ n : ℕ φ : L.BoundedFormula Empty (n + 1) x : Finₓ n → S a : M,
+      ∀ (n : ℕ) (φ : L.BoundedFormula Empty (n + 1)) (x : Finₓ n → S) (a : M),
         φ.realize default (Finₓ.snoc (coe ∘ x) a : _ → M) →
           ∃ b : S, φ.realize default (Finₓ.snoc (coe ∘ x) b : _ → M)) :
     L.ElementarySubstructure M :=

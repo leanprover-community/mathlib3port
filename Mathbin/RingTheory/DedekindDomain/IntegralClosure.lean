@@ -98,7 +98,7 @@ variable (A) (K)
 
 include K
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y «expr ≠ » (0 : A))
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y «expr ≠ » (0 : A))
 /-- Send a set of `x`'es in a finite extension `L` of the fraction field of `R`
 to `(y : R) • x ∈ integral_closure R L`. -/
 theorem exists_integral_multiples (s : Finset L) : ∃ (y : _)(_ : y ≠ (0 : A)), ∀, ∀ x ∈ s, ∀, IsIntegral A (y • x) := by
@@ -163,19 +163,24 @@ include L
 
 /- If `L` is a finite separable extension of `K = Frac(A)`, where `A` is
 integrally closed and Noetherian, the integral closure `C` of `A` in `L` is
-Noetherian. -/
-theorem IsIntegralClosure.is_noetherian_ring [IsIntegrallyClosed A] [IsNoetherianRing A] : IsNoetherianRing C := by
+Noetherian over `A`. -/
+theorem IsIntegralClosure.is_noetherian [IsIntegrallyClosed A] [IsNoetherianRing A] : IsNoetherian A C := by
   have := Classical.decEq L
   obtain ⟨s, b, hb_int⟩ := FiniteDimensional.exists_is_basis_integral A K L
-  rw [is_noetherian_ring_iff]
   let b' := (trace_form K L).dualBasis (trace_form_nondegenerate K L) b
   let this := is_noetherian_span_of_finite A (Set.finite_range b')
   let f : C →ₗ[A] Submodule.span A (Set.Range b') :=
     (Submodule.ofLe (IsIntegralClosure.range_le_span_dual_basis C b hb_int)).comp
       ((Algebra.linearMap C L).restrictScalars A).range_restrict
-  refine' is_noetherian_of_tower A (is_noetherian_of_ker_bot f _)
+  refine' is_noetherian_of_ker_bot f _
   rw [LinearMap.ker_comp, Submodule.ker_of_le, Submodule.comap_bot, LinearMap.ker_cod_restrict]
   exact LinearMap.ker_eq_bot_of_injective (IsIntegralClosure.algebra_map_injective C A L)
+
+/- If `L` is a finite separable extension of `K = Frac(A)`, where `A` is
+integrally closed and Noetherian, the integral closure `C` of `A` in `L` is
+Noetherian. -/
+theorem IsIntegralClosure.is_noetherian_ring [IsIntegrallyClosed A] [IsNoetherianRing A] : IsNoetherianRing C :=
+  is_noetherian_ring_iff.mpr <| is_noetherian_of_tower A (IsIntegralClosure.is_noetherian A K L C)
 
 variable {A K}
 

@@ -56,11 +56,11 @@ def preservesLimitIso : G.obj (limit F) ≅ limit (F ⋙ G) :=
   (PreservesLimit.preserves (limit.isLimit _)).conePointUniqueUpToIso (limit.isLimit _)
 
 @[simp, reassoc]
-theorem preserves_limits_iso_hom_π j : (preservesLimitIso G F).Hom ≫ limit.π _ j = G.map (limit.π F j) :=
+theorem preserves_limits_iso_hom_π (j) : (preservesLimitIso G F).Hom ≫ limit.π _ j = G.map (limit.π F j) :=
   IsLimit.cone_point_unique_up_to_iso_hom_comp _ _ j
 
 @[simp, reassoc]
-theorem preserves_limits_iso_inv_π j : (preservesLimitIso G F).inv ≫ G.map (limit.π F j) = limit.π _ j :=
+theorem preserves_limits_iso_inv_π (j) : (preservesLimitIso G F).inv ≫ G.map (limit.π F j) = limit.π _ j :=
   IsLimit.cone_point_unique_up_to_iso_inv_comp _ _ j
 
 @[simp, reassoc]

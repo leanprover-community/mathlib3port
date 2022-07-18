@@ -120,7 +120,7 @@ protected theorem Union_finset (m : OuterMeasure α) (s : β → Set α) (t : Fi
 protected theorem union (m : OuterMeasure α) (s₁ s₂ : Set α) : m (s₁ ∪ s₂) ≤ m s₁ + m s₂ :=
   rel_sup_add m m.Empty (· ≤ ·) m.Union_nat s₁ s₂
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- If a set has zero measure in a neighborhood of each of its points, then it has zero measure
 in a second-countable space. -/
 theorem null_of_locally_null [TopologicalSpace α] [SecondCountableTopology α] (m : OuterMeasure α) (s : Set α)
@@ -194,7 +194,7 @@ theorem diff_null (m : OuterMeasure α) (s : Set α) {t : Set α} (ht : m t = 0)
 theorem union_null (m : OuterMeasure α) {s₁ s₂ : Set α} (h₁ : m s₁ = 0) (h₂ : m s₂ = 0) : m (s₁ ∪ s₂) = 0 := by
   simpa [← h₁, ← h₂] using m.union s₁ s₂
 
-theorem coe_fn_injective : Injective fun μ : OuterMeasure α s : Set α => μ s := fun μ₁ μ₂ h => by
+theorem coe_fn_injective : Injective fun (μ : OuterMeasure α) (s : Set α) => μ s := fun μ₁ μ₂ h => by
   cases μ₁
   cases μ₂
   congr
@@ -556,7 +556,7 @@ end Basic
 
 section OfFunction
 
--- ./././Mathport/Syntax/Translate/Basic.lean:293:40: warning: unsupported option eqn_compiler.zeta
+-- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
 variable {α : Type _} (m : Set α → ℝ≥0∞) (m_empty : m ∅ = 0)
@@ -634,7 +634,7 @@ theorem is_greatest_of_function :
 theorem of_function_eq_Sup : OuterMeasure.ofFunction m m_empty = sup { μ | ∀ s, μ s ≤ m s } :=
   (@is_greatest_of_function α m m_empty).IsLub.Sup_eq.symm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (u «expr ⊆ » «expr ∪ »(s, t))
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (u «expr ⊆ » «expr ∪ »(s, t))
 /-- If `m u = ∞` for any set `u` that has nonempty intersection both with `s` and `t`, then
 `μ (s ∪ t) = μ s + μ t`, where `μ = measure_theory.outer_measure.of_function m m_empty`.
 
@@ -653,7 +653,7 @@ theorem of_function_union_of_top_of_nonempty_inter {s t : Set α}
     
   set I := fun s => { i : ℕ | (s ∩ f i).Nonempty }
   have hd : Disjoint (I s) (I t) := fun i hi => he ⟨i, hi⟩
-  have hI : ∀ u _ : u ⊆ s ∪ t, μ u ≤ ∑' i : I u, μ (f i) := fun u hu =>
+  have hI : ∀ (u) (_ : u ⊆ s ∪ t), μ u ≤ ∑' i : I u, μ (f i) := fun u hu =>
     calc
       μ u ≤ μ (⋃ i : I u, f i) :=
         μ.mono fun x hx =>
@@ -869,7 +869,7 @@ theorem is_caratheodory_sum {s : ℕ → Set α} (h : ∀ i, is_caratheodory (s 
     rw [bUnion_lt_succ, Finset.sum_range_succ, Set.union_comm, is_caratheodory_sum, m.measure_inter_union _ (h n),
       add_commₓ]
     intro a
-    simpa using fun h₁ : a ∈ s n i hi : i < n h₂ => hd _ _ (ne_of_gtₓ hi) ⟨h₁, h₂⟩
+    simpa using fun (h₁ : a ∈ s n) i (hi : i < n) h₂ => hd _ _ (ne_of_gtₓ hi) ⟨h₁, h₂⟩
 
 theorem is_caratheodory_Union_nat {s : ℕ → Set α} (h : ∀ i, is_caratheodory (s i)) (hd : Pairwise (Disjoint on s)) :
     is_caratheodory (⋃ i, s i) :=
@@ -1168,7 +1168,7 @@ theorem le_extend {s : α} (h : P s) : m s h ≤ extend m s := by
 
 -- TODO: why this is a bad `congr` lemma?
 theorem extend_congr {β : Type _} {Pb : β → Prop} {mb : ∀ s : β, Pb s → ℝ≥0∞} {sa : α} {sb : β} (hP : P sa ↔ Pb sb)
-    (hm : ∀ ha : P sa hb : Pb sb, m sa ha = mb sb hb) : extend m sa = extend mb sb :=
+    (hm : ∀ (ha : P sa) (hb : Pb sb), m sa ha = mb sb hb) : extend m sa = extend mb sb :=
   infi_congr_Prop hP fun h => hm _ _
 
 end Extend
@@ -1181,14 +1181,14 @@ variable {m : ∀ s : Set α, P s → ℝ≥0∞}
 
 variable (P0 : P ∅) (m0 : m ∅ P0 = 0)
 
-variable (PU : ∀ ⦃f : ℕ → Set α⦄ hm : ∀ i, P (f i), P (⋃ i, f i))
+variable (PU : ∀ ⦃f : ℕ → Set α⦄ (hm : ∀ i, P (f i)), P (⋃ i, f i))
 
 variable
-  (mU : ∀ ⦃f : ℕ → Set α⦄ hm : ∀ i, P (f i), Pairwise (Disjoint on f) → m (⋃ i, f i) (PU hm) = ∑' i, m (f i) (hm i))
+  (mU : ∀ ⦃f : ℕ → Set α⦄ (hm : ∀ i, P (f i)), Pairwise (Disjoint on f) → m (⋃ i, f i) (PU hm) = ∑' i, m (f i) (hm i))
 
-variable (msU : ∀ ⦃f : ℕ → Set α⦄ hm : ∀ i, P (f i), m (⋃ i, f i) (PU hm) ≤ ∑' i, m (f i) (hm i))
+variable (msU : ∀ ⦃f : ℕ → Set α⦄ (hm : ∀ i, P (f i)), m (⋃ i, f i) (PU hm) ≤ ∑' i, m (f i) (hm i))
 
-variable (m_mono : ∀ ⦃s₁ s₂ : Set α⦄ hs₁ : P s₁ hs₂ : P s₂, s₁ ⊆ s₂ → m s₁ hs₁ ≤ m s₂ hs₂)
+variable (m_mono : ∀ ⦃s₁ s₂ : Set α⦄ (hs₁ : P s₁) (hs₂ : P s₂), s₁ ⊆ s₂ → m s₁ hs₁ ≤ m s₂ hs₂)
 
 theorem extend_empty : extend m ∅ = 0 :=
   (extend_eq _ P0).trans m0
@@ -1260,7 +1260,8 @@ def inducedOuterMeasure : OuterMeasure α :=
 
 variable {m P0 m0}
 
-theorem le_induced_outer_measure {μ : OuterMeasure α} : μ ≤ inducedOuterMeasure m P0 m0 ↔ ∀ s hs : P s, μ s ≤ m s hs :=
+theorem le_induced_outer_measure {μ : OuterMeasure α} :
+    μ ≤ inducedOuterMeasure m P0 m0 ↔ ∀ (s) (hs : P s), μ s ≤ m s hs :=
   le_of_function.trans <| forall_congrₓ fun s => le_infi_iff
 
 /-- If `P u` is `false` for any set `u` that has nonempty intersection both with `s` and `t`, then
@@ -1300,7 +1301,7 @@ theorem induced_outer_measure_eq_infi (s : Set α) :
     
 
 theorem induced_outer_measure_preimage (f : α ≃ α) (Pm : ∀ s : Set α, P (f ⁻¹' s) ↔ P s)
-    (mm : ∀ s : Set α hs : P s, m (f ⁻¹' s) ((Pm _).mpr hs) = m s hs) {A : Set α} :
+    (mm : ∀ (s : Set α) (hs : P s), m (f ⁻¹' s) ((Pm _).mpr hs) = m s hs) {A : Set α} :
     inducedOuterMeasure m P0 m0 (f ⁻¹' A) = inducedOuterMeasure m P0 m0 A := by
   simp only [← induced_outer_measure_eq_infi _ msU m_mono]
   symm
@@ -1362,7 +1363,7 @@ variable (m0 : m ∅ MeasurableSet.empty = 0)
 
 variable
   (mU :
-    ∀ ⦃f : ℕ → Set α⦄ hm : ∀ i, MeasurableSet (f i),
+    ∀ ⦃f : ℕ → Set α⦄ (hm : ∀ i, MeasurableSet (f i)),
       Pairwise (Disjoint on f) → m (⋃ i, f i) (MeasurableSet.Union hm) = ∑' i, m (f i) (hm i))
 
 include m0 mU

@@ -124,12 +124,12 @@ def wpMk {α : Typevec n} (a : P.A) (f : P.last.B a → P.last.W) (f' : P.WPath 
 
 /-- Recursor for `Wp` -/
 def wpRecₓ {α : Typevec n} {C : Type _}
-    (g : ∀ a : P.A f : P.last.B a → P.last.W, P.WPath ⟨a, f⟩ ⟹ α → (P.last.B a → C) → C) :
-    ∀ x : P.last.W f' : P.WPath x ⟹ α, C
+    (g : ∀ (a : P.A) (f : P.last.B a → P.last.W), P.WPath ⟨a, f⟩ ⟹ α → (P.last.B a → C) → C) :
+    ∀ (x : P.last.W) (f' : P.WPath x ⟹ α), C
   | ⟨a, f⟩, f' => g a f f' fun i => Wp_rec (f i) (P.wPathDestRight f' i)
 
 theorem Wp_rec_eq {α : Typevec n} {C : Type _}
-    (g : ∀ a : P.A f : P.last.B a → P.last.W, P.WPath ⟨a, f⟩ ⟹ α → (P.last.B a → C) → C) (a : P.A)
+    (g : ∀ (a : P.A) (f : P.last.B a → P.last.W), P.WPath ⟨a, f⟩ ⟹ α → (P.last.B a → C) → C) (a : P.A)
     (f : P.last.B a → P.last.W) (f' : P.WPath ⟨a, f⟩ ⟹ α) :
     P.wpRec g ⟨a, f⟩ f' = g a f f' fun i => P.wpRec g (f i) (P.wPathDestRight f' i) :=
   rfl
@@ -137,9 +137,9 @@ theorem Wp_rec_eq {α : Typevec n} {C : Type _}
 -- Note: we could replace Prop by Type* and obtain a dependent recursor
 theorem Wp_ind {α : Typevec n} {C : ∀ x : P.last.W, P.WPath x ⟹ α → Prop}
     (ih :
-      ∀ a : P.A f : P.last.B a → P.last.W f' : P.WPath ⟨a, f⟩ ⟹ α,
+      ∀ (a : P.A) (f : P.last.B a → P.last.W) (f' : P.WPath ⟨a, f⟩ ⟹ α),
         (∀ i : P.last.B a, C (f i) (P.wPathDestRight f' i)) → C ⟨a, f⟩ f') :
-    ∀ x : P.last.W f' : P.WPath x ⟹ α, C x f'
+    ∀ (x : P.last.W) (f' : P.WPath x ⟹ α), C x f'
   | ⟨a, f⟩, f' => ih a f f' fun i => Wp_ind _ _
 
 /-!
@@ -176,7 +176,8 @@ theorem W_rec_eq {α : Typevec n} {C : Type _}
 
 /-- Induction principle for `W` -/
 theorem W_ind {α : Typevec n} {C : P.W α → Prop}
-    (ih : ∀ a : P.A f' : P.drop.B a ⟹ α f : P.last.B a → P.W α, (∀ i, C (f i)) → C (P.wMk a f' f)) : ∀ x, C x := by
+    (ih : ∀ (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α), (∀ i, C (f i)) → C (P.wMk a f' f)) : ∀ x, C x :=
+  by
   intro x
   cases' x with a f
   apply @Wp_ind n P α fun a f => C ⟨a, f⟩
@@ -190,7 +191,7 @@ theorem W_ind {α : Typevec n} {C : P.W α → Prop}
   apply ih'
 
 theorem W_cases {α : Typevec n} {C : P.W α → Prop}
-    (ih : ∀ a : P.A f' : P.drop.B a ⟹ α f : P.last.B a → P.W α, C (P.wMk a f' f)) : ∀ x, C x :=
+    (ih : ∀ (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α), C (P.wMk a f' f)) : ∀ x, C x :=
   P.W_ind fun a f' f ih' => ih a f' f
 
 /-- W-types are functorial -/

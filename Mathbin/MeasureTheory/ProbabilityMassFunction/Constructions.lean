@@ -30,7 +30,7 @@ namespace Pmf
 
 noncomputable section
 
-variable {α : Type _} {β : Type _} {γ : Type _}
+variable {α β γ : Type _}
 
 open Classical BigOperators Nnreal Ennreal
 
@@ -41,6 +41,9 @@ def map (f : α → β) (p : Pmf α) : Pmf β :=
   bind p (pure ∘ f)
 
 variable (f : α → β) (p : Pmf α) (b : β)
+
+theorem monad_map_eq_map {α β : Type _} (f : α → β) (p : Pmf α) : f <$> p = p.map f :=
+  rfl
 
 @[simp]
 theorem map_apply : (map f p) b = ∑' a, if b = f a then p a else 0 := by
@@ -93,6 +96,9 @@ def seq (q : Pmf (α → β)) (p : Pmf α) : Pmf β :=
 
 variable (q : Pmf (α → β)) (p : Pmf α) (b : β)
 
+theorem monad_seq_eq_seq {α β : Type _} (q : Pmf (α → β)) (p : Pmf α) : q <*> p = q.seq p :=
+  rfl
+
 @[simp]
 theorem seq_apply : (seq q p) b = ∑' (f : α → β) (a : α), if b = f a then q f * p a else 0 := by
   simp only [← seq, ← mul_boole, ← bind_apply, ← pure_apply]
@@ -109,16 +115,27 @@ theorem mem_support_seq_iff : b ∈ (seq q p).Support ↔ ∃ f ∈ q.Support, b
 
 end Seq
 
+instance : IsLawfulFunctor Pmf where
+  map_const_eq := fun α β => rfl
+  id_map := fun α => bind_pure
+  comp_map := fun α β γ g h x => (map_comp _ _ _).symm
+
+instance : IsLawfulMonad Pmf where
+  bind_pure_comp_eq_map := fun α β f x => rfl
+  bind_map_eq_seq := fun α β f x => rfl
+  pure_bind := fun α β => pure_bind
+  bind_assoc := fun α β γ => bind_bind
+
 section OfFinset
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a «expr ∉ » s)
 /-- Given a finset `s` and a function `f : α → ℝ≥0` with sum `1` on `s`,
   such that `f a = 0` for `a ∉ s`, we get a `pmf` -/
-def ofFinset (f : α → ℝ≥0 ) (s : Finset α) (h : (∑ a in s, f a) = 1) (h' : ∀ a _ : a ∉ s, f a = 0) : Pmf α :=
+def ofFinset (f : α → ℝ≥0 ) (s : Finset α) (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0) : Pmf α :=
   ⟨f, h ▸ has_sum_sum_of_ne_finset_zero h'⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (a «expr ∉ » s)
-variable {f : α → ℝ≥0 } {s : Finset α} (h : (∑ a in s, f a) = 1) (h' : ∀ a _ : a ∉ s, f a = 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a «expr ∉ » s)
+variable {f : α → ℝ≥0 } {s : Finset α} (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0)
 
 @[simp]
 theorem of_finset_apply (a : α) : ofFinset f s h h' a = f a :=

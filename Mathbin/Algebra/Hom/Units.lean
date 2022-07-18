@@ -84,7 +84,7 @@ theorem coe_inv : ∀ u : αˣ, ↑u⁻¹ = (u⁻¹ : α) :=
   (Units.coeHom α).map_inv
 
 @[simp, norm_cast, to_additive]
-theorem coe_zpow : ∀ u : αˣ n : ℤ, ((u ^ n : αˣ) : α) = u ^ n :=
+theorem coe_zpow : ∀ (u : αˣ) (n : ℤ), ((u ^ n : αˣ) : α) = u ^ n :=
   (Units.coeHom α).map_zpow
 
 theorem _root_.divp_eq_div (a : α) (u : αˣ) : a /ₚ u = a / u := by
@@ -104,15 +104,17 @@ def liftRight (f : M →* N) (g : M → Nˣ) (h : ∀ x, ↑(g x) = f x) : M →
       simp only [← h, ← coe_mul, ← f.map_mul]
 
 @[simp, to_additive]
-theorem coe_lift_right {f : M →* N} {g : M → Nˣ} (h : ∀ x, ↑(g x) = f x) x : (liftRight f g h x : N) = f x :=
+theorem coe_lift_right {f : M →* N} {g : M → Nˣ} (h : ∀ x, ↑(g x) = f x) (x) : (liftRight f g h x : N) = f x :=
   h x
 
 @[simp, to_additive]
-theorem mul_lift_right_inv {f : M →* N} {g : M → Nˣ} (h : ∀ x, ↑(g x) = f x) x : f x * ↑(liftRight f g h x)⁻¹ = 1 := by
+theorem mul_lift_right_inv {f : M →* N} {g : M → Nˣ} (h : ∀ x, ↑(g x) = f x) (x) : f x * ↑(liftRight f g h x)⁻¹ = 1 :=
+  by
   rw [Units.mul_inv_eq_iff_eq_mul, one_mulₓ, coe_lift_right]
 
 @[simp, to_additive]
-theorem lift_right_inv_mul {f : M →* N} {g : M → Nˣ} (h : ∀ x, ↑(g x) = f x) x : ↑(liftRight f g h x)⁻¹ * f x = 1 := by
+theorem lift_right_inv_mul {f : M →* N} {g : M → Nˣ} (h : ∀ x, ↑(g x) = f x) (x) : ↑(liftRight f g h x)⁻¹ * f x = 1 :=
+  by
   rw [Units.inv_mul_eq_iff_eq_mul, mul_oneₓ, coe_lift_right]
 
 end Units
@@ -158,15 +160,15 @@ noncomputable def liftRight (f : M →* N) (hf : ∀ x, IsUnit (f x)) : M →* N
   (Units.liftRight f fun x => (hf x).Unit) fun x => rfl
 
 @[to_additive]
-theorem coe_lift_right (f : M →* N) (hf : ∀ x, IsUnit (f x)) x : (IsUnit.liftRight f hf x : N) = f x :=
+theorem coe_lift_right (f : M →* N) (hf : ∀ x, IsUnit (f x)) (x) : (IsUnit.liftRight f hf x : N) = f x :=
   rfl
 
 @[simp, to_additive]
-theorem mul_lift_right_inv (f : M →* N) (h : ∀ x, IsUnit (f x)) x : f x * ↑(IsUnit.liftRight f h x)⁻¹ = 1 :=
+theorem mul_lift_right_inv (f : M →* N) (h : ∀ x, IsUnit (f x)) (x) : f x * ↑(IsUnit.liftRight f h x)⁻¹ = 1 :=
   Units.mul_lift_right_inv (fun y => rfl) x
 
 @[simp, to_additive]
-theorem lift_right_inv_mul (f : M →* N) (h : ∀ x, IsUnit (f x)) x : ↑(IsUnit.liftRight f h x)⁻¹ * f x = 1 :=
+theorem lift_right_inv_mul (f : M →* N) (h : ∀ x, IsUnit (f x)) (x) : ↑(IsUnit.liftRight f h x)⁻¹ * f x = 1 :=
   Units.lift_right_inv_mul (fun y => rfl) x
 
 end Monoidₓ

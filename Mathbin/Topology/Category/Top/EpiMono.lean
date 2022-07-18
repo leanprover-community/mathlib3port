@@ -28,9 +28,10 @@ theorem epi_iff_surjective {X Y : Top.{u}} (f : X ⟶ Y) : Epi f ↔ Function.Su
     rw [this, CategoryTheory.epi_iff_surjective]
     rfl
   constructor
-  · apply left_adjoint_preserves_epi adj₂
+  · intro
+    infer_instance
     
-  · apply faithful_reflects_epi
+  · apply functor.epi_of_epi_map
     
 
 theorem mono_iff_injective {X Y : Top.{u}} (f : X ⟶ Y) : Mono f ↔ Function.Injective f := by
@@ -38,9 +39,10 @@ theorem mono_iff_injective {X Y : Top.{u}} (f : X ⟶ Y) : Mono f ↔ Function.I
     rw [this, CategoryTheory.mono_iff_injective]
     rfl
   constructor
-  · apply right_adjoint_preserves_mono adj₁
+  · intro
+    infer_instance
     
-  · apply faithful_reflects_mono
+  · apply functor.mono_of_mono_map
     
 
 end Top

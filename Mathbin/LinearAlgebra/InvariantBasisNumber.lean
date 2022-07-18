@@ -78,7 +78,7 @@ variable (R : Type u) [Semiringₓ R]
     implies `n ≤ m`. -/
 @[mk_iff]
 class StrongRankCondition : Prop where
-  le_of_fin_injective : ∀ {n m : ℕ} f : (Finₓ n → R) →ₗ[R] Finₓ m → R, Injective f → n ≤ m
+  le_of_fin_injective : ∀ {n m : ℕ} (f : (Finₓ n → R) →ₗ[R] Finₓ m → R), Injective f → n ≤ m
 
 theorem le_of_fin_injective [StrongRankCondition R] {n m : ℕ} (f : (Finₓ n → R) →ₗ[R] Finₓ m → R) :
     Injective f → n ≤ m :=
@@ -87,7 +87,7 @@ theorem le_of_fin_injective [StrongRankCondition R] {n m : ℕ} (f : (Finₓ n �
 /-- A ring satisfies the strong rank condition if and only if, for all `n : ℕ`, any linear map
 `(fin (n + 1) → R) →ₗ[R] (fin n → R)` is not injective. -/
 theorem strong_rank_condition_iff_succ :
-    StrongRankCondition R ↔ ∀ n : ℕ f : (Finₓ (n + 1) → R) →ₗ[R] Finₓ n → R, ¬Function.Injective f := by
+    StrongRankCondition R ↔ ∀ (n : ℕ) (f : (Finₓ (n + 1) → R) →ₗ[R] Finₓ n → R), ¬Function.Injective f := by
   refine' ⟨fun h n => fun f hf => _, fun h => ⟨fun n m f hf => _⟩⟩
   · let this : StrongRankCondition R := h
     exact Nat.not_succ_le_selfₓ n (le_of_fin_injective R f hf)
@@ -115,7 +115,7 @@ theorem card_le_of_injective' [StrongRankCondition R] {α β : Type _} [Fintype 
 /-- We say that `R` satisfies the rank condition if `(fin n → R) →ₗ[R] (fin m → R)` surjective
     implies `m ≤ n`. -/
 class RankCondition : Prop where
-  le_of_fin_surjective : ∀ {n m : ℕ} f : (Finₓ n → R) →ₗ[R] Finₓ m → R, Surjective f → m ≤ n
+  le_of_fin_surjective : ∀ {n m : ℕ} (f : (Finₓ n → R) →ₗ[R] Finₓ m → R), Surjective f → m ≤ n
 
 theorem le_of_fin_surjective [RankCondition R] {n m : ℕ} (f : (Finₓ n → R) →ₗ[R] Finₓ m → R) : Surjective f → m ≤ n :=
   RankCondition.le_of_fin_surjective f

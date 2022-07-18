@@ -219,12 +219,12 @@ theorem of_real_mul_im (r : ℝ) (z : K) : im (↑r * z) = r * im z := by
   simp only [← add_zeroₓ, ← of_real_im, ← zero_mul, ← of_real_re, ← mul_im]
 
 @[is_R_or_C_simps]
-theorem smul_re : ∀ r : ℝ z : K, re (r • z) = r * re z := fun r z => by
+theorem smul_re : ∀ (r : ℝ) (z : K), re (r • z) = r * re z := fun r z => by
   rw [Algebra.smul_def]
   apply of_real_mul_re
 
 @[is_R_or_C_simps]
-theorem smul_im : ∀ r : ℝ z : K, im (r • z) = r * im z := fun r z => by
+theorem smul_im : ∀ (r : ℝ) (z : K), im (r • z) = r * im z := fun r z => by
   rw [Algebra.smul_def]
   apply of_real_mul_im
 

@@ -185,7 +185,7 @@ theorem encode_code_eq : encode = encode_code :=
 theorem of_nat_code_eq : ofNat Code = of_nat_code :=
   rfl
 
-theorem encode_lt_pair cf cg : encode cf < encode (pair cf cg) ∧ encode cg < encode (pair cf cg) := by
+theorem encode_lt_pair (cf cg) : encode cf < encode (pair cf cg) ∧ encode cg < encode (pair cf cg) := by
   simp [← encode_code_eq, ← encode_code, -add_commₓ]
   have :=
     Nat.mul_le_mul_rightₓ _
@@ -199,19 +199,19 @@ theorem encode_lt_pair cf cg : encode cf < encode (pair cf cg) ∧ encode cg < e
           decide : 0 < 4))
   exact ⟨lt_of_le_of_ltₓ (Nat.left_le_mkpair _ _) this, lt_of_le_of_ltₓ (Nat.right_le_mkpair _ _) this⟩
 
-theorem encode_lt_comp cf cg : encode cf < encode (comp cf cg) ∧ encode cg < encode (comp cf cg) := by
+theorem encode_lt_comp (cf cg) : encode cf < encode (comp cf cg) ∧ encode cg < encode (comp cf cg) := by
   suffices
   exact (encode_lt_pair cf cg).imp (fun h => lt_transₓ h this) fun h => lt_transₓ h this
   change _
   simp [← encode_code_eq, ← encode_code]
 
-theorem encode_lt_prec cf cg : encode cf < encode (prec cf cg) ∧ encode cg < encode (prec cf cg) := by
+theorem encode_lt_prec (cf cg) : encode cf < encode (prec cf cg) ∧ encode cg < encode (prec cf cg) := by
   suffices
   exact (encode_lt_pair cf cg).imp (fun h => lt_transₓ h this) fun h => lt_transₓ h this
   change _
   simp [← encode_code_eq, ← encode_code]
 
-theorem encode_lt_rfind' cf : encode cf < encode (rfind' cf) := by
+theorem encode_lt_rfind' (cf) : encode cf < encode (rfind' cf) := by
   simp [← encode_code_eq, ← encode_code, -add_commₓ]
   have :=
     Nat.mul_le_mul_rightₓ _
@@ -267,10 +267,10 @@ theorem rec_prim' {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (h
     {s : α → σ} (hs : Primrec s) {l : α → σ} (hl : Primrec l) {r : α → σ} (hr : Primrec r)
     {pr : α → code × code × σ × σ → σ} (hpr : Primrec₂ pr) {co : α → code × code × σ × σ → σ} (hco : Primrec₂ co)
     {pc : α → code × code × σ × σ → σ} (hpc : Primrec₂ pc) {rf : α → code × σ → σ} (hrf : Primrec₂ rf) :
-    let PR a := fun cf cg hf hg => pr a (cf, cg, hf, hg)
-    let CO a := fun cf cg hf hg => co a (cf, cg, hf, hg)
-    let PC a := fun cf cg hf hg => pc a (cf, cg, hf, hg)
-    let RF a := fun cf hf => rf a (cf, hf)
+    let PR (a) := fun cf cg hf hg => pr a (cf, cg, hf, hg)
+    let CO (a) := fun cf cg hf hg => co a (cf, cg, hf, hg)
+    let PC (a) := fun cf cg hf hg => pc a (cf, cg, hf, hg)
+    let RF (a) := fun cf hf => rf a (cf, hf)
     let F (a : α) (c : Code) : σ := Nat.Partrec.Code.recOn c (z a) (s a) (l a) (r a) (PR a) (CO a) (PC a) (RF a)
     Primrec (fun a => F a (c a) : α → σ) :=
   by
@@ -445,10 +445,10 @@ theorem rec_computable {α σ} [Primcodable α] [Primcodable σ] {c : α → Cod
     (hz : Computable z) {s : α → σ} (hs : Computable s) {l : α → σ} (hl : Computable l) {r : α → σ} (hr : Computable r)
     {pr : α → code × code × σ × σ → σ} (hpr : Computable₂ pr) {co : α → code × code × σ × σ → σ} (hco : Computable₂ co)
     {pc : α → code × code × σ × σ → σ} (hpc : Computable₂ pc) {rf : α → code × σ → σ} (hrf : Computable₂ rf) :
-    let PR a := fun cf cg hf hg => pr a (cf, cg, hf, hg)
-    let CO a := fun cf cg hf hg => co a (cf, cg, hf, hg)
-    let PC a := fun cf cg hf hg => pc a (cf, cg, hf, hg)
-    let RF a := fun cf hf => rf a (cf, hf)
+    let PR (a) := fun cf cg hf hg => pr a (cf, cg, hf, hg)
+    let CO (a) := fun cf cg hf hg => co a (cf, cg, hf, hg)
+    let PC (a) := fun cf cg hf hg => pc a (cf, cg, hf, hg)
+    let RF (a) := fun cf hf => rf a (cf, hf)
     let F (a : α) (c : Code) : σ := Nat.Partrec.Code.recOn c (z a) (s a) (l a) (r a) (PR a) (CO a) (PC a) (RF a)
     Computable fun a => F a (c a) :=
   by
@@ -586,12 +586,12 @@ theorem eval_const : ∀ n m, eval (Code.const n) m = Part.some n
 
 -- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
 @[simp]
-theorem eval_id n : eval Code.id n = Part.some n := by
+theorem eval_id (n) : eval Code.id n = Part.some n := by
   simp [← (· <*> ·)]
 
 -- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
 @[simp]
-theorem eval_curry c n x : eval (curry c n) x = eval c (mkpair n x) := by
+theorem eval_curry (c n x) : eval (curry c n) x = eval c (mkpair n x) := by
   simp [← (· <*> ·)]
 
 theorem const_prim : Primrec Code.const :=
@@ -992,7 +992,7 @@ private theorem hG : Primrec g := by
           fst)
     
 
-private theorem evaln_map k c n : ((((List.range k).nth n).map (evaln k c)).bind fun b => b) = evaln k c n := by
+private theorem evaln_map (k c n) : ((((List.range k).nth n).map (evaln k c)).bind fun b => b) = evaln k c n := by
   by_cases' kn : n < k
   · simp [← List.nth_range kn]
     
@@ -1008,7 +1008,7 @@ private theorem evaln_map k c n : ((((List.range k).nth n).map (evaln k c)).bind
 /-- The `nat.partrec.code.evaln` function is primitive recursive. -/
 theorem evaln_prim : Primrec fun a : (ℕ × code) × ℕ => evaln a.1.1 a.1.2 a.2 :=
   have :
-    Primrec₂ fun _ : Unit n : ℕ =>
+    Primrec₂ fun (_ : Unit) (n : ℕ) =>
       let a := ofNat (ℕ × code) n
       (List.range a.1).map (evaln a.1 a.2) :=
     (Primrec.nat_strong_rec _ (hG.comp snd).to₂) fun _ p => by
@@ -1087,7 +1087,7 @@ section
 
 open Partrec Computable
 
-theorem eval_eq_rfind_opt c n : eval c n = Nat.rfindOpt fun k => evaln k c n :=
+theorem eval_eq_rfind_opt (c n) : eval c n = Nat.rfindOpt fun k => evaln k c n :=
   Part.ext fun x => by
     refine' evaln_complete.trans (Nat.rfind_opt_mono _).symm
     intro a m n hl

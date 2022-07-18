@@ -7,6 +7,7 @@ import Mathbin.Data.Nat.Lattice
 import Mathbin.Logic.Denumerable
 import Mathbin.Logic.Function.Iterate
 import Mathbin.Order.Hom.Basic
+import Mathbin.Tactic.Congrm
 
 /-!
 # Relation embeddings from the naturals
@@ -23,9 +24,11 @@ defines the limit value of an eventually-constant sequence.
 -/
 
 
+variable {α : Type _}
+
 namespace RelEmbedding
 
-variable {α : Type _} {r : α → α → Prop} [IsStrictOrder α r]
+variable {r : α → α → Prop} [IsStrictOrder α r]
 
 /-- If `f` is a strictly `r`-increasing sequence, then this returns `f` as an order embedding. -/
 def natLt (f : ℕ → α) (H : ∀ n : ℕ, r (f n) (f (n + 1))) : ((· < ·) : ℕ → ℕ → Prop) ↪r r :=
@@ -65,21 +68,23 @@ end RelEmbedding
 
 namespace Nat
 
-variable (s : Set ℕ) [DecidablePred (· ∈ s)] [Infinite s]
+variable (s : Set ℕ) [Infinite s]
 
 /-- An order embedding from `ℕ` to itself with a specified range -/
-def orderEmbeddingOfSet : ℕ ↪o ℕ :=
+def orderEmbeddingOfSet [DecidablePred (· ∈ s)] : ℕ ↪o ℕ :=
   (RelEmbedding.orderEmbeddingOfLtEmbedding
         (RelEmbedding.natLt (Nat.Subtype.ofNat s) fun n => Nat.Subtype.lt_succ_self _)).trans
     (OrderEmbedding.subtype s)
 
-/-- `nat.subtype.of_nat` as an order isomorphism between `ℕ` and an infinite decidable subset.
-See also `nat.nth` for a version where the subset may be finite. -/
-noncomputable def Subtype.orderIsoOfNat : ℕ ≃o s :=
-  RelIso.ofSurjective
-    (RelEmbedding.orderEmbeddingOfLtEmbedding
-      (RelEmbedding.natLt (Nat.Subtype.ofNat s) fun n => Nat.Subtype.lt_succ_self _))
-    Nat.Subtype.of_nat_surjective
+/-- `nat.subtype.of_nat` as an order isomorphism between `ℕ` and an infinite subset. See also
+`nat.nth` for a version where the subset may be finite. -/
+noncomputable def Subtype.orderIsoOfNat : ℕ ≃o s := by
+  classical
+  exact
+    RelIso.ofSurjective
+      (RelEmbedding.orderEmbeddingOfLtEmbedding
+        (RelEmbedding.natLt (Nat.Subtype.ofNat s) fun n => Nat.Subtype.lt_succ_self _))
+      Nat.Subtype.of_nat_surjective
 
 variable {s}
 
@@ -99,8 +104,7 @@ variable (s)
 theorem order_embedding_of_set_range : Set.Range (Nat.orderEmbeddingOfSet s) = s :=
   subtype.coe_comp_of_nat_range
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
-theorem exists_subseq_of_forall_mem_union {α : Type _} {s t : Set α} (e : ℕ → α) (he : ∀ n, e n ∈ s ∪ t) :
+theorem exists_subseq_of_forall_mem_union {s t : Set α} (e : ℕ → α) (he : ∀ n, e n ∈ s ∪ t) :
     ∃ g : ℕ ↪o ℕ, (∀ n, e (g n) ∈ s) ∨ ∀ n, e (g n) ∈ t := by
   classical
   have : Infinite (e ⁻¹' s) ∨ Infinite (e ⁻¹' t) := by
@@ -112,8 +116,7 @@ theorem exists_subseq_of_forall_mem_union {α : Type _} {s t : Set α} (e : ℕ 
 
 end Nat
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
-theorem exists_increasing_or_nonincreasing_subseq' {α : Type _} (r : α → α → Prop) (f : ℕ → α) :
+theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f : ℕ → α) :
     ∃ g : ℕ ↪o ℕ, (∀ n : ℕ, r (f (g n)) (f (g (n + 1)))) ∨ ∀ m n : ℕ, m < n → ¬r (f (g m)) (f (g n)) := by
   classical
   let bad : Set ℕ := { m | ∀ n, m < n → ¬r (f m) (f n) }
@@ -151,7 +154,7 @@ theorem exists_increasing_or_nonincreasing_subseq' {α : Type _} (r : α → α 
 
 /-- This is the infinitary Erdős–Szekeres theorem, and an important lemma in the usual proof of
     Bolzano-Weierstrass for `ℝ`. -/
-theorem exists_increasing_or_nonincreasing_subseq {α : Type _} (r : α → α → Prop) [IsTrans α r] (f : ℕ → α) :
+theorem exists_increasing_or_nonincreasing_subseq (r : α → α → Prop) [IsTrans α r] (f : ℕ → α) :
     ∃ g : ℕ ↪o ℕ, (∀ m n : ℕ, m < n → r (f (g m)) (f (g n))) ∨ ∀ m n : ℕ, m < n → ¬r (f (g m)) (f (g n)) := by
   obtain ⟨g, hr | hnr⟩ := exists_increasing_or_nonincreasing_subseq' r f
   · refine' ⟨g, Or.intro_left _ fun m n mn => _⟩
@@ -166,42 +169,44 @@ theorem exists_increasing_or_nonincreasing_subseq {α : Type _} (r : α → α �
   · exact ⟨g, Or.intro_rightₓ _ hnr⟩
     
 
-/-- The "monotone chain condition" below is sometimes a convenient form of well foundedness. -/
-theorem WellFounded.monotone_chain_condition (α : Type _) [PartialOrderₓ α] :
-    WellFounded ((· > ·) : α → α → Prop) ↔ ∀ a : ℕ →o α, ∃ n, ∀ m, n ≤ m → a n = a m := by
-  constructor <;> intro h
-  · rw [WellFounded.well_founded_iff_has_max'] at h
-    intro a
-    have hne : (Set.Range a).Nonempty := by
-      use a 0
-      simp
-    obtain ⟨x, ⟨n, hn⟩, range_bounded⟩ := h _ hne
-    use n
-    intro m hm
-    rw [← hn] at range_bounded
-    symm
-    apply range_bounded (a m) (Set.mem_range_self _) (a.monotone hm)
+theorem WellFounded.monotone_chain_condition' [Preorderₓ α] :
+    WellFounded ((· > ·) : α → α → Prop) ↔ ∀ a : ℕ →o α, ∃ n, ∀ m, n ≤ m → ¬a n < a m := by
+  refine' ⟨fun h a => _, fun h => _⟩
+  · have hne : (Set.Range a).Nonempty :=
+      ⟨a 0, by
+        simp ⟩
+    obtain ⟨x, ⟨n, rfl⟩, H⟩ := h.has_min _ hne
+    exact ⟨n, fun m hm => H _ (Set.mem_range_self _)⟩
     
-  · rw [RelEmbedding.well_founded_iff_no_descending_seq]
-    refine' ⟨fun a => _⟩
+  · refine' RelEmbedding.well_founded_iff_no_descending_seq.2 ⟨fun a => _⟩
     obtain ⟨n, hn⟩ := h (a.swap : ((· < ·) : ℕ → ℕ → Prop) →r ((· < ·) : α → α → Prop)).toOrderHom
-    exact n.succ_ne_self.symm (RelEmbedding.to_order_hom_injective _ (hn _ n.le_succ))
+    exact hn n.succ n.lt_succ_self.le ((RelEmbedding.map_rel_iff _).2 n.lt_succ_self)
     
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]]
+/-- The "monotone chain condition" below is sometimes a convenient form of well foundedness. -/
+theorem WellFounded.monotone_chain_condition [PartialOrderₓ α] :
+    WellFounded ((· > ·) : α → α → Prop) ↔ ∀ a : ℕ →o α, ∃ n, ∀ m, n ≤ m → a n = a m :=
+  WellFounded.monotone_chain_condition'.trans <| by
+    trace
+      "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]]"
+    rw [lt_iff_le_and_ne]
+    simp [← a.mono h]
 
 /-- Given an eventually-constant monotone sequence `a₀ ≤ a₁ ≤ a₂ ≤ ...` in a partially-ordered
 type, `monotonic_sequence_limit_index a` is the least natural number `n` for which `aₙ` reaches the
 constant value. For sequences that are not eventually constant, `monotonic_sequence_limit_index a`
 is defined, but is a junk value. -/
-noncomputable def monotonicSequenceLimitIndex {α : Type _} [Preorderₓ α] (a : ℕ →o α) : ℕ :=
+noncomputable def monotonicSequenceLimitIndex [Preorderₓ α] (a : ℕ →o α) : ℕ :=
   inf { n | ∀ m, n ≤ m → a n = a m }
 
 /-- The constant value of an eventually-constant monotone sequence `a₀ ≤ a₁ ≤ a₂ ≤ ...` in a
 partially-ordered type. -/
-noncomputable def monotonicSequenceLimit {α : Type _} [Preorderₓ α] (a : ℕ →o α) :=
+noncomputable def monotonicSequenceLimit [Preorderₓ α] (a : ℕ →o α) :=
   a (monotonicSequenceLimitIndex a)
 
-theorem WellFounded.supr_eq_monotonic_sequence_limit {α : Type _} [CompleteLattice α]
-    (h : WellFounded ((· > ·) : α → α → Prop)) (a : ℕ →o α) : (⨆ m, a m) = monotonicSequenceLimit a := by
+theorem WellFounded.supr_eq_monotonic_sequence_limit [CompleteLattice α] (h : WellFounded ((· > ·) : α → α → Prop))
+    (a : ℕ →o α) : supr a = monotonicSequenceLimit a := by
   suffices (⨆ m : ℕ, a m) ≤ monotonicSequenceLimit a by
     exact le_antisymmₓ this (le_supr a _)
   apply supr_le

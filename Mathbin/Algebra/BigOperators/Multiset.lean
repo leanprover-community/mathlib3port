@@ -72,7 +72,7 @@ theorem prod_zero : @prod α _ 0 = 1 :=
   rfl
 
 @[simp, to_additive]
-theorem prod_cons (a : α) s : prod (a ::ₘ s) = a * prod s :=
+theorem prod_cons (a : α) (s) : prod (a ::ₘ s) = a * prod s :=
   foldr_cons _ _ _ _ _
 
 @[simp, to_additive]

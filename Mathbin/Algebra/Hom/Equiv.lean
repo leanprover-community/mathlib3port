@@ -63,7 +63,7 @@ structure AddEquiv (A B : Type _) [Add A] [Add B] extends A ≃ B, AddHom A B
 /-- `add_equiv_class F A B` states that `F` is a type of addition-preserving morphisms.
 You should extend this class when you extend `add_equiv`. -/
 class AddEquivClass (F A B : Type _) [Add A] [Add B] extends EquivLike F A B where
-  map_add : ∀ f : F a b, f (a + b) = f a + f b
+  map_add : ∀ (f : F) (a b), f (a + b) = f a + f b
 
 /-- The `equiv` underlying an `add_equiv`. -/
 add_decl_doc AddEquiv.toEquiv
@@ -85,7 +85,7 @@ add_decl_doc MulEquiv.toMulHom
 You should extend this class when you extend `mul_equiv`. -/
 @[to_additive]
 class MulEquivClass (F A B : Type _) [Mul A] [Mul B] extends EquivLike F A B where
-  map_mul : ∀ f : F a b, f (a * b) = f a * f b
+  map_mul : ∀ (f : F) (a b), f (a * b) = f a * f b
 
 -- mathport name: «expr ≃* »
 infixl:25 " ≃* " => MulEquiv
@@ -240,11 +240,11 @@ theorem to_equiv_symm (f : M ≃* N) : f.symm.toEquiv = f.toEquiv.symm :=
   rfl
 
 @[simp, to_additive]
-theorem coe_mk (f : M → N) g h₁ h₂ h₃ : ⇑(MulEquiv.mk f g h₁ h₂ h₃) = f :=
+theorem coe_mk (f : M → N) (g h₁ h₂ h₃) : ⇑(MulEquiv.mk f g h₁ h₂ h₃) = f :=
   rfl
 
 @[simp, to_additive]
-theorem to_equiv_mk (f : M → N) (g : N → M) h₁ h₂ h₃ : (mk f g h₁ h₂ h₃).toEquiv = ⟨f, g, h₁, h₂⟩ :=
+theorem to_equiv_mk (f : M → N) (g : N → M) (h₁ h₂ h₃) : (mk f g h₁ h₂ h₃).toEquiv = ⟨f, g, h₁, h₂⟩ :=
   rfl
 
 @[simp, to_additive]
@@ -256,7 +256,7 @@ theorem symm_bijective : Function.Bijective (symm : M ≃* N → N ≃* M) :=
   Equivₓ.bijective ⟨symm, symm, symm_symm, symm_symm⟩
 
 @[simp, to_additive]
-theorem symm_mk (f : M → N) g h₁ h₂ h₃ :
+theorem symm_mk (f : M → N) (g h₁ h₂ h₃) :
     (MulEquiv.mk f g h₁ h₂ h₃).symm = { (MulEquiv.mk f g h₁ h₂ h₃).symm with toFun := g, invFun := f } :=
   rfl
 
@@ -353,11 +353,11 @@ theorem ext_iff {f g : MulEquiv M N} : f = g ↔ ∀ x, f x = g x :=
   FunLike.ext_iff
 
 @[simp, to_additive]
-theorem mk_coe (e : M ≃* N) e' h₁ h₂ h₃ : (⟨e, e', h₁, h₂, h₃⟩ : M ≃* N) = e :=
+theorem mk_coe (e : M ≃* N) (e' h₁ h₂ h₃) : (⟨e, e', h₁, h₂, h₃⟩ : M ≃* N) = e :=
   ext fun _ => rfl
 
 @[simp, to_additive]
-theorem mk_coe' (e : M ≃* N) f h₁ h₂ h₃ : (MulEquiv.mk f (⇑e) h₁ h₂ h₃ : N ≃* M) = e.symm :=
+theorem mk_coe' (e : M ≃* N) (f h₁ h₂ h₃) : (MulEquiv.mk f (⇑e) h₁ h₂ h₃ : N ≃* M) = e.symm :=
   symm_bijective.Injective <| ext fun x => rfl
 
 @[to_additive]

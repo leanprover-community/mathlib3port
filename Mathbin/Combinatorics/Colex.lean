@@ -58,7 +58,7 @@ open BigOperators
 /-- We define this type synonym to refer to the colexicographic ordering on finsets
 rather than the natural subset ordering.
 -/
-def Finset.Colex α :=
+def Finset.Colex (α) :=
   Finset α deriving Inhabited
 
 /-- A convenience constructor to turn a `finset α` into a `finset.colex α`, useful in order to

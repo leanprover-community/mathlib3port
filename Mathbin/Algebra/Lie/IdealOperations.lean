@@ -62,7 +62,7 @@ theorem lie_ideal_oper_eq_linear_span :
     (↑⁅I,N⁆ : Submodule R M) = Submodule.span R { m | ∃ (x : I)(n : N), ⁅(x : L),(n : M)⁆ = m } := by
   apply le_antisymmₓ
   · let s := { m : M | ∃ (x : ↥I)(n : ↥N), ⁅(x : L),(n : M)⁆ = m }
-    have aux : ∀ y : L, ∀ m' ∈ Submodule.span R s, ∀, ⁅y,m'⁆ ∈ Submodule.span R s := by
+    have aux : ∀ (y : L), ∀ m' ∈ Submodule.span R s, ∀, ⁅y,m'⁆ ∈ Submodule.span R s := by
       intro y m' hm'
       apply Submodule.span_induction hm'
       · rintro m'' ⟨x, n, hm''⟩

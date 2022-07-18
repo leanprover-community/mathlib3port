@@ -109,15 +109,15 @@ def interpolate : F[X] :=
   ∑ x in s, c (f x) * basis s x
 
 @[simp]
-theorem interpolate_empty f : interpolate (∅ : Finset F) f = 0 :=
+theorem interpolate_empty (f) : interpolate (∅ : Finset F) f = 0 :=
   rfl
 
 @[simp]
-theorem interpolate_singleton f (x : F) : interpolate {x} f = c (f x) := by
+theorem interpolate_singleton (f) (x : F) : interpolate {x} f = c (f x) := by
   rw [interpolate, Finset.sum_singleton, basis_singleton_self, mul_oneₓ]
 
 @[simp]
-theorem eval_interpolate x (H : x ∈ s) : eval x (interpolate s f) = f x := by
+theorem eval_interpolate (x) (H : x ∈ s) : eval x (interpolate s f) = f x := by
   rw [interpolate, ← coe_eval_ring_hom, RingHom.map_sum, coe_eval_ring_hom, Finset.sum_eq_single x]
   · simp
     
@@ -167,7 +167,7 @@ def linterpolate : (F → F) →ₗ[F] Polynomial F where
     rfl
 
 @[simp]
-theorem interpolate_add f g : interpolate s (f + g) = interpolate s f + interpolate s g :=
+theorem interpolate_add (f g) : interpolate s (f + g) = interpolate s f + interpolate s g :=
   (linterpolate s).map_add f g
 
 @[simp]
@@ -175,15 +175,15 @@ theorem interpolate_zero : interpolate s 0 = 0 :=
   (linterpolate s).map_zero
 
 @[simp]
-theorem interpolate_neg f : interpolate s (-f) = -interpolate s f :=
+theorem interpolate_neg (f) : interpolate s (-f) = -interpolate s f :=
   (linterpolate s).map_neg f
 
 @[simp]
-theorem interpolate_sub f g : interpolate s (f - g) = interpolate s f - interpolate s g :=
+theorem interpolate_sub (f g) : interpolate s (f - g) = interpolate s f - interpolate s g :=
   (linterpolate s).map_sub f g
 
 @[simp]
-theorem interpolate_smul (c : F) f : interpolate s (c • f) = c • interpolate s f :=
+theorem interpolate_smul (c : F) (f) : interpolate s (c • f) = c • interpolate s f :=
   (linterpolate s).map_smul c f
 
 theorem eq_zero_of_eval_eq_zero {f : F'[X]} (hf1 : f.degree < s'.card) (hf2 : ∀, ∀ x ∈ s', ∀, f.eval x = 0) : f = 0 :=

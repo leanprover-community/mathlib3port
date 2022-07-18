@@ -364,13 +364,8 @@ section Order
 
 variable {n : ℕ} {x : α}
 
-theorem geom_sum_pos [OrderedSemiring α] (hx : 0 < x) (hn : n ≠ 0) : 0 < ∑ i in range n, x ^ i := by
-  refine' Nat.le_induction _ _ _ (show 1 ≤ n from hn.bot_lt)
-  · simp [← @zero_lt_one _ (nontrivial_of_lt _ _ hx)]
-    
-  intro k hk
-  rw [geom_sum_succ']
-  apply add_pos (pow_pos hx _)
+theorem geom_sum_pos [OrderedSemiring α] (hx : 0 < x) (hn : n ≠ 0) : 0 < ∑ i in range n, x ^ i :=
+  (sum_pos fun k hk => pow_pos hx _) <| nonempty_range_iff.2 hn
 
 theorem geom_sum_pos_and_lt_one [OrderedRing α] (hx : x < 0) (hx' : 0 < x + 1) (hn : 1 < n) :
     (0 < ∑ i in range n, x ^ i) ∧ (∑ i in range n, x ^ i) < 1 := by

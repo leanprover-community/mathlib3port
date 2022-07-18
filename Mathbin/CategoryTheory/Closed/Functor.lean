@@ -119,8 +119,7 @@ class CartesianClosedFunctor where
 attribute [instance] cartesian_closed_functor.comparison_iso
 
 theorem frobenius_morphism_mate (h : L ⊣ F) (A : C) :
-    transferNatTransSelf (h.comp _ _ (exp.adjunction A)) ((exp.adjunction (F.obj A)).comp _ _ h)
-        (frobeniusMorphism F h A) =
+    transferNatTransSelf (h.comp (exp.adjunction A)) ((exp.adjunction (F.obj A)).comp h) (frobeniusMorphism F h A) =
       expComparison F A :=
   by
   rw [← Equivₓ.eq_symm_apply]

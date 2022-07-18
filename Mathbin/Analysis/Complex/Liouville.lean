@@ -49,7 +49,7 @@ theorem deriv_eq_smul_circle_integral [CompleteSpace F] {R : ℝ} {c : ℂ} {f :
 
 theorem norm_deriv_le_aux [CompleteSpace F] {c : ℂ} {R C : ℝ} {f : ℂ → F} (hR : 0 < R)
     (hf : DiffContOnCl ℂ f (Ball c R)) (hC : ∀, ∀ z ∈ Sphere c R, ∀, ∥f z∥ ≤ C) : ∥deriv f c∥ ≤ C / R := by
-  have : ∀, ∀ z ∈ sphere c R, ∀, ∥(z - c) ^ (-2 : ℤ) • f z∥ ≤ C / (R * R) := fun z hz : abs (z - c) = R => by
+  have : ∀, ∀ z ∈ sphere c R, ∀, ∥(z - c) ^ (-2 : ℤ) • f z∥ ≤ C / (R * R) := fun z (hz : abs (z - c) = R) => by
     simpa [-mul_inv_rev, ← norm_smul, ← hz, ← zpow_two, div_eq_inv_mul] using
       (div_le_div_right (mul_pos hR hR)).2 (hC z hz)
   calc ∥deriv f c∥ = ∥(2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - c) ^ (-2 : ℤ) • f z∥ :=

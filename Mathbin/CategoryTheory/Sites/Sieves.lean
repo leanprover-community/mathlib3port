@@ -130,8 +130,8 @@ theorem of_arrows_pullback [HasPullbacks C] {ι : Type _} (Z : ι → C) (g : �
     apply of_arrows.mk
     
 
-theorem of_arrows_bind {ι : Type _} (Z : ι → C) (g : ∀ i : ι, Z i ⟶ X) (j : ∀ ⦃Y⦄ f : Y ⟶ X, OfArrows Z g f → Type _)
-    (W : ∀ ⦃Y⦄ f : Y ⟶ X H, j f H → C) (k : ∀ ⦃Y⦄ f : Y ⟶ X H i, W f H i ⟶ Y) :
+theorem of_arrows_bind {ι : Type _} (Z : ι → C) (g : ∀ i : ι, Z i ⟶ X) (j : ∀ ⦃Y⦄ (f : Y ⟶ X), OfArrows Z g f → Type _)
+    (W : ∀ ⦃Y⦄ (f : Y ⟶ X) (H), j f H → C) (k : ∀ ⦃Y⦄ (f : Y ⟶ X) (H i), W f H i ⟶ Y) :
     ((OfArrows Z g).bind fun Y f H => OfArrows (W f H) (k f H)) =
       OfArrows (fun i : Σi, j _ (OfArrows.mk i) => W (g i.1) _ i.2) fun ij => k (g ij.1) _ ij.2 ≫ g ij.1 :=
   by
@@ -211,7 +211,7 @@ left-composition.
 -/
 structure Sieve {C : Type u₁} [Category.{v₁} C] (X : C) where
   Arrows : Presieve X
-  downward_closed' : ∀ {Y Z f} hf : arrows f g : Z ⟶ Y, arrows (g ≫ f)
+  downward_closed' : ∀ {Y Z f} (hf : arrows f) (g : Z ⟶ Y), arrows (g ≫ f)
 
 namespace Sieve
 
@@ -230,10 +230,10 @@ theorem arrows_ext : ∀ {R S : Sieve X}, R.Arrows = S.Arrows → R = S
   | ⟨Ra, _⟩, ⟨Sa, _⟩, rfl => rfl
 
 @[ext]
-protected theorem ext {R S : Sieve X} (h : ∀ ⦃Y⦄ f : Y ⟶ X, R f ↔ S f) : R = S :=
+protected theorem ext {R S : Sieve X} (h : ∀ ⦃Y⦄ (f : Y ⟶ X), R f ↔ S f) : R = S :=
   arrows_ext <| funext fun x => funext fun f => propext <| h f
 
-protected theorem ext_iff {R S : Sieve X} : R = S ↔ ∀ ⦃Y⦄ f : Y ⟶ X, R f ↔ S f :=
+protected theorem ext_iff {R S : Sieve X} : R = S ↔ ∀ ⦃Y⦄ (f : Y ⟶ X), R f ↔ S f :=
   ⟨fun h Y f => h ▸ Iff.rfl, Sieve.ext⟩
 
 open Lattice
@@ -267,7 +267,7 @@ protected def inter (S R : Sieve X) : Sieve X where
 We generate this directly rather than using the galois insertion for nicer definitional properties.
 -/
 instance : CompleteLattice (Sieve X) where
-  le := fun S R => ∀ ⦃Y⦄ f : Y ⟶ X, S f → R f
+  le := fun S R => ∀ ⦃Y⦄ (f : Y ⟶ X), S f → R f
   le_refl := fun S f q => id
   le_trans := fun S₁ S₂ S₃ S₁₂ S₂₃ Y f h => S₂₃ _ (S₁₂ _ h)
   le_antisymm := fun S R p q => Sieve.ext fun Y f => ⟨p _, q _⟩
@@ -297,7 +297,7 @@ instance sieveInhabited : Inhabited (Sieve X) :=
   ⟨⊤⟩
 
 @[simp]
-theorem Inf_apply {Ss : Set (Sieve X)} {Y} (f : Y ⟶ X) : inf Ss f ↔ ∀ S : Sieve X H : S ∈ Ss, S f :=
+theorem Inf_apply {Ss : Set (Sieve X)} {Y} (f : Y ⟶ X) : inf Ss f ↔ ∀ (S : Sieve X) (H : S ∈ Ss), S f :=
   Iff.rfl
 
 @[simp]

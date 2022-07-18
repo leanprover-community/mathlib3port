@@ -285,7 +285,7 @@ inductive CprankMax1 [Mul α] : ∀ {ds}, Holor α ds → Prop
   it can be written as the sum of N holors of rank at most 1. -/
 inductive CprankMax [Mul α] [AddMonoidₓ α] : ℕ → ∀ {ds}, Holor α ds → Prop
   | zero {ds} : cprank_max 0 (0 : Holor α ds)
-  | succ n {ds} (x : Holor α ds) (y : Holor α ds) : CprankMax1 x → cprank_max n y → cprank_max (n + 1) (x + y)
+  | succ (n) {ds} (x : Holor α ds) (y : Holor α ds) : CprankMax1 x → cprank_max n y → cprank_max (n + 1) (x + y)
 
 theorem cprank_max_nil [Monoidₓ α] [AddMonoidₓ α] (x : Holor α nil) : CprankMax 1 x := by
   have h := CprankMax.succ 0 x 0 (CprankMax1.nil x) CprankMax.zero
@@ -307,7 +307,7 @@ theorem cprank_max_add [Monoidₓ α] [AddMonoidₓ α] :
     · exact cprank_max_add hx₂ hy
       
 
-theorem cprank_max_mul [Ringₓ α] : ∀ n : ℕ x : Holor α [d] y : Holor α ds, CprankMax n y → CprankMax n (x ⊗ y)
+theorem cprank_max_mul [Ringₓ α] : ∀ (n : ℕ) (x : Holor α [d]) (y : Holor α ds), CprankMax n y → CprankMax n (x ⊗ y)
   | 0, x, _, cprank_max.zero => by
     simp [← mul_zero x, ← cprank_max.zero]
   | n + 1, x, _, cprank_max.succ k y₁ y₂ hy₁ hy₂ => by
@@ -363,7 +363,7 @@ theorem cprank_max_upper_bound [Ringₓ α] : ∀ {ds}, ∀ x : Holor α ds, Cpr
 noncomputable def cprank [Ringₓ α] (x : Holor α ds) : Nat :=
   @Nat.findₓ (fun n => CprankMax n x) (Classical.decPred _) ⟨ds.Prod, cprank_max_upper_bound x⟩
 
-theorem cprank_upper_bound [Ringₓ α] : ∀ {ds}, ∀ x : Holor α ds, cprank x ≤ ds.Prod := fun ds x : Holor α ds => by
+theorem cprank_upper_bound [Ringₓ α] : ∀ {ds}, ∀ x : Holor α ds, cprank x ≤ ds.Prod := fun ds (x : Holor α ds) => by
   let this := Classical.decPred fun n : ℕ => cprank_max n x <;>
     exact
       Nat.find_min'ₓ ⟨ds.prod, show (fun n => cprank_max n x) ds.prod from cprank_max_upper_bound x⟩

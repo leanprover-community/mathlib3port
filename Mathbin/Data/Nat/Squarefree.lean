@@ -129,7 +129,7 @@ def MinSqFacProp (n : ℕ) : Option ℕ → Prop
   | none => Squarefree n
   | some d => Prime d ∧ d * d ∣ n ∧ ∀ p, Prime p → p * p ∣ n → d ≤ p
 
-theorem min_sq_fac_prop_div n {k} (pk : Prime k) (dk : k ∣ n) (dkk : ¬k * k ∣ n) {o} (H : MinSqFacProp (n / k) o) :
+theorem min_sq_fac_prop_div (n) {k} (pk : Prime k) (dk : k ∣ n) (dkk : ¬k * k ∣ n) {o} (H : MinSqFacProp (n / k) o) :
     MinSqFacProp n o := by
   have : ∀ p, Prime p → p * p ∣ n → k * (p * p) ∣ n := fun p pp dp =>
     have :=
@@ -147,7 +147,7 @@ theorem min_sq_fac_prop_div n {k} (pk : Prime k) (dk : k ∣ n) (dkk : ¬k * k �
     
 
 theorem min_sq_fac_aux_has_prop :
-    ∀ {n : ℕ} k, 0 < n → ∀ i, k = 2 * i + 3 → (∀ m, Prime m → m ∣ n → k ≤ m) → MinSqFacProp n (minSqFacAux n k)
+    ∀ {n : ℕ} (k), 0 < n → ∀ i, k = 2 * i + 3 → (∀ m, Prime m → m ∣ n → k ≤ m) → MinSqFacProp n (minSqFacAux n k)
   | n, k => fun n0 i e ih => by
     rw [min_sq_fac_aux]
     by_cases' h : n < k * k <;> simp [← h]
@@ -529,7 +529,7 @@ unsafe def prove_non_squarefree (e : expr) (n a : ℕ) : tactic expr := do
 
 /-- Given `en`,`en1 := bit1 en`, `n1` the value of `en1`, `ek`,
   returns `⊢ squarefree_helper en ek`. -/
-unsafe def prove_squarefree_aux : ∀ ic : instance_cache en en1 : expr n1 : ℕ ek : expr k : ℕ, tactic expr
+unsafe def prove_squarefree_aux : ∀ (ic : instance_cache) (en en1 : expr) (n1 : ℕ) (ek : expr) (k : ℕ), tactic expr
   | ic, en, en1, n1, ek, k => do
     let k1 := bit1 k
     let ek1 := (quote.1 (bit1 : ℕ → ℕ)).mk_app [ek]
@@ -578,7 +578,7 @@ unsafe def prove_squarefree (en : expr) (n : ℕ) : tactic expr :=
     pure <| (quote.1 squarefree_bit1).mk_app [en', p]
   | _ => failed
 
-/-- Evaluates the `prime` and `min_fac` functions. -/
+/-- Evaluates the `squarefree` predicate on naturals. -/
 @[norm_num]
 unsafe def eval_squarefree : expr → tactic (expr × expr)
   | quote.1 (Squarefree (%%ₓe : ℕ)) => do

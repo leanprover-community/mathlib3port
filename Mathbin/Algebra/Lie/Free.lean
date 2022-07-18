@@ -256,7 +256,7 @@ theorem lift_unique (f : X → L) (g : FreeLieAlgebra R X →ₗ⁅R⁆ L) : g �
   (lift R).symm_apply_eq
 
 @[simp]
-theorem lift_of_apply (f : X → L) x : lift R f (of R x) = f x := by
+theorem lift_of_apply (f : X → L) (x) : lift R f (of R x) = f x := by
   rw [← Function.comp_app (lift R f) (of R) x, of_comp_lift]
 
 @[simp]

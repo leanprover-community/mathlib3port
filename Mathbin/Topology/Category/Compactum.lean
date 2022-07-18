@@ -195,7 +195,7 @@ private theorem subset_cl {X : Compactum} (A : Set X) : A ⊆ Cl A := fun a ha =
   ⟨X.incl a, ha, by
     simp ⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (B C «expr ∈ » C0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (B C «expr ∈ » C0)
 private theorem cl_cl {X : Compactum} (A : Set X) : Cl (Cl A) ⊆ Cl A := by
   rintro _ ⟨F, hF, rfl⟩
   -- Notation to be used in this proof.
@@ -207,7 +207,7 @@ private theorem cl_cl {X : Compactum} (A : Set X) : Cl (Cl A) ⊆ Cl A := by
   let C1 := insert AA C0
   let C2 := finite_inter_closure C1
   -- C0 is closed under intersections.
-  have claim1 : ∀ B C _ : B ∈ C0 _ : C ∈ C0, B ∩ C ∈ C0 := by
+  have claim1 : ∀ (B C) (_ : B ∈ C0) (_ : C ∈ C0), B ∩ C ∈ C0 := by
     rintro B ⟨Q, hQ, rfl⟩ C ⟨R, hR, rfl⟩
     use Q ∩ R
     simp only [← and_trueₓ, ← eq_self_iff_true, ← Set.preimage_inter, ← Subtype.val_eq_coe]
@@ -263,7 +263,7 @@ theorem is_closed_cl {X : Compactum} (A : Set X) : IsClosed (Cl A) := by
   intro F hF
   exact cl_cl _ ⟨F, hF, rfl⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0)
 theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤ 𝓝 x → X.str F = x := by
   -- Notation to be used in this proof.
   let fsu := Finset (Set (Ultrafilter X))
@@ -287,7 +287,7 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
     intro A hA
     exact claim1 (cl A) (is_closed_cl A) (mem_of_superset hA (subset_cl A))
   -- T0 is closed under intersections.
-  have claim3 : ∀ S1 S2 _ : S1 ∈ T0 _ : S2 ∈ T0, S1 ∩ S2 ∈ T0 := by
+  have claim3 : ∀ (S1 S2) (_ : S1 ∈ T0) (_ : S2 ∈ T0), S1 ∩ S2 ∈ T0 := by
     rintro S1 ⟨S1, hS1, rfl⟩ S2 ⟨S2, hS2, rfl⟩
     exact
       ⟨S1 ∩ S2, inter_mem hS1 hS2, by
@@ -391,7 +391,7 @@ noncomputable def ofTopologicalSpace (X : Type _) [TopologicalSpace X] [CompactS
     ext FF
     change Ultrafilter (Ultrafilter X) at FF
     set x := (Ultrafilter.map Ultrafilter.lim FF).lim with c1
-    have c2 : ∀ U : Set X F : Ultrafilter X, F.lim ∈ U → IsOpen U → U ∈ F := by
+    have c2 : ∀ (U : Set X) (F : Ultrafilter X), F.lim ∈ U → IsOpen U → U ∈ F := by
       intro U F h1 hU
       exact c1 ▸ is_open_iff_ultrafilter.mp hU _ h1 _ (Ultrafilter.le_nhds_Lim _)
     have c3 : ↑(Ultrafilter.map Ultrafilter.lim FF) ≤ 𝓝 x := by

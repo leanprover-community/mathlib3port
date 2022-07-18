@@ -54,9 +54,9 @@ universe u v w
 structure BilinForm (R : Type _) (M : Type _) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] where
   bilin : M → M → R
   bilin_add_left : ∀ x y z : M, bilin (x + y) z = bilin x z + bilin y z
-  bilin_smul_left : ∀ a : R x y : M, bilin (a • x) y = a * bilin x y
+  bilin_smul_left : ∀ (a : R) (x y : M), bilin (a • x) y = a * bilin x y
   bilin_add_right : ∀ x y z : M, bilin x (y + z) = bilin x y + bilin x z
-  bilin_smul_right : ∀ a : R x y : M, bilin x (a • y) = a * bilin x y
+  bilin_smul_right : ∀ (a : R) (x y : M), bilin x (a • y) = a * bilin x y
 
 variable {R : Type _} {M : Type _} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
@@ -78,7 +78,7 @@ instance : CoeFun (BilinForm R M) fun _ => M → M → R :=
 initialize_simps_projections BilinForm (bilin → apply)
 
 @[simp]
-theorem coe_fn_mk (f : M → M → R) h₁ h₂ h₃ h₄ : (BilinForm.mk f h₁ h₂ h₃ h₄ : M → M → R) = f :=
+theorem coe_fn_mk (f : M → M → R) (h₁ h₂ h₃ h₄) : (BilinForm.mk f h₁ h₂ h₃ h₄ : M → M → R) = f :=
   rfl
 
 theorem coe_fn_congr : ∀ {x x' y y' : M}, x = x' → y = y' → B x y = B x' y'
@@ -523,15 +523,15 @@ theorem comp_right_comp_left (B : BilinForm R M) (l r : M →ₗ[R] M) : (B.comp
   rfl
 
 @[simp]
-theorem comp_apply (B : BilinForm R M') (l r : M →ₗ[R] M') v w : B.comp l r v w = B (l v) (r w) :=
+theorem comp_apply (B : BilinForm R M') (l r : M →ₗ[R] M') (v w) : B.comp l r v w = B (l v) (r w) :=
   rfl
 
 @[simp]
-theorem comp_left_apply (B : BilinForm R M) (f : M →ₗ[R] M) v w : B.compLeft f v w = B (f v) w :=
+theorem comp_left_apply (B : BilinForm R M) (f : M →ₗ[R] M) (v w) : B.compLeft f v w = B (f v) w :=
   rfl
 
 @[simp]
-theorem comp_right_apply (B : BilinForm R M) (f : M →ₗ[R] M) v w : B.compRight f v w = B v (f w) :=
+theorem comp_right_apply (B : BilinForm R M) (f : M →ₗ[R] M) (v w) : B.compRight f v w = B v (f w) :=
   rfl
 
 @[simp]
@@ -650,7 +650,7 @@ def linMulLin (f g : M₂ →ₗ[R₂] R₂) : BilinForm R₂ M₂ where
 variable {f g : M₂ →ₗ[R₂] R₂}
 
 @[simp]
-theorem lin_mul_lin_apply x y : linMulLin f g x y = f x * g y :=
+theorem lin_mul_lin_apply (x y) : linMulLin f g x y = f x * g y :=
   rfl
 
 @[simp]
@@ -728,7 +728,6 @@ theorem is_ortho_smul_right {x y : M₄} {a : R₄} (ha : a ≠ 0) : IsOrtho G x
   · rw [smul_right, H, mul_zero]
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A set of orthogonal vectors `v` with respect to some bilinear form `B` is linearly independent
   if for all `i`, `B (v i) (v i) ≠ 0`. -/
 theorem linear_independent_of_is_Ortho {n : Type w} {B : BilinForm K V} {v : n → V} (hv₁ : B.IsOrtho v)
@@ -1040,8 +1039,8 @@ theorem span_singleton_sup_orthogonal_eq_top {B : BilinForm K V} {x : V} (hx : �
   is complement to its orthogonal complement. -/
 theorem is_compl_span_singleton_orthogonal {B : BilinForm K V} {x : V} (hx : ¬B.IsOrtho x x) :
     IsCompl (K∙x) (B.orthogonal <| K∙x) :=
-  { inf_le_bot := eq_bot_iff.1 <| span_singleton_inf_orthogonal_eq_bot hx,
-    top_le_sup := eq_top_iff.1 <| span_singleton_sup_orthogonal_eq_top hx }
+  { Disjoint := eq_bot_iff.1 <| span_singleton_inf_orthogonal_eq_bot hx,
+    Codisjoint := eq_top_iff.1 <| span_singleton_sup_orthogonal_eq_top hx }
 
 end Orthogonal
 
@@ -1230,14 +1229,10 @@ theorem restrict_nondegenerate_of_is_compl_orthogonal {B : BilinForm K V} {W : S
     rintro ⟨n, hn⟩
     rw [restrict_apply, Submodule.coe_mk, Submodule.coe_mk, b₁]
     exact hx₂ n hn
-  refine' ⟨this ▸ le_rfl, _⟩
-  · rw [top_le_iff]
-    refine' eq_top_of_finrank_eq _
-    refine' le_antisymmₓ (Submodule.finrank_le _) _
-    conv_rhs => rw [← add_zeroₓ (finrank K _)]
-    rw [← finrank_bot K V, ← this, Submodule.dim_sup_add_dim_inf_eq, finrank_add_finrank_orthogonal b₁]
-    exact Nat.Le.intro rfl
-    
+  refine' IsCompl.of_eq this (eq_top_of_finrank_eq <| (Submodule.finrank_le _).antisymm _)
+  conv_rhs => rw [← add_zeroₓ (finrank K _)]
+  rw [← finrank_bot K V, ← this, Submodule.dim_sup_add_dim_inf_eq, finrank_add_finrank_orthogonal b₁]
+  exact le_self_add
 
 /-- A subspace is complement to its orthogonal complement with respect to some reflexive bilinear
 form if and only if that bilinear form restricted on to the subspace is nondegenerate. -/
@@ -1266,16 +1261,16 @@ noncomputable def dualBasis (B : BilinForm K V) (hB : B.Nondegenerate) (b : Basi
   b.dualBasis.map (B.toDual hB).symm
 
 @[simp]
-theorem dual_basis_repr_apply (B : BilinForm K V) (hB : B.Nondegenerate) (b : Basis ι K V) x i :
+theorem dual_basis_repr_apply (B : BilinForm K V) (hB : B.Nondegenerate) (b : Basis ι K V) (x i) :
     (B.dualBasis hB b).repr x i = B x (b i) := by
   rw [dual_basis, Basis.map_repr, LinearEquiv.symm_symm, LinearEquiv.trans_apply, Basis.dual_basis_repr, to_dual_def]
 
-theorem apply_dual_basis_left (B : BilinForm K V) (hB : B.Nondegenerate) (b : Basis ι K V) i j :
+theorem apply_dual_basis_left (B : BilinForm K V) (hB : B.Nondegenerate) (b : Basis ι K V) (i j) :
     B (B.dualBasis hB b i) (b j) = if j = i then 1 else 0 := by
   rw [dual_basis, Basis.map_apply, Basis.coe_dual_basis, ← to_dual_def hB, LinearEquiv.apply_symm_apply,
     Basis.coord_apply, Basis.repr_self, Finsupp.single_apply]
 
-theorem apply_dual_basis_right (B : BilinForm K V) (hB : B.Nondegenerate) (sym : B.IsSymm) (b : Basis ι K V) i j :
+theorem apply_dual_basis_right (B : BilinForm K V) (hB : B.Nondegenerate) (sym : B.IsSymm) (b : Basis ι K V) (i j) :
     B (b i) (B.dualBasis hB b j) = if i = j then 1 else 0 := by
   rw [Sym, apply_dual_basis_left]
 

@@ -180,7 +180,7 @@ def mulConst (k : Znum) (e : HornerExpr) : HornerExpr :=
       · exact horner A x n B
         
 
-def mulAux a₁ x₁ n₁ b₁ (A₁ B₁ : HornerExpr → HornerExpr) : HornerExpr → HornerExpr
+def mulAux (a₁ x₁ n₁ b₁) (A₁ B₁ : HornerExpr → HornerExpr) : HornerExpr → HornerExpr
   | const n₂ => mulConst n₂ (horner a₁ x₁ n₁ b₁)
   | e₂@(horner a₂ x₂ n₂ b₂) =>
     match PosNum.cmp x₁ x₂ with
@@ -274,7 +274,7 @@ theorem cseval_add_const {α} [CommSemiringₓ α] (t : Tree α) (k : Num) {e : 
 
 -- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
 -- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
-theorem cseval_horner' {α} [CommSemiringₓ α] (t : Tree α) a x n b (h₁ : IsCs a) (h₂ : IsCs b) :
+theorem cseval_horner' {α} [CommSemiringₓ α] (t : Tree α) (a x n b) (h₁ : IsCs a) (h₂ : IsCs b) :
     (horner' a x n b).IsCs ∧
       cseval t (horner' a x n b) = Tactic.Ring.hornerₓ (cseval t a) (t.getOrZero x) n (cseval t b) :=
   by
@@ -575,7 +575,7 @@ open Tactic.Ring2
 -- mathport name: «expr ?»
 local postfix:1024 "?" => optionalₓ
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 /-- `ring2` solves equations in the language of rings.
 
 It supports only the commutative semiring operations, i.e. it does not normalize subtraction or

@@ -60,7 +60,7 @@ alias lipschitz_with_iff_dist_le_mul ↔ LipschitzWith.dist_le_mul LipschitzWith
 /-- A function `f` is Lipschitz continuous with constant `K ≥ 0` on `s` if for all `x, y` in `s`
 we have `dist (f x) (f y) ≤ K * dist x y` -/
 def LipschitzOnWith [PseudoEmetricSpace α] [PseudoEmetricSpace β] (K : ℝ≥0 ) (f : α → β) (s : Set α) :=
-  ∀ ⦃x⦄ hx : x ∈ s ⦃y⦄ hy : y ∈ s, edist (f x) (f y) ≤ K * edist x y
+  ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), edist (f x) (f y) ≤ K * edist x y
 
 @[simp]
 theorem lipschitz_on_with_empty [PseudoEmetricSpace α] [PseudoEmetricSpace β] (K : ℝ≥0 ) (f : α → β) :
@@ -214,7 +214,7 @@ protected theorem iterate {f : α → α} (hf : LipschitzWith K f) : ∀ n, Lips
   | n + 1 => by
     rw [pow_succ'ₓ] <;> exact (iterate n).comp hf
 
-theorem edist_iterate_succ_le_geometric {f : α → α} (hf : LipschitzWith K f) x n :
+theorem edist_iterate_succ_le_geometric {f : α → α} (hf : LipschitzWith K f) (x n) :
     edist ((f^[n]) x) ((f^[n + 1]) x) ≤ edist x (f x) * K ^ n := by
   rw [iterate_succ, mul_comm]
   simpa only [← Ennreal.coe_pow] using (hf.iterate n) x (f x)
@@ -270,7 +270,7 @@ protected theorem of_le_add {f : α → ℝ} (h : ∀ x y, f x ≤ f y + dist x 
   LipschitzWith.of_le_add_mul 1 <| by
     simpa only [← Nnreal.coe_one, ← one_mulₓ]
 
-protected theorem le_add_mul {f : α → ℝ} {K : ℝ≥0 } (h : LipschitzWith K f) x y : f x ≤ f y + K * dist x y :=
+protected theorem le_add_mul {f : α → ℝ} {K : ℝ≥0 } (h : LipschitzWith K f) (x y) : f x ≤ f y + K * dist x y :=
   sub_le_iff_le_add'.1 <| le_transₓ (le_abs_self _) <| h.dist_le_mul x y
 
 protected theorem iff_le_add_mul {f : α → ℝ} {K : ℝ≥0 } : LipschitzWith K f ↔ ∀ x y, f x ≤ f y + K * dist x y :=
@@ -326,7 +326,7 @@ protected theorem dist_right (x : α) : LipschitzWith 1 (dist x) :=
 protected theorem dist : LipschitzWith 2 (Function.uncurry <| @dist α _) :=
   LipschitzWith.uncurry LipschitzWith.dist_left LipschitzWith.dist_right
 
-theorem dist_iterate_succ_le_geometric {f : α → α} (hf : LipschitzWith K f) x n :
+theorem dist_iterate_succ_le_geometric {f : α → α} (hf : LipschitzWith K f) (x n) :
     dist ((f^[n]) x) ((f^[n + 1]) x) ≤ dist x (f x) * K ^ n := by
   rw [iterate_succ, mul_comm]
   simpa only [← Nnreal.coe_pow] using (hf.iterate n).dist_le_mul x (f x)
@@ -469,7 +469,7 @@ theorem continuous_on_prod_of_continuous_on_lipschitz_on [PseudoEmetricSpace α]
     (ha : ∀, ∀ a ∈ s, ∀, ContinuousOn (fun y => f (a, y)) t)
     (hb : ∀, ∀ b ∈ t, ∀, LipschitzOnWith K (fun x => f (x, b)) s) : ContinuousOn f (s ×ˢ t) := by
   rintro ⟨x, y⟩ ⟨hx : x ∈ s, hy : y ∈ t⟩
-  refine' Emetric.tendsto_nhds.2 fun ε ε0 : 0 < ε => _
+  refine' Emetric.tendsto_nhds.2 fun ε (ε0 : 0 < ε) => _
   replace ε0 : 0 < ε / 2 := Ennreal.half_pos (ne_of_gtₓ ε0)
   have εK : 0 < ε / 2 / K := Ennreal.div_pos_iff.2 ⟨ε0.ne', Ennreal.coe_ne_top⟩
   have A : s ∩ Emetric.Ball x (ε / 2 / K) ∈ 𝓝[s] x := inter_mem_nhds_within _ (Emetric.ball_mem_nhds _ εK)

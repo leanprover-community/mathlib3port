@@ -304,11 +304,11 @@ variable (𝕜)
 /-- A map `f : E × F → G` satisfies `is_bounded_bilinear_map 𝕜 f` if it is bilinear and
 continuous. -/
 structure IsBoundedBilinearMap (f : E × F → G) : Prop where
-  add_left : ∀ x₁ x₂ : E y : F, f (x₁ + x₂, y) = f (x₁, y) + f (x₂, y)
-  smul_left : ∀ c : 𝕜 x : E y : F, f (c • x, y) = c • f (x, y)
-  add_right : ∀ x : E y₁ y₂ : F, f (x, y₁ + y₂) = f (x, y₁) + f (x, y₂)
-  smul_right : ∀ c : 𝕜 x : E y : F, f (x, c • y) = c • f (x, y)
-  bound : ∃ C > 0, ∀ x : E y : F, ∥f (x, y)∥ ≤ C * ∥x∥ * ∥y∥
+  add_left : ∀ (x₁ x₂ : E) (y : F), f (x₁ + x₂, y) = f (x₁, y) + f (x₂, y)
+  smul_left : ∀ (c : 𝕜) (x : E) (y : F), f (c • x, y) = c • f (x, y)
+  add_right : ∀ (x : E) (y₁ y₂ : F), f (x, y₁ + y₂) = f (x, y₁) + f (x, y₂)
+  smul_right : ∀ (c : 𝕜) (x : E) (y : F), f (x, c • y) = c • f (x, y)
+  bound : ∃ C > 0, ∀ (x : E) (y : F), ∥f (x, y)∥ ≤ C * ∥x∥ * ∥y∥
 
 variable {𝕜}
 
@@ -366,7 +366,7 @@ theorem IsBoundedBilinearMap.continuous (h : IsBoundedBilinearMap 𝕜 f) : Cont
   obtain ⟨C, Cpos : 0 < C, hC⟩ := h.bound
   rw [continuous_iff_continuous_at]
   intro x
-  have H : ∀ a : E b : F, ∥f (a, b)∥ ≤ C * ∥∥a∥ * ∥b∥∥ := by
+  have H : ∀ (a : E) (b : F), ∥f (a, b)∥ ≤ C * ∥∥a∥ * ∥b∥∥ := by
     intro a b
     simpa [← mul_assoc] using hC a b
   have h₁ : (fun e : E × F => f (e.1 - x.1, e.2)) =o[𝓝 x] fun e => (1 : ℝ) := by

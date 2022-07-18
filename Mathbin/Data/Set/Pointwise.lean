@@ -235,7 +235,7 @@ open MulOpposite
 
 @[to_additive]
 theorem image_op_inv : op '' s⁻¹ = (op '' s)⁻¹ := by
-  simp_rw [← image_inv, image_comm op_inv]
+  simp_rw [← image_inv, Function.Semiconj.set_image op_inv s]
 
 end HasInvolutiveInv
 
@@ -364,14 +364,14 @@ theorem Union_mul (s : ι → Set α) (t : Set α) : (⋃ i, s i) * t = ⋃ i, s
 theorem mul_Union (s : Set α) (t : ι → Set α) : (s * ⋃ i, t i) = ⋃ i, s * t i :=
   image2_Union_right _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem Union₂_mul (s : ∀ i, κ i → Set α) (t : Set α) : (⋃ (i) (j), s i j) * t = ⋃ (i) (j), s i j * t :=
   image2_Union₂_left _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem mul_Union₂ (s : Set α) (t : ∀ i, κ i → Set α) : (s * ⋃ (i) (j), t i j) = ⋃ (i) (j), s * t i j :=
   image2_Union₂_right _ _ _
@@ -384,14 +384,14 @@ theorem Inter_mul_subset (s : ι → Set α) (t : Set α) : (⋂ i, s i) * t ⊆
 theorem mul_Inter_subset (s : Set α) (t : ι → Set α) : (s * ⋂ i, t i) ⊆ ⋂ i, s * t i :=
   image2_Inter_subset_right _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem Inter₂_mul_subset (s : ∀ i, κ i → Set α) (t : Set α) : (⋂ (i) (j), s i j) * t ⊆ ⋂ (i) (j), s i j * t :=
   image2_Inter₂_subset_left _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem mul_Inter₂_subset (s : Set α) (t : ∀ i, κ i → Set α) : (s * ⋂ (i) (j), t i j) ⊆ ⋂ (i) (j), s * t i j :=
   image2_Inter₂_subset_right _ _ _
@@ -548,14 +548,14 @@ theorem Union_div (s : ι → Set α) (t : Set α) : (⋃ i, s i) / t = ⋃ i, s
 theorem div_Union (s : Set α) (t : ι → Set α) : (s / ⋃ i, t i) = ⋃ i, s / t i :=
   image2_Union_right _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem Union₂_div (s : ∀ i, κ i → Set α) (t : Set α) : (⋃ (i) (j), s i j) / t = ⋃ (i) (j), s i j / t :=
   image2_Union₂_left _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem div_Union₂ (s : Set α) (t : ∀ i, κ i → Set α) : (s / ⋃ (i) (j), t i j) = ⋃ (i) (j), s / t i j :=
   image2_Union₂_right _ _ _
@@ -568,14 +568,14 @@ theorem Inter_div_subset (s : ι → Set α) (t : Set α) : (⋂ i, s i) / t ⊆
 theorem div_Inter_subset (s : Set α) (t : ι → Set α) : (s / ⋂ i, t i) ⊆ ⋂ i, s / t i :=
   image2_Inter_subset_right _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem Inter₂_div_subset (s : ∀ i, κ i → Set α) (t : Set α) : (⋂ (i) (j), s i j) / t ⊆ ⋂ (i) (j), s i j / t :=
   image2_Inter₂_subset_left _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem div_Inter₂_subset (s : Set α) (t : ∀ i, κ i → Set α) : (s / ⋂ (i) (j), t i j) ⊆ ⋂ (i) (j), s / t i j :=
   image2_Inter₂_subset_right _ _ _
@@ -1020,7 +1020,6 @@ open BigOperators
 
 variable {ι : Type _} [CommMonoidₓ α]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The n-ary version of `set.mem_mul`. -/
 @[to_additive " The n-ary version of `set.mem_add`. "]
 theorem mem_finset_prod (t : Finset ι) (f : ι → Set α) (a : α) :
@@ -1056,21 +1055,65 @@ theorem mem_fintype_prod [Fintype ι] (f : ι → Set α) (a : α) :
   rw [mem_finset_prod]
   simp
 
-/-- The n-ary version of `set.mul_mem_mul`. -/
-@[to_additive " The n-ary version of `set.add_mem_add`. "]
-theorem finset_prod_mem_finset_prod (t : Finset ι) (f : ι → Set α) (g : ι → α) (hg : ∀, ∀ i ∈ t, ∀, g i ∈ f i) :
-    (∏ i in t, g i) ∈ ∏ i in t, f i := by
-  rw [mem_finset_prod]
-  exact ⟨g, hg, rfl⟩
+/-- An n-ary version of `set.mul_mem_mul`. -/
+@[to_additive " An n-ary version of `set.add_mem_add`. "]
+theorem list_prod_mem_list_prod (t : List ι) (f : ι → Set α) (g : ι → α) (hg : ∀, ∀ i ∈ t, ∀, g i ∈ f i) :
+    (t.map g).Prod ∈ (t.map f).Prod := by
+  induction' t with h tl ih
+  · simp_rw [List.map_nil, List.prod_nil, Set.mem_one]
+    
+  · simp_rw [List.map_cons, List.prod_cons]
+    exact mul_mem_mul (hg h <| List.mem_cons_selfₓ _ _) (ih fun i hi => hg i <| List.mem_cons_of_memₓ _ hi)
+    
 
-/-- The n-ary version of `set.mul_subset_mul`. -/
-@[to_additive " The n-ary version of `set.add_subset_add`. "]
-theorem finset_prod_subset_finset_prod (t : Finset ι) (f₁ f₂ : ι → Set α) (hf : ∀ {i}, i ∈ t → f₁ i ⊆ f₂ i) :
-    (∏ i in t, f₁ i) ⊆ ∏ i in t, f₂ i := by
-  intro a
-  rw [mem_finset_prod, mem_finset_prod]
-  rintro ⟨g, hg, rfl⟩
-  exact ⟨g, fun i hi => hf hi <| hg hi, rfl⟩
+/-- An n-ary version of `set.mul_subset_mul`. -/
+@[to_additive " An n-ary version of `set.add_subset_add`. "]
+theorem list_prod_subset_list_prod (t : List ι) (f₁ f₂ : ι → Set α) (hf : ∀, ∀ i ∈ t, ∀, f₁ i ⊆ f₂ i) :
+    (t.map f₁).Prod ⊆ (t.map f₂).Prod := by
+  induction' t with h tl ih
+  · rfl
+    
+  · simp_rw [List.map_cons, List.prod_cons]
+    exact mul_subset_mul (hf h <| List.mem_cons_selfₓ _ _) (ih fun i hi => hf i <| List.mem_cons_of_memₓ _ hi)
+    
+
+@[to_additive]
+theorem list_prod_singleton {M : Type _} [CommMonoidₓ M] (s : List M) :
+    (s.map fun i => ({i} : Set M)).Prod = {s.Prod} :=
+  (map_list_prod (singletonMonoidHom : M →* Set M) _).symm
+
+/-- An n-ary version of `set.mul_mem_mul`. -/
+@[to_additive " An n-ary version of `set.add_mem_add`. "]
+theorem multiset_prod_mem_multiset_prod (t : Multiset ι) (f : ι → Set α) (g : ι → α) (hg : ∀, ∀ i ∈ t, ∀, g i ∈ f i) :
+    (t.map g).Prod ∈ (t.map f).Prod := by
+  induction t using Quotientₓ.induction_on
+  simp_rw [Multiset.quot_mk_to_coe, Multiset.coe_map, Multiset.coe_prod]
+  exact list_prod_mem_list_prod _ _ _ hg
+
+/-- An n-ary version of `set.mul_subset_mul`. -/
+@[to_additive " An n-ary version of `set.add_subset_add`. "]
+theorem multiset_prod_subset_multiset_prod (t : Multiset ι) (f₁ f₂ : ι → Set α) (hf : ∀, ∀ i ∈ t, ∀, f₁ i ⊆ f₂ i) :
+    (t.map f₁).Prod ⊆ (t.map f₂).Prod := by
+  induction t using Quotientₓ.induction_on
+  simp_rw [Multiset.quot_mk_to_coe, Multiset.coe_map, Multiset.coe_prod]
+  exact list_prod_subset_list_prod _ _ _ hf
+
+@[to_additive]
+theorem multiset_prod_singleton {M : Type _} [CommMonoidₓ M] (s : Multiset M) :
+    (s.map fun i => ({i} : Set M)).Prod = {s.Prod} :=
+  (map_multiset_prod (singletonMonoidHom : M →* Set M) _).symm
+
+/-- An n-ary version of `set.mul_mem_mul`. -/
+@[to_additive " An n-ary version of `set.add_mem_add`. "]
+theorem finset_prod_mem_finset_prod (t : Finset ι) (f : ι → Set α) (g : ι → α) (hg : ∀, ∀ i ∈ t, ∀, g i ∈ f i) :
+    (∏ i in t, g i) ∈ ∏ i in t, f i :=
+  multiset_prod_mem_multiset_prod _ _ _ hg
+
+/-- An n-ary version of `set.mul_subset_mul`. -/
+@[to_additive " An n-ary version of `set.add_subset_add`. "]
+theorem finset_prod_subset_finset_prod (t : Finset ι) (f₁ f₂ : ι → Set α) (hf : ∀, ∀ i ∈ t, ∀, f₁ i ⊆ f₂ i) :
+    (∏ i in t, f₁ i) ⊆ ∏ i in t, f₂ i :=
+  multiset_prod_subset_multiset_prod _ _ _ hf
 
 @[to_additive]
 theorem finset_prod_singleton {M ι : Type _} [CommMonoidₓ M] (s : Finset ι) (I : ι → M) :
@@ -1213,14 +1256,14 @@ theorem Union_smul (s : ι → Set α) (t : Set β) : (⋃ i, s i) • t = ⋃ i
 theorem smul_Union (s : Set α) (t : ι → Set β) : (s • ⋃ i, t i) = ⋃ i, s • t i :=
   image2_Union_right _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem Union₂_smul (s : ∀ i, κ i → Set α) (t : Set β) : (⋃ (i) (j), s i j) • t = ⋃ (i) (j), s i j • t :=
   image2_Union₂_left _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem smul_Union₂ (s : Set α) (t : ∀ i, κ i → Set β) : (s • ⋃ (i) (j), t i j) = ⋃ (i) (j), s • t i j :=
   image2_Union₂_right _ _ _
@@ -1233,14 +1276,14 @@ theorem Inter_smul_subset (s : ι → Set α) (t : Set β) : (⋂ i, s i) • t 
 theorem smul_Inter_subset (s : Set α) (t : ι → Set β) : (s • ⋂ i, t i) ⊆ ⋂ i, s • t i :=
   image2_Inter_subset_right _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem Inter₂_smul_subset (s : ∀ i, κ i → Set α) (t : Set β) : (⋂ (i) (j), s i j) • t ⊆ ⋂ (i) (j), s i j • t :=
   image2_Inter₂_subset_left _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem smul_Inter₂_subset (s : Set α) (t : ∀ i, κ i → Set β) : (s • ⋂ (i) (j), t i j) ⊆ ⋂ (i) (j), s • t i j :=
   image2_Inter₂_subset_right _ _ _
@@ -1307,8 +1350,8 @@ theorem smul_set_inter_subset : a • (t₁ ∩ t₂) ⊆ a • t₁ ∩ a • t
 theorem smul_set_Union (a : α) (s : ι → Set β) : (a • ⋃ i, s i) = ⋃ i, a • s i :=
   image_Union
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem smul_set_Union₂ (a : α) (s : ∀ i, κ i → Set β) : (a • ⋃ (i) (j), s i j) = ⋃ (i) (j), a • s i j :=
   image_Union₂ _ _
@@ -1317,8 +1360,8 @@ theorem smul_set_Union₂ (a : α) (s : ∀ i, κ i → Set β) : (a • ⋃ (i)
 theorem smul_set_Inter_subset (a : α) (t : ι → Set β) : (a • ⋂ i, t i) ⊆ ⋂ i, a • t i :=
   image_Inter_subset _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 @[to_additive]
 theorem smul_set_Inter₂_subset (a : α) (t : ∀ i, κ i → Set β) : (a • ⋂ (i) (j), t i j) ⊆ ⋂ (i) (j), a • t i j :=
   image_Inter₂_subset _ _
@@ -1366,7 +1409,7 @@ theorem smul_set_range [HasSmul α β] {ι : Sort _} {f : ι → β} : a • Ran
 
 @[to_additive]
 instance smul_comm_class_set [HasSmul α γ] [HasSmul β γ] [SmulCommClass α β γ] : SmulCommClass α β (Set γ) :=
-  ⟨fun _ _ _ => image_comm <| smul_comm _ _⟩
+  ⟨fun _ _ => commute.set_image <| smul_comm _ _⟩
 
 @[to_additive]
 instance smul_comm_class_set' [HasSmul α γ] [HasSmul β γ] [SmulCommClass α β γ] : SmulCommClass α (Set β) (Set γ) :=
@@ -1556,13 +1599,13 @@ theorem Union_vsub (s : ι → Set β) (t : Set β) : (⋃ i, s i) -ᵥ t = ⋃ 
 theorem vsub_Union (s : Set β) (t : ι → Set β) : (s -ᵥ ⋃ i, t i) = ⋃ i, s -ᵥ t i :=
   image2_Union_right _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem Union₂_vsub (s : ∀ i, κ i → Set β) (t : Set β) : (⋃ (i) (j), s i j) -ᵥ t = ⋃ (i) (j), s i j -ᵥ t :=
   image2_Union₂_left _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem vsub_Union₂ (s : Set β) (t : ∀ i, κ i → Set β) : (s -ᵥ ⋃ (i) (j), t i j) = ⋃ (i) (j), s -ᵥ t i j :=
   image2_Union₂_right _ _ _
 
@@ -1572,13 +1615,13 @@ theorem Inter_vsub_subset (s : ι → Set β) (t : Set β) : (⋂ i, s i) -ᵥ t
 theorem vsub_Inter_subset (s : Set β) (t : ι → Set β) : (s -ᵥ ⋂ i, t i) ⊆ ⋂ i, s -ᵥ t i :=
   image2_Inter_subset_right _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem Inter₂_vsub_subset (s : ∀ i, κ i → Set β) (t : Set β) : (⋂ (i) (j), s i j) -ᵥ t ⊆ ⋂ (i) (j), s i j -ᵥ t :=
   image2_Inter₂_subset_left _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem vsub_Inter₂_subset (s : Set β) (t : ∀ i, κ i → Set β) : (s -ᵥ ⋂ (i) (j), t i j) ⊆ ⋂ (i) (j), s -ᵥ t i j :=
   image2_Inter₂_subset_right _ _ _
 
@@ -1857,7 +1900,7 @@ theorem card_pow_eq_card_pow_card_univ_aux {f : ℕ → ℕ} (h1 : Monotone f) {
 
 variable {G : Type _} [Groupₓ G] [Fintype G] (S : Set G)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[["!"]]
+-- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Interactive.lean:71:16: TODO classical! not yet supported
 @[to_additive]
 theorem card_pow_eq_card_pow_card_univ [∀ k : ℕ, DecidablePred (· ∈ S ^ k)] :
     ∀ k, Fintype.card G ≤ k → Fintype.card ↥(S ^ k) = Fintype.card ↥(S ^ Fintype.card G) := by
@@ -1868,7 +1911,7 @@ theorem card_pow_eq_card_pow_card_univ [∀ k : ℕ, DecidablePred (· ∈ S ^ k
     
   obtain ⟨a, ha⟩ := set.ne_empty_iff_nonempty.mp hS
   classical
-  have key : ∀ a s t : Set G, (∀ b : G, b ∈ s → a * b ∈ t) → Fintype.card s ≤ Fintype.card t := by
+  have key : ∀ (a) (s t : Set G), (∀ b : G, b ∈ s → a * b ∈ t) → Fintype.card s ≤ Fintype.card t := by
     refine' fun a s t h => Fintype.card_le_of_injective (fun ⟨b, hb⟩ => ⟨a * b, h b hb⟩) _
     rintro ⟨b, hb⟩ ⟨c, hc⟩ hbc
     exact Subtype.ext (mul_left_cancelₓ (subtype.ext_iff.mp hbc))

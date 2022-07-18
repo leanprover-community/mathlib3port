@@ -38,7 +38,7 @@ structure Functor (C : Type u₁) [Category.{v₁} C] (D : Type u₂) [Category.
   map_id' : ∀ X : C, map (𝟙 X) = 𝟙 (obj X) := by
     run_tac
       obviously
-  map_comp' : ∀ {X Y Z : C} f : X ⟶ Y g : Y ⟶ Z, map (f ≫ g) = map f ≫ map g := by
+  map_comp' : ∀ {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z), map (f ≫ g) = map f ≫ map g := by
     run_tac
       obviously
 

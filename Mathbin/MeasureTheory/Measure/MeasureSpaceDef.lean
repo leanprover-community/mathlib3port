@@ -96,7 +96,7 @@ namespace Measureₓ
 /-- Obtain a measure by giving a countably additive function that sends `∅` to `0`. -/
 def ofMeasurable (m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞) (m0 : m ∅ MeasurableSet.empty = 0)
     (mU :
-      ∀ ⦃f : ℕ → Set α⦄ h : ∀ i, MeasurableSet (f i),
+      ∀ ⦃f : ℕ → Set α⦄ (h : ∀ i, MeasurableSet (f i)),
         Pairwise (Disjoint on f) → m (⋃ i, f i) (MeasurableSet.Union h) = ∑' i, m (f i) (h i)) :
     Measure α :=
   { inducedOuterMeasure m _ m0 with
@@ -115,7 +115,7 @@ def ofMeasurable (m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞) (m0 : m �
 
 theorem of_measurable_apply {m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞} {m0 : m ∅ MeasurableSet.empty = 0}
     {mU :
-      ∀ ⦃f : ℕ → Set α⦄ h : ∀ i, MeasurableSet (f i),
+      ∀ ⦃f : ℕ → Set α⦄ (h : ∀ i, MeasurableSet (f i)),
         Pairwise (Disjoint on f) → m (⋃ i, f i) (MeasurableSet.Union h) = ∑' i, m (f i) (h i)}
     (s : Set α) (hs : MeasurableSet s) : ofMeasurable m m0 mU s = m s hs :=
   induced_outer_measure_eq m0 mU hs
@@ -163,7 +163,7 @@ theorem to_outer_measure_eq_induced_outer_measure :
     μ.toOuterMeasure = inducedOuterMeasure (fun s _ => μ s) MeasurableSet.empty μ.Empty :=
   μ.trimmed.symm
 
-theorem measure_eq_extend (hs : MeasurableSet s) : μ s = extend (fun t ht : MeasurableSet t => μ t) s :=
+theorem measure_eq_extend (hs : MeasurableSet s) : μ s = extend (fun t (ht : MeasurableSet t) => μ t) s :=
   (extend_eq _ hs).symm
 
 @[simp]
@@ -349,7 +349,7 @@ theorem ae_imp_iff {p : α → Prop} {q : Prop} : (∀ᵐ x ∂μ, q → p x) �
 theorem ae_all_iff [Encodable ι] {p : α → ι → Prop} : (∀ᵐ a ∂μ, ∀ i, p a i) ↔ ∀ i, ∀ᵐ a ∂μ, p a i :=
   eventually_countable_forall
 
-theorem ae_ball_iff {S : Set ι} (hS : S.Countable) {p : ∀ x : α, ∀ i ∈ S, ∀, Prop} :
+theorem ae_ball_iff {S : Set ι} (hS : S.Countable) {p : ∀ (x : α), ∀ i ∈ S, ∀, Prop} :
     (∀ᵐ x ∂μ, ∀, ∀ i ∈ S, ∀, p x i ‹_›) ↔ ∀, ∀ i ∈ S, ∀, ∀ᵐ x ∂μ, p x i ‹_› :=
   eventually_countable_ball hS
 
@@ -432,8 +432,8 @@ alias measure_congr ← _root_.filter.eventually_eq.measure_eq
 theorem measure_mono_null_ae (H : s ≤ᵐ[μ] t) (ht : μ t = 0) : μ s = 0 :=
   nonpos_iff_eq_zero.1 <| ht ▸ H.measure_le
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊇ » s)
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊇ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊇ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊇ » s)
 /-- A measurable set `t ⊇ s` such that `μ t = μ s`. It even satisfies `μ (t ∩ u) = μ (s ∩ u)` for
 any measurable set `u` if `μ s ≠ ∞`, see `measure_to_measurable_inter`.
 (This property holds without the assumption `μ s ≠ ∞` when the space is sigma-finite,
@@ -492,7 +492,7 @@ notation3"∀ᵐ "(...)", "r:(scoped P => Filter.Eventually P MeasureTheory.Meas
 notation3"∃ᵐ "(...)", "r:(scoped P => Filter.Frequently P MeasureTheory.Measure.ae MeasureTheory.MeasureSpace.volume) =>
   r
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 /-- The tactic `exact volume`, to be used in optional (`auto_param`) arguments. -/
 unsafe def volume_tac : tactic Unit :=
   sorry

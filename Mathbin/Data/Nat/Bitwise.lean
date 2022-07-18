@@ -211,7 +211,7 @@ theorem zero_lor (n : ℕ) : lorₓ 0 n = n := by
 theorem lor_zero (n : ℕ) : lorₓ n 0 = n := by
   simp [← lor]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 /-- Proving associativity of bitwise operations in general essentially boils down to a huge case
     distinction, so it is shorter to use this tactic instead of proving it in the general case. -/
 unsafe def bitwise_assoc_tac : tactic Unit :=
@@ -234,26 +234,35 @@ theorem lxor_self (n : ℕ) : lxor n n = 0 :=
   zero_of_test_bit_eq_ff fun i => by
     simp
 
-theorem lxor_right_inj {n m m' : ℕ} (h : lxor n m = lxor n m') : m = m' :=
-  calc
-    m = lxor n (lxor n m') := by
-      simp [lxor_assoc, h]
-    _ = m' := by
-      simp [lxor_assoc]
-    
+-- These lemmas match `mul_inv_cancel_right` and `mul_inv_cancel_left`.
+theorem lxor_cancel_right (n m : ℕ) : lxor (lxor m n) n = m := by
+  rw [lxor_assoc, lxor_self, lxor_zero]
 
-theorem lxor_left_inj {n n' m : ℕ} (h : lxor n m = lxor n' m) : n = n' := by
-  rw [lxor_comm n m, lxor_comm n' m] at h
-  exact lxor_right_inj h
+theorem lxor_cancel_left (n m : ℕ) : lxor n (lxor n m) = m := by
+  rw [← lxor_assoc, lxor_self, zero_lxor]
 
-theorem lxor_eq_zero {n m : ℕ} : lxor n m = 0 ↔ n = m :=
-  ⟨by
-    rw [← lxor_self m]
-    exact lxor_left_inj, by
-    rintro rfl
-    exact lxor_self _⟩
+theorem lxor_right_injective {n : ℕ} : Function.Injective (lxor n) := fun m m' h => by
+  rw [← lxor_cancel_left n m, ← lxor_cancel_left n m', h]
 
-theorem lxor_trichotomy {a b c : ℕ} (h : lxor a (lxor b c) ≠ 0) : lxor b c < a ∨ lxor a c < b ∨ lxor a b < c := by
+theorem lxor_left_injective {n : ℕ} : Function.Injective fun m => lxor m n := fun m m' (h : lxor m n = lxor m' n) => by
+  rw [← lxor_cancel_right n m, ← lxor_cancel_right n m', h]
+
+@[simp]
+theorem lxor_right_inj {n m m' : ℕ} : lxor n m = lxor n m' ↔ m = m' :=
+  lxor_right_injective.eq_iff
+
+@[simp]
+theorem lxor_left_inj {n m m' : ℕ} : lxor m n = lxor m' n ↔ m = m' :=
+  lxor_left_injective.eq_iff
+
+@[simp]
+theorem lxor_eq_zero {n m : ℕ} : lxor n m = 0 ↔ n = m := by
+  rw [← lxor_self n, lxor_right_inj, eq_comm]
+
+theorem lxor_ne_zero {n m : ℕ} : lxor n m ≠ 0 ↔ n ≠ m :=
+  lxor_eq_zero.Not
+
+theorem lxor_trichotomy {a b c : ℕ} (h : a ≠ lxor b c) : lxor b c < a ∨ lxor a c < b ∨ lxor a b < c := by
   set v := lxor a (lxor b c) with hv
   -- The xor of any two of `a`, `b`, `c` is the xor of `v` and the third.
   have hab : lxor a b = lxor c v := by
@@ -267,7 +276,7 @@ theorem lxor_trichotomy {a b c : ℕ} (h : lxor a (lxor b c) ≠ 0) : lxor b c <
     simp [← hv, lxor_assoc]
   -- If `i` is the position of the most significant bit of `v`, then at least one of `a`, `b`, `c`
   -- has a one bit at position `i`.
-  obtain ⟨i, ⟨hi, hi'⟩⟩ := exists_most_significant_bit h
+  obtain ⟨i, ⟨hi, hi'⟩⟩ := exists_most_significant_bit (lxor_ne_zero.2 h)
   have : test_bit a i = tt ∨ test_bit b i = tt ∨ test_bit c i = tt := by
     contrapose! hi
     simp only [← eq_ff_eq_not_eq_tt, ← Ne, ← test_bit_lxor] at hi⊢
@@ -292,6 +301,9 @@ theorem lxor_trichotomy {a b c : ℕ} (h : lxor a (lxor b c) ≠ 0) : lxor b c <
           simp [← h, ← hi])
         h fun j hj => by
         simp [← hi' _ hj]
+
+theorem lt_lxor_cases {a b c : ℕ} (h : a < lxor b c) : lxor a c < b ∨ lxor a b < c :=
+  (or_iff_right fun h' => (h.asymm h').elim).1 <| lxor_trichotomy h.Ne
 
 end Nat
 

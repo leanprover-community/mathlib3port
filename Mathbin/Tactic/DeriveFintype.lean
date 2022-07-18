@@ -110,7 +110,7 @@ namespace DeriveFintype
 /-- A step in the construction of `finset.univ` for a finite inductive type.
 We will set `enum` to the discriminant of the inductive type, so a `finset_above`
 represents a finset that enumerates all elements in a tail of the constructor list. -/
-def FinsetAbove α (enum : α → ℕ) (n : ℕ) :=
+def FinsetAbove (α) (enum : α → ℕ) (n : ℕ) :=
   { s : Finset α // ∀, ∀ x ∈ s, ∀, n ≤ enum x }
 
 /-- Construct a fintype instance from a completed `finset_above`. -/
@@ -118,7 +118,7 @@ def mkFintype {α} (enum : α → ℕ) (s : FinsetAbove α enum 0) (H : ∀ x, x
   ⟨s.1, H⟩
 
 /-- This is the case for a simple variant (no arguments) in an inductive type. -/
-def FinsetAbove.cons {α} {enum : α → ℕ} n (a : α) (h : enum a = n) (s : FinsetAbove α enum (n + 1)) :
+def FinsetAbove.cons {α} {enum : α → ℕ} (n) (a : α) (h : enum a = n) (s : FinsetAbove α enum (n + 1)) :
     FinsetAbove α enum n := by
   refine' ⟨Finset.cons a s.1 _, _⟩
   · intro h'
@@ -142,11 +142,11 @@ theorem FinsetAbove.mem_cons_of_mem {α} {enum : α → ℕ} {n a h s b} :
   Multiset.mem_cons_of_mem
 
 /-- The base case is when we run out of variants; we just put an empty finset at the end. -/
-def FinsetAbove.nil {α} {enum : α → ℕ} n : FinsetAbove α enum n :=
+def FinsetAbove.nil {α} {enum : α → ℕ} (n) : FinsetAbove α enum n :=
   ⟨∅, by
     rintro _ ⟨⟩⟩
 
-instance α enum n : Inhabited (FinsetAbove α enum n) :=
+instance (α enum n) : Inhabited (FinsetAbove α enum n) :=
   ⟨FinsetAbove.nil _⟩
 
 /-- This is a finset covering a nontrivial variant (with one or more constructor arguments).
@@ -161,18 +161,18 @@ sigma over all constructor arguments. We use sigma instances and existing fintyp
 to prove that `Γ` is a fintype, and construct the function `f` that maps `⟨a, b, c, ...⟩`
 to `C_n a b c ...` where `C_n` is the nth constructor, and `mem` asserts
 `enum (C_n a b c ...) = n`. -/
-def FinsetIn.mk {α} {P : α → Prop} Γ [Fintype Γ] (f : Γ → α) (inj : Function.Injective f) (mem : ∀ x, P (f x)) :
+def FinsetIn.mk {α} {P : α → Prop} (Γ) [Fintype Γ] (f : Γ → α) (inj : Function.Injective f) (mem : ∀ x, P (f x)) :
     FinsetIn P :=
   ⟨Finset.univ.map ⟨f, inj⟩, fun x h => by
     rcases Finset.mem_map.1 h with ⟨x, _, rfl⟩ <;> exact mem x⟩
 
-theorem FinsetIn.mem_mk {α} {P : α → Prop} {Γ} {s : Fintype Γ} {f : Γ → α} {inj mem a} b (H : f b = a) :
+theorem FinsetIn.mem_mk {α} {P : α → Prop} {Γ} {s : Fintype Γ} {f : Γ → α} {inj mem a} (b) (H : f b = a) :
     a ∈ (@FinsetIn.mk α P Γ s f inj mem).1 :=
   Finset.mem_map.2 ⟨_, Finset.mem_univ _, H⟩
 
 /-- For nontrivial variants, we split the constructor list into a `finset_in` component for the
 current constructor and a `finset_above` for the rest. -/
-def FinsetAbove.union {α} {enum : α → ℕ} n (s : FinsetIn fun a => enum a = n) (t : FinsetAbove α enum (n + 1)) :
+def FinsetAbove.union {α} {enum : α → ℕ} (n) (s : FinsetIn fun a => enum a = n) (t : FinsetAbove α enum (n + 1)) :
     FinsetAbove α enum n := by
   refine' ⟨Finset.disjUnion s.1 t.1 _, _⟩
   · intro a hs ht

@@ -245,7 +245,6 @@ theorem Fg.prod {sb : Submodule R M} {sc : Submodule R P} (hsb : sb.Fg) (hsc : s
     ⟨LinearMap.inl R M P '' tb ∪ LinearMap.inr R M P '' tc, (htb.1.Image _).union (htc.1.Image _), by
       rw [LinearMap.span_inl_union_inr, htb.2, htc.2]⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem fg_pi {ι : Type _} {M : ι → Type _} [Fintype ι] [∀ i, AddCommMonoidₓ (M i)] [∀ i, Module R (M i)]
     {p : ∀ i, Submodule R (M i)} (hsb : ∀ i, (p i).Fg) : (Submodule.pi Set.Univ p).Fg := by
   classical
@@ -339,13 +338,26 @@ theorem fg_of_fg_map_of_fg_inf_ker {R M P : Type _} [Ringₓ R] [AddCommGroupₓ
       
     
 
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
+theorem fg_induction (R M : Type _) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] (P : Submodule R M → Prop)
+    (h₁ : ∀ x, P (Submodule.span R {x})) (h₂ : ∀ M₁ M₂, P M₁ → P M₂ → P (M₁⊔M₂)) (N : Submodule R M) (hN : N.Fg) :
+    P N := by
+  classical
+  obtain ⟨s, rfl⟩ := hN
+  induction s using Finset.induction
+  · rw [Finset.coe_empty, Submodule.span_empty, ← Submodule.span_zero_singleton]
+    apply h₁
+    
+  · rw [Finset.coe_insert, Submodule.span_insert]
+    apply h₂ <;> apply_assumption
+    
+
 /-- An ideal of `R` is finitely generated if it is the span of a finite subset of `R`.
 
 This is defeq to `submodule.fg`, but unfolds more nicely. -/
 def _root_.ideal.fg (I : Ideal R) : Prop :=
   ∃ S : Finset R, Ideal.span ↑S = I
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The image of a finitely generated ideal is finitely generated.
 
 This is the `ideal` version of `submodule.fg.map`. -/
@@ -385,7 +397,6 @@ theorem _root_.ideal.fg_ker_comp {R S A : Type _} [CommRingₓ R] [CommRingₓ S
   let g₁ := (IsScalarTower.toAlgHom R S A).toLinearMap
   exact fg_ker_comp f₁ g₁ hf (fg_restrict_scalars g.ker hg hsur) hsur
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Finitely generated submodules are precisely compact elements in the submodule lattice. -/
 theorem fg_iff_compact (s : Submodule R M) : s.Fg ↔ CompleteLattice.IsCompactElement s := by
   classical
@@ -627,9 +638,46 @@ theorem is_noetherian_iff_well_founded :
   rw [(CompleteLattice.well_founded_characterisations <| Submodule R M).out 0 3]
   exact ⟨fun ⟨h⟩ => fun k => (fg_iff_compact k).mp (h k), fun h => ⟨fun k => (fg_iff_compact k).mpr (h k)⟩⟩
 
+theorem is_noetherian_iff_fg_well_founded :
+    IsNoetherian R M ↔ WellFounded ((· > ·) : { N : Submodule R M // N.Fg } → { N : Submodule R M // N.Fg } → Prop) :=
+  by
+  let α := { N : Submodule R M // N.Fg }
+  constructor
+  · intro H
+    let f : α ↪o Submodule R M := OrderEmbedding.subtype _
+    exact OrderEmbedding.well_founded f.dual (is_noetherian_iff_well_founded.mp H)
+    
+  · intro H
+    constructor
+    intro N
+    obtain ⟨⟨N₀, h₁⟩, e : N₀ ≤ N, h₂⟩ :=
+      well_founded.well_founded_iff_has_max'.mp H { N' : α | N'.1 ≤ N } ⟨⟨⊥, Submodule.fg_bot⟩, bot_le⟩
+    convert h₁
+    refine' (e.antisymm _).symm
+    by_contra h₃
+    obtain ⟨x, hx₁ : x ∈ N, hx₂ : x ∉ N₀⟩ := set.not_subset.mp h₃
+    apply hx₂
+    have := h₂ ⟨(R∙x)⊔N₀, _⟩ _ _
+    · injection this with eq
+      rw [← Eq]
+      exact (le_sup_left : (R∙x) ≤ (R∙x)⊔N₀) (Submodule.mem_span_singleton_self _)
+      
+    · exact
+        Submodule.Fg.sup
+          ⟨{x}, by
+            rw [Finset.coe_singleton]⟩
+          h₁
+      
+    · exact sup_le ((Submodule.span_singleton_le_iff_mem _ _).mpr hx₁) e
+      
+    · show N₀ ≤ (R∙x)⊔N₀
+      exact le_sup_right
+      
+    
+
 variable (R M)
 
-theorem well_founded_submodule_gt R M [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] :
+theorem well_founded_submodule_gt (R M) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] :
     ∀ [IsNoetherian R M], WellFounded ((· > ·) : Submodule R M → Submodule R M → Prop) :=
   is_noetherian_iff_well_founded.mp
 
@@ -673,7 +721,7 @@ theorem finite_of_linear_independent [Nontrivial R] [IsNoetherian R M] {s : Set 
     intro a b
     rw [span_le_span_iff hs (this a) (this b), Set.image_subset_image_iff (subtype.coe_injective.comp f.injective),
       Set.subset_def]
-    exact ⟨fun hab x hxa : x ≤ a => le_transₓ hxa hab, fun hx => hx a (le_reflₓ a)⟩
+    exact ⟨fun hab x (hxa : x ≤ a) => le_transₓ hxa hab, fun hx => hx a (le_reflₓ a)⟩
   exact
     ⟨⟨fun n => span R (coe ∘ f '' { m | m ≤ n }), fun x y => by
         simp (config := { contextual := true })[← le_antisymm_iffₓ, ← (this _ _).symm]⟩,
@@ -777,7 +825,7 @@ theorem is_noetherian_ring_iff_ideal_fg (R : Type _) [Semiringₓ R] : IsNoether
   is_noetherian_ring_iff.trans is_noetherian_def
 
 -- see Note [lower instance priority]
-instance (priority := 80) is_noetherian_of_fintype R M [Fintype M] [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] :
+instance (priority := 80) is_noetherian_of_fintype (R M) [Fintype M] [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] :
     IsNoetherian R M := by
   let this := Classical.dec <;>
     exact
@@ -787,7 +835,7 @@ instance (priority := 80) is_noetherian_of_fintype R M [Fintype M] [Semiringₓ 
 
 /-- Modules over the trivial ring are Noetherian. -/
 -- see Note [lower instance priority]
-instance (priority := 100) is_noetherian_of_subsingleton R M [Subsingleton R] [Semiringₓ R] [AddCommMonoidₓ M]
+instance (priority := 100) is_noetherian_of_subsingleton (R M) [Subsingleton R] [Semiringₓ R] [AddCommMonoidₓ M]
     [Module R M] : IsNoetherian R M :=
   have := Module.subsingleton R M
   is_noetherian_of_fintype R M
@@ -797,7 +845,7 @@ instance (priority := 100) Ringₓ.is_noetherian_of_subsingleton {R} [Semiring�
     IsNoetherianRing R :=
   ⟨⟩
 
-theorem is_noetherian_of_submodule_of_noetherian R M [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] (N : Submodule R M)
+theorem is_noetherian_of_submodule_of_noetherian (R M) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] (N : Submodule R M)
     (h : IsNoetherian R M) : IsNoetherian R N := by
   rw [is_noetherian_iff_well_founded] at h⊢
   exact OrderEmbedding.well_founded (Submodule.MapSubtype.orderEmbedding N).dual h
@@ -809,7 +857,7 @@ instance Submodule.Quotient.is_noetherian {R} [Ringₓ R] {M} [AddCommGroupₓ M
 
 /-- If `M / S / R` is a scalar tower, and `M / R` is Noetherian, then `M / S` is
 also noetherian. -/
-theorem is_noetherian_of_tower R {S M} [Semiringₓ R] [Semiringₓ S] [AddCommMonoidₓ M] [HasSmul R S] [Module S M]
+theorem is_noetherian_of_tower (R) {S M} [Semiringₓ R] [Semiringₓ S] [AddCommMonoidₓ M] [HasSmul R S] [Module S M]
     [Module R M] [IsScalarTower R S M] (h : IsNoetherian R M) : IsNoetherian S M := by
   rw [is_noetherian_iff_well_founded] at h⊢
   refine' (Submodule.restrictScalarsEmbedding R S M).dual.WellFounded h
@@ -861,11 +909,11 @@ theorem is_noetherian_of_fg_of_noetherian' {R M} [Ringₓ R] [AddCommGroupₓ M]
 
 /-- In a module over a noetherian ring, the submodule generated by finitely many vectors is
 noetherian. -/
-theorem is_noetherian_span_of_finite R {M} [Ringₓ R] [AddCommGroupₓ M] [Module R M] [IsNoetherianRing R] {A : Set M}
+theorem is_noetherian_span_of_finite (R) {M} [Ringₓ R] [AddCommGroupₓ M] [Module R M] [IsNoetherianRing R] {A : Set M}
     (hA : A.Finite) : IsNoetherian R (Submodule.span R A) :=
   is_noetherian_of_fg_of_noetherian _ (Submodule.fg_def.mpr ⟨A, hA, rfl⟩)
 
-theorem is_noetherian_ring_of_surjective R [Ringₓ R] S [Ringₓ S] (f : R →+* S) (hf : Function.Surjective f)
+theorem is_noetherian_ring_of_surjective (R) [Ringₓ R] (S) [Ringₓ S] (f : R →+* S) (hf : Function.Surjective f)
     [H : IsNoetherianRing R] : IsNoetherianRing S := by
   rw [is_noetherian_ring_iff, is_noetherian_iff_well_founded] at H⊢
   exact OrderEmbedding.well_founded (Ideal.orderEmbeddingOfSurjective f hf).dual H
@@ -874,7 +922,7 @@ instance is_noetherian_ring_range {R} [Ringₓ R] {S} [Ringₓ S] (f : R →+* S
     IsNoetherianRing f.range :=
   is_noetherian_ring_of_surjective R f.range f.range_restrict f.range_restrict_surjective
 
-theorem is_noetherian_ring_of_ring_equiv R [Ringₓ R] {S} [Ringₓ S] (f : R ≃+* S) [IsNoetherianRing R] :
+theorem is_noetherian_ring_of_ring_equiv (R) [Ringₓ R] {S} [Ringₓ S] (f : R ≃+* S) [IsNoetherianRing R] :
     IsNoetherianRing S :=
   is_noetherian_ring_of_surjective R S f.toRingHom f.toEquiv.Surjective
 

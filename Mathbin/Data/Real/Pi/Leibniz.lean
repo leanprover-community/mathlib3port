@@ -67,7 +67,7 @@ theorem tendsto_sum_pi_div_four :
   -- Since `k` is now fixed, we henceforth denote `u k` as `U`
   let U := u k
   -- (3) We introduce an auxiliary function `f`
-  let b := fun i : ℕ x => -(1 : ℝ) ^ i * x ^ (2 * i + 1) / (2 * i + 1)
+  let b := fun (i : ℕ) x => -(1 : ℝ) ^ i * x ^ (2 * i + 1) / (2 * i + 1)
   let f := fun x => arctan x - ∑ i in Finset.range k, b i x
   suffices f_bound : |f 1 - f 0| ≤ (1 : ℝ) - U + U ^ (2 * (k : ℝ) + 1)
   · rw [← norm_neg]

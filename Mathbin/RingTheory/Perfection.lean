@@ -107,7 +107,7 @@ def pthRoot : Ringₓ.Perfection R p →+* Ringₓ.Perfection R p where
 variable {R p}
 
 @[simp]
-theorem coeff_mk (f : ℕ → R) hf (n : ℕ) : coeff R p n ⟨f, hf⟩ = f n :=
+theorem coeff_mk (f : ℕ → R) (hf) (n : ℕ) : coeff R p n ⟨f, hf⟩ = f n :=
   rfl
 
 theorem coeff_pth_root (f : Ringₓ.Perfection R p) (n : ℕ) : coeff R p n (pthRoot R p f) = coeff R p (n + 1) f :=

@@ -87,7 +87,7 @@ theorem nnnorm_entry_le_entrywise_sup_nnnorm (A : Matrix m n α) {i : m} {j : n}
 
 @[simp]
 theorem nnnorm_map_eq (A : Matrix m n α) (f : α → β) (hf : ∀ a, ∥f a∥₊ = ∥a∥₊) : ∥A.map f∥₊ = ∥A∥₊ := by
-  simp_rw [Pi.nnnorm_def, Matrix.map, hf]
+  simp_rw [Pi.nnnorm_def, Matrix.map_apply, hf]
 
 @[simp]
 theorem norm_map_eq (A : Matrix m n α) (f : α → β) (hf : ∀ a, ∥f a∥ = ∥a∥) : ∥A.map f∥ = ∥A∥ :=
@@ -262,7 +262,7 @@ section NonUnitalSemiNormedRing
 
 variable [NonUnitalSemiNormedRing α]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (k j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (k j)
 theorem linfty_op_nnnorm_mul (A : Matrix l m α) (B : Matrix m n α) : ∥A ⬝ B∥₊ ≤ ∥A∥₊ * ∥B∥₊ := by
   simp_rw [linfty_op_nnnorm_def, Matrix.mul_apply]
   calc
@@ -375,18 +375,18 @@ section SemiNormedGroup
 
 variable [SemiNormedGroup α] [SemiNormedGroup β]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem frobenius_nnnorm_def (A : Matrix m n α) : ∥A∥₊ = (∑ (i) (j), ∥A i j∥₊ ^ (2 : ℝ)) ^ (1 / 2 : ℝ) := by
   simp_rw [PiLp.nnnorm_eq, ← Nnreal.rpow_mul, div_mul_cancel (1 : ℝ) two_ne_zero, Nnreal.rpow_one]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 theorem frobenius_norm_def (A : Matrix m n α) : ∥A∥ = (∑ (i) (j), ∥A i j∥ ^ (2 : ℝ)) ^ (1 / 2 : ℝ) :=
   (congr_arg coe (frobenius_nnnorm_def A)).trans <| by
     simp [← Nnreal.coe_sum]
 
 @[simp]
 theorem frobenius_nnnorm_map_eq (A : Matrix m n α) (f : α → β) (hf : ∀ a, ∥f a∥₊ = ∥a∥₊) : ∥A.map f∥₊ = ∥A∥₊ := by
-  simp_rw [frobenius_nnnorm_def, Matrix.map, hf]
+  simp_rw [frobenius_nnnorm_def, Matrix.map_apply, hf]
 
 @[simp]
 theorem frobenius_norm_map_eq (A : Matrix m n α) (f : α → β) (hf : ∀ a, ∥f a∥ = ∥a∥) : ∥A.map f∥ = ∥A∥ :=

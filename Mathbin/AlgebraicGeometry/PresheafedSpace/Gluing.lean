@@ -277,7 +277,7 @@ abbrev diagramOverOpenπ {i : D.J} (U : Opens (D.U i).Carrier) (j : D.J) :=
 
 /-- (Implementation) We construct the map `Γ(𝒪_{U_i}, U) ⟶ Γ(𝒪_V, U_V)` for each `V` in the gluing
 diagram. We will lift these maps into `ι_inv_app`. -/
-def ιInvAppπApp {i : D.J} (U : Opens (D.U i).Carrier) j :
+def ιInvAppπApp {i : D.J} (U : Opens (D.U i).Carrier) (j) :
     (𝖣.U i).Presheaf.obj (op U) ⟶ (D.diagramOverOpen U).obj (op j) := by
   rcases j with (⟨j, k⟩ | j)
   · refine' D.opens_image_preimage_map i j U ≫ (D.f j k).c.app _ ≫ (D.V (j, k)).Presheaf.map (eq_to_hom _)

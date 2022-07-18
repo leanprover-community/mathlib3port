@@ -106,7 +106,7 @@ theorem merge' {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) :
     
   exact Or.inr ha
 
-theorem merge {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) (H : ∀ a, ∀ x ∈ f a, ∀, ∀ y ∈ g a, ∀, x = y) :
+theorem merge {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) (H : ∀ (a), ∀ x ∈ f a, ∀, ∀ y ∈ g a, ∀, x = y) :
     ∃ k : α →. σ, Partrec k ∧ ∀ a x, x ∈ k a ↔ x ∈ f a ∨ x ∈ g a :=
   let ⟨k, hk, K⟩ := merge' hf hg
   ⟨k, hk, fun a x =>
@@ -215,7 +215,6 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
     contradiction
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem rice₂ (C : Set Code) (H : ∀ cf cg, eval cf = eval cg → (cf ∈ C ↔ cg ∈ C)) :
     (ComputablePred fun c => c ∈ C) ↔ C = ∅ ∨ C = Set.Univ := by
   classical <;>
@@ -235,10 +234,10 @@ theorem rice₂ (C : Set Code) (H : ∀ cf cg, eval cf = eval cg → (cf ∈ C �
               ⟨by
                 infer_instance, Computable.const _⟩⟩
 
-theorem halting_problem_re n : RePred fun c => (eval c n).Dom :=
+theorem halting_problem_re (n) : RePred fun c => (eval c n).Dom :=
   (eval_part.comp Computable.id (Computable.const _)).dom_re
 
-theorem halting_problem n : ¬ComputablePred fun c => (eval c n).Dom
+theorem halting_problem (n) : ¬ComputablePred fun c => (eval c n).Dom
   | h => rice { f | (f n).Dom } h Nat.Partrec.zero Nat.Partrec.none trivialₓ
 
 -- Post's theorem on the equivalence of r.e., co-r.e. sets and
@@ -260,11 +259,10 @@ theorem computable_iff_re_compl_re {p : α → Prop} [DecidablePred p] :
         cases hy.1 hx.1
         ⟩⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem computable_iff_re_compl_re' {p : α → Prop} : ComputablePred p ↔ RePred p ∧ RePred fun a => ¬p a := by
   classical <;> exact computable_iff_re_compl_re
 
-theorem halting_problem_not_re n : ¬RePred fun c => ¬(eval c n).Dom
+theorem halting_problem_not_re (n) : ¬RePred fun c => ¬(eval c n).Dom
   | h => halting_problem _ <| computable_iff_re_compl_re'.2 ⟨halting_problem_re _, h⟩
 
 end ComputablePred

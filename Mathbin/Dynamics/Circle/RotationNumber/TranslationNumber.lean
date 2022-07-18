@@ -141,7 +141,7 @@ instance : CoeFun CircleDeg1Lift fun _ => ℝ → ℝ :=
   ⟨CircleDeg1Lift.toFun⟩
 
 @[simp]
-theorem coe_mk f h₁ h₂ : ⇑(mk f h₁ h₂) = f :=
+theorem coe_mk (f h₁ h₂) : ⇑(mk f h₁ h₂) = f :=
   rfl
 
 variable (f g : CircleDeg1Lift)
@@ -191,7 +191,7 @@ instance : Inhabited CircleDeg1Lift :=
 theorem coe_mul : ⇑(f * g) = f ∘ g :=
   rfl
 
-theorem mul_apply x : (f * g) x = f (g x) :=
+theorem mul_apply (x) : (f * g) x = f (g x) :=
   rfl
 
 @[simp]

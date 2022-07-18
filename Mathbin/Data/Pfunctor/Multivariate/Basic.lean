@@ -110,10 +110,10 @@ def comp.mk (x : P.Obj fun i => (Q i).Obj α) : (comp P Q).Obj α :=
 
 /-- Destructor for functor composition -/
 def comp.get (x : (comp P Q).Obj α) : P.Obj fun i => (Q i).Obj α :=
-  ⟨x.1.1, fun i a => ⟨x.fst.snd i a, fun j : Fin2 m b : (Q i).B _ j => x.snd j ⟨i, ⟨a, b⟩⟩⟩⟩
+  ⟨x.1.1, fun i a => ⟨x.fst.snd i a, fun (j : Fin2 m) (b : (Q i).B _ j) => x.snd j ⟨i, ⟨a, b⟩⟩⟩⟩
 
 theorem comp.get_map (f : α ⟹ β) (x : (comp P Q).Obj α) :
-    comp.get (f <$$> x) = (fun i x : (Q i).Obj α => f <$$> x) <$$> comp.get x := by
+    comp.get (f <$$> x) = (fun i (x : (Q i).Obj α) => f <$$> x) <$$> comp.get x := by
   cases x
   rfl
 
@@ -194,7 +194,7 @@ theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x 
 
 open Set Mvfunctor
 
-theorem supp_eq {α : Typevec n} (a : P.A) (f : P.B a ⟹ α) i :
+theorem supp_eq {α : Typevec n} (a : P.A) (f : P.B a ⟹ α) (i) :
     @Supp.{u} _ P.Obj _ α (⟨a, f⟩ : P.Obj α) i = f i '' univ := by
   ext
   simp only [← supp, ← image_univ, ← mem_range, ← mem_set_of_eq]

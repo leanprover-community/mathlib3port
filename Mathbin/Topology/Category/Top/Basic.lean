@@ -103,7 +103,7 @@ theorem of_homeo_of_iso {X Y : Top.{u}} (f : X ≅ Y) : isoOfHomeo (homeoOfIso f
 @[simp]
 theorem open_embedding_iff_comp_is_iso {X Y Z : Top} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso g] :
     OpenEmbedding (f ≫ g) ↔ OpenEmbedding f :=
-  open_embedding_iff_open_embedding_compose f (Top.homeoOfIso (asIso g)).OpenEmbedding
+  (Top.homeoOfIso (asIso g)).OpenEmbedding.of_comp_iff f
 
 @[simp]
 theorem open_embedding_iff_is_iso_comp {X Y Z : Top} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso f] :

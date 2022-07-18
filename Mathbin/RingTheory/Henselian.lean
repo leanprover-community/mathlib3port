@@ -92,8 +92,8 @@ of `X^2-1` over `ℤ/4ℤ`.) -/
 class HenselianRing (R : Type _) [CommRingₓ R] (I : Ideal R) : Prop where
   jac : I ≤ Ideal.jacobson ⊥
   is_henselian :
-    ∀ f : R[X] hf : f.Monic a₀ : R h₁ : f.eval a₀ ∈ I h₂ : IsUnit (Ideal.Quotient.mk I (f.derivative.eval a₀)),
-      ∃ a : R, f.IsRoot a ∧ a - a₀ ∈ I
+    ∀ (f : R[X]) (hf : f.Monic) (a₀ : R) (h₁ : f.eval a₀ ∈ I)
+      (h₂ : IsUnit (Ideal.Quotient.mk I (f.derivative.eval a₀))), ∃ a : R, f.IsRoot a ∧ a - a₀ ∈ I
 
 /-- A local ring `R` is *Henselian* if the following condition holds:
 for every polynomial `f` over `R`, with a *simple* root `a₀` over the residue field,
@@ -105,7 +105,7 @@ In other words, `R` is local Henselian if it is Henselian at the ideal `I`,
 in the sense of `henselian_ring`. -/
 class HenselianLocalRing (R : Type _) [CommRingₓ R] extends LocalRing R : Prop where
   is_henselian :
-    ∀ f : R[X] hf : f.Monic a₀ : R h₁ : f.eval a₀ ∈ maximalIdeal R h₂ : IsUnit (f.derivative.eval a₀),
+    ∀ (f : R[X]) (hf : f.Monic) (a₀ : R) (h₁ : f.eval a₀ ∈ maximalIdeal R) (h₂ : IsUnit (f.derivative.eval a₀)),
       ∃ a : R, f.IsRoot a ∧ a - a₀ ∈ maximalIdeal R
 
 -- see Note [lower instance priority]
@@ -117,11 +117,11 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
 theorem HenselianLocalRing.tfae (R : Type u) [CommRingₓ R] [LocalRing R] :
     Tfae
       [HenselianLocalRing R,
-        ∀ f : R[X] hf : f.Monic a₀ : ResidueField R h₁ : aeval a₀ f = 0 h₂ : aeval a₀ f.derivative ≠ 0,
+        ∀ (f : R[X]) (hf : f.Monic) (a₀ : ResidueField R) (h₁ : aeval a₀ f = 0) (h₂ : aeval a₀ f.derivative ≠ 0),
           ∃ a : R, f.IsRoot a ∧ residue R a = a₀,
         ∀ {K : Type u} [Field K],
-          ∀ φ : R →+* K hφ : surjective φ f : R[X] hf : f.Monic a₀ : K h₁ : f.eval₂ φ a₀ = 0 h₂ :
-            f.derivative.eval₂ φ a₀ ≠ 0, ∃ a : R, f.IsRoot a ∧ φ a = a₀] :=
+          ∀ (φ : R →+* K) (hφ : surjective φ) (f : R[X]) (hf : f.Monic) (a₀ : K) (h₁ : f.eval₂ φ a₀ = 0)
+            (h₂ : f.derivative.eval₂ φ a₀ ≠ 0), ∃ a : R, f.IsRoot a ∧ φ a = a₀] :=
   by
   tfae_have _3_2 : 3 → 2
   · intro H
@@ -168,7 +168,6 @@ instance (R : Type _) [CommRingₓ R] [hR : HenselianLocalRing R] : HenselianRin
     rw [h₂]
     exact not_is_unit_zero
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A ring `R` that is `I`-adically complete is Henselian at `I`. -/
 -- see Note [lower instance priority]
 instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRingₓ R] (I : Ideal R) [IsAdicComplete I R] :

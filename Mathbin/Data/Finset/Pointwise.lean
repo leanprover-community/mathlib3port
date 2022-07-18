@@ -52,7 +52,7 @@ pointwise subtraction
 
 open Function
 
-open Pointwise
+open BigOperators Pointwise
 
 variable {F α β γ : Type _}
 
@@ -550,13 +550,28 @@ theorem coe_singleton_monoid_hom : (singletonMonoidHom : α → Finset α) = sin
 theorem singleton_monoid_hom_apply (a : α) : singletonMonoidHom a = {a} :=
   rfl
 
+/-- The coercion from `finset` to `set` as a `monoid_hom`. -/
+@[to_additive "The coercion from `finset` to `set` as an `add_monoid_hom`."]
+def coeMonoidHom : Finset α →* Set α where
+  toFun := coe
+  map_one' := coe_one
+  map_mul' := coe_mul
+
+@[simp, to_additive]
+theorem coe_coe_monoid_hom : (coeMonoidHom : Finset α → Set α) = coe :=
+  rfl
+
+@[simp, to_additive]
+theorem coe_monoid_hom_apply (s : Finset α) : coeMonoidHom s = s :=
+  rfl
+
 end MulOneClassₓ
 
 section Monoidₓ
 
 variable [Monoidₓ α] {s t : Finset α} {a : α} {m n : ℕ}
 
-@[simp, to_additive]
+@[simp, norm_cast, to_additive]
 theorem coe_pow (s : Finset α) (n : ℕ) : ↑(s ^ n) = (s ^ n : Set α) := by
   change ↑(npowRec n s) = _
   induction' n with n ih
@@ -626,10 +641,22 @@ protected theorem _root_.is_unit.finset : IsUnit a → IsUnit ({a} : Finset α) 
 
 end Monoidₓ
 
+section CommMonoidₓ
+
+variable [CommMonoidₓ α]
+
 /-- `finset α` is a `comm_monoid` under pointwise operations if `α` is. -/
 @[to_additive "`finset α` is an `add_comm_monoid` under pointwise operations if `α` is. "]
-protected def commMonoid [CommMonoidₓ α] : CommMonoidₓ (Finset α) :=
+protected def commMonoid : CommMonoidₓ (Finset α) :=
   coe_injective.CommMonoid _ coe_one coe_mul coe_pow
+
+localized [Pointwise] attribute [instance] Finset.commMonoid Finset.addCommMonoid
+
+@[simp, norm_cast, to_additive]
+theorem coe_prod {ι : Type _} (s : Finset ι) (f : ι → Finset α) : (↑(∏ i in s, f i) : Set α) = ∏ i in s, f i :=
+  map_prod (coeMonoidHom : Finset α →* Set α) _ _
+
+end CommMonoidₓ
 
 open Pointwise
 
@@ -684,7 +711,7 @@ protected def hasDistribNeg [Mul α] [HasDistribNeg α] : HasDistribNeg (Finset 
 
 localized [Pointwise]
   attribute [instance]
-    Finset.commMonoid Finset.addCommMonoid Finset.divisionMonoid Finset.subtractionMonoid Finset.divisionCommMonoid Finset.subtractionCommMonoid Finset.hasDistribNeg
+    Finset.divisionMonoid Finset.subtractionMonoid Finset.divisionCommMonoid Finset.subtractionCommMonoid Finset.hasDistribNeg
 
 section Distribₓ
 
@@ -813,25 +840,21 @@ section Groupₓ
 
 variable [Groupₓ α] {s t : Finset α} {a b : α}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp, to_additive]
 theorem preimage_mul_left_singleton : preimage {b} ((· * ·) a) ((mul_right_injective _).InjOn _) = {a⁻¹ * b} := by
   classical
   rw [← image_mul_left', image_singleton]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp, to_additive]
 theorem preimage_mul_right_singleton : preimage {b} (· * a) ((mul_left_injective _).InjOn _) = {b * a⁻¹} := by
   classical
   rw [← image_mul_right', image_singleton]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp, to_additive]
 theorem preimage_mul_left_one : preimage 1 ((· * ·) a) ((mul_right_injective _).InjOn _) = {a⁻¹} := by
   classical
   rw [← image_mul_left', image_one, mul_oneₓ]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp, to_additive]
 theorem preimage_mul_right_one : preimage 1 (· * b) ((mul_left_injective _).InjOn _) = {b⁻¹} := by
   classical
@@ -1167,7 +1190,7 @@ variable [DecidableEq γ]
 
 @[to_additive]
 instance smul_comm_class_finset [HasSmul α γ] [HasSmul β γ] [SmulCommClass α β γ] : SmulCommClass α β (Finset γ) :=
-  ⟨fun _ _ _ => image_comm <| smul_comm _ _⟩
+  ⟨fun _ _ => commute.finset_image <| smul_comm _ _⟩
 
 @[to_additive]
 instance smul_comm_class_finset' [HasSmul α γ] [HasSmul β γ] [SmulCommClass α β γ] :

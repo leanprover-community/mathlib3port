@@ -50,7 +50,6 @@ def leastOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : ℤ,
     match z, Le.dest (Hb _ h), h with
     | _, ⟨n, rfl⟩, h => add_le_add_left (Int.coe_nat_le.2 <| Nat.find_min'ₓ _ h) _⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `P : ℤ → Prop` is a predicate such that the set `{m : P m}` is bounded below and nonempty,
 then this set has the least element. This lemma uses classical logic to avoid assumption
 `[decidable_pred P]`. See `int.least_of_bdd` for a constructive counterpart. -/
@@ -84,7 +83,6 @@ def greatestOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : �
       al _ <| by
         rwa [neg_negₓ]⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `P : ℤ → Prop` is a predicate such that the set `{m : P m}` is bounded above and nonempty,
 then this set has the greatest element. This lemma uses classical logic to avoid assumption
 `[decidable_pred P]`. See `int.greatest_of_bdd` for a constructive counterpart. -/

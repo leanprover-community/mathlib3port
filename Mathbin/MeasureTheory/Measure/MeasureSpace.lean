@@ -379,13 +379,13 @@ theorem measure_bUnion_eq_supr {s : ι → Set α} {t : Set ι} (ht : t.Countabl
   have := ht.to_encodable
   rw [bUnion_eq_Union, measure_Union_eq_supr hd.directed_coe, ← supr_subtype'']
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊆ » s k)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s k)
 /-- Continuity from above: the measure of the intersection of a decreasing sequence of measurable
 sets is the infimum of the measures. -/
 theorem measure_Inter_eq_infi [Encodable ι] {s : ι → Set α} (h : ∀ i, MeasurableSet (s i)) (hd : Directed (· ⊇ ·) s)
     (hfin : ∃ i, μ (s i) ≠ ∞) : μ (⋂ i, s i) = ⨅ i, μ (s i) := by
   rcases hfin with ⟨k, hk⟩
-  have : ∀ t _ : t ⊆ s k, μ t ≠ ∞ := fun t ht => ne_top_of_le_ne_top hk (measure_mono ht)
+  have : ∀ (t) (_ : t ⊆ s k), μ t ≠ ∞ := fun t ht => ne_top_of_le_ne_top hk (measure_mono ht)
   rw [← Ennreal.sub_sub_cancel hk (infi_le _ k), Ennreal.sub_infi, ←
     Ennreal.sub_sub_cancel hk (measure_mono (Inter_subset _ k)), ←
     measure_diff (Inter_subset _ k) (MeasurableSet.Inter h) (this _ (Inter_subset _ k)), diff_Inter,
@@ -847,11 +847,11 @@ def liftLinear {m0 : MeasurableSpace α} (f : OuterMeasure α →ₗ[ℝ≥0∞]
       simp [← hs]
 
 @[simp]
-theorem lift_linear_apply {f : OuterMeasure α →ₗ[ℝ≥0∞] OuterMeasure β} hf {s : Set β} (hs : MeasurableSet s) :
+theorem lift_linear_apply {f : OuterMeasure α →ₗ[ℝ≥0∞] OuterMeasure β} (hf) {s : Set β} (hs : MeasurableSet s) :
     liftLinear f hf μ s = f μ.toOuterMeasure s :=
   to_measure_apply _ _ hs
 
-theorem le_lift_linear_apply {f : OuterMeasure α →ₗ[ℝ≥0∞] OuterMeasure β} hf (s : Set β) :
+theorem le_lift_linear_apply {f : OuterMeasure α →ₗ[ℝ≥0∞] OuterMeasure β} (hf) (s : Set β) :
     f μ.toOuterMeasure s ≤ liftLinear f hf μ s :=
   le_to_measure_apply _ _ s
 
@@ -975,9 +975,12 @@ theorem tendsto_ae_map {f : α → β} (hf : AeMeasurable f μ) : Tendsto f μ.a
 
 omit m0
 
-/-- Pullback of a `measure`. If `f` sends each `measurable` set to a `measurable` set, then for each
-measurable set `s` we have `comap f μ s = μ (f '' s)`. -/
-def comap [MeasurableSpace α] (f : α → β) : Measure β →ₗ[ℝ≥0∞] Measure α :=
+/-- Pullback of a `measure` as a linear map. If `f` sends each measurable set to a measurable
+set, then for each measurable set `s` we have `comapₗ f μ s = μ (f '' s)`.
+
+If the linearity is not needed, please use `comap` instead, which works for a larger class of
+functions. -/
+def comapₗ [MeasurableSpace α] (f : α → β) : Measure β →ₗ[ℝ≥0∞] Measure α :=
   if hf : Injective f ∧ ∀ s, MeasurableSet s → MeasurableSet (f '' s) then
     (liftLinear (OuterMeasure.comap f)) fun μ s hs t => by
       simp only [← coe_to_outer_measure, ← outer_measure.comap_apply, image_inter hf.1, ← image_diff hf.1]
@@ -985,11 +988,36 @@ def comap [MeasurableSpace α] (f : α → β) : Measure β →ₗ[ℝ≥0∞] M
       exact hf.2 s hs
   else 0
 
+theorem comapₗ_apply {β} [MeasurableSpace α] {mβ : MeasurableSpace β} (f : α → β) (hfi : Injective f)
+    (hf : ∀ s, MeasurableSet s → MeasurableSet (f '' s)) (μ : Measure β) (hs : MeasurableSet s) :
+    comapₗ f μ s = μ (f '' s) := by
+  rw [comapₗ, dif_pos, lift_linear_apply _ hs, outer_measure.comap_apply, coe_to_outer_measure]
+  exact ⟨hfi, hf⟩
+
+/-- Pullback of a `measure`. If `f` sends each measurable set to a null-measurable set,
+then for each measurable set `s` we have `comap f μ s = μ (f '' s)`. -/
+def comap [MeasurableSpace α] (f : α → β) (μ : Measure β) : Measure α :=
+  if hf : Injective f ∧ ∀ s, MeasurableSet s → NullMeasurableSet (f '' s) μ then
+    (OuterMeasure.comap f μ.toOuterMeasure).toMeasure fun s hs t => by
+      simp only [← coe_to_outer_measure, ← outer_measure.comap_apply, image_inter hf.1, ← image_diff hf.1]
+      exact (measure_inter_add_diff₀ _ (hf.2 s hs)).symm
+  else 0
+
+theorem comap_apply₀ [MeasurableSpace α] (f : α → β) (μ : Measure β) (hfi : Injective f)
+    (hf : ∀ s, MeasurableSet s → NullMeasurableSet (f '' s) μ) (hs : NullMeasurableSet s (comap f μ)) :
+    comap f μ s = μ (f '' s) := by
+  rw [comap, dif_pos (And.intro hfi hf)] at hs⊢
+  rw [to_measure_apply₀ _ _ hs, outer_measure.comap_apply, coe_to_outer_measure]
+
 theorem comap_apply {β} [MeasurableSpace α] {mβ : MeasurableSpace β} (f : α → β) (hfi : Injective f)
     (hf : ∀ s, MeasurableSet s → MeasurableSet (f '' s)) (μ : Measure β) (hs : MeasurableSet s) :
-    comap f μ s = μ (f '' s) := by
-  rw [comap, dif_pos, lift_linear_apply _ hs, outer_measure.comap_apply, coe_to_outer_measure]
-  exact ⟨hfi, hf⟩
+    comap f μ s = μ (f '' s) :=
+  comap_apply₀ f μ hfi (fun s hs => (hf s hs).NullMeasurableSet) hs.NullMeasurableSet
+
+theorem comapₗ_eq_comap {β} [MeasurableSpace α] {mβ : MeasurableSpace β} (f : α → β) (hfi : Injective f)
+    (hf : ∀ s, MeasurableSet s → MeasurableSet (f '' s)) (μ : Measure β) (hs : MeasurableSet s) :
+    comapₗ f μ s = comap f μ s :=
+  (comapₗ_apply f hfi hf μ hs).trans (comap_apply f hfi hf μ hs).symm
 
 /-! ### Restricting a measure -/
 
@@ -1243,9 +1271,9 @@ theorem restrict_eq_self_of_ae_mem {m0 : MeasurableSpace α} ⦃s : Set α⦄ �
     _ = μ := restrict_univ
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem restrict_congr_meas (hs : MeasurableSet s) :
-    μ.restrict s = ν.restrict s ↔ ∀ t _ : t ⊆ s, MeasurableSet t → μ t = ν t :=
+    μ.restrict s = ν.restrict s ↔ ∀ (t) (_ : t ⊆ s), MeasurableSet t → μ t = ν t :=
   ⟨fun H t hts ht => by
     rw [← inter_eq_self_of_subset_left hts, ← restrict_apply ht, H, restrict_apply ht], fun H =>
     ext fun t ht => by
@@ -2307,9 +2335,9 @@ end
 
 open Interval
 
--- ./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
 theorem interval_oc_ae_eq_interval [LinearOrderₓ α] {a b : α} :
-    Ι a b =ᵐ[μ] "./././Mathport/Syntax/Translate/Basic.lean:936:47: unsupported (impossible)" :=
+    Ι a b =ᵐ[μ] "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)" :=
   Ioc_ae_eq_Icc
 
 end NoAtoms
@@ -2461,7 +2489,7 @@ theorem exists_subset_measure_lt_top [SigmaFinite μ] {r : ℝ≥0∞} (hs : Mea
   refine' ⟨s ∩ spanning_sets μ n, hs.inter (measurable_spanning_sets _ _), inter_subset_left _ _, hn, _⟩
   exact (measure_mono (inter_subset_right _ _)).trans_lt (measure_spanning_sets_lt_top _ _)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t' «expr ⊇ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t' «expr ⊇ » t)
 /-- The measurable superset `to_measurable μ t` of `t` (which has the same measure as `t`)
 satisfies, for any measurable set `s`, the equality `μ (to_measurable μ t ∩ s) = μ (t ∩ s)`.
 This only holds when `μ` is σ-finite. For a version without this assumption (but requiring
@@ -3097,7 +3125,7 @@ namespace IsCompact
 
 variable [TopologicalSpace α] [MeasurableSpace α] {μ : Measureₓ α} {s : Set α}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (U «expr ⊇ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (U «expr ⊇ » s)
 /-- If `s` is a compact set and `μ` is finite at `𝓝 x` for every `x ∈ s`, then `s` admits an open
 superset of finite measure. -/
 theorem exists_open_superset_measure_lt_top' (h : IsCompact s) (hμ : ∀, ∀ x ∈ s, ∀, μ.FiniteAtFilter (𝓝 x)) :
@@ -3119,7 +3147,7 @@ theorem exists_open_superset_measure_lt_top' (h : IsCompact s) (hμ : ∀, ∀ x
     exact ⟨U, nhds_within_le_nhds (hUo.mem_nhds hx), U, subset.rfl, hUo, hU⟩
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (U «expr ⊇ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (U «expr ⊇ » s)
 /-- If `s` is a compact set and `μ` is a locally finite measure, then `s` admits an open superset of
 finite measure. -/
 theorem exists_open_superset_measure_lt_top (h : IsCompact s) (μ : Measureₓ α) [IsLocallyFiniteMeasure μ] :

@@ -25,6 +25,9 @@ variable {α : Sort u} {β : Sort v}
 instance [Subsingleton α] : Subsingleton (Plift α) :=
   Equivₓ.plift.Subsingleton
 
+instance [Nonempty α] : Nonempty (Plift α) :=
+  Equivₓ.plift.Nonempty
+
 instance [Unique α] : Unique (Plift α) :=
   Equivₓ.plift.unique
 
@@ -69,6 +72,9 @@ variable {α : Type u} {β : Type v}
 
 instance [Subsingleton α] : Subsingleton (ULift α) :=
   Equivₓ.ulift.Subsingleton
+
+instance [Nonempty α] : Nonempty (ULift α) :=
+  Equivₓ.ulift.Nonempty
 
 instance [Unique α] : Unique (ULift α) :=
   Equivₓ.ulift.unique

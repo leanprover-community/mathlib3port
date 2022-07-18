@@ -148,7 +148,7 @@ theorem aeval_X_left_apply (φ : MvPolynomial σ R) : aeval x φ = φ := by
 variable (f : σ → MvPolynomial τ R)
 
 @[simp]
-theorem bind₁_C_right (f : σ → MvPolynomial τ R) x : bind₁ f (c x) = c x := by
+theorem bind₁_C_right (f : σ → MvPolynomial τ R) (x) : bind₁ f (c x) = c x := by
   simp [← bind₁, ← algebra_map_eq]
 
 @[simp]

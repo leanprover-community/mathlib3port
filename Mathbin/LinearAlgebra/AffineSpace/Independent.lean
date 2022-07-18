@@ -50,12 +50,12 @@ include V
 nontrivial weighted subtractions (where the sum of weights is 0) are
 0. -/
 def AffineIndependent (p : ι → P) : Prop :=
-  ∀ s : Finset ι w : ι → k, (∑ i in s, w i) = 0 → s.weightedVsub p w = (0 : V) → ∀, ∀ i ∈ s, ∀, w i = 0
+  ∀ (s : Finset ι) (w : ι → k), (∑ i in s, w i) = 0 → s.weightedVsub p w = (0 : V) → ∀, ∀ i ∈ s, ∀, w i = 0
 
 /-- The definition of `affine_independent`. -/
 theorem affine_independent_def (p : ι → P) :
     AffineIndependent k p ↔
-      ∀ s : Finset ι w : ι → k, (∑ i in s, w i) = 0 → s.weightedVsub p w = (0 : V) → ∀, ∀ i ∈ s, ∀, w i = 0 :=
+      ∀ (s : Finset ι) (w : ι → k), (∑ i in s, w i) = 0 → s.weightedVsub p w = (0 : V) → ∀, ∀ i ∈ s, ∀, w i = 0 :=
   Iff.rfl
 
 /-- A family with at most one point is affinely independent. -/
@@ -169,7 +169,7 @@ combinations (with sum of weights 1) that evaluate to the same point
 have equal `set.indicator`. -/
 theorem affine_independent_iff_indicator_eq_of_affine_combination_eq (p : ι → P) :
     AffineIndependent k p ↔
-      ∀ s1 s2 : Finset ι w1 w2 : ι → k,
+      ∀ (s1 s2 : Finset ι) (w1 w2 : ι → k),
         (∑ i in s1, w1 i) = 1 →
           (∑ i in s2, w2 i) = 1 →
             s1.affineCombination p w1 = s2.affineCombination p w2 → Set.indicatorₓ (↑s1) w1 = Set.indicatorₓ (↑s2) w2 :=
@@ -428,7 +428,6 @@ theorem AffineIndependent.not_mem_affine_span_diff [Nontrivial k] {p : ι → P}
     (s : Set ι) : p i ∉ affineSpan k (p '' (s \ {i})) := by
   simp [← ha]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem exists_nontrivial_relation_sum_zero_of_not_affine_ind {t : Finset V} (h : ¬AffineIndependent k (coe : t → V)) :
     ∃ f : V → k, (∑ e in t, f e • e) = 0 ∧ (∑ e in t, f e) = 0 ∧ ∃ x ∈ t, f x ≠ 0 := by
   classical
@@ -453,7 +452,7 @@ theorem exists_nontrivial_relation_sum_zero_of_not_affine_ind {t : Finset V} (h 
 in terms of linear combinations. -/
 theorem affine_independent_iff {ι} {p : ι → V} :
     AffineIndependent k p ↔
-      ∀ s : Finset ι w : ι → k, s.Sum w = 0 → (∑ e in s, w e • p e) = 0 → ∀, ∀ e ∈ s, ∀, w e = 0 :=
+      ∀ (s : Finset ι) (w : ι → k), s.Sum w = 0 → (∑ e in s, w e • p e) = 0 → ∀, ∀ e ∈ s, ∀, w e = 0 :=
   forall₃_congrₓ fun s w hw => by
     simp [← s.weighted_vsub_eq_linear_combination hw]
 
@@ -505,7 +504,7 @@ theorem exists_subset_affine_independent_affine_span_eq_top {s : Set P} (h : Aff
 
 variable (k V)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem exists_affine_independent (s : Set P) :
     ∃ (t : _)(_ : t ⊆ s), affineSpan k t = affineSpan k s ∧ AffineIndependent k (coe : t → P) := by
   rcases s.eq_empty_or_nonempty with (rfl | ⟨p, hp⟩)

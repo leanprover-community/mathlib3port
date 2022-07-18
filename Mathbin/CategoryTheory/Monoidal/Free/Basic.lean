@@ -57,11 +57,11 @@ namespace FreeMonoidalCategory
     relations defining a monoidal category. -/
 @[nolint has_inhabited_instance]
 inductive Hom : F C → F C → Type u
-  | id X : hom X X
+  | id (X) : hom X X
   | α_hom (X Y Z : F C) : hom ((X.tensor Y).tensor Z) (X.tensor (Y.tensor Z))
   | α_inv (X Y Z : F C) : hom (X.tensor (Y.tensor Z)) ((X.tensor Y).tensor Z)
-  | l_hom X : hom (unit.tensor X) X
-  | l_inv X : hom X (unit.tensor X)
+  | l_hom (X) : hom (unit.tensor X) X
+  | l_inv (X) : hom X (unit.tensor X)
   | ρ_hom (X : F C) : hom (X.tensor unit) X
   | ρ_inv (X : F C) : hom X (X.tensor unit)
   | comp {X Y Z} (f : hom X Y) (g : hom Y Z) : hom X Z

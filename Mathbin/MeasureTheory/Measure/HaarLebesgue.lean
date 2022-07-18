@@ -54,7 +54,7 @@ def TopologicalSpace.PositiveCompacts.piIcc01 (ι : Type _) [Fintype ι] : Posit
   Carrier := pi Univ fun i => Icc 0 1
   compact' := is_compact_univ_pi fun i => is_compact_Icc
   interior_nonempty' := by
-    simp only [← interior_pi_set, ← Set.Finite.of_fintype, ← interior_Icc, ← univ_pi_nonempty_iff, ← nonempty_Ioo, ←
+    simp only [← interior_pi_set, ← Set.to_finite, ← interior_Icc, ← univ_pi_nonempty_iff, ← nonempty_Ioo, ←
       implies_true_iff, ← zero_lt_one]
 
 namespace MeasureTheory
@@ -397,13 +397,13 @@ theorem add_haar_ball [Nontrivial E] (x : E) {r : ℝ} (hr : 0 ≤ r) :
 theorem add_haar_closed_ball_mul_of_pos (x : E) {r : ℝ} (hr : 0 < r) (s : ℝ) :
     μ (ClosedBall x (r * s)) = Ennreal.ofReal (r ^ finrank ℝ E) * μ (ClosedBall 0 s) := by
   have : closed_ball (0 : E) (r * s) = r • closed_ball 0 s := by
-    simp [← smul_closed_ball' hr.ne' (0 : E), ← Real.norm_eq_abs, ← abs_of_nonneg hr.le]
+    simp [← smul_closed_ball' hr.ne' (0 : E), ← abs_of_nonneg hr.le]
   simp only [← this, ← add_haar_smul, ← abs_of_nonneg hr.le, ← add_haar_closed_ball_center, ← abs_pow]
 
 theorem add_haar_closed_ball_mul (x : E) {r : ℝ} (hr : 0 ≤ r) {s : ℝ} (hs : 0 ≤ s) :
     μ (ClosedBall x (r * s)) = Ennreal.ofReal (r ^ finrank ℝ E) * μ (ClosedBall 0 s) := by
   have : closed_ball (0 : E) (r * s) = r • closed_ball 0 s := by
-    simp [← smul_closed_ball r (0 : E) hs, ← Real.norm_eq_abs, ← abs_of_nonneg hr]
+    simp [← smul_closed_ball r (0 : E) hs, ← abs_of_nonneg hr]
   simp only [← this, ← add_haar_smul, ← abs_of_nonneg hr, ← add_haar_closed_ball_center, ← abs_pow]
 
 /-- The measure of a closed ball can be expressed in terms of the measure of the closed unit ball.
@@ -592,7 +592,7 @@ theorem tendsto_add_haar_inter_smul_zero_of_density_zero (s : Set E) (x : E)
     (h : Tendsto (fun r => μ (s ∩ ClosedBall x r) / μ (ClosedBall x r)) (𝓝[>] 0) (𝓝 0)) (t : Set E)
     (ht : MeasurableSet t) (h''t : μ t ≠ ∞) :
     Tendsto (fun r : ℝ => μ (s ∩ ({x} + r • t)) / μ ({x} + r • t)) (𝓝[>] 0) (𝓝 0) := by
-  refine' tendsto_order.2 ⟨fun a' ha' => (Ennreal.not_lt_zero ha').elim, fun ε εpos : 0 < ε => _⟩
+  refine' tendsto_order.2 ⟨fun a' ha' => (Ennreal.not_lt_zero ha').elim, fun ε (εpos : 0 < ε) => _⟩
   rcases eq_or_ne (μ t) 0 with (h't | h't)
   · apply eventually_of_forall fun r => _
     suffices H : μ (s ∩ ({x} + r • t)) = 0

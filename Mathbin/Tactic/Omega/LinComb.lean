@@ -21,7 +21,7 @@ def linComb : List Nat → List Term → Term
   | _ :: _, [] => ⟨0, []⟩
   | n :: ns, t :: ts => Term.add (t.mul ↑n) (lin_comb ns ts)
 
-theorem lin_comb_holds {v : Nat → Int} : ∀ {ts} ns, (∀, ∀ t ∈ ts, ∀, 0 ≤ Term.val v t) → 0 ≤ (linComb ns ts).val v
+theorem lin_comb_holds {v : Nat → Int} : ∀ {ts} (ns), (∀, ∀ t ∈ ts, ∀, 0 ≤ Term.val v t) → 0 ≤ (linComb ns ts).val v
   | [], [], h => by
     simp only [← add_zeroₓ, ← term.val, ← lin_comb, ← coeffs.val_nil]
   | [], _ :: _, h => by

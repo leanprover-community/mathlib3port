@@ -56,7 +56,7 @@ def toNat : ∀ {n}, Fin2 n → ℕ
   | _, @fs n i => succ (to_nat i)
 
 /-- Converts a natural into a `fin2` if it is in range -/
-def optOfNat : ∀ {n} k : ℕ, Option (Fin2 n)
+def optOfNat : ∀ {n} (k : ℕ), Option (Fin2 n)
   | 0, _ => none
   | succ n, 0 => some fz
   | succ n, succ k => fs <$> @opt_of_nat n k
@@ -67,7 +67,7 @@ def add {n} (i : Fin2 n) : ∀ k, Fin2 (n + k)
   | succ k => fs (add k)
 
 /-- `left k` is the embedding `fin2 n → fin2 (k + n)` -/
-def left k : ∀ {n}, Fin2 n → Fin2 (k + n)
+def left (k) : ∀ {n}, Fin2 n → Fin2 (k + n)
   | _, @fz n => fz
   | _, @fs n i => fs (left i)
 
@@ -97,15 +97,15 @@ def remapLeft {m n} (f : Fin2 m → Fin2 n) : ∀ k, Fin2 (m + k) → Fin2 (n + 
 class IsLt (m n : ℕ) where
   h : m < n
 
-instance IsLt.zero n : IsLt 0 (succ n) :=
+instance IsLt.zero (n) : IsLt 0 (succ n) :=
   ⟨succ_posₓ _⟩
 
-instance IsLt.succ m n [l : IsLt m n] : IsLt (succ m) (succ n) :=
+instance IsLt.succ (m n) [l : IsLt m n] : IsLt (succ m) (succ n) :=
   ⟨succ_lt_succₓ l.h⟩
 
 /-- Use type class inference to infer the boundedness proof, so that we can directly convert a
 `nat` into a `fin2 n`. This supports notation like `&1 : fin 3`. -/
-def ofNat' : ∀ {n} m [IsLt m n], Fin2 n
+def ofNat' : ∀ {n} (m) [IsLt m n], Fin2 n
   | 0, m, ⟨h⟩ => absurd h (Nat.not_lt_zeroₓ _)
   | succ n, 0, ⟨h⟩ => fz
   | succ n, succ m, ⟨h⟩ => fs (@of_nat' n m ⟨lt_of_succ_lt_succₓ h⟩)

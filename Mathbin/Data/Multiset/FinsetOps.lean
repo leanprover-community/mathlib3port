@@ -88,7 +88,7 @@ theorem attach_ndinsert (a : α) (s : Multiset α) :
       (fun p : { x // x ∈ s } => ⟨p.val, h p⟩ : { x // x ∈ s } → { x // x ∈ s }) = id :=
     fun h => funext fun p => Subtype.eq rfl
   have :
-    ∀ t eq : s.ndinsert a = t,
+    ∀ (t) (eq : s.ndinsert a = t),
       t.attach = ndinsert ⟨a, Eq ▸ mem_ndinsert_self a s⟩ (s.attach.map fun p => ⟨p.1, Eq ▸ mem_ndinsert_of_mem p.2⟩) :=
     by
     intro t ht

@@ -49,7 +49,7 @@ def Component (j : ConnectedComponents J) : Type u₁ :=
 
 /-- The inclusion functor from a connected component to the whole category. -/
 @[simps (config := { rhsMd := semireducible })]
-def Component.ι j : Component j ⥤ J :=
+def Component.ι (j) : Component j ⥤ J :=
   fullSubcategoryInclusion _ deriving Full, Faithful
 
 /-- Each connected component of the category is nonempty. -/

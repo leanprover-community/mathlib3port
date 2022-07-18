@@ -22,7 +22,6 @@ adjacent.
 ## TODO
 
 * Clique numbers
-* Going back and forth between cliques and complete subgraphs or embeddings of complete graphs.
 * Do we need `clique_set`, a version of `clique_finset` for infinite graphs?
 -/
 
@@ -46,6 +45,21 @@ abbrev IsClique (s : Set α) : Prop :=
 
 theorem is_clique_iff : G.IsClique s ↔ s.Pairwise G.Adj :=
   Iff.rfl
+
+/-- A clique is a set of vertices whose induced graph is complete. -/
+theorem is_clique_iff_induce_eq : G.IsClique s ↔ G.induce s = ⊤ := by
+  rw [is_clique_iff]
+  constructor
+  · intro h
+    ext ⟨v, hv⟩ ⟨w, hw⟩
+    simp only [← comap_adj, ← Subtype.coe_mk, ← top_adj, ← Ne.def, ← Subtype.mk_eq_mk]
+    exact ⟨adj.ne, h hv hw⟩
+    
+  · intro h v hv w hw hne
+    have : (G.induce s).Adj ⟨v, hv⟩ ⟨w, hw⟩ = _ := rfl
+    conv_lhs at this => rw [h]
+    simpa [← hne]
+    
 
 instance [DecidableEq α] [DecidableRel G.Adj] {s : Finset α} : Decidable (G.IsClique s) :=
   decidableOfIff' _ G.is_clique_iff
@@ -134,6 +148,44 @@ def CliqueFree (n : ℕ) : Prop :=
 
 variable {G H}
 
+theorem not_clique_free_of_top_embedding {n : ℕ} (f : (⊤ : SimpleGraph (Finₓ n)) ↪g G) : ¬G.CliqueFree n := by
+  simp only [← clique_free, ← is_n_clique_iff, ← is_clique_iff_induce_eq, ← not_forall, ← not_not]
+  use finset.univ.map f.to_embedding
+  simp only [← card_map, ← Finset.card_fin, ← eq_self_iff_true, ← and_trueₓ]
+  ext ⟨v, hv⟩ ⟨w, hw⟩
+  simp only [← coe_map, ← RelEmbedding.coe_fn_to_embedding, ← Set.mem_image, ← coe_univ, ← Set.mem_univ, ← true_andₓ] at
+    hv hw
+  obtain ⟨v', rfl⟩ := hv
+  obtain ⟨w', rfl⟩ := hw
+  simp only [← f.map_adj_iff, ← comap_adj, ← Function.Embedding.coe_subtype, ← Subtype.coe_mk, ← top_adj, ← Ne.def, ←
+    Subtype.mk_eq_mk]
+  exact (Function.Embedding.apply_eq_iff_eq _ _ _).symm.Not
+
+/-- An embedding of a complete graph that witnesses the fact that the graph is not clique-free. -/
+noncomputable def topEmbeddingOfNotCliqueFree {n : ℕ} (h : ¬G.CliqueFree n) : (⊤ : SimpleGraph (Finₓ n)) ↪g G := by
+  simp only [← clique_free, ← is_n_clique_iff, ← is_clique_iff_induce_eq, ← not_forall, ← not_not] at h
+  obtain ⟨ha, hb⟩ := h.some_spec
+  have : (⊤ : SimpleGraph (Finₓ h.some.card)) ≃g (⊤ : SimpleGraph h.some) := by
+    apply iso.complete_graph
+    simpa using (Fintype.equivFin h.some).symm
+  rw [← ha] at this
+  convert (embedding.induce ↑h.some).comp this.to_embedding <;> exact hb.symm
+
+theorem not_clique_free_iff (n : ℕ) : ¬G.CliqueFree n ↔ Nonempty ((⊤ : SimpleGraph (Finₓ n)) ↪g G) := by
+  constructor
+  · exact fun h => ⟨top_embedding_of_not_clique_free h⟩
+    
+  · rintro ⟨f⟩
+    exact not_clique_free_of_top_embedding f
+    
+
+theorem clique_free_iff {n : ℕ} : G.CliqueFree n ↔ IsEmpty ((⊤ : SimpleGraph (Finₓ n)) ↪g G) := by
+  rw [← not_iff_not, not_clique_free_iff, not_is_empty_iff]
+
+theorem not_clique_free_card_of_top_embedding [Fintype α] (f : (⊤ : SimpleGraph α) ↪g G) : ¬G.CliqueFree (card α) := by
+  rw [not_clique_free_iff]
+  use (iso.complete_graph (Fintype.equivFin α)).symm.toEmbedding.trans f
+
 theorem clique_free_bot (h : 2 ≤ n) : (⊥ : SimpleGraph α).CliqueFree n := by
   rintro t ht
   rw [is_n_clique_bot_iff] at ht
@@ -146,6 +198,13 @@ theorem CliqueFree.mono (h : m ≤ n) : G.CliqueFree m → G.CliqueFree n := by
 
 theorem CliqueFree.anti (h : G ≤ H) : H.CliqueFree n → G.CliqueFree n :=
   forall_imp fun s => mt <| IsNClique.mono h
+
+/-- See `simple_graph.clique_free_chromatic_number_succ` for a tighter bound. -/
+theorem clique_free_of_card_lt [Fintype α] (hc : card α < n) : G.CliqueFree n := by
+  by_contra h
+  refine' Nat.lt_le_antisymmₓ hc _
+  rw [clique_free_iff, not_is_empty_iff] at h
+  simpa using Fintype.card_le_of_embedding h.some.to_embedding
 
 end CliqueFree
 

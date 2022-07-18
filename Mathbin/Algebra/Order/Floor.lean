@@ -23,6 +23,7 @@ We define the natural- and integer-valued floor and ceil functions on linearly o
 * `int.floor a`: Greatest integer `z` such that `z ≤ a`.
 * `int.ceil a`: Least integer `z` such that `a ≤ z`.
 * `int.fract a`: Fractional part of `a`, defined as `a - floor a`.
+* `round a`: Nearest integer to `a`. It rounds halves towards infinity.
 
 ## Notations
 
@@ -463,14 +464,14 @@ instance : FloorRing ℤ where
     rfl
 
 /-- A `floor_ring` constructor from the `floor` function alone. -/
-def FloorRing.ofFloor α [LinearOrderedRing α] (floor : α → ℤ) (gc_coe_floor : GaloisConnection coe floor) :
+def FloorRing.ofFloor (α) [LinearOrderedRing α] (floor : α → ℤ) (gc_coe_floor : GaloisConnection coe floor) :
     FloorRing α :=
   { floor, ceil := fun a => -floor (-a), gc_coe_floor,
     gc_ceil_coe := fun a z => by
       rw [neg_le, ← gc_coe_floor, Int.cast_neg, neg_le_neg_iff] }
 
 /-- A `floor_ring` constructor from the `ceil` function alone. -/
-def FloorRing.ofCeil α [LinearOrderedRing α] (ceil : α → ℤ) (gc_ceil_coe : GaloisConnection ceil coe) : FloorRing α :=
+def FloorRing.ofCeil (α) [LinearOrderedRing α] (ceil : α → ℤ) (gc_ceil_coe : GaloisConnection ceil coe) : FloorRing α :=
   { floor := fun a => -ceil (-a), ceil,
     gc_coe_floor := fun a z => by
       rw [le_neg, gc_ceil_coe, Int.cast_neg, neg_le_neg_iff],
@@ -767,13 +768,21 @@ theorem image_fract (s : Set α) : fract '' s = ⋃ m : ℤ, (fun x => x - m) ''
 
 section LinearOrderedField
 
-variable {k : Type _} [LinearOrderedField k] [FloorRing k]
+variable {k : Type _} [LinearOrderedField k] [FloorRing k] {b : k}
 
 theorem fract_div_mul_self_mem_Ico (a b : k) (ha : 0 < a) : fract (b / a) * a ∈ Ico 0 a :=
   ⟨(zero_le_mul_right ha).2 (fract_nonneg (b / a)), (mul_lt_iff_lt_one_left ha).2 (fract_lt_one (b / a))⟩
 
 theorem fract_div_mul_self_add_zsmul_eq (a b : k) (ha : a ≠ 0) : fract (b / a) * a + ⌊b / a⌋ • a = b := by
   rw [zsmul_eq_mul, ← add_mulₓ, fract_add_floor, div_mul_cancel b ha]
+
+theorem sub_floor_div_mul_nonneg (a : k) (hb : 0 < b) : 0 ≤ a - ⌊a / b⌋ * b :=
+  sub_nonneg_of_le <| (le_div_iff hb).1 <| floor_le _
+
+theorem sub_floor_div_mul_lt (a : k) (hb : 0 < b) : a - ⌊a / b⌋ * b < b :=
+  sub_lt_iff_lt_add.2 <| by
+    rw [← one_add_mul, ← div_lt_iff hb, add_commₓ]
+    exact lt_floor_add_one _
 
 end LinearOrderedField
 
@@ -913,6 +922,39 @@ theorem preimage_Iic : (coe : ℤ → α) ⁻¹' Set.Iic a = Set.Iic ⌊a⌋ := 
   simp [← le_floor]
 
 end Int
+
+open Int
+
+/-! ### Round -/
+
+
+section round
+
+variable [LinearOrderedField α] [FloorRing α]
+
+/-- `round` rounds a number to the nearest integer. `round (1 / 2) = 1` -/
+def round (x : α) : ℤ :=
+  ⌊x + 1 / 2⌋
+
+@[simp]
+theorem round_zero : round (0 : α) = 0 :=
+  floor_eq_iff.2
+    (by
+      norm_num)
+
+@[simp]
+theorem round_one : round (1 : α) = 1 :=
+  floor_eq_iff.2
+    (by
+      norm_num)
+
+theorem abs_sub_round (x : α) : abs (x - round x) ≤ 1 / 2 := by
+  rw [round, abs_sub_le_iff]
+  have := floor_le (x + 1 / 2)
+  have := lt_floor_add_one (x + 1 / 2)
+  constructor <;> linarith
+
+end round
 
 variable {α} [LinearOrderedRing α] [FloorRing α]
 

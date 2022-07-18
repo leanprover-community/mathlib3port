@@ -44,7 +44,7 @@ instance : CoeFun (α ≃ᵤ β) fun _ => α → β :=
   ⟨fun e => e.toEquiv⟩
 
 @[simp]
-theorem uniform_equiv_mk_coe (a : Equivₓ α β) b c : (UniformEquiv.mk a b c : α → β) = a :=
+theorem uniform_equiv_mk_coe (a : Equivₓ α β) (b c) : (UniformEquiv.mk a b c : α → β) = a :=
   rfl
 
 /-- Inverse of a uniform isomorphism. -/
@@ -97,7 +97,7 @@ theorem trans_apply (h₁ : α ≃ᵤ β) (h₂ : β ≃ᵤ γ) (a : α) : h₁.
   rfl
 
 @[simp]
-theorem uniform_equiv_mk_coe_symm (a : Equivₓ α β) b c : ((UniformEquiv.mk a b c).symm : β → α) = a.symm :=
+theorem uniform_equiv_mk_coe_symm (a : Equivₓ α β) (b c) : ((UniformEquiv.mk a b c).symm : β → α) = a.symm :=
   rfl
 
 @[simp]

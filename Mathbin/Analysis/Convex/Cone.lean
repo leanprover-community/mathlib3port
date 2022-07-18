@@ -64,7 +64,7 @@ and `x, y ∈ s`. -/
 structure ConvexCone [AddCommMonoidₓ E] [HasSmul 𝕜 E] where
   Carrier : Set E
   smul_mem' : ∀ ⦃c : 𝕜⦄, 0 < c → ∀ ⦃x : E⦄, x ∈ carrier → c • x ∈ carrier
-  add_mem' : ∀ ⦃x⦄ hx : x ∈ carrier ⦃y⦄ hy : y ∈ carrier, x + y ∈ carrier
+  add_mem' : ∀ ⦃x⦄ (hx : x ∈ carrier) ⦃y⦄ (hy : y ∈ carrier), x + y ∈ carrier
 
 end Definitions
 
@@ -368,7 +368,7 @@ def positiveCone : ConvexCone 𝕜 E where
     rintro c hc x (hx : _ ≤ _)
     rw [← smul_zero c]
     exact smul_le_smul_of_nonneg hx hc.le
-  add_mem' := fun x hx : _ ≤ _ y hy : _ ≤ _ => add_nonneg hx hy
+  add_mem' := fun x (hx : _ ≤ _) y (hy : _ ≤ _) => add_nonneg hx hy
 
 /-- The positive cone of an ordered module is always salient. -/
 theorem salient_positive_cone : Salient (positiveCone 𝕜 E) := fun x xs hx hx' =>
@@ -605,7 +605,7 @@ theorem exists_extension_of_le_sublinear (f : LinearPmap ℝ E ℝ) (N : E → �
     try
       simp only [← LinearPmap.coprod_apply, ← to_pmap_apply, ← id_apply, ← LinearPmap.neg_apply, sub_eq_neg_add, ←
         sub_nonneg, ← Subtype.coe_mk] at *
-  replace g_eq : ∀ x : f.domain y : ℝ, g (x, y) = y - f x
+  replace g_eq : ∀ (x : f.domain) (y : ℝ), g (x, y) = y - f x
   · intro x y
     simpa only [← Subtype.coe_mk, ← Subtype.coe_eta] using g_eq ⟨(x, y), ⟨x.2, trivialₓ⟩⟩
     

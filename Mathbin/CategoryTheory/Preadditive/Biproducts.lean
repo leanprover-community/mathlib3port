@@ -255,7 +255,6 @@ theorem Biproduct.column_nonzero_of_iso' {σ τ : Type} [Fintype τ] {S : σ →
     simp
   exact h₁.symm.trans h₀
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `f : ⨁ S ⟶ ⨁ T` is an isomorphism, and `s` is a non-trivial summand of the source,
 then there is some `t` in the target so that the `s, t` matrix entry of `f` is nonzero.
 -/

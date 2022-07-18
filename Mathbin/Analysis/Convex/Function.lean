@@ -326,9 +326,9 @@ theorem LinearOrderₓ.concave_on_of_lt (hs : Convex 𝕜 s)
   @LinearOrderₓ.convex_on_of_lt _ _ βᵒᵈ _ _ _ _ _ _ s f hs hf
 
 /-- For a function on a convex set in a linearly ordered space (where the order and the algebraic
-structures aren't necessarily compatible), in order to prove that it is convex, it suffices to
-verify the inequality `f (a • x + b • y) ≤ a • f x + b • f y` for `x < y` and positive `a`, `b`. The
-main use case is `E = 𝕜` however one can apply it, e.g., to `𝕜^n` with lexicographic order. -/
+structures aren't necessarily compatible), in order to prove that it is strictly convex, it suffices
+to verify the inequality `f (a • x + b • y) < a • f x + b • f y` for `x < y` and positive `a`, `b`.
+The main use case is `E = 𝕜` however one can apply it, e.g., to `𝕜^n` with lexicographic order. -/
 theorem LinearOrderₓ.strict_convex_on_of_lt (hs : Convex 𝕜 s)
     (hf :
       ∀ ⦃x y : E⦄,
@@ -341,9 +341,9 @@ theorem LinearOrderₓ.strict_convex_on_of_lt (hs : Convex 𝕜 s)
   exact hf hx hy (h.lt_of_ne hxy) ha hb hab
 
 /-- For a function on a convex set in a linearly ordered space (where the order and the algebraic
-structures aren't necessarily compatible), in order to prove that it is concave it suffices to
-verify the inequality `a • f x + b • f y ≤ f (a • x + b • y)` for `x < y` and positive `a`, `b`. The
-main use case is `E = 𝕜` however one can apply it, e.g., to `𝕜^n` with lexicographic order. -/
+structures aren't necessarily compatible), in order to prove that it is strictly concave it suffices
+to verify the inequality `a • f x + b • f y < f (a • x + b • y)` for `x < y` and positive `a`, `b`.
+The main use case is `E = 𝕜` however one can apply it, e.g., to `𝕜^n` with lexicographic order. -/
 theorem LinearOrderₓ.strict_concave_on_of_lt (hs : Convex 𝕜 s)
     (hf :
       ∀ ⦃x y : E⦄,
@@ -580,7 +580,7 @@ theorem ConvexOn.le_right_of_left_le' (hf : ConvexOn 𝕜 s f) {x y : E} {a b : 
   rw [add_commₓ] at hab hfx⊢
   exact hf.le_left_of_right_le' hy hx hb ha hab hfx
 
-theorem ConcaveOn.le_right_of_left_le' (hf : ConcaveOn 𝕜 s f) {x y : E} {a b : 𝕜} (hx : x ∈ s) (hy : y ∈ s) (ha : 0 ≤ a)
+theorem ConcaveOn.right_le_of_le_left' (hf : ConcaveOn 𝕜 s f) {x y : E} {a b : 𝕜} (hx : x ∈ s) (hy : y ∈ s) (ha : 0 ≤ a)
     (hb : 0 < b) (hab : a + b = 1) (hfx : f (a • x + b • y) ≤ f x) : f y ≤ f (a • x + b • y) :=
   hf.dual.le_right_of_left_le' hx hy ha hb hab hfx
 
@@ -598,7 +598,7 @@ theorem ConvexOn.le_right_of_left_le (hf : ConvexOn 𝕜 s f) {x y z : E} (hx : 
   obtain ⟨a, b, ha, hb, hab, rfl⟩ := hz
   exact hf.le_right_of_left_le' hx hy ha.le hb hab hxz
 
-theorem ConcaveOn.le_right_of_left_le (hf : ConcaveOn 𝕜 s f) {x y z : E} (hx : x ∈ s) (hy : y ∈ s)
+theorem ConcaveOn.right_le_of_le_left (hf : ConcaveOn 𝕜 s f) {x y z : E} (hx : x ∈ s) (hy : y ∈ s)
     (hz : z ∈ OpenSegment 𝕜 x y) (hxz : f z ≤ f x) : f y ≤ f z :=
   hf.dual.le_right_of_left_le hx hy hz hxz
 
@@ -921,4 +921,29 @@ end HasSmul
 end OrderedAddCommMonoid
 
 end LinearOrderedField
+
+section
+
+variable [LinearOrderedField 𝕜] [LinearOrderedCancelAddCommMonoid β] [Module 𝕜 β] [OrderedSmul 𝕜 β] {x y z : 𝕜}
+  {s : Set 𝕜} {f : 𝕜 → β}
+
+theorem ConvexOn.le_right_of_left_le'' (hf : ConvexOn 𝕜 s f) (hx : x ∈ s) (hz : z ∈ s) (hxy : x < y) (hyz : y ≤ z)
+    (h : f x ≤ f y) : f y ≤ f z :=
+  hyz.eq_or_lt.elim (fun hyz => (congr_arg f hyz).le) fun hyz =>
+    hf.le_right_of_left_le hx hz (Ioo_subset_open_segment ⟨hxy, hyz⟩) h
+
+theorem ConvexOn.le_left_of_right_le'' (hf : ConvexOn 𝕜 s f) (hx : x ∈ s) (hz : z ∈ s) (hxy : x ≤ y) (hyz : y < z)
+    (h : f z ≤ f y) : f y ≤ f x :=
+  hxy.eq_or_lt.elim (fun hxy => (congr_arg f hxy).Ge) fun hxy =>
+    hf.le_left_of_right_le hx hz (Ioo_subset_open_segment ⟨hxy, hyz⟩) h
+
+theorem ConcaveOn.right_le_of_le_left'' (hf : ConcaveOn 𝕜 s f) (hx : x ∈ s) (hz : z ∈ s) (hxy : x < y) (hyz : y ≤ z)
+    (h : f y ≤ f x) : f z ≤ f y :=
+  hf.dual.le_right_of_left_le'' hx hz hxy hyz h
+
+theorem ConcaveOn.left_le_of_le_right'' (hf : ConcaveOn 𝕜 s f) (hx : x ∈ s) (hz : z ∈ s) (hxy : x ≤ y) (hyz : y < z)
+    (h : f y ≤ f z) : f x ≤ f y :=
+  hf.dual.le_left_of_right_le'' hx hz hxy hyz h
+
+end
 

@@ -226,7 +226,7 @@ variable {x : ℝ}
 
 open expNegInvGlue
 
-theorem pos_denom x : 0 < expNegInvGlue x + expNegInvGlue (1 - x) :=
+theorem pos_denom (x) : 0 < expNegInvGlue x + expNegInvGlue (1 - x) :=
   ((@zero_lt_one ℝ _ _).lt_or_lt x).elim (fun hx => add_pos_of_pos_of_nonneg (pos_of_pos hx) (nonneg _)) fun hx =>
     add_pos_of_nonneg_of_pos (nonneg _) (pos_of_pos <| sub_pos.2 hx)
 

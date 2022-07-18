@@ -195,11 +195,11 @@ theorem to_fun_eq_coe (f : α →*o β) : f.toFun = (f : α → β) :=
   rfl
 
 @[simp, to_additive]
-theorem coe_mk (f : α →* β) h : (OrderMonoidHom.mk f h : α → β) = f :=
+theorem coe_mk (f : α →* β) (h) : (OrderMonoidHom.mk f h : α → β) = f :=
   rfl
 
 @[simp, to_additive]
-theorem mk_coe (f : α →*o β) h : OrderMonoidHom.mk (f : α →* β) h = f := by
+theorem mk_coe (f : α →*o β) (h) : OrderMonoidHom.mk (f : α →* β) h = f := by
   ext
   rfl
 
@@ -414,11 +414,11 @@ theorem to_fun_eq_coe (f : α →*₀o β) : f.toFun = (f : α → β) :=
   rfl
 
 @[simp]
-theorem coe_mk (f : α →*₀ β) h : (OrderMonoidWithZeroHom.mk f h : α → β) = f :=
+theorem coe_mk (f : α →*₀ β) (h) : (OrderMonoidWithZeroHom.mk f h : α → β) = f :=
   rfl
 
 @[simp]
-theorem mk_coe (f : α →*₀o β) h : OrderMonoidWithZeroHom.mk (f : α →*₀ β) h = f := by
+theorem mk_coe (f : α →*₀o β) (h) : OrderMonoidWithZeroHom.mk (f : α →*₀ β) h = f := by
   ext
   rfl
 

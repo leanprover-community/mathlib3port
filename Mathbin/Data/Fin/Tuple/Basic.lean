@@ -151,6 +151,20 @@ theorem cons_induction_cons {P : (∀ i : Finₓ n.succ, α i) → Sort v} (h : 
   congr
   exact tail_cons _ _
 
+@[simp]
+theorem forall_fin_zero_pi {α : Finₓ 0 → Sort _} {P : (∀ i, α i) → Prop} : (∀ x, P x) ↔ P finZeroElim :=
+  ⟨fun h => h _, fun h x => Subsingleton.elimₓ finZeroElim x ▸ h⟩
+
+@[simp]
+theorem exists_fin_zero_pi {α : Finₓ 0 → Sort _} {P : (∀ i, α i) → Prop} : (∃ x, P x) ↔ P finZeroElim :=
+  ⟨fun ⟨x, h⟩ => Subsingleton.elimₓ x finZeroElim ▸ h, fun h => ⟨_, h⟩⟩
+
+theorem forall_fin_succ_pi {P : (∀ i, α i) → Prop} : (∀ x, P x) ↔ ∀ a v, P (Finₓ.cons a v) :=
+  ⟨fun h a v => h (Finₓ.cons a v), consInduction⟩
+
+theorem exists_fin_succ_pi {P : (∀ i, α i) → Prop} : (∃ x, P x) ↔ ∃ a v, P (Finₓ.cons a v) :=
+  ⟨fun ⟨x, h⟩ => ⟨x 0, tail x, (cons_self_tail x).symm ▸ h⟩, fun ⟨a, v, h⟩ => ⟨_, h⟩⟩
+
 /-- Updating the first element of a tuple does not change the tail. -/
 @[simp]
 theorem tail_update_zero : tail (update q 0 z) = tail q := by
@@ -620,7 +634,7 @@ section Find
 
 /-- `find p` returns the first index `n` where `p n` is satisfied, and `none` if it is never
 satisfied. -/
-def find : ∀ {n : ℕ} p : Finₓ n → Prop [DecidablePred p], Option (Finₓ n)
+def find : ∀ {n : ℕ} (p : Finₓ n → Prop) [DecidablePred p], Option (Finₓ n)
   | 0, p, _ => none
   | n + 1, p, _ => by
     skip <;>
@@ -629,7 +643,7 @@ def find : ∀ {n : ℕ} p : Finₓ n → Prop [DecidablePred p], Option (Finₓ
           (if h : p (Finₓ.last n) then some (Finₓ.last n) else none) fun i => some (i.cast_lt (Nat.lt_succ_of_ltₓ i.2))
 
 /-- If `find p = some i`, then `p i` holds -/
-theorem find_spec : ∀ {n : ℕ} p : Finₓ n → Prop [DecidablePred p] {i : Finₓ n} hi : i ∈ Finₓ.find p, p i
+theorem find_spec : ∀ {n : ℕ} (p : Finₓ n → Prop) [DecidablePred p] {i : Finₓ n} (hi : i ∈ Finₓ.find p), p i
   | 0, p, I, i, hi => Option.noConfusion hi
   | n + 1, p, I, i, hi => by
     dsimp' [← find]  at hi
@@ -682,7 +696,7 @@ theorem find_eq_none_iff {n : ℕ} {p : Finₓ n → Prop} [DecidablePred p] : f
 /-- If `find p` returns `some i`, then `p j` does not hold for `j < i`, i.e., `i` is minimal among
 the indices where `p` holds. -/
 theorem find_min :
-    ∀ {n : ℕ} {p : Finₓ n → Prop} [DecidablePred p] {i : Finₓ n} hi : i ∈ Finₓ.find p {j : Finₓ n} hj : j < i, ¬p j
+    ∀ {n : ℕ} {p : Finₓ n → Prop} [DecidablePred p] {i : Finₓ n} (hi : i ∈ Finₓ.find p) {j : Finₓ n} (hj : j < i), ¬p j
   | 0, p, _, i, hi, j, hj, hpj => Option.noConfusion hi
   | n + 1, p, _, i, hi, ⟨j, hjn⟩, hj, hpj => by
     skip

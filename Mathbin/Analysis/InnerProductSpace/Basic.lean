@@ -7,6 +7,7 @@ import Mathbin.Algebra.DirectSum.Module
 import Mathbin.Analysis.Complex.Basic
 import Mathbin.Analysis.Convex.Uniform
 import Mathbin.Analysis.NormedSpace.BoundedLinearMaps
+import Mathbin.Analysis.NormedSpace.Banach
 import Mathbin.LinearAlgebra.BilinearForm
 import Mathbin.LinearAlgebra.SesquilinearForm
 
@@ -513,23 +514,23 @@ theorem inner_sum {ι : Type _} (s : Finset ι) (f : ι → E) (x : E) : ⟪x, �
 
 /-- An inner product with a sum on the left, `finsupp` version. -/
 theorem Finsupp.sum_inner {ι : Type _} (l : ι →₀ 𝕜) (v : ι → E) (x : E) :
-    ⟪l.Sum fun i : ι a : 𝕜 => a • v i, x⟫ = l.Sum fun i : ι a : 𝕜 => conj a • ⟪v i, x⟫ := by
+    ⟪l.Sum fun (i : ι) (a : 𝕜) => a • v i, x⟫ = l.Sum fun (i : ι) (a : 𝕜) => conj a • ⟪v i, x⟫ := by
   convert sum_inner l.support (fun a => l a • v a) x
   simp [← inner_smul_left, ← Finsupp.sum]
 
 /-- An inner product with a sum on the right, `finsupp` version. -/
 theorem Finsupp.inner_sum {ι : Type _} (l : ι →₀ 𝕜) (v : ι → E) (x : E) :
-    ⟪x, l.Sum fun i : ι a : 𝕜 => a • v i⟫ = l.Sum fun i : ι a : 𝕜 => a • ⟪x, v i⟫ := by
+    ⟪x, l.Sum fun (i : ι) (a : 𝕜) => a • v i⟫ = l.Sum fun (i : ι) (a : 𝕜) => a • ⟪x, v i⟫ := by
   convert inner_sum l.support (fun a => l a • v a) x
   simp [← inner_smul_right, ← Finsupp.sum]
 
 theorem Dfinsupp.sum_inner {ι : Type _} [dec : DecidableEq ι] {α : ι → Type _} [∀ i, AddZeroClassₓ (α i)]
-    [∀ i x : α i, Decidable (x ≠ 0)] (f : ∀ i, α i → E) (l : Π₀ i, α i) (x : E) :
+    [∀ (i) (x : α i), Decidable (x ≠ 0)] (f : ∀ i, α i → E) (l : Π₀ i, α i) (x : E) :
     ⟪l.Sum f, x⟫ = l.Sum fun i a => ⟪f i a, x⟫ := by
   simp (config := { contextual := true })[← Dfinsupp.sum, ← sum_inner]
 
 theorem Dfinsupp.inner_sum {ι : Type _} [dec : DecidableEq ι] {α : ι → Type _} [∀ i, AddZeroClassₓ (α i)]
-    [∀ i x : α i, Decidable (x ≠ 0)] (f : ∀ i, α i → E) (l : Π₀ i, α i) (x : E) :
+    [∀ (i) (x : α i), Decidable (x ≠ 0)] (f : ∀ i, α i → E) (l : Π₀ i, α i) (x : E) :
     ⟪x, l.Sum f⟫ = l.Sum fun i a => ⟪x, f i a⟫ := by
   simp (config := { contextual := true })[← Dfinsupp.sum, ← inner_sum]
 
@@ -822,14 +823,12 @@ theorem orthonormal_subtype_iff_ite {s : Set E} :
 
 omit dec_E
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The inner product of a linear combination of a set of orthonormal vectors with one of those
 vectors picks out the coefficient of that vector. -/
 theorem Orthonormal.inner_right_finsupp {v : ι → E} (hv : Orthonormal 𝕜 v) (l : ι →₀ 𝕜) (i : ι) :
     ⟪v i, Finsupp.total ι E 𝕜 v l⟫ = l i := by
   classical <;> simp [← Finsupp.total_apply, ← Finsupp.inner_sum, ← orthonormal_iff_ite.mp hv]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The inner product of a linear combination of a set of orthonormal vectors with one of those
 vectors picks out the coefficient of that vector. -/
 theorem Orthonormal.inner_right_sum {v : ι → E} (hv : Orthonormal 𝕜 v) (l : ι → 𝕜) {s : Finset ι} {i : ι} (hi : i ∈ s) :
@@ -848,7 +847,6 @@ theorem Orthonormal.inner_left_finsupp {v : ι → E} (hv : Orthonormal 𝕜 v) 
     ⟪Finsupp.total ι E 𝕜 v l, v i⟫ = conj (l i) := by
   rw [← inner_conj_sym, hv.inner_right_finsupp]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The inner product of a linear combination of a set of orthonormal vectors with one of those
 vectors picks out the coefficient of that vector. -/
 theorem Orthonormal.inner_left_sum {v : ι → E} (hv : Orthonormal 𝕜 v) (l : ι → 𝕜) {s : Finset ι} {i : ι} (hi : i ∈ s) :
@@ -881,7 +879,6 @@ theorem Orthonormal.inner_sum {v : ι → E} (hv : Orthonormal 𝕜 v) (l₁ l�
   refine' Finset.sum_congr rfl fun i hi => _
   rw [hv.inner_right_sum l₂ hi]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The double sum of weighted inner products of pairs of vectors from an orthonormal sequence is the
 sum of the weights.
 -/
@@ -898,7 +895,6 @@ theorem Orthonormal.linear_independent {v : ι → E} (hv : Orthonormal 𝕜 v) 
     rw [hl]
   simpa [← hv.inner_right_finsupp] using key
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A subfamily of an orthonormal family (i.e., a composition with an injective map) is an
 orthonormal family. -/
 theorem Orthonormal.comp {ι' : Type _} {v : ι → E} (hv : Orthonormal 𝕜 v) (f : ι' → ι) (hf : Function.Injective f) :
@@ -916,7 +912,6 @@ theorem Orthonormal.inner_finsupp_eq_zero {v : ι → E} (hv : Orthonormal 𝕜 
   rw [Finsupp.mem_supported'] at hl
   simp [← hv.inner_left_finsupp, ← hl i hi]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given an orthonormal family, a second family of vectors is orthonormal if every vector equals
 the corresponding vector in the original family or its negation. -/
 theorem Orthonormal.orthonormal_of_forall_eq_or_eq_neg {v w : ι → E} (hv : Orthonormal 𝕜 v)
@@ -931,13 +926,11 @@ adapted from the corresponding development of the theory of linearly independent
 `exists_linear_independent` in particular. -/
 variable (𝕜 E)
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem orthonormal_empty : Orthonormal 𝕜 (fun x => x : (∅ : Set E) → E) := by
   classical <;> simp [← orthonormal_subtype_iff_ite]
 
 variable {𝕜 E}
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem orthonormal_Union_of_directed {η : Type _} {s : η → Set E} (hs : Directed (· ⊆ ·) s)
     (h : ∀ i, Orthonormal 𝕜 (fun x => x : s i → E)) : Orthonormal 𝕜 (fun x => x : (⋃ i, s i) → E) := by
   classical
@@ -956,12 +949,12 @@ theorem orthonormal_sUnion_of_directed {s : Set (Set E)} (hs : DirectedOn (· �
         (by
           simpa using h)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (w «expr ⊇ » s)
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (u «expr ⊇ » w)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (w «expr ⊇ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (u «expr ⊇ » w)
 /-- Given an orthonormal set `v` of vectors in `E`, there exists a maximal orthonormal set
 containing it. -/
 theorem exists_maximal_orthonormal {s : Set E} (hs : Orthonormal 𝕜 (coe : s → E)) :
-    ∃ (w : _)(_ : w ⊇ s), Orthonormal 𝕜 (coe : w → E) ∧ ∀ u _ : u ⊇ w, Orthonormal 𝕜 (coe : u → E) → u = w := by
+    ∃ (w : _)(_ : w ⊇ s), Orthonormal 𝕜 (coe : w → E) ∧ ∀ (u) (_ : u ⊇ w), Orthonormal 𝕜 (coe : u → E) → u = w := by
   obtain ⟨b, bi, sb, h⟩ := zorn_subset_nonempty { b | Orthonormal 𝕜 (coe : b → E) } _ _ hs
   · refine' ⟨b, sb, bi, _⟩
     exact fun u hus hu => h u hu hus
@@ -1251,11 +1244,11 @@ def LinearMap.isometryOfInner (f : E →ₗ[𝕜] E') (h : ∀ x y, ⟪f x, f y�
     simp only [← norm_eq_sqrt_inner, ← h]⟩
 
 @[simp]
-theorem LinearMap.coe_isometry_of_inner (f : E →ₗ[𝕜] E') h : ⇑(f.isometryOfInner h) = f :=
+theorem LinearMap.coe_isometry_of_inner (f : E →ₗ[𝕜] E') (h) : ⇑(f.isometryOfInner h) = f :=
   rfl
 
 @[simp]
-theorem LinearMap.isometry_of_inner_to_linear_map (f : E →ₗ[𝕜] E') h : (f.isometryOfInner h).toLinearMap = f :=
+theorem LinearMap.isometry_of_inner_to_linear_map (f : E →ₗ[𝕜] E') (h) : (f.isometryOfInner h).toLinearMap = f :=
   rfl
 
 /-- A linear equivalence that preserves the inner product is a linear isometric equivalence. -/
@@ -1263,14 +1256,13 @@ def LinearEquiv.isometryOfInner (f : E ≃ₗ[𝕜] E') (h : ∀ x y, ⟪f x, f 
   ⟨f, ((f : E →ₗ[𝕜] E').isometryOfInner h).norm_map⟩
 
 @[simp]
-theorem LinearEquiv.coe_isometry_of_inner (f : E ≃ₗ[𝕜] E') h : ⇑(f.isometryOfInner h) = f :=
+theorem LinearEquiv.coe_isometry_of_inner (f : E ≃ₗ[𝕜] E') (h) : ⇑(f.isometryOfInner h) = f :=
   rfl
 
 @[simp]
-theorem LinearEquiv.isometry_of_inner_to_linear_equiv (f : E ≃ₗ[𝕜] E') h : (f.isometryOfInner h).toLinearEquiv = f :=
+theorem LinearEquiv.isometry_of_inner_to_linear_equiv (f : E ≃ₗ[𝕜] E') (h) : (f.isometryOfInner h).toLinearEquiv = f :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A linear isometry preserves the property of being orthonormal. -/
 theorem Orthonormal.comp_linear_isometry {v : ι → E} (hv : Orthonormal 𝕜 v) (f : E →ₗᵢ[𝕜] E') : Orthonormal 𝕜 (f ∘ v) :=
   by
@@ -1899,7 +1891,7 @@ def OrthogonalFamily {G : ι → Type _} [∀ i, InnerProductSpace 𝕜 (G i)] (
   ∀ ⦃i j⦄, i ≠ j → ∀ v : G i, ∀ w : G j, ⟪V i v, V j w⟫ = 0
 
 variable {𝕜} {G : ι → Type _} [∀ i, InnerProductSpace 𝕜 (G i)] {V : ∀ i, G i →ₗᵢ[𝕜] E} (hV : OrthogonalFamily 𝕜 V)
-  [dec_V : ∀ i x : G i, Decidable (x ≠ 0)]
+  [dec_V : ∀ (i) (x : G i), Decidable (x ≠ 0)]
 
 theorem Orthonormal.orthogonal_family {v : ι → E} (hv : Orthonormal 𝕜 v) :
     @OrthogonalFamily 𝕜 _ _ _ _ (fun i : ι => 𝕜) _ fun i => LinearIsometry.toSpanSingleton 𝕜 E (hv.1 i) :=
@@ -1934,7 +1926,6 @@ theorem OrthogonalFamily.inner_right_dfinsupp (l : ⨁ i, G i) (i : ι) (v : G i
 
 omit dec_ι dec_V
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem OrthogonalFamily.inner_right_fintype [Fintype ι] (l : ∀ i, G i) (i : ι) (v : G i) :
     ⟪V i v, ∑ j : ι, V j (l j)⟫ = ⟪v, l i⟫ := by
   classical <;>
@@ -1943,7 +1934,6 @@ theorem OrthogonalFamily.inner_right_fintype [Fintype ι] (l : ∀ i, G i) (i : 
         congr_arg (Finset.sum Finset.univ) <| funext fun j => hV.eq_ite v (l j)_ = ⟪v, l i⟫ := by
         simp
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem OrthogonalFamily.inner_sum (l₁ l₂ : ∀ i, G i) (s : Finset ι) :
     ⟪∑ i in s, V i (l₁ i), ∑ j in s, V j (l₂ j)⟫ = ∑ i in s, ⟪l₁ i, l₂ i⟫ := by
   classical <;>
@@ -2012,7 +2002,6 @@ theorem OrthogonalFamily.norm_sq_diff_sum (f : ∀ i, G i) (s₁ s₂ : Finset �
 
 omit dec_ι
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A family `f` of mutually-orthogonal elements of `E` is summable, if and only if
 `(λ i, ∥f i∥ ^ 2)` is summable. -/
 theorem OrthogonalFamily.summable_iff_norm_sq_summable [CompleteSpace E] (f : ∀ i, G i) :
@@ -2063,7 +2052,6 @@ theorem OrthogonalFamily.summable_iff_norm_sq_summable [CompleteSpace E] (f : �
 
 omit hV
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- An orthogonal family forms an independent family of subspaces; that is, any collection of
 elements each from a different subspace in the family is linearly independent. In particular, the
 pairwise intersections of elements of the family are 0. -/
@@ -2348,69 +2336,4 @@ theorem Submodule.orthogonal_eq_top_iff : Kᗮ = ⊤ ↔ K = ⊥ := by
   rwa [h, inf_comm, top_inf_eq] at this
 
 end Orthogonal
-
-/-! ### Self-adjoint operators -/
-
-
-namespace InnerProductSpace
-
-/-- A (not necessarily bounded) operator on an inner product space is self-adjoint, if for all
-`x`, `y`, we have `⟪T x, y⟫ = ⟪x, T y⟫`. -/
-def IsSelfAdjoint (T : E →ₗ[𝕜] E) : Prop :=
-  ∀ x y, ⟪T x, y⟫ = ⟪x, T y⟫
-
-/-- An operator `T` on a `ℝ`-inner product space is self-adjoint if and only if it is
-`bilin_form.is_self_adjoint` with respect to the bilinear form given by the inner product. -/
-theorem is_self_adjoint_iff_bilin_form (T : F →ₗ[ℝ] F) : IsSelfAdjoint T ↔ bilinFormOfRealInner.IsSelfAdjoint T := by
-  simp [← is_self_adjoint, ← BilinForm.IsSelfAdjoint, ← BilinForm.IsAdjointPair]
-
-theorem IsSelfAdjoint.conj_inner_sym {T : E →ₗ[𝕜] E} (hT : IsSelfAdjoint T) (x y : E) : conj ⟪T x, y⟫ = ⟪T y, x⟫ := by
-  rw [hT x y, inner_conj_sym]
-
-@[simp]
-theorem IsSelfAdjoint.apply_clm {T : E →L[𝕜] E} (hT : IsSelfAdjoint (T : E →ₗ[𝕜] E)) (x y : E) : ⟪T x, y⟫ = ⟪x, T y⟫ :=
-  hT x y
-
-/-- For a self-adjoint operator `T`, the function `λ x, ⟪T x, x⟫` is real-valued. -/
-@[simp]
-theorem IsSelfAdjoint.coe_re_apply_inner_self_apply {T : E →L[𝕜] E} (hT : IsSelfAdjoint (T : E →ₗ[𝕜] E)) (x : E) :
-    (T.reApplyInnerSelf x : 𝕜) = ⟪T x, x⟫ := by
-  suffices ∃ r : ℝ, ⟪T x, x⟫ = r by
-    obtain ⟨r, hr⟩ := this
-    simp [← hr, ← T.re_apply_inner_self_apply]
-  rw [← eq_conj_iff_real]
-  exact hT.conj_inner_sym x x
-
-/-- If a self-adjoint operator preserves a submodule, its restriction to that submodule is
-self-adjoint. -/
-theorem IsSelfAdjoint.restrict_invariant {T : E →ₗ[𝕜] E} (hT : IsSelfAdjoint T) {V : Submodule 𝕜 E}
-    (hV : ∀, ∀ v ∈ V, ∀, T v ∈ V) : IsSelfAdjoint (T.restrict hV) := fun v w => hT v w
-
-section Complex
-
-variable {V : Type _} [InnerProductSpace ℂ V]
-
-/-- A linear operator on a complex inner product space is self-adjoint precisely when
-`⟪T v, v⟫_ℂ` is real for all v.-/
-theorem is_self_adjoint_iff_inner_map_self_real (T : V →ₗ[ℂ] V) :
-    IsSelfAdjoint T ↔ ∀ v : V, conj ⟪T v, v⟫_ℂ = ⟪T v, v⟫_ℂ := by
-  constructor
-  · intro hT v
-    apply is_self_adjoint.conj_inner_sym hT
-    
-  · intro h x y
-    nth_rw 1[← inner_conj_sym]
-    nth_rw 1[inner_map_polarization]
-    simp only [← star_ring_end_apply, ← star_div', ← star_sub, ← star_add, ← star_mul]
-    simp only [star_ring_end_apply]
-    rw [h (x + y), h (x - y), h (x + Complex.i • y), h (x - Complex.i • y)]
-    simp only [← Complex.conj_I]
-    rw [inner_map_polarization']
-    norm_num
-    ring
-    
-
-end Complex
-
-end InnerProductSpace
 

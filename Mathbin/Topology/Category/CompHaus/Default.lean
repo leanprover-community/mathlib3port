@@ -161,18 +161,18 @@ instance CompHaus.has_colimits : Limits.HasColimits CompHaus :=
 
 namespace CompHaus
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
 /-- An explicit limit cone for a functor `F : J ⥤ CompHaus`, defined in terms of
 `Top.limit_cone`. -/
 def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHaus.{max v u}) : Limits.Cone F where
   x :=
     { toTop := (Top.limitCone (F ⋙ compHausToTop)).x,
       IsCompact := by
-        show CompactSpace ↥{ u : ∀ j, F.obj j | ∀ {i j : J} f : i ⟶ j, (F.map f) (u i) = u j }
+        show CompactSpace ↥{ u : ∀ j, F.obj j | ∀ {i j : J} (f : i ⟶ j), (F.map f) (u i) = u j }
         rw [← is_compact_iff_compact_space]
         apply IsClosed.is_compact
         have :
-          { u : ∀ j, F.obj j | ∀ {i j : J} f : i ⟶ j, F.map f (u i) = u j } =
+          { u : ∀ j, F.obj j | ∀ {i j : J} (f : i ⟶ j), F.map f (u i) = u j } =
             ⋂ (i : J) (j : J) (f : i ⟶ j), { u | F.map f (u i) = u j } :=
           by
           ext1
@@ -190,7 +190,7 @@ def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHaus.{max v u}) : Li
         · exact continuous_apply j
           ,
       is_hausdorff :=
-        show T2Space ↥{ u : ∀ j, F.obj j | ∀ {i j : J} f : i ⟶ j, (F.map f) (u i) = u j } from inferInstance }
+        show T2Space ↥{ u : ∀ j, F.obj j | ∀ {i j : J} (f : i ⟶ j), (F.map f) (u i) = u j } from inferInstance }
   π :=
     { app := fun j => (Top.limitCone (F ⋙ compHausToTop)).π.app j,
       naturality' := by
@@ -235,7 +235,7 @@ theorem epi_iff_surjective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Epi f ↔ Functi
     exact zero_ne_one H
     
   · rw [← CategoryTheory.epi_iff_surjective]
-    apply faithful_reflects_epi (forget CompHaus)
+    apply (forget CompHaus).epi_of_epi_map
     
 
 theorem mono_iff_injective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Mono f ↔ Function.Injective f := by
@@ -251,7 +251,7 @@ theorem mono_iff_injective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Mono f ↔ Funct
     exact this
     
   · rw [← CategoryTheory.mono_iff_injective]
-    apply faithful_reflects_mono (forget CompHaus)
+    apply (forget CompHaus).mono_of_mono_map
     
 
 end CompHaus

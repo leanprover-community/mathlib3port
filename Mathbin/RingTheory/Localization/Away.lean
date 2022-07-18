@@ -124,6 +124,26 @@ noncomputable def atUnit (x : R) (e : IsUnit x) [IsLocalization.Away x S] : R �
 noncomputable def atOne [IsLocalization.Away (1 : R) S] : R ≃ₐ[R] S :=
   @atUnit R _ S _ _ (1 : R) is_unit_one _
 
+theorem away_of_is_unit_of_bijective {R : Type _} (S : Type _) [CommRingₓ R] [CommRingₓ S] [Algebra R S] {r : R}
+    (hr : IsUnit r) (H : Function.Bijective (algebraMap R S)) : IsLocalization.Away r S :=
+  { map_units := by
+      rintro ⟨_, n, rfl⟩
+      exact (algebraMap R S).is_unit_map (hr.pow _),
+    surj := fun z => by
+      obtain ⟨z', rfl⟩ := H.2 z
+      exact
+        ⟨⟨z', 1⟩, by
+          simp ⟩,
+    eq_iff_exists := fun x y => by
+      erw [H.1.eq_iff]
+      constructor
+      · rintro rfl
+        exact ⟨1, rfl⟩
+        
+      · rintro ⟨⟨_, n, rfl⟩, e⟩
+        exact (hr.pow _).mul_left_inj.mp e
+         }
+
 end AtUnits
 
 end IsLocalization

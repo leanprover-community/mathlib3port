@@ -29,7 +29,7 @@ def KleisliCat (m : Type u → Type v) :=
   Type u
 
 /-- Construct an object of the Kleisli category from a type. -/
-def KleisliCat.mk m (α : Type u) : KleisliCat m :=
+def KleisliCat.mk (m) (α : Type u) : KleisliCat m :=
   α
 
 instance KleisliCat.categoryStruct {m} [Monadₓ.{u, v} m] : CategoryStruct (KleisliCat m) where

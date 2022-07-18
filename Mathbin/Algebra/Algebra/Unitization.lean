@@ -266,8 +266,8 @@ theorem inl_fst_add_coe_snd_eq [AddZeroClassₓ R] [AddZeroClassₓ A] (x : Unit
 on terms of the form `inl r + a`.
 
 This can be used as `induction x using unitization.ind`. -/
-theorem ind {R A} [AddZeroClassₓ R] [AddZeroClassₓ A] {P : Unitization R A → Prop} (h : ∀ r : R a : A, P (inl r + a))
-    x : P x :=
+theorem ind {R A} [AddZeroClassₓ R] [AddZeroClassₓ A] {P : Unitization R A → Prop}
+    (h : ∀ (r : R) (a : A), P (inl r + a)) (x) : P x :=
   inl_fst_add_coe_snd_eq x ▸ h x.1 x.2
 
 /-- This cannot be marked `@[ext]` as it ends up being used instead of `linear_map.prod_ext` when

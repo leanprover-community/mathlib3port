@@ -82,7 +82,7 @@ theorem finrank {n} (h : n ≠ 0) : FiniteDimensional.finrank (Zmod p) (GaloisFi
     exact Nat.pow_right_injective (Nat.Prime.one_lt' p).out key
   rw [Set.eq_univ_iff_forall]
   suffices
-    ∀ x hx : x ∈ (⊤ : Subalgebra (Zmod p) (GaloisField p n)),
+    ∀ (x) (hx : x ∈ (⊤ : Subalgebra (Zmod p) (GaloisField p n))),
       x ∈ (X ^ p ^ n - X : (Zmod p)[X]).RootSet (GaloisField p n)
     by
     simpa

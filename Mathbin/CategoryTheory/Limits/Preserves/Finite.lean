@@ -41,7 +41,7 @@ variable {J : Type w} [SmallCategory J] {K : J ⥤ C}
 where `J : Type` is a finite category.
 -/
 class PreservesFiniteLimits (F : C ⥤ D) where
-  PreservesFiniteLimits : ∀ J : Type [SmallCategory J] [FinCategory J], PreservesLimitsOfShape J F := by
+  PreservesFiniteLimits : ∀ (J : Type) [SmallCategory J] [FinCategory J], PreservesLimitsOfShape J F := by
     run_tac
       tactic.apply_instance
 
@@ -67,7 +67,7 @@ noncomputable instance (priority := 120) PreservesLimits.preservesFiniteLimits (
 arbitrary universe. -/
 def preservesFiniteLimitsOfPreservesFiniteLimitsOfSize (F : C ⥤ D)
     (h :
-      ∀ J : Type w {𝒥 : SmallCategory J} hJ : @FinCategory J 𝒥, by
+      ∀ (J : Type w) {𝒥 : SmallCategory J} (hJ : @FinCategory J 𝒥), by
         skip
         exact preserves_limits_of_shape J F) :
     PreservesFiniteLimits F :=
@@ -92,7 +92,7 @@ def compPreservesFiniteLimits (F : C ⥤ D) (G : D ⥤ E) [PreservesFiniteLimits
 shape `J`, where `J : Type` is a finite category.
 -/
 class PreservesFiniteColimits (F : C ⥤ D) where
-  PreservesFiniteColimits : ∀ J : Type [SmallCategory J] [FinCategory J], PreservesColimitsOfShape J F := by
+  PreservesFiniteColimits : ∀ (J : Type) [SmallCategory J] [FinCategory J], PreservesColimitsOfShape J F := by
     run_tac
       tactic.apply_instance
 
@@ -114,7 +114,7 @@ noncomputable instance (priority := 100) PreservesColimits.preservesFiniteColimi
 arbitrary universe. -/
 def preservesFiniteColimitsOfPreservesFiniteColimitsOfSize (F : C ⥤ D)
     (h :
-      ∀ J : Type w {𝒥 : SmallCategory J} hJ : @FinCategory J 𝒥, by
+      ∀ (J : Type w) {𝒥 : SmallCategory J} (hJ : @FinCategory J 𝒥), by
         skip
         exact preserves_colimits_of_shape J F) :
     PreservesFiniteColimits F :=

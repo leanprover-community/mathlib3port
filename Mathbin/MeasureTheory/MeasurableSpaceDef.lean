@@ -215,7 +215,7 @@ theorem MeasurableSet.cond {s₁ s₂ : Set α} (h₁ : MeasurableSet s₁) (h�
   exacts[h₂, h₁]
 
 @[simp]
-theorem MeasurableSet.disjointed {f : ℕ → Set α} (h : ∀ i, MeasurableSet (f i)) n : MeasurableSet (disjointed f n) :=
+theorem MeasurableSet.disjointed {f : ℕ → Set α} (h : ∀ i, MeasurableSet (f i)) (n) : MeasurableSet (disjointed f n) :=
   disjointedRecₓ (fun t i ht => MeasurableSet.diff ht <| h _) (h n)
 
 @[simp]
@@ -316,8 +316,15 @@ def generateFrom (s : Set (Set α)) : MeasurableSpace α where
 theorem measurable_set_generate_from {s : Set (Set α)} {t : Set α} (ht : t ∈ s) : @MeasurableSet _ (generateFrom s) t :=
   GenerateMeasurable.basic t ht
 
+@[elab_as_eliminator]
+theorem generate_from_induction (p : Set α → Prop) (C : Set (Set α)) (hC : ∀, ∀ t ∈ C, ∀, p t) (h_empty : p ∅)
+    (h_compl : ∀ t, p t → p (tᶜ)) (h_Union : ∀ f : ℕ → Set α, (∀ n, p (f n)) → p (⋃ i, f i)) {s : Set α}
+    (hs : measurable_set[generateFrom C] s) : p s := by
+  induction hs
+  exacts[hC _ hs_H, h_empty, h_compl _ hs_ih, h_Union hs_f hs_ih]
+
 theorem generate_from_le {s : Set (Set α)} {m : MeasurableSpace α} (h : ∀, ∀ t ∈ s, ∀, measurable_set[m] t) :
-    generateFrom s ≤ m := fun t ht : GenerateMeasurable s t =>
+    generateFrom s ≤ m := fun t (ht : GenerateMeasurable s t) =>
   ht.recOn h (measurable_set_empty m) (fun s _ hs => measurable_set_compl m s hs) fun f _ hf =>
     measurable_set_Union m f hf
 

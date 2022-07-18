@@ -7,6 +7,7 @@ import Mathbin.Dynamics.Ergodic.MeasurePreserving
 import Mathbin.MeasureTheory.Measure.Regular
 import Mathbin.MeasureTheory.Group.MeasurableEquiv
 import Mathbin.MeasureTheory.Measure.OpenPos
+import Mathbin.MeasureTheory.Constructions.Prod
 
 /-!
 # Measures on Groups
@@ -99,7 +100,7 @@ theorem measure_preserving_mul_right (μ : Measure G) [IsMulRightInvariant μ] (
 /-- An alternative way to prove that `μ` is left invariant under multiplication. -/
 @[to_additive " An alternative way to prove that `μ` is left invariant under addition. "]
 theorem forall_measure_preimage_mul_iff (μ : Measure G) :
-    (∀ g : G A : Set G, MeasurableSet A → μ ((fun h => g * h) ⁻¹' A) = μ A) ↔ IsMulLeftInvariant μ := by
+    (∀ (g : G) (A : Set G), MeasurableSet A → μ ((fun h => g * h) ⁻¹' A) = μ A) ↔ IsMulLeftInvariant μ := by
   trans ∀ g, map ((· * ·) g) μ = μ
   · simp_rw [measure.ext_iff]
     refine' forall_congrₓ fun g => forall_congrₓ fun A => forall_congrₓ fun hA => _
@@ -110,13 +111,43 @@ theorem forall_measure_preimage_mul_iff (μ : Measure G) :
 /-- An alternative way to prove that `μ` is right invariant under multiplication. -/
 @[to_additive " An alternative way to prove that `μ` is right invariant under addition. "]
 theorem forall_measure_preimage_mul_right_iff (μ : Measure G) :
-    (∀ g : G A : Set G, MeasurableSet A → μ ((fun h => h * g) ⁻¹' A) = μ A) ↔ IsMulRightInvariant μ := by
+    (∀ (g : G) (A : Set G), MeasurableSet A → μ ((fun h => h * g) ⁻¹' A) = μ A) ↔ IsMulRightInvariant μ := by
   trans ∀ g, map (· * g) μ = μ
   · simp_rw [measure.ext_iff]
     refine' forall_congrₓ fun g => forall_congrₓ fun A => forall_congrₓ fun hA => _
     rw [map_apply (measurable_mul_const g) hA]
     
   exact ⟨fun h => ⟨h⟩, fun h => h.1⟩
+
+@[to_additive]
+instance [IsMulLeftInvariant μ] [SigmaFinite μ] {H : Type _} [Mul H] {mH : MeasurableSpace H} {ν : Measure H}
+    [HasMeasurableMul H] [IsMulLeftInvariant ν] [SigmaFinite ν] : IsMulLeftInvariant (μ.Prod ν) := by
+  constructor
+  rintro ⟨g, h⟩
+  change map (Prod.map ((· * ·) g) ((· * ·) h)) (μ.prod ν) = μ.prod ν
+  rw [← map_prod_map _ _ (measurable_const_mul g) (measurable_const_mul h), map_mul_left_eq_self μ g,
+    map_mul_left_eq_self ν h]
+  · rw [map_mul_left_eq_self μ g]
+    infer_instance
+    
+  · rw [map_mul_left_eq_self ν h]
+    infer_instance
+    
+
+@[to_additive]
+instance [IsMulRightInvariant μ] [SigmaFinite μ] {H : Type _} [Mul H] {mH : MeasurableSpace H} {ν : Measure H}
+    [HasMeasurableMul H] [IsMulRightInvariant ν] [SigmaFinite ν] : IsMulRightInvariant (μ.Prod ν) := by
+  constructor
+  rintro ⟨g, h⟩
+  change map (Prod.map (· * g) (· * h)) (μ.prod ν) = μ.prod ν
+  rw [← map_prod_map _ _ (measurable_mul_const g) (measurable_mul_const h), map_mul_right_eq_self μ g,
+    map_mul_right_eq_self ν h]
+  · rw [map_mul_right_eq_self μ g]
+    infer_instance
+    
+  · rw [map_mul_right_eq_self ν h]
+    infer_instance
+    
 
 end HasMeasurableMul
 
@@ -456,6 +487,11 @@ instance (priority := 100) IsHaarMeasure.sigma_finite [SigmaCompactSpace G] : Si
   ⟨⟨{ Set := CompactCovering G, set_mem := fun n => mem_univ _,
         Finite := fun n => IsCompact.measure_lt_top <| is_compact_compact_covering G n,
         spanning := Union_compact_covering G }⟩⟩
+
+@[to_additive]
+instance {G : Type _} [Groupₓ G] [TopologicalSpace G] {mG : MeasurableSpace G} {H : Type _} [Groupₓ H]
+    [TopologicalSpace H] {mH : MeasurableSpace H} (μ : Measure G) (ν : Measure H) [IsHaarMeasure μ] [IsHaarMeasure ν]
+    [SigmaFinite μ] [SigmaFinite ν] [HasMeasurableMul G] [HasMeasurableMul H] : IsHaarMeasure (μ.Prod ν) where
 
 open TopologicalSpace
 

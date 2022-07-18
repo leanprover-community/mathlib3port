@@ -48,7 +48,7 @@ theorem epi_iff_surjective : Epi f ↔ Function.Surjective f := by
   rw [epi_iff_range_eq_top, LinearMap.range_eq_top]
 
 /-- If the zero morphism is an epi then the codomain is trivial. -/
-def uniqueOfEpiZero X [h : Epi (0 : X ⟶ of R M)] : Unique M :=
+def uniqueOfEpiZero (X) [h : Epi (0 : X ⟶ of R M)] : Unique M :=
   uniqueOfSurjectiveZero X ((ModuleCat.epi_iff_surjective _).mp h)
 
 instance mono_as_hom'_subtype (U : Submodule R X) : Mono (↾U.Subtype) :=

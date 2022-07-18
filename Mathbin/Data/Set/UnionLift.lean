@@ -49,14 +49,14 @@ it on each component, and proving that it agrees on the intersections. -/
 `Union_lift_inclusion` will work without the user having to provide `hf` explicitly to
 simplify terms involving `Union_lift`. -/
 @[nolint unused_arguments]
-noncomputable def unionLift (S : ι → Set α) (f : ∀ i x : S i, β)
-    (hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩) (T : Set α) (hT : T ⊆ Union S) (x : T) :
-    β :=
+noncomputable def unionLift (S : ι → Set α) (f : ∀ (i) (x : S i), β)
+    (hf : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩) (T : Set α) (hT : T ⊆ Union S)
+    (x : T) : β :=
   let i := Classical.indefiniteDescription _ (mem_Union.1 (hT x.Prop))
   f i ⟨x, i.Prop⟩
 
-variable {S : ι → Set α} {f : ∀ i x : S i, β}
-  {hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩} {T : Set α} {hT : T ⊆ Union S}
+variable {S : ι → Set α} {f : ∀ (i) (x : S i), β}
+  {hf : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩} {T : Set α} {hT : T ⊆ Union S}
   (hT' : T = Union S)
 
 @[simp]
@@ -87,10 +87,10 @@ theorem Union_lift_const (c : T) (ci : ∀ i, S i) (hci : ∀ i, (ci i : α) = c
   of linear_maps on a union of submodules preserves scalar multiplication. -/
 theorem Union_lift_unary (u : T → T) (ui : ∀ i, S i → S i)
     (hui :
-      ∀ i x : S i,
+      ∀ (i) (x : S i),
         u (Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_Union S i) x) =
           Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_Union S i) (ui i x))
-    (uβ : β → β) (h : ∀ i x : S i, f i (ui i x) = uβ (f i x)) (x : T) :
+    (uβ : β → β) (h : ∀ (i) (x : S i), f i (ui i x) = uβ (f i x)) (x : T) :
     unionLift S f hf T (le_of_eqₓ hT') (u x) = uβ (unionLift S f hf T (le_of_eqₓ hT') x) := by
   subst hT'
   cases' Set.mem_Union.1 x.prop with i hi
@@ -111,7 +111,7 @@ theorem Union_lift_binary (dir : Directed (· ≤ ·) S) (op : T → T → T) (o
         Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_Union S i) (opi i x y) =
           op (Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_Union S i) x)
             (Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_Union S i) y))
-    (opβ : β → β → β) (h : ∀ i x y : S i, f i (opi i x y) = opβ (f i x) (f i y)) (x y : T) :
+    (opβ : β → β → β) (h : ∀ (i) (x y : S i), f i (opi i x y) = opβ (f i x) (f i y)) (x y : T) :
     unionLift S f hf T (le_of_eqₓ hT') (op x y) =
       opβ (unionLift S f hf T (le_of_eqₓ hT') x) (unionLift S f hf T (le_of_eqₓ hT') y) :=
   by
@@ -133,13 +133,14 @@ theorem Union_lift_binary (dir : Directed (· ≤ ·) S) (op : T → T → T) (o
 
 end UnionLift
 
-variable {S : ι → Set α} {f : ∀ i x : S i, β}
-  {hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩} {hS : Union S = univ}
+variable {S : ι → Set α} {f : ∀ (i) (x : S i), β}
+  {hf : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩} {hS : Union S = univ}
 
 /-- Glue together functions defined on each of a collection `S` of sets that cover a type. See
   also `set.Union_lift`.   -/
-noncomputable def liftCover (S : ι → Set α) (f : ∀ i x : S i, β)
-    (hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩) (hS : Union S = univ) (a : α) : β :=
+noncomputable def liftCover (S : ι → Set α) (f : ∀ (i) (x : S i), β)
+    (hf : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩) (hS : Union S = univ) (a : α) :
+    β :=
   unionLift S f hf Univ (hS ▸ Set.Subset.refl _) ⟨a, trivialₓ⟩
 
 @[simp]

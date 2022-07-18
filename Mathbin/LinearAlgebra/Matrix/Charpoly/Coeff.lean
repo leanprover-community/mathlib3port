@@ -157,7 +157,7 @@ theorem mat_poly_equiv_eval (M : Matrix n n R[X]) (r : R) (i j : n) :
     (matPolyEquiv M).eval ((scalar n) r) i j = (M i j).eval r := by
   unfold Polynomial.eval
   unfold eval₂
-  trans Polynomial.sum (matPolyEquiv M) fun e : ℕ a : Matrix n n R => (a * (scalar n) r ^ e) i j
+  trans Polynomial.sum (matPolyEquiv M) fun (e : ℕ) (a : Matrix n n R) => (a * (scalar n) r ^ e) i j
   · unfold Polynomial.sum
     rw [sum_apply]
     dsimp'
@@ -166,7 +166,7 @@ theorem mat_poly_equiv_eval (M : Matrix n n R[X]) (r : R) (i j : n) :
   · simp_rw [← RingHom.map_pow, ← (scalar.commute _ _).Eq]
     simp only [← coe_scalar, ← Matrix.one_mul, ← RingHom.id_apply, ← Pi.smul_apply, ← smul_eq_mul, ← mul_eq_mul, ←
       Algebra.smul_mul_assoc]
-    have h : ∀ x : ℕ, (fun e : ℕ a : R => r ^ e * a) x 0 = 0 := by
+    have h : ∀ x : ℕ, (fun (e : ℕ) (a : R) => r ^ e * a) x 0 = 0 := by
       simp
     simp only [← Polynomial.sum, ← mat_poly_equiv_coeff_apply, ← mul_comm]
     apply (Finset.sum_subset (support_subset_support_mat_poly_equiv _ _ _) _).symm
@@ -220,4 +220,27 @@ theorem pow_eq_aeval_mod_charpoly (M : Matrix n n R) (k : ℕ) : M ^ k = aeval M
   rw [← aeval_eq_aeval_mod_charpoly, map_pow, aeval_X]
 
 end Matrix
+
+section Ideal
+
+theorem coeff_charpoly_mem_ideal_pow {I : Ideal R} (h : ∀ i j, M i j ∈ I) (k : ℕ) :
+    M.charpoly.coeff k ∈ I ^ (Fintype.card n - k) := by
+  delta' charpoly
+  rw [Matrix.det_apply, finset_sum_coeff]
+  apply sum_mem
+  rintro c -
+  rw [coeff_smul, Submodule.smul_mem_iff']
+  have : (∑ x : n, 1) = Fintype.card n := by
+    rw [Finset.sum_const, card_univ, smul_eq_mul, mul_oneₓ]
+  rw [← this]
+  apply coeff_prod_mem_ideal_pow_tsub
+  rintro i - (_ | k)
+  · rw [tsub_zero, pow_oneₓ, charmatrix_apply, coeff_sub, coeff_X_mul_zero, coeff_C_zero, zero_sub, neg_mem_iff]
+    exact h (c i) i
+    
+  · rw [Nat.succ_eq_one_add, tsub_self_add, pow_zeroₓ, Ideal.one_eq_top]
+    exact Submodule.mem_top
+    
+
+end Ideal
 

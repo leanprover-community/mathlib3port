@@ -3,12 +3,13 @@ Copyright (c) 2017 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 -/
-import Mathbin.Tactic.Interactive
 import Mathbin.Data.Rbtree.Init
+import Mathbin.Logic.IsEmpty
+import Mathbin.Tactic.Interactive
 
 universe u
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 unsafe def tactic.interactive.blast_disjs : tactic Unit :=
   sorry
 
@@ -19,8 +20,8 @@ variable {α : Type u}
 open Color Nat
 
 inductive IsNodeOf : Rbnode α → Rbnode α → α → Rbnode α → Prop
-  | of_red l v r : is_node_of (red_node l v r) l v r
-  | of_black l v r : is_node_of (black_node l v r) l v r
+  | of_red (l v r) : is_node_of (red_node l v r) l v r
+  | of_black (l v r) : is_node_of (black_node l v r) l v r
 
 def Lift (lt : α → α → Prop) : Option α → Option α → Prop
   | some a, some b => lt a b
@@ -33,7 +34,7 @@ inductive IsSearchable (lt : α → α → Prop) : Rbnode α → Option α → O
   | black_s {l r v lo hi} (hs₁ : is_searchable l lo (some v)) (hs₂ : is_searchable r (some v) hi) :
     is_searchable (black_node l v r) lo hi
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1052:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
 unsafe def is_searchable_tactic : tactic Unit :=
   sorry
 
@@ -57,9 +58,9 @@ theorem lo_lt_hi {t : Rbnode α} {lt} [IsTrans α lt] : ∀ {lo hi}, IsSearchabl
     cases lo <;> cases hi <;> simp [← lift] at *
     apply trans_of lt h₁ h₂
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem is_searchable_of_is_searchable_of_incomp [IsStrictWeakOrder α lt] {t} :
-    ∀ {lo hi hi'} hc : ¬lt hi' hi ∧ ¬lt hi hi' hs : IsSearchable lt t lo (some hi), IsSearchable lt t lo (some hi') :=
+    ∀ {lo hi hi'} (hc : ¬lt hi' hi ∧ ¬lt hi hi') (hs : IsSearchable lt t lo (some hi)),
+      IsSearchable lt t lo (some hi') :=
   by
   classical
   induction t <;>
@@ -74,9 +75,9 @@ theorem is_searchable_of_is_searchable_of_incomp [IsStrictWeakOrder α lt] {t} :
   all_goals
     apply t_ih_rchild hc hs_hs₂
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem is_searchable_of_incomp_of_is_searchable [IsStrictWeakOrder α lt] {t} :
-    ∀ {lo lo' hi} hc : ¬lt lo' lo ∧ ¬lt lo lo' hs : IsSearchable lt t (some lo) hi, IsSearchable lt t (some lo') hi :=
+    ∀ {lo lo' hi} (hc : ¬lt lo' lo ∧ ¬lt lo lo') (hs : IsSearchable lt t (some lo) hi),
+      IsSearchable lt t (some lo') hi :=
   by
   classical
   induction t <;>
@@ -92,7 +93,7 @@ theorem is_searchable_of_incomp_of_is_searchable [IsStrictWeakOrder α lt] {t} :
     apply t_ih_lchild hc hs_hs₁
 
 theorem is_searchable_some_low_of_is_searchable_of_lt {t} [IsTrans α lt] :
-    ∀ {lo hi lo'} hlt : lt lo' lo hs : IsSearchable lt t (some lo) hi, IsSearchable lt t (some lo') hi := by
+    ∀ {lo hi lo'} (hlt : lt lo' lo) (hs : IsSearchable lt t (some lo) hi), IsSearchable lt t (some lo') hi := by
   induction t <;>
     intros <;>
       run_tac
@@ -105,7 +106,7 @@ theorem is_searchable_some_low_of_is_searchable_of_lt {t} [IsTrans α lt] :
     apply t_ih_lchild hlt hs_hs₁
 
 theorem is_searchable_none_low_of_is_searchable_some_low {t} :
-    ∀ {y hi} hlt : IsSearchable lt t (some y) hi, IsSearchable lt t none hi := by
+    ∀ {y hi} (hlt : IsSearchable lt t (some y) hi), IsSearchable lt t none hi := by
   induction t <;>
     intros <;>
       run_tac
@@ -116,7 +117,7 @@ theorem is_searchable_none_low_of_is_searchable_some_low {t} :
     apply t_ih_lchild hlt_hs₁
 
 theorem is_searchable_some_high_of_is_searchable_of_lt {t} [IsTrans α lt] :
-    ∀ {lo hi hi'} hlt : lt hi hi' hs : IsSearchable lt t lo (some hi), IsSearchable lt t lo (some hi') := by
+    ∀ {lo hi hi'} (hlt : lt hi hi') (hs : IsSearchable lt t lo (some hi)), IsSearchable lt t lo (some hi') := by
   induction t <;>
     intros <;>
       run_tac
@@ -130,7 +131,7 @@ theorem is_searchable_some_high_of_is_searchable_of_lt {t} [IsTrans α lt] :
     apply t_ih_rchild hlt hs_hs₂
 
 theorem is_searchable_none_high_of_is_searchable_some_high {t} :
-    ∀ {lo y} hlt : IsSearchable lt t lo (some y), IsSearchable lt t lo none := by
+    ∀ {lo y} (hlt : IsSearchable lt t lo (some y)), IsSearchable lt t lo none := by
   induction t <;>
     intros <;>
       run_tac
@@ -140,7 +141,6 @@ theorem is_searchable_none_high_of_is_searchable_some_high {t} :
   all_goals
     apply t_ih_rchild hlt_hs₂
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem range [IsStrictWeakOrder α lt] {t : Rbnode α} {x} :
     ∀ {lo hi}, IsSearchable lt t lo hi → Mem lt x t → Lift lt lo (some x) ∧ Lift lt (some x) hi := by
   classical

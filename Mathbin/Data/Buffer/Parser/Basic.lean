@@ -56,7 +56,7 @@ is always at a `parse_result.pos` that is at least `n`.
 The `mono` property is used mainly for proper `orelse` behavior.
 -/
 class Mono : Prop where
-  le' : ∀ cb : CharBuffer n : ℕ, n ≤ (p cb n).Pos
+  le' : ∀ (cb : CharBuffer) (n : ℕ), n ≤ (p cb n).Pos
 
 theorem Mono.le [p.mono] : n ≤ (p cb n).Pos :=
   Mono.le' cb n
@@ -94,7 +94,7 @@ theorem Bounded.exists (p : Parser α) [p.Bounded] {cb : CharBuffer} {n : ℕ} (
 /-- A `parser a` is defined to be `unfailing` if it always produces a `done` `parse_result`.
 -/
 class Unfailing : Prop where
-  ex' : ∀ cb : CharBuffer n : ℕ, ∃ (n' : ℕ)(a : α), p cb n = done n' a
+  ex' : ∀ (cb : CharBuffer) (n : ℕ), ∃ (n' : ℕ)(a : α), p cb n = done n' a
 
 /-- A `parser a` is defined to be `conditionally_unfailing` if it produces a
 `done` `parse_result` as long as it is parsing within the provided `char_buffer`.
@@ -122,7 +122,7 @@ theorem Bounded.of_done [p.Bounded] (h : p cb n = done n' a) : n < cb.size := by
   obtain ⟨np, err, hp⟩ := bounded.exists p h
   simp [← hp]
 
-theorem Static.iff : Static p ↔ ∀ cb : CharBuffer n n' : ℕ a : α, p cb n = done n' a → n = n' :=
+theorem Static.iff : Static p ↔ ∀ (cb : CharBuffer) (n n' : ℕ) (a : α), p cb n = done n' a → n = n' :=
   ⟨fun h _ _ _ _ hp => by
     have := h
     exact static.of_done hp, fun h => ⟨h⟩⟩
@@ -2346,14 +2346,15 @@ theorem nat_of_done {val : ℕ} (h : nat cb n = done n' val) :
     when rewriting the definition of `parser.nat` away. Since we know exactly what the function is,
     we have a `rfl`-like lemma here to rewrite it back into a readable form.
     -/
-  have natm : nat._match_1 = fun d : ℕ p => ⟨p.1 + d * p.2, p.2 * 10⟩ := by
+  have natm : nat._match_1 = fun (d : ℕ) p => ⟨p.1 + d * p.2, p.2 * 10⟩ := by
     ext1
     ext1 ⟨⟩
     rfl
   -- We also have to prove what is the `prod.snd` of the result of the fold of a `list (ℕ × ℕ)` with
   -- the function above. We use this lemma later when we finish our inductive case.
   have hpow :
-    ∀ l, (List.foldr (fun digit : ℕ x : ℕ × ℕ => (x.fst + digit * x.snd, x.snd * 10)) (0, 1) l).snd = 10 ^ l.length :=
+    ∀ l,
+      (List.foldr (fun (digit : ℕ) (x : ℕ × ℕ) => (x.fst + digit * x.snd, x.snd * 10)) (0, 1) l).snd = 10 ^ l.length :=
     by
     intro l
     induction' l with hd tl hl
@@ -2524,7 +2525,8 @@ position in `cb : char_buffer` is "numeric", that is, is between `'0'` and `'9'`
 This is a necessary part of proving one of the directions of `nat_eq_done`.
 -/
 theorem nat_of_done_as_digit {val : ℕ} (h : nat cb n = done n' val) :
-    ∀ hn : n' ≤ cb.size k hk : k < n', n ≤ k → '0' ≤ cb.read ⟨k, hk.trans_le hn⟩ ∧ cb.read ⟨k, hk.trans_le hn⟩ ≤ '9' :=
+    ∀ (hn : n' ≤ cb.size) (k) (hk : k < n'),
+      n ≤ k → '0' ≤ cb.read ⟨k, hk.trans_le hn⟩ ∧ cb.read ⟨k, hk.trans_le hn⟩ ≤ '9' :=
   by
   -- The properties to be shown for the characters involved rely solely on the success of
   -- `parser.digit` at the relevant positions, and not on the actual value `parser.nat` produced.
@@ -2668,7 +2670,7 @@ theorem nat_eq_done {val : ℕ} :
         val = Nat.ofDigits 10 (((cb.toList.drop n).take (n' - n)).reverse.map fun c => c.toNat - '0'.toNat) ∧
           (∀ hn' : n' < cb.size, '0' ≤ cb.read ⟨n', hn'⟩ → '9' < cb.read ⟨n', hn'⟩) ∧
             ∃ hn'' : n' ≤ cb.size,
-              ∀ k hk : k < n', n ≤ k → '0' ≤ cb.read ⟨k, hk.trans_le hn''⟩ ∧ cb.read ⟨k, hk.trans_le hn''⟩ ≤ '9' :=
+              ∀ (k) (hk : k < n'), n ≤ k → '0' ≤ cb.read ⟨k, hk.trans_le hn''⟩ ∧ cb.read ⟨k, hk.trans_le hn''⟩ ≤ '9' :=
   by
   -- To prove this iff, we have most of the way in the forward direction, using the lemmas proven
   -- above. First, we must use that `parser.nat` is `prog`, which means that on success, it must
@@ -2723,7 +2725,7 @@ theorem nat_eq_done {val : ℕ} :
     when rewriting the definition of `parser.nat` away. Since we know exactly what the function is,
     we have a `rfl`-like lemma here to rewrite it back into a readable form.
     -/
-  have natm : nat._match_1 = fun d : ℕ p => ⟨p.1 + d * p.2, p.2 * 10⟩ := by
+  have natm : nat._match_1 = fun (d : ℕ) p => ⟨p.1 + d * p.2, p.2 * 10⟩ := by
     ext1
     ext1 ⟨⟩
     rfl
@@ -2823,7 +2825,8 @@ theorem nat_eq_done {val : ℕ} :
       -- with the function above. We use this lemma to finish our inductive case.
       have hpow :
         ∀ l,
-          (List.foldr (fun digit : ℕ x : ℕ × ℕ => (x.fst + digit * x.snd, x.snd * 10)) (0, 1) l).snd = 10 ^ l.length :=
+          (List.foldr (fun (digit : ℕ) (x : ℕ × ℕ) => (x.fst + digit * x.snd, x.snd * 10)) (0, 1) l).snd =
+            10 ^ l.length :=
         by
         intro l
         induction' l with hd tl hl

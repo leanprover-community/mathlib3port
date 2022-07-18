@@ -66,10 +66,10 @@ protected def map : (Comp F G) α → (Comp F G) β :=
 
 instance : Mvfunctor (Comp F G) where map := fun α β => Comp.map
 
-theorem map_mk (x : F fun i => G i α) : f <$$> Comp.mk x = Comp.mk ((fun i x : G i α => f <$$> x) <$$> x) :=
+theorem map_mk (x : F fun i => G i α) : f <$$> Comp.mk x = Comp.mk ((fun i (x : G i α) => f <$$> x) <$$> x) :=
   rfl
 
-theorem get_map (x : Comp F G α) : Comp.get (f <$$> x) = (fun i x : G i α => f <$$> x) <$$> Comp.get x :=
+theorem get_map (x : Comp F G α) : Comp.get (f <$$> x) = (fun i (x : G i α) => f <$$> x) <$$> Comp.get x :=
   rfl
 
 include q q'

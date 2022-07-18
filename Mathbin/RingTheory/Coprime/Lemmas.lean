@@ -64,7 +64,7 @@ theorem IsCoprime.of_prod_right (H1 : IsCoprime x (∏ i in t, s i)) (i : I) (hi
   IsCoprime.prod_right_iff.1 H1 i hit
 
 theorem Finset.prod_dvd_of_coprime :
-    ∀ Hs : (t : Set I).Pairwise (IsCoprime on s) Hs1 : ∀, ∀ i ∈ t, ∀, s i ∣ z, (∏ x in t, s x) ∣ z :=
+    ∀ (Hs : (t : Set I).Pairwise (IsCoprime on s)) (Hs1 : ∀, ∀ i ∈ t, ∀, s i ∣ z), (∏ x in t, s x) ∣ z :=
   Finset.induction_on t (fun _ _ => one_dvd z)
     (by
       intro a r har ih Hs Hs1

@@ -89,11 +89,11 @@ theorem to_ordinal_one : toOrdinal 1 = 1 :=
   rfl
 
 @[simp]
-theorem to_ordinal_eq_zero a : toOrdinal a = 0 ↔ a = 0 :=
+theorem to_ordinal_eq_zero (a) : toOrdinal a = 0 ↔ a = 0 :=
   Iff.rfl
 
 @[simp]
-theorem to_ordinal_eq_one a : toOrdinal a = 1 ↔ a = 1 :=
+theorem to_ordinal_eq_one (a) : toOrdinal a = 1 ↔ a = 1 :=
   Iff.rfl
 
 @[simp]
@@ -111,7 +111,7 @@ theorem succ_def (a : NatOrdinal) : succ a = (a.toOrdinal + 1).toNatOrdinal :=
 protected def rec {β : NatOrdinal → Sort _} (h : ∀ a, β (toNatOrdinal a)) : ∀ a, β a := fun a => h a.toOrdinal
 
 /-- `ordinal.induction` but for `nat_ordinal`. -/
-theorem induction {p : NatOrdinal → Prop} : ∀ i h : ∀ j, (∀ k, k < j → p k) → p j, p i :=
+theorem induction {p : NatOrdinal → Prop} : ∀ (i) (h : ∀ j, (∀ k, k < j → p k) → p j), p i :=
   Ordinal.induction
 
 end NatOrdinal
@@ -137,11 +137,11 @@ theorem to_nat_ordinal_one : toNatOrdinal 1 = 1 :=
   rfl
 
 @[simp]
-theorem to_nat_ordinal_eq_zero a : toNatOrdinal a = 0 ↔ a = 0 :=
+theorem to_nat_ordinal_eq_zero (a) : toNatOrdinal a = 0 ↔ a = 0 :=
   Iff.rfl
 
 @[simp]
-theorem to_nat_ordinal_eq_one a : toNatOrdinal a = 1 ↔ a = 1 :=
+theorem to_nat_ordinal_eq_one (a) : toNatOrdinal a = 1 ↔ a = 1 :=
   Iff.rfl
 
 @[simp]
@@ -176,20 +176,20 @@ theorem nadd_le_iff : b ♯ c ≤ a ↔ (∀, ∀ b' < b, ∀, b' ♯ c < a) ∧
   rw [nadd_def]
   simp [← blsub_le_iff]
 
-theorem nadd_lt_nadd_left (h : b < c) a : a ♯ b < a ♯ c :=
+theorem nadd_lt_nadd_left (h : b < c) (a) : a ♯ b < a ♯ c :=
   lt_nadd_iff.2 (Or.inr ⟨b, h, le_rfl⟩)
 
-theorem nadd_lt_nadd_right (h : b < c) a : b ♯ a < c ♯ a :=
+theorem nadd_lt_nadd_right (h : b < c) (a) : b ♯ a < c ♯ a :=
   lt_nadd_iff.2 (Or.inl ⟨b, h, le_rfl⟩)
 
-theorem nadd_le_nadd_left (h : b ≤ c) a : a ♯ b ≤ a ♯ c := by
+theorem nadd_le_nadd_left (h : b ≤ c) (a) : a ♯ b ≤ a ♯ c := by
   rcases lt_or_eq_of_leₓ h with (h | rfl)
   · exact (nadd_lt_nadd_left h a).le
     
   · exact le_rfl
     
 
-theorem nadd_le_nadd_right (h : b ≤ c) a : b ♯ a ≤ c ♯ a := by
+theorem nadd_le_nadd_right (h : b ≤ c) (a) : b ♯ a ≤ c ♯ a := by
   rcases lt_or_eq_of_leₓ h with (h | rfl)
   · exact (nadd_lt_nadd_right h a).le
     
@@ -203,7 +203,7 @@ theorem nadd_comm : ∀ a b, a ♯ b = b ♯ a
     rw [nadd_def, nadd_def, max_commₓ]
     congr <;> ext c hc <;> apply nadd_comm
 
-theorem blsub_nadd_of_mono {f : ∀, ∀ c < a ♯ b, ∀, Ordinal.{max u v}} (hf : ∀ {i j} hi hj, i ≤ j → f i hi ≤ f j hj) :
+theorem blsub_nadd_of_mono {f : ∀, ∀ c < a ♯ b, ∀, Ordinal.{max u v}} (hf : ∀ {i j} (hi hj), i ≤ j → f i hi ≤ f j hj) :
     blsub _ f =
       max (blsub.{u, v} a fun a' ha' => f (a' ♯ b) <| nadd_lt_nadd_right ha' b)
         (blsub.{u, v} b fun b' hb' => f (a ♯ b') <| nadd_lt_nadd_left hb' a) :=
@@ -351,16 +351,16 @@ theorem le_of_nadd_le_nadd_left : ∀ {a b c}, a ♯ b ≤ a ♯ c → b ≤ c :
 theorem le_of_nadd_le_nadd_right : ∀ {a b c}, b ♯ a ≤ c ♯ a → b ≤ c :=
   @le_of_add_le_add_right NatOrdinal _ _ _
 
-theorem nadd_lt_nadd_iff_left : ∀ a {b c}, a ♯ b < a ♯ c ↔ b < c :=
+theorem nadd_lt_nadd_iff_left : ∀ (a) {b c}, a ♯ b < a ♯ c ↔ b < c :=
   @add_lt_add_iff_left NatOrdinal _ _ _ _
 
-theorem nadd_lt_nadd_iff_right : ∀ a {b c}, b ♯ a < c ♯ a ↔ b < c :=
+theorem nadd_lt_nadd_iff_right : ∀ (a) {b c}, b ♯ a < c ♯ a ↔ b < c :=
   @add_lt_add_iff_right NatOrdinal _ _ _ _
 
-theorem nadd_le_nadd_iff_left : ∀ a {b c}, a ♯ b ≤ a ♯ c ↔ b ≤ c :=
+theorem nadd_le_nadd_iff_left : ∀ (a) {b c}, a ♯ b ≤ a ♯ c ↔ b ≤ c :=
   @add_le_add_iff_left NatOrdinal _ _ _ _
 
-theorem nadd_le_nadd_iff_right : ∀ a {b c}, b ♯ a ≤ c ♯ a ↔ b ≤ c :=
+theorem nadd_le_nadd_iff_right : ∀ (a) {b c}, b ♯ a ≤ c ♯ a ↔ b ≤ c :=
   @add_le_add_iff_right NatOrdinal _ _ _ _
 
 theorem nadd_left_cancel : ∀ {a b c}, a ♯ b = a ♯ c → b = c :=

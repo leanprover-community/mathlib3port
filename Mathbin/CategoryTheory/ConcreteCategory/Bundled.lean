@@ -42,7 +42,7 @@ instance : CoeSort (Bundled c) (Type u) :=
   ⟨Bundled.α⟩
 
 @[simp]
-theorem coe_mk α str : (@Bundled.mk c α str : Type u) = α :=
+theorem coe_mk (α) (str) : (@Bundled.mk c α str : Type u) = α :=
   rfl
 
 /-- Map over the bundled structure -/

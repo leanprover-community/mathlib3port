@@ -5,6 +5,7 @@ Authors: Markus Himmel
 -/
 import Mathbin.CategoryTheory.Balanced
 import Mathbin.CategoryTheory.Limits.Opposites
+import Mathbin.CategoryTheory.Limits.Shapes.ZeroMorphisms
 import Mathbin.Data.Set.Opposite
 
 /-!
@@ -50,7 +51,7 @@ We
 -/
 
 
-universe v u
+universe w v u
 
 open CategoryTheory.Limits Opposite
 
@@ -61,23 +62,23 @@ variable {C : Type u} [Category.{v} C]
 /-- We say that `𝒢` is a separating set if the functors `C(G, -)` for `G ∈ 𝒢` are collectively
     faithful, i.e., if `h ≫ f = h ≫ g` for all `h` with domain in `𝒢` implies `f = g`. -/
 def IsSeparating (𝒢 : Set C) : Prop :=
-  ∀ ⦃X Y : C⦄ f g : X ⟶ Y, (∀, ∀ G ∈ 𝒢, ∀ h : G ⟶ X, h ≫ f = h ≫ g) → f = g
+  ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), (∀, ∀ G ∈ 𝒢, ∀ (h : G ⟶ X), h ≫ f = h ≫ g) → f = g
 
 /-- We say that `𝒢` is a coseparating set if the functors `C(-, G)` for `G ∈ 𝒢` are collectively
     faithful, i.e., if `f ≫ h = g ≫ h` for all `h` with codomain in `𝒢` implies `f = g`. -/
 def IsCoseparating (𝒢 : Set C) : Prop :=
-  ∀ ⦃X Y : C⦄ f g : X ⟶ Y, (∀, ∀ G ∈ 𝒢, ∀ h : Y ⟶ G, f ≫ h = g ≫ h) → f = g
+  ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), (∀, ∀ G ∈ 𝒢, ∀ (h : Y ⟶ G), f ≫ h = g ≫ h) → f = g
 
 /-- We say that `𝒢` is a detecting set if the functors `C(G, -)` collectively reflect isomorphisms,
     i.e., if any `h` with domain in `𝒢` uniquely factors through `f`, then `f` is an isomorphism. -/
 def IsDetecting (𝒢 : Set C) : Prop :=
-  ∀ ⦃X Y : C⦄ f : X ⟶ Y, (∀, ∀ G ∈ 𝒢, ∀ h : G ⟶ Y, ∃! h' : G ⟶ X, h' ≫ f = h) → IsIso f
+  ∀ ⦃X Y : C⦄ (f : X ⟶ Y), (∀, ∀ G ∈ 𝒢, ∀ (h : G ⟶ Y), ∃! h' : G ⟶ X, h' ≫ f = h) → IsIso f
 
 /-- We say that `𝒢` is a codetecting set if the functors `C(-, G)` collectively reflect
     isomorphisms, i.e., if any `h` with codomain in `G` uniquely factors through `f`, then `f` is
     an isomorphism. -/
 def IsCodetecting (𝒢 : Set C) : Prop :=
-  ∀ ⦃X Y : C⦄ f : X ⟶ Y, (∀, ∀ G ∈ 𝒢, ∀ h : X ⟶ G, ∃! h' : Y ⟶ G, f ≫ h' = h) → IsIso f
+  ∀ ⦃X Y : C⦄ (f : X ⟶ Y), (∀, ∀ G ∈ 𝒢, ∀ (h : X ⟶ G), ∃! h' : Y ⟶ G, f ≫ h' = h) → IsIso f
 
 section Dual
 
@@ -217,14 +218,14 @@ theorem is_coseparating_empty_of_thin [∀ X Y : C, Subsingleton (X ⟶ Y)] : Is
 theorem groupoid_of_is_detecting_empty (h : IsDetecting (∅ : Set C)) {X Y : C} (f : X ⟶ Y) : IsIso f :=
   (h _) fun G => False.elim
 
-theorem is_detecting_empty_of_groupoid [∀ {X Y : C} f : X ⟶ Y, IsIso f] : IsDetecting (∅ : Set C) := fun X Y f hf =>
+theorem is_detecting_empty_of_groupoid [∀ {X Y : C} (f : X ⟶ Y), IsIso f] : IsDetecting (∅ : Set C) := fun X Y f hf =>
   inferInstance
 
 theorem groupoid_of_is_codetecting_empty (h : IsCodetecting (∅ : Set C)) {X Y : C} (f : X ⟶ Y) : IsIso f :=
   (h _) fun G => False.elim
 
-theorem is_codetecting_empty_of_groupoid [∀ {X Y : C} f : X ⟶ Y, IsIso f] : IsCodetecting (∅ : Set C) := fun X Y f hf =>
-  inferInstance
+theorem is_codetecting_empty_of_groupoid [∀ {X Y : C} (f : X ⟶ Y), IsIso f] : IsCodetecting (∅ : Set C) :=
+  fun X Y f hf => inferInstance
 
 end Empty
 
@@ -284,45 +285,47 @@ theorem IsSeparator.is_detector [Balanced C] {G : C} : IsSeparator G → IsDetec
 theorem IsCospearator.is_codetector [Balanced C] {G : C} : IsCoseparator G → IsCodetector G :=
   is_coseparating.is_codetecting
 
-theorem is_separator_def (G : C) : IsSeparator G ↔ ∀ ⦃X Y : C⦄ f g : X ⟶ Y, (∀ h : G ⟶ X, h ≫ f = h ≫ g) → f = g :=
+theorem is_separator_def (G : C) : IsSeparator G ↔ ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), (∀ h : G ⟶ X, h ≫ f = h ≫ g) → f = g :=
   ⟨fun hG X Y f g hfg =>
     (hG _ _) fun H hH h => by
       obtain rfl := Set.mem_singleton_iff.1 hH
       exact hfg h,
     fun hG X Y f g hfg => (hG _ _) fun h => hfg _ (Set.mem_singleton _) _⟩
 
-theorem IsSeparator.def {G : C} : IsSeparator G → ∀ ⦃X Y : C⦄ f g : X ⟶ Y, (∀ h : G ⟶ X, h ≫ f = h ≫ g) → f = g :=
+theorem IsSeparator.def {G : C} : IsSeparator G → ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), (∀ h : G ⟶ X, h ≫ f = h ≫ g) → f = g :=
   (is_separator_def _).1
 
-theorem is_coseparator_def (G : C) : IsCoseparator G ↔ ∀ ⦃X Y : C⦄ f g : X ⟶ Y, (∀ h : Y ⟶ G, f ≫ h = g ≫ h) → f = g :=
+theorem is_coseparator_def (G : C) :
+    IsCoseparator G ↔ ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), (∀ h : Y ⟶ G, f ≫ h = g ≫ h) → f = g :=
   ⟨fun hG X Y f g hfg =>
     (hG _ _) fun H hH h => by
       obtain rfl := Set.mem_singleton_iff.1 hH
       exact hfg h,
     fun hG X Y f g hfg => (hG _ _) fun h => hfg _ (Set.mem_singleton _) _⟩
 
-theorem IsCoseparator.def {G : C} : IsCoseparator G → ∀ ⦃X Y : C⦄ f g : X ⟶ Y, (∀ h : Y ⟶ G, f ≫ h = g ≫ h) → f = g :=
+theorem IsCoseparator.def {G : C} : IsCoseparator G → ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), (∀ h : Y ⟶ G, f ≫ h = g ≫ h) → f = g :=
   (is_coseparator_def _).1
 
-theorem is_detector_def (G : C) : IsDetector G ↔ ∀ ⦃X Y : C⦄ f : X ⟶ Y, (∀ h : G ⟶ Y, ∃! h', h' ≫ f = h) → IsIso f :=
+theorem is_detector_def (G : C) : IsDetector G ↔ ∀ ⦃X Y : C⦄ (f : X ⟶ Y), (∀ h : G ⟶ Y, ∃! h', h' ≫ f = h) → IsIso f :=
   ⟨fun hG X Y f hf =>
     (hG _) fun H hH h => by
       obtain rfl := Set.mem_singleton_iff.1 hH
       exact hf h,
     fun hG X Y f hf => (hG _) fun h => hf _ (Set.mem_singleton _) _⟩
 
-theorem IsDetector.def {G : C} : IsDetector G → ∀ ⦃X Y : C⦄ f : X ⟶ Y, (∀ h : G ⟶ Y, ∃! h', h' ≫ f = h) → IsIso f :=
+theorem IsDetector.def {G : C} : IsDetector G → ∀ ⦃X Y : C⦄ (f : X ⟶ Y), (∀ h : G ⟶ Y, ∃! h', h' ≫ f = h) → IsIso f :=
   (is_detector_def _).1
 
 theorem is_codetector_def (G : C) :
-    IsCodetector G ↔ ∀ ⦃X Y : C⦄ f : X ⟶ Y, (∀ h : X ⟶ G, ∃! h', f ≫ h' = h) → IsIso f :=
+    IsCodetector G ↔ ∀ ⦃X Y : C⦄ (f : X ⟶ Y), (∀ h : X ⟶ G, ∃! h', f ≫ h' = h) → IsIso f :=
   ⟨fun hG X Y f hf =>
     (hG _) fun H hH h => by
       obtain rfl := Set.mem_singleton_iff.1 hH
       exact hf h,
     fun hG X Y f hf => (hG _) fun h => hf _ (Set.mem_singleton _) _⟩
 
-theorem IsCodetector.def {G : C} : IsCodetector G → ∀ ⦃X Y : C⦄ f : X ⟶ Y, (∀ h : X ⟶ G, ∃! h', f ≫ h' = h) → IsIso f :=
+theorem IsCodetector.def {G : C} :
+    IsCodetector G → ∀ ⦃X Y : C⦄ (f : X ⟶ Y), (∀ h : X ⟶ G, ∃! h', f ≫ h' = h) → IsIso f :=
   (is_codetector_def _).1
 
 theorem is_separator_iff_faithful_coyoneda_obj (G : C) : IsSeparator G ↔ Faithful (coyoneda.obj (op G)) :=
@@ -332,6 +335,128 @@ theorem is_separator_iff_faithful_coyoneda_obj (G : C) : IsSeparator G ↔ Faith
 theorem is_coseparator_iff_faithful_yoneda_obj (G : C) : IsCoseparator G ↔ Faithful (yoneda.obj G) :=
   ⟨fun hG => ⟨fun X Y f g hfg => Quiver.Hom.unop_inj (hG.def _ _ (congr_fun hfg))⟩, fun h =>
     (is_coseparator_def _).2 fun X Y f g hfg => Quiver.Hom.op_inj <| (yoneda.obj G).map_injective (funext hfg)⟩
+
+section ZeroMorphisms
+
+variable [HasZeroMorphisms C]
+
+theorem is_separator_coprod (G H : C) [HasBinaryCoproduct G H] : IsSeparator (G ⨿ H) ↔ IsSeparating ({G, H} : Set C) :=
+  by
+  refine' ⟨fun h X Y u v huv => _, fun h => (is_separator_def _).2 fun X Y u v huv => h _ _ fun Z hZ g => _⟩
+  · refine' h.def _ _ fun g => coprod.hom_ext _ _
+    · simpa using
+        huv G
+          (by
+            simp )
+          (coprod.inl ≫ g)
+      
+    · simpa using
+        huv H
+          (by
+            simp )
+          (coprod.inr ≫ g)
+      
+    
+  · simp only [← Set.mem_insert_iff, ← Set.mem_singleton_iff] at hZ
+    rcases hZ with (rfl | rfl)
+    · simpa using coprod.inl ≫= huv (coprod.desc g 0)
+      
+    · simpa using coprod.inr ≫= huv (coprod.desc 0 g)
+      
+    
+
+theorem is_separator_coprod_of_is_separator_left (G H : C) [HasBinaryCoproduct G H] (hG : IsSeparator G) :
+    IsSeparator (G ⨿ H) :=
+  (is_separator_coprod _ _).2 <|
+    IsSeparating.mono hG <| by
+      simp
+
+theorem is_separator_coprod_of_is_separator_right (G H : C) [HasBinaryCoproduct G H] (hH : IsSeparator H) :
+    IsSeparator (G ⨿ H) :=
+  (is_separator_coprod _ _).2 <|
+    IsSeparating.mono hH <| by
+      simp
+
+theorem is_separator_sigma {β : Type w} (f : β → C) [HasCoproduct f] : IsSeparator (∐ f) ↔ IsSeparating (Set.Range f) :=
+  by
+  refine' ⟨fun h X Y u v huv => _, fun h => (is_separator_def _).2 fun X Y u v huv => h _ _ fun Z hZ g => _⟩
+  · refine' h.def _ _ fun g => colimit.hom_ext fun b => _
+    simpa using
+      huv (f b.as)
+        (by
+          simp )
+        (colimit.ι (discrete.functor f) _ ≫ g)
+    
+  · obtain ⟨b, rfl⟩ := Set.mem_range.1 hZ
+    classical
+    simpa using sigma.ι f b ≫= huv (sigma.desc (Pi.single b g))
+    
+
+theorem is_separator_sigma_of_is_separator {β : Type w} (f : β → C) [HasCoproduct f] (b : β) (hb : IsSeparator (f b)) :
+    IsSeparator (∐ f) :=
+  (is_separator_sigma _).2 <|
+    IsSeparating.mono hb <| by
+      simp
+
+theorem is_coseparator_prod (G H : C) [HasBinaryProduct G H] :
+    IsCoseparator (G ⨯ H) ↔ IsCoseparating ({G, H} : Set C) := by
+  refine' ⟨fun h X Y u v huv => _, fun h => (is_coseparator_def _).2 fun X Y u v huv => h _ _ fun Z hZ g => _⟩
+  · refine' h.def _ _ fun g => prod.hom_ext _ _
+    · simpa using
+        huv G
+          (by
+            simp )
+          (g ≫ limits.prod.fst)
+      
+    · simpa using
+        huv H
+          (by
+            simp )
+          (g ≫ limits.prod.snd)
+      
+    
+  · simp only [← Set.mem_insert_iff, ← Set.mem_singleton_iff] at hZ
+    rcases hZ with (rfl | rfl)
+    · simpa using huv (prod.lift g 0) =≫ limits.prod.fst
+      
+    · simpa using huv (prod.lift 0 g) =≫ limits.prod.snd
+      
+    
+
+theorem is_coseparator_prod_of_is_coseparator_left (G H : C) [HasBinaryProduct G H] (hG : IsCoseparator G) :
+    IsCoseparator (G ⨯ H) :=
+  (is_coseparator_prod _ _).2 <|
+    IsCoseparating.mono hG <| by
+      simp
+
+theorem is_coseparator_prod_of_is_coseparator_right (G H : C) [HasBinaryProduct G H] (hH : IsCoseparator H) :
+    IsCoseparator (G ⨯ H) :=
+  (is_coseparator_prod _ _).2 <|
+    IsCoseparating.mono hH <| by
+      simp
+
+theorem is_coseparator_pi {β : Type w} (f : β → C) [HasProduct f] :
+    IsCoseparator (∏ f) ↔ IsCoseparating (Set.Range f) := by
+  refine' ⟨fun h X Y u v huv => _, fun h => (is_coseparator_def _).2 fun X Y u v huv => h _ _ fun Z hZ g => _⟩
+  · refine' h.def _ _ fun g => limit.hom_ext fun b => _
+    simpa using
+      huv (f b.as)
+        (by
+          simp )
+        (g ≫ limit.π (discrete.functor f) _)
+    
+  · obtain ⟨b, rfl⟩ := Set.mem_range.1 hZ
+    classical
+    simpa using huv (pi.lift (Pi.single b g)) =≫ pi.π f b
+    
+
+theorem is_coseparator_pi_of_is_coseparator {β : Type w} (f : β → C) [HasProduct f] (b : β) (hb : IsCoseparator (f b)) :
+    IsCoseparator (∏ f) :=
+  (is_coseparator_pi _).2 <|
+    IsCoseparating.mono hb <| by
+      simp
+
+end ZeroMorphisms
 
 theorem is_detector_iff_reflects_isomorphisms_coyoneda_obj (G : C) :
     IsDetector G ↔ ReflectsIsomorphisms (coyoneda.obj (op G)) := by

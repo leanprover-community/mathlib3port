@@ -197,7 +197,9 @@ theorem selfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing E]
 
 section starₗᵢ
 
-variable [CommSemiringₓ 𝕜] [StarRing 𝕜] [NormedRing E] [StarRing E] [NormedStarGroup E]
+variable [CommSemiringₓ 𝕜] [StarRing 𝕜]
+
+variable [SemiNormedGroup E] [StarAddMonoid E] [NormedStarGroup E]
 
 variable [Module 𝕜 E] [StarModule 𝕜 E]
 

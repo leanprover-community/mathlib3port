@@ -28,7 +28,6 @@ open TopologicalSpace
 
 attribute [local mono] prod_mono
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If a function `f` is differentiable in a convex open set and continuous on its closure, and its
 derivative converges to a limit `f'` at a point on the boundary, then `f` is differentiable there
 with derivative `f'`. -/
@@ -174,10 +173,10 @@ theorem has_deriv_at_interval_right_endpoint_of_tendsto_deriv {s : Set ℝ} {e :
     exact has_fderiv_at_boundary_of_tendsto_fderiv t_diff t_conv t_open t_cont t_diff'
   exact this.nhds_within (mem_nhds_within_Iic_iff_exists_Icc_subset.2 ⟨b, ba, subset.refl _⟩)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y «expr ≠ » x)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y «expr ≠ » x)
 /-- If a real function `f` has a derivative `g` everywhere but at a point, and `f` and `g` are
 continuous at this point, then `g` is also the derivative of `f` at this point. -/
-theorem has_deriv_at_of_has_deriv_at_of_ne {f g : ℝ → E} {x : ℝ} (f_diff : ∀ y _ : y ≠ x, HasDerivAt f (g y) y)
+theorem has_deriv_at_of_has_deriv_at_of_ne {f g : ℝ → E} {x : ℝ} (f_diff : ∀ (y) (_ : y ≠ x), HasDerivAt f (g y) y)
     (hf : ContinuousAt f x) (hg : ContinuousAt g x) : HasDerivAt f (g x) x := by
   have A : HasDerivWithinAt f (g x) (Ici x) x := by
     have diff : DifferentiableOn ℝ f (Ioi x) := fun y hy =>
@@ -201,10 +200,10 @@ theorem has_deriv_at_of_has_deriv_at_of_ne {f g : ℝ → E} {x : ℝ} (f_diff :
     exact (f_diff y (ne_of_ltₓ hy)).deriv.symm
   simpa using B.union A
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (y «expr ≠ » x)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y «expr ≠ » x)
 /-- If a real function `f` has a derivative `g` everywhere but at a point, and `f` and `g` are
 continuous at this point, then `g` is the derivative of `f` everywhere. -/
-theorem has_deriv_at_of_has_deriv_at_of_ne' {f g : ℝ → E} {x : ℝ} (f_diff : ∀ y _ : y ≠ x, HasDerivAt f (g y) y)
+theorem has_deriv_at_of_has_deriv_at_of_ne' {f g : ℝ → E} {x : ℝ} (f_diff : ∀ (y) (_ : y ≠ x), HasDerivAt f (g y) y)
     (hf : ContinuousAt f x) (hg : ContinuousAt g x) (y : ℝ) : HasDerivAt f (g y) y := by
   rcases eq_or_ne y x with (rfl | hne)
   · exact has_deriv_at_of_has_deriv_at_of_ne f_diff hf hg

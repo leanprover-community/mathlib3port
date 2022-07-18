@@ -54,16 +54,16 @@ open Functor
 
 /-- Bifunctor. This typeclass asserts that a lawless bitraversable bifunctor is lawful. -/
 class IsLawfulBitraversable (t : Type u → Type u → Type u) [Bitraversable t] extends IsLawfulBifunctor t where
-  id_bitraverse : ∀ {α β} x : t α β, bitraverse id.mk id.mk x = id.mk x
+  id_bitraverse : ∀ {α β} (x : t α β), bitraverse id.mk id.mk x = id.mk x
   comp_bitraverse :
-    ∀ {F G} [Applicativeₓ F] [Applicativeₓ G] [IsLawfulApplicative F] [IsLawfulApplicative G] {α α' β β' γ γ'} f :
-      β → F γ f' : β' → F γ' g : α → G β g' : α' → G β' x : t α α',
+    ∀ {F G} [Applicativeₓ F] [Applicativeₓ G] [IsLawfulApplicative F] [IsLawfulApplicative G] {α α' β β' γ γ'}
+      (f : β → F γ) (f' : β' → F γ') (g : α → G β) (g' : α' → G β') (x : t α α'),
       bitraverse (comp.mk ∘ map f ∘ g) (comp.mk ∘ map f' ∘ g') x = Comp.mk (bitraverse f f' <$> bitraverse g g' x)
   bitraverse_eq_bimap_id :
-    ∀ {α α' β β'} f : α → β f' : α' → β' x : t α α', bitraverse (id.mk ∘ f) (id.mk ∘ f') x = id.mk (bimap f f' x)
+    ∀ {α α' β β'} (f : α → β) (f' : α' → β') (x : t α α'), bitraverse (id.mk ∘ f) (id.mk ∘ f') x = id.mk (bimap f f' x)
   binaturality :
-    ∀ {F G} [Applicativeₓ F] [Applicativeₓ G] [IsLawfulApplicative F] [IsLawfulApplicative G] η :
-      ApplicativeTransformation F G {α α' β β'} f : α → F β f' : α' → F β' x : t α α',
+    ∀ {F G} [Applicativeₓ F] [Applicativeₓ G] [IsLawfulApplicative F] [IsLawfulApplicative G]
+      (η : ApplicativeTransformation F G) {α α' β β'} (f : α → F β) (f' : α' → F β') (x : t α α'),
       η (bitraverse f f' x) = bitraverse (@η _ ∘ f) (@η _ ∘ f') x
 
 export IsLawfulBitraversable (id_bitraverse comp_bitraverse bitraverse_eq_bimap_id)

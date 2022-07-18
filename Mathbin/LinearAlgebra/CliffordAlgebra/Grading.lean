@@ -76,11 +76,16 @@ theorem GradedAlgebra.ι_apply (m : M) :
   rfl
 
 theorem GradedAlgebra.ι_sq_scalar (m : M) : GradedAlgebra.ι Q m * GradedAlgebra.ι Q m = algebraMap R _ (Q m) := by
-  rw [graded_algebra.ι_apply, DirectSum.of_mul_of, DirectSum.algebra_map_apply]
+  rw [graded_algebra.ι_apply Q, DirectSum.of_mul_of, DirectSum.algebra_map_apply]
   refine' DirectSum.of_eq_of_graded_monoid_eq (Sigma.subtype_ext rfl <| ι_sq_scalar _ _)
 
 theorem GradedAlgebra.lift_ι_eq (i' : Zmod 2) (x' : evenOdd Q i') :
-    lift Q ⟨GradedAlgebra.ι Q, GradedAlgebra.ι_sq_scalar Q⟩ x' = DirectSum.of (fun i => evenOdd Q i) i' x' := by
+    lift Q
+        ⟨by
+          apply graded_algebra.ι Q, GradedAlgebra.ι_sq_scalar Q⟩
+        x' =
+      DirectSum.of (fun i => evenOdd Q i) i' x' :=
+  by
   cases' x' with x' hx'
   dsimp' only [← Subtype.coe_mk, ← DirectSum.lof_eq_of]
   refine' Submodule.supr_induction' _ (fun i x hx => _) _ (fun x y hx hy ihx ihy => _) hx'
@@ -94,7 +99,7 @@ theorem GradedAlgebra.lift_ι_eq (i' : Zmod 2) (x' : evenOdd Q i') :
       rfl
       
     · obtain ⟨_, rfl⟩ := hm
-      rw [AlgHom.map_mul, ih, lift_ι_apply, graded_algebra.ι_apply, DirectSum.of_mul_of]
+      rw [AlgHom.map_mul, ih, lift_ι_apply, graded_algebra.ι_apply Q, DirectSum.of_mul_of]
       refine' DirectSum.of_eq_of_graded_monoid_eq (Sigma.subtype_ext _ _) <;>
         dsimp' only [← GradedMonoid.mk, ← Subtype.coe_mk]
       · rw [Nat.succ_eq_add_one, add_commₓ, Nat.cast_addₓ, Nat.cast_oneₓ]
@@ -113,14 +118,20 @@ theorem GradedAlgebra.lift_ι_eq (i' : Zmod 2) (x' : evenOdd Q i') :
 
 /-- The clifford algebra is graded by the even and odd parts. -/
 instance gradedAlgebra : GradedAlgebra (evenOdd Q) :=
-  GradedAlgebra.ofAlgHom (evenOdd Q) (lift _ ⟨GradedAlgebra.ι Q, GradedAlgebra.ι_sq_scalar Q⟩)
+  GradedAlgebra.ofAlgHom (evenOdd Q)
+    (-- while not necessary, the `by apply` makes this elaborate faster
+      lift
+      Q
+      ⟨by
+        apply graded_algebra.ι Q, GradedAlgebra.ι_sq_scalar Q⟩)
     (-- the proof from here onward is mostly similar to the `tensor_algebra` case, with some extra
     -- handling for the `supr` in `even_odd`.
     by
       ext m
       dsimp' only [← LinearMap.comp_apply, ← AlgHom.to_linear_map_apply, ← AlgHom.comp_apply, ← AlgHom.id_apply]
-      rw [lift_ι_apply, graded_algebra.ι_apply, DirectSum.coe_alg_hom_of, Subtype.coe_mk])
-    (graded_algebra.lift_ι_eq Q)
+      rw [lift_ι_apply, graded_algebra.ι_apply Q, DirectSum.coe_alg_hom_of, Subtype.coe_mk])
+    (by
+      apply graded_algebra.lift_ι_eq Q)
 
 theorem supr_ι_range_eq_top : (⨆ i : ℕ, (ι Q).range ^ i) = ⊤ := by
   rw [← (DirectSum.Decomposition.is_internal (even_odd Q)).submodule_supr_eq_top, eq_comm]
@@ -141,10 +152,10 @@ scalars or vectors (respectively), closed under addition, and under left-multipl
 of vectors. -/
 @[elab_as_eliminator]
 theorem even_odd_induction (n : Zmod 2) {P : ∀ x, x ∈ evenOdd Q n → Prop}
-    (hr : ∀ v h : v ∈ (ι Q).range ^ n.val, P v (Submodule.mem_supr_of_mem ⟨n.val, n.nat_cast_zmod_val⟩ h))
+    (hr : ∀ (v) (h : v ∈ (ι Q).range ^ n.val), P v (Submodule.mem_supr_of_mem ⟨n.val, n.nat_cast_zmod_val⟩ h))
     (hadd : ∀ {x y hx hy}, P x hx → P y hy → P (x + y) (Submodule.add_mem _ hx hy))
     (hιι_mul :
-      ∀ m₁ m₂ {x hx},
+      ∀ (m₁ m₂) {x hx},
         P x hx →
           P (ι Q m₁ * ι Q m₂ * x) (zero_addₓ n ▸ SetLike.GradedMonoid.mul_mem (ι_mul_ι_mem_even_odd_zero Q m₁ m₂) hx))
     (x : CliffordAlgebra Q) (hx : x ∈ evenOdd Q n) : P x hx := by
@@ -190,7 +201,7 @@ theorem even_induction {P : ∀ x, x ∈ evenOdd Q 0 → Prop}
     (hr : ∀ r : R, P (algebraMap _ _ r) (SetLike.HasGradedOne.algebra_map_mem _ _))
     (hadd : ∀ {x y hx hy}, P x hx → P y hy → P (x + y) (Submodule.add_mem _ hx hy))
     (hιι_mul :
-      ∀ m₁ m₂ {x hx},
+      ∀ (m₁ m₂) {x hx},
         P x hx →
           P (ι Q m₁ * ι Q m₂ * x) (zero_addₓ 0 ▸ SetLike.GradedMonoid.mul_mem (ι_mul_ι_mem_even_odd_zero Q m₁ m₂) hx))
     (x : CliffordAlgebra Q) (hx : x ∈ evenOdd Q 0) : P x hx := by
@@ -205,7 +216,7 @@ vectors, closed under addition, and under left-multiplication by a pair of vecto
 theorem odd_induction {P : ∀ x, x ∈ evenOdd Q 1 → Prop} (hι : ∀ v, P (ι Q v) (ι_mem_even_odd_one _ _))
     (hadd : ∀ {x y hx hy}, P x hx → P y hy → P (x + y) (Submodule.add_mem _ hx hy))
     (hιι_mul :
-      ∀ m₁ m₂ {x hx},
+      ∀ (m₁ m₂) {x hx},
         P x hx →
           P (ι Q m₁ * ι Q m₂ * x)
             (zero_addₓ (1 : Zmod 2) ▸ SetLike.GradedMonoid.mul_mem (ι_mul_ι_mem_even_odd_zero Q m₁ m₂) hx))

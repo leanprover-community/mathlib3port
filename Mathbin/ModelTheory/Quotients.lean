@@ -33,8 +33,8 @@ open Structure
   such that quotienting by that equivalence relation is still a structure. -/
 class Prestructure (s : Setoidₓ M) where
   toStructure : L.Structure M
-  fun_equiv : ∀ {n} {f : L.Functions n} x y : Finₓ n → M, x ≈ y → funMap f x ≈ funMap f y
-  rel_equiv : ∀ {n} {r : L.Relations n} x y : Finₓ n → M h : x ≈ y, RelMap r x = RelMap r y
+  fun_equiv : ∀ {n} {f : L.Functions n} (x y : Finₓ n → M), x ≈ y → funMap f x ≈ funMap f y
+  rel_equiv : ∀ {n} {r : L.Relations n} (x y : Finₓ n → M) (h : x ≈ y), RelMap r x = RelMap r y
 
 variable {L} {s : Setoidₓ M} [ps : L.Prestructure s]
 

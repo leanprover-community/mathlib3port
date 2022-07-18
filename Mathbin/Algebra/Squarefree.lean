@@ -85,7 +85,7 @@ variable [CommMonoidₓ R] [DecidableRel (Dvd.Dvd : R → R → Prop)]
 theorem squarefree_iff_multiplicity_le_one (r : R) : Squarefree r ↔ ∀ x : R, multiplicity x r ≤ 1 ∨ IsUnit x := by
   refine' forall_congrₓ fun a => _
   rw [← sq, pow_dvd_iff_le_multiplicity, or_iff_not_imp_left, not_leₓ, imp_congr _ Iff.rfl]
-  simpa using Enat.add_one_le_iff_lt (Enat.coe_ne_top 1)
+  simpa using PartEnat.add_one_le_iff_lt (PartEnat.coe_ne_top 1)
 
 end CommMonoidₓ
 
@@ -93,7 +93,6 @@ section CancelCommMonoidWithZero
 
 variable [CancelCommMonoidWithZero R] [WfDvdMonoid R]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem finite_prime_left {a b : R} (ha : Prime a) (hb : b ≠ 0) : multiplicity.Finite a b := by
   classical
   revert hb
@@ -103,11 +102,11 @@ theorem finite_prime_left {a b : R} (ha : Prime a) (hb : b ≠ 0) : multiplicity
         contradiction)
       (fun u hu hu' => _) fun b p hb hp ih hpb => _
   · rw [multiplicity.finite_iff_dom, multiplicity.is_unit_right ha.not_unit hu]
-    exact Enat.dom_coe 0
+    exact PartEnat.dom_coe 0
     
   · refine'
       multiplicity.finite_mul ha
-        (multiplicity.finite_iff_dom.mpr (Enat.dom_of_le_coe (show multiplicity a p ≤ ↑1 from _))) (ih hb)
+        (multiplicity.finite_iff_dom.mpr (PartEnat.dom_of_le_coe (show multiplicity a p ≤ ↑1 from _))) (ih hb)
     norm_cast
     exact ((multiplicity.squarefree_iff_multiplicity_le_one p).mp hp.squarefree a).resolve_right ha.not_unit
     
@@ -164,7 +163,6 @@ variable [CancelCommMonoidWithZero R] [Nontrivial R] [UniqueFactorizationMonoid 
 
 variable [NormalizationMonoid R]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem squarefree_iff_nodup_normalized_factors [DecidableEq R] {x : R} (x0 : x ≠ 0) :
     Squarefree x ↔ Multiset.Nodup (normalizedFactors x) := by
   have drel : DecidableRel (Dvd.Dvd : R → R → Prop) := by
@@ -199,7 +197,6 @@ theorem squarefree_iff_nodup_normalized_factors [DecidableEq R] {x : R} (x0 : x 
     assumption_mod_cast
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem dvd_pow_iff_dvd_of_squarefree {x y : R} {n : ℕ} (hsq : Squarefree x) (h0 : n ≠ 0) : x ∣ y ^ n ↔ x ∣ y := by
   classical
   by_cases' hx : x = 0

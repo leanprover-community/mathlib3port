@@ -268,9 +268,9 @@ theorem algebraic_independent_subtype {s : Set A} :
   by
   apply @algebraic_independent_comp_subtype _ _ _ id
 
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem algebraic_independent_of_finite (s : Set A)
-    (H : ∀ t _ : t ⊆ s, t.Finite → AlgebraicIndependent R (fun x => x : t → A)) :
+    (H : ∀ (t) (_ : t ⊆ s), t.Finite → AlgebraicIndependent R (fun x => x : t → A)) :
     AlgebraicIndependent R (fun x => x : s → A) :=
   algebraic_independent_subtype.2 fun p hp =>
     algebraic_independent_subtype.1 (H _ (mem_supported.1 hp) (Finset.finite_to_set _)) _
@@ -366,7 +366,7 @@ def AlgebraicIndependent.repr (hx : AlgebraicIndependent R x) : Algebra.adjoin R
   hx.aevalEquiv.symm
 
 @[simp]
-theorem AlgebraicIndependent.aeval_repr p : aeval x (hx.repr p) = p :=
+theorem AlgebraicIndependent.aeval_repr (p) : aeval x (hx.repr p) = p :=
   Subtype.ext_iff.1 (AlgEquiv.apply_symm_apply hx.aevalEquiv p)
 
 theorem AlgebraicIndependent.aeval_comp_repr : (aeval x).comp hx.repr = Subalgebra.val _ :=
@@ -385,14 +385,14 @@ def AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin (hx : Algebraic
   (MvPolynomial.optionEquivLeft _ _).toRingEquiv.trans (Polynomial.mapEquiv hx.aevalEquiv.toRingEquiv)
 
 @[simp]
-theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_apply (hx : AlgebraicIndependent R x) y :
+theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_apply (hx : AlgebraicIndependent R x) (y) :
     hx.mvPolynomialOptionEquivPolynomialAdjoin y =
       Polynomial.map (hx.aevalEquiv : MvPolynomial ι R →+* adjoin R (Range x))
         (aeval (fun o : Option ι => o.elim Polynomial.x fun s : ι => Polynomial.c (x s)) y) :=
   rfl
 
 @[simp]
-theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_C (hx : AlgebraicIndependent R x) r :
+theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_C (hx : AlgebraicIndependent R x) (r) :
     hx.mvPolynomialOptionEquivPolynomialAdjoin (c r) = Polynomial.c (algebraMap _ _ r) := by
   -- TODO: this instance is slow to infer
   have h : IsScalarTower R (MvPolynomial ι R) (Polynomial (MvPolynomial ι R)) :=
@@ -407,7 +407,7 @@ theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_X_none
   rw [AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_apply, aeval_X, Option.elimₓ, Polynomial.map_X]
 
 @[simp]
-theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_X_some (hx : AlgebraicIndependent R x) i :
+theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_X_some (hx : AlgebraicIndependent R x) (i) :
     hx.mvPolynomialOptionEquivPolynomialAdjoin (x (some i)) = Polynomial.c (hx.aevalEquiv (x i)) := by
   rw [AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_apply, aeval_X, Option.elimₓ, Polynomial.map_C,
     RingHom.coe_coe]
@@ -446,7 +446,7 @@ variable (R)
 /-- A family is a transcendence basis if it is a maximal algebraically independent subset.
 -/
 def IsTranscendenceBasis (x : ι → A) : Prop :=
-  AlgebraicIndependent R x ∧ ∀ s : Set A i' : AlgebraicIndependent R (coe : s → A) h : Range x ≤ s, Range x = s
+  AlgebraicIndependent R x ∧ ∀ (s : Set A) (i' : AlgebraicIndependent R (coe : s → A)) (h : Range x ≤ s), Range x = s
 
 theorem exists_is_transcendence_basis (h : Injective (algebraMap R A)) :
     ∃ s : Set A, IsTranscendenceBasis R (coe : s → A) := by
@@ -464,7 +464,7 @@ variable {R}
 theorem AlgebraicIndependent.is_transcendence_basis_iff {ι : Type w} {R : Type u} [CommRingₓ R] [Nontrivial R]
     {A : Type v} [CommRingₓ A] [Algebra R A] {x : ι → A} (i : AlgebraicIndependent R x) :
     IsTranscendenceBasis R x ↔
-      ∀ κ : Type v w : κ → A i' : AlgebraicIndependent R w j : ι → κ h : w ∘ j = x, Surjective j :=
+      ∀ (κ : Type v) (w : κ → A) (i' : AlgebraicIndependent R w) (j : ι → κ) (h : w ∘ j = x), Surjective j :=
   by
   fconstructor
   · rintro p κ w i' j rfl

@@ -99,7 +99,7 @@ instance : Inhabited StieltjesFunction :=
 /-! ### The outer measure associated to a Stieltjes function -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:858:6: warning: expanding binder group (a b)
+-- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (a b)
 /-- Length of an interval. This is the largest monotone function which correctly measures all
 intervals. -/
 def length (s : Set ℝ) : ℝ≥0∞ :=
@@ -143,10 +143,10 @@ compactness to reduce it to a finite sum, and argue by induction on the size of 
 theorem length_subadditive_Icc_Ioo {a b : ℝ} {c d : ℕ → ℝ} (ss : Icc a b ⊆ ⋃ i, Ioo (c i) (d i)) :
     ofReal (f b - f a) ≤ ∑' i, ofReal (f (d i) - f (c i)) := by
   suffices
-    ∀ s : Finset ℕ b cv : Icc a b ⊆ ⋃ i ∈ (↑s : Set ℕ), Ioo (c i) (d i),
+    ∀ (s : Finset ℕ) (b) (cv : Icc a b ⊆ ⋃ i ∈ (↑s : Set ℕ), Ioo (c i) (d i)),
       (of_real (f b - f a) : ℝ≥0∞) ≤ ∑ i in s, of_real (f (d i) - f (c i))
     by
-    rcases is_compact_Icc.elim_finite_subcover_image (fun i : ℕ _ : i ∈ univ => @is_open_Ioo _ _ _ _ (c i) (d i))
+    rcases is_compact_Icc.elim_finite_subcover_image (fun (i : ℕ) (_ : i ∈ univ) => @is_open_Ioo _ _ _ _ (c i) (d i))
         (by
           simpa using ss) with
       ⟨s, su, hf, hs⟩

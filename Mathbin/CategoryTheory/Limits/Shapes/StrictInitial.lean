@@ -57,7 +57,7 @@ Strictly speaking, this says that *any* initial object must be strict, rather th
 initial objects exist.
 -/
 class HasStrictInitialObjects : Prop where
-  out : ∀ {I A : C} f : A ⟶ I, IsInitial I → IsIso f
+  out : ∀ {I A : C} (f : A ⟶ I), IsInitial I → IsIso f
 
 variable {C}
 
@@ -138,7 +138,7 @@ end
 
 /-- If `C` has an initial object such that every morphism *to* it is an isomorphism, then `C`
 has strict initial objects. -/
-theorem has_strict_initial_objects_of_initial_is_strict [HasInitial C] (h : ∀ A f : A ⟶ ⊥_ C, IsIso f) :
+theorem has_strict_initial_objects_of_initial_is_strict [HasInitial C] (h : ∀ (A) (f : A ⟶ ⊥_ C), IsIso f) :
     HasStrictInitialObjects C :=
   { out := fun I A f hI => by
       have := h A (f ≫ hI.to _)
@@ -157,7 +157,7 @@ Strictly speaking, this says that *any* terminal object must be strict, rather t
 terminal objects exist.
 -/
 class HasStrictTerminalObjects : Prop where
-  out : ∀ {I A : C} f : I ⟶ A, IsTerminal I → IsIso f
+  out : ∀ {I A : C} (f : I ⟶ A), IsTerminal I → IsIso f
 
 variable {C}
 
@@ -178,12 +178,11 @@ theorem IsTerminal.subsingleton_to (hI : IsTerminal I) {A : C} : Subsingleton (I
 
 variable {J : Type v} [SmallCategory J]
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
--- ./././Mathport/Syntax/Translate/Basic.lean:701:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
 /-- If all but one object in a diagram is strict terminal, the the limit is isomorphic to the
 said object via `limit.π`. -/
-theorem limit_π_is_iso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J) (H : ∀ j _ : j ≠ i, IsTerminal (F.obj j))
-    [Subsingleton (i ⟶ i)] : IsIso (limit.π F i) := by
+theorem limit_π_is_iso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
+    (H : ∀ (j) (_ : j ≠ i), IsTerminal (F.obj j)) [Subsingleton (i ⟶ i)] : IsIso (limit.π F i) := by
   classical
   refine' ⟨⟨limit.lift _ ⟨_, ⟨_, _⟩⟩, _, _⟩⟩
   · exact fun j =>
@@ -245,7 +244,7 @@ end
 
 /-- If `C` has an object such that every morphism *from* it is an isomorphism, then `C`
 has strict terminal objects. -/
-theorem has_strict_terminal_objects_of_terminal_is_strict (I : C) (h : ∀ A f : I ⟶ A, IsIso f) :
+theorem has_strict_terminal_objects_of_terminal_is_strict (I : C) (h : ∀ (A) (f : I ⟶ A), IsIso f) :
     HasStrictTerminalObjects C :=
   { out := fun I' A f hI' => by
       have := h A (hI'.from _ ≫ f)

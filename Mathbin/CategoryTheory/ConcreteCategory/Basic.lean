@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johannes Hölzl, Reid Barton, Sean Leather, Yury Kudryashov
 -/
 import Mathbin.CategoryTheory.Types
-import Mathbin.CategoryTheory.EpiMono
+import Mathbin.CategoryTheory.Functor.EpiMono
 
 /-!
 # Concrete categories
@@ -39,7 +39,7 @@ universe w v v' u
 
 namespace CategoryTheory
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1405:30: infer kinds are unsupported in Lean 4: #[`forget] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`forget] []
 /-- A concrete category is a category `C` with a fixed faithful functor `forget : C ⥤ Type`.
 
 Note that `concrete_category` potentially depends on three independent universe levels,
@@ -127,11 +127,11 @@ theorem ConcreteCategory.congr_arg {X Y : C} (f : X ⟶ Y) {x x' : X} (h : x = x
 
 /-- In any concrete category, injective morphisms are monomorphisms. -/
 theorem ConcreteCategory.mono_of_injective {X Y : C} (f : X ⟶ Y) (i : Function.Injective f) : Mono f :=
-  faithful_reflects_mono (forget C) ((mono_iff_injective f).2 i)
+  (forget C).mono_of_mono_map ((mono_iff_injective f).2 i)
 
 /-- In any concrete category, surjective morphisms are epimorphisms. -/
 theorem ConcreteCategory.epi_of_surjective {X Y : C} (f : X ⟶ Y) (s : Function.Surjective f) : Epi f :=
-  faithful_reflects_epi (forget C) ((epi_iff_surjective f).2 s)
+  (forget C).epi_of_epi_map ((epi_iff_surjective f).2 s)
 
 @[simp]
 theorem ConcreteCategory.has_coe_to_fun_Type {X Y : Type u} (f : X ⟶ Y) : coeFn f = f :=

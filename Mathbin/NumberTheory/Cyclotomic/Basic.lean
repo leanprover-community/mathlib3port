@@ -214,7 +214,6 @@ end Basic
 
 section Fintype
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem finite_of_singleton [IsDomain B] [h : IsCyclotomicExtension {n} A B] : Finite A B := by
   classical
   rw [Module.finite_def, ← top_to_submodule, ← ((iff_adjoin_eq_top _ _ _).1 h).2]
@@ -315,7 +314,6 @@ theorem adjoin_roots_cyclotomic_eq_adjoin_root_cyclotomic {n : ℕ+} [DecidableE
       mem_roots (cyclotomic_ne_zero n B)] using hζ.is_root_cyclotomic n.pos
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem adjoin_primitive_root_eq_top {n : ℕ+} [IsDomain B] [h : IsCyclotomicExtension {n} A B] {ζ : B}
     (hζ : IsPrimitiveRoot ζ n) : adjoin A ({ζ} : Set B) = ⊤ := by
   classical
@@ -412,13 +410,13 @@ end IsCyclotomicExtension
 
 section CyclotomicField
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler algebra K
+-- ./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler algebra K
 /-- Given `n : ℕ+` and a field `K`, we define `cyclotomic_field n K` as the
 splitting field of `cyclotomic n K`. If `n` is nonzero in `K`, it has
 the instance `is_cyclotomic_extension {n} K (cyclotomic_field n K)`. -/
 def CyclotomicField : Type w :=
   (cyclotomic n K).SplittingField deriving Field,
-  «./././Mathport/Syntax/Translate/Basic.lean:1118:9: unsupported derive handler algebra K», Inhabited
+  «./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler algebra K», Inhabited
 
 namespace CyclotomicField
 
