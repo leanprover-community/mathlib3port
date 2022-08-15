@@ -14,10 +14,10 @@ bundled maps.
 -/
 
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {E' : Type _}
-  [NormedGroup E'] [NormedSpace 𝕜 E'] {H : Type _} [TopologicalSpace H] {H' : Type _} [TopologicalSpace H']
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {E' : Type _}
+  [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H : Type _} [TopologicalSpace H] {H' : Type _} [TopologicalSpace H']
   (I : ModelWithCorners 𝕜 E H) (I' : ModelWithCorners 𝕜 E' H') (M : Type _) [TopologicalSpace M] [ChartedSpace H M]
-  (M' : Type _) [TopologicalSpace M'] [ChartedSpace H' M'] {E'' : Type _} [NormedGroup E''] [NormedSpace 𝕜 E'']
+  (M' : Type _) [TopologicalSpace M'] [ChartedSpace H' M'] {E'' : Type _} [NormedAddCommGroup E''] [NormedSpace 𝕜 E'']
   {H'' : Type _} [TopologicalSpace H''] {I'' : ModelWithCorners 𝕜 E'' H''} {M'' : Type _} [TopologicalSpace M'']
   [ChartedSpace H'' M''] (n : WithTop ℕ)
 

@@ -27,39 +27,27 @@ corresponding to the terms in `σ`, and coefficients in `R`.
 In the definitions below, we use the following notation:
 
 + `σ : Type*` (indexing the variables)
-
 + `R : Type*` `[comm_semiring R]` (the coefficients)
-
 + `s : σ →₀ ℕ`, a function from `σ` to `ℕ` which is zero away from a finite set.
-This will give rise to a monomial in `mv_polynomial σ R` which mathematicians might call `X^s`
-
+  This will give rise to a monomial in `mv_polynomial σ R` which mathematicians might call `X^s`
 + `a : R`
-
 + `i : σ`, with corresponding monomial `X i`, often denoted `X_i` by mathematicians
-
 + `p : mv_polynomial σ R`
 
 ### Definitions
 
 * `mv_polynomial σ R` : the type of polynomials with variables of type `σ` and coefficients
   in the commutative semiring `R`
-
 * `monomial s a` : the monomial which mathematically would be denoted `a * X^s`
-
 * `C a` : the constant polynomial with value `a`
-
 * `X i` : the degree one monomial corresponding to i; mathematically this might be denoted `Xᵢ`.
-
 * `coeff s p` : the coefficient of `s` in `p`.
-
 * `eval₂ (f : R → S₁) (g : σ → S₁) p` : given a semiring homomorphism from `R` to another
   semiring `S₁`, and a map `σ → S₁`, evaluates `p` at this valuation, returning a term of type `S₁`.
   Note that `eval₂` can be made using `eval` and `map` (see below), and it has been suggested
   that sticking to `eval` and `map` might make the code less brittle.
-
 * `eval (g : σ → R) p` : given a map `σ → R`, evaluates `p` at this valuation,
   returning a term of type `R`
-
 * `map (f : R → S₁) p` : returns the multivariate polynomial obtained from `p` by the change of
   coefficient semiring corresponding to `f`
 
@@ -176,6 +164,13 @@ variable {R σ}
 def x (n : σ) : MvPolynomial σ R :=
   monomial (single n 1) 1
 
+theorem monomial_left_injective {r : R} (hr : r ≠ 0) : Function.Injective fun s : σ →₀ ℕ => monomial s r :=
+  Finsupp.single_left_injective hr
+
+@[simp]
+theorem monomial_left_inj {s t : σ →₀ ℕ} {r : R} (hr : r ≠ 0) : monomial s r = monomial t r ↔ s = t :=
+  Finsupp.single_left_inj hr
+
 theorem C_apply : (c a : MvPolynomial σ R) = monomial 0 a :=
   rfl
 
@@ -220,7 +215,7 @@ instance infinite_of_infinite (σ : Type _) (R : Type _) [CommSemiringₓ R] [In
 instance infinite_of_nonempty (σ : Type _) (R : Type _) [Nonempty σ] [CommSemiringₓ R] [Nontrivial R] :
     Infinite (MvPolynomial σ R) :=
   Infinite.of_injective ((fun s : σ →₀ ℕ => monomial s 1) ∘ single (Classical.arbitrary σ)) <|
-    Function.Injective.comp (fun m n => (Finsupp.single_left_inj one_ne_zero).mp) (Finsupp.single_injective _)
+    (monomial_left_injective <| @one_ne_zero R _ _).comp (Finsupp.single_injective _)
 
 theorem C_eq_coe_nat (n : ℕ) : (c ↑n : MvPolynomial σ R) = n := by
   induction n <;> simp [← Nat.succ_eq_add_one, *]
@@ -233,6 +228,13 @@ theorem smul_eq_C_mul (p : MvPolynomial σ R) (a : R) : a • p = c a * p :=
 
 theorem C_eq_smul_one : (c a : MvPolynomial σ R) = a • 1 := by
   rw [← C_mul', mul_oneₓ]
+
+theorem X_injective [Nontrivial R] : Function.Injective (x : σ → MvPolynomial σ R) :=
+  (monomial_left_injective <| @one_ne_zero R _ _).comp (Finsupp.single_left_injective one_ne_zero)
+
+@[simp]
+theorem X_inj [Nontrivial R] (m n : σ) : x m = (x n : MvPolynomial σ R) ↔ m = n :=
+  X_injective.eq_iff
 
 theorem monomial_pow : monomial s a ^ e = monomial (e • s) (a ^ e) :=
   AddMonoidAlgebra.single_pow e
@@ -327,7 +329,7 @@ theorem induction_on_monomial {M : MvPolynomial σ R → Prop} (h_C : ∀ a, M (
 To prove something about mv_polynomials,
 it suffices to show the condition is closed under taking sums,
 and it holds for monomials. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction_on' {P : MvPolynomial σ R → Prop} (p : MvPolynomial σ R)
     (h1 : ∀ (u : σ →₀ ℕ) (a : R), P (monomial u a)) (h2 : ∀ p q : MvPolynomial σ R, P p → P q → P (p + q)) : P p :=
   Finsupp.induction p
@@ -603,7 +605,7 @@ theorem coeff_mul_monomial' (m) (s : σ →₀ ℕ) (r : R) (p : MvPolynomial σ
   obtain rfl | hr := eq_or_ne r 0
   · simp only [← monomial_zero, ← coeff_zero, ← mul_zero, ← if_t_t]
     
-  have : Nontrivial R := nontrivial_of_ne _ _ hr
+  haveI : Nontrivial R := nontrivial_of_ne _ _ hr
   split_ifs with h h
   · conv_rhs => rw [← coeff_mul_monomial _ s]
     congr with t
@@ -1212,23 +1214,44 @@ theorem map_aeval {B : Type _} [CommSemiringₓ B] (g : σ → S₁) (φ : S₁ 
   rfl
 
 @[simp]
-theorem eval₂_hom_zero (f : R →+* S₂) (p : MvPolynomial σ R) : eval₂Hom f (0 : σ → S₂) p = f (constantCoeff p) := by
-  suffices : eval₂_hom f (0 : σ → S₂) = f.comp constant_coeff
-  exact RingHom.congr_fun this p
+theorem eval₂_hom_zero (f : R →+* S₂) : eval₂Hom f (0 : σ → S₂) = f.comp constantCoeff := by
   ext <;> simp
 
 @[simp]
-theorem eval₂_hom_zero' (f : R →+* S₂) (p : MvPolynomial σ R) :
+theorem eval₂_hom_zero' (f : R →+* S₂) : eval₂Hom f (fun _ => 0 : σ → S₂) = f.comp constantCoeff :=
+  eval₂_hom_zero f
+
+theorem eval₂_hom_zero_apply (f : R →+* S₂) (p : MvPolynomial σ R) : eval₂Hom f (0 : σ → S₂) p = f (constantCoeff p) :=
+  RingHom.congr_fun (eval₂_hom_zero f) p
+
+theorem eval₂_hom_zero'_apply (f : R →+* S₂) (p : MvPolynomial σ R) :
     eval₂Hom f (fun _ => 0 : σ → S₂) p = f (constantCoeff p) :=
-  eval₂_hom_zero f p
+  eval₂_hom_zero_apply f p
+
+@[simp]
+theorem eval₂_zero_apply (f : R →+* S₂) (p : MvPolynomial σ R) : eval₂ f (0 : σ → S₂) p = f (constantCoeff p) :=
+  eval₂_hom_zero_apply _ _
+
+@[simp]
+theorem eval₂_zero'_apply (f : R →+* S₂) (p : MvPolynomial σ R) :
+    eval₂ f (fun _ => 0 : σ → S₂) p = f (constantCoeff p) :=
+  eval₂_zero_apply f p
 
 @[simp]
 theorem aeval_zero (p : MvPolynomial σ R) : aeval (0 : σ → S₁) p = algebraMap _ _ (constantCoeff p) :=
-  eval₂_hom_zero (algebraMap R S₁) p
+  eval₂_hom_zero_apply (algebraMap R S₁) p
 
 @[simp]
 theorem aeval_zero' (p : MvPolynomial σ R) : aeval (fun _ => 0 : σ → S₁) p = algebraMap _ _ (constantCoeff p) :=
   aeval_zero p
+
+@[simp]
+theorem eval_zero : eval (0 : σ → R) = constant_coeff :=
+  eval₂_hom_zero _
+
+@[simp]
+theorem eval_zero' : eval (fun _ => 0 : σ → R) = constant_coeff :=
+  eval₂_hom_zero _
 
 theorem aeval_monomial (g : σ → S₁) (d : σ →₀ ℕ) (r : R) :
     aeval g (monomial d r) = algebraMap _ _ r * d.Prod fun i k => g i ^ k :=

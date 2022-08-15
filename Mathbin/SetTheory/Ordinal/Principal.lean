@@ -223,9 +223,8 @@ theorem principal_add_iff_zero_or_omega_opow {o : Ordinal} : Principal (· + ·)
   · rw [principal_add_iff_add_left_eq_self]
     simp only [← ho, ← false_orₓ]
     refine'
-      ⟨fun H =>
-        ⟨_, ((lt_or_eq_of_leₓ (opow_log_le_self _ (Ordinal.pos_iff_ne_zero.2 ho))).resolve_left fun h => _).symm⟩,
-        fun ⟨b, e⟩ => e.symm ▸ fun a => add_omega_opow⟩
+      ⟨fun H => ⟨_, ((lt_or_eq_of_leₓ (opow_log_le_self _ ho)).resolve_left fun h => _).symm⟩, fun ⟨b, e⟩ =>
+        e.symm ▸ fun a => add_omega_opow⟩
     have := H _ h
     have := lt_opow_succ_log_self one_lt_omega o
     rw [opow_succ, lt_mul_of_limit omega_is_limit] at this
@@ -421,11 +420,11 @@ theorem mul_omega_dvd {a : Ordinal} (a0 : 0 < a) (ha : a < omega) : ∀ {b}, ome
   | _, ⟨b, rfl⟩ => by
     rw [← mul_assoc, mul_omega a0 ha]
 
-theorem mul_eq_opow_log_succ {a b : Ordinal.{u}} (ha : 0 < a) (hb : Principal (· * ·) b) (hb₂ : 2 < b) :
+theorem mul_eq_opow_log_succ {a b : Ordinal.{u}} (ha : a ≠ 0) (hb : Principal (· * ·) b) (hb₂ : 2 < b) :
     a * b = (b^succ (log b a)) := by
   apply le_antisymmₓ
   · have hbl := principal_mul_is_limit hb₂ hb
-    rw [← IsNormal.bsup_eq.{u, u} (mul_is_normal ha) hbl, bsup_le_iff]
+    rw [← IsNormal.bsup_eq.{u, u} (mul_is_normal (Ordinal.pos_iff_ne_zero.2 ha)) hbl, bsup_le_iff]
     intro c hcb
     have hb₁ : 1 < b := (lt_succ 1).trans hb₂
     have hbo₀ : (b^b.log a) ≠ 0 := Ordinal.pos_iff_ne_zero.1 (opow_pos _ (zero_lt_one.trans hb₁))

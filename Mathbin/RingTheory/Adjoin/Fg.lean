@@ -145,7 +145,7 @@ end
 theorem fg_of_fg_map (S : Subalgebra R A) (f : A →ₐ[R] B) (hf : Function.Injective f) (hs : (S.map f).Fg) : S.Fg :=
   let ⟨s, hs⟩ := hs
   ⟨(s.Preimage f) fun _ _ _ _ h => hf h,
-    map_injective f hf <| by
+    map_injective hf <| by
       rw [← Algebra.adjoin_image, Finset.coe_preimage, Set.image_preimage_eq_of_subset, hs]
       rw [← AlgHom.coe_range, ← Algebra.adjoin_le_iff, hs, ← Algebra.map_top]
       exact map_mono le_top⟩
@@ -193,7 +193,7 @@ theorem is_noetherian_ring_of_fg {S : Subalgebra R A} (HS : S.Fg) [IsNoetherianR
   let ⟨t, ht⟩ := HS
   ht ▸
     (Algebra.adjoin_eq_range R (↑t : Set A)).symm ▸ by
-      have : IsNoetherianRing (MvPolynomial (↑t : Set A) R) := MvPolynomial.is_noetherian_ring <;>
+      haveI : IsNoetherianRing (MvPolynomial (↑t : Set A) R) := MvPolynomial.is_noetherian_ring <;>
         convert AlgHom.is_noetherian_ring_range _ <;> infer_instance
 
 theorem is_noetherian_subring_closure (s : Set R) (hs : s.Finite) : IsNoetherianRing (Subring.closure s) :=

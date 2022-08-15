@@ -57,13 +57,13 @@ open Filter (Tendsto)
 
 open Metric ContinuousLinearMap
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
-  [NormedGroup F] [NormedSpace 𝕜 F] {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G]
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {F : Type _}
+  [NormedAddCommGroup F] [NormedSpace 𝕜 F] {G : Type _} [NormedAddCommGroup G] [NormedSpace 𝕜 G]
 
 /-- A function `f` satisfies `is_bounded_linear_map 𝕜 f` if it is linear and satisfies the
 inequality `∥f x∥ ≤ M * ∥x∥` for some positive constant `M`. -/
-structure IsBoundedLinearMap (𝕜 : Type _) [NormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
-  [NormedGroup F] [NormedSpace 𝕜 F] (f : E → F) extends IsLinearMap 𝕜 f : Prop where
+structure IsBoundedLinearMap (𝕜 : Type _) [NormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
+  {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F] (f : E → F) extends IsLinearMap 𝕜 f : Prop where
   bound : ∃ M, 0 < M ∧ ∀ x : E, ∥f x∥ ≤ M * ∥x∥
 
 theorem IsLinearMap.with_bound {f : E → F} (hf : IsLinearMap 𝕜 f) (M : ℝ) (h : ∀ x : E, ∥f x∥ ≤ M * ∥x∥) :
@@ -189,7 +189,8 @@ variable {ι : Type _} [DecidableEq ι] [Fintype ι]
 
 /-- Taking the cartesian product of two continuous multilinear maps
 is a bounded linear operation. -/
-theorem is_bounded_linear_map_prod_multilinear {E : ι → Type _} [∀ i, NormedGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)] :
+theorem is_bounded_linear_map_prod_multilinear {E : ι → Type _} [∀ i, NormedAddCommGroup (E i)]
+    [∀ i, NormedSpace 𝕜 (E i)] :
     IsBoundedLinearMap 𝕜 fun p : ContinuousMultilinearMap 𝕜 E F × ContinuousMultilinearMap 𝕜 E G => p.1.Prod p.2 :=
   { map_add := fun p₁ p₂ => by
       ext1 m
@@ -230,14 +231,15 @@ theorem is_bounded_linear_map_continuous_multilinear_map_comp_linear (g : G →L
   apply ContinuousMultilinearMap.op_norm_le_bound _ _ fun m => _
   · apply_rules [mul_nonneg, pow_nonneg, norm_nonneg]
     
-  calc ∥f (g ∘ m)∥ ≤ ∥f∥ * ∏ i, ∥g (m i)∥ := f.le_op_norm _ _ ≤ ∥f∥ * ∏ i, ∥g∥ * ∥m i∥ := by
+  calc
+    ∥f (g ∘ m)∥ ≤ ∥f∥ * ∏ i, ∥g (m i)∥ := f.le_op_norm _
+    _ ≤ ∥f∥ * ∏ i, ∥g∥ * ∥m i∥ := by
       apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-      exact
-        Finset.prod_le_prod (fun i hi => norm_nonneg _) fun i hi =>
-          g.le_op_norm _ _ = ∥g∥ ^ Fintype.card ι * ∥f∥ * ∏ i, ∥m i∥ :=
-      by
+      exact Finset.prod_le_prod (fun i hi => norm_nonneg _) fun i hi => g.le_op_norm _
+    _ = ∥g∥ ^ Fintype.card ι * ∥f∥ * ∏ i, ∥m i∥ := by
       simp [← Finset.prod_mul_distrib, ← Finset.card_univ]
       ring
+    
 
 end
 
@@ -249,21 +251,21 @@ namespace ContinuousLinearMap
   If `f` is a continuuous bilinear map, to use the corresponding rules for the second argument, use
   `(f _).map_add` and similar.
 
-  We have to assume that `F` and `G` are normed spaces in this section, to use
-  `continuous_linear_map.to_normed_group`, but we don't need to assume this for the first argument
-  of `f`.
+We have to assume that `F` and `G` are normed spaces in this section, to use
+`continuous_linear_map.to_normed_add_comm_group`, but we don't need to assume this for the first
+argument of `f`.
 -/
 
 
 variable {R : Type _}
 
-variable {𝕜₂ 𝕜' : Type _} [NondiscreteNormedField 𝕜'] [NondiscreteNormedField 𝕜₂]
+variable {𝕜₂ 𝕜' : Type _} [NontriviallyNormedField 𝕜'] [NontriviallyNormedField 𝕜₂]
 
 variable {M : Type _} [TopologicalSpace M]
 
 variable {σ₁₂ : 𝕜 →+* 𝕜₂} [RingHomIsometric σ₁₂]
 
-variable {G' : Type _} [NormedGroup G'] [NormedSpace 𝕜₂ G'] [NormedSpace 𝕜' G']
+variable {G' : Type _} [NormedAddCommGroup G'] [NormedSpace 𝕜₂ G'] [NormedSpace 𝕜' G']
 
 variable [SmulCommClass 𝕜₂ 𝕜' G']
 
@@ -420,9 +422,13 @@ theorem IsBoundedBilinearMap.is_bounded_linear_map_left (h : IsBoundedBilinearMa
           fun x => _⟩
       have : ∥y∥ ≤ ∥y∥ + 1 := by
         simp [← zero_le_one]
-      calc ∥f (x, y)∥ ≤ C * ∥x∥ * ∥y∥ := hC x y _ ≤ C * ∥x∥ * (∥y∥ + 1) := by
-          apply_rules [norm_nonneg, mul_le_mul_of_nonneg_left, le_of_ltₓ C_pos, mul_nonneg]_ = C * (∥y∥ + 1) * ∥x∥ := by
-          ring }
+      calc
+        ∥f (x, y)∥ ≤ C * ∥x∥ * ∥y∥ := hC x y
+        _ ≤ C * ∥x∥ * (∥y∥ + 1) := by
+          apply_rules [norm_nonneg, mul_le_mul_of_nonneg_left, le_of_ltₓ C_pos, mul_nonneg]
+        _ = C * (∥y∥ + 1) * ∥x∥ := by
+          ring
+         }
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 theorem IsBoundedBilinearMap.is_bounded_linear_map_right (h : IsBoundedBilinearMap 𝕜 f) (x : E) :
@@ -439,11 +445,15 @@ theorem IsBoundedBilinearMap.is_bounded_linear_map_right (h : IsBoundedBilinearM
           fun y => _⟩
       have : ∥x∥ ≤ ∥x∥ + 1 := by
         simp [← zero_le_one]
-      calc ∥f (x, y)∥ ≤ C * ∥x∥ * ∥y∥ := hC x y _ ≤ C * (∥x∥ + 1) * ∥y∥ := by
-          apply_rules [mul_le_mul_of_nonneg_right, norm_nonneg, mul_le_mul_of_nonneg_left, le_of_ltₓ C_pos] }
+      calc
+        ∥f (x, y)∥ ≤ C * ∥x∥ * ∥y∥ := hC x y
+        _ ≤ C * (∥x∥ + 1) * ∥y∥ := by
+          apply_rules [mul_le_mul_of_nonneg_right, norm_nonneg, mul_le_mul_of_nonneg_left, le_of_ltₓ C_pos]
+         }
 
-theorem is_bounded_bilinear_map_smul {𝕜' : Type _} [NormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] {E : Type _} [NormedGroup E]
-    [NormedSpace 𝕜 E] [NormedSpace 𝕜' E] [IsScalarTower 𝕜 𝕜' E] : IsBoundedBilinearMap 𝕜 fun p : 𝕜' × E => p.1 • p.2 :=
+theorem is_bounded_bilinear_map_smul {𝕜' : Type _} [NormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] {E : Type _}
+    [NormedAddCommGroup E] [NormedSpace 𝕜 E] [NormedSpace 𝕜' E] [IsScalarTower 𝕜 𝕜' E] :
+    IsBoundedBilinearMap 𝕜 fun p : 𝕜' × E => p.1 • p.2 :=
   (lsmul 𝕜 𝕜' : 𝕜' →L[𝕜] E →L[𝕜] E).IsBoundedBilinearMap
 
 theorem is_bounded_bilinear_map_mul : IsBoundedBilinearMap 𝕜 fun p : 𝕜 × 𝕜 => p.1 * p.2 := by
@@ -473,7 +483,7 @@ theorem is_bounded_bilinear_map_smul_right :
 /-- The composition of a continuous linear map with a continuous multilinear map is a bounded
 bilinear operation. -/
 theorem is_bounded_bilinear_map_comp_multilinear {ι : Type _} {E : ι → Type _} [DecidableEq ι] [Fintype ι]
-    [∀ i, NormedGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)] :
+    [∀ i, NormedAddCommGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)] :
     IsBoundedBilinearMap 𝕜 fun p : (F →L[𝕜] G) × ContinuousMultilinearMap 𝕜 E F =>
       p.1.compContinuousMultilinearMap p.2 :=
   (compContinuousMultilinearMapL 𝕜 E F G).IsBoundedBilinearMap
@@ -500,13 +510,16 @@ def IsBoundedBilinearMap.deriv (h : IsBoundedBilinearMap 𝕜 f) (p : E × F) : 
   (h.linearDeriv p).mkContinuousOfExistsBound <| by
     rcases h.bound with ⟨C, Cpos, hC⟩
     refine' ⟨C * ∥p.1∥ + C * ∥p.2∥, fun q => _⟩
-    calc ∥f (p.1, q.2) + f (q.1, p.2)∥ ≤ C * ∥p.1∥ * ∥q.2∥ + C * ∥q.1∥ * ∥p.2∥ :=
-        norm_add_le_of_le (hC _ _) (hC _ _)_ ≤ C * ∥p.1∥ * ∥q∥ + C * ∥q∥ * ∥p.2∥ := by
+    calc
+      ∥f (p.1, q.2) + f (q.1, p.2)∥ ≤ C * ∥p.1∥ * ∥q.2∥ + C * ∥q.1∥ * ∥p.2∥ := norm_add_le_of_le (hC _ _) (hC _ _)
+      _ ≤ C * ∥p.1∥ * ∥q∥ + C * ∥q∥ * ∥p.2∥ := by
         apply add_le_add
         exact mul_le_mul_of_nonneg_left (le_max_rightₓ _ _) (mul_nonneg (le_of_ltₓ Cpos) (norm_nonneg _))
         apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)
-        exact mul_le_mul_of_nonneg_left (le_max_leftₓ _ _) (le_of_ltₓ Cpos)_ = (C * ∥p.1∥ + C * ∥p.2∥) * ∥q∥ := by
+        exact mul_le_mul_of_nonneg_left (le_max_leftₓ _ _) (le_of_ltₓ Cpos)
+      _ = (C * ∥p.1∥ + C * ∥p.2∥) * ∥q∥ := by
         ring
+      
 
 @[simp]
 theorem is_bounded_bilinear_map_deriv_coe (h : IsBoundedBilinearMap 𝕜 f) (p q : E × F) :
@@ -534,12 +547,13 @@ theorem IsBoundedBilinearMap.is_bounded_linear_map_deriv (h : IsBoundedBilinearM
   · ext <;> simp [← h.smul_left, ← h.smul_right, ← smul_add]
     
   · refine' ContinuousLinearMap.op_norm_le_bound _ (mul_nonneg (add_nonneg Cpos.le Cpos.le) (norm_nonneg _)) fun q => _
-    calc ∥f (p.1, q.2) + f (q.1, p.2)∥ ≤ C * ∥p.1∥ * ∥q.2∥ + C * ∥q.1∥ * ∥p.2∥ :=
-        norm_add_le_of_le (hC _ _) (hC _ _)_ ≤ C * ∥p∥ * ∥q∥ + C * ∥q∥ * ∥p∥ := by
-        apply_rules [add_le_add, mul_le_mul, norm_nonneg, Cpos.le, le_reflₓ, le_max_leftₓ, le_max_rightₓ,
-          mul_nonneg]_ = (C + C) * ∥p∥ * ∥q∥ :=
-        by
+    calc
+      ∥f (p.1, q.2) + f (q.1, p.2)∥ ≤ C * ∥p.1∥ * ∥q.2∥ + C * ∥q.1∥ * ∥p.2∥ := norm_add_le_of_le (hC _ _) (hC _ _)
+      _ ≤ C * ∥p∥ * ∥q∥ + C * ∥q∥ * ∥p∥ := by
+        apply_rules [add_le_add, mul_le_mul, norm_nonneg, Cpos.le, le_reflₓ, le_max_leftₓ, le_max_rightₓ, mul_nonneg]
+      _ = (C + C) * ∥p∥ * ∥q∥ := by
         ring
+      
     
 
 end BilinearMap

@@ -106,7 +106,7 @@ def wp : Mvpfunctor n where
   B := P.WPath
 
 /-- W-type of `P` -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def W (α : Typevec n) : Type _ :=
   P.wp.Obj α
 

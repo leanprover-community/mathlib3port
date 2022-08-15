@@ -254,12 +254,14 @@ theorem zero_le_of_continuants_aux_b : 0 ≤ ((of v).continuantsAux n).b := by
         simp only [← this, ← IH]
         
       
-    · calc-- non-terminating case
+    · calc
+        -- non-terminating case
             (0 : K) ≤
             fib (n + 1) :=
           by
-          exact_mod_cast (n + 1).fib.zero_le _ ≤ ((of v).continuantsAux (n + 1)).b :=
-          fib_le_of_continuants_aux_b (Or.inr not_terminated)
+          exact_mod_cast (n + 1).fib.zero_le
+        _ ≤ ((of v).continuantsAux (n + 1)).b := fib_le_of_continuants_aux_b (Or.inr not_terminated)
+        
       
 
 /-- Shows that all denominators are nonnegative. -/
@@ -306,9 +308,11 @@ theorem of_denom_mono : (of v).denominators n ≤ (of v).denominators (n + 1) :=
   · obtain ⟨b, nth_part_denom_eq⟩ : ∃ b, g.partial_denominators.nth n = some b
     exact option.ne_none_iff_exists'.mp not_terminated
     have : 1 ≤ b := of_one_le_nth_part_denom nth_part_denom_eq
-    calc g.denominators n ≤ b * g.denominators n := by
-        simpa using mul_le_mul_of_nonneg_right this zero_le_of_denom _ ≤ g.denominators (n + 1) :=
-        le_of_succ_nth_denom nth_part_denom_eq
+    calc
+      g.denominators n ≤ b * g.denominators n := by
+        simpa using mul_le_mul_of_nonneg_right this zero_le_of_denom
+      _ ≤ g.denominators (n + 1) := le_of_succ_nth_denom nth_part_denom_eq
+      
     
 
 section Determinant
@@ -351,10 +355,14 @@ theorem determinant_aux (hyp : n = 0 ∨ ¬(of v).TerminatedAt (n - 1)) :
       rw [gp_a_eq_one, this.symm]
       ring
     suffices : pA * ppB - pB * ppA = -1 ^ (n + 1)
-    calc pA * (ppB + gp.b * pB) - pB * (ppA + gp.b * pA) = pA * ppB + pA * gp.b * pB - pB * ppA - pB * gp.b * pA := by
-        ring _ = pA * ppB - pB * ppA := by
-        ring _ = -1 ^ (n + 1) := by
+    calc
+      pA * (ppB + gp.b * pB) - pB * (ppA + gp.b * pA) = pA * ppB + pA * gp.b * pB - pB * ppA - pB * gp.b * pA := by
+        ring
+      _ = pA * ppB - pB * ppA := by
+        ring
+      _ = -1 ^ (n + 1) := by
         assumption
+      
     suffices ppA * pB - ppB * pA = -1 ^ n by
       have pow_succ_n : (-1 : K) ^ (n + 1) = -1 * -1 ^ n := pow_succₓ (-1) n
       rw [pow_succ_n, ← this]
@@ -474,15 +482,17 @@ theorem sub_convergents_eq {ifp : IntFractPair K} (stream_nth_eq : IntFractPair.
       (pA + ifp.fr⁻¹ * A) / (pB + ifp.fr⁻¹ * B) - A / B =
           ((pA + ifp.fr⁻¹ * A) * B - (pB + ifp.fr⁻¹ * B) * A) / ((pB + ifp.fr⁻¹ * B) * B) :=
         by
-        rw
-          [div_sub_div _ _ this.symm zero_ne_B.symm]_ = (pA * B + ifp.fr⁻¹ * A * B - (pB * A + ifp.fr⁻¹ * B * A)) / _ :=
-        by
+        rw [div_sub_div _ _ this.symm zero_ne_B.symm]
+      _ = (pA * B + ifp.fr⁻¹ * A * B - (pB * A + ifp.fr⁻¹ * B * A)) / _ := by
         repeat'
-          rw [add_mulₓ]_ = (pA * B - pB * A) / ((pB + ifp.fr⁻¹ * B) * B) :=
-        by
-        ring _ = -1 ^ n / ((pB + ifp.fr⁻¹ * B) * B) := by
-        rw [determinant_eq]_ = -1 ^ n / (B * (ifp.fr⁻¹ * B + pB)) := by
+          rw [add_mulₓ]
+      _ = (pA * B - pB * A) / ((pB + ifp.fr⁻¹ * B) * B) := by
+        ring
+      _ = -1 ^ n / ((pB + ifp.fr⁻¹ * B) * B) := by
+        rw [determinant_eq]
+      _ = -1 ^ n / (B * (ifp.fr⁻¹ * B + pB)) := by
         ac_rfl
+      
     
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument

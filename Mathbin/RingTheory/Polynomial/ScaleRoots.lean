@@ -61,7 +61,7 @@ theorem support_scale_roots_eq (p : R[X]) {s : R} (hs : s ∈ nonZeroDivisors R)
 
 @[simp]
 theorem degree_scale_roots (p : R[X]) {s : R} : degree (scaleRoots p s) = degree p := by
-  have := Classical.propDecidable
+  haveI := Classical.propDecidable
   by_cases' hp : p = 0
   · rw [hp, zero_scale_roots]
     

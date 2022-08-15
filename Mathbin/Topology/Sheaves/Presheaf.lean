@@ -40,7 +40,7 @@ variable (C : Type u) [Category.{v} C]
 namespace Top
 
 /-- The category of `C`-valued presheaves on a (bundled) topological space `X`. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def Presheaf (X : Top.{w}) :=
   (Opens X)ᵒᵖ ⥤ C deriving Category
 
@@ -230,7 +230,6 @@ def id : pullbackObj (𝟙 _) ℱ ≅ ℱ :=
     simp only [ℱ.map_comp]
     congr
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 theorem id_inv_app (U : Opens Y) :
     (id ℱ).inv.app (op U) =
       colimit.ι (Lan.diagram (Opens.map (𝟙 Y)).op ℱ (op U))
@@ -239,17 +238,12 @@ theorem id_inv_app (U : Opens Y) :
             (by
               simp ))) :=
   by
+  rw [← category.id_comp ((id ℱ).inv.app (op U)), ← nat_iso.app_inv, iso.comp_inv_eq]
   dsimp' [← id]
-  simp
-  dsimp' [← colimit_of_diagram_terminal]
-  delta' Lan.diagram
-  refine' Eq.trans _ (category.id_comp _)
-  rw [← ℱ.map_id]
-  congr
-  any_goals {
-  }
-  all_goals
-    simp
+  rw [colimit.ι_desc_assoc]
+  dsimp'
+  rw [← ℱ.map_comp, ← ℱ.map_id]
+  rfl
 
 end Pullback
 

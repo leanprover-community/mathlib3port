@@ -77,44 +77,43 @@ theorem card_image_polynomial_eval [DecidableEq R] [Fintype R] {p : R[X]} (hp : 
 
 /-- If `f` and `g` are quadratic polynomials, then the `f.eval a + g.eval b = 0` has a solution. -/
 theorem exists_root_sum_quadratic [Fintype R] {f g : R[X]} (hf2 : degree f = 2) (hg2 : degree g = 2)
-    (hR : Fintype.card R % 2 = 1) : ∃ a b, f.eval a + g.eval b = 0 := by
-  let this := Classical.decEq R <;>
+    (hR : Fintype.card R % 2 = 1) : ∃ a b, f.eval a + g.eval b = 0 :=
+  letI := Classical.decEq R
+  suffices ¬Disjoint (univ.image fun x : R => eval x f) (univ.image fun x : R => eval x (-g)) by
+    simp only [← disjoint_left, ← mem_image] at this
+    push_neg  at this
+    rcases this with ⟨x, ⟨a, _, ha⟩, ⟨b, _, hb⟩⟩
     exact
-      suffices ¬Disjoint (univ.image fun x : R => eval x f) (univ.image fun x : R => eval x (-g)) by
-        simp only [← disjoint_left, ← mem_image] at this
-        push_neg  at this
-        rcases this with ⟨x, ⟨a, _, ha⟩, ⟨b, _, hb⟩⟩
-        exact
-          ⟨a, b, by
-            rw [ha, ← hb, eval_neg, neg_add_selfₓ]⟩
-      fun hd : Disjoint _ _ =>
-      lt_irreflₓ (2 * ((univ.image fun x : R => eval x f) ∪ univ.image fun x : R => eval x (-g)).card) <|
-        calc
-          2 * ((univ.image fun x : R => eval x f) ∪ univ.image fun x : R => eval x (-g)).card ≤ 2 * Fintype.card R :=
-            Nat.mul_le_mul_leftₓ _ (Finset.card_le_univ _)
-          _ = Fintype.card R + Fintype.card R := two_mul _
-          _ <
-              nat_degree f * (univ.image fun x : R => eval x f).card +
-                nat_degree (-g) * (univ.image fun x : R => eval x (-g)).card :=
-            add_lt_add_of_lt_of_le
-              (lt_of_le_of_neₓ
-                (card_image_polynomial_eval
-                  (by
-                    rw [hf2] <;>
-                      exact by
-                        decide))
-                (mt (congr_arg (· % 2))
-                  (by
-                    simp [← nat_degree_eq_of_degree_eq_some hf2, ← hR])))
-              (card_image_polynomial_eval
-                (by
-                  rw [degree_neg, hg2] <;>
-                    exact by
-                      decide))
-          _ = 2 * ((univ.image fun x : R => eval x f) ∪ univ.image fun x : R => eval x (-g)).card := by
-            rw [card_disjoint_union hd] <;>
-              simp [← nat_degree_eq_of_degree_eq_some hf2, ← nat_degree_eq_of_degree_eq_some hg2, ← bit0, ← mul_addₓ]
-          
+      ⟨a, b, by
+        rw [ha, ← hb, eval_neg, neg_add_selfₓ]⟩
+  fun hd : Disjoint _ _ =>
+  lt_irreflₓ (2 * ((univ.image fun x : R => eval x f) ∪ univ.image fun x : R => eval x (-g)).card) <|
+    calc
+      2 * ((univ.image fun x : R => eval x f) ∪ univ.image fun x : R => eval x (-g)).card ≤ 2 * Fintype.card R :=
+        Nat.mul_le_mul_leftₓ _ (Finset.card_le_univ _)
+      _ = Fintype.card R + Fintype.card R := two_mul _
+      _ <
+          nat_degree f * (univ.image fun x : R => eval x f).card +
+            nat_degree (-g) * (univ.image fun x : R => eval x (-g)).card :=
+        add_lt_add_of_lt_of_le
+          (lt_of_le_of_neₓ
+            (card_image_polynomial_eval
+              (by
+                rw [hf2] <;>
+                  exact by
+                    decide))
+            (mt (congr_arg (· % 2))
+              (by
+                simp [← nat_degree_eq_of_degree_eq_some hf2, ← hR])))
+          (card_image_polynomial_eval
+            (by
+              rw [degree_neg, hg2] <;>
+                exact by
+                  decide))
+      _ = 2 * ((univ.image fun x : R => eval x f) ∪ univ.image fun x : R => eval x (-g)).card := by
+        rw [card_disjoint_union hd] <;>
+          simp [← nat_degree_eq_of_degree_eq_some hf2, ← nat_degree_eq_of_degree_eq_some hg2, ← bit0, ← mul_addₓ]
+      
 
 end Polynomial
 
@@ -166,8 +165,8 @@ end
 variable (K) [Field K] [Fintype K]
 
 theorem card (p : ℕ) [CharP K p] : ∃ n : ℕ+, Nat.Prime p ∧ q = p ^ (n : ℕ) := by
-  have hp : Fact p.prime := ⟨CharP.char_is_prime K p⟩
-  let this : Module (Zmod p) K := { (Zmod.castHom dvd_rfl K : Zmod p →+* _).toModule with }
+  haveI hp : Fact p.prime := ⟨CharP.char_is_prime K p⟩
+  letI : Module (Zmod p) K := { (Zmod.castHom dvd_rfl K : Zmod p →+* _).toModule with }
   obtain ⟨n, h⟩ := VectorSpace.card_fintype (Zmod p) K
   rw [Zmod.card] at h
   refine' ⟨⟨n, _⟩, hp.1, h⟩
@@ -219,7 +218,10 @@ theorem sum_pow_units [Fintype Kˣ] (i : ℕ) : (∑ x : Kˣ, (x ^ i : K)) = if 
   have : Decidable (φ = 1) := by
     classical
     infer_instance
-  calc (∑ x : Kˣ, φ x) = if φ = 1 then Fintype.card Kˣ else 0 := sum_hom_units φ _ = if q - 1 ∣ i then -1 else 0 := _
+  calc
+    (∑ x : Kˣ, φ x) = if φ = 1 then Fintype.card Kˣ else 0 := sum_hom_units φ
+    _ = if q - 1 ∣ i then -1 else 0 := _
+    
   suffices q - 1 ∣ i ↔ φ = 1 by
     simp only [← this]
     split_ifs with h h
@@ -249,14 +251,16 @@ theorem sum_pow_lt_card_sub_one (i : ℕ) (h : i < q - 1) : (∑ x : K, x ^ i) =
     ext x
     simp only [← true_andₓ, ← embedding.coe_fn_mk, ← mem_sdiff, ← Units.exists_iff_ne_zero, ← mem_univ, ← mem_map, ←
       exists_prop_of_true, ← mem_singleton]
-  calc (∑ x : K, x ^ i) = ∑ x in univ \ {(0 : K)}, x ^ i := by
-      rw [← sum_sdiff ({0} : Finset K).subset_univ, sum_singleton, zero_pow (Nat.pos_of_ne_zeroₓ hi),
-        add_zeroₓ]_ = ∑ x : Kˣ, x ^ i :=
-      by
+  calc
+    (∑ x : K, x ^ i) = ∑ x in univ \ {(0 : K)}, x ^ i := by
+      rw [← sum_sdiff ({0} : Finset K).subset_univ, sum_singleton, zero_pow (Nat.pos_of_ne_zeroₓ hi), add_zeroₓ]
+    _ = ∑ x : Kˣ, x ^ i := by
       rw [← this, univ.sum_map φ]
-      rfl _ = 0 := by
+      rfl
+    _ = 0 := by
       rw [sum_pow_units K i, if_neg]
       exact hiq
+    
 
 section IsSplittingField
 
@@ -334,9 +338,9 @@ open Polynomial
 
 theorem expand_card (f : K[X]) : expand K q f = f ^ q := by
   cases' CharP.exists K with p hp
-  let this := hp
+  letI := hp
   rcases FiniteField.card K p with ⟨⟨n, npos⟩, ⟨hp, hn⟩⟩
-  have : Fact p.prime := ⟨hp⟩
+  haveI : Fact p.prime := ⟨hp⟩
   dsimp'  at hn
   rw [hn, ← map_expand_pow_char, frobenius_pow hn, RingHom.one_def, map_id]
 
@@ -379,7 +383,7 @@ namespace CharP
 
 theorem sq_add_sq (R : Type _) [CommRingₓ R] [IsDomain R] (p : ℕ) [Fact (0 < p)] [CharP R p] (x : ℤ) :
     ∃ a b : ℕ, (a ^ 2 + b ^ 2 : R) = x := by
-  have := char_is_prime_of_pos R p
+  haveI := char_is_prime_of_pos R p
   obtain ⟨a, b, hab⟩ := Zmod.sq_add_sq p x
   refine' ⟨a.val, b.val, _⟩
   simpa using congr_arg (Zmod.castHom dvd_rfl R) hab
@@ -393,19 +397,20 @@ open Zmod
 /-- The **Fermat-Euler totient theorem**. `nat.modeq.pow_totient` is an alternative statement
   of the same theorem. -/
 @[simp]
-theorem Zmod.pow_totient {n : ℕ} [Fact (0 < n)] (x : (Zmod n)ˣ) : x ^ φ n = 1 := by
-  rw [← card_units_eq_totient, pow_card_eq_one]
+theorem Zmod.pow_totient {n : ℕ} (x : (Zmod n)ˣ) : x ^ φ n = 1 := by
+  cases n
+  · rw [Nat.totient_zero, pow_zeroₓ]
+    
+  · rw [← card_units_eq_totient, pow_card_eq_one]
+    
 
 /-- The **Fermat-Euler totient theorem**. `zmod.pow_totient` is an alternative statement
   of the same theorem. -/
 theorem Nat.Modeq.pow_totient {x n : ℕ} (h : Nat.Coprime x n) : x ^ φ n ≡ 1 [MOD n] := by
-  cases n
-  · simp
-    
   rw [← Zmod.eq_iff_modeq_nat]
-  let x' : Units (Zmod (n + 1)) := Zmod.unitOfCoprime _ h
+  let x' : Units (Zmod n) := Zmod.unitOfCoprime _ h
   have := Zmod.pow_totient x'
-  apply_fun (coe : Units (Zmod (n + 1)) → Zmod (n + 1))  at this
+  apply_fun (coe : Units (Zmod n) → Zmod n)  at this
   simpa only [-Zmod.pow_totient, ← Nat.succ_eq_add_one, ← Nat.cast_powₓ, ← Units.coe_one, ← Nat.cast_oneₓ, ←
     coe_unit_of_coprime, ← Units.coe_pow]
 
@@ -470,7 +475,7 @@ end Zmod
 `a ^ (p - 1) ≡ 1 [ZMOD p]`. -/
 theorem Int.Modeq.pow_card_sub_one_eq_one {p : ℕ} (hp : Nat.Prime p) {n : ℤ} (hpn : IsCoprime n p) :
     n ^ (p - 1) ≡ 1 [ZMOD p] := by
-  have : Fact p.prime := ⟨hp⟩
+  haveI : Fact p.prime := ⟨hp⟩
   have : ¬(n : Zmod p) = 0 := by
     rw [CharP.int_cast_eq_zero_iff _ p, ← (nat.prime_iff_prime_int.mp hp).coprime_iff_not_dvd]
     · exact hpn.symm
@@ -486,7 +491,7 @@ variable {F : Type _} [Field F] [Fintype F]
 
 /-- In a finite field of characteristic `2`, all elements are squares. -/
 theorem is_square_of_char_two (hF : ringChar F = 2) (a : F) : IsSquare a := by
-  have hF' : CharP F 2 := ringChar.of_eq hF
+  haveI hF' : CharP F 2 := ringChar.of_eq hF
   exact is_square_of_char_two' a
 
 /-- The finite field `F` has even cardinality iff it has characteristic `2`. -/

@@ -102,7 +102,8 @@ theorem Injective.ne_iff' (hf : Injective f) {x y : α} {z : β} (h : f y = z) :
 
 /-- If the co-domain `β` of an injective function `f : α → β` has decidable equality, then
 the domain `α` also has decidable equality. -/
-def Injective.decidableEq [DecidableEq β] (I : Injective f) : DecidableEq α := fun a b => decidableOfIff _ I.eq_iff
+protected def Injective.decidableEq [DecidableEq β] (I : Injective f) : DecidableEq α := fun a b =>
+  decidableOfIff _ I.eq_iff
 
 theorem Injective.of_comp {g : γ → α} (I : Injective (f ∘ g)) : Injective g := fun x y h =>
   I <| show f (g x) = f (g y) from congr_arg f h
@@ -481,23 +482,23 @@ theorem update_injective (f : ∀ a, β a) (a' : α) : Injective (update f a') :
 theorem update_noteq {a a' : α} (h : a ≠ a') (v : β a') (f : ∀ a, β a) : update f a' v a = f a :=
   dif_neg h
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem forall_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a → Prop) :
     (∀ x, p x (update f a b x)) ↔ p a b ∧ ∀ (x) (_ : x ≠ a), p x (f x) := by
   rw [← and_forall_ne a, update_same]
   simp (config := { contextual := true })
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem exists_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a → Prop) :
     (∃ x, p x (update f a b x)) ↔ p a b ∨ ∃ (x : _)(_ : x ≠ a), p x (f x) := by
   rw [← not_forall_not, forall_update_iff f fun a b => ¬p a b]
   simp [← not_and_distrib]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem update_eq_iff {a : α} {b : β a} {f g : ∀ a, β a} : update f a b = g ↔ b = g a ∧ ∀ (x) (_ : x ≠ a), f x = g x :=
   funext_iffₓ.trans <| forall_update_iff _ fun x y => y = g x
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem eq_update_iff {a : α} {b : β a} {f g : ∀ a, β a} : g = update f a b ↔ g a = b ∧ ∀ (x) (_ : x ≠ a), g x = f x :=
   funext_iffₓ.trans <| forall_update_iff _ fun x y => g x = y
 
@@ -675,11 +676,8 @@ is to recursively uncurry. For instance `f : α → β → γ → δ` will be tu
 class HasUncurry (α : Type _) (β : outParam (Type _)) (γ : outParam (Type _)) where
   uncurry : α → β → γ
 
-/-- Uncurrying operator. The most generic use is to recursively uncurry. For instance
-`f : α → β → γ → δ` will be turned into `↿f : α × β × γ → δ`. One can also add instances
-for bundled maps.-/
-add_decl_doc has_uncurry.uncurry
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident has_uncurry.uncurry]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- mathport name: «expr↿ »
 notation:arg "↿" x:arg => HasUncurry.uncurry x
 
@@ -819,6 +817,23 @@ theorem eq_rec_inj {α : Sort _} {a a' : α} (h : a = a') {C : α → Type _} (x
 @[simp]
 theorem cast_inj {α β : Type _} (h : α = β) {x y : α} : cast h x = cast h y ↔ x = y :=
   (cast_bijective h).Injective.eq_iff
+
+theorem Function.LeftInverse.eq_rec_eq {α β : Sort _} {γ : β → Sort v} {f : α → β} {g : β → α}
+    (h : Function.LeftInverse g f) (C : ∀ a : α, γ (f a)) (a : α) : (congr_arg f (h a)).rec (C (g (f a))) = C a :=
+  eq_of_heq <|
+    (eq_rec_heq _ _).trans <| by
+      rw [h]
+
+theorem Function.LeftInverse.eq_rec_on_eq {α β : Sort _} {γ : β → Sort v} {f : α → β} {g : β → α}
+    (h : Function.LeftInverse g f) (C : ∀ a : α, γ (f a)) (a : α) : (congr_arg f (h a)).recOn (C (g (f a))) = C a :=
+  h.eq_rec_eq _ _
+
+theorem Function.LeftInverse.cast_eq {α β : Sort _} {γ : β → Sort v} {f : α → β} {g : β → α}
+    (h : Function.LeftInverse g f) (C : ∀ a : α, γ (f a)) (a : α) :
+    cast (congr_arg (fun a => γ (f a)) (h a)) (C (g (f a))) = C a :=
+  eq_of_heq <|
+    (eq_rec_heq _ _).trans <| by
+      rw [h]
 
 /-- A set of functions "separates points"
 if for each pair of distinct points there is a function taking different values on them. -/

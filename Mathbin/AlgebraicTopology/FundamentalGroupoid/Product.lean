@@ -107,7 +107,7 @@ def piTopToPiCone :
       Groupoidₓ.piLimitFan fun i : I => πₓ (X i) where Hom := CategoryTheory.Functor.pi' (proj X)
 
 instance : IsIso (piTopToPiCone X) := by
-  have : is_iso (pi_Top_to_pi_cone X).Hom := (inferInstance : is_iso (pi_iso X).inv)
+  haveI : is_iso (pi_Top_to_pi_cone X).Hom := (inferInstance : is_iso (pi_iso X).inv)
   exact limits.cones.cone_iso_of_hom_iso (pi_Top_to_pi_cone X)
 
 /-- The fundamental groupoid functor preserves products -/

@@ -38,7 +38,7 @@ namespace Rat
 
 instance : Field ℚ :=
   { Rat.commRing, Rat.commGroupWithZero with zero := 0, add := (· + ·), neg := Neg.neg, one := 1, mul := (· * ·),
-    inv := Inv.inv }
+    inv := Inv.inv, ratCast := id, rat_cast_mk := fun a b h1 h2 => (num_div_denom _).symm, qsmul := (· * ·) }
 
 -- Extra instances to short-circuit type class resolution
 instance : DivisionRing ℚ := by

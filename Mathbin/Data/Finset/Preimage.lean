@@ -102,7 +102,7 @@ theorem image_preimage_of_bij [DecidableEq β] (f : α → β) (s : Finset β) (
 theorem preimage_subset {f : α ↪ β} {s : Finset β} {t : Finset α} (hs : s ⊆ t.map f) :
     s.Preimage f (f.Injective.InjOn _) ⊆ t := fun x hx => (mem_map' f).1 (hs (mem_preimage.1 hx))
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (u «expr ⊆ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (u «expr ⊆ » t)
 theorem subset_map_iff {f : α ↪ β} {s : Finset β} {t : Finset α} : s ⊆ t.map f ↔ ∃ (u : _)(_ : u ⊆ t), s = u.map f := by
   classical
   refine' ⟨fun h => ⟨_, preimage_subset h, _⟩, _⟩
@@ -132,13 +132,15 @@ end Preimage
 theorem prod_preimage' [CommMonoidₓ β] (f : α → γ) [DecidablePred fun x => x ∈ Set.Range f] (s : Finset γ)
     (hf : Set.InjOn f (f ⁻¹' ↑s)) (g : γ → β) :
     (∏ x in s.Preimage f hf, g (f x)) = ∏ x in s.filter fun x => x ∈ Set.Range f, g x := by
-  have := Classical.decEq γ <;>
-    calc (∏ x in preimage s f hf, g (f x)) = ∏ x in image f (preimage s f hf), g x :=
+  haveI := Classical.decEq γ <;>
+    calc
+      (∏ x in preimage s f hf, g (f x)) = ∏ x in image f (preimage s f hf), g x :=
         Eq.symm <|
           prod_image <| by
-            simpa only [← mem_preimage, ← inj_on] using hf _ = ∏ x in s.filter fun x => x ∈ Set.Range f, g x :=
-        by
+            simpa only [← mem_preimage, ← inj_on] using hf
+      _ = ∏ x in s.filter fun x => x ∈ Set.Range f, g x := by
         rw [image_preimage]
+      
 
 @[to_additive]
 theorem prod_preimage [CommMonoidₓ β] (f : α → γ) (s : Finset γ) (hf : Set.InjOn f (f ⁻¹' ↑s)) (g : γ → β)

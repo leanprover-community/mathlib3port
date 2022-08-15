@@ -181,7 +181,7 @@ fix F a b = F a b (fix F a b)
 def Fix {n : ℕ} (F : Typevec (n + 1) → Type _) [Mvfunctor F] [q : Mvqpf F] (α : Typevec n) :=
   Quotientₓ (wSetoid α : Setoidₓ (q.p.W α))
 
-attribute [nolint has_inhabited_instance] fix
+attribute [nolint has_nonempty_instance] fix
 
 /-- `fix F` is a functor -/
 def Fix.map {α β : Typevec n} (g : α ⟹ β) : Fix F α → Fix F β :=

@@ -81,7 +81,7 @@ instance : CoeTₓ α (WithOne α) :=
   ⟨some⟩
 
 /-- Recursor for `with_one` using the preferred forms `1` and `↑a`. -/
-@[elab_as_eliminator, to_additive "Recursor for `with_zero` using the preferred forms `0` and `↑a`."]
+@[elabAsElim, to_additive "Recursor for `with_zero` using the preferred forms `0` and `↑a`."]
 def recOneCoe {C : WithOne α → Sort _} (h₁ : C 1) (h₂ : ∀ a : α, C a) : ∀ n : WithOne α, C n :=
   Option.rec h₁ h₂
 
@@ -124,7 +124,7 @@ instance : CanLift (WithOne α) α where
 theorem coe_inj {a b : α} : (a : WithOne α) = b ↔ a = b :=
   Option.some_inj
 
-@[elab_as_eliminator, to_additive]
+@[elabAsElim, to_additive]
 protected theorem cases_on {P : WithOne α → Prop} : ∀ x : WithOne α, P 1 → (∀ a : α, P a) → P x :=
   Option.casesOn
 

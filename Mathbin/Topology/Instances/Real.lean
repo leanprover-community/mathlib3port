@@ -5,6 +5,7 @@ Authors: Johannes Hölzl, Mario Carneiro
 -/
 import Mathbin.Topology.MetricSpace.Basic
 import Mathbin.Topology.Algebra.UniformGroup
+import Mathbin.Topology.Algebra.UniformMulAction
 import Mathbin.Topology.Algebra.Ring
 import Mathbin.Topology.Algebra.Star
 import Mathbin.RingTheory.Subring.Basic
@@ -61,7 +62,7 @@ instance :
 instance : SecondCountableTopology ℝ :=
   second_countable_of_proper
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (a b)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (a b)
 theorem Real.is_topological_basis_Ioo_rat : @IsTopologicalBasis ℝ _ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) :=
   is_topological_basis_of_open_of_nhds
     (by
@@ -113,13 +114,8 @@ theorem Real.Continuous.inv [TopologicalSpace α] {f : α → ℝ} (h : ∀ a, f
   show Continuous ((Inv.inv ∘ @Subtype.val ℝ fun r => r ≠ 0) ∘ fun a => ⟨f a, h a⟩) from
     Real.continuous_inv.comp (continuous_subtype_mk _ hf)
 
-theorem Real.uniform_continuous_mul_const {x : ℝ} : UniformContinuous ((· * ·) x) :=
-  Metric.uniform_continuous_iff.2 fun ε ε0 => by
-    cases' exists_gt (abs x) with y xy
-    have y0 := lt_of_le_of_ltₓ (abs_nonneg _) xy
-    refine' ⟨_, div_pos ε0 y0, fun a b h => _⟩
-    rw [Real.dist_eq, ← mul_sub, abs_mul, ← mul_div_cancel' ε (ne_of_gtₓ y0)]
-    exact mul_lt_mul' (le_of_ltₓ xy) h (abs_nonneg _) y0
+theorem Real.uniform_continuous_const_mul {x : ℝ} : UniformContinuous ((· * ·) x) :=
+  uniform_continuous_const_smul x
 
 theorem Real.uniform_continuous_mul (s : Set (ℝ × ℝ)) {r₁ r₂ : ℝ}
     (H : ∀, ∀ x ∈ s, ∀, abs (x : ℝ × ℝ).1 < r₁ ∧ abs x.2 < r₂) : UniformContinuous fun p : s => p.1.1 * p.1.2 :=

@@ -31,7 +31,7 @@ variable (R M) (ι : Type _) [DecidableEq ι]
 /-- The finitely supported functions `ι →₀ M` are in linear equivalence with the direct sum of
 copies of M indexed by ι. -/
 def finsuppLequivDirectSum : (ι →₀ M) ≃ₗ[R] ⨁ i : ι, M :=
-  have : ∀ m : M, Decidable (m ≠ 0) := Classical.decPred _
+  haveI : ∀ m : M, Decidable (m ≠ 0) := Classical.decPred _
   finsuppLequivDfinsupp R
 
 @[simp]
@@ -42,7 +42,7 @@ theorem finsupp_lequiv_direct_sum_single (i : ι) (m : M) :
 @[simp]
 theorem finsupp_lequiv_direct_sum_symm_lof (i : ι) (m : M) :
     (finsuppLequivDirectSum R M ι).symm (DirectSum.lof R ι _ i m) = Finsupp.single i m := by
-  let this : ∀ m : M, Decidable (m ≠ 0) := Classical.decPred _
+  letI : ∀ m : M, Decidable (m ≠ 0) := Classical.decPred _
   exact Dfinsupp.to_finsupp_single i m
 
 end finsuppLequivDirectSum

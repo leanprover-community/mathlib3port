@@ -84,9 +84,14 @@ theorem coe_inv : ∀ u : αˣ, ↑u⁻¹ = (u⁻¹ : α) :=
   (Units.coeHom α).map_inv
 
 @[simp, norm_cast, to_additive]
+theorem coe_div : ∀ u₁ u₂ : αˣ, ↑(u₁ / u₂) = (u₁ / u₂ : α) :=
+  (Units.coeHom α).map_div
+
+@[simp, norm_cast, to_additive]
 theorem coe_zpow : ∀ (u : αˣ) (n : ℤ), ((u ^ n : αˣ) : α) = u ^ n :=
   (Units.coeHom α).map_zpow
 
+@[field_simps]
 theorem _root_.divp_eq_div (a : α) (u : αˣ) : a /ₚ u = a / u := by
   rw [div_eq_mul_inv, divp, u.coe_inv]
 

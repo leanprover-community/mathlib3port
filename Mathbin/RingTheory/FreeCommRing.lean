@@ -71,7 +71,7 @@ def of (x : α) : FreeCommRing α :=
 theorem of_injective : Function.Injective (of : α → FreeCommRing α) :=
   FreeAbelianGroup.of_injective.comp fun x y => (Multiset.coe_eq_coe.trans List.singleton_perm_singleton).mp
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on {C : FreeCommRing α → Prop} (z : FreeCommRing α) (hn1 : C (-1)) (hb : ∀ b, C (of b))
     (ha : ∀ x y, C x → C y → C (x + y)) (hm : ∀ x y, C x → C y → C (x * y)) : C z :=
   have hn : ∀ x, C x → C (-x) := fun x ih => neg_one_mul x ▸ hm _ _ hn1 ih
@@ -202,7 +202,7 @@ end Restriction
 theorem is_supported_of {p} {s : Set α} : IsSupported (of p) s ↔ p ∈ s :=
   suffices IsSupported (of p) s → p ∈ s from ⟨this, fun hps => Subring.subset_closure ⟨p, hps, rfl⟩⟩
   fun hps : IsSupported (of p) s => by
-  have := Classical.decPred s
+  haveI := Classical.decPred s
   have : ∀ x, is_supported x s → ∃ n : ℤ, lift (fun a => if a ∈ s then (0 : ℤ[X]) else Polynomial.x) x = n := by
     intro x hx
     refine' Subring.InClosure.rec_on hx _ _ _ _

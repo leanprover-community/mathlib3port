@@ -40,7 +40,7 @@ universe u v w
 namespace CategoryTheory
 
 /-- Type tag on `unit` used to define single-object categories and groupoids. -/
-@[nolint unused_arguments has_inhabited_instance]
+@[nolint unused_arguments has_nonempty_instance]
 def SingleObj (α : Type u) : Type :=
   Unit
 

@@ -297,7 +297,7 @@ theorem R_pos {c : E} (f : ContDiffBumpOfInner c) : 0 < f.r :=
 instance (c : E) : Inhabited (ContDiffBumpOfInner c) :=
   ⟨⟨1, 2, zero_lt_one, one_lt_two⟩⟩
 
-variable [InnerProductSpace ℝ E] [NormedGroup X] [NormedSpace ℝ X]
+variable [InnerProductSpace ℝ E] [NormedAddCommGroup X] [NormedSpace ℝ X]
 
 variable {c : E} (f : ContDiffBumpOfInner c) {x : E} {n : WithTop ℕ}
 
@@ -469,12 +469,12 @@ a bundled smooth function such that
 
 The structure `cont_diff_bump` contains the data required to construct the function: real
 numbers `r`, `R`, and proofs of `0 < r < R`. The function itself is available through `coe_fn`.-/
-structure ContDiffBump [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] (c : E) extends
+structure ContDiffBump [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] (c : E) extends
   ContDiffBumpOfInner (toEuclidean c)
 
 namespace ContDiffBump
 
-variable [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] {c x : E} (f : ContDiffBump c)
+variable [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] {c x : E} (f : ContDiffBump c)
 
 /-- The function defined by `f : cont_diff_bump c`. Use automatic coercion to function
 instead. -/
@@ -559,8 +559,8 @@ neighborhood `s` there exists an infinitely smooth function with the following p
 
 This lemma is a simple wrapper around lemmas about bundled smooth bump functions, see
 `cont_diff_bump`. -/
-theorem exists_cont_diff_bump_function_of_mem_nhds [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] {x : E}
-    {s : Set E} (hs : s ∈ 𝓝 x) :
+theorem exists_cont_diff_bump_function_of_mem_nhds [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+    {x : E} {s : Set E} (hs : s ∈ 𝓝 x) :
     ∃ f : E → ℝ, f =ᶠ[𝓝 x] 1 ∧ (∀ y, f y ∈ Icc (0 : ℝ) 1) ∧ ContDiff ℝ ⊤ f ∧ HasCompactSupport f ∧ Tsupport f ⊆ s :=
   let ⟨f, hf⟩ := ContDiffBump.exists_tsupport_subset hs
   ⟨f, f.eventually_eq_one, fun y => ⟨f.Nonneg, f.le_one⟩, f.ContDiff, f.HasCompactSupport, hf⟩

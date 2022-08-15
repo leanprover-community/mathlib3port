@@ -14,36 +14,34 @@ function on `ℕ`.
 -/
 
 
-open Nat
+open Nat Function
 
 namespace Equivₓ
 
 variable {α : Type _}
 
-/-- An equivalence between `ℕ × ℕ` and `ℕ`, using the `mkpair` and `unpair` functions in
-`data.nat.pairing`.
--/
-@[simp]
-def natProdNatEquivNat : ℕ × ℕ ≃ ℕ :=
-  ⟨fun p => Nat.mkpair p.1 p.2, Nat.unpair, fun p => by
-    cases p
-    apply Nat.unpair_mkpair, Nat.mkpair_unpair⟩
-
 /-- An equivalence between `bool × ℕ` and `ℕ`, by mapping `(tt, x)` to `2 * x + 1` and `(ff, x)` to
 `2 * x`.
 -/
-@[simp]
-def boolProdNatEquivNat : Bool × ℕ ≃ ℕ :=
-  ⟨fun ⟨b, n⟩ => bit b n, boddDiv2, fun ⟨b, n⟩ => by
-    simp [← bool_prod_nat_equiv_nat._match_1, ← bodd_bit, ← div2_bit], fun n => by
-    simp [← bool_prod_nat_equiv_nat._match_1, ← bit_decomp]⟩
+@[simps]
+def boolProdNatEquivNat : Bool × ℕ ≃ ℕ where
+  toFun := uncurry bit
+  invFun := boddDiv2
+  left_inv := fun ⟨b, n⟩ => by
+    simp only [← bodd_bit, ← div2_bit, ← uncurry_apply_pair, ← bodd_div2_eq]
+  right_inv := fun n => by
+    simp only [← bit_decomp, ← bodd_div2_eq, ← uncurry_apply_pair]
 
 /-- An equivalence between `ℕ ⊕ ℕ` and `ℕ`, by mapping `(sum.inl x)` to `2 * x` and `(sum.inr x)` to
 `2 * x + 1`.
 -/
-@[simp]
+@[simps symmApply]
 def natSumNatEquivNat : Sum ℕ ℕ ≃ ℕ :=
   (boolProdEquivSum ℕ).symm.trans boolProdNatEquivNat
+
+@[simp]
+theorem nat_sum_nat_equiv_nat_apply : ⇑nat_sum_nat_equiv_nat = Sum.elim bit0 bit1 := by
+  ext (x | x) <;> rfl
 
 /-- An equivalence between `ℤ` and `ℕ`, through `ℤ ≃ ℕ ⊕ ℕ` and `ℕ ⊕ ℕ ≃ ℕ`.
 -/
@@ -55,18 +53,9 @@ def intEquivNat : ℤ ≃ ℕ :=
 def prodEquivOfEquivNat (e : α ≃ ℕ) : α × α ≃ α :=
   calc
     α × α ≃ ℕ × ℕ := prodCongr e e
-    _ ≃ ℕ := natProdNatEquivNat
+    _ ≃ ℕ := mkpairEquiv
     _ ≃ α := e.symm
     
-
-/-- An equivalence between `ℕ+` and `ℕ`, by mapping `x` in `ℕ+` to `x - 1` in `ℕ`.
--/
-def pnatEquivNat : ℕ+ ≃ ℕ :=
-  ⟨fun n => pred n.1, succPnat, fun ⟨n, h⟩ => by
-    cases n
-    cases h
-    simp [← succ_pnat, ← h], fun n => by
-    simp [← succ_pnat]⟩
 
 end Equivₓ
 

@@ -92,9 +92,9 @@ theorem DivInvMonoidₓ.ext {M : Type _} ⦃m₁ m₂ : DivInvMonoidₓ M⦄ (h_
   set f :
     @MonoidHom M M
       (by
-        let this := m₁ <;> infer_instance)
+        letI := m₁ <;> infer_instance)
       (by
-        let this := m₂ <;> infer_instance) :=
+        letI := m₂ <;> infer_instance) :=
     { toFun := id, map_one' := h₁, map_mul' := fun x y => congr_fun (congr_fun h_mul x) y }
   have hpow : (@DivInvMonoidₓ.toMonoid _ m₁).npow = (@DivInvMonoidₓ.toMonoid _ m₂).npow :=
     congr_arg (@Monoidₓ.npow M) (Monoidₓ.ext h_mul)
@@ -114,7 +114,7 @@ theorem Groupₓ.ext {G : Type _} ⦃g₁ g₂ : Groupₓ G⦄ (h_mul : g₁.mul
   set f :=
     @MonoidHom.mk' G G
       (by
-        let this := g₁ <;> infer_instance)
+        letI := g₁ <;> infer_instance)
       g₂ id fun a b => congr_fun (congr_fun h_mul a) b
   exact
     Groupₓ.to_div_inv_monoid_injective

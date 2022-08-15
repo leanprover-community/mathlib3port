@@ -69,7 +69,7 @@ has limits of shape `J` and `G` preserves them, then `D` does not necessarily ha
 -/
 theorem has_terminal_of_has_terminal_of_preserves_limit [PreservesLimit (Functor.empty.{0} C) G] : HasTerminal D :=
   ⟨fun F => by
-    have := has_limit.mk ⟨_, is_limit_of_has_terminal_of_preserves_limit G⟩
+    haveI := has_limit.mk ⟨_, is_limit_of_has_terminal_of_preserves_limit G⟩
     apply has_limit_of_iso F.unique_from_empty.symm⟩
 
 variable [HasTerminal D]
@@ -144,7 +144,7 @@ shape `J`.
 -/
 theorem has_initial_of_has_initial_of_preserves_colimit [PreservesColimit (Functor.empty.{0} C) G] : HasInitial D :=
   ⟨fun F => by
-    have := has_colimit.mk ⟨_, is_colimit_of_has_initial_of_preserves_colimit G⟩
+    haveI := has_colimit.mk ⟨_, is_colimit_of_has_initial_of_preserves_colimit G⟩
     apply has_colimit_of_iso F.unique_from_empty⟩
 
 variable [HasInitial D]

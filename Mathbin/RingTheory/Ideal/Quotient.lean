@@ -197,7 +197,7 @@ theorem maximal_of_is_field (I : Ideal R) (hqf : IsField (R ⧸ I)) : I.IsMaxima
 /-- The quotient of a ring by an ideal is a field iff the ideal is maximal. -/
 theorem maximal_ideal_iff_is_field_quotient (I : Ideal R) : I.IsMaximal ↔ IsField (R ⧸ I) :=
   ⟨fun h => by
-    let this := @quotient.field _ _ I h
+    letI := @quotient.field _ _ I h
     exact Field.to_is_field _, maximal_of_is_field _⟩
 
 variable [CommRingₓ S]
@@ -244,6 +244,11 @@ def quotEquivOfEq {R : Type _} [CommRingₓ R] {I J : Ideal R} (h : I = J) : R �
 theorem quot_equiv_of_eq_mk {R : Type _} [CommRingₓ R] {I J : Ideal R} (h : I = J) (x : R) :
     quotEquivOfEq h (Ideal.Quotient.mk I x) = Ideal.Quotient.mk J x :=
   rfl
+
+@[simp]
+theorem quot_equiv_of_eq_symm {R : Type _} [CommRingₓ R] {I J : Ideal R} (h : I = J) :
+    (Ideal.quotEquivOfEq h).symm = Ideal.quotEquivOfEq h.symm := by
+  ext <;> rfl
 
 section Pi
 

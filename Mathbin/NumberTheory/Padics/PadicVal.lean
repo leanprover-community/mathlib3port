@@ -9,7 +9,6 @@ import Mathbin.RingTheory.Int.Basic
 import Mathbin.Tactic.Basic
 import Mathbin.Tactic.RingExp
 import Mathbin.NumberTheory.Divisors
-import Mathbin.Data.Nat.Factorization.Basic
 
 /-!
 # p-adic Valuation
@@ -250,6 +249,10 @@ theorem one_le_padic_val_nat_of_dvd {n p : Nat} [prime : Fact p.Prime] (n_pos : 
   dsimp'  at q
   solve_by_elim
 
+theorem dvd_iff_padic_val_nat_ne_zero {p n : ℕ} [Fact p.Prime] (hn0 : n ≠ 0) : p ∣ n ↔ padicValNat p n ≠ 0 :=
+  ⟨fun h => one_le_iff_ne_zero.mp (one_le_padic_val_nat_of_dvd hn0.bot_lt h), fun h =>
+    not_not.1 (mt padicValNat.eq_zero_of_not_dvd h)⟩
+
 end padicValNat
 
 namespace padicValRat
@@ -362,8 +365,9 @@ theorem le_padic_val_rat_add_of_le {q r : ℚ} (hqr : q + r ≠ 0) (h : padicVal
               rw [@multiplicity.mul _ _ _ _ (_ * _) _ (Nat.prime_iff_prime_int.1 p_prime.1), add_commₓ])
             (by
               rw [mul_assoc, @multiplicity.mul _ _ _ _ (q.denom : ℤ) (_ * _) (Nat.prime_iff_prime_int.1 p_prime.1)] <;>
-                exact add_le_add_left h _)_ ≤ _ :=
-          min_le_multiplicity_add
+                exact add_le_add_left h _)
+        _ ≤ _ := min_le_multiplicity_add
+        
 
 /-- The minimum of the valuations of `q` and `r` is less than or equal to the valuation of `q + r`.
 -/
@@ -520,35 +524,7 @@ protected theorem padicValNat.div' {p : ℕ} [p_prime : Fact p.Prime] :
         
       
 
-theorem padic_val_nat_eq_factorization (p n : ℕ) [hp : Fact p.Prime] : padicValNat p n = n.factorization p := by
-  by_cases' hn : n = 0
-  · subst hn
-    simp
-    
-  rw [@padic_val_nat_def p _ n (Nat.pos_of_ne_zeroₓ hn)]
-  simp [← @multiplicity_eq_factorization n p hp.elim hn]
-
 open BigOperators
-
-theorem prod_pow_prime_padic_val_nat (n : Nat) (hn : n ≠ 0) (m : Nat) (pr : n < m) :
-    (∏ p in Finset.filter Nat.Prime (Finset.range m), p ^ padicValNat p n) = n := by
-  nth_rw_rhs 0[← factorization_prod_pow_eq_self hn]
-  rw [eq_comm]
-  apply Finset.prod_subset_one_on_sdiff
-  · exact fun p hp =>
-      finset.mem_filter.mpr
-        ⟨finset.mem_range.mpr (gt_of_gt_of_geₓ pr (le_of_mem_factorization hp)), prime_of_mem_factorization hp⟩
-    
-  · intro p hp
-    cases' finset.mem_sdiff.mp hp with hp1 hp2
-    have := fact_iff.mpr (finset.mem_filter.mp hp1).2
-    rw [padic_val_nat_eq_factorization p n]
-    simp [← finsupp.not_mem_support_iff.mp hp2]
-    
-  · intro p hp
-    have := fact_iff.mpr (prime_of_mem_factorization hp)
-    simp [← padic_val_nat_eq_factorization]
-    
 
 theorem range_pow_padic_val_nat_subset_divisors {n : ℕ} (p : ℕ) (hn : n ≠ 0) :
     (Finset.range (padicValNat p n + 1)).Image (pow p) ⊆ n.divisors := by

@@ -105,8 +105,8 @@ end FormalMultilinearSeries
 /-! ### The radius of a formal multilinear series -/
 
 
-variable [NondiscreteNormedField 𝕜] [NormedGroup E] [NormedSpace 𝕜 E] [NormedGroup F] [NormedSpace 𝕜 F] [NormedGroup G]
-  [NormedSpace 𝕜 G]
+variable [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] [NormedAddCommGroup F] [NormedSpace 𝕜 F]
+  [NormedAddCommGroup G] [NormedSpace 𝕜 G]
 
 namespace FormalMultilinearSeries
 
@@ -169,9 +169,11 @@ theorem is_o_of_lt_radius (h : ↑r < p.radius) : ∃ a ∈ Ioo (0 : ℝ) 1, (fu
   have : 0 < (t : ℝ) := r.coe_nonneg.trans_lt rt
   rw [← div_lt_one this] at rt
   refine' ⟨_, rt, C, Or.inr zero_lt_one, fun n => _⟩
-  calc abs (∥p n∥ * r ^ n) = ∥p n∥ * t ^ n * (r / t) ^ n := by
-      field_simp [← mul_right_commₓ, ← abs_mul, ← this.ne']_ ≤ C * (r / t) ^ n :=
-      mul_le_mul_of_nonneg_right (hC n) (pow_nonneg (div_nonneg r.2 t.2) _)
+  calc
+    abs (∥p n∥ * r ^ n) = ∥p n∥ * t ^ n * (r / t) ^ n := by
+      field_simp [← mul_right_commₓ, ← abs_mul, ← this.ne']
+    _ ≤ C * (r / t) ^ n := mul_le_mul_of_nonneg_right (hC n) (pow_nonneg (div_nonneg r.2 t.2) _)
+    
 
 /-- For `r` strictly smaller than the radius of `p`, then `∥pₙ∥ rⁿ = o(1)`. -/
 theorem is_o_one_of_lt_radius (h : ↑r < p.radius) : (fun n => ∥p n∥ * r ^ n) =o[at_top] (fun _ => 1 : ℕ → ℝ) :=
@@ -436,7 +438,7 @@ theorem HasFpowerSeriesAt.sub (hf : HasFpowerSeriesAt f pf x) (hg : HasFpowerSer
 theorem AnalyticAt.sub (hf : AnalyticAt 𝕜 f x) (hg : AnalyticAt 𝕜 g x) : AnalyticAt 𝕜 (f - g) x := by
   simpa only [← sub_eq_add_neg] using hf.add hg.neg
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (i «expr ≠ » 0)
 theorem HasFpowerSeriesOnBall.coeff_zero (hf : HasFpowerSeriesOnBall f pf x r) (v : Finₓ 0 → E) : pf 0 v = f x := by
   have v_eq : v = fun i => 0 := Subsingleton.elimₓ _ _
   have zero_mem : (0 : E) ∈ Emetric.Ball (0 : E) r := by
@@ -499,13 +501,15 @@ theorem HasFpowerSeriesOnBall.uniform_geometric_approx' {r' : ℝ≥0 } (hf : Ha
       infer_instance
   apply norm_sub_le_of_geometric_bound_of_has_sum (ya.trans_lt ha.2) _ (hf.has_sum this)
   intro n
-  calc ∥(p n) fun i : Finₓ n => y∥ ≤ ∥p n∥ * ∏ i : Finₓ n, ∥y∥ :=
-      ContinuousMultilinearMap.le_op_norm _ _ _ = ∥p n∥ * r' ^ n * (∥y∥ / r') ^ n := by
-      field_simp [← hr'0.ne', ← mul_right_commₓ]_ ≤ C * a ^ n * (∥y∥ / r') ^ n :=
-      mul_le_mul_of_nonneg_right (hp n)
-        (pow_nonneg (div_nonneg (norm_nonneg _) r'.coe_nonneg) _)_ ≤ C * (a * (∥y∥ / r')) ^ n :=
-      by
+  calc
+    ∥(p n) fun i : Finₓ n => y∥ ≤ ∥p n∥ * ∏ i : Finₓ n, ∥y∥ := ContinuousMultilinearMap.le_op_norm _ _
+    _ = ∥p n∥ * r' ^ n * (∥y∥ / r') ^ n := by
+      field_simp [← hr'0.ne', ← mul_right_commₓ]
+    _ ≤ C * a ^ n * (∥y∥ / r') ^ n :=
+      mul_le_mul_of_nonneg_right (hp n) (pow_nonneg (div_nonneg (norm_nonneg _) r'.coe_nonneg) _)
+    _ ≤ C * (a * (∥y∥ / r')) ^ n := by
       rw [mul_powₓ, mul_assoc]
+    
 
 /-- If a function admits a power series expansion, then it is exponentially close to the partial
 sums of this power series on strict subdisks of the disk of convergence. -/
@@ -601,7 +605,7 @@ theorem HasFpowerSeriesOnBall.is_O_image_sub_image_sub_deriv_principal (hf : Has
   simp_rw [L, mul_right_commₓ _ (_ * _)]
   exact (is_O_refl _ _).const_mul_left _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball x r')
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball x r')
 /-- If `f` has formal power series `∑ n, pₙ` on a ball of radius `r`, then for `y, z` in any smaller
 ball, the norm of the difference `f y - f z - p 1 (λ _, y - z)` is bounded above by
 `C * (max ∥y - x∥ ∥z - x∥) * ∥y - z∥`. -/
@@ -774,16 +778,19 @@ theorem Asymptotics.IsO.continuous_multilinear_map_apply_eq_zero {n : ℕ} {p : 
         
     have h₃ : ∥k∥ * (c * ∥y∥ ^ (n.succ + 1)) < ε :=
       inv_mul_cancel_right₀ h₀.ne.symm ε ▸ mul_lt_mul_of_pos_right (lt_of_lt_of_leₓ k_norm (min_le_rightₓ _ _)) h₀
-    calc ∥p fun i => y∥ = ∥k⁻¹ ^ n.succ∥ * ∥p fun i => k • y∥ := by
+    calc
+      ∥p fun i => y∥ = ∥k⁻¹ ^ n.succ∥ * ∥p fun i => k • y∥ := by
         simpa only [← inv_smul_smul₀ (norm_pos_iff.mp k_pos), ← norm_smul, ← Finset.prod_const, ← Finset.card_fin] using
-          congr_arg norm
-            (p.map_smul_univ (fun i : Finₓ n.succ => k⁻¹) fun i : Finₓ n.succ =>
-              k • y)_ ≤ ∥k⁻¹ ^ n.succ∥ * (∥k∥ ^ n.succ * (∥k∥ * (c * ∥y∥ ^ (n.succ + 1)))) :=
-        mul_le_mul_of_nonneg_left h₂ (norm_nonneg _)_ = ∥(k⁻¹ * k) ^ n.succ∥ * (∥k∥ * (c * ∥y∥ ^ (n.succ + 1))) := by
+          congr_arg norm (p.map_smul_univ (fun i : Finₓ n.succ => k⁻¹) fun i : Finₓ n.succ => k • y)
+      _ ≤ ∥k⁻¹ ^ n.succ∥ * (∥k∥ ^ n.succ * (∥k∥ * (c * ∥y∥ ^ (n.succ + 1)))) :=
+        mul_le_mul_of_nonneg_left h₂ (norm_nonneg _)
+      _ = ∥(k⁻¹ * k) ^ n.succ∥ * (∥k∥ * (c * ∥y∥ ^ (n.succ + 1))) := by
         rw [← mul_assoc]
-        simp [← norm_mul, ← mul_powₓ]_ ≤ 0 + ε := by
+        simp [← norm_mul, ← mul_powₓ]
+      _ ≤ 0 + ε := by
         rw [inv_mul_cancel (norm_pos_iff.mp k_pos)]
         simpa using h₃.le
+      
     
 
 /-- If a formal multilinear series `p` represents the zero function at `x : E`, then the

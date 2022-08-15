@@ -46,8 +46,8 @@ def v (i j : 𝒰.J) : Scheme :=
 /-- The canonical transition map `(Uᵢ ×[Z] Y) ×[X] Uⱼ ⟶ (Uⱼ ×[Z] Y) ×[X] Uᵢ` given by the fact
 that pullbacks are associative and symmetric. -/
 def t (i j : 𝒰.J) : v 𝒰 f g i j ⟶ v 𝒰 f g j i := by
-  have : has_pullback (pullback.snd ≫ 𝒰.map i ≫ f) g := has_pullback_assoc_symm (𝒰.map j) (𝒰.map i) (𝒰.map i ≫ f) g
-  have : has_pullback (pullback.snd ≫ 𝒰.map j ≫ f) g := has_pullback_assoc_symm (𝒰.map i) (𝒰.map j) (𝒰.map j ≫ f) g
+  haveI : has_pullback (pullback.snd ≫ 𝒰.map i ≫ f) g := has_pullback_assoc_symm (𝒰.map j) (𝒰.map i) (𝒰.map i ≫ f) g
+  haveI : has_pullback (pullback.snd ≫ 𝒰.map j ≫ f) g := has_pullback_assoc_symm (𝒰.map i) (𝒰.map j) (𝒰.map j ≫ f) g
   refine' (pullback_symmetry _ _).Hom ≫ _
   refine' (pullback_assoc _ _ _ _).inv ≫ _
   change pullback _ _ ⟶ pullback _ _

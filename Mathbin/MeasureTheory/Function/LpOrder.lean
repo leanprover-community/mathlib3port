@@ -85,7 +85,7 @@ theorem coe_fn_abs (f : lp E p μ) : ⇑(abs f) =ᵐ[μ] fun x => abs (f x) :=
   AeEqFun.coe_fn_abs _
 
 noncomputable instance [Fact (1 ≤ p)] : NormedLatticeAddCommGroup (lp E p μ) :=
-  { lp.lattice, lp.normedGroup with add_le_add_left := fun f g => add_le_add_left,
+  { lp.lattice, lp.normedAddCommGroup with add_le_add_left := fun f g => add_le_add_left,
     solid := fun f g hfg => by
       rw [← coe_fn_le] at hfg
       simp_rw [Lp.norm_def, Ennreal.to_real_le_to_real (Lp.snorm_ne_top f) (Lp.snorm_ne_top g)]

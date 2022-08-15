@@ -57,12 +57,12 @@ theorem Prod.inducing_diag :
 
 end Defs
 
-variable [NondiscreteNormedField R] [TopologicalSpace B]
+variable [NontriviallyNormedField R] [TopologicalSpace B]
 
-variable (F₁ : Type _) [NormedGroup F₁] [NormedSpace R F₁] (E₁ : B → Type _) [TopologicalSpace (TotalSpace E₁)]
+variable (F₁ : Type _) [NormedAddCommGroup F₁] [NormedSpace R F₁] (E₁ : B → Type _) [TopologicalSpace (TotalSpace E₁)]
   [∀ x, AddCommMonoidₓ (E₁ x)] [∀ x, Module R (E₁ x)]
 
-variable (F₂ : Type _) [NormedGroup F₂] [NormedSpace R F₂] (E₂ : B → Type _) [TopologicalSpace (TotalSpace E₂)]
+variable (F₂ : Type _) [NormedAddCommGroup F₂] [NormedSpace R F₂] (E₂ : B → Type _) [TopologicalSpace (TotalSpace E₂)]
   [∀ x, AddCommMonoidₓ (E₂ x)] [∀ x, Module R (E₂ x)]
 
 namespace Trivialization
@@ -122,8 +122,7 @@ theorem Prod.right_inv {x : B × F₁ × F₂} (h : x ∈ (e₁.BaseSet ∩ e₂
   obtain ⟨⟨h₁ : x ∈ e₁.base_set, h₂ : x ∈ e₂.base_set⟩, -⟩ := h
   simp only [← prod.to_fun', ← prod.inv_fun', ← apply_mk_symm, ← h₁, ← h₂]
 
-theorem Prod.continuous_inv_fun :
-    ContinuousOn (Prod.invFun' e₁ e₂) ((e₁.BaseSet ∩ e₂.BaseSet) ×ˢ (Univ : Set (F₁ × F₂))) := by
+theorem Prod.continuous_inv_fun : ContinuousOn (Prod.invFun' e₁ e₂) ((e₁.BaseSet ∩ e₂.BaseSet) ×ˢ univ) := by
   rw [(prod.inducing_diag E₁ E₂).continuous_on_iff]
   have H₁ : Continuous fun p : B × F₁ × F₂ => ((p.1, p.2.1), (p.1, p.2.2)) :=
     (continuous_id.prod_map continuous_fst).prod_mk (continuous_id.prod_map continuous_snd)
@@ -143,7 +142,7 @@ def prod : Trivialization R (F₁ × F₂) (E₁×ᵇE₂) where
   toFun := Prod.toFun' e₁ e₂
   invFun := Prod.invFun' e₁ e₂
   Source := @TotalSpace.proj B (E₁×ᵇE₂) ⁻¹' (e₁.BaseSet ∩ e₂.BaseSet)
-  Target := (e₁.BaseSet ∩ e₂.BaseSet) ×ˢ (Set.Univ : Set (F₁ × F₂))
+  Target := (e₁.BaseSet ∩ e₂.BaseSet) ×ˢ Set.Univ
   map_source' := fun x h => ⟨h, Set.mem_univ _⟩
   map_target' := fun x h => h.1
   left_inv' := fun x => Prod.left_inv

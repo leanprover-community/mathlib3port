@@ -166,10 +166,11 @@ theorem sum_line_count_eq_sum_point_count [Fintype P] [Fintype L] :
   classical
   simp only [← line_count, ← point_count, ← Nat.card_eq_fintype_card, Fintype.card_sigma]
   apply Fintype.card_congr
-  calc (Σp, { l : L // p ∈ l }) ≃ { x : P × L // x.1 ∈ x.2 } :=
-      (Equivₓ.subtypeProdEquivSigmaSubtype (· ∈ ·)).symm _ ≃ { x : L × P // x.2 ∈ x.1 } :=
-      (Equivₓ.prodComm P L).subtypeEquiv fun x => Iff.rfl _ ≃ Σl, { p // p ∈ l } :=
-      Equivₓ.subtypeProdEquivSigmaSubtype fun (l : L) (p : P) => p ∈ l
+  calc
+    (Σp, { l : L // p ∈ l }) ≃ { x : P × L // x.1 ∈ x.2 } := (Equivₓ.subtypeProdEquivSigmaSubtype (· ∈ ·)).symm
+    _ ≃ { x : L × P // x.2 ∈ x.1 } := (Equivₓ.prodComm P L).subtypeEquiv fun x => Iff.rfl
+    _ ≃ Σl, { p // p ∈ l } := Equivₓ.subtypeProdEquivSigmaSubtype fun (l : L) (p : P) => p ∈ l
+    
 
 variable {P L}
 
@@ -178,7 +179,7 @@ theorem HasLines.point_count_le_line_count [HasLines P L] {p : P} {l : L} (h : p
   by_cases' hf : Infinite { p : P // p ∈ l }
   · exact (le_of_eqₓ Nat.card_eq_zero_of_infinite).trans (zero_le (line_count L p))
     
-  have := fintypeOfNotInfinite hf
+  haveI := fintypeOfNotInfinite hf
   rw [line_count, point_count, Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
   have : ∀ p' : { p // p ∈ l }, p ≠ p' := fun p' hp' => h ((congr_arg (· ∈ l) hp').mpr p'.2)
   exact
@@ -289,8 +290,8 @@ noncomputable def HasLines.hasPoints [HasLines P L] [Fintype P] [Fintype L] (h :
   let this : ∀ l₁ l₂ : L, l₁ ≠ l₂ → ∃ p : P, p ∈ l₁ ∧ p ∈ l₂ := fun l₁ l₂ hl => by
     classical
     obtain ⟨f, hf1, hf2⟩ := has_lines.exists_bijective_of_card_eq h
-    have : Nontrivial L := ⟨⟨l₁, l₂, hl⟩⟩
-    have := fintype.one_lt_card_iff_nontrivial.mp ((congr_arg _ h).mpr Fintype.one_lt_card)
+    haveI : Nontrivial L := ⟨⟨l₁, l₂, hl⟩⟩
+    haveI := fintype.one_lt_card_iff_nontrivial.mp ((congr_arg _ h).mpr Fintype.one_lt_card)
     have h₁ : ∀ p : P, 0 < line_count L p := fun p =>
       Exists.elim (exists_ne p) fun q hq =>
         (congr_arg _ Nat.card_eq_fintype_card).mpr (fintype.card_pos_iff.mpr ⟨⟨mk_line hq, (mk_line_ax hq).2⟩⟩)

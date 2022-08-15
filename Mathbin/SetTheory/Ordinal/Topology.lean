@@ -255,7 +255,7 @@ theorem is_normal_iff_strict_mono_and_continuous (f : Ordinal.{u} → Ordinal.{u
     exact ⟨_, out_nonempty_iff_ne_zero.2 ho.1, typein (· < ·), fun i => h _ (typein_lt_self i), sup_typein_limit ho.2⟩
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (b «expr < » a)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (b «expr < » a)
 theorem enum_ord_is_normal_iff_is_closed (hs : s.Unbounded (· < ·)) : IsNormal (enumOrd s) ↔ IsClosed s := by
   have Hs := enum_ord_strict_mono hs
   refine'
@@ -265,7 +265,7 @@ theorem enum_ord_is_normal_iff_is_closed (hs : s.Unbounded (· < ·)) : IsNormal
     suffices enum_ord s (sup.{u, u} g) = sup.{u, u} f by
       rw [← this]
       exact enum_ord_mem hs _
-    rw [IsNormal.sup.{u, u, u} h g hι]
+    rw [@IsNormal.sup.{u, u, u} _ h ι g hι]
     congr
     ext
     change ((enum_ord_order_iso hs) _).val = f x

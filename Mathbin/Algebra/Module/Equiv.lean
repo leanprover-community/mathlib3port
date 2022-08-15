@@ -49,12 +49,10 @@ variable {N₁ : Type _} {N₂ : Type _} {N₃ : Type _} {N₄ : Type _} {ι : T
 section
 
 /-- A linear equivalence is an invertible linear map. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure LinearEquiv {R : Type _} {S : Type _} [Semiringₓ R] [Semiringₓ S] (σ : R →+* S) {σ' : S →+* R}
   [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] (M : Type _) (M₂ : Type _) [AddCommMonoidₓ M] [AddCommMonoidₓ M₂]
   [Module R M] [Module S M₂] extends LinearMap σ M M₂, M ≃+ M₂
-
-end
 
 attribute [nolint doc_blame] LinearEquiv.toLinearMap
 
@@ -68,6 +66,47 @@ notation:50 M " ≃ₗ[" R "] " M₂ => LinearEquiv (RingHom.id R) M M₂
 
 -- mathport name: «expr ≃ₗ⋆[ ] »
 notation:50 M " ≃ₗ⋆[" R "] " M₂ => LinearEquiv (starRingEnd R) M M₂
+
+/-- `semilinear_equiv_class F σ M M₂` asserts `F` is a type of bundled `σ`-semilinear equivs
+`M → M₂`.
+
+See also `linear_equiv_class F R M M₂` for the case where `σ` is the identity map on `R`.
+
+A map `f` between an `R`-module and an `S`-module over a ring homomorphism `σ : R →+* S`
+is semilinear if it satisfies the two properties `f (x + y) = f x + f y` and
+`f (c • x) = (σ c) • f x`. -/
+class SemilinearEquivClass (F : Type _) {R S : outParam (Type _)} [Semiringₓ R] [Semiringₓ S] (σ : outParam <| R →+* S)
+  {σ' : outParam <| S →+* R} [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] (M M₂ : outParam (Type _)) [AddCommMonoidₓ M]
+  [AddCommMonoidₓ M₂] [Module R M] [Module S M₂] extends AddEquivClass F M M₂ where
+  map_smulₛₗ : ∀ (f : F) (r : R) (x : M), f (r • x) = σ r • f x
+
+-- `R, S, σ, σ'` become metavars, but it's OK since they are outparams.
+attribute [nolint dangerous_instance] SemilinearEquivClass.toAddEquivClass
+
+/-- `linear_equiv_class F R M M₂` asserts `F` is a type of bundled `R`-linear equivs `M → M₂`.
+This is an abbreviation for `semilinear_equiv_class F (ring_hom.id R) M M₂`.
+-/
+abbrev LinearEquivClass (F : Type _) (R M M₂ : outParam (Type _)) [Semiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ M₂]
+    [Module R M] [Module R M₂] :=
+  SemilinearEquivClass F (RingHom.id R) M M₂
+
+end
+
+namespace SemilinearEquivClass
+
+variable (F : Type _) [Semiringₓ R] [Semiringₓ S]
+
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₁] [AddCommMonoidₓ M₂]
+
+variable [Module R M] [Module S M₂] {σ : R →+* S} {σ' : S →+* R}
+
+-- `σ'` becomes a metavariable, but it's OK since it's an outparam
+@[nolint dangerous_instance]
+instance (priority := 100) [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] [s : SemilinearEquivClass F σ M M₂] :
+    SemilinearMapClass F σ M M₂ :=
+  { s with coe := (coe : F → M → M₂), coe_injective' := @FunLike.coe_injective F _ _ _ }
+
+end SemilinearEquivClass
 
 namespace LinearEquiv
 
@@ -119,9 +158,15 @@ theorem to_linear_map_injective : Injective (coe : (M ≃ₛₗ[σ] M₂) → M 
 theorem to_linear_map_inj {e₁ e₂ : M ≃ₛₗ[σ] M₂} : (e₁ : M →ₛₗ[σ] M₂) = e₂ ↔ e₁ = e₂ :=
   to_linear_map_injective.eq_iff
 
-instance : SemilinearMapClass (M ≃ₛₗ[σ] M₂) σ M M₂ where
+instance : SemilinearEquivClass (M ≃ₛₗ[σ] M₂) σ M M₂ where
   coe := LinearEquiv.toFun
-  coe_injective' := fun f g h => to_linear_map_injective (FunLike.coe_injective h)
+  inv := LinearEquiv.invFun
+  coe_injective' := fun f g h₁ h₂ => by
+    cases f
+    cases g
+    congr
+  left_inv := LinearEquiv.left_inv
+  right_inv := LinearEquiv.right_inv
   map_add := map_add'
   map_smulₛₗ := map_smul'
 
@@ -480,8 +525,8 @@ end
 /-- Interpret a `ring_equiv` `f` as an `f`-semilinear equiv. -/
 @[simps]
 def _root_.ring_equiv.to_semilinear_equiv (f : R ≃+* S) : by
-    have := RingHomInvPair.of_ring_equiv f <;>
-      have := RingHomInvPair.symm (↑f : R →+* S) (f.symm : S →+* R) <;> exact R ≃ₛₗ[(↑f : R →+* S)] S :=
+    haveI := RingHomInvPair.of_ring_equiv f <;>
+      haveI := RingHomInvPair.symm (↑f : R →+* S) (f.symm : S →+* R) <;> exact R ≃ₛₗ[(↑f : R →+* S)] S :=
   { f with toFun := f, map_smul' := f.map_mul }
 
 variable [Semiringₓ R₁] [Semiringₓ R₂] [Semiringₓ R₃]
@@ -575,7 +620,7 @@ namespace Module
 /-- `g : R ≃+* S` is `R`-linear when the module structure on `S` is `module.comp_hom S g` . -/
 @[simps]
 def compHom.toLinearEquiv {R S : Type _} [Semiringₓ R] [Semiringₓ S] (g : R ≃+* S) :
-    have := comp_hom S (↑g : R →+* S)
+    haveI := comp_hom S (↑g : R →+* S)
     R ≃ₗ[R] S :=
   { g with toFun := (g : R → S), invFun := (g.symm : S → R), map_smul' := g.map_mul }
 

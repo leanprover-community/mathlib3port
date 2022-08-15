@@ -1126,6 +1126,21 @@ protected theorem add_lt_add_of_lt_of_le [Preorderₓ α] [CovariantClass α α 
     [CovariantClass α α (swap (· + ·)) (· < ·)] (hc : c ≠ ⊤) (hab : a < b) (hcd : c ≤ d) : a + c < b + d :=
   (WithTop.add_lt_add_right hc hab).trans_le <| add_le_add_left hcd _
 
+--  There is no `with_top.map_mul_of_mul_hom`, since `with_top` does not have a multiplication.
+@[simp]
+protected theorem map_add {F} [Add β] [AddHomClass F α β] (f : F) (a b : WithTop α) :
+    (a + b).map f = a.map f + b.map f := by
+  induction a using WithTop.recTopCoe
+  · exact (top_add _).symm
+    
+  · induction b using WithTop.recTopCoe
+    · exact (add_top _).symm
+      
+    · rw [map_coe, map_coe, ← coe_add, ← coe_add, ← map_add]
+      rfl
+      
+    
+
 end Add
 
 instance [AddSemigroupₓ α] : AddSemigroupₓ (WithTop α) :=
@@ -1168,6 +1183,16 @@ instance [AddMonoidₓ α] : AddMonoidₓ (WithTop α) :=
 
 instance [AddCommMonoidₓ α] : AddCommMonoidₓ (WithTop α) :=
   { WithTop.addMonoid, WithTop.addCommSemigroup with }
+
+instance [AddMonoidWithOneₓ α] : AddMonoidWithOneₓ (WithTop α) :=
+  { WithTop.hasOne, WithTop.addMonoid with natCast := fun n => ↑(n : α),
+    nat_cast_zero := by
+      rw [Nat.cast_zeroₓ, WithTop.coe_zero],
+    nat_cast_succ := fun n => by
+      rw [Nat.cast_add_one, WithTop.coe_add, WithTop.coe_one] }
+
+instance [AddCommMonoidWithOne α] : AddCommMonoidWithOne (WithTop α) :=
+  { WithTop.addMonoidWithOne, WithTop.addCommMonoid with }
 
 instance [OrderedAddCommMonoid α] : OrderedAddCommMonoid (WithTop α) :=
   { WithTop.partialOrder, WithTop.addCommMonoid with
@@ -1238,14 +1263,7 @@ protected def _root_.one_hom.with_top_map {M N : Type _} [One M] [One N] (f : On
 protected def _root_.add_hom.with_top_map {M N : Type _} [Add M] [Add N] (f : AddHom M N) :
     AddHom (WithTop M) (WithTop N) where
   toFun := WithTop.map f
-  map_add' := fun x y =>
-    match x, y with
-    | ⊤, y => by
-      rw [top_add, map_top, top_add]
-    | x, ⊤ => by
-      rw [add_top, map_top, add_top]
-    | (x : M), (y : M) => by
-      simp only [coe_add, ← map_coe, ← map_add]
+  map_add' := WithTop.map_add f
 
 /-- A version of `with_top.map` for `add_monoid_hom`s. -/
 @[simps (config := { fullyApplied := false })]
@@ -1278,6 +1296,12 @@ instance [AddMonoidₓ α] : AddMonoidₓ (WithBot α) :=
 
 instance [AddCommMonoidₓ α] : AddCommMonoidₓ (WithBot α) :=
   WithTop.addCommMonoid
+
+instance [AddMonoidWithOneₓ α] : AddMonoidWithOneₓ (WithBot α) :=
+  WithTop.addMonoidWithOne
+
+instance [AddCommMonoidWithOne α] : AddCommMonoidWithOne (WithBot α) :=
+  WithTop.addCommMonoidWithOne
 
 instance [Zero α] [One α] [LE α] [ZeroLeOneClass α] : ZeroLeOneClass (WithBot α) :=
   ⟨some_le_some.2 zero_le_one⟩
@@ -1338,6 +1362,33 @@ theorem add_coe_eq_bot_iff : a + y = ⊥ ↔ a = ⊥ :=
 @[simp]
 theorem coe_add_eq_bot_iff : ↑x + b = ⊥ ↔ b = ⊥ :=
   WithTop.coe_add_eq_top_iff
+
+--  There is no `with_bot.map_mul_of_mul_hom`, since `with_bot` does not have a multiplication.
+@[simp]
+protected theorem map_add {F} [Add β] [AddHomClass F α β] (f : F) (a b : WithBot α) :
+    (a + b).map f = a.map f + b.map f :=
+  WithTop.map_add f a b
+
+/-- A version of `with_bot.map` for `one_hom`s. -/
+@[to_additive "A version of `with_bot.map` for `zero_hom`s", simps (config := { fullyApplied := false })]
+protected def _root_.one_hom.with_bot_map {M N : Type _} [One M] [One N] (f : OneHom M N) :
+    OneHom (WithBot M) (WithBot N) where
+  toFun := WithBot.map f
+  map_one' := by
+    rw [WithBot.map_one, map_one, coe_one]
+
+/-- A version of `with_bot.map` for `add_hom`s. -/
+@[simps (config := { fullyApplied := false })]
+protected def _root_.add_hom.with_bot_map {M N : Type _} [Add M] [Add N] (f : AddHom M N) :
+    AddHom (WithBot M) (WithBot N) where
+  toFun := WithBot.map f
+  map_add' := WithBot.map_add f
+
+/-- A version of `with_bot.map` for `add_monoid_hom`s. -/
+@[simps (config := { fullyApplied := false })]
+protected def _root_.add_monoid_hom.with_bot_map {M N : Type _} [AddZeroClassₓ M] [AddZeroClassₓ N] (f : M →+ N) :
+    WithBot M →+ WithBot N :=
+  { f.toZeroHom.with_bot_map, f.toAddHom.with_bot_map with toFun := WithBot.map f }
 
 variable [Preorderₓ α]
 

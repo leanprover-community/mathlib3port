@@ -30,7 +30,7 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 has as its objects `D`-morphisms of the form `S ⟶ T Y`, for some `Y : C`,
 and morphisms `C`-morphisms `Y ⟶ Y'` making the obvious triangle commute.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def StructuredArrow (S : D) (T : C ⥤ D) :=
   Comma (Functor.fromPunit S) T deriving Category
 
@@ -62,11 +62,6 @@ theorem mk_hom_eq_self (f : S ⟶ T.obj Y) : (mk f).Hom = f :=
 @[simp, reassoc]
 theorem w {A B : StructuredArrow S T} (f : A ⟶ B) : A.Hom ≫ T.map f.right = B.Hom := by
   have := f.w <;> tidy
-
-theorem eq_mk (f : StructuredArrow S T) : f = mk f.Hom := by
-  cases f
-  congr
-  ext
 
 /-- To construct a morphism of structured arrows,
 we need a morphism of the objects underlying the target,
@@ -102,6 +97,20 @@ def isoMk {f f' : StructuredArrow S T} (g : f.right ≅ f'.right) (w : f.Hom ≫
     g
     (by
       simpa [← eq_to_hom_map] using w.symm)
+
+/-- Eta rule for structured arrows. Prefer `structured_arrow.eta`, since equality of objects tends
+    to cause problems. -/
+theorem eq_mk (f : StructuredArrow S T) : f = mk f.Hom := by
+  cases f
+  congr
+  ext
+
+/-- Eta rule for structured arrows. -/
+@[simps]
+def eta (f : StructuredArrow S T) : f ≅ mk f.Hom :=
+  isoMk (Iso.refl _)
+    (by
+      tidy)
 
 /-- A morphism between source objects `S ⟶ S'`
 contravariantly induces a functor between structured arrows,
@@ -177,7 +186,7 @@ end StructuredArrow
 has as its objects `D`-morphisms of the form `S Y ⟶ T`, for some `Y : C`,
 and morphisms `C`-morphisms `Y ⟶ Y'` making the obvious triangle commute.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def CostructuredArrow (S : C ⥤ D) (T : D) :=
   Comma S (Functor.fromPunit T)deriving Category
 
@@ -210,11 +219,6 @@ theorem mk_hom_eq_self (f : S.obj Y ⟶ T) : (mk f).Hom = f :=
 theorem w {A B : CostructuredArrow S T} (f : A ⟶ B) : S.map f.left ≫ B.Hom = A.Hom := by
   tidy
 
-theorem eq_mk (f : CostructuredArrow S T) : f = mk f.Hom := by
-  cases f
-  congr
-  ext
-
 /-- To construct a morphism of costructured arrows,
 we need a morphism of the objects underlying the source,
 and to check that the triangle commutes.
@@ -241,6 +245,20 @@ def isoMk {f f' : CostructuredArrow S T} (g : f.left ≅ f'.left) (w : S.map g.H
         ext))
     (by
       simpa [← eq_to_hom_map] using w)
+
+/-- Eta rule for costructured arrows. Prefer `costructured_arrow.eta`, as equality of objects tends
+    to cause problems. -/
+theorem eq_mk (f : CostructuredArrow S T) : f = mk f.Hom := by
+  cases f
+  congr
+  ext
+
+/-- Eta rule for costructured arrows. -/
+@[simps]
+def eta (f : CostructuredArrow S T) : f ≅ mk f.Hom :=
+  isoMk (Iso.refl _)
+    (by
+      tidy)
 
 /-- A morphism between target objects `T ⟶ T'`
 covariantly induces a functor between costructured arrows,
@@ -328,7 +346,7 @@ def toCostructuredArrow (F : C ⥤ D) (d : D) : (StructuredArrow d F)ᵒᵖ ⥤ 
     CostructuredArrow.homMk f.unop.right.op
       (by
         dsimp'
-        rw [← op_comp, ← f.unop.w, functor.const.obj_map]
+        rw [← op_comp, ← f.unop.w, functor.const_obj_map]
         erw [category.id_comp])
 
 /-- For a functor `F : C ⥤ D` and an object `d : D`, we obtain a contravariant functor from the
@@ -343,7 +361,7 @@ def toCostructuredArrow' (F : C ⥤ D) (d : D) : (StructuredArrow (op d) F.op)�
       (by
         dsimp'
         rw [← Quiver.Hom.unop_op (F.map (Quiver.Hom.unop f.unop.right)), ← unop_comp, ← F.op_map, ← f.unop.w,
-          functor.const.obj_map]
+          functor.const_obj_map]
         erw [category.id_comp])
 
 end StructuredArrow
@@ -361,7 +379,7 @@ def toStructuredArrow (F : C ⥤ D) (d : D) : (CostructuredArrow F d)ᵒᵖ ⥤ 
     StructuredArrow.homMk f.unop.left.op
       (by
         dsimp'
-        rw [← op_comp, f.unop.w, functor.const.obj_map]
+        rw [← op_comp, f.unop.w, functor.const_obj_map]
         erw [category.comp_id])
 
 /-- For a functor `F : C ⥤ D` and an object `d : D`, we obtain a contravariant functor from the
@@ -375,7 +393,7 @@ def toStructuredArrow' (F : C ⥤ D) (d : D) : (CostructuredArrow F.op (op d))�
     StructuredArrow.homMk f.unop.left.unop
       (by
         dsimp'
-        rw [← Quiver.Hom.unop_op (F.map f.unop.left.unop), ← unop_comp, ← F.op_map, f.unop.w, functor.const.obj_map]
+        rw [← Quiver.Hom.unop_op (F.map f.unop.left.unop), ← unop_comp, ← F.op_map, f.unop.w, functor.const_obj_map]
         erw [category.comp_id])
 
 end CostructuredArrow

@@ -42,8 +42,8 @@ variable [dec_ι : DecidableEq ι] [Preorderₓ ι]
 
 variable (G : ι → Type w)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`map_self] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`map_map] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`map_self] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`map_map] []
 /-- A directed system is a functor from a category (directed poset) to another category. -/
 class DirectedSystem (f : ∀ i j, i ≤ j → G i → G j) : Prop where
   map_self : ∀ i x h, f i i h x = x
@@ -112,7 +112,7 @@ theorem exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)] (z : DirectLimit G f
         ⟨k, f i k hik x + f j k hjk y, by
           rw [LinearMap.map_add, of_f, of_f, ihx, ihy] <;> rfl⟩
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : DirectLimit G f → Prop} (z : DirectLimit G f)
     (ih : ∀ i x, C (of R ι G f i x)) : C z :=
   let ⟨i, x, h⟩ := exists_of z
@@ -235,7 +235,7 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : DirectS
 /-- A component that corresponds to zero in the direct limit is already zero in some
 bigger module in the directed system. -/
 theorem of.zero_exact [IsDirected ι (· ≤ ·)] {i x} (H : of R ι G f i x = 0) : ∃ j hij, f i j hij x = (0 : G j) :=
-  have : Nonempty ι := ⟨i⟩
+  haveI : Nonempty ι := ⟨i⟩
   let ⟨j, hj, hxj⟩ := of.zero_exact_aux H
   if hx0 : x = 0 then
     ⟨i, le_rfl, by
@@ -291,7 +291,7 @@ variable {G f}
 theorem of_f {i j} (hij) (x) : of G f j (f i j hij x) = of G f i x :=
   Module.DirectLimit.of_f
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : DirectLimit G f → Prop} (z : DirectLimit G f)
     (ih : ∀ i x, C (of G f i x)) : C z :=
   Module.DirectLimit.induction_on z ih
@@ -432,7 +432,7 @@ theorem Polynomial.exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)]
 
 end
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction_on [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : DirectLimit G f → Prop} (z : DirectLimit G f)
     (ih : ∀ i x, C (of G f i x)) : C z :=
   let ⟨i, x, hx⟩ := exists_of z
@@ -590,7 +590,7 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
 bigger module in the directed system. -/
 theorem of.zero_exact [IsDirected ι (· ≤ ·)] {i x} (hix : of G (fun i j h => f' i j h) i x = 0) :
     ∃ (j : _)(hij : i ≤ j), f' i j hij x = 0 :=
-  have : Nonempty ι := ⟨i⟩
+  haveI : Nonempty ι := ⟨i⟩
   let ⟨j, s, H, hxs, hx⟩ := of.zero_exact_aux hix
   have hixs : (⟨i, x⟩ : Σi, G i) ∈ s := is_supported_of.1 hxs
   ⟨j, H ⟨i, x⟩ hixs, by

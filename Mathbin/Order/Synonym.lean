@@ -109,7 +109,7 @@ theorem to_dual_lt [LT α] {a : α} {b : αᵒᵈ} : toDual a < b ↔ ofDual b <
   Iff.rfl
 
 /-- Recursor for `αᵒᵈ`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 protected def rec {C : αᵒᵈ → Sort _} (h₂ : ∀ a : α, C (toDual a)) : ∀ a : αᵒᵈ, C a :=
   h₂
 

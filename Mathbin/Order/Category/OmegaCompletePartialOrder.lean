@@ -133,7 +133,7 @@ instance : HasEqualizers ωCPO.{v} :=
   has_equalizers_of_has_limit_parallel_pair _
 
 instance : HasLimits ωCPO.{v} :=
-  limits_from_equalizers_and_products
+  has_limits_of_has_equalizers_and_products
 
 end
 

@@ -110,7 +110,7 @@ theorem append1_drop_last (α : Typevec (n + 1)) : Append1 (Drop α) (Last α) =
     cases i <;> rfl
 
 /-- cases on `(n+1)-length` vectors -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def append1Cases {C : Typevec (n + 1) → Sort u} (H : ∀ α β, C (Append1 α β)) (γ) : C γ := by
   rw [← @append1_drop_last _ γ] <;> apply H
 

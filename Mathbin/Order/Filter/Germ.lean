@@ -117,16 +117,16 @@ theorem quot_mk_eq_coe (l : Filter α) (f : α → β) : Quot.mk _ f = (f : Germ
 theorem mk'_eq_coe (l : Filter α) (f : α → β) : Quotientₓ.mk' f = (f : Germ l β) :=
   rfl
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction_on (f : Germ l β) {p : Germ l β → Prop} (h : ∀ f : α → β, p f) : p f :=
   Quotientₓ.induction_on' f h
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction_on₂ (f : Germ l β) (g : Germ l γ) {p : Germ l β → Germ l γ → Prop}
     (h : ∀ (f : α → β) (g : α → γ), p f g) : p f g :=
   Quotientₓ.induction_on₂' f g h
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction_on₃ (f : Germ l β) (g : Germ l γ) (h : Germ l δ) {p : Germ l β → Germ l γ → Germ l δ → Prop}
     (H : ∀ (f : α → β) (g : α → γ) (h : α → δ), p f g h) : p f g h :=
   Quotientₓ.induction_on₃' f g h H
@@ -345,9 +345,8 @@ instance [Monoidₓ M] : Monoidₓ (Germ l M) :=
 def coeMulHom [Monoidₓ M] (l : Filter α) : (α → M) →* Germ l M :=
   ⟨coe, rfl, fun f g => rfl⟩
 
-/-- coercion from functions to germs as an additive monoid homomorphism. -/
-add_decl_doc coe_add_hom
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident coe_add_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, to_additive]
 theorem coe_coe_mul_hom [Monoidₓ M] : (coeMulHom l : (α → M) → Germ l M) = coe :=
   rfl

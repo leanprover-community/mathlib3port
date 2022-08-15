@@ -333,7 +333,7 @@ a fixed choice of limit data for the empty functor, and for `pair X Y` for every
 
 This is an implementation detail for `symmetric_of_chosen_finite_products`.
 -/
-@[nolint unused_arguments has_inhabited_instance]
+@[nolint unused_arguments has_nonempty_instance]
 def MonoidalOfChosenFiniteProductsSynonym (𝒯 : LimitCone (Functor.empty.{v} C)) (ℬ : ∀ X Y : C, LimitCone (pair X Y)) :=
   C deriving Category
 

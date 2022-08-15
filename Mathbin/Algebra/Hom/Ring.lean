@@ -60,14 +60,10 @@ structure NonUnitalRingHom (α β : Type _) [NonUnitalNonAssocSemiringₓ α] [N
 -- mathport name: «expr →ₙ+* »
 infixr:25 " →ₙ+* " => NonUnitalRingHom
 
-/-- Reinterpret a non-unital ring homomorphism `f : α →ₙ+* β` as a semigroup
-homomorphism `α →ₙ* β`. The `simp`-normal form is `(f : α →ₙ* β)`. -/
-add_decl_doc NonUnitalRingHom.toMulHom
-
-/-- Reinterpret a non-unital ring homomorphism `f : α →ₙ+* β` as an additive
-monoid homomorphism `α →+ β`. The `simp`-normal form is `(f : α →+ β)`. -/
-add_decl_doc NonUnitalRingHom.toAddMonoidHom
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident non_unital_ring_hom.to_mul_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident non_unital_ring_hom.to_add_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 section NonUnitalRingHomClass
 
 /-- `non_unital_ring_hom_class F α β` states that `F` is a type of non-unital (semi)ring
@@ -306,22 +302,14 @@ structure RingHom (α : Type _) (β : Type _) [NonAssocSemiringₓ α] [NonAssoc
 -- mathport name: «expr →+* »
 infixr:25 " →+* " => RingHom
 
-/-- Reinterpret a ring homomorphism `f : α →+* β` as a monoid with zero homomorphism `α →*₀ β`.
-The `simp`-normal form is `(f : α →*₀ β)`. -/
-add_decl_doc RingHom.toMonoidWithZeroHom
-
-/-- Reinterpret a ring homomorphism `f : α →+* β` as a monoid homomorphism `α →* β`.
-The `simp`-normal form is `(f : α →* β)`. -/
-add_decl_doc RingHom.toMonoidHom
-
-/-- Reinterpret a ring homomorphism `f : α →+* β` as an additive monoid homomorphism `α →+ β`.
-The `simp`-normal form is `(f : α →+ β)`. -/
-add_decl_doc RingHom.toAddMonoidHom
-
-/-- Reinterpret a ring homomorphism `f : α →+* β` as a non-unital ring homomorphism `α →ₙ+* β`. The
-`simp`-normal form is `(f : α →ₙ+* β)`. -/
-add_decl_doc RingHom.toNonUnitalRingHom
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident ring_hom.to_monoid_with_zero_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident ring_hom.to_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident ring_hom.to_add_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident ring_hom.to_non_unital_ring_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 section RingHomClass
 
 /-- `ring_hom_class F α β` states that `F` is a type of (semi)ring homomorphisms.
@@ -520,6 +508,9 @@ theorem domain_nontrivial [Nontrivial β] : Nontrivial α :=
           show f 1 = 0 by
             rw [h, map_zero])
         f.map_one_ne_zero⟩⟩
+
+theorem codomain_trivial (f : α →+* β) [h : Subsingleton α] : Subsingleton β :=
+  (subsingleton_or_nontrivial β).resolve_right fun _ => not_nontrivial_iff_subsingleton.mpr h f.domain_nontrivial
 
 end
 

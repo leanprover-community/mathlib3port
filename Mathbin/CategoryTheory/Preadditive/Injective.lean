@@ -23,11 +23,11 @@ open CategoryTheory.Limits
 
 open Opposite
 
-universe v u
+universe v v₁ v₂ u₁ u₂
 
 namespace CategoryTheory
 
-variable {C : Type u} [Category.{v} C]
+variable {C : Type u₁} [Category.{v₁} C]
 
 /-- An object `J` is injective iff every morphism into `J` can be obtained by extending a monomorphism.
 -/
@@ -39,7 +39,7 @@ section
 /-- An injective presentation of an object `X` consists of a monomorphism `f : X ⟶ J`
 to some injective object `J`.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure InjectivePresentation (X : C) where
   j : C
   Injective : Injective J := by
@@ -91,7 +91,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
   ⟨of_iso i, of_iso i.symm⟩
 
 /-- The axiom of choice says that every nonempty type is an injective object in `Type`. -/
-instance (X : Type u) [Nonempty X] :
+instance (X : Type u₁) [Nonempty X] :
     Injective X where Factors := fun Y Z g f mono =>
     ⟨fun z => by
       classical <;> exact if h : z ∈ Set.Range f then g (Classical.some h) else Nonempty.some inferInstance, by
@@ -107,7 +107,7 @@ instance (X : Type u) [Nonempty X] :
 instance Type.enough_injectives :
     EnoughInjectives
       (Type
-        u) where presentation := fun X =>
+        u₁) where presentation := fun X =>
     Nonempty.intro
       { j := WithBot X, Injective := inferInstance, f := Option.some,
         mono := by
@@ -193,6 +193,23 @@ theorem injective_iff_preserves_epimorphisms_yoneda_obj (J : C) : Injective J �
   by
   rw [injective_iff_projective_op, projective.projective_iff_preserves_epimorphisms_coyoneda_obj]
   exact functor.preserves_epimorphisms.iso_iff (coyoneda.obj_op_op _)
+
+section Adjunction
+
+open CategoryTheory.Functor
+
+variable {D : Type u₂} [Category.{v₂} D]
+
+variable {L : C ⥤ D} {R : D ⥤ C} [PreservesMonomorphisms L]
+
+theorem injective_of_adjoint (adj : L ⊣ R) (J : D) [Injective J] : injective <| R.obj J :=
+  ⟨fun A A' g f im =>
+    ⟨adj.hom_equiv _ _ (factor_thru ((adj.hom_equiv A J).symm g) (L.map f)),
+      (adj.hom_equiv _ _).symm.Injective
+        (by
+          simp )⟩⟩
+
+end Adjunction
 
 section EnoughInjectives
 

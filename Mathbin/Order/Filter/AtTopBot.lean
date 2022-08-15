@@ -192,11 +192,11 @@ theorem at_top_basis_Ioi [Nonempty α] [SemilatticeSup α] [NoMaxOrder α] : (@a
 
 theorem at_top_countable_basis [Nonempty α] [SemilatticeSup α] [Encodable α] :
     HasCountableBasis (atTop : Filter α) (fun _ => True) Ici :=
-  { at_top_basis with Countable := countable_encodable _ }
+  { at_top_basis with Countable := to_countable _ }
 
 theorem at_bot_countable_basis [Nonempty α] [SemilatticeInf α] [Encodable α] :
     HasCountableBasis (atBot : Filter α) (fun _ => True) Iic :=
-  { at_bot_basis with Countable := countable_encodable _ }
+  { at_bot_basis with Countable := to_countable _ }
 
 instance (priority := 200) atTop.is_countably_generated [Preorderₓ α] [Encodable α] :
     (atTop : Filter <| α).IsCountablyGenerated :=
@@ -216,7 +216,7 @@ theorem OrderBot.at_bot_eq (α) [PartialOrderₓ α] [OrderBot α] : (atBot : Fi
 @[nontriviality]
 theorem Subsingleton.at_top_eq (α) [Subsingleton α] [Preorderₓ α] : (atTop : Filter α) = ⊤ := by
   refine' top_unique fun s hs x => _
-  let this : Unique α := ⟨⟨x⟩, fun y => Subsingleton.elimₓ y x⟩
+  letI : Unique α := ⟨⟨x⟩, fun y => Subsingleton.elimₓ y x⟩
   rw [at_top, infi_unique, Unique.default_eq x, mem_principal] at hs
   exact hs left_mem_Ici
 
@@ -388,7 +388,7 @@ theorem extraction_forall_of_eventually' {P : ℕ → ℕ → Prop} (h : ∀ n, 
 theorem exists_le_of_tendsto_at_top [SemilatticeSup α] [Preorderₓ β] {u : α → β} (h : Tendsto u atTop atTop) (a : α)
     (b : β) : ∃ a' ≥ a, b ≤ u a' := by
   have : ∀ᶠ x in at_top, a ≤ x ∧ b ≤ u x := (eventually_ge_at_top a).And (h.eventually <| eventually_ge_at_top b)
-  have : Nonempty α := ⟨a⟩
+  haveI : Nonempty α := ⟨a⟩
   rcases this.exists with ⟨a', ha, hb⟩
   exact ⟨a', ha, hb⟩
 
@@ -432,7 +432,10 @@ theorem high_scores [LinearOrderₓ β] [NoMaxOrder β] {u : ℕ → β} (hu : T
       
     · exact hn_min l hl H
       
-  calc u l ≤ u k := hlk _ < u n := hnk
+  calc
+    u l ≤ u k := hlk
+    _ < u n := hnk
+    
 
 /-- If `u` is a sequence which is unbounded below,
 then after any point, it reaches a value strictly smaller than all previous values.
@@ -1068,7 +1071,7 @@ theorem map_coe_at_top_of_Ici_subset [SemilatticeSup α] {a : α} {s : Set α} (
     use ⟨x⊔y⊔a, h le_sup_right⟩
     simp only [← ge_iff_le, ← principal_mono, ← Ici_subset_Ici, Subtype.coe_le_coe, ← Subtype.coe_mk]
     exact ⟨le_sup_left.trans le_sup_left, le_sup_right.trans le_sup_left⟩
-  have : Nonempty s := ⟨⟨a, h le_rfl⟩⟩
+  haveI : Nonempty s := ⟨⟨a, h le_rfl⟩⟩
   simp only [← le_antisymm_iffₓ, ← at_top, ← le_infi_iff, ← le_principal_iff, ← mem_map, ← mem_set_of_eq, ←
     map_infi_eq this, ← map_principal]
   constructor
@@ -1223,7 +1226,10 @@ theorem unbounded_of_tendsto_at_top [Nonempty α] [SemilatticeSup α] [Preorder�
   rintro ⟨M, hM⟩
   cases' mem_at_top_sets.mp (h <| Ioi_mem_at_top M) with a ha
   apply lt_irreflₓ M
-  calc M < f a := ha a le_rfl _ ≤ M := hM (Set.mem_range_self a)
+  calc
+    M < f a := ha a le_rfl
+    _ ≤ M := hM (Set.mem_range_self a)
+    
 
 theorem unbounded_of_tendsto_at_bot [Nonempty α] [SemilatticeSup α] [Preorderₓ β] [NoMinOrder β] {f : α → β}
     (h : Tendsto f atTop atBot) : ¬BddBelow (Range f) :=
@@ -1443,7 +1449,7 @@ theorem exists_le_mul_self (a : R) : ∃ x ≥ 0, a ≤ x * x :=
 
 end
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ∉ » set.range g)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ∉ » set.range g)
 /-- Let `g : γ → β` be an injective function and `f : β → α` be a function from the codomain of `g`
 to a commutative monoid. Suppose that `f x = 1` outside of the range of `g`. Then the filters
 `at_top.map (λ s, ∏ i in s, f (g i))` and `at_top.map (λ s, ∏ i in s, f i)` coincide.
@@ -1469,11 +1475,5 @@ theorem Function.Injective.map_at_top_finset_prod_eq [CommMonoidₓ α] {g : γ 
     exact ⟨_, (image_subset_iff_subset_preimage _).1 ht, rfl⟩
     
 
-/-- Let `g : γ → β` be an injective function and `f : β → α` be a function from the codomain of `g`
-to an additive commutative monoid. Suppose that `f x = 0` outside of the range of `g`. Then the
-filters `at_top.map (λ s, ∑ i in s, f (g i))` and `at_top.map (λ s, ∑ i in s, f i)` coincide.
-
-This lemma is used to prove the equality `∑' x, f (g x) = ∑' y, f y` under
-the same assumptions.-/
-add_decl_doc Function.Injective.map_at_top_finset_sum_eq
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident function.injective.map_at_top_finset_sum_eq]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg

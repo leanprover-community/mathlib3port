@@ -22,7 +22,7 @@ We also provide `ulift.mul_equiv : ulift R ≃* R` (and its additive analogue).
 
 universe u v
 
-variable {α : Type u} {x y : ULift.{v} α}
+variable {α : Type u} {β : Type _} {x y : ULift.{v} α}
 
 namespace ULift
 
@@ -58,6 +58,22 @@ instance hasInv [Inv α] : Inv (ULift α) :=
 theorem inv_down [Inv α] : x⁻¹.down = x.down⁻¹ :=
   rfl
 
+@[to_additive]
+instance hasSmul [HasSmul α β] : HasSmul α (ULift β) :=
+  ⟨fun n x => up (n • x.down)⟩
+
+@[simp, to_additive]
+theorem smul_down [HasSmul α β] (a : α) (b : ULift.{v} β) : (a • b).down = a • b.down :=
+  rfl
+
+@[to_additive HasSmul, to_additive_reorder 1]
+instance hasPow [Pow α β] : Pow (ULift α) β :=
+  ⟨fun x n => up (x.down ^ n)⟩
+
+@[simp, to_additive smul_down, to_additive_reorder 1]
+theorem pow_down [Pow α β] (a : ULift.{v} α) (b : β) : (a ^ b).down = a.down ^ b :=
+  rfl
+
 /-- The multiplicative equivalence between `ulift α` and `α`.
 -/
 @[to_additive "The additive equivalence between `ulift α` and `α`."]
@@ -80,20 +96,16 @@ instance mulZeroOneClass [MulZeroOneClassₓ α] : MulZeroOneClassₓ (ULift α)
   (Equivₓ.ulift.Injective.MulZeroOneClass _ rfl rfl) fun x y => rfl
 
 @[to_additive]
-instance hasSmul {β : Type _} [HasSmul α β] : HasSmul α (ULift β) :=
-  ⟨fun n x => up (n • x.down)⟩
-
-@[to_additive HasSmul, to_additive_reorder 1]
-instance hasPow {β : Type _} [Pow α β] : Pow (ULift α) β :=
-  ⟨fun x n => up (x.down ^ n)⟩
-
-@[to_additive]
 instance monoid [Monoidₓ α] : Monoidₓ (ULift α) :=
   Equivₓ.ulift.Injective.Monoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
 instance addMonoidWithOne [AddMonoidWithOneₓ α] : AddMonoidWithOneₓ (ULift α) :=
   { ULift.hasOne, ULift.addMonoid with natCast := fun n => ⟨n⟩, nat_cast_zero := congr_arg ULift.up Nat.cast_zeroₓ,
     nat_cast_succ := fun n => congr_arg ULift.up (Nat.cast_succₓ _) }
+
+@[simp]
+theorem nat_cast_down [AddMonoidWithOneₓ α] (n : ℕ) : (n : ULift α).down = n :=
+  rfl
 
 @[to_additive]
 instance commMonoid [CommMonoidₓ α] : CommMonoidₓ (ULift α) :=
@@ -118,6 +130,10 @@ instance addGroupWithOne [AddGroupWithOneₓ α] : AddGroupWithOneₓ (ULift α)
   { ULift.addMonoidWithOne, ULift.addGroup with intCast := fun n => ⟨n⟩,
     int_cast_of_nat := fun n => congr_arg ULift.up (Int.cast_of_nat _),
     int_cast_neg_succ_of_nat := fun n => congr_arg ULift.up (Int.cast_neg_succ_of_nat _) }
+
+@[simp]
+theorem int_cast_down [AddGroupWithOneₓ α] (n : ℤ) : (n : ULift α).down = n :=
+  rfl
 
 @[to_additive]
 instance commGroup [CommGroupₓ α] : CommGroupₓ (ULift α) :=

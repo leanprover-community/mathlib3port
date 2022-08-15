@@ -29,7 +29,7 @@ the continuum hypothesis*][flypitch_itp]
 -/
 
 
-universe u v u' v' w
+universe u v u' v' w w'
 
 namespace FirstOrder
 
@@ -196,7 +196,15 @@ class IsExpansionOn (M : Type _) [L.Structure M] [L'.Structure M] : Prop where
   map_on_function : ∀ {n} (f : L.Functions n) (x : Finₓ n → M), funMap (ϕ.onFunction f) x = funMap f x
   map_on_relation : ∀ {n} (R : L.Relations n) (x : Finₓ n → M), RelMap (ϕ.onRelation R) x = RelMap R x
 
-attribute [simp] is_expansion_on.map_on_function is_expansion_on.map_on_relation
+@[simp]
+theorem map_on_function {M : Type _} [L.Structure M] [L'.Structure M] [ϕ.IsExpansionOn M] {n} (f : L.Functions n)
+    (x : Finₓ n → M) : funMap (ϕ.onFunction f) x = funMap f x :=
+  IsExpansionOn.map_on_function f x
+
+@[simp]
+theorem map_on_relation {M : Type _} [L.Structure M] [L'.Structure M] [ϕ.IsExpansionOn M] {n} (R : L.Relations n)
+    (x : Finₓ n → M) : RelMap (ϕ.onRelation R) x = RelMap R x :=
+  IsExpansionOn.map_on_relation R x
 
 instance id_is_expansion_on (M : Type _) [L.Structure M] : IsExpansionOn (Lhom.id L) M :=
   ⟨fun _ _ _ => rfl, fun _ _ _ => rfl⟩
@@ -243,9 +251,19 @@ instance sum_inr_is_expansion_on (M : Type _) [L.Structure M] [L'.Structure M] :
     (Lhom.sumInr : L' →ᴸ L.Sum L').IsExpansionOn M :=
   ⟨fun _ f _ => rfl, fun _ R _ => rfl⟩
 
+@[simp]
+theorem fun_map_sum_inl [(L.Sum L').Structure M] [(Lhom.sumInl : L →ᴸ L.Sum L').IsExpansionOn M] {n} {f : L.Functions n}
+    {x : Finₓ n → M} : @funMap (L.Sum L') M _ n (Sum.inl f) x = funMap f x :=
+  (Lhom.sumInl : L →ᴸ L.Sum L').map_on_function f x
+
+@[simp]
+theorem fun_map_sum_inr [(L'.Sum L).Structure M] [(Lhom.sumInr : L →ᴸ L'.Sum L).IsExpansionOn M] {n} {f : L.Functions n}
+    {x : Finₓ n → M} : @funMap (L'.Sum L) M _ n (Sum.inr f) x = funMap f x :=
+  (Lhom.sumInr : L →ᴸ L'.Sum L).map_on_function f x
+
 instance (priority := 100) is_expansion_on_reduct (ϕ : L →ᴸ L') (M : Type _) [L'.Structure M] :
     @IsExpansionOn L L' ϕ M (ϕ.reduct M) _ := by
-  let this := ϕ.reduct M
+  letI := ϕ.reduct M
   exact ⟨fun _ f _ => rfl, fun _ R _ => rfl⟩
 
 end Lhom
@@ -329,8 +347,8 @@ def Lhom.constantsOnMap (f : α → β) : constantsOn α →ᴸ constantsOn β :
 
 theorem constants_on_map_is_expansion_on {f : α → β} {fα : α → M} {fβ : β → M} (h : fβ ∘ f = fα) :
     @Lhom.IsExpansionOn _ _ (Lhom.constantsOnMap f) M (constantsOn.structure fα) (constantsOn.structure fβ) := by
-  let this := constants_on.Structure fα
-  let this := constants_on.Structure fβ
+  letI := constants_on.Structure fα
+  letI := constants_on.Structure fβ
   exact ⟨fun n => Nat.casesOn n (fun F x => (congr_fun h F : _)) fun n F => isEmptyElim F, fun _ R => isEmptyElim R⟩
 
 end ConstantsOn
@@ -341,17 +359,17 @@ variable (L)
 
 section
 
-variable (α : Type w)
+variable (α : Type w')
 
 /-- Extends a language with a constant for each element of a parameter set in `M`. -/
-def withConstants : Language.{max u w, v} :=
+def withConstants : Language.{max u w', v} :=
   L.Sum (constantsOn α)
 
 -- mathport name: «expr [[ ]]»
 localized [FirstOrder] notation:95 L "[[" α "]]" => L.withConstants α
 
 @[simp]
-theorem card_with_constants : L[[α]].card = Cardinal.lift.{w} L.card + Cardinal.lift.{max u v} (# α) := by
+theorem card_with_constants : L[[α]].card = Cardinal.lift.{w'} L.card + Cardinal.lift.{max u v} (# α) := by
   rw [with_constants, card_sum, card_constants_on]
 
 /-- The language map adding constants.  -/
@@ -388,6 +406,16 @@ def Lequiv.addEmptyConstants [ie : IsEmpty α] : L ≃ᴸ L[[α]] where
     exact trans (congr rfl (Subsingleton.elimₓ _ _)) Lhom.sum_elim_inl_inr
 
 variable {α} {β : Type _}
+
+@[simp]
+theorem with_constants_fun_map_sum_inl [L[[α]].Structure M] [(lhomWithConstants L α).IsExpansionOn M] {n}
+    {f : L.Functions n} {x : Finₓ n → M} : @funMap (L[[α]]) M _ n (Sum.inl f) x = funMap f x :=
+  (lhomWithConstants L α).map_on_function f x
+
+@[simp]
+theorem with_constants_rel_map_sum_inl [L[[α]].Structure M] [(lhomWithConstants L α).IsExpansionOn M] {n}
+    {R : L.Relations n} {x : Finₓ n → M} : @RelMap (L[[α]]) M _ n (Sum.inl R) x = RelMap R x :=
+  (lhomWithConstants L α).map_on_relation R x
 
 /-- The language map extending the constant set.  -/
 def lhomWithConstantsMap (f : α → β) : L[[α]] →ᴸ L[[β]] :=
@@ -429,6 +457,12 @@ instance add_empty_constants_symm_is_expansion_on :
 instance add_constants_expansion {L' : Language} [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M] :
     (φ.addConstants α).IsExpansionOn M :=
   Lhom.sum_map_is_expansion_on _ _ M
+
+@[simp]
+theorem with_constants_fun_map_sum_inr {a : α} {x : Finₓ 0 → M} :
+    @funMap (L[[α]]) M _ 0 (Sum.inr a : L[[α]].Functions 0) x = L.con a := by
+  rw [Unique.eq_default x]
+  exact (Lhom.sum_inr : constants_on α →ᴸ L.sum _).map_on_function _ _
 
 variable {α} (A : Set M)
 

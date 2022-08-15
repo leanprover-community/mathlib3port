@@ -29,8 +29,9 @@ manifold, smooth bump function
 
 universe uE uF uH uM
 
-variable {E : Type uE} [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] {H : Type uH} [TopologicalSpace H]
-  (I : ModelWithCorners ℝ E H) {M : Type uM} [TopologicalSpace M] [ChartedSpace H M] [SmoothManifoldWithCorners I M]
+variable {E : Type uE} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] {H : Type uH}
+  [TopologicalSpace H] (I : ModelWithCorners ℝ E H) {M : Type uM} [TopologicalSpace M] [ChartedSpace H M]
+  [SmoothManifoldWithCorners I M]
 
 open Function Filter FiniteDimensional Set
 
@@ -304,12 +305,15 @@ protected theorem continuous : Continuous f :=
 
 /-- If `f : smooth_bump_function I c` is a smooth bump function and `g : M → G` is a function smooth
 on the source of the chart at `c`, then `f • g` is smooth on the whole manifold. -/
-theorem smooth_smul {G} [NormedGroup G] [NormedSpace ℝ G] {g : M → G} (hg : SmoothOn I 𝓘(ℝ, G) g (chartAt H c).Source) :
-    Smooth I 𝓘(ℝ, G) fun x => f x • g x := by
+theorem smooth_smul {G} [NormedAddCommGroup G] [NormedSpace ℝ G] {g : M → G}
+    (hg : SmoothOn I 𝓘(ℝ, G) g (chartAt H c).Source) : Smooth I 𝓘(ℝ, G) fun x => f x • g x := by
   apply cont_mdiff_of_support fun x hx => _
   have : x ∈ (chart_at H c).Source
-  calc x ∈ Tsupport fun x => f x • g x := hx _ ⊆ Tsupport f :=
-      closure_mono (support_smul_subset_left _ _)_ ⊆ (chart_at _ c).Source := f.tsupport_subset_chart_at_source
+  calc
+    x ∈ Tsupport fun x => f x • g x := hx
+    _ ⊆ Tsupport f := tsupport_smul_subset_left _ _
+    _ ⊆ (chart_at _ c).Source := f.tsupport_subset_chart_at_source
+    
   exact f.smooth_at.smul ((hg _ this).ContMdiffAt <| IsOpen.mem_nhds (chart_at _ _).open_source this)
 
 end SmoothBumpFunction

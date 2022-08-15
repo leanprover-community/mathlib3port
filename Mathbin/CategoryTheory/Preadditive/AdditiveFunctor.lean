@@ -70,6 +70,9 @@ theorem map_neg {X Y : C} {f : X ⟶ Y} : F.map (-f) = -F.map f :=
 theorem map_sub {X Y : C} {f g : X ⟶ Y} : F.map (f - g) = F.map f - F.map g :=
   (F.mapAddHom : (X ⟶ Y) →+ (F.obj X ⟶ F.obj Y)).map_sub _ _
 
+theorem map_nsmul {X Y : C} {f : X ⟶ Y} {n : ℕ} : F.map (n • f) = n • F.map f :=
+  (F.mapAddHom : (X ⟶ Y) →+ (F.obj X ⟶ F.obj Y)).map_nsmul _ _
+
 -- You can alternatively just use `functor.map_smul` here, with an explicit `(r : ℤ)` argument.
 theorem map_zsmul {X Y : C} {f : X ⟶ Y} {r : ℤ} : F.map (r • f) = r • F.map f :=
   (F.mapAddHom : (X ⟶ Y) →+ (F.obj X ⟶ F.obj Y)).map_zsmul _ _
@@ -117,6 +120,7 @@ instance (priority := 100) preservesFiniteBiproductsOfAdditive [Additive F] :
                 refine' congr_arg _ (hb.is_limit.hom_ext fun j => hb.is_colimit.hom_ext fun j' => _)
                 cases j
                 cases j'
+                dsimp' only [← limits.bicone.to_cone_π_app]
                 simp [← sum_comp, ← comp_sum, ← bicone.ι_π, ← comp_dite, ← dite_comp]) } }
 
 theorem additive_of_preserves_binary_biproducts [HasBinaryBiproducts C] [PreservesZeroMorphisms F]
@@ -145,9 +149,9 @@ section
 variable (C D : Type _) [Category C] [Category D] [Preadditive C] [Preadditive D]
 
 /-- Bundled additive functors. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def AdditiveFunctor :=
-  { F : C ⥤ D // Functor.Additive F }deriving Category
+  FullSubcategory fun F : C ⥤ D => F.Additive deriving Category
 
 -- mathport name: «expr ⥤+ »
 infixr:26 " ⥤+ " => AdditiveFunctor

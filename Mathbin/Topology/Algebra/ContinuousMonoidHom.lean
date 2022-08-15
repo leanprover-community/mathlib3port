@@ -64,12 +64,10 @@ class ContinuousMonoidHomClass (F α β : Type _) [Monoidₓ α] [Monoidₓ β] 
   [TopologicalSpace β] extends MonoidHomClass F α β where
   map_continuous (f : F) : Continuous f
 
-/-- Reinterpret a `continuous_monoid_hom` as a `monoid_hom`. -/
-add_decl_doc ContinuousMonoidHom.toMonoidHom
-
-/-- Reinterpret a `continuous_add_monoid_hom` as an `add_monoid_hom`. -/
-add_decl_doc ContinuousAddMonoidHom.toAddMonoidHom
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident continuous_monoid_hom.to_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident continuous_add_monoid_hom.to_add_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- See note [lower instance priority]
 @[to_additive]
 instance (priority := 100) ContinuousMonoidHomClass.toContinuousMapClass [Monoidₓ α] [Monoidₓ β] [TopologicalSpace α]
@@ -216,8 +214,8 @@ theorem is_inducing : Inducing (toContinuousMap : ContinuousMonoidHom A B → C(
 theorem is_embedding : Embedding (toContinuousMap : ContinuousMonoidHom A B → C(A, B)) :=
   ⟨is_inducing A B, to_continuous_map_injective⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (x y)
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (U V W)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (x y)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (U V W)
 theorem is_closed_embedding [HasContinuousMul B] [T2Space B] :
     ClosedEmbedding (toContinuousMap : ContinuousMonoidHom A B → C(A, B)) :=
   ⟨is_embedding A B,

@@ -39,14 +39,14 @@ uniform bound. Namely, over the `x` and `y` of norm `1`, `∥x + y∥` is unifor
 by a constant `< 2` when `∥x - y∥` is uniformly bounded below by a positive constant.
 
 See also `uniform_convex_space.of_uniform_convex_closed_unit_ball`. -/
-class UniformConvexSpace (E : Type _) [SemiNormedGroup E] : Prop where
+class UniformConvexSpace (E : Type _) [SeminormedAddCommGroup E] : Prop where
   uniform_convex : ∀ ⦃ε : ℝ⦄, 0 < ε → ∃ δ, 0 < δ ∧ ∀ ⦃x : E⦄, ∥x∥ = 1 → ∀ ⦃y⦄, ∥y∥ = 1 → ε ≤ ∥x - y∥ → ∥x + y∥ ≤ 2 - δ
 
 variable {E : Type _}
 
-section SemiNormedGroup
+section SeminormedAddCommGroup
 
-variable (E) [SemiNormedGroup E] [UniformConvexSpace E] {ε : ℝ}
+variable (E) [SeminormedAddCommGroup E] [UniformConvexSpace E] {ε : ℝ}
 
 theorem exists_forall_sphere_dist_add_le_two_sub (hε : 0 < ε) :
     ∃ δ, 0 < δ ∧ ∀ ⦃x : E⦄, ∥x∥ = 1 → ∀ ⦃y⦄, ∥y∥ = 1 → ε ≤ ∥x - y∥ → ∥x + y∥ ≤ 2 - δ :=
@@ -91,17 +91,20 @@ theorem exists_forall_closed_ball_dist_add_le_two_sub (hε : 0 < ε) :
         rw [sub_le_iff_le_add, norm_sub_rev _ x, ← add_assocₓ, this]
         exact norm_add₃_le _ _ _
       
-  calc ∥x + y∥ ≤ ∥x' + y'∥ + ∥x' - x∥ + ∥y' - y∥ := by
+  calc
+    ∥x + y∥ ≤ ∥x' + y'∥ + ∥x' - x∥ + ∥y' - y∥ := by
       have : ∀ x' y', x + y = x' + y' + (x - x') + (y - y') := fun _ _ => by
         abel
       rw [norm_sub_rev, norm_sub_rev y', this]
-      exact norm_add₃_le _ _ _ _ ≤ 2 - δ + δ' + δ' :=
-      add_le_add_three (h (h₁ _ hx') (h₁ _ hy') hxy') (h₂ _ hx hx'.le) (h₂ _ hy hy'.le)_ ≤ 2 - δ' := by
+      exact norm_add₃_le _ _ _
+    _ ≤ 2 - δ + δ' + δ' := add_le_add_three (h (h₁ _ hx') (h₁ _ hy') hxy') (h₂ _ hx hx'.le) (h₂ _ hy hy'.le)
+    _ ≤ 2 - δ' := by
       rw [← le_sub_iff_add_le, ← le_sub_iff_add_le, sub_sub, sub_sub]
       refine' sub_le_sub_left _ _
       ring_nf
       rw [← mul_div_cancel' δ three_ne_zero]
       exact mul_le_mul_of_nonneg_left (min_le_of_right_le <| min_le_rightₓ _ _) three_pos.le
+    
 
 theorem exists_forall_closed_ball_dist_add_le_two_mul_sub (hε : 0 < ε) (r : ℝ) :
     ∃ δ, 0 < δ ∧ ∀ ⦃x : E⦄, ∥x∥ ≤ r → ∀ ⦃y⦄, ∥y∥ ≤ r → ε ≤ ∥x - y∥ → ∥x + y∥ ≤ 2 * r - δ := by
@@ -120,9 +123,9 @@ theorem exists_forall_closed_ball_dist_add_le_two_mul_sub (hε : 0 < ε) (r : �
     div_le_iff hr, sub_mul] at this
   exact this hxy
 
-end SemiNormedGroup
+end SeminormedAddCommGroup
 
-variable [NormedGroup E] [NormedSpace ℝ E] [UniformConvexSpace E]
+variable [NormedAddCommGroup E] [NormedSpace ℝ E] [UniformConvexSpace E]
 
 -- See note [lower instance priority]
 instance (priority := 100) UniformConvexSpace.to_strict_convex_space : StrictConvexSpace ℝ E :=

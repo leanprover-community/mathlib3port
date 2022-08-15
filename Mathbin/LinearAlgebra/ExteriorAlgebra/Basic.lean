@@ -117,7 +117,7 @@ theorem hom_ext {f g : ExteriorAlgebra R M →ₐ[R] A} (h : f.toLinearMap.comp 
 /-- If `C` holds for the `algebra_map` of `r : R` into `exterior_algebra R M`, the `ι` of `x : M`,
 and is preserved under addition and muliplication, then it holds for all of `exterior_algebra R M`.
 -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction {C : ExteriorAlgebra R M → Prop} (h_grade0 : ∀ r, C (algebraMap R (ExteriorAlgebra R M) r))
     (h_grade1 : ∀ x, C (ι R x)) (h_mul : ∀ a b, C a → C b → C (a * b)) (h_add : ∀ a b, C a → C b → C (a + b))
     (a : ExteriorAlgebra R M) : C a :=
@@ -278,7 +278,7 @@ theorem ι_multi_succ_apply {n : ℕ} (v : Finₓ n.succ → M) : ιMulti R _ v 
   (congr_arg List.prod (List.of_fn_succ _)).trans List.prod_cons
 
 theorem ι_multi_succ_curry_left {n : ℕ} (m : M) :
-    (ιMulti R n.succ).curryLeft m = (Algebra.lmulLeft R (ι R m)).compAlternatingMap (ιMulti R n) :=
+    (ιMulti R n.succ).curryLeft m = (LinearMap.mulLeft R (ι R m)).compAlternatingMap (ιMulti R n) :=
   AlternatingMap.ext fun v =>
     (ι_multi_succ_apply _).trans <| by
       simp_rw [Matrix.tail_cons]

@@ -37,7 +37,7 @@ variable {ι X : Type _} [TopologicalSpace X] [NormalSpace X]
 
 namespace ShrinkingLemma
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ∉ » carrier)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (i «expr ∉ » carrier)
 /-- Auxiliary definition for the proof of `shrinking_lemma`. A partial refinement of a covering
 `⋃ i, u i` of a set `s` is a map `v : ι → set X` and a set `carrier : set ι` such that
 
@@ -50,7 +50,7 @@ This type is equipped with the folowing partial order: `v ≤ v'` if `v.carrier 
 and `v i = v' i` for `i ∈ v.carrier`. We will use Zorn's lemma to prove that this type has
 a maximal element, then show that the maximal element must have `carrier = univ`. -/
 -- the trivial refinement needs `u` to be a covering
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure PartialRefinement (u : ι → Set X) (s : Set X) where
   toFun : ι → Set X
   Carrier : Set ι
@@ -131,7 +131,7 @@ theorem find_apply_of_mem {c : Set (PartialRefinement u s)} (hc : IsChain (· �
     (hv : v ∈ c) (hi : i ∈ Carrier v) : find c Ne i i = v i :=
   apply_eq_of_chain hc (find_mem _ _) hv ((mem_find_carrier_iff _).2 <| mem_Union₂.2 ⟨v, hv, hi⟩) hi
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ∉ » chain_Sup_carrier c)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (i «expr ∉ » chain_Sup_carrier c)
 /-- Least upper bound of a nonempty chain of partial refinements. -/
 def chainSup (c : Set (PartialRefinement u s)) (hc : IsChain (· ≤ ·) c) (ne : c.Nonempty)
     (hfin : ∀, ∀ x ∈ s, ∀, { i | x ∈ u i }.Finite) (hU : s ⊆ ⋃ i, u i) : PartialRefinement u s := by
@@ -144,7 +144,7 @@ def chainSup (c : Set (PartialRefinement u s)) (hc : IsChain (· ≤ ·) c) (ne 
     rwa [(find c Ne i).apply_eq (mt (mem_find_carrier_iff _).1 hi)]
     
   · simp_rw [not_exists, not_imp_not, chain_Sup_carrier, mem_Union₂] at hx
-    have : Nonempty (partial_refinement u s) := ⟨ne.some⟩
+    haveI : Nonempty (partial_refinement u s) := ⟨ne.some⟩
     choose! v hvc hiv using hx
     rcases(hfin x hxs).exists_maximal_wrt v _ (mem_Union.1 (hU hxs)) with
       ⟨i, hxi : x ∈ u i, hmax : ∀ j, x ∈ u j → v i ≤ v j → v i = v j⟩
@@ -161,9 +161,9 @@ theorem le_chain_Sup {c : Set (PartialRefinement u s)} (hc : IsChain (· ≤ ·)
     v ≤ chainSup c hc Ne hfin hU :=
   ⟨fun i hi => mem_bUnion hv hi, fun i hi => (find_apply_of_mem hc _ hv hi).symm⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (j «expr ≠ » i)
 /-- If `s` is a closed set, `v` is a partial refinement, and `i` is an index such that
 `i ∉ v.carrier`, then there exists a partial refinement that is strictly greater than `v`. -/
 theorem exists_gt (v : PartialRefinement u s) (hs : IsClosed s) (i : ι) (hi : i ∉ v.Carrier) :
@@ -223,7 +223,7 @@ theorem exists_subset_Union_closure_subset (hs : IsClosed s) (uo : ∀ i, IsOpen
     (uf : ∀, ∀ x ∈ s, ∀, { i | x ∈ u i }.Finite) (us : s ⊆ ⋃ i, u i) :
     ∃ v : ι → Set X, s ⊆ Union v ∧ (∀ i, IsOpen (v i)) ∧ ∀ i, Closure (v i) ⊆ u i := by
   classical
-  have : Nonempty (partial_refinement u s) := ⟨⟨u, ∅, uo, us, fun _ => False.elim, fun _ _ => rfl⟩⟩
+  haveI : Nonempty (partial_refinement u s) := ⟨⟨u, ∅, uo, us, fun _ => False.elim, fun _ _ => rfl⟩⟩
   have : ∀ c : Set (partial_refinement u s), IsChain (· ≤ ·) c → c.Nonempty → ∃ ub, ∀, ∀ v ∈ c, ∀, v ≤ ub :=
     fun c hc ne => ⟨partial_refinement.chain_Sup c hc Ne uf us, fun v hv => partial_refinement.le_chain_Sup _ _ _ _ hv⟩
   rcases zorn_nonempty_partial_order this with ⟨v, hv⟩

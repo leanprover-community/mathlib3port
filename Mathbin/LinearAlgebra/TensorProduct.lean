@@ -122,7 +122,7 @@ infixl:100 " ⊗ₜ " => tmul _
 -- mathport name: «expr ⊗ₜ[ ] »
 notation:100 x " ⊗ₜ[" R "] " y:100 => tmul R x y
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on {C : M ⊗[R] N → Prop} (z : M ⊗[R] N) (C0 : C 0) (C1 : ∀ {x y}, C <| x ⊗ₜ[R] y)
     (Cp : ∀ {x y}, C x → C y → C (x + y)) : C z :=
   (AddCon.induction_on z) fun x =>
@@ -1003,9 +1003,15 @@ theorem ltensor_comp : (g.comp f).ltensor M = (g.ltensor M).comp (f.ltensor M) :
   ext m n
   simp only [← compr₂_apply, ← mk_apply, ← comp_apply, ← ltensor_tmul]
 
+theorem ltensor_comp_apply (x : M ⊗[R] N) : (g.comp f).ltensor M x = (g.ltensor M) ((f.ltensor M) x) := by
+  rw [ltensor_comp, coe_comp]
+
 theorem rtensor_comp : (g.comp f).rtensor M = (g.rtensor M).comp (f.rtensor M) := by
   ext m n
   simp only [← compr₂_apply, ← mk_apply, ← comp_apply, ← rtensor_tmul]
+
+theorem rtensor_comp_apply (x : N ⊗[R] M) : (g.comp f).rtensor M x = (g.rtensor M) ((f.rtensor M) x) := by
+  rw [rtensor_comp, coe_comp]
 
 theorem ltensor_mul (f g : Module.End R N) : (f * g).ltensor M = f.ltensor M * g.ltensor M :=
   ltensor_comp M f g
@@ -1019,9 +1025,17 @@ variable (N)
 theorem ltensor_id : (id : N →ₗ[R] N).ltensor M = id :=
   map_id
 
+-- `simp` can prove this.
+theorem ltensor_id_apply (x : M ⊗[R] N) : (LinearMap.id : N →ₗ[R] N).ltensor M x = x := by
+  rw [ltensor_id, id_coe, id.def]
+
 @[simp]
 theorem rtensor_id : (id : N →ₗ[R] N).rtensor M = id :=
   map_id
+
+-- `simp` can prove this.
+theorem rtensor_id_apply (x : N ⊗[R] M) : (LinearMap.id : N →ₗ[R] N).rtensor M x = x := by
+  rw [rtensor_id, id_coe, id.def]
 
 variable {N}
 

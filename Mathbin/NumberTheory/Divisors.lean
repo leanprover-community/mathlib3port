@@ -51,7 +51,7 @@ def properDivisors : Finset ℕ :=
 /-- `divisors_antidiagonal n` is the `finset` of pairs `(x,y)` such that `x * y = n`.
   As a special case, `divisors_antidiagonal 0 = ∅`. -/
 def divisorsAntidiagonal : Finset (ℕ × ℕ) :=
-  ((Finset.ico 1 (n + 1)).product (Finset.ico 1 (n + 1))).filter fun x => x.fst * x.snd = n
+  (ico 1 (n + 1) ×ˢ ico 1 (n + 1)).filter fun x => x.fst * x.snd = n
 
 variable {n}
 

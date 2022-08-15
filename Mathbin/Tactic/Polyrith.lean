@@ -5,6 +5,7 @@ Authors: Dhruv Bhatia, Eric Wieser
 -/
 import Mathbin.Tactic.LinearCombination
 import Mathbin.Data.Buffer.Parser.Numeral
+import Mathbin.Data.Json
 
 /-!
 
@@ -73,6 +74,7 @@ inductive Poly
   | sub : poly → poly → poly
   | mul : poly → poly → poly
   | pow : poly → ℕ → poly
+  | neg : poly → poly
   deriving DecidableEq
 
 /-- This converts a poly object into a string representing it. The string
@@ -88,6 +90,7 @@ unsafe def poly.mk_string : Poly → Stringₓ
   | poly.sub p q => "(" ++ poly.mk_string p ++ " - " ++ poly.mk_string q ++ ")"
   | poly.mul p q => "(" ++ poly.mk_string p ++ " * " ++ poly.mk_string q ++ ")"
   | poly.pow p n => toString <| f!"({(poly.mk_string p)} ^ {n})"
+  | poly.neg p => "-" ++ poly.mk_string p
 
 unsafe instance : Add Poly :=
   ⟨Poly.add⟩
@@ -100,6 +103,9 @@ unsafe instance : Mul Poly :=
 
 unsafe instance : Pow Poly ℕ :=
   ⟨Poly.pow⟩
+
+unsafe instance : Neg Poly :=
+  ⟨Poly.neg⟩
 
 unsafe instance : HasRepr Poly :=
   ⟨poly.mk_string⟩
@@ -159,7 +165,7 @@ unsafe def poly_form_of_expr (red : Transparency) : List expr → expr → tacti
     return (m', comp1 - comp2)
   | m, quote.1 (-%%ₓe) => do
     let (m', comp) ← poly_form_of_expr m e
-    return (m', poly.const (-1) * comp)
+    return (m', -comp)
   | m, p@(quote.1 (@Pow.pow _ ℕ _ (%%ₓe) (%%ₓn))) =>
     match n.toNat with
     | some k => do
@@ -180,8 +186,8 @@ The following section contains code that can convert an a `poly` object into a `
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `n
+-- ./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `n
 /-- This can convert a `poly` into a `pexpr` that would evaluate to a polynomial.
 To do so, it uses a list `m` of expressions, the atomic expressions that appear in the `poly`.
 The index of an expression in this list corresponds to its `poly.var` argument: that is,
@@ -195,7 +201,7 @@ unsafe def poly.to_pexpr : List expr → Poly → tactic pexpr
   | _, poly.const z => return z.to_pexpr
   | m, poly.var n => do
     let some e ← return <| m.nth n |
-      "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
     return (pquote.1 (%%ₓe))
   | m, poly.add p q => do
     let p_pexpr ← poly.to_pexpr m p
@@ -212,6 +218,9 @@ unsafe def poly.to_pexpr : List expr → Poly → tactic pexpr
   | m, poly.pow p n => do
     let p_pexpr ← poly.to_pexpr m p
     return (pquote.1 ((%%ₓp_pexpr) ^ n (%%ₓn.to_pexpr)))
+  | m, poly.neg p => do
+    let p_pexpr ← poly.to_pexpr m p
+    return (pquote.1 (-%%ₓp_pexpr))
 
 /-!
 # Parsing SageMath output into a poly
@@ -236,7 +245,7 @@ to the appropriate `poly` object representing a rational coefficient.
 Here, `r` is a rational number
 -/
 unsafe def const_fraction_parser : Parser Poly :=
-  str "poly.const " >> poly.const <$> parser.rat
+  str "poly.const " >> poly.const <$> Parser.rat
 
 /-- A parser object that parses `string`s of the form `"poly.add p q"`
 to the appropriate `poly` object representing the sum of two `poly`s.
@@ -267,70 +276,68 @@ and `n` is a natural number.
 unsafe def pow_parser (cont : Parser Poly) : Parser Poly :=
   str "poly.pow " >> poly.pow <$> cont <*> (ch ' ' >> Nat)
 
+/-- A parser object that parses `string`s of the form `"poly.neg p"`
+to the appropriate `poly` object representing the negation of a `poly`.
+Here, `p` is the string form of a `poly`.
+-/
+unsafe def neg_parser (cont : Parser Poly) : Parser Poly :=
+  str "poly.neg " >> poly.neg <$> cont
+
 /-- A parser for `poly` that uses an s-essresion style formats such as
 `(poly.add (poly.var 0) (poly.const 1)`. -/
 unsafe def poly_parser : Parser Poly :=
   ch '(' *>
       (var_parser <|>
         const_fraction_parser <|>
-          add_parser poly_parser <|> sub_parser poly_parser <|> mul_parser poly_parser <|> pow_parser poly_parser) <*
+          add_parser poly_parser <|>
+            sub_parser poly_parser <|> mul_parser poly_parser <|> pow_parser poly_parser <|> neg_parser poly_parser) <*
     ch ')'
+
+unsafe instance : non_null_json_serializable Poly where
+  to_json := fun p => json.null
+  -- we don't actually need this, but the typeclass asks for it
+  of_json := fun j => do
+    let s ← of_json Stringₓ j
+    match poly_parser s with
+      | Sum.inl s =>
+        exceptional.fail
+          f! "unable to parse polynomial from.
+            
+            {s}"
+      | Sum.inr p => pure p
+
+/-- A schema for success messages from the python script -/
+structure SageJsonSuccess where
+  success : { b : Bool // b = tt }
+  trace : Option Stringₓ := none
+  data : Option (List Poly) := none
+  deriving non_null_json_serializable, Inhabited
+
+/-- A schema for failure messages from the python script -/
+structure SageJsonFailure where
+  success : { b : Bool // b = ff }
+  errorName : Stringₓ
+  errorValue : Stringₓ
+  deriving non_null_json_serializable, Inhabited
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Parse the json output from `scripts/polyrith.py` into either an error message, a list of `poly`
 objects, or `none` if only trace output was requested. -/
 unsafe def convert_sage_output (j : json) : tactic (Option (List Poly)) := do
-  let json.object obj ← pure j |
-    "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
-  let obj := Rbmap.fromList obj
-  let json.of_bool success ← obj.find "success" |
-    "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
-  if success then do
-      do
-        let some t ← pure (obj "trace") | skip
-        let json.of_string t ← pure t |
-          "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
-        tactic.trace t
-      do
-        let some d ← pure (obj "data") | pure none
-        let json.array l ← some d |
-          "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
-        let l ←
-          l fun x => do
-              let json.of_string poly_s ← pure x |
-                "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
-              pure poly_s
-        let l ←
-          l fun x =>
-              match poly_parser x with
-              | Sum.inl s =>
-                "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
-              | Sum.inr p => pure p
-        pure l
-    else do
-      let json.of_string kind ← obj "error_name"
-      let json.of_string message ← obj "error_value"
-      "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+  let r : Sum sage_json_success sage_json_failure ←
+    decorate_ex "internal json error: "
+        (-- try the error format first, so that if both fail we get the message from the success parser
+            Sum.inr <$>
+            of_json SageJsonFailure j <|>
+          Sum.inl <$> of_json SageJsonSuccess j)
+  match r with
+    | Sum.inr f =>
+      "./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    | Sum.inl s => do
+      s trace
+      pure s
 
 /-!
 # Parsing context into poly
@@ -409,7 +416,7 @@ The following section contains code that allows lean to communicate with a pytho
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- This tactic calls python from the command line with the args in `arg_list`.
 The output printed to the console is returned as a `string`.
 It assumes that `python3` is available on the path.
@@ -419,7 +426,7 @@ unsafe def sage_output (arg_list : List Stringₓ := []) : tactic json := do
   let args := [path ++ "../scripts/polyrith_sage.py"] ++ arg_list
   let s ← unsafe_run_io <| Io.cmd { cmd := "python3", args }
   let some j ← pure (json.parse s) |
-    "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   pure j
 
 /-- Adds parentheses around additions and subtractions, for printing at
@@ -490,22 +497,29 @@ unsafe def create_args (only_on : Bool) (hyps : List pexpr) : tactic (List expr 
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- The second half of `tactic.polyrith` processes the output from Sage into
 a call to `linear_combination`.
 -/
-unsafe def process_output (eq_names : List expr) (m : List expr) (R : expr) (sage_out : json) : tactic format := do
-  let some coeffs_as_poly ← convert_sage_output sage_out |
-    "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
-  let coeffs_as_pexpr ← coeffs_as_poly.mmap (poly.to_pexpr m)
-  let eq_names_pexpr := eq_names.map to_pexpr
-  let coeffs_as_expr ← coeffs_as_pexpr.mmap fun e => to_expr (pquote.1 (%%ₓe : %%ₓR))
-  linear_combo.linear_combination eq_names_pexpr coeffs_as_pexpr
-  let components := (eq_names.zip coeffs_as_expr).filter fun pr => bnot <| pr.2.is_app_of `has_zero.zero
-  let expr_string ← components_to_lc_format components
-  return <| "linear_combination " ++ format.nest 2 (format.group expr_string)
+unsafe def process_output (eq_names : List expr) (m : List expr) (R : expr) (sage_out : json) : tactic format :=
+  focus1 <| do
+    let some coeffs_as_poly ← convert_sage_output sage_out |
+      "./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    let coeffs_as_pexpr ← coeffs_as_poly.mmap (poly.to_pexpr m)
+    let eq_names_pexpr := eq_names.map to_pexpr
+    let coeffs_as_expr ← coeffs_as_pexpr.mmap fun e => to_expr (pquote.1 (%%ₓe : %%ₓR))
+    linear_combo.linear_combination eq_names_pexpr coeffs_as_pexpr
+    let components := (eq_names.zip coeffs_as_expr).filter fun pr => bnot <| pr.2.is_app_of `has_zero.zero
+    let expr_string ← components_to_lc_format components
+    let lc_fmt : format := "linear_combination " ++ format.nest 2 (format.group expr_string)
+    done <|>
+        "./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    return <| "linear_combination " ++ format.nest 2 (format.group expr_string)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic for the special case when no hypotheses are available. -/
 unsafe def no_hypotheses_case : tactic (Option format) :=
   (do
@@ -513,7 +527,7 @@ unsafe def no_hypotheses_case : tactic (Option format) :=
       return <| some "ring") <|>
     fail "polyrith did not find any relevant hypotheses and the goal is not provable by ring"
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic for the special case when there are no variables. -/
 unsafe def no_variables_case : tactic (Option format) :=
   (do
@@ -610,7 +624,7 @@ unsafe def _root_.tactic.interactive.polyrith (restr : parse (tk "only")?) (hyps
 
 add_tactic_doc
   { Name := "polyrith", category := DocCategory.tactic, declNames := [`tactic.interactive.polyrith],
-    tags := ["arithmetic", "automation", "polynomial", "grobner", "groebner"] }
+    tags := ["arithmetic", "finishing", "decision procedure"] }
 
 end Polyrith
 

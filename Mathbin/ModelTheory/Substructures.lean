@@ -277,7 +277,7 @@ variable (L)
 
 theorem _root_.set.countable.substructure_closure [L.CountableFunctions] (h : s.Countable) :
     Nonempty (Encodable (closure L s)) := by
-  have : Nonempty (Encodable s) := h
+  haveI : Nonempty (Encodable s) := h
   rw [encodable_iff, ← lift_le_aleph_0]
   exact lift_card_closure_le_card_term.trans term.card_le_aleph_0
 
@@ -285,7 +285,7 @@ variable {L} (S)
 
 /-- An induction principle for closure membership. If `p` holds for all elements of `s`, and
 is preserved under function symbols, then `p` holds for all elements of the closure of `s`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure L s) (Hs : ∀, ∀ x ∈ s, ∀, p x)
     (Hfun : ∀ {n : ℕ} (f : L.Functions n), ClosedUnder f (SetOf p)) : p x :=
   (@closure_le L M _ ⟨SetOf p, fun n => Hfun⟩ _).2 Hs h
@@ -293,7 +293,7 @@ theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure L s) (Hs : ∀
 /-- If `s` is a dense set in a structure `M`, `substructure.closure L s = ⊤`, then in order to prove
 that some predicate `p` holds for all `x : M` it suffices to verify `p x` for `x ∈ s`, and verify
 that `p` is preserved under function symbols. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem dense_induction {p : M → Prop} (x : M) {s : Set M} (hs : closure L s = ⊤) (Hs : ∀, ∀ x ∈ s, ∀, p x)
     (Hfun : ∀ {n : ℕ} (f : L.Functions n), ClosedUnder f (SetOf p)) : p x := by
   have : ∀, ∀ x ∈ closure L s, ∀, p x := fun x hx => closure_induction hx Hs fun n => Hfun
@@ -556,7 +556,7 @@ theorem coe_top_equiv : ⇑(topEquiv : (⊤ : L.Substructure M) ≃[L] M) = coe 
   rfl
 
 /-- A dependent version of `substructure.closure_induction`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem closure_induction' (s : Set M) {p : ∀ x, x ∈ closure L s → Prop}
     (Hs : ∀ (x) (h : x ∈ s), p x (subset_closure h))
     (Hfun : ∀ {n : ℕ} (f : L.Functions n), ClosedUnder f { x | ∃ hx, p x hx }) {x} (hx : x ∈ closure L s) : p x hx := by
@@ -579,7 +579,7 @@ def substructureReduct : L'.Substructure M ↪o L.Substructure M where
     { Carrier := S,
       fun_mem := fun n f x hx => by
         have h := S.fun_mem (φ.on_function f) x hx
-        simp only [← is_expansion_on.map_on_function, ← substructure.mem_carrier] at h
+        simp only [← Lhom.map_on_function, ← substructure.mem_carrier] at h
         exact h }
   inj' := fun S T h => by
     simp only [← SetLike.coe_set_eq] at h

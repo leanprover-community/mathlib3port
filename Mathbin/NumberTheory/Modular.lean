@@ -116,7 +116,7 @@ section TendstoLemmas
 
 open Filter ContinuousLinearMap
 
-attribute [local instance] Matrix.normedGroup Matrix.normedSpace
+attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 attribute [local simp] coe_smul
 
@@ -303,7 +303,7 @@ theorem exists_max_im : ∃ g : SL(2, ℤ), ∀ g' : SL(2, ℤ), (g' • z).im �
   `|(g•z).re|`.  -/
 theorem exists_row_one_eq_and_min_re {cd : Finₓ 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) :
     ∃ g : SL(2, ℤ), ↑ₘg 1 = cd ∧ ∀ g' : SL(2, ℤ), ↑ₘg 1 = ↑ₘg' 1 → abs (g • z).re ≤ abs (g' • z).re := by
-  have : Nonempty { g : SL(2, ℤ) // ↑ₘg 1 = cd } :=
+  haveI : Nonempty { g : SL(2, ℤ) // ↑ₘg 1 = cd } :=
     let ⟨x, hx⟩ := bottom_row_surj hcd
     ⟨⟨x, hx.2⟩⟩
   obtain ⟨g, hg⟩ := Filter.Tendsto.exists_forall_le (tendsto_abs_re_smul z hcd)
@@ -315,59 +315,59 @@ theorem exists_row_one_eq_and_min_re {cd : Finₓ 2 → ℤ} (hcd : IsCoprime (c
     exact hg ⟨g1, this⟩
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
 /-- The matrix `T = [[1,1],[0,1]]` as an element of `SL(2,ℤ)` -/
 def t : SL(2, ℤ) :=
-  ⟨«expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation", by
-    norm_num [← Matrix.det_fin_two_of]⟩
+  ⟨«expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation", by
+    norm_num[← Matrix.det_fin_two_of]⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
 /-- The matrix `S = [[0,-1],[1,0]]` as an element of `SL(2,ℤ)` -/
 def s : SL(2, ℤ) :=
-  ⟨«expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation", by
-    norm_num [← Matrix.det_fin_two_of]⟩
+  ⟨«expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation", by
+    norm_num[← Matrix.det_fin_two_of]⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
 theorem coe_S :
-    ↑ₘS = «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation" :=
+    ↑ₘS = «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation" :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
 theorem coe_T :
-    ↑ₘT = «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation" :=
+    ↑ₘT = «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation" :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
 theorem coe_T_inv :
     ↑ₘT⁻¹ =
-      «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation" :=
+      «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation" :=
   by
   simp [← coe_inv, ← coe_T, ← adjugate_fin_two]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]]
--- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]]
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
 theorem coe_T_zpow (n : ℤ) :
     ↑ₘ(T ^ n) =
-      «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation" :=
+      «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation" :=
   by
   induction' n using Int.induction_on with n h n h
   · rw [zpow_zero, coe_one, Matrix.one_fin_two]
     
   · simp_rw [zpow_add, zpow_one, coe_mul, h, coe_T, Matrix.mul_fin_two]
     trace
-      "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, \",\", expr _, \";\", expr _, \",\", expr _, \"]\"] [])]]"
+      "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, \",\", expr _, \";\", expr _, \",\", expr _, \"]\"] [])]]"
     rw [mul_oneₓ, mul_oneₓ, add_commₓ]
     
   · simp_rw [zpow_sub, zpow_one, coe_mul, h, coe_T_inv, Matrix.mul_fin_two]
     trace
-        "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, \",\", expr _, \";\", expr _, \",\", expr _, \"]\"] [])]]" <;>
+        "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, \",\", expr _, \";\", expr _, \",\", expr _, \"]\"] [])]]" <;>
       ring
     
 
@@ -433,7 +433,7 @@ theorem exists_eq_T_zpow_of_c_eq_zero (hc : ↑ₘg 1 0 = 0) : ∃ n : ℤ, ∀ 
     fin_cases i <;> fin_cases j <;> simp [← ha, ← hc, ← hd, ← coe_T_zpow]
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]]
 -- If `c = 1`, then `g` factorises into a product terms involving only `T` and `S`.
 theorem g_eq_of_c_eq_one (hc : ↑ₘg 1 0 = 1) : g = T ^ ↑ₘg 0 0 * S * T ^ ↑ₘg 1 1 := by
   have hg := g.det_coe.symm
@@ -446,7 +446,7 @@ theorem g_eq_of_c_eq_one (hc : ↑ₘg 1 0 = 1) : g = T ^ ↑ₘg 0 0 * S * T ^ 
   rw [hc, hg]
   simp only [← coe_mul, ← coe_T_zpow, ← coe_S, ← mul_fin_two]
   trace
-      "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, \",\", expr _, \";\", expr _, \",\", expr _, \"]\"] [])]]" <;>
+      "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, \",\", expr _, \";\", expr _, \",\", expr _, \"]\"] [])]]" <;>
     ring
 
 /-- If `1 < |z|`, then `|S • z| < 1`. -/
@@ -501,8 +501,11 @@ theorem eq_zero_of_mem_fdo_of_T_zpow_mem_fdo {n : ℤ} (hz : z ∈ 𝒟ᵒ) (hg 
   have h₁ := hz.2
   have h₂ := hg.2
   rw [re_T_zpow_smul] at h₂
-  calc abs (n : ℝ) ≤ abs z.re + abs (z.re + (n : ℝ)) := abs_add' (n : ℝ) z.re _ < 1 / 2 + 1 / 2 :=
-      add_lt_add h₁ h₂ _ = 1 := add_halves 1
+  calc
+    abs (n : ℝ) ≤ abs z.re + abs (z.re + (n : ℝ)) := abs_add' (n : ℝ) z.re
+    _ < 1 / 2 + 1 / 2 := add_lt_add h₁ h₂
+    _ = 1 := add_halves 1
+    
 
 /-- Any `z : ℍ` can be moved to `𝒟` by an element of `SL(2,ℤ)`  -/
 theorem exists_smul_mem_fd (z : ℍ) : ∃ g : SL(2, ℤ), g • z ∈ 𝒟 := by
@@ -581,12 +584,16 @@ theorem abs_c_le_one (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : abs (↑�
   have h₂ : (c * z.im) ^ 4 / norm_sq (denom (↑g) z) ^ 2 ≤ 1 :=
     div_le_one_of_le (pow_four_le_pow_two_of_pow_two_le (UpperHalfPlane.c_mul_im_sq_le_norm_sq_denom z g)) (sq_nonneg _)
   let nsq := norm_sq (denom g z)
-  calc 9 * c ^ 4 < c ^ 4 * z.im ^ 2 * (g • z).im ^ 2 * 16 := by
-      linarith _ = c ^ 4 * z.im ^ 4 / nsq ^ 2 * 16 := by
+  calc
+    9 * c ^ 4 < c ^ 4 * z.im ^ 2 * (g • z).im ^ 2 * 16 := by
+      linarith
+    _ = c ^ 4 * z.im ^ 4 / nsq ^ 2 * 16 := by
       rw [special_linear_group.im_smul_eq_div_norm_sq, div_pow]
-      ring _ ≤ 16 := by
+      ring
+    _ ≤ 16 := by
       rw [← mul_powₓ]
       linarith
+    
 
 /-- An auxiliary result en route to `modular_group.eq_smul_self_of_mem_fdo_mem_fdo`. -/
 theorem c_eq_zero (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : ↑ₘg 1 0 = 0 := by

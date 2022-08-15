@@ -62,6 +62,14 @@ theorem linear_independent_single {φ : ι → Type _} {f : ∀ ι, φ ι → M}
       
     
 
+end Ringₓ
+
+section Semiringₓ
+
+variable {R : Type _} {M : Type _} {ι : Type _}
+
+variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
+
 open LinearMap Submodule
 
 /-- The basis on `ι →₀ M` with basis vectors `λ ⟨i, x⟩, single i (b i x)`. -/
@@ -124,7 +132,7 @@ protected def basisSingleOne : Basis ι R (ι →₀ R) :=
 theorem coe_basis_single_one : (Finsupp.basisSingleOne : ι → ι →₀ R) = fun i => Finsupp.single i 1 :=
   funext fun i => Basis.apply_eq_iff.mpr rfl
 
-end Ringₓ
+end Semiringₓ
 
 section Dim
 
@@ -158,8 +166,8 @@ open Module
 
 theorem equiv_of_dim_eq_lift_dim (h : Cardinal.lift.{w} (Module.rank K V) = Cardinal.lift.{v} (Module.rank K V')) :
     Nonempty (V ≃ₗ[K] V') := by
-  have := Classical.decEq V
-  have := Classical.decEq V'
+  haveI := Classical.decEq V
+  haveI := Classical.decEq V'
   let m := Basis.ofVectorSpace K V
   let m' := Basis.ofVectorSpace K V'
   rw [← Cardinal.lift_inj.1 m.mk_eq_dim, ← Cardinal.lift_inj.1 m'.mk_eq_dim] at h
@@ -192,12 +200,15 @@ variable (K V : Type u) [Field K] [AddCommGroupₓ V] [Module K V]
 theorem cardinal_mk_eq_cardinal_mk_field_pow_dim [FiniteDimensional K V] : # V = # K ^ Module.rank K V := by
   let s := Basis.OfVectorSpaceIndex K V
   let hs := Basis.ofVectorSpace K V
-  calc # V = # (s →₀ K) := Quotientₓ.sound ⟨hs.repr.to_equiv⟩_ = # (s → K) :=
-      Quotientₓ.sound ⟨Finsupp.equivFunOnFintype⟩_ = _ := by
+  calc
+    # V = # (s →₀ K) := Quotientₓ.sound ⟨hs.repr.to_equiv⟩
+    _ = # (s → K) := Quotientₓ.sound ⟨Finsupp.equivFunOnFintype⟩
+    _ = _ := by
       rw [← Cardinal.lift_inj.1 hs.mk_eq_dim, Cardinal.power_def]
+    
 
 theorem cardinal_lt_aleph_0_of_finite_dimensional [Fintype K] [FiniteDimensional K V] : # V < ℵ₀ := by
-  let this : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance
+  letI : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance
   rw [cardinal_mk_eq_cardinal_mk_field_pow_dim K V]
   exact Cardinal.power_lt_aleph_0 (Cardinal.lt_aleph_0_of_finite K) (IsNoetherian.dim_lt_aleph_0 K V)
 

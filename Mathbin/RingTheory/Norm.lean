@@ -25,7 +25,7 @@ The current definition is as general as possible and the assumption that we have
 fields or that the extension is finite is added to the lemmas as needed.
 
 We only define the norm for left multiplication (`algebra.left_mul_matrix`,
-i.e. `algebra.lmul_left`).
+i.e. `linear_map.mul_left`).
 For now, the definitions assume `S` is commutative, so the choice doesn't
 matter anyway.
 
@@ -82,11 +82,12 @@ variable {R}
 -- Can't be a `simp` lemma because it depends on a choice of basis
 theorem norm_eq_matrix_det [DecidableEq ι] (b : Basis ι R S) (s : S) :
     norm R s = Matrix.det (Algebra.leftMulMatrix b s) := by
-  rw [norm_apply, ← LinearMap.det_to_matrix b, to_matrix_lmul_eq]
+  rwa [norm_apply, ← LinearMap.det_to_matrix b, ← to_matrix_lmul_eq]
+  rfl
 
 /-- If `x` is in the base field `K`, then the norm is `x ^ [L : K]`. -/
 theorem norm_algebra_map_of_basis (b : Basis ι R S) (x : R) : norm R (algebraMap R S x) = x ^ Fintype.card ι := by
-  have := Classical.decEq ι
+  haveI := Classical.decEq ι
   rw [norm_apply, ← det_to_matrix b, lmul_algebra_map]
   convert @det_diagonal _ _ _ _ _ fun i : ι => x
   · ext i j
@@ -136,7 +137,7 @@ section EqZeroIff
 theorem norm_eq_zero_iff_of_basis [IsDomain R] [IsDomain S] (b : Basis ι R S) {x : S} : Algebra.norm R x = 0 ↔ x = 0 :=
   by
   have hι : Nonempty ι := b.index_nonempty
-  let this := Classical.decEq ι
+  letI := Classical.decEq ι
   rw [Algebra.norm_eq_matrix_det b]
   constructor
   · rw [← Matrix.exists_mul_vec_eq_zero_iff]
@@ -167,7 +168,7 @@ theorem norm_eq_zero_iff {K L : Type _} [Field K] [CommRingₓ L] [Algebra K L] 
 /-- This is `algebra.norm_eq_zero_iff` composed with `algebra.norm_apply`. -/
 @[simp]
 theorem norm_eq_zero_iff' {K L : Type _} [Field K] [CommRingₓ L] [Algebra K L] [IsDomain L] [FiniteDimensional K L]
-    {x : L} : LinearMap.det (Algebra.lmul K L x) = 0 ↔ x = 0 :=
+    {x : L} : LinearMap.det (LinearMap.mul K L x) = 0 ↔ x = 0 :=
   Algebra.norm_eq_zero_iff_of_basis (Basis.ofVectorSpace K L)
 
 end EqZeroIff
@@ -176,12 +177,12 @@ open IntermediateField
 
 variable (K)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem norm_eq_norm_adjoin [FiniteDimensional K L] [IsSeparable K L] (x : L) :
     norm K x = norm K (AdjoinSimple.gen K x) ^ finrank K⟮⟯ L := by
-  let this := is_separable_tower_top_of_is_separable K K⟮⟯ L
+  letI := is_separable_tower_top_of_is_separable K K⟮⟯ L
   let pbL := Field.powerBasisOfFiniteOfSeparable K⟮⟯ L
   let pbx := IntermediateField.adjoin.powerBasis (IsSeparable.is_integral K x)
   rw [← adjoin_simple.algebra_map_gen K x, norm_eq_matrix_det (pbx.basis.smul pbL.basis) _,
@@ -194,7 +195,7 @@ variable {K}
 
 section IntermediateField
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem _root_.intermediate_field.adjoin_simple.norm_gen_eq_one {x : L} (hx : ¬IsIntegral K x) :
     norm K (AdjoinSimple.gen K x) = 1 := by
   rw [norm_eq_one_of_not_exists_basis]
@@ -206,7 +207,7 @@ theorem _root_.intermediate_field.adjoin_simple.norm_gen_eq_one {x : L} (hx : ¬
   · exact IntermediateField.subset_adjoin K _ (Set.mem_singleton x)
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem _root_.intermediate_field.adjoin_simple.norm_gen_eq_prod_roots (x : L)
     (hf : (minpoly K x).Splits (algebraMap K F)) :
     (algebraMap K F) (norm K (AdjoinSimple.gen K x)) = ((minpoly K x).map (algebraMap K F)).roots.Prod := by
@@ -234,7 +235,7 @@ theorem norm_eq_prod_embeddings_gen {K L : Type _} [Field K] [CommRingₓ L] [Al
     [Algebra K E] (pb : PowerBasis K L) (hE : (minpoly K pb.gen).Splits (algebraMap K E))
     (hfx : (minpoly K pb.gen).Separable) :
     algebraMap K E (norm K pb.gen) = (@Finset.univ (PowerBasis.AlgHom.fintype pb)).Prod fun σ => σ pb.gen := by
-  let this := Classical.decEq E
+  letI := Classical.decEq E
   rw [power_basis.norm_gen_eq_prod_roots pb hE, Fintype.prod_equiv pb.lift_equiv', Finset.prod_mem_multiset,
     Finset.prod_eq_multiset_prod, Multiset.to_finset_val, multiset.dedup_eq_self.mpr, Multiset.map_id]
   · exact nodup_roots ((separable_map _).mpr hfx)
@@ -246,7 +247,7 @@ theorem norm_eq_prod_embeddings_gen {K L : Type _} [Field K] [CommRingₓ L] [Al
     rw [PowerBasis.lift_equiv'_apply_coe, id.def]
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem norm_eq_prod_roots [IsSeparable K L] [FiniteDimensional K L] {x : L}
     (hF : (minpoly K x).Splits (algebraMap K F)) :
     algebraMap K F (norm K x) = ((minpoly K x).map (algebraMap K F)).roots.Prod ^ finrank K⟮⟯ L := by
@@ -259,14 +260,14 @@ theorem prod_embeddings_eq_finrank_pow [Algebra L F] [IsScalarTower K L F] [IsAl
     (∏ σ : F →ₐ[K] E, σ (algebraMap L F pb.gen)) =
       ((@Finset.univ (PowerBasis.AlgHom.fintype pb)).Prod fun σ : L →ₐ[K] E => σ pb.gen) ^ finrank L F :=
   by
-  have : FiniteDimensional L F := FiniteDimensional.right K L F
-  have : IsSeparable L F := is_separable_tower_top_of_is_separable K L F
-  let this : Fintype (L →ₐ[K] E) := PowerBasis.AlgHom.fintype pb
-  let this : ∀ f : L →ₐ[K] E, Fintype (@AlgHom L F E _ _ _ _ f.to_ring_hom.to_algebra) := _
+  haveI : FiniteDimensional L F := FiniteDimensional.right K L F
+  haveI : IsSeparable L F := is_separable_tower_top_of_is_separable K L F
+  letI : Fintype (L →ₐ[K] E) := PowerBasis.AlgHom.fintype pb
+  letI : ∀ f : L →ₐ[K] E, Fintype (@AlgHom L F E _ _ _ _ f.to_ring_hom.to_algebra) := _
   rw [Fintype.prod_equiv algHomEquivSigma (fun σ : F →ₐ[K] E => _) fun σ => σ.1 pb.gen, ← Finset.univ_sigma_univ,
     Finset.prod_sigma, ← Finset.prod_pow]
   refine' Finset.prod_congr rfl fun σ _ => _
-  · let this : Algebra L E := σ.to_ring_hom.to_algebra
+  · letI : Algebra L E := σ.to_ring_hom.to_algebra
     simp only [← Finset.prod_const, ← Finset.card_univ]
     congr
     rw [AlgHom.card L F E]
@@ -278,7 +279,7 @@ theorem prod_embeddings_eq_finrank_pow [Algebra L F] [IsScalarTower K L F] [IsAl
 
 variable (K)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 /-- For `L/K` a finite separable extension of fields and `E` an algebraically closed extension
 of `K`, the norm (down to `K`) of an element `x` of `L` is equal to the product of the images
 of `x` over all the `K`-embeddings `σ`  of `L` into `E`. -/
@@ -289,7 +290,7 @@ theorem norm_eq_prod_embeddings [FiniteDimensional K L] [IsSeparable K L] [IsAlg
     norm_eq_prod_embeddings_gen E (adjoin.power_basis hx) (IsAlgClosed.splits_codomain _)]
   · exact (prod_embeddings_eq_finrank_pow L E (adjoin.power_basis hx)).symm
     
-  · have := is_separable_tower_bot_of_is_separable K K⟮⟯ L
+  · haveI := is_separable_tower_bot_of_is_separable K K⟮⟯ L
     exact IsSeparable.separable K _
     
 

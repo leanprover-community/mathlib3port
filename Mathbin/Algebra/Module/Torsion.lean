@@ -477,7 +477,7 @@ def IsTorsionBySet.hasSmul :
 
 @[simp]
 theorem IsTorsionBySet.mk_smul (b : R) (x : M) :
-    have := hM.has_smul
+    haveI := hM.has_smul
     Ideal.Quotient.mk I b • x = b • x :=
   rfl
 
@@ -629,7 +629,7 @@ theorem coe_torsion_eq_annihilator_ne_bot : (torsion R M : Set M) = { x : M | (R
 /-- A module over a domain has `no_zero_smul_divisors` iff its torsion submodule is trivial. -/
 theorem no_zero_smul_divisors_iff_torsion_eq_bot : NoZeroSmulDivisors R M ↔ torsion R M = ⊥ := by
   constructor <;> intro h
-  · have : NoZeroSmulDivisors R M := h
+  · haveI : NoZeroSmulDivisors R M := h
     rw [eq_bot_iff]
     rintro x ⟨a, hax⟩
     change (a : R) • x = 0 at hax

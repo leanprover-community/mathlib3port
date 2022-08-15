@@ -51,6 +51,12 @@ theorem lie_def (x y : A) : ⁅x,y⁆ = x * y - y * x :=
 
 end Ringₓ
 
+theorem commute_iff_lie_eq {x y : A} : Commute x y ↔ ⁅x,y⁆ = 0 :=
+  sub_eq_zero.symm
+
+theorem Commute.lie_eq {x y : A} (h : Commute x y) : ⁅x,y⁆ = 0 :=
+  sub_eq_zero_of_eq h
+
 namespace LieRing
 
 /-- An associative ring gives rise to a Lie ring by taking the bracket to be the ring commutator. -/
@@ -252,7 +258,7 @@ theorem to_endomorphism_comp_subtype_mem (m : M) (hm : m ∈ N) :
 
 @[simp]
 theorem to_endomorphism_restrict_eq_to_endomorphism (h := N.to_endomorphism_comp_subtype_mem x) :
-    ((toEndomorphism R L M x).restrict h : N →ₗ[R] N) = toEndomorphism R L N x := by
+    ((toEndomorphism R L M x).restrict h : (N : Submodule R M) →ₗ[R] N) = toEndomorphism R L N x := by
   ext
   simp [← LinearMap.restrict_apply]
 
@@ -261,7 +267,7 @@ end LieSubmodule
 open LieAlgebra
 
 theorem LieAlgebra.ad_eq_lmul_left_sub_lmul_right (A : Type v) [Ringₓ A] [Algebra R A] :
-    (ad R A : A → Module.End R A) = Algebra.lmulLeft R - Algebra.lmulRight R := by
+    (ad R A : A → Module.End R A) = LinearMap.mulLeft R - LinearMap.mulRight R := by
   ext a b
   simp [← LieRing.of_associative_ring_bracket]
 

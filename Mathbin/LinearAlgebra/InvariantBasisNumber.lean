@@ -89,7 +89,7 @@ theorem le_of_fin_injective [StrongRankCondition R] {n m : ℕ} (f : (Finₓ n �
 theorem strong_rank_condition_iff_succ :
     StrongRankCondition R ↔ ∀ (n : ℕ) (f : (Finₓ (n + 1) → R) →ₗ[R] Finₓ n → R), ¬Function.Injective f := by
   refine' ⟨fun h n => fun f hf => _, fun h => ⟨fun n m f hf => _⟩⟩
-  · let this : StrongRankCondition R := h
+  · letI : StrongRankCondition R := h
     exact Nat.not_succ_le_selfₓ n (le_of_fin_injective R f hf)
     
   · by_contra H
@@ -174,8 +174,8 @@ theorem card_eq_of_lequiv {α β : Type _} [Fintype α] [Fintype β] (f : (α �
 theorem nontrivial_of_invariant_basis_number : Nontrivial R := by
   by_contra h
   refine' zero_ne_one (eq_of_fin_equiv R _)
-  have := not_nontrivial_iff_subsingleton.1 h
-  have : Subsingleton (Finₓ 1 → R) := ⟨fun a b => funext fun x => Subsingleton.elimₓ _ _⟩
+  haveI := not_nontrivial_iff_subsingleton.1 h
+  haveI : Subsingleton (Finₓ 1 → R) := ⟨fun a b => funext fun x => Subsingleton.elimₓ _ _⟩
   refine' { .. } <;>
     first |
       · intros

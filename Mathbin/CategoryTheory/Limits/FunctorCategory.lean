@@ -20,10 +20,10 @@ We also show that `F : D ⥤ K ⥤ C` preserves (co)limits if it does so for eac
 -/
 
 
-open CategoryTheory CategoryTheory.Category
+open CategoryTheory CategoryTheory.Category CategoryTheory.Functor
 
 -- morphism levels before object levels. See note [category_theory universes].
-universe v₁ v₂ u₁ u₂ v v' u u'
+universe w' w v₁ v₂ u₁ u₂ v v' u u'
 
 namespace CategoryTheory.Limits
 
@@ -278,7 +278,7 @@ def preservesLimitOfEvaluation (F : D ⥤ K ⥤ C) (G : J ⥤ D)
   ⟨fun c hc => by
     apply evaluation_jointly_reflects_limits
     intro X
-    have := H X
+    haveI := H X
     change is_limit ((F ⋙ (evaluation K C).obj X).mapCone c)
     exact preserves_limit.preserves hc⟩
 
@@ -288,9 +288,13 @@ def preservesLimitsOfShapeOfEvaluation (F : D ⥤ K ⥤ C) (J : Type _) [Categor
   ⟨fun G => preservesLimitOfEvaluation F G fun k => PreservesLimitsOfShape.preservesLimit⟩
 
 /-- `F : D ⥤ K ⥤ C` preserves all limits if it does for each `k : K`. -/
-def preservesLimitsOfEvaluation.{w', w} (F : D ⥤ K ⥤ C)
+def preservesLimitsOfEvaluation (F : D ⥤ K ⥤ C)
     (H : ∀ k : K, PreservesLimitsOfSize.{w', w} (F ⋙ (evaluation K C).obj k)) : PreservesLimitsOfSize.{w', w} F :=
   ⟨fun L hL => preserves_limits_of_shape_of_evaluation F L fun k => preserves_limits_of_size.preserves_limits_of_shape⟩
+
+/-- The constant functor `C ⥤ (D ⥤ C)` preserves limits. -/
+instance preservesLimitsConst : PreservesLimitsOfSize.{w', w} (const D : C ⥤ _) :=
+  (preservesLimitsOfEvaluation _) fun X => preserves_limits_of_nat_iso <| iso.symm <| constCompEvaluationObj _ _
 
 instance evaluationPreservesColimits [HasColimits C] (k : K) :
     PreservesColimits ((evaluation K C).obj k) where PreservesColimitsOfShape := fun J 𝒥 => by
@@ -302,7 +306,7 @@ def preservesColimitOfEvaluation (F : D ⥤ K ⥤ C) (G : J ⥤ D)
   ⟨fun c hc => by
     apply evaluation_jointly_reflects_colimits
     intro X
-    have := H X
+    haveI := H X
     change is_colimit ((F ⋙ (evaluation K C).obj X).mapCocone c)
     exact preserves_colimit.preserves hc⟩
 
@@ -312,10 +316,14 @@ def preservesColimitsOfShapeOfEvaluation (F : D ⥤ K ⥤ C) (J : Type _) [Categ
   ⟨fun G => preservesColimitOfEvaluation F G fun k => PreservesColimitsOfShape.preservesColimit⟩
 
 /-- `F : D ⥤ K ⥤ C` preserves all colimits if it does for each `k : K`. -/
-def preservesColimitsOfEvaluation.{w', w} (F : D ⥤ K ⥤ C)
+def preservesColimitsOfEvaluation (F : D ⥤ K ⥤ C)
     (H : ∀ k : K, PreservesColimitsOfSize.{w', w} (F ⋙ (evaluation K C).obj k)) : PreservesColimitsOfSize.{w', w} F :=
   ⟨fun L hL =>
     preserves_colimits_of_shape_of_evaluation F L fun k => preserves_colimits_of_size.preserves_colimits_of_shape⟩
+
+/-- The constant functor `C ⥤ (D ⥤ C)` preserves colimits. -/
+instance preservesColimitsConst : PreservesColimitsOfSize.{w', w} (const D : C ⥤ _) :=
+  (preservesColimitsOfEvaluation _) fun X => preserves_colimits_of_nat_iso <| iso.symm <| constCompEvaluationObj _ _
 
 open CategoryTheory.prod
 

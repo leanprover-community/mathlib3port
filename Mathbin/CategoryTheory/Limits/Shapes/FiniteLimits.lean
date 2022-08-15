@@ -44,7 +44,7 @@ instance (priority := 100) has_limits_of_shape_of_has_finite_limits (J : Type w)
 
 instance (priority := 100) has_finite_limits_of_has_limits_of_size [HasLimitsOfSize.{v', u'} C] : HasFiniteLimits C :=
   ⟨fun J hJ hJ' => by
-    have := has_limits_of_size_shrink.{0, 0} C
+    haveI := has_limits_of_size_shrink.{0, 0} C
     exact has_limits_of_shape_of_equivalence (fin_category.equiv_as_type J)⟩
 
 /-- If `C` has all limits, it has finite limits. -/
@@ -64,7 +64,7 @@ theorem has_finite_limits_of_has_finite_limits_of_size
     let this : Category.{w, w} (UliftHom.{w} (ULift.{w, 0} J)) := by
       apply UliftHom.category.{0}
       exact CategoryTheory.uliftCategory J
-    have := h (UliftHom.{w} (ULift.{w} J)) CategoryTheory.finCategoryUlift
+    haveI := h (UliftHom.{w} (ULift.{w} J)) CategoryTheory.finCategoryUlift
     exact has_limits_of_shape_of_equivalence (UliftHomUliftCategory.equiv.{w, w} J).symm⟩
 
 /-- A category has all finite colimits if every functor `J ⥤ C` with a `fin_category J`
@@ -83,7 +83,7 @@ instance (priority := 100) has_colimits_of_shape_of_has_finite_colimits (J : Typ
 instance (priority := 100) has_finite_colimits_of_has_colimits_of_size [HasColimitsOfSize.{v', u'} C] :
     HasFiniteColimits C :=
   ⟨fun J hJ hJ' => by
-    have := has_colimits_of_size_shrink.{0, 0} C
+    haveI := has_colimits_of_size_shrink.{0, 0} C
     exact has_colimits_of_shape_of_equivalence (fin_category.equiv_as_type J)⟩
 
 /-- We can always derive `has_finite_colimits C` by providing colimits at an
@@ -99,7 +99,7 @@ theorem has_finite_colimits_of_has_finite_colimits_of_size
     let this : Category.{w, w} (UliftHom.{w} (ULift.{w, 0} J)) := by
       apply UliftHom.category.{0}
       exact CategoryTheory.uliftCategory J
-    have := h (UliftHom.{w} (ULift.{w} J)) CategoryTheory.finCategoryUlift
+    haveI := h (UliftHom.{w} (ULift.{w} J)) CategoryTheory.finCategoryUlift
     exact has_colimits_of_shape_of_equivalence (UliftHomUliftCategory.equiv.{w, w} J).symm⟩
 
 section
@@ -208,7 +208,7 @@ class HasFiniteWidePullbacks : Prop where
 
 instance has_limits_of_shape_wide_pullback_shape (J : Type) [Fintype J] [HasFiniteWidePullbacks C] :
     HasLimitsOfShape (WidePullbackShape J) C := by
-  have := @has_finite_wide_pullbacks.out C _ _ J
+  haveI := @has_finite_wide_pullbacks.out C _ _ J
   infer_instance
 
 /-- `has_finite_wide_pushouts` represents a choice of wide pushout
@@ -219,7 +219,7 @@ class HasFiniteWidePushouts : Prop where
 
 instance has_colimits_of_shape_wide_pushout_shape (J : Type) [Fintype J] [HasFiniteWidePushouts C] :
     HasColimitsOfShape (WidePushoutShape J) C := by
-  have := @has_finite_wide_pushouts.out C _ _ J
+  haveI := @has_finite_wide_pushouts.out C _ _ J
   infer_instance
 
 /-- Finite wide pullbacks are finite limits, so if `C` has all finite limits,

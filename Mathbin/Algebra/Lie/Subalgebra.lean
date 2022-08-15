@@ -104,6 +104,9 @@ instance [HasSmul R₁ R] [HasSmul R₁ᵐᵒᵖ R] [Module R₁ L] [Module R₁
 instance [HasSmul R₁ R] [Module R₁ L] [IsScalarTower R₁ R L] (L' : LieSubalgebra R L) : IsScalarTower R₁ R L' :=
   L'.toSubmodule.IsScalarTower
 
+instance (L' : LieSubalgebra R L) [IsNoetherian R L] : IsNoetherian R L' :=
+  is_noetherian_submodule' ↑L'
+
 end
 
 /-- A Lie subalgebra forms a new Lie algebra. -/
@@ -427,11 +430,11 @@ instance : HasInf (LieSubalgebra R L) :=
   ⟨fun K K' =>
     { (K⊓K' : Submodule R L) with lie_mem' := fun x y hx hy => mem_inter (K.lie_mem hx.1 hy.1) (K'.lie_mem hx.2 hy.2) }⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1122:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
+-- ./././Mathport/Syntax/Translate/Basic.lean:1129:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
 instance : HasInfₓ (LieSubalgebra R L) :=
   ⟨fun S =>
     { inf
-        "./././Mathport/Syntax/Translate/Basic.lean:1122:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" with
+        "./././Mathport/Syntax/Translate/Basic.lean:1129:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" with
       lie_mem' := fun x y hx hy => by
         simp only [← Submodule.mem_carrier, ← mem_Inter, ← Submodule.Inf_coe, ← mem_set_of_eq, ←
           forall_apply_eq_imp_iff₂, ← exists_imp_distrib] at *
@@ -442,12 +445,12 @@ instance : HasInfₓ (LieSubalgebra R L) :=
 theorem inf_coe : (↑(K⊓K') : Set L) = K ∩ K' :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1122:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
+-- ./././Mathport/Syntax/Translate/Basic.lean:1129:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
 @[simp]
 theorem Inf_coe_to_submodule (S : Set (LieSubalgebra R L)) :
     (↑(inf S) : Submodule R L) =
       inf
-        "./././Mathport/Syntax/Translate/Basic.lean:1122:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" :=
+        "./././Mathport/Syntax/Translate/Basic.lean:1129:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" :=
   rfl
 
 @[simp]
@@ -510,7 +513,7 @@ theorem subsingleton_of_bot : Subsingleton (LieSubalgebra R ↥(⊥ : LieSubalge
   apply subsingleton_of_bot_eq_top
   ext ⟨x, hx⟩
   change x ∈ ⊥ at hx
-  rw [Submodule.mem_bot] at hx
+  rw [LieSubalgebra.mem_bot] at hx
   subst hx
   simp only [← true_iffₓ, ← eq_self_iff_true, ← Submodule.mk_eq_zero, ← mem_bot]
 

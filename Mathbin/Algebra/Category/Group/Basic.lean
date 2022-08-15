@@ -27,9 +27,8 @@ open CategoryTheory
 def Groupₓₓ : Type (u + 1) :=
   Bundled Groupₓ
 
-/-- The category of additive groups and group morphisms -/
-add_decl_doc AddGroupₓₓ
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident AddGroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace Groupₓₓ
 
 @[to_additive]
@@ -49,17 +48,15 @@ instance : CoeSort Groupₓₓ (Type _) :=
 def of (X : Type u) [Groupₓ X] : Groupₓₓ :=
   Bundled.of X
 
-/-- Construct a bundled `AddGroup` from the underlying type and typeclass. -/
-add_decl_doc AddGroupₓₓ.of
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident AddGroup.of]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Typecheck a `monoid_hom` as a morphism in `Group`. -/
 @[to_additive]
 def ofHom {X Y : Type u} [Groupₓ X] [Groupₓ Y] (f : X →* Y) : of X ⟶ of Y :=
   f
 
-/-- Typecheck a `add_monoid_hom` as a morphism in `AddGroup`. -/
-add_decl_doc AddGroupₓₓ.ofHom
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident AddGroup.of_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, to_additive]
 theorem of_hom_apply {X Y : Type _} [Groupₓ X] [Groupₓ Y] (f : X →* Y) (x : X) : ofHom f x = f x :=
   rfl
@@ -103,9 +100,8 @@ end Groupₓₓ
 def CommGroupₓₓ : Type (u + 1) :=
   Bundled CommGroupₓ
 
-/-- The category of additive commutative groups and group morphisms. -/
-add_decl_doc AddCommGroupₓₓ
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident AddCommGroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `Ab` is an abbreviation for `AddCommGroup`, for the sake of mathematicians' sanity. -/
 abbrev Ab :=
   AddCommGroupₓₓ
@@ -129,17 +125,15 @@ instance : CoeSort CommGroupₓₓ (Type _) :=
 def of (G : Type u) [CommGroupₓ G] : CommGroupₓₓ :=
   Bundled.of G
 
-/-- Construct a bundled `AddCommGroup` from the underlying type and typeclass. -/
-add_decl_doc AddCommGroupₓₓ.of
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident AddCommGroup.of]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Typecheck a `monoid_hom` as a morphism in `CommGroup`. -/
 @[to_additive]
 def ofHom {X Y : Type u} [CommGroupₓ X] [CommGroupₓ Y] (f : X →* Y) : of X ⟶ of Y :=
   f
 
-/-- Typecheck a `add_monoid_hom` as a morphism in `AddCommGroup`. -/
-add_decl_doc AddCommGroupₓₓ.ofHom
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident AddCommGroup.of_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, to_additive]
 theorem of_hom_apply {X Y : Type _} [CommGroupₓ X] [CommGroupₓ Y] (f : X →* Y) (x : X) : ofHom f x = f x :=
   rfl
@@ -231,19 +225,16 @@ def MulEquiv.toGroupIso {X Y : Groupₓₓ} (e : X ≃* Y) : X ≅ Y where
   Hom := e.toMonoidHom
   inv := e.symm.toMonoidHom
 
-/-- Build an isomorphism in the category `AddGroup` from an `add_equiv` between `add_group`s. -/
-add_decl_doc AddEquiv.toAddGroupIso
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_equiv.to_AddGroup_iso]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Build an isomorphism in the category `CommGroup` from a `mul_equiv` between `comm_group`s. -/
 @[to_additive AddEquiv.toAddCommGroupIso, simps]
 def MulEquiv.toCommGroupIso {X Y : CommGroupₓₓ} (e : X ≃* Y) : X ≅ Y where
   Hom := e.toMonoidHom
   inv := e.symm.toMonoidHom
 
-/-- Build an isomorphism in the category `AddCommGroup` from a `add_equiv` between
-`add_comm_group`s. -/
-add_decl_doc AddEquiv.toAddCommGroupIso
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_equiv.to_AddCommGroup_iso]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace CategoryTheory.Iso
 
 /-- Build a `mul_equiv` from an isomorphism in the category `Group`. -/

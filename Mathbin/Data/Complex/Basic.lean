@@ -879,9 +879,11 @@ theorem abs_le_sqrt_two_mul_max (z : ℂ) : abs z ≤ Real.sqrt 2 * max (abs z.r
   cases' z with x y
   simp only [← abs, ← norm_sq_mk, sq]
   wlog (discharger := tactic.skip) hle : abs x ≤ abs y := le_totalₓ (abs x) (abs y) using x y, y x
-  · calc Real.sqrt (x ^ 2 + y ^ 2) ≤ Real.sqrt (y ^ 2 + y ^ 2) :=
-        Real.sqrt_le_sqrt (add_le_add_right (sq_le_sq.2 hle) _)_ = Real.sqrt 2 * max (abs x) (abs y) := by
+  · calc
+      Real.sqrt (x ^ 2 + y ^ 2) ≤ Real.sqrt (y ^ 2 + y ^ 2) := Real.sqrt_le_sqrt (add_le_add_right (sq_le_sq.2 hle) _)
+      _ = Real.sqrt 2 * max (abs x) (abs y) := by
         rw [max_eq_rightₓ hle, ← two_mul, Real.sqrt_mul two_pos.le, Real.sqrt_sq_eq_abs]
+      
     
   · rwa [add_commₓ, max_commₓ]
     

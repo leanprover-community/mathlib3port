@@ -6,6 +6,7 @@ Authors: Mario Carneiro
 import Mathbin.Data.Int.Basic
 import Mathbin.Data.Nat.Cast
 import Mathbin.Tactic.PiInstances
+import Mathbin.Data.Sum.Basic
 
 /-!
 # Cast of integers (additional theorems)
@@ -315,6 +316,9 @@ theorem coe_int (n : ℤ) : (n : ∀ a, β a) = fun _ => n :=
   rfl
 
 end Pi
+
+theorem Sum.elim_int_cast_int_cast {α β γ : Type _} [HasIntCast γ] (n : ℤ) : Sum.elim (n : α → γ) (n : β → γ) = n :=
+  @Sum.elim_lam_const_lam_const α β γ n
 
 namespace Pi
 

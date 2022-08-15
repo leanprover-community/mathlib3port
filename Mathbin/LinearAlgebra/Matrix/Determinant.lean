@@ -104,7 +104,7 @@ theorem coe_det_is_empty [IsEmpty n] : (det : Matrix n n R → R) = Function.con
   exact det_is_empty
 
 theorem det_eq_one_of_card_eq_zero {A : Matrix n n R} (h : Fintype.card n = 0) : det A = 1 := by
-  have : IsEmpty n := fintype.card_eq_zero_iff.mp h
+  haveI : IsEmpty n := fintype.card_eq_zero_iff.mp h
   exact det_is_empty
 
 /-- If `n` has only one element, the determinant of an `n` by `n` matrix is just that element.
@@ -120,7 +120,7 @@ theorem det_eq_elem_of_subsingleton [Subsingleton n] (A : Matrix n n R) (k : n) 
   exact uniqueOfSubsingleton k
 
 theorem det_eq_elem_of_card_eq_one {A : Matrix n n R} (h : Fintype.card n = 1) (k : n) : det A = A k k := by
-  have : Subsingleton n := fintype.card_le_one_iff_subsingleton.mp h.le
+  haveI : Subsingleton n := fintype.card_le_one_iff_subsingleton.mp h.le
   exact det_eq_elem_of_subsingleton _ _
 
 theorem det_mul_aux {M N : Matrix n n R} {p : n → n} (H : ¬Bijective p) :
@@ -711,12 +711,14 @@ theorem det_succ_column_zero {n : ℕ} (A : Matrix (Finₓ n.succ) (Finₓ n.suc
           (A (Finₓ.succ i) 0 * ∏ i', A ((Finₓ.succ i).succAbove (Finₓ.cycleRange i (σ i'))) i'.succ) :=
       by
       simp only [← Finₓ.prod_univ_succ, ← Finₓ.succ_above_cycle_range, ← Equivₓ.Perm.decompose_fin_symm_apply_zero, ←
-        Equivₓ.Perm.decompose_fin_symm_apply_succ]_ =
+        Equivₓ.Perm.decompose_fin_symm_apply_succ]
+    _ =
         -1 *
           (A (Finₓ.succ i) 0 * (σ.sign : ℤ) • ∏ i', A ((Finₓ.succ i).succAbove (Finₓ.cycleRange i (σ i'))) i'.succ) :=
       by
       simp only [← mul_assoc, ← mul_comm, ← _root_.neg_mul, ← one_mulₓ, ← zsmul_eq_mul, ← neg_inj, ← neg_smul, ←
         Finₓ.succ_above_cycle_range]
+    
 
 /-- Laplacian expansion of the determinant of an `n+1 × n+1` matrix along row 0. -/
 theorem det_succ_row_zero {n : ℕ} (A : Matrix (Finₓ n.succ) (Finₓ n.succ) R) :
@@ -731,9 +733,12 @@ theorem det_succ_row {n : ℕ} (A : Matrix (Finₓ n.succ) (Finₓ n.succ) R) (i
     det A = ∑ j : Finₓ n.succ, -1 ^ (i + j : ℕ) * A i j * det (A.minor i.succAbove j.succAbove) := by
   simp_rw [pow_addₓ, mul_assoc, ← mul_sum]
   have : det A = (-1 : R) ^ (i : ℕ) * i.cycle_range⁻¹.sign * det A := by
-    calc det A = ↑((-1 : ℤˣ) ^ (i : ℕ) * (-1 : ℤˣ) ^ (i : ℕ) : ℤˣ) * det A := by
-        simp _ = (-1 : R) ^ (i : ℕ) * i.cycle_range⁻¹.sign * det A := by
+    calc
+      det A = ↑((-1 : ℤˣ) ^ (i : ℕ) * (-1 : ℤˣ) ^ (i : ℕ) : ℤˣ) * det A := by
+        simp
+      _ = (-1 : R) ^ (i : ℕ) * i.cycle_range⁻¹.sign * det A := by
         simp [-Int.units_mul_self]
+      
   rw [this, mul_assoc]
   congr
   rw [← det_permute, det_succ_row_zero]
@@ -762,10 +767,10 @@ theorem det_fin_zero {A : Matrix (Finₓ 0) (Finₓ 0) R} : det A = 1 :=
 theorem det_fin_one (A : Matrix (Finₓ 1) (Finₓ 1) R) : det A = A 0 0 :=
   det_unique A
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
 theorem det_fin_one_of (a : R) :
-    det («expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation") =
+    det («expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation") =
       a :=
   det_fin_one _
 
@@ -774,12 +779,12 @@ theorem det_fin_two (A : Matrix (Finₓ 2) (Finₓ 2) R) : det A = A 0 0 * A 1 1
   simp [← Matrix.det_succ_row_zero, ← Finₓ.sum_univ_succ]
   ring
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
 @[simp]
 theorem det_fin_two_of (a b c d : R) :
     Matrix.det
-        («expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation") =
+        («expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation") =
       a * d - b * c :=
   det_fin_two _
 

@@ -958,7 +958,7 @@ instance smul_comm_class_filter' [HasSmul α γ] [HasSmul β γ] [SmulCommClass 
 @[to_additive]
 instance smul_comm_class_filter'' [HasSmul α γ] [HasSmul β γ] [SmulCommClass α β γ] :
     SmulCommClass (Filter α) β (Filter γ) :=
-  have := SmulCommClass.symm α β γ
+  haveI := SmulCommClass.symm α β γ
   SmulCommClass.symm _ _ _
 
 @[to_additive]
@@ -966,17 +966,20 @@ instance smul_comm_class [HasSmul α γ] [HasSmul β γ] [SmulCommClass α β γ
     SmulCommClass (Filter α) (Filter β) (Filter γ) :=
   ⟨fun f g h => map₂_left_comm smul_comm⟩
 
+@[to_additive]
 instance is_scalar_tower [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScalarTower α β γ] :
     IsScalarTower α β (Filter γ) :=
   ⟨fun a b f => by
     simp only [map_smul, ← map_map, ← smul_assoc]⟩
 
+@[to_additive]
 instance is_scalar_tower' [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScalarTower α β γ] :
     IsScalarTower α (Filter β) (Filter γ) :=
   ⟨fun a f g => by
     refine' (map_map₂_distrib_left fun _ _ => _).symm
     exact (smul_assoc a _ _).symm⟩
 
+@[to_additive]
 instance is_scalar_tower'' [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScalarTower α β γ] :
     IsScalarTower (Filter α) (Filter β) (Filter γ) :=
   ⟨fun f g h => map₂_assoc smul_assoc⟩

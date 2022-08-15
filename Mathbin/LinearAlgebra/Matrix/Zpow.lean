@@ -61,11 +61,16 @@ theorem pow_inv_comm' (A : M) (m n : ℕ) : A⁻¹ ^ m ⬝ A ^ n = A ^ n ⬝ A�
   · simp
     
   rcases nonsing_inv_cancel_or_zero A with (⟨h, h'⟩ | h)
-  · calc A⁻¹ ^ (m + 1) ⬝ A ^ (n + 1) = A⁻¹ ^ m ⬝ (A⁻¹ ⬝ A) ⬝ A ^ n := by
-        simp only [← pow_succ'ₓ A⁻¹, ← pow_succₓ A, ← mul_eq_mul, ← Matrix.mul_assoc]_ = A ^ n ⬝ A⁻¹ ^ m := by
-        simp only [← h, ← Matrix.mul_one, ← Matrix.one_mul, ← IH m]_ = A ^ n ⬝ (A ⬝ A⁻¹) ⬝ A⁻¹ ^ m := by
-        simp only [← h', ← Matrix.mul_one, ← Matrix.one_mul]_ = A ^ (n + 1) ⬝ A⁻¹ ^ (m + 1) := by
+  · calc
+      A⁻¹ ^ (m + 1) ⬝ A ^ (n + 1) = A⁻¹ ^ m ⬝ (A⁻¹ ⬝ A) ⬝ A ^ n := by
+        simp only [← pow_succ'ₓ A⁻¹, ← pow_succₓ A, ← mul_eq_mul, ← Matrix.mul_assoc]
+      _ = A ^ n ⬝ A⁻¹ ^ m := by
+        simp only [← h, ← Matrix.mul_one, ← Matrix.one_mul, ← IH m]
+      _ = A ^ n ⬝ (A ⬝ A⁻¹) ⬝ A⁻¹ ^ m := by
+        simp only [← h', ← Matrix.mul_one, ← Matrix.one_mul]
+      _ = A ^ (n + 1) ⬝ A⁻¹ ^ (m + 1) := by
         simp only [← pow_succ'ₓ A, ← pow_succₓ A⁻¹, ← mul_eq_mul, ← Matrix.mul_assoc]
+      
     
   · simp [← h]
     

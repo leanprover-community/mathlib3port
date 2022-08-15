@@ -55,7 +55,7 @@ namespace CompleteLattice
 
 variable (α)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a b «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (a b «expr ∈ » s)
 /-- A compactness property for a complete lattice is that any `sup`-closed non-empty subset
 contains its `Sup`. -/
 def IsSupClosedCompact : Prop :=
@@ -148,6 +148,22 @@ theorem is_compact_element_iff_le_of_directed_Sup_le (k : α) :
       ⟨htS, by
         rwa [← htsup]⟩
     
+
+theorem IsCompactElement.exists_finset_of_le_supr {k : α} (hk : IsCompactElement k) {ι : Type _} (f : ι → α)
+    (h : k ≤ ⨆ i, f i) : ∃ s : Finset ι, k ≤ ⨆ i ∈ s, f i := by
+  classical
+  let g : Finset ι → α := fun s => ⨆ i ∈ s, f i
+  have h1 : DirectedOn (· ≤ ·) (Set.Range g) := by
+    rintro - ⟨s, rfl⟩ - ⟨t, rfl⟩
+    exact
+      ⟨g (s ∪ t), ⟨s ∪ t, rfl⟩, supr_le_supr_of_subset (Finset.subset_union_left s t),
+        supr_le_supr_of_subset (Finset.subset_union_right s t)⟩
+  have h2 : k ≤ Sup (Set.Range g) :=
+    h.trans
+      (supr_le fun i => le_Sup_of_le ⟨{i}, rfl⟩ (le_supr_of_le i (le_supr_of_le (Finset.mem_singleton_self i) le_rfl)))
+  obtain ⟨-, ⟨s, rfl⟩, hs⟩ :=
+    (is_compact_element_iff_le_of_directed_Sup_le α k).mp hk (Set.Range g) (Set.range_nonempty g) h1 h2
+  exact ⟨s, hs⟩
 
 /-- A compact element `k` has the property that any directed set lying strictly below `k` has
 its Sup strictly below `k`. -/
@@ -321,7 +337,7 @@ theorem WellFounded.finite_of_set_independent (h : WellFounded ((· > ·) : α �
 
 theorem WellFounded.finite_of_independent (hwf : WellFounded ((· > ·) : α → α → Prop)) {ι : Type _} {t : ι → α}
     (ht : Independent t) (h_ne_bot : ∀ i, t i ≠ ⊥) : Finite ι := by
-  have := (well_founded.finite_of_set_independent hwf ht.set_independent_range).to_subtype
+  haveI := (well_founded.finite_of_set_independent hwf ht.set_independent_range).to_subtype
   exact Finite.of_injective_finite_range (ht.injective h_ne_bot)
 
 end CompleteLattice
@@ -471,7 +487,7 @@ instance (priority := 100) is_atomic_of_is_complemented [IsComplemented α] : Is
       right
       have hc' := CompleteLattice.Iic_coatomic_of_compact_element hc
       rw [← is_atomic_iff_is_coatomic] at hc'
-      have := hc'
+      haveI := hc'
       obtain con | ⟨a, ha, hac⟩ := eq_bot_or_exists_atom_le (⟨c, le_reflₓ c⟩ : Set.Iic c)
       · exfalso
         apply hcbot

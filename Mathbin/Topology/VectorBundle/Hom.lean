@@ -77,14 +77,14 @@ instance (x : B) : Module 𝕜₂ (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ 
 
 end Defs
 
-variable {𝕜₁ : Type _} [NondiscreteNormedField 𝕜₁] {𝕜₂ : Type _} [NondiscreteNormedField 𝕜₂] (σ : 𝕜₁ →+* 𝕜₂)
+variable {𝕜₁ : Type _} [NontriviallyNormedField 𝕜₁] {𝕜₂ : Type _} [NontriviallyNormedField 𝕜₂] (σ : 𝕜₁ →+* 𝕜₂)
 
 variable {B : Type _} [TopologicalSpace B]
 
-variable (F₁ : Type _) [NormedGroup F₁] [NormedSpace 𝕜₁ F₁] (E₁ : B → Type _) [∀ x, AddCommMonoidₓ (E₁ x)]
+variable (F₁ : Type _) [NormedAddCommGroup F₁] [NormedSpace 𝕜₁ F₁] (E₁ : B → Type _) [∀ x, AddCommMonoidₓ (E₁ x)]
   [∀ x, Module 𝕜₁ (E₁ x)] [TopologicalSpace (TotalSpace E₁)]
 
-variable (F₂ : Type _) [NormedGroup F₂] [NormedSpace 𝕜₂ F₂] (E₂ : B → Type _) [∀ x, AddCommMonoidₓ (E₂ x)]
+variable (F₂ : Type _) [NormedAddCommGroup F₂] [NormedSpace 𝕜₂ F₂] (E₂ : B → Type _) [∀ x, AddCommMonoidₓ (E₂ x)]
   [∀ x, Module 𝕜₂ (E₂ x)] [TopologicalSpace (TotalSpace E₂)]
 
 namespace TopologicalVectorBundle
@@ -144,7 +144,7 @@ def continuousLinearMap : Pretrivialization 𝕜₂ (F₁ →SL[σ] F₂) (Bundl
   toFun := fun p => ⟨p.1, (e₂.continuousLinearMapAt p.1).comp <| p.2.comp <| e₁.symmL p.1⟩
   invFun := fun p => ⟨p.1, (e₂.symmL p.1).comp <| p.2.comp <| e₁.continuousLinearMapAt p.1⟩
   Source := Bundle.TotalSpace.proj ⁻¹' (e₁.BaseSet ∩ e₂.BaseSet)
-  Target := (e₁.BaseSet ∩ e₂.BaseSet) ×ˢ (Set.Univ : Set (F₁ →SL[σ] F₂))
+  Target := (e₁.BaseSet ∩ e₂.BaseSet) ×ˢ Set.Univ
   map_source' := fun ⟨x, L⟩ h => ⟨h, Set.mem_univ _⟩
   map_target' := fun ⟨x, f⟩ h => h.1
   left_inv' := fun ⟨x, L⟩ ⟨h₁, h₂⟩ => by

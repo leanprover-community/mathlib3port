@@ -182,7 +182,7 @@ theorem nat_degree_derivative_le (p : R[X]) : p.derivative.natDegree ≤ p.natDe
     
 
 @[simp]
-theorem derivative_cast_nat {n : ℕ} : derivative (n : R[X]) = 0 := by
+theorem derivative_nat_cast {n : ℕ} : derivative (n : R[X]) = 0 := by
   rw [← map_nat_cast C n]
   exact derivative_C
 
@@ -280,7 +280,7 @@ theorem iterate_derivative_map [Semiringₓ S] (p : R[X]) (f : R →+* S) (k : �
     
 
 @[simp]
-theorem iterate_derivative_cast_nat_mul {n k : ℕ} {f : R[X]} : (derivative^[k]) (n * f) = n * (derivative^[k]) f := by
+theorem iterate_derivative_nat_cast_mul {n k : ℕ} {f : R[X]} : (derivative^[k]) (n * f) = n * (derivative^[k]) f := by
   induction' k with k ih generalizing f <;> simp [*]
 
 theorem mem_support_derivative [NoZeroSmulDivisors ℕ R] (p : R[X]) (n : ℕ) :

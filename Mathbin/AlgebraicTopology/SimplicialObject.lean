@@ -34,7 +34,7 @@ variable (C : Type u) [Category.{v} C]
 
 /-- The category of simplicial objects valued in a category `C`.
 This is the category of contravariant functors from `simplex_category` to `C`. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def SimplicialObject :=
   SimplexCategoryᵒᵖ ⥤ C deriving Category
 
@@ -125,7 +125,7 @@ def whiskering (D : Type _) [Category D] : (C ⥤ D) ⥤ SimplicialObject C ⥤ 
   whiskeringRight _ _ _
 
 /-- Truncated simplicial objects. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def Truncated (n : ℕ) :=
   (SimplexCategory.Truncated n)ᵒᵖ ⥤ C deriving Category
 
@@ -175,7 +175,7 @@ abbrev const : C ⥤ SimplicialObject C :=
   CategoryTheory.Functor.const _
 
 /-- The category of augmented simplicial objects, defined as a comma category. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def Augmented :=
   Comma (𝟭 (SimplicialObject C)) (const C)deriving Category
 
@@ -264,7 +264,7 @@ theorem augment_hom_zero (X : SimplicialObject C) (X₀ : C) (f : X _[0] ⟶ X�
 end SimplicialObject
 
 /-- Cosimplicial objects. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def CosimplicialObject :=
   SimplexCategory ⥤ C deriving Category
 
@@ -355,7 +355,7 @@ def whiskering (D : Type _) [Category D] : (C ⥤ D) ⥤ CosimplicialObject C �
   whiskeringRight _ _ _
 
 /-- Truncated cosimplicial objects. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def Truncated (n : ℕ) :=
   SimplexCategory.Truncated n ⥤ C deriving Category
 
@@ -405,7 +405,7 @@ abbrev const : C ⥤ CosimplicialObject C :=
   CategoryTheory.Functor.const _
 
 /-- Augmented cosimplicial objects. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def Augmented :=
   Comma (const C) (𝟭 (CosimplicialObject C))deriving Category
 
@@ -495,6 +495,11 @@ end CosimplicialObject
 @[simps]
 def simplicialCosimplicialEquiv : (SimplicialObject C)ᵒᵖ ≌ CosimplicialObject Cᵒᵖ :=
   Functor.leftOpRightOpEquiv _ _
+
+/-- The anti-equivalence between cosimplicial objects and simplicial objects. -/
+@[simps]
+def cosimplicialSimplicialEquiv : (CosimplicialObject C)ᵒᵖ ≌ SimplicialObject Cᵒᵖ :=
+  Functor.opUnopEquiv _ _
 
 variable {C}
 

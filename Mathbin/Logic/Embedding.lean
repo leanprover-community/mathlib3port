@@ -20,7 +20,7 @@ namespace Function
 
 /-- `α ↪ β` is a bundled injective function. -/
 -- depending on cardinalities, an injective function may not exist
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure Embedding (α : Sort _) (β : Sort _) where
   toFun : α → β
   inj' : Injective to_fun
@@ -228,6 +228,14 @@ def subtype {α} (p : α → Prop) : Subtype p ↪ α :=
 
 @[simp]
 theorem coe_subtype {α} (p : α → Prop) : ⇑(subtype p) = coe :=
+  rfl
+
+/-- `quotient.out` as an embedding. -/
+noncomputable def quotientOut (α) [s : Setoidₓ α] : Quotientₓ s ↪ α :=
+  ⟨_, Quotientₓ.out_injective⟩
+
+@[simp]
+theorem coe_quotient_out (α) [s : Setoidₓ α] : ⇑(quotientOut α) = Quotientₓ.out :=
   rfl
 
 /-- Choosing an element `b : β` gives an embedding of `punit` into `β`. -/

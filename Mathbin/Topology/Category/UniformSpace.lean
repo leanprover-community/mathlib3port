@@ -113,7 +113,7 @@ theorem coe_of (X : Type u) [UniformSpace X] [CompleteSpace X] [SeparatedSpace X
   rfl
 
 instance : Inhabited CpltSepUniformSpace := by
-  have : SeparatedSpace Empty :=
+  haveI : SeparatedSpace Empty :=
     separated_iff_t2.mpr
       (by
         infer_instance)

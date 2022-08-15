@@ -69,7 +69,7 @@ instance reflects_epimorphisms_comp (F : C ⥤ D) (G : D ⥤ E) [ReflectsEpimorp
 
 theorem PreservesMonomorphisms.of_iso {F G : C ⥤ D} [PreservesMonomorphisms F] (α : F ≅ G) : PreservesMonomorphisms G :=
   { preserves := fun X Y f h => by
-      have : mono (F.map f ≫ (α.app Y).Hom) := mono_comp _ _
+      haveI : mono (F.map f ≫ (α.app Y).Hom) := mono_comp _ _
       convert (mono_comp _ _ : mono ((α.app X).inv ≫ F.map f ≫ (α.app Y).Hom))
       rw [iso.eq_inv_comp, iso.app_hom, iso.app_hom, nat_trans.naturality] }
 
@@ -79,7 +79,7 @@ theorem PreservesMonomorphisms.iso_iff {F G : C ⥤ D} (α : F ≅ G) :
 
 theorem PreservesEpimorphisms.of_iso {F G : C ⥤ D} [PreservesEpimorphisms F] (α : F ≅ G) : PreservesEpimorphisms G :=
   { preserves := fun X Y f h => by
-      have : epi (F.map f ≫ (α.app Y).Hom) := epi_comp _ _
+      haveI : epi (F.map f ≫ (α.app Y).Hom) := epi_comp _ _
       convert (epi_comp _ _ : epi ((α.app X).inv ≫ F.map f ≫ (α.app Y).Hom))
       rw [iso.eq_inv_comp, iso.app_hom, iso.app_hom, nat_trans.naturality] }
 
@@ -89,7 +89,7 @@ theorem PreservesEpimorphisms.iso_iff {F G : C ⥤ D} (α : F ≅ G) : Preserves
 theorem ReflectsMonomorphisms.of_iso {F G : C ⥤ D} [ReflectsMonomorphisms F] (α : F ≅ G) : ReflectsMonomorphisms G :=
   { reflects := fun X Y f h => by
       apply F.mono_of_mono_map
-      have : mono (G.map f ≫ (α.app Y).inv) := mono_comp _ _
+      haveI : mono (G.map f ≫ (α.app Y).inv) := mono_comp _ _
       convert (mono_comp _ _ : mono ((α.app X).Hom ≫ G.map f ≫ (α.app Y).inv))
       rw [← category.assoc, iso.eq_comp_inv, iso.app_hom, iso.app_hom, nat_trans.naturality] }
 
@@ -99,7 +99,7 @@ theorem ReflectsMonomorphisms.iso_iff {F G : C ⥤ D} (α : F ≅ G) : ReflectsM
 theorem ReflectsEpimorphisms.of_iso {F G : C ⥤ D} [ReflectsEpimorphisms F] (α : F ≅ G) : ReflectsEpimorphisms G :=
   { reflects := fun X Y f h => by
       apply F.epi_of_epi_map
-      have : epi (G.map f ≫ (α.app Y).inv) := epi_comp _ _
+      haveI : epi (G.map f ≫ (α.app Y).inv) := epi_comp _ _
       convert (epi_comp _ _ : epi ((α.app X).Hom ≫ G.map f ≫ (α.app Y).inv))
       rw [← category.assoc, iso.eq_comp_inv, iso.app_hom, iso.app_hom, nat_trans.naturality] }
 
@@ -146,6 +146,57 @@ instance (priority := 100) reflects_epimorphisms_of_faithful (F : C ⥤ D) [Fait
         ((cancel_epi (F.map f)).1
           (by
             rw [← F.map_comp, hgh, F.map_comp]))⟩
+
+section
+
+variable (F : C ⥤ D) {X Y : C} (f : X ⟶ Y)
+
+/-- If `F` is a fully faithful functor, split epimorphisms are preserved and reflected by `F`. -/
+def splitEpiEquiv [Full F] [Faithful F] : SplitEpi f ≃ SplitEpi (F.map f) where
+  toFun := fun f => f.map F
+  invFun := fun s => by
+    refine' ⟨F.preimage s.section_, _⟩
+    apply F.map_injective
+    simp only [← map_comp, ← image_preimage, ← map_id]
+    apply split_epi.id
+  left_inv := by
+    tidy
+  right_inv := by
+    tidy
+
+/-- If `F` is a fully faithful functor, split monomorphisms are preserved and reflected by `F`. -/
+def splitMonoEquiv [Full F] [Faithful F] : SplitMono f ≃ SplitMono (F.map f) where
+  toFun := fun f => f.map F
+  invFun := fun s => by
+    refine' ⟨F.preimage s.retraction, _⟩
+    apply F.map_injective
+    simp only [← map_comp, ← image_preimage, ← map_id]
+    apply split_mono.id
+  left_inv := by
+    tidy
+  right_inv := by
+    tidy
+
+@[simp]
+theorem epi_map_iff_epi [hF₁ : PreservesEpimorphisms F] [hF₂ : ReflectsEpimorphisms F] : Epi (F.map f) ↔ Epi f := by
+  constructor
+  · exact F.epi_of_epi_map
+    
+  · intro h
+    exact F.map_epi f
+    
+
+@[simp]
+theorem mono_map_iff_mono [hF₁ : PreservesMonomorphisms F] [hF₂ : ReflectsMonomorphisms F] : Mono (F.map f) ↔ Mono f :=
+  by
+  constructor
+  · exact F.mono_of_mono_map
+    
+  · intro h
+    exact F.map_mono f
+    
+
+end
 
 end CategoryTheory.Functor
 

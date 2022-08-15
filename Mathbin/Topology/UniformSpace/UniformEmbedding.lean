@@ -74,7 +74,7 @@ theorem uniform_embedding_subtype_coe {p : α → Prop} : UniformEmbedding (coe 
 theorem uniform_embedding_set_inclusion {s t : Set α} (hst : s ⊆ t) : UniformEmbedding (inclusion hst) :=
   { comap_uniformity := by
       erw [uniformity_subtype, uniformity_subtype, comap_comap]
-      congr,
+      congr ,
     inj := inclusion_injective hst }
 
 theorem UniformEmbedding.comp {g : β → γ} (hg : UniformEmbedding g) {f : α → β} (hf : UniformEmbedding f) :
@@ -165,8 +165,11 @@ the preimage of `𝓤 β` under `prod.map f f` is the principal filter generated
 theorem comap_uniformity_of_spaced_out {α} {f : α → β} {s : Set (β × β)} (hs : s ∈ 𝓤 β)
     (hf : Pairwise fun x y => (f x, f y) ∉ s) : comap (Prod.map f f) (𝓤 β) = 𝓟 IdRel := by
   refine' le_antisymmₓ _ (@refl_le_uniformity α (UniformSpace.comap f ‹_›))
-  calc comap (Prod.map f f) (𝓤 β) ≤ comap (Prod.map f f) (𝓟 s) :=
-      comap_mono (le_principal_iff.2 hs)_ = 𝓟 (Prod.map f f ⁻¹' s) := comap_principal _ ≤ 𝓟 IdRel := principal_mono.2 _
+  calc
+    comap (Prod.map f f) (𝓤 β) ≤ comap (Prod.map f f) (𝓟 s) := comap_mono (le_principal_iff.2 hs)
+    _ = 𝓟 (Prod.map f f ⁻¹' s) := comap_principal
+    _ ≤ 𝓟 IdRel := principal_mono.2 _
+    
   rintro ⟨x, y⟩
   simpa [← not_imp_not] using hf x y
 
@@ -174,8 +177,8 @@ theorem comap_uniformity_of_spaced_out {α} {f : α → β} {s : Set (β × β)}
 `s ∈ 𝓤 β`, then `f` is a uniform embedding with respect to the discrete uniformity on `α`. -/
 theorem uniform_embedding_of_spaced_out {α} {f : α → β} {s : Set (β × β)} (hs : s ∈ 𝓤 β)
     (hf : Pairwise fun x y => (f x, f y) ∉ s) : @UniformEmbedding α β ⊥ ‹_› f := by
-  let this : UniformSpace α := ⊥
-  have : SeparatedSpace α := separated_iff_t2.2 inferInstance
+  letI : UniformSpace α := ⊥
+  haveI : SeparatedSpace α := separated_iff_t2.2 inferInstance
   exact UniformInducing.uniform_embedding ⟨comap_uniformity_of_spaced_out hs hf⟩
 
 theorem UniformInducing.uniform_continuous {f : α → β} (hf : UniformInducing f) : UniformContinuous f := by
@@ -209,7 +212,7 @@ theorem UniformEmbedding.dense_embedding {f : α → β} (h : UniformEmbedding f
 theorem closed_embedding_of_spaced_out {α} [TopologicalSpace α] [DiscreteTopology α] [SeparatedSpace β] {f : α → β}
     {s : Set (β × β)} (hs : s ∈ 𝓤 β) (hf : Pairwise fun x y => (f x, f y) ∉ s) : ClosedEmbedding f := by
   rcases DiscreteTopology.eq_bot α with rfl
-  let this : UniformSpace α := ⊥
+  letI : UniformSpace α := ⊥
   exact { (uniform_embedding_of_spaced_out hs hf).Embedding with closed_range := is_closed_range_of_spaced_out hs hf }
 
 theorem closure_image_mem_nhds_of_uniform_inducing {s : Set (α × α)} {e : α → β} (b : β) (he₁ : UniformInducing e)
@@ -270,7 +273,7 @@ theorem IsComplete.complete_space_coe {s : Set α} (hs : IsComplete s) : Complet
 theorem is_complete_image_iff {m : α → β} {s : Set α} (hm : UniformInducing m) : IsComplete (m '' s) ↔ IsComplete s :=
   by
   refine' ⟨is_complete_of_complete_image hm, fun c => _⟩
-  have : CompleteSpace s := c.complete_space_coe
+  haveI : CompleteSpace s := c.complete_space_coe
   set m' : s → β := m ∘ coe
   suffices IsComplete (range m') by
     rwa [range_comp, Subtype.range_coe] at this

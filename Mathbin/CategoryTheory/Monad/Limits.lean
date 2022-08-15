@@ -311,7 +311,7 @@ noncomputable def monadicCreatesColimitsOfPreservesColimits (R : D ⥤ C) [Monad
 section
 
 theorem has_limit_of_reflective (F : J ⥤ D) (R : D ⥤ C) [HasLimit (F ⋙ R)] [Reflective R] : HasLimit F := by
-  have := monadicCreatesLimits.{v, u} R
+  haveI := monadicCreatesLimits.{v, u} R
   exact has_limit_of_created F R
 
 /-- If `C` has limits of shape `J` then any reflective subcategory has limits of shape `J`. -/
@@ -328,7 +328,7 @@ theorem has_colimits_of_shape_of_reflective (R : D ⥤ C) [Reflective R] [HasCol
   { HasColimit := fun F => by
       let c := (left_adjoint R).mapCocone (colimit.cocone (F ⋙ R))
       let h := (adjunction.of_right_adjoint R).leftAdjointPreservesColimits.1
-      let this := @h J _
+      letI := @h J _
       let t : is_colimit c := is_colimit_of_preserves (left_adjoint R) (colimit.is_colimit _)
       apply has_colimit.mk ⟨_, (is_colimit.precompose_inv_equiv _ _).symm t⟩
       apply (iso_whisker_left F (as_iso (adjunction.of_right_adjoint R).counit) : _) ≪≫ F.right_unitor }
@@ -347,12 +347,12 @@ noncomputable def leftAdjointPreservesTerminalOfReflective (R : D ⥤ C) [Reflec
     apply preserves_limit_of_iso_diagram _ (functor.empty_ext (F ⋙ R) _)
     fconstructor
     intro c h
-    have : has_limit (F ⋙ R) := ⟨⟨⟨c, h⟩⟩⟩
-    have : has_limit F := has_limit_of_reflective F R
+    haveI : has_limit (F ⋙ R) := ⟨⟨⟨c, h⟩⟩⟩
+    haveI : has_limit F := has_limit_of_reflective F R
     apply is_limit_change_empty_cone D (limit.is_limit F)
     apply (as_iso ((adjunction.of_right_adjoint R).counit.app _)).symm.trans
     · apply (left_adjoint R).mapIso
-      let this := monadicCreatesLimits.{v, v} R
+      letI := monadicCreatesLimits.{v, v} R
       let this := (CategoryTheory.preservesLimitOfCreatesLimitAndHasLimit F R).preserves
       apply (this (limit.is_limit F)).conePointUniqueUpToIso h
       

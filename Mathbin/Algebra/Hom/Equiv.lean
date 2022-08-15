@@ -65,22 +65,18 @@ You should extend this class when you extend `add_equiv`. -/
 class AddEquivClass (F A B : Type _) [Add A] [Add B] extends EquivLike F A B where
   map_add : ∀ (f : F) (a b), f (a + b) = f a + f b
 
-/-- The `equiv` underlying an `add_equiv`. -/
-add_decl_doc AddEquiv.toEquiv
-
-/-- The `add_hom` underlying a `add_equiv`. -/
-add_decl_doc AddEquiv.toAddHom
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_equiv.to_equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_equiv.to_add_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `mul_equiv α β` is the type of an equiv `α ≃ β` which preserves multiplication. -/
 @[ancestor Equivₓ MulHom, to_additive]
 structure MulEquiv (M N : Type _) [Mul M] [Mul N] extends M ≃ N, M →ₙ* N
 
-/-- The `equiv` underlying a `mul_equiv`. -/
-add_decl_doc MulEquiv.toEquiv
-
-/-- The `mul_hom` underlying a `mul_equiv`. -/
-add_decl_doc MulEquiv.toMulHom
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident mul_equiv.to_equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident mul_equiv.to_mul_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `mul_equiv_class F A B` states that `F` is a type of multiplication-preserving morphisms.
 You should extend this class when you extend `mul_equiv`. -/
 @[to_additive]
@@ -784,4 +780,18 @@ def MulEquiv.toAdditive'' [AddZeroClassₓ G] [MulOneClassₓ H] : Multiplicativ
   AddEquiv.toMultiplicative''.symm
 
 end TypeTags
+
+section
+
+variable (G) (H)
+
+/-- `additive (multiplicative G)` is just `G`. -/
+def AddEquiv.additiveMultiplicative [AddZeroClassₓ G] : Additive (Multiplicative G) ≃+ G :=
+  MulEquiv.toAdditive'' (MulEquiv.refl (Multiplicative G))
+
+/-- `multiplicative (additive H)` is just `H`. -/
+def MulEquiv.multiplicativeAdditive [MulOneClassₓ H] : Multiplicative (Additive H) ≃* H :=
+  AddEquiv.toMultiplicative'' (AddEquiv.refl (Additive H))
+
+end
 

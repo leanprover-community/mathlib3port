@@ -21,9 +21,9 @@ open Pointwise TopologicalSpace
 
 variable {𝕜 E : Type _} [NormedField 𝕜]
 
-section SemiNormedGroup
+section SeminormedAddCommGroup
 
-variable [SemiNormedGroup E] [NormedSpace 𝕜 E]
+variable [SeminormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 theorem smul_ball {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) : c • Ball x r = Ball (c • x) (∥c∥ * r) := by
   ext y
@@ -48,7 +48,10 @@ theorem Metric.Bounded.smul {s : Set E} (hs : Bounded s) (c : 𝕜) : Bounded (c
   refine' bounded_iff_exists_norm_le.2 ⟨∥c∥ * R, _⟩
   intro z hz
   obtain ⟨y, ys, rfl⟩ : ∃ y : E, y ∈ s ∧ c • y = z := mem_smul_set.1 hz
-  calc ∥c • y∥ = ∥c∥ * ∥y∥ := norm_smul _ _ _ ≤ ∥c∥ * R := mul_le_mul_of_nonneg_left (hR y ys) (norm_nonneg _)
+  calc
+    ∥c • y∥ = ∥c∥ * ∥y∥ := norm_smul _ _
+    _ ≤ ∥c∥ * R := mul_le_mul_of_nonneg_left (hR y ys) (norm_nonneg _)
+    
 
 /-- If `s` is a bounded set, then for small enough `r`, the set `{x} + r • s` is contained in any
 fixed neighborhood of `x`. -/
@@ -294,11 +297,11 @@ theorem closed_ball_sub_closed_ball [ProperSpace E] (hε : 0 ≤ ε) (hδ : 0 �
     ClosedBall a ε - ClosedBall b δ = ClosedBall (a - b) (ε + δ) := by
   simp_rw [sub_eq_add_neg, neg_closed_ball, closed_ball_add_closed_ball hε hδ]
 
-end SemiNormedGroup
+end SeminormedAddCommGroup
 
-section NormedGroup
+section NormedAddCommGroup
 
-variable [NormedGroup E] [NormedSpace 𝕜 E]
+variable [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 theorem smul_closed_ball (c : 𝕜) (x : E) {r : ℝ} (hr : 0 ≤ r) : c • ClosedBall x r = ClosedBall (c • x) (∥c∥ * r) := by
   rcases eq_or_ne c 0 with (rfl | hc)
@@ -345,5 +348,5 @@ theorem affinity_unit_ball {r : ℝ} (hr : 0 < r) (x : E) : x +ᵥ r • Ball 0 
 theorem affinity_unit_closed_ball {r : ℝ} (hr : 0 ≤ r) (x : E) : x +ᵥ r • ClosedBall 0 1 = ClosedBall x r := by
   rw [smul_closed_unit_ball, Real.norm_of_nonneg hr, vadd_closed_ball_zero]
 
-end NormedGroup
+end NormedAddCommGroup
 

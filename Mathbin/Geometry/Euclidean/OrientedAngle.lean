@@ -6,6 +6,7 @@ Authors: Joseph Myers
 import Mathbin.Analysis.InnerProductSpace.Orientation
 import Mathbin.Analysis.InnerProductSpace.PiL2
 import Mathbin.Analysis.SpecialFunctions.Complex.Circle
+import Mathbin.Geometry.Euclidean.Basic
 
 /-!
 # Oriented angles.
@@ -40,6 +41,8 @@ generally use the definitions and results in the `orientation` namespace instead
 noncomputable section
 
 open Real
+
+open RealInnerProductSpace
 
 namespace Orthonormal
 
@@ -395,19 +398,18 @@ theorem oangle_eq_two_zsmul_oangle_sub_of_norm_eq {x y z : V} (hxyne : x ≠ y) 
     exact hxyne hxy
   have hx : x ≠ 0 := norm_ne_zero_iff.1 (hxy.symm ▸ norm_ne_zero_iff.2 hy)
   have hz : z ≠ 0 := norm_ne_zero_iff.1 (hxz ▸ norm_ne_zero_iff.2 hx)
-  calc hb.oangle y z = hb.oangle x z - hb.oangle x y :=
-      (hb.oangle_sub_left hx hy hz).symm _ = π - (2 : ℤ) • hb.oangle (x - z) x - (π - (2 : ℤ) • hb.oangle (x - y) x) :=
-      by
+  calc
+    hb.oangle y z = hb.oangle x z - hb.oangle x y := (hb.oangle_sub_left hx hy hz).symm
+    _ = π - (2 : ℤ) • hb.oangle (x - z) x - (π - (2 : ℤ) • hb.oangle (x - y) x) := by
       rw [hb.oangle_eq_pi_sub_two_zsmul_oangle_sub_of_norm_eq hxzne.symm hxz.symm,
-        hb.oangle_eq_pi_sub_two_zsmul_oangle_sub_of_norm_eq hxyne.symm
-          hxy.symm]_ = (2 : ℤ) • (hb.oangle (x - y) x - hb.oangle (x - z) x) :=
-      by
-      abel _ = (2 : ℤ) • hb.oangle (x - y) (x - z) := by
-      rw
-        [hb.oangle_sub_right (sub_ne_zero_of_ne hxyne) (sub_ne_zero_of_ne hxzne)
-          hx]_ = (2 : ℤ) • hb.oangle (y - x) (z - x) :=
-      by
+        hb.oangle_eq_pi_sub_two_zsmul_oangle_sub_of_norm_eq hxyne.symm hxy.symm]
+    _ = (2 : ℤ) • (hb.oangle (x - y) x - hb.oangle (x - z) x) := by
+      abel
+    _ = (2 : ℤ) • hb.oangle (x - y) (x - z) := by
+      rw [hb.oangle_sub_right (sub_ne_zero_of_ne hxyne) (sub_ne_zero_of_ne hxzne) hx]
+    _ = (2 : ℤ) • hb.oangle (y - x) (z - x) := by
       rw [← oangle_neg_neg, neg_sub, neg_sub]
+    
 
 /-- Angle at center of a circle equals twice angle at circumference, oriented vector angle
 form with radius specified. -/
@@ -668,7 +670,7 @@ theorem exists_linear_isometry_equiv_eq_of_det_pos {f : V ≃ₗᵢ[ℝ] V} (hd 
   · exact ⟨θ, hf⟩
     
   · simp [← hf, LinearEquiv.coe_det] at hd
-    norm_num  at hd
+    norm_num at hd
     
 
 /-- Any linear isometric equivalence in `V` with negative determinant is `conj_lie` composed
@@ -677,7 +679,7 @@ theorem exists_linear_isometry_equiv_eq_of_det_neg {f : V ≃ₗᵢ[ℝ] V} (hd 
     ∃ θ : Real.Angle, f = hb.conjLie.trans (hb.rotation θ) := by
   rcases hb.exists_linear_isometry_equiv_eq f with ⟨θ, hf | hf⟩
   · simp [← hf, LinearEquiv.coe_det] at hd
-    norm_num  at hd
+    norm_num at hd
     
   · exact ⟨θ, hf⟩
     
@@ -753,6 +755,55 @@ theorem rotation_eq_rotation_neg_of_orientation_eq_neg {b₂ : Basis (Finₓ 2) 
   congr 1
   simp only [← mul_comm (Real.Angle.expMapCircle θ₂ : ℂ), ← mul_assoc]
   rw [← Submonoid.coe_mul, mul_left_invₓ, Submonoid.coe_one, mul_oneₓ]
+
+/-- The inner product of two vectors is the product of the norms and the cosine of the oriented
+angle between the vectors. -/
+theorem inner_eq_norm_mul_norm_mul_cos_oangle (x y : V) : ⟪x, y⟫ = ∥x∥ * ∥y∥ * Real.Angle.cos (hb.oangle x y) := by
+  by_cases' hx : x = 0
+  · simp [← hx]
+    
+  by_cases' hy : y = 0
+  · simp [← hy]
+    
+  rw [oangle, Real.Angle.cos_coe, Complex.cos_arg]
+  swap
+  · simp [← hx, ← hy]
+    
+  simp_rw [Complex.abs_div, ← Complex.norm_eq_abs, LinearIsometryEquiv.norm_map, Complex.div_re, ← Complex.sq_abs, ←
+    Complex.norm_eq_abs, LinearIsometryEquiv.norm_map, Complex.isometry_of_orthonormal_symm_apply, Complex.add_re,
+    Complex.add_im, IsROrC.i, Complex.mul_I_re, Complex.mul_I_im, Complex.of_real_re, Complex.of_real_im,
+    Basis.coord_apply, neg_zero, zero_addₓ, add_zeroₓ]
+  conv_lhs => rw [← b.sum_repr x, ← b.sum_repr y]
+  simp_rw [hb.inner_sum,
+    (by
+      decide : (Finset.univ : Finset (Finₓ 2)) = {0, 1}),
+    star_ring_end_apply, star_trivial]
+  rw
+    [Finset.sum_insert
+      (by
+        decide : (0 : Finₓ 2) ∉ ({1} : Finset (Finₓ 2))),
+    Finset.sum_singleton]
+  field_simp [← norm_ne_zero_iff.2 hx, ← norm_ne_zero_iff.2 hy]
+  ring
+
+/-- The cosine of the oriented angle between two nonzero vectors is the inner product divided by
+the product of the norms. -/
+theorem cos_oangle_eq_inner_div_norm_mul_norm {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
+    Real.Angle.cos (hb.oangle x y) = ⟪x, y⟫ / (∥x∥ * ∥y∥) := by
+  rw [hb.inner_eq_norm_mul_norm_mul_cos_oangle]
+  field_simp [← norm_ne_zero_iff.2 hx, ← norm_ne_zero_iff.2 hy]
+  ring
+
+/-- The cosine of the oriented angle between two nonzero vectors equals that of the unoriented
+angle. -/
+theorem cos_oangle_eq_cos_angle {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
+    Real.Angle.cos (hb.oangle x y) = Real.cos (InnerProductGeometry.angle x y) := by
+  rw [hb.cos_oangle_eq_inner_div_norm_mul_norm hx hy, InnerProductGeometry.cos_angle]
+
+/-- The oriented angle between two nonzero vectors is plus or minus the unoriented angle. -/
+theorem oangle_eq_angle_or_eq_neg_angle {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
+    hb.oangle x y = InnerProductGeometry.angle x y ∨ hb.oangle x y = -InnerProductGeometry.angle x y :=
+  Real.Angle.cos_eq_real_cos_iff_eq_or_eq_neg.1 <| hb.cos_oangle_eq_cos_angle hx hy
 
 end Orthonormal
 
@@ -1189,6 +1240,28 @@ theorem rotation_neg_orientation_eq_neg (θ : Real.Angle) : (-o).rotation θ = o
   simp_rw [rotation]
   refine' Orthonormal.rotation_eq_rotation_neg_of_orientation_eq_neg _ _ _ _
   simp_rw [Orientation.fin_orthonormal_basis_orientation]
+
+/-- The inner product of two vectors is the product of the norms and the cosine of the oriented
+angle between the vectors. -/
+theorem inner_eq_norm_mul_norm_mul_cos_oangle (x y : V) : ⟪x, y⟫ = ∥x∥ * ∥y∥ * Real.Angle.cos (o.oangle x y) :=
+  ob.inner_eq_norm_mul_norm_mul_cos_oangle x y
+
+/-- The cosine of the oriented angle between two nonzero vectors is the inner product divided by
+the product of the norms. -/
+theorem cos_oangle_eq_inner_div_norm_mul_norm {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
+    Real.Angle.cos (o.oangle x y) = ⟪x, y⟫ / (∥x∥ * ∥y∥) :=
+  ob.cos_oangle_eq_inner_div_norm_mul_norm hx hy
+
+/-- The cosine of the oriented angle between two nonzero vectors equals that of the unoriented
+angle. -/
+theorem cos_oangle_eq_cos_angle {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
+    Real.Angle.cos (o.oangle x y) = Real.cos (InnerProductGeometry.angle x y) :=
+  ob.cos_oangle_eq_cos_angle hx hy
+
+/-- The oriented angle between two nonzero vectors is plus or minus the unoriented angle. -/
+theorem oangle_eq_angle_or_eq_neg_angle {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
+    o.oangle x y = InnerProductGeometry.angle x y ∨ o.oangle x y = -InnerProductGeometry.angle x y :=
+  ob.oangle_eq_angle_or_eq_neg_angle hx hy
 
 end Orientation
 

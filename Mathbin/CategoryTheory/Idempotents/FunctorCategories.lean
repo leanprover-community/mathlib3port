@@ -36,7 +36,7 @@ instance functor_category_is_idempotent_complete [IsIdempotentComplete C] : IsId
   refine' ⟨_⟩
   intro F p hp
   have hC := (is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent C).mp inferInstance
-  have : ∀ j : J, has_equalizer (𝟙 _) (p.app j) := fun j => hC _ _ (congr_app hp j)
+  haveI : ∀ j : J, has_equalizer (𝟙 _) (p.app j) := fun j => hC _ _ (congr_app hp j)
   /- We construct the direct factor `Y` associated to `p : F ⟶ F` by computing
       the equalizer of the identity and `p.app j` on each object `(j : J)`.  -/
   let Y : J ⥤ C :=
@@ -172,6 +172,26 @@ theorem to_karoubi_comp_karoubi_functor_category_embedding :
       rfl
       
     
+
+variable {J C} (P Q : Karoubi (J ⥤ C)) (f : P ⟶ Q) (X : J)
+
+@[simp, reassoc]
+theorem app_idem (X : J) : P.p.app X ≫ P.p.app X = P.p.app X :=
+  congr_app P.idem X
+
+variable {P Q}
+
+@[simp, reassoc]
+theorem app_p_comp : P.p.app X ≫ f.f.app X = f.f.app X :=
+  congr_app (p_comp f) X
+
+@[simp, reassoc]
+theorem app_comp_p : f.f.app X ≫ Q.p.app X = f.f.app X :=
+  congr_app (comp_p f) X
+
+@[reassoc]
+theorem app_p_comm : P.p.app X ≫ f.f.app X = f.f.app X ≫ Q.p.app X :=
+  congr_app (p_comm f) X
 
 end Idempotents
 

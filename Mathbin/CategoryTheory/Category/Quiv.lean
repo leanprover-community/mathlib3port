@@ -84,7 +84,7 @@ namespace Quiv
 
 /-- Any prefunctor into a category lifts to a functor from the path category. -/
 @[simps]
-def lift {V : Type u} [Quiver.{v + 1} V] {C : Type u} [Category.{v} C] (F : Prefunctor V C) : Paths V ⥤ C where
+def lift {V : Type u} [Quiver.{v + 1} V] {C : Type _} [Category C] (F : Prefunctor V C) : Paths V ⥤ C where
   obj := fun X => F.obj X
   map := fun X Y f => composePathₓ (F.mapPath f)
 

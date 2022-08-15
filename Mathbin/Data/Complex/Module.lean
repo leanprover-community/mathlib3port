@@ -268,13 +268,13 @@ theorem conj_ae_coe : ⇑conj_ae = conj :=
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
 /-- The matrix representation of `conj_ae`. -/
 @[simp]
 theorem to_matrix_conj_ae :
     LinearMap.toMatrix basisOneI basisOneI conjAe.toLinearMap =
-      «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation" :=
+      «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation" :=
   by
   ext i j
   simp [← LinearMap.to_matrix_apply]

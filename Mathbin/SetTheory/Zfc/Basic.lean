@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Mathbin.Data.Set.Lattice
+import Mathbin.Logic.Small
+import Mathbin.Order.WellFounded
 
 /-!
 # A model of ZFC
@@ -127,12 +129,17 @@ equivalent to some element of the second family and vice-versa. -/
 def Equiv (x y : PSet) : Prop :=
   PSet.rec (fun α z m ⟨β, B⟩ => (∀ a, ∃ b, m a (B b)) ∧ ∀ b, ∃ a, m a (B b)) x y
 
-theorem exists_equiv_left : ∀ {x y : PSet} (h : Equiv x y) (i : x.type), ∃ j, Equiv (x.func i) (y.func j)
-  | ⟨α, A⟩, ⟨β, B⟩, h => h.1
+theorem equiv_iff :
+    ∀ {x y : PSet}, Equiv x y ↔ (∀ i, ∃ j, Equiv (x.func i) (y.func j)) ∧ ∀ j, ∃ i, Equiv (x.func i) (y.func j)
+  | ⟨α, A⟩, ⟨β, B⟩ => Iff.rfl
 
-theorem exists_equiv_right : ∀ {x y : PSet} (h : Equiv x y) (j : y.type), ∃ i, Equiv (x.func i) (y.func j)
-  | ⟨α, A⟩, ⟨β, B⟩, h => h.2
+theorem Equiv.exists_left {x y : PSet} (h : Equiv x y) : ∀ i, ∃ j, Equiv (x.func i) (y.func j) :=
+  (equiv_iff.1 h).1
 
+theorem Equiv.exists_right {x y : PSet} (h : Equiv x y) : ∀ j, ∃ i, Equiv (x.func i) (y.func j) :=
+  (equiv_iff.1 h).2
+
+@[refl]
 protected theorem Equiv.refl (x) : Equiv x x :=
   (PSet.recOn x) fun α A IH => ⟨fun a => ⟨a, IH a⟩, fun a => ⟨a, IH a⟩⟩
 
@@ -151,11 +158,17 @@ protected theorem Equiv.euc {x} : ∀ {y z}, Equiv x y → Equiv z y → Equiv x
         let ⟨a, ba⟩ := βα b
         ⟨a, IH a ba cb⟩⟩
 
+@[symm]
 protected theorem Equiv.symm {x y} : Equiv x y → Equiv y x :=
   (Equiv.refl y).euc
 
+@[trans]
 protected theorem Equiv.trans {x y z} (h1 : Equiv x y) (h2 : Equiv y z) : Equiv x z :=
   h1.euc h2.symm
+
+protected theorem equiv_of_is_empty (x y : PSet) [IsEmpty x.type] [IsEmpty y.type] : Equiv x y :=
+  equiv_iff.2 <| by
+    simp
 
 instance setoid : Setoidₓ PSet :=
   ⟨PSet.Equiv, Equiv.refl, fun x y => Equiv.symm, fun x y z => Equiv.trans⟩
@@ -167,6 +180,15 @@ protected def Subset (x y : PSet) : Prop :=
 
 instance : HasSubset PSet :=
   ⟨PSet.Subset⟩
+
+instance : IsRefl PSet (· ⊆ ·) :=
+  ⟨fun x a => ⟨a, Equiv.refl _⟩⟩
+
+instance : IsTrans PSet (· ⊆ ·) :=
+  ⟨fun x y z hxy hyz a => by
+    cases' hxy a with b hb
+    cases' hyz b with c hc
+    exact ⟨c, hb.trans hc⟩⟩
 
 theorem Equiv.ext : ∀ x y : PSet, Equiv x y ↔ x ⊆ y ∧ y ⊆ x
   | ⟨α, A⟩, ⟨β, B⟩ =>
@@ -211,6 +233,10 @@ instance : HasMem PSet PSet :=
 theorem Mem.mk {α : Type u} (A : α → PSet) (a : α) : A a ∈ mk α A :=
   ⟨a, Equiv.refl (A a)⟩
 
+theorem func_mem (x : PSet) (i : x.type) : x.func i ∈ x := by
+  cases x
+  apply mem.mk
+
 theorem Mem.ext : ∀ {x y : PSet.{u}}, (∀ w : PSet.{u}, w ∈ x ↔ w ∈ y) → Equiv x y
   | ⟨α, A⟩, ⟨β, B⟩, h =>
     ⟨fun a => (h (A a)).1 (Mem.mk A a), fun b =>
@@ -237,9 +263,37 @@ theorem equiv_iff_mem {x y : PSet.{u}} : Equiv x y ↔ ∀ {w : PSet.{u}}, w ∈
 theorem Mem.congr_left : ∀ {x y : PSet.{u}}, Equiv x y → ∀ {w : PSet.{u}}, x ∈ w ↔ y ∈ w
   | x, y, h, ⟨α, A⟩ => ⟨fun ⟨a, ha⟩ => ⟨a, h.symm.trans ha⟩, fun ⟨a, ha⟩ => ⟨a, h.trans ha⟩⟩
 
+private theorem mem_wf_aux : ∀ {x y : PSet.{u}}, Equiv x y → Acc (· ∈ ·) y
+  | ⟨α, A⟩, ⟨β, B⟩, H =>
+    ⟨_, by
+      rintro ⟨γ, C⟩ ⟨b, hc⟩
+      cases' H.exists_right b with a ha
+      have H := ha.trans hc.symm
+      rw [mk_func] at H
+      exact mem_wf_aux H⟩
+
+theorem mem_wf : @WellFounded PSet (· ∈ ·) :=
+  ⟨fun x => mem_wf_aux <| Equiv.refl x⟩
+
+instance : HasWellFounded PSet :=
+  ⟨_, mem_wf⟩
+
+instance : IsAsymm PSet (· ∈ ·) :=
+  mem_wf.IsAsymm
+
+theorem mem_asymm {x y : PSet} : x ∈ y → y ∉ x :=
+  asymm
+
+theorem mem_irrefl (x : PSet) : x ∉ x :=
+  irrefl x
+
 /-- Convert a pre-set to a `set` of pre-sets. -/
 def ToSet (u : PSet.{u}) : Set PSet.{u} :=
   { x | x ∈ u }
+
+@[simp]
+theorem mem_to_set (a u : PSet.{u}) : a ∈ u.ToSet ↔ a ∈ u :=
+  Iff.rfl
 
 /-- Two pre-sets are equivalent iff they have the same members. -/
 theorem Equiv.eq {x y : PSet} : Equiv x y ↔ ToSet x = ToSet y :=
@@ -264,6 +318,16 @@ instance : IsEmpty (Type ∅) :=
 @[simp]
 theorem mem_empty (x : PSet.{u}) : x ∉ (∅ : PSet.{u}) :=
   IsEmpty.exists_iff.1
+
+@[simp]
+theorem to_set_empty : ToSet ∅ = ∅ := by
+  simp [← to_set]
+
+@[simp]
+theorem empty_subset (x : PSet.{u}) : (∅ : PSet) ⊆ x := fun x => x.elim
+
+protected theorem equiv_empty (x : PSet) [IsEmpty x.type] : Equiv x ∅ :=
+  PSet.equiv_of_is_empty x _
 
 /-- Insert an element into a pre-set -/
 protected def insert (x y : PSet) : PSet :=
@@ -311,11 +375,11 @@ theorem mem_powerset : ∀ {x y : PSet}, y ∈ powerset x ↔ y ⊆ x
         fun ⟨a, b, ba⟩ => ⟨b, ba⟩⟩⟩
 
 /-- The pre-set union operator -/
-def union (a : PSet) : PSet :=
+def sUnion (a : PSet) : PSet :=
   ⟨Σx, (a.func x).type, fun ⟨x, y⟩ => (a.func x).func y⟩
 
 @[simp]
-theorem mem_Union : ∀ {x y : PSet.{u}}, y ∈ union x ↔ ∃ z ∈ x, y ∈ z
+theorem mem_sUnion : ∀ {x y : PSet.{u}}, y ∈ ⋃₀x ↔ ∃ z ∈ x, y ∈ z
   | ⟨α, A⟩, y =>
     ⟨fun ⟨⟨a, c⟩, (e : Equivₓ y ((A a).func c))⟩ =>
       have : func (A a) c ∈ mk (A a).type (A a).func := Mem.mk (A a).func c
@@ -329,6 +393,11 @@ theorem mem_Union : ∀ {x y : PSet.{u}}, y ∈ union x ↔ ∃ z ∈ x, y ∈ z
         let ⟨βt, tβ⟩ := e
         let ⟨c, bc⟩ := βt b
         ⟨⟨a, c⟩, yb.trans bc⟩⟩
+
+@[simp]
+theorem to_set_sUnion (x : PSet.{u}) : (⋃₀x).ToSet = ⋃₀(to_set '' x.ToSet) := by
+  ext
+  simp
 
 /-- The image of a function from pre-sets to pre-sets. -/
 def image (f : PSet.{u} → PSet.{u}) (x : PSet.{u}) : PSet :=
@@ -505,9 +574,27 @@ protected def Mem : Setₓ → Setₓ → Prop :=
 instance : HasMem Setₓ Setₓ :=
   ⟨Setₓ.Mem⟩
 
+@[simp]
+theorem mk_mem_iff {x y : PSet} : mk x ∈ mk y ↔ x ∈ y :=
+  Iff.rfl
+
 /-- Convert a ZFC set into a `set` of ZFC sets -/
 def ToSet (u : Setₓ.{u}) : Set Setₓ.{u} :=
   { x | x ∈ u }
+
+@[simp]
+theorem mem_to_set (a u : Setₓ.{u}) : a ∈ u.ToSet ↔ a ∈ u :=
+  Iff.rfl
+
+instance small_to_set (x : Setₓ.{u}) : Small.{u} x.ToSet :=
+  (Quotientₓ.induction_on x) fun a => by
+    let f : a.type → (mk a).ToSet := fun i => ⟨mk <| a.func i, func_mem a i⟩
+    suffices Function.Surjective f by
+      exact small_of_surjective this
+    rintro ⟨y, hb⟩
+    induction y using Quotientₓ.induction_on
+    cases' hb with i h
+    exact ⟨i, Subtype.coe_injective (Quotientₓ.sound h.symm)⟩
 
 /-- `x ⊆ y` as ZFC sets means that all members of `x` are members of `y`. -/
 protected def Subset (x y : Setₓ.{u}) :=
@@ -519,20 +606,40 @@ instance hasSubset : HasSubset Setₓ :=
 theorem subset_def {x y : Setₓ.{u}} : x ⊆ y ↔ ∀ ⦃z⦄, z ∈ x → z ∈ y :=
   Iff.rfl
 
+instance : IsRefl Setₓ (· ⊆ ·) :=
+  ⟨fun x a => id⟩
+
+instance : IsTrans Setₓ (· ⊆ ·) :=
+  ⟨fun x y z hxy hyz a ha => hyz (hxy ha)⟩
+
 @[simp]
-theorem subset_iff : ∀ x y : PSet, mk x ⊆ mk y ↔ x ⊆ y
+theorem subset_iff : ∀ {x y : PSet}, mk x ⊆ mk y ↔ x ⊆ y
   | ⟨α, A⟩, ⟨β, B⟩ =>
     ⟨fun h a => @h ⟦A a⟧ (Mem.mk A a), fun h z =>
       Quotientₓ.induction_on z fun z ⟨a, za⟩ =>
         let ⟨b, ab⟩ := h a
         ⟨b, za.trans ab⟩⟩
 
+@[simp]
+theorem to_set_subset_iff {x y : Setₓ} : x.ToSet ⊆ y.ToSet ↔ x ⊆ y := by
+  simp [← subset_def, ← Set.subset_def]
+
+@[ext]
 theorem ext {x y : Setₓ.{u}} : (∀ z : Setₓ.{u}, z ∈ x ↔ z ∈ y) → x = y :=
   Quotientₓ.induction_on₂ x y fun u v h => Quotientₓ.sound (Mem.ext fun w => h ⟦w⟧)
 
-theorem ext_iff {x y : Setₓ.{u}} : (∀ z : Setₓ.{u}, z ∈ x ↔ z ∈ y) ↔ x = y :=
-  ⟨ext, fun h => by
-    simp [← h]⟩
+theorem ext_iff {x y : Setₓ.{u}} : x = y ↔ ∀ z : Setₓ.{u}, z ∈ x ↔ z ∈ y :=
+  ⟨fun h => by
+    simp [← h], ext⟩
+
+theorem to_set_injective : Function.Injective ToSet := fun x y h => ext <| Set.ext_iff.1 h
+
+@[simp]
+theorem to_set_inj {x y : Setₓ} : x.ToSet = y.ToSet ↔ x = y :=
+  to_set_injective.eq_iff
+
+instance : IsAntisymm Setₓ (· ⊆ ·) :=
+  ⟨fun a b hab hba => ext fun c => ⟨@hab c, @hba c⟩⟩
 
 /-- The empty ZFC set -/
 protected def empty : Setₓ :=
@@ -547,6 +654,14 @@ instance : Inhabited Setₓ :=
 @[simp]
 theorem mem_empty (x) : x ∉ (∅ : Setₓ.{u}) :=
   Quotientₓ.induction_on x PSet.mem_empty
+
+@[simp]
+theorem to_set_empty : ToSet ∅ = ∅ := by
+  simp [← to_set]
+
+@[simp]
+theorem empty_subset (x : Setₓ.{u}) : (∅ : Setₓ) ⊆ x :=
+  (Quotientₓ.induction_on x) fun y => subset_iff.2 <| PSet.empty_subset y
 
 theorem eq_empty (x : Setₓ.{u}) : x = ∅ ↔ ∀ y : Setₓ.{u}, y ∉ x :=
   ⟨fun h y => h.symm ▸ mem_empty y, fun h =>
@@ -579,7 +694,7 @@ instance : IsLawfulSingleton Setₓ Setₓ :=
   ⟨fun x => rfl⟩
 
 @[simp]
-theorem mem_insert {x y z : Setₓ.{u}} : x ∈ insert y z ↔ x = y ∨ x ∈ z :=
+theorem mem_insert_iff {x y z : Setₓ.{u}} : x ∈ insert y z ↔ x = y ∨ x ∈ z :=
   Quotientₓ.induction_on₃ x y z fun x y ⟨α, A⟩ =>
     show (x ∈ PSet.mk (Option α) fun o => Option.rec y A o) ↔ mk x = mk y ∨ x ∈ PSet.mk α A from
       ⟨fun m =>
@@ -591,13 +706,29 @@ theorem mem_insert {x y z : Setₓ.{u}} : x ∈ insert y z ↔ x = y ∨ x ∈ z
         | Or.inr ⟨a, ha⟩ => ⟨some a, ha⟩
         | Or.inl h => ⟨none, Quotientₓ.exact h⟩⟩
 
+theorem mem_insert (x y : Setₓ) : x ∈ insert x y :=
+  mem_insert_iff.2 <| Or.inl rfl
+
+theorem mem_insert_of_mem {y z : Setₓ} (x) (h : z ∈ y) : z ∈ insert x y :=
+  mem_insert_iff.2 <| Or.inr h
+
+@[simp]
+theorem to_set_insert (x y : Setₓ) : (insert x y).ToSet = insert x y.ToSet := by
+  ext
+  simp
+
 @[simp]
 theorem mem_singleton {x y : Setₓ.{u}} : x ∈ @singleton Setₓ.{u} Setₓ.{u} _ y ↔ x = y :=
-  Iff.trans mem_insert ⟨fun o => Or.ndrec (fun h => h) (fun n => absurd n (mem_empty _)) o, Or.inl⟩
+  Iff.trans mem_insert_iff ⟨fun o => Or.ndrec (fun h => h) (fun n => absurd n (mem_empty _)) o, Or.inl⟩
+
+@[simp]
+theorem to_set_singleton (x : Setₓ) : ({x} : Setₓ).ToSet = {x} := by
+  ext
+  simp
 
 @[simp]
 theorem mem_pair {x y z : Setₓ.{u}} : x ∈ ({y, z} : Setₓ) ↔ x = y ∨ x = z :=
-  Iff.trans mem_insert <| or_congr Iff.rfl mem_singleton
+  Iff.trans mem_insert_iff <| or_congr Iff.rfl mem_singleton
 
 /-- `omega` is the first infinite von Neumann ordinal -/
 def omega : Setₓ :=
@@ -646,6 +777,11 @@ theorem mem_sep {p : Setₓ.{u} → Prop} {x y : Setₓ.{u}} : y ∈ { y ∈ x |
           rwa [mk_func, ← Setₓ.sound h]⟩,
         h⟩⟩
 
+@[simp]
+theorem to_set_sep (a : Setₓ) (p : Setₓ → Prop) : { x ∈ a | p x }.ToSet = { x ∈ a.ToSet | p x } := by
+  ext
+  simp
+
 /-- The powerset operation, the collection of subsets of a ZFC set -/
 def powerset : Setₓ → Setₓ :=
   Resp.eval 1
@@ -666,8 +802,8 @@ theorem mem_powerset {x y : Setₓ.{u}} : y ∈ powerset x ↔ y ⊆ x :=
     show (⟨β, B⟩ : PSet.{u}) ∈ PSet.powerset.{u} ⟨α, A⟩ ↔ _ by
       simp [← mem_powerset, ← subset_iff]
 
-theorem Union_lem {α β : Type u} (A : α → PSet) (B : β → PSet) (αβ : ∀ a, ∃ b, Equivₓ (A a) (B b)) :
-    ∀ a, ∃ b, Equivₓ ((union ⟨α, A⟩).func a) ((union ⟨β, B⟩).func b)
+theorem sUnion_lem {α β : Type u} (A : α → PSet) (B : β → PSet) (αβ : ∀ a, ∃ b, Equivₓ (A a) (B b)) :
+    ∀ a, ∃ b, Equivₓ ((sUnion ⟨α, A⟩).func a) ((sUnion ⟨β, B⟩).func b)
   | ⟨a, c⟩ => by
     let ⟨b, hb⟩ := αβ a
     induction' ea : A a with γ Γ
@@ -689,33 +825,42 @@ theorem Union_lem {α β : Type u} (A : α → PSet) (B : β → PSet) (αβ : �
         this⟩
 
 /-- The union operator, the collection of elements of elements of a ZFC set -/
-def union : Setₓ → Setₓ :=
+def sUnion : Setₓ → Setₓ :=
   Resp.eval 1
-    ⟨PSet.union, fun ⟨α, A⟩ ⟨β, B⟩ ⟨αβ, βα⟩ =>
-      ⟨Union_lem A B αβ, fun a =>
-        Exists.elim (Union_lem B A (fun b => Exists.elim (βα b) fun c hc => ⟨c, PSet.Equiv.symm hc⟩) a) fun b hb =>
+    ⟨PSet.sUnion, fun ⟨α, A⟩ ⟨β, B⟩ ⟨αβ, βα⟩ =>
+      ⟨sUnion_lem A B αβ, fun a =>
+        Exists.elim (sUnion_lem B A (fun b => Exists.elim (βα b) fun c hc => ⟨c, PSet.Equiv.symm hc⟩) a) fun b hb =>
           ⟨b, PSet.Equiv.symm hb⟩⟩⟩
 
--- mathport name: «expr⋃»
-notation "⋃" => union
-
 @[simp]
-theorem mem_Union {x y : Setₓ.{u}} : y ∈ union x ↔ ∃ z ∈ x, y ∈ z :=
+theorem mem_sUnion {x y : Setₓ.{u}} : y ∈ ⋃₀x ↔ ∃ z ∈ x, y ∈ z :=
   Quotientₓ.induction_on₂ x y fun x y =>
-    Iff.trans mem_Union ⟨fun ⟨z, h⟩ => ⟨⟦z⟧, h⟩, fun ⟨z, h⟩ => Quotientₓ.induction_on z (fun z h => ⟨z, h⟩) h⟩
+    Iff.trans mem_sUnion ⟨fun ⟨z, h⟩ => ⟨⟦z⟧, h⟩, fun ⟨z, h⟩ => Quotientₓ.induction_on z (fun z h => ⟨z, h⟩) h⟩
+
+theorem mem_sUnion_of_mem {x y z : Setₓ} (hy : y ∈ z) (hz : z ∈ x) : y ∈ ⋃₀x :=
+  mem_sUnion.2 ⟨z, hz, hy⟩
 
 @[simp]
-theorem Union_singleton {x : Setₓ.{u}} : union {x} = x :=
+theorem sUnion_singleton {x : Setₓ.{u}} : ⋃₀({x} : Setₓ) = x :=
   ext fun y => by
-    simp_rw [mem_Union, exists_prop, mem_singleton, exists_eq_left]
+    simp_rw [mem_sUnion, exists_prop, mem_singleton, exists_eq_left]
 
-theorem singleton_inj {x y : Setₓ.{u}} (H : ({x} : Setₓ) = {y}) : x = y := by
-  let this := congr_arg union H
-  rwa [Union_singleton, Union_singleton] at this
+theorem singleton_injective : Function.Injective (@singleton Setₓ Setₓ _) := fun x y H => by
+  let this := congr_arg sUnion H
+  rwa [sUnion_singleton, sUnion_singleton] at this
+
+@[simp]
+theorem singleton_inj {x y : Setₓ} : ({x} : Setₓ) = {y} ↔ x = y :=
+  singleton_injective.eq_iff
+
+@[simp]
+theorem to_set_sUnion (x : Setₓ.{u}) : (⋃₀x).ToSet = ⋃₀(to_set '' x.ToSet) := by
+  ext
+  simp
 
 /-- The binary union operation -/
-protected def unionₓ (x y : Setₓ.{u}) : Setₓ.{u} :=
-  ⋃ {x, y}
+protected def union (x y : Setₓ.{u}) : Setₓ.{u} :=
+  ⋃₀{x, y}
 
 /-- The binary intersection operation -/
 protected def inter (x y : Setₓ.{u}) : Setₓ.{u} :=
@@ -726,7 +871,7 @@ protected def diff (x y : Setₓ.{u}) : Setₓ.{u} :=
   { z ∈ x | z ∉ y }
 
 instance : HasUnion Setₓ :=
-  ⟨Setₓ.unionₓ⟩
+  ⟨Setₓ.union⟩
 
 instance : HasInter Setₓ :=
   ⟨Setₓ.inter⟩
@@ -735,22 +880,28 @@ instance : HasSdiff Setₓ :=
   ⟨Setₓ.diff⟩
 
 @[simp]
-theorem mem_union {x y z : Setₓ.{u}} : z ∈ x ∪ y ↔ z ∈ x ∨ z ∈ y :=
-  Iff.trans mem_Union
-    ⟨fun ⟨w, wxy, zw⟩ =>
-      match mem_pair.1 wxy with
-      | Or.inl wx =>
-        Or.inl
-          (by
-            rwa [← wx])
-      | Or.inr wy =>
-        Or.inr
-          (by
-            rwa [← wy]),
-      fun zxy =>
-      match zxy with
-      | Or.inl zx => ⟨x, mem_pair.2 (Or.inl rfl), zx⟩
-      | Or.inr zy => ⟨y, mem_pair.2 (Or.inr rfl), zy⟩⟩
+theorem to_set_union (x y : Setₓ.{u}) : (x ∪ y).ToSet = x.ToSet ∪ y.ToSet := by
+  unfold HasUnion.union
+  rw [Setₓ.union]
+  simp
+
+@[simp]
+theorem to_set_inter (x y : Setₓ.{u}) : (x ∩ y).ToSet = x.ToSet ∩ y.ToSet := by
+  unfold HasInter.inter
+  rw [Setₓ.inter]
+  ext
+  simp
+
+@[simp]
+theorem to_set_sdiff (x y : Setₓ.{u}) : (x \ y).ToSet = x.ToSet \ y.ToSet := by
+  change { z ∈ x | z ∉ y }.ToSet = _
+  ext
+  simp
+
+@[simp]
+theorem mem_union {x y z : Setₓ.{u}} : z ∈ x ∪ y ↔ z ∈ x ∨ z ∈ y := by
+  rw [← mem_to_set]
+  simp
 
 @[simp]
 theorem mem_inter {x y z : Setₓ.{u}} : z ∈ x ∩ y ↔ z ∈ x ∧ z ∈ y :=
@@ -760,6 +911,8 @@ theorem mem_inter {x y z : Setₓ.{u}} : z ∈ x ∩ y ↔ z ∈ x ∧ z ∈ y :
 theorem mem_diff {x y z : Setₓ.{u}} : z ∈ x \ y ↔ z ∈ x ∧ z ∉ y :=
   @mem_sep fun z : Setₓ.{u} => z ∉ y
 
+/-- Induction on the `∈` relation. -/
+@[elabAsElim]
 theorem induction_on {p : Setₓ → Prop} (x) (h : ∀ x, (∀, ∀ y ∈ x, ∀, p y) → p x) : p x :=
   (Quotientₓ.induction_on x) fun u =>
     (PSet.recOn u) fun α A IH =>
@@ -768,6 +921,21 @@ theorem induction_on {p : Setₓ → Prop} (x) (h : ∀ x, (∀, ∀ y ∈ x, �
           Quotientₓ.induction_on y fun v ⟨a, ha⟩ => by
             rw [@Quotientₓ.sound PSet _ _ _ ha]
             exact IH a
+
+theorem mem_wf : @WellFounded Setₓ (· ∈ ·) :=
+  ⟨fun x => induction_on x Acc.intro⟩
+
+instance : HasWellFounded Setₓ :=
+  ⟨_, mem_wf⟩
+
+instance : IsAsymm Setₓ (· ∈ ·) :=
+  mem_wf.IsAsymm
+
+theorem mem_asymm {x y : Setₓ} : x ∈ y → y ∉ x :=
+  asymm
+
+theorem mem_irrefl (x : Setₓ) : x ∉ x :=
+  irrefl x
 
 theorem regularity (x : Setₓ.{u}) (h : x ≠ ∅) : ∃ y ∈ x, x ∩ y = ∅ :=
   Classical.by_contradiction fun ne =>
@@ -803,9 +971,18 @@ theorem mem_image :
     (Quotientₓ.induction_on₂ x y) fun ⟨α, A⟩ y =>
       ⟨fun ⟨a, ya⟩ => ⟨⟦A a⟧, Mem.mk A a, Eq.symm <| Quotientₓ.sound ya⟩, fun ⟨z, hz, e⟩ => e ▸ image.mk _ _ hz⟩
 
+@[simp]
+theorem to_set_image (f : Setₓ → Setₓ) [H : Definable 1 f] (x : Setₓ) : (image f x).ToSet = f '' x.ToSet := by
+  ext
+  simp
+
 /-- Kuratowski ordered pair -/
 def pair (x y : Setₓ.{u}) : Setₓ.{u} :=
   {{x}, {x, y}}
+
+@[simp]
+theorem to_set_pair (x y : Setₓ.{u}) : (pair x y).ToSet = {{x}, {x, y}} := by
+  simp [← pair]
 
 /-- A subset of pairs `{(a, b) ∈ x × y | p a b}` -/
 def pairSep (p : Setₓ.{u} → Setₓ.{u} → Prop) (x y : Setₓ.{u}) : Setₓ.{u} :=
@@ -823,8 +1000,8 @@ theorem mem_pair_sep {p} {x y z : Setₓ.{u}} : z ∈ pairSep p x y ↔ ∃ a �
   · rintro (rfl | rfl) <;> [left, right] <;> assumption
     
 
-theorem pair_inj {x y x' y' : Setₓ.{u}} (H : pair x y = pair x' y') : x = x' ∧ y = y' := by
-  have ae := ext_iff.2 H
+theorem pair_injective : Function.Injective2 pair := fun x x' y y' H => by
+  have ae := ext_iff.1 H
   simp only [← pair, ← mem_pair] at ae
   obtain rfl : x = x' := by
     cases'
@@ -832,7 +1009,7 @@ theorem pair_inj {x y x' y' : Setₓ.{u}} (H : pair x y = pair x' y') : x = x' �
         (by
           simp ) with
       h h
-    · exact singleton_inj h
+    · exact singleton_injective h
       
     · have m : x' ∈ ({x} : Setₓ) := by
         simp [← h]
@@ -849,7 +1026,7 @@ theorem pair_inj {x y x' y' : Setₓ.{u}} (H : pair x y = pair x' y') : x = x' �
       exact Or.inr rfl
       
     · simpa [← eq_comm] using
-        (ext_iff.2 xy'xx y').1
+        (ext_iff.1 xy'xx y').1
           (by
             simp )
       
@@ -859,19 +1036,23 @@ theorem pair_inj {x y x' y' : Setₓ.{u}} (H : pair x y = pair x' y') : x = x' �
         simp )
   · obtain rfl :=
       mem_singleton.mp
-        ((ext_iff.2 xyx y).1 <| by
+        ((ext_iff.1 xyx y).1 <| by
           simp )
     simp [← he rfl]
     
   · obtain rfl | yy' :=
       mem_pair.mp
-        ((ext_iff.2 xyy' y).1 <| by
+        ((ext_iff.1 xyy' y).1 <| by
           simp )
     · simp [← he rfl]
       
     · simp [← yy']
       
     
+
+@[simp]
+theorem pair_inj {x y x' y' : Setₓ} : pair x y = pair x' y' ↔ x = x' ∧ y = y' :=
+  pair_injective.eq_iff
 
 /-- The cartesian product, `{(a, b) | a ∈ x, b ∈ y}` -/
 def prod : Setₓ.{u} → Setₓ.{u} → Setₓ.{u} :=
@@ -885,7 +1066,7 @@ theorem mem_prod {x y z : Setₓ.{u}} : z ∈ prod x y ↔ ∃ a ∈ x, ∃ b �
 theorem pair_mem_prod {x y a b : Setₓ.{u}} : pair a b ∈ prod x y ↔ a ∈ x ∧ b ∈ y :=
   ⟨fun h =>
     let ⟨a', a'x, b', b'y, e⟩ := mem_prod.1 h
-    match a', b', pair_inj e, a'x, b'y with
+    match a', b', pair_injective e, a'x, b'y with
     | _, _, ⟨rfl, rfl⟩, ax, bY => ⟨ax, bY⟩,
     fun ⟨ax, bY⟩ => mem_prod.2 ⟨a, ax, b, bY, rfl⟩⟩
 
@@ -918,7 +1099,7 @@ theorem map_unique {f : Setₓ.{u} → Setₓ.{u}} [H : Definable 1 f] {x z : Se
     ∃! w, pair z w ∈ map f x :=
   ⟨f z, image.mk _ _ zx, fun y yx => by
     let ⟨w, wx, we⟩ := mem_image.1 yx
-    let ⟨wz, fy⟩ := pair_inj we
+    let ⟨wz, fy⟩ := pair_injective we
     rw [← fy, wz]⟩
 
 @[simp]
@@ -935,13 +1116,17 @@ theorem map_is_func {f : Setₓ → Setₓ} [H : Definable 1 f] {x y : Setₓ} :
 
 end Setₓ
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler has_sep Set
--- ./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler has_insert Set
-/-- The collection of all classes. A class is defined as a `set` of ZFC sets. -/
+-- ./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler has_sep Set
+-- ./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler has_insert Set
+/-- The collection of all classes.
+
+We define `Class` as `set Set`, as this allows us to get many instances automatically. However, in
+practice, we treat it as (the definitionally equal) `Set → Prop`. This means, the preferred way to
+state that `x : Set` belongs to `A : Class` is to write `A x`. -/
 def Class :=
   Set Setₓ deriving HasSubset,
-  «./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler has_sep Set», HasEmptyc, Inhabited,
-  «./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler has_insert Set», HasUnion, HasInter,
+  «./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler has_sep Set», HasEmptyc, Inhabited,
+  «./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler has_insert Set», HasUnion, HasInter,
   HasCompl, HasSdiff
 
 namespace Class
@@ -957,11 +1142,11 @@ instance : Coe Setₓ Class :=
 def Univ : Class :=
   Set.Univ
 
-/-- Assert that `A` is a ZFC set satisfying `p` -/
-def ToSet (p : Setₓ.{u} → Prop) (A : Class.{u}) : Prop :=
-  ∃ x, ↑x = A ∧ p x
+/-- Assert that `A` is a ZFC set satisfying `B` -/
+def ToSet (B : Class.{u}) (A : Class.{u}) : Prop :=
+  ∃ x, ↑x = A ∧ B x
 
-/-- `A ∈ B` if `A` is a ZFC set which is a member of `B` -/
+/-- `A ∈ B` if `A` is a ZFC set which satisfies `B` -/
 protected def Mem (A B : Class.{u}) : Prop :=
   ToSet.{u} B A
 
@@ -970,6 +1155,33 @@ instance : HasMem Class Class :=
 
 theorem mem_univ {A : Class.{u}} : A ∈ univ.{u} ↔ ∃ x : Setₓ.{u}, ↑x = A :=
   exists_congr fun x => and_trueₓ _
+
+theorem mem_wf : @WellFounded Class.{u} (· ∈ ·) :=
+  ⟨by
+    have H : ∀ x : Setₓ.{u}, @Acc Class.{u} (· ∈ ·) ↑x := by
+      refine' fun a => Setₓ.induction_on a fun x IH => ⟨x, _⟩
+      rintro A ⟨z, rfl, hz⟩
+      exact IH z hz
+    · refine' fun A => ⟨A, _⟩
+      rintro B ⟨x, rfl, hx⟩
+      exact H x
+      ⟩
+
+instance : HasWellFounded Class :=
+  ⟨_, mem_wf⟩
+
+instance : IsAsymm Class (· ∈ ·) :=
+  mem_wf.IsAsymm
+
+theorem mem_asymm {x y : Class} : x ∈ y → y ∉ x :=
+  asymm
+
+theorem mem_irrefl (x : Class) : x ∉ x :=
+  irrefl x
+
+/-- There is no universal set. -/
+theorem univ_not_mem_univ : univ ∉ univ :=
+  mem_irrefl _
 
 /-- Convert a conglomerate (a collection of classes) into a class -/
 def CongToClass (x : Set Class.{u}) : Class.{u} :=
@@ -984,11 +1196,8 @@ def Powerset (x : Class) : Class :=
   CongToClass (Set.Powerset x)
 
 /-- The union of a class is the class of all members of ZFC sets in the class -/
-def Union (x : Class) : Class :=
-  Set.SUnion (ClassToCong x)
-
--- mathport name: «expr⋃»
-notation "⋃" => Union
+def SUnion (x : Class) : Class :=
+  ⋃₀ClassToCong x
 
 theorem OfSet.inj {x y : Setₓ.{u}} (h : (x : Class.{u}) = y) : x = y :=
   Setₓ.ext fun z => by
@@ -996,7 +1205,7 @@ theorem OfSet.inj {x y : Setₓ.{u}} (h : (x : Class.{u}) = y) : x = y :=
     rw [h]
 
 @[simp]
-theorem to_Set_of_Set (p : Setₓ.{u} → Prop) (x : Setₓ.{u}) : ToSet p x ↔ p x :=
+theorem to_Set_of_Set (A : Class.{u}) (x : Setₓ.{u}) : ToSet A x ↔ A x :=
   ⟨fun ⟨y, yx, py⟩ => by
     rwa [of_Set.inj yx] at py, fun px => ⟨x, rfl, px⟩⟩
 
@@ -1013,7 +1222,7 @@ theorem subset_hom (x y : Setₓ.{u}) : (x : Class.{u}) ⊆ y ↔ x ⊆ y :=
   Iff.rfl
 
 @[simp]
-theorem sep_hom (p : Setₓ.{u} → Prop) (x : Setₓ.{u}) : (↑({ y ∈ x | p y }) : Class.{u}) = { y ∈ x | p y } :=
+theorem sep_hom (p : Class.{u}) (x : Setₓ.{u}) : (↑({ y ∈ x | p y }) : Class.{u}) = { y ∈ x | p y } :=
   Set.ext fun y => Setₓ.mem_sep
 
 @[simp]
@@ -1022,7 +1231,7 @@ theorem empty_hom : ↑(∅ : Setₓ.{u}) = (∅ : Class.{u}) :=
 
 @[simp]
 theorem insert_hom (x y : Setₓ.{u}) : @insert Setₓ.{u} Class.{u} _ x y = ↑(insert x y) :=
-  Set.ext fun z => Iff.symm Setₓ.mem_insert
+  Set.ext fun z => Iff.symm Setₓ.mem_insert_iff
 
 @[simp]
 theorem union_hom (x y : Setₓ.{u}) : (x : Class.{u}) ∪ y = (x ∪ y : Setₓ.{u}) :=
@@ -1041,26 +1250,26 @@ theorem powerset_hom (x : Setₓ.{u}) : Powerset.{u} x = Setₓ.powerset x :=
   Set.ext fun z => Iff.symm Setₓ.mem_powerset
 
 @[simp]
-theorem Union_hom (x : Setₓ.{u}) : Union.{u} x = Setₓ.union x :=
+theorem sUnion_hom (x : Setₓ.{u}) : ⋃₀(x : Class.{u}) = ⋃₀x :=
   Set.ext fun z => by
-    refine' Iff.trans _ Set.mem_Union.symm
+    refine' Iff.trans _ Set.mem_sUnion.symm
     exact ⟨fun ⟨_, ⟨a, rfl, ax⟩, za⟩ => ⟨a, ax, za⟩, fun ⟨a, ax, za⟩ => ⟨_, ⟨a, rfl, ax⟩, za⟩⟩
 
-/-- The definite description operator, which is `{x}` if `{a | p a} = {x}` and `∅` otherwise. -/
-def Iota (p : Setₓ → Prop) : Class :=
-  Union { x | ∀ y, p y ↔ y = x }
+/-- The definite description operator, which is `{x}` if `{y | A y} = {x}` and `∅` otherwise. -/
+def Iota (A : Class) : Class :=
+  ⋃₀{ x | ∀ y, A y ↔ y = x }
 
-theorem iota_val (p : Setₓ → Prop) (x : Setₓ) (H : ∀ y, p y ↔ y = x) : Iota p = ↑x :=
+theorem iota_val (A : Class) (x : Setₓ) (H : ∀ y, A y ↔ y = x) : Iota A = ↑x :=
   Set.ext fun y =>
     ⟨fun ⟨_, ⟨x', rfl, h⟩, yx'⟩ => by
       rwa [← (H x').1 <| (h x').2 rfl], fun yx => ⟨_, ⟨x, rfl, H⟩, yx⟩⟩
 
 /-- Unlike the other set constructors, the `iota` definite descriptor
   is a set for any set input, but not constructively so, so there is no
-  associated `(Set → Prop) → Set` function. -/
-theorem iota_ex (p) : Iota.{u} p ∈ univ.{u} :=
+  associated `Class → Set` function. -/
+theorem iota_ex (A) : Iota.{u} A ∈ univ.{u} :=
   mem_univ.2 <|
-    Or.elim (Classical.em <| ∃ x, ∀ y, p y ↔ y = x) (fun ⟨x, h⟩ => ⟨x, Eq.symm <| iota_val p x h⟩) fun hn =>
+    Or.elim (Classical.em <| ∃ x, ∀ y, A y ↔ y = x) (fun ⟨x, h⟩ => ⟨x, Eq.symm <| iota_val A x h⟩) fun hn =>
       ⟨∅, Set.ext fun z => empty_hom.symm ▸ ⟨False.ndrec _, fun ⟨_, ⟨x, rfl, H⟩, zA⟩ => hn ⟨x, H⟩⟩⟩
 
 /-- Function value -/
@@ -1084,7 +1293,7 @@ theorem map_fval {f : Setₓ.{u} → Setₓ.{u}} [H : PSet.Definable 1 f] {x y :
     rw [Class.to_Set_of_Set, Class.mem_hom_right, mem_map]
     exact
       ⟨fun ⟨w, wz, pr⟩ => by
-        let ⟨wy, fw⟩ := Setₓ.pair_inj pr
+        let ⟨wy, fw⟩ := Setₓ.pair_injective pr
         rw [← fw, wy], fun e => by
         subst e
         exact ⟨_, h, rfl⟩⟩
@@ -1103,8 +1312,8 @@ theorem choice_mem_aux (y : Setₓ.{u}) (yx : y ∈ x) : (Classical.epsilon fun 
       h <| by
         rwa [← (eq_empty y).2 fun z zx => n ⟨z, zx⟩]
 
-theorem choice_is_func : IsFunc x (union x) (choice x) :=
-  (@map_is_func _ (Classical.allDefinable _) _ _).2 fun y yx => mem_Union.2 ⟨y, yx, choice_mem_aux x h y yx⟩
+theorem choice_is_func : IsFunc x (⋃₀x) (choice x) :=
+  (@map_is_func _ (Classical.allDefinable _) _ _).2 fun y yx => mem_sUnion.2 ⟨y, yx, choice_mem_aux x h y yx⟩
 
 theorem choice_mem (y : Setₓ.{u}) (yx : y ∈ x) : (choice x′y : Class.{u}) ∈ (y : Class.{u}) := by
   delta' choice

@@ -44,7 +44,7 @@ and we may be unhappy with the resulting opaqueness of the definition.
 class WstarAlgebra (M : Type u) [NormedRing M] [StarRing M] [CstarRing M] [Module ℂ M] [NormedAlgebra ℂ M]
   [StarModule ℂ M] where
   exists_predual :
-    ∃ (X : Type u)(_ : NormedGroup X)(_ : NormedSpace ℂ X)(_ : CompleteSpace X),
+    ∃ (X : Type u)(_ : NormedAddCommGroup X)(_ : NormedSpace ℂ X)(_ : CompleteSpace X),
       Nonempty (NormedSpace.Dual ℂ X ≃ₗᵢ⋆[ℂ] M)
 
 /-- The double commutant definition of a von Neumann algebra,
@@ -62,17 +62,13 @@ Thus we can't say that the bounded operators `H →L[ℂ] H` form a `von_neumann
 and instead will use `⊤ : von_neumann_algebra H`.
 -/
 -- TODO: Without this, `von_neumann_algebra` times out. Why?
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure VonNeumannAlgebra (H : Type u) [InnerProductSpace ℂ H] [CompleteSpace H] extends
   StarSubalgebra ℂ (H →L[ℂ] H) where
   double_commutant : Set.Centralizer (Set.Centralizer carrier) = carrier
 
-/-- Consider a von Neumann algebra acting on a Hilbert space `H` as a *-subalgebra of `H →L[ℂ] H`.
-(That is, we forget that it is equal to its double commutant
-or equivalently that it is closed in the weak and strong operator topologies.)
--/
-add_decl_doc VonNeumannAlgebra.toStarSubalgebra
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident von_neumann_algebra.to_star_subalgebra]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace VonNeumannAlgebra
 
 variable (H : Type u) [InnerProductSpace ℂ H] [CompleteSpace H]

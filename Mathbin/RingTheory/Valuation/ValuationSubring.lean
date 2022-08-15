@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2022 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Adam Topaz, Junyan Xu
+Authors: Adam Topaz, Junyan Xu, Jack McKoen
 -/
 import Mathbin.RingTheory.Valuation.ValuationRing
 import Mathbin.RingTheory.Localization.AsSubring
@@ -25,7 +25,7 @@ noncomputable section
 variable (K : Type _) [Field K]
 
 /-- A valuation subring of a field `K` is a subring `A` such that for every `x : K`,
-either `x ∈ A` or `x⁻¹ ∈ K`. -/
+either `x ∈ A` or `x⁻¹ ∈ A`. -/
 structure ValuationSubring extends Subring K where
   mem_or_inv_mem' : ∀ x : K, x ∈ carrier ∨ x⁻¹ ∈ carrier
 
@@ -465,20 +465,7 @@ def unitGroup : Subgroup Kˣ :=
   (A.Valuation.toMonoidWithZeroHom.toMonoidHom.comp (Units.coeHom K)).ker
 
 theorem mem_unit_group_iff (x : Kˣ) : x ∈ A.unitGroup ↔ A.Valuation x = 1 :=
-  Iff.refl _
-
-theorem unit_group_injective : Function.Injective (unitGroup : ValuationSubring K → Subgroup _) := fun A B h => by
-  rw [← A.valuation_subring_valuation, ← B.valuation_subring_valuation, ← Valuation.is_equiv_iff_valuation_subring,
-    Valuation.is_equiv_iff_val_eq_one]
-  rw [SetLike.ext_iff] at h
-  intro x
-  by_cases' hx : x = 0
-  · simp only [← hx, ← Valuation.map_zero, ← zero_ne_one]
-    
-  exact h (Units.mk0 x hx)
-
-theorem eq_iff_unit_group {A B : ValuationSubring K} : A = B ↔ A.unitGroup = B.unitGroup :=
-  unit_group_injective.eq_iff.symm
+  Iff.rfl
 
 /-- For a valuation subring `A`, `A.unit_group` agrees with the units of `A`. -/
 def unitGroupMulEquiv : A.unitGroup ≃* Aˣ where
@@ -506,7 +493,7 @@ theorem coe_unit_group_mul_equiv_symm_apply (a : Aˣ) : (A.unitGroupMulEquiv.sym
 
 theorem unit_group_le_unit_group {A B : ValuationSubring K} : A.unitGroup ≤ B.unitGroup ↔ A ≤ B := by
   constructor
-  · rintro h x hx
+  · intro h x hx
     rw [← A.valuation_le_one_iff x, le_iff_lt_or_eqₓ] at hx
     by_cases' h_1 : x = 0
     · simp only [← h_1, ← zero_mem]
@@ -529,6 +516,12 @@ theorem unit_group_le_unit_group {A B : ValuationSubring K} : A.unitGroup ≤ B.
     simpa using hx
     
 
+theorem unit_group_injective : Function.Injective (unitGroup : ValuationSubring K → Subgroup _) := fun A B h => by
+  simpa only [← le_antisymm_iffₓ, ← unit_group_le_unit_group] using h
+
+theorem eq_iff_unit_group {A B : ValuationSubring K} : A = B ↔ A.unitGroup = B.unitGroup :=
+  unit_group_injective.eq_iff.symm
+
 /-- The map on valuation subrings to their unit groups is an order embedding. -/
 def unitGroupOrderEmbedding : ValuationSubring K ↪o Subgroup Kˣ where
   toFun := fun A => A.unitGroup
@@ -539,6 +532,209 @@ theorem unit_group_strict_mono : StrictMono (unitGroup : ValuationSubring K → 
   unitGroupOrderEmbedding.StrictMono
 
 end UnitGroup
+
+section Nonunits
+
+/-- The nonunits of a valuation subring of `K`, as a subsemigroup of `K`-/
+def nonunits : Subsemigroup K where
+  Carrier := { x | A.Valuation x < 1 }
+  mul_mem' := fun a b ha hb => (mul_lt_mul₀ ha hb).trans_eq <| mul_oneₓ _
+
+theorem mem_nonunits_iff {x : K} : x ∈ A.Nonunits ↔ A.Valuation x < 1 :=
+  Iff.rfl
+
+theorem nonunits_le_nonunits {A B : ValuationSubring K} : B.Nonunits ≤ A.Nonunits ↔ A ≤ B := by
+  constructor
+  · intro h x hx
+    by_cases' h_1 : x = 0
+    · simp only [← h_1, ← zero_mem]
+      
+    rw [← valuation_le_one_iff, ← not_ltₓ, Valuation.one_lt_val_iff _ h_1] at hx⊢
+    by_contra h_2
+    exact hx (h h_2)
+    
+  · intro h x hx
+    by_contra h_1
+    exact not_ltₓ.2 (monotone_map_of_le _ _ h (not_ltₓ.1 h_1)) hx
+    
+
+theorem nonunits_injective : Function.Injective (nonunits : ValuationSubring K → Subsemigroup _) := fun A B h => by
+  simpa only [← le_antisymm_iffₓ, ← nonunits_le_nonunits] using h.symm
+
+theorem nonunits_inj {A B : ValuationSubring K} : A.Nonunits = B.Nonunits ↔ A = B :=
+  nonunits_injective.eq_iff
+
+/-- The map on valuation subrings to their nonunits is a dual order embedding. -/
+def nonunitsOrderEmbedding : ValuationSubring K ↪o (Subsemigroup K)ᵒᵈ where
+  toFun := fun A => A.Nonunits
+  inj' := nonunits_injective
+  map_rel_iff' := fun A B => nonunits_le_nonunits
+
+variable {A}
+
+/-- The elements of `A.nonunits` are those of the maximal ideal of `A` after coercion to `K`.
+
+See also `mem_nonunits_iff_exists_mem_maximal_ideal`, which gets rid of the coercion to `K`,
+at the expense of a more complicated right hand side.
+ -/
+theorem coe_mem_nonunits_iff {a : A} : (a : K) ∈ A.Nonunits ↔ a ∈ LocalRing.maximalIdeal A :=
+  (valuation_lt_one_iff _ _).symm
+
+theorem nonunits_le : A.Nonunits ≤ A.toSubring.toSubmonoid.toSubsemigroup := fun a ha =>
+  (A.valuation_le_one_iff _).mp (A.mem_nonunits_iff.mp ha).le
+
+theorem nonunits_subset : (A.Nonunits : Set K) ⊆ A :=
+  nonunits_le
+
+/-- The elements of `A.nonunits` are those of the maximal ideal of `A`.
+
+See also `coe_mem_nonunits_iff`, which has a simpler right hand side but requires the element
+to be in `A` already.
+ -/
+theorem mem_nonunits_iff_exists_mem_maximal_ideal {a : K} :
+    a ∈ A.Nonunits ↔ ∃ ha, (⟨a, ha⟩ : A) ∈ LocalRing.maximalIdeal A :=
+  ⟨fun h => ⟨nonunits_subset h, coe_mem_nonunits_iff.mp h⟩, fun ⟨ha, h⟩ => coe_mem_nonunits_iff.mpr h⟩
+
+/-- `A.nonunits` agrees with the maximal ideal of `A`, after taking its image in `K`. -/
+theorem image_maximal_ideal : (coe : A → K) '' LocalRing.maximalIdeal A = A.Nonunits := by
+  ext a
+  simp only [← Set.mem_image, ← SetLike.mem_coe, ← mem_nonunits_iff_exists_mem_maximal_ideal]
+  erw [Subtype.exists]
+  simp_rw [Subtype.coe_mk, exists_and_distrib_right, exists_eq_right]
+
+end Nonunits
+
+section PrincipalUnitGroup
+
+/-- The principal unit group of a valuation subring, as a subgroup of `Kˣ`. -/
+def principalUnitGroup : Subgroup Kˣ where
+  Carrier := { x | A.Valuation (x - 1) < 1 }
+  mul_mem' := by
+    intro a b ha hb
+    refine' lt_of_le_of_ltₓ _ (max_ltₓ hb ha)
+    rw [← one_mulₓ (A.valuation (b - 1)), ← A.valuation.map_one_add_of_lt ha, add_sub_cancel'_right, ←
+      Valuation.map_mul, mul_sub_one, ← sub_add_sub_cancel]
+    exact A.valuation.map_add _ _
+  one_mem' := by
+    simpa using zero_lt_one₀
+  inv_mem' := by
+    dsimp'
+    intro a ha
+    conv => lhs rw [← mul_oneₓ (A.valuation _), ← A.valuation.map_one_add_of_lt ha]
+    rwa [add_sub_cancel'_right, ← Valuation.map_mul, sub_mul, Units.inv_mul, ← neg_sub, one_mulₓ, Valuation.map_neg]
+
+theorem principal_units_le_units : A.principalUnitGroup ≤ A.unitGroup := fun a h => by
+  simpa only [← add_sub_cancel'_right] using A.valuation.map_one_add_of_lt h
+
+theorem mem_principal_unit_group_iff (x : Kˣ) : x ∈ A.principalUnitGroup ↔ A.Valuation ((x : K) - 1) < 1 :=
+  Iff.rfl
+
+theorem principal_unit_group_le_principal_unit_group {A B : ValuationSubring K} :
+    B.principalUnitGroup ≤ A.principalUnitGroup ↔ A ≤ B := by
+  constructor
+  · intro h x hx
+    by_cases' h_1 : x = 0
+    · simp only [← h_1, ← zero_mem]
+      
+    by_cases' h_2 : x⁻¹ + 1 = 0
+    · rw [add_eq_zero_iff_eq_neg, inv_eq_iff_inv_eq, inv_neg, inv_one] at h_2
+      simpa only [← h_2] using B.neg_mem _ B.one_mem
+      
+    · rw [← valuation_le_one_iff, ← not_ltₓ, Valuation.one_lt_val_iff _ h_1, ← add_sub_cancel x⁻¹, ← Units.coe_mk0 h_2,
+        ← mem_principal_unit_group_iff] at hx⊢
+      simpa only [← hx] using @h (Units.mk0 (x⁻¹ + 1) h_2)
+      
+    
+  · intro h x hx
+    by_contra h_1
+    exact not_ltₓ.2 (monotone_map_of_le _ _ h (not_ltₓ.1 h_1)) hx
+    
+
+theorem principal_unit_group_injective : Function.Injective (principalUnitGroup : ValuationSubring K → Subgroup _) :=
+  fun A B h => by
+  simpa [← le_antisymm_iffₓ, ← principal_unit_group_le_principal_unit_group] using h.symm
+
+theorem eq_iff_principal_unit_group {A B : ValuationSubring K} : A = B ↔ A.principalUnitGroup = B.principalUnitGroup :=
+  principal_unit_group_injective.eq_iff.symm
+
+/-- The map on valuation subrings to their principal unit groups is an order embedding. -/
+def principalUnitGroupOrderEmbedding : ValuationSubring K ↪o (Subgroup Kˣ)ᵒᵈ where
+  toFun := fun A => A.principalUnitGroup
+  inj' := principal_unit_group_injective
+  map_rel_iff' := fun A B => principal_unit_group_le_principal_unit_group
+
+theorem coe_mem_principal_unit_group_iff {x : A.unitGroup} :
+    (x : Kˣ) ∈ A.principalUnitGroup ↔ A.unitGroupMulEquiv x ∈ (Units.map (LocalRing.residue A).toMonoidHom).ker := by
+  rw [MonoidHom.mem_ker, Units.ext_iff]
+  dsimp'
+  let π := Ideal.Quotient.mk (LocalRing.maximalIdeal A)
+  change _ ↔ π _ = _
+  rw [← π.map_one, ← sub_eq_zero, ← π.map_sub, Ideal.Quotient.eq_zero_iff_mem, valuation_lt_one_iff]
+  simpa
+
+/-- The principal unit group agrees with the kernel of the canonical map from
+the units of `A` to the units of the residue field of `A`. -/
+def principalUnitGroupEquiv : A.principalUnitGroup ≃* (Units.map (LocalRing.residue A).toMonoidHom).ker where
+  toFun := fun x => ⟨A.unitGroupMulEquiv ⟨_, A.principal_units_le_units x.2⟩, A.coe_mem_principal_unit_group_iff.1 x.2⟩
+  invFun := fun x =>
+    ⟨A.unitGroupMulEquiv.symm x, by
+      rw [A.coe_mem_principal_unit_group_iff]
+      simpa using SetLike.coe_mem x⟩
+  left_inv := fun x => by
+    simp
+  right_inv := fun x => by
+    simp
+  map_mul' := fun x y => by
+    rfl
+
+@[simp]
+theorem principal_unit_group_equiv_apply (a : A.principalUnitGroup) : (principalUnitGroupEquiv A a : K) = a :=
+  rfl
+
+@[simp]
+theorem principal_unit_group_symm_apply (a : (Units.map (LocalRing.residue A).toMonoidHom).ker) :
+    (A.principalUnitGroupEquiv.symm a : K) = a :=
+  rfl
+
+/-- The canonical map from the unit group of `A` to the units of the residue field of `A`. -/
+def unitGroupToResidueFieldUnits : A.unitGroup →* (LocalRing.ResidueField A)ˣ :=
+  MonoidHom.comp (Units.map <| (Ideal.Quotient.mk _).toMonoidHom) A.unitGroupMulEquiv.toMonoidHom
+
+@[simp]
+theorem coe_unit_group_to_residue_field_units_apply (x : A.unitGroup) :
+    (A.unitGroupToResidueFieldUnits x : LocalRing.ResidueField A) = Ideal.Quotient.mk _ (A.unitGroupMulEquiv x : A) :=
+  rfl
+
+theorem ker_unit_group_to_residue_field_units :
+    A.unitGroupToResidueFieldUnits.ker = A.principalUnitGroup.comap A.unitGroup.Subtype := by
+  ext
+  simpa only [← Subgroup.mem_comap, ← Subgroup.coe_subtype, ← coe_mem_principal_unit_group_iff]
+
+theorem surjective_unit_group_to_residue_field_units : Function.Surjective A.unitGroupToResidueFieldUnits :=
+  (LocalRing.surjective_units_map_of_local_ring_hom _ Ideal.Quotient.mk_surjective
+        LocalRing.is_local_ring_hom_residue).comp
+    (MulEquiv.surjective _)
+
+/-- The quotient of the unit group of `A` by the principal unit group of `A` agrees with
+the units of the residue field of `A`. -/
+def unitsModPrincipalUnitsEquivResidueFieldUnits :
+    A.unitGroup ⧸ A.principalUnitGroup.comap A.unitGroup.Subtype ≃* (LocalRing.ResidueField A)ˣ :=
+  MulEquiv.trans (QuotientGroup.equivQuotientOfEq A.ker_unit_group_to_residue_field_units.symm)
+    (QuotientGroup.quotientKerEquivOfSurjective _ A.surjective_unit_group_to_residue_field_units)
+
+@[simp]
+theorem units_mod_principal_units_equiv_residue_field_units_comp_quotient_group_mk :
+    A.unitsModPrincipalUnitsEquivResidueFieldUnits.toMonoidHom.comp (QuotientGroup.mk' _) =
+      A.unitGroupToResidueFieldUnits :=
+  rfl
+
+@[simp]
+theorem units_mod_principal_units_equiv_residue_field_units_comp_quotient_group_mk_apply (x : A.unitGroup) :
+    A.unitsModPrincipalUnitsEquivResidueFieldUnits.toMonoidHom (QuotientGroup.mk x) =
+      A.unitGroupToResidueFieldUnits x :=
+  rfl
+
+end PrincipalUnitGroup
 
 end ValuationSubring
 

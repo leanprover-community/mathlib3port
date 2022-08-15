@@ -9,7 +9,7 @@ import Mathbin.LinearAlgebra.AffineSpace.Slope
 /-!
 # Slope of a differentiable function
 
-Given a function `f : 𝕜 → E` from a nondiscrete normed field to a normed space over this field,
+Given a function `f : 𝕜 → E` from a nontrivially normed field to a normed space over this field,
 `dslope f a b` is defined as `slope f a b = (b - a)⁻¹ • (f b - f a)` for `a ≠ b` and as `deriv f a`
 for `a = b`.
 
@@ -22,7 +22,7 @@ open Classical TopologicalSpace Filter
 
 open Function Set Filter
 
-variable {𝕜 E : Type _} [NondiscreteNormedField 𝕜] [NormedGroup E] [NormedSpace 𝕜 E]
+variable {𝕜 E : Type _} [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 /-- `dslope f a b` is defined as `slope f a b = (b - a)⁻¹ • (f b - f a)` for `a ≠ b` and
 `deriv f a` for `a = b`. -/
@@ -38,8 +38,8 @@ variable {f : 𝕜 → E} {a b : 𝕜} {s : Set 𝕜}
 theorem dslope_of_ne (f : 𝕜 → E) (h : b ≠ a) : dslope f a b = slope f a b :=
   update_noteq h _ _
 
-theorem ContinuousLinearMap.dslope_comp {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] (f : E →L[𝕜] F) (g : 𝕜 → E)
-    (a b : 𝕜) (H : a = b → DifferentiableAt 𝕜 g a) : dslope (f ∘ g) a b = f (dslope g a b) := by
+theorem ContinuousLinearMap.dslope_comp {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F] (f : E →L[𝕜] F)
+    (g : 𝕜 → E) (a b : 𝕜) (H : a = b → DifferentiableAt 𝕜 g a) : dslope (f ∘ g) a b = f (dslope g a b) := by
   rcases eq_or_ne b a with (rfl | hne)
   · simp only [← dslope_same]
     exact (f.has_fderiv_at.comp_has_deriv_at b (H rfl).HasDerivAt).deriv

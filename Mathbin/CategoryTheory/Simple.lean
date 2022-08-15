@@ -57,7 +57,7 @@ theorem is_iso_of_mono_of_nonzero {X Y : C} [Simple Y] {f : X ⟶ Y} [Mono f] (w
 theorem Simple.of_iso {X Y : C} [Simple Y] (i : X ≅ Y) : Simple X :=
   { mono_is_iso_iff_nonzero := fun Z f m => by
       skip
-      have : mono (f ≫ i.hom) := mono_comp _ _
+      haveI : mono (f ≫ i.hom) := mono_comp _ _
       constructor
       · intro h w
         have j : is_iso (f ≫ i.hom)
@@ -80,7 +80,7 @@ theorem kernel_zero_of_nonzero_from_simple {X Y : C} [Simple X] {f : X ⟶ Y} [H
     kernel.ι f = 0 := by
   classical
   by_contra
-  have := is_iso_of_mono_of_nonzero h
+  haveI := is_iso_of_mono_of_nonzero h
   exact w (eq_zero_of_epi_kernel f)
 
 /-- A nonzero morphism `f` to a simple object is an epimorphism
@@ -90,7 +90,7 @@ theorem kernel_zero_of_nonzero_from_simple {X Y : C} [Simple X] {f : X ⟶ Y} [H
 theorem epi_of_nonzero_to_simple [HasEqualizers C] {X Y : C} [Simple Y] {f : X ⟶ Y} [HasImage f] (w : f ≠ 0) : Epi f :=
   by
   rw [← image.fac f]
-  have : is_iso (image.ι f) := is_iso_of_mono_of_nonzero fun h => w (eq_zero_of_image_eq_zero h)
+  haveI : is_iso (image.ι f) := is_iso_of_mono_of_nonzero fun h => w (eq_zero_of_image_eq_zero h)
   apply epi_comp
 
 theorem mono_to_simple_zero_of_not_iso {X Y : C} [Simple Y] {f : X ⟶ Y} [Mono f] (w : IsIso f → False) : f = 0 := by
@@ -156,13 +156,13 @@ theorem simple_of_cosimple (X : C) (h : ∀ {Z : C} (f : X ⟶ Z) [Epi f], IsIso
 /-- A nonzero epimorphism from a simple object is an isomorphism. -/
 theorem is_iso_of_epi_of_nonzero {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f] (w : f ≠ 0) : IsIso f := by
   -- `f ≠ 0` means that `kernel.ι f` is not an iso, and hence zero, and hence `f` is a mono.
-  have : mono f := preadditive.mono_of_kernel_zero (mono_to_simple_zero_of_not_iso (kernel_not_iso_of_nonzero w))
+  haveI : mono f := preadditive.mono_of_kernel_zero (mono_to_simple_zero_of_not_iso (kernel_not_iso_of_nonzero w))
   exact is_iso_of_mono_of_epi f
 
 theorem cokernel_zero_of_nonzero_to_simple {X Y : C} [Simple Y] {f : X ⟶ Y} (w : f ≠ 0) : cokernel.π f = 0 := by
   classical
   by_contra h
-  have := is_iso_of_epi_of_nonzero h
+  haveI := is_iso_of_epi_of_nonzero h
   exact w (eq_zero_of_mono_cokernel f)
 
 theorem epi_from_simple_zero_of_not_iso {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f] (w : IsIso f → False) : f = 0 := by
@@ -183,10 +183,10 @@ theorem Biprod.is_iso_inl_iff_is_zero (X Y : C) : IsIso (biprod.inl : X ⟶ X �
   constructor
   · intro h
     replace h := h =≫ biprod.snd
-    simpa [is_zero.iff_split_epi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y)] using h
+    simpa [is_zero.iff_is_split_epi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y)] using h
     
   · intro h
-    rw [is_zero.iff_split_epi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y)] at h
+    rw [is_zero.iff_is_split_epi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y)] at h
     rw [h, zero_comp]
     
 
@@ -194,7 +194,7 @@ theorem Biprod.is_iso_inl_iff_is_zero (X Y : C) : IsIso (biprod.inl : X ⟶ X �
 theorem indecomposable_of_simple (X : C) [Simple X] : Indecomposable X :=
   ⟨Simple.not_is_zero X, fun Y Z i => by
     refine' or_iff_not_imp_left.mpr fun h => _
-    rw [is_zero.iff_split_mono_eq_zero (biprod.inl : Y ⟶ Y ⊞ Z)] at h
+    rw [is_zero.iff_is_split_mono_eq_zero (biprod.inl : Y ⟶ Y ⊞ Z)] at h
     change biprod.inl ≠ 0 at h
     rw [← simple.mono_is_iso_iff_nonzero biprod.inl] at h
     · rwa [biprod.is_iso_inl_iff_is_zero] at h

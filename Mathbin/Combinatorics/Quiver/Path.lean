@@ -104,5 +104,9 @@ theorem map_path_comp {a b : V} (p : Path a b) :
     dsimp'
     rw [map_path_comp]
 
+@[simp]
+theorem map_path_to_path {a b : V} (f : a ⟶ b) : F.mapPath f.toPath = (F.map f).toPath :=
+  rfl
+
 end Prefunctor
 

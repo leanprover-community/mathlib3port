@@ -135,7 +135,7 @@ section resolvent
 
 open Filter Asymptotics
 
-variable [NondiscreteNormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [CompleteSpace A]
+variable [NontriviallyNormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [CompleteSpace A]
 
 -- mathport name: «exprρ»
 local notation "ρ" => ResolventSet 𝕜
@@ -167,16 +167,21 @@ theorem norm_resolvent_le_forall (a : A) : ∀, ∀ ε > 0, ∀, ∃ R > 0, ∀ 
   rcases(⟨Units.mk0 z hnz, Units.coe_mk0 hnz⟩ : IsUnit z) with ⟨z, rfl⟩
   have lt_δ : ∥z⁻¹ • a∥ < δ := by
     rw [Units.smul_def, norm_smul, Units.coe_inv, norm_inv]
-    calc ∥(z : 𝕜)∥⁻¹ * ∥a∥ ≤ δ * (∥a∥ + 1)⁻¹ * ∥a∥ :=
-        mul_le_mul_of_nonneg_right (hz.trans (min_le_leftₓ _ _)) (norm_nonneg _)_ < δ := by
+    calc
+      ∥(z : 𝕜)∥⁻¹ * ∥a∥ ≤ δ * (∥a∥ + 1)⁻¹ * ∥a∥ :=
+        mul_le_mul_of_nonneg_right (hz.trans (min_le_leftₓ _ _)) (norm_nonneg _)
+      _ < δ := by
         conv => rw [mul_assoc]rhs rw [(mul_oneₓ δ).symm]
         exact mul_lt_mul_of_pos_left ((inv_mul_lt_iff ha₁).mpr ((mul_oneₓ (∥a∥ + 1)).symm ▸ lt_add_one _)) δ_pos
+      
   rw [← inv_smul_smul z (resolvent a (z : 𝕜)), units_smul_resolvent_self, resolvent, Algebra.algebra_map_eq_smul_one,
     one_smul, Units.smul_def, norm_smul, Units.coe_inv, norm_inv]
-  calc _ ≤ ε * c⁻¹ * c :=
+  calc
+    _ ≤ ε * c⁻¹ * c :=
       mul_le_mul (hz.trans (min_le_rightₓ _ _)) (hδ (mem_ball_zero_iff.mpr lt_δ)) (norm_nonneg _)
-        (mul_pos hε (inv_pos.mpr c_pos)).le _ = _ :=
-      inv_mul_cancel_right₀ c_pos.ne.symm ε
+        (mul_pos hε (inv_pos.mpr c_pos)).le
+    _ = _ := inv_mul_cancel_right₀ c_pos.ne.symm ε
+    
 
 end resolvent
 
@@ -186,11 +191,11 @@ open ContinuousMultilinearMap Ennreal FormalMultilinearSeries
 
 open Nnreal Ennreal
 
-variable [NondiscreteNormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A]
+variable [NontriviallyNormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A]
 
 variable (𝕜)
 
-/-- In a Banach algebra `A` over a nondiscrete normed field `𝕜`, for any `a : A` the
+/-- In a Banach algebra `A` over a nontrivially normed field `𝕜`, for any `a : A` the
 power series with coefficients `a ^ n` represents the function `(1 - z • a)⁻¹` in a disk of
 radius `∥a∥₊⁻¹`. -/
 theorem has_fpower_series_on_ball_inverse_one_sub_smul [CompleteSpace A] (a : A) :
@@ -440,9 +445,9 @@ theorem continuous [NormOneClass A] (φ : A →ₐ[𝕜] 𝕜) : Continuous φ :
 
 end NormedField
 
-section NondiscreteNormedField
+section NontriviallyNormedField
 
-variable [NondiscreteNormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [CompleteSpace A]
+variable [NontriviallyNormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [CompleteSpace A]
 
 -- mathport name: «expr↑ₐ»
 local notation "↑ₐ" => algebraMap 𝕜 A
@@ -453,7 +458,7 @@ theorem to_continuous_linear_map_norm [NormOneClass A] (φ : A →ₐ[𝕜] 𝕜
     (fun a => (one_mulₓ ∥a∥).symm ▸ Spectrum.norm_le_norm_of_mem (φ.apply_mem_spectrum _)) fun _ _ h => by
     simpa only [← to_continuous_linear_map_apply, ← mul_oneₓ, ← map_one, ← norm_one] using h 1
 
-end NondiscreteNormedField
+end NontriviallyNormedField
 
 end AlgHom
 

@@ -34,8 +34,8 @@ open Finset Filter
 
 namespace FormalMultilinearSeries
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
-  [NormedGroup F] [NormedSpace 𝕜 F]
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {F : Type _}
+  [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 
 /-! ### The left inverse of a formal multilinear series -/
 
@@ -182,7 +182,7 @@ theorem right_inv_coeff_one (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[�
     p.right_inv i 1 = (continuousMultilinearCurryFin1 𝕜 F E).symm i.symm := by
   rw [right_inv]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr i.symm.to_continuous_linear_map.comp_continuous_multilinear_map (p.comp (λ k, _) _)]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `congrm #[[expr i.symm.to_continuous_linear_map.comp_continuous_multilinear_map (p.comp (λ k, _) _)]]
 /-- The right inverse does not depend on the zeroth coefficient of a formal multilinear
 series. -/
 theorem right_inv_remove_zero (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F) :
@@ -197,7 +197,7 @@ theorem right_inv_remove_zero (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L
   simp only [← right_inv, ← neg_inj]
   rw [remove_zero_comp_of_pos _ _ (add_pos_of_nonneg_of_pos n.zero_le zero_lt_two)]
   trace
-    "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr i.symm.to_continuous_linear_map.comp_continuous_multilinear_map (p.comp (λ k, _) _)]]"
+    "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `congrm #[[expr i.symm.to_continuous_linear_map.comp_continuous_multilinear_map (p.comp (λ k, _) _)]]"
   by_cases' hk : k < n + 2 <;> simp [← hk, ← IH]
 
 theorem comp_right_inv_aux1 {n : ℕ} (hn : 0 < n) (p : FormalMultilinearSeries 𝕜 E F) (q : FormalMultilinearSeries 𝕜 F E)
@@ -556,17 +556,17 @@ theorem radius_right_inv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F
           _ ≤ 1 / 2 := by
             rwa [← mul_assoc]
           
-      calc S (n + 1) ≤ I * a + I * C * ∑ k in Ico 2 (n + 1), (r * S n) ^ k :=
-          radius_right_inv_pos_of_radius_pos_aux2 In p i rpos.le apos.le Cpos.le
-            ple _ = I * a + I * C * (((r * S n) ^ 2 - (r * S n) ^ (n + 1)) / (1 - r * S n)) :=
-          by
+      calc
+        S (n + 1) ≤ I * a + I * C * ∑ k in Ico 2 (n + 1), (r * S n) ^ k :=
+          radius_right_inv_pos_of_radius_pos_aux2 In p i rpos.le apos.le Cpos.le ple
+        _ = I * a + I * C * (((r * S n) ^ 2 - (r * S n) ^ (n + 1)) / (1 - r * S n)) := by
           rw [geom_sum_Ico' _ In]
           exact
             ne_of_ltₓ
               (rSn.trans_lt
                 (by
-                  norm_num))_ ≤ I * a + I * C * ((r * S n) ^ 2 / (1 / 2)) :=
-          by
+                  norm_num))
+        _ ≤ I * a + I * C * ((r * S n) ^ 2 / (1 / 2)) := by
           apply_rules [add_le_add, le_reflₓ, mul_le_mul_of_nonneg_left, mul_nonneg, norm_nonneg, Cpos.le]
           refine'
             div_le_div (sq_nonneg _) _
@@ -575,13 +575,17 @@ theorem radius_right_inv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F
               (by
                 linarith)
           simp only [← sub_le_self_iff]
-          apply pow_nonneg (mul_nonneg rpos.le Snonneg)_ = I * a + 2 * I * C * (r * S n) ^ 2 := by
-          ring _ ≤ I * a + 2 * I * C * (r * ((I + 1) * a)) ^ 2 := by
+          apply pow_nonneg (mul_nonneg rpos.le Snonneg)
+        _ = I * a + 2 * I * C * (r * S n) ^ 2 := by
+          ring
+        _ ≤ I * a + 2 * I * C * (r * ((I + 1) * a)) ^ 2 := by
           apply_rules [add_le_add, le_reflₓ, mul_le_mul_of_nonneg_left, mul_nonneg, norm_nonneg, Cpos.le, zero_le_two,
-            pow_le_pow_of_le_left, rpos.le]_ = (I + 2 * I * C * r ^ 2 * (I + 1) ^ 2 * a) * a :=
-          by
-          ring _ ≤ (I + 1) * a := by
+            pow_le_pow_of_le_left, rpos.le]
+        _ = (I + 2 * I * C * r ^ 2 * (I + 1) ^ 2 * a) * a := by
+          ring
+        _ ≤ (I + 1) * a := by
           apply_rules [mul_le_mul_of_nonneg_right, apos.le, add_le_add, le_reflₓ]
+        
       
   -- conclude that all coefficients satisfy `aⁿ Qₙ ≤ (I + 1) a`.
   let a' : Nnreal := ⟨a, apos.le⟩
@@ -599,17 +603,20 @@ theorem radius_right_inv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F
     apply_rules [mul_nonneg, add_nonneg, norm_nonneg, zero_le_one, apos.le]
     
   · have one_le_n : 1 ≤ n := bot_lt_iff_ne_bot.2 hn
-    calc ∥p.right_inv i n∥ * ↑a' ^ n = a ^ n * ∥p.right_inv i n∥ :=
-        mul_comm _ _ _ ≤ ∑ k in Ico 1 (n + 1), a ^ k * ∥p.right_inv i k∥ := by
+    calc
+      ∥p.right_inv i n∥ * ↑a' ^ n = a ^ n * ∥p.right_inv i n∥ := mul_comm _ _
+      _ ≤ ∑ k in Ico 1 (n + 1), a ^ k * ∥p.right_inv i k∥ := by
         have : ∀, ∀ k ∈ Ico 1 (n + 1), ∀, 0 ≤ a ^ k * ∥p.right_inv i k∥ := fun k hk =>
           mul_nonneg (pow_nonneg apos.le _) (norm_nonneg _)
         exact
           single_le_sum this
             (by
-              simp [← one_le_n])_ ≤ (I + 1) * a :=
+              simp [← one_le_n])
+      _ ≤ (I + 1) * a :=
         IRec (n + 1)
           (by
             decide)
+      
     
 
 end FormalMultilinearSeries

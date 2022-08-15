@@ -856,12 +856,16 @@ theorem semiconj_of_group_action_of_forall_translation_number_eq {G : Type _} [G
     rintro _ ⟨g, rfl⟩
     have : τ (f₂ g⁻¹) = -τ (f₂ g) := by
       rw [← MonoidHom.coe_to_hom_units, MonoidHom.map_inv, translation_number_units_inv, MonoidHom.coe_to_hom_units]
-    calc f₂ g⁻¹ (f₁ g x) ≤ f₂ g⁻¹ (x + τ (f₁ g) + 1) :=
-        mono _ (map_lt_add_translation_number_add_one _ _).le _ = f₂ g⁻¹ (x + τ (f₂ g)) + 1 := by
-        rw [h, map_add_one]_ ≤ x + τ (f₂ g) + τ (f₂ g⁻¹) + 1 + 1 := by
+    calc
+      f₂ g⁻¹ (f₁ g x) ≤ f₂ g⁻¹ (x + τ (f₁ g) + 1) := mono _ (map_lt_add_translation_number_add_one _ _).le
+      _ = f₂ g⁻¹ (x + τ (f₂ g)) + 1 := by
+        rw [h, map_add_one]
+      _ ≤ x + τ (f₂ g) + τ (f₂ g⁻¹) + 1 + 1 := by
         mono
-        exact (map_lt_add_translation_number_add_one _ _).le _ = x + 2 := by
+        exact (map_lt_add_translation_number_add_one _ _).le
+      _ = x + 2 := by
         simp [← this, ← bit0, ← add_assocₓ]
+      
   -- We have a theorem about actions by `order_iso`, so we introduce auxiliary maps
   -- to `ℝ ≃o ℝ`.
   set F₁ := to_order_iso.comp f₁.to_hom_units
@@ -877,7 +881,7 @@ theorem semiconj_of_group_action_of_forall_translation_number_eq {G : Type _} [G
     
   · simp only [← map_add_one]
     exact
-      (map_csupr_of_continuous_at_of_monotone (continuous_at_id.add continuous_at_const) (monotone_id.add_const (1 : ℝ))
+      (Monotone.map_csupr_of_continuous_at (continuous_at_id.add continuous_at_const) (monotone_id.add_const (1 : ℝ))
           (this x)).symm
     
   · exact this x

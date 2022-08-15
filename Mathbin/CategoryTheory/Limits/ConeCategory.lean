@@ -4,29 +4,66 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Terminal
+import Mathbin.CategoryTheory.StructuredArrow
 
 /-!
-
 # Limits and the category of (co)cones
 
 This files contains results that stem from the limit API. For the definition and the category
 instance of `cone`, please refer to `category_theory/limits/cones.lean`.
 
-A cone is limiting iff it is terminal in the category of cones. As a corollary, an equivalence of
-categories of cones preserves limiting properties. We also provide the dual.
+## Main results
+* The category of cones on `F : J ⥤ C` is equivalent to the category
+  `costructured_arrow (const J) F`.
+* A cone is limiting iff it is terminal in the category of cones. As a corollary, an equivalence of
+  categories of cones preserves limiting properties.
 
 -/
 
 
 namespace CategoryTheory.Limits
 
-open CategoryTheory
+open CategoryTheory CategoryTheory.Functor
 
 universe v₁ v₂ v₃ v₄ u₁ u₂ u₃ u₄
 
 variable {J : Type u₁} [Category.{v₁} J] {K : Type u₂} [Category.{v₂} K]
 
 variable {C : Type u₃} [Category.{v₃} C] {D : Type u₄} [Category.{v₄} D]
+
+/-- Construct an object of the category `(Δ ↓ F)` from a cone on `F`. This is part of an
+    equivalence, see `cone.equiv_costructured_arrow`. -/
+@[simps]
+def Cone.toCostructuredArrow (F : J ⥤ C) : Cone F ⥤ CostructuredArrow (const J) F where
+  obj := fun c => CostructuredArrow.mk c.π
+  map := fun c d f =>
+    CostructuredArrow.homMk f.Hom <| by
+      ext
+      simp
+
+/-- Construct a cone on `F` from an object of the category `(Δ ↓ F)`. This is part of an
+    equivalence, see `cone.equiv_costructured_arrow`. -/
+@[simps]
+def Cone.fromCostructuredArrow (F : J ⥤ C) : CostructuredArrow (const J) F ⥤ Cone F where
+  obj := fun c => ⟨c.left, c.Hom⟩
+  map := fun c d f =>
+    { Hom := f.left,
+      w' := fun j => by
+        convert congr_fun (congr_arg nat_trans.app f.w) j
+        dsimp'
+        simp }
+
+/-- The category of cones on `F` is just the comma category `(Δ ↓ F)`, where `Δ` is the constant
+    functor. -/
+@[simps]
+def Cone.equivCostructuredArrow (F : J ⥤ C) : Cone F ≌ CostructuredArrow (const J) F :=
+  Equivalence.mk (Cone.toCostructuredArrow F) (Cone.fromCostructuredArrow F)
+    (NatIso.ofComponents Cones.eta
+      (by
+        tidy))
+    (NatIso.ofComponents (fun c => (CostructuredArrow.eta _).symm)
+      (by
+        tidy))
 
 /-- A cone is a limit cone iff it is terminal. -/
 def Cone.isLimitEquivIsTerminal {F : J ⥤ C} (c : Cone F) : IsLimit c ≃ IsTerminal c :=
@@ -37,6 +74,10 @@ def Cone.isLimitEquivIsTerminal {F : J ⥤ C} (c : Cone F) : IsLimit c ≃ IsTer
         tidy,
       right_inv := by
         tidy }
+
+theorem has_limit_iff_has_terminal_cone (F : J ⥤ C) : HasLimit F ↔ HasTerminal (Cone F) :=
+  ⟨fun h => (cone.is_limit_equiv_is_terminal _ (limit.is_limit F)).HasTerminal, fun h =>
+    ⟨⟨⟨⊤_ _, (cone.is_limit_equiv_is_terminal _).symm terminal_is_terminal⟩⟩⟩⟩
 
 theorem IsLimit.lift_cone_morphism_eq_is_terminal_from {F : J ⥤ C} {c : Cone F} (hc : IsLimit c) (s : Cone F) :
     hc.liftConeMorphism s = IsTerminal.from (Cone.isLimitEquivIsTerminal _ hc) _ :=
@@ -56,6 +97,40 @@ def IsLimit.ofReflectsConeTerminal {F : J ⥤ C} {F' : K ⥤ D} (G : Cone F ⥤ 
     [ReflectsLimit (Functor.empty.{0} _) G] {c : Cone F} (hc : IsLimit (G.obj c)) : IsLimit c :=
   (Cone.isLimitEquivIsTerminal _).symm <| (Cone.isLimitEquivIsTerminal _ hc).isTerminalOfObj _ _
 
+/-- Construct an object of the category `(F ↓ Δ)` from a cocone on `F`. This is part of an
+    equivalence, see `cocone.equiv_structured_arrow`. -/
+@[simps]
+def Cocone.toStructuredArrow (F : J ⥤ C) : Cocone F ⥤ StructuredArrow F (const J) where
+  obj := fun c => StructuredArrow.mk c.ι
+  map := fun c d f =>
+    StructuredArrow.homMk f.Hom <| by
+      ext
+      simp
+
+/-- Construct a cocone on `F` from an object of the category `(F ↓ Δ)`. This is part of an
+    equivalence, see `cocone.equiv_structured_arrow`. -/
+@[simps]
+def Cocone.fromStructuredArrow (F : J ⥤ C) : StructuredArrow F (const J) ⥤ Cocone F where
+  obj := fun c => ⟨c.right, c.Hom⟩
+  map := fun c d f =>
+    { Hom := f.right,
+      w' := fun j => by
+        convert (congr_fun (congr_arg nat_trans.app f.w) j).symm
+        dsimp'
+        simp }
+
+/-- The category of cocones on `F` is just the comma category `(F ↓ Δ)`, where `Δ` is the constant
+    functor. -/
+@[simps]
+def Cocone.equivStructuredArrow (F : J ⥤ C) : Cocone F ≌ StructuredArrow F (const J) :=
+  Equivalence.mk (Cocone.toStructuredArrow F) (Cocone.fromStructuredArrow F)
+    (NatIso.ofComponents Cocones.eta
+      (by
+        tidy))
+    (NatIso.ofComponents (fun c => (StructuredArrow.eta _).symm)
+      (by
+        tidy))
+
 /-- A cocone is a colimit cocone iff it is initial. -/
 def Cocone.isColimitEquivIsInitial {F : J ⥤ C} (c : Cocone F) : IsColimit c ≃ IsInitial c :=
   IsColimit.isoUniqueCoconeMorphism.toEquiv.trans
@@ -65,6 +140,10 @@ def Cocone.isColimitEquivIsInitial {F : J ⥤ C} (c : Cocone F) : IsColimit c �
         tidy,
       right_inv := by
         tidy }
+
+theorem has_colimit_iff_has_initial_cocone (F : J ⥤ C) : HasColimit F ↔ HasInitial (Cocone F) :=
+  ⟨fun h => (cocone.is_colimit_equiv_is_initial _ (colimit.is_colimit F)).HasInitial, fun h =>
+    ⟨⟨⟨⊥_ _, (cocone.is_colimit_equiv_is_initial _).symm initial_is_initial⟩⟩⟩⟩
 
 theorem IsColimit.desc_cocone_morphism_eq_is_initial_to {F : J ⥤ C} {c : Cocone F} (hc : IsColimit c) (s : Cocone F) :
     hc.descCoconeMorphism s = IsInitial.to (Cocone.isColimitEquivIsInitial _ hc) _ :=

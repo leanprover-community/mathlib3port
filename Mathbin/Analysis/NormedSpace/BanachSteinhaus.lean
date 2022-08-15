@@ -23,8 +23,8 @@ convex spaces), but these are not yet in `mathlib`.
 
 open Set
 
-variable {E F 𝕜 𝕜₂ : Type _} [SemiNormedGroup E] [SemiNormedGroup F] [NondiscreteNormedField 𝕜]
-  [NondiscreteNormedField 𝕜₂] [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F] {σ₁₂ : 𝕜 →+* 𝕜₂} [RingHomIsometric σ₁₂]
+variable {E F 𝕜 𝕜₂ : Type _} [SeminormedAddCommGroup E] [SeminormedAddCommGroup F] [NontriviallyNormedField 𝕜]
+  [NontriviallyNormedField 𝕜₂] [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F] {σ₁₂ : 𝕜 →+* 𝕜₂} [RingHomIsometric σ₁₂]
 
 /-- This is the standard Banach-Steinhaus theorem, or Uniform Boundedness Principle.
 If a family of continuous linear maps from a Banach space into a normed space is pointwise
@@ -56,18 +56,22 @@ theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ�
   · exact div_nonneg (Nat.cast_nonneg _) εk_pos.le
     
   intro y le_y y_lt
-  calc ∥g i y∥ = ∥g i (y + x) - g i x∥ := by
-      rw [ContinuousLinearMap.map_add, add_sub_cancel]_ ≤ ∥g i (y + x)∥ + ∥g i x∥ := norm_sub_le _ _ _ ≤ m + m :=
+  calc
+    ∥g i y∥ = ∥g i (y + x) - g i x∥ := by
+      rw [ContinuousLinearMap.map_add, add_sub_cancel]
+    _ ≤ ∥g i (y + x)∥ + ∥g i x∥ := norm_sub_le _ _
+    _ ≤ m + m :=
       add_le_add
         (real_norm_le (y + x)
           (by
             rwa [add_commₓ, add_mem_ball_iff_norm])
           i)
-        (real_norm_le x (Metric.mem_ball_self ε_pos) i)_ = (m + m : ℕ) :=
-      (m.cast_add m).symm _ ≤ (m + m : ℕ) * (∥y∥ / (ε / ∥k∥)) :=
-      le_mul_of_one_le_right (Nat.cast_nonneg _)
-        ((one_le_div <| div_pos ε_pos (zero_lt_one.trans hk)).2 le_y)_ = (m + m : ℕ) / (ε / ∥k∥) * ∥y∥ :=
-      (mul_comm_div _ _ _).symm
+        (real_norm_le x (Metric.mem_ball_self ε_pos) i)
+    _ = (m + m : ℕ) := (m.cast_add m).symm
+    _ ≤ (m + m : ℕ) * (∥y∥ / (ε / ∥k∥)) :=
+      le_mul_of_one_le_right (Nat.cast_nonneg _) ((one_le_div <| div_pos ε_pos (zero_lt_one.trans hk)).2 le_y)
+    _ = (m + m : ℕ) / (ε / ∥k∥) * ∥y∥ := (mul_comm_div _ _ _).symm
+    
 
 open Ennreal
 
@@ -110,8 +114,11 @@ def continuousLinearMapOfTendsto [CompleteSpace E] [T2Space F] (g : ℕ → E �
       rcases cauchy_seq_bdd (tendsto_pi_nhds.mp h x).CauchySeq with ⟨C, C_pos, hC⟩
       refine' ⟨C + ∥g 0 x∥, fun n => _⟩
       simp_rw [dist_eq_norm] at hC
-      calc ∥g n x∥ ≤ ∥g 0 x∥ + ∥g n x - g 0 x∥ := norm_le_insert' _ _ _ ≤ C + ∥g 0 x∥ := by
+      calc
+        ∥g n x∥ ≤ ∥g 0 x∥ + ∥g n x - g 0 x∥ := norm_le_insert' _ _
+        _ ≤ C + ∥g 0 x∥ := by
           linarith [hC n 0]
+        
     cases' banach_steinhaus h_point_bdd with C' hC'
     /- show the uniform bound from `banach_steinhaus` is a norm bound of the limit map
              by allowing "an `ε` of room." -/
@@ -122,7 +129,11 @@ def continuousLinearMapOfTendsto [CompleteSpace E] [T2Space F] (g : ℕ → E �
     have lt_ε : ∥g n x - f x∥ < ε := by
       rw [← dist_eq_norm]
       exact hn n (le_reflₓ n)
-    calc ∥f x∥ ≤ ∥g n x∥ + ∥g n x - f x∥ := norm_le_insert _ _ _ < ∥g n∥ * ∥x∥ + ε := by
-        linarith [lt_ε, (g n).le_op_norm x]_ ≤ C' * ∥x∥ + ε := by
+    calc
+      ∥f x∥ ≤ ∥g n x∥ + ∥g n x - f x∥ := norm_le_insert _ _
+      _ < ∥g n∥ * ∥x∥ + ε := by
+        linarith [lt_ε, (g n).le_op_norm x]
+      _ ≤ C' * ∥x∥ + ε := by
         nlinarith [hC' n, norm_nonneg x]
+      
 

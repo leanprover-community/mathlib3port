@@ -55,7 +55,7 @@ integral, torus
 
 variable {n : ℕ}
 
-variable {E : Type _} [NormedGroup E]
+variable {E : Type _} [NormedAddCommGroup E]
 
 noncomputable section
 

@@ -3,8 +3,9 @@ Copyright (c) 2022 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
+import Mathbin.CategoryTheory.Limits.Yoneda
 import Mathbin.CategoryTheory.Preadditive.Opposite
-import Mathbin.Algebra.Category.Module.Basic
+import Mathbin.Algebra.Category.Module.Abelian
 import Mathbin.Algebra.Category.Group.Preadditive
 
 /-!
@@ -25,7 +26,9 @@ embedding in the expected way and deduce that the preadditive Yoneda embedding i
 
 universe v u
 
-open CategoryTheory.Preadditive Opposite
+open CategoryTheory.Preadditive Opposite CategoryTheory.Limits
+
+noncomputable section
 
 namespace CategoryTheory
 
@@ -128,6 +131,20 @@ instance preadditive_yoneda_faithful : Faithful (preadditiveYoneda : C ⥤ Cᵒ�
 
 instance preadditive_coyoneda_faithful : Faithful (preadditiveCoyoneda : Cᵒᵖ ⥤ C ⥤ AddCommGroupₓₓ) :=
   Faithful.of_comp_eq whiskering_preadditive_coyoneda
+
+instance preservesLimitsPreadditiveYonedaObj (X : C) : PreservesLimits (preadditiveYonedaObj X) :=
+  have : PreservesLimits (preadditiveYonedaObj X ⋙ forget _) := (inferInstance : PreservesLimits (yoneda.obj X))
+  preserves_limits_of_reflects_of_preserves _ (forget _)
+
+instance preservesLimitsPreadditiveCoyonedaObj (X : Cᵒᵖ) : PreservesLimits (preadditiveCoyonedaObj X) :=
+  have : PreservesLimits (preadditiveCoyonedaObj X ⋙ forget _) := (inferInstance : PreservesLimits (coyoneda.obj X))
+  preserves_limits_of_reflects_of_preserves _ (forget _)
+
+instance PreservesLimitsPreadditiveYoneda.obj (X : C) : PreservesLimits (preadditiveYoneda.obj X) :=
+  show PreservesLimits (preadditiveYonedaObj X ⋙ forget₂ _ _) from inferInstance
+
+instance PreservesLimitsPreadditiveCoyoneda.obj (X : Cᵒᵖ) : PreservesLimits (preadditiveCoyoneda.obj X) :=
+  show PreservesLimits (preadditiveCoyonedaObj X ⋙ forget₂ _ _) from inferInstance
 
 end CategoryTheory
 

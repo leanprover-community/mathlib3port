@@ -82,7 +82,7 @@ theorem pderiv_one {i : σ} : pderiv i (1 : MvPolynomial σ R) = 0 :=
 theorem pderiv_X [d : DecidableEq σ] (i j : σ) : pderiv i (x j : MvPolynomial σ R) = @Pi.single σ _ d _ i 1 j :=
   (mk_derivation_X _ _ _).trans
     (by
-      congr)
+      congr )
 
 @[simp]
 theorem pderiv_X_self (i : σ) : pderiv i (x i : MvPolynomial σ R) = 1 := by

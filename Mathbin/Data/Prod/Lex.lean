@@ -60,11 +60,11 @@ theorem lt_iff [LT α] [LT β] (a b : α × β) : toLex a < toLex b ↔ a.1 < b.
 instance preorder (α β : Type _) [Preorderₓ α] [Preorderₓ β] : Preorderₓ (α ×ₗ β) :=
   { Prod.Lex.hasLe α β, Prod.Lex.hasLt α β with
     le_refl := by
-      have : IsRefl β (· ≤ ·) := ⟨le_reflₓ⟩
+      haveI : IsRefl β (· ≤ ·) := ⟨le_reflₓ⟩
       exact refl_of (Prod.Lex _ _),
     le_trans := fun _ _ _ => by
-      have : IsTrans α (· < ·) := ⟨fun _ _ _ => lt_transₓ⟩
-      have : IsTrans β (· ≤ ·) := ⟨fun _ _ _ => le_transₓ⟩
+      haveI : IsTrans α (· < ·) := ⟨fun _ _ _ => lt_transₓ⟩
+      haveI : IsTrans β (· ≤ ·) := ⟨fun _ _ _ => le_transₓ⟩
       exact trans_of (Prod.Lex _ _),
     lt_iff_le_not_le := fun x₁ x₂ =>
       match x₁, x₂ with
@@ -120,8 +120,8 @@ instance preorder (α β : Type _) [Preorderₓ α] [Preorderₓ β] : Preorder�
 instance partialOrder (α β : Type _) [PartialOrderₓ α] [PartialOrderₓ β] : PartialOrderₓ (α ×ₗ β) :=
   { Prod.Lex.preorder α β with
     le_antisymm := by
-      have : IsStrictOrder α (· < ·) := { irrefl := lt_irreflₓ, trans := fun _ _ _ => lt_transₓ }
-      have : IsAntisymm β (· ≤ ·) := ⟨fun _ _ => le_antisymmₓ⟩
+      haveI : IsStrictOrder α (· < ·) := { irrefl := lt_irreflₓ, trans := fun _ _ _ => lt_transₓ }
+      haveI : IsAntisymm β (· ≤ ·) := ⟨fun _ _ => le_antisymmₓ⟩
       exact @antisymm _ (Prod.Lex _ _) _ }
 
 /-- Dictionary / lexicographic linear_order for pairs. -/

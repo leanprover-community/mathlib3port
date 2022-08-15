@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 -/
 import Mathbin.Topology.Maps
+import Mathbin.Topology.LocallyFinite
 import Mathbin.Order.Filter.Pi
 import Mathbin.Data.Fin.Tuple.Default
 
@@ -67,6 +68,130 @@ instance Pi.topologicalSpace {β : α → Type v} [t₂ : ∀ a, TopologicalSpac
 
 instance ULift.topologicalSpace [t : TopologicalSpace α] : TopologicalSpace (ULift.{v, u} α) :=
   t.induced ULift.down
+
+/-!
+### `additive`, `multiplicative`
+
+The topology on those type synonyms is inherited without change.
+-/
+
+
+section
+
+variable [TopologicalSpace α]
+
+open Additive Multiplicative
+
+instance : TopologicalSpace (Additive α) :=
+  ‹TopologicalSpace α›
+
+instance : TopologicalSpace (Multiplicative α) :=
+  ‹TopologicalSpace α›
+
+instance [DiscreteTopology α] : DiscreteTopology (Additive α) :=
+  ‹DiscreteTopology α›
+
+instance [DiscreteTopology α] : DiscreteTopology (Multiplicative α) :=
+  ‹DiscreteTopology α›
+
+theorem continuous_of_mul : Continuous (ofMul : α → Additive α) :=
+  continuous_id
+
+theorem continuous_to_mul : Continuous (toMul : Additive α → α) :=
+  continuous_id
+
+theorem continuous_of_add : Continuous (ofAdd : α → Multiplicative α) :=
+  continuous_id
+
+theorem continuous_to_add : Continuous (toAdd : Multiplicative α → α) :=
+  continuous_id
+
+theorem is_open_map_of_mul : IsOpenMap (ofMul : α → Additive α) :=
+  IsOpenMap.id
+
+theorem is_open_map_to_mul : IsOpenMap (toMul : Additive α → α) :=
+  IsOpenMap.id
+
+theorem is_open_map_of_add : IsOpenMap (ofAdd : α → Multiplicative α) :=
+  IsOpenMap.id
+
+theorem is_open_map_to_add : IsOpenMap (toAdd : Multiplicative α → α) :=
+  IsOpenMap.id
+
+theorem is_closed_map_of_mul : IsClosedMap (ofMul : α → Additive α) :=
+  IsClosedMap.id
+
+theorem is_closed_map_to_mul : IsClosedMap (toMul : Additive α → α) :=
+  IsClosedMap.id
+
+theorem is_closed_map_of_add : IsClosedMap (ofAdd : α → Multiplicative α) :=
+  IsClosedMap.id
+
+theorem is_closed_map_to_add : IsClosedMap (toAdd : Multiplicative α → α) :=
+  IsClosedMap.id
+
+attribute [local semireducible] nhds
+
+theorem nhds_of_mul (a : α) : 𝓝 (ofMul a) = map ofMul (𝓝 a) :=
+  rfl
+
+theorem nhds_of_add (a : α) : 𝓝 (ofAdd a) = map ofAdd (𝓝 a) :=
+  rfl
+
+theorem nhds_to_mul (a : Additive α) : 𝓝 (toMul a) = map toMul (𝓝 a) :=
+  rfl
+
+theorem nhds_to_add (a : Multiplicative α) : 𝓝 (toAdd a) = map toAdd (𝓝 a) :=
+  rfl
+
+end
+
+/-!
+### Order dual
+
+The topology on this type synonym is inherited without change.
+-/
+
+
+section
+
+variable [TopologicalSpace α]
+
+open OrderDual
+
+instance : TopologicalSpace αᵒᵈ :=
+  ‹TopologicalSpace α›
+
+instance [DiscreteTopology α] : DiscreteTopology αᵒᵈ :=
+  ‹DiscreteTopology α›
+
+theorem continuous_to_dual : Continuous (toDual : α → αᵒᵈ) :=
+  continuous_id
+
+theorem continuous_of_dual : Continuous (ofDual : αᵒᵈ → α) :=
+  continuous_id
+
+theorem is_open_map_to_dual : IsOpenMap (toDual : α → αᵒᵈ) :=
+  IsOpenMap.id
+
+theorem is_open_map_of_dual : IsOpenMap (ofDual : αᵒᵈ → α) :=
+  IsOpenMap.id
+
+theorem is_closed_map_to_dual : IsClosedMap (toDual : α → αᵒᵈ) :=
+  IsClosedMap.id
+
+theorem is_closed_map_of_dual : IsClosedMap (ofDual : αᵒᵈ → α) :=
+  IsClosedMap.id
+
+attribute [local semireducible] nhds
+
+theorem nhds_to_dual (a : α) : 𝓝 (toDual a) = map toDual (𝓝 a) :=
+  rfl
+
+theorem nhds_of_dual (a : α) : 𝓝 (ofDual a) = map ofDual (𝓝 a) :=
+  rfl
+
+end
 
 theorem Quotientₓ.preimage_mem_nhds [TopologicalSpace α] [s : Setoidₓ α] {V : Set <| Quotientₓ s} {a : α}
     (hs : V ∈ 𝓝 (Quotientₓ.mk a)) : Quotientₓ.mk ⁻¹' V ∈ 𝓝 a :=
@@ -230,7 +355,11 @@ theorem ContinuousAt.snd'' {f : β → γ} {x : α × β} (hf : ContinuousAt f x
 @[continuity]
 theorem Continuous.prod_mk {f : γ → α} {g : γ → β} (hf : Continuous f) (hg : Continuous g) :
     Continuous fun x => (f x, g x) :=
-  continuous_inf_rng (continuous_induced_rng hf) (continuous_induced_rng hg)
+  continuous_inf_rng.2 ⟨continuous_induced_rng.2 hf, continuous_induced_rng.2 hg⟩
+
+@[simp]
+theorem continuous_prod_mk {f : α → β} {g : α → γ} : (Continuous fun x => (f x, g x)) ↔ Continuous f ∧ Continuous g :=
+  ⟨fun h => ⟨h.fst, h.snd⟩, fun h => h.1.prod_mk h.2⟩
 
 @[continuity]
 theorem Continuous.Prod.mk (a : α) : Continuous fun b : β => (a, b) :=
@@ -261,9 +390,9 @@ theorem Continuous.prod_map {f : γ → α} {g : δ → β} (hf : Continuous f) 
 theorem continuous_inf_dom_left₂ {α β γ} {f : α → β → γ} {ta1 ta2 : TopologicalSpace α} {tb1 tb2 : TopologicalSpace β}
     {tc1 : TopologicalSpace γ}
     (h : by
-      have := ta1 <;> have := tb1 <;> exact Continuous fun p : α × β => f p.1 p.2) :
+      haveI := ta1 <;> haveI := tb1 <;> exact Continuous fun p : α × β => f p.1 p.2) :
     by
-    have := ta1⊓ta2 <;> have := tb1⊓tb2 <;> exact Continuous fun p : α × β => f p.1 p.2 := by
+    haveI := ta1⊓ta2 <;> haveI := tb1⊓tb2 <;> exact Continuous fun p : α × β => f p.1 p.2 := by
   have ha := @continuous_inf_dom_left _ _ id ta1 ta2 ta1 (@continuous_id _ (id _))
   have hb := @continuous_inf_dom_left _ _ id tb1 tb2 tb1 (@continuous_id _ (id _))
   have h_continuous_id := @Continuous.prod_map _ _ _ _ ta1 tb1 (ta1⊓ta2) (tb1⊓tb2) _ _ ha hb
@@ -273,9 +402,9 @@ theorem continuous_inf_dom_left₂ {α β γ} {f : α → β → γ} {ta1 ta2 : 
 theorem continuous_inf_dom_right₂ {α β γ} {f : α → β → γ} {ta1 ta2 : TopologicalSpace α} {tb1 tb2 : TopologicalSpace β}
     {tc1 : TopologicalSpace γ}
     (h : by
-      have := ta2 <;> have := tb2 <;> exact Continuous fun p : α × β => f p.1 p.2) :
+      haveI := ta2 <;> haveI := tb2 <;> exact Continuous fun p : α × β => f p.1 p.2) :
     by
-    have := ta1⊓ta2 <;> have := tb1⊓tb2 <;> exact Continuous fun p : α × β => f p.1 p.2 := by
+    haveI := ta1⊓ta2 <;> haveI := tb1⊓tb2 <;> exact Continuous fun p : α × β => f p.1 p.2 := by
   have ha := @continuous_inf_dom_right _ _ id ta1 ta2 ta2 (@continuous_id _ (id _))
   have hb := @continuous_inf_dom_right _ _ id tb1 tb2 tb2 (@continuous_id _ (id _))
   have h_continuous_id := @Continuous.prod_map _ _ _ _ ta2 tb2 (ta1⊓ta2) (tb1⊓tb2) _ _ ha hb
@@ -285,7 +414,7 @@ theorem continuous_inf_dom_right₂ {α β γ} {f : α → β → γ} {ta1 ta2 :
 theorem continuous_Inf_dom₂ {α β γ} {f : α → β → γ} {tas : Set (TopologicalSpace α)} {tbs : Set (TopologicalSpace β)}
     {ta : TopologicalSpace α} {tb : TopologicalSpace β} {tc : TopologicalSpace γ} (ha : ta ∈ tas) (hb : tb ∈ tbs)
     (hf : Continuous fun p : α × β => f p.1 p.2) : by
-    have := Inf tas <;> have := Inf tbs <;> exact @Continuous _ _ _ tc fun p : α × β => f p.1 p.2 := by
+    haveI := Inf tas <;> haveI := Inf tbs <;> exact @Continuous _ _ _ tc fun p : α × β => f p.1 p.2 := by
   let t : TopologicalSpace (α × β) := Prod.topologicalSpace
   have ha := continuous_Inf_dom ha continuous_id
   have hb := continuous_Inf_dom hb continuous_id
@@ -515,7 +644,7 @@ theorem is_open_map_snd : IsOpenMap (@Prod.snd α β) :=
 /-- A product set is open in a product space if and only if each factor is open, or one of them is
 empty -/
 theorem is_open_prod_iff' {s : Set α} {t : Set β} : IsOpen (s ×ˢ t) ↔ IsOpen s ∧ IsOpen t ∨ s = ∅ ∨ t = ∅ := by
-  cases' (s ×ˢ t : Set _).eq_empty_or_nonempty with h h
+  cases' (s ×ˢ t).eq_empty_or_nonempty with h h
   · simp [← h, ← prod_eq_empty_iff.1 h]
     
   · have st : s.nonempty ∧ t.nonempty := prod_nonempty_iff.1 h
@@ -552,11 +681,11 @@ theorem frontier_prod_eq (s : Set α) (t : Set β) :
   simp only [← Frontier, ← closure_prod_eq, ← interior_prod_eq, ← prod_diff_prod]
 
 @[simp]
-theorem frontier_prod_univ_eq (s : Set α) : Frontier (s ×ˢ (Univ : Set β)) = Frontier s ×ˢ (Univ : Set β) := by
+theorem frontier_prod_univ_eq (s : Set α) : Frontier (s ×ˢ (Univ : Set β)) = Frontier s ×ˢ univ := by
   simp [← frontier_prod_eq]
 
 @[simp]
-theorem frontier_univ_prod_eq (s : Set β) : Frontier ((Univ : Set α) ×ˢ s) = (Univ : Set α) ×ˢ Frontier s := by
+theorem frontier_univ_prod_eq (s : Set β) : Frontier ((Univ : Set α) ×ˢ s) = univ ×ˢ Frontier s := by
   simp [← frontier_prod_eq]
 
 theorem map_mem_closure2 {s : Set α} {t : Set β} {u : Set γ} {f : α → β → γ} {a : α} {b : β}
@@ -626,7 +755,7 @@ theorem continuous_inr : Continuous (@inr α β) :=
 @[continuity]
 theorem Continuous.sum_elim {f : α → γ} {g : β → γ} (hf : Continuous f) (hg : Continuous g) :
     Continuous (Sum.elim f g) := by
-  apply continuous_sup_dom <;> rw [continuous_def] at hf hg⊢ <;> assumption
+  simp only [← continuous_sup_dom, ← continuous_coinduced_dom, ← Sum.elim_comp_inl, ← Sum.elim_comp_inr, ← true_andₓ, *]
 
 @[continuity]
 theorem Continuous.sum_map {f : α → β} {g : γ → δ} (hf : Continuous f) (hg : Continuous g) : Continuous (Sum.map f g) :=
@@ -749,7 +878,7 @@ theorem IsClosed.closed_embedding_subtype_coe {s : Set α} (hs : IsClosed s) :
 @[continuity]
 theorem continuous_subtype_mk {f : β → α} (hp : ∀ x, p (f x)) (h : Continuous f) :
     Continuous fun x => (⟨f x, hp x⟩ : Subtype p) :=
-  continuous_induced_rng h
+  continuous_induced_rng.2 h
 
 theorem continuous_inclusion {s t : Set α} (h : s ⊆ t) : Continuous (inclusion h) :=
   continuous_subtype_mk _ continuous_subtype_coe
@@ -808,6 +937,20 @@ theorem closure_subtype {x : { a // p a }} {s : Set { a // p a }} :
     x ∈ Closure s ↔ (x : α) ∈ Closure ((coe : _ → α) '' s) :=
   closure_induced
 
+theorem continuous_at_cod_restrict_iff {f : α → β} {t : Set β} (h1 : ∀ x, f x ∈ t) {x : α} :
+    ContinuousAt (codRestrict f t h1) x ↔ ContinuousAt f x := by
+  simp_rw [inducing_coe.continuous_at_iff, Function.comp, coe_cod_restrict_apply]
+
+alias continuous_at_cod_restrict_iff ↔ _ ContinuousAt.cod_restrict
+
+theorem ContinuousAt.restrict {f : α → β} {s : Set α} {t : Set β} (h1 : MapsTo f s t) {x : s} (h2 : ContinuousAt f x) :
+    ContinuousAt (h1.restrict f s t) x :=
+  (h2.comp continuous_at_subtype_coe).codRestrict _
+
+theorem ContinuousAt.restrict_preimage {f : α → β} {s : Set β} {x : f ⁻¹' s} (h : ContinuousAt f x) :
+    ContinuousAt (s.restrictPreimage f) x :=
+  h.restrict _
+
 @[continuity]
 theorem Continuous.cod_restrict {f : α → β} {s : Set β} (hf : Continuous f) (hs : ∀ a, f a ∈ s) :
     Continuous (s.codRestrict f hs) :=
@@ -839,7 +982,7 @@ theorem continuous_quot_mk : Continuous (@Quot.mk α r) :=
 @[continuity]
 theorem continuous_quot_lift {f : α → β} (hr : ∀ a b, r a b → f a = f b) (h : Continuous f) :
     Continuous (Quot.lift f hr : Quot r → β) :=
-  continuous_coinduced_dom h
+  continuous_coinduced_dom.2 h
 
 theorem quotient_map_quotient_mk : QuotientMap (@Quotientₓ.mk α s) :=
   quotient_map_quot_mk
@@ -847,13 +990,17 @@ theorem quotient_map_quotient_mk : QuotientMap (@Quotientₓ.mk α s) :=
 theorem continuous_quotient_mk : Continuous (@Quotientₓ.mk α s) :=
   continuous_coinduced_rng
 
-theorem continuous_quotient_lift {f : α → β} (hs : ∀ a b, a ≈ b → f a = f b) (h : Continuous f) :
+theorem Continuous.quotient_lift {f : α → β} (h : Continuous f) (hs : ∀ a b, a ≈ b → f a = f b) :
     Continuous (Quotientₓ.lift f hs : Quotientₓ s → β) :=
-  continuous_coinduced_dom h
+  continuous_coinduced_dom.2 h
 
-theorem continuous_quotient_lift_on' {f : α → β} (hs : ∀ a b, a ≈ b → f a = f b) (h : Continuous f) :
+theorem Continuous.quotient_lift_on' {f : α → β} (h : Continuous f) (hs : ∀ a b, @Setoidₓ.R _ s a b → f a = f b) :
     Continuous (fun x => Quotientₓ.liftOn' x f hs : Quotientₓ s → β) :=
-  continuous_coinduced_dom h
+  h.quotient_lift hs
+
+theorem Continuous.quotient_map' {t : Setoidₓ β} {f : α → β} (hf : Continuous f) (H : (s.R⇒t.R) f f) :
+    Continuous (Quotientₓ.map' f H) :=
+  (continuous_quotient_mk.comp hf).quotient_lift _
 
 end Quotientₓ
 
@@ -864,7 +1011,7 @@ variable {ι : Type _} {π : ι → Type _}
 @[continuity]
 theorem continuous_pi [TopologicalSpace α] [∀ i, TopologicalSpace (π i)] {f : α → ∀ i : ι, π i}
     (h : ∀ i, Continuous fun a => f a i) : Continuous f :=
-  continuous_infi_rng fun i => continuous_induced_rng <| h i
+  continuous_infi_rng.2 fun i => continuous_induced_rng.2 <| h i
 
 @[continuity]
 theorem continuous_apply [∀ i, TopologicalSpace (π i)] (i : ι) : Continuous fun p : ∀ i, π i => p i :=
@@ -1055,7 +1202,7 @@ theorem inducing_infi_to_pi {X : Type _} [∀ i, TopologicalSpace (π i)] (f : �
   funext
   erw [induced_compose]
 
-variable [Fintype ι] [∀ i, TopologicalSpace (π i)] [∀ i, DiscreteTopology (π i)]
+variable [Finite ι] [∀ i, TopologicalSpace (π i)] [∀ i, DiscreteTopology (π i)]
 
 /-- A finite product of discrete spaces is discrete. -/
 instance Pi.discrete_topology : DiscreteTopology (∀ i, π i) :=
@@ -1137,7 +1284,7 @@ theorem is_open_sigma_fst_preimage (s : Set ι) : IsOpen (Sigma.fst ⁻¹' s : S
 @[continuity]
 theorem continuous_sigma [TopologicalSpace β] {f : Sigma σ → β} (h : ∀ i, Continuous fun a => f ⟨i, a⟩) :
     Continuous f :=
-  continuous_supr_dom fun i => continuous_coinduced_dom (h i)
+  continuous_supr_dom.2 fun i => continuous_coinduced_dom.2 (h i)
 
 @[continuity]
 theorem continuous_sigma_map {κ : Type _} {τ : κ → Type _} [∀ k, TopologicalSpace (τ k)] {f₁ : ι → κ}
@@ -1197,7 +1344,7 @@ theorem continuous_ulift_down [TopologicalSpace α] : Continuous (ULift.down : U
 
 @[continuity]
 theorem continuous_ulift_up [TopologicalSpace α] : Continuous (ULift.up : α → ULift.{v, u} α) :=
-  continuous_induced_rng continuous_id
+  continuous_induced_rng.2 continuous_id
 
 end ULift
 

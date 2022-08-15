@@ -249,17 +249,23 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀, ∀ a ∈ s, �
       fun ⟨i, hi, Eq⟩ => Eq ▸ hf' i (mem_range.1 hi)⟩
   have : s = (range n).attach.Image fun i => f i.1 (mem_range.1 i.2) := by
     simpa only [← ext_iff, ← mem_image, ← exists_prop, ← Subtype.exists, ← mem_attach, ← true_andₓ]
-  calc s.card = card ((range n).attach.Image fun i => f i.1 (mem_range.1 i.2)) := by
-      rw [this]_ = card (range n).attach :=
-      (card_image_of_injective _) fun ⟨i, hi⟩ ⟨j, hj⟩ eq =>
-        Subtype.eq <| f_inj i j (mem_range.1 hi) (mem_range.1 hj) Eq _ = card (range n) :=
-      card_attach _ = n := card_range n
+  calc
+    s.card = card ((range n).attach.Image fun i => f i.1 (mem_range.1 i.2)) := by
+      rw [this]
+    _ = card (range n).attach :=
+      (card_image_of_injective _) fun ⟨i, hi⟩ ⟨j, hj⟩ eq => Subtype.eq <| f_inj i j (mem_range.1 hi) (mem_range.1 hj) Eq
+    _ = card (range n) := card_attach
+    _ = n := card_range n
+    
 
 theorem card_congr {t : Finset β} (f : ∀, ∀ a ∈ s, ∀, β) (h₁ : ∀ a ha, f a ha ∈ t)
     (h₂ : ∀ a b ha hb, f a ha = f b hb → a = b) (h₃ : ∀, ∀ b ∈ t, ∀, ∃ a ha, f a ha = b) : s.card = t.card := by
   classical <;>
-    calc s.card = s.attach.card := card_attach.symm _ = (s.attach.image fun a : { a // a ∈ s } => f a.1 a.2).card :=
-        Eq.symm ((card_image_of_injective _) fun a b h => Subtype.eq <| h₂ _ _ _ _ h)_ = t.card :=
+    calc
+      s.card = s.attach.card := card_attach.symm
+      _ = (s.attach.image fun a : { a // a ∈ s } => f a.1 a.2).card :=
+        Eq.symm ((card_image_of_injective _) fun a b h => Subtype.eq <| h₂ _ _ _ _ h)
+      _ = t.card :=
         congr_arg card
           (Finset.ext fun b =>
             ⟨fun h =>
@@ -270,12 +276,15 @@ theorem card_congr {t : Finset β} (f : ∀, ∀ a ∈ s, ∀, β) (h₁ : ∀ a
               mem_image.2
                 ⟨⟨a, ha₁⟩, by
                   simp [← ha₂]⟩⟩)
+      
 
 theorem card_le_card_of_inj_on {t : Finset β} (f : α → β) (hf : ∀, ∀ a ∈ s, ∀, f a ∈ t)
     (f_inj : ∀, ∀ a₁ ∈ s, ∀, ∀, ∀ a₂ ∈ s, ∀, f a₁ = f a₂ → a₁ = a₂) : s.card ≤ t.card := by
   classical <;>
-    calc s.card = (s.image f).card := (card_image_of_inj_on f_inj).symm _ ≤ t.card :=
-        card_le_of_subset <| image_subset_iff.2 hf
+    calc
+      s.card = (s.image f).card := (card_image_of_inj_on f_inj).symm
+      _ ≤ t.card := card_le_of_subset <| image_subset_iff.2 hf
+      
 
 /-- If there are more pigeons than pigeonholes, then there are two pigeons in the same pigeonhole.
 -/
@@ -321,7 +330,7 @@ theorem surj_on_of_inj_on_of_card_le {t : Finset β} (f : ∀, ∀ a ∈ s, ∀,
 theorem inj_on_of_surj_on_of_card_le {t : Finset β} (f : ∀, ∀ a ∈ s, ∀, β) (hf : ∀ a ha, f a ha ∈ t)
     (hsurj : ∀, ∀ b ∈ t, ∀, ∃ a ha, b = f a ha) (hst : s.card ≤ t.card) ⦃a₁ a₂⦄ (ha₁ : a₁ ∈ s) (ha₂ : a₂ ∈ s)
     (ha₁a₂ : f a₁ ha₁ = f a₂ ha₂) : a₁ = a₂ :=
-  have : Inhabited { x // x ∈ s } := ⟨⟨a₁, ha₁⟩⟩
+  haveI : Inhabited { x // x ∈ s } := ⟨⟨a₁, ha₁⟩⟩
   let f' : { x // x ∈ s } → { x // x ∈ t } := fun x => ⟨f x.1 x.2, hf x.1 x.2⟩
   let g : { x // x ∈ t } → { x // x ∈ s } :=
     @surj_inv _ _ f' fun x =>
@@ -446,7 +455,7 @@ theorem exists_subset_or_subset_of_two_mul_lt_card [DecidableEq α] {X Y : Finse
 theorem card_eq_one : s.card = 1 ↔ ∃ a, s = {a} := by
   cases s <;> simp only [← Multiset.card_eq_one, ← Finset.card, val_inj, ← singleton_val]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (a «expr ∉ » s)
 theorem exists_eq_insert_iff [DecidableEq α] {s t : Finset α} :
     (∃ (a : _)(_ : a ∉ s), insert a s = t) ↔ s ⊆ t ∧ s.card + 1 = t.card := by
   constructor
@@ -568,7 +577,7 @@ theorem card_eq_three [DecidableEq α] : s.card = 3 ↔ ∃ x y z, x ≠ y ∧ x
 /-! ### Inductions -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊂ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊂ » s)
 /-- Suppose that, given objects defined on all strict subsets of any finset `s`, one knows how to
 define an object on `s`. Then one can inductively define an object on all finsets, starting from
 the empty set and iterating. This can be used either to define data, or to prove properties. -/
@@ -578,25 +587,25 @@ def strongInductionₓ {p : Finset α → Sort _} (H : ∀ s, (∀ (t) (_ : t �
       have : t.card < s.card := card_lt_card h
       strong_induction t
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊂ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊂ » s)
 theorem strong_induction_eq {p : Finset α → Sort _} (H : ∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s) (s : Finset α) :
     strongInductionₓ H s = H s fun t h => strongInductionₓ H t := by
   rw [strong_induction]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊂ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊂ » s)
 /-- Analogue of `strong_induction` with order of arguments swapped. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def strongInductionOn {p : Finset α → Sort _} (s : Finset α) : (∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s) → p s := fun H =>
   strongInductionₓ H s
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊂ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊂ » s)
 theorem strong_induction_on_eq {p : Finset α → Sort _} (s : Finset α) (H : ∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s) :
     s.strong_induction_on H = H s fun t h => t.strong_induction_on H := by
   dunfold strong_induction_on
   rw [strong_induction]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
-@[elab_as_eliminator]
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
+@[elabAsElim]
 theorem case_strong_induction_on [DecidableEq α] {p : Finset α → Prop} (s : Finset α) (h₀ : p ∅)
     (h₁ : ∀ a s, a ∉ s → (∀ (t) (_ : t ⊆ s), p t) → p (insert a s)) : p s :=
   (Finset.strongInductionOn s) fun s =>
@@ -621,7 +630,7 @@ theorem strong_downward_induction_eq {p : Finset α → Sort _}
   rw [strong_downward_induction]
 
 /-- Analogue of `strong_downward_induction` with order of arguments swapped. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def strongDownwardInductionOn {p : Finset α → Sort _} (s : Finset α)
     (H : ∀ t₁, (∀ {t₂ : Finset α}, t₂.card ≤ n → t₁ ⊂ t₂ → p t₂) → t₁.card ≤ n → p t₁) : s.card ≤ n → p s :=
   strongDownwardInductionₓ H s

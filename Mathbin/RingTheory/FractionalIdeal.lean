@@ -155,6 +155,15 @@ theorem val_eq_coe (I : FractionalIdeal S P) : I.val = I :=
 theorem coe_mk (I : Submodule R P) (hI : IsFractional S I) : (Subtype.mk I hI : Submodule R P) = I :=
   rfl
 
+/-! Transfer instances from `submodule R P` to `fractional_ideal S P`. --/
+
+
+instance (I : FractionalIdeal S P) : AddCommGroupₓ I :=
+  Submodule.addCommGroup ↑I
+
+instance (I : FractionalIdeal S P) : Module R I :=
+  Submodule.module ↑I
+
 theorem coe_to_submodule_injective : Function.Injective (coe : FractionalIdeal S P → Submodule R P) :=
   Subtype.coe_injective
 
@@ -482,7 +491,7 @@ instance : Pow (FractionalIdeal S P) ℕ :=
 theorem coe_pow (I : FractionalIdeal S P) (n : ℕ) : ↑(I ^ n) = (I ^ n : Submodule R P) :=
   rfl
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem mul_induction_on {I J : FractionalIdeal S P} {C : P → Prop} {r : P} (hr : r ∈ I * J)
     (hm : ∀, ∀ i ∈ I, ∀, ∀ j ∈ J, ∀, C (i * j)) (ha : ∀ x y, C x → C y → C (x + y)) : C r :=
   Submodule.mul_induction_on hr hm ha
@@ -793,7 +802,7 @@ variable [Algebra R K] [IsFractionRing R K] [Algebra R K'] [IsFractionRing R K']
 
 variable {I J : FractionalIdeal R⁰ K} (h : K →ₐ[R] K')
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » (0 : R))
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ≠ » (0 : R))
 /-- Nonzero fractional ideals contain a nonzero integer. -/
 theorem exists_ne_zero_mem_is_integer [Nontrivial R] (hI : I ≠ 0) : ∃ (x : _)(_ : x ≠ (0 : R)), algebraMap R K x ∈ I :=
   by
@@ -1034,7 +1043,7 @@ theorem eq_zero_or_one (I : FractionalIdeal K⁰ L) : I = 0 ∨ I = 1 := by
     
 
 theorem eq_zero_or_one_of_is_field (hF : IsField R₁) (I : FractionalIdeal R₁⁰ K) : I = 0 ∨ I = 1 := by
-  let this : Field R₁ := hF.to_field
+  letI : Field R₁ := hF.to_field
   -- TODO can this be less ugly?
   exact
     @eq_zero_or_one R₁ K _ _ _

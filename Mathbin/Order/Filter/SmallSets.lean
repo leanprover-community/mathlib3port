@@ -49,7 +49,7 @@ theorem has_basis_small_sets (l : Filter α) : HasBasis l.smallSets (fun t : Set
 theorem tendsto_small_sets_iff {f : α → Set β} : Tendsto f la lb.smallSets ↔ ∀, ∀ t ∈ lb, ∀, ∀ᶠ x in la, f x ⊆ t :=
   (has_basis_small_sets lb).tendsto_right_iff
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem eventually_small_sets {p : Set α → Prop} : (∀ᶠ s in l.smallSets, p s) ↔ ∃ s ∈ l, ∀ (t) (_ : t ⊆ s), p t :=
   eventually_lift'_iff monotone_powerset
 
@@ -57,7 +57,7 @@ theorem eventually_small_sets' {p : Set α → Prop} (hp : ∀ ⦃s t⦄, s ⊆ 
     (∀ᶠ s in l.smallSets, p s) ↔ ∃ s ∈ l, p s :=
   eventually_small_sets.trans <| exists₂_congrₓ fun s hsf => ⟨fun H => H s Subset.rfl, fun hs t ht => hp ht hs⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (s «expr ⊆ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (s «expr ⊆ » t)
 theorem frequently_small_sets {p : Set α → Prop} :
     (∃ᶠ s in l.smallSets, p s) ↔ ∀, ∀ t ∈ l, ∀, ∃ (s : _)(_ : s ⊆ t), p s :=
   l.has_basis_small_sets.frequently_iff

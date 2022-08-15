@@ -84,7 +84,7 @@ local infixr:25 " →ₛ " => SimpleFunc
 /-! ### Lower semicontinuous upper bound for nonnegative functions -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (u «expr ⊇ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (u «expr ⊇ » s)
 /-- Given a simple function `f` with values in `ℝ≥0`, there exists a lower semicontinuous
 function `g ≥ f` with integral arbitrarily close to that of `f`. Formulation in terms of
 `lintegral`.
@@ -129,10 +129,13 @@ theorem SimpleFunc.exists_le_lower_semicontinuous_lintegral_ge (f : α →ₛ �
           ← Ennreal.coe_indicator, ← Set.univ_inter, ← MeasurableSet.univ, ← simple_func.const_zero, ←
           lintegral_indicator, ← simple_func.coe_zero, ← Set.piecewise_eq_indicator, ← simple_func.coe_piecewise, ←
           restrict_apply]
-      calc (c : ℝ≥0∞) * μ u ≤ c * (μ s + ε / c) := Ennreal.mul_le_mul le_rfl μu.le _ = c * μ s + ε := by
+      calc
+        (c : ℝ≥0∞) * μ u ≤ c * (μ s + ε / c) := Ennreal.mul_le_mul le_rfl μu.le
+        _ = c * μ s + ε := by
           simp_rw [mul_addₓ]
           rw [Ennreal.mul_div_cancel' _ Ennreal.coe_ne_top]
           simpa using hc
+        
       
     
   · rcases h₁ (Ennreal.half_pos ε0).ne' with ⟨g₁, f₁_le_g₁, g₁cont, g₁int⟩
@@ -169,12 +172,12 @@ theorem exists_le_lower_semicontinuous_lintegral_ge (f : α → ℝ≥0∞) (hf 
   · apply lower_semicontinuous_tsum fun n => _
     exact ennreal.continuous_coe.comp_lower_semicontinuous (gcont n) fun x y hxy => Ennreal.coe_le_coe.2 hxy
     
-  · calc (∫⁻ x, ∑' n : ℕ, g n x ∂μ) = ∑' n, ∫⁻ x, g n x ∂μ := by
-        rw
-          [lintegral_tsum fun n =>
-            (gcont n).Measurable.coe_nnreal_ennreal]_ ≤ ∑' n, (∫⁻ x, eapprox_diff f n x ∂μ) + δ n :=
-        Ennreal.tsum_le_tsum hg _ = (∑' n, ∫⁻ x, eapprox_diff f n x ∂μ) + ∑' n, δ n :=
-        Ennreal.tsum_add _ ≤ (∫⁻ x : α, f x ∂μ) + ε := by
+  · calc
+      (∫⁻ x, ∑' n : ℕ, g n x ∂μ) = ∑' n, ∫⁻ x, g n x ∂μ := by
+        rw [lintegral_tsum fun n => (gcont n).Measurable.coe_nnreal_ennreal]
+      _ ≤ ∑' n, (∫⁻ x, eapprox_diff f n x ∂μ) + δ n := Ennreal.tsum_le_tsum hg
+      _ = (∑' n, ∫⁻ x, eapprox_diff f n x ∂μ) + ∑' n, δ n := Ennreal.tsum_add
+      _ ≤ (∫⁻ x : α, f x ∂μ) + ε := by
         refine' add_le_add _ hδ.le
         rw [← lintegral_tsum]
         · simp_rw [tsum_eapprox_diff f hf, le_reflₓ]
@@ -182,6 +185,7 @@ theorem exists_le_lower_semicontinuous_lintegral_ge (f : α → ℝ≥0∞) (hf 
         · intro n
           exact (simple_func.measurable _).coe_nnreal_ennreal
           
+      
     
 
 /-- Given a measurable function `f` with values in `ℝ≥0` in a sigma-finite space, there exists a
@@ -197,14 +201,20 @@ theorem exists_lt_lower_semicontinuous_lintegral_ge [SigmaFinite μ] (f : α →
   rcases exists_le_lower_semicontinuous_lintegral_ge μ f' (fmeas.add wmeas).coe_nnreal_ennreal this with
     ⟨g, le_g, gcont, gint⟩
   refine' ⟨g, fun x => _, gcont, _⟩
-  · calc (f x : ℝ≥0∞) < f' x := by
-        simpa [Ennreal.coe_lt_coe] using add_lt_add_left (wpos x) (f x)_ ≤ g x := le_g x
+  · calc
+      (f x : ℝ≥0∞) < f' x := by
+        simpa [Ennreal.coe_lt_coe] using add_lt_add_left (wpos x) (f x)
+      _ ≤ g x := le_g x
+      
     
-  · calc (∫⁻ x : α, g x ∂μ) ≤ (∫⁻ x : α, f x + w x ∂μ) + ε / 2 :=
-        gint _ = ((∫⁻ x : α, f x ∂μ) + ∫⁻ x : α, w x ∂μ) + ε / 2 := by
-        rw [lintegral_add_right _ wmeas.coe_nnreal_ennreal]_ ≤ (∫⁻ x : α, f x ∂μ) + ε / 2 + ε / 2 :=
-        add_le_add_right (add_le_add_left wint.le _) _ _ = (∫⁻ x : α, f x ∂μ) + ε := by
+  · calc
+      (∫⁻ x : α, g x ∂μ) ≤ (∫⁻ x : α, f x + w x ∂μ) + ε / 2 := gint
+      _ = ((∫⁻ x : α, f x ∂μ) + ∫⁻ x : α, w x ∂μ) + ε / 2 := by
+        rw [lintegral_add_right _ wmeas.coe_nnreal_ennreal]
+      _ ≤ (∫⁻ x : α, f x ∂μ) + ε / 2 + ε / 2 := add_le_add_right (add_le_add_left wint.le _) _
+      _ = (∫⁻ x : α, f x ∂μ) + ε := by
         rw [add_assocₓ, Ennreal.add_halves]
+      
     
 
 /-- Given an almost everywhere measurable function `f` with values in `ℝ≥0` in a sigma-finite space,
@@ -234,8 +244,9 @@ theorem exists_lt_lower_semicontinuous_lintegral_ge_of_ae_measurable [SigmaFinit
       exact (f_lt_g0 x).trans_le le_self_add
       
     
-  · calc (∫⁻ x, g0 x + g1 x ∂μ) = (∫⁻ x, g0 x ∂μ) + ∫⁻ x, g1 x ∂μ :=
-        lintegral_add_left g0_cont.measurable _ _ ≤ (∫⁻ x, f x ∂μ) + ε / 2 + (0 + ε / 2) := by
+  · calc
+      (∫⁻ x, g0 x + g1 x ∂μ) = (∫⁻ x, g0 x ∂μ) + ∫⁻ x, g1 x ∂μ := lintegral_add_left g0_cont.measurable _
+      _ ≤ (∫⁻ x, f x ∂μ) + ε / 2 + (0 + ε / 2) := by
         refine' add_le_add _ _
         · convert g0_int using 2
           exact lintegral_congr_ae (fmeas.ae_eq_mk.fun_comp _)
@@ -243,9 +254,10 @@ theorem exists_lt_lower_semicontinuous_lintegral_ge_of_ae_measurable [SigmaFinit
         · convert g1_int
           simp only [← smeas, ← μs, ← lintegral_const, ← Set.univ_inter, ← MeasurableSet.univ, ← lintegral_indicator, ←
             mul_zero, ← restrict_apply]
-          _ = (∫⁻ x, f x ∂μ) + ε :=
-        by
+          
+      _ = (∫⁻ x, f x ∂μ) + ε := by
         simp only [← add_assocₓ, ← Ennreal.add_halves, ← zero_addₓ]
+      
     
 
 variable {μ}
@@ -287,14 +299,18 @@ theorem exists_lt_lower_semicontinuous_integral_gt_nnreal [SigmaFinite μ] (f : 
     convert gint_ne.lt_top using 1
     
   · rw [integral_eq_lintegral_of_nonneg_ae, integral_eq_lintegral_of_nonneg_ae]
-    · calc Ennreal.toReal (∫⁻ a : α, Ennreal.ofReal (g a).toReal ∂μ) = Ennreal.toReal (∫⁻ a : α, g a ∂μ) := by
-          congr 1_ ≤ Ennreal.toReal ((∫⁻ a : α, f a ∂μ) + δ) := by
+    · calc
+        Ennreal.toReal (∫⁻ a : α, Ennreal.ofReal (g a).toReal ∂μ) = Ennreal.toReal (∫⁻ a : α, g a ∂μ) := by
+          congr 1
+        _ ≤ Ennreal.toReal ((∫⁻ a : α, f a ∂μ) + δ) := by
           apply Ennreal.to_real_mono _ gint
-          simpa using int_f_ne_top _ = Ennreal.toReal (∫⁻ a : α, f a ∂μ) + δ := by
-          rw [Ennreal.to_real_add int_f_ne_top Ennreal.coe_ne_top,
-            Ennreal.coe_to_real]_ < Ennreal.toReal (∫⁻ a : α, f a ∂μ) + ε :=
-          add_lt_add_left hδε _ _ = (∫⁻ a : α, Ennreal.ofReal ↑(f a) ∂μ).toReal + ε := by
+          simpa using int_f_ne_top
+        _ = Ennreal.toReal (∫⁻ a : α, f a ∂μ) + δ := by
+          rw [Ennreal.to_real_add int_f_ne_top Ennreal.coe_ne_top, Ennreal.coe_to_real]
+        _ < Ennreal.toReal (∫⁻ a : α, f a ∂μ) + ε := add_lt_add_left hδε _
+        _ = (∫⁻ a : α, Ennreal.ofReal ↑(f a) ∂μ).toReal + ε := by
           simp
+        
       
     · apply Filter.eventually_of_forall fun x => _
       simp
@@ -311,7 +327,7 @@ theorem exists_lt_lower_semicontinuous_integral_gt_nnreal [SigmaFinite μ] (f : 
 /-! ### Upper semicontinuous lower bound for nonnegative functions -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (F «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (F «expr ⊆ » s)
 /-- Given a simple function `f` with values in `ℝ≥0`, there exists an upper semicontinuous
 function `g ≤ f` with integral arbitrarily close to that of `f`. Formulation in terms of
 `lintegral`.
@@ -350,10 +366,13 @@ theorem SimpleFunc.exists_upper_semicontinuous_le_lintegral_le (f : α →ₛ �
           lintegral_const, ← Ennreal.coe_indicator, ← Set.univ_inter, ← MeasurableSet.univ, ← simple_func.const_zero, ←
           lintegral_indicator, ← simple_func.coe_zero, ← Set.piecewise_eq_indicator, ← simple_func.coe_piecewise, ←
           restrict_apply]
-      calc (c : ℝ≥0∞) * μ s ≤ c * (μ F + ε / c) := Ennreal.mul_le_mul le_rfl μF.le _ = c * μ F + ε := by
+      calc
+        (c : ℝ≥0∞) * μ s ≤ c * (μ F + ε / c) := Ennreal.mul_le_mul le_rfl μF.le
+        _ = c * μ F + ε := by
           simp_rw [mul_addₓ]
           rw [Ennreal.mul_div_cancel' _ Ennreal.coe_ne_top]
           simpa using hc
+        
       
     
   · have A : ((∫⁻ x : α, f₁ x ∂μ) + ∫⁻ x : α, f₂ x ∂μ) ≠ ⊤ := by
@@ -397,9 +416,12 @@ theorem exists_upper_semicontinuous_le_lintegral_le (f : α → ℝ≥0 ) (int_f
     ∃ g : α → ℝ≥0 , (∀ x, g x ≤ fs x) ∧ UpperSemicontinuous g ∧ (∫⁻ x, fs x ∂μ) ≤ (∫⁻ x, g x ∂μ) + ε / 2 :=
     fs.exists_upper_semicontinuous_le_lintegral_le int_fs_lt_top (Ennreal.half_pos ε0).ne'
   refine' ⟨g, fun x => (g_le_fs x).trans (fs_le_f x), gcont, _⟩
-  calc (∫⁻ x, f x ∂μ) ≤ (∫⁻ x, fs x ∂μ) + ε / 2 := int_fs _ ≤ (∫⁻ x, g x ∂μ) + ε / 2 + ε / 2 :=
-      add_le_add gint le_rfl _ = (∫⁻ x, g x ∂μ) + ε := by
+  calc
+    (∫⁻ x, f x ∂μ) ≤ (∫⁻ x, fs x ∂μ) + ε / 2 := int_fs
+    _ ≤ (∫⁻ x, g x ∂μ) + ε / 2 + ε / 2 := add_le_add gint le_rfl
+    _ = (∫⁻ x, g x ∂μ) + ε := by
       rw [add_assocₓ, Ennreal.add_halves]
+    
 
 /-- Given an integrable function `f` with values in `ℝ≥0`, there exists an upper semicontinuous
 function `g ≤ f` with integral arbitrarily close to that of `f`. Formulation in terms of

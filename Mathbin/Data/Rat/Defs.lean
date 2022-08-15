@@ -281,14 +281,14 @@ theorem of_int_eq_mk (z : ℤ) : ofInt z = z /. 1 :=
 
 /-- Define a (dependent) function or prove `∀ r : ℚ, p r` by dealing with rational
 numbers of the form `n /. d` with `0 < d` and coprime `n`, `d`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def numDenomCasesOn.{u} {C : ℚ → Sort u} : ∀ (a : ℚ) (H : ∀ n d, 0 < d → (Int.natAbs n).Coprime d → C (n /. d)), C a
   | ⟨n, d, h, c⟩, H => by
     rw [num_denom'] <;> exact H n d h c
 
 /-- Define a (dependent) function or prove `∀ r : ℚ, p r` by dealing with rational
 numbers of the form `n /. d` with `d ≠ 0`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def numDenomCasesOn'.{u} {C : ℚ → Sort u} (a : ℚ) (H : ∀ (n : ℤ) (d : ℕ), d ≠ 0 → C (n /. d)) : C a :=
   (numDenomCasesOn a) fun n d h c => H n d h.ne'
 
@@ -345,10 +345,14 @@ theorem add_def {a b c d : ℤ} (b0 : b ≠ 0) (d0 : d ≠ 0) : a /. b + c /. d 
     
   · apply mul_ne_zero d₁0 d₂0
     
-  calc (n₁ * d₂ + n₂ * d₁) * (b * d) = n₁ * b * d₂ * d + n₂ * d * (d₁ * b) := by
-      simp [← mul_addₓ, ← mul_comm, ← mul_left_commₓ]_ = a * d₁ * d₂ * d + c * d₂ * (d₁ * b) := by
-      rw [h₁, h₂]_ = (a * d + c * b) * (d₁ * d₂) := by
+  calc
+    (n₁ * d₂ + n₂ * d₁) * (b * d) = n₁ * b * d₂ * d + n₂ * d * (d₁ * b) := by
       simp [← mul_addₓ, ← mul_comm, ← mul_left_commₓ]
+    _ = a * d₁ * d₂ * d + c * d₂ * (d₁ * b) := by
+      rw [h₁, h₂]
+    _ = (a * d + c * b) * (d₁ * d₂) := by
+      simp [← mul_addₓ, ← mul_comm, ← mul_left_commₓ]
+    
 
 /-- Negation of rational numbers. Use `-r` instead. -/
 protected def neg (r : ℚ) : ℚ :=
@@ -928,14 +932,14 @@ theorem inv_def' {q : ℚ} : q⁻¹ = (q.denom : ℚ) / q.num := by
   simp [← div_num_denom]
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:646:40: in rw #[["<-", expr @num_denom q]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:648:40: in rw #[["<-", expr @num_denom q]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp]
 theorem mul_denom_eq_num {q : ℚ} : q * q.denom = q.num := by
   suffices mk q.num ↑q.denom * mk (↑q.denom) 1 = mk q.num 1 by
     conv =>
       for q [1] =>
         trace
-          "./././Mathport/Syntax/Translate/Basic.lean:646:40: in rw #[[\"<-\", expr @num_denom q]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+          "./././Mathport/Syntax/Translate/Basic.lean:648:40: in rw #[[\"<-\", expr @num_denom q]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
     rwa [coe_int_eq_mk, coe_nat_eq_mk]
   have : (q.denom : ℤ) ≠ 0 :=
     ne_of_gtₓ

@@ -16,7 +16,7 @@ This file defines the type `ℕ+` or `pnat`, the subtype of natural numbers that
   and the VM representation of `ℕ+` is the same as `ℕ` because the proof
   is not stored. -/
 def Pnat :=
-  { n : ℕ // 0 < n }
+  { n : ℕ // 0 < n }deriving LinearOrderₓ
 
 -- mathport name: «exprℕ+»
 notation "ℕ+" => Pnat
@@ -27,21 +27,47 @@ instance coePnatNat : Coe ℕ+ ℕ :=
 instance : HasRepr ℕ+ :=
   ⟨fun n => reprₓ n.1⟩
 
+namespace Pnat
+
 /-- Predecessor of a `ℕ+`, as a `ℕ`. -/
-def Pnat.natPred (i : ℕ+) : ℕ :=
+def natPred (i : ℕ+) : ℕ :=
   i - 1
 
 @[simp]
-theorem Pnat.one_add_nat_pred (n : ℕ+) : 1 + n.natPred = n := by
-  rw [Pnat.natPred, add_tsub_cancel_iff_le.mpr <| show 1 ≤ (n : ℕ) from n.2]
+theorem one_add_nat_pred (n : ℕ+) : 1 + n.natPred = n := by
+  rw [nat_pred, add_tsub_cancel_iff_le.mpr <| show 1 ≤ (n : ℕ) from n.2]
 
 @[simp]
-theorem Pnat.nat_pred_add_one (n : ℕ+) : n.natPred + 1 = n :=
+theorem nat_pred_add_one (n : ℕ+) : n.natPred + 1 = n :=
   (add_commₓ _ _).trans n.one_add_nat_pred
 
 @[simp]
-theorem Pnat.nat_pred_eq_pred {n : ℕ} (h : 0 < n) : Pnat.natPred (⟨n, h⟩ : ℕ+) = n.pred :=
+theorem nat_pred_eq_pred {n : ℕ} (h : 0 < n) : natPred (⟨n, h⟩ : ℕ+) = n.pred :=
   rfl
+
+@[mono]
+theorem nat_pred_strict_mono : StrictMono natPred := fun m n h => Nat.pred_lt_predₓ m.2.ne' h
+
+@[mono]
+theorem nat_pred_monotone : Monotone natPred :=
+  nat_pred_strict_mono.Monotone
+
+theorem nat_pred_injective : Function.Injective natPred :=
+  nat_pred_strict_mono.Injective
+
+@[simp]
+theorem nat_pred_lt_nat_pred {m n : ℕ+} : m.natPred < n.natPred ↔ m < n :=
+  nat_pred_strict_mono.lt_iff_lt
+
+@[simp]
+theorem nat_pred_le_nat_pred {m n : ℕ+} : m.natPred ≤ n.natPred ↔ m ≤ n :=
+  nat_pred_strict_mono.le_iff_le
+
+@[simp]
+theorem nat_pred_inj {m n : ℕ+} : m.natPred = n.natPred ↔ m = n :=
+  nat_pred_injective.eq_iff
+
+end Pnat
 
 namespace Nat
 
@@ -62,9 +88,35 @@ def succPnat (n : ℕ) : ℕ+ :=
 theorem succ_pnat_coe (n : ℕ) : (succPnat n : ℕ) = succ n :=
   rfl
 
-theorem succ_pnat_inj {n m : ℕ} : succPnat n = succPnat m → n = m := fun h => by
-  let h' := congr_arg (coe : ℕ+ → ℕ) h
-  exact Nat.succ.injₓ h'
+@[mono]
+theorem succ_pnat_strict_mono : StrictMono succPnat := fun m n => Nat.succ_lt_succₓ
+
+@[mono]
+theorem succ_pnat_mono : Monotone succPnat :=
+  succ_pnat_strict_mono.Monotone
+
+@[simp]
+theorem succ_pnat_lt_succ_pnat {m n : ℕ} : m.succPnat < n.succPnat ↔ m < n :=
+  succ_pnat_strict_mono.lt_iff_lt
+
+@[simp]
+theorem succ_pnat_le_succ_pnat {m n : ℕ} : m.succPnat ≤ n.succPnat ↔ m ≤ n :=
+  succ_pnat_strict_mono.le_iff_le
+
+theorem succ_pnat_injective : Function.Injective succPnat :=
+  succ_pnat_strict_mono.Injective
+
+@[simp]
+theorem succ_pnat_inj {n m : ℕ} : succPnat n = succPnat m ↔ n = m :=
+  succ_pnat_injective.eq_iff
+
+@[simp]
+theorem nat_pred_succ_pnat (n : ℕ) : n.succPnat.natPred = n :=
+  rfl
+
+@[simp]
+theorem _root_.pnat.succ_pnat_nat_pred (n : ℕ+) : n.natPred.succPnat = n :=
+  Subtype.eq <| succ_pred_eq_of_posₓ n.2
 
 /-- Convert a natural number to a pnat. `n+1` is mapped to itself,
   and `0` becomes `1`. -/
@@ -91,9 +143,6 @@ open Nat
 -/
 instance : DecidableEq ℕ+ := fun a b : ℕ+ => by
   infer_instance
-
-instance : LinearOrderₓ ℕ+ :=
-  Subtype.linearOrder _
 
 @[simp]
 theorem mk_le_mk (n k : ℕ) (hn : 0 < n) (hk : 0 < k) : (⟨n, hn⟩ : ℕ+) ≤ ⟨k, hk⟩ ↔ n ≤ k :=
@@ -154,15 +203,23 @@ instance : AddLeftCancelSemigroup ℕ+ :=
 instance : AddRightCancelSemigroup ℕ+ :=
   coe_injective.AddRightCancelSemigroup coe fun _ _ => rfl
 
+/-- An equivalence between `ℕ+` and `ℕ` given by `pnat.nat_pred` and `nat.succ_pnat`. -/
+@[simps (config := { fullyApplied := false })]
+def _root_.equiv.pnat_equiv_nat : ℕ+ ≃ ℕ where
+  toFun := Pnat.natPred
+  invFun := Nat.succPnat
+  left_inv := succ_pnat_nat_pred
+  right_inv := Nat.nat_pred_succ_pnat
+
 /-- The order isomorphism between ℕ and ℕ+ given by `succ`. -/
-@[simps]
-def succOrderIso : ℕ ≃o ℕ+ where
-  toFun := fun n => ⟨_, succ_posₓ n⟩
-  invFun := fun n => pred (n : ℕ)
-  left_inv := pred_succ
-  right_inv := fun ⟨x, hx⟩ => by
-    simpa using succ_pred_eq_of_pos hx
-  map_rel_iff' := @succ_le_succ_iff
+@[simps (config := { fullyApplied := false }) apply]
+def _root_.order_iso.pnat_iso_nat : ℕ+ ≃o ℕ where
+  toEquiv := Equivₓ.pnatEquivNat
+  map_rel_iff' := fun _ _ => nat_pred_le_nat_pred
+
+@[simp]
+theorem _root_.order_iso.pnat_iso_nat_symm_apply : ⇑OrderIso.pnatIsoNat.symm = Nat.succPnat :=
+  rfl
 
 instance (priority := 10) : CovariantClass ℕ+ ℕ+ (· + ·) (· ≤ ·) :=
   ⟨by
@@ -271,29 +328,17 @@ theorem coe_coe_monoid_hom : (coeMonoidHom : ℕ+ → ℕ) = coe :=
 
 @[simp]
 theorem coe_eq_one_iff {m : ℕ+} : (m : ℕ) = 1 ↔ m = 1 := by
-  constructor <;>
-    intro h <;>
-      try
-          apply Pnat.eq <;>
-        rw [h] <;> simp
+  rw [← one_coe, coe_inj]
 
 @[simp]
-theorem le_one_iff {n : ℕ+} : n ≤ 1 ↔ n = 1 := by
-  rcases n with ⟨_ | n, hn⟩
-  · exact absurd hn (lt_irreflₓ _)
-    
-  · simp [Pnat.coe_le_coe, ← Subtype.ext_iff, ← Nat.succ_le_succ_iff, ← Nat.succ_inj']
-    
+theorem le_one_iff {n : ℕ+} : n ≤ 1 ↔ n = 1 :=
+  le_bot_iff
 
-theorem lt_add_left (n m : ℕ+) : n < m + n := by
-  rcases m with ⟨_ | m, hm⟩
-  · exact absurd hm (lt_irreflₓ _)
-    
-  · simp [Pnat.coe_lt_coe]
-    
+theorem lt_add_left (n m : ℕ+) : n < m + n :=
+  lt_add_of_pos_left _ m.2
 
 theorem lt_add_right (n m : ℕ+) : n < n + m :=
-  (lt_add_left n m).trans_le (add_commₓ _ _).le
+  (lt_add_left n m).trans_eq (add_commₓ _ _)
 
 @[simp]
 theorem coe_bit0 (a : ℕ+) : ((bit0 a : ℕ+) : ℕ) = bit0 (a : ℕ) :=
@@ -372,7 +417,7 @@ def caseStrongInductionOn {p : ℕ+ → Sort _} (a : ℕ+) (hz : p 1) (hi : ∀ 
 
 /-- An induction principle for `ℕ+`: it takes values in `Sort*`, so it applies also to Types,
 not only to `Prop`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def recOn (n : ℕ+) {p : ℕ+ → Sort _} (p1 : p 1) (hp : ∀ n, p n → p (n + 1)) : p n := by
   rcases n with ⟨n, h⟩
   induction' n with n IH

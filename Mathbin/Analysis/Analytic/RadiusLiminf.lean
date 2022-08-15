@@ -15,8 +15,8 @@ would create a circular dependency once we redefine `exp` using `formal_multilin
 -/
 
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
-  [NormedGroup F] [NormedSpace 𝕜 F]
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {F : Type _}
+  [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 
 open TopologicalSpace Classical BigOperators Nnreal Ennreal
 

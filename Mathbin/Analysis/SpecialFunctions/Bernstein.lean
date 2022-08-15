@@ -236,72 +236,78 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) : Tendsto (fun n : ℕ =
   -- The idea is to split up the sum over `k` into two sets,
   -- `S`, where `x - k/n < δ`, and its complement.
   let S := S f ε h n x
-  calc abs ((bernsteinApproximation n f - f) x) = abs (bernsteinApproximation n f x - f x) :=
-      rfl _ = abs (bernsteinApproximation n f x - f x * 1) := by
-      rw [mul_oneₓ]_ = abs (bernsteinApproximation n f x - f x * ∑ k : Finₓ (n + 1), bernstein n k x) := by
-      rw [bernstein.probability]_ = abs (∑ k : Finₓ (n + 1), (f k/ₙ - f x) * bernstein n k x) := by
-      simp [← bernsteinApproximation, ← Finset.mul_sum, ←
-        sub_mul]_ ≤ ∑ k : Finₓ (n + 1), abs ((f k/ₙ - f x) * bernstein n k x) :=
-      Finset.abs_sum_le_sum_abs _ _ _ = ∑ k : Finₓ (n + 1), abs (f k/ₙ - f x) * bernstein n k x := by
-      simp_rw [abs_mul,
-        abs_eq_self.mpr
-          bernstein_nonneg]_ =
-        (∑ k in S, abs (f k/ₙ - f x) * bernstein n k x) + ∑ k in Sᶜ, abs (f k/ₙ - f x) * bernstein n k x :=
-      (S.sum_add_sum_compl _).symm-- We'll now deal with the terms in `S` and the terms in `Sᶜ` in separate calc blocks.
+  calc
+    abs ((bernsteinApproximation n f - f) x) = abs (bernsteinApproximation n f x - f x) := rfl
+    _ = abs (bernsteinApproximation n f x - f x * 1) := by
+      rw [mul_oneₓ]
+    _ = abs (bernsteinApproximation n f x - f x * ∑ k : Finₓ (n + 1), bernstein n k x) := by
+      rw [bernstein.probability]
+    _ = abs (∑ k : Finₓ (n + 1), (f k/ₙ - f x) * bernstein n k x) := by
+      simp [← bernsteinApproximation, ← Finset.mul_sum, ← sub_mul]
+    _ ≤ ∑ k : Finₓ (n + 1), abs ((f k/ₙ - f x) * bernstein n k x) := Finset.abs_sum_le_sum_abs _ _
+    _ = ∑ k : Finₓ (n + 1), abs (f k/ₙ - f x) * bernstein n k x := by
+      simp_rw [abs_mul, abs_eq_self.mpr bernstein_nonneg]
+    _ = (∑ k in S, abs (f k/ₙ - f x) * bernstein n k x) + ∑ k in Sᶜ, abs (f k/ₙ - f x) * bernstein n k x :=
+      (S.sum_add_sum_compl _).symm
+    -- We'll now deal with the terms in `S` and the terms in `Sᶜ` in separate calc blocks.
         _ <
         ε / 2 + ε / 2 :=
-      add_lt_add_of_le_of_lt _ _ _ = ε := add_halves ε
+      add_lt_add_of_le_of_lt _ _
+    _ = ε := add_halves ε
+    
   · -- We now work on the terms in `S`: uniform continuity and `bernstein.probability`
     -- quickly give us a bound.
-    calc (∑ k in S, abs (f k/ₙ - f x) * bernstein n k x) ≤ ∑ k in S, ε / 2 * bernstein n k x :=
-        Finset.sum_le_sum fun k m =>
-          mul_le_mul_of_nonneg_right (le_of_ltₓ (lt_of_mem_S m))
-            bernstein_nonneg _ = ε / 2 * ∑ k in S, bernstein n k x :=
-        by
-        rw [Finset.mul_sum]-- In this step we increase the sum over `S` back to a sum over all of `fin (n+1)`,
+    calc
+      (∑ k in S, abs (f k/ₙ - f x) * bernstein n k x) ≤ ∑ k in S, ε / 2 * bernstein n k x :=
+        Finset.sum_le_sum fun k m => mul_le_mul_of_nonneg_right (le_of_ltₓ (lt_of_mem_S m)) bernstein_nonneg
+      _ = ε / 2 * ∑ k in S, bernstein n k x := by
+        rw [Finset.mul_sum]
+      -- In this step we increase the sum over `S` back to a sum over all of `fin (n+1)`,
           -- so that we can use `bernstein.probability`.
           _ ≤
           ε / 2 * ∑ k : Finₓ (n + 1), bernstein n k x :=
-        mul_le_mul_of_nonneg_left (Finset.sum_le_univ_sum_of_nonneg fun k => bernstein_nonneg)
-          (le_of_ltₓ (half_pos h))_ = ε / 2 :=
-        by
+        mul_le_mul_of_nonneg_left (Finset.sum_le_univ_sum_of_nonneg fun k => bernstein_nonneg) (le_of_ltₓ (half_pos h))
+      _ = ε / 2 := by
         rw [bernstein.probability, mul_oneₓ]
+      
     
   · -- We now turn to working on `Sᶜ`: we control the difference term just using `∥f∥`,
     -- and then insert a `δ^(-2) * (x - k/n)^2` factor
     -- (which is at least one because we are not in `S`).
-    calc (∑ k in Sᶜ, abs (f k/ₙ - f x) * bernstein n k x) ≤ ∑ k in Sᶜ, 2 * ∥f∥ * bernstein n k x :=
-        Finset.sum_le_sum fun k m =>
-          mul_le_mul_of_nonneg_right (f.dist_le_two_norm _ _)
-            bernstein_nonneg _ = 2 * ∥f∥ * ∑ k in Sᶜ, bernstein n k x :=
-        by
-        rw [Finset.mul_sum]_ ≤ 2 * ∥f∥ * ∑ k in Sᶜ, δ ^ (-2 : ℤ) * (x - k/ₙ) ^ 2 * bernstein n k x :=
+    calc
+      (∑ k in Sᶜ, abs (f k/ₙ - f x) * bernstein n k x) ≤ ∑ k in Sᶜ, 2 * ∥f∥ * bernstein n k x :=
+        Finset.sum_le_sum fun k m => mul_le_mul_of_nonneg_right (f.dist_le_two_norm _ _) bernstein_nonneg
+      _ = 2 * ∥f∥ * ∑ k in Sᶜ, bernstein n k x := by
+        rw [Finset.mul_sum]
+      _ ≤ 2 * ∥f∥ * ∑ k in Sᶜ, δ ^ (-2 : ℤ) * (x - k/ₙ) ^ 2 * bernstein n k x :=
         mul_le_mul_of_nonneg_left
           (Finset.sum_le_sum fun k m => by
             conv_lhs => rw [← one_mulₓ (bernstein _ _ _)]
             exact mul_le_mul_of_nonneg_right (le_of_mem_S_compl m) bernstein_nonneg)
-          w₁-- Again enlarging the sum from `Sᶜ` to all of `fin (n+1)`
+          w₁
+      -- Again enlarging the sum from `Sᶜ` to all of `fin (n+1)`
           _ ≤
           2 * ∥f∥ * ∑ k : Finₓ (n + 1), δ ^ (-2 : ℤ) * (x - k/ₙ) ^ 2 * bernstein n k x :=
         mul_le_mul_of_nonneg_left
           (Finset.sum_le_univ_sum_of_nonneg fun k =>
             mul_nonneg (mul_nonneg pow_minus_two_nonneg (sq_nonneg _)) bernstein_nonneg)
-          w₁ _ = 2 * ∥f∥ * δ ^ (-2 : ℤ) * ∑ k : Finₓ (n + 1), (x - k/ₙ) ^ 2 * bernstein n k x :=
-        by
-        conv_rhs =>
-          rw [mul_assoc,
-            Finset.mul_sum]simp only [mul_assoc]-- `bernstein.variance` and `x ∈ [0,1]` gives the uniform bound
+          w₁
+      _ = 2 * ∥f∥ * δ ^ (-2 : ℤ) * ∑ k : Finₓ (n + 1), (x - k/ₙ) ^ 2 * bernstein n k x := by
+        conv_rhs => rw [mul_assoc, Finset.mul_sum]simp only [mul_assoc]
+      -- `bernstein.variance` and `x ∈ [0,1]` gives the uniform bound
           _ =
           2 * ∥f∥ * δ ^ (-2 : ℤ) * x * (1 - x) / n :=
         by
         rw [variance npos]
-        ring _ ≤ 2 * ∥f∥ * δ ^ (-2 : ℤ) / n :=
+        ring
+      _ ≤ 2 * ∥f∥ * δ ^ (-2 : ℤ) / n :=
         (div_le_div_right npos).mpr
           (by
             apply mul_nonneg_le_one_le w₂
             apply mul_nonneg_le_one_le w₂ le_rfl
             all_goals
-              unit_interval)_ < ε / 2 :=
-        nh
+              unit_interval)
+      _ < ε / 2 := nh
+      
     
 

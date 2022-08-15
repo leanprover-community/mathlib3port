@@ -189,12 +189,18 @@ theorem nat_abs_div (a b : ℤ) (H : b ∣ a) : natAbs (a / b) = natAbs a / natA
   · rw [eq_zero_of_nat_abs_eq_zero h]
     simp [← Int.div_zero]
     
-  calc nat_abs (a / b) = nat_abs (a / b) * 1 := by
-      rw [mul_oneₓ]_ = nat_abs (a / b) * (nat_abs b / nat_abs b) := by
-      rw [Nat.div_selfₓ h]_ = nat_abs (a / b) * nat_abs b / nat_abs b := by
-      rw [Nat.mul_div_assocₓ _ dvd_rfl]_ = nat_abs (a / b * b) / nat_abs b := by
-      rw [nat_abs_mul (a / b) b]_ = nat_abs a / nat_abs b := by
+  calc
+    nat_abs (a / b) = nat_abs (a / b) * 1 := by
+      rw [mul_oneₓ]
+    _ = nat_abs (a / b) * (nat_abs b / nat_abs b) := by
+      rw [Nat.div_selfₓ h]
+    _ = nat_abs (a / b) * nat_abs b / nat_abs b := by
+      rw [Nat.mul_div_assocₓ _ dvd_rfl]
+    _ = nat_abs (a / b * b) / nat_abs b := by
+      rw [nat_abs_mul (a / b) b]
+    _ = nat_abs a / nat_abs b := by
       rw [Int.div_mul_cancel H]
+    
 
 theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul {p : ℕ} (p_prime : Nat.Prime p) {m n : ℤ} {k l : ℕ}
     (hpm : ↑(p ^ k) ∣ m) (hpn : ↑(p ^ l) ∣ n) (hpmn : ↑(p ^ (k + l + 1)) ∣ m * n) :

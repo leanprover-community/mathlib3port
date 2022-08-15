@@ -244,7 +244,7 @@ theorem slice_zero [Zero α] (i : ℕ) (hid : i < d) : slice (0 : Holor α (d ::
 
 theorem slice_sum [AddCommMonoidₓ α] {β : Type} (i : ℕ) (hid : i < d) (s : Finset β) (f : β → Holor α (d :: ds)) :
     (∑ x in s, slice (f x) i hid) = slice (∑ x in s, f x) i hid := by
-  let this := Classical.decEq β
+  letI := Classical.decEq β
   refine' Finset.induction_on s _ _
   · simp [← slice_zero]
     
@@ -320,22 +320,21 @@ theorem cprank_max_mul [Ringₓ α] : ∀ (n : ℕ) (x : Holor α [d]) (y : Holo
       
 
 theorem cprank_max_sum [Ringₓ α] {β} {n : ℕ} (s : Finset β) (f : β → Holor α ds) :
-    (∀, ∀ x ∈ s, ∀, CprankMax n (f x)) → CprankMax (s.card * n) (∑ x in s, f x) := by
-  let this := Classical.decEq β <;>
-    exact
-      Finset.induction_on s
-        (by
-          simp [← cprank_max.zero])
-        (by
-          intro x s(h_x_notin_s : x ∉ s)ih h_cprank
-          simp only [← Finset.sum_insert h_x_notin_s, ← Finset.card_insert_of_not_mem h_x_notin_s]
-          rw [Nat.right_distrib]
-          simp only [← Nat.one_mul, ← Nat.add_comm]
-          have ih' : cprank_max (Finset.card s * n) (∑ x in s, f x) := by
-            apply ih
-            intro (x : β)(h_x_in_s : x ∈ s)
-            simp only [← h_cprank, ← Finset.mem_insert_of_mem, ← h_x_in_s]
-          exact cprank_max_add (h_cprank x (Finset.mem_insert_self x s)) ih')
+    (∀, ∀ x ∈ s, ∀, CprankMax n (f x)) → CprankMax (s.card * n) (∑ x in s, f x) :=
+  letI := Classical.decEq β
+  Finset.induction_on s
+    (by
+      simp [← cprank_max.zero])
+    (by
+      intro x s(h_x_notin_s : x ∉ s)ih h_cprank
+      simp only [← Finset.sum_insert h_x_notin_s, ← Finset.card_insert_of_not_mem h_x_notin_s]
+      rw [Nat.right_distrib]
+      simp only [← Nat.one_mul, ← Nat.add_comm]
+      have ih' : cprank_max (Finset.card s * n) (∑ x in s, f x) := by
+        apply ih
+        intro (x : β)(h_x_in_s : x ∈ s)
+        simp only [← h_cprank, ← Finset.mem_insert_of_mem, ← h_x_in_s]
+      exact cprank_max_add (h_cprank x (Finset.mem_insert_self x s)) ih')
 
 theorem cprank_max_upper_bound [Ringₓ α] : ∀ {ds}, ∀ x : Holor α ds, CprankMax ds.Prod x
   | [], x => cprank_max_nil x
@@ -363,11 +362,10 @@ theorem cprank_max_upper_bound [Ringₓ α] : ∀ {ds}, ∀ x : Holor α ds, Cpr
 noncomputable def cprank [Ringₓ α] (x : Holor α ds) : Nat :=
   @Nat.findₓ (fun n => CprankMax n x) (Classical.decPred _) ⟨ds.Prod, cprank_max_upper_bound x⟩
 
-theorem cprank_upper_bound [Ringₓ α] : ∀ {ds}, ∀ x : Holor α ds, cprank x ≤ ds.Prod := fun ds (x : Holor α ds) => by
-  let this := Classical.decPred fun n : ℕ => cprank_max n x <;>
-    exact
-      Nat.find_min'ₓ ⟨ds.prod, show (fun n => cprank_max n x) ds.prod from cprank_max_upper_bound x⟩
-        (cprank_max_upper_bound x)
+theorem cprank_upper_bound [Ringₓ α] : ∀ {ds}, ∀ x : Holor α ds, cprank x ≤ ds.Prod := fun ds (x : Holor α ds) =>
+  letI := Classical.decPred fun n : ℕ => cprank_max n x
+  Nat.find_min'ₓ ⟨ds.prod, show (fun n => cprank_max n x) ds.prod from cprank_max_upper_bound x⟩
+    (cprank_max_upper_bound x)
 
 end Holor
 

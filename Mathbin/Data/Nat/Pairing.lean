@@ -142,18 +142,45 @@ theorem mkpair_lt_mkpair_right (a) {b₁ b₂} (h : b₁ < b₂) : mkpair a b₁
     exact le_transₓ h₁ (Nat.le_add_leftₓ _ _)
     
 
+theorem mkpair_lt_max_add_one_sq (m n : ℕ) : mkpair m n < (max m n + 1) ^ 2 := by
+  rw [mkpair, add_sq, mul_oneₓ, two_mul, sq, add_assocₓ, add_assocₓ]
+  cases lt_or_leₓ m n
+  · rw [if_pos h, max_eq_rightₓ h.le, add_lt_add_iff_left, add_assocₓ]
+    exact h.trans_le (self_le_add_right n _)
+    
+  · rw [if_neg h.not_lt, max_eq_leftₓ h, add_lt_add_iff_left, add_assocₓ, add_lt_add_iff_left]
+    exact lt_succ_of_le h
+    
+
+theorem max_sq_add_min_le_mkpair (m n : ℕ) : max m n ^ 2 + min m n ≤ mkpair m n := by
+  rw [mkpair]
+  cases lt_or_leₓ m n
+  · rw [if_pos h, max_eq_rightₓ h.le, min_eq_leftₓ h.le, sq]
+    
+  · rw [if_neg h.not_lt, max_eq_leftₓ h, min_eq_rightₓ h, sq, add_assocₓ, add_le_add_iff_left]
+    exact le_add_self
+    
+
+theorem add_le_mkpair (m n : ℕ) : m + n ≤ mkpair m n :=
+  (max_sq_add_min_le_mkpair _ _).trans' <| by
+    rw [sq, ← min_add_max, add_commₓ, add_le_add_iff_right]
+    exact le_mul_self _
+
+theorem unpair_add_le (n : ℕ) : (unpair n).1 + (unpair n).2 ≤ n :=
+  (add_le_mkpair _ _).trans_eq (mkpair_unpair _)
+
 end Nat
 
 open Nat
 
 section CompleteLattice
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
 theorem supr_unpair {α} [CompleteLattice α] (f : ℕ → ℕ → α) :
     (⨆ n : ℕ, f n.unpair.1 n.unpair.2) = ⨆ (i : ℕ) (j : ℕ), f i j := by
   rw [← (supr_prod : (⨆ i : ℕ × ℕ, f i.1 i.2) = _), ← nat.surjective_unpair.supr_comp]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
 theorem infi_unpair {α} [CompleteLattice α] (f : ℕ → ℕ → α) :
     (⨅ n : ℕ, f n.unpair.1 n.unpair.2) = ⨅ (i : ℕ) (j : ℕ), f i j :=
   supr_unpair (show ℕ → ℕ → αᵒᵈ from f)
@@ -168,11 +195,11 @@ theorem Union_unpair_prod {α β} {s : ℕ → Set α} {t : ℕ → Set β} :
   convert surjective_unpair.Union_comp _
   rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
 theorem Union_unpair {α} (f : ℕ → ℕ → Set α) : (⋃ n : ℕ, f n.unpair.1 n.unpair.2) = ⋃ (i : ℕ) (j : ℕ), f i j :=
   supr_unpair f
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
 theorem Inter_unpair {α} (f : ℕ → ℕ → Set α) : (⋂ n : ℕ, f n.unpair.1 n.unpair.2) = ⋂ (i : ℕ) (j : ℕ), f i j :=
   infi_unpair f
 

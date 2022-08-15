@@ -59,7 +59,7 @@ is the type of all prime ideals of `R`.
 It is naturally endowed with a topology (the Zariski topology),
 and a sheaf of commutative rings (see `algebraic_geometry.structure_sheaf`).
 It is a fundamental building block in algebraic geometry. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def PrimeSpectrum :=
   { I : Ideal R // I.IsPrime }
 
@@ -534,7 +534,7 @@ theorem comap_injective_of_surjective (f : R →+* S) (hf : Function.Surjective 
 
 theorem comap_singleton_is_closed_of_surjective (f : R →+* S) (hf : Function.Surjective f) (x : PrimeSpectrum S)
     (hx : IsClosed ({x} : Set (PrimeSpectrum S))) : IsClosed ({comap f x} : Set (PrimeSpectrum R)) := by
-  have : x.as_ideal.is_maximal := (is_closed_singleton_iff_is_maximal x).1 hx
+  haveI : x.as_ideal.is_maximal := (is_closed_singleton_iff_is_maximal x).1 hx
   exact (is_closed_singleton_iff_is_maximal _).2 (Ideal.comap_is_maximal_of_surjective f hf)
 
 theorem comap_singleton_is_closed_of_is_integral (f : R →+* S) (hf : f.IsIntegral) (x : PrimeSpectrum S)
@@ -588,6 +588,62 @@ theorem localization_comap_range [Algebra R S] (M : Submonoid R) [IsLocalization
     ext1
     exact IsLocalization.comap_map_of_is_prime_disjoint M S _ x.2 h
     
+
+section SpecOfSurjective
+
+/-! The comap of a surjective ring homomorphism is a closed embedding between the prime spectra. -/
+
+
+open Function RingHom
+
+theorem comap_inducing_of_surjective (hf : Surjective f) : Inducing (comap f) :=
+  { induced := by
+      simp_rw [topological_space_eq_iff, ← is_closed_compl_iff, is_closed_induced_iff, is_closed_iff_zero_locus]
+      refine' fun s =>
+        ⟨fun ⟨F, hF⟩ =>
+          ⟨zero_locus (f ⁻¹' F), ⟨f ⁻¹' F, rfl⟩, by
+            rw [preimage_comap_zero_locus, surjective.image_preimage hf, hF]⟩,
+          _⟩
+      rintro ⟨-, ⟨F, rfl⟩, hF⟩
+      exact ⟨f '' F, hF.symm.trans (preimage_comap_zero_locus f F)⟩ }
+
+theorem image_comap_zero_locus_eq_zero_locus_comap (hf : Surjective f) (I : Ideal S) :
+    comap f '' ZeroLocus I = ZeroLocus (I.comap f) := by
+  simp only [← Set.ext_iff, ← Set.mem_image, ← mem_zero_locus, ← SetLike.coe_subset_coe]
+  refine' fun p => ⟨_, fun h_I_p => _⟩
+  · rintro ⟨p, hp, rfl⟩ a ha
+    exact hp ha
+    
+  · have hp : ker f ≤ p.as_ideal := (Ideal.comap_mono bot_le).trans h_I_p
+    refine' ⟨⟨p.as_ideal.map f, Ideal.map_is_prime_of_surjective hf hp⟩, fun x hx => _, _⟩
+    · obtain ⟨x', rfl⟩ := hf x
+      exact Ideal.mem_map_of_mem f (h_I_p hx)
+      
+    · ext x
+      change f x ∈ p.as_ideal.map f ↔ _
+      rw [Ideal.mem_map_iff_of_surjective f hf]
+      refine' ⟨_, fun hx => ⟨x, hx, rfl⟩⟩
+      rintro ⟨x', hx', heq⟩
+      rw [← sub_sub_cancel x' x]
+      refine' p.as_ideal.sub_mem hx' (hp _)
+      rwa [mem_ker, map_sub, sub_eq_zero]
+      
+    
+
+theorem range_comap_of_surjective (hf : Surjective f) : Set.Range (comap f) = ZeroLocus (ker f) := by
+  rw [← Set.image_univ]
+  convert image_comap_zero_locus_eq_zero_locus_comap _ _ hf _
+  rw [zero_locus_bot]
+
+theorem is_closed_range_comap_of_surjective (hf : Surjective f) : IsClosed (Set.Range (comap f)) := by
+  rw [range_comap_of_surjective _ f hf]
+  exact is_closed_zero_locus ↑(ker f)
+
+theorem closed_embedding_comap_of_surjective (hf : Surjective f) : ClosedEmbedding (comap f) :=
+  { induced := (comap_inducing_of_surjective S f hf).induced, inj := comap_injective_of_surjective f hf,
+    closed_range := is_closed_range_comap_of_surjective S f hf }
+
+end SpecOfSurjective
 
 end Comap
 
@@ -675,7 +731,8 @@ theorem is_compact_basic_open (f : R) : IsCompact (basicOpen f : Set (PrimeSpect
     rcases Submodule.exists_finset_of_mem_supr I hn with ⟨s, hs⟩
     use s
     -- Using simp_rw here, because `hI` and `zero_locus_supr` need to be applied underneath binders
-    simp_rw [basic_open_eq_zero_locus_compl f, Set.inter_comm, ← Set.diff_eq, Set.diff_eq_empty, hI, ← zero_locus_supr]
+    simp_rw [basic_open_eq_zero_locus_compl f, Set.inter_comm (zero_locus {f}ᶜ), ← Set.diff_eq, Set.diff_eq_empty, hI, ←
+      zero_locus_supr]
     rw [← zero_locus_radical]
     -- this one can't be in `simp_rw` because it would loop
     apply zero_locus_anti_mono

@@ -327,12 +327,10 @@ attribute [to_additive] Subgroup
 
 attribute [to_additive AddSubgroup.toAddSubmonoid] Subgroup.toSubmonoid
 
-/-- Reinterpret a `subgroup` as a `submonoid`. -/
-add_decl_doc Subgroup.toSubmonoid
-
-/-- Reinterpret an `add_subgroup` as an `add_submonoid`. -/
-add_decl_doc AddSubgroup.toAddSubmonoid
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident subgroup.to_submonoid]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_subgroup.to_add_submonoid]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace Subgroup
 
 @[to_additive]
@@ -561,7 +559,7 @@ protected theorem pow_mem {x : G} (hx : x ∈ K) : ∀ n : ℕ, x ^ n ∈ K :=
 protected theorem zpow_mem {x : G} (hx : x ∈ K) : ∀ n : ℤ, x ^ n ∈ K :=
   zpow_mem hx
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » s)
 /-- Construct a subgroup from a nonempty set that is closed under division. -/
 @[to_additive "Construct a subgroup from a nonempty set that is closed under subtraction"]
 def ofDiv (s : Set G) (hsn : s.Nonempty) (hs : ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), x * y⁻¹ ∈ s) : Subgroup G :=
@@ -768,7 +766,7 @@ theorem coe_eq_univ {H : Subgroup G} : (H : Set G) = Set.Univ ↔ H = ⊤ :=
 @[to_additive]
 theorem coe_eq_singleton {H : Subgroup G} : (∃ g : G, (H : Set G) = {g}) ↔ H = ⊥ :=
   ⟨fun ⟨g, hg⟩ => by
-    have : Subsingleton (H : Set G) := by
+    haveI : Subsingleton (H : Set G) := by
       rw [hg]
       infer_instance
     exact H.eq_bot_of_subsingleton, fun h => ⟨1, SetLike.ext'_iff.mp h⟩⟩
@@ -787,7 +785,7 @@ theorem card_bot {_ : Fintype ↥(⊥ : Subgroup G)} : Fintype.card (⊥ : Subgr
 
 @[to_additive]
 theorem eq_top_of_card_eq [Fintype H] [Fintype G] (h : Fintype.card H = Fintype.card G) : H = ⊤ := by
-  have : Fintype (H : Set G) := ‹Fintype H›
+  haveI : Fintype (H : Set G) := ‹Fintype H›
   rw [SetLike.ext'_iff, coe_top, ← Finset.coe_univ, ← (H : Set G).coe_to_finset, Finset.coe_inj, ←
     Finset.card_eq_iff_eq_univ, ← h, Set.to_finset_card]
   congr
@@ -970,7 +968,7 @@ theorem closure_eq_of_le (h₁ : k ⊆ K) (h₂ : K ≤ closure k) : closure k =
 /-- An induction principle for closure membership. If `p` holds for `1` and all elements of `k`, and
 is preserved under multiplication and inverse, then `p` holds for all elements of the closure
 of `k`. -/
-@[elab_as_eliminator,
+@[elabAsElim,
   to_additive
       "An induction principle for additive closure membership. If `p`\nholds for `0` and all elements of `k`, and is preserved under addition and inverses, then `p` holds\nfor all elements of the additive closure of `k`."]
 theorem closure_induction {p : G → Prop} {x} (h : x ∈ closure k) (Hk : ∀, ∀ x ∈ k, ∀, p x) (H1 : p 1)
@@ -978,7 +976,7 @@ theorem closure_induction {p : G → Prop} {x} (h : x ∈ closure k) (Hk : ∀, 
   (@closure_le _ _ ⟨p, Hmul, H1, Hinv⟩ _).2 Hk h
 
 /-- A dependent version of `subgroup.closure_induction`.  -/
-@[elab_as_eliminator, to_additive "A dependent version of `add_subgroup.closure_induction`. "]
+@[elabAsElim, to_additive "A dependent version of `add_subgroup.closure_induction`. "]
 theorem closure_induction' {p : ∀ x, x ∈ closure k → Prop} (Hs : ∀ (x) (h : x ∈ k), p x (subset_closure h))
     (H1 : p 1 (one_mem _)) (Hmul : ∀ x hx y hy, p x hx → p y hy → p (x * y) (mul_mem hx hy))
     (Hinv : ∀ x hx, p x hx → p x⁻¹ (inv_mem hx)) {x} (hx : x ∈ closure k) : p x hx := by
@@ -988,8 +986,7 @@ theorem closure_induction' {p : ∀ x, x ∈ closure k → Prop} (Hs : ∀ (x) (
       fun x ⟨hx', hx⟩ => ⟨_, Hinv _ _ hx⟩
 
 /-- An induction principle for closure membership for predicates with two arguments. -/
-@[elab_as_eliminator,
-  to_additive "An induction principle for additive closure membership, for\npredicates with two arguments."]
+@[elabAsElim, to_additive "An induction principle for additive closure membership, for\npredicates with two arguments."]
 theorem closure_induction₂ {p : G → G → Prop} {x} {y : G} (hx : x ∈ closure k) (hy : y ∈ closure k)
     (Hk : ∀, ∀ x ∈ k, ∀, ∀ y ∈ k, ∀, p x y) (H1_left : ∀ x, p 1 x) (H1_right : ∀ x, p x 1)
     (Hmul_left : ∀ x₁ x₂ y, p x₁ y → p x₂ y → p (x₁ * x₂) y) (Hmul_right : ∀ x y₁ y₂, p x y₁ → p x y₂ → p x (y₁ * y₂))
@@ -1156,7 +1153,7 @@ theorem closure_induction'' {p : G → Prop} {x} (h : x ∈ closure k) (Hk : ∀
 /-- An induction principle for elements of `⨆ i, S i`.
 If `C` holds for `1` and all elements of `S i` for all `i`, and is preserved under multiplication,
 then it holds for all elements of the supremum of `S`. -/
-@[elab_as_eliminator,
+@[elabAsElim,
   to_additive
       " An induction principle for elements of `⨆ i, S i`.\nIf `C` holds for `0` and all elements of `S i` for all `i`, and is preserved under addition,\nthen it holds for all elements of the supremum of `S`. "]
 theorem supr_induction {ι : Sort _} (S : ι → Subgroup G) {C : G → Prop} {x : G} (hx : x ∈ ⨆ i, S i)
@@ -1171,7 +1168,7 @@ theorem supr_induction {ι : Sort _} (S : ι → Subgroup G) {C : G → Prop} {x
     
 
 /-- A dependent version of `subgroup.supr_induction`. -/
-@[elab_as_eliminator, to_additive "A dependent version of `add_subgroup.supr_induction`. "]
+@[elabAsElim, to_additive "A dependent version of `add_subgroup.supr_induction`. "]
 theorem supr_induction' {ι : Sort _} (S : ι → Subgroup G) {C : ∀ x, (x ∈ ⨆ i, S i) → Prop}
     (hp : ∀ (i), ∀ x ∈ S i, ∀, C x (mem_supr_of_mem i ‹_›)) (h1 : C 1 (one_mem _))
     (hmul : ∀ x y hx hy, C x hx → C y hy → C (x * y) (mul_mem ‹_› ‹_›)) {x : G} (hx : x ∈ ⨆ i, S i) : C x hx := by
@@ -1210,7 +1207,7 @@ theorem coe_supr_of_directed {ι} [Nonempty ι] {S : ι → Subgroup G} (hS : Di
 @[to_additive]
 theorem mem_Sup_of_directed_on {K : Set (Subgroup G)} (Kne : K.Nonempty) (hK : DirectedOn (· ≤ ·) K) {x : G} :
     x ∈ sup K ↔ ∃ s ∈ K, x ∈ s := by
-  have : Nonempty K := Kne.to_subtype
+  haveI : Nonempty K := Kne.to_subtype
   simp only [← Sup_eq_supr', ← mem_supr_of_directed hK.directed_coe, ← SetCoe.exists, ← Subtype.coe_mk]
 
 variable {N : Type _} [Groupₓ N] {P : Type _} [Groupₓ P]
@@ -1422,7 +1419,7 @@ def prod (H : Subgroup G) (K : Subgroup N) : Subgroup (G × N) :=
   { Submonoid.prod H.toSubmonoid K.toSubmonoid with inv_mem' := fun _ hx => ⟨H.inv_mem' hx.1, K.inv_mem' hx.2⟩ }
 
 @[to_additive coe_prod]
-theorem coe_prod (H : Subgroup G) (K : Subgroup N) : (H.Prod K : Set (G × N)) = (H : Set G) ×ˢ (K : Set N) :=
+theorem coe_prod (H : Subgroup G) (K : Subgroup N) : (H.Prod K : Set (G × N)) = H ×ˢ K :=
   rfl
 
 @[to_additive mem_prod]
@@ -1645,7 +1642,7 @@ end Subgroup
 
 namespace AddSubgroup
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`conj_mem] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`conj_mem] []
 /-- An add_subgroup is normal if whenever `n ∈ H`, then `g + n - g ∈ H` for every `g : G` -/
 structure Normal (H : AddSubgroup A) : Prop where
   conj_mem : ∀ n, n ∈ H → ∀ g : A, g + n + -g ∈ H
@@ -1832,8 +1829,8 @@ def setNormalizer (S : Set G) : Subgroup G where
 
 theorem mem_normalizer_fintype {S : Set G} [Fintype S] {x : G} (h : ∀ n, n ∈ S → x * n * x⁻¹ ∈ S) :
     x ∈ Subgroup.setNormalizer S := by
-  have := Classical.propDecidable <;>
-    have := Set.fintypeImage S fun n => x * n * x⁻¹ <;>
+  haveI := Classical.propDecidable <;>
+    haveI := Set.fintypeImage S fun n => x * n * x⁻¹ <;>
       exact fun n =>
         ⟨h n, fun h₁ =>
           have heq : (fun n => x * n * x⁻¹) '' S = S :=
@@ -2193,6 +2190,11 @@ theorem range_top_iff_surjective {N} [Groupₓ N] {f : G →* N} : f.range = (�
 @[to_additive "The range of a surjective `add_monoid` homomorphism is the whole of the codomain."]
 theorem range_top_of_surjective {N} [Groupₓ N] (f : G →* N) (hf : Function.Surjective f) : f.range = (⊤ : Subgroup N) :=
   range_top_iff_surjective.2 hf
+
+@[simp, to_additive]
+theorem range_one : (1 : G →* N).range = ⊥ :=
+  SetLike.ext fun x => by
+    simpa using @comm _ (· = ·) _ 1 x
 
 @[simp, to_additive]
 theorem _root_.subgroup.subtype_range (H : Subgroup G) : H.Subtype.range = H := by

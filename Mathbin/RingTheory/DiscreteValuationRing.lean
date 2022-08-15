@@ -132,7 +132,7 @@ theorem iff_pid_with_one_nonzero_prime (R : Type u) [CommRingₓ R] [IsDomain R]
       
     
   · rintro ⟨RPID, Punique⟩
-    have : LocalRing R := LocalRing.of_unique_nonzero_prime Punique
+    haveI : LocalRing R := LocalRing.of_unique_nonzero_prime Punique
     refine' { not_a_field' := _ }
     rcases Punique with ⟨P, ⟨hP1, hP2⟩, hP3⟩
     have hPM : P ≤ maximal_ideal R := le_maximal_ideal hP2.1
@@ -290,7 +290,7 @@ theorem of_ufd_of_unique_irreducible {R : Type u} [CommRingₓ R] [IsDomain R] [
     (h₁ : ∃ p : R, Irreducible p) (h₂ : ∀ ⦃p q : R⦄, Irreducible p → Irreducible q → Associated p q) :
     DiscreteValuationRing R := by
   rw [iff_pid_with_one_nonzero_prime]
-  have PID : IsPrincipalIdealRing R := aux_pid_of_ufd_of_unique_irreducible R h₁ h₂
+  haveI PID : IsPrincipalIdealRing R := aux_pid_of_ufd_of_unique_irreducible R h₁ h₂
   obtain ⟨p, hp⟩ := h₁
   refine' ⟨PID, ⟨Ideal.span {p}, ⟨_, _⟩, _⟩⟩
   · rw [Submodule.ne_bot_iff]
@@ -314,7 +314,7 @@ is a discrete valuation ring.
 -/
 theorem of_has_unit_mul_pow_irreducible_factorization {R : Type u} [CommRingₓ R] [IsDomain R]
     (hR : HasUnitMulPowIrreducibleFactorization R) : DiscreteValuationRing R := by
-  let this : UniqueFactorizationMonoid R := hR.to_unique_factorization_monoid
+  letI : UniqueFactorizationMonoid R := hR.to_unique_factorization_monoid
   apply of_ufd_of_unique_irreducible _ hR.unique_irreducible
   obtain ⟨p, hp, H⟩ := hR
   exact ⟨p, hp⟩

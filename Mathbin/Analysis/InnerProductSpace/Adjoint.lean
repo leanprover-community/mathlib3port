@@ -81,6 +81,21 @@ theorem IsSelfAdjoint.conj_inner_sym {T : E →ₗ[𝕜] E} (hT : IsSelfAdjoint 
 theorem IsSelfAdjoint.apply_clm {T : E →L[𝕜] E} (hT : IsSelfAdjoint (T : E →ₗ[𝕜] E)) (x y : E) : ⟪T x, y⟫ = ⟪x, T y⟫ :=
   hT x y
 
+theorem is_self_adjoint_zero : IsSelfAdjoint (0 : E →ₗ[𝕜] E) := fun x y =>
+  (inner_zero_right : ⟪x, 0⟫ = 0).symm ▸ (inner_zero_left : ⟪0, y⟫ = 0)
+
+theorem is_self_adjoint_id : IsSelfAdjoint (LinearMap.id : E →ₗ[𝕜] E) := fun x y => rfl
+
+theorem IsSelfAdjoint.add {T S : E →ₗ[𝕜] E} (hT : IsSelfAdjoint T) (hS : IsSelfAdjoint S) : IsSelfAdjoint (T + S) := by
+  intro x y
+  rw [LinearMap.add_apply, inner_add_left, hT x y, hS x y, ← inner_add_right]
+  rfl
+
+/-- The orthogonal projection is self-adjoint. -/
+theorem orthogonal_projection_is_self_adjoint [CompleteSpace E] (U : Submodule 𝕜 E) [CompleteSpace U] :
+    IsSelfAdjoint (U.subtypeL ∘L orthogonalProjection U : E →ₗ[𝕜] E) :=
+  inner_orthogonal_projection_left_eq_right U
+
 /-- The **Hellinger--Toeplitz theorem**: if a symmetric operator is defined everywhere, then
   it is automatically continuous. -/
 theorem IsSelfAdjoint.continuous [CompleteSpace E] {T : E →ₗ[𝕜] E} (hT : IsSelfAdjoint T) : Continuous T := by
@@ -253,6 +268,43 @@ theorem eq_adjoint_iff (A : E →L[𝕜] F) (B : F →L[𝕜] E) : A = B† ↔ 
     ext_inner_right 𝕜 fun y => by
       simp only [← adjoint_inner_left, ← h x y]
 
+@[simp]
+theorem is_self_adjoint_iff_adjoint_eq (A : E →L[𝕜] E) : IsSelfAdjoint (A : E →ₗ[𝕜] E) ↔ A† = A := by
+  simp_rw [is_self_adjoint, coe_coe, ← eq_adjoint_iff, eq_comm]
+
+theorem _root_.inner_product_space.is_self_adjoint.adjoint_eq {A : E →L[𝕜] E} (hA : IsSelfAdjoint (A : E →ₗ[𝕜] E)) :
+    A† = A := by
+  rwa [is_self_adjoint_iff_adjoint_eq] at hA
+
+theorem _root_.inner_product_space.is_self_adjoint.conj_adjoint {T : E →L[𝕜] E} (hT : IsSelfAdjoint (T : E →ₗ[𝕜] E))
+    (S : E →L[𝕜] F) : IsSelfAdjoint (S ∘L T ∘L S† : F →ₗ[𝕜] F) := by
+  intro x y
+  rw [coe_coe, comp_apply, comp_apply, ← adjoint_inner_right, ← coe_coe, hT, coe_coe, adjoint_inner_left]
+  rfl
+
+theorem _root_.inner_product_space.is_self_adjoint.adjoint_conj {T : E →L[𝕜] E} (hT : IsSelfAdjoint (T : E →ₗ[𝕜] E))
+    (S : F →L[𝕜] E) : IsSelfAdjoint (S† ∘L T ∘L S : F →ₗ[𝕜] F) := by
+  convert hT.conj_adjoint (S†)
+  rw [adjoint_adjoint]
+
+theorem _root_.inner_product_space.is_self_adjoint.conj_orthogonal_projection {T : E →L[𝕜] E}
+    (hT : IsSelfAdjoint (T : E →ₗ[𝕜] E)) (U : Submodule 𝕜 E) [CompleteSpace U] :
+    IsSelfAdjoint (U.subtypeL ∘L orthogonalProjection U ∘L T ∘L U.subtypeL ∘L orthogonalProjection U : E →ₗ[𝕜] E) := by
+  have := hT.conj_adjoint (U.subtypeL ∘L orthogonalProjection U)
+  rwa [(orthogonal_projection_is_self_adjoint U).adjoint_eq] at this
+
+theorem _root_.submodule.adjoint_subtypeL (U : Submodule 𝕜 E) [CompleteSpace U] :
+    U.subtypeL† = orthogonalProjection U := by
+  symm
+  rw [eq_adjoint_iff]
+  intro x u
+  rw [U.coe_inner, inner_orthogonal_projection_left_eq_right, orthogonal_projection_mem_subspace_eq_self]
+  rfl
+
+theorem _root_.submodule.adjoint_orthogonal_projection (U : Submodule 𝕜 E) [CompleteSpace U] :
+    (orthogonalProjection U : E →L[𝕜] U)† = U.subtypeL := by
+  rw [← U.adjoint_subtypeL, adjoint_adjoint]
+
 /-- `E →L[𝕜] E` is a star algebra with the adjoint as the star operation. -/
 instance : HasStar (E →L[𝕜] E) :=
   ⟨adjoint⟩
@@ -277,8 +329,11 @@ instance : CstarRing (E →L[𝕜] E) :=
     intro A
     rw [star_eq_adjoint]
     refine' le_antisymmₓ _ _
-    · calc ∥A† * A∥ ≤ ∥A†∥ * ∥A∥ := op_norm_comp_le _ _ _ = ∥A∥ * ∥A∥ := by
+    · calc
+        ∥A† * A∥ ≤ ∥A†∥ * ∥A∥ := op_norm_comp_le _ _
+        _ = ∥A∥ * ∥A∥ := by
           rw [LinearIsometryEquiv.norm_map]
+        
       
     · rw [← sq, ← Real.sqrt_le_sqrt_iff (norm_nonneg _), Real.sqrt_sq (norm_nonneg _)]
       refine' op_norm_le_bound _ (Real.sqrt_nonneg _) fun x => _
@@ -287,10 +342,13 @@ instance : CstarRing (E →L[𝕜] E) :=
           re ⟪(A† * A) x, x⟫ ≤ ∥(A† * A) x∥ * ∥x∥ := re_inner_le_norm _ _
           _ ≤ ∥A† * A∥ * ∥x∥ * ∥x∥ := mul_le_mul_of_nonneg_right (le_op_norm _ _) (norm_nonneg _)
           
-      calc ∥A x∥ = Real.sqrt (re ⟪(A† * A) x, x⟫) := by
-          rw [apply_norm_eq_sqrt_inner_adjoint_left]_ ≤ Real.sqrt (∥A† * A∥ * ∥x∥ * ∥x∥) :=
-          Real.sqrt_le_sqrt this _ = Real.sqrt ∥A† * A∥ * ∥x∥ := by
+      calc
+        ∥A x∥ = Real.sqrt (re ⟪(A† * A) x, x⟫) := by
+          rw [apply_norm_eq_sqrt_inner_adjoint_left]
+        _ ≤ Real.sqrt (∥A† * A∥ * ∥x∥ * ∥x∥) := Real.sqrt_le_sqrt this
+        _ = Real.sqrt ∥A† * A∥ * ∥x∥ := by
           rw [mul_assoc, Real.sqrt_mul (norm_nonneg _), Real.sqrt_mul_self (norm_nonneg _)]
+        
       ⟩
 
 section Real
@@ -318,7 +376,8 @@ attribute [local instance] FiniteDimensional.complete
 /-- The adjoint of an operator from the finite-dimensional inner product space E to the finite-
 dimensional inner product space F. -/
 def adjoint : (E →ₗ[𝕜] F) ≃ₗ⋆[𝕜] F →ₗ[𝕜] E :=
-  (LinearMap.toContinuousLinearMap.trans ContinuousLinearMap.adjoint.toLinearEquiv).trans
+  ((LinearMap.toContinuousLinearMap : (E →ₗ[𝕜] F) ≃ₗ[𝕜] E →L[𝕜] F).trans
+        ContinuousLinearMap.adjoint.toLinearEquiv).trans
     LinearMap.toContinuousLinearMap.symm
 
 theorem adjoint_to_continuous_linear_map (A : E →ₗ[𝕜] F) :

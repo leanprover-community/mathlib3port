@@ -310,13 +310,13 @@ namespace ManyOneDegree
 def of (p : α → Prop) : ManyOneDegree :=
   Quotientₓ.mk' (ToNat p)
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem ind_on {C : ManyOneDegree → Prop} (d : ManyOneDegree) (h : ∀ p : Set ℕ, C (of p)) : C d :=
   Quotientₓ.induction_on' d h
 
 /-- Lifts a function on sets of natural numbers to many-one degrees.
 -/
-@[elab_as_eliminator, reducible]
+@[elabAsElim, reducible]
 protected def liftOn {φ} (d : ManyOneDegree) (f : Set ℕ → φ) (h : ∀ p q, ManyOneEquiv p q → f p = f q) : φ :=
   Quotientₓ.liftOn' d f h
 
@@ -327,7 +327,7 @@ protected theorem lift_on_eq {φ} (p : Set ℕ) (f : Set ℕ → φ) (h : ∀ p 
 
 /-- Lifts a binary function on sets of natural numbers to many-one degrees.
 -/
-@[elab_as_eliminator, reducible, simp]
+@[elabAsElim, reducible, simp]
 protected def liftOn₂ {φ} (d₁ d₂ : ManyOneDegree) (f : Set ℕ → Set ℕ → φ)
     (h : ∀ p₁ p₂ q₁ q₂, ManyOneEquiv p₁ p₂ → ManyOneEquiv q₁ q₂ → f p₁ q₁ = f p₂ q₂) : φ :=
   d₁.liftOn

@@ -62,9 +62,15 @@ theorem directed_lt : Directed (· ≥ ·) fun γ₀ : Γ₀ˣ => principal { γ
   intro γ₁ γ₂
   use LinearOrderₓ.min γ₁ γ₂ <;> dsimp' only
   constructor <;> rw [ge_iff_le, principal_mono] <;> intro x x_in
-  · calc x < ↑(LinearOrderₓ.min γ₁ γ₂) := x_in _ ≤ γ₁ := min_le_leftₓ γ₁ γ₂
+  · calc
+      x < ↑(LinearOrderₓ.min γ₁ γ₂) := x_in
+      _ ≤ γ₁ := min_le_leftₓ γ₁ γ₂
+      
     
-  · calc x < ↑(LinearOrderₓ.min γ₁ γ₂) := x_in _ ≤ γ₂ := min_le_rightₓ γ₁ γ₂
+  · calc
+      x < ↑(LinearOrderₓ.min γ₁ γ₂) := x_in
+      _ ≤ γ₂ := min_le_rightₓ γ₁ γ₂
+      
     
 
 /-- At all points of a linearly ordered commutative group with a zero element adjoined,
@@ -206,7 +212,7 @@ instance (priority := 100) ordered_topology :
 
 /-- The topology on a linearly ordered group with zero element adjoined is T₃. -/
 instance (priority := 100) t3_space : T3Space Γ₀ := by
-  have : T1Space Γ₀ := T2Space.t1_space
+  haveI : T1Space Γ₀ := T2Space.t1_space
   constructor
   intro s x s_closed x_not_in_s
   by_cases' hx : x = 0
@@ -236,7 +242,7 @@ instance (priority := 100) t3_space : T3Space Γ₀ := by
         simp [← subset.refl]⟩
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y «expr ≠ » (0 : Γ₀))
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y «expr ≠ » (0 : Γ₀))
 /-- The topology on a linearly ordered group with zero element adjoined makes it a topological
 monoid. -/
 instance (priority := 100) : HasContinuousMul Γ₀ :=
@@ -266,8 +272,11 @@ instance (priority := 100) : HasContinuousMul Γ₀ :=
       rcases exists_square_le γ with ⟨γ', h⟩
       use γ'
       intro a b ha hb
-      calc a * b < γ' * γ' := mul_lt_mul₀ ha hb _ ≤ γ := by
+      calc
+        a * b < γ' * γ' := mul_lt_mul₀ ha hb
+        _ ≤ γ := by
           exact_mod_cast h
+        
       
     · rw [hx]
       exact common y hy

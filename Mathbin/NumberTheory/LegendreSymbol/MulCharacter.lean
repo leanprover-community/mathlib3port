@@ -15,6 +15,18 @@ that sends non-units to zero.
 
 We use the namespace `mul_char` for the definitions and results.
 
+## Main results
+
+We show that the multiplicative characters form a group (if `R'` is commutative);
+see `mul_char.comm_group`. We also provide an equivalence with the
+homomorphisms `Rˣ →* R'ˣ`; see `mul_char.equiv_to_unit_hom`.
+
+We define a multiplicative character to be *quadratic* if its values
+are among `0`, `1` and `-1`, and we prove some properties of quadratic characters.
+
+Finally, we show that the sum of all values of a nontrivial multiplicative
+character vanishes; see `mul_char.is_nontrivial.sum_eq_zero`.
+
 ## Tags
 
 multiplicative character
@@ -239,6 +251,10 @@ protected theorem map_one (χ : MulChar R R') : χ (1 : R) = 1 :=
 protected theorem map_zero {R : Type u} [CommMonoidWithZero R] [Nontrivial R] (χ : MulChar R R') : χ (0 : R) = 0 := by
   rw [map_nonunit χ not_is_unit_zero]
 
+/-- If the domain is a ring `R`, then `χ (ring_char R) = 0`. -/
+theorem map_ring_char {R : Type u} [CommRingₓ R] [Nontrivial R] (χ : MulChar R R') : χ (ringChar R) = 0 := by
+  rw [ringChar.Nat.cast_ring_char, χ.map_zero]
+
 noncomputable instance hasOne : One (MulChar R R') :=
   ⟨trivialₓ R R'⟩
 
@@ -287,11 +303,13 @@ noncomputable instance hasInv : Inv (MulChar R R') :=
 theorem inv_apply_eq_inv (χ : MulChar R R') (a : R) : χ⁻¹ a = Ring.inverse (χ a) :=
   Eq.refl <| inv χ a
 
-/-- Variant when the target is a field -/
+/-- The inverse of a multiplicative character `χ`, applied to `a`, is the inverse of `χ a`.
+Variant when the target is a field -/
 theorem inv_apply_eq_inv' {R' : Type v} [Field R'] (χ : MulChar R R') (a : R) : χ⁻¹ a = (χ a)⁻¹ :=
   (inv_apply_eq_inv χ a).trans <| Ring.inverse_eq_inv (χ a)
 
-/-- When the domain has a zero, we can as well take the inverse first. -/
+/-- When the domain has a zero, then the inverse of a multiplicative character `χ`,
+applied to `a`, is `χ` applied to the inverse of `a`. -/
 theorem inv_apply {R : Type u} [CommMonoidWithZero R] (χ : MulChar R R') (a : R) : χ⁻¹ a = χ (Ring.inverse a) := by
   by_cases' ha : IsUnit a
   · rw [inv_apply_eq_inv]
@@ -306,7 +324,8 @@ theorem inv_apply {R : Type u} [CommMonoidWithZero R] (χ : MulChar R R') (a : R
     rw [map_nonunit _ ha, Ring.inverse_non_unit a ha, MulChar.map_zero χ]
     
 
-/-- When the domain is a field, we can use the field inverse instead. -/
+/-- When the domain has a zero, then the inverse of a multiplicative character `χ`,
+applied to `a`, is `χ` applied to the inverse of `a`. -/
 theorem inv_apply' {R : Type u} [Field R] (χ : MulChar R R') (a : R) : χ⁻¹ a = χ a⁻¹ :=
   (inv_apply χ a).trans <| congr_arg _ (Ring.inverse_eq_inv a)
 
@@ -316,7 +335,7 @@ theorem inv_mul (χ : MulChar R R') : χ⁻¹ * χ = 1 := by
   ext x
   rw [coe_to_fun_mul, Pi.mul_apply, inv_apply_eq_inv, Ring.inverse_mul_cancel _ (IsUnit.map _ x.is_unit), one_apply_coe]
 
-/-- Finally, the commutative group structure on `mul_char R R'`. -/
+/-- The commutative group structure on `mul_char R R'`. -/
 noncomputable instance commGroup : CommGroupₓ (MulChar R R') :=
   { one := 1, mul := (· * ·), inv := Inv.inv, mul_left_inv := inv_mul,
     mul_assoc := by
@@ -380,6 +399,12 @@ theorem is_nontrivial_iff (χ : MulChar R R') : χ.IsNontrivial ↔ χ ≠ 1 := 
 /-- A multiplicative character is *quadratic* if it takes only the values `0`, `1`, `-1`. -/
 def IsQuadratic (χ : MulChar R R') : Prop :=
   ∀ a, χ a = 0 ∨ χ a = 1 ∨ χ a = -1
+
+/-- If two values of quadratic characters with target `ℤ` agree after coercion into a ring
+of characteristic not `2`, then they agree in `ℤ`. -/
+theorem IsQuadratic.eq_of_eq_coe {χ : MulChar R ℤ} (hχ : IsQuadratic χ) {χ' : MulChar R' ℤ} (hχ' : IsQuadratic χ')
+    [Nontrivial R''] (hR'' : ringChar R'' ≠ 2) {a : R} {a' : R'} (h : (χ a : R'') = χ' a') : χ a = χ' a' :=
+  Int.cast_inj_on_of_ring_char_ne_two hR'' (hχ a) (hχ' a') h
 
 /-- We can post-compose a multiplicative character with a ring homomorphism. -/
 @[simps]
@@ -460,10 +485,12 @@ theorem IsNontrivial.sum_eq_zero [Fintype R] [IsDomain R'] {χ : MulChar R R'} (
 /-- The sum over all values of the trivial multiplicative character on a finite ring is
 the cardinality of its unit group. -/
 theorem sum_one_eq_card_units [Fintype R] [DecidableEq R] : (∑ a, (1 : MulChar R R') a) = Fintype.card Rˣ := by
-  calc (∑ a, (1 : MulChar R R') a) = ∑ a : R, if IsUnit a then 1 else 0 :=
-      Finset.sum_congr rfl fun a _ => _ _ = ((Finset.univ : Finset R).filter IsUnit).card :=
-      Finset.sum_boole _ = (finset.univ.map ⟨(coe : Rˣ → R), Units.ext⟩).card := _ _ = Fintype.card Rˣ :=
-      congr_arg _ (Finset.card_map _)
+  calc
+    (∑ a, (1 : MulChar R R') a) = ∑ a : R, if IsUnit a then 1 else 0 := Finset.sum_congr rfl fun a _ => _
+    _ = ((Finset.univ : Finset R).filter IsUnit).card := Finset.sum_boole
+    _ = (finset.univ.map ⟨(coe : Rˣ → R), Units.ext⟩).card := _
+    _ = Fintype.card Rˣ := congr_arg _ (Finset.card_map _)
+    
   · split_ifs with h h
     · exact one_apply_coe h.unit
       

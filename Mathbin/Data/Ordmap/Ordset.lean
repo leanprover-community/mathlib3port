@@ -118,7 +118,7 @@ theorem Sized.eq_node' {s l x r} (h : @Sized α (node s l x r)) : node s l x r =
 theorem Sized.size_eq {s l x r} (H : Sized (@node α s l x r)) : size (@node α s l x r) = size l + size r + 1 :=
   H.1
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem Sized.induction {t} (hl : @Sized α t) {C : Ordnode α → Prop} (H0 : C nil)
     (H1 : ∀ l x r, C l → C r → C (node' l x r)) : C t := by
   induction t
@@ -550,12 +550,12 @@ theorem split_max_eq : ∀ (s l) (x : α) (r), splitMax' l x r = (eraseMax (node
   | _, l, x, node ls ll lx lr => by
     rw [split_max', split_max_eq, split_max', find_max', erase_max]
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem find_min'_all {P : α → Prop} : ∀ (t) (x : α), All P t → P x → P (findMin' t x)
   | nil, x, h, hx => hx
   | node _ ll lx lr, x, ⟨h₁, h₂, h₃⟩, hx => find_min'_all _ _ h₁ h₂
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem find_max'_all {P : α → Prop} : ∀ (x : α) (t), P x → All P t → P (findMax' x t)
   | x, nil, hx, h => hx
   | x, node _ ll lx lr, hx, ⟨h₁, h₂, h₃⟩ => find_max'_all _ _ h₂ h₃

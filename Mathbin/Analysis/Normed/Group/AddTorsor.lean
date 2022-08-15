@@ -22,21 +22,21 @@ open Nnreal TopologicalSpace
 open Filter
 
 /-- A `normed_add_torsor V P` is a torsor of an additive seminormed group
-action by a `semi_normed_group V` on points `P`. We bundle the pseudometric space
+action by a `seminormed_add_comm_group V` on points `P`. We bundle the pseudometric space
 structure and require the distance to be the same as results from the
 norm (which in fact implies the distance yields a pseudometric space, but
 bundling just the distance and using an instance for the pseudometric space
 results in type class problems). -/
-class NormedAddTorsor (V : outParam <| Type _) (P : Type _) [outParam <| SemiNormedGroup V]
+class NormedAddTorsor (V : outParam <| Type _) (P : Type _) [outParam <| SeminormedAddCommGroup V]
   [PseudoMetricSpace P] extends AddTorsor V P where
   dist_eq_norm' : ∀ x y : P, dist x y = ∥(x -ᵥ y : V)∥
 
-variable {α V P : Type _} [SemiNormedGroup V] [PseudoMetricSpace P] [NormedAddTorsor V P]
+variable {α V P W Q : Type _} [SeminormedAddCommGroup V] [PseudoMetricSpace P] [NormedAddTorsor V P]
+  [NormedAddCommGroup W] [MetricSpace Q] [NormedAddTorsor W Q]
 
-variable {W Q : Type _} [NormedGroup W] [MetricSpace Q] [NormedAddTorsor W Q]
-
-/-- A `semi_normed_group` is a `normed_add_torsor` over itself. -/
-instance (priority := 100) SemiNormedGroup.toNormedAddTorsor : NormedAddTorsor V V where dist_eq_norm' := dist_eq_norm
+/-- A `seminormed_add_comm_group` is a `normed_add_torsor` over itself. -/
+instance (priority := 100) SeminormedAddCommGroup.toNormedAddTorsor :
+    NormedAddTorsor V V where dist_eq_norm' := dist_eq_norm
 
 include V
 
@@ -79,7 +79,7 @@ addition/subtraction of `x : P`. -/
 @[simps]
 def Isometric.vaddConst (x : P) : V ≃ᵢ P where
   toEquiv := Equivₓ.vaddConst x
-  isometry_to_fun := isometry_emetric_iff_metric.2 fun _ _ => dist_vadd_cancel_right _ _ _
+  isometry_to_fun := Isometry.of_dist_eq fun _ _ => dist_vadd_cancel_right _ _ _
 
 section
 
@@ -89,7 +89,7 @@ variable (P)
 @[simps]
 def Isometric.constVadd (x : V) : P ≃ᵢ P where
   toEquiv := Equivₓ.constVadd P x
-  isometry_to_fun := isometry_emetric_iff_metric.2 fun _ _ => dist_vadd_cancel_left _ _ _
+  isometry_to_fun := Isometry.of_dist_eq fun _ _ => dist_vadd_cancel_left _ _ _
 
 end
 
@@ -102,7 +102,7 @@ subtraction from `x : P`. -/
 @[simps]
 def Isometric.constVsub (x : P) : P ≃ᵢ V where
   toEquiv := Equivₓ.constVsub x
-  isometry_to_fun := isometry_emetric_iff_metric.2 fun y z => dist_vsub_cancel_left _ _ _
+  isometry_to_fun := Isometry.of_dist_eq fun y z => dist_vsub_cancel_left _ _ _
 
 @[simp]
 theorem dist_vsub_cancel_right (x y z : P) : dist (x -ᵥ z) (y -ᵥ z) = dist x y :=
@@ -152,7 +152,7 @@ omit V
 /-- The pseudodistance defines a pseudometric space structure on the torsor. This
 is not an instance because it depends on `V` to define a `metric_space
 P`. -/
-def pseudoMetricSpaceOfNormedGroupOfAddTorsor (V P : Type _) [SemiNormedGroup V] [AddTorsor V P] :
+def pseudoMetricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [SeminormedAddCommGroup V] [AddTorsor V P] :
     PseudoMetricSpace P where
   dist := fun x y => ∥(x -ᵥ y : V)∥
   dist_self := fun x => by
@@ -168,7 +168,8 @@ def pseudoMetricSpaceOfNormedGroupOfAddTorsor (V P : Type _) [SemiNormedGroup V]
 /-- The distance defines a metric space structure on the torsor. This
 is not an instance because it depends on `V` to define a `metric_space
 P`. -/
-def metricSpaceOfNormedGroupOfAddTorsor (V P : Type _) [NormedGroup V] [AddTorsor V P] : MetricSpace P where
+def metricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [NormedAddCommGroup V] [AddTorsor V P] :
+    MetricSpace P where
   dist := fun x y => ∥(x -ᵥ y : V)∥
   dist_self := fun x => by
     simp

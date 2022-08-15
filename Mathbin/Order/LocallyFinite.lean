@@ -811,19 +811,19 @@ end LocallyFiniteOrderTop
 
 instance [LocallyFiniteOrder α] [LocallyFiniteOrder β] [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)] :
     LocallyFiniteOrder (α × β) :=
-  LocallyFiniteOrder.ofIcc' (α × β) (fun a b => (icc a.fst b.fst).product (icc a.snd b.snd)) fun a b x => by
+  LocallyFiniteOrder.ofIcc' (α × β) (fun a b => icc a.fst b.fst ×ˢ icc a.snd b.snd) fun a b x => by
     rw [mem_product, mem_Icc, mem_Icc, and_and_and_comm]
     rfl
 
 instance [LocallyFiniteOrderTop α] [LocallyFiniteOrderTop β] [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)] :
     LocallyFiniteOrderTop (α × β) :=
-  LocallyFiniteOrderTop.ofIci' (α × β) (fun a => (ici a.fst).product (ici a.snd)) fun a x => by
+  LocallyFiniteOrderTop.ofIci' (α × β) (fun a => ici a.fst ×ˢ ici a.snd) fun a x => by
     rw [mem_product, mem_Ici, mem_Ici]
     rfl
 
 instance [LocallyFiniteOrderBot α] [LocallyFiniteOrderBot β] [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)] :
     LocallyFiniteOrderBot (α × β) :=
-  LocallyFiniteOrderBot.ofIic' (α × β) (fun a => (iic a.fst).product (iic a.snd)) fun a x => by
+  LocallyFiniteOrderBot.ofIic' (α × β) (fun a => iic a.fst ×ˢ iic a.snd) fun a x => by
     rw [mem_product, mem_Iic, mem_Iic]
     rfl
 

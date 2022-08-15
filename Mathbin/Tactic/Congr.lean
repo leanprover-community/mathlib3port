@@ -50,8 +50,8 @@ unsafe def convert_to_core (r : pexpr) : tactic Unit := do
   rewrite_target h
   swap
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 /-- Attempts to prove the goal by proof irrelevance, but avoids unifying universe metavariables
 to do so. -/
 unsafe def by_proof_irrel : tactic Unit := do
@@ -76,10 +76,10 @@ unsafe def congr' : Option ℕ → tactic Unit
 
 namespace Interactive
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr *»
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr *»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
 /-- Same as the `congr` tactic, but takes an optional argument which gives
 the depth of recursive applications.
 * This is useful when `congr` is too aggressive in breaking down the goal.
@@ -96,7 +96,7 @@ unsafe def congr' (n : parse («expr ?» (with_desc "n" small_nat))) :
   | none => tactic.congr' n
   | some ⟨p, m⟩ => focus1 (tactic.congr' n >> all_goals' (tactic.ext p.join m $> ()))
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr *»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr *»
 /-- Repeatedly and apply `congr'` and `ext`, using the given patterns as arguments for `ext`.
 
 There are two ways this tactic stops:
@@ -141,8 +141,8 @@ add_tactic_doc
     declNames := [`tactic.interactive.congr', `tactic.interactive.congr, `tactic.interactive.rcongr],
     tags := ["congruence"], inheritDescriptionFrom := `tactic.interactive.congr' }
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
 /-- The `exact e` and `refine e` tactics require a term `e` whose type is
 definitionally equal to the goal. `convert e` is similar to `refine e`,
 but the type of `e` is not required to exactly match the
@@ -204,8 +204,8 @@ add_tactic_doc
   { Name := "convert", category := DocCategory.tactic, declNames := [`tactic.interactive.convert],
     tags := ["congruence"] }
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
 /-- `convert_to g using n` attempts to change the current goal to `g`, but unlike `change`,
 it will generate equality proof obligations using `congr' n` to resolve discrepancies.
 `convert_to g` defaults to using `congr' 1`.
@@ -220,7 +220,7 @@ unsafe def convert_to (r : parse texpr) (n : parse («expr ?» (tk "using" *> sm
   | some 0 => convert_to_core r
   | some o => convert_to_core r >> tactic.congr' o
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
 /-- `ac_change g using n` is `convert_to g using n` followed by `ac_refl`. It is useful for
 rearranging/reassociating e.g. sums:
 ```lean

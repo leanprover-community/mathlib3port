@@ -49,6 +49,10 @@ theorem aleph_0_lt_continuum : ℵ₀ < 𝔠 :=
 theorem aleph_0_le_continuum : ℵ₀ ≤ 𝔠 :=
   aleph_0_lt_continuum.le
 
+@[simp]
+theorem beth_one : beth 1 = 𝔠 := by
+  simpa using beth_succ 0
+
 theorem nat_lt_continuum (n : ℕ) : ↑n < 𝔠 :=
   (nat_lt_aleph_0 n).trans aleph_0_lt_continuum
 

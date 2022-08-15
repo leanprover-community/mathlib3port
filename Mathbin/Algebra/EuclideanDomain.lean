@@ -143,7 +143,7 @@ theorem mod_eq_zero {a b : R} : a % b = 0 ↔ b ∣ a :=
     rw [← div_add_mod a b, h, add_zeroₓ]
     exact dvd_mul_right _ _, fun ⟨c, e⟩ => by
     rw [e, ← add_left_cancel_iffₓ, div_add_mod, add_zeroₓ]
-    have := Classical.dec
+    haveI := Classical.dec
     by_cases' b0 : b = 0
     · simp only [← b0, ← zero_mul]
       
@@ -158,7 +158,7 @@ theorem dvd_mod_iff {a b c : R} (h : c ∣ b) : c ∣ a % b ↔ c ∣ a := by
   rw [dvd_add_iff_right (h.mul_right _), div_add_mod]
 
 theorem lt_one (a : R) : a ≺ (1 : R) → a = 0 := by
-  have := Classical.dec
+  haveI := Classical.dec
   exact
     not_imp_not.1 fun h => by
       simpa only [← one_mulₓ] using mul_left_not_lt 1 h
@@ -234,7 +234,7 @@ section
 
 open Classical
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem Gcd.induction {P : R → R → Prop} : ∀ a b : R, (∀ x, P 0 x) → (∀ a b, a ≠ 0 → P (b % a) a → P a b) → P a b
   | a => fun b H0 H1 =>
     if a0 : a = 0 then a0.symm ▸ H0 _
@@ -408,7 +408,7 @@ theorem gcd_eq_gcd_ab (a b : R) : (gcd a b : R) = a * gcdA a b + b * gcdB a b :=
 
 -- see Note [lower instance priority]
 instance (priority := 70) (R : Type _) [e : EuclideanDomain R] : IsDomain R := by
-  have := Classical.decEq R
+  haveI := Classical.decEq R
   exact
     { e with
       eq_zero_or_eq_zero_of_mul_eq_zero := fun a b h =>

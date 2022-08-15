@@ -34,7 +34,7 @@ open TopologicalSpace
 
 variable {μ ν : Measure α}
 
-variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
 /-- Given a measure `μ` and an integrable function `f`, `μ.with_densityᵥ f` is
 the vector measure which maps the set `s` to `∫ₛ f ∂μ`. -/
@@ -111,7 +111,7 @@ theorem with_densityᵥ_sub' (hf : Integrable f μ) (hg : Integrable g μ) :
   with_densityᵥ_sub hf hg
 
 @[simp]
-theorem with_densityᵥ_smul {𝕜 : Type _} [NondiscreteNormedField 𝕜] [NormedSpace 𝕜 E] [SmulCommClass ℝ 𝕜 E] (f : α → E)
+theorem with_densityᵥ_smul {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 E] [SmulCommClass ℝ 𝕜 E] (f : α → E)
     (r : 𝕜) : μ.withDensityᵥ (r • f) = r • μ.withDensityᵥ f := by
   by_cases' hf : integrable f μ
   · ext1 i hi
@@ -126,7 +126,7 @@ theorem with_densityᵥ_smul {𝕜 : Type _} [NondiscreteNormedField 𝕜] [Norm
       
     
 
-theorem with_densityᵥ_smul' {𝕜 : Type _} [NondiscreteNormedField 𝕜] [NormedSpace 𝕜 E] [SmulCommClass ℝ 𝕜 E] (f : α → E)
+theorem with_densityᵥ_smul' {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 E] [SmulCommClass ℝ 𝕜 E] (f : α → E)
     (r : 𝕜) : (μ.withDensityᵥ fun x => r • f x) = r • μ.withDensityᵥ f :=
   with_densityᵥ_smul f r
 

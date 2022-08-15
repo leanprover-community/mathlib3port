@@ -276,7 +276,7 @@ variable {α ι : Type _} [Encodable ι] [MeasurableSpace α] {μ : Measure α}
 theorem AeCover.bUnion_Iic_ae_cover [Preorderₓ ι] {φ : ι → Set α} (hφ : AeCover μ atTop φ) :
     AeCover μ atTop fun n : ι => ⋃ (k) (h : k ∈ Iic n), φ k :=
   { ae_eventually_mem := hφ.ae_eventually_mem.mono fun x h => h.mono fun i hi => mem_bUnion right_mem_Iic hi,
-    Measurable := fun i => MeasurableSet.bUnion (countable_encodable _) fun n _ => hφ.Measurable n }
+    Measurable := fun i => MeasurableSet.bUnion (to_countable _) fun n _ => hφ.Measurable n }
 
 theorem AeCover.bInter_Ici_ae_cover [SemilatticeSup ι] [Nonempty ι] {φ : ι → Set α} (hφ : AeCover μ atTop φ) :
     AeCover μ atTop fun n : ι => ⋂ (k) (h : k ∈ Ici n), φ k :=
@@ -289,7 +289,7 @@ theorem AeCover.bInter_Ici_ae_cover [SemilatticeSup ι] [Nonempty ι] {φ : ι �
           use i
           intro j hj
           exact mem_bInter fun k hk => hi k (le_transₓ hj hk)),
-    Measurable := fun i => MeasurableSet.bInter (countable_encodable _) fun n _ => hφ.Measurable n }
+    Measurable := fun i => MeasurableSet.bInter (to_countable _) fun n _ => hφ.Measurable n }
 
 end AeCoverUnionInterEncodable
 
@@ -342,7 +342,7 @@ end Lintegral
 
 section Integrable
 
-variable {α ι E : Type _} [MeasurableSpace α] {μ : Measure α} {l : Filter ι} [NormedGroup E]
+variable {α ι E : Type _} [MeasurableSpace α] {μ : Measure α} {l : Filter ι} [NormedAddCommGroup E]
 
 theorem AeCover.integrable_of_lintegral_nnnorm_bounded [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
     (hφ : AeCover μ l φ) {f : α → E} (I : ℝ) (hfm : AeStronglyMeasurable f μ)
@@ -407,7 +407,7 @@ end Integrable
 
 section Integral
 
-variable {α ι E : Type _} [MeasurableSpace α] {μ : Measure α} {l : Filter ι} [NormedGroup E] [NormedSpace ℝ E]
+variable {α ι E : Type _} [MeasurableSpace α] {μ : Measure α} {l : Filter ι} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [CompleteSpace E]
 
 theorem AeCover.integral_tendsto_of_countably_generated [l.IsCountablyGenerated] {φ : ι → Set α} (hφ : AeCover μ l φ)
@@ -438,7 +438,7 @@ end Integral
 
 section IntegrableOfIntervalIntegral
 
-variable {ι E : Type _} {μ : Measure ℝ} {l : Filter ι} [Filter.NeBot l] [IsCountablyGenerated l] [NormedGroup E]
+variable {ι E : Type _} {μ : Measure ℝ} {l : Filter ι} [Filter.NeBot l] [IsCountablyGenerated l] [NormedAddCommGroup E]
   {a b : ι → ℝ} {f : ℝ → E}
 
 theorem integrable_of_interval_integral_norm_bounded (I : ℝ) (hfi : ∀ i, IntegrableOn f (Ioc (a i) (b i)) μ)
@@ -519,7 +519,7 @@ end IntegrableOfIntervalIntegral
 
 section IntegralOfIntervalIntegral
 
-variable {ι E : Type _} {μ : Measure ℝ} {l : Filter ι} [IsCountablyGenerated l] [NormedGroup E] [NormedSpace ℝ E]
+variable {ι E : Type _} {μ : Measure ℝ} {l : Filter ι} [IsCountablyGenerated l] [NormedAddCommGroup E] [NormedSpace ℝ E]
   [CompleteSpace E] {a b : ι → ℝ} {f : ℝ → E}
 
 theorem interval_integral_tendsto_integral (hfi : Integrable f μ) (ha : Tendsto a l atBot) (hb : Tendsto b l atTop) :

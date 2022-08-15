@@ -157,20 +157,19 @@ theorem nilradical_eq_zero (R : Type _) [CommSemiringₓ R] [IsReduced R] : nilr
 
 end CommSemiringₓ
 
-namespace Algebra
+namespace LinearMap
 
 variable (R) {A : Type v} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 
 @[simp]
-theorem is_nilpotent_lmul_left_iff (a : A) : IsNilpotent (lmulLeft R a) ↔ IsNilpotent a := by
-  constructor <;> rintro ⟨n, hn⟩ <;> use n <;> simp only [← lmul_left_eq_zero_iff, ← pow_lmul_left] at hn⊢ <;> exact hn
+theorem is_nilpotent_mul_left_iff (a : A) : IsNilpotent (mulLeft R a) ↔ IsNilpotent a := by
+  constructor <;> rintro ⟨n, hn⟩ <;> use n <;> simp only [← mul_left_eq_zero_iff, ← pow_mul_left] at hn⊢ <;> exact hn
 
 @[simp]
-theorem is_nilpotent_lmul_right_iff (a : A) : IsNilpotent (lmulRight R a) ↔ IsNilpotent a := by
-  constructor <;>
-    rintro ⟨n, hn⟩ <;> use n <;> simp only [← lmul_right_eq_zero_iff, ← pow_lmul_right] at hn⊢ <;> exact hn
+theorem is_nilpotent_mul_right_iff (a : A) : IsNilpotent (mulRight R a) ↔ IsNilpotent a := by
+  constructor <;> rintro ⟨n, hn⟩ <;> use n <;> simp only [← mul_right_eq_zero_iff, ← pow_mul_right] at hn⊢ <;> exact hn
 
-end Algebra
+end LinearMap
 
 namespace Module.End
 
@@ -184,4 +183,51 @@ theorem IsNilpotent.mapq (hnp : IsNilpotent f) : IsNilpotent (p.mapq p f hp) := 
   simp [p.mapq_pow, ← hk]
 
 end Module.End
+
+namespace Ideal
+
+variable [CommSemiringₓ R] [CommRingₓ S] [Algebra R S] (I : Ideal S)
+
+/-- Let `P` be a property on ideals. If `P` holds for square-zero ideals, and if
+  `P I → P (J ⧸ I) → P J`, then `P` holds for all nilpotent ideals. -/
+theorem IsNilpotent.induction_on (hI : IsNilpotent I) {P : ∀ ⦃S : Type _⦄ [CommRingₓ S], ∀ I : Ideal S, Prop}
+    (h₁ : ∀ ⦃S : Type _⦄ [CommRingₓ S], ∀ I : Ideal S, I ^ 2 = ⊥ → P I)
+    (h₂ : ∀ ⦃S : Type _⦄ [CommRingₓ S], ∀ I J : Ideal S, I ≤ J → P I → P (J.map (Ideal.Quotient.mk I)) → P J) : P I :=
+  by
+  obtain ⟨n, hI : I ^ n = ⊥⟩ := hI
+  revert S
+  apply Nat.strong_induction_onₓ n
+  clear n
+  intro n H S _ I hI
+  by_cases' hI' : I = ⊥
+  · subst hI'
+    apply h₁
+    rw [← Ideal.zero_eq_bot, zero_pow]
+    exact zero_lt_two
+    
+  cases n
+  · rw [pow_zeroₓ, Ideal.one_eq_top] at hI
+    haveI := subsingleton_of_bot_eq_top hI.symm
+    exact (hI' (Subsingleton.elimₓ _ _)).elim
+    
+  cases n
+  · rw [pow_oneₓ] at hI
+    exact (hI' hI).elim
+    
+  apply h₂ (I ^ 2) _ (Ideal.pow_le_self two_ne_zero)
+  · apply H n.succ _ (I ^ 2)
+    · rw [← pow_mulₓ, eq_bot_iff, ← hI, Nat.succ_eq_add_one, Nat.succ_eq_add_one]
+      exact
+        Ideal.pow_le_pow
+          (by
+            linarith)
+      
+    · exact le_reflₓ n.succ.succ
+      
+    
+  · apply h₁
+    rw [← Ideal.map_pow, Ideal.map_quotient_self]
+    
+
+end Ideal
 

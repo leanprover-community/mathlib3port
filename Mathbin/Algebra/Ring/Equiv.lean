@@ -48,15 +48,12 @@ structure RingEquiv (R S : Type _) [Mul R] [Add R] [Mul S] [Add S] extends R ≃
 -- mathport name: «expr ≃+* »
 infixl:25 " ≃+* " => RingEquiv
 
-/-- The "plain" equivalence of types underlying an equivalence of (semi)rings. -/
-add_decl_doc RingEquiv.toEquiv
-
-/-- The equivalence of additive monoids underlying an equivalence of (semi)rings. -/
-add_decl_doc RingEquiv.toAddEquiv
-
-/-- The equivalence of multiplicative monoids underlying an equivalence of (semi)rings. -/
-add_decl_doc RingEquiv.toMulEquiv
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident ring_equiv.to_equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident ring_equiv.to_add_equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident ring_equiv.to_mul_equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `ring_equiv_class F R S` states that `F` is a type of ring structure preserving equivalences.
 You should extend this class when you extend `ring_equiv`. -/
 class RingEquivClass (F : Type _) (R S : outParam (Type _)) [Mul R] [Add R] [Mul S] [Add S] extends
@@ -237,6 +234,10 @@ protected def trans (e₁ : R ≃+* S) (e₂ : S ≃+* S') : R ≃+* S' :=
 
 @[simp]
 theorem trans_apply (e₁ : R ≃+* S) (e₂ : S ≃+* S') (a : R) : e₁.trans e₂ a = e₂ (e₁ a) :=
+  rfl
+
+@[simp]
+theorem symm_trans_apply (e₁ : R ≃+* S) (e₂ : S ≃+* S') (a : S') : (e₁.trans e₂).symm a = e₁.symm (e₂.symm a) :=
   rfl
 
 protected theorem bijective (e : R ≃+* S) : Function.Bijective e :=

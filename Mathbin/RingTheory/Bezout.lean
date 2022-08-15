@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
 import Mathbin.RingTheory.PrincipalIdealDomain
+import Mathbin.Algebra.GcdMonoid.IntegrallyClosed
 
 /-!
 
@@ -101,6 +102,11 @@ noncomputable def toGcdDomain [IsDomain R] [DecidableEq R] : GcdMonoid R :=
 end Gcd
 
 attribute [local instance] to_gcd_domain
+
+-- Note that the proof, despite being `infer_instance`, depends on the `local attribute [instance]`
+-- lemma above, and is thus necessary to be restated.
+instance (priority := 100) [IsDomain R] [IsBezout R] : IsIntegrallyClosed R :=
+  inferInstance
 
 theorem _root_.function.surjective.is_bezout {S : Type v} [CommRingₓ S] (f : R →+* S) (hf : Function.Surjective f)
     [IsBezout R] : IsBezout S := by

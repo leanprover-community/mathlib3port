@@ -159,6 +159,30 @@ theorem congr_hom {F G : C ⥤ D} (h : F = G) {X Y} (f : X ⟶ Y) :
     F.map f = eqToHom (congr_obj h X) ≫ G.map f ≫ eqToHom (congr_obj h Y).symm := by
   subst h <;> simp
 
+theorem congr_inv_of_congr_hom (F G : C ⥤ D) {X Y : C} (e : X ≅ Y) (hX : F.obj X = G.obj X) (hY : F.obj Y = G.obj Y)
+    (h₂ :
+      F.map e.Hom =
+        eqToHom
+            (by
+              rw [hX]) ≫
+          G.map e.Hom ≫
+            eqToHom
+              (by
+                rw [hY])) :
+    F.map e.inv =
+      eqToHom
+          (by
+            rw [hY]) ≫
+        G.map e.inv ≫
+          eqToHom
+            (by
+              rw [hX]) :=
+  by
+  simp only [is_iso.iso.inv_hom e, ← functor.map_inv, ← h₂, ← is_iso.inv_comp, ← inv_eq_to_hom, ← category.assoc]
+
+theorem congr_map (F : C ⥤ D) {X Y : C} {f g : X ⟶ Y} (h : f = g) : F.map f = F.map g := by
+  rw [h]
+
 section HEq
 
 -- Composition of functors and maps w.r.t. heq

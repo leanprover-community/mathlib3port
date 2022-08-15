@@ -86,28 +86,30 @@ theorem four_pow_lt_mul_central_binom (n : ℕ) (n_big : 4 ≤ n) : 4 ^ n < n * 
   · clear IH
     decide!
     
-  · norm_num [← central_binom, ← choose]
+  · norm_num[← central_binom, ← choose]
     
   obtain ⟨n, rfl⟩ : ∃ m, n = m + 1 := Nat.exists_eq_succ_of_ne_zero (zero_lt_four.trans hn).ne'
-  calc 4 ^ (n + 1) < 4 * (n * central_binom n) :=
-      (mul_lt_mul_left zero_lt_four).mpr
-        (IH n n.lt_succ_self (Nat.le_of_lt_succₓ hn))_ ≤ 2 * (2 * n + 1) * central_binom n :=
-      by
+  calc
+    4 ^ (n + 1) < 4 * (n * central_binom n) :=
+      (mul_lt_mul_left zero_lt_four).mpr (IH n n.lt_succ_self (Nat.le_of_lt_succₓ hn))
+    _ ≤ 2 * (2 * n + 1) * central_binom n := by
       rw [← mul_assoc]
-      linarith _ = (n + 1) * central_binom (n + 1) := (succ_mul_central_binom_succ n).symm
+      linarith
+    _ = (n + 1) * central_binom (n + 1) := (succ_mul_central_binom_succ n).symm
+    
 
 /-- An exponential lower bound on the central binomial coefficient.
-This bound is weaker than `four_pow_n_lt_n_mul_central_binom`, but it is of historical interest
+This bound is weaker than `nat.four_pow_lt_mul_central_binom`, but it is of historical interest
 because it appears in Erdős's proof of Bertrand's postulate.
 -/
 theorem four_pow_le_two_mul_self_mul_central_binom : ∀ (n : ℕ) (n_pos : 0 < n), 4 ^ n ≤ 2 * n * centralBinom n
   | 0, pr => (Nat.not_lt_zeroₓ _ pr).elim
   | 1, pr => by
-    norm_num [← central_binom, ← choose]
+    norm_num[← central_binom, ← choose]
   | 2, pr => by
-    norm_num [← central_binom, ← choose]
+    norm_num[← central_binom, ← choose]
   | 3, pr => by
-    norm_num [← central_binom, ← choose]
+    norm_num[← central_binom, ← choose]
   | n@(m + 4), _ =>
     calc
       4 ^ n ≤ n * centralBinom n := (four_pow_lt_mul_central_binom _ le_add_self).le

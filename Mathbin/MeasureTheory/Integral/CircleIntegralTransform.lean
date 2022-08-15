@@ -28,7 +28,7 @@ open Interval Real
 
 noncomputable section
 
-variable {E : Type} [NormedGroup E] [NormedSpace ℂ E] (R : ℝ) (z w : ℂ)
+variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] (R : ℝ) (z w : ℂ)
 
 namespace Complex
 
@@ -90,7 +90,7 @@ def circleTransformBoundingFunction (R : ℝ) (z : ℂ) (w : ℂ × ℝ) : ℂ :
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 theorem continuous_on_prod_circle_transform_function {R r : ℝ} (hr : r < R) {z : ℂ} :
-    ContinuousOn (fun w : ℂ × ℝ => (circleMap z R w.snd - w.fst)⁻¹ ^ 2) (ClosedBall z r ×ˢ (⊤ : Set ℝ)) := by
+    ContinuousOn (fun w : ℂ × ℝ => (circleMap z R w.snd - w.fst)⁻¹ ^ 2) (ClosedBall z r ×ˢ univ) := by
   simp_rw [← one_div]
   apply_rules [ContinuousOn.pow, ContinuousOn.div, continuous_on_const]
   refine'
@@ -106,9 +106,7 @@ theorem continuous_on_prod_circle_transform_function {R r : ℝ} (hr : r < R) {z
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 theorem continuous_on_abs_circle_transform_bounding_function {R r : ℝ} (hr : r < R) (z : ℂ) :
-    ContinuousOn (abs ∘ fun t => circleTransformBoundingFunction R z t)
-      (ClosedBall z r ×ˢ (⊤ : Set ℝ) : Set <| ℂ × ℝ) :=
-  by
+    ContinuousOn (abs ∘ fun t => circleTransformBoundingFunction R z t) (ClosedBall z r ×ˢ univ) := by
   have : ContinuousOn (circle_transform_bounding_function R z) (closed_ball z r ×ˢ (⊤ : Set ℝ)) := by
     apply_rules [ContinuousOn.smul, continuous_on_const]
     simp only [← deriv_circle_map]
@@ -120,24 +118,18 @@ theorem continuous_on_abs_circle_transform_bounding_function {R r : ℝ} (hr : r
   show maps_to _ _ (⊤ : Set ℂ)
   simp [← maps_to]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
--- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)
 theorem abs_circle_transform_bounding_function_le {R r : ℝ} (hr : r < R) (hr' : 0 ≤ r) (z : ℂ) :
-    ∃ x :
-      (ClosedBall z r ×ˢ "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)" : Set <| ℂ × ℝ),
-      ∀ y :
-        (ClosedBall z r ×ˢ "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)" :
-          Set <| ℂ × ℝ),
+    ∃ x : ClosedBall z r ×ˢ "./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)",
+      ∀ y : ClosedBall z r ×ˢ "./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)",
         abs (circleTransformBoundingFunction R z y) ≤ abs (circleTransformBoundingFunction R z x) :=
   by
   have cts := continuous_on_abs_circle_transform_bounding_function hr z
   have comp :
-    IsCompact
-      (closed_ball z r ×ˢ "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)" :
-        Set (ℂ × ℝ)) :=
-    by
+    IsCompact (closed_ball z r ×ˢ "./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)") := by
     apply_rules [IsCompact.prod, ProperSpace.is_compact_closed_ball z r, is_compact_interval]
   have none := (nonempty_closed_ball.2 hr').Prod nonempty_interval
   simpa using
@@ -148,7 +140,7 @@ theorem abs_circle_transform_bounding_function_le {R r : ℝ} (hr : r < R) (hr' 
           simp
           tauto))
 
--- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)
 /-- The derivative of a `circle_transform` is locally bounded. -/
 theorem circle_transform_deriv_bound {R : ℝ} (hR : 0 < R) {z x : ℂ} {f : ℂ → ℂ} (hx : x ∈ Ball z R)
     (hf : ContinuousOn f (Sphere z R)) :
@@ -168,7 +160,7 @@ theorem circle_transform_deriv_bound {R : ℝ} (hR : 0 < R) {z x : ℂ} {f : ℂ
   refine' ⟨abs (V b a) * abs (f X), ε', hε', subset.trans H (ball_subset_ball hr.le), _⟩
   intro y v hv
   obtain ⟨y1, hy1, hfun⟩ := periodic.exists_mem_Ico₀ (circle_transform_deriv_periodic R z v f) Real.two_pi_pos y
-  have hy2 : y1 ∈ "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)" := by
+  have hy2 : y1 ∈ "./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)" := by
     convert Ico_subset_Icc_self hy1
     simp [← interval_of_le real.two_pi_pos.le]
   have :=

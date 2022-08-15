@@ -170,7 +170,7 @@ variable [IsOrdered L] [L.Structure M]
 @[simp]
 theorem rel_map_le_symb [LE M] [L.IsOrderedStructure M] {a b : M} : RelMap (leSymb : L.Relations 2) ![a, b] ↔ a ≤ b :=
   by
-  rw [← order_Lhom_le_symb, Lhom.is_expansion_on.map_on_relation]
+  rw [← order_Lhom_le_symb, Lhom.map_on_relation]
   rfl
 
 @[simp]

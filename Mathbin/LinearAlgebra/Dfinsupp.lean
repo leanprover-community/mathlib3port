@@ -429,7 +429,7 @@ theorem Independent.dfinsupp_lsum_injective {p : ι → Submodule R N} (h : Inde
   rw [independent_iff_forall_dfinsupp] at h
   suffices (lsum ℕ fun i => (p i).Subtype).ker = ⊥ by
     -- Lean can't find this without our help
-    let this : AddCommGroupₓ (Π₀ i, p i) := @Dfinsupp.addCommGroup _ (fun i => p i) _
+    letI : AddCommGroupₓ (Π₀ i, p i) := @Dfinsupp.addCommGroup _ (fun i => p i) _
     rw [LinearMap.ker_eq_bot] at this
     exact this
   rw [LinearMap.ker_eq_bot']

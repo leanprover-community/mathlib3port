@@ -73,6 +73,14 @@ theorem nodup_iff_count_le_one [DecidableEq α] {s : Multiset α} : Nodup s ↔ 
 theorem count_eq_one_of_mem [DecidableEq α] {a : α} {s : Multiset α} (d : Nodup s) (h : a ∈ s) : count a s = 1 :=
   le_antisymmₓ (nodup_iff_count_le_one.1 d a) (count_pos.2 h)
 
+theorem count_eq_of_nodup [DecidableEq α] {a : α} {s : Multiset α} (d : Nodup s) : count a s = if a ∈ s then 1 else 0 :=
+  by
+  split_ifs with h
+  · exact count_eq_one_of_mem d h
+    
+  · exact count_eq_zero_of_not_mem h
+    
+
 theorem nodup_iff_pairwise {α} {s : Multiset α} : Nodup s ↔ Pairwise (· ≠ ·) s :=
   (Quotientₓ.induction_on s) fun l => (pairwise_coe_iff_pairwise fun a b => Ne.symm).symm
 

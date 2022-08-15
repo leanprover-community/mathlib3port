@@ -170,9 +170,7 @@ variable [DecidableEq R]
 /-- `finset_approx` is a finite set such that each fractional ideal in the integral closure
 contains an element close to `finset_approx`. -/
 noncomputable def finsetApprox : Finset R :=
-  ((Finset.univ.product Finset.univ).Image fun xy : _ × _ =>
-        distinctElems bS adm xy.1 - distinctElems bS adm xy.2).erase
-    0
+  (Finset.univ.Image fun xy : _ × _ => distinctElems bS adm xy.1 - distinctElems bS adm xy.2).erase 0
 
 theorem finsetApprox.zero_not_mem : (0 : R) ∉ finsetApprox bS adm :=
   Finset.not_mem_erase _ _
@@ -188,7 +186,7 @@ theorem mem_finset_approx {x : R} :
     simpa using hx
     
   · rintro ⟨i, j, hij, rfl⟩
-    refine' ⟨_, ⟨i, j⟩, finset.mem_product.mpr ⟨Finset.mem_univ _, Finset.mem_univ _⟩, rfl⟩
+    refine' ⟨_, ⟨i, j⟩, Finset.mem_univ _, rfl⟩
     rw [Ne.def, sub_eq_zero]
     exact fun h => hij ((distinct_elems bS adm).Injective h)
     
@@ -379,9 +377,9 @@ algebraic extension of `R`, that includes some extra assumptions.
 -/
 noncomputable def fintypeOfAdmissibleOfFinite [IsDedekindDomain R] :
     Fintype (@ClassGroup S L _ _ _ (IsIntegralClosure.is_fraction_ring_of_finite_extension R K L S)) := by
-  let this := Classical.decEq L
-  let this := IsIntegralClosure.is_fraction_ring_of_finite_extension R K L S
-  let this := IsIntegralClosure.is_dedekind_domain R K L S
+  letI := Classical.decEq L
+  letI := IsIntegralClosure.is_fraction_ring_of_finite_extension R K L S
+  letI := IsIntegralClosure.is_dedekind_domain R K L S
   choose s b hb_int using FiniteDimensional.exists_is_basis_integral R K L
   obtain ⟨n, b⟩ := Submodule.basisOfPidOfLeSpan _ (IsIntegralClosure.range_le_span_dual_basis S b hb_int)
   let bS := b.map ((LinearMap.quotKerEquivRange _).symm ≪≫ₗ _)

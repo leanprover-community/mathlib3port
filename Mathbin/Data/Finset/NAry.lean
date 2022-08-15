@@ -32,7 +32,7 @@ variable {α α' β β' γ γ' δ δ' ε ε' : Type _} [DecidableEq α'] [Decida
 /-- The image of a binary function `f : α → β → γ` as a function `finset α → finset β → finset γ`.
 Mathematically this should be thought of as the image of the corresponding function `α × β → γ`. -/
 def image₂ (f : α → β → γ) (s : Finset α) (t : Finset β) : Finset γ :=
-  (s.product t).Image <| uncurry f
+  (s ×ˢ t).Image <| uncurry f
 
 @[simp]
 theorem mem_image₂ : c ∈ image₂ f s t ↔ ∃ a b, a ∈ s ∧ b ∈ t ∧ f a b = c := by
@@ -45,8 +45,7 @@ theorem coe_image₂ (f : α → β → γ) (s : Finset α) (t : Finset β) : (i
 theorem card_image₂_le (f : α → β → γ) (s : Finset α) (t : Finset β) : (image₂ f s t).card ≤ s.card * t.card :=
   card_image_le.trans_eq <| card_product _ _
 
-theorem card_image₂_iff :
-    (image₂ f s t).card = s.card * t.card ↔ ((s : Set α) ×ˢ (t : Set β) : Set (α × β)).InjOn fun x => f x.1 x.2 := by
+theorem card_image₂_iff : (image₂ f s t).card = s.card * t.card ↔ (s ×ˢ t : Set (α × β)).InjOn fun x => f x.1 x.2 := by
   rw [← card_product, ← coe_product]
   exact card_image_iff
 
@@ -162,8 +161,8 @@ theorem subset_image₂ {s : Set α} {t : Set β} (hu : ↑u ⊆ Image2 f s t) :
     
   rintro a u ha _ _ ⟨s', t', hs, hs', h⟩
   obtain ⟨x, y, hx, hy, ha⟩ := hu ha
-  have := Classical.decEq α
-  have := Classical.decEq β
+  haveI := Classical.decEq α
+  haveI := Classical.decEq β
   refine' ⟨insert x s', insert y t', _⟩
   simp_rw [coe_insert, Set.insert_subset]
   exact
@@ -171,6 +170,36 @@ theorem subset_image₂ {s : Set α} {t : Set β} (hu : ↑u ⊆ Image2 f s t) :
       insert_subset.2
         ⟨mem_image₂.2 ⟨x, y, mem_insert_self _ _, mem_insert_self _ _, ha⟩,
           h.trans <| image₂_subset (subset_insert _ _) <| subset_insert _ _⟩⟩
+
+variable (s t)
+
+theorem card_image₂_singleton_left (hf : Injective (f a)) : (image₂ f {a} t).card = t.card := by
+  rw [image₂_singleton_left, card_image_of_injective _ hf]
+
+theorem card_image₂_singleton_right (hf : Injective fun a => f a b) : (image₂ f s {b}).card = s.card := by
+  rw [image₂_singleton_right, card_image_of_injective _ hf]
+
+theorem image₂_singleton_inter [DecidableEq β] (t₁ t₂ : Finset β) (hf : Injective (f a)) :
+    image₂ f {a} (t₁ ∩ t₂) = image₂ f {a} t₁ ∩ image₂ f {a} t₂ := by
+  simp_rw [image₂_singleton_left, image_inter _ _ hf]
+
+theorem image₂_inter_singleton [DecidableEq α] (s₁ s₂ : Finset α) (hf : Injective fun a => f a b) :
+    image₂ f (s₁ ∩ s₂) {b} = image₂ f s₁ {b} ∩ image₂ f s₂ {b} := by
+  simp_rw [image₂_singleton_right, image_inter _ _ hf]
+
+theorem card_le_card_image₂_left {s : Finset α} (hs : s.Nonempty) (hf : ∀ a, Injective (f a)) :
+    t.card ≤ (image₂ f s t).card := by
+  obtain ⟨a, ha⟩ := hs
+  rw [← card_image₂_singleton_left _ (hf a)]
+  exact card_le_of_subset (image₂_subset_right <| singleton_subset_iff.2 ha)
+
+theorem card_le_card_image₂_right {t : Finset β} (ht : t.Nonempty) (hf : ∀ b, Injective fun a => f a b) :
+    s.card ≤ (image₂ f s t).card := by
+  obtain ⟨b, hb⟩ := ht
+  rw [← card_image₂_singleton_right _ (hf b)]
+  exact card_le_of_subset (image₂_subset_left <| singleton_subset_iff.2 hb)
+
+variable {s t}
 
 theorem bUnion_image_left : (s.bUnion fun a => t.Image <| f a) = image₂ f s t :=
   coe_injective <| by

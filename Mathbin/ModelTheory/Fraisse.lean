@@ -194,7 +194,7 @@ theorem exists_cg_is_age_of (hn : K.Nonempty)
     (h : ∀ M N : Bundled.{w} L.Structure, Nonempty (M ≃[L] N) → (M ∈ K ↔ N ∈ K)) (hc : (Quotientₓ.mk '' K).Countable)
     (fg : ∀ M : Bundled.{w} L.Structure, M ∈ K → Structure.Fg L M) (hp : Hereditary K) (jep : JointEmbedding K) :
     ∃ M : Bundled.{w} L.Structure, Structure.Cg L M ∧ L.Age M = K := by
-  obtain ⟨F, hF⟩ := hc.exists_surjective (hn.image _)
+  obtain ⟨F, hF⟩ := hc.exists_eq_range (hn.image _)
   simp only [← Set.ext_iff, ← forall_quotient_iff, ← mem_image, ← mem_range, ← Quotientₓ.eq] at hF
   simp_rw [Quotientₓ.eq_mk_iff_out] at hF
   have hF' : ∀ n : ℕ, (F n).out ∈ K := by
@@ -231,8 +231,8 @@ theorem exists_countable_is_age_of_iff [L.CountableFunctions] :
     
   · rintro ⟨Kn, eqinv, cq, hfg, hp, jep⟩
     obtain ⟨M, hM, rfl⟩ := exists_cg_is_age_of Kn eqinv cq hfg hp jep
-    have := (Structure.cg_iff_countable.1 hM).some
-    refine' ⟨M, countable_encodable _, rfl⟩
+    haveI := (Structure.cg_iff_countable.1 hM).some
+    refine' ⟨M, to_countable _, rfl⟩
     
 
 variable {K} (L) (M)

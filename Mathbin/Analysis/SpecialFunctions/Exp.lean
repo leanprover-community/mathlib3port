@@ -5,6 +5,7 @@ Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne
 -/
 import Mathbin.Analysis.Complex.Basic
 import Mathbin.Data.Complex.Exponential
+import Mathbin.Analysis.Asymptotics.Theta
 
 /-!
 # Complex and real exponential
@@ -50,12 +51,15 @@ theorem locally_lipschitz_exp {r : ℝ} (hr_nonneg : 0 ≤ r) (hr_le : r ≤ 1) 
     have : ∥exp (x + z) - exp x - z • exp x∥ ≤ ∥exp x∥ * ∥z∥ ^ 2 := exp_bound_sq x z hz
     rw [← sub_le_iff_le_add', ← norm_smul z]
     exact (norm_sub_norm_le _ _).trans this
-  calc ∥exp y - exp x∥ = ∥exp (x + (y - x)) - exp x∥ := by
-      nth_rw 0[hy_eq]_ ≤ ∥y - x∥ * ∥exp x∥ + ∥exp x∥ * ∥y - x∥ ^ 2 :=
-      h_sq (y - x) (hyx.le.trans hr_le)_ ≤ ∥y - x∥ * ∥exp x∥ + ∥exp x∥ * (r * ∥y - x∥) :=
-      add_le_add_left (mul_le_mul le_rfl hyx_sq_le (sq_nonneg _) (norm_nonneg _)) _ _ = (1 + r) * ∥exp x∥ * ∥y - x∥ :=
-      by
+  calc
+    ∥exp y - exp x∥ = ∥exp (x + (y - x)) - exp x∥ := by
+      nth_rw 0[hy_eq]
+    _ ≤ ∥y - x∥ * ∥exp x∥ + ∥exp x∥ * ∥y - x∥ ^ 2 := h_sq (y - x) (hyx.le.trans hr_le)
+    _ ≤ ∥y - x∥ * ∥exp x∥ + ∥exp x∥ * (r * ∥y - x∥) :=
+      add_le_add_left (mul_le_mul le_rfl hyx_sq_le (sq_nonneg _) (norm_nonneg _)) _
+    _ = (1 + r) * ∥exp x∥ * ∥y - x∥ := by
       ring
+    
 
 @[continuity]
 theorem continuous_exp : Continuous exp :=
@@ -130,7 +134,7 @@ end RealContinuousExpComp
 
 namespace Real
 
-variable {x y z : ℝ}
+variable {α : Type _} {x y z : ℝ} {l : Filter α}
 
 theorem exp_half (x : ℝ) : exp (x / 2) = sqrt (exp x) := by
   rw [eq_comm, sqrt_eq_iff_sq_eq, sq, ← exp_add, add_halves] <;> exact (exp_pos _).le
@@ -158,12 +162,11 @@ theorem tendsto_exp_at_bot_nhds_within : Tendsto exp atBot (𝓝[>] 0) :=
   tendsto_inf.2 ⟨tendsto_exp_at_bot, tendsto_principal.2 <| eventually_of_forall exp_pos⟩
 
 @[simp]
-theorem is_bounded_under_ge_exp_comp {α : Type _} (l : Filter α) (f : α → ℝ) :
-    IsBoundedUnder (· ≥ ·) l fun x => exp (f x) :=
+theorem is_bounded_under_ge_exp_comp (l : Filter α) (f : α → ℝ) : IsBoundedUnder (· ≥ ·) l fun x => exp (f x) :=
   is_bounded_under_of ⟨0, fun x => (exp_pos _).le⟩
 
 @[simp]
-theorem is_bounded_under_le_exp_comp {α : Type _} {l : Filter α} {f : α → ℝ} :
+theorem is_bounded_under_le_exp_comp {f : α → ℝ} :
     (IsBoundedUnder (· ≤ ·) l fun x => exp (f x)) ↔ IsBoundedUnder (· ≤ ·) l f :=
   exp_monotone.is_bounded_under_le_comp tendsto_exp_at_top
 
@@ -180,10 +183,14 @@ theorem tendsto_exp_div_pow_at_top (n : ℕ) : Tendsto (fun x => exp x / x ^ n) 
   rw [Set.mem_Ioi] at hx
   have hx₀ : 0 < x := N.cast_nonneg.trans_lt hx
   rw [Set.mem_Ici, le_div_iff (pow_pos hx₀ _), ← le_div_iff' hC₀]
-  calc x ^ n ≤ ⌈x⌉₊ ^ n := pow_le_pow_of_le_left hx₀.le (Nat.le_ceil _) _ _ ≤ exp ⌈x⌉₊ / (exp 1 * C) :=
-      (hN _ (Nat.lt_ceil.2 hx).le).le _ ≤ exp (x + 1) / (exp 1 * C) :=
-      div_le_div_of_le (mul_pos (exp_pos _) hC₀).le (exp_le_exp.2 <| (Nat.ceil_lt_add_one hx₀.le).le)_ = exp x / C := by
+  calc
+    x ^ n ≤ ⌈x⌉₊ ^ n := pow_le_pow_of_le_left hx₀.le (Nat.le_ceil _) _
+    _ ≤ exp ⌈x⌉₊ / (exp 1 * C) := (hN _ (Nat.lt_ceil.2 hx).le).le
+    _ ≤ exp (x + 1) / (exp 1 * C) :=
+      div_le_div_of_le (mul_pos (exp_pos _) hC₀).le (exp_le_exp.2 <| (Nat.ceil_lt_add_one hx₀.le).le)
+    _ = exp x / C := by
       rw [add_commₓ, exp_add, mul_div_mul_left _ _ (exp_pos _).ne']
+    
 
 /-- The function `x^n * exp(-x)` tends to `0` at `+∞`, for any natural number `n`. -/
 theorem tendsto_pow_mul_exp_neg_at_top_nhds_0 (n : ℕ) : Tendsto (fun x => x ^ n * exp (-x)) atTop (𝓝 0) :=
@@ -254,12 +261,10 @@ theorem comap_exp_at_top : comap exp atTop = at_top := by
   rw [← map_exp_at_top, comap_map exp_injective, map_exp_at_top]
 
 @[simp]
-theorem tendsto_exp_comp_at_top {α : Type _} {l : Filter α} {f : α → ℝ} :
-    Tendsto (fun x => exp (f x)) l atTop ↔ Tendsto f l atTop := by
+theorem tendsto_exp_comp_at_top {f : α → ℝ} : Tendsto (fun x => exp (f x)) l atTop ↔ Tendsto f l atTop := by
   rw [← tendsto_comap_iff, comap_exp_at_top]
 
-theorem tendsto_comp_exp_at_top {α : Type _} {l : Filter α} {f : ℝ → α} :
-    Tendsto (fun x => f (exp x)) atTop l ↔ Tendsto f atTop l := by
+theorem tendsto_comp_exp_at_top {f : ℝ → α} : Tendsto (fun x => f (exp x)) atTop l ↔ Tendsto f atTop l := by
   rw [← tendsto_map'_iff, map_exp_at_top]
 
 @[simp]
@@ -270,8 +275,7 @@ theorem map_exp_at_bot : map exp atBot = 𝓝[>] 0 := by
 theorem comap_exp_nhds_within_Ioi_zero : comap exp (𝓝[>] 0) = at_bot := by
   rw [← map_exp_at_bot, comap_map exp_injective]
 
-theorem tendsto_comp_exp_at_bot {α : Type _} {l : Filter α} {f : ℝ → α} :
-    Tendsto (fun x => f (exp x)) atBot l ↔ Tendsto f (𝓝[>] 0) l := by
+theorem tendsto_comp_exp_at_bot {f : ℝ → α} : Tendsto (fun x => f (exp x)) atBot l ↔ Tendsto f (𝓝[>] 0) l := by
   rw [← map_exp_at_bot, tendsto_map'_iff]
 
 @[simp]
@@ -279,24 +283,55 @@ theorem comap_exp_nhds_zero : comap exp (𝓝 0) = at_bot :=
   (comap_nhds_within_range exp 0).symm.trans <| by
     simp
 
+@[simp]
+theorem tendsto_exp_comp_nhds_zero {f : α → ℝ} : Tendsto (fun x => exp (f x)) l (𝓝 0) ↔ Tendsto f l atBot := by
+  rw [← tendsto_comap_iff, comap_exp_nhds_zero]
+
 theorem is_o_pow_exp_at_top {n : ℕ} : (fun x => x ^ n) =o[at_top] Real.exp := by
   simpa [← is_o_iff_tendsto fun x hx => ((exp_pos x).ne' hx).elim] using
     tendsto_div_pow_mul_exp_add_at_top 1 0 n zero_ne_one
 
+@[simp]
+theorem is_O_exp_comp_exp_comp {f g : α → ℝ} :
+    ((fun x => exp (f x)) =O[l] fun x => exp (g x)) ↔ IsBoundedUnder (· ≤ ·) l (f - g) :=
+  Iff.trans (is_O_iff_is_bounded_under_le_div <| eventually_of_forall fun x => exp_ne_zero _) <| by
+    simp only [← norm_eq_abs, ← abs_exp, exp_sub, ← is_bounded_under_le_exp_comp, ← Pi.sub_def]
+
+@[simp]
+theorem is_Theta_exp_comp_exp_comp {f g : α → ℝ} :
+    ((fun x => exp (f x)) =Θ[l] fun x => exp (g x)) ↔ IsBoundedUnder (· ≤ ·) l fun x => abs (f x - g x) := by
+  simp only [← is_bounded_under_le_abs, is_bounded_under_le_neg, ← neg_sub, ← is_Theta, ← is_O_exp_comp_exp_comp, ←
+    Pi.sub_def]
+
+@[simp]
+theorem is_o_exp_comp_exp_comp {f g : α → ℝ} :
+    ((fun x => exp (f x)) =o[l] fun x => exp (g x)) ↔ Tendsto (fun x => g x - f x) l atTop := by
+  simp only [← is_o_iff_tendsto, ← exp_ne_zero, exp_sub, tendsto_neg_at_top_iff, ← false_implies_iff, ←
+    implies_true_iff, ← tendsto_exp_comp_nhds_zero, ← neg_sub]
+
+@[simp]
+theorem is_o_one_exp_comp {f : α → ℝ} : ((fun x => 1 : α → ℝ) =o[l] fun x => exp (f x)) ↔ Tendsto f l atTop := by
+  simp only [exp_zero, ← is_o_exp_comp_exp_comp, ← sub_zero]
+
 /-- `real.exp (f x)` is bounded away from zero along a filter if and only if this filter is bounded
 from below under `f`. -/
 @[simp]
-theorem is_O_one_exp_comp {α : Type _} {l : Filter α} {f : α → ℝ} :
-    ((fun x => 1 : α → ℝ) =O[l] fun x => exp (f x)) ↔ IsBoundedUnder (· ≥ ·) l f :=
-  calc
-    ((fun x => 1 : α → ℝ) =O[l] fun x => exp (f x)) ↔ ∃ b : ℝ, 0 < b ∧ ∀ᶠ x in l, b ≤ exp (f x) :=
-      Iff.trans (is_O_const_left_iff_pos_le_norm one_ne_zero) <| by
-        simp only [← norm_eq_abs, ← abs_exp]
-    _ ↔ IsBoundedUnder (· ≥ ·) l fun x => expOrderIso (f x) := by
-      simp only [← is_bounded_under, ← is_bounded, ← eventually_map, ← SetCoe.exists, ← ge_iff_le, Subtype.coe_le_coe, ←
-        exists_prop, ← coe_exp_order_iso_apply, ← Subtype.coe_mk, ← Set.mem_Ioi]
-    _ ↔ IsBoundedUnder (· ≥ ·) l f := expOrderIso.Monotone.is_bounded_under_ge_comp expOrderIso.tendsto_at_bot
-    
+theorem is_O_one_exp_comp {f : α → ℝ} : ((fun x => 1 : α → ℝ) =O[l] fun x => exp (f x)) ↔ IsBoundedUnder (· ≥ ·) l f :=
+  by
+  simp only [exp_zero, ← is_O_exp_comp_exp_comp, ← Pi.sub_def, ← zero_sub, ← is_bounded_under_le_neg]
+
+/-- `real.exp (f x)` is bounded away from zero along a filter if and only if this filter is bounded
+from below under `f`. -/
+theorem is_O_exp_comp_one {f : α → ℝ} : (fun x => exp (f x)) =O[l] (fun x => 1 : α → ℝ) ↔ IsBoundedUnder (· ≤ ·) l f :=
+  by
+  simp only [← is_O_one_iff, ← norm_eq_abs, ← abs_exp, ← is_bounded_under_le_exp_comp]
+
+/-- `real.exp (f x)` is bounded away from zero and infinity along a filter `l` if and only if
+`|f x|` is bounded from above along this filter. -/
+@[simp]
+theorem is_Theta_exp_comp_one {f : α → ℝ} :
+    (fun x => exp (f x)) =Θ[l] (fun x => 1 : α → ℝ) ↔ IsBoundedUnder (· ≤ ·) l fun x => abs (f x) := by
+  simp only [exp_zero, ← is_Theta_exp_comp_exp_comp, ← sub_zero]
 
 end Real
 

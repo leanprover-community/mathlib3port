@@ -39,8 +39,8 @@ variable {R A B : CommRingₓₓ.{u}} (f : R ⟶ A) (g : R ⟶ B)
 
 /-- The explicit cocone with tensor products as the fibered product in `CommRing`. -/
 def pushoutCocone : Limits.PushoutCocone f g := by
-  let this := RingHom.toAlgebra f
-  let this := RingHom.toAlgebra g
+  letI := RingHom.toAlgebra f
+  letI := RingHom.toAlgebra g
   apply limits.pushout_cocone.mk
   show CommRingₓₓ
   exact CommRingₓₓ.of (A ⊗[R] B)
@@ -58,33 +58,33 @@ def pushoutCocone : Limits.PushoutCocone f g := by
 @[simp]
 theorem pushout_cocone_inl :
     (pushoutCocone f g).inl = by
-      let this := f.to_algebra
-      let this := g.to_algebra
+      letI := f.to_algebra
+      letI := g.to_algebra
       exact algebra.tensor_product.include_left.to_ring_hom :=
   rfl
 
 @[simp]
 theorem pushout_cocone_inr :
     (pushoutCocone f g).inr = by
-      let this := f.to_algebra
-      let this := g.to_algebra
+      letI := f.to_algebra
+      letI := g.to_algebra
       exact algebra.tensor_product.include_right.to_ring_hom :=
   rfl
 
 @[simp]
 theorem pushout_cocone_X :
     (pushoutCocone f g).x = by
-      let this := f.to_algebra
-      let this := g.to_algebra
+      letI := f.to_algebra
+      letI := g.to_algebra
       exact CommRingₓₓ.of (A ⊗[R] B) :=
   rfl
 
 /-- Verify that the `pushout_cocone` is indeed the colimit. -/
 def pushoutCoconeIsColimit : Limits.IsColimit (pushoutCocone f g) :=
   Limits.PushoutCocone.isColimitAux' _ fun s => by
-    let this := RingHom.toAlgebra f
-    let this := RingHom.toAlgebra g
-    let this := RingHom.toAlgebra (f ≫ s.inl)
+    letI := RingHom.toAlgebra f
+    letI := RingHom.toAlgebra g
+    letI := RingHom.toAlgebra (f ≫ s.inl)
     let f' : A →ₐ[R] s.X :=
       { s.inl with
         commutes' := fun r => by

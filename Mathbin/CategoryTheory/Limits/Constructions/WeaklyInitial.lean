@@ -43,7 +43,7 @@ theorem has_initial_of_weakly_initial_and_has_wide_equalizers [HasWideEqualizers
     (hT : ∀ X, Nonempty (T ⟶ X)) : HasInitial C := by
   let endos := T ⟶ T
   let i := wide_equalizer.ι (id : endos → endos)
-  have : Nonempty endos := ⟨𝟙 _⟩
+  haveI : Nonempty endos := ⟨𝟙 _⟩
   have : ∀ X : C, Unique (wide_equalizer (id : endos → endos) ⟶ X) := by
     intro X
     refine' ⟨⟨i ≫ Classical.choice (hT X)⟩, fun a => _⟩
@@ -54,7 +54,7 @@ theorem has_initial_of_weakly_initial_and_has_wide_equalizers [HasWideEqualizers
       rw [category.assoc, category.assoc]
       apply wide_equalizer.condition (id : endos → endos) (h ≫ e ≫ i)
     rw [category.comp_id, cancel_mono_id i] at this
-    have : split_epi e := ⟨i ≫ h, this⟩
+    haveI : is_split_epi e := is_split_epi.mk' ⟨i ≫ h, this⟩
     rw [← cancel_epi e]
     apply equalizer.condition
   exact has_initial_of_unique (wide_equalizer (id : endos → endos))

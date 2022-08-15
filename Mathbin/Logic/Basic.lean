@@ -55,7 +55,7 @@ instance Subsingleton.prod {α β : Type _} [Subsingleton α] [Subsingleton β] 
     intro a b
     cases a
     cases b
-    congr⟩
+    congr ⟩
 
 instance : DecidableEq Empty := fun a => a.elim
 
@@ -115,6 +115,10 @@ theorem coe_fn_coe_base {α β γ} [Coe α β] [CoeFun β γ] (x : α) : @coeFn 
 theorem coe_fn_coe_base' {α β} {γ : outParam <| _} [Coe α β] [CoeFun β fun _ => γ] (x : α) :
     @coeFn α _ _ x = @coeFn β _ _ x :=
   rfl
+
+-- This instance should have low priority, to ensure we follow the chain
+-- `set_like → has_coe_to_sort`
+attribute [instance] coeSortTrans
 
 theorem coe_sort_coe_trans {α β γ δ} [Coe α β] [HasCoeTAux β γ] [CoeSort γ δ] (x : α) :
     @coeSort α _ _ x = @coeSort β _ _ x :=
@@ -207,7 +211,7 @@ theorem eq_iff_eq_cancel_right {a b : α} : (∀ {c}, a = c ↔ b = c) ↔ a = b
     rw [h], fun h a => by
     rw [h]⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`out] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`out] []
 /-- Wrapper for adding elementary propositions to the type class systems.
 Warning: this can easily be abused. See the rest of this docstring for details.
 
@@ -1004,7 +1008,7 @@ theorem ball_cond_comm {α} {s : α → Prop} {p : α → α → Prop} :
     (∀ a, s a → ∀ b, s b → p a b) ↔ ∀ a b, s a → s b → p a b :=
   ⟨fun h a b ha hb => h a ha b hb, fun h a ha b hb => h a b ha hb⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a b «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (a b «expr ∈ » s)
 theorem ball_mem_comm {α β} [HasMem α β] {s : β} {p : α → α → Prop} :
     (∀ (a b) (_ : a ∈ s) (_ : b ∈ s), p a b) ↔ ∀ a b, a ∈ s → b ∈ s → p a b :=
   ball_cond_comm
@@ -1089,10 +1093,10 @@ theorem congr_fun₂ {f g : ∀ a b, γ a b} (h : f = g) (a : α) (b : β a) : f
 theorem congr_fun₃ {f g : ∀ a b c, δ a b c} (h : f = g) (a : α) (b : β a) (c : γ a b) : f a b c = g a b c :=
   congr_fun₂ (congr_fun h _) _ _
 
-theorem funext₂ {f g : ∀ a, β a → Prop} (h : ∀ a b, f a b = g a b) : f = g :=
+theorem funext₂ {f g : ∀ a b, γ a b} (h : ∀ a b, f a b = g a b) : f = g :=
   funext fun _ => funext <| h _
 
-theorem funext₃ {f g : ∀ a b, γ a b → Prop} (h : ∀ a b c, f a b c = g a b c) : f = g :=
+theorem funext₃ {f g : ∀ a b c, δ a b c} (h : ∀ a b c, f a b c = g a b c) : f = g :=
   funext fun _ => funext₂ <| h _
 
 end Equality
@@ -1308,7 +1312,7 @@ theorem forall_eq {a' : α} : (∀ a, a = a' → p a) ↔ p a' :=
 theorem forall_eq' {a' : α} : (∀ a, a' = a → p a) ↔ p a' := by
   simp [← @eq_comm _ a']
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (b «expr ≠ » a)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (b «expr ≠ » a)
 theorem and_forall_ne (a : α) : (p a ∧ ∀ (b) (_ : b ≠ a), p b) ↔ ∀ b, p b := by
   simp only [@forall_eq _ p a, forall_and_distrib, or_imp_distrib, ← Classical.em, ← forall_const]
 
@@ -1564,7 +1568,7 @@ noncomputable def decEq (α : Sort _) : DecidableEq α := by
 
 /-- Construct a function from a default value `H0`, and a function to use if there exists a value
 satisfying the predicate. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 noncomputable def existsCases.{u} {C : Sort u} (H0 : C) (H : ∀ a, p a → C) : C :=
   if h : ∃ a, p a then H (Classical.some h) (Classical.some_spec h) else H0
 
@@ -1587,7 +1591,7 @@ end Classical
 /-- This function has the same type as `exists.rec_on`, and can be used to case on an equality,
 but `exists.rec_on` can only eliminate into Prop, while this version eliminates into any universe
 using the axiom of choice. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 noncomputable def Exists.classicalRecOn.{u} {α} {p : α → Prop} (h : ∃ a, p a) {C : Sort u} (H : ∀ a, p a → C) : C :=
   H (Classical.some h) (Classical.some_spec h)
 

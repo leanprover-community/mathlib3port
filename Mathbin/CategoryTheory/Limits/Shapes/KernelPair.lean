@@ -62,7 +62,7 @@ instance : Subsingleton (IsKernelPair f a b) :=
   ⟨fun P Q => by
     cases P
     cases Q
-    congr⟩
+    congr ⟩
 
 /-- If `f` is a monomorphism, then `(𝟙 _, 𝟙 _)`  is a kernel pair for `f`. -/
 def idOfMono [Mono f] : IsKernelPair f (𝟙 _) (𝟙 _) :=

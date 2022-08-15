@@ -50,7 +50,7 @@ def TendstoInMeasure [HasDist E] {m : MeasurableSpace α} (μ : Measure α) (f :
     Prop :=
   ∀ (ε) (hε : 0 < ε), Tendsto (fun i => μ { x | ε ≤ dist (f i x) (g x) }) l (𝓝 0)
 
-theorem tendsto_in_measure_iff_norm [SemiNormedGroup E] {l : Filter ι} {f : ι → α → E} {g : α → E} :
+theorem tendsto_in_measure_iff_norm [SeminormedAddCommGroup E] {l : Filter ι} {f : ι → α → E} {g : α → E} :
     TendstoInMeasure μ f l g ↔ ∀ (ε) (hε : 0 < ε), Tendsto (fun i => μ { x | ε ≤ ∥f i x - g x∥ }) l (𝓝 0) := by
   simp_rw [tendsto_in_measure, dist_eq_norm]
 
@@ -236,7 +236,7 @@ end ExistsSeqTendstoAe
 
 section AeMeasurableOf
 
-variable [MeasurableSpace E] [NormedGroup E] [BorelSpace E]
+variable [MeasurableSpace E] [NormedAddCommGroup E] [BorelSpace E]
 
 theorem TendstoInMeasure.ae_measurable {u : Filter ι} [NeBot u] [IsCountablyGenerated u] {f : ι → α → E} {g : α → E}
     (hf : ∀ n, AeMeasurable (f n) μ) (h_tendsto : TendstoInMeasure μ f u g) : AeMeasurable g μ := by
@@ -247,7 +247,7 @@ end AeMeasurableOf
 
 section TendstoInMeasureOf
 
-variable [NormedGroup E] {p : ℝ≥0∞}
+variable [NormedAddCommGroup E] {p : ℝ≥0∞}
 
 variable {f : ι → α → E} {g : α → E}
 
@@ -296,7 +296,7 @@ theorem tendsto_in_measure_of_tendsto_snorm_of_ne_top (hp_ne_zero : p ≠ 0) (hp
 
 /-- See also `measure_theory.tendsto_in_measure_of_tendsto_snorm` which work for general
 Lp-convergence for all `p ≠ 0`. -/
-theorem tendsto_in_measure_of_tendsto_snorm_top {E} [NormedGroup E] {f : ι → α → E} {g : α → E} {l : Filter ι}
+theorem tendsto_in_measure_of_tendsto_snorm_top {E} [NormedAddCommGroup E] {f : ι → α → E} {g : α → E} {l : Filter ι}
     (hfg : Tendsto (fun n => snorm (f n - g) ∞ μ) l (𝓝 0)) : TendstoInMeasure μ f l g := by
   intro δ hδ
   simp only [← snorm_exponent_top, ← snorm_ess_sup] at hfg

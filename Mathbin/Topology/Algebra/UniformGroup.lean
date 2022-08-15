@@ -192,7 +192,7 @@ theorem uniform_group_inf {u₁ u₂ : UniformSpace β} (h₁ : @UniformGroup β
 theorem uniform_group_comap {γ : Type _} [Groupₓ γ] {u : UniformSpace γ} [UniformGroup γ] {F : Type _}
     [MonoidHomClass F β γ] (f : F) : @UniformGroup β (u.comap f) _ :=
   { uniform_continuous_div := by
-      let this : UniformSpace β := u.comap f
+      letI : UniformSpace β := u.comap f
       refine' uniform_continuous_comap' _
       simp_rw [Function.comp, map_div]
       change UniformContinuous ((fun p : γ × γ => p.1 / p.2) ∘ Prod.map f f)
@@ -371,14 +371,14 @@ end UniformConvergence
 
 end UniformGroup
 
-section TopologicalCommGroup
+section TopologicalGroup
 
 open Filter
 
-variable (G : Type _) [CommGroupₓ G] [TopologicalSpace G] [TopologicalGroup G]
+variable (G : Type _) [Groupₓ G] [TopologicalSpace G] [TopologicalGroup G]
 
 /-- The right uniformity on a topological group. -/
-@[to_additive "The right uniformity on a topological group"]
+@[to_additive "The right uniformity on a topological additive group"]
 def TopologicalGroup.toUniformSpace : UniformSpace G where
   uniformity := comap (fun p : G × G => p.2 / p.1) (𝓝 1)
   refl := by
@@ -403,7 +403,7 @@ def TopologicalGroup.toUniformSpace : UniformSpace G where
         by
         intro p p_comp_rel
         rcases p_comp_rel with ⟨z, ⟨Hz1, Hz2⟩⟩
-        simpa [← sub_eq_add_neg, ← add_commₓ, ← add_left_commₓ] using V_sum _ Hz1 _ Hz2
+        simpa using V_sum _ Hz2 _ Hz1
       exact Set.Subset.trans comp_rel_sub U_sub
       
     · exact monotone_comp_rel monotone_id monotone_id
@@ -424,6 +424,12 @@ def TopologicalGroup.toUniformSpace : UniformSpace G where
     · rintro h x hx
       exact @h (a, x) hx rfl
       
+
+attribute [local instance] TopologicalGroup.toUniformSpace
+
+@[to_additive]
+theorem uniformity_eq_comap_nhds_one' : 𝓤 G = comap (fun p : G × G => p.2 / p.1) (𝓝 (1 : G)) :=
+  rfl
 
 variable {G}
 
@@ -459,7 +465,7 @@ theorem TopologicalGroup.tendsto_locally_uniformly_on_iff {ι α : Type _} [Topo
     (exists_imp_exists fun a => exists_imp_exists fun ha hp => mem_of_superset hp fun i hi a ha => hv (hi a ha)) ∘
       h u hu x⟩
 
-end TopologicalCommGroup
+end TopologicalGroup
 
 section TopologicalCommGroup
 
@@ -472,10 +478,6 @@ variable (G : Type _) [CommGroupₓ G] [TopologicalSpace G] [TopologicalGroup G]
 section
 
 attribute [local instance] TopologicalGroup.toUniformSpace
-
-@[to_additive]
-theorem uniformity_eq_comap_nhds_one' : 𝓤 G = comap (fun p : G × G => p.2 / p.1) (𝓝 (1 : G)) :=
-  rfl
 
 variable {G}
 
@@ -494,7 +496,7 @@ open Set
 
 @[to_additive]
 theorem TopologicalGroup.t2_space_iff_one_closed : T2Space G ↔ IsClosed ({1} : Set G) := by
-  have : UniformGroup G := topological_group_is_uniform
+  haveI : UniformGroup G := topological_group_is_uniform
   rw [← separated_iff_t2, separated_space_iff, ← closure_eq_iff_is_closed]
   constructor <;> intro h
   · apply subset.antisymm
@@ -532,7 +534,7 @@ theorem TopologicalGroup.t2_space_of_one_sep (H : ∀ x : G, x ≠ 1 → ∃ U �
 end
 
 @[to_additive]
-theorem UniformGroup.to_uniform_space_eq {G : Type _} [u : UniformSpace G] [CommGroupₓ G] [UniformGroup G] :
+theorem UniformGroup.to_uniform_space_eq {G : Type _} [u : UniformSpace G] [Groupₓ G] [UniformGroup G] :
     TopologicalGroup.toUniformSpace G = u := by
   ext : 1
   show @uniformity G (TopologicalGroup.toUniformSpace G) = 𝓤 G
@@ -540,16 +542,16 @@ theorem UniformGroup.to_uniform_space_eq {G : Type _} [u : UniformSpace G] [Comm
 
 end TopologicalCommGroup
 
-open CommGroupₓ Filter Set Function
+open Filter Set Function
 
 section
 
 variable {α : Type _} {β : Type _} {hom : Type _}
 
-variable [TopologicalSpace α] [CommGroupₓ α] [TopologicalGroup α]
+variable [TopologicalSpace α] [Groupₓ α] [TopologicalGroup α]
 
 -- β is a dense subgroup of α, inclusion is denoted by e
-variable [TopologicalSpace β] [CommGroupₓ β]
+variable [TopologicalSpace β] [Groupₓ β]
 
 variable [MonoidHomClass hom β α] {e : hom} (de : DenseInducing e)
 
@@ -603,7 +605,7 @@ variable {W' : Set G} (W'_nhd : W' ∈ 𝓝 (0 : G))
 
 include W'_nhd
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x x' «expr ∈ » U₂)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x x' «expr ∈ » U₂)
 private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
     ∃ U₂ ∈ comap e (𝓝 x₀), ∀ (x x') (_ : x ∈ U₂) (_ : x' ∈ U₂), Φ (x' - x, y₁) ∈ W' := by
   let Nx := 𝓝 x₀
@@ -621,10 +623,10 @@ private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
   simp_rw [ball_mem_comm]
   exact limₓ W' W'_nhd
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x x' «expr ∈ » U₁)
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y y' «expr ∈ » V₁)
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x x' «expr ∈ » U)
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y y' «expr ∈ » V)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x x' «expr ∈ » U₁)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y y' «expr ∈ » V₁)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x x' «expr ∈ » U)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y y' «expr ∈ » V)
 private theorem extend_Z_bilin_key (x₀ : α) (y₀ : γ) :
     ∃ U ∈ comap e (𝓝 x₀),
       ∃ V ∈ comap f (𝓝 y₀),

@@ -58,6 +58,9 @@ namespace Gal
 instance : CoeFun p.Gal fun _ => p.SplittingField → p.SplittingField :=
   AlgEquiv.hasCoeToFun
 
+instance applyMulSemiringAction : MulSemiringAction p.Gal p.SplittingField :=
+  AlgEquiv.applyMulSemiringAction
+
 @[ext]
 theorem ext {σ τ : p.Gal} (h : ∀, ∀ x ∈ p.RootSet p.SplittingField, ∀, σ x = τ x) : σ = τ := by
   refine'
@@ -191,15 +194,8 @@ theorem restrict_smul [Fact (p.Splits (algebraMap F E))] (ϕ : E ≃ₐ[F] E) (x
 variable (p E)
 
 /-- `polynomial.gal.gal_action` as a permutation representation -/
-def galActionHom [Fact (p.Splits (algebraMap F E))] : p.Gal →* Equivₓ.Perm (RootSet p E) where
-  toFun := fun ϕ =>
-    Equivₓ.mk (fun x => ϕ • x) (fun x => ϕ⁻¹ • x) (fun x => inv_smul_smul ϕ x) fun x => smul_inv_smul ϕ x
-  map_one' := by
-    ext1 x
-    exact MulAction.one_smul x
-  map_mul' := fun x y => by
-    ext1 z
-    exact MulAction.mul_smul x y z
+def galActionHom [Fact (p.Splits (algebraMap F E))] : p.Gal →* Equivₓ.Perm (RootSet p E) :=
+  MulAction.toPermHom _ _
 
 theorem gal_action_hom_restrict [Fact (p.Splits (algebraMap F E))] (ϕ : E ≃ₐ[F] E) (x : RootSet p E) :
     ↑(galActionHom p E (restrict p E ϕ) x) = ϕ x :=
@@ -250,7 +246,7 @@ theorem restrict_prod_injective : Function.Injective (restrictProd p q) := by
   ext x hx
   rw [root_set, Polynomial.map_mul, Polynomial.roots_mul] at hx
   cases' multiset.mem_add.mp (multiset.mem_to_finset.mp hx) with h h
-  · have : Fact (p.splits (algebraMap F (p * q).SplittingField)) :=
+  · haveI : Fact (p.splits (algebraMap F (p * q).SplittingField)) :=
       ⟨splits_of_splits_of_dvd _ hpq (splitting_field.splits (p * q)) (dvd_mul_right p q)⟩
     have key :
       x =
@@ -260,7 +256,7 @@ theorem restrict_prod_injective : Function.Injective (restrictProd p q) := by
     rw [key, ← AlgEquiv.restrict_normal_commutes, ← AlgEquiv.restrict_normal_commutes]
     exact congr_arg _ (alg_equiv.ext_iff.mp hfg.1 _)
     
-  · have : Fact (q.splits (algebraMap F (p * q).SplittingField)) :=
+  · haveI : Fact (q.splits (algebraMap F (p * q).SplittingField)) :=
       ⟨splits_of_splits_of_dvd _ hpq (splitting_field.splits (p * q)) (dvd_mul_left q p)⟩
     have key :
       x =
@@ -351,11 +347,11 @@ variable {p q}
 /-- For a separable polynomial, its Galois group has cardinality
 equal to the dimension of its splitting field over `F`. -/
 theorem card_of_separable (hp : p.Separable) : Fintype.card p.Gal = finrank F p.SplittingField := by
-  have : IsGalois F p.splitting_field := IsGalois.of_separable_splitting_field hp
+  haveI : IsGalois F p.splitting_field := IsGalois.of_separable_splitting_field hp
   exact IsGalois.card_aut_eq_finrank F p.splitting_field
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem prime_degree_dvd_card [CharZero F] (p_irr : Irreducible p) (p_deg : p.natDegree.Prime) :
     p.natDegree ∣ Fintype.card p.Gal := by
   rw [gal.card_of_separable p_irr.separable]

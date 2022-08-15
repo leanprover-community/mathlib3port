@@ -127,7 +127,8 @@ variable {ι : Type u} {X : Type v} [TopologicalSpace X]
 
 namespace PartitionOfUnity
 
-variable {s : Set X} (f : PartitionOfUnity ι X s)
+variable {E : Type _} [AddCommMonoidₓ E] [SmulWithZero ℝ E] [TopologicalSpace E] [HasContinuousSmul ℝ E] {s : Set X}
+  (f : PartitionOfUnity ι X s)
 
 instance : CoeFun (PartitionOfUnity ι X s) fun _ => ι → C(X, ℝ) :=
   ⟨toFun⟩
@@ -135,11 +136,21 @@ instance : CoeFun (PartitionOfUnity ι X s) fun _ => ι → C(X, ℝ) :=
 protected theorem locally_finite : LocallyFinite fun i => Support (f i) :=
   f.locally_finite'
 
+theorem locally_finite_tsupport : LocallyFinite fun i => Tsupport (f i) :=
+  f.LocallyFinite.closure
+
 theorem nonneg (i : ι) (x : X) : 0 ≤ f i x :=
   f.nonneg' i x
 
 theorem sum_eq_one {x : X} (hx : x ∈ s) : (∑ᶠ i, f i x) = 1 :=
   f.sum_eq_one' x hx
+
+/-- If `f` is a partition of unity on `s`, then for every `x ∈ s` there exists an index `i` such
+that `0 < f i x`. -/
+theorem exists_pos {x : X} (hx : x ∈ s) : ∃ i, 0 < f i x := by
+  have H := f.sum_eq_one hx
+  contrapose! H
+  simpa only [← fun i => (H i).antisymm (f.nonneg i x), ← finsum_zero] using zero_ne_one
 
 theorem sum_le_one (x : X) : (∑ᶠ i, f i x) ≤ 1 :=
   f.sum_le_one' x
@@ -149,6 +160,19 @@ theorem sum_nonneg (x : X) : 0 ≤ ∑ᶠ i, f i x :=
 
 theorem le_one (i : ι) (x : X) : f i x ≤ 1 :=
   (single_le_finsum i (f.LocallyFinite.point_finite x) fun j => f.Nonneg j x).trans (f.sum_le_one x)
+
+/-- If `f` is a partition of unity on `s : set X` and `g : X → E` is continuous at every point of
+the topological support of some `f i`, then `λ x, f i x • g x` is continuous on the whole space. -/
+theorem continuous_smul {g : X → E} {i : ι} (hg : ∀, ∀ x ∈ Tsupport (f i), ∀, ContinuousAt g x) :
+    Continuous fun x => f i x • g x :=
+  continuous_of_tsupport fun x hx => ((f i).ContinuousAt x).smul <| hg x <| tsupport_smul_subset_left _ _ hx
+
+/-- If `f` is a partition of unity on a set `s : set X` and `g : ι → X → E` is a family of functions
+such that each `g i` is continuous at every point of the topological support of `f i`, then the sum
+`λ x, ∑ᶠ i, f i x • g i x` is continuous on the whole space. -/
+theorem continuous_finsum_smul [HasContinuousAdd E] {g : ι → X → E}
+    (hg : ∀ (i), ∀ x ∈ Tsupport (f i), ∀, ContinuousAt (g i) x) : Continuous fun x => ∑ᶠ i, f i x • g i x :=
+  (continuous_finsum fun i => f.continuous_smul (hg i)) <| f.LocallyFinite.Subset fun i => support_smul_subset_left _ _
 
 /-- A partition of unity `f i` is subordinate to a family of sets `U i` indexed by the same type if
 for each `i` the closure of the support of `f i` is a subset of `U i`. -/
@@ -162,6 +186,14 @@ theorem exists_finset_nhd_support_subset {U : ι → Set X} (hso : f.IsSubordina
       ∀, ∀ z ∈ n, ∀, (Support fun i => f i z) ⊆ is :=
   f.LocallyFinite.exists_finset_nhd_support_subset hso ho x
 
+/-- If `f` is a partition of unity that is subordinate to a family of open sets `U i` and
+`g : ι → X → E` is a family of functions such that each `g i` is continuous on `U i`, then the sum
+`λ x, ∑ᶠ i, f i x • g i x` is a continuous function. -/
+theorem IsSubordinate.continuous_finsum_smul [HasContinuousAdd E] {U : ι → Set X} (ho : ∀ i, IsOpen (U i))
+    (hf : f.IsSubordinate U) {g : ι → X → E} (hg : ∀ i, ContinuousOn (g i) (U i)) :
+    Continuous fun x => ∑ᶠ i, f i x • g i x :=
+  f.continuous_finsum_smul fun i x hx => (hg i).ContinuousAt <| (ho i).mem_nhds <| hf i hx
+
 end PartitionOfUnity
 
 namespace BumpCovering
@@ -173,6 +205,9 @@ instance : CoeFun (BumpCovering ι X s) fun _ => ι → C(X, ℝ) :=
 
 protected theorem locally_finite : LocallyFinite fun i => Support (f i) :=
   f.locally_finite'
+
+theorem locally_finite_tsupport : LocallyFinite fun i => Tsupport (f i) :=
+  f.LocallyFinite.closure
 
 protected theorem point_finite (x : X) : { i | f i x ≠ 0 }.Finite :=
   f.LocallyFinite.point_finite x
@@ -320,7 +355,7 @@ theorem sum_to_pou_fun_eq (x : X) : (∑ᶠ i, f.toPouFun i x) = 1 - ∏ᶠ i, 1
   have B : (mul_support fun i => 1 - f i x) ⊆ s := by
     rw [hs, mul_support_one_sub]
     exact fun i => id
-  let this : LinearOrderₓ ι := linearOrderOfSTO' WellOrderingRel
+  letI : LinearOrderₓ ι := linearOrderOfSTO' WellOrderingRel
   rw [finsum_eq_sum_of_support_subset _ A, finprod_eq_prod_of_mul_support_subset _ B, Finset.prod_one_sub_ordered,
     sub_sub_cancel]
   refine' Finset.sum_congr rfl fun i hi => _

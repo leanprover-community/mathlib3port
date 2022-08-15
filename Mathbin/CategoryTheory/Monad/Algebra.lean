@@ -289,7 +289,7 @@ end Monadₓ
 namespace Comonad
 
 /-- An Eilenberg-Moore coalgebra for a comonad `T`. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure Coalgebra (G : Comonad C) : Type max u₁ v₁ where
   a : C
   a : A ⟶ (G : C ⥤ C).obj A
@@ -311,7 +311,7 @@ namespace Coalgebra
 variable {G : Comonad C}
 
 /-- A morphism of Eilenberg-Moore coalgebras for the comonad `G`. -/
-@[ext, nolint has_inhabited_instance]
+@[ext, nolint has_nonempty_instance]
 structure Hom (A B : Coalgebra G) where
   f : A.a ⟶ B.a
   h' : A.a ≫ (G : C ⥤ C).map f = f ≫ B.a := by

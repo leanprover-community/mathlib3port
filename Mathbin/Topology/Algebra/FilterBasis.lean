@@ -212,7 +212,7 @@ theorem mem_nhds_one (B : GroupFilterBasis G) {U : Set G} (hU : U ∈ B) : U ∈
 a group filter basis then it's a topological group. -/
 @[to_additive]
 instance (priority := 100) is_topological_group (B : GroupFilterBasis G) : @TopologicalGroup G B.topology _ := by
-  let this := B.topology
+  letI := B.topology
   have basis := B.nhds_one_has_basis
   have basis' := Basis.prod Basis
   refine' TopologicalGroup.of_nhds_one _ _ _ _
@@ -276,10 +276,10 @@ a ring filter basis then it's a topological ring. -/
 instance (priority := 100) is_topological_ring {R : Type u} [Ringₓ R] (B : RingFilterBasis R) :
     @TopologicalRing R B.topology _ := by
   let B' := B.to_add_group_filter_basis
-  let this := B'.topology
+  letI := B'.topology
   have basis := B'.nhds_zero_has_basis
   have basis' := Basis.prod Basis
-  have := B'.is_topological_add_group
+  haveI := B'.is_topological_add_group
   apply TopologicalRing.of_add_group_of_nhds_zero
   · rw [basis'.tendsto_iff Basis]
     suffices ∀, ∀ U ∈ B', ∀, ∃ V W, (V ∈ B' ∧ W ∈ B') ∧ ∀ a b, a ∈ V → b ∈ W → a * b ∈ U by
@@ -361,32 +361,47 @@ def topology' {R M : Type _} [CommRingₓ R] {tR : TopologicalSpace R} [AddCommG
     (B : ModuleFilterBasis R M) : TopologicalSpace M :=
   B.toAddGroupFilterBasis.topology
 
+/-- A topological add group whith a basis of `𝓝 0` satisfying the axioms of `module_filter_basis`
+is a topological module.
+
+This lemma is mathematically useless because one could obtain such a result by applying
+`module_filter_basis.has_continuous_smul` and use the fact that group topologies are characterized
+by their neighborhoods of 0 to obtain the `has_continuous_smul` on the pre-existing topology.
+
+But it turns out it's just easier to get it as a biproduct of the proof, so this is just a free
+quality-of-life improvement. -/
+theorem _root_.has_continuous_smul.of_basis_zero {ι : Type _} [TopologicalRing R] [TopologicalSpace M]
+    [TopologicalAddGroup M] {p : ι → Prop} {b : ι → Set M} (h : HasBasis (𝓝 0) p b)
+    (hsmul : ∀ {i}, p i → ∃ V ∈ 𝓝 (0 : R), ∃ (j : _)(hj : p j), V • b j ⊆ b i)
+    (hsmul_left : ∀ (x₀ : R) {i}, p i → ∃ (j : _)(hj : p j), b j ⊆ (fun x => x₀ • x) ⁻¹' b i)
+    (hsmul_right : ∀ (m₀ : M) {i}, p i → ∀ᶠ x in 𝓝 (0 : R), x • m₀ ∈ b i) : HasContinuousSmul R M := by
+  apply HasContinuousSmul.of_nhds_zero
+  · rw [h.tendsto_right_iff]
+    intro i hi
+    rcases hsmul hi with ⟨V, V_in, j, hj, hVj⟩
+    apply mem_of_superset (prod_mem_prod V_in <| h.mem_of_mem hj)
+    rintro ⟨v, w⟩ ⟨v_in : v ∈ V, w_in : w ∈ b j⟩
+    exact hVj (Set.smul_mem_smul v_in w_in)
+    
+  · intro m₀
+    rw [h.tendsto_right_iff]
+    intro i hi
+    exact hsmul_right m₀ hi
+    
+  · intro x₀
+    rw [h.tendsto_right_iff]
+    intro i hi
+    rcases hsmul_left x₀ hi with ⟨j, hj, hji⟩
+    exact mem_of_superset (h.mem_of_mem hj) hji
+    
+
 /-- If a module is endowed with a topological structure coming from
 a module filter basis then it's a topological module. -/
 instance (priority := 100) has_continuous_smul [TopologicalRing R] : @HasContinuousSmul R M _ _ B.topology := by
   let B' := B.to_add_group_filter_basis
-  let this := B'.topology
-  have basis := B'.nhds_zero_has_basis
-  have := B'.is_topological_add_group
-  apply HasContinuousSmul.of_nhds_zero
-  · rw [basis.tendsto_right_iff]
-    intro U U_in
-    rcases B.smul U_in with ⟨V, V_in, W, W_in, H⟩
-    apply mem_of_superset (prod_mem_prod V_in <| B'.mem_nhds_zero W_in)
-    rintro ⟨v, w⟩ ⟨v_in : v ∈ V, w_in : w ∈ W⟩
-    exact H (Set.smul_mem_smul v_in w_in)
-    
-  · intro m₀
-    rw [basis.tendsto_right_iff]
-    intro U U_in
-    exact B.smul_right m₀ U_in
-    
-  · intro x₀
-    rw [basis.tendsto_right_iff]
-    intro U U_in
-    rcases B.smul_left x₀ U_in with ⟨V, V_in, hV⟩
-    exact mem_of_superset (B'.mem_nhds_zero V_in) hV
-    
+  letI := B'.topology
+  haveI := B'.is_topological_add_group
+  exact HasContinuousSmul.of_basis_zero B'.nhds_zero_has_basis (fun _ => B.smul) B.smul_left B.smul_right
 
 /-- Build a module filter basis from compatible ring and additive group filter bases. -/
 def ofBases {R M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Module R M] (BR : RingFilterBasis R)

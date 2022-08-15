@@ -26,7 +26,7 @@ variable {α : Type _} [DecidableEq α] [CommGroupₓ α] (s : Finset α) {t : F
 /-- **Ruzsa's covering lemma**. -/
 @[to_additive "**Ruzsa's covering lemma**"]
 theorem exists_subset_mul_div (ht : t.Nonempty) : ∃ u : Finset α, u.card * t.card ≤ (s * t).card ∧ s ⊆ u * t / t := by
-  have : ∀ u, Decidable ((u : Set α).PairwiseDisjoint (· • t)) := fun u => Classical.dec _
+  haveI : ∀ u, Decidable ((u : Set α).PairwiseDisjoint (· • t)) := fun u => Classical.dec _
   set C := s.powerset.filter fun u => (u : Set α).PairwiseDisjoint (· • t)
   obtain ⟨u, hu, hCmax⟩ :=
     C.exists_maximal (filter_nonempty_iff.2 ⟨∅, empty_mem_powerset _, Set.pairwise_disjoint_empty⟩)

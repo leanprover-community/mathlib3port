@@ -587,35 +587,35 @@ section NonUnitalNonAssocSemiringDecidable
 
 variable [DecidableEq m] [NonUnitalNonAssocSemiringₓ α] (u v w : m → α)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem diagonal_dot_product (i : m) : diagonalₓ v i ⬝ᵥ w = v i * w i := by
   have : ∀ (j) (_ : j ≠ i), diagonalₓ v i j * w j = 0 := fun j hij => by
     simp [← diagonal_apply_ne' _ hij]
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem dot_product_diagonal (i : m) : v ⬝ᵥ diagonalₓ w i = v i * w i := by
   have : ∀ (j) (_ : j ≠ i), v j * diagonalₓ w i j = 0 := fun j hij => by
     simp [← diagonal_apply_ne' _ hij]
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem dot_product_diagonal' (i : m) : (v ⬝ᵥ fun j => diagonalₓ w j i) = v i * w i := by
   have : ∀ (j) (_ : j ≠ i), v j * diagonalₓ w j i = 0 := fun j hij => by
     simp [← diagonal_apply_ne _ hij]
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem single_dot_product (x : α) (i : m) : Pi.single i x ⬝ᵥ v = x * v i := by
   have : ∀ (j) (_ : j ≠ i), Pi.single i x j * v j = 0 := fun j hij => by
     simp [← Pi.single_eq_of_ne hij]
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem dot_product_single (x : α) (i : m) : v ⬝ᵥ Pi.single i x = v i * x := by
   have : ∀ (j) (_ : j ≠ i), v j * Pi.single i x j = 0 := fun j hij => by
@@ -1566,6 +1566,8 @@ theorem transpose_map {f : α → β} {M : Matrix m n α} : Mᵀ.map f = (M.map 
   ext
   rfl
 
+variable (m n α)
+
 /-- `matrix.transpose` as an `add_equiv` -/
 @[simps apply]
 def transposeAddEquiv [Add α] : Matrix m n α ≃+ Matrix n m α where
@@ -1576,26 +1578,42 @@ def transposeAddEquiv [Add α] : Matrix m n α ≃+ Matrix n m α where
   map_add' := transpose_add
 
 @[simp]
-theorem transpose_add_equiv_symm [Add α] :
-    (transposeAddEquiv : Matrix m n α ≃+ Matrix n m α).symm = transpose_add_equiv :=
+theorem transpose_add_equiv_symm [Add α] : (transposeAddEquiv m n α).symm = transposeAddEquiv n m α :=
   rfl
 
+variable {m n α}
+
 theorem transpose_list_sum [AddMonoidₓ α] (l : List (Matrix m n α)) : l.Sumᵀ = (l.map transposeₓ).Sum :=
-  (transposeAddEquiv : Matrix m n α ≃+ Matrix n m α).toAddMonoidHom.map_list_sum l
+  (transposeAddEquiv m n α).toAddMonoidHom.map_list_sum l
 
 theorem transpose_multiset_sum [AddCommMonoidₓ α] (s : Multiset (Matrix m n α)) : s.Sumᵀ = (s.map transposeₓ).Sum :=
-  (transposeAddEquiv : Matrix m n α ≃+ Matrix n m α).toAddMonoidHom.map_multiset_sum s
+  (transposeAddEquiv m n α).toAddMonoidHom.map_multiset_sum s
 
 theorem transpose_sum [AddCommMonoidₓ α] {ι : Type _} (s : Finset ι) (M : ι → Matrix m n α) :
     (∑ i in s, M i)ᵀ = ∑ i in s, (M i)ᵀ :=
-  (transposeAddEquiv : Matrix m n α ≃+ Matrix n m α).toAddMonoidHom.map_sum _ s
+  (transposeAddEquiv m n α).toAddMonoidHom.map_sum _ s
+
+variable (m n R α)
+
+/-- `matrix.transpose` as a `linear_map` -/
+@[simps apply]
+def transposeLinearEquiv [Semiringₓ R] [AddCommMonoidₓ α] [Module R α] : Matrix m n α ≃ₗ[R] Matrix n m α :=
+  { transposeAddEquiv m n α with map_smul' := transpose_smul }
+
+@[simp]
+theorem transpose_linear_equiv_symm [Semiringₓ R] [AddCommMonoidₓ α] [Module R α] :
+    (transposeLinearEquiv m n R α).symm = transposeLinearEquiv n m R α :=
+  rfl
+
+variable {m n R α}
 
 variable (m α)
 
 /-- `matrix.transpose` as a `ring_equiv` to the opposite ring -/
 @[simps]
 def transposeRingEquiv [AddCommMonoidₓ α] [CommSemigroupₓ α] [Fintype m] : Matrix m m α ≃+* (Matrix m m α)ᵐᵒᵖ :=
-  { transposeAddEquiv.trans MulOpposite.opAddEquiv with toFun := fun M => MulOpposite.op Mᵀ, invFun := fun M => M.unopᵀ,
+  { (transposeAddEquiv m m α).trans MulOpposite.opAddEquiv with toFun := fun M => MulOpposite.op Mᵀ,
+    invFun := fun M => M.unopᵀ,
     map_mul' := fun M N => (congr_arg MulOpposite.op (transpose_mul M N)).trans (MulOpposite.op_mul _ _) }
 
 variable {m α}
@@ -1607,6 +1625,19 @@ theorem transpose_pow [CommSemiringₓ α] [Fintype m] [DecidableEq m] (M : Matr
 theorem transpose_list_prod [CommSemiringₓ α] [Fintype m] [DecidableEq m] (l : List (Matrix m m α)) :
     l.Prodᵀ = (l.map transposeₓ).reverse.Prod :=
   (transposeRingEquiv m α).unop_map_list_prod l
+
+variable (R m α)
+
+/-- `matrix.transpose` as an `alg_equiv` to the opposite ring -/
+@[simps]
+def transposeAlgEquiv [CommSemiringₓ R] [CommSemiringₓ α] [Fintype m] [DecidableEq m] [Algebra R α] :
+    Matrix m m α ≃ₐ[R] (Matrix m m α)ᵐᵒᵖ :=
+  { (transposeAddEquiv m m α).trans MulOpposite.opAddEquiv, transposeRingEquiv m α with
+    toFun := fun M => MulOpposite.op Mᵀ,
+    commutes' := fun r => by
+      simp only [← algebra_map_eq_diagonal, ← diagonal_transpose, ← MulOpposite.algebra_map_apply] }
+
+variable {R m α}
 
 end Transpose
 
@@ -1736,6 +1767,8 @@ theorem conj_transpose_map [HasStar α] [HasStar β] {A : Matrix m n α} (f : α
     Aᴴ.map f = (A.map f)ᴴ :=
   Matrix.ext fun i j => hf _
 
+variable (m n α)
+
 /-- `matrix.conj_transpose` as an `add_equiv` -/
 @[simps apply]
 def conjTransposeAddEquiv [AddMonoidₓ α] [StarAddMonoid α] : Matrix m n α ≃+ Matrix n m α where
@@ -1747,27 +1780,44 @@ def conjTransposeAddEquiv [AddMonoidₓ α] [StarAddMonoid α] : Matrix m n α �
 
 @[simp]
 theorem conj_transpose_add_equiv_symm [AddMonoidₓ α] [StarAddMonoid α] :
-    (conjTransposeAddEquiv : Matrix m n α ≃+ Matrix n m α).symm = conj_transpose_add_equiv :=
+    (conjTransposeAddEquiv m n α).symm = conjTransposeAddEquiv n m α :=
   rfl
+
+variable {m n α}
 
 theorem conj_transpose_list_sum [AddMonoidₓ α] [StarAddMonoid α] (l : List (Matrix m n α)) :
     l.Sumᴴ = (l.map conjTranspose).Sum :=
-  (conjTransposeAddEquiv : Matrix m n α ≃+ Matrix n m α).toAddMonoidHom.map_list_sum l
+  (conjTransposeAddEquiv m n α).toAddMonoidHom.map_list_sum l
 
 theorem conj_transpose_multiset_sum [AddCommMonoidₓ α] [StarAddMonoid α] (s : Multiset (Matrix m n α)) :
     s.Sumᴴ = (s.map conjTranspose).Sum :=
-  (conjTransposeAddEquiv : Matrix m n α ≃+ Matrix n m α).toAddMonoidHom.map_multiset_sum s
+  (conjTransposeAddEquiv m n α).toAddMonoidHom.map_multiset_sum s
 
 theorem conj_transpose_sum [AddCommMonoidₓ α] [StarAddMonoid α] {ι : Type _} (s : Finset ι) (M : ι → Matrix m n α) :
     (∑ i in s, M i)ᴴ = ∑ i in s, (M i)ᴴ :=
-  (conjTransposeAddEquiv : Matrix m n α ≃+ Matrix n m α).toAddMonoidHom.map_sum _ s
+  (conjTransposeAddEquiv m n α).toAddMonoidHom.map_sum _ s
+
+variable (m n R α)
+
+/-- `matrix.conj_transpose` as a `linear_map` -/
+@[simps apply]
+def conjTransposeLinearEquiv [CommSemiringₓ R] [StarRing R] [AddCommMonoidₓ α] [StarAddMonoid α] [Module R α]
+    [StarModule R α] : Matrix m n α ≃ₗ⋆[R] Matrix n m α :=
+  { conjTransposeAddEquiv m n α with map_smul' := conj_transpose_smul }
+
+@[simp]
+theorem conj_transpose_linear_equiv_symm [CommSemiringₓ R] [StarRing R] [AddCommMonoidₓ α] [StarAddMonoid α]
+    [Module R α] [StarModule R α] : (conjTransposeLinearEquiv m n R α).symm = conjTransposeLinearEquiv n m R α :=
+  rfl
+
+variable {m n R α}
 
 variable (m α)
 
 /-- `matrix.conj_transpose` as a `ring_equiv` to the opposite ring -/
 @[simps]
 def conjTransposeRingEquiv [Semiringₓ α] [StarRing α] [Fintype m] : Matrix m m α ≃+* (Matrix m m α)ᵐᵒᵖ :=
-  { conjTransposeAddEquiv.trans MulOpposite.opAddEquiv with toFun := fun M => MulOpposite.op Mᴴ,
+  { (conjTransposeAddEquiv m m α).trans MulOpposite.opAddEquiv with toFun := fun M => MulOpposite.op Mᴴ,
     invFun := fun M => M.unopᴴ,
     map_mul' := fun M N => (congr_arg MulOpposite.op (conj_transpose_mul M N)).trans (MulOpposite.op_mul _ _) }
 

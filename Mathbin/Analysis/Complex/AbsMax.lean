@@ -84,7 +84,7 @@ open TopologicalSpace Filter Nnreal Real
 
 universe u v w
 
-variable {E : Type u} [NormedGroup E] [NormedSpace ℂ E] {F : Type v} [NormedGroup F] [NormedSpace ℂ F]
+variable {E : Type u} [NormedAddCommGroup E] [NormedSpace ℂ E] {F : Type v} [NormedAddCommGroup F] [NormedSpace ℂ F]
 
 -- mathport name: «expr ̂»
 local postfix:100 "̂" => UniformSpace.Completion
@@ -390,9 +390,12 @@ theorem norm_le_of_forall_mem_frontier_norm_le {f : E → F} {U : Set E} (hU : B
   have h₀ : (0 : ℂ) ∈ e ⁻¹' U := by
     simpa only [← e, ← mem_preimage, ← line_map_apply_zero]
   rcases exists_mem_frontier_is_max_on_norm (hL.bounded_preimage hU) ⟨0, h₀⟩ hd with ⟨ζ, hζU, hζ⟩
-  calc ∥f z∥ = ∥f (e 0)∥ := by
-      simp only [← e, ← line_map_apply_zero]_ ≤ ∥f (e ζ)∥ := hζ (subset_closure h₀)_ ≤ C :=
-      hC _ (hde.continuous.frontier_preimage_subset _ hζU)
+  calc
+    ∥f z∥ = ∥f (e 0)∥ := by
+      simp only [← e, ← line_map_apply_zero]
+    _ ≤ ∥f (e ζ)∥ := hζ (subset_closure h₀)
+    _ ≤ C := hC _ (hde.continuous.frontier_preimage_subset _ hζU)
+    
 
 /-- If two complex differentiable functions `f g : E → F` are equal on the boundary of a bounded set
 `U`, then they are equal on `closure U`. -/

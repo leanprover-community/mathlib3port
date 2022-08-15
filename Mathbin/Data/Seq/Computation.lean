@@ -455,10 +455,10 @@ theorem Results.val_unique {s : Computation α} {a b m n} (h1 : Results s a m) (
   mem_unique h1.Mem h2.Mem
 
 theorem Results.len_unique {s : Computation α} {a b m n} (h1 : Results s a m) (h2 : Results s b n) : m = n := by
-  have := h1.terminates <;> have := h2.terminates <;> rw [← h1.length, h2.length]
+  haveI := h1.terminates <;> haveI := h2.terminates <;> rw [← h1.length, h2.length]
 
 theorem exists_results_of_mem {s : Computation α} {a} (h : a ∈ s) : ∃ n, Results s a n :=
-  have := terminates_of_mem h
+  haveI := terminates_of_mem h
   ⟨_, results_of_terminates' s h⟩
 
 @[simp]
@@ -490,12 +490,12 @@ theorem length_think (s : Computation α) [h : Terminates s] : length (think s) 
     
 
 theorem results_think {s : Computation α} {a n} (h : Results s a n) : Results (think s) a (n + 1) :=
-  have := h.terminates
+  haveI := h.terminates
   ⟨think_mem h.mem, by
     rw [length_think, h.length]⟩
 
 theorem of_results_think {s : Computation α} {a n} (h : Results (think s) a n) : ∃ m, Results s a m ∧ n = m + 1 := by
-  have := of_think_terminates h.terminates
+  haveI := of_think_terminates h.terminates
   have := results_of_terminates' _ (of_think_mem h.mem)
   exact ⟨_, this, results.len_unique h (results_think this)⟩
 
@@ -538,7 +538,7 @@ theorem eq_thinkN' (s : Computation α) [h : Terminates s] : s = thinkN (return 
 
 def memRecOn {C : Computation α → Sort v} {a s} (M : a ∈ s) (h1 : C (return a)) (h2 : ∀ s, C s → C (think s)) : C s :=
   by
-  have T := terminates_of_mem M
+  haveI T := terminates_of_mem M
   rw [eq_thinkN' s, get_eq_of_mem s M]
   generalize length s = n
   induction' n with n IH

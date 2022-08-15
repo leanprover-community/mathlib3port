@@ -261,16 +261,16 @@ theorem l_supr {f : ι → α} : l (supr f) = ⨆ i, l (f i) :=
       show IsLub (Range (l ∘ f)) (l (supr f)) by
         rw [range_comp, ← Sup_range] <;> exact gc.is_lub_l_image (is_lub_Sup _)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
 theorem l_supr₂ {f : ∀ i, κ i → α} : l (⨆ (i) (j), f i j) = ⨆ (i) (j), l (f i j) := by
   simp_rw [gc.l_supr]
 
 theorem u_infi {f : ι → β} : u (infi f) = ⨅ i, u (f i) :=
   gc.dual.l_supr
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
 theorem u_infi₂ {f : ∀ i, κ i → β} : u (⨅ (i) (j), f i j) = ⨅ (i) (j), u (f i j) :=
   gc.dual.l_supr₂
 
@@ -402,7 +402,7 @@ end Nat
 /-- A Galois insertion is a Galois connection where `l ∘ u = id`. It also contains a constructive
 choice function, to give better definitional equalities when lifting order structures. Dual
 to `galois_coinsertion` -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure GaloisInsertion {α β : Type _} [Preorderₓ α] [Preorderₓ β] (l : α → β) (u : β → α) where
   choice : ∀ x : α, u (l x) ≤ x → β
   gc : GaloisConnection l u
@@ -465,8 +465,8 @@ theorem l_supr_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion
     _ = ⨆ i : ι, f i := congr_arg _ <| funext fun i => gi.l_u_eq (f i)
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i hi)
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i hi)
 theorem l_bsupr_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x} {p : ι → Prop}
     (f : ∀ (i) (hi : p i), β) : l (⨆ (i) (hi), u (f i hi)) = ⨆ (i) (hi), f i hi := by
   simp only [← supr_subtype', ← gi.l_supr_u]
@@ -489,8 +489,8 @@ theorem l_infi_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion
     _ = ⨅ i : ι, f i := gi.l_u_eq _
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i hi)
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i hi)
 theorem l_binfi_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x} {p : ι → Prop}
     (f : ∀ (i) (hi : p i), β) : l (⨅ (i) (hi), u (f i hi)) = ⨅ (i) (hi), f i hi := by
   simp only [← infi_subtype', ← gi.l_infi_u]
@@ -507,8 +507,8 @@ theorem l_infi_of_ul_eq_self [CompleteLattice α] [CompleteLattice β] (gi : Gal
     _ = ⨅ i, l (f i) := gi.l_infi_u _
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i hi)
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i hi)
 theorem l_binfi_of_ul_eq_self [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x}
     {p : ι → Prop} (f : ∀ (i) (hi : p i), α) (hf : ∀ i hi, u (l (f i hi)) = f i hi) :
     l (⨅ (i) (hi), f i hi) = ⨅ (i) (hi), l (f i hi) := by
@@ -605,7 +605,7 @@ end GaloisInsertion
 /-- A Galois coinsertion is a Galois connection where `u ∘ l = id`. It also contains a constructive
 choice function, to give better definitional equalities when lifting order structures. Dual to
 `galois_insertion` -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure GaloisCoinsertion [Preorderₓ α] [Preorderₓ β] (l : α → β) (u : β → α) where
   choice : ∀ x : β, x ≤ l (u x) → α
   gc : GaloisConnection l u
@@ -694,8 +694,8 @@ theorem u_supr_l [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinserti
     u (⨆ i, l (f i)) = ⨆ i, f i :=
   gi.dual.l_infi_u _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i hi)
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i hi)
 theorem u_bsupr_l [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u) {ι : Sort x} {p : ι → Prop}
     (f : ∀ (i) (hi : p i), α) : u (⨆ (i) (hi), l (f i hi)) = ⨆ (i) (hi), f i hi :=
   gi.dual.l_binfi_u _
@@ -708,8 +708,8 @@ theorem u_supr_of_lu_eq_self [CompleteLattice α] [CompleteLattice β] (gi : Gal
     (f : ι → β) (hf : ∀ i, l (u (f i)) = f i) : u (⨆ i, f i) = ⨆ i, u (f i) :=
   gi.dual.l_infi_of_ul_eq_self _ hf
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i hi)
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i hi)
 theorem u_bsupr_of_lu_eq_self [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u) {ι : Sort x}
     {p : ι → Prop} (f : ∀ (i) (hi : p i), β) (hf : ∀ i hi, l (u (f i hi)) = f i hi) :
     u (⨆ (i) (hi), f i hi) = ⨆ (i) (hi), u (f i hi) :=

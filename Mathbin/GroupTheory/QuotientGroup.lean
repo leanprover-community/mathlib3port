@@ -52,8 +52,11 @@ protected def con : Con G where
   toSetoid := leftRel N
   mul' := fun a b c d hab hcd => by
     rw [left_rel_eq] at hab hcd⊢
-    calc (a * c)⁻¹ * (b * d) = c⁻¹ * (a⁻¹ * b) * c⁻¹⁻¹ * (c⁻¹ * d) := by
-        simp only [← mul_inv_rev, ← mul_assoc, ← inv_mul_cancel_leftₓ]_ ∈ N := N.mul_mem (nN.conj_mem _ hab _) hcd
+    calc
+      (a * c)⁻¹ * (b * d) = c⁻¹ * (a⁻¹ * b) * c⁻¹⁻¹ * (c⁻¹ * d) := by
+        simp only [← mul_inv_rev, ← mul_assoc, ← inv_mul_cancel_leftₓ]
+      _ ∈ N := N.mul_mem (nN.conj_mem _ hab _) hcd
+      
 
 @[to_additive QuotientAddGroup.addGroup]
 instance Quotient.group : Groupₓ (G ⧸ N) :=
@@ -149,9 +152,12 @@ group homomorphism `G/N →* H`. -/
 def lift (φ : G →* H) (HN : ∀, ∀ x ∈ N, ∀, φ x = 1) : Q →* H :=
   ((QuotientGroup.con N).lift φ) fun x y h => by
     simp only [← QuotientGroup.con, ← left_rel_apply, ← Con.rel_mk] at h
-    calc φ x = φ (y * (x⁻¹ * y)⁻¹) := by
-        rw [mul_inv_rev, inv_invₓ, mul_inv_cancel_left]_ = φ y := by
+    calc
+      φ x = φ (y * (x⁻¹ * y)⁻¹) := by
+        rw [mul_inv_rev, inv_invₓ, mul_inv_cancel_left]
+      _ = φ y := by
         rw [φ.map_mul, HN _ (N.inv_mem h), mul_oneₓ]
+      
 
 @[simp, to_additive QuotientAddGroup.lift_mk]
 theorem lift_mk {φ : G →* H} (HN : ∀, ∀ x ∈ N, ∀, φ x = 1) (g : G) : lift N φ HN (g : Q ) = φ g :=

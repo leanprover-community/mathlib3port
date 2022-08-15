@@ -75,7 +75,7 @@ theorem euler_criterion {a : Zmod p} (ha : a ≠ 0) : IsSquare (a : Zmod p) ↔ 
     
 
 theorem exists_sq_eq_neg_one_iff : IsSquare (-1 : Zmod p) ↔ p % 4 ≠ 3 := by
-  have h := @is_square_neg_one_iff (Zmod p) _ _
+  have h := @FiniteField.is_square_neg_one_iff (Zmod p) _ _
   rw [card p] at h
   exact h
 
@@ -200,7 +200,7 @@ theorem legendre_sym_mod (p : ℕ) [Fact p.Prime] (a : ℤ) : legendreSym p a = 
   than `p/2` such that `(a * x) % p > p / 2` -/
 theorem gauss_lemma {a : ℤ} (hp : p ≠ 2) (ha0 : (a : Zmod p) ≠ 0) :
     legendreSym p a = -1 ^ ((ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a * x : Zmod p).val).card := by
-  have hp' : Fact (p % 2 = 1) := ⟨nat.prime.mod_two_eq_one_iff_ne_two.mpr hp⟩
+  haveI hp' : Fact (p % 2 = 1) := ⟨nat.prime.mod_two_eq_one_iff_ne_two.mpr hp⟩
   have :
     (legendre_sym p a : Zmod p) =
       ((-1 ^ ((Ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a * x : Zmod p).val).card : ℤ) : Zmod p) :=
@@ -239,7 +239,7 @@ open BigOperators
 
 theorem eisenstein_lemma (hp : p ≠ 2) {a : ℕ} (ha1 : a % 2 = 1) (ha0 : (a : Zmod p) ≠ 0) :
     legendreSym p a = -1 ^ ∑ x in ico 1 (p / 2).succ, x * a / p := by
-  have hp' : Fact (p % 2 = 1) := ⟨nat.prime.mod_two_eq_one_iff_ne_two.mpr hp⟩
+  haveI hp' : Fact (p % 2 = 1) := ⟨nat.prime.mod_two_eq_one_iff_ne_two.mpr hp⟩
   have ha0' : ((a : ℤ) : Zmod p) ≠ 0 := by
     norm_cast
     exact ha0
@@ -342,7 +342,7 @@ theorem exists_sq_eq_prime_iff_of_mod_four_eq_one (hp1 : p % 4 = 1) (hq1 : q ≠
     have hp_odd : p ≠ 2 := by
       by_contra
       simp [← h] at hp1
-      norm_num  at hp1
+      norm_num at hp1
     have hpq0 : ((p : ℤ) : Zmod q) ≠ 0 := by
       exact_mod_cast prime_ne_zero q p (Ne.symm hpq)
     have hqp0 : ((q : ℤ) : Zmod p) ≠ 0 := by
@@ -374,11 +374,11 @@ theorem exists_sq_eq_prime_iff_of_mod_four_eq_three (hp3 : p % 4 = 3) (hq3 : q %
   have hp_odd : p ≠ 2 := by
     by_contra
     simp [← h] at hp3
-    norm_num  at hp3
+    norm_num at hp3
   have hq_odd : q ≠ 2 := by
     by_contra
     simp [← h] at hq3
-    norm_num  at hq3
+    norm_num at hq3
   have hpq0 : ((p : ℤ) : Zmod q) ≠ 0 := by
     exact_mod_cast prime_ne_zero q p (Ne.symm hpq)
   have hqp0 : ((q : ℤ) : Zmod p) ≠ 0 := by

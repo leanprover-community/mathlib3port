@@ -69,7 +69,7 @@ you will not typically need to use this bundled object, and will instead use
   `(single C _ 0).obj Z` (all the components are equipped with `epi` instances,
   and when the category is `abelian` we will show `π` is a quasi-iso).
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure ProjectiveResolution (Z : C) where
   complex : ChainComplex C ℕ
   π : HomologicalComplex.Hom complex ((ChainComplex.single₀ C).obj Z)
@@ -84,7 +84,7 @@ structure ProjectiveResolution (Z : C) where
 
 attribute [instance] ProjectiveResolution.projective ProjectiveResolution.epi
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`out] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`out] []
 /-- An object admits a projective resolution.
 -/
 class HasProjectiveResolution (Z : C) : Prop where

@@ -57,7 +57,7 @@ unsafe def decide_eq (l r : expr) : tactic (Bool × expr) := do
       pure (ff, p)
 
 theorem List.not_mem_cons {α : Type _} {x y : α} {ys : List α} (h₁ : x ≠ y) (h₂ : x ∉ ys) : x ∉ y :: ys := fun h =>
-  ((List.mem_cons_iff _ _ _).mp h).elim h₁ h₂
+  ((List.mem_cons_iffₓ _ _ _).mp h).elim h₁ h₂
 
 /-- Use a decision procedure for the equality of list elements to decide list membership.
 
@@ -72,16 +72,103 @@ unsafe def list.decide_mem (decide_eq : expr → expr → tactic (Bool × expr))
   | x, y :: ys => do
     let (is_head, head_pf) ← decide_eq x y
     if is_head then do
-        let pf ← i_to_expr (pquote.1 ((List.mem_cons_iff (%%ₓx) (%%ₓy) _).mpr (Or.inl (%%ₓhead_pf))))
+        let pf ← i_to_expr (pquote.1 ((List.mem_cons_iffₓ (%%ₓx) (%%ₓy) _).mpr (Or.inl (%%ₓhead_pf))))
         pure (tt, pf)
       else do
         let (mem_tail, tail_pf) ← list.decide_mem x ys
         if mem_tail then do
-            let pf ← i_to_expr (pquote.1 ((List.mem_cons_iff (%%ₓx) (%%ₓy) _).mpr (Or.inr (%%ₓtail_pf))))
+            let pf ← i_to_expr (pquote.1 ((List.mem_cons_iffₓ (%%ₓx) (%%ₓy) _).mpr (Or.inr (%%ₓtail_pf))))
             pure (tt, pf)
           else do
             let pf ← i_to_expr (pquote.1 (List.not_mem_cons (%%ₓhead_pf) (%%ₓtail_pf)))
             pure (ff, pf)
+
+theorem List.map_cons_congr {α β : Type _} (f : α → β) {x : α} {xs : List α} {fx : β} {fxs : List β} (h₁ : f x = fx)
+    (h₂ : xs.map f = fxs) : (x :: xs).map f = fx :: fxs := by
+  rw [List.map_cons, h₁, h₂]
+
+/-- Apply `ef : α → β` to all elements of the list, constructing an equality proof. -/
+unsafe def eval_list_map (ef : expr) : List expr → tactic (List expr × expr)
+  | [] => do
+    let eq ← i_to_expr (pquote.1 (List.map_nil (%%ₓef)))
+    pure ([], Eq)
+  | x :: xs => do
+    let (fx, fx_eq) ← or_refl_conv norm_num.derive (expr.app ef x)
+    let (fxs, fxs_eq) ← eval_list_map xs
+    let eq ← i_to_expr (pquote.1 (List.map_cons_congr (%%ₓef) (%%ₓfx_eq) (%%ₓfxs_eq)))
+    pure (fx :: fxs, Eq)
+
+theorem List.cons_congr {α : Type _} (x : α) {xs : List α} {xs' : List α} (xs_eq : xs' = xs) : x :: xs' = x :: xs := by
+  rw [xs_eq]
+
+theorem List.map_congr {α β : Type _} (f : α → β) {xs xs' : List α} {ys : List β} (xs_eq : xs = xs')
+    (ys_eq : xs'.map f = ys) : xs.map f = ys := by
+  rw [← ys_eq, xs_eq]
+
+/-- Convert an expression denoting a list to a list of elements. -/
+unsafe def eval_list : expr → tactic (List expr × expr)
+  | e@(quote.1 List.nil) => do
+    let eq ← mk_eq_refl e
+    pure ([], Eq)
+  | e@(quote.1 (List.cons (%%ₓx) (%%ₓxs))) => do
+    let (xs, xs_eq) ← eval_list xs
+    let eq ← i_to_expr (pquote.1 (List.cons_congr (%%ₓx) (%%ₓxs_eq)))
+    pure (x :: xs, Eq)
+  | e@(quote.1 (List.range (%%ₓen))) => do
+    let n ← expr.to_nat en
+    let eis ← (List.range n).mmap fun i => expr.of_nat (quote.1 ℕ) i
+    let eq ← mk_eq_refl e
+    pure (eis, Eq)
+  | quote.1 (@List.map (%%ₓα) (%%ₓβ) (%%ₓef) (%%ₓexs)) => do
+    let (xs, xs_eq) ← eval_list exs
+    let (ys, ys_eq) ← eval_list_map ef xs
+    let eq ← i_to_expr (pquote.1 (List.map_congr (%%ₓef) (%%ₓxs_eq) (%%ₓys_eq)))
+    pure (ys, Eq)
+  | e => fail (to_fmt "Unknown list expression" ++ format.line ++ to_fmt e)
+
+theorem Multiset.cons_congr {α : Type _} (x : α) {xs : Multiset α} {xs' : List α} (xs_eq : (xs' : Multiset α) = xs) :
+    (List.cons x xs' : Multiset α) = x ::ₘ xs := by
+  rw [← xs_eq] <;> rfl
+
+theorem Multiset.map_congr {α β : Type _} (f : α → β) {xs : Multiset α} {xs' : List α} {ys : List β}
+    (xs_eq : xs = (xs' : Multiset α)) (ys_eq : xs'.map f = ys) : xs.map f = (ys : Multiset β) := by
+  rw [← ys_eq, ← Multiset.coe_map, xs_eq]
+
+/-- Convert an expression denoting a multiset to a list of elements.
+
+We return a list rather than a finset, so we can more easily iterate over it
+(without having to prove that our tactics are independent of the order of iteration,
+which is in general not true).
+-/
+unsafe def eval_multiset : expr → tactic (List expr × expr)
+  | e@(quote.1 (@Zero.zero (Multiset _) _)) => do
+    let eq ← mk_eq_refl e
+    pure ([], Eq)
+  | e@(quote.1 HasEmptyc.emptyc) => do
+    let eq ← mk_eq_refl e
+    pure ([], Eq)
+  | e@(quote.1 (HasSingleton.singleton (%%ₓx))) => do
+    let eq ← mk_eq_refl e
+    pure ([x], Eq)
+  | e@(quote.1 (Multiset.cons (%%ₓx) (%%ₓxs))) => do
+    let (xs, xs_eq) ← eval_multiset xs
+    let eq ← i_to_expr (pquote.1 (Multiset.cons_congr (%%ₓx) (%%ₓxs_eq)))
+    pure (x :: xs, Eq)
+  | e@(quote.1 (@HasInsert.insert Multiset.hasInsert (%%ₓx) (%%ₓxs))) => do
+    let (xs, xs_eq) ← eval_multiset xs
+    let eq ← i_to_expr (pquote.1 (Multiset.cons_congr (%%ₓx) (%%ₓxs_eq)))
+    pure (x :: xs, Eq)
+  | e@(quote.1 (Multiset.range (%%ₓen))) => do
+    let n ← expr.to_nat en
+    let eis ← (List.range n).mmap fun i => expr.of_nat (quote.1 ℕ) i
+    let eq ← mk_eq_refl e
+    pure (eis, Eq)
+  | quote.1 (@Multiset.map (%%ₓα) (%%ₓβ) (%%ₓef) (%%ₓexs)) => do
+    let (xs, xs_eq) ← eval_multiset exs
+    let (ys, ys_eq) ← eval_list_map ef xs
+    let eq ← i_to_expr (pquote.1 (Multiset.map_congr (%%ₓef) (%%ₓxs_eq) (%%ₓys_eq)))
+    pure (ys, Eq)
+  | e => fail (to_fmt "Unknown multiset expression" ++ format.line ++ to_fmt e)
 
 theorem Finset.insert_eq_coe_list_of_mem {α : Type _} [DecidableEq α] (x : α) (xs : Finset α) {xs' : List α}
     (h : x ∈ xs') (nd_xs : xs'.Nodup) (hxs' : xs = Finset.mk (↑xs') (Multiset.coe_nodup.mpr nd_xs)) :
@@ -150,93 +237,6 @@ unsafe def eval_finset (decide_eq : expr → expr → tactic (Bool × expr)) : e
     let nd ← i_to_expr (pquote.1 (List.nodup_fin_range (%%ₓen)))
     pure (eis, Eq, nd)
   | e => fail (to_fmt "Unknown finset expression" ++ format.line ++ to_fmt e)
-
-theorem List.map_cons_congr {α β : Type _} (f : α → β) {x : α} {xs : List α} {fx : β} {fxs : List β} (h₁ : f x = fx)
-    (h₂ : xs.map f = fxs) : (x :: xs).map f = fx :: fxs := by
-  rw [List.map_cons, h₁, h₂]
-
-/-- Apply `ef : α → β` to all elements of the list, constructing an equality proof. -/
-unsafe def eval_list_map (ef : expr) : List expr → tactic (List expr × expr)
-  | [] => do
-    let eq ← i_to_expr (pquote.1 (List.map_nil (%%ₓef)))
-    pure ([], Eq)
-  | x :: xs => do
-    let (fx, fx_eq) ← or_refl_conv norm_num.derive (expr.app ef x)
-    let (fxs, fxs_eq) ← eval_list_map xs
-    let eq ← i_to_expr (pquote.1 (List.map_cons_congr (%%ₓef) (%%ₓfx_eq) (%%ₓfxs_eq)))
-    pure (fx :: fxs, Eq)
-
-theorem Multiset.cons_congr {α : Type _} (x : α) {xs : Multiset α} {xs' : List α} (xs_eq : (xs' : Multiset α) = xs) :
-    (List.cons x xs' : Multiset α) = x ::ₘ xs := by
-  rw [← xs_eq] <;> rfl
-
-theorem Multiset.map_congr {α β : Type _} (f : α → β) {xs : Multiset α} {xs' : List α} {ys : List β}
-    (xs_eq : xs = (xs' : Multiset α)) (ys_eq : xs'.map f = ys) : xs.map f = (ys : Multiset β) := by
-  rw [← ys_eq, ← Multiset.coe_map, xs_eq]
-
-/-- Convert an expression denoting a multiset to a list of elements.
-
-We return a list rather than a finset, so we can more easily iterate over it
-(without having to prove that our tactics are independent of the order of iteration,
-which is in general not true).
--/
-unsafe def eval_multiset : expr → tactic (List expr × expr)
-  | e@(quote.1 (@Zero.zero (Multiset _) _)) => do
-    let eq ← mk_eq_refl e
-    pure ([], Eq)
-  | e@(quote.1 HasEmptyc.emptyc) => do
-    let eq ← mk_eq_refl e
-    pure ([], Eq)
-  | e@(quote.1 (HasSingleton.singleton (%%ₓx))) => do
-    let eq ← mk_eq_refl e
-    pure ([x], Eq)
-  | e@(quote.1 (Multiset.cons (%%ₓx) (%%ₓxs))) => do
-    let (xs, xs_eq) ← eval_multiset xs
-    let eq ← i_to_expr (pquote.1 (Multiset.cons_congr (%%ₓx) (%%ₓxs_eq)))
-    pure (x :: xs, Eq)
-  | e@(quote.1 (@HasInsert.insert Multiset.hasInsert (%%ₓx) (%%ₓxs))) => do
-    let (xs, xs_eq) ← eval_multiset xs
-    let eq ← i_to_expr (pquote.1 (Multiset.cons_congr (%%ₓx) (%%ₓxs_eq)))
-    pure (x :: xs, Eq)
-  | e@(quote.1 (Multiset.range (%%ₓen))) => do
-    let n ← expr.to_nat en
-    let eis ← (List.range n).mmap fun i => expr.of_nat (quote.1 ℕ) i
-    let eq ← mk_eq_refl e
-    pure (eis, Eq)
-  | quote.1 (@Multiset.map (%%ₓα) (%%ₓβ) (%%ₓef) (%%ₓexs)) => do
-    let (xs, xs_eq) ← eval_multiset exs
-    let (ys, ys_eq) ← eval_list_map ef xs
-    let eq ← i_to_expr (pquote.1 (Multiset.map_congr (%%ₓef) (%%ₓxs_eq) (%%ₓys_eq)))
-    pure (ys, Eq)
-  | e => fail (to_fmt "Unknown multiset expression" ++ format.line ++ to_fmt e)
-
-theorem List.cons_congr {α : Type _} (x : α) {xs : List α} {xs' : List α} (xs_eq : xs' = xs) : x :: xs' = x :: xs := by
-  rw [xs_eq]
-
-theorem List.map_congr {α β : Type _} (f : α → β) {xs xs' : List α} {ys : List β} (xs_eq : xs = xs')
-    (ys_eq : xs'.map f = ys) : xs.map f = ys := by
-  rw [← ys_eq, xs_eq]
-
-/-- Convert an expression denoting a list to a list of elements. -/
-unsafe def eval_list : expr → tactic (List expr × expr)
-  | e@(quote.1 List.nil) => do
-    let eq ← mk_eq_refl e
-    pure ([], Eq)
-  | e@(quote.1 (List.cons (%%ₓx) (%%ₓxs))) => do
-    let (xs, xs_eq) ← eval_list xs
-    let eq ← i_to_expr (pquote.1 (List.cons_congr (%%ₓx) (%%ₓxs_eq)))
-    pure (x :: xs, Eq)
-  | e@(quote.1 (List.range (%%ₓen))) => do
-    let n ← expr.to_nat en
-    let eis ← (List.range n).mmap fun i => expr.of_nat (quote.1 ℕ) i
-    let eq ← mk_eq_refl e
-    pure (eis, Eq)
-  | quote.1 (@List.map (%%ₓα) (%%ₓβ) (%%ₓef) (%%ₓexs)) => do
-    let (xs, xs_eq) ← eval_list exs
-    let (ys, ys_eq) ← eval_list_map ef xs
-    let eq ← i_to_expr (pquote.1 (List.map_congr (%%ₓef) (%%ₓxs_eq) (%%ₓys_eq)))
-    pure (ys, Eq)
-  | e => fail (to_fmt "Unknown list expression" ++ format.line ++ to_fmt e)
 
 @[to_additive]
 theorem List.prod_cons_congr {α : Type _} [Monoidₓ α] (xs : List α) (x y z : α) (his : xs.Prod = y) (hi : x * y = z) :

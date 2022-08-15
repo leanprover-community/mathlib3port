@@ -135,7 +135,7 @@ theorem choose_middle_le_pow (n : ℕ) : choose (2 * n + 1) n ≤ 4 ^ n := by
 theorem four_pow_le_two_mul_add_one_mul_central_binom (n : ℕ) : 4 ^ n ≤ (2 * n + 1) * choose (2 * n) n :=
   calc
     4 ^ n = (1 + 1) ^ (2 * n) := by
-      norm_num [← pow_mulₓ]
+      norm_num[← pow_mulₓ]
     _ = ∑ m in range (2 * n + 1), choose (2 * n) m := by
       simp [← add_pow]
     _ ≤ ∑ m in range (2 * n + 1), choose (2 * n) (2 * n / 2) := sum_le_sum fun i hi => choose_le_middle i (2 * n)

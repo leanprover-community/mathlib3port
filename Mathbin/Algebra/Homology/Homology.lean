@@ -37,8 +37,6 @@ noncomputable section
 
 namespace HomologicalComplex
 
-variable [HasZeroObject V]
-
 section Cycles
 
 variable [HasKernels V]
@@ -56,7 +54,7 @@ for any `j` such that `rel i j`.
 def cyclesIsoKernel {i j : ι} (r : c.Rel i j) : (C.cycles i : V) ≅ kernel (C.d i j) :=
   Subobject.isoOfEq _ _ (C.cycles_eq_kernel_subobject r) ≪≫ kernelSubobjectIso (C.d i j)
 
-theorem cycles_eq_top {i} (h : c.next i = none) : C.cycles i = ⊤ := by
+theorem cycles_eq_top {i} (h : ¬c.Rel i (c.next i)) : C.cycles i = ⊤ := by
   rw [eq_top_iff]
   apply le_kernel_subobject
   rw [C.d_from_eq_zero h, comp_zero]
@@ -81,7 +79,7 @@ for any `i` such that `rel i j`.
 def boundariesIsoImage [HasEqualizers V] {i j : ι} (r : c.Rel i j) : (C.boundaries j : V) ≅ image (C.d i j) :=
   Subobject.isoOfEq _ _ (C.boundaries_eq_image_subobject r) ≪≫ imageSubobjectIso (C.d i j)
 
-theorem boundaries_eq_bot {j} (h : c.prev j = none) : C.boundaries j = ⊥ := by
+theorem boundaries_eq_bot [HasZeroObject V] {j} (h : ¬c.Rel (c.prev j) j) : C.boundaries j = ⊥ := by
   rw [eq_bot_iff]
   refine' image_subobject_le _ 0 _
   rw [C.d_to_eq_zero h, zero_comp]
@@ -124,7 +122,7 @@ open HomologicalComplex
 
 section
 
-variable [HasZeroObject V] [HasKernels V]
+variable [HasKernels V]
 
 variable {C₁ C₂ C₃ : HomologicalComplex V c} (f : C₁ ⟶ C₂)
 
@@ -165,7 +163,7 @@ end
 
 section
 
-variable [HasZeroObject V] [HasImages V] [HasImageMaps V]
+variable [HasImages V] [HasImageMaps V]
 
 variable {C₁ C₂ C₃ : HomologicalComplex V c} (f : C₁ ⟶ C₂)
 
@@ -189,7 +187,7 @@ section
 /-! The `boundaries_to_cycles` morphisms are natural. -/
 
 
-variable [HasZeroObject V] [HasEqualizers V] [HasImages V] [HasImageMaps V]
+variable [HasEqualizers V] [HasImages V] [HasImageMaps V]
 
 variable {C₁ C₂ : HomologicalComplex V c} (f : C₁ ⟶ C₂)
 

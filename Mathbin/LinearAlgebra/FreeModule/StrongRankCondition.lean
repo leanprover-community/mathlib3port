@@ -41,9 +41,10 @@ instance (priority := 100) comm_ring_strong_rank_condition : StrongRankCondition
     rwa [strong_rank_condition_iff_succ R]
   intro n f
   by_contra hf
-  -- Lean is unable to find this instance without help, either via this `letI`, or via a duplicate
-  -- instance with unecessarily strong typeclasses on `R` and `M`.
-  let this : Module.Finite R (Finₓ n.succ → R) := Module.Finite.pi
+  -- Lean is unable to find these instances without help, either via this `letI`, or via duplicate
+  -- instances with unecessarily strong typeclasses on `R` and `M`.
+  letI : Module.Finite R (Finₓ n.succ → R) := Module.Finite.pi
+  letI : Module.Free R (Finₓ n.succ → R) := Module.Free.pi _ _
   let g : (Finₓ (n + 1) → R) →ₗ[R] Finₓ (n + 1) → R := (extend_by_zero.linear_map R cast_succ).comp f
   have hg : injective g := (extend_injective (RelEmbedding.injective cast_succ) 0).comp hf
   have hnex : ¬∃ i : Finₓ n, cast_succ i = last n := fun ⟨i, hi⟩ => ne_of_ltₓ (cast_succ_lt_last i) hi

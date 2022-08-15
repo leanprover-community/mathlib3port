@@ -20,7 +20,7 @@ The actual quotient structures are defined in the following files:
 
 The following notation is introduced:
 
-* `G ⧸ H` stands for the quotient of the type `G` by some term `H` 
+* `G ⧸ H` stands for the quotient of the type `G` by some term `H`
   (for example, `H` can be a normal subgroup of `G`).
   To implement this notation for other quotients, you should provide a `has_quotient` instance.
   Note that since `G` can usually be inferred from `H`, `_ ⧸ H` can also be used,
@@ -50,7 +50,7 @@ This differs from `has_quotient.quotient'` in that the `A` argument is explicit,
 to make Lean show the notation in the goal state.
 -/
 -- Will be provided by e.g. `ideal.quotient.inhabited`
-@[reducible, nolint has_inhabited_instance]
+@[reducible, nolint has_nonempty_instance]
 def HasQuotient.Quotient (A : outParam <| Type u) {B : Type v} [HasQuotient A B] (b : B) : Type max u v :=
   HasQuotient.Quotient' b
 

@@ -6,6 +6,7 @@ Authors: Yaël Dillies, Bhavik Mehta
 import Mathbin.Analysis.Convex.Star
 import Mathbin.Analysis.NormedSpace.Pointwise
 import Mathbin.Analysis.Seminorm
+import Mathbin.Data.Complex.IsROrC
 import Mathbin.Tactic.Congrm
 
 /-!
@@ -42,7 +43,7 @@ open Pointwise
 
 noncomputable section
 
-variable {E : Type _}
+variable {𝕜 E F : Type _}
 
 section AddCommGroupₓ
 
@@ -58,11 +59,11 @@ variable {s t : Set E} {a : ℝ} {x : E}
 theorem gauge_def : gauge s x = inf ({ r ∈ Set.Ioi 0 | x ∈ r • s }) :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr Inf (λ r, _)]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `congrm #[[expr Inf (λ r, _)]]
 /-- An alternative definition of the gauge using scalar multiplication on the element rather than on
 the set. -/
 theorem gauge_def' : gauge s x = inf ({ r ∈ Set.Ioi 0 | r⁻¹ • x ∈ s }) := by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr Inf (λ r, _)]]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `congrm #[[expr Inf (λ r, _)]]"
   exact and_congr_right fun hr => mem_smul_set_iff_inv_smul_mem₀ hr.ne' _ _
 
 private theorem gauge_set_bdd_below : BddBelow { r : ℝ | 0 < r ∧ x ∈ r • s } :=
@@ -240,18 +241,6 @@ theorem gauge_smul_of_nonneg [MulActionWithZero α E] [IsScalarTower α ℝ (Set
     exact smul_mem_smul_set hx
     
 
-/-- In textbooks, this is the homogeneity of the Minkowksi functional. -/
-theorem gauge_smul [Module α E] [IsScalarTower α ℝ (Set E)] {s : Set E} (symmetric : ∀, ∀ x ∈ s, ∀, -x ∈ s) (r : α)
-    (x : E) : gauge s (r • x) = abs r • gauge s x := by
-  rw [← gauge_smul_of_nonneg (abs_nonneg r)]
-  obtain h | h := abs_choice r
-  · rw [h]
-    
-  · rw [h, neg_smul, gauge_neg Symmetric]
-    
-  · infer_instance
-    
-
 theorem gauge_smul_left_of_nonneg [MulActionWithZero α E] [SmulCommClass α ℝ ℝ] [IsScalarTower α ℝ ℝ]
     [IsScalarTower α ℝ E] {s : Set E} {a : α} (ha : 0 ≤ a) : gauge (a • s) = a⁻¹ • gauge s := by
   obtain rfl | ha' := ha.eq_or_lt
@@ -292,6 +281,27 @@ theorem gauge_smul_left [Module α E] [SmulCommClass α ℝ ℝ] [IsScalarTower 
     
 
 end LinearOrderedField
+
+section IsROrC
+
+variable [IsROrC 𝕜] [Module 𝕜 E] [IsScalarTower ℝ 𝕜 E]
+
+theorem gauge_norm_smul (hs : Balanced 𝕜 s) (r : 𝕜) (x : E) : gauge s (∥r∥ • x) = gauge s (r • x) := by
+  rw [@IsROrC.real_smul_eq_coe_smul 𝕜]
+  obtain rfl | hr := eq_or_ne r 0
+  · simp only [← norm_zero, ← IsROrC.of_real_zero]
+    
+  unfold gauge
+  congr with θ
+  refine' and_congr_right fun hθ => (hs.smul _).mem_smul_iff _
+  rw [IsROrC.norm_of_real, norm_norm]
+
+/-- If `s` is balanced, then the Minkowski functional is ℂ-homogeneous. -/
+theorem gauge_smul (hs : Balanced 𝕜 s) (r : 𝕜) (x : E) : gauge s (r • x) = ∥r∥ * gauge s x := by
+  rw [← smul_eq_mul, ← gauge_smul_of_nonneg (norm_nonneg r), gauge_norm_smul hs]
+  infer_instance
+
+end IsROrC
 
 section TopologicalSpace
 
@@ -352,26 +362,21 @@ theorem gauge_add_le (hs : Convex ℝ s) (absorbs : Absorbent ℝ s) (x y : E) :
   rwa [smul_smul, smul_smul, ← mul_div_right_comm, ← mul_div_right_comm, mul_inv_cancel ha.ne', mul_inv_cancel hb.ne', ←
     smul_add, one_div, ← mem_smul_set_iff_inv_smul_mem₀ hab.ne'] at this
 
-/-- `gauge s` as a seminorm when `s` is symmetric, convex and absorbent. -/
+section IsROrC
+
+variable [IsROrC 𝕜] [Module 𝕜 E] [IsScalarTower ℝ 𝕜 E]
+
+/-- `gauge s` as a seminorm when `s` is  balanced, convex and absorbent. -/
 @[simps]
-def gaugeSeminorm (hs₀ : ∀, ∀ x ∈ s, ∀, -x ∈ s) (hs₁ : Convex ℝ s) (hs₂ : Absorbent ℝ s) : Seminorm ℝ E :=
-  Seminorm.of (gauge s) (gauge_add_le hs₁ hs₂) fun r x => by
-    rw [gauge_smul hs₀, Real.norm_eq_abs, smul_eq_mul] <;> infer_instance
+def gaugeSeminorm (hs₀ : Balanced 𝕜 s) (hs₁ : Convex ℝ s) (hs₂ : Absorbent ℝ s) : Seminorm 𝕜 E :=
+  Seminorm.of (gauge s) (gauge_add_le hs₁ hs₂) (gauge_smul hs₀)
 
-section gaugeSeminorm
-
-variable {hs₀ : ∀, ∀ x ∈ s, ∀, -x ∈ s} {hs₁ : Convex ℝ s} {hs₂ : Absorbent ℝ s}
-
-section TopologicalSpace
-
-variable [TopologicalSpace E] [HasContinuousSmul ℝ E]
+variable {hs₀ : Balanced 𝕜 s} {hs₁ : Convex ℝ s} {hs₂ : Absorbent ℝ s} [TopologicalSpace E] [HasContinuousSmul ℝ E]
 
 theorem gauge_seminorm_lt_one_of_open (hs : IsOpen s) {x : E} (hx : x ∈ s) : gaugeSeminorm hs₀ hs₁ hs₂ x < 1 :=
   gauge_lt_one_of_mem_of_open hs₁ hs₂.zero_mem hs hx
 
-end TopologicalSpace
-
-end gaugeSeminorm
+end IsROrC
 
 /-- Any seminorm arises as the gauge of its unit ball. -/
 @[simp]
@@ -399,14 +404,14 @@ protected theorem Seminorm.gauge_ball (p : Seminorm ℝ E) : gauge (p.ball 0 1) 
     
 
 theorem Seminorm.gauge_seminorm_ball (p : Seminorm ℝ E) :
-    gaugeSeminorm (fun x => p.symmetric_ball_zero 1) (p.convex_ball 0 1) (p.absorbent_ball_zero zero_lt_one) = p :=
+    gaugeSeminorm (p.balanced_ball_zero 1) (p.convex_ball 0 1) (p.absorbent_ball_zero zero_lt_one) = p :=
   FunLike.coe_injective p.gauge_ball
 
 end AddCommGroupₓ
 
 section Norm
 
-variable [SemiNormedGroup E] [NormedSpace ℝ E] {s : Set E} {r : ℝ} {x : E}
+variable [SeminormedAddCommGroup E] [NormedSpace ℝ E] {s : Set E} {r : ℝ} {x : E}
 
 theorem gauge_unit_ball (x : E) : gauge (Metric.Ball (0 : E) 1) x = ∥x∥ := by
   obtain rfl | hx := eq_or_ne x 0

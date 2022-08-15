@@ -86,7 +86,7 @@ theorem exp_neg_one_lt_d9 : exp (-1) < 0.3678794412 := by
 
 theorem log_two_near_10 : abs (log 2 - 287209 / 414355) ≤ 1 / 10 ^ 10 := by
   suffices abs (log 2 - 287209 / 414355) ≤ 1 / 17179869184 + (1 / 10 ^ 10 - 1 / 2 ^ 34) by
-    norm_num1  at *
+    norm_num1 at *
     assumption
   have t : abs (2⁻¹ : ℝ) = 2⁻¹ := by
     rw [abs_of_pos]
@@ -98,7 +98,7 @@ theorem log_two_near_10 : abs (log 2 - 287209 / 414355) ≤ 1 / 10 ^ 10 := by
         norm_num)
       34
   rw [t] at z
-  norm_num1  at z
+  norm_num1 at z
   rw [one_div (2 : ℝ), log_inv, ← sub_eq_add_neg, _root_.abs_sub_comm] at z
   apply le_transₓ (_root_.abs_sub_le _ _ _) (add_le_add z _)
   simp_rw [sum_range_succ]

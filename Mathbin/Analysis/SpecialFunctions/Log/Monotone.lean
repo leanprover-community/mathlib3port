@@ -47,11 +47,14 @@ theorem log_div_self_antitone_on : AntitoneOn (fun x : ℝ => log x / x) { x | e
   have hyx : 0 ≤ y / x - 1 := by
     rwa [le_sub_iff_add_le, le_div_iff x_pos, zero_addₓ, one_mulₓ]
   rw [div_le_iff y_pos, ← sub_le_sub_iff_right (log x)]
-  calc log y - log x = log (y / x) := by
-      rw [log_div y_pos.ne' x_pos.ne']_ ≤ y / x - 1 :=
-      log_le_sub_one_of_pos (div_pos y_pos x_pos)_ ≤ log x * (y / x - 1) :=
-      le_mul_of_one_le_left hyx hlogx _ = log x / x * y - log x := by
+  calc
+    log y - log x = log (y / x) := by
+      rw [log_div y_pos.ne' x_pos.ne']
+    _ ≤ y / x - 1 := log_le_sub_one_of_pos (div_pos y_pos x_pos)
+    _ ≤ log x * (y / x - 1) := le_mul_of_one_le_left hyx hlogx
+    _ = log x / x * y - log x := by
       ring
+    
 
 theorem log_div_self_rpow_antitone_on {a : ℝ} (ha : 0 < a) :
     AntitoneOn (fun x : ℝ => log x / x ^ a) { x | exp (1 / a) ≤ x } := by

@@ -173,7 +173,7 @@ protected def AddMonoidWithOneₓ.binary {R : Type _} [AddMonoidₓ R] [One R] :
       simp [← Nat.binCast, ← Nat.castₓ],
     nat_cast_succ := fun n => by
       simp only [← Nat.castₓ]
-      let this : AddMonoidWithOneₓ R := AddMonoidWithOneₓ.unary
+      letI : AddMonoidWithOneₓ R := AddMonoidWithOneₓ.unary
       erw [Nat.bin_cast_eq, Nat.bin_cast_eq, Nat.cast_succₓ]
       rfl }
 

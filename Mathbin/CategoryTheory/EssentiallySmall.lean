@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.Logic.Small
+import Mathbin.CategoryTheory.Category.Ulift
 import Mathbin.CategoryTheory.Skeletal
 
 /-!
@@ -39,7 +40,7 @@ theorem EssentiallySmall.mk' {C : Type u} [Category.{v} C] {S : Type w} [SmallCa
 
 /-- An arbitrarily chosen small model for an essentially small category.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def SmallModel (C : Type u) [Category.{v} C] [EssentiallySmall.{w} C] : Type w :=
   Classical.some (@EssentiallySmall.equiv_small_category C _ _)
 
@@ -67,6 +68,9 @@ theorem essentially_small_congr {C : Type u} [Category.{v} C] {D : Type u'} [Cat
 
 theorem Discrete.essentially_small_of_small {α : Type u} [Small.{w} α] : EssentiallySmall.{w} (Discrete α) :=
   ⟨⟨Discrete (Shrink α), ⟨inferInstance, ⟨Discrete.equivalence (equivShrink _)⟩⟩⟩⟩
+
+theorem essentially_small_self : EssentiallySmall.{max w v u} C :=
+  EssentiallySmall.mk' (AsSmall.equiv : C ≌ AsSmall.{w} C)
 
 /-- A category is `w`-locally small if every hom set is `w`-small.
 
@@ -107,7 +111,7 @@ instance (priority := 100) locally_small_of_essentially_small (C : Type u) [Cate
 /-- We define a type alias `shrink_homs C` for `C`. When we have `locally_small.{w} C`,
 we'll put a `category.{w}` instance on `shrink_homs C`.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def ShrinkHoms (C : Type u) :=
   C
 

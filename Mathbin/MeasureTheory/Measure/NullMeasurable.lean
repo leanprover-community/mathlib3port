@@ -205,7 +205,7 @@ protected theorem insert [MeasurableSingletonClass (NullMeasurableSpace α μ)] 
     NullMeasurableSet (insert a s) μ :=
   hs.insert a
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊇ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊇ » s)
 theorem exists_measurable_superset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _)(_ : t ⊇ s), MeasurableSet t ∧ t =ᵐ[μ] s := by
   rcases h with ⟨t, htm, hst⟩
@@ -224,7 +224,7 @@ theorem to_measurable_ae_eq (h : NullMeasurableSet s μ) : ToMeasurable μ s =�
 theorem compl_to_measurable_compl_ae_eq (h : NullMeasurableSet s μ) : ToMeasurable μ (sᶜ)ᶜ =ᵐ[μ] s := by
   simpa only [← compl_compl] using h.compl.to_measurable_ae_eq.compl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem exists_measurable_subset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _)(_ : t ⊆ s), MeasurableSet t ∧ t =ᵐ[μ] s :=
   ⟨ToMeasurable μ (sᶜ)ᶜ, compl_subset_comm.2 <| subset_to_measurable _ _, (measurable_set_to_measurable _ _).compl,
@@ -259,8 +259,11 @@ theorem measure_Union {m0 : MeasurableSpace α} {μ : Measure α} [Encodable ι]
 theorem measure_Union₀ [Encodable ι] {f : ι → Set α} (hd : Pairwise (AeDisjoint μ on f))
     (h : ∀ i, NullMeasurableSet (f i) μ) : μ (⋃ i, f i) = ∑' i, μ (f i) := by
   rcases exists_subordinate_pairwise_disjoint h hd with ⟨t, ht_sub, ht_eq, htm, htd⟩
-  calc μ (⋃ i, f i) = μ (⋃ i, t i) := measure_congr (EventuallyEq.countable_Union ht_eq)_ = ∑' i, μ (t i) :=
-      measure_Union htd htm _ = ∑' i, μ (f i) := tsum_congr fun i => measure_congr (ht_eq _).symm
+  calc
+    μ (⋃ i, f i) = μ (⋃ i, t i) := measure_congr (EventuallyEq.countable_Union ht_eq)
+    _ = ∑' i, μ (t i) := measure_Union htd htm
+    _ = ∑' i, μ (f i) := tsum_congr fun i => measure_congr (ht_eq _).symm
+    
 
 theorem measure_union₀_aux (hs : NullMeasurableSet s μ) (ht : NullMeasurableSet t μ) (hd : AeDisjoint μ s t) :
     μ (s ∪ t) = μ s + μ t := by
@@ -273,15 +276,20 @@ theorem measure_inter_add_diff₀ (s : Set α) (ht : NullMeasurableSet t μ) : �
   refine' le_antisymmₓ _ _
   · rcases exists_measurable_superset μ s with ⟨s', hsub, hs'm, hs'⟩
     replace hs'm : null_measurable_set s' μ := hs'm.null_measurable_set
-    calc μ (s ∩ t) + μ (s \ t) ≤ μ (s' ∩ t) + μ (s' \ t) :=
-        add_le_add (measure_mono <| inter_subset_inter_left _ hsub)
-          (measure_mono <| diff_subset_diff_left hsub)_ = μ (s' ∩ t ∪ s' \ t) :=
-        (measure_union₀_aux (hs'm.inter ht) (hs'm.diff ht) <|
-            (@disjoint_inf_sdiff _ s' t _).AeDisjoint).symm _ = μ s' :=
-        congr_arg μ (inter_union_diff _ _)_ = μ s := hs'
+    calc
+      μ (s ∩ t) + μ (s \ t) ≤ μ (s' ∩ t) + μ (s' \ t) :=
+        add_le_add (measure_mono <| inter_subset_inter_left _ hsub) (measure_mono <| diff_subset_diff_left hsub)
+      _ = μ (s' ∩ t ∪ s' \ t) :=
+        (measure_union₀_aux (hs'm.inter ht) (hs'm.diff ht) <| (@disjoint_inf_sdiff _ s' t _).AeDisjoint).symm
+      _ = μ s' := congr_arg μ (inter_union_diff _ _)
+      _ = μ s := hs'
+      
     
-  · calc μ s = μ (s ∩ t ∪ s \ t) := by
-        rw [inter_union_diff]_ ≤ μ (s ∩ t) + μ (s \ t) := measure_union_le _ _
+  · calc
+      μ s = μ (s ∩ t ∪ s \ t) := by
+        rw [inter_union_diff]
+      _ ≤ μ (s ∩ t) + μ (s \ t) := measure_union_le _ _
+      
     
 
 theorem measure_union_add_inter₀ (s : Set α) (ht : NullMeasurableSet t μ) : μ (s ∪ t) + μ (s ∩ t) = μ s + μ t := by
@@ -423,14 +431,14 @@ def completion {_ : MeasurableSpace α} (μ : Measure α) : @MeasureTheory.Measu
     refine' (infi₂_mono _).trans_eq (measure_eq_infi _).symm
     exact fun t ht => infi_mono' fun h => ⟨h.NullMeasurableSet, le_rfl⟩
 
-instance completion.is_complete {m : MeasurableSpace α} (μ : Measure α) : μ.completion.IsComplete :=
+instance completion.is_complete {m : MeasurableSpace α} (μ : Measure α) : μ.Completion.IsComplete :=
   ⟨fun z hz => NullMeasurableSet.of_null hz⟩
 
 @[simp]
-theorem coe_completion {_ : MeasurableSpace α} (μ : Measure α) : ⇑μ.completion = μ :=
+theorem coe_completion {_ : MeasurableSpace α} (μ : Measure α) : ⇑μ.Completion = μ :=
   rfl
 
-theorem completion_apply {_ : MeasurableSpace α} (μ : Measure α) (s : Set α) : μ.completion s = μ s :=
+theorem completion_apply {_ : MeasurableSpace α} (μ : Measure α) (s : Set α) : μ.Completion s = μ s :=
   rfl
 
 end Measureₓ

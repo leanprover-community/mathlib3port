@@ -382,7 +382,7 @@ open BigOperators
 open Finset
 
 theorem prod_cyclotomic_eq_geom_sum {n : ℕ} (h : 0 < n) (R) [CommRingₓ R] [IsDomain R] :
-    (∏ i in n.divisors \ {1}, cyclotomic i R) = ∑ i in range n, X ^ i := by
+    (∏ i in n.divisors \ {1}, cyclotomic i R) = ∑ i in Finset.range n, X ^ i := by
   apply_fun (· * cyclotomic 1 R) using mul_left_injective₀ (cyclotomic_ne_zero 1 R)
   have : (∏ i in {1}, cyclotomic i R) = cyclotomic 1 R := Finset.prod_singleton
   simp_rw [← this,
@@ -392,8 +392,8 @@ theorem prod_cyclotomic_eq_geom_sum {n : ℕ} (h : 0 < n) (R) [CommRingₓ R] [I
     this, cyclotomic_one, geom_sum_mul, prod_cyclotomic_eq_X_pow_sub_one h]
 
 theorem cyclotomic_dvd_geom_sum_of_dvd (R) [CommRingₓ R] {d n : ℕ} (hdn : d ∣ n) (hd : d ≠ 1) :
-    cyclotomic d R ∣ ∑ i in range n, X ^ i := by
-  suffices (cyclotomic d ℤ).map (Int.castRingHom R) ∣ (∑ i in range n, X ^ i).map (Int.castRingHom R) by
+    cyclotomic d R ∣ ∑ i in Finset.range n, X ^ i := by
+  suffices (cyclotomic d ℤ).map (Int.castRingHom R) ∣ (∑ i in Finset.range n, X ^ i).map (Int.castRingHom R) by
     have key := (map_ring_hom (Int.castRingHom R)).map_geom_sum X n
     simp only [← coe_map_ring_hom, ← map_X] at key
     rwa [map_cyclotomic, key] at this
@@ -584,7 +584,7 @@ private theorem is_root_cyclotomic_iff' {n : ℕ} {K : Type _} [Field K] {μ : K
 
 theorem is_root_cyclotomic_iff [NeZero (n : R)] {μ : R} : IsRoot (cyclotomic n R) μ ↔ IsPrimitiveRoot μ n := by
   have hf : Function.Injective _ := IsFractionRing.injective R (FractionRing R)
-  have : NeZero (n : FractionRing R) := NeZero.nat_of_injective hf
+  haveI : NeZero (n : FractionRing R) := NeZero.nat_of_injective hf
   rw [← is_root_map_iff hf, ← IsPrimitiveRoot.map_iff_of_injective hf, map_cyclotomic, ← is_root_cyclotomic_iff']
 
 theorem roots_cyclotomic_nodup [NeZero (n : R)] : (cyclotomic n R).roots.Nodup := by
@@ -612,7 +612,7 @@ end Roots
 primitive `n`-th root of unity. -/
 theorem is_root_cyclotomic_iff_char_zero {n : ℕ} {R : Type _} [CommRingₓ R] [IsDomain R] [CharZero R] {μ : R}
     (hn : 0 < n) : (Polynomial.cyclotomic n R).IsRoot μ ↔ IsPrimitiveRoot μ n := by
-  let this := NeZero.of_gt hn
+  letI := NeZero.of_gt hn
   exact is_root_cyclotomic_iff
 
 /-- Over a ring `R` of characteristic zero, `λ n, cyclotomic n R` is injective. -/
@@ -626,7 +626,7 @@ theorem cyclotomic_injective {R : Type _} [CommRingₓ R] [CharZero R] : Functio
     by_contra
     exact (Nat.totient_pos (zero_lt_iff.2 (Ne.symm h))).Ne hnm
     
-  · have := NeZero.mk hzero
+  · haveI := NeZero.mk hzero
     rw [← map_cyclotomic_int _ R, ← map_cyclotomic_int _ R] at hnm
     replace hnm := map_injective (Int.castRingHom R) Int.cast_injective hnm
     replace hnm := congr_arg (map (Int.castRingHom ℂ)) hnm
@@ -634,7 +634,7 @@ theorem cyclotomic_injective {R : Type _} [CommRingₓ R] [CharZero R] : Functio
     have hprim := Complex.is_primitive_root_exp _ hzero
     have hroot := is_root_cyclotomic_iff.2 hprim
     rw [hnm] at hroot
-    have hmzero : NeZero m :=
+    haveI hmzero : NeZero m :=
       ⟨fun h => by
         simpa [← h] using hroot⟩
     rw [is_root_cyclotomic_iff] at hroot
@@ -665,7 +665,7 @@ theorem eq_cyclotomic_iff {R : Type _} [CommRingₓ R] {n : ℕ} (hpos : 0 < n) 
 
 /-- If `p` is prime, then `cyclotomic p R = ∑ i in range p, X ^ i`. -/
 theorem cyclotomic_eq_geom_sum {R : Type _} [CommRingₓ R] {p : ℕ} (hp : Nat.Prime p) :
-    cyclotomic p R = ∑ i in range p, X ^ i := by
+    cyclotomic p R = ∑ i in Finset.range p, X ^ i := by
   refine' ((eq_cyclotomic_iff hp.pos _).mpr _).symm
   simp only [← Nat.Prime.proper_divisors hp, ← geom_sum_mul, ← Finset.prod_singleton, ← cyclotomic_one]
 
@@ -676,11 +676,11 @@ theorem cyclotomic_prime_mul_X_sub_one (R : Type _) [CommRingₓ R] (p : ℕ) [h
 /-- If `p ^ k` is a prime power, then
 `cyclotomic (p ^ (n + 1)) R = ∑ i in range p, (X ^ (p ^ n)) ^ i`. -/
 theorem cyclotomic_prime_pow_eq_geom_sum {R : Type _} [CommRingₓ R] {p n : ℕ} (hp : Nat.Prime p) :
-    cyclotomic (p ^ (n + 1)) R = ∑ i in range p, (X ^ p ^ n) ^ i := by
+    cyclotomic (p ^ (n + 1)) R = ∑ i in Finset.range p, (X ^ p ^ n) ^ i := by
   have :
     ∀ m,
-      (cyclotomic (p ^ (m + 1)) R = ∑ i in range p, (X ^ p ^ m) ^ i) ↔
-        ((∑ i in range p, (X ^ p ^ m) ^ i) * ∏ x : ℕ in Finset.range (m + 1), cyclotomic (p ^ x) R) =
+      (cyclotomic (p ^ (m + 1)) R = ∑ i in Finset.range p, (X ^ p ^ m) ^ i) ↔
+        ((∑ i in Finset.range p, (X ^ p ^ m) ^ i) * ∏ x : ℕ in Finset.range (m + 1), cyclotomic (p ^ x) R) =
           X ^ p ^ (m + 1) - 1 :=
     by
     intro m
@@ -780,7 +780,7 @@ theorem _root_.is_primitive_root.minpoly_dvd_cyclotomic {n : ℕ} {K : Type _} [
 theorem _root_.is_primitive_root.minpoly_eq_cyclotomic_of_irreducible {K : Type _} [Field K] {R : Type _} [CommRingₓ R]
     [IsDomain R] {μ : R} {n : ℕ} [Algebra K R] (hμ : IsPrimitiveRoot μ n) (h : Irreducible <| cyclotomic n K)
     [NeZero (n : K)] : cyclotomic n K = minpoly K μ := by
-  have := NeZero.of_no_zero_smul_divisors K R n
+  haveI := NeZero.of_no_zero_smul_divisors K R n
   refine' minpoly.eq_of_irreducible_of_monic h _ (cyclotomic.monic n K)
   rwa [aeval_def, eval₂_eq_eval_map, map_cyclotomic, ← is_root.def, is_root_cyclotomic_iff]
 
@@ -838,7 +838,7 @@ theorem cyclotomic_expand_eq_cyclotomic_mul {p n : ℕ} (hp : Nat.Prime p) (hdiv
   rcases Nat.eq_zero_or_posₓ n with (rfl | hnpos)
   · simp
     
-  have := NeZero.of_pos hnpos
+  haveI := NeZero.of_pos hnpos
   suffices expand ℤ p (cyclotomic n ℤ) = cyclotomic (n * p) ℤ * cyclotomic n ℤ by
     rw [← map_cyclotomic_int, ← map_expand, this, Polynomial.map_mul, map_cyclotomic_int]
   refine'
@@ -885,7 +885,7 @@ theorem cyclotomic_expand_eq_cyclotomic {p n : ℕ} (hp : Nat.Prime p) (hdiv : p
   rcases n.eq_zero_or_pos with (rfl | hzero)
   · simp
     
-  have := NeZero.of_pos hzero
+  haveI := NeZero.of_pos hzero
   suffices expand ℤ p (cyclotomic n ℤ) = cyclotomic (n * p) ℤ by
     rw [← map_cyclotomic_int, ← map_expand, this, map_cyclotomic_int]
   refine' eq_of_monic_of_dvd_of_nat_degree_le (cyclotomic.monic _ _) ((cyclotomic.monic n ℤ).expand hp.pos) _ _

@@ -5,6 +5,7 @@ Authors: Chris Hughes
 -/
 import Mathbin.Algebra.Hom.Equiv
 import Mathbin.Data.Part
+import Mathbin.Data.Nat.Lattice
 import Mathbin.Tactic.NormNum
 
 /-!
@@ -120,11 +121,11 @@ instance : HasSup PartEnat :=
 theorem le_def (x y : PartEnat) : x ≤ y ↔ ∃ h : y.Dom → x.Dom, ∀ hy : y.Dom, x.get (h hy) ≤ y.get hy :=
   Iff.rfl
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem cases_on' {P : PartEnat → Prop} : ∀ a : PartEnat, P ⊤ → (∀ n : ℕ, P (some n)) → P a :=
   Part.induction_on
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem cases_on {P : PartEnat → Prop} : ∀ a : PartEnat, P ⊤ → (∀ n : ℕ, P n) → P a := by
   simp only [some_eq_coe]
   exact PartEnat.cases_on'
@@ -634,6 +635,10 @@ end Find
 
 noncomputable instance : LinearOrderedAddCommMonoidWithTop PartEnat :=
   { PartEnat.linearOrder, PartEnat.orderedAddCommMonoid, PartEnat.orderTop with top_add' := top_add }
+
+noncomputable instance : CompleteLinearOrder PartEnat :=
+  { PartEnat.lattice, withTopOrderIso.symm.toGaloisInsertion.liftCompleteLattice, PartEnat.linearOrder with
+    inf := (·⊓·), sup := (·⊔·), top := ⊤, bot := ⊥, le := (· ≤ ·), lt := (· < ·) }
 
 end PartEnat
 

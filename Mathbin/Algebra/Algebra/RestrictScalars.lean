@@ -124,7 +124,7 @@ The preferred way of setting this up is
 `[module Rᵐᵒᵖ M] [module Sᵐᵒᵖ M] [is_scalar_tower Rᵐᵒᵖ Sᵐᵒᵖ M]`.
 -/
 instance RestrictScalars.opModule [Module Sᵐᵒᵖ M] : Module Rᵐᵒᵖ (RestrictScalars R S M) := by
-  let this : Module Sᵐᵒᵖ (RestrictScalars R S M) := ‹Module Sᵐᵒᵖ M›
+  letI : Module Sᵐᵒᵖ (RestrictScalars R S M) := ‹Module Sᵐᵒᵖ M›
   exact Module.compHom M (algebraMap R S).op
 
 instance RestrictScalars.is_central_scalar [Module S M] [Module Sᵐᵒᵖ M] [IsCentralScalar S M] :
@@ -137,7 +137,7 @@ of `restrict_scalars R S M`.
 def RestrictScalars.lsmul [Module S M] : S →ₐ[R] Module.End R (RestrictScalars R S M) := by
   -- We use `restrict_scalars.module_orig` in the implementation,
   -- but not in the type.
-  let this : Module S (RestrictScalars R S M) := RestrictScalars.moduleOrig R S M
+  letI : Module S (RestrictScalars R S M) := RestrictScalars.moduleOrig R S M
   exact Algebra.lsmul R (RestrictScalars R S M)
 
 end
@@ -145,18 +145,34 @@ end
 variable [AddCommMonoidₓ M]
 
 /-- `restrict_scalars.add_equiv` is the additive equivalence with the original module. -/
-@[simps]
 def RestrictScalars.addEquiv : RestrictScalars R S M ≃+ M :=
   AddEquiv.refl M
 
 variable [CommSemiringₓ R] [Semiringₓ S] [Algebra R S] [Module S M]
 
+/-- Note that this lemma relies on the definitional equality `restrict_scalars R S M = M`,
+so usage may result in instance leakage.
+`restrict_scalars.add_equiv_map_smul` is the "hygienic" version.
+-/
 theorem restrict_scalars_smul_def (c : R) (x : RestrictScalars R S M) : c • x = (algebraMap R S c • x : M) :=
   rfl
 
 @[simp]
-theorem RestrictScalars.add_equiv_map_smul (t : R) (x : RestrictScalars R S M) :
-    RestrictScalars.addEquiv R S M (t • x) = algebraMap R S t • RestrictScalars.addEquiv R S M x :=
+theorem RestrictScalars.add_equiv_map_smul (c : R) (x : RestrictScalars R S M) :
+    RestrictScalars.addEquiv R S M (c • x) = algebraMap R S c • RestrictScalars.addEquiv R S M x :=
+  rfl
+
+theorem RestrictScalars.add_equiv_symm_map_algebra_map_smul (r : R) (x : M) :
+    (RestrictScalars.addEquiv R S M).symm (algebraMap R S r • x) = r • (RestrictScalars.addEquiv R S M).symm x :=
+  rfl
+
+theorem RestrictScalars.add_equiv_symm_map_smul_smul (r : R) (s : S) (x : M) :
+    (RestrictScalars.addEquiv R S M).symm ((r • s) • x) = r • (RestrictScalars.addEquiv R S M).symm (s • x) := by
+  rw [Algebra.smul_def, mul_smul]
+  rfl
+
+theorem RestrictScalars.lsmul_apply_apply (s : S) (x : RestrictScalars R S M) :
+    RestrictScalars.lsmul R S M s x = (RestrictScalars.addEquiv R S M).symm (s • RestrictScalars.addEquiv R S M x) :=
   rfl
 
 end Module

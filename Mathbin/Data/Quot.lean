@@ -82,7 +82,7 @@ theorem lift_on_mk (a : α) (f : α → γ) (h : ∀ a₁ a₂, r a₁ a₂ → 
   rfl
 
 /-- Descends a function `f : α → β → γ` to quotients of `α` and `β`. -/
-@[reducible, elab_as_eliminator]
+@[reducible, elabAsElim]
 protected def lift₂ (f : α → β → γ) (hr : ∀ a b₁ b₂, s b₁ b₂ → f a b₁ = f a b₂)
     (hs : ∀ a₁ a₂ b, r a₁ a₂ → f a₁ b = f a₂ b) (q₁ : Quot r) (q₂ : Quot s) : γ :=
   Quot.lift (fun a => Quot.lift (f a) (hr a))
@@ -94,7 +94,7 @@ theorem lift₂_mk (f : α → β → γ) (hr : ∀ a b₁ b₂, s b₁ b₂ →
   rfl
 
 /-- Descends a function `f : α → β → γ` to quotients of `α` and `β` and applies it. -/
-@[reducible, elab_as_eliminator]
+@[reducible, elabAsElim]
 protected def liftOn₂ (p : Quot r) (q : Quot s) (f : α → β → γ) (hr : ∀ a b₁ b₂, s b₁ b₂ → f a b₁ = f a b₂)
     (hs : ∀ a₁ a₂ b, r a₁ a₂ → f a₁ b = f a₂ b) : γ :=
   Quot.lift₂ f hr hs p q
@@ -120,18 +120,18 @@ theorem map₂_mk (f : α → β → γ) (hr : ∀ a b₁ b₂, s b₁ b₂ → 
   rfl
 
 /-- A binary version of `quot.rec_on_subsingleton`. -/
-@[reducible, elab_as_eliminator]
+@[reducible, elabAsElim]
 protected def recOnSubsingleton₂ {φ : Quot r → Quot s → Sort _} [h : ∀ a b, Subsingleton (φ ⟦a⟧ ⟦b⟧)] (q₁ : Quot r)
     (q₂ : Quot s) (f : ∀ a b, φ ⟦a⟧ ⟦b⟧) : φ q₁ q₂ :=
   (@Quot.recOnSubsingleton _ r (fun q => φ q q₂) (fun a => Quot.ind (h a) q₂) q₁) fun a =>
     (Quot.recOnSubsingleton q₂) fun b => f a b
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on₂ {δ : Quot r → Quot s → Prop} (q₁ : Quot r) (q₂ : Quot s)
     (h : ∀ a b, δ (Quot.mk r a) (Quot.mk s b)) : δ q₁ q₂ :=
   Quot.ind (fun a₁ => Quot.ind (fun a₂ => h a₁ a₂) q₂) q₁
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on₃ {δ : Quot r → Quot s → Quot t → Prop} (q₁ : Quot r) (q₂ : Quot s) (q₃ : Quot t)
     (h : ∀ a b c, δ (Quot.mk r a) (Quot.mk s b) (Quot.mk t c)) : δ q₁ q₂ q₃ :=
   Quot.ind (fun a₁ => Quot.ind (fun a₂ => Quot.ind (fun a₃ => h a₁ a₂ a₃) q₃) q₂) q₁
@@ -335,7 +335,7 @@ theorem Quotientₓ.choice_eq {ι : Type _} {α : ι → Type _} [∀ i, Setoid�
     (Quotientₓ.choice fun i => ⟦f i⟧) = ⟦f⟧ :=
   Quotientₓ.sound fun i => Quotientₓ.mk_out _
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem Quotientₓ.induction_on_pi {ι : Type _} {α : ι → Sort _} [s : ∀ i, Setoidₓ (α i)]
     {p : (∀ i, Quotientₓ (s i)) → Prop} (f : ∀ i, Quotientₓ (s i)) (h : ∀ a : ∀ i, α i, p fun i => ⟦a i⟧) : p f := by
   rw [← (funext fun i => Quotientₓ.out_eq (f i) : (fun i => ⟦(f i).out⟧) = f)]
@@ -380,18 +380,18 @@ protected theorem lift_mk (f : α → β) (c) (a : α) : lift f c (mk a) = f a :
   rfl
 
 /-- Lift a constant function on `q : trunc α`. -/
-@[reducible, elab_as_eliminator]
+@[reducible, elabAsElim]
 protected def liftOn (q : Trunc α) (f : α → β) (c : ∀ a b : α, f a = f b) : β :=
   lift f c q
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on {β : Trunc α → Prop} (q : Trunc α) (h : ∀ a, β (mk a)) : β q :=
   ind h q
 
 theorem exists_rep (q : Trunc α) : ∃ a : α, mk a = q :=
   Quot.exists_rep q
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on₂ {C : Trunc α → Trunc β → Prop} (q₁ : Trunc α) (q₂ : Trunc β)
     (h : ∀ a b, C (mk a) (mk b)) : C q₁ q₂ :=
   (Trunc.induction_on q₁) fun a₁ => Trunc.induction_on q₂ (h a₁)
@@ -422,19 +422,19 @@ instance : IsLawfulMonad Trunc where
 variable {C : Trunc α → Sort _}
 
 /-- Recursion/induction principle for `trunc`. -/
-@[reducible, elab_as_eliminator]
+@[reducible, elabAsElim]
 protected def rec (f : ∀ a, C (mk a)) (h : ∀ a b : α, (Eq.ndrec (f a) (Trunc.eq (mk a) (mk b)) : C (mk b)) = f b)
     (q : Trunc α) : C q :=
   Quot.rec f (fun a b _ => h a b) q
 
 /-- A version of `trunc.rec` taking `q : trunc α` as the first argument. -/
-@[reducible, elab_as_eliminator]
+@[reducible, elabAsElim]
 protected def recOn (q : Trunc α) (f : ∀ a, C (mk a))
     (h : ∀ a b : α, (Eq.ndrec (f a) (Trunc.eq (mk a) (mk b)) : C (mk b)) = f b) : C q :=
   Trunc.rec f h q
 
 /-- A version of `trunc.rec_on` assuming the codomain is a `subsingleton`. -/
-@[reducible, elab_as_eliminator]
+@[reducible, elabAsElim]
 protected def recOnSubsingleton [∀ a, Subsingleton (C (mk a))] (q : Trunc α) (f : ∀ a, C (mk a)) : C q :=
   Trunc.rec f (fun a b => Subsingleton.elimₓ _ (f b)) q
 
@@ -474,7 +474,7 @@ theorem surjective_quotient_mk' : Function.Surjective (Quotientₓ.mk' : α → 
 
 /-- A version of `quotient.lift_on` taking `{s : setoid α}` as an implicit argument instead of an
 instance argument. -/
-@[elab_as_eliminator, reducible]
+@[elabAsElim, reducible]
 protected def liftOn' (q : Quotientₓ s₁) (f : α → φ) (h : ∀ a b, @Setoidₓ.R α s₁ a b → f a = f b) : φ :=
   Quotientₓ.liftOn q f h
 
@@ -484,7 +484,7 @@ protected theorem lift_on'_mk' (f : α → φ) (h) (x : α) : Quotientₓ.liftOn
 
 /-- A version of `quotient.lift_on₂` taking `{s₁ : setoid α} {s₂ : setoid β}` as implicit arguments
 instead of instance arguments. -/
-@[elab_as_eliminator, reducible]
+@[elabAsElim, reducible]
 protected def liftOn₂' (q₁ : Quotientₓ s₁) (q₂ : Quotientₓ s₂) (f : α → β → γ)
     (h : ∀ a₁ a₂ b₁ b₂, @Setoidₓ.R α s₁ a₁ b₁ → @Setoidₓ.R β s₂ a₂ b₂ → f a₁ a₂ = f b₁ b₂) : γ :=
   Quotientₓ.liftOn₂ q₁ q₂ f h
@@ -496,33 +496,33 @@ protected theorem lift_on₂'_mk' (f : α → β → γ) (h) (a : α) (b : β) :
 
 /-- A version of `quotient.ind` taking `{s : setoid α}` as an implicit argument instead of an
 instance argument. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem ind' {p : Quotientₓ s₁ → Prop} (h : ∀ a, p (Quotientₓ.mk' a)) (q : Quotientₓ s₁) : p q :=
   Quotientₓ.ind h q
 
 /-- A version of `quotient.ind₂` taking `{s₁ : setoid α} {s₂ : setoid β}` as implicit arguments
 instead of instance arguments. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem ind₂' {p : Quotientₓ s₁ → Quotientₓ s₂ → Prop} (h : ∀ a₁ a₂, p (Quotientₓ.mk' a₁) (Quotientₓ.mk' a₂))
     (q₁ : Quotientₓ s₁) (q₂ : Quotientₓ s₂) : p q₁ q₂ :=
   Quotientₓ.ind₂ h q₁ q₂
 
 /-- A version of `quotient.induction_on` taking `{s : setoid α}` as an implicit argument instead
 of an instance argument. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on' {p : Quotientₓ s₁ → Prop} (q : Quotientₓ s₁) (h : ∀ a, p (Quotientₓ.mk' a)) : p q :=
   Quotientₓ.induction_on q h
 
 /-- A version of `quotient.induction_on₂` taking `{s₁ : setoid α} {s₂ : setoid β}` as implicit
 arguments instead of instance arguments. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on₂' {p : Quotientₓ s₁ → Quotientₓ s₂ → Prop} (q₁ : Quotientₓ s₁) (q₂ : Quotientₓ s₂)
     (h : ∀ a₁ a₂, p (Quotientₓ.mk' a₁) (Quotientₓ.mk' a₂)) : p q₁ q₂ :=
   Quotientₓ.induction_on₂ q₁ q₂ h
 
 /-- A version of `quotient.induction_on₃` taking `{s₁ : setoid α} {s₂ : setoid β} {s₃ : setoid γ}`
 as implicit arguments instead of instance arguments. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on₃' {p : Quotientₓ s₁ → Quotientₓ s₂ → Quotientₓ s₃ → Prop} (q₁ : Quotientₓ s₁)
     (q₂ : Quotientₓ s₂) (q₃ : Quotientₓ s₃)
     (h : ∀ a₁ a₂ a₃, p (Quotientₓ.mk' a₁) (Quotientₓ.mk' a₂) (Quotientₓ.mk' a₃)) : p q₁ q₂ q₃ :=
@@ -530,14 +530,14 @@ protected theorem induction_on₃' {p : Quotientₓ s₁ → Quotientₓ s₂ �
 
 /-- A version of `quotient.rec_on_subsingleton` taking `{s₁ : setoid α}` as an implicit argument
 instead of an instance argument. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 protected def recOnSubsingleton' {φ : Quotientₓ s₁ → Sort _} [h : ∀ a, Subsingleton (φ ⟦a⟧)] (q : Quotientₓ s₁)
     (f : ∀ a, φ (Quotientₓ.mk' a)) : φ q :=
   Quotientₓ.recOnSubsingleton q f
 
 /-- A version of `quotient.rec_on_subsingleton₂` taking `{s₁ : setoid α} {s₂ : setoid α}`
 as implicit arguments instead of instance arguments. -/
-@[reducible, elab_as_eliminator]
+@[reducible, elabAsElim]
 protected def recOnSubsingleton₂' {φ : Quotientₓ s₁ → Quotientₓ s₂ → Sort _} [h : ∀ a b, Subsingleton (φ ⟦a⟧ ⟦b⟧)]
     (q₁ : Quotientₓ s₁) (q₂ : Quotientₓ s₂) (f : ∀ a₁ a₂, φ (Quotientₓ.mk' a₁) (Quotientₓ.mk' a₂)) : φ q₁ q₂ :=
   Quotientₓ.recOnSubsingleton₂ q₁ q₂ f

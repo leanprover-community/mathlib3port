@@ -70,15 +70,14 @@ variable {M : Type _} [AddCommMonoidₓ M] (S : AddSubmonoid M) (N : Type _) [Ad
 
 /-- The type of add_monoid homomorphisms satisfying the characteristic predicate: if `f : M →+ N`
 satisfies this predicate, then `N` is isomorphic to the localization of `M` at `S`. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure LocalizationMap extends AddMonoidHom M N where
   map_add_units' : ∀ y : S, IsAddUnit (to_fun y)
   surj' : ∀ z : N, ∃ x : M × S, z + to_fun x.2 = to_fun x.1
   eq_iff_exists' : ∀ x y, to_fun x = to_fun y ↔ ∃ c : S, x + c = y + c
 
-/-- The add_monoid hom underlying a `localization_map` of `add_comm_monoid`s. -/
-add_decl_doc localization_map.to_add_monoid_hom
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident localization_map.to_add_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 end AddSubmonoid
 
 section CommMonoidₓ
@@ -89,7 +88,7 @@ namespace Submonoid
 
 /-- The type of monoid homomorphisms satisfying the characteristic predicate: if `f : M →* N`
 satisfies this predicate, then `N` is isomorphic to the localization of `M` at `S`. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure LocalizationMap extends MonoidHom M N where
   map_units' : ∀ y : S, IsUnit (to_fun y)
   surj' : ∀ z : N, ∃ x : M × S, z * to_fun x.2 = to_fun x.1
@@ -99,9 +98,8 @@ attribute [to_additive AddSubmonoid.LocalizationMap] Submonoid.LocalizationMap
 
 attribute [to_additive AddSubmonoid.LocalizationMap.toAddMonoidHom] Submonoid.LocalizationMap.toMonoidHom
 
-/-- The monoid hom underlying a `localization_map`. -/
-add_decl_doc localization_map.to_monoid_hom
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident localization_map.to_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 end Submonoid
 
 namespace Localization
@@ -130,19 +128,26 @@ def r' : Con (M × S) := by
   · rintro a b c ⟨t₁, ht₁⟩ ⟨t₂, ht₂⟩
     use b.2 * t₁ * t₂
     simp only [← Submonoid.coe_mul]
-    calc a.1 * c.2 * (b.2 * t₁ * t₂) = a.1 * b.2 * t₁ * c.2 * t₂ := by
-        ac_rfl _ = b.1 * c.2 * t₂ * a.2 * t₁ := by
+    calc
+      a.1 * c.2 * (b.2 * t₁ * t₂) = a.1 * b.2 * t₁ * c.2 * t₂ := by
+        ac_rfl
+      _ = b.1 * c.2 * t₂ * a.2 * t₁ := by
         rw [ht₁]
-        ac_rfl _ = c.1 * a.2 * (b.2 * t₁ * t₂) := by
+        ac_rfl
+      _ = c.1 * a.2 * (b.2 * t₁ * t₂) := by
         rw [ht₂]
         ac_rfl
+      
     
   · rintro a b c d ⟨t₁, ht₁⟩ ⟨t₂, ht₂⟩
     use t₁ * t₂
-    calc a.1 * c.1 * (b.2 * d.2) * (t₁ * t₂) = a.1 * b.2 * t₁ * (c.1 * d.2 * t₂) := by
-        ac_rfl _ = b.1 * d.1 * (a.2 * c.2) * (t₁ * t₂) := by
+    calc
+      a.1 * c.1 * (b.2 * d.2) * (t₁ * t₂) = a.1 * b.2 * t₁ * (c.1 * d.2 * t₂) := by
+        ac_rfl
+      _ = b.1 * d.1 * (a.2 * c.2) * (t₁ * t₂) := by
         rw [ht₁, ht₂]
         ac_rfl
+      
     
 
 /-- The congruence relation used to localize a `comm_monoid` at a submonoid can be expressed
@@ -246,7 +251,7 @@ universe u
 /-- Dependent recursion principle for localizations: given elements `f a b : p (mk a b)`
 for all `a b`, such that `r S (a, b) (c, d)` implies `f a b = f c d` (wih the correct coercions),
 then `f` is defined on the whole `localization S`. -/
-@[elab_as_eliminator,
+@[elabAsElim,
   to_additive
       "Dependent recursion principle for `add_localizations`: given elements `f a b : p (mk a b)`\nfor all `a b`, such that `r S (a, b) (c, d)` implies `f a b = f c d` (wih the correct coercions),\nthen `f` is defined on the whole `add_localization S`."]
 def rec {p : Localization S → Sort u} (f : ∀ (a : M) (b : S), p (mk a b))
@@ -279,7 +284,7 @@ theorem rec_mk {p : Localization S → Sort u} (f : ∀ (a : M) (b : S), p (mk a
 /-- Non-dependent recursion principle for localizations: given elements `f a b : p`
 for all `a b`, such that `r S (a, b) (c, d)` implies `f a b = f c d`,
 then `f` is defined on the whole `localization S`. -/
-@[elab_as_eliminator,
+@[elabAsElim,
   to_additive
       "Non-dependent recursion principle for `add_localizations`: given elements `f a b : p`\nfor all `a b`, such that `r S (a, b) (c, d)` implies `f a b = f c d`,\nthen `f` is defined on the whole `localization S`."]
 def liftOn {p : Sort u} (x : Localization S) (f : M → S → p)
@@ -293,18 +298,18 @@ def liftOn {p : Sort u} (x : Localization S) (f : M → S → p)
 theorem lift_on_mk {p : Sort u} (f : ∀ (a : M) (b : S), p) (H) (a : M) (b : S) : liftOn (mk a b) f H = f a b :=
   rfl
 
-@[elab_as_eliminator, to_additive]
+@[elabAsElim, to_additive]
 theorem ind {p : Localization S → Prop} (H : ∀ y : M × S, p (mk y.1 y.2)) (x) : p x :=
   rec (fun a b => H (a, b)) (fun _ _ _ _ _ => rfl) x
 
-@[elab_as_eliminator, to_additive]
+@[elabAsElim, to_additive]
 theorem induction_on {p : Localization S → Prop} (x) (H : ∀ y : M × S, p (mk y.1 y.2)) : p x :=
   ind H x
 
 /-- Non-dependent recursion principle for localizations: given elements `f x y : p`
 for all `x` and `y`, such that `r S x x'` and `r S y y'` implies `f x y = f x' y'`,
 then `f` is defined on the whole `localization S`. -/
-@[elab_as_eliminator,
+@[elabAsElim,
   to_additive
       "Non-dependent recursion principle for localizations: given elements `f x y : p`\nfor all `x` and `y`, such that `r S x x'` and `r S y y'` implies `f x y = f x' y'`,\nthen `f` is defined on the whole `localization S`."]
 def liftOn₂ {p : Sort u} (x y : Localization S) (f : M → S → M → S → p)
@@ -318,12 +323,12 @@ theorem lift_on₂_mk {p : Sort _} (f : M → S → M → S → p) (H) (a c : M)
     liftOn₂ (mk a b) (mk c d) f H = f a b c d :=
   rfl
 
-@[elab_as_eliminator, to_additive]
+@[elabAsElim, to_additive]
 theorem induction_on₂ {p : Localization S → Localization S → Prop} (x y)
     (H : ∀ x y : M × S, p (mk x.1 x.2) (mk y.1 y.2)) : p x y :=
   (induction_on x) fun x => induction_on y <| H x
 
-@[elab_as_eliminator, to_additive]
+@[elabAsElim, to_additive]
 theorem induction_on₃ {p : Localization S → Localization S → Localization S → Prop} (x y z)
     (H : ∀ x y z : M × S, p (mk x.1 x.2) (mk y.1 y.2) (mk z.1 z.2)) : p x y z :=
   (induction_on₂ x y) fun x y => induction_on z <| H x y
@@ -1408,7 +1413,7 @@ namespace Submonoid
 /-- The type of homomorphisms between monoids with zero satisfying the characteristic predicate:
 if `f : M →*₀ N` satisfies this predicate, then `N` is isomorphic to the localization of `M` at
 `S`. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure LocalizationWithZeroMap extends LocalizationMap S N where
   map_zero' : to_fun 0 = 0
 

@@ -125,12 +125,6 @@ unsafe def head : Name → Stringₓ
 unsafe def is_private (n : Name) : Bool :=
   n.head = "_private"
 
-/-- Get the last component of a name, and convert it to a string. -/
-unsafe def last : Name → Stringₓ
-  | mk_string s _ => s
-  | mk_numeral n _ => reprₓ n
-  | anonymous => "[anonymous]"
-
 /-- Returns the number of characters used to print all the string components of a name,
   including periods between name segments. Ignores numerical parts of a name. -/
 unsafe def length : Name → ℕ
@@ -883,6 +877,19 @@ private unsafe def all_implicitly_included_variables_aux : List expr → List ex
 unsafe def all_implicitly_included_variables (es vs : List expr) : List expr :=
   all_implicitly_included_variables_aux es vs [] false
 
+/-- Get the list of explicit arguments of a function. -/
+unsafe def list_explicit_args (f : expr) : tactic (List expr) :=
+  tactic.fold_explicit_args f [] fun ll e => return <| ll ++ [e]
+
+/-- `replace_explicit_args f parg` assumes that `f` is an expression corresponding to a function
+application.  It replaces the explicit arguments of `f`, in succession, by the elements of `parg`.
+The implicit arguments of `f` remain unchanged. -/
+unsafe def replace_explicit_args (f : expr) (parg : List expr) : tactic expr := do
+  let finf ← get_fun_info f.get_app_fn
+  let is_ex_arg : List Bool := finf.params.map fun e => ¬e.isImplicit ∧ ¬e.isInstImplicit
+  let nargs := List.replaceIf f.get_app_args is_ex_arg parg
+  return <| expr.mk_app f nargs
+
 /-- Infer the type of an application of the form `f x1 x2 ... xn`, where `f` is an identifier.
 This also works if `x1, ... xn` contain free variables. -/
 protected unsafe def simple_infer_type (env : environment) (e : expr) : exceptional expr := do
@@ -1186,4 +1193,13 @@ end Declaration
 
 unsafe instance pexpr.decidable_eq {elab} : DecidableEq (expr elab) :=
   unchecked_cast expr.has_decidable_eq
+
+section
+
+attribute [local semireducible] reflected
+
+unsafe instance {α} [has_reflect α] : has_reflect (Thunkₓ α)
+  | a => expr.lam `x BinderInfo.default (reflect Unit) (reflect <| a ())
+
+end
 

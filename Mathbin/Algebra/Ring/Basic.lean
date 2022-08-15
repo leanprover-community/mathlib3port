@@ -857,6 +857,35 @@ protected theorem coe_neg_one : ((-1 : αˣ) : α) = -1 :=
 instance : HasDistribNeg αˣ :=
   Units.ext.HasDistribNeg _ Units.coe_neg Units.coe_mul
 
+@[field_simps]
+theorem neg_divp (a : α) (u : αˣ) : -(a /ₚ u) = -a /ₚ u := by
+  simp only [← divp, ← neg_mul]
+
+@[field_simps]
+theorem divp_add_divp_same (a b : α) (u : αˣ) : a /ₚ u + b /ₚ u = (a + b) /ₚ u := by
+  simp only [← divp, ← add_mulₓ]
+
+@[field_simps]
+theorem divp_sub_divp_same (a b : α) (u : αˣ) : a /ₚ u - b /ₚ u = (a - b) /ₚ u := by
+  rw [sub_eq_add_neg, sub_eq_add_neg, neg_divp, divp_add_divp_same]
+
+@[field_simps]
+theorem add_divp (a b : α) (u : αˣ) : a + b /ₚ u = (a * u + b) /ₚ u := by
+  simp only [← divp, ← add_mulₓ, ← Units.mul_inv_cancel_right]
+
+@[field_simps]
+theorem sub_divp (a b : α) (u : αˣ) : a - b /ₚ u = (a * u - b) /ₚ u := by
+  simp only [← divp, ← sub_mul, ← Units.mul_inv_cancel_right]
+
+@[field_simps]
+theorem divp_add (a b : α) (u : αˣ) : a /ₚ u + b = (a + b * u) /ₚ u := by
+  simp only [← divp, ← add_mulₓ, ← Units.mul_inv_cancel_right]
+
+@[field_simps]
+theorem divp_sub (a b : α) (u : αˣ) : a /ₚ u - b = (a - b * u) /ₚ u := by
+  simp only [← divp, ← sub_mul, ← sub_right_inj]
+  assoc_rw [Units.mul_inv, mul_oneₓ]
+
 end Units
 
 theorem IsUnit.neg [Ringₓ α] {a : α} : IsUnit a → IsUnit (-a)
@@ -1265,11 +1294,25 @@ theorem mul_self_eq_mul_self_iff [CommRingₓ R] [NoZeroDivisors R] {a b : R} : 
 theorem mul_self_eq_one_iff [NonAssocRing R] [NoZeroDivisors R] {a : R} : a * a = 1 ↔ a = 1 ∨ a = -1 := by
   rw [← (Commute.one_right a).mul_self_eq_mul_self_iff, mul_oneₓ]
 
+namespace Units
+
+@[field_simps]
+theorem divp_add_divp [CommRingₓ α] (a b : α) (u₁ u₂ : αˣ) : a /ₚ u₁ + b /ₚ u₂ = (a * u₂ + u₁ * b) /ₚ (u₁ * u₂) := by
+  simp only [← divp, ← add_mulₓ, ← mul_inv_rev, ← coe_mul]
+  rw [mul_comm (↑u₁ * b), mul_comm b]
+  assoc_rw [mul_inv, mul_inv, mul_oneₓ, mul_oneₓ]
+
+@[field_simps]
+theorem divp_sub_divp [CommRingₓ α] (a b : α) (u₁ u₂ : αˣ) : a /ₚ u₁ - b /ₚ u₂ = (a * u₂ - u₁ * b) /ₚ (u₁ * u₂) := by
+  simp_rw [sub_eq_add_neg, neg_divp, divp_add_divp, mul_neg]
+
 /-- In the unit group of an integral domain, a unit is its own inverse iff the unit is one or
   one's additive inverse. -/
-theorem Units.inv_eq_self_iff [Ringₓ R] [NoZeroDivisors R] (u : Rˣ) : u⁻¹ = u ↔ u = 1 ∨ u = -1 := by
+theorem inv_eq_self_iff [Ringₓ R] [NoZeroDivisors R] (u : Rˣ) : u⁻¹ = u ↔ u = 1 ∨ u = -1 := by
   rw [inv_eq_iff_mul_eq_one]
-  simp only [← Units.ext_iff]
+  simp only [← ext_iff]
   push_cast
   exact mul_self_eq_one_iff
+
+end Units
 

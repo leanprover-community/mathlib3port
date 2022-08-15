@@ -52,7 +52,10 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Finₓ n) R} (h : ∀ x 
     intro x
     dsimp' [← e]
     rw [fin_succ_equiv_apply]
-    calc _ = eval _ p := _ _ = 0 := h _
+    calc
+      _ = eval _ p := _
+      _ = 0 := h _
+      
     · intro i
       exact Finₓ.cases (eval x q) x i
       

@@ -153,7 +153,7 @@ theorem Intersecting.is_max_iff_card_eq (hs : (s : Set α).Intersecting) :
   classical
   refine'
     ⟨fun h => _, fun h t ht hst =>
-      eq_of_subset_of_card_le hst <| le_of_mul_le_mul_left (ht.card_le.trans_eq h.symm) two_pos⟩
+      Finset.eq_of_subset_of_card_le hst <| le_of_mul_le_mul_left (ht.card_le.trans_eq h.symm) two_pos⟩
   suffices s ∪ s.map ⟨compl, compl_injective⟩ = Finset.univ by
     rw [Fintype.card, ← this, two_mul, card_union_eq, card_map]
     rintro x hx

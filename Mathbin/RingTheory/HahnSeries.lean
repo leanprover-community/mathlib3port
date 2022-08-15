@@ -542,7 +542,7 @@ theorem support_one [MulZeroOneClassₓ R] [Nontrivial R] : Support (1 : HahnSer
 
 @[simp]
 theorem order_one [MulZeroOneClassₓ R] : order (1 : HahnSeries Γ R) = 0 := by
-  cases' subsingleton_or_nontrivial R with h h <;> have := h
+  cases' subsingleton_or_nontrivial R with h h <;> haveI := h
   · rw [Subsingleton.elimₓ (1 : HahnSeries Γ R) 0, order_zero]
     
   · exact order_single one_ne_zero

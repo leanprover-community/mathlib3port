@@ -77,7 +77,7 @@ def toSheafify : F ⟶ F.sheafify.1 where
 /-- The natural morphism from the stalk of the sheafification to the original stalk.
 In `sheafify_stalk_iso` we show this is an isomorphism.
 -/
-def stalkToFiber (x : X) : F.sheafify.1.stalk x ⟶ F.stalk x :=
+def stalkToFiber (x : X) : F.sheafify.Presheaf.stalk x ⟶ F.stalk x :=
   stalkToFiber (Sheafify.isLocallyGerm F) x
 
 theorem stalk_to_fiber_surjective (x : X) : Function.Surjective (F.stalkToFiber x) := by
@@ -109,10 +109,10 @@ theorem stalk_to_fiber_injective (x : X) : Function.Injective (F.stalkToFiber x)
   dsimp'  at e'
   use ⟨W⊓(U'⊓V'), ⟨mW, mU, mV⟩⟩
   refine' ⟨_, _, _⟩
-  · change W⊓(U'⊓V') ⟶ U.val
+  · change W⊓(U'⊓V') ⟶ U.obj
     exact opens.inf_le_right _ _ ≫ opens.inf_le_left _ _ ≫ iU
     
-  · change W⊓(U'⊓V') ⟶ V.val
+  · change W⊓(U'⊓V') ⟶ V.obj
     exact opens.inf_le_right _ _ ≫ opens.inf_le_right _ _ ≫ iV
     
   · intro w
@@ -127,7 +127,7 @@ theorem stalk_to_fiber_injective (x : X) : Function.Injective (F.stalkToFiber x)
 
 /-- The isomorphism betweeen a stalk of the sheafification and the original stalk.
 -/
-def sheafifyStalkIso (x : X) : F.sheafify.1.stalk x ≅ F.stalk x :=
+def sheafifyStalkIso (x : X) : F.sheafify.Presheaf.stalk x ≅ F.stalk x :=
   (Equivₓ.ofBijective _ ⟨stalk_to_fiber_injective _ _, stalk_to_fiber_surjective _ _⟩).toIso
 
 -- PROJECT functoriality, and that sheafification is the left adjoint of the forgetful functor.

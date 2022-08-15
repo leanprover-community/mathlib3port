@@ -31,10 +31,10 @@ universe u v w
 
 variable {α : Type u}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`map_zero] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`map_one] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`map_add] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`map_mul] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`map_zero] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`map_one] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`map_add] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`map_mul] []
 /-- Predicate for semiring homomorphisms (deprecated -- use the bundled `ring_hom` version). -/
 structure IsSemiringHom {α : Type u} {β : Type v} [Semiringₓ α] [Semiringₓ β] (f : α → β) : Prop where
   map_zero : f 0 = 0
@@ -73,9 +73,9 @@ theorem to_is_monoid_hom (hf : IsSemiringHom f) : IsMonoidHom f :=
 
 end IsSemiringHom
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`map_one] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`map_mul] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`map_add] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`map_one] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`map_mul] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`map_add] []
 /-- Predicate for ring homomorphisms (deprecated -- use the bundled `ring_hom` version). -/
 structure IsRingHom {α : Type u} {β : Type v} [Ringₓ α] [Ringₓ β] (f : α → β) : Prop where
   map_one : f 1 = 1

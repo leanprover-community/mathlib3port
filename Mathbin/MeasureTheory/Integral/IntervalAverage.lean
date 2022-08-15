@@ -29,7 +29,7 @@ open MeasureTheory Set TopologicalSpace
 
 open Interval
 
-variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
 -- mathport name: «expr⨍ in .. , »
 notation3"⨍ "(...)" in "a".."b", "r:(scoped f => average Measure.restrict volume Ι a b f) => r

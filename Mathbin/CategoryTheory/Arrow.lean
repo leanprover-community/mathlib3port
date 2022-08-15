@@ -59,6 +59,11 @@ def mk {X Y : T} (f : X ⟶ Y) : Arrow T where
   right := Y
   Hom := f
 
+@[simp]
+theorem mk_eq (f : Arrow T) : Arrow.mk f.Hom = f := by
+  cases f
+  rfl
+
 theorem mk_injective (A B : T) : Function.Injective (Arrow.mk : (A ⟶ B) → Arrow T) := fun f g h => by
   cases h
   rfl
@@ -106,6 +111,12 @@ and a proof that the square commutes. -/
 @[simps]
 def isoMk {f g : Arrow T} (l : f.left ≅ g.left) (r : f.right ≅ g.right) (h : l.Hom ≫ g.Hom = f.Hom ≫ r.Hom) : f ≅ g :=
   Comma.isoMk l r h
+
+/-- A variant of `arrow.iso_mk` that creates an iso between two `arrow.mk`s with a better type
+signature. -/
+abbrev isoMk' {W X Y Z : T} (f : W ⟶ X) (g : Y ⟶ Z) (e₁ : W ≅ Y) (e₂ : X ≅ Z) (h : e₁.Hom ≫ g = f ≫ e₂.Hom) :
+    Arrow.mk f ≅ Arrow.mk g :=
+  Arrow.isoMk e₁ e₂ h
 
 section
 
@@ -180,84 +191,6 @@ in terms of the inverse of `i`. -/
 theorem square_from_iso_invert {X Y : T} (i : X ≅ Y) (p : Arrow T) (sq : Arrow.mk i.Hom ⟶ p) :
     i.inv ≫ sq.left ≫ p.Hom = sq.right := by
   simp only [← iso.inv_hom_id_assoc, ← arrow.w, ← arrow.mk_hom]
-
-/-- A lift of a commutative square is a diagonal morphism making the two triangles commute. -/
-@[ext]
-structure LiftStruct {f g : Arrow T} (sq : f ⟶ g) where
-  lift : f.right ⟶ g.left
-  fac_left' : f.Hom ≫ lift = sq.left := by
-    run_tac
-      obviously
-  fac_right' : lift ≫ g.Hom = sq.right := by
-    run_tac
-      obviously
-
-restate_axiom lift_struct.fac_left'
-
-restate_axiom lift_struct.fac_right'
-
-instance liftStructInhabited {X : T} : Inhabited (LiftStruct (𝟙 (Arrow.mk (𝟙 X)))) :=
-  ⟨⟨𝟙 _, Category.id_comp _, Category.comp_id _⟩⟩
-
-/-- `has_lift sq` says that there is some `lift_struct sq`, i.e., that it is possible to find a
-    diagonal morphism making the two triangles commute. -/
-class HasLift {f g : Arrow T} (sq : f ⟶ g) : Prop where mk' ::
-  exists_lift : Nonempty (LiftStruct sq)
-
-theorem HasLift.mk {f g : Arrow T} {sq : f ⟶ g} (s : LiftStruct sq) : HasLift sq :=
-  ⟨Nonempty.intro s⟩
-
-attribute [simp, reassoc] lift_struct.fac_left lift_struct.fac_right
-
-/-- Given `has_lift sq`, obtain a lift. -/
-noncomputable def HasLift.struct {f g : Arrow T} (sq : f ⟶ g) [HasLift sq] : LiftStruct sq :=
-  Classical.choice HasLift.exists_lift
-
-/-- If there is a lift of a commutative square `sq`, we can access it by saying `lift sq`. -/
-noncomputable abbrev lift {f g : Arrow T} (sq : f ⟶ g) [HasLift sq] : f.right ⟶ g.left :=
-  (HasLift.struct sq).lift
-
-theorem lift.fac_left {f g : Arrow T} (sq : f ⟶ g) [HasLift sq] : f.Hom ≫ lift sq = sq.left := by
-  simp
-
-theorem lift.fac_right {f g : Arrow T} (sq : f ⟶ g) [HasLift sq] : lift sq ≫ g.Hom = sq.right := by
-  simp
-
-@[simp, reassoc]
-theorem lift.fac_right_of_to_mk {X Y : T} {f : Arrow T} {g : X ⟶ Y} (sq : f ⟶ mk g) [HasLift sq] :
-    lift sq ≫ g = sq.right := by
-  simp only [mk_hom g, ← lift.fac_right]
-
-@[simp, reassoc]
-theorem lift.fac_left_of_from_mk {X Y : T} {f : X ⟶ Y} {g : Arrow T} (sq : mk f ⟶ g) [HasLift sq] :
-    f ≫ lift sq = sq.left := by
-  simp only [mk_hom f, ← lift.fac_left]
-
-@[simp, reassoc]
-theorem lift_mk'_left {X Y P Q : T} {f : X ⟶ Y} {g : P ⟶ Q} {u : X ⟶ P} {v : Y ⟶ Q} (h : u ≫ g = f ≫ v)
-    [HasLift <| Arrow.homMk' h] : f ≫ lift (Arrow.homMk' h) = u := by
-  simp only [arrow.mk_hom f, ← lift.fac_left, ← arrow.hom_mk'_left]
-
-@[simp, reassoc]
-theorem lift_mk'_right {X Y P Q : T} {f : X ⟶ Y} {g : P ⟶ Q} {u : X ⟶ P} {v : Y ⟶ Q} (h : u ≫ g = f ≫ v)
-    [HasLift <| Arrow.homMk' h] : lift (Arrow.homMk' h) ≫ g = v := by
-  simp only [arrow.mk_hom g, ← lift.fac_right, ← arrow.hom_mk'_right]
-
-section
-
-instance subsingleton_lift_struct_of_epi {f g : Arrow T} (sq : f ⟶ g) [Epi f.Hom] : Subsingleton (LiftStruct sq) :=
-  Subsingleton.intro fun a b =>
-    LiftStruct.ext a b <|
-      (cancel_epi f.Hom).1 <| by
-        simp
-
-instance subsingleton_lift_struct_of_mono {f g : Arrow T} (sq : f ⟶ g) [Mono g.Hom] : Subsingleton (LiftStruct sq) :=
-  Subsingleton.intro fun a b =>
-    LiftStruct.ext a b <|
-      (cancel_mono g.Hom).1 <| by
-        simp
-
-end
 
 variable {C : Type u} [Category.{v} C]
 

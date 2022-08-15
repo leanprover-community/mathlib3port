@@ -64,16 +64,24 @@ provides the `Prop` typeclasses:
 * `set_like.has_graded_mul A` (which provides the obvious `graded_monoid.ghas_mul A` instance)
 * `set_like.graded_monoid A` (which provides the obvious `graded_monoid.gmonoid A` and
   `graded_monoid.gcomm_monoid A` instances)
-* `set_like.is_homogeneous A` (which says that `a` is homogeneous iff `a ∈ A i` for some `i : ι`)
+
+which respectively provide the API lemmas
+
+* `set_like.one_mem_graded`
+* `set_like.mul_mem_graded`
+* `set_like.pow_mem_graded`, `set_like.list_prod_map_mem_graded`
 
 Strictly this last class is unecessary as it has no fields not present in its parents, but it is
-included for convenience. Note that there is no need for `graded_ring` or similar, as all the
-information it would contain is already supplied by `graded_monoid` when `A` is a collection
-of additively-closed set_like objects such as `submodule`s. These constructions are explored in
-`algebra.direct_sum.internal`.
+included for convenience. Note that there is no need for `set_like.graded_ring` or similar, as all
+the information it would contain is already supplied by `graded_monoid` when `A` is a collection
+of objects satisfying `add_submonoid_class` such as `submodule`s. These constructions are explored
+in `algebra.direct_sum.internal`.
 
-This file also contains the definition of `set_like.homogeneous_submonoid A`, which is, as the name
-suggests, the submonoid consisting of all the homogeneous elements.
+This file also defines:
+
+* `set_like.is_homogeneous A` (which says that `a` is homogeneous iff `a ∈ A i` for some `i : ι`)
+* `set_like.homogeneous_submonoid A`, which is, as the name suggests, the submonoid consisting of
+  all the homogeneous elements.
 
 ## tags
 
@@ -137,7 +145,7 @@ def gnpowRec : ∀ (n : ℕ) {i}, A i → A (n • i)
 theorem gnpow_rec_zero (a : GradedMonoid A) : GradedMonoid.mk _ (gnpowRec 0 a.snd) = 1 :=
   Sigma.ext (zero_nsmul _) (heq_of_cast_eq _ rfl).symm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic used to autofill `graded_monoid.gmonoid.gnpow_zero'` when the default
 `graded_monoid.gmonoid.gnpow_rec` is used. -/
 unsafe def apply_gnpow_rec_zero_tac : tactic Unit :=
@@ -148,7 +156,7 @@ theorem gnpow_rec_succ (n : ℕ) (a : GradedMonoid A) :
     (GradedMonoid.mk _ <| gnpowRec n.succ a.snd) = a * ⟨_, gnpowRec n a.snd⟩ :=
   Sigma.ext (succ_nsmul _ _) (heq_of_cast_eq _ rfl).symm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic used to autofill `graded_monoid.gmonoid.gnpow_succ'` when the default
 `graded_monoid.gmonoid.gnpow_rec` is used. -/
 unsafe def apply_gnpow_rec_succ_tac : tactic Unit :=
@@ -294,7 +302,7 @@ def mkZeroMonoidHom : A 0 →* GradedMonoid A where
 
 /-- Each grade `A i` derives a `A 0`-action structure from `gmonoid A`. -/
 instance GradeZero.mulAction {i} : MulAction (A 0) (A i) := by
-  let this := MulAction.compHom (GradedMonoid A) (mk_zero_monoid_hom A)
+  letI := MulAction.compHom (GradedMonoid A) (mk_zero_monoid_hom A)
   exact Function.Injective.mulAction (mk i) sigma_mk_injective mk_zero_smul
 
 end MulAction
@@ -425,8 +433,12 @@ variable {R : Type _}
 class SetLike.HasGradedOne {S : Type _} [SetLike S R] [One R] [Zero ι] (A : ι → S) : Prop where
   one_mem : (1 : R) ∈ A 0
 
+theorem SetLike.one_mem_graded {S : Type _} [SetLike S R] [One R] [Zero ι] (A : ι → S) [SetLike.HasGradedOne A] :
+    (1 : R) ∈ A 0 :=
+  SetLike.HasGradedOne.one_mem
+
 instance SetLike.ghasOne {S : Type _} [SetLike S R] [One R] [Zero ι] (A : ι → S) [SetLike.HasGradedOne A] :
-    GradedMonoid.GhasOne fun i => A i where one := ⟨1, SetLike.HasGradedOne.one_mem⟩
+    GradedMonoid.GhasOne fun i => A i where one := ⟨1, SetLike.one_mem_graded _⟩
 
 @[simp]
 theorem SetLike.coe_ghas_one {S : Type _} [SetLike S R] [One R] [Zero ι] (A : ι → S) [SetLike.HasGradedOne A] :
@@ -437,9 +449,12 @@ theorem SetLike.coe_ghas_one {S : Type _} [SetLike S R] [One R] [Zero ι] (A : �
 class SetLike.HasGradedMul {S : Type _} [SetLike S R] [Mul R] [Add ι] (A : ι → S) : Prop where
   mul_mem : ∀ ⦃i j⦄ {gi gj}, gi ∈ A i → gj ∈ A j → gi * gj ∈ A (i + j)
 
+theorem SetLike.mul_mem_graded {S : Type _} [SetLike S R] [Mul R] [Add ι] {A : ι → S} [SetLike.HasGradedMul A] ⦃i j⦄
+    {gi gj} (hi : gi ∈ A i) (hj : gj ∈ A j) : gi * gj ∈ A (i + j) :=
+  SetLike.HasGradedMul.mul_mem hi hj
+
 instance SetLike.ghasMul {S : Type _} [SetLike S R] [Mul R] [Add ι] (A : ι → S) [SetLike.HasGradedMul A] :
-    GradedMonoid.GhasMul fun i =>
-      A i where mul := fun i j a b => ⟨(a * b : R), SetLike.HasGradedMul.mul_mem a.Prop b.Prop⟩
+    GradedMonoid.GhasMul fun i => A i where mul := fun i j a b => ⟨(a * b : R), SetLike.mul_mem_graded a.Prop b.Prop⟩
 
 @[simp]
 theorem SetLike.coe_ghas_mul {S : Type _} [SetLike S R] [Mul R] [Add ι] (A : ι → S) [SetLike.HasGradedMul A] {i j : ι}
@@ -450,37 +465,37 @@ theorem SetLike.coe_ghas_mul {S : Type _} [SetLike S R] [Mul R] [Add ι] (A : ι
 class SetLike.GradedMonoid {S : Type _} [SetLike S R] [Monoidₓ R] [AddMonoidₓ ι] (A : ι → S) extends
   SetLike.HasGradedOne A, SetLike.HasGradedMul A : Prop
 
-namespace SetLike.GradedMonoid
+namespace SetLike
 
 variable {S : Type _} [SetLike S R] [Monoidₓ R] [AddMonoidₓ ι]
 
 variable {A : ι → S} [SetLike.GradedMonoid A]
 
-theorem pow_mem (n : ℕ) {r : R} {i : ι} (h : r ∈ A i) : r ^ n ∈ A (n • i) := by
+theorem pow_mem_graded (n : ℕ) {r : R} {i : ι} (h : r ∈ A i) : r ^ n ∈ A (n • i) := by
   induction n
   · rw [pow_zeroₓ, zero_nsmul]
-    exact one_mem
+    exact one_mem_graded _
     
   · rw [pow_succ'ₓ, succ_nsmul']
-    exact mul_mem n_ih h
+    exact mul_mem_graded n_ih h
     
 
-theorem list_prod_map_mem {ι'} (l : List ι') (i : ι' → ι) (r : ι' → R) (h : ∀, ∀ j ∈ l, ∀, r j ∈ A (i j)) :
+theorem list_prod_map_mem_graded {ι'} (l : List ι') (i : ι' → ι) (r : ι' → R) (h : ∀, ∀ j ∈ l, ∀, r j ∈ A (i j)) :
     (l.map r).Prod ∈ A (l.map i).Sum := by
   induction l
   · rw [List.map_nil, List.map_nil, List.prod_nil, List.sum_nil]
-    exact one_mem
+    exact one_mem_graded _
     
   · rw [List.map_cons, List.map_cons, List.prod_cons, List.sum_cons]
-    exact mul_mem (h _ <| List.mem_cons_selfₓ _ _) (l_ih fun j hj => h _ <| List.mem_cons_of_memₓ _ hj)
+    exact mul_mem_graded (h _ <| List.mem_cons_selfₓ _ _) (l_ih fun j hj => h _ <| List.mem_cons_of_memₓ _ hj)
     
 
-theorem list_prod_of_fn_mem {n} (i : Finₓ n → ι) (r : Finₓ n → R) (h : ∀ j, r j ∈ A (i j)) :
+theorem list_prod_of_fn_mem_graded {n} (i : Finₓ n → ι) (r : Finₓ n → R) (h : ∀ j, r j ∈ A (i j)) :
     (List.ofFnₓ r).Prod ∈ A (List.ofFnₓ i).Sum := by
   rw [List.of_fn_eq_map, List.of_fn_eq_map]
-  exact list_prod_map_mem _ _ _ fun _ _ => h _
+  exact list_prod_map_mem_graded _ _ _ fun _ _ => h _
 
-end SetLike.GradedMonoid
+end SetLike
 
 /-- Build a `gmonoid` instance for a collection of subobjects. -/
 instance SetLike.gmonoid {S : Type _} [SetLike S R] [Monoidₓ R] [AddMonoidₓ ι] (A : ι → S) [SetLike.GradedMonoid A] :
@@ -488,7 +503,7 @@ instance SetLike.gmonoid {S : Type _} [SetLike S R] [Monoidₓ R] [AddMonoidₓ 
   { SetLike.ghasOne A, SetLike.ghasMul A with one_mul := fun ⟨i, a, h⟩ => Sigma.subtype_ext (zero_addₓ _) (one_mulₓ _),
     mul_one := fun ⟨i, a, h⟩ => Sigma.subtype_ext (add_zeroₓ _) (mul_oneₓ _),
     mul_assoc := fun ⟨i, a, ha⟩ ⟨j, b, hb⟩ ⟨k, c, hc⟩ => Sigma.subtype_ext (add_assocₓ _ _ _) (mul_assoc _ _ _),
-    gnpow := fun n i a => ⟨a ^ n, SetLike.GradedMonoid.pow_mem n a.Prop⟩,
+    gnpow := fun n i a => ⟨a ^ n, SetLike.pow_mem_graded n a.Prop⟩,
     gnpow_zero' := fun n => Sigma.subtype_ext (zero_nsmul _) (pow_zeroₓ _),
     gnpow_succ' := fun n a => Sigma.subtype_ext (succ_nsmul _ _) (pow_succₓ _ _) }
 
@@ -525,7 +540,7 @@ include R
 theorem SetLike.list_dprod_eq (A : ι → S) [SetLike.GradedMonoid A] (fι : α → ι) (fA : ∀ a, A (fι a)) (l : List α) :
     (l.dprod fι fA : (fun i => ↥(A i)) _) =
       ⟨List.prod (l.map fun a => fA a),
-        (l.dprod_index_eq_map_sum fι).symm ▸ list_prod_map_mem l _ _ fun i hi => (fA i).Prop⟩ :=
+        (l.dprod_index_eq_map_sum fι).symm ▸ list_prod_map_mem_graded l _ _ fun i hi => (fA i).Prop⟩ :=
   Subtype.ext <| SetLike.coe_list_dprod _ _ _ _
 
 end Dprod
@@ -546,11 +561,11 @@ theorem SetLike.is_homogeneous_coe {A : ι → S} {i} (x : A i) : SetLike.IsHomo
 
 theorem SetLike.is_homogeneous_one [Zero ι] [One R] (A : ι → S) [SetLike.HasGradedOne A] :
     SetLike.IsHomogeneous A (1 : R) :=
-  ⟨0, SetLike.HasGradedOne.one_mem⟩
+  ⟨0, SetLike.one_mem_graded _⟩
 
 theorem SetLike.IsHomogeneous.mul [Add ι] [Mul R] {A : ι → S} [SetLike.HasGradedMul A] {a b : R} :
     SetLike.IsHomogeneous A a → SetLike.IsHomogeneous A b → SetLike.IsHomogeneous A (a * b)
-  | ⟨i, hi⟩, ⟨j, hj⟩ => ⟨i + j, SetLike.HasGradedMul.mul_mem hi hj⟩
+  | ⟨i, hi⟩, ⟨j, hj⟩ => ⟨i + j, SetLike.mul_mem_graded hi hj⟩
 
 /-- When `A` is a `set_like.graded_monoid A`, then the homogeneous elements forms a submonoid. -/
 def SetLike.homogeneousSubmonoid [AddMonoidₓ ι] [Monoidₓ R] (A : ι → S) [SetLike.GradedMonoid A] : Submonoid R where

@@ -158,10 +158,8 @@ theorem zpow_bit1' (a : G₀) (n : ℤ) : a ^ bit1 n = (a * a) ^ n * a := by
 theorem zpow_eq_zero {x : G₀} {n : ℤ} (h : x ^ n = 0) : x = 0 :=
   Classical.by_contradiction fun hx => zpow_ne_zero_of_ne_zero hx n h
 
-theorem zpow_eq_zero_iff {a : G₀} {n : ℤ} (hn : 0 < n) : a ^ n = 0 ↔ a = 0 := by
-  refine' ⟨zpow_eq_zero, _⟩
-  rintro rfl
-  exact zero_zpow _ hn.ne'
+theorem zpow_eq_zero_iff {a : G₀} {n : ℤ} (hn : n ≠ 0) : a ^ n = 0 ↔ a = 0 :=
+  ⟨zpow_eq_zero, fun ha => ha.symm ▸ zero_zpow _ hn⟩
 
 theorem zpow_ne_zero {x : G₀} (n : ℤ) : x ≠ 0 → x ^ n ≠ 0 :=
   mt zpow_eq_zero

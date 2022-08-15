@@ -17,7 +17,7 @@ We also prove basic lemmas and provide convenience constructors.  The choice of 
 constructors is closely modelled on those for the `linear_isometry` and `affine_map` theories.
 
 Since many elementary properties don't require `∥x∥ = 0 → x = 0` we initially set up the theory for
-`semi_normed_group` and specialize to `normed_group` only when needed.
+`seminormed_add_comm_group` and specialize to `normed_add_comm_group` only when needed.
 
 ## Notation
 
@@ -33,10 +33,11 @@ algebra-homomorphisms.)
 open Function Set
 
 variable (𝕜 : Type _) {V V₁ V₂ V₃ V₄ : Type _} {P₁ : Type _} (P P₂ : Type _) {P₃ P₄ : Type _} [NormedField 𝕜]
-  [SemiNormedGroup V] [SemiNormedGroup V₁] [SemiNormedGroup V₂] [SemiNormedGroup V₃] [SemiNormedGroup V₄]
-  [NormedSpace 𝕜 V] [NormedSpace 𝕜 V₁] [NormedSpace 𝕜 V₂] [NormedSpace 𝕜 V₃] [NormedSpace 𝕜 V₄] [PseudoMetricSpace P]
-  [MetricSpace P₁] [PseudoMetricSpace P₂] [PseudoMetricSpace P₃] [PseudoMetricSpace P₄] [NormedAddTorsor V P]
-  [NormedAddTorsor V₁ P₁] [NormedAddTorsor V₂ P₂] [NormedAddTorsor V₃ P₃] [NormedAddTorsor V₄ P₄]
+  [SeminormedAddCommGroup V] [SeminormedAddCommGroup V₁] [SeminormedAddCommGroup V₂] [SeminormedAddCommGroup V₃]
+  [SeminormedAddCommGroup V₄] [NormedSpace 𝕜 V] [NormedSpace 𝕜 V₁] [NormedSpace 𝕜 V₂] [NormedSpace 𝕜 V₃]
+  [NormedSpace 𝕜 V₄] [PseudoMetricSpace P] [MetricSpace P₁] [PseudoMetricSpace P₂] [PseudoMetricSpace P₃]
+  [PseudoMetricSpace P₄] [NormedAddTorsor V P] [NormedAddTorsor V₁ P₁] [NormedAddTorsor V₂ P₂] [NormedAddTorsor V₃ P₃]
+  [NormedAddTorsor V₄ P₄]
 
 include V V₂
 

@@ -56,9 +56,14 @@ def add (x : Rˣ) (t : R) (h : ∥t∥ < ∥(↑x⁻¹ : R)∥⁻¹) : Rˣ :=
         (by
           nontriviality R using ← zero_lt_one
           have hpos : 0 < ∥(↑x⁻¹ : R)∥ := Units.norm_pos x⁻¹
-          calc ∥-(↑x⁻¹ * t)∥ = ∥↑x⁻¹ * t∥ := by
-              rw [norm_neg]_ ≤ ∥(↑x⁻¹ : R)∥ * ∥t∥ := norm_mul_le ↑x⁻¹ _ _ < ∥(↑x⁻¹ : R)∥ * ∥(↑x⁻¹ : R)∥⁻¹ := by
-              nlinarith only [h, hpos]_ = 1 := mul_inv_cancel (ne_of_gtₓ hpos)))
+          calc
+            ∥-(↑x⁻¹ * t)∥ = ∥↑x⁻¹ * t∥ := by
+              rw [norm_neg]
+            _ ≤ ∥(↑x⁻¹ : R)∥ * ∥t∥ := norm_mul_le ↑x⁻¹ _
+            _ < ∥(↑x⁻¹ : R)∥ * ∥(↑x⁻¹ : R)∥⁻¹ := by
+              nlinarith only [h, hpos]
+            _ = 1 := mul_inv_cancel (ne_of_gtₓ hpos)
+            ))
     (x + t)
     (by
       simp [← mul_addₓ])
@@ -225,8 +230,13 @@ theorem inverse_add_norm_diff_nth_order (x : Rˣ) (n : ℕ) :
   rw [hLHS]
   refine' le_transₓ (norm_mul_le _ _) _
   have h' : ∥-(↑x⁻¹ * t) ^ n∥ ≤ ∥(↑x⁻¹ : R)∥ ^ n * ∥t∥ ^ n := by
-    calc ∥-(↑x⁻¹ * t) ^ n∥ ≤ ∥-(↑x⁻¹ * t)∥ ^ n := norm_pow_le' _ hn _ = ∥↑x⁻¹ * t∥ ^ n := by
-        rw [norm_neg]_ ≤ (∥(↑x⁻¹ : R)∥ * ∥t∥) ^ n := _ _ = ∥(↑x⁻¹ : R)∥ ^ n * ∥t∥ ^ n := mul_powₓ _ _ n
+    calc
+      ∥-(↑x⁻¹ * t) ^ n∥ ≤ ∥-(↑x⁻¹ * t)∥ ^ n := norm_pow_le' _ hn
+      _ = ∥↑x⁻¹ * t∥ ^ n := by
+        rw [norm_neg]
+      _ ≤ (∥(↑x⁻¹ : R)∥ * ∥t∥) ^ n := _
+      _ = ∥(↑x⁻¹ : R)∥ ^ n * ∥t∥ ^ n := mul_powₓ _ _ n
+      
     exact pow_le_pow_of_le_left (norm_nonneg _) (norm_mul_le (↑x⁻¹) t) n
   have h'' : 0 ≤ ∥(↑x⁻¹ : R)∥ ^ n * ∥t∥ ^ n := by
     refine' mul_nonneg _ _ <;> exact pow_nonneg (norm_nonneg _) n

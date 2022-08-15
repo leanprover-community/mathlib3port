@@ -19,7 +19,7 @@ version `normed_space.inclusion_in_double_dual_li` of the map which is of type a
 isometric embedding, `E →ₗᵢ[𝕜] (dual 𝕜 (dual 𝕜 E))`.
 
 Since a lot of elementary properties don't require `eq_of_dist_eq_zero` we start setting up the
-theory for `semi_normed_group` and we specialize to `normed_group` when needed.
+theory for `seminormed_add_comm_group` and we specialize to `normed_add_comm_group` when needed.
 
 ## Main definitions
 
@@ -44,17 +44,17 @@ namespace NormedSpace
 
 section General
 
-variable (𝕜 : Type _) [NondiscreteNormedField 𝕜]
+variable (𝕜 : Type _) [NontriviallyNormedField 𝕜]
 
-variable (E : Type _) [SemiNormedGroup E] [NormedSpace 𝕜 E]
+variable (E : Type _) [SeminormedAddCommGroup E] [NormedSpace 𝕜 E]
 
-variable (F : Type _) [NormedGroup F] [NormedSpace 𝕜 F]
+variable (F : Type _) [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler normed_space 𝕜
+-- ./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler normed_space 𝕜
 /-- The topological dual of a seminormed space `E`. -/
 def Dual :=
-  E →L[𝕜] 𝕜 deriving Inhabited, SemiNormedGroup,
-  «./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler normed_space 𝕜»
+  E →L[𝕜] 𝕜 deriving Inhabited, SeminormedAddCommGroup,
+  «./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler normed_space 𝕜»
 
 instance : ContinuousLinearMapClass (Dual 𝕜 E) 𝕜 E 𝕜 :=
   ContinuousLinearMap.continuousSemilinearMapClass
@@ -62,8 +62,8 @@ instance : ContinuousLinearMapClass (Dual 𝕜 E) 𝕜 E 𝕜 :=
 instance : CoeFun (Dual 𝕜 E) fun _ => E → 𝕜 :=
   ContinuousLinearMap.toFun
 
-instance : NormedGroup (Dual 𝕜 F) :=
-  ContinuousLinearMap.toNormedGroup
+instance : NormedAddCommGroup (Dual 𝕜 F) :=
+  ContinuousLinearMap.toNormedAddCommGroup
 
 instance [FiniteDimensional 𝕜 E] : FiniteDimensional 𝕜 (Dual 𝕜 E) :=
   ContinuousLinearMap.finite_dimensional
@@ -103,7 +103,7 @@ end General
 
 section BidualIsometry
 
-variable (𝕜 : Type v) [IsROrC 𝕜] {E : Type u} [NormedGroup E] [NormedSpace 𝕜 E]
+variable (𝕜 : Type v) [IsROrC 𝕜] {E : Type u} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 /-- If one controls the norm of every `f x`, then one controls the norm of `x`.
     Compare `continuous_linear_map.op_norm_le_bound`. -/
@@ -113,9 +113,14 @@ theorem norm_le_dual_bound (x : E) {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ f : Dual 
   · simp only [← h, ← hMp, ← norm_zero]
     
   · obtain ⟨f, hf₁, hfx⟩ : ∃ f : E →L[𝕜] 𝕜, ∥f∥ = 1 ∧ f x = ∥x∥ := exists_dual_vector 𝕜 x h
-    calc ∥x∥ = ∥(∥x∥ : 𝕜)∥ := is_R_or_C.norm_coe_norm.symm _ = ∥f x∥ := by
-        rw [hfx]_ ≤ M * ∥f∥ := hM f _ = M := by
+    calc
+      ∥x∥ = ∥(∥x∥ : 𝕜)∥ := is_R_or_C.norm_coe_norm.symm
+      _ = ∥f x∥ := by
+        rw [hfx]
+      _ ≤ M * ∥f∥ := hM f
+      _ = M := by
         rw [hf₁, mul_oneₓ]
+      
     
 
 theorem eq_zero_of_forall_dual_eq_zero {x : E} (h : ∀ f : Dual 𝕜 E, f x = (0 : 𝕜)) : x = 0 :=
@@ -154,13 +159,13 @@ open Metric Set NormedSpace
 /-- Given a subset `s` in a normed space `E` (over a field `𝕜`), the polar
 `polar 𝕜 s` is the subset of `dual 𝕜 E` consisting of those functionals which
 evaluate to something of norm at most one at all points `z ∈ s`. -/
-def Polar (𝕜 : Type _) [NondiscreteNormedField 𝕜] {E : Type _} [SemiNormedGroup E] [NormedSpace 𝕜 E] :
+def Polar (𝕜 : Type _) [NontriviallyNormedField 𝕜] {E : Type _} [SeminormedAddCommGroup E] [NormedSpace 𝕜 E] :
     Set E → Set (Dual 𝕜 E) :=
   (dualPairing 𝕜 E).flip.Polar
 
-variable (𝕜 : Type _) [NondiscreteNormedField 𝕜]
+variable (𝕜 : Type _) [NontriviallyNormedField 𝕜]
 
-variable {E : Type _} [SemiNormedGroup E] [NormedSpace 𝕜 E]
+variable {E : Type _} [SeminormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 theorem mem_polar_iff {x' : Dual 𝕜 E} (s : Set E) : x' ∈ Polar 𝕜 s ↔ ∀, ∀ z ∈ s, ∀, ∥x' z∥ ≤ 1 :=
   Iff.rfl
@@ -207,10 +212,13 @@ theorem polar_ball_subset_closed_ball_div {c : 𝕜} (hc : 1 < ∥c∥) {r : ℝ
   simp only [← polar, ← mem_set_of_eq, ← mem_closed_ball_zero_iff, ← mem_ball_zero_iff] at *
   have hcr : 0 < ∥c∥ / r := div_pos (zero_lt_one.trans hc) hr
   refine' ContinuousLinearMap.op_norm_le_of_shell hr hcr.le hc fun x h₁ h₂ => _
-  calc ∥x' x∥ ≤ 1 := hx' _ h₂ _ ≤ ∥c∥ / r * ∥x∥ :=
+  calc
+    ∥x' x∥ ≤ 1 := hx' _ h₂
+    _ ≤ ∥c∥ / r * ∥x∥ :=
       (inv_pos_le_iff_one_le_mul' hcr).1
         (by
           rwa [inv_div])
+    
 
 variable (𝕜)
 
@@ -227,7 +235,7 @@ theorem closed_ball_inv_subset_polar_closed_ball {r : ℝ} :
 
 /-- The `polar` of closed ball in a normed space `E` is the closed ball of the dual with
 inverse radius. -/
-theorem polar_closed_ball {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {r : ℝ} (hr : 0 < r) :
+theorem polar_closed_ball {𝕜 E : Type _} [IsROrC 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] {r : ℝ} (hr : 0 < r) :
     Polar 𝕜 (ClosedBall (0 : E) r) = ClosedBall (0 : Dual 𝕜 E) r⁻¹ := by
   refine' subset.antisymm _ (closed_ball_inv_subset_polar_closed_ball _)
   intro x' h

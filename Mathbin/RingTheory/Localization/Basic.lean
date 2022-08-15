@@ -92,9 +92,9 @@ variable {R : Type _} [CommSemiringₓ R] (M : Submonoid R) (S : Type _) [CommSe
 
 variable [Algebra R S] {P : Type _} [CommSemiringₓ P]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`map_units] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`surj] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`eq_iff_exists] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`map_units] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`surj] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`eq_iff_exists] []
 /-- The typeclass `is_localization (M : submodule R) S` where `S` is an `R`-algebra
 expresses that `S` is isomorphic to the localization of `R` at `M`. -/
 class IsLocalization : Prop where
@@ -617,7 +617,7 @@ theorem is_localization_iff_of_alg_equiv [Algebra R P] (h : S ≃ₐ[R] P) : IsL
 
 theorem is_localization_iff_of_ring_equiv (h : S ≃+* P) :
     IsLocalization M S ↔ @IsLocalization _ M P _ (h.toRingHom.comp <| algebraMap R S).toAlgebra := by
-  let this := (h.to_ring_hom.comp <| algebraMap R S).toAlgebra
+  letI := (h.to_ring_hom.comp <| algebraMap R S).toAlgebra
   exact is_localization_iff_of_alg_equiv M { h with commutes' := fun _ => rfl }
 
 variable (S)
@@ -649,7 +649,7 @@ theorem is_localization_iff_of_base_ring_equiv (h : R ≃+* P) :
       @IsLocalization _ (M.map h.toMonoidHom) S _ ((algebraMap R S).comp h.symm.toRingHom).toAlgebra :=
   by
   refine' ⟨fun _ => is_localization_of_base_ring_equiv _ _ h, _⟩
-  let this := ((algebraMap R S).comp h.symm.to_ring_hom).toAlgebra
+  letI := ((algebraMap R S).comp h.symm.to_ring_hom).toAlgebra
   intro H
   convert @is_localization_of_base_ring_equiv _ _ _ _ _ _ H h.symm
   · erw [Submonoid.map_equiv_eq_comap_symm, Submonoid.comap_map_eq_of_injective]
@@ -719,8 +719,10 @@ protected irreducible_def add (z w : Localization M) : Localization M :=
         calc
           ((b : R) * c + d * a) * (b' * d') * (t₆ * t₅) = c * d' * t₆ * (b * b' * t₅) + a * b' * t₅ * (d * d' * t₆) :=
             by
-            ring _ = (b' * c' + d' * a') * (b * d) * (t₆ * t₅) := by
-            rw [ht₆, ht₅] <;> ring)
+            ring
+          _ = (b' * c' + d' * a') * (b * d) * (t₆ * t₅) := by
+            rw [ht₆, ht₅] <;> ring
+          )
 
 instance : Add (Localization M) :=
   ⟨Localization.add⟩
@@ -735,7 +737,7 @@ theorem add_mk_self (a b c) : (mk a b : Localization M) + mk c b = mk (a + c) b 
   simp only [← Submonoid.coe_one, ← Submonoid.coe_mul]
   ring
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 private unsafe def tac :=
   sorry
 
@@ -1001,6 +1003,21 @@ protected theorem to_map_ne_zero_of_mem_non_zero_divisors [Nontrivial R] (hM : M
   show (algebraMap R S).toMonoidWithZeroHom x ≠ 0 from
     map_ne_zero_of_mem_non_zero_divisors (algebraMap R S) (IsLocalization.injective S hM) hx
 
+variable {S}
+
+theorem sec_snd_ne_zero [Nontrivial R] (hM : M ≤ nonZeroDivisors R) (x : S) : ((sec M x).snd : R) ≠ 0 :=
+  nonZeroDivisors.coe_ne_zero ⟨(sec M x).snd.val, hM (sec M x).snd.property⟩
+
+theorem sec_fst_ne_zero [Nontrivial R] [NoZeroDivisors S] (hM : M ≤ nonZeroDivisors R) {x : S} (hx : x ≠ 0) :
+    (sec M x).fst ≠ 0 := by
+  have hsec := sec_spec M x
+  intro hfst
+  rw [hfst, map_zero, mul_eq_zero, _root_.map_eq_zero_iff] at hsec
+  · exact Or.elim hsec hx (sec_snd_ne_zero hM x)
+    
+  · exact IsLocalization.injective S hM
+    
+
 variable (S M) (Q : Type _) [CommRingₓ Q] {g : R →+* P} [Algebra P Q]
 
 /-- Injectivity of a map descends to the map induced on localizations. -/
@@ -1057,7 +1074,7 @@ open IsLocalization
 theorem IsField.localization_map_bijective {R Rₘ : Type _} [CommRingₓ R] [CommRingₓ Rₘ] {M : Submonoid R}
     (hM : (0 : R) ∉ M) (hR : IsField R) [Algebra R Rₘ] [IsLocalization M Rₘ] : Function.Bijective (algebraMap R Rₘ) :=
   by
-  let this := hR.to_field
+  letI := hR.to_field
   replace hM := le_non_zero_divisors_of_no_zero_divisors hM
   refine' ⟨IsLocalization.injective _ hM, fun x => _⟩
   obtain ⟨r, ⟨m, hm⟩, rfl⟩ := mk'_surjective M x

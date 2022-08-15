@@ -546,11 +546,11 @@ theorem coe_lower_central_series_ideal_quot_eq {I : LieIdeal R L} (k : ℕ) :
     constructor
     · rintro ⟨⟨y, -⟩, ⟨z, hz⟩, rfl : ⁅y,z⁆ = x⟩
       erw [← LieSubmodule.mem_coe_submodule, ih, LieSubmodule.mem_coe_submodule] at hz
-      exact ⟨⟨LieSubmodule.Quotient.mk y, Submodule.mem_top⟩, ⟨z, hz⟩, rfl⟩
+      exact ⟨⟨LieSubmodule.Quotient.mk y, LieSubmodule.mem_top _⟩, ⟨z, hz⟩, rfl⟩
       
     · rintro ⟨⟨⟨y⟩, -⟩, ⟨z, hz⟩, rfl : ⁅y,z⁆ = x⟩
       erw [← LieSubmodule.mem_coe_submodule, ← ih, LieSubmodule.mem_coe_submodule] at hz
-      exact ⟨⟨y, Submodule.mem_top⟩, ⟨z, hz⟩, rfl⟩
+      exact ⟨⟨y, LieSubmodule.mem_top _⟩, ⟨z, hz⟩, rfl⟩
       
     
 
@@ -564,7 +564,7 @@ theorem LieModule.coe_lower_central_series_ideal_le {I : LieIdeal R L} (k : ℕ)
   · simp only [← LieModule.lower_central_series_succ, ← LieSubmodule.lie_ideal_oper_eq_linear_span]
     apply Submodule.span_mono
     rintro x ⟨⟨y, -⟩, ⟨z, hz⟩, rfl : ⁅y,z⁆ = x⟩
-    exact ⟨⟨y.val, Submodule.mem_top⟩, ⟨z, ih hz⟩, rfl⟩
+    exact ⟨⟨y.val, LieSubmodule.mem_top _⟩, ⟨z, ih hz⟩, rfl⟩
     
 
 /-- A central extension of nilpotent Lie algebras is nilpotent. -/
@@ -685,7 +685,7 @@ theorem coe_lcs_eq : (I.lcs M k : Submodule R M) = lowerCentralSeries R I M k :=
     
   · simp_rw [lower_central_series_succ, lcs_succ, LieSubmodule.lie_ideal_oper_eq_linear_span', ←
       (I.lcs M k).mem_coe_submodule, ih, LieSubmodule.mem_coe_submodule, LieSubmodule.mem_top, exists_true_left,
-      LieSubalgebra.coe_bracket_of_module]
+      (I : LieSubalgebra R L).coe_bracket_of_module]
     congr
     ext m
     constructor
@@ -705,11 +705,12 @@ variable (R : Type u) {A : Type v} [CommRingₓ R] [Ringₓ A] [Algebra R A]
 
 theorem LieAlgebra.ad_nilpotent_of_nilpotent {a : A} (h : IsNilpotent a) : IsNilpotent (LieAlgebra.ad R A a) := by
   rw [LieAlgebra.ad_eq_lmul_left_sub_lmul_right]
-  have hl : IsNilpotent (Algebra.lmulLeft R a) := by
-    rwa [Algebra.is_nilpotent_lmul_left_iff]
-  have hr : IsNilpotent (Algebra.lmulRight R a) := by
-    rwa [Algebra.is_nilpotent_lmul_right_iff]
-  exact (Algebra.commute_lmul_left_right R a a).is_nilpotent_sub hl hr
+  have hl : IsNilpotent (LinearMap.mulLeft R a) := by
+    rwa [LinearMap.is_nilpotent_mul_left_iff]
+  have hr : IsNilpotent (LinearMap.mulRight R a) := by
+    rwa [LinearMap.is_nilpotent_mul_right_iff]
+  have := @LinearMap.commute_mul_left_right R A _ _ _ _ _ a a
+  exact this.is_nilpotent_sub hl hr
 
 variable {R}
 

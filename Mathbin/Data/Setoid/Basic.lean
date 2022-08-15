@@ -89,8 +89,8 @@ theorem ker_mk_eq (r : Setoidₓ α) : ker (@Quotientₓ.mk _ r) = r :=
   ext' fun x y => Quotientₓ.eq
 
 theorem ker_apply_mk_out {f : α → β} (a : α) :
-    f
-        (have := Setoidₓ.ker f
+    (f
+        haveI := Setoidₓ.ker f
         ⟦a⟧.out) =
       f a :=
   @Quotientₓ.mk_out _ (Setoidₓ.ker f) a

@@ -648,7 +648,7 @@ def Fork.ext {s t : Fork f g} (i : s.x ≅ t.x) (w : i.Hom ≫ t.ι = s.ι) : s 
 def Fork.isoForkOfι (c : Fork f g) : c ≅ Fork.ofι c.ι c.condition :=
   Fork.ext
     (by
-      simp only [← fork.of_ι_X, ← functor.const.obj_obj])
+      simp only [← fork.of_ι_X, ← functor.const_obj_obj])
     (by
       simp )
 
@@ -688,7 +688,7 @@ def Cofork.ext {s t : Cofork f g} (i : s.x ≅ t.x) (w : s.π ≫ i.Hom = t.π) 
 def Cofork.isoCoforkOfπ (c : Cofork f g) : c ≅ Cofork.ofπ c.π c.condition :=
   Cofork.ext
     (by
-      simp only [← cofork.of_π_X, ← functor.const.obj_obj])
+      simp only [← cofork.of_π_X, ← functor.const_obj_obj])
     (by
       dsimp' <;> simp )
 
@@ -1074,24 +1074,24 @@ theorem has_coequalizers_of_has_colimit_parallel_pair [∀ {X Y : C} {f g : X �
 section
 
 -- In this section we show that a split mono `f` equalizes `(retraction f ≫ f)` and `(𝟙 Y)`.
-variable {C} [SplitMono f]
+variable {C} [IsSplitMono f]
 
 /-- A split mono `f` equalizes `(retraction f ≫ f)` and `(𝟙 Y)`.
-Here we build the cone, and show in `split_mono_equalizes` that it is a limit cone.
+Here we build the cone, and show in `is_split_mono_equalizes` that it is a limit cone.
 -/
 @[simps (config := { rhsMd := semireducible })]
-def coneOfSplitMono : Fork (𝟙 Y) (retraction f ≫ f) :=
+def coneOfIsSplitMono : Fork (𝟙 Y) (retraction f ≫ f) :=
   Fork.ofι f
     (by
       simp )
 
 @[simp]
-theorem cone_of_split_mono_ι : (coneOfSplitMono f).ι = f :=
+theorem cone_of_is_split_mono_ι : (coneOfIsSplitMono f).ι = f :=
   rfl
 
 /-- A split mono `f` equalizes `(retraction f ≫ f)` and `(𝟙 Y)`.
 -/
-def splitMonoEqualizes {X Y : C} (f : X ⟶ Y) [SplitMono f] : IsLimit (coneOfSplitMono f) :=
+def isSplitMonoEqualizes {X Y : C} (f : X ⟶ Y) [IsSplitMono f] : IsLimit (coneOfIsSplitMono f) :=
   (Fork.IsLimit.mk' _) fun s =>
     ⟨s.ι ≫ retraction f, by
       dsimp'
@@ -1101,7 +1101,7 @@ def splitMonoEqualizes {X Y : C} (f : X ⟶ Y) [SplitMono f] : IsLimit (coneOfSp
 
 end
 
-/-- We show that the converse to `split_mono_equalizes` is true:
+/-- We show that the converse to `is_split_mono_equalizes` is true:
 Whenever `f` equalizes `(r ≫ f)` and `(𝟙 Y)`, then `r` is a retraction of `f`. -/
 def splitMonoOfEqualizer {X Y : C} {f : X ⟶ Y} {r : Y ⟶ X} (hr : f ≫ r ≫ f = f)
     (h : IsLimit (Fork.ofι f (hr.trans (Category.comp_id _).symm : f ≫ r ≫ f = f ≫ 𝟙 Y))) : SplitMono f where
@@ -1142,7 +1142,7 @@ def splitMonoOfIdempotentOfIsLimitFork {X : C} {f : X ⟶ X} (hf : f ≫ f = f) 
         (by
           simp [← hf]))
   id' := by
-    let this := mono_of_is_limit_fork i
+    letI := mono_of_is_limit_fork i
     rw [← cancel_mono_id c.ι, category.assoc, fork.is_limit.lift_ι, fork.ι_of_ι, ← c.condition]
     exact category.comp_id c.ι
 
@@ -1154,24 +1154,24 @@ def splitMonoOfIdempotentEqualizer {X : C} {f : X ⟶ X} (hf : f ≫ f = f) [Has
 section
 
 -- In this section we show that a split epi `f` coequalizes `(f ≫ section_ f)` and `(𝟙 X)`.
-variable {C} [SplitEpi f]
+variable {C} [IsSplitEpi f]
 
 /-- A split epi `f` coequalizes `(f ≫ section_ f)` and `(𝟙 X)`.
-Here we build the cocone, and show in `split_epi_coequalizes` that it is a colimit cocone.
+Here we build the cocone, and show in `is_split_epi_coequalizes` that it is a colimit cocone.
 -/
 @[simps (config := { rhsMd := semireducible })]
-def coconeOfSplitEpi : Cofork (𝟙 X) (f ≫ section_ f) :=
+def coconeOfIsSplitEpi : Cofork (𝟙 X) (f ≫ section_ f) :=
   Cofork.ofπ f
     (by
       simp )
 
 @[simp]
-theorem cocone_of_split_epi_π : (coconeOfSplitEpi f).π = f :=
+theorem cocone_of_is_split_epi_π : (coconeOfIsSplitEpi f).π = f :=
   rfl
 
 /-- A split epi `f` coequalizes `(f ≫ section_ f)` and `(𝟙 X)`.
 -/
-def splitEpiCoequalizes {X Y : C} (f : X ⟶ Y) [SplitEpi f] : IsColimit (coconeOfSplitEpi f) :=
+def isSplitEpiCoequalizes {X Y : C} (f : X ⟶ Y) [IsSplitEpi f] : IsColimit (coconeOfIsSplitEpi f) :=
   (Cofork.IsColimit.mk' _) fun s =>
     ⟨section_ f ≫ s.π, by
       dsimp'
@@ -1180,7 +1180,7 @@ def splitEpiCoequalizes {X Y : C} (f : X ⟶ Y) [SplitEpi f] : IsColimit (cocone
 
 end
 
-/-- We show that the converse to `split_epi_equalizes` is true:
+/-- We show that the converse to `is_split_epi_equalizes` is true:
 Whenever `f` coequalizes `(f ≫ s)` and `(𝟙 X)`, then `s` is a section of `f`. -/
 def splitEpiOfCoequalizer {X Y : C} {f : X ⟶ Y} {s : Y ⟶ X} (hs : f ≫ s ≫ f = f)
     (h :
@@ -1225,7 +1225,7 @@ def splitEpiOfIdempotentOfIsColimitCofork {X : C} {f : X ⟶ X} (hf : f ≫ f = 
         (by
           simp [← hf]))
   id' := by
-    let this := epi_of_is_colimit_cofork i
+    letI := epi_of_is_colimit_cofork i
     rw [← cancel_epi_id c.π, ← category.assoc, cofork.is_colimit.π_desc, cofork.π_of_π, ← c.condition]
     exact category.id_comp _
 

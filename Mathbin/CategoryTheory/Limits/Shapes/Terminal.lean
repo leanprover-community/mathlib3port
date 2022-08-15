@@ -161,20 +161,20 @@ theorem IsInitial.to_self {X : C} (t : IsInitial X) : t.to X = 𝟙 X :=
   t.hom_ext _ _
 
 /-- Any morphism from a terminal object is split mono. -/
-def IsTerminal.splitMonoFrom {X Y : C} (t : IsTerminal X) (f : X ⟶ Y) : SplitMono f :=
-  ⟨t.from _, t.hom_ext _ _⟩
+theorem IsTerminal.is_split_mono_from {X Y : C} (t : IsTerminal X) (f : X ⟶ Y) : IsSplitMono f :=
+  IsSplitMono.mk' ⟨t.from _, t.hom_ext _ _⟩
 
 /-- Any morphism to an initial object is split epi. -/
-def IsInitial.splitEpiTo {X Y : C} (t : IsInitial X) (f : Y ⟶ X) : SplitEpi f :=
-  ⟨t.to _, t.hom_ext _ _⟩
+theorem IsInitial.is_split_epi_to {X Y : C} (t : IsInitial X) (f : Y ⟶ X) : IsSplitEpi f :=
+  IsSplitEpi.mk' ⟨t.to _, t.hom_ext _ _⟩
 
 /-- Any morphism from a terminal object is mono. -/
 theorem IsTerminal.mono_from {X Y : C} (t : IsTerminal X) (f : X ⟶ Y) : Mono f := by
-  have := t.split_mono_from f <;> infer_instance
+  haveI := t.is_split_mono_from f <;> infer_instance
 
 /-- Any morphism to an initial object is epi. -/
 theorem IsInitial.epi_to {X Y : C} (t : IsInitial X) (f : Y ⟶ X) : Epi f := by
-  have := t.split_epi_to f <;> infer_instance
+  haveI := t.is_split_epi_to f <;> infer_instance
 
 /-- If `T` and `T'` are terminal, they are isomorphic. -/
 @[simps]
@@ -316,10 +316,24 @@ and showing there is a unique morphism to it from any other object. -/
 theorem has_terminal_of_unique (X : C) [h : ∀ Y : C, Unique (Y ⟶ X)] : HasTerminal C :=
   { HasLimit := fun F => HasLimit.mk ⟨_, (isTerminalEquivUnique F X).invFun h⟩ }
 
+theorem IsTerminal.has_terminal {X : C} (h : IsTerminal X) : HasTerminal C :=
+  { HasLimit := fun F =>
+      HasLimit.mk
+        ⟨⟨X, by
+            tidy⟩,
+          isLimitChangeEmptyCone _ h _ (Iso.refl _)⟩ }
+
 /-- We can more explicitly show that a category has an initial object by specifying the object,
 and showing there is a unique morphism from it to any other object. -/
 theorem has_initial_of_unique (X : C) [h : ∀ Y : C, Unique (X ⟶ Y)] : HasInitial C :=
   { HasColimit := fun F => HasColimit.mk ⟨_, (isInitialEquivUnique F X).invFun h⟩ }
+
+theorem IsInitial.has_initial {X : C} (h : IsInitial X) : HasInitial C :=
+  { HasColimit := fun F =>
+      HasColimit.mk
+        ⟨⟨X, by
+            tidy⟩,
+          isColimitChangeEmptyCocone _ h _ (Iso.refl _)⟩ }
 
 /-- The map from an object to the terminal object. -/
 abbrev terminal.from [HasTerminal C] (P : C) : P ⟶ ⊤_ C :=
@@ -360,12 +374,12 @@ def terminalIsoIsTerminal [HasTerminal C] {P : C} (t : IsTerminal P) : ⊤_ C �
   terminalIsTerminal.uniqueUpToIso t
 
 /-- Any morphism from a terminal object is split mono. -/
-instance terminal.splitMonoFrom {Y : C} [HasTerminal C] (f : ⊤_ C ⟶ Y) : SplitMono f :=
-  IsTerminal.splitMonoFrom terminalIsTerminal _
+instance terminal.is_split_mono_from {Y : C} [HasTerminal C] (f : ⊤_ C ⟶ Y) : IsSplitMono f :=
+  IsTerminal.is_split_mono_from terminalIsTerminal _
 
 /-- Any morphism to an initial object is split epi. -/
-instance initial.splitEpiTo {Y : C} [HasInitial C] (f : Y ⟶ ⊥_ C) : SplitEpi f :=
-  IsInitial.splitEpiTo initialIsInitial _
+instance initial.is_split_epi_to {Y : C} [HasInitial C] (f : Y ⟶ ⊥_ C) : IsSplitEpi f :=
+  IsInitial.is_split_epi_to initialIsInitial _
 
 /-- An initial object is terminal in the opposite category. -/
 def terminalOpOfInitial {X : C} (t : IsInitial X) : IsTerminal (Opposite.op X) where
@@ -386,6 +400,18 @@ def initialOpOfTerminal {X : C} (t : IsTerminal X) : IsInitial (Opposite.op X) w
 def initialUnopOfTerminal {X : Cᵒᵖ} (t : IsTerminal X) : IsInitial X.unop where
   desc := fun s => (t.from (Opposite.op s.x)).unop
   uniq' := fun s m w => Quiver.Hom.op_inj (t.hom_ext _ _)
+
+instance has_initial_op_of_has_terminal [HasTerminal C] : HasInitial Cᵒᵖ :=
+  (initialOpOfTerminal terminalIsTerminal).HasInitial
+
+instance has_terminal_op_of_has_initial [HasInitial C] : HasTerminal Cᵒᵖ :=
+  (terminalOpOfInitial initialIsInitial).HasTerminal
+
+theorem has_terminal_of_has_initial_op [HasInitial Cᵒᵖ] : HasTerminal C :=
+  (terminalUnopOfInitial initialIsInitial).HasTerminal
+
+theorem has_initial_of_has_terminal_op [HasTerminal Cᵒᵖ] : HasInitial C :=
+  (initialUnopOfTerminal terminalIsTerminal).HasInitial
 
 instance {J : Type _} [Category J] {C : Type _} [Category C] [HasTerminal C] :
     HasLimit ((CategoryTheory.Functor.const J).obj (⊤_ C)) :=

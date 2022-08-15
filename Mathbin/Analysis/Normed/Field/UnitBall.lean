@@ -31,14 +31,17 @@ instance [NonUnitalSemiNormedRing 𝕜] : Semigroupₓ (Ball (0 : 𝕜) 1) :=
   MulMemClass.toSemigroup (Subsemigroup.unitBall 𝕜)
 
 instance [NonUnitalSemiNormedRing 𝕜] : HasContinuousMul (Ball (0 : 𝕜) 1) :=
-  ⟨continuous_subtype_mk _ <|
-      Continuous.mul (continuous_subtype_val.comp continuous_fst) (continuous_subtype_val.comp continuous_snd)⟩
+  (Subsemigroup.unitBall 𝕜).HasContinuousMul
 
 instance [SemiNormedCommRing 𝕜] : CommSemigroupₓ (Ball (0 : 𝕜) 1) :=
   MulMemClass.toCommSemigroup (Subsemigroup.unitBall 𝕜)
 
 instance [NonUnitalSemiNormedRing 𝕜] : HasDistribNeg (Ball (0 : 𝕜) 1) :=
   Subtype.coe_injective.HasDistribNeg (coe : Ball (0 : 𝕜) 1 → 𝕜) (fun _ => rfl) fun _ _ => rfl
+
+@[simp, norm_cast]
+theorem coe_mul_unit_ball [NonUnitalSemiNormedRing 𝕜] (x y : Ball (0 : 𝕜) 1) : ↑(x * y) = (x * y : 𝕜) :=
+  rfl
 
 /-- Closed unit ball in a non unital semi normed ring as a bundled `subsemigroup`. -/
 def Subsemigroup.unitClosedBall (𝕜 : Type _) [NonUnitalSemiNormedRing 𝕜] : Subsemigroup 𝕜 where
@@ -54,8 +57,11 @@ instance [NonUnitalSemiNormedRing 𝕜] : HasDistribNeg (ClosedBall (0 : 𝕜) 1
   Subtype.coe_injective.HasDistribNeg (coe : ClosedBall (0 : 𝕜) 1 → 𝕜) (fun _ => rfl) fun _ _ => rfl
 
 instance [NonUnitalSemiNormedRing 𝕜] : HasContinuousMul (ClosedBall (0 : 𝕜) 1) :=
-  ⟨continuous_subtype_mk _ <|
-      Continuous.mul (continuous_subtype_val.comp continuous_fst) (continuous_subtype_val.comp continuous_snd)⟩
+  (Subsemigroup.unitClosedBall 𝕜).HasContinuousMul
+
+@[simp, norm_cast]
+theorem coe_mul_unit_closed_ball [NonUnitalSemiNormedRing 𝕜] (x y : ClosedBall (0 : 𝕜) 1) : ↑(x * y) = (x * y : 𝕜) :=
+  rfl
 
 /-- Closed unit ball in a semi normed ring as a bundled `submonoid`. -/
 def Submonoid.unitClosedBall (𝕜 : Type _) [SemiNormedRing 𝕜] [NormOneClass 𝕜] : Submonoid 𝕜 :=
@@ -67,6 +73,15 @@ instance [SemiNormedRing 𝕜] [NormOneClass 𝕜] : Monoidₓ (ClosedBall (0 : 
 instance [SemiNormedCommRing 𝕜] [NormOneClass 𝕜] : CommMonoidₓ (ClosedBall (0 : 𝕜) 1) :=
   SubmonoidClass.toCommMonoid (Submonoid.unitClosedBall 𝕜)
 
+@[simp, norm_cast]
+theorem coe_one_unit_closed_ball [SemiNormedRing 𝕜] [NormOneClass 𝕜] : ((1 : ClosedBall (0 : 𝕜) 1) : 𝕜) = 1 :=
+  rfl
+
+@[simp, norm_cast]
+theorem coe_pow_unit_closed_ball [SemiNormedRing 𝕜] [NormOneClass 𝕜] (x : ClosedBall (0 : 𝕜) 1) (n : ℕ) :
+    ↑(x ^ n) = (x ^ n : 𝕜) :=
+  rfl
+
 /-- Unit sphere in a normed division ring as a bundled `submonoid`. -/
 def Submonoid.unitSphere (𝕜 : Type _) [NormedDivisionRing 𝕜] : Submonoid 𝕜 where
   Carrier := Sphere (0 : 𝕜) 1
@@ -75,25 +90,74 @@ def Submonoid.unitSphere (𝕜 : Type _) [NormedDivisionRing 𝕜] : Submonoid �
     simp [*]
   one_mem' := mem_sphere_zero_iff_norm.2 norm_one
 
-instance [NormedDivisionRing 𝕜] : Groupₓ (Sphere (0 : 𝕜) 1) :=
-  { SubmonoidClass.toMonoid (Submonoid.unitSphere 𝕜) with
-    inv := fun x =>
-      ⟨x⁻¹,
-        mem_sphere_zero_iff_norm.2 <| by
-          rw [norm_inv, mem_sphere_zero_iff_norm.1 x.coe_prop, inv_one]⟩,
-    mul_left_inv := fun x => Subtype.coe_injective <| inv_mul_cancel <| ne_zero_of_mem_unit_sphere x }
+instance [NormedDivisionRing 𝕜] : Inv (Sphere (0 : 𝕜) 1) :=
+  ⟨fun x =>
+    ⟨x⁻¹,
+      mem_sphere_zero_iff_norm.2 <| by
+        rw [norm_inv, mem_sphere_zero_iff_norm.1 x.coe_prop, inv_one]⟩⟩
 
-instance [NormedDivisionRing 𝕜] : HasDistribNeg (Sphere (0 : 𝕜) 1) :=
-  Subtype.coe_injective.HasDistribNeg (coe : Sphere (0 : 𝕜) 1 → 𝕜) (fun _ => rfl) fun _ _ => rfl
+@[simp, norm_cast]
+theorem coe_inv_unit_sphere [NormedDivisionRing 𝕜] (x : Sphere (0 : 𝕜) 1) : ↑x⁻¹ = (x⁻¹ : 𝕜) :=
+  rfl
+
+instance [NormedDivisionRing 𝕜] : Div (Sphere (0 : 𝕜) 1) :=
+  ⟨fun x y =>
+    ⟨x / y,
+      mem_sphere_zero_iff_norm.2 <| by
+        rw [norm_div, mem_sphere_zero_iff_norm.1 x.coe_prop, mem_sphere_zero_iff_norm.1 y.coe_prop, div_one]⟩⟩
+
+@[simp, norm_cast]
+theorem coe_div_unit_sphere [NormedDivisionRing 𝕜] (x y : Sphere (0 : 𝕜) 1) : ↑(x / y) = (x / y : 𝕜) :=
+  rfl
+
+instance [NormedDivisionRing 𝕜] : Pow (Sphere (0 : 𝕜) 1) ℤ :=
+  ⟨fun x n =>
+    ⟨x ^ n, by
+      rw [mem_sphere_zero_iff_norm, norm_zpow, mem_sphere_zero_iff_norm.1 x.coe_prop, one_zpow]⟩⟩
+
+@[simp, norm_cast]
+theorem coe_zpow_unit_sphere [NormedDivisionRing 𝕜] (x : Sphere (0 : 𝕜) 1) (n : ℤ) : ↑(x ^ n) = (x ^ n : 𝕜) :=
+  rfl
+
+instance [NormedDivisionRing 𝕜] : Monoidₓ (Sphere (0 : 𝕜) 1) :=
+  SubmonoidClass.toMonoid (Submonoid.unitSphere 𝕜)
+
+@[simp, norm_cast]
+theorem coe_one_unit_sphere [NormedDivisionRing 𝕜] : ((1 : Sphere (0 : 𝕜) 1) : 𝕜) = 1 :=
+  rfl
+
+@[simp, norm_cast]
+theorem coe_mul_unit_sphere [NormedDivisionRing 𝕜] (x y : Sphere (0 : 𝕜) 1) : ↑(x * y) = (x * y : 𝕜) :=
+  rfl
+
+@[simp, norm_cast]
+theorem coe_pow_unit_sphere [NormedDivisionRing 𝕜] (x : Sphere (0 : 𝕜) 1) (n : ℕ) : ↑(x ^ n) = (x ^ n : 𝕜) :=
+  rfl
 
 /-- Monoid homomorphism from the unit sphere to the group of units. -/
 def unitSphereToUnits (𝕜 : Type _) [NormedDivisionRing 𝕜] : Sphere (0 : 𝕜) 1 →* Units 𝕜 :=
   Units.liftRight (Submonoid.unitSphere 𝕜).Subtype (fun x => Units.mk0 x <| ne_zero_of_mem_unit_sphere _) fun x => rfl
 
+@[simp]
+theorem unit_sphere_to_units_apply_coe [NormedDivisionRing 𝕜] (x : Sphere (0 : 𝕜) 1) :
+    (unitSphereToUnits 𝕜 x : 𝕜) = x :=
+  rfl
+
+theorem unit_sphere_to_units_injective [NormedDivisionRing 𝕜] : Function.Injective (unitSphereToUnits 𝕜) := fun x y h =>
+  Subtype.eq <| by
+    convert congr_arg Units.val h
+
+instance [NormedDivisionRing 𝕜] : Groupₓ (Sphere (0 : 𝕜) 1) :=
+  unit_sphere_to_units_injective.Group (unitSphereToUnits 𝕜) (Units.ext rfl) (fun x y => Units.ext rfl)
+    (fun x => Units.ext rfl) (fun x y => Units.ext <| div_eq_mul_inv _ _)
+    (fun x n => Units.ext (Units.coe_pow (unitSphereToUnits 𝕜 x) n).symm) fun x n =>
+    Units.ext (Units.coe_zpow (unitSphereToUnits 𝕜 x) n).symm
+
+instance [NormedDivisionRing 𝕜] : HasDistribNeg (Sphere (0 : 𝕜) 1) :=
+  Subtype.coe_injective.HasDistribNeg (coe : Sphere (0 : 𝕜) 1 → 𝕜) (fun _ => rfl) fun _ _ => rfl
+
 instance [NormedDivisionRing 𝕜] : TopologicalGroup (Sphere (0 : 𝕜) 1) where
-  continuous_mul :=
-    continuous_subtype_mk _ <|
-      (continuous_subtype_val.comp continuous_fst).mul (continuous_subtype_val.comp continuous_snd)
+  to_has_continuous_mul := (Submonoid.unitSphere 𝕜).HasContinuousMul
   continuous_inv := continuous_subtype_mk _ <| continuous_subtype_coe.inv₀ ne_zero_of_mem_unit_sphere
 
 instance [NormedField 𝕜] : CommGroupₓ (Sphere (0 : 𝕜) 1) :=

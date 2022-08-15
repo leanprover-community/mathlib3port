@@ -192,7 +192,7 @@ theorem of_irreducible_pow {α} [Monoidₓ α] {x : α} {n : ℕ} (hn : n ≠ 1)
 
 theorem irreducible_or_factor {α} [Monoidₓ α] (x : α) (h : ¬IsUnit x) :
     Irreducible x ∨ ∃ a b, ¬IsUnit a ∧ ¬IsUnit b ∧ a * b = x := by
-  have := Classical.dec
+  haveI := Classical.dec
   refine' or_iff_not_imp_right.2 fun H => _
   simp [← h, ← irreducible_iff] at H⊢
   refine' fun a b h => Classical.by_contradiction fun o => _

@@ -144,6 +144,7 @@ theorem is_gluing_iff_eq_res (sf : piOpens F U) (s : F.obj (op (supr U))) :
 in terms of unique gluings.
 -/
 theorem is_sheaf_of_is_sheaf_unique_gluing_types (Fsh : F.IsSheafUniqueGluing) : F.IsSheaf := by
+  rw [is_sheaf_iff_is_sheaf_equalizer_products]
   intro ι U
   refine' ⟨fork.is_limit.mk' _ _⟩
   intro s
@@ -168,6 +169,7 @@ theorem is_sheaf_of_is_sheaf_unique_gluing_types (Fsh : F.IsSheafUniqueGluing) :
 "equalizer" sheaf condition.
 -/
 theorem is_sheaf_unique_gluing_of_is_sheaf_types (Fsh : F.IsSheaf) : F.IsSheafUniqueGluing := by
+  rw [is_sheaf_iff_is_sheaf_equalizer_products] at Fsh
   intro ι U sf hsf
   let sf' := (pi_opens_iso_sections_family F U).inv sf
   have hsf' : left_res F U sf' = right_res F U sf' := by
@@ -233,7 +235,7 @@ variable {X : Top.{v}} (F : Sheaf C X) {ι : Type v} (U : ι → Opens X)
 -/
 theorem exists_unique_gluing (sf : ∀ i : ι, F.1.obj (op (U i))) (h : IsCompatible F.1 U sf) :
     ∃! s : F.1.obj (op (supr U)), IsGluing F.1 U sf s :=
-  (is_sheaf_iff_is_sheaf_unique_gluing F.1).mp F.property U sf h
+  (is_sheaf_iff_is_sheaf_unique_gluing F.1).mp F.cond U sf h
 
 /-- In this version of the lemma, the inclusion homs `iUV` can be specified directly by the user,
 which can be more convenient in practice.

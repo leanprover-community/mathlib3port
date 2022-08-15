@@ -56,7 +56,7 @@ theorem inducing_pullback_total_space_embedding (f : B' → B) : Inducing (@pull
   simp_rw [Prod.topologicalSpace, induced_inf, induced_compose, Pullback.TotalSpace.topologicalSpace, pullbackTopology]
   rfl
 
-variable (F) [NondiscreteNormedField 𝕜] [NormedGroup F] [NormedSpace 𝕜 F] [TopologicalSpace B]
+variable (F) [NontriviallyNormedField 𝕜] [NormedAddCommGroup F] [NormedSpace 𝕜 F] [TopologicalSpace B]
   [∀ x, AddCommMonoidₓ (E x)] [∀ x, Module 𝕜 (E x)]
 
 theorem Pullback.continuous_total_space_mk [∀ x, TopologicalSpace (E x)] [TopologicalVectorBundle 𝕜 F E] {f : B' → B}
@@ -74,7 +74,7 @@ def TopologicalVectorBundle.Trivialization.pullback (e : Trivialization 𝕜 F E
   invFun := fun y => @totalSpaceMk _ (f *ᵖ E) y.1 (e.symm (f y.1) y.2)
   Source := Pullback.lift f ⁻¹' e.Source
   BaseSet := f ⁻¹' e.BaseSet
-  Target := (f ⁻¹' e.BaseSet) ×ˢ (Univ : Set F)
+  Target := (f ⁻¹' e.BaseSet) ×ˢ univ
   map_source' := fun x h => by
     simp_rw [e.source_eq, mem_preimage, pullback.proj_lift] at h
     simp_rw [prod_mk_mem_set_prod_eq, mem_univ, and_trueₓ, mem_preimage, h]

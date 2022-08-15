@@ -70,22 +70,22 @@ def gcdMonoid (R) [EuclideanDomain R] : GcdMonoid R where
 variable {α : Type _} [EuclideanDomain α] [DecidableEq α]
 
 theorem span_gcd {α} [EuclideanDomain α] (x y : α) : span ({gcd x y} : Set α) = span ({x, y} : Set α) := by
-  let this := EuclideanDomain.gcdMonoid α
+  letI := EuclideanDomain.gcdMonoid α
   exact span_gcd x y
 
 theorem gcd_is_unit_iff {α} [EuclideanDomain α] {x y : α} : IsUnit (gcd x y) ↔ IsCoprime x y := by
-  let this := EuclideanDomain.gcdMonoid α
+  letI := EuclideanDomain.gcdMonoid α
   exact gcd_is_unit_iff x y
 
 -- this should be proved for UFDs surely?
 theorem is_coprime_of_dvd {α} [EuclideanDomain α] {x y : α} (nonzero : ¬(x = 0 ∧ y = 0))
     (H : ∀, ∀ z ∈ Nonunits α, ∀, z ≠ 0 → z ∣ x → ¬z ∣ y) : IsCoprime x y := by
-  let this := EuclideanDomain.gcdMonoid α
+  letI := EuclideanDomain.gcdMonoid α
   exact is_coprime_of_dvd x y nonzero H
 
 -- this should be proved for UFDs surely?
 theorem dvd_or_coprime {α} [EuclideanDomain α] (x y : α) (h : Irreducible x) : x ∣ y ∨ IsCoprime x y := by
-  let this := EuclideanDomain.gcdMonoid α
+  letI := EuclideanDomain.gcdMonoid α
   exact dvd_or_coprime x y h
 
 end EuclideanDomain

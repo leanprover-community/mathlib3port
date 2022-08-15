@@ -43,7 +43,7 @@ open BigOperators MeasureTheory ProbabilityTheory Ennreal Nnreal
 
 namespace ProbabilityTheory
 
-variable {Ω : Type _} {m : MeasurableSpace Ω} {X : Ω → ℝ} {p : ℕ} {μ : Measureₓ Ω}
+variable {Ω ι : Type _} {m : MeasurableSpace Ω} {X : Ω → ℝ} {p : ℕ} {μ : Measureₓ Ω}
 
 include m
 
@@ -200,13 +200,17 @@ theorem mgf_neg : mgf (-X) μ t = mgf X μ (-t) := by
 theorem cgf_neg : cgf (-X) μ t = cgf X μ (-t) := by
   simp_rw [cgf, mgf_neg]
 
+/-- This is a trivial application of `indep_fun.comp` but it will come up frequently. -/
+theorem IndepFunₓ.exp_mul {X Y : Ω → ℝ} (h_indep : IndepFunₓ X Y μ) (s t : ℝ) :
+    IndepFunₓ (fun ω => exp (s * X ω)) (fun ω => exp (t * Y ω)) μ := by
+  have h_meas : ∀ t, Measurable fun x => exp (t * x) := fun t => (measurable_id'.const_mul t).exp
+  change indep_fun ((fun x => exp (s * x)) ∘ X) ((fun x => exp (t * x)) ∘ Y) μ
+  exact indep_fun.comp h_indep (h_meas s) (h_meas t)
+
 theorem IndepFunₓ.mgf_add {X Y : Ω → ℝ} (h_indep : IndepFunₓ X Y μ) (h_int_X : Integrable (fun ω => exp (t * X ω)) μ)
     (h_int_Y : Integrable (fun ω => exp (t * Y ω)) μ) : mgf (X + Y) μ t = mgf X μ t * mgf Y μ t := by
   simp_rw [mgf, Pi.add_apply, mul_addₓ, exp_add]
-  refine' indep_fun.integral_mul_of_integrable' _ h_int_X h_int_Y
-  have h_meas : Measurable fun x => exp (t * x) := (measurable_id'.const_mul t).exp
-  change indep_fun ((fun x => exp (t * x)) ∘ X) ((fun x => exp (t * x)) ∘ Y) μ
-  exact indep_fun.comp h_indep h_meas h_meas
+  exact (h_indep.exp_mul t t).integral_mul_of_integrable' h_int_X h_int_Y
 
 theorem IndepFunₓ.cgf_add {X Y : Ω → ℝ} (h_indep : IndepFunₓ X Y μ) (h_int_X : Integrable (fun ω => exp (t * X ω)) μ)
     (h_int_Y : Integrable (fun ω => exp (t * Y ω)) μ) : cgf (X + Y) μ t = cgf X μ t + cgf Y μ t := by
@@ -215,6 +219,53 @@ theorem IndepFunₓ.cgf_add {X Y : Ω → ℝ} (h_indep : IndepFunₓ X Y μ) (h
     
   simp only [← cgf, ← h_indep.mgf_add h_int_X h_int_Y]
   exact log_mul (mgf_pos' hμ h_int_X).ne' (mgf_pos' hμ h_int_Y).ne'
+
+theorem IndepFunₓ.integrable_exp_mul_add {X Y : Ω → ℝ} (h_indep : IndepFunₓ X Y μ)
+    (h_int_X : Integrable (fun ω => exp (t * X ω)) μ) (h_int_Y : Integrable (fun ω => exp (t * Y ω)) μ) :
+    Integrable (fun ω => exp (t * (X + Y) ω)) μ := by
+  simp_rw [Pi.add_apply, mul_addₓ, exp_add]
+  exact (h_indep.exp_mul t t).integrable_mul h_int_X h_int_Y
+
+theorem IndepFun.integrable_exp_mul_sum [IsProbabilityMeasure μ] {X : ι → Ω → ℝ}
+    (h_indep : IndepFun (fun i => inferInstance) X μ) (h_meas : ∀ i, Measurable (X i)) {s : Finset ι}
+    (h_int : ∀, ∀ i ∈ s, ∀, Integrable (fun ω => exp (t * X i ω)) μ) :
+    Integrable (fun ω => exp (t * (∑ i in s, X i) ω)) μ := by
+  classical
+  induction' s using Finset.induction_on with i s hi_notin_s h_rec h_int
+  · simp only [← Pi.zero_apply, ← sum_apply, ← sum_empty, ← mul_zero, ← exp_zero]
+    exact integrable_const _
+    
+  · have : ∀ i : ι, i ∈ s → integrable (fun ω : Ω => exp (t * X i ω)) μ := fun i hi => h_int i (mem_insert_of_mem hi)
+    specialize h_rec this
+    rw [sum_insert hi_notin_s]
+    refine' indep_fun.integrable_exp_mul_add _ (h_int i (mem_insert_self _ _)) h_rec
+    exact (h_indep.indep_fun_finset_sum_of_not_mem h_meas hi_notin_s).symm
+    
+
+theorem IndepFun.mgf_sum [IsProbabilityMeasure μ] {X : ι → Ω → ℝ} (h_indep : IndepFun (fun i => inferInstance) X μ)
+    (h_meas : ∀ i, Measurable (X i)) {s : Finset ι} (h_int : ∀, ∀ i ∈ s, ∀, Integrable (fun ω => exp (t * X i ω)) μ) :
+    mgf (∑ i in s, X i) μ t = ∏ i in s, mgf (X i) μ t := by
+  classical
+  induction' s using Finset.induction_on with i s hi_notin_s h_rec h_int
+  · simp only [← sum_empty, ← mgf_zero_fun, ← measure_univ, ← Ennreal.one_to_real, ← prod_empty]
+    
+  · have h_int' : ∀ i : ι, i ∈ s → integrable (fun ω : Ω => exp (t * X i ω)) μ := fun i hi =>
+      h_int i (mem_insert_of_mem hi)
+    rw [sum_insert hi_notin_s,
+      indep_fun.mgf_add (h_indep.indep_fun_finset_sum_of_not_mem h_meas hi_notin_s).symm (h_int i (mem_insert_self _ _))
+        (h_indep.integrable_exp_mul_sum h_meas h_int'),
+      h_rec h_int', prod_insert hi_notin_s]
+    
+
+theorem IndepFun.cgf_sum [IsProbabilityMeasure μ] {X : ι → Ω → ℝ} (h_indep : IndepFun (fun i => inferInstance) X μ)
+    (h_meas : ∀ i, Measurable (X i)) {s : Finset ι} (h_int : ∀, ∀ i ∈ s, ∀, Integrable (fun ω => exp (t * X i ω)) μ) :
+    cgf (∑ i in s, X i) μ t = ∑ i in s, cgf (X i) μ t := by
+  simp_rw [cgf]
+  rw [← log_prod _ _ fun j hj => _]
+  · rw [h_indep.mgf_sum h_meas h_int]
+    
+  · exact (mgf_pos (h_int j hj)).ne'
+    
 
 /-- **Chernoff bound** on the upper tail of a real random variable. -/
 theorem measure_ge_le_exp_mul_mgf [IsFiniteMeasure μ] (ε : ℝ) (ht : 0 ≤ t)
@@ -225,18 +276,19 @@ theorem measure_ge_le_exp_mul_mgf [IsFiniteMeasure μ] (ε : ℝ) (ht : 0 ≤ t)
     rw [Ennreal.to_real_le_to_real (measure_ne_top μ _) (measure_ne_top μ _)]
     exact measure_mono (Set.subset_univ _)
     
-  calc (μ { ω | ε ≤ X ω }).toReal = (μ { ω | exp (t * ε) ≤ exp (t * X ω) }).toReal := by
+  calc
+    (μ { ω | ε ≤ X ω }).toReal = (μ { ω | exp (t * ε) ≤ exp (t * X ω) }).toReal := by
       congr with ω
       simp only [← exp_le_exp, ← eq_iff_iff]
-      exact
-        ⟨fun h => mul_le_mul_of_nonneg_left h ht_pos.le, fun h =>
-          le_of_mul_le_mul_left h ht_pos⟩_ ≤ (exp (t * ε))⁻¹ * μ[fun ω => exp (t * X ω)] :=
-      by
+      exact ⟨fun h => mul_le_mul_of_nonneg_left h ht_pos.le, fun h => le_of_mul_le_mul_left h ht_pos⟩
+    _ ≤ (exp (t * ε))⁻¹ * μ[fun ω => exp (t * X ω)] := by
       have : exp (t * ε) * (μ { ω | exp (t * ε) ≤ exp (t * X ω) }).toReal ≤ μ[fun ω => exp (t * X ω)] :=
         mul_meas_ge_le_integral_of_nonneg (fun x => (exp_pos _).le) h_int _
-      rwa [mul_comm (exp (t * ε))⁻¹, ← div_eq_mul_inv, le_div_iff' (exp_pos _)]_ = exp (-t * ε) * mgf X μ t := by
+      rwa [mul_comm (exp (t * ε))⁻¹, ← div_eq_mul_inv, le_div_iff' (exp_pos _)]
+    _ = exp (-t * ε) * mgf X μ t := by
       rw [neg_mul, exp_neg]
       rfl
+    
 
 /-- **Chernoff bound** on the lower tail of a real random variable. -/
 theorem measure_le_le_exp_mul_mgf [IsFiniteMeasure μ] (ε : ℝ) (ht : t ≤ 0)

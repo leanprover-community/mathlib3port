@@ -59,14 +59,14 @@ variable {f}
 noncomputable def image.lift (F' : MonoFactorisation f) : image f ⟶ F'.i where
   toFun := (fun x => F'.e (Classical.indefiniteDescription _ x.2).1 : image f → F'.i)
   map_zero' := by
-    have := F'.m_mono
+    haveI := F'.m_mono
     apply injective_of_mono F'.m
     change (F'.e ≫ F'.m) _ = _
     rw [F'.fac, AddMonoidHom.map_zero]
     exact (Classical.indefiniteDescription (fun y => f y = 0) _).2
   map_add' := by
     intro x y
-    have := F'.m_mono
+    haveI := F'.m_mono
     apply injective_of_mono F'.m
     rw [AddMonoidHom.map_add]
     change (F'.e ≫ F'.m) _ = (F'.e ≫ F'.m) _ + (F'.e ≫ F'.m) _

@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Mathbin.Data.Multiset.Basic
+import Mathbin.Data.Multiset.Range
+import Mathbin.Data.Multiset.Bind
 
 /-!
 # The powerset of a multiset
@@ -137,13 +139,13 @@ theorem revzip_powerset_aux_lemma [DecidableEq α] (l : List α) {l' : List (Mul
   simpa
 
 theorem revzip_powerset_aux_perm_aux' {l : List α} : revzipₓ (powersetAux l) ~ revzipₓ (powersetAux' l) := by
-  have := Classical.decEq α
+  haveI := Classical.decEq α
   rw [revzip_powerset_aux_lemma l revzip_powerset_aux, revzip_powerset_aux_lemma l revzip_powerset_aux']
   exact powerset_aux_perm_powerset_aux'.map _
 
 theorem revzip_powerset_aux_perm {l₁ l₂ : List α} (p : l₁ ~ l₂) : revzipₓ (powersetAux l₁) ~ revzipₓ (powersetAux l₂) :=
   by
-  have := Classical.decEq α
+  haveI := Classical.decEq α
   simp [← fun l : List α => revzip_powerset_aux_lemma l revzip_powerset_aux, ← coe_eq_coe.2 p]
   exact (powerset_aux_perm p).map _
 
@@ -262,6 +264,16 @@ theorem powerset_len_map {β : Type _} (f : α → β) (n : ℕ) (s : Multiset �
     
   · cases n <;> simp [← ih, ← map_comp_cons]
     
+
+theorem disjoint_powerset_len (s : Multiset α) {i j : ℕ} (h : i ≠ j) :
+    Multiset.Disjoint (s.powersetLen i) (s.powersetLen j) := fun x hi hj =>
+  h (Eq.trans (Multiset.mem_powerset_len.mp hi).right.symm (Multiset.mem_powerset_len.mp hj).right)
+
+theorem bind_powerset_len {α : Type _} (S : Multiset α) :
+    (bind (Multiset.range (S.card + 1)) fun k => S.powersetLen k) = S.Powerset := by
+  induction S using Quotientₓ.induction_on
+  simp_rw [quot_mk_to_coe, powerset_coe', powerset_len_coe, ← coe_range, coe_bind, ← List.bind_map, coe_card]
+  exact coe_eq_coe.mpr ((List.range_bind_sublists_len_perm S).map _)
 
 end Multiset
 

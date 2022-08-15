@@ -539,7 +539,7 @@ theorem of_left_inverse_eq_of_injective {α β : Type _} (f : α → β) (f_inv 
     ofLeftInverse f f_inv hf =
       ofInjective f
         ((em (Nonempty α)).elim (fun h => (hf h).Injective) fun h _ _ _ => by
-          have : Subsingleton α := subsingleton_of_not_nonempty h
+          haveI : Subsingleton α := subsingleton_of_not_nonempty h
           simp ) :=
   by
   ext

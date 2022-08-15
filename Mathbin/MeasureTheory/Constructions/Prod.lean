@@ -95,7 +95,7 @@ variable [MeasurableSpace γ]
 
 variable {μ : Measureₓ α} {ν : Measureₓ β} {τ : Measureₓ γ}
 
-variable [NormedGroup E]
+variable [NormedAddCommGroup E]
 
 /-! ### Measurability
 
@@ -188,7 +188,7 @@ theorem measurable_measure_prod_mk_left [SigmaFinite ν] {s : Set (α × β)} (h
   simp only [@supr_restrict_spanning_sets _ _ ν, ← this]
   apply measurable_supr
   intro i
-  have := Fact.mk (measure_spanning_sets_lt_top ν i)
+  haveI := Fact.mk (measure_spanning_sets_lt_top ν i)
   exact measurable_measure_prod_mk_left_finite hs
 
 /-- If `μ` is a σ-finite measure, and `s ⊆ α × β` is measurable, then `y ↦ μ { x | (x, y) ∈ s }` is
@@ -261,14 +261,14 @@ section
 
 variable [NormedSpace ℝ E] [CompleteSpace E]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr E]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `borelize #[[expr E]]
 /-- The Bochner integral is measurable. This shows that the integrand of (the right-hand-side of)
   Fubini's theorem is measurable.
   This version has `f` in curried form. -/
 theorem MeasureTheory.StronglyMeasurable.integral_prod_right [SigmaFinite ν] ⦃f : α → β → E⦄
     (hf : StronglyMeasurable (uncurry f)) : StronglyMeasurable fun x => ∫ y, f x y ∂ν := by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr E]]"
-  have : separable_space (range (uncurry f) ∪ {0} : Set E) := hf.separable_space_range_union_singleton
+  trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `borelize #[[expr E]]"
+  haveI : separable_space (range (uncurry f) ∪ {0} : Set E) := hf.separable_space_range_union_singleton
   let s : ℕ → simple_func (α × β) E :=
     simple_func.approx_on _ hf.measurable (range (uncurry f) ∪ {0}) 0
       (by
@@ -370,16 +370,15 @@ theorem prod_prod (s : Set α) (t : Set β) : μ.Prod ν (s ×ˢ t) = μ s * ν 
   apply le_antisymmₓ
   · set ST := to_measurable μ s ×ˢ to_measurable ν t
     have hSTm : MeasurableSet ST := (measurable_set_to_measurable _ _).Prod (measurable_set_to_measurable _ _)
-    calc μ.prod ν (s ×ˢ t) ≤ μ.prod ν ST :=
-        measure_mono <|
-          Set.prod_mono (subset_to_measurable _ _)
-            (subset_to_measurable _ _)_ = μ (to_measurable μ s) * ν (to_measurable ν t) :=
-        by
+    calc
+      μ.prod ν (s ×ˢ t) ≤ μ.prod ν ST :=
+        measure_mono <| Set.prod_mono (subset_to_measurable _ _) (subset_to_measurable _ _)
+      _ = μ (to_measurable μ s) * ν (to_measurable ν t) := by
         simp_rw [prod_apply hSTm, mk_preimage_prod_right_eq_if, measure_if,
-          lintegral_indicator _ (measurable_set_to_measurable _ _), lintegral_const, restrict_apply_univ,
-          mul_comm]_ = μ s * ν t :=
-        by
+          lintegral_indicator _ (measurable_set_to_measurable _ _), lintegral_const, restrict_apply_univ, mul_comm]
+      _ = μ s * ν t := by
         rw [measure_to_measurable, measure_to_measurable]
+      
     
   · -- Formalization is based on https://mathoverflow.net/a/254134/136589
     set ST := to_measurable (μ.prod ν) (s ×ˢ t)
@@ -389,11 +388,15 @@ theorem prod_prod (s : Set α) (t : Set β) : μ.Prod ν (s ×ˢ t) = μ s * ν 
     have hfm : Measurable f := measurable_measure_prod_mk_left hSTm
     set s' : Set α := { x | ν t ≤ f x }
     have hss' : s ⊆ s' := fun x hx => measure_mono fun y hy => hST <| mk_mem_prod hx hy
-    calc μ s * ν t ≤ μ s' * ν t := mul_le_mul_right' (measure_mono hss') _ _ = ∫⁻ x in s', ν t ∂μ := by
-        rw [set_lintegral_const, mul_comm]_ ≤ ∫⁻ x in s', f x ∂μ :=
-        set_lintegral_mono measurable_const hfm fun x => id _ ≤ ∫⁻ x, f x ∂μ :=
-        lintegral_mono' restrict_le_self le_rfl _ = μ.prod ν ST := (prod_apply hSTm).symm _ = μ.prod ν (s ×ˢ t) :=
-        measure_to_measurable _
+    calc
+      μ s * ν t ≤ μ s' * ν t := mul_le_mul_right' (measure_mono hss') _
+      _ = ∫⁻ x in s', ν t ∂μ := by
+        rw [set_lintegral_const, mul_comm]
+      _ ≤ ∫⁻ x in s', f x ∂μ := set_lintegral_mono measurable_const hfm fun x => id
+      _ ≤ ∫⁻ x, f x ∂μ := lintegral_mono' restrict_le_self le_rfl
+      _ = μ.prod ν ST := (prod_apply hSTm).symm
+      _ = μ.prod ν (s ×ˢ t) := measure_to_measurable _
+      
     
 
 instance {X Y : Type _} [TopologicalSpace X] [TopologicalSpace Y] {m : MeasurableSpace X} {μ : Measure X}
@@ -480,7 +483,7 @@ theorem ae_ae_of_ae_prod {p : α × β → Prop} (h : ∀ᵐ z ∂μ.Prod ν, p 
 noncomputable def FiniteSpanningSetsIn.prod {ν : Measure β} {C : Set (Set α)} {D : Set (Set β)}
     (hμ : μ.FiniteSpanningSetsIn C) (hν : ν.FiniteSpanningSetsIn D) :
     (μ.Prod ν).FiniteSpanningSetsIn (Image2 (· ×ˢ ·) C D) := by
-  have := hν.sigma_finite
+  haveI := hν.sigma_finite
   refine'
     ⟨fun n => hμ.set n.unpair.1 ×ˢ hν.set n.unpair.2, fun n => mem_image2_of_mem (hμ.set_mem _) (hν.set_mem _), fun n =>
       _, _⟩
@@ -513,7 +516,7 @@ theorem prod_eq_generate_from {μ : Measure α} {ν : Measure β} {C : Set (Set 
     (h3C.prod h3D).ext (generate_from_eq_prod hC hD h3C.is_countably_spanning h3D.is_countably_spanning).symm
       (h2C.prod h2D) _
   · rintro _ ⟨s, t, hs, ht, rfl⟩
-    have := h3D.sigma_finite
+    haveI := h3D.sigma_finite
     rw [h₁ s hs t ht, prod_prod]
     
 
@@ -597,7 +600,7 @@ theorem prod_zero (μ : Measure α) : μ.Prod (0 : Measure β) = 0 := by
 theorem map_prod_map {δ} [MeasurableSpace δ] {f : α → β} {g : γ → δ} {μa : Measure α} {μc : Measure γ}
     (hfa : SigmaFinite (map f μa)) (hgc : SigmaFinite (map g μc)) (hf : Measurable f) (hg : Measurable g) :
     (map f μa).Prod (map g μc) = map (Prod.map f g) (μa.Prod μc) := by
-  have := hgc.of_map μc hg.ae_measurable
+  haveI := hgc.of_map μc hg.ae_measurable
   refine' prod_eq fun s t hs ht => _
   rw [map_apply (hf.prod_map hg) (hs.prod ht), map_apply hf hs, map_apply hg ht]
   exact prod_prod (f ⁻¹' s) (g ⁻¹' t)
@@ -934,7 +937,7 @@ theorem integral_prod_swap (f : α × β → E) (hf : AeStronglyMeasurable f (μ
   rw [← prod_swap] at hf
   rw [← integral_map measurable_swap.ae_measurable hf, prod_swap]
 
-variable {E' : Type _} [NormedGroup E'] [CompleteSpace E'] [NormedSpace ℝ E']
+variable {E' : Type _} [NormedAddCommGroup E'] [CompleteSpace E'] [NormedSpace ℝ E']
 
 /-! Some rules about the sum/difference of double integrals. They follow from `integral_add`, but
   we separate them out as separate lemmas, because they involve quite some steps. -/

@@ -163,7 +163,10 @@ theorem bind₁_verschiebung_poly_witt_polynomial (n : ℕ) :
     
   · obtain ⟨n, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hn
     rw [Nat.succ_eq_add_one, add_tsub_cancel_right, RingHom.map_mul, map_nat_cast, hom_bind₁]
-    calc _ = ghost_component (n + 1) (verschiebung <| mk p x) := _ _ = _ := _
+    calc
+      _ = ghost_component (n + 1) (verschiebung <| mk p x) := _
+      _ = _ := _
+      
     · apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
       simp only [aeval_verschiebung_poly, ← coeff_mk]
       funext k

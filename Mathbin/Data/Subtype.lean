@@ -98,6 +98,9 @@ theorem coe_mk (a h) : (@mk α p a h : α) = a :=
 theorem mk_eq_mk {a h a' h'} : @mk α p a h = @mk α p a' h' ↔ a = a' :=
   ext_iff
 
+theorem coe_eq_of_eq_mk {a : { a // p a }} {b : α} (h : ↑a = b) : a = ⟨b, h ▸ a.2⟩ :=
+  Subtype.ext h
+
 theorem coe_eq_iff {a : { a // p a }} {b : α} : ↑a = b ↔ ∃ h, a = ⟨b, h⟩ :=
   ⟨fun h => h ▸ ⟨a.2, (coe_eta _ _).symm⟩, fun ⟨hb, ha⟩ => ha.symm ▸ rfl⟩
 
@@ -136,7 +139,7 @@ theorem restrict_injective {α β} {f : α → β} (p : α → Prop) (h : Inject
 
 theorem surjective_restrict {α} {β : α → Type _} [ne : ∀ a, Nonempty (β a)] (p : α → Prop) :
     Surjective fun f : ∀ x, β x => restrictₓ p f := by
-  let this := Classical.decPred p
+  letI := Classical.decPred p
   refine' fun f => ⟨fun x => if h : p x then f ⟨x, h⟩ else Nonempty.some (Ne x), funext <| _⟩
   rintro ⟨x, hx⟩
   exact dif_pos hx

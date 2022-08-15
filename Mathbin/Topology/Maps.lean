@@ -42,7 +42,7 @@ open map, closed map, embedding, quotient map, identification map
 -/
 
 
-open Set Filter
+open Set Filter Function
 
 open TopologicalSpace Filter
 
@@ -128,6 +128,9 @@ theorem Inducing.is_closed_iff' {f : α → β} (hf : Inducing f) {s : Set α} :
     IsClosed s ↔ ∀ x, f x ∈ Closure (f '' s) → x ∈ s := by
   rw [hf.induced, is_closed_induced_iff']
 
+theorem Inducing.is_closed_preimage {f : α → β} (h : Inducing f) (s : Set β) (hs : IsClosed s) : IsClosed (f ⁻¹' s) :=
+  (Inducing.is_closed_iff h).mpr ⟨s, hs, rfl⟩
+
 theorem Inducing.is_open_iff {f : α → β} (hf : Inducing f) {s : Set α} : IsOpen s ↔ ∃ t, IsOpen t ∧ f ⁻¹' t = s := by
   rw [hf.induced, is_open_induced_iff]
 
@@ -142,15 +145,15 @@ section Embedding
   and for all `s : set α`, `s` is open iff it is the preimage of an open set. -/
 @[mk_iff]
 structure Embedding [tα : TopologicalSpace α] [tβ : TopologicalSpace β] (f : α → β) extends Inducing f : Prop where
-  inj : Function.Injective f
+  inj : Injective f
 
-theorem Function.Injective.embedding_induced [t : TopologicalSpace β] {f : α → β} (hf : Function.Injective f) :
+theorem Function.Injective.embedding_induced [t : TopologicalSpace β] {f : α → β} (hf : Injective f) :
     @Embedding α β (t.induced f) t f :=
   { induced := rfl, inj := hf }
 
 variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
-theorem Embedding.mk' (f : α → β) (inj : Function.Injective f) (induced : ∀ a, comap f (𝓝 (f a)) = 𝓝 a) : Embedding f :=
+theorem Embedding.mk' (f : α → β) (inj : Injective f) (induced : ∀ a, comap f (𝓝 (f a)) = 𝓝 a) : Embedding f :=
   ⟨inducing_iff_nhds.2 fun a => (induced a).symm, inj⟩
 
 theorem embedding_id : Embedding (@id α) :=
@@ -166,8 +169,8 @@ theorem embedding_of_embedding_compose {f : α → β} {g : β → γ} (hf : Con
       hgf.inj <| by
         simp [← h, ← (· ∘ ·)] }
 
-protected theorem Function.LeftInverse.embedding {f : α → β} {g : β → α} (h : Function.LeftInverse f g)
-    (hf : Continuous f) (hg : Continuous g) : Embedding g :=
+protected theorem Function.LeftInverse.embedding {f : α → β} {g : β → α} (h : LeftInverse f g) (hf : Continuous f)
+    (hg : Continuous g) : Embedding g :=
   embedding_of_embedding_compose hg hf <| h.comp_eq_id.symm ▸ embedding_id
 
 theorem Embedding.map_nhds_eq {f : α → β} (hf : Embedding f) (a : α) : (𝓝 a).map f = 𝓝[Range f] f a :=
@@ -196,10 +199,10 @@ end Embedding
 /-- A function between topological spaces is a quotient map if it is surjective,
   and for all `s : set β`, `s` is open iff its preimage is an open set. -/
 def QuotientMap {α : Type _} {β : Type _} [tα : TopologicalSpace α] [tβ : TopologicalSpace β] (f : α → β) : Prop :=
-  Function.Surjective f ∧ tβ = tα.coinduced f
+  Surjective f ∧ tβ = tα.coinduced f
 
 theorem quotient_map_iff {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {f : α → β} :
-    QuotientMap f ↔ Function.Surjective f ∧ ∀ s : Set β, IsOpen s ↔ IsOpen (f ⁻¹' s) :=
+    QuotientMap f ↔ Surjective f ∧ ∀ s : Set β, IsOpen s ↔ IsOpen (f ⁻¹' s) :=
   and_congr Iff.rfl topological_space_eq_iff
 
 namespace QuotientMap
@@ -223,13 +226,16 @@ protected theorem of_quotient_map_compose (hf : Continuous f) (hg : Continuous g
       (by
         rwa [← continuous_iff_coinduced_le])⟩
 
+theorem of_inverse {g : β → α} (hf : Continuous f) (hg : Continuous g) (h : LeftInverse g f) : QuotientMap g :=
+  QuotientMap.of_quotient_map_compose hf hg <| h.comp_eq_id.symm ▸ QuotientMap.id
+
 protected theorem continuous_iff (hf : QuotientMap f) : Continuous g ↔ Continuous (g ∘ f) := by
   rw [continuous_iff_coinduced_le, continuous_iff_coinduced_le, hf.right, coinduced_compose]
 
 protected theorem continuous (hf : QuotientMap f) : Continuous f :=
   hf.continuous_iff.mp continuous_id
 
-protected theorem surjective (hf : QuotientMap f) : Function.Surjective f :=
+protected theorem surjective (hf : QuotientMap f) : Surjective f :=
   hf.1
 
 protected theorem is_open_preimage (hf : QuotientMap f) {s : Set β} : IsOpen (f ⁻¹' s) ↔ IsOpen s :=
@@ -249,8 +255,6 @@ namespace IsOpenMap
 
 variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] {f : α → β}
 
-open Function
-
 protected theorem id : IsOpenMap (@id α) := fun s hs => by
   rwa [image_id]
 
@@ -264,6 +268,9 @@ theorem is_open_range (hf : IsOpenMap f) : IsOpen (Range f) := by
 theorem image_mem_nhds (hf : IsOpenMap f) {x : α} {s : Set α} (hx : s ∈ 𝓝 x) : f '' s ∈ 𝓝 (f x) :=
   let ⟨t, hts, ht, hxt⟩ := mem_nhds_iff.1 hx
   mem_of_superset (IsOpen.mem_nhds (hf t ht) (mem_image_of_mem _ hxt)) (image_subset _ hts)
+
+theorem range_mem_nhds (hf : IsOpenMap f) (x : α) : Range f ∈ 𝓝 (f x) :=
+  hf.is_open_range.mem_nhds <| mem_range_self _
 
 theorem maps_to_interior (hf : IsOpenMap f) {s : Set α} {t : Set β} (h : MapsTo f s t) :
     MapsTo f (Interior s) (Interior t) :=
@@ -416,6 +423,7 @@ section OpenEmbedding
 variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
 /-- An open embedding is an embedding with open image. -/
+@[mk_iff]
 structure OpenEmbedding (f : α → β) extends Embedding f : Prop where
   open_range : IsOpen <| Range f
 
@@ -448,13 +456,13 @@ theorem open_embedding_of_embedding_open {f : α → β} (h₁ : Embedding f) (h
 theorem open_embedding_iff_embedding_open {f : α → β} : OpenEmbedding f ↔ Embedding f ∧ IsOpenMap f :=
   ⟨fun h => ⟨h.1, h.IsOpenMap⟩, fun h => open_embedding_of_embedding_open h.1 h.2⟩
 
-theorem open_embedding_of_continuous_injective_open {f : α → β} (h₁ : Continuous f) (h₂ : Function.Injective f)
+theorem open_embedding_of_continuous_injective_open {f : α → β} (h₁ : Continuous f) (h₂ : Injective f)
     (h₃ : IsOpenMap f) : OpenEmbedding f := by
   simp only [← open_embedding_iff_embedding_open, ← embedding_iff, ← inducing_iff_nhds, *, ← and_trueₓ]
   exact fun a => le_antisymmₓ (h₁.tendsto _).le_comap (@comap_map _ _ (𝓝 a) _ h₂ ▸ comap_mono (h₃.nhds_le _))
 
 theorem open_embedding_iff_continuous_injective_open {f : α → β} :
-    OpenEmbedding f ↔ Continuous f ∧ Function.Injective f ∧ IsOpenMap f :=
+    OpenEmbedding f ↔ Continuous f ∧ Injective f ∧ IsOpenMap f :=
   ⟨fun h => ⟨h.Continuous, h.inj, h.IsOpenMap⟩, fun h => open_embedding_of_continuous_injective_open h.1 h.2.1 h.2.2⟩
 
 theorem open_embedding_id : OpenEmbedding (@id α) :=
@@ -484,6 +492,7 @@ section ClosedEmbedding
 variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
 /-- A closed embedding is an embedding with closed image. -/
+@[mk_iff]
 structure ClosedEmbedding (f : α → β) extends Embedding f : Prop where
   closed_range : IsClosed <| Range f
 
@@ -513,8 +522,8 @@ theorem closed_embedding_of_embedding_closed (h₁ : Embedding f) (h₂ : IsClos
   ⟨h₁, by
     convert h₂ univ is_closed_univ <;> simp ⟩
 
-theorem closed_embedding_of_continuous_injective_closed (h₁ : Continuous f) (h₂ : Function.Injective f)
-    (h₃ : IsClosedMap f) : ClosedEmbedding f := by
+theorem closed_embedding_of_continuous_injective_closed (h₁ : Continuous f) (h₂ : Injective f) (h₃ : IsClosedMap f) :
+    ClosedEmbedding f := by
   refine' closed_embedding_of_embedding_closed ⟨⟨_⟩, h₂⟩ h₃
   apply le_antisymmₓ (continuous_iff_le_induced.mp h₁) _
   intro s'

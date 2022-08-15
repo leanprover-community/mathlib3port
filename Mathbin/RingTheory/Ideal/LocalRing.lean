@@ -213,7 +213,7 @@ instance _root_.CommRing.is_local_ring_hom_comp {R S T : CommRingₓₓ} (f : R 
 /-- If `f : R →+* S` is a local ring hom, then `R` is a local ring if `S` is. -/
 theorem _root_.ring_hom.domain_local_ring {R S : Type _} [CommSemiringₓ R] [CommSemiringₓ S] [H : LocalRing S]
     (f : R →+* S) [IsLocalRingHom f] : LocalRing R := by
-  have : Nontrivial R := pullback_nonzero f f.map_zero f.map_one
+  haveI : Nontrivial R := pullback_nonzero f f.map_zero f.map_one
   apply LocalRing.of_nonunits_add
   intro a b
   simp_rw [← map_mem_nonunits_iff f, f.map_add]
@@ -296,6 +296,19 @@ theorem of_surjective [CommSemiringₓ R] [LocalRing R] [CommSemiringₓ S] [Non
       rw [← map_add] at hab
       exact (is_unit_or_is_unit_of_is_unit_add <| IsLocalRingHom.map_nonunit _ hab).imp f.is_unit_map f.is_unit_map)
 
+/-- If `f : R →+* S` is a surjective local ring hom, then the induced units map is surjective. -/
+theorem surjective_units_map_of_local_ring_hom [CommRingₓ R] [CommRingₓ S] (f : R →+* S) (hf : Function.Surjective f)
+    (h : IsLocalRingHom f) : Function.Surjective (Units.map <| f.toMonoidHom) := by
+  intro a
+  obtain ⟨b, hb⟩ := hf (a : S)
+  use
+    (is_unit_of_map_unit f _
+        (by
+          rw [hb]
+          exact Units.is_unit _)).Unit
+  ext
+  exact hb
+
 section
 
 variable (R) [CommRingₓ R] [LocalRing R] [CommRingₓ S] [LocalRing S]
@@ -331,6 +344,13 @@ end ResidueField
 
 theorem ker_eq_maximal_ideal [Field K] (φ : R →+* K) (hφ : Function.Surjective φ) : φ.ker = maximalIdeal R :=
   LocalRing.eq_maximal_ideal <| (RingHom.ker_is_maximal_of_surjective φ) hφ
+
+theorem is_local_ring_hom_residue : IsLocalRingHom (LocalRing.residue R) := by
+  constructor
+  intro a ha
+  by_contra
+  erw [ideal.quotient.eq_zero_iff_mem.mpr ((LocalRing.mem_maximal_ideal _).mpr h)] at ha
+  exact ha.ne_zero rfl
 
 end
 

@@ -23,7 +23,7 @@ open TopologicalSpace Filter Nnreal
 
 universe u
 
-variable {E : Type u} [NormedGroup E] [NormedSpace ℂ E] [CompleteSpace E]
+variable {E : Type u} [NormedAddCommGroup E] [NormedSpace ℂ E] [CompleteSpace E]
 
 namespace Complex
 

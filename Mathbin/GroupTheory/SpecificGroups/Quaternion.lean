@@ -86,11 +86,15 @@ instance : Groupₓ (QuaternionGroup n) where
   mul_assoc := by
     rintro (i | i) (j | j) (k | k) <;> simp only [← mul] <;> abel
     simp only [← neg_mul, ← one_mulₓ, ← Int.cast_oneₓ, ← zsmul_eq_mul, ← Int.cast_neg, ← add_right_injₓ]
-    calc -(n : Zmod (2 * n)) = 0 - n := by
-        rw [zero_sub]_ = 2 * n - n := by
+    calc
+      -(n : Zmod (2 * n)) = 0 - n := by
+        rw [zero_sub]
+      _ = 2 * n - n := by
         norm_cast
-        simp _ = n := by
+        simp
+      _ = n := by
         ring
+      
   one := one
   one_mul := by
     rintro (i | i)
@@ -222,7 +226,7 @@ theorem xa_pow_four (i : Zmod (2 * n)) : xa i ^ 4 = 1 := by
 @[simp]
 theorem order_of_xa [hpos : Fact (0 < n)] (i : Zmod (2 * n)) : orderOf (xa i) = 4 := by
   change _ = 2 ^ 2
-  have : Fact (Nat.Prime 2) := Fact.mk Nat.prime_two
+  haveI : Fact (Nat.Prime 2) := Fact.mk Nat.prime_two
   apply order_of_eq_prime_pow
   · intro h
     simp only [← pow_oneₓ, ← xa_sq] at h
@@ -231,7 +235,7 @@ theorem order_of_xa [hpos : Fact (0 < n)] (i : Zmod (2 * n)) : orderOf (xa i) = 
     apply_fun (· / n)  at h'
     simp only [← Zmod.val_nat_cast, ← Zmod.val_zero, ← Nat.zero_divₓ, ← Nat.mod_mul_left_div_self, ←
       Nat.div_selfₓ hpos.1] at h'
-    norm_num  at h'
+    norm_num at h'
     
   · norm_num
     
@@ -251,10 +255,10 @@ theorem order_of_a_one : orderOf (a 1 : QuaternionGroup n) = 2 * n := by
     intro n hn
     rw [one_def, a_one_pow]
     apply mt a.inj
-    have : CharZero (Zmod (2 * 0)) := Zmod.char_zero
+    haveI : CharZero (Zmod (2 * 0)) := Zmod.char_zero
     simpa using hn.ne'
     
-  have := Fact.mk hn
+  haveI := Fact.mk hn
   apply (Nat.le_of_dvdₓ (Nat.succ_mul_pos _ hn) (order_of_dvd_of_pow_eq_one (@a_one_pow_n n))).lt_or_eq.resolve_left
   intro h
   have h1 : (a 1 : QuaternionGroup n) ^ orderOf (a 1) = 1 := pow_order_of_eq_one _
@@ -276,7 +280,7 @@ theorem exponent : Monoidₓ.exponent (QuaternionGroup n) = 2 * lcm n 2 := by
   · simp only [← lcm_zero_left, ← mul_zero]
     exact Monoidₓ.exponent_eq_zero_of_order_zero order_of_a_one
     
-  have := Fact.mk hn
+  haveI := Fact.mk hn
   apply Nat.dvd_antisymm
   · apply Monoidₓ.exponent_dvd_of_forall_pow_eq_one
     rintro (m | m)

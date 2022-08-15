@@ -416,18 +416,18 @@ theorem dense_range_coe₃ :
     DenseRange fun x : α × β × γ => ((x.1 : Completion α), ((x.2.1 : Completion β), (x.2.2 : Completion γ))) :=
   dense_range_coe.prod_map dense_range_coe₂
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction_on {p : Completion α → Prop} (a : Completion α) (hp : IsClosed { a | p a }) (ih : ∀ a : α, p a) :
     p a :=
   is_closed_property dense_range_coe hp ih a
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction_on₂ {p : Completion α → Completion β → Prop} (a : Completion α) (b : Completion β)
     (hp : IsClosed { x : Completion α × Completion β | p x.1 x.2 }) (ih : ∀ (a : α) (b : β), p a b) : p a b :=
   have : ∀ x : Completion α × Completion β, p x.1 x.2 := (is_closed_property dense_range_coe₂ hp) fun ⟨a, b⟩ => ih a b
   this (a, b)
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction_on₃ {p : Completion α → Completion β → Completion γ → Prop} (a : Completion α) (b : Completion β)
     (c : Completion γ) (hp : IsClosed { x : Completion α × Completion β × Completion γ | p x.1 x.2.1 x.2.2 })
     (ih : ∀ (a : α) (b : β) (c : γ), p a b c) : p a b c :=

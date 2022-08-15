@@ -22,8 +22,8 @@ open FiniteDimensional (finrank)
 
 open TopologicalSpace Nnreal Ennreal
 
-variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [MeasurableSpace E] [BorelSpace E] [FiniteDimensional ℝ E]
-  (μ : Measureₓ E) [IsAddHaarMeasure μ] {s : Set E}
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [MeasurableSpace E] [BorelSpace E]
+  [FiniteDimensional ℝ E] (μ : Measureₓ E) [IsAddHaarMeasure μ] {s : Set E}
 
 namespace Convex
 

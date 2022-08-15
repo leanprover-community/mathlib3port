@@ -113,7 +113,7 @@ argument of type `α` -/
 def ShrinkFn (α : Type _) [SizeOf α] :=
   ∀ x : α, LazyList { y : α // SizeofLt y x }
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`sample] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`sample] []
 /-- `sampleable α` provides ways of creating examples of type `α`,
 and given such an example `x : α`, gives us a way to shrink it
 and find simpler examples.  -/
@@ -126,7 +126,7 @@ attribute [instance] hasWellFoundedOfHasSizeof defaultHasSizeof
 
 attribute [instance] sampleable.wf
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`sample] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`sample] []
 /-- `sampleable_functor F` makes it possible to create samples of and
 shrink `F α` given a sampling function and a shrinking function for
 arbitrary `α` -/
@@ -136,7 +136,7 @@ class SampleableFunctor (F : Type u → Type v) [Functor F] where
   shrink : ∀ (α) [SizeOf α], ShrinkFn α → ShrinkFn (F α)
   pRepr : ∀ α, HasRepr α → HasRepr (F α)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`sample] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`sample] []
 /-- `sampleable_bifunctor F` makes it possible to create samples of
 and shrink `F α β` given a sampling function and a shrinking function
 for arbitrary `α` and `β` -/
@@ -153,8 +153,8 @@ interpretation in `sampleable_ext` instances. -/
 unsafe def sampleable.mk_trivial_interp : tactic Unit :=
   tactic.refine (pquote.1 id)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`interp] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`sample] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`interp] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`sample] []
 /-- `sampleable_ext` generalizes the behavior of `sampleable`
 and makes it possible to express instances for types that
 do not lend themselves to introspection, such as `ℕ → ℕ`.
@@ -525,7 +525,7 @@ def List.shrinkRemoves (k : ℕ) (hk : 0 < k) :
         LazyList.singleton ⟨[], this⟩
       else
         have h₂ : k < xs.length := hn ▸ lt_of_le_of_neₓ (le_of_not_gtₓ hkn) hkn'
-        match List.splitAtₓ k xs, rfl with
+        match (motive := ∀ ys, ys = List.splitAtₓ k xs → _) List.splitAtₓ k xs, rfl with
         | ⟨xs₁, xs₂⟩, h =>
           have h₄ : xs₁ = xs.take k := by
             simp only [← List.split_at_eq_take_drop, ← Prod.mk.inj_iff] at h <;> tauto
@@ -783,7 +783,7 @@ instance Ge.sampleable {x : α} [Sampleable α] [LinearOrderedAddCommGroup α] :
     let y ← sample α
     pure
         ⟨x + abs y, by
-          norm_num [← abs_nonneg]⟩
+          norm_num[← abs_nonneg]⟩
   shrink := fun _ => LazyList.nil
 
 /-!

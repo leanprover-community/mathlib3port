@@ -178,7 +178,7 @@ theorem orientation_neg_single [Nontrivial R] (e : Basis ι R M) (i : ι) :
 /-- Given a basis and an orientation, return a basis giving that orientation: either the original
 basis, or one constructed by negating a single (arbitrary) basis vector. -/
 def adjustToOrientation [Nontrivial R] [Nonempty ι] (e : Basis ι R M) (x : Orientation R M ι) : Basis ι R M :=
-  have := Classical.decEq (Orientation R M ι)
+  haveI := Classical.decEq (Orientation R M ι)
   if e.orientation = x then e else e.units_smul (Function.update 1 (Classical.arbitrary ι) (-1))
 
 /-- `adjust_to_orientation` gives a basis with the required orientation. -/

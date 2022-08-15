@@ -36,12 +36,12 @@ open Filter TopologicalSpace Nnreal Ennreal Nat Interval
 
 noncomputable section
 
-variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E]
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- This structure holds arguments of the Picard-Lipschitz (Cauchy-Lipschitz) theorem. Unless you
 want to use one of the auxiliary lemmas, use
 `exists_forall_deriv_within_Icc_eq_of_lipschitz_of_continuous` instead of using this structure. -/
-structure PicardLindelof (E : Type _) [NormedGroup E] [NormedSpace ℝ E] where
+structure PicardLindelof (E : Type _) [NormedAddCommGroup E] [NormedSpace ℝ E] where
   toFun : ℝ → E → E
   (tMin tMax : ℝ)
   t₀ : Icc t_min t_max
@@ -230,7 +230,7 @@ theorem next_apply (t : Icc v.tMin v.tMax) : f.next t = v.x₀ + ∫ τ : ℝ in
 
 theorem has_deriv_within_at_next (t : Icc v.tMin v.tMax) :
     HasDerivWithinAt (f.next ∘ v.proj) (v t (f t)) (Icc v.tMin v.tMax) t := by
-  have : Fact ((t : ℝ) ∈ Icc v.t_min v.t_max) := ⟨t.2⟩
+  haveI : Fact ((t : ℝ) ∈ Icc v.t_min v.t_max) := ⟨t.2⟩
   simp only [← (· ∘ ·), ← next_apply]
   refine' HasDerivWithinAt.const_add _ _
   have : HasDerivWithinAt (fun t : ℝ => ∫ τ in v.t₀..t, f.v_comp τ) (f.v_comp t) (Icc v.t_min v.t_max) t :=
@@ -260,8 +260,9 @@ theorem dist_next_apply_le_of_le {f₁ f₂ : FunSpace v} {n : ℕ} {d : ℝ}
             ((h _).trans_eq _)
         rw [v.proj_of_mem]
         exact interval_subset_Icc v.t₀.2 t.2 <| Ioc_subset_Icc_self hτ
-        _ = (v.L * abs (t - v.t₀)) ^ (n + 1) / (n + 1)! * d :=
-      _
+        
+    _ = (v.L * abs (t - v.t₀)) ^ (n + 1) / (n + 1)! * d := _
+    
   simp_rw [mul_powₓ, div_eq_mul_inv, mul_assoc, MeasureTheory.integral_mul_left, MeasureTheory.integral_mul_right,
     integral_pow_abs_sub_interval_oc, div_eq_mul_inv, pow_succₓ (v.L : ℝ), Nat.factorial_succ, Nat.cast_mulₓ,
     Nat.cast_succₓ, mul_inv, mul_assoc]

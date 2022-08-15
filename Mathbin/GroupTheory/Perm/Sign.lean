@@ -74,7 +74,7 @@ theorem perm_inv_maps_to_iff_maps_to {f : Perm α} {s : Set α} [Fintype s] :
 
 theorem perm_inv_on_of_perm_on_fintype {f : Perm α} {p : α → Prop} [Fintype { x // p x }] (h : ∀ x, p x → p (f x))
     {x : α} (hx : p x) : p (f⁻¹ x) := by
-  let this : Fintype ↥(show Set α from p) := ‹Fintype { x // p x }›
+  letI : Fintype ↥(show Set α from p) := ‹Fintype { x // p x }›
   exact perm_inv_maps_to_of_maps_to f h hx
 
 /-- If the permutation `f` maps `{x // p x}` into itself, then this returns the permutation
@@ -212,7 +212,7 @@ def swapFactorsAux :
           List.mem_of_ne_of_memₓ this.2 (h this.1)
       ⟨swap x (f x) :: m.1, by
         rw [List.prod_cons, m.2.1, ← mul_assoc, mul_def (swap x (f x)), swap_swap, ← one_def, one_mulₓ], fun g hg =>
-        ((List.mem_cons_iff _ _ _).1 hg).elim (fun h => ⟨x, f x, hfx, h⟩) (m.2.2 _)⟩
+        ((List.mem_cons_iffₓ _ _ _).1 hg).elim (fun h => ⟨x, f x, hfx, h⟩) (m.2.2 _)⟩
 
 /-- `swap_factors` represents a permutation as a product of a list of transpositions.
 The representation is non unique and depends on the linear order structure.
@@ -229,7 +229,7 @@ def truncSwapFactors [Fintype α] (f : Perm α) : Trunc { l : List (Perm α) // 
 
 /-- An induction principle for permutations. If `P` holds for the identity permutation, and
 is preserved under composition with a non-trivial swap, then `P` holds for all permutations. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem swap_induction_on [Fintype α] {P : Perm α → Prop} (f : Perm α) :
     P 1 → (∀ f x y, x ≠ y → P f → P (swap x y * f)) → P f := by
   cases' (trunc_swap_factors f).out with l hl
@@ -255,7 +255,7 @@ theorem closure_is_swap [Fintype α] : Subgroup.closure { σ : Perm α | IsSwap 
 
 An induction principle for permutations. If `P` holds for the identity permutation, and
 is preserved under composition with a non-trivial swap, then `P` holds for all permutations. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem swap_induction_on' [Fintype α] {P : Perm α → Prop} (f : Perm α) :
     P 1 → (∀ f x y, x ≠ y → P f → P (f * swap x y)) → P f := fun h1 IH =>
   inv_invₓ f ▸ swap_induction_on f⁻¹ h1 fun f => IH f⁻¹
@@ -389,7 +389,7 @@ private theorem sign_aux_swap_zero_one' (n : ℕ) : signAux (swap (0 : Finₓ (n
       have h01 : Equivₓ.swap (0 : Finₓ (n + 2)) 1 0 = 1 := by
         simp
       -- TODO : fix properly
-      norm_num [← swap_apply_of_ne_of_ne (ne_of_gtₓ H) ha₂, ← this.not_le, ← h01]
+      norm_num[← swap_apply_of_ne_of_ne (ne_of_gtₓ H) ha₂, ← this.not_le, ← h01]
       
     · have le : 1 ≤ a₂ := Nat.succ_le_of_ltₓ H'
       have lt : 1 < a₁ := le.trans_lt ha₁
@@ -397,9 +397,9 @@ private theorem sign_aux_swap_zero_one' (n : ℕ) : signAux (swap (0 : Finₓ (n
         simp
       -- TODO
       rcases le.eq_or_lt with (rfl | lt')
-      · norm_num [← swap_apply_of_ne_of_ne H.ne' lt.ne', ← H.not_le, ← h01]
+      · norm_num[← swap_apply_of_ne_of_ne H.ne' lt.ne', ← H.not_le, ← h01]
         
-      · norm_num [← swap_apply_of_ne_of_ne (ne_of_gtₓ H) (ne_of_gtₓ lt), ←
+      · norm_num[← swap_apply_of_ne_of_ne (ne_of_gtₓ H) (ne_of_gtₓ lt), ←
           swap_apply_of_ne_of_ne (ne_of_gtₓ H') (ne_of_gtₓ lt'), ← ha₁.not_le]
         
       
@@ -421,9 +421,9 @@ private theorem sign_aux_swap_zero_one {n : ℕ} (hn : 2 ≤ n) :
       -1 :=
   by
   rcases n with (_ | _ | n)
-  · norm_num  at hn
+  · norm_num at hn
     
-  · norm_num  at hn
+  · norm_num at hn
     
   · exact sign_aux_swap_zero_one' n
     
@@ -707,7 +707,7 @@ theorem prod_prod_extend_right {α : Type _} [DecidableEq α] (σ : α → Perm 
     refine' Or.inl ⟨l.mem_cons_self a, _⟩
     rw [prod_extend_right_apply_eq]
     
-  · refine' Or.inr ⟨fun h => not_orₓ ha' not_mem_l ((List.mem_cons_iff _ _ _).mp h), _⟩
+  · refine' Or.inr ⟨fun h => not_orₓ ha' not_mem_l ((List.mem_cons_iffₓ _ _ _).mp h), _⟩
     rw [prod_extend_right_apply_ne _ ha']
     
 

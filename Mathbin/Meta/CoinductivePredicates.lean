@@ -461,7 +461,7 @@ unsafe def coinductive_predicate (meta_info : decl_meta_info) (_ : parse <| tk "
       let some doc_string ← pure meta_info | skip
       add_doc_string d doc_string
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `hs
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `hs
 /-- Prepares coinduction proofs. This tactic constructs the coinduction invariant from
 the quantifiers in the current goal.
 

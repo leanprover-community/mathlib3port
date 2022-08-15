@@ -43,7 +43,7 @@ respect which `α` forms a lattice. Suppose that `α` is *solid*, that is to say
 `α`, with absolute values `|a|` and `|b|` respectively, `|a| ≤ |b|` implies `∥a∥ ≤ ∥b∥`. Then `α` is
 said to be a normed lattice ordered group.
 -/
-class NormedLatticeAddCommGroup (α : Type _) extends NormedGroup α, Lattice α where
+class NormedLatticeAddCommGroup (α : Type _) extends NormedAddCommGroup α, Lattice α where
   add_le_add_left : ∀ a b : α, a ≤ b → ∀ c : α, c + a ≤ c + b
   solid : ∀ a b : α, |a| ≤ |b| → ∥a∥ ≤ ∥b∥
 
@@ -64,7 +64,7 @@ instance (priority := 100) normedLatticeAddCommGroupToOrderedAddCommGroup {α : 
 /-- Let `α` be a normed group with a partial order. Then the order dual is also a normed group.
 -/
 -- see Note [lower instance priority]
-instance (priority := 100) {α : Type _} : ∀ [NormedGroup α], NormedGroup αᵒᵈ :=
+instance (priority := 100) {α : Type _} : ∀ [NormedAddCommGroup α], NormedAddCommGroup αᵒᵈ :=
   id
 
 variable {α : Type _} [NormedLatticeAddCommGroup α]
@@ -95,27 +95,35 @@ theorem norm_inf_sub_inf_le_add_norm (a b c d : α) : ∥a⊓b - c⊓d∥ ≤ �
   rw [← norm_abs_eq_norm (a - c), ← norm_abs_eq_norm (b - d)]
   refine' le_transₓ (solid _) (norm_add_le |a - c| |b - d|)
   rw [abs_of_nonneg (|a - c| + |b - d|) (add_nonneg (abs_nonneg (a - c)) (abs_nonneg (b - d)))]
-  calc |a⊓b - c⊓d| = |a⊓b - c⊓b + (c⊓b - c⊓d)| := by
-      rw [sub_add_sub_cancel]_ ≤ |a⊓b - c⊓b| + |c⊓b - c⊓d| := abs_add_le _ _ _ ≤ |a - c| + |b - d| := by
+  calc
+    |a⊓b - c⊓d| = |a⊓b - c⊓b + (c⊓b - c⊓d)| := by
+      rw [sub_add_sub_cancel]
+    _ ≤ |a⊓b - c⊓b| + |c⊓b - c⊓d| := abs_add_le _ _
+    _ ≤ |a - c| + |b - d| := by
       apply add_le_add
       · exact abs_inf_sub_inf_le_abs _ _ _
         
       · rw [@inf_comm _ _ c, @inf_comm _ _ c]
         exact abs_inf_sub_inf_le_abs _ _ _
         
+    
 
 theorem norm_sup_sub_sup_le_add_norm (a b c d : α) : ∥a⊔b - c⊔d∥ ≤ ∥a - c∥ + ∥b - d∥ := by
   rw [← norm_abs_eq_norm (a - c), ← norm_abs_eq_norm (b - d)]
   refine' le_transₓ (solid _) (norm_add_le |a - c| |b - d|)
   rw [abs_of_nonneg (|a - c| + |b - d|) (add_nonneg (abs_nonneg (a - c)) (abs_nonneg (b - d)))]
-  calc |a⊔b - c⊔d| = |a⊔b - c⊔b + (c⊔b - c⊔d)| := by
-      rw [sub_add_sub_cancel]_ ≤ |a⊔b - c⊔b| + |c⊔b - c⊔d| := abs_add_le _ _ _ ≤ |a - c| + |b - d| := by
+  calc
+    |a⊔b - c⊔d| = |a⊔b - c⊔b + (c⊔b - c⊔d)| := by
+      rw [sub_add_sub_cancel]
+    _ ≤ |a⊔b - c⊔b| + |c⊔b - c⊔d| := abs_add_le _ _
+    _ ≤ |a - c| + |b - d| := by
       apply add_le_add
       · exact abs_sup_sub_sup_le_abs _ _ _
         
       · rw [@sup_comm _ _ c, @sup_comm _ _ c]
         exact abs_sup_sub_sup_le_abs _ _ _
         
+    
 
 theorem norm_inf_le_add (x y : α) : ∥x⊓y∥ ≤ ∥x∥ + ∥y∥ := by
   have h : ∥x⊓y - 0⊓0∥ ≤ ∥x - 0∥ + ∥y - 0∥ := norm_inf_sub_inf_le_add_norm x y 0 0

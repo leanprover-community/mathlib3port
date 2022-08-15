@@ -50,7 +50,7 @@ def bernsteinPolynomial (n ν : ℕ) : R[X] :=
   choose n ν * X ^ ν * (1 - X) ^ (n - ν)
 
 example : bernsteinPolynomial ℤ 3 2 = 3 * X ^ 2 - 3 * X ^ 3 := by
-  norm_num [← bernsteinPolynomial, ← choose]
+  norm_num[← bernsteinPolynomial, ← choose]
   ring
 
 namespace bernsteinPolynomial
@@ -158,7 +158,7 @@ theorem iterate_derivative_at_0_eq_zero_of_lt (n : ℕ) {ν k : ℕ} :
     · simp [← eval_at_0]
       
     · simp only [← derivative_succ, ← Int.coe_nat_eq_zero, ← mul_eq_zero, ← Function.comp_app, ← Function.iterate_succ,
-        ← Polynomial.iterate_derivative_sub, ← Polynomial.iterate_derivative_cast_nat_mul, ← Polynomial.eval_mul, ←
+        ← Polynomial.iterate_derivative_sub, ← Polynomial.iterate_derivative_nat_cast_mul, ← Polynomial.eval_mul, ←
         Polynomial.eval_nat_cast, ← Polynomial.eval_sub]
       intro h
       apply mul_eq_zero_of_right
@@ -184,7 +184,7 @@ theorem iterate_derivative_at_0 (n ν : ℕ) :
       
     · have h' : ν ≤ n - 1 := le_tsub_of_add_le_right h
       simp only [← derivative_succ, ← ih (n - 1) h', ← iterate_derivative_succ_at_0_eq_zero, ← Nat.succ_sub_succ_eq_sub,
-        ← tsub_zero, ← sub_zero, ← iterate_derivative_sub, ← iterate_derivative_cast_nat_mul, ← eval_one, ← eval_mul, ←
+        ← tsub_zero, ← sub_zero, ← iterate_derivative_sub, ← iterate_derivative_nat_cast_mul, ← eval_one, ← eval_mul, ←
         eval_add, ← eval_sub, ← eval_X, ← eval_comp, ← eval_nat_cast, ← Function.comp_app, ← Function.iterate_succ, ←
         pochhammer_succ_left]
       obtain rfl | h'' := ν.eq_zero_or_pos
@@ -421,7 +421,11 @@ theorem variance (n : ℕ) :
     lhs rw [Finset.mul_sum, Finset.mul_sum, ← Finset.sum_add_distrib, ←
       Finset.sum_add_distrib]simp only [nat_cast_mul]simp only [mul_assoc]simp only [add_mulₓ]
   conv at p => rhs rw [Sum, sum_smul, sum_mul_smul, ← nat_cast_mul]
-  calc _ = _ := Finset.sum_congr rfl fun k m => _ _ = _ := p _ = _ := _
+  calc
+    _ = _ := Finset.sum_congr rfl fun k m => _
+    _ = _ := p
+    _ = _ := _
+    
   · congr 1
     simp' only [nat_cast_mul] with push_cast
     cases k <;>

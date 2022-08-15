@@ -232,10 +232,15 @@ section Product
 
 variable (a : α) (b : β) (s : Multiset α) (t : Multiset β)
 
-/-- The multiplicity of `(a, b)` in `s.product t` is
+/-- The multiplicity of `(a, b)` in `s ×ˢ t` is
   the product of the multiplicity of `a` in `s` and `b` in `t`. -/
 def product (s : Multiset α) (t : Multiset β) : Multiset (α × β) :=
   s.bind fun a => t.map <| Prod.mk a
+
+-- mathport name: «expr ×ˢ »
+infixr:82
+  " ×ˢ " =>-- This notation binds more strongly than (pre)images, unions and intersections.
+  Multiset.product
 
 @[simp]
 theorem coe_product (l₁ : List α) (l₂ : List β) : @product α β l₁ l₂ = l₁.product l₂ := by
@@ -248,19 +253,19 @@ theorem zero_product : @product α β 0 t = 0 :=
 
 --TODO: Add `product_zero`
 @[simp]
-theorem cons_product : (a ::ₘ s).product t = map (Prod.mk a) t + s.product t := by
+theorem cons_product : (a ::ₘ s) ×ˢ t = map (Prod.mk a) t + s ×ˢ t := by
   simp [← product]
 
 @[simp]
-theorem product_singleton : ({a} : Multiset α).product ({b} : Multiset β) = {(a, b)} := by
+theorem product_singleton : ({a} : Multiset α) ×ˢ ({b} : Multiset β) = {(a, b)} := by
   simp only [← product, ← bind_singleton, ← map_singleton]
 
 @[simp]
-theorem add_product (s t : Multiset α) (u : Multiset β) : (s + t).product u = s.product u + product t u := by
+theorem add_product (s t : Multiset α) (u : Multiset β) : (s + t) ×ˢ u = s ×ˢ u + t ×ˢ u := by
   simp [← product]
 
 @[simp]
-theorem product_add (s : Multiset α) : ∀ t u : Multiset β, s.product (t + u) = s.product t + s.product u :=
+theorem product_add (s : Multiset α) : ∀ t u : Multiset β, s ×ˢ (t + u) = s ×ˢ t + s ×ˢ u :=
   (Multiset.induction_on s fun t u => rfl) fun a s IH t u => by
     rw [cons_product, IH] <;> simp <;> cc
 
@@ -270,7 +275,7 @@ theorem mem_product {s t} : ∀ {p : α × β}, p ∈ @product α β s t ↔ p.1
     simp [← product, ← And.left_comm]
 
 @[simp]
-theorem card_product : (s.product t).card = s.card * t.card := by
+theorem card_product : (s ×ˢ t).card = s.card * t.card := by
   simp [← product, ← repeat, ← (· ∘ ·), ← mul_comm]
 
 end Product

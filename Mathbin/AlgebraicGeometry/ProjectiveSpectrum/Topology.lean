@@ -50,7 +50,7 @@ variable (𝒜 : ℕ → Submodule R A) [GradedAlgebra 𝒜]
 /-- The projective spectrum of a graded commutative ring is the subtype of all homogenous ideals that
 are prime and do not contain the irrelevant ideal.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def ProjectiveSpectrum :=
   { I : HomogeneousIdeal 𝒜 // I.toIdeal.IsPrime ∧ ¬HomogeneousIdeal.irrelevant 𝒜 ≤ I }
 

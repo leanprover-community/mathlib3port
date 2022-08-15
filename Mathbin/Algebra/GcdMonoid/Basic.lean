@@ -153,9 +153,11 @@ theorem normalize_eq_normalize {a b : α} (hab : a ∣ b) (hba : b ∣ a) : norm
       fun ha : a ≠ 0 => _
   suffices a * ↑(norm_unit a) = a * ↑u * ↑(norm_unit a) * ↑u⁻¹ by
     simpa only [← normalize_apply, ← mul_assoc, ← norm_unit_mul ha u.ne_zero, ← norm_unit_coe_units]
-  calc a * ↑(norm_unit a) = a * ↑(norm_unit a) * ↑u * ↑u⁻¹ :=
-      (Units.mul_inv_cancel_right _ _).symm _ = a * ↑u * ↑(norm_unit a) * ↑u⁻¹ := by
+  calc
+    a * ↑(norm_unit a) = a * ↑(norm_unit a) * ↑u * ↑u⁻¹ := (Units.mul_inv_cancel_right _ _).symm
+    _ = a * ↑u * ↑(norm_unit a) * ↑u⁻¹ := by
       rw [mul_right_commₓ a]
+    
 
 theorem normalize_eq_normalize_iff {x y : α} : normalize x = normalize y ↔ x ∣ y ∧ y ∣ x :=
   ⟨fun h => ⟨Units.dvd_mul_right.1 ⟨_, h.symm⟩, Units.dvd_mul_right.1 ⟨_, h⟩⟩, fun ⟨hxy, hyx⟩ =>

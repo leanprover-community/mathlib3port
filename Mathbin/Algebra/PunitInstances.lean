@@ -75,57 +75,6 @@ theorem lcm_eq : lcm x y = star :=
 theorem norm_unit_eq : normUnit x = 1 :=
   rfl
 
-instance : CompleteBooleanAlgebra PUnit := by
-  refine'
-      { le := fun _ _ => True, le_antisymm := fun _ _ _ _ => Subsingleton.elimₓ _ _, lt := fun _ _ => False,
-        lt_iff_le_not_le := fun _ _ => iff_of_false not_false fun H => H.2 trivialₓ, top := star, bot := star,
-        sup := fun _ _ => star, inf := fun _ _ => star, sup := fun _ => star, inf := fun _ => star,
-        compl := fun _ => star, sdiff := fun _ _ => star.. } <;>
-    intros <;>
-      first |
-        trivial|
-        simp only [← eq_iff_true_of_subsingleton]
-
-@[simp]
-theorem top_eq : (⊤ : PUnit) = star :=
-  rfl
-
-@[simp]
-theorem bot_eq : (⊥ : PUnit) = star :=
-  rfl
-
-@[simp]
-theorem sup_eq : x⊔y = star :=
-  rfl
-
-@[simp]
-theorem inf_eq : x⊓y = star :=
-  rfl
-
-@[simp]
-theorem Sup_eq : sup s = star :=
-  rfl
-
-@[simp]
-theorem Inf_eq : inf s = star :=
-  rfl
-
-@[simp]
-theorem compl_eq : xᶜ = star :=
-  rfl
-
-@[simp]
-theorem sdiff_eq : x \ y = star :=
-  rfl
-
-@[simp]
-protected theorem le : x ≤ y :=
-  trivialₓ
-
-@[simp]
-theorem not_lt : ¬x < y :=
-  not_false
-
 instance : CanonicallyOrderedAddMonoid PUnit := by
   refine'
       { PUnit.commRing, PUnit.completeBooleanAlgebra with
@@ -133,10 +82,8 @@ instance : CanonicallyOrderedAddMonoid PUnit := by
     intros <;> trivial
 
 instance : LinearOrderedCancelAddCommMonoid PUnit :=
-  { PUnit.canonicallyOrderedAddMonoid with add_left_cancel := fun _ _ _ _ => Subsingleton.elimₓ _ _,
-    le_of_add_le_add_left := fun _ _ _ _ => trivialₓ, le_total := fun _ _ => Or.inl trivialₓ,
-    decidableLe := fun _ _ => Decidable.true, DecidableEq := PUnit.decidableEq,
-    decidableLt := fun _ _ => Decidable.false }
+  { PUnit.canonicallyOrderedAddMonoid, PUnit.linearOrder with add_left_cancel := fun _ _ _ _ => Subsingleton.elimₓ _ _,
+    le_of_add_le_add_left := fun _ _ _ _ => trivialₓ }
 
 instance : HasSmul R PUnit where smul := fun _ _ => unit
 

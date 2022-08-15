@@ -33,21 +33,23 @@ variable (F K : Type _) [Field F] [Field K] [Algebra F K]
 
 /-- Typeclass for normal field extension: `K` is a normal extension of `F` iff the minimal
 polynomial of every element `x` in `K` splits in `K`, i.e. every conjugate of `x` is in `K`. -/
---TODO(Commelin): refactor normal to extend `is_algebraic`??
 class Normal : Prop where
-  is_integral' (x : K) : IsIntegral F x
+  is_algebraic' : Algebra.IsAlgebraic F K
   splits' (x : K) : Splits (algebraMap F K) (minpoly F x)
 
 variable {F K}
 
+theorem Normal.is_algebraic (h : Normal F K) (x : K) : IsAlgebraic F x :=
+  Normal.is_algebraic' x
+
 theorem Normal.is_integral (h : Normal F K) (x : K) : IsIntegral F x :=
-  Normal.is_integral' x
+  is_algebraic_iff_is_integral.mp (h.IsAlgebraic x)
 
 theorem Normal.splits (h : Normal F K) (x : K) : Splits (algebraMap F K) (minpoly F x) :=
   Normal.splits' x
 
 theorem normal_iff : Normal F K ↔ ∀ x : K, IsIntegral F x ∧ Splits (algebraMap F K) (minpoly F x) :=
-  ⟨fun h x => ⟨h.IsIntegral x, h.Splits x⟩, fun h => ⟨fun x => (h x).1, fun x => (h x).2⟩⟩
+  ⟨fun h x => ⟨h.IsIntegral x, h.Splits x⟩, fun h => ⟨fun x => (h x).1.IsAlgebraic F, fun x => (h x).2⟩⟩
 
 theorem Normal.out : Normal F K → ∀ x : K, IsIntegral F x ∧ Splits (algebraMap F K) (minpoly F x) :=
   normal_iff.1
@@ -55,9 +57,7 @@ theorem Normal.out : Normal F K → ∀ x : K, IsIntegral F x ∧ Splits (algebr
 variable (F K)
 
 instance normal_self : Normal F F :=
-  ⟨fun x => is_integral_algebra_map, fun x => by
-    rw [minpoly.eq_X_sub_C']
-    exact splits_X_sub_C _⟩
+  ⟨fun x => is_integral_algebra_map.IsAlgebraic F, fun x => (minpoly.eq_X_sub_C' x).symm ▸ splits_X_sub_C _⟩
 
 variable {K}
 
@@ -93,7 +93,7 @@ theorem Normal.tower_top_of_normal [h : Normal F E] : Normal K E :=
 
 theorem AlgHom.normal_bijective [h : Normal F E] (ϕ : E →ₐ[F] K) : Function.Bijective ϕ :=
   ⟨ϕ.toRingHom.Injective, fun x => by
-    let this : Algebra E K := ϕ.to_ring_hom.to_algebra
+    letI : Algebra E K := ϕ.to_ring_hom.to_algebra
     obtain ⟨h1, h2⟩ := h.out (algebraMap K E x)
     cases'
       minpoly.mem_range_of_degree_eq_one E x
@@ -140,18 +140,18 @@ theorem Normal.of_is_splitting_field (p : F[X]) [hFEp : IsSplittingField F E p] 
         (normal_self F)
     
   refine' normal_iff.2 fun x => _
-  have hFE : FiniteDimensional F E := is_splitting_field.finite_dimensional E p
+  haveI hFE : FiniteDimensional F E := is_splitting_field.finite_dimensional E p
   have Hx : IsIntegral F x := is_integral_of_noetherian (IsNoetherian.iff_fg.2 hFE) x
   refine' ⟨Hx, Or.inr _⟩
   rintro q q_irred ⟨r, hr⟩
   let D := AdjoinRoot q
-  have := Fact.mk q_irred
+  haveI := Fact.mk q_irred
   let pbED := AdjoinRoot.powerBasis q_irred.ne_zero
-  have : FiniteDimensional E D := PowerBasis.finite_dimensional pbED
+  haveI : FiniteDimensional E D := PowerBasis.finite_dimensional pbED
   have finrankED : FiniteDimensional.finrank E D = q.nat_degree := PowerBasis.finrank pbED
-  let this : Algebra F D := RingHom.toAlgebra ((algebraMap E D).comp (algebraMap F E))
-  have : IsScalarTower F E D := of_algebra_map_eq fun _ => rfl
-  have : FiniteDimensional F D := FiniteDimensional.trans F E D
+  letI : Algebra F D := RingHom.toAlgebra ((algebraMap E D).comp (algebraMap F E))
+  haveI : IsScalarTower F E D := of_algebra_map_eq fun _ => rfl
+  haveI : FiniteDimensional F D := FiniteDimensional.trans F E D
   suffices Nonempty (D →ₐ[F] E) by
     cases' this with ϕ
     rw [← WithBot.coe_one, degree_eq_iff_nat_degree_eq q_irred.ne_zero, ← finrankED]
@@ -164,16 +164,16 @@ theorem Normal.of_is_splitting_field (p : F[X]) [hFEp : IsSplittingField F E p] 
           (show Function.Injective ϕ.to_linear_map from ϕ.to_ring_hom.injective))
         FiniteDimensional.finrank_pos
   let C := AdjoinRoot (minpoly F x)
-  have Hx_irred := Fact.mk (minpoly.irreducible Hx)
-  let this : Algebra C D :=
+  haveI Hx_irred := Fact.mk (minpoly.irreducible Hx)
+  letI : Algebra C D :=
     RingHom.toAlgebra
       (AdjoinRoot.lift (algebraMap F D) (AdjoinRoot.root q)
         (by
           rw [algebra_map_eq F E D, ← eval₂_map, hr, AdjoinRoot.algebra_map_eq, eval₂_mul, AdjoinRoot.eval₂_root,
             zero_mul]))
-  let this : Algebra C E := RingHom.toAlgebra (AdjoinRoot.lift (algebraMap F E) x (minpoly.aeval F x))
-  have : IsScalarTower F C D := of_algebra_map_eq fun x => (AdjoinRoot.lift_of _).symm
-  have : IsScalarTower F C E := of_algebra_map_eq fun x => (AdjoinRoot.lift_of _).symm
+  letI : Algebra C E := RingHom.toAlgebra (AdjoinRoot.lift (algebraMap F E) x (minpoly.aeval F x))
+  haveI : IsScalarTower F C D := of_algebra_map_eq fun x => (AdjoinRoot.lift_of _).symm
+  haveI : IsScalarTower F C E := of_algebra_map_eq fun x => (AdjoinRoot.lift_of _).symm
   suffices Nonempty (D →ₐ[C] E) by
     exact Nonempty.map (AlgHom.restrictScalars F) this
   let S : Set D := ((p.map (algebraMap F E)).roots.map (algebraMap E D)).toFinset

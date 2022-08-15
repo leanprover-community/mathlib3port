@@ -408,10 +408,12 @@ theorem closed_range_to_bcf : IsClosed (Range (toBcf : C₀(α, β) → α →�
     refine' metric.tendsto_nhds.mpr fun ε hε => _
     obtain ⟨_, hg, g, rfl⟩ := hf (ball f (ε / 2)) (ball_mem_nhds f <| half_pos hε)
     refine' (metric.tendsto_nhds.mp (zero_at_infty g) (ε / 2) (half_pos hε)).mp (eventually_of_forall fun x hx => _)
-    calc dist (f x) 0 ≤ dist (g.to_bcf x) (f x) + dist (g x) 0 :=
-        dist_triangle_left _ _ _ _ < dist g.to_bcf f + ε / 2 := add_lt_add_of_le_of_lt (dist_coe_le_dist x) hx _ < ε :=
-        by
+    calc
+      dist (f x) 0 ≤ dist (g.to_bcf x) (f x) + dist (g x) 0 := dist_triangle_left _ _ _
+      _ < dist g.to_bcf f + ε / 2 := add_lt_add_of_le_of_lt (dist_coe_le_dist x) hx
+      _ < ε := by
         simpa [← add_halves ε] using add_lt_add_right hg (ε / 2)
+      
   exact
     ⟨⟨f.to_continuous_map, this⟩, by
       ext
@@ -436,7 +438,7 @@ field `𝕜` whenever `β` is as well.
 
 section NormedSpace
 
-variable [NormedGroup β] {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 β]
+variable [NormedAddCommGroup β] {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 β]
 
 /-- The natural inclusion `to_bcf : C₀(α, β) → (α →ᵇ β)` realized as an additive monoid
 homomorphism. -/
@@ -449,8 +451,8 @@ def toBcfAddMonoidHom : C₀(α, β) →+ α →ᵇ β where
 theorem coe_to_bcf_add_monoid_hom (f : C₀(α, β)) : (f.toBcfAddMonoidHom : α → β) = f :=
   rfl
 
-noncomputable instance : NormedGroup C₀(α, β) :=
-  NormedGroup.induced toBcfAddMonoidHom (to_bcf_injective α β)
+noncomputable instance : NormedAddCommGroup C₀(α, β) :=
+  NormedAddCommGroup.induced toBcfAddMonoidHom (to_bcf_injective α β)
 
 @[simp]
 theorem norm_to_bcf_eq_norm {f : C₀(α, β)} : ∥f.toBcf∥ = ∥f∥ :=
@@ -465,7 +467,7 @@ section NormedRing
 variable [NonUnitalNormedRing β]
 
 noncomputable instance : NonUnitalNormedRing C₀(α, β) :=
-  { ZeroAtInftyContinuousMap.nonUnitalRing, ZeroAtInftyContinuousMap.normedGroup with
+  { ZeroAtInftyContinuousMap.nonUnitalRing, ZeroAtInftyContinuousMap.normedAddCommGroup with
     norm_mul := fun f g => norm_mul_le f.toBcf g.toBcf }
 
 end NormedRing
@@ -510,7 +512,7 @@ end Star
 
 section NormedStar
 
-variable [NormedGroup β] [StarAddMonoid β] [NormedStarGroup β]
+variable [NormedAddCommGroup β] [StarAddMonoid β] [NormedStarGroup β]
 
 instance : NormedStarGroup C₀(α, β) where norm_star := fun f => (norm_star f.toBcf : _)
 

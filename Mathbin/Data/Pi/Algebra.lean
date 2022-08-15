@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot, Eric Wieser
 -/
 import Mathbin.Algebra.Group.ToAdditive
+import Mathbin.Algebra.Group.Defs
 import Mathbin.Data.Prod.Basic
 import Mathbin.Logic.Unique
 import Mathbin.Tactic.Congr
 import Mathbin.Tactic.Simpa
 import Mathbin.Tactic.SplitIfs
+import Mathbin.Data.Sum.Basic
 
 /-!
 # Instances and theorems on pi types
@@ -35,7 +37,7 @@ variable (x y : ∀ i, f i) (i : I)
 
 namespace Pi
 
-/-! `1`, `0`, `+`, `*`, `-`, `⁻¹`, and `/` are defined pointwise. -/
+/-! `1`, `0`, `+`, `*`, `+ᵥ`, `•`, `^`, `-`, `⁻¹`, and `/` are defined pointwise. -/
 
 
 @[to_additive]
@@ -80,6 +82,47 @@ theorem const_mul [Mul β] (a b : β) : const α a * const α b = const α (a * 
 
 @[to_additive]
 theorem mul_comp [Mul γ] (x y : β → γ) (z : α → β) : (x * y) ∘ z = x ∘ z * y ∘ z :=
+  rfl
+
+@[to_additive Pi.hasVadd]
+instance hasSmul [∀ i, HasSmul α <| f i] : HasSmul α (∀ i : I, f i) :=
+  ⟨fun s x => fun i => s • x i⟩
+
+@[simp, to_additive]
+theorem smul_apply [∀ i, HasSmul α <| f i] (s : α) (x : ∀ i, f i) (i : I) : (s • x) i = s • x i :=
+  rfl
+
+@[to_additive]
+theorem smul_def [∀ i, HasSmul α <| f i] (s : α) (x : ∀ i, f i) : s • x = fun i => s • x i :=
+  rfl
+
+@[simp, to_additive]
+theorem smul_const [HasSmul α β] (a : α) (b : β) : a • const I b = const I (a • b) :=
+  rfl
+
+@[to_additive]
+theorem smul_comp [HasSmul α γ] (a : α) (x : β → γ) (y : I → β) : (a • x) ∘ y = a • x ∘ y :=
+  rfl
+
+@[to_additive Pi.hasSmul]
+instance hasPow [∀ i, Pow (f i) β] : Pow (∀ i, f i) β :=
+  ⟨fun x b i => x i ^ b⟩
+
+@[simp, to_additive Pi.smul_apply, to_additive_reorder 5]
+theorem pow_apply [∀ i, Pow (f i) β] (x : ∀ i, f i) (b : β) (i : I) : (x ^ b) i = x i ^ b :=
+  rfl
+
+@[to_additive Pi.smul_def, to_additive_reorder 5]
+theorem pow_def [∀ i, Pow (f i) β] (x : ∀ i, f i) (b : β) : x ^ b = fun i => x i ^ b :=
+  rfl
+
+-- `to_additive` generates bad output if we take `has_pow α β`.
+@[simp, to_additive smul_const, to_additive_reorder 5]
+theorem const_pow [Pow β α] (b : β) (a : α) : const I b ^ a = const I (b ^ a) :=
+  rfl
+
+@[to_additive smul_comp, to_additive_reorder 6]
+theorem pow_comp [Pow γ α] (x : β → γ) (a : α) (y : I → β) : (x ^ a) ∘ y = x ∘ y ^ a :=
   rfl
 
 @[simp]
@@ -273,4 +316,38 @@ theorem Subsingleton.pi_mul_single_eq {α : Type _} [DecidableEq I] [Subsingleto
     Pi.mulSingle i x = fun _ => x :=
   funext fun j => by
     rw [Subsingleton.elimₓ j i, Pi.mul_single_eq_same]
+
+namespace Sum
+
+variable (a a' : α → γ) (b b' : β → γ)
+
+@[simp, to_additive]
+theorem elim_one_one [One γ] : Sum.elim (1 : α → γ) (1 : β → γ) = 1 :=
+  Sum.elim_const_const 1
+
+@[simp, to_additive]
+theorem elim_mul_single_one [DecidableEq α] [DecidableEq β] [One γ] (i : α) (c : γ) :
+    Sum.elim (Pi.mulSingle i c) (1 : β → γ) = Pi.mulSingle (Sum.inl i) c := by
+  simp only [← Pi.mulSingle, ← Sum.elim_update_left, ← elim_one_one]
+
+@[simp, to_additive]
+theorem elim_one_mul_single [DecidableEq α] [DecidableEq β] [One γ] (i : β) (c : γ) :
+    Sum.elim (1 : α → γ) (Pi.mulSingle i c) = Pi.mulSingle (Sum.inr i) c := by
+  simp only [← Pi.mulSingle, ← Sum.elim_update_right, ← elim_one_one]
+
+@[to_additive]
+theorem elim_inv_inv [Inv γ] : Sum.elim a⁻¹ b⁻¹ = (Sum.elim a b)⁻¹ :=
+  (Sum.comp_elim Inv.inv a b).symm
+
+@[to_additive]
+theorem elim_mul_mul [Mul γ] : Sum.elim (a * a') (b * b') = Sum.elim a b * Sum.elim a' b' := by
+  ext x
+  cases x <;> rfl
+
+@[to_additive]
+theorem elim_div_div [Div γ] : Sum.elim (a / a') (b / b') = Sum.elim a b / Sum.elim a' b' := by
+  ext x
+  cases x <;> rfl
+
+end Sum
 

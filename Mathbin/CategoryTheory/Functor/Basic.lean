@@ -42,9 +42,8 @@ structure Functor (C : Type u₁) [Category.{v₁} C] (D : Type u₂) [Category.
     run_tac
       obviously
 
-/-- The prefunctor between the underlying quivers. -/
-add_decl_doc functor.to_prefunctor
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident functor.to_prefunctor]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 end
 
 -- mathport name: «expr ⥤ »
@@ -69,6 +68,7 @@ section
 variable (C : Type u₁) [Category.{v₁} C]
 
 /-- `𝟭 C` is the identity functor on a category `C`. -/
+-- We don't use `@[simps]` here because we want `C` implicit for the simp lemmas.
 protected def id : C ⥤ C where
   obj := fun X => X
   map := fun _ _ f => f
@@ -98,16 +98,13 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 
 /-- `F ⋙ G` is the composition of a functor `F` and a functor `G` (`F` first, then `G`).
 -/
+@[simps obj]
 def comp (F : C ⥤ D) (G : D ⥤ E) : C ⥤ E where
   obj := fun X => G.obj (F.obj X)
   map := fun _ _ f => G.map (F.map f)
 
 -- mathport name: «expr ⋙ »
 infixr:80 " ⋙ " => comp
-
-@[simp]
-theorem comp_obj (F : C ⥤ D) (G : D ⥤ E) (X : C) : (F ⋙ G).obj X = G.obj (F.obj X) :=
-  rfl
 
 @[simp]
 theorem comp_map (F : C ⥤ D) (G : D ⥤ E) {X Y : C} (f : X ⟶ Y) : (F ⋙ G).map f = G.map (F.map f) :=

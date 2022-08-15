@@ -89,6 +89,7 @@ theorem epi_app_of_epi (α : F ⟶ G) [∀ X : C, Epi (α.app X)] : Epi α :=
     rw [← cancel_epi (α.app X), ← comp_app, Eq, comp_app]⟩
 
 /-- `hcomp α β` is the horizontal composition of natural transformations. -/
+@[simps]
 def hcomp {H I : D ⥤ E} (α : F ⟶ G) (β : H ⟶ I) : F ⋙ H ⟶ G ⋙ I where
   app := fun X : C => β.app (F.obj X) ≫ I.map (α.app X)
   naturality' := fun X Y f => by
@@ -96,10 +97,6 @@ def hcomp {H I : D ⥤ E} (α : F ⟶ G) (β : H ⟶ I) : F ⋙ H ⟶ G ⋙ I wh
 
 -- mathport name: «expr ◫ »
 infixl:80 " ◫ " => hcomp
-
-@[simp]
-theorem hcomp_app {H I : D ⥤ E} (α : F ⟶ G) (β : H ⟶ I) (X : C) : (α ◫ β).app X = β.app (F.obj X) ≫ I.map (α.app X) :=
-  rfl
 
 @[simp]
 theorem hcomp_id_app {H : D ⥤ E} (α : F ⟶ G) (X : C) : (α ◫ 𝟙 H).app X = H.map (α.app X) := by
@@ -125,6 +122,7 @@ open NatTrans
 namespace Functor
 
 /-- Flip the arguments of a bifunctor. See also `currying.lean`. -/
+@[simps]
 protected def flip (F : C ⥤ D ⥤ E) : D ⥤ C ⥤ E where
   obj := fun k =>
     { obj := fun j => (F.obj j).obj k, map := fun j j' f => (F.map f).app k,
@@ -134,18 +132,6 @@ protected def flip (F : C ⥤ D ⥤ E) : D ⥤ C ⥤ E where
       map_comp' := fun X Y Z f g => by
         rw [map_comp, ← comp_app] }
   map := fun c c' f => { app := fun j => (F.obj j).map f }
-
-@[simp]
-theorem flip_obj_obj (F : C ⥤ D ⥤ E) (c) (d) : (F.flip.obj d).obj c = (F.obj c).obj d :=
-  rfl
-
-@[simp]
-theorem flip_obj_map (F : C ⥤ D ⥤ E) {c c' : C} (f : c ⟶ c') (d : D) : (F.flip.obj d).map f = (F.map f).app d :=
-  rfl
-
-@[simp]
-theorem flip_map_app (F : C ⥤ D ⥤ E) {d d' : D} (f : d ⟶ d') (c : C) : (F.flip.map f).app c = (F.obj c).map f :=
-  rfl
 
 end Functor
 

@@ -237,17 +237,6 @@ instance : BooleanAlgebra (SimpleGraph V) :=
       refine' ⟨fun h => ⟨h.1, ⟨_, h.2⟩⟩, fun h => ⟨h.1, h.2.2⟩⟩
       rintro rfl
       exact x.irrefl h.1,
-    sup_inf_sdiff := fun a b => by
-      ext v w
-      refine' ⟨fun h => _, fun h' => _⟩
-      obtain ⟨ha, _⟩ | ⟨ha, _⟩ := h <;> exact ha
-      by_cases' b.adj v w <;>
-        first |
-          exact Or.inl ⟨h', h⟩|
-          exact Or.inr ⟨h', h⟩,
-    inf_inf_sdiff := fun a b => by
-      ext v w
-      exact ⟨fun ⟨⟨_, hb⟩, ⟨_, hb'⟩⟩ => hb' hb, fun h => h.elim⟩,
     le_sup_left := fun x y v w h => Or.inl h, le_sup_right := fun x y v w h => Or.inr h,
     le_inf := fun x y z hxy hyz v w h => ⟨hxy h, hyz h⟩,
     le_sup_inf := fun a b c v w h =>
@@ -849,6 +838,12 @@ theorem card_incidence_finset_eq_degree [DecidableEq V] : (G.incidenceFinset v).
 theorem mem_incidence_finset [DecidableEq V] (e : Sym2 V) : e ∈ G.incidenceFinset v ↔ e ∈ G.IncidenceSet v :=
   Set.mem_to_finset
 
+theorem incidence_finset_eq_filter [DecidableEq V] [Fintype G.EdgeSet] :
+    G.incidenceFinset v = G.edgeFinset.filter (HasMem.Mem v) := by
+  ext e
+  refine' Sym2.ind (fun x y => _) e
+  simp [← mk_mem_incidence_set_iff]
+
 end FiniteAt
 
 section LocallyFinite
@@ -973,7 +968,7 @@ degree.
 -/
 theorem max_degree_le_of_forall_degree_le [DecidableRel G.Adj] (k : ℕ) (h : ∀ v, G.degree v ≤ k) : G.maxDegree ≤ k := by
   by_cases' hV : (univ : Finset V).Nonempty
-  · have : Nonempty V := univ_nonempty_iff.mp hV
+  · haveI : Nonempty V := univ_nonempty_iff.mp hV
     obtain ⟨v, hv⟩ := G.exists_maximal_degree_vertex
     rw [hv]
     apply h

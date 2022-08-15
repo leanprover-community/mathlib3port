@@ -145,6 +145,9 @@ theorem lookup_is_some {a : α} {s : Alist β} : (s.lookup a).isSome ↔ a ∈ s
 theorem lookup_eq_none {a : α} {s : Alist β} : lookup a s = none ↔ a ∉ s :=
   lookup_eq_none
 
+theorem mem_lookup_iff {a : α} {b : β a} {s : Alist β} : b ∈ lookup a s ↔ Sigma.mk a b ∈ s.entries :=
+  mem_lookup_iff s.Nodupkeys
+
 theorem perm_lookup {a : α} {s₁ s₂ : Alist β} (p : s₁.entries ~ s₂.entries) : s₁.lookup a = s₂.lookup a :=
   perm_lookup _ s₁.Nodupkeys s₂.Nodupkeys p
 

@@ -112,10 +112,42 @@ theorem is_algebraic_rat (R : Type u) {A : Type v} [DivisionRing A] [Field R] [C
   rw [← map_rat_cast (algebraMap R A)]
   exact is_algebraic_algebra_map n
 
+theorem is_algebraic_of_mem_root_set {R : Type u} {A : Type v} [Field R] [Field A] [Algebra R A] {p : R[X]} {x : A}
+    (hx : x ∈ p.RootSet A) : IsAlgebraic R x :=
+  ⟨p, ne_zero_of_mem_root_set hx, aeval_eq_zero_of_mem_root_set hx⟩
+
+open IsScalarTower
+
 theorem is_algebraic_algebra_map_of_is_algebraic {a : S} : IsAlgebraic R a → IsAlgebraic R (algebraMap S A a) :=
   fun ⟨f, hf₁, hf₂⟩ =>
   ⟨f, hf₁, by
-    rw [← IsScalarTower.algebra_map_aeval R S A, hf₂, RingHom.map_zero]⟩
+    rw [← algebra_map_aeval, hf₂, map_zero]⟩
+
+/-- This is slightly more general than `is_algebraic_algebra_map_of_is_algebraic` in that it
+  allows noncommutative intermediate rings `A`. -/
+theorem is_algebraic_alg_hom_of_is_algebraic {B} [Ringₓ B] [Algebra R B] (f : A →ₐ[R] B) {a : A} (h : IsAlgebraic R a) :
+    IsAlgebraic R (f a) :=
+  let ⟨p, hp, ha⟩ := h
+  ⟨p, hp, by
+    rw [aeval_alg_hom, f.comp_apply, ha, map_zero]⟩
+
+/-- Transfer `algebra.is_algebraic` across an `alg_equiv`. -/
+theorem _root_.alg_equiv.is_algebraic {B} [Ringₓ B] [Algebra R B] (e : A ≃ₐ[R] B) (h : Algebra.IsAlgebraic R A) :
+    Algebra.IsAlgebraic R B := fun b => by
+  convert ← is_algebraic_alg_hom_of_is_algebraic e.to_alg_hom (h _) <;> apply e.apply_symm_apply
+
+theorem _root_.alg_equiv.is_algebraic_iff {B} [Ringₓ B] [Algebra R B] (e : A ≃ₐ[R] B) :
+    Algebra.IsAlgebraic R A ↔ Algebra.IsAlgebraic R B :=
+  ⟨e.IsAlgebraic, e.symm.IsAlgebraic⟩
+
+theorem is_algebraic_algebra_map_iff {a : S} (h : Function.Injective (algebraMap S A)) :
+    IsAlgebraic R (algebraMap S A a) ↔ IsAlgebraic R a :=
+  ⟨fun ⟨p, hp0, hp⟩ =>
+    ⟨p, hp0,
+      h
+        (by
+          rwa [map_zero, algebra_map_aeval])⟩,
+    is_algebraic_algebra_map_of_is_algebraic⟩
 
 end zero_ne_one
 
@@ -175,7 +207,7 @@ theorem _root_.is_algebraic_of_larger_base {x : A} (A_alg : IsAlgebraic K x) : I
 theorem is_algebraic_of_larger_base (A_alg : IsAlgebraic K A) : IsAlgebraic L A :=
   is_algebraic_of_larger_base_of_injective (algebraMap K L).Injective A_alg
 
-variable {R S} (K L)
+variable (K L)
 
 /-- A field extension is integral if it is finite. -/
 theorem is_integral_of_finite [FiniteDimensional K L] : Algebra.IsIntegral K L := fun x =>
@@ -185,11 +217,45 @@ theorem is_integral_of_finite [FiniteDimensional K L] : Algebra.IsIntegral K L :
 theorem is_algebraic_of_finite [finite : FiniteDimensional K L] : IsAlgebraic K L :=
   Algebra.is_algebraic_iff_is_integral.mpr (is_integral_of_finite K L)
 
+variable {K L}
+
+theorem IsAlgebraic.alg_hom_bijective (ha : Algebra.IsAlgebraic K L) (f : L →ₐ[K] L) : Function.Bijective f := by
+  refine' ⟨f.to_ring_hom.injective, fun b => _⟩
+  obtain ⟨p, hp, he⟩ := ha b
+  let f' : p.root_set L → p.root_set L := Set.MapsTo.restrict f _ _ (root_set_maps_to (map_ne_zero hp) f)
+  have : Function.Surjective f' :=
+    Fintype.injective_iff_surjective.1 fun _ _ h => Subtype.eq <| f.to_ring_hom.injective <| Subtype.ext_iff.1 h
+  obtain ⟨a, ha⟩ := this ⟨b, (mem_root_set_iff hp b).2 he⟩
+  exact ⟨a, Subtype.ext_iff.1 ha⟩
+
+theorem _root_.alg_hom.bijective [FiniteDimensional K L] (ϕ : L →ₐ[K] L) : Function.Bijective ϕ :=
+  (Algebra.is_algebraic_of_finite K L).alg_hom_bijective ϕ
+
+variable (K L)
+
+/-- Bijection between algebra equivalences and algebra homomorphisms -/
+@[simps]
+noncomputable def IsAlgebraic.algEquivEquivAlgHom (ha : Algebra.IsAlgebraic K L) : (L ≃ₐ[K] L) ≃* (L →ₐ[K] L) where
+  toFun := fun ϕ => ϕ.toAlgHom
+  invFun := fun ϕ => AlgEquiv.ofBijective ϕ (ha.alg_hom_bijective ϕ)
+  left_inv := fun _ => by
+    ext
+    rfl
+  right_inv := fun _ => by
+    ext
+    rfl
+  map_mul' := fun _ _ => rfl
+
+/-- Bijection between algebra equivalences and algebra homomorphisms -/
+@[reducible]
+noncomputable def _root_.alg_equiv_equiv_alg_hom [FiniteDimensional K L] : (L ≃ₐ[K] L) ≃* (L →ₐ[K] L) :=
+  (Algebra.is_algebraic_of_finite K L).algEquivEquivAlgHom K L
+
 end Algebra
 
 variable {R S : Type _} [CommRingₓ R] [IsDomain R] [CommRingₓ S]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y «expr ≠ » (0 : R))
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y «expr ≠ » (0 : R))
 theorem exists_integral_multiple [Algebra R S] {z : S} (hz : IsAlgebraic R z)
     (inj : ∀ x, algebraMap R S x = 0 → x = 0) :
     ∃ (x : integralClosure R S)(y : _)(_ : y ≠ (0 : R)), z * algebraMap R S y = x := by
@@ -201,7 +267,7 @@ theorem exists_integral_multiple [Algebra R S] {z : S} (hz : IsAlgebraic R z)
     ⟨p.integral_normalization, monic_integral_normalization p_ne_zero, integral_normalization_aeval_eq_zero px inj⟩
   exact ⟨⟨_, x_integral⟩, a, a_ne_zero, rfl⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (d «expr ≠ » (0 : R))
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (d «expr ≠ » (0 : R))
 /-- A fraction `(a : S) / (b : S)` can be reduced to `(c : S) / (d : R)`,
 if `S` is the integral closure of `R` in an algebraic extension `L` of `R`. -/
 theorem IsIntegralClosure.exists_smul_eq_mul {L : Type _} [Field L] [Algebra R S] [Algebra S L] [Algebra R L]

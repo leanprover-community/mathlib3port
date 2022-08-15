@@ -31,8 +31,8 @@ theorem reflects_isomorphisms_forget₂ [HasForget₂ C D] [ReflectsIsomorphisms
     ReflectsIsomorphisms (forget₂ C D) :=
   { reflects := fun X Y f i => by
       skip
-      have i' : is_iso ((forget D).map ((forget₂ C D).map f)) := functor.map_is_iso (forget D) _
-      have : is_iso ((forget C).map f) := by
+      haveI i' : is_iso ((forget D).map ((forget₂ C D).map f)) := functor.map_is_iso (forget D) _
+      haveI : is_iso ((forget C).map f) := by
         have := has_forget₂.forget_comp
         dsimp'  at this
         rw [← this]

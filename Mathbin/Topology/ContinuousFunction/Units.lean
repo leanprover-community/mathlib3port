@@ -36,7 +36,7 @@ def unitsLift : C(X, Mˣ) ≃ C(X, M)ˣ where
   invFun := fun f =>
     { toFun := fun x => ⟨f x, f⁻¹ x, ContinuousMap.congr_fun f.mul_inv x, ContinuousMap.congr_fun f.inv_mul x⟩,
       continuous_to_fun :=
-        continuous_induced_rng <|
+        continuous_induced_rng.2 <|
           Continuous.prod_mk (f : C(X, M)).Continuous <| MulOpposite.continuous_op.comp (↑f⁻¹ : C(X, M)).Continuous }
   left_inv := fun f => by
     ext
@@ -54,7 +54,7 @@ variable [NormedRing R] [CompleteSpace R]
 theorem _root_.normed_ring.is_unit_unit_continuous {f : C(X, R)} (h : ∀ x, IsUnit (f x)) :
     Continuous fun x => (h x).Unit := by
   refine'
-    continuous_induced_rng
+    continuous_induced_rng.2
       (Continuous.prod_mk f.continuous (mul_opposite.continuous_op.comp (continuous_iff_continuous_at.mpr fun x => _)))
   have := NormedRing.inverse_continuous_at (h x).Unit
   simp only [Ring.inverse_unit, ← IsUnit.unit_spec, Function.comp_applyₓ] at this⊢

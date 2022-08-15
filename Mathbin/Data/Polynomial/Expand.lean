@@ -194,8 +194,12 @@ theorem coeff_contract {p : ℕ} (hp : p ≠ 0) (f : R[X]) (n : ℕ) : (contract
   simp only [← contract, ← coeff_monomial, ← sum_ite_eq', ← finset_sum_coeff, ← mem_range, ← not_ltₓ, ← ite_eq_left_iff]
   intro hn
   apply (coeff_eq_zero_of_nat_degree_lt _).symm
-  calc f.nat_degree < f.nat_degree + 1 := Nat.lt_succ_selfₓ _ _ ≤ n * 1 := by
-      simpa only [← mul_oneₓ] using hn _ ≤ n * p := mul_le_mul_of_nonneg_left (show 1 ≤ p from hp.bot_lt) (zero_le n)
+  calc
+    f.nat_degree < f.nat_degree + 1 := Nat.lt_succ_selfₓ _
+    _ ≤ n * 1 := by
+      simpa only [← mul_oneₓ] using hn
+    _ ≤ n * p := mul_le_mul_of_nonneg_left (show 1 ≤ p from hp.bot_lt) (zero_le n)
+    
 
 theorem contract_expand {f : R[X]} (hp : p ≠ 0) : contract p (expand R p f) = f := by
   ext
@@ -264,7 +268,8 @@ theorem is_local_ring_hom_expand {p : ℕ} (hp : 0 < p) : IsLocalRingHom (↑(ex
 variable {R}
 
 theorem of_irreducible_expand {p : ℕ} (hp : p ≠ 0) {f : R[X]} (hf : Irreducible (expand R p f)) : Irreducible f :=
-  @of_irreducible_map _ _ _ (is_local_ring_hom_expand R hp.bot_lt) hf
+  let _ := is_local_ring_hom_expand R hp.bot_lt
+  of_irreducible_map (↑(expand R p)) hf
 
 theorem of_irreducible_expand_pow {p : ℕ} (hp : p ≠ 0) {f : R[X]} {n : ℕ} :
     Irreducible (expand R (p ^ n) f) → Irreducible f :=

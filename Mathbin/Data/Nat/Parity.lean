@@ -39,7 +39,7 @@ theorem even_iff : Even n ↔ n % 2 = 0 :=
 
 theorem odd_iff : Odd n ↔ n % 2 = 1 :=
   ⟨fun ⟨m, hm⟩ => by
-    norm_num [← hm, ← add_mod], fun h =>
+    norm_num[← hm, ← add_mod], fun h =>
     ⟨n / 2,
       (mod_add_divₓ n 2).symm.trans
         (by

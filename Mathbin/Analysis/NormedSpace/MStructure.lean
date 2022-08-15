@@ -59,7 +59,7 @@ M-summand, M-projection, L-summand, L-projection, M-ideal, M-structure
 -/
 
 
-variable (X : Type _) [NormedGroup X]
+variable (X : Type _) [NormedAddCommGroup X]
 
 variable {M : Type} [Ringₓ M] [Module M X]
 
@@ -145,18 +145,23 @@ theorem mul [HasFaithfulSmul M X] {P Q : M} (h₁ : IsLprojection X P) (h₂ : I
   refine' ⟨IsIdempotentElem.mul_of_commute (h₁.commute h₂) h₁.proj h₂.proj, _⟩
   intro x
   refine' le_antisymmₓ _ _
-  · calc ∥x∥ = ∥(P * Q) • x + (x - (P * Q) • x)∥ := by
-        rw [add_sub_cancel'_right ((P * Q) • x) x]_ ≤ ∥(P * Q) • x∥ + ∥x - (P * Q) • x∥ := by
-        apply norm_add_le _ = ∥(P * Q) • x∥ + ∥(1 - P * Q) • x∥ := by
+  · calc
+      ∥x∥ = ∥(P * Q) • x + (x - (P * Q) • x)∥ := by
+        rw [add_sub_cancel'_right ((P * Q) • x) x]
+      _ ≤ ∥(P * Q) • x∥ + ∥x - (P * Q) • x∥ := by
+        apply norm_add_le
+      _ = ∥(P * Q) • x∥ + ∥(1 - P * Q) • x∥ := by
         rw [sub_smul, one_smul]
+      
     
-  · calc ∥x∥ = ∥P • Q • x∥ + (∥Q • x - P • Q • x∥ + ∥x - Q • x∥) := by
-        rw [h₂.Lnorm x, h₁.Lnorm (Q • x), sub_smul, one_smul, sub_smul, one_smul,
-          add_assocₓ]_ ≥ ∥P • Q • x∥ + ∥Q • x - P • Q • x + (x - Q • x)∥ :=
-        (add_le_add_iff_left ∥P • Q • x∥).mpr
-          (norm_add_le (Q • x - P • Q • x) (x - Q • x))_ = ∥(P * Q) • x∥ + ∥(1 - P * Q) • x∥ :=
-        by
+  · calc
+      ∥x∥ = ∥P • Q • x∥ + (∥Q • x - P • Q • x∥ + ∥x - Q • x∥) := by
+        rw [h₂.Lnorm x, h₁.Lnorm (Q • x), sub_smul, one_smul, sub_smul, one_smul, add_assocₓ]
+      _ ≥ ∥P • Q • x∥ + ∥Q • x - P • Q • x + (x - Q • x)∥ :=
+        (add_le_add_iff_left ∥P • Q • x∥).mpr (norm_add_le (Q • x - P • Q • x) (x - Q • x))
+      _ = ∥(P * Q) • x∥ + ∥(1 - P * Q) • x∥ := by
         rw [sub_add_sub_cancel', sub_smul, one_smul, mul_smul]
+      
     
 
 theorem join [HasFaithfulSmul M X] {P Q : M} (h₁ : IsLprojection X P) (h₂ : IsLprojection X Q) :
@@ -286,15 +291,6 @@ instance [HasFaithfulSmul M X] : DistribLattice { P : M // IsLprojection X P } :
 instance [HasFaithfulSmul M X] : BooleanAlgebra { P : M // IsLprojection X P } :=
   { IsLprojection.Subtype.hasCompl, IsLprojection.Subtype.hasSdiff, IsLprojection.Subtype.boundedOrder,
     IsLprojection.Subtype.distribLattice with
-    sup_inf_sdiff := fun P Q =>
-      Subtype.ext <| by
-        rw [coe_sup, coe_inf, coe_sdiff, mul_assoc, ← mul_assoc ↑Q, (Q.prop.commute P.prop).Eq, mul_assoc ↑P ↑Q, ←
-          coe_compl, mul_compl_self, mul_zero, mul_zero, sub_zero, ← mul_addₓ, coe_compl, add_sub_cancel'_right,
-          mul_oneₓ],
-    inf_inf_sdiff := fun P Q =>
-      Subtype.ext <| by
-        rw [coe_inf, coe_inf, coe_sdiff, coe_bot, mul_assoc, ← mul_assoc ↑Q, (Q.prop.commute P.prop).Eq, ← coe_compl,
-          mul_assoc, mul_compl_self, mul_zero, mul_zero],
     inf_compl_le_bot := fun P =>
       (Subtype.ext
           (by

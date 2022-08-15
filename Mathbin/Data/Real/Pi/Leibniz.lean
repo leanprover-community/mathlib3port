@@ -147,12 +147,16 @@ theorem tendsto_sum_pi_div_four :
   have mvt1 := norm_image_sub_le_of_norm_deriv_le_segment' hderiv1 hbound1 _ (right_mem_Icc.mpr hU1)
   have mvt2 := norm_image_sub_le_of_norm_deriv_le_segment' hderiv2 hbound2 _ (right_mem_Icc.mpr hU2)
   -- The following algebra is enough to complete the proof
-  calc |f 1 - f 0| = |f 1 - f U + (f U - f 0)| := by
-      ring_nf _ ≤ 1 * (1 - U) + U ^ (2 * k) * (U - 0) :=
-      le_transₓ (abs_add (f 1 - f U) (f U - f 0)) (add_le_add mvt1 mvt2)_ = 1 - U + U ^ (2 * k) * U := by
-      ring _ = 1 - u k + u k ^ (2 * (k : ℝ) + 1) := by
+  calc
+    |f 1 - f 0| = |f 1 - f U + (f U - f 0)| := by
+      ring_nf
+    _ ≤ 1 * (1 - U) + U ^ (2 * k) * (U - 0) := le_transₓ (abs_add (f 1 - f U) (f U - f 0)) (add_le_add mvt1 mvt2)
+    _ = 1 - U + U ^ (2 * k) * U := by
+      ring
+    _ = 1 - u k + u k ^ (2 * (k : ℝ) + 1) := by
       rw [← pow_succ'ₓ (U : ℝ) (2 * k)]
       norm_cast
+    
 
 end Real
 

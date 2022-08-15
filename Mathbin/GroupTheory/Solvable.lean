@@ -103,7 +103,7 @@ instance (priority := 100) CommGroupₓ.is_solvable {G : Type _} [CommGroupₓ G
   ⟨⟨1, le_bot_iff.mp (Abelianization.commutator_subset_ker (MonoidHom.id G))⟩⟩
 
 theorem is_solvable_of_comm {G : Type _} [hG : Groupₓ G] (h : ∀ a b : G, a * b = b * a) : IsSolvable G := by
-  let hG' : CommGroupₓ G := { hG with mul_comm := h }
+  letI hG' : CommGroupₓ G := { hG with mul_comm := h }
   cases hG
   exact CommGroupₓ.is_solvable
 

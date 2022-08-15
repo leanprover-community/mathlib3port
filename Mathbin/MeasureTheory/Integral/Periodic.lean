@@ -30,7 +30,7 @@ theorem is_add_fundamental_domain_Ioc {T : ℝ} (hT : 0 < T) (t : ℝ)
   refine' this.exists_unique_iff.2 _
   simpa only [← add_commₓ x] using exists_unique_add_zsmul_mem_Ioc hT x t
 
-variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
 namespace Function
 
@@ -43,9 +43,9 @@ variable {f : ℝ → E} {T : ℝ}
 /-- An auxiliary lemma for a more general `function.periodic.interval_integral_add_eq`. -/
 theorem interval_integral_add_eq_of_pos (hf : Periodic f T) (hT : 0 < T) (t s : ℝ) :
     (∫ x in t..t + T, f x) = ∫ x in s..s + T, f x := by
-  have : Encodable (AddSubgroup.zmultiples T) := (countable_range _).toEncodable
+  haveI : Encodable (AddSubgroup.zmultiples T) := (countable_range _).toEncodable
   simp only [← integral_of_le, ← hT.le, ← le_add_iff_nonneg_right]
-  have : vadd_invariant_measure (AddSubgroup.zmultiples T) ℝ volume := ⟨fun c s hs => measure_preimage_add _ _ _⟩
+  haveI : vadd_invariant_measure (AddSubgroup.zmultiples T) ℝ volume := ⟨fun c s hs => measure_preimage_add _ _ _⟩
   exact (is_add_fundamental_domain_Ioc hT t).set_integral_eq (is_add_fundamental_domain_Ioc hT s) hf.map_vadd_zmultiples
 
 /-- If `f` is a periodic function with period `T`, then its integral over `[t, t + T]` does not

@@ -146,8 +146,8 @@ theorem sup_mem_closed_subalgebra (A : Subalgebra ℝ C(X, ℝ)) (h : IsClosed (
 
 open TopologicalSpace
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (f g «expr ∈ » L)
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (f g «expr ∈ » L)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (f g «expr ∈ » L)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (f g «expr ∈ » L)
 -- Here's the fun part of Stone-Weierstrass!
 theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
     (inf_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f⊓g ∈ L) (sup_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f⊔g ∈ L)

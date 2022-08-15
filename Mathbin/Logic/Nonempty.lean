@@ -101,9 +101,6 @@ theorem Nonempty.forall {α} {p : Nonempty α → Prop} : (∀ h : Nonempty α, 
 theorem Nonempty.exists {α} {p : Nonempty α → Prop} : (∃ h : Nonempty α, p h) ↔ ∃ a, p ⟨a⟩ :=
   Iff.intro (fun ⟨⟨a⟩, h⟩ => ⟨a, h⟩) fun ⟨a, h⟩ => ⟨⟨a⟩, h⟩
 
-theorem Classical.nonempty_piₓ {α} {β : α → Sort _} : Nonempty (∀ a : α, β a) ↔ ∀ a : α, Nonempty (β a) :=
-  Iff.intro (fun ⟨f⟩ a => ⟨f a⟩) fun f => ⟨fun a => Classical.choice <| f a⟩
-
 /-- Using `classical.choice`, lifts a (`Prop`-valued) `nonempty` instance to a (`Type`-valued)
   `inhabited` instance. `classical.inhabited_of_nonempty` already exists, in
   `core/init/classical.lean`, but the assumption is not a type class argument,
@@ -137,6 +134,12 @@ theorem Nonempty.elim_to_inhabited {α : Sort _} [h : Nonempty α] {p : Prop} (f
 
 instance {α β} [h : Nonempty α] [h2 : Nonempty β] : Nonempty (α × β) :=
   h.elim fun g => h2.elim fun g2 => ⟨⟨g, g2⟩⟩
+
+instance {ι : Sort _} {α : ι → Sort _} [∀ i, Nonempty (α i)] : Nonempty (∀ i, α i) :=
+  ⟨fun _ => Classical.arbitrary _⟩
+
+theorem Classical.nonempty_piₓ {ι} {α : ι → Sort _} : Nonempty (∀ i, α i) ↔ ∀ i, Nonempty (α i) :=
+  ⟨fun ⟨f⟩ a => ⟨f a⟩, @Pi.nonempty _ _⟩
 
 theorem subsingleton_of_not_nonempty {α : Sort _} (h : ¬Nonempty α) : Subsingleton α :=
   ⟨fun x => False.elim <| not_nonempty_iff_imp_false.mp h x⟩

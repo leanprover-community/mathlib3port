@@ -9,7 +9,7 @@ import Mathbin.Tactic.Interactive
 
 universe u
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 unsafe def tactic.interactive.blast_disjs : tactic Unit :=
   sorry
 
@@ -34,7 +34,7 @@ inductive IsSearchable (lt : α → α → Prop) : Rbnode α → Option α → O
   | black_s {l r v lo hi} (hs₁ : is_searchable l lo (some v)) (hs₂ : is_searchable r (some v) hi) :
     is_searchable (black_node l v r) lo hi
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 unsafe def is_searchable_tactic : tactic Unit :=
   sorry
 

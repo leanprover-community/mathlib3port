@@ -122,12 +122,12 @@ variable (V)
 localized [Isocrystal] notation "Φ(" p "," k ")" => WittVector.Isocrystal.frobenius p k
 
 /-- A homomorphism between isocrystals respects the Frobenius map. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure IsocrystalHom extends V →ₗ[K(p,k)] V₂ where
   frob_equivariant : ∀ x : V, Φ(p,k) (to_linear_map x) = to_linear_map (Φ(p,k) x)
 
 /-- An isomorphism between isocrystals respects the Frobenius map. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure IsocrystalEquiv extends V ≃ₗ[K(p,k)] V₂ where
   frob_equivariant : ∀ x : V, Φ(p,k) (to_linear_equiv x) = to_linear_equiv (Φ(p,k) x)
 
@@ -149,14 +149,14 @@ open Isocrystal
 def FractionRing.module : Module K(p,k) K(p,k) :=
   Semiringₓ.toModule
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler module «exprK( , )»(p, k)
+-- ./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler module «exprK( , )»(p, k)
 /-- Type synonym for `K(p, k)` to carry the standard 1-dimensional isocrystal structure
 of slope `m : ℤ`.
 -/
-@[nolint unused_arguments has_inhabited_instance]
+@[nolint unused_arguments has_nonempty_instance]
 def StandardOneDimIsocrystal (m : ℤ) : Type _ :=
   K(p,k)deriving AddCommGroupₓ,
-  ./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler module «exprK( , )»(p, k)
+  ./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler module «exprK( , )»(p, k)
 
 section PerfectRing
 
@@ -177,13 +177,13 @@ theorem StandardOneDimIsocrystal.frobenius_apply (m : ℤ) (x : StandardOneDimIs
 
 end PerfectRing
 
--- ./././Mathport/Syntax/Translate/Basic.lean:646:40: in linear_combination #[[expr «expr * »(«exprφ( , )»(p, k) c, hmb)], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args
+-- ./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr «expr * »(«exprφ( , )»(p, k) c, hmb)], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args
 /-- A one-dimensional isocrystal over an algebraically closed field
 admits an isomorphism to one of the standard (indexed by `m : ℤ`) one-dimensional isocrystals. -/
 theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP k p] (V : Type _) [AddCommGroupₓ V]
     [Isocrystal p k V] (h_dim : finrank K(p,k) V = 1) : ∃ m : ℤ, Nonempty (StandardOneDimIsocrystal p k m ≃ᶠⁱ[p,k] V) :=
   by
-  have : Nontrivial V := FiniteDimensional.nontrivial_of_finrank_eq_succ h_dim
+  haveI : Nontrivial V := FiniteDimensional.nontrivial_of_finrank_eq_succ h_dim
   obtain ⟨x, hx⟩ : ∃ x : V, x ≠ 0 := exists_ne 0
   have : Φ(p,k) x ≠ 0 := by
     simpa only [← map_zero] using Φ(p,k).Injective.Ne hx
@@ -217,7 +217,7 @@ theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP 
   simp only [mul_smul]
   congr 1
   trace
-    "./././Mathport/Syntax/Translate/Basic.lean:646:40: in linear_combination #[[expr «expr * »(«exprφ( , )»(p, k) c, hmb)], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args"
+    "./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr «expr * »(«exprφ( , )»(p, k) c, hmb)], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args"
 
 end WittVector
 

@@ -3,11 +3,10 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
-import Mathbin.Algebra.PunitInstances
-import Mathbin.Order.Hom.Basic
 import Mathbin.CategoryTheory.Category.Cat
 import Mathbin.CategoryTheory.Category.Preorder
+import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
+import Mathbin.Order.Hom.Basic
 
 /-!
 # Category of preorders
@@ -96,7 +95,7 @@ instance :
     exact functor.congr_obj h x
 
 instance : Full preorderToCat.{u} where
-  preimage := fun X Y f => ⟨f.obj, f.Monotone⟩
+  Preimage := fun X Y f => ⟨f.obj, f.Monotone⟩
   witness' := fun X Y f => by
     apply CategoryTheory.Functor.ext
     tidy

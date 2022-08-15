@@ -18,7 +18,7 @@ universe u v
 
 open Finset
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`Equiv] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`Equiv] []
 /-- `fin_enum α` means that `α` is finite and can be enumerated in some order,
   i.e. `α` has an explicit bijection with `fin n` for some n. -/
 class FinEnum (α : Sort _) where
@@ -96,7 +96,7 @@ instance punit : FinEnum PUnit :=
     cases x <;> simp
 
 instance prod {β} [FinEnum α] [FinEnum β] : FinEnum (α × β) :=
-  ofList ((toList α).product (toList β)) fun x => by
+  ofList (toList α ×ˢ toList β) fun x => by
     cases x <;> simp
 
 instance sum {β} [FinEnum α] [FinEnum β] : FinEnum (Sum α β) :=

@@ -409,12 +409,18 @@ theorem image.ext [HasImage f] {W : C} {g h : image f ⟶ W} [HasLimit (parallel
   -- The proof from wikipedia next proves `q ≫ v = 𝟙 _`,
   -- and concludes that `equalizer g h ≅ image f`,
   -- but this isn't necessary.
-  calc g = 𝟙 (image f) ≫ g := by
-      rw [category.id_comp]_ = v ≫ q ≫ g := by
-      rw [← t, category.assoc]_ = v ≫ q ≫ h := by
-      rw [equalizer.condition g h]_ = 𝟙 (image f) ≫ h := by
-      rw [← category.assoc, t]_ = h := by
+  calc
+    g = 𝟙 (image f) ≫ g := by
       rw [category.id_comp]
+    _ = v ≫ q ≫ g := by
+      rw [← t, category.assoc]
+    _ = v ≫ q ≫ h := by
+      rw [equalizer.condition g h]
+    _ = 𝟙 (image f) ≫ h := by
+      rw [← category.assoc, t]
+    _ = h := by
+      rw [category.id_comp]
+    
 
 instance [HasImage f] [∀ {Z : C} (g h : image f ⟶ Z), HasLimit (parallelPair g h)] : Epi (factorThruImage f) :=
   ⟨fun Z g h w => image.ext f w⟩
@@ -736,10 +742,9 @@ instance strongEpiMonoFactorisationInhabited {X Y : C} (f : X ⟶ Y) [StrongEpi 
     property of the image. -/
 def StrongEpiMonoFactorisation.toMonoIsImage {X Y : C} {f : X ⟶ Y} (F : StrongEpiMonoFactorisation f) :
     IsImage F.toMonoFactorisation where lift := fun G =>
-    arrow.lift <|
-      arrow.hom_mk' <|
-        show G.e ≫ G.m = F.e ≫ F.m by
-          rw [F.to_mono_factorisation.fac, G.fac]
+    (CommSq.mk
+        (show G.e ≫ G.m = F.e ≫ F.m by
+          rw [F.to_mono_factorisation.fac, G.fac])).lift
 
 variable (C)
 
@@ -808,25 +813,28 @@ instance (priority := 100) hasImageMapsOfHasStrongEpiImages [HasStrongEpiImages 
       C where HasImageMap := fun f g st =>
     HasImageMap.mk
       { map :=
-          arrow.lift <|
-            arrow.hom_mk' <|
-              show (st.left ≫ factorThruImage g.Hom) ≫ image.ι g.Hom = factorThruImage f.Hom ≫ image.ι f.Hom ≫ st.right
+          (CommSq.mk
+              (show (st.left ≫ factorThruImage g.Hom) ≫ image.ι g.Hom = factorThruImage f.Hom ≫ image.ι f.Hom ≫ st.right
                 by
-                simp }
+                simp )).lift }
 
 /-- If a category has images, equalizers and pullbacks, then images are automatically strong epi
     images. -/
 instance (priority := 100) has_strong_epi_images_of_has_pullbacks_of_has_equalizers [HasPullbacks C] [HasEqualizers C] :
-    HasStrongEpiImages C where strong_factor_thru_image := fun X Y f =>
-    { Epi := by
-        infer_instance,
-      HasLift := fun A B x y h h_mono w =>
-        Arrow.HasLift.mk
-          { lift :=
-              image.lift
-                  { i := pullback h y, m := pullback.snd ≫ image.ι f, m_mono := mono_comp _ _,
-                    e := pullback.lift _ _ w } ≫
-                pullback.fst } }
+    HasStrongEpiImages
+      C where strong_factor_thru_image := fun X Y f =>
+    StrongEpi.mk' fun A B h h_mono x y sq =>
+      CommSq.HasLift.mk'
+        { l :=
+            image.lift
+                { i := pullback h y, m := pullback.snd ≫ image.ι f, m_mono := mono_comp _ _,
+                  e := pullback.lift _ _ sq.w } ≫
+              pullback.fst,
+          fac_left' := by
+            simp only [← image.fac_lift_assoc, ← pullback.lift_fst],
+          fac_right' := by
+            ext
+            simp only [← sq.w, ← category.assoc, ← image.fac_lift_assoc, ← pullback.lift_fst_assoc] }
 
 end HasStrongEpiImages
 

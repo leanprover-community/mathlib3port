@@ -92,13 +92,13 @@ open Filter Asymptotics Set
 
 open ContinuousLinearMap (smul_right smul_right_one_eq_iff)
 
-variable {𝕜 : Type u} [NondiscreteNormedField 𝕜]
+variable {𝕜 : Type u} [NontriviallyNormedField 𝕜]
 
 section
 
-variable {F : Type v} [NormedGroup F] [NormedSpace 𝕜 F]
+variable {F : Type v} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 
-variable {E : Type w} [NormedGroup E] [NormedSpace 𝕜 E]
+variable {E : Type w} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 /-- `f` has the derivative `f'` at the point `x` as `x` goes along the filter `L`.
 
@@ -448,7 +448,7 @@ theorem differentiable_within_at_Ioi_iff_Ici [PartialOrderₓ 𝕜] :
   ⟨fun h => h.HasDerivWithinAt.Ici_of_Ioi.DifferentiableWithinAt, fun h =>
     h.HasDerivWithinAt.Ioi_of_Ici.DifferentiableWithinAt⟩
 
-theorem deriv_within_Ioi_eq_Ici {E : Type _} [NormedGroup E] [NormedSpace ℝ E] (f : ℝ → E) (x : ℝ) :
+theorem deriv_within_Ioi_eq_Ici {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] (f : ℝ → E) (x : ℝ) :
     derivWithin f (Ioi x) x = derivWithin f (Ici x) x := by
   by_cases' H : DifferentiableWithinAt ℝ f (Ioi x) x
   · have A := H.has_deriv_within_at.Ici_of_Ioi
@@ -759,7 +759,7 @@ section Pi
 /-! ### Derivatives of functions `f : 𝕜 → Π i, E i` -/
 
 
-variable {ι : Type _} [Fintype ι] {E' : ι → Type _} [∀ i, NormedGroup (E' i)] [∀ i, NormedSpace 𝕜 (E' i)]
+variable {ι : Type _} [Fintype ι] {E' : ι → Type _} [∀ i, NormedAddCommGroup (E' i)] [∀ i, NormedSpace 𝕜 (E' i)]
   {φ : 𝕜 → ∀ i, E' i} {φ' : ∀ i, E' i}
 
 @[simp]
@@ -790,7 +790,7 @@ section Smul
 /-! ### Derivative of the multiplication of a scalar function and a vector function -/
 
 
-variable {𝕜' : Type _} [NondiscreteNormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] [NormedSpace 𝕜' F] [IsScalarTower 𝕜 𝕜' F]
+variable {𝕜' : Type _} [NontriviallyNormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] [NormedSpace 𝕜' F] [IsScalarTower 𝕜 𝕜' F]
   {c : 𝕜 → 𝕜'} {c' : 𝕜'}
 
 theorem HasDerivWithinAt.smul (hc : HasDerivWithinAt c c' s x) (hf : HasDerivWithinAt f f' s x) :
@@ -1045,7 +1045,7 @@ section CartesianProduct
 /-! ### Derivative of the cartesian product of two functions -/
 
 
-variable {G : Type w} [NormedGroup G] [NormedSpace 𝕜 G]
+variable {G : Type w} [NormedAddCommGroup G] [NormedSpace 𝕜 G]
 
 variable {f₂ : 𝕜 → G} {f₂' : G}
 
@@ -1082,7 +1082,7 @@ usual multiplication in `comp` lemmas.
 
 /- For composition lemmas, we put x explicit to help the elaborator, as otherwise Lean tends to
 get confused since there are too many possibilities for composition -/
-variable {𝕜' : Type _} [NondiscreteNormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] [NormedSpace 𝕜' F] [IsScalarTower 𝕜 𝕜' F]
+variable {𝕜' : Type _} [NontriviallyNormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] [NormedSpace 𝕜' F] [IsScalarTower 𝕜 𝕜' F]
   {s' t' : Set 𝕜'} {h : 𝕜 → 𝕜'} {h₁ : 𝕜 → 𝕜} {h₂ : 𝕜' → 𝕜'} {h' h₂' : 𝕜'} {h₁' : 𝕜} {g₁ : 𝕜' → F} {g₁' : F}
   {L' : Filter 𝕜'} (x)
 
@@ -1464,7 +1464,7 @@ section Division
 /-! ### Derivative of `x ↦ c x / d x` -/
 
 
-variable {𝕜' : Type _} [NondiscreteNormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] {c d : 𝕜 → 𝕜'} {c' d' : 𝕜'}
+variable {𝕜' : Type _} [NontriviallyNormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] {c d : 𝕜 → 𝕜'} {c' d' : 𝕜'}
 
 theorem HasDerivWithinAt.div (hc : HasDerivWithinAt c c' s x) (hd : HasDerivWithinAt d d' s x) (hx : d x ≠ 0) :
     HasDerivWithinAt (fun y => c y / d y) ((c' * d x - c x * d') / d x ^ 2) s x := by
@@ -1558,7 +1558,7 @@ section ClmCompApply
 
 open ContinuousLinearMap
 
-variable {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G] {c : 𝕜 → F →L[𝕜] G} {c' : F →L[𝕜] G} {d : 𝕜 → E →L[𝕜] F}
+variable {G : Type _} [NormedAddCommGroup G] [NormedSpace 𝕜 G] {c : 𝕜 → F →L[𝕜] G} {c' : F →L[𝕜] G} {d : 𝕜 → E →L[𝕜] F}
   {d' : E →L[𝕜] F} {u : 𝕜 → F} {u' : F}
 
 theorem HasStrictDerivAt.clm_comp (hc : HasStrictDerivAt c c' x) (hd : HasStrictDerivAt d d' x) :
@@ -1811,20 +1811,6 @@ theorem HasDerivAt.pow (hc : HasDerivAt c c' x) : HasDerivAt (fun y => c y ^ n) 
   rw [← has_deriv_within_at_univ] at *
   exact hc.pow n
 
-theorem DifferentiableWithinAt.pow (hc : DifferentiableWithinAt 𝕜 c s x) :
-    DifferentiableWithinAt 𝕜 (fun x => c x ^ n) s x :=
-  (hc.HasDerivWithinAt.pow n).DifferentiableWithinAt
-
-@[simp]
-theorem DifferentiableAt.pow (hc : DifferentiableAt 𝕜 c x) : DifferentiableAt 𝕜 (fun x => c x ^ n) x :=
-  (hc.HasDerivAt.pow n).DifferentiableAt
-
-theorem DifferentiableOn.pow (hc : DifferentiableOn 𝕜 c s) : DifferentiableOn 𝕜 (fun x => c x ^ n) s := fun x h =>
-  (hc x h).pow n
-
-@[simp]
-theorem Differentiable.pow (hc : Differentiable 𝕜 c) : Differentiable 𝕜 fun x => c x ^ n := fun x => (hc x).pow n
-
 theorem deriv_within_pow' (hc : DifferentiableWithinAt 𝕜 c s x) (hxs : UniqueDiffWithinAt 𝕜 s x) :
     derivWithin (fun x => c x ^ n) s x = (n : 𝕜) * c x ^ (n - 1) * derivWithin c s x :=
   (hc.HasDerivWithinAt.pow n).derivWithin hxs
@@ -1840,7 +1826,7 @@ section Zpow
 /-! ### Derivative of `x ↦ x^m` for `m : ℤ` -/
 
 
-variable {x : 𝕜} {s : Set 𝕜} {m : ℤ}
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {x : 𝕜} {s : Set 𝕜} {m : ℤ}
 
 theorem has_strict_deriv_at_zpow (m : ℤ) (x : 𝕜) (h : x ≠ 0 ∨ 0 ≤ m) :
     HasStrictDerivAt (fun x => x ^ m) ((m : 𝕜) * x ^ (m - 1)) x := by
@@ -1940,6 +1926,22 @@ theorem iter_deriv_inv' (k : ℕ) :
     (deriv^[k]) Inv.inv = fun x : 𝕜 => (∏ i in Finset.range k, -1 - i) * x ^ (-1 - k : ℤ) :=
   funext (iter_deriv_inv k)
 
+variable {f : E → 𝕜} {t : Set E} {a : E}
+
+theorem DifferentiableWithinAt.zpow (hf : DifferentiableWithinAt 𝕜 f t a) (h : f a ≠ 0 ∨ 0 ≤ m) :
+    DifferentiableWithinAt 𝕜 (fun x => f x ^ m) t a :=
+  (differentiable_at_zpow.2 h).comp_differentiable_within_at a hf
+
+theorem DifferentiableAt.zpow (hf : DifferentiableAt 𝕜 f a) (h : f a ≠ 0 ∨ 0 ≤ m) :
+    DifferentiableAt 𝕜 (fun x => f x ^ m) a :=
+  (differentiable_at_zpow.2 h).comp a hf
+
+theorem DifferentiableOn.zpow (hf : DifferentiableOn 𝕜 f t) (h : (∀, ∀ x ∈ t, ∀, f x ≠ 0) ∨ 0 ≤ m) :
+    DifferentiableOn 𝕜 (fun x => f x ^ m) t := fun x hx => (hf x hx).zpow <| h.imp_left fun h => h x hx
+
+theorem Differentiable.zpow (hf : Differentiable 𝕜 f) (h : (∀ x, f x ≠ 0) ∨ 0 ≤ m) :
+    Differentiable 𝕜 fun x => f x ^ m := fun x => (hf x).zpow <| h.imp_left fun h => h x
+
 end Zpow
 
 /-! ### Support of derivatives -/
@@ -1949,13 +1951,13 @@ section Support
 
 open Function
 
-variable {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] {f : 𝕜 → F}
+variable {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F] {f : 𝕜 → F}
 
 theorem support_deriv_subset : Support (deriv f) ⊆ Tsupport f := by
   intro x
   rw [← not_imp_not]
   intro h2x
-  rw [not_mem_closure_support_iff_eventually_eq] at h2x
+  rw [not_mem_tsupport_iff_eventually_eq] at h2x
   exact nmem_support.mpr (h2x.deriv_eq.trans (deriv_const x 0))
 
 theorem HasCompactSupport.deriv (hf : HasCompactSupport f) : HasCompactSupport (deriv f) :=
@@ -1988,7 +1990,7 @@ section RealSpace
 
 open Metric
 
-variable {E : Type u} [NormedGroup E] [NormedSpace ℝ E] {f : ℝ → E} {f' : E} {s : Set ℝ} {x r : ℝ}
+variable {E : Type u} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : ℝ → E} {f' : E} {s : Set ℝ} {x r : ℝ}
 
 /-- If `f` has derivative `f'` within `s` at `x`, then for any `r > ∥f'∥` the ratio
 `∥f z - f x∥ / ∥z - x∥` is less than `r` in some neighborhood of `x` within `s`.

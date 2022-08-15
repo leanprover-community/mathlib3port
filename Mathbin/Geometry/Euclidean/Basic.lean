@@ -308,9 +308,12 @@ theorem norm_sub_eq_add_norm_iff_angle_eq_pi {x y : V} (hx : x ≠ 0) (hy : y �
   rw [← inner_eq_neg_mul_norm_iff_angle_eq_pi hx hy]
   obtain ⟨hxy₁, hxy₂⟩ := norm_nonneg (x - y), add_nonneg (norm_nonneg x) (norm_nonneg y)
   rw [← sq_eq_sq hxy₁ hxy₂, norm_sub_pow_two_real] at h
-  calc inner x y = (∥x∥ ^ 2 + ∥y∥ ^ 2 - (∥x∥ + ∥y∥) ^ 2) / 2 := by
-      linarith _ = -(∥x∥ * ∥y∥) := by
+  calc
+    inner x y = (∥x∥ ^ 2 + ∥y∥ ^ 2 - (∥x∥ + ∥y∥) ^ 2) / 2 := by
+      linarith
+    _ = -(∥x∥ * ∥y∥) := by
       ring
+    
 
 /-- The norm of the sum of two non-zero vectors equals the sum of their norms
 if and only the angle between the two vectors is 0. -/
@@ -320,9 +323,12 @@ theorem norm_add_eq_add_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy : y 
   rw [← inner_eq_mul_norm_iff_angle_eq_zero hx hy]
   obtain ⟨hxy₁, hxy₂⟩ := norm_nonneg (x + y), add_nonneg (norm_nonneg x) (norm_nonneg y)
   rw [← sq_eq_sq hxy₁ hxy₂, norm_add_pow_two_real] at h
-  calc inner x y = ((∥x∥ + ∥y∥) ^ 2 - ∥x∥ ^ 2 - ∥y∥ ^ 2) / 2 := by
-      linarith _ = ∥x∥ * ∥y∥ := by
+  calc
+    inner x y = ((∥x∥ + ∥y∥) ^ 2 - ∥x∥ ^ 2 - ∥y∥ ^ 2) / 2 := by
+      linarith
+    _ = ∥x∥ * ∥y∥ := by
       ring
+    
 
 /-- The norm of the difference of two non-zero vectors equals the absolute value
 of the difference of their norms if and only the angle between the two vectors is 0. -/
@@ -334,9 +340,12 @@ theorem norm_sub_eq_abs_sub_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy 
     rw [h]
     exact sq_abs (∥x∥ - ∥y∥)
   rw [norm_sub_pow_two_real] at h1
-  calc inner x y = ((∥x∥ + ∥y∥) ^ 2 - ∥x∥ ^ 2 - ∥y∥ ^ 2) / 2 := by
-      linarith _ = ∥x∥ * ∥y∥ := by
+  calc
+    inner x y = ((∥x∥ + ∥y∥) ^ 2 - ∥x∥ ^ 2 - ∥y∥ ^ 2) / 2 := by
+      linarith
+    _ = ∥x∥ * ∥y∥ := by
       ring
+    
 
 /-- The norm of the sum of two vectors equals the norm of their difference if and only if
 the angle between them is π/2. -/
@@ -1001,7 +1010,7 @@ theorem reflection_eq_self_iff {s : AffineSubspace ℝ P} [Nonempty s] [Complete
   constructor
   · intro h
     rw [← @vsub_eq_zero_iff_eq V, vadd_vsub_assoc, ← two_smul ℝ (↑(orthogonalProjection s p) -ᵥ p), smul_eq_zero] at h
-    norm_num  at h
+    norm_num at h
     exact h
     
   · intro h
@@ -1020,7 +1029,7 @@ theorem reflection_eq_iff_orthogonal_projection_eq (s₁ s₂ : AffineSubspace �
     rw [← @vsub_eq_zero_iff_eq V, vsub_vadd_eq_vsub_sub, vadd_vsub_assoc, add_commₓ, add_sub_assoc,
       vsub_sub_vsub_cancel_right, ← two_smul ℝ ((orthogonalProjection s₁ p : P) -ᵥ orthogonalProjection s₂ p),
       smul_eq_zero] at h
-    norm_num  at h
+    norm_num at h
     exact h
     
   · intro h

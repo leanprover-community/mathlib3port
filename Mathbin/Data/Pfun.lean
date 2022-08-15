@@ -75,6 +75,10 @@ def Dom (f : α →. β) : Set α :=
 theorem mem_dom (f : α →. β) (x : α) : x ∈ Dom f ↔ ∃ y, y ∈ f x := by
   simp [← dom, ← Part.dom_iff_mem]
 
+@[simp]
+theorem dom_mk (p : α → Prop) (f : ∀ a, p a → β) : (Pfun.Dom fun x => ⟨p x, f x⟩) = { x | p x } :=
+  rfl
+
 theorem dom_eq (f : α →. β) : Dom f = { x | ∃ y, y ∈ f x } :=
   Set.ext (mem_dom f)
 
@@ -277,7 +281,7 @@ theorem fix_fwd {f : α →. Sum β α} (a a' : α) (ha' : Sum.inr a' ∈ f a) :
     
 
 /-- A recursion principle for `pfun.fix`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def fixInduction {f : α →. Sum β α} {b : β} {C : α → Sort _} {a : α} (h : b ∈ f.fix a)
     (H : ∀ a', b ∈ f.fix a' → (∀ a'', Sum.inr a'' ∈ f a' → C a'') → C a') : C a := by
   replace h := Part.mem_assert_iff.1 h
@@ -295,7 +299,7 @@ def fixInduction {f : α →. Sum β α} {b : β} {C : α → Sort _} {a : α} (
 /-- Another induction lemma for `b ∈ f.fix a` which allows one to prove a predicate `P` holds for
 `a` given that `f a` inherits `P` from `a` and `P` holds for preimages of `b`.
 -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def fixInduction' (f : α →. Sum β α) (b : β) {C : α → Sort _} {a : α} (h : b ∈ f.fix a)
     (hbase : ∀ a_final : α, Sum.inl b ∈ f a_final → C a_final)
     (hind : ∀ a₀ a₁ : α, b ∈ f.fix a₁ → Sum.inr a₁ ∈ f a₀ → C a₁ → C a₀) : C a := by
@@ -354,6 +358,9 @@ theorem preimage_union (s t : Set β) : f.Preimage (s ∪ t) = f.Preimage s ∪ 
 
 theorem preimage_univ : f.Preimage Set.Univ = f.Dom := by
   ext <;> simp [← mem_preimage, ← mem_dom]
+
+theorem coe_preimage (f : α → β) (s : Set β) : (f : α →. β).Preimage s = f ⁻¹' s := by
+  ext <;> simp
 
 /-- Core of a set `s : set β` with respect to a partial function `f : α →. β`. Set of all `a : α`
 such that `f a ∈ s`, if `f a` is defined. -/

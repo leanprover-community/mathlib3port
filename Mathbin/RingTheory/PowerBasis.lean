@@ -59,7 +59,7 @@ This is a structure, not a class, since the same algebra can have many power bas
 For the common case where `S` is defined by adjoining an integral element to `R`,
 the canonical power basis is given by `{algebra,intermediate_field}.adjoin.power_basis`.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure PowerBasis (R S : Type _) [CommRingₓ R] [Ringₓ S] [Algebra R S] where
   gen : S
   dim : ℕ
@@ -317,8 +317,9 @@ noncomputable def liftEquiv' (pb : PowerBasis A S) :
 
 /-- There are finitely many algebra homomorphisms `S →ₐ[A] B` if `S` is of the form `A[x]`
 and `B` is an integral domain. -/
-noncomputable def AlgHom.fintype (pb : PowerBasis A S) : Fintype (S →ₐ[A] B) := by
-  let this := Classical.decEq B <;> exact Fintype.ofEquiv _ pb.lift_equiv'.symm
+noncomputable def AlgHom.fintype (pb : PowerBasis A S) : Fintype (S →ₐ[A] B) :=
+  letI := Classical.decEq B
+  Fintype.ofEquiv _ pb.lift_equiv'.symm
 
 /-- `pb.equiv_of_root pb' h₁ h₂` is an equivalence of algebras with the same power basis,
 where "the same" means that `pb` is a root of `pb'`s minimal polynomial and vice versa.

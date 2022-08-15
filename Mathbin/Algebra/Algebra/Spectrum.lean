@@ -342,10 +342,15 @@ theorem scalar_eq [Nontrivial A] (k : 𝕜) : σ (↑ₐ k) = {k} := by
           ⟨Set.mem_singleton 0, by
             simp [← hx]⟩⟩
       
-  calc σ (↑ₐ k) = σ (↑ₐ k + 0) := by
-      simp _ = LeftAddCoset k (σ (0 : A)) := by
-      rw [← left_add_coset_eq]_ = LeftAddCoset k {0} := by
-      rw [zero_eq]_ = {k} := coset_eq
+  calc
+    σ (↑ₐ k) = σ (↑ₐ k + 0) := by
+      simp
+    _ = LeftAddCoset k (σ (0 : A)) := by
+      rw [← left_add_coset_eq]
+    _ = LeftAddCoset k {0} := by
+      rw [zero_eq]
+    _ = {k} := coset_eq
+    
 
 @[simp]
 theorem one_eq [Nontrivial A] : σ (1 : A) = {1} :=

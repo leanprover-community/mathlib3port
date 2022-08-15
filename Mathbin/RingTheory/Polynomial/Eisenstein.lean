@@ -116,7 +116,7 @@ theorem exists_mem_adjoin_mul_eq_pow_nat_degree_le {x : S} (hx : aeval x f = 0) 
     (hf : f.IsWeaklyEisensteinAt P) :
     ∀ i, (f.map (algebraMap R S)).natDegree ≤ i → ∃ y ∈ adjoin R ({x} : Set S), (algebraMap R S) p * y = x ^ i := by
   intro i hi
-  obtain ⟨k, hk⟩ := le_iff_exists_add.1 hi
+  obtain ⟨k, hk⟩ := exists_add_of_le hi
   rw [hk, pow_addₓ]
   obtain ⟨y, hy, H⟩ := exists_mem_adjoin_mul_eq_pow_nat_degree hx hmo hf
   refine' ⟨y * x ^ k, _, _⟩
@@ -132,7 +132,7 @@ include hf
 theorem pow_nat_degree_le_of_root_of_monic_mem {x : R} (hroot : IsRoot f x) (hmo : f.Monic) :
     ∀ i, f.natDegree ≤ i → x ^ i ∈ 𝓟 := by
   intro i hi
-  obtain ⟨k, hk⟩ := le_iff_exists_add.1 hi
+  obtain ⟨k, hk⟩ := exists_add_of_le hi
   rw [hk, pow_addₓ]
   suffices x ^ f.nat_degree ∈ 𝓟 by
     exact mul_mem_right (x ^ k) 𝓟 this
@@ -145,7 +145,7 @@ theorem pow_nat_degree_le_of_aeval_zero_of_monic_mem_map {x : S} (hx : aeval x f
     ∀ i, (f.map (algebraMap R S)).natDegree ≤ i → x ^ i ∈ 𝓟.map (algebraMap R S) := by
   suffices x ^ (f.map (algebraMap R S)).natDegree ∈ 𝓟.map (algebraMap R S) by
     intro i hi
-    obtain ⟨k, hk⟩ := le_iff_exists_add.1 hi
+    obtain ⟨k, hk⟩ := exists_add_of_le hi
     rw [hk, pow_addₓ]
     refine' mul_mem_right _ _ this
   rw [aeval_def, eval₂_eq_eval_map, ← is_root.def] at hx
@@ -356,7 +356,7 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
     (hBint : IsIntegral R B.gen) {z : L} {Q : Polynomial R} (hQ : aeval B.gen Q = p • z) (hzint : IsIntegral R z)
     (hei : (minpoly R B.gen).IsEisensteinAt 𝓟) : p ∣ Q.coeff 0 := by
   -- First define some abbreviations.
-  let this := B.finite_dimensional
+  letI := B.finite_dimensional
   let P := minpoly R B.gen
   obtain ⟨n, hn⟩ := Nat.exists_eq_succ_of_ne_zero B.dim_pos.ne'
   have finrank_K_L : FiniteDimensional.finrank K L = B.dim := B.finrank
@@ -395,9 +395,12 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
   apply IsFractionRing.injective R K
   simp only [← _root_.map_mul, ← _root_.map_pow, ← _root_.map_neg, ← _root_.map_one]
   -- Both sides are actually norms:
-  calc _ = norm K (Q.coeff 0 • B.gen ^ n) :=
-      _ _ = norm K (p • (z * B.gen ^ n) - ∑ x : ℕ in (range (Q.nat_degree + 1)).erase 0, p • Q.coeff x • f (x + n)) :=
-      congr_arg (norm K) (eq_sub_of_add_eq _)_ = _ := _
+  calc
+    _ = norm K (Q.coeff 0 • B.gen ^ n) := _
+    _ = norm K (p • (z * B.gen ^ n) - ∑ x : ℕ in (range (Q.nat_degree + 1)).erase 0, p • Q.coeff x • f (x + n)) :=
+      congr_arg (norm K) (eq_sub_of_add_eq _)
+    _ = _ := _
+    
   · simp only [← Algebra.smul_def, ← algebra_map_apply R K L, ← Algebra.norm_algebra_map, ← _root_.map_mul, ←
       _root_.map_pow, ← finrank_K_L, ← power_basis.norm_gen_eq_coeff_zero_minpoly, ←
       minpoly.gcd_domain_eq_field_fractions' K hBint, ← coeff_map, hn]
@@ -407,12 +410,14 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
   · simp_rw [← smul_sum, ← smul_sub, Algebra.smul_def p, algebra_map_apply R K L, _root_.map_mul,
       Algebra.norm_algebra_map, finrank_K_L, hr, ← hn]
     
-  calc _ = (Q.coeff 0 • 1 + ∑ x : ℕ in (range (Q.nat_degree + 1)).erase 0, Q.coeff x • B.gen ^ x) * B.gen ^ n :=
-      _ _ =
-        (Q.coeff 0 • B.gen ^ 0 + ∑ x : ℕ in (range (Q.nat_degree + 1)).erase 0, Q.coeff x • B.gen ^ x) * B.gen ^ n :=
-      by
-      rw [pow_zeroₓ]_ = aeval B.gen Q * B.gen ^ n := _ _ = _ := by
+  calc
+    _ = (Q.coeff 0 • 1 + ∑ x : ℕ in (range (Q.nat_degree + 1)).erase 0, Q.coeff x • B.gen ^ x) * B.gen ^ n := _
+    _ = (Q.coeff 0 • B.gen ^ 0 + ∑ x : ℕ in (range (Q.nat_degree + 1)).erase 0, Q.coeff x • B.gen ^ x) * B.gen ^ n := by
+      rw [pow_zeroₓ]
+    _ = aeval B.gen Q * B.gen ^ n := _
+    _ = _ := by
       rw [hQ, Algebra.smul_mul_assoc]
+    
   · have :
       ∀, ∀ i ∈ (range (Q.nat_degree + 1)).erase 0, ∀, Q.coeff i • (B.gen ^ i * B.gen ^ n) = p • Q.coeff i • f (i + n) :=
       by
@@ -447,10 +452,10 @@ theorem mem_adjoin_of_smul_prime_smul_of_minpoly_is_eiseinstein_at {B : PowerBas
   -- First define some abbreviations.
   have hndiv : ¬p ^ 2 ∣ (minpoly R B.gen).coeff 0 := fun h =>
     hei.not_mem ((span_singleton_pow p 2).symm ▸ Ideal.mem_span_singleton.2 h)
-  let this := FiniteDimensional B
+  letI := FiniteDimensional B
   set P := minpoly R B.gen with hP
   obtain ⟨n, hn⟩ := Nat.exists_eq_succ_of_ne_zero B.dim_pos.ne'
-  have : NoZeroSmulDivisors R L := NoZeroSmulDivisors.trans R K L
+  haveI : NoZeroSmulDivisors R L := NoZeroSmulDivisors.trans R K L
   let P₁ := P.map (algebraMap R L)
   -- There is a polynomial `Q` such that `p • z = aeval B.gen Q`. We can assume that
   -- `Q.degree < P.degree` and `Q ≠ 0`.

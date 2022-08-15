@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
 import Mathbin.Data.Set.Intervals.Disjoint
+import Mathbin.Order.SuccPred.Basic
 import Mathbin.Tactic.FieldSimp
 
 /-!
@@ -72,8 +73,11 @@ irreducible_def orderIsoIooNegOneOne (k : Type _) [LinearOrderedField k] : k ≃
   refine' StrictMono.orderIsoOfRightInverse _ _ (fun x => x / (1 - abs x)) _
   · refine' cod_restrict (fun x => x / (1 + abs x)) _ fun x => abs_lt.1 _
     have H : 0 < 1 + abs x := (abs_nonneg x).trans_lt (lt_one_add _)
-    calc abs (x / (1 + abs x)) = abs x / (1 + abs x) := by
-        rw [abs_div, abs_of_pos H]_ < 1 := (div_lt_one H).2 (lt_one_add _)
+    calc
+      abs (x / (1 + abs x)) = abs x / (1 + abs x) := by
+        rw [abs_div, abs_of_pos H]
+      _ < 1 := (div_lt_one H).2 (lt_one_add _)
+      
     
   · refine' (strict_mono_of_odd_strict_mono_on_nonneg _ _).codRestrict _
     · intro x
@@ -219,4 +223,76 @@ theorem Union_Ioo_of_mono_of_is_glb_of_is_lub (hf : Antitone f) (hg : Monotone g
     
 
 end Union
+
+section SuccOrder
+
+open Order
+
+variable {α β : Type _} [PartialOrderₓ α]
+
+theorem StrictMonoOn.Iic_id_le [SuccOrder α] [IsSuccArchimedean α] [OrderBot α] {n : α} {φ : α → α}
+    (hφ : StrictMonoOn φ (Set.Iic n)) : ∀, ∀ m ≤ n, ∀, m ≤ φ m := by
+  revert hφ
+  refine'
+    Succ.rec_bot (fun n => StrictMonoOn φ (Set.Iic n) → ∀, ∀ m ≤ n, ∀, m ≤ φ m) (fun _ _ hm => hm.trans bot_le) _ _
+  rintro k ih hφ m hm
+  by_cases' hk : IsMax k
+  · rw [succ_eq_iff_is_max.2 hk] at hm
+    exact ih (hφ.mono <| Iic_subset_Iic.2 (le_succ _)) _ hm
+    
+  obtain rfl | h := le_succ_iff_eq_or_le.1 hm
+  · specialize ih (StrictMonoOn.mono hφ fun x hx => le_transₓ hx (le_succ _)) k le_rfl
+    refine' le_transₓ (succ_mono ih) (succ_le_of_lt (hφ (le_succ _) le_rfl _))
+    rw [lt_succ_iff_eq_or_lt_of_not_is_max hk]
+    exact Or.inl rfl
+    
+  · exact ih (StrictMonoOn.mono hφ fun x hx => le_transₓ hx (le_succ _)) _ h
+    
+
+theorem StrictMonoOn.Iic_le_id [PredOrder α] [IsPredArchimedean α] [OrderTop α] {n : α} {φ : α → α}
+    (hφ : StrictMonoOn φ (Set.Ici n)) : ∀ m, n ≤ m → φ m ≤ m :=
+  @StrictMonoOn.Iic_id_le αᵒᵈ _ _ _ _ _ _ fun i hi j hj hij => hφ hj hi hij
+
+variable [Preorderₓ β] {ψ : α → β}
+
+/-- A function `ψ` on a `succ_order` is strictly monotone before some `n` if for all `m` such that
+`m < n`, we have `ψ m < ψ (succ m)`. -/
+theorem strict_mono_on_Iic_of_lt_succ [SuccOrder α] [IsSuccArchimedean α] {n : α} (hψ : ∀ m, m < n → ψ m < ψ (succ m)) :
+    StrictMonoOn ψ (Set.Iic n) := by
+  intro x hx y hy hxy
+  obtain ⟨i, rfl⟩ := hxy.le.exists_succ_iterate
+  induction' i with k ih
+  · simpa using hxy
+    
+  cases k
+  · exact hψ _ (lt_of_lt_of_leₓ hxy hy)
+    
+  rw [Set.mem_Iic] at *
+  simp only [← Function.iterate_succ', ← Function.comp_applyₓ] at ih hxy hy⊢
+  by_cases' hmax : IsMax ((succ^[k]) x)
+  · rw [succ_eq_iff_is_max.2 hmax] at hxy⊢
+    exact ih (le_transₓ (le_succ _) hy) hxy
+    
+  by_cases' hmax' : IsMax (succ ((succ^[k]) x))
+  · rw [succ_eq_iff_is_max.2 hmax'] at hxy⊢
+    exact ih (le_transₓ (le_succ _) hy) hxy
+    
+  refine'
+    lt_transₓ (ih (le_transₓ (le_succ _) hy) (lt_of_le_of_ltₓ (le_succ_iterate k _) (lt_succ_iff_not_is_max.2 hmax))) _
+  rw [← Function.comp_applyₓ succ, ← Function.iterate_succ']
+  refine' hψ _ (lt_of_lt_of_leₓ _ hy)
+  rwa [Function.iterate_succ', Function.comp_applyₓ, lt_succ_iff_not_is_max]
+
+theorem strict_anti_on_Iic_of_succ_lt [SuccOrder α] [IsSuccArchimedean α] {n : α} (hψ : ∀ m, m < n → ψ (succ m) < ψ m) :
+    StrictAntiOn ψ (Set.Iic n) := fun i hi j hj hij => @strict_mono_on_Iic_of_lt_succ α βᵒᵈ _ _ ψ _ _ n hψ i hi j hj hij
+
+theorem strict_mono_on_Iic_of_pred_lt [PredOrder α] [IsPredArchimedean α] {n : α} (hψ : ∀ m, n < m → ψ (pred m) < ψ m) :
+    StrictMonoOn ψ (Set.Ici n) := fun i hi j hj hij =>
+  @strict_mono_on_Iic_of_lt_succ αᵒᵈ βᵒᵈ _ _ ψ _ _ n hψ j hj i hi hij
+
+theorem strict_anti_on_Iic_of_lt_pred [PredOrder α] [IsPredArchimedean α] {n : α} (hψ : ∀ m, n < m → ψ m < ψ (pred m)) :
+    StrictAntiOn ψ (Set.Ici n) := fun i hi j hj hij =>
+  @strict_anti_on_Iic_of_succ_lt αᵒᵈ βᵒᵈ _ _ ψ _ _ n hψ j hj i hi hij
+
+end SuccOrder
 

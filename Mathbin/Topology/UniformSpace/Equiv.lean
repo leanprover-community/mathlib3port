@@ -28,7 +28,7 @@ variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
 /-- Uniform isomorphism between `α` and `β` -/
 -- not all spaces are homeomorphic to each other
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure UniformEquiv (α : Type _) (β : Type _) [UniformSpace α] [UniformSpace β] extends α ≃ β where
   uniform_continuous_to_fun : UniformContinuous to_fun
   uniform_continuous_inv_fun : UniformContinuous inv_fun

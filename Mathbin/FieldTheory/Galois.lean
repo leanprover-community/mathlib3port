@@ -66,7 +66,7 @@ instance self : IsGalois F F :=
 variable (F) {E}
 
 theorem integral [IsGalois F E] (x : E) : IsIntegral F x :=
-  Normal.is_integral' x
+  to_normal.IsIntegral x
 
 theorem separable [IsGalois F E] (x : E) : (minpoly F x).Separable :=
   IsSeparable.separable F x
@@ -80,24 +80,24 @@ instance of_fixed_field (G : Type _) [Groupₓ G] [Fintype G] [MulSemiringAction
     IsGalois (FixedPoints.subfield G E) E :=
   ⟨⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem IntermediateField.AdjoinSimple.card_aut_eq_finrank [FiniteDimensional F E] {α : E} (hα : IsIntegral F α)
     (h_sep : (minpoly F α).Separable) (h_splits : (minpoly F α).Splits (algebraMap F F⟮⟯)) :
     Fintype.card (F⟮⟯ ≃ₐ[F] F⟮⟯) = finrank F F⟮⟯ := by
-  let this : Fintype (F⟮⟯ →ₐ[F] F⟮⟯) := IntermediateField.fintypeOfAlgHomAdjoinIntegral F hα
+  letI : Fintype (F⟮⟯ →ₐ[F] F⟮⟯) := IntermediateField.fintypeOfAlgHomAdjoinIntegral F hα
   rw [IntermediateField.adjoin.finrank hα]
   rw [← IntermediateField.card_alg_hom_adjoin_integral F hα h_sep h_splits]
   exact Fintype.card_congr (algEquivEquivAlgHom F F⟮⟯)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem card_aut_eq_finrank [FiniteDimensional F E] [IsGalois F E] : Fintype.card (E ≃ₐ[F] E) = finrank F E := by
   cases' Field.exists_primitive_element F E with α hα
   let iso : F⟮⟯ ≃ₐ[F] E :=
@@ -231,7 +231,7 @@ theorem fixing_subgroup_fixed_field [FiniteDimensional F E] : fixingSubgroup (fi
                 ⟨Set.inclusion_injective H_le, this⟩).2).symm
   apply Fintype.card_congr
   refine' (FixedPoints.toAlgHomEquiv H E).trans _
-  refine' (algEquivEquivAlgHom (fixed_field H) E).symm.trans _
+  refine' (algEquivEquivAlgHom (fixed_field H) E).toEquiv.symm.trans _
   exact (fixing_subgroup_equiv (fixed_field H)).toEquiv.symm
 
 instance fixedField.algebra : Algebra K (fixedField (fixingSubgroup K)) where
@@ -314,7 +314,7 @@ theorem is_separable_splitting_field [FiniteDimensional F E] [IsGalois F E] :
   cases' Field.exists_primitive_element F E with α h1
   use minpoly F α, separable F α, IsGalois.splits F α
   rw [eq_top_iff, ← IntermediateField.top_to_subalgebra, ← h1]
-  rw [IntermediateField.adjoin_simple_to_subalgebra_of_integral F α (integral F α)]
+  rw [IntermediateField.adjoin_simple_to_subalgebra_of_integral (integral F α)]
   apply Algebra.adjoin_mono
   rw [Set.singleton_subset_iff, Finset.mem_coe, Multiset.mem_to_finset, Polynomial.mem_roots]
   · dsimp' only [← Polynomial.IsRoot]
@@ -345,13 +345,13 @@ theorem of_card_aut_eq_finrank [FiniteDimensional F E] (h : Fintype.card (E ≃�
 
 variable {F} {E} {p : F[X]}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.IsSplittingField F E] (hp : p.Separable)
     (K : Type _) [Field K] [Algebra F K] [Algebra K E] [IsScalarTower F K E] {x : E}
     (hx : x ∈ (p.map (algebraMap F E)).roots)
@@ -369,7 +369,7 @@ theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.I
   let key_equiv : (K⟮⟯.restrictScalars F →ₐ[F] E) ≃ Σf : K →ₐ[F] E, @AlgHom K K⟮⟯ E _ _ _ _ (RingHom.toAlgebra f) := by
     change (K⟮⟯ →ₐ[F] E) ≃ Σf : K →ₐ[F] E, _
     exact algHomEquivSigma
-  have : ∀ f : K →ₐ[F] E, Fintype (@AlgHom K K⟮⟯ E _ _ _ _ (RingHom.toAlgebra f)) := fun f => by
+  haveI : ∀ f : K →ₐ[F] E, Fintype (@AlgHom K K⟮⟯ E _ _ _ _ (RingHom.toAlgebra f)) := fun f => by
     apply Fintype.ofInjective (Sigma.mk f) fun _ _ H => eq_of_heq (Sigma.mk.inj H).2
     exact Fintype.ofEquiv _ key_equiv
   rw [Fintype.card_congr key_equiv, Fintype.card_sigma, IntermediateField.adjoin.finrank h]
@@ -387,8 +387,8 @@ theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.I
     
 
 theorem of_separable_splitting_field [sp : p.IsSplittingField F E] (hp : p.Separable) : IsGalois F E := by
-  have hFE : FiniteDimensional F E := Polynomial.IsSplittingField.finite_dimensional E p
-  let this := Classical.decEq E
+  haveI hFE : FiniteDimensional F E := Polynomial.IsSplittingField.finite_dimensional E p
+  letI := Classical.decEq E
   let s := (p.map (algebraMap F E)).roots.toFinset
   have adjoin_root : IntermediateField.adjoin F ↑s = ⊤ := by
     apply IntermediateField.to_subalgebra_injective
@@ -401,7 +401,7 @@ theorem of_separable_splitting_field [sp : p.IsSplittingField F E] (hp : p.Separ
     rw [← Eq.trans this (LinearEquiv.finrank_eq intermediate_field.top_equiv.to_linear_equiv)]
     exact
       Fintype.card_congr
-        (Equivₓ.trans (algEquivEquivAlgHom F E) (AlgEquiv.arrowCongr intermediate_field.top_equiv.symm AlgEquiv.refl))
+        ((algEquivEquivAlgHom F E).toEquiv.trans (intermediate_field.top_equiv.symm.arrow_congr AlgEquiv.refl))
   apply IntermediateField.induction_on_adjoin_finset s P
   · have key := IntermediateField.card_alg_hom_adjoin_integral F (show IsIntegral F (0 : E) from is_integral_zero)
     rw [minpoly.zero, Polynomial.nat_degree_X] at key

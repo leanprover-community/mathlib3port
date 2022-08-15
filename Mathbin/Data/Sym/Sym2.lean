@@ -98,13 +98,20 @@ def Sym2 (α : Type u) :=
 
 namespace Sym2
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem ind {f : Sym2 α → Prop} (h : ∀ x y, f ⟦(x, y)⟧) : ∀ i, f i :=
   Quotientₓ.ind <| Prod.rec <| h
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on {f : Sym2 α → Prop} (i : Sym2 α) (hf : ∀ x y, f ⟦(x, y)⟧) : f i :=
   i.ind hf
+
+@[elabAsElim]
+protected theorem induction_on₂ {f : Sym2 α → Sym2 β → Prop} (i : Sym2 α) (j : Sym2 β)
+    (hf : ∀ a₁ a₂ b₁ b₂, f ⟦(a₁, a₂)⟧ ⟦(b₁, b₂)⟧) : f i j :=
+  Quotientₓ.induction_on₂ i j <| by
+    rintro ⟨a₁, a₂⟩ ⟨b₁, b₂⟩
+    exact hf _ _ _ _
 
 protected theorem exists {α : Sort _} {f : Sym2 α → Prop} : (∃ x : Sym2 α, f x) ↔ ∃ x y, f ⟦(x, y)⟧ :=
   (surjective_quotient_mk _).exists.trans Prod.exists
@@ -162,6 +169,33 @@ theorem lift_mk (f : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = f a�
 
 @[simp]
 theorem coe_lift_symm_apply (F : Sym2 α → β) (a₁ a₂ : α) : (lift.symm F : α → α → β) a₁ a₂ = F ⟦(a₁, a₂)⟧ :=
+  rfl
+
+/-- A two-argument version of `sym2.lift`. -/
+def lift₂ :
+    { f : α → α → β → β → γ // ∀ a₁ a₂ b₁ b₂, f a₁ a₂ b₁ b₂ = f a₂ a₁ b₁ b₂ ∧ f a₁ a₂ b₁ b₂ = f a₁ a₂ b₂ b₁ } ≃
+      (Sym2 α → Sym2 β → γ) where
+  toFun := fun f =>
+    Quotientₓ.lift₂ (fun (a : α × α) (b : β × β) => f.1 a.1 a.2 b.1 b.2)
+      (by
+        rintro _ _ _ _ ⟨⟩ ⟨⟩
+        exacts[rfl, (f.2 _ _ _ _).2, (f.2 _ _ _ _).1, (f.2 _ _ _ _).1.trans (f.2 _ _ _ _).2])
+  invFun := fun F =>
+    ⟨fun a₁ a₂ b₁ b₂ => F ⟦(a₁, a₂)⟧ ⟦(b₁, b₂)⟧, fun a₁ a₂ b₁ b₂ => by
+      constructor
+      exacts[congr_arg2ₓ F eq_swap rfl, congr_arg2ₓ F rfl eq_swap]⟩
+  left_inv := fun f => Subtype.ext rfl
+  right_inv := fun F => funext₂ fun a b => (Sym2.induction_on₂ a b) fun _ _ _ _ => rfl
+
+@[simp]
+theorem lift₂_mk
+    (f : { f : α → α → β → β → γ // ∀ a₁ a₂ b₁ b₂, f a₁ a₂ b₁ b₂ = f a₂ a₁ b₁ b₂ ∧ f a₁ a₂ b₁ b₂ = f a₁ a₂ b₂ b₁ })
+    (a₁ a₂ : α) (b₁ b₂ : β) : lift₂ f ⟦(a₁, a₂)⟧ ⟦(b₁, b₂)⟧ = (f : α → α → β → β → γ) a₁ a₂ b₁ b₂ :=
+  rfl
+
+@[simp]
+theorem coe_lift₂_symm_apply (F : Sym2 α → Sym2 β → γ) (a₁ a₂ : α) (b₁ b₂ : β) :
+    (lift₂.symm F : α → α → β → β → γ) a₁ a₂ b₁ b₂ = F ⟦(a₁, a₂)⟧ ⟦(b₁, b₂)⟧ :=
   rfl
 
 /-- The functor `sym2` is functorial, and this function constructs the induced maps.
@@ -648,7 +682,7 @@ theorem other_invol {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : ha.other ∈ z) 
   rw [other_eq_other']
 
 theorem filter_image_quotient_mk_is_diag [DecidableEq α] (s : Finset α) :
-    ((s.product s).Image Quotientₓ.mk).filter IsDiag = s.diag.Image Quotientₓ.mk := by
+    ((s ×ˢ s).Image Quotientₓ.mk).filter IsDiag = s.diag.Image Quotientₓ.mk := by
   ext z
   induction z using Quotientₓ.induction_on
   rcases z with ⟨x, y⟩
@@ -664,7 +698,7 @@ theorem filter_image_quotient_mk_is_diag [DecidableEq α] (s : Finset α) :
     
 
 theorem filter_image_quotient_mk_not_is_diag [DecidableEq α] (s : Finset α) :
-    (((s.product s).Image Quotientₓ.mk).filter fun a : Sym2 α => ¬a.IsDiag) = s.offDiag.Image Quotientₓ.mk := by
+    (((s ×ˢ s).Image Quotientₓ.mk).filter fun a : Sym2 α => ¬a.IsDiag) = s.offDiag.Image Quotientₓ.mk := by
   ext z
   induction z using Quotientₓ.induction_on
   rcases z with ⟨x, y⟩

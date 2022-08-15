@@ -37,7 +37,7 @@ See https://stacks.math.columbia.edu/tag/0FCG
 class NoetherianObject (X : C) : Prop where
   subobject_gt_well_founded : WellFounded ((· > ·) : Subobject X → Subobject X → Prop)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`subobject_lt_well_founded] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`subobject_lt_well_founded] []
 /-- An artinian object is an object
 which does not have infinite decreasing sequences of subobjects.
 
@@ -67,8 +67,8 @@ open Subobject
 variable [HasZeroMorphisms C] [HasZeroObject C]
 
 theorem exists_simple_subobject {X : C} [ArtinianObject X] (h : ¬IsZero X) : ∃ Y : Subobject X, Simple (Y : C) := by
-  have : Nontrivial (subobject X) := nontrivial_of_not_is_zero h
-  have := is_atomic_of_order_bot_well_founded_lt (artinian_object.subobject_lt_well_founded X)
+  haveI : Nontrivial (subobject X) := nontrivial_of_not_is_zero h
+  haveI := is_atomic_of_order_bot_well_founded_lt (artinian_object.subobject_lt_well_founded X)
   have := IsAtomic.eq_bot_or_exists_atom_le (⊤ : subobject X)
   obtain ⟨Y, s⟩ := (IsAtomic.eq_bot_or_exists_atom_le (⊤ : subobject X)).resolve_left top_ne_bot
   exact ⟨Y, (subobject_simple_iff_is_atom _).mpr s.1⟩

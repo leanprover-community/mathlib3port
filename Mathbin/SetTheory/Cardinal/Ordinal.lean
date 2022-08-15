@@ -22,6 +22,9 @@ using ordinals.
 * The function `cardinal.aleph` gives the infinite cardinals listed by their
   ordinal index. `aleph 0 = ℵ₀`, `aleph 1 = succ ℵ₀` is the first
   uncountable cardinal, and so on.
+* The function `cardinal.beth` enumerates the Beth cardinals. `beth 0 = ℵ₀`,
+  `beth (succ o) = 2 ^ beth o`, and for a limit ordinal `o`, `beth o` is the supremum of `beth a`
+  for `a < o`.
 
 ## Main Statements
 
@@ -65,6 +68,9 @@ theorem ord_is_limit {c} (co : ℵ₀ ≤ c) : (ord c).IsLimit := by
       exact omega_is_limit
       
     
+
+/-! ### Aleph cardinals -/
+
 
 /-- The `aleph'` index function, which gives the ordinal index of a cardinal.
   (The `aleph'` part is because unlike `aleph` this counts also the
@@ -192,6 +198,11 @@ theorem aleph'_le_of_limit {o : Ordinal} (l : o.IsLimit) {c} : aleph' o ≤ c �
     rw [← aleph'_le, aleph'_aleph_idx]
     exact h _ h'⟩
 
+theorem aleph'_limit {o : Ordinal} (ho : IsLimit o) : aleph' o = ⨆ a : Iio o, aleph' a := by
+  refine' le_antisymmₓ _ (csupr_le' fun i => aleph'_le.2 (le_of_ltₓ i.2))
+  rw [aleph'_le_of_limit ho]
+  exact fun a ha => le_csupr (bdd_above_of_small _) (⟨a, ha⟩ : Iio o)
+
 @[simp]
 theorem aleph'_omega : aleph' ω = ℵ₀ :=
   eq_of_forall_ge_iff fun c => by
@@ -230,12 +241,27 @@ theorem max_aleph_eq (o₁ o₂ : Ordinal) : max (aleph o₁) (aleph o₂) = ale
 
 @[simp]
 theorem aleph_succ {o : Ordinal} : aleph (succ o) = succ (aleph o) := by
-  rw [aleph, add_succ, aleph'_succ]
-  rfl
+  rw [aleph, add_succ, aleph'_succ, aleph]
 
 @[simp]
 theorem aleph_zero : aleph 0 = ℵ₀ := by
-  simp only [← aleph, ← add_zeroₓ, ← aleph'_omega]
+  rw [aleph, add_zeroₓ, aleph'_omega]
+
+theorem aleph_limit {o : Ordinal} (ho : IsLimit o) : aleph o = ⨆ a : Iio o, aleph a := by
+  apply le_antisymmₓ _ (csupr_le' _)
+  · rw [aleph, aleph'_limit (ho.add _)]
+    refine' csupr_mono' (bdd_above_of_small _) _
+    rintro ⟨i, hi⟩
+    cases lt_or_leₓ i ω
+    · rcases lt_omega.1 h with ⟨n, rfl⟩
+      use ⟨0, ho.pos⟩
+      simpa using (nat_lt_aleph_0 n).le
+      
+    · exact ⟨⟨_, (sub_lt_of_le h).2 hi⟩, aleph'_le.2 (le_add_sub _ _)⟩
+      
+    
+  · exact fun i => aleph_le.2 (le_of_ltₓ i.2)
+    
 
 theorem aleph_0_le_aleph' {o : Ordinal} : ℵ₀ ≤ aleph' o ↔ ω ≤ o := by
   rw [← aleph'_omega, aleph'_le]
@@ -336,6 +362,78 @@ theorem ord_aleph_eq_enum_card : ord ∘ aleph = enumOrd { b : Ordinal | b.card.
     exact aleph_0_le_aleph _
     
 
+/-! ### Beth cardinals -/
+
+
+/-- Beth numbers are defined so that `beth 0 = ℵ₀`, `beth (succ o) = 2 ^ (beth o)`, and when `o` is
+a limit ordinal, `beth o` is the supremum of `beth o'` for `o' < o`.
+
+Assuming the generalized continuum hypothesis, which is undecidable in ZFC, `beth o = aleph o` for
+every `o`. -/
+def beth (o : Ordinal.{u}) : Cardinal.{u} :=
+  limitRecOn o aleph0 (fun _ x => 2 ^ x) fun a ha IH => ⨆ b : Iio a, IH b.1 b.2
+
+@[simp]
+theorem beth_zero : beth 0 = aleph_0 :=
+  limit_rec_on_zero _ _ _
+
+@[simp]
+theorem beth_succ (o : Ordinal) : beth (succ o) = 2 ^ beth o :=
+  limit_rec_on_succ _ _ _ _
+
+theorem beth_limit {o : Ordinal} : IsLimit o → beth o = ⨆ a : Iio o, beth a :=
+  limit_rec_on_limit _ _ _ _
+
+theorem beth_strict_mono : StrictMono beth := by
+  intro a b
+  induction' b using Ordinal.induction with b IH generalizing a
+  intro h
+  rcases zero_or_succ_or_limit b with (rfl | ⟨c, rfl⟩ | hb)
+  · exact (Ordinal.not_lt_zero a h).elim
+    
+  · rw [lt_succ_iff] at h
+    rw [beth_succ]
+    apply lt_of_le_of_ltₓ _ (cantor _)
+    rcases eq_or_lt_of_le h with (rfl | h)
+    · rfl
+      
+    exact (IH c (lt_succ c) h).le
+    
+  · apply (cantor _).trans_le
+    rw [beth_limit hb, ← beth_succ]
+    exact le_csupr (bdd_above_of_small _) (⟨_, hb.succ_lt h⟩ : Iio b)
+    
+
+@[simp]
+theorem beth_lt {o₁ o₂ : Ordinal} : beth o₁ < beth o₂ ↔ o₁ < o₂ :=
+  beth_strict_mono.lt_iff_lt
+
+@[simp]
+theorem beth_le {o₁ o₂ : Ordinal} : beth o₁ ≤ beth o₂ ↔ o₁ ≤ o₂ :=
+  beth_strict_mono.le_iff_le
+
+theorem aleph_le_beth (o : Ordinal) : aleph o ≤ beth o := by
+  apply limit_rec_on o
+  · simp
+    
+  · intro o h
+    rw [aleph_succ, beth_succ, succ_le_iff]
+    exact (cantor _).trans_le (power_le_power_left two_ne_zero' h)
+    
+  · intro o ho IH
+    rw [aleph_limit ho, beth_limit ho]
+    exact csupr_mono (bdd_above_of_small _) fun x => IH x.1 x.2
+    
+
+theorem aleph_0_le_beth (o : Ordinal) : ℵ₀ ≤ beth o :=
+  (aleph_0_le_aleph o).trans <| aleph_le_beth o
+
+theorem beth_pos (o : Ordinal) : 0 < beth o :=
+  aleph_0_pos.trans_le <| aleph_0_le_beth o
+
+theorem beth_ne_zero (o : Ordinal) : beth o ≠ 0 :=
+  (beth_pos o).ne'
+
 /-! ### Properties of `mul` -/
 
 
@@ -350,15 +448,15 @@ theorem mul_eq_self {c : Cardinal} (h : ℵ₀ ≤ c) : c * c = c := by
   -- consider the minimal well-order `r` on `α` (a type with cardinality `c`).
   rcases ord_eq α with ⟨r, wo, e⟩
   skip
-  let this := linearOrderOfSTO' r
-  have : IsWellOrder α (· < ·) := wo
+  letI := linearOrderOfSTO' r
+  haveI : IsWellOrder α (· < ·) := wo
   -- Define an order `s` on `α × α` by writing `(a, b) < (c, d)` if `max a b < max c d`, or
   -- the max are equal and `a < c`, or the max are equal and `a = c` and `b < d`.
   let g : α × α → α := fun p => max p.1 p.2
   let f : α × α ↪ Ordinal × α × α := ⟨fun p : α × α => (typein (· < ·) (g p), p), fun p q => congr_arg Prod.snd⟩
   let s := f ⁻¹'o Prod.Lex (· < ·) (Prod.Lex (· < ·) (· < ·))
   -- this is a well order on `α × α`.
-  have : IsWellOrder _ s := (RelEmbedding.preimage _ _).IsWellOrder
+  haveI : IsWellOrder _ s := (RelEmbedding.preimage _ _).IsWellOrder
   /- it suffices to show that this well order is smaller than `r`
        if it were larger, then `r` would be a strict prefix of `s`. It would be contained in
       `β × β` for some `β` of cardinality `< c`. By the inductive assumption, this set has the
@@ -777,6 +875,7 @@ theorem powerlt_aleph_0_le (c : Cardinal) : c ^< ℵ₀ ≤ max c ℵ₀ := by
 /-! ### Computing cardinality of various types -/
 
 
+@[simp]
 theorem mk_list_eq_mk (α : Type u) [Infinite α] : # (List α) = # α :=
   have H1 : ℵ₀ ≤ # α := aleph_0_le_mk α
   Eq.symm <|
@@ -793,7 +892,7 @@ theorem mk_list_eq_aleph_0 (α : Type u) [Encodable α] [Nonempty α] : # (List 
 
 theorem mk_list_eq_max_mk_aleph_0 (α : Type u) [Nonempty α] : # (List α) = max (# α) ℵ₀ := by
   cases fintypeOrInfinite α
-  · have : Encodable α := Fintype.toEncodable α
+  · haveI : Encodable α := Fintype.toEncodable α
     rw [mk_list_eq_aleph_0, eq_comm, max_eq_rightₓ]
     exact mk_le_aleph_0
     
@@ -803,7 +902,7 @@ theorem mk_list_eq_max_mk_aleph_0 (α : Type u) [Nonempty α] : # (List α) = ma
 
 theorem mk_list_le_max (α : Type u) : # (List α) ≤ max ℵ₀ (# α) := by
   cases fintypeOrInfinite α
-  · have := Fintype.toEncodable α
+  · haveI := Fintype.toEncodable α
     exact mk_le_aleph_0.trans (le_max_leftₓ _ _)
     
   · rw [mk_list_eq_mk]
@@ -818,6 +917,29 @@ theorem mk_finset_of_infinite (α : Type u) [Infinite α] : # (Finset α) = # α
         # (Finset α) ≤ # (List α) := mk_le_of_surjective List.to_finset_surjective
         _ = # α := mk_list_eq_mk α
         
+
+@[simp]
+theorem mk_finsupp_lift_of_infinite (α : Type u) (β : Type v) [Infinite α] [Zero β] [Nontrivial β] :
+    # (α →₀ β) = max (lift.{v} (# α)) (lift.{u} (# β)) := by
+  apply le_antisymmₓ
+  · calc
+      # (α →₀ β) ≤ # (Finset (α × β)) := mk_le_of_injective (Finsupp.graph_injective α β)
+      _ = # (α × β) := mk_finset_of_infinite _
+      _ = max (lift.{v} (# α)) (lift.{u} (# β)) := by
+        rw [mk_prod, mul_eq_max_of_aleph_0_le_left] <;> simp
+      
+    
+  · apply max_leₓ <;> rw [← lift_id (# (α →₀ β)), ← lift_umax]
+    · cases' exists_ne (0 : β) with b hb
+      exact lift_mk_le.{u, max u v, v}.2 ⟨⟨_, Finsupp.single_left_injective hb⟩⟩
+      
+    · inhabit α
+      exact lift_mk_le.{v, max u v, u}.2 ⟨⟨_, Finsupp.single_injective default⟩⟩
+      
+    
+
+theorem mk_finsupp_of_infinite (α β : Type u) [Infinite α] [Zero β] [Nontrivial β] : # (α →₀ β) = max (# α) (# β) := by
+  simp
 
 theorem mk_bounded_set_le_of_infinite (α : Type u) [Infinite α] (c : Cardinal) : # { t : Set α // # t ≤ c } ≤ # α ^ c :=
   by
@@ -904,7 +1026,7 @@ theorem mk_compl_eq_mk_compl_finite_lift {α : Type u} {β : Type v} [Fintype α
     (h1 : lift.{max v w} (# α) = lift.{max u w} (# β)) (h2 : lift.{max v w} (# s) = lift.{max u w} (# t)) :
     lift.{max v w} (# (sᶜ : Set α)) = lift.{max u w} (# (tᶜ : Set β)) := by
   rcases lift_mk_eq.1 h1 with ⟨e⟩
-  let this : Fintype β := Fintype.ofEquiv α e
+  letI : Fintype β := Fintype.ofEquiv α e
   replace h1 : Fintype.card α = Fintype.card β := (Fintype.of_equiv_card _).symm
   classical
   lift s to Finset α using s.to_finite
@@ -952,7 +1074,7 @@ theorem extend_function_of_lt {α β : Type _} {s : Set α} (f : s ↪ β) (hs :
     
   · apply extend_function f
     cases' id h with g
-    have := Infinite.of_injective _ g.injective
+    haveI := Infinite.of_injective _ g.injective
     rw [← lift_mk_eq'] at h⊢
     rwa [mk_compl_of_infinite s hs, mk_compl_of_infinite]
     rwa [← lift_lt, mk_range_eq_of_injective f.injective, ← h, lift_lt]

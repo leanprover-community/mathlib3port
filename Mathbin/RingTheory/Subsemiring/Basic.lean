@@ -142,12 +142,10 @@ variable [NonAssocSemiringₓ S] [NonAssocSemiringₓ T]
 submonoid. -/
 structure Subsemiring (R : Type u) [NonAssocSemiringₓ R] extends Submonoid R, AddSubmonoid R
 
-/-- Reinterpret a `subsemiring` as a `submonoid`. -/
-add_decl_doc Subsemiring.toSubmonoid
-
-/-- Reinterpret a `subsemiring` as an `add_submonoid`. -/
-add_decl_doc Subsemiring.toAddSubmonoid
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident subsemiring.to_submonoid]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident subsemiring.to_add_submonoid]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace Subsemiring
 
 instance : SetLike (Subsemiring R) R where
@@ -697,13 +695,13 @@ theorem closure_add_submonoid_closure {s : Set R} : closure ↑(AddSubmonoid.clo
 /-- An induction principle for closure membership. If `p` holds for `0`, `1`, and all elements
 of `s`, and is preserved under addition and multiplication, then `p` holds for all elements
 of the closure of `s`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem closure_induction {s : Set R} {p : R → Prop} {x} (h : x ∈ closure s) (Hs : ∀, ∀ x ∈ s, ∀, p x) (H0 : p 0)
     (H1 : p 1) (Hadd : ∀ x y, p x → p y → p (x + y)) (Hmul : ∀ x y, p x → p y → p (x * y)) : p x :=
   (@closure_le _ _ _ ⟨p, Hmul, H1, Hadd, H0⟩).2 Hs h
 
 /-- An induction principle for closure membership for predicates with two arguments. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem closure_induction₂ {s : Set R} {p : R → R → Prop} {x} {y : R} (hx : x ∈ closure s) (hy : y ∈ closure s)
     (Hs : ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀, p x y) (H0_left : ∀ x, p 0 x) (H0_right : ∀ x, p x 0) (H1_left : ∀ x, p 1 x)
     (H1_right : ∀ x, p x 1) (Hadd_left : ∀ x₁ x₂ y, p x₁ y → p x₂ y → p (x₁ + x₂) y)
@@ -790,11 +788,10 @@ theorem comap_top (f : R →+* S) : (⊤ : Subsemiring S).comap f = ⊤ :=
 /-- Given `subsemiring`s `s`, `t` of semirings `R`, `S` respectively, `s.prod t` is `s × t`
 as a subsemiring of `R × S`. -/
 def prod (s : Subsemiring R) (t : Subsemiring S) : Subsemiring (R × S) :=
-  { s.toSubmonoid.Prod t.toSubmonoid, s.toAddSubmonoid.Prod t.toAddSubmonoid with
-    Carrier := (s : Set R) ×ˢ (t : Set S) }
+  { s.toSubmonoid.Prod t.toSubmonoid, s.toAddSubmonoid.Prod t.toAddSubmonoid with Carrier := s ×ˢ t }
 
 @[norm_cast]
-theorem coe_prod (s : Subsemiring R) (t : Subsemiring S) : (s.Prod t : Set (R × S)) = (s : Set R) ×ˢ (t : Set S) :=
+theorem coe_prod (s : Subsemiring R) (t : Subsemiring S) : (s.Prod t : Set (R × S)) = s ×ˢ t :=
   rfl
 
 theorem mem_prod {s : Subsemiring R} {t : Subsemiring S} {p : R × S} : p ∈ s.Prod t ↔ p.1 ∈ s ∧ p.2 ∈ t :=
@@ -845,7 +842,7 @@ theorem coe_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subsemiring R}
 
 theorem mem_Sup_of_directed_on {S : Set (Subsemiring R)} (Sne : S.Nonempty) (hS : DirectedOn (· ≤ ·) S) {x : R} :
     x ∈ sup S ↔ ∃ s ∈ S, x ∈ s := by
-  have : Nonempty S := Sne.to_subtype
+  haveI : Nonempty S := Sne.to_subtype
   simp only [← Sup_eq_supr', ← mem_supr_of_directed hS.directed_coe, ← SetCoe.exists, ← Subtype.coe_mk]
 
 theorem coe_Sup_of_directed_on {S : Set (Subsemiring R)} (Sne : S.Nonempty) (hS : DirectedOn (· ≤ ·) S) :

@@ -53,7 +53,7 @@ variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _} [TopologicalSpa
   [TopologicalSpace γ] [TopologicalSpace δ]
 
 /-- local homeomorphisms, defined on open subsets of the space -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure LocalHomeomorph (α : Type _) (β : Type _) [TopologicalSpace α] [TopologicalSpace β] extends
   LocalEquiv α β where
   open_source : IsOpen source
@@ -832,10 +832,10 @@ theorem prod_trans {η : Type _} {ε : Type _} [TopologicalSpace η] [Topologica
 theorem prod_eq_prod_of_nonempty {e₁ e₁' : LocalHomeomorph α β} {e₂ e₂' : LocalHomeomorph γ δ}
     (h : (e₁.Prod e₂).Source.Nonempty) : e₁.Prod e₂ = e₁'.Prod e₂' ↔ e₁ = e₁' ∧ e₂ = e₂' := by
   obtain ⟨⟨x, y⟩, -⟩ := id h
-  have : Nonempty α := ⟨x⟩
-  have : Nonempty β := ⟨e₁ x⟩
-  have : Nonempty γ := ⟨y⟩
-  have : Nonempty δ := ⟨e₂ y⟩
+  haveI : Nonempty α := ⟨x⟩
+  haveI : Nonempty β := ⟨e₁ x⟩
+  haveI : Nonempty γ := ⟨y⟩
+  haveI : Nonempty δ := ⟨e₂ y⟩
   simp_rw [LocalHomeomorph.ext_iff, prod_apply, prod_symm_apply, prod_source, Prod.ext_iff,
     Set.prod_eq_prod_iff_of_nonempty h, forall_and_distrib, Prod.forall, forall_const, forall_forall_const, and_assoc,
     And.left_comm]
@@ -942,7 +942,7 @@ homeomorphism if a neighborhood of the initial point is sent to the source of th
 homeomorphism-/
 theorem continuous_within_at_iff_continuous_within_at_comp_left {f : γ → α} {s : Set γ} {x : γ} (hx : f x ∈ e.Source)
     (h : f ⁻¹' e.Source ∈ 𝓝[s] x) : ContinuousWithinAt f s x ↔ ContinuousWithinAt (e ∘ f) s x := by
-  refine' ⟨(e.continuous_at hx).Tendsto.comp, fun fe_cont => _⟩
+  refine' ⟨(e.continuous_at hx).comp_continuous_within_at, fun fe_cont => _⟩
   rw [← continuous_within_at_inter' h] at fe_cont⊢
   have : ContinuousWithinAt (e.symm ∘ e ∘ f) (s ∩ f ⁻¹' e.source) x := by
     have : ContinuousWithinAt e.symm univ (e (f x)) := (e.continuous_at_symm (e.map_source hx)).ContinuousWithinAt
@@ -1067,7 +1067,7 @@ noncomputable def toLocalHomeomorph [Nonempty α] : LocalHomeomorph α β :=
 
 theorem continuous_at_iff {f : α → β} {g : β → γ} (hf : OpenEmbedding f) {x : α} :
     ContinuousAt (g ∘ f) x ↔ ContinuousAt g (f x) := by
-  have : Nonempty α := ⟨x⟩
+  haveI : Nonempty α := ⟨x⟩
   convert ((hf.to_local_homeomorph f).continuous_at_iff_continuous_at_comp_right _).symm
   · apply (LocalHomeomorph.left_inv _ _).symm
     simp

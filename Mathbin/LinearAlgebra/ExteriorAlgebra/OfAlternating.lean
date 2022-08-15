@@ -126,7 +126,7 @@ theorem lift_alternating_ι_multi :
   · rw [map_add, hx, hy]
     
   · simp_rw [lift_alternating_ι_mul, ι_multi_succ_curry_left, lift_alternating_comp, LinearMap.comp_apply,
-      Algebra.lmul_left_apply, hx]
+      LinearMap.mul_left_apply, hx]
     
 
 /-- `exterior_algebra.lift_alternating` is an equivalence. -/

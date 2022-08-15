@@ -44,7 +44,7 @@ theorem mem_range' {m : ℕ} : ∀ {s n : ℕ}, m ∈ range' s n ↔ s ≤ m ∧
     have : m = s → m < s + n + 1 := fun e => e ▸ lt_succ_of_leₓ (Nat.le_add_rightₓ _ _)
     have l : m = s ∨ s + 1 ≤ m ↔ s ≤ m := by
       simpa only [← eq_comm] using (@Decidable.le_iff_eq_or_lt _ _ _ s m).symm
-    (mem_cons_iff _ _ _).trans <| by
+    (mem_cons_iffₓ _ _ _).trans <| by
       simp only [← mem_range', ← or_and_distrib_left, ← or_iff_right_of_imp this, ← l, ← add_right_commₓ] <;> rfl
 
 theorem map_add_range' (a) : ∀ s n : ℕ, map ((· + ·) a) (range' s n) = range' (a + s) n
@@ -67,7 +67,7 @@ theorem chain_lt_range' (s n : ℕ) : Chain (· < ·) s (range' (s + 1) n) :=
 
 theorem pairwise_lt_range' : ∀ s n : ℕ, Pairwiseₓ (· < ·) (range' s n)
   | s, 0 => Pairwiseₓ.nil
-  | s, n + 1 => (chain_iff_pairwise fun a b c => lt_transₓ).1 (chain_lt_range' s n)
+  | s, n + 1 => chain_iff_pairwise.1 (chain_lt_range' s n)
 
 theorem nodup_range' (s n : ℕ) : Nodupₓ (range' s n) :=
   (pairwise_lt_range' s n).imp fun a b => ne_of_ltₓ

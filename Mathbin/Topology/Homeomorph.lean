@@ -35,7 +35,7 @@ variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
 /-- Homeomorphism between `α` and `β`, also called topological isomorphism -/
 -- not all spaces are homeomorphic to each other
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure Homeomorph (α : Type _) (β : Type _) [TopologicalSpace α] [TopologicalSpace β] extends α ≃ β where
   continuous_to_fun : Continuous to_fun := by
     run_tac
@@ -131,6 +131,16 @@ theorem apply_symm_apply (h : α ≃ₜ β) (x : β) : h (h.symm x) = x :=
 @[simp]
 theorem symm_apply_apply (h : α ≃ₜ β) (x : α) : h.symm (h x) = x :=
   h.toEquiv.symm_apply_apply x
+
+@[simp]
+theorem self_trans_symm (h : α ≃ₜ β) : h.trans h.symm = Homeomorph.refl α := by
+  ext
+  apply symm_apply_apply
+
+@[simp]
+theorem symm_trans_self (h : α ≃ₜ β) : h.symm.trans h = Homeomorph.refl β := by
+  ext
+  apply apply_symm_apply
 
 protected theorem bijective (h : α ≃ₜ β) : Function.Bijective h :=
   h.toEquiv.Bijective
@@ -495,6 +505,17 @@ def Set.univ (α : Type _) [TopologicalSpace α] : (Univ : Set α) ≃ₜ α whe
   toEquiv := Equivₓ.Set.univ α
   continuous_to_fun := continuous_subtype_coe
   continuous_inv_fun := continuous_subtype_mk _ continuous_id
+
+/-- `s ×ˢ t` is homeomorphic to `s × t`. -/
+@[simps]
+def Set.prod (s : Set α) (t : Set β) : ↥(s ×ˢ t) ≃ₜ s × t where
+  toEquiv := Equivₓ.Set.prod s t
+  continuous_to_fun :=
+    Continuous.prod_mk (continuous_subtype_mk _ (continuous_fst.comp continuous_induced_dom))
+      (continuous_subtype_mk _ (continuous_snd.comp continuous_induced_dom))
+  continuous_inv_fun :=
+    continuous_subtype_mk _
+      (Continuous.prod_mk (continuous_induced_dom.comp continuous_fst) (continuous_induced_dom.comp continuous_snd))
 
 end Homeomorph
 

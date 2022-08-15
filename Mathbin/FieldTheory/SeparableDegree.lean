@@ -153,7 +153,7 @@ theorem IsSeparableContraction.degree_eq [hF : ExpChar F q] (g : F[X]) (hg : IsS
   · rcases hg with ⟨hg, m, hm⟩
     let g' := Classical.some hf
     cases' (Classical.some_spec hf).2 with m' hm'
-    have : Fact q.prime := fact_iff.2 hF_hprime
+    haveI : Fact q.prime := fact_iff.2 hF_hprime
     apply contraction_degree_eq_or_insep q g g' m m'
     rw [hm, hm']
     exact hg

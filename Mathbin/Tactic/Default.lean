@@ -38,6 +38,7 @@ import Mathbin.Tactic.UnfoldCases
 import Mathbin.Tactic.FieldSimp
 import Mathbin.Tactic.LinearCombination
 import Mathbin.Tactic.Polyrith
+import Mathbin.Tactic.ExpandExists
 
 -- ensure basic tactics are available
 -- ensure basic tactics are available

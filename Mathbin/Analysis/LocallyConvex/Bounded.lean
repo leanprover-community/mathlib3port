@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 -/
 import Mathbin.Analysis.LocallyConvex.Basic
+import Mathbin.Analysis.Seminorm
 import Mathbin.Topology.Bornology.Basic
 import Mathbin.Topology.Algebra.UniformGroup
 import Mathbin.Analysis.LocallyConvex.BalancedCoreHull
@@ -157,18 +158,16 @@ end Bornology
 
 section UniformAddGroup
 
-variable [NondiscreteNormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E]
+variable (𝕜) [NontriviallyNormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E]
 
 variable [UniformSpace E] [UniformAddGroup E] [HasContinuousSmul 𝕜 E]
-
-variable [T3Space E]
 
 theorem TotallyBounded.is_vonN_bounded {s : Set E} (hs : TotallyBounded s) : Bornology.IsVonNBounded 𝕜 s := by
   rw [totally_bounded_iff_subset_finite_Union_nhds_zero] at hs
   intro U hU
   have h : Filter.Tendsto (fun x : E × E => x.fst + x.snd) (𝓝 (0, 0)) (𝓝 ((0 : E) + (0 : E))) := tendsto_add
   rw [add_zeroₓ] at h
-  have h' := (nhds_basis_closed_balanced 𝕜 E).Prod (nhds_basis_closed_balanced 𝕜 E)
+  have h' := (nhds_basis_balanced 𝕜 E).Prod (nhds_basis_balanced 𝕜 E)
   simp_rw [← nhds_prod_eq, id.def] at h'
   rcases h.basis_left h' U hU with ⟨x, hx, h''⟩
   rcases hs x.snd hx.2.1 with ⟨t, ht, hs⟩
@@ -181,7 +180,72 @@ theorem TotallyBounded.is_vonN_bounded {s : Set E} (hs : TotallyBounded s) : Bor
     simpa only [← hz] using h'' hz'
   refine' fun y hy => Absorbs.mono_left _ hx_fstsnd
   rw [← Set.singleton_vadd, vadd_eq_add]
-  exact (absorbent_nhds_zero hx.1.1).Absorbs.add hx.2.2.2.absorbs_self
+  exact (absorbent_nhds_zero hx.1.1).Absorbs.add hx.2.2.absorbs_self
 
 end UniformAddGroup
+
+section VonNBornologyEqMetric
+
+variable (𝕜 E) [NontriviallyNormedField 𝕜] [SeminormedAddCommGroup E] [NormedSpace 𝕜 E]
+
+namespace NormedSpace
+
+theorem is_vonN_bounded_ball (r : ℝ) : Bornology.IsVonNBounded 𝕜 (Metric.Ball (0 : E) r) := by
+  rw [metric.nhds_basis_ball.is_vonN_bounded_basis_iff, ← ball_norm_seminorm 𝕜 E]
+  exact fun ε hε => (normSeminorm 𝕜 E).ball_zero_absorbs_ball_zero hε
+
+theorem is_vonN_bounded_closed_ball (r : ℝ) : Bornology.IsVonNBounded 𝕜 (Metric.ClosedBall (0 : E) r) :=
+  (is_vonN_bounded_ball 𝕜 E (r + 1)).Subset
+    (Metric.closed_ball_subset_ball <| by
+      linarith)
+
+theorem is_vonN_bounded_iff (s : Set E) : Bornology.IsVonNBounded 𝕜 s ↔ Bornology.IsBounded s := by
+  rw [← Metric.bounded_iff_is_bounded, Metric.bounded_iff_subset_ball (0 : E)]
+  constructor
+  · intro h
+    rcases h (Metric.ball_mem_nhds 0 zero_lt_one) with ⟨ρ, hρ, hρball⟩
+    rcases NormedField.exists_lt_norm 𝕜 ρ with ⟨a, ha⟩
+    specialize hρball a ha.le
+    rw [← ball_norm_seminorm 𝕜 E, Seminorm.smul_ball_zero (hρ.trans ha), ball_norm_seminorm, mul_oneₓ] at hρball
+    exact ⟨∥a∥, hρball.trans Metric.ball_subset_closed_ball⟩
+    
+  · exact fun ⟨C, hC⟩ => (is_vonN_bounded_closed_ball 𝕜 E C).Subset hC
+    
+
+/-- In a normed space, the von Neumann bornology (`bornology.vonN_bornology`) is equal to the
+metric bornology. -/
+theorem vonN_bornology_eq : Bornology.vonNBornology 𝕜 E = PseudoMetricSpace.toBornology := by
+  rw [Bornology.ext_iff_is_bounded]
+  intro s
+  rw [Bornology.is_bounded_iff_is_vonN_bounded]
+  exact is_vonN_bounded_iff 𝕜 E s
+
+variable (𝕜)
+
+theorem is_bounded_iff_subset_smul_ball {s : Set E} : Bornology.IsBounded s ↔ ∃ a : 𝕜, s ⊆ a • Metric.Ball 0 1 := by
+  rw [← is_vonN_bounded_iff 𝕜]
+  constructor
+  · intro h
+    rcases h (Metric.ball_mem_nhds 0 zero_lt_one) with ⟨ρ, hρ, hρball⟩
+    rcases NormedField.exists_lt_norm 𝕜 ρ with ⟨a, ha⟩
+    exact ⟨a, hρball a ha.le⟩
+    
+  · rintro ⟨a, ha⟩
+    exact ((is_vonN_bounded_ball 𝕜 E 1).Image (a • 1 : E →L[𝕜] E)).Subset ha
+    
+
+theorem is_bounded_iff_subset_smul_closed_ball {s : Set E} :
+    Bornology.IsBounded s ↔ ∃ a : 𝕜, s ⊆ a • Metric.ClosedBall 0 1 := by
+  constructor
+  · rw [is_bounded_iff_subset_smul_ball 𝕜]
+    exact exists_imp_exists fun a ha => ha.trans <| Set.smul_set_mono <| Metric.ball_subset_closed_ball
+    
+  · rw [← is_vonN_bounded_iff 𝕜]
+    rintro ⟨a, ha⟩
+    exact ((is_vonN_bounded_closed_ball 𝕜 E 1).Image (a • 1 : E →L[𝕜] E)).Subset ha
+    
+
+end NormedSpace
+
+end VonNBornologyEqMetric
 

@@ -85,7 +85,7 @@ namespace IsCauSeq
 
 variable {α : Type _} [LinearOrderedField α] {β : Type _} [Ringₓ β] {abv : β → α} [IsAbsoluteValue abv] {f : ℕ → β}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j k «expr ≥ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (j k «expr ≥ » i)
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem cauchy₂ (hf : IsCauSeq abv f) {ε : α} (ε0 : 0 < ε) :
@@ -139,7 +139,7 @@ def ofEq (f : CauSeq β abv) (g : ℕ → β) (e : ∀ i, f i = g i) : CauSeq β
 
 variable [IsAbsoluteValue abv]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j k «expr ≥ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (j k «expr ≥ » i)
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem cauchy₂ (f : CauSeq β abv) {ε} : 0 < ε → ∃ i, ∀ (j k) (_ : j ≥ i) (_ : k ≥ i), abv (f j - f k) < ε :=
@@ -381,7 +381,7 @@ theorem lim_zero_congr {f g : CauSeq β abv} (h : f ≈ g) : LimZero f ↔ LimZe
     simpa using add_lim_zero h l⟩
 
 theorem abv_pos_of_not_lim_zero {f : CauSeq β abv} (hf : ¬LimZero f) : ∃ K > 0, ∃ i, ∀, ∀ j ≥ i, ∀, K ≤ abv (f j) := by
-  have := Classical.propDecidable
+  haveI := Classical.propDecidable
   by_contra nk
   refine' hf fun ε ε0 => _
   simp [← not_forall] at nk

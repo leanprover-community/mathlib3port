@@ -29,8 +29,8 @@ namespace MeasureTheory
 
 open ProbabilityTheory
 
-variable {α E : Type _} [NormedGroup E] [NormedSpace ℝ E] [CompleteSpace E] {m₁ m₂ m : MeasurableSpace α}
-  {μ : Measure α} {f : α → E}
+variable {Ω E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E] {m₁ m₂ m : MeasurableSpace Ω}
+  {μ : Measure Ω} {f : Ω → E}
 
 /-- If `m₁, m₂` are independent σ-algebras and `f` is `m₁`-measurable, then `𝔼[f | m₂] = 𝔼[f]`
 almost everywhere. -/

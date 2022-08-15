@@ -363,12 +363,16 @@ theorem pseudo_exact_of_exact {P Q R : C} {f : P ⟶ Q} {g : Q ⟶ R} (h : Exact
           infer_instance, by
           infer_instance, _⟩
       -- Now we can verify that the diagram commutes.
-      calc 𝟙 (pullback (abelian.factor_thru_image f) c) ≫ pullback.fst ≫ f = pullback.fst ≫ f :=
-          category.id_comp _ _ = pullback.fst ≫ abelian.factor_thru_image f ≫ kernel.ι (cokernel.π f) := by
-          rw [abelian.image.fac]_ = (pullback.snd ≫ c) ≫ kernel.ι (cokernel.π f) := by
-          rw [← category.assoc, pullback.condition]_ = pullback.snd ≫ b.hom := by
+      calc
+        𝟙 (pullback (abelian.factor_thru_image f) c) ≫ pullback.fst ≫ f = pullback.fst ≫ f := category.id_comp _
+        _ = pullback.fst ≫ abelian.factor_thru_image f ≫ kernel.ι (cokernel.π f) := by
+          rw [abelian.image.fac]
+        _ = (pullback.snd ≫ c) ≫ kernel.ι (cokernel.π f) := by
+          rw [← category.assoc, pullback.condition]
+        _ = pullback.snd ≫ b.hom := by
           rw [category.assoc]
-          congr⟩
+          congr
+        ⟩
 
 end
 
@@ -402,11 +406,11 @@ theorem exact_of_pseudo_exact {P Q R : C} (f : P ⟶ Q) (g : Q ⟶ R) :
       -- Let's give a name to the second pullback morphism.
       let j : pullback (kernel.ι (cokernel.π f)) (kernel.ι g) ⟶ kernel g := pullback.snd
       -- Since q is an epimorphism, in particular this means that j is an epimorphism.
-      have pe : epi j := epi_of_epi_fac hz₂
+      haveI pe : epi j := epi_of_epi_fac hz₂
       -- But is is also a monomorphism, because kernel.ι (cokernel.π f) is: A kernel is
       -- always a monomorphism and the pullback of a monomorphism is a monomorphism.
       -- But mono + epi = iso, so j is an isomorphism.
-      have : is_iso j := is_iso_of_mono_of_epi _
+      haveI : is_iso j := is_iso_of_mono_of_epi _
       -- But then kernel.ι g can be expressed using all of the maps of the pullback square, and we
       -- are done.
       rw [(iso.eq_inv_comp (as_iso j)).2 pullback.condition.symm]

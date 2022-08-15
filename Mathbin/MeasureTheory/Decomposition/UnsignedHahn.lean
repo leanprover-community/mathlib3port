@@ -89,7 +89,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
   have hf : ∀ n m, MeasurableSet (f n m) := by
     intro n m
     simp only [← f, ← Finset.inf_eq_infi]
-    exact MeasurableSet.bInter (countable_encodable _) fun i _ => he₁ _
+    exact MeasurableSet.bInter (to_countable _) fun i _ => he₁ _
   have f_subset_f : ∀ {a b c d}, a ≤ b → c ≤ d → f a d ⊆ f b c := by
     intro a b c d hab hcd
     dsimp' only [← f]
@@ -117,16 +117,19 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
             by
             refine' add_le_add_left (add_le_add_left _ _) γ
             simp only [← pow_addₓ, ← pow_oneₓ, ← le_sub_iff_add_le]
-            linarith _ = γ - (1 / 2) ^ (n + 1) + (γ - 2 * (1 / 2) ^ m + (1 / 2) ^ n) := by
-            simp only [← sub_eq_add_neg] <;> ac_rfl _ ≤ d (e (n + 1)) + d (f m n) :=
-            add_le_add (le_of_ltₓ <| he₂ _) ih _ ≤ d (e (n + 1)) + d (f m n \ e (n + 1)) + d (f m (n + 1)) := by
-            rw [f_succ _ _ hmn, d_split (f m n) (e (n + 1)) (hf _ _) (he₁ _),
-              add_assocₓ]_ = d (e (n + 1) ∪ f m n) + d (f m (n + 1)) :=
-            by
+            linarith
+          _ = γ - (1 / 2) ^ (n + 1) + (γ - 2 * (1 / 2) ^ m + (1 / 2) ^ n) := by
+            simp only [← sub_eq_add_neg] <;> ac_rfl
+          _ ≤ d (e (n + 1)) + d (f m n) := add_le_add (le_of_ltₓ <| he₂ _) ih
+          _ ≤ d (e (n + 1)) + d (f m n \ e (n + 1)) + d (f m (n + 1)) := by
+            rw [f_succ _ _ hmn, d_split (f m n) (e (n + 1)) (hf _ _) (he₁ _), add_assocₓ]
+          _ = d (e (n + 1) ∪ f m n) + d (f m (n + 1)) := by
             rw [d_split (e (n + 1) ∪ f m n) (e (n + 1)), union_diff_left, union_inter_cancel_left]
             ac_rfl
             exact (he₁ _).union (hf _ _)
-            exact he₁ _ _ ≤ γ + d (f m (n + 1)) := add_le_add_right (d_le_γ _ <| (he₁ _).union (hf _ _)) _
+            exact he₁ _
+          _ ≤ γ + d (f m (n + 1)) := add_le_add_right (d_le_γ _ <| (he₁ _).union (hf _ _)) _
+          
       exact (add_le_add_iff_left γ).1 this
       
   let s := ⋃ m, ⋂ n, f m n

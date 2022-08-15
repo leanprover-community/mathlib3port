@@ -61,7 +61,7 @@ theorem finite_inter_mem (cond : HasFiniteInter S) (F : Finset (Set α)) : ↑F 
     exact cond.inter_mem (h3 (Finset.mem_insert_self a s)) (h2 fun x hx => h3 <| Finset.mem_insert_of_mem hx)
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (P «expr ∈ » finite_inter_closure (insert A S))
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (P «expr ∈ » finite_inter_closure (insert A S))
 theorem finite_inter_closure_insert {A : Set α} (cond : HasFiniteInter S) (P)
     (_ : P ∈ FiniteInterClosure (insert A S)) : P ∈ S ∨ ∃ Q ∈ S, P = A ∩ Q := by
   induction' H with S h T1 T2 _ _ h1 h2

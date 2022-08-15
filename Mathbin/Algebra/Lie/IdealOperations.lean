@@ -128,7 +128,7 @@ theorem lie_comm : ⁅I,J⁆ = ⁅J,I⁆ := by
   rw [lie_ideal_oper_eq_span, lie_span_le]
   rintro x ⟨y, z, h⟩
   rw [← h]
-  rw [← lie_skew, ← lie_neg, ← Submodule.coe_neg]
+  rw [← lie_skew, ← lie_neg, ← LieSubmodule.coe_neg]
   apply lie_coe_mem_lie
 
 theorem lie_le_right : ⁅I,N⁆ ≤ N := by

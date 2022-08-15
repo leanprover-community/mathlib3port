@@ -86,6 +86,12 @@ theorem locally_convex_space_iff_exists_convex_subset_zero :
     LocallyConvexSpace 𝕜 E ↔ ∀, ∀ U ∈ (𝓝 0 : Filter E), ∀, ∃ S ∈ (𝓝 0 : Filter E), Convex 𝕜 S ∧ S ⊆ U :=
   (locally_convex_space_iff_zero 𝕜 E).trans has_basis_self
 
+-- see Note [lower instance priority]
+instance (priority := 100) LocallyConvexSpace.to_locally_connected_space [Module ℝ E] [HasContinuousSmul ℝ E]
+    [LocallyConvexSpace ℝ E] : LocallyConnectedSpace E :=
+  locally_connected_space_of_connected_bases _ _ (fun x => @LocallyConvexSpace.convex_basis ℝ _ _ _ _ _ _ x)
+    fun x s hs => hs.2.IsPreconnected
+
 end Module
 
 section LatticeOps
@@ -95,14 +101,14 @@ variable {ι : Sort _} {𝕜 E F : Type _} [OrderedSemiring 𝕜] [AddCommMonoid
 
 theorem locally_convex_space_Inf {ts : Set (TopologicalSpace E)} (h : ∀, ∀ t ∈ ts, ∀, @LocallyConvexSpace 𝕜 E _ _ _ t) :
     @LocallyConvexSpace 𝕜 E _ _ _ (inf ts) := by
-  let this : TopologicalSpace E := Inf ts
+  letI : TopologicalSpace E := Inf ts
   refine'
     LocallyConvexSpace.of_bases 𝕜 E (fun x => fun If : Set ts × (ts → Set E) => ⋂ i ∈ If.1, If.2 i)
       (fun x => fun If : Set ts × (ts → Set E) =>
         If.1.Finite ∧ ∀, ∀ i ∈ If.1, ∀, If.2 i ∈ @nhds _ (↑i) x ∧ Convex 𝕜 (If.2 i))
       (fun x => _) fun x If hif => convex_Inter fun i => convex_Inter fun hi => (hif.2 i hi).2
   rw [nhds_Inf, ← infi_subtype'']
-  exact has_basis_infi fun i : ts => (@locally_convex_space_iff 𝕜 E _ _ _ ↑i).mp (h (↑i) i.2) x
+  exact has_basis_infi' fun i : ts => (@locally_convex_space_iff 𝕜 E _ _ _ ↑i).mp (h (↑i) i.2) x
 
 theorem locally_convex_space_infi {ts' : ι → TopologicalSpace E} (h' : ∀ i, @LocallyConvexSpace 𝕜 E _ _ _ (ts' i)) :
     @LocallyConvexSpace 𝕜 E _ _ _ (⨅ i, ts' i) := by
@@ -117,7 +123,7 @@ theorem locally_convex_space_inf {t₁ t₂ : TopologicalSpace E} (h₁ : @Local
 
 theorem locally_convex_space_induced {t : TopologicalSpace F} [LocallyConvexSpace 𝕜 F] (f : E →ₗ[𝕜] F) :
     @LocallyConvexSpace 𝕜 E _ _ _ (t.induced f) := by
-  let this : TopologicalSpace E := t.induced f
+  letI : TopologicalSpace E := t.induced f
   refine'
     LocallyConvexSpace.of_bases 𝕜 E (fun x => preimage f) (fun x => fun s : Set F => s ∈ 𝓝 (f x) ∧ Convex 𝕜 s)
       (fun x => _) fun x s ⟨_, hs⟩ => hs.linear_preimage f

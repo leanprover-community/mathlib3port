@@ -80,7 +80,7 @@ example [h : Nonempty α] [IsEmpty β] : IsEmpty (α → β) := by
   infer_instance
 
 /-- Eliminate out of a type that `is_empty` (without using projection notation). -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def isEmptyElim [IsEmpty α] {p : α → Sort _} (a : α) : p a :=
   (IsEmpty.false a).elim
 

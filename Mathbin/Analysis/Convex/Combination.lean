@@ -24,7 +24,7 @@ lemmas unconditional on the sum of the weights being `1`.
 -/
 
 
-open Set
+open Set Function
 
 open BigOperators Classical Pointwise
 
@@ -73,8 +73,8 @@ deals with two different index types. -/
 theorem Finset.center_mass_segment' (s : Finset ι) (t : Finset ι') (ws : ι → R) (zs : ι → E) (wt : ι' → R) (zt : ι' → E)
     (hws : (∑ i in s, ws i) = 1) (hwt : (∑ i in t, wt i) = 1) (a b : R) (hab : a + b = 1) :
     a • s.centerMass ws zs + b • t.centerMass wt zt =
-      (s.map Function.Embedding.inl ∪ t.map Function.Embedding.inr).centerMass
-        (Sum.elim (fun i => a * ws i) fun j => b * wt j) (Sum.elim zs zt) :=
+      (s.map Embedding.inl ∪ t.map Embedding.inr).centerMass (Sum.elim (fun i => a * ws i) fun j => b * wt j)
+        (Sum.elim zs zt) :=
   by
   rw [s.center_mass_eq_of_sum_1 _ hws, t.center_mass_eq_of_sum_1 _ hwt, smul_sum, smul_sum, ← Finset.sum_sum_elim,
     Finset.center_mass_eq_of_sum_1]
@@ -154,6 +154,25 @@ theorem Convex.center_mass_mem (hs : Convex R s) :
 theorem Convex.sum_mem (hs : Convex R s) (h₀ : ∀, ∀ i ∈ t, ∀, 0 ≤ w i) (h₁ : (∑ i in t, w i) = 1)
     (hz : ∀, ∀ i ∈ t, ∀, z i ∈ s) : (∑ i in t, w i • z i) ∈ s := by
   simpa only [← h₁, ← center_mass, ← inv_one, ← one_smul] using hs.center_mass_mem h₀ (h₁.symm ▸ zero_lt_one) hz
+
+/-- A version of `convex.sum_mem` for `finsum`s. If `s` is a convex set, `w : ι → R` is a family of
+nonnegative weights with sum one and `z : ι → E` is a family of elements of a module over `R` such
+that `z i ∈ s` whenever `w i ≠ 0``, then the sum `∑ᶠ i, w i • z i` belongs to `s`. See also
+`partition_of_unity.finsum_smul_mem_convex`. -/
+theorem Convex.finsum_mem {ι : Sort _} {w : ι → R} {z : ι → E} {s : Set E} (hs : Convex R s) (h₀ : ∀ i, 0 ≤ w i)
+    (h₁ : (∑ᶠ i, w i) = 1) (hz : ∀ i, w i ≠ 0 → z i ∈ s) : (∑ᶠ i, w i • z i) ∈ s := by
+  have hfin_w : (support (w ∘ Plift.down)).Finite := by
+    by_contra H
+    rw [finsum, dif_neg H] at h₁
+    exact zero_ne_one h₁
+  have hsub : support ((fun i => w i • z i) ∘ Plift.down) ⊆ hfin_w.to_finset :=
+    (support_smul_subset_left _ _).trans hfin_w.coe_to_finset.ge
+  rw [finsum_eq_sum_plift_of_support_subset hsub]
+  refine' hs.sum_mem (fun _ _ => h₀ _) _ fun i hi => hz _ _
+  · rwa [finsum, dif_pos hfin_w] at h₁
+    
+  · rwa [hfin_w.mem_to_finset] at hi
+    
 
 theorem convex_iff_sum_mem :
     Convex R s ↔
@@ -365,7 +384,7 @@ theorem mk_mem_convex_hull_prod {t : Set F} {x : E} {y : F} (hx : x ∈ convexHu
   rw [convex_hull_eq] at hx hy⊢
   obtain ⟨ι, a, w, S, hw, hw', hS, hSp⟩ := hx
   obtain ⟨κ, b, v, T, hv, hv', hT, hTp⟩ := hy
-  have h_sum : (∑ i : ι × κ in a.product b, w i.fst * v i.snd) = 1 := by
+  have h_sum : (∑ i : ι × κ in a ×ˢ b, w i.fst * v i.snd) = 1 := by
     rw [Finset.sum_product, ← hw']
     congr
     ext i
@@ -375,7 +394,7 @@ theorem mk_mem_convex_hull_prod {t : Set F} {x : E} {y : F} (hx : x ∈ convexHu
       simp [← mul_comm]
     rw [this, ← Finset.sum_mul, hv']
     simp
-  refine' ⟨ι × κ, a.product b, fun p => w p.1 * v p.2, fun p => (S p.1, T p.2), fun p hp => _, h_sum, fun p hp => _, _⟩
+  refine' ⟨ι × κ, a ×ˢ b, fun p => w p.1 * v p.2, fun p => (S p.1, T p.2), fun p hp => _, h_sum, fun p hp => _, _⟩
   · rw [mem_product] at hp
     exact mul_nonneg (hw p.1 hp.1) (hv p.2 hp.2)
     
@@ -444,7 +463,7 @@ The map is defined in terms of operations on `(s → ℝ) →ₗ[ℝ] ℝ` so th
 to prove that this map is linear. -/
 theorem Set.Finite.convex_hull_eq_image {s : Set E} (hs : s.Finite) :
     convexHull R s =
-      have := hs.fintype
+      haveI := hs.fintype
       ⇑(∑ x : s, (@LinearMap.proj R s _ (fun i => R) _ _ x).smul_right x.1) '' StdSimplex R s :=
   by
   rw [← convex_hull_basis_eq_std_simplex, ← LinearMap.convex_hull_image, ← Set.range_comp, (· ∘ ·)]

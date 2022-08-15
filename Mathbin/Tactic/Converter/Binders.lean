@@ -110,7 +110,7 @@ unsafe structure binder_eq_elim where
   -- optionally adapt `eq` to `iff`
   apply_comm : old_conv Unit
   -- apply commutativity rule
-  apply_congr : (expr → old_conv Unit) → old_conv Unit
+  applyCongr : (expr → old_conv Unit) → old_conv Unit
   -- apply congruence rule
   apply_elim_eq : old_conv Unit
 
@@ -170,7 +170,7 @@ unsafe def exists_eq_elim : binder_eq_elim where
     return (β, f)
   adapt_rel := propext'
   apply_comm := applyc `` exists_comm
-  apply_congr := congr_binder `` exists_congr
+  applyCongr := congr_binder `` exists_congr
   apply_elim_eq := apply' `` exists_elim_eq_left <|> apply' `` exists_elim_eq_right
 
 theorem forall_comm.{u, v} {α : Sort u} {β : Sort v} (p : α → β → Prop) : (∀ a b, p a b) ↔ ∀ b a, p a b :=
@@ -194,7 +194,7 @@ unsafe def forall_eq_elim : binder_eq_elim where
     return (d, expr.lam n bi d bd)
   adapt_rel := propext'
   apply_comm := applyc `` forall_comm
-  apply_congr := congr_binder `` forall_congrₓ
+  applyCongr := congr_binder `` forall_congrₓ
   apply_elim_eq := apply' `` forall_elim_eq_left <|> apply' `` forall_elim_eq_right
 
 unsafe def supr_eq_elim : binder_eq_elim where
@@ -206,7 +206,7 @@ unsafe def supr_eq_elim : binder_eq_elim where
     guardₓ (r = `eq)
     c
   apply_comm := applyc `` supr_comm
-  apply_congr := congr_arg ∘ funext'
+  applyCongr := congr_arg ∘ funext'
   apply_elim_eq := applyc `` supr_supr_eq_left <|> applyc `` supr_supr_eq_right
 
 unsafe def infi_eq_elim : binder_eq_elim where
@@ -218,7 +218,7 @@ unsafe def infi_eq_elim : binder_eq_elim where
     guardₓ (r = `eq)
     c
   apply_comm := applyc `` infi_comm
-  apply_congr := congr_arg ∘ funext'
+  applyCongr := congr_arg ∘ funext'
   apply_elim_eq := applyc `` infi_infi_eq_left <|> applyc `` infi_infi_eq_right
 
 universe u v w w₂

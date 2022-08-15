@@ -147,7 +147,7 @@ theorem has_continuous_smul_Inf {ts : Set (TopologicalSpace X)} (h : ∀, ∀ t 
   { continuous_smul := by
       rw [← @Inf_singleton _ _ ‹TopologicalSpace M›]
       exact
-        continuous_Inf_rng fun t ht =>
+        continuous_Inf_rng.2 fun t ht =>
           continuous_Inf_dom₂ (Eq.refl _) ht (@HasContinuousSmul.continuous_smul _ _ _ _ t (h t ht)) }
 
 @[to_additive]

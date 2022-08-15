@@ -101,6 +101,39 @@ namespace Subobject
 abbrev mk {X A : C} (f : A ⟶ X) [Mono f] : Subobject X :=
   (toThinSkeleton _).obj (MonoOver.mk' f)
 
+section
+
+attribute [local ext] CategoryTheory.Comma
+
+protected theorem ind {X : C} (p : Subobject X → Prop) (h : ∀ ⦃A : C⦄ (f : A ⟶ X) [Mono f], p (subobject.mk f))
+    (P : Subobject X) : p P := by
+  apply Quotientₓ.induction_on'
+  intro a
+  convert h a.arrow
+  ext <;> rfl
+
+protected theorem ind₂ {X : C} (p : Subobject X → Subobject X → Prop)
+    (h : ∀ ⦃A B : C⦄ (f : A ⟶ X) (g : B ⟶ X) [Mono f] [Mono g], p (subobject.mk f) (subobject.mk g))
+    (P Q : Subobject X) : p P Q := by
+  apply Quotientₓ.induction_on₂'
+  intro a b
+  convert h a.arrow b.arrow <;> ext <;> rfl
+
+end
+
+/-- Declare a function on subobjects of `X` by specifying a function on monomorphisms with
+    codomain `X`. -/
+protected def lift {α : Sort _} {X : C} (F : ∀ ⦃A : C⦄ (f : A ⟶ X) [Mono f], α)
+    (h : ∀ ⦃A B : C⦄ (f : A ⟶ X) (g : B ⟶ X) [Mono f] [Mono g] (i : A ≅ B), i.Hom ≫ g = f → F f = F g) :
+    Subobject X → α := fun P =>
+  (Quotientₓ.liftOn' P fun m => F m.arrow) fun m n ⟨i⟩ =>
+    h m.arrow n.arrow ((MonoOver.forget X ⋙ Over.forget X).mapIso i) (Over.w i.Hom)
+
+@[simp]
+protected theorem lift_mk {α : Sort _} {X : C} (F : ∀ ⦃A : C⦄ (f : A ⟶ X) [Mono f], α) {h A} (f : A ⟶ X) [Mono f] :
+    Subobject.lift F h (Subobject.mk f) = F f :=
+  rfl
+
 /-- The category of subobjects is equivalent to the `mono_over` category. It is more convenient to
 use the former due to the partial order instance, but oftentimes it is easier to define structures
 on the latter. -/
@@ -142,7 +175,7 @@ noncomputable def underlyingIso {X Y : C} (f : X ⟶ Y) [Mono f] : (Subobject.mk
 /-- The morphism in `C` from the arbitrarily chosen underlying object to the ambient object.
 -/
 noncomputable def arrow {X : C} (Y : Subobject X) : (Y : C) ⟶ X :=
-  (representative.obj Y).val.Hom
+  (representative.obj Y).obj.Hom
 
 instance arrow_mono {X : C} (Y : Subobject X) : Mono Y.arrow :=
   (representative.obj Y).property

@@ -39,9 +39,12 @@ theorem IsMinOn.of_is_local_min_on_of_convex_on_Icc {f : ℝ → β} {a b : ℝ}
   rcases(Convex.mem_Ioc a_lt_c).mp hy_ac with ⟨ya, yc, ya₀, yc₀, yac, rfl⟩
   suffices : ya • f a + yc • f a ≤ ya • f a + yc • f c
   exact (smul_le_smul_iff_of_pos yc₀).1 (le_of_add_le_add_left this)
-  calc ya • f a + yc • f a = f a := by
-      rw [← add_smul, yac, one_smul]_ ≤ f (ya * a + yc * c) := hfy _ ≤ ya • f a + yc • f c :=
-      h_conv.2 (left_mem_Icc.2 a_lt_b.le) hc ya₀ yc₀.le yac
+  calc
+    ya • f a + yc • f a = f a := by
+      rw [← add_smul, yac, one_smul]
+    _ ≤ f (ya * a + yc * c) := hfy
+    _ ≤ ya • f a + yc • f c := h_conv.2 (left_mem_Icc.2 a_lt_b.le) hc ya₀ yc₀.le yac
+    
 
 /-- A local minimum of a convex function is a global minimum, restricted to a set `s`.
 -/

@@ -26,8 +26,12 @@ open Polynomial Finset.Nat
 /-- Vandermonde's identity -/
 theorem Nat.add_choose_eq (m n k : ℕ) :
     (m + n).choose k = ∑ ij : ℕ × ℕ in antidiagonal k, m.choose ij.1 * n.choose ij.2 := by
-  calc (m + n).choose k = ((X + 1) ^ (m + n)).coeff k := _ _ = ((X + 1) ^ m * (X + 1) ^ n).coeff k := by
-      rw [pow_addₓ]_ = ∑ ij : ℕ × ℕ in antidiagonal k, m.choose ij.1 * n.choose ij.2 := _
+  calc
+    (m + n).choose k = ((X + 1) ^ (m + n)).coeff k := _
+    _ = ((X + 1) ^ m * (X + 1) ^ n).coeff k := by
+      rw [pow_addₓ]
+    _ = ∑ ij : ℕ × ℕ in antidiagonal k, m.choose ij.1 * n.choose ij.2 := _
+    
   · rw [coeff_X_add_one_pow, Nat.cast_id]
     
   · rw [coeff_mul, Finset.sum_congr rfl]

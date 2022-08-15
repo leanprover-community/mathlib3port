@@ -16,10 +16,10 @@ noncomputable section
 
 open Manifold
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {E' : Type _}
-  [NormedGroup E'] [NormedSpace 𝕜 E'] {H : Type _} [TopologicalSpace H] {I : ModelWithCorners 𝕜 E H} {H' : Type _}
-  [TopologicalSpace H'] {I' : ModelWithCorners 𝕜 E' H'} {N : Type _} [TopologicalSpace N] [ChartedSpace H N]
-  {E'' : Type _} [NormedGroup E''] [NormedSpace 𝕜 E''] {H'' : Type _} [TopologicalSpace H'']
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {E' : Type _}
+  [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H : Type _} [TopologicalSpace H] {I : ModelWithCorners 𝕜 E H}
+  {H' : Type _} [TopologicalSpace H'] {I' : ModelWithCorners 𝕜 E' H'} {N : Type _} [TopologicalSpace N]
+  [ChartedSpace H N] {E'' : Type _} [NormedAddCommGroup E''] [NormedSpace 𝕜 E''] {H'' : Type _} [TopologicalSpace H'']
   {I'' : ModelWithCorners 𝕜 E'' H''} {N' : Type _} [TopologicalSpace N'] [ChartedSpace H'' N']
 
 namespace SmoothMap
@@ -168,25 +168,25 @@ field `𝕜` inherit a vector space structure.
 -/
 
 
-instance hasSmul {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V] : HasSmul 𝕜 C^∞⟮I, N; 𝓘(𝕜, V), V⟯ :=
+instance hasSmul {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] : HasSmul 𝕜 C^∞⟮I, N; 𝓘(𝕜, V), V⟯ :=
   ⟨fun r f => ⟨r • f, smooth_const.smul f.Smooth⟩⟩
 
 @[simp]
-theorem coe_smul {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V] (r : 𝕜) (f : C^∞⟮I, N; 𝓘(𝕜, V), V⟯) :
+theorem coe_smul {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] (r : 𝕜) (f : C^∞⟮I, N; 𝓘(𝕜, V), V⟯) :
     ⇑(r • f) = r • f :=
   rfl
 
 @[simp]
-theorem smul_comp {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V] (r : 𝕜) (g : C^∞⟮I'', N'; 𝓘(𝕜, V), V⟯)
+theorem smul_comp {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] (r : 𝕜) (g : C^∞⟮I'', N'; 𝓘(𝕜, V), V⟯)
     (h : C^∞⟮I, N; I'', N'⟯) : (r • g).comp h = r • g.comp h :=
   rfl
 
-instance module {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V] : Module 𝕜 C^∞⟮I, N; 𝓘(𝕜, V), V⟯ :=
+instance module {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] : Module 𝕜 C^∞⟮I, N; 𝓘(𝕜, V), V⟯ :=
   Function.Injective.module 𝕜 coeFnAddMonoidHom ContMdiffMap.coe_inj coe_smul
 
 /-- Coercion to a function as a `linear_map`. -/
 @[simps]
-def coeFnLinearMap {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V] : C^∞⟮I, N; 𝓘(𝕜, V), V⟯ →ₗ[𝕜] N → V :=
+def coeFnLinearMap {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] : C^∞⟮I, N; 𝓘(𝕜, V), V⟯ →ₗ[𝕜] N → V :=
   { (coeFnAddMonoidHom : C^∞⟮I, N; 𝓘(𝕜, V), V⟯ →+ _) with toFun := coeFn, map_smul' := coe_smul }
 
 end ModuleStructure
@@ -244,15 +244,16 @@ If `V` is a module over `𝕜`, then we show that the space of smooth functions 
 is naturally a vector space over the ring of smooth functions from `N` to `𝕜`. -/
 
 
-instance hasSmul' {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V] : HasSmul C^∞⟮I, N; 𝕜⟯ C^∞⟮I, N; 𝓘(𝕜, V), V⟯ :=
+instance hasSmul' {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] : HasSmul C^∞⟮I, N; 𝕜⟯ C^∞⟮I, N; 𝓘(𝕜, V), V⟯ :=
   ⟨fun f g => ⟨fun x => f x • g x, Smooth.smul f.2 g.2⟩⟩
 
 @[simp]
-theorem smul_comp' {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V] (f : C^∞⟮I'', N'; 𝕜⟯) (g : C^∞⟮I'', N'; 𝓘(𝕜, V), V⟯)
-    (h : C^∞⟮I, N; I'', N'⟯) : (f • g).comp h = f.comp h • g.comp h :=
+theorem smul_comp' {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] (f : C^∞⟮I'', N'; 𝕜⟯)
+    (g : C^∞⟮I'', N'; 𝓘(𝕜, V), V⟯) (h : C^∞⟮I, N; I'', N'⟯) : (f • g).comp h = f.comp h • g.comp h :=
   rfl
 
-instance module' {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V] : Module C^∞⟮I, N; 𝓘(𝕜), 𝕜⟯ C^∞⟮I, N; 𝓘(𝕜, V), V⟯ where
+instance module' {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] :
+    Module C^∞⟮I, N; 𝓘(𝕜), 𝕜⟯ C^∞⟮I, N; 𝓘(𝕜, V), V⟯ where
   smul := (· • ·)
   smul_add := fun c f g => by
     ext x <;> exact smul_add (c x) (f x) (g x)

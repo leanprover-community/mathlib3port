@@ -192,25 +192,25 @@ theorem of_epi_eq_zero {X Y : C} (f : X ⟶ Y) [Epi f] (h : f = 0) : IsZero Y :=
   subst h
   apply of_epi_zero X Y
 
-theorem iff_split_mono_eq_zero {X Y : C} (f : X ⟶ Y) [SplitMono f] : IsZero X ↔ f = 0 := by
+theorem iff_is_split_mono_eq_zero {X Y : C} (f : X ⟶ Y) [IsSplitMono f] : IsZero X ↔ f = 0 := by
   rw [iff_id_eq_zero]
   constructor
   · intro h
     rw [← category.id_comp f, h, zero_comp]
     
   · intro h
-    rw [← split_mono.id f]
+    rw [← is_split_mono.id f]
     simp [← h]
     
 
-theorem iff_split_epi_eq_zero {X Y : C} (f : X ⟶ Y) [SplitEpi f] : IsZero Y ↔ f = 0 := by
+theorem iff_is_split_epi_eq_zero {X Y : C} (f : X ⟶ Y) [IsSplitEpi f] : IsZero Y ↔ f = 0 := by
   rw [iff_id_eq_zero]
   constructor
   · intro h
     rw [← category.comp_id f, h, comp_zero]
     
   · intro h
-    rw [← split_epi.id f]
+    rw [← is_split_epi.id f]
     simp [← h]
     
 
@@ -515,8 +515,12 @@ theorem has_zero_object_of_has_initial_object [HasZeroMorphisms C] [HasInitial C
         ⟨⟨⟨0⟩, by
             tidy⟩⟩,
         fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩⟩⟩
-  calc f = f ≫ 𝟙 _ := (category.comp_id _).symm _ = f ≫ 0 := by
-      congr _ = 0 := has_zero_morphisms.comp_zero _ _
+  calc
+    f = f ≫ 𝟙 _ := (category.comp_id _).symm
+    _ = f ≫ 0 := by
+      congr
+    _ = 0 := has_zero_morphisms.comp_zero _ _
+    
 
 /-- If there are zero morphisms, any terminal object is a zero object. -/
 theorem has_zero_object_of_has_terminal_object [HasZeroMorphisms C] [HasTerminal C] : HasZeroObject C := by
@@ -524,8 +528,12 @@ theorem has_zero_object_of_has_terminal_object [HasZeroMorphisms C] [HasTerminal
     ⟨⟨⊤_ C, fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩, fun X =>
         ⟨⟨⟨0⟩, by
             tidy⟩⟩⟩⟩
-  calc f = 𝟙 _ ≫ f := (category.id_comp _).symm _ = 0 ≫ f := by
-      congr _ = 0 := zero_comp
+  calc
+    f = 𝟙 _ ≫ f := (category.id_comp _).symm
+    _ = 0 ≫ f := by
+      congr
+    _ = 0 := zero_comp
+    
 
 section Image
 
@@ -587,28 +595,34 @@ theorem image.ι_zero' [HasEqualizers C] {X Y : C} {f : X ⟶ Y} (h : f = 0) [Ha
 end Image
 
 /-- In the presence of zero morphisms, coprojections into a coproduct are (split) monomorphisms. -/
-instance splitMonoSigmaι {β : Type u'} [HasZeroMorphisms C] (f : β → C) [HasColimit (Discrete.functor f)] (b : β) :
-    SplitMono (Sigma.ι f b) where retraction := sigma.desc <| Pi.single b (𝟙 _)
+instance is_split_mono_sigma_ι {β : Type u'} [HasZeroMorphisms C] (f : β → C) [HasColimit (Discrete.functor f)]
+    (b : β) : IsSplitMono (Sigma.ι f b) :=
+  IsSplitMono.mk' { retraction := sigma.desc <| Pi.single b (𝟙 _) }
 
 /-- In the presence of zero morphisms, projections into a product are (split) epimorphisms. -/
-instance splitEpiPiπ {β : Type u'} [HasZeroMorphisms C] (f : β → C) [HasLimit (Discrete.functor f)] (b : β) :
-    SplitEpi (Pi.π f b) where section_ := pi.lift <| Pi.single b (𝟙 _)
+instance is_split_epi_pi_π {β : Type u'} [HasZeroMorphisms C] (f : β → C) [HasLimit (Discrete.functor f)] (b : β) :
+    IsSplitEpi (Pi.π f b) :=
+  IsSplitEpi.mk' { section_ := pi.lift <| Pi.single b (𝟙 _) }
 
 /-- In the presence of zero morphisms, coprojections into a coproduct are (split) monomorphisms. -/
-instance splitMonoCoprodInl [HasZeroMorphisms C] {X Y : C} [HasColimit (pair X Y)] :
-    SplitMono (coprod.inl : X ⟶ X ⨿ Y) where retraction := coprod.desc (𝟙 X) 0
+instance is_split_mono_coprod_inl [HasZeroMorphisms C] {X Y : C} [HasColimit (pair X Y)] :
+    IsSplitMono (coprod.inl : X ⟶ X ⨿ Y) :=
+  IsSplitMono.mk' { retraction := coprod.desc (𝟙 X) 0 }
 
 /-- In the presence of zero morphisms, coprojections into a coproduct are (split) monomorphisms. -/
-instance splitMonoCoprodInr [HasZeroMorphisms C] {X Y : C} [HasColimit (pair X Y)] :
-    SplitMono (coprod.inr : Y ⟶ X ⨿ Y) where retraction := coprod.desc 0 (𝟙 Y)
+instance is_split_mono_coprod_inr [HasZeroMorphisms C] {X Y : C} [HasColimit (pair X Y)] :
+    IsSplitMono (coprod.inr : Y ⟶ X ⨿ Y) :=
+  IsSplitMono.mk' { retraction := coprod.desc 0 (𝟙 Y) }
 
 /-- In the presence of zero morphisms, projections into a product are (split) epimorphisms. -/
-instance splitEpiProdFst [HasZeroMorphisms C] {X Y : C} [HasLimit (pair X Y)] :
-    SplitEpi (prod.fst : X ⨯ Y ⟶ X) where section_ := prod.lift (𝟙 X) 0
+instance is_split_epi_prod_fst [HasZeroMorphisms C] {X Y : C} [HasLimit (pair X Y)] :
+    IsSplitEpi (prod.fst : X ⨯ Y ⟶ X) :=
+  IsSplitEpi.mk' { section_ := prod.lift (𝟙 X) 0 }
 
 /-- In the presence of zero morphisms, projections into a product are (split) epimorphisms. -/
-instance splitEpiProdSnd [HasZeroMorphisms C] {X Y : C} [HasLimit (pair X Y)] :
-    SplitEpi (prod.snd : X ⨯ Y ⟶ Y) where section_ := prod.lift 0 (𝟙 Y)
+instance is_split_epi_prod_snd [HasZeroMorphisms C] {X Y : C} [HasLimit (pair X Y)] :
+    IsSplitEpi (prod.snd : X ⨯ Y ⟶ Y) :=
+  IsSplitEpi.mk' { section_ := prod.lift 0 (𝟙 Y) }
 
 end CategoryTheory.Limits
 

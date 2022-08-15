@@ -105,8 +105,8 @@ theorem disjoint_or_exists_inter_eq_convex_hull (hs : s ∈ K.Faces) (ht : t ∈
   · rw [coe_inter, convex_hull_inter_convex_hull hs ht]
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (s t «expr ∈ » faces)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (s t «expr ∈ » faces)
 /-- Construct a simplicial complex by removing the empty face for you. -/
 @[simps]
 def ofErase (faces : Set (Finset E)) (indep : ∀, ∀ s ∈ faces, ∀, AffineIndependent 𝕜 (coe : (s : Set E) → E))

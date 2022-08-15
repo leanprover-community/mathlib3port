@@ -185,7 +185,7 @@ instance : MetricSpace (Completion α) where
 
 /-- The embedding of a metric space in its completion is an isometry. -/
 theorem coe_isometry : Isometry (coe : α → Completion α) :=
-  isometry_emetric_iff_metric.2 Completion.dist_eq
+  Isometry.of_dist_eq Completion.dist_eq
 
 @[simp]
 protected theorem edist_eq (x y : α) : edist (x : Completion α) y = edist x y :=

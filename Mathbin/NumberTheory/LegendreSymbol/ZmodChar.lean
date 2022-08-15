@@ -174,27 +174,11 @@ theorem χ₈'_eq_χ₄_mul_χ₈ (a : Zmod 8) : χ₈' a = χ₄ a * χ₈ a :=
   decide!
 
 theorem χ₈'_int_eq_χ₄_mul_χ₈ (a : ℤ) : χ₈' a = χ₄ a * χ₈ a := by
-  have h : (a : Zmod 4) = (a : Zmod 8) := by
-    have help : ∀ m : ℤ, 0 ≤ m → m < 8 → ((m % 4 : ℤ) : Zmod 4) = (m : Zmod 8) := by
-      decide
-    rw [← Zmod.int_cast_mod a 8, ← Zmod.int_cast_mod a 4,
+  rw [←
+    @cast_int_cast 8 (Zmod 4) _ 4 _
       (by
-        norm_cast : ((8 : ℕ) : ℤ) = 8),
-      (by
-        norm_cast : ((4 : ℕ) : ℤ) = 4),
-      ←
-      Int.mod_mod_of_dvd a
-        (by
-          norm_num : (4 : ℤ) ∣ 8)]
-    exact
-      help (a % 8)
-        (Int.mod_nonneg a
-          (by
-            norm_num))
-        (Int.mod_lt a
-          (by
-            norm_num))
-  rw [h]
+        norm_num)
+      a]
   exact χ₈'_eq_χ₄_mul_χ₈ a
 
 end QuadCharModP

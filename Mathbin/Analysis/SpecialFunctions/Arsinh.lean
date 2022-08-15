@@ -54,8 +54,10 @@ def arsinh (x : ℝ) :=
 theorem exp_arsinh (x : ℝ) : exp (arsinh x) = x + sqrt (1 + x ^ 2) := by
   apply exp_log
   rw [← neg_lt_iff_pos_add']
-  calc -x ≤ sqrt (x ^ 2) := le_sqrt_of_sq_le (neg_pow_bit0 _ _).le _ < sqrt (1 + x ^ 2) :=
-      sqrt_lt_sqrt (sq_nonneg _) (lt_one_add _)
+  calc
+    -x ≤ sqrt (x ^ 2) := le_sqrt_of_sq_le (neg_pow_bit0 _ _).le
+    _ < sqrt (1 + x ^ 2) := sqrt_lt_sqrt (sq_nonneg _) (lt_one_add _)
+    
 
 @[simp]
 theorem arsinh_zero : arsinh 0 = 0 := by
@@ -200,7 +202,8 @@ end Continuous
 
 section fderiv
 
-variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {f : E → ℝ} {s : Set E} {a : E} {f' : E →L[ℝ] ℝ} {n : WithTop ℕ}
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ} {s : Set E} {a : E} {f' : E →L[ℝ] ℝ}
+  {n : WithTop ℕ}
 
 theorem HasStrictFderivAt.arsinh (hf : HasStrictFderivAt f f' a) :
     HasStrictFderivAt (fun x => arsinh (f x)) ((sqrt (1 + f a ^ 2))⁻¹ • f') a :=

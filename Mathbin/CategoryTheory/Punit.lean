@@ -104,7 +104,7 @@ theorem equiv_punit_iff_unique : Nonempty (C ≌ Discrete PUnit) ↔ Nonempty C 
     congr
     
   · rintro ⟨⟨p⟩, h⟩
-    have := fun x y => (h x y).some
+    haveI := fun x y => (h x y).some
     refine'
       Nonempty.intro
         (CategoryTheory.Equivalence.mk ((Functor.Const _).obj ⟨⟨⟩⟩) ((Functor.Const _).obj p) _

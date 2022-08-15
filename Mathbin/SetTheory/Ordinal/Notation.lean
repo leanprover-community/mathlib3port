@@ -412,7 +412,7 @@ theorem repr_add : ∀ (o₁ o₂) [NF o₁] [NF o₂], repr (o₁ + o₂) = rep
   | 0, o, h₁, h₂ => by
     simp
   | oadd e n a, o, h₁, h₂ => by
-    have := h₁.snd
+    haveI := h₁.snd
     have h' := repr_add a o
     conv at h' in _ + o => simp [← (· + ·)]
     have nf := Onote.add_NF a o
@@ -420,7 +420,7 @@ theorem repr_add : ∀ (o₁ o₂) [NF o₁] [NF o₂], repr (o₁ + o₂) = rep
     conv in _ + o => simp [← (· + ·), ← add]
     cases' add a o with e' n' a' <;> simp [← add, ← h'.symm, ← add_assocₓ]
     have := h₁.fst
-    have := nf.fst
+    haveI := nf.fst
     have ee := cmp_compares e e'
     cases cmp e e' <;> simp [← add]
     · rw [← add_assocₓ, @add_absorp _ (reprₓ e') (ω ^ reprₓ e' * (n' : ℕ))]
@@ -471,8 +471,8 @@ theorem repr_sub : ∀ (o₁ o₂) [NF o₁] [NF o₂], repr (o₁ - o₂) = rep
     cases o <;> exact (Ordinal.zero_sub _).symm
   | oadd e n a, 0, h₁, h₂ => (Ordinal.sub_zero _).symm
   | oadd e₁ n₁ a₁, oadd e₂ n₂ a₂, h₁, h₂ => by
-    have := h₁.snd
-    have := h₂.snd
+    haveI := h₁.snd
+    haveI := h₂.snd
     have h' := repr_sub a₁ a₂
     conv at h' in a₁ - a₂ => simp [← Sub.sub]
     have nf := Onote.sub_NF a₁ a₂
@@ -539,8 +539,8 @@ theorem oadd_mul_NF_below {e₁ n₁ a₁ b₁} (h₁ : NFBelow (oadd e₁ n₁ 
     · apply NF_below.oadd h₁.fst h₁.snd
       simpa using (add_lt_add_iff_left (reprₓ e₁)).2 (lt_of_le_of_ltₓ (Ordinal.zero_le _) h₂.lt)
       
-    · have := h₁.fst
-      have := h₂.fst
+    · haveI := h₁.fst
+      haveI := h₂.fst
       apply NF_below.oadd
       infer_instance
       · rwa [repr_add]
@@ -571,8 +571,8 @@ theorem repr_mul : ∀ (o₁ o₂) [NF o₁] [NF o₂], repr (o₁ * o₂) = rep
       simp [← h₂.zero_of_zero e0, ← xe, -Nat.cast_succₓ]
       rw [nat_cast_succ x, add_mul_succ _ ao, mul_assoc]
       
-    · have := h₁.fst
-      have := h₂.fst
+    · haveI := h₁.fst
+      haveI := h₂.fst
       simp [← IH, ← repr_add, ← opow_add, ← mul_addₓ]
       rw [← mul_assoc]
       congr 2
@@ -652,8 +652,8 @@ theorem split_eq_scale_split' : ∀ {o o' m} [NF o], split' o = (o', m) → spli
       
     · revert p
       cases' h' : split' a with a' m'
-      have := h.fst
-      have := h.snd
+      haveI := h.fst
+      haveI := h.snd
       simp [← split_eq_scale_split' h', ← split, ← split']
       have : 1 + (e - 1) = e := by
         refine' repr_inj.1 _
@@ -675,8 +675,8 @@ theorem NF_repr_split' : ∀ {o o' m} [NF o], split' o = (o', m) → NF o' ∧ r
       
     · revert p
       cases' h' : split' a with a' m'
-      have := h.fst
-      have := h.snd
+      haveI := h.fst
+      haveI := h.snd
       cases' NF_repr_split' h' with IH₁ IH₂
       simp [← IH₂, ← split']
       intros
@@ -705,7 +705,7 @@ theorem scale_eq_mul (x) [NF x] : ∀ (o) [NF o], scale x o = oadd x 1 0 * o
   | oadd e n a, h => by
     simp [← (· * ·)]
     simp [← mul, ← scale]
-    have := h.snd
+    haveI := h.snd
     by_cases' e0 : e = 0
     · rw [scale_eq_mul]
       simp [← e0, ← h.zero_of_zero, ←
@@ -763,13 +763,13 @@ instance NF_opow_aux (e a0 a) [NF e] [NF a0] [NF a] : ∀ k m, NF (opowAux e a0 
     cases k <;> exact NF.zero
   | 0, m + 1 => NF.oadd_zero _ _
   | k + 1, m + 1 => by
-    have := NF_opow_aux k <;> simp [← opow_aux, ← Nat.succ_ne_zero] <;> infer_instance
+    haveI := NF_opow_aux k <;> simp [← opow_aux, ← Nat.succ_ne_zero] <;> infer_instance
 
 instance NF_opow (o₁ o₂) [NF o₁] [NF o₂] : NF (o₁ ^ o₂) := by
   cases' e₁ : split o₁ with a m
   have na := (NF_repr_split e₁).1
   cases' e₂ : split' o₂ with b' k
-  have := (NF_repr_split' e₂).1
+  haveI := (NF_repr_split' e₂).1
   cases' a with a0 n a'
   · cases' m with m
     · by_cases' o₂ = 0 <;> simp [← pow, ← opow, *] <;> infer_instance
@@ -832,7 +832,7 @@ theorem repr_opow_aux₂ {a0 a'} [N0 : NF a0] [Na' : NF a'] (m : ℕ) (d : ω �
       ((ω^repr a0)^k) * ((ω^repr a0) * (n : ℕ) + repr a') + R = ((ω^repr a0) * (n : ℕ) + repr a' + m^succ k) :=
   by
   intro
-  have No : NF (oadd a0 n a') := N0.oadd n (Na'.below_of_lt' <| lt_of_le_of_ltₓ (le_add_right _ _) h)
+  haveI No : NF (oadd a0 n a') := N0.oadd n (Na'.below_of_lt' <| lt_of_le_of_ltₓ (le_add_right _ _) h)
   induction' k with k IH
   · cases m <;> simp [← opow_aux, ← R]
     
@@ -879,10 +879,13 @@ theorem repr_opow_aux₂ {a0 a'} [N0 : NF a0] [Na' : NF a'] (m : ℕ) (d : ω �
             mul_le_mul_left' (succ_le_succ_iff.2 (nat_cast_le.2 (le_of_ltₓ k.lt_succ_self))) _)
       
     
-  calc (ω0^k.succ) * α' + R' = (ω0^succ k) * α' + ((ω0^k) * α' * m + R) := by
-      rw [nat_cast_succ, RR, ← mul_assoc]_ = ((ω0^k) * α' + R) * α' + ((ω0^k) * α' + R) * m :=
-      _ _ = (α' + m^succ k.succ) := by
+  calc
+    (ω0^k.succ) * α' + R' = (ω0^succ k) * α' + ((ω0^k) * α' * m + R) := by
+      rw [nat_cast_succ, RR, ← mul_assoc]
+    _ = ((ω0^k) * α' + R) * α' + ((ω0^k) * α' + R) * m := _
+    _ = (α' + m^succ k.succ) := by
       rw [← mul_addₓ, nat_cast_succ, opow_succ, IH.2]
+    
   congr 1
   · have αd : ω ∣ α' :=
       dvd_add
@@ -935,8 +938,8 @@ theorem repr_opow (o₁ o₂) [NF o₁] [NF o₂] : repr (o₁ ^ o₂) = repr o�
       simpa using nat_cast_lt.2 (Nat.succ_lt_succₓ <| pos_iff_ne_zero.2 h)
       
     
-  · have := N₁.fst
-    have := N₁.snd
+  · haveI := N₁.fst
+    haveI := N₁.snd
     cases' N₁.of_dvd_omega (split_dvd e₁) with a00 ad
     have al := split_add_lt e₁
     have aa : reprₓ (a' + of_nat m) = reprₓ a' + m := by
@@ -1172,7 +1175,7 @@ theorem fast_growing_ε₀_one : fastGrowingε₀ 1 = 2 := by
   simp [← fast_growing_ε₀, ← show oadd 0 1 0 = 1 from rfl]
 
 theorem fast_growing_ε₀_two : fastGrowingε₀ 2 = 2048 := by
-  norm_num [← fast_growing_ε₀, ← show oadd 0 1 0 = 1 from rfl, ← @fast_growing_limit (oadd 1 1 0) _ rfl, ←
+  norm_num[← fast_growing_ε₀, ← show oadd 0 1 0 = 1 from rfl, ← @fast_growing_limit (oadd 1 1 0) _ rfl, ←
     show oadd 0 (2 : Nat).succPnat 0 = 3 from rfl, ← @fast_growing_succ 3 2 rfl]
 
 end Onote
@@ -1269,7 +1272,7 @@ def oadd (e : Nonote) (n : ℕ+) (a : Nonote) (h : below a e) : Nonote :=
 /-- This is a recursor-like theorem for `nonote` suggesting an
   inductive definition, which can't actually be defined this
   way due to conflicting dependencies. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def recOn {C : Nonote → Sort _} (o : Nonote) (H0 : C 0) (H1 : ∀ e n a h, C e → C a → C (oadd e n a h)) : C o := by
   cases' o with o h
   induction' o with e n a IHe IHa

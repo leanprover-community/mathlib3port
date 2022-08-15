@@ -4,10 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 -/
 import Mathbin.GroupTheory.OrderOfElement
-import Mathbin.Algebra.PunitInstances
 import Mathbin.Algebra.GcdMonoid.Finset
+import Mathbin.Algebra.PunitInstances
+import Mathbin.Data.Nat.Factorization.Basic
 import Mathbin.Tactic.ByContra
-import Mathbin.NumberTheory.Padics.PadicVal
 
 /-!
 # Exponent of a group
@@ -163,7 +163,7 @@ theorem lcm_order_of_dvd_exponent [Fintype G] : (Finset.univ : Finset G).lcm ord
 @[to_additive exists_order_of_eq_pow_padic_val_nat_add_exponent]
 theorem _root_.nat.prime.exists_order_of_eq_pow_factorization_exponent {p : ℕ} (hp : p.Prime) :
     ∃ g : G, orderOf g = p ^ (exponent G).factorization p := by
-  have := Fact.mk hp
+  haveI := Fact.mk hp
   rcases eq_or_ne ((exponent G).factorization p) 0 with (h | h)
   · refine'
       ⟨1, by

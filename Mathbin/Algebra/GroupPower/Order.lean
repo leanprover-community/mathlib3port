@@ -160,14 +160,17 @@ theorem pow_add_pow_le (hx : 0 ≤ x) (hy : 0 ≤ y) (hn : n ≠ 0) : x ^ n + y 
   let n := k.succ
   have h1 := add_nonneg (mul_nonneg hx (pow_nonneg hy n)) (mul_nonneg hy (pow_nonneg hx n))
   have h2 := add_nonneg hx hy
-  calc x ^ n.succ + y ^ n.succ ≤ x * x ^ n + y * y ^ n + (x * y ^ n + y * x ^ n) := by
+  calc
+    x ^ n.succ + y ^ n.succ ≤ x * x ^ n + y * y ^ n + (x * y ^ n + y * x ^ n) := by
       rw [pow_succₓ _ n, pow_succₓ _ n]
-      exact le_add_of_nonneg_right h1 _ = (x + y) * (x ^ n + y ^ n) := by
+      exact le_add_of_nonneg_right h1
+    _ = (x + y) * (x ^ n + y ^ n) := by
       rw [add_mulₓ, mul_addₓ, mul_addₓ, add_commₓ (y * x ^ n), ← add_assocₓ, ← add_assocₓ,
-        add_assocₓ (x * x ^ n) (x * y ^ n), add_commₓ (x * y ^ n) (y * y ^ n), ← add_assocₓ]_ ≤ (x + y) ^ n.succ :=
-      by
+        add_assocₓ (x * x ^ n) (x * y ^ n), add_commₓ (x * y ^ n) (y * y ^ n), ← add_assocₓ]
+    _ ≤ (x + y) ^ n.succ := by
       rw [pow_succₓ _ n]
       exact mul_le_mul_of_nonneg_left (ih (Nat.succ_ne_zero k)) h2
+    
 
 theorem pow_lt_pow_of_lt_left (Hxy : x < y) (Hxpos : 0 ≤ x) (Hnpos : 0 < n) : x ^ n < y ^ n := by
   cases lt_or_eq_of_leₓ Hxpos

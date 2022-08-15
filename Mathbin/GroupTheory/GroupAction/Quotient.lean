@@ -184,8 +184,10 @@ provide `mul_action.self_equiv_sigma_orbits_quotient_stabilizer` as a special ca
 noncomputable def selfEquivSigmaOrbitsQuotientStabilizer' {φ : Ω → β} (hφ : LeftInverse Quotientₓ.mk' φ) :
     β ≃ Σω : Ω, α ⧸ stabilizer α (φ ω) :=
   calc
-    β ≃ Σω : Ω, Orbit α (φ ω) := selfEquivSigmaOrbits' α β hφ
-    _ ≃ Σω : Ω, α ⧸ stabilizer α (φ ω) := Equivₓ.sigmaCongrRight fun ω => orbitEquivQuotientStabilizer α (φ ω)
+    β ≃ Σω : Ω, orbitRel.Quotient.Orbit ω := selfEquivSigmaOrbits' α β
+    _ ≃ Σω : Ω, α ⧸ stabilizer α (φ ω) :=
+      Equivₓ.sigmaCongrRight fun ω =>
+        (Equivₓ.Set.ofEq <| orbitRel.Quotient.orbit_eq_orbit_out _ hφ).trans <| orbitEquivQuotientStabilizer α (φ ω)
     
 
 /-- **Class formula** for a finite group acting on a finite type. See

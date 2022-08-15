@@ -43,7 +43,7 @@ instance : CoeSort PartialFun (Type _) :=
   ⟨id⟩
 
 /-- Turns a type into a `PartialFun`. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def of : Type _ → PartialFun :=
   id
 

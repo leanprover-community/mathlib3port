@@ -115,9 +115,15 @@ theorem add_pow_half_succ_self_eq_pow_half (n) : powHalf (n + 1) + powHalf (n + 
   induction' n using Nat.strong_induction_onₓ with n hn
   · constructor <;> rw [le_iff_forall_lf] <;> constructor
     · rintro (⟨⟨⟩⟩ | ⟨⟨⟩⟩) <;> apply lf_of_lt
-      · calc 0 + pow_half n.succ ≈ pow_half n.succ := zero_add_equiv _ _ < pow_half n := pow_half_succ_lt_pow_half n
+      · calc
+          0 + pow_half n.succ ≈ pow_half n.succ := zero_add_equiv _
+          _ < pow_half n := pow_half_succ_lt_pow_half n
+          
         
-      · calc pow_half n.succ + 0 ≈ pow_half n.succ := add_zero_equiv _ _ < pow_half n := pow_half_succ_lt_pow_half n
+      · calc
+          pow_half n.succ + 0 ≈ pow_half n.succ := add_zero_equiv _
+          _ < pow_half n := pow_half_succ_lt_pow_half n
+          
         
       
     · cases n
@@ -127,21 +133,30 @@ theorem add_pow_half_succ_self_eq_pow_half (n) : powHalf (n + 1) + powHalf (n + 
       apply lf_of_move_right_le
       swap
       exact Sum.inl default
-      calc pow_half n.succ + pow_half (n.succ + 1) ≤ pow_half n.succ + pow_half n.succ :=
-          add_le_add_left (pow_half_succ_le_pow_half _) _ _ ≈ pow_half n := hn _ (Nat.lt_succ_selfₓ n)
+      calc
+        pow_half n.succ + pow_half (n.succ + 1) ≤ pow_half n.succ + pow_half n.succ :=
+          add_le_add_left (pow_half_succ_le_pow_half _) _
+        _ ≈ pow_half n := hn _ (Nat.lt_succ_selfₓ n)
+        
       
     · simp only [← pow_half_move_left, ← forall_const]
       apply lf_of_lt
-      calc 0 ≈ 0 + 0 := (add_zero_equiv 0).symm _ ≤ pow_half n.succ + 0 :=
-          add_le_add_right (zero_le_pow_half _) _ _ < pow_half n.succ + pow_half n.succ :=
-          add_lt_add_left (pow_half_pos _) _
+      calc
+        0 ≈ 0 + 0 := (add_zero_equiv 0).symm
+        _ ≤ pow_half n.succ + 0 := add_le_add_right (zero_le_pow_half _) _
+        _ < pow_half n.succ + pow_half n.succ := add_lt_add_left (pow_half_pos _) _
+        
       
     · rintro (⟨⟨⟩⟩ | ⟨⟨⟩⟩) <;> apply lf_of_lt
-      · calc pow_half n ≈ pow_half n + 0 := (add_zero_equiv _).symm _ < pow_half n + pow_half n.succ :=
-            add_lt_add_left (pow_half_pos _) _
+      · calc
+          pow_half n ≈ pow_half n + 0 := (add_zero_equiv _).symm
+          _ < pow_half n + pow_half n.succ := add_lt_add_left (pow_half_pos _) _
+          
         
-      · calc pow_half n ≈ 0 + pow_half n := (zero_add_equiv _).symm _ < pow_half n.succ + pow_half n :=
-            add_lt_add_right (pow_half_pos _) _
+      · calc
+          pow_half n ≈ 0 + pow_half n := (zero_add_equiv _).symm
+          _ < pow_half n.succ + pow_half n := add_lt_add_right (pow_half_pos _) _
+          
         
       
     
@@ -241,8 +256,11 @@ def dyadicMap : Localization.Away (2 : ℤ) →+ Surreal where
         (2 ^ b' * c + 2 ^ d' * a) • pow_half (b' + d') =
             (c * 2 ^ b') • pow_half (b' + d') + (a * 2 ^ d') • pow_half (d' + b') :=
           by
-          simp only [← add_smul, ← mul_comm, ← add_commₓ]_ = c • pow_half d' + a • pow_half b' := by
-          simp only [← zsmul_pow_two_pow_half]_ = a • pow_half b' + c • pow_half d' := add_commₓ _ _
+          simp only [← add_smul, ← mul_comm, ← add_commₓ]
+        _ = c • pow_half d' + a • pow_half b' := by
+          simp only [← zsmul_pow_two_pow_half]
+        _ = a • pow_half b' + c • pow_half d' := add_commₓ _ _
+        
 
 @[simp]
 theorem dyadic_map_apply (m : ℤ) (p : Submonoid.powers (2 : ℤ)) :

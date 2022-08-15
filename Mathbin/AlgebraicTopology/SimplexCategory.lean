@@ -35,7 +35,7 @@ universe v
 
 open CategoryTheory
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1390:31: unsupported: @[derive, irreducible] def
+-- ./././Mathport/Syntax/Translate/Basic.lean:1402:31: unsupported: @[derive, irreducible] def
 /-- The simplex category:
 * objects are natural numbers `n : ℕ`
 * morphisms from `n` to `m` are monotone functions `fin (n+1) → fin (m+1)`
@@ -75,7 +75,7 @@ theorem mk_len (n : SimplexCategory) : [n.len] = n :=
   rfl
 
 /-- Morphisms in the simplex_category. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 protected irreducible_def Hom (a b : SimplexCategory) :=
   Finₓ (a.len + 1) →o Finₓ (b.len + 1)
 
@@ -439,7 +439,7 @@ noncomputable def isSkeletonOf : IsSkeletonOf NonemptyFinLinOrdₓ SimplexCatego
 
 /-- The truncated simplex category. -/
 def Truncated (n : ℕ) :=
-  { a : SimplexCategory // a.len ≤ n }deriving SmallCategory
+  FullSubcategory fun a : SimplexCategory => a.len ≤ n deriving SmallCategory
 
 namespace Truncated
 
@@ -604,7 +604,7 @@ instance : ReflectsIsomorphisms (forget SimplexCategory) :=
 
 theorem is_iso_of_bijective {x y : SimplexCategory} {f : x ⟶ y} (hf : Function.Bijective f.toOrderHom.toFun) :
     IsIso f := by
-  have : is_iso ((forget SimplexCategory).map f) := (is_iso_iff_bijective _).mpr hf
+  haveI : is_iso ((forget SimplexCategory).map f) := (is_iso_iff_bijective _).mpr hf
   exact is_iso_of_reflects_iso f (forget SimplexCategory)
 
 /-- An isomorphism in `simplex_category` induces an `order_iso`. -/
@@ -784,10 +784,10 @@ theorem eq_σ_of_epi {n : ℕ} (θ : mk (n + 1) ⟶ mk n) [Epi θ] : ∃ i : Fin
       le_of_mono (mono_iff_injective.mpr h)
     
   use i
-  have : epi (σ i ≫ θ') := by
+  haveI : epi (σ i ≫ θ') := by
     rw [← h]
     infer_instance
-  have := CategoryTheory.epi_of_epi (σ i) θ'
+  haveI := CategoryTheory.epi_of_epi (σ i) θ'
   rw [h, eq_id_of_epi θ', category.comp_id]
 
 theorem eq_δ_of_mono {n : ℕ} (θ : mk n ⟶ mk (n + 1)) [Mono θ] : ∃ i : Finₓ (n + 2), θ = δ i := by
@@ -797,10 +797,10 @@ theorem eq_δ_of_mono {n : ℕ} (θ : mk n ⟶ mk (n + 1)) [Mono θ] : ∃ i : F
     simpa only [← add_le_iff_nonpos_right, ← nonpos_iff_eq_zero] using le_of_epi (epi_iff_surjective.mpr h)
     
   use i
-  have : mono (θ' ≫ δ i) := by
+  haveI : mono (θ' ≫ δ i) := by
     rw [← h]
     infer_instance
-  have := CategoryTheory.mono_of_mono θ' (δ i)
+  haveI := CategoryTheory.mono_of_mono θ' (δ i)
   rw [h, eq_id_of_mono θ', category.id_comp]
 
 end EpiMono

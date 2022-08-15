@@ -66,7 +66,7 @@ theorem germ_injective_of_is_integral [IsIntegral X] {U : Opens X.Carrier} (x : 
   rw [← (X.presheaf.germ x).map_zero] at hy
   obtain ⟨W, hW, iU, iV, e⟩ := X.presheaf.germ_eq _ x.prop x.prop _ _ hy
   cases show iU = iV from Subsingleton.elimₓ _ _
-  have : Nonempty W := ⟨⟨_, hW⟩⟩
+  haveI : Nonempty W := ⟨⟨_, hW⟩⟩
   exact map_injective_of_is_integral X iU e
 
 theorem Scheme.germ_to_function_field_injective [IsIntegral X] (U : Opens X.Carrier) [Nonempty U] :
@@ -129,7 +129,7 @@ instance function_field_is_fraction_ring_of_affine (R : CommRingₓₓ.{u}) [IsD
 
 instance {X : Scheme} [IsIntegral X] {U : Opens X.Carrier} [hU : Nonempty U] :
     IsIntegral (X.restrict U.OpenEmbedding) := by
-  have : Nonempty (X.restrict U.open_embedding).Carrier := hU
+  haveI : Nonempty (X.restrict U.open_embedding).Carrier := hU
   exact is_integral_of_open_immersion (X.of_restrict U.open_embedding)
 
 theorem IsAffineOpen.prime_ideal_of_generic_point {X : Scheme} [IsIntegral X] {U : Opens X.Carrier}
@@ -141,7 +141,7 @@ theorem IsAffineOpen.prime_ideal_of_generic_point {X : Scheme} [IsIntegral X] {U
               simpa using h)⟩ =
       genericPoint (Scheme.spec.obj <| op <| X.Presheaf.obj <| op U).Carrier :=
   by
-  have : is_affine _ := hU
+  haveI : is_affine _ := hU
   have e : U.open_embedding.is_open_map.functor.obj ⊤ = U := by
     ext1
     exact set.image_univ.trans Subtype.range_coe
@@ -155,9 +155,9 @@ theorem IsAffineOpen.prime_ideal_of_generic_point {X : Scheme} [IsIntegral X] {U
 
 theorem function_field_is_fraction_ring_of_is_affine_open [IsIntegral X] (U : Opens X.Carrier) (hU : IsAffineOpen U)
     [hU' : Nonempty U] : IsFractionRing (X.Presheaf.obj <| op U) X.functionField := by
-  have : is_affine _ := hU
-  have : Nonempty (X.restrict U.open_embedding).Carrier := hU'
-  have : IsIntegral (X.restrict U.open_embedding) :=
+  haveI : is_affine _ := hU
+  haveI : Nonempty (X.restrict U.open_embedding).Carrier := hU'
+  haveI : IsIntegral (X.restrict U.open_embedding) :=
     @is_integral_of_is_affine_is_domain _ _ _
       (by
         dsimp'
@@ -178,7 +178,7 @@ instance (x : X.Carrier) : IsAffine (X.affineCover.obj x) :=
 instance [h : IsIntegral X] (x : X.Carrier) : IsFractionRing (X.Presheaf.stalk x) X.functionField := by
   let U : opens X.carrier :=
     ⟨Set.Range (X.affine_cover.map x).1.base, PresheafedSpace.is_open_immersion.base_open.open_range⟩
-  have : Nonempty U := ⟨⟨_, X.affine_cover.covers x⟩⟩
+  haveI : Nonempty U := ⟨⟨_, X.affine_cover.covers x⟩⟩
   have hU : is_affine_open U := range_is_affine_open_of_open_immersion (X.affine_cover.map x)
   exact
     @IsFractionRing.is_fraction_ring_of_is_domain_of_is_localization _ _ _ _ _ _ _ _ _ _ _

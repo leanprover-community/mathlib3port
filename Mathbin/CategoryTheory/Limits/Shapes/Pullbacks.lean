@@ -513,6 +513,14 @@ abbrev snd (t : PullbackCone f g) : t.x ⟶ Y :=
   t.π.app WalkingCospan.right
 
 @[simp]
+theorem π_app_left (c : PullbackCone f g) : c.π.app WalkingCospan.left = c.fst :=
+  rfl
+
+@[simp]
+theorem π_app_right (c : PullbackCone f g) : c.π.app WalkingCospan.right = c.snd :=
+  rfl
+
+@[simp]
 theorem condition_one (t : PullbackCone f g) : t.π.app WalkingCospan.one = t.fst ≫ f := by
   have w := t.π.naturality walking_cospan.hom.inl
   dsimp'  at w
@@ -715,6 +723,14 @@ abbrev inl (t : PushoutCocone f g) : Y ⟶ t.x :=
 /-- The second inclusion of a pushout cocone. -/
 abbrev inr (t : PushoutCocone f g) : Z ⟶ t.x :=
   t.ι.app WalkingSpan.right
+
+@[simp]
+theorem ι_app_left (c : PushoutCocone f g) : c.ι.app WalkingSpan.left = c.inl :=
+  rfl
+
+@[simp]
+theorem ι_app_right (c : PushoutCocone f g) : c.ι.app WalkingSpan.right = c.inr :=
+  rfl
 
 @[simp]
 theorem condition_zero (t : PushoutCocone f g) : t.ι.app WalkingSpan.zero = f ≫ t.inl := by
@@ -1013,6 +1029,26 @@ abbrev pullback.lift {W X Y Z : C} {f : X ⟶ Z} {g : Y ⟶ Z} [HasPullback f g]
 abbrev pushout.desc {W X Y Z : C} {f : X ⟶ Y} {g : X ⟶ Z} [HasPushout f g] (h : Y ⟶ W) (k : Z ⟶ W) (w : f ≫ h = g ≫ k) :
     pushout f g ⟶ W :=
   colimit.desc _ (PushoutCocone.mk h k w)
+
+@[simp]
+theorem PullbackCone.fst_colimit_cocone {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [HasLimit (cospan f g)] :
+    PullbackCone.fst (Limit.cone (cospan f g)) = pullback.fst :=
+  rfl
+
+@[simp]
+theorem PullbackCone.snd_colimit_cocone {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [HasLimit (cospan f g)] :
+    PullbackCone.snd (Limit.cone (cospan f g)) = pullback.snd :=
+  rfl
+
+@[simp]
+theorem PushoutCocone.inl_colimit_cocone {X Y Z : C} (f : Z ⟶ X) (g : Z ⟶ Y) [HasColimit (span f g)] :
+    PushoutCocone.inl (Colimit.cocone (span f g)) = pushout.inl :=
+  rfl
+
+@[simp]
+theorem PushoutCocone.inr_colimit_cocone {X Y Z : C} (f : Z ⟶ X) (g : Z ⟶ Y) [HasColimit (span f g)] :
+    PushoutCocone.inr (Colimit.cocone (span f g)) = pushout.inr :=
+  rfl
 
 @[simp, reassoc]
 theorem pullback.lift_fst {W X Y Z : C} {f : X ⟶ Z} {g : Y ⟶ Z} [HasPullback f g] (h : W ⟶ X) (k : W ⟶ Y)
@@ -2480,8 +2516,25 @@ def walkingCospanOpEquiv : walking_cospanᵒᵖ ≌ walking_span :=
 /-- Having wide pullback at any universe level implies having binary pullbacks. -/
 -- see Note [lower instance priority]
 instance (priority := 100) has_pullbacks_of_has_wide_pullbacks [HasWidePullbacks.{w} C] : HasPullbacks C := by
-  have := has_wide_pullbacks_shrink.{0, w} C
+  haveI := has_wide_pullbacks_shrink.{0, w} C
   infer_instance
+
+variable {C}
+
+/-- Given a morphism `f : X ⟶ Y`, we can take morphisms over `Y` to morphisms over `X` via
+pullbacks. This is right adjoint to `over.map` (TODO) -/
+@[simps (config := { rhsMd := semireducible, simpRhs := true }) obj_left obj_hom mapLeft]
+def baseChange [HasPullbacks C] {X Y : C} (f : X ⟶ Y) : Over Y ⥤ Over X where
+  obj := fun g => Over.mk (pullback.snd : pullback g.Hom f ⟶ _)
+  map := fun g₁ g₂ i =>
+    Over.homMk
+      (pullback.map _ _ _ _ i.left (𝟙 _) (𝟙 _)
+        (by
+          simp )
+        (by
+          simp ))
+      (by
+        simp )
 
 end CategoryTheory.Limits
 

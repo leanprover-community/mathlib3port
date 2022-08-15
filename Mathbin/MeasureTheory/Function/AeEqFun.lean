@@ -159,17 +159,17 @@ theorem coe_fn_mk (f : α → β) (hf) : (mk f hf : α →ₘ[μ] β) =ᵐ[μ] f
   apply (ae_strongly_measurable.ae_eq_mk _).symm.trans
   exact @Quotientₓ.mk_out' _ (μ.ae_eq_setoid β) (⟨f, hf⟩ : { f // ae_strongly_measurable f μ })
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction_on (f : α →ₘ[μ] β) {p : (α →ₘ[μ] β) → Prop} (H : ∀ f hf, p (mk f hf)) : p f :=
   Quotientₓ.induction_on' f <| Subtype.forall.2 H
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction_on₂ {α' β' : Type _} [MeasurableSpace α'] [TopologicalSpace β'] {μ' : Measure α'} (f : α →ₘ[μ] β)
     (f' : α' →ₘ[μ'] β') {p : (α →ₘ[μ] β) → (α' →ₘ[μ'] β') → Prop} (H : ∀ f hf f' hf', p (mk f hf) (mk f' hf')) :
     p f f' :=
   (induction_on f) fun f hf => induction_on f' <| H f hf
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction_on₃ {α' β' : Type _} [MeasurableSpace α'] [TopologicalSpace β'] {μ' : Measure α'} {α'' β'' : Type _}
     [MeasurableSpace α''] [TopologicalSpace β''] {μ'' : Measure α''} (f : α →ₘ[μ] β) (f' : α' →ₘ[μ'] β')
     (f'' : α'' →ₘ[μ''] β'') {p : (α →ₘ[μ] β) → (α' →ₘ[μ'] β') → (α'' →ₘ[μ''] β'') → Prop}

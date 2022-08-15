@@ -160,7 +160,7 @@ instance image_to_kernel_epi_of_epi_of_zero [HasImages V] [Epi f] :
           simp )) :=
   by
   simp only [← image_to_kernel_zero_right]
-  have := epi_image_of_epi f
+  haveI := epi_image_of_epi f
   rw [← image_subobject_arrow]
   refine' @epi_comp _ _ _ _ _ _ (epi_comp _ _) _ _
 
@@ -325,7 +325,7 @@ section
 variable {A B C : V} {f : A ⟶ B} {g : B ⟶ C} (w : f ≫ g = 0) {f' : A ⟶ B} {g' : B ⟶ C} (w' : f' ≫ g' = 0) [HasKernels V]
   [HasCokernels V] [HasImages V] [HasImageMaps V]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 /-- Custom tactic to golf and speedup boring proofs in `homology.congr`. -/
 private unsafe def aux_tac : tactic Unit :=
   sorry

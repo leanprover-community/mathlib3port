@@ -162,19 +162,20 @@ theorem sum_boxes_congr [Fintype ι] (f : ι →ᵇᵃ[I₀] M) (hI : ↑I ≤ I
   rcases hs _ (Or.inl rfl), hs _ (Or.inr rfl) with ⟨h₁, h₂⟩
   clear hs
   rw [h] at h₁
-  calc (∑ J in π₁.boxes, f J) = ∑ J in π₁.boxes, ∑ J' in (split_many J s).boxes, f J' :=
-      Finset.sum_congr rfl fun J hJ =>
-        (f.sum_partition_boxes _
-            (is_partition_split_many _ _)).symm _ = ∑ J in (π₁.bUnion fun J => split_many J s).boxes, f J :=
-      (sum_bUnion_boxes _ _ _).symm _ = ∑ J in (π₂.bUnion fun J => split_many J s).boxes, f J := by
-      rw [h₁, h₂]_ = ∑ J in π₂.boxes, ∑ J' in (split_many J s).boxes, f J' :=
-      sum_bUnion_boxes _ _ _ _ = ∑ J in π₂.boxes, f J :=
-      Finset.sum_congr rfl fun J hJ => f.sum_partition_boxes _ (is_partition_split_many _ _)
+  calc
+    (∑ J in π₁.boxes, f J) = ∑ J in π₁.boxes, ∑ J' in (split_many J s).boxes, f J' :=
+      Finset.sum_congr rfl fun J hJ => (f.sum_partition_boxes _ (is_partition_split_many _ _)).symm
+    _ = ∑ J in (π₁.bUnion fun J => split_many J s).boxes, f J := (sum_bUnion_boxes _ _ _).symm
+    _ = ∑ J in (π₂.bUnion fun J => split_many J s).boxes, f J := by
+      rw [h₁, h₂]
+    _ = ∑ J in π₂.boxes, ∑ J' in (split_many J s).boxes, f J' := sum_bUnion_boxes _ _ _
+    _ = ∑ J in π₂.boxes, f J := Finset.sum_congr rfl fun J hJ => f.sum_partition_boxes _ (is_partition_split_many _ _)
+    
   exacts[(WithTop.coe_le_coe.2 <| π₁.le_of_mem hJ).trans hI, (WithTop.coe_le_coe.2 <| π₂.le_of_mem hJ).trans hI]
 
 section ToSmul
 
-variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E]
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- If `f` is a box-additive map, then so is the map sending `I` to the scalar multiplication
 by `f I` as a continuous linear map from `E` to itself. -/

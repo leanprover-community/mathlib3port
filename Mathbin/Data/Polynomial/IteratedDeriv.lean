@@ -148,14 +148,14 @@ theorem coeff_iterated_deriv_as_prod_range :
   · simp
     
   intro m
-  calc (f.iterated_deriv k.succ).coeff m = (∏ i in range k, m + k.succ - i) • f.coeff (m + k.succ) * (m + 1) := by
-      rw [iterated_deriv_succ, coeff_derivative, ih m.succ, succ_add,
-        add_succ]_ = ((∏ i in range k, m + k.succ - i) * (m + 1)) • f.coeff (m + k.succ) :=
-      by
-      rw [← Nat.cast_add_one, ← nsmul_eq_mul', smul_smul,
-        mul_comm]_ = (∏ i in range k.succ, m + k.succ - i) • f.coeff (m + k.succ) :=
-      by
+  calc
+    (f.iterated_deriv k.succ).coeff m = (∏ i in range k, m + k.succ - i) • f.coeff (m + k.succ) * (m + 1) := by
+      rw [iterated_deriv_succ, coeff_derivative, ih m.succ, succ_add, add_succ]
+    _ = ((∏ i in range k, m + k.succ - i) * (m + 1)) • f.coeff (m + k.succ) := by
+      rw [← Nat.cast_add_one, ← nsmul_eq_mul', smul_smul, mul_comm]
+    _ = (∏ i in range k.succ, m + k.succ - i) • f.coeff (m + k.succ) := by
       rw [prod_range_succ, add_tsub_assoc_of_le k.le_succ, succ_sub le_rfl, tsub_self]
+    
 
 theorem iterated_deriv_eq_zero_of_nat_degree_lt (h : f.natDegree < n) : iteratedDeriv f n = 0 := by
   ext m
@@ -171,32 +171,32 @@ theorem iterated_deriv_mul :
     (p * q).iteratedDeriv n.succ =
         (∑ k : ℕ in range n.succ, n.choose k • (p.iterated_deriv (n - k) * q.iterated_deriv k)).derivative :=
       by
-      rw [iterated_deriv_succ,
-        IH]_ =
+      rw [iterated_deriv_succ, IH]
+    _ =
         (∑ k : ℕ in range n.succ, n.choose k • (p.iterated_deriv (n - k + 1) * q.iterated_deriv k)) +
           ∑ k : ℕ in range n.succ, n.choose k • (p.iterated_deriv (n - k) * q.iterated_deriv (k + 1)) :=
       by
-      simp_rw [derivative_sum, derivative_smul, derivative_mul, iterated_deriv_succ, smul_add,
-        sum_add_distrib]_ =
+      simp_rw [derivative_sum, derivative_smul, derivative_mul, iterated_deriv_succ, smul_add, sum_add_distrib]
+    _ =
         (∑ k : ℕ in range n.succ, n.choose k.succ • (p.iterated_deriv (n - k) * q.iterated_deriv (k + 1))) +
             1 • (p.iterated_deriv n.succ * q.iterated_deriv 0) +
           ∑ k : ℕ in range n.succ, n.choose k • (p.iterated_deriv (n - k) * q.iterated_deriv (k + 1)) :=
-      _ _ =
+      _
+    _ =
         ((∑ k : ℕ in range n.succ, n.choose k • (p.iterated_deriv (n - k) * q.iterated_deriv (k + 1))) +
             ∑ k : ℕ in range n.succ, n.choose k.succ • (p.iterated_deriv (n - k) * q.iterated_deriv (k + 1))) +
           1 • (p.iterated_deriv n.succ * q.iterated_deriv 0) :=
       by
-      rw [add_commₓ,
-        add_assocₓ]_ =
+      rw [add_commₓ, add_assocₓ]
+    _ =
         (∑ i : ℕ in range n.succ,
             (n + 1).choose (i + 1) • (p.iterated_deriv (n + 1 - (i + 1)) * q.iterated_deriv (i + 1))) +
           1 • (p.iterated_deriv n.succ * q.iterated_deriv 0) :=
       by
-      simp_rw [choose_succ_succ, succ_sub_succ, add_smul,
-        sum_add_distrib]_ =
-        ∑ k : ℕ in range n.succ.succ, n.succ.choose k • (p.iterated_deriv (n.succ - k) * q.iterated_deriv k) :=
-      by
+      simp_rw [choose_succ_succ, succ_sub_succ, add_smul, sum_add_distrib]
+    _ = ∑ k : ℕ in range n.succ.succ, n.succ.choose k • (p.iterated_deriv (n.succ - k) * q.iterated_deriv k) := by
       rw [sum_range_succ' _ n.succ, choose_zero_right, tsub_zero]
+    
   congr
   refine' (sum_range_succ' _ _).trans (congr_arg2ₓ (· + ·) _ _)
   · rw [sum_range_succ, Nat.choose_succ_self, zero_smul, add_zeroₓ]

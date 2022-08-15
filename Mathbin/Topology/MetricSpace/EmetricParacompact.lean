@@ -48,7 +48,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
   refine' ⟨fun ι s ho hcov => _⟩
   simp only [← Union_eq_univ_iff] at hcov
   -- choose a well founded order on `S`
-  let this : LinearOrderₓ ι := linearOrderOfSTO' WellOrderingRel
+  letI : LinearOrderₓ ι := linearOrderOfSTO' WellOrderingRel
   have wf : WellFounded ((· < ·) : ι → ι → Prop) := @IsWellOrder.wf ι WellOrderingRel _
   -- Let `ind x` be the minimal index `s : S` such that `x ∈ s`.
   set ind : α → ι := fun x => wf.min { i : ι | x ∈ s i } (hcov x)
@@ -111,7 +111,10 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
     rw [memD]
     rintro ⟨y, rfl, hsub, -, hyx⟩
     refine' hsub (lt_of_lt_of_leₓ hyx _)
-    calc 2⁻¹ ^ n = 1 * 2⁻¹ ^ n := (one_mulₓ _).symm _ ≤ 3 * 2⁻¹ ^ n := Ennreal.mul_le_mul _ le_rfl
+    calc
+      2⁻¹ ^ n = 1 * 2⁻¹ ^ n := (one_mulₓ _).symm
+      _ ≤ 3 * 2⁻¹ ^ n := Ennreal.mul_le_mul _ le_rfl
+      
     -- TODO: use `norm_num`
     have : ((1 : ℕ) : ℝ≥0∞) ≤ (3 : ℕ) :=
       Ennreal.coe_nat_le_coe_nat.2
@@ -146,15 +149,18 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
             linarith)
           i (hsub hz)
       apply this
-      calc edist z x ≤ edist y z + edist y x := edist_triangle_left _ _ _ _ < 2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1) :=
-          Ennreal.add_lt_add hz hyx _ ≤ 2⁻¹ ^ (k + 1) + 2⁻¹ ^ (k + 1) :=
+      calc
+        edist z x ≤ edist y z + edist y x := edist_triangle_left _ _ _
+        _ < 2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1) := Ennreal.add_lt_add hz hyx
+        _ ≤ 2⁻¹ ^ (k + 1) + 2⁻¹ ^ (k + 1) :=
           add_le_add
             (hpow_le <| by
               linarith)
             (hpow_le <| by
-              linarith)_ = 2⁻¹ ^ k :=
-          by
+              linarith)
+        _ = 2⁻¹ ^ k := by
           rw [← two_mul, h2pow]
+        
     -- For each `m ≤ n + k` there is at most one `j` such that `D m j ∩ B` is nonempty.
     have Hle : ∀, ∀ m ≤ n + k, ∀, Set.Subsingleton { j | (D m j ∩ B).Nonempty } := by
       rintro m hm j₁ ⟨y, hyD, hyB⟩ j₂ ⟨z, hzD, hzB⟩
@@ -164,15 +170,19 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
       rcases memD.1 hzD with ⟨z', rfl, -, -, hdistz⟩
       suffices : edist z' y' < 3 * 2⁻¹ ^ m
       exact nmem_of_lt_ind h (hsuby this)
-      calc edist z' y' ≤ edist z' x + edist x y' :=
-          edist_triangle _ _ _ _ ≤ edist z z' + edist z x + (edist y x + edist y y') :=
-          add_le_add (edist_triangle_left _ _ _)
-            (edist_triangle_left _ _ _)_ < 2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1) + (2⁻¹ ^ (n + k + 1) + 2⁻¹ ^ m) :=
-          by
-          apply_rules [Ennreal.add_lt_add]_ = 2 * (2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1)) := by
-          simp only [← two_mul, ← add_commₓ]_ ≤ 2 * (2⁻¹ ^ m + 2⁻¹ ^ (m + 1)) :=
-          Ennreal.mul_le_mul le_rfl <| add_le_add le_rfl <| hpow_le (add_le_add hm le_rfl)_ = 3 * 2⁻¹ ^ m := by
+      calc
+        edist z' y' ≤ edist z' x + edist x y' := edist_triangle _ _ _
+        _ ≤ edist z z' + edist z x + (edist y x + edist y y') :=
+          add_le_add (edist_triangle_left _ _ _) (edist_triangle_left _ _ _)
+        _ < 2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1) + (2⁻¹ ^ (n + k + 1) + 2⁻¹ ^ m) := by
+          apply_rules [Ennreal.add_lt_add]
+        _ = 2 * (2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1)) := by
+          simp only [← two_mul, ← add_commₓ]
+        _ ≤ 2 * (2⁻¹ ^ m + 2⁻¹ ^ (m + 1)) :=
+          Ennreal.mul_le_mul le_rfl <| add_le_add le_rfl <| hpow_le (add_le_add hm le_rfl)
+        _ = 3 * 2⁻¹ ^ m := by
           rw [mul_addₓ, h2pow, bit1, add_mulₓ, one_mulₓ]
+        
     -- Finally, we glue `Hgt` and `Hle`
     have : (⋃ (m ≤ n + k) (i ∈ { i : ι | (D m i ∩ B).Nonempty }), {(m, i)}).Finite :=
       (finite_le_nat _).bUnion' fun i hi => (Hle i hi).Finite.bUnion' fun _ _ => finite_singleton _

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Products
-import Mathbin.Topology.Sheaves.Sheaf
+import Mathbin.Topology.Sheaves.SheafCondition.Sites
 
 /-!
 # Checking the sheaf condition on the underlying presheaf of types.
@@ -148,12 +148,13 @@ See <https://stacks.math.columbia.edu/tag/0073>.
 In fact we prove a stronger version with arbitrary complete target category.
 -/
 theorem is_sheaf_iff_is_sheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F ⋙ G) := by
+  rw [presheaf.is_sheaf_iff_is_sheaf_equalizer_products, presheaf.is_sheaf_iff_is_sheaf_equalizer_products]
   constructor
   · intro S ι U
     -- We have that the sheaf condition fork for `F` is a limit fork,
     obtain ⟨t₁⟩ := S U
     -- and since `G` preserves limits, the image under `G` of this fork is a limit fork too.
-    let this := preserves_smallest_limits_of_preserves_limits G
+    letI := preserves_smallest_limits_of_preserves_limits G
     have t₂ := @preserves_limit.preserves _ _ _ _ _ _ _ G _ _ t₁
     -- As we established above, that image is just the sheaf condition fork
     -- for `F ⋙ G` postcomposed with some natural isomorphism,
@@ -173,7 +174,7 @@ theorem is_sheaf_iff_is_sheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F 
     suffices is_iso (G.map f) by
       skip
       -- we have that `f` itself is an isomorphism, since `G` reflects isomorphisms
-      have : is_iso f := is_iso_of_reflects_iso f G
+      haveI : is_iso f := is_iso_of_reflects_iso f G
       -- TODO package this up as a result elsewhere:
       apply is_limit.of_iso_limit (limit.is_limit _)
       apply iso.symm
@@ -190,7 +191,7 @@ theorem is_sheaf_iff_is_sheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F 
       let c := fork (F ⋙ G) U
       obtain ⟨hc⟩ := S U
       let d := G.map_cone (equalizer.fork (left_res F U) (right_res F U))
-      let this := preserves_smallest_limits_of_preserves_limits G
+      letI := preserves_smallest_limits_of_preserves_limits G
       have hd : is_limit d := preserves_limit.preserves (limit.is_limit _)
       -- Since both of these are limit cones
       -- (`c` by our hypothesis `S`, and `d` because `G` preserves limits),
@@ -213,7 +214,7 @@ theorem is_sheaf_iff_is_sheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F 
             simp )
       -- conclude that it is an isomorphism,
       -- just because it's a morphism between two limit cones.
-      have : is_iso f' := is_limit.hom_is_iso hc hd' f'
+      haveI : is_iso f' := is_limit.hom_is_iso hc hd' f'
       -- A cone morphism is an isomorphism exactly if the morphism between the cone points is,
       -- so we're done!
       exact is_iso.of_iso ((cones.forget _).mapIso (as_iso f'))

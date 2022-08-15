@@ -35,12 +35,12 @@ universe u v
 
 variable {α : Type u} {β : Type v}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`map_add] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`map_add] []
 /-- Predicate for maps which preserve an addition. -/
 structure IsAddHom {α β : Type _} [Add α] [Add β] (f : α → β) : Prop where
   map_add : ∀ x y, f (x + y) = f x + f y
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`map_mul] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`map_mul] []
 /-- Predicate for maps which preserve a multiplication. -/
 @[to_additive]
 structure IsMulHom {α β : Type _} [Mul α] [Mul β] (f : α → β) : Prop where
@@ -77,12 +77,12 @@ theorem inv {α β} [Mul α] [CommGroupₓ β] {f : α → β} (hf : IsMulHom f)
 
 end IsMulHom
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`map_zero] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`map_zero] []
 /-- Predicate for add_monoid homomorphisms (deprecated -- use the bundled `monoid_hom` version). -/
 structure IsAddMonoidHom [AddZeroClassₓ α] [AddZeroClassₓ β] (f : α → β) extends IsAddHom f : Prop where
   map_zero : f 0 = 0
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`map_one] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`map_one] []
 /-- Predicate for monoid homomorphisms (deprecated -- use the bundled `monoid_hom` version). -/
 @[to_additive]
 structure IsMonoidHom [MulOneClassₓ α] [MulOneClassₓ β] (f : α → β) extends IsMulHom f : Prop where

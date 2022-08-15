@@ -169,7 +169,7 @@ unsafe def funext (c : old_conv Unit) : old_conv Unit := fun r lhs => do
         let x ← intro1
         let c_result ← c r (b.instantiate_var x)
         let rhs := expr.lam n bi d (c_result.rhs.abstract x)
-        match c_result with
+        match (motive := _ → tactic (old_conv_result Unit)) c_result with
           | some pr => do
             let aux_pr := expr.lam n bi d (pr x)
             let new_pr ← mk_app `funext [lhs, rhs, aux_pr]
@@ -177,7 +177,7 @@ unsafe def funext (c : old_conv Unit) : old_conv Unit := fun r lhs => do
           | none => return ⟨(), rhs, none⟩
   return result
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `f_type
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `f_type
 unsafe def congr_core (c_f c_a : old_conv Unit) : old_conv Unit := fun r lhs => do
   guardₓ (r = `eq)
   let expr.app f a ← return lhs

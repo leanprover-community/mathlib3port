@@ -214,9 +214,9 @@ theorem exists_locally_constant {α : Type _} (f : LocallyConstant C.x α) :
         
     simp only [not_nonempty_iff, not_forall]
     intro h
-    have : ∀ j : J, Nonempty ((F ⋙ Profinite.toTop).obj j) := h
-    have : ∀ j : J, T2Space ((F ⋙ Profinite.toTop).obj j) := fun j => (inferInstance : T2Space (F.obj j))
-    have : ∀ j : J, CompactSpace ((F ⋙ Profinite.toTop).obj j) := fun j => (inferInstance : CompactSpace (F.obj j))
+    haveI : ∀ j : J, Nonempty ((F ⋙ Profinite.toTop).obj j) := h
+    haveI : ∀ j : J, T2Space ((F ⋙ Profinite.toTop).obj j) := fun j => (inferInstance : T2Space (F.obj j))
+    haveI : ∀ j : J, CompactSpace ((F ⋙ Profinite.toTop).obj j) := fun j => (inferInstance : CompactSpace (F.obj j))
     have cond := Top.nonempty_limit_cone_of_compact_t2_cofiltered_system (F ⋙ Profinite.toTop)
     suffices : Nonempty C.X
     exact IsEmpty.false (S.proj this.some)

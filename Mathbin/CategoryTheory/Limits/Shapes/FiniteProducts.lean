@@ -35,7 +35,7 @@ class HasFiniteProducts : Prop where
 
 instance has_limits_of_shape_discrete (J : Type) [Fintype J] [HasFiniteProducts C] : HasLimitsOfShape (Discrete J) C :=
   by
-  have := @has_finite_products.out C _ _ J
+  haveI := @has_finite_products.out C _ _ J
   infer_instance
 
 /-- If `C` has finite limits then it has finite products. -/
@@ -70,7 +70,7 @@ attribute [class] has_finite_coproducts
 
 instance has_colimits_of_shape_discrete (J : Type) [Fintype J] [HasFiniteCoproducts C] :
     HasColimitsOfShape (Discrete J) C := by
-  have := @has_finite_coproducts.out C _ _ J
+  haveI := @has_finite_coproducts.out C _ _ J
   infer_instance
 
 /-- If `C` has finite colimits then it has finite coproducts. -/

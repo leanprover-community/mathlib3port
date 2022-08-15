@@ -109,7 +109,7 @@ theorem MeasurableSet.Union [Encodable β] ⦃f : β → Set α⦄ (h : ∀ b, M
 theorem MeasurableSet.bUnion {f : β → Set α} {s : Set β} (hs : s.Countable) (h : ∀, ∀ b ∈ s, ∀, MeasurableSet (f b)) :
     MeasurableSet (⋃ b ∈ s, f b) := by
   rw [bUnion_eq_Union]
-  have := hs.to_encodable
+  haveI := hs.to_encodable
   exact
     MeasurableSet.Union
       (by
@@ -316,7 +316,7 @@ def generateFrom (s : Set (Set α)) : MeasurableSpace α where
 theorem measurable_set_generate_from {s : Set (Set α)} {t : Set α} (ht : t ∈ s) : @MeasurableSet _ (generateFrom s) t :=
   GenerateMeasurable.basic t ht
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem generate_from_induction (p : Set α → Prop) (C : Set (Set α)) (hC : ∀, ∀ t ∈ C, ∀, p t) (h_empty : p ∅)
     (h_compl : ∀ t, p t → p (tᶜ)) (h_Union : ∀ f : ℕ → Set α, (∀ n, p (f n)) → p (⋃ i, f i)) {s : Set α}
     (hs : measurable_set[generateFrom C] s) : p s := by

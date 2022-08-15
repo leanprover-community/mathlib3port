@@ -160,9 +160,12 @@ theorem MapFrobeniusPoly.key₂ {n i j : ℕ} (hi : i < n) (hj : j < p ^ (n - i)
       simpa only using hc
     rw [mul_addₓ, mul_oneₓ] at hc
     apply Nat.le_of_lt_succₓ
-    calc m < p ^ m := Nat.lt_pow_self hp.1.one_lt m _ ≤ j + 1 := by
+    calc
+      m < p ^ m := Nat.lt_pow_self hp.1.one_lt m
+      _ ≤ j + 1 := by
         rw [← tsub_eq_of_eq_add_rev hc]
         apply Nat.sub_leₓ
+      
     
 
 theorem map_frobenius_poly (n : ℕ) : MvPolynomial.map (Int.castRingHom ℚ) (frobeniusPoly p n) = frobeniusPolyRat p n :=
@@ -307,7 +310,10 @@ theorem coeff_frobenius_char_p (x : 𝕎 R) (n : ℕ) : coeff (frobenius x) n = 
   calc
     aeval (fun k => x.coeff k) (frobenius_poly p n) =
         aeval (fun k => x.coeff k) (MvPolynomial.map (Int.castRingHom (Zmod p)) (frobenius_poly p n)) :=
-      _ _ = aeval (fun k => x.coeff k) (X n ^ p : MvPolynomial ℕ (Zmod p)) := _ _ = x.coeff n ^ p := _
+      _
+    _ = aeval (fun k => x.coeff k) (X n ^ p : MvPolynomial ℕ (Zmod p)) := _
+    _ = x.coeff n ^ p := _
+    
   · conv_rhs => rw [aeval_eq_eval₂_hom, eval₂_hom_map_hom]
     apply eval₂_hom_congr (RingHom.ext_int _ _) rfl rfl
     

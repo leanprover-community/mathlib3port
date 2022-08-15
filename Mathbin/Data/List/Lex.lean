@@ -103,7 +103,7 @@ instance decidableRel [DecidableEq α] (r : α → α → Prop) [DecidableRel r]
       cases h
   | [], b :: l₂ => isTrue Lex.nil
   | a :: l₁, b :: l₂ => by
-    have := DecidableRel l₁ l₂
+    haveI := DecidableRel l₁ l₂
     refine' decidableOfIff (r a b ∨ a = b ∧ lex r l₁ l₂) ⟨fun h => _, fun h => _⟩
     · rcases h with (h | ⟨rfl, h⟩)
       · exact lex.rel h

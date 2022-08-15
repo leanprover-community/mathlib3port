@@ -106,14 +106,23 @@ theorem iterate_sup_le_sup_iff {α : Type _} [SemilatticeSup α] (f : α →o α
       induction' n with n ih <;> intro a₁ a₂
       · rfl
         
-      · calc (f^[n + 1]) (a₁⊔a₂) = (f^[n]) (f (a₁⊔a₂)) := Function.iterate_succ_apply f n _ _ ≤ (f^[n]) (f a₁⊔a₂) :=
-            f.mono.iterate n (h a₁ a₂)_ ≤ (f^[n]) (f a₁)⊔a₂ := ih _ _ _ = (f^[n + 1]) a₁⊔a₂ := by
+      · calc
+          (f^[n + 1]) (a₁⊔a₂) = (f^[n]) (f (a₁⊔a₂)) := Function.iterate_succ_apply f n _
+          _ ≤ (f^[n]) (f a₁⊔a₂) := f.mono.iterate n (h a₁ a₂)
+          _ ≤ (f^[n]) (f a₁)⊔a₂ := ih _ _
+          _ = (f^[n + 1]) a₁⊔a₂ := by
             rw [← Function.iterate_succ_apply]
+          
         
-    calc (f^[n₁ + n₂]) (a₁⊔a₂) = (f^[n₁]) ((f^[n₂]) (a₁⊔a₂)) :=
-        Function.iterate_add_apply f n₁ n₂ _ _ = (f^[n₁]) ((f^[n₂]) (a₂⊔a₁)) := by
-        rw [sup_comm]_ ≤ (f^[n₁]) ((f^[n₂]) a₂⊔a₁) := f.mono.iterate n₁ (h' n₂ _ _)_ = (f^[n₁]) (a₁⊔(f^[n₂]) a₂) := by
-        rw [sup_comm]_ ≤ (f^[n₁]) a₁⊔(f^[n₂]) a₂ := h' n₁ a₁ _
+    calc
+      (f^[n₁ + n₂]) (a₁⊔a₂) = (f^[n₁]) ((f^[n₂]) (a₁⊔a₂)) := Function.iterate_add_apply f n₁ n₂ _
+      _ = (f^[n₁]) ((f^[n₂]) (a₂⊔a₁)) := by
+        rw [sup_comm]
+      _ ≤ (f^[n₁]) ((f^[n₂]) a₂⊔a₁) := f.mono.iterate n₁ (h' n₂ _ _)
+      _ = (f^[n₁]) (a₁⊔(f^[n₂]) a₂) := by
+        rw [sup_comm]
+      _ ≤ (f^[n₁]) a₁⊔(f^[n₂]) a₂ := h' n₁ a₁ _
+      
     
 
 end Preorderₓ

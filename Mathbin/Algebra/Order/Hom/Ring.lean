@@ -43,9 +43,8 @@ structure OrderRingHom (α β : Type _) [NonAssocSemiringₓ α] [Preorderₓ α
   α →+* β where
   monotone' : Monotone to_fun
 
-/-- Reinterpret an ordered ring homomorphism as a ring homomorphism. -/
-add_decl_doc OrderRingHom.toRingHom
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident order_ring_hom.to_ring_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- mathport name: «expr →+*o »
 infixl:25 " →+*o " => OrderRingHom
 

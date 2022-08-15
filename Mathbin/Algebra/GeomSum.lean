@@ -352,13 +352,18 @@ theorem Nat.geom_sum_Ico_le {b : ℕ} (hb : 2 ≤ b) (a n : ℕ) : (∑ i in ico
     exact Nat.zero_leₓ _
     
   rw [← add_le_add_iff_left a]
-  calc (a + ∑ i : ℕ in Ico 1 n.succ, a / b ^ i) = a / b ^ 0 + ∑ i : ℕ in Ico 1 n.succ, a / b ^ i := by
-      rw [pow_zeroₓ, Nat.div_oneₓ]_ = ∑ i in range n.succ, a / b ^ i := by
+  calc
+    (a + ∑ i : ℕ in Ico 1 n.succ, a / b ^ i) = a / b ^ 0 + ∑ i : ℕ in Ico 1 n.succ, a / b ^ i := by
+      rw [pow_zeroₓ, Nat.div_oneₓ]
+    _ = ∑ i in range n.succ, a / b ^ i := by
       rw [range_eq_Ico, ← Nat.Ico_insert_succ_left (Nat.succ_posₓ _), sum_insert]
-      exact fun h => zero_lt_one.not_le (mem_Ico.1 h).1_ ≤ a * b / (b - 1) :=
-      Nat.geom_sum_le hb a _ _ = (a * 1 + a * (b - 1)) / (b - 1) := by
-      rw [← mul_addₓ, add_tsub_cancel_of_le (one_le_two.trans hb)]_ = a + a / (b - 1) := by
+      exact fun h => zero_lt_one.not_le (mem_Ico.1 h).1
+    _ ≤ a * b / (b - 1) := Nat.geom_sum_le hb a _
+    _ = (a * 1 + a * (b - 1)) / (b - 1) := by
+      rw [← mul_addₓ, add_tsub_cancel_of_le (one_le_two.trans hb)]
+    _ = a + a / (b - 1) := by
       rw [mul_oneₓ, Nat.add_mul_div_rightₓ _ _ (tsub_pos_of_lt hb), add_commₓ]
+    
 
 section Order
 

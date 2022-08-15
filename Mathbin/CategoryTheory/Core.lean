@@ -28,7 +28,7 @@ universe v₁ v₂ u₁ u₂
 /-- The core of a category C is the groupoid whose morphisms are all the
 isomorphisms of C. -/
 -- morphism levels before object levels. See note [category_theory universes].
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def Core (C : Type u₁) :=
   C
 

@@ -53,7 +53,7 @@ def ofEquiv (E : σ ≃ τ) : Ctop α σ → Ctop α τ
         simpa using h₃ (E.symm a) (E.symm b) x h }
 
 @[simp]
-theorem of_equiv_val (E : σ ≃ τ) (F : Ctop α σ) (a : τ) : F.ofEquiv E a = F (E.symm a) := by
+theorem of_equiv_val (E : σ ≃ τ) (F : Ctop α σ) (a : τ) : F.of_equiv E a = F (E.symm a) := by
   cases F <;> rfl
 
 end
@@ -63,11 +63,10 @@ def toTopsp (F : Ctop α σ) : TopologicalSpace α :=
   TopologicalSpace.generateFrom (Set.Range F.f)
 
 theorem to_topsp_is_topological_basis (F : Ctop α σ) :
-    @TopologicalSpace.IsTopologicalBasis _ F.toTopsp (Set.Range F.f) := by
-  let this := F.to_topsp <;>
-    exact
-      ⟨fun u ⟨a, e₁⟩ v ⟨b, e₂⟩ => e₁ ▸ e₂ ▸ fun x h => ⟨_, ⟨_, rfl⟩, F.inter_mem a b x h, F.inter_sub a b x h⟩,
-        eq_univ_iff_forall.2 fun x => ⟨_, ⟨_, rfl⟩, F.top_mem x⟩, rfl⟩
+    @TopologicalSpace.IsTopologicalBasis _ F.toTopsp (Set.Range F.f) :=
+  letI := F.to_topsp
+  ⟨fun u ⟨a, e₁⟩ v ⟨b, e₂⟩ => e₁ ▸ e₂ ▸ fun x h => ⟨_, ⟨_, rfl⟩, F.inter_mem a b x h, F.inter_sub a b x h⟩,
+    eq_univ_iff_forall.2 fun x => ⟨_, ⟨_, rfl⟩, F.top_mem x⟩, rfl⟩
 
 @[simp]
 theorem mem_nhds_to_topsp (F : Ctop α σ) {s : Set α} {a : α} : s ∈ @nhds _ F.toTopsp a ↔ ∃ b, a ∈ F b ∧ F b ⊆ s :=
@@ -108,7 +107,7 @@ theorem is_closed_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} :
     F.is_open_iff.trans <|
       forall_congrₓ fun a =>
         show (a ∉ s → ∃ b : F.σ, a ∈ F.f b ∧ ∀, ∀ z ∈ F.f b, ∀, z ∉ s) ↔ _ by
-          have := Classical.propDecidable <;>
+          haveI := Classical.propDecidable <;>
             rw [not_imp_comm] <;> simp [← not_exists, ← not_and, ← not_forall, ← and_comm]
 
 theorem mem_interior_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} {a : α} :
@@ -141,7 +140,7 @@ protected def id : Realizer α :=
       ⟨⟨t, o⟩, m, h⟩⟩
 
 def ofEquiv (F : Realizer α) (E : F.σ ≃ τ) : Realizer α :=
-  ⟨τ, F.f.ofEquiv E,
+  ⟨τ, F.f.of_equiv E,
     ext' fun a s =>
       F.mem_nhds.trans <|
         ⟨fun ⟨s, h⟩ =>
@@ -152,11 +151,11 @@ def ofEquiv (F : Realizer α) (E : F.σ ≃ τ) : Realizer α :=
             simpa using h⟩⟩⟩
 
 @[simp]
-theorem of_equiv_σ (F : Realizer α) (E : F.σ ≃ τ) : (F.ofEquiv E).σ = τ :=
+theorem of_equiv_σ (F : Realizer α) (E : F.σ ≃ τ) : (F.of_equiv E).σ = τ :=
   rfl
 
 @[simp]
-theorem of_equiv_F (F : Realizer α) (E : F.σ ≃ τ) (s : τ) : (F.ofEquiv E).f s = F.f (E.symm s) := by
+theorem of_equiv_F (F : Realizer α) (E : F.σ ≃ τ) (s : τ) : (F.of_equiv E).f s = F.f (E.symm s) := by
   delta' of_equiv <;> simp
 
 protected def nhds (F : Realizer α) (a : α) : (𝓝 a).Realizer :=

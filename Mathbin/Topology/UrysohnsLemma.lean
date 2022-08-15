@@ -168,9 +168,15 @@ theorem bdd_above_range_approx (c : CU X) (x : X) : BddAbove (range fun n => c.a
 theorem approx_le_approx_of_U_sub_C {c₁ c₂ : CU X} (h : c₁.U ⊆ c₂.c) (n₁ n₂ : ℕ) (x : X) :
     c₂.approx n₂ x ≤ c₁.approx n₁ x := by
   by_cases' hx : x ∈ c₁.U
-  · calc approx n₂ c₂ x = 0 := approx_of_mem_C _ _ (h hx)_ ≤ approx n₁ c₁ x := approx_nonneg _ _ _
+  · calc
+      approx n₂ c₂ x = 0 := approx_of_mem_C _ _ (h hx)
+      _ ≤ approx n₁ c₁ x := approx_nonneg _ _ _
+      
     
-  · calc approx n₂ c₂ x ≤ 1 := approx_le_one _ _ _ _ = approx n₁ c₁ x := (approx_of_nmem_U _ _ hx).symm
+  · calc
+      approx n₂ c₂ x ≤ 1 := approx_le_one _ _ _
+      _ = approx n₁ c₁ x := (approx_of_nmem_U _ _ hx).symm
+      
     
 
 theorem approx_mem_Icc_right_left (c : CU X) (n : ℕ) (x : X) :

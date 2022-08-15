@@ -147,7 +147,7 @@ theorem exact_of_image_eq_kernel {A B C : V} (f : A ⟶ B) (g : B ⟶ C) (p : im
     Exact f g :=
   { w := comp_eq_zero_of_image_eq_kernel f g p,
     Epi := by
-      have := image_to_kernel_is_iso_of_image_eq_kernel f g p
+      haveI := image_to_kernel_is_iso_of_image_eq_kernel f g p
       infer_instance }
 
 end
@@ -165,7 +165,7 @@ theorem exact_comp_hom_inv_comp (i : B ≅ D) (h : Exact f g) : Exact (f ≫ i.H
     ⟨by
       simp [← h.w], _⟩
   rw [image_to_kernel_comp_hom_inv_comp]
-  have := h.epi
+  haveI := h.epi
   infer_instance
 
 theorem exact_comp_inv_hom_comp (i : D ≅ B) (h : Exact f g) : Exact (f ≫ i.inv) (i.Hom ≫ g) :=
@@ -205,7 +205,7 @@ theorem exact_comp_mono_iff [Mono h] : Exact f (g ≫ h) ↔ Exact f g := by
         _⟩,
       fun h => exact_comp_mono h⟩
   rw [← (iso.eq_comp_inv _).1 (image_to_kernel_comp_mono _ _ h hfg.1)]
-  have := hfg.2
+  haveI := hfg.2
   infer_instance
 
 @[simp]
@@ -329,7 +329,7 @@ theorem epi_iff_exact_zero_right [HasEqualizers V] {A B : V} (f : A ⟶ B) : Epi
     rw [category.assoc, is_iso.inv_hom_id, category.comp_id] at e₂
     rw [← image_subobject_arrow] at e₂
     skip
-    have : epi (image.ι f) := epi_of_epi (image_subobject_iso f).Hom (image.ι f)
+    haveI : epi (image.ι f) := epi_of_epi (image_subobject_iso f).Hom (image.ι f)
     apply epi_of_epi_image⟩
 
 end

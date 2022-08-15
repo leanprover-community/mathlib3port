@@ -32,11 +32,13 @@ theorem integral_sin_pow_div_tendsto_one :
           (∫ x in 0 ..π, sin x ^ (2 * n.succ + 1)) / ∫ x in 0 ..π, sin x ^ (2 * n + 1) :=
         by
         refine' div_le_div (integral_sin_pow_pos _).le le_rfl (integral_sin_pow_pos _) _
-        convert integral_sin_pow_succ_le (2 * n + 1) using 1_ = 2 * ↑n.succ / (2 * ↑n.succ + 1) := by
+        convert integral_sin_pow_succ_le (2 * n + 1) using 1
+      _ = 2 * ↑n.succ / (2 * ↑n.succ + 1) := by
         rw [div_eq_iff (integral_sin_pow_pos (2 * n + 1)).ne']
         convert integral_sin_pow (2 * n + 1)
         simp' with field_simps
         norm_cast
+      
   refine' tendsto_of_tendsto_of_tendsto_of_le_of_le _ _ (fun n => (h₄ n).le) fun n => h₃ n
   · refine' metric.tendsto_at_top.mpr fun ε hε => ⟨⌈1 / ε⌉₊, fun n hn => _⟩
     have h : (2 : ℝ) * n / (2 * n + 1) - 1 = -1 / (2 * n + 1) := by
@@ -51,10 +53,14 @@ theorem integral_sin_pow_div_tendsto_one :
       norm_cast
       norm_num
     rw [dist_eq, h, abs_div, abs_neg, abs_one, abs_of_pos hpos, one_div_lt hpos hε]
-    calc 1 / ε ≤ ⌈1 / ε⌉₊ := Nat.le_ceil _ _ ≤ n := by
-        exact_mod_cast hn.le _ < 2 * n + 1 := by
+    calc
+      1 / ε ≤ ⌈1 / ε⌉₊ := Nat.le_ceil _
+      _ ≤ n := by
+        exact_mod_cast hn.le
+      _ < 2 * n + 1 := by
         norm_cast
         linarith
+      
     
   · exact tendsto_const_nhds
     
@@ -82,7 +88,7 @@ theorem tendsto_prod_pi_div_two :
     · simp_rw
         [mul_inv_cancel_left₀
           (show π / 2 ≠ 0 by
-            norm_num [← pi_ne_zero])]
+            norm_num[← pi_ne_zero])]
       
     · rw [mul_oneₓ]
       

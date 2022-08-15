@@ -146,7 +146,7 @@ theorem noncomm_prod_cons' (s : Multiset α) (a : α) (comm : ∀, ∀ x ∈ a :
       apply comm <;> simp
       
     · intro x hx y hy
-      simp only [← quot_mk_to_coe, ← List.mem_cons_iff, ← mem_coe, ← cons_coe] at hx hy
+      simp only [← quot_mk_to_coe, ← List.mem_cons_iffₓ, ← mem_coe, ← cons_coe] at hx hy
       apply comm
       · cases hx <;> simp [← hx]
         

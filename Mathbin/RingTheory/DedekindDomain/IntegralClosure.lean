@@ -98,11 +98,11 @@ variable (A) (K)
 
 include K
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y «expr ≠ » (0 : A))
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y «expr ≠ » (0 : A))
 /-- Send a set of `x`'es in a finite extension `L` of the fraction field of `R`
 to `(y : R) • x ∈ integral_closure R L`. -/
 theorem exists_integral_multiples (s : Finset L) : ∃ (y : _)(_ : y ≠ (0 : A)), ∀, ∀ x ∈ s, ∀, IsIntegral A (y • x) := by
-  have := Classical.decEq L
+  haveI := Classical.decEq L
   refine' s.induction _ _
   · use 1, one_ne_zero
     rintro x ⟨⟩
@@ -130,8 +130,8 @@ variable (L)
 /-- If `L` is a finite extension of `K = Frac(A)`,
 then `L` has a basis over `A` consisting of integral elements. -/
 theorem FiniteDimensional.exists_is_basis_integral : ∃ (s : Finset L)(b : Basis s K L), ∀ x, IsIntegral A (b x) := by
-  let this := Classical.decEq L
-  let this : IsNoetherian K L := IsNoetherian.iff_fg.2 inferInstance
+  letI := Classical.decEq L
+  letI : IsNoetherian K L := IsNoetherian.iff_fg.2 inferInstance
   let s' := IsNoetherian.finsetBasisIndex K L
   let bs' := IsNoetherian.finsetBasis K L
   obtain ⟨y, hy, his'⟩ := exists_integral_multiples A K (finset.univ.image bs')
@@ -165,10 +165,10 @@ include L
 integrally closed and Noetherian, the integral closure `C` of `A` in `L` is
 Noetherian over `A`. -/
 theorem IsIntegralClosure.is_noetherian [IsIntegrallyClosed A] [IsNoetherianRing A] : IsNoetherian A C := by
-  have := Classical.decEq L
+  haveI := Classical.decEq L
   obtain ⟨s, b, hb_int⟩ := FiniteDimensional.exists_is_basis_integral A K L
   let b' := (trace_form K L).dualBasis (trace_form_nondegenerate K L) b
-  let this := is_noetherian_span_of_finite A (Set.finite_range b')
+  letI := is_noetherian_span_of_finite A (Set.finite_range b')
   let f : C →ₗ[A] Submodule.span A (Set.Range b') :=
     (Submodule.ofLe (IsIntegralClosure.range_le_span_dual_basis C b hb_int)).comp
       ((Algebra.linearMap C L).restrictScalars A).range_restrict
@@ -201,7 +201,7 @@ Can't be an instance since `A`, `K` or `L` can't be inferred. See also the insta
 and `C := integral_closure A L`.
 -/
 theorem IsIntegralClosure.is_dedekind_domain [h : IsDedekindDomain A] : IsDedekindDomain C := by
-  have : IsFractionRing C L := IsIntegralClosure.is_fraction_ring_of_finite_extension A K L C
+  haveI : IsFractionRing C L := IsIntegralClosure.is_fraction_ring_of_finite_extension A K L C
   exact
     ⟨IsIntegralClosure.is_noetherian_ring A K L C, h.dimension_le_one.is_integral_closure _ L _,
       (is_integrally_closed_iff L).mpr fun x hx =>

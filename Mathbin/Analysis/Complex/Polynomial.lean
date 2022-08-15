@@ -36,9 +36,8 @@ theorem exists_root {f : Polynomial ℂ} (hf : 0 < degree f) : ∃ z : ℂ, IsRo
       let g := (f - c (f.eval z₀)) /ₘ (X - c z₀) ^ n
       have hg0 : g.eval z₀ ≠ 0 := eval_div_by_monic_pow_root_multiplicity_ne_zero _ hfX
       have hg : g * (X - c z₀) ^ n = f - c (f.eval z₀) := div_by_monic_mul_pow_root_multiplicity_eq _ _
-      have hn0 : 0 < n :=
-        Nat.pos_of_ne_zeroₓ fun hn0 => by
-          simpa [← g, ← hn0] using hg0
+      have hn0 : n ≠ 0 := fun hn0 => by
+        simpa [← g, ← hn0] using hg0
       let ⟨δ', hδ'₁, hδ'₂⟩ := continuous_iff.1 (Polynomial.continuous g) z₀ (g.eval z₀).abs (Complex.abs_pos.2 hg0)
       let δ := min (min (δ' / 2) 1) ((f.eval z₀).abs / (g.eval z₀).abs / 2)
       have hf0' : 0 < (f.eval z₀).abs := Complex.abs_pos.2 hf0
@@ -68,8 +67,7 @@ theorem exists_root {f : Polynomial ℂ} (hf : 0 < degree f) : ∃ z : ℂ, IsRo
         (div_lt_one hf0').2 <|
           (lt_div_iff' hg0').1 <|
             calc
-              δ ^ n ≤ δ ^ 1 := pow_le_pow_of_le_one (le_of_ltₓ hδ0) hδ1 hn0
-              _ = δ := pow_oneₓ _
+              δ ^ n ≤ δ := pow_le_of_le_one (le_of_ltₓ hδ0) hδ1 hn0
               _ ≤ (f.eval z₀).abs / (g.eval z₀).abs / 2 := min_le_rightₓ _ _
               _ < _ := half_lt_self (div_pos hf0' hg0')
               
@@ -91,7 +89,7 @@ theorem exists_root {f : Polynomial ℂ} (hf : 0 < degree f) : ∃ z : ℂ, IsRo
       have hz'z₀ : abs (z' - z₀) = δ := by
         simp [← z', ← mul_assoc, ← mul_left_commₓ _ (_ ^ n), ← mul_comm _ (_ ^ n), ← mul_comm (eval z₀ f).abs, ←
           _root_.mul_div_cancel _ hef0, ← of_real_mul, ← neg_mul, ← neg_div, ← IsAbsoluteValue.abv_pow Complex.abs, ←
-          Complex.abs_of_nonneg (le_of_ltₓ hδ0), ← Real.pow_nat_rpow_nat_inv (le_of_ltₓ hδ0) hn0]
+          Complex.abs_of_nonneg hδ0.le, ← Real.pow_nat_rpow_nat_inv hδ0.le hn0]
       have hF₃ : (f.eval z' - F.eval z').abs < (g.eval z₀).abs * δ ^ n :=
         calc
           (f.eval z' - F.eval z').abs = (g.eval z' - g.eval z₀).abs * (z' - z₀).abs ^ n := by

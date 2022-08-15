@@ -31,8 +31,8 @@ open Filter Set
 
 open TopologicalSpace Filter BigOperators
 
-variable {E F : Type _} [NormedGroup E] [NormedSpace ℝ E] [CompleteSpace E] [NormedGroup F] [NormedSpace ℝ F]
-  [CompleteSpace F] {f : E → F} {φ : E → ℝ} {x₀ : E} {f' : E →L[ℝ] F} {φ' : E →L[ℝ] ℝ}
+variable {E F : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E] [NormedAddCommGroup F]
+  [NormedSpace ℝ F] [CompleteSpace F] {f : E → F} {φ : E → ℝ} {x₀ : E} {f' : E →L[ℝ] F} {φ' : E →L[ℝ] ℝ}
 
 /-- Lagrange multipliers theorem: if `φ : E → ℝ` has a local extremum on the set `{x | f x = f x₀}`
 at `x₀`, both `f : E → F` and `φ` are strictly differentiable at `x₀`, and the codomain of `f` is
@@ -101,7 +101,7 @@ theorem IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at {ι : Type _} [
     {f' : ι → E →L[ℝ] ℝ} (hextr : IsLocalExtrOn φ { x | ∀ i, f i x = f i x₀ } x₀)
     (hf' : ∀ i, HasStrictFderivAt (f i) (f' i) x₀) (hφ' : HasStrictFderivAt φ φ' x₀) :
     ∃ (Λ : ι → ℝ)(Λ₀ : ℝ), (Λ, Λ₀) ≠ 0 ∧ (∑ i, Λ i • f' i) + Λ₀ • φ' = 0 := by
-  let this := Classical.decEq ι
+  letI := Classical.decEq ι
   replace hextr : IsLocalExtrOn φ { x | (fun i => f i x) = fun i => f i x₀ } x₀
   · simpa only [← Function.funext_iffₓ] using hextr
     

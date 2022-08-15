@@ -83,7 +83,7 @@ variable [Fintype ι] [Fintype ι']
 theorem IsCountablySpanning.pi {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCountablySpanning (C i)) :
     IsCountablySpanning (pi Univ '' pi Univ C) := by
   choose s h1s h2s using hC
-  have := Fintype.toEncodable ι
+  haveI := Fintype.toEncodable ι
   let e : ℕ → ι → ℕ := fun n => (decode (ι → ℕ) n).iget
   refine' ⟨fun n => pi univ fun i => s i (e n i), fun n => mem_image_of_mem _ fun i _ => h1s i _, _⟩
   simp_rw [(surjective_decode_iget (ι → ℕ)).Union_comp fun x => pi univ fun i => s i (x i), Union_univ_pi s, h2s,
@@ -93,7 +93,7 @@ theorem IsCountablySpanning.pi {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCoun
   are countably spanning. -/
 theorem generate_from_pi_eq {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCountablySpanning (C i)) :
     (@MeasurableSpace.pi _ _ fun i => generateFrom (C i)) = generateFrom (pi Univ '' pi Univ C) := by
-  have := Fintype.toEncodable ι
+  haveI := Fintype.toEncodable ι
   apply le_antisymmₓ
   · refine' supr_le _
     intro i
@@ -320,7 +320,7 @@ theorem pi_pi_aux [∀ i, SigmaFinite (μ i)] (s : ∀ i, Set (α i)) (hs : ∀ 
   · rw [measure.pi, to_measure_apply _ _ (MeasurableSet.pi_fintype fun i _ => hs i)]
     apply outer_measure.pi_pi_le
     
-  · have : Encodable ι := Fintype.toEncodable ι
+  · haveI : Encodable ι := Fintype.toEncodable ι
     rw [← pi'_pi μ s]
     simp_rw [← pi'_pi μ s, measure.pi, to_measure_apply _ _ (MeasurableSet.pi_fintype fun i _ => hs i), ←
       to_outer_measure_apply]
@@ -338,8 +338,8 @@ variable {μ}
 /-- `measure.pi μ` has finite spanning sets in rectangles of finite spanning sets. -/
 def FiniteSpanningSetsIn.pi {C : ∀ i, Set (Set (α i))} (hμ : ∀ i, (μ i).FiniteSpanningSetsIn (C i)) :
     (Measure.pi μ).FiniteSpanningSetsIn (pi Univ '' pi Univ C) := by
-  have := fun i => (hμ i).SigmaFinite
-  have := Fintype.toEncodable ι
+  haveI := fun i => (hμ i).SigmaFinite
+  haveI := Fintype.toEncodable ι
   refine'
       ⟨fun n => pi univ fun i => (hμ i).Set ((decode (ι → ℕ) n).iget i), fun n => _, fun n => _,
         _⟩ <;>-- TODO (kmill) If this let comes before the refine, while the noncomputability checker
@@ -352,10 +352,12 @@ def FiniteSpanningSetsIn.pi {C : ∀ i, Set (Set (α i))} (hμ : ∀ i, (μ i).F
   · calc
       measure.pi μ (pi univ fun i => (hμ i).Set (e n i)) ≤
           measure.pi μ (pi univ fun i => to_measurable (μ i) ((hμ i).Set (e n i))) :=
-        measure_mono
-          (pi_mono fun i hi => subset_to_measurable _ _)_ = ∏ i, μ i (to_measurable (μ i) ((hμ i).Set (e n i))) :=
-        pi_pi_aux μ _ fun i => measurable_set_to_measurable _ _ _ = ∏ i, μ i ((hμ i).Set (e n i)) := by
-        simp only [← measure_to_measurable]_ < ∞ := Ennreal.prod_lt_top fun i hi => ((hμ i).Finite _).Ne
+        measure_mono (pi_mono fun i hi => subset_to_measurable _ _)
+      _ = ∏ i, μ i (to_measurable (μ i) ((hμ i).Set (e n i))) := pi_pi_aux μ _ fun i => measurable_set_to_measurable _ _
+      _ = ∏ i, μ i ((hμ i).Set (e n i)) := by
+        simp only [← measure_to_measurable]
+      _ < ∞ := Ennreal.prod_lt_top fun i hi => ((hμ i).Finite _).Ne
+      
     
   · simp_rw [(surjective_decode_iget (ι → ℕ)).Union_comp fun x => pi univ fun i => (hμ i).Set (x i),
       Union_univ_pi fun i => (hμ i).Set, (hμ _).spanning, Set.pi_univ]
@@ -375,7 +377,7 @@ theorem pi_eq_generate_from {C : ∀ i, Set (Set (α i))} (hC : ∀ i, generateF
       (IsPiSystem.pi h2C) _
   rintro _ ⟨s, hs, rfl⟩
   rw [mem_univ_pi] at hs
-  have := fun i => (h3C i).SigmaFinite
+  haveI := fun i => (h3C i).SigmaFinite
   simp_rw [h₁ s hs, pi_pi_aux μ s fun i => h4C i _ (hs i)]
 
 variable [∀ i, SigmaFinite (μ i)]
@@ -394,7 +396,7 @@ theorem pi'_eq_pi [Encodable ι] : pi' μ = Measure.pi μ :=
 
 @[simp]
 theorem pi_pi (s : ∀ i, Set (α i)) : Measure.pi μ (pi Univ s) = ∏ i, μ i (s i) := by
-  have : Encodable ι := Fintype.toEncodable ι
+  haveI : Encodable ι := Fintype.toEncodable ι
   rw [← pi'_eq_pi, pi'_pi]
 
 theorem pi_univ : Measure.pi μ Univ = ∏ i, μ i Univ := by
@@ -413,7 +415,7 @@ instance pi.sigma_finite : SigmaFinite (Measure.pi μ) :=
 
 theorem pi_of_empty {α : Type _} [IsEmpty α] {β : α → Type _} {m : ∀ a, MeasurableSpace (β a)}
     (μ : ∀ a : α, Measure (β a)) (x : ∀ a, β a := isEmptyElim) : Measure.pi μ = dirac x := by
-  have : ∀ a, sigma_finite (μ a) := isEmptyElim
+  haveI : ∀ a, sigma_finite (μ a) := isEmptyElim
   refine' pi_eq fun s hs => _
   rw [Fintype.prod_empty, dirac_apply_of_mem]
   exact isEmptyElim
@@ -662,7 +664,7 @@ theorem volume_preserving_pi_fin_two (α : Finₓ 2 → Type u) [∀ i, MeasureS
 
 theorem measure_preserving_fin_two_arrow_vec {α : Type u} {m : MeasurableSpace α} (μ ν : Measure α) [SigmaFinite μ]
     [SigmaFinite ν] : MeasurePreserving MeasurableEquiv.finTwoArrow (Measure.pi ![μ, ν]) (μ.Prod ν) := by
-  have : ∀ i, sigma_finite (![μ, ν] i) := Finₓ.forall_fin_two.2 ⟨‹_›, ‹_›⟩
+  haveI : ∀ i, sigma_finite (![μ, ν] i) := Finₓ.forall_fin_two.2 ⟨‹_›, ‹_›⟩
   exact measure_preserving_pi_fin_two _
 
 theorem measure_preserving_fin_two_arrow {α : Type u} {m : MeasurableSpace α} (μ : Measure α) [SigmaFinite μ] :

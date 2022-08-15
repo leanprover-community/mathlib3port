@@ -13,8 +13,8 @@ In this file, we define the relation `is_equivalent l u v`, which means that `u-
 `v` along the filter `l`.
 
 Unlike `is_[oO]` relations, this one requires `u` and `v` to have the same codomain `β`. While the
-definition only requires `β` to be a `normed_group`, most interesting properties require it to be a
-`normed_field`.
+definition only requires `β` to be a `normed_add_comm_group`, most interesting properties require it
+to be a `normed_field`.
 
 ## Notations
 
@@ -23,7 +23,7 @@ We introduce the notation `u ~[l] v := is_equivalent l u v`, which you can use b
 
 ## Main results
 
-If `β` is a `normed_group` :
+If `β` is a `normed_add_comm_group` :
 
 - `_ ~[l] _` is an equivalence relation
 - Equivalent statements for `u ~[l] const _ c` :
@@ -61,9 +61,9 @@ open Filter Function
 
 open TopologicalSpace
 
-section NormedGroup
+section NormedAddCommGroup
 
-variable {α β : Type _} [NormedGroup β]
+variable {α β : Type _} [NormedAddCommGroup β]
 
 /-- Two functions `u` and `v` are said to be asymptotically equivalent along a filter `l` when
     `u x - v x = o(v x)` as x converges along `l`. -/
@@ -164,7 +164,7 @@ theorem IsEquivalent.neg (huv : u ~[l] v) : (fun x => -u x) ~[l] fun x => -v x :
   ext
   simp
 
-end NormedGroup
+end NormedAddCommGroup
 
 open Asymptotics
 
@@ -218,8 +218,8 @@ end NormedField
 
 section Smul
 
-theorem IsEquivalent.smul {α E 𝕜 : Type _} [NormedField 𝕜] [NormedGroup E] [NormedSpace 𝕜 E] {a b : α → 𝕜} {u v : α → E}
-    {l : Filter α} (hab : a ~[l] b) (huv : u ~[l] v) : (fun x => a x • u x) ~[l] fun x => b x • v x := by
+theorem IsEquivalent.smul {α E 𝕜 : Type _} [NormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] {a b : α → 𝕜}
+    {u v : α → E} {l : Filter α} (hab : a ~[l] b) (huv : u ~[l] v) : (fun x => a x • u x) ~[l] fun x => b x • v x := by
   rcases hab.exists_eq_mul with ⟨φ, hφ, habφ⟩
   have : ((fun x : α => a x • u x) - fun x : α => b x • v x) =ᶠ[l] fun x => b x • (φ x • u x - v x) := by
     convert (habφ.comp₂ (· • ·) <| eventually_eq.refl _ u).sub (eventually_eq.refl _ fun x => b x • v x)
@@ -256,12 +256,17 @@ theorem IsEquivalent.smul {α E 𝕜 : Type _} [NormedField 𝕜] [NormedGroup E
         field_simp [← hC.ne.symm]
         ring
       
-  calc ∥((fun x : α => φ x • u x) - v) x∥ = ∥(φ x - 1) • u x + (u x - v x)∥ := by
-      simp [← sub_smul, ← sub_add]_ ≤ ∥(φ x - 1) • u x∥ + ∥u x - v x∥ :=
-      norm_add_le _ _ _ = ∥φ x - 1∥ * ∥u x∥ + ∥u x - v x∥ := by
-      rw [norm_smul]_ ≤ c / 2 * ∥v x∥ + ∥u x - v x∥ := add_le_add_right key _ _ ≤ c / 2 * ∥v x∥ + c / 2 * ∥v x∥ :=
-      add_le_add_left huvx _ _ = c * ∥v x∥ := by
+  calc
+    ∥((fun x : α => φ x • u x) - v) x∥ = ∥(φ x - 1) • u x + (u x - v x)∥ := by
+      simp [← sub_smul, ← sub_add]
+    _ ≤ ∥(φ x - 1) • u x∥ + ∥u x - v x∥ := norm_add_le _ _
+    _ = ∥φ x - 1∥ * ∥u x∥ + ∥u x - v x∥ := by
+      rw [norm_smul]
+    _ ≤ c / 2 * ∥v x∥ + ∥u x - v x∥ := add_le_add_right key _
+    _ ≤ c / 2 * ∥v x∥ + c / 2 * ∥v x∥ := add_le_add_left huvx _
+    _ = c * ∥v x∥ := by
       ring
+    
 
 end Smul
 
@@ -319,7 +324,7 @@ open Filter Asymptotics
 
 open Asymptotics
 
-variable {α β : Type _} [NormedGroup β]
+variable {α β : Type _} [NormedAddCommGroup β]
 
 theorem Filter.EventuallyEq.is_equivalent {u v : α → β} {l : Filter α} (h : u =ᶠ[l] v) : u ~[l] v :=
   IsEquivalent.congr_right (is_o_refl_left _ _) h

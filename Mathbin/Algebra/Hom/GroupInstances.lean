@@ -87,8 +87,22 @@ instance [AddCommMonoidₓ M] : Semiringₓ (AddMonoidₓ.End M) :=
     nat_cast_zero := AddMonoidₓ.nsmul_zero' _,
     nat_cast_succ := fun n => (AddMonoidₓ.nsmul_succ' n 1).trans (add_commₓ _ _) }
 
+/-- See also `add_monoid.End.nat_cast_def`. -/
+@[simp]
+theorem AddMonoidₓ.End.nat_cast_apply [AddCommMonoidₓ M] (n : ℕ) (m : M) : (↑n : AddMonoidₓ.End M) m = n • m :=
+  rfl
+
+instance [AddCommGroupₓ M] : AddCommGroupₓ (AddMonoidₓ.End M) :=
+  AddMonoidHom.addCommGroup
+
 instance [AddCommGroupₓ M] : Ringₓ (AddMonoidₓ.End M) :=
-  { AddMonoidₓ.End.semiring, AddMonoidHom.addCommGroup with }
+  { AddMonoidₓ.End.semiring, AddMonoidHom.addCommGroup with intCast := fun z => z • 1,
+    int_cast_of_nat := of_nat_zsmul _, int_cast_neg_succ_of_nat := zsmul_neg_succ_of_nat _ }
+
+/-- See also `add_monoid.End.int_cast_def`. -/
+@[simp]
+theorem AddMonoidₓ.End.int_cast_apply [AddCommGroupₓ M] (z : ℤ) (m : M) : (↑z : AddMonoidₓ.End M) m = z • m :=
+  rfl
 
 /-!
 ### Morphisms of morphisms
@@ -225,7 +239,8 @@ variable {R S : Type _} [NonUnitalNonAssocSemiringₓ R] [NonUnitalNonAssocSemir
 
 This is a more-strongly bundled version of `add_monoid_hom.mul_left` and `add_monoid_hom.mul_right`.
 
-A stronger version of this exists for algebras as `algebra.lmul`.
+Stronger versions of this exists for algebras as `linear_map.mul`, `non_unital_alg_hom.mul`
+and `algebra.lmul`.
 -/
 def AddMonoidHom.mul : R →+ R →+ R where
   toFun := AddMonoidHom.mulLeft

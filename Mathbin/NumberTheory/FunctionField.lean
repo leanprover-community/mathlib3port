@@ -241,7 +241,7 @@ def FqtInfty :=
   @UniformSpace.Completion (Ratfunc Fq) <| (inftyValuedFqt Fq).toUniformSpace
 
 instance : Field (FqtInfty Fq) := by
-  let this := infty_valued_Fqt Fq
+  letI := infty_valued_Fqt Fq
   exact UniformSpace.Completion.field
 
 instance : Inhabited (FqtInfty Fq) :=

@@ -71,7 +71,7 @@ theorem ContDiffAt.real_of_complex {n : WithTop ℕ} (h : ContDiffAt ℂ n e z) 
 theorem ContDiff.real_of_complex {n : WithTop ℕ} (h : ContDiff ℂ n e) : ContDiff ℝ n fun x : ℝ => (e x).re :=
   cont_diff_iff_cont_diff_at.2 fun x => h.ContDiffAt.real_of_complex
 
-variable {E : Type _} [NormedGroup E] [NormedSpace ℂ E]
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
 theorem HasStrictDerivAt.complex_to_real_fderiv' {f : ℂ → E} {x : ℂ} {f' : E} (h : HasStrictDerivAt f f' x) :
     HasStrictFderivAt f (reClm.smul_right f' + I • imClm.smul_right f') x := by
@@ -108,7 +108,7 @@ open Complex ContinuousLinearMap
 
 open ComplexConjugate
 
-variable {E : Type _} [NormedGroup E] [NormedSpace ℂ E] {z : ℂ} {f : ℂ → E}
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E] {z : ℂ} {f : ℂ → E}
 
 /-- A real differentiable function of the complex plane into some complex normed space `E` is
     conformal at a point `z` if it is holomorphic at that point with a nonvanishing differential.

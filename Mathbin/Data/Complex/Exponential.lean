@@ -58,11 +58,12 @@ theorem is_cau_of_decreasing_bounded (f : ℕ → α) {a : α} {m : ℕ} (ham : 
   intro j hj
   have hfij : f j ≤ f i := (Nat.rel_of_forall_rel_succ_of_le_of_le (· ≥ ·) hnm hi.1 hj).le
   rw [abs_of_nonpos (sub_nonpos.2 hfij), neg_sub, sub_lt_iff_lt_add']
-  calc f i ≤ a - Nat.pred l • ε := hi.2_ = a - l • ε + ε := by
-      conv =>
-        rhs rw [← Nat.succ_pred_eq_of_posₓ (Nat.pos_of_ne_zeroₓ hl0), succ_nsmul', sub_add,
-          add_sub_cancel]_ < f j + ε :=
-      add_lt_add_right (hl j (le_transₓ hi.1 hj)) _
+  calc
+    f i ≤ a - Nat.pred l • ε := hi.2
+    _ = a - l • ε + ε := by
+      conv => rhs rw [← Nat.succ_pred_eq_of_posₓ (Nat.pos_of_ne_zeroₓ hl0), succ_nsmul', sub_add, add_sub_cancel]
+    _ < f j + ε := add_lt_add_right (hl j (le_transₓ hi.1 hj)) _
+    
 
 theorem is_cau_of_mono_bounded (f : ℕ → α) {a : α} {m : ℕ} (ham : ∀, ∀ n ≥ m, ∀, abs (f n) ≤ a)
     (hnm : ∀, ∀ n ≥ m, ∀, f n ≤ f n.succ) : IsCauSeq abs f := by
@@ -237,7 +238,7 @@ section
 variable [Semiringₓ β] [IsAbsoluteValue abv]
 
 theorem abv_sum_le_sum_abv {γ : Type _} (f : γ → β) (s : Finset γ) : abv (∑ k in s, f k) ≤ ∑ k in s, abv (f k) :=
-  have := Classical.decEq γ
+  haveI := Classical.decEq γ
   Finset.induction_on s
     (by
       simp [← abv_zero abv])
@@ -357,8 +358,8 @@ theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑ n in r
           rw [sub_eq_add_neg]
           refine' le_transₓ (abv_add _ _ _) _
           rw [two_mul, abv_neg abv]
-          exact add_le_add (le_of_ltₓ (hQ _)) (le_of_ltₓ (hQ _))_ < ε / (4 * Q) * (2 * Q) :=
-        by
+          exact add_le_add (le_of_ltₓ (hQ _)) (le_of_ltₓ (hQ _))
+      _ < ε / (4 * Q) * (2 * Q) := by
         rw [← sum_mul, ← sum_range_sub_sum_range (le_of_ltₓ hNMK)] <;>
           refine'
             (mul_lt_mul_right <| by
@@ -366,7 +367,8 @@ theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑ n in r
                     exact add_pos (lt_of_le_of_ltₓ (abv_nonneg _ _) (hQ 0)) (lt_of_le_of_ltₓ (abv_nonneg _ _) (hQ 0))).2
               (lt_of_le_of_ltₓ (le_abs_self _)
                 (hM _ (le_transₓ (Nat.le_succ_of_leₓ (le_max_rightₓ _ _)) (le_of_ltₓ hNMK)) _
-                  (Nat.le_succ_of_leₓ (le_max_rightₓ _ _))))⟩
+                  (Nat.le_succ_of_leₓ (le_max_rightₓ _ _))))
+      ⟩
 
 end
 
@@ -864,11 +866,14 @@ theorem cos_sub_cos : cos x - cos y = -2 * sin ((x + y) / 2) * sin ((x - y) / 2)
 theorem cos_add_cos : cos x + cos y = 2 * cos ((x + y) / 2) * cos ((x - y) / 2) := by
   have h2 : (2 : ℂ) ≠ 0 := by
     norm_num
-  calc cos x + cos y = cos ((x + y) / 2 + (x - y) / 2) + cos ((x + y) / 2 - (x - y) / 2) :=
-      _ _ =
+  calc
+    cos x + cos y = cos ((x + y) / 2 + (x - y) / 2) + cos ((x + y) / 2 - (x - y) / 2) := _
+    _ =
         cos ((x + y) / 2) * cos ((x - y) / 2) - sin ((x + y) / 2) * sin ((x - y) / 2) +
           (cos ((x + y) / 2) * cos ((x - y) / 2) + sin ((x + y) / 2) * sin ((x - y) / 2)) :=
-      _ _ = 2 * cos ((x + y) / 2) * cos ((x - y) / 2) := _
+      _
+    _ = 2 * cos ((x + y) / 2) * cos ((x - y) / 2) := _
+    
   · congr <;> field_simp [← h2] <;> ring
     
   · rw [cos_add, cos_sub]
@@ -1497,9 +1502,9 @@ theorem exp_bound {x : ℂ} (hx : abs x ≤ 1) {n : ℕ} (hn : 0 < n) :
       by
       refine' congr_arg abs (sum_congr rfl fun m hm => _)
       rw [mem_filter, mem_range] at hm
-      rw [← mul_div_assoc, ← pow_addₓ,
-        add_tsub_cancel_of_le hm.2]_ ≤ ∑ m in Filter (fun k => n ≤ k) (range j), abs (x ^ n * (_ / m !)) :=
-      abv_sum_le_sum_abv _ _ _ ≤ ∑ m in Filter (fun k => n ≤ k) (range j), abs x ^ n * (1 / m !) := by
+      rw [← mul_div_assoc, ← pow_addₓ, add_tsub_cancel_of_le hm.2]
+    _ ≤ ∑ m in Filter (fun k => n ≤ k) (range j), abs (x ^ n * (_ / m !)) := abv_sum_le_sum_abv _ _
+    _ ≤ ∑ m in Filter (fun k => n ≤ k) (range j), abs x ^ n * (1 / m !) := by
       refine' sum_le_sum fun m hm => _
       rw [abs_mul, abv_pow abs, abs_div, abs_cast_nat]
       refine' mul_le_mul_of_nonneg_left ((div_le_div_right _).2 _) _
@@ -1509,10 +1514,12 @@ theorem exp_bound {x : ℂ} (hx : abs x ≤ 1) {n : ℕ} (hn : 0 < n) :
         exact pow_le_one _ (abs_nonneg _) hx
         
       · exact pow_nonneg (abs_nonneg _) _
-        _ = abs x ^ n * ∑ m in (range j).filter fun k => n ≤ k, (1 / m ! : ℝ) :=
-      by
-      simp [← abs_mul, ← abv_pow abs, ← abs_div, ← mul_sum.symm]_ ≤ abs x ^ n * (n.succ * (n ! * n)⁻¹) :=
+        
+    _ = abs x ^ n * ∑ m in (range j).filter fun k => n ≤ k, (1 / m ! : ℝ) := by
+      simp [← abs_mul, ← abv_pow abs, ← abs_div, ← mul_sum.symm]
+    _ ≤ abs x ^ n * (n.succ * (n ! * n)⁻¹) :=
       mul_le_mul_of_nonneg_left (sum_div_factorial_le _ _ hn) (pow_nonneg (abs_nonneg _) _)
+    
 
 theorem exp_bound' {x : ℂ} {n : ℕ} (hx : abs x / n.succ ≤ 1 / 2) :
     abs (exp x - ∑ m in range n, x ^ m / m !) ≤ abs x ^ n / n ! * 2 := by
@@ -1525,10 +1532,13 @@ theorem exp_bound' {x : ℂ} {n : ℕ} (hx : abs x / n.succ ≤ 1 / 2) :
   rw [hj, sum_range_add_sub_sum_range]
   calc
     abs (∑ i : ℕ in range k, x ^ (n + i) / ((n + i)! : ℂ)) ≤ ∑ i : ℕ in range k, abs (x ^ (n + i) / ((n + i)! : ℂ)) :=
-      abv_sum_le_sum_abv _ _ _ ≤ ∑ i : ℕ in range k, abs x ^ (n + i) / (n + i)! := by
-      simp only [← Complex.abs_cast_nat, ← Complex.abs_div, ←
-        abv_pow abs]_ ≤ ∑ i : ℕ in range k, abs x ^ (n + i) / (n ! * n.succ ^ i) :=
-      _ _ = ∑ i : ℕ in range k, abs x ^ n / n ! * (abs x ^ i / n.succ ^ i) := _ _ ≤ abs x ^ n / ↑n ! * 2 := _
+      abv_sum_le_sum_abv _ _
+    _ ≤ ∑ i : ℕ in range k, abs x ^ (n + i) / (n + i)! := by
+      simp only [← Complex.abs_cast_nat, ← Complex.abs_div, ← abv_pow abs]
+    _ ≤ ∑ i : ℕ in range k, abs x ^ (n + i) / (n ! * n.succ ^ i) := _
+    _ = ∑ i : ℕ in range k, abs x ^ n / n ! * (abs x ^ i / n.succ ^ i) := _
+    _ ≤ abs x ^ n / ↑n ! * 2 := _
+    
   · refine' sum_le_sum fun m hm => div_le_div (pow_nonneg (abs_nonneg x) (n + m)) le_rfl _ _
     · exact_mod_cast mul_pos n.factorial_pos (pow_pos n.succ_pos _)
       
@@ -1908,7 +1918,7 @@ theorem exp_bound_div_one_sub_of_interval_approx {x : ℝ} (h1 : 0 ≤ x) (h2 : 
     (∑ j : ℕ in Finset.range 3, x ^ j / j.factorial) + x ^ 3 * ((3 : ℕ) + 1) / ((3 : ℕ).factorial * (3 : ℕ)) ≤
       ∑ j in Finset.range 3, x ^ j :=
   by
-  norm_num [← Finset.sum]
+  norm_num[← Finset.sum]
   rw [add_assocₓ, add_commₓ (x + 1) (x ^ 3 * 4 / 18), ← add_assocₓ, add_le_add_iff_right, ←
     add_le_add_iff_left (-(x ^ 2 / 2)), ← add_assocₓ, CommRingₓ.add_left_neg (x ^ 2 / 2), zero_addₓ, neg_add_eq_sub,
     sub_half, sq, pow_succₓ, sq]
@@ -1924,11 +1934,11 @@ theorem exp_bound_div_one_sub_of_interval_approx {x : ℝ} (h1 : 0 ≤ x) (h2 : 
 
 theorem exp_bound_div_one_sub_of_interval {x : ℝ} (h1 : 0 ≤ x) (h2 : x < 1) : Real.exp x ≤ 1 / (1 - x) := by
   have h : (∑ j in Finset.range 3, x ^ j) ≤ 1 / (1 - x) := by
-    norm_num [← Finset.sum]
+    norm_num[← Finset.sum]
     have h1x : 0 < 1 - x := by
       simpa
     rw [le_div_iff h1x]
-    norm_num [add_assocₓ, ← mul_sub_left_distrib, ← mul_oneₓ, ← add_mulₓ, ← sub_add_eq_sub_sub, ← pow_succ'ₓ x 2]
+    norm_num[add_assocₓ, ← mul_sub_left_distrib, ← mul_oneₓ, ← add_mulₓ, ← sub_add_eq_sub_sub, ← pow_succ'ₓ x 2]
     have hx3 : 0 ≤ x ^ 3 := by
       norm_num
       exact h1

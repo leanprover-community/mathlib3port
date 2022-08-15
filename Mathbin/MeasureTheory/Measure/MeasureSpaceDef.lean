@@ -207,7 +207,7 @@ theorem measure_Union_le [Encodable β] (s : β → Set α) : μ (⋃ i, s i) �
   μ.toOuterMeasure.Union _
 
 theorem measure_bUnion_le {s : Set β} (hs : s.Countable) (f : β → Set α) : μ (⋃ b ∈ s, f b) ≤ ∑' p : s, μ (f p) := by
-  have := hs.to_encodable
+  haveI := hs.to_encodable
   rw [bUnion_eq_Union]
   apply measure_Union_le
 
@@ -432,8 +432,8 @@ alias measure_congr ← _root_.filter.eventually_eq.measure_eq
 theorem measure_mono_null_ae (H : s ≤ᵐ[μ] t) (ht : μ t = 0) : μ s = 0 :=
   nonpos_iff_eq_zero.1 <| ht ▸ H.measure_le
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊇ » s)
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊇ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊇ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊇ » s)
 /-- A measurable set `t ⊇ s` such that `μ t = μ s`. It even satisfies `μ (t ∩ u) = μ (s ∩ u)` for
 any measurable set `u` if `μ s ≠ ∞`, see `measure_to_measurable_inter`.
 (This property holds without the assumption `μ s ≠ ∞` when the space is sigma-finite,
@@ -479,9 +479,8 @@ class MeasureSpace (α : Type _) extends MeasurableSpace α where
 
 export MeasureSpace (volume)
 
-/-- `volume` is the canonical  measure on `α`. -/
-add_decl_doc volume
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident volume]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 section MeasureSpace
 
 -- mathport name: «expr∀ᵐ , »
@@ -492,7 +491,7 @@ notation3"∀ᵐ "(...)", "r:(scoped P => Filter.Eventually P MeasureTheory.Meas
 notation3"∃ᵐ "(...)", "r:(scoped P => Filter.Frequently P MeasureTheory.Measure.ae MeasureTheory.MeasureSpace.volume) =>
   r
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 /-- The tactic `exact volume`, to be used in optional (`auto_param`) arguments. -/
 unsafe def volume_tac : tactic Unit :=
   sorry

@@ -57,11 +57,6 @@ instance monoid [∀ i, Monoidₓ <| f i] : Monoidₓ (∀ i : I, f i) := by
     run_tac
       tactic.pi_instance_derive_field
 
--- the attributes are intentionally out of order. `smul_apply` proves `nsmul_apply`.
-@[to_additive, simp]
-theorem pow_apply [∀ i, Monoidₓ <| f i] (n : ℕ) : (x ^ n) i = x i ^ n :=
-  rfl
-
 @[to_additive]
 instance commMonoid [∀ i, CommMonoidₓ <| f i] : CommMonoidₓ (∀ i : I, f i) := by
   refine_struct { one := (1 : ∀ i, f i), mul := (· * ·), npow := Monoidₓ.npow } <;>

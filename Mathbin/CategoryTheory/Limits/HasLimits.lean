@@ -71,7 +71,7 @@ variable {F : J ⥤ C}
 section Limit
 
 /-- `limit_cone F` contains a cone over `F` together with the information that it is a limit. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure LimitCone (F : J ⥤ C) where
   Cone : Cone F
   IsLimit : IsLimit cone
@@ -433,7 +433,7 @@ attribute [local elabWithoutExpectedType] inv_fun_id_assoc
 -/
 -- not entirely sure why this is needed
 theorem has_limit_of_equivalence_comp (e : K ≌ J) [HasLimit (e.Functor ⋙ F)] : HasLimit F := by
-  have : has_limit (e.inverse ⋙ e.functor ⋙ F) := limits.has_limit_equivalence_comp e.symm
+  haveI : has_limit (e.inverse ⋙ e.functor ⋙ F) := limits.has_limit_equivalence_comp e.symm
   apply has_limit_of_iso (e.inv_fun_id_assoc F)
 
 -- `has_limit_comp_equivalence` and `has_limit_of_comp_equivalence`
@@ -529,7 +529,7 @@ section Colimit
 
 /-- `colimit_cocone F` contains a cocone over `F` together with the information that it is a
     colimit. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure ColimitCocone (F : J ⥤ C) where
   Cocone : Cocone F
   IsColimit : IsColimit cocone
@@ -829,7 +829,7 @@ variable (D : L ⥤ K) [HasColimit (D ⋙ E ⋙ F)]
 theorem colimit.pre_pre : colimit.pre (E ⋙ F) D ≫ colimit.pre F E = colimit.pre F (D ⋙ E) := by
   ext j
   rw [← assoc, colimit.ι_pre, colimit.ι_pre]
-  let this : has_colimit ((D ⋙ E) ⋙ F) :=
+  letI : has_colimit ((D ⋙ E) ⋙ F) :=
     show has_colimit (D ⋙ E ⋙ F) by
       infer_instance
   exact (colimit.ι_pre F (D ⋙ E) j).symm
@@ -898,7 +898,7 @@ theorem colimit.pre_post {D : Type u'} [Category.{v'} D] (E : K ⥤ J) (F : J �
   by
   ext
   rw [← assoc, colimit.ι_post, ← G.map_comp, colimit.ι_pre, ← assoc]
-  let this : has_colimit (E ⋙ F ⋙ G) :=
+  letI : has_colimit (E ⋙ F ⋙ G) :=
     show has_colimit ((E ⋙ F) ⋙ G) by
       infer_instance
   erw [colimit.ι_pre (F ⋙ G) E j, colimit.ι_post]
@@ -913,7 +913,7 @@ instance has_colimit_equivalence_comp (e : K ≌ J) [HasColimit F] : HasColimit 
 /-- If a `E ⋙ F` has a colimit, and `E` is an equivalence, we can construct a colimit of `F`.
 -/
 theorem has_colimit_of_equivalence_comp (e : K ≌ J) [HasColimit (e.Functor ⋙ F)] : HasColimit F := by
-  have : has_colimit (e.inverse ⋙ e.functor ⋙ F) := limits.has_colimit_equivalence_comp e.symm
+  haveI : has_colimit (e.inverse ⋙ e.functor ⋙ F) := limits.has_colimit_equivalence_comp e.symm
   apply has_colimit_of_iso (e.inv_fun_id_assoc F).symm
 
 section ColimFunctor

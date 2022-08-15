@@ -414,7 +414,7 @@ unsafe def mk_app_class (f : Name) (inst : expr) (args : List expr) : ring_exp_m
   let ctx ← get_context
   pure <| (@expr.const tt f [ctx] ctx inst).mk_app args
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `ctx
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `ctx
 /-- Specialized version of `mk_app` where the first two arguments are `{α}` `[comm_semiring α]`.
 Should be faster because it can use the cached instances.
  -/

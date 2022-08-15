@@ -31,6 +31,18 @@ section Semiringₓ
 
 variable [Semiringₓ R] {p q r : R[X]}
 
+theorem monic_zero_iff_subsingleton : Monic (0 : R[X]) ↔ Subsingleton R :=
+  subsingleton_iff_zero_eq_one
+
+theorem not_monic_zero_iff : ¬Monic (0 : R[X]) ↔ (0 : R) ≠ 1 :=
+  (monic_zero_iff_subsingleton.trans subsingleton_iff_zero_eq_one.symm).Not
+
+theorem monic_zero_iff_subsingleton' : Monic (0 : R[X]) ↔ (∀ f g : R[X], f = g) ∧ ∀ a b : R, a = b :=
+  Polynomial.monic_zero_iff_subsingleton.trans
+    ⟨by
+      intro
+      simp , fun h => subsingleton_iff.mpr h.2⟩
+
 theorem Monic.as_sum (hp : p.Monic) : p = X ^ p.natDegree + ∑ i in range p.natDegree, c (p.coeff i) * X ^ i := by
   conv_lhs => rw [p.as_sum_range_C_mul_X_pow, sum_range_succ_comm]
   suffices C (p.coeff p.nat_degree) = 1 by
@@ -77,7 +89,7 @@ theorem monic_X_add_C (x : R) : Monic (X + c x) :=
 
 theorem Monic.mul (hp : Monic p) (hq : Monic q) : Monic (p * q) :=
   if h0 : (0 : R) = 1 then
-    have := subsingleton_of_zero_eq_one h0
+    haveI := subsingleton_of_zero_eq_one h0
     Subsingleton.elimₓ _ _
   else by
     have : leadingCoeff p * leadingCoeff q ≠ 0 := by
@@ -366,8 +378,8 @@ section NonzeroSemiring
 variable [Semiringₓ R] [Nontrivial R] {p q : R[X]}
 
 @[simp]
-theorem not_monic_zero : ¬Monic (0 : R[X]) := by
-  simpa only [← monic, ← leading_coeff_zero] using (zero_ne_one : (0 : R) ≠ 1)
+theorem not_monic_zero : ¬Monic (0 : R[X]) :=
+  not_monic_zero_iff.mp zero_ne_one
 
 end NonzeroSemiring
 

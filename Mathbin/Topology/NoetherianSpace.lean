@@ -123,7 +123,7 @@ theorem NoetherianSpace.range [NoetherianSpace α] (f : α → β) (hf : Continu
       continuity)
     fun ⟨a, b, h⟩ => ⟨b, Subtype.ext h⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem noetherian_space_set_iff (s : Set α) : NoetherianSpace s ↔ ∀ (t) (_ : t ⊆ s), IsCompact t := by
   rw [(noetherian_space_tfae s).out 0 2]
   constructor
@@ -156,7 +156,7 @@ attribute [local instance] noetherian_space.discrete
 
 /-- Spaces that are both Noetherian and Hausdorff is finite. -/
 theorem NoetherianSpace.finite [NoetherianSpace α] [T2Space α] : Finite α := by
-  let this : Fintype α := Set.fintypeOfFiniteUniv (noetherian_space.is_compact Set.Univ).finite_of_discrete
+  letI : Fintype α := Set.fintypeOfFiniteUniv (noetherian_space.is_compact Set.Univ).finite_of_discrete
   infer_instance
 
 instance (priority := 100) Finite.to_noetherian_space [Finite α] : NoetherianSpace α := by

@@ -420,8 +420,7 @@ instance [CommMonoidₓ R] [NonUnitalSemiringₓ A] [DistribMulAction R A] [IsSc
           nth_rw 2[mul_comm]
           abel }
 
--- This should work for `non_unital_comm_semiring`s, but we don't seem to have those
-instance [CommMonoidₓ R] [CommSemiringₓ A] [DistribMulAction R A] [IsScalarTower R A A] [SmulCommClass R A A] :
+instance [CommMonoidₓ R] [NonUnitalCommSemiring A] [DistribMulAction R A] [IsScalarTower R A A] [SmulCommClass R A A] :
     CommMonoidₓ (Unitization R A) :=
   { Unitization.monoid with
     mul_comm := fun x₁ x₂ =>
@@ -433,8 +432,7 @@ instance [CommSemiringₓ R] [NonUnitalSemiringₓ A] [Module R A] [IsScalarTowe
     Semiringₓ (Unitization R A) :=
   { Unitization.monoid, Unitization.nonAssocSemiring with }
 
--- This should work for `non_unital_comm_semiring`s, but we don't seem to have those
-instance [CommSemiringₓ R] [CommSemiringₓ A] [Module R A] [IsScalarTower R A A] [SmulCommClass R A A] :
+instance [CommSemiringₓ R] [NonUnitalCommSemiring A] [Module R A] [IsScalarTower R A A] [SmulCommClass R A A] :
     CommSemiringₓ (Unitization R A) :=
   { Unitization.commMonoid, Unitization.nonAssocSemiring with }
 

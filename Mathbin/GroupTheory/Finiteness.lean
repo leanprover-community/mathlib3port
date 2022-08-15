@@ -41,10 +41,8 @@ section Submonoid
 def Submonoid.Fg (P : Submonoid M) : Prop :=
   ∃ S : Finset M, Submonoid.closure ↑S = P
 
-/-- An additive submonoid of `N` is finitely generated if it is the closure of a finite subset of
-`M`. -/
-add_decl_doc AddSubmonoid.Fg
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_submonoid.fg]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- An equivalent expression of `submonoid.fg` in terms of `set.finite` instead of `finset`. -/
 @[to_additive "An equivalent expression of `add_submonoid.fg` in terms of `set.finite` instead of\n`finset`."]
 theorem Submonoid.fg_iff (P : Submonoid M) : Submonoid.Fg P ↔ ∃ S : Set M, Submonoid.closure S = P ∧ S.Finite :=
@@ -173,10 +171,8 @@ section Subgroup
 def Subgroup.Fg (P : Subgroup G) : Prop :=
   ∃ S : Finset G, Subgroup.closure ↑S = P
 
-/-- An additive subgroup of `H` is finitely generated if it is the closure of a finite subset of
-`H`. -/
-add_decl_doc AddSubgroup.Fg
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_subgroup.fg]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- An equivalent expression of `subgroup.fg` in terms of `set.finite` instead of `finset`. -/
 @[to_additive "An equivalent expression of `add_subgroup.fg` in terms of `set.finite` instead of\n`finset`."]
 theorem Subgroup.fg_iff (P : Subgroup G) : Subgroup.Fg P ↔ ∃ S : Set G, Subgroup.closure S = P ∧ S.Finite :=

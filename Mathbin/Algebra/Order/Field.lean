@@ -3,12 +3,7 @@ Copyright (c) 2014 Robert Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Mario Carneiro, Floris van Doorn
 -/
-import Mathbin.Algebra.Field.Basic
-import Mathbin.Algebra.GroupPower.Lemmas
-import Mathbin.Algebra.GroupPower.Order
-import Mathbin.Algebra.Order.Ring
-import Mathbin.Order.Bounds
-import Mathbin.Tactic.Monotonicity.Basic
+import Mathbin.Algebra.Order.FieldDefs
 
 /-!
 # Linear ordered (semi)fields
@@ -26,19 +21,6 @@ A linear ordered (semi)field is a (semi)field equipped with a linear order such 
 
 
 variable {α β : Type _}
-
-/-- A linear ordered semifield is a field with a linear order respecting the operations. -/
-@[protect_proj]
-class LinearOrderedSemifield (α : Type _) extends LinearOrderedSemiring α, Semifield α
-
-/-- A linear ordered field is a field with a linear order respecting the operations. -/
-@[protect_proj]
-class LinearOrderedField (α : Type _) extends LinearOrderedCommRing α, Field α
-
--- See note [lower instance priority]
-instance (priority := 100) LinearOrderedField.toLinearOrderedSemifield [LinearOrderedField α] :
-    LinearOrderedSemifield α :=
-  { LinearOrderedRing.toLinearOrderedSemiring, ‹LinearOrderedField α› with }
 
 namespace Function
 
@@ -59,15 +41,17 @@ def Injective.linearOrderedSemifield [LinearOrderedSemifield α] [Zero β] [One 
 -- See note [reducible non-instances]
 @[reducible]
 def Injective.linearOrderedField [LinearOrderedField α] [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [Pow β ℕ]
-    [HasSmul ℕ β] [HasSmul ℤ β] [HasNatCast β] [HasIntCast β] [Inv β] [Div β] [Pow β ℤ] [HasSup β] [HasInf β]
-    (f : β → α) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
-    (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y)
-    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
-    (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
+    [HasSmul ℕ β] [HasSmul ℤ β] [HasSmul ℚ β] [HasNatCast β] [HasIntCast β] [HasRatCast β] [Inv β] [Div β] [Pow β ℤ]
+    [HasSup β] [HasInf β] (f : β → α) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
+    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
+    (sub : ∀ x y, f (x - y) = f x - f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y)
+    (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x)
+    (qsmul : ∀ (x) (n : ℚ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n)
-    (hsup : ∀ x y, f (x⊔y) = max (f x) (f y)) (hinf : ∀ x y, f (x⊓y) = min (f x) (f y)) : LinearOrderedField β :=
+    (rat_cast : ∀ n : ℚ, f n = n) (hsup : ∀ x y, f (x⊔y) = max (f x) (f y)) (hinf : ∀ x y, f (x⊓y) = min (f x) (f y)) :
+    LinearOrderedField β :=
   { hf.LinearOrderedRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast hsup hinf,
-    hf.Field f zero one add mul neg sub inv div nsmul zsmul npow zpow nat_cast int_cast with }
+    hf.Field f zero one add mul neg sub inv div nsmul zsmul qsmul npow zpow nat_cast int_cast rat_cast with }
 
 end Function
 
@@ -97,9 +81,13 @@ theorem inv_pos : 0 < a⁻¹ ↔ 0 < a :=
   flip lt_of_mul_lt_mul_left ha.le <| by
     simp [← ne_of_gtₓ ha, ← zero_lt_one]
 
+alias inv_pos ↔ _ inv_pos_of_pos
+
 @[simp]
 theorem inv_nonneg : 0 ≤ a⁻¹ ↔ 0 ≤ a := by
   simp only [← le_iff_eq_or_lt, ← inv_pos, ← zero_eq_inv]
+
+alias inv_nonneg ↔ _ inv_nonneg_of_nonneg
 
 @[simp]
 theorem inv_lt_zero : a⁻¹ < 0 ↔ a < 0 := by

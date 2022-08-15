@@ -43,7 +43,7 @@ variable {ι : Type u} {α : Type v} [Fintype ι] {t : ι → Finset α} [Decida
 
 theorem hall_cond_of_erase {x : ι} (a : α) (ha : ∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.bUnion t).card)
     (s' : Finset { x' : ι | x' ≠ x }) : s'.card ≤ (s'.bUnion fun x' => (t x').erase a).card := by
-  have := Classical.decEq ι
+  haveI := Classical.decEq ι
   specialize ha (s'.image coe)
   rw [nonempty.image_iff, Finset.card_image_of_injective s' Subtype.coe_injective] at ha
   by_cases' he : s'.nonempty
@@ -82,14 +82,18 @@ theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
           (∀ s' : Finset ι', s'.card ≤ (s'.bUnion t').card) → ∃ f : ι' → α, Function.Injective f ∧ ∀ x, f x ∈ t' x)
     (ha : ∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.bUnion t).card) :
     ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x := by
-  have : Nonempty ι := fintype.card_pos_iff.mp (hn.symm ▸ Nat.succ_posₓ _)
-  have := Classical.decEq ι
+  haveI : Nonempty ι := fintype.card_pos_iff.mp (hn.symm ▸ Nat.succ_posₓ _)
+  haveI := Classical.decEq ι
   -- Choose an arbitrary element `x : ι` and `y : t x`.
   let x := Classical.arbitrary ι
   have tx_ne : (t x).Nonempty := by
     rw [← Finset.card_pos]
-    calc 0 < 1 := Nat.one_posₓ _ ≤ (Finset.bUnion {x} t).card := ht {x}_ = (t x).card := by
+    calc
+      0 < 1 := Nat.one_posₓ
+      _ ≤ (Finset.bUnion {x} t).card := ht {x}
+      _ = (t x).card := by
         rw [Finset.singleton_bUnion]
+      
   choose y hy using tx_ne
   -- Restrict to everything except `x` and `y`.
   let ι' := { x' : ι | x' ≠ x }
@@ -132,7 +136,7 @@ theorem hall_cond_of_restrict {ι : Type u} {t : ι → Finset α} {s : Finset �
 theorem hall_cond_of_compl {ι : Type u} {t : ι → Finset α} {s : Finset ι} (hus : s.card = (s.bUnion t).card)
     (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card) (s' : Finset (sᶜ : Set ι)) :
     s'.card ≤ (s'.bUnion fun x' => t x' \ s.bUnion t).card := by
-  have := Classical.decEq ι
+  haveI := Classical.decEq ι
   have disj : Disjoint s (s'.image coe) := by
     simp only [← disjoint_left, ← not_exists, ← mem_image, ← exists_prop, ← SetCoe.exists, ← exists_and_distrib_right, ←
       exists_eq_right, ← Subtype.coe_mk]
@@ -170,14 +174,17 @@ theorem hall_hard_inductive_step_B {n : ℕ} (hn : Fintype.card ι = n + 1)
           (∀ s' : Finset ι', s'.card ≤ (s'.bUnion t').card) → ∃ f : ι' → α, Function.Injective f ∧ ∀ x, f x ∈ t' x)
     (s : Finset ι) (hs : s.Nonempty) (hns : s ≠ univ) (hus : s.card = (s.bUnion t).card) :
     ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x := by
-  have := Classical.decEq ι
+  haveI := Classical.decEq ι
   -- Restrict to `s`
   let t' : s → Finset α := fun x' => t x'
   rw [Nat.add_one] at hn
   have card_ι'_le : Fintype.card s ≤ n := by
     apply Nat.le_of_lt_succₓ
-    calc Fintype.card s = s.card := Fintype.card_coe _ _ < Fintype.card ι :=
-        (card_lt_iff_ne_univ _).mpr hns _ = n.succ := hn
+    calc
+      Fintype.card s = s.card := Fintype.card_coe _
+      _ < Fintype.card ι := (card_lt_iff_ne_univ _).mpr hns
+      _ = n.succ := hn
+      
   rcases ih t' card_ι'_le (hall_cond_of_restrict ht) with ⟨f', hf', hsf'⟩
   -- Restrict to `sᶜ` in the domain and `(s.bUnion t)ᶜ` in the codomain.
   set ι'' := (s : Set ι)ᶜ with ι''_def

@@ -216,7 +216,7 @@ theorem measurable_of_empty [IsEmpty α] (f : α → β) : Measurable f :=
   Subsingleton.measurable
 
 theorem measurable_of_empty_codomain [IsEmpty β] (f : α → β) : Measurable f := by
-  have := Function.is_empty f
+  haveI := Function.is_empty f
   exact measurable_of_empty f
 
 /-- A version of `measurable_const` that assumes `f x = f y` for all `x, y`. This version works
@@ -495,7 +495,7 @@ theorem Measurable.dite [∀ x, Decidable (x ∈ s)] {f : s → β} (hf : Measur
 
 theorem measurable_of_measurable_on_compl_finite [MeasurableSingletonClass α] {f : α → β} (s : Set α) (hs : s.Finite)
     (hf : Measurable (sᶜ.restrict f)) : Measurable f := by
-  let this : Fintype s := finite.fintype hs
+  letI : Fintype s := finite.fintype hs
   exact measurable_of_restrict_of_restrict_compl hs.measurable_set (measurable_of_fintype _) hf
 
 theorem measurable_of_measurable_on_compl_singleton [MeasurableSingletonClass α] {f : α → β} (a : α)
@@ -587,7 +587,7 @@ theorem MeasurableSet.prod {s : Set α} {t : Set β} (hs : MeasurableSet s) (ht 
     MeasurableSet (s ×ˢ t) :=
   MeasurableSet.inter (measurable_fst hs) (measurable_snd ht)
 
-theorem measurable_set_prod_of_nonempty {s : Set α} {t : Set β} (h : (s ×ˢ t : Set _).Nonempty) :
+theorem measurable_set_prod_of_nonempty {s : Set α} {t : Set β} (h : (s ×ˢ t).Nonempty) :
     MeasurableSet (s ×ˢ t) ↔ MeasurableSet s ∧ MeasurableSet t := by
   rcases h with ⟨⟨x, y⟩, hx, hy⟩
   refine' ⟨fun hst => _, fun h => h.1.Prod h.2⟩
@@ -597,7 +597,7 @@ theorem measurable_set_prod_of_nonempty {s : Set α} {t : Set β} (h : (s ×ˢ t
 
 theorem measurable_set_prod {s : Set α} {t : Set β} :
     MeasurableSet (s ×ˢ t) ↔ MeasurableSet s ∧ MeasurableSet t ∨ s = ∅ ∨ t = ∅ := by
-  cases' (s ×ˢ t : Set _).eq_empty_or_nonempty with h h
+  cases' (s ×ˢ t).eq_empty_or_nonempty with h h
   · simp [← h, ← prod_eq_empty_iff.mp h]
     
   · simp [not_nonempty_iff_eq_empty, ← prod_nonempty_iff.mp h, ← measurable_set_prod_of_nonempty h]
@@ -713,7 +713,7 @@ theorem MeasurableSet.pi {s : Set δ} {t : ∀ i : δ, Set (π i)} (hs : s.Count
 
 theorem MeasurableSet.univ_pi [Encodable δ] {t : ∀ i : δ, Set (π i)} (ht : ∀ i, MeasurableSet (t i)) :
     MeasurableSet (Pi Univ t) :=
-  MeasurableSet.pi (countable_encodable _) fun i _ => ht i
+  MeasurableSet.pi (to_countable _) fun i _ => ht i
 
 theorem measurable_set_pi_of_nonempty {s : Set δ} {t : ∀ i, Set (π i)} (hs : s.Countable) (h : (Pi s t).Nonempty) :
     MeasurableSet (Pi s t) ↔ ∀, ∀ i ∈ s, ∀, MeasurableSet (t i) := by
@@ -767,7 +767,7 @@ attribute [local instance] Fintype.toEncodable
 
 theorem MeasurableSet.pi_fintype [Fintype δ] {s : Set δ} {t : ∀ i, Set (π i)}
     (ht : ∀, ∀ i ∈ s, ∀, MeasurableSet (t i)) : MeasurableSet (Pi s t) :=
-  MeasurableSet.pi (countable_encodable _) ht
+  MeasurableSet.pi (to_countable _) ht
 
 theorem MeasurableSet.univ_pi_fintype [Fintype δ] {t : ∀ i, Set (π i)} (ht : ∀ i, MeasurableSet (t i)) :
     MeasurableSet (Pi Univ t) :=
@@ -1257,14 +1257,14 @@ def sumProdDistrib (α β γ) [MeasurableSpace α] [MeasurableSpace β] [Measura
         (by
           rintro ⟨a | b, c⟩ <;> simp [← Set.prod_eq])
         _ _
-    · refine' (set.prod (range Sum.inl) univ).symm.measurable_comp_iff.1 _
+    · refine' (Set.Prod (range Sum.inl) univ).symm.measurable_comp_iff.1 _
       refine' (prod_congr set.range_inl (Set.Univ _)).symm.measurable_comp_iff.1 _
       dsimp' [← (· ∘ ·)]
       convert measurable_inl
       ext ⟨a, c⟩
       rfl
       
-    · refine' (set.prod (range Sum.inr) univ).symm.measurable_comp_iff.1 _
+    · refine' (Set.Prod (range Sum.inr) univ).symm.measurable_comp_iff.1 _
       refine' (prod_congr set.range_inr (Set.Univ _)).symm.measurable_comp_iff.1 _
       dsimp' [← (· ∘ ·)]
       convert measurable_inr
@@ -1422,7 +1422,7 @@ instance infi_is_measurably_generated {f : ι → Filter α} [∀ i, IsMeasurabl
   · rw [← equiv.plift.surjective.infi_comp, mem_infi]
     refine' ⟨t, ht, U, hUf, rfl⟩
     
-  · have := ht.countable.to_encodable
+  · haveI := ht.countable.to_encodable
     exact MeasurableSet.Inter fun i => (hU i).1
     
   · exact Inter_mono fun i => (hU i).2
@@ -1535,9 +1535,7 @@ instance : BoundedOrder (Subtype (MeasurableSet : Set α → Prop)) where
 
 instance : BooleanAlgebra (Subtype (MeasurableSet : Set α → Prop)) :=
   { MeasurableSet.Subtype.boundedOrder, MeasurableSet.Subtype.distribLattice with sdiff := (· \ ·),
-    sup_inf_sdiff := fun a b => Subtype.eq <| sup_inf_sdiff a b,
-    inf_inf_sdiff := fun a b => Subtype.eq <| inf_inf_sdiff a b, compl := HasCompl.compl,
-    inf_compl_le_bot := fun a => BooleanAlgebra.inf_compl_le_bot (a : Set α),
+    compl := HasCompl.compl, inf_compl_le_bot := fun a => BooleanAlgebra.inf_compl_le_bot (a : Set α),
     top_le_sup_compl := fun a => BooleanAlgebra.top_le_sup_compl (a : Set α),
     sdiff_eq := fun a b => Subtype.eq <| sdiff_eq }
 

@@ -222,8 +222,8 @@ definition is an isometric isomorphism from `Lp ℂ 2 haar_circle` to `ℓ²(ℤ
 def fourierSeries : HilbertBasis ℤ ℂ (lp ℂ 2 haarCircle) :=
   HilbertBasis.mk orthonormal_fourier
     (span_fourier_Lp_closure_eq_top
-      (by
-        norm_num))
+        (by
+          norm_num)).Ge
 
 /-- The elements of the Hilbert basis `fourier_series` for `Lp ℂ 2 haar_circle` are the functions
 `fourier_Lp 2`, the monomials `λ z, z ^ n` on the circle considered as elements of `L2`. -/

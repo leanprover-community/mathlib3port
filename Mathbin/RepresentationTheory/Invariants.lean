@@ -98,7 +98,7 @@ noncomputable def averageMap : V →ₗ[k] V :=
 /-- The `average_map` sends elements of `V` to the subspace of invariants.
 -/
 theorem average_map_invariant (v : V) : averageMap ρ v ∈ invariants ρ := fun g => by
-  rw [average_map, ← as_algebra_hom_single, ← LinearMap.mul_apply, ← map_mul (as_algebra_hom ρ), mul_average_left]
+  rw [average_map, ← as_algebra_hom_single_one, ← LinearMap.mul_apply, ← map_mul (as_algebra_hom ρ), mul_average_left]
 
 /-- The `average_map` acts as the identity on the subspace of invariants.
 -/
@@ -120,9 +120,10 @@ open CategoryTheory Action
 variable {k : Type u} [CommRingₓ k] {G : Groupₓₓ.{u}}
 
 theorem mem_invariants_iff_comm {X Y : Rep k G} (f : X.V →ₗ[k] Y.V) (g : G) :
-    (linHom X.ρ Y.ρ) g f = f ↔ X.ρ g ≫ f = f ≫ Y.ρ g := by
-  rw [lin_hom_apply, ← ρ_Aut_apply_inv, ← LinearMap.comp_assoc, ← ModuleCat.comp_def, ← ModuleCat.comp_def,
-    iso.inv_comp_eq, ρ_Aut_apply_hom]
+    (linHom X.ρ Y.ρ) g f = f ↔ f.comp (X.ρ g) = (Y.ρ g).comp f := by
+  dsimp'
+  erw [← ρ_Aut_apply_inv]
+  rw [← LinearMap.comp_assoc, ← ModuleCat.comp_def, ← ModuleCat.comp_def, iso.inv_comp_eq, ρ_Aut_apply_hom]
   exact comm
 
 /-- The invariants of the representation `lin_hom X.ρ Y.ρ` correspond to the the representation

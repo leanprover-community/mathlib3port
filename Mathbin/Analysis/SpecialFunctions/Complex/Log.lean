@@ -87,7 +87,7 @@ theorem log_neg_I : log (-I) = -(π / 2) * I := by
   simp [← log]
 
 theorem two_pi_I_ne_zero : (2 * π * I : ℂ) ≠ 0 := by
-  norm_num [← Real.pi_ne_zero, ← I_ne_zero]
+  norm_num[← Real.pi_ne_zero, ← I_ne_zero]
 
 theorem exp_eq_one_iff {x : ℂ} : exp x = 1 ↔ ∃ n : ℤ, x = n * (2 * π * I) := by
   constructor

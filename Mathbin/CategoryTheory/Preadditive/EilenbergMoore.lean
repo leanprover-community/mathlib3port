@@ -37,6 +37,10 @@ instance Monad.algebraPreadditive : Preadditive (Monad.Algebra T) where
         { f := 0,
           h' := by
             simp only [← functor.map_zero, ← zero_comp, ← comp_zero] },
+      nsmul := fun n α =>
+        { f := n • α.f,
+          h' := by
+            rw [functor.map_nsmul, nsmul_comp, monad.algebra.hom.h, comp_nsmul] },
       neg := fun α =>
         { f := -α.f,
           h' := by
@@ -45,6 +49,10 @@ instance Monad.algebraPreadditive : Preadditive (Monad.Algebra T) where
         { f := α.f - β.f,
           h' := by
             simp only [← functor.map_sub, ← sub_comp, ← monad.algebra.hom.h, ← comp_sub] },
+      zsmul := fun r α =>
+        { f := r • α.f,
+          h' := by
+            rw [functor.map_zsmul, zsmul_comp, monad.algebra.hom.h, comp_zsmul] },
       add_assoc := by
         intros
         ext
@@ -57,10 +65,32 @@ instance Monad.algebraPreadditive : Preadditive (Monad.Algebra T) where
         intros
         ext
         apply add_zeroₓ,
+      nsmul_zero' := by
+        intros
+        ext
+        apply zero_smul,
+      nsmul_succ' := by
+        intros
+        ext
+        apply succ_nsmul,
       sub_eq_add_neg := by
         intros
         ext
         apply sub_eq_add_neg,
+      zsmul_zero' := by
+        intros
+        ext
+        apply zero_smul,
+      zsmul_succ' := by
+        intros
+        ext
+        dsimp'
+        simp only [← coe_nat_zsmul, ← succ_nsmul]
+        rfl,
+      zsmul_neg' := by
+        intros
+        ext
+        simp only [← zsmul_neg_succ_of_nat, ← neg_inj, ← nsmul_eq_smul_cast ℤ],
       add_left_neg := by
         intros
         ext
@@ -77,6 +107,8 @@ instance Monad.algebraPreadditive : Preadditive (Monad.Algebra T) where
     intros
     ext
     apply comp_add
+
+instance Monad.forget_additive : (Monad.forget T).Additive where
 
 variable (U : Comonad C) [Functor.Additive (U : C ⥤ C)]
 
@@ -92,6 +124,10 @@ instance Comonad.coalgebraPreadditive : Preadditive (Comonad.Coalgebra U) where
         { f := 0,
           h' := by
             simp only [← functor.map_zero, ← comp_zero, ← zero_comp] },
+      nsmul := fun n α =>
+        { f := n • α.f,
+          h' := by
+            rw [functor.map_nsmul, comp_nsmul, comonad.coalgebra.hom.h, nsmul_comp] },
       neg := fun α =>
         { f := -α.f,
           h' := by
@@ -100,6 +136,10 @@ instance Comonad.coalgebraPreadditive : Preadditive (Comonad.Coalgebra U) where
         { f := α.f - β.f,
           h' := by
             simp only [← functor.map_sub, ← comp_sub, ← comonad.coalgebra.hom.h, ← sub_comp] },
+      zsmul := fun r α =>
+        { f := r • α.f,
+          h' := by
+            rw [functor.map_zsmul, comp_zsmul, comonad.coalgebra.hom.h, zsmul_comp] },
       add_assoc := by
         intros
         ext
@@ -112,10 +152,32 @@ instance Comonad.coalgebraPreadditive : Preadditive (Comonad.Coalgebra U) where
         intros
         ext
         apply add_zeroₓ,
+      nsmul_zero' := by
+        intros
+        ext
+        apply zero_smul,
+      nsmul_succ' := by
+        intros
+        ext
+        apply succ_nsmul,
       sub_eq_add_neg := by
         intros
         ext
         apply sub_eq_add_neg,
+      zsmul_zero' := by
+        intros
+        ext
+        apply zero_smul,
+      zsmul_succ' := by
+        intros
+        ext
+        dsimp'
+        simp only [← coe_nat_zsmul, ← succ_nsmul]
+        rfl,
+      zsmul_neg' := by
+        intros
+        ext
+        simp only [← zsmul_neg_succ_of_nat, ← neg_inj, ← nsmul_eq_smul_cast ℤ],
       add_left_neg := by
         intros
         ext
@@ -132,6 +194,8 @@ instance Comonad.coalgebraPreadditive : Preadditive (Comonad.Coalgebra U) where
     intros
     ext
     apply comp_add
+
+instance Comonad.forget_additive : (Comonad.forget U).Additive where
 
 end CategoryTheory
 

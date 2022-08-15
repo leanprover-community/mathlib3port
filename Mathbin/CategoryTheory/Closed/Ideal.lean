@@ -77,7 +77,7 @@ def exponentialIdealReflective (A : C) [Reflective i] [ExponentialIdeal i] :
   symm
   apply nat_iso.of_components _ _
   · intro X
-    have := (exponential_ideal.exp_closed (i.obj_mem_ess_image X) A).unit_is_iso
+    haveI := (exponential_ideal.exp_closed (i.obj_mem_ess_image X) A).unit_is_iso
     apply as_iso ((adjunction.of_right_adjoint i).Unit.app (A ⟹ i.obj X))
     
   · simp
@@ -130,8 +130,8 @@ instance (priority := 10) exponential_ideal_of_preserves_binary_products
       assoc, assoc, prod_comparison_natural_assoc, L.map_id, ← prod.map_id_comp_assoc, ir.left_triangle_components,
       prod.map_id_id, id_comp]
     apply is_iso.hom_inv_id_assoc
-  have : split_mono (η.app (A ⟹ i.obj B)) := ⟨_, this⟩
-  apply mem_ess_image_of_unit_split_mono
+  haveI : is_split_mono (η.app (A ⟹ i.obj B)) := is_split_mono.mk' ⟨_, this⟩
+  apply mem_ess_image_of_unit_is_split_mono
 
 variable [ExponentialIdeal i]
 
@@ -147,7 +147,7 @@ def cartesianClosedOfReflective :
             · symm
               apply nat_iso.of_components _ _
               · intro X
-                have := Adjunction.rightAdjointPreservesLimits.{0, 0} (adjunction.of_right_adjoint i)
+                haveI := Adjunction.rightAdjointPreservesLimits.{0, 0} (adjunction.of_right_adjoint i)
                 apply as_iso (prod_comparison i B X)
                 
               · intro X Y f
@@ -189,8 +189,8 @@ noncomputable def bijection (A B : C) (X : D) :
       ((exp.adjunction _).homEquiv _ _).symm
     _ ≃ (i.obj ((leftAdjoint i).obj A ⨯ (leftAdjoint i).obj B) ⟶ i.obj X) := by
       apply iso.hom_congr _ (iso.refl _)
-      have : preserves_limits i := (adjunction.of_right_adjoint i).rightAdjointPreservesLimits
-      have := preserves_smallest_limits_of_preserves_limits i
+      haveI : preserves_limits i := (adjunction.of_right_adjoint i).rightAdjointPreservesLimits
+      haveI := preserves_smallest_limits_of_preserves_limits i
       exact (preserves_limit_pair.iso _ _ _).symm
     _ ≃ ((leftAdjoint i).obj A ⨯ (leftAdjoint i).obj B ⟶ X) := (equivOfFullyFaithful _).symm
     
@@ -243,8 +243,8 @@ noncomputable def preservesBinaryProductsOfExponentialIdeal :
 -/
 noncomputable def preservesFiniteProductsOfExponentialIdeal (J : Type) [Fintype J] :
     PreservesLimitsOfShape (Discrete J) (leftAdjoint i) := by
-  let this := preserves_binary_products_of_exponential_ideal i
-  let this := leftAdjointPreservesTerminalOfReflective.{0} i
+  letI := preserves_binary_products_of_exponential_ideal i
+  letI := leftAdjointPreservesTerminalOfReflective.{0} i
   apply preserves_finite_products_of_preserves_binary_and_terminal (left_adjoint i) J
 
 end

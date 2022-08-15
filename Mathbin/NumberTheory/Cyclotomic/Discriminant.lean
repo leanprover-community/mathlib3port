@@ -35,7 +35,7 @@ variable [IsCyclotomicExtension {n} ℚ K]
 discriminant of the power basis given by `ζ - 1`. -/
 theorem discr_zeta_eq_discr_zeta_sub_one (hζ : IsPrimitiveRoot ζ n) :
     discr ℚ (hζ.PowerBasis ℚ).Basis = discr ℚ (hζ.subOnePowerBasis ℚ).Basis := by
-  have : NumberField K := NumberField.mk
+  haveI : NumberField K := NumberField.mk
   have H₁ : (aeval (hζ.power_basis ℚ).Gen) (X - 1 : ℤ[X]) = (hζ.sub_one_power_basis ℚ).Gen := by
     simp
   have H₂ : (aeval (hζ.sub_one_power_basis ℚ).Gen) (X + 1 : ℤ[X]) = (hζ.power_basis ℚ).Gen := by
@@ -70,7 +70,7 @@ theorem discr_prime_pow_ne_two [IsCyclotomicExtension {p ^ (k + 1)} K L] [hp : F
     discr K (hζ.PowerBasis K).Basis =
       -1 ^ ((p ^ (k + 1) : ℕ).totient / 2) * p ^ ((p : ℕ) ^ k * ((p - 1) * (k + 1) - 1)) :=
   by
-  have hne := IsCyclotomicExtension.ne_zero' (p ^ (k + 1)) K L
+  haveI hne := IsCyclotomicExtension.ne_zero' (p ^ (k + 1)) K L
   have hp2 : p = 2 → 1 ≤ k := by
     intro hp
     refine' one_le_iff_ne_zero.2 fun h => _

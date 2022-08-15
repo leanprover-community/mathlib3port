@@ -89,7 +89,7 @@ instance _root_.module.finite.add_monoid_hom : Module.Finite ℤ (M →+ N) :=
   Module.Finite.equiv (addMonoidHomLequivInt ℤ).symm
 
 instance add_monoid_hom : Module.Free ℤ (M →+ N) := by
-  let this : Module.Free ℤ (M →ₗ[ℤ] N) := Module.Free.linear_map _ _ _
+  letI : Module.Free ℤ (M →ₗ[ℤ] N) := Module.Free.linear_map _ _ _
   exact Module.Free.of_equiv (addMonoidHomLequivInt ℤ).symm
 
 end Integer

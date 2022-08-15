@@ -48,11 +48,11 @@ variable (R : Type _) (M : Type _)
 
 variable [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler module R
+-- ./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler module R
 /-- The dual space of an R-module M is the R-module of linear maps `M → R`. -/
 def Dual :=
   M →ₗ[R] R deriving AddCommMonoidₓ,
-  «./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler module R»
+  «./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler module R»
 
 instance {S : Type _} [CommRingₓ S] {N : Type _} [AddCommGroupₓ N] [Module S N] : AddCommGroupₓ (Dual S N) :=
   LinearMap.addCommGroup
@@ -304,7 +304,7 @@ end CommRingₓ
 @[simp]
 theorem total_coord [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [Fintype ι] (b : Basis ι R M) (f : ι →₀ R) (i : ι) :
     Finsupp.total ι (Dual R M) R b.Coord f (b i) = f i := by
-  have := Classical.decEq ι
+  haveI := Classical.decEq ι
   rw [← coe_dual_basis, total_dual_basis]
 
 -- TODO(jmc): generalize to rings, once `module.rank` is generalized
@@ -335,7 +335,7 @@ theorem dual_dim_eq [FiniteDimensional K V] : Cardinal.lift (Module.rank K V) = 
   (Basis.ofVectorSpace K V).dual_dim_eq
 
 theorem erange_coe [FiniteDimensional K V] : (eval K V).range = ⊤ := by
-  let this : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance
+  letI : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance
   exact (Basis.ofVectorSpace K V).eval_range
 
 variable (K V)
@@ -361,7 +361,7 @@ variable {R M ι : Type _}
 variable [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] [DecidableEq ι]
 
 /-- `e` and `ε` have characteristic properties of a basis and its dual -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure DualPair (e : ι → M) (ε : ι → Dual R M) where
   eval : ∀ i j : ι, ε i (e j) = if i = j then 1 else 0
   Total : ∀ {m : M}, (∀ i, ε i m = 0) → m = 0
@@ -383,7 +383,7 @@ variable {e : ι → M} {ε : ι → Dual R M}
 def coeffs [DecidableEq ι] (h : DualPair e ε) (m : M) : ι →₀ R where
   toFun := fun i => ε i m
   support := by
-    have := h.finite m
+    haveI := h.finite m
     exact { i : ι | ε i m ≠ 0 }.toFinset
   mem_support_to_fun := by
     intro i
@@ -819,7 +819,7 @@ variable [CommRingₓ R] [AddCommGroupₓ M] [AddCommGroupₓ N]
 
 variable [Module R M] [Module R N]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
 /-- An inverse to `dual_tensor_dual_map` given bases.
 -/
 noncomputable def dualDistribInvOfBasis (b : Basis ι R M) (c : Basis κ R N) :
@@ -827,7 +827,7 @@ noncomputable def dualDistribInvOfBasis (b : Basis ι R M) (c : Basis κ R N) :
   ∑ (i) (j),
     (ringLmapEquivSelf R ℕ _).symm (b.dualBasis i ⊗ₜ c.dualBasis j) ∘ₗ applyₗ (c j) ∘ₗ applyₗ (b i) ∘ₗ lcurry R M N R
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
 @[simp]
 theorem dual_distrib_inv_of_basis_apply (b : Basis ι R M) (c : Basis κ R N) (f : Dual R (M ⊗[R] N)) :
     dualDistribInvOfBasis b c f = ∑ (i) (j), f (b i ⊗ₜ c j) • b.dualBasis i ⊗ₜ c.dualBasis j := by

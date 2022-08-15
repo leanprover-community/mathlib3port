@@ -210,11 +210,11 @@ unsafe instance has_reflect : has_reflect rcases_patt
   | typed l e => ((quote.1 typed).subst (has_reflect l)).subst (reflect e)
   | tuple l =>
     (quote.1 fun l => tuple l).subst <|
-      have := has_reflect
+      haveI := has_reflect
       list.reflect l
   | alts l =>
     (quote.1 fun l => alts l).subst <|
-      have := has_reflect
+      haveI := has_reflect
       list.reflect l
 
 /-- Formats an `rcases` pattern. If the `bracket` argument is true, then it will be
@@ -419,7 +419,14 @@ unsafe def rcases (h : Option Name) (p : pexpr) (pat : rcases_patt) : tactic Uni
         interactive.generalize h () (p, x)
         get_local x
       | none => i_to_expr p
-  if e then focus1 (rcases_core pat e >>= clear_goals)
+  if e then
+      match pat with
+      | some x => do
+        let n ← revert e
+        let e ← intro x
+        intron (n - 1)
+        focus1 (rcases_core pat e >>= clear_goals)
+      | none => focus1 (rcases_core pat e >>= clear_goals)
     else do
       let x ← pat mk_fresh_name pure
       let n ← revert_kdependencies e semireducible
@@ -443,7 +450,14 @@ unsafe def rcases_many (ps : listΠ pexpr) (pat : rcases_patt) : tactic Unit := 
           | rcases_patt.typed _ ty => pquote.1 (%%ₓp : %%ₓty)
           | _ => p
         let e ← i_to_expr p
-        if e then pure (pat, e)
+        if e then
+            match pat with
+            | some x => do
+              let n ← revert e
+              let e ← intro x
+              intron (n - 1)
+              pure (pat, e)
+            | none => pure (pat, e)
           else do
             let x ← pat mk_fresh_name pure
             let n ← revert_kdependencies e semireducible
@@ -773,7 +787,7 @@ patt_med ::= (patt_hi "|")* patt_hi
 unsafe def rcases_patt_parse_list :=
   with_desc "patt_med" rcases_patt_parse_list'
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
 /-- Parse the optional depth argument `(: n)?` of `rcases?` and `rintro?`, with default depth 5. -/
 unsafe def rcases_parse_depth : parser Nat := do
   let o ← «expr ?» (tk ":" *> small_nat)
@@ -791,8 +805,8 @@ unsafe inductive rcases_args
   | rcases_many (tgt : listΠ pexpr) (pat : rcases_patt)
   deriving has_reflect
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
 /-- Syntax for a `rcases` pattern:
 * `rcases? expr (: n)?`
 * `rcases (h :)? expr (with patt_list (: expr)?)?`. -/
@@ -818,7 +832,7 @@ unsafe def rcases_parse : parser rcases_args :=
         let depth ← rcases_parse_depth
         pure <| rcases_args.hint p depth
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr *»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr *»
 mutual
   /-- `rintro_patt_parse_hi` and `rintro_patt_parse` are like `rcases_patt_parse`, but is used for
   parsing top level `rintro` patterns, which allow sequences like `(x y : t)` in addition to simple
@@ -1021,8 +1035,8 @@ add_tactic_doc
 
 setup_tactic_parser
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
 /-- Parses `patt? (: expr)? (:= expr)?`, the arguments for `obtain`.
  (This is almost the same as `rcases_patt_parse`,
 but it allows the pattern part to be empty.) -/

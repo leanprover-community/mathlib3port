@@ -3,6 +3,7 @@ Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
+import Mathbin.Geometry.Manifold.LocalInvariantProperties
 import Mathbin.Geometry.Manifold.TangentBundle
 
 /-!
@@ -114,10 +115,73 @@ We use the names `mdifferentiable` and `mfderiv`, where the prefix letter `m` me
 -/
 
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type _}
   [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _} [TopologicalSpace M] [ChartedSpace H M] {E' : Type _}
-  [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H'] (I' : ModelWithCorners 𝕜 E' H') {M' : Type _}
-  [TopologicalSpace M'] [ChartedSpace H' M']
+  [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H'] (I' : ModelWithCorners 𝕜 E' H')
+  {M' : Type _} [TopologicalSpace M'] [ChartedSpace H' M']
+
+/-- Property in the model space of a model with corners of being differentiable within at set at a
+point, when read in the model vector space. This property will be lifted to manifolds to define
+differentiable functions between manifolds. -/
+def DifferentiableWithinAtProp (f : H → H') (s : Set H) (x : H) : Prop :=
+  DifferentiableWithinAt 𝕜 (I' ∘ f ∘ I.symm) (⇑I.symm ⁻¹' s ∩ Set.Range I) (I x)
+
+/-- Being differentiable in the model space is a local property, invariant under smooth maps.
+Therefore, it will lift nicely to manifolds. -/
+theorem differentiable_within_at_local_invariant_prop :
+    (contDiffGroupoid ⊤ I).LocalInvariantProp (contDiffGroupoid ⊤ I') (DifferentiableWithinAtProp I I') :=
+  { is_local := by
+      intro s x u f u_open xu
+      have : I.symm ⁻¹' (s ∩ u) ∩ Set.Range I = I.symm ⁻¹' s ∩ Set.Range I ∩ I.symm ⁻¹' u := by
+        simp only [← Set.inter_right_comm, ← Set.preimage_inter]
+      rw [DifferentiableWithinAtProp, DifferentiableWithinAtProp, this]
+      symm
+      apply differentiable_within_at_inter
+      have : u ∈ 𝓝 (I.symm (I x)) := by
+        rw [ModelWithCorners.left_inv]
+        exact IsOpen.mem_nhds u_open xu
+      apply ContinuousAt.preimage_mem_nhds I.continuous_symm.continuous_at this,
+    right_invariance' := by
+      intro s x f e he hx h
+      rw [DifferentiableWithinAtProp] at h⊢
+      have : I x = (I ∘ e.symm ∘ I.symm) (I (e x)) := by
+        simp' only [← hx] with mfld_simps
+      rw [this] at h
+      have : I (e x) ∈ I.symm ⁻¹' e.target ∩ Set.Range I := by
+        simp' only [← hx] with mfld_simps
+      have := (mem_groupoid_of_pregroupoid.2 he).2.ContDiffWithinAt this
+      convert (h.comp' _ (this.differentiable_within_at le_top)).mono_of_mem _ using 1
+      · ext y
+        simp' only with mfld_simps
+        
+      refine'
+        mem_nhds_within.mpr
+          ⟨I.symm ⁻¹' e.target, e.open_target.preimage I.continuous_symm, by
+            simp_rw [Set.mem_preimage, I.left_inv, e.maps_to hx], _⟩
+      mfld_set_tac,
+    congr_of_forall := by
+      intro s x f g h hx hf
+      apply hf.congr
+      · intro y hy
+        simp' only with mfld_simps  at hy
+        simp' only [← h, ← hy] with mfld_simps
+        
+      · simp' only [← hx] with mfld_simps
+        ,
+    left_invariance' := by
+      intro s x f e' he' hs hx h
+      rw [DifferentiableWithinAtProp] at h⊢
+      have A : (I' ∘ f ∘ I.symm) (I x) ∈ I'.symm ⁻¹' e'.source ∩ Set.Range I' := by
+        simp' only [← hx] with mfld_simps
+      have := (mem_groupoid_of_pregroupoid.2 he').1.ContDiffWithinAt A
+      convert (this.differentiable_within_at le_top).comp _ h _
+      · ext y
+        simp' only with mfld_simps
+        
+      · intro y hy
+        simp' only with mfld_simps  at hy
+        simpa only [← hy] with mfld_simps using hs hy.1
+         }
 
 /-- Predicate ensuring that, at a point and within a set, a function can have at most one
 derivative. This is expressed using the preferred chart at the considered point. -/
@@ -146,6 +210,10 @@ def MdifferentiableWithinAt (f : M → M') (s : Set M) (x : M) :=
   ContinuousWithinAt f s x ∧
     DifferentiableWithinAt 𝕜 (writtenInExtChartAt I I' x f) ((extChartAt I x).symm ⁻¹' s ∩ Range I) ((extChartAt I x) x)
 
+theorem mdifferentiable_within_at_iff_lift_prop_within_at (f : M → M') (s : Set M) (x : M) :
+    MdifferentiableWithinAt I I' f s x ↔ LiftPropWithinAt (DifferentiableWithinAtProp I I') f s x := by
+  rfl
+
 /-- `mdifferentiable_at I I' f x` indicates that the function `f` between manifolds
 has a derivative at the point `x`.
 This is a generalization of `differentiable_at` to manifolds.
@@ -156,6 +224,15 @@ and in particular by coincidence `written_in_ext_chart_at I I' x f` could be dif
 this would not mean anything relevant. -/
 def MdifferentiableAt (f : M → M') (x : M) :=
   ContinuousAt f x ∧ DifferentiableWithinAt 𝕜 (writtenInExtChartAt I I' x f) (Range I) ((extChartAt I x) x)
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]
+theorem mdifferentiable_at_iff_lift_prop_at (f : M → M') (x : M) :
+    MdifferentiableAt I I' f x ↔ LiftPropAt (DifferentiableWithinAtProp I I') f x := by
+  trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
+  · rw [continuous_within_at_univ]
+    
+  · simp [← DifferentiableWithinAtProp, ← Set.univ_inter]
+    
 
 /-- `mdifferentiable_on I I' f s` indicates that the function `f` between manifolds
 has a derivative within `s` at all points of `s`.
@@ -233,14 +310,14 @@ section DerivativesProperties
 /-! ### Unique differentiability sets in manifolds -/
 
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type _}
   [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _} [TopologicalSpace M] [ChartedSpace H M]
   --
   {E' : Type _}
-  [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H'] {I' : ModelWithCorners 𝕜 E' H'} {M' : Type _}
-  [TopologicalSpace M'] [ChartedSpace H' M'] {E'' : Type _} [NormedGroup E''] [NormedSpace 𝕜 E''] {H'' : Type _}
-  [TopologicalSpace H''] {I'' : ModelWithCorners 𝕜 E'' H''} {M'' : Type _} [TopologicalSpace M''] [ChartedSpace H'' M'']
-  {f f₀ f₁ : M → M'} {x : M} {s t : Set M} {g : M' → M''} {u : Set M'}
+  [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H'] {I' : ModelWithCorners 𝕜 E' H'}
+  {M' : Type _} [TopologicalSpace M'] [ChartedSpace H' M'] {E'' : Type _} [NormedAddCommGroup E''] [NormedSpace 𝕜 E'']
+  {H'' : Type _} [TopologicalSpace H''] {I'' : ModelWithCorners 𝕜 E'' H''} {M'' : Type _} [TopologicalSpace M'']
+  [ChartedSpace H'' M''] {f f₀ f₁ : M → M'} {x : M} {s t : Set M} {g : M' → M''} {u : Set M'}
 
 theorem unique_mdiff_within_at_univ : UniqueMdiffWithinAt I Univ x := by
   unfold UniqueMdiffWithinAt
@@ -315,6 +392,17 @@ theorem mdifferentiable_within_at_iff {f : M → M'} {s : Set M} {x : M} :
   simp only [← HasFderivWithinAt, ← nhds_within_inter, ← nhds_within_ext_chart_target_eq]
 
 include Is I's
+
+/-- One can reformulate differentiability within a set at a point as continuity within this set at
+this point, and differentiability in any chart containing that point. -/
+theorem mdifferentiable_within_at_iff_of_mem_source {x' : M} {y : M'} (hx : x' ∈ (ChartedSpace.chartAt H x).Source)
+    (hy : f x' ∈ (ChartedSpace.chartAt H' y).Source) :
+    MdifferentiableWithinAt I I' f s x' ↔
+      ContinuousWithinAt f s x' ∧
+        DifferentiableWithinAt 𝕜 (extChartAt I' y ∘ f ∘ (extChartAt I x).symm)
+          ((extChartAt I x).symm ⁻¹' s ∩ Set.Range I) ((extChartAt I x) x') :=
+  (differentiable_within_at_local_invariant_prop I I').lift_prop_within_at_indep_chart
+    (StructureGroupoid.chart_mem_maximal_atlas _ x) hx (StructureGroupoid.chart_mem_maximal_atlas _ y) hy
 
 theorem mfderiv_within_zero_of_not_mdifferentiable_within_at (h : ¬MdifferentiableWithinAt I I' f s x) :
     mfderivWithin I I' f s x = 0 := by
@@ -473,6 +561,15 @@ theorem mfderiv_within_inter (ht : t ∈ 𝓝 x) (hs : UniqueMdiffWithinAt I s x
     mfderivWithin I I' f (s ∩ t) x = mfderivWithin I I' f s x := by
   rw [mfderivWithin, mfderivWithin, ext_chart_preimage_inter_eq, mdifferentiable_within_at_inter ht,
     fderiv_within_inter (ext_chart_preimage_mem_nhds I x ht) hs]
+
+theorem mdifferentiable_at_iff_of_mem_source {x' : M} {y : M'} (hx : x' ∈ (ChartedSpace.chartAt H x).Source)
+    (hy : f x' ∈ (ChartedSpace.chartAt H' y).Source) :
+    MdifferentiableAt I I' f x' ↔
+      ContinuousAt f x' ∧
+        DifferentiableWithinAt 𝕜 (extChartAt I' y ∘ f ∘ (extChartAt I x).symm) (Set.Range I) ((extChartAt I x) x') :=
+  mdifferentiable_within_at_univ.symm.trans <|
+    (mdifferentiable_within_at_iff_of_mem_source hx hy).trans <| by
+      rw [continuous_within_at_univ, Set.preimage_univ, Set.univ_inter]
 
 omit Is I's
 
@@ -745,8 +842,8 @@ this and related statements.
 -/
 
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {E' : Type _}
-  [NormedGroup E'] [NormedSpace 𝕜 E'] {f : E → E'} {s : Set E} {x : E}
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {E' : Type _}
+  [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {f : E → E'} {s : Set E} {x : E}
 
 theorem unique_mdiff_within_at_iff_unique_diff_within_at : UniqueMdiffWithinAt 𝓘(𝕜, E) s x ↔ UniqueDiffWithinAt 𝕜 s x :=
   by
@@ -830,10 +927,10 @@ section SpecificFunctions
 /-! ### Differentiability of specific functions -/
 
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type _}
   [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _} [TopologicalSpace M] [ChartedSpace H M]
-  [SmoothManifoldWithCorners I M] {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
-  (I' : ModelWithCorners 𝕜 E' H') {M' : Type _} [TopologicalSpace M'] [ChartedSpace H' M']
+  [SmoothManifoldWithCorners I M] {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : Type _}
+  [TopologicalSpace H'] (I' : ModelWithCorners 𝕜 E' H') {M' : Type _} [TopologicalSpace M'] [ChartedSpace H' M']
   [SmoothManifoldWithCorners I' M']
 
 namespace ContinuousLinearMap
@@ -1110,12 +1207,12 @@ end SpecificFunctions
 
 namespace LocalHomeomorph.Mdifferentiable
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type _}
   [TopologicalSpace H] {I : ModelWithCorners 𝕜 E H} {M : Type _} [TopologicalSpace M] [ChartedSpace H M] {E' : Type _}
-  [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H'] {I' : ModelWithCorners 𝕜 E' H'} {M' : Type _}
-  [TopologicalSpace M'] [ChartedSpace H' M'] {E'' : Type _} [NormedGroup E''] [NormedSpace 𝕜 E''] {H'' : Type _}
-  [TopologicalSpace H''] {I'' : ModelWithCorners 𝕜 E'' H''} {M'' : Type _} [TopologicalSpace M''] [ChartedSpace H'' M'']
-  {e : LocalHomeomorph M M'} (he : e.Mdifferentiable I I') {e' : LocalHomeomorph M' M''}
+  [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H'] {I' : ModelWithCorners 𝕜 E' H'}
+  {M' : Type _} [TopologicalSpace M'] [ChartedSpace H' M'] {E'' : Type _} [NormedAddCommGroup E''] [NormedSpace 𝕜 E'']
+  {H'' : Type _} [TopologicalSpace H''] {I'' : ModelWithCorners 𝕜 E'' H''} {M'' : Type _} [TopologicalSpace M'']
+  [ChartedSpace H'' M''] {e : LocalHomeomorph M M'} (he : e.Mdifferentiable I I') {e' : LocalHomeomorph M' M''}
 
 include he
 
@@ -1199,7 +1296,7 @@ end LocalHomeomorph.Mdifferentiable
 
 section extChartAt
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type _}
   [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _} [TopologicalSpace M] [ChartedSpace H M]
   [SmoothManifoldWithCorners I M] {s : Set M} {x y : M}
 
@@ -1225,10 +1322,11 @@ end extChartAt
 
 section UniqueMdiff
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type _}
   [TopologicalSpace H] {I : ModelWithCorners 𝕜 E H} {M : Type _} [TopologicalSpace M] [ChartedSpace H M]
-  [SmoothManifoldWithCorners I M] {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
-  {I' : ModelWithCorners 𝕜 E' H'} {M' : Type _} [TopologicalSpace M'] [ChartedSpace H' M'] {s : Set M}
+  [SmoothManifoldWithCorners I M] {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : Type _}
+  [TopologicalSpace H'] {I' : ModelWithCorners 𝕜 E' H'} {M' : Type _} [TopologicalSpace M'] [ChartedSpace H' M']
+  {s : Set M}
 
 /-- If a set has the unique differential property, then its image under a local
 diffeomorphism also has the unique differential property. -/
@@ -1329,7 +1427,7 @@ theorem UniqueMdiffOn.unique_diff_on_inter_preimage (hs : UniqueMdiffOn I s) (x 
     exact IsOpen.mem_nhds (ext_chart_at_open_source I' y) hz.2
   exact this.unique_diff_on_target_inter _
 
-variable {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] (Z : BasicSmoothVectorBundleCore I M F)
+variable {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F] (Z : BasicSmoothVectorBundleCore I M F)
 
 /-- In a smooth fiber bundle constructed from core, the preimage under the projection of a set with
 unique differential in the basis also has unique differential. -/
@@ -1365,8 +1463,8 @@ theorem UniqueMdiffOn.smooth_bundle_preimage (hs : UniqueMdiffOn I s) :
   have :
     (fun p : E × F => (I.symm p.1, p.snd)) ⁻¹' e.target ∩
           (fun p : E × F => (I.symm p.1, p.snd)) ⁻¹' (e.symm ⁻¹' (Sigma.fst ⁻¹' s)) ∩
-        range I ×ˢ (univ : Set F) =
-      (I.symm ⁻¹' (e₀.target ∩ e₀.symm ⁻¹' s) ∩ range I) ×ˢ (univ : Set F) :=
+        range I ×ˢ univ =
+      (I.symm ⁻¹' (e₀.target ∩ e₀.symm ⁻¹' s) ∩ range I) ×ˢ univ :=
     by
     mfld_set_tac
   intro q hq

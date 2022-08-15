@@ -161,7 +161,7 @@ universe v u
 we will equip with a category structure where the morphisms are formal `R`-linear combinations
 of the morphisms in `C`.
 -/
-@[nolint unused_arguments has_inhabited_instance]
+@[nolint unused_arguments has_nonempty_instance]
 def Free (R : Type _) (C : Type u) :=
   C
 
@@ -259,19 +259,21 @@ def lift (F : C ⥤ D) : Free R C ⥤ D where
     simp
   map_comp' := fun X Y Z f g => by
     apply Finsupp.induction_linear f
-    · simp
+    · simp only [← limits.zero_comp, ← sum_zero_index]
       
     · intro f₁ f₂ w₁ w₂
       rw [add_comp]
       rw [Finsupp.sum_add_index, Finsupp.sum_add_index]
-      · simp [← w₁, ← w₂, ← add_comp]
+      · simp only [← w₁, ← w₂, ← add_comp]
         
-      · simp
+      · intros
+        rw [zero_smul]
         
       · intros
         simp only [← add_smul]
         
-      · simp
+      · intros
+        rw [zero_smul]
         
       · intros
         simp only [← add_smul]
@@ -279,19 +281,21 @@ def lift (F : C ⥤ D) : Free R C ⥤ D where
       
     · intro f' r
       apply Finsupp.induction_linear g
-      · simp
+      · simp only [← limits.comp_zero, ← sum_zero_index]
         
       · intro f₁ f₂ w₁ w₂
         rw [comp_add]
         rw [Finsupp.sum_add_index, Finsupp.sum_add_index]
-        · simp [← w₁, ← w₂, ← add_comp]
+        · simp only [← w₁, ← w₂, ← comp_add]
           
-        · simp
+        · intros
+          rw [zero_smul]
           
         · intros
           simp only [← add_smul]
           
-        · simp
+        · intros
+          rw [zero_smul]
           
         · intros
           simp only [← add_smul]

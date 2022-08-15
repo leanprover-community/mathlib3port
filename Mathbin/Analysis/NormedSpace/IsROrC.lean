@@ -30,11 +30,12 @@ This file exists mainly to avoid importing `is_R_or_C` in the main normed space 
 open Metric
 
 @[simp, is_R_or_C_simps]
-theorem IsROrC.norm_coe_norm {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedGroup E] {z : E} : ∥(∥z∥ : 𝕜)∥ = ∥z∥ := by
+theorem IsROrC.norm_coe_norm {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedAddCommGroup E] {z : E} : ∥(∥z∥ : 𝕜)∥ = ∥z∥ :=
+  by
   unfold_coes
   simp only [← norm_algebra_map', ← RingHom.to_fun_eq_coe, ← norm_norm]
 
-variable {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
+variable {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 /-- Lemma to normalize a vector in a normed space `E` over either `ℂ` or `ℝ` to unit length. -/
 @[simp]
@@ -72,7 +73,7 @@ theorem LinearMap.bound_of_sphere_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f :
     
   apply mul_le_mul norm_f_z₁ rfl.le (norm_nonneg z) ((norm_nonneg _).trans norm_f_z₁)
 
-/-- `linear_map.bound_of_ball_bound` is a version of this over arbitrary nondiscrete normed fields.
+/-- `linear_map.bound_of_ball_bound` is a version of this over arbitrary nontrivially normed fields.
 It produces a less precise bound so we keep both versions. -/
 theorem LinearMap.bound_of_ball_bound' {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →ₗ[𝕜] 𝕜)
     (h : ∀, ∀ z ∈ ClosedBall (0 : E) r, ∀, ∥f z∥ ≤ c) (z : E) : ∥f z∥ ≤ c / r * ∥z∥ :=
@@ -96,6 +97,6 @@ variable (𝕜)
 include 𝕜
 
 theorem NormedSpace.sphere_nonempty_is_R_or_C [Nontrivial E] {r : ℝ} (hr : 0 ≤ r) : Nonempty (Sphere (0 : E) r) := by
-  let this : NormedSpace ℝ E := NormedSpace.restrictScalars ℝ 𝕜 E
+  letI : NormedSpace ℝ E := NormedSpace.restrictScalars ℝ 𝕜 E
   exact set.nonempty_coe_sort.mpr (normed_space.sphere_nonempty.mpr hr)
 

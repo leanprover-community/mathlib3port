@@ -6,6 +6,8 @@ Authors: Bhavik Mehta, Andrew Yang
 import Mathbin.CategoryTheory.Limits.Shapes.Terminal
 import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
 import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
+import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Pullbacks
+import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Terminal
 
 /-!
 # Constructing binary product from pullbacks and terminal object.
@@ -17,35 +19,38 @@ We also provide the dual.
 -/
 
 
-universe v u
+universe v v' u u'
 
 open CategoryTheory CategoryTheory.Category CategoryTheory.Limits
 
-variable {C : Type u} [Category.{v} C]
+variable {C : Type u} [Category.{v} C] {D : Type u'} [Category.{v'} D] (F : C ⥤ D)
+
+/-- If a span is the pullback span over the terminal object, then it is a binary product. -/
+def isBinaryProductOfIsTerminalIsPullback (F : Discrete WalkingPair ⥤ C) (c : Cone F) {X : C} (hX : IsTerminal X)
+    (f : F.obj ⟨WalkingPair.left⟩ ⟶ X) (g : F.obj ⟨WalkingPair.right⟩ ⟶ X)
+    (hc :
+      IsLimit
+        (PullbackCone.mk (c.π.app ⟨WalkingPair.left⟩) (c.π.app ⟨WalkingPair.right⟩ : _) <|
+          hX.hom_ext (_ ≫ f) (_ ≫ g))) :
+    IsLimit c where
+  lift := fun s => hc.lift (PullbackCone.mk (s.π.app ⟨WalkingPair.left⟩) (s.π.app ⟨WalkingPair.right⟩) (hX.hom_ext _ _))
+  fac' := fun s j =>
+    Discrete.casesOn j fun j => WalkingPair.casesOn j (hc.fac _ WalkingCospan.left) (hc.fac _ WalkingCospan.right)
+  uniq' := fun s m J => by
+    let c' :=
+      pullback_cone.mk (m ≫ c.π.app ⟨walking_pair.left⟩) (m ≫ c.π.app ⟨walking_pair.right⟩ : _)
+        (hX.hom_ext (_ ≫ f) (_ ≫ g))
+    rw [← J, ← J]
+    apply hc.hom_ext
+    rintro (_ | (_ | _)) <;> simp only [← pullback_cone.mk_π_app_one, ← pullback_cone.mk_π_app]
+    exacts[(category.assoc _ _ _).symm.trans (hc.fac_assoc c' walking_cospan.left f).symm,
+      (hc.fac c' walking_cospan.left).symm, (hc.fac c' walking_cospan.right).symm]
 
 /-- The pullback over the terminal object is the product -/
 def isProductOfIsTerminalIsPullback {W X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) (h : W ⟶ X) (k : W ⟶ Y) (H₁ : IsTerminal Z)
-    (H₂ : IsLimit (PullbackCone.mk _ _ (show h ≫ f = k ≫ g from H₁.hom_ext _ _))) : IsLimit (BinaryFan.mk h k) where
-  lift := fun c => H₂.lift (PullbackCone.mk (c.π.app ⟨WalkingPair.left⟩) (c.π.app ⟨WalkingPair.right⟩) (H₁.hom_ext _ _))
-  fac' := fun c j => by
-    cases j
-    convert
-      H₂.fac (pullback_cone.mk (c.π.app ⟨walking_pair.left⟩) (c.π.app ⟨walking_pair.right⟩) (H₁.hom_ext _ _))
-        (some j) using
-      1
-    rcases j with ⟨⟩ <;> rfl
-  uniq' := fun c m hm => by
-    apply pullback_cone.is_limit.hom_ext H₂
-    · exact
-        (hm ⟨walking_pair.left⟩).trans
-          (H₂.fac (pullback_cone.mk (c.π.app ⟨walking_pair.left⟩) (c.π.app ⟨walking_pair.right⟩) (H₁.hom_ext _ _))
-              walking_cospan.left).symm
-      
-    · exact
-        (hm ⟨walking_pair.right⟩).trans
-          (H₂.fac (pullback_cone.mk (c.π.app ⟨walking_pair.left⟩) (c.π.app ⟨walking_pair.right⟩) (H₁.hom_ext _ _))
-              walking_cospan.right).symm
-      
+    (H₂ : IsLimit (PullbackCone.mk _ _ (show h ≫ f = k ≫ g from H₁.hom_ext _ _))) : IsLimit (BinaryFan.mk h k) := by
+  apply isBinaryProductOfIsTerminalIsPullback _ _ H₁
+  exact H₂
 
 /-- The product is the pullback over the terminal object. -/
 def isPullbackOfIsTerminalIsProduct {W X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) (h : W ⟶ X) (k : W ⟶ Y) (H₁ : IsTerminal Z)
@@ -69,20 +74,26 @@ noncomputable def limitConeOfTerminalAndPullbacks [HasTerminal C] [HasPullbacks 
   Cone :=
     { x := pullback (terminal.from (F.obj ⟨WalkingPair.left⟩)) (terminal.from (F.obj ⟨WalkingPair.right⟩)),
       π := Discrete.natTrans fun x => Discrete.casesOn x fun x => WalkingPair.casesOn x pullback.fst pullback.snd }
-  IsLimit :=
-    { lift := fun c =>
-        pullback.lift (c.π.app ⟨WalkingPair.left⟩) (c.π.app ⟨WalkingPair.right⟩) (Subsingleton.elimₓ _ _),
-      fac' := fun s c => Discrete.casesOn c fun c => WalkingPair.casesOn c (limit.lift_π _ _) (limit.lift_π _ _),
-      uniq' := fun s m J => by
-        rw [← J, ← J]
-        ext <;> rw [limit.lift_π] <;> rfl }
+  IsLimit := isBinaryProductOfIsTerminalIsPullback F _ terminalIsTerminal _ _ (pullbackIsPullback _ _)
 
 variable (C)
 
 /-- Any category with pullbacks and terminal object has binary products. -/
 -- This is not an instance, as it is not always how one wants to construct binary products!
-theorem has_binary_products_of_terminal_and_pullbacks [HasTerminal C] [HasPullbacks C] : HasBinaryProducts C :=
+theorem has_binary_products_of_has_terminal_and_pullbacks [HasTerminal C] [HasPullbacks C] : HasBinaryProducts C :=
   { HasLimit := fun F => HasLimit.mk (limitConeOfTerminalAndPullbacks F) }
+
+variable {C}
+
+/-- A functor that preserves terminal objects and pullbacks preserves binary products. -/
+noncomputable def preservesBinaryProductsOfPreservesTerminalAndPullbacks [HasTerminal C] [HasPullbacks C]
+    [PreservesLimitsOfShape (Discrete.{0} Pempty) F] [PreservesLimitsOfShape WalkingCospan F] :
+    PreservesLimitsOfShape (Discrete WalkingPair) F :=
+  ⟨fun K =>
+    preservesLimitOfPreservesLimitCone (limitConeOfTerminalAndPullbacks K).2
+      (by
+        apply isBinaryProductOfIsTerminalIsPullback _ _ (is_limit_of_has_terminal_of_preserves_limit F)
+        apply is_limit_of_has_pullback_of_preserves_limit)⟩
 
 /-- In a category with a terminal object and pullbacks,
 a product of objects `X` and `Y` is isomorphic to a pullback. -/
@@ -90,33 +101,34 @@ noncomputable def prodIsoPullback [HasTerminal C] [HasPullbacks C] (X Y : C) [Ha
     X ⨯ Y ≅ pullback (terminal.from X) (terminal.from Y) :=
   limit.isoLimitCone (limitConeOfTerminalAndPullbacks _)
 
-variable {C}
+/-- If a cospan is the pushout cospan under the initial object, then it is a binary coproduct. -/
+def isBinaryCoproductOfIsInitialIsPushout (F : Discrete WalkingPair ⥤ C) (c : Cocone F) {X : C} (hX : IsInitial X)
+    (f : X ⟶ F.obj ⟨WalkingPair.left⟩) (g : X ⟶ F.obj ⟨WalkingPair.right⟩)
+    (hc :
+      IsColimit
+        (PushoutCocone.mk (c.ι.app ⟨WalkingPair.left⟩) (c.ι.app ⟨WalkingPair.right⟩ : _) <|
+          hX.hom_ext (f ≫ _) (g ≫ _))) :
+    IsColimit c where
+  desc := fun s =>
+    hc.desc (PushoutCocone.mk (s.ι.app ⟨WalkingPair.left⟩) (s.ι.app ⟨WalkingPair.right⟩) (hX.hom_ext _ _))
+  fac' := fun s j =>
+    Discrete.casesOn j fun j => WalkingPair.casesOn j (hc.fac _ WalkingSpan.left) (hc.fac _ WalkingSpan.right)
+  uniq' := fun s m J => by
+    let c' :=
+      pushout_cocone.mk (c.ι.app ⟨walking_pair.left⟩ ≫ m) (c.ι.app ⟨walking_pair.right⟩ ≫ m)
+        (hX.hom_ext (f ≫ _) (g ≫ _))
+    rw [← J, ← J]
+    apply hc.hom_ext
+    rintro (_ | (_ | _)) <;> simp only [← pushout_cocone.mk_ι_app_zero, ← pushout_cocone.mk_ι_app, ← category.assoc]
+    congr 1
+    exacts[(hc.fac c' walking_span.left).symm, (hc.fac c' walking_span.left).symm, (hc.fac c' walking_span.right).symm]
 
 /-- The pushout under the initial object is the coproduct -/
 def isCoproductOfIsInitialIsPushout {W X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) (h : W ⟶ X) (k : W ⟶ Y) (H₁ : IsInitial W)
-    (H₂ : IsColimit (PushoutCocone.mk _ _ (show h ≫ f = k ≫ g from H₁.hom_ext _ _))) :
-    IsColimit (BinaryCofan.mk f g) where
-  desc := fun c =>
-    H₂.desc (PushoutCocone.mk (c.ι.app ⟨WalkingPair.left⟩) (c.ι.app ⟨WalkingPair.right⟩) (H₁.hom_ext _ _))
-  fac' := fun c j => by
-    cases j
-    convert
-      H₂.fac (pushout_cocone.mk (c.ι.app ⟨walking_pair.left⟩) (c.ι.app ⟨walking_pair.right⟩) (H₁.hom_ext _ _))
-        (some j) using
-      1
-    cases j <;> rfl
-  uniq' := fun c m hm => by
-    apply pushout_cocone.is_colimit.hom_ext H₂
-    · exact
-        (hm ⟨walking_pair.left⟩).trans
-          (H₂.fac (pushout_cocone.mk (c.ι.app ⟨walking_pair.left⟩) (c.ι.app ⟨walking_pair.right⟩) (H₁.hom_ext _ _))
-              walking_cospan.left).symm
-      
-    · exact
-        (hm ⟨walking_pair.right⟩).trans
-          (H₂.fac (pushout_cocone.mk (c.ι.app ⟨walking_pair.left⟩) (c.ι.app ⟨walking_pair.right⟩) (H₁.hom_ext _ _))
-              walking_cospan.right).symm
-      
+    (H₂ : IsColimit (PushoutCocone.mk _ _ (show h ≫ f = k ≫ g from H₁.hom_ext _ _))) : IsColimit (BinaryCofan.mk f g) :=
+  by
+  apply isBinaryCoproductOfIsInitialIsPushout _ _ H₁
+  exact H₂
 
 /-- The coproduct is the pushout under the initial object. -/
 def isPushoutOfIsInitialIsCoproduct {W X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) (h : W ⟶ X) (k : W ⟶ Y) (H₁ : IsInitial W)
@@ -141,19 +153,26 @@ noncomputable def colimitCoconeOfInitialAndPushouts [HasInitial C] [HasPushouts 
   Cocone :=
     { x := pushout (initial.to (F.obj ⟨WalkingPair.left⟩)) (initial.to (F.obj ⟨WalkingPair.right⟩)),
       ι := Discrete.natTrans fun x => Discrete.casesOn x fun x => WalkingPair.casesOn x pushout.inl pushout.inr }
-  IsColimit :=
-    { desc := fun c => pushout.desc (c.ι.app ⟨WalkingPair.left⟩) (c.ι.app ⟨WalkingPair.right⟩) (Subsingleton.elimₓ _ _),
-      fac' := fun s c => Discrete.casesOn c fun c => WalkingPair.casesOn c (colimit.ι_desc _ _) (colimit.ι_desc _ _),
-      uniq' := fun s m J => by
-        rw [← J, ← J]
-        ext <;> rw [colimit.ι_desc] <;> rfl }
+  IsColimit := isBinaryCoproductOfIsInitialIsPushout F _ initialIsInitial _ _ (pushoutIsPushout _ _)
 
 variable (C)
 
 /-- Any category with pushouts and initial object has binary coproducts. -/
 -- This is not an instance, as it is not always how one wants to construct binary coproducts!
-theorem has_binary_coproducts_of_initial_and_pushouts [HasInitial C] [HasPushouts C] : HasBinaryCoproducts C :=
+theorem has_binary_coproducts_of_has_initial_and_pushouts [HasInitial C] [HasPushouts C] : HasBinaryCoproducts C :=
   { HasColimit := fun F => HasColimit.mk (colimitCoconeOfInitialAndPushouts F) }
+
+variable {C}
+
+/-- A functor that preserves initial objects and pushouts preserves binary coproducts. -/
+noncomputable def preservesBinaryCoproductsOfPreservesInitialAndPushouts [HasInitial C] [HasPushouts C]
+    [PreservesColimitsOfShape (Discrete.{0} Pempty) F] [PreservesColimitsOfShape WalkingSpan F] :
+    PreservesColimitsOfShape (Discrete WalkingPair) F :=
+  ⟨fun K =>
+    preservesColimitOfPreservesColimitCocone (colimitCoconeOfInitialAndPushouts K).2
+      (by
+        apply isBinaryCoproductOfIsInitialIsPushout _ _ (is_colimit_of_has_initial_of_preserves_colimit F)
+        apply is_colimit_of_has_pushout_of_preserves_colimit)⟩
 
 /-- In a category with an initial object and pushouts,
 a coproduct of objects `X` and `Y` is isomorphic to a pushout. -/

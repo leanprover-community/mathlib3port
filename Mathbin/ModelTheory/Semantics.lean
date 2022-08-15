@@ -139,6 +139,47 @@ theorem realize_restrict_var_left [DecidableEq α] {γ : Type _} {t : L.Term (Su
     exact congr rfl (funext fun i => ih i (h i (Finset.mem_univ i)))
     
 
+@[simp]
+theorem realize_constants_to_vars [L[[α]].Structure M] [(lhomWithConstants L α).IsExpansionOn M] {t : L[[α]].Term β}
+    {v : β → M} : t.constantsToVars.realize (Sum.elim (fun a => ↑(L.con a)) v) = t.realize v := by
+  induction' t with _ n f _ ih
+  · simp
+    
+  · cases n
+    · cases f
+      · simp [← ih]
+        
+      · simp only [← realize, ← constants_to_vars, ← Sum.elim_inl, ← fun_map_eq_coe_constants]
+        rfl
+        
+      
+    · cases f
+      · simp [← ih]
+        
+      · exact isEmptyElim f
+        
+      
+    
+
+@[simp]
+theorem realize_vars_to_constants [L[[α]].Structure M] [(lhomWithConstants L α).IsExpansionOn M] {t : L.Term (Sum α β)}
+    {v : β → M} : t.varsToConstants.realize v = t.realize (Sum.elim (fun a => ↑(L.con a)) v) := by
+  induction' t with ab n f ts ih
+  · cases ab <;> simp [← language.con]
+    
+  · simp [← ih]
+    
+
+theorem realize_constants_vars_equiv_left [L[[α]].Structure M] [(lhomWithConstants L α).IsExpansionOn M] {n}
+    {t : L[[α]].Term (Sum β (Finₓ n))} {v : β → M} {xs : Finₓ n → M} :
+    (constantsVarsEquivLeft t).realize (Sum.elim (Sum.elim (fun a => ↑(L.con a)) v) xs) = t.realize (Sum.elim v xs) :=
+  by
+  simp only [← constants_vars_equiv_left, ← realize_relabel, ← Equivₓ.coe_trans, ← Function.comp_app, ←
+    constants_vars_equiv_apply, ← relabel_equiv_symm_apply]
+  refine' trans _ realize_constants_to_vars
+  rcongr
+  rcases x with (a | (b | i)) <;> simp
+
 end Term
 
 namespace Lhom
@@ -149,7 +190,7 @@ theorem realize_on_term [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M]
   induction' t with _ n f ts ih
   · rfl
     
-  · simp only [← term.realize, ← Lhom.on_term, ← Lhom.is_expansion_on.map_on_function, ← ih]
+  · simp only [← term.realize, ← Lhom.on_term, ← Lhom.map_on_function, ← ih]
     
 
 end Lhom
@@ -258,7 +299,7 @@ theorem realize_foldr_sup (l : List (L.BoundedFormula α n)) (v : α → M) (xs 
   induction' l with φ l ih
   · simp
     
-  · simp_rw [List.foldr_cons, realize_sup, ih, exists_prop, List.mem_cons_iff, or_and_distrib_right, exists_or_distrib,
+  · simp_rw [List.foldr_cons, realize_sup, ih, exists_prop, List.mem_cons_iffₓ, or_and_distrib_right, exists_or_distrib,
       exists_eq_left]
     
 
@@ -407,6 +448,18 @@ theorem realize_restrict_free_var [DecidableEq α] {n : ℕ} {φ : L.BoundedForm
   · simp [← restrict_free_var, ← realize, ← ih3]
     
 
+theorem realize_constants_vars_equiv [L[[α]].Structure M] [(lhomWithConstants L α).IsExpansionOn M] {n}
+    {φ : L[[α]].BoundedFormula β n} {v : β → M} {xs : Finₓ n → M} :
+    (constantsVarsEquiv φ).realize (Sum.elim (fun a => ↑(L.con a)) v) xs ↔ φ.realize v xs := by
+  refine' realize_map_term_rel_id (fun n t xs => realize_constants_vars_equiv_left) fun n R xs => _
+  rw [← (Lhom_with_constants L α).map_on_relation (Equivₓ.sumEmpty (L.relations n) ((constants_on α).Relations n) R) xs]
+  rcongr
+  cases R
+  · simp
+    
+  · exact isEmptyElim R
+    
+
 variable [Nonempty M]
 
 theorem realize_all_lift_at_one_self {n : ℕ} {φ : L.BoundedFormula α n} {v : α → M} {xs : Finₓ n → M} :
@@ -508,7 +561,7 @@ theorem realize_on_bounded_formula [L'.Structure M] (φ : L →ᴸ L') [φ.IsExp
   · simp only [← on_bounded_formula, ← realize_bd_equal, ← realize_on_term]
     rfl
     
-  · simp only [← on_bounded_formula, ← realize_rel, ← realize_on_term, ← is_expansion_on.map_on_relation]
+  · simp only [← on_bounded_formula, ← realize_rel, ← realize_on_term, ← Lhom.map_on_relation]
     rfl
     
   · simp only [← on_bounded_formula, ← ih1, ← ih2, ← realize_imp]

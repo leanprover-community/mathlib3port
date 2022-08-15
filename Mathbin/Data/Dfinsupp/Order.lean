@@ -50,11 +50,8 @@ theorem le_def {f g : Π₀ i, α i} : f ≤ g ↔ ∀ i, f i ≤ g i :=
 
 /-- The order on `dfinsupp`s over a partial order embeds into the order on functions -/
 def orderEmbeddingToFun : (Π₀ i, α i) ↪o ∀ i, α i where
-  toFun := fun f => f
-  inj' := fun f g h =>
-    Dfinsupp.ext fun i => by
-      dsimp'  at h
-      rw [h]
+  toFun := coeFn
+  inj' := coe_fn_injective
   map_rel_iff' := fun a b => (@le_def _ _ _ _ a b).symm
 
 @[simp]

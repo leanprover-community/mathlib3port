@@ -48,6 +48,25 @@ instance AddGroupₓ.has_uniform_continuous_const_smul_int [AddGroupₓ X] [Unif
     HasUniformContinuousConstSmul ℤ X :=
   ⟨uniform_continuous_const_zsmul⟩
 
+/-- A `distrib_mul_action` that is continuous on a uniform group is uniformly continuous.
+This can't be an instance due to it forming a loop with
+`has_uniform_continuous_const_smul.to_has_continuous_const_smul` -/
+theorem has_uniform_continuous_const_smul_of_continuous_const_smul [Monoidₓ R] [AddCommGroupₓ M] [DistribMulAction R M]
+    [UniformSpace M] [UniformAddGroup M] [HasContinuousConstSmul R M] : HasUniformContinuousConstSmul R M :=
+  ⟨fun r =>
+    uniform_continuous_of_continuous_at_zero (DistribMulAction.toAddMonoidHom M r)
+      (Continuous.continuous_at (continuous_const_smul r))⟩
+
+/-- The action of `semiring.to_module` is uniformly continuous. -/
+instance Ringₓ.has_uniform_continuous_const_smul [Ringₓ R] [UniformSpace R] [UniformAddGroup R] [HasContinuousMul R] :
+    HasUniformContinuousConstSmul R R :=
+  has_uniform_continuous_const_smul_of_continuous_const_smul _ _
+
+/-- The action of `semiring.to_opposite_module` is uniformly continuous. -/
+instance Ringₓ.has_uniform_continuous_const_op_smul [Ringₓ R] [UniformSpace R] [UniformAddGroup R]
+    [HasContinuousMul R] : HasUniformContinuousConstSmul Rᵐᵒᵖ R :=
+  has_uniform_continuous_const_smul_of_continuous_const_smul _ _
+
 section HasSmul
 
 variable [HasSmul M X]

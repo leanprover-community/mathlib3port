@@ -66,8 +66,9 @@ variable {ι : Type _} {R : Type _} {M : Type _}
 section Defs
 
 /-- Interpret a `finsupp` as a homogenous `dfinsupp`. -/
-def Finsupp.toDfinsupp [Zero M] (f : ι →₀ M) : Π₀ i : ι, M :=
-  ⟦⟨f, f.support.1, fun i => (Classical.em (f i = 0)).symm.imp_left Finsupp.mem_support_iff.mpr⟩⟧
+def Finsupp.toDfinsupp [Zero M] (f : ι →₀ M) : Π₀ i : ι, M where
+  toFun := f
+  support' := Trunc.mk ⟨f.support.1, fun i => (Classical.em (f i = 0)).symm.imp_left Finsupp.mem_support_iff.mpr⟩
 
 @[simp]
 theorem Finsupp.to_dfinsupp_coe [Zero M] (f : ι →₀ M) : ⇑f.toDfinsupp = f :=
@@ -231,9 +232,11 @@ open Finsupp
 /-- `finsupp.split` is an equivalence between `(Σ i, η i) →₀ N` and `Π₀ i, (η i →₀ N)`. -/
 def sigmaFinsuppEquivDfinsupp [Zero N] : ((Σi, η i) →₀ N) ≃ Π₀ i, η i →₀ N where
   toFun := fun f =>
-    ⟦⟨split f, (splitSupport f : Finset ι).val, fun i => by
-        rw [← Finset.mem_def, mem_split_support_iff_nonzero]
-        exact (Decidable.em _).symm⟩⟧
+    ⟨split f,
+      Trunc.mk
+        ⟨(splitSupport f : Finset ι).val, fun i => by
+          rw [← Finset.mem_def, mem_split_support_iff_nonzero]
+          exact (Decidable.em _).symm⟩⟩
   invFun := fun f => by
     refine'
       on_finset (Finset.sigma f.support fun j => (f j).support) (fun ji => f ji.1 ji.2) fun g hg =>

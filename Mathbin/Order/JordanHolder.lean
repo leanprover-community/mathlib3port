@@ -408,11 +408,13 @@ theorem append_succ_cast_add_aux {s₁ s₂ : CompositionSeries X} (i : Finₓ s
           s₂ 0 :=
         congr_arg s₂
           (by
-            simp [← Finₓ.ext_iff, ← this])_ = s₁ (Finₓ.last _) :=
-        h.symm _ = _ :=
+            simp [← Finₓ.ext_iff, ← this])
+      _ = s₁ (Finₓ.last _) := h.symm
+      _ = _ :=
         congr_arg s₁
           (by
             simp [← Finₓ.ext_iff, ← this])
+      
     
 
 theorem append_nat_add_aux {s₁ s₂ : CompositionSeries X} (i : Finₓ s₂.length) :

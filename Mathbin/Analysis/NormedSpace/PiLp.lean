@@ -178,10 +178,13 @@ theorem lipschitz_with_equiv_aux : LipschitzWith 1 (PiLp.equiv p β) := by
   intro x y
   simp only [← edist, ← forall_prop_of_true, ← one_mulₓ, ← Finset.mem_univ, ← Finset.sup_le_iff, ← Ennreal.coe_one]
   intro i
-  calc edist (x i) (y i) = (edist (x i) (y i) ^ p) ^ (1 / p) := by
-      simp [Ennreal.rpow_mul, ← cancel, -one_div]_ ≤ (∑ i, edist (x i) (y i) ^ p) ^ (1 / p) := by
+  calc
+    edist (x i) (y i) = (edist (x i) (y i) ^ p) ^ (1 / p) := by
+      simp [Ennreal.rpow_mul, ← cancel, -one_div]
+    _ ≤ (∑ i, edist (x i) (y i) ^ p) ^ (1 / p) := by
       apply Ennreal.rpow_le_rpow _ (one_div_nonneg.2 <| (Pos p).le)
       exact Finset.single_le_sum (fun i hi => (bot_le : (0 : ℝ≥0∞) ≤ _)) (Finset.mem_univ i)
+    
 
 theorem antilipschitz_with_equiv_aux : AntilipschitzWith ((Fintype.card ι : ℝ≥0 ) ^ (1 / p)) (PiLp.equiv p β) := by
   have pos : 0 < p := lt_of_lt_of_leₓ zero_lt_one fact_one_le_p.out
@@ -189,19 +192,18 @@ theorem antilipschitz_with_equiv_aux : AntilipschitzWith ((Fintype.card ι : ℝ
   have cancel : p * (1 / p) = 1 := mul_div_cancel' 1 (ne_of_gtₓ Pos)
   intro x y
   simp [← edist, -one_div]
-  calc (∑ i, edist (x i) (y i) ^ p) ^ (1 / p) ≤ (∑ i, edist (PiLp.equiv p β x) (PiLp.equiv p β y) ^ p) ^ (1 / p) := by
+  calc
+    (∑ i, edist (x i) (y i) ^ p) ^ (1 / p) ≤ (∑ i, edist (PiLp.equiv p β x) (PiLp.equiv p β y) ^ p) ^ (1 / p) := by
       apply Ennreal.rpow_le_rpow _ nonneg
       apply Finset.sum_le_sum fun i hi => _
       apply Ennreal.rpow_le_rpow _ (le_of_ltₓ Pos)
-      exact
-        Finset.le_sup
-          (Finset.mem_univ
-            i)_ = ((Fintype.card ι : ℝ≥0 ) ^ (1 / p) : ℝ≥0 ) * edist (PiLp.equiv p β x) (PiLp.equiv p β y) :=
-      by
+      exact Finset.le_sup (Finset.mem_univ i)
+    _ = ((Fintype.card ι : ℝ≥0 ) ^ (1 / p) : ℝ≥0 ) * edist (PiLp.equiv p β x) (PiLp.equiv p β y) := by
       simp only [← nsmul_eq_mul, ← Finset.card_univ, ← Ennreal.rpow_one, ← Finset.sum_const, ←
         Ennreal.mul_rpow_of_nonneg _ _ nonneg, Ennreal.rpow_mul, ← cancel]
       have : (Fintype.card ι : ℝ≥0∞) = (Fintype.card ι : ℝ≥0 ) := (Ennreal.coe_nat (Fintype.card ι)).symm
       rw [this, Ennreal.coe_rpow_of_nonneg _ nonneg]
+    
 
 theorem aux_uniformity_eq : 𝓤 (PiLp p β) = @uniformity _ (Pi.uniformSpace _) := by
   have A : UniformInducing (PiLp.equiv p β) :=
@@ -285,51 +287,51 @@ theorem antilipschitz_with_equiv [∀ i, PseudoEmetricSpace (β i)] :
 
 /-- seminormed group instance on the product of finitely many normed groups, using the `L^p`
 norm. -/
-instance semiNormedGroup [∀ i, SemiNormedGroup (β i)] : SemiNormedGroup (PiLp p β) :=
+instance seminormedAddCommGroup [∀ i, SeminormedAddCommGroup (β i)] : SeminormedAddCommGroup (PiLp p β) :=
   { Pi.addCommGroup with norm := fun f => (∑ i, ∥f i∥ ^ p) ^ (1 / p),
     dist_eq := fun x y => by
       simp [← PiLp.dist_eq, ← dist_eq_norm, ← sub_eq_add_neg] }
 
 /-- normed group instance on the product of finitely many normed groups, using the `L^p` norm. -/
-instance normedGroup [∀ i, NormedGroup (α i)] : NormedGroup (PiLp p α) :=
-  { PiLp.semiNormedGroup p α with }
+instance normedAddCommGroup [∀ i, NormedAddCommGroup (α i)] : NormedAddCommGroup (PiLp p α) :=
+  { PiLp.seminormedAddCommGroup p α with }
 
 omit fact_one_le_p
 
-theorem norm_eq {p : ℝ} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, SemiNormedGroup (β i)] (f : PiLp p β) :
+theorem norm_eq {p : ℝ} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (f : PiLp p β) :
     ∥f∥ = (∑ i, ∥f i∥ ^ p) ^ (1 / p) :=
   rfl
 
-theorem nnnorm_eq {p : ℝ} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, SemiNormedGroup (β i)] (f : PiLp p β) :
+theorem nnnorm_eq {p : ℝ} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (f : PiLp p β) :
     ∥f∥₊ = (∑ i, ∥f i∥₊ ^ p) ^ (1 / p) := by
   ext
   simp [← Nnreal.coe_sum, ← norm_eq]
 
-theorem norm_eq_of_nat {p : ℝ} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, SemiNormedGroup (β i)] (n : ℕ) (h : p = n)
+theorem norm_eq_of_nat {p : ℝ} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (n : ℕ) (h : p = n)
     (f : PiLp p β) : ∥f∥ = (∑ i, ∥f i∥ ^ n) ^ (1 / (n : ℝ)) := by
   simp [← norm_eq, ← h, ← Real.sqrt_eq_rpow, Real.rpow_nat_cast]
 
-theorem norm_eq_of_L2 {β : ι → Type _} [∀ i, SemiNormedGroup (β i)] (x : PiLp 2 β) : ∥x∥ = sqrt (∑ i : ι, ∥x i∥ ^ 2) :=
-  by
+theorem norm_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (x : PiLp 2 β) :
+    ∥x∥ = sqrt (∑ i : ι, ∥x i∥ ^ 2) := by
   rw [norm_eq_of_nat 2] <;> simp [← sqrt_eq_rpow]
 
-theorem nnnorm_eq_of_L2 {β : ι → Type _} [∀ i, SemiNormedGroup (β i)] (x : PiLp 2 β) :
+theorem nnnorm_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (x : PiLp 2 β) :
     ∥x∥₊ = Nnreal.sqrt (∑ i : ι, ∥x i∥₊ ^ 2) :=
   Subtype.ext <| by
     push_cast
     exact norm_eq_of_L2 x
 
-theorem dist_eq_of_L2 {β : ι → Type _} [∀ i, SemiNormedGroup (β i)] (x y : PiLp 2 β) :
+theorem dist_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (x y : PiLp 2 β) :
     dist x y = (∑ i, dist (x i) (y i) ^ 2).sqrt := by
   simp_rw [dist_eq_norm, norm_eq_of_L2, Pi.sub_apply]
 
-theorem nndist_eq_of_L2 {β : ι → Type _} [∀ i, SemiNormedGroup (β i)] (x y : PiLp 2 β) :
+theorem nndist_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (x y : PiLp 2 β) :
     nndist x y = (∑ i, nndist (x i) (y i) ^ 2).sqrt :=
   Subtype.ext <| by
     push_cast
     exact dist_eq_of_L2 _ _
 
-theorem edist_eq_of_L2 {β : ι → Type _} [∀ i, SemiNormedGroup (β i)] (x y : PiLp 2 β) :
+theorem edist_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (x y : PiLp 2 β) :
     edist x y = (∑ i, edist (x i) (y i) ^ 2) ^ (1 / 2 : ℝ) := by
   simp_rw [PiLp.edist_eq, Ennreal.rpow_two]
 
@@ -338,7 +340,7 @@ include fact_one_le_p
 variable [NormedField 𝕜]
 
 /-- The product of finitely many normed spaces is a normed space, with the `L^p` norm. -/
-instance normedSpace [∀ i, SemiNormedGroup (β i)] [∀ i, NormedSpace 𝕜 (β i)] : NormedSpace 𝕜 (PiLp p β) :=
+instance normedSpace [∀ i, SeminormedAddCommGroup (β i)] [∀ i, NormedSpace 𝕜 (β i)] : NormedSpace 𝕜 (PiLp p β) :=
   { Pi.module ι β 𝕜 with
     norm_smul_le := by
       intro c f
@@ -347,9 +349,13 @@ instance normedSpace [∀ i, SemiNormedGroup (β i)] [∀ i, NormedSpace 𝕜 (�
       rw [mul_rpow (rpow_nonneg_of_nonneg (norm_nonneg _) _), ← rpow_mul (norm_nonneg _), this, rpow_one]
       exact Finset.sum_nonneg fun i hi => rpow_nonneg_of_nonneg (norm_nonneg _) _ }
 
+instance finite_dimensional [∀ i, SeminormedAddCommGroup (β i)] [∀ i, NormedSpace 𝕜 (β i)]
+    [I : ∀ i, FiniteDimensional 𝕜 (β i)] : FiniteDimensional 𝕜 (PiLp p β) :=
+  FiniteDimensional.finite_dimensional_pi' _ _
+
 /- Register simplification lemmas for the applications of `pi_Lp` elements, as the usual lemmas
 for Pi types will not trigger. -/
-variable {𝕜 p α} [∀ i, SemiNormedGroup (β i)] [∀ i, NormedSpace 𝕜 (β i)] (c : 𝕜)
+variable {𝕜 p α} [∀ i, SeminormedAddCommGroup (β i)] [∀ i, NormedSpace 𝕜 (β i)] (c : 𝕜)
 
 variable (x y : PiLp p β) (x' y' : ∀ i, β i) (i : ι)
 
@@ -377,7 +383,7 @@ variable {ι' : Type _}
 
 variable [Fintype ι']
 
-variable (p 𝕜) (E : Type _) [NormedGroup E] [NormedSpace 𝕜 E]
+variable (p 𝕜) (E : Type _) [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 /-- An equivalence of finite domains induces a linearly isometric equivalence of finitely supported
 functions-/
@@ -451,26 +457,26 @@ theorem equiv_smul : PiLp.equiv p β (c • x) = c • PiLp.equiv p β x :=
 theorem equiv_symm_smul : (PiLp.equiv p β).symm (c • x') = c • (PiLp.equiv p β).symm x' :=
   rfl
 
-theorem nnnorm_equiv_symm_const {β} [SemiNormedGroup β] (b : β) :
+theorem nnnorm_equiv_symm_const {β} [SeminormedAddCommGroup β] (b : β) :
     ∥(PiLp.equiv p fun _ : ι => β).symm (Function.const _ b)∥₊ = Fintype.card ι ^ (1 / p) * ∥b∥₊ := by
   have : p ≠ 0 := (zero_lt_one.trans_le (Fact.out <| 1 ≤ p)).ne'
   simp_rw [PiLp.nnnorm_eq, equiv_symm_apply, Function.const_applyₓ, Finset.sum_const, Finset.card_univ, nsmul_eq_mul,
     Nnreal.mul_rpow, ← Nnreal.rpow_mul, mul_one_div_cancel this, Nnreal.rpow_one]
 
-theorem norm_equiv_symm_const {β} [SemiNormedGroup β] (b : β) :
+theorem norm_equiv_symm_const {β} [SeminormedAddCommGroup β] (b : β) :
     ∥(PiLp.equiv p fun _ : ι => β).symm (Function.const _ b)∥ = Fintype.card ι ^ (1 / p) * ∥b∥ :=
   (congr_arg coe <| nnnorm_equiv_symm_const b).trans <| by
     simp
 
-theorem nnnorm_equiv_symm_one {β} [SemiNormedGroup β] [One β] :
+theorem nnnorm_equiv_symm_one {β} [SeminormedAddCommGroup β] [One β] :
     ∥(PiLp.equiv p fun _ : ι => β).symm 1∥₊ = Fintype.card ι ^ (1 / p) * ∥(1 : β)∥₊ :=
   (nnnorm_equiv_symm_const (1 : β)).trans rfl
 
-theorem norm_equiv_symm_one {β} [SemiNormedGroup β] [One β] :
+theorem norm_equiv_symm_one {β} [SeminormedAddCommGroup β] [One β] :
     ∥(PiLp.equiv p fun _ : ι => β).symm 1∥ = Fintype.card ι ^ (1 / p) * ∥(1 : β)∥ :=
   (norm_equiv_symm_const (1 : β)).trans rfl
 
-variable (𝕜)
+variable (𝕜 p)
 
 /-- `pi_Lp.equiv` as a linear map. -/
 @[simps (config := { fullyApplied := false })]

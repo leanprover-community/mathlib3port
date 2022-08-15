@@ -71,7 +71,7 @@ variable {X Y : Type _} [TopologicalSpace X] [TopologicalSpace Y] {x y z : X} {�
 
 
 /-- Continuous path connecting two points `x` and `y` in a topological space -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure Path (x y : X) extends C(I, X) where
   source' : to_fun 0 = x
   target' : to_fun 1 = y
@@ -262,15 +262,15 @@ theorem trans_symm (γ : Path x y) (γ' : Path y z) : (γ.trans γ').symm = γ'.
   split_ifs with h h₁ h₂ h₃ h₄ <;> rw [coe_symm_eq] at h
   · have ht : (t : ℝ) = 1 / 2 := by
       linarith [UnitInterval.nonneg t, UnitInterval.le_one t]
-    norm_num [← ht]
+    norm_num[← ht]
     
   · refine' congr_arg _ (Subtype.ext _)
-    norm_num [← sub_sub_eq_add_sub, ← mul_sub]
+    norm_num[← sub_sub_eq_add_sub, ← mul_sub]
     
   · refine' congr_arg _ (Subtype.ext _)
     have h : 2 - 2 * (t : ℝ) - 1 = 1 - 2 * t := by
       linarith
-    norm_num [← mul_sub, ← h]
+    norm_num[← mul_sub, ← h]
     
   · exfalso
     linarith [UnitInterval.nonneg t, UnitInterval.le_one t]
@@ -869,13 +869,13 @@ theorem is_path_connected_iff_eq : IsPathConnected F ↔ ∃ x ∈ F, PathCompon
     rwa [← h] at y_in
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » F)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » F)
 theorem IsPathConnected.joined_in (h : IsPathConnected F) : ∀ (x y) (_ : x ∈ F) (_ : y ∈ F), JoinedIn F x y :=
   fun x x_in x y_in =>
   let ⟨b, b_in, hb⟩ := h
   (hb x_in).symm.trans (hb y_in)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » F)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » F)
 theorem is_path_connected_iff : IsPathConnected F ↔ F.Nonempty ∧ ∀ (x y) (_ : x ∈ F) (_ : y ∈ F), JoinedIn F x y :=
   ⟨fun h =>
     ⟨let ⟨b, b_in, hb⟩ := h
@@ -1008,7 +1008,7 @@ class PathConnectedSpace (X : Type _) [TopologicalSpace X] : Prop where
 
 theorem path_connected_space_iff_zeroth_homotopy :
     PathConnectedSpace X ↔ Nonempty (ZerothHomotopy X) ∧ Subsingleton (ZerothHomotopy X) := by
-  let this := pathSetoid X
+  letI := pathSetoid X
   constructor
   · intro h
     refine' ⟨(nonempty_quotient_iff _).mpr h.1, ⟨_⟩⟩
@@ -1049,7 +1049,7 @@ theorem is_path_connected_iff_path_connected_space : IsPathConnected F ↔ PathC
 theorem path_connected_space_iff_univ : PathConnectedSpace X ↔ IsPathConnected (Univ : Set X) := by
   constructor
   · intro h
-    have := @PathConnectedSpace.nonempty X _ _
+    haveI := @PathConnectedSpace.nonempty X _ _
     inhabit X
     refine' ⟨default, mem_univ _, _⟩
     simpa using PathConnectedSpace.joined default
@@ -1187,6 +1187,6 @@ theorem loc_path_connected_of_is_open [LocPathConnectedSpace X] {U : Set X} (h :
 theorem IsOpen.is_connected_iff_is_path_connected [LocPathConnectedSpace X] {U : Set X} (U_op : IsOpen U) :
     IsPathConnected U ↔ IsConnected U := by
   rw [is_connected_iff_connected_space, is_path_connected_iff_path_connected_space]
-  have := loc_path_connected_of_is_open U_op
+  haveI := loc_path_connected_of_is_open U_op
   exact path_connected_space_iff_connected_space
 

@@ -147,6 +147,11 @@ theorem nat_degree_le_of_dvd {p q : R[X]} (h1 : p ∣ q) (h2 : q ≠ 0) : p.natD
   rw [nat_degree_mul h2.1 h2.2]
   exact Nat.le_add_rightₓ _ _
 
+theorem degree_le_of_dvd {p q : R[X]} (h1 : p ∣ q) (h2 : q ≠ 0) : degree p ≤ degree q := by
+  rcases h1 with ⟨q, rfl⟩
+  rw [mul_ne_zero_iff] at h2
+  exact degree_le_mul_left p h2.2
+
 /-- This lemma is useful for working with the `int_degree` of a rational function. -/
 theorem nat_degree_sub_eq_of_prod_eq {p₁ p₂ q₁ q₂ : Polynomial R} (hp₁ : p₁ ≠ 0) (hq₁ : q₁ ≠ 0) (hp₂ : p₂ ≠ 0)
     (hq₂ : q₂ ≠ 0) (h_eq : p₁ * q₂ = p₂ * q₁) : (p₁.natDegree : ℤ) - q₁.natDegree = (p₂.natDegree : ℤ) - q₂.natDegree :=
@@ -279,7 +284,7 @@ theorem root_multiplicity_add {p q : R[X]} (a : R) (hzero : p + q ≠ 0) :
 theorem exists_multiset_roots :
     ∀ {p : R[X]} (hp : p ≠ 0), ∃ s : Multiset R, (s.card : WithBot ℕ) ≤ degree p ∧ ∀ a, s.count a = rootMultiplicity a p
   | p => fun hp =>
-    have := Classical.propDecidable (∃ x, is_root p x)
+    haveI := Classical.propDecidable (∃ x, is_root p x)
     if h : ∃ x, is_root p x then
       let ⟨x, hx⟩ := h
       have hpd : 0 < degree p := degree_pos_of_root hp hx
@@ -364,6 +369,12 @@ theorem count_roots (p : R[X]) : p.roots.count a = rootMultiplicity a p := by
 theorem mem_roots (hp : p ≠ 0) : a ∈ p.roots ↔ IsRoot p a := by
   rw [← count_pos, count_roots p, root_multiplicity_pos hp]
 
+theorem ne_zero_of_mem_roots (h : a ∈ p.roots) : p ≠ 0 := fun hp => by
+  rwa [hp, roots_zero] at h
+
+theorem is_root_of_mem_roots (h : a ∈ p.roots) : IsRoot p a :=
+  (mem_roots <| ne_zero_of_mem_roots h).mp h
+
 theorem card_le_degree_of_subset_roots {p : R[X]} {Z : Finset R} (h : Z.val ⊆ p.roots) : Z.card ≤ p.natDegree :=
   (Multiset.card_le_of_le (Finset.val_le_iff_val_subset.2 h)).trans (Polynomial.card_roots' p)
 
@@ -425,7 +436,7 @@ theorem roots_smul_nonzero (p : R[X]) {r : R} (hr : r ≠ 0) : (r • p).roots =
 
 theorem roots_list_prod (L : List R[X]) : (0 : R[X]) ∉ L → L.Prod.roots = (L : Multiset R[X]).bind roots :=
   (List.recOn L fun _ => roots_one) fun hd tl ih H => by
-    rw [List.mem_cons_iff, not_or_distrib] at H
+    rw [List.mem_cons_iffₓ, not_or_distrib] at H
     rw [List.prod_cons, roots_mul (mul_ne_zero (Ne.symm H.1) <| List.prod_ne_zero H.2), ← Multiset.cons_coe,
       Multiset.cons_bind, ih H.2]
 
@@ -671,6 +682,21 @@ theorem mem_root_set_iff {p : T[X]} (hp : p ≠ 0) {S : Type _} [CommRingₓ S] 
   intro h
   rw [← Polynomial.map_zero (algebraMap T S)] at h
   exact hp (map_injective _ (NoZeroSmulDivisors.algebra_map_injective T S) h)
+
+theorem root_set_maps_to {p : T[X]} {S S'} [CommRingₓ S] [IsDomain S] [Algebra T S] [CommRingₓ S'] [IsDomain S']
+    [Algebra T S'] (hp : p.map (algebraMap T S') ≠ 0) (f : S →ₐ[T] S') : (p.RootSet S).MapsTo f (p.RootSet S') :=
+  fun x hx => by
+  rw [mem_root_set_iff' hp, ← f.comp_algebra_map, ← map_map, eval_map]
+  erw [eval₂_hom, (mem_root_set_iff' (mt (fun h => _) hp) x).1 hx, _root_.map_zero]
+  rw [← f.comp_algebra_map, ← map_map, h, Polynomial.map_zero]
+
+theorem ne_zero_of_mem_root_set {p : T[X]} [CommRingₓ S] [IsDomain S] [Algebra T S] {a : S} (h : a ∈ p.RootSet S) :
+    p ≠ 0 := fun hf => by
+  rwa [hf, root_set_zero] at h
+
+theorem aeval_eq_zero_of_mem_root_set {p : T[X]} [CommRingₓ S] [IsDomain S] [Algebra T S] [NoZeroSmulDivisors T S]
+    {a : S} (hx : a ∈ p.RootSet S) : aeval a p = 0 :=
+  (mem_root_set_iff (ne_zero_of_mem_root_set hx) a).mp hx
 
 end Roots
 

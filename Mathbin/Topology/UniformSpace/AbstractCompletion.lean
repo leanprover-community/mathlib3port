@@ -86,7 +86,7 @@ theorem uniform_continuous_coe : UniformContinuous ι :=
 theorem continuous_coe : Continuous ι :=
   pkg.uniform_continuous_coe.Continuous
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction_on {p : hatα → Prop} (a : hatα) (hp : IsClosed { a | p a }) (ih : ∀ a, p (ι a)) : p a :=
   is_closed_property pkg.dense hp ih a
 

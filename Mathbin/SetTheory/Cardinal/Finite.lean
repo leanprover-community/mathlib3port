@@ -57,8 +57,8 @@ def equivFinOfCardPos {α : Type _} (h : Nat.card α ≠ 0) : α ≃ Finₓ (Nat
     
 
 theorem card_of_subsingleton (a : α) [Subsingleton α] : Nat.card α = 1 := by
-  rw [card_eq_fintype_card]
-  convert Fintype.card_of_subsingleton a
+  letI := Fintype.ofSubsingleton a
+  rw [card_eq_fintype_card, Fintype.card_of_subsingleton a]
 
 @[simp]
 theorem card_unique [Unique α] : Nat.card α = 1 :=

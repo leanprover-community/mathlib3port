@@ -101,6 +101,12 @@ protected theorem IsChain.directed {f : β → α} {c : Set β} (h : IsChain (f 
       simp only [← hab, ← exists_prop, ← and_selfₓ, ← Subtype.exists] <;> exact ⟨b, hb, refl _⟩)
     fun hab => ((h ha hb hab).elim fun h => ⟨⟨b, hb⟩, h, refl _⟩) fun h => ⟨⟨a, ha⟩, refl _, h⟩
 
+theorem IsChain.exists3 (hchain : IsChain r s) [IsTrans α r] {a b c} (mem1 : a ∈ s) (mem2 : b ∈ s) (mem3 : c ∈ s) :
+    ∃ (z : _)(mem4 : z ∈ s), r a z ∧ r b z ∧ r c z := by
+  rcases directed_on_iff_directed.mpr (IsChain.directed hchain) a mem1 b mem2 with ⟨z, mem4, H1, H2⟩
+  rcases directed_on_iff_directed.mpr (IsChain.directed hchain) z mem4 c mem3 with ⟨z', mem5, H3, H4⟩
+  exact ⟨z', mem5, trans H1 H3, trans H2 H3, H4⟩
+
 end Total
 
 theorem IsMaxChain.is_chain (h : IsMaxChain r s) : IsChain r s :=

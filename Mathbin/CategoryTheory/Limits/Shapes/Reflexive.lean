@@ -37,13 +37,13 @@ variable {D : Type u₂} [Category.{v₂} D]
 
 variable {A B : C} {f g : A ⟶ B}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`common_section] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`common_section] []
 /-- The pair `f g : A ⟶ B` is reflexive if there is a morphism `B ⟶ A` which is a section for both.
 -/
 class IsReflexivePair (f g : A ⟶ B) : Prop where
   common_section : ∃ s : B ⟶ A, s ≫ f = 𝟙 B ∧ s ≫ g = 𝟙 B
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`common_retraction] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`common_retraction] []
 /-- The pair `f g : A ⟶ B` is coreflexive if there is a morphism `B ⟶ A` which is a retraction for both.
 -/
 class IsCoreflexivePair (f g : A ⟶ B) : Prop where
@@ -122,12 +122,12 @@ attribute [instance] has_coreflexive_equalizers.has_eq
 
 theorem has_coequalizer_of_common_section [HasReflexiveCoequalizers C] {A B : C} {f g : A ⟶ B} (r : B ⟶ A)
     (rf : r ≫ f = 𝟙 _) (rg : r ≫ g = 𝟙 _) : HasCoequalizer f g := by
-  let this := is_reflexive_pair.mk' r rf rg
+  letI := is_reflexive_pair.mk' r rf rg
   infer_instance
 
 theorem has_equalizer_of_common_retraction [HasCoreflexiveEqualizers C] {A B : C} {f g : A ⟶ B} (r : B ⟶ A)
     (fr : f ≫ r = 𝟙 _) (gr : g ≫ r = 𝟙 _) : HasEqualizer f g := by
-  let this := is_coreflexive_pair.mk' r fr gr
+  letI := is_coreflexive_pair.mk' r fr gr
   infer_instance
 
 /-- If `C` has coequalizers, then it has reflexive coequalizers. -/

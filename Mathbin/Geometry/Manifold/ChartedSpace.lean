@@ -487,10 +487,10 @@ end Groupoid
 /-! ### Charted spaces -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`Atlas] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`chartAt] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`mem_chart_source] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`chart_mem_atlas] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`Atlas] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`chartAt] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`mem_chart_source] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`chart_mem_atlas] []
 /-- A charted space is a topological space endowed with an atlas, i.e., a set of local
 homeomorphisms taking value in a model space `H`, called charts, such that the domains of the charts
 cover the whole space. We express the covering property by chosing for each `x` a member
@@ -543,13 +543,29 @@ theorem chart_source_mem_nhds (x : M) : (chartAt H x).Source ∈ 𝓝 x :=
 theorem chart_target_mem_nhds (x : M) : (chartAt H x).Target ∈ 𝓝 (chartAt H x x) :=
   (chartAt H x).open_target.mem_nhds <| mem_chart_target H x
 
+/-- `achart H x` is the chart at `x`, considered as an element of the atlas.
+Especially useful for working with `basic_smooth_vector_bundle_core` -/
+def achart (x : M) : Atlas H M :=
+  ⟨chartAt H x, chart_mem_atlas H x⟩
+
+theorem achart_def (x : M) : achart H x = ⟨chartAt H x, chart_mem_atlas H x⟩ :=
+  rfl
+
+@[simp, mfld_simps]
+theorem coe_achart (x : M) : (achart H x : LocalHomeomorph M H) = chartAt H x :=
+  rfl
+
+@[simp, mfld_simps]
+theorem achart_val (x : M) : (achart H x).1 = chartAt H x :=
+  rfl
+
 open TopologicalSpace
 
 theorem ChartedSpace.second_countable_of_countable_cover [SecondCountableTopology H] {s : Set M}
     (hs : (⋃ (x) (hx : x ∈ s), (chartAt H x).Source) = univ) (hsc : s.Countable) : SecondCountableTopology M := by
-  have : ∀ x : M, second_countable_topology (chart_at H x).Source := fun x =>
+  haveI : ∀ x : M, second_countable_topology (chart_at H x).Source := fun x =>
     (chart_at H x).second_countable_topology_source
-  have := hsc.to_encodable
+  haveI := hsc.to_encodable
   rw [bUnion_eq_Union] at hs
   exact second_countable_topology_of_countable_cover (fun x : s => (chart_at H (x : M)).open_source) hs
 
@@ -575,6 +591,23 @@ theorem ChartedSpace.locally_compact [LocallyCompactSpace H] : LocallyCompactSpa
   refine' locally_compact_space_of_has_basis this _
   rintro x s ⟨h₁, h₂, h₃⟩
   exact h₂.image_of_continuous_on ((chart_at H x).continuous_on_symm.mono h₃)
+
+/-- If a topological space admits an atlas with locally connected charts, then the space itself is
+locally connected. -/
+theorem ChartedSpace.locally_connected_space [LocallyConnectedSpace H] : LocallyConnectedSpace M := by
+  let E : M → LocalHomeomorph M H := chart_at H
+  refine'
+    locally_connected_space_of_connected_bases (fun x s => (E x).symm '' s)
+      (fun x s => (IsOpen s ∧ E x x ∈ s ∧ IsConnected s) ∧ s ⊆ (E x).Target) _ _
+  · intro x
+    simpa only [← LocalHomeomorph.symm_map_nhds_eq, ← mem_chart_source] using
+      ((LocallyConnectedSpace.open_connected_basis (E x x)).restrict_subset
+            ((E x).open_target.mem_nhds (mem_chart_target H x))).map
+        (E x).symm
+    
+  · rintro x s ⟨⟨-, -, hsconn⟩, hssubset⟩
+    exact hsconn.is_preconnected.image _ ((E x).continuous_on_symm.mono hssubset)
+    
 
 end
 
@@ -679,7 +712,7 @@ end ChartedSpace
 have a topological structure, where the topology would come from the charts. For this, one needs
 charts that are only local equivs, and continuity properties for their composition.
 This is formalised in `charted_space_core`. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure ChartedSpaceCore (H : Type _) [TopologicalSpace H] (M : Type _) where
   Atlas : Set (LocalEquiv M H)
   chartAt : M → LocalEquiv M H
@@ -719,7 +752,7 @@ protected def localHomeomorph (e : LocalEquiv M H) (he : e ∈ c.Atlas) : @Local
     open_target := by
       convert c.open_target he,
     continuous_to_fun := by
-      let this : TopologicalSpace M := c.to_topological_space
+      letI : TopologicalSpace M := c.to_topological_space
       rw [continuous_on_open_iff (c.open_source' he)]
       intro s s_open
       rw [inter_comm]
@@ -727,7 +760,7 @@ protected def localHomeomorph (e : LocalEquiv M H) (he : e ∈ c.Atlas) : @Local
       simp only [← exists_prop, ← mem_Union, ← mem_singleton_iff]
       exact ⟨e, he, ⟨s, s_open, rfl⟩⟩,
     continuous_inv_fun := by
-      let this : TopologicalSpace M := c.to_topological_space
+      letI : TopologicalSpace M := c.to_topological_space
       apply continuous_on_open_of_generate_from (c.open_target he)
       intro t ht
       simp only [← exists_prop, ← mem_Union, ← mem_singleton_iff] at ht
@@ -764,7 +797,7 @@ section HasGroupoid
 
 variable [TopologicalSpace H] [TopologicalSpace M] [ChartedSpace H M]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`compatible] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`compatible] []
 /-- A charted space has an atlas in a groupoid `G` if the change of coordinates belong to the
 groupoid -/
 class HasGroupoid {H : Type _} [TopologicalSpace H] (M : Type _) [TopologicalSpace M] [ChartedSpace H M]
@@ -817,11 +850,11 @@ def StructureGroupoid.MaximalAtlas : Set (LocalHomeomorph M H) :=
 variable {M}
 
 /-- The elements of the atlas belong to the maximal atlas for any structure groupoid -/
-theorem StructureGroupoid.mem_maximal_atlas_of_mem_atlas [HasGroupoid M G] {e : LocalHomeomorph M H}
-    (he : e ∈ Atlas H M) : e ∈ G.MaximalAtlas M := fun e' he' => ⟨G.compatible he he', G.compatible he' he⟩
+theorem StructureGroupoid.subset_maximal_atlas [HasGroupoid M G] : Atlas H M ⊆ G.MaximalAtlas M := fun e he e' he' =>
+  ⟨G.compatible he he', G.compatible he' he⟩
 
 theorem StructureGroupoid.chart_mem_maximal_atlas [HasGroupoid M G] (x : M) : chartAt H x ∈ G.MaximalAtlas M :=
-  G.mem_maximal_atlas_of_mem_atlas (chart_mem_atlas H x)
+  G.subset_maximal_atlas (chart_mem_atlas H x)
 
 variable {G}
 
@@ -864,9 +897,8 @@ variable (G)
 
 /-- In the model space, the identity is in any maximal atlas. -/
 theorem StructureGroupoid.id_mem_maximal_atlas : LocalHomeomorph.refl H ∈ G.MaximalAtlas H :=
-  G.mem_maximal_atlas_of_mem_atlas
-    (by
-      simp )
+  G.subset_maximal_atlas <| by
+    simp
 
 end MaximalAtlas
 
@@ -971,7 +1003,7 @@ instance : ChartedSpace H s where
 instance [ClosedUnderRestriction G] :
     HasGroupoid s G where compatible := by
     rintro e e' ⟨_, ⟨x, hc⟩, he⟩ ⟨_, ⟨x', hc'⟩, he'⟩
-    have : Nonempty s := ⟨x⟩
+    haveI : Nonempty s := ⟨x⟩
     simp only [← hc.symm, ← mem_singleton_iff, ← Subtype.val_eq_coe] at he
     simp only [← hc'.symm, ← mem_singleton_iff, ← Subtype.val_eq_coe] at he'
     rw [he, he']
@@ -990,7 +1022,7 @@ end TopologicalSpace.Opens
 /-- A `G`-diffeomorphism between two charted spaces is a homeomorphism which, when read in the
 charts, belongs to `G`. We avoid the word diffeomorph as it is too related to the smooth category,
 and use structomorph instead. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure Structomorph (G : StructureGroupoid H) (M : Type _) (M' : Type _) [TopologicalSpace M] [TopologicalSpace M']
   [ChartedSpace H M] [ChartedSpace H M'] extends Homeomorph M M' where
   mem_groupoid :

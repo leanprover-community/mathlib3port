@@ -48,7 +48,7 @@ instance {C : Type u₁} [Category.{v₁} C] : HasFiniteProducts (C ⥤ Type u�
 instance {C : Type v₁} [SmallCategory C] :
     CartesianClosed (C ⥤ Type v₁) where closed' := fun F =>
     { isAdj := by
-        let this := functor_category.prod_preserves_colimits F
+        letI := functor_category.prod_preserves_colimits F
         apply is_left_adjoint_of_preserves_colimits (prod.functor.obj F) }
 
 end CartesianClosed

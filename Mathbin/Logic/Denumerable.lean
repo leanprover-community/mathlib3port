@@ -322,10 +322,10 @@ open Encodable
 
 /-- An infinite encodable type is denumerable. -/
 def ofEncodableOfInfinite (α : Type _) [Encodable α] [Infinite α] : Denumerable α := by
-  let this := @decidable_range_encode α _ <;>
-    let this : Infinite (Set.Range (@encode α _)) :=
+  letI := @decidable_range_encode α _ <;>
+    letI : Infinite (Set.Range (@encode α _)) :=
       Infinite.of_injective _ (Equivₓ.ofInjective _ encode_injective).Injective
-  let this := Nat.Subtype.denumerable (Set.Range (@encode α _))
+  letI := Nat.Subtype.denumerable (Set.Range (@encode α _))
   exact Denumerable.ofEquiv (Set.Range (@encode α _)) (equiv_range_encode α)
 
 end Denumerable

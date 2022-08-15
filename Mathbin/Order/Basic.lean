@@ -29,6 +29,7 @@ classes and allows to transfer order instances.
 
 * `has_sup`: type class for the `⊔` notation
 * `has_inf`: type class for the `⊓` notation
+* `has_compl`: type class for the `ᶜ` notation
 * `densely_ordered`: An order with no gap, i.e. for any two elements `a < b` there exists `c` such
   that `a < c < b`.
 
@@ -306,7 +307,7 @@ protected theorem Decidable.eq_iff_le_not_lt [PartialOrderₓ α] [@DecidableRel
     h₁.antisymm <| Decidable.by_contradiction fun h₃ => h₂ (h₁.lt_of_not_le h₃)⟩
 
 theorem eq_iff_le_not_lt [PartialOrderₓ α] {a b : α} : a = b ↔ a ≤ b ∧ ¬a < b :=
-  have := Classical.dec
+  haveI := Classical.dec
   Decidable.eq_iff_le_not_lt
 
 theorem eq_or_lt_of_le [PartialOrderₓ α] {a b : α} (h : a ≤ b) : a = b ∨ a < b :=
@@ -345,7 +346,7 @@ protected theorem Decidable.ne_iff_lt_iff_le [PartialOrderₓ α] [DecidableEq �
 
 @[simp]
 theorem ne_iff_lt_iff_le [PartialOrderₓ α] {a b : α} : (a ≠ b ↔ a < b) ↔ a ≤ b :=
-  have := Classical.dec
+  haveI := Classical.dec
   Decidable.ne_iff_lt_iff_le
 
 theorem lt_of_not_le [LinearOrderₓ α] {a b : α} (h : ¬b ≤ a) : a < b :=
@@ -458,7 +459,7 @@ theorem LinearOrderₓ.to_partial_order_injective {α : Type _} : Function.Injec
 theorem Preorderₓ.ext {α} {A B : Preorderₓ α}
     (H :
       ∀ x y : α,
-        (have := A
+        (haveI := A
           x ≤ y) ↔
           x ≤ y) :
     A = B := by
@@ -468,7 +469,7 @@ theorem Preorderₓ.ext {α} {A B : Preorderₓ α}
 theorem PartialOrderₓ.ext {α} {A B : PartialOrderₓ α}
     (H :
       ∀ x y : α,
-        (have := A
+        (haveI := A
           x ≤ y) ↔
           x ≤ y) :
     A = B := by
@@ -478,7 +479,7 @@ theorem PartialOrderₓ.ext {α} {A B : PartialOrderₓ α}
 theorem LinearOrderₓ.ext {α} {A B : LinearOrderₓ α}
     (H :
       ∀ x y : α,
-        (have := A
+        (haveI := A
           x ≤ y) ↔
           x ≤ y) :
     A = B := by
@@ -554,6 +555,41 @@ theorem linearOrder.dual_dual (α : Type _) [H : LinearOrderₓ α] : OrderDual.
 
 end OrderDual
 
+/-! ### `has_compl` -/
+
+
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1217:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-- Set / lattice complement -/
+@[«./././Mathport/Syntax/Translate/Basic.lean:1217:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg»]
+class HasCompl (α : Type _) where
+  compl : α → α
+
+export HasCompl (compl)
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:565:9: unsupported: advanced prec syntax «expr + »(max, 1)
+-- mathport name: «expr ᶜ»
+postfix:999 "ᶜ" => compl
+
+instance Prop.hasCompl : HasCompl Prop :=
+  ⟨Not⟩
+
+instance Pi.hasCompl {ι : Type u} {α : ι → Type v} [∀ i, HasCompl (α i)] : HasCompl (∀ i, α i) :=
+  ⟨fun x i => x iᶜ⟩
+
+theorem Pi.compl_def {ι : Type u} {α : ι → Type v} [∀ i, HasCompl (α i)] (x : ∀ i, α i) : xᶜ = fun i => x iᶜ :=
+  rfl
+
+@[simp]
+theorem Pi.compl_apply {ι : Type u} {α : ι → Type v} [∀ i, HasCompl (α i)] (x : ∀ i, α i) (i : ι) : (xᶜ) i = x iᶜ :=
+  rfl
+
+instance IsIrrefl.compl (r) [IsIrrefl α r] : IsRefl α (rᶜ) :=
+  ⟨@irrefl α r _⟩
+
+instance IsRefl.compl (r) [IsRefl α r] : IsIrrefl α (rᶜ) :=
+  ⟨fun a => not_not_intro (refl a)⟩
+
 /-! ### Order instances on the function space -/
 
 
@@ -569,23 +605,35 @@ theorem Pi.lt_def {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)]
     x < y ↔ x ≤ y ∧ ∃ i, x i < y i := by
   simp (config := { contextual := true })[← lt_iff_le_not_leₓ, ← Pi.le_def]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem le_update_iff {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] [DecidableEq ι] {x y : ∀ i, α i} {i : ι}
     {a : α i} : x ≤ Function.update y i a ↔ x i ≤ a ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j :=
   Function.forall_update_iff _ fun j z => x j ≤ z
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem update_le_iff {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] [DecidableEq ι] {x y : ∀ i, α i} {i : ι}
     {a : α i} : Function.update x i a ≤ y ↔ a ≤ y i ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j :=
   Function.forall_update_iff _ fun j z => z ≤ y j
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem update_le_update_iff {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] [DecidableEq ι] {x y : ∀ i, α i}
     {i : ι} {a b : α i} : Function.update x i a ≤ Function.update y i b ↔ a ≤ b ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j := by
   simp (config := { contextual := true })[← update_le_iff]
 
 instance Pi.partialOrder {ι : Type u} {α : ι → Type v} [∀ i, PartialOrderₓ (α i)] : PartialOrderₓ (∀ i, α i) :=
   { Pi.preorder with le_antisymm := fun f g h1 h2 => funext fun b => (h1 b).antisymm (h2 b) }
+
+instance Pi.hasSdiff {ι : Type u} {α : ι → Type v} [∀ i, HasSdiff (α i)] : HasSdiff (∀ i, α i) :=
+  ⟨fun x y i => x i \ y i⟩
+
+theorem Pi.sdiff_def {ι : Type u} {α : ι → Type v} [∀ i, HasSdiff (α i)] (x y : ∀ i, α i) :
+    x \ y = fun i => x i \ y i :=
+  rfl
+
+@[simp]
+theorem Pi.sdiff_apply {ι : Type u} {α : ι → Type v} [∀ i, HasSdiff (α i)] (x y : ∀ i, α i) (i : ι) :
+    (x \ y) i = x i \ y i :=
+  rfl
 
 /-! ### `min`/`max` recursors -/
 
@@ -612,16 +660,16 @@ end MinMaxRec
 
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1217:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Typeclass for the `⊔` (`\lub`) notation -/
-@[«./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg»]
+@[«./././Mathport/Syntax/Translate/Basic.lean:1217:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg»]
 class HasSup (α : Type u) where
   sup : α → α → α
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1217:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Typeclass for the `⊓` (`\glb`) notation -/
-@[«./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg»]
+@[«./././Mathport/Syntax/Translate/Basic.lean:1217:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg»]
 class HasInf (α : Type u) where
   inf : α → α → α
 
@@ -843,6 +891,61 @@ theorem dense_or_discrete [LinearOrderₓ α] (a₁ a₂ : α) :
     (∃ a, a₁ < a ∧ a < a₂) ∨ (∀ a, a₁ < a → a₂ ≤ a) ∧ ∀, ∀ a < a₂, ∀, a ≤ a₁ :=
   or_iff_not_imp_left.2 fun h =>
     ⟨fun a ha₁ => le_of_not_gtₓ fun ha₂ => h ⟨a, ha₁, ha₂⟩, fun a ha₂ => le_of_not_gtₓ fun ha₁ => h ⟨a, ha₁, ha₂⟩⟩
+
+namespace PUnit
+
+variable (a b : PUnit.{u + 1})
+
+instance : LinearOrderₓ PUnit := by
+  refine_struct
+      { le := fun _ _ => True, lt := fun _ _ => False, max := fun _ _ => star, min := fun _ _ => star,
+        DecidableEq := PUnit.decidableEq, decidableLe := fun _ _ => Decidable.true,
+        decidableLt := fun _ _ => Decidable.false } <;>
+    intros <;>
+      first |
+        trivial|
+        simp only [← eq_iff_true_of_subsingleton, ← not_true, ← and_falseₓ]|
+        exact Or.inl trivialₓ
+
+theorem max_eq : max a b = star :=
+  rfl
+
+theorem min_eq : min a b = star :=
+  rfl
+
+@[simp]
+protected theorem le : a ≤ b :=
+  trivialₓ
+
+@[simp]
+theorem not_lt : ¬a < b :=
+  not_false
+
+instance : DenselyOrdered PUnit :=
+  ⟨fun _ _ => False.elim⟩
+
+end PUnit
+
+section Prop
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported binary notation `«->»
+/-- Propositions form a complete boolean algebra, where the `≤` relation is given by implication. -/
+instance Prop.hasLe : LE Prop :=
+  ⟨(«->» · ·)⟩
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported binary notation `«->»
+@[simp]
+theorem le_Prop_eq : ((· ≤ ·) : Prop → Prop → Prop) = («->» · ·) :=
+  rfl
+
+theorem subrelation_iff_le {r s : α → α → Prop} : Subrelation r s ↔ r ≤ s :=
+  Iff.rfl
+
+instance Prop.partialOrder : PartialOrderₓ Prop :=
+  { Prop.hasLe with le_refl := fun _ => id, le_trans := fun a b c f g => g ∘ f,
+    le_antisymm := fun a b Hab Hba => propext ⟨Hab, Hba⟩ }
+
+end Prop
 
 variable {s : β → β → Prop} {t : γ → γ → Prop}
 

@@ -6,6 +6,7 @@ Authors: Riccardo Brasca
 import Mathbin.LinearAlgebra.DirectSum.Finsupp
 import Mathbin.Logic.Small
 import Mathbin.LinearAlgebra.StdBasis
+import Mathbin.LinearAlgebra.FinsuppVectorSpace
 
 /-!
 
@@ -25,7 +26,7 @@ Use `finsupp.total_id_surjective` to prove that any module is the quotient of a 
 
 universe u v w z
 
-variable (R : Type u) (M : Type v) (N : Type z)
+variable {ι : Type _} (R : Type u) (M : Type v) (N : Type z)
 
 open TensorProduct DirectSum BigOperators
 
@@ -33,7 +34,7 @@ section Basic
 
 variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`exists_basis] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`exists_basis] []
 /-- `module.free R M` is the statement that the `R`-module `M` is free.-/
 class Module.Free : Prop where
   exists_basis : Nonempty (ΣI : Type v, Basis I R M)
@@ -69,7 +70,7 @@ variable [AddCommMonoidₓ N] [Module R N]
 
 /-- If `module.free R M` then `choose_basis_index R M` is the `ι` which indexes the basis
   `ι → M`. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def ChooseBasisIndex :=
   (exists_basis R M).some.1
 
@@ -98,15 +99,6 @@ instance (priority := 100) no_zero_smul_divisors [NoZeroDivisors R] : NoZeroSmul
   let ⟨⟨_, b⟩⟩ := exists_basis R M
   b.NoZeroSmulDivisors
 
-/-- The product of finitely many free modules is free. -/
-instance pi {ι : Type _} [Fintype ι] {M : ι → Type _} [∀ i : ι, AddCommGroupₓ (M i)] [∀ i : ι, Module R (M i)]
-    [∀ i : ι, Module.Free R (M i)] : Module.Free R (∀ i, M i) :=
-  of_basis <| Pi.basis fun i => chooseBasis R (M i)
-
-/-- The module of finite matrices is free. -/
-instance matrix {m n : Type _} [Fintype m] [Fintype n] : Module.Free R (Matrix m n R) :=
-  of_basis <| Matrix.stdBasis R m n
-
 variable {R M N}
 
 theorem of_equiv (e : M ≃ₗ[R] N) : Module.Free R N :=
@@ -120,23 +112,41 @@ theorem of_equiv' {P : Type v} [AddCommMonoidₓ P] [Module R P] (h : Module.Fre
 
 variable (R M N)
 
-instance {ι : Type v} : Module.Free R (ι →₀ R) :=
-  of_basis (Basis.of_repr (LinearEquiv.refl _ _))
-
-instance {ι : Type v} [Fintype ι] : Module.Free R (ι → R) :=
-  of_equiv (Basis.of_repr <| LinearEquiv.refl _ _).equivFun
+/-- The module structure provided by `semiring.to_module` is free. -/
+instance self : Module.Free R R :=
+  of_basis (Basis.singleton Unit R)
 
 instance prod [Module.Free R N] : Module.Free R (M × N) :=
   of_basis <| (chooseBasis R M).Prod (chooseBasis R N)
 
-instance self : Module.Free R R :=
-  of_basis <| Basis.singleton Unit R
+/-- The product of finitely many free modules is free. -/
+instance pi (M : ι → Type _) [Finite ι] [∀ i : ι, AddCommMonoidₓ (M i)] [∀ i : ι, Module R (M i)]
+    [∀ i : ι, Module.Free R (M i)] : Module.Free R (∀ i, M i) :=
+  let ⟨_⟩ := nonempty_fintype ι
+  of_basis <| Pi.basis fun i => choose_basis R (M i)
+
+/-- The module of finite matrices is free. -/
+instance matrix {m n : Type _} [Finite m] [Finite n] : Module.Free R (Matrix m n M) :=
+  Module.Free.pi R _
+
+variable (ι)
+
+/-- The product of finitely many free modules is free (non-dependent version to help with typeclass
+search). -/
+instance function [Finite ι] : Module.Free R (ι → M) :=
+  Free.pi _ _
+
+instance finsupp : Module.Free R (ι →₀ M) :=
+  of_basis (Finsupp.basis fun i => chooseBasis R M)
+
+variable {ι}
 
 instance (priority := 100) of_subsingleton [Subsingleton N] : Module.Free R N :=
   of_basis (Basis.empty N : Basis Pempty R N)
 
-instance (priority := 100) of_subsingleton' [Subsingleton R] : Module.Free R N := by
-  let this := Module.subsingleton R N <;> exact Module.Free.of_subsingleton R N
+instance (priority := 100) of_subsingleton' [Subsingleton R] : Module.Free R N :=
+  letI := Module.subsingleton R N
+  Module.Free.of_subsingleton R N
 
 instance dfinsupp {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoidₓ (M i)] [∀ i : ι, Module R (M i)]
     [∀ i : ι, Module.Free R (M i)] : Module.Free R (Π₀ i, M i) :=
@@ -155,7 +165,7 @@ variable [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [Module.Free R M]
 variable [AddCommGroupₓ N] [Module R N] [Module.Free R N]
 
 instance tensor : Module.Free R (M ⊗[R] N) :=
-  of_equiv' (of_equiv' (Finsupp.free R) (finsuppTensorFinsupp' R _ _).symm)
+  of_equiv' (of_equiv' (Free.finsupp _ R _) (finsuppTensorFinsupp' R _ _).symm)
     (TensorProduct.congr (chooseBasis R M).repr (chooseBasis R N).repr).symm
 
 end CommRingₓ

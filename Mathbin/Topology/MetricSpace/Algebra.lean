@@ -84,8 +84,8 @@ instance MulOpposite.has_lipschitz_mul :
       (lipschitz_with_lipschitz_const_mul_edist ⟨x₂.unop, x₁.unop⟩ ⟨y₂.unop, y₁.unop⟩).trans_eq
         (congr_arg _ <| max_commₓ _ _)⟩
 
--- this instance could be deduced from `normed_group.has_lipschitz_add`, but we prove it separately
--- here so that it is available earlier in the hierarchy
+-- this instance could be deduced from `normed_add_comm_group.has_lipschitz_add`, but we prove it
+-- separately here so that it is available earlier in the hierarchy
 instance Real.has_lipschitz_add :
     HasLipschitzAdd ℝ where lipschitz_add :=
     ⟨2, by
@@ -148,7 +148,11 @@ instance (priority := 100) HasBoundedSmul.has_continuous_smul :
       linarith
     refine' ⟨δ, hδ_pos, _⟩
     rintro ⟨a', b'⟩ hab'
-    calc _ ≤ _ := dist_triangle _ (a • b') _ _ ≤ δ * (dist a 0 + dist b 0 + δ) := _ _ < ε := _
+    calc
+      _ ≤ _ := dist_triangle _ (a • b') _
+      _ ≤ δ * (dist a 0 + dist b 0 + δ) := _
+      _ < ε := _
+      
     · have : 0 ≤ dist a' a := dist_nonneg
       have := dist_triangle b' b 0
       have := dist_comm (a • b') (a' • b')
@@ -191,4 +195,14 @@ instance HasBoundedSmul.op [HasSmul αᵐᵒᵖ β] [IsCentralScalar α β] : Ha
         simpa only [← op_smul_eq_smul] using dist_pair_smul x₁ x₂ y
 
 end HasBoundedSmul
+
+instance [Monoidₓ α] [HasLipschitzMul α] : HasLipschitzAdd (Additive α) :=
+  ⟨@HasLipschitzMul.lipschitz_mul α _ _ _⟩
+
+instance [AddMonoidₓ α] [HasLipschitzAdd α] : HasLipschitzMul (Multiplicative α) :=
+  ⟨@HasLipschitzAdd.lipschitz_add α _ _ _⟩
+
+@[to_additive]
+instance [Monoidₓ α] [HasLipschitzMul α] : HasLipschitzMul αᵒᵈ :=
+  ‹HasLipschitzMul α›
 

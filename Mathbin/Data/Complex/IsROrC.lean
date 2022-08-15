@@ -48,7 +48,7 @@ open ComplexConjugate
 
 /-- This typeclass captures properties shared by ℝ and ℂ, with an API that closely matches that of ℂ.
 -/
-class IsROrC (K : Type _) extends NondiscreteNormedField K, StarRing K, NormedAlgebra ℝ K, CompleteSpace K where
+class IsROrC (K : Type _) extends DenselyNormedField K, StarRing K, NormedAlgebra ℝ K, CompleteSpace K where
   re : K →+ ℝ
   im : K →+ ℝ
   i : K
@@ -72,7 +72,7 @@ end
 
 mk_simp_attribute is_R_or_C_simps := "Simp attribute for lemmas about `is_R_or_C`"
 
-variable {K : Type _} [IsROrC K]
+variable {K E : Type _} [IsROrC K]
 
 namespace IsROrC
 
@@ -85,6 +85,13 @@ noncomputable instance (priority := 900) algebraMapCoe : CoeTₓ ℝ K :=
 
 theorem of_real_alg (x : ℝ) : (x : K) = x • (1 : K) :=
   Algebra.algebra_map_eq_smul_one x
+
+theorem real_smul_eq_coe_mul (r : ℝ) (z : K) : r • z = (r : K) * z := by
+  rw [IsROrC.of_real_alg, ← smul_eq_mul, smul_assoc, smul_eq_mul, one_mulₓ]
+
+theorem real_smul_eq_coe_smul [AddCommGroupₓ E] [Module K E] [Module ℝ E] [IsScalarTower ℝ K E] (r : ℝ) (x : E) :
+    r • x = (r : K) • x := by
+  rw [IsROrC.of_real_alg, smul_one_smul]
 
 theorem algebra_map_eq_of_real : ⇑(algebraMap ℝ K) = coe :=
   rfl
@@ -860,15 +867,15 @@ instance is_R_or_C_to_real : FiniteDimensional ℝ K :=
         
       simp [← re_add_im a, ← Algebra.smul_def, ← algebra_map_eq_of_real]⟩⟩
 
-variable (K) (E : Type _) [NormedGroup E] [NormedSpace K E]
+variable (K E) [NormedAddCommGroup E] [NormedSpace K E]
 
-/-- A finite dimensional vector space Over an `is_R_or_C` is a proper metric space.
+/-- A finite dimensional vector space over an `is_R_or_C` is a proper metric space.
 
 This is not an instance because it would cause a search for `finite_dimensional ?x E` before
 `is_R_or_C ?x`. -/
 theorem proper_is_R_or_C [FiniteDimensional K E] : ProperSpace E := by
-  let this : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ K E
-  let this : FiniteDimensional ℝ E := FiniteDimensional.trans ℝ K E
+  letI : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ K E
+  letI : FiniteDimensional ℝ E := FiniteDimensional.trans ℝ K E
   infer_instance
 
 variable {E}
@@ -881,7 +888,7 @@ end FiniteDimensional
 section Instances
 
 noncomputable instance Real.isROrC : IsROrC ℝ :=
-  { Real.nondiscreteNormedField, Real.metricSpace with re := AddMonoidHom.id ℝ, im := 0, i := 0,
+  { Real.denselyNormedField, Real.metricSpace with re := AddMonoidHom.id ℝ, im := 0, i := 0,
     I_re_ax := by
       simp only [← AddMonoidHom.map_zero],
     I_mul_I_ax := Or.intro_left _ rfl,

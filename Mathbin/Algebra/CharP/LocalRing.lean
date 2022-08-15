@@ -25,7 +25,7 @@ theorem char_p_zero_or_prime_power (R : Type _) [CommRingₓ R] [LocalRing R] (q
   apply or_iff_not_imp_left.2
   intro q_pos
   let K := LocalRing.ResidueField R
-  have RM_char := ringChar.char_p K
+  haveI RM_char := ringChar.char_p K
   let r := ringChar K
   let n := q.factorization r
   -- `r := char(R/m)` is either prime or zero:
@@ -61,9 +61,9 @@ theorem char_p_zero_or_prime_power (R : Type _) [CommRingₓ R] [LocalRing R] (q
     -- Definition of prime power: `∃ r n, prime r ∧ 0 < n ∧ r ^ n = q`.
     exact ⟨r, ⟨n, ⟨nat.prime_iff.mp r_prime, ⟨pos_iff_ne_zero.mpr n_pos, q_eq_rn.symm⟩⟩⟩⟩
     
-  · have K_char_p_0 := ringChar.of_eq r_zero
-    have K_char_zero : CharZero K := CharP.char_p_to_char_zero K
-    have R_char_zero := RingHom.char_zero (LocalRing.residue R)
+  · haveI K_char_p_0 := ringChar.of_eq r_zero
+    haveI K_char_zero : CharZero K := CharP.char_p_to_char_zero K
+    haveI R_char_zero := RingHom.char_zero (LocalRing.residue R)
     -- Finally, `r = 0` would lead to a contradiction:
     have q_zero := CharP.eq R char_R_q (CharP.of_char_zero R)
     exact absurd q_zero q_pos

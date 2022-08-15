@@ -79,8 +79,7 @@ theorem map_prod_mul_eq_swap [IsMulLeftInvariant μ] : map (fun z : G × G => (z
 
 @[to_additive]
 theorem measurable_measure_mul_right (hE : MeasurableSet E) : Measurable fun x => μ ((fun y => y * x) ⁻¹' E) := by
-  suffices
-    Measurable fun y => μ ((fun x => (x, y)) ⁻¹' ((fun z : G × G => ((1 : G), z.1 * z.2)) ⁻¹' (univ : Set G) ×ˢ E)) by
+  suffices Measurable fun y => μ ((fun x => (x, y)) ⁻¹' ((fun z : G × G => ((1 : G), z.1 * z.2)) ⁻¹' univ ×ˢ E)) by
     convert this
     ext1 x
     congr 1 with y : 1

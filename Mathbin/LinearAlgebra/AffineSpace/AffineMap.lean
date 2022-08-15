@@ -539,18 +539,21 @@ theorem line_map_vadd_line_map (v₁ v₂ : V1) (p₁ p₂ : P1) (c : k) :
   ((fst : V1 × P1 →ᵃ[k] V1) +ᵥ snd).apply_line_map (v₁, p₁) (v₂, p₂) c
 
 theorem line_map_vsub_line_map (p₁ p₂ p₃ p₄ : P1) (c : k) :
-    lineMap p₁ p₂ c -ᵥ lineMap p₃ p₄ c = lineMap (p₁ -ᵥ p₃) (p₂ -ᵥ p₄) c := by
-  -- Why Lean fails to find this instance without a hint?
-    let this : affine_space (V1 × V1) (P1 × P1) := Prod.addTorsor <;>
-    exact ((fst : P1 × P1 →ᵃ[k] P1) -ᵥ (snd : P1 × P1 →ᵃ[k] P1)).apply_line_map (_, _) (_, _) c
+    lineMap p₁ p₂ c -ᵥ lineMap p₃ p₄ c = lineMap (p₁ -ᵥ p₃) (p₂ -ᵥ p₄) c :=
+  letI-- Why Lean fails to find this instance without a hint?
+   : affine_space (V1 × V1) (P1 × P1) := Prod.addTorsor
+  ((fst : P1 × P1 →ᵃ[k] P1) -ᵥ (snd : P1 × P1 →ᵃ[k] P1)).apply_line_map (_, _) (_, _) c
 
 /-- Decomposition of an affine map in the special case when the point space and vector space
 are the same. -/
 theorem decomp (f : V1 →ᵃ[k] V2) : (f : V1 → V2) = f.linear + fun z => f 0 := by
   ext x
-  calc f x = f.linear x +ᵥ f 0 := by
-      simp [f.map_vadd]_ = (f.linear.to_fun + fun z : V1 => f 0) x := by
+  calc
+    f x = f.linear x +ᵥ f 0 := by
+      simp [f.map_vadd]
+    _ = (f.linear.to_fun + fun z : V1 => f 0) x := by
       simp
+    
 
 /-- Decomposition of an affine map in the special case when the point space and vector space
 are the same. -/

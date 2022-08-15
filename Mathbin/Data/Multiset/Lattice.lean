@@ -28,6 +28,10 @@ def sup (s : Multiset α) : α :=
   s.fold (·⊔·) ⊥
 
 @[simp]
+theorem sup_coe (l : List α) : sup (l : Multiset α) = l.foldr (·⊔·) ⊥ :=
+  rfl
+
+@[simp]
 theorem sup_zero : (0 : Multiset α).sup = ⊥ :=
   fold_zero _ _
 
@@ -99,6 +103,10 @@ variable [SemilatticeInf α] [OrderTop α]
 /-- Infimum of a multiset: `inf {a, b, c} = a ⊓ b ⊓ c` -/
 def inf (s : Multiset α) : α :=
   s.fold (·⊓·) ⊤
+
+@[simp]
+theorem inf_coe (l : List α) : inf (l : Multiset α) = l.foldr (·⊓·) ⊤ :=
+  rfl
 
 @[simp]
 theorem inf_zero : (0 : Multiset α).inf = ⊤ :=

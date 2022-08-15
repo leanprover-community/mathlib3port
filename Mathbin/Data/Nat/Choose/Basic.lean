@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Chris Hughes, Bhavik Mehta
+Authors: Chris Hughes, Bhavik Mehta, Stuart Presnell
 -/
 import Mathbin.Data.Nat.Factorial.Basic
 
@@ -21,7 +21,17 @@ requiring more imports).
 * `nat.desc_factorial_eq_factorial_mul_choose`: Relates binomial coefficients to the descending
   factorial. This is used to prove `nat.choose_le_pow` and variants. We provide similar statements
   for the ascending factorial.
+* `nat.multichoose`: whereas `choose` counts combinations, `multichoose` counts multicombinations.
+The fact that this is indeed the correct counting function for multisets is proved in
+`sym.card_sym_eq_multichoose` in `data/sym/card`.
+* `nat.multichoose_eq` : a proof that `multichoose n k = (n + k - 1).choose k`.
+This is central to the "stars and bars" technique in informal mathematics, where we switch between
+counting multisets of size `k` over an alphabet of size `n` to counting strings of `k` elements
+("stars") separated by `n-1` dividers ("bars").  See `data/sym/card` for more detail.
 
+## Tags
+
+binomial coefficient, combination, multicombination, stars and bars
 -/
 
 
@@ -137,19 +147,18 @@ theorem choose_mul {n k s : ℕ} (hkn : k ≤ n) (hsk : s ≤ k) :
     n.choose k * k.choose s = n.choose s * (n - s).choose (k - s) := by
   have h : 0 < (n - k)! * (k - s)! * s ! := mul_pos (mul_pos (factorial_pos _) (factorial_pos _)) (factorial_pos _)
   refine' eq_of_mul_eq_mul_right h _
-  calc n.choose k * k.choose s * ((n - k)! * (k - s)! * s !) = n.choose k * (k.choose s * s ! * (k - s)!) * (n - k)! :=
-      by
-      rw [mul_assoc, mul_assoc, mul_assoc, mul_assoc _ s !, mul_assoc, mul_comm (n - k)!, mul_comm s !]_ = n ! := by
-      rw [choose_mul_factorial_mul_factorial hsk,
-        choose_mul_factorial_mul_factorial
-          hkn]_ = n.choose s * s ! * ((n - s).choose (k - s) * (k - s)! * (n - s - (k - s))!) :=
-      by
+  calc
+    n.choose k * k.choose s * ((n - k)! * (k - s)! * s !) = n.choose k * (k.choose s * s ! * (k - s)!) * (n - k)! := by
+      rw [mul_assoc, mul_assoc, mul_assoc, mul_assoc _ s !, mul_assoc, mul_comm (n - k)!, mul_comm s !]
+    _ = n ! := by
+      rw [choose_mul_factorial_mul_factorial hsk, choose_mul_factorial_mul_factorial hkn]
+    _ = n.choose s * s ! * ((n - s).choose (k - s) * (k - s)! * (n - s - (k - s))!) := by
       rw [choose_mul_factorial_mul_factorial (tsub_le_tsub_right hkn _),
-        choose_mul_factorial_mul_factorial
-          (hsk.trans hkn)]_ = n.choose s * (n - s).choose (k - s) * ((n - k)! * (k - s)! * s !) :=
-      by
+        choose_mul_factorial_mul_factorial (hsk.trans hkn)]
+    _ = n.choose s * (n - s).choose (k - s) * ((n - k)! * (k - s)! * s !) := by
       rw [tsub_tsub_tsub_cancel_right hsk, mul_assoc, mul_left_commₓ s !, mul_assoc, mul_comm (k - s)!, mul_comm s !,
         mul_right_commₓ, ← mul_assoc]
+    
 
 theorem choose_eq_factorial_div_factorial {n k : ℕ} (hk : k ≤ n) : choose n k = n ! / (k ! * (n - k)!) := by
   rw [← choose_mul_factorial_mul_factorial hk, mul_assoc]
@@ -286,6 +295,75 @@ theorem choose_le_choose {a b : ℕ} (c : ℕ) (h : a ≤ b) : choose a c ≤ ch
   add_tsub_cancel_of_le h ▸ choose_le_add a (b - a) c
 
 theorem choose_mono (b : ℕ) : Monotone fun a => choose a b := fun _ _ => choose_le_choose b
+
+/-! #### Multichoose
+
+Whereas `choose n k` is the number of subsets of cardinality `k` from a type of cardinality `n`,
+`multichoose n k` is the number of multisets of cardinality `k` from a type of cardinality `n`.
+
+Alternatively, whereas `choose n k` counts the number of combinations,
+i.e. ways to select `k` items (up to permutation) from `n` items without replacement,
+`multichoose n k` counts the number of multicombinations,
+i.e. ways to select `k` items (up to permutation) from `n` items with replacement.
+
+Note that `multichoose` is *not* the multinomial coefficient, although it can be computed
+in terms of multinomial coefficients. For details see https://mathworld.wolfram.com/Multichoose.html
+
+TODO: Prove that `choose (-n) k = (-1)^k * multichoose n k`,
+where `choose` is the generalized binomial coefficient.
+<https://github.com/leanprover-community/mathlib/pull/15072#issuecomment-1171415738>
+
+-/
+
+
+/-- `multichoose n k` is the number of multisets of cardinality `k` from a type of cardinality `n`. -/
+def multichoose : ℕ → ℕ → ℕ
+  | _, 0 => 1
+  | 0, k + 1 => 0
+  | n + 1, k + 1 => multichoose n (k + 1) + multichoose (n + 1) k
+
+@[simp]
+theorem multichoose_zero_right (n : ℕ) : multichoose n 0 = 1 := by
+  cases n <;> simp [← multichoose]
+
+@[simp]
+theorem multichoose_zero_succ (k : ℕ) : multichoose 0 (k + 1) = 0 := by
+  simp [← multichoose]
+
+theorem multichoose_succ_succ (n k : ℕ) : multichoose (n + 1) (k + 1) = multichoose n (k + 1) + multichoose (n + 1) k :=
+  by
+  simp [← multichoose]
+
+@[simp]
+theorem multichoose_one (k : ℕ) : multichoose 1 k = 1 := by
+  induction' k with k IH
+  · simp
+    
+  simp [← multichoose_succ_succ 0 k, ← IH]
+
+@[simp]
+theorem multichoose_two (k : ℕ) : multichoose 2 k = k + 1 := by
+  induction' k with k IH
+  · simp
+    
+  simp [← multichoose_succ_succ 1 k, ← IH]
+  rw [add_commₓ]
+
+@[simp]
+theorem multichoose_one_right (n : ℕ) : multichoose n 1 = n := by
+  induction' n with n IH
+  · simp
+    
+  simp [← multichoose_succ_succ n 0, ← IH]
+
+theorem multichoose_eq : ∀ n k : ℕ, multichoose n k = (n + k - 1).choose k
+  | _, 0 => by
+    simp
+  | 0, k + 1 => by
+    simp
+  | n + 1, k + 1 => by
+    rw [multichoose_succ_succ, add_commₓ, Nat.succ_add_sub_one, ← add_assocₓ, Nat.choose_succ_succ]
+    simp [← multichoose_eq]
 
 end Nat
 

@@ -3,9 +3,8 @@ Copyright (c) 2022 Eric Rodriguez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 -/
-import Mathbin.RingTheory.IntegralDomain
-import Mathbin.RingTheory.Localization.Basic
 import Mathbin.SetTheory.Cardinal.Ordinal
+import Mathbin.RingTheory.Artinian
 
 /-!
 # Cardinality of localizations
@@ -34,23 +33,11 @@ variable {R : Type u} [CommRingₓ R] (S : Submonoid R) {L : Type u} [CommRing�
 
 include S
 
-/-- Localizing a finite ring can only reduce the amount of elements. -/
-theorem algebra_map_surjective_of_fintype [Fintype R] : Function.Surjective (algebraMap R L) := by
-  classical
-  have : Fintype L := IsLocalization.fintype' S L
-  intro x
-  obtain ⟨⟨r, s⟩, h : x * (algebraMap R L) ↑s = (algebraMap R L) r⟩ := IsLocalization.surj S x
-  obtain ⟨n, hn, hp⟩ := (is_of_fin_order_iff_pow_eq_one _).1 (exists_pow_eq_one (IsLocalization.map_units L s).Unit)
-  rw [Units.ext_iff, Units.coe_pow, IsUnit.unit_spec, ← Nat.succ_pred_eq_of_posₓ hn, pow_succₓ] at hp
-  exact
-    ⟨r * s ^ (n - 1), by
-      erw [map_mul, map_pow, ← h, mul_assoc, hp, mul_oneₓ]⟩
-
 /-- A localization always has cardinality less than or equal to the base ring. -/
 theorem card_le : # L ≤ # R := by
   classical
   cases fintypeOrInfinite R
-  · exact Cardinal.mk_le_of_surjective (algebra_map_surjective_of_fintype S)
+  · exact Cardinal.mk_le_of_surjective (IsArtinianRing.localization_surjective S _)
     
   erw [← Cardinal.mul_eq_self <| Cardinal.aleph_0_le_mk R]
   set f : R × R → L := fun aa => IsLocalization.mk' _ aa.1 (if h : aa.2 ∈ S then ⟨aa.2, h⟩ else 1)

@@ -32,7 +32,7 @@ namespace MeasureTheory
 
 section
 
-variable {α F : Type _} {m : MeasurableSpace α} {μ : Measure α} [NormedGroup F]
+variable {α F : Type _} {m : MeasurableSpace α} {μ : Measure α} [NormedAddCommGroup F]
 
 theorem Memℒp.integrable_sq {f : α → ℝ} (h : Memℒp f 2 μ) : Integrable (fun x => f x ^ 2) μ := by
   simpa [mem_ℒp_one_iff_integrable] using h.norm_rpow Ennreal.two_ne_zero Ennreal.two_ne_top
@@ -56,7 +56,8 @@ end
 
 namespace L2
 
-variable {α E F 𝕜 : Type _} [IsROrC 𝕜] [MeasurableSpace α] {μ : Measure α} [InnerProductSpace 𝕜 E] [NormedGroup F]
+variable {α E F 𝕜 : Type _} [IsROrC 𝕜] [MeasurableSpace α] {μ : Measure α} [InnerProductSpace 𝕜 E]
+  [NormedAddCommGroup F]
 
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y

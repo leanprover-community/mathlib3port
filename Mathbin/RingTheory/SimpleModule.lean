@@ -130,7 +130,7 @@ noncomputable instance _root_.module.End.division_ring [DecidableEq (Module.End 
           (Equivₓ.ofBijective _ (bijective_of_ne_zero h)).right_inv,
     exists_pair_ne :=
       ⟨0, 1, by
-        have := IsSimpleModule.nontrivial R M
+        haveI := IsSimpleModule.nontrivial R M
         have h := exists_pair_ne M
         contrapose! h
         intro x y

@@ -53,7 +53,7 @@ theorem tfae_cons_cons {a b} {l : List Prop} : Tfae (a :: b :: l) ↔ (a ↔ b) 
 theorem tfae_of_forall (b : Prop) (l : List Prop) (h : ∀, ∀ a ∈ l, ∀, a ↔ b) : Tfae l := fun a₁ h₁ a₂ h₂ =>
   (h _ h₁).trans (h _ h₂).symm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:703:4: warning: unsupported binary notation `«->»
+-- ./././Mathport/Syntax/Translate/Basic.lean:705:4: warning: unsupported binary notation `«->»
 theorem tfae_of_cycle {a b} {l : List Prop} :
     List.Chain («->» · ·) a (b :: l) → (ilast' b l → a) → Tfae (a :: b :: l) := by
   induction' l with c l IH generalizing a b <;>

@@ -130,7 +130,7 @@ structure Besicovitch.SatelliteConfig (α : Type _) [MetricSpace α] (N : ℕ) (
   hlast : ∀, ∀ i < last N, ∀, r i ≤ dist (c i) (c (last N)) ∧ r (last N) ≤ τ * r i
   inter : ∀, ∀ i < last N, ∀, dist (c i) (c (last N)) ≤ r i + r (last N)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`no_satellite_config] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`no_satellite_config] []
 /-- A metric space has the Besicovitch covering property if there exist `N` and `τ > 1` such that
 there are no satellite configuration of parameter `τ` with `N+1` points. This is the condition that
 guarantees that the measurable Besicovitch covering theorem holds. It is satified by
@@ -603,7 +603,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measureₓ α) [IsFinite
         rw [Ennreal.mul_div_cancel']
         · simp only [← Npos, ← Ne.def, ← Nat.cast_eq_zero, ← not_false_iff]
           
-        · exact Ennreal.coe_nat_ne_top
+        · exact Ennreal.nat_ne_top _
           
       _ ≤ ∑ i, μ (s ∩ v i) := by
         conv_lhs => rw [A]
@@ -655,13 +655,13 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measureₓ α) [IsFinite
     rw [← diff_inter_self_eq_diff, measure_diff_le_iff_le_add _ (inter_subset_right _ _) (measure_lt_top μ _).Ne]
     swap
     · apply MeasurableSet.inter _ omeas
-      have : Encodable (u i) := (u_count i).toEncodable
+      haveI : Encodable (u i) := (u_count i).toEncodable
       exact MeasurableSet.Union fun b => MeasurableSet.Union_Prop fun hb => measurable_set_closed_ball
       
-    calc μ o = 1 / (N + 1) * μ s + N / (N + 1) * μ s := by
-        rw [μo, ← add_mulₓ, Ennreal.div_add_div_same, add_commₓ, Ennreal.div_self, one_mulₓ] <;>
-          simp _ ≤ μ ((⋃ x ∈ w, closed_ball (↑x) (r ↑x)) ∩ o) + N / (N + 1) * μ s :=
-        by
+    calc
+      μ o = 1 / (N + 1) * μ s + N / (N + 1) * μ s := by
+        rw [μo, ← add_mulₓ, Ennreal.div_add_div_same, add_commₓ, Ennreal.div_self, one_mulₓ] <;> simp
+      _ ≤ μ ((⋃ x ∈ w, closed_ball (↑x) (r ↑x)) ∩ o) + N / (N + 1) * μ s := by
         refine' add_le_add _ le_rfl
         rw [div_eq_mul_inv, one_mulₓ, mul_comm, ← div_eq_mul_inv]
         apply hw.le.trans (le_of_eqₓ _)
@@ -674,6 +674,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measureₓ α) [IsFinite
         · intro b hb
           apply omeas.inter measurable_set_closed_ball
           
+      
     
   -- show that the balls are disjoint
   · intro k hk l hl hkl
@@ -840,9 +841,11 @@ theorem exists_disjoint_closed_ball_covering_ae_of_finite_measure_aux (μ : Meas
             N / (N + 1) * μ (s \ ⋃ (p : α × ℝ) (hp : p ∈ u n), closed_ball p.fst p.snd) :=
           by
           rw [u_succ]
-          exact (hF (u n) (Pu n)).2.2_ ≤ (N / (N + 1)) ^ n.succ * μ s := by
+          exact (hF (u n) (Pu n)).2.2
+        _ ≤ (N / (N + 1)) ^ n.succ * μ s := by
           rw [pow_succₓ, mul_assoc]
           exact Ennreal.mul_le_mul le_rfl IH
+        
     have C : tendsto (fun n : ℕ => ((N : ℝ≥0∞) / (N + 1)) ^ n * μ s) at_top (𝓝 (0 * μ s)) := by
       apply Ennreal.Tendsto.mul_const _ (Or.inr (measure_lt_top μ s).Ne)
       apply Ennreal.tendsto_pow_at_top_nhds_0_of_lt_1
@@ -963,8 +966,8 @@ theorem exists_disjoint_closed_ball_covering_ae (μ : Measureₓ α) [SigmaFinit
     rwa [← im_t, A.pairwise_disjoint_image] at v_disj
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (U «expr ⊇ » s)
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (v «expr ⊇ » s')
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (U «expr ⊇ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (v «expr ⊇ » s')
 /-- In a space with the Besicovitch property, any set `s` can be covered with balls whose measures
 add up to at most `μ s + ε`, for any positive `ε`. This works even if one restricts the set of
 allowed radii around a point `x` to a set `f x` which accumulates at `0`. -/
@@ -1094,7 +1097,7 @@ theorem exists_closed_ball_covering_tsum_measure_le (μ : Measureₓ α) [SigmaF
           ext x
           rw [r_t0 x x.2]
         _ = μ (⋃ x : t0, closed_ball x (r0 x)) := by
-          have : Encodable t0 := t0_count.to_encodable
+          haveI : Encodable t0 := t0_count.to_encodable
           rw [measure_Union]
           · exact (pairwise_subtype_iff_pairwise_set _ _).2 t0_disj
             
@@ -1120,7 +1123,7 @@ theorem exists_closed_ball_covering_tsum_measure_le (μ : Measureₓ α) [SigmaF
           have : (x : α) ∈ s' := x.1.2
           simp only [← r, ← if_pos this]
         _ = μ (⋃ x : S i, closed_ball x (r1 x)) := by
-          have : Encodable (S i) := (S_count i).toEncodable
+          haveI : Encodable (S i) := (S_count i).toEncodable
           rw [measure_Union]
           · exact (pairwise_subtype_iff_pairwise_set _ _).2 (S_disj i)
             
@@ -1139,19 +1142,20 @@ theorem exists_closed_ball_covering_tsum_measure_le (μ : Measureₓ α) [SigmaF
     calc
       (∑' x : t0 ∪ ⋃ i : Finₓ N, (coe : s' → α) '' S i, μ (closed_ball x (r x))) ≤
           (∑' x : t0, μ (closed_ball x (r x))) + ∑' x : ⋃ i : Finₓ N, (coe : s' → α) '' S i, μ (closed_ball x (r x)) :=
-        Ennreal.tsum_union_le (fun x => μ (closed_ball x (r x))) _
-          _ _ ≤
-          (∑' x : t0, μ (closed_ball x (r x))) + ∑ i : Finₓ N, ∑' x : (coe : s' → α) '' S i, μ (closed_ball x (r x)) :=
-        add_le_add le_rfl
-          (Ennreal.tsum_Union_le (fun x => μ (closed_ball x (r x))) _)_ ≤ μ s + ε / 2 + ∑ i : Finₓ N, ε / 2 / N :=
-        by
+        Ennreal.tsum_union_le (fun x => μ (closed_ball x (r x))) _ _
+      _ ≤ (∑' x : t0, μ (closed_ball x (r x))) + ∑ i : Finₓ N, ∑' x : (coe : s' → α) '' S i, μ (closed_ball x (r x)) :=
+        add_le_add le_rfl (Ennreal.tsum_Union_le (fun x => μ (closed_ball x (r x))) _)
+      _ ≤ μ s + ε / 2 + ∑ i : Finₓ N, ε / 2 / N := by
         refine' add_le_add A _
         refine' Finset.sum_le_sum _
         intro i hi
-        exact B i _ ≤ μ s + ε / 2 + ε / 2 := by
+        exact B i
+      _ ≤ μ s + ε / 2 + ε / 2 := by
         refine' add_le_add le_rfl _
-        simp only [← Finset.card_fin, ← Finset.sum_const, ← nsmul_eq_mul, ← Ennreal.mul_div_le]_ = μ s + ε := by
+        simp only [← Finset.card_fin, ← Finset.sum_const, ← nsmul_eq_mul, ← Ennreal.mul_div_le]
+      _ = μ s + ε := by
         rw [add_assocₓ, Ennreal.add_halves]
+      
     
 
 /-! ### Consequences on differentiation of measures -/
@@ -1221,7 +1225,7 @@ variable [MetricSpace β] [MeasurableSpace β] [BorelSpace β] [SigmaCompactSpac
 almost surely to to the Radon-Nikodym derivative. -/
 theorem ae_tendsto_rn_deriv (ρ μ : Measureₓ β) [IsLocallyFiniteMeasure μ] [IsLocallyFiniteMeasure ρ] :
     ∀ᵐ x ∂μ, Tendsto (fun r => ρ (ClosedBall x r) / μ (ClosedBall x r)) (𝓝[>] 0) (𝓝 (ρ.rnDeriv μ x)) := by
-  have : second_countable_topology β := Emetric.second_countable_of_sigma_compact β
+  haveI : second_countable_topology β := Emetric.second_countable_of_sigma_compact β
   filter_upwards [VitaliFamily.ae_tendsto_rn_deriv (Besicovitch.vitaliFamily μ) ρ] with x hx
   exact hx.comp (tendsto_filter_at μ x)
 
@@ -1233,7 +1237,7 @@ see `ae_tendsto_measure_inter_div`. -/
 theorem ae_tendsto_measure_inter_div_of_measurable_set (μ : Measureₓ β) [IsLocallyFiniteMeasure μ] {s : Set β}
     (hs : MeasurableSet s) :
     ∀ᵐ x ∂μ, Tendsto (fun r => μ (s ∩ ClosedBall x r) / μ (ClosedBall x r)) (𝓝[>] 0) (𝓝 (s.indicator 1 x)) := by
-  have : second_countable_topology β := Emetric.second_countable_of_sigma_compact β
+  haveI : second_countable_topology β := Emetric.second_countable_of_sigma_compact β
   filter_upwards [VitaliFamily.ae_tendsto_measure_inter_div_of_measurable_set (Besicovitch.vitaliFamily μ) hs]
   intro x hx
   exact hx.comp (tendsto_filter_at μ x)
@@ -1245,7 +1249,7 @@ A stronger version holds for measurable sets, see `ae_tendsto_measure_inter_div_
 -/
 theorem ae_tendsto_measure_inter_div (μ : Measureₓ β) [IsLocallyFiniteMeasure μ] (s : Set β) :
     ∀ᵐ x ∂μ.restrict s, Tendsto (fun r => μ (s ∩ ClosedBall x r) / μ (ClosedBall x r)) (𝓝[>] 0) (𝓝 1) := by
-  have : second_countable_topology β := Emetric.second_countable_of_sigma_compact β
+  haveI : second_countable_topology β := Emetric.second_countable_of_sigma_compact β
   filter_upwards [VitaliFamily.ae_tendsto_measure_inter_div
       (Besicovitch.vitaliFamily μ)] with x hx using hx.comp (tendsto_filter_at μ x)
 

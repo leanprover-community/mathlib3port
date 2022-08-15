@@ -73,7 +73,8 @@ theorem map₂_span_span (f : M →ₗ[R] N →ₗ[R] P) (s : Set M) (t : Set N)
       simp only [← LinearMap.map_zero, ← LinearMap.zero_apply, ← zero_mem, ← LinearMap.map_add, ← LinearMap.add_apply, ←
         LinearMap.map_smul, ← LinearMap.smul_apply]
     all_goals
-      solve_by_elim [← add_mem _ _, ← zero_mem _, ← smul_mem _ _ _]
+      solve_by_elim(config := { max_depth := 4, discharger := tactic.interactive.apply_instance }) [← add_mem _ _, ←
+        zero_mem _, ← smul_mem _ _ _]
     
   · rw [span_le]
     rintro _ ⟨a, b, ha, hb, rfl⟩

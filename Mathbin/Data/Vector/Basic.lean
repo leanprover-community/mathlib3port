@@ -61,6 +61,18 @@ theorem cons_head (a : α) : ∀ v : Vector α n, (a ::ᵥ v).head = a
 theorem cons_tail (a : α) : ∀ v : Vector α n, (a ::ᵥ v).tail = v
   | ⟨_, _⟩ => rfl
 
+theorem eq_cons_iff (a : α) (v : Vector α n.succ) (v' : Vector α n) : v = a ::ᵥ v' ↔ v.head = a ∧ v.tail = v' :=
+  ⟨fun h => h.symm ▸ ⟨head_cons a v', tail_cons a v'⟩, fun h =>
+    trans (cons_head_tail v).symm
+      (by
+        rw [h.1, h.2])⟩
+
+theorem ne_cons_iff (a : α) (v : Vector α n.succ) (v' : Vector α n) : v ≠ a ::ᵥ v' ↔ v.head ≠ a ∨ v.tail ≠ v' := by
+  rw [Ne.def, eq_cons_iff a v v', not_and_distrib]
+
+theorem exists_eq_cons (v : Vector α n.succ) : ∃ (a : α)(as : Vector α n), v = a ::ᵥ as :=
+  ⟨v.head, v.tail, (eq_cons_iff v.head v v.tail).2 ⟨rfl, rfl⟩⟩
+
 @[simp]
 theorem to_list_of_fn : ∀ {n} (f : Finₓ n → α), toList (ofFn f) = List.ofFnₓ f
   | 0, f => rfl
@@ -78,6 +90,16 @@ theorem length_coe (v : Vector α n) : ((coe : { l : List α // l.length = n } �
 @[simp]
 theorem to_list_map {β : Type _} (v : Vector α n) (f : α → β) : (v.map f).toList = v.toList.map f := by
   cases v <;> rfl
+
+@[simp]
+theorem head_map {β : Type _} (v : Vector α (n + 1)) (f : α → β) : (v.map f).head = f v.head := by
+  obtain ⟨a, v', h⟩ := Vector.exists_eq_cons v
+  rw [h, map_cons, head_cons, head_cons]
+
+@[simp]
+theorem tail_map {β : Type _} (v : Vector α (n + 1)) (f : α → β) : (v.map f).tail = v.tail.map f := by
+  obtain ⟨a, v', h⟩ := Vector.exists_eq_cons v
+  rw [h, map_cons, tail_cons, tail_cons]
 
 theorem nth_eq_nth_le :
     ∀ (v : Vector α n) (i),
@@ -154,16 +176,6 @@ theorem map_id {n : ℕ} (v : Vector α n) : Vector.map id v = v :=
     (by
       simp only [← List.map_id, ← Vector.to_list_map])
 
-theorem mem_iff_nth {a : α} {v : Vector α n} : a ∈ v.toList ↔ ∃ i, v.nth i = a := by
-  simp only [← List.mem_iff_nth_le, ← Finₓ.exists_iff, ← Vector.nth_eq_nth_le] <;>
-    exact
-      ⟨fun ⟨i, hi, h⟩ =>
-        ⟨i, by
-          rwa [to_list_length] at hi, h⟩,
-        fun ⟨i, hi, h⟩ =>
-        ⟨i, by
-          rwa [to_list_length], h⟩⟩
-
 theorem nodup_iff_nth_inj {v : Vector α n} : v.toList.Nodup ↔ Function.Injective v.nth := by
   cases' v with l hl
   subst hl
@@ -181,10 +193,6 @@ theorem nodup_iff_nth_inj {v : Vector α n} : v.toList.Nodup ↔ Function.Inject
     simp [← nth_eq_nth_le] at *
     tauto
     
-
-@[simp]
-theorem nth_mem (i : Finₓ n) (v : Vector α n) : v.nth i ∈ v.toList := by
-  rw [nth_eq_nth_le] <;> exact List.nth_le_mem _ _ _
 
 theorem head'_to_list : ∀ v : Vector α n.succ, (toList v).head' = some (head v)
   | ⟨a :: l, e⟩ => rfl
@@ -380,7 +388,7 @@ This function has two arguments: `h_nil` handles the base case on `C nil`,
 and `h_cons` defines the inductive step using `∀ x : α, C w → C (x ::ᵥ w)`.
 
 This can be used as `induction v using vector.induction_on`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def inductionOn {C : ∀ {n : ℕ}, Vector α n → Sort _} {n : ℕ} (v : Vector α n) (h_nil : C nil)
     (h_cons : ∀ {n : ℕ} {x : α} {w : Vector α n}, C w → C (x ::ᵥ w)) : C v := by
   induction' n with n ih generalizing v
@@ -400,7 +408,7 @@ example (v : Vector α n) : True := by
 variable {β γ : Type _}
 
 /-- Define `C v w` by induction on a pair of vectors `v : vector α n` and `w : vector β n`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def inductionOn₂ {C : ∀ {n}, Vector α n → Vector β n → Sort _} (v : Vector α n) (w : Vector β n) (h_nil : C nil nil)
     (h_cons : ∀ {n a b} {x : Vector α n} {y}, C x y → C (a ::ᵥ x) (b ::ᵥ y)) : C v w := by
   induction' n with n ih generalizing v w
@@ -418,7 +426,7 @@ def inductionOn₂ {C : ∀ {n}, Vector α n → Vector β n → Sort _} (v : Ve
 
 /-- Define `C u v w` by induction on a triplet of vectors
 `u : vector α n`, `v : vector β n`, and `w : vector γ b`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def inductionOn₃ {C : ∀ {n}, Vector α n → Vector β n → Vector γ n → Sort _} (u : Vector α n) (v : Vector β n)
     (w : Vector γ n) (h_nil : C nil nil nil)
     (h_cons : ∀ {n a b c} {x : Vector α n} {y z}, C x y z → C (a ::ᵥ x) (b ::ᵥ y) (c ::ᵥ z)) : C u v w := by
@@ -658,18 +666,18 @@ instance : IsLawfulTraversable.{u} (flip Vector n) where
   comp_map := by
     intros <;> cases x <;> simp [← (· <$> ·)]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]
--- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `reflect_name #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `reflect_name #[]
 unsafe instance reflect [reflected_univ.{u}] {α : Type u} [has_reflect α] [reflected _ α] {n : ℕ} :
     has_reflect (Vector α n) := fun v =>
   @Vector.inductionOn α (fun n => reflected _) n v
     ((by
-          trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]" :
+          trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `reflect_name #[]" :
           reflected _ @Vector.nil.{u}).subst
       (quote.1 α))
     fun n x xs ih =>
     (by
-          trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]" :
+          trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `reflect_name #[]" :
           reflected _ @Vector.cons.{u}).subst₄
       (quote.1 α) (quote.1 n) (quote.1 x) ih
 

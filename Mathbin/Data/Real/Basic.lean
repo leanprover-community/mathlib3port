@@ -31,6 +31,15 @@ notation "ℝ" => Real
 
 attribute [pp_using_anonymous_constructor] Real
 
+namespace CauSeq.Completion
+
+-- this can't go in `data.real.cau_seq_completion` as the structure on `rat` isn't available
+@[simp]
+theorem of_rat_rat {abv : ℚ → ℚ} [IsAbsoluteValue abv] (q : ℚ) : ofRat (q : ℚ) = (q : @Cauchy _ _ _ _ abv _) :=
+  rfl
+
+end CauSeq.Completion
+
 namespace Real
 
 open CauSeq CauSeq.Completion
@@ -64,6 +73,9 @@ private irreducible_def neg : ℝ → ℝ
 private irreducible_def mul : ℝ → ℝ → ℝ
   | ⟨a⟩, ⟨b⟩ => ⟨a * b⟩
 
+private noncomputable irreducible_def inv' : ℝ → ℝ
+  | ⟨a⟩ => ⟨a⁻¹⟩
+
 instance : Zero ℝ :=
   ⟨zero⟩
 
@@ -78,6 +90,9 @@ instance : Neg ℝ :=
 
 instance : Mul ℝ :=
   ⟨mul⟩
+
+noncomputable instance : Inv ℝ :=
+  ⟨inv'⟩
 
 theorem of_cauchy_zero : (⟨0⟩ : ℝ) = 0 :=
   show _ = zero by
@@ -98,6 +113,10 @@ theorem of_cauchy_neg (a) : (⟨-a⟩ : ℝ) = -⟨a⟩ :=
 theorem of_cauchy_mul (a b) : (⟨a * b⟩ : ℝ) = ⟨a⟩ * ⟨b⟩ :=
   show _ = mul _ _ by
     rw [mul]
+
+theorem of_cauchy_inv {f} : (⟨f⁻¹⟩ : ℝ) = ⟨f⟩⁻¹ :=
+  show _ = inv' _ by
+    rw [inv']
 
 theorem cauchy_zero : (0 : ℝ).cauchy = 0 :=
   show zero.cauchy = 0 by
@@ -122,6 +141,16 @@ theorem cauchy_mul : ∀ a b, (a * b : ℝ).cauchy = a.cauchy * b.cauchy
     show (mul _ _).cauchy = _ by
       rw [mul]
 
+theorem cauchy_inv : ∀ f, (f⁻¹ : ℝ).cauchy = f.cauchy⁻¹
+  | ⟨f⟩ =>
+    show (inv' _).cauchy = _ by
+      rw [inv']
+
+/-- `real.equiv_Cauchy` as a ring equivalence. -/
+@[simps]
+def ringEquivCauchy : ℝ ≃+* CauSeq.Completion.Cauchy :=
+  { equivCauchy with toFun := cauchy, invFun := of_cauchy, map_add' := cauchy_add, map_mul' := cauchy_mul }
+
 instance : CommRingₓ ℝ := by
   refine_struct
       { zero := (0 : ℝ), one := (1 : ℝ), mul := (· * ·), add := (· + ·), neg := @Neg.neg ℝ _, sub := fun a b => a + -b,
@@ -142,6 +171,26 @@ instance : CommRingₓ ℝ := by
             apply right_distrib|
             apply sub_eq_add_neg|
             skip
+
+instance : HasRatCast ℝ where ratCast := fun q => ⟨q⟩
+
+theorem of_cauchy_nat_cast (n : ℕ) : (⟨n⟩ : ℝ) = n :=
+  rfl
+
+theorem of_cauchy_int_cast (z : ℤ) : (⟨z⟩ : ℝ) = z :=
+  rfl
+
+theorem of_cauchy_rat_cast (q : ℚ) : (⟨q⟩ : ℝ) = q :=
+  rfl
+
+theorem cauchy_nat_cast (n : ℕ) : (n : ℝ).cauchy = n :=
+  rfl
+
+theorem cauchy_int_cast (z : ℤ) : (z : ℝ).cauchy = z :=
+  rfl
+
+theorem cauchy_rat_cast (q : ℚ) : (q : ℝ).cauchy = q :=
+  rfl
 
 /-! Extra instances to short-circuit type class resolution.
 
@@ -217,16 +266,6 @@ instance : StarRing ℝ :=
 instance : HasTrivialStar ℝ :=
   ⟨fun _ => rfl⟩
 
-/-- Coercion `ℚ` → `ℝ` as a `ring_hom`. Note that this
-is `cau_seq.completion.of_rat`, not `rat.cast`. -/
-def ofRat : ℚ →+* ℝ := by
-  refine_struct { toFun := of_cauchy ∘ of_rat } <;>
-    simp [← of_rat_one, ← of_rat_zero, ← of_rat_mul, ← of_rat_add, ← of_cauchy_one, ← of_cauchy_zero, of_cauchy_mul,
-      of_cauchy_add]
-
-theorem of_rat_apply (x : ℚ) : ofRat x = of_cauchy (CauSeq.Completion.ofRat x) :=
-  rfl
-
 /-- Make a real number from a Cauchy sequence of rationals (by taking the equivalence class). -/
 def mk (x : CauSeq ℚ abs) : ℝ :=
   ⟨CauSeq.Completion.mk x⟩
@@ -285,7 +324,7 @@ private theorem le_def {x y : ℝ} : x ≤ y ↔ x < y ∨ x = y :=
 theorem mk_le {f g : CauSeq ℚ abs} : mk f ≤ mk g ↔ f ≤ g := by
   simp [← le_def, ← mk_eq] <;> rfl
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem ind_mk {C : Real → Prop} (x : Real) (h : ∀ y, C (mk y)) : C x := by
   cases' x with x
   induction' x using Quot.induction_on with x
@@ -328,12 +367,12 @@ instance : Preorderₓ ℝ := by
   infer_instance
 
 -- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:92:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible }
-theorem of_rat_lt {x y : ℚ} : ofRat x < ofRat y ↔ x < y := by
+theorem rat_cast_lt {x y : ℚ} : (x : ℝ) < (y : ℝ) ↔ x < y := by
   rw [mk_lt]
   exact const_lt
 
 protected theorem zero_lt_one : (0 : ℝ) < 1 := by
-  convert of_rat_lt.2 zero_lt_one <;> simp
+  convert rat_cast_lt.2 zero_lt_one <;> simp [of_cauchy_rat_cast, ← of_cauchy_one, ← of_cauchy_zero]
 
 protected theorem mul_pos {a b : ℝ} : 0 < a → 0 < b → 0 < a * b := by
   induction' a using Real.ind_mk with a
@@ -394,21 +433,6 @@ noncomputable instance : LinearOrderedSemiring ℝ := by
 instance : IsDomain ℝ :=
   { Real.nontrivial, Real.commRing, LinearOrderedRing.is_domain with }
 
-private noncomputable irreducible_def inv' : ℝ → ℝ
-  | ⟨a⟩ => ⟨a⁻¹⟩
-
-noncomputable instance : Inv ℝ :=
-  ⟨inv'⟩
-
-theorem of_cauchy_inv {f} : (⟨f⁻¹⟩ : ℝ) = ⟨f⟩⁻¹ :=
-  show _ = inv' _ by
-    rw [inv']
-
-theorem cauchy_inv : ∀ f, (f⁻¹ : ℝ).cauchy = f.cauchy⁻¹
-  | ⟨f⟩ =>
-    show (inv' _).cauchy = _ by
-      rw [inv']
-
 noncomputable instance : LinearOrderedField ℝ :=
   { Real.linearOrderedCommRing with inv := Inv.inv,
     mul_inv_cancel := by
@@ -417,7 +441,10 @@ noncomputable instance : LinearOrderedField ℝ :=
       simp only [of_cauchy_inv, of_cauchy_mul, of_cauchy_one, of_cauchy_zero, ← Ne.def] at *
       exact CauSeq.Completion.inv_mul_cancel h,
     inv_zero := by
-      simp [of_cauchy_zero, of_cauchy_inv] }
+      simp [of_cauchy_zero, of_cauchy_inv],
+    ratCast := coe,
+    rat_cast_mk := fun n d hd h2 => by
+      rw [← of_cauchy_rat_cast, Rat.cast_mk', of_cauchy_mul, of_cauchy_inv, of_cauchy_nat_cast, of_cauchy_int_cast] }
 
 -- Extra instances to short-circuit type class resolution
 noncomputable instance : LinearOrderedAddCommGroup ℝ := by
@@ -456,11 +483,12 @@ noncomputable instance decidableLe (a b : ℝ) : Decidable (a ≤ b) := by
 noncomputable instance decidableEq (a b : ℝ) : Decidable (a = b) := by
   infer_instance
 
-open Rat
+/-- Show an underlying cauchy sequence for real numbers.
 
-@[simp]
-theorem of_rat_eq_cast : ∀ x : ℚ, ofRat x = x :=
-  ofRat.eq_rat_cast
+The representative chosen is the one passed in the VM to `quot.mk`, so two cauchy sequences
+converging to the same number may be printed differently.
+-/
+unsafe instance : HasRepr ℝ where repr := fun r => "real.of_cauchy " ++ reprₓ r.cauchy
 
 -- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:92:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible }
 theorem le_mk_of_forall_le {f : CauSeq ℚ abs} : (∃ i, ∀, ∀ j ≥ i, ∀, x ≤ f j) → x ≤ mk f := by
@@ -471,7 +499,6 @@ theorem le_mk_of_forall_le {f : CauSeq ℚ abs} : (∃ i, ∀, ∀ j ≥ i, ∀,
   rintro ⟨K, K0, hK⟩
   obtain ⟨i, H⟩ := exists_forall_ge_and h (exists_forall_ge_and hK (f.cauchy₃ <| half_pos K0))
   apply not_lt_of_le (H _ le_rfl).1
-  rw [← of_rat_eq_cast]
   rw [mk_lt]
   refine' ⟨_, half_pos K0, i, fun j ij => _⟩
   have := add_le_add (H _ ij).2.1 (le_of_ltₓ (abs_lt.1 <| (H _ le_rfl).2.2 _ ij).1)
@@ -529,7 +556,7 @@ theorem exists_floor (x : ℝ) : ∃ ub : ℤ, (ub : ℝ) ≤ x ∧ ∀ z : ℤ,
     (let ⟨n, hn⟩ := exists_int_lt x
     ⟨n, le_of_ltₓ hn⟩)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε)))
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε)))
 theorem exists_is_lub (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃ x, IsLub S x := by
   rcases hne, hbdd with ⟨⟨L, hL⟩, ⟨U, hU⟩⟩
   have : ∀ d : ℕ, BddAbove { m : ℤ | ∃ y ∈ S, (m : ℝ) ≤ y * d } := by

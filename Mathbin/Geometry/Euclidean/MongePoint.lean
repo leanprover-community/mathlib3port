@@ -723,7 +723,7 @@ theorem affine_span_of_orthocentric_system {s : Set P} (ho : OrthocentricSystem 
   have hfd : FiniteDimensional ℝ (affineSpan ℝ s).direction := by
     rw [hs]
     infer_instance
-  have := hfd
+  haveI := hfd
   refine' eq_of_le_of_finrank_eq (direction_le (affine_span_mono ℝ hps)) _
   rw [hs, direction_affine_span, direction_affine_span, ha.finrank_vector_span (Fintype.card_fin _),
     t.independent.finrank_vector_span (Fintype.card_fin _)]

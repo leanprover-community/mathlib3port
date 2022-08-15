@@ -31,10 +31,13 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
 theorem prod_erase_none (f : α → M) (s : Finset (Option α)) :
     (∏ x in s.eraseNone, f x) = ∏ x in s, Option.elimₓ 1 f x := by
   classical <;>
-    calc (∏ x in s.erase_none, f x) = ∏ x in s.erase_none.map embedding.some, Option.elimₓ 1 f x :=
-        (prod_map s.erase_none embedding.some <| Option.elimₓ 1 f).symm _ = ∏ x in s.erase none, Option.elimₓ 1 f x :=
-        by
-        rw [map_some_erase_none]_ = ∏ x in s, Option.elimₓ 1 f x := prod_erase _ rfl
+    calc
+      (∏ x in s.erase_none, f x) = ∏ x in s.erase_none.map embedding.some, Option.elimₓ 1 f x :=
+        (prod_map s.erase_none embedding.some <| Option.elimₓ 1 f).symm
+      _ = ∏ x in s.erase none, Option.elimₓ 1 f x := by
+        rw [map_some_erase_none]
+      _ = ∏ x in s, Option.elimₓ 1 f x := prod_erase _ rfl
+      
 
 end Finset
 

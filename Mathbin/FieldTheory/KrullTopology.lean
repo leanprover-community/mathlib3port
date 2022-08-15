@@ -250,7 +250,7 @@ theorem krull_topology_totally_disconnected {K L : Type _} [Field K] [Field L] [
     rwa [Ne.def, inv_mul_eq_one]
   rcases FunLike.exists_ne hστ with ⟨x, hx : (σ⁻¹ * τ) x ≠ x⟩
   let E := IntermediateField.adjoin K ({x} : Set L)
-  have := IntermediateField.adjoin.finite_dimensional (h_int x)
+  haveI := IntermediateField.adjoin.finite_dimensional (h_int x)
   refine'
     ⟨LeftCoset σ E.fixing_subgroup, ⟨E.fixing_subgroup_is_open.left_coset σ, E.fixing_subgroup_is_closed.left_coset σ⟩,
       ⟨1, E.fixing_subgroup.one_mem', by

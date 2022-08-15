@@ -80,7 +80,7 @@ theorem Prime.eq_one_or_self_of_dvd {p : ℕ} (pp : p.Prime) (m : ℕ) (hm : m �
   rintro rfl
   rw [hn, mul_oneₓ]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (m «expr ∣ » p)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (m «expr ∣ » p)
 theorem prime_def_lt'' {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ (m) (_ : m ∣ p), m = 1 ∨ m = p := by
   refine' ⟨fun h => ⟨h.two_le, h.eq_one_or_self_of_dvd⟩, fun h => _⟩
   have h1 := one_lt_two.trans_le h.1
@@ -555,7 +555,7 @@ theorem prime_of_mem_factors : ∀ {n p}, p ∈ factors n → Prime p
     let m := minFac n
     have : n / m < n := factors_lemma
     have h₁ : p = m ∨ p ∈ factors (n / m) :=
-      (List.mem_cons_iff _ _ _).1
+      (List.mem_cons_iffₓ _ _ _).1
         (by
           rwa [factors] at h)
     Or.cases_on h₁
@@ -622,7 +622,7 @@ theorem factors_chain' (n) : List.Chain' (· ≤ ·) (factors n) :=
   @List.Chain'.tail _ _ (_ :: _) (factors_chain_2 _)
 
 theorem factors_sorted (n : ℕ) : List.Sorted (· ≤ ·) (factors n) :=
-  (List.chain'_iff_pairwise (@le_transₓ _ _)).1 (factors_chain' _)
+  List.chain'_iff_pairwise.1 (factors_chain' _)
 
 /-- `factors` can be constructed inductively by extracting `min_fac`, for sufficiently large `n`. -/
 theorem factors_add_two (n : ℕ) : factors (n + 2) = minFac (n + 2) :: factors ((n + 2) / minFac (n + 2)) := by
@@ -1138,7 +1138,7 @@ theorem factors_helper_same_sn (a : ℕ) : FactorsHelper a a [a] :=
 
 theorem factors_helper_end (n : ℕ) (l : List ℕ) (H : FactorsHelper n 2 l) : Nat.factors n = l :=
   let ⟨h₁, h₂, h₃⟩ := H Nat.prime_two
-  have := (List.chain'_iff_pairwise (@le_transₓ _ _)).1 (@List.Chain'.tail _ _ (_ :: _) h₁)
+  have := List.chain'_iff_pairwise.1 (@List.Chain'.tail _ _ (_ :: _) h₁)
   (List.eq_of_perm_of_sorted (Nat.factors_unique h₃ h₂) this (Nat.factors_sorted _)).symm
 
 /-- Given `n` and `a` natural numerals, returns `(l, ⊢ factors_helper n a l)`. -/
@@ -1300,19 +1300,4 @@ theorem prime_three : Prime (3 : ℤ) :=
   Nat.prime_iff_prime_int.mp Nat.prime_three
 
 end Int
-
-section
-
-open Finset
-
-/-- Exactly `n / p` naturals in `[1, n]` are multiples of `p`. -/
-theorem card_multiples (n p : ℕ) : card ((range n).filter fun e => p ∣ e + 1) = n / p := by
-  induction' n with n hn
-  · rw [Nat.zero_divₓ, range_zero, filter_empty, card_empty]
-    
-  · rw [Nat.succ_div, add_ite, add_zeroₓ, range_succ, filter_insert, apply_ite card,
-      card_insert_of_not_mem (mem_filter.not.mpr (not_and_of_not_left _ not_mem_range_self)), hn]
-    
-
-end
 

@@ -49,11 +49,11 @@ theorem to_pgame_left_moves (o : Ordinal) : o.toPgame.LeftMoves = o.out.α := by
 theorem to_pgame_right_moves (o : Ordinal) : o.toPgame.RightMoves = Pempty := by
   rw [to_pgame, right_moves]
 
-instance : IsEmpty (toPgame 0).LeftMoves := by
+instance is_empty_zero_to_pgame_left_moves : IsEmpty (toPgame 0).LeftMoves := by
   rw [to_pgame_left_moves]
   infer_instance
 
-instance (o : Ordinal) : IsEmpty o.toPgame.RightMoves := by
+instance is_empty_to_pgame_right_moves (o : Ordinal) : IsEmpty o.toPgame.RightMoves := by
   rw [to_pgame_right_moves]
   infer_instance
 
@@ -78,6 +78,30 @@ theorem to_pgame_move_left' {o : Ordinal} (i) : o.toPgame.moveLeft i = (toLeftMo
 theorem to_pgame_move_left {o : Ordinal} (i) : o.toPgame.moveLeft (toLeftMovesToPgame i) = i.val.toPgame := by
   simp
 
+/-- `0.to_pgame` has the same moves as `0`. -/
+noncomputable def zeroToPgameRelabelling : toPgame 0 ≡r 0 :=
+  Relabelling.isEmpty _
+
+noncomputable instance uniqueOneToPgameLeftMoves : Unique (toPgame 1).LeftMoves :=
+  (Equivₓ.cast <| to_pgame_left_moves 1).unique
+
+@[simp]
+theorem one_to_pgame_left_moves_default_eq :
+    (default : (toPgame 1).LeftMoves) = @toLeftMovesToPgame 1 ⟨0, zero_lt_one⟩ :=
+  rfl
+
+@[simp]
+theorem to_left_moves_one_to_pgame_symm (i) : (@toLeftMovesToPgame 1).symm i = ⟨0, zero_lt_one⟩ := by
+  simp
+
+theorem one_to_pgame_move_left (x) : (toPgame 1).moveLeft x = toPgame 0 := by
+  simp
+
+/-- `1.to_pgame` has the same moves as `1`. -/
+noncomputable def oneToPgameRelabelling : toPgame 1 ≡r 1 :=
+  ⟨Equivₓ.equivOfUnique _ _, Equivₓ.equivOfIsEmpty _ _, fun i => by
+    simpa using zero_to_pgame_relabelling, isEmptyElim⟩
+
 theorem to_pgame_lf {a b : Ordinal} (h : a < b) : a.toPgame ⧏ b.toPgame := by
   convert move_left_lf (to_left_moves_to_pgame ⟨a, h⟩)
   rw [to_pgame_move_left]
@@ -89,6 +113,9 @@ theorem to_pgame_le {a b : Ordinal} (h : a ≤ b) : a.toPgame ≤ b.toPgame := b
 
 theorem to_pgame_lt {a b : Ordinal} (h : a < b) : a.toPgame < b.toPgame :=
   ⟨to_pgame_le h.le, to_pgame_lf h⟩
+
+theorem to_pgame_nonneg (a : Ordinal) : 0 ≤ a.toPgame :=
+  zeroToPgameRelabelling.Ge.trans <| to_pgame_le <| Ordinal.zero_le a
 
 @[simp]
 theorem to_pgame_lf_iff {a b : Ordinal} : a.toPgame ⧏ b.toPgame ↔ a < b :=

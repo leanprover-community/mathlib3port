@@ -98,6 +98,10 @@ instance covariant_class_mul_le : CovariantClass ℝ≥0∞ ℝ≥0∞ (· * ·)
 instance covariant_class_add_le : CovariantClass ℝ≥0∞ ℝ≥0∞ (· + ·) (· ≤ ·) :=
   OrderedAddCommMonoid.to_covariant_class_left ℝ≥0∞
 
+noncomputable instance : LinearOrderedCommMonoidWithZero ℝ≥0∞ :=
+  { Ennreal.linearOrderedAddCommMonoidWithTop, show CommSemiringₓ ℝ≥0∞ from inferInstance with
+    mul_le_mul_left := fun a b => mul_le_mul_left', zero_le_one := zero_le 1 }
+
 instance : Inhabited ℝ≥0∞ :=
   ⟨0⟩
 
@@ -118,9 +122,8 @@ theorem some_eq_coe (a : ℝ≥0 ) : (some a : ℝ≥0∞) = (↑a : ℝ≥0∞)
   rfl
 
 /-- `to_nnreal x` returns `x` if it is real, otherwise 0. -/
-protected def toNnreal : ℝ≥0∞ → ℝ≥0
-  | some r => r
-  | none => 0
+protected def toNnreal : ℝ≥0∞ → ℝ≥0 :=
+  WithTop.untop' 0
 
 /-- `to_real x` returns `x` if it is real, `0` otherwise. -/
 protected def toReal (a : ℝ≥0∞) : Real :=
@@ -227,11 +230,11 @@ theorem forall_ennreal {p : ℝ≥0∞ → Prop} : (∀ a, p a) ↔ (∀ r : ℝ
     | some r => h₁ _
     | none => h₂⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a «expr ≠ » «expr∞»())
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (a «expr ≠ » «expr∞»())
 theorem forall_ne_top {p : ℝ≥0∞ → Prop} : (∀ (a) (_ : a ≠ ∞), p a) ↔ ∀ r : ℝ≥0 , p r :=
   Option.ball_ne_none
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a «expr ≠ » «expr∞»())
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (a «expr ≠ » «expr∞»())
 theorem exists_ne_top {p : ℝ≥0∞ → Prop} : (∃ (a : _)(_ : a ≠ ∞), p a) ↔ ∃ r : ℝ≥0 , p r :=
   Option.bex_ne_none
 
@@ -354,9 +357,6 @@ theorem one_lt_two : (1 : ℝ≥0∞) < 2 :=
     coe_two ▸ by
       exact_mod_cast @one_lt_two ℕ _ _
 
-theorem one_le_two : (1 : ℝ≥0∞) ≤ 2 :=
-  one_lt_two.le
-
 @[simp]
 theorem zero_lt_two : (0 : ℝ≥0∞) < 2 :=
   lt_transₓ Ennreal.zero_lt_one one_lt_two
@@ -373,9 +373,7 @@ instance _root_.fact_one_le_one_ennreal : Fact ((1 : ℝ≥0∞) ≤ 1) :=
 
 /-- `(1 : ℝ≥0∞) ≤ 2`, recorded as a `fact` for use with `Lp` spaces. -/
 instance _root_.fact_one_le_two_ennreal : Fact ((1 : ℝ≥0∞) ≤ 2) :=
-  ⟨Ennreal.coe_le_coe.2
-      (show (1 : ℝ≥0 ) ≤ 2 by
-        norm_num)⟩
+  ⟨one_le_two⟩
 
 /-- `(1 : ℝ≥0∞) ≤ ∞`, recorded as a `fact` for use with `Lp` spaces. -/
 instance _root_.fact_one_le_top_ennreal : Fact ((1 : ℝ≥0∞) ≤ ∞) :=
@@ -391,14 +389,14 @@ def neTopEquivNnreal : { a | a ≠ ∞ } ≃ ℝ≥0 where
 theorem cinfi_ne_top [HasInfₓ α] (f : ℝ≥0∞ → α) : (⨅ x : { x // x ≠ ∞ }, f x) = ⨅ x : ℝ≥0 , f x :=
   Eq.symm <| (neTopEquivNnreal.symm.Surjective.infi_congr _) fun x => rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » «expr∞»())
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ≠ » «expr∞»())
 theorem infi_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) : (⨅ (x) (_ : x ≠ ∞), f x) = ⨅ x : ℝ≥0 , f x := by
   rw [infi_subtype', cinfi_ne_top]
 
 theorem csupr_ne_top [HasSupₓ α] (f : ℝ≥0∞ → α) : (⨆ x : { x // x ≠ ∞ }, f x) = ⨆ x : ℝ≥0 , f x :=
   @cinfi_ne_top αᵒᵈ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » «expr∞»())
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ≠ » «expr∞»())
 theorem supr_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) : (⨆ (x) (_ : x ≠ ∞), f x) = ⨆ x : ℝ≥0 , f x :=
   @infi_ne_top αᵒᵈ _ _
 
@@ -809,9 +807,6 @@ theorem coe_lt_coe_nat {n : ℕ} : (r : ℝ≥0∞) < n ↔ r < n :=
 theorem coe_nat_lt_coe_nat {m n : ℕ} : (m : ℝ≥0∞) < n ↔ m < n :=
   Ennreal.coe_nat n ▸ coe_nat_lt_coe.trans Nat.cast_lt
 
-theorem coe_nat_ne_top {n : ℕ} : (n : ℝ≥0∞) ≠ ∞ :=
-  Ennreal.coe_nat n ▸ coe_ne_top
-
 theorem coe_nat_mono : StrictMono (coe : ℕ → ℝ≥0∞) := fun _ _ => coe_nat_lt_coe_nat.2
 
 @[simp, norm_cast]
@@ -834,7 +829,7 @@ theorem Union_Iio_coe_nat : (⋃ n : ℕ, Iio (n : ℝ≥0∞)) = {∞}ᶜ := by
 
 @[simp]
 theorem Union_Iic_coe_nat : (⋃ n : ℕ, Iic (n : ℝ≥0∞)) = {∞}ᶜ :=
-  Subset.antisymm (Union_subset fun n x hx => ne_top_of_le_ne_top coe_nat_ne_top hx) <|
+  Subset.antisymm (Union_subset fun n x hx => ne_top_of_le_ne_top (nat_ne_top n) hx) <|
     Union_Iio_coe_nat ▸ Union_mono fun n => Iio_subset_Iic_self
 
 @[simp]
@@ -925,9 +920,11 @@ theorem mul_lt_mul (ac : a < c) (bd : b < d) : a * b < c * d := by
   rcases lt_iff_exists_nnreal_btwn.1 bd with ⟨b', bb', b'd⟩
   lift b to ℝ≥0 using ne_top_of_lt bb'
   norm_cast  at *
-  calc ↑(a * b) < ↑(a' * b') :=
-      coe_lt_coe.2 (mul_lt_mul' aa'.le bb' (zero_le _) ((zero_le a).trans_lt aa'))_ = ↑a' * ↑b' := coe_mul _ ≤ c * d :=
-      mul_le_mul a'c.le b'd.le
+  calc
+    ↑(a * b) < ↑(a' * b') := coe_lt_coe.2 (mul_lt_mul' aa'.le bb' (zero_le _) ((zero_le a).trans_lt aa'))
+    _ = ↑a' * ↑b' := coe_mul
+    _ ≤ c * d := mul_le_mul a'c.le b'd.le
+    
 
 theorem mul_left_mono : Monotone ((· * ·) a) := fun b c => mul_le_mul le_rfl
 
@@ -1704,8 +1701,8 @@ theorem exists_nat_pos_inv_mul_lt (ha : a ≠ ∞) (hb : b ≠ 0) : ∃ n > 0, (
   rcases exists_nat_pos_mul_gt hb ha with ⟨n, npos, hn⟩
   have : (n : ℝ≥0∞) ≠ 0 := Nat.cast_ne_zero.2 npos.lt.ne'
   use n, npos
-  rwa [← one_mulₓ b, ← inv_mul_cancel this coe_nat_ne_top, mul_assoc,
-    mul_lt_mul_left (inv_ne_zero.2 coe_nat_ne_top) (inv_ne_top.2 this)]
+  rwa [← one_mulₓ b, ← inv_mul_cancel this (nat_ne_top n), mul_assoc,
+    mul_lt_mul_left (inv_ne_zero.2 <| nat_ne_top _) (inv_ne_top.2 this)]
 
 theorem exists_nnreal_pos_mul_lt (ha : a ≠ ∞) (hb : b ≠ 0) : ∃ n > 0, ↑(n : ℝ≥0 ) * a < b := by
   rcases exists_nat_pos_inv_mul_lt ha hb with ⟨n, npos : 0 < n, hn⟩
@@ -1986,25 +1983,15 @@ theorem of_real_inv_of_pos {x : ℝ} (hx : 0 < x) : (Ennreal.ofReal x)⁻¹ = En
 theorem of_real_div_of_pos {x y : ℝ} (hy : 0 < y) : Ennreal.ofReal (x / y) = Ennreal.ofReal x / Ennreal.ofReal y := by
   rw [div_eq_mul_inv, div_eq_mul_inv, of_real_mul' (inv_nonneg.2 hy.le), of_real_inv_of_pos hy]
 
+@[simp]
+theorem to_nnreal_mul {a b : ℝ≥0∞} : (a * b).toNnreal = a.toNnreal * b.toNnreal :=
+  WithTop.untop'_zero_mul a b
+
 theorem to_nnreal_mul_top (a : ℝ≥0∞) : Ennreal.toNnreal (a * ∞) = 0 := by
-  by_cases' h : a = 0
-  · rw [h, zero_mul, zero_to_nnreal]
-    
-  · rw [mul_top, if_neg h, top_to_nnreal]
-    
+  simp
 
 theorem to_nnreal_top_mul (a : ℝ≥0∞) : Ennreal.toNnreal (∞ * a) = 0 := by
-  rw [mul_comm, to_nnreal_mul_top]
-
-@[simp]
-theorem to_nnreal_mul {a b : ℝ≥0∞} : (a * b).toNnreal = a.toNnreal * b.toNnreal := by
-  induction a using WithTop.recTopCoe
-  · rw [to_nnreal_top_mul, top_to_nnreal, zero_mul]
-    
-  induction b using WithTop.recTopCoe
-  · rw [to_nnreal_mul_top, top_to_nnreal, mul_zero]
-    
-  simp only [← to_nnreal_coe, coe_mul]
+  simp
 
 @[simp]
 theorem smul_to_nnreal (a : ℝ≥0 ) (b : ℝ≥0∞) : (a • b).toNnreal = a * b.toNnreal := by
@@ -2175,7 +2162,7 @@ theorem Inf_add {s : Set ℝ≥0∞} : inf s + a = ⨅ b ∈ s, b + a := by
 theorem add_infi {a : ℝ≥0∞} : a + infi f = ⨅ b, a + f b := by
   rw [add_commₓ, infi_add] <;> simp [← add_commₓ]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (a a')
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (a a')
 theorem infi_add_infi (h : ∀ i j, ∃ k, f k + g k ≤ f i + g j) : infi f + infi g = ⨅ a, f a + g a :=
   suffices (⨅ a, f a + g a) ≤ infi f + infi g from
     le_antisymmₓ (le_infi fun a => add_le_add (infi_le _ _) (infi_le _ _)) this

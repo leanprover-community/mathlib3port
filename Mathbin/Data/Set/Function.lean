@@ -54,6 +54,14 @@ theorem restrict_eq (f : α → β) (s : Set α) : s.restrict f = f ∘ coe :=
 theorem restrict_apply (f : α → β) (s : Set α) (x : s) : s.restrict f x = f x :=
   rfl
 
+theorem restrict_eq_iff {f : ∀ a, π a} {s : Set α} {g : ∀ a : s, π a} :
+    restrict s f = g ↔ ∀ (a) (ha : a ∈ s), f a = g ⟨a, ha⟩ :=
+  funext_iffₓ.trans Subtype.forall
+
+theorem eq_restrict_iff {s : Set α} {f : ∀ a : s, π a} {g : ∀ a, π a} :
+    f = restrict s g ↔ ∀ (a) (ha : a ∈ s), f ⟨a, ha⟩ = g a :=
+  funext_iffₓ.trans Subtype.forall
+
 @[simp]
 theorem range_restrict (f : α → β) (s : Set α) : Set.Range (s.restrict f) = f '' s :=
   (range_comp _ _).trans <| congr_arg ((· '' ·) f) Subtype.range_coe
@@ -61,13 +69,13 @@ theorem range_restrict (f : α → β) (s : Set α) : Set.Range (s.restrict f) =
 theorem image_restrict (f : α → β) (s t : Set α) : s.restrict f '' (coe ⁻¹' t) = f '' (t ∩ s) := by
   rw [restrict, image_comp, image_preimage_eq_inter_range, Subtype.range_coe]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (a «expr ∉ » s)
 @[simp]
 theorem restrict_dite {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀, ∀ a ∈ s, ∀, β) (g : ∀ (a) (_ : a ∉ s), β) :
     (s.restrict fun a => if h : a ∈ s then f a h else g a h) = fun a => f a a.2 :=
   funext fun a => dif_pos a.2
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (a «expr ∉ » s)
 @[simp]
 theorem restrict_dite_compl {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀, ∀ a ∈ s, ∀, β) (g : ∀ (a) (_ : a ∉ s), β) :
     (sᶜ.restrict fun a => if h : a ∈ s then f a h else g a h) = fun a => g a a.2 :=
@@ -149,6 +157,10 @@ def EqOn (f₁ f₂ : α → β) (s : Set α) : Prop :=
 
 @[simp]
 theorem eq_on_empty (f₁ f₂ : α → β) : EqOn f₁ f₂ ∅ := fun x => False.elim
+
+@[simp]
+theorem restrict_eq_restrict_iff : restrict s f₁ = restrict s f₂ ↔ EqOn f₁ f₂ s :=
+  restrict_eq_iff
 
 @[symm]
 theorem EqOn.symm (h : EqOn f₁ f₂ s) : EqOn f₂ f₁ s := fun x hx => (h hx).symm
@@ -263,6 +275,13 @@ def MapsTo.restrict (f : α → β) (s : Set α) (t : Set β) (h : MapsTo f s t)
 theorem MapsTo.coe_restrict_apply (h : MapsTo f s t) (x : s) : (h.restrict f s t x : β) = f x :=
   rfl
 
+theorem MapsTo.coe_restrict (h : Set.MapsTo f s t) : coe ∘ h.restrict f s t = s.restrict f :=
+  rfl
+
+theorem MapsTo.range_restrict (f : α → β) (s : Set α) (t : Set β) (h : MapsTo f s t) :
+    Range (h.restrict f s t) = coe ⁻¹' (f '' s) :=
+  Set.range_subtype_map f h
+
 theorem maps_to_iff_exists_map_subtype : MapsTo f s t ↔ ∃ g : s → t, ∀ x : s, f x = g x :=
   ⟨fun h => ⟨h.restrict f s t, fun _ => rfl⟩, fun ⟨g, hg⟩ x hx => by
     erw [hg ⟨x, hx⟩]
@@ -362,6 +381,25 @@ theorem surjective_maps_to_image_restrict (f : α → β) (s : Set α) :
 theorem MapsTo.mem_iff (h : MapsTo f s t) (hc : MapsTo f (sᶜ) (tᶜ)) {x} : f x ∈ t ↔ x ∈ s :=
   ⟨fun ht => by_contra fun hs => hc hs ht, fun hx => h hx⟩
 
+/-! ### Restriction onto preimage -/
+
+
+section
+
+variable (t f)
+
+/-- The restriction of a function onto the preimage of a set. -/
+@[simps]
+def restrictPreimage : f ⁻¹' t → t :=
+  (Set.maps_to_preimage f t).restrict _ _ _
+
+theorem range_restrict_preimage : Range (t.restrictPreimage f) = coe ⁻¹' Range f := by
+  delta' Set.restrictPreimage
+  rw [maps_to.range_restrict, Set.image_preimage_eq_inter_range, Set.preimage_inter, Subtype.coe_preimage_self,
+    Set.univ_inter]
+
+end
+
 /-! ### Injectivity on a set -/
 
 
@@ -422,6 +460,11 @@ theorem inj_on_iff_injective : InjOn f s ↔ Injective (s.restrict f) :=
   ⟨fun H a b h => Subtype.eq <| H a.2 b.2 h, fun H a as b bs h => congr_arg Subtype.val <| @H ⟨a, as⟩ ⟨b, bs⟩ h⟩
 
 alias inj_on_iff_injective ↔ inj_on.injective _
+
+theorem exists_inj_on_iff_injective [Nonempty β] : (∃ f : α → β, InjOn f s) ↔ ∃ f : s → β, Injective f :=
+  ⟨fun ⟨f, hf⟩ => ⟨_, hf.Injective⟩, fun ⟨f, hf⟩ => by
+    lift f to α → β using trivialₓ
+    exact ⟨f, inj_on_iff_injective.2 hf⟩⟩
 
 theorem inj_on_preimage {B : Set (Set β)} (hB : B ⊆ 𝒫 Range f) : InjOn (Preimage f) B := fun s hs t ht hst =>
   (preimage_eq_preimage' (hB hs) (hB ht)).1 hst
@@ -802,14 +845,14 @@ theorem SurjOn.bij_on_subset [Nonempty α] (h : SurjOn f s t) : BijOn f (invFunO
   rintro _ ⟨y, hy, rfl⟩
   rwa [h.right_inv_on_inv_fun_on hy]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (s' «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (s' «expr ⊆ » s)
 theorem surj_on_iff_exists_bij_on_subset : SurjOn f s t ↔ ∃ (s' : _)(_ : s' ⊆ s), BijOn f s' t := by
   constructor
   · rcases eq_empty_or_nonempty t with (rfl | ht)
     · exact fun _ => ⟨∅, empty_subset _, bij_on_empty f⟩
       
     · intro h
-      have : Nonempty α := ⟨Classical.some (h.comap_nonempty ht)⟩
+      haveI : Nonempty α := ⟨Classical.some (h.comap_nonempty ht)⟩
       exact ⟨_, h.maps_to_inv_fun_on.image_subset, h.bij_on_subset⟩
       
     
@@ -914,7 +957,7 @@ theorem piecewise_eq_on (f g : α → β) : EqOn (s.piecewise f g) f s := fun _ 
 
 theorem piecewise_eq_on_compl (f g : α → β) : EqOn (s.piecewise f g) g (sᶜ) := fun _ => piecewise_eq_of_not_mem _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem piecewise_le {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g : ∀ i, δ i}
     (h₁ : ∀, ∀ i ∈ s, ∀, f₁ i ≤ g i) (h₂ : ∀ (i) (_ : i ∉ s), f₂ i ≤ g i) : s.piecewise f₁ f₂ ≤ g := fun i =>
   if h : i ∈ s then by
@@ -922,12 +965,12 @@ theorem piecewise_le {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set �
   else by
     simp [*]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem le_piecewise {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g : ∀ i, δ i}
     (h₁ : ∀, ∀ i ∈ s, ∀, g i ≤ f₁ i) (h₂ : ∀ (i) (_ : i ∉ s), g i ≤ f₂ i) : g ≤ s.piecewise f₁ f₂ :=
   @piecewise_le α (fun i => (δ i)ᵒᵈ) _ s _ _ _ _ h₁ h₂
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem piecewise_le_piecewise {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)]
     {f₁ f₂ g₁ g₂ : ∀ i, δ i} (h₁ : ∀, ∀ i ∈ s, ∀, f₁ i ≤ g₁ i) (h₂ : ∀ (i) (_ : i ∉ s), f₂ i ≤ g₂ i) :
     s.piecewise f₁ f₂ ≤ s.piecewise g₁ g₂ := by
@@ -1008,7 +1051,7 @@ theorem range_piecewise (f g : α → β) : Range (s.piecewise f g) = f '' s ∪
   · rintro (⟨x, hx, rfl⟩ | ⟨x, hx, rfl⟩) <;> use x <;> simp_all
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y «expr ∉ » s)
 theorem injective_piecewise_iff {f g : α → β} :
     Injective (s.piecewise f g) ↔ InjOn f s ∧ InjOn g (sᶜ) ∧ ∀, ∀ x ∈ s, ∀ (y) (_ : y ∉ s), f x ≠ g y := by
   rw [injective_iff_inj_on_univ, ← union_compl_self s, inj_on_union (@disjoint_compl_right _ s _),

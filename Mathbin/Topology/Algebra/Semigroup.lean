@@ -16,7 +16,7 @@ We also state a corresponding lemma guaranteeing that a subset of `M` contains a
 -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (m m' «expr ∈ » N)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (m m' «expr ∈ » N)
 /-- Any nonempty compact Hausdorff semigroup where right-multiplication is continuous contains
 an idempotent, i.e. an `m` such that `m * m = m`. -/
 @[to_additive
@@ -76,7 +76,7 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
     exact fun t ht => (hcs ht).2.2 m (set.mem_sInter.mp hm t ht) m' (set.mem_sInter.mp hm' t ht)
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » s)
 /-- A version of `exists_idempotent_of_compact_t2_of_continuous_mul_left` where the idempotent lies
 in some specified nonempty compact subsemigroup. -/
 @[to_additive exists_idempotent_in_compact_add_subsemigroup
@@ -85,10 +85,10 @@ theorem exists_idempotent_in_compact_subsemigroup {M} [Semigroupₓ M] [Topologi
     (continuous_mul_left : ∀ r : M, Continuous (· * r)) (s : Set M) (snemp : s.Nonempty) (s_compact : IsCompact s)
     (s_add : ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), x * y ∈ s) : ∃ m ∈ s, m * m = m := by
   let M' := { m // m ∈ s }
-  let this : Semigroupₓ M' :=
+  letI : Semigroupₓ M' :=
     { mul := fun p q => ⟨p.1 * q.1, s_add _ p.2 _ q.2⟩, mul_assoc := fun p q r => Subtype.eq (mul_assoc _ _ _) }
-  have : CompactSpace M' := is_compact_iff_compact_space.mp s_compact
-  have : Nonempty M' := nonempty_subtype.mpr snemp
+  haveI : CompactSpace M' := is_compact_iff_compact_space.mp s_compact
+  haveI : Nonempty M' := nonempty_subtype.mpr snemp
   have : ∀ p : M', Continuous (· * p) := fun p =>
     continuous_subtype_mk _ ((continuous_mul_left p.1).comp continuous_subtype_val)
   obtain ⟨⟨m, hm⟩, idem⟩ := exists_idempotent_of_compact_t2_of_continuous_mul_left this

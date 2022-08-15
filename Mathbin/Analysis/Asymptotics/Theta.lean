@@ -24,11 +24,8 @@ variable {α : Type _} {β : Type _} {E : Type _} {F : Type _} {G : Type _} {E' 
 
 variable [HasNorm E] [HasNorm F] [HasNorm G]
 
-variable [SemiNormedGroup E'] [SemiNormedGroup F'] [SemiNormedGroup G']
-
-variable [NormedGroup E''] [NormedGroup F''] [NormedGroup G'']
-
-variable [SemiNormedRing R] [SemiNormedRing R']
+variable [SeminormedAddCommGroup E'] [SeminormedAddCommGroup F'] [SeminormedAddCommGroup G'] [NormedAddCommGroup E'']
+  [NormedAddCommGroup F''] [NormedAddCommGroup G''] [SemiNormedRing R] [SemiNormedRing R']
 
 variable [NormedField 𝕜] [NormedField 𝕜']
 

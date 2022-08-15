@@ -19,11 +19,11 @@ open Filter Asymptotics
 
 open Ennreal
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜]
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜]
 
-variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
-variable {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F]
+variable {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 
 section fderiv
 

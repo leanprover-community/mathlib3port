@@ -71,9 +71,9 @@ noncomputable def ofPrenndist (d : X → X → ℝ≥0 ) (dist_self : ∀ x, d x
     calc
       (⨅ l, (zip_with d (x :: l) (l ++ [z])).Sum) ≤
           (zip_with d (x :: (lxy ++ y :: lyz)) (lxy ++ y :: lyz ++ [z])).Sum :=
-        cinfi_le (OrderBot.bdd_below _)
-          (lxy ++ y :: lyz)_ = (zip_with d (x :: lxy) (lxy ++ [y])).Sum + (zip_with d (y :: lyz) (lyz ++ [z])).Sum :=
-        _
+        cinfi_le (OrderBot.bdd_below _) (lxy ++ y :: lyz)
+      _ = (zip_with d (x :: lxy) (lxy ++ [y])).Sum + (zip_with d (y :: lyz) (lyz ++ [z])).Sum := _
+      
     rw [← sum_append, ← zip_with_append, cons_append, ← @singleton_append _ y, append_assoc, append_assoc, append_assoc]
     rw [length_cons, length_append, length_singleton]
 
@@ -109,7 +109,7 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0 ) (dist_self : ∀
     intro a b c hab hbc
     rw [← nonpos_iff_eq_zero]
     simpa only [*, ← max_eq_rightₓ, ← mul_zero] using hd a b c c
-  have : IsTrans X fun x y => d x y = 0 := ⟨hd₀_trans⟩
+  haveI : IsTrans X fun x y => d x y = 0 := ⟨hd₀_trans⟩
   induction' hn : length l using Nat.strong_induction_onₓ with n ihn generalizing x y l
   simp only at ihn
   subst n
@@ -199,7 +199,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
         hB.tendsto_small_sets.eventually (eventually_uniformity_iterate_comp_subset (hB.mem m) 2) with
       ⟨φ, hφ_mono, hφ_comp, hφB⟩
     exact ⟨V ∘ φ, fun n => hV_symm _, hφ_comp, hφB⟩
-  let this := UniformSpace.separationSetoid X
+  letI := UniformSpace.separationSetoid X
   set d : X → X → ℝ≥0 := fun x y => if h : ∃ n, (x, y) ∉ U n then (1 / 2) ^ Nat.findₓ h else 0
   have hd₀ : ∀ {x y}, d x y = 0 ↔ x ≈ y := by
     intro x y
@@ -217,7 +217,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
     dsimp' only [← d]
     simp only [← @SymmetricRel.mk_mem_comm _ _ (hU_symm _) x y]
   have hr : (1 / 2 : ℝ≥0 ) ∈ Ioo (0 : ℝ≥0 ) 1 := ⟨Nnreal.half_pos one_pos, Nnreal.half_lt_self one_ne_zero⟩
-  let I := PseudoMetricSpace.ofPrenndist d (fun x => hd₀.2 (Setoidₓ.refl _)) hd_symm
+  letI I := PseudoMetricSpace.ofPrenndist d (fun x => hd₀.2 (Setoidₓ.refl _)) hd_symm
   have hdist_le : ∀ x y, dist x y ≤ d x y := PseudoMetricSpace.dist_of_prenndist_le _ _ _
   have hle_d : ∀ {x y : X} {n : ℕ}, (1 / 2) ^ n ≤ d x y ↔ (x, y) ∉ U n := by
     intro x y n
@@ -267,13 +267,13 @@ protected noncomputable def UniformSpace.metricSpace (X : Type _) [UniformSpace 
 /-- A uniform space with countably generated `𝓤 X` is pseudo metrizable. -/
 instance (priority := 100) UniformSpace.pseudo_metrizable_space [UniformSpace X] [IsCountablyGenerated (𝓤 X)] :
     TopologicalSpace.PseudoMetrizableSpace X := by
-  let this := UniformSpace.pseudoMetricSpace X
+  letI := UniformSpace.pseudoMetricSpace X
   infer_instance
 
 /-- A T₀ uniform space with countably generated `𝓤 X` is metrizable. This is not an instance to
 avoid loops. -/
 theorem UniformSpace.metrizable_space [UniformSpace X] [IsCountablyGenerated (𝓤 X)] [T0Space X] :
     TopologicalSpace.MetrizableSpace X := by
-  let this := UniformSpace.metricSpace X
+  letI := UniformSpace.metricSpace X
   infer_instance
 

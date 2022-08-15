@@ -87,7 +87,7 @@ variable [CommRingₓ R] [IsDomain R] [Groupₓ G] [Fintype G]
 
 theorem card_nth_roots_subgroup_units (f : G →* R) (hf : Injective f) {n : ℕ} (hn : 0 < n) (g₀ : G) :
     ({ g ∈ univ | g ^ n = g₀ } : Finset G).card ≤ (nthRoots n (f g₀)).card := by
-  have : DecidableEq R := Classical.decEq _
+  haveI : DecidableEq R := Classical.decEq _
   refine' le_transₓ _ (nth_roots n (f g₀)).to_finset_card_le
   apply card_le_card_of_inj_on f
   · intro g hg
@@ -159,21 +159,25 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) =
   replace hx1 : (x : R) - 1 ≠ 0
   exact fun h => hx1 (Subtype.eq (Units.ext (sub_eq_zero.1 h)))
   let c := (univ.filter fun g => f.to_hom_units g = 1).card
-  calc (∑ g : G, f g) = ∑ g : G, f.to_hom_units g :=
-      rfl _ = ∑ u : Rˣ in univ.image f.to_hom_units, (univ.filter fun g => f.to_hom_units g = u).card • u :=
-      sum_comp (coe : Rˣ → R) f.to_hom_units _ = ∑ u : Rˣ in univ.image f.to_hom_units, c • u :=
-      sum_congr rfl fun u hu => congr_arg2ₓ _ _ rfl-- remaining goal 1, proven below
+  calc
+    (∑ g : G, f g) = ∑ g : G, f.to_hom_units g := rfl
+    _ = ∑ u : Rˣ in univ.image f.to_hom_units, (univ.filter fun g => f.to_hom_units g = u).card • u :=
+      sum_comp (coe : Rˣ → R) f.to_hom_units
+    _ = ∑ u : Rˣ in univ.image f.to_hom_units, c • u := sum_congr rfl fun u hu => congr_arg2ₓ _ _ rfl
+    -- remaining goal 1, proven below
         _ =
         ∑ b : MonoidHom.range f.to_hom_units, c • ↑b :=
       Finset.sum_subtype _
         (by
           simp )
-        _ _ = c • ∑ b : MonoidHom.range f.to_hom_units, (b : R) :=
-      smul_sum.symm _ = c • 0 :=
-      congr_arg2ₓ _ rfl _-- remaining goal 2, proven below
+        _
+    _ = c • ∑ b : MonoidHom.range f.to_hom_units, (b : R) := smul_sum.symm
+    _ = c • 0 := congr_arg2ₓ _ rfl _
+    -- remaining goal 2, proven below
         _ =
         0 :=
       smul_zero _
+    
   · -- remaining goal 1
     show (univ.filter fun g : G => f.to_hom_units g = u).card = c
     apply card_fiber_eq_of_mem_range f.to_hom_units
@@ -184,7 +188,8 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) =
     
   -- remaining goal 2
   show (∑ b : MonoidHom.range f.to_hom_units, (b : R)) = 0
-  calc (∑ b : MonoidHom.range f.to_hom_units, (b : R)) = ∑ n in range (orderOf x), x ^ n :=
+  calc
+    (∑ b : MonoidHom.range f.to_hom_units, (b : R)) = ∑ n in range (orderOf x), x ^ n :=
       Eq.symm <|
         sum_bij (fun n _ => x ^ n)
           (by
@@ -200,8 +205,9 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) =
           fun b hb =>
           let ⟨n, hn⟩ := hx b
           ⟨n % orderOf x, mem_range.2 (Nat.mod_ltₓ _ (order_of_pos _)), by
-            rw [← pow_eq_mod_order_of, hn]⟩_ = 0 :=
-      _
+            rw [← pow_eq_mod_order_of, hn]⟩
+    _ = 0 := _
+    
   rw [← mul_left_inj' hx1, zero_mul, geom_sum_mul, coe_coe]
   norm_cast
   simp [← pow_order_of_eq_one]

@@ -80,6 +80,10 @@ theorem prod_erase [DecidableEq α] (h : a ∈ s) : a * (s.erase a).Prod = s.Pro
   rw [← s.coe_to_list, coe_erase, coe_prod, coe_prod, List.prod_erase ((s.mem_to_list a).2 h)]
 
 @[simp, to_additive]
+theorem prod_map_erase [DecidableEq ι] {a : ι} (h : a ∈ m) : f a * ((m.erase a).map f).Prod = (m.map f).Prod := by
+  rw [← m.coe_to_list, coe_erase, coe_map, coe_map, coe_prod, coe_prod, List.prod_map_erase f ((m.mem_to_list a).2 h)]
+
+@[simp, to_additive]
 theorem prod_singleton (a : α) : prod {a} = a := by
   simp only [← mul_oneₓ, ← prod_cons, ← singleton_eq_cons, ← eq_self_iff_true, ← prod_zero]
 
@@ -102,6 +106,20 @@ theorem prod_nsmul (m : Multiset α) : ∀ n : ℕ, (n • m).Prod = m.Prod ^ n
 @[simp, to_additive]
 theorem prod_repeat (a : α) (n : ℕ) : (repeat a n).Prod = a ^ n := by
   simp [← repeat, ← List.prod_repeat]
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (i' «expr ≠ » i)
+@[to_additive]
+theorem prod_map_eq_pow_single [DecidableEq ι] (i : ι) (hf : ∀ (i') (_ : i' ≠ i), i' ∈ m → f i' = 1) :
+    (m.map f).Prod = f i ^ m.count i := by
+  induction' m using Quotientₓ.induction_on with l
+  simp [← List.prod_map_eq_pow_single i f hf]
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (a' «expr ≠ » a)
+@[to_additive]
+theorem prod_eq_pow_single [DecidableEq α] (a : α) (h : ∀ (a') (_ : a' ≠ a), a' ∈ s → a' = 1) :
+    s.Prod = a ^ s.count a := by
+  induction' s using Quotientₓ.induction_on with l
+  simp [← List.prod_eq_pow_single a h]
 
 @[to_additive]
 theorem pow_count [DecidableEq α] (a : α) : a ^ s.count a = (s.filter (Eq a)).Prod := by
@@ -187,7 +205,7 @@ theorem dvd_prod : a ∈ s → a ∣ s.Prod :=
     a
 
 theorem prod_dvd_prod_of_le (h : s ≤ t) : s.Prod ∣ t.Prod := by
-  obtain ⟨z, rfl⟩ := Multiset.le_iff_exists_add.1 h
+  obtain ⟨z, rfl⟩ := exists_add_of_le h
   simp only [← prod_add, ← dvd_mul_right]
 
 end CommMonoidₓ
@@ -370,6 +388,12 @@ theorem prod_nonneg [OrderedCommSemiring α] {m : Multiset α} (h : ∀, ∀ a �
 theorem prod_eq_one_iff [CanonicallyOrderedMonoid α] {m : Multiset α} : m.Prod = 1 ↔ ∀, ∀ x ∈ m, ∀, x = (1 : α) :=
   (Quotientₓ.induction_on m) fun l => by
     simpa using List.prod_eq_one_iff l
+
+/-- Slightly more general version of `multiset.prod_eq_one_iff` for a non-ordered `monoid` -/
+@[to_additive "Slightly more general version of `multiset.sum_eq_zero_iff`\n  for a non-ordered `add_monoid`"]
+theorem prod_eq_one [CommMonoidₓ α] {m : Multiset α} (h : ∀, ∀ x ∈ m, ∀, x = (1 : α)) : m.Prod = 1 := by
+  induction' m using Quotientₓ.induction_on with l
+  simp [← List.prod_eq_one h]
 
 @[to_additive]
 theorem le_prod_of_mem [CanonicallyOrderedMonoid α] {m : Multiset α} {a : α} (h : a ∈ m) : a ≤ m.Prod := by

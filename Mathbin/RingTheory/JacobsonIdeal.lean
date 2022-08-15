@@ -146,7 +146,7 @@ theorem eq_jacobson_iff_Inf_maximal' :
       let ⟨M, hM⟩ := h
       ⟨M, ⟨fun J hJ => Or.rec_on (Classical.em (J = ⊤)) (fun h => Or.inr h) fun h => Or.inl ⟨⟨h, hM.1 J hJ⟩⟩, hM.2⟩⟩⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ∉ » I)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ∉ » I)
 /-- An ideal `I` equals its Jacobson radical if and only if every element outside `I`
 also lies outside of a maximal ideal containing `I`. -/
 theorem eq_jacobson_iff_not_mem : I.jacobson = I ↔ ∀ (x) (_ : x ∉ I), ∃ M : Ideal R, (I ≤ M ∧ M.IsMaximal) ∧ x ∉ M := by
@@ -170,7 +170,7 @@ theorem map_jacobson_of_surjective {f : R →+* S} (hf : Function.Surjective f) 
   have : ∀, ∀ J ∈ { J : Ideal R | I ≤ J ∧ J.IsMaximal }, ∀, f.ker ≤ J := fun J hJ => le_transₓ h hJ.left
   refine' trans (map_Inf hf this) (le_antisymmₓ _ _)
   · refine' Inf_le_Inf fun J hJ => ⟨comap f J, ⟨⟨le_comap_of_map_le hJ.1, _⟩, map_comap_of_surjective f hf J⟩⟩
-    have : J.is_maximal := hJ.right
+    haveI : J.is_maximal := hJ.right
     exact comap_is_maximal_of_surjective f hf
     
   · refine' Inf_le_Inf_of_subset_insert_top fun j hj => hj.recOn fun J hJ => _
@@ -207,7 +207,7 @@ theorem comap_jacobson_of_surjective {f : R →+* S} (hf : Function.Surjective f
     
   · rw [comap_Inf]
     refine' le_infi_iff.2 fun J => le_infi_iff.2 fun hJ => _
-    have : J.is_maximal := hJ.right
+    haveI : J.is_maximal := hJ.right
     refine' Inf_le ⟨comap_mono hJ.left, comap_is_maximal_of_surjective _ hf⟩
     
 
@@ -300,7 +300,7 @@ variable [CommRingₓ R]
 theorem jacobson_bot_polynomial_le_Inf_map_maximal :
     jacobson (⊥ : Ideal R[X]) ≤ inf (map (c : R →+* R[X]) '' { J : Ideal R | J.IsMaximal }) := by
   refine' le_Inf fun J => exists_imp_distrib.2 fun j hj => _
-  have : j.is_maximal := hj.1
+  haveI : j.is_maximal := hj.1
   refine' trans (jacobson_mono bot_le) (le_of_eqₓ _ : J.jacobson ≤ J)
   suffices (⊥ : Ideal (Polynomial (R ⧸ j))).jacobson = ⊥ by
     rw [← hj.2, jacobson_eq_iff_jacobson_quotient_eq_bot]

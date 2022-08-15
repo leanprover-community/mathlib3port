@@ -189,9 +189,9 @@ def normalMonoCategory :
       w := by
         simp ,
       IsLimit := by
-        have : limits.has_images C := has_images
-        have : has_equalizers C := preadditive.has_equalizers_of_has_kernels
-        have : has_zero_object C := limits.has_zero_object_of_has_finite_biproducts _
+        haveI : limits.has_images C := has_images
+        haveI : has_equalizers C := preadditive.has_equalizers_of_has_kernels
+        haveI : has_zero_object C := limits.has_zero_object_of_has_finite_biproducts _
         have aux : _ := _
         refine' is_limit_aux _ (fun A => limit.lift _ _ ≫ inv (image_mono_factorisation f).e) aux _
         · intro A g hg
@@ -213,9 +213,9 @@ def normalEpiCategory :
       C where normalEpiOfEpi := fun X Y f m =>
     { w := kernel f, g := kernel.ι _, w := kernel.condition _,
       IsColimit := by
-        have : limits.has_images C := has_images
-        have : has_equalizers C := preadditive.has_equalizers_of_has_kernels
-        have : has_zero_object C := limits.has_zero_object_of_has_finite_biproducts _
+        haveI : limits.has_images C := has_images
+        haveI : has_equalizers C := preadditive.has_equalizers_of_has_kernels
+        haveI : has_zero_object C := limits.has_zero_object_of_has_finite_biproducts _
         have aux : _ := _
         refine'
           is_colimit_aux _
@@ -463,10 +463,10 @@ instance (priority := 100) has_pushouts : HasPushouts C :=
   has_pushouts_of_has_binary_coproducts_of_has_coequalizers C
 
 instance (priority := 100) has_finite_limits : HasFiniteLimits C :=
-  limits.finite_limits_from_equalizers_and_finite_products
+  limits.has_finite_limits_of_has_equalizers_and_finite_products
 
 instance (priority := 100) has_finite_colimits : HasFiniteColimits C :=
-  limits.finite_colimits_from_coequalizers_and_finite_coproducts
+  limits.has_finite_colimits_of_has_coequalizers_and_finite_coproducts
 
 end
 
@@ -566,20 +566,30 @@ instance epi_pullback_of_epi_f [Epi f] : Epi (pullback.snd : pullback f g ⟶ Y)
     change biprod.desc f (-g) ≫ d = u at hd
     -- But then f ≫ d = 0:
     have : f ≫ d = 0
-    calc f ≫ d = (biprod.inl ≫ biprod.desc f (-g)) ≫ d := by
-        rw [biprod.inl_desc]_ = biprod.inl ≫ u := by
-        rw [category.assoc, hd]_ = 0 := biprod.inl_desc _ _
+    calc
+      f ≫ d = (biprod.inl ≫ biprod.desc f (-g)) ≫ d := by
+        rw [biprod.inl_desc]
+      _ = biprod.inl ≫ u := by
+        rw [category.assoc, hd]
+      _ = 0 := biprod.inl_desc _ _
+      
     -- But f is an epimorphism, so d = 0...
     have : d = 0 :=
       (cancel_epi f).1
         (by
           simpa)
     -- ...or, in other words, e = 0.
-    calc e = biprod.inr ≫ u := by
-        rw [biprod.inr_desc]_ = biprod.inr ≫ biprod.desc f (-g) ≫ d := by
-        rw [← hd]_ = biprod.inr ≫ biprod.desc f (-g) ≫ 0 := by
-        rw [this]_ = (biprod.inr ≫ biprod.desc f (-g)) ≫ 0 := by
-        rw [← category.assoc]_ = 0 := has_zero_morphisms.comp_zero _ _
+    calc
+      e = biprod.inr ≫ u := by
+        rw [biprod.inr_desc]
+      _ = biprod.inr ≫ biprod.desc f (-g) ≫ d := by
+        rw [← hd]
+      _ = biprod.inr ≫ biprod.desc f (-g) ≫ 0 := by
+        rw [this]
+      _ = (biprod.inr ≫ biprod.desc f (-g)) ≫ 0 := by
+        rw [← category.assoc]
+      _ = 0 := has_zero_morphisms.comp_zero _ _
+      
 
 /-- In an abelian category, the pullback of an epimorphism is an epimorphism. -/
 instance epi_pullback_of_epi_g [Epi g] : Epi (pullback.fst : pullback f g ⟶ X) :=
@@ -602,20 +612,30 @@ instance epi_pullback_of_epi_g [Epi g] : Epi (pullback.fst : pullback f g ⟶ X)
     change biprod.desc f (-g) ≫ d = u at hd
     -- But then (-g) ≫ d = 0:
     have : -g ≫ d = 0
-    calc -g ≫ d = (biprod.inr ≫ biprod.desc f (-g)) ≫ d := by
-        rw [biprod.inr_desc]_ = biprod.inr ≫ u := by
-        rw [category.assoc, hd]_ = 0 := biprod.inr_desc _ _
+    calc
+      -g ≫ d = (biprod.inr ≫ biprod.desc f (-g)) ≫ d := by
+        rw [biprod.inr_desc]
+      _ = biprod.inr ≫ u := by
+        rw [category.assoc, hd]
+      _ = 0 := biprod.inr_desc _ _
+      
     -- But g is an epimorphism, thus so is -g, so d = 0...
     have : d = 0 :=
       (cancel_epi (-g)).1
         (by
           simpa)
     -- ...or, in other words, e = 0.
-    calc e = biprod.inl ≫ u := by
-        rw [biprod.inl_desc]_ = biprod.inl ≫ biprod.desc f (-g) ≫ d := by
-        rw [← hd]_ = biprod.inl ≫ biprod.desc f (-g) ≫ 0 := by
-        rw [this]_ = (biprod.inl ≫ biprod.desc f (-g)) ≫ 0 := by
-        rw [← category.assoc]_ = 0 := has_zero_morphisms.comp_zero _ _
+    calc
+      e = biprod.inl ≫ u := by
+        rw [biprod.inl_desc]
+      _ = biprod.inl ≫ biprod.desc f (-g) ≫ d := by
+        rw [← hd]
+      _ = biprod.inl ≫ biprod.desc f (-g) ≫ 0 := by
+        rw [this]
+      _ = (biprod.inl ≫ biprod.desc f (-g)) ≫ 0 := by
+        rw [← category.assoc]
+      _ = 0 := has_zero_morphisms.comp_zero _ _
+      
 
 theorem epi_snd_of_is_limit [Epi f] {s : PullbackCone f g} (hs : IsLimit s) : Epi s.snd := by
   convert epi_of_epi_fac (is_limit.cone_point_unique_up_to_iso_hom_comp (limit.is_limit _) hs _)
@@ -654,18 +674,28 @@ instance mono_pushout_of_mono_f [Mono f] : Mono (pushout.inr : Z ⟶ pushout f g
     change R ⟶ X at d
     change d ≫ biprod.lift f (-g) = u at hd
     have : d ≫ f = 0
-    calc d ≫ f = d ≫ biprod.lift f (-g) ≫ biprod.fst := by
-        rw [biprod.lift_fst]_ = u ≫ biprod.fst := by
-        rw [← category.assoc, hd]_ = 0 := biprod.lift_fst _ _
+    calc
+      d ≫ f = d ≫ biprod.lift f (-g) ≫ biprod.fst := by
+        rw [biprod.lift_fst]
+      _ = u ≫ biprod.fst := by
+        rw [← category.assoc, hd]
+      _ = 0 := biprod.lift_fst _ _
+      
     have : d = 0 :=
       (cancel_mono f).1
         (by
           simpa)
-    calc e = u ≫ biprod.snd := by
-        rw [biprod.lift_snd]_ = (d ≫ biprod.lift f (-g)) ≫ biprod.snd := by
-        rw [← hd]_ = (0 ≫ biprod.lift f (-g)) ≫ biprod.snd := by
-        rw [this]_ = 0 ≫ biprod.lift f (-g) ≫ biprod.snd := by
-        rw [category.assoc]_ = 0 := zero_comp
+    calc
+      e = u ≫ biprod.snd := by
+        rw [biprod.lift_snd]
+      _ = (d ≫ biprod.lift f (-g)) ≫ biprod.snd := by
+        rw [← hd]
+      _ = (0 ≫ biprod.lift f (-g)) ≫ biprod.snd := by
+        rw [this]
+      _ = 0 ≫ biprod.lift f (-g) ≫ biprod.snd := by
+        rw [category.assoc]
+      _ = 0 := zero_comp
+      
 
 instance mono_pushout_of_mono_g [Mono g] : Mono (pushout.inl : Y ⟶ pushout f g) :=
   (mono_of_cancel_zero _) fun R e h => by
@@ -677,18 +707,28 @@ instance mono_pushout_of_mono_g [Mono g] : Mono (pushout.inl : Y ⟶ pushout f g
     change R ⟶ X at d
     change d ≫ biprod.lift f (-g) = u at hd
     have : d ≫ -g = 0
-    calc d ≫ -g = d ≫ biprod.lift f (-g) ≫ biprod.snd := by
-        rw [biprod.lift_snd]_ = u ≫ biprod.snd := by
-        rw [← category.assoc, hd]_ = 0 := biprod.lift_snd _ _
+    calc
+      d ≫ -g = d ≫ biprod.lift f (-g) ≫ biprod.snd := by
+        rw [biprod.lift_snd]
+      _ = u ≫ biprod.snd := by
+        rw [← category.assoc, hd]
+      _ = 0 := biprod.lift_snd _ _
+      
     have : d = 0 :=
       (cancel_mono (-g)).1
         (by
           simpa)
-    calc e = u ≫ biprod.fst := by
-        rw [biprod.lift_fst]_ = (d ≫ biprod.lift f (-g)) ≫ biprod.fst := by
-        rw [← hd]_ = (0 ≫ biprod.lift f (-g)) ≫ biprod.fst := by
-        rw [this]_ = 0 ≫ biprod.lift f (-g) ≫ biprod.fst := by
-        rw [category.assoc]_ = 0 := zero_comp
+    calc
+      e = u ≫ biprod.fst := by
+        rw [biprod.lift_fst]
+      _ = (d ≫ biprod.lift f (-g)) ≫ biprod.fst := by
+        rw [← hd]
+      _ = (0 ≫ biprod.lift f (-g)) ≫ biprod.fst := by
+        rw [this]
+      _ = 0 ≫ biprod.lift f (-g) ≫ biprod.fst := by
+        rw [category.assoc]
+      _ = 0 := zero_comp
+      
 
 theorem mono_inr_of_is_colimit [Mono f] {s : PushoutCocone f g} (hs : IsColimit s) : Mono s.inr := by
   convert mono_of_mono_fac (is_colimit.comp_cocone_point_unique_up_to_iso_hom hs (colimit.is_colimit _) _)

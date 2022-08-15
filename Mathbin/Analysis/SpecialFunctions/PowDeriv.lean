@@ -68,7 +68,8 @@ section fderiv
 
 open Complex
 
-variable {E : Type _} [NormedGroup E] [NormedSpace ℂ E] {f g : E → ℂ} {f' g' : E →L[ℂ] ℂ} {x : E} {s : Set E} {c : ℂ}
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E] {f g : E → ℂ} {f' g' : E →L[ℂ] ℂ} {x : E} {s : Set E}
+  {c : ℂ}
 
 theorem HasStrictFderivAt.cpow (hf : HasStrictFderivAt f f' x) (hg : HasStrictFderivAt g g' x)
     (h0 : 0 < (f x).re ∨ (f x).im ≠ 0) :
@@ -322,8 +323,8 @@ open Real
 
 section fderiv
 
-variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {f g : E → ℝ} {f' g' : E →L[ℝ] ℝ} {x : E} {s : Set E} {c p : ℝ}
-  {n : WithTop ℕ}
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f g : E → ℝ} {f' g' : E →L[ℝ] ℝ} {x : E} {s : Set E}
+  {c p : ℝ} {n : WithTop ℕ}
 
 theorem HasFderivWithinAt.rpow (hf : HasFderivWithinAt f f' s x) (hg : HasFderivWithinAt g g' s x) (h : 0 < f x) :
     HasFderivWithinAt (fun x => f x ^ g x) ((g x * f x ^ (g x - 1)) • f' + (f x ^ g x * log (f x)) • g') s x :=

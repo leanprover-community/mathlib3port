@@ -19,7 +19,7 @@ the star-linear versions.
 We also prove some trivial lemmas and provide convenience constructors.
 
 Since a lot of elementary properties don't require `∥x∥ = 0 → x = 0` we start setting up the
-theory for `semi_normed_group` and we specialize to `normed_group` when needed.
+theory for `seminormed_add_comm_group` and we specialize to `normed_add_comm_group` when needed.
 -/
 
 
@@ -33,12 +33,13 @@ variable {R R₂ R₃ R₄ E E₂ E₃ E₄ F : Type _} [Semiringₓ R] [Semirin
   [RingHomInvPair σ₄₂ σ₂₄] [RingHomInvPair σ₃₄ σ₄₃] [RingHomInvPair σ₄₃ σ₃₄] [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
   [RingHomCompTriple σ₁₂ σ₂₄ σ₁₄] [RingHomCompTriple σ₂₃ σ₃₄ σ₂₄] [RingHomCompTriple σ₁₃ σ₃₄ σ₁₄]
   [RingHomCompTriple σ₃₂ σ₂₁ σ₃₁] [RingHomCompTriple σ₄₂ σ₂₁ σ₄₁] [RingHomCompTriple σ₄₃ σ₃₂ σ₄₂]
-  [RingHomCompTriple σ₄₃ σ₃₁ σ₄₁] [SemiNormedGroup E] [SemiNormedGroup E₂] [SemiNormedGroup E₃] [SemiNormedGroup E₄]
-  [Module R E] [Module R₂ E₂] [Module R₃ E₃] [Module R₄ E₄] [NormedGroup F] [Module R F]
+  [RingHomCompTriple σ₄₃ σ₃₁ σ₄₁] [SeminormedAddCommGroup E] [SeminormedAddCommGroup E₂] [SeminormedAddCommGroup E₃]
+  [SeminormedAddCommGroup E₄] [Module R E] [Module R₂ E₂] [Module R₃ E₃] [Module R₄ E₄] [NormedAddCommGroup F]
+  [Module R F]
 
 /-- A `σ₁₂`-semilinear isometric embedding of a normed `R`-module into an `R₂`-module. -/
-structure LinearIsometry (σ₁₂ : R →+* R₂) (E E₂ : Type _) [SemiNormedGroup E] [SemiNormedGroup E₂] [Module R E]
-  [Module R₂ E₂] extends E →ₛₗ[σ₁₂] E₂ where
+structure LinearIsometry (σ₁₂ : R →+* R₂) (E E₂ : Type _) [SeminormedAddCommGroup E] [SeminormedAddCommGroup E₂]
+  [Module R E] [Module R₂ E₂] extends E →ₛₗ[σ₁₂] E₂ where
   norm_map' : ∀ x, ∥to_linear_map x∥ = ∥x∥
 
 -- mathport name: «expr →ₛₗᵢ[ ] »
@@ -49,6 +50,67 @@ notation:25 E " →ₗᵢ[" R:25 "] " E₂:0 => LinearIsometry (RingHom.id R) E 
 
 -- mathport name: «expr →ₗᵢ⋆[ ] »
 notation:25 E " →ₗᵢ⋆[" R:25 "] " E₂:0 => LinearIsometry (starRingEnd R) E E₂
+
+/-- `semilinear_isometry_class F σ E E₂` asserts `F` is a type of bundled `σ`-semilinear isometries
+`E → E₂`.
+
+See also `linear_isometry_class F R E E₂` for the case where `σ` is the identity map on `R`.
+
+A map `f` between an `R`-module and an `S`-module over a ring homomorphism `σ : R →+* S`
+is semilinear if it satisfies the two properties `f (x + y) = f x + f y` and
+`f (c • x) = (σ c) • f x`. -/
+class SemilinearIsometryClass (𝓕 : Type _) {R R₂ : outParam (Type _)} [Semiringₓ R] [Semiringₓ R₂]
+  (σ₁₂ : outParam <| R →+* R₂) (E E₂ : outParam (Type _)) [SeminormedAddCommGroup E] [SeminormedAddCommGroup E₂]
+  [Module R E] [Module R₂ E₂] extends SemilinearMapClass 𝓕 σ₁₂ E E₂ where
+  norm_map : ∀ (f : 𝓕) (x : E), ∥f x∥ = ∥x∥
+
+/-- `linear_isometry_class F R E E₂` asserts `F` is a type of bundled `R`-linear isometries
+`M → M₂`.
+
+This is an abbreviation for `semilinear_isometry_class F (ring_hom.id R) E E₂`.
+-/
+abbrev LinearIsometryClass (𝓕 : Type _) (R E E₂ : outParam (Type _)) [Semiringₓ R] [SeminormedAddCommGroup E]
+    [SeminormedAddCommGroup E₂] [Module R E] [Module R E₂] :=
+  SemilinearIsometryClass 𝓕 (RingHom.id R) E E₂
+
+namespace SemilinearIsometryClass
+
+variable {𝓕 : Type _}
+
+protected theorem isometry [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) : Isometry f :=
+  AddMonoidHomClass.isometry_of_norm _ (norm_map _)
+
+@[continuity]
+protected theorem continuous [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) : Continuous f :=
+  (SemilinearIsometryClass.isometry f).Continuous
+
+@[simp]
+theorem nnnorm_map [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) (x : E) : ∥f x∥₊ = ∥x∥₊ :=
+  Nnreal.eq <| norm_map f x
+
+protected theorem lipschitz [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) : LipschitzWith 1 f :=
+  (SemilinearIsometryClass.isometry f).lipschitz
+
+protected theorem antilipschitz [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) : AntilipschitzWith 1 f :=
+  (SemilinearIsometryClass.isometry f).antilipschitz
+
+theorem ediam_image [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) (s : Set E) : Emetric.diam (f '' s) = Emetric.diam s :=
+  (SemilinearIsometryClass.isometry f).ediam_image s
+
+theorem ediam_range [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) :
+    Emetric.diam (Range f) = Emetric.diam (Univ : Set E) :=
+  (SemilinearIsometryClass.isometry f).ediam_range
+
+theorem diam_image [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) (s : Set E) : Metric.diam (f '' s) = Metric.diam s :=
+  (SemilinearIsometryClass.isometry f).diam_image s
+
+theorem diam_range [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) : Metric.diam (Range f) = Metric.diam (Univ : Set E) :=
+  (SemilinearIsometryClass.isometry f).diam_range
+
+instance (priority := 100) [s : SemilinearIsometryClass 𝓕 σ₁₂ E E₂] : ContinuousSemilinearMapClass 𝓕 σ₁₂ E E₂ :=
+  { s with map_continuous := SemilinearIsometryClass.continuous }
+
+end SemilinearIsometryClass
 
 namespace LinearIsometry
 
@@ -61,11 +123,12 @@ theorem to_linear_map_injective : Injective (toLinearMap : (E →ₛₗᵢ[σ₁
 theorem to_linear_map_inj {f g : E →ₛₗᵢ[σ₁₂] E₂} : f.toLinearMap = g.toLinearMap ↔ f = g :=
   to_linear_map_injective.eq_iff
 
-instance : AddMonoidHomClass (E →ₛₗᵢ[σ₁₂] E₂) E E₂ where
-  coe := fun e => e.toFun
+instance : SemilinearIsometryClass (E →ₛₗᵢ[σ₁₂] E₂) σ₁₂ E E₂ where
+  coe := fun f => f.toFun
   coe_injective' := fun f g h => to_linear_map_injective (FunLike.coe_injective h)
   map_add := fun f => map_add f.toLinearMap
-  map_zero := fun f => map_zero f.toLinearMap
+  map_smulₛₗ := fun f => map_smulₛₗ f.toLinearMap
+  norm_map := fun f => f.norm_map'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly.
@@ -84,6 +147,14 @@ theorem coe_mk (f : E →ₛₗ[σ₁₂] E₂) (hf) : ⇑(mk f hf) = f :=
 theorem coe_injective : @Injective (E →ₛₗᵢ[σ₁₂] E₂) (E → E₂) coeFn :=
   FunLike.coe_injective
 
+/-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
+  because it is a composition of multiple projections. -/
+def Simps.apply (σ₁₂ : R →+* R₂) (E E₂ : Type _) [SeminormedAddCommGroup E] [SeminormedAddCommGroup E₂] [Module R E]
+    [Module R₂ E₂] (h : E →ₛₗᵢ[σ₁₂] E₂) : E → E₂ :=
+  h
+
+initialize_simps_projections LinearIsometry (to_linear_map_to_fun → apply)
+
 @[ext]
 theorem ext {f g : E →ₛₗᵢ[σ₁₂] E₂} (h : ∀ x, f x = g x) : f = g :=
   coe_injective <| funext h
@@ -95,27 +166,27 @@ protected theorem congr_fun {f g : E →ₛₗᵢ[σ₁₂] E₂} (h : f = g) (x
   h ▸ rfl
 
 @[simp]
-theorem map_zero : f 0 = 0 :=
+protected theorem map_zero : f 0 = 0 :=
   f.toLinearMap.map_zero
 
 @[simp]
-theorem map_add (x y : E) : f (x + y) = f x + f y :=
+protected theorem map_add (x y : E) : f (x + y) = f x + f y :=
   f.toLinearMap.map_add x y
 
 @[simp]
-theorem map_neg (x : E) : f (-x) = -f x :=
+protected theorem map_neg (x : E) : f (-x) = -f x :=
   f.toLinearMap.map_neg x
 
 @[simp]
-theorem map_sub (x y : E) : f (x - y) = f x - f y :=
+protected theorem map_sub (x y : E) : f (x - y) = f x - f y :=
   f.toLinearMap.map_sub x y
 
 @[simp]
-theorem map_smulₛₗ (c : R) (x : E) : f (c • x) = σ₁₂ c • f x :=
+protected theorem map_smulₛₗ (c : R) (x : E) : f (c • x) = σ₁₂ c • f x :=
   f.toLinearMap.map_smulₛₗ c x
 
 @[simp]
-theorem map_smul [Module R E₂] (f : E →ₗᵢ[R] E₂) (c : R) (x : E) : f (c • x) = c • f x :=
+protected theorem map_smul [Module R E₂] (f : E →ₗᵢ[R] E₂) (c : R) (x : E) : f (c • x) = c • f x :=
   f.toLinearMap.map_smul c x
 
 @[simp]
@@ -169,8 +240,17 @@ protected theorem antilipschitz : AntilipschitzWith 1 f :=
 protected theorem continuous : Continuous f :=
   f.Isometry.Continuous
 
-instance : ContinuousSemilinearMapClass (E →ₛₗᵢ[σ₁₂] E₂) σ₁₂ E E₂ :=
-  { LinearIsometry.addMonoidHomClass with map_smulₛₗ := fun f => f.map_smulₛₗ, map_continuous := fun f => f.Continuous }
+@[simp]
+theorem preimage_ball (x : E) (r : ℝ) : f ⁻¹' Metric.Ball (f x) r = Metric.Ball x r :=
+  f.Isometry.preimage_ball x r
+
+@[simp]
+theorem preimage_sphere (x : E) (r : ℝ) : f ⁻¹' Metric.Sphere (f x) r = Metric.Sphere x r :=
+  f.Isometry.preimage_sphere x r
+
+@[simp]
+theorem preimage_closed_ball (x : E) (r : ℝ) : f ⁻¹' Metric.ClosedBall (f x) r = Metric.ClosedBall x r :=
+  f.Isometry.preimage_closed_ball x r
 
 theorem ediam_image (s : Set E) : Emetric.diam (f '' s) = Emetric.diam s :=
   f.Isometry.ediam_image s
@@ -301,31 +381,16 @@ theorem coe_subtypeₗᵢ : ⇑p.subtypeₗᵢ = p.Subtype :=
 theorem subtypeₗᵢ_to_linear_map : p.subtypeₗᵢ.toLinearMap = p.Subtype :=
   rfl
 
-/-- `submodule.subtype` as a `continuous_linear_map`. -/
-def subtypeL : p →L[R'] E :=
-  p.subtypeₗᵢ.toContinuousLinearMap
-
 @[simp]
-theorem coe_subtypeL : (p.subtypeL : p →ₗ[R'] E) = p.Subtype :=
+theorem subtypeₗᵢ_to_continuous_linear_map : p.subtypeₗᵢ.toContinuousLinearMap = p.subtypeL :=
   rfl
-
-@[simp]
-theorem coe_subtypeL' : ⇑p.subtypeL = p.Subtype :=
-  rfl
-
-@[simp]
-theorem range_subtypeL : p.subtypeL.range = p :=
-  range_subtype _
-
-@[simp]
-theorem ker_subtypeL : p.subtypeL.ker = ⊥ :=
-  ker_subtype _
 
 end Submodule
 
 /-- A semilinear isometric equivalence between two normed vector spaces. -/
 structure LinearIsometryEquiv (σ₁₂ : R →+* R₂) {σ₂₁ : R₂ →+* R} [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂]
-  (E E₂ : Type _) [SemiNormedGroup E] [SemiNormedGroup E₂] [Module R E] [Module R₂ E₂] extends E ≃ₛₗ[σ₁₂] E₂ where
+  (E E₂ : Type _) [SeminormedAddCommGroup E] [SeminormedAddCommGroup E₂] [Module R E] [Module R₂ E₂] extends
+  E ≃ₛₗ[σ₁₂] E₂ where
   norm_map' : ∀ x, ∥to_linear_equiv x∥ = ∥x∥
 
 -- mathport name: «expr ≃ₛₗᵢ[ ] »
@@ -336,6 +401,44 @@ notation:25 E " ≃ₗᵢ[" R:25 "] " E₂:0 => LinearIsometryEquiv (RingHom.id 
 
 -- mathport name: «expr ≃ₗᵢ⋆[ ] »
 notation:25 E " ≃ₗᵢ⋆[" R:25 "] " E₂:0 => LinearIsometryEquiv (starRingEnd R) E E₂
+
+/-- `semilinear_isometry_equiv_class F σ E E₂` asserts `F` is a type of bundled `σ`-semilinear
+isometric equivs `E → E₂`.
+
+See also `linear_isometry_equiv_class F R E E₂` for the case where `σ` is the identity map on `R`.
+
+A map `f` between an `R`-module and an `S`-module over a ring homomorphism `σ : R →+* S`
+is semilinear if it satisfies the two properties `f (x + y) = f x + f y` and
+`f (c • x) = (σ c) • f x`. -/
+class SemilinearIsometryEquivClass (𝓕 : Type _) {R R₂ : outParam (Type _)} [Semiringₓ R] [Semiringₓ R₂]
+  (σ₁₂ : outParam <| R →+* R₂) {σ₂₁ : outParam <| R₂ →+* R} [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂]
+  (E E₂ : outParam (Type _)) [SeminormedAddCommGroup E] [SeminormedAddCommGroup E₂] [Module R E] [Module R₂ E₂] extends
+  SemilinearEquivClass 𝓕 σ₁₂ E E₂ where
+  norm_map : ∀ (f : 𝓕) (x : E), ∥f x∥ = ∥x∥
+
+/-- `linear_isometry_equiv_class F R E E₂` asserts `F` is a type of bundled `R`-linear isometries
+`M → M₂`.
+
+This is an abbreviation for `semilinear_isometry_equiv_class F (ring_hom.id R) E E₂`.
+-/
+abbrev LinearIsometryEquivClass (𝓕 : Type _) (R E E₂ : outParam (Type _)) [Semiringₓ R] [SeminormedAddCommGroup E]
+    [SeminormedAddCommGroup E₂] [Module R E] [Module R E₂] :=
+  SemilinearIsometryEquivClass 𝓕 (RingHom.id R) E E₂
+
+namespace SemilinearIsometryEquivClass
+
+variable (𝓕 : Type _)
+
+include σ₂₁
+
+-- `σ₂₁` becomes a metavariable, but it's OK since it's an outparam
+@[nolint dangerous_instance]
+instance (priority := 100) [s : SemilinearIsometryEquivClass 𝓕 σ₁₂ E E₂] : SemilinearIsometryClass 𝓕 σ₁₂ E E₂ :=
+  { s with coe := (coe : 𝓕 → E → E₂), coe_injective' := @FunLike.coe_injective 𝓕 _ _ _ }
+
+omit σ₂₁
+
+end SemilinearIsometryEquivClass
 
 namespace LinearIsometryEquiv
 
@@ -522,6 +625,19 @@ theorem to_isometric_symm : e.toIsometric.symm = e.symm.toIsometric :=
 @[simp]
 theorem to_homeomorph_symm : e.toHomeomorph.symm = e.symm.toHomeomorph :=
   rfl
+
+/-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
+  because it is a composition of multiple projections. -/
+def Simps.apply (σ₁₂ : R →+* R₂) {σ₂₁ : R₂ →+* R} [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂] (E E₂ : Type _)
+    [SeminormedAddCommGroup E] [SeminormedAddCommGroup E₂] [Module R E] [Module R₂ E₂] (h : E ≃ₛₗᵢ[σ₁₂] E₂) : E → E₂ :=
+  h
+
+/-- See Note [custom simps projection] -/
+def Simps.symmApply (σ₁₂ : R →+* R₂) {σ₂₁ : R₂ →+* R} [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂] (E E₂ : Type _)
+    [SeminormedAddCommGroup E] [SeminormedAddCommGroup E₂] [Module R E] [Module R₂ E₂] (h : E ≃ₛₗᵢ[σ₁₂] E₂) : E₂ → E :=
+  h.symm
+
+initialize_simps_projections LinearIsometryEquiv (to_linear_equiv_to_fun → apply, to_linear_equiv_inv_fun → symmApply)
 
 include σ₃₁ σ₃₂
 
@@ -720,6 +836,9 @@ protected theorem lipschitz : LipschitzWith 1 e :=
 protected theorem antilipschitz : AntilipschitzWith 1 e :=
   e.Isometry.antilipschitz
 
+theorem image_eq_preimage (s : Set E) : e '' s = e.symm ⁻¹' s :=
+  e.toLinearEquiv.image_eq_preimage s
+
 @[simp]
 theorem ediam_image (s : Set E) : Emetric.diam (e '' s) = Emetric.diam s :=
   e.Isometry.ediam_image s
@@ -727,6 +846,30 @@ theorem ediam_image (s : Set E) : Emetric.diam (e '' s) = Emetric.diam s :=
 @[simp]
 theorem diam_image (s : Set E) : Metric.diam (e '' s) = Metric.diam s :=
   e.Isometry.diam_image s
+
+@[simp]
+theorem preimage_ball (x : E₂) (r : ℝ) : e ⁻¹' Metric.Ball x r = Metric.Ball (e.symm x) r :=
+  e.toIsometric.preimage_ball x r
+
+@[simp]
+theorem preimage_sphere (x : E₂) (r : ℝ) : e ⁻¹' Metric.Sphere x r = Metric.Sphere (e.symm x) r :=
+  e.toIsometric.preimage_sphere x r
+
+@[simp]
+theorem preimage_closed_ball (x : E₂) (r : ℝ) : e ⁻¹' Metric.ClosedBall x r = Metric.ClosedBall (e.symm x) r :=
+  e.toIsometric.preimage_closed_ball x r
+
+@[simp]
+theorem image_ball (x : E) (r : ℝ) : e '' Metric.Ball x r = Metric.Ball (e x) r :=
+  e.toIsometric.image_ball x r
+
+@[simp]
+theorem image_sphere (x : E) (r : ℝ) : e '' Metric.Sphere x r = Metric.Sphere (e x) r :=
+  e.toIsometric.image_sphere x r
+
+@[simp]
+theorem image_closed_ball (x : E) (r : ℝ) : e '' Metric.ClosedBall x r = Metric.ClosedBall (e x) r :=
+  e.toIsometric.image_closed_ball x r
 
 variable {α : Type _} [TopologicalSpace α]
 
@@ -795,6 +938,32 @@ theorem coe_prod_assoc_symm [Module R E₂] [Module R E₃] :
     ((prodAssoc R E E₂ E₃).symm : E × E₂ × E₃ → (E × E₂) × E₃) = (Equivₓ.prodAssoc E E₂ E₃).symm :=
   rfl
 
+/-- If `p` is a submodule that is equal to `⊤`, then `linear_isometry_equiv.of_top p hp` is the
+"identity" equivalence between `p` and `E`. -/
+@[simps toLinearEquiv apply symm_apply_coe]
+def ofTop {R : Type _} [Ringₓ R] [Module R E] (p : Submodule R E) (hp : p = ⊤) : p ≃ₗᵢ[R] E :=
+  { p.subtypeₗᵢ with toLinearEquiv := LinearEquiv.ofTop p hp }
+
+variable {R E E₂ E₃} {R' : Type _} [Ringₓ R'] [Module R' E] (p q : Submodule R' E)
+
+/-- `linear_equiv.of_eq` as a `linear_isometry_equiv`. -/
+def ofEq (hpq : p = q) : p ≃ₗᵢ[R'] q :=
+  { LinearEquiv.ofEq p q hpq with norm_map' := fun x => rfl }
+
+variable {p q}
+
+@[simp]
+theorem coe_of_eq_apply (h : p = q) (x : p) : (ofEq p q h x : E) = x :=
+  rfl
+
+@[simp]
+theorem of_eq_symm (h : p = q) : (ofEq p q h).symm = ofEq q p h.symm :=
+  rfl
+
+@[simp]
+theorem of_eq_rfl : ofEq p p rfl = LinearIsometryEquiv.refl R' p := by
+  ext <;> rfl
+
 end LinearIsometryEquiv
 
 /-- Two linear isometries are equal if they are equal on basis vectors. -/
@@ -810,4 +979,11 @@ theorem Basis.ext_linear_isometry_equiv {ι : Type _} (b : Basis ι R E) {f₁ f
   LinearIsometryEquiv.to_linear_equiv_injective <| b.ext' h
 
 omit σ₂₁
+
+/-- Reinterpret a `linear_isometry` as a `linear_isometry_equiv` to the range. -/
+@[simps toLinearEquiv apply_coe]
+noncomputable def LinearIsometry.equivRange {R S : Type _} [Semiringₓ R] [Ringₓ S] [Module S E] [Module R F]
+    {σ₁₂ : R →+* S} {σ₂₁ : S →+* R} [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂] (f : F →ₛₗᵢ[σ₁₂] E) :
+    F ≃ₛₗᵢ[σ₁₂] f.toLinearMap.range :=
+  { f with toLinearEquiv := LinearEquiv.ofInjective f.toLinearMap f.Injective }
 

@@ -86,8 +86,8 @@ theorem degree_le_eq_span_X_pow {n : ℕ} :
   exact (degree_X_pow_le _).trans (WithBot.coe_le_coe.2 <| Nat.le_of_lt_succₓ <| Finset.mem_range.1 hk)
 
 theorem mem_degree_lt {n : ℕ} {f : R[X]} : f ∈ degreeLt R n ↔ degree f < n := by
-  simp_rw [degree_lt, Submodule.mem_infi, LinearMap.mem_ker, degree, Finset.sup_lt_iff (WithBot.bot_lt_coe n),
-    mem_support_iff, WithBot.coe_lt_coe, lt_iff_not_le, Ne, not_imp_not]
+  simp_rw [degree_lt, Submodule.mem_infi, LinearMap.mem_ker, degree, Finset.max_eq_sup_coe,
+    Finset.sup_lt_iff (WithBot.bot_lt_coe n), mem_support_iff, WithBot.coe_lt_coe, lt_iff_not_le, Ne, not_imp_not]
   rfl
 
 @[mono]
@@ -150,6 +150,20 @@ def degreeLtEquiv (R) [Semiringₓ R] (n : ℕ) : degreeLt R n ≃ₗ[R] Finₓ 
     · intro h
       exact (h (Finset.mem_univ _)).elim
       
+
+@[simp]
+theorem degree_lt_equiv_eq_zero_iff_eq_zero {n : ℕ} {p : R[X]} (hp : p ∈ degreeLt R n) :
+    degreeLtEquiv _ _ ⟨p, hp⟩ = 0 ↔ p = 0 := by
+  rw [LinearEquiv.map_eq_zero_iff, Submodule.mk_eq_zero]
+
+theorem eval_eq_sum_degree_lt_equiv {n : ℕ} {p : R[X]} (hp : p ∈ degreeLt R n) (x : R) :
+    p.eval x = ∑ i, degreeLtEquiv _ _ ⟨p, hp⟩ i * x ^ (i : ℕ) := by
+  simp_rw [eval_eq_sum]
+  exact
+    (sum_fin _
+        (by
+          simp_rw [zero_mul, forall_const])
+        (mem_degree_lt.mp hp)).symm
 
 /-- The finset of nonzero coefficients of a polynomial. -/
 def frange (p : R[X]) : Finset R :=
@@ -921,7 +935,7 @@ protected theorem Polynomial.is_noetherian_ring [IsNoetherianRing R] : IsNoether
               refine' (mul_oneₓ _).symm.trans _
               rw [← h, mul_zero]
               rfl
-            have : Nontrivial R := ⟨⟨0, 1, this⟩⟩
+            haveI : Nontrivial R := ⟨⟨0, 1, this⟩⟩
             have : p.leading_coeff ∈ I.leading_coeff_nth N := by
               rw [HN]
               exact hm2 k ((I.mem_leading_coeff_nth _ _).2 ⟨_, hp, hn ▸ Polynomial.degree_le_nat_degree, rfl⟩)
@@ -1077,7 +1091,7 @@ See `mv_polynomial.is_domain` for the general case. -/
 theorem is_domain_fin (R : Type u) [CommRingₓ R] [IsDomain R] : ∀ n : ℕ, IsDomain (MvPolynomial (Finₓ n) R)
   | 0 => is_domain_fin_zero R
   | n + 1 => by
-    have := is_domain_fin n
+    haveI := is_domain_fin n
     exact RingEquiv.is_domain (Polynomial (MvPolynomial (Finₓ n) R)) (MvPolynomial.finSuccEquiv _ n).toRingEquiv
 
 /-- Auxiliary definition:
@@ -1101,7 +1115,7 @@ protected theorem eq_zero_or_eq_zero_of_mul_eq_zero {R : Type u} [CommRingₓ R]
     by
     apply rename_injective _ Subtype.val_injective
     simpa using h
-  let this := MvPolynomial.is_domain_fintype R { x // x ∈ s ∪ t }
+  letI := MvPolynomial.is_domain_fintype R { x // x ∈ s ∪ t }
   rw [mul_eq_zero] at this
   cases this <;> [left, right]
   all_goals
@@ -1263,8 +1277,8 @@ open UniqueFactorizationMonoid
 namespace Polynomial
 
 instance (priority := 100) unique_factorization_monoid : UniqueFactorizationMonoid (Polynomial D) := by
-  have := arbitrary (NormalizationMonoid D)
-  have := to_normalized_gcd_monoid D
+  haveI := arbitrary (NormalizationMonoid D)
+  haveI := to_normalized_gcd_monoid D
   exact ufm_of_gcd_of_wf_dvd_monoid
 
 end Polynomial

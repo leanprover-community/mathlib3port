@@ -141,6 +141,37 @@ theorem nat_degree_add_coeff_mul (f g : R[X]) :
 theorem nat_degree_lt_coeff_mul (h : p.natDegree + q.natDegree < m + n) : (p * q).coeff (m + n) = 0 :=
   coeff_eq_zero_of_nat_degree_lt (nat_degree_mul_le.trans_lt h)
 
+theorem coeff_mul_of_nat_degree_le (pm : p.natDegree ≤ m) (qn : q.natDegree ≤ n) :
+    (p * q).coeff (m + n) = p.coeff m * q.coeff n := by
+  rcases eq_or_lt_of_le pm with (rfl | hm) <;> rcases eq_or_lt_of_le qn with (rfl | hn)
+  · exact nat_degree_add_coeff_mul _ _
+    
+  · rw [coeff_eq_zero_of_nat_degree_lt hn, mul_zero]
+    exact nat_degree_lt_coeff_mul (add_lt_add_left hn _)
+    
+  · rw [coeff_eq_zero_of_nat_degree_lt hm, zero_mul]
+    exact nat_degree_lt_coeff_mul (add_lt_add_right hm _)
+    
+  · rw [coeff_eq_zero_of_nat_degree_lt hn, mul_zero]
+    exact nat_degree_lt_coeff_mul (add_lt_add hm hn)
+    
+
+theorem coeff_pow_of_nat_degree_le (pn : p.natDegree ≤ n) : (p ^ m).coeff (n * m) = p.coeff n ^ m := by
+  induction' m with m hm
+  · simp
+    
+  · rw [pow_succ'ₓ, pow_succ'ₓ, ← hm, Nat.mul_succ, coeff_mul_of_nat_degree_le _ pn]
+    refine' nat_degree_pow_le.trans (le_transₓ _ (mul_comm _ _).le)
+    exact mul_le_mul_of_nonneg_left pn m.zero_le
+    
+
+theorem coeff_add_eq_left_of_lt (qn : q.natDegree < n) : (p + q).coeff n = p.coeff n :=
+  (coeff_add _ _ _).trans <| (congr_arg _ <| coeff_eq_zero_of_nat_degree_lt <| qn).trans <| add_zeroₓ _
+
+theorem coeff_add_eq_right_of_lt (pn : p.natDegree < n) : (p + q).coeff n = q.coeff n := by
+  rw [add_commₓ]
+  exact coeff_add_eq_left_of_lt pn
+
 theorem degree_sum_eq_of_disjoint (f : S → R[X]) (s : Finset S)
     (h : Set.Pairwise { i | i ∈ s ∧ f i ≠ 0 } (Ne on degree ∘ f)) : degree (s.Sum f) = s.sup fun i => degree (f i) := by
   induction' s using Finset.induction_on with x s hx IH
@@ -215,6 +246,14 @@ theorem nat_degree_sum_eq_of_disjoint (f : S → R[X]) (s : Finset S)
     simp [← H x hx]
     
 
+theorem nat_degree_bit0 (a : R[X]) : (bit0 a).natDegree ≤ a.natDegree :=
+  (nat_degree_add_le _ _).trans (max_selfₓ _).le
+
+theorem nat_degree_bit1 (a : R[X]) : (bit1 a).natDegree ≤ a.natDegree :=
+  (nat_degree_add_le _ _).trans
+    (by
+      simp [← nat_degree_bit0])
+
 variable [Semiringₓ S]
 
 theorem nat_degree_pos_of_eval₂_root {p : R[X]} (hp : p ≠ 0) (f : R →+* S) {z : S} (hz : eval₂ f z p = 0)
@@ -239,6 +278,29 @@ theorem coe_lt_degree {p : R[X]} {n : ℕ} : (n : WithBot ℕ) < degree p ↔ n 
 end Degree
 
 end Semiringₓ
+
+section Ringₓ
+
+variable [Ringₓ R] {p q : R[X]}
+
+theorem nat_degree_sub : (p - q).natDegree = (q - p).natDegree := by
+  rw [← nat_degree_neg, neg_sub]
+
+theorem nat_degree_sub_le_iff_left (qn : q.natDegree ≤ n) : (p - q).natDegree ≤ n ↔ p.natDegree ≤ n := by
+  rw [← nat_degree_neg] at qn
+  rw [sub_eq_add_neg, nat_degree_add_le_iff_left _ _ qn]
+
+theorem nat_degree_sub_le_iff_right (pn : p.natDegree ≤ n) : (p - q).natDegree ≤ n ↔ q.natDegree ≤ n := by
+  rwa [nat_degree_sub, nat_degree_sub_le_iff_left]
+
+theorem coeff_sub_eq_left_of_lt (dg : q.natDegree < n) : (p - q).coeff n = p.coeff n := by
+  rw [← nat_degree_neg] at dg
+  rw [sub_eq_add_neg, coeff_add_eq_left_of_lt dg]
+
+theorem coeff_sub_eq_neg_right_of_lt (df : p.natDegree < n) : (p - q).coeff n = -q.coeff n := by
+  rwa [sub_eq_add_neg, coeff_add_eq_right_of_lt, coeff_neg]
+
+end Ringₓ
 
 section NoZeroDivisors
 

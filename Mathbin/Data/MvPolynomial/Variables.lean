@@ -597,10 +597,12 @@ theorem total_degree_pow (a : MvPolynomial σ R) (n : ℕ) : (a ^ n).totalDegree
   · simp only [← Nat.nat_zero_eq_zero, ← zero_mul, ← pow_zeroₓ, ← total_degree_one]
     
   rw [pow_succₓ]
-  calc total_degree (a * a ^ n) ≤ a.total_degree + (a ^ n).totalDegree :=
-      total_degree_mul _ _ _ ≤ a.total_degree + n * a.total_degree :=
-      add_le_add_left ih _ _ = (n + 1) * a.total_degree := by
+  calc
+    total_degree (a * a ^ n) ≤ a.total_degree + (a ^ n).totalDegree := total_degree_mul _ _
+    _ ≤ a.total_degree + n * a.total_degree := add_le_add_left ih _
+    _ = (n + 1) * a.total_degree := by
       rw [add_mulₓ, one_mulₓ, add_commₓ]
+    
 
 @[simp]
 theorem total_degree_monomial (s : σ →₀ ℕ) {c : R} (hc : c ≠ 0) :
@@ -643,12 +645,16 @@ theorem total_degree_finset_sum {ι : Type _} (s : Finset ι) (f : ι → MvPoly
 theorem exists_degree_lt [Fintype σ] (f : MvPolynomial σ R) (n : ℕ) (h : f.totalDegree < n * Fintype.card σ)
     {d : σ →₀ ℕ} (hd : d ∈ f.support) : ∃ i, d i < n := by
   contrapose! h
-  calc n * Fintype.card σ = ∑ s : σ, n := by
-      rw [Finset.sum_const, Nat.nsmul_eq_mul, mul_comm, Finset.card_univ]_ ≤ ∑ s, d s :=
-      Finset.sum_le_sum fun s _ => h s _ ≤ d.sum fun i e => e := by
+  calc
+    n * Fintype.card σ = ∑ s : σ, n := by
+      rw [Finset.sum_const, Nat.nsmul_eq_mul, mul_comm, Finset.card_univ]
+    _ ≤ ∑ s, d s := Finset.sum_le_sum fun s _ => h s
+    _ ≤ d.sum fun i e => e := by
       rw [Finsupp.sum_fintype]
       intros
-      rfl _ ≤ f.total_degree := Finset.le_sup hd
+      rfl
+    _ ≤ f.total_degree := Finset.le_sup hd
+    
 
 theorem coeff_eq_zero_of_total_degree_lt {f : MvPolynomial σ R} {d : σ →₀ ℕ}
     (h : f.totalDegree < ∑ i in d.support, d i) : coeff d f = 0 := by
@@ -769,26 +775,30 @@ theorem exists_rename_eq_of_vars_subset_range (p : MvPolynomial σ R) (f : τ �
 
 theorem vars_bind₁ (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
     (bind₁ f φ).vars ⊆ φ.vars.bUnion fun i => (f i).vars := by
-  calc (bind₁ f φ).vars = (φ.support.sum fun x : σ →₀ ℕ => (bind₁ f) (monomial x (coeff x φ))).vars := by
-      rw [← AlgHom.map_sum, ←
-        φ.as_sum]_ ≤ φ.support.bUnion fun i : σ →₀ ℕ => ((bind₁ f) (monomial i (coeff i φ))).vars :=
-      vars_sum_subset _ _ _ = φ.support.bUnion fun d : σ →₀ ℕ => (C (coeff d φ) * ∏ i in d.support, f i ^ d i).vars :=
-      by
-      simp only [← bind₁_monomial]_ ≤ φ.support.bUnion fun d : σ →₀ ℕ => d.support.bUnion fun i => (f i).vars :=
-      _-- proof below
+  calc
+    (bind₁ f φ).vars = (φ.support.sum fun x : σ →₀ ℕ => (bind₁ f) (monomial x (coeff x φ))).vars := by
+      rw [← AlgHom.map_sum, ← φ.as_sum]
+    _ ≤ φ.support.bUnion fun i : σ →₀ ℕ => ((bind₁ f) (monomial i (coeff i φ))).vars := vars_sum_subset _ _
+    _ = φ.support.bUnion fun d : σ →₀ ℕ => (C (coeff d φ) * ∏ i in d.support, f i ^ d i).vars := by
+      simp only [← bind₁_monomial]
+    _ ≤ φ.support.bUnion fun d : σ →₀ ℕ => d.support.bUnion fun i => (f i).vars := _
+    -- proof below
         _ ≤
         φ.vars.bUnion fun i : σ => (f i).vars :=
       _
+    
   -- proof below
   · apply Finset.bUnion_mono
     intro d hd
     calc
       (C (coeff d φ) * ∏ i : σ in d.support, f i ^ d i).vars ≤
           (C (coeff d φ)).vars ∪ (∏ i : σ in d.support, f i ^ d i).vars :=
-        vars_mul _ _ _ ≤ (∏ i : σ in d.support, f i ^ d i).vars := by
-        simp only [← Finset.empty_union, ← vars_C, ← Finset.le_iff_subset, ←
-          Finset.Subset.refl]_ ≤ d.support.bUnion fun i : σ => (f i ^ d i).vars :=
-        vars_prod _ _ ≤ d.support.bUnion fun i : σ => (f i).vars := _
+        vars_mul _ _
+      _ ≤ (∏ i : σ in d.support, f i ^ d i).vars := by
+        simp only [← Finset.empty_union, ← vars_C, ← Finset.le_iff_subset, ← Finset.Subset.refl]
+      _ ≤ d.support.bUnion fun i : σ => (f i ^ d i).vars := vars_prod _
+      _ ≤ d.support.bUnion fun i : σ => (f i).vars := _
+      
     apply Finset.bUnion_mono
     intro i hi
     apply vars_pow

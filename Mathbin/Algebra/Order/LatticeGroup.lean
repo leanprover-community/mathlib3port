@@ -431,19 +431,27 @@ def latticeOrderedCommGroupToDistribLattice (α : Type u) [s : Lattice α] [Comm
 @[to_additive]
 theorem abs_div_sup_mul_abs_div_inf [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) :
     abs ((a⊔c) / (b⊔c)) * abs ((a⊓c) / (b⊓c)) = abs (a / b) := by
-  let this : DistribLattice α := lattice_ordered_comm_group_to_distrib_lattice α
-  calc abs ((a⊔c) / (b⊔c)) * abs ((a⊓c) / (b⊓c)) = (b⊔c⊔(a⊔c)) / ((b⊔c)⊓(a⊔c)) * abs ((a⊓c) / (b⊓c)) := by
-      rw [sup_div_inf_eq_abs_div]_ = (b⊔c⊔(a⊔c)) / ((b⊔c)⊓(a⊔c)) * ((b⊓c⊔a⊓c) / (b⊓c⊓(a⊓c))) := by
-      rw [sup_div_inf_eq_abs_div (b⊓c) (a⊓c)]_ = (b⊔a⊔c) / (b⊓a⊔c) * (((b⊔a)⊓c) / (b⊓a⊓c)) := by
+  letI : DistribLattice α := lattice_ordered_comm_group_to_distrib_lattice α
+  calc
+    abs ((a⊔c) / (b⊔c)) * abs ((a⊓c) / (b⊓c)) = (b⊔c⊔(a⊔c)) / ((b⊔c)⊓(a⊔c)) * abs ((a⊓c) / (b⊓c)) := by
+      rw [sup_div_inf_eq_abs_div]
+    _ = (b⊔c⊔(a⊔c)) / ((b⊔c)⊓(a⊔c)) * ((b⊓c⊔a⊓c) / (b⊓c⊓(a⊓c))) := by
+      rw [sup_div_inf_eq_abs_div (b⊓c) (a⊓c)]
+    _ = (b⊔a⊔c) / (b⊓a⊔c) * (((b⊔a)⊓c) / (b⊓a⊓c)) := by
       rw [← sup_inf_right, ← inf_sup_right, sup_assoc]
       nth_rw 1[sup_comm]
       rw [sup_right_idem, sup_assoc, inf_assoc]
       nth_rw 3[inf_comm]
-      rw [inf_right_idem, inf_assoc]_ = (b⊔a⊔c) * ((b⊔a)⊓c) / ((b⊓a⊔c) * (b⊓a⊓c)) := by
-      rw [div_mul_div_comm]_ = (b⊔a) * c / ((b⊓a) * c) := by
-      rw [mul_comm, inf_mul_sup, mul_comm (b⊓a⊔c), inf_mul_sup]_ = (b⊔a) / (b⊓a) := by
-      rw [div_eq_mul_inv, mul_inv_rev, mul_assoc, mul_inv_cancel_left, ← div_eq_mul_inv]_ = abs (a / b) := by
+      rw [inf_right_idem, inf_assoc]
+    _ = (b⊔a⊔c) * ((b⊔a)⊓c) / ((b⊓a⊔c) * (b⊓a⊓c)) := by
+      rw [div_mul_div_comm]
+    _ = (b⊔a) * c / ((b⊓a) * c) := by
+      rw [mul_comm, inf_mul_sup, mul_comm (b⊓a⊔c), inf_mul_sup]
+    _ = (b⊔a) / (b⊓a) := by
+      rw [div_eq_mul_inv, mul_inv_rev, mul_assoc, mul_inv_cancel_left, ← div_eq_mul_inv]
+    _ = abs (a / b) := by
       rw [sup_div_inf_eq_abs_div]
+    
 
 /-- If `a` is positive, then it is equal to its positive component `a⁺`. -/
 -- pos_of_nonneg
@@ -451,6 +459,13 @@ theorem abs_div_sup_mul_abs_div_inf [CovariantClass α α (· * ·) (· ≤ ·)]
 theorem pos_of_one_le (a : α) (h : 1 ≤ a) : a⁺ = a := by
   rw [m_pos_part_def]
   exact sup_of_le_left h
+
+-- pos_eq_self_of_pos_pos
+@[to_additive]
+theorem pos_eq_self_of_one_lt_pos {α} [LinearOrderₓ α] [CommGroupₓ α] {x : α} (hx : 1 < x⁺) : x⁺ = x := by
+  rw [m_pos_part_def, right_lt_sup, not_leₓ] at hx
+  rw [m_pos_part_def, sup_eq_left]
+  exact hx.le
 
 -- 0 ≤ a implies a⁺ = a
 -- pos_of_nonpos

@@ -321,18 +321,19 @@ private theorem inner_le_Lp_mul_Lp_of_norm_le_one (f g : ι → ℝ≥0 ) {p q :
     (hf : (∑ i in s, f i ^ p) ≤ 1) (hg : (∑ i in s, g i ^ q) ≤ 1) : (∑ i in s, f i * g i) ≤ 1 := by
   have hp_ne_zero : Real.toNnreal p ≠ 0 := (zero_lt_one.trans hpq.one_lt_nnreal).Ne.symm
   have hq_ne_zero : Real.toNnreal q ≠ 0 := (zero_lt_one.trans hpq.symm.one_lt_nnreal).Ne.symm
-  calc (∑ i in s, f i * g i) ≤ ∑ i in s, f i ^ p / Real.toNnreal p + g i ^ q / Real.toNnreal q :=
-      Finset.sum_le_sum fun i his =>
-        young_inequality_real (f i) (g i)
-          hpq _ = (∑ i in s, f i ^ p) / Real.toNnreal p + (∑ i in s, g i ^ q) / Real.toNnreal q :=
-      by
-      rw [sum_add_distrib, sum_div, sum_div]_ ≤ 1 / Real.toNnreal p + 1 / Real.toNnreal q := by
+  calc
+    (∑ i in s, f i * g i) ≤ ∑ i in s, f i ^ p / Real.toNnreal p + g i ^ q / Real.toNnreal q :=
+      Finset.sum_le_sum fun i his => young_inequality_real (f i) (g i) hpq
+    _ = (∑ i in s, f i ^ p) / Real.toNnreal p + (∑ i in s, g i ^ q) / Real.toNnreal q := by
+      rw [sum_add_distrib, sum_div, sum_div]
+    _ ≤ 1 / Real.toNnreal p + 1 / Real.toNnreal q := by
       refine' add_le_add _ _
       · rwa [div_le_iff hp_ne_zero, div_mul_cancel _ hp_ne_zero]
         
       · rwa [div_le_iff hq_ne_zero, div_mul_cancel _ hq_ne_zero]
-        _ = 1 :=
-      hpq.inv_add_inv_conj_nnreal
+        
+    _ = 1 := hpq.inv_add_inv_conj_nnreal
+    
 
 private theorem inner_le_Lp_mul_Lp_of_norm_eq_zero (f g : ι → ℝ≥0 ) {p q : ℝ} (hpq : p.IsConjugateExponent q)
     (hf : (∑ i in s, f i ^ p) = 0) :
@@ -353,12 +354,14 @@ theorem inner_le_Lp_mul_Lq (f g : ι → ℝ≥0 ) {p q : ℝ} (hpq : p.IsConjug
   · exact inner_le_Lp_mul_Lp_of_norm_eq_zero s f g hpq hF_zero
     
   by_cases' hG_zero : (∑ i in s, g i ^ q) = 0
-  · calc (∑ i in s, f i * g i) = ∑ i in s, g i * f i := by
+  · calc
+      (∑ i in s, f i * g i) = ∑ i in s, g i * f i := by
         congr with i
-        rw [mul_comm]_ ≤ (∑ i in s, g i ^ q) ^ (1 / q) * (∑ i in s, f i ^ p) ^ (1 / p) :=
-        inner_le_Lp_mul_Lp_of_norm_eq_zero s g f hpq.symm
-          hG_zero _ = (∑ i in s, f i ^ p) ^ (1 / p) * (∑ i in s, g i ^ q) ^ (1 / q) :=
-        mul_comm _ _
+        rw [mul_comm]
+      _ ≤ (∑ i in s, g i ^ q) ^ (1 / q) * (∑ i in s, f i ^ p) ^ (1 / p) :=
+        inner_le_Lp_mul_Lp_of_norm_eq_zero s g f hpq.symm hG_zero
+      _ = (∑ i in s, f i ^ p) ^ (1 / p) * (∑ i in s, g i ^ q) ^ (1 / q) := mul_comm _ _
+      
     
   let f' := fun i => f i / (∑ i in s, f i ^ p) ^ (1 / p)
   let g' := fun i => g i / (∑ i in s, g i ^ q) ^ (1 / q)

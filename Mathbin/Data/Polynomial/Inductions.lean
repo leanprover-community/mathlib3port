@@ -60,8 +60,9 @@ theorem div_X_add : divX (p + q) = divX p + divX q :=
     simp
 
 theorem degree_div_X_lt (hp0 : p ≠ 0) : (divX p).degree < p.degree := by
-  have := nontrivial.of_polynomial_ne hp0 <;>
-    calc (div_X p).degree < (div_X p * X + C (p.coeff 0)).degree :=
+  haveI := nontrivial.of_polynomial_ne hp0 <;>
+    calc
+      (div_X p).degree < (div_X p * X + C (p.coeff 0)).degree :=
         if h : degree p ≤ 0 then by
           have h' : C (p.coeff 0) ≠ 0 := by
             rwa [← eq_C_of_degree_le_zero h]
@@ -91,11 +92,12 @@ theorem degree_div_X_lt (hp0 : p ≠ 0) : (divX p).degree < p.degree := by
                           exact fun h0 => h (h0.symm ▸ degree_C_le))
                       le_rfl
               
-          rw [degree_add_eq_left_of_degree_lt this] <;> exact degree_lt_degree_mul_X hXp0 _ = p.degree :=
-        congr_arg _ (div_X_mul_X_add _)
+          rw [degree_add_eq_left_of_degree_lt this] <;> exact degree_lt_degree_mul_X hXp0
+      _ = p.degree := congr_arg _ (div_X_mul_X_add _)
+      
 
 /-- An induction principle for polynomials, valued in Sort* instead of Prop. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 noncomputable def recOnHornerₓ {M : R[X] → Sort _} :
     ∀ p : R[X], M 0 → (∀ p a, coeff p 0 = 0 → a ≠ 0 → M p → M (p + c a)) → (∀ p, p ≠ 0 → M p → M (p * X)) → M p
   | p => fun M0 MC MX =>
@@ -127,7 +129,7 @@ with appropriate restrictions on each term.
 
 See `nat_degree_ne_zero_induction_on` for a similar statement involving no explicit multiplication.
  -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem degree_pos_induction_on {P : R[X] → Prop} (p : R[X]) (h0 : 0 < degree p) (hC : ∀ {a}, a ≠ 0 → P (c a * X))
     (hX : ∀ {p}, 0 < degree p → P p → P (p * X)) (hadd : ∀ {p} {a}, 0 < degree p → P p → P (p + c a)) : P p :=
   recOnHornerₓ p
@@ -162,7 +164,7 @@ Note that multiplication is "hidden" in the assumption on monomials, so there is
 multiplication in the statement.
 See `degree_pos_induction_on` for a similar statement involving more explicit multiplications.
  -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem nat_degree_ne_zero_induction_on {M : R[X] → Prop} {f : R[X]} (f0 : f.natDegree ≠ 0)
     (h_C_add : ∀ {a p}, M p → M (c a + p)) (h_add : ∀ {p q}, M p → M q → M (p + q))
     (h_monomial : ∀ {n : ℕ} {a : R}, a ≠ 0 → n ≠ 0 → M (monomial n a)) : M f := by

@@ -71,7 +71,7 @@ open TopologicalSpace Classical Polynomial
 
 section Module
 
-variable {E : Type u} [NormedGroup E] [NormedSpace ℝ E] {f : E → ℝ} {a : E} {f' : E →L[ℝ] ℝ}
+variable {E : Type u} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ} {a : E} {f' : E →L[ℝ] ℝ}
 
 /-- "Positive" tangent cone to `s` at `x`; the only difference from `tangent_cone_at`
 is that we require `c n → ∞` instead of `∥c n∥ → ∞`. One can think about `pos_tangent_cone_at`
@@ -342,7 +342,7 @@ namespace Polynomial
 
 theorem card_root_set_le_derivative {F : Type _} [Field F] [Algebra F ℝ] (p : F[X]) :
     Fintype.card (p.RootSet ℝ) ≤ Fintype.card (p.derivative.RootSet ℝ) + 1 := by
-  have : CharZero F :=
+  haveI : CharZero F :=
     (RingHom.char_zero_iff (algebraMap F ℝ).Injective).mpr
       (by
         infer_instance)

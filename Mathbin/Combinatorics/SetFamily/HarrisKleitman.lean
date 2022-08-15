@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
 import Mathbin.Algebra.BigOperators.Basic
+import Mathbin.Combinatorics.SetFamily.Compression.Down
 import Mathbin.Order.UpperLower
 
 /-!
@@ -16,10 +17,6 @@ correlate in the uniform measure.
 
 ## Main declarations
 
-* `finset.non_member_subfamily`: `𝒜.non_member_subfamily a` is the subfamily of sets not containing
-  `a`.
-* `finset.member_subfamily`: `𝒜.member_subfamily a` is the image of the subfamily of sets
-  containing `a` under removing `a`.
 * `is_lower_set.le_card_inter_finset`: One form of the Harris-Kleitman inequality.
 
 ## References
@@ -28,52 +25,11 @@ correlate in the uniform measure.
 -/
 
 
+open Finset
+
 open BigOperators
 
 variable {α : Type _} [DecidableEq α] {𝒜 ℬ : Finset (Finset α)} {s : Finset α} {a : α}
-
-namespace Finset
-
-/-- ELements of `𝒜` that do not contain `a`. -/
-def nonMemberSubfamily (𝒜 : Finset (Finset α)) (a : α) : Finset (Finset α) :=
-  𝒜.filter fun s => a ∉ s
-
-/-- Image of the elements of `𝒜` which contain `a` under removing `a`. Finsets that do not contain
-`a` such that `insert a s ∈ 𝒜`. -/
-def memberSubfamily (𝒜 : Finset (Finset α)) (a : α) : Finset (Finset α) :=
-  (𝒜.filter fun s => a ∈ s).Image fun s => erase s a
-
-@[simp]
-theorem mem_non_member_subfamily : s ∈ 𝒜.nonMemberSubfamily a ↔ s ∈ 𝒜 ∧ a ∉ s :=
-  mem_filter
-
-@[simp]
-theorem mem_member_subfamily : s ∈ 𝒜.memberSubfamily a ↔ insert a s ∈ 𝒜 ∧ a ∉ s := by
-  simp_rw [member_subfamily, mem_image, mem_filter]
-  refine' ⟨_, fun h => ⟨insert a s, ⟨h.1, mem_insert_self _ _⟩, erase_insert h.2⟩⟩
-  rintro ⟨s, hs, rfl⟩
-  rw [insert_erase hs.2]
-  exact ⟨hs.1, not_mem_erase _ _⟩
-
-theorem non_member_subfamily_inter (𝒜 ℬ : Finset (Finset α)) (a : α) :
-    (𝒜 ∩ ℬ).nonMemberSubfamily a = 𝒜.nonMemberSubfamily a ∩ ℬ.nonMemberSubfamily a :=
-  filter_inter_distrib _ _ _
-
-theorem member_subfamily_inter (𝒜 ℬ : Finset (Finset α)) (a : α) :
-    (𝒜 ∩ ℬ).memberSubfamily a = 𝒜.memberSubfamily a ∩ ℬ.memberSubfamily a := by
-  unfold member_subfamily
-  rw [filter_inter_distrib, image_inter_of_inj_on _ _ ((erase_inj_on' _).mono _)]
-  rw [← coe_union, ← filter_union, coe_filter]
-  exact Set.inter_subset_right _ _
-
-theorem card_member_subfamily_add_card_non_member_subfamily (𝒜 : Finset (Finset α)) (a : α) :
-    (𝒜.memberSubfamily a).card + (𝒜.nonMemberSubfamily a).card = 𝒜.card := by
-  rw [member_subfamily, non_member_subfamily, card_image_of_inj_on, filter_card_add_filter_neg_card_eq_card]
-  exact (erase_inj_on' _).mono fun s hs => (mem_filter.1 hs).2
-
-end Finset
-
-open Finset
 
 theorem IsLowerSet.non_member_subfamily (h : IsLowerSet (𝒜 : Set (Finset α))) :
     IsLowerSet (𝒜.nonMemberSubfamily a : Set (Finset α)) := fun s t hts => by
@@ -105,8 +61,8 @@ theorem IsLowerSet.le_card_inter_finset' (h𝒜 : IsLowerSet (𝒜 : Set (Finset
     · simp only [← card_empty, ← pow_zeroₓ, ← inter_singleton_of_mem, ← mem_singleton, ← card_singleton]
       
     
-  rw [card_insert_of_not_mem hs, ← card_member_subfamily_add_card_non_member_subfamily 𝒜 a, ←
-    card_member_subfamily_add_card_non_member_subfamily ℬ a, add_mulₓ, mul_addₓ, mul_addₓ, add_commₓ (_ * _),
+  rw [card_insert_of_not_mem hs, ← card_member_subfamily_add_card_non_member_subfamily a 𝒜, ←
+    card_member_subfamily_add_card_non_member_subfamily a ℬ, add_mulₓ, mul_addₓ, mul_addₓ, add_commₓ (_ * _),
     add_add_add_commₓ]
   refine'
     (add_le_add_right

@@ -15,12 +15,12 @@ a quadratic_form `Q`.
 
 ## Notation
 
-The Clifford algebra of the `R`-module `M` equipped with a quadratic_form `Q` is denoted as
-`clifford_algebra Q`.
+The Clifford algebra of the `R`-module `M` equipped with a quadratic_form `Q` is
+an `R`-algebra denoted `clifford_algebra Q`.
 
 Given a linear morphism `f : M → A` from a module `M` to another `R`-algebra `A`, such that
 `cond : ∀ m, f m * f m = algebra_map _ _ (Q m)`, there is a (unique) lift of `f` to an `R`-algebra
-morphism, which is denoted `clifford_algebra.lift Q f cond`.
+morphism from `clifford_algebra Q` to `A`, which is denoted `clifford_algebra.lift Q f cond`.
 
 The canonical linear map `M → clifford_algebra Q` is denoted `clifford_algebra.ι Q`.
 
@@ -65,12 +65,12 @@ inductive Rel : TensorAlgebra R M → TensorAlgebra R M → Prop
 
 end CliffordAlgebra
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler algebra R
+-- ./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler algebra R
 /-- The Clifford algebra of an `R`-module `M` equipped with a quadratic_form `Q`.
 -/
 def CliffordAlgebra :=
   RingQuot (CliffordAlgebra.Rel Q)deriving Inhabited, Ringₓ,
-  «./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler algebra R»
+  «./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler algebra R»
 
 namespace CliffordAlgebra
 
@@ -156,7 +156,7 @@ and is preserved under addition and muliplication, then it holds for all of `cli
 See also the stronger `clifford_algebra.left_induction` and `clifford_algebra.right_induction`.
 -/
 -- This proof closely follows `tensor_algebra.induction`
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction {C : CliffordAlgebra Q → Prop} (h_grade0 : ∀ r, C (algebraMap R (CliffordAlgebra Q) r))
     (h_grade1 : ∀ x, C (ι Q x)) (h_mul : ∀ a b, C a → C b → C (a * b)) (h_add : ∀ a b, C a → C b → C (a + b))
     (a : CliffordAlgebra Q) : C a := by

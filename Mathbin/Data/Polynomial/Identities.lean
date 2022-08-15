@@ -44,11 +44,15 @@ def powAddExpansion {R : Type _} [CommSemiringₓ R] (x y : R) :
   | n + 2 => by
     cases' pow_add_expansion (n + 1) with z hz
     exists x * z + (n + 1) * x ^ n + z * y
-    calc (x + y) ^ (n + 2) = (x + y) * (x + y) ^ (n + 1) := by
-        ring_exp _ = (x + y) * (x ^ (n + 1) + ↑(n + 1) * x ^ (n + 1 - 1) * y + z * y ^ 2) := by
-        rw [hz]_ = x ^ (n + 2) + ↑(n + 2) * x ^ (n + 1) * y + (x * z + (n + 1) * x ^ n + z * y) * y ^ 2 := by
+    calc
+      (x + y) ^ (n + 2) = (x + y) * (x + y) ^ (n + 1) := by
+        ring_exp
+      _ = (x + y) * (x ^ (n + 1) + ↑(n + 1) * x ^ (n + 1 - 1) * y + z * y ^ 2) := by
+        rw [hz]
+      _ = x ^ (n + 2) + ↑(n + 2) * x ^ (n + 1) * y + (x * z + (n + 1) * x ^ n + z * y) * y ^ 2 := by
         push_cast
         ring_exp!
+      
 
 variable [CommRingₓ R]
 
@@ -89,7 +93,7 @@ def binomExpansion (f : R[X]) (x y : R) :
   · exact finset.sum_mul.symm
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:646:40: in linear_combination #[[expr «expr * »(x, hz)], ["with"], { normalization_tactic := `[ring_exp [] []] }]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args
+-- ./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr «expr * »(x, hz)], ["with"], { normalization_tactic := `[ring_exp [] []] }]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args
 /-- `x^n - y^n` can be expressed as `z * (x - y)` for some `z` in the ring.
 -/
 def powSubPowFactor (x y : R) : ∀ i : ℕ, { z : R // x ^ i - y ^ i = z * (x - y) }
@@ -103,7 +107,7 @@ def powSubPowFactor (x y : R) : ∀ i : ℕ, { z : R // x ^ i - y ^ i = z * (x -
     cases' @pow_sub_pow_factor (k + 1) with z hz
     exists z * x + y ^ (k + 1)
     trace
-      "./././Mathport/Syntax/Translate/Basic.lean:646:40: in linear_combination #[[expr «expr * »(x, hz)], [\"with\"], { normalization_tactic := `[ring_exp [] []] }]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args"
+      "./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr «expr * »(x, hz)], [\"with\"], { normalization_tactic := `[ring_exp [] []] }]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args"
 
 /-- For any polynomial `f`, `f.eval x - f.eval y` can be expressed as `z * (x - y)`
 for some `z` in the ring.

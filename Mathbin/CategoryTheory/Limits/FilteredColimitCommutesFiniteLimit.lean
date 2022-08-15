@@ -140,7 +140,7 @@ theorem colimit_limit_to_limit_colimit_injective : Function.Injective (colimitLi
   -- We can check if two elements of a limit (in `Type`) are equal by comparing them componentwise.
   ext
   -- Now it's just a calculation using `W` and `w`.
-  simp only [← functor.comp_map, ← limit.map_π_apply, ← curry.obj_map_app, ← swap_map]
+  simp only [← functor.comp_map, ← limit.map_π_apply, ← curry_obj_map_app, ← swap_map]
   rw [← W _ _ (fH j)]
   rw [← W _ _ (gH j)]
   simp [← w]
@@ -286,21 +286,19 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
         F.map ((f, g j ≫ gf (𝟙 j) ≫ i (𝟙 j)) : (j, k j) ⟶ (j', k'')) (y j) =
             F.map ((f, g j ≫ hf f ≫ i f) : (j, k j) ⟶ (j', k'')) (y j) :=
           by
-          rw
-            [s (𝟙 j)
-              f]_ =
-            F.map ((𝟙 j', i f) : (j', kf f) ⟶ (j', k'')) (F.map ((f, g j ≫ hf f) : (j, k j) ⟶ (j', kf f)) (y j)) :=
-          by
-          rw [← functor_to_types.map_comp_apply, prod_comp, comp_id,
-            assoc]_ =
+          rw [s (𝟙 j) f]
+        _ = F.map ((𝟙 j', i f) : (j', kf f) ⟶ (j', k'')) (F.map ((f, g j ≫ hf f) : (j, k j) ⟶ (j', kf f)) (y j)) := by
+          rw [← functor_to_types.map_comp_apply, prod_comp, comp_id, assoc]
+        _ =
             F.map ((𝟙 j', i f) : (j', kf f) ⟶ (j', k''))
               (F.map ((𝟙 j', g j' ≫ gf f) : (j', k j') ⟶ (j', kf f)) (y j')) :=
           by
-          rw [← wf f]_ = F.map ((𝟙 j', g j' ≫ gf f ≫ i f) : (j', k j') ⟶ (j', k'')) (y j') := by
-          rw [← functor_to_types.map_comp_apply, prod_comp, id_comp,
-            assoc]_ = F.map ((𝟙 j', g j' ≫ gf (𝟙 j') ≫ i (𝟙 j')) : (j', k j') ⟶ (j', k'')) (y j') :=
-          by
+          rw [← wf f]
+        _ = F.map ((𝟙 j', g j' ≫ gf f ≫ i f) : (j', k j') ⟶ (j', k'')) (y j') := by
+          rw [← functor_to_types.map_comp_apply, prod_comp, id_comp, assoc]
+        _ = F.map ((𝟙 j', g j' ≫ gf (𝟙 j') ≫ i (𝟙 j')) : (j', k j') ⟶ (j', k'')) (y j') := by
           rw [s f (𝟙 j'), ← s (𝟙 j') (𝟙 j')]
+        
       
     
   -- Finally we check that this maps to `x`.
@@ -309,7 +307,7 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
     intro j
     -- and as each component is an equation in a colimit, we can verify it by
     -- pointing out the morphism which carries one representative to the other:
-    simp only [e, ← colimit_eq_iff.{v, v}, ← curry.obj_obj_map, ← limit.π_mk', ← bifunctor.map_id_comp, ← id.def, ←
+    simp only [e, ← colimit_eq_iff.{v, v}, ← curry_obj_obj_map, ← limit.π_mk', ← bifunctor.map_id_comp, ← id.def, ←
       types_comp_apply, ← limits.ι_colimit_limit_to_limit_colimit_π_apply]
     refine' ⟨k'', 𝟙 k'', g j ≫ gf (𝟙 j) ≫ i (𝟙 j), _⟩
     simp only [← bifunctor.map_id_comp, ← types_comp_apply, ← bifunctor.map_id, ← types_id_apply]
@@ -350,7 +348,7 @@ variable [ReflectsLimitsOfShape J (forget C)] [PreservesColimitsOfShape K (forge
 variable [PreservesLimitsOfShape J (forget C)]
 
 noncomputable instance filteredColimPreservesFiniteLimits : PreservesLimitsOfShape J (colim : (K ⥤ C) ⥤ _) := by
-  have : preserves_limits_of_shape J ((colim : (K ⥤ C) ⥤ _) ⋙ forget C) :=
+  haveI : preserves_limits_of_shape J ((colim : (K ⥤ C) ⥤ _) ⋙ forget C) :=
     preserves_limits_of_shape_of_nat_iso (preserves_colimit_nat_iso _).symm
   exact preserves_limits_of_shape_of_reflects_of_preserves _ (forget C)
 
@@ -389,7 +387,7 @@ theorem ι_colimit_limit_iso_limit_π (F : J ⥤ K ⥤ C) (a) (b) :
     limits.has_limit.iso_of_nat_iso_hom_π]
   congr 1
   simp only [category.assoc, ← iso.comp_inv_eq, ← limits.colimit_obj_iso_colimit_comp_evaluation_ι_app_hom, ←
-    limits.has_colimit.iso_of_nat_iso_ι_hom, ← nat_iso.of_components.hom_app]
+    limits.has_colimit.iso_of_nat_iso_ι_hom, ← nat_iso.of_components_hom_app]
   dsimp'
   simp
 

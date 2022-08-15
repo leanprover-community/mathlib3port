@@ -92,6 +92,9 @@ def preservesPullbackSymmetry :
     · exact (c.π.naturality walking_cospan.hom.inr).symm.trans (c.π.naturality walking_cospan.hom.inl : _)
       
 
+theorem has_pullback_of_preserves_pullback [HasPullback f g] : HasPullback (G.map f) (G.map g) :=
+  ⟨⟨⟨_, isLimitPullbackConeMapOfIsLimit G _ (pullbackIsPullback _ _)⟩⟩⟩
+
 variable [HasPullback f g] [HasPullback (G.map f) (G.map g)]
 
 /-- If `G` preserves the pullback of `(f,g)`, then the pullback comparison map for `G` at `(f,g)` is
@@ -176,6 +179,9 @@ def preservesPushoutSymmetry :
       
     · exact (c.ι.naturality walking_span.hom.snd).trans (c.ι.naturality walking_span.hom.fst).symm
       
+
+theorem has_pushout_of_preserves_pushout [HasPushout f g] : HasPushout (G.map f) (G.map g) :=
+  ⟨⟨⟨_, isColimitPushoutCoconeMapOfIsColimit G _ (pushoutIsPushout _ _)⟩⟩⟩
 
 variable [HasPushout f g] [HasPushout (G.map f) (G.map g)]
 

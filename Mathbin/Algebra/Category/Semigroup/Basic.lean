@@ -37,9 +37,8 @@ open CategoryTheory
 def Magma : Type (u + 1) :=
   Bundled Mul
 
-/-- The category of additive magmas and additive magma morphisms. -/
-add_decl_doc AddMagma
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident AddMagma]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace Magma
 
 @[to_additive]
@@ -59,17 +58,15 @@ instance : CoeSort Magma (Type _) :=
 def of (M : Type u) [Mul M] : Magma :=
   Bundled.of M
 
-/-- Construct a bundled `AddMagma` from the underlying type and typeclass. -/
-add_decl_doc AddMagma.of
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident AddMagma.of]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Typecheck a `mul_hom` as a morphism in `Magma`. -/
 @[to_additive]
 def ofHom {X Y : Type u} [Mul X] [Mul Y] (f : X →ₙ* Y) : of X ⟶ of Y :=
   f
 
-/-- Typecheck a `add_hom` as a morphism in `AddMagma`. -/
-add_decl_doc AddMagma.ofHom
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident AddMagma.of_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, to_additive]
 theorem of_hom_apply {X Y : Type u} [Mul X] [Mul Y] (f : X →ₙ* Y) (x : X) : ofHom f x = f x :=
   rfl
@@ -93,9 +90,8 @@ end Magma
 def Semigroupₓₓ : Type (u + 1) :=
   Bundled Semigroupₓ
 
-/-- The category of additive semigroups and semigroup morphisms. -/
-add_decl_doc AddSemigroupₓₓ
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident AddSemigroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace Semigroupₓₓ
 
 @[to_additive]
@@ -115,17 +111,15 @@ instance : CoeSort Semigroupₓₓ (Type _) :=
 def of (M : Type u) [Semigroupₓ M] : Semigroupₓₓ :=
   Bundled.of M
 
-/-- Construct a bundled `AddSemigroup` from the underlying type and typeclass. -/
-add_decl_doc AddSemigroupₓₓ.of
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident AddSemigroup.of]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Typecheck a `mul_hom` as a morphism in `Semigroup`. -/
 @[to_additive]
 def ofHom {X Y : Type u} [Semigroupₓ X] [Semigroupₓ Y] (f : X →ₙ* Y) : of X ⟶ of Y :=
   f
 
-/-- Typecheck a `add_hom` as a morphism in `AddSemigroup`. -/
-add_decl_doc AddSemigroupₓₓ.ofHom
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident AddSemigroup.of_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, to_additive]
 theorem of_hom_apply {X Y : Type u} [Semigroupₓ X] [Semigroupₓ Y] (f : X →ₙ* Y) (x : X) : ofHom f x = f x :=
   rfl

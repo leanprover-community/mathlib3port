@@ -66,7 +66,7 @@ integral, circle, Cauchy integral
 -/
 
 
-variable {E : Type _} [NormedGroup E]
+variable {E : Type _} [NormedAddCommGroup E]
 
 noncomputable section
 
@@ -258,7 +258,7 @@ theorem ContinuousOn.circle_integrable {f : ℂ → E} {c : ℂ} {R : ℝ} (hR :
     CircleIntegrable f c R :=
   ContinuousOn.circle_integrable' <| (abs_of_nonneg hR).symm ▸ hf
 
--- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)
 /-- The function `λ z, (z - w) ^ n`, `n : ℤ`, is circle integrable on the circle with center `c` and
 radius `|R|` if and only if `R = 0` or `0 ≤ n`, or `w` does not belong to this circle. -/
 @[simp]
@@ -271,7 +271,7 @@ theorem circle_integrable_sub_zpow_iff {c w : ℂ} {R : ℝ} {n : ℤ} :
     simp only [← circle_integrable_iff R, ← deriv_circle_map]
     rw [← image_circle_map_Ioc] at hw
     rcases hw with ⟨θ, hθ, rfl⟩
-    replace hθ : θ ∈ "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)"
+    replace hθ : θ ∈ "./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)"
     exact Icc_subset_interval (Ioc_subset_Icc_self hθ)
     refine' not_interval_integrable_of_sub_inv_is_O_punctured _ real.two_pi_pos.ne hθ
     set f : ℝ → ℂ := fun θ' => circleMap c R θ' - circleMap c R θ
@@ -391,8 +391,10 @@ theorem norm_integral_lt_of_norm_le_const_of_lt {f : ℂ → E} {c : ℂ} {R C :
     ∥∮ z in C(c, R), f z∥ < 2 * π * R * C := by
   rw [← _root_.abs_of_pos hR, ← image_circle_map_Ioc] at hlt
   rcases hlt with ⟨_, ⟨θ₀, hmem, rfl⟩, hlt⟩
-  calc ∥∮ z in C(c, R), f z∥ ≤ ∫ θ in 0 ..2 * π, ∥deriv (circleMap c R) θ • f (circleMap c R θ)∥ :=
-      intervalIntegral.norm_integral_le_integral_norm real.two_pi_pos.le _ < ∫ θ in 0 ..2 * π, R * C := by
+  calc
+    ∥∮ z in C(c, R), f z∥ ≤ ∫ θ in 0 ..2 * π, ∥deriv (circleMap c R) θ • f (circleMap c R θ)∥ :=
+      intervalIntegral.norm_integral_le_integral_norm real.two_pi_pos.le
+    _ < ∫ θ in 0 ..2 * π, R * C := by
       simp only [← norm_smul, ← deriv_circle_map, ← norm_eq_abs, ← Complex.abs_mul, ← abs_I, ← mul_oneₓ, ←
         abs_circle_map_zero, ← abs_of_pos hR]
       refine'
@@ -405,9 +407,10 @@ theorem norm_integral_lt_of_norm_le_const_of_lt {f : ℂ → E} {c : ℂ} {R C :
       · exact mul_le_mul_of_nonneg_left (hf _ <| circle_map_mem_sphere _ hR.le _) hR.le
         
       · exact (mul_lt_mul_left hR).2 hlt
-        _ = 2 * π * R * C :=
-      by
+        
+    _ = 2 * π * R * C := by
       simp [← mul_assoc]
+    
 
 @[simp]
 theorem integral_smul {𝕜 : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] [SmulCommClass 𝕜 ℂ E] (a : 𝕜) (f : ℂ → E) (c : ℂ)

@@ -195,7 +195,7 @@ theorem quasi_sober_of_open_cover (S : Set (Set α)) (hS : ∀ s : S, IsOpen (s 
   obtain ⟨U, hU, hU'⟩ : x ∈ ⋃₀S := by
     rw [hS'']
     trivial
-  have : QuasiSober U := hS' ⟨U, hU⟩
+  haveI : QuasiSober U := hS' ⟨U, hU⟩
   have H : IsPreirreducible (coe ⁻¹' t : Set U) := h.2.Preimage (hS ⟨U, hU⟩).open_embedding_subtype_coe
   replace H : IsIrreducible (coe ⁻¹' t : Set U) :=
     ⟨⟨⟨x, hU'⟩, by

@@ -151,11 +151,14 @@ variable [CharP R p]
 
 theorem iterate_verschiebung_mul (x y : 𝕎 R) (i j : ℕ) :
     (verschiebung^[i]) x * (verschiebung^[j]) y = (verschiebung^[i + j]) ((frobenius^[j]) x * (frobenius^[i]) y) := by
-  calc _ = (verschiebung^[i]) (x * (frobenius^[i]) ((verschiebung^[j]) y)) :=
-      _ _ = (verschiebung^[i]) (x * (verschiebung^[j]) ((frobenius^[i]) y)) :=
-      _ _ = (verschiebung^[i]) ((verschiebung^[j]) ((frobenius^[i]) y) * x) :=
-      _ _ = (verschiebung^[i]) ((verschiebung^[j]) ((frobenius^[i]) y * (frobenius^[j]) x)) :=
-      _ _ = (verschiebung^[i + j]) ((frobenius^[i]) y * (frobenius^[j]) x) := _ _ = _ := _
+  calc
+    _ = (verschiebung^[i]) (x * (frobenius^[i]) ((verschiebung^[j]) y)) := _
+    _ = (verschiebung^[i]) (x * (verschiebung^[j]) ((frobenius^[i]) y)) := _
+    _ = (verschiebung^[i]) ((verschiebung^[j]) ((frobenius^[i]) y) * x) := _
+    _ = (verschiebung^[i]) ((verschiebung^[j]) ((frobenius^[i]) y * (frobenius^[j]) x)) := _
+    _ = (verschiebung^[i + j]) ((frobenius^[i]) y * (frobenius^[j]) x) := _
+    _ = _ := _
+    
   · apply iterate_verschiebung_mul_left
     
   · rw [verschiebung_frobenius_comm.iterate_iterate] <;> infer_instance
@@ -180,9 +183,12 @@ theorem iterate_frobenius_coeff (x : 𝕎 R) (i k : ℕ) : ((frobenius^[i]) x).c
 /-- This is a slightly specialized form of [Hazewinkel, *Witt Vectors*][Haze09] 6.2 equation 5. -/
 theorem iterate_verschiebung_mul_coeff (x y : 𝕎 R) (i j : ℕ) :
     ((verschiebung^[i]) x * (verschiebung^[j]) y).coeff (i + j) = x.coeff 0 ^ p ^ j * y.coeff 0 ^ p ^ i := by
-  calc _ = ((verschiebung^[i + j]) ((frobenius^[j]) x * (frobenius^[i]) y)).coeff (i + j) :=
-      _ _ = ((frobenius^[j]) x * (frobenius^[i]) y).coeff 0 :=
-      _ _ = ((frobenius^[j]) x).coeff 0 * ((frobenius^[i]) y).coeff 0 := _ _ = _ := _
+  calc
+    _ = ((verschiebung^[i + j]) ((frobenius^[j]) x * (frobenius^[i]) y)).coeff (i + j) := _
+    _ = ((frobenius^[j]) x * (frobenius^[i]) y).coeff 0 := _
+    _ = ((frobenius^[j]) x).coeff 0 * ((frobenius^[i]) y).coeff 0 := _
+    _ = _ := _
+    
   · rw [iterate_verschiebung_mul]
     
   · convert iterate_verschiebung_coeff _ _ _ using 2

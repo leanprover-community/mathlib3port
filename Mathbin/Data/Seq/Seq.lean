@@ -42,12 +42,13 @@ instance : Inhabited (Seqₓₓ α) :=
   ⟨nil⟩
 
 /-- Prepend an element to a sequence -/
-def cons (a : α) : Seqₓₓ α → Seqₓₓ α
-  | ⟨f, al⟩ =>
-    ⟨some a :: f, fun n h => by
-      cases' n with n
-      contradiction
-      exact al h⟩
+def cons (a : α) (s : Seqₓₓ α) : Seqₓₓ α :=
+  ⟨some a :: s.1, by
+    rintro (n | _) h
+    · contradiction
+      
+    · exact s.2 h
+      ⟩
 
 /-- Get the nth element of a sequence (if it exists) -/
 def nth : Seqₓₓ α → ℕ → Option α :=
@@ -66,6 +67,9 @@ instance terminatedAtDecidable (s : Seqₓₓ α) (n : ℕ) : Decidable (s.Termi
 def Terminates (s : Seqₓₓ α) : Prop :=
   ∃ n : ℕ, s.TerminatedAt n
 
+theorem not_terminates_iff {s : Seqₓₓ α} : ¬s.Terminates ↔ ∀ n, (s.nth n).isSome := by
+  simp [← terminates, ← terminated_at, Ne.def, ← Option.ne_none_iff_is_some]
+
 /-- Functorial action of the functor `option (α × _)` -/
 @[simp]
 def omap (f : β → γ) : Option (α × β) → Option (α × γ)
@@ -77,8 +81,10 @@ def head (s : Seqₓₓ α) : Option α :=
   nth s 0
 
 /-- Get the tail of a sequence (or `nil` if the sequence is `nil`) -/
-def tail : Seqₓₓ α → Seqₓₓ α
-  | ⟨f, al⟩ => ⟨f.tail, fun n => al⟩
+def tail (s : Seqₓₓ α) : Seqₓₓ α :=
+  ⟨s.1.tail, fun n => by
+    cases' s with f al
+    exact al⟩
 
 protected def Mem (a : α) (s : Seqₓₓ α) :=
   some a ∈ s.1
@@ -92,9 +98,8 @@ theorem le_stable (s : Seqₓₓ α) {m n} (h : m ≤ n) : s.nth m = none → s.
   exacts[id, fun h2 => al (IH h2)]
 
 /-- If a sequence terminated at position `n`, it also terminated at `m ≥ n `. -/
-theorem terminated_stable (s : Seqₓₓ α) {m n : ℕ} (m_le_n : m ≤ n) (terminated_at_m : s.TerminatedAt m) :
-    s.TerminatedAt n :=
-  le_stable s m_le_n terminated_at_m
+theorem terminated_stable : ∀ (s : Seqₓₓ α) {m n : ℕ}, m ≤ n → s.TerminatedAt m → s.TerminatedAt n :=
+  le_stable
 
 /-- If `s.nth n = some aₙ` for some value `aₙ`, then there is also some value `aₘ` such
 that `s.nth = some aₘ` for `m ≤ n`.
@@ -122,12 +127,8 @@ theorem eq_or_mem_of_mem_cons {a b : α} : ∀ {s : Seqₓₓ α}, a ∈ cons b 
 
 @[simp]
 theorem mem_cons_iff {a b : α} {s : Seqₓₓ α} : a ∈ cons b s ↔ a = b ∨ a ∈ s :=
-  ⟨eq_or_mem_of_mem_cons, fun o => by
-    cases' o with e m <;>
-      [· rw [e]
-        apply mem_cons
-        ,
-      exact mem_cons_of_mem _ m]⟩
+  ⟨eq_or_mem_of_mem_cons, by
+    rintro (rfl | m) <;> [apply mem_cons, exact mem_cons_of_mem _ m]⟩
 
 /-- Destructor for a sequence, resulting in either `none` (for `nil`) or
   `some (a, s)` (for `cons a s`). -/
@@ -522,18 +523,17 @@ def unzip (s : Seqₓₓ (α × β)) : Seqₓₓ α × Seqₓₓ β :=
   (map Prod.fst s, map Prod.snd s)
 
 /-- Convert a sequence which is known to terminate into a list -/
-def toList (s : Seqₓₓ α) (h : ∃ n, ¬(nth s n).isSome) : List α :=
+def toList (s : Seqₓₓ α) (h : s.Terminates) : List α :=
   take (Nat.findₓ h) s
 
 /-- Convert a sequence which is known not to terminate into a stream -/
-def toStream (s : Seqₓₓ α) (h : ∀ n, (nth s n).isSome) : Streamₓ α := fun n => Option.getₓ (h n)
+def toStream (s : Seqₓₓ α) (h : ¬s.Terminates) : Streamₓ α := fun n => Option.getₓ <| not_terminates_iff.1 h n
 
 /-- Convert a sequence into either a list or a stream depending on whether
   it is finite or infinite. (Without decidability of the infiniteness predicate,
   this is not constructively possible.) -/
-def toListOrStream (s : Seqₓₓ α) [Decidable (∃ n, ¬(nth s n).isSome)] : Sum (List α) (Streamₓ α) :=
-  if h : ∃ n, ¬(nth s n).isSome then Sum.inl (toList s h)
-  else Sum.inr (toStream s fun n => Decidable.by_contradiction fun hn => h ⟨n, hn⟩)
+def toListOrStream (s : Seqₓₓ α) [Decidable s.Terminates] : Sum (List α) (Streamₓ α) :=
+  if h : s.Terminates then Sum.inl (toList s h) else Sum.inr (toStream s h)
 
 @[simp]
 theorem nil_append (s : Seqₓₓ α) : append nil s = s := by

@@ -130,11 +130,11 @@ theorem to_complex_eq_zero {x : ℤ[i]} : (x : ℂ) = 0 ↔ x = 0 := by
 
 @[simp]
 theorem nat_cast_real_norm (x : ℤ[i]) : (x.norm : ℝ) = (x : ℂ).normSq := by
-  rw [norm, norm_sq] <;> simp
+  rw [Zsqrtd.norm, norm_sq] <;> simp
 
 @[simp]
 theorem nat_cast_complex_norm (x : ℤ[i]) : (x.norm : ℂ) = (x : ℂ).normSq := by
-  cases x <;> rw [norm, norm_sq] <;> simp
+  cases x <;> rw [Zsqrtd.norm, norm_sq] <;> simp
 
 theorem norm_nonneg (x : ℤ[i]) : 0 ≤ norm x :=
   norm_nonneg
@@ -159,7 +159,7 @@ theorem nat_cast_nat_abs_norm {α : Type _} [Ringₓ α] (x : ℤ[i]) : (x.norm.
 theorem nat_abs_norm_eq (x : ℤ[i]) : x.norm.natAbs = x.re.natAbs * x.re.natAbs + x.im.natAbs * x.im.natAbs :=
   Int.coe_nat_inj <| by
     simp
-    simp [← norm]
+    simp [← Zsqrtd.norm]
 
 instance : Div ℤ[i] :=
   ⟨fun x y =>
@@ -217,12 +217,12 @@ theorem norm_mod_lt (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) : (x % y).norm < y.
     rwa [Ne.def, ← to_complex_zero, to_complex_inj]
   (@Int.cast_lt ℝ _ _ _ _).1 <|
     calc
-      ↑(norm (x % y)) = (x - y * (x / y : ℤ[i]) : ℂ).normSq := by
+      ↑(Zsqrtd.norm (x % y)) = (x - y * (x / y : ℤ[i]) : ℂ).normSq := by
         simp [← mod_def]
       _ = (y : ℂ).normSq * (x / y - (x / y : ℤ[i]) : ℂ).normSq := by
         rw [← norm_sq_mul, mul_sub, mul_div_cancel' _ this]
       _ < (y : ℂ).normSq * 1 := mul_lt_mul_of_pos_left (norm_sq_div_sub_div_lt_one _ _) (norm_sq_pos.2 this)
-      _ = norm y := by
+      _ = Zsqrtd.norm y := by
         simp
       
 
@@ -232,7 +232,7 @@ theorem nat_abs_norm_mod_lt (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) : (x % y).n
       simp [-Int.coe_nat_lt, ← norm_mod_lt x hy])
 
 theorem norm_le_norm_mul_left (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) : (norm x).natAbs ≤ (norm (x * y)).natAbs := by
-  rw [norm_mul, Int.nat_abs_mul] <;>
+  rw [Zsqrtd.norm_mul, Int.nat_abs_mul] <;>
     exact
       le_mul_of_one_le_right (Nat.zero_leₓ _)
         (Int.coe_nat_le.1
@@ -304,10 +304,10 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime] (h
       have hpk₁ : ¬(p : ℤ[i]) ∣ ⟨k, -1⟩ := fun ⟨x, hx⟩ =>
         lt_irreflₓ (p * x : ℤ[i]).norm.natAbs <|
           calc
-            (norm (p * x : ℤ[i])).natAbs = (norm ⟨k, -1⟩).natAbs := by
+            (norm (p * x : ℤ[i])).natAbs = (Zsqrtd.norm ⟨k, -1⟩).natAbs := by
               rw [hx]
             _ < (norm (p : ℤ[i])).natAbs := by
-              simpa [← add_commₓ, ← norm] using hkltp
+              simpa [← add_commₓ, ← Zsqrtd.norm] using hkltp
             _ ≤ (norm (p * x : ℤ[i])).natAbs :=
               norm_le_norm_mul_left _ fun hx0 =>
                 show (-1 : ℤ) ≠ 0 by
@@ -318,10 +318,10 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime] (h
       have hpk₂ : ¬(p : ℤ[i]) ∣ ⟨k, 1⟩ := fun ⟨x, hx⟩ =>
         lt_irreflₓ (p * x : ℤ[i]).norm.natAbs <|
           calc
-            (norm (p * x : ℤ[i])).natAbs = (norm ⟨k, 1⟩).natAbs := by
+            (norm (p * x : ℤ[i])).natAbs = (Zsqrtd.norm ⟨k, 1⟩).natAbs := by
               rw [hx]
             _ < (norm (p : ℤ[i])).natAbs := by
-              simpa [← add_commₓ, ← norm] using hkltp
+              simpa [← add_commₓ, ← Zsqrtd.norm] using hkltp
             _ ≤ (norm (p * x : ℤ[i])).natAbs :=
               norm_le_norm_mul_left _ fun hx0 =>
                 show (1 : ℤ) ≠ 0 by

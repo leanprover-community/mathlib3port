@@ -219,7 +219,7 @@ theorem inv_of_T (n : ℤ) : ⅟ (t n : R[T;T⁻¹]) = t (-n) :=
 theorem is_unit_T (n : ℤ) : IsUnit (t n : R[T;T⁻¹]) :=
   is_unit_of_invertible _
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on {M : R[T;T⁻¹] → Prop} (p : R[T;T⁻¹]) (h_C : ∀ a, M (c a))
     (h_add : ∀ {p q}, M p → M q → M (p + q)) (h_C_mul_T : ∀ (n : ℕ) (a : R), M (c a * t n) → M (c a * t (n + 1)))
     (h_C_mul_T_Z : ∀ (n : ℕ) (a : R), M (c a * t (-n)) → M (c a * t (-n - 1))) : M p := by
@@ -254,7 +254,7 @@ protected theorem induction_on {M : R[T;T⁻¹] → Prop} (p : R[T;T⁻¹]) (h_C
 * the condition is closed under taking sums, and
 * it holds for monomials.
 -/
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on' {M : R[T;T⁻¹] → Prop} (p : R[T;T⁻¹]) (h_add : ∀ p q, M p → M q → M (p + q))
     (h_C_mul_T : ∀ (n : ℤ) (a : R), M (c a * t n)) : M p := by
   refine' p.induction_on (fun a => _) h_add _ _ <;>
@@ -342,7 +342,7 @@ theorem exists_T_pow (f : R[T;T⁻¹]) : ∃ (n : ℕ)(f' : R[X]), f'.toLaurent 
     
 
 /-- This is a version of `exists_T_pow` stated as an induction principle. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction_on_mul_T {Q : R[T;T⁻¹] → Prop} (f : R[T;T⁻¹]) (Qf : ∀ {f : R[X]} {n : ℕ}, Q (f.toLaurent * t (-n))) :
     Q f := by
   rcases f.exists_T_pow with ⟨n, f', hf⟩

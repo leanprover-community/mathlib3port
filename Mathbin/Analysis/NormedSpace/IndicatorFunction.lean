@@ -16,7 +16,7 @@ indicator, norm
 -/
 
 
-variable {α E : Type _} [SemiNormedGroup E] {s t : Set α} (f : α → E) (a : α)
+variable {α E : Type _} [SeminormedAddCommGroup E] {s t : Set α} (f : α → E) (a : α)
 
 open Set
 

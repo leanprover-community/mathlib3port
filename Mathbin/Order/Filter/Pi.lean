@@ -34,6 +34,9 @@ section Pi
 def pi (f : ∀ i, Filter (α i)) : Filter (∀ i, α i) :=
   ⨅ i, comap (eval i) (f i)
 
+instance pi.is_countably_generated [Countable ι] [∀ i, IsCountablyGenerated (f i)] : IsCountablyGenerated (pi f) :=
+  Infi.is_countably_generated _
+
 theorem tendsto_eval_pi (f : ∀ i, Filter (α i)) (i : ι) : Tendsto (eval i) (pi f) (f i) :=
   tendsto_infi' i tendsto_comap
 
@@ -91,7 +94,7 @@ theorem has_basis_pi {ι' : ι → Type} {s : ∀ i, ι' i → Set (α i)} {p : 
     (pi f).HasBasis (fun If : Set ι × ∀ i, ι' i => If.1.Finite ∧ ∀, ∀ i ∈ If.1, ∀, p i (If.2 i))
       fun If : Set ι × ∀ i, ι' i => If.1.pi fun i => s i <| If.2 i :=
   by
-  have : (pi f).HasBasis _ _ := has_basis_infi fun i => (h i).comap (eval i : (∀ j, α j) → α i)
+  have : (pi f).HasBasis _ _ := has_basis_infi' fun i => (h i).comap (eval i : (∀ j, α j) → α i)
   convert this
   ext
   simp

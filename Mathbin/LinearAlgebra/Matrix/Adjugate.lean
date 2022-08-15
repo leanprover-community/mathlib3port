@@ -196,9 +196,7 @@ theorem adjugate_transpose (A : Matrix n n α) : (adjugate A)ᵀ = adjugate Aᵀ
   intro σ _
   congr 1
   by_cases' i = σ j
-  · -- Everything except `(i , j)` (= `(σ j , j)`) is given by A, and the rest is a single `1`.
-      congr <;>
-      ext j'
+  · congr <;> ext j'
     subst h
     have : σ j' = σ j ↔ j' = j := σ.injective.eq_iff
     rw [update_row_apply, update_column_apply]
@@ -264,7 +262,7 @@ theorem adjugate_subsingleton [Subsingleton n] (A : Matrix n n α) : adjugate A 
   simp [← Subsingleton.elimₓ i j, ← adjugate_apply, ← det_eq_elem_of_subsingleton _ i]
 
 theorem adjugate_eq_one_of_card_eq_one {A : Matrix n n α} (h : Fintype.card n = 1) : adjugate A = 1 := by
-  have : Subsingleton n := fintype.card_le_one_iff_subsingleton.mp h.le
+  haveI : Subsingleton n := fintype.card_le_one_iff_subsingleton.mp h.le
   exact adjugate_subsingleton _
 
 @[simp]
@@ -314,7 +312,7 @@ theorem _root_.alg_hom.map_adjugate {R A B : Type _} [CommSemiringₓ R] [CommRi
 theorem det_adjugate (A : Matrix n n α) : (adjugate A).det = A.det ^ (Fintype.card n - 1) := by
   -- get rid of the `- 1`
   cases' (Fintype.card n).eq_zero_or_pos with h_card h_card
-  · have : IsEmpty n := fintype.card_eq_zero_iff.mp h_card
+  · haveI : IsEmpty n := fintype.card_eq_zero_iff.mp h_card
     rw [h_card, Nat.zero_sub, pow_zeroₓ, adjugate_subsingleton, det_one]
     
   replace h_card := tsub_add_cancel_of_le h_card.nat_succ_le
@@ -325,9 +323,13 @@ theorem det_adjugate (A : Matrix n n α) : (adjugate A).det = A.det ^ (Fintype.c
     rw [← mv_polynomial_X_map_matrix_aeval ℤ A, ← AlgHom.map_adjugate, ← AlgHom.map_det, ← AlgHom.map_det, ←
       AlgHom.map_pow, this]
   apply mul_left_cancel₀ (show A'.det ≠ 0 from det_mv_polynomial_X_ne_zero n ℤ)
-  calc A'.det * A'.adjugate.det = (A' ⬝ adjugate A').det := (det_mul _ _).symm _ = A'.det ^ Fintype.card n := by
-      rw [mul_adjugate, det_smul, det_one, mul_oneₓ]_ = A'.det * A'.det ^ (Fintype.card n - 1) := by
+  calc
+    A'.det * A'.adjugate.det = (A' ⬝ adjugate A').det := (det_mul _ _).symm
+    _ = A'.det ^ Fintype.card n := by
+      rw [mul_adjugate, det_smul, det_one, mul_oneₓ]
+    _ = A'.det * A'.det ^ (Fintype.card n - 1) := by
       rw [← pow_succₓ, h_card]
+    
 
 @[simp]
 theorem adjugate_fin_zero (A : Matrix (Finₓ 0) (Finₓ 0) α) : adjugate A = 0 :=
@@ -339,11 +341,11 @@ theorem adjugate_fin_one (A : Matrix (Finₓ 1) (Finₓ 1) α) : adjugate A = 1 
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
 theorem adjugate_fin_two (A : Matrix (Finₓ 2) (Finₓ 2) α) :
     adjugate A =
-      «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation" :=
+      «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation" :=
   by
   ext i j
   rw [adjugate_apply, det_fin_two]
@@ -353,15 +355,15 @@ theorem adjugate_fin_two (A : Matrix (Finₓ 2) (Finₓ 2) α) :
         Finₓ.zero_eq_one_iff, ← sub_zero, ← Pi.single_eq_of_ne, ← Ne.def, ← not_false_iff, ← update_row_self, ←
         update_row_ne, ← cons_val_zero, ← mul_zero, ← mul_oneₓ, ← zero_sub, ← cons_val_one, ← head_cons, ← of_apply]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
 @[simp]
 theorem adjugate_fin_two_of (a b c d : α) :
     adjugate
-        («expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation") =
-      «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation" :=
+        («expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation") =
+      «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation" :=
   adjugate_fin_two _
 
 theorem adjugate_conj_transpose [StarRing α] (A : Matrix n n α) : A.adjugateᴴ = adjugate Aᴴ := by
@@ -433,7 +435,7 @@ theorem adjugate_adjugate (A : Matrix n n α) (h : Fintype.card n ≠ 1) :
     adjugate (adjugate A) = det A ^ (Fintype.card n - 2) • A := by
   -- get rid of the `- 2`
   cases' h_card : Fintype.card n with n'
-  · have : IsEmpty n := fintype.card_eq_zero_iff.mp h_card
+  · haveI : IsEmpty n := fintype.card_eq_zero_iff.mp h_card
     exact @Subsingleton.elimₓ _ Matrix.subsingleton_of_empty_left _ _
     
   cases n'

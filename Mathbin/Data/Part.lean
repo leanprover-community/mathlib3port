@@ -304,7 +304,7 @@ theorem coe_none : (@Option.none α : Part α) = none :=
 theorem coe_some (a : α) : (Option.some a : Part α) = some a :=
   rfl
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on {P : Part α → Prop} (a : Part α) (hnone : P none) (hsome : ∀ a : α, P (some a)) : P a :=
   (Classical.em a.Dom).elim (fun h => Part.some_get h ▸ hsome _) fun h => (eq_none_iff'.2 h).symm ▸ hnone
 
@@ -322,11 +322,11 @@ theorem of_to_option (o : Part α) [Decidable o.Dom] : ofOption (toOption o) = o
 
 /-- `part α` is (classically) equivalent to `option α`. -/
 noncomputable def equivOption : Part α ≃ Option α :=
-  have := Classical.dec
+  haveI := Classical.dec
   ⟨fun o => to_option o, of_option, fun o => of_to_option o, fun o =>
     Eq.trans
       (by
-        dsimp' <;> congr)
+        dsimp' <;> congr )
       (to_of_option o)⟩
 
 /-- We give `part α` the order where everything is greater than `none`. -/

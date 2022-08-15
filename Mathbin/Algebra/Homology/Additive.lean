@@ -111,8 +111,6 @@ namespace HomologicalComplex
 
 instance eval_additive (i : ι) : (eval V c i).Additive where
 
-variable [HasZeroObject V]
-
 instance cycles_additive [HasEqualizers V] : (cyclesFunctor V c i).Additive where
 
 variable [HasImages V] [HasImageMaps V]

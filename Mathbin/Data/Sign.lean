@@ -49,16 +49,12 @@ theorem neg_eq_neg_one : neg = -1 :=
 theorem pos_eq_one : Pos = 1 :=
   rfl
 
-/-- The multiplication on `sign_type`. -/
-def mul : SignType → SignType → SignType
-  | neg, neg => pos
-  | neg, zero => zero
-  | neg, Pos => neg
-  | zero, _ => zero
-  | Pos, h => h
-
 instance : Mul SignType :=
-  ⟨mul⟩
+  ⟨fun x y =>
+    match x with
+    | neg => -y
+    | zero => zero
+    | Pos => y⟩
 
 /-- The less-than relation on signs. -/
 inductive Le : SignType → SignType → Prop
@@ -120,6 +116,12 @@ instance : LinearOrderₓ SignType where
     casesm* _ <;> constructor
   decidableLe := Le.decidableRel
 
+instance : BoundedOrder SignType where
+  top := 1
+  le_top := Le.of_pos
+  bot := -1
+  bot_le := Le.of_neg
+
 instance : HasDistribNeg SignType :=
   { SignType.hasNeg with
     neg_neg := fun x => by
@@ -148,6 +150,72 @@ def fin3Equiv : SignType ≃* Finₓ 3 where
     | ⟨n + 3, h⟩ => (h.not_le le_add_self).elim
   map_mul' := fun x y => by
     casesm* _ <;> rfl
+
+section CaseBashing
+
+theorem nonneg_iff {a : SignType} : 0 ≤ a ↔ a = 0 ∨ a = 1 := by
+  decide!
+
+theorem nonneg_iff_ne_neg_one {a : SignType} : 0 ≤ a ↔ a ≠ -1 := by
+  decide!
+
+theorem neg_one_lt_iff {a : SignType} : -1 < a ↔ 0 ≤ a := by
+  decide!
+
+theorem nonpos_iff {a : SignType} : a ≤ 0 ↔ a = -1 ∨ a = 0 := by
+  decide!
+
+theorem nonpos_iff_ne_one {a : SignType} : a ≤ 0 ↔ a ≠ 1 := by
+  decide!
+
+theorem lt_one_iff {a : SignType} : a < 1 ↔ a ≤ 0 := by
+  decide!
+
+@[simp]
+theorem neg_iff {a : SignType} : a < 0 ↔ a = -1 := by
+  decide!
+
+@[simp]
+theorem le_neg_one_iff {a : SignType} : a ≤ -1 ↔ a = -1 :=
+  le_bot_iff
+
+@[simp]
+theorem pos_iff {a : SignType} : 0 < a ↔ a = 1 := by
+  decide!
+
+@[simp]
+theorem one_le_iff {a : SignType} : 1 ≤ a ↔ a = 1 :=
+  top_le_iff
+
+@[simp]
+theorem neg_one_le (a : SignType) : -1 ≤ a :=
+  bot_le
+
+@[simp]
+theorem le_one (a : SignType) : a ≤ 1 :=
+  le_top
+
+@[simp]
+theorem not_lt_neg_one (a : SignType) : ¬a < -1 :=
+  not_lt_bot
+
+@[simp]
+theorem not_one_lt (a : SignType) : ¬1 < a :=
+  not_top_lt
+
+@[simp]
+theorem self_eq_neg_iff (a : SignType) : a = -a ↔ a = 0 := by
+  decide!
+
+@[simp]
+theorem neg_eq_self_iff (a : SignType) : -a = a ↔ a = 0 := by
+  decide!
+
+@[simp]
+theorem neg_one_lt_one : (-1 : SignType) < 1 :=
+  bot_lt_top
+
+end CaseBashing
 
 section cast
 
@@ -229,6 +297,23 @@ theorem sign_pos (ha : 0 < a) : sign a = 1 := by
 theorem sign_neg (ha : a < 0) : sign a = -1 := by
   rwa [sign_apply, if_neg <| asymm ha, if_pos]
 
+theorem sign_eq_one_iff : sign a = 1 ↔ 0 < a := by
+  refine' ⟨fun h => _, fun h => sign_pos h⟩
+  by_contra hn
+  rw [sign_apply, if_neg hn] at h
+  split_ifs  at h <;> simpa using h
+
+theorem sign_eq_neg_one_iff : sign a = -1 ↔ a < 0 := by
+  refine' ⟨fun h => _, fun h => sign_neg h⟩
+  rw [sign_apply] at h
+  split_ifs  at h
+  · simpa using h
+    
+  · exact h_2
+    
+  · simpa using h
+    
+
 end Preorderₓ
 
 section LinearOrderₓ
@@ -244,6 +329,26 @@ theorem sign_eq_zero_iff : sign a = 0 ↔ a = 0 := by
 
 theorem sign_ne_zero : sign a ≠ 0 ↔ a ≠ 0 :=
   sign_eq_zero_iff.Not
+
+@[simp]
+theorem sign_nonneg_iff : 0 ≤ sign a ↔ 0 ≤ a := by
+  rcases lt_trichotomyₓ 0 a with (h | rfl | h)
+  · simp [← h, ← h.le]
+    
+  · simp
+    
+  · simpa [← h, ← h.not_le]
+    
+
+@[simp]
+theorem sign_nonpos_iff : sign a ≤ 0 ↔ a ≤ 0 := by
+  rcases lt_trichotomyₓ 0 a with (h | rfl | h)
+  · simp [← h, ← h.not_le]
+    
+  · simp
+    
+  · simp [← h, ← h.le]
+    
 
 end LinearOrderₓ
 
@@ -271,4 +376,34 @@ def signHom : α →*₀ SignType where
           ← mul_pos]
 
 end LinearOrderedRing
+
+section AddGroupₓ
+
+variable [AddGroupₓ α] [Preorderₓ α] [DecidableRel ((· < ·) : α → α → Prop)]
+
+theorem Left.sign_neg [CovariantClass α α (· + ·) (· < ·)] (a : α) : sign (-a) = -sign a := by
+  simp_rw [sign_apply, Left.neg_pos_iff, Left.neg_neg_iff]
+  split_ifs with h h'
+  · exact False.elim (lt_asymmₓ h h')
+    
+  · simp
+    
+  · simp
+    
+  · simp
+    
+
+theorem Right.sign_neg [CovariantClass α α (Function.swap (· + ·)) (· < ·)] (a : α) : sign (-a) = -sign a := by
+  simp_rw [sign_apply, Right.neg_pos_iff, Right.neg_neg_iff]
+  split_ifs with h h'
+  · exact False.elim (lt_asymmₓ h h')
+    
+  · simp
+    
+  · simp
+    
+  · simp
+    
+
+end AddGroupₓ
 

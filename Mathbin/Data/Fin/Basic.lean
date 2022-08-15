@@ -1148,7 +1148,7 @@ section Rec
 This function has two arguments: `H0 n` defines `0`-th element `C (n+1) 0` of an `(n+1)`-tuple,
 and `Hs n i` defines `(i+1)`-st element of `(n+1)`-tuple based on `n`, `i`, and `i`-th element
 of `n`-tuple. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def succRec {C : ∀ n, Finₓ n → Sort _} (H0 : ∀ n, C (succ n) 0) (Hs : ∀ n i, C n i → C (succ n) i.succ) :
     ∀ {n : ℕ} (i : Finₓ n), C n i
   | 0, i => i.elim0
@@ -1161,7 +1161,7 @@ and `Hs n i` defines `(i+1)`-st element of `(n+1)`-tuple based on `n`, `i`, and 
 of `n`-tuple.
 
 A version of `fin.succ_rec` taking `i : fin n` as the first argument. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def succRecOn {n : ℕ} (i : Finₓ n) {C : ∀ n, Finₓ n → Sort _} (H0 : ∀ n, C (succ n) 0)
     (Hs : ∀ n i, C n i → C (succ n) i.succ) : C n i :=
   i.succRec H0 Hs
@@ -1179,7 +1179,7 @@ theorem succ_rec_on_succ {C : ∀ n, Finₓ n → Sort _} {H0 Hs} {n} (i : Fin�
 This function has two arguments: `h0` handles the base case on `C 0`,
 and `hs` defines the inductive step using `C i.cast_succ`.
 -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def induction {C : Finₓ (n + 1) → Sort _} (h0 : C 0) (hs : ∀ i : Finₓ n, C i.cast_succ → C i.succ) :
     ∀ i : Finₓ (n + 1), C i := by
   rintro ⟨i, hi⟩
@@ -1206,14 +1206,14 @@ and `hs` defines the inductive step using `C i.cast_succ`.
 
 A version of `fin.induction` taking `i : fin (n + 1)` as the first argument.
 -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def inductionOn (i : Finₓ (n + 1)) {C : Finₓ (n + 1) → Sort _} (h0 : C 0)
     (hs : ∀ i : Finₓ n, C i.cast_succ → C i.succ) : C i :=
   induction h0 hs i
 
 /-- Define `f : Π i : fin n.succ, C i` by separately handling the cases `i = 0` and
 `i = j.succ`, `j : fin n`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def cases {C : Finₓ (succ n) → Sort _} (H0 : C 0) (Hs : ∀ i : Finₓ n, C i.succ) : ∀ i : Finₓ (succ n), C i :=
   induction H0 fun i _ => Hs i
 
@@ -1257,7 +1257,7 @@ theorem fin_two_eq_of_eq_zero_iff {a b : Finₓ 2} (h : a = 0 ↔ b = 0) : a = b
 This function has two arguments: `hlast` handles the base case on `C (fin.last n)`,
 and `hs` defines the inductive step using `C i.succ`, inducting downwards.
 -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def reverseInduction {n : ℕ} {C : Finₓ (n + 1) → Sort _} (hlast : C (Finₓ.last n))
     (hs : ∀ i : Finₓ n, C i.succ → C i.cast_succ) : ∀ i : Finₓ (n + 1), C i
   | i =>
@@ -1292,7 +1292,7 @@ theorem reverse_induction_cast_succ {n : ℕ} {C : Finₓ (n + 1) → Sort _} (h
 
 /-- Define `f : Π i : fin n.succ, C i` by separately handling the cases `i = fin.last n` and
 `i = j.cast_succ`, `j : fin n`. -/
-@[elab_as_eliminator, elab_strategy]
+@[elabAsElim, elab_strategy]
 def lastCases {n : ℕ} {C : Finₓ (n + 1) → Sort _} (hlast : C (Finₓ.last n)) (hcast : ∀ i : Finₓ n, C i.cast_succ)
     (i : Finₓ (n + 1)) : C i :=
   reverseInduction hlast (fun i _ => hcast i) i
@@ -1310,7 +1310,7 @@ theorem last_cases_cast_succ {n : ℕ} {C : Finₓ (n + 1) → Sort _} (hlast : 
 
 /-- Define `f : Π i : fin (m + n), C i` by separately handling the cases `i = cast_add n i`,
 `j : fin m` and `i = nat_add m j`, `j : fin n`. -/
-@[elab_as_eliminator, elab_strategy]
+@[elabAsElim, elab_strategy]
 def addCases {m n : ℕ} {C : Finₓ (m + n) → Sort u} (hleft : ∀ i, C (castAdd n i)) (hright : ∀ i, C (natAdd m i))
     (i : Finₓ (m + n)) : C i :=
   if hi : (i : ℕ) < m then Eq.recOnₓ (cast_add_cast_lt n i hi) (hleft (castLt i hi))
@@ -1423,25 +1423,45 @@ theorem coe_sub_one {n} (a : Finₓ (n + 1)) : ↑(a - 1) = if a = 0 then n else
   rw [add_commₓ ↑a, add_le_add_iff_left, Nat.one_le_iff_ne_zero]
   rwa [Subtype.ext_iff] at h
 
+theorem coe_sub_iff_le {n : ℕ} {a b : Finₓ n} : (↑(a - b) : ℕ) = a - b ↔ b ≤ a := by
+  cases n
+  · exact finZeroElim a
+    
+  rw [le_iff_coe_le_coe, Finₓ.coe_sub, ← add_tsub_assoc_of_le b.is_lt.le]
+  cases' le_or_ltₓ (b : ℕ) a with h h
+  · simp [tsub_add_eq_add_tsub h, ← h, ← Nat.mod_eq_of_ltₓ ((Nat.sub_leₓ _ _).trans_lt a.is_lt)]
+    
+  · rw [Nat.mod_eq_of_ltₓ, tsub_eq_zero_of_le h.le, tsub_eq_zero_iff_le, ← not_iff_not]
+    · simpa [← b.is_lt.trans_le le_add_self] using h
+      
+    · rwa [tsub_lt_iff_left (b.is_lt.le.trans le_add_self), add_lt_add_iff_right]
+      
+    
+
+theorem coe_sub_iff_lt {n : ℕ} {a b : Finₓ n} : (↑(a - b) : ℕ) = n + a - b ↔ a < b := by
+  cases n
+  · exact finZeroElim a
+    
+  rw [lt_iff_coe_lt_coe, Finₓ.coe_sub, add_commₓ]
+  cases' le_or_ltₓ (b : ℕ) a with h h
+  · simpa [← add_tsub_assoc_of_le h, not_leₓ, ← h] using ((Nat.mod_ltₓ _ (Nat.succ_posₓ _)).trans_le le_self_add).Ne
+    
+  · simp [tsub_tsub_assoc b.is_lt.le h.le, tsub_add_eq_add_tsub b.is_lt.le, ←
+      Nat.mod_eq_of_ltₓ (tsub_lt_self (Nat.succ_posₓ _) (tsub_pos_of_lt h)), ← h]
+    
+
 /-- By sending `x` to `last n - x`, `fin n` is order-equivalent to its `order_dual`. -/
 def _root_.order_iso.fin_equiv : ∀ {n}, (Finₓ n)ᵒᵈ ≃o Finₓ n
   | 0 => ⟨⟨elim0, elim0, elim0, elim0⟩, elim0⟩
   | n + 1 =>
     OrderIso.symm <|
-      { toFun := fun x => last n - x, invFun := fun x => last n - x, left_inv := sub_sub_cancel _,
-        right_inv := sub_sub_cancel _,
+      { toFun := fun x => OrderDual.toDual (last n - x), invFun := fun x => last n - x.ofDual,
+        left_inv := sub_sub_cancel _, right_inv := sub_sub_cancel _,
         map_rel_iff' := fun a b => by
-          rw [OrderDual.hasLe]
-          simp only [← Equivₓ.coe_fn_mk]
-          rw [le_iff_coe_le_coe, Finₓ.coe_sub, Finₓ.coe_sub, coe_last]
-          have : (n - ↑b) % (n + 1) ≤ (n - ↑a) % (n + 1) ↔ a ≤ b := by
-            rw [Nat.mod_eq_of_ltₓ, Nat.mod_eq_of_ltₓ, tsub_le_tsub_iff_left a.is_le, le_iff_coe_le_coe] <;>
-              exact tsub_le_self.trans_lt n.lt_succ_self
-          suffices key : ∀ {x : Finₓ (n + 1)}, (n + (n + 1 - x)) % (n + 1) = (n - x) % (n + 1)
-          · convert this using 2 <;> exact key
-            
-          intro x
-          rw [add_commₓ, tsub_add_eq_add_tsub x.is_lt.le, add_tsub_assoc_of_le x.is_le, Nat.add_mod_leftₓ] }
+          simp only [← Equivₓ.coe_fn_mk, ← OrderDual.to_dual_le_to_dual]
+          rw [le_iff_coe_le_coe, coe_sub_iff_le.mpr (le_last b), coe_sub_iff_le.mpr (le_last _), tsub_le_tsub_iff_left,
+            le_iff_coe_le_coe]
+          exact le_last _ }
 
 theorem _root_.order_iso.fin_equiv_apply (a) : OrderIso.finEquiv a = last n - a.ofDual :=
   rfl
@@ -1672,7 +1692,10 @@ theorem pred_above_right_monotone (p : Finₓ n) : Monotone p.predAbove := fun a
     simp only [← le_iff_coe_le_coe, ← coe_pred]
   · exact pred_le_pred H
     
-  · calc _ ≤ _ := Nat.pred_leₓ _ _ ≤ _ := H
+  · calc
+      _ ≤ _ := Nat.pred_leₓ _
+      _ ≤ _ := H
+      
     
   · simp at ha
     exact le_pred_of_lt (lt_of_le_of_ltₓ ha hb)

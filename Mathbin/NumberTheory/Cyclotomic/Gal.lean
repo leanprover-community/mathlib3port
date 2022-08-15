@@ -39,14 +39,15 @@ it is always a subgroup, and if the `n`th cyclotomic polynomial is irreducible, 
 
 attribute [local instance] Pnat.fact_pos
 
-variable {n : ℕ+} (K : Type _) [Field K] {L : Type _} [Field L] {μ : L} (hμ : IsPrimitiveRoot μ n) [Algebra K L]
-  [IsCyclotomicExtension {n} K L]
+variable {n : ℕ+} (K : Type _) [Field K] {L : Type _} {μ : L}
 
 open Polynomial IsCyclotomicExtension
 
 open Cyclotomic
 
 namespace IsPrimitiveRoot
+
+variable [CommRingₓ L] [IsDomain L] (hμ : IsPrimitiveRoot μ n) [Algebra K L] [IsCyclotomicExtension {n} K L]
 
 -- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:92:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([2]) }
 /-- `is_primitive_root.aut_to_pow` is injective in the case that it's considered over a cyclotomic
@@ -77,6 +78,8 @@ end IsPrimitiveRoot
 
 namespace IsCyclotomicExtension
 
+variable [CommRingₓ L] [IsDomain L] (hμ : IsPrimitiveRoot μ n) [Algebra K L] [IsCyclotomicExtension {n} K L]
+
 /-- Cyclotomic extensions are abelian. -/
 noncomputable def Aut.commGroup : CommGroupₓ (L ≃ₐ[K] L) :=
   ((zeta_spec n K L).aut_to_pow_injective K).CommGroup _ (map_one _) (map_mul _) (map_inv _) (map_div _) (map_pow _)
@@ -97,7 +100,7 @@ noncomputable def autEquivPow : (L ≃ₐ[K] L) ≃* (Zmod n)ˣ :=
     invFun := fun t =>
       (hζ.PowerBasis K).equivOfMinpoly ((hμ t).PowerBasis K)
         (by
-          have := IsCyclotomicExtension.ne_zero' n K L
+          haveI := IsCyclotomicExtension.ne_zero' n K L
           simp only [← IsPrimitiveRoot.power_basis_gen]
           have hr :=
             IsPrimitiveRoot.minpoly_eq_cyclotomic_of_irreducible
@@ -112,7 +115,7 @@ noncomputable def autEquivPow : (L ≃ₐ[K] L) ≃* (Zmod n)ˣ :=
       simp only [← IsPrimitiveRoot.power_basis_gen, ← IsPrimitiveRoot.aut_to_pow_spec],
     right_inv := fun x => by
       simp only [← MonoidHom.to_fun_eq_coe]
-      generalize_proofs _ _ _ h
+      generalize_proofs _ _ h
       have key := hζ.aut_to_pow_spec K ((hζ.power_basis K).equivOfMinpoly ((hμ x).PowerBasis K) h)
       have := (hζ.power_basis K).equiv_of_minpoly_gen ((hμ x).PowerBasis K) h
       rw [hζ.power_basis_gen K] at this
@@ -139,7 +142,7 @@ noncomputable def fromZetaAut : L ≃ₐ[K] L :=
 -- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:92:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([4]) }
 theorem from_zeta_aut_spec : fromZetaAut hμ h (zeta n K L) = μ := by
   simp_rw [from_zeta_aut, aut_equiv_pow_symm_apply]
-  generalize_proofs _ _ hζ h _ hμ _
+  generalize_proofs _ hζ h _ hμ _
   rw [← hζ.power_basis_gen K]
   rw [PowerBasis.equiv_of_minpoly_gen, hμ.power_basis_gen K]
   convert h.some_spec.some_spec
@@ -149,7 +152,8 @@ end IsCyclotomicExtension
 
 section Gal
 
-variable (h : Irreducible (cyclotomic n K)) {K}
+variable [Field L] (hμ : IsPrimitiveRoot μ n) [Algebra K L] [IsCyclotomicExtension {n} K L]
+  (h : Irreducible (cyclotomic n K)) {K}
 
 /-- `is_cyclotomic_extension.aut_equiv_pow` repackaged in terms of `gal`. Asserts that the
 Galois group of `cyclotomic n K` is equivalent to `(zmod n)ˣ` if `cyclotomic n K` is irreducible in

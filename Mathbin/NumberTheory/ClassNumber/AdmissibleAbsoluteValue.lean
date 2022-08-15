@@ -69,7 +69,7 @@ theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
     ∀ {ε : ℝ} (hε : 0 < ε) {b : R} (hb : b ≠ 0) (A : Finₓ (h.card ε ^ n).succ → Finₓ n → R),
       ∃ i₀ i₁, i₀ ≠ i₁ ∧ ∀ k, (abv (A i₁ k % b - A i₀ k % b) : ℝ) < abv b • ε :=
   by
-  have := Classical.decEq R
+  haveI := Classical.decEq R
   induction' n with n ih
   · intro ε hε b hb A
     refine' ⟨0, 1, _, _⟩

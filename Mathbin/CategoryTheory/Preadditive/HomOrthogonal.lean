@@ -57,7 +57,7 @@ namespace HomOrthogonal
 variable {ι : Type _} {s : ι → C}
 
 theorem eq_zero [HasZeroMorphisms C] (o : HomOrthogonal s) {i j : ι} (w : i ≠ j) (f : s i ⟶ s j) : f = 0 := by
-  have := o i j w
+  haveI := o i j w
   apply Subsingleton.elimₓ
 
 section

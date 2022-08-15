@@ -151,7 +151,7 @@ topology. -/
 def openAddSubgroup (i : ι) : @OpenAddSubgroup A _ hB.topology :=
   { B i with
     is_open' := by
-      let this := hB.topology
+      letI := hB.topology
       rw [is_open_iff_mem_nhds]
       intro a a_in
       rw [(hB.has_basis_nhds a).mem_iff]
@@ -161,7 +161,7 @@ def openAddSubgroup (i : ι) : @OpenAddSubgroup A _ hB.topology :=
 
 -- see Note [nonarchimedean non instances]
 theorem nonarchimedean : @NonarchimedeanRing A _ hB.topology := by
-  let this := hB.topology
+  letI := hB.topology
   constructor
   intro U hU
   obtain ⟨i, -, hi : (B i : Set A) ⊆ U⟩ := hB.has_basis_nhds_zero.mem_iff.mp hU
@@ -262,7 +262,7 @@ topology. -/
 def openAddSubgroup (i : ι) : @OpenAddSubgroup M _ hB.topology :=
   { (B i).toAddSubgroup with
     is_open' := by
-      let this := hB.topology
+      letI := hB.topology
       rw [is_open_iff_mem_nhds]
       intro a a_in
       rw [(hB.to_module_filter_basis.to_add_group_filter_basis.nhds_has_basis a).mem_iff]
@@ -272,7 +272,7 @@ def openAddSubgroup (i : ι) : @OpenAddSubgroup M _ hB.topology :=
 
 -- see Note [nonarchimedean non instances]
 theorem nonarchimedean (hB : SubmodulesBasis B) : @NonarchimedeanAddGroup M _ hB.topology := by
-  let this := hB.topology
+  letI := hB.topology
   constructor
   intro U hU
   obtain ⟨-, ⟨i, rfl⟩, hi : (B i : Set M) ⊆ U⟩ :=
@@ -318,7 +318,7 @@ theorem RingFilterBasis.submodules_basis_is_basis (BR : RingFilterBasis R) {B : 
     (hB : BR.SubmodulesBasis B) : @SubmodulesBasis ι R _ M _ _ BR.topology B :=
   { inter := hB.inter,
     smul := by
-      let this := BR.topology
+      letI := BR.topology
       intro m i
       rcases hB.smul m i with ⟨V, V_in, hV⟩
       exact mem_of_superset (BR.to_add_group_filter_basis.mem_nhds_zero V_in) hV }

@@ -106,7 +106,7 @@ section Real
 variable {F : Type _} [InnerProductSpace ℝ F]
 
 theorem has_strict_fderiv_at_re_apply_inner_self {T : F →L[ℝ] F} (hT : IsSelfAdjoint (T : F →ₗ[ℝ] F)) (x₀ : F) :
-    HasStrictFderivAt T.reApplyInnerSelf (bit0 (innerSL (T x₀))) x₀ := by
+    HasStrictFderivAt T.reApplyInnerSelf (bit0 (innerSL (T x₀) : F →L[ℝ] ℝ)) x₀ := by
   convert T.has_strict_fderiv_at.inner (has_strict_fderiv_at_id x₀)
   ext y
   simp [← bit0, ← hT.apply_clm x₀ y, ← real_inner_comm x₀]
@@ -172,7 +172,7 @@ local notation "rayleigh_quotient" => fun x : E => T.reApplyInnerSelf x / ∥(x 
 theorem eq_smul_self_of_is_local_extr_on (hT : IsSelfAdjoint (T : E →ₗ[𝕜] E)) {x₀ : E}
     (hextr : IsLocalExtrOn T.reApplyInnerSelf (Sphere (0 : E) ∥x₀∥) x₀) : T x₀ = (↑(rayleigh_quotient x₀) : 𝕜) • x₀ :=
   by
-  let this := InnerProductSpace.isROrCToReal 𝕜 E
+  letI := InnerProductSpace.isROrCToReal 𝕜 E
   let S : E →L[ℝ] E := @ContinuousLinearMap.restrictScalars 𝕜 E E _ _ _ _ _ _ _ ℝ _ _ _ _ T
   have hSA : is_self_adjoint (S : E →ₗ[ℝ] E) := fun x y => by
     have := hT x y
@@ -242,7 +242,7 @@ include _i
 finite-dimensional vector space is an eigenvalue for that operator. -/
 theorem has_eigenvalue_supr_of_finite_dimensional (hT : IsSelfAdjoint T) :
     HasEigenvalue T ↑(⨆ x : { x : E // x ≠ 0 }, IsROrC.re ⟪T x, x⟫ / ∥(x : E)∥ ^ 2) := by
-  have := FiniteDimensional.proper_is_R_or_C 𝕜 E
+  haveI := FiniteDimensional.proper_is_R_or_C 𝕜 E
   let T' : E →L[𝕜] E := T.to_continuous_linear_map
   have hT' : is_self_adjoint (T' : E →ₗ[𝕜] E) := hT
   obtain ⟨x, hx⟩ : ∃ x : E, x ≠ 0 := exists_ne 0
@@ -266,7 +266,7 @@ theorem has_eigenvalue_supr_of_finite_dimensional (hT : IsSelfAdjoint T) :
 finite-dimensional vector space is an eigenvalue for that operator. -/
 theorem has_eigenvalue_infi_of_finite_dimensional (hT : IsSelfAdjoint T) :
     HasEigenvalue T ↑(⨅ x : { x : E // x ≠ 0 }, IsROrC.re ⟪T x, x⟫ / ∥(x : E)∥ ^ 2) := by
-  have := FiniteDimensional.proper_is_R_or_C 𝕜 E
+  haveI := FiniteDimensional.proper_is_R_or_C 𝕜 E
   let T' : E →L[𝕜] E := T.to_continuous_linear_map
   have hT' : is_self_adjoint (T' : E →ₗ[𝕜] E) := hT
   obtain ⟨x, hx⟩ : ∃ x : E, x ≠ 0 := exists_ne 0

@@ -608,7 +608,7 @@ theorem is_sheaf_for_singleton_iso (P : Cᵒᵖ ⥤ Type w) : IsSheafFor P (Pres
 [Elephant] C2.1.5(ii)
 -/
 theorem is_sheaf_for_top_sieve (P : Cᵒᵖ ⥤ Type w) : IsSheafFor P ((⊤ : Sieve X) : Presieve X) := by
-  rw [← generate_of_singleton_split_epi (𝟙 X)]
+  rw [← generate_of_singleton_is_split_epi (𝟙 X)]
   rw [← is_sheaf_for_iff_generate]
   apply is_sheaf_for_singleton_iso
 

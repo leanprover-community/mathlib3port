@@ -168,8 +168,10 @@ theorem ConcaveOn.convex_ge (hf : ConcaveOn 𝕜 s f) (r : β) : Convex 𝕜 ({ 
 theorem ConvexOn.convex_epigraph (hf : ConvexOn 𝕜 s f) : Convex 𝕜 { p : E × β | p.1 ∈ s ∧ f p.1 ≤ p.2 } := by
   rintro ⟨x, r⟩ ⟨y, t⟩ ⟨hx, hr⟩ ⟨hy, ht⟩ a b ha hb hab
   refine' ⟨hf.1 hx hy ha hb hab, _⟩
-  calc f (a • x + b • y) ≤ a • f x + b • f y := hf.2 hx hy ha hb hab _ ≤ a • r + b • t :=
-      add_le_add (smul_le_smul_of_nonneg hr ha) (smul_le_smul_of_nonneg ht hb)
+  calc
+    f (a • x + b • y) ≤ a • f x + b • f y := hf.2 hx hy ha hb hab
+    _ ≤ a • r + b • t := add_le_add (smul_le_smul_of_nonneg hr ha) (smul_le_smul_of_nonneg ht hb)
+    
 
 theorem ConcaveOn.convex_hypograph (hf : ConcaveOn 𝕜 s f) : Convex 𝕜 { p : E × β | p.1 ∈ s ∧ p.2 ≤ f p.1 } :=
   hf.dual.convex_epigraph
@@ -440,8 +442,10 @@ theorem ConvexOn.open_segment_subset_strict_epigraph (hf : ConvexOn 𝕜 s f) (p
     (hq : q.1 ∈ s ∧ f q.1 ≤ q.2) : OpenSegment 𝕜 p q ⊆ { p : E × β | p.1 ∈ s ∧ f p.1 < p.2 } := by
   rintro _ ⟨a, b, ha, hb, hab, rfl⟩
   refine' ⟨hf.1 hp.1 hq.1 ha.le hb.le hab, _⟩
-  calc f (a • p.1 + b • q.1) ≤ a • f p.1 + b • f q.1 := hf.2 hp.1 hq.1 ha.le hb.le hab _ < a • p.2 + b • q.2 :=
-      add_lt_add_of_lt_of_le (smul_lt_smul_of_pos hp.2 ha) (smul_le_smul_of_nonneg hq.2 hb.le)
+  calc
+    f (a • p.1 + b • q.1) ≤ a • f p.1 + b • f q.1 := hf.2 hp.1 hq.1 ha.le hb.le hab
+    _ < a • p.2 + b • q.2 := add_lt_add_of_lt_of_le (smul_lt_smul_of_pos hp.2 ha) (smul_le_smul_of_nonneg hq.2 hb.le)
+    
 
 theorem ConcaveOn.open_segment_subset_strict_hypograph (hf : ConcaveOn 𝕜 s f) (p q : E × β) (hp : p.1 ∈ s ∧ p.2 < f p.1)
     (hq : q.1 ∈ s ∧ q.2 ≤ f q.1) : OpenSegment 𝕜 p q ⊆ { p : E × β | p.1 ∈ s ∧ p.2 < f p.1 } :=
@@ -464,11 +468,17 @@ variable [LinearOrderedAddCommMonoid β] [HasSmul 𝕜 E] [Module 𝕜 β] [Orde
 /-- The pointwise maximum of convex functions is convex. -/
 theorem ConvexOn.sup (hf : ConvexOn 𝕜 s f) (hg : ConvexOn 𝕜 s g) : ConvexOn 𝕜 s (f⊔g) := by
   refine' ⟨hf.left, fun x y hx hy a b ha hb hab => sup_le _ _⟩
-  · calc f (a • x + b • y) ≤ a • f x + b • f y := hf.right hx hy ha hb hab _ ≤ a • (f x⊔g x) + b • (f y⊔g y) :=
+  · calc
+      f (a • x + b • y) ≤ a • f x + b • f y := hf.right hx hy ha hb hab
+      _ ≤ a • (f x⊔g x) + b • (f y⊔g y) :=
         add_le_add (smul_le_smul_of_nonneg le_sup_left ha) (smul_le_smul_of_nonneg le_sup_left hb)
+      
     
-  · calc g (a • x + b • y) ≤ a • g x + b • g y := hg.right hx hy ha hb hab _ ≤ a • (f x⊔g x) + b • (f y⊔g y) :=
+  · calc
+      g (a • x + b • y) ≤ a • g x + b • g y := hg.right hx hy ha hb hab
+      _ ≤ a • (f x⊔g x) + b • (f y⊔g y) :=
         add_le_add (smul_le_smul_of_nonneg le_sup_right ha) (smul_le_smul_of_nonneg le_sup_right hb)
+      
     
 
 /-- The pointwise minimum of concave functions is concave. -/

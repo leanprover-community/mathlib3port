@@ -110,12 +110,40 @@ theorem add_one_pow_unbounded_of_pos [OrderedSemiring α] [Nontrivial α] [Archi
         rw [add_commₓ]
       ⟩
 
-section LinearOrderedRing
+section OrderedRing
 
-variable [LinearOrderedRing α] [Archimedean α]
+variable [OrderedRing α] [Nontrivial α] [Archimedean α]
 
 theorem pow_unbounded_of_one_lt (x : α) {y : α} (hy1 : 1 < y) : ∃ n : ℕ, x < y ^ n :=
   sub_add_cancel y 1 ▸ add_one_pow_unbounded_of_pos _ (sub_pos.2 hy1)
+
+theorem exists_int_gt (x : α) : ∃ n : ℤ, x < n :=
+  let ⟨n, h⟩ := exists_nat_gt x
+  ⟨n, by
+    rwa [Int.cast_coe_nat]⟩
+
+theorem exists_int_lt (x : α) : ∃ n : ℤ, (n : α) < x :=
+  let ⟨n, h⟩ := exists_int_gt (-x)
+  ⟨-n, by
+    rw [Int.cast_neg] <;> exact neg_lt.1 h⟩
+
+theorem exists_floor (x : α) : ∃ fl : ℤ, ∀ z : ℤ, z ≤ fl ↔ (z : α) ≤ x := by
+  haveI := Classical.propDecidable
+  have : ∃ ub : ℤ, (ub : α) ≤ x ∧ ∀ z : ℤ, (z : α) ≤ x → z ≤ ub :=
+    Int.exists_greatest_of_bdd
+      (let ⟨n, hn⟩ := exists_int_gt x
+      ⟨n, fun z h' => Int.cast_le.1 <| le_transₓ h' <| le_of_ltₓ hn⟩)
+      (let ⟨n, hn⟩ := exists_int_lt x
+      ⟨n, le_of_ltₓ hn⟩)
+  refine' this.imp fun fl h z => _
+  cases' h with h₁ h₂
+  exact ⟨fun h => le_transₓ (Int.cast_le.2 h) h₁, h₂ z⟩
+
+end OrderedRing
+
+section LinearOrderedRing
+
+variable [LinearOrderedRing α] [Archimedean α]
 
 /-- Every x greater than or equal to 1 is between two successive
 natural-number powers of every y greater than one. -/
@@ -132,28 +160,6 @@ theorem exists_nat_pow_near {x : α} {y : α} (hx : 1 ≤ x) (hy : 1 < y) : ∃ 
       have hltn : Nat.pred n < n := Nat.pred_ltₓ (ne_of_gtₓ hnp)
       ⟨Nat.pred n, le_of_not_ltₓ (Nat.find_minₓ h hltn), by
         rwa [hnsp]⟩
-
-theorem exists_int_gt (x : α) : ∃ n : ℤ, x < n :=
-  let ⟨n, h⟩ := exists_nat_gt x
-  ⟨n, by
-    rwa [Int.cast_coe_nat]⟩
-
-theorem exists_int_lt (x : α) : ∃ n : ℤ, (n : α) < x :=
-  let ⟨n, h⟩ := exists_int_gt (-x)
-  ⟨-n, by
-    rw [Int.cast_neg] <;> exact neg_lt.1 h⟩
-
-theorem exists_floor (x : α) : ∃ fl : ℤ, ∀ z : ℤ, z ≤ fl ↔ (z : α) ≤ x := by
-  have := Classical.propDecidable
-  have : ∃ ub : ℤ, (ub : α) ≤ x ∧ ∀ z : ℤ, (z : α) ≤ x → z ≤ ub :=
-    Int.exists_greatest_of_bdd
-      (let ⟨n, hn⟩ := exists_int_gt x
-      ⟨n, fun z h' => Int.cast_le.1 <| le_transₓ h' <| le_of_ltₓ hn⟩)
-      (let ⟨n, hn⟩ := exists_int_lt x
-      ⟨n, le_of_ltₓ hn⟩)
-  refine' this.imp fun fl h z => _
-  cases' h with h₁ h₂
-  exact ⟨fun h => le_transₓ (Int.cast_le.2 h) h₁, h₂ z⟩
 
 end LinearOrderedRing
 
@@ -306,6 +312,20 @@ theorem archimedean_iff_nat_le : Archimedean α ↔ ∀ x : α, ∃ n : ℕ, x �
       let ⟨n, h⟩ := H x
       ⟨n + 1, lt_of_le_of_ltₓ h (Nat.cast_lt.2 (lt_add_one _))⟩⟩
 
+theorem archimedean_iff_int_lt : Archimedean α ↔ ∀ x : α, ∃ n : ℤ, x < n :=
+  ⟨@exists_int_gt α _ _, by
+    rw [archimedean_iff_nat_lt]
+    intro h x
+    obtain ⟨n, h⟩ := h x
+    refine' ⟨n.to_nat, h.trans_le _⟩
+    exact_mod_cast Int.le_to_nat _⟩
+
+theorem archimedean_iff_int_le : Archimedean α ↔ ∀ x : α, ∃ n : ℤ, x ≤ n :=
+  archimedean_iff_int_lt.trans
+    ⟨fun H x => (H x).imp fun _ => le_of_ltₓ, fun H x =>
+      let ⟨n, h⟩ := H x
+      ⟨n + 1, lt_of_le_of_ltₓ h (Int.cast_lt.2 (lt_add_one _))⟩⟩
+
 theorem archimedean_iff_rat_lt : Archimedean α ↔ ∀ x : α, ∃ q : ℚ, x < q :=
   ⟨@exists_rat_gt α _, fun H =>
     archimedean_iff_nat_lt.2 fun x =>
@@ -344,4 +364,9 @@ cases we have a computable `floor` function. -/
 noncomputable def Archimedean.floorRing (α) [LinearOrderedRing α] [Archimedean α] : FloorRing α :=
   FloorRing.ofFloor α (fun a => Classical.some (exists_floor a)) fun z a =>
     (Classical.some_spec (exists_floor a) z).symm
+
+/-- A linear ordered field that is a floor ring is archimedean. -/
+theorem FloorRing.archimedean (α) [LinearOrderedField α] [FloorRing α] : Archimedean α := by
+  rw [archimedean_iff_int_le]
+  exact fun x => ⟨⌈x⌉, Int.le_ceil x⟩
 

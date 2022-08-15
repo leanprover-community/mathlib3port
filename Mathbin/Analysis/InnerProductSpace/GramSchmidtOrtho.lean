@@ -189,7 +189,7 @@ theorem gram_schmidt_linear_independent (f : ι → E) (h₀ : LinearIndependent
 
 /-- When given a basis, `gram_schmidt` produces a basis. -/
 noncomputable def gramSchmidtBasis (b : Basis ι 𝕜 E) : Basis ι 𝕜 E :=
-  Basis.mk (gram_schmidt_linear_independent 𝕜 b b.LinearIndependent) ((span_gram_schmidt 𝕜 b).trans b.span_eq)
+  Basis.mk (gram_schmidt_linear_independent 𝕜 b b.LinearIndependent) ((span_gram_schmidt 𝕜 b).trans b.span_eq).Ge
 
 theorem coe_gram_schmidt_basis (b : Basis ι 𝕜 E) : (gramSchmidtBasis 𝕜 b : ι → E) = gramSchmidt 𝕜 b :=
   Basis.coe_mk _ _
@@ -242,5 +242,5 @@ theorem span_gram_schmidt_normed_range (f : ι → E) :
 /-- When given a basis, `gram_schmidt_normed` produces an orthonormal basis. -/
 noncomputable def gramSchmidtOrthonormalBasis [Fintype ι] (b : Basis ι 𝕜 E) : OrthonormalBasis ι 𝕜 E :=
   OrthonormalBasis.mk (gram_schmidt_orthonormal 𝕜 b b.LinearIndependent)
-    (((span_gram_schmidt_normed_range 𝕜 b).trans (span_gram_schmidt 𝕜 b)).trans b.span_eq)
+    (((span_gram_schmidt_normed_range 𝕜 b).trans (span_gram_schmidt 𝕜 b)).trans b.span_eq).Ge
 

@@ -195,7 +195,7 @@ def toΓSpec : X ⟶ Spec.locallyRingedSpaceObj (Γ.obj (op X)) where
     let p : PrimeSpectrum (Γ.obj (op X)) := X.to_Γ_Spec_fun x
     constructor
     -- show stalk map is local hom ↓
-    let S := (structure_sheaf _).val.stalk p
+    let S := (structure_sheaf _).Presheaf.stalk p
     rintro (t : S) ht
     obtain ⟨⟨r, s⟩, he⟩ := IsLocalization.surj p.as_ideal.prime_compl t
     dsimp'  at he
@@ -272,7 +272,7 @@ theorem right_triangle (R : CommRingₓₓ) :
   by
   apply LocallyRingedSpace.comp_ring_hom_ext
   · ext (p : PrimeSpectrum R) x
-    erw [← IsLocalization.AtPrime.to_map_mem_maximal_iff ((structure_sheaf R).val.stalk p) p.as_ideal x]
+    erw [← IsLocalization.AtPrime.to_map_mem_maximal_iff ((structure_sheaf R).Presheaf.stalk p) p.as_ideal x]
     rfl
     
   · intro r

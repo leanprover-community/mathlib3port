@@ -49,7 +49,7 @@ instance decValidFinite (e m) : Decidable (ValidFinite e m) := by
 inductive Float
   | inf : Bool → float
   | nan : float
-  | finite : Bool → ∀ e m, ValidFinite e m → float
+  | Finite : Bool → ∀ e m, ValidFinite e m → float
 
 def Float.isFinite : Float → Bool
   | float.finite s e m f => true
@@ -190,7 +190,7 @@ unsafe def add (mode : Rmode) : Float → Float → Float
   | inf ff, inf tt => nan
   | inf s₁, _ => inf s₁
   | _, inf s₂ => inf s₂
-  | finite s₁ e₁ m₁ v₁, finite s₂ e₂ m₂ v₂ =>
+  | Finite s₁ e₁ m₁ v₁, Finite s₂ e₂ m₂ v₂ =>
     let f₁ := finite s₁ e₁ m₁ v₁
     let f₂ := finite s₂ e₂ m₂ v₂
     of_rat mode (toRat f₁ rfl + toRat f₂ rfl)
@@ -209,7 +209,7 @@ unsafe def mul (mode : Rmode) : Float → Float → Float
   | _, nan => nan
   | inf s₁, f₂ => if f₂.isZero then nan else inf (bxor s₁ f₂.sign)
   | f₁, inf s₂ => if f₁.isZero then nan else inf (bxor f₁.sign s₂)
-  | finite s₁ e₁ m₁ v₁, finite s₂ e₂ m₂ v₂ =>
+  | Finite s₁ e₁ m₁ v₁, Finite s₂ e₂ m₂ v₂ =>
     let f₁ := finite s₁ e₁ m₁ v₁
     let f₂ := finite s₂ e₂ m₂ v₂
     of_rat mode (toRat f₁ rfl * toRat f₂ rfl)
@@ -220,7 +220,7 @@ unsafe def div (mode : Rmode) : Float → Float → Float
   | inf s₁, inf s₂ => nan
   | inf s₁, f₂ => inf (bxor s₁ f₂.sign)
   | f₁, inf s₂ => zero (bxor f₁.sign s₂)
-  | finite s₁ e₁ m₁ v₁, finite s₂ e₂ m₂ v₂ =>
+  | Finite s₁ e₁ m₁ v₁, Finite s₂ e₂ m₂ v₂ =>
     let f₁ := finite s₁ e₁ m₁ v₁
     let f₂ := finite s₂ e₂ m₂ v₂
     if f₂.isZero then inf (bxor s₁ s₂) else of_rat mode (toRat f₁ rfl / toRat f₂ rfl)

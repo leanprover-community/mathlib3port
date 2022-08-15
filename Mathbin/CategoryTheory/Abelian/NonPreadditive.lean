@@ -112,26 +112,34 @@ instance : Epi (Abelian.factorThruImage f) :=
     fun R (g : I ⟶ R) (hpg : p ≫ g = 0) => by
     -- Since C is abelian, u := ker g ≫ i is the kernel of some morphism h.
     let u := kernel.ι g ≫ i
-    have : mono u := mono_comp _ _
-    have hu := normal_mono_of_mono u
+    haveI : mono u := mono_comp _ _
+    haveI hu := normal_mono_of_mono u
     let h := hu.g
     -- By hypothesis, p factors through the kernel of g via some t.
     obtain ⟨t, ht⟩ := kernel.lift' g p hpg
     have fh : f ≫ h = 0
-    calc f ≫ h = (p ≫ i) ≫ h := (abelian.image.fac f).symm ▸ rfl _ = ((t ≫ kernel.ι g) ≫ i) ≫ h :=
-        ht ▸ rfl _ = t ≫ u ≫ h := by
-        simp only [← category.assoc] <;> conv_lhs => congr skip rw [← category.assoc]_ = t ≫ 0 := hu.w ▸ rfl _ = 0 :=
-        has_zero_morphisms.comp_zero _ _
+    calc
+      f ≫ h = (p ≫ i) ≫ h := (abelian.image.fac f).symm ▸ rfl
+      _ = ((t ≫ kernel.ι g) ≫ i) ≫ h := ht ▸ rfl
+      _ = t ≫ u ≫ h := by
+        simp only [← category.assoc] <;> conv_lhs => congr skip rw [← category.assoc]
+      _ = t ≫ 0 := hu.w ▸ rfl
+      _ = 0 := has_zero_morphisms.comp_zero _ _
+      
     -- h factors through the cokernel of f via some l.
     obtain ⟨l, hl⟩ := cokernel.desc' f h fh
     have hih : i ≫ h = 0
-    calc i ≫ h = i ≫ cokernel.π f ≫ l := hl ▸ rfl _ = 0 ≫ l := by
-        rw [← category.assoc, kernel.condition]_ = 0 := zero_comp
+    calc
+      i ≫ h = i ≫ cokernel.π f ≫ l := hl ▸ rfl
+      _ = 0 ≫ l := by
+        rw [← category.assoc, kernel.condition]
+      _ = 0 := zero_comp
+      
     -- i factors through u = ker h via some s.
     obtain ⟨s, hs⟩ := normal_mono.lift' u i hih
     have hs' : (s ≫ kernel.ι g) ≫ i = 𝟙 I ≫ i := by
       rw [category.assoc, hs, category.id_comp]
-    have : epi (kernel.ι g) := epi_of_epi_fac ((cancel_mono _).1 hs')
+    haveI : epi (kernel.ι g) := epi_of_epi_fac ((cancel_mono _).1 hs')
     -- ker g is an epimorphism, but ker g ≫ g = 0 = ker g ≫ 0, so g = 0 as required.
     exact zero_of_epi_comp _ (kernel.condition g)
 
@@ -146,26 +154,35 @@ instance : Mono (Abelian.factorThruCoimage f) :=
   (NormalEpiCategory.mono_of_cancel_zero _) fun R (g : R ⟶ I) (hgi : g ≫ i = 0) => by
     -- Since C is abelian, u := p ≫ coker g is the cokernel of some morphism h.
     let u := p ≫ cokernel.π g
-    have : epi u := epi_comp _ _
-    have hu := normal_epi_of_epi u
+    haveI : epi u := epi_comp _ _
+    haveI hu := normal_epi_of_epi u
     let h := hu.g
     -- By hypothesis, i factors through the cokernel of g via some t.
     obtain ⟨t, ht⟩ := cokernel.desc' g i hgi
     have hf : h ≫ f = 0
-    calc h ≫ f = h ≫ p ≫ i := (abelian.coimage.fac f).symm ▸ rfl _ = h ≫ p ≫ cokernel.π g ≫ t :=
-        ht ▸ rfl _ = h ≫ u ≫ t := by
-        simp only [← category.assoc] <;> conv_lhs => congr skip rw [← category.assoc]_ = 0 ≫ t := by
-        rw [← category.assoc, hu.w]_ = 0 := zero_comp
+    calc
+      h ≫ f = h ≫ p ≫ i := (abelian.coimage.fac f).symm ▸ rfl
+      _ = h ≫ p ≫ cokernel.π g ≫ t := ht ▸ rfl
+      _ = h ≫ u ≫ t := by
+        simp only [← category.assoc] <;> conv_lhs => congr skip rw [← category.assoc]
+      _ = 0 ≫ t := by
+        rw [← category.assoc, hu.w]
+      _ = 0 := zero_comp
+      
     -- h factors through the kernel of f via some l.
     obtain ⟨l, hl⟩ := kernel.lift' f h hf
     have hhp : h ≫ p = 0
-    calc h ≫ p = (l ≫ kernel.ι f) ≫ p := hl ▸ rfl _ = l ≫ 0 := by
-        rw [category.assoc, cokernel.condition]_ = 0 := comp_zero
+    calc
+      h ≫ p = (l ≫ kernel.ι f) ≫ p := hl ▸ rfl
+      _ = l ≫ 0 := by
+        rw [category.assoc, cokernel.condition]
+      _ = 0 := comp_zero
+      
     -- p factors through u = coker h via some s.
     obtain ⟨s, hs⟩ := normal_epi.desc' u p hhp
     have hs' : p ≫ cokernel.π g ≫ s = p ≫ 𝟙 I := by
       rw [← category.assoc, hs, category.comp_id]
-    have : mono (cokernel.π g) := mono_of_mono_fac ((cancel_epi _).1 hs')
+    haveI : mono (cokernel.π g) := mono_of_mono_fac ((cancel_epi _).1 hs')
     -- coker g is a monomorphism, but g ≫ coker g = 0 = 0 ≫ coker g, so g = 0 as required.
     exact zero_of_comp_mono _ (cokernel.condition g)
 
@@ -222,7 +239,7 @@ instance mono_r {A : C} : Mono (r A) := by
   have hyy : y = 0 := by
     erw [← category.comp_id y, ← limits.prod.lift_snd (𝟙 A) (𝟙 A), ← category.assoc, hy, category.assoc, prod.lift_snd,
       has_zero_morphisms.comp_zero]
-  have : mono (prod.lift (𝟙 A) (0 : A ⟶ A)) := mono_of_mono_fac (prod.lift_fst _ _)
+  haveI : mono (prod.lift (𝟙 A) (0 : A ⟶ A)) := mono_of_mono_fac (prod.lift_fst _ _)
   apply (cancel_mono (prod.lift (𝟙 A) (0 : A ⟶ A))).1
   rw [← hy, hyy, zero_comp, zero_comp]
 
@@ -235,7 +252,7 @@ instance epi_r {A : C} : Epi (r A) := by
       erw [category.comp_id]
       
     · intro s m h
-      have : mono (prod.lift (𝟙 A) (0 : A ⟶ A)) := mono_of_mono_fac (prod.lift_fst _ _)
+      haveI : mono (prod.lift (𝟙 A) (0 : A ⟶ A)) := mono_of_mono_fac (prod.lift_fst _ _)
       apply (cancel_mono (prod.lift (𝟙 A) (0 : A ⟶ A))).1
       convert h
       ext <;> simp
@@ -293,11 +310,16 @@ theorem σ_comp {X Y : C} (f : X ⟶ Y) : σ ≫ f = Limits.prod.map f f ≫ σ 
   suffices hfg : f = g
   · rw [← hg, cofork.π_of_π, hfg]
     
-  calc f = f ≫ prod.lift (𝟙 Y) 0 ≫ σ := by
-      rw [lift_σ, category.comp_id]_ = prod.lift (𝟙 X) 0 ≫ limits.prod.map f f ≫ σ := by
-      rw [lift_map_assoc]_ = prod.lift (𝟙 X) 0 ≫ σ ≫ g := by
-      rw [← hg, cokernel_cofork.π_of_π]_ = g := by
+  calc
+    f = f ≫ prod.lift (𝟙 Y) 0 ≫ σ := by
+      rw [lift_σ, category.comp_id]
+    _ = prod.lift (𝟙 X) 0 ≫ limits.prod.map f f ≫ σ := by
+      rw [lift_map_assoc]
+    _ = prod.lift (𝟙 X) 0 ≫ σ ≫ g := by
+      rw [← hg, cokernel_cofork.π_of_π]
+    _ = g := by
       rw [← category.assoc, lift_σ, category.id_comp]
+    
 
 section
 

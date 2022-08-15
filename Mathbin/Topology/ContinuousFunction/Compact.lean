@@ -34,7 +34,7 @@ open BoundedContinuousFunction
 
 namespace ContinuousMap
 
-variable {α β E : Type _} [TopologicalSpace α] [CompactSpace α] [MetricSpace β] [NormedGroup E]
+variable {α β E : Type _} [TopologicalSpace α] [CompactSpace α] [MetricSpace β] [NormedAddCommGroup E]
 
 section
 
@@ -155,7 +155,7 @@ theorem _root_.bounded_continuous_function.norm_to_continuous_map_eq (f : α →
 
 open BoundedContinuousFunction
 
-instance : NormedGroup C(α, E) :=
+instance : NormedAddCommGroup C(α, E) :=
   { ContinuousMap.metricSpace _ _, ContinuousMap.addCommGroup with
     dist_eq := fun x y => by
       rw [← norm_mk_of_compact, ← dist_mk_of_compact, dist_eq_norm, mk_of_compact_sub],
@@ -203,7 +203,7 @@ section
 variable {R : Type _} [NormedRing R]
 
 instance : NormedRing C(α, R) :=
-  { (inferInstance : NormedGroup C(α, R)), ContinuousMap.ring with
+  { (inferInstance : NormedAddCommGroup C(α, R)), ContinuousMap.ring with
     norm_mul := fun f g => norm_mul_le (mkOfCompact f) (mkOfCompact g) }
 
 end
@@ -308,9 +308,9 @@ end ContinuousMap
 
 section CompLeft
 
-variable (X : Type _) {𝕜 β γ : Type _} [TopologicalSpace X] [CompactSpace X] [NondiscreteNormedField 𝕜]
+variable (X : Type _) {𝕜 β γ : Type _} [TopologicalSpace X] [CompactSpace X] [NontriviallyNormedField 𝕜]
 
-variable [NormedGroup β] [NormedSpace 𝕜 β] [NormedGroup γ] [NormedSpace 𝕜 γ]
+variable [NormedAddCommGroup β] [NormedSpace 𝕜 β] [NormedAddCommGroup γ] [NormedSpace 𝕜 γ]
 
 open ContinuousMap
 
@@ -356,7 +356,7 @@ section CompRight
 /-- Precomposition by a continuous map is itself a continuous map between spaces of continuous maps.
 -/
 def compRightContinuousMap {X Y : Type _} (T : Type _) [TopologicalSpace X] [CompactSpace X] [TopologicalSpace Y]
-    [CompactSpace Y] [NormedGroup T] (f : C(X, Y)) : C(C(Y, T), C(X, T)) where
+    [CompactSpace Y] [NormedAddCommGroup T] (f : C(X, Y)) : C(C(Y, T), C(X, T)) where
   toFun := fun g => g.comp f
   continuous_to_fun := by
     refine' metric.continuous_iff.mpr _
@@ -368,14 +368,14 @@ def compRightContinuousMap {X Y : Type _} (T : Type _) [TopologicalSpace X] [Com
 
 @[simp]
 theorem comp_right_continuous_map_apply {X Y : Type _} (T : Type _) [TopologicalSpace X] [CompactSpace X]
-    [TopologicalSpace Y] [CompactSpace Y] [NormedGroup T] (f : C(X, Y)) (g : C(Y, T)) :
+    [TopologicalSpace Y] [CompactSpace Y] [NormedAddCommGroup T] (f : C(X, Y)) (g : C(Y, T)) :
     (compRightContinuousMap T f) g = g.comp f :=
   rfl
 
 /-- Precomposition by a homeomorphism is itself a homeomorphism between spaces of continuous maps.
 -/
 def compRightHomeomorph {X Y : Type _} (T : Type _) [TopologicalSpace X] [CompactSpace X] [TopologicalSpace Y]
-    [CompactSpace Y] [NormedGroup T] (f : X ≃ₜ Y) : C(Y, T) ≃ₜ C(X, T) where
+    [CompactSpace Y] [NormedAddCommGroup T] (f : X ≃ₜ Y) : C(Y, T) ≃ₜ C(X, T) where
   toFun := compRightContinuousMap T f.toContinuousMap
   invFun := compRightContinuousMap T f.symm.toContinuousMap
   left_inv := by
@@ -422,7 +422,7 @@ open TopologicalSpace
 
 variable {X : Type _} [TopologicalSpace X] [T2Space X] [LocallyCompactSpace X]
 
-variable {E : Type _} [NormedGroup E] [CompleteSpace E]
+variable {E : Type _} [NormedAddCommGroup E] [CompleteSpace E]
 
 theorem summable_of_locally_summable_norm {ι : Type _} {F : ι → C(X, E)}
     (hF : ∀ K : Compacts X, Summable fun i => ∥(F i).restrict K∥) : Summable F := by
@@ -449,7 +449,7 @@ section NormedSpace
 
 variable {α : Type _} {β : Type _}
 
-variable [TopologicalSpace α] [NormedGroup β] [StarAddMonoid β] [NormedStarGroup β]
+variable [TopologicalSpace α] [NormedAddCommGroup β] [StarAddMonoid β] [NormedStarGroup β]
 
 theorem _root_.bounded_continuous_function.mk_of_compact_star [CompactSpace α] (f : C(α, β)) :
     mkOfCompact (star f) = star (mkOfCompact f) :=

@@ -79,7 +79,7 @@ variable [HasProducts.{v} C]
 
 /-- The pushforward of a sheaf (by a continuous map) is a sheaf.
 -/
-theorem pushforward_sheaf_of_sheaf {F : Presheaf C X} (h : F.IsSheaf) : (f _* F).IsSheaf := by
+theorem pushforward_sheaf_of_sheaf {F : X.Presheaf C} (h : F.IsSheaf) : (f _* F).IsSheaf := by
   rw [is_sheaf_iff_is_sheaf_pairwise_intersections] at h⊢ <;>
     exact sheaf_condition_pairwise_intersections.pushforward_sheaf_of_sheaf f h
 
@@ -87,7 +87,7 @@ theorem pushforward_sheaf_of_sheaf {F : Presheaf C X} (h : F.IsSheaf) : (f _* F)
 -/
 def pushforward (f : X ⟶ Y) : X.Sheaf C ⥤ Y.Sheaf C where
   obj := fun ℱ => ⟨f _* ℱ.1, pushforward_sheaf_of_sheaf f ℱ.2⟩
-  map := fun _ _ => pushforwardMap f
+  map := fun _ _ g => ⟨pushforwardMap f g.1⟩
 
 end Sheaf
 

@@ -20,8 +20,8 @@ will always pick the later typeclass in this situation, and does not care whethe
 `[]`, `{}`, or `()`. All of these use the `measurable_space` `M2` to define `μ`:
 
 ```lean
-example {M1 : measurable_space α} [M2 : measurable_space α] {μ : measure α} : sorry := sorry
-example [M1 : measurable_space α] {M2 : measurable_space α} {μ : measure α} : sorry := sorry
+example {M1 : measurable_space Ω} [M2 : measurable_space Ω] {μ : measure Ω} : sorry := sorry
+example [M1 : measurable_space Ω] {M2 : measurable_space Ω} {μ : measure Ω} : sorry := sorry
 ```
 
 -/
@@ -33,17 +33,17 @@ open Set MeasureTheory
 
 open Ennreal MeasureTheory
 
-variable {α : Type _} {mα : MeasurableSpace α} {μ : Measureₓ α} {f g : α → ℝ≥0∞} {X Y : α → ℝ}
+variable {Ω : Type _} {mΩ : MeasurableSpace Ω} {μ : Measureₓ Ω} {f g : Ω → ℝ≥0∞} {X Y : Ω → ℝ}
 
 namespace ProbabilityTheory
 
 /-- If a random variable `f` in `ℝ≥0∞` is independent of an event `T`, then if you restrict the
   random variable to `T`, then `E[f * indicator T c 0]=E[f] * E[indicator T c 0]`. It is useful for
   `lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space`. -/
-theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf mα : MeasurableSpace α} {μ : Measureₓ α}
-    (hMf : Mf ≤ mα) (c : ℝ≥0∞) {T : Set α} (h_meas_T : MeasurableSet T)
+theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf mΩ : MeasurableSpace Ω} {μ : Measureₓ Ω}
+    (hMf : Mf ≤ mΩ) (c : ℝ≥0∞) {T : Set Ω} (h_meas_T : MeasurableSet T)
     (h_ind : IndepSetsₓ { s | measurable_set[Mf] s } {T} μ) (h_meas_f : measurable[Mf] f) :
-    (∫⁻ a, f a * T.indicator (fun _ => c) a ∂μ) = (∫⁻ a, f a ∂μ) * ∫⁻ a, T.indicator (fun _ => c) a ∂μ := by
+    (∫⁻ ω, f ω * T.indicator (fun _ => c) ω ∂μ) = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, T.indicator (fun _ => c) ω ∂μ := by
   revert f
   have h_mul_indicator : ∀ g, Measurable g → Measurable fun a => g a * T.indicator (fun x => c) a := fun g h_mg =>
     h_mg.mul (measurable_const.indicator h_meas_T)
@@ -83,9 +83,9 @@ theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf mα : M
    domains of `f` and `g`. This is similar to the sigma-algebra approach to
    independence. See `lintegral_mul_eq_lintegral_mul_lintegral_of_independent_fn` for
    a more common variant of the product of independent variables. -/
-theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space {Mf Mg mα : MeasurableSpace α}
-    {μ : Measureₓ α} (hMf : Mf ≤ mα) (hMg : Mg ≤ mα) (h_ind : Indepₓ Mf Mg μ) (h_meas_f : measurable[Mf] f)
-    (h_meas_g : measurable[Mg] g) : (∫⁻ a, f a * g a ∂μ) = (∫⁻ a, f a ∂μ) * ∫⁻ a, g a ∂μ := by
+theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space {Mf Mg mΩ : MeasurableSpace Ω}
+    {μ : Measureₓ Ω} (hMf : Mf ≤ mΩ) (hMg : Mg ≤ mΩ) (h_ind : Indepₓ Mf Mg μ) (h_meas_f : measurable[Mf] f)
+    (h_meas_g : measurable[Mg] g) : (∫⁻ ω, f ω * g ω ∂μ) = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, g ω ∂μ := by
   revert g
   have h_measM_f : Measurable f := h_meas_f.mono hMf le_rfl
   apply Measurable.ennreal_induction
@@ -115,7 +115,7 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space
 /-- If `f` and `g` are independent random variables with values in `ℝ≥0∞`,
    then `E[f * g] = E[f] * E[g]`. -/
 theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun (h_meas_f : Measurable f) (h_meas_g : Measurable g)
-    (h_indep_fun : IndepFunₓ f g μ) : (∫⁻ a, (f * g) a ∂μ) = (∫⁻ a, f a ∂μ) * ∫⁻ a, g a ∂μ :=
+    (h_indep_fun : IndepFunₓ f g μ) : (∫⁻ ω, (f * g) ω ∂μ) = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, g ω ∂μ :=
   lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space (measurable_iff_comap_le.1 h_meas_f)
     (measurable_iff_comap_le.1 h_meas_g) h_indep_fun (Measurable.of_comap_le le_rfl) (Measurable.of_comap_le le_rfl)
 
@@ -124,17 +124,17 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun (h_meas_f : Measur
    `lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun`). -/
 theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' (h_meas_f : AeMeasurable f μ)
     (h_meas_g : AeMeasurable g μ) (h_indep_fun : IndepFunₓ f g μ) :
-    (∫⁻ a, (f * g) a ∂μ) = (∫⁻ a, f a ∂μ) * ∫⁻ a, g a ∂μ := by
+    (∫⁻ ω, (f * g) ω ∂μ) = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, g ω ∂μ := by
   have fg_ae : f * g =ᵐ[μ] h_meas_f.mk _ * h_meas_g.mk _ := h_meas_f.ae_eq_mk.mul h_meas_g.ae_eq_mk
   rw [lintegral_congr_ae h_meas_f.ae_eq_mk, lintegral_congr_ae h_meas_g.ae_eq_mk, lintegral_congr_ae fg_ae]
   apply lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun h_meas_f.measurable_mk h_meas_g.measurable_mk
   exact h_indep_fun.ae_eq h_meas_f.ae_eq_mk h_meas_g.ae_eq_mk
 
 /-- The product of two independent, integrable, real_valued random variables is integrable. -/
-theorem IndepFunₓ.integrable_mul {β : Type _} [MeasurableSpace β] {X Y : α → β} [NormedDivisionRing β] [BorelSpace β]
+theorem IndepFunₓ.integrable_mul {β : Type _} [MeasurableSpace β] {X Y : Ω → β} [NormedDivisionRing β] [BorelSpace β]
     (hXY : IndepFunₓ X Y μ) (hX : Integrable X μ) (hY : Integrable Y μ) : Integrable (X * Y) μ := by
-  let nX : α → Ennreal := fun a => ∥X a∥₊
-  let nY : α → Ennreal := fun a => ∥Y a∥₊
+  let nX : Ω → Ennreal := fun a => ∥X a∥₊
+  let nY : Ω → Ennreal := fun a => ∥Y a∥₊
   have hXY' : indep_fun (fun a => ∥X a∥₊) (fun a => ∥Y a∥₊) μ := hXY.comp measurable_nnnorm measurable_nnnorm
   have hXY'' : indep_fun nX nY μ := hXY'.comp measurable_coe_nnreal_ennreal measurable_coe_nnreal_ennreal
   have hnX : AeMeasurable nX μ := hX.1.AeMeasurable.nnnorm.coe_nnreal_ennreal
@@ -215,7 +215,7 @@ theorem IndepFunₓ.integral_mul_of_integrable' (hXY : IndepFunₓ X Y μ) (hX :
   `E[(φ ∘ f) * (ψ ∘ g)] = E[φ ∘ f] * E[ψ ∘ g]` for all measurable `φ` and `ψ` with values in `ℝ`
   satisfying appropriate integrability conditions. -/
 theorem indep_fun_iff_integral_comp_mul [IsFiniteMeasure μ] {β β' : Type _} {mβ : MeasurableSpace β}
-    {mβ' : MeasurableSpace β'} {f : α → β} {g : α → β'} {hfm : Measurable f} {hgm : Measurable g} :
+    {mβ' : MeasurableSpace β'} {f : Ω → β} {g : Ω → β'} {hfm : Measurable f} {hgm : Measurable g} :
     IndepFunₓ f g μ ↔
       ∀ {φ : β → ℝ} {ψ : β' → ℝ},
         Measurable φ →

@@ -47,7 +47,7 @@ theorem countable_Inter_mem [Encodable ι] {s : ι → Set α} : (⋂ i, s i) �
 theorem countable_bInter_mem {S : Set ι} (hS : S.Countable) {s : ∀, ∀ i ∈ S, ∀, Set α} :
     (⋂ i ∈ S, s i ‹_›) ∈ l ↔ ∀, ∀ i ∈ S, ∀, s i ‹_› ∈ l := by
   rw [bInter_eq_Inter]
-  have := hS.to_encodable
+  haveI := hS.to_encodable
   exact countable_Inter_mem.trans Subtype.forall
 
 theorem eventually_countable_forall [Encodable ι] {p : α → ι → Prop} :
@@ -70,7 +70,7 @@ theorem EventuallyEq.countable_Union [Encodable ι] {s t : ι → Set α} (h : �
 theorem EventuallyLe.countable_bUnion {S : Set ι} (hS : S.Countable) {s t : ∀, ∀ i ∈ S, ∀, Set α}
     (h : ∀, ∀ i ∈ S, ∀, s i ‹_› ≤ᶠ[l] t i ‹_›) : (⋃ i ∈ S, s i ‹_›) ≤ᶠ[l] ⋃ i ∈ S, t i ‹_› := by
   simp only [← bUnion_eq_Union]
-  have := hS.to_encodable
+  haveI := hS.to_encodable
   exact EventuallyLe.countable_Union fun i => h i i.2
 
 theorem EventuallyEq.countable_bUnion {S : Set ι} (hS : S.Countable) {s t : ∀, ∀ i ∈ S, ∀, Set α}
@@ -89,7 +89,7 @@ theorem EventuallyEq.countable_Inter [Encodable ι] {s t : ι → Set α} (h : �
 theorem EventuallyLe.countable_bInter {S : Set ι} (hS : S.Countable) {s t : ∀, ∀ i ∈ S, ∀, Set α}
     (h : ∀, ∀ i ∈ S, ∀, s i ‹_› ≤ᶠ[l] t i ‹_›) : (⋂ i ∈ S, s i ‹_›) ≤ᶠ[l] ⋂ i ∈ S, t i ‹_› := by
   simp only [← bInter_eq_Inter]
-  have := hS.to_encodable
+  haveI := hS.to_encodable
   exact EventuallyLe.countable_Inter fun i => h i i.2
 
 theorem EventuallyEq.countable_bInter {S : Set ι} (hS : S.Countable) {s t : ∀, ∀ i ∈ S, ∀, Set α}

@@ -65,7 +65,7 @@ then the numerator of `r` divides the constant coefficient -/
 theorem num_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) : Num A r ∣ p.coeff 0 := by
   suffices Num A r ∣ (scale_roots p (denom A r)).coeff 0 by
     simp only [← coeff_scale_roots, ← tsub_zero] at this
-    have := Classical.propDecidable
+    haveI := Classical.propDecidable
     by_cases' hr : Num A r = 0
     · obtain ⟨u, hu⟩ := (is_unit_denom_of_num_eq_zero hr).pow p.nat_degree
       rw [← hu] at this

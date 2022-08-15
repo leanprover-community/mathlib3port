@@ -308,7 +308,7 @@ theorem of_subtype_subtype_perm {f : Perm α} {p : α → Prop} [DecidablePred p
     by_cases' hx : p x
     · simp only [← hx, ← coe_fn_mk, ← dif_pos, ← MonoidHom.coe_mk, ← Subtype.coe_mk]
       
-    · have := Classical.propDecidable
+    · haveI := Classical.propDecidable
       simp only [← hx, ← not_not.mp (mt (h₂ x) hx), ← coe_fn_mk, ← dif_neg, ← not_false_iff, ← MonoidHom.coe_mk]
       
 

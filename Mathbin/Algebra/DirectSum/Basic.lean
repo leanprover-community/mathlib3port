@@ -56,7 +56,7 @@ variable {β}
 
 @[simp]
 theorem sub_apply (g₁ g₂ : ⨁ i, β i) (i : ι) : (g₁ - g₂) i = g₁ i - g₂ i :=
-  Dfinsupp.sub_apply _ _ _
+  rfl
 
 end AddCommGroupₓ
 
@@ -70,7 +70,7 @@ variable {β}
 
 @[simp]
 theorem add_apply (g₁ g₂ : ⨁ i, β i) (i : ι) : (g₁ + g₂) i = g₁ i + g₂ i :=
-  Dfinsupp.add_apply _ _ _
+  rfl
 
 variable (β)
 
@@ -116,7 +116,7 @@ theorem mk_injective (s : Finset ι) : Function.Injective (mk β s) :=
 theorem of_injective (i : ι) : Function.Injective (of β i) :=
   Dfinsupp.single_injective
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on {C : (⨁ i, β i) → Prop} (x : ⨁ i, β i) (H_zero : C 0)
     (H_basic : ∀ (i : ι) (x : β i), C (of β i x)) (H_plus : ∀ x y, C x → C y → C (x + y)) : C x := by
   apply Dfinsupp.induction x H_zero
@@ -240,18 +240,18 @@ section Sigma
 
 variable {α : ι → Type u} {δ : ∀ i, α i → Type w} [∀ i j, AddCommMonoidₓ (δ i j)]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
 /-- The natural map between `⨁ (i : Σ i, α i), δ i.1 i.2` and `⨁ i (j : α i), δ i j`.-/
 noncomputable def sigmaCurry : (⨁ i : Σi, _, δ i.1 i.2) →+ ⨁ (i) (j), δ i j where
   toFun := @Dfinsupp.sigmaCurry _ _ δ _
   map_zero' := Dfinsupp.sigma_curry_zero
-  map_add' := fun f g => Dfinsupp.sigma_curry_add f g
+  map_add' := fun f g => @Dfinsupp.sigma_curry_add _ _ δ _ f g
 
 @[simp]
 theorem sigma_curry_apply (f : ⨁ i : Σi, _, δ i.1 i.2) (i : ι) (j : α i) : sigmaCurry f i j = f ⟨i, j⟩ :=
-  Dfinsupp.sigma_curry_apply f i j
+  @Dfinsupp.sigma_curry_apply _ _ δ _ f i j
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
 /-- The natural map between `⨁ i (j : α i), δ i j` and `Π₀ (i : Σ i, α i), δ i.1 i.2`, inverse of
 `curry`.-/
 noncomputable def sigmaUncurry : (⨁ (i) (j), δ i j) →+ ⨁ i : Σi, _, δ i.1 i.2 where
@@ -259,12 +259,12 @@ noncomputable def sigmaUncurry : (⨁ (i) (j), δ i j) →+ ⨁ i : Σi, _, δ i
   map_zero' := Dfinsupp.sigma_uncurry_zero
   map_add' := Dfinsupp.sigma_uncurry_add
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
 @[simp]
 theorem sigma_uncurry_apply (f : ⨁ (i) (j), δ i j) (i : ι) (j : α i) : sigmaUncurry f ⟨i, j⟩ = f i j :=
   Dfinsupp.sigma_uncurry_apply f i j
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
 /-- The natural map between `⨁ (i : Σ i, α i), δ i.1 i.2` and `⨁ i (j : α i), δ i j`.-/
 noncomputable def sigmaCurryEquiv : (⨁ i : Σi, _, δ i.1 i.2) ≃+ ⨁ (i) (j), δ i j :=
   { sigmaCurry, Dfinsupp.sigmaCurryEquiv with }

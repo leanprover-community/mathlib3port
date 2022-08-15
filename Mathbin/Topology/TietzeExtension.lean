@@ -77,19 +77,28 @@ theorem tietze_extension_step (f : X →ᵇ ℝ) (e : C(X, Y)) (he : ClosedEmbed
     have hfx : -∥f∥ ≤ f x ∧ f x ≤ ∥f∥ := by
       simpa only [← Real.norm_eq_abs, ← abs_le] using f.norm_coe_le_norm x
     cases' le_totalₓ (f x) (-∥f∥ / 3) with hle₁ hle₁
-    · calc abs (g (e x) - f x) = -∥f∥ / 3 - f x := by
-          rw [hg₁ (mem_image_of_mem _ hle₁), abs_of_nonneg (sub_nonneg.2 hle₁)]_ ≤ 2 / 3 * ∥f∥ := by
+    · calc
+        abs (g (e x) - f x) = -∥f∥ / 3 - f x := by
+          rw [hg₁ (mem_image_of_mem _ hle₁), abs_of_nonneg (sub_nonneg.2 hle₁)]
+        _ ≤ 2 / 3 * ∥f∥ := by
           linarith
+        
       
     · cases' le_totalₓ (f x) (∥f∥ / 3) with hle₂ hle₂
       · simp only [← neg_div] at *
-        calc dist (g (e x)) (f x) ≤ abs (g (e x)) + abs (f x) := dist_le_norm_add_norm _ _ _ ≤ ∥f∥ / 3 + ∥f∥ / 3 :=
-            add_le_add (abs_le.2 <| hgf _) (abs_le.2 ⟨hle₁, hle₂⟩)_ = 2 / 3 * ∥f∥ := by
+        calc
+          dist (g (e x)) (f x) ≤ abs (g (e x)) + abs (f x) := dist_le_norm_add_norm _ _
+          _ ≤ ∥f∥ / 3 + ∥f∥ / 3 := add_le_add (abs_le.2 <| hgf _) (abs_le.2 ⟨hle₁, hle₂⟩)
+          _ = 2 / 3 * ∥f∥ := by
             linarith
+          
         
-      · calc abs (g (e x) - f x) = f x - ∥f∥ / 3 := by
-            rw [hg₂ (mem_image_of_mem _ hle₂), abs_sub_comm, abs_of_nonneg (sub_nonneg.2 hle₂)]_ ≤ 2 / 3 * ∥f∥ := by
+      · calc
+          abs (g (e x) - f x) = f x - ∥f∥ / 3 := by
+            rw [hg₂ (mem_image_of_mem _ hle₂), abs_sub_comm, abs_of_nonneg (sub_nonneg.2 hle₂)]
+          _ ≤ 2 / 3 * ∥f∥ := by
             linarith
+          
         
       
     
@@ -121,15 +130,19 @@ theorem exists_extension_norm_eq_of_closed_embedding' (f : X →ᵇ ℝ) (e : C(
       
   have hg_dist : ∀ n, dist (g n) (g (n + 1)) ≤ 1 / 3 * ∥f∥ * (2 / 3) ^ n := by
     intro n
-    calc dist (g n) (g (n + 1)) = ∥F (f - (g n).comp_continuous e)∥ := by
-        rw [g_succ, dist_eq_norm', add_sub_cancel']_ ≤ ∥f - (g n).comp_continuous e∥ / 3 :=
-        hF_norm _ _ = 1 / 3 * dist ((g n).comp_continuous e) f := by
-        rw [dist_eq_norm', one_div, div_eq_inv_mul]_ ≤ 1 / 3 * ((2 / 3) ^ n * ∥f∥) :=
+    calc
+      dist (g n) (g (n + 1)) = ∥F (f - (g n).comp_continuous e)∥ := by
+        rw [g_succ, dist_eq_norm', add_sub_cancel']
+      _ ≤ ∥f - (g n).comp_continuous e∥ / 3 := hF_norm _
+      _ = 1 / 3 * dist ((g n).comp_continuous e) f := by
+        rw [dist_eq_norm', one_div, div_eq_inv_mul]
+      _ ≤ 1 / 3 * ((2 / 3) ^ n * ∥f∥) :=
         mul_le_mul_of_nonneg_left (hgf n)
           (by
-            norm_num1)_ = 1 / 3 * ∥f∥ * (2 / 3) ^ n :=
-        by
+            norm_num1)
+      _ = 1 / 3 * ∥f∥ * (2 / 3) ^ n := by
         ac_rfl
+      
   have hg_cau : CauchySeq g :=
     cauchy_seq_of_le_geometric _ _
       (by
@@ -260,7 +273,10 @@ theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f
     · have hay : a < (g + dg) y := by
         rcases(hg_mem y).1.eq_or_lt with (rfl | hlt)
         · refine' (lt_add_iff_pos_right _).2 _
-          calc 0 < c - g y := sub_pos.2 hac _ = dg y := (dga rfl).symm
+          calc
+            0 < c - g y := sub_pos.2 hac
+            _ = dg y := (dga rfl).symm
+            
           
         · exact hlt.trans_le ((le_add_iff_nonneg_right _).2 <| (dgmem y).1)
           
@@ -269,8 +285,11 @@ theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f
       cases' le_totalₓ c (g y) with hc hc
       · simp [← dg0 (Or.inr hc), ← (hg_mem y).2]
         
-      · calc g y + dg y ≤ c + (c - a) := add_le_add hc (dgmem _).2_ = b := by
+      · calc
+          g y + dg y ≤ c + (c - a) := add_le_add hc (dgmem _).2
+          _ = b := by
             rw [hsub, add_sub_cancel'_right]
+          
         
       
   /- Now we deal with the case `∀ x, f x ≠ b`. The proof is the same as in the first case, with
@@ -297,7 +316,10 @@ theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f
   · have hyb : (g - dg) y < b := by
       rcases(hgb y).eq_or_lt with (rfl | hlt)
       · refine' (sub_lt_self_iff _).2 _
-        calc 0 < g y - c := sub_pos.2 hcb _ = dg y := (dgb rfl).symm
+        calc
+          0 < g y - c := sub_pos.2 hcb
+          _ = dg y := (dgb rfl).symm
+          
         
       · exact ((sub_le_self_iff _).2 (dgmem _).1).trans_lt hlt
         
@@ -305,13 +327,19 @@ theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f
     cases' lt_or_leₓ c (g y) with hc hc
     · rcases em (a ∈ range f) with (⟨x, rfl⟩ | ha')
       · refine' ⟨x, xu, _, hyxu.le⟩
-        calc f x = c - (b - c) := by
-            rw [← hsub, sub_sub_cancel]_ ≤ g y - dg y := sub_le_sub hc.le (dgmem _).2
+        calc
+          f x = c - (b - c) := by
+            rw [← hsub, sub_sub_cancel]
+          _ ≤ g y - dg y := sub_le_sub hc.le (dgmem _).2
+          
         
       · have hay : a < (g - dg) y := by
-          calc a = c - (b - c) := by
-              rw [← hsub, sub_sub_cancel]_ < g y - (b - c) := sub_lt_sub_right hc _ _ ≤ g y - dg y :=
-              sub_le_sub_left (dgmem _).2 _
+          calc
+            a = c - (b - c) := by
+              rw [← hsub, sub_sub_cancel]
+            _ < g y - (b - c) := sub_lt_sub_right hc _
+            _ ≤ g y - dg y := sub_le_sub_left (dgmem _).2 _
+            
         rcases ha.exists_between hay with ⟨_, ⟨x, rfl⟩, ha, hxy⟩
         exact ⟨x, xu, hxy.le, hyxu.le⟩
         

@@ -125,7 +125,7 @@ theorem disjoint_take_drop {m n : ℕ} (hl : l.Nodup) (h : m ≤ n) : Disjoint (
     · intro h
       exact h₀ _ (mem_of_mem_drop h) rfl
       
-    solve_by_elim [← le_of_succ_le_succ]
+    solve_by_elim(config := { max_depth := 4 }) [← le_of_succ_le_succ]
 
 end Disjoint
 
@@ -290,7 +290,7 @@ theorem count_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, count a (l₁.bagI
   | l₁, [] => by
     simp
   | h₁ :: l₁, h₂ :: l₂ => by
-    simp only [← List.bagInterₓ, ← List.mem_cons_iff]
+    simp only [← List.bagInterₓ, ← List.mem_cons_iffₓ]
     by_cases' p₁ : h₂ = h₁ <;> by_cases' p₂ : h₁ = a
     · simp only [← p₁, ← p₂, ← count_bag_inter, ← min_succ_succ, ← erase_cons_head, ← if_true, ← mem_cons_iff, ←
         count_cons_self, ← true_orₓ, ← eq_self_iff_true]

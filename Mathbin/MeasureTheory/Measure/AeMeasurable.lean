@@ -269,8 +269,8 @@ theorem AeMeasurable.restrict (hfm : AeMeasurable f μ) {s} : AeMeasurable f (μ
 theorem ae_measurable_Ioi_of_forall_Ioc {β} {mβ : MeasurableSpace β} [LinearOrderₓ α]
     [(atTop : Filter α).IsCountablyGenerated] {x : α} {g : α → β}
     (g_meas : ∀, ∀ t > x, ∀, AeMeasurable g (μ.restrict (Ioc x t))) : AeMeasurable g (μ.restrict (Ioi x)) := by
-  have : Nonempty α := ⟨x⟩
-  have : (at_top : Filter α).ne_bot := at_top_ne_bot
+  haveI : Nonempty α := ⟨x⟩
+  haveI : (at_top : Filter α).ne_bot := at_top_ne_bot
   obtain ⟨u, hu_tendsto⟩ := exists_seq_tendsto (at_top : Filter α)
   have Ioi_eq_Union : Ioi x = ⋃ n : ℕ, Ioc x (u n) := by
     rw [Union_Ioc_eq_Ioi_self_iff.mpr _]

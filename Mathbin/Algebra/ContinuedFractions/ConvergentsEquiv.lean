@@ -275,12 +275,15 @@ theorem succ_nth_convergent_eq_squash_gcf_nth_convergent [Field K]
       suffices (b * g.h + a) / b = g.h + a / b by
         simpa [← squash_gcf, ← s_nth_eq, ← convergent_eq_conts_a_div_conts_b, ←
           continuants_recurrence_aux s_nth_eq zeroth_continuant_aux_eq_one_zero first_continuant_aux_eq_h_one]
-      calc (b * g.h + a) / b = b * g.h / b + a / b := by
-          ring-- requires `field`, not `division_ring`
+      calc
+        (b * g.h + a) / b = b * g.h / b + a / b := by
+          ring
+        -- requires `field`, not `division_ring`
             _ =
             g.h + a / b :=
           by
           rw [mul_div_cancel_left _ b_ne_zero]
+        
     case nat.succ =>
       obtain ⟨⟨pa, pb⟩, s_n'th_eq⟩ : ∃ gp_n', g.s.nth n' = some gp_n' := g.s.ge_stable n'.le_succ s_nth_eq
       -- Notations

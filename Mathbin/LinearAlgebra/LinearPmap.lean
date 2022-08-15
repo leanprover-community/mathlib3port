@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2020 Yury Kudryashov All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Yury Kudryashov
+Authors: Yury Kudryashov, Moritz Doll
 -/
 import Mathbin.LinearAlgebra.Basic
 import Mathbin.LinearAlgebra.Prod
@@ -19,11 +19,14 @@ a `semilattice_inf` with `order_bot` instance on this this, and define three ope
 * `Sup` takes a `directed_on (≤)` set of partial linear maps, and returns the unique
   partial linear map on the `Sup` of their domains that extends all these maps.
 
+Moreover, we define
+* `linear_pmap.graph` is the graph of the partial linear map viewed as a submodule of `E × F`.
+
 Partially defined maps are currently used in `mathlib` to prove Hahn-Banach theorem
 and its variations. Namely, `linear_pmap.Sup` implies that every chain of `linear_pmap`s
 is bounded above.
+They are also the basis for the theory of unbounded operators.
 
-Another possible use (not yet in `mathlib`) would be the theory of unbounded linear operators.
 -/
 
 
@@ -63,6 +66,15 @@ theorem ext {f g : LinearPmap R E F} (h : f.domain = g.domain)
 @[simp]
 theorem map_zero (f : LinearPmap R E F) : f 0 = 0 :=
   f.toFun.map_zero
+
+theorem ext_iff {f g : LinearPmap R E F} :
+    f = g ↔ ∃ domain_eq : f.domain = g.domain, ∀ ⦃x : f.domain⦄ ⦃y : g.domain⦄ (h : (x : E) = y), f x = g y :=
+  ⟨fun EQ =>
+    EQ ▸
+      ⟨rfl, fun x y h => by
+        congr
+        exact_mod_cast h⟩,
+    fun ⟨deq, feq⟩ => ext deq feq⟩
 
 theorem map_add (f : LinearPmap R E F) (x y : f.domain) : f (x + y) = f x + f y :=
   f.toFun.map_add x y
@@ -398,6 +410,12 @@ protected theorem Sup_le {c : Set (LinearPmap R E F)} (hc : DirectedOn (· ≤ �
         have : f ≤ LinearPmap.supₓ c hc⊓g := le_inf (LinearPmap.le_Sup _ hf) (hg f hf)
         this.1
 
+protected theorem Sup_apply {c : Set (LinearPmap R E F)} (hc : DirectedOn (· ≤ ·) c) {l : LinearPmap R E F} (hl : l ∈ c)
+    (x : l.domain) : (LinearPmap.supₓ c hc) ⟨x, (LinearPmap.le_Sup hc hl).1 x.2⟩ = l x := by
+  symm
+  apply (Classical.some_spec (Sup_aux c hc) hl).2
+  rfl
+
 end LinearPmap
 
 namespace LinearMap
@@ -467,6 +485,57 @@ theorem mem_graph_iff (f : LinearPmap R E F) {x : E × F} : x ∈ f.graph ↔ �
 theorem mem_graph (f : LinearPmap R E F) (x : domain f) : ((x : E), f x) ∈ f.graph := by
   simp
 
+variable {M : Type _} [Monoidₓ M] [DistribMulAction M F] [SmulCommClass R M F] (y : M)
+
+/-- The graph of `z • f` as a pushforward. -/
+theorem smul_graph (f : LinearPmap R E F) (z : M) :
+    (z • f).graph = f.graph.map (LinearMap.id.prod_map (z • LinearMap.id)) := by
+  ext x
+  cases x
+  constructor <;> intro h
+  · rw [mem_graph_iff] at h
+    rcases h with ⟨y, hy, h⟩
+    rw [LinearPmap.smul_apply] at h
+    rw [Submodule.mem_map]
+    simp only [← mem_graph_iff, ← LinearMap.prod_map_apply, ← LinearMap.id_coe, ← id.def, ← LinearMap.smul_apply, ←
+      Prod.mk.inj_iff, ← Prod.exists, ← exists_exists_and_eq_and]
+    use x_fst, y
+    simp [← hy, ← h]
+    
+  rw [Submodule.mem_map] at h
+  rcases h with ⟨x', hx', h⟩
+  cases x'
+  simp only [← LinearMap.prod_map_apply, ← LinearMap.id_coe, ← id.def, ← LinearMap.smul_apply, ← Prod.mk.inj_iff] at h
+  rw [mem_graph_iff] at hx'⊢
+  rcases hx' with ⟨y, hy, hx'⟩
+  use y
+  rw [← h.1, ← h.2]
+  simp [← hy, ← hx']
+
+/-- The graph of `-f` as a pushforward. -/
+theorem neg_graph (f : LinearPmap R E F) : (-f).graph = f.graph.map (LinearMap.id.prod_map (-LinearMap.id)) := by
+  ext
+  cases x
+  constructor <;> intro h
+  · rw [mem_graph_iff] at h
+    rcases h with ⟨y, hy, h⟩
+    rw [LinearPmap.neg_apply] at h
+    rw [Submodule.mem_map]
+    simp only [← mem_graph_iff, ← LinearMap.prod_map_apply, ← LinearMap.id_coe, ← id.def, ← LinearMap.neg_apply, ←
+      Prod.mk.inj_iff, ← Prod.exists, ← exists_exists_and_eq_and]
+    use x_fst, y
+    simp [← hy, ← h]
+    
+  rw [Submodule.mem_map] at h
+  rcases h with ⟨x', hx', h⟩
+  cases x'
+  simp only [← LinearMap.prod_map_apply, ← LinearMap.id_coe, ← id.def, ← LinearMap.neg_apply, ← Prod.mk.inj_iff] at h
+  rw [mem_graph_iff] at hx'⊢
+  rcases hx' with ⟨y, hy, hx'⟩
+  use y
+  rw [← h.1, ← h.2]
+  simp [← hy, ← hx']
+
 theorem mem_graph_snd_inj (f : LinearPmap R E F) {x y : E} {x' y' : F} (hx : (x, x') ∈ f.graph) (hy : (y, y') ∈ f.graph)
     (hxy : x = y) : x' = y' := by
   rw [mem_graph_iff] at hx hy
@@ -485,6 +554,69 @@ theorem mem_graph_snd_inj' (f : LinearPmap R E F) {x y : E × F} (hx : x ∈ f.g
 /-- The property that `f 0 = 0` in terms of the graph. -/
 theorem graph_fst_eq_zero_snd (f : LinearPmap R E F) {x : E} {x' : F} (h : (x, x') ∈ f.graph) (hx : x = 0) : x' = 0 :=
   f.mem_graph_snd_inj h f.graph.zero_mem hx
+
+theorem mem_domain_iff {f : LinearPmap R E F} {x : E} : x ∈ f.domain ↔ ∃ y : F, (x, y) ∈ f.graph := by
+  constructor <;> intro h
+  · use f ⟨x, h⟩
+    exact f.mem_graph ⟨x, h⟩
+    
+  cases' h with y h
+  rw [mem_graph_iff] at h
+  cases' h with x' h
+  simp only at h
+  rw [← h.1]
+  simp
+
+theorem image_iff {f : LinearPmap R E F} {x : E} {y : F} (hx : x ∈ f.domain) : y = f ⟨x, hx⟩ ↔ (x, y) ∈ f.graph := by
+  rw [mem_graph_iff]
+  constructor <;> intro h
+  · use ⟨x, hx⟩
+    simp [← h]
+    
+  rcases h with ⟨⟨x', hx'⟩, ⟨h1, h2⟩⟩
+  simp only [← Submodule.coe_mk] at h1 h2
+  simp only [h2, ← h1]
+
+theorem mem_range_iff {f : LinearPmap R E F} {y : F} : y ∈ Set.Range f ↔ ∃ x : E, (x, y) ∈ f.graph := by
+  constructor <;> intro h
+  · rw [Set.mem_range] at h
+    rcases h with ⟨⟨x, hx⟩, h⟩
+    use x
+    rw [← h]
+    exact f.mem_graph ⟨x, hx⟩
+    
+  cases' h with x h
+  rw [mem_graph_iff] at h
+  cases' h with x h
+  rw [Set.mem_range]
+  use x
+  simp only at h
+  rw [h.2]
+
+theorem mem_domain_iff_of_eq_graph {f g : LinearPmap R E F} (h : f.graph = g.graph) {x : E} :
+    x ∈ f.domain ↔ x ∈ g.domain := by
+  simp_rw [mem_domain_iff, h]
+
+theorem le_of_le_graph {f g : LinearPmap R E F} (h : f.graph ≤ g.graph) : f ≤ g := by
+  constructor
+  · intro x hx
+    rw [mem_domain_iff] at hx⊢
+    cases' hx with y hx
+    use y
+    exact h hx
+    
+  rintro ⟨x, hx⟩ ⟨y, hy⟩ hxy
+  rw [image_iff]
+  refine' h _
+  simp only [← Submodule.coe_mk] at hxy
+  rw [hxy] at hx
+  rw [← image_iff hx]
+  simp [← hxy]
+
+theorem eq_of_eq_graph {f g : LinearPmap R E F} (h : f.graph = g.graph) : f = g := by
+  ext
+  exact mem_domain_iff_of_eq_graph h
+  exact (le_of_le_graph h.le).2
 
 end Graph
 

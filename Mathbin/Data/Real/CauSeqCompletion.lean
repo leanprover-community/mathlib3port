@@ -136,6 +136,14 @@ instance : AddGroupWithOneₓ Cauchy :=
     int_cast_of_nat := fun n => congr_arg mk (Int.cast_of_nat n),
     int_cast_neg_succ_of_nat := fun n => congr_arg mk (Int.cast_neg_succ_of_nat n), one := 1 }
 
+@[simp]
+theorem of_rat_nat_cast (n : ℕ) : of_rat n = n :=
+  rfl
+
+@[simp]
+theorem of_rat_int_cast (z : ℤ) : of_rat z = z :=
+  rfl
+
 instance : CommRingₓ Cauchy := by
   refine'
       { Cauchy.add_group_with_one with add := (· + ·), zero := (0 : Cauchy), mul := (· * ·), one := 1,
@@ -147,6 +155,19 @@ instance : CommRingₓ Cauchy := by
         simp [← zero_def, ← one_def, ← mul_left_commₓ, ← mul_comm, ← mul_addₓ, ← add_commₓ, ← add_left_commₓ, ←
           sub_eq_add_neg]
         
+
+-- shortcut instance to ensure computability
+instance : Ringₓ Cauchy :=
+  CommRingₓ.toRing _
+
+/-- `cau_seq.completion.of_rat` as a `ring_hom`  -/
+@[simps]
+def ofRatRingHom : β →+* Cauchy where
+  toFun := of_rat
+  map_zero' := of_rat_zero
+  map_one' := of_rat_one
+  map_add' := of_rat_add
+  map_mul' := of_rat_mul
 
 theorem of_rat_sub (x y : β) : of_rat (x - y) = of_rat x - of_rat y :=
   congr_arg mk (const_sub _ _)
@@ -163,6 +184,13 @@ parameter {β : Type _}[Field β]{abv : β → α}[IsAbsoluteValue abv]
 
 -- mathport name: «exprCauchy»
 local notation "Cauchy" => @Cauchy _ _ _ _ abv _
+
+instance : HasRatCast Cauchy :=
+  ⟨fun q => ofRat q⟩
+
+@[simp]
+theorem of_rat_rat_cast (q : ℚ) : ofRat (↑q : β) = (q : Cauchy) :=
+  rfl
 
 noncomputable instance : Inv Cauchy :=
   ⟨fun x =>
@@ -204,23 +232,32 @@ protected theorem inv_mul_cancel {x : Cauchy} : x ≠ 0 → x⁻¹ * x = 1 :=
     simp [← hf]
     exact Quotientₓ.sound (CauSeq.inv_mul_cancel hf)
 
-/-- The Cauchy completion forms a field.
-See note [reducible non-instances]. -/
-@[reducible]
-noncomputable def field : Field Cauchy :=
-  { Cauchy.commRing with inv := Inv.inv,
-    mul_inv_cancel := fun x x0 => by
-      rw [mul_comm, CauSeq.Completion.inv_mul_cancel x0],
-    exists_pair_ne := ⟨0, 1, zero_ne_one⟩, inv_zero }
-
-attribute [local instance] Field
-
 theorem of_rat_inv (x : β) : ofRat x⁻¹ = ((ofRat x)⁻¹ : Cauchy) :=
   congr_arg mk <| by
     split_ifs with h <;> [simp [← const_lim_zero.1 h], rfl]
 
+/-- The Cauchy completion forms a field. -/
+noncomputable instance : Field Cauchy :=
+  { Cauchy.commRing with inv := Inv.inv,
+    mul_inv_cancel := fun x x0 => by
+      rw [mul_comm, CauSeq.Completion.inv_mul_cancel x0],
+    exists_pair_ne := ⟨0, 1, zero_ne_one⟩, inv_zero, ratCast := fun q => ofRat q,
+    rat_cast_mk := fun n d hd hnd => by
+      rw [Rat.cast_mk', of_rat_mul, of_rat_int_cast, of_rat_inv, of_rat_nat_cast] }
+
 theorem of_rat_div (x y : β) : ofRat (x / y) = (ofRat x / ofRat y : Cauchy) := by
   simp only [← div_eq_inv_mul, ← of_rat_inv, ← of_rat_mul]
+
+/-- Show the first 10 items of a representative of this equivalence class of cauchy sequences.
+
+The representative chosen is the one passed in the VM to `quot.mk`, so two cauchy sequences
+converging to the same number may be printed differently.
+-/
+unsafe instance [HasRepr β] :
+    HasRepr Cauchy where repr := fun r =>
+    let N := 10
+    let seq := r.unquot
+    "(sorry /- " ++ (", ".intercalate <| (List.range N).map <| reprₓ ∘ seq) ++ ", ... -/)"
 
 end
 

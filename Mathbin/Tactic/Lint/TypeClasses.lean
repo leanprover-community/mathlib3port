@@ -14,7 +14,8 @@ This file defines several linters checking the correct usage of type classes
 and the appropriate definition of instances:
 
  * `instance_priority` ensures that blanket instances have low priority.
- * `has_inhabited_instances` checks that every type has an `inhabited` instance.
+ * `has_nonempty_instances` checks that every type has a `nonempty` instance, an `inhabited`
+   instance, or a `unique` instance.
  * `impossible_instance` checks that there are no instances which can never apply.
  * `incorrect_type_class_argument` checks that only type classes are used in
    instance-implicit arguments.
@@ -107,8 +108,10 @@ unsafe def linter.instance_priority : linter where
     "DANGEROUS INSTANCE PRIORITIES.\nThe following instances always apply, and therefore should have a priority < 1000.\nIf you don't know what priority to choose, use priority 100.\nSee note [lower instance priority] for instructions to change the priority."
   auto_decls := true
 
-/-- Reports declarations of types that do not have an associated `inhabited` instance. -/
-private unsafe def has_inhabited_instance (d : declaration) : tactic (Option Stringₓ) := do
+/-- Reports declarations of types that do not have an nonemptiness instance.
+A `nonempty`, `inhabited` or `unique` instance suffices, and we prefer a computable `inhabited`
+or `unique` instance if possible. -/
+private unsafe def has_nonempty_instance (d : declaration) : tactic (Option Stringₓ) := do
   let tt ← pure d.is_trusted | pure none
   let ff ← has_attribute' `reducible d.to_name | pure none
   let ff ← has_attribute' `class d.to_name | pure none
@@ -119,20 +122,21 @@ private unsafe def has_inhabited_instance (d : declaration) : tactic (Option Str
       let quote.1 (Sort _) ← whnf ty | pure none
       let insts ← attribute.get_instances `instance
       let insts_tys ← insts fun i => expr.pi_codomain <$> declaration.type <$> get_decl i
-      let inhabited_insts := insts_tys fun i => i = `` Inhabited ∨ i = `unique
-      let inhabited_tys := inhabited_insts fun i => i
-      if d ∈ inhabited_tys then pure none else pure "inhabited instance missing"
+      let nonempty_insts := insts_tys fun i => i ∈ [`` Nonempty, `` Inhabited, `unique]
+      let nonempty_tys := nonempty_insts fun i => i
+      if d ∈ nonempty_tys then pure none else pure "nonempty/inhabited/unique instance missing"
 
-/-- A linter for missing `inhabited` instances. -/
+/-- A linter for missing `nonempty` instances. -/
 @[linter]
-unsafe def linter.has_inhabited_instance : linter where
-  test := has_inhabited_instance
+unsafe def linter.has_nonempty_instance : linter where
+  test := has_nonempty_instance
   auto_decls := false
-  no_errors_found := "No types have missing inhabited instances."
-  errors_found := "TYPES ARE MISSING INHABITED INSTANCES:"
+  no_errors_found := "No types have missing nonempty instances."
+  errors_found :=
+    "TYPES ARE MISSING NONEMPTY INSTANCES.\nThe following types should have an associated instance of the class\n`nonempty`, or if computably possible `inhabited` or `unique`:"
   is_fast := false
 
-attribute [nolint has_inhabited_instance] Pempty
+attribute [nolint has_nonempty_instance] Pempty
 
 /-- Checks whether an instance can never be applied. -/
 private unsafe def impossible_instance (d : declaration) : tactic (Option Stringₓ) := do

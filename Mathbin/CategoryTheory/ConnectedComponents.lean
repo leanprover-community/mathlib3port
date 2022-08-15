@@ -45,7 +45,7 @@ instance [Inhabited J] : Inhabited (ConnectedComponents J) :=
 
 /-- Given an index for a connected component, produce the actual component as a full subcategory. -/
 def Component (j : ConnectedComponents J) : Type u₁ :=
-  { k : J // Quotientₓ.mk' k = j }deriving Category
+  FullSubcategory fun k => Quotientₓ.mk' k = j deriving Category
 
 /-- The inclusion functor from a connected component to the whole category. -/
 @[simps (config := { rhsMd := semireducible })]
@@ -91,7 +91,7 @@ instance (j : ConnectedComponents J) : IsConnected (Component j) := by
         (by
           simpa [← h₁₂] using hf)
         (List.cons_ne_nil _ _)]
-    exact Subtype.ext hl₂
+    exact full_subcategory.ext _ _ hl₂
     
 
 /-- The disjoint union of `J`s connected components, written explicitly as a sigma-type with the

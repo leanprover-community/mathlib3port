@@ -240,7 +240,7 @@ theorem adj_matrix_mul_vec_const_apply_of_regular [Semiringₓ α] {d : ℕ} {a 
     (G.adjMatrix α).mulVec (Function.const _ a) v = d * a := by
   simp [← hd v]
 
--- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc1.lean:253:2: unsupported tactic unify_equations
+-- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc1.lean:254:2: unsupported tactic unify_equations
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: unify_equations ... #[[ident hqp, ident hrp]]
 theorem adj_matrix_pow_apply_eq_card_walk [DecidableEq V] [Semiringₓ α] (n : ℕ) (u v : V) :
     (G.adjMatrix α ^ n) u v = Fintype.card { p : G.Walk u v | p.length = n } := by
@@ -265,7 +265,7 @@ theorem adj_matrix_pow_apply_eq_card_walk [DecidableEq V] [Semiringₓ α] (n : 
           try
             simpa using hp
       obtain ⟨⟨qx, hql, hqp⟩, ⟨rx, hrl, hrp⟩⟩ := hp
-      «./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc1.lean:253:2: unsupported tactic unify_equations»
+      «./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc1.lean:254:2: unsupported tactic unify_equations»
       exact absurd rfl hxy
       
     

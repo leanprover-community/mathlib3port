@@ -1084,7 +1084,7 @@ theorem modify_head_modify_head (l : List α) (f g : α → α) : (l.modifyHead 
 /-- Induction principle from the right for lists: if a property holds for the empty list, and
 for `l ++ [a]` if it holds for `l`, then it holds for all lists. The principle is given for
 a `Sort`-valued predicate, i.e., it can also be used to construct data. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def reverseRecOn {C : List α → Sort _} (l : List α) (H0 : C []) (H1 : ∀ (l : List α) (a : α), C l → C (l ++ [a])) :
     C l := by
   rw [← reverse_reverse l]
@@ -1114,7 +1114,7 @@ def bidirectionalRecₓ {C : List α → Sort _} (H0 : C []) (H1 : ∀ a : α, C
     exact Hn a l' b' ‹C l'›
 
 /-- Like `bidirectional_rec`, but with the list parameter placed first. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def bidirectionalRecOn {C : List α → Sort _} (l : List α) (H0 : C []) (H1 : ∀ a : α, C [a])
     (Hn : ∀ (a : α) (l : List α) (b : α), C l → C (a :: (l ++ [b]))) : C l :=
   bidirectionalRecₓ H0 H1 Hn l
@@ -1371,6 +1371,10 @@ theorem nth_le_nth : ∀ {l : List α} {n} (h), nth l n = some (nthLe l n h)
 theorem nth_len_le : ∀ {l : List α} {n}, length l ≤ n → nth l n = none
   | [], n, h => rfl
   | a :: l, n + 1, h => nth_len_le (le_of_succ_le_succₓ h)
+
+@[simp]
+theorem nth_length (l : List α) : l.nth l.length = none :=
+  nth_len_le le_rfl
 
 theorem nth_eq_some {l : List α} {n a} : nth l n = some a ↔ ∃ h, nthLe l n h = a :=
   ⟨fun e =>
@@ -1646,7 +1650,7 @@ theorem modify_nth_tail_modify_nth_tail {f g : List α → List α} (m : ℕ) :
 
 theorem modify_nth_tail_modify_nth_tail_le {f g : List α → List α} (m n : ℕ) (l : List α) (h : n ≤ m) :
     (l.modifyNthTail f n).modifyNthTail g m = l.modifyNthTail (fun l => (f l).modifyNthTail g (m - n)) n := by
-  rcases le_iff_exists_add.1 h with ⟨m, rfl⟩
+  rcases exists_add_of_le h with ⟨m, rfl⟩
   rw [add_tsub_cancel_left, add_commₓ, modify_nth_tail_modify_nth_tail]
 
 theorem modify_nth_tail_modify_nth_tail_same {f g : List α → List α} (n : ℕ) (l : List α) :
@@ -1763,9 +1767,9 @@ theorem nth_le_update_nth_of_ne {l : List α} {i j : ℕ} (h : i ≠ j) (a : α)
 
 theorem mem_or_eq_of_mem_update_nth : ∀ {l : List α} {n : ℕ} {a b : α} (h : a ∈ l.updateNth n b), a ∈ l ∨ a = b
   | [], n, a, b, h => False.elim h
-  | c :: l, 0, a, b, h => ((mem_cons_iff _ _ _).1 h).elim Or.inr (Or.inl ∘ mem_cons_of_memₓ _)
+  | c :: l, 0, a, b, h => ((mem_cons_iffₓ _ _ _).1 h).elim Or.inr (Or.inl ∘ mem_cons_of_memₓ _)
   | c :: l, n + 1, a, b, h =>
-    ((mem_cons_iff _ _ _).1 h).elim (fun h => h ▸ Or.inl (mem_cons_selfₓ _ _)) fun h =>
+    ((mem_cons_iffₓ _ _ _).1 h).elim (fun h => h ▸ Or.inl (mem_cons_selfₓ _ _)) fun h =>
       (mem_or_eq_of_mem_update_nth h).elim (Or.inl ∘ mem_cons_of_memₓ _) Or.inr
 
 section InsertNth
@@ -3739,6 +3743,73 @@ theorem take_while_append_drop : ∀ l : List α, takeWhileₓ p l ++ dropWhile�
     else by
       rw [take_while, drop_while, if_neg pa, if_neg pa, nil_append]
 
+theorem drop_while_nth_le_zero_not (l : List α) (hl : 0 < (l.dropWhile p).length) : ¬p ((l.dropWhile p).nthLe 0 hl) :=
+  by
+  induction' l with hd tl IH
+  · cases hl
+    
+  · simp only [← drop_while]
+    split_ifs with hp
+    · exact IH _
+      
+    · simpa using hp
+      
+    
+
+variable {p} {l : List α}
+
+@[simp]
+theorem drop_while_eq_nil_iff : dropWhileₓ p l = [] ↔ ∀, ∀ x ∈ l, ∀, p x := by
+  induction' l with x xs IH
+  · simp [← drop_while]
+    
+  · by_cases' hp : p x <;> simp [← hp, ← drop_while, ← IH]
+    
+
+@[simp]
+theorem take_while_eq_self_iff : takeWhileₓ p l = l ↔ ∀, ∀ x ∈ l, ∀, p x := by
+  induction' l with x xs IH
+  · simp [← take_while]
+    
+  · by_cases' hp : p x <;> simp [← hp, ← take_while, ← IH]
+    
+
+@[simp]
+theorem take_while_eq_nil_iff : takeWhileₓ p l = [] ↔ ∀ hl : 0 < l.length, ¬p (l.nthLe 0 hl) := by
+  induction' l with x xs IH
+  · simp
+    
+  · by_cases' hp : p x <;> simp [← hp, ← take_while, ← IH]
+    
+
+theorem mem_take_while_imp {x : α} (hx : x ∈ takeWhileₓ p l) : p x := by
+  induction' l with hd tl IH
+  · simpa [← take_while] using hx
+    
+  · simp only [← take_while] at hx
+    split_ifs  at hx
+    · rw [mem_cons_iff] at hx
+      rcases hx with (rfl | hx)
+      · exact h
+        
+      · exact IH hx
+        
+      
+    · simpa using hx
+      
+    
+
+theorem take_while_take_while (p q : α → Prop) [DecidablePred p] [DecidablePred q] (l : List α) :
+    takeWhileₓ p (takeWhileₓ q l) = takeWhileₓ (fun a => p a ∧ q a) l := by
+  induction' l with hd tl IH
+  · simp [← take_while]
+    
+  · by_cases' hp : p hd <;> by_cases' hq : q hd <;> simp [← take_while, ← hp, ← hq, ← IH]
+    
+
+theorem take_while_idem : takeWhileₓ p (takeWhileₓ p l) = takeWhileₓ p l := by
+  simp_rw [take_while_take_while, and_selfₓ]
+
 end Filter
 
 /-! ### erasep -/
@@ -4616,6 +4687,127 @@ theorem sizeof_slice_lt [SizeOf α] (i j : ℕ) (hj : 0 < j) (xs : List α) (hi 
       apply xs_ih _ _ h
       apply lt_of_succ_lt_succ hi
       
+
+/-! ### nthd and inth -/
+
+
+section Nthd
+
+variable (l : List α) (x : α) (xs : List α) (d : α) (n : ℕ)
+
+@[simp]
+theorem nthd_nil : nthd d [] n = d :=
+  rfl
+
+@[simp]
+theorem nthd_cons_zero : nthd d (x :: xs) 0 = x :=
+  rfl
+
+@[simp]
+theorem nthd_cons_succ : nthd d (x :: xs) (n + 1) = nthd d xs n :=
+  rfl
+
+theorem nthd_eq_nth_le {n : ℕ} (hn : n < l.length) : l.nthd d n = l.nthLe n hn := by
+  induction' l with hd tl IH generalizing n
+  · exact absurd hn (not_lt_of_geₓ (Nat.zero_leₓ _))
+    
+  · cases n
+    · exact nthd_cons_zero _ _ _
+      
+    · exact IH _
+      
+    
+
+theorem nthd_eq_default {n : ℕ} (hn : l.length ≤ n) : l.nthd d n = d := by
+  induction' l with hd tl IH generalizing n
+  · exact nthd_nil _ _
+    
+  · cases n
+    · refine' absurd (Nat.zero_lt_succₓ _) (not_lt_of_geₓ hn)
+      
+    · exact IH (Nat.le_of_succ_le_succₓ hn)
+      
+    
+
+/-- An empty list can always be decidably checked for the presence of an element.
+Not an instance because it would clash with `decidable_eq α`. -/
+def decidableNthdNilNe {α} (a : α) : DecidablePred fun i : ℕ => nthd a ([] : List α) i ≠ a := fun i =>
+  is_false fun H => H (nthd_nil _ _)
+
+@[simp]
+theorem nthd_singleton_default_eq (n : ℕ) : [d].nthd d n = d := by
+  cases n <;> simp
+
+@[simp]
+theorem nthd_repeat_default_eq (r n : ℕ) : (repeat d r).nthd d n = d := by
+  induction' r with r IH generalizing n
+  · simp
+    
+  · cases n <;> simp [← IH]
+    
+
+theorem nthd_append (l l' : List α) (d : α) (n : ℕ) (h : n < l.length)
+    (h' : n < (l ++ l').length := h.trans_le ((length_append l l').symm ▸ le_self_add)) :
+    (l ++ l').nthd d n = l.nthd d n := by
+  rw [nthd_eq_nth_le _ _ h', nth_le_append h' h, nthd_eq_nth_le]
+
+theorem nthd_append_right (l l' : List α) (d : α) (n : ℕ) (h : l.length ≤ n) :
+    (l ++ l').nthd d n = l'.nthd d (n - l.length) := by
+  cases' lt_or_leₓ _ _ with h' h'
+  · rw [nthd_eq_nth_le _ _ h', nth_le_append_right h h', nthd_eq_nth_le]
+    
+  · rw [nthd_eq_default _ _ h', nthd_eq_default]
+    rwa [le_tsub_iff_left h, ← length_append]
+    
+
+theorem nthd_eq_get_or_else_nth (n : ℕ) : l.nthd d n = (l.nth n).getOrElse d := by
+  cases' lt_or_leₓ _ _ with h h
+  · rw [nthd_eq_nth_le _ _ h, nth_le_nth h, Option.get_or_else_some]
+    
+  · rw [nthd_eq_default _ _ h, nth_eq_none_iff.mpr h, Option.get_or_else_none]
+    
+
+end Nthd
+
+section Inth
+
+variable [Inhabited α] (l : List α) (x : α) (xs : List α) (n : ℕ)
+
+@[simp]
+theorem inth_nil : inth ([] : List α) n = default :=
+  rfl
+
+@[simp]
+theorem inth_cons_zero : inth (x :: xs) 0 = x :=
+  rfl
+
+@[simp]
+theorem inth_cons_succ : inth (x :: xs) (n + 1) = inth xs n :=
+  rfl
+
+theorem inth_eq_nth_le {n : ℕ} (hn : n < l.length) : l.inth n = l.nthLe n hn :=
+  nthd_eq_nth_le _ _ _
+
+theorem inth_eq_default {n : ℕ} (hn : l.length ≤ n) : l.inth n = default :=
+  nthd_eq_default _ _ hn
+
+theorem nthd_default_eq_inth : l.nthd default = l.inth :=
+  rfl
+
+theorem inth_append (l l' : List α) (n : ℕ) (h : n < l.length)
+    (h' : n < (l ++ l').length := h.trans_le ((length_append l l').symm ▸ le_self_add)) : (l ++ l').inth n = l.inth n :=
+  nthd_append _ _ _ _ h h'
+
+theorem inth_append_right (l l' : List α) (n : ℕ) (h : l.length ≤ n) : (l ++ l').inth n = l'.inth (n - l.length) :=
+  nthd_append_right _ _ _ _ h
+
+theorem inth_eq_iget_nth (n : ℕ) : l.inth n = (l.nth n).iget := by
+  rw [← nthd_default_eq_inth, nthd_eq_get_or_else_nth, Option.get_or_else_default_eq_iget]
+
+theorem inth_zero_eq_head : l.inth 0 = l.head := by
+  cases l <;> rfl
+
+end Inth
 
 end List
 

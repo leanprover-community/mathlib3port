@@ -152,7 +152,7 @@ instance (α enum n) : Inhabited (FinsetAbove α enum n) :=
 /-- This is a finset covering a nontrivial variant (with one or more constructor arguments).
 The property `P` here is `λ a, enum a = n` where `n` is the discriminant for the current
 variant. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def FinsetIn {α} (P : α → Prop) :=
   { s : Finset α // ∀, ∀ x ∈ s, ∀, P x }
 

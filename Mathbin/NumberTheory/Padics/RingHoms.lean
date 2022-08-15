@@ -87,14 +87,18 @@ theorem mod_part_nonneg : 0 ≤ modPart p r :=
 theorem is_unit_denom (r : ℚ) (h : ∥(r : ℚ_[p])∥ ≤ 1) : IsUnit (r.denom : ℤ_[p]) := by
   rw [is_unit_iff]
   apply le_antisymmₓ (r.denom : ℤ_[p]).2
-  rw [← not_ltₓ, val_eq_coe, coe_coe]
+  rw [← not_ltₓ, val_eq_coe, coe_nat_cast]
   intro norm_denom_lt
   have hr : ∥(r * r.denom : ℚ_[p])∥ = ∥(r.num : ℚ_[p])∥ := by
     rw_mod_cast[@Rat.mul_denom_eq_num r]
     rfl
   rw [padicNormE.mul] at hr
   have key : ∥(r.num : ℚ_[p])∥ < 1 := by
-    calc _ = _ := hr.symm _ < 1 * 1 := mul_lt_mul' h norm_denom_lt (norm_nonneg _) zero_lt_one _ = 1 := mul_oneₓ 1
+    calc
+      _ = _ := hr.symm
+      _ < 1 * 1 := mul_lt_mul' h norm_denom_lt (norm_nonneg _) zero_lt_one
+      _ = 1 := mul_oneₓ 1
+      
   have : ↑p ∣ r.num ∧ (p : ℤ) ∣ r.denom := by
     simp only [norm_int_lt_one_iff_dvd, padic_norm_e_of_padic_int]
     norm_cast
@@ -127,7 +131,7 @@ theorem norm_sub_mod_part (h : ∥(r : ℚ_[p])∥ ≤ 1) : ∥(⟨r, h⟩ - mod
     convert (Int.castRingHom ℤ_[p]).map_dvd this
     simp only [← sub_mul, ← Int.cast_coe_nat, ← RingHom.eq_int_cast, ← Int.cast_mul, ← sub_left_inj, ← Int.cast_sub]
     apply Subtype.coe_injective
-    simp only [← coe_mul, ← Subtype.coe_mk, ← coe_coe]
+    simp only [← coe_mul, ← Subtype.coe_mk, ← coe_nat_cast]
     rw_mod_cast[@Rat.mul_denom_eq_num r]
     rfl
   exact norm_sub_mod_part_aux r h
@@ -171,15 +175,19 @@ theorem exists_mem_range : ∃ n : ℕ, n < p ∧ x - n ∈ maximalIdeal ℤ_[p]
   obtain ⟨r, hr⟩ := rat_dense (x : ℚ_[p]) zero_lt_one
   have H : ∥(r : ℚ_[p])∥ ≤ 1 := by
     rw [norm_sub_rev] at hr
-    calc _ = ∥(r : ℚ_[p]) - x + x∥ := by
-        ring_nf _ ≤ _ := padicNormE.nonarchimedean _ _ _ ≤ _ := max_leₓ (le_of_ltₓ hr) x.2
+    calc
+      _ = ∥(r : ℚ_[p]) - x + x∥ := by
+        ring_nf
+      _ ≤ _ := padicNormE.nonarchimedean _ _
+      _ ≤ _ := max_leₓ (le_of_ltₓ hr) x.2
+      
   obtain ⟨n, hzn, hnp, hn⟩ := exists_mem_range_of_norm_rat_le_one r H
   lift n to ℕ using hzn
   use n
   constructor
   · exact_mod_cast hnp
     
-  simp only [← norm_def, ← coe_sub, ← Subtype.coe_mk, ← coe_coe] at hn⊢
+  simp only [← norm_def, ← coe_sub, ← Subtype.coe_mk, ← coe_nat_cast] at hn⊢
   rw
     [show (x - n : ℚ_[p]) = x - r + (r - n) by
       ring]
@@ -308,7 +316,10 @@ theorem appr_lt (x : ℤ_[p]) (n : ℕ) : x.appr n < p ^ n := by
   split_ifs with h
   · apply lt_transₓ (ih _) hp
     
-  · calc _ < p ^ n + p ^ n * (p - 1) := _ _ = p ^ (n + 1) := _
+  · calc
+      _ < p ^ n + p ^ n * (p - 1) := _
+      _ = p ^ (n + 1) := _
+      
     · apply add_lt_add_of_lt_of_le (ih _)
       apply Nat.mul_le_mul_leftₓ
       apply le_pred_of_lt
@@ -505,8 +516,8 @@ theorem pow_dvd_nth_hom_sub (r : R) (i j : ℕ) (h : i ≤ j) : ↑p ^ i ∣ nth
   rw [← Int.coe_nat_pow, ← Zmod.int_coe_zmod_eq_zero_iff_dvd, Int.cast_sub]
   dsimp' [← nth_hom]
   rw [← f_compat, RingHom.comp_apply]
-  have : Fact (p ^ i > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
-  have : Fact (p ^ j > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
+  haveI : Fact (p ^ i > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
+  haveI : Fact (p ^ j > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
   simp only [← Zmod.cast_id, ← Zmod.cast_hom_apply, ← sub_self, ← Zmod.nat_cast_val, ← Zmod.int_cast_cast]
 
 theorem is_cau_seq_nth_hom (r : R) : IsCauSeq (padicNorm p) fun n => nthHom f r n := by
@@ -531,7 +542,7 @@ theorem nth_hom_seq_one : nthHomSeq f_compat 1 ≈ 1 := by
   change _ < _ at hε
   use 1
   intro j hj
-  have : Fact (1 < p ^ j) :=
+  haveI : Fact (1 < p ^ j) :=
     ⟨Nat.one_lt_pow _ _
         (by
           linarith)
@@ -547,8 +558,8 @@ theorem nth_hom_seq_add (r s : R) : nthHomSeq f_compat (r + s) ≈ nthHomSeq f_c
   apply lt_of_le_of_ltₓ _ hn
   rw [← Int.cast_add, ← Int.cast_sub, ← padicNorm.dvd_iff_norm_le, ← Zmod.int_coe_zmod_eq_zero_iff_dvd]
   dsimp' [← nth_hom]
-  have : Fact (p ^ n > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
-  have : Fact (p ^ j > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
+  haveI : Fact (p ^ n > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
+  haveI : Fact (p ^ j > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
   simp only [← Zmod.nat_cast_val, ← RingHom.map_add, ← Int.cast_sub, ← Zmod.int_cast_cast, ← Int.cast_add]
   rw [Zmod.cast_add (show p ^ n ∣ p ^ j from pow_dvd_pow _ hj), sub_self]
   · infer_instance
@@ -563,8 +574,8 @@ theorem nth_hom_seq_mul (r s : R) : nthHomSeq f_compat (r * s) ≈ nthHomSeq f_c
   apply lt_of_le_of_ltₓ _ hn
   rw [← Int.cast_mul, ← Int.cast_sub, ← padicNorm.dvd_iff_norm_le, ← Zmod.int_coe_zmod_eq_zero_iff_dvd]
   dsimp' [← nth_hom]
-  have : Fact (p ^ n > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
-  have : Fact (p ^ j > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
+  haveI : Fact (p ^ n > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
+  haveI : Fact (p ^ j > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
   simp only [← Zmod.nat_cast_val, ← RingHom.map_mul, ← Int.cast_sub, ← Zmod.int_cast_cast, ← Int.cast_mul]
   rw [Zmod.cast_mul (show p ^ n ∣ p ^ j from pow_dvd_pow _ hj), sub_self]
   · infer_instance
@@ -587,8 +598,7 @@ theorem lim_nth_hom_spec (r : R) : ∀ ε : ℝ, 0 < ε → ∃ N : ℕ, ∀, �
   apply lt_transₓ _ hε'
   change ↑(padicNormE _) < _
   norm_cast
-  convert hN _ hn
-  simp [← nth_hom, ← lim_nth_hom, ← nth_hom_seq, ← of_int_seq]
+  exact hN _ hn
 
 theorem lim_nth_hom_zero : limNthHom f_compat 0 = 0 := by
   simp [← lim_nth_hom] <;> rfl
@@ -633,7 +643,7 @@ See also `padic_int.lift_unique`.
 -/
 theorem lift_spec (n : ℕ) : (toZmodPow n).comp (lift f_compat) = f n := by
   ext r
-  have : Fact (0 < p ^ n) := ⟨pow_pos hp_prime.1.Pos n⟩
+  haveI : Fact (0 < p ^ n) := ⟨pow_pos hp_prime.1.Pos n⟩
   rw [RingHom.comp_apply, ← Zmod.nat_cast_zmod_val (f n r), ← map_nat_cast <| to_zmod_pow n, ← sub_eq_zero, ←
     RingHom.map_sub, ← RingHom.mem_ker, ker_to_zmod_pow]
   apply lift_sub_val_mem_span

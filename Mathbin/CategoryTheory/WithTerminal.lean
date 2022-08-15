@@ -58,7 +58,7 @@ attribute [local tidy] tactic.case_bash
 variable {C}
 
 /-- Morphisms for `with_terminal C`. -/
-@[simp, nolint has_inhabited_instance]
+@[simp, nolint has_nonempty_instance]
 def Homₓ : WithTerminal C → WithTerminal C → Type v
   | of X, of Y => X ⟶ Y
   | star, of X => Pempty
@@ -209,7 +209,7 @@ attribute [local tidy] tactic.case_bash
 variable {C}
 
 /-- Morphisms for `with_initial C`. -/
-@[simp, nolint has_inhabited_instance]
+@[simp, nolint has_nonempty_instance]
 def Homₓ : WithInitial C → WithInitial C → Type v
   | of X, of Y => X ⟶ Y
   | of X, _ => Pempty

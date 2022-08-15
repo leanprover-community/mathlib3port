@@ -5,9 +5,9 @@ Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro
 -/
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Algebra.SmulWithZero
+import Mathbin.Data.Rat.Cast
 import Mathbin.GroupTheory.GroupAction.BigOperators
 import Mathbin.GroupTheory.GroupAction.Group
-import Mathbin.Tactic.NormNum
 
 /-!
 # Modules over a ring
@@ -71,6 +71,9 @@ instance AddCommMonoidₓ.natModule : Module ℕ M where
   smul_zero := nsmul_zero
   zero_smul := zero_nsmul
   add_smul := fun r s x => add_nsmul x r s
+
+theorem AddMonoidₓ.End.nat_cast_def (n : ℕ) : (↑n : AddMonoidₓ.End M) = DistribMulAction.toAddMonoidEnd ℕ M n :=
+  rfl
 
 theorem add_smul : (r + s) • x = r • x + s • x :=
   Module.add_smul r s x
@@ -207,11 +210,14 @@ instance AddCommGroupₓ.intModule : Module ℤ M where
   zero_smul := zero_zsmul
   add_smul := fun r s x => add_zsmul x r s
 
+theorem AddMonoidₓ.End.int_cast_def (z : ℤ) : (↑z : AddMonoidₓ.End M) = DistribMulAction.toAddMonoidEnd ℤ M z :=
+  rfl
+
 /-- A structure containing most informations as in a module, except the fields `zero_smul`
 and `smul_zero`. As these fields can be deduced from the other ones when `M` is an `add_comm_group`,
 this provides a way to construct a module structure by checking less properties, in
 `module.of_core`. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure Module.Core extends HasSmul R M where
   smul_add : ∀ (r : R) (x y : M), r • (x + y) = r • x + r • y
   add_smul : ∀ (r s : R) (x : M), (r + s) • x = r • x + s • x
@@ -222,11 +228,10 @@ variable {R M}
 
 /-- Define `module` without proving `zero_smul` and `smul_zero` by using an auxiliary
 structure `module.core`, when the underlying space is an `add_comm_group`. -/
-def Module.ofCore (H : Module.Core R M) : Module R M := by
-  let this := H.to_has_smul <;>
-    exact
-      { H with zero_smul := fun x => (AddMonoidHom.mk' (fun r : R => r • x) fun r s => H.add_smul r s x).map_zero,
-        smul_zero := fun r => (AddMonoidHom.mk' ((· • ·) r) (H.smul_add r)).map_zero }
+def Module.ofCore (H : Module.Core R M) : Module R M :=
+  letI := H.to_has_smul
+  { H with zero_smul := fun x => (AddMonoidHom.mk' (fun r : R => r • x) fun r s => H.add_smul r s x).map_zero,
+    smul_zero := fun r => (AddMonoidHom.mk' ((· • ·) r) (H.smul_add r)).map_zero }
 
 end AddCommGroupₓ
 
@@ -236,9 +241,9 @@ theorem Module.ext' {R : Type _} [Semiringₓ R] {M : Type _} [AddCommMonoidₓ 
     (w :
       ∀ (r : R) (m : M),
         by
-          have := P
+          haveI := P
           exact r • m = by
-          have := Q
+          haveI := Q
           exact r • m) :
     P = Q := by
   ext
@@ -551,8 +556,8 @@ theorem Nat.no_zero_smul_divisors : NoZeroSmulDivisors ℕ M :=
 
 @[simp]
 theorem two_nsmul_eq_zero {v : M} : 2 • v = 0 ↔ v = 0 := by
-  have := Nat.no_zero_smul_divisors R M
-  norm_num [← smul_eq_zero]
+  haveI := Nat.no_zero_smul_divisors R M
+  simp [← smul_eq_zero]
 
 end Nat
 

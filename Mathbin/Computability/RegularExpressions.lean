@@ -319,7 +319,7 @@ theorem star_rmatch_iff (P : RegularExpression α) :
               tauto⟩
           
         · cases' t' with b t
-          · simp only [← forall_eq_or_imp, ← List.mem_cons_iff] at helem
+          · simp only [← forall_eq_or_imp, ← List.mem_cons_iffₓ] at helem
             simp only [← eq_self_iff_true, ← not_true, ← Ne.def, ← false_andₓ] at helem
             cases helem
             

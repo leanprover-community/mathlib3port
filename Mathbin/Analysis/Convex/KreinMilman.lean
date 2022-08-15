@@ -58,7 +58,7 @@ open Set
 
 open Classical
 
-variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {s : Set E}
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {s : Set E}
 
 /-- **Krein-Milman lemma**: In a LCTVS (currently only in normed `ℝ`-spaces), any nonempty compact
 set has an extreme point. -/
@@ -86,7 +86,7 @@ theorem IsCompact.has_extreme_point (hscomp : IsCompact s) (hsnemp : s.Nonempty)
   refine'
     ⟨⋂₀ F, ⟨_, is_closed_sInter fun t ht => (hFS ht).2.1, (is_extreme_sInter hFnemp) fun t ht => (hFS ht).2.2⟩,
       fun t ht => sInter_subset_of_mem ht⟩
-  have : Nonempty ↥F := hFnemp.to_subtype
+  haveI : Nonempty ↥F := hFnemp.to_subtype
   rw [sInter_eq_Inter]
   refine'
     IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed _ (fun t u => _) (fun t => (hFS t.Mem).1)

@@ -63,10 +63,11 @@ require balls of positive radius with center at the origin to be strictly convex
 then prove that any closed ball is strictly convex in `strict_convex_closed_ball` below.
 
 See also `strict_convex_space.of_strict_convex_closed_unit_ball`. -/
-class StrictConvexSpace (𝕜 E : Type _) [NormedLinearOrderedField 𝕜] [NormedGroup E] [NormedSpace 𝕜 E] : Prop where
+class StrictConvexSpace (𝕜 E : Type _) [NormedLinearOrderedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] :
+  Prop where
   strict_convex_closed_ball : ∀ r : ℝ, 0 < r → StrictConvex 𝕜 (ClosedBall (0 : E) r)
 
-variable (𝕜 : Type _) {E : Type _} [NormedLinearOrderedField 𝕜] [NormedGroup E] [NormedSpace 𝕜 E]
+variable (𝕜 : Type _) {E : Type _} [NormedLinearOrderedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 /-- A closed ball in a strictly convex space is strictly convex. -/
 theorem strict_convex_closed_ball [StrictConvexSpace 𝕜 E] (x : E) (r : ℝ) : StrictConvex 𝕜 (ClosedBall x r) := by
@@ -102,8 +103,11 @@ theorem StrictConvexSpace.of_norm_add (h : ∀ x y : E, ∥x + y∥ = ∥x∥ + 
   have hy₁ : ∥y∥ = 1 := mem_sphere_zero_iff_norm.1 hy
   have ha' : ∥a∥ = a := Real.norm_of_nonneg ha.le
   have hb' : ∥b∥ = b := Real.norm_of_nonneg hb.le
-  calc ∥a • x + b • y∥ < ∥a • x∥ + ∥b • y∥ := (norm_add_le _ _).lt_of_ne fun H => hne _ _ = 1 := by
+  calc
+    ∥a • x + b • y∥ < ∥a • x∥ + ∥b • y∥ := (norm_add_le _ _).lt_of_ne fun H => hne _
+    _ = 1 := by
       simpa only [← norm_smul, ← hx₁, ← hy₁, ← mul_oneₓ, ← ha', ← hb']
+    
   simpa only [← norm_smul, ← hx₁, ← hy₁, ← ha', ← hb', ← mul_oneₓ, ← smul_comm a, ← smul_right_inj ha.ne', ←
     smul_right_inj hb.ne'] using (h _ _ H).norm_smul_eq.symm
 
@@ -117,14 +121,18 @@ theorem StrictConvexSpace.of_norm_add_lt_aux {a b c d : ℝ} (ha : 0 < a) (hab :
   have h₂ : 0 ≤ d - c / a * b := by
     rw [sub_nonneg, mul_comm_div, ← le_div_iff' hc]
     exact div_le_div hd.le hbd hc hca
-  calc ∥c • x + d • y∥ = ∥(c / a) • (a • x + b • y) + (d - c / a * b) • y∥ := by
-      rw [smul_add, ← mul_smul, ← mul_smul, div_mul_cancel _ ha.ne', sub_smul,
-        add_add_sub_cancel]_ ≤ ∥(c / a) • (a • x + b • y)∥ + ∥(d - c / a * b) • y∥ :=
-      norm_add_le _ _ _ = c / a * ∥a • x + b • y∥ + (d - c / a * b) * ∥y∥ := by
-      rw [norm_smul_of_nonneg h₁.le, norm_smul_of_nonneg h₂]_ < c / a * 1 + (d - c / a * b) * 1 :=
-      add_lt_add_of_lt_of_le (mul_lt_mul_of_pos_left hxy h₁) (mul_le_mul_of_nonneg_left hy h₂)_ = 1 := by
+  calc
+    ∥c • x + d • y∥ = ∥(c / a) • (a • x + b • y) + (d - c / a * b) • y∥ := by
+      rw [smul_add, ← mul_smul, ← mul_smul, div_mul_cancel _ ha.ne', sub_smul, add_add_sub_cancel]
+    _ ≤ ∥(c / a) • (a • x + b • y)∥ + ∥(d - c / a * b) • y∥ := norm_add_le _ _
+    _ = c / a * ∥a • x + b • y∥ + (d - c / a * b) * ∥y∥ := by
+      rw [norm_smul_of_nonneg h₁.le, norm_smul_of_nonneg h₂]
+    _ < c / a * 1 + (d - c / a * b) * 1 :=
+      add_lt_add_of_lt_of_le (mul_lt_mul_of_pos_left hxy h₁) (mul_le_mul_of_nonneg_left hy h₂)
+    _ = 1 := by
       nth_rw 0[← hab]
       rw [mul_addₓ, div_mul_cancel _ ha.ne', mul_oneₓ, add_add_sub_cancel, hcd]
+    
 
 /-- Strict convexity is equivalent to `∥a • x + b • y∥ < 1` for all `x` and `y` of norm at most `1`
 and all strictly positive `a` and `b` such that `a + b = 1`. This shows that we only need to check
@@ -229,7 +237,7 @@ theorem norm_midpoint_lt_iff (h : ∥x∥ = ∥y∥) : ∥(1 / 2 : ℝ) • (x +
   rw [norm_smul, Real.norm_of_nonneg (one_div_nonneg.2 zero_le_two), ← inv_eq_one_div, ← div_eq_inv_mul,
     div_lt_iff (@zero_lt_two ℝ _ _), mul_two, ← not_same_ray_iff_of_norm_eq h, not_same_ray_iff_norm_add_lt, h]
 
-variable {F : Type _} [NormedGroup F] [NormedSpace ℝ F]
+variable {F : Type _} [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 variable {PF : Type _} {PE : Type _} [MetricSpace PF] [MetricSpace PE]
 

@@ -41,7 +41,7 @@ support in the tensor product library, it is far easier to bootstrap like this, 
 definition below. -/
 private def bracket' : A ⊗[R] L →ₗ[R] A ⊗[R] L →ₗ[R] A ⊗[R] L :=
   TensorProduct.curry <|
-    TensorProduct.map (Algebra.lmul' R) (LieModule.toModuleHom R L L : L ⊗[R] L →ₗ[R] L) ∘ₗ
+    TensorProduct.map (LinearMap.mul' R _) (LieModule.toModuleHom R L L : L ⊗[R] L →ₗ[R] L) ∘ₗ
       ↑(TensorProduct.tensorTensorTensorComm R A L A L)
 
 @[simp]
@@ -135,7 +135,7 @@ private theorem bracket_lie_smul (a : A) (x y : A ⊗[R] L) : ⁅x,a • y⁆ = 
       
     · intro a₂ l₂
       simp only [← bracket_def, ← bracket', ← TensorProduct.smul_tmul', ← mul_left_commₓ a₁ a a₂, ←
-        TensorProduct.curry_apply, ← Algebra.lmul'_apply, ← Algebra.id.smul_eq_mul, ← Function.comp_app, ←
+        TensorProduct.curry_apply, ← LinearMap.mul'_apply, ← Algebra.id.smul_eq_mul, ← Function.comp_app, ←
         LinearEquiv.coe_coe, ← LinearMap.coe_comp, ← TensorProduct.map_tmul, ←
         TensorProduct.tensor_tensor_tensor_comm_tmul]
       

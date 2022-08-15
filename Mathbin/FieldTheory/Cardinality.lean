@@ -38,7 +38,7 @@ universe u
 /-- A finite field has prime power cardinality. -/
 theorem Fintype.is_prime_pow_card_of_field {α} [Fintype α] [Field α] : IsPrimePow ‖α‖ := by
   cases' CharP.exists α with p _
-  have hp := Fact.mk (CharP.char_is_prime α p)
+  haveI hp := Fact.mk (CharP.char_is_prime α p)
   let b := IsNoetherian.finsetBasis (Zmod p) α
   rw [Module.card_fintype b, Zmod.card, is_prime_pow_pow_iff]
   · exact hp.1.IsPrimePow
@@ -50,7 +50,7 @@ theorem Fintype.is_prime_pow_card_of_field {α} [Fintype α] [Field α] : IsPrim
 theorem Fintype.nonempty_field_iff {α} [Fintype α] : Nonempty (Field α) ↔ IsPrimePow ‖α‖ := by
   refine' ⟨fun ⟨h⟩ => Fintype.is_prime_pow_card_of_field, _⟩
   rintro ⟨p, n, hp, hn, hα⟩
-  have := Fact.mk (nat.prime_iff.mpr hp)
+  haveI := Fact.mk (nat.prime_iff.mpr hp)
   exact ⟨(Fintype.equivOfCardEq ((GaloisField.card p n hn.ne').trans hα)).symm.Field⟩
 
 theorem Fintype.not_is_field_of_card_not_prime_pow {α} [Fintype α] [Ringₓ α] : ¬IsPrimePow ‖α‖ → ¬IsField α :=
@@ -58,7 +58,7 @@ theorem Fintype.not_is_field_of_card_not_prime_pow {α} [Fintype α] [Ringₓ α
 
 /-- Any infinite type can be endowed a field structure. -/
 theorem Infinite.nonempty_field {α : Type u} [Infinite α] : Nonempty (Field α) := by
-  let K := FractionRing (MvPolynomial α <| ULift.{u} ℚ)
+  letI K := FractionRing (MvPolynomial α <| ULift.{u} ℚ)
   suffices # α = # K by
     obtain ⟨e⟩ := Cardinal.eq.1 this
     exact ⟨e.field⟩

@@ -89,12 +89,12 @@ noncomputable def ofAntisymmetrization : Antisymmetrization α r → α :=
 instance [Inhabited α] : Inhabited (Antisymmetrization α r) :=
   Quotientₓ.inhabited _
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem Antisymmetrization.ind {p : Antisymmetrization α r → Prop} :
     (∀ a, p <| toAntisymmetrization r a) → ∀ q, p q :=
   Quot.ind
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem Antisymmetrization.induction_on {p : Antisymmetrization α r → Prop} (a : Antisymmetrization α r)
     (h : ∀ a, p <| toAntisymmetrization r a) : p a :=
   Quotientₓ.induction_on' a h

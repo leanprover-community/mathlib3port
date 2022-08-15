@@ -60,15 +60,21 @@ theorem Valuation.inversion_estimate {x y : K} {γ : Γ₀ˣ} (y_ne : y ≠ 0) (
   have decomp : x⁻¹ - y⁻¹ = x⁻¹ * (y - x) * y⁻¹ := by
     rw [mul_sub_left_distrib, sub_mul, mul_assoc, show y * y⁻¹ = 1 from mul_inv_cancel y_ne,
       show x⁻¹ * x = 1 from inv_mul_cancel x_ne, mul_oneₓ, one_mulₓ]
-  calc v (x⁻¹ - y⁻¹) = v (x⁻¹ * (y - x) * y⁻¹) := by
-      rw [decomp]_ = v x⁻¹ * (v <| y - x) * v y⁻¹ := by
+  calc
+    v (x⁻¹ - y⁻¹) = v (x⁻¹ * (y - x) * y⁻¹) := by
+      rw [decomp]
+    _ = v x⁻¹ * (v <| y - x) * v y⁻¹ := by
       repeat'
-        rw [Valuation.map_mul]_ = (v x)⁻¹ * (v <| y - x) * (v y)⁻¹ :=
-      by
-      rw [v.map_inv, v.map_inv]_ = (v <| y - x) * (v y * v y)⁻¹ := by
-      rw [mul_assoc, mul_comm, key, mul_assoc, mul_inv_rev]_ = (v <| y - x) * (v y * v y)⁻¹ :=
-      rfl _ = (v <| x - y) * (v y * v y)⁻¹ := by
-      rw [Valuation.map_sub_swap]_ < γ := hyp1'
+        rw [Valuation.map_mul]
+    _ = (v x)⁻¹ * (v <| y - x) * (v y)⁻¹ := by
+      rw [v.map_inv, v.map_inv]
+    _ = (v <| y - x) * (v y * v y)⁻¹ := by
+      rw [mul_assoc, mul_comm, key, mul_assoc, mul_inv_rev]
+    _ = (v <| y - x) * (v y * v y)⁻¹ := rfl
+    _ = (v <| x - y) * (v y * v y)⁻¹ := by
+      rw [Valuation.map_sub_swap]
+    _ < γ := hyp1'
+    
 
 end InversionEstimate
 
@@ -209,7 +215,7 @@ attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
 noncomputable def extension : hat K → Γ₀ :=
   Completion.dense_inducing_coe.extend (v : K → Γ₀)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » V')
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » V')
 theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) := by
   refine' completion.dense_inducing_coe.continuous_extend _
   intro x₀
@@ -286,14 +292,18 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
       rw [completion.coe_mul, this, ← hy, hz₀, mul_inv, mul_comm y₀⁻¹, ← mul_assoc, mul_assoc y, mul_inv_cancel h,
         mul_oneₓ]
       solve_by_elim
-    calc v x = v (x * z₀⁻¹ * z₀) := by
-        rw [mul_assoc, inv_mul_cancel z₀_ne, mul_oneₓ]_ = v (x * z₀⁻¹) * v z₀ := Valuation.map_mul _ _ _ _ = v z₀ := by
+    calc
+      v x = v (x * z₀⁻¹ * z₀) := by
+        rw [mul_assoc, inv_mul_cancel z₀_ne, mul_oneₓ]
+      _ = v (x * z₀⁻¹) * v z₀ := Valuation.map_mul _ _ _
+      _ = v z₀ := by
         rw [this, one_mulₓ]
+      
     
 
 @[simp, norm_cast]
 theorem extension_extends (x : K) : extension (x : hat K) = v x := by
-  have : T2Space Γ₀ := T3Space.t2_space _
+  haveI : T2Space Γ₀ := T3Space.t2_space _
   refine' completion.dense_inducing_coe.extend_eq_of_tendsto _
   rw [← completion.dense_inducing_coe.nhds_eq_comap]
   exact valued.continuous_valuation.continuous_at

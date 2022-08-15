@@ -25,7 +25,7 @@ open BoundedContinuousFunction Filter TopologicalSpace
 
 namespace TopologicalSpace
 
-variable {ι X Y : Type _} {π : ι → Type _} [TopologicalSpace X] [TopologicalSpace Y] [Fintype ι]
+variable {ι X Y : Type _} {π : ι → Type _} [TopologicalSpace X] [TopologicalSpace Y] [Finite ι]
   [∀ i, TopologicalSpace (π i)]
 
 /-- A topological space is *pseudo metrizable* if there exists a pseudo metric space structure
@@ -45,22 +45,23 @@ noncomputable def pseudoMetrizableSpacePseudoMetric (X : Type _) [TopologicalSpa
 
 instance pseudo_metrizable_space_prod [PseudoMetrizableSpace X] [PseudoMetrizableSpace Y] :
     PseudoMetrizableSpace (X × Y) := by
-  let this : PseudoMetricSpace X := pseudo_metrizable_space_pseudo_metric X
-  let this : PseudoMetricSpace Y := pseudo_metrizable_space_pseudo_metric Y
+  letI : PseudoMetricSpace X := pseudo_metrizable_space_pseudo_metric X
+  letI : PseudoMetricSpace Y := pseudo_metrizable_space_pseudo_metric Y
   infer_instance
 
 /-- Given an inducing map of a topological space into a pseudo metrizable space, the source space
 is also pseudo metrizable. -/
 theorem _root_.inducing.pseudo_metrizable_space [PseudoMetrizableSpace Y] {f : X → Y} (hf : Inducing f) :
     PseudoMetrizableSpace X := by
-  let this : PseudoMetricSpace Y := pseudo_metrizable_space_pseudo_metric Y
+  letI : PseudoMetricSpace Y := pseudo_metrizable_space_pseudo_metric Y
   exact ⟨⟨hf.comap_pseudo_metric_space, rfl⟩⟩
 
 instance PseudoMetrizableSpace.subtype [PseudoMetrizableSpace X] (s : Set X) : PseudoMetrizableSpace s :=
   inducing_coe.PseudoMetrizableSpace
 
 instance pseudo_metrizable_space_pi [∀ i, PseudoMetrizableSpace (π i)] : PseudoMetrizableSpace (∀ i, π i) := by
-  let this := fun i => pseudo_metrizable_space_pseudo_metric (π i)
+  cases nonempty_fintype ι
+  letI := fun i => pseudo_metrizable_space_pseudo_metric (π i)
   infer_instance
 
 /-- A topological space is metrizable if there exists a metric space structure compatible with the
@@ -83,25 +84,26 @@ noncomputable def metrizableSpaceMetric (X : Type _) [TopologicalSpace X] [h : M
   h.exists_metric.some.replaceTopology h.exists_metric.some_spec.symm
 
 instance (priority := 100) t2_space_of_metrizable_space [MetrizableSpace X] : T2Space X := by
-  let this : MetricSpace X := metrizable_space_metric X
+  letI : MetricSpace X := metrizable_space_metric X
   infer_instance
 
 instance metrizable_space_prod [MetrizableSpace X] [MetrizableSpace Y] : MetrizableSpace (X × Y) := by
-  let this : MetricSpace X := metrizable_space_metric X
-  let this : MetricSpace Y := metrizable_space_metric Y
+  letI : MetricSpace X := metrizable_space_metric X
+  letI : MetricSpace Y := metrizable_space_metric Y
   infer_instance
 
 /-- Given an embedding of a topological space into a metrizable space, the source space is also
 metrizable. -/
 theorem _root_.embedding.metrizable_space [MetrizableSpace Y] {f : X → Y} (hf : Embedding f) : MetrizableSpace X := by
-  let this : MetricSpace Y := metrizable_space_metric Y
+  letI : MetricSpace Y := metrizable_space_metric Y
   exact ⟨⟨hf.comap_metric_space f, rfl⟩⟩
 
 instance MetrizableSpace.subtype [MetrizableSpace X] (s : Set X) : MetrizableSpace s :=
   embedding_subtype_coe.MetrizableSpace
 
 instance metrizable_space_pi [∀ i, MetrizableSpace (π i)] : MetrizableSpace (∀ i, π i) := by
-  let this := fun i => metrizable_space_metric (π i)
+  cases nonempty_fintype ι
+  letI := fun i => metrizable_space_metric (π i)
   infer_instance
 
 variable (X) [T3Space X] [SecondCountableTopology X]
@@ -109,17 +111,17 @@ variable (X) [T3Space X] [SecondCountableTopology X]
 /-- A T₃ topological space with second countable topology can be embedded into `l^∞ = ℕ →ᵇ ℝ`.
 -/
 theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := by
-  have : NormalSpace X := normal_space_of_t3_second_countable X
+  haveI : NormalSpace X := normal_space_of_t3_second_countable X
   -- Choose a countable basis, and consider the set `s` of pairs of set `(U, V)` such that `U ∈ B`,
   -- `V ∈ B`, and `closure U ⊆ V`.
   rcases exists_countable_basis X with ⟨B, hBc, -, hB⟩
   set s : Set (Set X × Set X) := { UV ∈ B ×ˢ B | Closure UV.1 ⊆ UV.2 }
   -- `s` is a countable set.
-  have : Encodable s := ((hBc.prod hBc).mono (inter_subset_left _ _)).toEncodable
+  haveI : Encodable s := ((hBc.prod hBc).mono (inter_subset_left _ _)).toEncodable
   -- We don't have the space of bounded (possibly discontinuous) functions, so we equip `s`
   -- with the discrete topology and deal with `s →ᵇ ℝ` instead.
-  let this : TopologicalSpace s := ⊥
-  have : DiscreteTopology s := ⟨rfl⟩
+  letI : TopologicalSpace s := ⊥
+  haveI : DiscreteTopology s := ⟨rfl⟩
   suffices ∃ f : X → s →ᵇ ℝ, Embedding f by
     rcases this with ⟨f, hf⟩
     exact
@@ -159,8 +161,12 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
     rcases hB.exists_closure_subset (hB.mem_nhds hVB hxV) with ⟨U, hUB, hxU, hUV⟩
     set UV : ↥s := ⟨(U, V), ⟨hUB, hVB⟩, hUV⟩
     apply (ε01 UV).1.Ne
-    calc (0 : ℝ) = F x UV := (hf0 UV hxU).symm _ = F y UV := by
-        rw [hxy]_ = ε UV := hfε UV fun h : y ∈ V => hVy h rfl
+    calc
+      (0 : ℝ) = F x UV := (hf0 UV hxU).symm
+      _ = F y UV := by
+        rw [hxy]
+      _ = ε UV := hfε UV fun h : y ∈ V => hVy h rfl
+      
     
   · /- Now we prove that each neighborhood `V` of `x : X` include a preimage of a neighborhood of
         `F x` under `F`. Without loss of generality, `V` belongs to `B`. Choose `U ∈ B` such that

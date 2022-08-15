@@ -97,7 +97,7 @@ class HasShift (C : Type u) (A : Type _) [Category.{v} C] [AddMonoidₓ A] where
   shift : MonoidalFunctor (Discrete A) (C ⥤ C)
 
 /-- A helper structure to construct the shift functor `(discrete A) ⥤ (C ⥤ C)`. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure ShiftMkCore where
   f : A → C ⥤ C
   ε : 𝟭 C ≅ F 0
@@ -346,7 +346,7 @@ instance shift_functor_faithful (i : A) : Faithful (shiftFunctor C i) :=
 
 /-- Shifting by `n` is a full functor. -/
 instance shiftFunctorFull (i : A) : Full (shiftFunctor C i) := by
-  have : full (shift_functor C i ⋙ shift_functor C (-i)) := full.of_iso (shift_functor_comp_shift_functor_neg C i).symm
+  haveI : full (shift_functor C i ⋙ shift_functor C (-i)) := full.of_iso (shift_functor_comp_shift_functor_neg C i).symm
   exact full.of_comp_faithful _ (shift_functor C (-i))
 
 /-- Shifting by `n` is an essentially surjective functor. -/
@@ -541,7 +541,7 @@ the inclusion functor intertwines the shifts. -/
 -- incorrectly reports that `[full F]` and `[faithful F]` are unused.
 @[nolint unused_arguments]
 def hasShiftOfFullyFaithfulComm (s : A → C ⥤ C) (i : ∀ i, s i ⋙ F ≅ F ⋙ shiftFunctor D i) (m : A) : by
-    have := has_shift_of_fully_faithful F s i
+    haveI := has_shift_of_fully_faithful F s i
     exact shift_functor C m ⋙ F ≅ F ⋙ shift_functor D m :=
   i m
 

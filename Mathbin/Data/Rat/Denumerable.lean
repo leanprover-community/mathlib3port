@@ -28,9 +28,9 @@ private def denumerable_aux : ℚ ≃ { x : ℤ × ℕ // 0 < x.2 ∧ x.1.natAbs
 /-- **Denumerability of the Rational Numbers** -/
 instance : Denumerable ℚ := by
   let T := { x : ℤ × ℕ // 0 < x.2 ∧ x.1.natAbs.Coprime x.2 }
-  let this : Infinite T := Infinite.of_injective _ denumerable_aux.injective
-  let this : Encodable T := Subtype.encodable
-  let this : Denumerable T := of_encodable_of_infinite T
+  letI : Infinite T := Infinite.of_injective _ denumerable_aux.injective
+  letI : Encodable T := Subtype.encodable
+  letI : Denumerable T := of_encodable_of_infinite T
   exact Denumerable.ofEquiv T denumerable_aux
 
 end Rat

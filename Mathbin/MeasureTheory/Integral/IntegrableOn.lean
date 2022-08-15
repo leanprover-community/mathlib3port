@@ -70,16 +70,16 @@ end
 
 namespace MeasureTheory
 
-section NormedGroup
+section NormedAddCommGroup
 
-theorem has_finite_integral_restrict_of_bounded [NormedGroup E] {f : α → E} {s : Set α} {μ : Measure α} {C}
+theorem has_finite_integral_restrict_of_bounded [NormedAddCommGroup E] {f : α → E} {s : Set α} {μ : Measure α} {C}
     (hs : μ s < ∞) (hf : ∀ᵐ x ∂μ.restrict s, ∥f x∥ ≤ C) : HasFiniteIntegral f (μ.restrict s) :=
-  have : is_finite_measure (μ.restrict s) :=
+  haveI : is_finite_measure (μ.restrict s) :=
     ⟨by
       rwa [measure.restrict_apply_univ]⟩
   has_finite_integral_of_bounded hf
 
-variable [NormedGroup E] {f g : α → E} {s t : Set α} {μ ν : Measure α}
+variable [NormedAddCommGroup E] {f g : α → E} {s t : Set α} {μ ν : Measure α}
 
 /-- A function is `integrable_on` a set `s` if it is almost everywhere strongly measurable on `s`
 and if the integral of its pointwise norm over `s` is less than infinity. -/
@@ -220,8 +220,8 @@ theorem IntegrableOn.indicator (h : IntegrableOn f s μ) (hs : MeasurableSet s) 
 theorem Integrable.indicator (h : Integrable f μ) (hs : MeasurableSet s) : Integrable (indicatorₓ s f) μ :=
   h.IntegrableOn.indicator hs
 
-theorem integrable_indicator_const_Lp {E} [NormedGroup E] {p : ℝ≥0∞} {s : Set α} (hs : MeasurableSet s) (hμs : μ s ≠ ∞)
-    (c : E) : Integrable (indicatorConstLp p hs hμs c) μ := by
+theorem integrable_indicator_const_Lp {E} [NormedAddCommGroup E] {p : ℝ≥0∞} {s : Set α} (hs : MeasurableSet s)
+    (hμs : μ s ≠ ∞) (c : E) : Integrable (indicatorConstLp p hs hμs c) μ := by
   rw [integrable_congr indicator_const_Lp_coe_fn, integrable_indicator_iff hs, integrable_on, integrable_const_iff,
     lt_top_iff_ne_top]
   right
@@ -232,12 +232,12 @@ theorem integrable_on_iff_integable_of_support_subset {f : α → E} {s : Set α
   refine' ⟨fun h => _, fun h => h.IntegrableOn⟩
   rwa [← indicator_eq_self.2 h1s, integrable_indicator_iff h2s]
 
-theorem integrable_on_Lp_of_measure_ne_top {E} [NormedGroup E] {p : ℝ≥0∞} {s : Set α} (f : lp E p μ) (hp : 1 ≤ p)
+theorem integrable_on_Lp_of_measure_ne_top {E} [NormedAddCommGroup E] {p : ℝ≥0∞} {s : Set α} (f : lp E p μ) (hp : 1 ≤ p)
     (hμs : μ s ≠ ∞) : IntegrableOn f s μ := by
   refine' mem_ℒp_one_iff_integrable.mp _
   have hμ_restrict_univ : (μ.restrict s) Set.Univ < ∞ := by
     simpa only [← Set.univ_inter, ← MeasurableSet.univ, ← measure.restrict_apply, ← lt_top_iff_ne_top]
-  have hμ_finite : is_finite_measure (μ.restrict s) := ⟨hμ_restrict_univ⟩
+  haveI hμ_finite : is_finite_measure (μ.restrict s) := ⟨hμ_restrict_univ⟩
   exact ((Lp.mem_ℒp _).restrict s).mem_ℒp_of_exponent_le hp
 
 /-- We say that a function `f` is *integrable at filter* `l` if it is integrable on some
@@ -313,13 +313,13 @@ theorem integrable_add_of_disjoint {f g : α → E} (h : Disjoint (Support f) (S
     exact hfg.indicator hg.measurable_set_support
     
 
-end NormedGroup
+end NormedAddCommGroup
 
 end MeasureTheory
 
 open MeasureTheory
 
-variable [NormedGroup E]
+variable [NormedAddCommGroup E]
 
 /-- A function which is continuous on a set `s` is almost everywhere measurable with respect to
 `μ.restrict s`. -/
@@ -336,26 +336,26 @@ theorem ContinuousOn.ae_measurable [TopologicalSpace α] [OpensMeasurableSpace �
   rw [piecewise_preimage, Set.Ite, hu]
   exact (u_open.measurable_set.inter hs).union ((measurable_const ht.measurable_set).diff hs)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr β]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `borelize #[[expr β]]
 /-- A function which is continuous on a separable set `s` is almost everywhere strongly measurable
 with respect to `μ.restrict s`. -/
 theorem ContinuousOn.ae_strongly_measurable_of_is_separable [TopologicalSpace α] [PseudoMetrizableSpace α]
     [OpensMeasurableSpace α] [TopologicalSpace β] [PseudoMetrizableSpace β] {f : α → β} {s : Set α} {μ : Measureₓ α}
     (hf : ContinuousOn f s) (hs : MeasurableSet s) (h's : TopologicalSpace.IsSeparable s) :
     AeStronglyMeasurable f (μ.restrict s) := by
-  let this := pseudo_metrizable_space_pseudo_metric α
-  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr β]]"
+  letI := pseudo_metrizable_space_pseudo_metric α
+  trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `borelize #[[expr β]]"
   rw [ae_strongly_measurable_iff_ae_measurable_separable]
   refine' ⟨hf.ae_measurable hs, f '' s, hf.is_separable_image h's, _⟩
   exact mem_of_superset (self_mem_ae_restrict hs) (subset_preimage_image _ _)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr β]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `borelize #[[expr β]]
 /-- A function which is continuous on a set `s` is almost everywhere strongly measurable with
 respect to `μ.restrict s` when either the source space or the target space is second-countable. -/
 theorem ContinuousOn.ae_strongly_measurable [TopologicalSpace α] [TopologicalSpace β]
     [h : SecondCountableTopologyEither α β] [OpensMeasurableSpace α] [PseudoMetrizableSpace β] {f : α → β} {s : Set α}
     {μ : Measureₓ α} (hf : ContinuousOn f s) (hs : MeasurableSet s) : AeStronglyMeasurable f (μ.restrict s) := by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr β]]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `borelize #[[expr β]]"
   refine'
     ae_strongly_measurable_iff_ae_measurable_separable.2
       ⟨hf.ae_measurable hs, f '' s, _, mem_of_superset (self_mem_ae_restrict hs) (subset_preimage_image _ _)⟩
@@ -374,7 +374,7 @@ theorem ContinuousOn.integrable_at_nhds_within_of_is_separable [TopologicalSpace
     [OpensMeasurableSpace α] {μ : Measureₓ α} [IsLocallyFiniteMeasure μ] {a : α} {t : Set α} {f : α → E}
     (hft : ContinuousOn f t) (ht : MeasurableSet t) (h't : TopologicalSpace.IsSeparable t) (ha : a ∈ t) :
     IntegrableAtFilter f (𝓝[t] a) μ := by
-  have : (𝓝[t] a).IsMeasurablyGenerated := ht.nhds_within_is_measurably_generated _
+  haveI : (𝓝[t] a).IsMeasurablyGenerated := ht.nhds_within_is_measurably_generated _
   exact
     (hft a ha).IntegrableAtFilter ⟨_, self_mem_nhds_within, hft.ae_strongly_measurable_of_is_separable ht h't⟩
       (μ.finite_at_nhds_within _ _)
@@ -382,7 +382,7 @@ theorem ContinuousOn.integrable_at_nhds_within_of_is_separable [TopologicalSpace
 theorem ContinuousOn.integrable_at_nhds_within [TopologicalSpace α] [SecondCountableTopologyEither α E]
     [OpensMeasurableSpace α] {μ : Measureₓ α} [IsLocallyFiniteMeasure μ] {a : α} {t : Set α} {f : α → E}
     (hft : ContinuousOn f t) (ht : MeasurableSet t) (ha : a ∈ t) : IntegrableAtFilter f (𝓝[t] a) μ := by
-  have : (𝓝[t] a).IsMeasurablyGenerated := ht.nhds_within_is_measurably_generated _
+  haveI : (𝓝[t] a).IsMeasurablyGenerated := ht.nhds_within_is_measurably_generated _
   exact
     (hft a ha).IntegrableAtFilter ⟨_, self_mem_nhds_within, hft.ae_strongly_measurable ht⟩ (μ.finite_at_nhds_within _ _)
 

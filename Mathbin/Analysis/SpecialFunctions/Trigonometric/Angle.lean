@@ -5,6 +5,7 @@ Authors: Calle Sönne
 -/
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathbin.Algebra.CharZero.Quotient
+import Mathbin.Data.Sign
 
 /-!
 # The type of angles
@@ -46,7 +47,7 @@ theorem coe_coe_hom : (coeHom : ℝ → Angle) = coe :=
 
 /-- An induction principle to deduce results for `angle` from those for `ℝ`, used with
 `induction θ using real.angle.induction_on`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on {p : Angle → Prop} (θ : Angle) (h : ∀ x : ℝ, p x) : p θ :=
   Quotientₓ.induction_on' θ h
 
@@ -132,7 +133,7 @@ theorem two_nsmul_eq_zero_iff {θ : Angle} : (2 : ℕ) • θ = 0 ↔ θ = 0 ∨
 theorem two_zsmul_eq_zero_iff {θ : Angle} : (2 : ℤ) • θ = 0 ↔ θ = 0 ∨ θ = π := by
   simp_rw [two_zsmul, ← two_nsmul, two_nsmul_eq_zero_iff]
 
-theorem cos_eq_iff_eq_or_eq_neg {θ ψ : ℝ} : cos θ = cos ψ ↔ (θ : Angle) = ψ ∨ (θ : Angle) = -ψ := by
+theorem cos_eq_iff_coe_eq_or_eq_neg {θ ψ : ℝ} : cos θ = cos ψ ↔ (θ : Angle) = ψ ∨ (θ : Angle) = -ψ := by
   constructor
   · intro Hcos
     rw [← sub_eq_zero, cos_sub_cos, mul_eq_zero, mul_eq_zero, neg_eq_zero, eq_false_intro two_ne_zero, false_orₓ,
@@ -157,11 +158,11 @@ theorem cos_eq_iff_eq_or_eq_neg {θ ψ : ℝ} : cos θ = cos ψ ↔ (θ : Angle)
       mul_comm π _, sin_int_mul_pi, mul_zero, zero_mul]
     
 
-theorem sin_eq_iff_eq_or_add_eq_pi {θ ψ : ℝ} : sin θ = sin ψ ↔ (θ : Angle) = ψ ∨ (θ : Angle) + ψ = π := by
+theorem sin_eq_iff_coe_eq_or_add_eq_pi {θ ψ : ℝ} : sin θ = sin ψ ↔ (θ : Angle) = ψ ∨ (θ : Angle) + ψ = π := by
   constructor
   · intro Hsin
     rw [← cos_pi_div_two_sub, ← cos_pi_div_two_sub] at Hsin
-    cases' cos_eq_iff_eq_or_eq_neg.mp Hsin with h h
+    cases' cos_eq_iff_coe_eq_or_eq_neg.mp Hsin with h h
     · left
       rw [coe_sub, coe_sub] at h
       exact sub_right_inj.1 h
@@ -182,10 +183,10 @@ theorem sin_eq_iff_eq_or_add_eq_pi {θ ψ : ℝ} : sin θ = sin ψ ↔ (θ : Ang
     
 
 theorem cos_sin_inj {θ ψ : ℝ} (Hcos : cos θ = cos ψ) (Hsin : sin θ = sin ψ) : (θ : Angle) = ψ := by
-  cases' cos_eq_iff_eq_or_eq_neg.mp Hcos with hc hc
+  cases' cos_eq_iff_coe_eq_or_eq_neg.mp Hcos with hc hc
   · exact hc
     
-  cases' sin_eq_iff_eq_or_add_eq_pi.mp Hsin with hs hs
+  cases' sin_eq_iff_coe_eq_or_add_eq_pi.mp Hsin with hs hs
   · exact hs
     
   rw [eq_neg_iff_add_eq_zero, hs] at hc
@@ -207,7 +208,7 @@ theorem sin_coe (x : ℝ) : sin (x : Angle) = Real.sin x :=
 
 @[continuity]
 theorem continuous_sin : Continuous sin :=
-  continuous_quotient_lift_on' _ Real.continuous_sin
+  Real.continuous_sin.quotient_lift_on' _
 
 /-- The cosine of a `real.angle`. -/
 def cos (θ : Angle) : ℝ :=
@@ -219,7 +220,120 @@ theorem cos_coe (x : ℝ) : cos (x : Angle) = Real.cos x :=
 
 @[continuity]
 theorem continuous_cos : Continuous cos :=
-  continuous_quotient_lift_on' _ Real.continuous_cos
+  Real.continuous_cos.quotient_lift_on' _
+
+theorem cos_eq_real_cos_iff_eq_or_eq_neg {θ : Angle} {ψ : ℝ} : cos θ = Real.cos ψ ↔ θ = ψ ∨ θ = -ψ := by
+  induction θ using Real.Angle.induction_on
+  exact cos_eq_iff_coe_eq_or_eq_neg
+
+theorem cos_eq_iff_eq_or_eq_neg {θ ψ : Angle} : cos θ = cos ψ ↔ θ = ψ ∨ θ = -ψ := by
+  induction ψ using Real.Angle.induction_on
+  exact cos_eq_real_cos_iff_eq_or_eq_neg
+
+theorem sin_eq_real_sin_iff_eq_or_add_eq_pi {θ : Angle} {ψ : ℝ} : sin θ = Real.sin ψ ↔ θ = ψ ∨ θ + ψ = π := by
+  induction θ using Real.Angle.induction_on
+  exact sin_eq_iff_coe_eq_or_add_eq_pi
+
+theorem sin_eq_iff_eq_or_add_eq_pi {θ ψ : Angle} : sin θ = sin ψ ↔ θ = ψ ∨ θ + ψ = π := by
+  induction ψ using Real.Angle.induction_on
+  exact sin_eq_real_sin_iff_eq_or_add_eq_pi
+
+@[simp]
+theorem sin_zero : sin (0 : Angle) = 0 := by
+  rw [← coe_zero, sin_coe, Real.sin_zero]
+
+@[simp]
+theorem sin_coe_pi : sin (π : Angle) = 0 := by
+  rw [sin_coe, Real.sin_pi]
+
+theorem sin_eq_zero_iff {θ : Angle} : sin θ = 0 ↔ θ = 0 ∨ θ = π := by
+  nth_rw 0[← sin_zero]
+  rw [sin_eq_iff_eq_or_add_eq_pi]
+  simp
+
+@[simp]
+theorem sin_neg (θ : Angle) : sin (-θ) = -sin θ := by
+  induction θ using Real.Angle.induction_on
+  exact Real.sin_neg _
+
+theorem sin_antiperiodic : Function.Antiperiodic sin (π : Angle) := by
+  intro θ
+  induction θ using Real.Angle.induction_on
+  exact Real.sin_antiperiodic θ
+
+@[simp]
+theorem sin_add_pi (θ : Angle) : sin (θ + π) = -sin θ :=
+  sin_antiperiodic θ
+
+@[simp]
+theorem sin_sub_pi (θ : Angle) : sin (θ - π) = -sin θ :=
+  sin_antiperiodic.sub_eq θ
+
+@[simp]
+theorem cos_zero : cos (0 : Angle) = 1 := by
+  rw [← coe_zero, cos_coe, Real.cos_zero]
+
+@[simp]
+theorem cos_coe_pi : cos (π : Angle) = -1 := by
+  rw [cos_coe, Real.cos_pi]
+
+@[simp]
+theorem cos_neg (θ : Angle) : cos (-θ) = cos θ := by
+  induction θ using Real.Angle.induction_on
+  exact Real.cos_neg _
+
+theorem cos_antiperiodic : Function.Antiperiodic cos (π : Angle) := by
+  intro θ
+  induction θ using Real.Angle.induction_on
+  exact Real.cos_antiperiodic θ
+
+@[simp]
+theorem cos_add_pi (θ : Angle) : cos (θ + π) = -cos θ :=
+  cos_antiperiodic θ
+
+@[simp]
+theorem cos_sub_pi (θ : Angle) : cos (θ - π) = -cos θ :=
+  cos_antiperiodic.sub_eq θ
+
+/-- The sign of a `real.angle` is `0` if the angle is `0` or `π`, `1` if the angle is strictly
+between `0` and `π` and `-1` is the angle is strictly between `-π` and `0`. It is defined as the
+sign of the sine of the angle. -/
+def sign (θ : Angle) : SignType :=
+  sign (sin θ)
+
+@[simp]
+theorem sign_zero : (0 : Angle).sign = 0 := by
+  rw [sign, sin_zero, sign_zero]
+
+@[simp]
+theorem sign_coe_pi : (π : Angle).sign = 0 := by
+  rw [sign, sin_coe_pi, _root_.sign_zero]
+
+@[simp]
+theorem sign_neg (θ : Angle) : (-θ).sign = -θ.sign := by
+  simp_rw [sign, sin_neg, Left.sign_neg]
+
+theorem sign_antiperiodic : Function.Antiperiodic sign (π : Angle) := fun θ => by
+  rw [sign, sign, sin_add_pi, Left.sign_neg]
+
+@[simp]
+theorem sign_add_pi (θ : Angle) : (θ + π).sign = -θ.sign :=
+  sign_antiperiodic θ
+
+@[simp]
+theorem sign_pi_add (θ : Angle) : ((π : Angle) + θ).sign = -θ.sign := by
+  rw [add_commₓ, sign_add_pi]
+
+@[simp]
+theorem sign_sub_pi (θ : Angle) : (θ - π).sign = -θ.sign :=
+  sign_antiperiodic.sub_eq θ
+
+@[simp]
+theorem sign_pi_sub (θ : Angle) : ((π : Angle) - θ).sign = θ.sign := by
+  simp [← sign_antiperiodic.sub_eq']
+
+theorem sign_eq_zero_iff {θ : Angle} : θ.sign = 0 ↔ θ = 0 ∨ θ = π := by
+  rw [sign, sign_eq_zero_iff, sin_eq_zero_iff]
 
 end Angle
 

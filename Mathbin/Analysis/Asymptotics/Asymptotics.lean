@@ -55,11 +55,8 @@ variable {α : Type _} {β : Type _} {E : Type _} {F : Type _} {G : Type _} {E' 
 
 variable [HasNorm E] [HasNorm F] [HasNorm G]
 
-variable [SemiNormedGroup E'] [SemiNormedGroup F'] [SemiNormedGroup G']
-
-variable [NormedGroup E''] [NormedGroup F''] [NormedGroup G'']
-
-variable [SemiNormedRing R] [SemiNormedRing R']
+variable [SeminormedAddCommGroup E'] [SeminormedAddCommGroup F'] [SeminormedAddCommGroup G'] [NormedAddCommGroup E'']
+  [NormedAddCommGroup F''] [NormedAddCommGroup G''] [SemiNormedRing R] [SemiNormedRing R']
 
 variable [NormedField 𝕜] [NormedField 𝕜']
 
@@ -366,8 +363,11 @@ theorem IsOₓ.mono (h : f =o[l'] g) (hl : l ≤ l') : f =o[l] g :=
 theorem IsOWith.trans (hfg : IsOWith c l f g) (hgk : IsOWith c' l g k) (hc : 0 ≤ c) : IsOWith (c * c') l f k := by
   unfold is_O_with  at *
   filter_upwards [hfg, hgk] with x hx hx'
-  calc ∥f x∥ ≤ c * ∥g x∥ := hx _ ≤ c * (c' * ∥k x∥) := mul_le_mul_of_nonneg_left hx' hc _ = c * c' * ∥k x∥ :=
-      (mul_assoc _ _ _).symm
+  calc
+    ∥f x∥ ≤ c * ∥g x∥ := hx
+    _ ≤ c * (c' * ∥k x∥) := mul_le_mul_of_nonneg_left hx' hc
+    _ = c * c' * ∥k x∥ := (mul_assoc _ _ _).symm
+    
 
 @[trans]
 theorem IsO.trans {f : α → E} {g : α → F'} {k : α → G} (hfg : f =O[l] g) (hgk : g =O[l] k) : f =O[l] k :=
@@ -1213,9 +1213,27 @@ theorem IsOWith.pow [NormOneClass R] {f : α → R} {g : α → 𝕜} (h : IsOWi
     simpa using h.pow' 0
   | n + 1 => h.pow' (n + 1)
 
+theorem IsOWith.of_pow {n : ℕ} {f : α → 𝕜} {g : α → R} (h : IsOWith c l (f ^ n) (g ^ n)) (hn : n ≠ 0) (hc : c ≤ c' ^ n)
+    (hc' : 0 ≤ c') : IsOWith c' l f g :=
+  is_O_with.of_bound <|
+    (h.weaken hc).bound.mono fun x hx =>
+      le_of_pow_le_pow n (mul_nonneg hc' <| norm_nonneg _) hn.bot_lt <|
+        calc
+          ∥f x∥ ^ n = ∥f x ^ n∥ := (norm_pow _ _).symm
+          _ ≤ c' ^ n * ∥g x ^ n∥ := hx
+          _ ≤ c' ^ n * ∥g x∥ ^ n := mul_le_mul_of_nonneg_left (norm_pow_le' _ hn.bot_lt) (pow_nonneg hc' _)
+          _ = (c' * ∥g x∥) ^ n := (mul_powₓ _ _ _).symm
+          
+
 theorem IsO.pow {f : α → R} {g : α → 𝕜} (h : f =O[l] g) (n : ℕ) : (fun x => f x ^ n) =O[l] fun x => g x ^ n :=
   let ⟨C, hC⟩ := h.IsOWith
   is_O_iff_is_O_with.2 ⟨_, hC.pow' n⟩
+
+theorem IsO.of_pow {f : α → 𝕜} {g : α → R} {n : ℕ} (hn : n ≠ 0) (h : (f ^ n) =O[l] (g ^ n)) : f =O[l] g := by
+  rcases h.exists_pos with ⟨C, hC₀, hC⟩
+  obtain ⟨c, hc₀, hc⟩ : ∃ c : ℝ, 0 ≤ c ∧ C ≤ c ^ n
+  exact ((eventually_ge_at_top _).And <| (tendsto_pow_at_top hn).eventually_ge_at_top C).exists
+  exact (hC.of_pow hn hc hc₀).IsO
 
 theorem IsOₓ.pow {f : α → R} {g : α → 𝕜} (h : f =o[l] g) {n : ℕ} (hn : 0 < n) :
     (fun x => f x ^ n) =o[l] fun x => g x ^ n := by
@@ -1226,6 +1244,9 @@ theorem IsOₓ.pow {f : α → R} {g : α → 𝕜} (h : f =o[l] g) {n : ℕ} (h
   · simpa only [← pow_oneₓ]
     
   convert h.mul ihn <;> simp [← pow_succₓ]
+
+theorem IsOₓ.of_pow {f : α → 𝕜} {g : α → R} {n : ℕ} (h : (f ^ n) =o[l] (g ^ n)) (hn : n ≠ 0) : f =o[l] g :=
+  is_o.of_is_O_with fun c hc => (h.def' <| pow_pos hc _).of_pow hn le_rfl hc.le
 
 /-! ### Inverse -/
 
@@ -1503,7 +1524,7 @@ theorem is_o_iff_exists_eq_mul : u =o[l] v ↔ ∃ (φ : α → 𝕜)(hφ : Tend
     
   · unfold is_o
     rintro ⟨φ, hφ, huvφ⟩ c hpos
-    rw [NormedGroup.tendsto_nhds_zero] at hφ
+    rw [NormedAddCommGroup.tendsto_nhds_zero] at hφ
     exact is_O_with_of_eq_mul _ ((hφ c hpos).mono fun x => le_of_ltₓ) huvφ
     
 
@@ -1537,7 +1558,7 @@ theorem is_O_of_div_tendsto_nhds {α : Type _} {l : Filter α} {f g : α → �
     (H : Filter.Tendsto (f / g) l (𝓝 c)) : f =O[l] g :=
   (is_O_iff_div_is_bounded_under hgf).2 <| H.norm.is_bounded_under_le
 
-theorem IsOₓ.tendsto_zero_of_tendsto {α E 𝕜 : Type _} [NormedGroup E] [NormedField 𝕜] {u : α → E} {v : α → 𝕜}
+theorem IsOₓ.tendsto_zero_of_tendsto {α E 𝕜 : Type _} [NormedAddCommGroup E] [NormedField 𝕜] {u : α → E} {v : α → 𝕜}
     {l : Filter α} {y : 𝕜} (huv : u =o[l] v) (hv : Tendsto v l (𝓝 y)) : Tendsto u l (𝓝 0) := by
   suffices h : u =o[l] fun x => (1 : 𝕜)
   · rwa [is_o_one_iff] at h
@@ -1616,19 +1637,19 @@ theorem is_O_one_nat_at_top_iff {f : ℕ → E''} : f =O[at_top] (fun n => 1 : �
   Iff.trans (is_O_nat_at_top_iff fun n h => (one_ne_zero h).elim) <| by
     simp only [← norm_one, ← mul_oneₓ]
 
-theorem is_O_with_pi {ι : Type _} [Fintype ι] {E' : ι → Type _} [∀ i, NormedGroup (E' i)] {f : α → ∀ i, E' i} {C : ℝ}
-    (hC : 0 ≤ C) : IsOWith C l f g' ↔ ∀ i, IsOWith C l (fun x => f x i) g' := by
+theorem is_O_with_pi {ι : Type _} [Fintype ι] {E' : ι → Type _} [∀ i, NormedAddCommGroup (E' i)] {f : α → ∀ i, E' i}
+    {C : ℝ} (hC : 0 ≤ C) : IsOWith C l f g' ↔ ∀ i, IsOWith C l (fun x => f x i) g' := by
   have : ∀ x, 0 ≤ C * ∥g' x∥ := fun x => mul_nonneg hC (norm_nonneg _)
   simp only [← is_O_with_iff, ← pi_norm_le_iff (this _), ← eventually_all]
 
 @[simp]
-theorem is_O_pi {ι : Type _} [Fintype ι] {E' : ι → Type _} [∀ i, NormedGroup (E' i)] {f : α → ∀ i, E' i} :
+theorem is_O_pi {ι : Type _} [Fintype ι] {E' : ι → Type _} [∀ i, NormedAddCommGroup (E' i)] {f : α → ∀ i, E' i} :
     f =O[l] g' ↔ ∀ i, (fun x => f x i) =O[l] g' := by
   simp only [← is_O_iff_eventually_is_O_with, eventually_all]
   exact eventually_congr (eventually_at_top.2 ⟨0, fun c => is_O_with_pi⟩)
 
 @[simp]
-theorem is_o_pi {ι : Type _} [Fintype ι] {E' : ι → Type _} [∀ i, NormedGroup (E' i)] {f : α → ∀ i, E' i} :
+theorem is_o_pi {ι : Type _} [Fintype ι] {E' : ι → Type _} [∀ i, NormedAddCommGroup (E' i)] {f : α → ∀ i, E' i} :
     f =o[l] g' ↔ ∀ i, (fun x => f x i) =o[l] g' := by
   simp (config := { contextual := true })only [← is_o, ← is_O_with_pi, ← le_of_ltₓ]
   exact ⟨fun h i c hc => h hc i, fun h c hc i => h i hc⟩
@@ -1637,12 +1658,12 @@ end Asymptotics
 
 open Asymptotics
 
-theorem summable_of_is_O {ι E} [NormedGroup E] [CompleteSpace E] {f : ι → E} {g : ι → ℝ} (hg : Summable g)
+theorem summable_of_is_O {ι E} [NormedAddCommGroup E] [CompleteSpace E] {f : ι → E} {g : ι → ℝ} (hg : Summable g)
     (h : f =O[cofinite] g) : Summable f :=
   let ⟨C, hC⟩ := h.IsOWith
   summable_of_norm_bounded_eventually (fun x => C * ∥g x∥) (hg.abs.mul_left _) hC.bound
 
-theorem summable_of_is_O_nat {E} [NormedGroup E] [CompleteSpace E] {f : ℕ → E} {g : ℕ → ℝ} (hg : Summable g)
+theorem summable_of_is_O_nat {E} [NormedAddCommGroup E] [CompleteSpace E] {f : ℕ → E} {g : ℕ → ℝ} (hg : Summable g)
     (h : f =O[at_top] g) : Summable f :=
   summable_of_is_O hg <| Nat.cofinite_eq_at_top.symm ▸ h
 

@@ -26,7 +26,7 @@ open Classical TopologicalSpace
 
 namespace Complex
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] [NormedAlgebra 𝕜 ℂ]
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedAlgebra 𝕜 ℂ]
 
 /-- The complex exponential is everywhere differentiable, with the derivative `exp x`. -/
 theorem has_deriv_at_exp (x : ℂ) : HasDerivAt exp (exp x) x := by
@@ -78,7 +78,7 @@ end Complex
 
 section
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] [NormedAlgebra 𝕜 ℂ] {f : 𝕜 → ℂ} {f' : ℂ} {x : 𝕜} {s : Set 𝕜}
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedAlgebra 𝕜 ℂ] {f : 𝕜 → ℂ} {f' : ℂ} {x : 𝕜} {s : Set 𝕜}
 
 theorem HasStrictDerivAt.cexp (hf : HasStrictDerivAt f f' x) :
     HasStrictDerivAt (fun x => Complex.exp (f x)) (Complex.exp (f x) * f') x :=
@@ -104,8 +104,8 @@ end
 
 section
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] [NormedAlgebra 𝕜 ℂ] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
-  {f : E → ℂ} {f' : E →L[𝕜] ℂ} {x : E} {s : Set E}
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedAlgebra 𝕜 ℂ] {E : Type _} [NormedAddCommGroup E]
+  [NormedSpace 𝕜 E] {f : E → ℂ} {f' : E →L[𝕜] ℂ} {x : E} {s : Set E}
 
 theorem HasStrictFderivAt.cexp (hf : HasStrictFderivAt f f' x) :
     HasStrictFderivAt (fun x => Complex.exp (f x)) (Complex.exp (f x) • f') x :=
@@ -214,7 +214,7 @@ section
 function, for standalone use and use with `simp`. -/
 
 
-variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {f : E → ℝ} {f' : E →L[ℝ] ℝ} {x : E} {s : Set E}
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ} {f' : E →L[ℝ] ℝ} {x : E} {s : Set E}
 
 theorem ContDiff.exp {n} (hf : ContDiff ℝ n f) : ContDiff ℝ n fun x => Real.exp (f x) :=
   Real.cont_diff_exp.comp hf

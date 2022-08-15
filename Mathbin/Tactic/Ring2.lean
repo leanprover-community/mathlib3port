@@ -575,7 +575,7 @@ open Tactic.Ring2
 -- mathport name: «expr ?»
 local postfix:1024 "?" => optionalₓ
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 /-- `ring2` solves equations in the language of rings.
 
 It supports only the commutative semiring operations, i.e. it does not normalize subtraction or

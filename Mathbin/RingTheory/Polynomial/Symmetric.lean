@@ -135,20 +135,7 @@ def esymm (n : ℕ) : MvPolynomial σ R :=
 
 /-- We can define `esymm σ R n` by summing over a subtype instead of over `powerset_len`. -/
 theorem esymm_eq_sum_subtype (n : ℕ) : esymm σ R n = ∑ t : { s : Finset σ // s.card = n }, ∏ i in (t : Finset σ), x i :=
-  by
-  rw [esymm]
-  let i : ∀ a : Finset σ, a ∈ powerset_len n univ → { s : Finset σ // s.card = n } := fun a ha =>
-    ⟨_, (mem_powerset_len.mp ha).2⟩
-  refine' sum_bij i (fun a ha => mem_univ (i a ha)) _ (fun _ _ _ _ hi => subtype.ext_iff_val.mp hi) _
-  · intros
-    apply prod_congr
-    simp only [← Subtype.coe_mk]
-    intros
-    rfl
-    
-  · refine' fun b H => ⟨b.val, mem_powerset_len.mpr ⟨subset_univ b.val, b.property⟩, _⟩
-    simp [← i]
-    
+  sum_subtype _ (fun _ => mem_powerset_len_univ_iff) _
 
 /-- We can define `esymm σ R n` as a sum over explicit monomials -/
 theorem esymm_eq_sum_monomial (n : ℕ) :

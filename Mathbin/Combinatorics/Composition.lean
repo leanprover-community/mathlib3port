@@ -354,8 +354,11 @@ theorem disjoint_range {i₁ i₂ : Finₓ c.length} (h : i₁ ≠ i₂) :
   have : i₁ < i₂ := lt_of_le_of_neₓ h' h
   have A : (i₁ : ℕ).succ ≤ i₂ := Nat.succ_le_of_ltₓ this
   apply lt_irreflₓ (x : ℕ)
-  calc (x : ℕ) < c.size_up_to (i₁ : ℕ).succ := (c.mem_range_embedding_iff.1 hx₁).2_ ≤ c.size_up_to (i₂ : ℕ) :=
-      monotone_sum_take _ A _ ≤ x := (c.mem_range_embedding_iff.1 hx₂).1
+  calc
+    (x : ℕ) < c.size_up_to (i₁ : ℕ).succ := (c.mem_range_embedding_iff.1 hx₁).2
+    _ ≤ c.size_up_to (i₂ : ℕ) := monotone_sum_take _ A
+    _ ≤ x := (c.mem_range_embedding_iff.1 hx₂).1
+    
 
 theorem mem_range_embedding (j : Finₓ n) : j ∈ Set.Range (c.Embedding (c.index j)) := by
   have : c.embedding (c.index j) (c.inv_embedding j) ∈ Set.Range (c.embedding (c.index j)) := Set.mem_range_self _
@@ -486,8 +489,10 @@ theorem eq_ones_iff_length {c : Composition n} : c = ones n ↔ c.length = n := 
   · contrapose
     intro H length_n
     apply lt_irreflₓ n
-    calc n = ∑ i : Finₓ c.length, 1 := by
-        simp [← length_n]_ < ∑ i : Finₓ c.length, c.blocks_fun i := by
+    calc
+      n = ∑ i : Finₓ c.length, 1 := by
+        simp [← length_n]
+      _ < ∑ i : Finₓ c.length, c.blocks_fun i := by
         obtain ⟨i, hi, i_blocks⟩ : ∃ i ∈ c.blocks, 1 < i := ne_ones_iff.1 H
         rw [← of_fn_blocks_fun, mem_of_fn c.blocks_fun, Set.mem_range] at hi
         obtain ⟨j : Finₓ c.length, hj : c.blocks_fun j = i⟩ := hi
@@ -496,8 +501,9 @@ theorem eq_ones_iff_length {c : Composition n} : c = ones n ↔ c.length = n := 
           Finset.sum_lt_sum
             (fun i hi => by
               simp [← blocks_fun])
-            ⟨j, Finset.mem_univ _, i_blocks⟩_ = n :=
-        c.sum_blocks_fun
+            ⟨j, Finset.mem_univ _, i_blocks⟩
+      _ = n := c.sum_blocks_fun
+      
     
 
 theorem eq_ones_iff_le_length {c : Composition n} : c = ones n ↔ n ≤ c.length := by
@@ -561,9 +567,12 @@ theorem ne_single_iff {n : ℕ} (hn : 0 < n) {c : Composition n} : c ≠ single 
       intro j
       by_contra ji
       apply lt_irreflₓ (∑ k, c.blocks_fun k)
-      calc (∑ k, c.blocks_fun k) ≤ c.blocks_fun i := by
-          simp only [← c.sum_blocks_fun, ← hi]_ < ∑ k, c.blocks_fun k :=
+      calc
+        (∑ k, c.blocks_fun k) ≤ c.blocks_fun i := by
+          simp only [← c.sum_blocks_fun, ← hi]
+        _ < ∑ k, c.blocks_fun k :=
           Finset.single_lt_sum ji (Finset.mem_univ _) (Finset.mem_univ _) (c.one_le_blocks_fun j) fun _ _ _ => zero_le _
+        
     simpa using Fintype.card_eq_one_of_forall_eq this
     
 

@@ -51,7 +51,7 @@ def lsmul : A →ₐ[R] Module.End R M where
 theorem lsmul_coe (a : A) : (lsmul R M a : M → M) = (· • ·) a :=
   rfl
 
-theorem lmul_algebra_map (x : R) : lmul R A (algebraMap R A x) = Algebra.lsmul R A x :=
+theorem lmul_algebra_map (x : R) : Algebra.lmul R A (algebraMap R A x) = Algebra.lsmul R A x :=
   Eq.symm <| LinearMap.ext <| smul_def x
 
 end Algebra
@@ -112,7 +112,7 @@ instance subalgebra' (S₀ : Subalgebra R S) : IsScalarTower R S₀ A :=
 theorem Algebra.ext {S : Type u} {A : Type v} [CommSemiringₓ S] [Semiringₓ A] (h1 h2 : Algebra S A)
     (h :
       ∀ (r : S) (x : A),
-        (have := h1
+        (haveI := h1
           r • x) =
           r • x) :
     h1 = h2 :=
@@ -157,7 +157,7 @@ instance (priority := 999) subsemiring (U : Subsemiring S) : IsScalarTower U S A
 @[nolint instance_priority]
 instance of_ring_hom {R A B : Type _} [CommSemiringₓ R] [CommSemiringₓ A] [CommSemiringₓ B] [Algebra R A] [Algebra R B]
     (f : A →ₐ[R] B) : @IsScalarTower R A B _ f.toRingHom.toAlgebra.toHasSmul _ := by
-  let this := (f : A →+* B).toAlgebra
+  letI := (f : A →+* B).toAlgebra
   exact of_algebra_map_eq fun x => (f.commutes x).symm
 
 end Semiringₓ

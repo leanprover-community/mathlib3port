@@ -241,7 +241,7 @@ def monadicOfHasPreservesReflectsGSplitCoequalizers [∀ ⦃A B⦄ (f g : A ⟶ 
     [∀ ⦃A B⦄ (f g : A ⟶ B) [G.IsSplitPair f g], PreservesColimit (parallelPair f g) G]
     [∀ ⦃A B⦄ (f g : A ⟶ B) [G.IsSplitPair f g], ReflectsColimit (parallelPair f g) G] : MonadicRightAdjoint G := by
   let L : (adjunction.of_right_adjoint G).toMonad.Algebra ⥤ D := left_adjoint_comparison
-  let i : is_right_adjoint (comparison (of_right_adjoint G)) := ⟨_, comparison_adjunction⟩
+  letI i : is_right_adjoint (comparison (of_right_adjoint G)) := ⟨_, comparison_adjunction⟩
   constructor
   let this :
     ∀ X : (of_right_adjoint G).toMonad.Algebra,
@@ -263,7 +263,7 @@ def monadicOfHasPreservesReflectsGSplitCoequalizers [∀ ⦃A B⦄ (f g : A ⟶ 
     change is_iso (is_colimit.cocone_point_unique_up_to_iso _ _).Hom
     infer_instance
     apply counit_coequalizer_of_reflects_coequalizer _
-    let this :
+    letI :
       G.is_split_pair ((left_adjoint G).map (G.map ((adjunction.of_right_adjoint G).counit.app Y)))
         ((adjunction.of_right_adjoint G).counit.app ((left_adjoint G).obj (G.obj Y))) :=
       monadicity_internal.main_pair_G_split ((comparison (adjunction.of_right_adjoint G)).obj Y)
@@ -324,7 +324,7 @@ reflexive coequalizers and `G` reflects isomorphisms, then `G` is monadic.
 -/
 def monadicOfHasPreservesReflexiveCoequalizersOfReflectsIsomorphisms : MonadicRightAdjoint G := by
   let L : (adjunction.of_right_adjoint G).toMonad.Algebra ⥤ D := left_adjoint_comparison
-  let i : is_right_adjoint (comparison (adjunction.of_right_adjoint G)) := ⟨_, comparison_adjunction⟩
+  letI i : is_right_adjoint (comparison (adjunction.of_right_adjoint G)) := ⟨_, comparison_adjunction⟩
   constructor
   let this :
     ∀ X : (adjunction.of_right_adjoint G).toMonad.Algebra,

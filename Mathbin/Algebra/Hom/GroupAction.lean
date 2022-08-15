@@ -68,7 +68,7 @@ variable (T : Type _) [Semiringₓ T] [MulSemiringAction M T]
 variable (G : Type _) [Groupₓ G] (H : Subgroup G)
 
 /-- Equivariant functions. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure MulActionHom where
   toFun : X → Y
   map_smul' : ∀ (m : M') (x : X), to_fun (m • x) = m • to_fun x
@@ -173,12 +173,10 @@ end MulActionHom
 /-- Equivariant additive monoid homomorphisms. -/
 structure DistribMulActionHom extends A →[M] B, A →+ B
 
-/-- Reinterpret an equivariant additive monoid homomorphism as an additive monoid homomorphism. -/
-add_decl_doc DistribMulActionHom.toAddMonoidHom
-
-/-- Reinterpret an equivariant additive monoid homomorphism as an equivariant function. -/
-add_decl_doc DistribMulActionHom.toMulActionHom
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident distrib_mul_action_hom.to_add_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident distrib_mul_action_hom.to_mul_action_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- mathport name: «expr →+[ ] »
 notation:25 A " →+[" M:25 "] " B:0 => DistribMulActionHom M A B
 
@@ -335,15 +333,13 @@ end Semiringₓ
 end DistribMulActionHom
 
 /-- Equivariant ring homomorphisms. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure MulSemiringActionHom extends R →+[M] S, R →+* S
 
-/-- Reinterpret an equivariant ring homomorphism as a ring homomorphism. -/
-add_decl_doc MulSemiringActionHom.toRingHom
-
-/-- Reinterpret an equivariant ring homomorphism as an equivariant additive monoid homomorphism. -/
-add_decl_doc MulSemiringActionHom.toDistribMulActionHom
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident mul_semiring_action_hom.to_ring_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident mul_semiring_action_hom.to_distrib_mul_action_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- mathport name: «expr →+*[ ] »
 notation:25 R " →+*[" M:25 "] " S:0 => MulSemiringActionHom M R S
 

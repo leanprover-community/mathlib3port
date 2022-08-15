@@ -171,7 +171,7 @@ instance [TopologicalSpace α] [IsLocallyFiniteMeasure μ] : IsLocallyFiniteMeas
 theorem lintegral_rn_deriv_lt_top_of_measure_ne_top {μ : Measure α} (ν : Measure α) {s : Set α} (hs : μ s ≠ ∞) :
     (∫⁻ x in s, μ.rnDeriv ν x ∂ν) < ∞ := by
   by_cases' hl : have_lebesgue_decomposition μ ν
-  · have := hl
+  · haveI := hl
     obtain ⟨-, -, hadd⟩ := have_lebesgue_decomposition_spec μ ν
     suffices : (∫⁻ x in to_measurable μ s, μ.rn_deriv ν x ∂ν) < ∞
     exact lt_of_le_of_ltₓ (lintegral_mono_set (subset_to_measurable _ _)) this
@@ -211,7 +211,7 @@ while `measure_theory.measure.eq_rn_deriv` provides the uniqueness of the
 `rn_deriv`. -/
 theorem eq_singular_part {s : Measure α} {f : α → ℝ≥0∞} (hf : Measurable f) (hs : s ⊥ₘ ν)
     (hadd : μ = s + ν.withDensity f) : s = μ.singularPart ν := by
-  have : have_lebesgue_decomposition μ ν := ⟨⟨⟨s, f⟩, hf, hs, hadd⟩⟩
+  haveI : have_lebesgue_decomposition μ ν := ⟨⟨⟨s, f⟩, hf, hs, hadd⟩⟩
   obtain ⟨hmeas, hsing, hadd'⟩ := have_lebesgue_decomposition_spec μ ν
   obtain ⟨⟨S, hS₁, hS₂, hS₃⟩, ⟨T, hT₁, hT₂, hT₃⟩⟩ := hs, hsing
   rw [hadd'] at hadd
@@ -253,7 +253,7 @@ theorem singular_part_smul (μ ν : Measure α) (r : ℝ≥0 ) : (r • μ).sing
   · rw [hr, zero_smul, zero_smul, singular_part_zero]
     
   by_cases' hl : have_lebesgue_decomposition μ ν
-  · have := hl
+  · haveI := hl
     refine'
       (eq_singular_part ((measurable_rn_deriv μ ν).const_smul (r : ℝ≥0∞))
           (mutually_singular.smul r (have_lebesgue_decomposition_spec _ _).2.1) _).symm
@@ -291,7 +291,7 @@ theorem, while `measure_theory.measure.eq_singular_part` provides the uniqueness
 terms of the functions is given in `eq_rn_deriv`. -/
 theorem eq_with_density_rn_deriv {s : Measure α} {f : α → ℝ≥0∞} (hf : Measurable f) (hs : s ⊥ₘ ν)
     (hadd : μ = s + ν.withDensity f) : ν.withDensity f = ν.withDensity (μ.rnDeriv ν) := by
-  have : have_lebesgue_decomposition μ ν := ⟨⟨⟨s, f⟩, hf, hs, hadd⟩⟩
+  haveI : have_lebesgue_decomposition μ ν := ⟨⟨⟨s, f⟩, hf, hs, hadd⟩⟩
   obtain ⟨hmeas, hsing, hadd'⟩ := have_lebesgue_decomposition_spec μ ν
   obtain ⟨⟨S, hS₁, hS₂, hS₃⟩, ⟨T, hT₁, hT₂, hT₃⟩⟩ := hs, hsing
   rw [hadd'] at hadd
@@ -335,9 +335,12 @@ theorem eq_rn_deriv [SigmaFinite ν] {s : Measure α} {f : α → ℝ≥0∞} (h
     (hadd : μ = s + ν.withDensity f) : f =ᵐ[ν] μ.rnDeriv ν := by
   refine' ae_eq_of_forall_set_lintegral_eq_of_sigma_finite hf (measurable_rn_deriv μ ν) _
   intro a ha h'a
-  calc (∫⁻ x : α in a, f x ∂ν) = ν.with_density f a :=
-      (with_density_apply f ha).symm _ = ν.with_density (μ.rn_deriv ν) a := by
-      rw [eq_with_density_rn_deriv hf hs hadd]_ = ∫⁻ x : α in a, μ.rn_deriv ν x ∂ν := with_density_apply _ ha
+  calc
+    (∫⁻ x : α in a, f x ∂ν) = ν.with_density f a := (with_density_apply f ha).symm
+    _ = ν.with_density (μ.rn_deriv ν) a := by
+      rw [eq_with_density_rn_deriv hf hs hadd]
+    _ = ∫⁻ x : α in a, μ.rn_deriv ν x ∂ν := with_density_apply _ ha
+    
 
 /-- The Radon-Nikodym derivative of `f ν` with respect to `ν` is `f`. -/
 theorem rn_deriv_with_density (ν : Measure α) [SigmaFinite ν] {f : α → ℝ≥0∞} (hf : Measurable f) :
@@ -531,8 +534,8 @@ end LebesgueDecomposition
 
 open LebesgueDecomposition
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (n k)
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (n k)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (n k)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (n k)
 /-- Any pair of finite measures `μ` and `ν`, `have_lebesgue_decomposition`. That is to say,
 there exist a measure `ξ` and a measurable function `f`, such that `ξ` is mutually singular
 with respect to `ν` and `μ = ξ + ν.with_density f`.
@@ -874,7 +877,7 @@ section
 theorem singular_part_mutually_singular (s : SignedMeasure α) (μ : Measure α) :
     s.toJordanDecomposition.posPart.singularPart μ ⊥ₘ s.toJordanDecomposition.negPart.singularPart μ := by
   by_cases' hl : s.have_lebesgue_decomposition μ
-  · have := hl
+  · haveI := hl
     obtain ⟨i, hi, hpos, hneg⟩ := s.to_jordan_decomposition.mutually_singular
     rw [s.to_jordan_decomposition.pos_part.have_lebesgue_decomposition_add μ] at hpos
     rw [s.to_jordan_decomposition.neg_part.have_lebesgue_decomposition_add μ] at hneg
@@ -993,15 +996,15 @@ theorem to_jordan_decomposition_eq_of_eq_add_with_density {f : α → ℝ} (hf :
       @JordanDecomposition.mk α _ (t.toJordanDecomposition.posPart + μ.withDensity fun x => Ennreal.ofReal (f x))
         (t.toJordanDecomposition.negPart + μ.withDensity fun x => Ennreal.ofReal (-f x))
         (by
-          have := is_finite_measure_with_density_of_real hfi.2
+          haveI := is_finite_measure_with_density_of_real hfi.2
           infer_instance)
         (by
-          have := is_finite_measure_with_density_of_real hfi.neg.2
+          haveI := is_finite_measure_with_density_of_real hfi.neg.2
           infer_instance)
         (jordan_decomposition_add_with_density_mutually_singular hf htμ) :=
   by
-  have := is_finite_measure_with_density_of_real hfi.2
-  have := is_finite_measure_with_density_of_real hfi.neg.2
+  haveI := is_finite_measure_with_density_of_real hfi.2
+  haveI := is_finite_measure_with_density_of_real hfi.neg.2
   refine' to_jordan_decomposition_eq _
   simp_rw [jordan_decomposition.to_signed_measure, hadd]
   ext i hi
@@ -1143,7 +1146,7 @@ theorem eq_rn_deriv (t : SignedMeasure α) (f : α → ℝ) (hfi : Integrable f 
   have hadd' : s = t + μ.with_densityᵥ f' := by
     convert hadd using 2
     exact with_densityᵥ_eq.congr_ae hfi.1.ae_eq_mk.symm
-  have := have_lebesgue_decomposition_mk μ hfi.1.measurable_mk htμ hadd'
+  haveI := have_lebesgue_decomposition_mk μ hfi.1.measurable_mk htμ hadd'
   refine' (integrable.ae_eq_of_with_densityᵥ_eq (integrable_rn_deriv _ _) hfi _).symm
   rw [← add_right_injₓ t, ← hadd, eq_singular_part _ f htμ hadd, singular_part_add_with_density_rn_deriv_eq]
 

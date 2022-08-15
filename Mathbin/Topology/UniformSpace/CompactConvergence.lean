@@ -226,11 +226,14 @@ theorem Inter_compact_open_gen_subset_compact_conv_nhd (hK : IsCompact K) (hV : 
       intro y hy
       obtain ⟨z, hz₁, hz₂⟩ := uniform_space.mem_closure_iff_ball.mp hy hZ₁
       exact ball_mono hZ₃ _ (mem_ball_comp hz₂ ((mem_ball_symmetry hZ₂).mp hz₁))
-    calc f '' (K ∩ Closure (U x)) ⊆ f '' Closure (U x) :=
-        image_subset _ (inter_subset_right _ _)_ ⊆ Closure (f '' U x) :=
-        f.continuous.continuous_on.image_closure _ ⊆ Closure (ball (f x) Z) := by
+    calc
+      f '' (K ∩ Closure (U x)) ⊆ f '' Closure (U x) := image_subset _ (inter_subset_right _ _)
+      _ ⊆ Closure (f '' U x) := f.continuous.continuous_on.image_closure
+      _ ⊆ Closure (ball (f x) Z) := by
         apply closure_mono
-        simp _ ⊆ ball (f x) W := hZW
+        simp
+      _ ⊆ ball (f x) W := hZW
+      
   refine'
     ⟨t, t.fintype_coe_sort, C, fun i => hK.inter_right is_closed_closure, fun i => ball (f ((i : K) : α)) W, fun i =>
       is_open_ball _ hW₄, by
@@ -250,7 +253,7 @@ theorem compact_open_eq_compact_convergence :
       exact @IsOpen.mem_nhds C(α, β) compact_convergence_topology _ _ hX hf
     obtain ⟨-, ⟨⟨K, V⟩, ⟨hK, hV⟩, rfl⟩, hXf⟩ := hXf
     obtain ⟨ι, hι, C, hC, U, hU, h₁, h₂⟩ := Inter_compact_open_gen_subset_compact_conv_nhd f hK hV
-    have := hι
+    haveI := hι
     exact
       ⟨⋂ i, compact_open.gen (C i) (U i), h₂.trans hXf, is_open_Inter fun i => ContinuousMap.is_open_gen (hC i) (hU i),
         h₁⟩

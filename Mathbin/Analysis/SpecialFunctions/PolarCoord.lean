@@ -101,13 +101,13 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ) where
     · exact complex.equiv_real_prodₗ.symm.continuous.continuous_on
       
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
 theorem has_fderiv_at_polar_coord_symm (p : ℝ × ℝ) :
     HasFderivAt polarCoord.symm
       (Matrix.toLin (Basis.finTwoProd ℝ) (Basis.finTwoProd ℝ)
           («expr!![ »
-            "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation")).toContinuousLinearMap
+            "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation")).toContinuousLinearMap
       p :=
   by
   rw [Matrix.to_lin_fin_two_prod_to_continuous_linear_map]
@@ -133,14 +133,14 @@ theorem polar_coord_source_ae_eq_univ : polarCoord.Source =ᵐ[volume] univ := b
   simp only [← ae_eq_univ]
   exact le_antisymmₓ ((measure_mono A).trans (le_of_eqₓ B)) bot_le
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
-theorem integral_comp_polar_coord_symm {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
+theorem integral_comp_polar_coord_symm {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     (f : ℝ × ℝ → E) : (∫ p in polarCoord.Target, p.1 • f (polarCoord.symm p)) = ∫ p, f p := by
   set B : ℝ × ℝ → ℝ × ℝ →L[ℝ] ℝ × ℝ := fun p =>
     (Matrix.toLin (Basis.finTwoProd ℝ) (Basis.finTwoProd ℝ)
         («expr!![ »
-          "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation")).toContinuousLinearMap with
+          "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation")).toContinuousLinearMap with
     hB
   have A : ∀, ∀ p ∈ polar_coord.symm.source, ∀, HasFderivAt polar_coord.symm (B p) p := fun p hp =>
     has_fderiv_at_polar_coord_symm p
@@ -151,16 +151,16 @@ theorem integral_comp_polar_coord_symm {E : Type _} [NormedGroup E] [NormedSpace
       sub_neg_eq_add]
     ring_exp
   symm
-  calc (∫ p, f p) = ∫ p in polar_coord.source, f p := by
+  calc
+    (∫ p, f p) = ∫ p in polar_coord.source, f p := by
       rw [← integral_univ]
       apply set_integral_congr_set_ae
-      exact polar_coord_source_ae_eq_univ.symm _ = ∫ p in polar_coord.target, abs (B p).det • f (polar_coord.symm p) :=
-      by
-      apply
-        integral_target_eq_integral_abs_det_fderiv_smul volume
-          A _ = ∫ p in polar_coord.target, p.1 • f (polar_coord.symm p) :=
-      by
+      exact polar_coord_source_ae_eq_univ.symm
+    _ = ∫ p in polar_coord.target, abs (B p).det • f (polar_coord.symm p) := by
+      apply integral_target_eq_integral_abs_det_fderiv_smul volume A
+    _ = ∫ p in polar_coord.target, p.1 • f (polar_coord.symm p) := by
       apply set_integral_congr polar_coord.open_target.measurable_set fun x hx => _
       rw [B_det, abs_of_pos]
       exact hx.1
+    
 

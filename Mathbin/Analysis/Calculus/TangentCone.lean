@@ -31,7 +31,7 @@ properties of the tangent cone we prove here.
 -/
 
 
-variable (𝕜 : Type _) [NondiscreteNormedField 𝕜]
+variable (𝕜 : Type _) [NontriviallyNormedField 𝕜]
 
 open Filter Set
 
@@ -67,11 +67,11 @@ def UniqueDiffOn (s : Set E) : Prop :=
 
 end TangentCone
 
-variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
-variable {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F]
+variable {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 
-variable {G : Type _} [NormedGroup G] [NormedSpace ℝ G]
+variable {G : Type _} [NormedAddCommGroup G] [NormedSpace ℝ G]
 
 variable {𝕜} {x y : E} {s t : Set E}
 
@@ -178,10 +178,10 @@ theorem subset_tangent_cone_prod_right {t : Set F} {y : F} (hs : x ∈ Closure s
     exact tendsto_pow_at_top_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (j «expr ≠ » i)
 /-- The tangent cone of a product contains the tangent cone of each factor. -/
-theorem maps_to_tangent_cone_pi {ι : Type _} [DecidableEq ι] {E : ι → Type _} [∀ i, NormedGroup (E i)]
+theorem maps_to_tangent_cone_pi {ι : Type _} [DecidableEq ι] {E : ι → Type _} [∀ i, NormedAddCommGroup (E i)]
     [∀ i, NormedSpace 𝕜 (E i)] {s : ∀ i, Set (E i)} {x : ∀ i, E i} {i : ι}
     (hi : ∀ (j) (_ : j ≠ i), x j ∈ Closure (s j)) :
     MapsTo (LinearMap.single i : E i →ₗ[𝕜] ∀ j, E j) (TangentConeAt 𝕜 (s i) (x i))
@@ -338,7 +338,7 @@ theorem UniqueDiffWithinAt.prod {t : Set F} {y : F} (hs : UniqueDiffWithinAt �
   rw [LinearMap.span_inl_union_inr, SetLike.le_def] at this
   exact (hs.1.Prod ht.1).mono this
 
-theorem UniqueDiffWithinAt.univ_pi (ι : Type _) [Fintype ι] (E : ι → Type _) [∀ i, NormedGroup (E i)]
+theorem UniqueDiffWithinAt.univ_pi (ι : Type _) [Fintype ι] (E : ι → Type _) [∀ i, NormedAddCommGroup (E i)]
     [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i)) (x : ∀ i, E i) (h : ∀ i, UniqueDiffWithinAt 𝕜 (s i) (x i)) :
     UniqueDiffWithinAt 𝕜 (Set.Pi Univ s) x := by
   classical
@@ -348,7 +348,7 @@ theorem UniqueDiffWithinAt.univ_pi (ι : Type _) [Fintype ι] (E : ι → Type _
   simp only [Submodule.supr_map_single, ← supr_le_iff, ← LinearMap.map_span, ← Submodule.span_le, maps_to']
   exact fun i => (maps_to_tangent_cone_pi fun j hj => (h j).2).mono subset.rfl Submodule.subset_span
 
-theorem UniqueDiffWithinAt.pi (ι : Type _) [Fintype ι] (E : ι → Type _) [∀ i, NormedGroup (E i)]
+theorem UniqueDiffWithinAt.pi (ι : Type _) [Fintype ι] (E : ι → Type _) [∀ i, NormedAddCommGroup (E i)]
     [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i)) (x : ∀ i, E i) (I : Set ι)
     (h : ∀, ∀ i ∈ I, ∀, UniqueDiffWithinAt 𝕜 (s i) (x i)) : UniqueDiffWithinAt 𝕜 (Set.Pi I s) x := by
   classical
@@ -362,13 +362,13 @@ theorem UniqueDiffOn.prod {t : Set F} (hs : UniqueDiffOn 𝕜 s) (ht : UniqueDif
 
 /-- The finite product of a family of sets of unique differentiability is a set of unique
 differentiability. -/
-theorem UniqueDiffOn.pi (ι : Type _) [Fintype ι] (E : ι → Type _) [∀ i, NormedGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)]
-    (s : ∀ i, Set (E i)) (I : Set ι) (h : ∀, ∀ i ∈ I, ∀, UniqueDiffOn 𝕜 (s i)) : UniqueDiffOn 𝕜 (Set.Pi I s) :=
-  fun x hx => (UniqueDiffWithinAt.pi _ _ _ _ _) fun i hi => h i hi (x i) (hx i hi)
+theorem UniqueDiffOn.pi (ι : Type _) [Fintype ι] (E : ι → Type _) [∀ i, NormedAddCommGroup (E i)]
+    [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i)) (I : Set ι) (h : ∀, ∀ i ∈ I, ∀, UniqueDiffOn 𝕜 (s i)) :
+    UniqueDiffOn 𝕜 (Set.Pi I s) := fun x hx => (UniqueDiffWithinAt.pi _ _ _ _ _) fun i hi => h i hi (x i) (hx i hi)
 
 /-- The finite product of a family of sets of unique differentiability is a set of unique
 differentiability. -/
-theorem UniqueDiffOn.univ_pi (ι : Type _) [Fintype ι] (E : ι → Type _) [∀ i, NormedGroup (E i)]
+theorem UniqueDiffOn.univ_pi (ι : Type _) [Fintype ι] (E : ι → Type _) [∀ i, NormedAddCommGroup (E i)]
     [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i)) (h : ∀ i, UniqueDiffOn 𝕜 (s i)) : UniqueDiffOn 𝕜 (Set.Pi Univ s) :=
   (UniqueDiffOn.pi _ _ _ _) fun i _ => h i
 

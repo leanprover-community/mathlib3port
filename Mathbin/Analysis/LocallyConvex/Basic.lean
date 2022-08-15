@@ -3,7 +3,9 @@ Copyright (c) 2019 Jean Lo. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo, Bhavik Mehta, Yaël Dillies
 -/
-import Mathbin.Analysis.NormedSpace.Basic
+import Mathbin.Analysis.Convex.Basic
+import Mathbin.Analysis.NormedSpace.LatticeOrderedGroup
+import Mathbin.Analysis.NormedSpace.Ordered
 
 /-!
 # Local convexity
@@ -160,14 +162,14 @@ theorem Balanced.inter (hA : Balanced 𝕜 A) (hB : Balanced 𝕜 B) : Balanced 
 theorem balanced_Union {f : ι → Set E} (h : ∀ i, Balanced 𝕜 (f i)) : Balanced 𝕜 (⋃ i, f i) := fun a ha =>
   (smul_set_Union _ _).Subset.trans <| Union_mono fun _ => h _ _ ha
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
 theorem balanced_Union₂ {f : ∀ i, κ i → Set E} (h : ∀ i j, Balanced 𝕜 (f i j)) : Balanced 𝕜 (⋃ (i) (j), f i j) :=
   balanced_Union fun _ => balanced_Union <| h _
 
 theorem balanced_Inter {f : ι → Set E} (h : ∀ i, Balanced 𝕜 (f i)) : Balanced 𝕜 (⋂ i, f i) := fun a ha =>
   (smul_set_Inter_subset _ _).trans <| Inter_mono fun _ => h _ _ ha
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
 theorem balanced_Inter₂ {f : ∀ i, κ i → Set E} (h : ∀ i j, Balanced 𝕜 (f i j)) : Balanced 𝕜 (⋂ (i) (j), f i j) :=
   balanced_Inter fun _ => balanced_Inter <| h _
 
@@ -303,7 +305,10 @@ theorem absorbent_nhds_zero (hA : A ∈ 𝓝 (0 : E)) : Absorbent 𝕜 A := by
   have ha₂ : 0 < ∥a∥ := hr₃.trans_le ha₁
   refine' (mem_smul_set_iff_inv_smul_mem₀ (norm_pos_iff.mp ha₂) _ _).2 (hw₁ <| hr₂ _)
   rw [Metric.mem_ball, dist_zero_right, norm_inv]
-  calc ∥a∥⁻¹ ≤ r / 2 := (inv_le (half_pos hr₁) ha₂).mp ha₁ _ < r := half_lt_self hr₁
+  calc
+    ∥a∥⁻¹ ≤ r / 2 := (inv_le (half_pos hr₁) ha₂).mp ha₁
+    _ < r := half_lt_self hr₁
+    
 
 /-- The union of `{0}` with the interior of a balanced set is balanced. -/
 theorem balanced_zero_union_interior (hA : Balanced 𝕜 A) : Balanced 𝕜 ((0 : Set E) ∪ Interior A) := by
@@ -317,8 +322,10 @@ theorem balanced_zero_union_interior (hA : Balanced 𝕜 A) : Balanced 𝕜 ((0 
     · rw [image_zero, smul_zero]
       rfl
       
-    · calc a • Interior A ⊆ Interior (a • A) := (is_open_map_smul₀ h).image_interior_subset A _ ⊆ Interior A :=
-          interior_mono (hA _ ha)
+    · calc
+        a • Interior A ⊆ Interior (a • A) := (is_open_map_smul₀ h).image_interior_subset A
+        _ ⊆ Interior A := interior_mono (hA _ ha)
+        
       
     
 
@@ -332,9 +339,9 @@ theorem Balanced.closure (hA : Balanced 𝕜 A) : Balanced 𝕜 (Closure A) := f
 
 end NormedField
 
-section NondiscreteNormedField
+section NontriviallyNormedField
 
-variable [NondiscreteNormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {s : Set E}
+variable [NontriviallyNormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {s : Set E}
 
 theorem absorbs_zero_iff : Absorbs 𝕜 s 0 ↔ (0 : E) ∈ s := by
   refine' ⟨_, fun h => ⟨1, zero_lt_one, fun a _ => zero_subset.2 <| zero_mem_smul_set h⟩⟩
@@ -347,5 +354,23 @@ theorem absorbs_zero_iff : Absorbs 𝕜 s 0 ↔ (0 : E) ∈ s := by
 theorem Absorbent.zero_mem (hs : Absorbent 𝕜 s) : (0 : E) ∈ s :=
   absorbs_zero_iff.1 <| absorbent_iff_forall_absorbs_singleton.1 hs _
 
-end NondiscreteNormedField
+end NontriviallyNormedField
+
+section Real
+
+variable [AddCommGroupₓ E] [Module ℝ E] {s : Set E}
+
+theorem balanced_iff_neg_mem (hs : Convex ℝ s) : Balanced ℝ s ↔ ∀ ⦃x⦄, x ∈ s → -x ∈ s := by
+  refine' ⟨fun h x => h.neg_mem_iff.2, fun h a ha => smul_set_subset_iff.2 fun x hx => _⟩
+  rw [Real.norm_eq_abs, abs_le] at ha
+  rw
+    [show a = -((1 - a) / 2) + (a - -1) / 2 by
+      ring,
+    add_smul, neg_smul, ← smul_neg]
+  exact
+    hs (h hx) hx (div_nonneg (sub_nonneg_of_le ha.2) zero_le_two) (div_nonneg (sub_nonneg_of_le ha.1) zero_le_two)
+      (by
+        ring)
+
+end Real
 

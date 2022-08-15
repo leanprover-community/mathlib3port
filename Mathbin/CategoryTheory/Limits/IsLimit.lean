@@ -51,7 +51,7 @@ cone morphism to `t`.
 
 See <https://stacks.math.columbia.edu/tag/002E>.
   -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure IsLimit (t : Cone F) where
   lift : ∀ s : Cone F, s.x ⟶ t.x
   fac' : ∀ (s : Cone F) (j : J), lift s ≫ t.π.app j = s.π.app j := by
@@ -192,8 +192,8 @@ first cone was limiting also.
 def ofPointIso {r t : Cone F} (P : IsLimit r) [i : IsIso (P.lift t)] : IsLimit t :=
   ofIsoLimit P
     (by
-      have : is_iso (P.lift_cone_morphism t).Hom := i
-      have : is_iso (P.lift_cone_morphism t) := cones.cone_iso_of_hom_iso _
+      haveI : is_iso (P.lift_cone_morphism t).Hom := i
+      haveI : is_iso (P.lift_cone_morphism t) := cones.cone_iso_of_hom_iso _
       symm
       apply as_iso (P.lift_cone_morphism t))
 
@@ -508,7 +508,7 @@ cocone morphism from `t`.
 
 See <https://stacks.math.columbia.edu/tag/002F>.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure IsColimit (t : Cocone F) where
   desc : ∀ s : Cocone F, t.x ⟶ s.x
   fac' : ∀ (s : Cocone F) (j : J), t.ι.app j ≫ desc s = s.ι.app j := by
@@ -653,8 +653,8 @@ first cocone was colimiting also.
 def ofPointIso {r t : Cocone F} (P : IsColimit r) [i : IsIso (P.desc t)] : IsColimit t :=
   ofIsoColimit P
     (by
-      have : is_iso (P.desc_cocone_morphism t).Hom := i
-      have : is_iso (P.desc_cocone_morphism t) := cocones.cocone_iso_of_hom_iso _
+      haveI : is_iso (P.desc_cocone_morphism t).Hom := i
+      haveI : is_iso (P.desc_cocone_morphism t) := cocones.cocone_iso_of_hom_iso _
       apply as_iso (P.desc_cocone_morphism t))
 
 variable {t : Cocone F}

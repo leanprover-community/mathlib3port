@@ -118,7 +118,7 @@ finite-dimensional inner product space is trivial. -/
 theorem orthogonal_supr_eigenspaces_eq_bot : (⨆ μ, eigenspace T μ)ᗮ = ⊥ := by
   have hT' : is_self_adjoint _ := hT.restrict_invariant hT.orthogonal_supr_eigenspaces_invariant
   -- a self-adjoint operator on a nontrivial inner product space has an eigenvalue
-  have := hT'.subsingleton_of_no_eigenvalue_finite_dimensional hT.orthogonal_supr_eigenspaces
+  haveI := hT'.subsingleton_of_no_eigenvalue_finite_dimensional hT.orthogonal_supr_eigenspaces
   exact Submodule.eq_bot_of_subsingleton _
 
 theorem orthogonal_supr_eigenspaces_eq_bot' : (⨆ μ : Eigenvalues T, eigenspace T μ)ᗮ = ⊥ :=

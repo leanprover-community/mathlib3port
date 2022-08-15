@@ -32,7 +32,7 @@ the polynomials. For instance,
 
 Polynomials are defined using `add_monoid_algebra R ℕ`, where `R` is a semiring.
 The variable `X` commutes with every polynomial `p`: lemma `X_mul` proves the identity
-`X * p = `p * X`.  The relationship to `add_monoid_algebra R ℕ` is through a structure
+`X * p = p * X`.  The relationship to `add_monoid_algebra R ℕ` is through a structure
 to make polynomials irreducible from the point of view of the kernel. Most operations
 are irreducible since Lean can not compute anyway with `add_monoid_algebra`. There are two
 exceptions that we make semireducible:
@@ -90,10 +90,6 @@ they unfold around `polynomial.of_finsupp` and `polynomial.to_finsupp`.
 
 section AddMonoidAlgebra
 
-/-- The function version of `monomial`. Use `monomial` instead of this one. -/
-irreducible_def monomialFun (n : ℕ) (a : R) : R[X] :=
-  ⟨Finsupp.single n a⟩
-
 private irreducible_def add : R[X] → R[X] → R[X]
   | ⟨a⟩, ⟨b⟩ => ⟨a + b⟩
 
@@ -107,7 +103,7 @@ instance : Zero R[X] :=
   ⟨⟨0⟩⟩
 
 instance : One R[X] :=
-  ⟨monomialFun 0 (1 : R)⟩
+  ⟨⟨1⟩⟩
 
 instance : Add R[X] :=
   ⟨add⟩
@@ -132,9 +128,7 @@ theorem of_finsupp_zero : (⟨0⟩ : R[X]) = 0 :=
   rfl
 
 @[simp]
-theorem of_finsupp_one : (⟨1⟩ : R[X]) = 1 := by
-  change (⟨1⟩ : R[X]) = monomial_fun 0 (1 : R)
-  rw [monomial_fun]
+theorem of_finsupp_one : (⟨1⟩ : R[X]) = 1 :=
   rfl
 
 @[simp]
@@ -176,9 +170,7 @@ theorem to_finsupp_zero : (0 : R[X]).toFinsupp = 0 :=
   rfl
 
 @[simp]
-theorem to_finsupp_one : (1 : R[X]).toFinsupp = 1 := by
-  change to_finsupp (monomial_fun _ _) = _
-  rw [monomial_fun]
+theorem to_finsupp_one : (1 : R[X]).toFinsupp = 1 :=
   rfl
 
 @[simp]
@@ -338,19 +330,19 @@ theorem card_support_eq_zero : p.Support.card = 0 ↔ p = 0 := by
 
 /-- `monomial s a` is the monomial `a * X^s` -/
 def monomial (n : ℕ) : R →ₗ[R] R[X] where
-  toFun := monomialFun n
+  toFun := fun t => ⟨Finsupp.single n t⟩
   map_add' := by
-    simp [← monomial_fun]
+    simp
   map_smul' := by
-    simp [← monomial_fun, of_finsupp_smul]
+    simp [of_finsupp_smul]
 
 @[simp]
 theorem to_finsupp_monomial (n : ℕ) (r : R) : (monomial n r).toFinsupp = Finsupp.single n r := by
-  simp [← monomial, ← monomial_fun]
+  simp [← monomial]
 
 @[simp]
 theorem of_finsupp_single (n : ℕ) (r : R) : (⟨Finsupp.single n r⟩ : R[X]) = monomial n r := by
-  simp [← monomial, ← monomial_fun]
+  simp [← monomial]
 
 @[simp]
 theorem monomial_zero_right (n : ℕ) : monomial n (0 : R) = 0 :=
@@ -381,10 +373,8 @@ theorem smul_monomial {S} [Monoidₓ S] [DistribMulAction S R] (a : S) (n : ℕ)
   to_finsupp_injective <| by
     simp
 
-theorem monomial_injective (n : ℕ) : Function.Injective (monomial n : R → R[X]) := by
-  convert (to_finsupp_iso R).symm.Injective.comp (single_injective n)
-  ext
-  simp
+theorem monomial_injective (n : ℕ) : Function.Injective (monomial n : R → R[X]) :=
+  (toFinsuppIso R).symm.Injective.comp (single_injective n)
 
 @[simp]
 theorem monomial_eq_zero_iff (t : R) (n : ℕ) : monomial n t = 0 ↔ t = 0 :=
@@ -618,6 +608,14 @@ theorem C_eq_zero : c a = 0 ↔ a = 0 :=
     _ ↔ a = 0 := C_inj
     
 
+theorem subsingleton_iff_subsingleton : Subsingleton R[X] ↔ Subsingleton R :=
+  ⟨fun h => subsingleton_iff.mpr fun a b => C_inj.mp (subsingleton_iff.mp h _ _), by
+    intro
+    infer_instance⟩
+
+theorem forall_eq_iff_forall_eq : (∀ f g : R[X], f = g) ↔ ∀ a b : R, a = b := by
+  simpa only [subsingleton_iff] using subsingleton_iff_subsingleton
+
 theorem ext_iff {p q : R[X]} : p = q ↔ ∀ n, coeff p n = coeff q n := by
   rcases p with ⟨⟩
   rcases q with ⟨⟩
@@ -792,6 +790,12 @@ theorem sum_smul_index {S : Type _} [AddCommMonoidₓ S] (p : R[X]) (b : R) (f :
     (b • p).Sum f = p.Sum fun n a => f n (b * a) := by
   rcases p with ⟨⟩
   simpa [← Sum, ← support, ← coeff] using Finsupp.sum_smul_index hf
+
+theorem sum_monomial_eq : ∀ p : R[X], (p.Sum fun n a => monomial n a) = p
+  | ⟨p⟩ => (of_finsupp_sum _ _).symm.trans (congr_arg _ <| Finsupp.sum_single _)
+
+theorem sum_C_mul_X_eq (p : R[X]) : (p.Sum fun n a => c a * X ^ n) = p := by
+  simp_rw [← monomial_eq_C_mul_X, sum_monomial_eq]
 
 /-- `erase p n` is the polynomial `p` in which the `X^n` term has been erased. -/
 irreducible_def erase (n : ℕ) : R[X] → R[X]

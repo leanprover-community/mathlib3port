@@ -83,7 +83,7 @@ theorem tendsto_coe_rat_at_bot_iff [LinearOrderedField R] [Archimedean R] {f : �
 
 theorem at_top_countable_basis_of_archimedean [LinearOrderedSemiring R] [Archimedean R] :
     (atTop : Filter R).HasCountableBasis (fun n : ℕ => True) fun n => Ici n :=
-  { Countable := countable_encodable _,
+  { Countable := to_countable _,
     to_has_basis :=
       at_top_basis.to_has_basis
         (fun x hx =>
@@ -93,7 +93,7 @@ theorem at_top_countable_basis_of_archimedean [LinearOrderedSemiring R] [Archime
 
 theorem at_bot_countable_basis_of_archimedean [LinearOrderedRing R] [Archimedean R] :
     (atBot : Filter R).HasCountableBasis (fun m : ℤ => True) fun m => Iic m :=
-  { Countable := countable_encodable _,
+  { Countable := to_countable _,
     to_has_basis :=
       at_bot_basis.to_has_basis
         (fun x hx =>
@@ -126,11 +126,15 @@ theorem Tendsto.const_mul_at_top' (hr : 0 < r) (hf : Tendsto f l atTop) : Tendst
   obtain ⟨n : ℕ, hn : 1 ≤ n • r⟩ := Archimedean.arch 1 hr
   rw [nsmul_eq_mul'] at hn
   filter_upwards [tendsto_at_top.1 hf (n * max b 0)] with x hx
-  calc b ≤ 1 * max b 0 := by
+  calc
+    b ≤ 1 * max b 0 := by
       rw [one_mulₓ]
-      exact le_max_leftₓ _ _ _ ≤ r * n * max b 0 :=
-      mul_le_mul_of_nonneg_right hn (le_max_rightₓ _ _)_ = r * (n * max b 0) := by
-      rw [mul_assoc]_ ≤ r * f x := mul_le_mul_of_nonneg_left hx (le_of_ltₓ hr)
+      exact le_max_leftₓ _ _
+    _ ≤ r * n * max b 0 := mul_le_mul_of_nonneg_right hn (le_max_rightₓ _ _)
+    _ = r * (n * max b 0) := by
+      rw [mul_assoc]
+    _ ≤ r * f x := mul_le_mul_of_nonneg_left hx (le_of_ltₓ hr)
+    
 
 /-- If a function tends to infinity along a filter, then this function multiplied by a positive
 constant (on the right) also tends to infinity. The archimedean assumption is convenient to get a
@@ -142,11 +146,15 @@ theorem Tendsto.at_top_mul_const' (hr : 0 < r) (hf : Tendsto f l atTop) : Tendst
   have hn' : 1 ≤ (n : R) * r := by
     rwa [nsmul_eq_mul] at hn
   filter_upwards [tendsto_at_top.1 hf (max b 0 * n)] with x hx
-  calc b ≤ max b 0 * 1 := by
+  calc
+    b ≤ max b 0 * 1 := by
       rw [mul_oneₓ]
-      exact le_max_leftₓ _ _ _ ≤ max b 0 * (n * r) :=
-      mul_le_mul_of_nonneg_left hn' (le_max_rightₓ _ _)_ = max b 0 * n * r := by
-      rw [mul_assoc]_ ≤ f x * r := mul_le_mul_of_nonneg_right hx (le_of_ltₓ hr)
+      exact le_max_leftₓ _ _
+    _ ≤ max b 0 * (n * r) := mul_le_mul_of_nonneg_left hn' (le_max_rightₓ _ _)
+    _ = max b 0 * n * r := by
+      rw [mul_assoc]
+    _ ≤ f x * r := mul_le_mul_of_nonneg_right hx (le_of_ltₓ hr)
+    
 
 end LinearOrderedSemiring
 

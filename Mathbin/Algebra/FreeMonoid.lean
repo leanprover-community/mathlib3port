@@ -63,8 +63,7 @@ theorem of_def (x : α) : of x = [x] :=
 theorem of_injective : Function.Injective (@of α) := fun a b => List.head_eq_of_cons_eq
 
 /-- Recursor for `free_monoid` using `1` and `of x * xs` instead of `[]` and `x :: xs`. -/
-@[elab_as_eliminator,
-  to_additive "Recursor for `free_add_monoid` using `0` and `of x + xs` instead of `[]` and `x :: xs`."]
+@[elabAsElim, to_additive "Recursor for `free_add_monoid` using `0` and `of x + xs` instead of `[]` and `x :: xs`."]
 def recOn {C : FreeMonoid α → Sort _} (xs : FreeMonoid α) (h0 : C 1) (ih : ∀ x xs, C xs → C (of x * xs)) : C xs :=
   List.recOn xs h0 ih
 

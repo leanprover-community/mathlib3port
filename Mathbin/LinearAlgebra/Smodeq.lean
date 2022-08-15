@@ -53,8 +53,14 @@ theorem mono (HU : U₁ ≤ U₂) (hxy : x ≡ y [SMOD U₁]) : x ≡ y [SMOD U�
   (Submodule.Quotient.eq U₂).2 <| HU <| (Submodule.Quotient.eq U₁).1 hxy
 
 @[refl]
-theorem refl : x ≡ x [SMOD U] :=
-  Eq.refl _
+protected theorem refl (x : M) : x ≡ x [SMOD U] :=
+  @rfl _ _
+
+protected theorem rfl : x ≡ x [SMOD U] :=
+  Smodeq.refl _
+
+instance : IsRefl _ (Smodeq U) :=
+  ⟨Smodeq.refl⟩
 
 @[symm]
 theorem symm (hxy : x ≡ y [SMOD U]) : y ≡ x [SMOD U] :=

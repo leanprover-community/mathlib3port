@@ -17,8 +17,8 @@ open TopologicalSpace MeasureTheory Filter Metric
 
 open TopologicalSpace Filter Interval
 
-variable {𝕜 : Type _} [IsROrC 𝕜] {μ : Measureₓ ℝ} {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [NormedSpace 𝕜 E]
-  [CompleteSpace E] {H : Type _} [NormedGroup H] [NormedSpace 𝕜 H] {a b ε : ℝ} {bound : ℝ → ℝ}
+variable {𝕜 : Type _} [IsROrC 𝕜] {μ : Measureₓ ℝ} {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
+  [NormedSpace 𝕜 E] [CompleteSpace E] {H : Type _} [NormedAddCommGroup H] [NormedSpace 𝕜 H] {a b ε : ℝ} {bound : ℝ → ℝ}
 
 namespace intervalIntegral
 

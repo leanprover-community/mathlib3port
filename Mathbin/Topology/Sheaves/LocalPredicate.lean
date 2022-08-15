@@ -207,7 +207,7 @@ def subsheafToTypes (P : LocalPredicate T) : Sheaf (Type v) X :=
 
 /-- There is a canonical map from the stalk to the original fiber, given by evaluating sections.
 -/
-def stalkToFiber (P : LocalPredicate T) (x : X) : (subsheafToTypes P).1.stalk x ⟶ T x := by
+def stalkToFiber (P : LocalPredicate T) (x : X) : (subsheafToTypes P).Presheaf.stalk x ⟶ T x := by
   refine' colimit.desc _ { x := T x, ι := { app := fun U f => _, naturality' := _ } }
   · exact f.1 ⟨x, (unop U).2⟩
     
@@ -216,7 +216,7 @@ def stalkToFiber (P : LocalPredicate T) (x : X) : (subsheafToTypes P).1.stalk x 
 
 @[simp]
 theorem stalk_to_fiber_germ (P : LocalPredicate T) (U : Opens X) (x : U) (f) :
-    stalkToFiber P x ((subsheafToTypes P).1.germ x f) = f.1 x := by
+    stalkToFiber P x ((subsheafToTypes P).Presheaf.germ x f) = f.1 x := by
   dsimp' [← presheaf.germ, ← stalk_to_fiber]
   cases x
   simp
@@ -230,7 +230,7 @@ theorem stalk_to_fiber_surjective (P : LocalPredicate T) (x : X)
     Function.Surjective (stalkToFiber P x) := fun t => by
   rcases w t with ⟨U, f, h, rfl⟩
   fconstructor
-  · exact (subsheaf_to_Types P).1.germ ⟨x, U.2⟩ ⟨f, h⟩
+  · exact (subsheaf_to_Types P).Presheaf.germ ⟨x, U.2⟩ ⟨f, h⟩
     
   · exact stalk_to_fiber_germ _ U.1 ⟨x, U.2⟩ ⟨f, h⟩
     
@@ -247,8 +247,8 @@ theorem stalk_to_fiber_injective (P : LocalPredicate T) (x : X)
   -- We promise to provide all the ingredients of the proof later:
   let Q :
     ∃ (W : (open_nhds x)ᵒᵖ)(s : ∀ w : (unop W).1, T w)(hW : P.pred s),
-      tU = (subsheaf_to_Types P).1.germ ⟨x, (unop W).2⟩ ⟨s, hW⟩ ∧
-        tV = (subsheaf_to_Types P).1.germ ⟨x, (unop W).2⟩ ⟨s, hW⟩ :=
+      tU = (subsheaf_to_Types P).Presheaf.germ ⟨x, (unop W).2⟩ ⟨s, hW⟩ ∧
+        tV = (subsheaf_to_Types P).Presheaf.germ ⟨x, (unop W).2⟩ ⟨s, hW⟩ :=
     _
   · choose W s hW e using Q
     exact e.1.trans e.2.symm

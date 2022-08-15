@@ -161,8 +161,10 @@ theorem log_anti_left {b c n : ℕ} (hc : 1 < c) (hb : c ≤ b) : log b n ≤ lo
   · rw [log_zero_right, log_zero_right]
     
   rw [← pow_le_iff_le_log hc (zero_lt_succ n)]
-  calc c ^ log b n.succ ≤ b ^ log b n.succ := pow_le_pow_of_le_left (zero_lt_one.trans hc).le hb _ _ ≤ n.succ :=
-      pow_log_le_self (hc.trans_le hb) (zero_lt_succ n)
+  calc
+    c ^ log b n.succ ≤ b ^ log b n.succ := pow_le_pow_of_le_left (zero_lt_one.trans hc).le hb _
+    _ ≤ n.succ := pow_log_le_self (hc.trans_le hb) (zero_lt_succ n)
+    
 
 theorem log_monotone {b : ℕ} : Monotone (log b) := fun x y => log_mono_right
 
@@ -315,7 +317,10 @@ theorem clog_mono_right (b : ℕ) {n m : ℕ} (h : n ≤ m) : clog b n ≤ clog 
 @[mono]
 theorem clog_anti_left {b c n : ℕ} (hc : 1 < c) (hb : c ≤ b) : clog b n ≤ clog c n := by
   rw [← le_pow_iff_clog_le (lt_of_lt_of_leₓ hc hb)]
-  calc n ≤ c ^ clog c n := le_pow_clog hc _ _ ≤ b ^ clog c n := pow_le_pow_of_le_left (zero_lt_one.trans hc).le hb _
+  calc
+    n ≤ c ^ clog c n := le_pow_clog hc _
+    _ ≤ b ^ clog c n := pow_le_pow_of_le_left (zero_lt_one.trans hc).le hb _
+    
 
 theorem clog_monotone (b : ℕ) : Monotone (clog b) := fun x y => clog_mono_right _
 

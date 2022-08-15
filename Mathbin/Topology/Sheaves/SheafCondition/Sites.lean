@@ -11,10 +11,10 @@ import Mathbin.CategoryTheory.Sites.DenseSubsite
 
 # The sheaf condition in terms of sites.
 
-The theory of sheaves on sites is developed independently from sheaves on spaces in
+The theory of sheaves on sites was developed independently from sheaves on spaces in
 `category_theory/sites`. In this file, we connect the two theories: We show that for a topological
 space `X`, a presheaf `F : (opens X)ᵒᵖ ⥤ C` is a sheaf on the site `opens X` if and only if it is
-a sheaf on `X` in the usual sense.
+a sheaf on `X` in terms of `is_sheaf_equalizer_products`.
 
 Recall that a presheaf `F : (opens X)ᵒᵖ ⥤ C` is called a *sheaf* on the space `X`, if for every
 family of opens `U : ι → opens X`, the object `F.obj (op (supr U))` is the limit of some fork
@@ -25,10 +25,8 @@ and `presieve_of_covering`, which translate between the two concepts. We then pr
 naturality lemmas relating the two fork diagrams to each other.
 
 ## Main statements
-* `is_sheaf_sites_iff_is_sheaf_spaces`. A presheaf `F : (opens X)ᵒᵖ ⥤ C` is a sheaf on the site
-  `opens X` if and only if it is a sheaf on the space `X`.
-* `Sheaf_sites_eq_sheaf_spaces`. The type of sheaves on the site `opens X` is *equal* to the type
-  of sheaves on the space `X`.
+* `is_sheaf_iff_is_sheaf_equalizer_products`. A presheaf `F : (opens X)ᵒᵖ ⥤ C` is a sheaf on the
+  site `opens X` if and only if it is a sheaf on the space `X`.
 
 -/
 
@@ -216,7 +214,8 @@ def postcomposeDiagramForkIso (hR : Sieve.generate R ∈ Opens.grothendieckTopol
 
 end CoveringOfPresieve
 
-theorem is_sheaf_sites_of_is_sheaf_spaces (Fsh : F.IsSheaf) : Presheaf.IsSheaf (Opens.grothendieckTopology X) F := by
+theorem is_sheaf_of_is_sheaf_equalizer_products (Fsh : F.IsSheafEqualizerProducts) : F.IsSheaf := by
+  delta' is_sheaf
   rw [presheaf.is_sheaf_iff_is_sheaf']
   intro U R hR
   refine' ⟨_⟩
@@ -391,8 +390,9 @@ end PresieveOfCovering
 
 open PresieveOfCovering
 
-theorem is_sheaf_spaces_of_is_sheaf_sites (Fsh : Presheaf.IsSheaf (Opens.grothendieckTopology X) F) : F.IsSheaf := by
+theorem is_sheaf_equalizer_products_of_is_sheaf (Fsh : F.IsSheaf) : F.IsSheafEqualizerProducts := by
   intro ι U
+  delta' is_sheaf  at Fsh
   rw [presheaf.is_sheaf_iff_is_sheaf'] at Fsh
   -- We know that the sites diagram for `presieve_of_covering U` is a limit fork
   obtain ⟨h_limit⟩ := Fsh (supr U) (presieve_of_covering U) (presieve_of_covering.mem_grothendieck_topology U)
@@ -420,67 +420,8 @@ theorem is_sheaf_spaces_of_is_sheaf_sites (Fsh : Presheaf.IsSheaf (Opens.grothen
     erw [← category.assoc, hm]
     
 
-theorem is_sheaf_sites_iff_is_sheaf_spaces : Presheaf.IsSheaf (Opens.grothendieckTopology X) F ↔ F.IsSheaf :=
-  Iff.intro (is_sheaf_spaces_of_is_sheaf_sites F) (is_sheaf_sites_of_is_sheaf_spaces F)
-
-variable (C X)
-
-/-- Turn a sheaf on the site `opens X` into a sheaf on the space `X`. -/
-@[simps]
-def sheafSitesToSheafSpaces : Sheaf (Opens.grothendieckTopology X) C ⥤ Sheaf C X where
-  obj := fun F => ⟨F.1, is_sheaf_spaces_of_is_sheaf_sites F.1 F.2⟩
-  map := fun F G f => f.val
-
-/-- Turn a sheaf on the space `X` into a sheaf on the site `opens X`. -/
-@[simps]
-def sheafSpacesToSheafSites : Sheaf C X ⥤ Sheaf (Opens.grothendieckTopology X) C where
-  obj := fun F => ⟨F.1, is_sheaf_sites_of_is_sheaf_spaces F.1 F.2⟩
-  map := fun F G f => ⟨f⟩
-
-/-- The equivalence of categories between sheaves on the site `opens X` and sheaves on the space `X`.
--/
-@[simps]
-def sheafSpacesEquivSheafSites : Sheaf (Opens.grothendieckTopology X) C ≌ Sheaf C X where
-  Functor := sheafSitesToSheafSpaces C X
-  inverse := sheafSpacesToSheafSites C X
-  unitIso :=
-    (NatIso.ofComponents fun t =>
-        ⟨⟨𝟙 _⟩, ⟨𝟙 _⟩, by
-          ext1
-          simp , by
-          ext1
-          simp ⟩) <|
-      by
-      intros
-      ext1
-      dsimp'
-      simp
-  counitIso :=
-    (NatIso.ofComponents fun t =>
-        ⟨𝟙 _, 𝟙 _, by
-          ext
-          simp , by
-          ext
-          simp ⟩) <|
-      by
-      intros
-      ext
-      dsimp'
-      simp
-
-/-- The two forgetful functors are isomorphic via `Sheaf_spaces_equiv_sheaf_sites`. -/
-def sheafSpacesEquivSheafSitesFunctorForget :
-    (sheafSpacesEquivSheafSites C X).Functor ⋙ Sheaf.forget C X ≅ sheafToPresheaf _ _ :=
-  NatIso.ofComponents (fun F => Iso.refl F.1) fun F G f => by
-    erw [category.comp_id, category.id_comp]
-    rfl
-
-/-- The two forgetful functors are isomorphic via `Sheaf_spaces_equiv_sheaf_sites`. -/
-def sheafSpacesEquivSheafSitesInverseForget :
-    (sheafSpacesEquivSheafSites C X).inverse ⋙ sheafToPresheaf _ _ ≅ Sheaf.forget C X :=
-  NatIso.ofComponents (fun F => Iso.refl F.1) fun F G f => by
-    erw [category.comp_id, category.id_comp]
-    rfl
+theorem is_sheaf_iff_is_sheaf_equalizer_products : F.IsSheaf ↔ F.IsSheafEqualizerProducts :=
+  Iff.intro (is_sheaf_equalizer_products_of_is_sheaf F) (is_sheaf_of_is_sheaf_equalizer_products F)
 
 end Top.Presheaf
 
@@ -513,15 +454,15 @@ namespace Top.Sheaf
 
 open CategoryTheory TopologicalSpace Top Opposite
 
-variable {C : Type u} [Category.{v} C] [Limits.HasProducts.{v} C]
+variable {C : Type u} [Category.{v} C]
 
 variable {X : Top.{v}} {ι : Type _} {B : ι → Opens X}
 
-variable (F : Presheaf C X) (F' : Sheaf C X) (h : Opens.IsBasis (Set.Range B))
+variable (F : X.Presheaf C) (F' : Sheaf C X) (h : Opens.IsBasis (Set.Range B))
 
 /-- The empty component of a sheaf is terminal -/
 def isTerminalOfEmpty (F : Sheaf C X) : Limits.IsTerminal (F.val.obj (op ∅)) :=
-  ((Presheaf.sheafSpacesToSheafSites C X).obj F).isTerminalOfBotCover ∅
+  F.isTerminalOfBotCover ∅
     (by
       tidy)
 
@@ -534,8 +475,7 @@ def isTerminalOfEqEmpty (F : X.Sheaf C) {U : Opens X} (h : U = ∅) : Limits.IsT
     is equivalent to a homomorphism between their restrictions to the indexing type
     `ι` of `B`, with the induced category structure on `ι`. -/
 def restrictHomEquivHom : ((inducedFunctor B).op ⋙ F ⟶ (inducedFunctor B).op ⋙ F'.1) ≃ (F ⟶ F'.1) :=
-  @CoverDense.restrictHomEquivHom _ _ _ _ _ _ _ _ (Opens.cover_dense_induced_functor h) _ F
-    ((Presheaf.sheafSpacesToSheafSites C X).obj F')
+  @CoverDense.restrictHomEquivHom _ _ _ _ _ _ _ _ (Opens.cover_dense_induced_functor h) _ F F'
 
 @[simp]
 theorem extend_hom_app (α : (inducedFunctor B).op ⋙ F ⟶ (inducedFunctor B).op ⋙ F'.1) (i : ι) :

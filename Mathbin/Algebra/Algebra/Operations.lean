@@ -18,7 +18,7 @@ An interface for multiplication and division of sub-R-modules of an R-algebra A 
 
 ## Main definitions
 
-Let `R` be a commutative ring (or semiring) and aet `A` be an `R`-algebra.
+Let `R` be a commutative ring (or semiring) and let `A` be an `R`-algebra.
 
 * `1 : submodule R A`       : the R-submodule R of the R-algebra A
 * `has_mul (submodule R A)` : multiplication of two sub-R-modules M and N of A is defined to be
@@ -27,6 +27,9 @@ Let `R` be a commutative ring (or semiring) and aet `A` be an `R`-algebra.
                               that `a • J ⊆ I`
 
 It is proved that `submodule R A` is a semiring, and also an algebra over `set A`.
+
+Additionally, in the `pointwise` locale we promote `submodule.pointwise_distrib_mul_action` to a
+`mul_semiring_action` as `submodule.pointwise_mul_semiring_action`.
 
 ## Tags
 
@@ -127,7 +130,7 @@ theorem comap_unop_one : comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).sy
 /-- Multiplication of sub-R-modules of an R-algebra A. The submodule `M * N` is the
 smallest R-submodule of `A` containing the elements `m * n` for `m ∈ M` and `n ∈ N`. -/
 instance : Mul (Submodule R A) :=
-  ⟨Submodule.map₂ (Algebra.lmul R A).toLinearMap⟩
+  ⟨Submodule.map₂ <| LinearMap.mul R A⟩
 
 theorem mul_mem_mul (hm : m ∈ M) (hn : n ∈ N) : m * n ∈ M * N :=
   apply_mem_map₂ _ hm hn
@@ -137,18 +140,18 @@ theorem mul_le : M * N ≤ P ↔ ∀, ∀ m ∈ M, ∀, ∀ n ∈ N, ∀, m * n 
 
 theorem mul_to_add_submonoid (M N : Submodule R A) : (M * N).toAddSubmonoid = M.toAddSubmonoid * N.toAddSubmonoid := by
   dsimp' [← Mul.mul]
-  simp_rw [← Algebra.lmul_left_to_add_monoid_hom R, Algebra.lmulLeft, ← map_to_add_submonoid _ N, map₂]
+  simp_rw [← LinearMap.mul_left_to_add_monoid_hom R, LinearMap.mulLeft, ← map_to_add_submonoid _ N, map₂]
   rw [supr_to_add_submonoid]
   rfl
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem mul_induction_on {C : A → Prop} {r : A} (hr : r ∈ M * N) (hm : ∀, ∀ m ∈ M, ∀, ∀ n ∈ N, ∀, C (m * n))
     (ha : ∀ x y, C x → C y → C (x + y)) : C r := by
   rw [← mem_to_add_submonoid, mul_to_add_submonoid] at hr
   exact AddSubmonoid.mul_induction_on hr hm ha
 
 /-- A dependent version of `mul_induction_on`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem mul_induction_on' {C : ∀ r, r ∈ M * N → Prop}
     (hm : ∀, ∀ m ∈ M, ∀, ∀ n ∈ N, ∀, C (m * n) (mul_mem_mul ‹_› ‹_›))
     (ha : ∀ x hx y hy, C x hx → C y hy → C (x + y) (add_mem ‹_› ‹_›)) {r : A} (hr : r ∈ M * N) : C r hr := by
@@ -209,7 +212,7 @@ theorem mul_subset_mul : (↑M : Set A) * (↑N : Set A) ⊆ (↑(M * N) : Set A
 protected theorem map_mul {A'} [Semiringₓ A'] [Algebra R A'] (f : A →ₐ[R] A') :
     map f.toLinearMap (M * N) = map f.toLinearMap M * map f.toLinearMap N :=
   calc
-    map f.toLinearMap (M * N) = ⨆ i : M, (N.map (lmul R A i)).map f.toLinearMap := map_supr _ _
+    map f.toLinearMap (M * N) = ⨆ i : M, (N.map (LinearMap.mul R A i)).map f.toLinearMap := map_supr _ _
     _ = map f.toLinearMap M * map f.toLinearMap N := by
       apply congr_arg Sup
       ext S
@@ -361,7 +364,7 @@ theorem le_pow_to_add_submonoid {n : ℕ} : M.toAddSubmonoid ^ n ≤ (M ^ n).toA
     
 
 /-- Dependent version of `submodule.pow_induction_on_left`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem pow_induction_on_left' {C : ∀ (n : ℕ) (x), x ∈ M ^ n → Prop}
     (hr : ∀ r : R, C 0 (algebraMap _ _ r) (algebra_map_mem r))
     (hadd : ∀ x y i hx hy, C i x hx → C i y hy → C i (x + y) (add_mem ‹_› ‹_›))
@@ -377,7 +380,7 @@ protected theorem pow_induction_on_left' {C : ∀ (n : ℕ) (x), x ∈ M ^ n →
       (fun x hx y hy Cx Cy => hadd _ _ _ _ _ Cx Cy) hx
 
 /-- Dependent version of `submodule.pow_induction_on_right`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem pow_induction_on_right' {C : ∀ (n : ℕ) (x), x ∈ M ^ n → Prop}
     (hr : ∀ r : R, C 0 (algebraMap _ _ r) (algebra_map_mem r))
     (hadd : ∀ x y i hx hy, C i x hx → C i y hy → C i (x + y) (add_mem ‹_› ‹_›))
@@ -397,7 +400,7 @@ protected theorem pow_induction_on_right' {C : ∀ (n : ℕ) (x), x ∈ M ^ n �
 
 /-- To show a property on elements of `M ^ n` holds, it suffices to show that it holds for scalars,
 is closed under addition, and holds for `m * x` where `m ∈ M` and it holds for `x` -/
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem pow_induction_on_left {C : A → Prop} (hr : ∀ r : R, C (algebraMap _ _ r))
     (hadd : ∀ x y, C x → C y → C (x + y)) (hmul : ∀, ∀ m ∈ M, ∀ (x), C x → C (m * x)) {x : A} {n : ℕ} (hx : x ∈ M ^ n) :
     C x :=
@@ -405,7 +408,7 @@ protected theorem pow_induction_on_left {C : A → Prop} (hr : ∀ r : R, C (alg
 
 /-- To show a property on elements of `M ^ n` holds, it suffices to show that it holds for scalars,
 is closed under addition, and holds for `x * m` where `m ∈ M` and it holds for `x` -/
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem pow_induction_on_right {C : A → Prop} (hr : ∀ r : R, C (algebraMap _ _ r))
     (hadd : ∀ x y, C x → C y → C (x + y)) (hmul : ∀ x, C x → ∀, ∀ m ∈ M, ∀, C (x * m)) {x : A} {n : ℕ}
     (hx : x ∈ M ^ n) : C x :=
@@ -467,6 +470,24 @@ def span.ringHom : SetSemiring A →+* Submodule R A where
   map_mul' := fun s t => by
     erw [span_mul_span, ← image_mul_prod]
 
+section
+
+variable {α : Type _} [Monoidₓ α] [MulSemiringAction α A] [SmulCommClass α R A]
+
+/-- The action on a submodule corresponding to applying the action to every element.
+
+This is available as an instance in the `pointwise` locale.
+
+This is a stronger version of `submodule.pointwise_distrib_mul_action`. -/
+protected def pointwiseMulSemiringAction : MulSemiringAction α (Submodule R A) :=
+  { Submodule.pointwiseDistribMulAction with
+    smul_mul := fun r x y => Submodule.map_mul x y <| MulSemiringAction.toAlgHom R A r,
+    smul_one := fun r => Submodule.map_one <| MulSemiringAction.toAlgHom R A r }
+
+localized [Pointwise] attribute [instance] Submodule.pointwiseMulSemiringAction
+
+end
+
 end Ringₓ
 
 section CommRingₓ
@@ -490,7 +511,7 @@ instance : CommSemiringₓ (Submodule R A) :=
 
 theorem prod_span {ι : Type _} (s : Finset ι) (M : ι → Set A) :
     (∏ i in s, Submodule.span R (M i)) = Submodule.span R (∏ i in s, M i) := by
-  let this := Classical.decEq ι
+  letI := Classical.decEq ι
   refine' Finset.induction_on s _ _
   · simp [← one_eq_span, ← Set.singleton_one]
     
@@ -531,7 +552,7 @@ theorem smul_def {s : SetSemiring A} {P : Submodule R A} : s • P = span R s * 
 theorem smul_le_smul {s t : SetSemiring A} {M N : Submodule R A} (h₁ : s.down ≤ t.down) (h₂ : M ≤ N) : s • M ≤ t • N :=
   mul_le_mul (span_mono h₁) h₂
 
-theorem smul_singleton (a : A) (M : Submodule R A) : ({a} : Set A).up • M = M.map (lmulLeft _ a) := by
+theorem smul_singleton (a : A) (M : Submodule R A) : ({a} : Set A).up • M = M.map (LinearMap.mulLeft _ a) := by
   conv_lhs => rw [← span_eq M]
   change span _ _ * span _ _ = _
   rw [span_mul_span]

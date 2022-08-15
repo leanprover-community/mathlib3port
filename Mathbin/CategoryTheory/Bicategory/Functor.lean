@@ -80,9 +80,8 @@ structure PrelaxFunctor (B : Type u₁) [Quiver.{v₁ + 1} B] [∀ a b : B, Quiv
   [Quiver.{v₂ + 1} C] [∀ a b : C, Quiver.{w₂ + 1} (a ⟶ b)] extends Prefunctor B C where
   map₂ {a b : B} {f g : a ⟶ b} : (f ⟶ g) → (map f ⟶ map g)
 
-/-- The prefunctor between the underlying quivers. -/
-add_decl_doc prelax_functor.to_prefunctor
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident prelax_functor.to_prefunctor]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace PrelaxFunctor
 
 instance hasCoeToPrefunctor : Coe (PrelaxFunctor B C) (Prefunctor B C) :=
@@ -210,9 +209,8 @@ attribute [simp] map₂_comp map₂_left_unitor map₂_right_unitor
 
 section
 
-/-- The prelax functor between the underlying quivers. -/
-add_decl_doc oplax_functor.to_prelax_functor
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident oplax_functor.to_prelax_functor]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 instance hasCoeToPrelax : Coe (OplaxFunctor B C) (PrelaxFunctor B C) :=
   ⟨toPrelaxFunctor⟩
 
@@ -273,7 +271,7 @@ def comp (F : OplaxFunctor B C) (G : OplaxFunctor C D) : OplaxFunctor B D :=
 /-- A structure on an oplax functor that promotes an oplax functor to a pseudofunctor.
 See `pseudofunctor.mk_of_oplax`.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure PseudoCore (F : OplaxFunctor B C) where
   mapIdIso (a : B) : F.map (𝟙 a) ≅ 𝟙 (F.obj a)
   mapCompIso {a b c : B} (f : a ⟶ b) (g : b ⟶ c) : F.map (f ≫ g) ≅ F.map f ≫ F.map g
@@ -381,9 +379,8 @@ section
 
 open Iso
 
-/-- The prelax functor between the underlying quivers. -/
-add_decl_doc pseudofunctor.to_prelax_functor
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident pseudofunctor.to_prelax_functor]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 instance hasCoeToPrelaxFunctor : Coe (Pseudofunctor B C) (PrelaxFunctor B C) :=
   ⟨toPrelaxFunctor⟩
 

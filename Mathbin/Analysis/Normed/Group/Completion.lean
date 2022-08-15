@@ -29,10 +29,10 @@ variable (E : Type _)
 instance [UniformSpace E] [HasNorm E] : HasNorm (Completion E) where norm := Completion.extension HasNorm.norm
 
 @[simp]
-theorem norm_coe {E} [SemiNormedGroup E] (x : E) : ∥(x : Completion E)∥ = ∥x∥ :=
+theorem norm_coe {E} [SeminormedAddCommGroup E] (x : E) : ∥(x : Completion E)∥ = ∥x∥ :=
   Completion.extension_coe uniform_continuous_norm x
 
-instance [SemiNormedGroup E] : NormedGroup (Completion E) :=
+instance [SeminormedAddCommGroup E] : NormedAddCommGroup (Completion E) :=
   { Completion.addCommGroup, Completion.metricSpace with
     dist_eq := by
       intro x y

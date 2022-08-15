@@ -329,7 +329,7 @@ theorem eq_adjoin_of_eq_algebra_adjoin (K : IntermediateField F E) (h : K.toSuba
   rw [← h]
   rfl
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem adjoin_induction {s : Set E} {p : E → Prop} {x} (h : x ∈ adjoin F s) (Hs : ∀, ∀ x ∈ s, ∀, p x)
     (Hmap : ∀ x, p (algebraMap F E x)) (Hadd : ∀ x y, p x → p y → p (x + y)) (Hneg : ∀ x, p x → p (-x))
     (Hinv : ∀ x, p x → p x⁻¹) (Hmul : ∀ x y, p x → p y → p (x * y)) : p x :=
@@ -356,68 +356,128 @@ section AdjoinSimple
 
 variable (α : E)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem mem_adjoin_simple_self : α ∈ F⟮⟯ :=
   subset_adjoin F {α} (Set.mem_singleton α)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 /-- generator of `F⟮α⟯` -/
 def AdjoinSimple.gen : F⟮⟯ :=
   ⟨α, mem_adjoin_simple_self F α⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 @[simp]
 theorem AdjoinSimple.algebra_map_gen : algebraMap F⟮⟯ E (AdjoinSimple.gen F α) = α :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 @[simp]
 theorem AdjoinSimple.is_integral_gen : IsIntegral F (AdjoinSimple.gen F α) ↔ IsIntegral F α := by
   conv_rhs => rw [← adjoin_simple.algebra_map_gen F α]
   rw [is_integral_algebra_map_iff (algebraMap F⟮⟯ E).Injective]
   infer_instance
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem adjoin_simple_adjoin_simple (β : E) : F⟮⟯⟮⟯.restrictScalars F = F⟮⟯ :=
   adjoin_adjoin_left _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem adjoin_simple_comm (β : E) : F⟮⟯⟮⟯.restrictScalars F = F⟮⟯⟮⟯.restrictScalars F :=
   adjoin_adjoin_comm _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- TODO: develop the API for `subalgebra.is_field_of_algebraic` so it can be used here
-theorem adjoin_simple_to_subalgebra_of_integral (hα : IsIntegral F α) : F⟮⟯.toSubalgebra = Algebra.adjoin F {α} := by
-  apply adjoin_eq_algebra_adjoin
-  intro x hx
-  by_cases' x = 0
-  · rw [h, inv_zero]
-    exact Subalgebra.zero_mem (Algebra.adjoin F {α})
-    
-  let ϕ := AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly F α
-  have := Fact.mk (minpoly.irreducible hα)
-  suffices ϕ ⟨x, hx⟩ * (ϕ ⟨x, hx⟩)⁻¹ = 1 by
-    convert Subtype.mem (ϕ.symm (ϕ ⟨x, hx⟩)⁻¹)
-    refine' inv_eq_of_mul_eq_one_right _
-    apply_fun ϕ.symm  at this
-    rw [AlgEquiv.map_one, AlgEquiv.map_mul, AlgEquiv.symm_apply_apply] at this
-    rw [← Subsemiring.coe_one, ← this, Subsemiring.coe_mul, Subtype.coe_mk]
-  rw [mul_inv_cancel (mt (fun key => _) h)]
-  rw [← ϕ.map_zero] at key
-  change ↑(⟨x, hx⟩ : Algebra.adjoin F {α}) = _
-  rw [ϕ.injective key, Subalgebra.coe_zero]
-
 variable {F} {α}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+theorem adjoin_algebraic_to_subalgebra {S : Set E} (hS : ∀, ∀ x ∈ S, ∀, IsAlgebraic F x) :
+    (IntermediateField.adjoin F S).toSubalgebra = Algebra.adjoin F S := by
+  simp only [← is_algebraic_iff_is_integral] at hS
+  have : Algebra.IsIntegral F (Algebra.adjoin F S) := by
+    rwa [← le_integral_closure_iff_is_integral, Algebra.adjoin_le_iff]
+  have := is_field_of_is_integral_of_is_field' this (Field.to_is_field F)
+  rw [← ((Algebra.adjoin F S).toIntermediateField' this).eq_adjoin_of_eq_algebra_adjoin F S] <;> rfl
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+theorem adjoin_simple_to_subalgebra_of_integral (hα : IsIntegral F α) : F⟮⟯.toSubalgebra = Algebra.adjoin F {α} := by
+  apply adjoin_algebraic_to_subalgebra
+  rintro x (rfl : x = α)
+  rwa [is_algebraic_iff_is_integral]
+
+open Set CompleteLattice
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 @[simp]
 theorem adjoin_simple_le_iff {K : IntermediateField F E} : F⟮⟯ ≤ K ↔ α ∈ K :=
-  adjoin_le_iff.trans Set.singleton_subset_iff
+  adjoin_le_iff.trans singleton_subset_iff
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+/-- Adjoining a single element is compact in the lattice of intermediate fields. -/
+theorem adjoin_simple_is_compact_element (x : E) : IsCompactElement F⟮⟯ := by
+  rw [is_compact_element_iff_le_of_directed_Sup_le]
+  rintro s ⟨F₀, hF₀⟩ hs hx
+  simp only [← adjoin_simple_le_iff] at hx⊢
+  let F : IntermediateField F E :=
+    { Carrier := ⋃ E ∈ s, ↑E,
+      add_mem' := by
+        rintro x₁ x₂ ⟨-, ⟨F₁, rfl⟩, ⟨-, ⟨hF₁, rfl⟩, hx₁⟩⟩ ⟨-, ⟨F₂, rfl⟩, ⟨-, ⟨hF₂, rfl⟩, hx₂⟩⟩
+        obtain ⟨F₃, hF₃, h₁₃, h₂₃⟩ := hs F₁ hF₁ F₂ hF₂
+        exact mem_Union_of_mem F₃ (mem_Union_of_mem hF₃ (F₃.add_mem (h₁₃ hx₁) (h₂₃ hx₂))),
+      neg_mem' := by
+        rintro x ⟨-, ⟨E, rfl⟩, ⟨-, ⟨hE, rfl⟩, hx⟩⟩
+        exact mem_Union_of_mem E (mem_Union_of_mem hE (E.neg_mem hx)),
+      mul_mem' := by
+        rintro x₁ x₂ ⟨-, ⟨F₁, rfl⟩, ⟨-, ⟨hF₁, rfl⟩, hx₁⟩⟩ ⟨-, ⟨F₂, rfl⟩, ⟨-, ⟨hF₂, rfl⟩, hx₂⟩⟩
+        obtain ⟨F₃, hF₃, h₁₃, h₂₃⟩ := hs F₁ hF₁ F₂ hF₂
+        exact mem_Union_of_mem F₃ (mem_Union_of_mem hF₃ (F₃.mul_mem (h₁₃ hx₁) (h₂₃ hx₂))),
+      inv_mem' := by
+        rintro x ⟨-, ⟨E, rfl⟩, ⟨-, ⟨hE, rfl⟩, hx⟩⟩
+        exact mem_Union_of_mem E (mem_Union_of_mem hE (E.inv_mem hx)),
+      algebra_map_mem' := fun x => mem_Union_of_mem F₀ (mem_Union_of_mem hF₀ (F₀.algebra_map_mem x)) }
+  have key : Sup s ≤ F := Sup_le fun E hE => subset_Union_of_subset E (subset_Union _ hE)
+  obtain ⟨-, ⟨E, rfl⟩, -, ⟨hE, rfl⟩, hx⟩ := key hx
+  exact ⟨E, hE, hx⟩
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+/-- Adjoining a finite subset is compact in the lattice of intermediate fields. -/
+theorem adjoin_finset_is_compact_element (S : Finset E) : IsCompactElement (adjoin F S : IntermediateField F E) := by
+  have key : adjoin F ↑S = ⨆ x ∈ S, F⟮⟯ :=
+    le_antisymmₓ
+      (adjoin_le_iff.mpr fun x hx =>
+        set_like.mem_coe.mpr (adjoin_simple_le_iff.mp (le_supr_of_le x (le_supr_of_le hx le_rfl))))
+      (supr_le fun x => supr_le fun hx => adjoin_simple_le_iff.mpr (subset_adjoin F S hx))
+  rw [key, ← Finset.sup_eq_supr]
+  exact finset_sup_compact_of_compact S fun x hx => adjoin_simple_is_compact_element x
+
+/-- Adjoining a finite subset is compact in the lattice of intermediate fields. -/
+theorem adjoin_finite_is_compact_element {S : Set E} (h : S.Finite) : IsCompactElement (adjoin F S) :=
+  Finite.coe_to_finset h ▸ adjoin_finset_is_compact_element h.toFinset
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+/-- The lattice of intermediate fields is compactly generated. -/
+instance : IsCompactlyGenerated (IntermediateField F E) :=
+  ⟨fun s =>
+    ⟨(fun x => F⟮⟯) '' s,
+      ⟨by
+        rintro t ⟨x, hx, rfl⟩ <;> exact adjoin_simple_is_compact_element x,
+        Sup_image.trans
+          (le_antisymmₓ (supr_le fun i => supr_le fun hi => adjoin_simple_le_iff.mpr hi) fun x hx =>
+            adjoin_simple_le_iff.mp (le_supr_of_le x (le_supr_of_le hx le_rfl)))⟩⟩⟩
+
+theorem exists_finset_of_mem_supr {ι : Type _} {f : ι → IntermediateField F E} {x : E} (hx : x ∈ ⨆ i, f i) :
+    ∃ s : Finset ι, x ∈ ⨆ i ∈ s, f i := by
+  have := (adjoin_simple_is_compact_element x).exists_finset_of_le_supr (IntermediateField F E) f
+  simp only [← adjoin_simple_le_iff] at this
+  exact this hx
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+theorem exists_finset_of_mem_supr' {ι : Type _} {f : ι → IntermediateField F E} {x : E} (hx : x ∈ ⨆ i, f i) :
+    ∃ s : Finset (Σi, f i), x ∈ ⨆ i ∈ s, F⟮⟯ :=
+  exists_finset_of_mem_supr
+    (SetLike.le_def.mp
+      (supr_le fun i x h => SetLike.le_def.mp (le_supr_of_le ⟨i, x, h⟩ le_rfl) (mem_adjoin_simple_self F x)) hx)
 
 end AdjoinSimple
 
@@ -432,28 +492,28 @@ theorem adjoin_eq_bot_iff : adjoin F S = ⊥ ↔ S ⊆ (⊥ : IntermediateField 
   rw [eq_bot_iff, adjoin_le_iff]
   rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 @[simp]
 theorem adjoin_simple_eq_bot_iff : F⟮⟯ = ⊥ ↔ α ∈ (⊥ : IntermediateField F E) := by
   rw [adjoin_eq_bot_iff]
   exact Set.singleton_subset_iff
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 @[simp]
 theorem adjoin_zero : F⟮⟯ = ⊥ :=
   adjoin_simple_eq_bot_iff.mpr (zero_mem ⊥)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 @[simp]
 theorem adjoin_one : F⟮⟯ = ⊥ :=
   adjoin_simple_eq_bot_iff.mpr (one_mem ⊥)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 @[simp]
 theorem adjoin_int (n : ℤ) : F⟮⟯ = ⊥ :=
   adjoin_simple_eq_bot_iff.mpr (coe_int_mem ⊥ n)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 @[simp]
 theorem adjoin_nat (n : ℕ) : F⟮⟯ = ⊥ :=
   adjoin_simple_eq_bot_iff.mpr (coe_nat_mem ⊥ n)
@@ -483,7 +543,7 @@ theorem finrank_bot : finrank F (⊥ : IntermediateField F E) = 1 := by
 theorem dim_adjoin_eq_one_iff : Module.rank F (adjoin F S) = 1 ↔ S ⊆ (⊥ : IntermediateField F E) :=
   Iff.trans dim_eq_one_iff adjoin_eq_bot_iff
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem dim_adjoin_simple_eq_one_iff : Module.rank F F⟮⟯ = 1 ↔ α ∈ (⊥ : IntermediateField F E) := by
   rw [dim_adjoin_eq_one_iff]
   exact Set.singleton_subset_iff
@@ -491,34 +551,34 @@ theorem dim_adjoin_simple_eq_one_iff : Module.rank F F⟮⟯ = 1 ↔ α ∈ (⊥
 theorem finrank_adjoin_eq_one_iff : finrank F (adjoin F S) = 1 ↔ S ⊆ (⊥ : IntermediateField F E) :=
   Iff.trans finrank_eq_one_iff adjoin_eq_bot_iff
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem finrank_adjoin_simple_eq_one_iff : finrank F F⟮⟯ = 1 ↔ α ∈ (⊥ : IntermediateField F E) := by
   rw [finrank_adjoin_eq_one_iff]
   exact Set.singleton_subset_iff
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 /-- If `F⟮x⟯` has dimension `1` over `F` for every `x ∈ E` then `F = E`. -/
 theorem bot_eq_top_of_dim_adjoin_eq_one (h : ∀ x : E, Module.rank F F⟮⟯ = 1) : (⊥ : IntermediateField F E) = ⊤ := by
   ext
   rw [iff_true_right IntermediateField.mem_top]
   exact dim_adjoin_simple_eq_one_iff.mp (h x)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem bot_eq_top_of_finrank_adjoin_eq_one (h : ∀ x : E, finrank F F⟮⟯ = 1) : (⊥ : IntermediateField F E) = ⊤ := by
   ext
   rw [iff_true_right IntermediateField.mem_top]
   exact finrank_adjoin_simple_eq_one_iff.mp (h x)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem subsingleton_of_dim_adjoin_eq_one (h : ∀ x : E, Module.rank F F⟮⟯ = 1) : Subsingleton (IntermediateField F E) :=
   subsingleton_of_bot_eq_top (bot_eq_top_of_dim_adjoin_eq_one h)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem subsingleton_of_finrank_adjoin_eq_one (h : ∀ x : E, finrank F F⟮⟯ = 1) : Subsingleton (IntermediateField F E) :=
   subsingleton_of_bot_eq_top (bot_eq_top_of_finrank_adjoin_eq_one h)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 /-- If `F⟮x⟯` has dimension `≤1` over `F` for every `x ∈ E` then `F = E`. -/
 theorem bot_eq_top_of_finrank_adjoin_le_one [FiniteDimensional F E] (h : ∀ x : E, finrank F F⟮⟯ ≤ 1) :
     (⊥ : IntermediateField F E) = ⊤ := by
@@ -526,7 +586,7 @@ theorem bot_eq_top_of_finrank_adjoin_le_one [FiniteDimensional F E] (h : ∀ x :
   exact fun x => by
     linarith [h x, show 0 < finrank F F⟮⟯ from finrank_pos]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem subsingleton_of_finrank_adjoin_le_one [FiniteDimensional F E] (h : ∀ x : E, finrank F F⟮⟯ ≤ 1) :
     Subsingleton (IntermediateField F E) :=
   subsingleton_of_bot_eq_top (bot_eq_top_of_finrank_adjoin_le_one h)
@@ -541,7 +601,7 @@ variable {F : Type _} [Field F] {E : Type _} [Field E] [Algebra F E] {α : E}
 
 variable {K : Type _} [Field K] [Algebra F K]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem minpoly_gen {α : E} (h : IsIntegral F α) : minpoly F (AdjoinSimple.gen F α) = minpoly F α := by
   rw [← adjoin_simple.algebra_map_gen F α] at h
   have inj := (algebraMap F⟮⟯ E).Injective
@@ -550,22 +610,22 @@ theorem minpoly_gen {α : E} (h : IsIntegral F α) : minpoly F (AdjoinSimple.gen
 
 variable (F)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem aeval_gen_minpoly (α : E) : aeval (AdjoinSimple.gen F α) (minpoly F α) = 0 := by
   ext
   convert minpoly.aeval F α
   conv in aeval α => rw [← adjoin_simple.algebra_map_gen F α]
   exact IsScalarTower.algebra_map_aeval F F⟮⟯ E _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 /-- algebra isomorphism between `adjoin_root` and `F⟮α⟯` -/
 noncomputable def adjoinRootEquivAdjoin (h : IsIntegral F α) : AdjoinRoot (minpoly F α) ≃ₐ[F] F⟮⟯ :=
   AlgEquiv.ofBijective (AdjoinRoot.liftHom (minpoly F α) (AdjoinSimple.gen F α) (aeval_gen_minpoly F α))
     (by
       set f := AdjoinRoot.lift _ _ (aeval_gen_minpoly F α : _)
-      have := Fact.mk (minpoly.irreducible h)
+      haveI := Fact.mk (minpoly.irreducible h)
       constructor
       · exact RingHom.injective f
         
@@ -593,13 +653,13 @@ section PowerBasis
 
 variable {L : Type _} [Field L] [Algebra K L]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 /-- The elements `1, x, ..., x ^ (d - 1)` form a basis for `K⟮x⟯`,
 where `d` is the degree of the minimal polynomial of `x`. -/
 noncomputable def powerBasisAux {x : L} (hx : IsIntegral K x) : Basis (Finₓ (minpoly K x).natDegree) K K⟮⟯ :=
   (AdjoinRoot.powerBasis (minpoly.ne_zero hx)).Basis.map (adjoinRootEquivAdjoin K hx).toLinearEquiv
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 /-- The power basis `1, x, ..., x ^ (d - 1)` for `K⟮x⟯`,
 where `d` is the degree of the minimal polynomial of `x`. -/
 @[simps]
@@ -611,18 +671,18 @@ noncomputable def adjoin.powerBasis {x : L} (hx : IsIntegral K x) : PowerBasis K
     rw [power_basis_aux, Basis.map_apply, PowerBasis.basis_eq_pow, AlgEquiv.to_linear_equiv_apply, AlgEquiv.map_pow,
       AdjoinRoot.power_basis_gen, adjoin_root_equiv_adjoin_apply_root]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem adjoin.finite_dimensional {x : L} (hx : IsIntegral K x) : FiniteDimensional K K⟮⟯ :=
   PowerBasis.finite_dimensional (adjoin.powerBasis hx)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem adjoin.finrank {x : L} (hx : IsIntegral K x) : FiniteDimensional.finrank K K⟮⟯ = (minpoly K x).natDegree := by
   rw [PowerBasis.finrank (adjoin.power_basis hx : _)]
   rfl
 
 end PowerBasis
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 /-- Algebra homomorphism `F⟮α⟯ →ₐ[F] K` are in bijection with the set of roots
 of `minpoly α` in `K`. -/
 noncomputable def algHomAdjoinIntegralEquiv (h : IsIntegral F α) :
@@ -631,12 +691,12 @@ noncomputable def algHomAdjoinIntegralEquiv (h : IsIntegral F α) :
     ((Equivₓ.refl _).subtypeEquiv fun x => by
       rw [adjoin.power_basis_gen, minpoly_gen h, Equivₓ.refl_apply])
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 /-- Fintype of algebra homomorphism `F⟮α⟯ →ₐ[F] K` -/
 noncomputable def fintypeOfAlgHomAdjoinIntegral (h : IsIntegral F α) : Fintype (F⟮⟯ →ₐ[F] K) :=
   PowerBasis.AlgHom.fintype (adjoin.powerBasis h)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem card_alg_hom_adjoin_integral (h : IsIntegral F α) (h_sep : (minpoly F α).Separable)
     (h_splits : (minpoly F α).Splits (algebraMap F K)) :
     @Fintype.card (F⟮⟯ →ₐ[F] K) (fintypeOfAlgHomAdjoinIntegral F h) = (minpoly F α).natDegree := by
@@ -670,7 +730,7 @@ theorem fg_of_fg_to_subalgebra (S : IntermediateField F E) (h : S.toSubalgebra.F
 theorem fg_of_noetherian (S : IntermediateField F E) [IsNoetherian F E] : S.Fg :=
   S.fg_of_fg_to_subalgebra S.toSubalgebra.fg_of_noetherian
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem induction_on_adjoin_finset (S : Finset E) (P : IntermediateField F E → Prop) (base : P ⊥)
     (ih : ∀ (K : IntermediateField F E), ∀ x ∈ S, ∀, P K → P (K⟮⟯.restrictScalars F)) : P (adjoin F ↑S) := by
   apply Finset.induction_on' S
@@ -681,18 +741,18 @@ theorem induction_on_adjoin_finset (S : Finset E) (P : IntermediateField F E →
     exact ih (adjoin F s) a h1 h4
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem induction_on_adjoin_fg (P : IntermediateField F E → Prop) (base : P ⊥)
     (ih : ∀ (K : IntermediateField F E) (x : E), P K → P (K⟮⟯.restrictScalars F)) (K : IntermediateField F E)
     (hK : K.Fg) : P K := by
   obtain ⟨S, rfl⟩ := hK
   exact induction_on_adjoin_finset S P base fun K x _ hK => ih K x hK
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem induction_on_adjoin [fd : FiniteDimensional F E] (P : IntermediateField F E → Prop) (base : P ⊥)
     (ih : ∀ (K : IntermediateField F E) (x : E), P K → P (K⟮⟯.restrictScalars F)) (K : IntermediateField F E) : P K :=
   by
-  let this : IsNoetherian F E := IsNoetherian.iff_fg.2 inferInstance
+  letI : IsNoetherian F E := IsNoetherian.iff_fg.2 inferInstance
   exact induction_on_adjoin_fg P base ih K K.fg_of_noetherian
 
 end Induction
@@ -806,9 +866,9 @@ theorem Lifts.exists_upper_bound (c : Set (Lifts F E K)) (hc : IsChain (· ≤ �
       exact congr_arg z.2 (Subtype.ext hst)
       ⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 /-- Extend a lift `x : lifts F E K` to an element `s : E` whose conjugates are all in `K` -/
 noncomputable def Lifts.liftOfSplits (x : Lifts F E K) {s : E} (h1 : IsIntegral F s)
     (h2 : (minpoly F s).Splits (algebraMap F K)) : Lifts F E K :=
@@ -829,15 +889,15 @@ noncomputable def Lifts.liftOfSplits (x : Lifts F E K) {s : E} (h1 : IsIntegral 
             simp_rw [mem_roots (map_ne_zero (minpoly.ne_zero h3)), is_root, ← eval₂_eq_eval_map]
             exact map_root_of_splits x.2.toRingHom key (ne_of_gtₓ (minpoly.degree_pos h3))⟩⟩⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 theorem Lifts.le_lifts_of_splits (x : Lifts F E K) {s : E} (h1 : IsIntegral F s)
     (h2 : (minpoly F s).Splits (algebraMap F K)) : x ≤ x.lift_of_splits h1 h2 :=
   ⟨fun z hz => algebra_map_mem x.1⟮⟯ ⟨z, hz⟩, fun t u htu =>
     Eq.symm
       (by
         rw [← show algebraMap x.1 x.1⟮⟯ t = u from Subtype.ext htu]
-        let this : Algebra x.1 K := x.2.toRingHom.toAlgebra
+        letI : Algebra x.1 K := x.2.toRingHom.toAlgebra
         exact AlgHom.commutes _ t)⟩
 
 theorem Lifts.mem_lifts_of_splits (x : Lifts F E K) {s : E} (h1 : IsIntegral F s)
@@ -903,7 +963,7 @@ instance finite_dimensional_sup [h1 : FiniteDimensional K E1] [h2 : FiniteDimens
     rwa [this] at h
   rw [Algebra.TensorProduct.product_map_range, E1.range_val, E2.range_val, sup_to_subalgebra]
 
-instance IntermediateField.finite_dimensional_supr_of_finite {ι : Type _} {t : ι → IntermediateField K L} [h : Finite ι]
+instance finite_dimensional_supr_of_finite {ι : Type _} {t : ι → IntermediateField K L} [h : Finite ι]
     [∀ i, FiniteDimensional K (t i)] : FiniteDimensional K (⨆ i, t i : IntermediateField K L) := by
   rw [← supr_univ]
   let P : Set ι → Prop := fun s => FiniteDimensional K (⨆ i ∈ s, t i : IntermediateField K L)
@@ -914,12 +974,30 @@ instance IntermediateField.finite_dimensional_supr_of_finite {ι : Type _} {t : 
   all_goals
     dsimp' only [← P]
   · rw [supr_emptyset]
-    exact (IntermediateField.botEquiv K L).symm.toLinearEquiv.FiniteDimensional
+    exact (bot_equiv K L).symm.toLinearEquiv.FiniteDimensional
     
   · intro _ s _ _ hs
     rw [supr_insert]
     exact IntermediateField.finite_dimensional_sup _ _
     
+
+instance finite_dimensional_supr_of_finset {ι : Type _} {f : ι → IntermediateField K L} {s : Finset ι}
+    [h : ∀, ∀ i ∈ s, ∀, FiniteDimensional K (f i)] : FiniteDimensional K (⨆ i ∈ s, f i : IntermediateField K L) := by
+  haveI : ∀ i : { i // i ∈ s }, FiniteDimensional K (f i) := fun i => h i i.2
+  have : (⨆ i ∈ s, f i) = ⨆ i : { i // i ∈ s }, f i :=
+    le_antisymmₓ (supr_le fun i => supr_le fun h => le_supr (fun i : { i // i ∈ s } => f i) ⟨i, h⟩)
+      (supr_le fun i => le_supr_of_le i (le_supr_of_le i.2 le_rfl))
+  exact this.symm ▸ IntermediateField.finite_dimensional_supr_of_finite
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+theorem is_algebraic_supr {ι : Type _} {f : ι → IntermediateField K L} (h : ∀ i, Algebra.IsAlgebraic K (f i)) :
+    Algebra.IsAlgebraic K (⨆ i, f i : IntermediateField K L) := by
+  rintro ⟨x, hx⟩
+  obtain ⟨s, hx⟩ := exists_finset_of_mem_supr' hx
+  rw [is_algebraic_iff, Subtype.coe_mk, ← Subtype.coe_mk x hx, ← is_algebraic_iff]
+  haveI : ∀ i : Σi, f i, FiniteDimensional K K⟮⟯ := fun ⟨i, x⟩ =>
+    adjoin.finite_dimensional (is_integral_iff.1 (is_algebraic_iff_is_integral.1 (h i x)))
+  apply Algebra.is_algebraic_of_finite
 
 end Supremum
 
@@ -933,8 +1011,8 @@ namespace PowerBasis
 
 open IntermediateField
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 /-- `pb.equiv_adjoin_simple` is the equivalence between `K⟮pb.gen⟯` and `L` itself. -/
 noncomputable def equivAdjoinSimple (pb : PowerBasis K L) : K⟮⟯ ≃ₐ[K] L :=
   (adjoin.powerBasis pb.is_integral_gen).equivOfMinpoly pb

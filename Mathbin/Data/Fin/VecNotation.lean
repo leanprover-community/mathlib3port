@@ -162,20 +162,20 @@ theorem cons_val_fin_one (x : α) (u : Finₓ 0 → α) (i : Finₓ 1) : vecCons
 theorem cons_fin_one (x : α) (u : Finₓ 0 → α) : vecCons x u = fun _ => x :=
   funext (cons_val_fin_one x u)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]
--- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `reflect_name #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `reflect_name #[]
 unsafe instance _root_.pi_fin.reflect [reflected_univ.{u}] [reflected _ α] [has_reflect α] :
     ∀ {n}, has_reflect (Finₓ n → α)
   | 0, v =>
     (Subsingleton.elimₓ vecEmpty v).rec
       ((by
-            trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]" :
+            trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `reflect_name #[]" :
             reflected _ @vecEmpty.{u}).subst
         (quote.1 α))
   | n + 1, v =>
     (cons_head_tail v).rec <|
       (by
-            trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `reflect_name #[]" :
+            trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `reflect_name #[]" :
             reflected _ @vecCons.{u}).subst₄
         (quote.1 α) (quote.1 n) (quote.1 _) (_root_.pi_fin.reflect _)
 

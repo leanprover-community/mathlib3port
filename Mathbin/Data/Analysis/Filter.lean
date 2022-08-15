@@ -44,7 +44,7 @@ def ofEquiv (E : σ ≃ τ) : Cfilter α σ → Cfilter α τ
         simpa using h₂ (E.symm a) (E.symm b) }
 
 @[simp]
-theorem of_equiv_val (E : σ ≃ τ) (F : Cfilter α σ) (a : τ) : F.ofEquiv E a = F (E.symm a) := by
+theorem of_equiv_val (E : σ ≃ τ) (F : Cfilter α σ) (a : τ) : F.of_equiv E a = F (E.symm a) := by
   cases F <;> rfl
 
 end
@@ -92,7 +92,7 @@ def ofFilter (f : Filter α) : f.Realizer :=
 
 /-- Transfer a filter realizer to another realizer on a different base type. -/
 def ofEquiv {f : Filter α} (F : f.Realizer) (E : F.σ ≃ τ) : f.Realizer :=
-  ⟨τ, F.f.ofEquiv E, by
+  ⟨τ, F.f.of_equiv E, by
     refine' Eq.trans _ F.eq <;>
       exact
         filter_eq
@@ -105,11 +105,11 @@ def ofEquiv {f : Filter α} (F : f.Realizer) (E : F.σ ≃ τ) : f.Realizer :=
                 simp [← h]⟩⟩)⟩
 
 @[simp]
-theorem of_equiv_σ {f : Filter α} (F : f.Realizer) (E : F.σ ≃ τ) : (F.ofEquiv E).σ = τ :=
+theorem of_equiv_σ {f : Filter α} (F : f.Realizer) (E : F.σ ≃ τ) : (F.of_equiv E).σ = τ :=
   rfl
 
 @[simp]
-theorem of_equiv_F {f : Filter α} (F : f.Realizer) (E : F.σ ≃ τ) (s : τ) : (F.ofEquiv E).f s = F.f (E.symm s) := by
+theorem of_equiv_F {f : Filter α} (F : f.Realizer) (E : F.σ ≃ τ) (s : τ) : (F.of_equiv E).f s = F.f (E.symm s) := by
   delta' of_equiv <;> simp
 
 /-- `unit` is a realizer for the principal filter -/
@@ -265,7 +265,7 @@ protected def supₓ {f : α → Filter β} (F : ∀ i, (f i).Realizer) : (⨆ i
       filter_eq <|
         Set.ext <| by
           simp [← Filter.bind, ← eq_univ_iff_forall, ← supr_sets_eq]
-  F'.ofEquiv <|
+  F'.of_equiv <|
     show (Σu : Unit, ∀ i : α, True → (F i).σ) ≃ ∀ i, (F i).σ from
       ⟨fun ⟨_, f⟩ i => f i ⟨⟩, fun f => ⟨(), fun i _ => f i⟩, fun ⟨⟨⟩, f⟩ => by
         dsimp' <;> congr <;> simp , fun f => rfl⟩

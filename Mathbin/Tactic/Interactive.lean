@@ -32,7 +32,7 @@ unsafe def try_for (max : parse parser.pexpr) (tac : itactic) : tactic Unit := d
     | some r => r
     | none => (tactic.trace "try_for timeout, using sorry" >> tactic.admit) s
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr *»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr *»
 /-- Multiple `subst`. `substs x y z` is the same as `subst x, subst y, subst z`. -/
 unsafe def substs (l : parse («expr *» ident)) : tactic Unit :=
   propagate_tags <| (l.mmap' fun h => get_local h >>= tactic.subst) >> try (tactic.reflexivity reducible)
@@ -153,9 +153,9 @@ add_tactic_doc
   { Name := "clear_", category := DocCategory.tactic, declNames := [`tactic.interactive.clear_],
     tags := ["context management"] }
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
 /-- Acts like `have`, but removes a hypothesis with the same name as
 this one. For example if the state is `h : p ⊢ goal` and `f : p → q`,
 then after `replace h := f h` the goal will be `h : q ⊢ goal`,
@@ -176,7 +176,7 @@ add_tactic_doc
   { Name := "replace", category := DocCategory.tactic, declNames := [`tactic.interactive.replace],
     tags := ["context management"] }
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
 /-- Make every proposition in the context decidable.
 
 `classical!` does this more aggressively, such that even if a decidable instance is already
@@ -199,7 +199,7 @@ private unsafe def generalize_arg_p : parser (pexpr × Name) :=
 noncomputable theorem generalizeAAux.{u} {α : Sort u} (h : ∀ x : Sort u, (α → x) → x) : α :=
   h α id
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
 /-- Like `generalize` but also considers assumptions
 specified by the user. The user can also specify to
 omit the goal.
@@ -415,7 +415,7 @@ unsafe def guard_target_mod_implicit (p : parse texpr) : tactic Unit := do
   let e ← to_expr p
   is_def_eq tgt e transparency.none
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr *»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr *»
 /-- Test that `t` is the tag of the main goal. -/
 unsafe def guard_tags (tags : parse («expr *» ident)) : tactic Unit := do
   let (t : List Name) ← get_main_tag
@@ -548,8 +548,8 @@ private unsafe def h_generalize_arg_p_aux : pexpr → parser (pexpr × Name)
 private unsafe def h_generalize_arg_p : parser (pexpr × Name) :=
   with_desc "expr == id" <| parser.pexpr 0 >>= h_generalize_arg_p_aux
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
 /-- `h_generalize Hx : e == x` matches on `cast _ e` in the goal and replaces it with
 `x`. It also adds `Hx : e == x` as an assumption. If `cast _ e` appears multiple
 times (not necessarily with the same proof), they are all replaced by `x`. `cast`
@@ -720,7 +720,7 @@ unsafe def loc.get_local_pp_names : Loc → tactic (List Name)
 unsafe def loc.get_local_uniq_names (l : Loc) : tactic (List Name) :=
   List.map expr.local_uniq_name <$> l.get_locals
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
 /-- The logic of `change x with y at l` fails when there are dependencies.
 `change'` mimics the behavior of `change`, except in the case of `change x with y at l`.
 In this case, it will correctly replace occurences of `x` with `y` at all possible hypotheses
@@ -745,13 +745,13 @@ add_tactic_doc
     declNames := [`tactic.interactive.change', `tactic.interactive.change], tags := ["renaming"],
     inheritDescriptionFrom := `tactic.interactive.change' }
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
 private unsafe def opt_dir_with : parser (Option (Bool × Name)) :=
   «expr ?» (tk "with" *> ((fun arrow h => (Option.isSome arrow, h)) <$> «expr ?» (tk "<-") <*> ident))
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
 /-- `set a := t with h` is a variant of `let a := t`. It adds the hypothesis `h : a = t` to
 the local context and replaces `t` with `a` everywhere it can.
 
@@ -794,7 +794,7 @@ add_tactic_doc
   { Name := "set", category := DocCategory.tactic, declNames := [`tactic.interactive.set],
     tags := ["context management"] }
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr *»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr *»
 /-- `clear_except h₀ h₁` deletes all the assumptions it can except for `h₀` and `h₁`.
 -/
 unsafe def clear_except (xs : parse («expr *» ident)) : tactic Unit := do
@@ -839,9 +839,9 @@ private unsafe def partition_vars : tactic (List expr × List expr) := do
   let ls ← local_context
   partition_vars' (name_set.of_list <| ls expr.local_uniq_name) ls [] []
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr *»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr *»
 /-- Format the current goal as a stand-alone example. Useful for testing tactics
 or creating [minimal working examples](https://leanprover-community.github.io/mwe.html).
 
@@ -960,7 +960,7 @@ add_tactic_doc
   { Name := "extract_goal", category := DocCategory.tactic, declNames := [`tactic.interactive.extract_goal],
     tags := ["goal management", "proof extraction", "debugging"] }
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
 /-- `inhabit α` tries to derive a `nonempty α` instance and then upgrades this
 to an `inhabited α` instance.
 If the target is a `Prop`, this is done constructively;
@@ -993,7 +993,7 @@ add_tactic_doc
   { Name := "inhabit", category := DocCategory.tactic, declNames := [`tactic.interactive.inhabit],
     tags := ["context management", "type class"] }
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr *»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr *»
 /-- `revert_deps n₁ n₂ ...` reverts all the hypotheses that depend on one of `n₁, n₂, ...`
 It does not revert `n₁, n₂, ...` themselves (unless they depend on another `nᵢ`). -/
 unsafe def revert_deps (ns : parse («expr *» ident)) : tactic Unit :=
@@ -1019,7 +1019,7 @@ add_tactic_doc
   { Name := "revert_target_deps", category := DocCategory.tactic, declNames := [`tactic.interactive.revert_target_deps],
     tags := ["context management", "goal management"] }
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr *»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr *»
 /-- `clear_value n₁ n₂ ...` clears the bodies of the local definitions `n₁, n₂ ...`, changing them
 into regular hypotheses. A hypothesis `n : α := t` is changed to `n : α`. -/
 unsafe def clear_value (ns : parse («expr *» ident)) : tactic Unit :=
@@ -1029,7 +1029,7 @@ add_tactic_doc
   { Name := "clear_value", category := DocCategory.tactic, declNames := [`tactic.interactive.clear_value],
     tags := ["context management"] }
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
 /-- `generalize' : e = x` replaces all occurrences of `e` in the target with a new hypothesis `x` of
 the same type.
 

@@ -79,7 +79,7 @@ the `Aᵢ` commute with the `Bⱼ`.
 The physical interpretation is that `A₀` and `A₁` are a pair of boolean observables which
 are spacelike separated from another pair `B₀` and `B₁` of boolean observables.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure IsCHSHTuple {R} [Monoidₓ R] [StarSemigroup R] (A₀ A₁ B₀ B₁ : R) where
   A₀_inv : A₀ ^ 2 = 1
   A₁_inv : A₁ ^ 2 = 1
@@ -214,7 +214,6 @@ theorem tsirelson_inequality [OrderedRing R] [StarOrderedRing R] [Algebra ℝ R]
     simp only [← M]
     simp only [← neg_mul, ← Int.cast_bit0, ← one_mulₓ, ← mul_inv_cancel_of_invertible, ← Int.cast_oneₓ, ← one_smul, ←
       Int.cast_neg, ← add_right_injₓ, ← neg_smul, add_smul]
-    -- just look at the coefficients now:
     congr
     exact
       mul_left_cancel₀

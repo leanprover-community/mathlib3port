@@ -103,7 +103,7 @@ variable {B' : Type _}
 
 /-- The pullback of a bundle `E` over a base `B` under a map `f : B' → B`, denoted by `pullback f E`
 or `f *ᵖ E`,  is the bundle over `B'` whose fiber over `b'` is `E (f b')`. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def Pullback (f : B' → B) (E : B → Type _) := fun x => E (f x)
 
 -- mathport name: «expr *ᵖ »

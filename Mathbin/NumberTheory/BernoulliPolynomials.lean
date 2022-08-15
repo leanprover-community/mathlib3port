@@ -11,15 +11,15 @@ import Mathbin.NumberTheory.Bernoulli
 /-!
 # Bernoulli polynomials
 
-The Bernoulli polynomials (defined here : https://en.wikipedia.org/wiki/Bernoulli_polynomials)
+The [Bernoulli polynomials](https://en.wikipedia.org/wiki/Bernoulli_polynomials)
 are an important tool obtained from Bernoulli numbers.
 
 ## Mathematical overview
 
 The $n$-th Bernoulli polynomial is defined as
-$$ B_n(X) = ∑_{k = 0}^n {n \choose k} (-1)^k * B_k * X^{n - k} $$
+$$ B_n(X) = ∑_{k = 0}^n {n \choose k} (-1)^k  B_k  X^{n - k} $$
 where $B_k$ is the $k$-th Bernoulli number. The Bernoulli polynomials are generating functions,
-$$ t * e^{tX} / (e^t - 1) = ∑_{n = 0}^{\infty} B_n(X) * \frac{t^n}{n!} $$
+$$ \frac{t  e^{tX} }{ e^t - 1} = ∑_{n = 0}^{\infty} B_n(X)  \frac{t^n}{n!} $$
 
 ## Implementation detail
 
@@ -28,8 +28,8 @@ Bernoulli polynomials are defined using `bernoulli`, the Bernoulli numbers.
 ## Main theorems
 
 - `sum_bernoulli`: The sum of the $k^\mathrm{th}$ Bernoulli polynomial with binomial
-  coefficients up to n is `(n + 1) * X^n`.
-- `bernoulli_generating_function`: The Bernoulli polynomials act as generating functions
+  coefficients up to `n` is `(n + 1) * X^n`.
+- `polynomial.bernoulli_generating_function`: The Bernoulli polynomials act as generating functions
   for the exponential.
 
 ## TODO
@@ -85,7 +85,7 @@ theorem bernoulli_eval_one (n : ℕ) : (bernoulli n).eval 1 = bernoulli' n := by
   simp only [succ_eq_add_one, ← sum_range_succ, ← mul_oneₓ, ← cast_one, ← choose_self, ← (_root_.bernoulli _).mul_comm,
     ← sum_bernoulli, ← one_pow, ← mul_oneₓ, ← eval_C, ← eval_monomial]
   by_cases' h : n = 1
-  · norm_num [← h]
+  · norm_num[← h]
     
   · simp [← h]
     exact bernoulli_eq_bernoulli'_of_ne_one h
@@ -244,7 +244,7 @@ theorem bernoulli_generating_function (t : A) :
   simp only [← Nat.cast_choose ℚ (mem_range_le hi), ← coeff_mk, ← if_neg (mem_range_sub_ne_zero hi), ← one_div, ←
     AlgHom.map_smul, ← PowerSeries.coeff_one, ← Units.coe_mk, ← coeff_exp, ← sub_zero, ← LinearMap.map_sub, ←
     Algebra.smul_mul_assoc, ← Algebra.smul_def, ← mul_right_commₓ _ ((aeval t) _), mul_assoc, RingHom.map_mul, ←
-    succ_eq_add_one]
+    succ_eq_add_one, Polynomial.C_eq_algebra_map, ← Polynomial.aeval_mul, ← Polynomial.aeval_C]
   -- finally cancel the Bernoulli polynomial and the algebra_map
   congr
   apply congr_arg

@@ -6,6 +6,7 @@ Authors: Johannes Hölzl, Scott Morrison
 import Mathbin.Algebra.Hom.GroupAction
 import Mathbin.Algebra.IndicatorFunction
 import Mathbin.Data.Finset.Preimage
+import Mathbin.Data.List.Alist
 
 /-!
 # Type of functions with finite support
@@ -211,7 +212,7 @@ instance [DecidableEq α] [DecidableEq M] : DecidableEq (α →₀ M) := fun f g
 theorem finite_support (f : α →₀ M) : Set.Finite (Function.Support f) :=
   f.fun_support_eq.symm ▸ f.Support.finite_to_set
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (a «expr ∉ » s)
 theorem support_subset_iff {s : Set α} {f : α →₀ M} : ↑f.Support ⊆ s ↔ ∀ (a) (_ : a ∉ s), f a = 0 := by
   simp only [← Set.subset_def, ← mem_coe, ← mem_support_iff] <;> exact forall_congrₓ fun a => not_imp_comm
 
@@ -405,7 +406,7 @@ theorem support_eq_singleton {f : α →₀ M} {a : α} : f.Support = {a} ↔ f 
   ⟨fun h => ⟨mem_support_iff.1 <| h.symm ▸ Finset.mem_singleton_self a, eq_single_iff.2 ⟨subset_of_eq h, rfl⟩⟩, fun h =>
     h.2.symm ▸ support_single_ne_zero _ h.1⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (b «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (b «expr ≠ » 0)
 theorem support_eq_singleton' {f : α →₀ M} {a : α} : f.Support = {a} ↔ ∃ (b : _)(_ : b ≠ 0), f = single a b :=
   ⟨fun h =>
     let h := support_eq_singleton.1 h
@@ -415,7 +416,7 @@ theorem support_eq_singleton' {f : α →₀ M} {a : α} : f.Support = {a} ↔ �
 theorem card_support_eq_one {f : α →₀ M} : card f.Support = 1 ↔ ∃ a, f a ≠ 0 ∧ f = single a (f a) := by
   simp only [← card_eq_one, ← support_eq_singleton]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (b «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (b «expr ≠ » 0)
 theorem card_support_eq_one' {f : α →₀ M} : card f.Support = 1 ↔ ∃ (a : _)(b : _)(_ : b ≠ 0), f = single a b := by
   simp only [← card_eq_one, ← support_eq_singleton']
 
@@ -853,7 +854,78 @@ theorem graph_zero : graph (0 : α →₀ M) = ∅ := by
 theorem graph_eq_empty {f : α →₀ M} : f.graph = ∅ ↔ f = 0 :=
   (graph_injective α M).eq_iff' graph_zero
 
+/-- Produce an association list for the finsupp over its support using choice. -/
+@[simps]
+def toAlist (f : α →₀ M) : Alist fun x : α => M :=
+  ⟨f.graph.toList.map Prod.toSigma, by
+    rw [List.Nodupkeys, List.keys, List.map_mapₓ, Prod.fst_comp_to_sigma, List.nodup_map_iff_inj_on]
+    · rintro ⟨b, m⟩ hb ⟨c, n⟩ hc (rfl : b = c)
+      rw [mem_to_list, Finsupp.mem_graph_iff] at hb hc
+      dsimp'  at hb hc
+      rw [← hc.1, hb.1]
+      
+    · apply nodup_to_list
+      ⟩
+
+@[simp]
+theorem to_alist_keys_to_finset (f : α →₀ M) : f.toAlist.keys.toFinset = f.Support := by
+  ext
+  simp [← to_alist, ← Alist.mem_keys, ← Alist.keys, ← List.keys]
+
+@[simp]
+theorem mem_to_alist {f : α →₀ M} {x : α} : x ∈ f.toAlist ↔ f x ≠ 0 := by
+  rw [Alist.mem_keys, ← List.mem_to_finset, to_alist_keys_to_finset, mem_support_iff]
+
 end Graph
+
+end Finsupp
+
+/-! ### Declarations about `alist.lookup_finsupp` -/
+
+
+section LookupFinsupp
+
+variable [Zero M]
+
+namespace Alist
+
+open List
+
+/-- Converts an association list into a finitely supported function via `alist.lookup`, sending
+absent keys to zero. -/
+@[simps]
+def lookupFinsupp (l : Alist fun x : α => M) : α →₀ M where
+  Support := (l.1.filter fun x => Sigma.snd x ≠ 0).keys.toFinset
+  toFun := fun a => (l.lookup a).getOrElse 0
+  mem_support_to_fun := fun a => by
+    simp_rw [mem_to_finset, List.mem_keys, List.mem_filterₓ, ← mem_lookup_iff]
+    cases lookup a l <;> simp
+
+alias lookup_finsupp_to_fun ← lookup_finsupp_apply
+
+@[simp]
+theorem to_alist_lookup_finsupp (f : α →₀ M) : f.toAlist.lookupFinsupp = f := by
+  ext
+  by_cases' h : f a = 0
+  · suffices f.to_alist.lookup a = none by
+      simp [← h, ← this]
+    · simp [← lookup_eq_none, ← h]
+      
+    
+  · suffices f.to_alist.lookup a = some (f a) by
+      simp [← h, ← this]
+    · apply mem_lookup_iff.2
+      simpa using h
+      
+    
+
+theorem lookup_finsupp_surjective : Surjective (@lookupFinsupp α M _) := fun f => ⟨_, to_alist_lookup_finsupp f⟩
+
+end Alist
+
+end LookupFinsupp
+
+namespace Finsupp
 
 /-!
 ### Declarations about `sum` and `prod`
@@ -1083,7 +1155,7 @@ def eraseAddHom (a : α) : (α →₀ M) →+ α →₀ M where
   map_zero' := erase_zero a
   map_add' := erase_add a
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 0)
     (ha : ∀ (a b) (f : α →₀ M), a ∉ f.Support → b ≠ 0 → p f → p (single a b + f)) : p f :=
   suffices ∀ (s) (f : α →₀ M), f.Support = s → p f from this _ _ rfl
@@ -1544,6 +1616,15 @@ theorem prod_add_index_of_disjoint [AddCommMonoidₓ M] {f1 f2 : α →₀ M} (h
     Finset.prod_congr rfl fun x hx => by
       simp only [← not_mem_support_iff.mp (disjoint_left.mp hd hx), ← add_zeroₓ]
   simp_rw [← this hd, ← this hd.symm, add_commₓ (f2 _), Finsupp.prod, support_add_eq hd, prod_union hd, add_apply]
+
+theorem prod_dvd_prod_of_subset_of_dvd [AddCommMonoidₓ M] [CommMonoidₓ N] {f1 f2 : α →₀ M} {g1 g2 : α → M → N}
+    (h1 : f1.Support ⊆ f2.Support) (h2 : ∀ a : α, a ∈ f1.Support → g1 a (f1 a) ∣ g2 a (f2 a)) :
+    f1.Prod g1 ∣ f2.Prod g2 := by
+  simp only [← Finsupp.prod, ← Finsupp.prod_mul]
+  rw [← sdiff_union_of_subset h1, prod_union sdiff_disjoint]
+  apply dvd_mul_of_dvd_right
+  apply prod_dvd_prod_of_dvd
+  exact h2
 
 section MapRange
 

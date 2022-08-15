@@ -71,11 +71,17 @@ def head' : List α → Option α
 /-- Convert a list into an array (whose length is the length of `l`). -/
 def toArrayₓ (l : List α) : Arrayₓ l.length α where data := fun v => l.nthLe v.1 v.2
 
+/-- "default" `nth` function: returns `d` instead of `none` in the case
+  that the index is out of bounds. -/
+def nthd (d : α) : ∀ (l : List α) (n : ℕ), α
+  | [], _ => d
+  | x :: xs, 0 => x
+  | x :: xs, n + 1 => nthd xs n
+
 /-- "inhabited" `nth` function: returns `default` instead of `none` in the case
   that the index is out of bounds. -/
-@[simp]
 def inth [h : Inhabited α] (l : List α) (n : Nat) : α :=
-  (nth l n).iget
+  nthd default l n
 
 /-- Apply a function to the nth tail of `l`. Returns the input without
   using `f` if the index is larger than the length of the list.
@@ -490,7 +496,7 @@ local infixl:50 " ≺ " => InvImage (Prod.Lex (· < ·) (· < ·)) meas
 
 /-- A recursor for pairs of lists. To have `C l₁ l₂` for all `l₁`, `l₂`, it suffices to have it for
 `l₂ = []` and to be able to pour the elements of `l₁` into `l₂`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def PermutationsAux.recₓ {C : List α → List α → Sort v} (H0 : ∀ is, C [] is)
     (H1 : ∀ t ts is, C ts (t :: is) → C is [] → C (t :: ts) is) : ∀ l₁ l₂, C l₁ l₂
   | [], is => H0 is
@@ -573,6 +579,11 @@ def revzipₓ (l : List α) : List (α × α) :=
      product [1, 2] [5, 6] = [(1, 5), (1, 6), (2, 5), (2, 6)] -/
 def product (l₁ : List α) (l₂ : List β) : List (α × β) :=
   l₁.bind fun a => l₂.map <| Prod.mk a
+
+-- mathport name: «expr ×ˢ »
+infixr:82
+  " ×ˢ " =>-- This notation binds more strongly than (pre)images, unions and intersections.
+  List.product
 
 /-- `sigma l₁ l₂` is the list of dependent pairs `(a, b)` where `a ∈ l₁` and `b ∈ l₂ a`.
 
@@ -1064,6 +1075,15 @@ def zipWith4 (f : α → β → γ → δ → ε) : List α → List β → List
 def zipWith5 (f : α → β → γ → δ → ε → ζ) : List α → List β → List γ → List δ → List ε → List ζ
   | x :: xs, y :: ys, z :: zs, u :: us, v :: vs => f x y z u v :: zip_with5 xs ys zs us vs
   | _, _, _, _, _ => []
+
+/-- Given a starting list `old`, a list of booleans and a replacement list `new`,
+read the items in `old` in succession and either replace them with the next element of `new` or
+not, according as to whether the corresponding boolean is `tt` or `ff`. -/
+def replaceIf : List α → List Bool → List α → List α
+  | l, _, [] => l
+  | [], _, _ => []
+  | l, [], _ => l
+  | n :: ns, tf :: bs, e@(c :: cs) => if tf then c :: ns.replaceIf bs cs else n :: ns.replaceIf bs e
 
 /-- An auxiliary function for `list.map_with_prefix_suffix`. -/
 def mapWithPrefixSuffixAux {α β} (f : List α → α → List α → β) : List α → List α → List β

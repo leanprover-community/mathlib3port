@@ -51,9 +51,9 @@ namespace HomotopyCategory
 def quotient : HomologicalComplex V c ⥤ HomotopyCategory V c :=
   CategoryTheory.Quotient.functor _
 
-attribute [local instance] has_zero_object.has_zero
+open ZeroObject
 
--- TODO upgrade this is to `has_zero_object`, presumably for any `quotient`.
+-- TODO upgrade this to `has_zero_object`, presumably for any `quotient`.
 instance [HasZeroObject V] : Inhabited (HomotopyCategory V c) :=
   ⟨(quotient V c).obj 0⟩
 
@@ -118,7 +118,7 @@ def homotopyEquivOfIso {C D : HomologicalComplex V c} (i : (quotient V c).obj C 
         simp
         rfl)
 
-variable (V c) [HasZeroObject V] [HasEqualizers V] [HasImages V] [HasImageMaps V] [HasCokernels V]
+variable (V c) [HasEqualizers V] [HasImages V] [HasImageMaps V] [HasCokernels V]
 
 /-- The `i`-th homology, as a functor from the homotopy category. -/
 def homologyFunctor (i : ι) : HomotopyCategory V c ⥤ V :=

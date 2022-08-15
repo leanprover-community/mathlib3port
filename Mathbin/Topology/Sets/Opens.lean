@@ -238,7 +238,7 @@ theorem is_basis_iff_nbhd {B : Set (Opens α)} : IsBasis B ↔ ∀ {U : Opens α
       
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (Us «expr ⊆ » B)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (Us «expr ⊆ » B)
 theorem is_basis_iff_cover {B : Set (Opens α)} : IsBasis B ↔ ∀ U : Opens α, ∃ (Us : _)(_ : Us ⊆ B), U = sup Us := by
   constructor
   · intro hB U
@@ -254,6 +254,19 @@ theorem is_basis_iff_cover {B : Set (Opens α)} : IsBasis B ↔ ∀ U : Opens α
     rcases h U with ⟨Us, hUs, rfl⟩
     rcases mem_Sup.1 hx with ⟨U, Us, xU⟩
     exact ⟨U, hUs Us, xU, le_Sup Us⟩
+    
+
+/-- If `α` has a basis consisting of compact opens, then an open set in `α` is compact open iff
+  it is a finite union of some elements in the basis -/
+theorem is_compact_open_iff_eq_finite_Union_of_is_basis {ι : Type _} (b : ι → Opens α)
+    (hb : Opens.IsBasis (Set.Range b)) (hb' : ∀ i, IsCompact (b i : Set α)) (U : Set α) :
+    IsCompact U ∧ IsOpen U ↔ ∃ s : Set ι, s.Finite ∧ U = ⋃ i ∈ s, b i := by
+  apply is_compact_open_iff_eq_finite_Union_of_is_topological_basis fun i : ι => (b i).1
+  · convert hb
+    ext
+    simp
+    
+  · exact hb'
     
 
 @[simp]

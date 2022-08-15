@@ -32,7 +32,7 @@ open Classical BigOperators TopologicalSpace Nnreal
 
 open Finset Filter Metric
 
-variable {ι α E F : Type _} [SemiNormedGroup E] [SemiNormedGroup F]
+variable {ι α E F : Type _} [SeminormedAddCommGroup E] [SeminormedAddCommGroup F]
 
 theorem cauchy_seq_finset_iff_vanishing_norm {f : ι → E} :
     (CauchySeq fun s : Finset ι => ∑ i in s, f i) ↔
@@ -58,8 +58,11 @@ theorem cauchy_seq_finset_of_norm_bounded_eventually {f : ι → E} {g : ι → 
     intro i hi
     simp only [← disjoint_left, ← mem_union, ← not_or_distrib, ← h.mem_to_finset, ← Set.mem_compl_iff, ← not_not] at ht
     exact (ht hi).2
-  calc ∥∑ i in t, f i∥ ≤ ∑ i in t, g i := norm_sum_le_of_le _ this _ ≤ ∥∑ i in t, g i∥ := le_abs_self _ _ < ε :=
-      hs _ (ht.mono_right le_sup_left)
+  calc
+    ∥∑ i in t, f i∥ ≤ ∑ i in t, g i := norm_sum_le_of_le _ this
+    _ ≤ ∥∑ i in t, g i∥ := le_abs_self _
+    _ < ε := hs _ (ht.mono_right le_sup_left)
+    
 
 theorem cauchy_seq_finset_of_norm_bounded {f : ι → E} (g : ι → ℝ) (hg : Summable g) (h : ∀ i, ∥f i∥ ≤ g i) :
     CauchySeq fun s : Finset ι => ∑ i in s, f i :=
@@ -73,8 +76,12 @@ theorem cauchy_seq_range_of_norm_bounded {f : ℕ → E} (g : ℕ → ℝ) (hg :
   refine' (Metric.cauchy_seq_iff'.1 hg ε hε).imp fun N hg n hn => _
   specialize hg n hn
   rw [dist_eq_norm, ← sum_Ico_eq_sub _ hn] at hg⊢
-  calc ∥∑ k in Ico N n, f k∥ ≤ ∑ k in _, ∥f k∥ := norm_sum_le _ _ _ ≤ ∑ k in _, g k :=
-      sum_le_sum fun x _ => hf x _ ≤ ∥∑ k in _, g k∥ := le_abs_self _ _ < ε := hg
+  calc
+    ∥∑ k in Ico N n, f k∥ ≤ ∑ k in _, ∥f k∥ := norm_sum_le _ _
+    _ ≤ ∑ k in _, g k := sum_le_sum fun x _ => hf x
+    _ ≤ ∥∑ k in _, g k∥ := le_abs_self _
+    _ < ε := hg
+    
 
 theorem cauchy_seq_finset_of_summable_norm {f : ι → E} (hf : Summable fun a => ∥f a∥) :
     CauchySeq fun s : Finset ι => ∑ a in s, f a :=

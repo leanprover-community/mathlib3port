@@ -27,9 +27,9 @@ Furthermore, we have the following results:
 
 open Set Filter
 
-open TopologicalSpace
+open TopologicalSpace Filter
 
-variable {α : Type _} [TopologicalSpace α] {s t s₁ s₂ t₁ t₂ : Set α} {x : α}
+variable {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {s t s₁ s₂ t₁ t₂ : Set α} {x : α}
 
 /-- The filter of neighborhoods of a set in a topological space. -/
 def nhdsSet (s : Set α) : Filter α :=
@@ -54,6 +54,19 @@ theorem has_basis_nhds_set (s : Set α) : (𝓝ˢ s).HasBasis (fun U => IsOpen U
 theorem IsOpen.mem_nhds_set (hU : IsOpen s) : s ∈ 𝓝ˢ t ↔ t ⊆ s := by
   rw [← subset_interior_iff_mem_nhds_set, interior_eq_iff_open.mpr hU]
 
+theorem principal_le_nhds_set : 𝓟 s ≤ 𝓝ˢ s := fun s hs =>
+  (subset_interior_iff_mem_nhds_set.mpr hs).trans interior_subset
+
+@[simp]
+theorem nhds_set_eq_principal_iff : 𝓝ˢ s = 𝓟 s ↔ IsOpen s := by
+  rw [← principal_le_nhds_set.le_iff_eq, le_principal_iff, mem_nhds_set_iff_forall, is_open_iff_mem_nhds]
+
+alias nhds_set_eq_principal_iff ↔ _ IsOpen.nhds_set_eq
+
+@[simp]
+theorem nhds_set_interior : 𝓝ˢ (Interior s) = 𝓟 (Interior s) :=
+  is_open_interior.nhds_set_eq
+
 @[simp]
 theorem nhds_set_singleton : 𝓝ˢ {x} = 𝓝 x := by
   ext
@@ -62,18 +75,16 @@ theorem nhds_set_singleton : 𝓝ˢ {x} = 𝓝 x := by
 theorem mem_nhds_set_interior : s ∈ 𝓝ˢ (Interior s) :=
   subset_interior_iff_mem_nhds_set.mp Subset.rfl
 
-theorem mem_nhds_set_empty : s ∈ 𝓝ˢ (∅ : Set α) :=
-  subset_interior_iff_mem_nhds_set.mp <| empty_subset _
-
 @[simp]
 theorem nhds_set_empty : 𝓝ˢ (∅ : Set α) = ⊥ := by
-  ext
-  simp [← mem_nhds_set_empty]
+  rw [is_open_empty.nhds_set_eq, principal_empty]
+
+theorem mem_nhds_set_empty : s ∈ 𝓝ˢ (∅ : Set α) := by
+  simp
 
 @[simp]
 theorem nhds_set_univ : 𝓝ˢ (Univ : Set α) = ⊤ := by
-  ext
-  rw [← subset_interior_iff_mem_nhds_set, univ_subset_iff, interior_eq_univ, mem_top]
+  rw [is_open_univ.nhds_set_eq, principal_univ]
 
 theorem monotone_nhds_set : Monotone (𝓝ˢ : Set α → Filter α) := fun s t hst => Sup_le_Sup <| image_subset _ hst
 
@@ -84,4 +95,11 @@ theorem nhds_set_union (s t : Set α) : 𝓝ˢ (s ∪ t) = 𝓝ˢ s⊔𝓝ˢ t :
 theorem union_mem_nhds_set (h₁ : s₁ ∈ 𝓝ˢ t₁) (h₂ : s₂ ∈ 𝓝ˢ t₂) : s₁ ∪ s₂ ∈ 𝓝ˢ (t₁ ∪ t₂) := by
   rw [nhds_set_union]
   exact union_mem_sup h₁ h₂
+
+/-- Preimage of a set neighborhood of `t` under a continuous map `f` is a set neighborhood of `s`
+provided that `f` maps `s` to `t`.  -/
+theorem Continuous.tendsto_nhds_set {f : α → β} {t : Set β} (hf : Continuous f) (hst : MapsTo f s t) :
+    Tendsto f (𝓝ˢ s) (𝓝ˢ t) :=
+  ((has_basis_nhds_set s).tendsto_iff (has_basis_nhds_set t)).mpr fun U hU =>
+    ⟨f ⁻¹' U, ⟨hU.1.Preimage hf, hst.mono Subset.rfl hU.2⟩, fun x => id⟩
 

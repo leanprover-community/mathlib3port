@@ -41,8 +41,7 @@ noncomputable def adjoin.powerBasisAux {x : S} (hx : IsIntegral K x) :
   · have := hx'.linear_independent_pow
     rwa [minpoly_eq] at this
     
-  · rw [_root_.eq_top_iff]
-    rintro ⟨y, hy⟩ _
+  · rintro ⟨y, hy⟩ _
     have := hx'.mem_span_pow
     rw [minpoly_eq] at this
     apply this
@@ -55,7 +54,8 @@ noncomputable def adjoin.powerBasisAux {x : S} (hx : IsIntegral K x) :
     
 
 /-- The power basis `1, x, ..., x ^ (d - 1)` for `K[x]`,
-where `d` is the degree of the minimal polynomial of `x`. -/
+where `d` is the degree of the minimal polynomial of `x`. See `algebra.adjoin.power_basis'` for
+a version over a more general base ring. -/
 @[simps gen dim]
 noncomputable def adjoin.powerBasis {x : S} (hx : IsIntegral K x) : PowerBasis K (adjoin K ({x} : Set S)) where
   gen := ⟨x, subset_adjoin (Set.mem_singleton x)⟩
@@ -67,7 +67,8 @@ end Algebra
 
 open Algebra
 
-/-- The power basis given by `x` if `B.gen ∈ adjoin K {x}`. -/
+/-- The power basis given by `x` if `B.gen ∈ adjoin K {x}`. See `power_basis.of_gen_mem_adjoin'`
+for a version over a more general base ring. -/
 @[simps]
 noncomputable def PowerBasis.ofGenMemAdjoin {x : S} (B : PowerBasis K S) (hint : IsIntegral K x)
     (hx : B.gen ∈ adjoin K ({x} : Set S)) : PowerBasis K S :=
@@ -106,7 +107,7 @@ theorem repr_gen_pow_is_integral [IsDomain S] (hmin : minpoly S B.gen = (minpoly
     
   have hlt : Q.nat_degree < B.dim := by
     rw [← B.nat_degree_minpoly, hmin, (minpoly.monic hB).nat_degree_map, nat_degree_lt_nat_degree_iff hQ]
-    let this : Nontrivial R := nontrivial.of_polynomial_ne hQ
+    letI : Nontrivial R := nontrivial.of_polynomial_ne hQ
     exact degree_mod_by_monic_lt _ (minpoly.monic hB)
     infer_instance
   rw [this, aeval_eq_sum_range' hlt]

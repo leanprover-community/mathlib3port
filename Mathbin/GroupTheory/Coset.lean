@@ -394,7 +394,7 @@ abbrev mk (a : α) : α ⧸ s :=
 theorem mk_surjective : Function.Surjective <| @mk _ _ s :=
   Quotientₓ.surjective_quotient_mk'
 
-@[elab_as_eliminator, to_additive]
+@[elabAsElim, to_additive]
 theorem induction_on {C : α ⧸ s → Prop} (x : α ⧸ s) (H : ∀ z, C (QuotientGroup.mk z)) : C x :=
   Quotientₓ.induction_on' x H
 
@@ -403,7 +403,7 @@ instance : CoeTₓ α (α ⧸ s) :=
   ⟨mk⟩
 
 -- note [use has_coe_t]
-@[elab_as_eliminator, to_additive]
+@[elabAsElim, to_additive]
 theorem induction_on' {C : α ⧸ s → Prop} (x : α ⧸ s) (H : ∀ z : α, C z) : C x :=
   Quotientₓ.induction_on' x H
 
@@ -590,8 +590,10 @@ variable {H : Type _} [Groupₓ H]
 @[to_additive]
 theorem card_dvd_of_injective [Fintype α] [Fintype H] (f : α →* H) (hf : Function.Injective f) : card α ∣ card H := by
   classical <;>
-    calc card α = card (f.range : Subgroup H) := card_congr (Equivₓ.ofInjective f hf)_ ∣ card H :=
-        card_subgroup_dvd_card _
+    calc
+      card α = card (f.range : Subgroup H) := card_congr (Equivₓ.ofInjective f hf)
+      _ ∣ card H := card_subgroup_dvd_card _
+      
 
 @[to_additive]
 theorem card_dvd_of_le {H K : Subgroup α} [Fintype H] [Fintype K] (hHK : H ≤ K) : card H ∣ card K :=
@@ -600,10 +602,12 @@ theorem card_dvd_of_le {H K : Subgroup α} [Fintype H] [Fintype K] (hHK : H ≤ 
 @[to_additive]
 theorem card_comap_dvd_of_injective (K : Subgroup H) [Fintype K] (f : α →* H) [Fintype (K.comap f)]
     (hf : Function.Injective f) : Fintype.card (K.comap f) ∣ Fintype.card K := by
-  have : Fintype ((K.comap f).map f) := Fintype.ofEquiv _ (equiv_map_of_injective _ _ hf).toEquiv <;>
-    calc Fintype.card (K.comap f) = Fintype.card ((K.comap f).map f) :=
-        Fintype.card_congr (equiv_map_of_injective _ _ hf).toEquiv _ ∣ Fintype.card K :=
-        card_dvd_of_le (map_comap_le _ _)
+  haveI : Fintype ((K.comap f).map f) := Fintype.ofEquiv _ (equiv_map_of_injective _ _ hf).toEquiv <;>
+    calc
+      Fintype.card (K.comap f) = Fintype.card ((K.comap f).map f) :=
+        Fintype.card_congr (equiv_map_of_injective _ _ hf).toEquiv
+      _ ∣ Fintype.card K := card_dvd_of_le (map_comap_le _ _)
+      
 
 end Subgroup
 

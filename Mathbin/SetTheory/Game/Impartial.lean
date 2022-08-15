@@ -66,16 +66,12 @@ instance move_right_impartial {G : Pgame} [h : G.Impartial] (j : G.RightMoves) :
   (impartial_def.1 h).2.2 j
 
 theorem impartial_congr : ∀ {G H : Pgame} (e : G ≡r H) [G.Impartial], H.Impartial
-  | G, H, e => by
+  | G, H => fun e => by
     intro h
-    rw [impartial_def]
-    refine' ⟨e.symm.equiv.trans ((neg_equiv_self G).trans (neg_equiv_neg_iff.2 e.equiv)), fun i => _, fun j => _⟩ <;>
-      cases' e with _ _ L R hL hR
-    · convert impartial_congr (hL (L.symm i))
-      rw [Equivₓ.apply_symm_apply]
-      
-    · exact impartial_congr (hR j)
-      
+    exact
+      impartial_def.2
+        ⟨e.symm.equiv.trans ((neg_equiv_self G).trans (neg_equiv_neg_iff.2 e.equiv)), fun i =>
+          impartial_congr (e.move_left_symm i), fun j => impartial_congr (e.move_right_symm j)⟩
 
 instance impartial_add : ∀ (G H : Pgame) [G.Impartial] [H.Impartial], (G + H).Impartial
   | G, H => by

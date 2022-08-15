@@ -46,16 +46,16 @@ variable {α : Type u} {β : Type v}
 
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1217:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Typeclass for the `⊤` (`\top`) notation -/
-@[«./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg»]
+@[«./././Mathport/Syntax/Translate/Basic.lean:1217:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg»]
 class HasTop (α : Type u) where
   top : α
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1217:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Typeclass for the `⊥` (`\bot`) notation -/
-@[«./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg»]
+@[«./././Mathport/Syntax/Translate/Basic.lean:1217:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg»]
 class HasBot (α : Type u) where
   bot : α
 
@@ -80,6 +80,16 @@ class OrderTop (α : Type u) [LE α] extends HasTop α where
   le_top : ∀ a : α, a ≤ ⊤
 
 section OrderTop
+
+/-- An order is (noncomputably) either an `order_top` or a `no_order_top`. Use as
+`casesI bot_order_or_no_bot_order α`. -/
+noncomputable def topOrderOrNoTopOrder (α : Type _) [LE α] : PSum (OrderTop α) (NoTopOrder α) := by
+  by_cases' H : ∀ a : α, ∃ b, ¬b ≤ a
+  · exact PSum.inr ⟨H⟩
+    
+  · push_neg  at H
+    exact PSum.inl ⟨_, Classical.some_spec H⟩
+    
 
 section LE
 
@@ -190,10 +200,10 @@ theorem StrictMono.maximal_preimage_top [LinearOrderₓ α] [Preorderₓ β] [Or
 theorem OrderTop.ext_top {α} {hA : PartialOrderₓ α} (A : OrderTop α) {hB : PartialOrderₓ α} (B : OrderTop α)
     (H :
       ∀ x y : α,
-        (have := hA
+        (haveI := hA
           x ≤ y) ↔
           x ≤ y) :
-    (have := A
+    (haveI := A
       ⊤ :
         α) =
       ⊤ :=
@@ -214,6 +224,16 @@ class OrderBot (α : Type u) [LE α] extends HasBot α where
   bot_le : ∀ a : α, ⊥ ≤ a
 
 section OrderBot
+
+/-- An order is (noncomputably) either an `order_bot` or a `no_order_bot`. Use as
+`casesI bot_order_or_no_bot_order α`. -/
+noncomputable def botOrderOrNoBotOrder (α : Type _) [LE α] : PSum (OrderBot α) (NoBotOrder α) := by
+  by_cases' H : ∀ a : α, ∃ b, ¬a ≤ b
+  · exact PSum.inr ⟨H⟩
+    
+  · push_neg  at H
+    exact PSum.inl ⟨_, Classical.some_spec H⟩
+    
 
 section LE
 
@@ -360,10 +380,10 @@ theorem StrictMono.minimal_preimage_bot [LinearOrderₓ α] [PartialOrderₓ β]
 theorem OrderBot.ext_bot {α} {hA : PartialOrderₓ α} (A : OrderBot α) {hB : PartialOrderₓ α} (B : OrderBot α)
     (H :
       ∀ x y : α,
-        (have := hA
+        (haveI := hA
           x ≤ y) ↔
           x ≤ y) :
-    (have := A
+    (haveI := A
       ⊥ :
         α) =
       ⊥ :=
@@ -466,20 +486,11 @@ theorem BoundedOrder.ext {α} [PartialOrderₓ α] {A B : BoundedOrder α} : A =
     
 
 /-- Propositions form a distributive lattice. -/
-instance Prop.distribLattice : DistribLattice Prop where
-  le := fun a b => a → b
-  le_refl := fun _ => id
-  le_trans := fun a b c f g => g ∘ f
-  le_antisymm := fun a b Hab Hba => propext ⟨Hab, Hba⟩
-  sup := Or
-  le_sup_left := @Or.inl
-  le_sup_right := @Or.inr
-  sup_le := fun a b c => Or.ndrec
-  inf := And
-  inf_le_left := @And.left
-  inf_le_right := @And.right
-  le_inf := fun a b c Hab Hac Ha => And.intro (Hab Ha) (Hac Ha)
-  le_sup_inf := fun a b c H => or_iff_not_imp_left.2 fun Ha => ⟨H.1.resolve_left Ha, H.2.resolve_left Ha⟩
+instance Prop.distribLattice : DistribLattice Prop :=
+  { Prop.partialOrder with sup := Or, le_sup_left := @Or.inl, le_sup_right := @Or.inr, sup_le := fun a b c => Or.ndrec,
+    inf := And, inf_le_left := @And.left, inf_le_right := @And.right,
+    le_inf := fun a b c Hab Hac Ha => And.intro (Hab Ha) (Hac Ha),
+    le_sup_inf := fun a b c H => or_iff_not_imp_left.2 fun Ha => ⟨H.1.resolve_left Ha, H.2.resolve_left Ha⟩ }
 
 /-- Propositions form a bounded order. -/
 instance Prop.boundedOrder : BoundedOrder Prop where
@@ -495,14 +506,6 @@ instance Prop.le_is_total : IsTotal Prop (· ≤ ·) :=
 
 noncomputable instance Prop.linearOrder : LinearOrderₓ Prop := by
   classical <;> exact Lattice.toLinearOrder Prop
-
-theorem subrelation_iff_le {r s : α → α → Prop} : Subrelation r s ↔ r ≤ s :=
-  Iff.rfl
-
--- ./././Mathport/Syntax/Translate/Basic.lean:703:4: warning: unsupported binary notation `«->»
-@[simp]
-theorem le_Prop_eq : ((· ≤ ·) : Prop → Prop → Prop) = («->» · ·) :=
-  rfl
 
 @[simp]
 theorem sup_Prop_eq : (·⊔·) = (· ∨ ·) :=
@@ -713,7 +716,7 @@ theorem coe_ne_bot : (a : WithBot α) ≠ ⊥ :=
   fun.
 
 /-- Recursor for `with_bot` using the preferred forms `⊥` and `↑a`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def recBotCoe {C : WithBot α → Sort _} (h₁ : C ⊥) (h₂ : ∀ a : α, C a) : ∀ n : WithBot α, C n :=
   Option.rec h₁ h₂
 
@@ -1123,7 +1126,7 @@ theorem coe_ne_top : (a : WithTop α) ≠ ⊤ :=
   fun.
 
 /-- Recursor for `with_top` using the preferred forms `⊤` and `↑a`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def recTopCoe {C : WithTop α → Sort _} (h₁ : C ⊤) (h₂ : ∀ a : α, C a) : ∀ n : WithTop α, C n :=
   Option.rec h₁ h₂
 
@@ -1388,6 +1391,40 @@ theorem well_founded_gt [Preorderₓ α] (h : @WellFounded α (· > ·)) : @Well
 theorem _root_.with_bot.well_founded_gt [Preorderₓ α] (h : @WellFounded α (· > ·)) : @WellFounded (WithBot α) (· > ·) :=
   @WithTop.well_founded_lt αᵒᵈ _ h
 
+instance Trichotomous.lt [Preorderₓ α] [IsTrichotomous α (· < ·)] : IsTrichotomous (WithTop α) (· < ·) :=
+  ⟨by
+    rintro (a | _) (b | _)
+    iterate 3 
+      simp
+    simpa [← Option.some_inj] using @trichotomous _ (· < ·) _ a b⟩
+
+instance IsWellOrder.lt [Preorderₓ α] [h : IsWellOrder α (· < ·)] :
+    IsWellOrder (WithTop α) (· < ·) where wf := well_founded_lt h.wf
+
+instance Trichotomous.gt [Preorderₓ α] [IsTrichotomous α (· > ·)] : IsTrichotomous (WithTop α) (· > ·) :=
+  ⟨by
+    rintro (a | _) (b | _)
+    iterate 3 
+      simp
+    simpa [← Option.some_inj] using @trichotomous _ (· > ·) _ a b⟩
+
+instance IsWellOrder.gt [Preorderₓ α] [h : IsWellOrder α (· > ·)] :
+    IsWellOrder (WithTop α) (· > ·) where wf := well_founded_gt h.wf
+
+instance _root_.with_bot.trichotomous.lt [Preorderₓ α] [h : IsTrichotomous α (· < ·)] :
+    IsTrichotomous (WithBot α) (· < ·) :=
+  @WithTop.Trichotomous.gt αᵒᵈ _ h
+
+instance _root_.with_bot.is_well_order.lt [Preorderₓ α] [h : IsWellOrder α (· < ·)] : IsWellOrder (WithBot α) (· < ·) :=
+  @WithTop.IsWellOrder.gt αᵒᵈ _ h
+
+instance _root_.with_bot.trichotomous.gt [Preorderₓ α] [h : IsTrichotomous α (· > ·)] :
+    IsTrichotomous (WithBot α) (· > ·) :=
+  @WithTop.Trichotomous.lt αᵒᵈ _ h
+
+instance _root_.with_bot.is_well_order.gt [Preorderₓ α] [h : IsWellOrder α (· > ·)] : IsWellOrder (WithBot α) (· > ·) :=
+  @WithTop.IsWellOrder.lt αᵒᵈ _ h
+
 instance [LT α] [DenselyOrdered α] [NoMaxOrder α] : DenselyOrdered (WithTop α) :=
   OrderDual.densely_ordered (WithBot αᵒᵈ)
 
@@ -1592,6 +1629,12 @@ theorem symmetric_disjoint : Symmetric (Disjoint : α → α → Prop) :=
 theorem disjoint_assoc : Disjoint (a⊓b) c ↔ Disjoint a (b⊓c) := by
   rw [Disjoint, Disjoint, inf_assoc]
 
+theorem disjoint_left_comm : Disjoint a (b⊓c) ↔ Disjoint b (a⊓c) := by
+  simp_rw [Disjoint, inf_left_comm]
+
+theorem disjoint_right_comm : Disjoint (a⊓b) c ↔ Disjoint (a⊓c) b := by
+  simp_rw [Disjoint, inf_right_comm]
+
 @[simp]
 theorem disjoint_bot_left : Disjoint ⊥ a :=
   inf_le_left
@@ -1726,6 +1769,12 @@ theorem symmetric_codisjoint : Symmetric (Codisjoint : α → α → Prop) :=
 theorem codisjoint_assoc : Codisjoint (a⊔b) c ↔ Codisjoint a (b⊔c) := by
   rw [Codisjoint, Codisjoint, sup_assoc]
 
+theorem codisjoint_left_comm : Codisjoint a (b⊔c) ↔ Codisjoint b (a⊔c) := by
+  simp_rw [Codisjoint, sup_left_comm]
+
+theorem codisjoint_right_comm : Codisjoint (a⊔b) c ↔ Codisjoint (a⊔c) b := by
+  simp_rw [Codisjoint, sup_right_comm]
+
 @[simp]
 theorem codisjoint_top_left : Codisjoint ⊤ a :=
   le_sup_left
@@ -1855,6 +1904,16 @@ theorem codisjoint_to_dual_iff [SemilatticeInf α] [OrderBot α] {a b : α} :
 theorem codisjoint_of_dual_iff [SemilatticeSup α] [OrderTop α] {a b : αᵒᵈ} :
     Codisjoint (ofDual a) (ofDual b) ↔ Disjoint a b :=
   Iff.rfl
+
+section DistribLattice
+
+variable [DistribLattice α] [BoundedOrder α] {a b c : α}
+
+theorem Disjoint.le_of_codisjoint (hab : Disjoint a b) (hbc : Codisjoint b c) : a ≤ c := by
+  rw [← @inf_top_eq _ _ _ a, ← @bot_sup_eq _ _ _ c, ← hab.eq_bot, ← hbc.eq_top, sup_inf_right]
+  exact inf_le_inf_right _ le_sup_left
+
+end DistribLattice
 
 section IsCompl
 

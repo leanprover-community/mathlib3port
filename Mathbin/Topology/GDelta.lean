@@ -83,7 +83,7 @@ theorem is_Gδ_Inter [Encodable ι] {s : ι → Set α} (hs : ∀ i, IsGδ (s i)
 theorem is_Gδ_bInter {s : Set ι} (hs : s.Countable) {t : ∀, ∀ i ∈ s, ∀, Set α} (ht : ∀, ∀ i ∈ s, ∀, IsGδ (t i ‹_›)) :
     IsGδ (⋂ i ∈ s, t i ‹_›) := by
   rw [bInter_eq_Inter]
-  have := hs.to_encodable
+  haveI := hs.to_encodable
   exact is_Gδ_Inter fun x => ht x x.2
 
 /-- A countable intersection of Gδ sets is a Gδ set. -/
@@ -117,7 +117,7 @@ theorem is_Gδ_bUnion {s : Set ι} (hs : s.Finite) {f : ι → Set α} (h : ∀,
 theorem IsClosed.is_Gδ {α} [UniformSpace α] [IsCountablyGenerated (𝓤 α)] {s : Set α} (hs : IsClosed s) : IsGδ s := by
   rcases(@uniformity_has_basis_open α _).exists_antitone_subbasis with ⟨U, hUo, hU, -⟩
   rw [← hs.closure_eq, ← hU.bInter_bUnion_ball]
-  refine' is_Gδ_bInter (countable_encodable _) fun n hn => IsOpen.is_Gδ _
+  refine' is_Gδ_bInter (to_countable _) fun n hn => IsOpen.is_Gδ _
   exact is_open_bUnion fun x hx => UniformSpace.is_open_ball _ (hUo _).2
 
 section T1Space
@@ -147,7 +147,7 @@ variable [FirstCountableTopology α]
 theorem is_Gδ_singleton (a : α) : IsGδ ({a} : Set α) := by
   rcases(nhds_basis_opens a).exists_antitone_subbasis with ⟨U, hU, h_basis⟩
   rw [← bInter_basis_nhds h_basis.to_has_basis]
-  exact is_Gδ_bInter (countable_encodable _) fun n hn => (hU n).2.IsGδ
+  exact is_Gδ_bInter (to_countable _) fun n hn => (hU n).2.IsGδ
 
 theorem Set.Finite.is_Gδ {s : Set α} (hs : s.Finite) : IsGδ s :=
   (Finite.induction_on hs is_Gδ_empty) fun a s _ _ hs => (is_Gδ_singleton a).union hs

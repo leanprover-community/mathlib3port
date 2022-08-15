@@ -172,8 +172,8 @@ theorem val_sub {is js : List Int} : val v (sub is js) = val v is - val v js := 
 def valExcept (k : Nat) (v : Nat → Int) (as) :=
   valBetween v as 0 k + valBetween v as (k + 1) (as.length - (k + 1))
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » k)
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » k)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ≠ » k)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ≠ » k)
 theorem val_except_eq_val_except {k : Nat} {is js : List Int} {v w : Nat → Int} :
     (∀ (x) (_ : x ≠ k), v x = w x) → (∀ (x) (_ : x ≠ k), get x is = get x js) → valExcept k v is = valExcept k w js :=
   by

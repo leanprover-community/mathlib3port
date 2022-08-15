@@ -3,8 +3,7 @@ Copyright (c) 2021 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 -/
-import Mathbin.GroupTheory.GroupAction.Quotient
-import Mathbin.GroupTheory.OrderOfElement
+import Mathbin.Data.Zmod.Quotient
 
 /-!
 # Complements
@@ -19,6 +18,8 @@ In this file we define the complement of a subgroup.
   i.e. the set of all `S : set G` that contain exactly one element of each left coset of `T`.
 - `right_transversals S` where `S` is a subset of `G` is the set of all right-complements of `S`,
   i.e. the set of all `T : set G` that contain exactly one element of each right coset of `S`.
+- `transfer_transversal H g` is a specific `left_transversal` of `H` that is used in the
+  computation of the transfer homomorphism evaluated at an element `g : G`.
 
 ## Main results
 
@@ -444,6 +445,78 @@ theorem is_complement'_stabilizer {α : Type _} [MulAction G α] (a : α) (h1 : 
         rwa [mul_smul, smul_def h', ← hg, ← mul_smul, hg])
   refine' Prod.extₓ (eq_inv_of_mul_eq_one_right h1) (Subtype.ext _)
   rwa [Subtype.ext_iff, coe_one, coe_mul, ← self_eq_mul_left, mul_assoc (↑h) (↑h') g] at h1
+
+end Subgroup
+
+namespace Subgroup
+
+open Equivₓ Function MemLeftTransversals MulAction MulAction.quotient Zmod
+
+universe u
+
+variable {G : Type u} [Groupₓ G] (H : Subgroup G) (g : G)
+
+/-- Partition `G ⧸ H` into orbits of the action of `g : G`. -/
+noncomputable def quotientEquivSigmaZmod :
+    G ⧸ H ≃ Σq : orbitRel.Quotient (zpowers g) (G ⧸ H), Zmod (minimalPeriod ((· • ·) g) q.out') :=
+  (selfEquivSigmaOrbits (zpowers g) (G ⧸ H)).trans (sigmaCongrRight fun q => orbitZpowersEquiv g q.out')
+
+theorem quotient_equiv_sigma_zmod_symm_apply (q : orbitRel.Quotient (zpowers g) (G ⧸ H))
+    (k : Zmod (minimalPeriod ((· • ·) g) q.out')) : (quotientEquivSigmaZmod H g).symm ⟨q, k⟩ = g ^ (k : ℤ) • q.out' :=
+  rfl
+
+theorem quotient_equiv_sigma_zmod_apply (q : orbitRel.Quotient (zpowers g) (G ⧸ H)) (k : ℤ) :
+    quotientEquivSigmaZmod H g (g ^ k • q.out') = ⟨q, k⟩ := by
+  rw [apply_eq_iff_eq_symm_apply, quotient_equiv_sigma_zmod_symm_apply, Zmod.coe_int_cast, zpow_smul_mod_minimal_period]
+
+/-- The transfer transversal as a function. Given a `⟨g⟩`-orbit `q₀, g • q₀, ..., g ^ (m - 1) • q₀`
+  in `G ⧸ H`, an element `g ^ k • q₀` is mapped to `g ^ k • g₀` for a fixed choice of
+  representative `g₀` of `q₀`. -/
+noncomputable def transferFunction : G ⧸ H → G := fun q =>
+  g ^ ((quotientEquivSigmaZmod H g q).2 : ℤ) * (quotientEquivSigmaZmod H g q).1.out'.out'
+
+theorem transfer_function_apply (q : G ⧸ H) :
+    transferFunction H g q = g ^ ((quotientEquivSigmaZmod H g q).2 : ℤ) * (quotientEquivSigmaZmod H g q).1.out'.out' :=
+  rfl
+
+theorem coe_transfer_function (q : G ⧸ H) : ↑(transferFunction H g q) = q := by
+  rw [transfer_function_apply, ← smul_eq_mul, coe_smul_out', ← quotient_equiv_sigma_zmod_symm_apply, Sigma.eta,
+    symm_apply_apply]
+
+/-- The transfer transversal as a set. Contains elements of the form `g ^ k • g₀` for fixed choices
+  of representatives `g₀` of fixed choices of representatives `q₀` of `⟨g⟩`-orbits in `G ⧸ H`. -/
+def TransferSet : Set G :=
+  Set.Range (transferFunction H g)
+
+theorem mem_transfer_set (q : G ⧸ H) : transferFunction H g q ∈ TransferSet H g :=
+  ⟨q, rfl⟩
+
+/-- The transfer transversal. Contains elements of the form `g ^ k • g₀` for fixed choices
+  of representatives `g₀` of fixed choices of representatives `q₀` of `⟨g⟩`-orbits in `G ⧸ H`. -/
+def transferTransversal : LeftTransversals (H : Set G) :=
+  ⟨TransferSet H g, range_mem_left_transversals (coe_transfer_function H g)⟩
+
+theorem transfer_transversal_apply (q : G ⧸ H) : ↑(toEquiv (transferTransversal H g).2 q) = transferFunction H g q :=
+  to_equiv_apply (coe_transfer_function H g) q
+
+theorem transfer_transversal_apply' (q : orbitRel.Quotient (zpowers g) (G ⧸ H))
+    (k : Zmod (minimalPeriod ((· • ·) g) q.out')) :
+    ↑(toEquiv (transferTransversal H g).2 (g ^ (k : ℤ) • q.out')) = g ^ (k : ℤ) * q.out'.out' := by
+  rw [transfer_transversal_apply, transfer_function_apply, ← quotient_equiv_sigma_zmod_symm_apply, apply_symm_apply]
+
+theorem transfer_transversal_apply'' (q : orbitRel.Quotient (zpowers g) (G ⧸ H))
+    (k : Zmod (minimalPeriod ((· • ·) g) q.out')) :
+    ↑(toEquiv (g • transferTransversal H g).2 (g ^ (k : ℤ) • q.out')) =
+      if k = 0 then g ^ minimalPeriod ((· • ·) g) q.out' * q.out'.out' else g ^ (k : ℤ) * q.out'.out' :=
+  by
+  rw [smul_apply_eq_smul_apply_inv_smul, transfer_transversal_apply, transfer_function_apply, ← mul_smul, ←
+    zpow_neg_one, ← zpow_add, quotient_equiv_sigma_zmod_apply, smul_eq_mul, ← mul_assoc, ← zpow_one_add, Int.cast_add,
+    Int.cast_neg, Int.cast_oneₓ, int_cast_cast, cast_id', id.def, ← sub_eq_neg_add, cast_sub_one, add_sub_cancel'_right]
+  by_cases' hk : k = 0
+  · rw [if_pos hk, if_pos hk, zpow_coe_nat]
+    
+  · rw [if_neg hk, if_neg hk]
+    
 
 end Subgroup
 

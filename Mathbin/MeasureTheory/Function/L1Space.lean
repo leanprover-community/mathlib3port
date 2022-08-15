@@ -19,15 +19,15 @@ classes of integrable functions, already defined as a special case of `L^p` spac
 
 ## Notation
 
-* `α →₁[μ] β` is the type of `L¹` space, where `α` is a `measure_space` and `β` is a `normed_group`
-  with a `second_countable_topology`. `f : α →ₘ β` is a "function" in `L¹`. In comments, `[f]` is
-  also used to denote an `L¹` function.
+* `α →₁[μ] β` is the type of `L¹` space, where `α` is a `measure_space` and `β` is a
+  `normed_add_comm_group` with a `second_countable_topology`. `f : α →ₘ β` is a "function" in `L¹`.
+  In comments, `[f]` is also used to denote an `L¹` function.
 
   `₁` can be typed as `\1`.
 
 ## Main definitions
 
-* Let `f : α → β` be a function, where `α` is a `measure_space` and `β` a `normed_group`.
+* Let `f : α → β` be a function, where `α` is a `measure_space` and `β` a `normed_add_comm_group`.
   Then `has_finite_integral f` means `(∫⁻ a, ∥f a∥₊) < ∞`.
 
 * If `β` is moreover a `measurable_space` then `f` is called `integrable` if
@@ -53,9 +53,9 @@ open Set Filter TopologicalSpace Ennreal Emetric MeasureTheory
 
 variable {α β γ δ : Type _} {m : MeasurableSpace α} {μ ν : Measureₓ α} [MeasurableSpace δ]
 
-variable [NormedGroup β]
+variable [NormedAddCommGroup β]
 
-variable [NormedGroup γ]
+variable [NormedAddCommGroup γ]
 
 namespace MeasureTheory
 
@@ -120,8 +120,11 @@ theorem has_finite_integral_iff_of_nnreal {f : α → ℝ≥0 } :
 theorem HasFiniteIntegral.mono {f : α → β} {g : α → γ} (hg : HasFiniteIntegral g μ) (h : ∀ᵐ a ∂μ, ∥f a∥ ≤ ∥g a∥) :
     HasFiniteIntegral f μ := by
   simp only [← has_finite_integral_iff_norm] at *
-  calc (∫⁻ a, Ennreal.ofReal ∥f a∥ ∂μ) ≤ ∫⁻ a : α, Ennreal.ofReal ∥g a∥ ∂μ :=
-      lintegral_mono_ae (h.mono fun a h => of_real_le_of_real h)_ < ∞ := hg
+  calc
+    (∫⁻ a, Ennreal.ofReal ∥f a∥ ∂μ) ≤ ∫⁻ a : α, Ennreal.ofReal ∥g a∥ ∂μ :=
+      lintegral_mono_ae (h.mono fun a h => of_real_le_of_real h)
+    _ < ∞ := hg
+    
 
 theorem HasFiniteIntegral.mono' {f : α → β} {g : α → ℝ} (hg : HasFiniteIntegral g μ) (h : ∀ᵐ a ∂μ, ∥f a∥ ≤ g a) :
     HasFiniteIntegral f μ :=
@@ -249,12 +252,15 @@ theorem has_finite_integral_of_dominated_convergence {F : ℕ → α → β} {f 
   /- `∥F n a∥ ≤ bound a` and `∥F n a∥ --> ∥f a∥` implies `∥f a∥ ≤ bound a`,
     and so `∫ ∥f∥ ≤ ∫ bound < ∞` since `bound` is has_finite_integral -/
   rw [has_finite_integral_iff_norm]
-  calc (∫⁻ a, Ennreal.ofReal ∥f a∥ ∂μ) ≤ ∫⁻ a, Ennreal.ofReal (bound a) ∂μ :=
-      lintegral_mono_ae <| all_ae_of_real_f_le_bound h_bound h_lim _ < ∞ := by
+  calc
+    (∫⁻ a, Ennreal.ofReal ∥f a∥ ∂μ) ≤ ∫⁻ a, Ennreal.ofReal (bound a) ∂μ :=
+      lintegral_mono_ae <| all_ae_of_real_f_le_bound h_bound h_lim
+    _ < ∞ := by
       rw [← has_finite_integral_iff_of_real]
       · exact bound_has_finite_integral
         
       exact (h_bound 0).mono fun a h => le_transₓ (norm_nonneg _) h
+    
 
 theorem tendsto_lintegral_norm_of_dominated_convergence {F : ℕ → α → β} {f : α → β} {bound : α → ℝ}
     (F_measurable : ∀ n, AeStronglyMeasurable (F n) μ) (bound_has_finite_integral : HasFiniteIntegral bound μ)
@@ -267,7 +273,8 @@ theorem tendsto_lintegral_norm_of_dominated_convergence {F : ℕ → α → β} 
   have hb : ∀ n, ∀ᵐ a ∂μ, Ennreal.ofReal ∥F n a - f a∥ ≤ b a := by
     intro n
     filter_upwards [all_ae_of_real_F_le_bound h_bound n, all_ae_of_real_f_le_bound h_bound h_lim] with a h₁ h₂
-    calc Ennreal.ofReal ∥F n a - f a∥ ≤ Ennreal.ofReal ∥F n a∥ + Ennreal.ofReal ∥f a∥ := by
+    calc
+      Ennreal.ofReal ∥F n a - f a∥ ≤ Ennreal.ofReal ∥F n a∥ + Ennreal.ofReal ∥f a∥ := by
         rw [← Ennreal.of_real_add]
         apply of_real_le_of_real
         · apply norm_sub_le
@@ -275,9 +282,11 @@ theorem tendsto_lintegral_norm_of_dominated_convergence {F : ℕ → α → β} 
         · exact norm_nonneg _
           
         · exact norm_nonneg _
-          _ ≤ Ennreal.ofReal (bound a) + Ennreal.ofReal (bound a) :=
-        add_le_add h₁ h₂ _ = b a := by
+          
+      _ ≤ Ennreal.ofReal (bound a) + Ennreal.ofReal (bound a) := add_le_add h₁ h₂
+      _ = b a := by
         rw [← two_mul]
+      
   -- On the other hand, `F n a --> f a` implies that `∥F n a - f a∥ --> 0`
   have h : ∀ᵐ a ∂μ, Tendsto (fun n => Ennreal.ofReal ∥F n a - f a∥) atTop (𝓝 0) := by
     rw [← Ennreal.of_real_zero]
@@ -295,9 +304,12 @@ theorem tendsto_lintegral_norm_of_dominated_convergence {F : ℕ → α → β} 
     
   -- Show `2 * bound` is has_finite_integral
   · rw [has_finite_integral_iff_of_real] at bound_has_finite_integral
-    · calc (∫⁻ a, b a ∂μ) = 2 * ∫⁻ a, Ennreal.ofReal (bound a) ∂μ := by
+    · calc
+        (∫⁻ a, b a ∂μ) = 2 * ∫⁻ a, Ennreal.ofReal (bound a) ∂μ := by
           rw [lintegral_const_mul']
-          exact coe_ne_top _ ≠ ∞ := mul_ne_top coe_ne_top bound_has_finite_integral.ne
+          exact coe_ne_top
+        _ ≠ ∞ := mul_ne_top coe_ne_top bound_has_finite_integral.ne
+        
       
     filter_upwards [h_bound 0] with _ h using le_transₓ (norm_nonneg _) h
     
@@ -333,10 +345,13 @@ variable {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 β]
 theorem HasFiniteIntegral.smul (c : 𝕜) {f : α → β} : HasFiniteIntegral f μ → HasFiniteIntegral (c • f) μ := by
   simp only [← has_finite_integral]
   intro hfi
-  calc (∫⁻ a : α, ∥c • f a∥₊ ∂μ) = ∫⁻ a : α, ∥c∥₊ * ∥f a∥₊ ∂μ := by
-      simp only [← nnnorm_smul, ← Ennreal.coe_mul]_ < ∞ := by
+  calc
+    (∫⁻ a : α, ∥c • f a∥₊ ∂μ) = ∫⁻ a : α, ∥c∥₊ * ∥f a∥₊ ∂μ := by
+      simp only [← nnnorm_smul, ← Ennreal.coe_mul]
+    _ < ∞ := by
       rw [lintegral_const_mul']
       exacts[mul_lt_top coe_ne_top hfi.ne, coe_ne_top]
+    
 
 theorem has_finite_integral_smul_iff {c : 𝕜} (hc : c ≠ 0) (f : α → β) :
     HasFiniteIntegral (c • f) μ ↔ HasFiniteIntegral f μ := by
@@ -607,7 +622,10 @@ theorem integrable_of_norm_sub_le {f₀ f₁ : α → β} {g : α → ℝ} (hf�
   have : ∀ᵐ a ∂μ, ∥f₁ a∥ ≤ ∥f₀ a∥ + g a := by
     apply h.mono
     intro a ha
-    calc ∥f₁ a∥ ≤ ∥f₀ a∥ + ∥f₀ a - f₁ a∥ := norm_le_insert _ _ _ ≤ ∥f₀ a∥ + g a := add_le_add_left ha _
+    calc
+      ∥f₁ a∥ ≤ ∥f₀ a∥ + ∥f₀ a - f₁ a∥ := norm_le_insert _ _
+      _ ≤ ∥f₀ a∥ + g a := add_le_add_left ha _
+      
   exact integrable.mono' (hf₀_i.norm.add hg_i) hf₁_m this
 
 theorem Integrable.prod_mk {f : α → β} {g : α → γ} (hf : Integrable f μ) (hg : Integrable g μ) :
@@ -649,7 +667,7 @@ theorem coe_to_nnreal_ae_eq {f : α → ℝ≥0∞} (hf : ∀ᵐ x ∂μ, f x < 
 
 section
 
-variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E]
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 theorem integrable_with_density_iff_integrable_coe_smul {f : α → ℝ≥0 } (hf : Measurable f) {g : α → E} :
     Integrable g (μ.withDensity fun x => f x) ↔ Integrable (fun x => (f x : ℝ) • g x) μ := by
@@ -712,7 +730,7 @@ theorem integrable_with_density_iff {f : α → ℝ≥0∞} (hf : Measurable f) 
 
 section
 
-variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E]
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 theorem mem_ℒ1_smul_of_L1_with_density {f : α → ℝ≥0 } (f_meas : Measurable f)
     (u : lp E 1 (μ.withDensity fun x => f x)) : Memℒp (fun x => f x • u x) 1 μ :=
@@ -825,13 +843,20 @@ theorem Integrable.mul_const' {f : α → ℝ} (h : Integrable f μ) (c : ℝ) :
 theorem Integrable.div_const {f : α → ℝ} (h : Integrable f μ) (c : ℝ) : Integrable (fun x => f x / c) μ := by
   simp_rw [div_eq_mul_inv, h.mul_const]
 
+theorem Integrable.bdd_mul' {f g : α → ℝ} {c : ℝ} (hg : Integrable g μ) (hf : AeStronglyMeasurable f μ)
+    (hf_bound : ∀ᵐ x ∂μ, ∥f x∥ ≤ c) : Integrable (fun x => f x * g x) μ := by
+  refine' integrable.mono' (hg.norm.smul c) (hf.mul hg.1) _
+  filter_upwards [hf_bound] with x hx
+  rw [Pi.smul_apply, smul_eq_mul]
+  exact (norm_mul_le _ _).trans (mul_le_mul_of_nonneg_right hx (norm_nonneg _))
+
 end NormedSpace
 
 section NormedSpaceOverCompleteField
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] [CompleteSpace 𝕜]
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] [CompleteSpace 𝕜]
 
-variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 theorem integrable_smul_const {f : α → 𝕜} {c : E} (hc : c ≠ 0) : Integrable (fun x => f x • c) μ ↔ Integrable f μ := by
   simp_rw [integrable, ae_strongly_measurable_smul_const_iff hc, And.congr_right_iff, has_finite_integral, nnnorm_smul,
@@ -886,7 +911,7 @@ end InnerProduct
 
 section Trim
 
-variable {H : Type _} [NormedGroup H] {m0 : MeasurableSpace α} {μ' : Measure α} {f : α → H}
+variable {H : Type _} [NormedAddCommGroup H] {m0 : MeasurableSpace α} {μ' : Measure α} {f : α → H}
 
 theorem Integrable.trim (hm : m ≤ m0) (hf_int : Integrable f μ') (hf : strongly_measurable[m] f) :
     Integrable f (μ'.trim hm) := by
@@ -908,7 +933,7 @@ end Trim
 
 section SigmaFinite
 
-variable {E : Type _} {m0 : MeasurableSpace α} [NormedGroup E]
+variable {E : Type _} {m0 : MeasurableSpace α} [NormedAddCommGroup E]
 
 theorem integrable_of_forall_fin_meas_le' {μ : Measure α} (hm : m ≤ m0) [SigmaFinite (μ.trim hm)] (C : ℝ≥0∞)
     (hC : C < ∞) {f : α → E} (hf_meas : AeStronglyMeasurable f μ)
@@ -1113,8 +1138,8 @@ end MeasureTheory
 
 open MeasureTheory
 
-variable {E : Type _} [NormedGroup E] {𝕜 : Type _} [NondiscreteNormedField 𝕜] [NormedSpace 𝕜 E] {H : Type _}
-  [NormedGroup H] [NormedSpace 𝕜 H]
+variable {E : Type _} [NormedAddCommGroup E] {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 E] {H : Type _}
+  [NormedAddCommGroup H] [NormedSpace 𝕜 H]
 
 theorem MeasureTheory.Integrable.apply_continuous_linear_map {φ : α → H →L[𝕜] E} (φ_int : Integrable φ μ) (v : H) :
     Integrable (fun a => φ a v) μ :=

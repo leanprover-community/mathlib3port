@@ -21,8 +21,8 @@ complemented subspace, normed vector space
 -/
 
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
-  [NormedGroup F] [NormedSpace 𝕜 F] {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G]
+variable {𝕜 E F G : Type _} [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] [NormedAddCommGroup F]
+  [NormedSpace 𝕜 F] [NormedAddCommGroup G] [NormedSpace 𝕜 G]
 
 noncomputable section
 
@@ -73,16 +73,14 @@ namespace Subspace
 
 variable [CompleteSpace E] (p q : Subspace 𝕜 E)
 
-open ContinuousLinearMap (subtype_val)
-
 /-- If `q` is a closed complement of a closed subspace `p`, then `p × q` is continuously
 isomorphic to `E`. -/
 def prodEquivOfClosedCompl (h : IsCompl p q) (hp : IsClosed (p : Set E)) (hq : IsClosed (q : Set E)) :
     (p × q) ≃L[𝕜] E := by
-  have := hp.complete_space_coe
-  have := hq.complete_space_coe
+  haveI := hp.complete_space_coe
+  haveI := hq.complete_space_coe
   refine' (p.prod_equiv_of_is_compl q h).toContinuousLinearEquivOfContinuous _
-  exact ((subtype_val p).coprod (subtype_val q)).Continuous
+  exact (p.subtypeL.coprod q.subtypeL).Continuous
 
 /-- Projection to a closed submodule along a closed complement. -/
 def linearProjOfClosedCompl (h : IsCompl p q) (hp : IsClosed (p : Set E)) (hq : IsClosed (q : Set E)) : E →L[𝕜] p :=
@@ -122,7 +120,7 @@ theorem closed_complemented_iff_has_closed_compl :
 theorem closed_complemented_of_quotient_finite_dimensional [CompleteSpace 𝕜] [FiniteDimensional 𝕜 (E ⧸ p)]
     (hp : IsClosed (p : Set E)) : p.ClosedComplemented := by
   obtain ⟨q, hq⟩ : ∃ q, IsCompl p q := p.exists_is_compl
-  have : FiniteDimensional 𝕜 q := (p.quotient_equiv_of_is_compl q hq).FiniteDimensional
+  haveI : FiniteDimensional 𝕜 q := (p.quotient_equiv_of_is_compl q hq).FiniteDimensional
   exact closed_complemented_of_closed_compl hq hp q.closed_of_finite_dimensional
 
 end Subspace

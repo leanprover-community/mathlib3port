@@ -27,9 +27,9 @@ This file contains results about bases in normed affine spaces.
 
 section Barycentric
 
-variable {ι 𝕜 E P : Type _} [NondiscreteNormedField 𝕜] [CompleteSpace 𝕜]
+variable {ι 𝕜 E P : Type _} [NontriviallyNormedField 𝕜] [CompleteSpace 𝕜]
 
-variable [NormedGroup E] [NormedSpace 𝕜 E] [FiniteDimensional 𝕜 E]
+variable [NormedAddCommGroup E] [NormedSpace 𝕜 E] [FiniteDimensional 𝕜 E]
 
 variable [MetricSpace P] [NormedAddTorsor E P]
 
@@ -57,7 +57,7 @@ to this basis.
 
 TODO Restate this result for affine spaces (instead of vector spaces) once the definition of
 convexity is generalised to this setting. -/
-theorem interior_convex_hull_aff_basis {ι E : Type _} [Fintype ι] [NormedGroup E] [NormedSpace ℝ E]
+theorem interior_convex_hull_aff_basis {ι E : Type _} [Fintype ι] [NormedAddCommGroup E] [NormedSpace ℝ E]
     (b : AffineBasis ι ℝ E) : Interior (convexHull ℝ (Range b.points)) = { x | ∀ i, 0 < b.Coord i x } := by
   cases subsingleton_or_nontrivial ι
   · -- The zero-dimensional case.
@@ -77,19 +77,19 @@ theorem interior_convex_hull_aff_basis {ι E : Type _} [Fintype ι] [NormedGroup
       ext
       simp
     ext
-    simp only [← this, ← interior_Inter_of_fintype,
+    simp only [← this, ← interior_Inter,
       IsOpenMap.preimage_interior_eq_interior_preimage (is_open_map_barycentric_coord b _)
         (continuous_barycentric_coord b _),
       ← interior_Ici, ← mem_Inter, ← mem_set_of_eq, ← mem_Ioi, ← mem_preimage]
     
 
-variable {V P : Type _} [NormedGroup V] [NormedSpace ℝ V] [MetricSpace P] [NormedAddTorsor V P]
+variable {V P : Type _} [NormedAddCommGroup V] [NormedSpace ℝ V] [MetricSpace P] [NormedAddTorsor V P]
 
 include V
 
 open AffineMap
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y «expr ∉ » s)
 /-- Given a set `s` of affine-independent points belonging to an open set `u`, we may extend `s` to
 an affine basis, all of whose elements belong to `u`. -/
 theorem exists_subset_affine_independent_span_eq_top_of_open {s u : Set P} (hu : IsOpen u) (hsu : s ⊆ u)
@@ -108,9 +108,12 @@ theorem exists_subset_affine_independent_span_eq_top_of_open {s u : Set P} (hu :
     · rwa [hyq, mul_zero]
       
     rw [← norm_pos_iff, norm_norm] at hyq
-    calc abs (ε / 2 / ∥y -ᵥ q∥) * ∥y -ᵥ q∥ = ε / 2 / ∥y -ᵥ q∥ * ∥y -ᵥ q∥ := by
-        rw [abs_div, abs_of_pos (half_pos hε), abs_of_pos hyq]_ = ε / 2 := div_mul_cancel _ (ne_of_gtₓ hyq)_ < ε :=
-        half_lt_self hε
+    calc
+      abs (ε / 2 / ∥y -ᵥ q∥) * ∥y -ᵥ q∥ = ε / 2 / ∥y -ᵥ q∥ * ∥y -ᵥ q∥ := by
+        rw [abs_div, abs_of_pos (half_pos hε), abs_of_pos hyq]
+      _ = ε / 2 := div_mul_cancel _ (ne_of_gtₓ hyq)
+      _ < ε := half_lt_self hε
+      
   have hεyq : ∀ (y) (_ : y ∉ s), ε / 2 / dist y q ≠ 0 := by
     simp only [← Ne.def, ← div_eq_zero_iff, ← or_falseₓ, ← dist_eq_zero, ← bit0_eq_zero, ← one_ne_zero, ←
       not_or_distrib, ← ne_of_gtₓ hε, ← true_andₓ, ← not_false_iff]
@@ -154,7 +157,7 @@ theorem interior_convex_hull_nonempty_iff_aff_span_eq_top [FiniteDimensional ℝ
       rw [Subtype.range_coe_subtype, set_of_mem_eq] at this
       apply nonempty.mono _ this
       mono*
-    have : Fintype t := fintypeOfFinDimAffineIndependent ℝ h_ind
+    haveI : Fintype t := fintypeOfFinDimAffineIndependent ℝ h_ind
     use Finset.centroid ℝ (Finset.univ : Finset t) (coe : t → V)
     rw [h, ← @set_of_mem_eq V t, ← Subtype.range_coe_subtype] at h_tot
     let b : AffineBasis t ℝ V := ⟨coe, h_ind, h_tot⟩

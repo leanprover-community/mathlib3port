@@ -19,8 +19,8 @@ open Function Metric Set Filter Finset
 
 open Classical TopologicalSpace BigOperators Nnreal
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
-  [NormedGroup F] [NormedSpace 𝕜 F] (f : E →L[𝕜] F)
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {F : Type _}
+  [NormedAddCommGroup F] [NormedSpace 𝕜 F] (f : E →L[𝕜] F)
 
 include 𝕜
 
@@ -218,9 +218,11 @@ theorem exists_preimage_norm_le (surj : Surjective f) : ∃ C > 0, ∀ y, ∃ x,
   have ule : ∀ n, ∥u n∥ ≤ (1 / 2) ^ n * (C * ∥y∥) := by
     intro n
     apply le_transₓ (hg _).2 _
-    calc C * ∥(h^[n]) y∥ ≤ C * ((1 / 2) ^ n * ∥y∥) :=
-        mul_le_mul_of_nonneg_left (hnle n) C0 _ = (1 / 2) ^ n * (C * ∥y∥) := by
+    calc
+      C * ∥(h^[n]) y∥ ≤ C * ((1 / 2) ^ n * ∥y∥) := mul_le_mul_of_nonneg_left (hnle n) C0
+      _ = (1 / 2) ^ n * (C * ∥y∥) := by
         ring
+      
   have sNu : Summable fun n => ∥u n∥ := by
     refine' summable_of_nonneg_of_le (fun n => norm_nonneg _) ule _
     exact
@@ -429,7 +431,7 @@ theorem range_eq_map_coprod_subtypeL_equiv_of_is_compl (f : E →L[𝕜] F) {G :
 `E / f.ker`, once we have quotient normed spaces. -/
 theorem closed_complemented_range_of_is_compl_of_ker_eq_bot (f : E →L[𝕜] F) (G : Submodule 𝕜 F) (h : IsCompl f.range G)
     (hG : IsClosed (G : Set F)) (hker : f.ker = ⊥) : IsClosed (f.range : Set F) := by
-  have : CompleteSpace G := hG.complete_space_coe
+  haveI : CompleteSpace G := hG.complete_space_coe
   let g := coprod_subtypeL_equiv_of_is_compl f h hker
   rw [congr_arg coe (range_eq_map_coprod_subtypeL_equiv_of_is_compl f h hker)]
   apply g.to_homeomorph.is_closed_image.2
@@ -444,7 +446,7 @@ variable [CompleteSpace E] (g : E →ₗ[𝕜] F)
 /-- The **closed graph theorem** : a linear map between two Banach spaces whose graph is closed
 is continuous. -/
 theorem LinearMap.continuous_of_is_closed_graph (hg : IsClosed (g.graph : Set <| E × F)) : Continuous g := by
-  let this : CompleteSpace g.graph := complete_space_coe_iff_is_complete.mpr hg.is_complete
+  letI : CompleteSpace g.graph := complete_space_coe_iff_is_complete.mpr hg.is_complete
   let φ₀ : E →ₗ[𝕜] E × F := linear_map.id.prod g
   have : Function.LeftInverse Prod.fst φ₀ := fun x => rfl
   let φ : E ≃ₗ[𝕜] g.graph := (LinearEquiv.ofLeftInverse this).trans (LinearEquiv.ofEq _ _ g.graph_eq_range_prod.symm)

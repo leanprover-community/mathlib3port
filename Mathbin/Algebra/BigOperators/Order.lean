@@ -43,12 +43,8 @@ theorem le_prod_nonempty_of_submultiplicative_on_pred (f : M → N) (p : M → P
   rw [Multiset.map_map]
   rfl
 
-/-- Let `{x | p x}` be an additive subsemigroup of an additive commutative monoid `M`. Let
-`f : M → N` be a map subadditive on `{x | p x}`, i.e., `p x → p y → f (x + y) ≤ f x + f y`. Let
-`g i`, `i ∈ s`, be a nonempty finite family of elements of `M` such that `∀ i ∈ s, p (g i)`. Then
-`f (∑ i in s, g i) ≤ ∑ i in s, f (g i)`. -/
-add_decl_doc le_sum_nonempty_of_subadditive_on_pred
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident le_sum_nonempty_of_subadditive_on_pred]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- If `f : M → N` is a submultiplicative function, `f (x * y) ≤ f x * f y` and `g i`, `i ∈ s`, is a
 nonempty finite family of elements of `M`, then `f (∏ i in s, g i) ≤ ∏ i in s, f (g i)`. -/
 @[to_additive le_sum_nonempty_of_subadditive]
@@ -57,10 +53,8 @@ theorem le_prod_nonempty_of_submultiplicative (f : M → N) (h_mul : ∀ x y, f 
   le_prod_nonempty_of_submultiplicative_on_pred f (fun i => True) (fun x y _ _ => h_mul x y) (fun _ _ _ _ => trivialₓ) g
     s hs fun _ _ => trivialₓ
 
-/-- If `f : M → N` is a subadditive function, `f (x + y) ≤ f x + f y` and `g i`, `i ∈ s`, is a
-nonempty finite family of elements of `M`, then `f (∑ i in s, g i) ≤ ∑ i in s, f (g i)`. -/
-add_decl_doc le_sum_nonempty_of_subadditive
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident le_sum_nonempty_of_subadditive]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Let `{x | p x}` be a subsemigroup of a commutative monoid `M`. Let `f : M → N` be a map
 such that `f 1 = 1` and `f` is submultiplicative on `{x | p x}`, i.e.,
 `p x → p y → f (x * y) ≤ f x * f y`. Let `g i`, `i ∈ s`, be a finite family of elements of `M` such
@@ -75,12 +69,8 @@ theorem le_prod_of_submultiplicative_on_pred (f : M → N) (p : M → Prop) (h_o
   · exact le_prod_nonempty_of_submultiplicative_on_pred f p h_mul hp_mul g s hs_nonempty hs
     
 
-/-- Let `{x | p x}` be a subsemigroup of a commutative additive monoid `M`. Let `f : M → N` be a map
-such that `f 0 = 0` and `f` is subadditive on `{x | p x}`, i.e. `p x → p y → f (x + y) ≤ f x + f y`.
-Let `g i`, `i ∈ s`, be a finite family of elements of `M` such that `∀ i ∈ s, p (g i)`. Then
-`f (∑ x in s, g x) ≤ ∑ x in s, f (g x)`. -/
-add_decl_doc le_sum_of_subadditive_on_pred
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident le_sum_of_subadditive_on_pred]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- If `f : M → N` is a submultiplicative function, `f (x * y) ≤ f x * f y`, `f 1 = 1`, and `g i`,
 `i ∈ s`, is a finite family of elements of `M`, then `f (∏ i in s, g i) ≤ ∏ i in s, f (g i)`. -/
 @[to_additive le_sum_of_subadditive]
@@ -90,10 +80,8 @@ theorem le_prod_of_submultiplicative (f : M → N) (h_one : f 1 = 1) (h_mul : �
   rw [Multiset.map_map]
   rfl
 
-/-- If `f : M → N` is a subadditive function, `f (x + y) ≤ f x + f y`, `f 0 = 0`, and `g i`,
-`i ∈ s`, is a finite family of elements of `M`, then `f (∑ i in s, g i) ≤ ∑ i in s, f (g i)`. -/
-add_decl_doc le_sum_of_subadditive
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident le_sum_of_subadditive]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 variable {f g : ι → N} {s t : Finset ι}
 
 /-- In an ordered commutative monoid, if each factor `f i` of one finite product is less than or
@@ -109,11 +97,8 @@ theorem prod_le_prod'' (h : ∀, ∀ i ∈ s, ∀, f i ≤ g i) : (∏ i in s, f
     exact mul_le_mul' (h _ (mem_insert_self _ _)) (ihs fun j hj => h j (mem_insert_of_mem hj))
     
 
-/-- In an ordered additive commutative monoid, if each summand `f i` of one finite sum is less than
-or equal to the corresponding summand `g i` of another finite sum, then
-`∑ i in s, f i ≤ ∑ i in s, g i`. -/
-add_decl_doc sum_le_sum
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident sum_le_sum]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[to_additive sum_nonneg]
 theorem one_le_prod' (h : ∀, ∀ i ∈ s, ∀, 1 ≤ f i) : 1 ≤ ∏ i in s, f i :=
   le_transₓ
@@ -135,12 +120,15 @@ theorem prod_le_one' (h : ∀, ∀ i ∈ s, ∀, f i ≤ 1) : (∏ i in s, f i) 
 theorem prod_le_prod_of_subset_of_one_le' (h : s ⊆ t) (hf : ∀, ∀ i ∈ t, ∀, i ∉ s → 1 ≤ f i) :
     (∏ i in s, f i) ≤ ∏ i in t, f i := by
   classical <;>
-    calc (∏ i in s, f i) ≤ (∏ i in t \ s, f i) * ∏ i in s, f i :=
+    calc
+      (∏ i in s, f i) ≤ (∏ i in t \ s, f i) * ∏ i in s, f i :=
         le_mul_of_one_le_left' <|
           one_le_prod' <| by
-            simpa only [← mem_sdiff, ← and_imp] _ = ∏ i in t \ s ∪ s, f i :=
-        (prod_union sdiff_disjoint).symm _ = ∏ i in t, f i := by
+            simpa only [← mem_sdiff, ← and_imp]
+      _ = ∏ i in t \ s ∪ s, f i := (prod_union sdiff_disjoint).symm
+      _ = ∏ i in t, f i := by
         rw [sdiff_union_of_subset h]
+      
 
 @[to_additive sum_mono_set_of_nonneg]
 theorem prod_mono_set_of_one_le' (hf : ∀ x, 1 ≤ f x) : Monotone fun s => ∏ x in s, f x := fun s t hst =>
@@ -188,7 +176,7 @@ theorem card_bUnion_le_card_mul [DecidableEq β] (s : Finset ι) (f : ι → Fin
 
 variable {ι' : Type _} [DecidableEq ι']
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y «expr ∉ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y «expr ∉ » t)
 @[to_additive sum_fiberwise_le_sum_of_sum_fiber_nonneg]
 theorem prod_fiberwise_le_prod_of_one_le_prod_fiber' {t : Finset ι'} {g : ι → ι'} {f : ι → N}
     (h : ∀ (y) (_ : y ∉ t), (1 : N) ≤ ∏ x in s.filter fun x => g x = y, f x) :
@@ -199,7 +187,7 @@ theorem prod_fiberwise_le_prod_of_one_le_prod_fiber' {t : Finset ι'} {g : ι �
     _ = ∏ x in s, f x := prod_fiberwise_of_maps_to (fun x hx => mem_union.2 <| Or.inr <| mem_image_of_mem _ hx) _
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y «expr ∉ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y «expr ∉ » t)
 @[to_additive sum_le_sum_fiberwise_of_sum_fiber_nonpos]
 theorem prod_le_prod_fiberwise_of_prod_fiber_le_one' {t : Finset ι'} {g : ι → ι'} {f : ι → N}
     (h : ∀ (y) (_ : y ∉ t), (∏ x in s.filter fun x => g x = y, f x) ≤ 1) :
@@ -345,14 +333,16 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
 @[to_additive sum_le_sum_of_ne_zero]
 theorem prod_le_prod_of_ne_one' (h : ∀, ∀ x ∈ s, ∀, f x ≠ 1 → x ∈ t) : (∏ x in s, f x) ≤ ∏ x in t, f x := by
   classical <;>
-    calc (∏ x in s, f x) = (∏ x in s.filter fun x => f x = 1, f x) * ∏ x in s.filter fun x => f x ≠ 1, f x := by
-        rw [← prod_union, filter_union_filter_neg_eq] <;>
-          exact disjoint_filter.2 fun _ _ h n_h => n_h h _ ≤ ∏ x in t, f x :=
+    calc
+      (∏ x in s, f x) = (∏ x in s.filter fun x => f x = 1, f x) * ∏ x in s.filter fun x => f x ≠ 1, f x := by
+        rw [← prod_union, filter_union_filter_neg_eq] <;> exact disjoint_filter.2 fun _ _ h n_h => n_h h
+      _ ≤ ∏ x in t, f x :=
         mul_le_of_le_one_of_le
           (prod_le_one' <| by
             simp only [← mem_filter, ← and_imp] <;> exact fun _ _ => le_of_eqₓ)
           (prod_le_prod_of_subset' <| by
             simpa only [← subset_iff, ← mem_filter, ← and_imp] )
+      
 
 end CanonicallyOrderedMonoid
 
@@ -382,9 +372,11 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀, ∀ i ∈ s, ∀
 theorem prod_lt_prod_of_subset' (h : s ⊆ t) {i : ι} (ht : i ∈ t) (hs : i ∉ s) (hlt : 1 < f i)
     (hle : ∀, ∀ j ∈ t, ∀, j ∉ s → 1 ≤ f j) : (∏ j in s, f j) < ∏ j in t, f j := by
   classical <;>
-    calc (∏ j in s, f j) < ∏ j in insert i s, f j := by
+    calc
+      (∏ j in s, f j) < ∏ j in insert i s, f j := by
         rw [prod_insert hs]
-        exact lt_mul_of_one_lt_left' (∏ j in s, f j) hlt _ ≤ ∏ j in t, f j := by
+        exact lt_mul_of_one_lt_left' (∏ j in s, f j) hlt
+      _ ≤ ∏ j in t, f j := by
         apply prod_le_prod_of_subset_of_one_le'
         · simp [← Finset.insert_subset, ← h, ← ht]
           
@@ -392,6 +384,7 @@ theorem prod_lt_prod_of_subset' (h : s ⊆ t) {i : ι} (ht : i ∈ t) (hs : i �
           simp only [← mem_insert, ← not_or_distrib] at h'x
           exact hle x hx h'x.2
           
+      
 
 @[to_additive single_lt_sum]
 theorem single_lt_prod' {i j : ι} (hij : j ≠ i) (hi : i ∈ s) (hj : j ∈ s) (hlt : 1 < f j)
@@ -449,7 +442,10 @@ theorem exists_one_lt_of_prod_one_of_exists_ne_one' (f : ι → M) (h₁ : (∏ 
   contrapose! h₁
   obtain ⟨i, m, i_ne⟩ : ∃ i ∈ s, f i ≠ 1 := h₂
   apply ne_of_ltₓ
-  calc (∏ j in s, f j) < ∏ j in s, 1 := prod_lt_prod' h₁ ⟨i, m, (h₁ i m).lt_of_ne i_ne⟩_ = 1 := prod_const_one
+  calc
+    (∏ j in s, f j) < ∏ j in s, 1 := prod_lt_prod' h₁ ⟨i, m, (h₁ i m).lt_of_ne i_ne⟩
+    _ = 1 := prod_const_one
+    
 
 end LinearOrderedCancelCommMonoid
 
@@ -610,7 +606,7 @@ variable {S : Type _}
 
 theorem AbsoluteValue.sum_le [Semiringₓ R] [OrderedSemiring S] (abv : AbsoluteValue R S) (s : Finset ι) (f : ι → R) :
     abv (∑ i in s, f i) ≤ ∑ i in s, abv (f i) := by
-  let this := Classical.decEq ι
+  letI := Classical.decEq ι
   refine' Finset.induction_on s _ fun i s hi ih => _
   · simp
     

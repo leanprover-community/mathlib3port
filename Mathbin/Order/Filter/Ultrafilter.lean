@@ -290,7 +290,7 @@ end
 theorem exists_le (f : Filter α) [h : NeBot f] : ∃ u : Ultrafilter α, ↑u ≤ f := by
   let τ := { f' // ne_bot f' ∧ f' ≤ f }
   let r : τ → τ → Prop := fun t₁ t₂ => t₂.val ≤ t₁.val
-  have := nonempty_of_ne_bot f
+  haveI := nonempty_of_ne_bot f
   let top : τ := ⟨f, h, le_reflₓ f⟩
   let sup : ∀ c : Set τ, IsChain r c → τ := fun c hc =>
     ⟨⨅ a : { a : τ // a ∈ insert top c }, a.1,
@@ -353,7 +353,7 @@ protected theorem NeBot.le_pure_iff (hf : f.ne_bot) : f ≤ pure a ↔ f = pure 
 theorem mem_iff_ultrafilter : s ∈ f ↔ ∀ g : Ultrafilter α, ↑g ≤ f → s ∈ g := by
   refine' ⟨fun hf g hg => hg hf, fun H => by_contra fun hf => _⟩
   set g : Filter ↥(sᶜ) := comap coe f
-  have : ne_bot g :=
+  haveI : ne_bot g :=
     comap_ne_bot_iff_compl_range.2
       (by
         simpa [← compl_set_of] )
@@ -431,19 +431,22 @@ noncomputable def ofComapInfPrincipal (h : m '' s ∈ g) : Ultrafilter α :=
 
 theorem of_comap_inf_principal_mem (h : m '' s ∈ g) : s ∈ ofComapInfPrincipal h := by
   let f := Filter.comap m g⊓𝓟 s
-  have : f.ne_bot := comap_inf_principal_ne_bot_of_image_mem h
+  haveI : f.ne_bot := comap_inf_principal_ne_bot_of_image_mem h
   have : s ∈ f := mem_inf_of_right (mem_principal_self s)
   exact le_def.mp (of_le _) s this
 
 theorem of_comap_inf_principal_eq_of_map (h : m '' s ∈ g) : (ofComapInfPrincipal h).map m = g := by
   let f := Filter.comap m g⊓𝓟 s
-  have : f.ne_bot := comap_inf_principal_ne_bot_of_image_mem h
+  haveI : f.ne_bot := comap_inf_principal_ne_bot_of_image_mem h
   apply eq_of_le
-  calc Filter.map m (of f) ≤ Filter.map m f :=
-      map_mono (of_le _)_ ≤ (Filter.map m <| Filter.comap m g)⊓Filter.map m (𝓟 s) :=
-      map_inf_le _ = (Filter.map m <| Filter.comap m g)⊓(𝓟 <| m '' s) := by
-      rw [map_principal]_ ≤ g⊓(𝓟 <| m '' s) := inf_le_inf_right _ map_comap_le _ = g :=
-      inf_of_le_left (le_principal_iff.mpr h)
+  calc
+    Filter.map m (of f) ≤ Filter.map m f := map_mono (of_le _)
+    _ ≤ (Filter.map m <| Filter.comap m g)⊓Filter.map m (𝓟 s) := map_inf_le
+    _ = (Filter.map m <| Filter.comap m g)⊓(𝓟 <| m '' s) := by
+      rw [map_principal]
+    _ ≤ g⊓(𝓟 <| m '' s) := inf_le_inf_right _ map_comap_le
+    _ = g := inf_of_le_left (le_principal_iff.mpr h)
+    
 
 end Ultrafilter
 

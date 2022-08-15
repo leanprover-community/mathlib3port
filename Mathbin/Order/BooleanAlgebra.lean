@@ -27,12 +27,8 @@ intervals.)
 
 ## Main declarations
 
-* `has_compl`: a type class for the complement operator
 * `generalized_boolean_algebra`: a type class for generalized Boolean algebras
-* `boolean_algebra.core`: a type class with the minimal assumptions for a Boolean algebras
-* `boolean_algebra`: the main type class for Boolean algebras; it extends both
-  `generalized_boolean_algebra` and `boolean_algebra.core`. An instance of `boolean_algebra` can be
-  obtained from one of `boolean_algebra.core` using `boolean_algebra.of_core`.
+* `boolean_algebra`: a type class for Boolean algebras.
 * `Prop.boolean_algebra`: the Boolean algebra instance on `Prop`
 
 ## Implementation notes
@@ -45,11 +41,6 @@ The `sup_inf_sdiff` and `inf_inf_sdiff` axioms for the relative complement opera
 complement operator `a \ b` for all `a`, `b`. Instead, the postulates there amount to an assumption
 that for all `a, b : α` where `a ≤ b`, the equations `x ⊔ a = b` and `x ⊓ a = ⊥` have a solution
 `x`. `disjoint.sdiff_unique` proves that this `x` is in fact `b \ a`.
-
-## Notations
-
-* `xᶜ` is notation for `compl x`
-* `x \ y` is notation for `sdiff x y`.
 
 ## References
 
@@ -549,23 +540,39 @@ theorem inf_sdiff_sup_right : x \ z⊓(y⊔x) = x \ z := by
 theorem sdiff_sdiff_right : x \ (y \ z) = x \ y⊔x⊓y⊓z := by
   rw [sup_comm, inf_comm, ← inf_assoc, sup_inf_inf_sdiff]
   apply sdiff_unique
-  · calc x⊓y \ z⊔(z⊓x⊔x \ y) = (x⊔(z⊓x⊔x \ y))⊓(y \ z⊔(z⊓x⊔x \ y)) := by
-        rw [sup_inf_right]_ = (x⊔x⊓z⊔x \ y)⊓(y \ z⊔(x⊓z⊔x \ y)) := by
-        ac_rfl _ = x⊓(y \ z⊔x⊓z⊔x \ y) := by
-        rw [sup_inf_self, sup_sdiff_left, ← sup_assoc]_ = x⊓(y \ z⊓(z⊔y)⊔x⊓(z⊔y)⊔x \ y) := by
-        rw [sup_inf_left, sup_sdiff_self_left, inf_sup_right, @sup_comm _ _ y]_ = x⊓(y \ z⊔(x⊓z⊔x⊓y)⊔x \ y) := by
-        rw [inf_sdiff_sup_right, @inf_sup_left _ _ x z y]_ = x⊓(y \ z⊔(x⊓z⊔(x⊓y⊔x \ y))) := by
-        ac_rfl _ = x⊓(y \ z⊔(x⊔x⊓z)) := by
-        rw [sup_inf_sdiff, @sup_comm _ _ (x⊓z)]_ = x := by
+  · calc
+      x⊓y \ z⊔(z⊓x⊔x \ y) = (x⊔(z⊓x⊔x \ y))⊓(y \ z⊔(z⊓x⊔x \ y)) := by
+        rw [sup_inf_right]
+      _ = (x⊔x⊓z⊔x \ y)⊓(y \ z⊔(x⊓z⊔x \ y)) := by
+        ac_rfl
+      _ = x⊓(y \ z⊔x⊓z⊔x \ y) := by
+        rw [sup_inf_self, sup_sdiff_left, ← sup_assoc]
+      _ = x⊓(y \ z⊓(z⊔y)⊔x⊓(z⊔y)⊔x \ y) := by
+        rw [sup_inf_left, sup_sdiff_self_left, inf_sup_right, @sup_comm _ _ y]
+      _ = x⊓(y \ z⊔(x⊓z⊔x⊓y)⊔x \ y) := by
+        rw [inf_sdiff_sup_right, @inf_sup_left _ _ x z y]
+      _ = x⊓(y \ z⊔(x⊓z⊔(x⊓y⊔x \ y))) := by
+        ac_rfl
+      _ = x⊓(y \ z⊔(x⊔x⊓z)) := by
+        rw [sup_inf_sdiff, @sup_comm _ _ (x⊓z)]
+      _ = x := by
         rw [sup_inf_self, sup_comm, inf_sup_self]
+      
     
-  · calc x⊓y \ z⊓(z⊓x⊔x \ y) = x⊓y \ z⊓(z⊓x)⊔x⊓y \ z⊓x \ y := by
-        rw [inf_sup_left]_ = x⊓(y \ z⊓z⊓x)⊔x⊓y \ z⊓x \ y := by
-        ac_rfl _ = x⊓y \ z⊓x \ y := by
-        rw [inf_sdiff_self_left, bot_inf_eq, inf_bot_eq, bot_sup_eq]_ = x⊓(y \ z⊓y)⊓x \ y := by
-        conv_lhs => rw [← inf_sdiff_left]_ = x⊓(y \ z⊓(y⊓x \ y)) := by
-        ac_rfl _ = ⊥ := by
+  · calc
+      x⊓y \ z⊓(z⊓x⊔x \ y) = x⊓y \ z⊓(z⊓x)⊔x⊓y \ z⊓x \ y := by
+        rw [inf_sup_left]
+      _ = x⊓(y \ z⊓z⊓x)⊔x⊓y \ z⊓x \ y := by
+        ac_rfl
+      _ = x⊓y \ z⊓x \ y := by
+        rw [inf_sdiff_self_left, bot_inf_eq, inf_bot_eq, bot_sup_eq]
+      _ = x⊓(y \ z⊓y)⊓x \ y := by
+        conv_lhs => rw [← inf_sdiff_left]
+      _ = x⊓(y \ z⊓(y⊓x \ y)) := by
+        ac_rfl
+      _ = ⊥ := by
         rw [inf_sdiff_self_right, inf_bot_eq, inf_bot_eq]
+      
     
 
 theorem sdiff_sdiff_right' : x \ (y \ z) = x \ y⊔x⊓z :=
@@ -771,56 +778,60 @@ end GeneralizedBooleanAlgebra
 -/
 
 
--- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
-/-- Set / lattice complement -/
-@[«./././Mathport/Syntax/Translate/Basic.lean:1209:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg»]
-class HasCompl (α : Type _) where
-  compl : α → α
+/-- A Boolean algebra is a bounded distributive lattice with a complement operator `ᶜ` such that
+`x ⊓ xᶜ = ⊥` and `x ⊔ xᶜ = ⊤`. For convenience, it must also provide a set difference operation `\`
+satisfying `x \ y = x ⊓ yᶜ`.
 
-export HasCompl (compl)
-
--- ./././Mathport/Syntax/Translate/Basic.lean:565:9: unsupported: advanced prec syntax «expr + »(max, 1)
--- mathport name: «expr ᶜ»
-postfix:999 "ᶜ" => compl
-
-/-- This class contains the core axioms of a Boolean algebra. The `boolean_algebra` class extends
-both this class and `generalized_boolean_algebra`, see Note [forgetful inheritance].
+This is a generalization of (classical) logic of propositions, or the powerset lattice.
 
 Since `bounded_order`, `order_bot`, and `order_top` are mixins that require `has_le`
 to be present at define-time, the `extends` mechanism does not work with them.
 Instead, we extend using the underlying `has_bot` and `has_top` data typeclasses, and replicate the
 order axioms of those classes here. A "forgetful" instance back to `bounded_order` is provided.
 -/
-class BooleanAlgebra.Core (α : Type u) extends DistribLattice α, HasCompl α, HasTop α, HasBot α where
+class BooleanAlgebra (α : Type u) extends DistribLattice α, HasCompl α, HasSdiff α, HasTop α, HasBot α where
   inf_compl_le_bot : ∀ x : α, x⊓xᶜ ≤ ⊥
   top_le_sup_compl : ∀ x : α, ⊤ ≤ x⊔xᶜ
   le_top : ∀ a : α, a ≤ ⊤
   bot_le : ∀ a : α, ⊥ ≤ a
+  sdiff := fun x y => x⊓yᶜ
+  sdiff_eq : ∀ x y : α, x \ y = x⊓yᶜ := by
+    run_tac
+      obviously
 
 -- see Note [lower instance priority]
-instance (priority := 100) BooleanAlgebra.Core.toBoundedOrder [h : BooleanAlgebra.Core α] : BoundedOrder α :=
+instance (priority := 100) BooleanAlgebra.toBoundedOrder [h : BooleanAlgebra α] : BoundedOrder α :=
   { h with }
 
-section BooleanAlgebraCore
+/-- A bounded generalized boolean algebra is a boolean algebra. -/
+-- See note [reducible non instances]
+@[reducible]
+def GeneralizedBooleanAlgebra.toBooleanAlgebra [GeneralizedBooleanAlgebra α] [OrderTop α] : BooleanAlgebra α :=
+  { ‹GeneralizedBooleanAlgebra α›, GeneralizedBooleanAlgebra.toOrderBot, ‹OrderTop α› with compl := fun a => ⊤ \ a,
+    inf_compl_le_bot := fun _ => disjoint_sdiff_self_right, top_le_sup_compl := fun _ => le_sup_sdiff,
+    sdiff_eq := fun _ _ => by
+      rw [← inf_sdiff_assoc, inf_top_eq]
+      rfl }
 
-variable [BooleanAlgebra.Core α]
+section BooleanAlgebra
+
+variable [BooleanAlgebra α]
 
 @[simp]
 theorem inf_compl_eq_bot : x⊓xᶜ = ⊥ :=
-  bot_unique <| BooleanAlgebra.Core.inf_compl_le_bot x
-
-@[simp]
-theorem compl_inf_eq_bot : xᶜ⊓x = ⊥ :=
-  Eq.trans inf_comm inf_compl_eq_bot
+  bot_unique <| BooleanAlgebra.inf_compl_le_bot x
 
 @[simp]
 theorem sup_compl_eq_top : x⊔xᶜ = ⊤ :=
-  top_unique <| BooleanAlgebra.Core.top_le_sup_compl x
+  top_unique <| BooleanAlgebra.top_le_sup_compl x
+
+@[simp]
+theorem compl_inf_eq_bot : xᶜ⊓x = ⊥ :=
+  inf_comm.trans inf_compl_eq_bot
 
 @[simp]
 theorem compl_sup_eq_top : xᶜ⊔x = ⊤ :=
-  Eq.trans sup_comm sup_compl_eq_top
+  sup_comm.trans sup_compl_eq_top
 
 theorem is_compl_compl : IsCompl x (xᶜ) :=
   IsCompl.of_eq inf_compl_eq_bot sup_compl_eq_top
@@ -947,72 +958,25 @@ alias disjoint_compl_left_iff ↔ _ LE.le.disjoint_compl_left
 
 alias disjoint_compl_right_iff ↔ _ LE.le.disjoint_compl_right
 
-namespace BooleanAlgebra
+theorem sdiff_eq : x \ y = x⊓yᶜ :=
+  BooleanAlgebra.sdiff_eq x y
 
-instance (priority := 100) : IsComplemented α :=
-  ⟨fun x => ⟨xᶜ, is_compl_compl⟩⟩
-
-end BooleanAlgebra
-
-end BooleanAlgebraCore
-
-/-- A Boolean algebra is a bounded distributive lattice with
-a complement operator `ᶜ` such that `x ⊓ xᶜ = ⊥` and `x ⊔ xᶜ = ⊤`.
-For convenience, it must also provide a set difference operation `\`
-satisfying `x \ y = x ⊓ yᶜ`.
-
-This is a generalization of (classical) logic of propositions, or
-the powerset lattice. -/
--- Lean complains about metavariables in the type if the universe is not specified
-class BooleanAlgebra (α : Type u) extends GeneralizedBooleanAlgebra α, BooleanAlgebra.Core α where
-  sdiff_eq : ∀ x y : α, x \ y = x⊓yᶜ
-
--- TODO: is there a way to automatically fill in the proofs of sup_inf_sdiff and inf_inf_sdiff given
--- everything in `boolean_algebra.core` and `sdiff_eq`? The following doesn't work:
--- (sup_inf_sdiff := λ a b, by rw [sdiff_eq, ←inf_sup_left, sup_compl_eq_top, inf_top_eq])
-section OfCore
-
-/-- Create a `has_sdiff` instance from a `boolean_algebra.core` instance, defining `x \ y` to
-be `x ⊓ yᶜ`.
-
-For some types, it may be more convenient to create the `boolean_algebra` instance by hand in order
-to have a simpler `sdiff` operation.
-
-See note [reducible non-instances]. -/
-@[reducible]
-def BooleanAlgebra.Core.sdiff [BooleanAlgebra.Core α] : HasSdiff α :=
-  ⟨fun x y => x⊓yᶜ⟩
-
-attribute [local instance] BooleanAlgebra.Core.sdiff
-
-theorem BooleanAlgebra.Core.sdiff_eq [BooleanAlgebra.Core α] (a b : α) : a \ b = a⊓bᶜ :=
-  rfl
-
-/-- Create a `boolean_algebra` instance from a `boolean_algebra.core` instance, defining `x \ y` to
-be `x ⊓ yᶜ`.
-
-For some types, it may be more convenient to create the `boolean_algebra` instance by hand in order
-to have a simpler `sdiff` operation. -/
-def BooleanAlgebra.ofCore (B : BooleanAlgebra.Core α) : BooleanAlgebra α :=
-  { B with sdiff := fun x y => x⊓yᶜ, sdiff_eq := fun _ _ => rfl,
+-- see Note [lower instance priority]
+instance (priority := 100) BooleanAlgebra.toGeneralizedBooleanAlgebra : GeneralizedBooleanAlgebra α :=
+  { ‹BooleanAlgebra α› with
     sup_inf_sdiff := fun a b => by
-      rw [← inf_sup_left, sup_compl_eq_top, inf_top_eq],
+      rw [sdiff_eq, ← inf_sup_left, sup_compl_eq_top, inf_top_eq],
     inf_inf_sdiff := fun a b => by
-      rw [inf_left_right_swap, BooleanAlgebra.Core.sdiff_eq, @inf_assoc _ _ _ _ b, compl_inf_eq_bot, inf_bot_eq,
-        bot_inf_eq]
+      rw [sdiff_eq, ← inf_inf_distrib_left, inf_compl_eq_bot, inf_bot_eq]
       congr }
 
-end OfCore
+instance (priority := 100) BooleanAlgebra.to_is_complemented : IsComplemented α :=
+  ⟨fun x => ⟨xᶜ, is_compl_compl⟩⟩
 
-section BooleanAlgebra
-
-variable [BooleanAlgebra α]
-
---TODO@Yaël: Once we have co-Heyting algebras, we won't need to go through `boolean_algebra.of_core`
+--TODO@Yaël: Once we have co-Heyting algebras, we won't need to use the default value for `sdiff`
 instance : BooleanAlgebra αᵒᵈ :=
-  BooleanAlgebra.ofCore
-    { OrderDual.distribLattice α, OrderDual.boundedOrder α with compl := fun a => toDual (ofDual aᶜ),
-      inf_compl_le_bot := fun _ => sup_compl_eq_top.Ge, top_le_sup_compl := fun _ => inf_compl_eq_bot.Ge }
+  { OrderDual.distribLattice α, OrderDual.boundedOrder α with compl := fun a => toDual (ofDual aᶜ),
+    inf_compl_le_bot := fun _ => sup_compl_eq_top.Ge, top_le_sup_compl := fun _ => inf_compl_eq_bot.Ge }
 
 @[simp]
 theorem of_dual_compl (a : αᵒᵈ) : ofDual (aᶜ) = ofDual aᶜ :=
@@ -1021,9 +985,6 @@ theorem of_dual_compl (a : αᵒᵈ) : ofDual (aᶜ) = ofDual aᶜ :=
 @[simp]
 theorem to_dual_compl (a : α) : toDual (aᶜ) = toDual aᶜ :=
   rfl
-
-theorem sdiff_eq : x \ y = x⊓yᶜ :=
-  BooleanAlgebra.sdiff_eq x y
 
 @[simp]
 theorem sdiff_compl : x \ yᶜ = x⊓y := by
@@ -1048,53 +1009,21 @@ theorem compl_sdiff : (x \ y)ᶜ = xᶜ⊔y := by
 end BooleanAlgebra
 
 instance Prop.booleanAlgebra : BooleanAlgebra Prop :=
-  BooleanAlgebra.ofCore
-    { Prop.distribLattice, Prop.boundedOrder with compl := Not, inf_compl_le_bot := fun p ⟨Hp, Hpc⟩ => Hpc Hp,
-      top_le_sup_compl := fun p H => Classical.em p }
-
-instance Pi.hasSdiff {ι : Type u} {α : ι → Type v} [∀ i, HasSdiff (α i)] : HasSdiff (∀ i, α i) :=
-  ⟨fun x y i => x i \ y i⟩
-
-theorem Pi.sdiff_def {ι : Type u} {α : ι → Type v} [∀ i, HasSdiff (α i)] (x y : ∀ i, α i) :
-    x \ y = fun i => x i \ y i :=
-  rfl
-
-@[simp]
-theorem Pi.sdiff_apply {ι : Type u} {α : ι → Type v} [∀ i, HasSdiff (α i)] (x y : ∀ i, α i) (i : ι) :
-    (x \ y) i = x i \ y i :=
-  rfl
-
-instance Pi.hasCompl {ι : Type u} {α : ι → Type v} [∀ i, HasCompl (α i)] : HasCompl (∀ i, α i) :=
-  ⟨fun x i => x iᶜ⟩
-
-theorem Pi.compl_def {ι : Type u} {α : ι → Type v} [∀ i, HasCompl (α i)] (x : ∀ i, α i) : xᶜ = fun i => x iᶜ :=
-  rfl
-
-instance IsIrrefl.compl (r) [IsIrrefl α r] : IsRefl α (rᶜ) :=
-  ⟨@irrefl α r _⟩
-
-instance IsRefl.compl (r) [IsRefl α r] : IsIrrefl α (rᶜ) :=
-  ⟨fun a => not_not_intro (refl a)⟩
-
-@[simp]
-theorem Pi.compl_apply {ι : Type u} {α : ι → Type v} [∀ i, HasCompl (α i)] (x : ∀ i, α i) (i : ι) : (xᶜ) i = x iᶜ :=
-  rfl
+  { Prop.hasCompl, Prop.distribLattice, Prop.boundedOrder with inf_compl_le_bot := fun p ⟨Hp, Hpc⟩ => Hpc Hp,
+    top_le_sup_compl := fun p H => Classical.em p }
 
 instance Pi.booleanAlgebra {ι : Type u} {α : ι → Type v} [∀ i, BooleanAlgebra (α i)] : BooleanAlgebra (∀ i, α i) :=
   { Pi.hasSdiff, Pi.hasCompl, Pi.boundedOrder, Pi.distribLattice with sdiff_eq := fun x y => funext fun i => sdiff_eq,
-    sup_inf_sdiff := fun x y => funext fun i => sup_inf_sdiff (x i) (y i),
-    inf_inf_sdiff := fun x y => funext fun i => inf_inf_sdiff (x i) (y i),
     inf_compl_le_bot := fun _ _ => BooleanAlgebra.inf_compl_le_bot _,
     top_le_sup_compl := fun _ _ => BooleanAlgebra.top_le_sup_compl _ }
 
 instance : BooleanAlgebra Bool :=
-  BooleanAlgebra.ofCore
-    { Bool.linearOrder, Bool.boundedOrder with sup := bor, le_sup_left := Bool.left_le_bor,
-      le_sup_right := Bool.right_le_bor, sup_le := fun _ _ _ => Bool.bor_le, inf := band,
-      inf_le_left := Bool.band_le_left, inf_le_right := Bool.band_le_right, le_inf := fun _ _ _ => Bool.le_band,
-      le_sup_inf := by
-        decide,
-      compl := bnot, inf_compl_le_bot := fun a => a.band_bnot_self.le, top_le_sup_compl := fun a => a.bor_bnot_self.Ge }
+  { Bool.linearOrder, Bool.boundedOrder with sup := bor, le_sup_left := Bool.left_le_bor,
+    le_sup_right := Bool.right_le_bor, sup_le := fun _ _ _ => Bool.bor_le, inf := band,
+    inf_le_left := Bool.band_le_left, inf_le_right := Bool.band_le_right, le_inf := fun _ _ _ => Bool.le_band,
+    le_sup_inf := by
+      decide,
+    compl := bnot, inf_compl_le_bot := fun a => a.band_bnot_self.le, top_le_sup_compl := fun a => a.bor_bnot_self.Ge }
 
 @[simp]
 theorem Bool.sup_eq_bor : (·⊔·) = bor :=
@@ -1163,4 +1092,43 @@ protected def Function.Injective.booleanAlgebra [HasSup α] [HasInf α] [HasTop 
             exact (map_compl _).symm }
 
 end lift
+
+namespace PUnit
+
+variable (a b : PUnit.{u + 1})
+
+instance : BooleanAlgebra PUnit := by
+  refine_struct
+      { PUnit.linearOrder with top := star, bot := star, sup := fun _ _ => star, inf := fun _ _ => star,
+        compl := fun _ => star, sdiff := fun _ _ => star } <;>
+    intros <;>
+      first |
+        trivial|
+        exact Subsingleton.elimₓ _ _
+
+@[simp]
+theorem top_eq : (⊤ : PUnit) = star :=
+  rfl
+
+@[simp]
+theorem bot_eq : (⊥ : PUnit) = star :=
+  rfl
+
+@[simp]
+theorem sup_eq : a⊔b = star :=
+  rfl
+
+@[simp]
+theorem inf_eq : a⊓b = star :=
+  rfl
+
+@[simp]
+theorem compl_eq : aᶜ = star :=
+  rfl
+
+@[simp]
+theorem sdiff_eq : a \ b = star :=
+  rfl
+
+end PUnit
 

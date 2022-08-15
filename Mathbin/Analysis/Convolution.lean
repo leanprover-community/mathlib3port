@@ -85,13 +85,12 @@ open Pointwise TopologicalSpace Nnreal
 
 variable {𝕜 G E E' E'' F F' F'' : Type _}
 
-variable [NormedGroup E] [NormedGroup E'] [NormedGroup E''] [NormedGroup F]
+variable [NormedAddCommGroup E] [NormedAddCommGroup E'] [NormedAddCommGroup E''] [NormedAddCommGroup F] {f f' : G → E}
+  {g g' : G → E'} {x x' : G} {y y' : E}
 
-variable {f f' : G → E} {g g' : G → E'} {x x' : G} {y y' : E}
+section NontriviallyNormedField
 
-section NondiscreteNormedField
-
-variable [NondiscreteNormedField 𝕜]
+variable [NontriviallyNormedField 𝕜]
 
 variable [NormedSpace 𝕜 E] [NormedSpace 𝕜 E'] [NormedSpace 𝕜 E''] [NormedSpace 𝕜 F]
 
@@ -568,9 +567,9 @@ theorem HasCompactSupport.continuous_convolution_left_of_integrable (hcf : HasCo
 
 end CommGroupₓ
 
-section NormedGroup
+section NormedAddCommGroup
 
-variable [SemiNormedGroup G]
+variable [SeminormedAddCommGroup G]
 
 /-- Compute `(f ⋆ g) x₀` if the support of the `f` is within `metric.ball 0 R`, and `g` is constant
 on `metric.ball x₀ R`.
@@ -681,7 +680,7 @@ theorem convolution_tendsto_right {ι} {l : Filter ι} {φ : ι → G → ℝ} (
   exact
     (dist_convolution_le (half_pos hε).le hi (hnφ i) (hiφ i) hmg fun x hx => (hgδ hx.out).le).trans_lt (half_lt_self hε)
 
-end NormedGroup
+end NormedAddCommGroup
 
 namespace ContDiffBumpOfInner
 
@@ -730,7 +729,7 @@ theorem convolution_tendsto_right' {ι} {φ : ι → ContDiffBumpOfInner (0 : G)
     (hφ : Tendsto (fun i => (φ i).r) l (𝓝 0)) (hmg : AeStronglyMeasurable g μ) {x₀ : G} (hcg : ContinuousAt g x₀) :
     Tendsto (fun i => ((fun x => (φ i).normed μ x) ⋆[lsmul ℝ ℝ, μ] g : G → E') x₀) l (𝓝 (g x₀)) := by
   refine' convolution_tendsto_right (fun i => (φ i).nonneg_normed) (fun i => (φ i).integral_normed) _ hmg hcg
-  rw [NormedGroup.tendsto_nhds_zero] at hφ
+  rw [NormedAddCommGroup.tendsto_nhds_zero] at hφ
   rw [tendsto_small_sets_iff]
   intro t ht
   rcases metric.mem_nhds_iff.mp ht with ⟨ε, hε, ht⟩
@@ -749,7 +748,7 @@ end ContDiffBumpOfInner
 
 end Measurability
 
-end NondiscreteNormedField
+end NontriviallyNormedField
 
 open convolution
 
@@ -775,9 +774,9 @@ variable (L : E →L[𝕜] E' →L[𝕜] F)
 
 section Assoc
 
-variable [NormedGroup F'] [NormedSpace ℝ F'] [NormedSpace 𝕜 F'] [CompleteSpace F']
+variable [NormedAddCommGroup F'] [NormedSpace ℝ F'] [NormedSpace 𝕜 F'] [CompleteSpace F']
 
-variable [NormedGroup F''] [NormedSpace ℝ F''] [NormedSpace 𝕜 F''] [CompleteSpace F'']
+variable [NormedAddCommGroup F''] [NormedSpace ℝ F''] [NormedSpace 𝕜 F''] [CompleteSpace F'']
 
 variable {k : G → E''}
 
@@ -813,7 +812,7 @@ theorem convolution_assoc (hL : ∀ (x : E) (y : E') (z : E''), L₂ (L x y) z =
 
 end Assoc
 
-variable [NormedGroup G] [BorelSpace G]
+variable [NormedAddCommGroup G] [BorelSpace G]
 
 variable [SecondCountableTopology G] [SigmaCompactSpace G]
 

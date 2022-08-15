@@ -164,9 +164,12 @@ theorem derived_series_add_eq_bot {k l : ℕ} {I J : LieIdeal R L} (hI : derived
   let D := derived_series_of_ideal R L
   change D k I = ⊥ at hI
   change D l J = ⊥ at hJ
-  calc D (k + l) (I + J) ≤ D k I + D l J := derived_series_of_ideal_add_le_add I J k l _ ≤ ⊥ := by
+  calc
+    D (k + l) (I + J) ≤ D k I + D l J := derived_series_of_ideal_add_le_add I J k l
+    _ ≤ ⊥ := by
       rw [hI, hJ]
       simp
+    
 
 theorem derived_series_map_le (k : ℕ) : (derivedSeries R L' k).map f ≤ derivedSeries R L k := by
   induction' k with k ih

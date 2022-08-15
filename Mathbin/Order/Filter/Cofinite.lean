@@ -92,7 +92,7 @@ theorem coprod_cofinite : (cofinite : Filter α).coprod (cofinite : Filter β) =
     simp only [← compl_mem_coprod, ← mem_cofinite, ← compl_compl, ← finite_image_fst_and_snd_iff]
 
 /-- Finite product of finite sets is finite -/
-theorem Coprod_cofinite {α : ι → Type _} [Fintype ι] : (Filter.coprodₓ fun i => (cofinite : Filter (α i))) = cofinite :=
+theorem Coprod_cofinite {α : ι → Type _} [Finite ι] : (Filter.coprodₓ fun i => (cofinite : Filter (α i))) = cofinite :=
   Filter.coext fun s => by
     simp only [← compl_mem_Coprod, ← mem_cofinite, ← compl_compl, ← forall_finite_image_eval_iff]
 

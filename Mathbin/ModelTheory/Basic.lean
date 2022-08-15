@@ -122,7 +122,7 @@ protected def sum (L : Language.{u, v}) (L' : Language.{u', v'}) : Language :=
 variable (L : Language.{u, v})
 
 /-- The type of constants in a given language. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 protected def Constants :=
   L.Functions 0
 
@@ -131,7 +131,7 @@ theorem constants_mk₂ (c f₁ f₂ : Type u) (r₁ r₂ : Type v) : (Language.
   rfl
 
 /-- The type of symbols in a given language. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def Symbols :=
   Sum (Σl, L.Functions l) (Σl, L.Relations l)
 

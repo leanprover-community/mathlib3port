@@ -136,7 +136,7 @@ theorem quot_mk_eq_mk (x : ℕ × K) : (Quot.mk (R K p) x : PerfectClosure K p) 
 variable {K p}
 
 /-- Lift a function `ℕ × K → L` to a function on `perfect_closure K p`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def liftOn {L : Type _} (x : PerfectClosure K p) (f : ℕ × K → L) (hf : ∀ x y, R K p x y → f x = f y) : L :=
   Quot.liftOn x f hf
 
@@ -145,7 +145,7 @@ theorem lift_on_mk {L : Sort _} (f : ℕ × K → L) (hf : ∀ x y, R K p x y �
     (mk K p x).liftOn f hf = f x :=
   rfl
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction_on (x : PerfectClosure K p) {q : PerfectClosure K p → Prop} (h : ∀ x, q (mk K p x)) : q x :=
   Quot.induction_on x h
 

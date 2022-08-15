@@ -99,7 +99,7 @@ def normalOfIsPullbackSndOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h :
   w := by
     rw [← reassoc_of comm, hn.w, has_zero_morphisms.comp_zero]
   IsLimit := by
-    let gr := regular_of_is_pullback_snd_of_regular comm t
+    letI gr := regular_of_is_pullback_snd_of_regular comm t
     have q := (has_zero_morphisms.comp_zero k hn.Z).symm
     convert gr.is_limit
     dunfold kernel_fork.of_ι fork.of_ι
@@ -135,7 +135,7 @@ def normalMonoOfMono [NormalMonoCategory C] (f : X ⟶ Y) [Mono f] : NormalMono 
 
 instance (priority := 100) regularMonoCategoryOfNormalMonoCategory [NormalMonoCategory C] :
     RegularMonoCategory C where regularMonoOfMono := fun _ _ f _ => by
-    have := normal_mono_of_mono f
+    haveI := normal_mono_of_mono f
     infer_instance
 
 end
@@ -203,7 +203,7 @@ def normalOfIsPushoutSndOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : 
   w := by
     rw [category.assoc, comm, reassoc_of gn.w, zero_comp]
   IsColimit := by
-    let hn := regular_of_is_pushout_snd_of_regular comm t
+    letI hn := regular_of_is_pushout_snd_of_regular comm t
     have q := (@zero_comp _ _ _ gn.W _ _ f).symm
     convert hn.is_colimit
     dunfold cokernel_cofork.of_π cofork.of_π
@@ -277,7 +277,7 @@ def normalEpiOfEpi [NormalEpiCategory C] (f : X ⟶ Y) [Epi f] : NormalEpi f :=
 
 instance (priority := 100) regularEpiCategoryOfNormalEpiCategory [NormalEpiCategory C] :
     RegularEpiCategory C where regularEpiOfEpi := fun _ _ f _ => by
-    have := normal_epi_of_epi f
+    haveI := normal_epi_of_epi f
     infer_instance
 
 end CategoryTheory

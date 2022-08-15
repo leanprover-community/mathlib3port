@@ -83,6 +83,12 @@ instance (priority := 100) NoMinOrder.to_no_bot_order (α : Type _) [Preorderₓ
 instance (priority := 100) NoMaxOrder.to_no_top_order (α : Type _) [Preorderₓ α] [NoMaxOrder α] : NoTopOrder α :=
   ⟨fun a => (exists_gt a).imp fun _ => not_le_of_lt⟩
 
+theorem NoMinOrder.not_acc [LT α] [NoMinOrder α] (a : α) : ¬Acc (· < ·) a := fun h =>
+  (Acc.recOnₓ h) fun x _ => (exists_lt x).recOn
+
+theorem NoMaxOrder.not_acc [LT α] [NoMaxOrder α] (a : α) : ¬Acc (· > ·) a := fun h =>
+  (Acc.recOnₓ h) fun x _ => (exists_gt x).recOn
+
 section LE
 
 variable [LE α] {a b : α}

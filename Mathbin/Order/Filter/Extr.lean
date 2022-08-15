@@ -526,7 +526,7 @@ section ConditionallyCompleteLinearOrder
 variable [ConditionallyCompleteLinearOrder α] {f : β → α} {s : Set β} {x₀ : β}
 
 theorem IsMaxOn.supr_eq (hx₀ : x₀ ∈ s) (h : IsMaxOn f s x₀) : (⨆ x : s, f x) = f x₀ := by
-  have : Nonempty s := ⟨⟨x₀, hx₀⟩⟩
+  haveI : Nonempty s := ⟨⟨x₀, hx₀⟩⟩
   exact csupr_eq_of_forall_le_of_forall_lt_exists_gt (fun x => h x.Prop) fun w hw => ⟨⟨x₀, hx₀⟩, hw⟩
 
 theorem IsMinOn.infi_eq (hx₀ : x₀ ∈ s) (h : IsMinOn f s x₀) : (⨅ x : s, f x) = f x₀ :=

@@ -35,6 +35,6 @@ theorem inv_of_lt_zero [Invertible a] : ⅟ a < 0 ↔ a < 0 := by
 
 @[simp]
 theorem inv_of_le_one [Invertible a] (h : 1 ≤ a) : ⅟ a ≤ 1 :=
-  have := @LinearOrderₓ.decidableLe α _
+  haveI := @LinearOrderₓ.decidableLe α _
   mul_inv_of_self a ▸ Decidable.le_mul_of_one_le_left (inv_of_nonneg.2 <| zero_le_one.trans h) h
 

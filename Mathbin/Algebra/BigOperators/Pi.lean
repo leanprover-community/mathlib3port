@@ -49,7 +49,7 @@ theorem Fintype.prod_apply {α : Type _} {β : α → Type _} {γ : Type _} [Fin
 @[to_additive prod_mk_sum]
 theorem prod_mk_prod {α β γ : Type _} [CommMonoidₓ α] [CommMonoidₓ β] (s : Finset γ) (f : γ → α) (g : γ → β) :
     (∏ x in s, f x, ∏ x in s, g x) = ∏ x in s, (f x, g x) :=
-  have := Classical.decEq γ
+  haveI := Classical.decEq γ
   Finset.induction_on s rfl
     (by
       simp (config := { contextual := true })[← Prod.ext_iff])

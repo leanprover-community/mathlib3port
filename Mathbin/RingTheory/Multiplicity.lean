@@ -6,7 +6,6 @@ Authors: Robert Y. Lewis, Chris Hughes
 import Mathbin.Algebra.Associated
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.RingTheory.Valuation.Basic
-import Mathbin.Data.Nat.Factorization.Basic
 
 /-!
 # Multiplicity of a divisor
@@ -600,27 +599,6 @@ theorem multiplicity_eq_zero_of_coprime {p a b : ℕ} (hp : p ≠ 1) (hle : mult
   have := Nat.dvd_gcdₓ h (hle _ h)
   rw [coprime.gcd_eq_one hab, Nat.dvd_one, pow_oneₓ] at this
   exact hp this
-
-theorem multiplicity_eq_factorization {n p : ℕ} (pp : p.Prime) (hn : n ≠ 0) : multiplicity p n = n.factorization p :=
-  multiplicity.eq_coe_iff.mpr ⟨pow_factorization_dvd n p, pow_succ_factorization_not_dvd hn pp⟩
-
-@[to_additive sum_factors_gcd_add_sum_factors_mul]
-theorem prod_factors_gcd_mul_prod_factors_mul {β : Type _} [CommMonoidₓ β] (m n : ℕ) (f : ℕ → β) :
-    (m.gcd n).factors.toFinset.Prod f * (m * n).factors.toFinset.Prod f =
-      m.factors.toFinset.Prod f * n.factors.toFinset.Prod f :=
-  by
-  rcases eq_or_ne n 0 with (rfl | hm0)
-  · simp
-    
-  rcases eq_or_ne m 0 with (rfl | hn0)
-  · simp
-    
-  rw [← @Finset.prod_union_inter _ _ m.factors.to_finset n.factors.to_finset, mul_comm]
-  congr
-  · apply factors_mul_to_finset <;> assumption
-    
-  · simp only [support_factorization, ← factorization_gcd hn0 hm0, ← Finsupp.support_inf]
-    
 
 end Nat
 

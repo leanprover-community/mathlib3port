@@ -88,6 +88,37 @@ theorem prod_univ_one [CommMonoidₓ β] (f : Finₓ 1 → β) : (∏ i, f i) = 
 theorem prod_univ_two [CommMonoidₓ β] (f : Finₓ 2 → β) : (∏ i, f i) = f 0 * f 1 := by
   simp [← prod_univ_succ]
 
+@[to_additive]
+theorem prod_univ_three [CommMonoidₓ β] (f : Finₓ 3 → β) : (∏ i, f i) = f 0 * f 1 * f 2 := by
+  rw [prod_univ_cast_succ, prod_univ_two]
+  rfl
+
+@[to_additive]
+theorem prod_univ_four [CommMonoidₓ β] (f : Finₓ 4 → β) : (∏ i, f i) = f 0 * f 1 * f 2 * f 3 := by
+  rw [prod_univ_cast_succ, prod_univ_three]
+  rfl
+
+@[to_additive]
+theorem prod_univ_five [CommMonoidₓ β] (f : Finₓ 5 → β) : (∏ i, f i) = f 0 * f 1 * f 2 * f 3 * f 4 := by
+  rw [prod_univ_cast_succ, prod_univ_four]
+  rfl
+
+@[to_additive]
+theorem prod_univ_six [CommMonoidₓ β] (f : Finₓ 6 → β) : (∏ i, f i) = f 0 * f 1 * f 2 * f 3 * f 4 * f 5 := by
+  rw [prod_univ_cast_succ, prod_univ_five]
+  rfl
+
+@[to_additive]
+theorem prod_univ_seven [CommMonoidₓ β] (f : Finₓ 7 → β) : (∏ i, f i) = f 0 * f 1 * f 2 * f 3 * f 4 * f 5 * f 6 := by
+  rw [prod_univ_cast_succ, prod_univ_six]
+  rfl
+
+@[to_additive]
+theorem prod_univ_eight [CommMonoidₓ β] (f : Finₓ 8 → β) : (∏ i, f i) = f 0 * f 1 * f 2 * f 3 * f 4 * f 5 * f 6 * f 7 :=
+  by
+  rw [prod_univ_cast_succ, prod_univ_seven]
+  rfl
+
 theorem sum_pow_mul_eq_add_pow {n : ℕ} {R : Type _} [CommSemiringₓ R] (a b : R) :
     (∑ s : Finset (Finₓ n), a ^ s.card * b ^ (n - s.card)) = (a + b) ^ n := by
   simpa using Fintype.sum_pow_mul_eq_add_pow (Finₓ n) a b
@@ -155,6 +186,32 @@ theorem partial_prod_succ (f : Finₓ n → α) (j : Finₓ n) : partialProd f j
 theorem partial_prod_succ' (f : Finₓ (n + 1) → α) (j : Finₓ (n + 1)) :
     partialProd f j.succ = f 0 * partialProd (Finₓ.tail f) j := by
   simpa [← partial_prod]
+
+@[to_additive]
+theorem partial_prod_left_inv {G : Type _} [Groupₓ G] (f : Finₓ (n + 1) → G) :
+    (f 0 • partialProd fun i : Finₓ n => (f i)⁻¹ * f i.succ) = f :=
+  funext fun x =>
+    Finₓ.inductionOn x
+      (by
+        simp )
+      fun x hx => by
+      simp only [← coe_eq_cast_succ, ← Pi.smul_apply, ← smul_eq_mul] at hx⊢
+      rw [partial_prod_succ, ← mul_assoc, hx, mul_inv_cancel_left]
+
+@[to_additive]
+theorem partial_prod_right_inv {G : Type _} [Groupₓ G] (g : G) (f : Finₓ n → G) (i : Finₓ n) :
+    ((g • partialProd f) i)⁻¹ * (g • partialProd f) i.succ = f i := by
+  cases' i with i hn
+  induction' i with i hi generalizing hn
+  · simp [Finₓ.succ_mk, ← partial_prod_succ]
+    
+  · specialize hi (lt_transₓ (Nat.lt_succ_selfₓ i) hn)
+    simp only [← mul_inv_rev, ← Finₓ.coe_eq_cast_succ, ← Finₓ.succ_mk, ← Finₓ.cast_succ_mk, ← smul_eq_mul, ←
+      Pi.smul_apply] at hi⊢
+    rw [← Finₓ.succ_mk _ _ (lt_transₓ (Nat.lt_succ_selfₓ _) hn), ← Finₓ.succ_mk]
+    simp only [← partial_prod_succ, ← mul_inv_rev, ← Finₓ.cast_succ_mk]
+    assoc_rw [hi, inv_mul_cancel_leftₓ]
+    
 
 end PartialProd
 

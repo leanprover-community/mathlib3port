@@ -56,7 +56,7 @@ noncomputable def coproduct : LocallyRingedSpace where
   toSheafedSpace := colimit (F ⋙ forget_to_SheafedSpace : _)
   LocalRing := fun x => by
     obtain ⟨i, y, ⟨⟩⟩ := SheafedSpace.colimit_exists_rep (F ⋙ forget_to_SheafedSpace) x
-    have : _root_.local_ring (((F ⋙ forget_to_SheafedSpace).obj i).toPresheafedSpace.stalk y) := (F.obj i).LocalRing _
+    haveI : _root_.local_ring (((F ⋙ forget_to_SheafedSpace).obj i).toPresheafedSpace.stalk y) := (F.obj i).LocalRing _
     exact
       (as_iso
               (PresheafedSpace.stalk_map (colimit.ι (F ⋙ forget_to_SheafedSpace) i : _)
@@ -83,7 +83,7 @@ noncomputable def coproductCofanIsColimit : IsColimit (coproductCofan F) where
           (colimit.desc (F ⋙ forget_to_SheafedSpace) (forget_to_SheafedSpace.map_cocone s)) y
       rw [← is_iso.comp_inv_eq] at this
       erw [← this, PresheafedSpace.stalk_map.congr_hom _ _ (colimit.ι_desc (forget_to_SheafedSpace.map_cocone s) i : _)]
-      have : IsLocalRingHom (PresheafedSpace.stalk_map ((forget_to_SheafedSpace.map_cocone s).ι.app i) y) :=
+      haveI : IsLocalRingHom (PresheafedSpace.stalk_map ((forget_to_SheafedSpace.map_cocone s).ι.app i) y) :=
         (s.ι.app i).2 y
       infer_instance⟩
   fac' := fun s j => Subtype.eq (colimit.ι_desc _ _)
@@ -274,7 +274,7 @@ noncomputable instance preservesCoequalizer : PreservesColimitsOfShape WalkingPa
 end HasCoequalizer
 
 instance : HasColimits LocallyRingedSpace :=
-  colimits_from_coequalizers_and_coproducts
+  has_colimits_of_has_coequalizers_and_coproducts
 
 noncomputable instance : PreservesColimits LocallyRingedSpace.forgetToSheafedSpace :=
   preservesColimitsOfPreservesCoequalizersAndCoproducts _

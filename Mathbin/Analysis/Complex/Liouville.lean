@@ -27,7 +27,7 @@ open TopologicalSpace Filter Nnreal Real
 
 universe u v
 
-variable {E : Type u} [NormedGroup E] [NormedSpace ℂ E] {F : Type v} [NormedGroup F] [NormedSpace ℂ F]
+variable {E : Type u} [NormedAddCommGroup E] [NormedSpace ℂ E] {F : Type v} [NormedAddCommGroup F] [NormedSpace ℂ F]
 
 -- mathport name: «expr ̂»
 local postfix:100 "̂" => UniformSpace.Completion
@@ -52,10 +52,13 @@ theorem norm_deriv_le_aux [CompleteSpace F] {c : ℂ} {R C : ℝ} {f : ℂ → F
   have : ∀, ∀ z ∈ sphere c R, ∀, ∥(z - c) ^ (-2 : ℤ) • f z∥ ≤ C / (R * R) := fun z (hz : abs (z - c) = R) => by
     simpa [-mul_inv_rev, ← norm_smul, ← hz, ← zpow_two, div_eq_inv_mul] using
       (div_le_div_right (mul_pos hR hR)).2 (hC z hz)
-  calc ∥deriv f c∥ = ∥(2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - c) ^ (-2 : ℤ) • f z∥ :=
-      congr_arg norm (deriv_eq_smul_circle_integral hR hf)_ ≤ R * (C / (R * R)) :=
-      circleIntegral.norm_two_pi_I_inv_smul_integral_le_of_norm_le_const hR.le this _ = C / R := by
+  calc
+    ∥deriv f c∥ = ∥(2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - c) ^ (-2 : ℤ) • f z∥ :=
+      congr_arg norm (deriv_eq_smul_circle_integral hR hf)
+    _ ≤ R * (C / (R * R)) := circleIntegral.norm_two_pi_I_inv_smul_integral_le_of_norm_le_const hR.le this
+    _ = C / R := by
       rw [mul_div_left_comm, div_self_mul_self', div_eq_mul_inv]
+    
 
 /-- If `f` is complex differentiable on an open disc of radius `R > 0`, is continuous on its
 closure, and its values on the boundary circle of this disc are bounded from above by `C`, then the
@@ -65,11 +68,14 @@ theorem norm_deriv_le_of_forall_mem_sphere_norm_le {c : ℂ} {R C : ℝ} {f : �
   set e : F →L[ℂ] F̂ := UniformSpace.Completion.toComplL
   have : HasDerivAt (e ∘ f) (e (deriv f c)) c :=
     e.has_fderiv_at.comp_has_deriv_at c (hd.differentiable_at is_open_ball <| mem_ball_self hR).HasDerivAt
-  calc ∥deriv f c∥ = ∥deriv (e ∘ f) c∥ := by
+  calc
+    ∥deriv f c∥ = ∥deriv (e ∘ f) c∥ := by
       rw [this.deriv]
-      exact (UniformSpace.Completion.norm_coe _).symm _ ≤ C / R :=
+      exact (UniformSpace.Completion.norm_coe _).symm
+    _ ≤ C / R :=
       norm_deriv_le_aux hR (e.differentiable.comp_diff_cont_on_cl hd) fun z hz =>
         (UniformSpace.Completion.norm_coe _).trans_le (hC z hz)
+    
 
 /-- An auxiliary lemma for Liouville's theorem `differentiable.apply_eq_apply_of_bounded`. -/
 theorem liouville_theorem_aux {f : ℂ → F} (hf : Differentiable ℂ f) (hb : Bounded (Range f)) (z w : ℂ) : f z = f w := by
@@ -81,9 +87,11 @@ theorem liouville_theorem_aux {f : ℂ → F} (hf : Differentiable ℂ f) (hb : 
     rcases bounded_iff_forall_norm_le.1 hb with ⟨C, hC⟩
     exact ⟨max C 1, lt_max_iff.2 (Or.inr zero_lt_one), fun z => (hC (f z) (mem_range_self _)).trans (le_max_leftₓ _ _)⟩
   refine' norm_le_zero_iff.1 (le_of_forall_le_of_dense fun ε ε₀ => _)
-  calc ∥deriv f c∥ ≤ C / (C / ε) :=
-      norm_deriv_le_of_forall_mem_sphere_norm_le (div_pos C₀ ε₀) hf.diff_cont_on_cl fun z _ => hC z _ = ε :=
-      div_div_cancel' C₀.lt.ne'
+  calc
+    ∥deriv f c∥ ≤ C / (C / ε) :=
+      norm_deriv_le_of_forall_mem_sphere_norm_le (div_pos C₀ ε₀) hf.diff_cont_on_cl fun z _ => hC z
+    _ = ε := div_div_cancel' C₀.lt.ne'
+    
 
 end Complex
 

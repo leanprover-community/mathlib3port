@@ -168,12 +168,10 @@ variable [Ringₓ S] [Ringₓ T]
   same 0 and 1 as R. -/
 structure Subring (R : Type u) [Ringₓ R] extends Subsemiring R, AddSubgroup R
 
-/-- Reinterpret a `subring` as a `subsemiring`. -/
-add_decl_doc Subring.toSubsemiring
-
-/-- Reinterpret a `subring` as an `add_subgroup`. -/
-add_decl_doc Subring.toAddSubgroup
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident subring.to_subsemiring]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident subring.to_add_subgroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace Subring
 
 /-- The underlying submonoid of a subring. -/
@@ -738,14 +736,14 @@ theorem closure_eq_of_le {s : Set R} {t : Subring R} (h₁ : s ⊆ t) (h₂ : t 
 /-- An induction principle for closure membership. If `p` holds for `0`, `1`, and all elements
 of `s`, and is preserved under addition, negation, and multiplication, then `p` holds for all
 elements of the closure of `s`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem closure_induction {s : Set R} {p : R → Prop} {x} (h : x ∈ closure s) (Hs : ∀, ∀ x ∈ s, ∀, p x) (H0 : p 0)
     (H1 : p 1) (Hadd : ∀ x y, p x → p y → p (x + y)) (Hneg : ∀ x : R, p x → p (-x))
     (Hmul : ∀ x y, p x → p y → p (x * y)) : p x :=
   (@closure_le _ _ _ ⟨p, Hmul, H1, Hadd, H0, Hneg⟩).2 Hs h
 
 /-- An induction principle for closure membership, for predicates with two arguments. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem closure_induction₂ {s : Set R} {p : R → R → Prop} {a b : R} (ha : a ∈ closure s) (hb : b ∈ closure s)
     (Hs : ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀, p x y) (H0_left : ∀ x, p 0 x) (H0_right : ∀ x, p x 0) (H1_left : ∀ x, p 1 x)
     (H1_right : ∀ x, p x 1) (Hneg_left : ∀ x y, p x y → p (-x) y) (Hneg_right : ∀ x y, p x y → p x (-y))
@@ -903,10 +901,10 @@ theorem comap_top (f : R →+* S) : (⊤ : Subring S).comap f = ⊤ :=
 /-- Given `subring`s `s`, `t` of rings `R`, `S` respectively, `s.prod t` is `s ×̂ t`
 as a subring of `R × S`. -/
 def prod (s : Subring R) (t : Subring S) : Subring (R × S) :=
-  { s.toSubmonoid.Prod t.toSubmonoid, s.toAddSubgroup.Prod t.toAddSubgroup with Carrier := (s : Set R) ×ˢ (t : Set S) }
+  { s.toSubmonoid.Prod t.toSubmonoid, s.toAddSubgroup.Prod t.toAddSubgroup with Carrier := s ×ˢ t }
 
 @[norm_cast]
-theorem coe_prod (s : Subring R) (t : Subring S) : (s.Prod t : Set (R × S)) = (s : Set R) ×ˢ (t : Set S) :=
+theorem coe_prod (s : Subring R) (t : Subring S) : (s.Prod t : Set (R × S)) = s ×ˢ t :=
   rfl
 
 theorem mem_prod {s : Subring R} {t : Subring S} {p : R × S} : p ∈ s.Prod t ↔ p.1 ∈ s ∧ p.2 ∈ t :=
@@ -959,7 +957,7 @@ theorem coe_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subring R} (hS
 
 theorem mem_Sup_of_directed_on {S : Set (Subring R)} (Sne : S.Nonempty) (hS : DirectedOn (· ≤ ·) S) {x : R} :
     x ∈ sup S ↔ ∃ s ∈ S, x ∈ s := by
-  have : Nonempty S := Sne.to_subtype
+  haveI : Nonempty S := Sne.to_subtype
   simp only [← Sup_eq_supr', ← mem_supr_of_directed hS.directed_coe, ← SetCoe.exists, ← Subtype.coe_mk]
 
 theorem coe_Sup_of_directed_on {S : Set (Subring R)} (Sne : S.Nonempty) (hS : DirectedOn (· ≤ ·) S) :
@@ -1109,7 +1107,7 @@ variable {s : Set R}
 
 attribute [local reducible] closure
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ closure s) (h1 : C 1) (hneg1 : C (-1))
     (hs : ∀, ∀ z ∈ s, ∀, ∀ n, C n → C (z * n)) (ha : ∀ {x y}, C x → C y → C (x + y)) : C x := by
   have h0 : C 0 := add_neg_selfₓ (1 : R) ▸ ha h1 hneg1

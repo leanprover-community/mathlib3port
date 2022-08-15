@@ -50,7 +50,7 @@ theorem compact_space_uniformity [CompactSpace α] [SeparatedSpace α] : 𝓤 α
   obtain ⟨V, hV, h⟩ : ∃ V : Set (α × α), (∀ x : α, V ∈ 𝓝 (x, x)) ∧ 𝓤 α⊓𝓟 (Vᶜ) ≠ ⊥ := by
     simpa [← le_iff_forall_inf_principal_compl] using H
   let F := 𝓤 α⊓𝓟 (Vᶜ)
-  have : ne_bot F := ⟨h⟩
+  haveI : ne_bot F := ⟨h⟩
   obtain ⟨⟨x, y⟩, hx⟩ : ∃ p : α × α, ClusterPt p F := cluster_point_of_compact F
   have : ClusterPt (x, y) (𝓤 α) := hx.of_inf_left
   obtain rfl : x = y := eq_of_uniformity_inf_nhds this
@@ -78,7 +78,7 @@ theorem unique_uniformity_of_compact_t2 [t : TopologicalSpace γ] [CompactSpace 
     rwa [separated_iff_t2, h']
   rw [compact_space_uniformity, compact_space_uniformity, h, h']
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y «expr ≠ » x)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y «expr ≠ » x)
 /-- The unique uniform structure inducing a given compact Hausdorff topological structure. -/
 def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ] : UniformSpace γ where
   uniformity := ⨆ x, 𝓝 (x, x)
@@ -104,7 +104,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     rw [le_iff_forall_inf_principal_compl]
     intro V V_in
     by_contra H
-    have : ne_bot (F⊓𝓟 (Vᶜ)) := ⟨H⟩
+    haveI : ne_bot (F⊓𝓟 (Vᶜ)) := ⟨H⟩
     -- Hence compactness would give us a cluster point (x, y) for F ⊓ 𝓟 Vᶜ
     obtain ⟨⟨x, y⟩, hxy⟩ : ∃ p : γ × γ, ClusterPt p (F⊓𝓟 (Vᶜ)) := cluster_point_of_compact _
     -- In particular (x, y) is a cluster point of 𝓟 Vᶜ, hence is not in the interior of V,
@@ -124,7 +124,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
       apply diag_subset
       simp [← h]
     -- Since γ is compact and Hausdorff, it is normal, hence T₃.
-    have : NormalSpace γ := normal_of_compact_t2
+    haveI : NormalSpace γ := normal_of_compact_t2
     -- So there are closed neighboords V₁ and V₂ of x and y contained in disjoint open neighborhoods
     -- U₁ and U₂.
     obtain ⟨U₁, U₁_in, V₁, V₁_in, U₂, U₂_in₂, V₂, V₂_in, V₁_cl, V₂_cl, U₁_op, U₂_op, VU₁, VU₂, hU₁₂⟩ :=
@@ -231,10 +231,10 @@ theorem IsCompact.uniform_continuous_on_of_continuous [SeparatedSpace α] {s : S
 `β` is compact and separated and `f` is continuous on `U × (univ : set β)` for some separated
 neighborhood `U` of `x`. -/
 theorem ContinuousOn.tendsto_uniformly [LocallyCompactSpace α] [CompactSpace β] [SeparatedSpace β] [UniformSpace γ]
-    {f : α → β → γ} {x : α} {U : Set α} (hxU : U ∈ 𝓝 x) (hU : IsSeparated U)
-    (h : ContinuousOn (↿f) (U ×ˢ (Univ : Set β))) : TendstoUniformly f (f x) (𝓝 x) := by
+    {f : α → β → γ} {x : α} {U : Set α} (hxU : U ∈ 𝓝 x) (hU : IsSeparated U) (h : ContinuousOn (↿f) (U ×ˢ univ)) :
+    TendstoUniformly f (f x) (𝓝 x) := by
   rcases LocallyCompactSpace.local_compact_nhds _ _ hxU with ⟨K, hxK, hKU, hK⟩
-  have : UniformContinuousOn (↿f) (K ×ˢ (univ : Set β)) := by
+  have : UniformContinuousOn (↿f) (K ×ˢ univ) := by
     refine' IsCompact.uniform_continuous_on_of_continuous' (hK.prod compact_univ) _ (h.mono <| prod_mono hKU subset.rfl)
     exact (hU.mono hKU).Prod (is_separated_of_separated_space _)
   exact this.tendsto_uniformly hxK

@@ -227,7 +227,7 @@ theorem symmetric (h : Symmetric r) : Symmetric (ReflTransGen r) := by
 theorem cases_tail : ReflTransGen r a b → b = a ∨ ∃ c, ReflTransGen r a c ∧ r c b :=
   (cases_tail_iff r a b).1
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem head_induction_on {P : ∀ a : α, ReflTransGen r a b → Prop} {a : α} (h : ReflTransGen r a b) (refl : P b refl)
     (head : ∀ {a c} (h' : r a c) (h : ReflTransGen r c b), P c h → P a (h.head h')) : P a h := by
   induction h generalizing P
@@ -240,7 +240,7 @@ theorem head_induction_on {P : ∀ a : α, ReflTransGen r a b → Prop} {a : α}
     show ∀ a a', r a a' → refl_trans_gen r a' b → P a' _ → P a _
     exact fun a a' hab hbc => head hab _
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem trans_induction_on {P : ∀ {a b : α}, ReflTransGen r a b → Prop} {a b : α} (h : ReflTransGen r a b)
     (ih₁ : ∀ a, @P a a refl) (ih₂ : ∀ {a b} (h : r a b), P (single h))
     (ih₃ : ∀ {a b c} (h₁ : ReflTransGen r a b) (h₂ : ReflTransGen r b c), P h₁ → P h₂ → P (h₁.trans h₂)) : P h := by
@@ -319,7 +319,7 @@ theorem tail' (hab : ReflTransGen r a b) (hbc : r b c) : TransGen r a c := by
 theorem head (hab : r a b) (hbc : TransGen r b c) : TransGen r a c :=
   head' hab hbc.to_refl
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem head_induction_on {P : ∀ a : α, TransGen r a b → Prop} {a : α} (h : TransGen r a b)
     (base : ∀ {a} (h : r a b), P a (single h))
     (ih : ∀ {a c} (h' : r a c) (h : TransGen r c b), P c h → P a (h.head h')) : P a h := by
@@ -333,7 +333,7 @@ theorem head_induction_on {P : ∀ a : α, TransGen r a b → Prop} {a : α} (h 
     show ∀ a a', r a a' → trans_gen r a' b → P a' _ → P a _
     exact fun a a' hab hbc => ih hab _
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem trans_induction_on {P : ∀ {a b : α}, TransGen r a b → Prop} {a b : α} (h : TransGen r a b)
     (base : ∀ {a b} (h : r a b), P (single h))
     (ih : ∀ {a b c} (h₁ : TransGen r a b) (h₂ : TransGen r b c), P h₁ → P h₂ → P (h₁.trans h₂)) : P h := by

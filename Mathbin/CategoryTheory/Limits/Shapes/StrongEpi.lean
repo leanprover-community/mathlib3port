@@ -3,16 +3,16 @@ Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
-import Mathbin.CategoryTheory.Arrow
 import Mathbin.CategoryTheory.Balanced
+import Mathbin.CategoryTheory.LiftingProperties.Basic
 
 /-!
 # Strong epimorphisms
 
-In this file, we define strong epimorphisms. A strong epimorphism is an epimorphism `f`, such
-that for every commutative square with `f` at the top and a monomorphism at the bottom, there is
-a diagonal morphism making the two triangles commute. This lift is necessarily unique (as shown in
-`comma.lean`).
+In this file, we define strong epimorphisms. A strong epimorphism is an epimorphism `f`
+which has the (unique) left lifting property with respect to monomorphisms. Similarly,
+a strong monomorphisms in a monomorphism which has the (unique) right lifting property
+with respect to epimorphisms.
 
 ## Main results
 
@@ -42,23 +42,31 @@ variable {C : Type u} [Category.{v} C]
 
 variable {P Q : C}
 
-/-- A strong epimorphism `f` is an epimorphism such that every commutative square with `f` at the
-    top and a monomorphism at the bottom has a lift. -/
+/-- A strong epimorphism `f` is an epimorphism which has the left lifting property
+with respect to monomorphisms. -/
 class StrongEpi (f : P ⟶ Q) : Prop where
   Epi : Epi f
-  HasLift :
-    ∀ {X Y : C} {u : P ⟶ X} {v : Q ⟶ Y} {z : X ⟶ Y} [Mono z] (h : u ≫ z = f ≫ v), arrow.has_lift <| Arrow.homMk' h
+  llp : ∀ ⦃X Y : C⦄ (z : X ⟶ Y) [Mono z], HasLiftingProperty f z
 
-/-- A strong monomorphism `f` is a monomorphism such that every commutative square with `f` at the
-    bottom and an epimorphism at the top has a lift. -/
+theorem StrongEpi.mk' {f : P ⟶ Q} [Epi f]
+    (hf : ∀ (X Y : C) (z : X ⟶ Y) (hz : Mono z) (u : P ⟶ X) (v : Q ⟶ Y) (sq : CommSq u f z v), sq.HasLift) :
+    StrongEpi f :=
+  { Epi := inferInstance, llp := fun X Y z hz => ⟨fun u v sq => hf X Y z hz u v sq⟩ }
+
+/-- A strong monomorphism `f` is a monomorphism which has the right lifting property
+with respect to epimorphisms. -/
 class StrongMono (f : P ⟶ Q) : Prop where
   mono : Mono f
-  HasLift :
-    ∀ {X Y : C} {u : X ⟶ P} {v : Y ⟶ Q} {z : X ⟶ Y} [Epi z] (h : u ≫ f = z ≫ v), arrow.has_lift <| Arrow.homMk' h
+  rlp : ∀ ⦃X Y : C⦄ (z : X ⟶ Y) [Epi z], HasLiftingProperty z f
 
-attribute [instance] strong_epi.has_lift
+theorem StrongMono.mk' {f : P ⟶ Q} [Mono f]
+    (hf : ∀ (X Y : C) (z : X ⟶ Y) (hz : Epi z) (u : X ⟶ P) (v : Y ⟶ Q) (sq : CommSq u z f v), sq.HasLift) :
+    StrongMono f :=
+  { mono := inferInstance, rlp := fun X Y z hz => ⟨fun u v sq => hf X Y z hz u v sq⟩ }
 
-attribute [instance] strong_mono.has_lift
+attribute [instance] strong_epi.llp
+
+attribute [instance] strong_mono.rlp
 
 instance (priority := 100) epi_of_strong_epi (f : P ⟶ Q) [StrongEpi f] : Epi f :=
   strong_epi.epi
@@ -73,103 +81,74 @@ variable {R : C} (f : P ⟶ Q) (g : Q ⟶ R)
 /-- The composition of two strong epimorphisms is a strong epimorphism. -/
 theorem strong_epi_comp [StrongEpi f] [StrongEpi g] : StrongEpi (f ≫ g) :=
   { Epi := epi_comp _ _,
-    HasLift := by
+    llp := by
       intros
-      have h₀ : u ≫ z = f ≫ g ≫ v := by
-        simpa [← category.assoc] using h
-      let w : Q ⟶ X := arrow.lift (arrow.hom_mk' h₀)
-      have h₁ : w ≫ z = g ≫ v := by
-        rw [arrow.lift_mk'_right]
-      exact
-        arrow.has_lift.mk
-          ⟨(arrow.lift (arrow.hom_mk' h₁) : R ⟶ X), by
-            simp , by
-            simp ⟩ }
+      infer_instance }
 
 /-- The composition of two strong monomorphisms is a strong monomorphism. -/
 theorem strong_mono_comp [StrongMono f] [StrongMono g] : StrongMono (f ≫ g) :=
   { mono := mono_comp _ _,
-    HasLift := by
+    rlp := by
       intros
-      have h₀ : (u ≫ f) ≫ g = z ≫ v := by
-        simpa [← category.assoc] using h
-      let w : Y ⟶ Q := arrow.lift (arrow.hom_mk' h₀)
-      have h₁ : u ≫ f = z ≫ w := by
-        rw [arrow.lift_mk'_left]
-      exact
-        arrow.has_lift.mk
-          ⟨(arrow.lift (arrow.hom_mk' h₁) : Y ⟶ P), by
-            simp , by
-            simp ⟩ }
+      infer_instance }
 
 /-- If `f ≫ g` is a strong epimorphism, then so is `g`. -/
 theorem strong_epi_of_strong_epi [StrongEpi (f ≫ g)] : StrongEpi g :=
   { Epi := epi_of_epi f g,
-    HasLift := by
+    llp := by
       intros
+      constructor
+      intro u v sq
       have h₀ : (f ≫ u) ≫ z = (f ≫ g) ≫ v := by
-        simp only [← category.assoc, ← h]
+        simp only [← category.assoc, ← sq.w]
       exact
-        arrow.has_lift.mk
-          ⟨(arrow.lift (arrow.hom_mk' h₀) : R ⟶ X),
-            (cancel_mono z).1
-              (by
-                simp [← h]),
-            by
+        comm_sq.has_lift.mk'
+          ⟨(comm_sq.mk h₀).lift, by
+            simp only [cancel_mono z, ← category.assoc, ← comm_sq.fac_right, ← sq.w], by
             simp ⟩ }
 
 /-- If `f ≫ g` is a strong monomorphism, then so is `f`. -/
 theorem strong_mono_of_strong_mono [StrongMono (f ≫ g)] : StrongMono f :=
   { mono := mono_of_mono f g,
-    HasLift := by
+    rlp := by
       intros
+      constructor
+      intro u v sq
       have h₀ : u ≫ f ≫ g = z ≫ v ≫ g := by
-        rw [reassoc_of h]
+        rw [reassoc_of sq.w]
       exact
-        arrow.has_lift.mk
-          ⟨(arrow.lift (arrow.hom_mk' h₀) : Y ⟶ P), by
-            simp ,
-            (cancel_epi z).1
-              (by
-                simp [← h])⟩ }
+        comm_sq.has_lift.mk'
+          ⟨(comm_sq.mk h₀).lift, by
+            simp , by
+            simp [cancel_epi z, ← sq.w]⟩ }
 
 /-- An isomorphism is in particular a strong epimorphism. -/
 instance (priority := 100) strong_epi_of_is_iso [IsIso f] : StrongEpi f where
   Epi := by
     infer_instance
-  HasLift := fun X Y u v z _ h =>
-    Arrow.HasLift.mk
-      ⟨inv f ≫ u, by
-        simp , by
-        simp [← h]⟩
+  llp := fun X Y z hz => HasLiftingProperty.of_left_iso _ _
 
 /-- An isomorphism is in particular a strong monomorphism. -/
 instance (priority := 100) strong_mono_of_is_iso [IsIso f] : StrongMono f where
   mono := by
     infer_instance
-  HasLift := fun X Y u v z _ h =>
-    Arrow.HasLift.mk
-      ⟨v ≫ inv f, by
-        simp [category.assoc, h], by
-        simp ⟩
+  rlp := fun X Y z hz => HasLiftingProperty.of_right_iso _ _
 
 end
 
 /-- A strong epimorphism that is a monomorphism is an isomorphism. -/
 theorem is_iso_of_mono_of_strong_epi (f : P ⟶ Q) [Mono f] [StrongEpi f] : IsIso f :=
-  ⟨⟨arrow.lift <|
-        arrow.hom_mk' <|
-          show 𝟙 P ≫ f = f ≫ 𝟙 Q by
-            simp ,
+  ⟨⟨(CommSq.mk
+          (show 𝟙 P ≫ f = f ≫ 𝟙 Q by
+            simp )).lift,
       by
       tidy⟩⟩
 
 /-- A strong monomorphism that is an epimorphism is an isomorphism. -/
 theorem is_iso_of_epi_of_strong_mono (f : P ⟶ Q) [Epi f] [StrongMono f] : IsIso f :=
-  ⟨⟨arrow.lift <|
-        arrow.hom_mk' <|
-          show 𝟙 P ≫ f = f ≫ 𝟙 Q by
-            simp ,
+  ⟨⟨(CommSq.mk
+          (show 𝟙 P ≫ f = f ≫ 𝟙 Q by
+            simp )).lift,
       by
       tidy⟩⟩
 

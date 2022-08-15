@@ -356,8 +356,8 @@ theorem inducing_prod_map {W X Y Z : Top} {f : W ⟶ X} {g : Y ⟶ Z} (hf : Indu
 theorem embedding_prod_map {W X Y Z : Top} {f : W ⟶ X} {g : Y ⟶ Z} (hf : Embedding f) (hg : Embedding g) :
     Embedding (Limits.prod.map f g) :=
   ⟨inducing_prod_map hf.to_inducing hg.to_inducing, by
-    have := (Top.mono_iff_injective _).mpr hf.inj
-    have := (Top.mono_iff_injective _).mpr hg.inj
+    haveI := (Top.mono_iff_injective _).mpr hf.inj
+    haveI := (Top.mono_iff_injective _).mpr hg.inj
     exact (Top.mono_iff_injective _).mp inferInstance⟩
 
 end Prod
@@ -958,8 +958,8 @@ corollary to `Top.nonempty_limit_cone_of_compact_t2_inverse_system`. -/
 theorem NonemptySectionsOfFintypeCofilteredSystem.init {J : Type u} [SmallCategory J] [IsCofiltered J] (F : J ⥤ Type u)
     [hf : ∀ j : J, Fintype (F.obj j)] [hne : ∀ j : J, Nonempty (F.obj j)] : F.sections.Nonempty := by
   let F' : J ⥤ Top := F ⋙ Top.discrete
-  have : ∀ j : J, Fintype (F'.obj j) := hf
-  have : ∀ j : J, Nonempty (F'.obj j) := hne
+  haveI : ∀ j : J, Fintype (F'.obj j) := hf
+  haveI : ∀ j : J, Nonempty (F'.obj j) := hne
   obtain ⟨⟨u, hu⟩⟩ := Top.nonempty_limit_cone_of_compact_t2_cofiltered_system F'
   exact ⟨u, fun _ _ f => hu f⟩
 
@@ -972,8 +972,8 @@ theorem nonempty_sections_of_fintype_cofiltered_system {J : Type u} [Category.{w
   let J' : Type max w v u := AsSmall.{max w v} J
   let down : J' ⥤ J := as_small.down
   let F' : J' ⥤ Type max u v w := down ⋙ F ⋙ ulift_functor.{max u w, v}
-  have : ∀ i, Nonempty (F'.obj i) := fun i => ⟨⟨Classical.arbitrary (F.obj (down.obj i))⟩⟩
-  have : ∀ i, Fintype (F'.obj i) := fun i => Fintype.ofEquiv (F.obj (down.obj i)) equiv.ulift.symm
+  haveI : ∀ i, Nonempty (F'.obj i) := fun i => ⟨⟨Classical.arbitrary (F.obj (down.obj i))⟩⟩
+  haveI : ∀ i, Fintype (F'.obj i) := fun i => Fintype.ofEquiv (F.obj (down.obj i)) equiv.ulift.symm
   -- Step 2: apply the bootstrap theorem
   obtain ⟨u, hu⟩ := NonemptySectionsOfFintypeCofilteredSystem.init F'
   -- Step 3: interpret the results
@@ -997,7 +997,7 @@ Elements of `F.sections` can be read off as infinite rays in the graph. -/
 theorem nonempty_sections_of_fintype_inverse_system {J : Type u} [Preorderₓ J] [IsDirected J (· ≤ ·)] (F : Jᵒᵖ ⥤ Type v)
     [∀ j : Jᵒᵖ, Fintype (F.obj j)] [∀ j : Jᵒᵖ, Nonempty (F.obj j)] : F.sections.Nonempty := by
   cases is_empty_or_nonempty J
-  · have : IsEmpty Jᵒᵖ := ⟨fun j => isEmptyElim j.unop⟩
+  · haveI : IsEmpty Jᵒᵖ := ⟨fun j => isEmptyElim j.unop⟩
     -- TODO: this should be a global instance
     exact ⟨isEmptyElim, isEmptyElim⟩
     

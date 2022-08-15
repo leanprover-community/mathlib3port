@@ -17,7 +17,7 @@ open Manifold
 
 section SmoothRing
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedGroup E]
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedAddCommGroup E]
   [NormedSpace 𝕜 E]
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option default_priority
@@ -44,7 +44,7 @@ instance SmoothRing.to_lie_add_group (I : ModelWithCorners 𝕜 E H) (R : Type _
 
 end SmoothRing
 
-instance field_smooth_ring {𝕜 : Type _} [NondiscreteNormedField 𝕜] : SmoothRing 𝓘(𝕜) 𝕜 :=
+instance field_smooth_ring {𝕜 : Type _} [NontriviallyNormedField 𝕜] : SmoothRing 𝓘(𝕜) 𝕜 :=
   { normed_space_lie_add_group with
     smooth_mul := by
       rw [smooth_iff]
@@ -53,7 +53,7 @@ instance field_smooth_ring {𝕜 : Type _} [NondiscreteNormedField 𝕜] : Smoot
       rw [cont_diff_on_univ]
       exact cont_diff_mul }
 
-variable {𝕜 R E H : Type _} [TopologicalSpace R] [TopologicalSpace H] [NondiscreteNormedField 𝕜] [NormedGroup E]
+variable {𝕜 R E H : Type _} [TopologicalSpace R] [TopologicalSpace H] [NontriviallyNormedField 𝕜] [NormedAddCommGroup E]
   [NormedSpace 𝕜 E] [ChartedSpace H R] (I : ModelWithCorners 𝕜 E H)
 
 /-- A smooth (semi)ring is a topological (semi)ring. This is not an instance for technical reasons,

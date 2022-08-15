@@ -136,6 +136,24 @@ end Finite
 
 end Module
 
+instance Module.Finite.base_change [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] [AddCommMonoidₓ M] [Module R M]
+    [h : Module.Finite R M] : Module.Finite A (TensorProduct R A M) := by
+  classical
+  obtain ⟨s, hs⟩ := h.out
+  refine' ⟨⟨s.image (TensorProduct.mk R A M 1), eq_top_iff.mpr fun x _ => _⟩⟩
+  apply TensorProduct.induction_on x
+  · exact zero_mem _
+    
+  · intro x y
+    rw [Finset.coe_image, ← Submodule.span_span_of_tower R, Submodule.span_image, hs, Submodule.map_top,
+      LinearMap.range_coe]
+    change _ ∈ Submodule.span A (Set.Range <| TensorProduct.mk R A M 1)
+    rw [← mul_oneₓ x, ← smul_eq_mul, ← TensorProduct.smul_tmul']
+    exact Submodule.smul_mem _ x (Submodule.subset_span <| Set.mem_range_self y)
+    
+  · exact fun _ _ => Submodule.add_mem _
+    
+
 instance Module.Finite.tensor_product [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] [AddCommMonoidₓ N] [Module R N]
     [hM : Module.Finite R M] [hN : Module.Finite R N] :
     Module.Finite R
@@ -221,7 +239,7 @@ theorem iff_quotient_mv_polynomial' :
       infer_instance, f, hsur
     
   · rintro ⟨ι, ⟨hfintype, ⟨f, hsur⟩⟩⟩
-    let this : Fintype ι := hfintype
+    letI : Fintype ι := hfintype
     exact finite_type.of_surjective (finite_type.mv_polynomial R ι) f hsur
     
 
@@ -409,8 +427,9 @@ namespace RingHom
 variable {A B C : Type _} [CommRingₓ A] [CommRingₓ B] [CommRingₓ C]
 
 /-- A ring morphism `A →+* B` is `finite` if `B` is finitely generated as `A`-module. -/
-def Finite (f : A →+* B) : Prop := by
-  let this : Algebra A B := f.to_algebra <;> exact Module.Finite A B
+def Finite (f : A →+* B) : Prop :=
+  letI : Algebra A B := f.to_algebra
+  Module.Finite A B
 
 /-- A ring morphism `A →+* B` is of `finite_type` if `B` is finitely generated as `A`-algebra. -/
 def FiniteType (f : A →+* B) : Prop :=
@@ -431,7 +450,7 @@ theorem id : Finite (RingHom.id A) :=
 variable {A}
 
 theorem of_surjective (f : A →+* B) (hf : Surjective f) : f.Finite := by
-  let this := f.to_algebra
+  letI := f.to_algebra
   exact Module.Finite.of_surjective (Algebra.ofId A B).toLinearMap hf
 
 theorem comp {g : B →+* C} {f : A →+* B} (hg : g.Finite) (hf : f.Finite) : (g.comp f).Finite :=
@@ -447,11 +466,11 @@ theorem finite_type {f : A →+* B} (hf : f.Finite) : FiniteType f :=
   @Module.Finite.finite_type _ _ _ _ f.toAlgebra hf
 
 theorem of_comp_finite {f : A →+* B} {g : B →+* C} (h : (g.comp f).Finite) : g.Finite := by
-  let this := f.to_algebra
-  let this := g.to_algebra
-  let this := (g.comp f).toAlgebra
-  let this : IsScalarTower A B C := RestrictScalars.is_scalar_tower A B C
-  let this : Module.Finite A C := h
+  letI := f.to_algebra
+  letI := g.to_algebra
+  letI := (g.comp f).toAlgebra
+  letI : IsScalarTower A B C := RestrictScalars.is_scalar_tower A B C
+  letI : Module.Finite A C := h
   exact Module.Finite.of_restrict_scalars_finite A B C
 
 end Finite
@@ -482,15 +501,20 @@ theorem comp {g : B →+* C} {f : A →+* B} (hg : g.FiniteType) (hf : f.FiniteT
       rfl)
     hf hg
 
+theorem of_finite {f : A →+* B} (hf : f.Finite) : f.FiniteType :=
+  @Module.Finite.finite_type _ _ _ _ f.toAlgebra hf
+
+alias of_finite ← _root_.ring_hom.finite.to_finite_type
+
 theorem of_finite_presentation {f : A →+* B} (hf : f.FinitePresentation) : f.FiniteType :=
   @Algebra.FiniteType.of_finite_presentation A B _ _ f.toAlgebra hf
 
 theorem of_comp_finite_type {f : A →+* B} {g : B →+* C} (h : (g.comp f).FiniteType) : g.FiniteType := by
-  let this := f.to_algebra
-  let this := g.to_algebra
-  let this := (g.comp f).toAlgebra
-  let this : IsScalarTower A B C := RestrictScalars.is_scalar_tower A B C
-  let this : Algebra.FiniteType A C := h
+  letI := f.to_algebra
+  letI := g.to_algebra
+  letI := (g.comp f).toAlgebra
+  letI : IsScalarTower A B C := RestrictScalars.is_scalar_tower A B C
+  letI : Algebra.FiniteType A C := h
   exact Algebra.FiniteType.of_restrict_scalars_finite_type A B C
 
 end FiniteType
@@ -681,7 +705,7 @@ image generates, as algera, `add_monoid_algebra R M`. -/
 theorem exists_finset_adjoin_eq_top [h : FiniteType R (AddMonoidAlgebra R M)] :
     ∃ G : Finset M, Algebra.adjoin R (of' R M '' G) = ⊤ := by
   obtain ⟨S, hS⟩ := h
-  let this : DecidableEq M := Classical.decEq M
+  letI : DecidableEq M := Classical.decEq M
   use Finset.bUnion S fun f => f.support
   have : (Finset.bUnion S fun f => f.support : Set M) = ⋃ f ∈ S, (f.support : Set M) := by
     simp only [← Finset.set_bUnion_coe, ← Finset.coe_bUnion]
@@ -825,7 +849,7 @@ generates, as algera, `monoid_algebra R M`. -/
 theorem exists_finset_adjoin_eq_top [h : FiniteType R (MonoidAlgebra R M)] :
     ∃ G : Finset M, Algebra.adjoin R (of R M '' G) = ⊤ := by
   obtain ⟨S, hS⟩ := h
-  let this : DecidableEq M := Classical.decEq M
+  letI : DecidableEq M := Classical.decEq M
   use Finset.bUnion S fun f => f.support
   have : (Finset.bUnion S fun f => f.support : Set M) = ⋃ f ∈ S, (f.support : Set M) := by
     simp only [← Finset.set_bUnion_coe, ← Finset.coe_bUnion]
@@ -920,11 +944,11 @@ include f
 theorem modulePolynomialOfEndo.is_scalar_tower :
     @IsScalarTower R R[X] M _
       (by
-        let this := modulePolynomialOfEndo f
+        letI := modulePolynomialOfEndo f
         infer_instance)
       _ :=
   by
-  let this := modulePolynomialOfEndo f
+  letI := modulePolynomialOfEndo f
   constructor
   intro x y z
   simp
@@ -939,8 +963,8 @@ This is similar to `is_noetherian.injective_of_surjective_endomorphism` but only
 commutative case, but does not use a Noetherian hypothesis. -/
 theorem Module.Finite.injective_of_surjective_endomorphism [hfg : Finite R M] (f_surj : Function.Surjective f) :
     Function.Injective f := by
-  let this := modulePolynomialOfEndo f
-  have : IsScalarTower R R[X] M := modulePolynomialOfEndo.is_scalar_tower f
+  letI := modulePolynomialOfEndo f
+  haveI : IsScalarTower R R[X] M := modulePolynomialOfEndo.is_scalar_tower f
   have hfgpoly : Finite R[X] M := finite.of_restrict_scalars_finite R _ _
   have X_mul : ∀ o, (X : R[X]) • o = f o := by
     intro

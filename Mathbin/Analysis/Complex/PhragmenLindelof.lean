@@ -57,7 +57,7 @@ namespace PhragmenLindelof
 -/
 
 
-variable {E : Type _} [NormedGroup E]
+variable {E : Type _} [NormedAddCommGroup E]
 
 /-- An auxiliary lemma that combines two double exponential estimates into a similar estimate
 on the difference of the functions. -/
@@ -199,7 +199,10 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
       (· ∘ ·), ← Real.norm_eq_abs, ← abs_of_pos (Real.exp_pos _)] at hA
     suffices tendsto (fun R => expR (δ * expR (d * R) + B * expR (c * R) + Real.log A)) at_top (𝓝 0) by
       filter_upwards [this.eventually (ge_mem_nhds hC₀), hA] with R hR Hle w hre him
-      calc ∥g ε w • f w∥ ≤ expR (δ * expR (d * R) + B * expR (c * R) + Real.log A) := _ _ ≤ C := hR
+      calc
+        ∥g ε w • f w∥ ≤ expR (δ * expR (d * R) + B * expR (c * R) + Real.log A) := _
+        _ ≤ C := hR
+        
       rw [norm_smul, Real.exp_add, ← hre, Real.exp_add, Real.exp_log hA₀, mul_assoc, mul_comm _ A]
       exact mul_le_mul (hδ <| Ioo_subset_Icc_self him) (Hle _ hre him) (norm_nonneg _) (Real.exp_pos _).le
     refine' real.tendsto_exp_at_bot.comp _
@@ -739,8 +742,13 @@ theorem right_half_plane_of_tendsto_zero_on_real (hd : DiffContOnCl ℂ f { z | 
       rw [mem_ball, dist_zero_left, dist_eq, norm_eq_abs, Complex.abs_of_nonneg hx₀] at hz
       rw [mem_set_of_eq]
       contrapose! hz
-      calc x₀ ≤ x₀ - z.re := (le_sub_self_iff _).2 hz _ ≤ abs (x₀ - z.re) := le_abs_self _ _ = abs (z - x₀).re := by
-          rw [sub_re, of_real_re, _root_.abs_sub_comm]_ ≤ abs (z - x₀) := abs_re_le_abs _
+      calc
+        x₀ ≤ x₀ - z.re := (le_sub_self_iff _).2 hz
+        _ ≤ abs (x₀ - z.re) := le_abs_self _
+        _ = abs (z - x₀).re := by
+          rw [sub_re, of_real_re, _root_.abs_sub_comm]
+        _ ≤ abs (z - x₀) := abs_re_le_abs _
+        
     -- Thus we have `C < ∥f x₀∥ = ∥f 0∥ ≤ C`. Contradiction completes the proof.
     refine' (h.not_le <| this ▸ _).elim
     simpa using him 0
@@ -840,8 +848,11 @@ theorem eq_zero_on_right_half_plane_of_superexponential_decay (hd : DiffContOnCl
     filter_upwards [eventually_ge_at_top (1 : ℝ)] with r hr z hzr hre
     subst r
     refine' add_le_add (mul_le_mul_of_nonneg_left _ n.cast_nonneg) _
-    · calc z.re ≤ abs z := re_le_abs _ _ = abs z ^ (1 : ℝ) := (Real.rpow_one _).symm _ ≤ abs z ^ max c 1 :=
-          Real.rpow_le_rpow_of_exponent_le hr (le_max_rightₓ _ _)
+    · calc
+        z.re ≤ abs z := re_le_abs _
+        _ = abs z ^ (1 : ℝ) := (Real.rpow_one _).symm
+        _ ≤ abs z ^ max c 1 := Real.rpow_le_rpow_of_exponent_le hr (le_max_rightₓ _ _)
+        
       
     · exact
         mul_le_mul (le_max_leftₓ _ _) (Real.rpow_le_rpow_of_exponent_le hr (le_max_leftₓ _ _))

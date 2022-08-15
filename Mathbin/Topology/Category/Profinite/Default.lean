@@ -219,12 +219,13 @@ theorem is_closed_map : IsClosedMap f :=
 
 /-- Any continuous bijection of profinite spaces induces an isomorphism. -/
 theorem is_iso_of_bijective (bij : Function.Bijective f) : IsIso f := by
-  have := CompHaus.is_iso_of_bijective (Profinite_to_CompHaus.map f) bij
+  haveI := CompHaus.is_iso_of_bijective (Profinite_to_CompHaus.map f) bij
   exact is_iso_of_fully_faithful profiniteToCompHaus _
 
 /-- Any continuous bijection of profinite spaces induces an isomorphism. -/
-noncomputable def isoOfBijective (bij : Function.Bijective f) : X ≅ Y := by
-  let this := Profinite.is_iso_of_bijective f bij <;> exact as_iso f
+noncomputable def isoOfBijective (bij : Function.Bijective f) : X ≅ Y :=
+  letI := Profinite.is_iso_of_bijective f bij
+  as_iso f
 
 instance forget_reflects_isomorphisms : ReflectsIsomorphisms (forget Profinite) :=
   ⟨by
@@ -284,7 +285,7 @@ theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Funct
     have hUy : U ∈ nhds y := hU.mem_nhds hyU
     obtain ⟨V, hV, hyV, hVU⟩ := is_topological_basis_clopen.mem_nhds_iff.mp hUy
     classical
-    let this : TopologicalSpace (ULift.{u} <| Finₓ 2) := ⊥
+    letI : TopologicalSpace (ULift.{u} <| Finₓ 2) := ⊥
     let Z := of (ULift.{u} <| Finₓ 2)
     let g : Y ⟶ Z := ⟨(LocallyConstant.ofClopen hV).map ULift.up, LocallyConstant.continuous _⟩
     let h : Y ⟶ Z := ⟨fun _ => ⟨1⟩, continuous_const⟩
@@ -309,8 +310,8 @@ theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Funct
 theorem mono_iff_injective {X Y : Profinite.{u}} (f : X ⟶ Y) : Mono f ↔ Function.Injective f := by
   constructor
   · intro h
-    have : limits.preserves_limits profiniteToCompHaus := inferInstance
-    have : mono (Profinite_to_CompHaus.map f) := inferInstance
+    haveI : limits.preserves_limits profiniteToCompHaus := inferInstance
+    haveI : mono (Profinite_to_CompHaus.map f) := inferInstance
     rwa [← CompHaus.mono_iff_injective]
     
   · rw [← CategoryTheory.mono_iff_injective]

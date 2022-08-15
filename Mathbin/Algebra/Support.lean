@@ -58,7 +58,7 @@ theorem mem_mul_support {f : α → M} {x : α} : x ∈ MulSupport f ↔ f x ≠
 theorem mul_support_subset_iff {f : α → M} {s : Set α} : MulSupport f ⊆ s ↔ ∀ x, f x ≠ 1 → x ∈ s :=
   Iff.rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ∉ » s)
 @[to_additive]
 theorem mul_support_subset_iff' {f : α → M} {s : Set α} : MulSupport f ⊆ s ↔ ∀ (x) (_ : x ∉ s), f x = 1 :=
   forall_congrₓ fun x => not_imp_comm
@@ -246,7 +246,7 @@ theorem support_smul_subset_right [AddMonoidₓ A] [Monoidₓ B] [DistribMulActi
   hbf <| by
     rw [Pi.smul_apply, hf, smul_zero]
 
-theorem support_smul_subset_left [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] (f : α → R) (g : α → M) :
+theorem support_smul_subset_left [Zero M] [Zero β] [SmulWithZero M β] (f : α → M) (g : α → β) :
     Support (f • g) ⊆ Support f := fun x hfg hf =>
   hfg <| by
     rw [Pi.smul_apply', hf, zero_smul]

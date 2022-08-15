@@ -86,9 +86,9 @@ corner `I`) with fiber the normed vector space `F` over `𝕜`, which is trivial
 of `M`. This structure registers the changes in the fibers when one changes coordinate charts in the
 base. We require the change of coordinates of the fibers to be linear, so that the resulting bundle
 is a vector bundle. -/
-structure BasicSmoothVectorBundleCore {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E]
+structure BasicSmoothVectorBundleCore {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E]
   [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _) [TopologicalSpace M]
-  [ChartedSpace H M] [SmoothManifoldWithCorners I M] (F : Type _) [NormedGroup F] [NormedSpace 𝕜 F] where
+  [ChartedSpace H M] [SmoothManifoldWithCorners I M] (F : Type _) [NormedAddCommGroup F] [NormedSpace 𝕜 F] where
   coordChange : Atlas H M → Atlas H M → H → F →L[𝕜] F
   coord_change_self : ∀ i : Atlas H M, ∀, ∀ x ∈ i.1.Target, ∀, ∀ v, coord_change i i x v = v
   coord_change_comp :
@@ -101,9 +101,9 @@ structure BasicSmoothVectorBundleCore {𝕜 : Type _} [NondiscreteNormedField �
 
 /-- The trivial basic smooth bundle core, in which all the changes of coordinates are the
 identity. -/
-def trivialBasicSmoothVectorBundleCore {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E]
+def trivialBasicSmoothVectorBundleCore {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E]
     [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _) [TopologicalSpace M]
-    [ChartedSpace H M] [SmoothManifoldWithCorners I M] (F : Type _) [NormedGroup F] [NormedSpace 𝕜 F] :
+    [ChartedSpace H M] [SmoothManifoldWithCorners I M] (F : Type _) [NormedAddCommGroup F] [NormedSpace 𝕜 F] :
     BasicSmoothVectorBundleCore I M F where
   coordChange := fun i j x => ContinuousLinearMap.id 𝕜 F
   coord_change_self := fun i x hx v => rfl
@@ -114,9 +114,10 @@ def trivialBasicSmoothVectorBundleCore {𝕜 : Type _} [NondiscreteNormedField �
 
 namespace BasicSmoothVectorBundleCore
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type _}
   [TopologicalSpace H] {I : ModelWithCorners 𝕜 E H} {M : Type _} [TopologicalSpace M] [ChartedSpace H M]
-  [SmoothManifoldWithCorners I M] {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] (Z : BasicSmoothVectorBundleCore I M F)
+  [SmoothManifoldWithCorners I M] {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
+  (Z : BasicSmoothVectorBundleCore I M F)
 
 instance : Inhabited (BasicSmoothVectorBundleCore I M F) :=
   ⟨trivialBasicSmoothVectorBundleCore I M F⟩
@@ -135,15 +136,14 @@ theorem coord_change_continuous (i j : Atlas H M) : ContinuousOn (Z.coordChange 
     
 
 theorem coord_change_smooth (i j : Atlas H M) :
-    ContDiffOn 𝕜 ∞ (fun p : E × F => Z.coordChange i j (I.symm p.1) p.2)
-      ((I '' (i.1.symm.trans j.1).Source) ×ˢ (Univ : Set F)) :=
+    ContDiffOn 𝕜 ∞ (fun p : E × F => Z.coordChange i j (I.symm p.1) p.2) ((I '' (i.1.symm.trans j.1).Source) ×ˢ univ) :=
   by
   have A : ContDiff 𝕜 ∞ fun p : (F →L[𝕜] F) × F => p.1 p.2 := by
     apply IsBoundedBilinearMap.cont_diff
     exact is_bounded_bilinear_map_apply
   have B :
     ContDiffOn 𝕜 ∞ (fun p : E × F => (Z.coord_change i j (I.symm p.1), p.snd))
-      ((I '' (i.1.symm.trans j.1).Source) ×ˢ (univ : Set F)) :=
+      ((I '' (i.1.symm.trans j.1).Source) ×ˢ univ) :=
     by
     apply ContDiffOn.prod _ _
     · exact (Z.coord_change_smooth_clm i j).comp cont_diff_fst.cont_diff_on (prod_subset_preimage_fst _ _)
@@ -157,7 +157,7 @@ theorem coord_change_smooth (i j : Atlas H M) :
 def toTopologicalVectorBundleCore : TopologicalVectorBundleCore 𝕜 M F (Atlas H M) where
   BaseSet := fun i => i.1.Source
   is_open_base_set := fun i => i.1.open_source
-  indexAt := fun x => ⟨chartAt H x, chart_mem_atlas H x⟩
+  indexAt := achart H
   mem_base_set_at := fun x => mem_chart_source H x
   coordChange := fun i j x => Z.coordChange i j (i.1 x)
   coord_change_self := fun i x hx v => Z.coord_change_self i (i.1 x) (i.1.map_source hx) v
@@ -179,7 +179,7 @@ theorem base_set (i : Atlas H M) : (Z.toTopologicalVectorBundleCore.localTriv i)
   rfl
 
 @[simp, mfld_simps]
-theorem target (i : Atlas H M) : (Z.toTopologicalVectorBundleCore.localTriv i).Target = i.1.Source ×ˢ (Univ : Set F) :=
+theorem target (i : Atlas H M) : (Z.toTopologicalVectorBundleCore.localTriv i).Target = i.1.Source ×ˢ univ :=
   rfl
 
 /-- Local chart for the total space of a basic smooth bundle -/
@@ -195,8 +195,7 @@ theorem chart_source (e : LocalHomeomorph M H) (he : e ∈ Atlas H M) :
   mfld_set_tac
 
 @[simp, mfld_simps]
-theorem chart_target (e : LocalHomeomorph M H) (he : e ∈ Atlas H M) :
-    (Z.chart he).Target = e.Target ×ˢ (Univ : Set F) := by
+theorem chart_target (e : LocalHomeomorph M H) (he : e ∈ Atlas H M) : (Z.chart he).Target = e.Target ×ˢ univ := by
   simp only [← chart]
   mfld_set_tac
 
@@ -253,7 +252,7 @@ instance to_smooth_manifold : SmoothManifoldWithCorners (I.Prod 𝓘(𝕜, F)) Z
     intro e e' he he'
     have :
       J.symm ⁻¹' ((chart Z he).symm.trans (chart Z he')).Source ∩ range J =
-        (I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) ×ˢ (univ : Set F) :=
+        (I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) ×ˢ univ :=
       by
       simp only [← J, ← chart, ← ModelWithCorners.prod]
       mfld_set_tac
@@ -262,13 +261,12 @@ instance to_smooth_manifold : SmoothManifoldWithCorners (I.Prod 𝓘(𝕜, F)) Z
     apply ContDiffOn.prod
     show
       ContDiffOn 𝕜 ∞ (fun p : E × F => (I ∘ e' ∘ e.symm ∘ I.symm) p.1)
-        ((I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) ×ˢ (univ : Set F))
+        ((I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) ×ˢ univ)
     · -- the coordinate change on the base is just a coordinate change for `M`, smooth since
       -- `M` is smooth
       have A : ContDiffOn 𝕜 ∞ (I ∘ e.symm.trans e' ∘ I.symm) (I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) :=
         (HasGroupoid.compatible (contDiffGroupoid ∞ I) he he').1
-      have B :
-        ContDiffOn 𝕜 ∞ (fun p : E × F => p.1) ((I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) ×ˢ (univ : Set F)) :=
+      have B : ContDiffOn 𝕜 ∞ (fun p : E × F => p.1) ((I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) ×ˢ univ) :=
         cont_diff_fst.cont_diff_on
       exact ContDiffOn.comp A B (prod_subset_preimage_fst _ _)
       
@@ -278,7 +276,7 @@ instance to_smooth_manifold : SmoothManifoldWithCorners (I.Prod 𝓘(𝕜, F)) Z
           Z.coord_change ⟨chart_at H (e.symm (I.symm p.1)), _⟩ ⟨e', he'⟩
             ((chart_at H (e.symm (I.symm p.1)) : M → H) (e.symm (I.symm p.1)))
             (Z.coord_change ⟨e, he⟩ ⟨chart_at H (e.symm (I.symm p.1)), _⟩ (e (e.symm (I.symm p.1))) p.2))
-        ((I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) ×ˢ (univ : Set F))
+        ((I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) ×ˢ univ)
     · /- The coordinate change in the fiber is more complicated as its definition involves the
             reference chart chosen at each point. However, it appears with its inverse, so using the
             cocycle property one can get rid of it, and then conclude using the smoothness of the
@@ -306,7 +304,7 @@ end BasicSmoothVectorBundleCore
 
 section TangentBundle
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type _}
   [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _) [TopologicalSpace M] [ChartedSpace H M]
   [SmoothManifoldWithCorners I M]
 
@@ -326,7 +324,7 @@ def tangentBundleCore : BasicSmoothVectorBundleCore I M E where
         (fun p : E × E =>
           (fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) p.1 : E → E)
             p.2)
-        ((I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) ×ˢ (univ : Set E)) :=
+        ((I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) ×ˢ univ) :=
       cont_diff_on_fderiv_within_apply A B le_top
     have D :
       ∀,
@@ -492,7 +490,7 @@ variable (M)
 /-- The tangent bundle to a smooth manifold, as a Sigma type. Defined in terms of
 `bundle.total_space` to be able to put a suitable topology on it. -/
 -- is empty if the base manifold is empty
-@[nolint has_inhabited_instance, reducible]
+@[nolint has_nonempty_instance, reducible]
 def TangentBundle :=
   Bundle.TotalSpace (TangentSpace I : M → Type _)
 

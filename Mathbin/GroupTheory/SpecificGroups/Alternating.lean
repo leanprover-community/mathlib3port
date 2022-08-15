@@ -194,7 +194,7 @@ namespace alternatingGroup
 open Equivₓ.Perm
 
 theorem nontrivial_of_three_le_card (h3 : 3 ≤ card α) : Nontrivial (alternatingGroup α) := by
-  have :=
+  haveI :=
     Fintype.one_lt_card_iff_nontrivial.1
       (lt_transₓ
         (by
@@ -283,7 +283,7 @@ theorem is_conj_swap_mul_swap_of_cycle_type_two {g : Perm (Finₓ 5)} (ha : g �
       (by
         decide)
   rw [mem_alternating_group, sign_of_cycle_type, h2] at ha
-  norm_num  at ha
+  norm_num at ha
   rw [pow_addₓ, pow_mulₓ, Int.units_pow_two, one_mulₓ, Units.ext_iff, Units.coe_one, Units.coe_pow, Units.coe_neg_one,
     neg_one_pow_eq_one_iff_even _] at ha
   swap

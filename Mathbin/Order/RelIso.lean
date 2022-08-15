@@ -38,11 +38,11 @@ open Function
 
 universe u v w
 
-variable {α β γ : Type _} {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop}
+variable {α β γ δ : Type _} {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop} {u : δ → δ → Prop}
 
 /-- A relation homomorphism with respect to a given pair of relations `r` and `s`
 is a function `f : α → β` such that `r a b → s (f a) (f b)`. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure RelHom {α β : Type _} (r : α → α → Prop) (s : β → β → Prop) where
   toFun : α → β
   map_rel' : ∀ {a b}, r a b → s (to_fun a) (to_fun b)
@@ -243,6 +243,10 @@ theorem coe_coe_fn (f : r ↪r s) : ((f : r →r s) : α → β) = f :=
 theorem injective (f : r ↪r s) : Injective f :=
   f.inj'
 
+@[simp]
+theorem inj (f : r ↪r s) {a b} : f a = f b ↔ a = b :=
+  f.Injective.eq_iff
+
 theorem map_rel_iff (f : r ↪r s) : ∀ {a b}, s (f a) (f b) ↔ r a b :=
   f.map_rel_iff'
 
@@ -351,6 +355,28 @@ protected theorem well_founded : ∀ (f : r ↪r s) (h : WellFounded s), WellFou
 protected theorem is_well_order : ∀ (f : r ↪r s) [IsWellOrder β s], IsWellOrder α r
   | f, H => { f.is_strict_total_order' with wf := f.well_founded H.wf }
 
+/-- `quotient.out` as a relation embedding between the lift of a relation and the relation. -/
+@[simps]
+noncomputable def _root_.quotient.out_rel_embedding [s : Setoidₓ α] {r : α → α → Prop} (H) : Quotientₓ.lift₂ r H ↪r r :=
+  ⟨Embedding.quotientOut α, by
+    refine' fun x y => Quotientₓ.induction_on₂ x y fun a b => _
+    apply iff_iff_eq.2 (H _ _ _ _ _ _) <;> apply Quotientₓ.mk_out⟩
+
+/-- A relation is well founded iff its lift to a quotient is. -/
+@[simp]
+theorem _root_.well_founded_lift₂_iff [s : Setoidₓ α] {r : α → α → Prop} {H} :
+    WellFounded (Quotientₓ.lift₂ r H) ↔ WellFounded r :=
+  ⟨fun hr => by
+    suffices ∀ {x : Quotientₓ s} {a : α}, ⟦a⟧ = x → Acc r a by
+      exact ⟨fun a => this rfl⟩
+    · refine' fun x => hr.induction x _
+      rintro x IH a rfl
+      exact ⟨_, fun b hb => IH ⟦b⟧ hb rfl⟩
+      ,
+    (Quotientₓ.outRelEmbedding H).WellFounded⟩
+
+alias _root_.well_founded_lift₂_iff ↔ _root_.well_founded.of_quotient_lift₂ _root_.well_founded.quotient_lift₂
+
 /-- To define an relation embedding from an antisymmetric relation `r` to a reflexive relation `s` it
 suffices to give a function together with a proof that it satisfies `s (f a) (f b) ↔ r a b`.
 -/
@@ -367,7 +393,7 @@ theorem of_map_rel_iff_coe (f : α → β) [IsAntisymm α r] [IsRefl β s] (hf :
 /-- It suffices to prove `f` is monotone between strict relations
   to show it is a relation embedding. -/
 def ofMonotone [IsTrichotomous α r] [IsAsymm β s] (f : α → β) (H : ∀ a b, r a b → s (f a) (f b)) : r ↪r s := by
-  have := @IsAsymm.is_irrefl β s _
+  haveI := @IsAsymm.is_irrefl β s _
   refine' ⟨⟨f, fun a b e => _⟩, fun a b => ⟨fun h => _, H _ _⟩⟩
   · refine' ((@trichotomous _ r _ a b).resolve_left _).resolve_right _ <;>
       exact fun h =>
@@ -391,6 +417,74 @@ theorem of_monotone_coe [IsTrichotomous α r] [IsAsymm β s] (f : α → β) (H)
 /-- A relation embedding from an empty type. -/
 def ofIsEmpty (r : α → α → Prop) (s : β → β → Prop) [IsEmpty α] : r ↪r s :=
   ⟨Embedding.ofIsEmpty, isEmptyElim⟩
+
+/-- `sum.inl` as a relation embedding into `sum.lift_rel r s`. -/
+@[simps]
+def sumLiftRelInl (r : α → α → Prop) (s : β → β → Prop) : r ↪r Sum.LiftRel r s where
+  toFun := Sum.inl
+  inj' := Sum.inl_injective
+  map_rel_iff' := fun a b => Sum.lift_rel_inl_inl
+
+/-- `sum.inr` as a relation embedding into `sum.lift_rel r s`. -/
+@[simps]
+def sumLiftRelInr (r : α → α → Prop) (s : β → β → Prop) : s ↪r Sum.LiftRel r s where
+  toFun := Sum.inr
+  inj' := Sum.inr_injective
+  map_rel_iff' := fun a b => Sum.lift_rel_inr_inr
+
+/-- `sum.map` as a relation embedding between `sum.lift_rel` relations. -/
+@[simps]
+def sumLiftRelMap (f : r ↪r s) (g : t ↪r u) : Sum.LiftRel r t ↪r Sum.LiftRel s u where
+  toFun := Sum.map f g
+  inj' := f.Injective.sum_map g.Injective
+  map_rel_iff' := by
+    rintro (a | b) (c | d) <;> simp [← f.map_rel_iff, ← g.map_rel_iff]
+
+/-- `sum.inl` as a relation embedding into `sum.lex r s`. -/
+@[simps]
+def sumLexInl (r : α → α → Prop) (s : β → β → Prop) : r ↪r Sum.Lex r s where
+  toFun := Sum.inl
+  inj' := Sum.inl_injective
+  map_rel_iff' := fun a b => Sum.lex_inl_inl
+
+/-- `sum.inr` as a relation embedding into `sum.lex r s`. -/
+@[simps]
+def sumLexInr (r : α → α → Prop) (s : β → β → Prop) : s ↪r Sum.Lex r s where
+  toFun := Sum.inr
+  inj' := Sum.inr_injective
+  map_rel_iff' := fun a b => Sum.lex_inr_inr
+
+/-- `sum.map` as a relation embedding between `sum.lex` relations. -/
+@[simps]
+def sumLexMap (f : r ↪r s) (g : t ↪r u) : Sum.Lex r t ↪r Sum.Lex s u where
+  toFun := Sum.map f g
+  inj' := f.Injective.sum_map g.Injective
+  map_rel_iff' := by
+    rintro (a | b) (c | d) <;> simp [← f.map_rel_iff, ← g.map_rel_iff]
+
+/-- `λ b, prod.mk a b` as a relation embedding. -/
+@[simps]
+def prodLexMkLeft (s : β → β → Prop) {a : α} (h : ¬r a a) : s ↪r Prod.Lex r s where
+  toFun := Prod.mk a
+  inj' := Prod.mk.inj_left a
+  map_rel_iff' := fun b₁ b₂ => by
+    simp [← Prod.lex_def, ← h]
+
+/-- `λ a, prod.mk a b` as a relation embedding. -/
+@[simps]
+def prodLexMkRight (r : α → α → Prop) {b : β} (h : ¬s b b) : r ↪r Prod.Lex r s where
+  toFun := fun a => (a, b)
+  inj' := Prod.mk.inj_right b
+  map_rel_iff' := fun a₁ a₂ => by
+    simp [← Prod.lex_def, ← h]
+
+/-- `prod.map` as a relation embedding. -/
+@[simps]
+def prodLexMap (f : r ↪r s) (g : t ↪r u) : Prod.Lex r t ↪r Prod.Lex s u where
+  toFun := Prod.map f g
+  inj' := f.Injective.prod_map g.Injective
+  map_rel_iff' := fun a b => by
+    simp [← Prod.lex_def, ← f.map_rel_iff, ← g.map_rel_iff]
 
 end RelEmbedding
 

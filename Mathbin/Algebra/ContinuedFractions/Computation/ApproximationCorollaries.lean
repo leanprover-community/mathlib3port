@@ -133,19 +133,25 @@ theorem of_convergence_epsilon : ∀, ∀ ε > (0 : K), ∀, ∃ N : ℕ, ∀, �
     suffices : (n : K) ≤ B * nB
     exact (mul_le_mul_left ε_pos).elim_right this
     show (n : K) ≤ B * nB
-    calc (n : K) ≤ fib n := by
-        exact_mod_cast le_fib_self <| le_transₓ (le_max_rightₓ N' 5) n_ge_N _ ≤ fib (n + 1) := by
-        exact_mod_cast fib_le_fib_succ _ ≤ fib (n + 1) * fib (n + 1) := by
-        exact_mod_cast (fib (n + 1)).le_mul_self _ ≤ fib (n + 1) * fib (n + 2) :=
+    calc
+      (n : K) ≤ fib n := by
+        exact_mod_cast le_fib_self <| le_transₓ (le_max_rightₓ N' 5) n_ge_N
+      _ ≤ fib (n + 1) := by
+        exact_mod_cast fib_le_fib_succ
+      _ ≤ fib (n + 1) * fib (n + 1) := by
+        exact_mod_cast (fib (n + 1)).le_mul_self
+      _ ≤ fib (n + 1) * fib (n + 2) :=
         mul_le_mul_of_nonneg_left
           (by
             exact_mod_cast fib_le_fib_succ)
           (by
-            exact_mod_cast (fib (n + 1)).zero_le)_ ≤ B * nB :=
+            exact_mod_cast (fib (n + 1)).zero_le)
+      _ ≤ B * nB :=
         mul_le_mul B_ineq nB_ineq
           (by
             exact_mod_cast (fib (n + 2)).zero_le)
           (le_of_ltₓ zero_lt_B)
+      
     
 
 attribute [local instance] Preorderₓ.topology

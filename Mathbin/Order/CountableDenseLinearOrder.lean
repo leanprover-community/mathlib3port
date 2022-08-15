@@ -64,7 +64,7 @@ theorem exists_between_finsets {α : Type _} [LinearOrderₓ α] [DenselyOrdered
 
 variable (α β : Type _) [LinearOrderₓ α] [LinearOrderₓ β]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (p q «expr ∈ » f)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (p q «expr ∈ » f)
 /-- The type of partial order isomorphisms between `α` and `β` defined on finite subsets.
     A partial order isomorphism is encoded as a finite subset of `α × β`, consisting
     of pairs which should be identified. -/
@@ -196,7 +196,7 @@ variable (α β)
 theorem embedding_from_countable_to_dense [Encodable α] [DenselyOrdered β] [Nontrivial β] : Nonempty (α ↪o β) := by
   rcases exists_pair_lt β with ⟨x, y, hxy⟩
   cases' exists_between hxy with a ha
-  have : Nonempty (Set.Ioo x y) := ⟨⟨a, ha⟩⟩
+  haveI : Nonempty (Set.Ioo x y) := ⟨⟨a, ha⟩⟩
   let our_ideal : ideal (partial_iso α _) := ideal_of_cofinals default (defined_at_left (Set.Ioo x y))
   let F := fun a => fun_of_ideal a our_ideal (cofinal_meets_ideal_of_cofinals _ _ a)
   refine'

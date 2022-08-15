@@ -168,7 +168,7 @@ theorem squarefree_iff_nodup_normalized_factors [DecidableEq R] {x : R} (x0 : x 
   have drel : DecidableRel (Dvd.Dvd : R → R → Prop) := by
     classical
     infer_instance
-  have := drel
+  haveI := drel
   rw [multiplicity.squarefree_iff_multiplicity_le_one, Multiset.nodup_iff_count_le_one]
   constructor <;> intro h a
   · by_cases' hmem : a ∈ normalized_factors x

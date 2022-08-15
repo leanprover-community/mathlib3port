@@ -165,7 +165,7 @@ theorem order_of_r_one : orderOf (r 1 : DihedralGroup n) = n := by
     apply mt r.inj
     simpa using hn.ne'
     
-  · have := Fact.mk hn
+  · haveI := Fact.mk hn
     apply (Nat.le_of_dvdₓ hn <| order_of_dvd_of_pow_eq_one <| @r_one_pow_n n).lt_or_eq.resolve_left
     intro h
     have h1 : (r 1 : DihedralGroup n) ^ orderOf (r 1) = 1 := pow_order_of_eq_one _
@@ -185,7 +185,7 @@ theorem exponent : Monoidₓ.exponent (DihedralGroup n) = lcm n 2 := by
   rcases n.eq_zero_or_pos with (rfl | hn)
   · exact Monoidₓ.exponent_eq_zero_of_order_zero order_of_r_one
     
-  have := Fact.mk hn
+  haveI := Fact.mk hn
   apply Nat.dvd_antisymm
   · apply Monoidₓ.exponent_dvd_of_forall_pow_eq_one
     rintro (m | m)

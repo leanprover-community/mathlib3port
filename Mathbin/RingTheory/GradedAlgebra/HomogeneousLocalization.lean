@@ -86,7 +86,7 @@ section
 /-- Let `x` be a prime ideal, then `num_denom_same_deg 𝒜 x` is a structure with a numerator and a
 denominator with same grading such that the denominator is not contained in `x`.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure NumDenomSameDeg where
   deg : ι
   (num denom : 𝒜 deg)
@@ -216,9 +216,10 @@ instance : CommMonoidₓ (NumDenomSameDeg 𝒜 x) where
 instance :
     Pow (NumDenomSameDeg 𝒜 x)
       ℕ where pow := fun c n =>
-    ⟨n • c.deg, ⟨c.num ^ n, pow_mem n c.num.2⟩, ⟨c.denom ^ n, pow_mem n c.denom.2⟩, by
+    ⟨n • c.deg, @GradedMonoid.Gmonoid.gnpow _ (fun i => ↥(𝒜 i)) _ _ n _ c.num,
+      @GradedMonoid.Gmonoid.gnpow _ (fun i => ↥(𝒜 i)) _ _ n _ c.denom, by
       cases n
-      · simp only [← pow_zeroₓ]
+      · simp only [← GradedMonoid.Gmonoid.gnpow, ← Subtype.coe_mk, ← pow_zeroₓ]
         exact fun r => (inferInstance : x.is_prime).ne_top <| (Ideal.eq_top_iff_one _).mpr r
         
       · exact fun r =>
@@ -273,7 +274,7 @@ end HomogeneousLocalization
 kernel of `embedding 𝒜 x`. This is essentially the subring of `Aₓ` where the numerator and
 denominator share the same grading.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def HomogeneousLocalization : Type _ :=
   Quotientₓ (Setoidₓ.ker <| HomogeneousLocalization.NumDenomSameDeg.embedding 𝒜 x)
 

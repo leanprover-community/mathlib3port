@@ -46,9 +46,9 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 /-- `init_ring` is an auxiliary tactic that discharges goals factoring `init` over ring operations.
 -/
 unsafe def init_ring (assert : parse (tk "using" *> parser.pexpr)?) : tactic Unit := do
@@ -131,7 +131,7 @@ theorem select_add_select_not : ∀ x : 𝕎 R, select P x + select (fun i => ¬
 theorem coeff_add_of_disjoint (x y : 𝕎 R) (h : ∀ n, x.coeff n = 0 ∨ y.coeff n = 0) :
     (x + y).coeff n = x.coeff n + y.coeff n := by
   let P : ℕ → Prop := fun n => y.coeff n = 0
-  have : DecidablePred P := Classical.decPred P
+  haveI : DecidablePred P := Classical.decPred P
   set z := mk p fun n => if P n then x.coeff n else y.coeff n with hz
   have hx : select P z = x := by
     ext1 n
@@ -149,8 +149,11 @@ theorem coeff_add_of_disjoint (x y : 𝕎 R) (h : ∀ n, x.coeff n = 0 ∨ y.coe
       
     · rfl
       
-  calc (x + y).coeff n = z.coeff n := by
-      rw [← hx, ← hy, select_add_select_not P z]_ = x.coeff n + y.coeff n := _
+  calc
+    (x + y).coeff n = z.coeff n := by
+      rw [← hx, ← hy, select_add_select_not P z]
+    _ = x.coeff n + y.coeff n := _
+    
   dsimp' [← z]
   split_ifs with hn
   · dsimp' [← P]  at hn

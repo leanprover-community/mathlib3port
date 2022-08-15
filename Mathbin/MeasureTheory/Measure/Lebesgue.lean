@@ -436,7 +436,7 @@ variable {α : Type _}
 def RegionBetween (f g : α → ℝ) (s : Set α) : Set (α × ℝ) :=
   { p : α × ℝ | p.1 ∈ s ∧ p.2 ∈ Ioo (f p.1) (g p.1) }
 
-theorem region_between_subset (f g : α → ℝ) (s : Set α) : RegionBetween f g s ⊆ s ×ˢ (Univ : Set ℝ) := by
+theorem region_between_subset (f g : α → ℝ) (s : Set α) : RegionBetween f g s ⊆ s ×ˢ univ := by
   simpa only [← prod_univ, ← RegionBetween, ← Set.Preimage, ← set_of_subset_set_of] using fun a => And.left
 
 variable [MeasurableSpace α] {μ : Measureₓ α} {f g : α → ℝ} {s : Set α}

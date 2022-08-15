@@ -95,7 +95,7 @@ theorem infty_ne_coe (x : X) : ∞ ≠ (x : Alexandroff X) :=
   fun.
 
 /-- Recursor for `alexandroff` using the preferred forms `∞` and `↑x`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 protected def rec (C : Alexandroff X → Sort _) (h₁ : C ∞) (h₂ : ∀ x : X, C x) : ∀ z : Alexandroff X, C z :=
   Option.rec h₁ h₂
 

@@ -147,11 +147,11 @@ theorem equiv_to_fun_val (f : α ≃ₜ β) (K : Compacts α) : (Compacts.equiv 
 
 /-- The product of two `compacts`, as a `compacts` in the product space. -/
 protected def prod (K : Compacts α) (L : Compacts β) : Compacts (α × β) where
-  Carrier := (K : Set α) ×ˢ (L : Set β)
+  Carrier := K ×ˢ L
   compact' := IsCompact.prod K.2 L.2
 
 @[simp]
-theorem coe_prod (K : Compacts α) (L : Compacts β) : (K.Prod L : Set (α × β)) = (K : Set α) ×ˢ (L : Set β) :=
+theorem coe_prod (K : Compacts α) (L : Compacts β) : (K.Prod L : Set (α × β)) = K ×ˢ L :=
   rfl
 
 end Compacts
@@ -230,8 +230,7 @@ protected def prod (K : NonemptyCompacts α) (L : NonemptyCompacts β) : Nonempt
   { K.toCompacts.Prod L.toCompacts with nonempty' := K.Nonempty.Prod L.Nonempty }
 
 @[simp]
-theorem coe_prod (K : NonemptyCompacts α) (L : NonemptyCompacts β) :
-    (K.Prod L : Set (α × β)) = (K : Set α) ×ˢ (L : Set β) :=
+theorem coe_prod (K : NonemptyCompacts α) (L : NonemptyCompacts β) : (K.Prod L : Set (α × β)) = K ×ˢ L :=
   rfl
 
 end NonemptyCompacts
@@ -239,8 +238,8 @@ end NonemptyCompacts
 /-! ### Positive compact sets -/
 
 
-/-- The type of compact sets nonempty interior of a topological space. See also `compacts` and
-`nonempty_compacts` -/
+/-- The type of compact sets with nonempty interior of a topological space.
+See also `compacts` and `nonempty_compacts`. -/
 structure PositiveCompacts (α : Type _) [TopologicalSpace α] extends Compacts α where
   interior_nonempty' : (Interior carrier).Nonempty
 
@@ -319,8 +318,7 @@ protected def prod (K : PositiveCompacts α) (L : PositiveCompacts β) : Positiv
       exact K.interior_nonempty.prod L.interior_nonempty }
 
 @[simp]
-theorem coe_prod (K : PositiveCompacts α) (L : PositiveCompacts β) :
-    (K.Prod L : Set (α × β)) = (K : Set α) ×ˢ (L : Set β) :=
+theorem coe_prod (K : PositiveCompacts α) (L : PositiveCompacts β) : (K.Prod L : Set (α × β)) = K ×ˢ L :=
   rfl
 
 end PositiveCompacts
@@ -441,7 +439,7 @@ protected def prod (K : CompactOpens α) (L : CompactOpens β) : CompactOpens (�
   { K.toCompacts.Prod L.toCompacts with open' := K.open.Prod L.open }
 
 @[simp]
-theorem coe_prod (K : CompactOpens α) (L : CompactOpens β) : (K.Prod L : Set (α × β)) = (K : Set α) ×ˢ (L : Set β) :=
+theorem coe_prod (K : CompactOpens α) (L : CompactOpens β) : (K.Prod L : Set (α × β)) = K ×ˢ L :=
   rfl
 
 end CompactOpens

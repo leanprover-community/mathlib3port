@@ -394,14 +394,14 @@ instance : Inhabited (J.cover X) :=
   ⟨⊤⟩
 
 /-- An auxiliary structure, used to define `S.index` in `plus.lean`. -/
-@[nolint has_inhabited_instance, ext]
+@[nolint has_nonempty_instance, ext]
 structure Arrow (S : J.cover X) where
   y : C
   f : Y ⟶ X
   hf : S f
 
 /-- An auxiliary structure, used to define `S.index` in `plus.lean`. -/
-@[nolint has_inhabited_instance, ext]
+@[nolint has_nonempty_instance, ext]
 structure Relation (S : J.cover X) where
   (y₁ y₂ z : C)
   g₁ : Z ⟶ Y₁

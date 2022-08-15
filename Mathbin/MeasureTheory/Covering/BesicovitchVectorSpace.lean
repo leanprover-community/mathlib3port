@@ -50,7 +50,7 @@ noncomputable section
 
 namespace Besicovitch
 
-variable {E : Type _} [NormedGroup E]
+variable {E : Type _} [NormedAddCommGroup E]
 
 namespace SatelliteConfig
 
@@ -124,25 +124,25 @@ end SatelliteConfig
 
 /-- The maximum cardinality of a `1`-separated set in the ball of radius `2`. This is also the
 optimal number of families in the Besicovitch covering theorem. -/
-def multiplicity (E : Type _) [NormedGroup E] :=
+def multiplicity (E : Type _) [NormedAddCommGroup E] :=
   sup { N | ∃ s : Finset E, s.card = N ∧ (∀, ∀ c ∈ s, ∀, ∥c∥ ≤ 2) ∧ ∀, ∀ c ∈ s, ∀, ∀, ∀ d ∈ s, ∀, c ≠ d → 1 ≤ ∥c - d∥ }
 
 section
 
 variable [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr E]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `borelize #[[expr E]]
 /-- Any `1`-separated set in the ball of radius `2` has cardinality at most `5 ^ dim`. This is
 useful to show that the supremum in the definition of `besicovitch.multiplicity E` is
 well behaved. -/
 theorem card_le_of_separated (s : Finset E) (hs : ∀, ∀ c ∈ s, ∀, ∥c∥ ≤ 2)
     (h : ∀, ∀ c ∈ s, ∀, ∀ d ∈ s, ∀, c ≠ d → 1 ≤ ∥c - d∥) : s.card ≤ 5 ^ finrank ℝ E := by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr E]]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `borelize #[[expr E]]"
   let μ : Measureₓ E := measure.add_haar
   let δ : ℝ := (1 : ℝ) / 2
   let ρ : ℝ := (5 : ℝ) / 2
   have ρpos : 0 < ρ := by
-    norm_num [← ρ]
+    norm_num[← ρ]
   set A := ⋃ c ∈ s, ball (c : E) δ with hA
   have D : Set.Pairwise (s : Set E) (Disjoint on fun c => ball (c : E) δ) := by
     rintro c hc d hd hcd
@@ -153,10 +153,13 @@ theorem card_le_of_separated (s : Finset E) (hs : ∀, ∀ c ∈ s, ∀, ∥c∥
   have A_subset : A ⊆ ball (0 : E) ρ := by
     refine' Union₂_subset fun x hx => _
     apply ball_subset_ball'
-    calc δ + dist x 0 ≤ δ + 2 := by
+    calc
+      δ + dist x 0 ≤ δ + 2 := by
         rw [dist_zero_right]
-        exact add_le_add le_rfl (hs x hx)_ = 5 / 2 := by
-        norm_num [← δ]
+        exact add_le_add le_rfl (hs x hx)
+      _ = 5 / 2 := by
+        norm_num[← δ]
+      
   have I :
     (s.card : ℝ≥0∞) * Ennreal.ofReal (δ ^ finrank ℝ E) * μ (ball 0 1) ≤
       Ennreal.ofReal (ρ ^ finrank ℝ E) * μ (ball 0 1) :=
@@ -164,7 +167,7 @@ theorem card_le_of_separated (s : Finset E) (hs : ∀, ∀ c ∈ s, ∀, ∥c∥
       (s.card : ℝ≥0∞) * Ennreal.ofReal (δ ^ finrank ℝ E) * μ (ball 0 1) = μ A := by
         rw [hA, measure_bUnion_finset D fun c hc => measurable_set_ball]
         have I : 0 < δ := by
-          norm_num [← δ]
+          norm_num[← δ]
         simp only [← μ.add_haar_ball_of_pos _ I, ← one_div, ← one_pow, ← Finset.sum_const, ← nsmul_eq_mul, ← div_pow, ←
           mul_assoc]
       _ ≤ μ (ball (0 : E) ρ) := measure_mono A_subset
@@ -448,15 +451,21 @@ theorem exists_normalized_aux2 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
         _ ≤ 4 := by
           norm_num
         
-    calc a.r j - δ ≤ a.r j - a.r j / 4 * δ := by
+    calc
+      a.r j - δ ≤ a.r j - a.r j / 4 * δ := by
         refine' sub_le_sub le_rfl _
         refine' mul_le_of_le_one_left δnonneg _
-        linarith only [C]_ = (1 - δ / 4) * a.r j := by
-        ring _ ≤ (1 - δ / 4) * (τ * a.r i) := mul_le_mul_of_nonneg_left H.2 D _ ≤ 1 * a.r i := by
+        linarith only [C]
+      _ = (1 - δ / 4) * a.r j := by
+        ring
+      _ ≤ (1 - δ / 4) * (τ * a.r i) := mul_le_mul_of_nonneg_left H.2 D
+      _ ≤ 1 * a.r i := by
         rw [← mul_assoc]
-        apply mul_le_mul_of_nonneg_right J (a.rpos _).le _ ≤ ∥a.c i - a.c j∥ := by
+        apply mul_le_mul_of_nonneg_right J (a.rpos _).le
+      _ ≤ ∥a.c i - a.c j∥ := by
         rw [one_mulₓ]
         exact H.1
+      
   set d := (2 / ∥a.c j∥) • a.c j with hd
   have : a.r j - δ ≤ ∥a.c i - d∥ + (a.r j - 1) :=
     calc
@@ -511,11 +520,18 @@ theorem exists_normalized_aux3 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
     calc
       a.r j - ∥a.c j - a.c i∥ ≤ s * (τ - 1) := by
         rcases ah j i inej.symm with (H | H)
-        · calc a.r j - ∥a.c j - a.c i∥ ≤ 0 := sub_nonpos.2 H.1_ ≤ s * (τ - 1) := mul_nonneg spos.le (sub_nonneg.2 hτ)
+        · calc
+            a.r j - ∥a.c j - a.c i∥ ≤ 0 := sub_nonpos.2 H.1
+            _ ≤ s * (τ - 1) := mul_nonneg spos.le (sub_nonneg.2 hτ)
+            
           
         · rw [norm_sub_rev] at H
-          calc a.r j - ∥a.c j - a.c i∥ ≤ τ * a.r i - a.r i := sub_le_sub H.2 H.1_ = a.r i * (τ - 1) := by
-              ring _ ≤ s * (τ - 1) := mul_le_mul_of_nonneg_right A (sub_nonneg.2 hτ)
+          calc
+            a.r j - ∥a.c j - a.c i∥ ≤ τ * a.r i - a.r i := sub_le_sub H.2 H.1
+            _ = a.r i * (τ - 1) := by
+              ring
+            _ ≤ s * (τ - 1) := mul_le_mul_of_nonneg_right A (sub_nonneg.2 hτ)
+            
           
       _ ≤ s * (δ / 2) :=
         mul_le_mul_of_nonneg_left
@@ -526,18 +542,21 @@ theorem exists_normalized_aux3 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
         ring
       
   have invs_nonneg : 0 ≤ 2 / s := div_nonneg zero_le_two (zero_le_two.trans hi.le)
-  calc 1 - δ = 2 / s * (s / 2 - s / 2 * δ) := by
+  calc
+    1 - δ = 2 / s * (s / 2 - s / 2 * δ) := by
       field_simp [← spos.ne']
-      ring _ ≤ 2 / s * ∥d - a.c i∥ :=
+      ring
+    _ ≤ 2 / s * ∥d - a.c i∥ :=
       mul_le_mul_of_nonneg_left
         (by
           linarith only [hcrj, I, J, hi])
-        invs_nonneg _ = ∥(2 / s) • a.c i - (2 / ∥a.c j∥) • a.c j∥ :=
-      by
+        invs_nonneg
+    _ = ∥(2 / s) • a.c i - (2 / ∥a.c j∥) • a.c j∥ := by
       conv_lhs => rw [norm_sub_rev, ← abs_of_nonneg invs_nonneg]
       rw [← Real.norm_eq_abs, ← norm_smul, smul_sub, hd, smul_smul]
       congr 3
       field_simp [← spos.ne']
+    
 
 theorem exists_normalized {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ) (lastc : a.c (last N) = 0)
     (lastr : a.R (last N) = 1) (hτ : 1 ≤ τ) (δ : ℝ) (hδ1 : τ ≤ 1 + δ / 4) (hδ2 : δ ≤ 1) :

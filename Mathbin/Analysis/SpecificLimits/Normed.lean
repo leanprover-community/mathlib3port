@@ -38,7 +38,7 @@ theorem summable_of_absolute_convergence_real {f : ℕ → ℝ} :
 /-! ### Powers -/
 
 
-theorem tendsto_norm_zero' {𝕜 : Type _} [NormedGroup 𝕜] : Tendsto (norm : 𝕜 → ℝ) (𝓝[≠] 0) (𝓝[>] 0) :=
+theorem tendsto_norm_zero' {𝕜 : Type _} [NormedAddCommGroup 𝕜] : Tendsto (norm : 𝕜 → ℝ) (𝓝[≠] 0) (𝓝[>] 0) :=
   tendsto_norm_zero.inf <| tendsto_principal_principal.2 fun x hx => norm_pos_iff.2 hx
 
 namespace NormedField
@@ -57,14 +57,14 @@ theorem tendsto_norm_zpow_nhds_within_0_at_top {𝕜 : Type _} [NormedField 𝕜
   exact (tendsto_pow_at_top hm.ne').comp NormedField.tendsto_norm_inverse_nhds_within_0_at_top
 
 /-- The (scalar) product of a sequence that tends to zero with a bounded one also tends to zero. -/
-theorem tendsto_zero_smul_of_tendsto_zero_of_bounded {ι 𝕜 𝔸 : Type _} [NormedField 𝕜] [NormedGroup 𝔸] [NormedSpace 𝕜 𝔸]
-    {l : Filter ι} {ε : ι → 𝕜} {f : ι → 𝔸} (hε : Tendsto ε l (𝓝 0)) (hf : Filter.IsBoundedUnder (· ≤ ·) l (norm ∘ f)) :
-    Tendsto (ε • f) l (𝓝 0) := by
+theorem tendsto_zero_smul_of_tendsto_zero_of_bounded {ι 𝕜 𝔸 : Type _} [NormedField 𝕜] [NormedAddCommGroup 𝔸]
+    [NormedSpace 𝕜 𝔸] {l : Filter ι} {ε : ι → 𝕜} {f : ι → 𝔸} (hε : Tendsto ε l (𝓝 0))
+    (hf : Filter.IsBoundedUnder (· ≤ ·) l (norm ∘ f)) : Tendsto (ε • f) l (𝓝 0) := by
   rw [← is_o_one_iff 𝕜] at hε⊢
   simpa using is_o.smul_is_O hε (hf.is_O_const (one_ne_zero : (1 : 𝕜) ≠ 0))
 
 @[simp]
-theorem continuous_at_zpow {𝕜 : Type _} [NondiscreteNormedField 𝕜] {m : ℤ} {x : 𝕜} :
+theorem continuous_at_zpow {𝕜 : Type _} [NontriviallyNormedField 𝕜] {m : ℤ} {x : 𝕜} :
     ContinuousAt (fun x => x ^ m) x ↔ x ≠ 0 ∨ 0 ≤ m := by
   refine' ⟨_, continuous_at_zpow₀ _ _⟩
   contrapose!
@@ -74,7 +74,7 @@ theorem continuous_at_zpow {𝕜 : Type _} [NondiscreteNormedField 𝕜] {m : �
       (tendsto_norm_zpow_nhds_within_0_at_top hm)
 
 @[simp]
-theorem continuous_at_inv {𝕜 : Type _} [NondiscreteNormedField 𝕜] {x : 𝕜} : ContinuousAt Inv.inv x ↔ x ≠ 0 := by
+theorem continuous_at_inv {𝕜 : Type _} [NontriviallyNormedField 𝕜] {x : 𝕜} : ContinuousAt Inv.inv x ↔ x ≠ 0 := by
   simpa [← (@zero_lt_one ℤ _ _).not_le] using @continuous_at_zpow _ _ (-1) x
 
 end NormedField
@@ -323,12 +323,17 @@ theorem has_sum_coe_mul_geometric_of_norm_lt_1 {𝕜 : Type _} [NormedField 𝕜
     rintro rfl
     simpa [← lt_irreflₓ] using hr
   set s : 𝕜 := ∑' n : ℕ, n * r ^ n
-  calc s = (1 - r) * s / (1 - r) := (mul_div_cancel_left _ (sub_ne_zero.2 hr'.symm)).symm _ = (s - r * s) / (1 - r) :=
-      by
-      rw [sub_mul, one_mulₓ]_ = (((0 : ℕ) * r ^ 0 + ∑' n : ℕ, (n + 1 : ℕ) * r ^ (n + 1)) - r * s) / (1 - r) := by
-      rw [← tsum_eq_zero_add A]_ = ((r * ∑' n : ℕ, (n + 1) * r ^ n) - r * s) / (1 - r) := by
-      simp [← pow_succₓ, ← mul_left_commₓ _ r, ← tsum_mul_left]_ = r / (1 - r) ^ 2 := by
+  calc
+    s = (1 - r) * s / (1 - r) := (mul_div_cancel_left _ (sub_ne_zero.2 hr'.symm)).symm
+    _ = (s - r * s) / (1 - r) := by
+      rw [sub_mul, one_mulₓ]
+    _ = (((0 : ℕ) * r ^ 0 + ∑' n : ℕ, (n + 1 : ℕ) * r ^ (n + 1)) - r * s) / (1 - r) := by
+      rw [← tsum_eq_zero_add A]
+    _ = ((r * ∑' n : ℕ, (n + 1) * r ^ n) - r * s) / (1 - r) := by
+      simp [← pow_succₓ, ← mul_left_commₓ _ r, ← tsum_mul_left]
+    _ = r / (1 - r) ^ 2 := by
       simp [← add_mulₓ, ← tsum_add A B.summable, ← mul_addₓ, ← B.tsum_eq, div_eq_mul_inv, ← sq, ← div_div]
+    
 
 /-- If `∥r∥ < 1`, then `∑' n : ℕ, n * r ^ n = r / (1 - r) ^ 2`. -/
 theorem tsum_coe_mul_geometric_of_norm_lt_1 {𝕜 : Type _} [NormedField 𝕜] [CompleteSpace 𝕜] {r : 𝕜} (hr : ∥r∥ < 1) :
@@ -339,9 +344,9 @@ end MulGeometric
 
 section SummableLeGeometric
 
-variable [SemiNormedGroup α] {r C : ℝ} {f : ℕ → α}
+variable [SeminormedAddCommGroup α] {r C : ℝ} {f : ℕ → α}
 
-theorem SemiNormedGroup.cauchy_seq_of_le_geometric {C : ℝ} {r : ℝ} (hr : r < 1) {u : ℕ → α}
+theorem SeminormedAddCommGroup.cauchy_seq_of_le_geometric {C : ℝ} {r : ℝ} (hr : r < 1) {u : ℕ → α}
     (h : ∀ n, ∥u n - u (n + 1)∥ ≤ C * r ^ n) : CauchySeq u :=
   cauchy_seq_of_le_geometric r C hr
     (by
@@ -382,18 +387,18 @@ theorem cauchy_series_of_le_geometric {C : ℝ} {u : ℕ → α} {r : ℝ} (hr :
     (by
       simp [← h])
 
-theorem NormedGroup.cauchy_series_of_le_geometric' {C : ℝ} {u : ℕ → α} {r : ℝ} (hr : r < 1)
+theorem NormedAddCommGroup.cauchy_series_of_le_geometric' {C : ℝ} {u : ℕ → α} {r : ℝ} (hr : r < 1)
     (h : ∀ n, ∥u n∥ ≤ C * r ^ n) : CauchySeq fun n => ∑ k in range (n + 1), u k :=
   (cauchy_series_of_le_geometric hr h).comp_tendsto <| tendsto_add_at_top_nat 1
 
-theorem NormedGroup.cauchy_series_of_le_geometric'' {C : ℝ} {u : ℕ → α} {N : ℕ} {r : ℝ} (hr₀ : 0 < r) (hr₁ : r < 1)
-    (h : ∀, ∀ n ≥ N, ∀, ∥u n∥ ≤ C * r ^ n) : CauchySeq fun n => ∑ k in range (n + 1), u k := by
+theorem NormedAddCommGroup.cauchy_series_of_le_geometric'' {C : ℝ} {u : ℕ → α} {N : ℕ} {r : ℝ} (hr₀ : 0 < r)
+    (hr₁ : r < 1) (h : ∀, ∀ n ≥ N, ∀, ∥u n∥ ≤ C * r ^ n) : CauchySeq fun n => ∑ k in range (n + 1), u k := by
   set v : ℕ → α := fun n => if n < N then 0 else u n
   have hC : 0 ≤ C := (zero_le_mul_right <| pow_pos hr₀ N).mp ((norm_nonneg _).trans <| h N <| le_reflₓ N)
   have : ∀, ∀ n ≥ N, ∀, u n = v n := by
     intro n hn
     simp [← v, ← hn, ← if_neg (not_lt.mpr hn)]
-  refine' cauchy_seq_sum_of_eventually_eq this (NormedGroup.cauchy_series_of_le_geometric' hr₁ _)
+  refine' cauchy_seq_sum_of_eventually_eq this (NormedAddCommGroup.cauchy_series_of_le_geometric' hr₁ _)
   · exact C
     
   intro n
@@ -458,8 +463,8 @@ end NormedRingGeometric
 /-! ### Summability tests based on comparison with geometric series -/
 
 
-theorem summable_of_ratio_norm_eventually_le {α : Type _} [SemiNormedGroup α] [CompleteSpace α] {f : ℕ → α} {r : ℝ}
-    (hr₁ : r < 1) (h : ∀ᶠ n in at_top, ∥f (n + 1)∥ ≤ r * ∥f n∥) : Summable f := by
+theorem summable_of_ratio_norm_eventually_le {α : Type _} [SeminormedAddCommGroup α] [CompleteSpace α] {f : ℕ → α}
+    {r : ℝ} (hr₁ : r < 1) (h : ∀ᶠ n in at_top, ∥f (n + 1)∥ ≤ r * ∥f n∥) : Summable f := by
   by_cases' hr₀ : 0 ≤ r
   · rw [eventually_at_top] at h
     rcases h with ⟨N, hN⟩
@@ -480,7 +485,7 @@ theorem summable_of_ratio_norm_eventually_le {α : Type _} [SemiNormedGroup α] 
     exact not_lt.mpr (norm_nonneg _) (lt_of_le_of_ltₓ hn <| mul_neg_of_neg_of_pos hr₀ h)
     
 
-theorem summable_of_ratio_test_tendsto_lt_one {α : Type _} [NormedGroup α] [CompleteSpace α] {f : ℕ → α} {l : ℝ}
+theorem summable_of_ratio_test_tendsto_lt_one {α : Type _} [NormedAddCommGroup α] [CompleteSpace α] {f : ℕ → α} {l : ℝ}
     (hl₁ : l < 1) (hf : ∀ᶠ n in at_top, f n ≠ 0) (h : Tendsto (fun n => ∥f (n + 1)∥ / ∥f n∥) atTop (𝓝 l)) :
     Summable f := by
   rcases exists_between hl₁ with ⟨r, hr₀, hr₁⟩
@@ -488,8 +493,8 @@ theorem summable_of_ratio_test_tendsto_lt_one {α : Type _} [NormedGroup α] [Co
   filter_upwards [eventually_le_of_tendsto_lt hr₀ h, hf] with _ _ h₁
   rwa [← div_le_iff (norm_pos_iff.mpr h₁)]
 
-theorem not_summable_of_ratio_norm_eventually_ge {α : Type _} [SemiNormedGroup α] {f : ℕ → α} {r : ℝ} (hr : 1 < r)
-    (hf : ∃ᶠ n in at_top, ∥f n∥ ≠ 0) (h : ∀ᶠ n in at_top, r * ∥f n∥ ≤ ∥f (n + 1)∥) : ¬Summable f := by
+theorem not_summable_of_ratio_norm_eventually_ge {α : Type _} [SeminormedAddCommGroup α] {f : ℕ → α} {r : ℝ}
+    (hr : 1 < r) (hf : ∃ᶠ n in at_top, ∥f n∥ ≠ 0) (h : ∀ᶠ n in at_top, r * ∥f n∥ ≤ ∥f (n + 1)∥) : ¬Summable f := by
   rw [eventually_at_top] at h
   rcases h with ⟨N₀, hN₀⟩
   rw [frequently_at_top] at hf
@@ -509,8 +514,8 @@ theorem not_summable_of_ratio_norm_eventually_ge {α : Type _} [SemiNormedGroup 
     ac_rfl
     
 
-theorem not_summable_of_ratio_test_tendsto_gt_one {α : Type _} [SemiNormedGroup α] {f : ℕ → α} {l : ℝ} (hl : 1 < l)
-    (h : Tendsto (fun n => ∥f (n + 1)∥ / ∥f n∥) atTop (𝓝 l)) : ¬Summable f := by
+theorem not_summable_of_ratio_test_tendsto_gt_one {α : Type _} [SeminormedAddCommGroup α] {f : ℕ → α} {l : ℝ}
+    (hl : 1 < l) (h : Tendsto (fun n => ∥f (n + 1)∥ / ∥f n∥) atTop (𝓝 l)) : ¬Summable f := by
   have key : ∀ᶠ n in at_top, ∥f n∥ ≠ 0 := by
     filter_upwards [eventually_ge_of_tendsto_gt hl h] with _ hn hc
     rw [hc, div_zero] at hn
@@ -525,7 +530,7 @@ section
 /-! ### Dirichlet and alternating series tests -/
 
 
-variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E]
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 variable {b : ℝ} {f : ℕ → ℝ} {z : ℕ → E}
 
@@ -540,7 +545,7 @@ theorem Monotone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded (hfa : Monoton
   · exact normed_uniform_group
     
   · simp_rw [abs_of_nonneg (sub_nonneg_of_le (hfa (Nat.le_succₓ _))), ← mul_sum]
-    apply real.uniform_continuous_mul_const.comp_cauchy_seq
+    apply real.uniform_continuous_const_mul.comp_cauchy_seq
     simp_rw [sum_range_sub, sub_eq_add_neg]
     exact (tendsto.cauchy_seq hf0).AddConst
     
@@ -610,11 +615,13 @@ theorem Real.summable_pow_div_factorial (x : ℝ) : Summable (fun n => x ^ n / n
   exact summable_of_ratio_norm_eventually_le B (eventually_at_top.2 ⟨⌊∥x∥⌋₊, this⟩)
   -- Finally, we prove the upper estimate
   intro n hn
-  calc ∥x ^ (n + 1) / (n + 1)!∥ = ∥x∥ / (n + 1) * ∥x ^ n / n !∥ := by
+  calc
+    ∥x ^ (n + 1) / (n + 1)!∥ = ∥x∥ / (n + 1) * ∥x ^ n / n !∥ := by
       rw [pow_succₓ, Nat.factorial_succ, Nat.cast_mulₓ, ← div_mul_div_comm, norm_mul, norm_div, Real.norm_coe_nat,
-        Nat.cast_succₓ]_ ≤ ∥x∥ / (⌊∥x∥⌋₊ + 1) * ∥x ^ n / n !∥ :=
-      by
+        Nat.cast_succₓ]
+    _ ≤ ∥x∥ / (⌊∥x∥⌋₊ + 1) * ∥x ^ n / n !∥ := by
       mono* with 0 ≤ ∥x ^ n / n !∥, 0 ≤ ∥x∥ <;> apply norm_nonneg
+    
 
 theorem Real.tendsto_pow_div_factorial_at_top (x : ℝ) : Tendsto (fun n => x ^ n / n ! : ℕ → ℝ) atTop (𝓝 0) :=
   (Real.summable_pow_div_factorial x).tendsto_at_top_zero

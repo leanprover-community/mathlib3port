@@ -64,7 +64,7 @@ In this file we prove the following facts:
 -/
 
 
-variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {F : Type _} [NormedGroup F] [NormedSpace ℝ F]
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {F : Type _} [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 open Metric Set Asymptotics ContinuousLinearMap Filter
 
@@ -234,8 +234,8 @@ Let `f` and `B` be continuous functions on `[a, b]` such that
 * we have `f' x < B' x` whenever `∥f x∥ = B x`.
 
 Then `∥f x∥ ≤ B x` everywhere on `[a, b]`. -/
-theorem image_norm_le_of_liminf_right_slope_norm_lt_deriv_boundary {E : Type _} [NormedGroup E] {f : ℝ → E} {f' : ℝ → ℝ}
-    (hf : ContinuousOn f (Icc a b))
+theorem image_norm_le_of_liminf_right_slope_norm_lt_deriv_boundary {E : Type _} [NormedAddCommGroup E] {f : ℝ → E}
+    {f' : ℝ → ℝ} (hf : ContinuousOn f (Icc a b))
     -- `hf'` actually says `liminf (∥f z∥ - ∥f x∥) / (z - x) ≤ f' x`
     (hf' : ∀, ∀ x ∈ Ico a b, ∀, ∀ r, f' x < r → ∃ᶠ z in 𝓝[>] x, slope (norm ∘ f) x z < r)
     {B B' : ℝ → ℝ} (ha : ∥f a∥ ≤ B a) (hB : ContinuousOn B (Icc a b))
@@ -416,7 +416,7 @@ also assume `[normed_space ℝ E]` to have a notion of a `convex` set. -/
 
 section
 
-variable {𝕜 G : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] [NormedGroup G] [NormedSpace 𝕜 G]
+variable {𝕜 G : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] [NormedAddCommGroup G] [NormedSpace 𝕜 G]
 
 namespace Convex
 
@@ -426,7 +426,7 @@ variable {f : E → G} {C : ℝ} {s : Set E} {x y : E} {f' : E → E →L[𝕜] 
 the function is `C`-Lipschitz. Version with `has_fderiv_within`. -/
 theorem norm_image_sub_le_of_norm_has_fderiv_within_le (hf : ∀, ∀ x ∈ s, ∀, HasFderivWithinAt f (f' x) s x)
     (bound : ∀, ∀ x ∈ s, ∀, ∥f' x∥ ≤ C) (hs : Convex ℝ s) (xs : x ∈ s) (ys : y ∈ s) : ∥f y - f x∥ ≤ C * ∥y - x∥ := by
-  let this : NormedSpace ℝ G := RestrictScalars.normedSpace ℝ 𝕜 G
+  letI : NormedSpace ℝ G := RestrictScalars.normedSpace ℝ 𝕜 G
   /- By composition with `t ↦ x + t • (y-x)`, we reduce to a statement for functions defined
     on `[0,1]`, for which it is proved in `norm_image_sub_le_of_norm_deriv_le_segment`.
     We just have to check the differentiability of the composition and bounds on its derivative,
@@ -530,10 +530,15 @@ theorem norm_image_sub_le_of_norm_has_fderiv_within_le' (hf : ∀, ∀ x ∈ s, 
     together the pieces, expressing back `f` in terms of `g`. -/
   let g := fun y => f y - φ y
   have hg : ∀, ∀ x ∈ s, ∀, HasFderivWithinAt g (f' x - φ) s x := fun x xs => (hf x xs).sub φ.has_fderiv_within_at
-  calc ∥f y - f x - φ (y - x)∥ = ∥f y - f x - (φ y - φ x)∥ := by
-      simp _ = ∥f y - φ y - (f x - φ x)∥ := by
-      abel _ = ∥g y - g x∥ := by
-      simp _ ≤ C * ∥y - x∥ := Convex.norm_image_sub_le_of_norm_has_fderiv_within_le hg bound hs xs ys
+  calc
+    ∥f y - f x - φ (y - x)∥ = ∥f y - f x - (φ y - φ x)∥ := by
+      simp
+    _ = ∥f y - φ y - (f x - φ x)∥ := by
+      abel
+    _ = ∥g y - g x∥ := by
+      simp
+    _ ≤ C * ∥y - x∥ := Convex.norm_image_sub_le_of_norm_has_fderiv_within_le hg bound hs xs ys
+    
 
 /-- Variant of the mean value inequality on a convex set. Version with `fderiv_within`. -/
 theorem norm_image_sub_le_of_norm_fderiv_within_le' (hf : DifferentiableOn 𝕜 f s)
@@ -731,7 +736,7 @@ theorem exists_deriv_eq_slope : ∃ c ∈ Ioo a b, deriv f c = (f b - f a) / (b 
 
 end Interval
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » D)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » D)
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `C < f'`, then
 `f` grows faster than `C * x` on `D`, i.e., `C * (y - x) < f y - f x` whenever `x, y ∈ D`,
@@ -756,7 +761,7 @@ theorem mul_sub_lt_image_sub_of_lt_deriv {f : ℝ → ℝ} (hf : Differentiable 
   convex_univ.mul_sub_lt_image_sub_of_lt_deriv hf.Continuous.ContinuousOn hf.DifferentiableOn (fun x _ => hf'_gt x) x
     trivialₓ y trivialₓ hxy
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » D)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » D)
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `C ≤ f'`, then
 `f` grows at least as fast as `C * x` on `D`, i.e., `C * (y - x) ≤ f y - f x` whenever `x, y ∈ D`,
@@ -784,7 +789,7 @@ theorem mul_sub_le_image_sub_of_le_deriv {f : ℝ → ℝ} (hf : Differentiable 
   convex_univ.mul_sub_le_image_sub_of_le_deriv hf.Continuous.ContinuousOn hf.DifferentiableOn (fun x _ => hf'_ge x) x
     trivialₓ y trivialₓ hxy
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » D)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » D)
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `f' < C`, then
 `f` grows slower than `C * x` on `D`, i.e., `f y - f x < C * (y - x)` whenever `x, y ∈ D`,
@@ -806,7 +811,7 @@ theorem image_sub_lt_mul_sub_of_deriv_lt {f : ℝ → ℝ} (hf : Differentiable 
   convex_univ.image_sub_lt_mul_sub_of_deriv_lt hf.Continuous.ContinuousOn hf.DifferentiableOn (fun x _ => lt_hf' x) x
     trivialₓ y trivialₓ hxy
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » D)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » D)
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `f' ≤ C`, then
 `f` grows at most as fast as `C * x` on `D`, i.e., `f y - f x ≤ C * (y - x)` whenever `x, y ∈ D`,
@@ -1258,8 +1263,8 @@ balls over `ℝ` or `ℂ`. For now, we only include the ones that we need.
 -/
 
 
-variable {𝕜 : Type _} [IsROrC 𝕜] {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G] {H : Type _} [NormedGroup H]
-  [NormedSpace 𝕜 H] {f : G → H} {f' : G → G →L[𝕜] H} {x : G}
+variable {𝕜 : Type _} [IsROrC 𝕜] {G : Type _} [NormedAddCommGroup G] [NormedSpace 𝕜 G] {H : Type _}
+  [NormedAddCommGroup H] [NormedSpace 𝕜 H] {f : G → H} {f' : G → G →L[𝕜] H} {x : G}
 
 /-- Over the reals or the complexes, a continuously differentiable function is strictly
 differentiable. -/
@@ -1279,7 +1284,7 @@ theorem has_strict_fderiv_at_of_has_fderiv_at_of_continuous_at (hder : ∀ᶠ y 
     rw [← dist_eq_norm]
     exact le_of_ltₓ (hε H').2
   -- apply mean value theorem
-  let this : NormedSpace ℝ G := RestrictScalars.normedSpace ℝ 𝕜 G
+  letI : NormedSpace ℝ G := RestrictScalars.normedSpace ℝ 𝕜 G
   refine' (convex_ball _ _).norm_image_sub_le_of_norm_has_fderiv_within_le' _ hf' h.2 h.1
   exact fun y hy => (hε hy).1.HasFderivWithinAt
 

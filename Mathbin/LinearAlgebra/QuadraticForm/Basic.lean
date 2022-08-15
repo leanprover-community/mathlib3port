@@ -748,7 +748,7 @@ variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 def Anisotropic (Q : QuadraticForm R M) : Prop :=
   ∀ x, Q x = 0 → x = 0
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ≠ » 0)
 theorem not_anisotropic_iff_exists (Q : QuadraticForm R M) : ¬Anisotropic Q ↔ ∃ (x : _)(_ : x ≠ 0), Q x = 0 := by
   simp only [← anisotropic, ← not_forall, ← exists_prop, ← and_comm]
 
@@ -779,7 +779,7 @@ variable {R₂ : Type u} [OrderedRing R₂] [AddCommMonoidₓ M] [Module R₂ M]
 
 variable {Q₂ : QuadraticForm R₂ M}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ≠ » 0)
 /-- A positive definite quadratic form is positive on nonzero vectors. -/
 def PosDef (Q₂ : QuadraticForm R₂ M) : Prop :=
   ∀ (x) (_ : x ≠ 0), 0 < Q₂ x
@@ -928,7 +928,7 @@ theorem exists_orthogonal_basis [hK : Invertible (2 : K)] {B : BilinForm K V} (h
   induction' hd : finrank K V with d ih generalizing V
   · exact ⟨basisOfFinrankZero hd, fun _ _ _ => zero_left _⟩
     
-  have := finrank_pos_iff.1 (hd.symm ▸ Nat.succ_posₓ d : 0 < finrank K V)
+  haveI := finrank_pos_iff.1 (hd.symm ▸ Nat.succ_posₓ d : 0 < finrank K V)
   -- either the bilinear form is trivial or we can pick a non-null `x`
   obtain rfl | hB₁ := eq_or_ne B 0
   · let b := FiniteDimensional.finBasis K V

@@ -639,7 +639,7 @@ theorem Union_eq (h : π.IsPartition) : π.Union = I :=
 theorem Union_subset (h : π.IsPartition) (π₁ : Prepartition I) : π₁.Union ⊆ π.Union :=
   h.Union_eq.symm ▸ π₁.Union_subset
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (J «expr ∈ » π)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (J «expr ∈ » π)
 protected theorem exists_unique (h : π.IsPartition) (hx : x ∈ I) : ∃! (J : _)(_ : J ∈ π), x ∈ J := by
   rcases h x hx with ⟨J, h, hx⟩
   exact ExistsUnique.intro2 J h hx fun J' h' hx' => π.eq_of_mem_of_mem h' h hx' hx

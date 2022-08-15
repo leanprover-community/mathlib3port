@@ -202,7 +202,7 @@ instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRing�
       exact (ih.eval f).trans h₁
     have hf'c : ∀ n, IsUnit (f'.eval (c n)) := by
       intro n
-      have := is_local_ring_hom_of_le_jacobson_bot I (IsAdicComplete.le_jacobson_bot I)
+      haveI := is_local_ring_hom_of_le_jacobson_bot I (IsAdicComplete.le_jacobson_bot I)
       apply is_unit_of_map_unit (Ideal.Quotient.mk I)
       convert h₂ using 1
       exact smodeq.def.mp ((hc_mod n).eval _)
@@ -268,7 +268,7 @@ instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRing�
       specialize ha 1
       rw [hc, pow_oneₓ, ← Ideal.one_eq_top, Ideal.smul_eq_mul, mul_oneₓ, sub_eq_add_neg] at ha
       rw [← Smodeq.sub_mem, ← add_zeroₓ a₀]
-      refine' ha.symm.trans (smodeq.refl.add _)
+      refine' ha.symm.trans (smodeq.rfl.add _)
       rw [Smodeq.zero, Ideal.neg_mem_iff]
       exact Ideal.mul_mem_right _ _ h₁
       

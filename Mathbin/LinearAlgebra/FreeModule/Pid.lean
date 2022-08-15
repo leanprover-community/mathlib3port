@@ -297,7 +297,7 @@ See also the stronger version `submodule.smith_normal_form`.
 -/
 theorem Submodule.nonempty_basis_of_pid {ι : Type _} [Fintype ι] (b : Basis ι R M) (N : Submodule R M) :
     ∃ n : ℕ, Nonempty (Basis (Finₓ n) R N) := by
-  have := Classical.decEq M
+  haveI := Classical.decEq M
   refine' N.induction_on_rank b _ _
   intro N ih
   let b' := (b.reindex (Fintype.equivFin ι)).map (LinearEquiv.ofTop _ rfl).symm
@@ -345,7 +345,7 @@ noncomputable def Submodule.basisOfPidOfLeSpan {ι : Type _} [Fintype ι] {b : �
 
 variable {M}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ∉ » I)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (i «expr ∉ » I)
 /-- A finite type torsion free module over a PID is free. -/
 noncomputable def Module.freeOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M} (hs : span R (Range s) = ⊤)
     [NoZeroSmulDivisors R M] : Σn : ℕ, Basis (Finₓ n) R M := by
@@ -390,8 +390,11 @@ noncomputable def Module.freeOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M}
       rintro _ ⟨i, rfl⟩
       apply this
     intro i
-    calc (∏ j, a j) • s i = (∏ j in {i}ᶜ, a j) • a i • s i := by
-        rw [Fintype.prod_eq_prod_compl_mul i, mul_smul]_ ∈ N := N.smul_mem _ (ha' i)
+    calc
+      (∏ j, a j) • s i = (∏ j in {i}ᶜ, a j) • a i • s i := by
+        rw [Fintype.prod_eq_prod_compl_mul i, mul_smul]
+      _ ∈ N := N.smul_mem _ (ha' i)
+      
   -- Since a submodule of a free `R`-module is free, we get that `A • M` is free
   obtain ⟨n, b : Basis (Finₓ n) R φ.range⟩ := Submodule.basisOfPidOfLe this sI_basis
   -- hence `M` is free.
@@ -407,7 +410,7 @@ section SmithNormal
 /-- A Smith normal form basis for a submodule `N` of a module `M` consists of
 bases for `M` and `N` such that the inclusion map `N → M` can be written as a
 (rectangular) matrix with `a` along the diagonal: in Smith normal form. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure Basis.SmithNormalForm (N : Submodule R M) (ι : Type _) (n : ℕ) where
   bM : Basis ι R M
   bN : Basis (Finₓ n) R N

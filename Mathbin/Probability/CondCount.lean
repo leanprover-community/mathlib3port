@@ -41,30 +41,30 @@ open MeasureTheory MeasurableSpace
 
 namespace ProbabilityTheory
 
-variable {α : Type _} [MeasurableSpace α]
+variable {Ω : Type _} [MeasurableSpace Ω]
 
 /-- Given a set `s`, `cond_count s` is the counting measure conditioned on `s`. In particular,
 `cond_count s t` is the proportion of `s` that is contained in `t`.
 
 This is a probability measure when `s` is finite and nonempty and is given by
 `probability_theory.cond_count_is_probability_measure`. -/
-def condCount (s : Set α) : Measureₓ α :=
+def condCount (s : Set Ω) : Measureₓ Ω :=
   measure.count[|s]
 
 @[simp]
-theorem cond_count_empty_meas : (condCount ∅ : Measureₓ α) = 0 := by
+theorem cond_count_empty_meas : (condCount ∅ : Measureₓ Ω) = 0 := by
   simp [← cond_count]
 
-theorem cond_count_empty {s : Set α} : condCount s ∅ = 0 := by
+theorem cond_count_empty {s : Set Ω} : condCount s ∅ = 0 := by
   simp
 
-theorem finite_of_cond_count_ne_zero {s t : Set α} (h : condCount s t ≠ 0) : s.Finite := by
+theorem finite_of_cond_count_ne_zero {s t : Set Ω} (h : condCount s t ≠ 0) : s.Finite := by
   by_contra hs'
   simpa [← cond_count, ← cond, ← measure.count_apply_infinite hs'] using h
 
-variable [MeasurableSingletonClass α]
+variable [MeasurableSingletonClass Ω]
 
-theorem cond_count_is_probability_measure {s : Set α} (hs : s.Finite) (hs' : s.Nonempty) :
+theorem cond_count_is_probability_measure {s : Set Ω} (hs : s.Finite) (hs' : s.Nonempty) :
     IsProbabilityMeasure (condCount s) :=
   { measure_univ := by
       rw [cond_count, cond_apply _ hs.measurable_set, Set.inter_univ, Ennreal.inv_mul_cancel]
@@ -73,21 +73,21 @@ theorem cond_count_is_probability_measure {s : Set α} (hs : s.Finite) (hs' : s.
       · exact (measure.count_apply_lt_top.2 hs).Ne
          }
 
-theorem cond_count_singleton (a : α) (t : Set α) [Decidable (a ∈ t)] : condCount {a} t = if a ∈ t then 1 else 0 := by
-  rw [cond_count, cond_apply _ (measurable_set_singleton a), measure.count_singleton, Ennreal.inv_one, one_mulₓ]
+theorem cond_count_singleton (ω : Ω) (t : Set Ω) [Decidable (ω ∈ t)] : condCount {ω} t = if ω ∈ t then 1 else 0 := by
+  rw [cond_count, cond_apply _ (measurable_set_singleton ω), measure.count_singleton, Ennreal.inv_one, one_mulₓ]
   split_ifs
   · rw
       [(by
-        simpa : ({a} : Set α) ∩ t = {a}),
+        simpa : ({ω} : Set Ω) ∩ t = {ω}),
       measure.count_singleton]
     
   · rw
       [(by
-        simpa : ({a} : Set α) ∩ t = ∅),
+        simpa : ({ω} : Set Ω) ∩ t = ∅),
       measure.count_empty]
     
 
-variable {s t u : Set α}
+variable {s t u : Set Ω}
 
 theorem cond_count_inter_self (hs : s.Finite) : condCount s (s ∩ t) = condCount s t := by
   rw [cond_count, cond_inter_self _ hs.measurable_set]
@@ -100,7 +100,7 @@ theorem cond_count_self (hs : s.Finite) (hs' : s.Nonempty) : condCount s s = 1 :
     
 
 theorem cond_count_eq_one_of (hs : s.Finite) (hs' : s.Nonempty) (ht : s ⊆ t) : condCount s t = 1 := by
-  have := cond_count_is_probability_measure hs hs'
+  haveI := cond_count_is_probability_measure hs hs'
   refine' eq_of_le_of_not_lt prob_le_one _
   rw [not_ltₓ, ← cond_count_self hs hs']
   exact measure_mono ht
@@ -149,7 +149,7 @@ theorem cond_count_union (hs : s.Finite) (htu : Disjoint t u) : condCount s (t �
     Set.inter_union_distrib_left, measure_union, mul_addₓ]
   exacts[htu.mono inf_le_right inf_le_right, (hs.inter_of_left _).MeasurableSet]
 
-theorem cond_count_compl (t : Set α) (hs : s.Finite) (hs' : s.Nonempty) : condCount s t + condCount s (tᶜ) = 1 := by
+theorem cond_count_compl (t : Set Ω) (hs : s.Finite) (hs' : s.Nonempty) : condCount s t + condCount s (tᶜ) = 1 := by
   rw [← cond_count_union hs disjoint_compl_right, Set.union_compl_self,
     (cond_count_is_probability_measure hs hs').measure_univ]
 
@@ -175,7 +175,7 @@ theorem cond_count_disjoint_union (hs : s.Finite) (ht : t.Finite) (hst : Disjoin
     (measure.count_apply_lt_top.2 ht).Ne, measure.count_ne_zero hs', (measure.count_apply_lt_top.2 hs).Ne]
 
 /-- A version of the law of total probability for counting probabilites. -/
-theorem cond_count_add_compl_eq (u t : Set α) (hs : s.Finite) :
+theorem cond_count_add_compl_eq (u t : Set Ω) (hs : s.Finite) :
     condCount (s ∩ u) t * condCount s u + condCount (s ∩ uᶜ) t * condCount s (uᶜ) = condCount s t := by
   conv_rhs =>
     rw

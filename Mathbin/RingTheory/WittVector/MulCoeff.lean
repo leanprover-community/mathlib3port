@@ -51,7 +51,7 @@ def wittPolyProd (n : ℕ) : MvPolynomial (Finₓ 2 × ℕ) ℤ :=
 
 include hp
 
-theorem witt_poly_prod_vars (n : ℕ) : (wittPolyProd p n).vars ⊆ Finset.univ.product (Finset.range (n + 1)) := by
+theorem witt_poly_prod_vars (n : ℕ) : (wittPolyProd p n).vars ⊆ univ ×ˢ range (n + 1) := by
   rw [witt_poly_prod]
   apply subset.trans (vars_mul _ _)
   apply union_subset <;>
@@ -63,8 +63,7 @@ theorem witt_poly_prod_vars (n : ℕ) : (wittPolyProd p n).vars ⊆ Finset.univ.
 def wittPolyProdRemainder (n : ℕ) : MvPolynomial (Finₓ 2 × ℕ) ℤ :=
   ∑ i in range n, p ^ i * wittMul p i ^ p ^ (n - i)
 
-theorem witt_poly_prod_remainder_vars (n : ℕ) :
-    (wittPolyProdRemainder p n).vars ⊆ Finset.univ.product (Finset.range n) := by
+theorem witt_poly_prod_remainder_vars (n : ℕ) : (wittPolyProdRemainder p n).vars ⊆ univ ×ˢ range n := by
   rw [witt_poly_prod_remainder]
   apply subset.trans (vars_sum_subset _ _)
   rw [bUnion_subset]
@@ -96,7 +95,7 @@ def remainder (n : ℕ) : MvPolynomial (Finₓ 2 × ℕ) ℤ :=
 
 include hp
 
-theorem remainder_vars (n : ℕ) : (remainder p n).vars ⊆ univ.product (range (n + 1)) := by
+theorem remainder_vars (n : ℕ) : (remainder p n).vars ⊆ univ ×ˢ range (n + 1) := by
   rw [remainder]
   apply subset.trans (vars_mul _ _)
   apply union_subset <;>
@@ -190,7 +189,7 @@ theorem mul_poly_of_interest_aux5 (n : ℕ) :
   ring
 
 theorem mul_poly_of_interest_vars (n : ℕ) :
-    ((p ^ (n + 1) : MvPolynomial (Finₓ 2 × ℕ) ℤ) * polyOfInterest p n).vars ⊆ univ.product (range (n + 1)) := by
+    ((p ^ (n + 1) : MvPolynomial (Finₓ 2 × ℕ) ℤ) * polyOfInterest p n).vars ⊆ univ ×ˢ range (n + 1) := by
   rw [mul_poly_of_interest_aux5]
   apply subset.trans (vars_sub_subset _ _)
   apply union_subset
@@ -212,7 +211,7 @@ theorem poly_of_interest_vars_eq (n : ℕ) :
   apply pow_ne_zero
   exact_mod_cast hp.out.ne_zero
 
-theorem poly_of_interest_vars (n : ℕ) : (polyOfInterest p n).vars ⊆ univ.product (range (n + 1)) := by
+theorem poly_of_interest_vars (n : ℕ) : (polyOfInterest p n).vars ⊆ univ ×ˢ range (n + 1) := by
   rw [poly_of_interest_vars_eq] <;> apply mul_poly_of_interest_vars
 
 theorem peval_poly_of_interest (n : ℕ) (x y : 𝕎 k) :

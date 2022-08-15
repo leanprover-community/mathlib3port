@@ -33,7 +33,7 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1394:31: unsupported: @[derive] abbrev
+-- ./././Mathport/Syntax/Translate/Basic.lean:1406:31: unsupported: @[derive] abbrev
 /-- The category of finite dimensional `k`-linear representations of a monoid `G`. -/
 --, has_limits, has_colimits
 abbrev FdRep (k G : Type u) [Field k] [Monoidₓ G] :=
@@ -47,15 +47,15 @@ instance : CoeSort (FdRep k G) (Type u) :=
   ConcreteCategory.hasCoeToSort _
 
 instance (V : FdRep k G) : AddCommGroupₓ V := by
-  change AddCommGroupₓ ((forget₂ (FdRep k G) (FinVect k)).obj V)
+  change AddCommGroupₓ ((forget₂ (FdRep k G) (FinVect k)).obj V).obj
   infer_instance
 
 instance (V : FdRep k G) : Module k V := by
-  change Module k ((forget₂ (FdRep k G) (FinVect k)).obj V)
+  change Module k ((forget₂ (FdRep k G) (FinVect k)).obj V).obj
   infer_instance
 
 instance (V : FdRep k G) : FiniteDimensional k V := by
-  change FiniteDimensional k ((forget₂ (FdRep k G) (FinVect k)).obj V)
+  change FiniteDimensional k ((forget₂ (FdRep k G) (FinVect k)).obj V).obj
   infer_instance
 
 /-- The monoid homomorphism corresponding to the action of `G` onto `V : fdRep k G`. -/
@@ -122,7 +122,7 @@ noncomputable def dualTensorIsoLinHom : FdRep.of ρV.dual ⊗ FdRep.of ρW ≅ F
   convert dual_tensor_hom_comm ρV ρW
 
 @[simp]
-theorem dual_tensor_iso_lin_hom_hom_hom : (dualTensorIsoLinHom ρV ρW).Hom.Hom = dualTensorHom k V W :=
+theorem dual_tensor_iso_lin_hom_hom_hom : (dualTensorIsoLinHom ρV ρW).hom.hom = dualTensorHom k V W :=
   rfl
 
 end FdRep

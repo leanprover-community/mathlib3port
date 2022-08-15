@@ -137,8 +137,8 @@ theorem iff_is_const [PreconnectedSpace X] {f : X → Y} : IsLocallyConstant f �
   ⟨fun h x y => h.apply_eq_of_is_preconnected is_preconnected_univ trivialₓ trivialₓ, of_constant _⟩
 
 theorem range_finite [CompactSpace X] {f : X → Y} (hf : IsLocallyConstant f) : (Set.Range f).Finite := by
-  let this : TopologicalSpace Y := ⊥
-  have : DiscreteTopology Y := ⟨rfl⟩
+  letI : TopologicalSpace Y := ⊥
+  haveI : DiscreteTopology Y := ⟨rfl⟩
   rw [@iff_continuous X Y ‹_› ‹_›] at hf
   exact (is_compact_range hf).finite_of_discrete
 
@@ -172,6 +172,16 @@ theorem desc {α β : Type _} (f : X → α) (g : α → β) (h : IsLocallyConst
         rw [h], fun h => inj h⟩
   rw [this]
   apply h
+
+theorem of_constant_on_connected_components [LocallyConnectedSpace X] {f : X → Y}
+    (h : ∀ x, ∀, ∀ y ∈ ConnectedComponent x, ∀, f y = f x) : IsLocallyConstant f := by
+  rw [iff_exists_open]
+  exact fun x => ⟨ConnectedComponent x, is_open_connected_component, mem_connected_component, h x⟩
+
+theorem of_constant_on_preconnected_clopens [LocallyConnectedSpace X] {f : X → Y}
+    (h : ∀ U : Set X, IsPreconnected U → IsClopen U → ∀, ∀ x ∈ U, ∀, ∀, ∀ y ∈ U, ∀, f y = f x) : IsLocallyConstant f :=
+  of_constant_on_connected_components fun x =>
+    h (ConnectedComponent x) is_preconnected_connected_component is_clopen_connected_component x mem_connected_component
 
 end IsLocallyConstant
 

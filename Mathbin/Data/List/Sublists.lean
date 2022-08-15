@@ -324,5 +324,16 @@ theorem mem_sublists_len {α : Type _} {n} {l l' : List α} : l' ∈ sublistsLen
   ⟨fun h => ⟨mem_sublists'.1 ((sublists_len_sublist_sublists' _ _).Subset h), length_of_sublists_len h⟩, fun ⟨h₁, h₂⟩ =>
     h₂ ▸ mem_sublists_len_self h₁⟩
 
+theorem sublists_len_of_length_lt {n} {l : List α} (h : l.length < n) : sublistsLen n l = [] :=
+  eq_nil_iff_forall_not_memₓ.mpr fun x =>
+    mem_sublists_len.Not.mpr fun ⟨hs, hl⟩ => (h.trans_eq hl.symm).not_le (length_le_of_sublistₓ hs)
+
+@[simp]
+theorem sublists_len_length : ∀ l : List α, sublistsLen l.length l = [l]
+  | [] => rfl
+  | a :: l => by
+    rw [length, sublists_len_succ_cons, sublists_len_length, map_singleton, sublists_len_of_length_lt (lt_succ_self _),
+      nil_append]
+
 end List
 

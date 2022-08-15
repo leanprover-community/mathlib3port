@@ -69,12 +69,13 @@ theorem mem_convex_hull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndepe
   have hk : k i₀ = 0 := by
     field_simp [← k, ← ne_of_gtₓ hg]
   have ksum : (∑ e in t.erase i₀, k e) = 1 := by
-    calc (∑ e in t.erase i₀, k e) = ∑ e in t, k e := by
-        conv_rhs =>
-          rw [← insert_erase hi₀, sum_insert (not_mem_erase i₀ t), hk,
-            zero_addₓ]_ = ∑ e in t, f e - f i₀ / g i₀ * g e :=
-        rfl _ = 1 := by
+    calc
+      (∑ e in t.erase i₀, k e) = ∑ e in t, k e := by
+        conv_rhs => rw [← insert_erase hi₀, sum_insert (not_mem_erase i₀ t), hk, zero_addₓ]
+      _ = ∑ e in t, f e - f i₀ / g i₀ * g e := rfl
+      _ = 1 := by
         rw [sum_sub_distrib, fsum, ← mul_sum, gsum, mul_zero, sub_zero]
+      
   refine'
     ⟨⟨i₀, hi₀⟩, k, _, by
       convert ksum, _⟩
@@ -87,11 +88,13 @@ theorem mem_convex_hull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndepe
       rw [← le_div_iff hge]
       exact w _ hes
       
-    · calc _ ≤ 0 :=
-          mul_nonpos_of_nonneg_of_nonpos _ _-- prove two goals below
+    · calc
+        _ ≤ 0 := mul_nonpos_of_nonneg_of_nonpos _ _
+        -- prove two goals below
             _ ≤
             f e :=
           fpos e het
+        
       · apply div_nonneg (fpos i₀ (mem_of_subset (filter_subset _ t) mem)) (le_of_ltₓ hg)
         
       · simpa only [← mem_filter, ← het, ← true_andₓ, ← not_ltₓ] using hes
@@ -99,11 +102,14 @@ theorem mem_convex_hull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndepe
       
     
   · simp only [← Subtype.coe_mk, ← center_mass_eq_of_sum_1 _ id ksum, ← id]
-    calc (∑ e in t.erase i₀, k e • e) = ∑ e in t, k e • e :=
+    calc
+      (∑ e in t.erase i₀, k e • e) = ∑ e in t, k e • e :=
         sum_erase _
           (by
-            rw [hk, zero_smul])_ = ∑ e in t, (f e - f i₀ / g i₀ * g e) • e :=
-        rfl _ = t.center_mass f id := _
+            rw [hk, zero_smul])
+      _ = ∑ e in t, (f e - f i₀ / g i₀ * g e) • e := rfl
+      _ = t.center_mass f id := _
+      
     simp only [← sub_smul, ← mul_smul, ← sum_sub_distrib, smul_sum, ← gcombo, ← smul_zero, ← sub_zero, ← center_mass, ←
       fsum, ← inv_one, ← one_smul, ← id.def]
     

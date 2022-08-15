@@ -207,6 +207,12 @@ theorem lt_succ_iff_of_not_is_max (ha : ¬IsMax a) : b < succ a ↔ b ≤ a :=
 theorem succ_le_iff_of_not_is_max (ha : ¬IsMax a) : succ a ≤ b ↔ a < b :=
   ⟨(lt_succ_of_not_is_max ha).trans_le, succ_le_of_lt⟩
 
+theorem succ_lt_succ_iff_of_not_is_max (ha : ¬IsMax a) (hb : ¬IsMax b) : succ a < succ b ↔ a < b := by
+  rw [lt_succ_iff_of_not_is_max hb, succ_le_iff_of_not_is_max ha]
+
+theorem succ_le_succ_iff_of_not_is_max (ha : ¬IsMax a) (hb : ¬IsMax b) : succ a ≤ succ b ↔ a ≤ b := by
+  rw [succ_le_iff_of_not_is_max ha, lt_succ_iff_of_not_is_max hb]
+
 @[simp, mono]
 theorem succ_le_succ (h : a ≤ b) : succ a ≤ succ b := by
   by_cases' hb : IsMax b
@@ -220,6 +226,13 @@ theorem succ_le_succ (h : a ≤ b) : succ a ≤ succ b := by
     
 
 theorem succ_mono : Monotone (succ : α → α) := fun a b => succ_le_succ
+
+theorem le_succ_iterate (k : ℕ) (x : α) : x ≤ (succ^[k]) x := by
+  conv_lhs =>
+    rw
+      [(by
+        simp only [← Function.iterate_id, ← id.def] : x = (id^[k]) x)]
+  exact Monotone.le_iterate_of_le succ_mono le_succ k x
 
 theorem Iio_succ_of_not_is_max (ha : ¬IsMax a) : Iio (succ a) = Iic a :=
   Set.ext fun x => lt_succ_iff_of_not_is_max ha
@@ -307,6 +320,9 @@ theorem succ_eq_iff_is_max : succ a = a ↔ IsMax a :=
 
 alias succ_eq_iff_is_max ↔ _ _root_.is_max.succ_eq
 
+theorem succ_eq_succ_iff_of_not_is_max (ha : ¬IsMax a) (hb : ¬IsMax b) : succ a = succ b ↔ a = b := by
+  rw [eq_iff_le_not_lt, eq_iff_le_not_lt, succ_le_succ_iff_of_not_is_max ha hb, succ_lt_succ_iff_of_not_is_max ha hb]
+
 theorem le_le_succ_iff : a ≤ b ∧ b ≤ succ a ↔ b = a ∨ b = succ a := by
   refine'
     ⟨fun h => or_iff_not_imp_left.2 fun hba : b ≠ a => h.2.antisymm (succ_le_of_lt <| h.1.lt_of_ne <| hba.symm), _⟩
@@ -352,8 +368,8 @@ section NoMaxOrder
 variable [NoMaxOrder α]
 
 @[simp]
-theorem succ_eq_succ_iff : succ a = succ b ↔ a = b := by
-  simp_rw [eq_iff_le_not_lt, succ_le_succ_iff, succ_lt_succ_iff]
+theorem succ_eq_succ_iff : succ a = succ b ↔ a = b :=
+  succ_eq_succ_iff_of_not_is_max (not_is_max a) (not_is_max b)
 
 theorem succ_injective : Injective (succ : α → α) := fun a b => succ_eq_succ_iff.1
 
@@ -401,7 +417,16 @@ end OrderTop
 
 section OrderBot
 
-variable [OrderBot α] [Nontrivial α]
+variable [OrderBot α]
+
+@[simp]
+theorem lt_succ_bot_iff [NoMaxOrder α] : a < succ ⊥ ↔ a = ⊥ := by
+  rw [lt_succ_iff, le_bot_iff]
+
+theorem le_succ_bot_iff : a ≤ succ ⊥ ↔ a = ⊥ ∨ a = succ ⊥ := by
+  rw [le_succ_iff_eq_or_le, le_bot_iff, or_comm]
+
+variable [Nontrivial α]
 
 theorem bot_lt_succ (a : α) : ⊥ < succ a :=
   (lt_succ_of_not_is_max not_is_max_bot).trans_le <| succ_mono bot_le
@@ -489,6 +514,13 @@ theorem pred_le_pred {a b : α} (h : a ≤ b) : pred a ≤ pred b :=
   succ_le_succ h.dual
 
 theorem pred_mono : Monotone (pred : α → α) := fun a b => pred_le_pred
+
+theorem pred_iterate_le (k : ℕ) (x : α) : (pred^[k]) x ≤ x := by
+  conv_rhs =>
+    rw
+      [(by
+        simp only [← Function.iterate_id, ← id.def] : x = (id^[k]) x)]
+  exact Monotone.iterate_le_of_le pred_mono pred_le k x
 
 theorem Ioi_pred_of_not_is_min (ha : ¬IsMin a) : Ioi (pred a) = Ici a :=
   Set.ext fun x => pred_lt_iff_of_not_is_min ha
@@ -665,7 +697,16 @@ end OrderBot
 
 section OrderTop
 
-variable [OrderTop α] [Nontrivial α]
+variable [OrderTop α]
+
+@[simp]
+theorem pred_top_lt_iff [NoMinOrder α] : pred ⊤ < a ↔ a = ⊤ :=
+  @lt_succ_bot_iff αᵒᵈ _ _ _ _ _
+
+theorem pred_top_le_iff : pred ⊤ ≤ a ↔ a = ⊤ ∨ a = pred ⊤ :=
+  @le_succ_bot_iff αᵒᵈ _ _ _ _
+
+variable [Nontrivial α]
 
 theorem pred_lt_top (a : α) : pred a < ⊤ :=
   (pred_mono le_top).trans_lt <| pred_lt_of_not_is_min not_is_min_top
@@ -1165,7 +1206,7 @@ theorem exists_succ_iterate_iff_le : (∃ n, (succ^[n]) a = b) ↔ a ≤ b := by
   exact id_le_iterate_of_id_le le_succ n a
 
 /-- Induction principle on a type with a `succ_order` for all elements above a given element `m`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem Succ.rec {P : α → Prop} {m : α} (h0 : P m) (h1 : ∀ n, m ≤ n → P n → P (succ n)) ⦃n : α⦄ (hmn : m ≤ n) : P n :=
   by
   obtain ⟨n, rfl⟩ := hmn.exists_succ_iterate
@@ -1198,7 +1239,7 @@ theorem exists_pred_iterate_iff_le : (∃ n, (pred^[n]) b = a) ↔ a ≤ b :=
   @exists_succ_iterate_iff_le αᵒᵈ _ _ _ _ _
 
 /-- Induction principle on a type with a `pred_order` for all elements below a given element `m`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem Pred.rec {P : α → Prop} {m : α} (h0 : P m) (h1 : ∀ n, n ≤ m → P n → P (pred n)) ⦃n : α⦄ (hmn : n ≤ m) : P n :=
   @Succ.rec αᵒᵈ _ _ _ _ _ h0 h1 _ hmn
 

@@ -1036,6 +1036,10 @@ def MulLeCancellable [Mul α] [LE α] (a : α) : Prop :=
 theorem Contravariant.mul_le_cancellable [Mul α] [LE α] [ContravariantClass α α (· * ·) (· ≤ ·)] {a : α} :
     MulLeCancellable a := fun b c => le_of_mul_le_mul_left'
 
+@[to_additive]
+theorem mul_le_cancellable_one [Monoidₓ α] [LE α] : MulLeCancellable (1 : α) := fun a b => by
+  simpa only [← one_mulₓ] using id
+
 namespace MulLeCancellable
 
 @[to_additive]

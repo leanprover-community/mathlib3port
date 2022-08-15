@@ -39,18 +39,18 @@ theorem continuous_unop : Continuous (unop : Mᵐᵒᵖ → M) :=
 
 @[continuity, to_additive]
 theorem continuous_op : Continuous (op : M → Mᵐᵒᵖ) :=
-  continuous_induced_rng continuous_id
-
-@[to_additive]
-instance [T2Space M] : T2Space Mᵐᵒᵖ :=
-  ⟨fun x y h => separated_by_continuous MulOpposite.continuous_unop <| unop_injective.Ne h⟩
+  continuous_induced_rng.2 continuous_id
 
 /-- `mul_opposite.op` as a homeomorphism. -/
-@[to_additive "`add_opposite.op` as a homeomorphism."]
+@[to_additive "`add_opposite.op` as a homeomorphism.", simps]
 def opHomeomorph : M ≃ₜ Mᵐᵒᵖ where
   toEquiv := opEquiv
   continuous_to_fun := continuous_op
   continuous_inv_fun := continuous_unop
+
+@[to_additive]
+instance [T2Space M] : T2Space Mᵐᵒᵖ :=
+  opHomeomorph.symm.Embedding.T2Space
 
 @[simp, to_additive]
 theorem map_op_nhds (x : M) : map (op : M → Mᵐᵒᵖ) (𝓝 x) = 𝓝 (op x) :=
@@ -74,12 +74,20 @@ namespace Units
 
 open MulOpposite
 
-variable [TopologicalSpace M] [Monoidₓ M]
+variable [TopologicalSpace M] [Monoidₓ M] [TopologicalSpace X]
 
 /-- The units of a monoid are equipped with a topology, via the embedding into `M × M`. -/
 @[to_additive]
 instance : TopologicalSpace Mˣ :=
   TopologicalSpace.induced (embedProduct M) Prod.topologicalSpace
+
+@[to_additive]
+theorem inducing_embed_product : Inducing (embedProduct M) :=
+  ⟨rfl⟩
+
+@[to_additive]
+theorem embedding_embed_product : Embedding (embedProduct M) :=
+  ⟨inducing_embed_product, embed_product_injective M⟩
 
 @[to_additive]
 theorem continuous_embed_product : Continuous (embedProduct M) :=
@@ -88,6 +96,16 @@ theorem continuous_embed_product : Continuous (embedProduct M) :=
 @[to_additive]
 theorem continuous_coe : Continuous (coe : Mˣ → M) :=
   (@continuous_embed_product M _ _).fst
+
+@[to_additive]
+protected theorem continuous_iff {f : X → Mˣ} :
+    Continuous f ↔ Continuous (coe ∘ f : X → M) ∧ Continuous (fun x => ↑(f x)⁻¹ : X → M) := by
+  simp only [← inducing_embed_product.continuous_iff, ← embed_product_apply, ← (· ∘ ·), ← continuous_prod_mk, ←
+    op_homeomorph.symm.inducing.continuous_iff, ← op_homeomorph_symm_apply, ← unop_op]
+
+@[to_additive]
+theorem continuous_coe_inv : Continuous (fun u => ↑u⁻¹ : Mˣ → M) :=
+  (Units.continuous_iff.1 continuous_id).2
 
 end Units
 

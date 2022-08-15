@@ -78,7 +78,7 @@ unsafe def rewrite_search (explain : parse <| optionalₓ (tk "?"))
 
 add_tactic_doc
   { Name := "rewrite_search", category := DocCategory.tactic, declNames := [`tactic.interactive.rewrite_search],
-    tags := ["rewriting", "automation"] }
+    tags := ["rewriting", "search"] }
 
 end Tactic.Interactive
 

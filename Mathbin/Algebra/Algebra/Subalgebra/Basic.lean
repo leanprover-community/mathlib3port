@@ -5,6 +5,8 @@ Authors: Kenny Lau, Yury Kudryashov
 -/
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.Data.Set.UnionLift
+import Mathbin.LinearAlgebra.Finsupp
+import Mathbin.RingTheory.Ideal.Operations
 
 /-!
 # Subalgebras over Commutative Semiring
@@ -26,9 +28,8 @@ structure Subalgebra (R : Type u) (A : Type v) [CommSemiringₓ R] [Semiringₓ 
   zero_mem' := (algebraMap R A).map_zero ▸ algebra_map_mem' 0
   one_mem' := (algebraMap R A).map_one ▸ algebra_map_mem' 1
 
-/-- Reinterpret a `subalgebra` as a `subsemiring`. -/
-add_decl_doc Subalgebra.toSubsemiring
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident subalgebra.to_subsemiring]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace Subalgebra
 
 variable {R' : Type u'} {R : Type u} {A : Type v} {B : Type w} {C : Type w'}
@@ -369,15 +370,14 @@ def toSubmoduleEquiv (S : Subalgebra R A) : S.toSubmodule ≃ₗ[R] S :=
   LinearEquiv.ofEq _ _ rfl
 
 /-- Transport a subalgebra via an algebra homomorphism. -/
-def map (S : Subalgebra R A) (f : A →ₐ[R] B) : Subalgebra R B :=
+def map (f : A →ₐ[R] B) (S : Subalgebra R A) : Subalgebra R B :=
   { S.toSubsemiring.map (f : A →+* B) with
     algebra_map_mem' := fun r => f.commutes r ▸ Set.mem_image_of_mem _ (S.algebra_map_mem r) }
 
 theorem map_mono {S₁ S₂ : Subalgebra R A} {f : A →ₐ[R] B} : S₁ ≤ S₂ → S₁.map f ≤ S₂.map f :=
   Set.image_subset f
 
-theorem map_injective {S₁ S₂ : Subalgebra R A} (f : A →ₐ[R] B) (hf : Function.Injective f) (ih : S₁.map f = S₂.map f) :
-    S₁ = S₂ :=
+theorem map_injective {f : A →ₐ[R] B} (hf : Function.Injective f) : Function.Injective (map f) := fun S₁ S₂ ih =>
   ext <| Set.ext_iff.1 <| Set.image_injective.2 hf <| Set.ext <| SetLike.ext_iff.mp ih
 
 @[simp]
@@ -387,7 +387,7 @@ theorem map_id (S : Subalgebra R A) : S.map (AlgHom.id R A) = S :=
 theorem map_map (S : Subalgebra R A) (g : B →ₐ[R] C) (f : A →ₐ[R] B) : (S.map f).map g = S.map (g.comp f) :=
   SetLike.coe_injective <| Set.image_image _ _ _
 
-theorem mem_map {S : Subalgebra R A} {f : A →ₐ[R] B} {y : B} : y ∈ map S f ↔ ∃ x ∈ S, f x = y :=
+theorem mem_map {S : Subalgebra R A} {f : A →ₐ[R] B} {y : B} : y ∈ map f S ↔ ∃ x ∈ S, f x = y :=
   Subsemiring.mem_map
 
 theorem map_to_submodule {S : Subalgebra R A} {f : A →ₐ[R] B} :
@@ -403,14 +403,14 @@ theorem coe_map (S : Subalgebra R A) (f : A →ₐ[R] B) : (S.map f : Set B) = f
   rfl
 
 /-- Preimage of a subalgebra under an algebra homomorphism. -/
-def comap (S : Subalgebra R B) (f : A →ₐ[R] B) : Subalgebra R A :=
+def comap (f : A →ₐ[R] B) (S : Subalgebra R B) : Subalgebra R A :=
   { S.toSubsemiring.comap (f : A →+* B) with
     algebra_map_mem' := fun r => show f (algebraMap R A r) ∈ S from (f.commutes r).symm ▸ S.algebra_map_mem r }
 
-theorem map_le {S : Subalgebra R A} {f : A →ₐ[R] B} {U : Subalgebra R B} : map S f ≤ U ↔ S ≤ comap U f :=
+theorem map_le {S : Subalgebra R A} {f : A →ₐ[R] B} {U : Subalgebra R B} : map f S ≤ U ↔ S ≤ comap f U :=
   Set.image_subset_iff
 
-theorem gc_map_comap (f : A →ₐ[R] B) : GaloisConnection (fun S => map S f) fun S => comap S f := fun S U => map_le
+theorem gc_map_comap (f : A →ₐ[R] B) : GaloisConnection (map f) (comap f) := fun S U => map_le
 
 @[simp]
 theorem mem_comap (S : Subalgebra R B) (f : A →ₐ[R] B) (x : A) : x ∈ S.comap f ↔ f x ∈ S :=
@@ -742,21 +742,24 @@ theorem eq_top_iff {S : Subalgebra R A} : S = ⊤ ↔ ∀ x : A, x ∈ S :=
     rw [h] <;> exact mem_top, fun h => by
     ext x <;> exact ⟨fun _ => mem_top, fun _ => h x⟩⟩
 
+theorem range_top_iff_surjective (f : A →ₐ[R] B) : f.range = (⊤ : Subalgebra R B) ↔ Function.Surjective f :=
+  Algebra.eq_top_iff
+
 @[simp]
 theorem range_id : (AlgHom.id R A).range = ⊤ :=
   SetLike.coe_injective Set.range_id
 
 @[simp]
-theorem map_top (f : A →ₐ[R] B) : Subalgebra.map (⊤ : Subalgebra R A) f = f.range :=
+theorem map_top (f : A →ₐ[R] B) : (⊤ : Subalgebra R A).map f = f.range :=
   SetLike.coe_injective Set.image_univ
 
 @[simp]
-theorem map_bot (f : A →ₐ[R] B) : Subalgebra.map (⊥ : Subalgebra R A) f = ⊥ :=
+theorem map_bot (f : A →ₐ[R] B) : (⊥ : Subalgebra R A).map f = ⊥ :=
   SetLike.coe_injective <| by
     simp only [Set.range_comp, ← (· ∘ ·), ← Algebra.coe_bot, ← Subalgebra.coe_map, ← f.commutes]
 
 @[simp]
-theorem comap_top (f : A →ₐ[R] B) : Subalgebra.comap (⊤ : Subalgebra R B) f = ⊤ :=
+theorem comap_top (f : A →ₐ[R] B) : (⊤ : Subalgebra R B).comap f = ⊤ :=
   eq_top_iff.2 fun x => mem_top
 
 /-- `alg_hom` to `⊤ : subalgebra R A`. -/
@@ -829,12 +832,12 @@ theorem _root_.alg_hom.subsingleton [Subsingleton (Subalgebra R A)] : Subsinglet
 
 -- TODO[gh-6025]: make this an instance once safe to do so
 theorem _root_.alg_equiv.subsingleton_left [Subsingleton (Subalgebra R A)] : Subsingleton (A ≃ₐ[R] B) := by
-  have : Subsingleton (A →ₐ[R] B) := AlgHom.subsingleton
+  haveI : Subsingleton (A →ₐ[R] B) := AlgHom.subsingleton
   exact ⟨fun f g => AlgEquiv.ext fun x => alg_hom.ext_iff.mp (Subsingleton.elimₓ f.toAlgHom g.toAlgHom) x⟩
 
 -- TODO[gh-6025]: make this an instance once safe to do so
 theorem _root_.alg_equiv.subsingleton_right [Subsingleton (Subalgebra R B)] : Subsingleton (A ≃ₐ[R] B) := by
-  have : Subsingleton (B ≃ₐ[R] A) := AlgEquiv.subsingleton_left
+  haveI : Subsingleton (B ≃ₐ[R] A) := AlgEquiv.subsingleton_left
   exact
     ⟨fun f g =>
       Eq.trans (AlgEquiv.symm_symm _).symm
@@ -913,11 +916,11 @@ variable (S₁ : Subalgebra R B)
 
 /-- The product of two subalgebras is a subalgebra. -/
 def prod : Subalgebra R (A × B) :=
-  { S.toSubsemiring.Prod S₁.toSubsemiring with Carrier := (S : Set A) ×ˢ (S₁ : Set B),
+  { S.toSubsemiring.Prod S₁.toSubsemiring with Carrier := S ×ˢ S₁,
     algebra_map_mem' := fun r => ⟨algebra_map_mem _ _, algebra_map_mem _ _⟩ }
 
 @[simp]
-theorem coe_prod : (prod S S₁ : Set (A × B)) = (S : Set A) ×ˢ (S₁ : Set B) :=
+theorem coe_prod : (prod S S₁ : Set (A × B)) = S ×ˢ S₁ :=
   rfl
 
 theorem prod_to_submodule : (S.Prod S₁).toSubmodule = S.toSubmodule.Prod S₁.toSubmodule :=
@@ -1174,6 +1177,41 @@ theorem centralizer_univ : centralizer R Set.Univ = center R A :=
   SetLike.ext' (Set.centralizer_univ A)
 
 end Centralizer
+
+/-- Suppose we are given `∑ i, lᵢ * sᵢ = 1` in `S`, and `S'` a subalgebra of `S` that contains
+`lᵢ` and `sᵢ`. To check that an `x : S` falls in `S'`, we only need to show that
+`r ^ n • x ∈ M'` for some `n` for each `r : s`. -/
+theorem mem_of_span_eq_top_of_smul_pow_mem {S : Type _} [CommRingₓ S] [Algebra R S] (S' : Subalgebra R S) (s : Set S)
+    (l : s →₀ S) (hs : Finsupp.total s S S coe l = 1) (hs' : s ⊆ S') (hl : ∀ i, l i ∈ S') (x : S)
+    (H : ∀ r : s, ∃ n : ℕ, (r ^ n : S) • x ∈ S') : x ∈ S' := by
+  let s' : Set S' := coe ⁻¹' s
+  let e : s' ≃ s := ⟨fun x => ⟨x.1, x.2⟩, fun x => ⟨⟨_, hs' x.2⟩, x.2⟩, fun ⟨⟨_, _⟩, _⟩ => rfl, fun ⟨_, _⟩ => rfl⟩
+  let l' : s →₀ S' :=
+    ⟨l.support, fun x => ⟨_, hl x⟩, fun _ =>
+      finsupp.mem_support_iff.trans <|
+        Iff.not <| by
+          rw [← Subtype.coe_inj]
+          rfl⟩
+  have : Ideal.span s' = ⊤ := by
+    rw [Ideal.eq_top_iff_one, Ideal.span, Finsupp.mem_span_iff_total]
+    refine' ⟨Finsupp.equivMapDomain e.symm l', Subtype.ext <| Eq.trans _ hs⟩
+    rw [Finsupp.total_equiv_map_domain]
+    exact Finsupp.apply_total _ (Algebra.ofId S' S).toLinearMap _ _
+  obtain ⟨s'', hs₁, hs₂⟩ := (Ideal.span_eq_top_iff_finite _).mp this
+  replace H : ∀ r : s'', ∃ n : ℕ, (r ^ n : S) • x ∈ S' := fun r => H ⟨r, hs₁ r.2⟩
+  choose n₁ n₂ using H
+  let N := s''.attach.sup n₁
+  have hs' := Ideal.span_pow_eq_top _ hs₂ N
+  have : ∀ {x : S}, x ∈ (Algebra.ofId S' S).range.toSubmodule ↔ x ∈ S' := fun x =>
+    ⟨by
+      rintro ⟨x, rfl⟩
+      exact x.2, fun h => ⟨⟨x, h⟩, rfl⟩⟩
+  rw [← this]
+  apply (Algebra.ofId S' S).range.toSubmodule.mem_of_span_top_of_smul_mem _ hs'
+  rintro ⟨_, r, hr, rfl⟩
+  convert Submodule.smul_mem _ (r ^ (N - n₁ ⟨r, hr⟩)) (this.mpr <| n₂ ⟨r, hr⟩) using 1
+  simp only [← _root_.coe_coe, ← Subtype.coe_mk, ← Subalgebra.smul_def, ← smul_smul, pow_addₓ, ← Subalgebra.coe_pow]
+  rw [tsub_add_cancel_of_le (Finset.le_sup (s''.mem_attach _) : n₁ ⟨r, hr⟩ ≤ N)]
 
 end Subalgebra
 

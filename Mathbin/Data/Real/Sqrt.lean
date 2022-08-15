@@ -5,7 +5,7 @@ Authors: Mario Carneiro, Floris van Doorn, Yury Kudryashov
 -/
 import Mathbin.Topology.Algebra.Order.MonotoneContinuity
 import Mathbin.Topology.Instances.Nnreal
-import Mathbin.Tactic.NormCast
+import Mathbin.Tactic.Positivity
 
 /-!
 # Square root of a real number
@@ -313,6 +313,28 @@ theorem sqrt_pos : 0 < sqrt x ↔ 0 < x :=
       (by
         simp [← le_antisymm_iffₓ, ← sqrt_nonneg])
       sqrt_eq_zero')
+
+alias sqrt_pos ↔ _ sqrt_pos_of_pos
+
+section
+
+open Tactic Tactic.Positivity
+
+/-- Extension for the `positivity` tactic: a square root is nonnegative, and is strictly positive if
+its input is. -/
+@[positivity]
+unsafe def _root_.tactic.positivity_sqrt : expr → tactic strictness
+  | quote.1 (Real.sqrt (%%ₓa)) => do
+    (-- if can prove `0 < a`, report positivity
+        do
+          let positive pa ← core a
+          positive <$> mk_app `` sqrt_pos_of_pos [pa]) <|>
+        nonnegative <$> mk_app `` sqrt_nonneg [a]
+  |-- else report nonnegativity
+    _ =>
+    failed
+
+end
 
 @[simp]
 theorem sqrt_mul (hx : 0 ≤ x) (y : ℝ) : sqrt (x * y) = sqrt x * sqrt y := by

@@ -20,7 +20,7 @@ universe u v
 
 variable (R : Type u)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`cast_eq_zero_iff] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`cast_eq_zero_iff] []
 /-- The generator of the kernel of the unique homomorphism ℕ → R for a semiring R.
 
 *Warning*: for a semiring `R`, `char_p R 0` and `char_zero R` need not coincide.
@@ -66,34 +66,32 @@ instance CharP.of_char_zero [AddMonoidWithOneₓ R] [CharZero R] : CharP R 0 :=
   ⟨fun x => by
     rw [zero_dvd_iff, ← Nat.cast_zeroₓ, Nat.cast_inj]⟩
 
-theorem CharP.exists [NonAssocSemiringₓ R] : ∃ p, CharP R p := by
-  let this := Classical.decEq R <;>
-    exact
-      Classical.by_cases
-        (fun H : ∀ p : ℕ, (p : R) = 0 → p = 0 =>
-          ⟨0,
-            ⟨fun x => by
-              rw [zero_dvd_iff] <;>
-                exact
-                  ⟨H x, by
-                    rintro rfl <;> simp ⟩⟩⟩)
-        fun H =>
-        ⟨Nat.findₓ (not_forall.1 H),
-          ⟨fun x =>
-            ⟨fun H1 =>
-              Nat.dvd_of_mod_eq_zeroₓ
-                (by_contradiction fun H2 =>
-                  Nat.find_minₓ (not_forall.1 H)
-                    (Nat.mod_ltₓ x <| Nat.pos_of_ne_zeroₓ <| not_of_not_imp <| Nat.find_specₓ (not_forall.1 H))
-                    (not_imp_of_and_not
-                      ⟨by
-                        rwa [← Nat.mod_add_divₓ x (Nat.findₓ (not_forall.1 H)), Nat.cast_addₓ, Nat.cast_mulₓ,
-                          of_not_not (not_not_of_not_imp <| Nat.find_specₓ (not_forall.1 H)), zero_mul, add_zeroₓ] at
-                          H1,
-                        H2⟩)),
-              fun H1 => by
-              rw [← Nat.mul_div_cancel'ₓ H1, Nat.cast_mulₓ,
-                of_not_not (not_not_of_not_imp <| Nat.find_specₓ (not_forall.1 H)), zero_mul]⟩⟩⟩
+theorem CharP.exists [NonAssocSemiringₓ R] : ∃ p, CharP R p :=
+  letI := Classical.decEq R
+  Classical.by_cases
+    (fun H : ∀ p : ℕ, (p : R) = 0 → p = 0 =>
+      ⟨0,
+        ⟨fun x => by
+          rw [zero_dvd_iff] <;>
+            exact
+              ⟨H x, by
+                rintro rfl <;> simp ⟩⟩⟩)
+    fun H =>
+    ⟨Nat.findₓ (not_forall.1 H),
+      ⟨fun x =>
+        ⟨fun H1 =>
+          Nat.dvd_of_mod_eq_zeroₓ
+            (by_contradiction fun H2 =>
+              Nat.find_minₓ (not_forall.1 H)
+                (Nat.mod_ltₓ x <| Nat.pos_of_ne_zeroₓ <| not_of_not_imp <| Nat.find_specₓ (not_forall.1 H))
+                (not_imp_of_and_not
+                  ⟨by
+                    rwa [← Nat.mod_add_divₓ x (Nat.findₓ (not_forall.1 H)), Nat.cast_addₓ, Nat.cast_mulₓ,
+                      of_not_not (not_not_of_not_imp <| Nat.find_specₓ (not_forall.1 H)), zero_mul, add_zeroₓ] at H1,
+                    H2⟩)),
+          fun H1 => by
+          rw [← Nat.mul_div_cancel'ₓ H1, Nat.cast_mulₓ,
+            of_not_not (not_not_of_not_imp <| Nat.find_specₓ (not_forall.1 H)), zero_mul]⟩⟩⟩
 
 theorem CharP.exists_unique [NonAssocSemiringₓ R] : ∃! p, CharP R p :=
   let ⟨c, H⟩ := CharP.exists R
@@ -111,7 +109,7 @@ namespace ringChar
 variable [NonAssocSemiringₓ R]
 
 theorem spec : ∀ x : ℕ, (x : R) = 0 ↔ ringChar R ∣ x := by
-  let this := (Classical.some_spec (CharP.exists_unique R)).1 <;>
+  letI := (Classical.some_spec (CharP.exists_unique R)).1 <;>
     unfold ringChar <;> exact CharP.cast_eq_zero_iff R (ringChar R)
 
 theorem eq (p : ℕ) [C : CharP R p] : ringChar R = p :=
@@ -361,12 +359,14 @@ theorem cast_eq_mod (p : ℕ) [CharP R p] (k : ℕ) : (k : R) = (k % p : ℕ) :=
     
 
 /-- The characteristic of a finite ring cannot be zero. -/
-theorem char_ne_zero_of_fintype (p : ℕ) [hc : CharP R p] [Fintype R] : p ≠ 0 := fun h : p = 0 =>
-  have : CharZero R := @char_p_to_char_zero R _ (h ▸ hc)
-  absurd (@Nat.cast_injective R _ this) (not_injective_infinite_fintype coe)
+theorem char_ne_zero_of_finite (p : ℕ) [CharP R p] [Finite R] : p ≠ 0 := by
+  rintro rfl
+  haveI : CharZero R := char_p_to_char_zero R
+  cases nonempty_fintype R
+  exact absurd Nat.cast_injective (not_injective_infinite_fintype (coe : ℕ → R))
 
-theorem ring_char_ne_zero_of_fintype [Fintype R] : ringChar R ≠ 0 :=
-  char_ne_zero_of_fintype R (ringChar R)
+theorem ring_char_ne_zero_of_finite [Finite R] : ringChar R ≠ 0 :=
+  char_ne_zero_of_finite R (ringChar R)
 
 end
 
@@ -405,7 +405,7 @@ section NoZeroDivisors
 
 variable [NoZeroDivisors R]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (d «expr ∣ » p)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (d «expr ∣ » p)
 theorem char_is_prime_of_two_le (p : ℕ) [hc : CharP R p] (hp : 2 ≤ p) : Nat.Prime p :=
   suffices ∀ (d) (_ : d ∣ p), d = 1 ∨ d = p from Nat.prime_def_lt''.mpr ⟨hp, this⟩
   fun (d : ℕ) (hdvd : ∃ e, p = d * e) =>
@@ -446,10 +446,10 @@ end Semiringₓ
 
 section Ringₓ
 
-variable (R) [Ringₓ R] [NoZeroDivisors R] [Nontrivial R] [Fintype R]
+variable (R) [Ringₓ R] [NoZeroDivisors R] [Nontrivial R] [Finite R]
 
 theorem char_is_prime (p : ℕ) [CharP R p] : p.Prime :=
-  Or.resolve_right (char_is_prime_or_zero R p) (char_ne_zero_of_fintype R p)
+  Or.resolve_right (char_is_prime_or_zero R p) (char_ne_zero_of_finite R p)
 
 end Ringₓ
 

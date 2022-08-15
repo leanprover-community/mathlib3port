@@ -881,7 +881,7 @@ def cycleFactorsAux [Fintype α] :
               split_ifs  at hy <;> cc)
       ⟨cycleOf f x :: m, by
         rw [List.prod_cons, hm₁]
-        simp , fun g hg => ((List.mem_cons_iff _ _ _).1 hg).elim (fun hg => hg.symm ▸ is_cycle_cycle_of _ hx) (hm₂ g),
+        simp , fun g hg => ((List.mem_cons_iffₓ _ _ _).1 hg).elim (fun hg => hg.symm ▸ is_cycle_cycle_of _ hx) (hm₂ g),
         List.pairwise_cons.2
           ⟨fun g hg y =>
             or_iff_not_imp_left.2 fun hfy =>
@@ -1153,7 +1153,7 @@ theorem cycle_is_cycle_of {f c : Equivₓ.Perm α} {a : α} (ha : a ∈ c.suppor
 
 end CycleFactorsFinset
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem cycle_induction_on [Fintype β] (P : Perm β → Prop) (σ : Perm β) (base_one : P 1)
     (base_cycles : ∀ σ : Perm β, σ.IsCycle → P σ)
     (induction_disjoint : ∀ σ τ : Perm β, Disjoint σ τ → IsCycle σ → P σ → P τ → P (σ * τ)) : P σ := by

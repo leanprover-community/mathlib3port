@@ -114,7 +114,7 @@ def adjunctionOfCostructuredArrowTerminals : G ⊣ rightAdjointOfCostructuredArr
   Adjunction.adjunctionOfEquivRight _ _
 
 /-- If each costructured arrow category on `G` has an terminal object, `G` is a left adjoint. -/
-def isRightAdjointOfCostructuredArrowTerminals : IsLeftAdjoint G where
+def isLeftAdjointOfCostructuredArrowTerminals : IsLeftAdjoint G where
   right := rightAdjointOfCostructuredArrowTerminals G
   adj := Adjunction.adjunctionOfEquivRight _ _
 

@@ -60,10 +60,11 @@ theorem AntitoneOn.integral_le_sum (hf : AntitoneOn f (Icc x₀ (x₀ + a))) :
       
     · simp only [← add_le_add_iff_left, ← Nat.cast_le, ← Nat.le_succₓ]
       
-  calc (∫ x in x₀..x₀ + a, f x) = ∑ i in Finset.range a, ∫ x in x₀ + i..x₀ + (i + 1 : ℕ), f x := by
+  calc
+    (∫ x in x₀..x₀ + a, f x) = ∑ i in Finset.range a, ∫ x in x₀ + i..x₀ + (i + 1 : ℕ), f x := by
       convert (intervalIntegral.sum_integral_adjacent_intervals hint).symm
-      simp only [← Nat.cast_zeroₓ, ← add_zeroₓ]_ ≤ ∑ i in Finset.range a, ∫ x in x₀ + i..x₀ + (i + 1 : ℕ), f (x₀ + i) :=
-      by
+      simp only [← Nat.cast_zeroₓ, ← add_zeroₓ]
+    _ ≤ ∑ i in Finset.range a, ∫ x in x₀ + i..x₀ + (i + 1 : ℕ), f (x₀ + i) := by
       apply Finset.sum_le_sum fun i hi => _
       have ia : i < a := Finset.mem_range.1 hi
       refine'
@@ -86,9 +87,10 @@ theorem AntitoneOn.integral_le_sum (hf : AntitoneOn f (Icc x₀ (x₀ + a))) :
                 hx.1,
               le_transₓ hx.2 _⟩
         simp only [← add_le_add_iff_left, ← Nat.cast_le, ← Nat.succ_le_of_ltₓ ia]
-        _ = ∑ i in Finset.range a, f (x₀ + i) :=
-      by
+        
+    _ = ∑ i in Finset.range a, f (x₀ + i) := by
       simp
+    
 
 theorem AntitoneOn.integral_le_sum_Ico (hab : a ≤ b) (hf : AntitoneOn f (Set.Icc a b)) :
     (∫ x in a..b, f x) ≤ ∑ x in Finset.ico a b, f x := by
@@ -117,7 +119,8 @@ theorem AntitoneOn.sum_le_integral (hf : AntitoneOn f (Icc x₀ (x₀ + a))) :
     (∑ i in Finset.range a, f (x₀ + (i + 1 : ℕ))) =
         ∑ i in Finset.range a, ∫ x in x₀ + i..x₀ + (i + 1 : ℕ), f (x₀ + (i + 1 : ℕ)) :=
       by
-      simp _ ≤ ∑ i in Finset.range a, ∫ x in x₀ + i..x₀ + (i + 1 : ℕ), f x := by
+      simp
+    _ ≤ ∑ i in Finset.range a, ∫ x in x₀ + i..x₀ + (i + 1 : ℕ), f x := by
       apply Finset.sum_le_sum fun i hi => _
       have ia : i + 1 ≤ a := Finset.mem_range.1 hi
       refine'
@@ -133,10 +136,11 @@ theorem AntitoneOn.sum_le_integral (hf : AntitoneOn f (Icc x₀ (x₀ + a))) :
         
       · refine' mem_Icc.2 ⟨(le_add_iff_nonneg_right _).2 (Nat.cast_nonneg _), _⟩
         simp only [← add_le_add_iff_left, ← Nat.cast_le, ← ia]
-        _ = ∫ x in x₀..x₀ + a, f x :=
-      by
+        
+    _ = ∫ x in x₀..x₀ + a, f x := by
       convert intervalIntegral.sum_integral_adjacent_intervals hint
       simp only [← Nat.cast_zeroₓ, ← add_zeroₓ]
+    
 
 theorem AntitoneOn.sum_le_integral_Ico (hab : a ≤ b) (hf : AntitoneOn f (Set.Icc a b)) :
     (∑ i in Finset.ico a b, f (i + 1 : ℕ)) ≤ ∫ x in a..b, f x := by

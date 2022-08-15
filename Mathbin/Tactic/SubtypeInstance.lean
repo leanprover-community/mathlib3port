@@ -14,14 +14,14 @@ namespace Tactic
 
 setup_tactic_parser
 
-open Tactic.Interactive (get_current_field refine_struct)
+open Tactic.Interactive (get_current_field refineStruct)
 
 /-- makes the substructure axiom name from field name, by postfacing with `_mem`-/
 def mkMemName (sub : Name) : Name → Name
   | mk_string n _ => mk_string (n ++ "_mem") sub
   | n => n
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 unsafe def derive_field_subtype : tactic Unit := do
   let field ← get_current_field
   let b ← target >>= is_prop

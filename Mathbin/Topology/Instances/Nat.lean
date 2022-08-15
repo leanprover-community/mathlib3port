@@ -60,11 +60,14 @@ theorem closed_ball_eq_Icc (x : ℕ) (r : ℝ) : ClosedBall x r = Icc ⌈↑x - 
   · rw [closed_ball_eq_empty.2 hr]
     apply (Icc_eq_empty _).symm
     rw [not_leₓ]
-    calc ⌊(x : ℝ) + r⌋₊ ≤ ⌊(x : ℝ)⌋₊ := by
+    calc
+      ⌊(x : ℝ) + r⌋₊ ≤ ⌊(x : ℝ)⌋₊ := by
         apply floor_mono
-        linarith _ < ⌈↑x - r⌉₊ := by
+        linarith
+      _ < ⌈↑x - r⌉₊ := by
         rw [floor_coe, Nat.lt_ceil]
         linarith
+      
     
 
 instance : ProperSpace ℕ :=

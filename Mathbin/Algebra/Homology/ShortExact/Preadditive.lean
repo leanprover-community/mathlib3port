@@ -52,7 +52,7 @@ structure LeftSplit : Prop where
 theorem LeftSplit.short_exact {f : A ⟶ B} {g : B ⟶ C} (h : LeftSplit f g) : ShortExact f g :=
   { mono := by
       obtain ⟨φ, hφ⟩ := h.left_split
-      have : mono (f ≫ φ) := by
+      haveI : mono (f ≫ φ) := by
         rw [hφ]
         infer_instance
       exact mono_of_mono f φ,
@@ -70,7 +70,7 @@ structure RightSplit : Prop where
 theorem RightSplit.short_exact {f : A ⟶ B} {g : B ⟶ C} (h : RightSplit f g) : ShortExact f g :=
   { Epi := by
       obtain ⟨χ, hχ⟩ := h.right_split
-      have : epi (χ ≫ g) := by
+      haveI : epi (χ ≫ g) := by
         rw [hχ]
         infer_instance
       exact epi_of_epi χ g,
@@ -110,8 +110,10 @@ theorem exact_of_split {A B C : 𝒜} {f : A ⟶ B} {g : B ⟶ C} {χ : C ⟶ B}
       · infer_instance
         
       simp only [← image_to_kernel_arrow, ← image_subobject_arrow_comp, ← category.id_comp, ← category.assoc]
-      calc (kernel_subobject g).arrow ≫ φ ≫ f = (kernel_subobject g).arrow ≫ 𝟙 B := _ _ = (kernel_subobject g).arrow :=
-          category.comp_id _
+      calc
+        (kernel_subobject g).arrow ≫ φ ≫ f = (kernel_subobject g).arrow ≫ 𝟙 B := _
+        _ = (kernel_subobject g).arrow := category.comp_id _
+        
       rw [← H, preadditive.comp_add]
       simp only [← add_zeroₓ, ← zero_comp, ← kernel_subobject_arrow_comp_assoc] }
 
@@ -171,7 +173,7 @@ end Preadditive
 /-- A *splitting* of a sequence `A -f⟶ B -g⟶ C` is an isomorphism
 to the short exact sequence `0 ⟶ A ⟶ A ⊞ C ⟶ C ⟶ 0` such that
 the vertical maps on the left and the right are the identity. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure Splitting [HasZeroMorphisms 𝒜] [HasBinaryBiproducts 𝒜] where
   Iso : B ≅ A ⊞ C
   comp_iso_eq_inl : f ≫ iso.Hom = biprod.inl
@@ -291,7 +293,7 @@ theorem π_section_eq_id_sub : g ≫ h.section = 𝟙 _ - h.retraction ≫ f :=
   eq_sub_iff_add_eq.mpr ((add_commₓ _ _).trans h.split_add)
 
 theorem splittings_comm (h h' : Splitting f g) : h'.section ≫ h.retraction = -(h.section ≫ h'.retraction) := by
-  have := h.mono
+  haveI := h.mono
   rw [← cancel_mono f]
   simp [← retraction_ι_eq_id_sub]
 

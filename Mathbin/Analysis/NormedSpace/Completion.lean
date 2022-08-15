@@ -22,7 +22,7 @@ namespace UniformSpace
 
 namespace Completion
 
-variable (𝕜 E : Type _) [NormedField 𝕜] [NormedGroup E] [NormedSpace 𝕜 E]
+variable (𝕜 E : Type _) [NormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 instance (priority := 100) NormedSpace.to_has_uniform_continuous_const_smul : HasUniformContinuousConstSmul 𝕜 E :=
   ⟨fun c => (lipschitz_with_smul c).UniformContinuous⟩
@@ -52,8 +52,8 @@ theorem coe_to_complL : ⇑(toComplL : E →L[𝕜] Completion E) = coe :=
   rfl
 
 @[simp]
-theorem norm_to_complL {𝕜 E : Type _} [NondiscreteNormedField 𝕜] [NormedGroup E] [NormedSpace 𝕜 E] [Nontrivial E] :
-    ∥(toComplL : E →L[𝕜] Completion E)∥ = 1 :=
+theorem norm_to_complL {𝕜 E : Type _} [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E]
+    [Nontrivial E] : ∥(toComplL : E →L[𝕜] Completion E)∥ = 1 :=
   (toComplₗᵢ : E →ₗᵢ[𝕜] Completion E).norm_to_continuous_linear_map
 
 end Completion

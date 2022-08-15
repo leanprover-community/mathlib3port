@@ -22,7 +22,7 @@ universe v u
 
 noncomputable section
 
-open CategoryTheory CategoryTheory.Category CategoryTheory.Limits CategoryTheory.Subobject
+open CategoryTheory CategoryTheory.Category CategoryTheory.Limits CategoryTheory.Subobject Opposite
 
 variable {C : Type u} [Category.{v} C] {X Y Z : C}
 
@@ -208,6 +208,61 @@ instance kernel_subobject_comp_mono_is_iso (f : X ⟶ Y) [HasKernel f] {Z : C} (
     
   · simp
     
+
+/-- Taking cokernels is an order-reversing map from the subobjects of `X` to the quotient objects
+    of `X`. -/
+@[simps]
+def cokernelOrderHom [HasCokernels C] (X : C) : Subobject X →o (Subobject (op X))ᵒᵈ where
+  toFun :=
+    Subobject.lift (fun A f hf => Subobject.mk (cokernel.π f).op)
+      (by
+        rintro A B f g hf hg i rfl
+        refine' subobject.mk_eq_mk_of_comm _ _ (iso.op _) (Quiver.Hom.unop_inj _)
+        · exact
+            (is_colimit.cocone_point_unique_up_to_iso (colimit.is_colimit _)
+                (is_cokernel_epi_comp (colimit.is_colimit _) i.hom rfl)).symm
+          
+        · simp only [← iso.comp_inv_eq, ← iso.op_hom, ← iso.symm_hom, ← unop_comp, ← Quiver.Hom.unop_op, ←
+            colimit.comp_cocone_point_unique_up_to_iso_hom, ← cofork.of_π_ι_app, ← coequalizer.cofork_π]
+          )
+  monotone' :=
+    Subobject.ind₂ _ <| by
+      intro A B f g hf hg h
+      dsimp' only [← subobject.lift_mk]
+      refine' subobject.mk_le_mk_of_comm (cokernel.desc f (cokernel.π g) _).op _
+      · rw [← subobject.of_mk_le_mk_comp h, category.assoc, cokernel.condition, comp_zero]
+        
+      · exact Quiver.Hom.unop_inj (cokernel.π_desc _ _ _)
+        
+
+/-- Taking kernels is an order-reversing map from the quotient objects of `X` to the subobjects of
+    `X`. -/
+@[simps]
+def kernelOrderHom [HasKernels C] (X : C) : (Subobject (op X))ᵒᵈ →o Subobject X where
+  toFun :=
+    Subobject.lift (fun A f hf => Subobject.mk (kernel.ι f.unop))
+      (by
+        rintro A B f g hf hg i rfl
+        refine' subobject.mk_eq_mk_of_comm _ _ _ _
+        · exact
+            is_limit.cone_point_unique_up_to_iso (limit.is_limit _)
+              (is_kernel_comp_mono (limit.is_limit (parallel_pair g.unop 0)) i.unop.hom rfl)
+          
+        · dsimp'
+          simp only [iso.eq_inv_comp, ← limit.cone_point_unique_up_to_iso_inv_comp, ← fork.of_ι_π_app]
+          )
+  monotone' :=
+    Subobject.ind₂ _ <| by
+      intro A B f g hf hg h
+      dsimp' only [← subobject.lift_mk]
+      refine' subobject.mk_le_mk_of_comm (kernel.lift g.unop (kernel.ι f.unop) _) _
+      · rw [← subobject.of_mk_le_mk_comp h, unop_comp, kernel.condition_assoc, zero_comp]
+        
+      · exact
+          Quiver.Hom.op_inj
+            (by
+              simp )
+        
 
 end Kernel
 

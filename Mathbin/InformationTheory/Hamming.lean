@@ -22,7 +22,7 @@ code.
 * `hamming β`: a type synonym for `Π i, β i` with `dist` and `norm` provided by the above.
 * `hamming.to_hamming`, `hamming.of_hamming`: functions for casting between `hamming β` and
 `Π i, β i`.
-* `hamming.normed_group`: the Hamming norm forms a normed group on `hamming β`.
+* `hamming.normed_add_comm_group`: the Hamming norm forms a normed group on `hamming β`.
 -/
 
 
@@ -209,7 +209,7 @@ end HammingDistNorm
 
 
 /-- Type synonym for a Pi type which inherits the usual algebraic instances, but is equipped with
-the Hamming metric and norm, instead of `pi.normed_group` which uses the sup norm. -/
+the Hamming metric and norm, instead of `pi.normed_add_comm_group` which uses the sup norm. -/
 def Hamming {ι : Type _} (β : ι → Type _) : Type _ :=
   ∀ i, β i
 
@@ -404,7 +404,7 @@ instance [∀ i, Zero (β i)] : HasNorm (Hamming β) :=
 theorem norm_eq_hamming_norm [∀ i, Zero (β i)] (x : Hamming β) : ∥x∥ = hammingNorm (ofHamming x) :=
   rfl
 
-instance [∀ i, AddCommGroupₓ (β i)] : SemiNormedGroup (Hamming β) :=
+instance [∀ i, AddCommGroupₓ (β i)] : SeminormedAddCommGroup (Hamming β) :=
   { Pi.addCommGroup with
     dist_eq := by
       push_cast
@@ -414,8 +414,8 @@ instance [∀ i, AddCommGroupₓ (β i)] : SemiNormedGroup (Hamming β) :=
 theorem nnnorm_eq_hamming_norm [∀ i, AddCommGroupₓ (β i)] (x : Hamming β) : ∥x∥₊ = hammingNorm (ofHamming x) :=
   rfl
 
-instance [∀ i, AddCommGroupₓ (β i)] : NormedGroup (Hamming β) :=
-  { Hamming.semiNormedGroup with }
+instance [∀ i, AddCommGroupₓ (β i)] : NormedAddCommGroup (Hamming β) :=
+  { Hamming.seminormedAddCommGroup with }
 
 end
 

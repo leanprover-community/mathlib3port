@@ -414,7 +414,7 @@ theorem one_lt_prod_of_one_lt [OrderedCommMonoid M] :
   | [b], h, _ => by
     simpa using h
   | a :: b :: l, hl₁, hl₂ => by
-    simp only [← forall_eq_or_imp, ← List.mem_cons_iff _ a] at hl₁
+    simp only [← forall_eq_or_imp, ← List.mem_cons_iffₓ _ a] at hl₁
     rw [List.prod_cons]
     apply one_lt_mul_of_lt_of_le' hl₁.1
     apply le_of_ltₓ ((b :: l).one_lt_prod_of_one_lt hl₁.2 (l.cons_ne_nil b))
@@ -442,6 +442,11 @@ theorem prod_eq_one_iff [CanonicallyOrderedMonoid M] (l : List M) : l.Prod = 1 �
   ⟨all_one_of_le_one_le_of_prod_eq_one fun _ _ => one_le _, fun h => by
     rw [eq_repeat.2 ⟨rfl, h⟩, prod_repeat, one_pow]⟩
 
+/-- Slightly more general version of `list.prod_eq_one_iff` for a non-ordered `monoid` -/
+@[to_additive "Slightly more general version of `list.sum_eq_zero_iff`\n  for a non-ordered `add_monoid`"]
+theorem prod_eq_one [Monoidₓ M] {l : List M} (hl : ∀, ∀ x ∈ l, ∀, x = (1 : M)) : l.Prod = 1 :=
+  trans (prod_eq_pow_card l 1 hl) (one_pow l.length)
+
 /-- If all elements in a list are bounded below by `1`, then the length of the list is bounded
 by the sum of the elements. -/
 theorem length_le_sum_of_one_le (L : List ℕ) (h : ∀, ∀ i ∈ L, ∀, 1 ≤ i) : L.length ≤ L.Sum := by
@@ -467,6 +472,16 @@ theorem prod_erase [DecidableEq M] [CommMonoidₓ M] {a} : ∀ {l : List M}, a �
     · simp only [← List.eraseₓ, ← if_pos, ← prod_cons]
       
     · simp only [← List.eraseₓ, ← if_neg (mt Eq.symm Ne), ← prod_cons, ← prod_erase h, ← mul_left_commₓ a b]
+      
+
+@[simp, to_additive]
+theorem prod_map_erase [DecidableEq ι] [CommMonoidₓ M] (f : ι → M) {a} :
+    ∀ {l : List ι}, a ∈ l → f a * ((l.erase a).map f).Prod = (l.map f).Prod
+  | b :: l, h => by
+    obtain rfl | ⟨ne, h⟩ := Decidable.List.eq_or_ne_mem_of_mem h
+    · simp only [← map, ← erase_cons_head, ← prod_cons]
+      
+    · simp only [← map, ← erase_cons_tail _ Ne.symm, ← prod_cons, ← prod_map_erase h, ← mul_left_commₓ (f a) (f b)]
       
 
 theorem dvd_prod [CommMonoidₓ M] {a} {l : List M} (ha : a ∈ l) : a ∣ l.Prod := by

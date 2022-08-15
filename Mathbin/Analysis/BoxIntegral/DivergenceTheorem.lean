@@ -49,7 +49,7 @@ noncomputable section
 
 universe u
 
-variable {E : Type u} [NormedGroup E] [NormedSpace ℝ E] {n : ℕ}
+variable {E : Type u} [NormedAddCommGroup E] [NormedSpace ℝ E] {n : ℕ}
 
 namespace BoxIntegral
 
@@ -137,21 +137,19 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
       rw [← integral_sub (Hi _ Hu) (Hi _ Hl), ← box.volume_face_mul i, mul_smul, ← box.volume_apply, ←
         box_additive_map.to_smul_apply, ← integral_const, ← box_additive_map.volume, ←
         integral_sub (integrable_const _) ((Hi _ Hu).sub (Hi _ Hl))]
-      simp only [← (· ∘ ·), ← Pi.sub_def, f'.map_smul, Pi.single_smul', ← smul_eq_mul, ←
-        mul_oneₓ]_ ≤ (volume (I.face i : Set ℝⁿ)).toReal * (2 * ε * c * (I.upper i - I.lower i)) :=
-      by
+      simp only [← (· ∘ ·), ← Pi.sub_def, f'.map_smul, Pi.single_smul', ← smul_eq_mul, ← mul_oneₓ]
+    _ ≤ (volume (I.face i : Set ℝⁿ)).toReal * (2 * ε * c * (I.upper i - I.lower i)) := by
       -- The hard part of the estimate was done above, here we just replace `diam I.Icc`
       -- with `c * (I.upper i - I.lower i)`
       refine' norm_integral_le_of_le_const (fun y hy => (this y hy).trans _) volume
       rw [mul_assoc (2 * ε)]
-      exact
-        mul_le_mul_of_nonneg_left (I.diam_Icc_le_of_distortion_le i hc)
-          (mul_nonneg zero_le_two h0.le)_ = 2 * ε * c * ∏ j, I.upper j - I.lower j :=
-      by
+      exact mul_le_mul_of_nonneg_left (I.diam_Icc_le_of_distortion_le i hc) (mul_nonneg zero_le_two h0.le)
+    _ = 2 * ε * c * ∏ j, I.upper j - I.lower j := by
       rw [← measure.to_box_additive_apply, box.volume_apply, ← I.volume_face_mul i]
       ac_rfl
+    
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y₁ y₂ «expr ∈ » «expr ∩ »(closed_ball x δ, I.Icc))
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y₁ y₂ «expr ∈ » «expr ∩ »(closed_ball x δ, I.Icc))
 /-- If `f : ℝⁿ⁺¹ → E` is differentiable on a closed rectangular box `I` with derivative `f'`, then
 the partial derivative `λ x, f' x (pi.single i 1)` is Henstock-Kurzweil integrable with integral
 equal to the difference of integrals of `f` over the faces `x i = I.upper i` and `x i = I.lower i`.
@@ -210,9 +208,11 @@ theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → �
         have : closed_ball x δ ∩ I.Icc ⊆ closed_ball x δ₁ ∩ I.Icc :=
           inter_subset_inter_left _ (closed_ball_subset_closed_ball hδ.2)
         rw [← dist_eq_norm]
-        calc dist (f y₁) (f y₂) ≤ dist (f y₁) (f x) + dist (f y₂) (f x) :=
-            dist_triangle_right _ _ _ _ ≤ ε / 2 / 2 + ε / 2 / 2 :=
-            add_le_add (hδ₁ _ <| this hy₁) (hδ₁ _ <| this hy₂)_ = ε / 2 := add_halves _
+        calc
+          dist (f y₁) (f y₂) ≤ dist (f y₁) (f x) + dist (f y₂) (f x) := dist_triangle_right _ _ _
+          _ ≤ ε / 2 / 2 + ε / 2 / 2 := add_le_add (hδ₁ _ <| this hy₁) (hδ₁ _ <| this hy₂)
+          _ = ε / 2 := add_halves _
+          
         
       · have : ContinuousWithinAt (fun δ => (2 * δ) ^ (n + 1) * ∥f' x (Pi.single i 1)∥) (Ioi (0 : ℝ)) 0 :=
           ((continuous_within_at_id.const_mul _).pow _).mul_const _
@@ -240,12 +240,18 @@ theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → �
       refine' (mul_le_mul_of_nonneg_right _ <| norm_nonneg _).trans hδ
       have : ∀ j, abs (J.upper j - J.lower j) ≤ 2 * δ := by
         intro j
-        calc dist (J.upper j) (J.lower j) ≤ dist J.upper J.lower :=
-            dist_le_pi_dist _ _ _ _ ≤ dist J.upper x + dist J.lower x := dist_triangle_right _ _ _ _ ≤ δ + δ :=
-            add_le_add (hJδ J.upper_mem_Icc) (hJδ J.lower_mem_Icc)_ = 2 * δ := (two_mul δ).symm
-      calc (∏ j, abs (J.upper j - J.lower j)) ≤ ∏ j : Finₓ (n + 1), 2 * δ :=
-          prod_le_prod (fun _ _ => abs_nonneg _) fun j hj => this j _ = (2 * δ) ^ (n + 1) := by
+        calc
+          dist (J.upper j) (J.lower j) ≤ dist J.upper J.lower := dist_le_pi_dist _ _ _
+          _ ≤ dist J.upper x + dist J.lower x := dist_triangle_right _ _ _
+          _ ≤ δ + δ := add_le_add (hJδ J.upper_mem_Icc) (hJδ J.lower_mem_Icc)
+          _ = 2 * δ := (two_mul δ).symm
+          
+      calc
+        (∏ j, abs (J.upper j - J.lower j)) ≤ ∏ j : Finₓ (n + 1), 2 * δ :=
+          prod_le_prod (fun _ _ => abs_nonneg _) fun j hj => this j
+        _ = (2 * δ) ^ (n + 1) := by
           simp
+        
       
     · refine' (norm_integral_le_of_le_const (fun y hy => hdfδ _ (Hmaps _ Hu hy) _ (Hmaps _ Hl hy)) _).trans _
       refine' (mul_le_mul_of_nonneg_right _ (half_pos ε0).le).trans_eq (one_mulₓ _)
@@ -254,11 +260,13 @@ theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → �
       calc
         J.upper (i.succ_above j) - J.lower (i.succ_above j) ≤
             dist (J.upper (i.succ_above j)) (J.lower (i.succ_above j)) :=
-          le_abs_self _ _ ≤ dist J.upper J.lower :=
-          dist_le_pi_dist J.upper J.lower (i.succ_above j)_ ≤ dist J.upper x + dist J.lower x :=
-          dist_triangle_right _ _ _ _ ≤ δ + δ :=
-          add_le_add (hJδ J.upper_mem_Icc) (hJδ J.lower_mem_Icc)_ ≤ 1 / 2 + 1 / 2 := add_le_add hδ12 hδ12 _ = 1 :=
-          add_halves 1
+          le_abs_self _
+        _ ≤ dist J.upper J.lower := dist_le_pi_dist J.upper J.lower (i.succ_above j)
+        _ ≤ dist J.upper x + dist J.lower x := dist_triangle_right _ _ _
+        _ ≤ δ + δ := add_le_add (hJδ J.upper_mem_Icc) (hJδ J.lower_mem_Icc)
+        _ ≤ 1 / 2 + 1 / 2 := add_le_add hδ12 hδ12
+        _ = 1 := add_halves 1
+        
       
     
   · intro c x hx ε ε0

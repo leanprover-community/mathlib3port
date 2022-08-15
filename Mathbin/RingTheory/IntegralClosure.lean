@@ -226,7 +226,7 @@ theorem is_integral_of_mem_of_fg (S : Subalgebra R A) (HS : S.toSubmodule.Fg) (x
       rw [← hy]
       exact subset_span hp
   -- Now `S` is a subalgebra so the product of two elements of `y` is also in `S`.
-  have : ∀ jk : (↑(y.product y) : Set (A × A)), jk.1.1 * jk.1.2 ∈ S.to_submodule := fun jk =>
+  have : ∀ jk : (↑(y ×ˢ y) : Set (A × A)), jk.1.1 * jk.1.2 ∈ S.to_submodule := fun jk =>
     S.mul_mem (hyS (Finset.mem_product.1 jk.2).1) (hyS (Finset.mem_product.1 jk.2).2)
   rw [← hy, ← Set.image_id ↑y] at this
   simp only [← Finsupp.mem_span_image_iff_total] at this
@@ -236,8 +236,8 @@ theorem is_integral_of_mem_of_fg (S : Subalgebra R A) (HS : S.toSubmodule.Fg) (x
   let S₀ : Subring R := Subring.closure ↑(lx.frange ∪ Finset.bUnion Finset.univ (Finsupp.frange ∘ ly))
   -- It suffices to prove that `x` is integral over `S₀`.
   refine' is_integral_of_subring S₀ _
-  let this : CommRingₓ S₀ := SubringClass.toCommRing S₀
-  let this : Algebra S₀ A := Algebra.ofSubring S₀
+  letI : CommRingₓ S₀ := SubringClass.toCommRing S₀
+  letI : Algebra S₀ A := Algebra.ofSubring S₀
   -- Claim: the `S₀`-module span (in `A`) of the set `y ∪ {1}` is closed under
   -- multiplication (indeed, this is the motivation for the definition of `S₀`).
   have : span S₀ (insert 1 ↑y : Set A) * span S₀ (insert 1 ↑y : Set A) ≤ span S₀ (insert 1 ↑y : Set A) := by
@@ -286,7 +286,7 @@ theorem is_integral_of_mem_of_fg (S : Subalgebra R A) (HS : S.toSubmodule.Fg) (x
       
   have foo : ∀ z, z ∈ S₁ ↔ z ∈ Algebra.adjoin (↥S₀) (y : Set A)
   simp [← this]
-  have : IsNoetherianRing ↥S₀ := is_noetherian_subring_closure _ (Finset.finite_to_set _)
+  haveI : IsNoetherianRing ↥S₀ := is_noetherian_subring_closure _ (Finset.finite_to_set _)
   refine'
     is_integral_of_submodule_noetherian (Algebra.adjoin S₀ ↑y)
       (is_noetherian_of_fg_of_noetherian _
@@ -303,9 +303,58 @@ theorem is_integral_of_mem_of_fg (S : Subalgebra R A) (HS : S.toSubmodule.Fg) (x
   rw [Finsupp.mem_supported] at hlx1
   exact Subalgebra.smul_mem _ (Algebra.subset_adjoin <| hlx1 hr) _
 
+variable {f}
+
+theorem RingHom.Finite.to_is_integral (h : f.Finite) : f.IsIntegral := by
+  letI := f.to_algebra
+  exact fun x => is_integral_of_mem_of_fg ⊤ h.1 _ trivialₓ
+
+alias RingHom.Finite.to_is_integral ← RingHom.IsIntegral.of_finite
+
+theorem RingHom.IsIntegral.to_finite (h : f.IsIntegral) (h' : f.FiniteType) : f.Finite := by
+  letI := f.to_algebra
+  obtain ⟨s, hs⟩ := h'
+  constructor
+  change (⊤ : Subalgebra R S).toSubmodule.Fg
+  rw [← hs]
+  exact fg_adjoin_of_finite (Set.to_finite _) fun x _ => h x
+
+alias RingHom.IsIntegral.to_finite ← RingHom.Finite.of_is_integral_of_finite_type
+
+/-- finite = integral + finite type -/
+theorem RingHom.finite_iff_is_integral_and_finite_type : f.Finite ↔ f.IsIntegral ∧ f.FiniteType :=
+  ⟨fun h => ⟨h.to_is_integral, h.to_finite_type⟩, fun ⟨h, h'⟩ => h.to_finite h'⟩
+
+theorem Algebra.IsIntegral.finite (h : Algebra.IsIntegral R A) [h' : Algebra.FiniteType R A] : Module.Finite R A := by
+  have :=
+    h.to_finite
+      (by
+        delta' RingHom.FiniteType
+        convert h'
+        ext
+        exact (Algebra.smul_def _ _).symm)
+  delta' RingHom.Finite  at this
+  convert this
+  ext
+  exact Algebra.smul_def _ _
+
+theorem Algebra.IsIntegral.of_finite [h : Module.Finite R A] : Algebra.IsIntegral R A := by
+  apply RingHom.Finite.to_is_integral
+  delta' RingHom.Finite
+  convert h
+  ext
+  exact (Algebra.smul_def _ _).symm
+
+/-- finite = integral + finite type -/
+theorem Algebra.finite_iff_is_integral_and_finite_type :
+    Module.Finite R A ↔ Algebra.IsIntegral R A ∧ Algebra.FiniteType R A :=
+  ⟨fun h => ⟨Algebra.IsIntegral.of_finite, inferInstance⟩, fun ⟨h, h'⟩ => h.finite⟩
+
+variable (f)
+
 theorem RingHom.is_integral_of_mem_closure {x y z : S} (hx : f.IsIntegralElem x) (hy : f.IsIntegralElem y)
     (hz : z ∈ Subring.closure ({x, y} : Set S)) : f.IsIntegralElem z := by
-  let this : Algebra R S := f.to_algebra
+  letI : Algebra R S := f.to_algebra
   have := (fg_adjoin_singleton_of_integral x hx).mul (fg_adjoin_singleton_of_integral y hy)
   rw [← Algebra.adjoin_union_coe_submodule, Set.singleton_union] at this
   exact
@@ -583,7 +632,7 @@ end
 
 section IsIntegralClosure
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`algebra_map_injective] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`algebra_map_injective] []
 /-- `is_integral_closure A R B` is the characteristic predicate stating `A` is
 the integral closure of `R` in `B`,
 i.e. that an element of `B` is integral over `R` iff it is an element of (the image of) `A`.
@@ -878,14 +927,16 @@ theorem is_field_of_is_integral_of_is_field {R S : Type _} [CommRingₓ R] [Nont
 
 theorem is_field_of_is_integral_of_is_field' {R S : Type _} [CommRingₓ R] [CommRingₓ S] [IsDomain S] [Algebra R S]
     (H : Algebra.IsIntegral R S) (hR : IsField R) : IsField S := by
-  let this := hR.to_field
+  letI := hR.to_field
   refine' ⟨⟨0, 1, zero_ne_one⟩, mul_comm, fun x hx => _⟩
   let A := Algebra.adjoin R ({x} : Set S)
-  have : IsNoetherian R A := is_noetherian_of_fg_of_noetherian A.to_submodule (fg_adjoin_singleton_of_integral x (H x))
-  have : Module.Finite R A := Module.IsNoetherian.finite R A
+  haveI : IsNoetherian R A := is_noetherian_of_fg_of_noetherian A.to_submodule (fg_adjoin_singleton_of_integral x (H x))
+  haveI : Module.Finite R A := Module.IsNoetherian.finite R A
   obtain ⟨y, hy⟩ :=
     LinearMap.surjective_of_injective
-      (@lmul_left_injective R A _ _ _ _ ⟨x, subset_adjoin (Set.mem_singleton x)⟩ fun h => hx (subtype.ext_iff.mp h)) 1
+      (@LinearMap.mul_left_injective R A _ _ _ _ ⟨x, subset_adjoin (Set.mem_singleton x)⟩ fun h =>
+        hx (subtype.ext_iff.mp h))
+      1
   exact ⟨y, subtype.ext_iff.mp hy⟩
 
 theorem Algebra.IsIntegral.is_field_iff_is_field {R S : Type _} [CommRingₓ R] [Nontrivial R] [CommRingₓ S] [IsDomain S]

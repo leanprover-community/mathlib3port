@@ -48,7 +48,7 @@ open MeasureTheory TopologicalSpace ContinuousMap
 
 variable {α : Type _} [MeasurableSpace α] [TopologicalSpace α] [NormalSpace α] [BorelSpace α]
 
-variable (E : Type _) [NormedGroup E] [SecondCountableTopologyEither α E]
+variable (E : Type _) [NormedAddCommGroup E] [SecondCountableTopologyEither α E]
 
 variable {p : ℝ≥0∞} [_i : Fact (1 ≤ p)] (hp : p ≠ ∞) (μ : Measureₓ α)
 
@@ -58,8 +58,8 @@ namespace MeasureTheory.lp
 
 variable [NormedSpace ℝ E]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (u «expr ⊇ » s)
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (F «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (u «expr ⊇ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (F «expr ⊆ » s)
 /-- A function in `Lp` can be approximated in `Lp` by continuous functions. -/
 theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     (boundedContinuousFunction E p μ).topologicalClosure = ⊤ := by
@@ -167,7 +167,7 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     exact Ennreal.to_real_le_coe_of_le_coe gc_snorm
     
   · rw [SetLike.mem_coe, mem_bounded_continuous_function_iff]
-    refine' ⟨BoundedContinuousFunction.ofNormedGroup _ gc_cont ∥c∥ _, rfl⟩
+    refine' ⟨BoundedContinuousFunction.ofNormedAddCommGroup _ gc_cont ∥c∥ _, rfl⟩
     intro x
     have h₀ : g x * ∥c∥ ≤ ∥c∥ := by
       nlinarith [(hg_range x).1, (hg_range x).2, norm_nonneg c]
@@ -182,7 +182,7 @@ namespace BoundedContinuousFunction
 
 theorem to_Lp_dense_range [μ.WeaklyRegular] [IsFiniteMeasure μ] : DenseRange ⇑(toLp p μ 𝕜 : (α →ᵇ E) →L[𝕜] lp E p μ) :=
   by
-  have : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ 𝕜 E
+  haveI : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ 𝕜 E
   rw [dense_range_iff_closure_range]
   suffices (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ).range.toAddSubgroup.topologicalClosure = ⊤ by
     exact congr_arg coe this
@@ -194,7 +194,7 @@ namespace ContinuousMap
 
 theorem to_Lp_dense_range [CompactSpace α] [μ.WeaklyRegular] [IsFiniteMeasure μ] :
     DenseRange ⇑(toLp p μ 𝕜 : C(α, E) →L[𝕜] lp E p μ) := by
-  have : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ 𝕜 E
+  haveI : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ 𝕜 E
   rw [dense_range_iff_closure_range]
   suffices (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ).range.toAddSubgroup.topologicalClosure = ⊤ by
     exact congr_arg coe this

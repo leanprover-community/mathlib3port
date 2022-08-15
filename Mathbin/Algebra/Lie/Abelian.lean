@@ -269,7 +269,7 @@ theorem self_module_ker_eq_center : LieModule.ker R L L = center R L := by
   simp only [← LieModule.mem_max_triv_submodule, ← LieModule.mem_ker, lie_skew _ y, ← neg_eq_zero]
 
 theorem abelian_of_le_center (I : LieIdeal R L) (h : I ≤ center R L) : IsLieAbelian I := by
-  have : LieModule.IsTrivial L I := (LieModule.trivial_iff_le_maximal_trivial R L L I).mpr h
+  haveI : LieModule.IsTrivial L I := (LieModule.trivial_iff_le_maximal_trivial R L L I).mpr h
   exact LieIdeal.is_lie_abelian_of_trivial R L I
 
 theorem is_lie_abelian_iff_center_eq_top : IsLieAbelian L ↔ center R L = ⊤ :=
@@ -306,11 +306,11 @@ theorem LieSubmodule.lie_abelian_iff_lie_self_eq_bot : IsLieAbelian I ↔ ⁅I,I
   refine'
     ⟨fun h z x y hz =>
       hz.symm.trans
-        ((LieSubalgebra.coe_bracket _ _ _).symm.trans
+        (((I : LieSubalgebra R L).coe_bracket x y).symm.trans
           ((coe_zero_iff_zero _ _).mpr
             (by
               apply h.trivial))),
-      fun h => ⟨fun x y => (coe_zero_iff_zero _ _).mp (h _ x y rfl)⟩⟩
+      fun h => ⟨fun x y => ((I : LieSubalgebra R L).coe_zero_iff_zero _).mp (h _ x y rfl)⟩⟩
 
 end IdealOperations
 

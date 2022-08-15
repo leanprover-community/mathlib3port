@@ -104,7 +104,7 @@ end HasLimits
 
 open HasLimits
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1389:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Basic.lean:1401:38: unsupported irreducible non-definition
 /-- The category of R-algebras has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} (AlgebraCat.{max v w} R) :=
   { HasLimitsOfShape := fun J 𝒥 =>

@@ -282,8 +282,12 @@ theorem outer_measure_preimage (f : G ≃ₜ G) (h : ∀ ⦃K : Compacts G⦄, �
 theorem outer_measure_lt_top_of_is_compact [LocallyCompactSpace G] {K : Set G} (hK : IsCompact K) :
     μ.OuterMeasure K < ∞ := by
   rcases exists_compact_superset hK with ⟨F, h1F, h2F⟩
-  calc μ.outer_measure K ≤ μ.outer_measure (Interior F) := outer_measure.mono' _ h2F _ ≤ μ ⟨F, h1F⟩ := by
-      apply μ.outer_measure_le ⟨Interior F, is_open_interior⟩ ⟨F, h1F⟩ interior_subset _ < ⊤ := μ.lt_top _
+  calc
+    μ.outer_measure K ≤ μ.outer_measure (Interior F) := outer_measure.mono' _ h2F
+    _ ≤ μ ⟨F, h1F⟩ := by
+      apply μ.outer_measure_le ⟨Interior F, is_open_interior⟩ ⟨F, h1F⟩ interior_subset
+    _ < ⊤ := μ.lt_top _
+    
 
 @[to_additive]
 theorem is_mul_left_invariant_outer_measure [Groupₓ G] [TopologicalGroup G]
@@ -322,7 +326,7 @@ theorem borel_le_caratheodory : S ≤ μ.OuterMeasure.caratheodory := by
   rw [μ.outer_measure_of_is_open ((U' : Set G) ∩ U) (IsOpen.inter U'.prop hU)]
   simp only [← inner_content, ← supr_subtype']
   rw [opens.coe_mk]
-  have : Nonempty { L : compacts G // (L : Set G) ⊆ U' ∩ U } := ⟨⟨⊥, empty_subset _⟩⟩
+  haveI : Nonempty { L : compacts G // (L : Set G) ⊆ U' ∩ U } := ⟨⟨⊥, empty_subset _⟩⟩
   rw [Ennreal.supr_add]
   refine' supr_le _
   rintro ⟨L, hL⟩
@@ -332,7 +336,7 @@ theorem borel_le_caratheodory : S ≤ μ.OuterMeasure.caratheodory := by
   rw [μ.outer_measure_of_is_open (↑U' \ L) (IsOpen.sdiff U'.2 L.2.IsClosed)]
   simp only [← inner_content, ← supr_subtype']
   rw [opens.coe_mk]
-  have : Nonempty { M : compacts G // (M : Set G) ⊆ ↑U' \ L } := ⟨⟨⊥, empty_subset _⟩⟩
+  haveI : Nonempty { M : compacts G // (M : Set G) ⊆ ↑U' \ L } := ⟨⟨⊥, empty_subset _⟩⟩
   rw [Ennreal.add_supr]
   refine' supr_le _
   rintro ⟨M, hM⟩

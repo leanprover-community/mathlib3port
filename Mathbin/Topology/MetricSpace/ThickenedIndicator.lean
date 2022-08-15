@@ -61,7 +61,7 @@ theorem continuous_thickened_indicator_aux {δ : ℝ} (δ_pos : 0 < δ) (E : Set
       rfl]
   apply (@Ennreal.continuous_nnreal_sub 1).comp
   apply (Ennreal.continuous_div_const (Ennreal.ofReal δ) _).comp continuous_inf_edist
-  norm_num [← δ_pos]
+  norm_num[← δ_pos]
 
 theorem thickened_indicator_aux_le_one (δ : ℝ) (E : Set α) (x : α) : thickenedIndicatorAux δ E x ≤ 1 := by
   apply @tsub_le_self _ _ _ _ (1 : ℝ≥0∞)

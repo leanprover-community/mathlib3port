@@ -336,8 +336,8 @@ instance : HasSup (Ideal P) :=
           le_sup_left, le_sup_right⟩,
       lower' := fun x y h ⟨yi, _, yj, _, _⟩ => ⟨yi, ‹_›, yj, ‹_›, h.trans ‹_›⟩ }⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ∈ » I)
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ∈ » J)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (i «expr ∈ » I)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (j «expr ∈ » J)
 instance : Lattice (Ideal P) :=
   { Ideal.partialOrder with sup := (·⊔·),
     le_sup_left := fun I J i (_ : i ∈ I) => by
@@ -420,7 +420,10 @@ variable {I J : Ideal P}
 
 theorem eq_sup_of_le_sup {x i j : P} (hi : i ∈ I) (hj : j ∈ J) (hx : x ≤ i⊔j) : ∃ i' ∈ I, ∃ j' ∈ J, x = i'⊔j' := by
   refine' ⟨x⊓i, I.lower inf_le_right hi, x⊓j, J.lower inf_le_right hj, _⟩
-  calc x = x⊓(i⊔j) := left_eq_inf.mpr hx _ = x⊓i⊔x⊓j := inf_sup_left
+  calc
+    x = x⊓(i⊔j) := left_eq_inf.mpr hx
+    _ = x⊓i⊔x⊓j := inf_sup_left
+    
 
 theorem coe_sup_eq : ↑(I⊔J) = { x | ∃ i ∈ I, ∃ j ∈ J, x = i⊔j } :=
   Set.ext fun _ =>

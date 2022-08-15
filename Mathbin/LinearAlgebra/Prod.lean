@@ -821,7 +821,7 @@ noncomputable def tunnel'ₓ (f : M × N →ₗ[R] M) (i : Injective f) : ℕ �
 all isomorphic to `M`.
 -/
 def tunnel (f : M × N →ₗ[R] M) (i : Injective f) : ℕ →o (Submodule R M)ᵒᵈ :=
-  ⟨fun n => (tunnel'ₓ f i n).1,
+  ⟨fun n => OrderDual.toDual (tunnel'ₓ f i n).1,
     monotone_nat_of_le_succ fun n => by
       dsimp' [← tunnel', ← tunnel_aux]
       rw [Submodule.map_comp, Submodule.map_comp]
@@ -838,20 +838,20 @@ def tailingLinearEquiv (f : M × N →ₗ[R] M) (i : Injective f) (n : ℕ) : ta
   ((Submodule.snd R M N).equivMapOfInjective _ (tunnel_aux_injective f i (tunnel'ₓ f i n))).symm.trans
     (Submodule.sndEquiv R M N)
 
-theorem tailing_le_tunnel (f : M × N →ₗ[R] M) (i : Injective f) (n : ℕ) : tailing f i n ≤ tunnel f i n := by
+theorem tailing_le_tunnel (f : M × N →ₗ[R] M) (i : Injective f) (n : ℕ) : tailing f i n ≤ (tunnel f i n).ofDual := by
   dsimp' [← tailing, ← tunnel_aux]
   rw [Submodule.map_comp, Submodule.map_comp]
   apply Submodule.map_subtype_le
 
 theorem tailing_disjoint_tunnel_succ (f : M × N →ₗ[R] M) (i : Injective f) (n : ℕ) :
-    Disjoint (tailing f i n) (tunnel f i (n + 1)) := by
+    Disjoint (tailing f i n) (tunnel f i (n + 1)).ofDual := by
   rw [disjoint_iff]
   dsimp' [← tailing, ← tunnel, ← tunnel']
   rw [Submodule.map_inf_eq_map_inf_comap, Submodule.comap_map_eq_of_injective (tunnel_aux_injective _ i _), inf_comm,
     Submodule.fst_inf_snd, Submodule.map_bot]
 
 theorem tailing_sup_tunnel_succ_le_tunnel (f : M × N →ₗ[R] M) (i : Injective f) (n : ℕ) :
-    tailing f i n⊔tunnel f i (n + 1) ≤ tunnel f i n := by
+    tailing f i n⊔(tunnel f i (n + 1)).ofDual ≤ (tunnel f i n).ofDual := by
   dsimp' [← tailing, ← tunnel, ← tunnel', ← tunnel_aux]
   rw [← Submodule.map_sup, sup_comm, Submodule.fst_sup_snd, Submodule.map_comp, Submodule.map_comp]
   apply Submodule.map_subtype_le
@@ -870,7 +870,7 @@ theorem tailings_succ (f : M × N →ₗ[R] M) (i : Injective f) (n : ℕ) :
   simp [← tailings]
 
 theorem tailings_disjoint_tunnel (f : M × N →ₗ[R] M) (i : Injective f) (n : ℕ) :
-    Disjoint (tailings f i n) (tunnel f i (n + 1)) := by
+    Disjoint (tailings f i n) (tunnel f i (n + 1)).ofDual := by
   induction' n with n ih
   · simp only [← tailings_zero]
     apply tailing_disjoint_tunnel_succ

@@ -91,7 +91,7 @@ protected theorem bot_ext (x y : (⊥ : Submodule R M)) : x = y := by
   rw [(Submodule.eq_bot_iff _).mp rfl y ym]
 
 protected theorem ne_bot_iff (p : Submodule R M) : p ≠ ⊥ ↔ ∃ x ∈ p, x ≠ (0 : M) := by
-  have := Classical.propDecidable
+  haveI := Classical.propDecidable
   simp_rw [Ne.def, p.eq_bot_iff, not_forall]
 
 theorem nonzero_mem_of_bot_lt {p : Submodule R M} (bot_lt : ⊥ < p) : ∃ a : p, a ≠ 0 :=
@@ -233,7 +233,7 @@ theorem Inf_coe (P : Set (Submodule R M)) : (↑(inf P) : Set M) = ⋂ p ∈ P, 
 
 @[simp]
 theorem finset_inf_coe {ι} (s : Finset ι) (p : ι → Submodule R M) : (↑(s.inf p) : Set M) = ⋂ i ∈ s, ↑(p i) := by
-  let this := Classical.decEq ι
+  letI := Classical.decEq ι
   refine' s.induction_on _ fun i s hi ih => _
   · simp
     
@@ -265,6 +265,11 @@ theorem mem_sup_right {S T : Submodule R M} : ∀ {x : M}, x ∈ T → x ∈ S�
 
 theorem add_mem_sup {S T : Submodule R M} {s t : M} (hs : s ∈ S) (ht : t ∈ T) : s + t ∈ S⊔T :=
   add_mem (mem_sup_left hs) (mem_sup_right ht)
+
+theorem sub_mem_sup {R' M' : Type _} [Ringₓ R'] [AddCommGroupₓ M'] [Module R' M'] {S T : Submodule R' M'} {s t : M'}
+    (hs : s ∈ S) (ht : t ∈ T) : s - t ∈ S⊔T := by
+  rw [sub_eq_add_neg]
+  exact add_mem_sup hs (neg_mem ht)
 
 theorem mem_supr_of_mem {ι : Sort _} {b : M} {p : ι → Submodule R M} (i : ι) (h : b ∈ p i) : b ∈ ⨆ i, p i :=
   have : p i ≤ ⨆ i, p i := le_supr p i

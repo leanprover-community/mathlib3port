@@ -42,7 +42,7 @@ variable {m : Sym2 α}
 
 /-- Lifts a finset to `sym2 α`. `s.sym2` is the finset of all pairs with elements in `s`. -/
 protected def sym2 (s : Finset α) : Finset (Sym2 α) :=
-  (s.product s).Image Quotientₓ.mk
+  (s ×ˢ s).Image Quotientₓ.mk
 
 @[simp]
 theorem mem_sym2_iff : m ∈ s.Sym2 ↔ ∀, ∀ a ∈ m, ∀, a ∈ s := by

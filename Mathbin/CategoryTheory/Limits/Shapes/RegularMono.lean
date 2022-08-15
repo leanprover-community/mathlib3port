@@ -13,7 +13,7 @@ import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
 A regular monomorphism is a morphism that is the equalizer of some parallel pair.
 
 We give the constructions
-* `split_mono → regular_mono` and
+* `is_split_mono → regular_mono` and
 * `regular_mono → mono`
 as well as the dual constructions for regular epimorphisms. Additionally, we give the construction
 * `regular_epi ⟶ strong_epi`.
@@ -64,13 +64,13 @@ instance equalizerRegular (g h : X ⟶ Y) [HasLimit (parallelPair g h)] : Regula
       simp [w]
 
 /-- Every split monomorphism is a regular monomorphism. -/
-instance (priority := 100) RegularMono.ofSplitMono (f : X ⟶ Y) [SplitMono f] : RegularMono f where
+instance (priority := 100) RegularMono.ofIsSplitMono (f : X ⟶ Y) [IsSplitMono f] : RegularMono f where
   z := Y
   left := 𝟙 Y
   right := retraction f ≫ f
   w := by
     tidy
-  IsLimit := splitMonoEqualizes f
+  IsLimit := isSplitMonoEqualizes f
 
 /-- If `f` is a regular mono, then any map `k : W ⟶ Y` equalizing `regular_mono.left` and
     `regular_mono.right` induces a morphism `l : W ⟶ X` such that `l ≫ f = k`. -/
@@ -117,17 +117,16 @@ def regularOfIsPullbackFstOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h
     (comm : f ≫ h = g ≫ k) (t : IsLimit (PullbackCone.mk _ _ comm)) : RegularMono f :=
   regularOfIsPullbackSndOfRegular comm.symm (PullbackCone.flipIsLimit t)
 
-instance (priority := 100) strong_mono_of_regular_mono (f : X ⟶ Y) [RegularMono f] : StrongMono f where
-  mono := by
-    infer_instance
-  HasLift := by
-    intros
-    have : v ≫ (regular_mono.left : Y ⟶ regular_mono.Z f) = v ≫ regular_mono.right := by
-      apply (cancel_epi z).1
-      simp only [← regular_mono.w, reassoc_of h]
-    obtain ⟨t, ht⟩ := regular_mono.lift' _ _ this
-    refine' arrow.has_lift.mk ⟨t, (cancel_mono f).1 _, ht⟩
-    simp only [← arrow.mk_hom, ← arrow.hom_mk'_left, ← category.assoc, ← ht, ← h]
+instance (priority := 100) strong_mono_of_regular_mono (f : X ⟶ Y) [RegularMono f] : StrongMono f :=
+  StrongMono.mk'
+    (by
+      intro A B z hz u v sq
+      have : v ≫ (regular_mono.left : Y ⟶ regular_mono.Z f) = v ≫ regular_mono.right := by
+        apply (cancel_epi z).1
+        simp only [← regular_mono.w, reassoc_of sq.w]
+      obtain ⟨t, ht⟩ := regular_mono.lift' _ _ this
+      refine' comm_sq.has_lift.mk' ⟨t, (cancel_mono f).1 _, ht⟩
+      simp only [← arrow.mk_hom, ← arrow.hom_mk'_left, ← category.assoc, ← ht, ← sq.w])
 
 /-- A regular monomorphism is an isomorphism if it is an epimorphism. -/
 theorem is_iso_of_regular_mono_of_epi (f : X ⟶ Y) [RegularMono f] [e : Epi f] : IsIso f :=
@@ -150,12 +149,12 @@ def regularMonoOfMono [RegularMonoCategory C] (f : X ⟶ Y) [Mono f] : RegularMo
 
 instance (priority := 100) regularMonoCategoryOfSplitMonoCategory [SplitMonoCategory C] :
     RegularMonoCategory C where regularMonoOfMono := fun _ _ f _ => by
-    have := split_mono_of_mono f
+    haveI := is_split_mono_of_mono f
     infer_instance
 
 instance (priority := 100) strong_mono_category_of_regular_mono_category [RegularMonoCategory C] :
     StrongMonoCategory C where strong_mono_of_mono := fun _ _ f _ => by
-    have := regular_mono_of_mono f
+    haveI := regular_mono_of_mono f
     infer_instance
 
 /-- A regular epimorphism is a morphism which is the coequalizer of some parallel pair. -/
@@ -185,13 +184,13 @@ instance coequalizerRegular (g h : X ⟶ Y) [HasColimit (parallelPair g h)] : Re
       simp [w]
 
 /-- Every split epimorphism is a regular epimorphism. -/
-instance (priority := 100) RegularEpi.ofSplitEpi (f : X ⟶ Y) [SplitEpi f] : RegularEpi f where
+instance (priority := 100) RegularEpi.ofSplitEpi (f : X ⟶ Y) [IsSplitEpi f] : RegularEpi f where
   w := X
   left := 𝟙 X
   right := f ≫ section_ f
   w := by
     tidy
-  IsColimit := splitEpiCoequalizes f
+  IsColimit := isSplitEpiCoequalizes f
 
 /-- If `f` is a regular epi, then every morphism `k : X ⟶ W` coequalizing `regular_epi.left` and
     `regular_epi.right` induces `l : Y ⟶ W` such that `f ≫ l = k`. -/
@@ -238,21 +237,20 @@ def regularOfIsPushoutFstOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h 
     (comm : f ≫ h = g ≫ k) (t : IsColimit (PushoutCocone.mk _ _ comm)) : RegularEpi k :=
   regularOfIsPushoutSndOfRegular comm.symm (PushoutCocone.flipIsColimit t)
 
-instance (priority := 100) strong_epi_of_regular_epi (f : X ⟶ Y) [RegularEpi f] : StrongEpi f where
-  Epi := by
-    infer_instance
-  HasLift := by
-    intros
-    have : (regular_epi.left : regular_epi.W f ⟶ X) ≫ u = regular_epi.right ≫ u := by
-      apply (cancel_mono z).1
-      simp only [← category.assoc, ← h, ← regular_epi.w_assoc]
-    obtain ⟨t, ht⟩ := regular_epi.desc' f u this
-    exact
-      arrow.has_lift.mk
-        ⟨t, ht,
-          (cancel_epi f).1
-            (by
-              simp only [category.assoc, ← ht, h, ← arrow.mk_hom, ← arrow.hom_mk'_right])⟩
+instance (priority := 100) strong_epi_of_regular_epi (f : X ⟶ Y) [RegularEpi f] : StrongEpi f :=
+  StrongEpi.mk'
+    (by
+      intro A B z hz u v sq
+      have : (regular_epi.left : regular_epi.W f ⟶ X) ≫ u = regular_epi.right ≫ u := by
+        apply (cancel_mono z).1
+        simp only [← category.assoc, ← sq.w, ← regular_epi.w_assoc]
+      obtain ⟨t, ht⟩ := regular_epi.desc' f u this
+      exact
+        comm_sq.has_lift.mk'
+          ⟨t, ht,
+            (cancel_epi f).1
+              (by
+                simp only [category.assoc, ← ht, sq.w, ← arrow.mk_hom, ← arrow.hom_mk'_right])⟩)
 
 /-- A regular epimorphism is an isomorphism if it is a monomorphism. -/
 theorem is_iso_of_regular_epi_of_mono (f : X ⟶ Y) [RegularEpi f] [m : Mono f] : IsIso f :=
@@ -275,12 +273,12 @@ def regularEpiOfEpi [RegularEpiCategory C] (f : X ⟶ Y) [Epi f] : RegularEpi f 
 
 instance (priority := 100) regularEpiCategoryOfSplitEpiCategory [SplitEpiCategory C] :
     RegularEpiCategory C where regularEpiOfEpi := fun _ _ f _ => by
-    have := split_epi_of_epi f
+    haveI := is_split_epi_of_epi f
     infer_instance
 
 instance (priority := 100) strong_epi_category_of_regular_epi_category [RegularEpiCategory C] :
     StrongEpiCategory C where strong_epi_of_epi := fun _ _ f _ => by
-    have := regular_epi_of_epi f
+    haveI := regular_epi_of_epi f
     infer_instance
 
 end CategoryTheory

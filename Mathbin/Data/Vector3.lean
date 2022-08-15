@@ -91,7 +91,7 @@ theorem cons_elim_cons {C H a t} : @consElim α n C H (a :: t) = H a t :=
   rfl
 
 /-- Recursion principle with the vector as first argument. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 protected def recOn {C : ∀ {n}, Vector3 α n → Sort u} {n} (v : Vector3 α n) (H0 : C [])
     (Hs : ∀ {n} (a) (w : Vector3 α n), C w → C (a :: w)) : C v :=
   Nat.recOn n (fun v => v.nilElim H0) (fun n IH v => v.consElim fun a t => Hs _ _ (IH _)) v

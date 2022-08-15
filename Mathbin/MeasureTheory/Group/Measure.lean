@@ -334,9 +334,12 @@ theorem is_open_pos_measure_of_mul_left_invariant_of_compact (K : Set G) (hK : I
   rw [← hU.interior_eq] at hne
   obtain ⟨t, hKt⟩ : ∃ t : Finset G, K ⊆ ⋃ (g : G) (H : g ∈ t), (fun h : G => g * h) ⁻¹' U :=
     compact_covered_by_mul_left_translates hK hne
-  calc μ K ≤ μ (⋃ (g : G) (H : g ∈ t), (fun h : G => g * h) ⁻¹' U) :=
-      measure_mono hKt _ ≤ ∑ g in t, μ ((fun h : G => g * h) ⁻¹' U) := measure_bUnion_finset_le _ _ _ = 0 := by
+  calc
+    μ K ≤ μ (⋃ (g : G) (H : g ∈ t), (fun h : G => g * h) ⁻¹' U) := measure_mono hKt
+    _ ≤ ∑ g in t, μ ((fun h : G => g * h) ⁻¹' U) := measure_bUnion_finset_le _ _
+    _ = 0 := by
       simp [← measure_preimage_mul, ← h]
+    
 
 /-- A nonzero left-invariant regular measure gives positive mass to any open set. -/
 @[to_additive "A nonzero left-invariant regular measure gives positive mass to any open set."]
@@ -349,7 +352,7 @@ theorem null_iff_of_is_mul_left_invariant [Regular μ] {s : Set G} (hs : IsOpen 
   by_cases' h3μ : μ = 0
   · simp [← h3μ]
     
-  · have := is_open_pos_measure_of_mul_left_invariant_of_regular h3μ
+  · haveI := is_open_pos_measure_of_mul_left_invariant_of_regular h3μ
     simp only [← h3μ, ← or_falseₓ, ← hs.measure_eq_zero_iff μ]
     
 
@@ -372,11 +375,13 @@ theorem measure_lt_top_of_is_compact_of_is_mul_left_invariant (U : Set G) (hU : 
   rw [← hU.interior_eq] at h'U
   obtain ⟨t, hKt⟩ : ∃ t : Finset G, K ⊆ ⋃ (g : G) (H : g ∈ t), (fun h : G => g * h) ⁻¹' U :=
     compact_covered_by_mul_left_translates hK h'U
-  calc μ K ≤ μ (⋃ (g : G) (H : g ∈ t), (fun h : G => g * h) ⁻¹' U) :=
-      measure_mono hKt _ ≤ ∑ g in t, μ ((fun h : G => g * h) ⁻¹' U) :=
-      measure_bUnion_finset_le _ _ _ = Finset.card t * μ U := by
-      simp only [← measure_preimage_mul, ← Finset.sum_const, ← nsmul_eq_mul]_ < ∞ :=
-      Ennreal.mul_lt_top Ennreal.coe_nat_ne_top h
+  calc
+    μ K ≤ μ (⋃ (g : G) (H : g ∈ t), (fun h : G => g * h) ⁻¹' U) := measure_mono hKt
+    _ ≤ ∑ g in t, μ ((fun h : G => g * h) ⁻¹' U) := measure_bUnion_finset_le _ _
+    _ = Finset.card t * μ U := by
+      simp only [← measure_preimage_mul, ← Finset.sum_const, ← nsmul_eq_mul]
+    _ < ∞ := Ennreal.mul_lt_top (Ennreal.nat_ne_top _) h
+    
 
 /-- If a left-invariant measure gives finite mass to a set with nonempty interior, then
 it gives finite mass to any compact set. -/
@@ -542,7 +547,7 @@ instance (priority := 100) IsHaarMeasure.has_no_atoms [TopologicalGroup G] [Bore
 
 /- The above instance applies in particular to show that an additive Haar measure on a nontrivial
 finite-dimensional real vector space has no atom. -/
-example {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [Nontrivial E] [FiniteDimensional ℝ E] [MeasurableSpace E]
+example {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [Nontrivial E] [FiniteDimensional ℝ E] [MeasurableSpace E]
     [BorelSpace E] (μ : Measure E) [IsAddHaarMeasure μ] : HasNoAtoms μ := by
   infer_instance
 

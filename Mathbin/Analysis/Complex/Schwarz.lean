@@ -55,7 +55,7 @@ namespace Complex
 
 section Space
 
-variable {E : Type _} [NormedGroup E] [NormedSpace ℂ E] {R R₁ R₂ : ℝ} {f : ℂ → E} {c z : ℂ}
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E] {R R₁ R₂ : ℝ} {f : ℂ → E} {c z : ℂ}
 
 /-- An auxiliary lemma for `complex.norm_dslope_le_div_of_maps_to_ball`. -/
 theorem schwarz_aux {f : ℂ → ℂ} (hd : DifferentiableOn ℂ f (Ball c R₁)) (h_maps : MapsTo f (Ball c R₁) (Ball (f c) R₂))
@@ -103,11 +103,14 @@ theorem norm_dslope_le_div_of_maps_to_ball (hd : DifferentiableOn ℂ f (Ball c 
   have hg' : ∥g∥₊ = 1 := Nnreal.eq hg
   have hg₀ : ∥g∥₊ ≠ 0 := by
     simpa only [← hg'] using one_ne_zero
-  calc ∥dslope f c z∥ = ∥dslope (g ∘ f) c z∥ := by
+  calc
+    ∥dslope f c z∥ = ∥dslope (g ∘ f) c z∥ := by
       rw [g.dslope_comp, hgf, IsROrC.norm_of_real, norm_norm]
-      exact fun _ => hd.differentiable_at (ball_mem_nhds _ hR₁)_ ≤ R₂ / R₁ := by
+      exact fun _ => hd.differentiable_at (ball_mem_nhds _ hR₁)
+    _ ≤ R₂ / R₁ := by
       refine' schwarz_aux (g.differentiable.comp_differentiable_on hd) (maps_to.comp _ h_maps) hz
       simpa only [← hg', ← Nnreal.coe_one, ← one_mulₓ] using g.lipschitz.maps_to_ball hg₀ (f c) R₂
+    
 
 /-- The **Schwarz Lemma**: if `f : ℂ → E` sends an open disk with center `c` and a positive radius
 `R₁` to an open ball with center `f c` and radius `R₂`, then the absolute value of the derivative of

@@ -5,6 +5,7 @@ Authors: Leonardo de Moura, Mario Carneiro
 -/
 import Mathbin.Logic.Equiv.Nat
 import Mathbin.Order.Directed
+import Mathbin.Data.Countable.Defs
 import Mathbin.Order.RelIso
 
 /-!
@@ -34,7 +35,7 @@ to make the range of `encode` decidable even when the finiteness of `α` is not.
 
 open Option List Nat Function
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`decode] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`decode] []
 /-- Constructively countable type. Made from an explicit injection `encode : α → ℕ` and a partial
 inverse `decode : ℕ → option α`. Note that finite types *are* countable. See `denumerable` if you
 wish to enforce infiniteness. -/
@@ -59,6 +60,11 @@ theorem encode_injective [Encodable α] : Function.Injective (@encode α _)
 @[simp]
 theorem encode_inj [Encodable α] {a b : α} : encode a = encode b ↔ a = b :=
   encode_injective.eq_iff
+
+-- The priority of the instance below is less than the priorities of `subtype.countable`
+-- and `quotient.countable`
+instance (priority := 400) [Encodable α] : Countable α :=
+  encode_injective.Countable
 
 theorem surjective_decode_iget (α : Type _) [Encodable α] [Inhabited α] :
     Surjective fun n => (Encodable.decode α n).iget := fun x =>
@@ -369,8 +375,22 @@ instance _root_.plift.encodable [Encodable α] : Encodable (Plift α) :=
 noncomputable def ofInj [Encodable β] (f : α → β) (hf : Injective f) : Encodable α :=
   ofLeftInjection f (partialInv f) fun x => (partial_inv_of_injective hf _ _).2 rfl
 
+/-- If `α` is countable, then it has a (non-canonical) `encodable` structure. -/
+noncomputable def ofCountable (α : Type _) [Countable α] : Encodable α :=
+  Nonempty.some <|
+    let ⟨f, hf⟩ := exists_injective_nat α
+    ⟨ofInj f hf⟩
+
+@[simp]
+theorem nonempty_encodable : Nonempty (Encodable α) ↔ Countable α :=
+  ⟨fun ⟨h⟩ => @Encodable.countable α h, fun h => ⟨@ofCountable _ h⟩⟩
+
 end Encodable
 
+instance : Countable ℕ+ :=
+  Subtype.countable
+
+-- short-circuit instance search
 section Ulower
 
 attribute [local instance] Encodable.decidableRangeEncode
@@ -458,7 +478,7 @@ def chooseX (h : ∃ x, p x) : { a : α // p a } :=
     let ⟨w, pw⟩ := h
     ⟨encode w, by
       simp [← good, ← encodek, ← pw]⟩
-  match _, Nat.find_specₓ this with
+  match (motive := ∀ o, Goodₓ p o → { a // p a }) _, Nat.find_specₓ this with
   | some a, h => ⟨a, h⟩
 
 /-- Constructive choice function for a decidable predicate over an encodable type. -/

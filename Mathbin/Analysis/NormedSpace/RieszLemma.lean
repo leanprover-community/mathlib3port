@@ -13,7 +13,7 @@ Riesz's lemma, stated for a normed space over a normed field: for any
 closed proper subspace `F` of `E`, there is a nonzero `x` such that `∥x - F∥`
 is at least `r * ∥x∥` for any `r < 1`. This is `riesz_lemma`.
 
-In a nondiscrete normed field (with an element `c` of norm `> 1`) and any `R > ∥c∥`, one can
+In a nontrivially normed field (with an element `c` of norm `> 1`) and any `R > ∥c∥`, one can
 guarantee `∥x∥ ≤ R` and `∥x - y∥ ≥ 1` for any `y` in `F`. This is `riesz_lemma_of_norm_lt`.
 
 A further lemma, `metric.closed_ball_inf_dist_compl_subset_closure`, finds a *closed* ball within
@@ -27,9 +27,9 @@ open TopologicalSpace
 
 variable {𝕜 : Type _} [NormedField 𝕜]
 
-variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
-variable {F : Type _} [SemiNormedGroup F] [NormedSpace ℝ F]
+variable {F : Type _} [SeminormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- Riesz's lemma, which usually states that it is possible to find a
 vector with norm 1 whose distance to a closed proper subspace is
@@ -62,17 +62,22 @@ theorem riesz_lemma {F : Subspace 𝕜 E} (hFc : IsClosed (F : Set E)) (hF : ∃
     exact hx this
   refine' ⟨x - y₀, x_ne_y₀, fun y hy => le_of_ltₓ _⟩
   have hy₀y : y₀ + y ∈ F := F.add_mem hy₀F hy
-  calc r * ∥x - y₀∥ ≤ r' * ∥x - y₀∥ := mul_le_mul_of_nonneg_right (le_max_leftₓ _ _) (norm_nonneg _)_ < d := by
+  calc
+    r * ∥x - y₀∥ ≤ r' * ∥x - y₀∥ := mul_le_mul_of_nonneg_right (le_max_leftₓ _ _) (norm_nonneg _)
+    _ < d := by
       rw [← dist_eq_norm]
-      exact (lt_div_iff' hlt).1 hxy₀ _ ≤ dist x (y₀ + y) := Metric.inf_dist_le_dist_of_mem hy₀y _ = ∥x - y₀ - y∥ := by
+      exact (lt_div_iff' hlt).1 hxy₀
+    _ ≤ dist x (y₀ + y) := Metric.inf_dist_le_dist_of_mem hy₀y
+    _ = ∥x - y₀ - y∥ := by
       rw [sub_sub, dist_eq_norm]
+    
 
 /-- A version of Riesz lemma: given a strict closed subspace `F`, one may find an element of norm `≤ R`
 which is at distance  at least `1` of every element of `F`. Here, `R` is any given constant
 strictly larger than the norm of an element of norm `> 1`. For a version without an `R`, see
 `riesz_lemma`.
 
-Since we are considering a general nondiscrete normed field, there may be a gap in possible norms
+Since we are considering a general nontrivially normed field, there may be a gap in possible norms
 (for instance no element of norm in `(1,2)`). Hence, we can not allow `R` arbitrarily close to `1`,
 and require `R > ∥c∥` for some `c : 𝕜` with norm `> 1`.
 -/
@@ -93,18 +98,22 @@ theorem riesz_lemma_of_norm_lt {c : 𝕜} (hc : 1 < ∥c∥) {R : ℝ} (hR : ∥
     simp [← hy', ← Submodule.smul_mem _ _ hy]
   have yy' : y = d • y' := by
     simp [← hy', ← smul_smul, ← mul_inv_cancel d0]
-  calc 1 = ∥c∥ / R * (R / ∥c∥) := by
-      field_simp [← Rpos.ne', ← (zero_lt_one.trans hc).ne']_ ≤ ∥c∥ / R * ∥d • x∥ :=
-      mul_le_mul_of_nonneg_left ledx (div_nonneg (norm_nonneg _) Rpos.le)_ = ∥d∥ * (∥c∥ / R * ∥x∥) := by
+  calc
+    1 = ∥c∥ / R * (R / ∥c∥) := by
+      field_simp [← Rpos.ne', ← (zero_lt_one.trans hc).ne']
+    _ ≤ ∥c∥ / R * ∥d • x∥ := mul_le_mul_of_nonneg_left ledx (div_nonneg (norm_nonneg _) Rpos.le)
+    _ = ∥d∥ * (∥c∥ / R * ∥x∥) := by
       simp [← norm_smul]
-      ring _ ≤ ∥d∥ * ∥x - y'∥ :=
+      ring
+    _ ≤ ∥d∥ * ∥x - y'∥ :=
       mul_le_mul_of_nonneg_left
         (hx y'
           (by
             simp [← hy', ← Submodule.smul_mem _ _ hy]))
-        (norm_nonneg _)_ = ∥d • x - y∥ :=
-      by
+        (norm_nonneg _)
+    _ = ∥d • x - y∥ := by
       simp [← yy', smul_sub, ← norm_smul]
+    
 
 theorem Metric.closed_ball_inf_dist_compl_subset_closure {x : F} {s : Set F} (hx : x ∈ s) :
     ClosedBall x (infDist x (sᶜ)) ⊆ Closure s := by

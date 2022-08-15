@@ -72,10 +72,10 @@ theorem form_perm_disjoint_iff (hl : Nodupₓ l) (hl' : Nodupₓ l') (hn : 2 ≤
 
 theorem is_cycle_form_perm (hl : Nodupₓ l) (hn : 2 ≤ l.length) : IsCycle (formPerm l) := by
   cases' l with x l
-  · norm_num  at hn
+  · norm_num at hn
     
   induction' l with y l IH generalizing x
-  · norm_num  at hn
+  · norm_num at hn
     
   · use x
     constructor

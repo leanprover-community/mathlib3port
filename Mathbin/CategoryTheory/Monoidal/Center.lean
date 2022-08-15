@@ -49,7 +49,7 @@ Thinking of `C` as a 2-category with a single `0`-morphism, these are the same a
 transformations (in the pseudo- sense) of the identity 2-functor on `C`, which send the unique
 `0`-morphism to `X`.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure HalfBraiding (X : C) where
   β : ∀ U, X ⊗ U ≅ U ⊗ X
   monoidal' :
@@ -76,7 +76,7 @@ variable (C)
 /-- The Drinfeld center of a monoidal category `C` has as objects pairs `⟨X, b⟩`, where `X : C`
 and `b` is a half-braiding on `X`.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def Center :=
   ΣX : C, HalfBraiding X
 
@@ -85,7 +85,7 @@ namespace Center
 variable {C}
 
 /-- A morphism in the Drinfeld center of `C`. -/
-@[ext, nolint has_inhabited_instance]
+@[ext, nolint has_nonempty_instance]
 structure Hom (X Y : Center C) where
   f : X.1 ⟶ Y.1
   comm' : ∀ U, (f ⊗ 𝟙 U) ≫ (Y.2.β U).Hom = (X.2.β U).Hom ≫ (𝟙 U ⊗ f) := by
@@ -130,7 +130,7 @@ instance is_iso_of_f_is_iso {X Y : Center C} (f : X ⟶ Y) [IsIso f.f] : IsIso f
   change is_iso (iso_mk f).Hom
   infer_instance
 
--- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `coherence #[]
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 @[simps]
 def tensorObj (X Y : Center C) : Center C :=
@@ -152,7 +152,7 @@ def tensorObj (X Y : Center C) : Center C :=
         slice_rhs 7 7 => rw [associator_inv_conjugation]
         slice_rhs 6 6 => rw [associator_conjugation]
         slice_rhs 3 3 => rw [associator_conjugation]
-        trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]",
+        trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `coherence #[]",
       naturality' := fun U U' f => by
         dsimp'
         rw [category.assoc, category.assoc, category.assoc, category.assoc, id_tensor_associator_naturality_assoc, ←
@@ -183,14 +183,14 @@ def tensorUnit : Center C :=
         dsimp'
         rw [left_unitor_naturality_assoc, right_unitor_inv_naturality, category.assoc] }⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `coherence #[]
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 def associator (X Y Z : Center C) : tensorObj (tensorObj X Y) Z ≅ tensorObj X (tensorObj Y Z) :=
   isoMk
     ⟨(α_ X.1 Y.1 Z.1).Hom, fun U => by
       dsimp'
       simp only [← comp_tensor_id, ← id_tensor_comp, tensor_id, ← associator_conjugation]
-      trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `coherence #[]"⟩
+      trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `coherence #[]"⟩
 
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 def leftUnitor (X : Center C) : tensorObj tensorUnit X ≅ X :=

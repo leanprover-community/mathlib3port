@@ -36,7 +36,7 @@ open TopologicalSpace
 local postfix:max "⋆" => star
 
 /-- A normed star group is a normed group with a compatible `star` which is isometric. -/
-class NormedStarGroup (E : Type _) [SemiNormedGroup E] [StarAddMonoid E] : Prop where
+class NormedStarGroup (E : Type _) [SeminormedAddCommGroup E] [StarAddMonoid E] : Prop where
   norm_star : ∀ x : E, ∥x⋆∥ = ∥x∥
 
 export NormedStarGroup (norm_star)
@@ -47,14 +47,14 @@ variable {𝕜 E α : Type _}
 
 section NormedStarGroup
 
-variable [SemiNormedGroup E] [StarAddMonoid E] [NormedStarGroup E]
+variable [SeminormedAddCommGroup E] [StarAddMonoid E] [NormedStarGroup E]
 
 @[simp]
 theorem nnnorm_star (x : E) : ∥star x∥₊ = ∥x∥₊ :=
   Subtype.ext <| norm_star _
 
 /-- The `star` map in a normed star group is a normed group homomorphism. -/
-def starNormedGroupHom : NormedGroupHom E E :=
+def starNormedAddGroupHom : NormedAddGroupHom E E :=
   { starAddEquiv with bound' := ⟨1, fun v => le_transₓ (norm_star _).le (one_mulₓ _).symm.le⟩ }
 
 /-- The `star` map in a normed star group is an isometry -/
@@ -146,14 +146,21 @@ theorem norm_of_mem_unitary [Nontrivial E] {U : E} (hU : U ∈ unitary E) : ∥U
 theorem norm_coe_unitary_mul (U : unitary E) (A : E) : ∥(U : E) * A∥ = ∥A∥ := by
   nontriviality E
   refine' le_antisymmₓ _ _
-  · calc _ ≤ ∥(U : E)∥ * ∥A∥ := norm_mul_le _ _ _ = ∥A∥ := by
+  · calc
+      _ ≤ ∥(U : E)∥ * ∥A∥ := norm_mul_le _ _
+      _ = ∥A∥ := by
         rw [norm_coe_unitary, one_mulₓ]
+      
     
-  · calc _ = ∥(U : E)⋆ * U * A∥ := by
-        rw [unitary.coe_star_mul_self U, one_mulₓ]_ ≤ ∥(U : E)⋆∥ * ∥(U : E) * A∥ := by
+  · calc
+      _ = ∥(U : E)⋆ * U * A∥ := by
+        rw [unitary.coe_star_mul_self U, one_mulₓ]
+      _ ≤ ∥(U : E)⋆∥ * ∥(U : E) * A∥ := by
         rw [mul_assoc]
-        exact norm_mul_le _ _ _ = ∥(U : E) * A∥ := by
+        exact norm_mul_le _ _
+      _ = ∥(U : E) * A∥ := by
         rw [norm_star, norm_coe_unitary, one_mulₓ]
+      
     
 
 @[simp]
@@ -199,7 +206,7 @@ section starₗᵢ
 
 variable [CommSemiringₓ 𝕜] [StarRing 𝕜]
 
-variable [SemiNormedGroup E] [StarAddMonoid E] [NormedStarGroup E]
+variable [SeminormedAddCommGroup E] [StarAddMonoid E] [NormedStarGroup E]
 
 variable [Module 𝕜 E] [StarModule 𝕜 E]
 

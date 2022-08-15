@@ -106,7 +106,7 @@ theorem Union_null_iff [Encodable β] (m : OuterMeasure α) {s : β → Set α} 
 
 theorem bUnion_null_iff (m : OuterMeasure α) {s : Set β} (hs : s.Countable) {t : β → Set α} :
     m (⋃ i ∈ s, t i) = 0 ↔ ∀, ∀ i ∈ s, ∀, m (t i) = 0 := by
-  have := hs.to_encodable
+  haveI := hs.to_encodable
   rw [bUnion_eq_Union, Union_null_iff, SetCoe.forall']
 
 theorem sUnion_null_iff (m : OuterMeasure α) {S : Set (Set α)} (hS : S.Countable) :
@@ -120,7 +120,7 @@ protected theorem Union_finset (m : OuterMeasure α) (s : β → Set α) (t : Fi
 protected theorem union (m : OuterMeasure α) (s₁ s₂ : Set α) : m (s₁ ∪ s₂) ≤ m s₁ + m s₂ :=
   rel_sup_add m m.Empty (· ≤ ·) m.Union_nat s₁ s₂
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- If a set has zero measure in a neighborhood of each of its points, then it has zero measure
 in a second-countable space. -/
 theorem null_of_locally_null [TopologicalSpace α] [SecondCountableTopology α] (m : OuterMeasure α) (s : Set α)
@@ -187,9 +187,12 @@ theorem le_inter_add_diff {m : OuterMeasure α} {t : Set α} (s : Set α) : m t 
 
 theorem diff_null (m : OuterMeasure α) (s : Set α) {t : Set α} (ht : m t = 0) : m (s \ t) = m s := by
   refine' le_antisymmₓ (m.mono <| diff_subset _ _) _
-  calc m s ≤ m (s ∩ t) + m (s \ t) := le_inter_add_diff _ _ ≤ m t + m (s \ t) :=
-      add_le_add_right (m.mono <| inter_subset_right _ _) _ _ = m (s \ t) := by
+  calc
+    m s ≤ m (s ∩ t) + m (s \ t) := le_inter_add_diff _
+    _ ≤ m t + m (s \ t) := add_le_add_right (m.mono <| inter_subset_right _ _) _
+    _ = m (s \ t) := by
       rw [ht, zero_addₓ]
+    
 
 theorem union_null (m : OuterMeasure α) {s₁ s₂ : Set α} (h₁ : m s₁ = 0) (h₂ : m s₂ = 0) : m (s₁ ∪ s₂) = 0 := by
   simpa [← h₁, ← h₂] using m.union s₁ s₂
@@ -590,7 +593,7 @@ protected def ofFunction : OuterMeasure α :=
                   simpa using (hε' i).ne')
             simpa [← μ, ← infi_lt_iff]
         refine' le_transₓ _ (Ennreal.tsum_le_tsum fun i => le_of_ltₓ (hf i).2)
-        rw [← Ennreal.tsum_prod, ← equiv.nat_prod_nat_equiv_nat.symm.tsum_eq]
+        rw [← Ennreal.tsum_prod, ← nat.mkpair_equiv.symm.tsum_eq]
         swap
         · infer_instance
           
@@ -602,7 +605,7 @@ protected def ofFunction : OuterMeasure α :=
                 subset.trans
                     (by
                       simp ) <|
-                  subset_Union _ <| Equivₓ.natProdNatEquivNat (i, j) }
+                  subset_Union _ <| Nat.mkpairEquiv (i, j) }
 
 theorem of_function_apply (s : Set α) :
     OuterMeasure.ofFunction m m_empty s = ⨅ (t : ℕ → Set α) (h : s ⊆ Union t), ∑' n, m (t n) :=
@@ -634,7 +637,7 @@ theorem is_greatest_of_function :
 theorem of_function_eq_Sup : OuterMeasure.ofFunction m m_empty = sup { μ | ∀ s, μ s ≤ m s } :=
   (@is_greatest_of_function α m m_empty).IsLub.Sup_eq.symm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (u «expr ⊆ » «expr ∪ »(s, t))
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (u «expr ⊆ » «expr ∪ »(s, t))
 /-- If `m u = ∞` for any set `u` that has nonempty intersection both with `s` and `t`, then
 `μ (s ∪ t) = μ s + μ t`, where `μ = measure_theory.outer_measure.of_function m m_empty`.
 
@@ -649,7 +652,11 @@ theorem of_function_union_of_top_of_nonempty_inter {s t : Set α}
   refine' le_antisymmₓ (outer_measure.union _ _ _) (le_infi fun f => le_infi fun hf => _)
   set μ := outer_measure.of_function m m_empty
   rcases em (∃ i, (s ∩ f i).Nonempty ∧ (t ∩ f i).Nonempty) with (⟨i, hs, ht⟩ | he)
-  · calc μ s + μ t ≤ ∞ := le_top _ = m (f i) := (h (f i) hs ht).symm _ ≤ ∑' i, m (f i) := Ennreal.le_tsum i
+  · calc
+      μ s + μ t ≤ ∞ := le_top
+      _ = m (f i) := (h (f i) hs ht).symm
+      _ ≤ ∑' i, m (f i) := Ennreal.le_tsum i
+      
     
   set I := fun s => { i : ℕ | (s ∩ f i).Nonempty }
   have hd : Disjoint (I s) (I t) := fun i hi => he ⟨i, hi⟩
@@ -661,13 +668,16 @@ theorem of_function_union_of_top_of_nonempty_inter {s t : Set α}
           mem_Union.2 ⟨⟨i, ⟨x, hx, hi⟩⟩, hi⟩
       _ ≤ ∑' i : I u, μ (f i) := μ.Union _
       
-  calc μ s + μ t ≤ (∑' i : I s, μ (f i)) + ∑' i : I t, μ (f i) :=
-      add_le_add (hI _ <| subset_union_left _ _) (hI _ <| subset_union_right _ _)_ = ∑' i : I s ∪ I t, μ (f i) :=
-      (@tsum_union_disjoint _ _ _ _ _ (fun i => μ (f i)) _ _ _ hd Ennreal.summable
-          Ennreal.summable).symm _ ≤ ∑' i, μ (f i) :=
+  calc
+    μ s + μ t ≤ (∑' i : I s, μ (f i)) + ∑' i : I t, μ (f i) :=
+      add_le_add (hI _ <| subset_union_left _ _) (hI _ <| subset_union_right _ _)
+    _ = ∑' i : I s ∪ I t, μ (f i) :=
+      (@tsum_union_disjoint _ _ _ _ _ (fun i => μ (f i)) _ _ _ hd Ennreal.summable Ennreal.summable).symm
+    _ ≤ ∑' i, μ (f i) :=
       tsum_le_tsum_of_inj coe Subtype.coe_injective (fun _ _ => zero_le _) (fun _ => le_rfl) Ennreal.summable
-        Ennreal.summable _ ≤ ∑' i, m (f i) :=
-      Ennreal.tsum_le_tsum fun i => of_function_le _
+        Ennreal.summable
+    _ ≤ ∑' i, m (f i) := Ennreal.tsum_le_tsum fun i => of_function_le _
+    
 
 theorem comap_of_function {β} (f : β → α) (h : Monotone m ∨ Surjective f) :
     comap f (OuterMeasure.ofFunction m m_empty) =
@@ -723,7 +733,7 @@ theorem smul_of_function {c : ℝ≥0∞} (hc : c ≠ ∞) :
           simp [← m_empty]) :=
   by
   ext1 s
-  have : Nonempty { t : ℕ → Set α // s ⊆ ⋃ i, t i } := ⟨⟨fun _ => s, subset_Union (fun _ => s) 0⟩⟩
+  haveI : Nonempty { t : ℕ → Set α // s ⊆ ⋃ i, t i } := ⟨⟨fun _ => s, subset_Union (fun _ => s) 0⟩⟩
   simp only [← smul_apply, ← of_function_apply, ← Ennreal.tsum_mul_left, ← Pi.smul_apply, ← smul_eq_mul, ←
     infi_subtype', ← Ennreal.infi_mul_left fun h => (hc h).elim]
 
@@ -1057,7 +1067,7 @@ the minimum value of a measure on that set: it is the infimum sum of measures of
 sets that covers that set, where a different measure can be used for each set in the cover. -/
 theorem binfi_apply {ι} {I : Set ι} (hI : I.Nonempty) (m : ι → OuterMeasure α) (s : Set α) :
     (⨅ i ∈ I, m i) s = ⨅ (t : ℕ → Set α) (h2 : s ⊆ Union t), ∑' n, ⨅ i ∈ I, m i (t n) := by
-  have := hI.to_subtype
+  haveI := hI.to_subtype
   simp only [infi_subtype'', ← infi_apply]
 
 /-- The value of the Infimum of a nonempty family of outer measures on a set is not simply
@@ -1097,7 +1107,7 @@ theorem map_infi_comap {ι β} [Nonempty ι] {f : α → β} (m : ι → OuterMe
 
 theorem map_binfi_comap {ι β} {I : Set ι} (hI : I.Nonempty) {f : α → β} (m : ι → OuterMeasure β) :
     map f (⨅ i ∈ I, comap f (m i)) = ⨅ i ∈ I, map f (comap f (m i)) := by
-  have := hI.to_subtype
+  haveI := hI.to_subtype
   rw [← infi_subtype'', ← infi_subtype'']
   exact map_infi_comap _
 
@@ -1116,7 +1126,7 @@ theorem restrict_infi {ι} [Nonempty ι] (s : Set α) (m : ι → OuterMeasure �
 
 theorem restrict_binfi {ι} {I : Set ι} (hI : I.Nonempty) (s : Set α) (m : ι → OuterMeasure α) :
     restrict s (⨅ i ∈ I, m i) = ⨅ i ∈ I, restrict s (m i) := by
-  have := hI.to_subtype
+  haveI := hI.to_subtype
   rw [← infi_subtype'', ← infi_subtype'']
   exact restrict_infi _ _
 

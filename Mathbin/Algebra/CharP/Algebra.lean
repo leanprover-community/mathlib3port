@@ -60,6 +60,10 @@ variable (K L : Type _) [Field K] [CommSemiringₓ L] [Nontrivial L] [Algebra K 
 theorem Algebra.char_p_iff (p : ℕ) : CharP K p ↔ CharP L p :=
   (algebraMap K L).char_p_iff_char_p p
 
+theorem Algebra.ring_char_eq : ringChar K = ringChar L := by
+  rw [ringChar.eq_iff, Algebra.char_p_iff K L]
+  apply ringChar.char_p
+
 end
 
 namespace FreeAlgebra

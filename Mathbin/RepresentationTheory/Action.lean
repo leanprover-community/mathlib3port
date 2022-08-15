@@ -155,6 +155,14 @@ def mkIso {M N : Action V G} (f : M.V ≅ N.V) (comm : ∀ g : G, M.ρ g ≫ f.H
         simp at w
         simp [← w] }
 
+instance (priority := 100) is_iso_of_hom_is_iso {M N : Action V G} (f : M ⟶ N) [IsIso f.Hom] : IsIso f := by
+  convert is_iso.of_iso (mk_iso (as_iso f.hom) f.comm)
+  ext
+  rfl
+
+instance is_iso_hom_mk {M N : Action V G} (f : M.V ⟶ N.V) [IsIso f] (w) : @IsIso _ _ M N ⟨f, w⟩ :=
+  IsIso.of_iso (mkIso (asIso f) w)
+
 namespace FunctorCategoryEquivalence
 
 /-- Auxilliary definition for `functor_category_equivalence`. -/
@@ -409,6 +417,14 @@ variable [MonoidalCategory V]
 
 instance : MonoidalCategory (Action V G) :=
   Monoidal.transport (Action.functorCategoryEquivalence _ _).symm
+
+@[simp]
+theorem tensor_unit_V : (𝟙_ (Action V G)).V = 𝟙_ V :=
+  rfl
+
+@[simp]
+theorem tensor_unit_rho {g : G} : (𝟙_ (Action V G)).ρ g = 𝟙 (𝟙_ V) :=
+  rfl
 
 @[simp]
 theorem tensor_V {X Y : Action V G} : (X ⊗ Y).V = X.V ⊗ Y.V :=
@@ -673,4 +689,56 @@ variable {R : Type _} [Semiringₓ R] [CategoryTheory.Linear R V] [CategoryTheor
 instance map_Action_linear [F.Additive] [F.Linear R] : (F.mapAction G).Linear R where
 
 end CategoryTheory.Functor
+
+namespace CategoryTheory.MonoidalFunctor
+
+open Action
+
+variable {V} {W : Type (u + 1)} [LargeCategory W] [MonoidalCategory V] [MonoidalCategory W]
+
+/-- A monoidal functor induces a monoidal functor between
+the categories of `G`-actions within those categories. -/
+@[simps]
+def mapAction (F : MonoidalFunctor V W) (G : Mon.{u}) : MonoidalFunctor (Action V G) (Action W G) :=
+  { -- See note [dsimp, simp].
+          F.toFunctor.mapAction
+      G with
+    ε :=
+      { Hom := F.ε,
+        comm' := fun g => by
+          dsimp'
+          erw [category.id_comp, CategoryTheory.Functor.map_id, category.comp_id] },
+    μ := fun X Y => { Hom := F.μ X.V Y.V, comm' := fun g => F.toLaxMonoidalFunctor.μ_natural (X.ρ g) (Y.ρ g) },
+    ε_is_iso := by
+      infer_instance,
+    μ_is_iso := by
+      infer_instance,
+    μ_natural' := by
+      intros
+      ext
+      dsimp'
+      simp ,
+    associativity' := by
+      intros
+      ext
+      dsimp'
+      simp
+      dsimp'
+      simp ,
+    left_unitality' := by
+      intros
+      ext
+      dsimp'
+      simp
+      dsimp'
+      simp ,
+    right_unitality' := by
+      intros
+      ext
+      dsimp'
+      simp
+      dsimp'
+      simp }
+
+end CategoryTheory.MonoidalFunctor
 

@@ -177,7 +177,7 @@ instance ListBlank.hasEmptyc {Γ} [Inhabited Γ] : HasEmptyc (ListBlank Γ) :=
 
 /-- A modified version of `quotient.lift_on'` specialized for `list_blank`, with the stronger
 precondition `blank_extends` instead of `blank_rel`. -/
-@[elab_as_eliminator, reducible]
+@[elabAsElim, reducible]
 protected def ListBlank.liftOn {Γ} [Inhabited Γ] {α} (l : ListBlank Γ) (f : List Γ → α)
     (H : ∀ a b, BlankExtends a b → f a = f b) : α :=
   l.liftOn' f <| by
@@ -187,7 +187,7 @@ protected def ListBlank.liftOn {Γ} [Inhabited Γ] {α} (l : ListBlank Γ) (f : 
 def ListBlank.mk {Γ} [Inhabited Γ] : List Γ → ListBlank Γ :=
   Quotientₓ.mk'
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem ListBlank.induction_on {Γ} [Inhabited Γ] {p : ListBlank Γ → Prop} (q : ListBlank Γ)
     (h : ∀ a, p (ListBlank.mk a)) : p q :=
   Quotientₓ.induction_on' q h
@@ -264,15 +264,15 @@ def ListBlank.nth {Γ} [Inhabited Γ] (l : ListBlank Γ) (n : ℕ) : Γ :=
   l.liftOn (fun l => List.inth l n)
     (by
       rintro l _ ⟨i, rfl⟩
-      simp only [← List.inth]
+      simp only
       cases' lt_or_leₓ _ _ with h h
-      · rw [List.nth_append h]
+      · rw [List.inth_append _ _ _ h]
         
-      rw [List.nth_len_le h]
+      rw [List.inth_eq_default _ h]
       cases' le_or_ltₓ _ _ with h₂ h₂
-      · rw [List.nth_len_le h₂]
+      · rw [List.inth_eq_default _ h₂]
         
-      rw [List.nth_le_nth h₂, List.nth_le_append_right h, List.nth_le_repeat])
+      rw [List.inth_eq_nth_le _ h₂, List.nth_le_append_right h, List.nth_le_repeat])
 
 @[simp]
 theorem ListBlank.nth_mk {Γ} [Inhabited Γ] (l : List Γ) (n : ℕ) : (ListBlank.mk l).nth n = l.inth n :=
@@ -300,12 +300,13 @@ theorem ListBlank.ext {Γ} [Inhabited Γ] {L₁ L₂ : ListBlank Γ} : (∀ i, L
       refine' List.ext_le _ fun i h h₂ => Eq.symm _
       · simp only [← add_tsub_cancel_of_le h, ← List.length_append, ← List.length_repeat]
         
-      simp at H
+      simp only [← list_blank.nth_mk] at H
       cases' lt_or_leₓ i l₁.length with h' h'
-      · simpa only [← List.nth_le_append _ h', ← List.nth_le_nth h, ← List.nth_le_nth h', ← Option.iget] using H i
+      · simp only [← List.nth_le_append _ h', ← List.nth_le_nth h, ← List.nth_le_nth h', List.inth_eq_nth_le _ h,
+          List.inth_eq_nth_le _ h', ← H]
         
-      · simpa only [← List.nth_le_append_right h', ← List.nth_le_repeat, ← List.nth_le_nth h, ← List.nth_len_le h', ←
-          Option.iget] using H i
+      · simp only [← List.nth_le_append_right h', ← List.nth_le_repeat, ← List.nth_le_nth h, ← List.nth_len_le h',
+          List.inth_eq_default _ h', ← H, ← List.inth_eq_nth_le _ h]
         
 
 /-- Apply a function to a value stored at the nth position of the list. -/
@@ -391,7 +392,7 @@ theorem ListBlank.nth_map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMa
   l.induction_on
     (by
       intro l
-      simp only [← List.nth_map, ← list_blank.map_mk, ← list_blank.nth_mk, ← List.inth]
+      simp only [← List.nth_map, ← list_blank.map_mk, ← list_blank.nth_mk, ← List.inth_eq_iget_nth]
       cases l.nth n
       · exact f.2.symm
         
@@ -718,7 +719,7 @@ theorem Reaches₀.tail' {σ} {f : σ → Option σ} {a b c : σ} (h : Reaches�
 which is either terminal (meaning `a = b`) or where the next point also satisfies `C`, then it
 holds of any point where `eval f a` evaluates to `b`. This formalizes the notion that if
 `eval f a` evaluates to `b` then it reaches terminal state `b` in finitely many steps. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def evalInduction {σ} {f : σ → Option σ} {b : σ} {C : σ → Sort _} {a : σ} (h : b ∈ eval f a)
     (H : ∀ a, b ∈ eval f a → (∀ a', f a = some a' → C a') → C a) : C a :=
   Pfun.fixInduction h fun a' ha' h' =>
@@ -1430,7 +1431,7 @@ variable [Fintype σ]
 /-- Given a finite set of accessible `Λ` machine states, there is a finite set of accessible
 machine states in the target (even though the type `Λ'` is infinite). -/
 noncomputable def trStmts (S : Finset Λ) : Finset Λ' :=
-  (TM1.stmts M S).product Finset.univ
+  TM1.stmts M S ×ˢ Finset.univ
 
 open Classical
 
@@ -1523,7 +1524,7 @@ theorem exists_enc_dec [Fintype Γ] :
     ∃ (n : _)(enc : Γ → Vector Bool n)(dec : Vector Bool n → Γ),
       enc default = Vector.repeat false n ∧ ∀ a, dec (enc a) = a :=
   by
-  let this := Classical.decEq Γ
+  letI := Classical.decEq Γ
   let n := Fintype.card Γ
   obtain ⟨F⟩ := Fintype.truncEquivFin Γ
   let G : Finₓ n ↪ Finₓ n → Bool :=
@@ -2215,7 +2216,7 @@ namespace TM2to1
 -- A displaced lemma proved in unnecessary generality
 theorem stk_nth_val {K : Type _} {Γ : K → Type _} {L : ListBlank (∀ k, Option (Γ k))} {k S} (n)
     (hL : ListBlank.map (proj k) L = ListBlank.mk (List.map some S).reverse) : L.nth n k = S.reverse.nth n := by
-  rw [← proj_map_nth, hL, ← List.map_reverse, list_blank.nth_mk, List.inth, List.nth_map]
+  rw [← proj_map_nth, hL, ← List.map_reverse, list_blank.nth_mk, List.inth_eq_iget_nth, List.nth_map]
   cases S.reverse.nth n <;> rfl
 
 section
@@ -2316,7 +2317,7 @@ def stWrite {k : K} (v : σ) (l : List (Γ k)) : st_act k → List (Γ k)
 /-- We have partitioned the TM2 statements into "stack actions", which require going to the end
 of the stack, and all other actions, which do not. This is a modified recursor which lumps the
 stack actions into one. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def stmtStRecₓ.{l} {C : stmt₂ → Sort l} (H₁ : ∀ (k) (s : st_act k) (q) (IH : C q), C (st_run s q))
     (H₂ : ∀ (a q) (IH : C q), C (TM2.Stmt.load a q))
     (H₃ : ∀ (p q₁ q₂) (IH₁ : C q₁) (IH₂ : C q₂), C (TM2.Stmt.branch p q₁ q₂)) (H₄ : ∀ l, C (TM2.Stmt.goto l))
@@ -2431,19 +2432,18 @@ theorem tr_respects_aux₂ {k q v} {S : ∀ k, List (Γ k)} {L : ListBlank (∀ 
     rw [list_blank.nth_map, list_blank.nth_modify_nth, proj, pointed_map.mk_val]
     by_cases' h' : k' = k
     · subst k'
-      split_ifs <;>
-        simp only [← List.reverse_cons, ← Function.update_same, ← list_blank.nth_mk, ← List.inth, ← List.map]
-      · rw [List.nth_le_nth, List.nth_le_append_right] <;>
+      split_ifs <;> simp only [← List.reverse_cons, ← Function.update_same, ← list_blank.nth_mk, ← List.map]
+      · rw [List.inth_eq_nth_le, List.nth_le_append_right] <;>
           simp only [← h, ← List.nth_le_singleton, ← List.length_mapₓ, ← List.length_reverse, ← Nat.succ_pos', ←
             List.length_append, ← lt_add_iff_pos_right, ← List.length]
         
-      rw [← proj_map_nth, hL, list_blank.nth_mk, List.inth]
+      rw [← proj_map_nth, hL, list_blank.nth_mk]
       cases' lt_or_gt_of_neₓ h with h h
-      · rw [List.nth_append]
+      · rw [List.inth_append]
         simpa only [← List.length_mapₓ, ← List.length_reverse] using h
         
       · rw [gt_iff_lt] at h
-        rw [List.nth_len_le, List.nth_len_le] <;>
+        rw [List.inth_eq_default, List.inth_eq_default] <;>
           simp only [← Nat.add_one_le_iff, ← h, ← List.length, ← le_of_ltₓ, ← List.length_reverse, ← List.length_append,
             ← List.length_mapₓ]
         
@@ -2484,19 +2484,19 @@ theorem tr_respects_aux₂ {k q v} {S : ∀ k, List (Γ k)} {L : ListBlank (∀ 
       rw [list_blank.nth_map, list_blank.nth_modify_nth, proj, pointed_map.mk_val]
       by_cases' h' : k' = k
       · subst k'
-        split_ifs <;> simp only [← Function.update_same, ← list_blank.nth_mk, ← List.tail, ← List.inth]
-        · rw [List.nth_len_le]
+        split_ifs <;> simp only [← Function.update_same, ← list_blank.nth_mk, ← List.tail]
+        · rw [List.inth_eq_default]
           · rfl
             
           rw [h, List.length_reverse, List.length_mapₓ]
           
-        rw [← proj_map_nth, hL, list_blank.nth_mk, List.inth, e, List.map, List.reverse_cons]
+        rw [← proj_map_nth, hL, list_blank.nth_mk, e, List.map, List.reverse_cons]
         cases' lt_or_gt_of_neₓ h with h h
-        · rw [List.nth_append]
+        · rw [List.inth_append]
           simpa only [← List.length_mapₓ, ← List.length_reverse] using h
           
         · rw [gt_iff_lt] at h
-          rw [List.nth_len_le, List.nth_len_le] <;>
+          rw [List.inth_eq_default, List.inth_eq_default] <;>
             simp only [← Nat.add_one_le_iff, ← h, ← List.length, ← le_of_ltₓ, ← List.length_reverse, ←
               List.length_append, ← List.length_mapₓ]
           
@@ -2527,7 +2527,7 @@ inductive TrCfg : cfg₂ → cfg₁ → Prop
     (∀ k, L.map (proj k) = ListBlank.mk ((S k).map some).reverse) →
       tr_cfg ⟨q, v, S⟩ ⟨q.map normal, v, Tape.mk' ∅ (add_bottom L)⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (n «expr ≤ » S.length)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (n «expr ≤ » S.length)
 theorem tr_respects_aux₁ {k} (o q v) {S : List (Γ k)} {L : ListBlank (∀ k, Option (Γ k))}
     (hL : L.map (proj k) = ListBlank.mk (S.map some).reverse) (n) (_ : n ≤ S.length) :
     Reaches₀ (TM1.step tr) ⟨some (go k o q), v, Tape.mk' ∅ (add_bottom L)⟩
@@ -2612,14 +2612,15 @@ theorem tr_cfg_init (k) (L : List (Γ k)) : tr_cfg (TM2.init k L) (TM1.init (tr_
   rw [(_ : TM1.init _ = _)]
   · refine' ⟨list_blank.mk (L.reverse.map fun a => update default k (some a)), fun k' => _⟩
     refine' list_blank.ext fun i => _
-    rw [list_blank.map_mk, list_blank.nth_mk, List.inth, List.map_mapₓ, (· ∘ ·), List.nth_map, proj, pointed_map.mk_val]
+    rw [list_blank.map_mk, list_blank.nth_mk, List.inth_eq_iget_nth, List.map_mapₓ, (· ∘ ·), List.nth_map, proj,
+      pointed_map.mk_val]
     by_cases' k' = k
     · subst k'
       simp only [← Function.update_same]
-      rw [list_blank.nth_mk, List.inth, ← List.map_reverse, List.nth_map]
+      rw [list_blank.nth_mk, List.inth_eq_iget_nth, ← List.map_reverse, List.nth_map]
       
     · simp only [← Function.update_noteq h]
-      rw [list_blank.nth_mk, List.inth, List.map, List.reverse_nil, List.nth]
+      rw [list_blank.nth_mk, List.inth_eq_iget_nth, List.map, List.reverse_nil, List.nth]
       cases L.reverse.nth i <;> rfl
       
     

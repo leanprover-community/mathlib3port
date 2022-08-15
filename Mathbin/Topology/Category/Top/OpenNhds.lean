@@ -39,7 +39,7 @@ namespace TopologicalSpace
 
 /-- The type of open neighbourhoods of a point `x` in a (bundled) topological space. -/
 def OpenNhds (x : X) :=
-  { U : Opens X // x ∈ U }
+  FullSubcategory fun U : Opens X => x ∈ U
 
 namespace OpenNhds
 
@@ -47,7 +47,7 @@ instance (x : X) : PartialOrderₓ (OpenNhds x) where
   le := fun U V => U.1 ≤ V.1
   le_refl := fun _ => le_rfl
   le_trans := fun _ _ _ => le_transₓ
-  le_antisymm := fun _ _ i j => Subtype.eq <| le_antisymmₓ i j
+  le_antisymm := fun _ _ i j => FullSubcategory.ext _ _ <| le_antisymmₓ i j
 
 instance (x : X) : Lattice (OpenNhds x) :=
   { OpenNhds.partialOrder x with inf := fun U V => ⟨U.1⊓V.1, ⟨U.2, V.2⟩⟩,
@@ -93,9 +93,7 @@ theorem open_embedding {x : X} (U : OpenNhds x) : OpenEmbedding U.1.inclusion :=
   U.1.OpenEmbedding
 
 def map (x : X) : OpenNhds (f x) ⥤ OpenNhds x where
-  obj := fun U =>
-    ⟨(Opens.map f).obj U.1, by
-      tidy⟩
+  obj := fun U => ⟨(Opens.map f).obj U.1, U.2⟩
   map := fun U V i => (Opens.map f).map i
 
 @[simp]

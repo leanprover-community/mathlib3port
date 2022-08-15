@@ -3,7 +3,7 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Fin.Basic
+import Mathbin.Data.Fin.Tuple.Basic
 import Mathbin.Data.List.Basic
 import Mathbin.Data.List.Join
 
@@ -20,6 +20,8 @@ The main statements pertain to lists generated using `of_fn`
 - `list.length_of_fn`, which tells us the length of such a list
 - `list.nth_of_fn`, which tells us the nth element of such a list
 - `list.array_eq_of_fn`, which interprets the list form of an array as such a list.
+- `list.equiv_sigma_tuple`, which is an `equiv` between lists and the functions that generate them
+  via `list.of_fn`.
 -/
 
 
@@ -117,6 +119,18 @@ theorem of_fn_succ' {n} (f : Finₓ (succ n) → α) : ofFnₓ f = (ofFnₓ fun 
     simp_rw [Finₓ.cast_succ_fin_succ]
     
 
+@[simp]
+theorem of_fn_eq_nil_iff {n : ℕ} {f : Finₓ n → α} : ofFnₓ f = [] ↔ n = 0 := by
+  cases n <;> simp only [← of_fn_zero, ← of_fn_succ, ← eq_self_iff_true, ← Nat.succ_ne_zero]
+
+theorem last_of_fn {n : ℕ} (f : Finₓ n → α) (h : ofFnₓ f ≠ [])
+    (hn : n - 1 < n := Nat.pred_ltₓ <| of_fn_eq_nil_iff.Not.mp h) : last (ofFnₓ f) h = f ⟨n - 1, hn⟩ := by
+  simp [← last_eq_nth_le]
+
+theorem last_of_fn_succ {n : ℕ} (f : Finₓ n.succ → α)
+    (h : ofFnₓ f ≠ [] := mt of_fn_eq_nil_iff.mp (Nat.succ_ne_zero _)) : last (ofFnₓ f) h = f (Finₓ.last _) :=
+  last_of_fn f h
+
 /-- Note this matches the convention of `list.of_fn_succ'`, putting the `fin m` elements first. -/
 theorem of_fn_add {m n} (f : Finₓ (m + n) → α) :
     List.ofFnₓ f = (List.ofFnₓ fun i => f (Finₓ.castAdd n i)) ++ List.ofFnₓ fun j => f (Finₓ.natAdd m j) := by
@@ -192,6 +206,48 @@ theorem of_fn_const (n : ℕ) (c : α) : (ofFnₓ fun i : Finₓ n => c) = repea
         simp ))
     fun n ihn => by
     simp [← ihn]
+
+/-- Lists are equivalent to the sigma type of tuples of a given length. -/
+@[simps]
+def equivSigmaTuple : List α ≃ Σn, Finₓ n → α where
+  toFun := fun l => ⟨l.length, fun i => l.nthLe (↑i) i.2⟩
+  invFun := fun f => List.ofFnₓ f.2
+  left_inv := List.of_fn_nth_le
+  right_inv := fun ⟨n, f⟩ => Finₓ.sigma_eq_of_eq_comp_cast (length_of_fn _) <| funext fun i => nth_le_of_fn' f i.Prop
+
+/-- A recursor for lists that expands a list into a function mapping to its elements.
+
+This can be used with `induction l using list.of_fn_rec`. -/
+@[elabAsElim]
+def ofFnRec {C : List α → Sort _} (h : ∀ (n) (f : Finₓ n → α), C (List.ofFnₓ f)) (l : List α) : C l :=
+  cast (congr_arg _ l.of_fn_nth_le) <| h l.length fun i => l.nthLe (↑i) i.2
+
+@[simp]
+theorem of_fn_rec_of_fn {C : List α → Sort _} (h : ∀ (n) (f : Finₓ n → α), C (List.ofFnₓ f)) {n : ℕ} (f : Finₓ n → α) :
+    @ofFnRec _ C h (List.ofFnₓ f) = h _ f :=
+  equivSigmaTuple.right_inverse_symm.cast_eq (fun s => h s.1 s.2) ⟨n, f⟩
+
+theorem exists_iff_exists_tuple {P : List α → Prop} :
+    (∃ l : List α, P l) ↔ ∃ (n : _)(f : Finₓ n → α), P (List.ofFnₓ f) :=
+  equivSigmaTuple.symm.Surjective.exists.trans Sigma.exists
+
+theorem forall_iff_forall_tuple {P : List α → Prop} : (∀ l : List α, P l) ↔ ∀ (n) (f : Finₓ n → α), P (List.ofFnₓ f) :=
+  equivSigmaTuple.symm.Surjective.forall.trans Sigma.forall
+
+/-- `fin.sigma_eq_iff_eq_comp_cast` may be useful to work with the RHS of this expression. -/
+theorem of_fn_inj' {m n : ℕ} {f : Finₓ m → α} {g : Finₓ n → α} :
+    ofFnₓ f = ofFnₓ g ↔ (⟨m, f⟩ : Σn, Finₓ n → α) = ⟨n, g⟩ :=
+  Iff.symm <| equivSigmaTuple.symm.Injective.eq_iff.symm
+
+/-- Note we can only state this when the two functions are indexed by defeq `n`. -/
+theorem of_fn_injective {n : ℕ} : Function.Injective (ofFnₓ : (Finₓ n → α) → List α) := fun f g h =>
+  eq_of_heq <| by
+    injection of_fn_inj'.mp h
+
+/-- A special case of `list.of_fn_inj'` for when the two functions are indexed by defeq `n`. -/
+@[simp]
+theorem of_fn_inj {n : ℕ} {f g : Finₓ n → α} : ofFnₓ f = ofFnₓ g ↔ f = g :=
+  of_fn_injective.eq_iff
 
 end List
 

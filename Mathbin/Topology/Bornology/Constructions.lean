@@ -151,3 +151,35 @@ alias bounded_space_coe_set_iff ↔ _ Bornology.IsBounded.bounded_space_coe
 instance [BoundedSpace α] {p : α → Prop} : BoundedSpace (Subtype p) :=
   (IsBounded.all { x | p x }).bounded_space_subtype
 
+/-!
+### `additive`, `multiplicative`
+
+The bornology on those type synonyms is inherited without change.
+-/
+
+
+instance : Bornology (Additive α) :=
+  ‹Bornology α›
+
+instance : Bornology (Multiplicative α) :=
+  ‹Bornology α›
+
+instance [BoundedSpace α] : BoundedSpace (Additive α) :=
+  ‹BoundedSpace α›
+
+instance [BoundedSpace α] : BoundedSpace (Multiplicative α) :=
+  ‹BoundedSpace α›
+
+/-!
+### Order dual
+
+The bornology on this type synonym is inherited without change.
+-/
+
+
+instance : Bornology αᵒᵈ :=
+  ‹Bornology α›
+
+instance [BoundedSpace α] : BoundedSpace αᵒᵈ :=
+  ‹BoundedSpace α›
+

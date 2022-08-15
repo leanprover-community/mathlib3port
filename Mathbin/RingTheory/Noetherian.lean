@@ -10,6 +10,7 @@ import Mathbin.Order.OrderIsoNat
 import Mathbin.RingTheory.Ideal.Operations
 import Mathbin.Order.CompactlyGenerated
 import Mathbin.LinearAlgebra.LinearIndependent
+import Mathbin.Algebra.Ring.Idempotents
 
 /-!
 # Noetherian rings and modules
@@ -171,6 +172,14 @@ theorem exists_sub_one_mem_and_smul_eq_zero_of_fg_of_le_smul {R : Type _} [CommR
     exact add_mem (smul_mem _ _ hci) (smul_mem _ _ hz)
     
 
+theorem exists_mem_and_smul_eq_self_of_fg_of_le_smul {R : Type _} [CommRingₓ R] {M : Type _} [AddCommGroupₓ M]
+    [Module R M] (I : Ideal R) (N : Submodule R M) (hn : N.Fg) (hin : N ≤ I • N) : ∃ r ∈ I, ∀, ∀ n ∈ N, ∀, r • n = n :=
+  by
+  obtain ⟨r, hr, hr'⟩ := N.exists_sub_one_mem_and_smul_eq_zero_of_fg_of_le_smul I hn hin
+  exact
+    ⟨-(r - 1), I.neg_mem hr, fun n hn => by
+      simpa [← sub_smul] using hr' n hn⟩
+
 theorem fg_bot : (⊥ : Submodule R M).Fg :=
   ⟨∅, by
     rw [Finset.coe_empty, span_empty]⟩
@@ -257,9 +266,9 @@ theorem fg_pi {ι : Type _} {M : ι → Type _} [Fintype ι] [∀ i, AddCommMono
 finitely generated then so is M. -/
 theorem fg_of_fg_map_of_fg_inf_ker {R M P : Type _} [Ringₓ R] [AddCommGroupₓ M] [Module R M] [AddCommGroupₓ P]
     [Module R P] (f : M →ₗ[R] P) {s : Submodule R M} (hs1 : (s.map f).Fg) (hs2 : (s⊓f.ker).Fg) : s.Fg := by
-  have := Classical.decEq R
-  have := Classical.decEq M
-  have := Classical.decEq P
+  haveI := Classical.decEq R
+  haveI := Classical.decEq M
+  haveI := Classical.decEq P
   cases' hs1 with t1 ht1
   cases' hs2 with t2 ht2
   have : ∀, ∀ y ∈ t1, ∀, ∃ x ∈ s, f x = y := by
@@ -307,7 +316,7 @@ theorem fg_of_fg_map_of_fg_inf_ker {R M P : Type _} [Ringₓ R] [AddCommGroupₓ
         x - Finsupp.total M M R id ((Finsupp.lmapDomain R R g : (P →₀ R) → M →₀ R) l), _, add_sub_cancel'_right _ _⟩
   · rw [← Set.image_id (g '' ↑t1), Finsupp.mem_span_image_iff_total]
     refine' ⟨_, _, rfl⟩
-    have : Inhabited P := ⟨0⟩
+    haveI : Inhabited P := ⟨0⟩
     rw [← Finsupp.lmap_domain_supported _ _ g, mem_map]
     refine' ⟨l, hl1, _⟩
     rfl
@@ -352,22 +361,6 @@ theorem fg_induction (R M : Type _) [Semiringₓ R] [AddCommMonoidₓ M] [Module
     apply h₂ <;> apply_assumption
     
 
-/-- An ideal of `R` is finitely generated if it is the span of a finite subset of `R`.
-
-This is defeq to `submodule.fg`, but unfolds more nicely. -/
-def _root_.ideal.fg (I : Ideal R) : Prop :=
-  ∃ S : Finset R, Ideal.span ↑S = I
-
-/-- The image of a finitely generated ideal is finitely generated.
-
-This is the `ideal` version of `submodule.fg.map`. -/
-theorem _root_.ideal.fg.map {R S : Type _} [Semiringₓ R] [Semiringₓ S] {I : Ideal R} (h : I.Fg) (f : R →+* S) :
-    (I.map f).Fg := by
-  classical
-  obtain ⟨s, hs⟩ := h
-  refine' ⟨s.image f, _⟩
-  rw [Finset.coe_image, ← Ideal.map_span, hs]
-
 /-- The kernel of the composition of two linear maps is finitely generated if both kernels are and
 the first morphism is surjective. -/
 theorem fg_ker_comp {R M N P : Type _} [Ringₓ R] [AddCommGroupₓ M] [Module R M] [AddCommGroupₓ N] [Module R N]
@@ -386,16 +379,6 @@ theorem fg_restrict_scalars {R S M : Type _} [CommSemiringₓ R] [Semiringₓ S]
   obtain ⟨X, rfl⟩ := hfin
   use X
   exact Submodule.span_eq_restrict_scalars R S M X h
-
-theorem _root_.ideal.fg_ker_comp {R S A : Type _} [CommRingₓ R] [CommRingₓ S] [CommRingₓ A] (f : R →+* S) (g : S →+* A)
-    (hf : f.ker.Fg) (hg : g.ker.Fg) (hsur : Function.Surjective f) : (g.comp f).ker.Fg := by
-  let this : Algebra R S := RingHom.toAlgebra f
-  let this : Algebra R A := RingHom.toAlgebra (g.comp f)
-  let this : Algebra S A := RingHom.toAlgebra g
-  let this : IsScalarTower R S A := IsScalarTower.of_algebra_map_eq fun _ => rfl
-  let f₁ := Algebra.linearMap R S
-  let g₁ := (IsScalarTower.toAlgHom R S A).toLinearMap
-  exact fg_ker_comp f₁ g₁ hf (fg_restrict_scalars g.ker hg hsur) hsur
 
 /-- Finitely generated submodules are precisely compact elements in the submodule lattice. -/
 theorem fg_iff_compact (s : Submodule R M) : s.Fg ↔ CompleteLattice.IsCompactElement s := by
@@ -429,6 +412,70 @@ theorem fg_iff_compact (s : Submodule R M) : s.Fg ↔ CompleteLattice.IsCompactE
     
 
 end Submodule
+
+namespace Ideal
+
+variable {R : Type _} {M : Type _} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
+
+/-- An ideal of `R` is finitely generated if it is the span of a finite subset of `R`.
+
+This is defeq to `submodule.fg`, but unfolds more nicely. -/
+def Fg (I : Ideal R) : Prop :=
+  ∃ S : Finset R, Ideal.span ↑S = I
+
+/-- The image of a finitely generated ideal is finitely generated.
+
+This is the `ideal` version of `submodule.fg.map`. -/
+theorem Fg.map {R S : Type _} [Semiringₓ R] [Semiringₓ S] {I : Ideal R} (h : I.Fg) (f : R →+* S) : (I.map f).Fg := by
+  classical
+  obtain ⟨s, hs⟩ := h
+  refine' ⟨s.image f, _⟩
+  rw [Finset.coe_image, ← Ideal.map_span, hs]
+
+theorem fg_ker_comp {R S A : Type _} [CommRingₓ R] [CommRingₓ S] [CommRingₓ A] (f : R →+* S) (g : S →+* A)
+    (hf : f.ker.Fg) (hg : g.ker.Fg) (hsur : Function.Surjective f) : (g.comp f).ker.Fg := by
+  letI : Algebra R S := RingHom.toAlgebra f
+  letI : Algebra R A := RingHom.toAlgebra (g.comp f)
+  letI : Algebra S A := RingHom.toAlgebra g
+  letI : IsScalarTower R S A := IsScalarTower.of_algebra_map_eq fun _ => rfl
+  let f₁ := Algebra.linearMap R S
+  let g₁ := (IsScalarTower.toAlgHom R S A).toLinearMap
+  exact Submodule.fg_ker_comp f₁ g₁ hf (Submodule.fg_restrict_scalars g.ker hg hsur) hsur
+
+/-- A finitely generated idempotent ideal is generated by an idempotent element -/
+theorem is_idempotent_elem_iff_of_fg {R : Type _} [CommRingₓ R] (I : Ideal R) (h : I.Fg) :
+    IsIdempotentElem I ↔ ∃ e : R, IsIdempotentElem e ∧ I = R∙e := by
+  constructor
+  · intro e
+    obtain ⟨r, hr, hr'⟩ :=
+      Submodule.exists_mem_and_smul_eq_self_of_fg_of_le_smul I I h
+        (by
+          rw [smul_eq_mul]
+          exact e.ge)
+    simp_rw [smul_eq_mul] at hr'
+    refine' ⟨r, hr' r hr, antisymm _ ((Submodule.span_singleton_le_iff_mem _ _).mpr hr)⟩
+    intro x hx
+    rw [← hr' x hx]
+    exact ideal.mem_span_singleton'.mpr ⟨_, mul_comm _ _⟩
+    
+  · rintro ⟨e, he, rfl⟩
+    simp [← IsIdempotentElem, ← Ideal.span_singleton_mul_span_singleton, ← he.eq]
+    
+
+theorem is_idempotent_elem_iff_eq_bot_or_top {R : Type _} [CommRingₓ R] [IsDomain R] (I : Ideal R) (h : I.Fg) :
+    IsIdempotentElem I ↔ I = ⊥ ∨ I = ⊤ := by
+  constructor
+  · intro H
+    obtain ⟨e, he, rfl⟩ := (I.is_idempotent_elem_iff_of_fg h).mp H
+    simp only [← Ideal.submodule_span_eq, ← Ideal.span_singleton_eq_bot]
+    apply or_of_or_of_imp_of_imp (is_idempotent_elem.iff_eq_zero_or_one.mp he) id
+    rintro rfl
+    simp
+    
+  · rintro (rfl | rfl) <;> simp [← IsIdempotentElem]
+    
+
+end Ideal
 
 /-- `is_noetherian R M` is the proposition that `M` is a Noetherian `R`-module,
 implemented as the predicate that all `R`-submodules of `M` are finitely generated.
@@ -531,10 +578,10 @@ instance is_noetherian_prod [IsNoetherian R M] [IsNoetherian R P] : IsNoetherian
 
 instance is_noetherian_pi {R ι : Type _} {M : ι → Type _} [Ringₓ R] [∀ i, AddCommGroupₓ (M i)] [∀ i, Module R (M i)]
     [Fintype ι] [∀ i, IsNoetherian R (M i)] : IsNoetherian R (∀ i, M i) := by
-  have := Classical.decEq ι
+  haveI := Classical.decEq ι
   suffices on_finset : ∀ s : Finset ι, IsNoetherian R (∀ i : s, M i)
   · let coe_e := Equivₓ.subtypeUnivEquiv Finset.mem_univ
-    let this : IsNoetherian R (∀ i : Finset.univ, M (coe_e i)) := on_finset Finset.univ
+    letI : IsNoetherian R (∀ i : Finset.univ, M (coe_e i)) := on_finset Finset.univ
     exact is_noetherian_of_linear_equiv (LinearEquiv.piCongrLeft R M coe_e)
     
   intro s
@@ -825,20 +872,18 @@ theorem is_noetherian_ring_iff_ideal_fg (R : Type _) [Semiringₓ R] : IsNoether
   is_noetherian_ring_iff.trans is_noetherian_def
 
 -- see Note [lower instance priority]
-instance (priority := 80) is_noetherian_of_fintype (R M) [Fintype M] [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] :
-    IsNoetherian R M := by
-  let this := Classical.dec <;>
-    exact
-      ⟨fun s =>
-        ⟨to_finset s, by
-          rw [Set.coe_to_finset, Submodule.span_eq]⟩⟩
+instance (priority := 80) is_noetherian_of_finite (R M) [Finite M] [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] :
+    IsNoetherian R M :=
+  ⟨fun s =>
+    ⟨(s : Set M).to_finite.toFinset, by
+      rw [Set.Finite.coe_to_finset, Submodule.span_eq]⟩⟩
 
 /-- Modules over the trivial ring are Noetherian. -/
 -- see Note [lower instance priority]
 instance (priority := 100) is_noetherian_of_subsingleton (R M) [Subsingleton R] [Semiringₓ R] [AddCommMonoidₓ M]
-    [Module R M] : IsNoetherian R M :=
-  have := Module.subsingleton R M
-  is_noetherian_of_fintype R M
+    [Module R M] : IsNoetherian R M := by
+  haveI := Module.subsingleton R M
+  exact is_noetherian_of_finite R M
 
 -- see Note [lower instance priority]
 instance (priority := 100) Ringₓ.is_noetherian_of_subsingleton {R} [Semiringₓ R] [Subsingleton R] :
@@ -869,9 +914,9 @@ instance Ideal.Quotient.is_noetherian_ring {R : Type _} [CommRingₓ R] [h : IsN
 theorem is_noetherian_of_fg_of_noetherian {R M} [Ringₓ R] [AddCommGroupₓ M] [Module R M] (N : Submodule R M)
     [IsNoetherianRing R] (hN : N.Fg) : IsNoetherian R N := by
   let ⟨s, hs⟩ := hN
-  have := Classical.decEq M
-  have := Classical.decEq R
-  let this : IsNoetherian R R := by
+  haveI := Classical.decEq M
+  haveI := Classical.decEq R
+  letI : IsNoetherian R R := by
     infer_instance
   have : ∀, ∀ x ∈ s, ∀, x ∈ N := fun x hx => hs ▸ Submodule.subset_span hx
   refine' @is_noetherian_of_surjective ((↑s : Set M) → R) _ _ _ (Pi.module _ _ _) _ _ _ is_noetherian_pi

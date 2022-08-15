@@ -42,7 +42,7 @@ open Nnreal Classical Ennreal TopologicalSpace
 
 namespace Vitali
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (u «expr ⊆ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (u «expr ⊆ » t)
 /-- Vitali covering theorem: given a set `t` of subsets of a type, one may extract a disjoint
 subfamily `u` such that the `τ`-enlargment of this family covers all elements of `t`, where `τ > 1`
 is any fixed number.
@@ -146,9 +146,13 @@ theorem exists_disjoint_subfamily_covering_enlargment (t : Set (Set α)) (δ : S
       simp only [not_disjoint_iff_nonempty_inter, ← not_not] at H
       rcases mem_insert_iff.1 ba'u with (rfl | H')
       · refine' ⟨b, mem_insert _ _, hcb, _⟩
-        calc δ c ≤ m := le_cSup bddA (mem_image_of_mem _ ⟨ct, H⟩)_ = τ * (m / τ) := by
+        calc
+          δ c ≤ m := le_cSup bddA (mem_image_of_mem _ ⟨ct, H⟩)
+          _ = τ * (m / τ) := by
             field_simp [← (zero_lt_one.trans hτ).ne']
-            ring _ ≤ τ * δ b := mul_le_mul_of_nonneg_left ha' (zero_le_one.trans hτ.le)
+            ring
+          _ ≤ τ * δ b := mul_le_mul_of_nonneg_left ha' (zero_le_one.trans hτ.le)
+          
         
       · rw [← not_disjoint_iff_nonempty_inter] at hcb
         exact (hcb (H _ H')).elim
@@ -156,8 +160,8 @@ theorem exists_disjoint_subfamily_covering_enlargment (t : Set (Set α)) (δ : S
       
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (u' «expr ⊆ » t')
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (u «expr ⊆ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (u' «expr ⊆ » t')
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (u «expr ⊆ » t)
 /-- Vitali covering theorem, closed balls version: given a family `t` of closed balls, one can
 extract a disjoint subfamily `u ⊆ t` so that all balls in `t` are covered by the 5-times
 dilations of balls in `u`. -/
@@ -245,8 +249,8 @@ theorem exists_disjoint_subfamily_covering_enlargment_closed_ball [MetricSpace �
       
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (u «expr ⊆ » t')
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (u «expr ⊆ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (u «expr ⊆ » t')
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (u «expr ⊆ » t)
 /-- The measurable Vitali covering theorem. Assume one is given a family `t` of closed sets with
 nonempty interior, such that each `a ∈ t` is included in a ball `B (x, r)` and covers a definite
 proportion of the ball `B (x, 6 r)` for a given measure `μ` (think of the situation where `μ` is
@@ -296,12 +300,14 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
       
     · apply lt_of_le_of_ltₓ (measure_mono _) μR
       apply closed_ball_subset_closed_ball
-      calc 20 * min 1 (R / 20) ≤ 20 * (R / 20) :=
+      calc
+        20 * min 1 (R / 20) ≤ 20 * (R / 20) :=
           mul_le_mul_of_nonneg_left (min_le_rightₓ _ _)
             (by
-              norm_num)_ = R :=
-          by
+              norm_num)
+        _ = R := by
           ring
+        
       
   choose r hr0 hr1 hrμ
   -- we restrict to a subfamily `t'` of `t`, made of elements small enough to ensure that
@@ -314,9 +320,11 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     by
     have A : ∀ a : Set α, a ∈ t' → diam a ≤ 2 := by
       rintro a ⟨hat, ⟨x, hax⟩⟩
-      calc diam a ≤ 2 * 1 :=
-          diam_le_of_subset_closed_ball zero_le_one (hax.trans <| closed_ball_subset_closed_ball <| hr1 x)_ = 2 :=
-          mul_oneₓ _
+      calc
+        diam a ≤ 2 * 1 :=
+          diam_le_of_subset_closed_ball zero_le_one (hax.trans <| closed_ball_subset_closed_ball <| hr1 x)
+        _ = 2 := mul_oneₓ _
+        
     have B : ∀ a : Set α, a ∈ t' → a.Nonempty := fun a hat' => Set.Nonempty.mono interior_subset (ht a hat'.1)
     exact exists_disjoint_subfamily_covering_enlargment t' diam 2 one_lt_two (fun a ha => diam_nonneg) 2 A B
   have ut : u ⊆ t := fun a hau => (ut' hau).1
@@ -381,15 +389,18 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
       nonpos_iff_eq_zero.mp (le_of_forall_le_of_dense fun ε εpos => _)⟩
   -- the elements of `v` are disjoint and all contained in a finite volume ball, hence the sum
   -- of their measures is finite.
-  have I : (∑' a : v, μ a) < ∞ := by
-    calc (∑' a : v, μ a) = μ (⋃ a ∈ v, a) := by
+  have I : (∑' a : v, μ ↑a) < ∞ := by
+    calc
+      (∑' a : v, μ ↑a) = μ (⋃ a ∈ v, a) := by
         rw [measure_bUnion (u_count.mono vu) _ fun a ha => (h't _ (vu.trans ut ha)).MeasurableSet]
-        exact u_disj.subset vu _ ≤ μ (closed_ball x R) :=
-        measure_mono (Union₂_subset fun a ha => hR a (vu ha) ha.2)_ < ∞ := μR
+        exact u_disj.subset vu
+      _ ≤ μ (closed_ball x R) := measure_mono (Union₂_subset fun a ha => hR a (vu ha) ha.2)
+      _ < ∞ := μR
+      
   -- we can obtain a finite subfamily of `v`, such that the measures of the remaining elements
   -- add up to an arbitrarily small number, say `ε / C`.
-  obtain ⟨w, hw⟩ : ∃ w : Finset ↥v, (∑' a : { a // a ∉ w }, μ a) < ε / C := by
-    have : ne_bot (at_top : Filter (Finset v)) := at_top_ne_bot
+  obtain ⟨w, hw⟩ : ∃ w : Finset ↥v, (∑' a : { a // a ∉ w }, μ ↑a) < ε / C := by
+    haveI : ne_bot (at_top : Filter (Finset v)) := at_top_ne_bot
     have : 0 < ε / C := by
       simp only [← Ennreal.div_pos_iff, ← εpos.ne', ← Ennreal.coe_ne_top, ← Ne.def, ← not_false_iff, ← and_selfₓ]
     exact ((tendsto_order.1 (Ennreal.tendsto_tsum_compl_at_top_zero I.ne)).2 _ this).exists
@@ -401,7 +412,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
       ⋃ a : { a // a ∉ w }, closed_ball (y a) (3 * diam (a : Set α)) :=
     by
     intro z hz
-    set k := ⋃ (a : v) (ha : a ∈ w), (a : Set α) with hk
+    set k := ⋃ (a : v) (ha : a ∈ w), (↑a : Set α) with hk
     have k_closed : IsClosed k := is_closed_bUnion w.finite_to_set fun i hi => h't _ (ut (vu i.2))
     have z_notmem_k : z ∉ k := by
       simp only [← not_exists, ← exists_prop, ← mem_Union, ← mem_sep_eq, ← forall_exists_index, ← SetCoe.exists, ←
@@ -433,7 +444,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     -- contrary to `b`
     have b'_notmem_w : b' ∉ w := by
       intro b'w
-      have b'k : (b' : Set α) ⊆ k := Finset.subset_set_bUnion_of_mem b'w
+      have b'k : (↑b' : Set α) ⊆ k := Finset.subset_set_bUnion_of_mem b'w
       have : (ball x (r x) \ k ∩ k).Nonempty := ab.mono (inter_subset_inter (ad.trans hd) b'k)
       simpa only [← diff_inter_self, ← not_nonempty_empty]
     let b'' : { a // a ∉ w } := ⟨b', b'_notmem_w⟩
@@ -448,22 +459,24 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
       simp only [← mem_closed_ball]
       linarith [dist_triangle z e (y b)]
     suffices H :
-      closed_ball (y (b'' : Set α)) (3 * diam (b'' : Set α)) ⊆
-        ⋃ a : { a // a ∉ w }, closed_ball (y (a : Set α)) (3 * diam (a : Set α))
+      closed_ball (y ↑b'') (3 * diam (↑b'' : Set α)) ⊆ ⋃ a : { a // a ∉ w }, closed_ball (y ↑a) (3 * diam (↑a : Set α))
     exact H zb
-    exact subset_Union (fun a : { a // a ∉ w } => closed_ball (y a) (3 * diam (a : Set α))) b''
+    exact subset_Union (fun a : { a // a ∉ w } => closed_ball (y ↑a) (3 * diam (↑a : Set α))) b''
   -- now that we have proved our main inclusion, we can use it to estimate the measure of the points
   -- in `ball x (r x)` not covered by `u`.
-  have : Encodable v := (u_count.mono vu).toEncodable
+  haveI : Encodable v := (u_count.mono vu).toEncodable
   calc
     μ ((s \ ⋃ (a : Set α) (H : a ∈ u), a) ∩ ball x (r x)) ≤
-        μ (⋃ a : { a // a ∉ w }, closed_ball (y a) (3 * diam (a : Set α))) :=
-      measure_mono M _ ≤ ∑' a : { a // a ∉ w }, μ (closed_ball (y a) (3 * diam (a : Set α))) :=
-      measure_Union_le _ _ ≤ ∑' a : { a // a ∉ w }, C * μ a :=
-      Ennreal.tsum_le_tsum fun a => (hy a (ut (vu a.1.2))).2_ = C * ∑' a : { a // a ∉ w }, μ a :=
-      Ennreal.tsum_mul_left _ ≤ C * (ε / C) := Ennreal.mul_le_mul le_rfl hw.le _ ≤ ε := Ennreal.mul_div_le
+        μ (⋃ a : { a // a ∉ w }, closed_ball (y ↑a) (3 * diam (↑a : Set α))) :=
+      measure_mono M
+    _ ≤ ∑' a : { a // a ∉ w }, μ (closed_ball (y ↑a) (3 * diam (↑a : Set α))) := measure_Union_le _
+    _ ≤ ∑' a : { a // a ∉ w }, C * μ ↑a := Ennreal.tsum_le_tsum fun a => (hy a (ut (vu a.1.2))).2
+    _ = C * ∑' a : { a // a ∉ w }, μ ↑a := Ennreal.tsum_mul_left
+    _ ≤ C * (ε / C) := Ennreal.mul_le_mul le_rfl hw.le
+    _ ≤ ε := Ennreal.mul_div_le
+    
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (u «expr ⊆ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (u «expr ⊆ » t)
 /-- Assume that around every point there are arbitrarily small scales at which the measure is
 doubling. Then the set of closed sets `a` with nonempty interior covering a fixed proportion `1/C`
 of the ball `closed_ball x (3 * diam a)` forms a Vitali family. This is essentially a restatement

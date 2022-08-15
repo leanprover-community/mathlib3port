@@ -78,14 +78,14 @@ attribute [to_additive] OneMemClass
 section
 
 /-- A submonoid of a monoid `M` is a subset containing 1 and closed under multiplication. -/
+@[ancestor Subsemigroup]
 structure Submonoid (M : Type _) [MulOneClassₓ M] extends Subsemigroup M where
   one_mem' : (1 : M) ∈ carrier
 
 end
 
-/-- A submonoid of a monoid `M` can be considered as a subsemigroup of that monoid. -/
-add_decl_doc Submonoid.toSubsemigroup
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident submonoid.to_subsemigroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `submonoid_class S M` says `S` is a type of subsets `s ≤ M` that contain `1`
 and are closed under `(*)` -/
 class SubmonoidClass (S : Type _) (M : outParam <| Type _) [MulOneClassₓ M] [SetLike S M] extends MulMemClass S M where
@@ -95,15 +95,14 @@ section
 
 /-- An additive submonoid of an additive monoid `M` is a subset containing 0 and
   closed under addition. -/
+@[ancestor AddSubsemigroup]
 structure AddSubmonoid (M : Type _) [AddZeroClassₓ M] extends AddSubsemigroup M where
   zero_mem' : (0 : M) ∈ carrier
 
 end
 
-/-- An additive submonoid of an additive monoid `M` can be considered as an
-additive subsemigroup of that additive monoid. -/
-add_decl_doc AddSubmonoid.toAddSubsemigroup
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_submonoid.to_add_subsemigroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `add_submonoid_class S M` says `S` is a type of subsets `s ≤ M` that contain `0`
 and are closed under `(+)` -/
 class AddSubmonoidClass (S : Type _) (M : outParam <| Type _) [AddZeroClassₓ M] [SetLike S M] extends
@@ -350,7 +349,7 @@ variable (S)
 
 /-- An induction principle for closure membership. If `p` holds for `1` and all elements of `s`, and
 is preserved under multiplication, then `p` holds for all elements of the closure of `s`. -/
-@[elab_as_eliminator,
+@[elabAsElim,
   to_additive
       "An induction principle for additive closure membership. If `p`\nholds for `0` and all elements of `s`, and is preserved under addition, then `p` holds for all\nelements of the additive closure of `s`."]
 theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure s) (Hs : ∀, ∀ x ∈ s, ∀, p x) (H1 : p 1)
@@ -358,7 +357,7 @@ theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure s) (Hs : ∀, 
   (@closure_le _ _ _ ⟨p, Hmul, H1⟩).2 Hs h
 
 /-- A dependent version of `submonoid.closure_induction`.  -/
-@[elab_as_eliminator, to_additive "A dependent version of `add_submonoid.closure_induction`. "]
+@[elabAsElim, to_additive "A dependent version of `add_submonoid.closure_induction`. "]
 theorem closure_induction' (s : Set M) {p : ∀ x, x ∈ closure s → Prop} (Hs : ∀ (x) (h : x ∈ s), p x (subset_closure h))
     (H1 : p 1 (one_mem _)) (Hmul : ∀ x hx y hy, p x hx → p y hy → p (x * y) (mul_mem hx hy)) {x} (hx : x ∈ closure s) :
     p x hx := by
@@ -366,8 +365,7 @@ theorem closure_induction' (s : Set M) {p : ∀ x, x ∈ closure s → Prop} (Hs
   exact closure_induction hx (fun x hx => ⟨_, Hs x hx⟩) ⟨_, H1⟩ fun x y ⟨hx', hx⟩ ⟨hy', hy⟩ => ⟨_, Hmul _ _ _ _ hx hy⟩
 
 /-- An induction principle for closure membership for predicates with two arguments.  -/
-@[elab_as_eliminator,
-  to_additive "An induction principle for additive closure membership for\npredicates with two arguments."]
+@[elabAsElim, to_additive "An induction principle for additive closure membership for\npredicates with two arguments."]
 theorem closure_induction₂ {p : M → M → Prop} {x} {y : M} (hx : x ∈ closure s) (hy : y ∈ closure s)
     (Hs : ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀, p x y) (H1_left : ∀ x, p 1 x) (H1_right : ∀ x, p x 1)
     (Hmul_left : ∀ x y z, p x z → p y z → p (x * y) z) (Hmul_right : ∀ x y z, p z x → p z y → p z (x * y)) : p x y :=
@@ -377,7 +375,7 @@ theorem closure_induction₂ {p : M → M → Prop} {x} {y : M} (hx : x ∈ clos
 /-- If `s` is a dense set in a monoid `M`, `submonoid.closure s = ⊤`, then in order to prove that
 some predicate `p` holds for all `x : M` it suffices to verify `p x` for `x ∈ s`, verify `p 1`,
 and verify that `p x` and `p y` imply `p (x * y)`. -/
-@[elab_as_eliminator,
+@[elabAsElim,
   to_additive
       "If `s` is a dense set in an additive monoid `M`,\n`add_submonoid.closure s = ⊤`, then in order to prove that some predicate `p` holds for all `x : M`\nit suffices to verify `p x` for `x ∈ s`, verify `p 0`, and verify that `p x` and `p y` imply\n`p (x + y)`."]
 theorem dense_induction {p : M → Prop} (x : M) {s : Set M} (hs : closure s = ⊤) (Hs : ∀, ∀ x ∈ s, ∀, p x) (H1 : p 1)
@@ -518,11 +516,8 @@ def ofMdense {M N} [Monoidₓ M] [Monoidₓ N] {s : Set M} (f : M → N) (hs : c
         simp only [mul_assoc, ← h₁, ← h₂])
       x
 
-/-- Let `s` be a subset of an additive monoid `M` such that the closure of `s` is the whole monoid.
-Then `add_monoid_hom.of_mdense` defines an additive monoid homomorphism from `M` asking for a proof
-of `f (x + y) = f x + f y` only for `y ∈ s`. -/
-add_decl_doc AddMonoidHom.ofMdense
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_monoid_hom.of_mdense]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, norm_cast, to_additive]
 theorem coe_of_mdense (f : M → N) (hs : closure s = ⊤) (h1 hmul) : ⇑(ofMdense f hs h1 hmul) = f :=
   rfl

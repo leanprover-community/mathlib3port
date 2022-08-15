@@ -30,15 +30,23 @@ def unitary (R : Type _) [Monoidₓ R] [StarSemigroup R] : Submonoid R where
     simp only [← mul_oneₓ, ← and_selfₓ, ← Set.mem_set_of_eq, ← star_one]
   mul_mem' := fun U B ⟨hA₁, hA₂⟩ ⟨hB₁, hB₂⟩ => by
     refine' ⟨_, _⟩
-    · calc star (U * B) * (U * B) = star B * star U * U * B := by
-          simp only [← mul_assoc, ← star_mul]_ = star B * (star U * U) * B := by
-          rw [← mul_assoc]_ = 1 := by
+    · calc
+        star (U * B) * (U * B) = star B * star U * U * B := by
+          simp only [← mul_assoc, ← star_mul]
+        _ = star B * (star U * U) * B := by
+          rw [← mul_assoc]
+        _ = 1 := by
           rw [hA₁, mul_oneₓ, hB₁]
+        
       
-    · calc U * B * star (U * B) = U * B * (star B * star U) := by
-          rw [star_mul]_ = U * (B * star B) * star U := by
-          simp_rw [← mul_assoc]_ = 1 := by
+    · calc
+        U * B * star (U * B) = U * B * (star B * star U) := by
+          rw [star_mul]
+        _ = U * (B * star B) * star U := by
+          simp_rw [← mul_assoc]
+        _ = 1 := by
           rw [hB₂, mul_oneₓ, hA₂]
+        
       
 
 variable {R : Type _}

@@ -53,37 +53,52 @@ local notation "q" => Fintype.card K
 
 theorem MvPolynomial.sum_mv_polynomial_eq_zero [DecidableEq σ] (f : MvPolynomial σ K)
     (h : f.totalDegree < (q - 1) * Fintype.card σ) : (∑ x, eval x f) = 0 := by
-  have : DecidableEq K := Classical.decEq K
-  calc (∑ x, eval x f) = ∑ x : σ → K, ∑ d in f.support, f.coeff d * ∏ i, x i ^ d i := by
-      simp only [← eval_eq']_ = ∑ d in f.support, ∑ x : σ → K, f.coeff d * ∏ i, x i ^ d i := sum_comm _ = 0 :=
-      sum_eq_zero _
+  haveI : DecidableEq K := Classical.decEq K
+  calc
+    (∑ x, eval x f) = ∑ x : σ → K, ∑ d in f.support, f.coeff d * ∏ i, x i ^ d i := by
+      simp only [← eval_eq']
+    _ = ∑ d in f.support, ∑ x : σ → K, f.coeff d * ∏ i, x i ^ d i := sum_comm
+    _ = 0 := sum_eq_zero _
+    
   intro d hd
   obtain ⟨i, hi⟩ : ∃ i, d i < q - 1
   exact f.exists_degree_lt (q - 1) h hd
-  calc (∑ x : σ → K, f.coeff d * ∏ i, x i ^ d i) = f.coeff d * ∑ x : σ → K, ∏ i, x i ^ d i := mul_sum.symm _ = 0 :=
-      (mul_eq_zero.mpr ∘ Or.inr) _
+  calc
+    (∑ x : σ → K, f.coeff d * ∏ i, x i ^ d i) = f.coeff d * ∑ x : σ → K, ∏ i, x i ^ d i := mul_sum.symm
+    _ = 0 := (mul_eq_zero.mpr ∘ Or.inr) _
+    
   calc
     (∑ x : σ → K, ∏ i, x i ^ d i) =
         ∑ (x₀ : { j // j ≠ i } → K) (x : { x : σ → K // x ∘ coe = x₀ }), ∏ j, (x : σ → K) j ^ d j :=
-      (Fintype.sum_fiberwise _ _).symm _ = 0 := Fintype.sum_eq_zero _ _
+      (Fintype.sum_fiberwise _ _).symm
+    _ = 0 := Fintype.sum_eq_zero _ _
+    
   intro x₀
   let e : K ≃ { x // x ∘ coe = x₀ } := (Equivₓ.subtypeEquivCodomain _).symm
-  calc (∑ x : { x : σ → K // x ∘ coe = x₀ }, ∏ j, (x : σ → K) j ^ d j) = ∑ a : K, ∏ j : σ, (e a : σ → K) j ^ d j :=
-      (e.sum_comp _).symm _ = ∑ a : K, (∏ j, x₀ j ^ d j) * a ^ d i :=
-      Fintype.sum_congr _ _ _ _ = (∏ j, x₀ j ^ d j) * ∑ a : K, a ^ d i := by
-      rw [mul_sum]_ = 0 := by
+  calc
+    (∑ x : { x : σ → K // x ∘ coe = x₀ }, ∏ j, (x : σ → K) j ^ d j) = ∑ a : K, ∏ j : σ, (e a : σ → K) j ^ d j :=
+      (e.sum_comp _).symm
+    _ = ∑ a : K, (∏ j, x₀ j ^ d j) * a ^ d i := Fintype.sum_congr _ _ _
+    _ = (∏ j, x₀ j ^ d j) * ∑ a : K, a ^ d i := by
+      rw [mul_sum]
+    _ = 0 := by
       rw [sum_pow_lt_card_sub_one _ hi, mul_zero]
+    
   intro a
   let e' : Sum { j // j = i } { j // j ≠ i } ≃ σ := Equivₓ.sumCompl _
-  let this : Unique { j // j = i } := { default := ⟨i, rfl⟩, uniq := fun ⟨j, h⟩ => Subtype.val_injective h }
-  calc (∏ j : σ, (e a : σ → K) j ^ d j) = (e a : σ → K) i ^ d i * ∏ j : { j // j ≠ i }, (e a : σ → K) j ^ d j := by
+  letI : Unique { j // j = i } := { default := ⟨i, rfl⟩, uniq := fun ⟨j, h⟩ => Subtype.val_injective h }
+  calc
+    (∏ j : σ, (e a : σ → K) j ^ d j) = (e a : σ → K) i ^ d i * ∏ j : { j // j ≠ i }, (e a : σ → K) j ^ d j := by
       rw [← e'.prod_comp, Fintype.prod_sum_type, univ_unique, prod_singleton]
-      rfl _ = a ^ d i * ∏ j : { j // j ≠ i }, (e a : σ → K) j ^ d j := by
-      rw [Equivₓ.subtype_equiv_codomain_symm_apply_eq]_ = a ^ d i * ∏ j, x₀ j ^ d j :=
-      congr_arg _ (Fintype.prod_congr _ _ _)-- see below
+      rfl
+    _ = a ^ d i * ∏ j : { j // j ≠ i }, (e a : σ → K) j ^ d j := by
+      rw [Equivₓ.subtype_equiv_codomain_symm_apply_eq]
+    _ = a ^ d i * ∏ j, x₀ j ^ d j := congr_arg _ (Fintype.prod_congr _ _ _)
+    -- see below
         _ =
         (∏ j, x₀ j ^ d j) * a ^ d i :=
       mul_comm _ _
+    
   · -- the remaining step of the calculation above
     rintro ⟨j, hj⟩
     show (e a : σ → K) j ^ d j = x₀ ⟨j, hj⟩ ^ d j
@@ -115,7 +130,10 @@ theorem char_dvd_card_solutions_family (p : ℕ) [CharP K p] {ι : Type _} {s : 
   let F : MvPolynomial σ K := ∏ i in s, 1 - f i ^ (q - 1)
   have hF : ∀ x, eval x F = if x ∈ S then 1 else 0 := by
     intro x
-    calc eval x F = ∏ i in s, eval x (1 - f i ^ (q - 1)) := eval_prod s _ x _ = if x ∈ S then 1 else 0 := _
+    calc
+      eval x F = ∏ i in s, eval x (1 - f i ^ (q - 1)) := eval_prod s _ x
+      _ = if x ∈ S then 1 else 0 := _
+      
     simp only [← (eval x).map_sub, ← (eval x).map_pow, ← (eval x).map_one]
     split_ifs with hx hx
     · apply Finset.prod_eq_one
@@ -140,19 +158,25 @@ theorem char_dvd_card_solutions_family (p : ℕ) [CharP K p] {ι : Type _} {s : 
   apply F.sum_mv_polynomial_eq_zero
   -- It remains to verify the crucial assumption of this machine
   show F.total_degree < (q - 1) * Fintype.card σ
-  calc F.total_degree ≤ ∑ i in s, (1 - f i ^ (q - 1)).totalDegree :=
-      total_degree_finset_prod s _ _ ≤ ∑ i in s, (q - 1) * (f i).totalDegree :=
-      sum_le_sum fun i hi => _-- see ↓
+  calc
+    F.total_degree ≤ ∑ i in s, (1 - f i ^ (q - 1)).totalDegree := total_degree_finset_prod s _
+    _ ≤ ∑ i in s, (q - 1) * (f i).totalDegree := sum_le_sum fun i hi => _
+    -- see ↓
         _ =
         (q - 1) * ∑ i in s, (f i).totalDegree :=
-      mul_sum.symm _ < (q - 1) * Fintype.card σ := by
+      mul_sum.symm
+    _ < (q - 1) * Fintype.card σ := by
       rwa [mul_lt_mul_left hq]
+    
   -- Now we prove the remaining step from the preceding calculation
   show (1 - f i ^ (q - 1)).totalDegree ≤ (q - 1) * (f i).totalDegree
-  calc (1 - f i ^ (q - 1)).totalDegree ≤ max (1 : MvPolynomial σ K).totalDegree (f i ^ (q - 1)).totalDegree :=
-      total_degree_sub _ _ _ ≤ (f i ^ (q - 1)).totalDegree := by
-      simp only [← max_eq_rightₓ, ← Nat.zero_leₓ, ← total_degree_one]_ ≤ (q - 1) * (f i).totalDegree :=
-      total_degree_pow _ _
+  calc
+    (1 - f i ^ (q - 1)).totalDegree ≤ max (1 : MvPolynomial σ K).totalDegree (f i ^ (q - 1)).totalDegree :=
+      total_degree_sub _ _
+    _ ≤ (f i ^ (q - 1)).totalDegree := by
+      simp only [← max_eq_rightₓ, ← Nat.zero_leₓ, ← total_degree_one]
+    _ ≤ (q - 1) * (f i).totalDegree := total_degree_pow _ _
+    
 
 /-- The Chevalley–Warning theorem.
 Let `f` be a multivariate polynomial in finitely many variables (`X s`, `s : σ`)

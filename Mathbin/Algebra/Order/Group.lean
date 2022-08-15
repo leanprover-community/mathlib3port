@@ -1155,9 +1155,16 @@ theorem abs_pos_of_neg (h : a < 0) : 0 < abs a :=
 
 theorem neg_abs_le_self (a : α) : -abs a ≤ a := by
   cases' le_totalₓ 0 a with h h
-  · calc -abs a = -a := congr_arg Neg.neg (abs_of_nonneg h)_ ≤ 0 := neg_nonpos.mpr h _ ≤ a := h
+  · calc
+      -abs a = -a := congr_arg Neg.neg (abs_of_nonneg h)
+      _ ≤ 0 := neg_nonpos.mpr h
+      _ ≤ a := h
+      
     
-  · calc -abs a = - -a := congr_arg Neg.neg (abs_of_nonpos h)_ ≤ a := (neg_negₓ a).le
+  · calc
+      -abs a = - -a := congr_arg Neg.neg (abs_of_nonpos h)
+      _ ≤ a := (neg_negₓ a).le
+      
     
 
 theorem add_abs_nonneg (a : α) : 0 ≤ a + abs a := by
@@ -1320,10 +1327,14 @@ theorem eq_of_abs_sub_nonpos (h : abs (a - b) ≤ 0) : a = b :=
 theorem max_sub_max_le_max (a b c d : α) : max a b - max c d ≤ max (a - c) (b - d) := by
   simp only [← sub_le_iff_le_add, ← max_le_iff]
   constructor
-  calc a = a - c + c := (sub_add_cancel a c).symm _ ≤ max (a - c) (b - d) + max c d :=
-      add_le_add (le_max_leftₓ _ _) (le_max_leftₓ _ _)
-  calc b = b - d + d := (sub_add_cancel b d).symm _ ≤ max (a - c) (b - d) + max c d :=
-      add_le_add (le_max_rightₓ _ _) (le_max_rightₓ _ _)
+  calc
+    a = a - c + c := (sub_add_cancel a c).symm
+    _ ≤ max (a - c) (b - d) + max c d := add_le_add (le_max_leftₓ _ _) (le_max_leftₓ _ _)
+    
+  calc
+    b = b - d + d := (sub_add_cancel b d).symm
+    _ ≤ max (a - c) (b - d) + max c d := add_le_add (le_max_rightₓ _ _) (le_max_rightₓ _ _)
+    
 
 theorem abs_max_sub_max_le_max (a b c d : α) : abs (max a b - max c d) ≤ max (abs (a - c)) (abs (b - d)) := by
   refine' abs_sub_le_iff.2 ⟨_, _⟩
@@ -1360,7 +1371,7 @@ namespace AddCommGroupₓ
 /-- A collection of elements in an `add_comm_group` designated as "non-negative".
 This is useful for constructing an `ordered_add_commm_group`
 by choosing a positive cone in an exisiting `add_comm_group`. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure PositiveCone (α : Type _) [AddCommGroupₓ α] where
   Nonneg : α → Prop
   Pos : α → Prop := fun a => nonneg a ∧ ¬nonneg (-a)
@@ -1373,14 +1384,13 @@ structure PositiveCone (α : Type _) [AddCommGroupₓ α] where
 
 /-- A positive cone in an `add_comm_group` induces a linear order if
 for every `a`, either `a` or `-a` is non-negative. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure TotalPositiveCone (α : Type _) [AddCommGroupₓ α] extends PositiveCone α where
   nonnegDecidable : DecidablePred nonneg
   nonneg_total : ∀ a : α, nonneg a ∨ nonneg (-a)
 
-/-- Forget that a `total_positive_cone` is total. -/
-add_decl_doc total_positive_cone.to_positive_cone
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident total_positive_cone.to_positive_cone]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 end AddCommGroupₓ
 
 namespace OrderedAddCommGroup

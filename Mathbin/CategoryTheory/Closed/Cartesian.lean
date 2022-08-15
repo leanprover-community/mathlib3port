@@ -290,10 +290,10 @@ This actually shows a slightly stronger version: any morphism to an initial obje
 exponentiable object is an isomorphism.
 -/
 theorem strict_initial {I : C} (t : IsInitial I) (f : A ⟶ I) : IsIso f := by
-  have : mono (limits.prod.lift (𝟙 A) f ≫ (zero_mul t).Hom) := mono_comp _ _
+  haveI : mono (limits.prod.lift (𝟙 A) f ≫ (zero_mul t).Hom) := mono_comp _ _
   rw [zero_mul_hom, prod.lift_snd] at _inst
-  have : split_epi f := ⟨t.to _, t.hom_ext _ _⟩
-  apply is_iso_of_mono_of_split_epi
+  haveI : is_split_epi f := is_split_epi.mk' ⟨t.to _, t.hom_ext _ _⟩
+  apply is_iso_of_mono_of_is_split_epi
 
 instance to_initial_is_iso [HasInitial C] (f : A ⟶ ⊥_ C) : IsIso f :=
   strict_initial initialIsInitial _
@@ -301,8 +301,8 @@ instance to_initial_is_iso [HasInitial C] (f : A ⟶ ⊥_ C) : IsIso f :=
 /-- If an initial object `0` exists in a CCC then every morphism from it is monic. -/
 theorem initial_mono {I : C} (B : C) (t : IsInitial I) [CartesianClosed C] : Mono (t.to B) :=
   ⟨fun B g h _ => by
-    have := strict_initial t g
-    have := strict_initial t h
+    haveI := strict_initial t g
+    haveI := strict_initial t h
     exact eq_of_inv_eq_inv (t.hom_ext _ _)⟩
 
 instance Initial.mono_to [HasInitial C] (B : C) [CartesianClosed C] : Mono (initial.to B) :=
@@ -322,7 +322,7 @@ along the `prod_comparison` isomorphism.
 def cartesianClosedOfEquiv (e : C ≌ D) [h : CartesianClosed C] :
     CartesianClosed D where closed' := fun X =>
     { isAdj := by
-        have q : exponentiable (e.inverse.obj X) := inferInstance
+        haveI q : exponentiable (e.inverse.obj X) := inferInstance
         have : is_left_adjoint (prod.functor.obj (e.inverse.obj X)) := q.is_adj
         have : e.functor ⋙ prod.functor.obj X ⋙ e.inverse ≅ prod.functor.obj (e.inverse.obj X)
         apply nat_iso.of_components _ _

@@ -155,7 +155,9 @@ def vcomp (η : OplaxNatTrans F G) (θ : OplaxNatTrans G H) : OplaxNatTrans F H 
                   _ ≫
                     (F.map f ≫ η.app b) ◁ θ.naturality g ≫
                       η.naturality f ▷ (θ.app b ≫ H.map g) ≫ _ ≫ η.app a ◁ θ.naturality f ▷ H.map g ≫ _ :=
-        _ _ = _ := _
+        _
+      _ = _ := _
+      
     exact (α_ _ _ _).inv
     exact (α_ _ _ _).Hom ▷ _ ≫ (α_ _ _ _).Hom
     exact _ ◁ (α_ _ _ _).Hom ≫ (α_ _ _ _).inv

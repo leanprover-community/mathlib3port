@@ -258,10 +258,15 @@ theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.ei
     have total_l' : S l' = 0 := by
       let g := f - algebraMap K (End K V) μ₀
       let a : Π₀ μ : K, V := Dfinsupp.mapRange.linearMap (fun μ => (f.eigenspace μ).Subtype) l
-      calc S l' = Dfinsupp.lsum ℕ (fun μ => (f.eigenspace μ).Subtype.comp ((μ - μ₀) • LinearMap.id)) l :=
-          _ _ = Dfinsupp.lsum ℕ (fun μ => g.comp (f.eigenspace μ).Subtype) l := _ _ = Dfinsupp.lsum ℕ (fun μ => g) a :=
-          _ _ = g (Dfinsupp.lsum ℕ (fun μ => (LinearMap.id : V →ₗ[K] V)) a) := _ _ = g (S l) := _ _ = 0 := by
+      calc
+        S l' = Dfinsupp.lsum ℕ (fun μ => (f.eigenspace μ).Subtype.comp ((μ - μ₀) • LinearMap.id)) l := _
+        _ = Dfinsupp.lsum ℕ (fun μ => g.comp (f.eigenspace μ).Subtype) l := _
+        _ = Dfinsupp.lsum ℕ (fun μ => g) a := _
+        _ = g (Dfinsupp.lsum ℕ (fun μ => (LinearMap.id : V →ₗ[K] V)) a) := _
+        _ = g (S l) := _
+        _ = 0 := by
           rw [hl, g.map_zero]
+        
       · exact Dfinsupp.sum_map_range_index.linear_map
         
       · congr
@@ -283,12 +288,14 @@ theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.ei
     -- By the definition of `l'`, this means that `(μ - μ₀) • l μ = 0` for all `μ`.
     have h_smul_eq_0 : ∀ μ, (μ - μ₀) • l μ = 0 := by
       intro μ
-      calc (μ - μ₀) • l μ = l' μ := by
+      calc
+        (μ - μ₀) • l μ = l' μ := by
           simp only [← l', ← LinearMap.id_coe, ← id.def, ← LinearMap.smul_apply, ← Dfinsupp.map_range_apply, ←
-            Dfinsupp.mapRange.linear_map_apply]_ = 0 :=
-          by
+            Dfinsupp.mapRange.linear_map_apply]
+        _ = 0 := by
           rw [l'_eq_0]
           rfl
+        
     -- Thus, the eigenspace-representatives in `l` for all `μ ≠ μ₀` are `0`.
     have h_lμ_eq_0 : ∀ μ : K, μ ≠ μ₀ → l μ = 0 := by
       intro μ hμ
@@ -523,7 +530,7 @@ theorem supr_generalized_eigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K 
     simp only [← finrank_eq_zero.1 (Eq.trans finrank_top h_dim), ← bot_le]
     
   -- Otherwise the vector space is nontrivial.
-  · have : Nontrivial V :=
+  · haveI : Nontrivial V :=
       finrank_pos_iff.1
         (by
           rw [h_dim]

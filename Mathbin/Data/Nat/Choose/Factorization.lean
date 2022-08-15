@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bolton Bailey, Patrick Stevens, Thomas Browning
 -/
 import Mathbin.Data.Nat.Choose.Central
-import Mathbin.NumberTheory.Padics.PadicNorm
+import Mathbin.Data.Nat.Factorization.Basic
 import Mathbin.Data.Nat.Multiplicity
 
 /-!
@@ -26,6 +26,8 @@ These results appear in the [Erdős proof of Bertrand's postulate](aigner1999pro
 -/
 
 
+open BigOperators
+
 namespace Nat
 
 variable {p n k : ℕ}
@@ -40,7 +42,7 @@ theorem factorization_choose_le_log : (choose n k).factorization p ≤ log p n :
   have hkn : k ≤ n := by
     refine' le_of_not_ltₓ fun hnk => h _
     simp [← choose_eq_zero_of_lt hnk]
-  rw [← @padic_val_nat_eq_factorization p _ ⟨hp⟩, @padic_val_nat_def _ ⟨hp⟩ _ (choose_pos hkn)]
+  rw [factorization_def _ hp, @padic_val_nat_def _ ⟨hp⟩ _ (choose_pos hkn)]
   simp only [← hp.multiplicity_choose hkn (lt_add_one _), ← PartEnat.get_coe]
   refine' (Finset.card_filter_le _ _).trans (le_of_eqₓ (Nat.card_Ico _ _))
 
@@ -72,7 +74,7 @@ theorem factorization_choose_of_lt_three_mul (hp' : p ≠ 2) (hk : p ≤ k) (hk'
   cases' lt_or_leₓ n k with hnk hkn
   · simp [← choose_eq_zero_of_lt hnk]
     
-  rw [← @padic_val_nat_eq_factorization p _ ⟨hp⟩, @padic_val_nat_def _ ⟨hp⟩ _ (choose_pos hkn)]
+  rw [factorization_def _ hp, @padic_val_nat_def _ ⟨hp⟩ _ (choose_pos hkn)]
   simp only [← hp.multiplicity_choose hkn (lt_add_one _), ← PartEnat.get_coe, ← Finset.card_eq_zero, ←
     Finset.filter_eq_empty_iff, ← not_leₓ]
   intro i hi
@@ -86,8 +88,12 @@ theorem factorization_choose_of_lt_three_mul (hp' : p ≠ 2) (hk : p ≤ k) (hk'
           rwa [div_add_mod, div_add_mod, add_tsub_cancel_of_le hkn])
     
   · replace hn : n < p ^ i
-    · calc n < 3 * p := hn _ ≤ p * p := mul_le_mul_right' (lt_of_le_of_neₓ hp.two_le hp'.symm) p _ = p ^ 2 :=
-          (sq p).symm _ ≤ p ^ i := pow_le_pow hp.one_lt.le hi
+    · calc
+        n < 3 * p := hn
+        _ ≤ p * p := mul_le_mul_right' (lt_of_le_of_neₓ hp.two_le hp'.symm) p
+        _ = p ^ 2 := (sq p).symm
+        _ ≤ p ^ i := pow_le_pow hp.one_lt.le hi
+        
       
     rwa [mod_eq_of_lt (lt_of_le_of_ltₓ hkn hn), mod_eq_of_lt (lt_of_le_of_ltₓ tsub_le_self hn),
       add_tsub_cancel_of_le hkn]
@@ -130,6 +136,28 @@ theorem factorization_central_binom_eq_zero_of_two_mul_lt (h : 2 * n < p) : (cen
 -/
 theorem le_two_mul_of_factorization_central_binom_pos (h_pos : 0 < (centralBinom n).factorization p) : p ≤ 2 * n :=
   le_of_not_ltₓ (pos_iff_ne_zero.mp h_pos ∘ factorization_central_binom_eq_zero_of_two_mul_lt)
+
+/-- A binomial coefficient is the product of its prime factors, which are at most `n`. -/
+theorem prod_pow_factorization_choose (n k : ℕ) (hkn : k ≤ n) :
+    (∏ p in Finset.range (n + 1), p ^ (Nat.choose n k).factorization p) = choose n k := by
+  nth_rw_rhs 0[← factorization_prod_pow_eq_self (choose_pos hkn).ne']
+  rw [eq_comm]
+  apply Finset.prod_subset
+  · intro p hp
+    rw [Finset.mem_range]
+    contrapose! hp
+    rw [Finsupp.mem_support_iff, not_not, factorization_choose_eq_zero_of_lt hp]
+    
+  · intro p _ h2
+    simp [← not_not.1 (mt Finsupp.mem_support_iff.2 h2)]
+    
+
+/-- The `n`th central binomial coefficient is the product of its prime factors, which are
+at most `2n`. -/
+theorem prod_pow_factorization_central_binom (n : ℕ) :
+    (∏ p in Finset.range (2 * n + 1), p ^ (centralBinom n).factorization p) = centralBinom n := by
+  apply prod_pow_factorization_choose
+  linarith
 
 end Nat
 

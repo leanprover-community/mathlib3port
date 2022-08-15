@@ -58,7 +58,7 @@ instance : CommRingₓ Int where
   natCast := Int.ofNat
   nat_cast_zero := rfl
   nat_cast_succ := fun n => rfl
-  intCast := id
+  intCast := fun n => n
   int_cast_of_nat := fun n => rfl
   int_cast_neg_succ_of_nat := fun n => rfl
   zsmul := (· * ·)
@@ -337,7 +337,7 @@ theorem abs_le_one_iff {a : ℤ} : abs a ≤ 1 ↔ a = 0 ∨ a = 1 ∨ a = -1 :=
 theorem one_le_abs {z : ℤ} (h₀ : z ≠ 0) : 1 ≤ abs z :=
   add_one_le_iff.mpr (abs_pos.mpr h₀)
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on {p : ℤ → Prop} (i : ℤ) (hz : p 0) (hp : ∀ i : ℕ, p i → p (i + 1))
     (hn : ∀ i : ℕ, p (-i) → p (-i - 1)) : p i := by
   induction i
@@ -360,7 +360,7 @@ protected theorem induction_on {p : ℤ → Prop} (i : ℤ) (hz : p 0) (hp : ∀
 
 /-- Inductively define a function on `ℤ` by defining it at `b`, for the `succ` of a number greater
 than `b`, and the `pred` of a number less than `b`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 protected def inductionOn' {C : ℤ → Sort _} (z : ℤ) (b : ℤ) (H0 : C b) (Hs : ∀ k, b ≤ k → C k → C (k + 1))
     (Hp : ∀, ∀ k ≤ b, ∀, C k → C (k - 1)) : C z := by
   -- Note that we use `convert` here where possible as we are constructing data, and this reduces
@@ -1705,7 +1705,7 @@ theorem test_bit_succ (m b) : ∀ n, testBit (bit b n) (Nat.succ m) = testBit n 
   | -[1+ n] => by
     rw [bit_neg_succ] <;> dsimp' [← test_bit] <;> rw [Nat.test_bit_succ]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 private unsafe def bitwise_tac : tactic Unit :=
   sorry
 

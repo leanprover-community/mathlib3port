@@ -224,6 +224,10 @@ theorem dvd_of_pow_dvd {p k m : ℕ} (hk : 1 ≤ k) (hpk : p ^ k ∣ m) : p ∣ 
 theorem pow_div {x m n : ℕ} (h : n ≤ m) (hx : 0 < x) : x ^ m / x ^ n = x ^ (m - n) := by
   rw [Nat.div_eq_iff_eq_mul_left (pow_pos hx n) (pow_dvd_pow _ h), pow_sub_mul_pow _ h]
 
+theorem lt_of_pow_dvd_right {p i n : ℕ} (hn : n ≠ 0) (hp : 2 ≤ p) (h : p ^ i ∣ n) : i < n := by
+  rw [← pow_lt_iff_lt_right hp]
+  exact lt_of_le_of_ltₓ (le_of_dvd hn.bot_lt h) (lt_pow_self (succ_le_iff.mp hp) n)
+
 /-! ### `shiftl` and `shiftr` -/
 
 

@@ -196,16 +196,15 @@ private def calc_eval_z' {z z' z1 : ℤ_[p]} (hz' : z' = z - z1) {n} (hz : ih n 
     calc
       F.derivative.eval z * -z1 = F.derivative.eval z * -⟨↑(F.eval z) / ↑(F.derivative.eval z), h1⟩ := by
         rw [hzeq]
-      _ = -(F.derivative.eval z * ⟨↑(F.eval z) / ↑(F.derivative.eval z), h1⟩) := by
-        simp [← Subtype.ext_iff_val]
+      _ = -(F.derivative.eval z * ⟨↑(F.eval z) / ↑(F.derivative.eval z), h1⟩) := mul_neg _ _
       _ = -⟨↑(F.derivative.eval z) * (↑(F.eval z) / ↑(F.derivative.eval z)), this⟩ :=
         Subtype.ext <| by
-          simp
+          simp only [← PadicInt.coe_neg, ← PadicInt.coe_mul, ← Subtype.coe_mk]
       _ = -F.eval z := by
-        simp [← mul_div_cancel' _ hdzne']
+        simp only [← mul_div_cancel' _ hdzne', ← Subtype.coe_eta]
       
   have heq : F.eval z' = q * z1 ^ 2 := by
-    simpa [← sub_eq_add_neg, ← this, ← hz'] using hq
+    simpa only [← sub_eq_add_neg, ← this, ← hz', ← add_right_negₓ, ← neg_sq, ← zero_addₓ] using hq
   ⟨q, HEq⟩
 
 private def calc_eval_z'_norm {z z' z1 : ℤ_[p]} {n} (hz : ih n z) {q} (heq : F.eval z' = q * z1 ^ 2)

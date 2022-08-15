@@ -3,6 +3,7 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 -/
+import Mathbin.Data.Finsupp.Basic
 import Mathbin.Data.Nat.PartEnat
 import Mathbin.Data.Set.Countable
 import Mathbin.Logic.Small
@@ -109,16 +110,16 @@ localized [Cardinal] notation "#" => Cardinal.mk
 instance canLiftCardinalType : CanLift Cardinal.{u} (Type u) :=
   ⟨mk, fun c => True, fun c _ => (Quot.induction_on c) fun α => ⟨α, rfl⟩⟩
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction_on {p : Cardinal → Prop} (c : Cardinal) (h : ∀ α, p (# α)) : p c :=
   Quotientₓ.induction_on c h
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction_on₂ {p : Cardinal → Cardinal → Prop} (c₁ : Cardinal) (c₂ : Cardinal) (h : ∀ α β, p (# α) (# β)) :
     p c₁ c₂ :=
   Quotientₓ.induction_on₂ c₁ c₂ h
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction_on₃ {p : Cardinal → Cardinal → Cardinal → Prop} (c₁ : Cardinal) (c₂ : Cardinal) (c₃ : Cardinal)
     (h : ∀ α β γ, p (# α) (# β) (# γ)) : p c₁ c₂ c₃ :=
   Quotientₓ.induction_on₃ c₁ c₂ c₃ h
@@ -360,7 +361,7 @@ theorem mk_psum (α : Type u) (β : Type v) : # (PSum α β) = lift.{v} (# α) +
 theorem mk_fintype (α : Type u) [Fintype α] : # α = Fintype.card α := by
   refine' Fintype.induction_empty_option' _ _ _ α
   · intro α β h e hα
-    let this := Fintype.ofEquiv β e.symm
+    letI := Fintype.ofEquiv β e.symm
     rwa [mk_congr e, Fintype.card_congr e] at hα
     
   · rfl
@@ -607,7 +608,7 @@ protected theorem lt_wf : @WellFounded Cardinal.{u} (· < ·) :=
     Classical.by_contradiction fun h => by
       let ι := { c : Cardinal // ¬Acc (· < ·) c }
       let f : ι → Cardinal := Subtype.val
-      have hι : Nonempty ι := ⟨⟨_, h⟩⟩
+      haveI hι : Nonempty ι := ⟨⟨_, h⟩⟩
       obtain ⟨⟨c : Cardinal, hc : ¬Acc (· < ·) c⟩, ⟨h_1 : ∀ j, (f ⟨c, hc⟩).out ↪ (f j).out⟩⟩ :=
         embedding.min_injective fun i => (f i).out
       apply hc (Acc.intro _ fun j h' => Classical.by_contradiction fun hj => h'.2 _)
@@ -641,7 +642,10 @@ theorem add_one_le_succ (c : Cardinal.{u}) : c + 1 ≤ succ c := by
   have : ¬surjective f := fun hn => (not_le_of_lt hlt) (mk_le_of_surjective hn)
   simp only [← surjective, ← not_forall] at this
   rcases this with ⟨b, hb⟩
-  calc # γ + 1 = # (Option γ) := mk_option.symm _ ≤ # β := (f.option_elim b hb).cardinal_le
+  calc
+    # γ + 1 = # (Option γ) := mk_option.symm
+    _ ≤ # β := (f.option_elim b hb).cardinal_le
+    
 
 theorem succ_pos : ∀ c : Cardinal, 0 < succ c :=
   bot_lt_succ
@@ -717,6 +721,9 @@ instance (a : Cardinal.{u}) : Small.{u} (Set.Iic a) := by
   rintro ⟨x, hx⟩
   simpa using le_mk_iff_exists_set.1 hx
 
+instance (a : Cardinal.{u}) : Small.{u} (Set.Iio a) :=
+  small_subset Iio_subset_Iic_self
+
 /-- A set of cardinals is bounded above iff it's small, i.e. it corresponds to an usual ZFC set. -/
 theorem bdd_above_iff_small {s : Set Cardinal.{u}} : BddAbove s ↔ Small.{u} s :=
   ⟨fun ⟨a, ha⟩ => @small_subset _ (Iic a) s (fun x h => ha h) _, by
@@ -732,6 +739,9 @@ theorem bdd_above_iff_small {s : Set Cardinal.{u}} : BddAbove s ↔ Small.{u} s 
     · simp_rw [Subtype.val_eq_coe, Equivₓ.symm_apply_apply]
       rfl
       ⟩
+
+theorem bdd_above_of_small (s : Set Cardinal.{u}) [h : Small.{u} s] : BddAbove s :=
+  bdd_above_iff_small.2 h
 
 theorem bdd_above_image (f : Cardinal.{u} → Cardinal.{max u v}) {s : Set Cardinal.{u}} (hs : BddAbove s) :
     BddAbove (f '' s) := by
@@ -975,6 +985,14 @@ theorem mk_coe_finset {α : Type u} {s : Finset α} : # s = ↑(Finset.card s) :
 theorem mk_finset_of_fintype [Fintype α] : # (Finset α) = 2 ^ℕ Fintype.card α := by
   simp
 
+@[simp]
+theorem mk_finsupp_lift_of_fintype (α : Type u) (β : Type v) [Fintype α] [Zero β] :
+    # (α →₀ β) = lift.{u} (# β) ^ℕ Fintype.card α := by
+  simpa using (@Finsupp.equivFunOnFintype α β _ _).cardinal_eq
+
+theorem mk_finsupp_of_fintype (α β : Type u) [Fintype α] [Zero β] : # (α →₀ β) = # β ^ℕ Fintype.card α := by
+  simp
+
 theorem card_le_of_finset {α} (s : Finset α) : (s.card : Cardinal) ≤ # α := by
   rw [(_ : (s.card : Cardinal) = # s)]
   · exact ⟨Function.Embedding.subtype _⟩
@@ -1055,7 +1073,7 @@ theorem lt_aleph_0 {c : Cardinal} : c < ℵ₀ ↔ ∃ n : ℕ, c = n :=
       lift S to Finset ℕ using this
       simp
     contrapose! h'
-    have := infinite.to_subtype h'
+    haveI := infinite.to_subtype h'
     exact ⟨Infinite.natEmbedding S⟩, fun ⟨n, e⟩ => e.symm ▸ nat_lt_aleph_0 _⟩
 
 theorem aleph_0_le {c : Cardinal} : ℵ₀ ≤ c ↔ ∀ n : ℕ, ↑n ≤ c :=
@@ -1669,9 +1687,12 @@ theorem two_le_iff' (x : α) : (2 : Cardinal) ≤ # α ↔ ∃ y : α, x ≠ y :
 
 theorem exists_not_mem_of_length_le {α : Type _} (l : List α) (h : ↑l.length < # α) : ∃ z : α, z ∉ l := by
   contrapose! h
-  calc # α = # (Set.Univ : Set α) := mk_univ.symm _ ≤ # l.to_finset :=
-      mk_le_mk_of_subset fun x _ => list.mem_to_finset.mpr (h x)_ = l.to_finset.card :=
-      Cardinal.mk_coe_finset _ ≤ l.length := cardinal.nat_cast_le.mpr (List.to_finset_card_le l)
+  calc
+    # α = # (Set.Univ : Set α) := mk_univ.symm
+    _ ≤ # l.to_finset := mk_le_mk_of_subset fun x _ => list.mem_to_finset.mpr (h x)
+    _ = l.to_finset.card := Cardinal.mk_coe_finset
+    _ ≤ l.length := cardinal.nat_cast_le.mpr (List.to_finset_card_le l)
+    
 
 theorem three_le {α : Type _} (h : 3 ≤ # α) (x : α) (y : α) : ∃ z : α, z ≠ x ∧ z ≠ y := by
   have : ↑(3 : ℕ) ≤ # α

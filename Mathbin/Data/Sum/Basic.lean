@@ -421,6 +421,48 @@ theorem Surjective.sum_map {f : α → β} {g : α' → β'} (hf : Surjective f)
 
 end Function
 
+namespace Sum
+
+open Function
+
+theorem elim_const_const (c : γ) : Sum.elim (const _ c : α → γ) (const _ c : β → γ) = const _ c := by
+  ext x
+  cases x <;> rfl
+
+@[simp]
+theorem elim_lam_const_lam_const (c : γ) : (Sum.elim (fun _ : α => c) fun _ : β => c) = fun _ => c :=
+  Sum.elim_const_const c
+
+theorem elim_update_left [DecidableEq α] [DecidableEq β] (f : α → γ) (g : β → γ) (i : α) (c : γ) :
+    Sum.elim (Function.update f i c) g = Function.update (Sum.elim f g) (inl i) c := by
+  ext x
+  cases x
+  · by_cases' h : x = i
+    · subst h
+      simp
+      
+    · simp [← h]
+      
+    
+  · simp
+    
+
+theorem elim_update_right [DecidableEq α] [DecidableEq β] (f : α → γ) (g : β → γ) (i : β) (c : γ) :
+    Sum.elim f (Function.update g i c) = Function.update (Sum.elim f g) (inr i) c := by
+  ext x
+  cases x
+  · simp
+    
+  · by_cases' h : x = i
+    · subst h
+      simp
+      
+    · simp [← h]
+      
+    
+
+end Sum
+
 /-!
 ### Ternary sum
 

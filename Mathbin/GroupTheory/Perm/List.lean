@@ -105,9 +105,9 @@ theorem mem_of_form_perm_apply_mem (x : α) (l : List α) (h : l.formPerm x ∈ 
       split_ifs  at h <;> simp [← IH _ _ hx]
       
     · replace hx := (Function.Injective.eq_iff (Equivₓ.injective _)).mp (List.form_perm_apply_of_not_mem _ _ hx)
-      simp only [← List.form_perm_cons_cons, ← hx, ← Equivₓ.Perm.coe_mul, ← Function.comp_app, ← List.mem_cons_iff, ←
+      simp only [← List.form_perm_cons_cons, ← hx, ← Equivₓ.Perm.coe_mul, ← Function.comp_app, ← List.mem_cons_iffₓ, ←
         swap_apply_def, ← ite_eq_left_iff] at h
-      simp only [← List.mem_cons_iff]
+      simp only [← List.mem_cons_iffₓ]
       obtain h | h | h := h <;>
         · split_ifs  at h <;> cc
           

@@ -188,8 +188,10 @@ theorem of_diff {M : Type _} [AddCommGroupₓ M] [TopologicalSpace M] [T2Space M
 theorem of_diff_of_diff_eq_zero {A B : Set α} (hA : MeasurableSet A) (hB : MeasurableSet B) (h' : v (B \ A) = 0) :
     v (A \ B) + v B = v A := by
   symm
-  calc v A = v (A \ B ∪ A ∩ B) := by
-      simp only [← Set.diff_union_inter]_ = v (A \ B) + v (A ∩ B) := by
+  calc
+    v A = v (A \ B ∪ A ∩ B) := by
+      simp only [← Set.diff_union_inter]
+    _ = v (A \ B) + v (A ∩ B) := by
       rw [of_union]
       · rw [Disjoint.comm]
         exact Set.disjoint_of_subset_left (A.inter_subset_right B) Set.disjoint_diff
@@ -197,17 +199,18 @@ theorem of_diff_of_diff_eq_zero {A B : Set α} (hA : MeasurableSet A) (hB : Meas
       · exact hA.diff hB
         
       · exact hA.inter hB
-        _ = v (A \ B) + v (A ∩ B ∪ B \ A) :=
-      by
+        
+    _ = v (A \ B) + v (A ∩ B ∪ B \ A) := by
       rw [of_union, h', add_zeroₓ]
       · exact Set.disjoint_of_subset_left (A.inter_subset_left B) Set.disjoint_diff
         
       · exact hA.inter hB
         
       · exact hB.diff hA
-        _ = v (A \ B) + v B :=
-      by
+        
+    _ = v (A \ B) + v B := by
       rw [Set.union_comm, Set.inter_comm, Set.diff_union_inter]
+    
 
 theorem of_Union_nonneg {M : Type _} [TopologicalSpace M] [OrderedAddCommMonoid M] [OrderClosedTopology M]
     {v : VectorMeasure α M} (hf₁ : ∀ i, MeasurableSet (f i)) (hf₂ : Pairwise (Disjoint on f)) (hf₃ : ∀ i, 0 ≤ v (f i)) :
@@ -1136,8 +1139,8 @@ theorem ennreal_to_measure {μ : VectorMeasure α ℝ≥0∞} : (∀ ⦃s : Set 
 
 end AbsolutelyContinuous
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » «expr ᶜ»(s))
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » «expr ᶜ»(s))
 /-- Two vector measures `v` and `w` are said to be mutually singular if there exists a measurable
 set `s`, such that for all `t ⊆ s`, `v t = 0` and for all `t ⊆ sᶜ`, `w t = 0`.
 
@@ -1155,8 +1158,8 @@ namespace MutuallySingular
 
 variable {v v₁ v₂ : VectorMeasure α M} {w w₁ w₂ : VectorMeasure α N}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » «expr ᶜ»(s))
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » «expr ᶜ»(s))
 theorem mk (s : Set α) (hs : MeasurableSet s) (h₁ : ∀ (t) (_ : t ⊆ s), MeasurableSet t → v t = 0)
     (h₂ : ∀ (t) (_ : t ⊆ sᶜ), MeasurableSet t → w t = 0) : v ⊥ᵥ w := by
   refine' ⟨s, hs, fun t hst => _, fun t hst => _⟩ <;> by_cases' ht : MeasurableSet t

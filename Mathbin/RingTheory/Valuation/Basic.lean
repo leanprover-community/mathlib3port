@@ -68,9 +68,8 @@ noncomputable section
 
 open Function Ideal
 
-variable {F R : Type _}
+variable {K F R : Type _} [DivisionRing K]
 
--- This will be a ring, assumed commutative in some sections
 section
 
 variable (F R) (Γ₀ : Type _) [LinearOrderedCommMonoidWithZero Γ₀] [Ringₓ R]
@@ -78,7 +77,7 @@ variable (F R) (Γ₀ : Type _) [LinearOrderedCommMonoidWithZero Γ₀] [Ringₓ
 /-- The type of `Γ₀`-valued valuations on `R`.
 
 When you extend this structure, make sure to extend `valuation_class`. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure Valuation extends R →*₀ Γ₀ where
   map_add_le_max' : ∀ x y, to_fun (x + y) ≤ max (to_fun x) (to_fun y)
 
@@ -200,10 +199,10 @@ def toPreorder : Preorderₓ R :=
 
 /-- If `v` is a valuation on a division ring then `v(x) = 0` iff `x = 0`. -/
 @[simp]
-theorem zero_iff [Nontrivial Γ₀] {K : Type _} [DivisionRing K] (v : Valuation K Γ₀) {x : K} : v x = 0 ↔ x = 0 :=
+theorem zero_iff [Nontrivial Γ₀] (v : Valuation K Γ₀) {x : K} : v x = 0 ↔ x = 0 :=
   v.toMonoidWithZeroHom.map_eq_zero
 
-theorem ne_zero_iff [Nontrivial Γ₀] {K : Type _} [DivisionRing K] (v : Valuation K Γ₀) {x : K} : v x ≠ 0 ↔ x ≠ 0 :=
+theorem ne_zero_iff [Nontrivial Γ₀] (v : Valuation K Γ₀) {x : K} : v x ≠ 0 ↔ x ≠ 0 :=
   v.toMonoidWithZeroHom.map_ne_zero
 
 theorem unit_map_eq (u : Rˣ) : (Units.map (v : R →* Γ₀) u : Γ₀) = v u :=
@@ -248,11 +247,11 @@ section Groupₓ
 variable [LinearOrderedCommGroupWithZero Γ₀] {R} {Γ₀} (v : Valuation R Γ₀) {x y z : R}
 
 @[simp]
-theorem map_inv {K : Type _} [DivisionRing K] (v : Valuation K Γ₀) {x : K} : v x⁻¹ = (v x)⁻¹ :=
+theorem map_inv (v : Valuation K Γ₀) {x : K} : v x⁻¹ = (v x)⁻¹ :=
   v.toMonoidWithZeroHom.map_inv x
 
 @[simp]
-theorem map_zpow {K : Type _} [DivisionRing K] (v : Valuation K Γ₀) {x : K} {n : ℤ} : v (x ^ n) = v x ^ n :=
+theorem map_zpow (v : Valuation K Γ₀) {x : K} {n : ℤ} : v (x ^ n) = v x ^ n :=
   v.toMonoidWithZeroHom.map_zpow x n
 
 theorem map_units_inv (x : Rˣ) : v (x⁻¹ : Rˣ) = (v x)⁻¹ :=
@@ -287,8 +286,12 @@ theorem map_add_of_distinct_val (h : v x ≠ v y) : v (x + y) = max (v x) (v y) 
     
   · rw [max_eq_left_of_ltₓ vyx] at h'
     apply lt_irreflₓ (v x)
-    calc v x = v (x + y - y) := by
-        simp _ ≤ max (v <| x + y) (v y) := map_sub _ _ _ _ < v x := max_ltₓ h' vyx
+    calc
+      v x = v (x + y - y) := by
+        simp
+      _ ≤ max (v <| x + y) (v y) := map_sub _ _ _
+      _ < v x := max_ltₓ h' vyx
+      
     
   · apply this h.symm
     rwa [add_commₓ, max_commₓ] at h'
@@ -320,6 +323,9 @@ theorem map_one_sub_of_lt (h : v x < 1) : v (1 - x) = 1 := by
   rw [← v.map_one, ← v.map_neg] at h
   rw [sub_eq_add_neg 1 x]
   simpa only [← v.map_one, ← v.map_neg] using v.map_add_eq_of_lt_left h
+
+theorem one_lt_val_iff (v : Valuation K Γ₀) {x : K} (h : x ≠ 0) : 1 < v x ↔ v x⁻¹ < 1 := by
+  simpa using (inv_lt_inv₀ (v.ne_zero_iff.2 h) one_ne_zero).symm
 
 /-- The subgroup of elements whose valuation is less than a certain unit.-/
 def ltAddSubgroup (v : Valuation R Γ₀) (γ : Γ₀ˣ) : AddSubgroup R where
@@ -391,9 +397,8 @@ theorem is_equiv_of_map_strict_mono [LinearOrderedCommMonoidWithZero Γ₀] [Lin
     {v : Valuation R Γ₀} (f : Γ₀ →*₀ Γ'₀) (H : StrictMono f) : IsEquiv (v.map f H.Monotone) v := fun x y =>
   ⟨H.le_iff_le.mp, fun h => H.Monotone h⟩
 
-theorem is_equiv_of_val_le_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOrderedCommGroupWithZero Γ'₀] {K : Type _}
-    [DivisionRing K] (v : Valuation K Γ₀) (v' : Valuation K Γ'₀) (h : ∀ {x : K}, v x ≤ 1 ↔ v' x ≤ 1) : v.IsEquiv v' :=
-  by
+theorem is_equiv_of_val_le_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOrderedCommGroupWithZero Γ'₀]
+    (v : Valuation K Γ₀) (v' : Valuation K Γ'₀) (h : ∀ {x : K}, v x ≤ 1 ↔ v' x ≤ 1) : v.IsEquiv v' := by
   intro x y
   by_cases' hy : y = 0
   · simp [← hy, ← zero_iff]
@@ -417,13 +422,13 @@ theorem is_equiv_of_val_le_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOrd
     rwa [h]
     
 
-theorem is_equiv_iff_val_le_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOrderedCommGroupWithZero Γ'₀] {K : Type _}
-    [DivisionRing K] (v : Valuation K Γ₀) (v' : Valuation K Γ'₀) : v.IsEquiv v' ↔ ∀ {x : K}, v x ≤ 1 ↔ v' x ≤ 1 :=
+theorem is_equiv_iff_val_le_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOrderedCommGroupWithZero Γ'₀]
+    (v : Valuation K Γ₀) (v' : Valuation K Γ'₀) : v.IsEquiv v' ↔ ∀ {x : K}, v x ≤ 1 ↔ v' x ≤ 1 :=
   ⟨fun h x => by
     simpa using h x 1, is_equiv_of_val_le_one _ _⟩
 
-theorem is_equiv_iff_val_eq_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOrderedCommGroupWithZero Γ'₀] {K : Type _}
-    [DivisionRing K] (v : Valuation K Γ₀) (v' : Valuation K Γ'₀) : v.IsEquiv v' ↔ ∀ {x : K}, v x = 1 ↔ v' x = 1 := by
+theorem is_equiv_iff_val_eq_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOrderedCommGroupWithZero Γ'₀]
+    (v : Valuation K Γ₀) (v' : Valuation K Γ'₀) : v.IsEquiv v' ↔ ∀ {x : K}, v x = 1 ↔ v' x = 1 := by
   constructor
   · intro h x
     simpa using @is_equiv.val_eq _ _ _ _ _ _ v v' h x 1
@@ -467,6 +472,63 @@ theorem is_equiv_iff_val_eq_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOr
         
       
     
+
+theorem is_equiv_iff_val_lt_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOrderedCommGroupWithZero Γ'₀]
+    (v : Valuation K Γ₀) (v' : Valuation K Γ'₀) : v.IsEquiv v' ↔ ∀ {x : K}, v x < 1 ↔ v' x < 1 := by
+  constructor
+  · intro h x
+    simp only [← lt_iff_le_and_ne, ←
+      and_congr ((is_equiv_iff_val_le_one _ _).1 h) ((is_equiv_iff_val_eq_one _ _).1 h).Not]
+    
+  · rw [is_equiv_iff_val_eq_one]
+    intro h x
+    by_cases' hx : x = 0
+    · simp only [← (zero_iff _).2 hx, ← zero_ne_one]
+      
+    constructor
+    · intro hh
+      by_contra h_1
+      cases ne_iff_lt_or_gtₓ.1 h_1
+      · simpa [← hh, ← lt_self_iff_false] using h.2 h_2
+        
+      · rw [← inv_one, eq_inv_iff_eq_inv, ← map_inv] at hh
+        exact hh.le.not_lt (h.2 ((one_lt_val_iff v' hx).1 h_2))
+        
+      
+    · intro hh
+      by_contra h_1
+      cases ne_iff_lt_or_gtₓ.1 h_1
+      · simpa [← hh, ← lt_self_iff_false] using h.1 h_2
+        
+      · rw [← inv_one, eq_inv_iff_eq_inv, ← map_inv] at hh
+        exact hh.le.not_lt (h.1 ((one_lt_val_iff v hx).1 h_2))
+        
+      
+    
+
+theorem is_equiv_iff_val_sub_one_lt_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOrderedCommGroupWithZero Γ'₀]
+    (v : Valuation K Γ₀) (v' : Valuation K Γ'₀) : v.IsEquiv v' ↔ ∀ {x : K}, v (x - 1) < 1 ↔ v' (x - 1) < 1 := by
+  rw [is_equiv_iff_val_lt_one]
+  exact (Equivₓ.subRight 1).Surjective.forall
+
+theorem is_equiv_tfae [LinearOrderedCommGroupWithZero Γ₀] [LinearOrderedCommGroupWithZero Γ'₀] (v : Valuation K Γ₀)
+    (v' : Valuation K Γ'₀) :
+    [v.IsEquiv v', ∀ {x}, v x ≤ 1 ↔ v' x ≤ 1, ∀ {x}, v x = 1 ↔ v' x = 1, ∀ {x}, v x < 1 ↔ v' x < 1,
+        ∀ {x}, v (x - 1) < 1 ↔ v' (x - 1) < 1].Tfae :=
+  by
+  tfae_have 1 ↔ 2
+  · apply is_equiv_iff_val_le_one
+    
+  tfae_have 1 ↔ 3
+  · apply is_equiv_iff_val_eq_one
+    
+  tfae_have 1 ↔ 4
+  · apply is_equiv_iff_val_lt_one
+    
+  tfae_have 1 ↔ 5
+  · apply is_equiv_iff_val_sub_one_lt_one
+    
+  tfae_finish
 
 end
 
@@ -524,11 +586,14 @@ theorem map_add_supp (a : R) {s : R} (h : s ∈ supp v) : v (a + s) = v a := by
     refine' le_transₓ (v.map_add a' s') (max_leₓ le_rfl _)
     simp [← h']
   apply le_antisymmₓ (aux a s h)
-  calc v a = v (a + s + -s) := by
-      simp _ ≤ v (a + s) :=
+  calc
+    v a = v (a + s + -s) := by
+      simp
+    _ ≤ v (a + s) :=
       aux (a + s) (-s)
         (by
           rwa [← Ideal.neg_mem_iff] at h)
+    
 
 /-- If `hJ : J ⊆ supp v` then `on_quot_val hJ` is the induced function on R/J as a function.
 Note: it's just the function; the valuation is `on_quot hJ`. -/
@@ -594,7 +659,7 @@ section AddMonoidₓ
 variable (R) [Ringₓ R] (Γ₀ : Type _) [LinearOrderedAddCommMonoidWithTop Γ₀]
 
 /-- The type of `Γ₀`-valued additive valuations on `R`. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def AddValuation :=
   Valuation R (Multiplicative Γ₀ᵒᵈ)
 
@@ -701,10 +766,10 @@ def toPreorder : Preorderₓ R :=
 
 /-- If `v` is an additive valuation on a division ring then `v(x) = ⊤` iff `x = 0`. -/
 @[simp]
-theorem top_iff [Nontrivial Γ₀] {K : Type _} [DivisionRing K] (v : AddValuation K Γ₀) {x : K} : v x = ⊤ ↔ x = 0 :=
+theorem top_iff [Nontrivial Γ₀] (v : AddValuation K Γ₀) {x : K} : v x = ⊤ ↔ x = 0 :=
   v.zero_iff
 
-theorem ne_top_iff [Nontrivial Γ₀] {K : Type _} [DivisionRing K] (v : AddValuation K Γ₀) {x : K} : v x ≠ ⊤ ↔ x ≠ 0 :=
+theorem ne_top_iff [Nontrivial Γ₀] (v : AddValuation K Γ₀) {x : K} : v x ≠ ⊤ ↔ x ≠ 0 :=
   v.ne_zero_iff
 
 /-- A ring homomorphism `S → R` induces a map `add_valuation R Γ₀ → add_valuation S Γ₀`. -/
@@ -737,7 +802,7 @@ section Groupₓ
 variable [LinearOrderedAddCommGroupWithTop Γ₀] [Ringₓ R] (v : AddValuation R Γ₀) {x y z : R}
 
 @[simp]
-theorem map_inv {K : Type _} [DivisionRing K] (v : AddValuation K Γ₀) {x : K} : v x⁻¹ = -v x :=
+theorem map_inv (v : AddValuation K Γ₀) {x : K} : v x⁻¹ = -v x :=
   v.map_inv
 
 theorem map_units_inv (x : Rˣ) : v (x⁻¹ : Rˣ) = -v x :=

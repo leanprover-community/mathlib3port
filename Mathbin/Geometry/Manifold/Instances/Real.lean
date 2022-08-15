@@ -84,7 +84,7 @@ theorem range_quadrant (n : ℕ) : (Range fun x : EuclideanQuadrant n => x.val) 
 
 end
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ∈ » ({0} : set (fin n)))
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (i «expr ∈ » ({0} : set (fin n)))
 /-- Definition of the model with corners `(euclidean_space ℝ (fin n), euclidean_half_space n)`, used as
 a model for manifolds with boundary. In the locale `manifold`, use the shortcut `𝓡∂ n`.
 -/

@@ -231,11 +231,16 @@ theorem zero_ne_one : 0 ≠ (1 : M₀) := by
   intro h
   rcases exists_pair_ne M₀ with ⟨x, y, hx⟩
   apply hx
-  calc x = 1 * x := by
-      rw [one_mulₓ]_ = 0 := by
-      rw [← h, zero_mul]_ = 1 * y := by
-      rw [← h, zero_mul]_ = y := by
+  calc
+    x = 1 * x := by
       rw [one_mulₓ]
+    _ = 0 := by
+      rw [← h, zero_mul]
+    _ = 1 * y := by
+      rw [← h, zero_mul]
+    _ = y := by
+      rw [one_mulₓ]
+    
 
 @[simp]
 theorem one_ne_zero : (1 : M₀) ≠ 0 :=

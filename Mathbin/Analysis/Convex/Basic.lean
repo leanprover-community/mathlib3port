@@ -8,6 +8,7 @@ import Mathbin.Algebra.Order.Module
 import Mathbin.LinearAlgebra.AffineSpace.Midpoint
 import Mathbin.LinearAlgebra.AffineSpace.AffineSubspace
 import Mathbin.LinearAlgebra.Ray
+import Mathbin.Tactic.Positivity
 
 /-!
 # Convex sets and functions in vector spaces
@@ -332,6 +333,9 @@ theorem mem_segment_iff_div :
     rw [← add_div, div_self hab.ne']
     
 
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `positivity #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `positivity #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `positivity #[]
 theorem mem_open_segment_iff_div :
     x ∈ OpenSegment 𝕜 y z ↔ ∃ a b : 𝕜, 0 < a ∧ 0 < b ∧ (a / (a + b)) • y + (b / (a + b)) • z = x := by
   constructor
@@ -340,8 +344,12 @@ theorem mem_open_segment_iff_div :
     rw [hab, div_one, div_one]
     
   · rintro ⟨a, b, ha, hb, rfl⟩
-    have hab : 0 < a + b := add_pos ha hb
-    refine' ⟨a / (a + b), b / (a + b), div_pos ha hab, div_pos hb hab, _, rfl⟩
+    have hab : 0 < a + b := by
+      trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `positivity #[]"
+    refine'
+      ⟨a / (a + b), b / (a + b), by
+        trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `positivity #[]", by
+        trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `positivity #[]", _, rfl⟩
     rw [← add_div, div_self hab.ne']
     
 
@@ -366,10 +374,14 @@ variable [OrderedAddCommMonoid E] [Module 𝕜 E] [OrderedSmul 𝕜 E]
 theorem segment_subset_Icc {x y : E} (h : x ≤ y) : [x -[𝕜] y] ⊆ Icc x y := by
   rintro z ⟨a, b, ha, hb, hab, rfl⟩
   constructor
-  calc x = a • x + b • x := (Convex.combo_self hab _).symm _ ≤ a • x + b • y :=
-      add_le_add_left (smul_le_smul_of_nonneg h hb) _
-  calc a • x + b • y ≤ a • y + b • y := add_le_add_right (smul_le_smul_of_nonneg h ha) _ _ = y :=
-      Convex.combo_self hab _
+  calc
+    x = a • x + b • x := (Convex.combo_self hab _).symm
+    _ ≤ a • x + b • y := add_le_add_left (smul_le_smul_of_nonneg h hb) _
+    
+  calc
+    a • x + b • y ≤ a • y + b • y := add_le_add_right (smul_le_smul_of_nonneg h ha) _
+    _ = y := Convex.combo_self hab _
+    
 
 end OrderedAddCommMonoid
 
@@ -380,9 +392,14 @@ variable [OrderedCancelAddCommMonoid E] [Module 𝕜 E] [OrderedSmul 𝕜 E]
 theorem open_segment_subset_Ioo {x y : E} (h : x < y) : OpenSegment 𝕜 x y ⊆ Ioo x y := by
   rintro z ⟨a, b, ha, hb, hab, rfl⟩
   constructor
-  calc x = a • x + b • x := (Convex.combo_self hab _).symm _ < a • x + b • y :=
-      add_lt_add_left (smul_lt_smul_of_pos h hb) _
-  calc a • x + b • y < a • y + b • y := add_lt_add_right (smul_lt_smul_of_pos h ha) _ _ = y := Convex.combo_self hab _
+  calc
+    x = a • x + b • x := (Convex.combo_self hab _).symm
+    _ < a • x + b • y := add_lt_add_left (smul_lt_smul_of_pos h hb) _
+    
+  calc
+    a • x + b • y < a • y + b • y := add_lt_add_right (smul_lt_smul_of_pos h ha) _
+    _ = y := Convex.combo_self hab _
+    
 
 end OrderedCancelAddCommMonoid
 
@@ -575,7 +592,7 @@ theorem convex_sInter {S : Set (Set E)} (h : ∀, ∀ s ∈ S, ∀, Convex 𝕜 
 theorem convex_Inter {ι : Sort _} {s : ι → Set E} (h : ∀ i, Convex 𝕜 (s i)) : Convex 𝕜 (⋂ i, s i) :=
   sInter_range s ▸ convex_sInter <| forall_range_iff.2 h
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
 theorem convex_Inter₂ {ι : Sort _} {κ : ι → Sort _} {s : ∀ i, κ i → Set E} (h : ∀ i j, Convex 𝕜 (s i j)) :
     Convex 𝕜 (⋂ (i) (j), s i j) :=
   convex_Inter fun i => convex_Inter <| h i
@@ -735,9 +752,11 @@ theorem convex_Iio (r : β) : Convex 𝕜 (Iio r) := by
     rwa [zero_smul, zero_addₓ, hab, one_smul]
     
   rw [mem_Iio] at hx hy
-  calc a • x + b • y < a • r + b • r :=
-      add_lt_add_of_lt_of_le (smul_lt_smul_of_pos hx ha') (smul_le_smul_of_nonneg hy.le hb)_ = r :=
-      Convex.combo_self hab _
+  calc
+    a • x + b • y < a • r + b • r :=
+      add_lt_add_of_lt_of_le (smul_lt_smul_of_pos hx ha') (smul_le_smul_of_nonneg hy.le hb)
+    _ = r := Convex.combo_self hab _
+    
 
 theorem convex_Ioi (r : β) : Convex 𝕜 (Ioi r) :=
   @convex_Iio 𝕜 βᵒᵈ _ _ _ _ r
@@ -958,6 +977,7 @@ theorem Convex.mem_smul_of_zero_mem (h : Convex 𝕜 s) {x : E} (zero_mem : (0 :
   rw [mem_smul_set_iff_inv_smul_mem₀ (zero_lt_one.trans_le ht).ne']
   exact h.smul_mem_of_zero_mem zero_mem hx ⟨inv_nonneg.2 (zero_le_one.trans ht), inv_le_one ht⟩
 
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `positivity #[]
 theorem Convex.add_smul (h_conv : Convex 𝕜 s) {p q : 𝕜} (hp : 0 ≤ p) (hq : 0 ≤ q) : (p + q) • s = p • s + q • s := by
   obtain rfl | hs := s.eq_empty_or_nonempty
   · simp_rw [smul_set_empty, add_empty]
@@ -975,14 +995,15 @@ theorem Convex.add_smul (h_conv : Convex 𝕜 s) {p q : 𝕜} (hp : 0 ≤ p) (hq
     
   · rintro ⟨v₁, v₂, ⟨v₁₁, h₁₂, rfl⟩, ⟨v₂₁, h₂₂, rfl⟩, rfl⟩
     have hpq := add_pos hp' hq'
-    exact
-      mem_smul_set.2
-        ⟨_,
-          h_conv h₁₂ h₂₂ (div_pos hp' hpq).le (div_pos hq' hpq).le
-            (by
-              rw [← div_self hpq.ne', add_div] : p / (p + q) + q / (p + q) = 1),
-          by
-          simp only [mul_smul, ← smul_add, ← mul_div_cancel' _ hpq.ne']⟩
+    refine'
+        mem_smul_set.2
+          ⟨_,
+            h_conv h₁₂ h₂₂ _ _
+              (by
+                rw [← div_self hpq.ne', add_div] : p / (p + q) + q / (p + q) = 1),
+            by
+            simp only [mul_smul, ← smul_add, ← mul_div_cancel' _ hpq.ne']⟩ <;>
+      trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `positivity #[]"
     
 
 end AddCommGroupₓ

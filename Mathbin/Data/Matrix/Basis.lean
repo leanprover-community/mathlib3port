@@ -70,11 +70,11 @@ theorem matrix_eq_sum_std_basis [Fintype m] [Fintype n] (x : Matrix m n α) :
 theorem std_basis_eq_basis_mul_basis (i : m) (j : n) :
     stdBasisMatrix i j 1 = vecMulVecₓ (fun i' => ite (i = i') 1 0) fun j' => ite (j = j') 1 0 := by
   ext
-  norm_num [← std_basis_matrix, ← vec_mul_vec]
+  norm_num[← std_basis_matrix, ← vec_mul_vec]
   exact ite_and _ _ _ _
 
 -- todo: the old proof used fintypes, I don't know `finsupp` but this feels generalizable
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on' [Fintype m] [Fintype n] {P : Matrix m n α → Prop} (M : Matrix m n α) (h_zero : P 0)
     (h_add : ∀ p q, P p → P q → P (p + q)) (h_std_basis : ∀ (i : m) (j : n) (x : α), P (stdBasisMatrix i j x)) : P M :=
   by
@@ -84,7 +84,7 @@ protected theorem induction_on' [Fintype m] [Fintype n] {P : Matrix m n α → P
     apply h_std_basis
     
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on [Fintype m] [Fintype n] [Nonempty m] [Nonempty n] {P : Matrix m n α → Prop}
     (M : Matrix m n α) (h_add : ∀ p q, P p → P q → P (p + q)) (h_std_basis : ∀ i j x, P (stdBasisMatrix i j x)) : P M :=
   Matrix.induction_on' M

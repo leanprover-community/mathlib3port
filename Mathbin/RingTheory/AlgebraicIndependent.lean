@@ -155,7 +155,7 @@ theorem AlgHom.algebraic_independent_iff (f : A →ₐ[R] A') (hf : Injective f)
 
 @[nontriviality]
 theorem algebraic_independent_of_subsingleton [Subsingleton R] : AlgebraicIndependent R x :=
-  have := @MvPolynomial.unique R ι
+  haveI := @MvPolynomial.unique R ι
   algebraic_independent_iff.2 fun l hl => Subsingleton.elimₓ _ _
 
 theorem algebraic_independent_equiv (e : ι ≃ ι') {f : ι' → A} :
@@ -268,7 +268,7 @@ theorem algebraic_independent_subtype {s : Set A} :
   by
   apply @algebraic_independent_comp_subtype _ _ _ id
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem algebraic_independent_of_finite (s : Set A)
     (H : ∀ (t) (_ : t ⊆ s), t.Finite → AlgebraicIndependent R (fun x => x : t → A)) :
     AlgebraicIndependent R (fun x => x : s → A) :=
@@ -298,7 +298,7 @@ theorem algebraic_independent_Union_of_directed {η : Type _} [Nonempty η] {s :
 theorem algebraic_independent_sUnion_of_directed {s : Set (Set A)} (hsn : s.Nonempty) (hs : DirectedOn (· ⊆ ·) s)
     (h : ∀, ∀ a ∈ s, ∀, AlgebraicIndependent R (fun x => x : (a : Set A) → A)) :
     AlgebraicIndependent R (fun x => x : ⋃₀s → A) := by
-  let this : Nonempty s := nonempty.to_subtype hsn <;>
+  letI : Nonempty s := nonempty.to_subtype hsn <;>
     rw [sUnion_eq_Union] <;>
       exact
         algebraic_independent_Union_of_directed hs.directed_coe

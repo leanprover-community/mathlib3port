@@ -29,6 +29,8 @@ We define morphisms of cones, and the category of cones.
 We define `cone.postcompose α : cone F ⥤ cone G` for `α` a natural transformation `F ⟶ G`.
 
 And, of course, we dualise all this to cocones as well.
+
+For more results about the category of cones, see `cone_category.lean`.
 -/
 
 
@@ -247,6 +249,13 @@ def ext {c c' : Cone F} (φ : c.x ≅ c'.x) (w : ∀ j, c.π.app j = φ.Hom ≫ 
   Hom := { Hom := φ.Hom }
   inv := { Hom := φ.inv, w' := fun j => φ.inv_comp_eq.mpr (w j) }
 
+/-- Eta rule for cones. -/
+@[simps]
+def eta (c : Cone F) : c ≅ ⟨c.x, c.π⟩ :=
+  Cones.ext (Iso.refl _)
+    (by
+      tidy)
+
 /-- Given a cone morphism whose object part is an isomorphism, produce an
 isomorphism of cones.
 -/
@@ -422,8 +431,8 @@ instance reflects_cone_isomorphism (F : C ⥤ D) [ReflectsIsomorphisms F] (K : J
     ReflectsIsomorphisms (Cones.functoriality K F) := by
   constructor
   intros
-  have : is_iso (F.map f.hom) := (cones.forget (K ⋙ F)).map_is_iso ((cones.functoriality K F).map f)
-  have := reflects_isomorphisms.reflects F f.hom
+  haveI : is_iso (F.map f.hom) := (cones.forget (K ⋙ F)).map_is_iso ((cones.functoriality K F).map f)
+  haveI := reflects_isomorphisms.reflects F f.hom
   apply cone_iso_of_hom_iso
 
 end
@@ -461,6 +470,13 @@ namespace Cocones
 def ext {c c' : Cocone F} (φ : c.x ≅ c'.x) (w : ∀ j, c.ι.app j ≫ φ.Hom = c'.ι.app j) : c ≅ c' where
   Hom := { Hom := φ.Hom }
   inv := { Hom := φ.inv, w' := fun j => φ.comp_inv_eq.mpr (w j).symm }
+
+/-- Eta rule for cocones. -/
+@[simps]
+def eta (c : Cocone F) : c ≅ ⟨c.x, c.ι⟩ :=
+  Cocones.ext (Iso.refl _)
+    (by
+      tidy)
 
 /-- Given a cocone morphism whose object part is an isomorphism, produce an
 isomorphism of cocones.
@@ -647,8 +663,8 @@ instance reflects_cocone_isomorphism (F : C ⥤ D) [ReflectsIsomorphisms F] (K :
     ReflectsIsomorphisms (Cocones.functoriality K F) := by
   constructor
   intros
-  have : is_iso (F.map f.hom) := (cocones.forget (K ⋙ F)).map_is_iso ((cocones.functoriality K F).map f)
-  have := reflects_isomorphisms.reflects F f.hom
+  haveI : is_iso (F.map f.hom) := (cocones.forget (K ⋙ F)).map_is_iso ((cocones.functoriality K F).map f)
+  haveI := reflects_isomorphisms.reflects F f.hom
   apply cocone_iso_of_hom_iso
 
 end

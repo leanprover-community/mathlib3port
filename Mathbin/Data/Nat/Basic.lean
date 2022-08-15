@@ -46,7 +46,7 @@ instance : CommSemiringₓ ℕ where
   zero_mul := Nat.zero_mul
   mul_zero := Nat.mul_zero
   mul_comm := Nat.mul_comm
-  natCast := id
+  natCast := fun n => n
   nat_cast_zero := rfl
   nat_cast_succ := fun n => rfl
   nsmul := fun m n => m * n
@@ -728,7 +728,7 @@ theorem rec_add_one {C : ℕ → Sort u} (h0 : C 0) (h : ∀ n, C n → C (n + 1
 /-- Recursion starting at a non-zero number: given a map `C k → C (k+1)` for each `k`,
 there is a map from `C n` to each `C m`, `n ≤ m`. For a version where the assumption is only made
 when `k ≥ n`, see `le_rec_on'`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def leRecOn {C : ℕ → Sort u} {n : ℕ} : ∀ {m : ℕ}, n ≤ m → (∀ {k}, C k → C (k + 1)) → C n → C m
   | 0, H, next, x => Eq.recOnₓ (Nat.eq_zero_of_le_zeroₓ H) x
   | m + 1, H, next, x =>
@@ -780,12 +780,12 @@ theorem le_rec_on_surjective {C : ℕ → Sort u} {n m} (hnm : n ≤ m) (next : 
   rw [le_rec_on_succ]
 
 /-- Recursion principle based on `<`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 protected def strongRec' {p : ℕ → Sort u} (H : ∀ n, (∀ m, m < n → p m) → p n) : ∀ n : ℕ, p n
   | n => H n fun m hm => strong_rec' m
 
 /-- Recursion principle based on `<` applied to some natural number. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def strongRecOn' {P : ℕ → Sort _} (n : ℕ) (h : ∀ n, (∀ m, m < n → P m) → P n) : P n :=
   Nat.strongRec' h n
 
@@ -795,14 +795,14 @@ theorem strong_rec_on_beta' {P : ℕ → Sort _} {h} {n : ℕ} :
   rw [Nat.strongRec']
 
 /-- Induction principle starting at a non-zero number. For maps to a `Sort*` see `le_rec_on`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem le_induction {P : Nat → Prop} {m} (h0 : P m) (h1 : ∀ n, m ≤ n → P n → P (n + 1)) : ∀ n, m ≤ n → P n := by
   apply Nat.LessThanOrEqual.ndrec h0 <;> exact h1
 
 /-- Decreasing induction: if `P (k+1)` implies `P k`, then `P n` implies `P m` for all `m ≤ n`.
 Also works for functions to `Sort*`. For a version assuming only the assumption for `k < n`, see
 `decreasing_induction'`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def decreasingInduction {P : ℕ → Sort _} (h : ∀ n, P (n + 1) → P n) {m n : ℕ} (mn : m ≤ n) (hP : P n) : P m :=
   leRecOn mn (fun k ih hsk => ih <| h k hsk) (fun h => h) hP
 
@@ -834,10 +834,59 @@ theorem decreasing_induction_succ_left {P : ℕ → Sort _} (h : ∀ n, P (n + 1
     (mn : m ≤ n) (hP : P n) : (decreasingInduction h mn hP : P m) = h m (decreasingInduction h smn hP) := by
   rw [Subsingleton.elimₓ mn (le_transₓ (le_succ m) smn), decreasing_induction_trans, decreasing_induction_succ']
 
+/-- Recursion principle on even and odd numbers: if we have `P 0`, and for all `i : ℕ` we can
+extend from `P i` to both `P (2 * i)` and `P (2 * i + 1)`, then we have `P n` for all `n : ℕ`.
+This is nothing more than a wrapper around `nat.binary_rec`, to avoid having to switch to
+dealing with `bit0` and `bit1`. -/
+@[elabAsElim]
+def evenOddRec (n : ℕ) (P : ℕ → Sort _) (h0 : P 0) (h_even : ∀ i, P i → P (2 * i)) (h_odd : ∀ i, P i → P (2 * i + 1)) :
+    P n := by
+  refine' @binary_rec P h0 (fun b i hi => _) n
+  cases b
+  · simpa [← bit, ← bit0_val i] using h_even i hi
+    
+  · simpa [← bit, ← bit1_val i] using h_odd i hi
+    
+
+@[simp]
+theorem even_odd_rec_zero (P : ℕ → Sort _) (h0 : P 0) (h_even : ∀ i, P i → P (2 * i))
+    (h_odd : ∀ i, P i → P (2 * i + 1)) : @evenOddRec 0 P h0 h_even h_odd = h0 :=
+  binary_rec_zero _ _
+
+@[simp]
+theorem even_odd_rec_even (n : ℕ) (P : ℕ → Sort _) (h0 : P 0) (h_even : ∀ i, P i → P (2 * i))
+    (h_odd : ∀ i, P i → P (2 * i + 1)) (H : h_even 0 h0 = h0) :
+    @evenOddRec (2 * n) P h0 h_even h_odd = h_even n (evenOddRec n P h0 h_even h_odd) := by
+  convert binary_rec_eq _ ff n
+  · exact (bit0_eq_two_mul _).symm
+    
+  · exact (bit0_eq_two_mul _).symm
+    
+  · apply heq_of_cast_eq
+    rfl
+    
+  · exact H
+    
+
+@[simp]
+theorem even_odd_rec_odd (n : ℕ) (P : ℕ → Sort _) (h0 : P 0) (h_even : ∀ i, P i → P (2 * i))
+    (h_odd : ∀ i, P i → P (2 * i + 1)) (H : h_even 0 h0 = h0) :
+    @evenOddRec (2 * n + 1) P h0 h_even h_odd = h_odd n (evenOddRec n P h0 h_even h_odd) := by
+  convert binary_rec_eq _ tt n
+  · exact (bit0_eq_two_mul _).symm
+    
+  · exact (bit0_eq_two_mul _).symm
+    
+  · apply heq_of_cast_eq
+    rfl
+    
+  · exact H
+    
+
 /-- Given a predicate on two naturals `P : ℕ → ℕ → Prop`, `P a b` is true for all `a < b` if
 `P (a + 1) (a + 1)` is true for all `a`, `P 0 (b + 1)` is true for all `b` and for all
 `a < b`, `P (a + 1) b` is true and `P a (b + 1)` is true implies `P (a + 1) (b + 1)` is true. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem diag_induction (P : ℕ → ℕ → Prop) (ha : ∀ a, P (a + 1) (a + 1)) (hb : ∀ b, P 0 (b + 1))
     (hd : ∀ a b, a < b → P (a + 1) b → P a (b + 1) → P (a + 1) (b + 1)) : ∀ a b, a < b → P a b
   | 0, b + 1, h => hb _
@@ -857,7 +906,7 @@ theorem diag_induction (P : ℕ → ℕ → Prop) (ha : ∀ a, P (a + 1) (a + 1)
 strictly below `(a,b)` to `P a b`, then we have `P n m` for all `n m : ℕ`.
 Note that for non-`Prop` output it is preferable to use the equation compiler directly if possible,
 since this produces equation lemmas. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def strongSubRecursion {P : ℕ → ℕ → Sort _} (H : ∀ a b, (∀ x y, x < a → y < b → P x y) → P a b) : ∀ n m : ℕ, P n m
   | n, m => H n m fun x y hx hy => strong_sub_recursion x y
 
@@ -866,7 +915,7 @@ and for any `x y : ℕ` we can extend `P` from `(x,y+1)` and `(x+1,y)` to `(x+1,
 then we have `P n m` for all `n m : ℕ`.
 Note that for non-`Prop` output it is preferable to use the equation compiler directly if possible,
 since this produces equation lemmas. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def pincerRecursion {P : ℕ → ℕ → Sort _} (Ha0 : ∀ a : ℕ, P a 0) (H0b : ∀ b : ℕ, P 0 b)
     (H : ∀ x y : ℕ, P x y.succ → P x.succ y → P x.succ y.succ) : ∀ n m : ℕ, P n m
   | a, 0 => Ha0 a
@@ -875,7 +924,7 @@ def pincerRecursion {P : ℕ → ℕ → Sort _} (Ha0 : ∀ a : ℕ, P a 0) (H0b
 
 /-- Recursion starting at a non-zero number: given a map `C k → C (k+1)` for each `k ≥ n`,
 there is a map from `C n` to each `C m`, `n ≤ m`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def leRecOn' {C : ℕ → Sort _} {n : ℕ} : ∀ {m : ℕ}, n ≤ m → (∀ ⦃k⦄, n ≤ k → C k → C (k + 1)) → C n → C m
   | 0, H, next, x => Eq.recOnₓ (Nat.eq_zero_of_le_zeroₓ H) x
   | m + 1, H, next, x =>
@@ -883,7 +932,7 @@ def leRecOn' {C : ℕ → Sort _} {n : ℕ} : ∀ {m : ℕ}, n ≤ m → (∀ �
 
 /-- Decreasing induction: if `P (k+1)` implies `P k` for all `m ≤ k < n`, then `P n` implies `P m`.
 Also works for functions to `Sort*`. Weakens the assumptions of `decreasing_induction`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def decreasingInduction' {P : ℕ → Sort _} {m n : ℕ} (h : ∀, ∀ k < n, ∀, m ≤ k → P (k + 1) → P k) (mn : m ≤ n)
     (hP : P n) : P m := by
   -- induction mn using nat.le_rec_on' generalizing h hP -- this doesn't work unfortunately
@@ -1094,6 +1143,15 @@ protected theorem div_left_inj {a b d : ℕ} (hda : d ∣ a) (hdb : d ∣ b) : a
 
 /-! ### `mod`, `dvd` -/
 
+
+theorem mod_eq_iff_lt {a b : ℕ} (h : b ≠ 0) : a % b = a ↔ a < b := by
+  cases b
+  contradiction
+  exact ⟨fun h => h.ge.trans_lt (mod_lt _ (succ_pos _)), mod_eq_of_lt⟩
+
+@[simp]
+theorem mod_succ_eq_iff_lt {a b : ℕ} : a % b.succ = a ↔ a < b.succ :=
+  mod_eq_iff_lt (succ_ne_zero _)
 
 theorem div_add_modₓ (m k : ℕ) : k * (m / k) + m % k = m :=
   (Nat.add_comm _ _).trans (mod_add_divₓ _ _)

@@ -32,7 +32,7 @@ is that some theorems about the group actions will not apply when since this
 -/
 
 
-variable (M G G₀ R K : Type _)
+variable (α M G G₀ R K : Type _)
 
 /-- A type alias for a group `G`. `conj_act G` acts on `G` by conjugation -/
 def ConjAct : Type _ :=
@@ -80,6 +80,10 @@ protected def rec {C : ConjAct G → Sort _} (h : ∀ g, C (toConjAct g)) : ∀ 
   h
 
 @[simp]
+theorem forall (p : ConjAct G → Prop) : (∀ x : ConjAct G, p x) ↔ ∀ x : G, p (toConjAct x) :=
+  Iff.rfl
+
+@[simp]
 theorem of_mul_symm_eq : (@ofConjAct G _).symm = to_conj_act :=
   rfl
 
@@ -124,10 +128,6 @@ instance : HasSmul (ConjAct G) G where smul := fun g h => ofConjAct g * h * (ofC
 theorem smul_def (g : ConjAct G) (h : G) : g • h = ofConjAct g * h * (ofConjAct g)⁻¹ :=
   rfl
 
-@[simp]
-theorem forall (p : ConjAct G → Prop) : (∀ x : ConjAct G, p x) ↔ ∀ x : G, p (toConjAct x) :=
-  Iff.rfl
-
 end DivInvMonoidₓ
 
 section Units
@@ -151,6 +151,15 @@ instance unitsMulDistribMulAction : MulDistribMulAction (ConjAct Mˣ) M where
     simp [← units_smul_def, ← mul_assoc]
   smul_one := by
     simp [← units_smul_def]
+
+instance units_smul_comm_class [HasSmul α M] [SmulCommClass α M M] [IsScalarTower α M M] :
+    SmulCommClass α (ConjAct Mˣ) M where smul_comm := fun a um m => by
+    rw [units_smul_def, units_smul_def, mul_smul_comm, smul_mul_assoc]
+
+instance units_smul_comm_class' [HasSmul α M] [SmulCommClass M α M] [IsScalarTower α M M] :
+    SmulCommClass (ConjAct Mˣ) α M := by
+  haveI : SmulCommClass α M M := SmulCommClass.symm _ _ _
+  exact SmulCommClass.symm _ _ _
 
 end Monoidₓ
 
@@ -188,6 +197,15 @@ instance mulAction₀ : MulAction (ConjAct G₀) G₀ where
   mul_smul := by
     simp [← smul_def, ← mul_assoc, ← mul_inv_rev]
 
+instance smul_comm_class₀ [HasSmul α G₀] [SmulCommClass α G₀ G₀] [IsScalarTower α G₀ G₀] :
+    SmulCommClass α (ConjAct G₀) G₀ where smul_comm := fun a ug g => by
+    rw [smul_def, smul_def, mul_smul_comm, smul_mul_assoc]
+
+instance smul_comm_class₀' [HasSmul α G₀] [SmulCommClass G₀ α G₀] [IsScalarTower α G₀ G₀] :
+    SmulCommClass (ConjAct G₀) α G₀ := by
+  haveI := SmulCommClass.symm G₀ α G₀
+  exact SmulCommClass.symm _ _ _
+
 end GroupWithZeroₓ
 
 section DivisionRing
@@ -215,6 +233,15 @@ instance : MulDistribMulAction (ConjAct G) G where
     simp [← smul_def]
   mul_smul := by
     simp [← smul_def, ← mul_assoc]
+
+instance smul_comm_class [HasSmul α G] [SmulCommClass α G G] [IsScalarTower α G G] :
+    SmulCommClass α (ConjAct G) G where smul_comm := fun a ug g => by
+    rw [smul_def, smul_def, mul_smul_comm, smul_mul_assoc]
+
+instance smul_comm_class' [HasSmul α G] [SmulCommClass G α G] [IsScalarTower α G G] : SmulCommClass (ConjAct G) α G :=
+  by
+  haveI := SmulCommClass.symm G α G
+  exact SmulCommClass.symm _ _ _
 
 theorem smul_eq_mul_aut_conj (g : ConjAct G) (h : G) : g • h = MulAut.conj (ofConjAct g) h :=
   rfl

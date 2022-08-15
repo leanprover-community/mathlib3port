@@ -559,6 +559,9 @@ theorem not_subset_iff_exists_mem_not_mem {α : Type _} {s t : Set α} : ¬s ⊆
 theorem univ_unique [Unique α] : @Set.Univ α = {default} :=
   Set.ext fun x => iff_of_true trivialₓ <| Subsingleton.elimₓ x default
 
+instance [Nonempty α] : Nontrivial (Set α) :=
+  ⟨⟨∅, Univ, empty_ne_univ⟩⟩
+
 /-! ### Lemmas about union -/
 
 
@@ -876,6 +879,13 @@ theorem insert_eq_of_mem {a : α} {s : Set α} (h : a ∈ s) : insert a s = s :=
 theorem ne_insert_of_not_mem {s : Set α} (t : Set α) {a : α} : a ∉ s → s ≠ insert a t :=
   mt fun e => e.symm ▸ mem_insert _ _
 
+@[simp]
+theorem insert_eq_self : insert a s = s ↔ a ∈ s :=
+  ⟨fun h => h ▸ mem_insert _ _, insert_eq_of_mem⟩
+
+theorem insert_ne_self : insert a s ≠ s ↔ a ∉ s :=
+  insert_eq_self.Not
+
 theorem insert_subset : insert a s ⊆ t ↔ a ∈ t ∧ s ⊆ t := by
   simp only [← subset_def, ← or_imp_distrib, ← forall_and_distrib, ← forall_eq, ← mem_insert_iff]
 
@@ -886,7 +896,7 @@ theorem insert_subset_insert_iff (ha : a ∉ s) : insert a s ⊆ insert a t ↔ 
   rcases h (subset_insert _ _ hx) with (rfl | hxt)
   exacts[(ha hx).elim, hxt]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (a «expr ∉ » s)
 theorem ssubset_iff_insert {s t : Set α} : s ⊂ t ↔ ∃ (a : _)(_ : a ∉ s), insert a s ⊆ t := by
   simp only [← insert_subset, ← exists_and_distrib_right, ← ssubset_def, ← not_subset]
   simp only [← exists_prop, ← and_comm]
@@ -1940,8 +1950,10 @@ theorem preimage_eq_preimage {f : β → α} (hf : Surjective f) : f ⁻¹' s = 
 
 theorem image_inter_preimage (f : α → β) (s : Set α) (t : Set β) : f '' (s ∩ f ⁻¹' t) = f '' s ∩ t := by
   apply subset.antisymm
-  · calc f '' (s ∩ f ⁻¹' t) ⊆ f '' s ∩ f '' (f ⁻¹' t) := image_inter_subset _ _ _ _ ⊆ f '' s ∩ t :=
-        inter_subset_inter_right _ (image_preimage_subset f t)
+  · calc
+      f '' (s ∩ f ⁻¹' t) ⊆ f '' s ∩ f '' (f ⁻¹' t) := image_inter_subset _ _ _
+      _ ⊆ f '' s ∩ t := inter_subset_inter_right _ (image_preimage_subset f t)
+      
     
   · rintro _ ⟨⟨x, h', rfl⟩, h⟩
     exact ⟨x, ⟨h', h⟩, rfl⟩
@@ -2122,6 +2134,43 @@ theorem univ_eq_true_false : univ = ({True, False} : Set Prop) :=
           simp )
         (by
           simp )
+
+section Preorderₓ
+
+variable [Preorderₓ α] [Preorderₓ β] (f : α → β)
+
+/-! ### Monotonicity on singletons -/
+
+
+protected theorem Subsingleton.monotone_on (h : s.Subsingleton) : MonotoneOn f s := fun a ha b hb _ =>
+  (congr_arg _ (h ha hb)).le
+
+protected theorem Subsingleton.antitone_on (h : s.Subsingleton) : AntitoneOn f s := fun a ha b hb _ =>
+  (congr_arg _ (h hb ha)).le
+
+protected theorem Subsingleton.strict_mono_on (h : s.Subsingleton) : StrictMonoOn f s := fun a ha b hb hlt =>
+  (hlt.Ne (h ha hb)).elim
+
+protected theorem Subsingleton.strict_anti_on (h : s.Subsingleton) : StrictAntiOn f s := fun a ha b hb hlt =>
+  (hlt.Ne (h ha hb)).elim
+
+@[simp]
+theorem monotone_on_singleton : MonotoneOn f {a} :=
+  subsingleton_singleton.MonotoneOn f
+
+@[simp]
+theorem antitone_on_singleton : AntitoneOn f {a} :=
+  subsingleton_singleton.AntitoneOn f
+
+@[simp]
+theorem strict_mono_on_singleton : StrictMonoOn f {a} :=
+  subsingleton_singleton.StrictMonoOn f
+
+@[simp]
+theorem strict_anti_on_singleton : StrictAntiOn f {a} :=
+  subsingleton_singleton.StrictAntiOn f
+
+end Preorderₓ
 
 /-! ### Lemmas about range of a function. -/
 
@@ -2384,6 +2433,11 @@ theorem range_const_subset {c : α} : (Range fun x : ι => c) ⊆ {c} :=
 @[simp]
 theorem range_const : ∀ [Nonempty ι] {c : α}, (Range fun x : ι => c) = {c}
   | ⟨x⟩, c => (Subset.antisymm range_const_subset) fun y hy => (mem_singleton_iff.1 hy).symm ▸ mem_range_self x
+
+theorem range_subtype_map {p : α → Prop} {q : β → Prop} (f : α → β) (h : ∀ x, p x → q (f x)) :
+    Range (Subtype.map f h) = coe ⁻¹' (f '' { x | p x }) := by
+  ext ⟨x, hx⟩
+  simp_rw [mem_preimage, mem_range, mem_image, Subtype.exists, Subtype.map, Subtype.coe_mk, mem_set_of, exists_prop]
 
 theorem image_swap_eq_preimage_swap : Image (@Prod.swap α β) = Preimage Prod.swap :=
   image_eq_preimage_of_inverse Prod.swap_left_inverse Prod.swap_right_inverse
@@ -3128,7 +3182,7 @@ variable {α : Type _} [Subsingleton α]
 theorem eq_univ_of_nonempty {s : Set α} : s.Nonempty → s = univ := fun ⟨x, hx⟩ =>
   eq_univ_of_forall fun y => Subsingleton.elimₓ x y ▸ hx
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem set_cases {p : Set α → Prop} (h0 : p ∅) (h1 : p Univ) (s) : p s :=
   (s.eq_empty_or_nonempty.elim fun h => h.symm ▸ h0) fun h => (eq_univ_of_nonempty h).symm ▸ h1
 

@@ -122,13 +122,15 @@ theorem induced_topology_pure : TopologicalSpace.induced (pure : α → Ultrafil
   simp
 
 /-- `pure : α → ultrafilter α` defines a dense inducing of `α` in `ultrafilter α`. -/
-theorem dense_inducing_pure : @DenseInducing _ _ ⊥ _ (pure : α → Ultrafilter α) := by
-  let this : TopologicalSpace α := ⊥ <;> exact ⟨⟨induced_topology_pure.symm⟩, dense_range_pure⟩
+theorem dense_inducing_pure : @DenseInducing _ _ ⊥ _ (pure : α → Ultrafilter α) :=
+  letI : TopologicalSpace α := ⊥
+  ⟨⟨induced_topology_pure.symm⟩, dense_range_pure⟩
 
 /-- `pure : α → ultrafilter α` defines a dense embedding of `α` in `ultrafilter α`. -/
 -- The following refined version will never be used
-theorem dense_embedding_pure : @DenseEmbedding _ _ ⊥ _ (pure : α → Ultrafilter α) := by
-  let this : TopologicalSpace α := ⊥ <;> exact { dense_inducing_pure with inj := ultrafilter_pure_injective }
+theorem dense_embedding_pure : @DenseEmbedding _ _ ⊥ _ (pure : α → Ultrafilter α) :=
+  letI : TopologicalSpace α := ⊥
+  { dense_inducing_pure with inj := ultrafilter_pure_injective }
 
 end Embedding
 
@@ -143,14 +145,15 @@ variable {γ : Type _} [TopologicalSpace γ]
 
 /-- The extension of a function `α → γ` to a function `ultrafilter α → γ`.
   When `γ` is a compact Hausdorff space it will be continuous. -/
-def Ultrafilter.extend (f : α → γ) : Ultrafilter α → γ := by
-  let this : TopologicalSpace α := ⊥ <;> exact dense_inducing_pure.extend f
+def Ultrafilter.extend (f : α → γ) : Ultrafilter α → γ :=
+  letI : TopologicalSpace α := ⊥
+  dense_inducing_pure.extend f
 
 variable [T2Space γ]
 
 theorem ultrafilter_extend_extends (f : α → γ) : Ultrafilter.extend f ∘ pure = f := by
-  let this : TopologicalSpace α := ⊥
-  have : DiscreteTopology α := ⟨rfl⟩
+  letI : TopologicalSpace α := ⊥
+  haveI : DiscreteTopology α := ⟨rfl⟩
   exact funext (dense_inducing_pure.extend_eq continuous_of_discrete_topology)
 
 variable [CompactSpace γ]
@@ -163,8 +166,8 @@ theorem continuous_ultrafilter_extend (f : α → γ) : Continuous (Ultrafilter.
         (by
           rw [le_principal_iff] <;> exact univ_mem)
     ⟨c, le_transₓ (map_mono (ultrafilter_comap_pure_nhds _)) h⟩
-  let this : TopologicalSpace α := ⊥
-  have : NormalSpace γ := normal_of_compact_t2
+  letI : TopologicalSpace α := ⊥
+  haveI : NormalSpace γ := normal_of_compact_t2
   exact dense_inducing_pure.continuous_extend this
 
 /-- The value of `ultrafilter.extend f` on an ultrafilter `b` is the
@@ -181,9 +184,9 @@ theorem ultrafilter_extend_eq_iff {f : α → γ} {b : Ultrafilter α} {c : γ} 
     refine' le_transₓ _ (le_transₓ (map_mono t) this)
     change _ ≤ map (Ultrafilter.extend f ∘ pure) ↑b
     rw [ultrafilter_extend_extends]
-    exact le_rfl, fun h => by
-    let this : TopologicalSpace α := ⊥ <;>
-      exact dense_inducing_pure.extend_eq_of_tendsto (le_transₓ (map_mono (ultrafilter_comap_pure_nhds _)) h)⟩
+    exact le_rfl, fun h =>
+    letI : TopologicalSpace α := ⊥
+    dense_inducing_pure.extend_eq_of_tendsto (le_transₓ (map_mono (ultrafilter_comap_pure_nhds _)) h)⟩
 
 end Extension
 

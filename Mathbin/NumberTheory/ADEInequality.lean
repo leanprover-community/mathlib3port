@@ -157,8 +157,11 @@ theorem lt_three {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r) (H : 1 < sumInv 
   rw [sum_inv_pqr]
   have h3q := H.trans hpq
   have h3r := h3q.trans hqr
-  calc (p⁻¹ + q⁻¹ + r⁻¹ : ℚ) ≤ 3⁻¹ + 3⁻¹ + 3⁻¹ := add_le_add (add_le_add _ _) _ _ = 1 := by
+  calc
+    (p⁻¹ + q⁻¹ + r⁻¹ : ℚ) ≤ 3⁻¹ + 3⁻¹ + 3⁻¹ := add_le_add (add_le_add _ _) _
+    _ = 1 := by
       norm_num
+    
   all_goals
     rw [inv_le_inv _ h3] <;> [assumption_mod_cast, norm_num]
 
@@ -169,8 +172,11 @@ theorem lt_four {q r : ℕ+} (hqr : q ≤ r) (H : 1 < sumInv {2, q, r}) : q < 4 
   rw [sum_inv_pqr]
   have h4r := H.trans hqr
   simp only [← Pnat.coe_bit0, ← Nat.cast_bit0, ← Pnat.one_coe, ← Nat.cast_oneₓ, ← coe_coe]
-  calc (2⁻¹ + q⁻¹ + r⁻¹ : ℚ) ≤ 2⁻¹ + 4⁻¹ + 4⁻¹ := add_le_add (add_le_add le_rfl _) _ _ = 1 := by
+  calc
+    (2⁻¹ + q⁻¹ + r⁻¹ : ℚ) ≤ 2⁻¹ + 4⁻¹ + 4⁻¹ := add_le_add (add_le_add le_rfl _) _
+    _ = 1 := by
       norm_num
+    
   all_goals
     rw [inv_le_inv _ h4] <;> [assumption_mod_cast, norm_num]
 
@@ -181,8 +187,11 @@ theorem lt_six {r : ℕ+} (H : 1 < sumInv {2, 3, r}) : r < 6 := by
   rw [sum_inv_pqr]
   simp only [← Pnat.coe_bit0, ← Nat.cast_bit0, ← Pnat.one_coe, ← Nat.cast_bit1, ← Nat.cast_oneₓ, ← Pnat.coe_bit1, ←
     coe_coe]
-  calc (2⁻¹ + 3⁻¹ + r⁻¹ : ℚ) ≤ 2⁻¹ + 3⁻¹ + 6⁻¹ := add_le_add (add_le_add le_rfl le_rfl) _ _ = 1 := by
+  calc
+    (2⁻¹ + 3⁻¹ + r⁻¹ : ℚ) ≤ 2⁻¹ + 3⁻¹ + 6⁻¹ := add_le_add (add_le_add le_rfl le_rfl) _
+    _ = 1 := by
       norm_num
+    
   rw [inv_le_inv _ h6] <;> [assumption_mod_cast, norm_num]
 
 theorem admissible_of_one_lt_sum_inv_aux' {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r) (H : 1 < sumInv {p, q, r}) :

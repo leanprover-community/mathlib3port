@@ -113,7 +113,7 @@ attribute [local instance] move_right_short'
 
 theorem short_birthday : ∀ (x : Pgame.{u}) [Short x], x.birthday < Ordinal.omega
   | ⟨xl, xr, xL, xR⟩, hs => by
-    have := hs
+    haveI := hs
     rcases hs with ⟨_, _, _, _, sL, sR, hl, hr⟩
     rw [birthday, max_lt_iff]
     constructor
@@ -177,14 +177,15 @@ instance shortOfLists : ∀ (L R : List Pgame) [ListShort L] [ListShort R], Shor
 def shortOfRelabelling : ∀ {x y : Pgame.{u}} (R : Relabelling x y) (S : Short x), Short y
   | x, y, ⟨L, R, rL, rR⟩, S => by
     skip
-    have := Fintype.ofEquiv _ L
-    have := Fintype.ofEquiv _ R
+    haveI := Fintype.ofEquiv _ L
+    haveI := Fintype.ofEquiv _ R
     exact
       short.mk'
         (fun i => by
           rw [← L.right_inv i]
           apply short_of_relabelling (rL (L.symm i)) inferInstance)
-        fun j => short_of_relabelling (rR j) inferInstance
+        fun j => by
+        simpa using short_of_relabelling (rR (R.symm j)) inferInstance
 
 instance shortNeg : ∀ (x : Pgame.{u}) [Short x], Short (-x)
   | mk xl xr xL xR, _ => by

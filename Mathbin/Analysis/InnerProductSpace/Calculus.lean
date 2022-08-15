@@ -3,16 +3,24 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Analysis.InnerProductSpace.Basic
+import Mathbin.Analysis.InnerProductSpace.PiL2
 import Mathbin.Analysis.SpecialFunctions.Sqrt
 
 /-!
-# Derivative of the inner product
+# Calculus in inner product spaces
 
 In this file we prove that the inner product and square of the norm in an inner space are
 infinitely `ℝ`-smooth. In order to state these results, we need a `normed_space ℝ E`
 instance. Though we can deduce this structure from `inner_product_space 𝕜 E`, this instance may be
 not definitionally equal to some other “natural” instance. So, we assume `[normed_space ℝ E]`.
+
+We also prove that functions to a `euclidean_space` are (higher) differentiable if and only if
+their components are. This follows from the corresponding fact for finite product of normed spaces,
+and from the equivalence of norms in finite dimensions.
+
+## TODO
+
+The last part of the file should be generalized to `pi_Lp`.
 -/
 
 
@@ -21,6 +29,8 @@ noncomputable section
 open IsROrC Real Filter
 
 open BigOperators Classical TopologicalSpace
+
+section DerivInner
 
 variable {𝕜 E F : Type _} [IsROrC 𝕜]
 
@@ -48,7 +58,7 @@ theorem cont_diff_at_inner {p : E × E} {n} : ContDiffAt ℝ n (fun p : E × E =
 theorem differentiable_inner : Differentiable ℝ fun p : E × E => ⟪p.1, p.2⟫ :=
   is_bounded_bilinear_map_inner.DifferentiableAt
 
-variable {G : Type _} [NormedGroup G] [NormedSpace ℝ G] {f g : G → E} {f' g' : G →L[ℝ] E} {s : Set G} {x : G}
+variable {G : Type _} [NormedAddCommGroup G] [NormedSpace ℝ G] {f g : G → E} {f' g' : G →L[ℝ] E} {s : Set G} {x : G}
   {n : WithTop ℕ}
 
 include 𝕜
@@ -162,7 +172,8 @@ theorem ContDiff.dist (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) (hne : ∀
 
 omit 𝕜
 
-theorem has_strict_fderiv_at_norm_sq (x : F) : HasStrictFderivAt (fun x => ∥x∥ ^ 2) (bit0 (innerSL x)) x := by
+theorem has_strict_fderiv_at_norm_sq (x : F) : HasStrictFderivAt (fun x => ∥x∥ ^ 2) (bit0 (innerSL x : F →L[ℝ] ℝ)) x :=
+  by
   simp only [← sq, inner_self_eq_norm_mul_norm]
   convert (has_strict_fderiv_at_id x).inner (has_strict_fderiv_at_id x)
   ext y
@@ -211,4 +222,59 @@ theorem DifferentiableOn.norm (hf : DifferentiableOn ℝ f s) (h0 : ∀, ∀ x �
 theorem DifferentiableOn.dist (hf : DifferentiableOn ℝ f s) (hg : DifferentiableOn ℝ g s)
     (hne : ∀, ∀ x ∈ s, ∀, f x ≠ g x) : DifferentiableOn ℝ (fun y => dist (f y) (g y)) s := fun x hx =>
   (hf x hx).dist (hg x hx) (hne x hx)
+
+end DerivInner
+
+section PiLike
+
+open ContinuousLinearMap
+
+variable {𝕜 ι H : Type _} [IsROrC 𝕜] [NormedAddCommGroup H] [NormedSpace 𝕜 H] [Fintype ι] {f : H → EuclideanSpace 𝕜 ι}
+  {f' : H →L[𝕜] EuclideanSpace 𝕜 ι} {t : Set H} {y : H}
+
+theorem differentiable_within_at_euclidean :
+    DifferentiableWithinAt 𝕜 f t y ↔ ∀ i, DifferentiableWithinAt 𝕜 (fun x => f x i) t y := by
+  rw [← (EuclideanSpace.equiv ι 𝕜).comp_differentiable_within_at_iff, differentiable_within_at_pi]
+  rfl
+
+theorem differentiable_at_euclidean : DifferentiableAt 𝕜 f y ↔ ∀ i, DifferentiableAt 𝕜 (fun x => f x i) y := by
+  rw [← (EuclideanSpace.equiv ι 𝕜).comp_differentiable_at_iff, differentiable_at_pi]
+  rfl
+
+theorem differentiable_on_euclidean : DifferentiableOn 𝕜 f t ↔ ∀ i, DifferentiableOn 𝕜 (fun x => f x i) t := by
+  rw [← (EuclideanSpace.equiv ι 𝕜).comp_differentiable_on_iff, differentiable_on_pi]
+  rfl
+
+theorem differentiable_euclidean : Differentiable 𝕜 f ↔ ∀ i, Differentiable 𝕜 fun x => f x i := by
+  rw [← (EuclideanSpace.equiv ι 𝕜).comp_differentiable_iff, differentiable_pi]
+  rfl
+
+theorem has_strict_fderiv_at_euclidean :
+    HasStrictFderivAt f f' y ↔ ∀ i, HasStrictFderivAt (fun x => f x i) (EuclideanSpace.proj i ∘L f') y := by
+  rw [← (EuclideanSpace.equiv ι 𝕜).comp_has_strict_fderiv_at_iff, has_strict_fderiv_at_pi']
+  rfl
+
+theorem has_fderiv_within_at_euclidean :
+    HasFderivWithinAt f f' t y ↔ ∀ i, HasFderivWithinAt (fun x => f x i) (EuclideanSpace.proj i ∘L f') t y := by
+  rw [← (EuclideanSpace.equiv ι 𝕜).comp_has_fderiv_within_at_iff, has_fderiv_within_at_pi']
+  rfl
+
+theorem cont_diff_within_at_euclidean {n : WithTop ℕ} :
+    ContDiffWithinAt 𝕜 n f t y ↔ ∀ i, ContDiffWithinAt 𝕜 n (fun x => f x i) t y := by
+  rw [← (EuclideanSpace.equiv ι 𝕜).comp_cont_diff_within_at_iff, cont_diff_within_at_pi]
+  rfl
+
+theorem cont_diff_at_euclidean {n : WithTop ℕ} : ContDiffAt 𝕜 n f y ↔ ∀ i, ContDiffAt 𝕜 n (fun x => f x i) y := by
+  rw [← (EuclideanSpace.equiv ι 𝕜).comp_cont_diff_at_iff, cont_diff_at_pi]
+  rfl
+
+theorem cont_diff_on_euclidean {n : WithTop ℕ} : ContDiffOn 𝕜 n f t ↔ ∀ i, ContDiffOn 𝕜 n (fun x => f x i) t := by
+  rw [← (EuclideanSpace.equiv ι 𝕜).comp_cont_diff_on_iff, cont_diff_on_pi]
+  rfl
+
+theorem cont_diff_euclidean {n : WithTop ℕ} : ContDiff 𝕜 n f ↔ ∀ i, ContDiff 𝕜 n fun x => f x i := by
+  rw [← (EuclideanSpace.equiv ι 𝕜).comp_cont_diff_iff, cont_diff_pi]
+  rfl
+
+end PiLike
 

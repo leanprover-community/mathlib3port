@@ -53,7 +53,7 @@ variable {L : GrothendieckTopology E}
 
 /-- An auxiliary structure that witnesses the fact that `f` factors through an image object of `G`.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure Presieve.CoverByImageStructure (G : C ⥤ D) {V U : D} (f : V ⟶ U) where
   obj : C
   lift : V ⟶ G.obj obj
@@ -324,7 +324,7 @@ noncomputable def presheafIso {ℱ ℱ' : Sheaf K A} (i : G.op ⋙ ℱ.val ≅ G
     exact ((presheaf_iso H (iso_over i (unop x))).app X).hom_inv_id
     exact ((presheaf_iso H (iso_over i (unop x))).app X).inv_hom_id
     infer_instance
-  have : is_iso (sheaf_hom H i.hom) := by
+  haveI : is_iso (sheaf_hom H i.hom) := by
     apply nat_iso.is_iso_of_is_iso_app
   apply as_iso (sheaf_hom H i.hom)
 
@@ -458,7 +458,7 @@ noncomputable def sheafEquivOfCoverPreservingCoverLifting : Sheaf J A ≌ Sheaf 
     intro ℱ
     apply reflects_isomorphisms.reflects (Sheaf_to_presheaf J A) with { instances := false }
     exact is_iso.of_iso ((@as_iso _ _ _ _ _ (Ran.reflective A G.op)).app ℱ.val)
-  have : is_iso α.counit := nat_iso.is_iso_of_is_iso_app _
+  haveI : is_iso α.counit := nat_iso.is_iso_of_is_iso_app _
   exact
     { Functor := sites.pullback A Hd.compatible_preserving Hp, inverse := sites.copullback A Hl,
       unitIso := as_iso α.unit, counitIso := as_iso α.counit,

@@ -200,7 +200,7 @@ unsafe def nontriviality_by_elim (α : expr) (lems : interactive.parse simp_arg_
       fail f! "Could not prove goal assuming `subsingleton {α}`"
   reset_instance_cache
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 /-- Tries to generate a `nontrivial α` instance using `nontrivial_of_ne` or `nontrivial_of_lt`
 and local hypotheses.
 -/

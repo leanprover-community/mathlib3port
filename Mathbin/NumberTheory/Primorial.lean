@@ -76,18 +76,18 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
       | ⟨m, twice_m⟩ => by
         have recurse : m + 1 < n + 2 := by
           linarith
-        calc (n + 2)# = ∏ i in filter Nat.Prime (range (2 * m + 2)), i := by
+        calc
+          (n + 2)# = ∏ i in filter Nat.Prime (range (2 * m + 2)), i := by
             simpa [← two_mul, twice_m]
-              _ = ∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2) ∪ range (m + 2)), i :=
-            by
+          _ = ∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2) ∪ range (m + 2)), i := by
             rw [range_eq_Ico, Finset.union_comm, Finset.Ico_union_Ico_eq_Ico]
             · exact bot_le
               
             · simpa only [← add_le_add_iff_right, ← two_mul] using Nat.le_add_leftₓ m m
-              _ = ∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)) ∪ filter Nat.Prime (range (m + 2)), i :=
-            by
-            rw
-              [filter_union]_ =
+              
+          _ = ∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)) ∪ filter Nat.Prime (range (m + 2)), i := by
+            rw [filter_union]
+          _ =
               (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) *
                 ∏ i in filter Nat.Prime (range (m + 2)), i :=
             by
@@ -96,10 +96,10 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
               simp only [← Finset.disjoint_left, ← and_imp, ← Finset.mem_Ico, ← not_ltₓ, ← Finset.mem_range]
               intro _ pr _
               exact pr
-            exact
-              Finset.disjoint_filter_filter
-                disj _ ≤ (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) * 4 ^ (m + 1) :=
-            Nat.mul_le_mul_leftₓ _ (primorial_le_4_pow (m + 1))_ ≤ choose (2 * m + 1) (m + 1) * 4 ^ (m + 1) := by
+            exact Finset.disjoint_filter_filter disj
+          _ ≤ (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) * 4 ^ (m + 1) :=
+            Nat.mul_le_mul_leftₓ _ (primorial_le_4_pow (m + 1))
+          _ ≤ choose (2 * m + 1) (m + 1) * 4 ^ (m + 1) := by
             have s : (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) ∣ choose (2 * m + 1) (m + 1) := by
               refine' prod_primes_dvd (choose (2 * m + 1) (m + 1)) _ _
               · intro a
@@ -120,21 +120,28 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
                 @choose_pos (2 * m + 1) (m + 1)
                   (by
                     linarith)
-            exact Nat.mul_le_mul_rightₓ _ r _ = choose (2 * m + 1) m * 4 ^ (m + 1) := by
-            rw [choose_symm_half m]_ ≤ 4 ^ m * 4 ^ (m + 1) :=
-            Nat.mul_le_mul_rightₓ _ (choose_middle_le_pow m)_ = 4 ^ (2 * m + 1) := by
-            ring_exp _ = 4 ^ (n + 2) := by
+            exact Nat.mul_le_mul_rightₓ _ r
+          _ = choose (2 * m + 1) m * 4 ^ (m + 1) := by
+            rw [choose_symm_half m]
+          _ ≤ 4 ^ m * 4 ^ (m + 1) := Nat.mul_le_mul_rightₓ _ (choose_middle_le_pow m)
+          _ = 4 ^ (2 * m + 1) := by
+            ring_exp
+          _ = 4 ^ (n + 2) := by
             rw [two_mul, ← twice_m]
+          
     | Or.inr n_even => by
       obtain one_lt_n | n_le_one : 1 < n + 1 ∨ n + 1 ≤ 1 := lt_or_leₓ 1 (n + 1)
       · rw [primorial_succ one_lt_n n_even]
-        calc (n + 1)# ≤ 4 ^ n.succ := primorial_le_4_pow (n + 1)_ ≤ 4 ^ (n + 2) :=
+        calc
+          (n + 1)# ≤ 4 ^ n.succ := primorial_le_4_pow (n + 1)
+          _ ≤ 4 ^ (n + 2) :=
             pow_le_pow
               (by
                 norm_num)
               (Nat.le_succₓ _)
+          
         
       · have n_zero : n = 0 := eq_bot_iff.2 (succ_le_succ_iff.1 n_le_one)
-        norm_num [← n_zero, ← primorial, ← range_succ, ← prod_filter, ← Nat.not_prime_zero, ← Nat.prime_two]
+        norm_num[← n_zero, ← primorial, ← range_succ, ← prod_filter, ← Nat.not_prime_zero, ← Nat.prime_two]
         
 

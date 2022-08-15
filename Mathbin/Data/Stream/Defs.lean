@@ -25,10 +25,9 @@ namespace Streamₓ
 variable {α : Type u} {β : Type v} {δ : Type w}
 
 /-- Prepend an element to a stream. -/
-def cons (a : α) (s : Streamₓ α) : Streamₓ α := fun i =>
-  match i with
+def cons (a : α) (s : Streamₓ α) : Streamₓ α
   | 0 => a
-  | succ n => s n
+  | n + 1 => s n
 
 /-- Head of a stream: `stream.head s = stream.nth 0 s`. -/
 def head (s : Streamₓ α) : α :=

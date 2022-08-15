@@ -32,8 +32,8 @@ open MeasureTheory MeasureTheory.Measure Metric Set Filter TopologicalSpace Func
 
 open TopologicalSpace BigOperators Ennreal Convex
 
-variable {α E F : Type _} {m0 : MeasurableSpace α} [NormedGroup E] [NormedSpace ℝ E] [CompleteSpace E] [NormedGroup F]
-  [NormedSpace ℝ F] [CompleteSpace F] {μ : Measureₓ α} {s : Set E}
+variable {α E F : Type _} {m0 : MeasurableSpace α} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+  [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F] {μ : Measureₓ α} {s : Set E}
 
 /-!
 ### Average value of a function w.r.t. a measure
@@ -129,7 +129,7 @@ theorem average_pair {f : α → E} {g : α → F} (hfi : Integrable f μ) (hgi 
 
 theorem measure_smul_set_average (f : α → E) {s : Set α} (h : μ s ≠ ∞) :
     ((μ s).toReal • ⨍ x in s, f x ∂μ) = ∫ x in s, f x ∂μ := by
-  have := Fact.mk h.lt_top
+  haveI := Fact.mk h.lt_top
   rw [← measure_smul_average, restrict_apply_univ]
 
 theorem average_union {f : α → E} {s t : Set α} (hd : AeDisjoint μ s t) (ht : NullMeasurableSet t μ) (hsμ : μ s ≠ ∞)
@@ -138,8 +138,8 @@ theorem average_union {f : α → E} {s t : Set α} (hd : AeDisjoint μ s t) (ht
       (((μ s).toReal / ((μ s).toReal + (μ t).toReal)) • ⨍ x in s, f x ∂μ) +
         ((μ t).toReal / ((μ s).toReal + (μ t).toReal)) • ⨍ x in t, f x ∂μ :=
   by
-  have := Fact.mk hsμ.lt_top
-  have := Fact.mk htμ.lt_top
+  haveI := Fact.mk hsμ.lt_top
+  haveI := Fact.mk htμ.lt_top
   rw [restrict_union₀ hd ht, average_add_measure hfs hft, restrict_apply_univ, restrict_apply_univ]
 
 theorem average_union_mem_open_segment {f : α → E} {s t : Set α} (hd : AeDisjoint μ s t) (ht : NullMeasurableSet t μ)
@@ -164,7 +164,10 @@ theorem average_union_mem_segment {f : α → E} {s t : Set α} (hd : AeDisjoint
       mem_segment_iff_div.mpr
         ⟨(μ s).toReal, (μ t).toReal, Ennreal.to_real_nonneg, Ennreal.to_real_nonneg, _,
           (average_union hd ht hsμ htμ hfs hft).symm⟩
-    calc 0 < (μ s).toReal := Ennreal.to_real_pos hse hsμ _ ≤ _ := le_add_of_nonneg_right Ennreal.to_real_nonneg
+    calc
+      0 < (μ s).toReal := Ennreal.to_real_pos hse hsμ
+      _ ≤ _ := le_add_of_nonneg_right Ennreal.to_real_nonneg
+      
     
 
 theorem average_mem_open_segment_compl_self [IsFiniteMeasure μ] {f : α → E} {s : Set α} (hs : NullMeasurableSet s μ)

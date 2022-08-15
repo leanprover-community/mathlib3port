@@ -22,7 +22,7 @@ open CategoryTheory.Limits
 variable (C : Type _) [Category C] [Abelian C]
 
 attribute [local instance]
-  finite_limits_from_equalizers_and_finite_products finite_colimits_from_coequalizers_and_finite_coproducts has_finite_limits_opposite has_finite_colimits_opposite has_finite_products_opposite
+  has_finite_limits_of_has_equalizers_and_finite_products has_finite_colimits_of_has_coequalizers_and_finite_coproducts has_finite_limits_opposite has_finite_colimits_opposite has_finite_products_opposite
 
 instance : Abelian Cᵒᵖ where
   normalMonoOfMono := fun X Y f m => normal_mono_of_normal_epi_unop _ (normal_epi_of_epi f.unop)

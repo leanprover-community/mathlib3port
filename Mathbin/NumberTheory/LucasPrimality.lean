@@ -50,7 +50,7 @@ theorem lucas_primality (p : ℕ) (a : Zmod p) (ha : a ^ (p - 1) = 1)
   have order_of_a : orderOf a = p - 1 := by
     apply order_of_eq_of_pow_and_pow_div_prime _ ha hd
     exact tsub_pos_of_lt hp1
-  have fhp0 : Fact (0 < p) := ⟨h0.bot_lt⟩
+  haveI fhp0 : Fact (0 < p) := ⟨h0.bot_lt⟩
   rw [Nat.prime_iff_card_units]
   -- Prove cardinality of `units` of `zmod p` is both `≤ p-1` and `≥ p-1`
   refine' le_antisymmₓ (Nat.card_units_zmod_lt_sub_one hp1) _
@@ -59,6 +59,9 @@ theorem lucas_primality (p : ℕ) (a : Zmod p) (ha : a ^ (p - 1) = 1)
     Units.mkOfMulEqOne a (a ^ (p - 2))
       (by
         rw [← pow_succₓ, hp', ha])
-  calc p - 1 = orderOf a := order_of_a.symm _ = orderOf a' :=
-      order_of_injective (Units.coeHom (Zmod p)) Units.ext a' _ ≤ Fintype.card (Zmod p)ˣ := order_of_le_card_univ
+  calc
+    p - 1 = orderOf a := order_of_a.symm
+    _ = orderOf a' := order_of_injective (Units.coeHom (Zmod p)) Units.ext a'
+    _ ≤ Fintype.card (Zmod p)ˣ := order_of_le_card_univ
+    
 

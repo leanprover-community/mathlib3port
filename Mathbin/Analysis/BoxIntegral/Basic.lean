@@ -59,8 +59,8 @@ namespace BoxIntegral
 
 universe u v w
 
-variable {ι : Type u} {E : Type v} {F : Type w} [NormedGroup E] [NormedSpace ℝ E] [NormedGroup F] [NormedSpace ℝ F]
-  {I J : Box ι} {π : TaggedPrepartition I}
+variable {ι : Type u} {E : Type v} {F : Type w} [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedAddCommGroup F]
+  [NormedSpace ℝ F] {I J : Box ι} {π : TaggedPrepartition I}
 
 open TaggedPrepartition
 
@@ -91,8 +91,10 @@ theorem integral_sum_bUnion_partition (f : ℝⁿ → E) (vol : ι →ᵇᵃ E �
     (∑ J' in (πi J).boxes, vol J' (f (π.tag <| π.to_prepartition.bUnion_index πi J'))) =
         ∑ J' in (πi J).boxes, vol J' (f (π.tag J)) :=
       sum_congr rfl fun J' hJ' => by
-        rw [prepartition.bUnion_index_of_mem _ hJ hJ']_ = vol J (f (π.tag J)) :=
+        rw [prepartition.bUnion_index_of_mem _ hJ hJ']
+    _ = vol J (f (π.tag J)) :=
       (vol.map ⟨fun g : E →L[ℝ] F => g (f (π.tag J)), rfl, fun _ _ => rfl⟩).sum_partition_boxes le_top (hπi J hJ)
+    
 
 theorem integral_sum_inf_partition (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) (π : TaggedPrepartition I) {π' : Prepartition I}
     (h : π'.IsPartition) : integralSum f vol (π.infPrepartition π') = integralSum f vol π :=
@@ -572,10 +574,12 @@ theorem dist_integral_sum_sum_integral_le_of_mem_base_set_of_Union_eq (h : Integ
     dist (integral_sum f vol π) (∑ J in π₀.boxes, integral J l f vol) ≤
         dist (integral_sum f vol π) (∑ J in π₀.boxes, integral_sum f vol (πi J)) +
           dist (∑ J in π₀.boxes, integral_sum f vol (πi J)) (∑ J in π₀.boxes, integral J l f vol) :=
-      dist_triangle _ _ _ _ ≤ ε + δ' + ∑ J in π₀.boxes, δ' :=
-      add_le_add this (dist_sum_sum_le_of_le _ hπiδ')_ = ε + δ := by
+      dist_triangle _ _ _
+    _ ≤ ε + δ' + ∑ J in π₀.boxes, δ' := add_le_add this (dist_sum_sum_le_of_le _ hπiδ')
+    _ = ε + δ := by
       field_simp [← H0.ne']
       ring
+    
 
 /-- **Henstock-Sacks inequality**. Let `r : ℝⁿ → (0, ∞)` be a function such that for any tagged
 *partition* of `I` subordinate to `r`, the integral sum of `f` over this partition differs from the

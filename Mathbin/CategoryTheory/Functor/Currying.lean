@@ -23,6 +23,7 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 
 /-- The uncurrying functor, taking a functor `C ⥤ (D ⥤ E)` and producing a functor `(C × D) ⥤ E`.
 -/
+@[simps]
 def uncurry : (C ⥤ D ⥤ E) ⥤ C × D ⥤ E where
   obj := fun F =>
     { obj := fun X => (F.obj X.1).obj X.2, map := fun X Y f => (F.map f.1).app X.2 ≫ (F.obj Y.1).map f.2,
@@ -47,6 +48,7 @@ def curryObj (F : C × D ⥤ E) : C ⥤ D ⥤ E where
 
 /-- The currying functor, taking a functor `(C × D) ⥤ E` and producing a functor `C ⥤ (D ⥤ E)`.
 -/
+@[simps obj_obj_obj obj_obj_map obj_map_app map_app_app]
 def curry : (C × D ⥤ E) ⥤ C ⥤ D ⥤ E where
   obj := fun F => curryObj F
   map := fun F G T =>
@@ -59,36 +61,6 @@ def curry : (C × D ⥤ E) ⥤ C ⥤ D ⥤ E where
         ext
         dsimp' [← curry_obj]
         rw [nat_trans.naturality] }
-
-@[simp]
-theorem uncurry.obj_obj {F : C ⥤ D ⥤ E} {X : C × D} : (uncurry.obj F).obj X = (F.obj X.1).obj X.2 :=
-  rfl
-
-@[simp]
-theorem uncurry.obj_map {F : C ⥤ D ⥤ E} {X Y : C × D} {f : X ⟶ Y} :
-    (uncurry.obj F).map f = (F.map f.1).app X.2 ≫ (F.obj Y.1).map f.2 :=
-  rfl
-
-@[simp]
-theorem uncurry.map_app {F G : C ⥤ D ⥤ E} {α : F ⟶ G} {X : C × D} : (uncurry.map α).app X = (α.app X.1).app X.2 :=
-  rfl
-
-@[simp]
-theorem curry.obj_obj_obj {F : C × D ⥤ E} {X : C} {Y : D} : ((curry.obj F).obj X).obj Y = F.obj (X, Y) :=
-  rfl
-
-@[simp]
-theorem curry.obj_obj_map {F : C × D ⥤ E} {X : C} {Y Y' : D} {g : Y ⟶ Y'} :
-    ((curry.obj F).obj X).map g = F.map (𝟙 X, g) :=
-  rfl
-
-@[simp]
-theorem curry.obj_map_app {F : C × D ⥤ E} {X X' : C} {f : X ⟶ X'} {Y} : ((curry.obj F).map f).app Y = F.map (f, 𝟙 Y) :=
-  rfl
-
-@[simp]
-theorem curry.map_app_app {F G : C × D ⥤ E} {α : F ⟶ G} {X} {Y} : ((curry.map α).app X).app Y = α.app (X, Y) :=
-  rfl
 
 /-- The equivalence of functor categories given by currying/uncurrying.
 -/

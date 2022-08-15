@@ -93,7 +93,7 @@ theorem bounded_formula_realize_cast {β : Type _} {n : ℕ} (φ : L.BoundedForm
     (φ.realize (fun i : β => (x i : (u : Filter α).product M)) fun i => v i) ↔
       ∀ᶠ a : α in u, φ.realize (fun i : β => x i a) fun i => v i a :=
   by
-  let this := (u : Filter α).productSetoid M
+  letI := (u : Filter α).productSetoid M
   induction' φ with _ _ _ _ _ _ _ _ m _ _ ih ih' k φ ih
   · simp only [← bounded_formula.realize, ← eventually_const]
     
@@ -151,7 +151,7 @@ theorem sentence_realize (φ : L.Sentence) : (u : Filter α).product M ⊨ φ �
   exact congr rfl (Subsingleton.elimₓ _ _)
 
 instance : Nonempty ((u : Filter α).product M) := by
-  let this : ∀ a, Inhabited (M a) := fun _ => Classical.inhabitedOfNonempty'
+  letI : ∀ a, Inhabited (M a) := fun _ => Classical.inhabitedOfNonempty'
   exact nonempty_of_inhabited
 
 end Ultraproduct

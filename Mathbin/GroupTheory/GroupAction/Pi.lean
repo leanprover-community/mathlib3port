@@ -32,18 +32,6 @@ variable (x y : ∀ i, f i) (i : I)
 
 namespace Pi
 
-@[to_additive Pi.hasVadd]
-instance hasSmul {α : Type _} [∀ i, HasSmul α <| f i] : HasSmul α (∀ i : I, f i) :=
-  ⟨fun s x => fun i => s • x i⟩
-
-@[to_additive]
-theorem smul_def {α : Type _} [∀ i, HasSmul α <| f i] (s : α) : s • x = fun i => s • x i :=
-  rfl
-
-@[simp, to_additive]
-theorem smul_apply {α : Type _} [∀ i, HasSmul α <| f i] (s : α) : (s • x) i = s • x i :=
-  rfl
-
 @[to_additive Pi.hasVadd']
 instance hasSmul' {g : I → Type _} [∀ i, HasSmul (f i) (g i)] : HasSmul (∀ i, f i) (∀ i : I, g i) :=
   ⟨fun s x => fun i => s i • x i⟩

@@ -227,10 +227,10 @@ def createsLimitOfReflectsIso {K : J ⥤ C} {F : C ⥤ D} [ReflectsIsomorphisms 
         let hd' : is_limit d' := (h (F.map_cone d) hd).makesLimit
         let f : d ⟶ d' := hd'.lift_cone_morphism d
         have : (cones.functoriality K F).map f = i.inv := (hd.of_iso_limit i.symm).uniq_cone_morphism
-        have : is_iso ((cones.functoriality K F).map f) := by
+        haveI : is_iso ((cones.functoriality K F).map f) := by
           rw [this]
           infer_instance
-        have : is_iso f := is_iso_of_reflects_iso f (cones.functoriality K F)
+        haveI : is_iso f := is_iso_of_reflects_iso f (cones.functoriality K F)
         exact is_limit.of_iso_limit hd' (as_iso f).symm }
 
 /-- When `F` is fully faithful, and `has_limit (K ⋙ F)`, to show that `F` creates the limit for `K`
@@ -305,10 +305,10 @@ def createsColimitOfReflectsIso {K : J ⥤ C} {F : C ⥤ D} [ReflectsIsomorphism
         let hd' : is_colimit d' := (h (F.map_cocone d) hd).makesColimit
         let f : d' ⟶ d := hd'.desc_cocone_morphism d
         have : (cocones.functoriality K F).map f = i.hom := (hd.of_iso_colimit i.symm).uniq_cocone_morphism
-        have : is_iso ((cocones.functoriality K F).map f) := by
+        haveI : is_iso ((cocones.functoriality K F).map f) := by
           rw [this]
           infer_instance
-        have := is_iso_of_reflects_iso f (cocones.functoriality K F)
+        haveI := is_iso_of_reflects_iso f (cocones.functoriality K F)
         exact is_colimit.of_iso_colimit hd' (as_iso f) }
 
 /-- When `F` is fully faithful, and `has_colimit (K ⋙ F)`, to show that `F` creates the colimit for `K`

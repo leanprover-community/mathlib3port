@@ -51,21 +51,21 @@ This isn't skeletal, so it's not a partial order.
 Later we define `subobject X` as the quotient of this by isomorphisms.
 -/
 def MonoOver (X : C) :=
-  { f : Over X // Mono f.Hom }deriving Category
+  FullSubcategory fun f : Over X => Mono f.Hom deriving Category
 
 namespace MonoOver
 
 /-- Construct a `mono_over X`. -/
 @[simps]
 def mk' {X A : C} (f : A ⟶ X) [hf : Mono f] : MonoOver X where
-  val := Over.mk f
+  obj := Over.mk f
   property := hf
 
 /-- The inclusion from monomorphisms over X to morphisms over X. -/
 def forget (X : C) : MonoOver X ⥤ Over X :=
   fullSubcategoryInclusion _
 
-instance : Coe (MonoOver X) C where coe := fun Y => Y.val.left
+instance : Coe (MonoOver X) C where coe := fun Y => Y.obj.left
 
 @[simp]
 theorem forget_obj_left {f} : ((forget X).obj f).left = (f : C) :=
@@ -88,10 +88,10 @@ theorem forget_obj_hom {f} : ((forget X).obj f).Hom = f.arrow :=
   rfl
 
 instance : Full (forget X) :=
-  fullSubcategory.full _
+  FullSubcategory.full _
 
 instance : Faithful (forget X) :=
-  fullSubcategory.faithful _
+  FullSubcategory.faithful _
 
 instance mono (f : MonoOver X) : Mono f.arrow :=
   f.property
@@ -109,12 +109,12 @@ theorem w {f g : MonoOver X} (k : f ⟶ g) : k.left ≫ g.arrow = f.arrow :=
   Over.w _
 
 /-- Convenience constructor for a morphism in monomorphisms over `X`. -/
-abbrev homMk {f g : MonoOver X} (h : f.val.left ⟶ g.val.left) (w : h ≫ g.arrow = f.arrow) : f ⟶ g :=
+abbrev homMk {f g : MonoOver X} (h : f.obj.left ⟶ g.obj.left) (w : h ≫ g.arrow = f.arrow) : f ⟶ g :=
   Over.homMk h w
 
 /-- Convenience constructor for an isomorphism in monomorphisms over `X`. -/
 @[simps]
-def isoMk {f g : MonoOver X} (h : f.val.left ≅ g.val.left) (w : h.Hom ≫ g.arrow = f.arrow) : f ≅ g where
+def isoMk {f g : MonoOver X} (h : f.obj.left ≅ g.obj.left) (w : h.Hom ≫ g.arrow = f.arrow) : f ≅ g where
   Hom := homMk h.Hom w
   inv :=
     homMk h.inv
@@ -225,7 +225,7 @@ def mapId : map (𝟙 X) ≅ 𝟭 _ :=
   liftIso _ _ Over.mapId ≪≫ lift_id
 
 @[simp]
-theorem map_obj_left (f : X ⟶ Y) [Mono f] (g : MonoOver X) : ((map f).obj g : C) = g.val.left :=
+theorem map_obj_left (f : X ⟶ Y) [Mono f] (g : MonoOver X) : ((map f).obj g : C) = g.obj.left :=
   rfl
 
 @[simp]
@@ -354,7 +354,7 @@ def imageForgetAdj : image ⊣ forget X :=
             apply image.fac,
           invFun := fun k => by
             refine' over.hom_mk _ _
-            refine' image.lift { i := g.val.left, m := g.arrow, e := k.left, fac' := over.w k }
+            refine' image.lift { i := g.obj.left, m := g.arrow, e := k.left, fac' := over.w k }
             apply image.lift_fac,
           left_inv := fun k => Subsingleton.elimₓ _ _,
           right_inv := fun k => by

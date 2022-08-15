@@ -66,19 +66,19 @@ theorem gal_prod_is_solvable {s : Multiset F[X]} (hs : ∀, ∀ p ∈ s, ∀, Is
 
 theorem gal_is_solvable_of_splits {p q : F[X]} (hpq : Fact (p.Splits (algebraMap F q.SplittingField)))
     (hq : IsSolvable q.Gal) : IsSolvable p.Gal := by
-  have : IsSolvable (q.splitting_field ≃ₐ[F] q.splitting_field) := hq
+  haveI : IsSolvable (q.splitting_field ≃ₐ[F] q.splitting_field) := hq
   exact solvable_of_surjective (AlgEquiv.restrict_normal_hom_surjective q.splitting_field)
 
 theorem gal_is_solvable_tower (p q : F[X]) (hpq : p.Splits (algebraMap F q.SplittingField)) (hp : IsSolvable p.Gal)
     (hq : IsSolvable (q.map (algebraMap F p.SplittingField)).Gal) : IsSolvable q.Gal := by
   let K := p.splitting_field
   let L := q.splitting_field
-  have : Fact (p.splits (algebraMap F L)) := ⟨hpq⟩
+  haveI : Fact (p.splits (algebraMap F L)) := ⟨hpq⟩
   let ϕ : (L ≃ₐ[K] L) ≃* (q.map (algebraMap F K)).Gal :=
     (is_splitting_field.alg_equiv L (q.map (algebraMap F K))).autCongr
   have ϕ_inj : Function.Injective ϕ.to_monoid_hom := ϕ.injective
-  have : IsSolvable (K ≃ₐ[F] K) := hp
-  have : IsSolvable (L ≃ₐ[K] L) := solvable_of_solvable_injective ϕ_inj
+  haveI : IsSolvable (K ≃ₐ[F] K) := hp
+  haveI : IsSolvable (L ≃ₐ[K] L) := solvable_of_solvable_injective ϕ_inj
   exact is_solvable_of_is_scalar_tower F p.splitting_field q.splitting_field
 
 section GalXPowSubC
@@ -356,10 +356,10 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
       
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 /-- An auxiliary induction lemma, which is generalized by `solvable_by_rad.is_solvable`. -/
 theorem induction2 {α β γ : solvableByRad F E} (hγ : γ ∈ F⟮⟯) (hα : P α) (hβ : P β) : P γ := by
   let p := minpoly F α
@@ -389,7 +389,7 @@ theorem induction2 {α β γ : solvableByRad F E} (hγ : γ ∈ F⟮⟯) (hα : 
   rw [P, key]
   exact gal_is_solvable_of_splits ⟨Normal.splits (splitting_field.normal _) _⟩ (gal_mul_is_solvable hα hβ)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:956:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
 /-- An auxiliary induction lemma, which is generalized by `solvable_by_rad.is_solvable`. -/
 theorem induction1 {α β : solvableByRad F E} (hβ : β ∈ F⟮⟯) (hα : P α) : P β :=
   induction2 (adjoin.mono F _ _ (ge_of_eq (Set.pair_eq_singleton α)) hβ) hα hα

@@ -74,7 +74,7 @@ namespace Mat_
 variable {C}
 
 /-- A morphism in `Mat_ C` is a dependently typed matrix of morphisms. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def Hom (M N : Mat_ C) : Type v₁ :=
   Dmatrix M.ι N.ι fun i j => M.x i ⟶ N.x j
 
@@ -559,12 +559,12 @@ instance :
           (by
             dsimp'
             cases X
-            congr)⟩⟩
+            congr )⟩⟩
 
 /-- The categorical equivalence between the category of matrices over a ring,
 and the category of matrices over that ring considered as a single-object category. -/
 def equivalenceSingleObj : Mat R ≌ Mat_ (SingleObj Rᵐᵒᵖ) := by
-  have := equivalence.of_fully_faithfully_ess_surj (equivalence_single_obj_inverse R)
+  haveI := equivalence.of_fully_faithfully_ess_surj (equivalence_single_obj_inverse R)
   exact (equivalence_single_obj_inverse R).asEquivalence.symm
 
 instance : Preadditive (Mat R) where

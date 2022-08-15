@@ -256,7 +256,7 @@ theorem eq_bot_of_comap_eq_bot [Nontrivial R] [IsDomain S] (hRS : Algebra.IsInte
 theorem is_maximal_comap_of_is_integral_of_is_maximal (hRS : Algebra.IsIntegral R S) (I : Ideal S) [hI : I.IsMaximal] :
     IsMaximal (I.comap (algebraMap R S)) := by
   refine' quotient.maximal_of_is_field _ _
-  have : is_prime (I.comap (algebraMap R S)) := comap_is_prime _ _
+  haveI : is_prime (I.comap (algebraMap R S)) := comap_is_prime _ _
   exact
     is_field_of_is_integral_of_is_field (is_integral_quotient_of_is_integral hRS) algebra_map_quotient_injective
       (by
@@ -321,10 +321,10 @@ theorem exists_ideal_over_prime_of_is_integral' (H : Algebra.IsIntegral R S) (P 
     exact absurd (hP x0) hx
   let Rₚ := Localization P.prime_compl
   let Sₚ := Localization (Algebra.algebraMapSubmonoid S P.prime_compl)
-  let this : IsDomain (Localization (Algebra.algebraMapSubmonoid S P.prime_compl)) :=
+  letI : IsDomain (Localization (Algebra.algebraMapSubmonoid S P.prime_compl)) :=
     IsLocalization.is_domain_localization (le_non_zero_divisors_of_no_zero_divisors hP0)
   obtain ⟨Qₚ : Ideal Sₚ, Qₚ_maximal⟩ := exists_maximal Sₚ
-  have Qₚ_max : is_maximal (comap _ Qₚ) :=
+  haveI Qₚ_max : is_maximal (comap _ Qₚ) :=
     @is_maximal_comap_of_is_integral_of_is_maximal Rₚ _ Sₚ _ (localizationAlgebra P.prime_compl S)
       (is_integral_localization H) _ Qₚ_maximal
   refine' ⟨comap (algebraMap S Sₚ) Qₚ, ⟨comap_is_prime _ Qₚ, _⟩⟩
@@ -347,7 +347,7 @@ theorem exists_ideal_over_prime_of_is_integral (H : Algebra.IsIntegral R S) (P :
         (by
           simp [← hIP]))
       (le_transₓ (le_of_eqₓ ((RingHom.injective_iff_ker_eq_bot _).1 algebra_map_quotient_injective)) bot_le)
-  have := Q'_prime
+  haveI := Q'_prime
   refine' ⟨Q'.comap _, le_transₓ (le_of_eqₓ mk_ker.symm) (ker_le_comap _), ⟨comap_is_prime _ Q', _⟩⟩
   rw [comap_comap]
   refine' trans _ (trans (congr_arg (comap (Quotientₓ.mk (comap (algebraMap R S) I))) hQ') _)
@@ -363,7 +363,7 @@ theorem exists_ideal_over_maximal_of_is_integral [IsDomain S] (H : Algebra.IsInt
     [P_max : IsMaximal P] (hP : (algebraMap R S).ker ≤ P) : ∃ Q : Ideal S, IsMaximal Q ∧ Q.comap (algebraMap R S) = P :=
   by
   obtain ⟨Q, ⟨Q_prime, hQ⟩⟩ := exists_ideal_over_prime_of_is_integral' H P hP
-  have : Q.is_prime := Q_prime
+  haveI : Q.is_prime := Q_prime
   exact ⟨Q, is_maximal_of_is_integral_of_is_maximal_comap H _ (hQ.symm ▸ P_max), hQ⟩
 
 end IsDomain

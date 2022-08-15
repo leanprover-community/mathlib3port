@@ -70,9 +70,8 @@ structure AlternatingMap extends MultilinearMap R (fun i : ι => M) N where
 
 end
 
-/-- The multilinear map associated to an alternating map -/
-add_decl_doc AlternatingMap.toMultilinearMap
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident alternating_map.to_multilinear_map]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace AlternatingMap
 
 variable (f f' : AlternatingMap R M N ι)
@@ -837,7 +836,7 @@ Here, we generalize this by replacing:
 * the additions in the subscripts of $\sigma$ with an index of type `sum`
 
 The specialized version can be obtained by combining this definition with `fin_sum_fin_equiv` and
-`algebra.lmul'`.
+`linear_map.mul'`.
 -/
 @[simps]
 def domCoprod (a : AlternatingMap R' Mᵢ N₁ ιa) (b : AlternatingMap R' Mᵢ N₂ ιb) :

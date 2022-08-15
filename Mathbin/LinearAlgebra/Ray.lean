@@ -61,7 +61,7 @@ theorem of_subsingleton [Subsingleton M] (x y : M) : SameRay R x y := by
 
 @[nontriviality]
 theorem of_subsingleton' [Subsingleton R] (x y : M) : SameRay R x y := by
-  have := Module.subsingleton R M
+  haveI := Module.subsingleton R M
   exact of_subsingleton x y
 
 /-- `same_ray` is reflexive. -/
@@ -193,7 +193,7 @@ end SameRay
 
 /-- Nonzero vectors, as used to define rays. This type depends on an unused argument `R` so that
 `ray_vector.setoid` can be an instance. -/
-@[nolint unused_arguments has_inhabited_instance]
+@[nolint unused_arguments has_nonempty_instance]
 def RayVector (R M : Type _) [Zero M] :=
   { v : M // v ≠ 0 }
 
@@ -212,7 +212,7 @@ instance : Setoidₓ (RayVector R M) where
   iseqv := ⟨fun x => SameRay.refl _, fun x y h => h.symm, fun x y z hxy hyz => (hxy.trans hyz) fun hy => (y.2 hy).elim⟩
 
 /-- A ray (equivalence class of nonzero vectors with common positive multiples) in a module. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def Module.Ray :=
   Quotientₓ (RayVector.setoid R M)
 
@@ -369,7 +369,7 @@ theorem eq_zero_of_same_ray_neg_smul_right [NoZeroSmulDivisors R M] {r : R} (hr 
 /-- If a vector is in the same ray as its negation, that vector is zero. -/
 theorem eq_zero_of_same_ray_self_neg [NoZeroSmulDivisors R M] (h : SameRay R x (-x)) : x = 0 := by
   nontriviality M
-  have : Nontrivial R := Module.nontrivial R M
+  haveI : Nontrivial R := Module.nontrivial R M
   refine' eq_zero_of_same_ray_neg_smul_right (neg_lt_zero.2 (@one_pos R _ _)) _
   rwa [neg_one_smul]
 

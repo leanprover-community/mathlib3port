@@ -37,11 +37,11 @@ unsafe def measurability : user_attribute where
 /- Mark some measurability lemmas already defined in `measure_theory.measurable_space_def` and
 `measure_theory.measure_space_def` -/
 attribute [measurability]
-  measurable_id measurable_id' ae_measurable_id ae_measurable_id' measurable_const ae_measurable_const AeMeasurable.measurable_mk MeasurableSet.empty MeasurableSet.univ MeasurableSet.compl Subsingleton.measurable_set MeasurableSet.Union MeasurableSet.Inter MeasurableSet.Union_Prop MeasurableSet.Inter_Prop MeasurableSet.union MeasurableSet.inter MeasurableSet.diff MeasurableSet.symm_diff MeasurableSet.ite MeasurableSet.cond MeasurableSet.disjointed MeasurableSet.const MeasurableSet.insert measurable_set_eq Set.Finite.measurable_set Finset.measurable_set Set.Countable.measurable_set MeasurableSpace.measurable_set_top
+  measurable_id measurable_id' ae_measurable_id ae_measurable_id' measurable_const ae_measurable_const AeMeasurable.measurable_mk MeasurableSet.empty MeasurableSet.univ MeasurableSet.compl Subsingleton.measurable_set MeasurableSet.Union MeasurableSet.Inter MeasurableSet.Union_Prop MeasurableSet.Inter_Prop MeasurableSet.union MeasurableSet.inter MeasurableSet.diff MeasurableSet.symm_diff MeasurableSet.ite MeasurableSet.cond MeasurableSet.disjointed MeasurableSet.const MeasurableSet.insert measurable_set_eq Finset.measurable_set MeasurableSpace.measurable_set_top
 
 namespace Tactic
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic to apply `measurable.comp` when appropriate.
 
 Applying `measurable.comp` is not always a good idea, so we have some
@@ -61,7 +61,7 @@ extra logic here to try to avoid bad cases.
 unsafe def apply_measurable.comp : tactic Unit :=
   sorry
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic to apply `measurable.comp_ae_measurable` when appropriate.
 
 Applying `measurable.comp_ae_measurable` is not always a good idea, so we have some
@@ -92,8 +92,8 @@ unsafe def goal_is_not_measurable : tactic Unit := do
     | quote.1 (MeasurableSet (%%ₓl)) => failed
     | _ => skip
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 /-- List of tactics used by `measurability` internally. The option `use_exfalso := ff` is passed to
 the tactic `apply_assumption` in order to avoid loops in the presence of negated hypotheses in
 the context. -/

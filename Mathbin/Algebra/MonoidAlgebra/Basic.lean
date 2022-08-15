@@ -183,6 +183,9 @@ instance : NonAssocSemiringₓ (MonoidAlgebra k G) :=
       simp only [← mul_def, ← one_def, ← sum_single_index, ← mul_zero, ← single_zero, ← sum_zero, ← add_zeroₓ, ←
         mul_oneₓ, ← sum_single] }
 
+theorem nat_cast_def (n : ℕ) : (n : MonoidAlgebra k G) = single 1 n :=
+  rfl
+
 end MulOneClassₓ
 
 /-! #### Semiring structure -/
@@ -236,10 +239,17 @@ instance [Ringₓ k] [Semigroupₓ G] : NonUnitalRing (MonoidAlgebra k G) :=
   { MonoidAlgebra.addCommGroup, MonoidAlgebra.nonUnitalSemiring with }
 
 instance [Ringₓ k] [MulOneClassₓ G] : NonAssocRing (MonoidAlgebra k G) :=
-  { MonoidAlgebra.addCommGroup, MonoidAlgebra.nonAssocSemiring with }
+  { MonoidAlgebra.addCommGroup, MonoidAlgebra.nonAssocSemiring with intCast := fun z => single 1 (z : k),
+    int_cast_of_nat := fun n => by
+      simpa,
+    int_cast_neg_succ_of_nat := fun n => by
+      simpa }
+
+theorem int_cast_def [Ringₓ k] [MulOneClassₓ G] (z : ℤ) : (z : MonoidAlgebra k G) = single 1 z :=
+  rfl
 
 instance [Ringₓ k] [Monoidₓ G] : Ringₓ (MonoidAlgebra k G) :=
-  { MonoidAlgebra.nonUnitalNonAssocRing, MonoidAlgebra.semiring with }
+  { MonoidAlgebra.nonAssocRing, MonoidAlgebra.semiring with }
 
 instance [CommRingₓ k] [CommSemigroupₓ G] : NonUnitalCommRing (MonoidAlgebra k G) :=
   { MonoidAlgebra.nonUnitalCommSemiring, MonoidAlgebra.nonUnitalRing with }
@@ -298,8 +308,8 @@ theorem mul_apply_antidiagonal [Mul G] (f g : MonoidAlgebra k G) (x : G) (s : Fi
     classical <;> exact if p.1 * p.2 = x then f p.1 * g p.2 else 0
   calc
     (f * g) x = ∑ a₁ in f.Support, ∑ a₂ in g.Support, F (a₁, a₂) := mul_apply f g x
-    _ = ∑ p in f.Support.product g.Support, F p := Finset.sum_product.symm
-    _ = ∑ p in (f.Support.product g.Support).filter fun p : G × G => p.1 * p.2 = x, f p.1 * g p.2 :=
+    _ = ∑ p in f.Support ×ˢ g.Support, F p := Finset.sum_product.symm
+    _ = ∑ p in (f.Support ×ˢ g.Support).filter fun p : G × G => p.1 * p.2 = x, f p.1 * g p.2 :=
       (Finset.sum_filter _ _).symm
     _ = ∑ p in s.filter fun p : G × G => p.1 ∈ f.Support ∧ p.2 ∈ g.Support, f p.1 * g p.2 :=
       sum_congr
@@ -507,7 +517,7 @@ instance smul_comm_class_self [SmulCommClass R k k] : SmulCommClass R (MonoidAlg
 
 instance smul_comm_class_symm_self [SmulCommClass k R k] : SmulCommClass (MonoidAlgebra k G) R (MonoidAlgebra k G) :=
   ⟨fun t a b => by
-    have := SmulCommClass.symm k R k
+    haveI := SmulCommClass.symm k R k
     rw [← smul_comm]⟩
 
 variable {A : Type u₃} [NonUnitalNonAssocSemiringₓ A]
@@ -1051,6 +1061,9 @@ instance : NonAssocSemiringₓ (AddMonoidAlgebra k G) :=
       simp only [← mul_def, ← one_def, ← sum_single_index, ← mul_zero, ← single_zero, ← sum_zero, ← add_zeroₓ, ←
         mul_oneₓ, ← sum_single] }
 
+theorem nat_cast_def (n : ℕ) : (n : AddMonoidAlgebra k G) = single 0 n :=
+  rfl
+
 end MulOneClassₓ
 
 /-! #### Semiring structure -/
@@ -1104,10 +1117,17 @@ instance [Ringₓ k] [AddSemigroupₓ G] : NonUnitalRing (AddMonoidAlgebra k G) 
   { AddMonoidAlgebra.addCommGroup, AddMonoidAlgebra.nonUnitalSemiring with }
 
 instance [Ringₓ k] [AddZeroClassₓ G] : NonAssocRing (AddMonoidAlgebra k G) :=
-  { AddMonoidAlgebra.addCommGroup, AddMonoidAlgebra.nonAssocSemiring with }
+  { AddMonoidAlgebra.addCommGroup, AddMonoidAlgebra.nonAssocSemiring with intCast := fun z => single 0 (z : k),
+    int_cast_of_nat := fun n => by
+      simpa,
+    int_cast_neg_succ_of_nat := fun n => by
+      simpa }
+
+theorem int_cast_def [Ringₓ k] [AddZeroClassₓ G] (z : ℤ) : (z : AddMonoidAlgebra k G) = single 0 z :=
+  rfl
 
 instance [Ringₓ k] [AddMonoidₓ G] : Ringₓ (AddMonoidAlgebra k G) :=
-  { AddMonoidAlgebra.nonUnitalNonAssocRing, AddMonoidAlgebra.semiring with }
+  { AddMonoidAlgebra.nonAssocRing, AddMonoidAlgebra.semiring with }
 
 instance [CommRingₓ k] [AddCommSemigroupₓ G] : NonUnitalCommRing (AddMonoidAlgebra k G) :=
   { AddMonoidAlgebra.nonUnitalCommSemiring, AddMonoidAlgebra.nonUnitalRing with }

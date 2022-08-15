@@ -106,9 +106,9 @@ theorem is_satisfiable_directed_union_iff {ι : Type _} [Nonempty ι] {T : ι �
 theorem is_satisfiable_union_distinct_constants_theory_of_card_le (T : L.Theory) (s : Set α) (M : Type w') [Nonempty M]
     [L.Structure M] [M ⊨ T] (h : Cardinal.lift.{w'} (# s) ≤ Cardinal.lift.{w} (# M)) :
     ((L.lhomWithConstants α).OnTheory T ∪ L.DistinctConstantsTheory s).IsSatisfiable := by
-  have : Inhabited M := Classical.inhabitedOfNonempty inferInstance
+  haveI : Inhabited M := Classical.inhabitedOfNonempty inferInstance
   rw [Cardinal.lift_mk_le'] at h
-  let this : (constants_on α).Structure M := constants_on.Structure (Function.extendₓ coe h.some default)
+  letI : (constants_on α).Structure M := constants_on.Structure (Function.extendₓ coe h.some default)
   have : M ⊨ (L.Lhom_with_constants α).OnTheory T ∪ L.distinct_constants_theory s := by
     refine' ((Lhom.on_Theory_model _ _).2 inferInstance).union _
     rw [model_distinct_constants_theory]
@@ -139,7 +139,7 @@ theorem exists_large_model_of_infinite_model (T : L.Theory) (κ : Cardinal.{w}) 
     [Infinite M] : ∃ N : ModelCat.{_, _, max u v w} T, Cardinal.lift.{max u v w} κ ≤ # N := by
   obtain ⟨N⟩ := is_satisfiable_union_distinct_constants_theory_of_infinite T (Set.Univ : Set κ.out) M
   refine' ⟨(N.is_model.mono (Set.subset_union_left _ _)).Bundled.reduct _, _⟩
-  have : N ⊨ distinct_constants_theory _ _ := N.is_model.mono (Set.subset_union_right _ _)
+  haveI : N ⊨ distinct_constants_theory _ _ := N.is_model.mono (Set.subset_union_right _ _)
   simp only [← Model.reduct_carrier, ← coe_of, ← Model.carrier_eq_coe]
   refine' trans (lift_le.2 (le_of_eqₓ (Cardinal.mk_out κ).symm)) _
   rw [← mk_univ]
@@ -181,8 +181,8 @@ theorem exists_elementary_embedding_card_eq_of_ge (M : Type w') [L.Structure M] 
   obtain ⟨N, ⟨NN0⟩, hN⟩ :=
     exists_elementary_embedding_card_eq_of_le (L[[M]]) N0 κ
       (aleph_0_le_lift.1 ((aleph_0_le_lift.2 (aleph_0_le_mk M)).trans h2)) _ (hN0.trans _)
-  · let this := (Lhom_with_constants L M).reduct N
-    have h : N ⊨ L.elementary_diagram M := (NN0.Theory_model_iff (L.elementary_diagram M)).2 inferInstance
+  · letI := (Lhom_with_constants L M).reduct N
+    haveI h : N ⊨ L.elementary_diagram M := (NN0.Theory_model_iff (L.elementary_diagram M)).2 inferInstance
     refine' ⟨bundled.of N, ⟨_⟩, hN⟩
     apply elementary_embedding.of_models_elementary_diagram L M N
     
@@ -228,7 +228,7 @@ theorem exists_model_card_eq (h : ∃ M : ModelCat.{u, v, max u v} T, Infinite M
     (h2 : Cardinal.lift.{w} L.card ≤ Cardinal.lift.{max u v} κ) : ∃ N : ModelCat.{u, v, w} T, # N = κ := by
   cases' h with M MI
   obtain ⟨N, hN, rfl⟩ := exists_elementarily_equivalent_card_eq L M κ h1 h2
-  have : Nonempty N := hN.nonempty
+  haveI : Nonempty N := hN.nonempty
   exact ⟨hN.Theory_model.bundled, rfl⟩
 
 variable (T)
@@ -456,8 +456,8 @@ theorem Categorical.is_complete (h : κ.Categorical T) (h1 : ℵ₀ ≤ κ)
     obtain ⟨⟨MF, hMF⟩, MT, hMT⟩ := con
     rw [sentence.realize_not, not_not] at hMT
     refine' hMF _
-    have := hT MT
-    have := hT MF
+    haveI := hT MT
+    haveI := hT MF
     obtain ⟨NT, MNT, hNT⟩ := exists_elementarily_equivalent_card_eq L MT κ h1 h2
     obtain ⟨NF, MNF, hNF⟩ := exists_elementarily_equivalent_card_eq L MF κ h1 h2
     obtain ⟨TF⟩ := h (MNT.to_Model T) (MNF.to_Model T) hNT hNF

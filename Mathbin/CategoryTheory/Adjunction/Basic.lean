@@ -189,7 +189,7 @@ namespace Adjunction
 See `adjunction.mk_of_hom_equiv`.
 This structure won't typically be used anywhere else.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure CoreHomEquiv (F : C ⥤ D) (G : D ⥤ C) where
   homEquiv : ∀ X Y, (F.obj X ⟶ Y) ≃ (X ⟶ G.obj Y)
   hom_equiv_naturality_left_symm' :
@@ -227,7 +227,7 @@ end CoreHomEquiv
 See `adjunction.mk_of_unit_counit`.
 This structure won't typically be used anywhere else.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure CoreUnitCounit (F : C ⥤ D) (G : D ⥤ C) where
   Unit : 𝟭 C ⟶ F.comp G
   counit : G.comp F ⟶ 𝟭 D

@@ -166,7 +166,7 @@ theorem basis_to_matrix_mul_linear_map_to_matrix [DecidableEq ι'] :
     c.toMatrix c' ⬝ LinearMap.toMatrix b' c' f = LinearMap.toMatrix b' c f :=
   (Matrix.toLin b' c).Injective
     (by
-      have := Classical.decEq κ' <;>
+      haveI := Classical.decEq κ' <;>
         rw [to_lin_to_matrix, to_lin_mul b' c' c, to_lin_to_matrix, c.to_lin_to_matrix, id_comp])
 
 variable [Fintype ι]
@@ -203,7 +203,7 @@ theorem basis_to_matrix_basis_fun_mul (b : Basis ι R (ι → R)) (A : Matrix ι
 /-- A generalization of `linear_map.to_matrix_id`. -/
 @[simp]
 theorem LinearMap.to_matrix_id_eq_basis_to_matrix [DecidableEq ι] : LinearMap.toMatrix b b' id = b'.toMatrix b := by
-  have := Classical.decEq ι'
+  haveI := Classical.decEq ι'
   rw [← @basis_to_matrix_mul_linear_map_to_matrix _ _ ι, to_matrix_id, Matrix.mul_one]
 
 /-- See also `basis.to_matrix_reindex` which gives the `simp` normal form of this result. -/
@@ -221,7 +221,7 @@ theorem Basis.to_matrix_mul_to_matrix {ι'' : Type _} [Fintype ι'] (b'' : ι'' 
     b.toMatrix b' ⬝ b'.toMatrix b'' = b.toMatrix b'' := by
   have := Classical.decEq ι
   have := Classical.decEq ι'
-  have := Classical.decEq ι''
+  haveI := Classical.decEq ι''
   ext i j
   simp only [← Matrix.mul_apply, ← Basis.to_matrix_apply, ← Basis.sum_repr_mul_repr]
 

@@ -828,8 +828,11 @@ theorem ball_bot {r : ℝ} (x : E) (hr : 0 < r) : Ball (⊥ : Seminorm 𝕜 E) x
 theorem balanced_ball_zero (r : ℝ) : Balanced 𝕜 (Ball p 0 r) := by
   rintro a ha x ⟨y, hy, hx⟩
   rw [mem_ball_zero, ← hx, p.smul]
-  calc _ ≤ p y := mul_le_of_le_one_left (p.nonneg _) ha _ < r := by
+  calc
+    _ ≤ p y := mul_le_of_le_one_left (p.nonneg _) ha
+    _ < r := by
       rwa [mem_ball_zero] at hy
+    
 
 theorem ball_finset_sup_eq_Inter (p : ι → Seminorm 𝕜 E) (s : Finset ι) (x : E) {r : ℝ} (hr : 0 < r) :
     Ball (s.sup p) x r = ⋂ i ∈ s, Ball (p i) x r := by
@@ -947,9 +950,13 @@ variable [HasSmul ℝ E] [IsScalarTower ℝ 𝕜 E] (p : Seminorm 𝕜 E)
 /-- A seminorm is convex. Also see `convex_on_norm`. -/
 protected theorem convex_on : ConvexOn ℝ Univ p := by
   refine' ⟨convex_univ, fun x y _ _ a b ha hb hab => _⟩
-  calc p (a • x + b • y) ≤ p (a • x) + p (b • y) := p.add_le _ _ _ = ∥a • (1 : 𝕜)∥ * p x + ∥b • (1 : 𝕜)∥ * p y := by
-      rw [← p.smul, ← p.smul, smul_one_smul, smul_one_smul]_ = a * p x + b * p y := by
+  calc
+    p (a • x + b • y) ≤ p (a • x) + p (b • y) := p.add_le _ _
+    _ = ∥a • (1 : 𝕜)∥ * p x + ∥b • (1 : 𝕜)∥ * p y := by
+      rw [← p.smul, ← p.smul, smul_one_smul, smul_one_smul]
+    _ = a * p x + b * p y := by
       rw [norm_smul, norm_smul, norm_one, mul_oneₓ, mul_oneₓ, Real.norm_of_nonneg ha, Real.norm_of_nonneg hb]
+    
 
 end HasSmul
 
@@ -975,7 +982,7 @@ end Seminorm
 
 section normSeminorm
 
-variable (𝕜) (E) [NormedField 𝕜] [SemiNormedGroup E] [NormedSpace 𝕜 E] {r : ℝ}
+variable (𝕜) (E) [NormedField 𝕜] [SeminormedAddCommGroup E] [NormedSpace 𝕜 E] {r : ℝ}
 
 /-- The norm of a seminormed group as an add_monoid seminorm. -/
 def normAddGroupSeminorm : AddGroupSeminorm E :=

@@ -3,6 +3,7 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 -/
+import Mathbin.Algebra.Order.ToIntervalMod
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Angle
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Inverse
 
@@ -79,8 +80,11 @@ theorem abs_mul_cos_add_sin_mul_I (x : ℂ) : (abs x * (cos (arg x) + sin (arg x
 
 theorem abs_eq_one_iff (z : ℂ) : abs z = 1 ↔ ∃ θ : ℝ, exp (θ * I) = z := by
   refine' ⟨fun hz => ⟨arg z, _⟩, _⟩
-  · calc exp (arg z * I) = abs z * exp (arg z * I) := by
-        rw [hz, of_real_one, one_mulₓ]_ = z := abs_mul_exp_arg_mul_I z
+  · calc
+      exp (arg z * I) = abs z * exp (arg z * I) := by
+        rw [hz, of_real_one, one_mulₓ]
+      _ = z := abs_mul_exp_arg_mul_I z
+      
     
   · rintro ⟨θ, rfl⟩
     exact Complex.abs_exp_of_real_mul_I θ
@@ -167,13 +171,15 @@ theorem arg_nonneg_iff {z : ℂ} : 0 ≤ arg z ↔ 0 ≤ z.im := by
   rcases eq_or_ne z 0 with (rfl | h₀)
   · simp
     
-  calc 0 ≤ arg z ↔ 0 ≤ Real.sin (arg z) :=
+  calc
+    0 ≤ arg z ↔ 0 ≤ Real.sin (arg z) :=
       ⟨fun h => Real.sin_nonneg_of_mem_Icc ⟨h, arg_le_pi z⟩, by
         contrapose!
         intro h
-        exact Real.sin_neg_of_neg_of_neg_pi_lt h (neg_pi_lt_arg _)⟩_ ↔ _ :=
-      by
+        exact Real.sin_neg_of_neg_of_neg_pi_lt h (neg_pi_lt_arg _)⟩
+    _ ↔ _ := by
       rw [sin_arg, le_div_iff (abs_pos.2 h₀), zero_mul]
+    
 
 @[simp]
 theorem arg_neg_iff {z : ℂ} : arg z < 0 ↔ z.im < 0 :=
@@ -445,29 +451,21 @@ theorem arg_neg_coe_angle {x : ℂ} (hx : x ≠ 0) : (arg (-x) : Real.Angle) = a
   · rw [arg_neg_eq_arg_sub_pi_of_im_pos hi, Real.Angle.coe_sub, Real.Angle.sub_coe_pi_eq_add_coe_pi]
     
 
-theorem arg_mul_cos_add_sin_mul_I_eq_mul_fract {r : ℝ} (hr : 0 < r) (θ : ℝ) :
-    arg (r * (cos θ + sin θ * I)) = π - 2 * π * Int.fract ((π - θ) / (2 * π)) := by
-  have hi : π - 2 * π * Int.fract ((π - θ) / (2 * π)) ∈ Ioc (-π) π := by
-    rw [← mem_preimage, preimage_const_sub_Ioc, ← mem_preimage, preimage_const_mul_Ico _ _ Real.two_pi_pos, sub_self,
-      zero_div, sub_neg_eq_add, ← two_mul, div_self real.two_pi_pos.ne.symm]
-    refine' Set.mem_of_mem_of_subset (Set.mem_range_self _) _
-    rw [← image_univ, Int.image_fract]
-    simp
-  have hs : π - 2 * π * Int.fract ((π - θ) / (2 * π)) = 2 * π * ⌊(π - θ) / (2 * π)⌋ + θ := by
-    rw [Int.fract, mul_sub, mul_div_cancel' _ real.two_pi_pos.ne.symm]
-    abel
+theorem arg_mul_cos_add_sin_mul_I_eq_to_Ioc_mod {r : ℝ} (hr : 0 < r) (θ : ℝ) :
+    arg (r * (cos θ + sin θ * I)) = toIocMod (-π) Real.two_pi_pos θ := by
+  have hi : toIocMod (-π) Real.two_pi_pos θ ∈ Ioc (-π) π := by
+    convert to_Ioc_mod_mem_Ioc _ Real.two_pi_pos _
+    ring
   convert arg_mul_cos_add_sin_mul_I hr hi using 3
-  simp_rw [hs, mul_comm (2 * π), add_commₓ _ θ, ← of_real_cos, ← of_real_sin, Real.cos_add_int_mul_two_pi,
-    Real.sin_add_int_mul_two_pi]
+  simp [← toIocMod, ← cos_add_int_mul_two_pi, ← sin_add_int_mul_two_pi]
 
-theorem arg_cos_add_sin_mul_I_eq_mul_fract (θ : ℝ) :
-    arg (cos θ + sin θ * I) = π - 2 * π * Int.fract ((π - θ) / (2 * π)) := by
-  rw [← one_mulₓ (_ + _), ← of_real_one, arg_mul_cos_add_sin_mul_I_eq_mul_fract zero_lt_one]
+theorem arg_cos_add_sin_mul_I_eq_to_Ioc_mod (θ : ℝ) : arg (cos θ + sin θ * I) = toIocMod (-π) Real.two_pi_pos θ := by
+  rw [← one_mulₓ (_ + _), ← of_real_one, arg_mul_cos_add_sin_mul_I_eq_to_Ioc_mod zero_lt_one]
 
 theorem arg_mul_cos_add_sin_mul_I_sub {r : ℝ} (hr : 0 < r) (θ : ℝ) :
     arg (r * (cos θ + sin θ * I)) - θ = 2 * π * ⌊(π - θ) / (2 * π)⌋ := by
-  rw [arg_mul_cos_add_sin_mul_I_eq_mul_fract hr, Int.fract, mul_sub, mul_div_cancel' _ real.two_pi_pos.ne.symm]
-  abel
+  rw [arg_mul_cos_add_sin_mul_I_eq_to_Ioc_mod hr, to_Ioc_mod_sub_self, to_Ioc_div_eq_floor, zsmul_eq_mul]
+  ring_nf
 
 theorem arg_cos_add_sin_mul_I_sub (θ : ℝ) : arg (cos θ + sin θ * I) - θ = 2 * π * ⌊(π - θ) / (2 * π)⌋ := by
   rw [← one_mulₓ (_ + _), ← of_real_one, arg_mul_cos_add_sin_mul_I_sub zero_lt_one]

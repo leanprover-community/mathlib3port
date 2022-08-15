@@ -511,7 +511,7 @@ end Cauchy
 
 theorem subgroup_eq_top_of_swap_mem [DecidableEq α] {H : Subgroup (Perm α)} [d : DecidablePred (· ∈ H)] {τ : Perm α}
     (h0 : (Fintype.card α).Prime) (h1 : Fintype.card α ∣ Fintype.card H) (h2 : τ ∈ H) (h3 : IsSwap τ) : H = ⊤ := by
-  have : Fact (Fintype.card α).Prime := ⟨h0⟩
+  haveI : Fact (Fintype.card α).Prime := ⟨h0⟩
   obtain ⟨σ, hσ⟩ := exists_prime_order_of_dvd_card (Fintype.card α) h1
   have hσ1 : orderOf (σ : perm α) = Fintype.card α := (order_of_subgroup σ).trans hσ
   have hσ2 : is_cycle ↑σ := is_cycle_of_prime_order'' h0 hσ1

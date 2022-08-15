@@ -69,9 +69,9 @@ open Polynomial
 
 open Finset
 
-variable {M N G G₀ R S F : Type _}
+variable {M N G R S F : Type _}
 
-variable [CommMonoidₓ M] [CommMonoidₓ N] [CommGroupₓ G] [CommGroupWithZero G₀]
+variable [CommMonoidₓ M] [CommMonoidₓ N] [DivisionCommMonoid G]
 
 section rootsOfUnity
 
@@ -315,7 +315,7 @@ theorem mk_of_lt (ζ : M) (hk : 0 < k) (h1 : ζ ^ k = 1) (h : ∀ l : ℕ, 0 < l
 
 section CommMonoidₓ
 
-variable {ζ : M} (h : IsPrimitiveRoot ζ k)
+variable {ζ : M} {f : F} (h : IsPrimitiveRoot ζ k)
 
 @[nontriviality]
 theorem of_subsingleton [Subsingleton M] (x : M) : IsPrimitiveRoot x 1 :=
@@ -444,6 +444,38 @@ theorem pow {n : ℕ} {a b : ℕ} (hn : 0 < n) (h : IsPrimitiveRoot ζ n) (hprod
   rwa [← mul_dvd_mul_iff_left ha0]
   exact h.dvd_of_pow_eq_one _ hl
 
+section Maps
+
+open Function
+
+theorem map_of_injective [MonoidHomClass F M N] (h : IsPrimitiveRoot ζ k) (hf : Injective f) :
+    IsPrimitiveRoot (f ζ) k :=
+  { pow_eq_one := by
+      rw [← map_pow, h.pow_eq_one, _root_.map_one],
+    dvd_of_pow_eq_one := by
+      rw [h.eq_order_of]
+      intro l hl
+      rw [← map_pow, ← map_one f] at hl
+      exact order_of_dvd_of_pow_eq_one (hf hl) }
+
+theorem of_map_of_injective [MonoidHomClass F M N] (h : IsPrimitiveRoot (f ζ) k) (hf : Injective f) :
+    IsPrimitiveRoot ζ k :=
+  { pow_eq_one := by
+      apply_fun f
+      rw [map_pow, _root_.map_one, h.pow_eq_one],
+    dvd_of_pow_eq_one := by
+      rw [h.eq_order_of]
+      intro l hl
+      apply_fun f  at hl
+      rw [map_pow, _root_.map_one] at hl
+      exact order_of_dvd_of_pow_eq_one hl }
+
+theorem map_iff_of_injective [MonoidHomClass F M N] (hf : Injective f) :
+    IsPrimitiveRoot (f ζ) k ↔ IsPrimitiveRoot ζ k :=
+  ⟨fun h => h.of_map_of_injective hf, fun h => h.map_of_injective hf⟩
+
+end Maps
+
 end CommMonoidₓ
 
 section CommMonoidWithZero
@@ -459,7 +491,7 @@ protected theorem ne_zero [Nontrivial M₀] {ζ : M₀} (h : IsPrimitiveRoot ζ 
 
 end CommMonoidWithZero
 
-section CommGroupₓ
+section DivisionCommMonoid
 
 variable {ζ : G}
 
@@ -513,97 +545,7 @@ theorem zpow_of_gcd_eq_one (h : IsPrimitiveRoot ζ k) (i : ℤ) (hi : i.gcd k = 
   rw [Int.gcdₓ, ← Int.nat_abs_neg, ← hi'] at hi
   exact hi
 
-end CommGroupₓ
-
-section CommGroupWithZero
-
-variable {ζ : G₀}
-
-theorem zpow_eq_one₀ (h : IsPrimitiveRoot ζ k) : ζ ^ (k : ℤ) = 1 := by
-  rw [zpow_coe_nat]
-  exact h.pow_eq_one
-
-theorem zpow_eq_one_iff_dvd₀ (h : IsPrimitiveRoot ζ k) (l : ℤ) : ζ ^ l = 1 ↔ (k : ℤ) ∣ l := by
-  by_cases' h0 : 0 ≤ l
-  · lift l to ℕ using h0
-    rw [zpow_coe_nat]
-    norm_cast
-    exact h.pow_eq_one_iff_dvd l
-    
-  · have : 0 ≤ -l := by
-      simp only [← not_leₓ, ← neg_nonneg] at h0⊢
-      exact le_of_ltₓ h0
-    lift -l to ℕ using this with l' hl'
-    rw [← dvd_neg, ← hl']
-    norm_cast
-    rw [← h.pow_eq_one_iff_dvd, ← inv_inj, ← zpow_neg, ← hl', zpow_coe_nat, inv_one]
-    
-
-theorem inv' (h : IsPrimitiveRoot ζ k) : IsPrimitiveRoot ζ⁻¹ k :=
-  { pow_eq_one := by
-      simp only [← h.pow_eq_one, ← inv_one, ← eq_self_iff_true, ← inv_pow],
-    dvd_of_pow_eq_one := by
-      intro l hl
-      apply h.dvd_of_pow_eq_one l
-      rw [← inv_inj, ← inv_pow, hl, inv_one] }
-
-@[simp]
-theorem inv_iff' : IsPrimitiveRoot ζ⁻¹ k ↔ IsPrimitiveRoot ζ k := by
-  refine' ⟨_, fun h => inv' h⟩
-  intro h
-  rw [← inv_invₓ ζ]
-  exact inv' h
-
-theorem zpow_of_gcd_eq_one₀ (h : IsPrimitiveRoot ζ k) (i : ℤ) (hi : i.gcd k = 1) : IsPrimitiveRoot (ζ ^ i) k := by
-  by_cases' h0 : 0 ≤ i
-  · lift i to ℕ using h0
-    rw [zpow_coe_nat]
-    exact h.pow_of_coprime i hi
-    
-  have : 0 ≤ -i := by
-    simp only [← not_leₓ, ← neg_nonneg] at h0⊢
-    exact le_of_ltₓ h0
-  lift -i to ℕ using this with i' hi'
-  rw [← inv_iff', ← zpow_neg, ← hi', zpow_coe_nat]
-  apply h.pow_of_coprime
-  rw [Int.gcdₓ, ← Int.nat_abs_neg, ← hi'] at hi
-  exact hi
-
-end CommGroupWithZero
-
-section CommSemiringₓ
-
-variable [CommSemiringₓ R] [CommSemiringₓ S] {f : F} {ζ : R}
-
-open Function
-
-theorem map_of_injective [MonoidHomClass F R S] (h : IsPrimitiveRoot ζ k) (hf : Injective f) :
-    IsPrimitiveRoot (f ζ) k :=
-  { pow_eq_one := by
-      rw [← map_pow, h.pow_eq_one, _root_.map_one],
-    dvd_of_pow_eq_one := by
-      rw [h.eq_order_of]
-      intro l hl
-      rw [← map_pow, ← map_one f] at hl
-      exact order_of_dvd_of_pow_eq_one (hf hl) }
-
-theorem of_map_of_injective [MonoidHomClass F R S] (h : IsPrimitiveRoot (f ζ) k) (hf : Injective f) :
-    IsPrimitiveRoot ζ k :=
-  { pow_eq_one := by
-      apply_fun f
-      rw [map_pow, _root_.map_one, h.pow_eq_one],
-    dvd_of_pow_eq_one := by
-      rw [h.eq_order_of]
-      intro l hl
-      apply_fun f  at hl
-      rw [map_pow, _root_.map_one] at hl
-      exact order_of_dvd_of_pow_eq_one hl }
-
-theorem map_iff_of_injective [MonoidHomClass F R S] (hf : Injective f) :
-    IsPrimitiveRoot (f ζ) k ↔ IsPrimitiveRoot ζ k :=
-  ⟨fun h => h.of_map_of_injective hf, fun h => h.map_of_injective hf⟩
-
-end CommSemiringₓ
+end DivisionCommMonoid
 
 section IsDomain
 
@@ -634,7 +576,7 @@ theorem ne_zero' {n : ℕ+} (hζ : IsPrimitiveRoot ζ n) : NeZero ((n : ℕ) : R
   obtain ⟨m, hm⟩ := multiplicity.exists_eq_pow_mul_and_not_dvd hfin
   by_cases' hp : p ∣ n
   · obtain ⟨k, hk⟩ := Nat.exists_eq_succ_of_ne_zero (multiplicity.pos_of_dvd hfin hp).ne'
-    have hpri : Fact p.prime := @CharP.char_is_prime_of_pos R _ _ _ p ⟨Nat.pos_of_dvd_of_posₓ hp n.pos⟩ _
+    haveI hpri : Fact p.prime := @CharP.char_is_prime_of_pos R _ _ _ p ⟨Nat.pos_of_dvd_of_posₓ hp n.pos⟩ _
     have := hζ.pow_eq_one
     rw [hm.1, hk, pow_succₓ, mul_assoc, pow_mul', ← frobenius_def, ← frobenius_one p] at this
     exfalso
@@ -741,13 +683,16 @@ variable [IsDomain R]
 
 theorem zpowers_eq {k : ℕ+} {ζ : Rˣ} (h : IsPrimitiveRoot ζ k) : Subgroup.zpowers ζ = rootsOfUnity k R := by
   apply SetLike.coe_injective
-  have : Fact (0 < (k : ℕ)) := ⟨k.pos⟩
-  have F : Fintype (Subgroup.zpowers ζ) := Fintype.ofEquiv _ h.zmod_equiv_zpowers.toEquiv
+  haveI : Fact (0 < (k : ℕ)) := ⟨k.pos⟩
+  haveI F : Fintype (Subgroup.zpowers ζ) := Fintype.ofEquiv _ h.zmod_equiv_zpowers.toEquiv
   refine'
     @Set.eq_of_subset_of_card_le Rˣ (Subgroup.zpowers ζ) (rootsOfUnity k R) F (rootsOfUnity.fintype R k)
       (Subgroup.zpowers_subset <| show ζ ∈ rootsOfUnity k R from h.pow_eq_one) _
-  calc Fintype.card (rootsOfUnity k R) ≤ k := card_roots_of_unity R k _ = Fintype.card (Zmod k) :=
-      (Zmod.card k).symm _ = Fintype.card (Subgroup.zpowers ζ) := Fintype.card_congr h.zmod_equiv_zpowers.toEquiv
+  calc
+    Fintype.card (rootsOfUnity k R) ≤ k := card_roots_of_unity R k
+    _ = Fintype.card (Zmod k) := (Zmod.card k).symm
+    _ = Fintype.card (Subgroup.zpowers ζ) := Fintype.card_congr h.zmod_equiv_zpowers.toEquiv
+    
 
 theorem eq_pow_of_mem_roots_of_unity {k : ℕ+} {ζ ξ : Rˣ} (h : IsPrimitiveRoot ζ k) (hξ : ξ ∈ rootsOfUnity k R) :
     ∃ (i : ℕ)(hi : i < k), ζ ^ i = ξ := by
@@ -803,13 +748,16 @@ theorem is_primitive_root_iff {k : ℕ} {ζ ξ : R} (h : IsPrimitiveRoot ζ k) (
     
 
 theorem card_roots_of_unity' {n : ℕ+} (h : IsPrimitiveRoot ζ n) : Fintype.card (rootsOfUnity n R) = n := by
-  have : Fact (0 < ↑n) := ⟨n.pos⟩
+  haveI : Fact (0 < ↑n) := ⟨n.pos⟩
   let e := h.zmod_equiv_zpowers
-  have F : Fintype (Subgroup.zpowers ζ) := Fintype.ofEquiv _ e.to_equiv
-  calc Fintype.card (rootsOfUnity n R) = Fintype.card (Subgroup.zpowers ζ) :=
+  haveI F : Fintype (Subgroup.zpowers ζ) := Fintype.ofEquiv _ e.to_equiv
+  calc
+    Fintype.card (rootsOfUnity n R) = Fintype.card (Subgroup.zpowers ζ) :=
       Fintype.card_congr <| by
-        rw [h.zpowers_eq]_ = Fintype.card (Zmod n) :=
-      Fintype.card_congr e.to_equiv.symm _ = n := Zmod.card n
+        rw [h.zpowers_eq]
+    _ = Fintype.card (Zmod n) := Fintype.card_congr e.to_equiv.symm
+    _ = n := Zmod.card n
+    
 
 theorem card_roots_of_unity {ζ : R} {n : ℕ+} (h : IsPrimitiveRoot ζ n) : Fintype.card (rootsOfUnity n R) = n := by
   obtain ⟨ζ, hζ⟩ := h.is_unit n.pos
@@ -966,24 +914,18 @@ theorem is_integral : IsIntegral ℤ μ := by
   · simp only [← ((IsPrimitiveRoot.iff_def μ n).mp h).left, ← eval₂_one, ← eval₂_X_pow, ← eval₂_sub, ← sub_self]
     
 
-end CommRingₓ
+section IsDomain
 
-variable {n : ℕ} {K : Type _} [Field K] {μ : K} (h : IsPrimitiveRoot μ n) (hpos : 0 < n)
-
-include n μ h hpos
-
-variable [CharZero K]
+variable [IsDomain K] [CharZero K]
 
 omit hpos
 
 /-- The minimal polynomial of a root of unity `μ` divides `X ^ n - 1`. -/
 theorem minpoly_dvd_X_pow_sub_one : minpoly ℤ μ ∣ X ^ n - 1 := by
-  by_cases' hpos : n = 0
-  · simp [← hpos]
+  rcases n.eq_zero_or_pos with (rfl | hpos)
+  · simp
     
-  apply
-    minpoly.gcd_domain_dvd (IsIntegral h (Nat.pos_of_ne_zeroₓ hpos))
-      (monic_X_pow_sub_C 1 (ne_of_ltₓ (Nat.pos_of_ne_zeroₓ hpos)).symm).ne_zero
+  apply minpoly.gcd_domain_dvd (IsIntegral h hpos) (monic_X_pow_sub_C 1 hpos.ne').ne_zero
   simp only [← ((IsPrimitiveRoot.iff_def μ n).mp h).left, ← aeval_X_pow, ← RingHom.eq_int_cast, ← Int.cast_oneₓ, ←
     aeval_one, ← AlgHom.map_sub, ← sub_self]
 
@@ -1006,10 +948,9 @@ theorem squarefree_minpoly_mod {p : ℕ} [Fact p.Prime] (hdiv : ¬p ∣ n) :
 `μ ^ p`, where `p` is a prime that does not divide `n`. Then `P` divides `expand ℤ p Q`. -/
 theorem minpoly_dvd_expand {p : ℕ} (hprime : Nat.Prime p) (hdiv : ¬p ∣ n) :
     minpoly ℤ μ ∣ expand ℤ p (minpoly ℤ (μ ^ p)) := by
-  by_cases' hn : n = 0
+  rcases n.eq_zero_or_pos with (rfl | hpos)
   · simp_all
     
-  have hpos := Nat.pos_of_ne_zeroₓ hn
   refine' minpoly.gcd_domain_dvd (h.is_integral hpos) _ _
   · apply monic.ne_zero
     rw [Polynomial.Monic, leading_coeff, nat_degree_expand, mul_comm, coeff_expand_mul' (Nat.Prime.pos hprime), ←
@@ -1116,7 +1057,7 @@ theorem minpoly_eq_pow_coprime {m : ℕ} (hcop : Nat.Coprime m n) : minpoly ℤ 
     clear hind
     replace hprime := Nat.prime_iff.2 hprime
     have hdiv := (Nat.Prime.coprime_iff_not_dvd hprime).1 (Nat.Coprime.coprime_mul_right hcop)
-    have := Fact.mk hprime
+    haveI := Fact.mk hprime
     rw [minpoly_eq_pow (h.pow_of_coprime a (Nat.Coprime.coprime_mul_left hcop)) hdiv]
     congr 1
     ring_exp
@@ -1156,6 +1097,10 @@ theorem totient_le_degree_minpoly : Nat.totient n ≤ (minpoly ℤ μ).natDegree
     _ ≤ P_K.natDegree := card_roots' _
     _ ≤ P.natDegree := nat_degree_map_le _ _
     
+
+end IsDomain
+
+end CommRingₓ
 
 end minpoly
 

@@ -123,7 +123,7 @@ instance : SmallCategory (WalkingMultispan fst snd) where
 end WalkingMultispan
 
 /-- This is a structure encapsulating the data necessary to define a `multicospan`. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure MulticospanIndex (C : Type u) [Category.{v} C] where
   (L R : Type w)
   (fstTo sndTo : R → L)
@@ -133,7 +133,7 @@ structure MulticospanIndex (C : Type u) [Category.{v} C] where
   snd : ∀ b, left (snd_to b) ⟶ right b
 
 /-- This is a structure encapsulating the data necessary to define a `multispan`. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure MultispanIndex (C : Type u) [Category.{v} C] where
   (L R : Type w)
   (fstFrom sndFrom : L → R)
@@ -274,12 +274,12 @@ end MultispanIndex
 variable {C : Type u} [Category.{v} C]
 
 /-- A multifork is a cone over a multicospan. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 abbrev Multifork (I : MulticospanIndex C) :=
   Cone I.multicospan
 
 /-- A multicofork is a cocone over a multispan. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 abbrev Multicofork (I : MultispanIndex C) :=
   Cocone I.multispan
 
@@ -358,11 +358,11 @@ def IsLimit.mk (lift : ∀ E : Multifork I, E.x ⟶ K.x) (fac : ∀ (E : Multifo
 
 variable [HasProduct I.left] [HasProduct I.right]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `discrete_cases #[]
 @[simp, reassoc]
 theorem pi_condition : Pi.lift K.ι ≫ I.fstPiMap = Pi.lift K.ι ≫ I.sndPiMap := by
   ext
-  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `discrete_cases #[]"
   simp
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
@@ -561,11 +561,11 @@ def IsColimit.mk (desc : ∀ E : Multicofork I, K.x ⟶ E.x) (fac : ∀ (E : Mul
 
 variable [HasCoproduct I.left] [HasCoproduct I.right]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `discrete_cases #[]
 @[simp, reassoc]
 theorem sigma_condition : I.fstSigmaMap ≫ Sigma.desc K.π = I.sndSigmaMap ≫ Sigma.desc K.π := by
   ext
-  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `discrete_cases #[]"
   simp
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument

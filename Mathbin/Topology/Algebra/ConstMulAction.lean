@@ -169,10 +169,8 @@ def Homeomorph.smul (γ : G) : α ≃ₜ α where
   continuous_to_fun := continuous_const_smul γ
   continuous_inv_fun := continuous_const_smul γ⁻¹
 
-/-- The homeomorphism given by affine-addition by an element of an additive group `Γ` acting on
-  `T` is a homeomorphism from `T` to itself. -/
-add_decl_doc Homeomorph.vadd
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident homeomorph.vadd]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[to_additive]
 theorem is_open_map_smul (c : G) : IsOpenMap fun x : α => c • x :=
   (Homeomorph.smul c).IsOpenMap

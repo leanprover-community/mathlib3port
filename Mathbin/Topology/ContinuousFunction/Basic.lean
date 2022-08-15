@@ -268,6 +268,11 @@ def restrict (f : C(α, β)) : C(s, β) :=
 theorem coe_restrict (f : C(α, β)) : ⇑(f.restrict s) = f ∘ coe :=
   rfl
 
+/-- The restriction of a continuous map onto the preimage of a set. -/
+@[simps]
+def restrictPreimage (f : C(α, β)) (s : Set β) : C(f ⁻¹' s, s) :=
+  ⟨s.restrictPreimage f, continuous_iff_continuous_at.mpr fun x => f.2.ContinuousAt.restrictPreimage⟩
+
 end Restrict
 
 section Gluing
@@ -337,9 +342,41 @@ end Gluing
 
 end ContinuousMap
 
-/-- The forward direction of a homeomorphism, as a bundled continuous map.
--/
+namespace Homeomorph
+
+variable {α β γ : Type _} [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
+
+variable (f : α ≃ₜ β) (g : β ≃ₜ γ)
+
+/-- The forward direction of a homeomorphism, as a bundled continuous map. -/
 @[simps]
-def Homeomorph.toContinuousMap {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] (e : α ≃ₜ β) : C(α, β) :=
+def toContinuousMap (e : α ≃ₜ β) : C(α, β) :=
   ⟨e⟩
+
+/-- `homeomorph.to_continuous_map` as a coercion. -/
+instance : Coe (α ≃ₜ β) C(α, β) :=
+  ⟨Homeomorph.toContinuousMap⟩
+
+theorem to_continuous_map_as_coe : f.toContinuousMap = f :=
+  rfl
+
+@[simp]
+theorem coe_refl : (Homeomorph.refl α : C(α, α)) = ContinuousMap.id α :=
+  rfl
+
+@[simp]
+theorem coe_trans : (f.trans g : C(α, γ)) = (g : C(β, γ)).comp f :=
+  rfl
+
+/-- Left inverse to a continuous map from a homeomorphism, mirroring `equiv.symm_comp_self`. -/
+@[simp]
+theorem symm_comp_to_continuous_map : (f.symm : C(β, α)).comp (f : C(α, β)) = ContinuousMap.id α := by
+  rw [← coeTransₓ, self_trans_symm, coe_refl]
+
+/-- Right inverse to a continuous map from a homeomorphism, mirroring `equiv.self_comp_symm`. -/
+@[simp]
+theorem to_continuous_map_comp_symm : (f : C(α, β)).comp (f.symm : C(β, α)) = ContinuousMap.id β := by
+  rw [← coeTransₓ, symm_trans_self, coe_refl]
+
+end Homeomorph
 

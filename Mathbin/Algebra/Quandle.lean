@@ -343,7 +343,7 @@ instance oppositeQuandle :
 /-- The conjugation quandle of a group.  Each element of the group acts by
 the corresponding inner automorphism.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def Conj (G : Type _) :=
   G
 
@@ -387,7 +387,7 @@ instance {G : Type _} {H : Type _} [Groupₓ G] [Groupₓ H] : HasLift (G →* H
 
 Used for Fox n-colorings of knots.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def Dihedral (n : ℕ) :=
   Zmod n
 

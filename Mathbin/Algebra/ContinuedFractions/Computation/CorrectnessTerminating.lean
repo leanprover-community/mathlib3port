@@ -112,9 +112,12 @@ theorem comp_exact_value_correctness_of_stream_eq_some :
     -- int.fract v = 0; we must then have `v = ⌊v⌋`
     · suffices v = ⌊v⌋ by
         simpa [← continuants_aux, ← fract_eq_zero, ← comp_exact_value]
-      calc v = Int.fract v + ⌊v⌋ := by
-          rw [Int.fract_add_floor]_ = ⌊v⌋ := by
+      calc
+        v = Int.fract v + ⌊v⌋ := by
+          rw [Int.fract_add_floor]
+        _ = ⌊v⌋ := by
           simp [← fract_eq_zero]
+        
       
     -- int.fract v ≠ 0; the claim then easily follows by unfolding a single computation step
     · field_simp [← continuants_aux, ← next_continuants, ← next_numerator, ← next_denominator, ← of_h_eq_floor, ←

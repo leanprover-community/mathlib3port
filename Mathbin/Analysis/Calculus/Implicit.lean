@@ -50,7 +50,7 @@ open TopologicalSpace
 
 open Filter
 
-open ContinuousLinearMap (fst snd subtype_val smul_right ker_prod)
+open ContinuousLinearMap (fst snd smul_right ker_prod)
 
 open ContinuousLinearEquiv (ofBijective)
 
@@ -92,10 +92,10 @@ such that
 * both functions are strictly differentiable at `a`;
 * the derivatives are surjective;
 * the kernels of the derivatives are complementary subspaces of `E`. -/
-@[nolint has_inhabited_instance]
-structure ImplicitFunctionData (𝕜 : Type _) [NondiscreteNormedField 𝕜] (E : Type _) [NormedGroup E] [NormedSpace 𝕜 E]
-  [CompleteSpace E] (F : Type _) [NormedGroup F] [NormedSpace 𝕜 F] [CompleteSpace F] (G : Type _) [NormedGroup G]
-  [NormedSpace 𝕜 G] [CompleteSpace G] where
+@[nolint has_nonempty_instance]
+structure ImplicitFunctionData (𝕜 : Type _) [NontriviallyNormedField 𝕜] (E : Type _) [NormedAddCommGroup E]
+  [NormedSpace 𝕜 E] [CompleteSpace E] (F : Type _) [NormedAddCommGroup F] [NormedSpace 𝕜 F] [CompleteSpace F]
+  (G : Type _) [NormedAddCommGroup G] [NormedSpace 𝕜 G] [CompleteSpace G] where
   leftFun : E → F
   leftDeriv : E →L[𝕜] F
   rightFun : E → G
@@ -109,9 +109,9 @@ structure ImplicitFunctionData (𝕜 : Type _) [NondiscreteNormedField 𝕜] (E 
 
 namespace ImplicitFunctionData
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] [CompleteSpace E]
-  {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] [CompleteSpace F] {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G]
-  [CompleteSpace G] (φ : ImplicitFunctionData 𝕜 E F G)
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
+  [CompleteSpace E] {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F] [CompleteSpace F] {G : Type _}
+  [NormedAddCommGroup G] [NormedSpace 𝕜 G] [CompleteSpace G] (φ : ImplicitFunctionData 𝕜 E F G)
 
 /-- The function given by `x ↦ (left_fun x, right_fun x)`. -/
 def prodFun (x : E) : F × G :=
@@ -202,8 +202,9 @@ complementary to `ker f'` lead to different maps `φ`.
 -/
 
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] [CompleteSpace E]
-  {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] [CompleteSpace F] {f : E → F} {f' : E →L[𝕜] F} {a : E}
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
+  [CompleteSpace E] {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F] [CompleteSpace F] {f : E → F} {f' : E →L[𝕜] F}
+  {a : E}
 
 section Defs
 
@@ -299,10 +300,10 @@ theorem implicit_function_of_complemented_apply_image (hf : HasStrictFderivAt f 
 
 theorem to_implicit_function_of_complemented (hf : HasStrictFderivAt f f' a) (hf' : f'.range = ⊤)
     (hker : f'.ker.ClosedComplemented) :
-    HasStrictFderivAt (hf.implicitFunctionOfComplemented f f' hf' hker (f a)) (subtypeVal f'.ker) 0 := by
+    HasStrictFderivAt (hf.implicitFunctionOfComplemented f f' hf' hker (f a)) f'.ker.subtypeL 0 := by
   convert
-        (implicit_function_data_of_complemented f f' hf hf' hker).implicit_function_has_strict_fderiv_at
-          (subtype_val f'.ker) _ _ <;>
+        (implicit_function_data_of_complemented f f' hf hf' hker).implicit_function_has_strict_fderiv_at f'.ker.subtypeL
+          _ _ <;>
       [skip, ext, ext] <;>
     simp [← Classical.some_spec hker]
 
@@ -328,14 +329,14 @@ complementary to `ker f'` lead to different maps `φ`.
 
 section FiniteDimensional
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] [CompleteSpace 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
-  [CompleteSpace E] {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] [FiniteDimensional 𝕜 F] (f : E → F) (f' : E →L[𝕜] F)
-  {a : E}
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] [CompleteSpace 𝕜] {E : Type _} [NormedAddCommGroup E]
+  [NormedSpace 𝕜 E] [CompleteSpace E] {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F] [FiniteDimensional 𝕜 F]
+  (f : E → F) (f' : E →L[𝕜] F) {a : E}
 
 /-- Given a map `f : E → F` to a finite dimensional space with a surjective derivative `f'`,
 returns a local homeomorphism between `E` and `F × ker f'`. -/
 def implicitToLocalHomeomorph (hf : HasStrictFderivAt f f' a) (hf' : f'.range = ⊤) : LocalHomeomorph E (F × f'.ker) :=
-  have := FiniteDimensional.complete 𝕜 F
+  haveI := FiniteDimensional.complete 𝕜 F
   hf.implicit_to_local_homeomorph_of_complemented f f' hf' f'.ker_closed_complemented_of_finite_dimensional_range
 
 /-- Implicit function `g` defined by `f (g z y) = z`. -/
@@ -394,7 +395,7 @@ theorem eq_implicit_function (hf : HasStrictFderivAt f f' a) (hf' : f'.range = �
   apply eq_implicit_function_of_complemented
 
 theorem to_implicit_function (hf : HasStrictFderivAt f f' a) (hf' : f'.range = ⊤) :
-    HasStrictFderivAt (hf.implicitFunction f f' hf' (f a)) (subtypeVal f'.ker) 0 := by
+    HasStrictFderivAt (hf.implicitFunction f f' hf' (f a)) f'.ker.subtypeL 0 := by
   apply to_implicit_function_of_complemented
 
 end FiniteDimensional

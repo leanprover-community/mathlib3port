@@ -90,7 +90,7 @@ theorem fib_add_two_sub_fib_add_one {n : ℕ} : fib (n + 2) - fib (n + 1) = fib 
   rw [fib_add_two, add_tsub_cancel_right]
 
 theorem fib_lt_fib_succ {n : ℕ} (hn : 2 ≤ n) : fib n < fib (n + 1) := by
-  rcases le_iff_exists_add.1 hn with ⟨n, rfl⟩
+  rcases exists_add_of_le hn with ⟨n, rfl⟩
   rw [← tsub_pos_iff_lt, add_commₓ 2, fib_add_two_sub_fib_add_one]
   apply fib_pos (succ_pos n)
 
@@ -107,12 +107,15 @@ theorem le_fib_self {n : ℕ} (five_le_n : 5 ≤ n) : n ≤ fib n := by
     
   · -- n + 1 ≤ fib (n + 1) for 5 ≤ n
     rw [succ_le_iff]
-    calc n ≤ fib n := IH _ < fib (n + 1) :=
+    calc
+      n ≤ fib n := IH
+      _ < fib (n + 1) :=
         fib_lt_fib_succ
           (le_transₓ
             (by
               decide)
             five_le_n)
+      
     
 
 /-- Subsequent Fibonacci numbers are coprime,
@@ -220,11 +223,15 @@ theorem gcd_fib_add_self (m n : ℕ) : gcdₓ (fib m) (fib (n + m)) = gcdₓ (fi
     
   replace h := Nat.succ_pred_eq_of_posₓ h
   rw [← h, succ_eq_add_one]
-  calc gcd (fib m) (fib (n.pred + 1 + m)) = gcd (fib m) (fib n.pred * fib m + fib (n.pred + 1) * fib (m + 1)) := by
+  calc
+    gcd (fib m) (fib (n.pred + 1 + m)) = gcd (fib m) (fib n.pred * fib m + fib (n.pred + 1) * fib (m + 1)) := by
       rw [← fib_add n.pred _]
-      ring_nf _ = gcd (fib m) (fib (n.pred + 1) * fib (m + 1)) := by
-      rw [add_commₓ, gcd_add_mul_right_right (fib m) _ (fib n.pred)]_ = gcd (fib m) (fib (n.pred + 1)) :=
+      ring_nf
+    _ = gcd (fib m) (fib (n.pred + 1) * fib (m + 1)) := by
+      rw [add_commₓ, gcd_add_mul_right_right (fib m) _ (fib n.pred)]
+    _ = gcd (fib m) (fib (n.pred + 1)) :=
       coprime.gcd_mul_right_cancel_right (fib (n.pred + 1)) (coprime.symm (fib_coprime_fib_succ m))
+    
 
 theorem gcd_fib_add_mul_self (m n : ℕ) : ∀ k, gcdₓ (fib m) (fib (n + k * m)) = gcdₓ (fib m) (fib n)
   | 0 => by
@@ -259,9 +266,13 @@ theorem fib_succ_eq_succ_sum (n : ℕ) : fib (n + 1) = (∑ k in Finset.range n,
   induction' n with n ih
   · simp
     
-  · calc fib (n + 2) = fib n + fib (n + 1) := fib_add_two _ = (fib n + ∑ k in Finset.range n, fib k) + 1 := by
-        rw [ih, add_assocₓ]_ = (∑ k in Finset.range (n + 1), fib k) + 1 := by
+  · calc
+      fib (n + 2) = fib n + fib (n + 1) := fib_add_two
+      _ = (fib n + ∑ k in Finset.range n, fib k) + 1 := by
+        rw [ih, add_assocₓ]
+      _ = (∑ k in Finset.range (n + 1), fib k) + 1 := by
         simp [← Finset.range_add_one]
+      
     
 
 end Nat

@@ -468,13 +468,19 @@ section Completion
 variable {p : ℕ} [Fact p.Prime]
 
 /-- The discrete field structure on `ℚ_p` is inherited from the Cauchy completion construction. -/
-instance field : Field ℚ_[p] :=
-  CauSeq.Completion.field
+instance : Field ℚ_[p] :=
+  Cauchy.field
 
 instance : Inhabited ℚ_[p] :=
   ⟨0⟩
 
 -- short circuits
+instance : CommRingₓ ℚ_[p] :=
+  Cauchy.comm_ring
+
+instance : Ringₓ ℚ_[p] :=
+  Cauchy.ring
+
 instance : Zero ℚ_[p] := by
   infer_instance
 
@@ -499,9 +505,6 @@ instance : Div ℚ_[p] := by
 instance : AddCommGroupₓ ℚ_[p] := by
   infer_instance
 
-instance : CommRingₓ ℚ_[p] := by
-  infer_instance
-
 /-- Builds the equivalence class of a Cauchy sequence of rationals. -/
 def mk : PadicSeq p → ℚ_[p] :=
   Quotientₓ.mk
@@ -515,99 +518,48 @@ variable (p : ℕ) [Fact p.Prime]
 theorem mk_eq {f g : PadicSeq p} : mk f = mk g ↔ f ≈ g :=
   Quotientₓ.eq
 
-/-- Embeds the rational numbers in the p-adic numbers. -/
-def ofRat : ℚ → ℚ_[p] :=
-  CauSeq.Completion.ofRat
-
-@[simp]
-theorem of_rat_add : ∀ x y : ℚ, ofRat p (x + y) = ofRat p x + ofRat p y :=
-  CauSeq.Completion.of_rat_add
-
-@[simp]
-theorem of_rat_neg : ∀ x : ℚ, ofRat p (-x) = -ofRat p x :=
-  CauSeq.Completion.of_rat_neg
-
-@[simp]
-theorem of_rat_mul : ∀ x y : ℚ, ofRat p (x * y) = ofRat p x * ofRat p y :=
-  CauSeq.Completion.of_rat_mul
-
-@[simp]
-theorem of_rat_sub : ∀ x y : ℚ, ofRat p (x - y) = ofRat p x - ofRat p y :=
-  CauSeq.Completion.of_rat_sub
-
-@[simp]
-theorem of_rat_div : ∀ x y : ℚ, ofRat p (x / y) = ofRat p x / ofRat p y :=
-  CauSeq.Completion.of_rat_div
-
-@[simp]
-theorem of_rat_one : ofRat p 1 = 1 :=
-  rfl
-
-@[simp]
-theorem of_rat_zero : ofRat p 0 = 0 :=
-  rfl
-
-theorem cast_eq_of_rat_of_nat (n : ℕ) : (↑n : ℚ_[p]) = ofRat p n := by
-  induction' n with n ih
-  · rfl
-    
-  · simpa using ih
-    
-
-theorem cast_eq_of_rat_of_int (n : ℤ) : ↑n = ofRat p n := by
-  induction n <;> simp [← cast_eq_of_rat_of_nat]
-
-theorem cast_eq_of_rat : ∀ q : ℚ, (↑q : ℚ_[p]) = ofRat p q
-  | ⟨n, d, h1, h2⟩ =>
-    show ↑n / ↑d = _ by
-      have : (⟨n, d, h1, h2⟩ : ℚ) = Rat.mk n d := Rat.num_denom'
-      simp [← this, ← Rat.mk_eq_div, ← of_rat_div, ← cast_eq_of_rat_of_int, ← cast_eq_of_rat_of_nat]
-
-@[norm_cast]
-theorem coe_add : ∀ {x y : ℚ}, (↑(x + y) : ℚ_[p]) = ↑x + ↑y := by
-  simp [← cast_eq_of_rat]
-
-@[norm_cast]
-theorem coe_neg : ∀ {x : ℚ}, (↑(-x) : ℚ_[p]) = -↑x := by
-  simp [← cast_eq_of_rat]
-
-@[norm_cast]
-theorem coe_mul : ∀ {x y : ℚ}, (↑(x * y) : ℚ_[p]) = ↑x * ↑y := by
-  simp [← cast_eq_of_rat]
-
-@[norm_cast]
-theorem coe_sub : ∀ {x y : ℚ}, (↑(x - y) : ℚ_[p]) = ↑x - ↑y := by
-  simp [← cast_eq_of_rat]
-
-@[norm_cast]
-theorem coe_div : ∀ {x y : ℚ}, (↑(x / y) : ℚ_[p]) = ↑x / ↑y := by
-  simp [← cast_eq_of_rat]
-
-@[norm_cast]
-theorem coe_one : (↑1 : ℚ_[p]) = 1 := by
-  simp [← cast_eq_of_rat]
-
-@[norm_cast]
-theorem coe_zero : (↑0 : ℚ_[p]) = 0 :=
-  rfl
-
 theorem const_equiv {q r : ℚ} : const (padicNorm p) q ≈ const (padicNorm p) r ↔ q = r :=
   ⟨fun heq : LimZero (const (padicNorm p) (q - r)) => eq_of_sub_eq_zero <| const_lim_zero.1 HEq, fun heq => by
     rw [HEq] <;> apply Setoidₓ.refl _⟩
 
-theorem of_rat_eq {q r : ℚ} : ofRat p q = ofRat p r ↔ q = r :=
+@[norm_cast]
+theorem coe_inj {q r : ℚ} : (↑q : ℚ_[p]) = ↑r ↔ q = r :=
   ⟨(const_equiv p).1 ∘ Quotientₓ.eq.1, fun h => by
     rw [h]⟩
-
-@[norm_cast]
-theorem coe_inj {q r : ℚ} : (↑q : ℚ_[p]) = ↑r ↔ q = r := by
-  simp [← cast_eq_of_rat, ← of_rat_eq]
 
 instance : CharZero ℚ_[p] :=
   ⟨fun m n => by
     rw [← Rat.cast_coe_nat]
     norm_cast
     exact id⟩
+
+@[norm_cast]
+theorem coe_add : ∀ {x y : ℚ}, (↑(x + y) : ℚ_[p]) = ↑x + ↑y :=
+  Rat.cast_add
+
+@[norm_cast]
+theorem coe_neg : ∀ {x : ℚ}, (↑(-x) : ℚ_[p]) = -↑x :=
+  Rat.cast_neg
+
+@[norm_cast]
+theorem coe_mul : ∀ {x y : ℚ}, (↑(x * y) : ℚ_[p]) = ↑x * ↑y :=
+  Rat.cast_mul
+
+@[norm_cast]
+theorem coe_sub : ∀ {x y : ℚ}, (↑(x - y) : ℚ_[p]) = ↑x - ↑y :=
+  Rat.cast_sub
+
+@[norm_cast]
+theorem coe_div : ∀ {x y : ℚ}, (↑(x / y) : ℚ_[p]) = ↑x / ↑y :=
+  Rat.cast_div
+
+@[norm_cast]
+theorem coe_one : (↑1 : ℚ_[p]) = 1 :=
+  rfl
+
+@[norm_cast]
+theorem coe_zero : (↑0 : ℚ_[p]) = 0 :=
+  rfl
 
 end Completion
 
@@ -627,7 +579,6 @@ open PadicSeq
 variable {p : ℕ} [Fact p.Prime]
 
 theorem defn (f : PadicSeq p) {ε : ℚ} (hε : 0 < ε) : ∃ N, ∀, ∀ i ≥ N, ∀, padicNormE (⟦f⟧ - f i) < ε := by
-  simp only [← Padic.cast_eq_of_rat]
   change ∃ N, ∀, ∀ i ≥ N, ∀, (f - const _ (f i)).norm < ε
   by_contra' h
   cases' cauchy₂ f hε with N hN
@@ -705,7 +656,7 @@ instance : IsAbsoluteValue (@padicNormE p _) where
   abv_mul := padicNormE.mul'
 
 @[simp]
-theorem eq_padic_norm' (q : ℚ) : padicNormE (Padic.ofRat p q) = padicNorm p q :=
+theorem eq_padic_norm' (q : ℚ) : padicNormE (q : ℚ_[p]) = padicNorm p q :=
   norm_const _
 
 protected theorem image' {q : ℚ_[p]} : q ≠ 0 → ∃ n : ℤ, padicNormE q = p ^ -n :=
@@ -726,13 +677,12 @@ section Complete
 
 open PadicSeq Padic
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (m n «expr ≥ » N)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (m n «expr ≥ » N)
 theorem rat_dense' {p : ℕ} [Fact p.Prime] (q : ℚ_[p]) {ε : ℚ} (hε : 0 < ε) : ∃ r : ℚ, padicNormE (q - r) < ε :=
   (Quotientₓ.induction_on q) fun q' =>
     have : ∃ N, ∀ (m n) (_ : m ≥ N) (_ : n ≥ N), padicNorm p (q' m - q' n) < ε := cauchy₂ _ hε
     let ⟨N, hN⟩ := this
     ⟨q' N, by
-      simp only [← Padic.cast_eq_of_rat]
       change PadicSeq.norm (q' - const _ (q' N)) < ε
       cases' Decidable.em (q' - const (padicNorm p) (q' N) ≈ 0) with heq hne'
       · simpa only [← HEq, ← PadicSeq.norm, ← dif_pos]
@@ -793,7 +743,7 @@ theorem exi_rat_seq_conv_cauchy : IsCauSeq (padicNorm p) (limSeq f) := fun ε h�
   intro j hj
   suffices padicNormE (↑(lim_seq f j) - f (max N N2) + (f (max N N2) - lim_seq f (max N N2))) < ε by
     ring_nf  at this⊢
-    rw [← padicNormE.eq_padic_norm', ← Padic.cast_eq_of_rat]
+    rw [← padicNormE.eq_padic_norm']
     exact_mod_cast this
   · apply lt_of_le_of_ltₓ
     · apply padicNormE.add
@@ -954,13 +904,15 @@ theorem add_eq_max_of_ne {q r : ℚ_[p]} (h : ∥q∥ ≠ ∥r∥) : ∥q + r∥
 @[simp]
 theorem eq_padic_norm (q : ℚ) : ∥(↑q : ℚ_[p])∥ = padicNorm p q := by
   unfold HasNorm.norm
-  rw [← padicNormE.eq_padic_norm', ← Padic.cast_eq_of_rat]
+  rw [← padicNormE.eq_padic_norm']
 
 @[simp]
 theorem norm_p : ∥(p : ℚ_[p])∥ = p⁻¹ := by
   have p₀ : p ≠ 0 := hp.1.ne_zero
   have p₁ : p ≠ 1 := hp.1.ne_one
-  simp [← p₀, ← p₁, ← norm, ← padicNorm, ← padicValRat, ← padicValInt, ← zpow_neg, ← Padic.cast_eq_of_rat_of_nat]
+  rw [← @Rat.cast_coe_nat ℝ _ p]
+  rw [← @Rat.cast_coe_nat ℚ_[p] _ p]
+  simp [← p₀, ← p₁, ← norm, ← padicNorm, ← padicValRat, ← padicValInt, ← zpow_neg, -Rat.cast_coe_nat]
 
 theorem norm_p_lt_one : ∥(p : ℚ_[p])∥ < 1 := by
   rw [norm_p]
@@ -971,7 +923,7 @@ theorem norm_p_lt_one : ∥(p : ℚ_[p])∥ < 1 := by
 theorem norm_p_pow (n : ℤ) : ∥(p ^ n : ℚ_[p])∥ = p ^ -n := by
   rw [norm_zpow, norm_p] <;> field_simp
 
-instance : NondiscreteNormedField ℚ_[p] :=
+instance : NontriviallyNormedField ℚ_[p] :=
   { Padic.normedField p with
     non_trivial :=
       ⟨p⁻¹, by
@@ -1005,7 +957,7 @@ theorem norm_rat_le_one : ∀ {q : ℚ} (hq : ¬p ∣ q.denom), ∥(q : ℚ_[p])
   | ⟨n, d, hn, hd⟩ => fun hq : ¬p ∣ d =>
     if hnz : n = 0 then by
       have : (⟨n, d, hn, hd⟩ : ℚ) = 0 := Rat.zero_iff_num_zero.mpr hnz
-      norm_num [← this]
+      norm_num[← this]
     else by
       have hnz' : { num := n, denom := d, Pos := hn, cop := hd } ≠ 0 := mt Rat.zero_iff_num_zero.1 hnz
       rw [padicNormE.eq_padic_norm]
@@ -1031,8 +983,12 @@ theorem norm_int_lt_one_iff_dvd (k : ℤ) : ∥(k : ℚ_[p])∥ < 1 ↔ ↑p ∣
     contrapose! h
     apply le_of_eqₓ
     rw [eq_comm]
-    calc ∥(k : ℚ_[p])∥ = ∥((k : ℚ) : ℚ_[p])∥ := by
-        norm_cast _ = padicNorm p k := padicNormE.eq_padic_norm _ _ = 1 := _
+    calc
+      ∥(k : ℚ_[p])∥ = ∥((k : ℚ) : ℚ_[p])∥ := by
+        norm_cast
+      _ = padicNorm p k := padicNormE.eq_padic_norm _
+      _ = 1 := _
+      
     rw [padicNorm]
     split_ifs with H
     · exfalso
@@ -1051,12 +1007,14 @@ theorem norm_int_lt_one_iff_dvd (k : ℤ) : ∥(k : ℚ_[p])∥ < 1 ↔ ↑p ∣
   · rintro ⟨x, rfl⟩
     push_cast
     rw [padicNormE.mul]
-    calc _ ≤ ∥(p : ℚ_[p])∥ * 1 :=
+    calc
+      _ ≤ ∥(p : ℚ_[p])∥ * 1 :=
         mul_le_mul le_rfl
           (by
             simpa using norm_int_le_one _)
-          (norm_nonneg _) (norm_nonneg _)_ < 1 :=
-        _
+          (norm_nonneg _) (norm_nonneg _)
+      _ < 1 := _
+      
     · rw [mul_oneₓ, padicNormE.norm_p]
       apply inv_lt_one
       exact_mod_cast hp.1.one_lt
@@ -1185,9 +1143,7 @@ theorem norm_eq_pow_val {x : ℚ_[p]} : x ≠ 0 → ∥x∥ = p ^ -x.Valuation :
   change (PadicSeq.norm _ : ℝ) = (p : ℝ) ^ -PadicSeq.valuation _
   rw [PadicSeq.norm_eq_pow_val]
   change ↑((p : ℚ) ^ -PadicSeq.valuation f) = (p : ℝ) ^ -PadicSeq.valuation f
-  · rw [Rat.cast_zpow]
-    congr 1
-    norm_cast
+  · rw [Rat.cast_zpow, Rat.cast_coe_nat]
     
   · apply CauSeq.not_lim_zero_of_not_congr_zero
     contrapose! hf

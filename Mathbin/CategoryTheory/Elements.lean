@@ -41,7 +41,7 @@ variable {C : Type u} [Category.{v} C]
 /-- The type of objects for the category of elements of a functor `F : C ⥤ Type`
 is a pair `(X : C, x : F.obj X)`.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def Functor.Elements (F : C ⥤ Type w) :=
   Σc : C, F.obj c
 

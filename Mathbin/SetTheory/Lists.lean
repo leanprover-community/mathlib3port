@@ -125,12 +125,10 @@ end
 -- mathport name: «expr ~ »
 local infixl:50 " ~ " => Lists.Equiv
 
-/-- Equivalence of ZFA lists. Defined inductively. -/
-add_decl_doc Lists.Equiv
-
-/-- Subset relation for ZFA lists. Defined inductively. -/
-add_decl_doc Lists'.Subset
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident lists.equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident lists'.subset]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace Lists'
 
 instance : HasSubset (Lists' α true) :=
@@ -373,12 +371,12 @@ mutual
       is_false <| by
         rintro ⟨⟩
     | ⟨tt, l₁⟩, ⟨tt, l₂⟩ => by
-      have :=
+      haveI :=
         have : sizeof l₁ + sizeof l₂ < sizeof (⟨tt, l₁⟩ : Lists α) + sizeof (⟨tt, l₂⟩ : Lists α) := by
           run_tac
             default_dec_tac
         subset.decidable l₁ l₂
-      have :=
+      haveI :=
         have : sizeof l₂ + sizeof l₁ < sizeof (⟨tt, l₁⟩ : Lists α) + sizeof (⟨tt, l₂⟩ : Lists α) := by
           run_tac
             default_dec_tac
@@ -388,11 +386,11 @@ mutual
   def Subset.decidable [DecidableEq α] : ∀ l₁ l₂ : Lists' α true, Decidable (l₁ ⊆ l₂)
     | Lists'.nil, l₂ => isTrue Subset.nil
     | @Lists'.cons' _ b a l₁, l₂ => by
-      have :=
+      haveI :=
         have : sizeof (⟨b, a⟩ : Lists α) + sizeof l₂ < sizeof (Lists'.cons' a l₁) + sizeof l₂ :=
           add_lt_add_right (lt_sizeof_cons' _ _) _
         mem.decidable ⟨b, a⟩ l₂
-      have :=
+      haveI :=
         have : sizeof l₁ + sizeof l₂ < sizeof (Lists'.cons' a l₁) + sizeof l₂ := by
           run_tac
             default_dec_tac
@@ -404,11 +402,11 @@ mutual
       is_false <| by
         rintro ⟨_, ⟨⟩, _⟩
     | a, Lists'.cons' b l₂ => by
-      have :=
+      haveI :=
         have : sizeof a + sizeof (⟨_, b⟩ : Lists α) < sizeof a + sizeof (Lists'.cons' b l₂) :=
           add_lt_add_left (lt_sizeof_cons' _ _) _
         equiv.decidable a ⟨_, b⟩
-      have :=
+      haveI :=
         have : sizeof a + sizeof l₂ < sizeof a + sizeof (Lists'.cons' b l₂) := by
           run_tac
             default_dec_tac

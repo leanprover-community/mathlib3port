@@ -98,7 +98,7 @@ theorem exp_series_sum_eq (x : 𝔸) : (expSeries 𝕂 𝔸).Sum x = ∑' n : �
 theorem exp_eq_tsum : exp 𝕂 = fun x : 𝔸 => ∑' n : ℕ, (n !⁻¹ : 𝕂) • x ^ n :=
   funext exp_series_sum_eq
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (n «expr ∉ » ({0} : finset exprℕ()))
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (n «expr ∉ » ({0} : finset exprℕ()))
 @[simp]
 theorem exp_zero [T2Space 𝔸] : exp 𝕂 (0 : 𝔸) = 1 := by
   suffices (fun x : 𝔸 => ∑' n : ℕ, (n !⁻¹ : 𝕂) • x ^ n) 0 = ∑' n : ℕ, if n = 0 then 1 else 0 by
@@ -157,7 +157,7 @@ section Normed
 
 section AnyFieldAnyAlgebra
 
-variable {𝕂 𝔸 𝔹 : Type _} [NondiscreteNormedField 𝕂]
+variable {𝕂 𝔸 𝔹 : Type _} [NontriviallyNormedField 𝕂]
 
 variable [NormedRing 𝔸] [NormedRing 𝔹] [NormedAlgebra 𝕂 𝔸] [NormedAlgebra 𝕂 𝔹]
 
@@ -251,7 +251,7 @@ theorem is_unit_exp_of_mem_ball [CharZero 𝕂] {x : 𝔸} (hx : x ∈ Emetric.B
 
 theorem inv_of_exp_of_mem_ball [CharZero 𝕂] {x : 𝔸} (hx : x ∈ Emetric.Ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius)
     [Invertible (exp 𝕂 x)] : ⅟ (exp 𝕂 x) = exp 𝕂 (-x) := by
-  let this := invertibleExpOfMemBall hx
+  letI := invertibleExpOfMemBall hx
   convert (rfl : ⅟ (exp 𝕂 x) = _)
 
 /-- Any continuous ring homomorphism commutes with `exp`. -/
@@ -272,7 +272,7 @@ end AnyFieldAnyAlgebra
 
 section AnyFieldDivisionAlgebra
 
-variable {𝕂 𝔸 : Type _} [NondiscreteNormedField 𝕂] [NormedDivisionRing 𝔸] [NormedAlgebra 𝕂 𝔸]
+variable {𝕂 𝔸 : Type _} [NontriviallyNormedField 𝕂] [NormedDivisionRing 𝔸] [NormedAlgebra 𝕂 𝔸]
 
 variable (𝕂)
 
@@ -295,14 +295,14 @@ variable {𝕂}
 
 theorem exp_neg_of_mem_ball [CharZero 𝕂] [CompleteSpace 𝔸] {x : 𝔸}
     (hx : x ∈ Emetric.Ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) : exp 𝕂 (-x) = (exp 𝕂 x)⁻¹ := by
-  let this := invertibleExpOfMemBall hx
+  letI := invertibleExpOfMemBall hx
   exact inv_of_eq_inv (exp 𝕂 x)
 
 end AnyFieldDivisionAlgebra
 
 section AnyFieldCommAlgebra
 
-variable {𝕂 𝔸 : Type _} [NondiscreteNormedField 𝕂] [NormedCommRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
+variable {𝕂 𝔸 : Type _} [NontriviallyNormedField 𝕂] [NormedCommRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
 
 /-- In a commutative Banach-algebra `𝔸` over a normed field `𝕂` of characteristic zero,
 `exp 𝕂 (x+y) = (exp 𝕂 x) * (exp 𝕂 y)` for all `x`, `y` in the disk of convergence. -/
@@ -394,7 +394,7 @@ theorem inv_of_exp (x : 𝔸) [Invertible (exp 𝕂 x)] : ⅟ (exp 𝕂 x) = exp
   inv_of_exp_of_mem_ball <| (exp_series_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _
 
 theorem Ringₓ.inverse_exp (x : 𝔸) : Ring.inverse (exp 𝕂 x) = exp 𝕂 (-x) := by
-  let this := invertibleExp 𝕂 x
+  letI := invertibleExp 𝕂 x
   exact Ringₓ.inverse_invertible _
 
 end
@@ -447,7 +447,7 @@ theorem Prod.snd_exp [CompleteSpace 𝔹] (x : 𝔸 × 𝔹) : (exp 𝕂 x).snd 
 theorem Pi.exp_apply {ι : Type _} {𝔸 : ι → Type _} [Fintype ι] [∀ i, NormedRing (𝔸 i)] [∀ i, NormedAlgebra 𝕂 (𝔸 i)]
     [∀ i, CompleteSpace (𝔸 i)] (x : ∀ i, 𝔸 i) (i : ι) : exp 𝕂 x i = exp 𝕂 (x i) := by
   -- Lean struggles to infer this instance due to it wanting `[Π i, semi_normed_ring (𝔸 i)]`
-  let this : NormedAlgebra 𝕂 (∀ i, 𝔸 i) := Pi.normedAlgebra _
+  letI : NormedAlgebra 𝕂 (∀ i, 𝔸 i) := Pi.normedAlgebra _
   exact map_exp _ (Pi.evalRingHom 𝔸 i) (continuous_apply _) x
 
 theorem Pi.exp_def {ι : Type _} {𝔸 : ι → Type _} [Fintype ι] [∀ i, NormedRing (𝔸 i)] [∀ i, NormedAlgebra 𝕂 (𝔸 i)]

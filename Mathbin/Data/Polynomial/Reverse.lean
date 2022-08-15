@@ -93,17 +93,20 @@ Eventually, it will be used with `N` exactly equal to the degree of `f`.  -/
 noncomputable def reflect (N : ℕ) : R[X] → R[X]
   | ⟨f⟩ => ⟨Finsupp.embDomain (revAt N) f⟩
 
-theorem reflect_support (N : ℕ) (f : R[X]) : (reflect N f).Support = image (revAt N) f.Support := by
+theorem reflect_support (N : ℕ) (f : R[X]) : (reflect N f).Support = Finset.image (revAt N) f.Support := by
   rcases f with ⟨⟩
   ext1
-  rw [reflect, mem_image, support, support, support_emb_domain, mem_map]
+  simp only [← reflect, ← support_of_finsupp, ← support_emb_domain, ← Finset.mem_map, ← Finset.mem_image]
 
 @[simp]
 theorem coeff_reflect (N : ℕ) (f : R[X]) (i : ℕ) : coeff (reflect N f) i = f.coeff (revAt N i) := by
   rcases f with ⟨⟩
   simp only [← reflect, ← coeff]
-  calc Finsupp.embDomain (rev_at N) f i = Finsupp.embDomain (rev_at N) f (rev_at N (rev_at N i)) := by
-      rw [rev_at_invol]_ = f (rev_at N i) := Finsupp.emb_domain_apply _ _ _
+  calc
+    Finsupp.embDomain (rev_at N) f i = Finsupp.embDomain (rev_at N) f (rev_at N (rev_at N i)) := by
+      rw [rev_at_invol]
+    _ = f (rev_at N i) := Finsupp.emb_domain_apply _ _ _
+    
 
 @[simp]
 theorem reflect_zero {N : ℕ} : reflect N (0 : R[X]) = 0 :=

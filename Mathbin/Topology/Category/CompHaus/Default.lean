@@ -96,8 +96,9 @@ theorem is_iso_of_bijective {X Y : CompHaus.{u}} (f : X ⟶ Y) (bij : Function.B
     
 
 /-- Any continuous bijection of compact Hausdorff spaces induces an isomorphism. -/
-noncomputable def isoOfBijective {X Y : CompHaus.{u}} (f : X ⟶ Y) (bij : Function.Bijective f) : X ≅ Y := by
-  let this := is_iso_of_bijective _ bij <;> exact as_iso f
+noncomputable def isoOfBijective {X Y : CompHaus.{u}} (f : X ⟶ Y) (bij : Function.Bijective f) : X ≅ Y :=
+  letI := is_iso_of_bijective _ bij
+  as_iso f
 
 end CompHaus
 
@@ -161,7 +162,7 @@ instance CompHaus.has_colimits : Limits.HasColimits CompHaus :=
 
 namespace CompHaus
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
 /-- An explicit limit cone for a functor `F : J ⥤ CompHaus`, defined in terms of
 `Top.limit_cone`. -/
 def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHaus.{max v u}) : Limits.Cone F where
@@ -196,7 +197,7 @@ def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHaus.{max v u}) : Li
       naturality' := by
         intro _ _ _
         ext ⟨x, hx⟩
-        simp only [← comp_apply, ← functor.const.obj_map, ← id_apply]
+        simp only [← comp_apply, ← functor.const_obj_map, ← id_apply]
         exact (hx f).symm }
 
 /-- The limit cone `CompHaus.limit_cone F` is indeed a limit cone. -/
@@ -216,10 +217,10 @@ theorem epi_iff_surjective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Epi f ↔ Functi
       rw [Set.disjoint_singleton_right]
       rintro ⟨y', hy'⟩
       exact hy y' hy'
-    have : NormalSpace ↥Y.to_Top := normal_of_compact_t2
+    haveI : NormalSpace ↥Y.to_Top := normal_of_compact_t2
     obtain ⟨φ, hφ0, hφ1, hφ01⟩ := exists_continuous_zero_one_of_closed hC hD hCD
-    have : CompactSpace (ULift.{u} <| Set.Icc (0 : ℝ) 1) := homeomorph.ulift.symm.compact_space
-    have : T2Space (ULift.{u} <| Set.Icc (0 : ℝ) 1) := homeomorph.ulift.symm.t2_space
+    haveI : CompactSpace (ULift.{u} <| Set.Icc (0 : ℝ) 1) := homeomorph.ulift.symm.compact_space
+    haveI : T2Space (ULift.{u} <| Set.Icc (0 : ℝ) 1) := homeomorph.ulift.symm.t2_space
     let Z := of (ULift.{u} <| Set.Icc (0 : ℝ) 1)
     let g : Y ⟶ Z :=
       ⟨fun y' => ⟨⟨φ y', hφ01 y'⟩⟩, continuous_ulift_up.comp (continuous_subtype_mk (fun y' => hφ01 y') φ.continuous)⟩

@@ -461,7 +461,7 @@ theorem length_edges {u v : V} (p : G.Walk u v) : p.edges.length = p.length := b
 
 theorem dart_fst_mem_support_of_mem_darts : ∀ {u v : V} (p : G.Walk u v) {d : G.Dart}, d ∈ p.darts → d.fst ∈ p.Support
   | u, v, cons h p', d, hd => by
-    simp only [← support_cons, ← darts_cons, ← List.mem_cons_iff] at hd⊢
+    simp only [← support_cons, ← darts_cons, ← List.mem_cons_iffₓ] at hd⊢
     rcases hd with (rfl | hd)
     · exact Or.inl rfl
       
@@ -511,24 +511,24 @@ theorem edges_nodup_of_support_nodup {u v : V} {p : G.Walk u v} (h : p.Support.N
 structure IsTrail {u v : V} (p : G.Walk u v) : Prop where
   edges_nodup : p.edges.Nodup
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1467:11: unsupported: advanced extends in structure
+-- ./././Mathport/Syntax/Translate/Basic.lean:1481:11: unsupported: advanced extends in structure
 /-- A *path* is a walk with no repeating vertices.
 Use `simple_graph.walk.is_path.mk'` for a simpler constructor. -/
 structure IsPath {u v : V} (p : G.Walk u v) extends
-  "./././Mathport/Syntax/Translate/Basic.lean:1467:11: unsupported: advanced extends in structure" : Prop where
+  "./././Mathport/Syntax/Translate/Basic.lean:1481:11: unsupported: advanced extends in structure" : Prop where
   support_nodup : p.Support.Nodup
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1467:11: unsupported: advanced extends in structure
+-- ./././Mathport/Syntax/Translate/Basic.lean:1481:11: unsupported: advanced extends in structure
 /-- A *circuit* at `u : V` is a nonempty trail beginning and ending at `u`. -/
 structure IsCircuit {u : V} (p : G.Walk u u) extends
-  "./././Mathport/Syntax/Translate/Basic.lean:1467:11: unsupported: advanced extends in structure" : Prop where
+  "./././Mathport/Syntax/Translate/Basic.lean:1481:11: unsupported: advanced extends in structure" : Prop where
   ne_nil : p ≠ nil
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1467:11: unsupported: advanced extends in structure
+-- ./././Mathport/Syntax/Translate/Basic.lean:1481:11: unsupported: advanced extends in structure
 /-- A *cycle* at `u : V` is a circuit at `u` whose only repeating vertex
 is `u` (which appears exactly twice). -/
 structure IsCycle {u : V} (p : G.Walk u u) extends
-  "./././Mathport/Syntax/Translate/Basic.lean:1467:11: unsupported: advanced extends in structure" : Prop where
+  "./././Mathport/Syntax/Translate/Basic.lean:1481:11: unsupported: advanced extends in structure" : Prop where
   support_nodup : p.Support.tail.Nodup
 
 theorem is_trail_def {u v : V} (p : G.Walk u v) : p.IsTrail ↔ p.edges.Nodup :=
@@ -827,12 +827,74 @@ end WalkDecomp
 
 end Walk
 
-/-! ### Walks to paths -/
+/-! ### Type of paths -/
 
 
 /-- The type for paths between two vertices. -/
 abbrev Path (u v : V) :=
   { p : G.Walk u v // p.IsPath }
+
+namespace Path
+
+variable {G G'}
+
+@[simp]
+protected theorem is_path {u v : V} (p : G.Path u v) : (p : G.Walk u v).IsPath :=
+  p.property
+
+@[simp]
+protected theorem is_trail {u v : V} (p : G.Path u v) : (p : G.Walk u v).IsTrail :=
+  p.property.to_trail
+
+/-- The length-0 path at a vertex. -/
+@[refl, simps]
+protected def nil {u : V} : G.Path u u :=
+  ⟨Walk.nil, Walk.IsPath.nil⟩
+
+/-- The length-1 path between a pair of adjacent vertices. -/
+@[simps]
+def singleton {u v : V} (h : G.Adj u v) : G.Path u v :=
+  ⟨Walk.cons h Walk.nil, by
+    simp [← h.ne]⟩
+
+theorem mk_mem_edges_singleton {u v : V} (h : G.Adj u v) : ⟦(u, v)⟧ ∈ (singleton h : G.Walk u v).edges := by
+  simp [← singleton]
+
+/-- The reverse of a path is another path.  See also `simple_graph.walk.reverse`. -/
+@[symm, simps]
+def reverse {u v : V} (p : G.Path u v) : G.Path v u :=
+  ⟨Walk.reverse p, p.property.reverse⟩
+
+theorem count_support_eq_one [DecidableEq V] {u v w : V} {p : G.Path u v} (hw : w ∈ (p : G.Walk u v).Support) :
+    (p : G.Walk u v).Support.count w = 1 :=
+  List.count_eq_one_of_mem p.property.support_nodup hw
+
+theorem count_edges_eq_one [DecidableEq V] {u v : V} {p : G.Path u v} (e : Sym2 V) (hw : e ∈ (p : G.Walk u v).edges) :
+    (p : G.Walk u v).edges.count e = 1 :=
+  List.count_eq_one_of_mem p.property.to_trail.edges_nodup hw
+
+@[simp]
+theorem nodup_support {u v : V} (p : G.Path u v) : (p : G.Walk u v).Support.Nodup :=
+  (Walk.is_path_def _).mp p.property
+
+theorem loop_eq {v : V} (p : G.Path v v) : p = path.nil := by
+  obtain p | p := p
+  · rfl
+    
+  · simpa using p_property
+    
+
+theorem not_mem_edges_of_loop {v : V} {e : Sym2 V} {p : G.Path v v} : ¬e ∈ (p : G.Walk v v).edges := by
+  simp [← p.loop_eq]
+
+theorem cons_is_cycle {u v : V} (p : G.Path v u) (h : G.Adj u v) (he : ¬⟦(u, v)⟧ ∈ (p : G.Walk v u).edges) :
+    (Walk.cons h ↑p).IsCycle := by
+  simp [← walk.is_cycle_def, ← walk.cons_is_trail_iff, ← he]
+
+end Path
+
+/-! ### Walks to paths -/
+
 
 namespace Walk
 
@@ -929,7 +991,7 @@ theorem edges_to_path_subset {u v : V} (p : G.Walk u v) : (p.toPath : G.Walk u v
 
 end Walk
 
-/-! ## Mapping paths -/
+/-! ### Mapping paths -/
 
 
 namespace Walk
@@ -1186,7 +1248,7 @@ instance : CoeFun G.Connected fun _ => ∀ u v : V, G.Reachable u v :=
 
 theorem Connected.map {G : SimpleGraph V} {H : SimpleGraph V'} (f : G →g H) (hf : Surjective f) (hG : G.Connected) :
     H.Connected := by
-  have := hG.nonempty.map f
+  haveI := hG.nonempty.map f
   exact ⟨hG.preconnected.map f hf⟩
 
 theorem Iso.connected_iff {G : SimpleGraph V} {H : SimpleGraph V'} (e : G ≃g H) : G.Connected ↔ H.Connected :=
@@ -1208,12 +1270,12 @@ section ConnectedComponent
 
 variable {G}
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem ConnectedComponent.ind {β : G.ConnectedComponent → Prop} (h : ∀ v : V, β (G.connectedComponentMk v))
     (c : G.ConnectedComponent) : β c :=
   Quot.ind h c
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem ConnectedComponent.ind₂ {β : G.ConnectedComponent → G.ConnectedComponent → Prop}
     (h : ∀ v w : V, β (G.connectedComponentMk v) (G.connectedComponentMk w)) (c d : G.ConnectedComponent) : β c d :=
   Quot.induction_on₂ c d h

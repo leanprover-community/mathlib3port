@@ -74,31 +74,17 @@ theorem T_zero : t R 0 = 1 :=
 theorem T_one : t R 1 = X :=
   rfl
 
-theorem T_two : t R 2 = 2 * X ^ 2 - 1 := by
-  simp only [← T, ← sub_left_inj, ← sq, ← mul_assoc]
-
 @[simp]
 theorem T_add_two (n : ℕ) : t R (n + 2) = 2 * X * t R (n + 1) - t R n := by
   rw [T]
+
+theorem T_two : t R 2 = 2 * X ^ 2 - 1 := by
+  simp only [← T, ← sub_left_inj, ← sq, ← mul_assoc]
 
 theorem T_of_two_le (n : ℕ) (h : 2 ≤ n) : t R n = 2 * X * t R (n - 1) - t R (n - 2) := by
   obtain ⟨n, rfl⟩ := Nat.exists_eq_add_of_le h
   rw [add_commₓ]
   exact T_add_two R n
-
-variable {R S}
-
-theorem map_T (f : R →+* S) : ∀ n : ℕ, map f (t R n) = t S n
-  | 0 => by
-    simp only [← T_zero, ← Polynomial.map_one]
-  | 1 => by
-    simp only [← T_one, ← map_X]
-  | n + 2 => by
-    simp only [← T_add_two, ← Polynomial.map_mul, ← Polynomial.map_sub, ← map_X, ← bit0, ← Polynomial.map_add, ←
-      Polynomial.map_one]
-    rw [map_T (n + 1), map_T n]
-
-variable (R S)
 
 /-- `U n` is the `n`-th Chebyshev polynomial of the second kind -/
 noncomputable def u : ℕ → R[X]
@@ -114,13 +100,13 @@ theorem U_zero : u R 0 = 1 :=
 theorem U_one : u R 1 = 2 * X :=
   rfl
 
-theorem U_two : u R 2 = 4 * X ^ 2 - 1 := by
-  simp only [← U]
-  ring
-
 @[simp]
 theorem U_add_two (n : ℕ) : u R (n + 2) = 2 * X * u R (n + 1) - u R n := by
   rw [U]
+
+theorem U_two : u R 2 = 4 * X ^ 2 - 1 := by
+  simp only [← U]
+  ring
 
 theorem U_of_two_le (n : ℕ) (h : 2 ≤ n) : u R n = 2 * X * u R (n - 1) - u R (n - 2) := by
   obtain ⟨n, rfl⟩ := Nat.exists_eq_add_of_le h
@@ -169,6 +155,17 @@ theorem one_sub_X_sq_mul_U_eq_pol_in_T (n : ℕ) : (1 - X ^ 2) * u R n = X * t R
   rw [T_eq_X_mul_T_sub_pol_U, ← sub_add, sub_self, zero_addₓ]
 
 variable {R S}
+
+@[simp]
+theorem map_T (f : R →+* S) : ∀ n : ℕ, map f (t R n) = t S n
+  | 0 => by
+    simp only [← T_zero, ← Polynomial.map_one]
+  | 1 => by
+    simp only [← T_one, ← map_X]
+  | n + 2 => by
+    simp only [← T_add_two, ← Polynomial.map_mul, ← Polynomial.map_sub, ← map_X, ← bit0, ← Polynomial.map_add, ←
+      Polynomial.map_one]
+    rw [map_T (n + 1), map_T n]
 
 @[simp]
 theorem map_U (f : R →+* S) : ∀ n : ℕ, map f (u R n) = u S n
@@ -237,24 +234,26 @@ theorem add_one_mul_T_eq_poly_in_U (n : ℕ) :
     ((n : R[X]) + 1) * T R (n + 1) =
         ((n : R[X]) + 1 + 1) * (X * U R n + T R (n + 1)) - X * ((n + 1) * U R n) - (X * U R n + T R (n + 1)) :=
       by
-      ring _ = derivative (T R (n + 2)) - X * derivative (T R (n + 1)) - U R (n + 1) := by
+      ring
+    _ = derivative (T R (n + 2)) - X * derivative (T R (n + 1)) - U R (n + 1) := by
       rw [← U_eq_X_mul_U_add_T, ← T_derivative_eq_U, ← Nat.cast_oneₓ, ← Nat.cast_addₓ, Nat.cast_oneₓ, ←
-        T_derivative_eq_U
-          (n +
-            1)]_ =
+        T_derivative_eq_U (n + 1)]
+    _ =
         U R (n + 1) - X * U R n + X * derivative (T R (n + 1)) + 2 * X * U R n - (1 - X ^ 2) * derivative (U R n) -
             X * derivative (T R (n + 1)) -
           U R (n + 1) :=
       by
-      rw [h]_ = X * U R n - (1 - X ^ 2) * derivative (U R n) := by
+      rw [h]
+    _ = X * U R n - (1 - X ^ 2) * derivative (U R n) := by
       ring
+    
 
 variable (R)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:646:40: in linear_combination #[[expr «expr - »(«expr - »(«expr - »(«expr + »(«expr * »(«expr * »(2, T R «expr + »(«expr + »(m, k), 2)), h₁), «expr * »(«expr * »(2, X), H₁)), H₂), h₂), h₃)],
+-- ./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr «expr - »(«expr - »(«expr - »(«expr + »(«expr * »(«expr * »(2, T R «expr + »(«expr + »(m, k), 2)), h₁), «expr * »(«expr * »(2, X), H₁)), H₂), h₂), h₃)],
   []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args
 /-- The product of two Chebyshev polynomials is the sum of two other Chebyshev polynomials. -/
-theorem mul_T : ∀ m : ℕ, ∀ k, 2 * t R m * t R (m + k) = t R (2 * m + k) + t R k
+theorem mul_T : ∀ m k, 2 * t R m * t R (m + k) = t R (2 * m + k) + t R k
   | 0 => by
     simp [← two_mul, ← add_mulₓ]
   | 1 => by
@@ -288,10 +287,10 @@ theorem mul_T : ∀ m : ℕ, ∀ k, 2 * t R m * t R (m + k) = t R (2 * m + k) + 
     have h₂ := T_add_two R (2 * m + k + 2)
     have h₃ := T_add_two R k
     trace
-      "./././Mathport/Syntax/Translate/Basic.lean:646:40: in linear_combination #[[expr «expr - »(«expr - »(«expr - »(«expr + »(«expr * »(«expr * »(2, T R «expr + »(«expr + »(m, k), 2)), h₁), «expr * »(«expr * »(2, X), H₁)), H₂), h₂), h₃)],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args"
+      "./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr «expr - »(«expr - »(«expr - »(«expr + »(«expr * »(«expr * »(2, T R «expr + »(«expr + »(m, k), 2)), h₁), «expr * »(«expr * »(2, X), H₁)), H₂), h₂), h₃)],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args"
 
 /-- The `(m * n)`-th Chebyshev polynomial is the composition of the `m`-th and `n`-th -/
-theorem T_mul : ∀ m : ℕ, ∀ n : ℕ, t R (m * n) = (t R m).comp (t R n)
+theorem T_mul : ∀ m n, t R (m * n) = (t R m).comp (t R n)
   | 0 => by
     simp
   | 1 => by

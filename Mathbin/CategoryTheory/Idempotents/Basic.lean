@@ -83,7 +83,7 @@ theorem is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent :
   · intro h
     refine' ⟨_⟩
     intro X p hp
-    have := h X p hp
+    haveI := h X p hp
     use equalizer (𝟙 X) p
     use equalizer.ι (𝟙 X) p
     use
@@ -115,12 +115,12 @@ theorem is_idempotent_complete_iff_idempotents_have_kernels [Preadditive C] :
   rw [is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent]
   constructor
   · intro h X p hp
-    have := h X (𝟙 _ - p) (idem_of_id_sub_idem p hp)
+    haveI := h X (𝟙 _ - p) (idem_of_id_sub_idem p hp)
     convert has_kernel_of_has_equalizer (𝟙 X) (𝟙 X - p)
     rw [sub_sub_cancel]
     
   · intro h X p hp
-    have : has_kernel (𝟙 _ - p) := h X (𝟙 _ - p) (idem_of_id_sub_idem p hp)
+    haveI : has_kernel (𝟙 _ - p) := h X (𝟙 _ - p) (idem_of_id_sub_idem p hp)
     apply preadditive.has_equalizer_of_has_kernel
     
 

@@ -119,7 +119,7 @@ theorem nhds_within_le_iff {s t : Set α} {x : α} : 𝓝[s] x ≤ 𝓝[t] x ↔
 theorem preimage_nhds_within_coinduced' {π : α → β} {s : Set β} {t : Set α} {a : α} (h : a ∈ t) (ht : IsOpen t)
     (hs : s ∈ @nhds β (TopologicalSpace.coinduced (fun x : t => π x) Subtype.topologicalSpace) (π a)) :
     π ⁻¹' s ∈ 𝓝[t] a := by
-  let this := TopologicalSpace.coinduced (fun x : t => π x) Subtype.topologicalSpace
+  letI := TopologicalSpace.coinduced (fun x : t => π x) Subtype.topologicalSpace
   rcases mem_nhds_iff.mp hs with ⟨V, hVs, V_op, mem_V⟩
   refine'
     mem_nhds_within_iff_exists_mem_nhds_inter.mpr
@@ -250,7 +250,7 @@ theorem nhds_within_pi_eq' {ι : Type _} {α : ι → Type _} [∀ i, Topologica
   simp only [← nhdsWithin, ← nhds_pi, ← Filter.pi, ← comap_inf, ← comap_infi, ← pi_def, ← comap_principal,
     infi_principal_finite hI, infi_inf_eq]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ∉ » I)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (i «expr ∉ » I)
 theorem nhds_within_pi_eq {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {I : Set ι} (hI : I.Finite)
     (s : ∀ i, Set (α i)) (x : ∀ i, α i) :
     𝓝[pi I s] x = (⨅ i ∈ I, comap (fun x => x i) (𝓝[s i] x i))⊓⨅ (i) (_ : i ∉ I), comap (fun x => x i) (𝓝 (x i)) := by
@@ -259,7 +259,7 @@ theorem nhds_within_pi_eq {ι : Type _} {α : ι → Type _} [∀ i, Topological
   rw [infi_split _ fun i => i ∈ I, inf_right_comm]
   simp only [← infi_inf_eq]
 
-theorem nhds_within_pi_univ_eq {ι : Type _} {α : ι → Type _} [Fintype ι] [∀ i, TopologicalSpace (α i)]
+theorem nhds_within_pi_univ_eq {ι : Type _} {α : ι → Type _} [Finite ι] [∀ i, TopologicalSpace (α i)]
     (s : ∀ i, Set (α i)) (x : ∀ i, α i) : 𝓝[pi Univ s] x = ⨅ i, comap (fun x => x i) (𝓝[s i] x i) := by
   simpa [← nhdsWithin] using nhds_within_pi_eq finite_univ s x
 
@@ -553,7 +553,7 @@ theorem ContinuousWithinAt.union {f : α → β} {s t : Set α} {x : α} (hs : C
 
 theorem ContinuousWithinAt.mem_closure_image {f : α → β} {s : Set α} {x : α} (h : ContinuousWithinAt f s x)
     (hx : x ∈ Closure s) : f x ∈ Closure (f '' s) :=
-  have := mem_closure_iff_nhds_within_ne_bot.1 hx
+  haveI := mem_closure_iff_nhds_within_ne_bot.1 hx
   mem_closure_of_tendsto h <| mem_of_superset self_mem_nhds_within (subset_preimage_image f s)
 
 theorem ContinuousWithinAt.mem_closure {f : α → β} {s : Set α} {x : α} {A : Set β} (h : ContinuousWithinAt f s x)

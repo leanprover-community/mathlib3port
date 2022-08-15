@@ -564,7 +564,7 @@ conclusion as `surj_on f s univ`. -/
 theorem ContinuousOn.surj_on_of_tendsto {f : α → δ} {s : Set α} [OrdConnected s] (hs : s.Nonempty)
     (hf : ContinuousOn f s) (hbot : Tendsto (fun x : s => f x) atBot atBot)
     (htop : Tendsto (fun x : s => f x) atTop atTop) : SurjOn f s Univ :=
-  have := Classical.inhabitedOfNonempty hs.to_subtype
+  haveI := Classical.inhabitedOfNonempty hs.to_subtype
   surj_on_iff_surjective.2 <| (continuous_on_iff_continuous_restrict.1 hf).Surjective htop hbot
 
 /-- If a function `f : α → β` is continuous on a nonempty interval `s`, its restriction to `s`

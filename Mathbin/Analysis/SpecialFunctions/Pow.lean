@@ -136,23 +136,30 @@ theorem cpow_int_cast (x : ℂ) : ∀ n : ℤ, x ^ (n : ℂ) = x ^ n
       simp only [← Int.neg_succ_of_nat_coe, ← Int.cast_neg, ← Complex.cpow_neg, ← inv_eq_one_div, ← Int.cast_coe_nat, ←
         cpow_nat_cast]
 
-theorem cpow_nat_inv_pow (x : ℂ) {n : ℕ} (hn : 0 < n) : (x ^ (n⁻¹ : ℂ)) ^ n = x := by
+theorem cpow_nat_inv_pow (x : ℂ) {n : ℕ} (hn : n ≠ 0) : (x ^ (n⁻¹ : ℂ)) ^ n = x := by
   suffices im (log x * n⁻¹) ∈ Ioc (-π) π by
     rw [← cpow_nat_cast, ← cpow_mul _ this.1 this.2, inv_mul_cancel, cpow_one]
-    exact_mod_cast hn.ne'
+    exact_mod_cast hn
   rw [mul_comm, ← of_real_nat_cast, ← of_real_inv, of_real_mul_im, ← div_eq_inv_mul]
+  rw [← pos_iff_ne_zero] at hn
   have hn' : 0 < (n : ℝ) := by
     assumption_mod_cast
   have hn1 : 1 ≤ (n : ℝ) := by
     exact_mod_cast Nat.succ_le_iff.2 hn
   constructor
   · rw [lt_div_iff hn']
-    calc -π * n ≤ -π * 1 := mul_le_mul_of_nonpos_left hn1 (neg_nonpos.2 real.pi_pos.le)_ = -π :=
-        mul_oneₓ _ _ < im (log x) := neg_pi_lt_log_im _
+    calc
+      -π * n ≤ -π * 1 := mul_le_mul_of_nonpos_left hn1 (neg_nonpos.2 real.pi_pos.le)
+      _ = -π := mul_oneₓ _
+      _ < im (log x) := neg_pi_lt_log_im _
+      
     
   · rw [div_le_iff hn']
-    calc im (log x) ≤ π := log_im_le_pi _ _ = π * 1 := (mul_oneₓ π).symm _ ≤ π * n :=
-        mul_le_mul_of_nonneg_left hn1 real.pi_pos.le
+    calc
+      im (log x) ≤ π := log_im_le_pi _
+      _ = π * 1 := (mul_oneₓ π).symm
+      _ ≤ π * n := mul_le_mul_of_nonneg_left hn1 real.pi_pos.le
+      
     
 
 end Complex
@@ -304,6 +311,10 @@ theorem rpow_def_of_pos {x : ℝ} (hx : 0 < x) (y : ℝ) : x ^ y = exp (log x * 
 
 theorem exp_mul (x y : ℝ) : exp (x * y) = exp x ^ y := by
   rw [rpow_def_of_pos (exp_pos _), log_exp]
+
+@[simp]
+theorem exp_one_rpow (x : ℝ) : exp 1 ^ x = exp x := by
+  rw [← exp_mul, one_mulₓ]
 
 theorem rpow_eq_zero_iff_of_nonneg {x y : ℝ} (hx : 0 ≤ x) : x ^ y = 0 ↔ x = 0 ∧ y ≠ 0 := by
   simp only [← rpow_def_of_nonneg hx]
@@ -484,9 +495,12 @@ theorem le_rpow_add {x : ℝ} (hx : 0 ≤ x) (y z : ℝ) : x ^ y * x ^ z ≤ x ^
   rcases le_iff_eq_or_lt.1 hx with (H | pos)
   · by_cases' h : y + z = 0
     · simp only [← H.symm, ← h, ← rpow_zero]
-      calc (0 : ℝ) ^ y * 0 ^ z ≤ 1 * 1 :=
-          mul_le_mul (zero_rpow_le_one y) (zero_rpow_le_one z) (zero_rpow_nonneg z) zero_le_one _ = 1 := by
+      calc
+        (0 : ℝ) ^ y * 0 ^ z ≤ 1 * 1 :=
+          mul_le_mul (zero_rpow_le_one y) (zero_rpow_le_one z) (zero_rpow_nonneg z) zero_le_one
+        _ = 1 := by
           simp
+        
       
     · simp [← rpow_add', H, ← h]
       
@@ -763,14 +777,12 @@ theorem abs_log_mul_self_rpow_lt (x t : ℝ) (h1 : 0 < x) (h2 : x ≤ 1) (ht : 0
   have := abs_log_mul_self_lt (x ^ t) (rpow_pos_of_pos h1 t) (rpow_le_one h1.le h2 ht.le)
   rwa [log_rpow h1, mul_assoc, abs_mul, abs_of_pos ht, mul_comm] at this
 
-theorem pow_nat_rpow_nat_inv {x : ℝ} (hx : 0 ≤ x) {n : ℕ} (hn : 0 < n) : (x ^ n) ^ (n⁻¹ : ℝ) = x := by
-  have hn0 : (n : ℝ) ≠ 0 := by
-    simpa [← pos_iff_ne_zero] using hn
+theorem pow_nat_rpow_nat_inv {x : ℝ} (hx : 0 ≤ x) {n : ℕ} (hn : n ≠ 0) : (x ^ n) ^ (n⁻¹ : ℝ) = x := by
+  have hn0 : (n : ℝ) ≠ 0 := Nat.cast_ne_zero.2 hn
   rw [← rpow_nat_cast, ← rpow_mul hx, mul_inv_cancel hn0, rpow_one]
 
-theorem rpow_nat_inv_pow_nat {x : ℝ} (hx : 0 ≤ x) {n : ℕ} (hn : 0 < n) : (x ^ (n⁻¹ : ℝ)) ^ n = x := by
-  have hn0 : (n : ℝ) ≠ 0 := by
-    simpa [← pos_iff_ne_zero] using hn
+theorem rpow_nat_inv_pow_nat {x : ℝ} (hx : 0 ≤ x) {n : ℕ} (hn : n ≠ 0) : (x ^ (n⁻¹ : ℝ)) ^ n = x := by
+  have hn0 : (n : ℝ) ≠ 0 := Nat.cast_ne_zero.2 hn
   rw [← rpow_nat_cast, ← rpow_mul hx, inv_mul_cancel hn0, rpow_one]
 
 theorem continuous_at_const_rpow {a b : ℝ} (h : a ≠ 0) : ContinuousAt (rpow a) b := by
@@ -991,14 +1003,14 @@ theorem tendsto_exp_mul_div_rpow_at_top (s : ℝ) (b : ℝ) (hb : 0 < b) :
   filter_upwards [eventually_ge_at_top (0 : ℝ)] with x hx₀
   simp [← div_rpow, ← (exp_pos x).le, ← rpow_nonneg_of_nonneg, rpow_mul, exp_mul, ← mul_comm x, ← hb.ne', *]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:646:40: in filter_upwards #[[], ["with", ident x],
+-- ./././Mathport/Syntax/Translate/Basic.lean:648:40: in filter_upwards #[[], ["with", ident x],
   ["using", expr by simp [] [] [] ["[", expr exp_neg, ",", expr inv_div, ",", expr div_eq_mul_inv _ (exp _), "]"] [] []]]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: parse error
 /-- The function `x ^ s * exp (-b * x)` tends to `0` at `+∞`, for any real `s` and `b > 0`. -/
 theorem tendsto_rpow_mul_exp_neg_mul_at_top_nhds_0 (s : ℝ) (b : ℝ) (hb : 0 < b) :
     Tendsto (fun x : ℝ => x ^ s * exp (-b * x)) atTop (𝓝 0) := by
   refine' (tendsto_exp_mul_div_rpow_at_top s b hb).inv_tendsto_at_top.congr' _
   trace
-    "./././Mathport/Syntax/Translate/Basic.lean:646:40: in filter_upwards #[[], [\"with\", ident x],\n  [\"using\", expr by simp [] [] [] [\"[\", expr exp_neg, \",\", expr inv_div, \",\", expr div_eq_mul_inv _ (exp _), \"]\"] [] []]]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: parse error"
+    "./././Mathport/Syntax/Translate/Basic.lean:648:40: in filter_upwards #[[], [\"with\", ident x],\n  [\"using\", expr by simp [] [] [] [\"[\", expr exp_neg, \",\", expr inv_div, \",\", expr div_eq_mul_inv _ (exp _), \"]\"] [] []]]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: parse error"
 
 namespace Asymptotics
 
@@ -1008,9 +1020,12 @@ theorem IsOWith.rpow (h : IsOWith c l f g) (hc : 0 ≤ c) (hr : 0 ≤ r) (hg : 0
     IsOWith (c ^ r) l (fun x => f x ^ r) fun x => g x ^ r := by
   apply is_O_with.of_bound
   filter_upwards [hg, h.bound] with x hgx hx
-  calc abs (f x ^ r) ≤ abs (f x) ^ r := abs_rpow_le_abs_rpow _ _ _ ≤ (c * abs (g x)) ^ r :=
-      rpow_le_rpow (abs_nonneg _) hx hr _ = c ^ r * abs (g x ^ r) := by
+  calc
+    abs (f x ^ r) ≤ abs (f x) ^ r := abs_rpow_le_abs_rpow _ _
+    _ ≤ (c * abs (g x)) ^ r := rpow_le_rpow (abs_nonneg _) hx hr
+    _ = c ^ r * abs (g x ^ r) := by
       rw [mul_rpow hc (abs_nonneg _), abs_rpow_of_nonneg hgx]
+    
 
 theorem IsO.rpow (hr : 0 ≤ r) (hg : 0 ≤ᶠ[l] g) (h : f =O[l] g) : (fun x => f x ^ r) =O[l] fun x => g x ^ r :=
   let ⟨c, hc, h'⟩ := h.exists_nonneg
@@ -1340,11 +1355,11 @@ theorem eq_rpow_one_div_iff {x y : ℝ≥0 } {z : ℝ} (hz : z ≠ 0) : x = y ^ 
 theorem rpow_one_div_eq_iff {x y : ℝ≥0 } {z : ℝ} (hz : z ≠ 0) : x ^ (1 / z) = y ↔ x = y ^ z := by
   rw [← rpow_eq_rpow_iff hz, rpow_self_rpow_inv hz]
 
-theorem pow_nat_rpow_nat_inv (x : ℝ≥0 ) {n : ℕ} (hn : 0 < n) : (x ^ n) ^ (n⁻¹ : ℝ) = x := by
+theorem pow_nat_rpow_nat_inv (x : ℝ≥0 ) {n : ℕ} (hn : n ≠ 0) : (x ^ n) ^ (n⁻¹ : ℝ) = x := by
   rw [← Nnreal.coe_eq, coe_rpow, Nnreal.coe_pow]
   exact Real.pow_nat_rpow_nat_inv x.2 hn
 
-theorem rpow_nat_inv_pow_nat (x : ℝ≥0 ) {n : ℕ} (hn : 0 < n) : (x ^ (n⁻¹ : ℝ)) ^ n = x := by
+theorem rpow_nat_inv_pow_nat (x : ℝ≥0 ) {n : ℕ} (hn : n ≠ 0) : (x ^ (n⁻¹ : ℝ)) ^ n = x := by
   rw [← Nnreal.coe_eq, Nnreal.coe_pow, coe_rpow]
   exact Real.rpow_nat_inv_pow_nat x.2 hn
 
@@ -1385,7 +1400,7 @@ theorem exists_rat_pow_btwn_rat_aux (hn : n ≠ 0) (x y : ℝ) (h : x < y) (hy :
   have hq := this.trans_lt hxq
   replace hxq := rpow_lt_rpow this hxq hn'
   replace hqy := rpow_lt_rpow hq.le hqy hn'
-  rw [rpow_nat_cast, rpow_nat_cast, rpow_nat_inv_pow_nat _ hn.bot_lt] at hxq hqy
+  rw [rpow_nat_cast, rpow_nat_cast, rpow_nat_inv_pow_nat _ hn] at hxq hqy
   exact
     ⟨q, by
       exact_mod_cast hq, (le_max_rightₓ _ _).trans_lt hxq, hqy⟩

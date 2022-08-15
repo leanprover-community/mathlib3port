@@ -124,7 +124,7 @@ def coneOfConeUncurryIsLimit {D : DiagramOfCones F} (Q : ∀ j, IsLimit (D.obj j
               dsimp'
               slice_rhs 3 4 => rw [← nat_trans.naturality]
               slice_rhs 2 3 => rw [← (D.obj j).π.naturality]
-              simp only [← functor.const.obj_map, ← category.id_comp, ← category.assoc]
+              simp only [← functor.const_obj_map, ← category.id_comp, ← category.assoc]
               have w := (D.map fj).w k'
               dsimp'  at w
               rw [← w]
@@ -256,7 +256,7 @@ the limit of the limits of the functors `G.obj (j, _)`.
 -/
 noncomputable def limitIsoLimitCurryCompLim : limit G ≅ limit (curry.obj G ⋙ lim) := by
   have i : G ≅ uncurry.obj ((@curry J _ K _ C _).obj G) := currying.symm.unit_iso.app G
-  have : limits.has_limit (uncurry.obj ((@curry J _ K _ C _).obj G)) := has_limit_of_iso i
+  haveI : limits.has_limit (uncurry.obj ((@curry J _ K _ C _).obj G)) := has_limit_of_iso i
   trans limit (uncurry.obj ((@curry J _ K _ C _).obj G))
   apply has_limit.iso_of_nat_iso i
   exact limit_uncurry_iso_limit_comp_lim ((@curry J _ K _ C _).obj G)

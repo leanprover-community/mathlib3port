@@ -8,10 +8,9 @@ import Mathbin.Tactic.Ring
 /-!
 
 # linear_combination Tactic
-
 In this file, the `linear_combination` tactic is created.  This tactic, which
-works over `ring`s, attempts to prove the target by creating and applying a
-linear combination of a list of equalities.  This file also includes a
+works over `ring`s, attempts to simplify the target by creating a linear combination
+of a list of equalities and subtracting it from the target.  This file also includes a
 definition for `linear_combination_config`.  A `linear_combination_config`
 object can be passed into the tactic, allowing the user to specify a
 normalization tactic.
@@ -23,8 +22,7 @@ given coefficients.  Then, it subtracts the right side of the weighted sum
 from the left side so that the right side equals 0, and it does the same with
 the target.  Afterwards, it sets the goal to be the equality between the
 lefthand side of the new goal and the lefthand side of the new weighted sum.
-Lastly, it uses a normalization tactic to see if the weighted sum is equal
-to the target.
+Lastly, calls a normalization tactic on this target.
 
 ## References
 
@@ -55,10 +53,13 @@ theorem all_on_left_equiv {α} [h : AddGroupₓ α] (x y : α) : (x = y) = (x - 
 theorem replace_eq_expr {α} [h : Zero α] {x y : α} (h1 : x = 0) (h2 : y = x) : y = 0 := by
   rwa [h2]
 
+theorem eq_zero_of_sub_eq_zero {α} [AddGroupₓ α] {x y : α} (h : y = 0) (h2 : x - y = 0) : x = 0 := by
+  rwa [h, sub_zero] at h2
+
 /-! ### Configuration -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 /-- A configuration object for `linear_combination`.
 
 `normalize` describes whether or not the normalization step should be used.
@@ -128,10 +129,10 @@ unsafe def sum_two_hyps_one_mul_helper (h_equality1 h_equality2 : expr) (coeff_f
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Given that `l_sum1 = r_sum1`, `l_h1 = r_h1`, ..., `l_hn = r_hn`, and given
   coefficients `c_1`, ..., `c_n`, this tactic returns an `expr` proving that
     `l_sum1 + (c_1 * l_h1) + ... + (c_n * l_hn)`
@@ -158,9 +159,9 @@ unsafe def make_sum_of_hyps_helper (expected_tp : expr) : Option (tactic expr) �
         quote.1
         (@Eq (%%ₓeqtp) _ _)
       ← infer_type h_equality |
-      "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
     is_def_eq eqtp expected_tp <|>
-        "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        "./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
     make_sum_of_hyps_helper (some (mul_equality_expr h_equality coeff)) h_eqs_names coeffs
   | some tactic_hcombo, h_equality :: h_eqs_names, coeff :: coeffs => do
     let hcombo
@@ -234,12 +235,12 @@ unsafe def move_target_to_left_side : tactic Unit := do
 /-! ### Part 3: Matching the Linear Combination to the Target -/
 
 
-/-- This tactic changes the goal to be that the lefthand side of the target is
-  equal to the lefthand side of the given expression.  For example,
+/-- This tactic changes the goal to be that the lefthand side of the target minus the
+  lefthand side of the given expression is equal to 0.  For example,
   if `hsum_on_left` is `5*x - 5*y = 0`, and the target is `-5*y + 5*x = 0`, this
-  tactic will change the target to be `-5*y + 5*x = 5*x - 5*y`.
+  tactic will change the target to be `-5*y + 5*x - (5*x - 5*y) = 0`.
 
-This tactic only should be used when the target's type an equality whose
+This tactic only should be used when the target's type is an equality whose
   right side is 0.
 
 * Input:
@@ -248,8 +249,8 @@ This tactic only should be used when the target's type an equality whose
 
 * Output: N/A
 -/
-unsafe def set_goal_to_hleft_eq_tleft (hsum_on_left : expr) : tactic Unit := do
-  to_expr (pquote.1 (replace_eq_expr (%%ₓhsum_on_left))) >>= apply
+unsafe def set_goal_to_hleft_sub_tleft (hsum_on_left : expr) : tactic Unit := do
+  to_expr (pquote.1 (eq_zero_of_sub_eq_zero (%%ₓhsum_on_left))) >>= apply
   skip
 
 /-- This tactic attempts to prove the goal by normalizing the target if the
@@ -261,17 +262,17 @@ unsafe def set_goal_to_hleft_eq_tleft (hsum_on_left : expr) : tactic Unit := do
 
 * Output: N/A
 -/
-unsafe def prove_equal_if_desired (config : linear_combination_config) : tactic Unit :=
+unsafe def normalize_if_desired (config : linear_combination_config) : tactic Unit :=
   when config.normalize config.normalization_tactic
 
 /-! ### Part 4: Completed Tactic -/
 
 
-/-- This is a tactic that attempts to prove the target by creating and applying a
-  linear combination of a list of equalities.  (If the `normalize` field of the
+/-- This is a tactic that attempts to simplify the target by creating a linear combination
+  of a list of equalities and subtracting it from the target.
+  (If the `normalize` field of the
   configuration is set to ff, then the tactic will simply set the user up to
-  prove their target using the linear combination instead of attempting to
-  finish the proof.)
+  prove their target using the linear combination instead of normalizing the subtraction.)
 
 Note: The left and right sides of all the equalities should have the same
   ring type, and the coefficients should also have this type.  There must be
@@ -296,8 +297,8 @@ unsafe def linear_combination (h_eqs_names : List pexpr) (coeffs : List pexpr)
   let hsum ← make_sum_of_hyps ext h_eqs coeffs
   let hsum_on_left ← move_to_left_side hsum
   move_target_to_left_side
-  set_goal_to_hleft_eq_tleft hsum_on_left
-  prove_equal_if_desired config
+  set_goal_to_hleft_sub_tleft hsum_on_left
+  normalize_if_desired config
 
 /-- `mk_mul [p₀, p₁, ..., pₙ]` produces the pexpr `p₀ * p₁ * ... * pₙ`. -/
 unsafe def mk_mul : List pexpr → pexpr
@@ -328,13 +329,13 @@ section InteractiveMode
 
 setup_tactic_parser
 
-/-- `linear_combination` attempts to prove the target by creating and applying a
-  linear combination of a list of equalities.  The tactic will create a linear
+/-- `linear_combination` attempts to simplify the target by creating a linear combination
+  of a list of equalities and subtracting it from the target.
+  The tactic will create a linear
   combination by adding the equalities together from left to right, so the order
   of the input hypotheses does matter.  If the `normalize` field of the
   configuration is set to false, then the tactic will simply set the user up to
-  prove their target using the linear combination instead of attempting to
-  finish the proof.
+  prove their target using the linear combination instead of normalizing the subtraction.
 
 Note: The left and right sides of all the equalities should have the same
   type, and the coefficients should also have this type.  There must be
@@ -352,7 +353,7 @@ Note: The left and right sides of all the equalities should have the same
       for normalization; by default, this value is the standard configuration
       for a linear_combination_config.  In the standard configuration,
       `normalize` is set to tt (meaning this tactic is set to use
-      normalization), and `normalization_tactic` is set to  `ring1`.
+      normalization), and `normalization_tactic` is set to  `ring_nf SOP`.
 
 Example Usage:
 ```
@@ -363,6 +364,13 @@ by linear_combination 1*h1 - 2*h2
 example (x y : ℤ) (h1 : x*y + 2*x = 1) (h2 : x = y) :
   x*y = -2*y + 1 :=
 by linear_combination h1 - 2*h2
+
+example (x y : ℤ) (h1 : x*y + 2*x = 1) (h2 : x = y) :
+  x*y = -2*y + 1 :=
+begin
+ linear_combination -2*h2,
+ /- Goal: x * y + x * 2 - 1 = 0 -/
+end
 
 example (x y z : ℝ) (ha : x + 2*y - z = 4) (hb : 2*x + y + z = -2)
     (hc : x + 2*y + z = 2) :

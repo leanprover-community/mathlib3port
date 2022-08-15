@@ -18,8 +18,8 @@ open Set Filter Metric
 
 open TopologicalSpace
 
-variable (𝕜 : Type _) {E F G : Type _} [NondiscreteNormedField 𝕜] [NormedGroup E] [NormedGroup F] [NormedSpace 𝕜 E]
-  [NormedSpace 𝕜 F] [NormedGroup G] [NormedSpace 𝕜 G] {f g : E → F} {s t : Set E} {x : E}
+variable (𝕜 : Type _) {E F G : Type _} [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedAddCommGroup F]
+  [NormedSpace 𝕜 E] [NormedSpace 𝕜 F] [NormedAddCommGroup G] [NormedSpace 𝕜 G] {f g : E → F} {s t : Set E} {x : E}
 
 /-- A predicate saying that a function is differentiable on a set and is continuous on its
 closure. This is a common assumption in complex analysis. -/
@@ -99,12 +99,12 @@ theorem const_smul {R : Type _} [Semiringₓ R] [Module R F] [SmulCommClass 𝕜
     (hf : DiffContOnCl 𝕜 f s) (c : R) : DiffContOnCl 𝕜 (c • f) s :=
   ⟨hf.1.const_smul c, hf.2.const_smul c⟩
 
-theorem smul {𝕜' : Type _} [NondiscreteNormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] [NormedSpace 𝕜' F] [IsScalarTower 𝕜 𝕜' F]
+theorem smul {𝕜' : Type _} [NontriviallyNormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] [NormedSpace 𝕜' F] [IsScalarTower 𝕜 𝕜' F]
     {c : E → 𝕜'} {f : E → F} {s : Set E} (hc : DiffContOnCl 𝕜 c s) (hf : DiffContOnCl 𝕜 f s) :
     DiffContOnCl 𝕜 (fun x => c x • f x) s :=
   ⟨hc.1.smul hf.1, hc.2.smul hf.2⟩
 
-theorem smul_const {𝕜' : Type _} [NondiscreteNormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] [NormedSpace 𝕜' F]
+theorem smul_const {𝕜' : Type _} [NontriviallyNormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] [NormedSpace 𝕜' F]
     [IsScalarTower 𝕜 𝕜' F] {c : E → 𝕜'} {s : Set E} (hc : DiffContOnCl 𝕜 c s) (y : F) :
     DiffContOnCl 𝕜 (fun x => c x • y) s :=
   hc.smul diff_cont_on_cl_const

@@ -308,8 +308,8 @@ end FormalMultilinearSeries
 
 end Topological
 
-variable [NondiscreteNormedField 𝕜] [NormedGroup E] [NormedSpace 𝕜 E] [NormedGroup F] [NormedSpace 𝕜 F] [NormedGroup G]
-  [NormedSpace 𝕜 G] [NormedGroup H] [NormedSpace 𝕜 H]
+variable [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] [NormedAddCommGroup F] [NormedSpace 𝕜 F]
+  [NormedAddCommGroup G] [NormedSpace 𝕜 G] [NormedAddCommGroup H] [NormedSpace 𝕜 H]
 
 namespace FormalMultilinearSeries
 
@@ -479,23 +479,32 @@ theorem comp_summable_nnreal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalM
   have I : ∀ i : Σn : ℕ, Composition n, ∥q.comp_along_composition p i.2∥₊ * r ^ i.1 ≤ Cq / 4 ^ i.1 := by
     rintro ⟨n, c⟩
     have A
-    calc ∥q c.length∥₊ * rq ^ n ≤ ∥q c.length∥₊ * rq ^ c.length :=
-        mul_le_mul' le_rfl (pow_le_pow_of_le_one rq.2 hrq.1.le c.length_le)_ ≤ Cq := hCq _
+    calc
+      ∥q c.length∥₊ * rq ^ n ≤ ∥q c.length∥₊ * rq ^ c.length :=
+        mul_le_mul' le_rfl (pow_le_pow_of_le_one rq.2 hrq.1.le c.length_le)
+      _ ≤ Cq := hCq _
+      
     have B
-    calc (∏ i, ∥p (c.blocks_fun i)∥₊) * rp ^ n = ∏ i, ∥p (c.blocks_fun i)∥₊ * rp ^ c.blocks_fun i := by
-        simp only [← Finset.prod_mul_distrib, ← Finset.prod_pow_eq_pow_sum, ←
-          c.sum_blocks_fun]_ ≤ ∏ i : Finₓ c.length, Cp :=
-        Finset.prod_le_prod' fun i _ => hCp _ _ = Cp ^ c.length := by
-        simp _ ≤ Cp ^ n := pow_le_pow hCp1 c.length_le
-    calc ∥q.comp_along_composition p c∥₊ * r ^ n ≤ (∥q c.length∥₊ * ∏ i, ∥p (c.blocks_fun i)∥₊) * r ^ n :=
-        mul_le_mul' (q.comp_along_composition_nnnorm p c)
-          le_rfl _ = ∥q c.length∥₊ * rq ^ n * ((∏ i, ∥p (c.blocks_fun i)∥₊) * rp ^ n) * r0 ^ n :=
-        by
+    calc
+      (∏ i, ∥p (c.blocks_fun i)∥₊) * rp ^ n = ∏ i, ∥p (c.blocks_fun i)∥₊ * rp ^ c.blocks_fun i := by
+        simp only [← Finset.prod_mul_distrib, ← Finset.prod_pow_eq_pow_sum, ← c.sum_blocks_fun]
+      _ ≤ ∏ i : Finₓ c.length, Cp := Finset.prod_le_prod' fun i _ => hCp _
+      _ = Cp ^ c.length := by
+        simp
+      _ ≤ Cp ^ n := pow_le_pow hCp1 c.length_le
+      
+    calc
+      ∥q.comp_along_composition p c∥₊ * r ^ n ≤ (∥q c.length∥₊ * ∏ i, ∥p (c.blocks_fun i)∥₊) * r ^ n :=
+        mul_le_mul' (q.comp_along_composition_nnnorm p c) le_rfl
+      _ = ∥q c.length∥₊ * rq ^ n * ((∏ i, ∥p (c.blocks_fun i)∥₊) * rp ^ n) * r0 ^ n := by
         simp only [← r, ← mul_powₓ]
-        ring _ ≤ Cq * Cp ^ n * r0 ^ n := mul_le_mul' (mul_le_mul' A B) le_rfl _ = Cq / 4 ^ n := by
+        ring
+      _ ≤ Cq * Cp ^ n * r0 ^ n := mul_le_mul' (mul_le_mul' A B) le_rfl
+      _ = Cq / 4 ^ n := by
         simp only [← r0]
         field_simp [← mul_powₓ, ← (zero_lt_one.trans_le hCp1).ne']
         ring
+      
   refine' ⟨r, r_pos, Nnreal.summable_of_le I _⟩
   simp_rw [div_eq_mul_inv]
   refine' Summable.mul_left _ _
@@ -518,13 +527,13 @@ theorem le_comp_radius_of_summable (q : FormalMultilinearSeries 𝕜 F G) (p : F
     (r : ℝ≥0∞) ≤ (q.comp p).radius := by
   refine'
     le_radius_of_bound_nnreal _ (∑' i : Σn, Composition n, ∥comp_along_composition q p i.snd∥₊ * r ^ i.fst) fun n => _
-  calc ∥FormalMultilinearSeries.comp q p n∥₊ * r ^ n ≤ ∑' c : Composition n, ∥comp_along_composition q p c∥₊ * r ^ n :=
-      by
+  calc
+    ∥FormalMultilinearSeries.comp q p n∥₊ * r ^ n ≤ ∑' c : Composition n, ∥comp_along_composition q p c∥₊ * r ^ n := by
       rw [tsum_fintype, ← Finset.sum_mul]
-      exact
-        mul_le_mul' (nnnorm_sum_le _ _)
-          le_rfl _ ≤ ∑' i : Σn : ℕ, Composition n, ∥comp_along_composition q p i.snd∥₊ * r ^ i.fst :=
+      exact mul_le_mul' (nnnorm_sum_le _ _) le_rfl
+    _ ≤ ∑' i : Σn : ℕ, Composition n, ∥comp_along_composition q p i.snd∥₊ * r ^ i.fst :=
       Nnreal.tsum_comp_le_tsum_of_inj hr sigma_mk_injective
+    
 
 /-!
 ### Composing analytic functions
@@ -645,13 +654,16 @@ theorem comp_change_of_variables_sum {α : Type _} [AddCommMonoidₓ α] (m M N 
       rwa [HEq, comp_change_of_variables_length] at this
     congr
     funext i
-    calc blocks_fun i = (comp_change_of_variables m M N _ H).2.blocksFun _ :=
-        (comp_change_of_variables_blocks_fun m M N H i).symm _ = (comp_change_of_variables m M N _ H').2.blocksFun _ :=
-        by
+    calc
+      blocks_fun i = (comp_change_of_variables m M N _ H).2.blocksFun _ :=
+        (comp_change_of_variables_blocks_fun m M N H i).symm
+      _ = (comp_change_of_variables m M N _ H').2.blocksFun _ := by
         apply Composition.blocks_fun_congr <;>
           try
             rw [HEq]
-        rfl _ = blocks_fun' i := comp_change_of_variables_blocks_fun m M N H' i
+        rfl
+      _ = blocks_fun' i := comp_change_of_variables_blocks_fun m M N H' i
+      
     
   -- 4 - show that the map is surjective
   · intro i hi
@@ -790,15 +802,17 @@ theorem HasFpowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
       apply cauchy_seq_finset_of_norm_bounded _ (Nnreal.summable_coe.2 hr) _
       simp only [← coe_nnnorm, ← Nnreal.coe_mul, ← Nnreal.coe_pow]
       rintro ⟨n, c⟩
-      calc ∥(comp_along_composition q p c) fun j : Finₓ n => y∥ ≤ ∥comp_along_composition q p c∥ * ∏ j : Finₓ n, ∥y∥ :=
-          by
-          apply ContinuousMultilinearMap.le_op_norm _ ≤ ∥comp_along_composition q p c∥ * (r : ℝ) ^ n := by
+      calc
+        ∥(comp_along_composition q p c) fun j : Finₓ n => y∥ ≤ ∥comp_along_composition q p c∥ * ∏ j : Finₓ n, ∥y∥ := by
+          apply ContinuousMultilinearMap.le_op_norm
+        _ ≤ ∥comp_along_composition q p c∥ * (r : ℝ) ^ n := by
           apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
           rw [Finset.prod_const, Finset.card_fin]
           apply pow_le_pow_of_le_left (norm_nonneg _)
           rw [Emetric.mem_ball, edist_eq_coe_nnnorm] at hy
           have := le_transₓ (le_of_ltₓ hy) (min_le_rightₓ _ _)
           rwa [Ennreal.coe_le_coe, ← Nnreal.coe_le_coe, coe_nnnorm] at this
+        
     exact tendsto_nhds_of_cauchy_seq_of_subseq cau comp_partial_sum_target_tendsto_at_top C
   -- Fifth step: the sum over `n` of `q.comp p n` can be expressed as a particular resummation of
   -- the sum over all compositions, by grouping together the compositions of the same

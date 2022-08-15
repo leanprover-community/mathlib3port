@@ -29,7 +29,7 @@ variable {X Y E : Type _} [MeasurableSpace X] [TopologicalSpace X]
 
 variable [MeasurableSpace Y] [TopologicalSpace Y]
 
-variable [NormedGroup E] {f : X → E} {μ : Measureₓ X}
+variable [NormedAddCommGroup E] {f : X → E} {μ : Measureₓ X}
 
 namespace MeasureTheory
 
@@ -111,7 +111,7 @@ variable {K : Set X} {a b : X}
 /-- A function `f` continuous on a compact set `K` is integrable on this set with respect to any
 locally finite measure. -/
 theorem ContinuousOn.integrable_on_compact (hK : IsCompact K) (hf : ContinuousOn f K) : IntegrableOn f K μ := by
-  let this := metrizable_space_metric X
+  letI := metrizable_space_metric X
   apply hK.integrable_on_of_nhds_within fun x hx => _
   exact hf.integrable_at_nhds_within_of_is_separable hK.measurable_set hK.is_separable hx
 
@@ -131,16 +131,16 @@ theorem Continuous.integrable_on_Ioc [Preorderₓ X] [CompactIccSpace X] (hf : C
     IntegrableOn f (Ioc a b) μ :=
   hf.integrable_on_Icc.mono_set Ioc_subset_Icc_self
 
--- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)
 theorem ContinuousOn.integrable_on_interval [LinearOrderₓ X] [CompactIccSpace X]
-    (hf : ContinuousOn f "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)") :
-    IntegrableOn f "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)" μ :=
+    (hf : ContinuousOn f "./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)") :
+    IntegrableOn f "./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)" μ :=
   hf.integrable_on_Icc
 
--- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)
 theorem Continuous.integrable_on_interval [LinearOrderₓ X] [CompactIccSpace X] (hf : Continuous f) :
-    IntegrableOn f "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)" μ :=
+    IntegrableOn f "./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)" μ :=
   hf.integrable_on_Icc
 
 theorem Continuous.integrable_on_interval_oc [LinearOrderₓ X] [CompactIccSpace X] (hf : Continuous f) :
@@ -159,9 +159,9 @@ section Monotone
 variable [BorelSpace X] [MetrizableSpace X] [ConditionallyCompleteLinearOrder X] [ConditionallyCompleteLinearOrder E]
   [OrderTopology X] [OrderTopology E] [SecondCountableTopology E] [IsLocallyFiniteMeasure μ] {s : Set X}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr E]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `borelize #[[expr E]]
 theorem MonotoneOn.integrable_on_compact (hs : IsCompact s) (hmono : MonotoneOn f s) : IntegrableOn f s μ := by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `borelize #[[expr E]]"
+  trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `borelize #[[expr E]]"
   obtain rfl | h := s.eq_empty_or_nonempty
   · exact integrable_on_empty
     

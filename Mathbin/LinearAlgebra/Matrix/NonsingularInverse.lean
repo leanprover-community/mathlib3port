@@ -103,7 +103,7 @@ def invertibleOfDetInvertible [Invertible A.det] : Invertible A where
     rw [smul_mul_assoc, Matrix.mul_eq_mul, adjugate_mul, smul_smul, inv_of_mul_self, one_smul]
 
 theorem inv_of_eq [Invertible A.det] [Invertible A] : ⅟ A = ⅟ A.det • A.adjugate := by
-  let this := invertible_of_det_invertible A
+  letI := invertible_of_det_invertible A
   convert (rfl : ⅟ A = _)
 
 /-- `A.det` is invertible if `A` has a left inverse. -/
@@ -127,7 +127,7 @@ def detInvertibleOfInvertible [Invertible A] : Invertible A.det :=
   detInvertibleOfLeftInverse A (⅟ A) (inv_of_mul_self _)
 
 theorem det_inv_of [Invertible A] [Invertible A.det] : (⅟ A).det = ⅟ A.det := by
-  let this := det_invertible_of_invertible A
+  letI := det_invertible_of_invertible A
   convert (rfl : _ = ⅟ A.det)
 
 /-- Together `matrix.det_invertible_of_invertible` and `matrix.invertible_of_det_invertible` form an
@@ -144,12 +144,17 @@ variable {A B}
 theorem mul_eq_one_comm : A ⬝ B = 1 ↔ B ⬝ A = 1 :=
   suffices ∀ A B, A ⬝ B = 1 → B ⬝ A = 1 from ⟨this A B, this B A⟩
   fun A B h => by
-  let this : Invertible B.det := det_invertible_of_left_inverse _ _ h
-  let this : Invertible B := invertible_of_det_invertible B
-  calc B ⬝ A = B ⬝ A ⬝ (B ⬝ ⅟ B) := by
-      rw [Matrix.mul_inv_of_self, Matrix.mul_one]_ = B ⬝ (A ⬝ B ⬝ ⅟ B) := by
-      simp only [← Matrix.mul_assoc]_ = B ⬝ ⅟ B := by
-      rw [h, Matrix.one_mul]_ = 1 := Matrix.mul_inv_of_self B
+  letI : Invertible B.det := det_invertible_of_left_inverse _ _ h
+  letI : Invertible B := invertible_of_det_invertible B
+  calc
+    B ⬝ A = B ⬝ A ⬝ (B ⬝ ⅟ B) := by
+      rw [Matrix.mul_inv_of_self, Matrix.mul_one]
+    _ = B ⬝ (A ⬝ B ⬝ ⅟ B) := by
+      simp only [← Matrix.mul_assoc]
+    _ = B ⬝ ⅟ B := by
+      rw [h, Matrix.one_mul]
+    _ = 1 := Matrix.mul_inv_of_self B
+    
 
 variable (A B)
 
@@ -218,14 +223,14 @@ theorem nonsing_inv_apply (h : IsUnit A.det) : A⁻¹ = (↑h.Unit⁻¹ : α) �
 /-- The nonsingular inverse is the same as `inv_of` when `A` is invertible. -/
 @[simp]
 theorem inv_of_eq_nonsing_inv [Invertible A] : ⅟ A = A⁻¹ := by
-  let this := det_invertible_of_invertible A
+  letI := det_invertible_of_invertible A
   rw [inv_def, Ringₓ.inverse_invertible, inv_of_eq]
 
 /-- Coercing the result of `units.has_inv` is the same as coercing first and applying the
 nonsingular inverse. -/
 @[simp, norm_cast]
 theorem coe_units_inv (A : (Matrix n n α)ˣ) : ↑A⁻¹ = (A⁻¹ : Matrix n n α) := by
-  let this := A.invertible
+  letI := A.invertible
   rw [← inv_of_eq_nonsing_inv, inv_of_units]
 
 /-- The nonsingular inverse is the same as the general `ring.inverse`. -/
@@ -310,7 +315,7 @@ theorem det_nonsing_inv_mul_det (h : IsUnit A.det) : A⁻¹.det * A.det = 1 := b
 theorem det_nonsing_inv : A⁻¹.det = Ring.inverse A.det := by
   by_cases' h : IsUnit A.det
   · cases h.nonempty_invertible
-    let this := invertible_of_det_invertible A
+    letI := invertible_of_det_invertible A
     rw [Ringₓ.inverse_invertible, ← inv_of_eq_nonsing_inv, det_inv_of]
     
   cases is_empty_or_nonempty n
@@ -356,7 +361,7 @@ variable {A} {B}
 
 /-- If matrix A is left invertible, then its inverse equals its left inverse. -/
 theorem inv_eq_left_inv (h : B ⬝ A = 1) : A⁻¹ = B := by
-  let this := invertible_of_left_inverse _ _ h
+  letI := invertible_of_left_inverse _ _ h
   exact inv_of_eq_nonsing_inv A ▸ inv_of_eq_left_inv h
 
 /-- If matrix A is right invertible, then its inverse equals its right inverse. -/
@@ -396,7 +401,7 @@ theorem inv_zero : (0 : Matrix n n α)⁻¹ = 0 := by
     
   cases' (Fintype.card n).zero_le.eq_or_lt with hc hc
   · rw [eq_comm, Fintype.card_eq_zero_iff] at hc
-    have := hc
+    haveI := hc
     ext i
     exact (IsEmpty.false i).elim
     
@@ -431,22 +436,24 @@ def diagonalInvertible {α} [NonAssocSemiringₓ α] (v : n → α) [Invertible 
 
 theorem inv_of_diagonal_eq {α} [Semiringₓ α] (v : n → α) [Invertible v] [Invertible (diagonalₓ v)] :
     ⅟ (diagonalₓ v) = diagonalₓ (⅟ v) := by
-  let this := diagonal_invertible v
+  letI := diagonal_invertible v
   convert (rfl : ⅟ (diagonal v) = _)
+  convert Subsingleton.elimₓ _ _
+  apply Invertible.subsingleton
 
 /-- `v` is invertible if `diagonal v` is -/
 def invertibleOfDiagonalInvertible (v : n → α) [Invertible (diagonalₓ v)] : Invertible v where
   invOf := diag (⅟ (diagonalₓ v))
   inv_of_mul_self :=
     funext fun i => by
-      let this : Invertible (diagonal v).det := det_invertible_of_invertible _
+      letI : Invertible (diagonal v).det := det_invertible_of_invertible _
       rw [inv_of_eq, diag_smul, adjugate_diagonal, diag_diagonal]
       dsimp'
       rw [mul_assoc, prod_erase_mul _ _ (Finset.mem_univ _), ← det_diagonal]
       exact mul_inv_of_self _
   mul_inv_of_self :=
     funext fun i => by
-      let this : Invertible (diagonal v).det := det_invertible_of_invertible _
+      letI : Invertible (diagonal v).det := det_invertible_of_invertible _
       rw [inv_of_eq, diag_smul, adjugate_diagonal, diag_diagonal]
       dsimp'
       rw [mul_left_commₓ, mul_prod_erase _ _ (Finset.mem_univ _), ← det_diagonal]
@@ -543,7 +550,7 @@ theorem det_from_blocks₁₁ (A : Matrix m m α) (B : Matrix m n α) (C : Matri
 @[simp]
 theorem det_from_blocks_one₁₁ (B : Matrix m n α) (C : Matrix n m α) (D : Matrix n n α) :
     (Matrix.fromBlocks 1 B C D).det = det (D - C ⬝ B) := by
-  have : Invertible (1 : Matrix m m α) := invertibleOne
+  haveI : Invertible (1 : Matrix m m α) := invertibleOne
   rw [det_from_blocks₁₁, inv_of_one, Matrix.mul_one, det_one, one_mulₓ]
 
 /-- Determinant of a 2×2 block matrix, expanded around an invertible bottom right element in terms
@@ -558,7 +565,7 @@ theorem det_from_blocks₂₂ (A : Matrix m m α) (B : Matrix m n α) (C : Matri
 @[simp]
 theorem det_from_blocks_one₂₂ (A : Matrix m m α) (B : Matrix m n α) (C : Matrix n m α) :
     (Matrix.fromBlocks A B C 1).det = det (A - B ⬝ C) := by
-  have : Invertible (1 : Matrix n n α) := invertibleOne
+  haveI : Invertible (1 : Matrix n n α) := invertibleOne
   rw [det_from_blocks₂₂, inv_of_one, Matrix.mul_one, det_one, one_mulₓ]
 
 /-- The **Weinstein–Aronszajn identity**. Note the `1` on the LHS is of shape m×m, while the `1` on

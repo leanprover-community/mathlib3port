@@ -260,7 +260,7 @@ def fork.isoOfOpenEmbedding :
     -- Ugh, it is unpleasant that we need this.
     simp only [← res, ← diagram.iso_of_open_embedding, ← discrete.nat_iso_inv_app, ← functor.map_iso_inv, ←
       limit.lift_π, ← cones.postcompose_obj_π, ← functor.comp_map, ← fork_π_app_walking_parallel_pair_zero, ←
-      pi_opens.iso_of_open_embedding, ← nat_iso.of_components.inv_app, ← functor.map_iso_refl, ← functor.op_map, ←
+      pi_opens.iso_of_open_embedding, ← nat_iso.of_components_inv_app, ← functor.map_iso_refl, ← functor.op_map, ←
       limit.lift_map, ← fan.mk_π_app, ← nat_trans.comp_app, ← Quiver.Hom.unop_op, ← category.assoc, ←
       lim_map_eq_lim_map]
     dsimp'
@@ -271,6 +271,14 @@ def fork.isoOfOpenEmbedding :
 end OpenEmbedding
 
 end SheafConditionEqualizerProducts
+
+/-- The sheaf condition for a `F : presheaf C X` requires that the morphism
+`F.obj U ⟶ ∏ F.obj (U i)` (where `U` is some open set which is the union of the `U i`)
+is the equalizer of the two morphisms
+`∏ F.obj (U i) ⟶ ∏ F.obj (U i) ⊓ (U j)`.
+-/
+def IsSheafEqualizerProducts (F : Presheaf.{v', v, u} C X) : Prop :=
+  ∀ ⦃ι : Type v⦄ (U : ι → Opens X), Nonempty (IsLimit (SheafConditionEqualizerProducts.fork F U))
 
 end Presheaf
 

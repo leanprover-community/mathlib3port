@@ -22,15 +22,6 @@ type.
 
 open Function
 
-/-- Notation class for product of subobjects (sets, submonoids, subgroups, etc). -/
-class HasSetProd (α β : Type _) (γ : outParam (Type _)) where
-  Prod : α → β → γ
-
--- mathport name: «expr ×ˢ »
-infixr:82
-  " ×ˢ " =>-- This notation binds more strongly than (pre)images, unions and intersections.
-  HasSetProd.prod
-
 namespace Set
 
 /-! ### Cartesian binary product of sets -/
@@ -40,10 +31,14 @@ section Prod
 
 variable {α β γ δ : Type _} {s s₁ s₂ : Set α} {t t₁ t₂ : Set β} {a : α} {b : β}
 
-/-- The cartesian product `prod s t` is the set of `(a, b)`
-  such that `a ∈ s` and `b ∈ t`. -/
-instance : HasSetProd (Set α) (Set β) (Set (α × β)) :=
-  ⟨fun s t => { p | p.1 ∈ s ∧ p.2 ∈ t }⟩
+/-- The cartesian product `prod s t` is the set of `(a, b)` such that `a ∈ s` and `b ∈ t`. -/
+def Prod (s : Set α) (t : Set β) : Set (α × β) :=
+  { p | p.1 ∈ s ∧ p.2 ∈ t }
+
+-- mathport name: «expr ×ˢ »
+infixr:82
+  " ×ˢ " =>-- This notation binds more strongly than (pre)images, unions and intersections.
+  Set.Prod
 
 theorem prod_eq (s : Set α) (t : Set β) : s ×ˢ t = Prod.fst ⁻¹' s ∩ Prod.snd ⁻¹' t :=
   rfl
@@ -223,13 +218,13 @@ theorem range_pair_subset (f : α → β) (g : α → γ) : (Range fun x => (f x
   rw [this, ← range_prod_map]
   apply range_comp_subset_range
 
-theorem Nonempty.prod : s.Nonempty → t.Nonempty → (s ×ˢ t : Set _).Nonempty := fun ⟨x, hx⟩ ⟨y, hy⟩ => ⟨(x, y), ⟨hx, hy⟩⟩
+theorem Nonempty.prod : s.Nonempty → t.Nonempty → (s ×ˢ t).Nonempty := fun ⟨x, hx⟩ ⟨y, hy⟩ => ⟨(x, y), ⟨hx, hy⟩⟩
 
-theorem Nonempty.fst : (s ×ˢ t : Set _).Nonempty → s.Nonempty := fun ⟨x, hx⟩ => ⟨x.1, hx.1⟩
+theorem Nonempty.fst : (s ×ˢ t).Nonempty → s.Nonempty := fun ⟨x, hx⟩ => ⟨x.1, hx.1⟩
 
-theorem Nonempty.snd : (s ×ˢ t : Set _).Nonempty → t.Nonempty := fun ⟨x, hx⟩ => ⟨x.2, hx.2⟩
+theorem Nonempty.snd : (s ×ˢ t).Nonempty → t.Nonempty := fun ⟨x, hx⟩ => ⟨x.2, hx.2⟩
 
-theorem prod_nonempty_iff : (s ×ˢ t : Set _).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
+theorem prod_nonempty_iff : (s ×ˢ t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
   ⟨fun h => ⟨h.fst, h.snd⟩, fun h => h.1.Prod h.2⟩
 
 theorem prod_eq_empty_iff : s ×ˢ t = ∅ ↔ s = ∅ ∨ t = ∅ := by
@@ -275,7 +270,7 @@ theorem prod_diff_prod : s ×ˢ t \ s₁ ×ˢ t₁ = s ×ˢ (t \ t₁) ∪ (s \ 
 /-- A product set is included in a product set if and only factors are included, or a factor of the
 first set is empty. -/
 theorem prod_subset_prod_iff : s ×ˢ t ⊆ s₁ ×ˢ t₁ ↔ s ⊆ s₁ ∧ t ⊆ t₁ ∨ s = ∅ ∨ t = ∅ := by
-  cases' (s ×ˢ t : Set _).eq_empty_or_nonempty with h h
+  cases' (s ×ˢ t).eq_empty_or_nonempty with h h
   · simp [← h, ← prod_eq_empty_iff.1 h]
     
   have st : s.nonempty ∧ t.nonempty := by
@@ -292,7 +287,7 @@ theorem prod_subset_prod_iff : s ×ˢ t ⊆ s₁ ×ˢ t₁ ↔ s ⊆ s₁ ∧ t 
     exact prod_mono H.1 H.2
     
 
-theorem prod_eq_prod_iff_of_nonempty (h : (s ×ˢ t : Set _).Nonempty) : s ×ˢ t = s₁ ×ˢ t₁ ↔ s = s₁ ∧ t = t₁ := by
+theorem prod_eq_prod_iff_of_nonempty (h : (s ×ˢ t).Nonempty) : s ×ˢ t = s₁ ×ˢ t₁ ↔ s = s₁ ∧ t = t₁ := by
   constructor
   · intro heq
     have h₁ : (s₁ ×ˢ t₁ : Set _).Nonempty := by
@@ -356,7 +351,11 @@ end Mono
 
 end Prod
 
-/-! ### Diagonal -/
+/-! ### Diagonal
+
+In this section we prove some lemmas about the diagonal set `{p | p.1 = p.2}` and the diagonal map
+`λ x, (x, x)`.
+-/
 
 
 section Diagonal
@@ -378,14 +377,22 @@ theorem preimage_coe_coe_diagonal (s : Set α) : Prod.map coe coe ⁻¹' Diagona
   ext ⟨⟨x, hx⟩, ⟨y, hy⟩⟩
   simp [← Set.Diagonal]
 
-theorem diagonal_eq_range : Diagonal α = Range fun x => (x, x) := by
+@[simp]
+theorem range_diag : (Range fun x => (x, x)) = Diagonal α := by
   ext ⟨x, y⟩
   simp [← diagonal, ← eq_comm]
 
 @[simp]
 theorem prod_subset_compl_diagonal_iff_disjoint : s ×ˢ t ⊆ Diagonal αᶜ ↔ Disjoint s t :=
   subset_compl_comm.trans <| by
-    simp_rw [diagonal_eq_range, range_subset_iff, disjoint_left, mem_compl_iff, prod_mk_mem_set_prod_eq, not_and]
+    simp_rw [← range_diag, range_subset_iff, disjoint_left, mem_compl_iff, prod_mk_mem_set_prod_eq, not_and]
+
+@[simp]
+theorem diag_preimage_prod (s t : Set α) : (fun x => (x, x)) ⁻¹' s ×ˢ t = s ∩ t :=
+  rfl
+
+theorem diag_preimage_prod_self (s : Set α) : (fun x => (x, x)) ⁻¹' s ×ˢ s = s :=
+  inter_self s
 
 end Diagonal
 
@@ -579,7 +586,7 @@ theorem update_preimage_pi [DecidableEq ι] {f : ∀ i, α i} (hi : i ∈ s) (hf
       
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem update_preimage_univ_pi [DecidableEq ι] {f : ∀ i, α i} (hf : ∀ (j) (_ : j ≠ i), f j ∈ t j) :
     update f i ⁻¹' Pi Univ t = t i :=
   update_preimage_pi (mem_univ i) fun j _ => hf j

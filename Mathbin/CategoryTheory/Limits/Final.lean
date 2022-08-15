@@ -300,10 +300,7 @@ theorem colimit_pre_is_iso_aux {t : Cocone G} (P : IsColimit t) :
   intro j
   dsimp'
   simp
-  dsimp'
-  simp
 
--- See library note [dsimp, simp].
 instance colimit_pre_is_iso [HasColimit G] : IsIso (colimit.pre G F) := by
   rw [colimit.pre_eq (colimit_cocone_comp F (get_colimit_cocone G)) (get_colimit_cocone G)]
   erw [colimit_pre_is_iso_aux]

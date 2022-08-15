@@ -67,7 +67,7 @@ def W :=
 /- inhabitants of W types is awkward to encode as an instance
 assumption because there needs to be a value `a : P.A`
 such that `P.B a` is empty to yield a finite tree -/
-attribute [nolint has_inhabited_instance] W
+attribute [nolint has_nonempty_instance] W
 
 variable {P}
 

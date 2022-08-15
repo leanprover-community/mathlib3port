@@ -93,7 +93,7 @@ the one obtained by transporting a multiplicative structure on `β` back along `
 @[to_additive
       "An equivalence `e : α ≃ β` gives a additive equivalence `α ≃+ β`\nwhere the additive structure on `α` is\nthe one obtained by transporting an additive structure on `β` back along `e`."]
 def mulEquiv (e : α ≃ β) [Mul β] : by
-    let this := Equivₓ.hasMul e
+    letI := Equivₓ.hasMul e
     exact α ≃* β := by
   intros
   exact
@@ -109,7 +109,7 @@ theorem mul_equiv_apply (e : α ≃ β) [Mul β] (a : α) : (mulEquiv e) a = e a
 
 @[to_additive]
 theorem mul_equiv_symm_apply (e : α ≃ β) [Mul β] (b : β) : by
-    let this := Equivₓ.hasMul e
+    letI := Equivₓ.hasMul e
     exact (MulEquiv e).symm b = e.symm b := by
   intros
   rfl
@@ -119,8 +119,8 @@ where the ring structure on `α` is
 the one obtained by transporting a ring structure on `β` back along `e`.
 -/
 def ringEquiv (e : α ≃ β) [Add β] [Mul β] : by
-    let this := Equivₓ.hasAdd e
-    let this := Equivₓ.hasMul e
+    letI := Equivₓ.hasAdd e
+    letI := Equivₓ.hasMul e
     exact α ≃+* β := by
   intros
   exact
@@ -139,8 +139,8 @@ theorem ring_equiv_apply (e : α ≃ β) [Add β] [Mul β] (a : α) : (ringEquiv
   rfl
 
 theorem ring_equiv_symm_apply (e : α ≃ β) [Add β] [Mul β] (b : β) : by
-    let this := Equivₓ.hasAdd e
-    let this := Equivₓ.hasMul e
+    letI := Equivₓ.hasAdd e
+    letI := Equivₓ.hasMul e
     exact (RingEquiv e).symm b = e.symm b := by
   intros
   rfl
@@ -344,6 +344,9 @@ protected theorem nontrivial [Nontrivial β] : Nontrivial α :=
 protected theorem is_domain [Ringₓ α] [Ringₓ β] [IsDomain β] (e : α ≃+* β) : IsDomain α :=
   Function.Injective.is_domain e.toRingHom e.Injective
 
+/-- Transfer `has_rat_cast` across an `equiv` -/
+protected def hasRatCast [HasRatCast β] : HasRatCast α where ratCast := fun n => e.symm n
+
 /-- Transfer `division_ring` across an `equiv` -/
 protected def divisionRing [DivisionRing β] : DivisionRing α := by
   let add_group_with_one := e.AddGroupWithOne
@@ -353,6 +356,8 @@ protected def divisionRing [DivisionRing β] : DivisionRing α := by
   let mul := e.HasMul
   let npow := e.HasPow ℕ
   let zpow := e.HasPow ℤ
+  let rat_cast := e.HasRatCast
+  let qsmul := e.HasSmul ℚ
   skip <;> apply e.injective.division_ring _ <;> intros <;> exact e.apply_symm_apply _
 
 /-- Transfer `field` across an `equiv` -/
@@ -365,6 +370,8 @@ protected def field [Field β] : Field α := by
   let mul := e.HasMul
   let npow := e.HasPow ℕ
   let zpow := e.HasPow ℤ
+  let rat_cast := e.HasRatCast
+  let qsmul := e.HasSmul ℚ
   skip <;> apply e.injective.field _ <;> intros <;> exact e.apply_symm_apply _
 
 section R
@@ -387,10 +394,10 @@ protected def mulAction (e : α ≃ β) [MulAction R β] : MulAction R α :=
 
 /-- Transfer `distrib_mul_action` across an `equiv` -/
 protected def distribMulAction (e : α ≃ β) [AddCommMonoidₓ β] : by
-    let this := Equivₓ.addCommMonoid e
+    letI := Equivₓ.addCommMonoid e
     exact ∀ [DistribMulAction R β], DistribMulAction R α := by
   intros
-  let this := Equivₓ.addCommMonoid e
+  letI := Equivₓ.addCommMonoid e
   exact
     ({ Equivₓ.mulAction R e with
       smul_zero := by
@@ -407,7 +414,7 @@ variable [Semiringₓ R]
 
 /-- Transfer `module` across an `equiv` -/
 protected def module (e : α ≃ β) [AddCommMonoidₓ β] : by
-    let this := Equivₓ.addCommMonoid e
+    letI := Equivₓ.addCommMonoid e
     exact ∀ [Module R β], Module R α := by
   intros
   exact
@@ -423,8 +430,8 @@ where the `R`-module structure on `α` is
 the one obtained by transporting an `R`-module structure on `β` back along `e`.
 -/
 def linearEquiv (e : α ≃ β) [AddCommMonoidₓ β] [Module R β] : by
-    let this := Equivₓ.addCommMonoid e
-    let this := Equivₓ.module R e
+    letI := Equivₓ.addCommMonoid e
+    letI := Equivₓ.module R e
     exact α ≃ₗ[R] β := by
   intros
   exact
@@ -442,7 +449,7 @@ variable [CommSemiringₓ R]
 
 /-- Transfer `algebra` across an `equiv` -/
 protected def algebra (e : α ≃ β) [Semiringₓ β] : by
-    let this := Equivₓ.semiring e
+    letI := Equivₓ.semiring e
     exact ∀ [Algebra R β], Algebra R α := by
   intros
   fapply RingHom.toAlgebra'
@@ -464,8 +471,8 @@ where the `R`-algebra structure on `α` is
 the one obtained by transporting an `R`-algebra structure on `β` back along `e`.
 -/
 def algEquiv (e : α ≃ β) [Semiringₓ β] [Algebra R β] : by
-    let this := Equivₓ.semiring e
-    let this := Equivₓ.algebra R e
+    letI := Equivₓ.semiring e
+    letI := Equivₓ.algebra R e
     exact α ≃ₐ[R] β := by
   intros
   exact
@@ -487,7 +494,7 @@ namespace RingEquiv
 
 protected theorem local_ring {A B : Type _} [CommSemiringₓ A] [LocalRing A] [CommSemiringₓ B] (e : A ≃+* B) :
     LocalRing B := by
-  have := e.symm.to_equiv.nontrivial
+  haveI := e.symm.to_equiv.nontrivial
   exact LocalRing.of_surjective (e : A →+* B) e.surjective
 
 end RingEquiv

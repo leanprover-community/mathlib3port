@@ -22,9 +22,8 @@ open Nnreal TopologicalSpace
 
 open Filter
 
-variable {α V P : Type _} [SemiNormedGroup V] [PseudoMetricSpace P] [NormedAddTorsor V P]
-
-variable {W Q : Type _} [NormedGroup W] [MetricSpace Q] [NormedAddTorsor W Q]
+variable {α V P W Q : Type _} [SeminormedAddCommGroup V] [PseudoMetricSpace P] [NormedAddTorsor V P]
+  [NormedAddCommGroup W] [MetricSpace Q] [NormedAddTorsor W Q]
 
 section NormedSpace
 
@@ -127,7 +126,7 @@ variable (𝕜)
 
 theorem eventually_homothety_mem_of_mem_interior (x : Q) {s : Set Q} {y : Q} (hy : y ∈ Interior s) :
     ∀ᶠ δ in 𝓝 (1 : 𝕜), homothety x δ y ∈ s := by
-  rw [(NormedGroup.nhds_basis_norm_lt (1 : 𝕜)).eventually_iff]
+  rw [(NormedAddCommGroup.nhds_basis_norm_lt (1 : 𝕜)).eventually_iff]
   cases' eq_or_ne y x with h h
   · use 1
     simp [← h.symm, ← interior_subset hy]

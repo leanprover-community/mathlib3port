@@ -686,9 +686,8 @@ protected theorem MonoidHom.map_one [MulOneClassₓ M] [MulOneClassₓ N] (f : M
 protected theorem MonoidWithZeroHom.map_one [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] (f : M →*₀ N) : f 1 = 1 :=
   f.map_one'
 
-/-- If `f` is an additive monoid homomorphism then `f 0 = 0`. -/
-add_decl_doc AddMonoidHom.map_zero
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_monoid_hom.map_zero]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 protected theorem MonoidWithZeroHom.map_zero [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] (f : M →*₀ N) : f 0 = 0 :=
   f.map_zero'
 
@@ -705,9 +704,8 @@ protected theorem MonoidWithZeroHom.map_mul [MulZeroOneClassₓ M] [MulZeroOneCl
     f (a * b) = f a * f b :=
   f.map_mul' a b
 
-/-- If `f` is an additive monoid homomorphism then `f (a + b) = f a + f b`. -/
-add_decl_doc AddMonoidHom.map_add
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_monoid_hom.map_add]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace MonoidHom
 
 variable {mM : MulOneClassₓ M} {mN : MulOneClassₓ N} [MonoidHomClass F M N]
@@ -780,15 +778,12 @@ def MonoidWithZeroHom.id (M : Type _) [MulZeroOneClassₓ M] : M →*₀ M where
   map_one' := rfl
   map_mul' := fun _ _ => rfl
 
-/-- The identity map from an type with zero to itself. -/
-add_decl_doc ZeroHom.id
-
-/-- The identity map from an type with addition to itself. -/
-add_decl_doc AddHom.id
-
-/-- The identity map from an additive monoid to itself. -/
-add_decl_doc AddMonoidHom.id
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident zero_hom.id]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_hom.id]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_monoid_hom.id]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Composition of `one_hom`s as a `one_hom`. -/
 @[to_additive]
 def OneHom.comp [One M] [One N] [One P] (hnp : OneHom N P) (hmn : OneHom M N) : OneHom M P where
@@ -823,15 +818,12 @@ def MonoidWithZeroHom.comp [MulZeroOneClassₓ M] [MulZeroOneClassₓ N] [MulZer
   map_mul' := by
     simp
 
-/-- Composition of `zero_hom`s as a `zero_hom`. -/
-add_decl_doc ZeroHom.comp
-
-/-- Composition of `add_hom`s as a `add_hom`. -/
-add_decl_doc AddHom.comp
-
-/-- Composition of additive monoid morphisms as an additive monoid morphism. -/
-add_decl_doc AddMonoidHom.comp
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident zero_hom.comp]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_hom.comp]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_monoid_hom.comp]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, to_additive]
 theorem OneHom.coe_comp [One M] [One N] [One P] (g : OneHom N P) (f : OneHom M N) : ⇑(g.comp f) = g ∘ f :=
   rfl
@@ -1089,15 +1081,12 @@ instance [Mul M] [MulOneClassₓ N] : One (M →ₙ* N) :=
 instance [MulOneClassₓ M] [MulOneClassₓ N] : One (M →* N) :=
   ⟨⟨fun _ => 1, rfl, fun _ _ => (one_mulₓ 1).symm⟩⟩
 
-/-- `0` is the homomorphism sending all elements to `0`. -/
-add_decl_doc ZeroHom.hasZero
-
-/-- `0` is the additive homomorphism sending all elements to `0`. -/
-add_decl_doc AddHom.hasZero
-
-/-- `0` is the additive monoid homomorphism sending all elements to `0`. -/
-add_decl_doc AddMonoidHom.hasZero
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident zero_hom.has_zero]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_hom.has_zero]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_monoid_hom.has_zero]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, to_additive]
 theorem OneHom.one_apply [One M] [One N] (x : M) : (1 : OneHom M N) x = 1 :=
   rfl
@@ -1144,10 +1133,8 @@ instance [Mul M] [CommSemigroupₓ N] : Mul (M →ₙ* N) :=
         show f (x * y) * g (x * y) = f x * g x * (f y * g y)
         rw [f.map_mul, g.map_mul, ← mul_assoc, ← mul_assoc, mul_right_commₓ (f x)] }⟩
 
-/-- Given two additive morphisms `f`, `g` to an additive commutative semigroup, `f + g` is the
-additive morphism sending `x` to `f x + g x`. -/
-add_decl_doc AddHom.hasAdd
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_hom.has_add]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, to_additive]
 theorem mul_apply {M N} {mM : Mul M} {mN : CommSemigroupₓ N} (f g : M →ₙ* N) (x : M) : (f * g) x = f x * g x :=
   rfl
@@ -1185,10 +1172,8 @@ instance {M N} {mM : MulOneClassₓ M} [CommMonoidₓ N] : Mul (M →* N) :=
         show f (x * y) * g (x * y) = f x * g x * (f y * g y)
         rw [f.map_mul, g.map_mul, ← mul_assoc, ← mul_assoc, mul_right_commₓ (f x)] }⟩
 
-/-- Given two additive monoid morphisms `f`, `g` to an additive commutative monoid, `f + g` is the
-additive monoid morphism sending `x` to `f x + g x`. -/
-add_decl_doc AddMonoidHom.hasAdd
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_monoid_hom.has_add]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, to_additive]
 theorem mul_apply {M N} {mM : MulOneClassₓ M} {mN : CommMonoidₓ N} (f g : M →* N) (x : M) : (f * g) x = f x * g x :=
   rfl
@@ -1312,10 +1297,8 @@ instance {M G} [MulOneClassₓ M] [CommGroupₓ G] : Inv (M →* G) :=
     (mk' fun g => (f g)⁻¹) fun a b => by
       rw [← mul_inv, f.map_mul]⟩
 
-/-- If `f` is an additive monoid homomorphism to an additive commutative group, then `-f` is the
-homomorphism sending `x` to `-(f x)`. -/
-add_decl_doc AddMonoidHom.hasNeg
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_monoid_hom.has_neg]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, to_additive]
 theorem inv_apply {M G} {mM : MulOneClassₓ M} {gG : CommGroupₓ G} (f : M →* G) (x : M) : f⁻¹ x = (f x)⁻¹ :=
   rfl
@@ -1340,10 +1323,8 @@ instance {M G} [MulOneClassₓ M] [CommGroupₓ G] : Div (M →* G) :=
     (mk' fun x => f x / g x) fun a b => by
       simp [← div_eq_mul_inv, ← mul_assoc, ← mul_left_commₓ, ← mul_comm]⟩
 
-/-- If `f` and `g` are monoid homomorphisms to an additive commutative group, then `f - g`
-is the homomorphism sending `x` to `(f x) - (g x)`. -/
-add_decl_doc AddMonoidHom.hasSub
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_monoid_hom.has_sub]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, to_additive]
 theorem div_apply {M G} {mM : MulOneClassₓ M} {gG : CommGroupₓ G} (f g : M →* G) (x : M) : (f / g) x = f x / g x :=
   rfl

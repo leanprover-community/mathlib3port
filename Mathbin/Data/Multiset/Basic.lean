@@ -123,7 +123,7 @@ protected theorem induction {p : Multiset α → Prop} (h₁ : p 0) (h₂ : ∀ 
     ∀ s, p s := by
   rintro ⟨l⟩ <;> induction' l with _ _ ih <;> [exact h₁, exact h₂ ih]
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on {p : Multiset α → Prop} (s : Multiset α) (h₁ : p 0)
     (h₂ : ∀ ⦃a : α⦄ {s : Multiset α}, p s → p (a ::ₘ s)) : p s :=
   Multiset.induction h₁ h₂ s
@@ -150,7 +150,7 @@ protected def rec (C_0 : C 0) (C_cons : ∀ a m, C m → C (a ::ₘ m))
       fun a a' l => C_cons_heq a a' ⟦l⟧
 
 /-- Companion to `multiset.rec` with more convenient argument order. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 protected def recOn (m : Multiset α) (C_0 : C 0) (C_cons : ∀ a m, C m → C (a ::ₘ m))
     (C_cons_heq : ∀ a a' m b, HEq (C_cons a (a' ::ₘ m) (C_cons a' m b)) (C_cons a' (a ::ₘ m) (C_cons a m b))) : C m :=
   Multiset.rec C_0 C_cons C_cons_heq m
@@ -238,7 +238,7 @@ theorem cons_ne_zero {a : α} {m : Multiset α} : a ::ₘ m ≠ 0 :=
 
 theorem cons_eq_cons {a b : α} {as bs : Multiset α} :
     a ::ₘ as = b ::ₘ bs ↔ a = b ∧ as = bs ∨ a ≠ b ∧ ∃ cs, as = b ::ₘ cs ∧ bs = a ::ₘ cs := by
-  have : DecidableEq α := Classical.decEq α
+  haveI : DecidableEq α := Classical.decEq α
   constructor
   · intro eq
     by_cases' a = b
@@ -266,6 +266,33 @@ theorem cons_eq_cons {a b : α} {as bs : Multiset α} :
     
 
 end Mem
+
+/-! ### Singleton -/
+
+
+instance : HasSingleton α (Multiset α) :=
+  ⟨fun a => a ::ₘ 0⟩
+
+instance : IsLawfulSingleton α (Multiset α) :=
+  ⟨fun a => rfl⟩
+
+theorem singleton_eq_cons (a : α) : singleton a = a ::ₘ 0 :=
+  rfl
+
+@[simp]
+theorem mem_singleton {a b : α} : b ∈ ({a} : Multiset α) ↔ b = a := by
+  simp only [← singleton_eq_cons, ← mem_cons, ← iff_selfₓ, ← or_falseₓ, ← not_mem_zero]
+
+theorem mem_singleton_self (a : α) : a ∈ ({a} : Multiset α) := by
+  rw [singleton_eq_cons]
+  exact mem_cons_self _ _
+
+theorem singleton_inj {a b : α} : ({a} : Multiset α) = {b} ↔ a = b := by
+  simp_rw [singleton_eq_cons]
+  exact cons_inj_left _
+
+theorem pair_comm (x y : α) : ({x, y} : Multiset α) = {y, x} :=
+  cons_swap x y 0
 
 /-! ### `multiset.subset` -/
 
@@ -331,6 +358,9 @@ theorem induction_on' {p : Multiset α → Prop} (S : Multiset α) (h₁ : p 0)
 
 end Subset
 
+/-! ### `multiset.to_list` -/
+
+
 section ToList
 
 /-- Produces a list of the elements in the multiset using choice. -/
@@ -388,7 +418,7 @@ theorem not_mem_mono (h : s ⊆ t) : a ∉ t → a ∉ s :=
 theorem coe_le {l₁ l₂ : List α} : (l₁ : Multiset α) ≤ l₂ ↔ l₁ <+~ l₂ :=
   Iff.rfl
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem le_induction_on {C : Multiset α → Multiset α → Prop} {s t : Multiset α} (h : s ≤ t)
     (H : ∀ {l₁ l₂ : List α}, l₁ <+ l₂ → C l₁ l₂) : C s t :=
   Quotientₓ.induction_on₂ s t (fun l₁ l₂ ⟨l, p, s⟩ => (show ⟦l⟧ = ⟦l₁⟧ from Quot.sound p) ▸ H s) h
@@ -396,8 +426,16 @@ theorem le_induction_on {C : Multiset α → Multiset α → Prop} {s t : Multis
 theorem zero_le (s : Multiset α) : 0 ≤ s :=
   (Quot.induction_on s) fun l => (nil_sublist l).Subperm
 
+instance : OrderBot (Multiset α) :=
+  ⟨0, zero_le⟩
+
+/-- This is a `rfl` and `simp` version of `bot_eq_zero`. -/
+@[simp]
+theorem bot_eq_zero : (⊥ : Multiset α) = 0 :=
+  rfl
+
 theorem le_zero : s ≤ 0 ↔ s = 0 :=
-  ⟨fun h => le_antisymmₓ h (zero_le _), le_of_eqₓ⟩
+  le_bot_iff
 
 theorem lt_cons_self (s : Multiset α) (a : α) : s < a ::ₘ s :=
   (Quot.induction_on s) fun l =>
@@ -425,32 +463,6 @@ theorem le_cons_of_not_mem (m : a ∉ s) : s ≤ a ::ₘ t ↔ s ≤ t := by
   rcases mem_split m₂ with ⟨r₁, r₂, rfl⟩
   exact perm_middle.subperm_left.2 ((subperm_cons _).2 <| ((sublist_or_mem_of_sublist s).resolve_right m₁).Subperm)
 
-end
-
-/-! ### Singleton -/
-
-
-instance : HasSingleton α (Multiset α) :=
-  ⟨fun a => a ::ₘ 0⟩
-
-instance : IsLawfulSingleton α (Multiset α) :=
-  ⟨fun a => rfl⟩
-
-theorem singleton_eq_cons (a : α) : singleton a = a ::ₘ 0 :=
-  rfl
-
-@[simp]
-theorem mem_singleton {a b : α} : b ∈ ({a} : Multiset α) ↔ b = a := by
-  simp only [← singleton_eq_cons, ← mem_cons, ← iff_selfₓ, ← or_falseₓ, ← not_mem_zero]
-
-theorem mem_singleton_self (a : α) : a ∈ ({a} : Multiset α) := by
-  rw [singleton_eq_cons]
-  exact mem_cons_self _ _
-
-theorem singleton_inj {a b : α} : ({a} : Multiset α) = {b} ↔ a = b := by
-  simp_rw [singleton_eq_cons]
-  exact cons_inj_left _
-
 @[simp]
 theorem singleton_ne_zero (a : α) : ({a} : Multiset α) ≠ 0 :=
   ne_of_gtₓ (lt_cons_self _ _)
@@ -461,8 +473,7 @@ theorem singleton_le {a : α} {s : Multiset α} : {a} ≤ s ↔ a ∈ s :=
     let ⟨t, e⟩ := exists_cons_of_mem h
     e.symm ▸ cons_le_cons _ (zero_le _)⟩
 
-theorem pair_comm (x y : α) : ({x, y} : Multiset α) = {y, x} :=
-  cons_swap x y 0
+end
 
 /-! ### Additive monoid -/
 
@@ -516,21 +527,12 @@ theorem le_iff_exists_add {s t : Multiset α} : s ≤ t ↔ ∃ u, t = s + u :=
       ⟨l, Quot.sound p⟩,
     fun ⟨u, e⟩ => e.symm ▸ le_add_right _ _⟩
 
-instance : OrderBot (Multiset α) where
-  bot := 0
-  bot_le := Multiset.zero_le
-
 instance : CanonicallyOrderedAddMonoid (Multiset α) :=
   { Multiset.orderBot, Multiset.orderedCancelAddCommMonoid with le_self_add := le_add_right,
     exists_add_of_le := fun a b h =>
       (le_induction_on h) fun l₁ l₂ s =>
         let ⟨l, p⟩ := s.exists_perm_append
         ⟨l, Quot.sound p⟩ }
-
-/-- This is a `rfl` and `simp` version of `bot_eq_zero`. -/
-@[simp]
-theorem bot_eq_zero : (⊥ : Multiset α) = 0 :=
-  rfl
 
 @[simp]
 theorem cons_add (a : α) (s t : Multiset α) : a ::ₘ s + t = a ::ₘ (s + t) := by
@@ -644,7 +646,7 @@ theorem card_eq_three {s : Multiset α} : s.card = 3 ↔ ∃ x y z, s = {x, y, z
 If you construct a value for a particular multiset given values for all strictly smaller multisets,
 you can construct a value for any multiset.
 -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def strongInductionOnₓ {p : Multiset α → Sort _} : ∀ s : Multiset α, (∀ s, (∀, ∀ t < s, ∀, p t) → p s) → p s
   | s => fun ih =>
     (ih s) fun t h =>
@@ -655,7 +657,7 @@ theorem strong_induction_eq {p : Multiset α → Sort _} (s : Multiset α) (H) :
     @strongInductionOnₓ _ p s H = H s fun t h => @strongInductionOnₓ _ p t H := by
   rw [strong_induction_on]
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem case_strong_induction_on {p : Multiset α → Prop} (s : Multiset α) (h₀ : p 0)
     (h₁ : ∀ a s, (∀, ∀ t ≤ s, ∀, p t) → p (a ::ₘ s)) : p s :=
   (Multiset.strongInductionOnₓ s) fun s =>
@@ -680,7 +682,7 @@ theorem strong_downward_induction_eq {p : Multiset α → Sort _} {n : ℕ}
   rw [strong_downward_induction]
 
 /-- Analogue of `strong_downward_induction` with order of arguments swapped. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def strongDownwardInductionOn {p : Multiset α → Sort _} {n : ℕ} :
     ∀ s : Multiset α,
       (∀ t₁, (∀ {t₂ : Multiset α}, t₂.card ≤ n → t₁ < t₂ → p t₂) → t₁.card ≤ n → p t₁) → s.card ≤ n → p s :=
@@ -1326,6 +1328,9 @@ protected theorem sub_le_iff_le_add : s - t ≤ u ↔ s ≤ u + t := by
 
 instance : HasOrderedSub (Multiset α) :=
   ⟨fun n m k => Multiset.sub_le_iff_le_add⟩
+
+theorem cons_sub_of_le (a : α) {s t : Multiset α} (h : t ≤ s) : a ::ₘ s - t = a ::ₘ (s - t) := by
+  rw [← singleton_add, ← singleton_add, add_tsub_assoc_of_le h]
 
 theorem sub_eq_fold_erase (s t : Multiset α) : s - t = foldl erase erase_comm s t :=
   (Quotientₓ.induction_on₂ s t) fun l₁ l₂ =>
@@ -2081,7 +2086,7 @@ theorem count_map {α β : Type _} (f : α → β) (s : Multiset α) [DecidableE
     count b (map f s) = (s.filter fun a => b = f a).card :=
   countp_map _ _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- `multiset.map f` preserves `count` if `f` is injective on the set of elements contained in
 the multiset -/
 theorem count_map_eq_count [DecidableEq β] (f : α → β) (s : Multiset α) (hf : Set.InjOn f { x : α | x ∈ s }) (x)
@@ -2497,6 +2502,15 @@ list. -/
 def Pairwise (r : α → α → Prop) (m : Multiset α) : Prop :=
   ∃ l : List α, m = l ∧ l.Pairwise r
 
+@[simp]
+theorem pairwise_nil (r : α → α → Prop) : Multiset.Pairwise r 0 :=
+  ⟨[], rfl, List.Pairwiseₓ.nil⟩
+
+theorem pairwise_coe_iff {r : α → α → Prop} {l : List α} :
+    Multiset.Pairwise r l ↔ ∃ l' : List α, l ~ l' ∧ l'.Pairwise r :=
+  exists_congr <| by
+    simp
+
 theorem pairwise_coe_iff_pairwise {r : α → α → Prop} (hr : Symmetric r) {l : List α} :
     Multiset.Pairwise r l ↔ l.Pairwise r :=
   Iff.intro (fun ⟨l', Eq, h⟩ => ((Quotientₓ.exact Eq).pairwise_iff hr).2 h) fun h => ⟨l, rfl, h⟩
@@ -2522,7 +2536,10 @@ def chooseX : ∀ hp : ∃! a, a ∈ l ∧ p a, { a // a ∈ l ∧ p a } :=
       · rintro ⟨x, px⟩ ⟨y, py⟩
         rcases hp with ⟨z, ⟨z_mem_l, pz⟩, z_unique⟩
         congr
-        calc x = z := z_unique x px _ = y := (z_unique y py).symm
+        calc
+          x = z := z_unique x px
+          _ = y := (z_unique y py).symm
+          
         )
 
 /-- Given a proof `hp` that there exists a unique `a ∈ l` such that `p a`, `choose p l hp` returns

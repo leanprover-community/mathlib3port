@@ -116,7 +116,7 @@ theorem not_is_bounded_under_of_tendsto_at_bot [Preorderₓ β] [NoMinOrder β] 
 theorem IsBoundedUnder.bdd_above_range_of_cofinite [SemilatticeSup β] {f : α → β}
     (hf : IsBoundedUnder (· ≤ ·) cofinite f) : BddAbove (Range f) := by
   rcases hf with ⟨b, hb⟩
-  have : Nonempty β := ⟨b⟩
+  haveI : Nonempty β := ⟨b⟩
   rw [← image_univ, ← union_compl_self { x | f x ≤ b }, image_union, bdd_above_union]
   exact ⟨⟨b, ball_image_iff.2 fun x => id⟩, (hb.image f).BddAbove⟩
 
@@ -544,6 +544,24 @@ theorem HasBasis.liminf_eq_supr_infi {p : ι → Prop} {s : ι → Set β} {f : 
     f.liminf u = ⨆ (i) (hi : p i), ⨅ a ∈ s i, u a :=
   @HasBasis.limsup_eq_infi_supr αᵒᵈ _ _ _ _ _ _ _ h
 
+theorem limsup_eq_Inf_Sup {ι R : Type _} (F : Filter ι) [CompleteLattice R] (a : ι → R) :
+    F.limsup a = inf ((fun I => sup (a '' I)) '' F.Sets) := by
+  refine' le_antisymmₓ _ _
+  · rw [limsup_eq]
+    refine' Inf_le_Inf fun x hx => _
+    rcases(mem_image _ F.sets x).mp hx with ⟨I, ⟨I_mem_F, hI⟩⟩
+    filter_upwards [I_mem_F] with i hi
+    exact hI ▸ le_Sup (mem_image_of_mem _ hi)
+    
+  · refine' le_Inf_iff.mpr fun b hb => Inf_le_of_le (mem_image_of_mem _ <| filter.mem_sets.mpr hb) <| Sup_le _
+    rintro _ ⟨_, h, rfl⟩
+    exact h
+    
+
+theorem liminf_eq_Sup_Inf {ι R : Type _} (F : Filter ι) [CompleteLattice R] (a : ι → R) :
+    F.liminf a = sup ((fun I => inf (a '' I)) '' F.Sets) :=
+  @Filter.limsup_eq_Inf_Sup ι (OrderDual R) _ _ a
+
 @[simp]
 theorem liminf_nat_add (f : ℕ → α) (k : ℕ) : (atTop.liminf fun i => f (i + k)) = atTop.liminf f := by
   simp_rw [liminf_eq_supr_infi_of_nat]
@@ -570,6 +588,22 @@ theorem le_limsup_of_frequently_le' {α β} [CompleteLattice β] {f : Filter α}
 end CompleteLattice
 
 section ConditionallyCompleteLinearOrder
+
+theorem frequently_lt_of_lt_Limsup {f : Filter α} [ConditionallyCompleteLinearOrder α] {a : α}
+    (hf : f.IsCobounded (· ≤ ·) := by
+      run_tac
+        is_bounded_default)
+    (h : a < f.limsup) : ∃ᶠ n in f, a < n := by
+  contrapose! h
+  simp only [← not_frequently, ← not_ltₓ] at h
+  exact Limsup_le_of_le hf h
+
+theorem frequently_lt_of_Liminf_lt {f : Filter α} [ConditionallyCompleteLinearOrder α] {a : α}
+    (hf : f.IsCobounded (· ≥ ·) := by
+      run_tac
+        is_bounded_default)
+    (h : f.liminf < a) : ∃ᶠ n in f, n < a :=
+  @frequently_lt_of_lt_Limsup (OrderDual α) f _ a hf h
 
 theorem eventually_lt_of_lt_liminf {f : Filter α} [ConditionallyCompleteLinearOrder β] {u : α → β} {b : β}
     (h : b < liminfₓ f u)

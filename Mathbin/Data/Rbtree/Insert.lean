@@ -87,7 +87,7 @@ theorem balance2_node_ne_leaf {s : Rbnode α} (a : α) (t : Rbnode α) : s ≠ l
 
 variable (lt : α → α → Prop)
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem ins.induction [DecidableRel lt] {p : Rbnode α → Prop} (t x) (is_leaf : p leaf)
     (is_red_lt : ∀ (a y b) (hc : cmpUsing lt x y = Ordering.lt) (ih : p a), p (red_node a y b))
     (is_red_eq : ∀ (a y b) (hc : cmpUsing lt x y = Ordering.eq), p (red_node a y b))
@@ -510,7 +510,7 @@ theorem ite_eq_of_not_lt [DecidableRel lt] [IsStrictOrder α lt] {a b} {β : Typ
 
 attribute [local simp] ite_eq_of_not_lt
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 private unsafe def simp_fi : tactic Unit :=
   sorry
 
@@ -642,7 +642,7 @@ theorem find_balance1_lt {l r t v x y lo hi} (h : lt x y) (hl : IsSearchable lt 
     case is_gt =>
       apply weak_trichotomous lt l_val x <;> intros <;> simp [*]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 unsafe def ins_ne_leaf_tac :=
   sorry
 

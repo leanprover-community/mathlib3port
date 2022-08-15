@@ -44,7 +44,7 @@ theorem LinearIndependent.localization {ι : Type _} {b : ι → M} (hli : Linea
   rw [linear_independent_iff'] at hli⊢
   intro s g hg i hi
   choose a g' hg' using IsLocalization.exist_integer_multiples S s g
-  let this := fun i => Classical.propDecidable (i ∈ s)
+  letI := fun i => Classical.propDecidable (i ∈ s)
   specialize hli s (fun i => if hi : i ∈ s then g' i hi else 0) _ i hi
   · rw [← @smul_zero _ M _ _ _ (a : R), ← hg, Finset.smul_sum]
     refine' Finset.sum_congr rfl fun i hi => _
@@ -65,7 +65,7 @@ variable {M : Type _} [AddCommGroupₓ M] [Module R M] [Module Rₛ M] [IsScalar
 /-- Promote a basis for `M` over `R` to a basis for `M` over the localization `Rₛ` -/
 noncomputable def Basis.localization {ι : Type _} (b : Basis ι R M) : Basis ι Rₛ M :=
   Basis.mk (b.LinearIndependent.Localization Rₛ S) <| by
-    rw [← @Submodule.restrict_scalars_eq_top_iff Rₛ R, eq_top_iff, ← b.span_eq]
+    rw [← eq_top_iff, ← @Submodule.restrict_scalars_eq_top_iff Rₛ R, eq_top_iff, ← b.span_eq]
     apply Submodule.span_le_restrict_scalars
 
 end AddCommGroupₓ

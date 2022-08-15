@@ -36,7 +36,7 @@ open uniformity TopologicalSpace BigOperators Filter Nnreal Ennreal
 
 universe u v w
 
-variable {α : Type u} {β : Type v}
+variable {α : Type u} {β : Type v} {X : Type _}
 
 /-- Characterizing uniformities associated to a (generalized) distance function `D`
 in terms of the elements of the uniformity. -/
@@ -145,10 +145,12 @@ theorem edist_le_Ico_sum_edist (f : ℕ → α) {m n} (h : m ≤ n) :
     exact le_reflₓ (0 : ℝ≥0∞)
     
   · intro n hn hrec
-    calc edist (f m) (f (n + 1)) ≤ edist (f m) (f n) + edist (f n) (f (n + 1)) :=
-        edist_triangle _ _ _ _ ≤ (∑ i in Finset.ico m n, _) + _ :=
-        add_le_add hrec le_rfl _ = ∑ i in Finset.ico m (n + 1), _ := by
+    calc
+      edist (f m) (f (n + 1)) ≤ edist (f m) (f n) + edist (f n) (f (n + 1)) := edist_triangle _ _ _
+      _ ≤ (∑ i in Finset.ico m n, _) + _ := add_le_add hrec le_rfl
+      _ = ∑ i in Finset.ico m (n + 1), _ := by
         rw [Nat.Ico_succ_right_eq_insert_Ico hn, Finset.sum_insert, add_commₓ] <;> simp
+      
     
 
 /-- The triangle (polygon) inequality for sequences of points; `finset.range` version. -/
@@ -240,6 +242,12 @@ theorem uniformity_basis_edist_nnreal :
     let ⟨δ, hδ⟩ := Ennreal.lt_iff_exists_nnreal_btwn.1 ε₀
     ⟨δ, Ennreal.coe_pos.1 hδ.1, le_of_ltₓ hδ.2⟩
 
+theorem uniformity_basis_edist_nnreal_le :
+    (𝓤 α).HasBasis (fun ε : ℝ≥0 => 0 < ε) fun ε => { p : α × α | edist p.1 p.2 ≤ ε } :=
+  Emetric.mk_uniformity_basis_le (fun _ => Ennreal.coe_pos.2) fun ε ε₀ =>
+    let ⟨δ, hδ⟩ := Ennreal.lt_iff_exists_nnreal_btwn.1 ε₀
+    ⟨δ, Ennreal.coe_pos.1 hδ.1, le_of_ltₓ hδ.2⟩
+
 theorem uniformity_basis_edist_inv_nat :
     (𝓤 α).HasBasis (fun _ => True) fun n : ℕ => { p : α × α | edist p.1 p.2 < (↑n)⁻¹ } :=
   Emetric.mk_uniformity_basis (fun n _ => Ennreal.inv_pos.2 <| Ennreal.nat_ne_top n) fun ε ε₀ =>
@@ -261,7 +269,7 @@ namespace Emetric
 instance (priority := 900) : IsCountablyGenerated (𝓤 α) :=
   is_countably_generated_of_seq ⟨_, uniformity_basis_edist_inv_nat.eq_infi⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection {a b «expr ∈ » s}
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection {a b «expr ∈ » s}
 /-- ε-δ characterization of uniform continuity on a set for pseudoemetric spaces -/
 theorem uniform_continuous_on_iff [PseudoEmetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
@@ -300,7 +308,7 @@ theorem controlled_of_uniform_embedding [PseudoEmetricSpace β] {f : α → β} 
   intro h
   exact ⟨uniform_continuous_iff.1 (uniform_embedding_iff.1 h).2.1, (uniform_embedding_iff.1 h).2.2⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » t)
 /-- ε-δ characterization of Cauchy sequences on pseudoemetric spaces -/
 protected theorem cauchy_iff {f : Filter α} :
     Cauchy f ↔ f ≠ ⊥ ∧ ∀, ∀ ε > 0, ∀, ∃ t ∈ f, ∀ (x y) (_ : x ∈ t) (_ : y ∈ t), edist x y < ε := by
@@ -588,6 +596,12 @@ theorem ball_eq_empty_iff : Ball x ε = ∅ ↔ ε = 0 :=
     ⟨fun h => le_bot_iff.1 (le_of_not_gtₓ fun ε0 => h _ (mem_ball_self ε0)), fun ε0 y h =>
       not_lt_of_le (le_of_eqₓ ε0) (pos_of_mem_ball h)⟩
 
+theorem ord_connected_set_of_closed_ball_subset (x : α) (s : Set α) : OrdConnected { r | ClosedBall x r ⊆ s } :=
+  ⟨fun r₁ hr₁ r₂ hr₂ r hr => (closed_ball_subset_closed_ball hr.2).trans hr₂⟩
+
+theorem ord_connected_set_of_ball_subset (x : α) (s : Set α) : OrdConnected { r | Ball x r ⊆ s } :=
+  ⟨fun r₁ hr₁ r₂ hr₂ r hr => (ball_subset_ball hr.2).trans hr₂⟩
+
 /-- Relation “two points are at a finite edistance” is an equivalence relation. -/
 def edistLtTopSetoid : Setoidₓ α where
   R := fun x y => edist x y < ⊤
@@ -657,7 +671,7 @@ theorem tendsto_at_top [Nonempty β] [SemilatticeSup β] {u : β → α} {a : α
 theorem inseparable_iff : Inseparable x y ↔ edist x y = 0 := by
   simp [← inseparable_iff_mem_closure, ← mem_closure_iff, ← edist_comm, ← forall_lt_iff_le']
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (m n «expr ≥ » N)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (m n «expr ≥ » N)
 /-- In a pseudoemetric space, Cauchy sequences are characterized by the fact that, eventually,
 the pseudoedistance between its elements is arbitrarily small -/
 -- see Note [nolint_ge]
@@ -684,7 +698,7 @@ theorem totally_bounded_iff {s : Set α} :
     let ⟨t, ft, h⟩ := H ε ε0
     ⟨t, ft, h.trans <| Union₂_mono fun y yt z => hε⟩⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem totally_bounded_iff' {s : Set α} :
     TotallyBounded s ↔ ∀, ∀ ε > 0, ∀, ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, Ball y ε :=
   ⟨fun H ε ε0 => (totally_bounded_iff_subset.1 H) _ (edist_mem_uniformity ε0), fun H r ru =>
@@ -694,7 +708,7 @@ theorem totally_bounded_iff' {s : Set α} :
 
 section Compact
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- For a set `s` in a pseudo emetric space, if for every `ε > 0` there exists a countable
 set that is `ε`-dense in `s`, then there exists a countable subset `t ⊆ s` that is dense in `s`. -/
 theorem subset_countable_closure_of_almost_dense_set (s : Set α)
@@ -715,8 +729,11 @@ theorem subset_countable_closure_of_almost_dense_set (s : Set α)
       exact empty_subset _
       
     · refine' ⟨y, hys, fun z hz => _⟩
-      calc edist z y ≤ edist z x + edist y x := edist_triangle_right _ _ _ _ ≤ r + r := add_le_add hz.1 hxy _ = r * 2 :=
-          (mul_two r).symm
+      calc
+        edist z y ≤ edist z x + edist y x := edist_triangle_right _ _ _
+        _ ≤ r + r := add_le_add hz.1 hxy
+        _ = r * 2 := (mul_two r).symm
+        
       
   choose f hfs hf
   refine'
@@ -726,9 +743,12 @@ theorem subset_countable_closure_of_almost_dense_set (s : Set α)
   rcases Ennreal.exists_inv_nat_lt (Ennreal.half_pos ε0.lt.ne').ne' with ⟨n, hn⟩
   rcases mem_Union₂.1 (hsT n hx) with ⟨y, hyn, hyx⟩
   refine' ⟨f n⁻¹ y, mem_Union.2 ⟨n, mem_image_of_mem _ hyn⟩, _⟩
-  calc edist x (f n⁻¹ y) ≤ n⁻¹ * 2 := hf _ _ ⟨hyx, hx⟩_ < ε := Ennreal.mul_lt_of_lt_div hn
+  calc
+    edist x (f n⁻¹ y) ≤ n⁻¹ * 2 := hf _ _ ⟨hyx, hx⟩
+    _ < ε := Ennreal.mul_lt_of_lt_div hn
+    
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- A compact set in a pseudo emetric space is separable, i.e., it is a subset of the closure of a
 countable set.  -/
 theorem subset_countable_closure_of_compact {s : Set α} (hs : IsCompact s) :
@@ -840,15 +860,21 @@ theorem diam_union {t : Set α} (xs : x ∈ s) (yt : y ∈ t) : diam (s ∪ t) �
       
   refine' diam_le fun a ha b hb => _
   cases' (mem_union _ _ _).1 ha with h'a h'a <;> cases' (mem_union _ _ _).1 hb with h'b h'b
-  · calc edist a b ≤ diam s := edist_le_diam_of_mem h'a h'b _ ≤ diam s + (edist x y + diam t) :=
-        le_self_add _ = diam s + edist x y + diam t := (add_assocₓ _ _ _).symm
+  · calc
+      edist a b ≤ diam s := edist_le_diam_of_mem h'a h'b
+      _ ≤ diam s + (edist x y + diam t) := le_self_add
+      _ = diam s + edist x y + diam t := (add_assocₓ _ _ _).symm
+      
     
   · exact A a h'a b h'b
     
   · have Z := A b h'b a h'a
     rwa [edist_comm] at Z
     
-  · calc edist a b ≤ diam t := edist_le_diam_of_mem h'a h'b _ ≤ diam s + edist x y + diam t := le_add_self
+  · calc
+      edist a b ≤ diam t := edist_le_diam_of_mem h'a h'b
+      _ ≤ diam s + edist x y + diam t := le_add_self
+      
     
 
 theorem diam_union' {t : Set α} (h : (s ∩ t).Nonempty) : diam (s ∪ t) ≤ diam s + diam t := by
@@ -1024,7 +1050,7 @@ end Pi
 
 namespace Emetric
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- A compact set in an emetric space is separable, i.e., it is the closure of a countable set. -/
 theorem countable_closure_of_compact {s : Set γ} (hs : IsCompact s) :
     ∃ (t : _)(_ : t ⊆ s), t.Countable ∧ s = Closure t := by
@@ -1044,4 +1070,85 @@ theorem diam_pos_iff : 0 < diam s ↔ ∃ x ∈ s, ∃ y ∈ s, x ≠ y := by
 end Diam
 
 end Emetric
+
+/-!
+### `additive`, `multiplicative`
+
+The distance on those type synonyms is inherited without change.
+-/
+
+
+open Additive Multiplicative
+
+section
+
+variable [HasEdist X]
+
+instance : HasEdist (Additive X) :=
+  ‹HasEdist X›
+
+instance : HasEdist (Multiplicative X) :=
+  ‹HasEdist X›
+
+@[simp]
+theorem edist_of_mul (a b : X) : edist (ofMul a) (ofMul b) = edist a b :=
+  rfl
+
+@[simp]
+theorem edist_of_add (a b : X) : edist (ofAdd a) (ofAdd b) = edist a b :=
+  rfl
+
+@[simp]
+theorem edist_to_mul (a b : Additive X) : edist (toMul a) (toMul b) = edist a b :=
+  rfl
+
+@[simp]
+theorem edist_to_add (a b : Multiplicative X) : edist (toAdd a) (toAdd b) = edist a b :=
+  rfl
+
+end
+
+instance [PseudoEmetricSpace X] : PseudoEmetricSpace (Additive X) :=
+  ‹PseudoEmetricSpace X›
+
+instance [PseudoEmetricSpace X] : PseudoEmetricSpace (Multiplicative X) :=
+  ‹PseudoEmetricSpace X›
+
+instance [EmetricSpace X] : EmetricSpace (Additive X) :=
+  ‹EmetricSpace X›
+
+instance [EmetricSpace X] : EmetricSpace (Multiplicative X) :=
+  ‹EmetricSpace X›
+
+/-!
+### Order dual
+
+The distance on this type synonym is inherited without change.
+-/
+
+
+open OrderDual
+
+section
+
+variable [HasEdist X]
+
+instance : HasEdist Xᵒᵈ :=
+  ‹HasEdist X›
+
+@[simp]
+theorem edist_to_dual (a b : X) : edist (toDual a) (toDual b) = edist a b :=
+  rfl
+
+@[simp]
+theorem edist_of_dual (a b : Xᵒᵈ) : edist (ofDual a) (ofDual b) = edist a b :=
+  rfl
+
+end
+
+instance [PseudoEmetricSpace X] : PseudoEmetricSpace Xᵒᵈ :=
+  ‹PseudoEmetricSpace X›
+
+instance [EmetricSpace X] : EmetricSpace Xᵒᵈ :=
+  ‹EmetricSpace X›
 

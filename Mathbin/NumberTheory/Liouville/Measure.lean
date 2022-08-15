@@ -63,8 +63,10 @@ theorem set_of_liouville_with_subset_aux :
   have hb0 : (0 : ℝ) < b := zero_lt_one.trans_le hb
   replace hlt : abs (x - a / b) < 1 / b
   · refine' hlt.trans_le (one_div_le_one_div_of_le hb0 _)
-    calc (b : ℝ) = b ^ (1 : ℝ) := (rpow_one _).symm _ ≤ b ^ (2 + 1 / (n + 1 : ℕ) : ℝ) :=
-        rpow_le_rpow_of_exponent_le hb (one_le_two.trans _)
+    calc
+      (b : ℝ) = b ^ (1 : ℝ) := (rpow_one _).symm
+      _ ≤ b ^ (2 + 1 / (n + 1 : ℕ) : ℝ) := rpow_le_rpow_of_exponent_le hb (one_le_two.trans _)
+      
     simpa using n.cast_add_one_pos.le
     
   rw [sub_div' _ _ _ hb0.ne', abs_div, abs_of_pos hb0, div_lt_div_right hb0, abs_sub_lt_iff, sub_lt_iff_lt_add,
@@ -76,7 +78,10 @@ theorem set_of_liouville_with_subset_aux :
   · simp only [← mul_nonneg hx01.left b.cast_nonneg, ← neg_le_sub_iff_le_add, ← le_add_iff_nonneg_left]
     
   · rw [add_le_add_iff_left]
-    calc x * b ≤ 1 * b := mul_le_mul_of_nonneg_right hx01.2.le hb0.le _ = b := one_mulₓ b
+    calc
+      x * b ≤ 1 * b := mul_le_mul_of_nonneg_right hx01.2.le hb0.le
+      _ = b := one_mulₓ b
+      
     
 
 /-- The set of numbers satisfying the Liouville condition with some exponent `p > 2` has Lebesgue
@@ -89,7 +94,7 @@ theorem volume_Union_set_of_liouville_with : volume (⋃ (p : ℝ) (hp : 2 < p),
   intro m
   rw [measure_preimage_add_right]
   clear m
-  refine' (measure_bUnion_null_iff <| countable_encodable _).2 fun n (hn : 1 ≤ n) => _
+  refine' (measure_bUnion_null_iff <| to_countable _).2 fun n (hn : 1 ≤ n) => _
   generalize hr : (2 + 1 / n : ℝ) = r
   replace hr : 2 < r
   · simp [hr, ← zero_lt_one.trans_le hn]
@@ -104,11 +109,14 @@ theorem volume_Union_set_of_liouville_with : volume (⋃ (p : ℝ) (hp : 2 < p),
       Ennreal.of_real_coe_nnreal]
   have : ∀ b : ℕ, volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ (2 * (b ^ (1 - r) + b ^ -r) : ℝ≥0 ) := by
     intro b
-    calc volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ ∑ a in Finset.icc (0 : ℤ) b, volume (B a b) :=
-        measure_bUnion_finset_le _ _ _ = ((b + 1) * (2 / b ^ r) : ℝ≥0 ) := by
+    calc
+      volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ ∑ a in Finset.icc (0 : ℤ) b, volume (B a b) :=
+        measure_bUnion_finset_le _ _
+      _ = ((b + 1) * (2 / b ^ r) : ℝ≥0 ) := by
         simp only [← hB, ← Int.card_Icc, ← Finset.sum_const, ← nsmul_eq_mul, ← sub_zero, Int.coe_nat_succ, ←
-          Int.to_nat_coe_nat, Nat.cast_succₓ, ← Ennreal.coe_mul, ← Ennreal.coe_nat]_ = _ :=
-        _
+          Int.to_nat_coe_nat, Nat.cast_succₓ, ← Ennreal.coe_mul, ← Ennreal.coe_nat]
+      _ = _ := _
+      
     have : 1 - r ≠ 0 := by
       linarith
     rw [Ennreal.coe_eq_coe]

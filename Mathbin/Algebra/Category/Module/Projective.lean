@@ -27,13 +27,13 @@ open ModuleCat
 theorem IsProjective.iff_projective {R : Type u} [Ringₓ R] {P : Type max u v} [AddCommGroupₓ P] [Module R P] :
     Module.Projective R P ↔ Projective (ModuleCat.of R P) := by
   refine' ⟨fun h => _, fun h => _⟩
-  · let this : Module.Projective R ↥(ModuleCat.of R P) := h
+  · letI : Module.Projective R ↥(ModuleCat.of R P) := h
     exact ⟨fun E X f e epi => Module.projective_lifting_property _ _ ((ModuleCat.epi_iff_surjective _).mp epi)⟩
     
   · refine' Module.projective_of_lifting_property _
     intro E X mE mX sE sX f g s
-    have : epi (↟f) := (ModuleCat.epi_iff_surjective (↟f)).mpr s
-    let this : projective (ModuleCat.of R P) := h
+    haveI : epi (↟f) := (ModuleCat.epi_iff_surjective (↟f)).mpr s
+    letI : projective (ModuleCat.of R P) := h
     exact ⟨projective.factor_thru (↟g) (↟f), projective.factor_thru_comp (↟g) (↟f)⟩
     
 

@@ -53,10 +53,12 @@ theorem compares_swap [LT α] {a b : α} {o : Ordering} : o.swap.Compares a b �
 
 alias compares_swap ↔ compares.of_swap compares.swap
 
-theorem swap_eq_iff_eq_swap {o o' : Ordering} : o.swap = o' ↔ o = o'.swap :=
-  ⟨fun h => by
-    rw [← swap_swap o, h], fun h => by
-    rw [← swap_swap o', h]⟩
+@[simp]
+theorem swap_inj (o₁ o₂ : Ordering) : o₁.swap = o₂.swap ↔ o₁ = o₂ := by
+  cases o₁ <;> cases o₂ <;> decide
+
+theorem swap_eq_iff_eq_swap {o o' : Ordering} : o.swap = o' ↔ o = o'.swap := by
+  rw [← swap_inj, swap_swap]
 
 theorem Compares.eq_lt [Preorderₓ α] : ∀ {o} {a b : α}, Compares o a b → (o = lt ↔ a < b)
   | lt, a, b, h => ⟨fun _ => h, fun _ => rfl⟩
@@ -156,6 +158,7 @@ theorem cmp_compares [LinearOrderₓ α] (a b : α) : (cmp a b).Compares a b := 
 theorem Ordering.Compares.cmp_eq [LinearOrderₓ α] {a b : α} {o : Ordering} (h : o.Compares a b) : cmp a b = o :=
   (cmp_compares a b).inj h
 
+@[simp]
 theorem cmp_swap [Preorderₓ α] [@DecidableRel α (· < ·)] (a b : α) : (cmp a b).swap = cmp b a := by
   unfold cmp cmpUsing
   by_cases' a < b <;> by_cases' h₂ : b < a <;> simp [← h, ← h₂, ← Ordering.swap]
@@ -203,12 +206,10 @@ theorem cmp_self_eq_eq : cmp x x = Ordering.eq := by
 
 variable {x y} {β : Type _} [LinearOrderₓ β] {x' y' : β}
 
-theorem cmp_eq_cmp_symm : cmp x y = cmp x' y' ↔ cmp y x = cmp y' x' := by
-  constructor
-  rw [← cmp_swap _ y, ← cmp_swap _ y']
-  cc
-  rw [← cmp_swap _ x, ← cmp_swap _ x']
-  cc
+theorem cmp_eq_cmp_symm : cmp x y = cmp x' y' ↔ cmp y x = cmp y' x' :=
+  ⟨fun h => by
+    rwa [← cmp_swap x', ← cmp_swap, swap_inj], fun h => by
+    rwa [← cmp_swap y', ← cmp_swap, swap_inj]⟩
 
 theorem lt_iff_lt_of_cmp_eq_cmp (h : cmp x y = cmp x' y') : x < y ↔ x' < y' := by
   rw [← cmp_eq_lt_iff, ← cmp_eq_lt_iff, h]

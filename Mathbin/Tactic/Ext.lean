@@ -311,11 +311,9 @@ unsafe def extensional_attribute : user_attribute Unit (Option Name) where
   Name := `ext
   descr := "lemmas usable by `ext` tactic"
   parser := optionalₓ ident
-  before_unset := some fun _ _ => pure ()
   after_set :=
     some fun n _ b => do
       let add ← extensional_attribute.get_param n
-      unset_attribute `ext n
       let e ← get_env
       let n ← if (e.structure_fields n).isSome then derive_struct_ext_lemma n else pure n
       let s ← mk_const n >>= infer_type >>= get_ext_subject

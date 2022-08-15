@@ -80,6 +80,7 @@ noncomputable def basisOf (i : ι) : Basis { j : ι // j ≠ i } k V :=
       suffices
         Submodule.span k (range fun j : { x // x ≠ i } => b.points ↑j -ᵥ b.points i) = vectorSpan k (range b.points) by
         rw [this, ← direction_affine_span, b.tot, AffineSubspace.direction_top]
+        exact le_rfl
       conv_rhs => rw [← image_univ]
       rw [vector_span_image_eq_span_vsub_set_right_ne k b.points (mem_univ i)]
       congr
@@ -169,7 +170,7 @@ theorem coe_coord_of_subsingleton_eq_one [Subsingleton ι] (i : ι) : (b.Coord i
     rw [← image_univ]
     apply subsingleton.image
     apply subsingleton_of_subsingleton
-  have := AffineSubspace.subsingleton_of_subsingleton_span_eq_top hp b.tot
+  haveI := AffineSubspace.subsingleton_of_subsingleton_span_eq_top hp b.tot
   let s : Finset ι := {i}
   have hi : i ∈ s := by
     simp
@@ -259,11 +260,17 @@ theorem affine_span_eq_top_of_to_matrix_left_inv [DecidableEq ι] [Nontrivial k]
     exact this i
   intro i
   have hAi : (∑ j, A i j) = 1 := by
-    calc (∑ j, A i j) = ∑ j, A i j * ∑ l, b.to_matrix p j l := by
-        simp _ = ∑ j, ∑ l, A i j * b.to_matrix p j l := by
-        simp_rw [Finset.mul_sum]_ = ∑ l, ∑ j, A i j * b.to_matrix p j l := by
-        rw [Finset.sum_comm]_ = ∑ l, (A ⬝ b.to_matrix p) i l := rfl _ = 1 := by
+    calc
+      (∑ j, A i j) = ∑ j, A i j * ∑ l, b.to_matrix p j l := by
+        simp
+      _ = ∑ j, ∑ l, A i j * b.to_matrix p j l := by
+        simp_rw [Finset.mul_sum]
+      _ = ∑ l, ∑ j, A i j * b.to_matrix p j l := by
+        rw [Finset.sum_comm]
+      _ = ∑ l, (A ⬝ b.to_matrix p) i l := rfl
+      _ = 1 := by
         simp [← hA, ← Matrix.one_apply, ← Finset.filter_eq]
+      
   have hbi : b.points i = finset.univ.affine_combination p (A i) := by
     apply b.ext_elem
     intro j
@@ -355,7 +362,7 @@ variable {k V P}
 theorem exists_affine_basis_of_finite_dimensional {ι : Type _} [Fintype ι] [FiniteDimensional k V]
     (h : Fintype.card ι = FiniteDimensional.finrank k V + 1) : Nonempty (AffineBasis ι k P) := by
   obtain ⟨s, ⟨⟨incl, h_ind, h_tot⟩⟩⟩ := AffineBasis.exists_affine_basis k V P
-  have : Fintype s := fintypeOfFinDimAffineIndependent k h_ind
+  haveI : Fintype s := fintypeOfFinDimAffineIndependent k h_ind
   have hs : Fintype.card ι = Fintype.card s := by
     rw [h]
     exact (h_ind.affine_span_eq_top_iff_card_eq_finrank_add_one.mp h_tot).symm

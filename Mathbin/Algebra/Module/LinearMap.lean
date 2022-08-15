@@ -89,9 +89,8 @@ structure LinearMap {R : Type _} {S : Type _} [Semiringₓ R] [Semiringₓ S] (�
   [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [Module R M] [Module S M₂] extends AddHom M M₂ where
   map_smul' : ∀ (r : R) (x : M), to_fun (r • x) = σ r • to_fun x
 
-/-- The `add_hom` underlying a `linear_map`. -/
-add_decl_doc LinearMap.toAddHom
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident linear_map.to_add_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- mathport name: «expr →ₛₗ[ ] »
 notation:25 M " →ₛₗ[" σ:25 "] " M₂:0 => LinearMap σ M M₂
 
@@ -563,7 +562,7 @@ namespace Module
 /-- `g : R →+* S` is `R`-linear when the module structure on `S` is `module.comp_hom S g` . -/
 @[simps]
 def compHom.toLinearMap {R S : Type _} [Semiringₓ R] [Semiringₓ S] (g : R →+* S) :
-    have := comp_hom S g
+    haveI := comp_hom S g
     R →ₗ[R] S where
   toFun := (g : R → S)
   map_add' := g.map_add
@@ -978,10 +977,23 @@ instance _root_.module.End.monoid : Monoidₓ (Module.End R M) where
 instance _root_.module.End.semiring : Semiringₓ (Module.End R M) :=
   { AddMonoidWithOneₓ.unary, Module.End.monoid, LinearMap.addCommMonoid with mul := (· * ·), one := (1 : M →ₗ[R] M),
     zero := 0, add := (· + ·), mul_zero := comp_zero, zero_mul := zero_comp,
-    left_distrib := fun f g h => comp_add _ _ _, right_distrib := fun f g h => add_comp _ _ _ }
+    left_distrib := fun f g h => comp_add _ _ _, right_distrib := fun f g h => add_comp _ _ _,
+    natCast := fun n => n • 1, nat_cast_zero := AddMonoidₓ.nsmul_zero' _,
+    nat_cast_succ := fun n => (AddMonoidₓ.nsmul_succ' n 1).trans (add_commₓ _ _) }
+
+/-- See also `module.End.nat_cast_def`. -/
+@[simp]
+theorem _root_.module.End.nat_cast_apply (n : ℕ) (m : M) : (↑n : Module.End R M) m = n • m :=
+  rfl
 
 instance _root_.module.End.ring : Ringₓ (Module.End R N₁) :=
-  { Module.End.semiring, LinearMap.addCommGroup with }
+  { Module.End.semiring, LinearMap.addCommGroup with intCast := fun z => z • 1, int_cast_of_nat := of_nat_zsmul _,
+    int_cast_neg_succ_of_nat := zsmul_neg_succ_of_nat _ }
+
+/-- See also `module.End.int_cast_def`. -/
+@[simp]
+theorem _root_.module.End.int_cast_apply (z : ℤ) (m : N₁) : (↑z : Module.End R N₁) m = z • m :=
+  rfl
 
 section
 
@@ -1071,7 +1083,7 @@ variable (R M) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
 variable [Semiringₓ S] [Module S M] [SmulCommClass S R M]
 
-/-- Each element of the monoid defines a module endomorphism.
+/-- Each element of the semiring defines a module endomorphism.
 
 This is a stronger version of `distrib_mul_action.to_module_End`. -/
 @[simps]
@@ -1092,6 +1104,14 @@ multiplication. -/
 def moduleEndSelfOp : R ≃+* Module.End Rᵐᵒᵖ R :=
   { Module.toModuleEnd _ _ with toFun := DistribMulAction.toLinearMap _ _, invFun := fun f => f 1, left_inv := mul_oneₓ,
     right_inv := fun f => LinearMap.ext_ring_op <| mul_oneₓ _ }
+
+theorem End.nat_cast_def (n : ℕ) [AddCommMonoidₓ N₁] [Module R N₁] :
+    (↑n : Module.End R N₁) = Module.toModuleEnd R N₁ n :=
+  rfl
+
+theorem End.int_cast_def (z : ℤ) [AddCommGroupₓ N₁] [Module R N₁] :
+    (↑z : Module.End R N₁) = Module.toModuleEnd R N₁ z :=
+  rfl
 
 end Module
 

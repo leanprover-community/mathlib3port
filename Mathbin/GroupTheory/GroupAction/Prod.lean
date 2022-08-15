@@ -26,7 +26,7 @@ scalar multiplication as a homomorphism from `α × β` to `β`.
 -/
 
 
-variable {M N P α β : Type _}
+variable {M N P E α β : Type _}
 
 namespace Prod
 
@@ -56,6 +56,34 @@ theorem smul_def (a : M) (x : α × β) : a • x = (a • x.1, a • x.2) :=
 
 @[simp, to_additive]
 theorem smul_swap : (a • x).swap = a • x.swap :=
+  rfl
+
+variable [Pow α E] [Pow β E]
+
+@[to_additive HasSmul]
+instance hasPow : Pow (α × β) E where pow := fun p c => (p.1 ^ c, p.2 ^ c)
+
+@[simp, to_additive smul_snd, to_additive_reorder 6]
+theorem pow_fst (p : α × β) (c : E) : (p ^ c).fst = p.fst ^ c :=
+  rfl
+
+@[simp, to_additive smul_snd, to_additive_reorder 6]
+theorem pow_snd (p : α × β) (c : E) : (p ^ c).snd = p.snd ^ c :=
+  rfl
+
+/- Note that the `c` arguments to this lemmas cannot be in the more natural right-most positions due
+to limitations in `to_additive` and `to_additive_reorder`, which will silently fail to reorder more
+than two adjacent arguments -/
+@[simp, to_additive smul_mk, to_additive_reorder 6]
+theorem pow_mk (c : E) (a : α) (b : β) : Prod.mk a b ^ c = Prod.mk (a ^ c) (b ^ c) :=
+  rfl
+
+@[to_additive smul_def, to_additive_reorder 6]
+theorem pow_def (p : α × β) (c : E) : p ^ c = (p.1 ^ c, p.2 ^ c) :=
+  rfl
+
+@[simp, to_additive smul_swap, to_additive_reorder 6]
+theorem pow_swap (p : α × β) (c : E) : (p ^ c).swap = p.swap ^ c :=
   rfl
 
 instance [HasSmul M N] [IsScalarTower M N α] [IsScalarTower M N β] : IsScalarTower M N (α × β) :=

@@ -42,8 +42,8 @@ We work in a preadditive category `C` equipped with an additive shift.
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ] [Preadditive C]
   [∀ n : ℤ, Functor.Additive (shiftFunctor C n)]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`DistinguishedTriangles] []
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (T₂ «expr ≅ » T₁)
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`DistinguishedTriangles] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (T₂ «expr ≅ » T₁)
 /-- A preadditive category `C` with an additive shift, and a class of "distinguished triangles"
 relative to that shift is called pretriangulated if the following hold:
 * Any triangle that is isomorphic to a distinguished triangle is also distinguished.
@@ -84,20 +84,20 @@ variable [Pretriangulated C]
 -- mathport name: «exprdist_triang »
 notation:20 "dist_triang " C => DistinguishedTriangles C
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
 /-- Given any distinguished triangle `T`, then we know `T.rotate` is also distinguished.
 -/
 theorem rot_of_dist_triangle (T) (_ : T ∈ (dist_triang C)) : T.rotate ∈ (dist_triang C) :=
   (rotate_distinguished_triangle T).mp H
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
 /-- Given any distinguished triangle `T`, then we know `T.inv_rotate` is also distinguished.
 -/
 theorem inv_rot_of_dist_triangle (T) (_ : T ∈ (dist_triang C)) : T.invRotate ∈ (dist_triang C) :=
   (rotate_distinguished_triangle T.invRotate).mpr
     (isomorphic_distinguished T H T.invRotate.rotate (invRotCompRot.app T))
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
 /-- Given any distinguished triangle
 ```
       f       g       h
@@ -117,7 +117,7 @@ theorem comp_dist_triangle_mor_zero₁₂ (T) (_ : T ∈ (dist_triang C)) : T.mo
   rw [← f.left]
   simp only [← limits.zero_comp, ← contractible_triangle_mor₂]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
 /-- Given any distinguished triangle
 ```
       f       g       h
@@ -130,7 +130,7 @@ See <https://stacks.math.columbia.edu/tag/0146>
 theorem comp_dist_triangle_mor_zero₂₃ (T) (_ : T ∈ (dist_triang C)) : T.mor₂ ≫ T.mor₃ = 0 :=
   comp_dist_triangle_mor_zero₁₂ C T.rotate (rot_of_dist_triangle C T H)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
 /-- Given any distinguished triangle
 ```
       f       g       h

@@ -38,7 +38,7 @@ We use notation `𝕎 R`, entered `\bbW`, for the Witt vectors over `R`.
 
 noncomputable section
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1474:34: infer kinds are unsupported in Lean 4: mk []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1488:34: infer kinds are unsupported in Lean 4: mk []
 /-- `witt_vector p R` is the ring of `p`-typical Witt vectors over the commutative ring `R`,
 where `p` is a prime number.
 
@@ -62,15 +62,10 @@ namespace WittVector
 
 variable (p) {R : Type _}
 
-/-- Construct a Witt vector `mk p x : 𝕎 R` from a sequence `x` of elements of `R`. -/
-add_decl_doc WittVector.mk
-
-/-- `x.coeff n` is the `n`th coefficient of the Witt vector `x`.
-
-This concept does not have a standard name in the literature.
--/
-add_decl_doc WittVector.coeff
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident witt_vector.mk]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident witt_vector.coeff]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[ext]
 theorem ext {x y : 𝕎 R} (h : ∀ n, x.coeff n = y.coeff n) : x = y := by
   cases x
@@ -357,25 +352,25 @@ theorem mul_coeff_zero (x y : 𝕎 R) : (x * y).coeff 0 = x.coeff 0 * y.coeff 0 
 
 end Coeff
 
-theorem witt_add_vars (n : ℕ) : (wittAdd p n).vars ⊆ Finset.univ.product (Finset.range (n + 1)) :=
+theorem witt_add_vars (n : ℕ) : (wittAdd p n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   witt_structure_int_vars _ _ _
 
-theorem witt_sub_vars (n : ℕ) : (wittSub p n).vars ⊆ Finset.univ.product (Finset.range (n + 1)) :=
+theorem witt_sub_vars (n : ℕ) : (wittSub p n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   witt_structure_int_vars _ _ _
 
-theorem witt_mul_vars (n : ℕ) : (wittMul p n).vars ⊆ Finset.univ.product (Finset.range (n + 1)) :=
+theorem witt_mul_vars (n : ℕ) : (wittMul p n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   witt_structure_int_vars _ _ _
 
-theorem witt_neg_vars (n : ℕ) : (wittNeg p n).vars ⊆ Finset.univ.product (Finset.range (n + 1)) :=
+theorem witt_neg_vars (n : ℕ) : (wittNeg p n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   witt_structure_int_vars _ _ _
 
-theorem witt_nsmul_vars (m : ℕ) (n : ℕ) : (wittNsmul p m n).vars ⊆ Finset.univ.product (Finset.range (n + 1)) :=
+theorem witt_nsmul_vars (m : ℕ) (n : ℕ) : (wittNsmul p m n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   witt_structure_int_vars _ _ _
 
-theorem witt_zsmul_vars (m : ℤ) (n : ℕ) : (wittZsmul p m n).vars ⊆ Finset.univ.product (Finset.range (n + 1)) :=
+theorem witt_zsmul_vars (m : ℤ) (n : ℕ) : (wittZsmul p m n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   witt_structure_int_vars _ _ _
 
-theorem witt_pow_vars (m : ℕ) (n : ℕ) : (wittPow p m n).vars ⊆ Finset.univ.product (Finset.range (n + 1)) :=
+theorem witt_pow_vars (m : ℕ) (n : ℕ) : (wittPow p m n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   witt_structure_int_vars _ _ _
 
 end WittVector

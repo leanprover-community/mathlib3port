@@ -61,7 +61,7 @@ of `X` at `f x` and the stalk of the restriction of `X` along `f` at t `x`.
 def restrictStalkIso {U : Top} (X : PresheafedSpace.{v} C) {f : U ⟶ (X : Top.{v})} (h : OpenEmbedding f) (x : U) :
     (X.restrict h).stalk x ≅ X.stalk (f x) := by
   -- As a left adjoint, the functor `h.is_open_map.functor_nhds x` is initial.
-  have := initial_of_adjunction (h.is_open_map.adjunction_nhds x)
+  haveI := initial_of_adjunction (h.is_open_map.adjunction_nhds x)
   -- Typeclass resolution knows that the opposite of an initial functor is final. The result
   -- follows from the general fact that postcomposing with a final functor doesn't change colimits.
   exact final.colimit_iso (h.is_open_map.functor_nhds x).op ((open_nhds.inclusion (f x)).op ⋙ X.presheaf)

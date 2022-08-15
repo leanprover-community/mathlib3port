@@ -234,6 +234,10 @@ theorem IsSheaf.hom_ext {A : Type u₂} [Category.{max v₁ u₁} A] {E : A} {X 
     (S : J.cover X) (e₁ e₂ : E ⟶ P.obj (op X)) (h : ∀ I : S.arrow, e₁ ≫ P.map I.f.op = e₂ ≫ P.map I.f.op) : e₁ = e₂ :=
   (hP _ _ S.condition).IsSeparatedFor.ext fun Y f hf => h ⟨Y, f, hf⟩
 
+theorem is_sheaf_of_iso_iff {P P' : Cᵒᵖ ⥤ A} (e : P ≅ P') : IsSheaf J P ↔ IsSheaf J P' :=
+  forall_congrₓ fun a =>
+    ⟨Presieve.is_sheaf_iso J (isoWhiskerRight e _), Presieve.is_sheaf_iso J (isoWhiskerRight e.symm _)⟩
+
 variable (J)
 
 end Presheaf
@@ -284,6 +288,14 @@ def sheafToPresheaf : Sheaf J A ⥤ Cᵒᵖ ⥤ A where
 instance : Full (sheafToPresheaf J A) where preimage := fun X Y f => ⟨f⟩
 
 instance : Faithful (sheafToPresheaf J A) where
+
+/-- This is stated as a lemma to prevent class search from forming a loop since a sheaf morphism is
+monic if and only if it is monic as a presheaf morphism (under suitable assumption).-/
+theorem Sheaf.Hom.mono_of_presheaf_mono {F G : Sheaf J A} (f : F ⟶ G) [h : Mono f.1] : Mono f :=
+  (sheafToPresheaf J A).mono_of_mono_map h
+
+instance Sheaf.Hom.epi_of_presheaf_epi {F G : Sheaf J A} (f : F ⟶ G) [h : Epi f.1] : Epi f :=
+  (sheafToPresheaf J A).epi_of_epi_map h
 
 /-- The sheaf of sections guaranteed by the sheaf condition. -/
 @[simps]
@@ -542,7 +554,7 @@ theorem is_sheaf_iff_is_sheaf' : IsSheaf J P ↔ IsSheaf' J P := by
     rw [equalizer.presieve.sheaf_condition]
     refine' ⟨_⟩
     refine' is_sheaf_for_is_sheaf_for' _ _ _ _ _
-    let this := preserves_smallest_limits_of_preserves_limits (coyoneda.obj (op U))
+    letI := preserves_smallest_limits_of_preserves_limits (coyoneda.obj (op U))
     apply is_limit_of_preserves
     apply Classical.choice (h _ S _)
     simpa
@@ -567,15 +579,15 @@ theorem is_sheaf_iff_is_sheaf_forget (s : A ⥤ Type max v₁ u₁) [HasLimits A
   rw [is_sheaf_iff_is_sheaf', is_sheaf_iff_is_sheaf']
   apply forall_congrₓ fun U => _
   apply ball_congr fun R hR => _
-  let this : reflects_limits s := reflects_limits_of_reflects_isomorphisms
+  letI : reflects_limits s := reflects_limits_of_reflects_isomorphisms
   have : is_limit (s.map_cone (fork.of_ι _ (w R P))) ≃ is_limit (fork.of_ι _ (w R (P ⋙ s))) :=
     is_sheaf_for_is_sheaf_for' P s U R
   rw [← Equivₓ.nonempty_congr this]
   constructor
-  · have := preserves_smallest_limits_of_preserves_limits s
+  · haveI := preserves_smallest_limits_of_preserves_limits s
     exact Nonempty.map fun t => is_limit_of_preserves s t
     
-  · have := reflects_smallest_limits_of_reflects_limits s
+  · haveI := reflects_smallest_limits_of_reflects_limits s
     exact Nonempty.map fun t => is_limit_of_reflects s t
     
 

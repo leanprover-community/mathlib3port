@@ -112,7 +112,7 @@ theorem exists_list_of_mem_closure {a : R} (h : a ∈ Closure s) :
       ⟨L1 ++ L2, List.forall_mem_appendₓ.2 ⟨h1, h2⟩, by
         rw [List.map_append, List.sum_append]⟩
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ Closure s) (h1 : C 1) (hneg1 : C (-1))
     (hs : ∀, ∀ z ∈ s, ∀, ∀ n, C n → C (z * n)) (ha : ∀ {x y}, C x → C y → C (x + y)) : C x := by
   have h0 : C 0 := add_neg_selfₓ (1 : R) ▸ ha h1 hneg1

@@ -25,13 +25,13 @@ open Polynomial
 
 variable {n : ℕ}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:646:40: in linear_combination #[[expr «expr + »(«expr * »(«expr - »(«expr - »(«expr - »(1, z), «expr ^ »(z, 2)), «expr ^ »(z, n)), h1), «expr * »(«expr - »(«expr ^ »(z, n), 2), h2))],
+-- ./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr «expr + »(«expr * »(«expr - »(«expr - »(«expr - »(1, z), «expr ^ »(z, 2)), «expr ^ »(z, n)), h1), «expr * »(«expr - »(«expr ^ »(z, n), 2), h2))],
   []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args
 theorem X_pow_sub_X_sub_one_irreducible_aux (z : ℂ) : ¬(z ^ n = z + 1 ∧ z ^ n + z ^ 2 = 0) := by
   rintro ⟨h1, h2⟩
   replace h3 : z ^ 3 = 1
   · trace
-      "./././Mathport/Syntax/Translate/Basic.lean:646:40: in linear_combination #[[expr «expr + »(«expr * »(«expr - »(«expr - »(«expr - »(1, z), «expr ^ »(z, 2)), «expr ^ »(z, n)), h1), «expr * »(«expr - »(«expr ^ »(z, n), 2), h2))],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args"
+      "./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr «expr + »(«expr * »(«expr - »(«expr - »(«expr - »(1, z), «expr ^ »(z, 2)), «expr ^ »(z, n)), h1), «expr * »(«expr - »(«expr ^ »(z, n), 2), h2))],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args"
     
   -- thanks polyrith!
   have key : z ^ n = 1 ∨ z ^ n = z ∨ z ^ n = z ^ 2 := by
@@ -58,8 +58,8 @@ theorem X_pow_sub_X_sub_one_irreducible_aux (z : ℂ) : ¬(z ^ n = z + 1 ∧ z ^
             rwa [key, add_self_eq_zero] at h2))
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:646:40: in linear_combination #[[expr h1], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args
--- ./././Mathport/Syntax/Translate/Basic.lean:646:40: in linear_combination #[[expr «expr- »(h2)], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args
+-- ./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr h1], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args
+-- ./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr «expr- »(h2)], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args
 theorem X_pow_sub_X_sub_one_irreducible (hn1 : n ≠ 1) : Irreducible (X ^ n - X - 1 : ℤ[X]) := by
   by_cases' hn0 : n = 0
   · rw [hn0, pow_zeroₓ, sub_sub, add_commₓ, ← sub_sub, sub_self, zero_sub]
@@ -77,14 +77,14 @@ theorem X_pow_sub_X_sub_one_irreducible (hn1 : n ≠ 1) : Irreducible (X ^ n - X
   simp_rw [Units.coe_neg, Units.coe_one, map_neg, map_one] at h1 h2
   replace h1 : z ^ n = z + 1 := by
     trace
-      "./././Mathport/Syntax/Translate/Basic.lean:646:40: in linear_combination #[[expr h1], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args"
+      "./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr h1], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args"
   replace h2 := mul_eq_zero_of_left h2 z
   rw [add_mulₓ, add_mulₓ, add_zeroₓ, mul_assoc (-1 : ℂ), ← pow_succ'ₓ, Nat.sub_add_cancelₓ hn.le] at h2
   rw [h1] at h2⊢
   exact
     ⟨rfl, by
       trace
-        "./././Mathport/Syntax/Translate/Basic.lean:646:40: in linear_combination #[[expr «expr- »(h2)], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args"⟩
+        "./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr «expr- »(h2)], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args"⟩
 
 theorem X_pow_sub_X_sub_one_irreducible_rat (hn1 : n ≠ 1) : Irreducible (X ^ n - X - 1 : ℚ[X]) := by
   by_cases' hn0 : n = 0

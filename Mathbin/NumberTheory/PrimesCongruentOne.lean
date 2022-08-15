@@ -34,12 +34,14 @@ theorem exists_prime_ge_modeq_one {k : ℕ} (n : ℕ) (hpos : 0 < k) : ∃ p : �
       norm_cast
       rwa [one_mulₓ] at hkey
       
-    calc 1 ≤ _ := by
+    calc
+      1 ≤ _ := by
         rw [le_tsub_iff_left (one_le_two.trans (hkey _).le)]
-        exact (hkey _).le _ < _ :=
-        sub_one_lt_nat_abs_cyclotomic_eval (one_lt_succ_succ k) (one_lt_two.trans (hkey k.succ)).Ne.symm
+        exact (hkey _).le
+      _ < _ := sub_one_lt_nat_abs_cyclotomic_eval (one_lt_succ_succ k) (one_lt_two.trans (hkey k.succ)).Ne.symm
+      
   let p := min_fac (eval (↑b) (cyclotomic k ℤ)).natAbs
-  have hprime : Fact p.prime := ⟨min_fac_prime (ne_of_ltₓ hgt).symm⟩
+  haveI hprime : Fact p.prime := ⟨min_fac_prime (ne_of_ltₓ hgt).symm⟩
   have hroot : is_root (cyclotomic k (Zmod p)) (cast_ring_hom (Zmod p) b) := by
     rw [is_root.def, ← map_cyclotomic_int k (Zmod p), eval_map, coe_cast_ring_hom, ← Int.cast_coe_nat, ←
       Int.coe_cast_ring_hom, eval₂_hom, Int.coe_cast_ring_hom, Zmod.int_coe_zmod_eq_zero_iff_dvd _ _]
@@ -57,7 +59,7 @@ theorem exists_prime_ge_modeq_one {k : ℕ} (n : ℕ) (hpos : 0 < k) : ∃ p : �
     have : ¬p ∣ k :=
       hprime.1.coprime_iff_not_dvd.1
         (coprime_of_root_cyclotomic hpos hroot).symm.coprime_mul_left_right.coprime_mul_right_right
-    have := NeZero.of_not_dvd (Zmod p) this
+    haveI := NeZero.of_not_dvd (Zmod p) this
     have : k = orderOf (b : Zmod p) := (is_root_cyclotomic_iff.mp hroot).eq_order_of
     rw [← order_of_units, Zmod.coe_unit_of_coprime, ← this] at hdiv
     exact ((modeq_iff_dvd' hprime.1.Pos).2 hdiv).symm

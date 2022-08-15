@@ -77,7 +77,7 @@ open Alist
 
 
 /-- Lift a permutation-respecting function on `alist` to `finmap`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def liftOn {γ} (s : Finmap β) (f : Alist β → γ) (H : ∀ a b : Alist β, a.entries ~ b.entries → f a = f b) : γ := by
   refine'
     (Quotientₓ.liftOn s.1 (fun l => (⟨_, fun nd => f ⟨l, nd⟩⟩ : Part γ)) fun l₁ l₂ p => Part.ext' (perm_nodupkeys p) _ :
@@ -95,7 +95,7 @@ theorem lift_on_to_finmap {γ} (s : Alist β) (f : Alist β → γ) (H) : liftOn
   cases s <;> rfl
 
 /-- Lift a permutation-respecting function on 2 `alist`s to 2 `finmap`s. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def liftOn₂ {γ} (s₁ s₂ : Finmap β) (f : Alist β → Alist β → γ)
     (H : ∀ a₁ b₁ a₂ b₂ : Alist β, a₁.entries ~ a₂.entries → b₁.entries ~ b₂.entries → f a₁ b₁ = f a₂ b₂) : γ :=
   liftOn s₁ (fun l₁ => liftOn s₂ (f l₁) fun b₁ b₂ p => H _ _ _ _ (Perm.refl _) p) fun a₁ a₂ p => by
@@ -109,16 +109,16 @@ theorem lift_on₂_to_finmap {γ} (s₁ s₂ : Alist β) (f : Alist β → Alist
 /-! ### induction -/
 
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction_on {C : Finmap β → Prop} (s : Finmap β) (H : ∀ a : Alist β, C ⟦a⟧) : C s := by
   rcases s with ⟨⟨a⟩, h⟩ <;> exact H ⟨a, h⟩
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction_on₂ {C : Finmap β → Finmap β → Prop} (s₁ s₂ : Finmap β) (H : ∀ a₁ a₂ : Alist β, C ⟦a₁⟧ ⟦a₂⟧) :
     C s₁ s₂ :=
   (induction_on s₁) fun l₁ => (induction_on s₂) fun l₂ => H l₁ l₂
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction_on₃ {C : Finmap β → Finmap β → Finmap β → Prop} (s₁ s₂ s₃ : Finmap β)
     (H : ∀ a₁ a₂ a₃ : Alist β, C ⟦a₁⟧ ⟦a₂⟧ ⟦a₃⟧) : C s₁ s₂ s₃ :=
   (induction_on₂ s₁ s₂) fun l₁ l₂ => (induction_on s₃) fun l₃ => H l₁ l₂ l₃

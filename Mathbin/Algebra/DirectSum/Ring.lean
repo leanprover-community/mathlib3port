@@ -261,7 +261,7 @@ open BigOperators
 /-- A heavily unfolded version of the definition of multiplication -/
 theorem mul_eq_sum_support_ghas_mul [∀ (i : ι) (x : A i), Decidable (x ≠ 0)] (a a' : ⨁ i, A i) :
     a * a' =
-      ∑ ij : ι × ι in (Dfinsupp.support a).product (Dfinsupp.support a'),
+      ∑ ij in Dfinsupp.support a ×ˢ Dfinsupp.support a',
         DirectSum.of _ _ (GradedMonoid.GhasMul.mul (a ij.fst) (a' ij.snd)) :=
   by
   change DirectSum.mulHom _ a a' = _
@@ -363,7 +363,7 @@ instance GradeZero.nonUnitalNonAssocSemiring : NonUnitalNonAssocSemiringₓ (A 0
     (of_zero_mul A) fun x n => Dfinsupp.single_smul n x
 
 instance GradeZero.smulWithZero (i : ι) : SmulWithZero (A 0) (A i) := by
-  let this := SmulWithZero.compHom (⨁ i, A i) (of A 0).toZeroHom
+  letI := SmulWithZero.compHom (⨁ i, A i) (of A 0).toZeroHom
   refine' dfinsupp.single_injective.smul_with_zero (of A i).toZeroHom (of_zero_smul A)
 
 end Mul
@@ -399,7 +399,7 @@ def ofZeroRingHom : A 0 →+* ⨁ i, A i :=
 in an overall `module (A 0) (⨁ i, A i)` structure via `direct_sum.module`.
 -/
 instance GradeZero.module {i} : Module (A 0) (A i) := by
-  let this := Module.compHom (⨁ i, A i) (of_zero_ring_hom A)
+  letI := Module.compHom (⨁ i, A i) (of_zero_ring_hom A)
   exact dfinsupp.single_injective.module (A 0) (of A i) fun a => of_zero_smul A a
 
 end Semiringₓ
@@ -424,10 +424,10 @@ instance GradeZero.nonUnitalNonAssocRing : NonUnitalNonAssocRing (A 0) :=
   Function.Injective.nonUnitalNonAssocRing (of A 0) Dfinsupp.single_injective (of A 0).map_zero (of A 0).map_add
     (of_zero_mul A) (of A 0).map_neg (of A 0).map_sub
     (fun x n => by
-      let this : ∀ i, DistribMulAction ℕ (A i) := fun i => inferInstance
+      letI : ∀ i, DistribMulAction ℕ (A i) := fun i => inferInstance
       exact Dfinsupp.single_smul n x)
     fun x n => by
-    let this : ∀ i, DistribMulAction ℤ (A i) := fun i => inferInstance
+    letI : ∀ i, DistribMulAction ℤ (A i) := fun i => inferInstance
     exact Dfinsupp.single_smul n x
 
 end Ringₓ
@@ -448,10 +448,10 @@ instance GradeZero.ring : Ringₓ (A 0) :=
   Function.Injective.ring (of A 0) Dfinsupp.single_injective (of A 0).map_zero (of_zero_one A) (of A 0).map_add
     (of_zero_mul A) (of A 0).map_neg (of A 0).map_sub
     (fun x n => by
-      let this : ∀ i, DistribMulAction ℕ (A i) := fun i => inferInstance
+      letI : ∀ i, DistribMulAction ℕ (A i) := fun i => inferInstance
       exact Dfinsupp.single_smul n x)
     (fun x n => by
-      let this : ∀ i, DistribMulAction ℤ (A i) := fun i => inferInstance
+      letI : ∀ i, DistribMulAction ℤ (A i) := fun i => inferInstance
       exact Dfinsupp.single_smul n x)
     (fun x n => of_zero_pow _ _ _) (of_nat_cast A) (of_int_cast A)
 
@@ -466,10 +466,10 @@ instance GradeZero.commRing : CommRingₓ (A 0) :=
   Function.Injective.commRing (of A 0) Dfinsupp.single_injective (of A 0).map_zero (of_zero_one A) (of A 0).map_add
     (of_zero_mul A) (of A 0).map_neg (of A 0).map_sub
     (fun x n => by
-      let this : ∀ i, DistribMulAction ℕ (A i) := fun i => inferInstance
+      letI : ∀ i, DistribMulAction ℕ (A i) := fun i => inferInstance
       exact Dfinsupp.single_smul n x)
     (fun x n => by
-      let this : ∀ i, DistribMulAction ℤ (A i) := fun i => inferInstance
+      letI : ∀ i, DistribMulAction ℤ (A i) := fun i => inferInstance
       exact Dfinsupp.single_smul n x)
     (fun x n => of_zero_pow _ _ _) (of_nat_cast A) (of_int_cast A)
 

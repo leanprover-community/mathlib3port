@@ -64,9 +64,13 @@ variable {R : Type _} [CommSemiringₓ R]
 
 variable {A : Type u} [TopologicalSpace A]
 
-variable [Semiringₓ A]
+variable [Semiringₓ A] [Algebra R A]
 
-variable [Algebra R A] [TopologicalSemiring A]
+instance Subalgebra.has_continuous_smul [TopologicalSpace R] [HasContinuousSmul R A] (s : Subalgebra R A) :
+    HasContinuousSmul R s :=
+  s.toSubmodule.HasContinuousSmul
+
+variable [TopologicalSemiring A]
 
 /-- The closure of a subalgebra in a topological algebra as a subalgebra. -/
 def Subalgebra.topologicalClosure (s : Subalgebra R A) : Subalgebra R A :=
@@ -78,13 +82,8 @@ theorem Subalgebra.topological_closure_coe (s : Subalgebra R A) :
     (s.topologicalClosure : Set A) = Closure (s : Set A) :=
   rfl
 
-instance Subalgebra.topological_closure_topological_semiring (s : Subalgebra R A) :
-    TopologicalSemiring s.topologicalClosure :=
-  s.toSubsemiring.topological_closure_topological_semiring
-
-instance Subalgebra.topological_closure_topological_algebra [TopologicalSpace R] [HasContinuousSmul R A]
-    (s : Subalgebra R A) : HasContinuousSmul R s.topologicalClosure :=
-  s.toSubmodule.topological_closure_has_continuous_smul
+instance Subalgebra.topological_semiring (s : Subalgebra R A) : TopologicalSemiring s :=
+  s.toSubsemiring.TopologicalSemiring
 
 theorem Subalgebra.subalgebra_topological_closure (s : Subalgebra R A) : s ≤ s.topologicalClosure :=
   subset_closure
@@ -149,7 +148,7 @@ variable {R}
 instance [T2Space A] {x : A} : CommRingₓ (Algebra.elementalAlgebra R x) :=
   Subalgebra.commRingTopologicalClosure _
     (by
-      let this : CommRingₓ (Algebra.adjoin R ({x} : Set A)) :=
+      letI : CommRingₓ (Algebra.adjoin R ({x} : Set A)) :=
         Algebra.adjoinCommRingOfComm R fun y hy z hz => by
           rw [mem_singleton_iff] at hy hz
           rw [hy, hz]
@@ -162,7 +161,8 @@ section DivisionRing
 /-- The action induced by `algebra_rat` is continuous. -/
 instance DivisionRing.has_continuous_const_smul_rat {A} [DivisionRing A] [TopologicalSpace A] [HasContinuousMul A]
     [CharZero A] : HasContinuousConstSmul ℚ A :=
-  ⟨fun r => continuous_const.mul continuous_id⟩
+  ⟨fun r => by
+    simpa only [← Algebra.smul_def] using continuous_const.mul continuous_id⟩
 
 end DivisionRing
 

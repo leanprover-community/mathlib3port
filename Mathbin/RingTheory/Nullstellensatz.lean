@@ -144,8 +144,8 @@ theorem is_maximal_iff_eq_vanishing_ideal_singleton (I : Ideal (MvPolynomial σ 
     ⟨fun hI => _, fun h =>
       let ⟨x, hx⟩ := h
       hx.symm ▸ MvPolynomial.vanishing_ideal_singleton_is_maximal⟩
-  let this : I.is_maximal := hI
-  let this : Field (MvPolynomial σ k ⧸ I) := quotient.field I
+  letI : I.is_maximal := hI
+  letI : Field (MvPolynomial σ k ⧸ I) := quotient.field I
   let ϕ : k →+* MvPolynomial σ k ⧸ I := (Ideal.Quotient.mk I).comp C
   have hϕ : Function.Bijective ϕ :=
     ⟨quotient_mk_comp_C_injective _ _ I hI.ne_top,

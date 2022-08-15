@@ -81,8 +81,8 @@ def mfldCfg : SimpsCfg where
 
 namespace Tactic.Interactive
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 /-- A very basic tactic to show that sets showing up in manifolds coincide or are included in
 one another. -/
 unsafe def mfld_set_tac : tactic Unit := do
@@ -366,10 +366,9 @@ theorem is_image_source_target : e.IsImage e.Source e.Target := fun x hx => by
   simp [← hx]
 
 theorem is_image_source_target_of_disjoint (e' : LocalEquiv α β) (hs : Disjoint e.Source e'.Source)
-    (ht : Disjoint e.Target e'.Target) : e.IsImage e'.Source e'.Target := fun x hx => by
-  have : x ∉ e'.Source := fun hx' => hs ⟨hx, hx'⟩
-  have : e x ∉ e'.Target := fun hx' => ht ⟨e.MapsTo hx, hx'⟩
-  simp only [*]
+    (ht : Disjoint e.Target e'.Target) : e.IsImage e'.Source e'.Target :=
+  is_image.of_image_eq <| by
+    rw [hs.inter_eq, ht.inter_eq, image_empty]
 
 theorem image_source_inter_eq' (s : Set α) : e '' (e.Source ∩ s) = e.Target ∩ e.symm ⁻¹' s := by
   rw [inter_comm, e.left_inv_on.image_inter', image_source_eq_target, inter_comm]
@@ -399,6 +398,12 @@ theorem source_inter_preimage_target_inter (s : Set β) : e.Source ∩ e ⁻¹' 
 
 theorem target_inter_inv_preimage_preimage (s : Set β) : e.Target ∩ e.symm ⁻¹' (e ⁻¹' s) = e.Target ∩ s :=
   e.symm.source_inter_preimage_inv_preimage _
+
+theorem symm_image_image_of_subset_source {s : Set α} (h : s ⊆ e.Source) : e.symm '' (e '' s) = s :=
+  (e.LeftInvOn.mono h).image_image
+
+theorem image_symm_image_of_subset_target {s : Set β} (h : s ⊆ e.Target) : e '' (e.symm '' s) = s :=
+  e.symm.symm_image_image_of_subset_source h
 
 theorem source_subset_preimage_target : e.Source ⊆ e ⁻¹' e.Target :=
   e.MapsTo

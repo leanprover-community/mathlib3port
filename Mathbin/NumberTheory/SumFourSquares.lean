@@ -152,7 +152,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c
       simpa [← sq] using hk.1⟩
   let m := Nat.findₓ hm
   let ⟨a, b, c, d, (habcd : a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = m * p)⟩ := (Nat.find_specₓ hm).snd.2
-  have hm0 : _root_.fact (0 < m) := ⟨(Nat.find_specₓ hm).snd.1⟩
+  haveI hm0 : _root_.fact (0 < m) := ⟨(Nat.find_specₓ hm).snd.1⟩
   have hmp : m < p := (Nat.find_specₓ hm).fst
   m.mod_two_eq_zero_or_one.elim
     (fun hm2 : m % 2 = 0 =>

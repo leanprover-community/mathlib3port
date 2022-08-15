@@ -35,22 +35,25 @@ with value on `Y : Cᵒᵖ` given by `Module.of R (unop Y ⟶ X)`. -/
 def linearYoneda : C ⥤ Cᵒᵖ ⥤ ModuleCat R where
   obj := fun X =>
     { obj := fun Y => ModuleCat.of R (unop Y ⟶ X), map := fun Y Y' f => Linear.leftComp R _ f.unop,
-      map_comp' := fun _ _ _ f g => by
-        ext
-        dsimp'
-        erw [category.assoc],
-      map_id' := fun Y => by
-        ext
-        dsimp'
-        erw [category.id_comp] }
-  map := fun X X' f => { app := fun Y => Linear.rightComp R _ f }
-  map_id' := fun X => by
-    ext
-    simp
-  -- `obviously` provides these, but slowly
-  map_comp' := fun _ _ _ f g => by
-    ext
-    simp
+      map_comp' := fun _ _ _ f g => LinearMap.ext fun _ => Category.assoc _ _ _,
+      map_id' := fun Y => LinearMap.ext fun _ => Category.id_comp _ }
+  map := fun X X' f =>
+    { app := fun Y => Linear.rightComp R _ f,
+      naturality' := fun X Y f =>
+        LinearMap.ext fun x => by
+          simp only [← category.assoc, ← ModuleCat.coe_comp, ← Function.comp_app, ← linear.left_comp_apply, ←
+            linear.right_comp_apply] }
+  map_id' := fun X =>
+    NatTrans.ext _ _ <|
+      funext fun _ =>
+        LinearMap.ext fun _ => by
+          simp only [← linear.right_comp_apply, ← category.comp_id, ← nat_trans.id_app, ← ModuleCat.id_apply]
+  map_comp' := fun _ _ _ f g =>
+    NatTrans.ext _ _ <|
+      funext fun _ =>
+        LinearMap.ext fun _ => by
+          simp only [← category.assoc, ← linear.right_comp_apply, ← nat_trans.comp_app, ← ModuleCat.coe_comp, ←
+            Function.comp_app]
 
 /-- The Yoneda embedding for `R`-linear categories `C`,
 sending an object `Y : Cᵒᵖ` to the `Module R`-valued copresheaf on `C`,
@@ -59,20 +62,25 @@ with value on `X : C` given by `Module.of R (unop Y ⟶ X)`. -/
 def linearCoyoneda : Cᵒᵖ ⥤ C ⥤ ModuleCat R where
   obj := fun Y =>
     { obj := fun X => ModuleCat.of R (unop Y ⟶ X), map := fun Y Y' => Linear.rightComp _ _,
-      map_id' := fun Y => by
-        ext
-        exact category.comp_id _,
-      map_comp' := fun _ _ _ f g => by
-        ext
-        exact Eq.symm (category.assoc _ _ _) }
-  map := fun Y Y' f => { app := fun X => Linear.leftComp _ _ f.unop }
-  map_id' := fun X => by
-    ext
-    simp
-  -- `obviously` provides these, but slowly
-  map_comp' := fun _ _ _ f g => by
-    ext
-    simp
+      map_id' := fun Y => LinearMap.ext fun _ => Category.comp_id _,
+      map_comp' := fun _ _ _ f g => LinearMap.ext fun _ => Eq.symm (Category.assoc _ _ _) }
+  map := fun Y Y' f =>
+    { app := fun X => Linear.leftComp _ _ f.unop,
+      naturality' := fun X Y f =>
+        LinearMap.ext fun x => by
+          simp only [← category.assoc, ← ModuleCat.coe_comp, ← Function.comp_app, ← linear.right_comp_apply, ←
+            linear.left_comp_apply] }
+  map_id' := fun X =>
+    NatTrans.ext _ _ <|
+      funext fun _ =>
+        LinearMap.ext fun _ => by
+          simp only [← linear.left_comp_apply, ← unop_id, ← category.id_comp, ← nat_trans.id_app, ← ModuleCat.id_apply]
+  map_comp' := fun _ _ _ f g =>
+    NatTrans.ext _ _ <|
+      funext fun _ =>
+        LinearMap.ext fun _ => by
+          simp only [← category.assoc, ← ModuleCat.coe_comp, ← Function.comp_app, ← linear.left_comp_apply, ← unop_comp,
+            ← nat_trans.comp_app]
 
 instance linear_yoneda_obj_additive (X : C) : ((linearYoneda R C).obj X).Additive where
 

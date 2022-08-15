@@ -65,9 +65,12 @@ then these operations are equal.
 In fact, they give a commutative monoid structure, see `eckmann_hilton.comm_monoid`. -/
 theorem mul : m₁ = m₂ := by
   funext a b
-  calc m₁ a b = m₁ (m₂ a e₁) (m₂ e₁ b) := by
-      simp only [← one h₁ h₂ distrib, ← h₁.left_id, ← h₁.right_id, ← h₂.left_id, ← h₂.right_id]_ = m₂ a b := by
+  calc
+    m₁ a b = m₁ (m₂ a e₁) (m₂ e₁ b) := by
+      simp only [← one h₁ h₂ distrib, ← h₁.left_id, ← h₁.right_id, ← h₂.left_id, ← h₂.right_id]
+    _ = m₂ a b := by
       simp only [← distrib, ← h₁.left_id, ← h₁.right_id, ← h₂.left_id, ← h₂.right_id]
+    
 
 /-- If a type carries two unital binary operations that distribute over each other,
 then these operations are commutative.

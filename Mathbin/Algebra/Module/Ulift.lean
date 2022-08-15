@@ -28,15 +28,12 @@ variable {M : Type v}
 
 variable {N : Type w}
 
+@[to_additive]
 instance hasSmulLeft [HasSmul R M] : HasSmul (ULift R) M :=
   ⟨fun s x => s.down • x⟩
 
-@[simp]
-theorem smul_down [HasSmul R M] (s : ULift R) (x : M) : s • x = s.down • x :=
-  rfl
-
-@[simp]
-theorem smul_down' [HasSmul R M] (s : R) (x : ULift M) : (s • x).down = s • x.down :=
+@[simp, to_additive]
+theorem smul_def [HasSmul R M] (s : ULift R) (x : M) : s • x = s.down • x :=
   rfl
 
 instance is_scalar_tower [HasSmul R M] [HasSmul M N] [HasSmul R N] [IsScalarTower R M N] :
@@ -56,20 +53,16 @@ instance is_scalar_tower'' [HasSmul R M] [HasSmul M N] [HasSmul R N] [IsScalarTo
 instance [HasSmul R M] [HasSmul Rᵐᵒᵖ M] [IsCentralScalar R M] : IsCentralScalar R (ULift M) :=
   ⟨fun r m => congr_arg up <| op_smul_eq_smul r m.down⟩
 
+@[to_additive]
 instance mulAction [Monoidₓ R] [MulAction R M] : MulAction (ULift R) M where
   smul := (· • ·)
   mul_smul := fun _ _ => mul_smul _ _
   one_smul := one_smul _
 
-instance mulAction' [Monoidₓ R] [MulAction R M] : MulAction R (ULift M) where
-  smul := (· • ·)
-  mul_smul := fun r s f => by
-    cases f
-    ext
-    simp [← mul_smul]
-  one_smul := fun f => by
-    ext
-    simp [← one_smul]
+@[to_additive]
+instance mulAction' [Monoidₓ R] [MulAction R M] : MulAction R (ULift M) :=
+  { ULift.hasSmulLeft with smul := (· • ·), mul_smul := fun r s ⟨f⟩ => ext _ _ <| mul_smul _ _ _,
+    one_smul := fun ⟨f⟩ => ext _ _ <| one_smul _ _ }
 
 instance distribMulAction [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction (ULift R) M where
   smul_zero := fun _ => smul_zero _

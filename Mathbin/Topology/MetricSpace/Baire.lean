@@ -193,7 +193,7 @@ theorem dense_sInter_of_open {S : Set (Set α)} (ho : ∀, ∀ s ∈ S, ∀, IsO
   cases' S.eq_empty_or_nonempty with h h
   · simp [← h]
     
-  · rcases hS.exists_surjective h with ⟨f, hf⟩
+  · rcases hS.exists_eq_range h with ⟨f, hf⟩
     have F : ∀ n, f n ∈ S := fun n => by
       rw [hf] <;> exact mem_range_self _
     rw [hf, sInter_range]
@@ -258,7 +258,7 @@ an index set which is a countable set in any type. -/
 theorem dense_bInter_of_Gδ {S : Set β} {f : ∀, ∀ x ∈ S, ∀, Set α} (ho : ∀, ∀ s ∈ S, ∀, IsGδ (f s ‹_›))
     (hS : S.Countable) (hd : ∀, ∀ s ∈ S, ∀, Dense (f s ‹_›)) : Dense (⋂ s ∈ S, f s ‹_›) := by
   rw [bInter_eq_Inter]
-  have := hS.to_encodable
+  haveI := hS.to_encodable
   exact dense_Inter_of_Gδ (fun s => ho s s.2) fun s => hd s s.2
 
 /-- Baire theorem: the intersection of two dense Gδ sets is dense. -/
@@ -283,7 +283,7 @@ theorem eventually_residual {p : α → Prop} :
       simp [← and_assoc]
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- A set is residual (comeagre) if and only if it includes a dense `Gδ` set. -/
 theorem mem_residual {s : Set α} : s ∈ residual α ↔ ∃ (t : _)(_ : t ⊆ s), IsGδ t ∧ Dense t :=
   (@eventually_residual α _ _ fun x => x ∈ s).trans <|
@@ -328,7 +328,7 @@ theorem IsGδ.dense_Union_interior_of_closed [Encodable ι] {s : Set α} (hs : I
 is dense. Formulated here with a union over a countable set in any type. -/
 theorem IsGδ.dense_bUnion_interior_of_closed {t : Set ι} {s : Set α} (hs : IsGδ s) (hd : Dense s) (ht : t.Countable)
     {f : ι → Set α} (hc : ∀, ∀ i ∈ t, ∀, IsClosed (f i)) (hU : s ⊆ ⋃ i ∈ t, f i) : Dense (⋃ i ∈ t, Interior (f i)) := by
-  have := ht.to_encodable
+  haveI := ht.to_encodable
   simp only [← bUnion_eq_Union, ← SetCoe.forall'] at *
   exact hs.dense_Union_interior_of_closed hd hc hU
 

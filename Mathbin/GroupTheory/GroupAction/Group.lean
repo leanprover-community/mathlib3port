@@ -41,9 +41,8 @@ theorem smul_inv_smul (c : α) (x : β) : c • c⁻¹ • x = x := by
 def MulAction.toPerm (a : α) : Equivₓ.Perm β :=
   ⟨fun x => a • x, fun x => a⁻¹ • x, inv_smul_smul a, smul_inv_smul a⟩
 
-/-- Given an action of an additive group `α` on `β`, each `g : α` defines a permutation of `β`. -/
-add_decl_doc AddAction.toPerm
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_action.to_perm]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `mul_action.to_perm` is injective on faithful actions. -/
 @[to_additive]
 theorem MulAction.to_perm_injective [HasFaithfulSmul α β] : Function.Injective (MulAction.toPerm : α → Equivₓ.Perm β) :=

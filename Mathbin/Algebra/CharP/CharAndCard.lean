@@ -16,11 +16,12 @@ characterstic, cardinality, ring
 -/
 
 
-/-- A prime `p` is a unit in a finite commutative ring `R`
-iff it does not divide the characteristic. -/
-theorem is_unit_iff_not_dvd_char (R : Type _) [CommRingₓ R] [Fintype R] (p : ℕ) [Fact p.Prime] :
-    IsUnit (p : R) ↔ ¬p ∣ ringChar R := by
+/-- A prime `p` is a unit in a commutative ring `R` of nonzero characterstic iff it does not divide
+the characteristic. -/
+theorem is_unit_iff_not_dvd_char_of_ring_char_ne_zero (R : Type _) [CommRingₓ R] (p : ℕ) [Fact p.Prime]
+    (hR : ringChar R ≠ 0) : IsUnit (p : R) ↔ ¬p ∣ ringChar R := by
   have hch := CharP.cast_eq_zero R (ringChar R)
+  have hp : p.prime := Fact.out p.prime
   constructor
   · rintro h₁ ⟨q, hq⟩
     rcases IsUnit.exists_left_inv h₁ with ⟨a, ha⟩
@@ -28,8 +29,7 @@ theorem is_unit_iff_not_dvd_char (R : Type _) [CommRingₓ R] [Fintype R] (p : �
       rintro ⟨r, hr⟩
       rw [hr, ← mul_assoc, mul_comm p, mul_assoc] at hq
       nth_rw 0[← mul_oneₓ (ringChar R)]  at hq
-      exact
-        Nat.Prime.not_dvd_one (Fact.out p.prime) ⟨r, mul_left_cancel₀ (CharP.char_ne_zero_of_fintype R (ringChar R)) hq⟩
+      exact Nat.Prime.not_dvd_one hp ⟨r, mul_left_cancel₀ hR hq⟩
     have h₄ := mt (CharP.int_cast_eq_zero_iff R (ringChar R) q).mp
     apply_fun (coe : ℕ → R)  at hq
     apply_fun (· * ·) a  at hq
@@ -38,12 +38,18 @@ theorem is_unit_iff_not_dvd_char (R : Type _) [CommRingₓ R] [Fintype R] (p : �
     exact h₄ h₃ hq.symm
     
   · intro h
-    rcases nat.is_coprime_iff_coprime.mpr ((Nat.Prime.coprime_iff_not_dvd (Fact.out _)).mpr h) with ⟨a, b, hab⟩
+    rcases(hp.coprime_iff_not_dvd.mpr h).IsCoprime with ⟨a, b, hab⟩
     apply_fun (coe : ℤ → R)  at hab
     push_cast at hab
     rw [hch, mul_zero, add_zeroₓ, mul_comm] at hab
     exact is_unit_of_mul_eq_one (p : R) a hab
     
+
+/-- A prime `p` is a unit in a finite commutative ring `R`
+iff it does not divide the characteristic. -/
+theorem is_unit_iff_not_dvd_char (R : Type _) [CommRingₓ R] (p : ℕ) [Fact p.Prime] [Finite R] :
+    IsUnit (p : R) ↔ ¬p ∣ ringChar R :=
+  is_unit_iff_not_dvd_char_of_ring_char_ne_zero R p <| CharP.char_ne_zero_of_finite R (ringChar R)
 
 /-- The prime divisors of the characteristic of a finite commutative ring are exactly
 the prime divisors of its cardinality. -/

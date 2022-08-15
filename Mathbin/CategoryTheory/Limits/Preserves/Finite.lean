@@ -56,7 +56,7 @@ noncomputable instance (priority := 100) preservesLimitsOfShapeOfPreservesFinite
 noncomputable instance (priority := 100) PreservesLimits.preservesFiniteLimitsOfSize (F : C ⥤ D)
     [PreservesLimitsOfSize.{w, w₂} F] : PreservesFiniteLimits F :=
   ⟨fun J sJ fJ => by
-    have := preserves_smallest_limits_of_preserves_limits F
+    haveI := preserves_smallest_limits_of_preserves_limits F
     exact preserves_limits_of_shape_of_equiv (fin_category.equiv_as_type J) F⟩
 
 noncomputable instance (priority := 120) PreservesLimits.preservesFiniteLimits (F : C ⥤ D) [PreservesLimits F] :
@@ -76,7 +76,7 @@ def preservesFiniteLimitsOfPreservesFiniteLimitsOfSize (F : C ⥤ D)
     let this : Category.{w, w} (UliftHom.{w} (ULift.{w, 0} J)) := by
       apply UliftHom.category.{0}
       exact CategoryTheory.uliftCategory J
-    have := h (UliftHom.{w} (ULift.{w} J)) CategoryTheory.finCategoryUlift
+    haveI := h (UliftHom.{w} (ULift.{w} J)) CategoryTheory.finCategoryUlift
     exact preserves_limits_of_shape_of_equiv (UliftHomUliftCategory.equiv.{w, w} J).symm F⟩
 
 instance idPreservesFiniteLimits : PreservesFiniteLimits (𝟭 C) where
@@ -107,7 +107,7 @@ noncomputable instance (priority := 100) preservesColimitsOfShapeOfPreservesFini
 noncomputable instance (priority := 100) PreservesColimits.preservesFiniteColimits (F : C ⥤ D)
     [PreservesColimitsOfSize.{w, w₂} F] : PreservesFiniteColimits F :=
   ⟨fun J sJ fJ => by
-    have := preserves_smallest_colimits_of_preserves_colimits F
+    haveI := preserves_smallest_colimits_of_preserves_colimits F
     exact preserves_colimits_of_shape_of_equiv (fin_category.equiv_as_type J) F⟩
 
 /-- We can always derive `preserves_finite_limits C` by showing that we are preserving limits at an
@@ -123,7 +123,7 @@ def preservesFiniteColimitsOfPreservesFiniteColimitsOfSize (F : C ⥤ D)
     let this : Category.{w, w} (UliftHom.{w} (ULift.{w, 0} J)) := by
       apply UliftHom.category.{0}
       exact CategoryTheory.uliftCategory J
-    have := h (UliftHom.{w} (ULift.{w} J)) CategoryTheory.finCategoryUlift
+    haveI := h (UliftHom.{w} (ULift.{w} J)) CategoryTheory.finCategoryUlift
     exact preserves_colimits_of_shape_of_equiv (UliftHomUliftCategory.equiv.{w, w} J).symm F⟩
 
 instance idPreservesFiniteColimits : PreservesFiniteColimits (𝟭 C) where

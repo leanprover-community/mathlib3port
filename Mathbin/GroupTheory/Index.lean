@@ -52,8 +52,8 @@ noncomputable def relindex : ℕ :=
 @[to_additive]
 theorem index_comap_of_surjective {G' : Type _} [Groupₓ G'] {f : G' →* G} (hf : Function.Surjective f) :
     (H.comap f).index = H.index := by
-  let this := QuotientGroup.leftRel H
-  let this := QuotientGroup.leftRel (H.comap f)
+  letI := QuotientGroup.leftRel H
+  letI := QuotientGroup.leftRel (H.comap f)
   have key : ∀ x y : G', Setoidₓ.R x y ↔ Setoidₓ.R (f x) (f y) := by
     simp only [← QuotientGroup.left_rel_apply]
     exact fun x y =>

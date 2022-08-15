@@ -44,7 +44,7 @@ namespace Tactic
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `typical_variable_names t` obtains typical names for variables of type `t`.
 The returned list is guaranteed to be nonempty. Fails if there is no instance
 `has_typical_variable_names t`.
@@ -57,7 +57,7 @@ unsafe def typical_variable_names (t : expr) : tactic (List Name) :=
   (do
       let names ← to_expr (pquote.1 (HasVariableNames.names (%%ₓt)))
       eval_expr (List Name) names) <|>
-    "./././Mathport/Syntax/Translate/Basic.lean:1143:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
 
 end Tactic
 

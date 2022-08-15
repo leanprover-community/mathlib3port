@@ -44,6 +44,10 @@ instance _root_.list.encodable : Encodable (List α) :=
   ⟨encodeList, decodeList, fun l => by
     induction' l with a l IH <;> simp [← encode_list, ← decode_list, ← unpair_mkpair, ← encodek, *]⟩
 
+instance _root_.list.countable {α : Type _} [Countable α] : Countable (List α) := by
+  haveI := Encodable.ofCountable α
+  infer_instance
+
 @[simp]
 theorem encode_list_nil : encode (@nil α) = 0 :=
   rfl
@@ -99,6 +103,10 @@ instance _root_.multiset.encodable : Encodable (Multiset α) :=
   ⟨encodeMultiset, decodeMultiset, fun s => by
     simp [← encode_multiset, ← decode_multiset, ← encodek]⟩
 
+/-- If `α` is countable, then so is `multiset α`. -/
+instance _root_.multiset.countable {α : Type _} [Countable α] : Countable (Multiset α) :=
+  Quotientₓ.countable
+
 end Finset
 
 /-- A listable type with decidable equality is encodable. -/
@@ -122,6 +130,10 @@ noncomputable def _root_.fintype.to_encodable (α : Type _) [Fintype α] : Encod
 instance _root_.vector.encodable [Encodable α] {n} : Encodable (Vector α n) :=
   Subtype.encodable
 
+/-- If `α` is countable, then so is `vector α n`. -/
+instance _root_.vector.countable [Countable α] {n} : Countable (Vector α n) :=
+  Subtype.countable
+
 /-- If `α` is encodable, then so is `fin n → α`. -/
 instance finArrow [Encodable α] {n} : Encodable (Finₓ n → α) :=
   ofEquiv _ (Equivₓ.vectorEquivFin _ _).symm
@@ -133,11 +145,19 @@ instance finPi (n) (π : Finₓ n → Type _) [∀ i, Encodable (π i)] : Encoda
 instance _root_.array.encodable [Encodable α] {n} : Encodable (Arrayₓ n α) :=
   ofEquiv _ (Equivₓ.arrayEquivFin _ _)
 
+/-- If `α` is countable, then so is `array n α`. -/
+instance _root_.array.countable [Countable α] {n} : Countable (Arrayₓ n α) :=
+  Countable.of_equiv _ (Equivₓ.vectorEquivArray _ _)
+
 /-- If `α` is encodable, then so is `finset α`. -/
 instance _root_.finset.encodable [Encodable α] : Encodable (Finset α) :=
-  have := decidable_eq_of_encodable α
+  haveI := decidable_eq_of_encodable α
   of_equiv { s : Multiset α // s.Nodup }
     ⟨fun ⟨a, b⟩ => ⟨a, b⟩, fun ⟨a, b⟩ => ⟨a, b⟩, fun ⟨a, b⟩ => rfl, fun ⟨a, b⟩ => rfl⟩
+
+/-- If `α` is countable, then so is `finset α`. -/
+instance _root_.finset.countable [Countable α] : Countable (Finset α) :=
+  Finset.val_injective.Countable
 
 /-- When `α` is finite and `β` is encodable, `α → β` is encodable too. Because the encoding is not
 unique, we wrap it in `trunc` to preserve computability. -/
@@ -176,7 +196,7 @@ theorem sorted_univ_to_finset (α) [Fintype α] [Encodable α] [DecidableEq α] 
 
 /-- An encodable `fintype` is equivalent to the same size `fin`. -/
 def fintypeEquivFin {α} [Fintype α] [Encodable α] : α ≃ Finₓ (Fintype.card α) := by
-  have : DecidableEq α := Encodable.decidableEqOfEncodable _
+  haveI : DecidableEq α := Encodable.decidableEqOfEncodable _
   trans
   · exact ((sorted_univ_nodup α).nthLeEquivOfForallMemList _ mem_sorted_univ).symm
     
@@ -260,7 +280,7 @@ theorem raise_chain : ∀ l n, List.Chain (· ≤ ·) n (raise l n)
 /-- `raise l n` is an non-decreasing sequence. -/
 theorem raise_sorted : ∀ l n, List.Sorted (· ≤ ·) (raise l n)
   | [], n => List.sorted_nil
-  | m :: l, n => (List.chain_iff_pairwise (@le_transₓ _ _)).1 (raise_chain _ _)
+  | m :: l, n => List.chain_iff_pairwise.1 (raise_chain _ _)
 
 /-- If `α` is denumerable, then so is `multiset α`. Warning: this is *not* the same encoding as used
 in `multiset.encodable`. -/
@@ -309,7 +329,7 @@ theorem raise'_chain : ∀ (l) {m n}, m < n → List.Chain (· < ·) m (raise' l
 /-- `raise' l n` is a strictly increasing sequence. -/
 theorem raise'_sorted : ∀ l n, List.Sorted (· < ·) (raise' l n)
   | [], n => List.sorted_nil
-  | m :: l, n => (List.chain_iff_pairwise (@lt_transₓ _ _)).1 (raise'_chain _ (lt_succ_selfₓ _))
+  | m :: l, n => List.chain_iff_pairwise.1 (raise'_chain _ (lt_succ_selfₓ _))
 
 /-- Makes `raise' l n` into a finset. Elements are distinct thanks to `raise'_sorted`. -/
 def raise'Finset (l : List ℕ) (n : ℕ) : Finset ℕ :=

@@ -115,7 +115,7 @@ See the implementation notes in this file for discussion of the details of this 
 -/
 /- control priority of
 `instance [algebra R A] : has_smul R A` -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 class Algebra (R : Type u) (A : Type v) [CommSemiringₓ R] [Semiringₓ A] extends HasSmul R A, R →+* A where
   commutes' : ∀ r x, to_fun r * x = x * to_fun r
   smul_def' : ∀ r x, r • x = to_fun r * x
@@ -199,9 +199,9 @@ theorem algebra_ext {R : Type _} [CommSemiringₓ R] {A : Type _} [Semiringₓ A
     (w :
       ∀ r : R,
         by
-          have := P
+          haveI := P
           exact algebraMap R A r = by
-          have := Q
+          haveI := Q
           exact algebraMap R A r) :
     P = Q := by
   rcases P with ⟨⟨P⟩⟩
@@ -280,6 +280,11 @@ search (and was here first). -/
 @[simp]
 protected theorem smul_mul_assoc (r : R) (x y : A) : r • x * y = r • (x * y) :=
   smul_mul_assoc r x y
+
+@[simp]
+theorem _root_.smul_algebra_map {α : Type _} [Monoidₓ α] [MulDistribMulAction α A] [SmulCommClass α R A] (a : α)
+    (r : R) : a • algebraMap R A r = algebraMap R A r := by
+  rw [algebra_map_eq_smul_one, smul_comm a r (1 : A), smul_one]
 
 section
 
@@ -528,7 +533,7 @@ theorem ker_algebra_map_End (K : Type u) (V : Type v) [Field K] [AddCommGroupₓ
 end Module
 
 /-- Defining the homomorphism in the category R-Alg. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure AlgHom (R : Type u) (A : Type v) (B : Type w) [CommSemiringₓ R] [Semiringₓ A] [Semiringₓ B] [Algebra R A]
   [Algebra R B] extends RingHom A B where
   commutes' : ∀ r : R, to_fun (algebraMap R A r) = algebraMap R B r
@@ -809,6 +814,22 @@ theorem map_smul_of_tower {R'} [HasSmul R' A] [HasSmul R' B] [LinearMap.Compatib
 theorem map_list_prod (s : List A) : φ s.Prod = (s.map φ).Prod :=
   φ.toRingHom.map_list_prod s
 
+@[simps (config := { attrs := [] }) mul one]
+instance end : Monoidₓ (A →ₐ[R] A) where
+  mul := comp
+  mul_assoc := fun ϕ ψ χ => rfl
+  one := AlgHom.id R A
+  one_mul := fun ϕ => ext fun x => rfl
+  mul_one := fun ϕ => ext fun x => rfl
+
+@[simp]
+theorem one_apply (x : A) : (1 : A →ₐ[R] A) x = x :=
+  rfl
+
+@[simp]
+theorem mul_apply (φ ψ : A →ₐ[R] A) (x : A) : (φ * ψ) x = φ (ψ x) :=
+  rfl
+
 section Prod
 
 /-- First projection as `alg_hom`. -/
@@ -881,7 +902,8 @@ end DivisionRing
 end AlgHom
 
 @[simp]
-theorem Rat.smul_one_eq_coe {A : Type _} [DivisionRing A] [Algebra ℚ A] (m : ℚ) : m • (1 : A) = ↑m := by
+theorem Rat.smul_one_eq_coe {A : Type _} [DivisionRing A] [Algebra ℚ A] (m : ℚ) :
+    @HasSmul.smul Algebra.toHasSmul m (1 : A) = ↑m := by
   rw [Algebra.smul_def, mul_oneₓ, RingHom.eq_rat_cast]
 
 /-- An equivalence of algebras is an equivalence of rings commuting with the actions of scalars. -/
@@ -915,6 +937,10 @@ namespace AlgEquivClass
 instance (priority := 100) toAlgHomClass (F R A B : Type _) [CommSemiringₓ R] [Semiringₓ A] [Semiringₓ B] [Algebra R A]
     [Algebra R B] [h : AlgEquivClass F R A B] : AlgHomClass F R A B :=
   { h with coe := coeFn, coe_injective' := FunLike.coe_injective, map_zero := map_zero, map_one := map_one }
+
+instance (priority := 100) toLinearEquivClass (F R A B : Type _) [CommSemiringₓ R] [Semiringₓ A] [Semiringₓ B]
+    [Algebra R A] [Algebra R B] [h : AlgEquivClass F R A B] : LinearEquivClass F R A B :=
+  { h with map_smulₛₗ := fun f => map_smulₛₗ f }
 
 end AlgEquivClass
 
@@ -1443,7 +1469,7 @@ This is a stronger version of `mul_semiring_action.to_ring_hom` and
 `distrib_mul_action.to_linear_map`. -/
 @[simps]
 def toAlgHom (m : M) : A →ₐ[R] A :=
-  AlgHom.mk' (MulSemiringAction.toRingHom _ _ m) (smul_comm _)
+  { MulSemiringAction.toRingHom _ _ m with toFun := fun a => m • a, commutes' := smul_algebra_map _ }
 
 theorem to_alg_hom_injective [HasFaithfulSmul M A] :
     Function.Injective (MulSemiringAction.toAlgHom R A : M → A →ₐ[R] A) := fun m₁ m₂ h =>
@@ -1546,8 +1572,15 @@ end
 
 section Rat
 
-instance algebraRat {α} [DivisionRing α] [CharZero α] : Algebra ℚ α :=
-  (Rat.castHom α).toAlgebra' fun r x => r.cast_commute x
+instance algebraRat {α} [DivisionRing α] [CharZero α] : Algebra ℚ α where
+  smul := (· • ·)
+  smul_def' := DivisionRing.qsmul_eq_mul'
+  toRingHom := Rat.castHom α
+  commutes' := Rat.cast_commute
+
+/-- The two `algebra ℚ ℚ` instances should coincide. -/
+example : algebraRat = Algebra.id ℚ :=
+  rfl
 
 @[simp]
 theorem algebra_map_rat_rat : algebraMap ℚ ℚ = RingHom.id ℚ :=

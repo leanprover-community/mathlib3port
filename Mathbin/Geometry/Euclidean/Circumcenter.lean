@@ -91,7 +91,7 @@ theorem exists_unique_dist_eq_of_insert {s : AffineSubspace ℝ P} [CompleteSpac
     ∃! cccr₂ : P × ℝ,
       cccr₂.fst ∈ affineSpan ℝ (insert p (s : Set P)) ∧ ∀, ∀ p1 ∈ insert p ps, ∀, dist p1 cccr₂.fst = cccr₂.snd :=
   by
-  have : Nonempty s := Set.Nonempty.to_subtype (hnps.mono hps)
+  haveI : Nonempty s := Set.Nonempty.to_subtype (hnps.mono hps)
   rcases hu with ⟨⟨cc, cr⟩, ⟨hcc, hcr⟩, hcccru⟩
   simp only [← Prod.fst, ← Prod.snd] at hcc hcr hcccru
   let x := dist cc (orthogonalProjection s p)
@@ -195,7 +195,7 @@ theorem _root_.affine_independent.exists_unique_dist_eq {ι : Type _} [hne : Non
   · cases m
     · rw [Fintype.card_eq_one_iff] at hn
       cases' hn with i hi
-      have : Unique ι := ⟨⟨i⟩, hi⟩
+      haveI : Unique ι := ⟨⟨i⟩, hi⟩
       use (p i, 0)
       simp only [← Prod.fst, ← Prod.snd, ← Set.range_unique, ← AffineSubspace.mem_affine_span_singleton]
       constructor
@@ -226,7 +226,7 @@ theorem _root_.affine_independent.exists_unique_dist_eq {ι : Type _} [hne : Non
           
         · simp
           
-      have : Nonempty ι2 := Fintype.card_pos_iff.1 (hc.symm ▸ Nat.zero_lt_succₓ _)
+      haveI : Nonempty ι2 := Fintype.card_pos_iff.1 (hc.symm ▸ Nat.zero_lt_succₓ _)
       have ha2 : AffineIndependent ℝ fun i2 : ι2 => p i2 := ha.subtype _
       replace hm := hm ha2 hc
       have hr : Set.Range p = insert (p i) (Set.Range fun i2 : ι2 => p i2) := by
@@ -718,7 +718,7 @@ theorem circumradius_eq_of_cospherical_subset {s : AffineSubspace ℝ P} {ps : S
 circumradius. -/
 theorem exists_circumradius_eq_of_cospherical {ps : Set P} {n : ℕ} [FiniteDimensional ℝ V] (hd : finrank ℝ V = n)
     (hc : Cospherical ps) : ∃ r : ℝ, ∀ sx : Simplex ℝ P n, Set.Range sx.points ⊆ ps → sx.circumradius = r := by
-  have : Nonempty (⊤ : AffineSubspace ℝ P) := Set.Univ.nonempty
+  haveI : Nonempty (⊤ : AffineSubspace ℝ P) := Set.Univ.nonempty
   rw [← finrank_top, ← direction_top ℝ V P] at hd
   refine' exists_circumradius_eq_of_cospherical_subset _ hd hc
   exact Set.subset_univ _
@@ -760,7 +760,7 @@ theorem circumcenter_eq_of_cospherical_subset {s : AffineSubspace ℝ P} {ps : S
 circumcenter. -/
 theorem exists_circumcenter_eq_of_cospherical {ps : Set P} {n : ℕ} [FiniteDimensional ℝ V] (hd : finrank ℝ V = n)
     (hc : Cospherical ps) : ∃ c : P, ∀ sx : Simplex ℝ P n, Set.Range sx.points ⊆ ps → sx.circumcenter = c := by
-  have : Nonempty (⊤ : AffineSubspace ℝ P) := Set.Univ.nonempty
+  haveI : Nonempty (⊤ : AffineSubspace ℝ P) := Set.Univ.nonempty
   rw [← finrank_top, ← direction_top ℝ V P] at hd
   refine' exists_circumcenter_eq_of_cospherical_subset _ hd hc
   exact Set.subset_univ _

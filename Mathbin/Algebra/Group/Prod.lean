@@ -562,7 +562,8 @@ open MulOpposite
 /-- Canonical homomorphism of monoids from `αˣ` into `α × αᵐᵒᵖ`.
 Used mainly to define the natural topology of `αˣ`. -/
 @[to_additive
-      "Canonical homomorphism of additive monoids from `add_units α` into `α × αᵃᵒᵖ`.\nUsed mainly to define the natural topology of `add_units α`."]
+      "Canonical homomorphism of additive monoids from `add_units α` into `α × αᵃᵒᵖ`.\nUsed mainly to define the natural topology of `add_units α`.",
+  simps]
 def embedProduct (α : Type _) [Monoidₓ α] : αˣ →* α × αᵐᵒᵖ where
   toFun := fun x => ⟨x, op ↑x⁻¹⟩
   map_one' := by

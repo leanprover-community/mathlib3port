@@ -46,8 +46,8 @@ we'll usually prove all objects are closed uniformly.
 -/
 def tensorClosed {X Y : C} (hX : Closed X) (hY : Closed Y) :
     Closed (X ⊗ Y) where isAdj := by
-    have := hX.is_adj
-    have := hY.is_adj
+    haveI := hX.is_adj
+    haveI := hY.is_adj
     exact adjunction.left_adjoint_of_nat_iso (monoidal_category.tensor_left_tensor _ _).symm
 
 /-- The unit object is always closed.

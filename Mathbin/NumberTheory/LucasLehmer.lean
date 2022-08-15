@@ -45,8 +45,11 @@ def mersenne (p : ℕ) : ℕ :=
 
 theorem mersenne_pos {p : ℕ} (h : 0 < p) : 0 < mersenne p := by
   dsimp' [← mersenne]
-  calc 0 < 2 ^ 1 - 1 := by
-      norm_num _ ≤ 2 ^ p - 1 := Nat.pred_le_predₓ (Nat.pow_le_pow_of_le_rightₓ (Nat.succ_posₓ 1) h)
+  calc
+    0 < 2 ^ 1 - 1 := by
+      norm_num
+    _ ≤ 2 ^ p - 1 := Nat.pred_le_predₓ (Nat.pow_le_pow_of_le_rightₓ (Nat.succ_posₓ 1) h)
+    
 
 @[simp]
 theorem succ_mersenne (k : ℕ) : mersenne k + 1 = 2 ^ k := by
@@ -291,10 +294,145 @@ instance : CommRingₓ (X q) :=
           ring
            }
 
-instance [Fact (1 < (q : ℕ))] : Nontrivial (X q) :=
-  ⟨⟨0, 1, fun h => by
-      injection h with h1 _
-      exact zero_ne_one h1⟩⟩
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers [] [] [] [] [] [])
+ (Command.instance
+  (Term.attrKind [])
+  "instance"
+  []
+  []
+  (Command.declSig
+   [(Term.instBinder
+     "["
+     []
+     (Term.app `Fact [(«term_<_» (num "1") "<" (Term.paren "(" [`q [(Term.typeAscription ":" (termℕ "ℕ"))]] ")"))])
+     "]")]
+   (Term.typeSpec ":" (Term.app `Nontrivial [(Term.app `X [`q])])))
+  (Command.declValSimple
+   ":="
+   (Term.anonymousCtor
+    "⟨"
+    [(Term.anonymousCtor
+      "⟨"
+      [(num "0")
+       ","
+       (num "1")
+       ","
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [`h]
+         []
+         "=>"
+         (Term.byTactic
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(group (Tactic.injection "injection" `h ["with" [`h1 "_"]]) [])
+             (group (Tactic.exact "exact" (Term.app `zero_ne_one [`h1])) [])])))))]
+      "⟩")]
+    "⟩")
+   [])
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.anonymousCtor
+   "⟨"
+   [(Term.anonymousCtor
+     "⟨"
+     [(num "0")
+      ","
+      (num "1")
+      ","
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`h]
+        []
+        "=>"
+        (Term.byTactic
+         "by"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(group (Tactic.injection "injection" `h ["with" [`h1 "_"]]) [])
+            (group (Tactic.exact "exact" (Term.app `zero_ne_one [`h1])) [])])))))]
+     "⟩")]
+   "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.anonymousCtor
+   "⟨"
+   [(num "0")
+    ","
+    (num "1")
+    ","
+    (Term.fun
+     "fun"
+     (Term.basicFun
+      [`h]
+      []
+      "=>"
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(group (Tactic.injection "injection" `h ["with" [`h1 "_"]]) [])
+          (group (Tactic.exact "exact" (Term.app `zero_ne_one [`h1])) [])])))))]
+   "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.fun
+   "fun"
+   (Term.basicFun
+    [`h]
+    []
+    "=>"
+    (Term.byTactic
+     "by"
+     (Tactic.tacticSeq
+      (Tactic.tacticSeq1Indented
+       [(group (Tactic.injection "injection" `h ["with" [`h1 "_"]]) [])
+        (group (Tactic.exact "exact" (Term.app `zero_ne_one [`h1])) [])])))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.byTactic
+   "by"
+   (Tactic.tacticSeq
+    (Tactic.tacticSeq1Indented
+     [(group (Tactic.injection "injection" `h ["with" [`h1 "_"]]) [])
+      (group (Tactic.exact "exact" (Term.app `zero_ne_one [`h1])) [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Tactic.exact "exact" (Term.app `zero_ne_one [`h1]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `zero_ne_one [`h1])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `h1
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `zero_ne_one
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.injection "injection" `h ["with" [`h1 "_"]])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '_', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '_', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+instance
+  [ Fact 1 < ( q : ℕ ) ] : Nontrivial X q
+  := ⟨ ⟨ 0 , 1 , fun h => by injection h with h1 _ exact zero_ne_one h1 ⟩ ⟩
 
 @[simp]
 theorem nat_coe_fst (n : ℕ) : (n : X q).fst = (n : Zmod q) :=
@@ -328,7 +466,7 @@ theorem X_card : Fintype.card (X q) = q ^ 2 := by
 
 /-- There are strictly fewer than `q^2` units, since `0` is not a unit. -/
 theorem units_card (w : 1 < q) : Fintype.card (X q)ˣ < q ^ 2 := by
-  have : Fact (1 < (q : ℕ)) := ⟨w⟩
+  haveI : Fact (1 < (q : ℕ)) := ⟨w⟩
   convert card_units_lt (X q)
   rw [X_card]
 
@@ -356,12 +494,19 @@ theorem closed_form (i : ℕ) : (s i : X q) = (ω : X q) ^ 2 ^ i + (ωb : X q) ^
       · simp <;> rfl
         
     
-  · calc (s (i + 1) : X q) = (s i ^ 2 - 2 : ℤ) := rfl _ = (s i : X q) ^ 2 - 2 := by
-        push_cast _ = (ω ^ 2 ^ i + ωb ^ 2 ^ i) ^ 2 - 2 := by
-        rw [ih]_ = (ω ^ 2 ^ i) ^ 2 + (ωb ^ 2 ^ i) ^ 2 + 2 * (ωb ^ 2 ^ i * ω ^ 2 ^ i) - 2 := by
-        ring _ = (ω ^ 2 ^ i) ^ 2 + (ωb ^ 2 ^ i) ^ 2 := by
-        rw [← mul_powₓ ωb ω, ωb_mul_ω, one_pow, mul_oneₓ, add_sub_cancel]_ = ω ^ 2 ^ (i + 1) + ωb ^ 2 ^ (i + 1) := by
+  · calc
+      (s (i + 1) : X q) = (s i ^ 2 - 2 : ℤ) := rfl
+      _ = (s i : X q) ^ 2 - 2 := by
+        push_cast
+      _ = (ω ^ 2 ^ i + ωb ^ 2 ^ i) ^ 2 - 2 := by
+        rw [ih]
+      _ = (ω ^ 2 ^ i) ^ 2 + (ωb ^ 2 ^ i) ^ 2 + 2 * (ωb ^ 2 ^ i * ω ^ 2 ^ i) - 2 := by
+        ring
+      _ = (ω ^ 2 ^ i) ^ 2 + (ωb ^ 2 ^ i) ^ 2 := by
+        rw [← mul_powₓ ωb ω, ωb_mul_ω, one_pow, mul_oneₓ, add_sub_cancel]
+      _ = ω ^ 2 ^ (i + 1) + ωb ^ 2 ^ (i + 1) := by
         rw [← pow_mulₓ, ← pow_mulₓ, pow_succ'ₓ]
+      
     
 
 end X
@@ -472,7 +617,7 @@ theorem order_ω (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) : orderOf (ωU
     replace ω_pow := congr_arg (Units.coeHom (X (q (p' + 2))) : Units (X (q (p' + 2))) → X (q (p' + 2))) ω_pow
     simp at ω_pow
     have h : (1 : Zmod (q (p' + 2))) = -1 := congr_arg Prod.fst (ω_pow.symm.trans (ω_pow_eq_neg_one p' h))
-    have : Fact (2 < (q (p' + 2) : ℕ)) := ⟨two_lt_q _⟩
+    haveI : Fact (2 < (q (p' + 2) : ℕ)) := ⟨two_lt_q _⟩
     apply Zmod.neg_one_ne_one h.symm
     
   · apply order_of_dvd_iff_pow_eq_one.2
@@ -525,9 +670,9 @@ theorem s_mod_succ {p a i b c} (h1 : (2 ^ p - 1 : ℤ) = a) (h2 : sMod p i = b) 
   dsimp' [← s_mod, ← mersenne]
   rw [h1, h2, sq, h3]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 /-- Given a goal of the form `lucas_lehmer_test p`,
 attempt to do the calculation using `norm_num` to certify each step.
 -/
@@ -553,7 +698,7 @@ unsafe def run_test : tactic Unit := do
     to_expr
         (pquote.1
           (by
-            norm_num [← LucasLehmer.sMod] : sMod (%%ₓquote.1 p) 0 = 4))
+            norm_num[← LucasLehmer.sMod] : sMod (%%ₓquote.1 p) 0 = 4))
   let h ← assertv `h t v
   -- step case, repeated p-2 times
       iterate_exactly

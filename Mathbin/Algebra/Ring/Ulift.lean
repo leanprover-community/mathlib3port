@@ -122,10 +122,22 @@ instance commRing [CommRingₓ α] : CommRingₓ (ULift α) := by
     run_tac
       tactic.pi_instance_derive_field
 
+instance [HasRatCast α] : HasRatCast (ULift α) :=
+  ⟨fun a => ULift.up (coe a)⟩
+
+@[simp]
+theorem rat_cast_down [HasRatCast α] (n : ℚ) : ULift.down (n : ULift α) = n :=
+  rfl
+
 instance field [Field α] : Field (ULift α) := by
+  have of_rat_mk : ∀ a b h1 h2, ((⟨a, b, h1, h2⟩ : ℚ) : ULift α) = ↑a * (↑b)⁻¹ := by
+    intro a b h1 h2
+    ext
+    rw [rat_cast_down, mul_down, inv_down, nat_cast_down, int_cast_down]
+    exact Field.rat_cast_mk a b h1 h2
   refine_struct
       { @ULift.nontrivial α _, ULift.commRing with zero := (0 : ULift α), inv := Inv.inv, div := Div.div,
-        zpow := fun n a => ULift.up (a.down ^ n) } <;>
+        zpow := fun n a => ULift.up (a.down ^ n), ratCast := coe, rat_cast_mk := of_rat_mk, qsmul := (· • ·) } <;>
     run_tac
       tactic.pi_instance_derive_field
   -- `mul_inv_cancel` requires special attention: it leaves the goal `∀ {a}, a ≠ 0 → a * a⁻¹ = 1`.

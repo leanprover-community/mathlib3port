@@ -28,8 +28,8 @@ isometry, affine map, linear map
 -/
 
 
-variable {E PE : Type _} [NormedGroup E] [NormedSpace ℝ E] [MetricSpace PE] [NormedAddTorsor E PE] {F PF : Type _}
-  [NormedGroup F] [NormedSpace ℝ F] [MetricSpace PF] [NormedAddTorsor F PF]
+variable {E PE F PF : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [MetricSpace PE] [NormedAddTorsor E PE]
+  [NormedAddCommGroup F] [NormedSpace ℝ F] [MetricSpace PF] [NormedAddTorsor F PF]
 
 open Set AffineMap AffineIsometryEquiv
 
@@ -46,14 +46,18 @@ theorem midpoint_fixed {x y : PE} : ∀ e : PE ≃ᵢ PE, e x = x → e y = y �
   set z := midpoint ℝ x y
   -- Consider the set of `e : E ≃ᵢ E` such that `e x = x` and `e y = y`
   set s := { e : PE ≃ᵢ PE | e x = x ∧ e y = y }
-  have : Nonempty s := ⟨⟨Isometric.refl PE, rfl, rfl⟩⟩
+  haveI : Nonempty s := ⟨⟨Isometric.refl PE, rfl, rfl⟩⟩
   -- On the one hand, `e` cannot send the midpoint `z` of `[x, y]` too far
   have h_bdd : BddAbove (range fun e : s => dist (e z) z) := by
     refine' ⟨dist x z + dist x z, forall_range_iff.2 <| Subtype.forall.2 _⟩
     rintro e ⟨hx, hy⟩
-    calc dist (e z) z ≤ dist (e z) x + dist x z := dist_triangle (e z) x z _ = dist (e x) (e z) + dist x z := by
-        rw [hx, dist_comm]_ = dist x z + dist x z := by
+    calc
+      dist (e z) z ≤ dist (e z) x + dist x z := dist_triangle (e z) x z
+      _ = dist (e x) (e z) + dist x z := by
+        rw [hx, dist_comm]
+      _ = dist x z + dist x z := by
         erw [e.dist_eq x z]
+      
   -- On the other hand, consider the map `f : (E ≃ᵢ E) → (E ≃ᵢ E)`
   -- sending each `e` to `R ∘ e⁻¹ ∘ R ∘ e`, where `R` is the point reflection in the
   -- midpoint `z` of `[x, y]`.

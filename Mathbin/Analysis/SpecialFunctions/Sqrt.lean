@@ -100,7 +100,8 @@ end deriv
 
 section fderiv
 
-variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {f : E → ℝ} {n : WithTop ℕ} {s : Set E} {x : E} {f' : E →L[ℝ] ℝ}
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ} {n : WithTop ℕ} {s : Set E} {x : E}
+  {f' : E →L[ℝ] ℝ}
 
 theorem HasFderivAt.sqrt (hf : HasFderivAt f f' x) (hx : f x ≠ 0) :
     HasFderivAt (fun y => sqrt (f y)) ((1 / (2 * sqrt (f x))) • f') x :=

@@ -325,14 +325,6 @@ theorem coe_compl {s : L.DefinableSet A α} : ((sᶜ : L.DefinableSet A α) : Se
 instance : BooleanAlgebra (L.DefinableSet A α) :=
   { DefinableSet.hasCompl, DefinableSet.boundedOrder, DefinableSet.distribLattice with sdiff := fun s t => s⊓tᶜ,
     sdiff_eq := fun s t => rfl,
-    sup_inf_sdiff := fun ⟨s, hs⟩ ⟨t, ht⟩ => by
-      apply le_antisymmₓ <;> simp [← le_iff],
-    inf_inf_sdiff := fun ⟨s, hs⟩ ⟨t, ht⟩ => by
-      rw [eq_bot_iff]
-      simp only [← coe_compl, ← le_iff, ← coe_bot, ← coe_inf, ← Subtype.coe_mk, ← le_eq_subset]
-      intro x hx
-      simp only [← Set.mem_inter_eq, ← mem_compl_eq] at hx
-      tauto,
     inf_compl_le_bot := fun ⟨s, hs⟩ => by
       simp [← le_iff],
     top_le_sup_compl := fun ⟨s, hs⟩ => by

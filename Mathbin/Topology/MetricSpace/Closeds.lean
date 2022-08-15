@@ -54,16 +54,16 @@ theorem continuous_inf_edist_Hausdorff_edist : Continuous fun p : α × Closeds 
         simp )
       _
   rintro ⟨x, s⟩ ⟨y, t⟩
-  calc inf_edist x s ≤ inf_edist x t + Hausdorff_edist (t : Set α) s :=
-      inf_edist_le_inf_edist_add_Hausdorff_edist _ ≤ inf_edist y t + edist x y + Hausdorff_edist (t : Set α) s :=
-      add_le_add_right inf_edist_le_inf_edist_add_edist
-        _ _ = inf_edist y t + (edist x y + Hausdorff_edist (s : Set α) t) :=
-      by
-      rw [add_assocₓ, Hausdorff_edist_comm]_ ≤ inf_edist y t + (edist (x, s) (y, t) + edist (x, s) (y, t)) :=
-      add_le_add_left (add_le_add (le_max_leftₓ _ _) (le_max_rightₓ _ _))
-        _ _ = inf_edist y t + 2 * edist (x, s) (y, t) :=
-      by
+  calc
+    inf_edist x s ≤ inf_edist x t + Hausdorff_edist (t : Set α) s := inf_edist_le_inf_edist_add_Hausdorff_edist
+    _ ≤ inf_edist y t + edist x y + Hausdorff_edist (t : Set α) s := add_le_add_right inf_edist_le_inf_edist_add_edist _
+    _ = inf_edist y t + (edist x y + Hausdorff_edist (s : Set α) t) := by
+      rw [add_assocₓ, Hausdorff_edist_comm]
+    _ ≤ inf_edist y t + (edist (x, s) (y, t) + edist (x, s) (y, t)) :=
+      add_le_add_left (add_le_add (le_max_leftₓ _ _) (le_max_rightₓ _ _)) _
+    _ = inf_edist y t + 2 * edist (x, s) (y, t) := by
       rw [← mul_two, mul_comm]
+    
 
 /-- Subsets of a given closed subset form a closed set -/
 theorem is_closed_subsets_of_is_closed (hs : IsClosed s) : IsClosed { t : Closeds α | (t : Set α) ⊆ s } := by
@@ -189,7 +189,7 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
   exact ((tendsto_order.1 this).2 ε εpos).exists_forall_of_at_top
   exact ⟨N, fun n hn => lt_of_le_of_ltₓ (main n) (hN n hn)⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (v «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (v «expr ⊆ » s)
 /-- In a compact space, the type of closed subsets is compact. -/
 instance Closeds.compact_space [CompactSpace α] : CompactSpace (Closeds α) :=
   ⟨by
@@ -316,7 +316,7 @@ instance NonemptyCompacts.compact_space [CompactSpace α] : CompactSpace (Nonemp
 /-- In a second countable space, the type of nonempty compact subsets is second countable -/
 instance NonemptyCompacts.second_countable_topology [SecondCountableTopology α] :
     SecondCountableTopology (NonemptyCompacts α) := by
-  have : separable_space (nonempty_compacts α) := by
+  haveI : separable_space (nonempty_compacts α) := by
     /- To obtain a countable dense subset of `nonempty_compacts α`, start from
         a countable dense subset `s` of α, and then consider all its finite nonempty subsets.
         This set is countable and made of nonempty compact sets. It turns out to be dense:
@@ -352,8 +352,11 @@ instance NonemptyCompacts.second_countable_topology [SecondCountableTopology α]
         intro x hx
         rcases mem_Union₂.1 (ta hx) with ⟨z, za, Dxz⟩
         exists F z, mem_image_of_mem _ za
-        calc edist x (F z) ≤ edist x z + edist z (F z) := edist_triangle _ _ _ _ < δ / 2 + δ / 2 :=
-            Ennreal.add_lt_add Dxz (Fspec z).2_ = δ := Ennreal.add_halves _
+        calc
+          edist x (F z) ≤ edist x z + edist z (F z) := edist_triangle _ _ _
+          _ < δ / 2 + δ / 2 := Ennreal.add_lt_add Dxz (Fspec z).2
+          _ = δ := Ennreal.add_halves _
+          
       -- keep only the points in `b` that are close to point in `t`, yielding a new set `c`
       let c := { y ∈ b | ∃ x ∈ t, edist x y < δ }
       have : c.finite := ‹b.finite›.Subset fun x hx => hx.1

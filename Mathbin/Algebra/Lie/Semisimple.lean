@@ -61,11 +61,11 @@ theorem is_semisimple_iff_no_solvable_ideals : IsSemisimple R L ↔ ∀ I : LieI
 theorem is_semisimple_iff_no_abelian_ideals : IsSemisimple R L ↔ ∀ I : LieIdeal R L, IsLieAbelian I → I = ⊥ := by
   rw [is_semisimple_iff_no_solvable_ideals]
   constructor <;> intro h₁ I h₂
-  · have : IsLieAbelian I := h₂
+  · haveI : IsLieAbelian I := h₂
     apply h₁
     exact LieAlgebra.of_abelian_is_solvable R I
     
-  · have : is_solvable R I := h₂
+  · haveI : is_solvable R I := h₂
     rw [← abelian_of_solvable_ideal_eq_bot_iff]
     apply h₁
     exact abelian_derived_abelian_of_ideal I

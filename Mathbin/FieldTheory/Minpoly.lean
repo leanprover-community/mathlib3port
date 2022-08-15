@@ -94,7 +94,7 @@ theorem map_ne_one [Nontrivial B] {R : Type _} [Semiringₓ R] [Nontrivial R] (f
 
 /-- A minimal polynomial is not a unit. -/
 theorem not_is_unit [Nontrivial B] : ¬IsUnit (minpoly A x) := by
-  have : Nontrivial A := (algebraMap A B).domain_nontrivial
+  haveI : Nontrivial A := (algebraMap A B).domain_nontrivial
   by_cases' hx : IsIntegral A x
   · exact mt (eq_one_of_is_unit_of_monic (monic hx)) (ne_one A x)
     
@@ -240,10 +240,15 @@ theorem irreducible (hx : IsIntegral A x) : Irreducible (minpoly A x) := by
     simp only [← coeff_prod, ← leading_coeff_mul, ← leading_coeff_C]
   have prod : minpoly A x = a * C b.leading_coeff * (b * C a.leading_coeff) := by
     symm
-    calc a * C b.leading_coeff * (b * C a.leading_coeff) = a * b * (C a.leading_coeff * C b.leading_coeff) := by
-        ring _ = a * b * C (a.leading_coeff * b.leading_coeff) := by
-        simp only [← RingHom.map_mul]_ = a * b := by
-        rw [coeff_prod, C_1, mul_oneₓ]_ = minpoly A x := hab_eq
+    calc
+      a * C b.leading_coeff * (b * C a.leading_coeff) = a * b * (C a.leading_coeff * C b.leading_coeff) := by
+        ring
+      _ = a * b * C (a.leading_coeff * b.leading_coeff) := by
+        simp only [← RingHom.map_mul]
+      _ = a * b := by
+        rw [coeff_prod, C_1, mul_oneₓ]
+      _ = minpoly A x := hab_eq
+      
   have hzero := aeval A x
   rw [Prod, aeval_mul, mul_eq_zero] at hzero
   cases hzero

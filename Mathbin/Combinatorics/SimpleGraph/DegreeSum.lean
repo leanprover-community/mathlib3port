@@ -70,7 +70,7 @@ theorem dart_fst_fiber_card_eq_degree [DecidableEq V] (v : V) :
     card_image_of_injective univ (G.dart_of_neighbor_set_injective v)
 
 theorem dart_card_eq_sum_degrees : Fintype.card G.Dart = ∑ v, G.degree v := by
-  have := Classical.decEq V
+  haveI := Classical.decEq V
   simp only [card_univ, dart_fst_fiber_card_eq_degree]
   exact
     card_eq_sum_card_fiberwise
@@ -157,7 +157,7 @@ theorem odd_card_odd_degree_vertices_ne [Fintype V] [DecidableEq V] [DecidableRe
 
 theorem exists_ne_odd_degree_of_exists_odd_degree [Fintype V] [DecidableRel G.Adj] (v : V) (h : Odd (G.degree v)) :
     ∃ w : V, w ≠ v ∧ Odd (G.degree w) := by
-  have := Classical.decEq V
+  haveI := Classical.decEq V
   rcases G.odd_card_odd_degree_vertices_ne v h with ⟨k, hg⟩
   have hg' : (filter (fun w : V => w ≠ v ∧ Odd (G.degree w)) univ).card > 0 := by
     rw [hg]

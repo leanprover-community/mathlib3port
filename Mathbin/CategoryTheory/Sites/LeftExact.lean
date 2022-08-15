@@ -183,7 +183,7 @@ instance (K : Type max v u) [SmallCategory K] [FinCategory K] [HasLimitsOfShape 
     dsimp'
     simp only [← category.assoc]
     rw [ι_colimit_limit_iso_limit_π_assoc]
-    simp only [← nat_iso.of_components.inv_app, ← colimit_obj_iso_colimit_comp_evaluation_ι_app_hom, ← iso.symm_inv]
+    simp only [← nat_iso.of_components_inv_app, ← colimit_obj_iso_colimit_comp_evaluation_ι_app_hom, ← iso.symm_inv]
     dsimp' [← is_limit.cone_point_unique_up_to_iso]
     rw [← category.assoc, ← nat_trans.comp_app, limit.lift_π]
     rfl
@@ -193,7 +193,7 @@ instance [HasFiniteLimits D] [PreservesFiniteLimits (forget D)] [ReflectsIsomorp
     PreservesFiniteLimits (J.plusFunctor D) := by
   apply preservesFiniteLimitsOfPreservesFiniteLimitsOfSize.{max v u}
   intro K _ _
-  have : reflects_limits_of_shape K (forget D) := reflects_limits_of_shape_of_reflects_isomorphisms
+  haveI : reflects_limits_of_shape K (forget D) := reflects_limits_of_shape_of_reflects_isomorphisms
   infer_instance
 
 instance (K : Type max v u) [SmallCategory K] [FinCategory K] [HasLimitsOfShape K D]
@@ -229,7 +229,7 @@ instance : PreservesLimitsOfShape K (presheafToSheaf J D) := by
   constructor
   intro S hS
   apply is_limit_of_reflects (Sheaf_to_presheaf J D)
-  have : reflects_limits_of_shape K (forget D) := reflects_limits_of_shape_of_reflects_isomorphisms
+  haveI : reflects_limits_of_shape K (forget D) := reflects_limits_of_shape_of_reflects_isomorphisms
   apply is_limit_of_preserves (J.sheafification D) hS
 
 instance [HasFiniteLimits D] : PreservesFiniteLimits (presheafToSheaf J D) := by

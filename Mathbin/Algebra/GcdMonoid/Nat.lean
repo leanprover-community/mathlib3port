@@ -25,7 +25,7 @@ namespace Finset
 theorem coprime_of_div_gcd (s : Finset ℕ) {x : ℕ} (hx : x ∈ s) (hnz : x ≠ 0) : s.gcd (· / s.gcd id) = 1 := by
   rw [Nat.eq_one_iff_not_exists_prime_dvd]
   intro p hp hdvd
-  have : Fact p.prime := ⟨hp⟩
+  haveI : Fact p.prime := ⟨hp⟩
   rw [dvd_gcd_iff] at hdvd
   replace hdvd : ∀, ∀ b ∈ s, ∀, s.gcd id * p ∣ b
   · intro b hb

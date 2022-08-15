@@ -51,7 +51,7 @@ you will not typically need to use this bundled object, and will instead use
   `injective_resolution Z` (all the components are equipped with `mono` instances,
   and when the category is `abelian` we will show `ι` is a quasi-iso).
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure InjectiveResolution (Z : C) where
   cocomplex : CochainComplex C ℕ
   ι : (CochainComplex.single₀ C).obj Z ⟶ cocomplex
@@ -70,7 +70,7 @@ structure InjectiveResolution (Z : C) where
 
 attribute [instance] InjectiveResolution.injective InjectiveResolution.mono
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`out] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`out] []
 /-- An object admits a injective resolution. -/
 class HasInjectiveResolution (Z : C) : Prop where
   out : Nonempty (InjectiveResolution Z)

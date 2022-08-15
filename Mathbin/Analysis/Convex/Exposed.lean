@@ -47,7 +47,7 @@ open Classical Affine BigOperators
 
 open Set
 
-variable (𝕜 : Type _) {E : Type _} [NormedLinearOrderedField 𝕜] [NormedGroup E] [NormedSpace 𝕜 E] {l : E →L[𝕜] 𝕜}
+variable (𝕜 : Type _) {E : Type _} [NormedLinearOrderedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] {l : E →L[𝕜] 𝕜}
   {A B C : Set E} {X : Finset E} {x : E}
 
 /-- A set `B` is exposed with respect to `A` iff it maximizes some functional over `A` (and contains

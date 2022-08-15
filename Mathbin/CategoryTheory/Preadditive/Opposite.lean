@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Scott Morrison, Adam Topaz
+Authors: Scott Morrison, Adam Topaz, Johan Commelin, Joël Riou
 -/
 import Mathbin.CategoryTheory.Preadditive.Default
 import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
@@ -39,6 +39,14 @@ theorem unop_add {X Y : Cᵒᵖ} (f g : X ⟶ Y) : (f + g).unop = f.unop + g.uno
   rfl
 
 @[simp]
+theorem unop_zsmul {X Y : Cᵒᵖ} (k : ℤ) (f : X ⟶ Y) : (k • f).unop = k • f.unop :=
+  rfl
+
+@[simp]
+theorem unop_neg {X Y : Cᵒᵖ} (f : X ⟶ Y) : (-f).unop = -f.unop :=
+  rfl
+
+@[simp]
 theorem op_zero (X Y : C) : (0 : X ⟶ Y).op = 0 :=
   rfl
 
@@ -46,7 +54,36 @@ theorem op_zero (X Y : C) : (0 : X ⟶ Y).op = 0 :=
 theorem op_add {X Y : C} (f g : X ⟶ Y) : (f + g).op = f.op + g.op :=
   rfl
 
-variable {C} {D : Type _} [Category D] [Preadditive D]
+@[simp]
+theorem op_zsmul {X Y : C} (k : ℤ) (f : X ⟶ Y) : (k • f).op = k • f.op :=
+  rfl
+
+@[simp]
+theorem op_neg {X Y : C} (f : X ⟶ Y) : (-f).op = -f.op :=
+  rfl
+
+variable {C}
+
+/-- `unop` induces morphisms of monoids on hom groups of a preadditive category -/
+@[simps]
+def unopHom (X Y : Cᵒᵖ) : (X ⟶ Y) →+ (Opposite.unop Y ⟶ Opposite.unop X) :=
+  (AddMonoidHom.mk' fun f => f.unop) fun f g => unop_add _ f g
+
+@[simp]
+theorem unop_sum (X Y : Cᵒᵖ) {ι : Type _} (s : Finset ι) (f : ι → (X ⟶ Y)) :
+    (s.Sum f).unop = s.Sum fun i => (f i).unop :=
+  (unopHom X Y).map_sum _ _
+
+/-- `op` induces morphisms of monoids on hom groups of a preadditive category -/
+@[simps]
+def opHom (X Y : C) : (X ⟶ Y) →+ (Opposite.op Y ⟶ Opposite.op X) :=
+  (AddMonoidHom.mk' fun f => f.op) fun f g => op_add _ f g
+
+@[simp]
+theorem op_sum (X Y : C) {ι : Type _} (s : Finset ι) (f : ι → (X ⟶ Y)) : (s.Sum f).op = s.Sum fun i => (f i).op :=
+  (opHom X Y).map_sum _ _
+
+variable {D : Type _} [Category D] [Preadditive D]
 
 instance Functor.op_additive (F : C ⥤ D) [F.Additive] : F.op.Additive where
 

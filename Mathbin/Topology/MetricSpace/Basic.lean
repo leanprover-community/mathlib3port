@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébastien Gouëzel
 -/
 import Mathbin.Data.Int.Interval
+import Mathbin.Tactic.Positivity
 import Mathbin.Topology.Algebra.Order.Compact
 import Mathbin.Topology.MetricSpace.EmetricSpace
 import Mathbin.Topology.Bornology.Constructions
@@ -54,7 +55,7 @@ open uniformity TopologicalSpace BigOperators Filter Nnreal Ennreal
 
 universe u v w
 
-variable {α : Type u} {β : Type v}
+variable {α : Type u} {β : Type v} {X : Type _}
 
 /-- Construct a uniform structure core from a distance function and metric space axioms.
 This is a technical construction that can be immediately used to construct a uniform structure
@@ -160,7 +161,7 @@ private theorem pseudo_metric_space.dist_nonneg' {α} {x y : α} (dist : α → 
       
   nonneg_of_mul_nonneg_right this zero_lt_two
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 /-- This tactic is used to populate `pseudo_metric_space.edist_dist` when the default `edist` is
 used. -/
 protected unsafe def pseudo_metric_space.edist_dist_tac : tactic Unit :=
@@ -300,10 +301,12 @@ theorem dist_le_Ico_sum_dist (f : ℕ → α) {m n} (h : m ≤ n) :
   · simp only [← Finset.sum_empty, ← Finset.Ico_self, ← dist_self]
     
   · intro n hn hrec
-    calc dist (f m) (f (n + 1)) ≤ dist (f m) (f n) + dist _ _ :=
-        dist_triangle _ _ _ _ ≤ (∑ i in Finset.ico m n, _) + _ :=
-        add_le_add hrec le_rfl _ = ∑ i in Finset.ico m (n + 1), _ := by
+    calc
+      dist (f m) (f (n + 1)) ≤ dist (f m) (f n) + dist _ _ := dist_triangle _ _ _
+      _ ≤ (∑ i in Finset.ico m n, _) + _ := add_le_add hrec le_rfl
+      _ = ∑ i in Finset.ico m (n + 1), _ := by
         rw [Nat.Ico_succ_right_eq_insert_Ico hn, Finset.sum_insert, add_commₓ] <;> simp
+      
     
 
 /-- The triangle (polygon) inequality for sequences of points; `finset.range` version. -/
@@ -331,6 +334,18 @@ theorem abs_dist_sub_le (x y z : α) : abs (dist x z - dist y z) ≤ dist x y :=
 
 theorem dist_nonneg {x y : α} : 0 ≤ dist x y :=
   PseudoMetricSpace.dist_nonneg' dist dist_self dist_comm dist_triangle
+
+section
+
+open Tactic Tactic.Positivity
+
+/-- Extension for the `positivity` tactic: distances are nonnegative. -/
+@[positivity]
+unsafe def _root_.tactic.positivity_dist : expr → tactic strictness
+  | quote.1 (dist (%%ₓa) (%%ₓb)) => nonnegative <$> mk_app `` dist_nonneg [a, b]
+  | _ => failed
+
+end
 
 @[simp]
 theorem abs_dist {a b : α} : abs (dist a b) = dist a b :=
@@ -763,13 +778,13 @@ theorem uniform_continuous_iff [PseudoMetricSpace β] {f : α → β} :
     UniformContinuous f ↔ ∀, ∀ ε > 0, ∀, ∃ δ > 0, ∀ {a b : α}, dist a b < δ → dist (f a) (f b) < ε :=
   uniformity_basis_dist.uniform_continuous_iff uniformity_basis_dist
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem uniform_continuous_on_iff [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
       ∀, ∀ ε > 0, ∀, ∃ δ > 0, ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), dist x y < δ → dist (f x) (f y) < ε :=
   Metric.uniformity_basis_dist.uniform_continuous_on_iff Metric.uniformity_basis_dist
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem uniform_continuous_on_iff_le [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
       ∀, ∀ ε > 0, ∀, ∃ δ > 0, ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), dist x y ≤ δ → dist (f x) (f y) ≤ ε :=
@@ -818,7 +833,7 @@ theorem totally_bounded_of_finite_discretization {s : Set α}
     exact totally_bounded_empty
     
   rcases hs with ⟨x0, hx0⟩
-  have : Inhabited s := ⟨⟨x0, hx0⟩⟩
+  haveI : Inhabited s := ⟨⟨x0, hx0⟩⟩
   refine' totally_bounded_iff.2 fun ε ε0 => _
   rcases H ε ε0 with ⟨β, fβ, F, hF⟩
   skip
@@ -829,7 +844,7 @@ theorem totally_bounded_of_finite_discretization {s : Set α}
   simp only [← Set.mem_Union, ← Set.mem_range]
   exact ⟨_, ⟨F ⟨x, xs⟩, rfl⟩, hF _ _ this.symm⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem finite_approx_of_totally_bounded {s : Set α} (hs : TotallyBounded s) :
     ∀, ∀ ε > 0, ∀, ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, Ball y ε := by
   intro ε ε_pos
@@ -868,7 +883,7 @@ theorem tendsto_uniformly_iff {ι : Type _} {F : ι → β → α} {f : β → �
   rw [← tendsto_uniformly_on_univ, tendsto_uniformly_on_iff]
   simp
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » t)
 protected theorem cauchy_iff {f : Filter α} :
     Cauchy f ↔ NeBot f ∧ ∀, ∀ ε > 0, ∀, ∃ t ∈ f, ∀ (x y) (_ : x ∈ t) (_ : y ∈ t), dist x y < ε :=
   uniformity_basis_dist.cauchy_iff
@@ -1328,7 +1343,7 @@ section CauchySeq
 
 variable [Nonempty β] [SemilatticeSup β]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (m n «expr ≥ » N)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (m n «expr ≥ » N)
 /-- In a pseudometric space, Cauchy sequences are characterized by the fact that, eventually,
 the distance between its elements is arbitrarily small -/
 -- see Note [nolint_ge]
@@ -1730,11 +1745,11 @@ be contained in `s`. -/
 theorem _root_.topological_space.is_separable.separable_space {s : Set α} (hs : IsSeparable s) : SeparableSpace s := by
   classical
   rcases eq_empty_or_nonempty s with (rfl | ⟨⟨x₀, x₀s⟩⟩)
-  · have : Encodable (∅ : Set α) := Fintype.toEncodable ↥∅
+  · haveI : Encodable (∅ : Set α) := Fintype.toEncodable ↥∅
     exact encodable.to_separable_space
     
   rcases hs with ⟨c, hc, h'c⟩
-  have : Encodable c := hc.to_encodable
+  haveI : Encodable c := hc.to_encodable
   obtain ⟨u, -, u_pos, u_lim⟩ : ∃ u : ℕ → ℝ, StrictAnti u ∧ (∀ n : ℕ, 0 < u n) ∧ tendsto u at_top (𝓝 0) :=
     exists_seq_strict_anti_tendsto (0 : ℝ)
   let f : c × ℕ → α := fun p => if h : (Metric.Ball (p.1 : α) (u p.2) ∩ s).Nonempty then h.some else x₀
@@ -1756,18 +1771,21 @@ theorem _root_.topological_space.is_separable.separable_space {s : Set α} (hs :
   have A : (Metric.Ball z (u n) ∩ s).Nonempty := ⟨x, hz, xs⟩
   dsimp' [← f]
   simp only [← A, ← dif_pos]
-  calc dist x A.some ≤ dist x z + dist z A.some := dist_triangle _ _ _ _ < r / 2 + r / 2 :=
-      add_lt_add (hz.trans hn) ((Metric.mem_ball'.1 A.some_spec.1).trans hn)_ = r := add_halves _
+  calc
+    dist x A.some ≤ dist x z + dist z A.some := dist_triangle _ _ _
+    _ < r / 2 + r / 2 := add_lt_add (hz.trans hn) ((Metric.mem_ball'.1 A.some_spec.1).trans hn)
+    _ = r := add_halves _
+    
 
 /-- The preimage of a separable set by an inducing map is separable. -/
 protected theorem _root_.inducing.is_separable_preimage {f : β → α} [TopologicalSpace β] (hf : Inducing f) {s : Set α}
     (hs : IsSeparable s) : IsSeparable (f ⁻¹' s) := by
   have : second_countable_topology s := by
-    have : separable_space s := hs.separable_space
+    haveI : separable_space s := hs.separable_space
     exact UniformSpace.second_countable_of_separable _
   let g : f ⁻¹' s → s := cod_restrict (f ∘ coe) s fun x => x.2
   have : Inducing g := (hf.comp inducing_coe).codRestrict _
-  have : second_countable_topology (f ⁻¹' s) := this.second_countable_topology
+  haveI : second_countable_topology (f ⁻¹' s) := this.second_countable_topology
   rw
     [show f ⁻¹' s = coe '' (univ : Set (f ⁻¹' s)) by
       simpa only [← image_univ, ← Subtype.range_coe_subtype] ]
@@ -1900,7 +1918,7 @@ end Pi
 
 section Compact
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- Any compact set in a pseudometric space can be covered by finitely many balls of a given
 positive radius -/
 theorem finite_cover_balls_of_compact {α : Type u} [PseudoMetricSpace α] {s : Set α} (hs : IsCompact s) {e : ℝ}
@@ -1985,7 +2003,7 @@ instance (priority := 100) proper_of_compact [CompactSpace α] : ProperSpace α 
 instance (priority := 100) locally_compact_of_proper [ProperSpace α] : LocallyCompactSpace α :=
   (locally_compact_space_of_has_basis fun x => nhds_basis_closed_ball) fun x ε ε0 => is_compact_closed_ball _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » t)
 /-- A proper space is complete -/
 -- see Note [lower instance priority]
 instance (priority := 100) complete_of_proper [ProperSpace α] : CompleteSpace α :=
@@ -2040,7 +2058,7 @@ theorem exists_lt_subset_ball (hs : IsClosed s) (h : s ⊆ Ball x r) : ∃ r' < 
 end ProperSpace
 
 theorem IsCompact.is_separable {s : Set α} (hs : IsCompact s) : IsSeparable s := by
-  have : CompactSpace s := is_compact_iff_compact_space.mp hs
+  haveI : CompactSpace s := is_compact_iff_compact_space.mp hs
   exact is_separable_of_separable_space_subtype s
 
 namespace Metric
@@ -2085,7 +2103,7 @@ theorem lebesgue_number_lemma_of_metric_sUnion {s : Set α} {c : Set (Set α)} (
 
 namespace Metric
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » s)
 /-- Boundedness of a subset of a pseudometric space. We formulate the definition to work
 even in the empty space. -/
 def Bounded (s : Set α) : Prop :=
@@ -2094,6 +2112,10 @@ def Bounded (s : Set α) : Prop :=
 section Bounded
 
 variable {x : α} {s t : Set α} {r : ℝ}
+
+theorem bounded_iff_is_bounded (s : Set α) : Bounded s ↔ IsBounded s := by
+  change bounded s ↔ sᶜ ∈ (cobounded α).Sets
+  simp [← PseudoMetricSpace.cobounded_sets, ← Metric.Bounded]
 
 @[simp]
 theorem bounded_empty : Bounded (∅ : Set α) :=
@@ -2111,7 +2133,10 @@ theorem Bounded.mono (incl : s ⊆ t) : Bounded t → Bounded s :=
 theorem bounded_closed_ball : Bounded (ClosedBall x r) :=
   ⟨r + r, fun y hy z hz => by
     simp only [← mem_closed_ball] at *
-    calc dist y z ≤ dist y x + dist z x := dist_triangle_right _ _ _ _ ≤ r + r := add_le_add hy hz⟩
+    calc
+      dist y z ≤ dist y x + dist z x := dist_triangle_right _ _ _
+      _ ≤ r + r := add_le_add hy hz
+      ⟩
 
 /-- Open balls are bounded -/
 theorem bounded_ball : Bounded (Ball x r) :=
@@ -2744,7 +2769,7 @@ def UniformEmbedding.comapMetricSpace {α β} [UniformSpace α] [MetricSpace β]
 @[reducible]
 def Embedding.comapMetricSpace {α β} [TopologicalSpace α] [MetricSpace β] (f : α → β) (h : Embedding f) :
     MetricSpace α := by
-  let this : UniformSpace α := Embedding.comapUniformSpace f h
+  letI : UniformSpace α := Embedding.comapUniformSpace f h
   exact UniformEmbedding.comapMetricSpace f (h.to_uniform_embedding f)
 
 instance Subtype.metricSpace {α : Type _} {p : α → Prop} [MetricSpace α] : MetricSpace (Subtype p) :=
@@ -2848,14 +2873,14 @@ theorem second_countable_of_countable_discretization {α : Type u} [MetricSpace 
     (H : ∀, ∀ ε > (0 : ℝ), ∀, ∃ (β : Type _)(_ : Encodable β)(F : α → β), ∀ x y, F x = F y → dist x y ≤ ε) :
     SecondCountableTopology α := by
   cases' (univ : Set α).eq_empty_or_nonempty with hs hs
-  · have : CompactSpace α :=
+  · haveI : CompactSpace α :=
       ⟨by
         rw [hs] <;> exact is_compact_empty⟩
     · infer_instance
       
     
   rcases hs with ⟨x0, hx0⟩
-  let this : Inhabited α := ⟨x0⟩
+  letI : Inhabited α := ⟨x0⟩
   refine' second_countable_of_almost_dense_set fun ε ε0 => _
   rcases H ε ε0 with ⟨β, fβ, F, hF⟩
   skip
@@ -2885,9 +2910,13 @@ def PseudoMetric.distSetoid (α : Type u) [PseudoMetricSpace α] : Setoidₓ α 
         
       · intro x y z hxy hyz
         refine' le_antisymmₓ _ dist_nonneg
-        calc dist x z ≤ dist x y + dist y z := PseudoMetricSpace.dist_triangle _ _ _ _ = 0 + 0 := by
-            rw [hxy, hyz]_ = 0 := by
+        calc
+          dist x z ≤ dist x y + dist y z := PseudoMetricSpace.dist_triangle _ _ _
+          _ = 0 + 0 := by
+            rw [hxy, hyz]
+          _ = 0 := by
             simp
+          
         )
 
 attribute [local instance] PseudoMetric.distSetoid
@@ -2936,4 +2965,130 @@ instance metricSpaceQuot {α : Type u} [PseudoMetricSpace α] : MetricSpace (Pse
   dist_triangle := fun xc yc zc => Quotientₓ.induction_on₃ xc yc zc fun x y z => PseudoMetricSpace.dist_triangle _ _ _
 
 end EqRel
+
+/-!
+### `additive`, `multiplicative`
+
+The distance on those type synonyms is inherited without change.
+-/
+
+
+open Additive Multiplicative
+
+section
+
+variable [HasDist X]
+
+instance : HasDist (Additive X) :=
+  ‹HasDist X›
+
+instance : HasDist (Multiplicative X) :=
+  ‹HasDist X›
+
+@[simp]
+theorem dist_of_mul (a b : X) : dist (ofMul a) (ofMul b) = dist a b :=
+  rfl
+
+@[simp]
+theorem dist_of_add (a b : X) : dist (ofAdd a) (ofAdd b) = dist a b :=
+  rfl
+
+@[simp]
+theorem dist_to_mul (a b : Additive X) : dist (toMul a) (toMul b) = dist a b :=
+  rfl
+
+@[simp]
+theorem dist_to_add (a b : Multiplicative X) : dist (toAdd a) (toAdd b) = dist a b :=
+  rfl
+
+end
+
+section
+
+variable [PseudoMetricSpace X]
+
+instance : PseudoMetricSpace (Additive X) :=
+  ‹PseudoMetricSpace X›
+
+instance : PseudoMetricSpace (Multiplicative X) :=
+  ‹PseudoMetricSpace X›
+
+@[simp]
+theorem nndist_of_mul (a b : X) : nndist (ofMul a) (ofMul b) = nndist a b :=
+  rfl
+
+@[simp]
+theorem nndist_of_add (a b : X) : nndist (ofAdd a) (ofAdd b) = nndist a b :=
+  rfl
+
+@[simp]
+theorem nndist_to_mul (a b : Additive X) : nndist (toMul a) (toMul b) = nndist a b :=
+  rfl
+
+@[simp]
+theorem nndist_to_add (a b : Multiplicative X) : nndist (toAdd a) (toAdd b) = nndist a b :=
+  rfl
+
+end
+
+instance [MetricSpace X] : MetricSpace (Additive X) :=
+  ‹MetricSpace X›
+
+instance [MetricSpace X] : MetricSpace (Multiplicative X) :=
+  ‹MetricSpace X›
+
+instance [PseudoMetricSpace X] [ProperSpace X] : ProperSpace (Additive X) :=
+  ‹ProperSpace X›
+
+instance [PseudoMetricSpace X] [ProperSpace X] : ProperSpace (Multiplicative X) :=
+  ‹ProperSpace X›
+
+/-!
+### Order dual
+
+The distance on this type synonym is inherited without change.
+-/
+
+
+open OrderDual
+
+section
+
+variable [HasDist X]
+
+instance : HasDist Xᵒᵈ :=
+  ‹HasDist X›
+
+@[simp]
+theorem dist_to_dual (a b : X) : dist (toDual a) (toDual b) = dist a b :=
+  rfl
+
+@[simp]
+theorem dist_of_dual (a b : Xᵒᵈ) : dist (ofDual a) (ofDual b) = dist a b :=
+  rfl
+
+end
+
+section
+
+variable [PseudoMetricSpace X]
+
+instance : PseudoMetricSpace Xᵒᵈ :=
+  ‹PseudoMetricSpace X›
+
+@[simp]
+theorem nndist_to_dual (a b : X) : nndist (toDual a) (toDual b) = nndist a b :=
+  rfl
+
+@[simp]
+theorem nndist_of_dual (a b : Xᵒᵈ) : nndist (ofDual a) (ofDual b) = nndist a b :=
+  rfl
+
+end
+
+instance [MetricSpace X] : MetricSpace Xᵒᵈ :=
+  ‹MetricSpace X›
+
+instance [PseudoMetricSpace X] [ProperSpace X] : ProperSpace Xᵒᵈ :=
+  ‹ProperSpace X›
 

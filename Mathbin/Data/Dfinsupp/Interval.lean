@@ -79,16 +79,14 @@ open Finset
 
 namespace Dfinsupp
 
-variable [DecidableEq ι] [∀ i, DecidableEq (α i)]
-
 section BundledSingleton
 
 variable [∀ i, Zero (α i)] {f : Π₀ i, α i} {i : ι} {a : α i}
 
 /-- Pointwise `finset.singleton` bundled as a `dfinsupp`. -/
-def singleton (f : Π₀ i, α i) : Π₀ i, Finset (α i) :=
-  ⟦{ toFun := fun i => {f i}, preSupport := f.support.1,
-      zero := fun i => (ne_or_eq (f i) 0).imp mem_support_iff.2 (congr_arg _) }⟧
+def singleton (f : Π₀ i, α i) : Π₀ i, Finset (α i) where
+  toFun := fun i => {f i}
+  support' := f.support'.map fun s => ⟨s, fun i => (s.Prop i).imp id (congr_arg _)⟩
 
 theorem mem_singleton_apply_iff : a ∈ f.singleton i ↔ a = f i :=
   mem_singleton
@@ -101,13 +99,17 @@ variable [∀ i, Zero (α i)] [∀ i, PartialOrderₓ (α i)] [∀ i, LocallyFin
   {a : α i}
 
 /-- Pointwise `finset.Icc` bundled as a `dfinsupp`. -/
-def rangeIcc (f g : Π₀ i, α i) : Π₀ i, Finset (α i) :=
-  ⟦{ toFun := fun i => icc (f i) (g i), preSupport := f.support.1 + g.support.1,
-      zero := fun i => by
-        refine' or_iff_not_imp_left.2 fun h => _
-        rw [not_mem_support_iff.1 (Multiset.not_mem_mono (Multiset.le_add_right _ _).Subset h),
-          not_mem_support_iff.1 (Multiset.not_mem_mono (Multiset.le_add_left _ _).Subset h)]
-        exact Icc_self _ }⟧
+def rangeIcc (f g : Π₀ i, α i) : Π₀ i, Finset (α i) where
+  toFun := fun i => icc (f i) (g i)
+  support' :=
+    f.support'.bind fun fs =>
+      g.support'.map fun gs =>
+        ⟨fs + gs, fun i =>
+          or_iff_not_imp_left.2 fun h => by
+            have hf : f i = 0 := (fs.prop i).resolve_left (Multiset.not_mem_mono (Multiset.le_add_right _ _).Subset h)
+            have hg : g i = 0 := (gs.prop i).resolve_left (Multiset.not_mem_mono (Multiset.le_add_left _ _).Subset h)
+            rw [hf, hg]
+            exact Icc_self _⟩
 
 @[simp]
 theorem range_Icc_apply (f g : Π₀ i, α i) (i : ι) : f.rangeIcc g i = icc (f i) (g i) :=
@@ -116,7 +118,8 @@ theorem range_Icc_apply (f g : Π₀ i, α i) (i : ι) : f.rangeIcc g i = icc (f
 theorem mem_range_Icc_apply_iff : a ∈ f.rangeIcc g i ↔ f i ≤ a ∧ a ≤ g i :=
   mem_Icc
 
-theorem support_range_Icc_subset : (f.rangeIcc g).support ⊆ f.support ∪ g.support := by
+theorem support_range_Icc_subset [DecidableEq ι] [∀ i, DecidableEq (α i)] :
+    (f.rangeIcc g).support ⊆ f.support ∪ g.support := by
   refine' fun x hx => _
   by_contra
   refine' not_mem_support_iff.2 _ hx
@@ -128,7 +131,7 @@ end BundledIcc
 
 section Pi
 
-variable [∀ i, Zero (α i)]
+variable [∀ i, Zero (α i)] [DecidableEq ι] [∀ i, DecidableEq (α i)]
 
 /-- Given a finitely supported function `f : Π₀ i, finset (α i)`, one can define the finset
 `f.pi` of all finitely supported functions whose value at `i` is in `f i` for all `i`. -/
@@ -149,6 +152,8 @@ theorem card_pi (f : Π₀ i, Finset (α i)) : f.pi.card = f.Prod fun i => (f i)
 end Pi
 
 section LocallyFinite
+
+variable [DecidableEq ι] [∀ i, DecidableEq (α i)]
 
 variable [∀ i, PartialOrderₓ (α i)] [∀ i, Zero (α i)] [∀ i, LocallyFiniteOrder (α i)]
 

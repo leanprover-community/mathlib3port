@@ -36,15 +36,15 @@ theorem Orthonormal.orthonormal_adjust_to_orientation [Nonempty ι] {e : Basis �
 /-- An orthonormal basis, indexed by `fin n`, with the given orientation. -/
 protected def Orientation.finOrthonormalBasis {n : ℕ} (hn : 0 < n) (h : finrank ℝ E = n)
     (x : Orientation ℝ E (Finₓ n)) : Basis (Finₓ n) ℝ E := by
-  have := Finₓ.pos_iff_nonempty.1 hn
-  have := finite_dimensional_of_finrank (h.symm ▸ hn : 0 < finrank ℝ E)
+  haveI := Finₓ.pos_iff_nonempty.1 hn
+  haveI := finite_dimensional_of_finrank (h.symm ▸ hn : 0 < finrank ℝ E)
   exact (finStdOrthonormalBasis h).toBasis.adjustToOrientation x
 
 /-- `orientation.fin_orthonormal_basis` is orthonormal. -/
 protected theorem Orientation.fin_orthonormal_basis_orthonormal {n : ℕ} (hn : 0 < n) (h : finrank ℝ E = n)
     (x : Orientation ℝ E (Finₓ n)) : Orthonormal ℝ (x.finOrthonormalBasis hn h) := by
-  have := Finₓ.pos_iff_nonempty.1 hn
-  have := finite_dimensional_of_finrank (h.symm ▸ hn : 0 < finrank ℝ E)
+  haveI := Finₓ.pos_iff_nonempty.1 hn
+  haveI := finite_dimensional_of_finrank (h.symm ▸ hn : 0 < finrank ℝ E)
   exact
     show Orthonormal ℝ (finStdOrthonormalBasis h).toBasis by
           -- Note sure how to format this
@@ -55,6 +55,6 @@ protected theorem Orientation.fin_orthonormal_basis_orthonormal {n : ℕ} (hn : 
 @[simp]
 theorem Orientation.fin_orthonormal_basis_orientation {n : ℕ} (hn : 0 < n) (h : finrank ℝ E = n)
     (x : Orientation ℝ E (Finₓ n)) : (x.finOrthonormalBasis hn h).Orientation = x := by
-  have := Finₓ.pos_iff_nonempty.1 hn
+  haveI := Finₓ.pos_iff_nonempty.1 hn
   exact Basis.orientation_adjust_to_orientation _ _
 

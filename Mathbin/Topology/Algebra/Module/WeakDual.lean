@@ -69,12 +69,12 @@ variable {α 𝕜 𝕝 R E F M : Type _}
 
 section WeakTopology
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler module 𝕜
+-- ./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler module 𝕜
 /-- The space `E` equipped with the weak topology induced by the bilinear form `B`. -/
-@[nolint has_inhabited_instance unused_arguments]
+@[nolint has_nonempty_instance unused_arguments]
 def WeakBilin [CommSemiringₓ 𝕜] [AddCommMonoidₓ E] [Module 𝕜 E] [AddCommMonoidₓ F] [Module 𝕜 F]
     (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :=
-  E deriving AddCommMonoidₓ, «./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler module 𝕜»
+  E deriving AddCommMonoidₓ, «./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler module 𝕜»
 
 namespace WeakBilin
 
@@ -103,6 +103,7 @@ variable (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜)
 instance : TopologicalSpace (WeakBilin B) :=
   TopologicalSpace.induced (fun x y => B x y) Pi.topologicalSpace
 
+/-- The coercion `(λ x y, B x y) : E → (F → 𝕜)` is continuous. -/
 theorem coe_fn_continuous : Continuous fun (x : WeakBilin B) y => B x y :=
   continuous_induced_dom
 
@@ -111,7 +112,7 @@ theorem eval_continuous (y : F) : Continuous fun x : WeakBilin B => B x y :=
 
 theorem continuous_of_continuous_eval [TopologicalSpace α] {g : α → WeakBilin B}
     (h : ∀ y, Continuous fun a => B (g a) y) : Continuous g :=
-  continuous_induced_rng (continuous_pi_iff.mpr h)
+  continuous_induced_rng.2 (continuous_pi_iff.mpr h)
 
 /-- The coercion `(λ x y, B x y) : E → (F → 𝕜)` is an embedding. -/
 theorem embedding {B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜} (hB : Function.Injective B) : Embedding fun (x : WeakBilin B) y => B x y :=
@@ -123,7 +124,7 @@ theorem tendsto_iff_forall_eval_tendsto {l : Filter α} {f : α → WeakBilin B}
 
 /-- Addition in `weak_space B` is continuous. -/
 instance [HasContinuousAdd 𝕜] : HasContinuousAdd (WeakBilin B) := by
-  refine' ⟨continuous_induced_rng _⟩
+  refine' ⟨continuous_induced_rng.2 _⟩
   refine'
     cast (congr_arg _ _) (((coe_fn_continuous B).comp continuous_fst).add ((coe_fn_continuous B).comp continuous_snd))
   ext
@@ -131,7 +132,7 @@ instance [HasContinuousAdd 𝕜] : HasContinuousAdd (WeakBilin B) := by
 
 /-- Scalar multiplication by `𝕜` on `weak_bilin B` is continuous. -/
 instance [HasContinuousSmul 𝕜 𝕜] : HasContinuousSmul 𝕜 (WeakBilin B) := by
-  refine' ⟨continuous_induced_rng _⟩
+  refine' ⟨continuous_induced_rng.2 _⟩
   refine' cast (congr_arg _ _) (continuous_fst.smul ((coe_fn_continuous B).comp continuous_snd))
   ext
   simp only [← Function.comp_app, ← Pi.smul_apply, ← LinearMap.map_smulₛₗ, ← RingHom.id_apply, ← LinearMap.smul_apply]
@@ -154,7 +155,7 @@ instance [HasContinuousAdd 𝕜] : TopologicalAddGroup (WeakBilin B) where
   to_has_continuous_add := by
     infer_instance
   continuous_neg := by
-    refine' continuous_induced_rng (continuous_pi_iff.mpr fun y => _)
+    refine' continuous_induced_rng.2 (continuous_pi_iff.mpr fun y => _)
     refine' cast (congr_arg _ _) (eval_continuous B (-y))
     ext
     simp only [← map_neg, ← Function.comp_app, ← LinearMap.neg_apply]
@@ -181,13 +182,13 @@ variable [AddCommMonoidₓ E] [Module 𝕜 E] [TopologicalSpace E]
 theorem dual_pairing_apply (v : E →L[𝕜] 𝕜) (x : E) : topDualPairing 𝕜 E v x = v x :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler module 𝕜
+-- ./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler module 𝕜
 /-- The weak star topology is the topology coarsest topology on `E →L[𝕜] 𝕜` such that all
 functionals `λ v, top_dual_pairing 𝕜 E v x` are continuous. -/
 def WeakDual (𝕜 E) [CommSemiringₓ 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜] [HasContinuousConstSmul 𝕜 𝕜]
     [AddCommMonoidₓ E] [Module 𝕜 E] [TopologicalSpace E] :=
   WeakBilin (topDualPairing 𝕜 E)deriving AddCommMonoidₓ,
-  «./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler module 𝕜», TopologicalSpace,
+  «./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler module 𝕜», TopologicalSpace,
   HasContinuousAdd
 
 namespace WeakDual
@@ -223,13 +224,13 @@ instance module' (R) [Semiringₓ R] [Module R 𝕜] [SmulCommClass 𝕜 R 𝕜]
 
 instance (M) [Monoidₓ M] [DistribMulAction M 𝕜] [SmulCommClass 𝕜 M 𝕜] [HasContinuousConstSmul M 𝕜] :
     HasContinuousConstSmul M (WeakDual 𝕜 E) :=
-  ⟨fun m => continuous_induced_rng <| (WeakBilin.coe_fn_continuous (topDualPairing 𝕜 E)).const_smul m⟩
+  ⟨fun m => continuous_induced_rng.2 <| (WeakBilin.coe_fn_continuous (topDualPairing 𝕜 E)).const_smul m⟩
 
 /-- If a monoid `M` distributively continuously acts on `𝕜` and this action commutes with
 multiplication on `𝕜`, then it continuously acts on `weak_dual 𝕜 E`. -/
 instance (M) [Monoidₓ M] [DistribMulAction M 𝕜] [SmulCommClass 𝕜 M 𝕜] [TopologicalSpace M] [HasContinuousSmul M 𝕜] :
     HasContinuousSmul M (WeakDual 𝕜 E) :=
-  ⟨continuous_induced_rng <|
+  ⟨continuous_induced_rng.2 <|
       continuous_fst.smul ((WeakBilin.coe_fn_continuous (topDualPairing 𝕜 E)).comp continuous_snd)⟩
 
 theorem coe_fn_continuous : Continuous fun (x : WeakDual 𝕜 E) y => x y :=
@@ -240,18 +241,18 @@ theorem eval_continuous (y : E) : Continuous fun x : WeakDual 𝕜 E => x y :=
 
 theorem continuous_of_continuous_eval [TopologicalSpace α] {g : α → WeakDual 𝕜 E}
     (h : ∀ y, Continuous fun a => (g a) y) : Continuous g :=
-  continuous_induced_rng (continuous_pi_iff.mpr h)
+  continuous_induced_rng.2 (continuous_pi_iff.mpr h)
 
 end WeakDual
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler module 𝕜
+-- ./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler module 𝕜
 /-- The weak topology is the topology coarsest topology on `E` such that all
 functionals `λ x, top_dual_pairing 𝕜 E v x` are continuous. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def WeakSpace (𝕜 E) [CommSemiringₓ 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜] [HasContinuousConstSmul 𝕜 𝕜]
     [AddCommMonoidₓ E] [Module 𝕜 E] [TopologicalSpace E] :=
   WeakBilin (topDualPairing 𝕜 E).flip deriving AddCommMonoidₓ,
-  «./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler module 𝕜», TopologicalSpace,
+  «./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler module 𝕜», TopologicalSpace,
   HasContinuousAdd
 
 theorem tendsto_iff_forall_eval_tendsto_top_dual_pairing {l : Filter α} {f : α → WeakDual 𝕜 E} {x : WeakDual 𝕜 E} :

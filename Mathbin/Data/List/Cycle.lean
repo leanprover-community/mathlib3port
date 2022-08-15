@@ -516,7 +516,7 @@ instance : Inhabited (Cycle α) :=
   ⟨nil⟩
 
 /-- An induction principle for `cycle`. Use as `induction s using cycle.induction_on`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction_on {C : Cycle α → Prop} (s : Cycle α) (H0 : C nil) (HI : ∀ (a) (l : List α), C ↑l → C ↑(a :: l)) :
     C s :=
   (Quotientₓ.induction_on' s) fun l => by
@@ -970,12 +970,12 @@ theorem chain_of_pairwise : (∀, ∀ a ∈ s, ∀, ∀ b ∈ s, ∀, r a b) →
     exact hs b (Hl hb) a Ha
     
 
-theorem chain_iff_pairwise (hr : Transitive r) : Chain r s ↔ ∀, ∀ a ∈ s, ∀, ∀ b ∈ s, ∀, r a b :=
+theorem chain_iff_pairwise [IsTrans α r] : Chain r s ↔ ∀, ∀ a ∈ s, ∀, ∀ b ∈ s, ∀, r a b :=
   ⟨by
     induction' s using Cycle.induction_on with a l _
     exact fun _ b hb => hb.elim
     intro hs b hb c hc
-    rw [Cycle.chain_coe_cons, chain_iff_pairwise hr] at hs
+    rw [Cycle.chain_coe_cons, chain_iff_pairwise] at hs
     simp only [← pairwise_append, ← pairwise_cons, ← mem_append, ← mem_singleton, ← List.not_mem_nilₓ, ←
       IsEmpty.forall_iff, ← implies_true_iff, ← pairwise.nil, ← forall_eq, ← true_andₓ] at hs
     simp only [← mem_coe_iff, ← mem_cons_iff] at hb hc
@@ -986,14 +986,14 @@ theorem chain_iff_pairwise (hr : Transitive r) : Chain r s ↔ ∀, ∀ a ∈ s,
       
     · exact hs.2.2 b hb
       
-    · exact hr (hs.2.2 b hb) (hs.1 c (Or.inl hc))
+    · exact trans (hs.2.2 b hb) (hs.1 c (Or.inl hc))
       ,
     Cycle.chain_of_pairwise⟩
 
-theorem forall_eq_of_chain (hr : Transitive r) (hr' : AntiSymmetric r) (hs : Chain r s) {a b : α} (ha : a ∈ s)
-    (hb : b ∈ s) : a = b := by
-  rw [chain_iff_pairwise hr] at hs
-  exact hr' (hs a ha b hb) (hs b hb a ha)
+theorem forall_eq_of_chain [IsTrans α r] [IsAntisymm α r] (hs : Chain r s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) :
+    a = b := by
+  rw [chain_iff_pairwise] at hs
+  exact antisymm (hs a ha b hb) (hs b hb a ha)
 
 end Cycle
 

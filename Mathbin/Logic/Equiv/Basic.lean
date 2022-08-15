@@ -766,9 +766,31 @@ def punitProd (α : Type _) : PUnit.{u + 1} × α ≃ α :=
 def prodUnique (α β : Type _) [Unique β] : α × β ≃ α :=
   ((Equivₓ.refl α).prodCongr <| equivPunit β).trans <| prodPunit α
 
+@[simp]
+theorem coe_prod_unique {α β : Type _} [Unique β] : ⇑(prodUnique α β) = Prod.fst :=
+  rfl
+
+theorem prod_unique_apply {α β : Type _} [Unique β] (x : α × β) : prodUnique α β x = x.1 :=
+  rfl
+
+@[simp]
+theorem prod_unique_symm_apply {α β : Type _} [Unique β] (x : α) : (prodUnique α β).symm x = (x, default) :=
+  rfl
+
 /-- Any `unique` type is a left identity for type product up to equivalence. -/
 def uniqueProd (α β : Type _) [Unique β] : β × α ≃ α :=
   ((equivPunit β).prodCongr <| Equivₓ.refl α).trans <| punitProd α
+
+@[simp]
+theorem coe_unique_prod {α β : Type _} [Unique β] : ⇑(uniqueProd α β) = Prod.snd :=
+  rfl
+
+theorem unique_prod_apply {α β : Type _} [Unique β] (x : β × α) : uniqueProd α β x = x.2 :=
+  rfl
+
+@[simp]
+theorem unique_prod_symm_apply {α β : Type _} [Unique β] (x : α) : (uniqueProd α β).symm x = (default, x) :=
+  rfl
 
 /-- `empty` type is a right absorbing element for type product up to an equivalence. -/
 def prodEmpty (α : Type _) : α × Empty ≃ Empty :=
@@ -871,7 +893,7 @@ end Perm
 
 /-- `bool` is equivalent the sum of two `punit`s. -/
 def boolEquivPunitSumPunit : Bool ≃ Sum PUnit.{u + 1} PUnit.{v + 1} :=
-  ⟨fun b => cond b (inr PUnit.unit) (inl PUnit.unit), fun s => Sum.recOn s (fun _ => false) fun _ => true, fun b => by
+  ⟨fun b => cond b (inr PUnit.unit) (inl PUnit.unit), Sum.elim (fun _ => false) fun _ => true, fun b => by
     cases b <;> rfl, fun s => by
     rcases s with (⟨⟨⟩⟩ | ⟨⟨⟩⟩) <;> rfl⟩
 
@@ -1303,10 +1325,11 @@ end Perm
 @[simps apply]
 def sigmaCongrLeft {α₁ α₂} {β : α₂ → Sort _} (e : α₁ ≃ α₂) : (Σa : α₁, β (e a)) ≃ Σa : α₂, β a :=
   ⟨fun a => ⟨e a.1, a.2⟩, fun a => ⟨e.symm a.1, @Eq.ndrec β a.2 (e.right_inv a.1).symm⟩, fun ⟨a, b⟩ =>
-    match e.symm (e a), e.left_inv a with
+    match (motive := ∀ (a') (h : a' = a), @Sigma.mk _ (β ∘ e) _ (@Eq.ndrec β b (congr_arg e h.symm)) = ⟨a, b⟩)
+      e.symm (e a), e.left_inv a with
     | _, rfl => rfl,
     fun ⟨a, b⟩ =>
-    match e (e.symm a), _ with
+    match (motive := ∀ (a') (h : a' = a), Sigma.mk a' (@Eq.ndrec β b h.symm) = ⟨a, b⟩) e (e.symm a), _ with
     | _, rfl => rfl⟩
 
 /-- Transporting a sigma type through an equivalence of the base -/
@@ -1586,12 +1609,14 @@ def sigmaNatSucc (f : ℕ → Type u) : (Σn, f n) ≃ Sum (f 0) (Σn, f (n + 1)
     rintro (x | ⟨n, x⟩) <;> rfl⟩
 
 /-- The product `bool × α` is equivalent to `α ⊕ α`. -/
-def boolProdEquivSum (α : Type u) : Bool × α ≃ Sum α α :=
-  calc
-    Bool × α ≃ Sum Unit Unit × α := prodCongr boolEquivPunitSumPunit (Equivₓ.refl _)
-    _ ≃ Sum (Unit × α) (Unit × α) := sumProdDistrib _ _ _
-    _ ≃ Sum α α := sumCongr (punitProd _) (punitProd _)
-    
+@[simps]
+def boolProdEquivSum (α : Type u) : Bool × α ≃ Sum α α where
+  toFun := fun p => cond p.1 (inr p.2) (inl p.2)
+  invFun := Sum.elim (Prod.mk false) (Prod.mk true)
+  left_inv := by
+    rintro ⟨_ | _, _⟩ <;> rfl
+  right_inv := by
+    rintro (_ | _) <;> rfl
 
 /-- The function type `bool → α` is equivalent to `α × α`. -/
 @[simps]
@@ -1608,41 +1633,26 @@ section
 open Sum Nat
 
 /-- The set of natural numbers is equivalent to `ℕ ⊕ punit`. -/
-def natEquivNatSumPunit : ℕ ≃ Sum ℕ PUnit.{u + 1} :=
-  ⟨fun n =>
-    match n with
-    | zero => inr PUnit.unit
-    | succ a => inl a,
-    fun s =>
-    match s with
-    | inl n => succ n
-    | inr PUnit.unit => zero,
-    fun n => by
-    cases n
-    repeat'
-      rfl,
-    fun s => by
-    cases' s with a u
-    · rfl
-      
-    · cases u
-      · rfl
-        
-      ⟩
+def natEquivNatSumPunit : ℕ ≃ Sum ℕ PUnit.{u + 1} where
+  toFun := fun n => Nat.casesOn n (inr PUnit.unit) inl
+  invFun := Sum.elim Nat.succ fun _ => 0
+  left_inv := fun n => by
+    cases n <;> rfl
+  right_inv := by
+    rintro (_ | _ | _) <;> rfl
 
 /-- `ℕ ⊕ punit` is equivalent to `ℕ`. -/
 def natSumPunitEquivNat : Sum ℕ PUnit.{u + 1} ≃ ℕ :=
   natEquivNatSumPunit.symm
 
 /-- The type of integer numbers is equivalent to `ℕ ⊕ ℕ`. -/
-def intEquivNatSumNat : ℤ ≃ Sum ℕ ℕ := by
-  refine' ⟨_, _, _, _⟩ <;>
-    intro z <;>
-      first |
-        · cases z <;> [left, right] <;> assumption
-          |
-        · cases z <;> rfl
-          
+def intEquivNatSumNat : ℤ ≃ Sum ℕ ℕ where
+  toFun := fun z => Int.casesOn z inl inr
+  invFun := Sum.elim coe Int.negSucc
+  left_inv := by
+    rintro (m | n) <;> rfl
+  right_inv := by
+    rintro (m | n) <;> rfl
 
 end
 

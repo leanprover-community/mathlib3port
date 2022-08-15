@@ -308,9 +308,12 @@ instance [CompleteSpace β] : CompleteSpace (α →ᵇ β) :=
     · -- Check that `F` is bounded
       rcases(f 0).Bounded with ⟨C, hC⟩
       refine' ⟨C + (b 0 + b 0), fun x y => _⟩
-      calc dist (F x) (F y) ≤ dist (f 0 x) (f 0 y) + (dist (f 0 x) (F x) + dist (f 0 y) (F y)) :=
-          dist_triangle4_left _ _ _ _ _ ≤ C + (b 0 + b 0) := by
+      calc
+        dist (F x) (F y) ≤ dist (f 0 x) (f 0 y) + (dist (f 0 x) (F x) + dist (f 0 y) (F y)) :=
+          dist_triangle4_left _ _ _ _
+        _ ≤ C + (b 0 + b 0) := by
           mono*
+        
       
     · -- Check that `F` is close to `f N` in distance terms
       refine' tendsto_iff_dist_tendsto_zero.2 (squeeze_zero (fun _ => dist_nonneg) _ b_lim)
@@ -410,9 +413,11 @@ theorem dist_extend_extend (f : α ↪ δ) (g₁ g₂ : α →ᵇ β) (h₁ h₂
       
     · simp only [← extend_apply' hx]
       lift x to (range fᶜ : Set δ) using hx
-      calc dist (h₁ x) (h₂ x) = dist (h₁.restrict (range fᶜ) x) (h₂.restrict (range fᶜ) x) :=
-          rfl _ ≤ dist (h₁.restrict (range fᶜ)) (h₂.restrict (range fᶜ)) := dist_coe_le_dist x _ ≤ _ :=
-          le_max_rightₓ _ _
+      calc
+        dist (h₁ x) (h₂ x) = dist (h₁.restrict (range fᶜ) x) (h₂.restrict (range fᶜ) x) := rfl
+        _ ≤ dist (h₁.restrict (range fᶜ)) (h₂.restrict (range fᶜ)) := dist_coe_le_dist x
+        _ ≤ _ := le_max_rightₓ _ _
+        
       
     
   · refine' (dist_le dist_nonneg).2 fun x => _
@@ -420,12 +425,15 @@ theorem dist_extend_extend (f : α ↪ δ) (g₁ g₂ : α →ᵇ β) (h₁ h₂
     exact dist_coe_le_dist _
     
   · refine' (dist_le dist_nonneg).2 fun x => _
-    calc dist (h₁ x) (h₂ x) = dist (extend f g₁ h₁ x) (extend f g₂ h₂ x) := by
-        rw [extend_apply' x.coe_prop, extend_apply' x.coe_prop]_ ≤ _ := dist_coe_le_dist _
+    calc
+      dist (h₁ x) (h₂ x) = dist (extend f g₁ h₁ x) (extend f g₂ h₂ x) := by
+        rw [extend_apply' x.coe_prop, extend_apply' x.coe_prop]
+      _ ≤ _ := dist_coe_le_dist _
+      
     
 
 theorem isometry_extend (f : α ↪ δ) (h : δ →ᵇ β) : Isometry fun g : α →ᵇ β => extend f g h :=
-  isometry_emetric_iff_metric.2 fun g₁ g₂ => by
+  Isometry.of_dist_eq fun g₁ g₂ => by
     simp [← dist_nonneg]
 
 end Extend
@@ -438,8 +446,8 @@ variable [TopologicalSpace α] [CompactSpace α] [PseudoMetricSpace β]
 
 variable {f g : α →ᵇ β} {x : α} {C : ℝ}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y z «expr ∈ » U)
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y z «expr ∈ » U)
 /-- First version, with pointwise equicontinuity and range in a compact space -/
 /- Arzela-Ascoli theorem asserts that, on a compact space, a set of functions sharing
 a common modulus of continuity and taking values in a compact set forms a compact
@@ -490,20 +498,27 @@ theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : Is
   -- If two functions have the same approximation, then they are within distance ε
   refine' lt_of_le_of_ltₓ ((dist_le <| le_of_ltₓ ε₁0).2 fun x => _) εε₁
   obtain ⟨x', x'tα, hx'⟩ : ∃ x' ∈ tα, x ∈ U x' := mem_Union₂.1 (htα (mem_univ x))
-  calc dist (f x) (g x) ≤ dist (f x) (f x') + dist (g x) (g x') + dist (f x') (g x') :=
-      dist_triangle4_right _ _ _ _ _ ≤ ε₂ + ε₂ + ε₁ / 2 := le_of_ltₓ (add_lt_add (add_lt_add _ _) _)_ = ε₁ := by
+  calc
+    dist (f x) (g x) ≤ dist (f x) (f x') + dist (g x) (g x') + dist (f x') (g x') := dist_triangle4_right _ _ _ _
+    _ ≤ ε₂ + ε₂ + ε₁ / 2 := le_of_ltₓ (add_lt_add (add_lt_add _ _) _)
+    _ = ε₁ := by
       rw [add_halves, add_halves]
+    
   · exact (hU x').2.2 _ hx' _ (hU x').1 hf
     
   · exact (hU x').2.2 _ hx' _ (hU x').1 hg
     
   · have F_f_g : F (f x') = F (g x') := (congr_arg (fun f : tα → tβ => (f ⟨x', x'tα⟩ : β)) f_eq_g : _)
-    calc dist (f x') (g x') ≤ dist (f x') (F (f x')) + dist (g x') (F (f x')) :=
-        dist_triangle_right _ _ _ _ = dist (f x') (F (f x')) + dist (g x') (F (g x')) := by
-        rw [F_f_g]_ < ε₂ + ε₂ := add_lt_add (hF (f x')).2 (hF (g x')).2_ = ε₁ / 2 := add_halves _
+    calc
+      dist (f x') (g x') ≤ dist (f x') (F (f x')) + dist (g x') (F (f x')) := dist_triangle_right _ _ _
+      _ = dist (f x') (F (f x')) + dist (g x') (F (g x')) := by
+        rw [F_f_g]
+      _ < ε₂ + ε₂ := add_lt_add (hF (f x')).2 (hF (g x')).2
+      _ = ε₁ / 2 := add_halves _
+      
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y z «expr ∈ » U)
 /-- Second version, with pointwise equicontinuity and range in a compact subset -/
 theorem arzela_ascoli₂ (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)) (closed : IsClosed A)
     (in_s : ∀ (f : α →ᵇ β) (x : α), f ∈ A → f x ∈ s)
@@ -514,11 +529,14 @@ theorem arzela_ascoli₂ (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)
   have M : LipschitzWith 1 coe := LipschitzWith.subtype_coe s
   let F : (α →ᵇ s) → α →ᵇ β := comp coe M
   refine' compact_of_is_closed_subset ((_ : IsCompact (F ⁻¹' A)).Image (continuous_comp M)) closed fun f hf => _
-  · have : CompactSpace s := is_compact_iff_compact_space.1 hs
+  · haveI : CompactSpace s := is_compact_iff_compact_space.1 hs
     refine'
       arzela_ascoli₁ _ (continuous_iff_is_closed.1 (continuous_comp M) _ closed) fun x ε ε0 =>
         Bex.imp_right (fun U U_nhds hU y hy z hz f hf => _) (H x ε ε0)
-    calc dist (f y) (f z) = dist (F f y) (F f z) := rfl _ < ε := hU y hy z hz (F f) hf
+    calc
+      dist (f y) (f z) = dist (F f y) (F f z) := rfl
+      _ < ε := hU y hy z hz (F f) hf
+      
     
   · let g := cod_restrict s f fun x => in_s f x hf
     rw
@@ -528,8 +546,8 @@ theorem arzela_ascoli₂ (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)
     exact ⟨g, hf, rfl⟩
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y z «expr ∈ » U)
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y z «expr ∈ » U)
 /-- Third (main) version, with pointwise equicontinuity and range in a compact subset, but
 without closedness. The closure is then compact -/
 theorem arzela_ascoli [T2Space β] (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β))
@@ -549,12 +567,14 @@ theorem arzela_ascoli [T2Space β] (s : Set β) (hs : IsCompact s) (A : Set (α 
       refine' Bex.imp_right (fun U U_set hU y hy z hz f hf => _) (H x (ε / 2) (half_pos ε0))
       rcases Metric.mem_closure_iff.1 hf (ε / 2 / 2) (half_pos (half_pos ε0)) with ⟨g, gA, dist_fg⟩
       replace dist_fg := fun x => lt_of_le_of_ltₓ (dist_coe_le_dist x) dist_fg
-      calc dist (f y) (f z) ≤ dist (f y) (g y) + dist (f z) (g z) + dist (g y) (g z) :=
-          dist_triangle4_right _ _ _ _ _ < ε / 2 / 2 + ε / 2 / 2 + ε / 2 :=
-          add_lt_add (add_lt_add (dist_fg y) (dist_fg z)) (hU y hy z hz g gA)_ = ε := by
+      calc
+        dist (f y) (f z) ≤ dist (f y) (g y) + dist (f z) (g z) + dist (g y) (g z) := dist_triangle4_right _ _ _ _
+        _ < ε / 2 / 2 + ε / 2 / 2 + ε / 2 := add_lt_add (add_lt_add (dist_fg y) (dist_fg z)) (hU y hy z hz g gA)
+        _ = ε := by
           rw [add_halves, add_halves]
+        
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y z «expr ∈ » U)
 /- To apply the previous theorems, one needs to check the equicontinuity. An important
 instance is when the source space is a metric space, and there is a fixed modulus of continuity
 for all the functions in the set A -/
@@ -570,12 +590,16 @@ theorem equicontinuous_of_continuity_modulus {α : Type u} [PseudoMetricSpace α
       _ < δ / 2 + δ / 2 := add_lt_add hy hz
       _ = δ := add_halves _
       
-  calc dist (f y) (f z) ≤ b (dist y z) := H y z f hf _ ≤ abs (b (dist y z)) :=
-      le_abs_self _ _ = dist (b (dist y z)) 0 := by
-      simp [← Real.dist_eq]_ < ε :=
+  calc
+    dist (f y) (f z) ≤ b (dist y z) := H y z f hf
+    _ ≤ abs (b (dist y z)) := le_abs_self _
+    _ = dist (b (dist y z)) 0 := by
+      simp [← Real.dist_eq]
+    _ < ε :=
       hδ
         (by
           simpa [← Real.dist_eq] using this)
+    
 
 end ArzelaAscoli
 
@@ -690,7 +714,8 @@ instance :
       refine' mul_le_mul_of_nonneg_left _ C_nonneg
       apply max_le_max <;> exact dist_coe_le_dist x⟩
 
-/-- Coercion of a `normed_group_hom` is an `add_monoid_hom`. Similar to `add_monoid_hom.coe_fn` -/
+/-- Coercion of a `normed_add_group_hom` is an `add_monoid_hom`. Similar to
+`add_monoid_hom.coe_fn`. -/
 @[simps]
 def coeFnAddHom : (α →ᵇ β) →+ α → β where
   toFun := coeFn
@@ -735,12 +760,12 @@ theorem sum_apply {ι : Type _} (s : Finset ι) (f : ι → α →ᵇ β) (a : �
 
 end CommHasLipschitzAdd
 
-section NormedGroup
+section NormedAddCommGroup
 
 /- In this section, if β is a normed group, then we show that the space of bounded
 continuous functions from α to β inherits a normed group structure, by using
 pointwise operations and checking that they are compatible with the uniform distance. -/
-variable [TopologicalSpace α] [SemiNormedGroup β]
+variable [TopologicalSpace α] [SeminormedAddCommGroup β]
 
 variable (f g : α →ᵇ β) {x : α} {C : ℝ}
 
@@ -819,32 +844,33 @@ theorem norm_const_eq [h : Nonempty α] (b : β) : ∥const α b∥ = ∥b∥ :=
 
 /-- Constructing a bounded continuous function from a uniformly bounded continuous
 function taking values in a normed group. -/
-def ofNormedGroup {α : Type u} {β : Type v} [TopologicalSpace α] [SemiNormedGroup β] (f : α → β) (Hf : Continuous f)
-    (C : ℝ) (H : ∀ x, ∥f x∥ ≤ C) : α →ᵇ β :=
+def ofNormedAddCommGroup {α : Type u} {β : Type v} [TopologicalSpace α] [SeminormedAddCommGroup β] (f : α → β)
+    (Hf : Continuous f) (C : ℝ) (H : ∀ x, ∥f x∥ ≤ C) : α →ᵇ β :=
   ⟨⟨fun n => f n, Hf⟩, ⟨_, dist_le_two_norm' H⟩⟩
 
 @[simp]
-theorem coe_of_normed_group {α : Type u} {β : Type v} [TopologicalSpace α] [SemiNormedGroup β] (f : α → β)
-    (Hf : Continuous f) (C : ℝ) (H : ∀ x, ∥f x∥ ≤ C) : (ofNormedGroup f Hf C H : α → β) = f :=
+theorem coe_of_normed_add_comm_group {α : Type u} {β : Type v} [TopologicalSpace α] [SeminormedAddCommGroup β]
+    (f : α → β) (Hf : Continuous f) (C : ℝ) (H : ∀ x, ∥f x∥ ≤ C) : (ofNormedAddCommGroup f Hf C H : α → β) = f :=
   rfl
 
-theorem norm_of_normed_group_le {f : α → β} (hfc : Continuous f) {C : ℝ} (hC : 0 ≤ C) (hfC : ∀ x, ∥f x∥ ≤ C) :
-    ∥ofNormedGroup f hfc C hfC∥ ≤ C :=
+theorem norm_of_normed_add_comm_group_le {f : α → β} (hfc : Continuous f) {C : ℝ} (hC : 0 ≤ C) (hfC : ∀ x, ∥f x∥ ≤ C) :
+    ∥ofNormedAddCommGroup f hfc C hfC∥ ≤ C :=
   (norm_le hC).2 hfC
 
 /-- Constructing a bounded continuous function from a uniformly bounded
 function on a discrete space, taking values in a normed group -/
-def ofNormedGroupDiscrete {α : Type u} {β : Type v} [TopologicalSpace α] [DiscreteTopology α] [SemiNormedGroup β]
-    (f : α → β) (C : ℝ) (H : ∀ x, norm (f x) ≤ C) : α →ᵇ β :=
-  ofNormedGroup f continuous_of_discrete_topology C H
+def ofNormedAddCommGroupDiscrete {α : Type u} {β : Type v} [TopologicalSpace α] [DiscreteTopology α]
+    [SeminormedAddCommGroup β] (f : α → β) (C : ℝ) (H : ∀ x, norm (f x) ≤ C) : α →ᵇ β :=
+  ofNormedAddCommGroup f continuous_of_discrete_topology C H
 
 @[simp]
-theorem coe_of_normed_group_discrete {α : Type u} {β : Type v} [TopologicalSpace α] [DiscreteTopology α]
-    [SemiNormedGroup β] (f : α → β) (C : ℝ) (H : ∀ x, ∥f x∥ ≤ C) : (ofNormedGroupDiscrete f C H : α → β) = f :=
+theorem coe_of_normed_add_comm_group_discrete {α : Type u} {β : Type v} [TopologicalSpace α] [DiscreteTopology α]
+    [SeminormedAddCommGroup β] (f : α → β) (C : ℝ) (H : ∀ x, ∥f x∥ ≤ C) :
+    (ofNormedAddCommGroupDiscrete f C H : α → β) = f :=
   rfl
 
-/-- Taking the pointwise norm of a bounded continuous function with values in a `semi_normed_group`,
-yields a bounded continuous function with values in ℝ. -/
+/-- Taking the pointwise norm of a bounded continuous function with values in a
+`seminormed_add_comm_group` yields a bounded continuous function with values in ℝ. -/
 def normComp : α →ᵇ ℝ :=
   f.comp norm lipschitz_with_one_norm
 
@@ -864,12 +890,13 @@ theorem norm_eq_supr_norm : ∥f∥ = ⨆ x : α, ∥f x∥ := by
 
 /-- The pointwise opposite of a bounded continuous function is again bounded continuous. -/
 instance : Neg (α →ᵇ β) :=
-  ⟨fun f => (ofNormedGroup (-f) f.Continuous.neg ∥f∥) fun x => trans_rel_right _ (norm_neg _) (f.norm_coe_le_norm x)⟩
+  ⟨fun f =>
+    (ofNormedAddCommGroup (-f) f.Continuous.neg ∥f∥) fun x => trans_rel_right _ (norm_neg _) (f.norm_coe_le_norm x)⟩
 
 /-- The pointwise difference of two bounded continuous functions is again bounded continuous. -/
 instance : Sub (α →ᵇ β) :=
   ⟨fun f g =>
-    (ofNormedGroup (f - g) (f.Continuous.sub g.Continuous) (∥f∥ + ∥g∥)) fun x => by
+    (ofNormedAddCommGroup (f - g) (f.Continuous.sub g.Continuous) (∥f∥ + ∥g∥)) fun x => by
       simp only [← sub_eq_add_neg]
       exact
         le_transₓ (norm_add_le _ _)
@@ -923,11 +950,11 @@ instance : AddCommGroupₓ (α →ᵇ β) :=
     coe_zsmul _ _
 
 instance :
-    SemiNormedGroup (α →ᵇ β) where dist_eq := fun f g => by
+    SeminormedAddCommGroup (α →ᵇ β) where dist_eq := fun f g => by
     simp only [← norm_eq, ← dist_eq, ← dist_eq_norm, ← sub_apply]
 
-instance {α β} [TopologicalSpace α] [NormedGroup β] : NormedGroup (α →ᵇ β) :=
-  { BoundedContinuousFunction.semiNormedGroup with }
+instance {α β} [TopologicalSpace α] [NormedAddCommGroup β] : NormedAddCommGroup (α →ᵇ β) :=
+  { BoundedContinuousFunction.seminormedAddCommGroup with }
 
 theorem nnnorm_def : ∥f∥₊ = nndist f 0 :=
   rfl
@@ -965,7 +992,7 @@ theorem norm_comp_continuous_le [TopologicalSpace γ] (f : α →ᵇ β) (g : C(
   ((lipschitz_comp_continuous g).dist_le_mul f 0).trans <| by
     rw [Nnreal.coe_one, one_mulₓ, dist_zero_right]
 
-end NormedGroup
+end NormedAddCommGroup
 
 section HasBoundedSmul
 
@@ -1090,18 +1117,18 @@ pointwise operations and checking that they are compatible with the uniform dist
 
 variable {𝕜 : Type _}
 
-variable [TopologicalSpace α] [SemiNormedGroup β]
+variable [TopologicalSpace α] [SeminormedAddCommGroup β]
 
 variable {f g : α →ᵇ β} {x : α} {C : ℝ}
 
 instance [NormedField 𝕜] [NormedSpace 𝕜 β] : NormedSpace 𝕜 (α →ᵇ β) :=
   ⟨fun c f => by
-    refine' norm_of_normed_group_le _ (mul_nonneg (norm_nonneg _) (norm_nonneg _)) _
+    refine' norm_of_normed_add_comm_group_le _ (mul_nonneg (norm_nonneg _) (norm_nonneg _)) _
     exact fun x => trans_rel_right _ (norm_smul _ _) (mul_le_mul_of_nonneg_left (f.norm_coe_le_norm _) (norm_nonneg _))⟩
 
-variable [NondiscreteNormedField 𝕜] [NormedSpace 𝕜 β]
+variable [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 β]
 
-variable [SemiNormedGroup γ] [NormedSpace 𝕜 γ]
+variable [SeminormedAddCommGroup γ] [NormedSpace 𝕜 γ]
 
 variable (α)
 
@@ -1113,13 +1140,13 @@ Upgraded version of `continuous_linear_map.comp_left_continuous`, similar to
 protected def _root_.continuous_linear_map.comp_left_continuous_bounded (g : β →L[𝕜] γ) : (α →ᵇ β) →L[𝕜] α →ᵇ γ :=
   LinearMap.mkContinuous
     { toFun := fun f =>
-        ofNormedGroup (g ∘ f) (g.Continuous.comp f.Continuous) (∥g∥ * ∥f∥) fun x =>
+        ofNormedAddCommGroup (g ∘ f) (g.Continuous.comp f.Continuous) (∥g∥ * ∥f∥) fun x =>
           g.le_op_norm_of_le (f.norm_coe_le_norm x),
       map_add' := fun f g => by
         ext <;> simp ,
       map_smul' := fun c f => by
         ext <;> simp }
-    ∥g∥ fun f => norm_of_normed_group_le _ (mul_nonneg (norm_nonneg g) (norm_nonneg f)) _
+    ∥g∥ fun f => norm_of_normed_add_comm_group_le _ (mul_nonneg (norm_nonneg g) (norm_nonneg f)) _
 
 @[simp]
 theorem _root_.continuous_linear_map.comp_left_continuous_bounded_apply (g : β →L[𝕜] γ) (f : α →ᵇ β) (x : α) :
@@ -1150,7 +1177,7 @@ instance :
     Mul
       (α →ᵇ
         R) where mul := fun f g =>
-    (ofNormedGroup (f * g) (f.Continuous.mul g.Continuous) (∥f∥ * ∥g∥)) fun x =>
+    (ofNormedAddCommGroup (f * g) (f.Continuous.mul g.Continuous) (∥f∥ * ∥g∥)) fun x =>
       le_transₓ (norm_mul_le (f x) (g x)) <|
         mul_le_mul (f.norm_coe_le_norm x) (g.norm_coe_le_norm x) (norm_nonneg _) (norm_nonneg _)
 
@@ -1166,13 +1193,13 @@ instance : NonUnitalRing (α →ᵇ R) :=
     coe_zsmul _ _
 
 instance : NonUnitalSemiNormedRing (α →ᵇ R) :=
-  { BoundedContinuousFunction.semiNormedGroup with
-    norm_mul := fun f g => norm_of_normed_group_le _ (mul_nonneg (norm_nonneg _) (norm_nonneg _)) _ }
+  { BoundedContinuousFunction.seminormedAddCommGroup with
+    norm_mul := fun f g => norm_of_normed_add_comm_group_le _ (mul_nonneg (norm_nonneg _) (norm_nonneg _)) _ }
 
 end SemiNormed
 
 instance [NonUnitalNormedRing R] : NonUnitalNormedRing (α →ᵇ R) :=
-  { BoundedContinuousFunction.nonUnitalSemiNormedRing, BoundedContinuousFunction.normedGroup with }
+  { BoundedContinuousFunction.nonUnitalSemiNormedRing, BoundedContinuousFunction.normedAddCommGroup with }
 
 end NonUnital
 
@@ -1245,10 +1272,10 @@ instance [SemiNormedCommRing R] : CommRingₓ (α →ᵇ R) :=
   { BoundedContinuousFunction.ring with mul_comm := fun f₁ f₂ => ext fun x => mul_comm _ _ }
 
 instance [SemiNormedCommRing R] : SemiNormedCommRing (α →ᵇ R) :=
-  { BoundedContinuousFunction.commRing, BoundedContinuousFunction.semiNormedGroup with }
+  { BoundedContinuousFunction.commRing, BoundedContinuousFunction.seminormedAddCommGroup with }
 
 instance [NormedCommRing R] : NormedCommRing (α →ᵇ R) :=
-  { BoundedContinuousFunction.commRing, BoundedContinuousFunction.normedGroup with }
+  { BoundedContinuousFunction.commRing, BoundedContinuousFunction.normedAddCommGroup with }
 
 end NormedCommRing
 
@@ -1264,7 +1291,7 @@ pointwise operations and checking that they are compatible with the uniform dist
 
 variable {𝕜 : Type _} [NormedField 𝕜]
 
-variable [TopologicalSpace α] [SemiNormedGroup β] [NormedSpace 𝕜 β]
+variable [TopologicalSpace α] [SeminormedAddCommGroup β] [NormedSpace 𝕜 β]
 
 variable [NormedRing γ] [NormedAlgebra 𝕜 γ]
 
@@ -1301,7 +1328,7 @@ functions from `α` to `𝕜`. -/
 
 instance hasSmul' : HasSmul (α →ᵇ 𝕜) (α →ᵇ β) :=
   ⟨fun (f : α →ᵇ 𝕜) (g : α →ᵇ β) =>
-    ofNormedGroup (fun x => f x • g x) (f.Continuous.smul g.Continuous) (∥f∥ * ∥g∥) fun x =>
+    ofNormedAddCommGroup (fun x => f x • g x) (f.Continuous.smul g.Continuous) (∥f∥ * ∥g∥) fun x =>
       calc
         ∥f x • g x∥ ≤ ∥f x∥ * ∥g x∥ := NormedSpace.norm_smul_le _ _
         _ ≤ ∥f∥ * ∥g∥ := mul_le_mul (f.norm_coe_le_norm _) (g.norm_coe_le_norm _) (norm_nonneg _) (norm_nonneg _)
@@ -1314,7 +1341,7 @@ instance module' : Module (α →ᵇ 𝕜) (α →ᵇ β) :=
       one_smul := fun f => ext fun x => one_smul 𝕜 (f x) }
 
 theorem norm_smul_le (f : α →ᵇ 𝕜) (g : α →ᵇ β) : ∥f • g∥ ≤ ∥f∥ * ∥g∥ :=
-  norm_of_normed_group_le _ (mul_nonneg (norm_nonneg _) (norm_nonneg _)) _
+  norm_of_normed_add_comm_group_le _ (mul_nonneg (norm_nonneg _) (norm_nonneg _)) _
 
 /- TODO: When `normed_module` has been added to `normed_space.basic`, the above facts
 show that the space of bounded continuous functions from `α` to `β` is naturally a normed
@@ -1344,16 +1371,15 @@ completeness is guaranteed when `β` is complete (see
 `bounded_continuous_function.complete`). -/
 
 
-section NormedGroup
+section NormedAddCommGroup
 
-variable {𝕜 : Type _} [NormedField 𝕜] [StarRing 𝕜]
-
-variable [TopologicalSpace α] [SemiNormedGroup β] [StarAddMonoid β] [NormedStarGroup β]
+variable {𝕜 : Type _} [NormedField 𝕜] [StarRing 𝕜] [TopologicalSpace α] [SeminormedAddCommGroup β] [StarAddMonoid β]
+  [NormedStarGroup β]
 
 variable [NormedSpace 𝕜 β] [StarModule 𝕜 β]
 
 instance : StarAddMonoid (α →ᵇ β) where
-  star := fun f => f.comp star starNormedGroupHom.lipschitz
+  star := fun f => f.comp star starNormedAddGroupHom.lipschitz
   star_involutive := fun f => ext fun x => star_star (f x)
   star_add := fun f g => ext fun x => star_add (f x) (g x)
 
@@ -1373,7 +1399,7 @@ instance :
 
 instance : StarModule 𝕜 (α →ᵇ β) where star_smul := fun k f => ext fun x => star_smul k (f x)
 
-end NormedGroup
+end NormedAddCommGroup
 
 section CstarRing
 
@@ -1427,7 +1453,7 @@ instance : SemilatticeInf (α →ᵇ β) :=
           obtain ⟨C₁, hf⟩ := f.bounded
           obtain ⟨C₂, hg⟩ := g.bounded
           refine' ⟨C₁ + C₂, fun x y => _⟩
-          simp_rw [NormedGroup.dist_eq] at hf hg⊢
+          simp_rw [NormedAddCommGroup.dist_eq] at hf hg⊢
           exact (norm_inf_sub_inf_le_add_norm _ _ _ _).trans (add_le_add (hf _ _) (hg _ _)) },
     inf_le_left := fun f g => ContinuousMap.le_def.mpr fun _ => inf_le_left,
     inf_le_right := fun f g => ContinuousMap.le_def.mpr fun _ => inf_le_right,
@@ -1442,7 +1468,7 @@ instance : SemilatticeSup (α →ᵇ β) :=
           obtain ⟨C₁, hf⟩ := f.bounded
           obtain ⟨C₂, hg⟩ := g.bounded
           refine' ⟨C₁ + C₂, fun x y => _⟩
-          simp_rw [NormedGroup.dist_eq] at hf hg⊢
+          simp_rw [NormedAddCommGroup.dist_eq] at hf hg⊢
           exact (norm_sup_sub_sup_le_add_norm _ _ _ _).trans (add_le_add (hf _ _) (hg _ _)) },
     le_sup_left := fun f g => ContinuousMap.le_def.mpr fun _ => le_sup_left,
     le_sup_right := fun f g => ContinuousMap.le_def.mpr fun _ => le_sup_right,

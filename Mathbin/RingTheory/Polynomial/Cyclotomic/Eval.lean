@@ -28,8 +28,8 @@ open BigOperators
 @[simp]
 theorem eval_one_cyclotomic_prime {R : Type _} [CommRingₓ R] {p : ℕ} [hn : Fact p.Prime] :
     eval 1 (cyclotomic p R) = p := by
-  simp only [← cyclotomic_eq_geom_sum hn.out, ← eval_X, ← one_pow, ← sum_const, ← eval_pow, ← eval_finset_sum, ←
-    card_range, ← smul_one_eq_coe]
+  simp only [← cyclotomic_eq_geom_sum hn.out, ← eval_X, ← one_pow, ← Finset.sum_const, ← eval_pow, ← eval_finset_sum, ←
+    Finset.card_range, ← smul_one_eq_coe]
 
 @[simp]
 theorem eval₂_one_cyclotomic_prime {R S : Type _} [CommRingₓ R] [Semiringₓ S] (f : R →+* S) {p : ℕ} [Fact p.Prime] :
@@ -39,8 +39,8 @@ theorem eval₂_one_cyclotomic_prime {R S : Type _} [CommRingₓ R] [Semiringₓ
 @[simp]
 theorem eval_one_cyclotomic_prime_pow {R : Type _} [CommRingₓ R] {p : ℕ} (k : ℕ) [hn : Fact p.Prime] :
     eval 1 (cyclotomic (p ^ (k + 1)) R) = p := by
-  simp only [← cyclotomic_prime_pow_eq_geom_sum hn.out, ← eval_X, ← one_pow, ← sum_const, ← eval_pow, ← eval_finset_sum,
-    ← card_range, ← smul_one_eq_coe]
+  simp only [← cyclotomic_prime_pow_eq_geom_sum hn.out, ← eval_X, ← one_pow, ← Finset.sum_const, ← eval_pow, ←
+    eval_finset_sum, ← Finset.card_range, ← smul_one_eq_coe]
 
 @[simp]
 theorem eval₂_one_cyclotomic_prime_pow {R S : Type _} [CommRingₓ R] [Semiringₓ S] (f : R →+* S) {p : ℕ} (k : ℕ)
@@ -49,7 +49,7 @@ theorem eval₂_one_cyclotomic_prime_pow {R S : Type _} [CommRingₓ R] [Semirin
 
 private theorem cyclotomic_neg_one_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] :
     0 < eval (-1 : R) (cyclotomic n R) := by
-  have := NeZero.of_gt hn
+  haveI := NeZero.of_gt hn
   rw [← map_cyclotomic_int, ← Int.cast_oneₓ, ← Int.cast_neg, eval_int_cast_map, Int.coe_cast_ring_hom, Int.cast_pos]
   suffices 0 < eval (↑(-1 : ℤ)) (cyclotomic n ℝ) by
     rw [← map_cyclotomic_int n ℝ, eval_int_cast_map, Int.coe_cast_ring_hom] at this
@@ -74,20 +74,21 @@ theorem cyclotomic_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] (x :
   dsimp'  at ih
   have := prod_cyclotomic_eq_geom_sum hn' R
   apply_fun eval x  at this
-  rw [divisors_eq_proper_divisors_insert_self_of_pos hn', insert_sdiff_of_not_mem, prod_insert, eval_mul,
+  rw [divisors_eq_proper_divisors_insert_self_of_pos hn', Finset.insert_sdiff_of_not_mem, Finset.prod_insert, eval_mul,
     eval_geom_sum] at this
   rotate_left
-  · simp only [← lt_self_iff_false, ← mem_sdiff, ← not_false_iff, ← mem_proper_divisors, ← and_falseₓ, ← false_andₓ]
+  · simp only [← lt_self_iff_false, ← Finset.mem_sdiff, ← not_false_iff, ← mem_proper_divisors, ← and_falseₓ, ←
+      false_andₓ]
     
-  · simpa only [← mem_singleton] using hn''.ne'
+  · simpa only [← Finset.mem_singleton] using hn''.ne'
     
-  rcases lt_trichotomyₓ 0 (∑ i in range n, x ^ i) with (h | h | h)
+  rcases lt_trichotomyₓ 0 (∑ i in Finset.range n, x ^ i) with (h | h | h)
   · apply pos_of_mul_pos_left
     · rwa [this]
       
     rw [eval_prod]
-    refine' prod_nonneg fun i hi => _
-    simp only [← mem_sdiff, ← mem_proper_divisors, ← mem_singleton] at hi
+    refine' Finset.prod_nonneg fun i hi => _
+    simp only [← Finset.mem_sdiff, ← mem_proper_divisors, ← Finset.mem_singleton] at hi
     rw [geom_sum_pos_iff hn''] at h
     cases' h with hk hx
     · refine' (ih _ hi.1.2 (Nat.two_lt_of_ne _ hi.2 _)).le <;> rintro rfl
@@ -112,14 +113,14 @@ theorem cyclotomic_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] (x :
       
     rw [geom_sum_neg_iff hn''] at h
     have h2 : {2} ⊆ n.proper_divisors \ {1} := by
-      rw [singleton_subset_iff, mem_sdiff, mem_proper_divisors, not_mem_singleton]
+      rw [Finset.singleton_subset_iff, Finset.mem_sdiff, mem_proper_divisors, Finset.not_mem_singleton]
       exact ⟨⟨even_iff_two_dvd.mp h.1, hn⟩, (Nat.one_lt_bit0 one_ne_zero).ne'⟩
-    rw [eval_prod, ← prod_sdiff h2, prod_singleton] <;>
+    rw [eval_prod, ← Finset.prod_sdiff h2, Finset.prod_singleton] <;>
       try
         infer_instance
     apply mul_nonpos_of_nonneg_of_nonpos
-    · refine' prod_nonneg fun i hi => le_of_ltₓ _
-      simp only [← mem_sdiff, ← mem_proper_divisors, ← mem_singleton] at hi
+    · refine' Finset.prod_nonneg fun i hi => le_of_ltₓ _
+      simp only [← Finset.mem_sdiff, ← mem_proper_divisors, ← Finset.mem_singleton] at hi
       refine' ih _ hi.1.1.2 (Nat.two_lt_of_ne _ hi.1.2 hi.2)
       rintro rfl
       rw [zero_dvd_iff] at hi
@@ -169,7 +170,7 @@ theorem eval_one_cyclotomic_not_prime_pow {R : Type _} [Ringₓ R] {n : ℕ} (h 
       
   rw [← Int.nat_abs_eq_nat_abs_iff, Int.nat_abs_one, Nat.eq_one_iff_not_exists_prime_dvd]
   intro p hp hpe
-  have := Fact.mk hp
+  haveI := Fact.mk hp
   have hpn : p ∣ n := by
     apply hpe.trans
     nth_rw 1[← Int.nat_abs_of_nat n]
@@ -248,7 +249,7 @@ theorem sub_one_pow_totient_lt_cyclotomic_eval {n : ℕ} {q : ℝ} (hn' : 2 ≤ 
     simp [← cyclotomic_nonneg n hq'.le]
   simp only [← cyclotomic_eq_prod_X_sub_primitive_roots hζ, ← eval_prod, ← eval_C, ← eval_X, ← eval_sub, ← nnnorm_prod,
     ← Units.mk0_prod]
-  convert prod_lt_prod' _ _
+  convert Finset.prod_lt_prod' _ _
   swap
   · exact fun _ =>
       Units.mk0 (Real.toNnreal (q - 1))
@@ -257,13 +258,13 @@ theorem sub_one_pow_totient_lt_cyclotomic_eval {n : ℕ} {q : ℝ} (hn' : 2 ≤ 
     
   · simp [← Complex.card_primitive_roots]
     
-  · simp only [← Subtype.coe_mk, ← mem_attach, ← forall_true_left, ← Subtype.forall, Units.coe_le_coe,
+  · simp only [← Subtype.coe_mk, ← Finset.mem_attach, ← forall_true_left, ← Subtype.forall, Units.coe_le_coe,
       Nnreal.coe_le_coe, ← Complex.abs_nonneg, ← hq'.le, ← Units.coe_mk0, ← Real.coe_to_nnreal', ← coe_nnnorm, ←
       Complex.norm_eq_abs, ← max_le_iff, ← tsub_le_iff_right]
     intro x hx
     simpa using hfor x hx
     
-  · simp only [← Subtype.coe_mk, ← mem_attach, ← exists_true_left, ← Subtype.exists, Nnreal.coe_lt_coe,
+  · simp only [← Subtype.coe_mk, ← Finset.mem_attach, ← exists_true_left, ← Subtype.exists, Nnreal.coe_lt_coe,
       Units.coe_lt_coe, ← Units.coe_mk0 _, ← coe_nnnorm]
     simpa [← hq'.le] using hex
     
@@ -330,7 +331,7 @@ theorem cyclotomic_eval_lt_sub_one_pow_totient {n : ℕ} {q : ℝ} (hn' : 3 ≤ 
     linarith
   simp only [← cyclotomic_eq_prod_X_sub_primitive_roots hζ, ← eval_prod, ← eval_C, ← eval_X, ← eval_sub, ← nnnorm_prod,
     ← Units.mk0_prod]
-  convert prod_lt_prod' _ _
+  convert Finset.prod_lt_prod' _ _
   swap
   · exact fun _ =>
       Units.mk0 (Real.toNnreal (q + 1))
@@ -339,14 +340,14 @@ theorem cyclotomic_eval_lt_sub_one_pow_totient {n : ℕ} {q : ℝ} (hn' : 3 ≤ 
     
   · simp [← Complex.card_primitive_roots]
     
-  · simp only [← Subtype.coe_mk, ← mem_attach, ← forall_true_left, ← Subtype.forall, Units.coe_le_coe,
+  · simp only [← Subtype.coe_mk, ← Finset.mem_attach, ← forall_true_left, ← Subtype.forall, Units.coe_le_coe,
       Nnreal.coe_le_coe, ← Complex.abs_nonneg, ← hq'.le, ← Units.coe_mk0, ← Real.coe_to_nnreal, ← coe_nnnorm, ←
       Complex.norm_eq_abs, ← max_le_iff]
     intro x hx
     have : Complex.abs _ ≤ _ := hfor x hx
     simp [← this]
     
-  · simp only [← Subtype.coe_mk, ← mem_attach, ← exists_true_left, ← Subtype.exists, Nnreal.coe_lt_coe,
+  · simp only [← Subtype.coe_mk, ← Finset.mem_attach, ← exists_true_left, ← Subtype.exists, Nnreal.coe_lt_coe,
       Units.coe_lt_coe, ← Units.coe_mk0 _, ← coe_nnnorm]
     obtain ⟨ζ, hζ, hhζ : Complex.abs _ < _⟩ := hex
     exact
@@ -365,7 +366,10 @@ theorem sub_one_lt_nat_abs_cyclotomic_eval {n : ℕ} {q : ℕ} (hn' : 1 < n) (hq
     rcases this with (rfl | rfl) <;> simpa using h
   suffices (q.succ : ℝ) < (eval (↑q + 1 + 1) (cyclotomic n ℤ)).natAbs by
     exact_mod_cast this
-  calc _ ≤ ((q + 2 - 1) ^ n.totient : ℝ) := _ _ < _ := _
+  calc
+    _ ≤ ((q + 2 - 1) ^ n.totient : ℝ) := _
+    _ < _ := _
+    
   · norm_num
     convert
       pow_mono

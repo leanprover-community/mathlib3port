@@ -948,17 +948,33 @@ theorem Iio_subset_Iic_iff [DenselyOrdered α] : Iio a ⊆ Iic b ↔ a ≤ b := 
 /-! #### Two infinite intervals -/
 
 
+theorem Iic_union_Ioi_of_le (h : a ≤ b) : Iic b ∪ Ioi a = univ :=
+  eq_univ_of_forall fun x => (h.lt_or_le x).symm
+
+theorem Iio_union_Ici_of_le (h : a ≤ b) : Iio b ∪ Ici a = univ :=
+  eq_univ_of_forall fun x => (h.le_or_lt x).symm
+
+theorem Iic_union_Ici_of_le (h : a ≤ b) : Iic b ∪ Ici a = univ :=
+  eq_univ_of_forall fun x => (h.le_or_le x).symm
+
+theorem Iio_union_Ioi_of_lt (h : a < b) : Iio b ∪ Ioi a = univ :=
+  eq_univ_of_forall fun x => (h.lt_or_lt x).symm
+
 @[simp]
 theorem Iic_union_Ici : Iic a ∪ Ici a = univ :=
-  eq_univ_of_forall fun x => le_totalₓ x a
+  Iic_union_Ici_of_le le_rfl
 
 @[simp]
 theorem Iio_union_Ici : Iio a ∪ Ici a = univ :=
-  eq_univ_of_forall fun x => lt_or_leₓ x a
+  Iio_union_Ici_of_le le_rfl
 
 @[simp]
 theorem Iic_union_Ioi : Iic a ∪ Ioi a = univ :=
-  eq_univ_of_forall fun x => le_or_ltₓ x a
+  Iic_union_Ioi_of_le le_rfl
+
+@[simp]
+theorem Iio_union_Ioi : Iio a ∪ Ioi a = {a}ᶜ :=
+  ext fun x => lt_or_lt_iff_ne
 
 /-! #### A finite and an infinite interval -/
 
@@ -1529,7 +1545,8 @@ theorem Ioc_union_Ioc_union_Ioc_cycle : Ioc a b ∪ Ioc b c ∪ Ioc c a = Ioc (m
   rw [Ioc_union_Ioc, Ioc_union_Ioc]
   ac_rfl
   all_goals
-    solve_by_elim [← min_le_of_left_le, ← min_le_of_right_le, ← le_max_of_le_left, ← le_max_of_le_right, ← le_reflₓ]
+    solve_by_elim(config := { max_depth := 5 }) [← min_le_of_left_le, ← min_le_of_right_le, ← le_max_of_le_left, ←
+      le_max_of_le_right, ← le_reflₓ]
 
 end LinearOrderₓ
 

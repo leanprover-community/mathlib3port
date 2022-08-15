@@ -47,10 +47,10 @@ open Manifold TopologicalSpace
 
 open Function Set
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {E' : Type _}
-  [NormedGroup E'] [NormedSpace 𝕜 E'] {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] {H : Type _} [TopologicalSpace H]
-  {H' : Type _} [TopologicalSpace H'] {G : Type _} [TopologicalSpace G] {G' : Type _} [TopologicalSpace G']
-  {I : ModelWithCorners 𝕜 E H} {I' : ModelWithCorners 𝕜 E' H'} {J : ModelWithCorners 𝕜 F G}
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {E' : Type _}
+  [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F] {H : Type _}
+  [TopologicalSpace H] {H' : Type _} [TopologicalSpace H'] {G : Type _} [TopologicalSpace G] {G' : Type _}
+  [TopologicalSpace G'] {I : ModelWithCorners 𝕜 E H} {I' : ModelWithCorners 𝕜 E' H'} {J : ModelWithCorners 𝕜 F G}
   {J' : ModelWithCorners 𝕜 F G'}
 
 variable {M : Type _} [TopologicalSpace M] [ChartedSpace H M] {M' : Type _} [TopologicalSpace M'] [ChartedSpace H' M']
@@ -63,7 +63,7 @@ variable (I I' M M' n)
 
 /-- `n`-times continuously differentiable diffeomorphism between `M` and `M'` with respect to I and I'
 -/
-@[protect_proj, nolint has_inhabited_instance]
+@[protect_proj, nolint has_nonempty_instance]
 structure Diffeomorph extends M ≃ M' where
   cont_mdiff_to_fun : ContMdiff I I' n to_equiv
   cont_mdiff_inv_fun : ContMdiff I' I n to_equiv.symm
@@ -288,7 +288,7 @@ theorem cont_mdiff_within_at_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N
     ContMdiffWithinAt I' J m (h ∘ f) s x ↔ ContMdiffWithinAt I' I m f s x :=
   ⟨fun Hhf => by
     simpa only [← (· ∘ ·), ← h.symm_apply_apply] using (h.symm.cont_mdiff_at.of_le hm).comp_cont_mdiff_within_at _ Hhf,
-    fun Hf => (h.ContMdiffAt.ofLe hm).comp_cont_mdiff_within_at _ Hf⟩
+    fun Hf => (h.ContMdiffAt.of_le hm).comp_cont_mdiff_within_at _ Hf⟩
 
 @[simp]
 theorem cont_mdiff_at_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : M' → M} (hm : m ≤ n) {x} :

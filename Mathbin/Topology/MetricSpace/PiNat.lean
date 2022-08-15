@@ -367,7 +367,7 @@ where the distance is given by `dist x y = (1/2)^n`, where `n` is the smallest i
 `y` differ. Not registered as a global instance by default. -/
 protected def metricSpaceOfDiscreteUniformity {E : ℕ → Type _} [∀ n, UniformSpace (E n)]
     (h : ∀ n, uniformity (E n) = 𝓟 IdRel) : MetricSpace (∀ n, E n) := by
-  have : ∀ n, DiscreteTopology (E n) := fun n => discrete_topology_of_discrete_uniformity (h n)
+  haveI : ∀ n, DiscreteTopology (E n) := fun n => discrete_topology_of_discrete_uniformity (h n)
   exact
     { dist_triangle := PiNat.dist_triangle, dist_comm := PiNat.dist_comm, dist_self := PiNat.dist_self,
       eq_of_dist_eq_zero := PiNat.eq_of_dist_eq_zero, toUniformSpace := Pi.uniformSpace _,
@@ -449,9 +449,13 @@ theorem exists_disjoint_cylinder {s : Set (∀ n, E n)} (hs : IsClosed s) {x : �
   refine' ⟨n, _⟩
   apply disjoint_left.2 fun y ys hy => _
   apply lt_irreflₓ (inf_dist x s)
-  calc inf_dist x s ≤ dist x y := inf_dist_le_dist_of_mem ys _ ≤ (1 / 2) ^ n := by
+  calc
+    inf_dist x s ≤ dist x y := inf_dist_le_dist_of_mem ys
+    _ ≤ (1 / 2) ^ n := by
       rw [mem_cylinder_comm] at hy
-      exact mem_cylinder_iff_dist_le.1 hy _ < inf_dist x s := hn
+      exact mem_cylinder_iff_dist_le.1 hy
+    _ < inf_dist x s := hn
+    
 
 /-- Given a point `x` in a product space `Π (n : ℕ), E n`, and `s` a subset of this space, then
 `shortest_prefix_diff x s` if the smallest `n` for which there is no element of `s` having the same
@@ -696,7 +700,7 @@ theorem exists_nat_nat_continuous_surjective_of_complete_space (α : Type _) [Me
     balls `closed_ball (u xₙ) (1/2^n)` have a nonempty intersection. This set is closed, and we define
     `f x` there to be the unique point in the intersection. This function is continuous and surjective
     by design. -/
-  let this : MetricSpace (ℕ → ℕ) := PiNat.metricSpaceNatNat
+  letI : MetricSpace (ℕ → ℕ) := PiNat.metricSpaceNatNat
   have I0 : (0 : ℝ) < 1 / 2 := by
     norm_num
   have I1 : (1 / 2 : ℝ) < 1 := by
@@ -724,10 +728,14 @@ theorem exists_nat_nat_continuous_surjective_of_complete_space (α : Type _) [Me
     have hn : first_diff x.1 y.1 = n + 1 := (Nat.succ_pred_eq_of_posₓ diff_pos).symm
     rw [dist', dist_eq_of_ne hne', hn]
     have B : x.1 n = y.1 n := mem_cylinder_first_diff x.1 y.1 n (Nat.pred_ltₓ diff_pos.ne')
-    calc dist (g x) (g y) ≤ dist (g x) (u (x.1 n)) + dist (g y) (u (x.1 n)) :=
-        dist_triangle_right _ _ _ _ = dist (g x) (u (x.1 n)) + dist (g y) (u (y.1 n)) := by
-        rw [← B]_ ≤ (1 / 2) ^ n + (1 / 2) ^ n := add_le_add (A x n) (A y n)_ = 4 * (1 / 2) ^ (n + 1) := by
+    calc
+      dist (g x) (g y) ≤ dist (g x) (u (x.1 n)) + dist (g y) (u (x.1 n)) := dist_triangle_right _ _ _
+      _ = dist (g x) (u (x.1 n)) + dist (g y) (u (y.1 n)) := by
+        rw [← B]
+      _ ≤ (1 / 2) ^ n + (1 / 2) ^ n := add_le_add (A x n) (A y n)
+      _ = 4 * (1 / 2) ^ (n + 1) := by
         ring_exp
+      
   have g_surj : surjective g := by
     intro y
     have : ∀ n : ℕ, ∃ j, y ∈ closed_ball (u j) ((1 / 2) ^ n) := by
@@ -860,9 +868,11 @@ protected def metricSpace : MetricSpace (∀ i, F i) where
         _ ≤ min ((1 / 2) ^ encode i) (dist (x i) (y i)) + min ((1 / 2) ^ encode i) (dist (y i) (z i)) :=
           min_le_rightₓ _ _
         
-    calc dist x z ≤ ∑' i, min ((1 / 2) ^ encode i) (dist (x i) (y i)) + min ((1 / 2) ^ encode i) (dist (y i) (z i)) :=
-        tsum_le_tsum I (dist_summable x z) ((dist_summable x y).add (dist_summable y z))_ = dist x y + dist y z :=
-        tsum_add (dist_summable x y) (dist_summable y z)
+    calc
+      dist x z ≤ ∑' i, min ((1 / 2) ^ encode i) (dist (x i) (y i)) + min ((1 / 2) ^ encode i) (dist (y i) (z i)) :=
+        tsum_le_tsum I (dist_summable x z) ((dist_summable x y).add (dist_summable y z))
+      _ = dist x y + dist y z := tsum_add (dist_summable x y) (dist_summable y z)
+      
   eq_of_dist_eq_zero := by
     intro x y hxy
     ext1 n
@@ -904,30 +914,31 @@ protected def metricSpace : MetricSpace (∀ i, F i) where
         
       · rintro ⟨x, y⟩ hxy
         simp only [← mem_Inter, ← mem_set_of_eq, ← SetCoe.forall, ← Finset.mem_range, ← Finset.mem_coe] at hxy
-        calc dist x y = ∑' i : ι, min ((1 / 2) ^ encode i) (dist (x i) (y i)) :=
-            rfl _ =
+        calc
+          dist x y = ∑' i : ι, min ((1 / 2) ^ encode i) (dist (x i) (y i)) := rfl
+          _ =
               (∑ i in K, min ((1 / 2) ^ encode i) (dist (x i) (y i))) +
                 ∑' i : (↑K : Set ι)ᶜ, min ((1 / 2) ^ encode (i : ι)) (dist (x i) (y i)) :=
-            (sum_add_tsum_compl
-                (dist_summable _
-                  _)).symm _ ≤ (∑ i in K, dist (x i) (y i)) + ∑' i : (↑K : Set ι)ᶜ, (1 / 2) ^ encode (i : ι) :=
-            by
+            (sum_add_tsum_compl (dist_summable _ _)).symm
+          _ ≤ (∑ i in K, dist (x i) (y i)) + ∑' i : (↑K : Set ι)ᶜ, (1 / 2) ^ encode (i : ι) := by
             refine' add_le_add (Finset.sum_le_sum fun i hi => min_le_rightₓ _ _) _
             refine' tsum_le_tsum (fun i => min_le_leftₓ _ _) _ _
             · apply Summable.subtype (dist_summable x y) ((↑K : Set ι)ᶜ)
               
             · apply Summable.subtype summable_geometric_two_encode ((↑K : Set ι)ᶜ)
-              _ < (∑ i in K, δ) + ε / 2 :=
-            by
+              
+          _ < (∑ i in K, δ) + ε / 2 := by
             apply add_lt_add_of_le_of_lt _ hK
             apply Finset.sum_le_sum fun i hi => _
             apply (hxy i _).le
-            simpa using hi _ ≤ ε / 2 + ε / 2 :=
+            simpa using hi
+          _ ≤ ε / 2 + ε / 2 :=
             add_le_add_right
               (by
                 simpa only [← Finset.sum_const, ← nsmul_eq_mul] using hδ)
-              _ _ = ε :=
-            add_halves _
+              _
+          _ = ε := add_halves _
+          
         
       
     · simp only [← le_infi_iff, ← le_principal_iff]
@@ -941,7 +952,10 @@ protected def metricSpace : MetricSpace (∀ i, F i) where
       refine' mem_infi_of_mem this _
       simp only [← and_imp, ← Prod.forall, ← set_of_subset_set_of, ← lt_min_iff, ← mem_principal]
       intro x y hn hε
-      calc dist (x i) (y i) ≤ dist x y := dist_le_dist_pi_of_dist_lt hn _ < ε := hε
+      calc
+        dist (x i) (y i) ≤ dist x y := dist_le_dist_pi_of_dist_lt hn
+        _ < ε := hε
+        
       
 
 end PiCountable

@@ -38,12 +38,10 @@ variable {G : Type u''} {S : Type u'} {R : Type u} {M : Type v} {ι : Type w}
 structure Submodule (R : Type u) (M : Type v) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] extends AddSubmonoid M,
   SubMulAction R M : Type v
 
-/-- Reinterpret a `submodule` as an `add_submonoid`. -/
-add_decl_doc Submodule.toAddSubmonoid
-
-/-- Reinterpret a `submodule` as an `sub_mul_action`. -/
-add_decl_doc Submodule.toSubMulAction
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident submodule.to_add_submonoid]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident submodule.to_sub_mul_action]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace Submodule
 
 variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]

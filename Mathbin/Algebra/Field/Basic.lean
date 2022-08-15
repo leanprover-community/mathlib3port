@@ -50,23 +50,69 @@ universe u
 
 variable {α β K : Type _}
 
+/-- The default definition of the coercion `(↑(a : ℚ) : K)` for a division ring `K`
+is defined as `(a / b : K) = (a : K) * (b : K)⁻¹`.
+Use `coe` instead of `rat.cast_rec` for better definitional behaviour.
+-/
+def Rat.castRec [HasLiftT ℕ K] [HasLiftT ℤ K] [Mul K] [Inv K] : ℚ → K
+  | ⟨a, b, _, _⟩ => ↑a * (↑b)⁻¹
+
+/-- Type class for the canonical homomorphism `ℚ → K`.
+-/
+@[protect_proj]
+class HasRatCast (K : Type u) where
+  ratCast : ℚ → K
+
+/-- The default definition of the scalar multiplication `(a : ℚ) • (x : K)` for a division ring `K`
+is given by `a • x = (↑ a) * x`.
+Use `(a : ℚ) • (x : K)` instead of `qsmul_rec` for better definitional behaviour.
+-/
+def qsmulRec (coe : ℚ → K) [Mul K] (a : ℚ) (x : K) : K :=
+  coe a * x
+
 /-- A `division_semiring` is a `semiring` with multiplicative inverses for nonzero elements. -/
 @[protect_proj, ancestor Semiringₓ GroupWithZeroₓ]
 class DivisionSemiring (α : Type _) extends Semiringₓ α, GroupWithZeroₓ α
 
-/-- A `division_ring` is a `ring` with multiplicative inverses for nonzero elements. -/
-@[protect_proj, ancestor Ringₓ DivisionSemiring]
-class DivisionRing (α : Type _) extends Ringₓ α, DivInvMonoidₓ α, Nontrivial α where
-  mul_inv_cancel : ∀ {a : α}, a ≠ 0 → a * a⁻¹ = 1
-  inv_zero : (0 : α)⁻¹ = 0
+/-- A `division_ring` is a `ring` with multiplicative inverses for nonzero elements.
+
+An instance of `division_ring K` includes maps `of_rat : ℚ → K` and `qsmul : ℚ → K → K`.
+If the division ring has positive characteristic p, we define `of_rat (1 / p) = 1 / 0 = 0`
+for consistency with our division by zero convention.
+The fields `of_rat` and `qsmul are needed to implement the
+`algebra_rat [division_ring K] : algebra ℚ K` instance, since we need to control the specific
+definitions for some special cases of `K` (in particular `K = ℚ` itself).
+See also Note [forgetful inheritance].
+-/
+@[protect_proj, ancestor Ringₓ DivInvMonoidₓ Nontrivial]
+class DivisionRing (K : Type u) extends Ringₓ K, DivInvMonoidₓ K, Nontrivial K, HasRatCast K where
+  mul_inv_cancel : ∀ {a : K}, a ≠ 0 → a * a⁻¹ = 1
+  inv_zero : (0 : K)⁻¹ = 0
+  ratCast := Rat.castRec
+  rat_cast_mk : ∀ (a : ℤ) (b : ℕ) (h1 h2), rat_cast ⟨a, b, h1, h2⟩ = a * b⁻¹ := by
+    run_tac
+      try_refl_tac
+  qsmul : ℚ → K → K := qsmulRec rat_cast
+  qsmul_eq_mul' : ∀ (a : ℚ) (x : K), qsmul a x = rat_cast a * x := by
+    run_tac
+      try_refl_tac
 
 /-- A `semifield` is a `comm_semiring` with multiplicative inverses for nonzero elements. -/
 @[protect_proj, ancestor CommSemiringₓ DivisionSemiring CommGroupWithZero]
 class Semifield (α : Type _) extends CommSemiringₓ α, DivisionSemiring α, CommGroupWithZero α
 
-/-- A `field` is a `comm_ring` with multiplicative inverses for nonzero elements. -/
-@[protect_proj, ancestor CommRingₓ DivisionRing]
-class Field (α : Type _) extends CommRingₓ α, DivisionRing α
+/-- A `field` is a `comm_ring` with multiplicative inverses for nonzero elements.
+
+An instance of `field K` includes maps `of_rat : ℚ → K` and `qsmul : ℚ → K → K`.
+If the field has positive characteristic p, we define `of_rat (1 / p) = 1 / 0 = 0`
+for consistency with our division by zero convention.
+The fields `of_rat` and `qsmul are needed to implement the
+`algebra_rat [division_ring K] : algebra ℚ K` instance, since we need to control the specific
+definitions for some special cases of `K` (in particular `K = ℚ` itself).
+See also Note [forgetful inheritance].
+-/
+@[protect_proj, ancestor CommRingₓ DivInvMonoidₓ Nontrivial]
+class Field (K : Type u) extends CommRingₓ K, DivisionRing K
 
 -- see Note [lower instance priority]
 instance (priority := 100) DivisionRing.toDivisionSemiring [DivisionRing α] : DivisionSemiring α :=
@@ -113,11 +159,9 @@ theorem div_add' (a b c : α) (hc : c ≠ 0) : a / c + b = (a + b * c) / c := by
 
 end DivisionSemiring
 
-section DivisionRing
+section DivisionMonoid
 
-variable [DivisionRing K] {a b : K}
-
-attribute [local simp] division_def mul_comm mul_assoc mul_left_commₓ mul_inv_cancel inv_mul_cancel
+variable [DivisionMonoid K] [HasDistribNeg K] {a b : K}
 
 theorem one_div_neg_one_eq_neg_one : (1 : K) / -1 = -1 :=
   have : -1 * -1 = (1 : K) := by
@@ -158,6 +202,45 @@ theorem neg_div' (a b : K) : -(b / a) = -b / a := by
 theorem neg_div_neg_eq (a b : K) : -a / -b = a / b := by
   rw [div_neg_eq_neg_div, neg_div, neg_negₓ]
 
+theorem neg_inv : -a⁻¹ = (-a)⁻¹ := by
+  rw [inv_eq_one_div, inv_eq_one_div, div_neg_eq_neg_div]
+
+theorem div_neg (a : K) : a / -b = -(a / b) := by
+  rw [← div_neg_eq_neg_div]
+
+theorem inv_neg : (-a)⁻¹ = -a⁻¹ := by
+  rw [neg_inv]
+
+end DivisionMonoid
+
+section DivisionRing
+
+variable [DivisionRing K] {a b : K}
+
+namespace Rat
+
+/-- Construct the canonical injection from `ℚ` into an arbitrary
+  division ring. If the field has positive characteristic `p`,
+  we define `1 / p = 1 / 0 = 0` for consistency with our
+  division by zero convention. -/
+-- see Note [coercion into rings]
+instance (priority := 900) castCoe {K : Type _} [HasRatCast K] : CoeTₓ ℚ K :=
+  ⟨HasRatCast.ratCast⟩
+
+theorem cast_mk' (a b h1 h2) : ((⟨a, b, h1, h2⟩ : ℚ) : K) = a * b⁻¹ :=
+  DivisionRing.rat_cast_mk _ _ _ _
+
+theorem cast_def : ∀ r : ℚ, (r : K) = r.num / r.denom
+  | ⟨a, b, h1, h2⟩ => (cast_mk' _ _ _ _).trans (div_eq_mul_inv _ _).symm
+
+instance (priority := 100) smulDivisionRing : HasSmul ℚ K :=
+  ⟨DivisionRing.qsmul⟩
+
+theorem smul_def (a : ℚ) (x : K) : a • x = ↑a * x :=
+  DivisionRing.qsmul_eq_mul' a x
+
+end Rat
+
 @[simp]
 theorem div_neg_self {a : K} (h : a ≠ 0) : a / -a = -1 := by
   rw [div_neg_eq_neg_div, div_self h]
@@ -181,17 +264,8 @@ theorem div_sub_same {a b : K} (h : b ≠ 0) : (a - b) / b = a / b - 1 := by
 theorem div_sub_one {a b : K} (h : b ≠ 0) : a / b - 1 = (a - b) / b :=
   (div_sub_same h).symm
 
-theorem neg_inv : -a⁻¹ = (-a)⁻¹ := by
-  rw [inv_eq_one_div, inv_eq_one_div, div_neg_eq_neg_div]
-
 theorem sub_div (a b c : K) : (a - b) / c = a / c - b / c :=
   (div_sub_div_same _ _ _).symm
-
-theorem div_neg (a : K) : a / -b = -(a / b) := by
-  rw [← div_neg_eq_neg_div]
-
-theorem inv_neg : (-a)⁻¹ = -a⁻¹ := by
-  rw [neg_inv]
 
 theorem one_div_mul_sub_mul_one_div_eq_one_div_add_one_div (ha : a ≠ 0) (hb : b ≠ 0) :
     1 / a * (b - a) * (1 / b) = 1 / a - 1 / b := by
@@ -309,10 +383,14 @@ theorem uniq_inv_of_is_field (R : Type u) [Ringₓ R] (hf : IsField R) : ∀ x :
   · exact hf.mul_inv_cancel hx
     
   · intro y z hxy hxz
-    calc y = y * (x * z) := by
-        rw [hxz, mul_oneₓ]_ = x * y * z := by
-        rw [← mul_assoc, hf.mul_comm y x]_ = z := by
+    calc
+      y = y * (x * z) := by
+        rw [hxz, mul_oneₓ]
+      _ = x * y * z := by
+        rw [← mul_assoc, hf.mul_comm y x]
+      _ = z := by
         rw [hxy, one_mulₓ]
+      
     
 
 end IsField
@@ -386,15 +464,25 @@ protected def Function.Injective.divisionSemiring [DivisionSemiring β] [Zero α
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.divisionRing [DivisionRing K] {K'} [Zero K'] [One K'] [Add K'] [Mul K'] [Neg K']
-    [Sub K'] [Inv K'] [Div K'] [HasSmul ℕ K'] [HasSmul ℤ K'] [Pow K' ℕ] [Pow K' ℤ] [HasNatCast K'] [HasIntCast K']
-    (f : K' → K) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
-    (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y)
-    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
-    (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
-    (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) :
-    DivisionRing K' :=
+    [Sub K'] [Inv K'] [Div K'] [HasSmul ℕ K'] [HasSmul ℤ K'] [HasSmul ℚ K'] [Pow K' ℕ] [Pow K' ℤ] [HasNatCast K']
+    [HasIntCast K'] [HasRatCast K'] (f : K' → K) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
+    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
+    (sub : ∀ x y, f (x - y) = f x - f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y)
+    (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x)
+    (qsmul : ∀ (x) (n : ℚ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
+    (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n)
+    (rat_cast : ∀ n : ℚ, f n = n) : DivisionRing K' :=
   { hf.GroupWithZero f zero one mul inv div npow zpow,
-    hf.Ring f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with }
+    hf.Ring f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with ratCast := coe,
+    rat_cast_mk := fun a b h1 h2 =>
+      hf
+        (by
+          erw [rat_cast, mul, inv, int_cast, nat_cast] <;> exact DivisionRing.rat_cast_mk a b h1 h2),
+    qsmul := (· • ·),
+    qsmul_eq_mul' := fun a x =>
+      hf
+        (by
+          erw [qsmul, mul, Rat.smul_def, rat_cast]) }
 
 /-- Pullback a `field` along an injective function. -/
 -- See note [reducible non-instances]
@@ -411,13 +499,23 @@ protected def Function.Injective.semifield [Semifield β] [Zero α] [Mul α] [Ad
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.field [Field K] {K'} [Zero K'] [Mul K'] [Add K'] [Neg K'] [Sub K'] [One K'] [Inv K']
-    [Div K'] [HasSmul ℕ K'] [HasSmul ℤ K'] [Pow K' ℕ] [Pow K' ℤ] [HasNatCast K'] [HasIntCast K'] (f : K' → K)
-    (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
-    (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y)
-    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
-    (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
-    (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) :
-    Field K' :=
+    [Div K'] [HasSmul ℕ K'] [HasSmul ℤ K'] [HasSmul ℚ K'] [Pow K' ℕ] [Pow K' ℤ] [HasNatCast K'] [HasIntCast K']
+    [HasRatCast K'] (f : K' → K) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
+    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
+    (sub : ∀ x y, f (x - y) = f x - f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y)
+    (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x)
+    (qsmul : ∀ (x) (n : ℚ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
+    (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n)
+    (rat_cast : ∀ n : ℚ, f n = n) : Field K' :=
   { hf.CommGroupWithZero f zero one mul inv div npow zpow,
-    hf.CommRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with }
+    hf.CommRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with ratCast := coe,
+    rat_cast_mk := fun a b h1 h2 =>
+      hf
+        (by
+          erw [rat_cast, mul, inv, int_cast, nat_cast] <;> exact DivisionRing.rat_cast_mk a b h1 h2),
+    qsmul := (· • ·),
+    qsmul_eq_mul' := fun a x =>
+      hf
+        (by
+          erw [qsmul, mul, Rat.smul_def, rat_cast]) }
 

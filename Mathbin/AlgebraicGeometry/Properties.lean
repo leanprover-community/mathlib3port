@@ -31,17 +31,11 @@ namespace AlgebraicGeometry
 variable (X : Scheme)
 
 instance : T0Space X.Carrier := by
-  rw [t0_space_iff_inseparable]
-  intro x y h
+  refine' T0Space.of_open_cover fun x => _
   obtain ⟨U, R, ⟨e⟩⟩ := X.local_affine x
-  have hy : y ∈ U.val := (h.mem_open_iff U.1.2).1 U.2
-  erw [← subtype_inseparable_iff (⟨x, U.2⟩ : U.1.1) (⟨y, hy⟩ : U.1.1)] at h
   let e' : U.1 ≃ₜ PrimeSpectrum R :=
     homeo_of_iso ((LocallyRingedSpace.forget_to_SheafedSpace ⋙ SheafedSpace.forget _).mapIso e)
-  have := t0_space_of_injective_of_continuous e'.injective e'.continuous
-  rw [t0_space_iff_inseparable] at this
-  · simpa only [← Subtype.mk_eq_mk] using this ⟨x, U.2⟩ ⟨y, hy⟩ h
-    
+  exact ⟨U.1.1, U.2, U.1.2, e'.embedding.t0_space⟩
 
 instance : QuasiSober X.Carrier := by
   apply quasi_sober_of_open_cover (Set.Range fun x => Set.Range <| (X.affine_cover.map x).1.base) with
@@ -181,7 +175,7 @@ theorem eq_zero_of_basic_open_empty {X : Scheme} [hX : IsReduced X] {U : Opens X
       rw [← Set.image_univ, Set.preimage_image_eq _ hf.base_open.inj, Set.top_eq_univ]
     refine' ⟨_, _, e, rfl, _⟩
     rintro H hX s hs ⟨_, x, rfl⟩
-    have := is_reduced_of_open_immersion f
+    haveI := is_reduced_of_open_immersion f
     specialize
       H (f.1.c.app _ s) _
         ⟨x, by
@@ -237,11 +231,11 @@ instance (priority := 900) is_reduced_of_is_integral [IsIntegral X] : IsReduced 
   intro U
   cases U.1.eq_empty_or_nonempty
   · have : U = ∅ := Subtype.eq h
-    have := CommRingₓₓ.subsingleton_of_is_terminal (X.sheaf.is_terminal_of_eq_empty this)
+    haveI := CommRingₓₓ.subsingleton_of_is_terminal (X.sheaf.is_terminal_of_eq_empty this)
     change _root_.is_reduced (X.sheaf.val.obj (op U))
     infer_instance
     
-  · have : Nonempty U := by
+  · haveI : Nonempty U := by
       simpa
     infer_instance
     
@@ -254,9 +248,9 @@ instance is_irreducible_of_is_integral [IsIntegral X] : IrreducibleSpace X.Carri
   rcases H with ⟨S, T, hS, hT, h₁, h₂, h₃⟩
   erw [not_forall] at h₂ h₃
   simp_rw [not_forall] at h₂ h₃
-  have : Nonempty (⟨Sᶜ, hS.1⟩ : opens X.carrier) := ⟨⟨_, h₂.some_spec.some_spec⟩⟩
-  have : Nonempty (⟨Tᶜ, hT.1⟩ : opens X.carrier) := ⟨⟨_, h₃.some_spec.some_spec⟩⟩
-  have : Nonempty (⟨Sᶜ, hS.1⟩⊔⟨Tᶜ, hT.1⟩ : opens X.carrier) := ⟨⟨_, Or.inl h₂.some_spec.some_spec⟩⟩
+  haveI : Nonempty (⟨Sᶜ, hS.1⟩ : opens X.carrier) := ⟨⟨_, h₂.some_spec.some_spec⟩⟩
+  haveI : Nonempty (⟨Tᶜ, hT.1⟩ : opens X.carrier) := ⟨⟨_, h₃.some_spec.some_spec⟩⟩
+  haveI : Nonempty (⟨Sᶜ, hS.1⟩⊔⟨Tᶜ, hT.1⟩ : opens X.carrier) := ⟨⟨_, Or.inl h₂.some_spec.some_spec⟩⟩
   let e : X.presheaf.obj _ ≅ CommRingₓₓ.of _ :=
     (X.sheaf.is_product_of_disjoint ⟨_, hS.1⟩ ⟨_, hT.1⟩ _).conePointUniqueUpToIso (CommRingₓₓ.prodFanIsLimit _ _)
   apply false_of_nontrivial_of_product_domain with { instances := false }

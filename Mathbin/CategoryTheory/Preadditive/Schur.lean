@@ -38,7 +38,7 @@ theorem mono_of_nonzero_from_simple [HasKernels C] {X Y : C} [Simple X] {f : X �
 that a nonzero morphism between simple objects is an isomorphism.
 -/
 theorem is_iso_of_hom_simple [HasKernels C] {X Y : C} [Simple X] [Simple Y] {f : X ⟶ Y} (w : f ≠ 0) : IsIso f := by
-  have := mono_of_nonzero_from_simple w
+  haveI := mono_of_nonzero_from_simple w
   exact is_iso_of_mono_of_nonzero w
 
 /-- As a corollary of Schur's lemma for preadditive categories,
@@ -60,11 +60,11 @@ noncomputable instance [HasKernels C] {X : C} [Simple X] : DivisionRing (End X) 
         inv := fun f =>
           if h : f = 0 then 0
           else by
-            have := is_iso_of_hom_simple h
+            haveI := is_iso_of_hom_simple h
             exact inv f,
         exists_pair_ne := ⟨𝟙 X, 0, id_nonzero _⟩, inv_zero := dif_pos rfl,
         mul_inv_cancel := fun f h => by
-          have := is_iso_of_hom_simple h
+          haveI := is_iso_of_hom_simple h
           convert is_iso.inv_hom_id f
           exact dif_neg h }
 
@@ -79,7 +79,7 @@ the hom space between two non-isomorphic simple objects is 0-dimensional.
 -/
 theorem finrank_hom_simple_simple_eq_zero_of_not_iso [HasKernels C] [Linear 𝕜 C] {X Y : C} [Simple X] [Simple Y]
     (h : (X ≅ Y) → False) : finrank 𝕜 (X ⟶ Y) = 0 := by
-  have :=
+  haveI :=
     subsingleton_of_forall_eq (0 : X ⟶ Y) fun f => by
       have p := not_congr (is_iso_iff_nonzero f)
       simp only [← not_not, ← Ne.def] at p
@@ -115,7 +115,7 @@ theorem finrank_endomorphism_eq_one {X : C} (is_iso_iff_nonzero : ∀ f : X ⟶ 
   · exact id_nonzero
     
   · intro f
-    have : Nontrivial (End X) := nontrivial_of_ne _ _ id_nonzero
+    haveI : Nontrivial (End X) := nontrivial_of_ne _ _ id_nonzero
     obtain ⟨c, nu⟩ :=
       @Spectrum.nonempty_of_is_alg_closed_of_finite_dimensional 𝕜 (End X) _ _ _ _ _
         (by
@@ -171,7 +171,7 @@ theorem finrank_hom_simple_simple_le_one (X Y : C) [FiniteDimensional 𝕜 (X �
     exact zero_le_one
     
   · obtain ⟨f, nz⟩ := (nontrivial_iff_exists_ne 0).mp h
-    have fi := (is_iso_iff_nonzero f).mpr nz
+    haveI fi := (is_iso_iff_nonzero f).mpr nz
     apply finrank_le_one f
     intro g
     obtain ⟨c, w⟩ := endomorphism_simple_eq_smul_id 𝕜 (g ≫ inv f)

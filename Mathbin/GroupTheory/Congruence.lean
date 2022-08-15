@@ -64,12 +64,10 @@ structure AddCon [Add M] extends Setoidₓ M where
 structure Con [Mul M] extends Setoidₓ M where
   mul' : ∀ {w x y z}, r w x → r y z → r (w * y) (x * z)
 
-/-- The equivalence relation underlying an additive congruence relation. -/
-add_decl_doc AddCon.toSetoid
-
-/-- The equivalence relation underlying a multiplicative congruence relation. -/
-add_decl_doc Con.toSetoid
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_con.to_setoid]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident con.to_setoid]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 variable {M}
 
 /-- The inductively defined smallest additive congruence relation containing a given binary
@@ -224,7 +222,7 @@ theorem quot_mk_eq_coe {M : Type _} [Mul M] (c : Con M) (x : M) : Quot.mk c x = 
 
 /-- The function on the quotient by a congruence relation `c` induced by a function that is
     constant on `c`'s equivalence classes. -/
-@[elab_as_eliminator,
+@[elabAsElim,
   to_additive
       "The function on the quotient by a congruence relation `c`\ninduced by a function that is constant on `c`'s equivalence classes."]
 protected def liftOn {β} {c : Con M} (q : c.Quotient) (f : M → β) (h : ∀ a b, c a b → f a = f b) : β :=
@@ -232,7 +230,7 @@ protected def liftOn {β} {c : Con M} (q : c.Quotient) (f : M → β) (h : ∀ a
 
 /-- The binary function on the quotient by a congruence relation `c` induced by a binary function
     that is constant on `c`'s equivalence classes. -/
-@[elab_as_eliminator,
+@[elabAsElim,
   to_additive
       "The binary function on the quotient by a congruence relation `c`\ninduced by a binary function that is constant on `c`'s equivalence classes."]
 protected def liftOn₂ {β} {c : Con M} (q r : c.Quotient) (f : M → M → β)
@@ -256,14 +254,14 @@ variable {c}
 
 /-- The inductive principle used to prove propositions about the elements of a quotient by a
     congruence relation. -/
-@[elab_as_eliminator,
+@[elabAsElim,
   to_additive
       "The inductive principle used to prove propositions about\nthe elements of a quotient by an additive congruence relation."]
 protected theorem induction_on {C : c.Quotient → Prop} (q : c.Quotient) (H : ∀ x : M, C x) : C q :=
   Quotientₓ.induction_on' q H
 
 /-- A version of `con.induction_on` for predicates which take two arguments. -/
-@[elab_as_eliminator, to_additive "A version of `add_con.induction_on` for predicates which take\ntwo arguments."]
+@[elabAsElim, to_additive "A version of `add_con.induction_on` for predicates which take\ntwo arguments."]
 protected theorem induction_on₂ {d : Con N} {C : c.Quotient → d.Quotient → Prop} (p : c.Quotient) (q : d.Quotient)
     (H : ∀ (x : M) (y : N), C x y) : C p q :=
   Quotientₓ.induction_on₂' p q H
@@ -1015,19 +1013,15 @@ def liftOnUnits (u : Units c.Quotient) (f : ∀ x y : M, c (x * y) 1 → c (y * 
   rintro Hyx Hyx' -
   exact heq_of_eq (Hf _ _ _ _ _ _ _ _ hx hy)
 
-/-- In order to define a function `(con.quotient c)ˣ → α` on the units of `con.quotient c`,
-where `c : con M` is a multiplicative congruence on a monoid, it suffices to define a function `f`
-that takes elements `x y : M` with proofs of `c (x * y) 1` and `c (y * x) 1`, and returns an element
-of `α` provided that `f x y _ _ = f x' y' _ _` whenever `c x x'` and `c y y'`. -/
-add_decl_doc AddCon.liftOnAddUnits
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_con.lift_on_add_units]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, to_additive]
 theorem lift_on_units_mk (f : ∀ x y : M, c (x * y) 1 → c (y * x) 1 → α)
     (Hf : ∀ x y hxy hyx x' y' hxy' hyx', c x x' → c y y' → f x y hxy hyx = f x' y' hxy' hyx') (x y : M) (hxy hyx) :
     liftOnUnits ⟨(x : c.Quotient), y, hxy, hyx⟩ f Hf = f x y (c.Eq.1 hxy) (c.Eq.1 hyx) :=
   rfl
 
-@[elab_as_eliminator, to_additive]
+@[elabAsElim, to_additive]
 theorem induction_on_units {p : Units c.Quotient → Prop} (u : Units c.Quotient)
     (H : ∀ (x y : M) (hxy : c (x * y) 1) (hyx : c (y * x) 1), p ⟨x, y, c.Eq.2 hxy, c.Eq.2 hyx⟩) : p u := by
   rcases u with ⟨⟨x⟩, ⟨y⟩, h₁, h₂⟩

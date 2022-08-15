@@ -69,7 +69,7 @@ variable {L : GrothendieckTopology E}
 /-- A functor `G : (C, J) ⥤ (D, K)` between sites is called to have the cover-lifting property
 if for all covering sieves `R` in `D`, `R.pullback G` is a covering sieve in `C`.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure CoverLifting (G : C ⥤ D) : Prop where
   cover_lift : ∀ {U : C} {S : Sieve (G.obj U)} (hS : S ∈ K (G.obj U)), S.FunctorPullback G ∈ J U
 
@@ -122,7 +122,7 @@ variable {G : C ⥤ D} (hu : CoverLifting J K G) (ℱ : Sheaf J A)
 variable {X : A} {U : D} (S : Sieve U) (hS : S ∈ K U)
 
 instance (X : Dᵒᵖ) : HasLimitsOfShape (StructuredArrow X G.op) A := by
-  have := Limits.has_limits_of_size_shrink.{v, max u v, max u v, max u v} A
+  haveI := Limits.has_limits_of_size_shrink.{v, max u v, max u v, max u v} A
   exact has_limits_of_size.has_limits_of_shape _
 
 variable (x : S.Arrows.FamilyOfElements ((ran G.op).obj ℱ.val ⋙ coyoneda.obj (op X)))

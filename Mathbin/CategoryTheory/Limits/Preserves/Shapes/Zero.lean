@@ -62,8 +62,11 @@ theorem map_eq_zero_iff (F : C ⥤ D) [PreservesZeroMorphisms F] [Faithful F] {X
 instance (priority := 100) preserves_zero_morphisms_of_is_left_adjoint (F : C ⥤ D) [IsLeftAdjoint F] :
     PreservesZeroMorphisms F where map_zero' := fun X Y => by
     let adj := Adjunction.ofLeftAdjoint F
-    calc F.map (0 : X ⟶ Y) = F.map 0 ≫ F.map (adj.unit.app Y) ≫ adj.counit.app (F.obj Y) :=
-        _ _ = F.map 0 ≫ F.map ((right_adjoint F).map (0 : F.obj X ⟶ _)) ≫ adj.counit.app (F.obj Y) := _ _ = 0 := _
+    calc
+      F.map (0 : X ⟶ Y) = F.map 0 ≫ F.map (adj.unit.app Y) ≫ adj.counit.app (F.obj Y) := _
+      _ = F.map 0 ≫ F.map ((right_adjoint F).map (0 : F.obj X ⟶ _)) ≫ adj.counit.app (F.obj Y) := _
+      _ = 0 := _
+      
     · rw [adjunction.left_triangle_components]
       exact (category.comp_id _).symm
       
@@ -75,8 +78,11 @@ instance (priority := 100) preserves_zero_morphisms_of_is_left_adjoint (F : C �
 instance (priority := 100) preserves_zero_morphisms_of_is_right_adjoint (G : C ⥤ D) [IsRightAdjoint G] :
     PreservesZeroMorphisms G where map_zero' := fun X Y => by
     let adj := Adjunction.ofRightAdjoint G
-    calc G.map (0 : X ⟶ Y) = adj.unit.app (G.obj X) ≫ G.map (adj.counit.app X) ≫ G.map 0 :=
-        _ _ = adj.unit.app (G.obj X) ≫ G.map ((left_adjoint G).map (0 : _ ⟶ G.obj X)) ≫ G.map 0 := _ _ = 0 := _
+    calc
+      G.map (0 : X ⟶ Y) = adj.unit.app (G.obj X) ≫ G.map (adj.counit.app X) ≫ G.map 0 := _
+      _ = adj.unit.app (G.obj X) ≫ G.map ((left_adjoint G).map (0 : _ ⟶ G.obj X)) ≫ G.map 0 := _
+      _ = 0 := _
+      
     · rw [adjunction.right_triangle_components_assoc]
       
     · simp only [G.map_comp, ← comp_zero]

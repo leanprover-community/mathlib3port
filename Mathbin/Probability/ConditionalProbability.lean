@@ -10,13 +10,13 @@ import Mathbin.Probability.Independence
 
 This file defines conditional probability and includes basic results relating to it.
 
-Given some measure `μ` defined on a measure space on some type `α` and some `s : set α`,
+Given some measure `μ` defined on a measure space on some type `Ω` and some `s : set Ω`,
 we define the measure of `μ` conditioned on `s` as the restricted measure scaled by
 the inverse of the measure of `s`: `cond μ s = (μ s)⁻¹ • μ.restrict s`. The scaling
 ensures that this is a probability measure (when `μ` is a finite measure).
 
 From this definition, we derive the "axiomatic" definition of conditional probability
-based on application: for any `s t : set α`, we have `μ[t|s] = (μ s)⁻¹ * μ (s ∩ t)`.
+based on application: for any `s t : set Ω`, we have `μ[t|s] = (μ s)⁻¹ * μ (s ∩ t)`.
 
 ## Main Statements
 
@@ -60,7 +60,7 @@ open Ennreal
 
 open MeasureTheory MeasurableSpace
 
-variable {α : Type _} {m : MeasurableSpace α} (μ : Measureₓ α) {s t : Set α}
+variable {Ω : Type _} {m : MeasurableSpace Ω} (μ : Measureₓ Ω) {s t : Set Ω}
 
 namespace ProbabilityTheory
 
@@ -69,7 +69,7 @@ section Definitions
 /-- The conditional probability measure of measure `μ` on set `s` is `μ` restricted to `s`
 and scaled by the inverse of `μ s` (to make it a probability measure):
 `(μ s)⁻¹ • μ.restrict s`. -/
-def cond (s : Set α) : Measureₓ α :=
+def cond (s : Set Ω) : Measureₓ Ω :=
   (μ s)⁻¹ • μ.restrict s
 
 end Definitions
@@ -98,11 +98,11 @@ theorem cond_univ [IsProbabilityMeasure μ] : μ[|Set.Univ] = μ := by
   simp [← cond, ← measure_univ, ← measure.restrict_univ]
 
 /-- The axiomatic definition of conditional probability derived from a measure-theoretic one. -/
-theorem cond_apply (hms : MeasurableSet s) (t : Set α) : μ[t|s] = (μ s)⁻¹ * μ (s ∩ t) := by
+theorem cond_apply (hms : MeasurableSet s) (t : Set Ω) : μ[t|s] = (μ s)⁻¹ * μ (s ∩ t) := by
   rw [cond, measure.smul_apply, measure.restrict_apply' hms, Set.inter_comm]
   rfl
 
-theorem cond_inter_self (hms : MeasurableSet s) (t : Set α) : μ[s ∩ t|s] = μ[t|s] := by
+theorem cond_inter_self (hms : MeasurableSet s) (t : Set Ω) : μ[s ∩ t|s] = μ[t|s] := by
   rw [cond_apply _ hms, ← Set.inter_assoc, Set.inter_self, ← cond_apply _ hms]
 
 theorem inter_pos_of_cond_ne_zero (hms : MeasurableSet s) (hcst : μ[t|s] ≠ 0) : 0 < μ (s ∩ t) := by
@@ -131,11 +131,11 @@ theorem cond_cond_eq_cond_inter [IsFiniteMeasure μ] (hms : MeasurableSet s) (hm
     (hci : μ (s ∩ t) ≠ 0) : μ[|s][|t] = μ[|s ∩ t] :=
   cond_cond_eq_cond_inter' μ hms hmt (measure_ne_top μ s) hci
 
-theorem cond_mul_eq_inter' (hms : MeasurableSet s) (hcs : μ s ≠ 0) (hcs' : μ s ≠ ∞) (t : Set α) :
+theorem cond_mul_eq_inter' (hms : MeasurableSet s) (hcs : μ s ≠ 0) (hcs' : μ s ≠ ∞) (t : Set Ω) :
     μ[t|s] * μ s = μ (s ∩ t) := by
   rw [cond_apply μ hms t, mul_comm, ← mul_assoc, Ennreal.mul_inv_cancel hcs hcs', one_mulₓ]
 
-theorem cond_mul_eq_inter [IsFiniteMeasure μ] (hms : MeasurableSet s) (hcs : μ s ≠ 0) (t : Set α) :
+theorem cond_mul_eq_inter [IsFiniteMeasure μ] (hms : MeasurableSet s) (hcs : μ s ≠ 0) (t : Set Ω) :
     μ[t|s] * μ s = μ (s ∩ t) :=
   cond_mul_eq_inter' μ hms hcs (measure_ne_top _ s) t
 

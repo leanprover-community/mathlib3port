@@ -122,15 +122,15 @@ noncomputable section
 
 section
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜]
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜]
 
-variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
-variable {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F]
+variable {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 
-variable {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G]
+variable {G : Type _} [NormedAddCommGroup G] [NormedSpace 𝕜 G]
 
-variable {G' : Type _} [NormedGroup G'] [NormedSpace 𝕜 G']
+variable {G' : Type _} [NormedAddCommGroup G'] [NormedSpace 𝕜 G']
 
 /-- A function `f` has the continuous linear map `f'` as derivative along the filter `L` if
 `f x' = f x + f' (x' - x) + o (x' - x)` when `x'` converges along the filter `L`. This definition
@@ -299,8 +299,11 @@ theorem HasFderivAt.le_of_lip' {f : E → F} {f' : E →L[𝕜] F} {x₀ : E} (h
   rw [← map_add_left_nhds_zero x₀, eventually_map] at hlip
   filter_upwards [is_o_iff.1 (has_fderiv_at_iff_is_o_nhds_zero.1 hf) ε0, hlip] with y hy hyC
   rw [add_sub_cancel'] at hyC
-  calc ∥f' y∥ ≤ ∥f (x₀ + y) - f x₀∥ + ∥f (x₀ + y) - f x₀ - f' y∥ := norm_le_insert _ _ _ ≤ C * ∥y∥ + ε * ∥y∥ :=
-      add_le_add hyC hy _ = (C + ε) * ∥y∥ := (add_mulₓ _ _ _).symm
+  calc
+    ∥f' y∥ ≤ ∥f (x₀ + y) - f x₀∥ + ∥f (x₀ + y) - f x₀ - f' y∥ := norm_le_insert _ _
+    _ ≤ C * ∥y∥ + ε * ∥y∥ := add_le_add hyC hy
+    _ = (C + ε) * ∥y∥ := (add_mulₓ _ _ _).symm
+    
 
 /-- Converse to the mean value inequality: if `f` is differentiable at `x₀` and `C`-lipschitz
 on a neighborhood of `x₀` then it its derivative at `x₀` has norm bounded by `C`. -/
@@ -453,6 +456,10 @@ theorem DifferentiableWithinAt.mono (h : DifferentiableWithinAt 𝕜 f t x) (st 
     DifferentiableWithinAt 𝕜 f s x := by
   rcases h with ⟨f', hf'⟩
   exact ⟨f', hf'.mono st⟩
+
+theorem DifferentiableWithinAt.mono_of_mem (h : DifferentiableWithinAt 𝕜 f s x) {t : Set E} (hst : s ∈ nhdsWithin x t) :
+    DifferentiableWithinAt 𝕜 f t x :=
+  (h.HasFderivWithinAt.mono_of_mem hst).DifferentiableWithinAt
 
 theorem differentiable_within_at_univ : DifferentiableWithinAt 𝕜 f Univ x ↔ DifferentiableAt 𝕜 f x := by
   simp only [← DifferentiableWithinAt, ← has_fderiv_within_at_univ, ← DifferentiableAt]
@@ -968,10 +975,13 @@ example {g : F → G} {g' : F →L[𝕜] G} (hg : HasFderivAtFilter g g' (f x) (
       _ =O[L] fun x' => x' - x := hf.is_O_sub
       
   refine' this.triangle _
-  calc (fun x' : E => g' (f x' - f x) - g'.comp f' (x' - x)) =ᶠ[L] fun x' => g' (f x' - f x - f' (x' - x)) :=
+  calc
+    (fun x' : E => g' (f x' - f x) - g'.comp f' (x' - x)) =ᶠ[L] fun x' => g' (f x' - f x - f' (x' - x)) :=
       eventually_of_forall fun x' => by
-        simp _ =O[L] fun x' => f x' - f x - f' (x' - x) :=
-      g'.is_O_comp _ _ _ =o[L] fun x' => x' - x := hf
+        simp
+    _ =O[L] fun x' => f x' - f x - f' (x' - x) := g'.is_O_comp _ _
+    _ =o[L] fun x' => x' - x := hf
+    
 
 theorem HasFderivWithinAt.comp {g : F → G} {g' : F →L[𝕜] G} {t : Set F} (hg : HasFderivWithinAt g g' t (f x))
     (hf : HasFderivWithinAt f f' s x) (hst : MapsTo f s t) : HasFderivWithinAt (g ∘ f) (g'.comp f') s x :=
@@ -1603,7 +1613,7 @@ theorem:
 -/
 
 
-variable {ι : Type _} [Fintype ι] {F' : ι → Type _} [∀ i, NormedGroup (F' i)] [∀ i, NormedSpace 𝕜 (F' i)]
+variable {ι : Type _} [Fintype ι] {F' : ι → Type _} [∀ i, NormedAddCommGroup (F' i)] [∀ i, NormedSpace 𝕜 (F' i)]
   {φ : ∀ i, E → F' i} {φ' : ∀ i, E →L[𝕜] F' i} {Φ : E → ∀ i, F' i} {Φ' : E →L[𝕜] ∀ i, F' i}
 
 @[simp]
@@ -1959,8 +1969,8 @@ section ClmCompApply
 /-! ### Derivative of the pointwise composition/application of continuous linear maps -/
 
 
-variable {H : Type _} [NormedGroup H] [NormedSpace 𝕜 H] {c : E → G →L[𝕜] H} {c' : E →L[𝕜] G →L[𝕜] H} {d : E → F →L[𝕜] G}
-  {d' : E →L[𝕜] F →L[𝕜] G} {u : E → G} {u' : E →L[𝕜] G}
+variable {H : Type _} [NormedAddCommGroup H] [NormedSpace 𝕜 H] {c : E → G →L[𝕜] H} {c' : E →L[𝕜] G →L[𝕜] H}
+  {d : E → F →L[𝕜] G} {d' : E →L[𝕜] F →L[𝕜] G} {u : E → G} {u' : E →L[𝕜] G}
 
 theorem HasStrictFderivAt.clm_comp (hc : HasStrictFderivAt c c' x) (hd : HasStrictFderivAt d d' x) :
     HasStrictFderivAt (fun y => (c y).comp (d y)) ((compL 𝕜 F G H (c x)).comp d' + ((compL 𝕜 F G H).flip (d x)).comp c')
@@ -2050,7 +2060,7 @@ normed vector space.
 -/
 
 
-variable {𝕜' : Type _} [NondiscreteNormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] [NormedSpace 𝕜' F] [IsScalarTower 𝕜 𝕜' F]
+variable {𝕜' : Type _} [NontriviallyNormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] [NormedSpace 𝕜' F] [IsScalarTower 𝕜 𝕜' F]
 
 variable {c : E → 𝕜'} {c' : E →L[𝕜] 𝕜'}
 
@@ -2179,6 +2189,24 @@ theorem DifferentiableOn.mul (ha : DifferentiableOn 𝕜 a s) (hb : Differentiab
 @[simp]
 theorem Differentiable.mul (ha : Differentiable 𝕜 a) (hb : Differentiable 𝕜 b) : Differentiable 𝕜 fun y => a y * b y :=
   fun x => (ha x).mul (hb x)
+
+theorem DifferentiableWithinAt.pow (ha : DifferentiableWithinAt 𝕜 a s x) :
+    ∀ n : ℕ, DifferentiableWithinAt 𝕜 (fun x => a x ^ n) s x
+  | 0 => by
+    simp only [← pow_zeroₓ, ← differentiable_within_at_const]
+  | n + 1 => by
+    simp only [← pow_succₓ, ← DifferentiableWithinAt.pow n, ← ha.mul]
+
+@[simp]
+theorem DifferentiableAt.pow (ha : DifferentiableAt 𝕜 a x) (n : ℕ) : DifferentiableAt 𝕜 (fun x => a x ^ n) x :=
+  differentiable_within_at_univ.mp <| ha.DifferentiableWithinAt.pow n
+
+theorem DifferentiableOn.pow (ha : DifferentiableOn 𝕜 a s) (n : ℕ) : DifferentiableOn 𝕜 (fun x => a x ^ n) s :=
+  fun x h => (ha x h).pow n
+
+@[simp]
+theorem Differentiable.pow (ha : Differentiable 𝕜 a) (n : ℕ) : Differentiable 𝕜 fun x => a x ^ n := fun x =>
+  (ha x).pow n
 
 theorem fderiv_within_mul' (hxs : UniqueDiffWithinAt 𝕜 s x) (ha : DifferentiableWithinAt 𝕜 a s x)
     (hb : DifferentiableWithinAt 𝕜 b s x) :
@@ -2583,9 +2611,9 @@ section
   we can use  scalar multiplication in the `tendsto` characterization
   of the Fréchet derivative.
 -/
-variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E]
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
-variable {F : Type _} [NormedGroup F] [NormedSpace ℝ F]
+variable {F : Type _} [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 variable {f : E → F} {f' : E →L[ℝ] F} {x : E}
 
@@ -2609,8 +2637,8 @@ end
 
 section TangentCone
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
-  [NormedGroup F] [NormedSpace 𝕜 F] {f : E → F} {s : Set E} {f' : E →L[𝕜] F}
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {F : Type _}
+  [NormedAddCommGroup F] [NormedSpace 𝕜 F] {f : E → F} {s : Set E} {f' : E →L[𝕜] F}
 
 /-- The image of a tangent cone under the differential of a map is included in the tangent cone to
 the image. -/
@@ -2665,15 +2693,15 @@ respectively by `𝕜'` and `𝕜` where `𝕜'` is a normed algebra over `𝕜`
 -/
 
 
-variable (𝕜 : Type _) [NondiscreteNormedField 𝕜]
+variable (𝕜 : Type _) [NontriviallyNormedField 𝕜]
 
-variable {𝕜' : Type _} [NondiscreteNormedField 𝕜'] [NormedAlgebra 𝕜 𝕜']
+variable {𝕜' : Type _} [NontriviallyNormedField 𝕜'] [NormedAlgebra 𝕜 𝕜']
 
-variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] [NormedSpace 𝕜' E]
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] [NormedSpace 𝕜' E]
 
 variable [IsScalarTower 𝕜 𝕜' E]
 
-variable {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] [NormedSpace 𝕜' F]
+variable {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F] [NormedSpace 𝕜' F]
 
 variable [IsScalarTower 𝕜 𝕜' F]
 
@@ -2746,15 +2774,14 @@ section Support
 
 open Function
 
-variable (𝕜 : Type _) {E F : Type _} [NondiscreteNormedField 𝕜]
-
-variable [NormedGroup E] [NormedSpace 𝕜 E] [NormedGroup F] [NormedSpace 𝕜 F] {f : E → F}
+variable (𝕜 : Type _) {E F : Type _} [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E]
+  [NormedAddCommGroup F] [NormedSpace 𝕜 F] {f : E → F}
 
 theorem support_fderiv_subset : Support (fderiv 𝕜 f) ⊆ Tsupport f := by
   intro x
   rw [← not_imp_not]
   intro h2x
-  rw [not_mem_closure_support_iff_eventually_eq] at h2x
+  rw [not_mem_tsupport_iff_eventually_eq] at h2x
   exact nmem_support.mpr (h2x.fderiv_eq.trans <| fderiv_const_apply 0)
 
 theorem HasCompactSupport.fderiv (hf : HasCompactSupport f) : HasCompactSupport (fderiv 𝕜 f) :=

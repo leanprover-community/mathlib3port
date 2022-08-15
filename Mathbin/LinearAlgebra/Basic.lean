@@ -126,6 +126,24 @@ theorem linear_equiv_fun_on_fintype_symm_coe (f : α →₀ M) : (linearEquivFun
   ext
   simp [← linear_equiv_fun_on_fintype]
 
+/-- If `α` has a unique term, then the type of finitely supported functions `α →₀ M` is
+`R`-linearly equivalent to `M`. -/
+noncomputable def LinearEquiv.finsuppUnique (α : Type _) [Unique α] : (α →₀ M) ≃ₗ[R] M :=
+  { Finsupp.equivFunOnFintype.trans (Equivₓ.funUnique α M) with map_add' := fun x y => rfl,
+    map_smul' := fun r x => rfl }
+
+variable {R M α}
+
+@[simp]
+theorem LinearEquiv.finsupp_unique_apply (α : Type _) [Unique α] (f : α →₀ M) :
+    LinearEquiv.finsuppUnique R M α f = f default :=
+  rfl
+
+@[simp]
+theorem LinearEquiv.finsupp_unique_symm_apply {α : Type _} [Unique α] (m : M) :
+    (LinearEquiv.finsuppUnique R M α).symm m = Finsupp.single default m := by
+  ext <;> simp [← linear_equiv.finsupp_unique]
+
 end Finsupp
 
 /-- decomposing `x : ι → R` as a sum along the canonical basis -/
@@ -598,7 +616,7 @@ instance [Subsingleton M] : Unique (Submodule R M) :=
   ⟨⟨⊥⟩, fun a => @Subsingleton.elimₓ _ ((subsingleton_iff R).mpr ‹_›) a _⟩
 
 instance unique' [Subsingleton R] : Unique (Submodule R M) := by
-  have := Module.subsingleton R M <;> infer_instance
+  haveI := Module.subsingleton R M <;> infer_instance
 
 instance [Nontrivial M] : Nontrivial (Submodule R M) :=
   (nontrivial_iff R).mpr ‹_›
@@ -1259,7 +1277,7 @@ theorem ker_to_add_subgroup (f : M →ₛₗ[τ₁₂] M₂) : f.ker.toAddSubgro
 theorem sub_mem_ker_iff {x y} : x - y ∈ f.ker ↔ f x = f y := by
   rw [mem_ker, map_sub, sub_eq_zero]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » p)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » p)
 theorem disjoint_ker' {p : Submodule R M} : Disjoint p (ker f) ↔ ∀ (x y) (_ : x ∈ p) (_ : y ∈ p), f x = f y → x = y :=
   disjoint_ker.trans
     ⟨fun H x hx y hy h =>
@@ -1272,7 +1290,7 @@ theorem disjoint_ker' {p : Submodule R M} : Disjoint p (ker f) ↔ ∀ (x y) (_ 
         (by
           simpa using h₂)⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem inj_of_disjoint_ker {p : Submodule R M} {s : Set M} (h : s ⊆ p) (hd : Disjoint p (ker f)) :
     ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), f x = f y → x = y := fun x hx y hy => disjoint_ker'.1 hd _ (h hx) _ (h hy)
 
@@ -1749,6 +1767,10 @@ theorem coe_of_eq_apply (h : p = q) (x : p) : (ofEq p q h x : M) = x :=
 @[simp]
 theorem of_eq_symm (h : p = q) : (ofEq p q h).symm = ofEq q p h.symm :=
   rfl
+
+@[simp]
+theorem of_eq_rfl : ofEq p p rfl = LinearEquiv.refl R p := by
+  ext <;> rfl
 
 include σ₂₁
 

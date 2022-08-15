@@ -39,11 +39,11 @@ local prefix:1024 "↑ₘ" => @coe _ (Matrix (Finₓ 2) (Finₓ 2) _) _
 -- mathport name: «exprGL( , )⁺»
 local notation "GL(" n ", " R ")" "⁺" => Matrix.gLPos (Finₓ n) R
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler λ α, has_coe α exprℂ()
+-- ./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler λ α, has_coe α exprℂ()
 /-- The open upper half plane -/
 def UpperHalfPlane :=
   { point : ℂ // 0 < point.im }deriving
-  «./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler λ α, has_coe α exprℂ()»
+  «./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler λ α, has_coe α exprℂ()»
 
 -- mathport name: «exprℍ»
 localized [UpperHalfPlane] notation "ℍ" => UpperHalfPlane
@@ -297,9 +297,12 @@ theorem c_mul_im_sq_le_norm_sq_denom (z : ℍ) (g : SL(2,ℝ)) : ((↑ₘg 1 0 :
   by
   let c := (↑ₘg 1 0 : ℝ)
   let d := (↑ₘg 1 1 : ℝ)
-  calc (c * z.im) ^ 2 ≤ (c * z.im) ^ 2 + (c * z.re + d) ^ 2 := by
-      nlinarith _ = Complex.normSq (denom g z) := by
+  calc
+    (c * z.im) ^ 2 ≤ (c * z.im) ^ 2 + (c * z.re + d) ^ 2 := by
+      nlinarith
+    _ = Complex.normSq (denom g z) := by
       simp [← Complex.normSq] <;> ring
+    
 
 theorem SpecialLinearGroup.im_smul_eq_div_norm_sq : (g • z).im = z.im / Complex.normSq (denom g z) := by
   convert im_smul_eq_div_norm_sq g z

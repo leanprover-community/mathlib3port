@@ -3,13 +3,10 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Data.Nat.Prime
-import Mathbin.Data.Zmod.Basic
-import Mathbin.RingTheory.Multiplicity
-import Mathbin.Data.Nat.Periodic
 import Mathbin.Algebra.CharP.Two
-import Mathbin.NumberTheory.Divisors
+import Mathbin.Data.Nat.Factorization.Basic
+import Mathbin.Data.Nat.Periodic
+import Mathbin.Data.Zmod.Basic
 
 /-!
 # Euler's totient function
@@ -96,9 +93,12 @@ theorem Ico_filter_coprime_le {a : ℕ} (k n : ℕ) (a_pos : 0 < a) :
       rw [Ico_union_Ico_eq_Ico]
       rw [add_assocₓ]
       exact le_self_add
-      exact le_self_add _ ≤ (filter a.coprime (Ico k (k + n % a + a * i))).card + a.totient := by
+      exact le_self_add
+    _ ≤ (filter a.coprime (Ico k (k + n % a + a * i))).card + a.totient := by
       rw [filter_union, ← filter_coprime_Ico_eq_totient a (k + n % a + a * i)]
-      apply card_union_le _ ≤ a.totient * i + a.totient + a.totient := add_le_add_right ih (totient a)
+      apply card_union_le
+    _ ≤ a.totient * i + a.totient + a.totient := add_le_add_right ih (totient a)
+    
 
 open Zmod
 
@@ -117,7 +117,7 @@ theorem _root_.zmod.card_units_eq_totient (n : ℕ) [h : Fact (0 < n)] [Fintype 
     
 
 theorem totient_even {n : ℕ} (hn : 2 < n) : Even n.totient := by
-  have : Fact (1 < n) := ⟨one_lt_two.trans hn⟩
+  haveI : Fact (1 < n) := ⟨one_lt_two.trans hn⟩
   suffices 2 = orderOf (-1 : (Zmod n)ˣ) by
     rw [← Zmod.card_units_eq_totient, even_iff_two_dvd, this]
     exact order_of_dvd_card_univ
@@ -127,9 +127,9 @@ theorem totient_mul {m n : ℕ} (h : m.Coprime n) : φ (m * n) = φ m * φ n :=
   if hmn0 : m * n = 0 then by
     cases' Nat.mul_eq_zero.1 hmn0 with h h <;> simp only [← totient_zero, ← mul_zero, ← zero_mul, ← h]
   else by
-    have : Fact (0 < m * n) := ⟨Nat.pos_of_ne_zeroₓ hmn0⟩
-    have : Fact (0 < m) := ⟨Nat.pos_of_ne_zeroₓ <| left_ne_zero_of_mul hmn0⟩
-    have : Fact (0 < n) := ⟨Nat.pos_of_ne_zeroₓ <| right_ne_zero_of_mul hmn0⟩
+    haveI : Fact (0 < m * n) := ⟨Nat.pos_of_ne_zeroₓ hmn0⟩
+    haveI : Fact (0 < m) := ⟨Nat.pos_of_ne_zeroₓ <| left_ne_zero_of_mul hmn0⟩
+    haveI : Fact (0 < n) := ⟨Nat.pos_of_ne_zeroₓ <| right_ne_zero_of_mul hmn0⟩
     simp only [Zmod.card_units_eq_totient]
     rw [Fintype.card_congr (Units.mapEquiv (Zmod.chineseRemainder h).toMulEquiv).toEquiv,
       Fintype.card_congr (@MulEquiv.prodUnits (Zmod m) (Zmod n) _ _).toEquiv, Fintype.card_prod]
@@ -214,20 +214,6 @@ theorem totient_prime_pow {p : ℕ} (hp : p.Prime) {n : ℕ} (hn : 0 < n) : φ (
 theorem totient_prime {p : ℕ} (hp : p.Prime) : φ p = p - 1 := by
   rw [← pow_oneₓ p, totient_prime_pow hp] <;> simp
 
-theorem totient_mul_of_prime_of_dvd {p n : ℕ} (hp : p.Prime) (h : p ∣ n) : (p * n).totient = p * n.totient := by
-  by_cases' hzero : n = 0
-  · simp [← hzero]
-    
-  · have hfin := multiplicity.finite_nat_iff.2 ⟨hp.ne_one, zero_lt_iff.2 hzero⟩
-    have h0 : 0 < (multiplicity p n).get hfin := multiplicity.pos_of_dvd hfin h
-    obtain ⟨m, hm, hndiv⟩ := multiplicity.exists_eq_pow_mul_and_not_dvd hfin
-    rw [hm, ← mul_assoc, ← pow_succₓ, Nat.totient_mul (coprime_comm.mp (hp.coprime_pow_of_not_dvd hndiv)),
-      Nat.totient_mul (coprime_comm.mp (hp.coprime_pow_of_not_dvd hndiv)), ← mul_assoc]
-    congr
-    rw [← succ_pred_eq_of_pos h0, totient_prime_pow_succ hp, totient_prime_pow_succ hp, succ_pred_eq_of_pos h0, ←
-      mul_assoc p, ← pow_succₓ, ← succ_pred_eq_of_pos h0, Nat.pred_succ]
-    
-
 theorem totient_eq_iff_prime {p : ℕ} (hp : 0 < p) : p.totient = p - 1 ↔ p.Prime := by
   refine' ⟨fun h => _, totient_prime⟩
   replace hp : 1 < p
@@ -245,7 +231,7 @@ theorem totient_eq_iff_prime {p : ℕ} (hp : 0 < p) : p.totient = p - 1 ↔ p.Pr
   rwa [succ_le_iff, pos_iff_ne_zero]
 
 theorem card_units_zmod_lt_sub_one {p : ℕ} (hp : 1 < p) [Fintype (Zmod p)ˣ] : Fintype.card (Zmod p)ˣ ≤ p - 1 := by
-  have : Fact (0 < p) := ⟨zero_lt_one.trans hp⟩
+  haveI : Fact (0 < p) := ⟨zero_lt_one.trans hp⟩
   rw [Zmod.card_units_eq_totient p]
   exact Nat.le_pred_of_ltₓ (Nat.totient_lt p hp)
 
@@ -258,7 +244,7 @@ theorem prime_iff_card_units (p : ℕ) [Fintype (Zmod p)ˣ] : p.Prime ↔ Fintyp
       convert this
     simp
     
-  have : Fact (0 < p) := ⟨Nat.pos_of_ne_zeroₓ hp⟩
+  haveI : Fact (0 < p) := ⟨Nat.pos_of_ne_zeroₓ hp⟩
   rw [Zmod.card_units_eq_totient, Nat.totient_eq_iff_prime (Fact.out (0 < p))]
 
 @[simp]
@@ -333,10 +319,13 @@ theorem totient_gcd_mul_totient_mul (a b : ℕ) : φ (a.gcd b) * φ (a * b) = φ
   have shuffle :
     ∀ a1 a2 b1 b2 c1 c2 : ℕ, b1 ∣ a1 → b2 ∣ a2 → a1 / b1 * c1 * (a2 / b2 * c2) = a1 * a2 / (b1 * b2) * (c1 * c2) := by
     intro a1 a2 b1 b2 c1 c2 h1 h2
-    calc a1 / b1 * c1 * (a2 / b2 * c2) = a1 / b1 * (a2 / b2) * (c1 * c2) := by
-        apply mul_mul_mul_commₓ _ = a1 * a2 / (b1 * b2) * (c1 * c2) := by
+    calc
+      a1 / b1 * c1 * (a2 / b2 * c2) = a1 / b1 * (a2 / b2) * (c1 * c2) := by
+        apply mul_mul_mul_commₓ
+      _ = a1 * a2 / (b1 * b2) * (c1 * c2) := by
         congr 1
         exact div_mul_div_comm h1 h2
+      
   simp only [← totient_eq_div_factors_mul]
   rw [shuffle, shuffle]
   rotate_left
@@ -355,6 +344,31 @@ theorem totient_super_multiplicative (a b : ℕ) : φ a * φ b ≤ φ (a * b) :=
   have hd0 : 0 < d := Nat.gcd_pos_of_pos_leftₓ _ ha0
   rw [← mul_le_mul_right hd0, ← totient_gcd_mul_totient_mul a b, mul_comm]
   apply mul_le_mul_left' (Nat.totient_le d)
+
+theorem totient_dvd_of_dvd {a b : ℕ} (h : a ∣ b) : φ a ∣ φ b := by
+  rcases eq_or_ne a 0 with (rfl | ha0)
+  · simp [← zero_dvd_iff.1 h]
+    
+  rcases eq_or_ne b 0 with (rfl | hb0)
+  · simp
+    
+  have hab' : a.factorization.support ⊆ b.factorization.support := by
+    intro p
+    simp only [← support_factorization, ← List.mem_to_finset]
+    apply factors_subset_of_dvd h hb0
+  rw [totient_eq_prod_factorization ha0, totient_eq_prod_factorization hb0]
+  refine' Finsupp.prod_dvd_prod_of_subset_of_dvd hab' fun p hp => mul_dvd_mul _ dvd_rfl
+  exact pow_dvd_pow p (tsub_le_tsub_right ((factorization_le_iff_dvd ha0 hb0).2 h p) 1)
+
+theorem totient_mul_of_prime_of_dvd {p n : ℕ} (hp : p.Prime) (h : p ∣ n) : (p * n).totient = p * n.totient := by
+  have h1 := totient_gcd_mul_totient_mul p n
+  rw [gcd_eq_left h, mul_assoc] at h1
+  simpa [← (totient_pos hp.pos).ne', ← mul_comm] using h1
+
+theorem totient_mul_of_prime_of_not_dvd {p n : ℕ} (hp : p.Prime) (h : ¬p ∣ n) : (p * n).totient = (p - 1) * n.totient :=
+  by
+  rw [totient_mul _, totient_prime hp]
+  simpa [← h] using coprime_or_dvd_of_prime hp n
 
 end Nat
 

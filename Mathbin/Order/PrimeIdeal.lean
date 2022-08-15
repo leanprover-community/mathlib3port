@@ -41,7 +41,7 @@ namespace Ideal
 
 /-- A pair of an `ideal` and a `pfilter` which form a partition of `P`.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure PrimePair (P : Type _) [Preorderₓ P] where
   i : Ideal P
   f : Pfilter P

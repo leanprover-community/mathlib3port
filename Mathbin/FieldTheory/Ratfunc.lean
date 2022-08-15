@@ -209,8 +209,12 @@ theorem lift_on_condition_of_lift_on'_condition {P : Sort v} {f : ∀ p q : K[X]
     (H : ∀ {p q a} (hq : q ≠ 0) (ha : a ≠ 0), f (a * p) (a * q) = f p q) ⦃p q p' q' : K[X]⦄ (hq : q ≠ 0) (hq' : q' ≠ 0)
     (h : p * q' = p' * q) : f p q = f p' q' := by
   have H0 : f 0 q = f 0 q' := by
-    calc f 0 q = f (q' * 0) (q' * q) := (H hq hq').symm _ = f (q * 0) (q * q') := by
-        rw [mul_zero, mul_zero, mul_comm]_ = f 0 q' := H hq' hq
+    calc
+      f 0 q = f (q' * 0) (q' * q) := (H hq hq').symm
+      _ = f (q * 0) (q * q') := by
+        rw [mul_zero, mul_zero, mul_comm]
+      _ = f 0 q' := H hq' hq
+      
   by_cases' hp : p = 0
   · simp only [← hp, ← hq, ← zero_mul, ← or_falseₓ, ← zero_eq_mul] at h⊢
     rw [h, H0]
@@ -218,8 +222,12 @@ theorem lift_on_condition_of_lift_on'_condition {P : Sort v} {f : ∀ p q : K[X]
   by_cases' hp' : p' = 0
   · simpa only [← hp, ← hp', ← hq', ← zero_mul, ← or_selfₓ, ← mul_eq_zero] using h
     
-  calc f p q = f (p' * p) (p' * q) := (H hq hp').symm _ = f (p * p') (p * q') := by
-      rw [mul_comm p p', h]_ = f p' q' := H hq' hp
+  calc
+    f p q = f (p' * p) (p' * q) := (H hq hp').symm
+    _ = f (p * p') (p * q') := by
+      rw [mul_comm p p', h]
+    _ = f p' q' := H hq' hp
+    
 
 /-- Non-dependent recursion principle for `ratfunc K`: if `f p q : P` for all `p q`,
 such that `f (a * p) (a * q) = f p q`, then we can find a value of `P`
@@ -239,7 +247,7 @@ theorem lift_on'_mk {P : Sort v} (p q : K[X]) (f : ∀ p q : K[X], P) (f0 : ∀ 
   rw [Ratfunc.liftOn', Ratfunc.lift_on_mk _ _ _ f0]
   exact lift_on_condition_of_lift_on'_condition @H
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1389:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Basic.lean:1401:38: unsupported irreducible non-definition
 /-- Induction principle for `ratfunc K`: if `f p q : P (ratfunc.mk p q)` for all `p q`,
 then `P` holds on all elements of `ratfunc K`.
 
@@ -437,12 +445,12 @@ def toFractionRingRingEquiv : Ratfunc K ≃+* FractionRing K[X] where
 
 omit hring
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 /-- Solve equations for `ratfunc K` by working in `fraction_ring K[X]`. -/
 unsafe def frac_tac : tactic Unit :=
   sorry
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 /-- Solve equations for `ratfunc K` by applying `ratfunc.induction_on`. -/
 unsafe def smul_tac : tactic Unit :=
   sorry

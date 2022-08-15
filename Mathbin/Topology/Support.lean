@@ -81,6 +81,10 @@ theorem tsupport_mul_subset_right {α : Type _} [MulZeroClassₓ α] {f g : X �
 
 end One
 
+theorem tsupport_smul_subset_left {M α} [TopologicalSpace X] [Zero M] [Zero α] [SmulWithZero M α] (f : X → M)
+    (g : X → α) : (Tsupport fun x => f x • g x) ⊆ Tsupport f :=
+  closure_mono <| support_smul_subset_left f g
+
 section
 
 variable [TopologicalSpace α] [TopologicalSpace α']
@@ -90,9 +94,16 @@ variable [One β] [One γ] [One δ]
 variable {g : β → γ} {f : α → β} {f₂ : α → γ} {m : β → γ → δ} {x : α}
 
 @[to_additive]
-theorem not_mem_closure_mul_support_iff_eventually_eq : x ∉ MulTsupport f ↔ f =ᶠ[𝓝 x] 1 := by
+theorem not_mem_mul_tsupport_iff_eventually_eq : x ∉ MulTsupport f ↔ f =ᶠ[𝓝 x] 1 := by
   simp_rw [MulTsupport, mem_closure_iff_nhds, not_forall, not_nonempty_iff_eq_empty, ← disjoint_iff_inter_eq_empty,
     disjoint_mul_support_iff, eventually_eq_iff_exists_mem]
+
+@[to_additive]
+theorem continuous_of_mul_tsupport [TopologicalSpace β] {f : α → β} (hf : ∀, ∀ x ∈ MulTsupport f, ∀, ContinuousAt f x) :
+    Continuous f :=
+  continuous_iff_continuous_at.2 fun x =>
+    ((em _).elim (hf x)) fun hx =>
+      (@continuous_at_const _ _ _ _ _ 1).congr (not_mem_mul_tsupport_iff_eventually_eq.mp hx).symm
 
 /-- A function `f` *has compact multiplicative support* or is *compactly supported* if the closure
 of the multiplicative support of `f` is compact. In a T₂ space this is equivalent to `f` being equal
@@ -106,14 +117,14 @@ def HasCompactMulSupport (f : α → β) : Prop :=
 theorem has_compact_mul_support_def : HasCompactMulSupport f ↔ IsCompact (Closure (MulSupport f)) := by
   rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ∉ » K)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ∉ » K)
 @[to_additive]
 theorem exists_compact_iff_has_compact_mul_support [T2Space α] :
     (∃ K : Set α, IsCompact K ∧ ∀ (x) (_ : x ∉ K), f x = 1) ↔ HasCompactMulSupport f := by
   simp_rw [← nmem_mul_support, ← mem_compl_iff, ← subset_def, compl_subset_compl, has_compact_mul_support_def,
     exists_compact_superset_iff]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ∉ » K)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ∉ » K)
 @[to_additive]
 theorem HasCompactMulSupport.intro [T2Space α] {K : Set α} (hK : IsCompact K) (hfK : ∀ (x) (_ : x ∉ K), f x = 1) :
     HasCompactMulSupport f :=

@@ -283,7 +283,7 @@ variable (S)
 
 /-- An induction principle for closure membership. If `p` holds for all elements of `s`, and
 is preserved under multiplication, then `p` holds for all elements of the closure of `s`. -/
-@[elab_as_eliminator,
+@[elabAsElim,
   to_additive
       "An induction principle for additive closure membership. If `p`\nholds for all elements of `s`, and is preserved under addition, then `p` holds for all\nelements of the additive closure of `s`."]
 theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure s) (Hs : ∀, ∀ x ∈ s, ∀, p x)
@@ -291,15 +291,14 @@ theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure s) (Hs : ∀, 
   (@closure_le _ _ _ ⟨p, Hmul⟩).2 Hs h
 
 /-- A dependent version of `subsemigroup.closure_induction`.  -/
-@[elab_as_eliminator, to_additive "A dependent version of `add_subsemigroup.closure_induction`. "]
+@[elabAsElim, to_additive "A dependent version of `add_subsemigroup.closure_induction`. "]
 theorem closure_induction' (s : Set M) {p : ∀ x, x ∈ closure s → Prop} (Hs : ∀ (x) (h : x ∈ s), p x (subset_closure h))
     (Hmul : ∀ x hx y hy, p x hx → p y hy → p (x * y) (mul_mem hx hy)) {x} (hx : x ∈ closure s) : p x hx := by
   refine' Exists.elim _ fun (hx : x ∈ closure s) (hc : p x hx) => hc
   exact closure_induction hx (fun x hx => ⟨_, Hs x hx⟩) fun x y ⟨hx', hx⟩ ⟨hy', hy⟩ => ⟨_, Hmul _ _ _ _ hx hy⟩
 
 /-- An induction principle for closure membership for predicates with two arguments.  -/
-@[elab_as_eliminator,
-  to_additive "An induction principle for additive closure membership for\npredicates with two arguments."]
+@[elabAsElim, to_additive "An induction principle for additive closure membership for\npredicates with two arguments."]
 theorem closure_induction₂ {p : M → M → Prop} {x} {y : M} (hx : x ∈ closure s) (hy : y ∈ closure s)
     (Hs : ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀, p x y) (Hmul_left : ∀ x y z, p x z → p y z → p (x * y) z)
     (Hmul_right : ∀ x y z, p z x → p z y → p z (x * y)) : p x y :=
@@ -309,7 +308,7 @@ theorem closure_induction₂ {p : M → M → Prop} {x} {y : M} (hx : x ∈ clos
 /-- If `s` is a dense set in a magma `M`, `subsemigroup.closure s = ⊤`, then in order to prove that
 some predicate `p` holds for all `x : M` it suffices to verify `p x` for `x ∈ s`,
 and verify that `p x` and `p y` imply `p (x * y)`. -/
-@[elab_as_eliminator,
+@[elabAsElim,
   to_additive
       "If `s` is a dense set in an additive monoid `M`,\n`add_subsemigroup.closure s = ⊤`, then in order to prove that some predicate `p` holds\nfor all `x : M` it suffices to verify `p x` for `x ∈ s`, and verify that `p x` and `p y` imply\n`p (x + y)`."]
 theorem dense_induction {p : M → Prop} (x : M) {s : Set M} (hs : closure s = ⊤) (Hs : ∀, ∀ x ∈ s, ∀, p x)
@@ -415,11 +414,8 @@ def ofMdense {M N} [Semigroupₓ M] [Semigroupₓ N] {s : Set M} (f : M → N) (
         simp only [mul_assoc, ← h₁, ← h₂])
       x
 
-/-- Let `s` be a subset of an additive semigroup `M` such that the closure of `s` is the whole
-semigroup.  Then `add_hom.of_mdense` defines an additive homomorphism from `M` asking for a proof
-of `f (x + y) = f x + f y` only for `y ∈ s`. -/
-add_decl_doc AddHom.ofMdense
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_hom.of_mdense]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, norm_cast, to_additive]
 theorem coe_of_mdense [Semigroupₓ M] [Semigroupₓ N] {s : Set M} (f : M → N) (hs : closure s = ⊤) (hmul) :
     (ofMdense f hs hmul : M → N) = f :=

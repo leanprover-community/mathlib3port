@@ -57,7 +57,7 @@ noncomputable def isometrySignWeightedSumSquares [DecidableEq ι] (w : ι → �
   erw [hsum]
   simp only [← u, ← Function.comp, ← smul_eq_mul]
   split_ifs
-  · simp only [← h, ← zero_smul, ← zero_mul, ← sign_zero]
+  · simp only [← h, ← zero_smul, ← zero_mul, ← Real.sign_zero]
     
   have hwu : w j = u j := by
     simp only [← u, ← dif_neg h, ← Units.coe_mk0]

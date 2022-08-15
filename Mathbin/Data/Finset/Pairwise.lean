@@ -8,7 +8,9 @@ import Mathbin.Data.Finset.Lattice
 /-!
 # Relations holding pairwise on finite sets
 
-In this file we prove a few results about the interaction of `set.pairwise_disjoint` and `finset`.
+In this file we prove a few results about the interaction of `set.pairwise_disjoint` and `finset`,
+as well as the interaction of `list.pairwise disjoint` and the condition of
+`disjoint` on `list.to_finset`, in `set` form.
 -/
 
 
@@ -58,4 +60,40 @@ theorem PairwiseDisjoint.bUnion_finset {s : Set ι'} {g : ι' → Finset ι} {f 
     
 
 end Set
+
+namespace List
+
+variable {β : Type _} [DecidableEq α] {r : α → α → Prop} {l : List α}
+
+theorem pairwise_of_coe_to_finset_pairwise (hl : (l.toFinset : Set α).Pairwise r) (hn : l.Nodup) : l.Pairwise r := by
+  induction' l with hd tl IH
+  · simp
+    
+  simp only [← Set.pairwise_insert, ← pairwise_cons, ← to_finset_cons, ← Finset.coe_insert, ← Finset.mem_coe, ←
+    mem_to_finset, ← Ne.def, ← nodup_cons] at hl hn⊢
+  refine' ⟨fun x hx => (hl.right x hx _).left, IH hl.left hn.right⟩
+  rintro rfl
+  exact hn.left hx
+
+theorem pairwise_iff_coe_to_finset_pairwise (hn : l.Nodup) (hs : Symmetric r) :
+    (l.toFinset : Set α).Pairwise r ↔ l.Pairwise r := by
+  refine' ⟨fun h => pairwise_of_coe_to_finset_pairwise h hn, fun h => _⟩
+  induction' l with hd tl IH
+  · simp
+    
+  simp only [← Set.pairwise_insert, ← to_finset_cons, ← Finset.coe_insert, ← Finset.mem_coe, ← mem_to_finset, ← Ne.def,
+    ← pairwise_cons, ← nodup_cons] at hn h⊢
+  exact ⟨IH hn.right h.right, fun x hx hne => ⟨h.left _ hx, hs (h.left _ hx)⟩⟩
+
+theorem pairwise_disjoint_of_coe_to_finset_pairwise_disjoint {α ι} [SemilatticeInf α] [OrderBot α] [DecidableEq ι]
+    {l : List ι} {f : ι → α} (hl : (l.toFinset : Set ι).PairwiseDisjoint f) (hn : l.Nodup) :
+    l.Pairwise (_root_.disjoint on f) :=
+  pairwise_of_coe_to_finset_pairwise hl hn
+
+theorem pairwise_disjoint_iff_coe_to_finset_pairwise_disjoint {α ι} [SemilatticeInf α] [OrderBot α] [DecidableEq ι]
+    {l : List ι} {f : ι → α} (hn : l.Nodup) :
+    (l.toFinset : Set ι).PairwiseDisjoint f ↔ l.Pairwise (_root_.disjoint on f) :=
+  pairwise_iff_coe_to_finset_pairwise hn (symmetric_disjoint.comap f)
+
+end List
 

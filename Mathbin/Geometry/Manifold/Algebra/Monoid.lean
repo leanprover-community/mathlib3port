@@ -42,8 +42,8 @@ semigroup. A smooth additive monoid over `α`, for example, is obtained by requi
 instances `add_monoid α` and `has_smooth_add α`. -/
 -- See note [Design choices about smooth algebraic structures]
 @[ancestor SmoothManifoldWithCorners]
-class HasSmoothAdd {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
-  [NormedGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _) [Add G] [TopologicalSpace G]
+class HasSmoothAdd {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
+  [NormedAddCommGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _) [Add G] [TopologicalSpace G]
   [ChartedSpace H G] extends SmoothManifoldWithCorners I G : Prop where
   smooth_add : Smooth (I.Prod I) I fun p : G × G => p.1 + p.2
 
@@ -52,16 +52,16 @@ A smooth monoid over `G`, for example, is obtained by requiring both the instanc
 and `has_smooth_mul I G`. -/
 -- See note [Design choices about smooth algebraic structures]
 @[ancestor SmoothManifoldWithCorners, to_additive]
-class HasSmoothMul {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
-  [NormedGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _) [Mul G] [TopologicalSpace G]
+class HasSmoothMul {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
+  [NormedAddCommGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _) [Mul G] [TopologicalSpace G]
   [ChartedSpace H G] extends SmoothManifoldWithCorners I G : Prop where
   smooth_mul : Smooth (I.Prod I) I fun p : G × G => p.1 * p.2
 
 section HasSmoothMul
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedGroup E]
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedAddCommGroup E]
   [NormedSpace 𝕜 E] {I : ModelWithCorners 𝕜 E H} {G : Type _} [Mul G] [TopologicalSpace G] [ChartedSpace H G]
-  [HasSmoothMul I G] {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
+  [HasSmoothMul I G] {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
   {I' : ModelWithCorners 𝕜 E' H'} {M : Type _} [TopologicalSpace M] [ChartedSpace H' M]
 
 section
@@ -81,9 +81,43 @@ theorem has_continuous_mul_of_smooth : HasContinuousMul G :=
 
 end
 
+section
+
+variable {f g : M → G} {s : Set M} {x : M} {n : WithTop ℕ}
+
 @[to_additive]
-theorem Smooth.mul {f : M → G} {g : M → G} (hf : Smooth I' I f) (hg : Smooth I' I g) : Smooth I' I (f * g) :=
-  (smooth_mul I).comp (hf.prod_mk hg)
+theorem ContMdiffWithinAt.mul (hf : ContMdiffWithinAt I' I n f s x) (hg : ContMdiffWithinAt I' I n g s x) :
+    ContMdiffWithinAt I' I n (f * g) s x :=
+  ((smooth_mul I).SmoothAt.of_le le_top).comp_cont_mdiff_within_at x (hf.prod_mk hg)
+
+@[to_additive]
+theorem ContMdiffAt.mul (hf : ContMdiffAt I' I n f x) (hg : ContMdiffAt I' I n g x) : ContMdiffAt I' I n (f * g) x :=
+  hf.mul hg
+
+@[to_additive]
+theorem ContMdiffOn.mul (hf : ContMdiffOn I' I n f s) (hg : ContMdiffOn I' I n g s) : ContMdiffOn I' I n (f * g) s :=
+  fun x hx => (hf x hx).mul (hg x hx)
+
+@[to_additive]
+theorem ContMdiff.mul (hf : ContMdiff I' I n f) (hg : ContMdiff I' I n g) : ContMdiff I' I n (f * g) := fun x =>
+  (hf x).mul (hg x)
+
+@[to_additive]
+theorem SmoothWithinAt.mul (hf : SmoothWithinAt I' I f s x) (hg : SmoothWithinAt I' I g s x) :
+    SmoothWithinAt I' I (f * g) s x :=
+  hf.mul hg
+
+@[to_additive]
+theorem SmoothAt.mul (hf : SmoothAt I' I f x) (hg : SmoothAt I' I g x) : SmoothAt I' I (f * g) x :=
+  hf.mul hg
+
+@[to_additive]
+theorem SmoothOn.mul (hf : SmoothOn I' I f s) (hg : SmoothOn I' I g s) : SmoothOn I' I (f * g) s :=
+  hf.mul hg
+
+@[to_additive]
+theorem Smooth.mul (hf : Smooth I' I f) (hg : Smooth I' I g) : Smooth I' I (f * g) :=
+  hf.mul hg
 
 @[to_additive]
 theorem smooth_mul_left {a : G} : Smooth I I fun b : G => a * b :=
@@ -93,10 +127,7 @@ theorem smooth_mul_left {a : G} : Smooth I I fun b : G => a * b :=
 theorem smooth_mul_right {a : G} : Smooth I I fun b : G => b * a :=
   smooth_id.mul smooth_const
 
-@[to_additive]
-theorem SmoothOn.mul {f : M → G} {g : M → G} {s : Set M} (hf : SmoothOn I' I f s) (hg : SmoothOn I' I g s) :
-    SmoothOn I' I (f * g) s :=
-  ((smooth_mul I).comp_smooth_on (hf.prod_mk hg) : _)
+end
 
 variable (I) (g h : G)
 
@@ -156,11 +187,11 @@ end
 
 -- Instance of product
 @[to_additive]
-instance HasSmoothMul.prod {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
-    {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (G : Type _) [TopologicalSpace G] [ChartedSpace H G]
-    [Mul G] [HasSmoothMul I G] {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
-    (I' : ModelWithCorners 𝕜 E' H') (G' : Type _) [TopologicalSpace G'] [ChartedSpace H' G'] [Mul G']
-    [HasSmoothMul I' G'] : HasSmoothMul (I.Prod I') (G × G') :=
+instance HasSmoothMul.prod {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E]
+    [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (G : Type _) [TopologicalSpace G]
+    [ChartedSpace H G] [Mul G] [HasSmoothMul I G] {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : Type _}
+    [TopologicalSpace H'] (I' : ModelWithCorners 𝕜 E' H') (G' : Type _) [TopologicalSpace G'] [ChartedSpace H' G']
+    [Mul G'] [HasSmoothMul I' G'] : HasSmoothMul (I.Prod I') (G × G') :=
   { SmoothManifoldWithCorners.prod G G' with
     smooth_mul :=
       ((smooth_fst.comp smooth_fst).Smooth.mul (smooth_fst.comp smooth_snd)).prod_mk
@@ -170,9 +201,9 @@ end HasSmoothMul
 
 section Monoidₓ
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedGroup E]
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedAddCommGroup E]
   [NormedSpace 𝕜 E] {I : ModelWithCorners 𝕜 E H} {G : Type _} [Monoidₓ G] [TopologicalSpace G] [ChartedSpace H G]
-  [HasSmoothMul I G] {H' : Type _} [TopologicalSpace H'] {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E']
+  [HasSmoothMul I G] {H' : Type _} [TopologicalSpace H'] {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E']
   {I' : ModelWithCorners 𝕜 E' H'} {G' : Type _} [Monoidₓ G'] [TopologicalSpace G'] [ChartedSpace H' G']
   [HasSmoothMul I' G']
 
@@ -214,36 +245,109 @@ section CommMonoidₓ
 
 open BigOperators
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedGroup E]
-  [NormedSpace 𝕜 E] {I : ModelWithCorners 𝕜 E H} {G : Type _} [CommMonoidₓ G] [TopologicalSpace G] [ChartedSpace H G]
-  [HasSmoothMul I G] {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
-  {I' : ModelWithCorners 𝕜 E' H'} {M : Type _} [TopologicalSpace M] [ChartedSpace H' M]
+variable {ι 𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
+  [NormedAddCommGroup E] [NormedSpace 𝕜 E] {I : ModelWithCorners 𝕜 E H} {G : Type _} [CommMonoidₓ G]
+  [TopologicalSpace G] [ChartedSpace H G] [HasSmoothMul I G] {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E']
+  {H' : Type _} [TopologicalSpace H'] {I' : ModelWithCorners 𝕜 E' H'} {M : Type _} [TopologicalSpace M]
+  [ChartedSpace H' M] {s : Set M} {x : M} {t : Finset ι} {f : ι → M → G} {n : WithTop ℕ} {p : ι → Prop}
 
 @[to_additive]
-theorem smooth_finset_prod' {ι} {s : Finset ι} {f : ι → M → G} (h : ∀, ∀ i ∈ s, ∀, Smooth I' I (f i)) :
-    Smooth I' I (∏ i in s, f i) :=
-  Finset.prod_induction _ _ (fun f g hf hg => hf.mul hg) (@smooth_const _ _ _ _ _ _ _ I' _ _ _ _ _ _ _ _ I _ _ _ 1) h
+theorem cont_mdiff_within_at_finset_prod' (h : ∀, ∀ i ∈ t, ∀, ContMdiffWithinAt I' I n (f i) s x) :
+    ContMdiffWithinAt I' I n (∏ i in t, f i) s x :=
+  Finset.prod_induction f (fun f => ContMdiffWithinAt I' I n f s x) (fun f g hf hg => hf.mul hg)
+    cont_mdiff_within_at_const h
 
 @[to_additive]
-theorem smooth_finset_prod {ι} {s : Finset ι} {f : ι → M → G} (h : ∀, ∀ i ∈ s, ∀, Smooth I' I (f i)) :
-    Smooth I' I fun x => ∏ i in s, f i x := by
+theorem cont_mdiff_at_finset_prod' (h : ∀, ∀ i ∈ t, ∀, ContMdiffAt I' I n (f i) x) :
+    ContMdiffAt I' I n (∏ i in t, f i) x :=
+  cont_mdiff_within_at_finset_prod' h
+
+@[to_additive]
+theorem cont_mdiff_on_finset_prod' (h : ∀, ∀ i ∈ t, ∀, ContMdiffOn I' I n (f i) s) :
+    ContMdiffOn I' I n (∏ i in t, f i) s := fun x hx => cont_mdiff_within_at_finset_prod' fun i hi => h i hi x hx
+
+@[to_additive]
+theorem cont_mdiff_finset_prod' (h : ∀, ∀ i ∈ t, ∀, ContMdiff I' I n (f i)) : ContMdiff I' I n (∏ i in t, f i) :=
+  fun x => cont_mdiff_at_finset_prod' fun i hi => h i hi x
+
+@[to_additive]
+theorem cont_mdiff_within_at_finset_prod (h : ∀, ∀ i ∈ t, ∀, ContMdiffWithinAt I' I n (f i) s x) :
+    ContMdiffWithinAt I' I n (fun x => ∏ i in t, f i x) s x := by
   simp only [Finset.prod_apply]
-  exact smooth_finset_prod' h
+  exact cont_mdiff_within_at_finset_prod' h
+
+@[to_additive]
+theorem cont_mdiff_at_finset_prod (h : ∀, ∀ i ∈ t, ∀, ContMdiffAt I' I n (f i) x) :
+    ContMdiffAt I' I n (fun x => ∏ i in t, f i x) x :=
+  cont_mdiff_within_at_finset_prod h
+
+@[to_additive]
+theorem cont_mdiff_on_finset_prod (h : ∀, ∀ i ∈ t, ∀, ContMdiffOn I' I n (f i) s) :
+    ContMdiffOn I' I n (fun x => ∏ i in t, f i x) s := fun x hx =>
+  cont_mdiff_within_at_finset_prod fun i hi => h i hi x hx
+
+@[to_additive]
+theorem cont_mdiff_finset_prod (h : ∀, ∀ i ∈ t, ∀, ContMdiff I' I n (f i)) :
+    ContMdiff I' I n fun x => ∏ i in t, f i x := fun x => cont_mdiff_at_finset_prod fun i hi => h i hi x
+
+@[to_additive]
+theorem smooth_within_at_finset_prod' (h : ∀, ∀ i ∈ t, ∀, SmoothWithinAt I' I (f i) s x) :
+    SmoothWithinAt I' I (∏ i in t, f i) s x :=
+  cont_mdiff_within_at_finset_prod' h
+
+@[to_additive]
+theorem smooth_at_finset_prod' (h : ∀, ∀ i ∈ t, ∀, SmoothAt I' I (f i) x) : SmoothAt I' I (∏ i in t, f i) x :=
+  cont_mdiff_at_finset_prod' h
+
+@[to_additive]
+theorem smooth_on_finset_prod' (h : ∀, ∀ i ∈ t, ∀, SmoothOn I' I (f i) s) : SmoothOn I' I (∏ i in t, f i) s :=
+  cont_mdiff_on_finset_prod' h
+
+@[to_additive]
+theorem smooth_finset_prod' (h : ∀, ∀ i ∈ t, ∀, Smooth I' I (f i)) : Smooth I' I (∏ i in t, f i) :=
+  cont_mdiff_finset_prod' h
+
+@[to_additive]
+theorem smooth_within_at_finset_prod (h : ∀, ∀ i ∈ t, ∀, SmoothWithinAt I' I (f i) s x) :
+    SmoothWithinAt I' I (fun x => ∏ i in t, f i x) s x :=
+  cont_mdiff_within_at_finset_prod h
+
+@[to_additive]
+theorem smooth_at_finset_prod (h : ∀, ∀ i ∈ t, ∀, SmoothAt I' I (f i) x) : SmoothAt I' I (fun x => ∏ i in t, f i x) x :=
+  cont_mdiff_at_finset_prod h
+
+@[to_additive]
+theorem smooth_on_finset_prod (h : ∀, ∀ i ∈ t, ∀, SmoothOn I' I (f i) s) : SmoothOn I' I (fun x => ∏ i in t, f i x) s :=
+  cont_mdiff_on_finset_prod h
+
+@[to_additive]
+theorem smooth_finset_prod (h : ∀, ∀ i ∈ t, ∀, Smooth I' I (f i)) : Smooth I' I fun x => ∏ i in t, f i x :=
+  cont_mdiff_finset_prod h
 
 open Function Filter
 
 @[to_additive]
-theorem smooth_finprod {ι} {f : ι → M → G} (h : ∀ i, Smooth I' I (f i))
-    (hfin : LocallyFinite fun i => MulSupport (f i)) : Smooth I' I fun x => ∏ᶠ i, f i x := by
+theorem cont_mdiff_finprod (h : ∀ i, ContMdiff I' I n (f i)) (hfin : LocallyFinite fun i => MulSupport (f i)) :
+    ContMdiff I' I n fun x => ∏ᶠ i, f i x := by
   intro x
   rcases finprod_eventually_eq_prod hfin x with ⟨s, hs⟩
-  exact (smooth_finset_prod (fun i hi => h i) x).congr_of_eventually_eq hs
+  exact (cont_mdiff_finset_prod (fun i hi => h i) x).congr_of_eventually_eq hs
 
 @[to_additive]
-theorem smooth_finprod_cond {ι} {f : ι → M → G} {p : ι → Prop} (hc : ∀ i, p i → Smooth I' I (f i))
-    (hf : LocallyFinite fun i => MulSupport (f i)) : Smooth I' I fun x => ∏ᶠ (i) (hi : p i), f i x := by
+theorem cont_mdiff_finprod_cond (hc : ∀ i, p i → ContMdiff I' I n (f i))
+    (hf : LocallyFinite fun i => MulSupport (f i)) : ContMdiff I' I n fun x => ∏ᶠ (i) (hi : p i), f i x := by
   simp only [finprod_subtype_eq_finprod_cond]
-  exact smooth_finprod (fun i => hc i i.2) (hf.comp_injective Subtype.coe_injective)
+  exact cont_mdiff_finprod (fun i => hc i i.2) (hf.comp_injective Subtype.coe_injective)
+
+@[to_additive]
+theorem smooth_finprod (h : ∀ i, Smooth I' I (f i)) (hfin : LocallyFinite fun i => MulSupport (f i)) :
+    Smooth I' I fun x => ∏ᶠ i, f i x :=
+  cont_mdiff_finprod h hfin
+
+@[to_additive]
+theorem smooth_finprod_cond (hc : ∀ i, p i → Smooth I' I (f i)) (hf : LocallyFinite fun i => MulSupport (f i)) :
+    Smooth I' I fun x => ∏ᶠ (i) (hi : p i), f i x :=
+  cont_mdiff_finprod_cond hc hf
 
 end CommMonoidₓ
 

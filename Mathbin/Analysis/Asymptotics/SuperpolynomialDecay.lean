@@ -158,8 +158,11 @@ theorem SuperpolynomialDecay.trans_eventually_abs_le (hf : SuperpolynomialDecay 
   refine' fun z =>
     tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds (hf z) (eventually_of_forall fun x => abs_nonneg _)
       (hfg.mono fun x hx => _)
-  calc abs (k x ^ z * g x) = abs (k x ^ z) * abs (g x) := abs_mul (k x ^ z) (g x)_ ≤ abs (k x ^ z) * abs (f x) :=
-      mul_le_mul le_rfl hx (abs_nonneg _) (abs_nonneg _)_ = abs (k x ^ z * f x) := (abs_mul (k x ^ z) (f x)).symm
+  calc
+    abs (k x ^ z * g x) = abs (k x ^ z) * abs (g x) := abs_mul (k x ^ z) (g x)
+    _ ≤ abs (k x ^ z) * abs (f x) := mul_le_mul le_rfl hx (abs_nonneg _) (abs_nonneg _)
+    _ = abs (k x ^ z * f x) := (abs_mul (k x ^ z) (f x)).symm
+    
 
 theorem SuperpolynomialDecay.trans_abs_le (hf : SuperpolynomialDecay l k f) (hfg : ∀ x, abs (g x) ≤ abs (f x)) :
     SuperpolynomialDecay l k g :=

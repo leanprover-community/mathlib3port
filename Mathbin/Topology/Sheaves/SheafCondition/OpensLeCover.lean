@@ -53,13 +53,10 @@ namespace SheafCondition
 /-- The category of open sets contained in some element of the cover.
 -/
 def OpensLeCover : Type v :=
-  { V : Opens X // ∃ i, V ≤ U i }
+  FullSubcategory fun V : Opens X => ∃ i, V ≤ U i deriving Category
 
 instance [Inhabited ι] : Inhabited (OpensLeCover U) :=
   ⟨⟨⊥, default, bot_le⟩⟩
-
-instance : Category (OpensLeCover U) :=
-  CategoryTheory.fullSubcategory _
 
 namespace OpensLeCover
 
@@ -72,7 +69,7 @@ def index (V : OpensLeCover U) : ι :=
 
 /-- The morphism from `V` to `U i` for some `i`.
 -/
-def homToIndex (V : OpensLeCover U) : V.val ⟶ U (index V) :=
+def homToIndex (V : OpensLeCover U) : V.obj ⟶ U (index V) :=
   V.property.some_spec.Hom
 
 end OpensLeCover
@@ -248,7 +245,7 @@ variable {Y : Opens X} (hY : Y = supr U)
     category of opens contained in some `U i`. -/
 @[simps]
 def generateEquivalenceOpensLe :
-    { f : Over Y // (Sieve.generate (PresieveOfCoveringAux U Y)).Arrows f.Hom } ≌ OpensLeCover U where
+    (FullSubcategory fun f : Over Y => (Sieve.generate (PresieveOfCoveringAux U Y)).Arrows f.Hom) ≌ OpensLeCover U where
   Functor :=
     { obj := fun f =>
         ⟨f.1.left,
@@ -340,9 +337,8 @@ def isLimitOpensLeEquivGenerate₂ (R : Presieve Y) (hR : Sieve.generate R ∈ O
     it satisfies the `is_sheaf_opens_le_cover` sheaf condition. The latter is not the
     official definition of sheaves on spaces, but has the advantage that it does not
     require `has_products C`. -/
-theorem is_sheaf_sites_iff_is_sheaf_opens_le_cover :
-    CategoryTheory.Presheaf.IsSheaf (Opens.grothendieckTopology X) F ↔ F.IsSheafOpensLeCover := by
-  rw [presheaf.is_sheaf_iff_is_limit]
+theorem is_sheaf_iff_is_sheaf_opens_le_cover : F.IsSheaf ↔ F.IsSheafOpensLeCover := by
+  refine' (presheaf.is_sheaf_iff_is_limit _ _).trans _
   constructor
   · intro h ι U
     rw [(is_limit_opens_le_equiv_generate₁ F U rfl).nonempty_congr]
@@ -357,15 +353,6 @@ theorem is_sheaf_sites_iff_is_sheaf_opens_le_cover :
     
 
 end
-
-variable [HasProducts.{v} C]
-
-/-- The sheaf condition in terms of an equalizer diagram is equivalent
-to the reformulation in terms of a limit diagram over all `{ V : opens X // ∃ i, V ≤ U i }`.
--/
-theorem is_sheaf_iff_is_sheaf_opens_le_cover (F : Presheaf C X) : F.IsSheaf ↔ F.IsSheafOpensLeCover :=
-  Iff.trans (is_sheaf_iff_is_sheaf_pairwise_intersections F)
-    (is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections F).symm
 
 end Presheaf
 

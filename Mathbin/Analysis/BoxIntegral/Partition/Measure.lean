@@ -48,7 +48,7 @@ variable [Fintype ι] (I : Box ι)
 
 theorem measurable_set_coe : MeasurableSet (I : Set (ι → ℝ)) := by
   rw [coe_eq_pi]
-  have := Fintype.toEncodable ι
+  haveI := Fintype.toEncodable ι
   exact MeasurableSet.univ_pi fun i => measurable_set_Ioc
 
 theorem measurable_set_Icc : MeasurableSet I.Icc :=
@@ -113,10 +113,10 @@ namespace BoxAdditiveMap
 
 /-- Box-additive map sending each box `I` to the continuous linear endomorphism
 `x ↦ (volume I).to_real • x`. -/
-protected def volume {E : Type _} [NormedGroup E] [NormedSpace ℝ E] : ι →ᵇᵃ E →L[ℝ] E :=
+protected def volume {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] : ι →ᵇᵃ E →L[ℝ] E :=
   (volume : Measureₓ (ι → ℝ)).toBoxAdditive.toSmul
 
-theorem volume_apply {E : Type _} [NormedGroup E] [NormedSpace ℝ E] (I : Box ι) (x : E) :
+theorem volume_apply {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] (I : Box ι) (x : E) :
     BoxAdditiveMap.volume I x = (∏ j, I.upper j - I.lower j) • x :=
   congr_arg2ₓ (· • ·) I.volume_apply rfl
 

@@ -91,7 +91,7 @@ theorem cont_diff_on_stereo_to_fun [CompleteSpace E] :
     ContDiffOn ℝ ⊤ (stereoToFun v) { x : E | innerSL v x ≠ (1 : ℝ) } := by
   refine' ContDiffOn.smul _ (orthogonalProjection (ℝ∙v)ᗮ).ContDiff.ContDiffOn
   refine' cont_diff_const.cont_diff_on.div _ _
-  · exact (cont_diff_const.sub (innerSL v).ContDiff).ContDiffOn
+  · exact (cont_diff_const.sub (innerSL v : E →L[ℝ] ℝ).ContDiff).ContDiffOn
     
   · intro x h h'
     exact h (sub_eq_zero.mp h').symm
@@ -175,7 +175,7 @@ theorem stereo_inv_fun_ne_north_pole (hv : ∥v∥ = 1) (w : (ℝ∙v)ᗮ) :
     
 
 theorem continuous_stereo_inv_fun (hv : ∥v∥ = 1) : Continuous (stereoInvFun hv) :=
-  continuous_induced_rng (cont_diff_stereo_inv_fun_aux.Continuous.comp continuous_subtype_coe)
+  continuous_induced_rng.2 (cont_diff_stereo_inv_fun_aux.Continuous.comp continuous_subtype_coe)
 
 variable [CompleteSpace E]
 
@@ -405,7 +405,7 @@ theorem cont_mdiff_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
     exact ((cont_diff_stereo_inv_fun_aux.comp (ℝ∙(-v : E))ᗮ.subtypeL.ContDiff).comp U.symm.cont_diff).ContDiffOn
     
 
-variable {F : Type _} [NormedGroup F] [NormedSpace ℝ F]
+variable {F : Type _} [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 variable {H : Type _} [TopologicalSpace H] {I : ModelWithCorners ℝ F H}
 
@@ -417,7 +417,7 @@ theorem ContMdiff.cod_restrict_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] {
     (hf : ContMdiff I 𝓘(ℝ, E) m f) (hf' : ∀ x, f x ∈ Sphere (0 : E) 1) :
     ContMdiff I (𝓡 n) m (Set.codRestrict _ _ hf' : M → Sphere (0 : E) 1) := by
   rw [cont_mdiff_iff_target]
-  refine' ⟨continuous_induced_rng hf.continuous, _⟩
+  refine' ⟨continuous_induced_rng.2 hf.continuous, _⟩
   intro v
   let U :=
     (-- Again, removing type ascription... Weird that this helps!
@@ -467,7 +467,7 @@ instance : LieGroup (𝓡 1) circle where
     let c : circle → ℂ := coe
     have h₂ : ContMdiff (𝓘(ℝ, ℂ).Prod 𝓘(ℝ, ℂ)) 𝓘(ℝ, ℂ) ∞ fun z : ℂ × ℂ => z.fst * z.snd := by
       rw [cont_mdiff_iff]
-      exact ⟨continuous_mul, fun x y => (cont_diff_mul.restrict_scalars ℝ).ContDiffOn⟩
+      exact ⟨continuous_mul, fun x y => cont_diff_mul.cont_diff_on⟩
     suffices h₁ : ContMdiff _ _ _ (Prod.map c c)
     · apply h₂.comp h₁
       

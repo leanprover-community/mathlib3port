@@ -181,8 +181,11 @@ theorem witt_structure_rat_rec (Φ : MvPolynomial idx ℚ) (n : ℕ) :
         (bind₁ (fun b => rename (fun i => (b, i)) (W_ ℚ n)) Φ -
           ∑ i in range n, c (p ^ i : ℚ) * wittStructureRat p Φ i ^ p ^ (n - i)) :=
   by
-  calc wittStructureRat p Φ n = C (1 / p ^ n : ℚ) * (wittStructureRat p Φ n * C (p ^ n : ℚ)) := _ _ = _ := by
+  calc
+    wittStructureRat p Φ n = C (1 / p ^ n : ℚ) * (wittStructureRat p Φ n * C (p ^ n : ℚ)) := _
+    _ = _ := by
       rw [witt_structure_rat_rec_aux]
+    
   rw [mul_left_commₓ, ← C_mul, div_mul_cancel, C_1, mul_oneₓ]
   exact pow_ne_zero _ (Nat.cast_ne_zero.2 hp.1.ne_zero)
 
@@ -351,11 +354,12 @@ theorem witt_structure_int_rename {σ : Type _} (Φ : MvPolynomial idx ℤ) (f :
 theorem constant_coeff_witt_structure_rat_zero (Φ : MvPolynomial idx ℚ) :
     constantCoeff (wittStructureRat p Φ 0) = constantCoeff Φ := by
   simp only [← wittStructureRat, ← bind₁, ← map_aeval, ← X_in_terms_of_W_zero, ← constant_coeff_rename, ←
-    constant_coeff_witt_polynomial, ← aeval_X, ← constant_coeff_comp_algebra_map, ← eval₂_hom_zero', ← RingHom.id_apply]
+    constant_coeff_witt_polynomial, ← aeval_X, ← constant_coeff_comp_algebra_map, ← eval₂_hom_zero'_apply, ←
+    RingHom.id_apply]
 
 theorem constant_coeff_witt_structure_rat (Φ : MvPolynomial idx ℚ) (h : constantCoeff Φ = 0) (n : ℕ) :
     constantCoeff (wittStructureRat p Φ n) = 0 := by
-  simp only [← wittStructureRat, ← eval₂_hom_zero', ← h, ← bind₁, ← map_aeval, ← constant_coeff_rename, ←
+  simp only [← wittStructureRat, ← eval₂_hom_zero'_apply, ← h, ← bind₁, ← map_aeval, ← constant_coeff_rename, ←
     constant_coeff_witt_polynomial, ← constant_coeff_comp_algebra_map, ← RingHom.id_apply, ←
     constant_coeff_X_in_terms_of_W]
 
@@ -382,7 +386,7 @@ variable (R)
 -- we could relax the fintype on `idx`, but then we need to cast from finset to set.
 -- for our applications `idx` is always finite.
 theorem witt_structure_rat_vars [Fintype idx] (Φ : MvPolynomial idx ℚ) (n : ℕ) :
-    (wittStructureRat p Φ n).vars ⊆ Finset.univ.product (Finset.range (n + 1)) := by
+    (wittStructureRat p Φ n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) := by
   rw [wittStructureRat]
   intro x hx
   simp only [← Finset.mem_product, ← true_andₓ, ← Finset.mem_univ, ← Finset.mem_range]
@@ -397,7 +401,7 @@ theorem witt_structure_rat_vars [Fintype idx] (Φ : MvPolynomial idx ℚ) (n : �
 -- we could relax the fintype on `idx`, but then we need to cast from finset to set.
 -- for our applications `idx` is always finite.
 theorem witt_structure_int_vars [Fintype idx] (Φ : MvPolynomial idx ℤ) (n : ℕ) :
-    (wittStructureInt p Φ n).vars ⊆ Finset.univ.product (Finset.range (n + 1)) := by
+    (wittStructureInt p Φ n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) := by
   have : Function.Injective (Int.castRingHom ℚ) := Int.cast_injective
   rw [← vars_map_of_injective _ this, map_witt_structure_int]
   apply witt_structure_rat_vars

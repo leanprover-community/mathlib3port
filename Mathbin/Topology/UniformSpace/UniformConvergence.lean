@@ -427,7 +427,7 @@ theorem tendsto_locally_uniformly_iff_tendsto_uniformly_of_compact_space [Compac
 /-- For a compact set `s`, locally uniform convergence on `s` is just uniform convergence on `s`. -/
 theorem tendsto_locally_uniformly_on_iff_tendsto_uniformly_on_of_compact (hs : IsCompact s) :
     TendstoLocallyUniformlyOn F f p s ↔ TendstoUniformlyOn F f p s := by
-  have : CompactSpace s := is_compact_iff_compact_space.mp hs
+  haveI : CompactSpace s := is_compact_iff_compact_space.mp hs
   refine' ⟨fun h => _, TendstoUniformlyOn.tendsto_locally_uniformly_on⟩
   rwa [tendsto_locally_uniformly_on_iff_tendsto_locally_uniformly_comp_coe,
     tendsto_locally_uniformly_iff_tendsto_uniformly_of_compact_space, ←

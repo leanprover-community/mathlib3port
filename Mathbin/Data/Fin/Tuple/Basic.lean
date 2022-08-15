@@ -136,7 +136,7 @@ theorem cons_self_tail : cons (q 0) (tail q) = q := by
     
 
 /-- Recurse on an `n+1`-tuple by splitting it into a single element and an `n`-tuple. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def consInduction {P : (∀ i : Finₓ n.succ, α i) → Sort v} (h : ∀ x₀ x, P (Finₓ.cons x₀ x))
     (x : ∀ i : Finₓ n.succ, α i) : P x :=
   cast
@@ -472,7 +472,7 @@ variable {α : Finₓ (n + 1) → Type u} {β : Type v}
 `fin.succ_above i j`, `j : fin n`. This version is elaborated as eliminator and works for
 propositions, see also `fin.insert_nth` for a version without an `@[elab_as_eliminator]`
 attribute. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def succAboveCases {α : Finₓ (n + 1) → Sort u} (i : Finₓ (n + 1)) (x : α i) (p : ∀ j : Finₓ n, α (i.succAbove j))
     (j : Finₓ (n + 1)) : α j :=
   if hj : j = i then Eq.ndrec x hj.symm
@@ -757,6 +757,20 @@ theorem mem_find_of_unique {p : Finₓ n → Prop} [DecidablePred p] (h : ∀ i 
   mem_find_iff.2 ⟨hi, fun j hj => le_of_eqₓ <| h i j hi hj⟩
 
 end Find
+
+/-- To show two sigma pairs of tuples agree, it to show the second elements are related via
+`fin.cast`. -/
+theorem sigma_eq_of_eq_comp_cast {α : Type _} :
+    ∀ {a b : Σii, Finₓ ii → α} (h : a.fst = b.fst), a.snd = b.snd ∘ Finₓ.cast h → a = b
+  | ⟨ai, a⟩, ⟨bi, b⟩, hi, h => by
+    dsimp' only  at hi
+    subst hi
+    simpa using h
+
+/-- `fin.sigma_eq_of_eq_comp_cast` as an `iff`. -/
+theorem sigma_eq_iff_eq_comp_cast {α : Type _} {a b : Σii, Finₓ ii → α} :
+    a = b ↔ ∃ h : a.fst = b.fst, a.snd = b.snd ∘ Finₓ.cast h :=
+  ⟨fun h => h ▸ ⟨rfl, funext <| Subtype.rec fun i hi => rfl⟩, fun ⟨h, h'⟩ => sigma_eq_of_eq_comp_cast _ h'⟩
 
 end Finₓ
 

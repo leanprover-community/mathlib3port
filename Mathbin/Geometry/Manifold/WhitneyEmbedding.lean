@@ -28,7 +28,7 @@ partition of unity, smooth bump function, whitney theorem
 
 universe uι uE uH uM
 
-variable {ι : Type uι} {E : Type uE} [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] {H : Type uH}
+variable {ι : Type uι} {E : Type uE} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] {H : Type uH}
   [TopologicalSpace H] {I : ModelWithCorners ℝ E H} {M : Type uM} [TopologicalSpace M] [ChartedSpace H M]
   [SmoothManifoldWithCorners I M]
 
@@ -108,8 +108,8 @@ theorem exists_immersion_euclidean (f : SmoothBumpCovering ι I M) :
       Smooth I (𝓡 n) e ∧ Injective e ∧ ∀ x : M, Injective (mfderiv I (𝓡 n) e x) :=
   by
   set F := EuclideanSpace ℝ (Finₓ <| finrank ℝ (ι → E × ℝ))
-  let this : IsNoetherian ℝ (E × ℝ) := IsNoetherian.iff_fg.2 inferInstance
-  let this : FiniteDimensional ℝ (ι → E × ℝ) := IsNoetherian.iff_fg.1 inferInstance
+  letI : IsNoetherian ℝ (E × ℝ) := IsNoetherian.iff_fg.2 inferInstance
+  letI : FiniteDimensional ℝ (ι → E × ℝ) := IsNoetherian.iff_fg.1 inferInstance
   set eEF : (ι → E × ℝ) ≃L[ℝ] F := ContinuousLinearEquiv.ofFinrankEq finrank_euclidean_space_fin.symm
   refine'
     ⟨_, eEF ∘ f.embedding_pi_tangent, eEF.to_diffeomorph.smooth.comp f.embedding_pi_tangent.smooth,
@@ -127,7 +127,7 @@ theorem exists_embedding_euclidean_of_compact [T2Space M] [CompactSpace M] :
       Smooth I (𝓡 n) e ∧ ClosedEmbedding e ∧ ∀ x : M, Injective (mfderiv I (𝓡 n) e x) :=
   by
   rcases SmoothBumpCovering.exists_is_subordinate I is_closed_univ fun (x : M) _ => univ_mem with ⟨ι, f, -⟩
-  have := f.fintype
+  haveI := f.fintype
   rcases f.exists_immersion_euclidean with ⟨n, e, hsmooth, hinj, hinj_mfderiv⟩
   exact ⟨n, e, hsmooth, hsmooth.continuous.closed_embedding hinj, hinj_mfderiv⟩
 

@@ -30,6 +30,7 @@ variable {C : Type u₂} [Category.{v₂} C]
 
 /-- The functor sending `X : C` to the constant functor `J ⥤ C` sending everything to `X`.
 -/
+@[simps]
 def const : C ⥤ J ⥤ C where
   obj := fun X => { obj := fun j => X, map := fun j j' f => 𝟙 X }
   map := fun X Y f => { app := fun j => f }
@@ -40,32 +41,13 @@ open Opposite
 
 variable {J}
 
-@[simp]
-theorem obj_obj (X : C) (j : J) : ((const J).obj X).obj j = X :=
-  rfl
-
-@[simp]
-theorem obj_map (X : C) {j j' : J} (f : j ⟶ j') : ((const J).obj X).map f = 𝟙 X :=
-  rfl
-
-@[simp]
-theorem map_app {X Y : C} (f : X ⟶ Y) (j : J) : ((const J).map f).app j = f :=
-  rfl
-
 /-- The contant functor `Jᵒᵖ ⥤ Cᵒᵖ` sending everything to `op X`
 is (naturally isomorphic to) the opposite of the constant functor `J ⥤ C` sending everything to `X`.
 -/
+@[simps]
 def opObjOp (X : C) : (const Jᵒᵖ).obj (op X) ≅ ((const J).obj X).op where
   Hom := { app := fun j => 𝟙 _ }
   inv := { app := fun j => 𝟙 _ }
-
-@[simp]
-theorem op_obj_op_hom_app (X : C) (j : Jᵒᵖ) : (opObjOp X).Hom.app j = 𝟙 _ :=
-  rfl
-
-@[simp]
-theorem op_obj_op_inv_app (X : C) (j : Jᵒᵖ) : (opObjOp X).inv.app j = 𝟙 _ :=
-  rfl
 
 /-- The contant functor `Jᵒᵖ ⥤ C` sending everything to `unop X`
 is (naturally isomorphic to) the opposite of

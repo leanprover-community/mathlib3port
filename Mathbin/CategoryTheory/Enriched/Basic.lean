@@ -40,13 +40,13 @@ open MonoidalCategory
 
 variable (V : Type v) [Category.{w} V] [MonoidalCategory V]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1453:24: unsupported: (notation) in structure
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⟶[] »
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⟶[] »
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⟶[] »
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⟶[] »
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⟶[] »
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ⟶[] »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1467:24: unsupported: (notation) in structure
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ⟶[] »
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ⟶[] »
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ⟶[] »
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ⟶[] »
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ⟶[] »
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ⟶[] »
 /-- A `V`-category is a category enriched in a monoidal category `V`.
 
 Note that we do not assume that `V` is a concrete category,
@@ -103,7 +103,7 @@ variable {V} {W : Type v} [Category.{w} W] [MonoidalCategory W]
 In a moment we will equip this with the `W`-enriched category structure
 obtained by applying the functor `F : lax_monoidal_functor V W` to each hom object.
 -/
-@[nolint has_inhabited_instance unused_arguments]
+@[nolint has_nonempty_instance unused_arguments]
 def TransportEnrichment (F : LaxMonoidalFunctor V W) (C : Type u₁) :=
   C
 
@@ -191,7 +191,7 @@ When `V` is any of `Type`, `Top`, `AddCommGroup`, or `Module R`,
 For `V = Algebra R`, the usual forgetful functor is coyoneda of `polynomial R`, not of `R`.
 (Perhaps we should have a typeclass for this situation: `concrete_monoidal`?)
 -/
-@[nolint has_inhabited_instance unused_arguments]
+@[nolint has_nonempty_instance unused_arguments]
 def ForgetEnrichment (W : Type (v + 1)) [Category.{v} W] [MonoidalCategory W] (C : Type u₁) [EnrichedCategory W C] :=
   C
 
@@ -378,7 +378,7 @@ coming from the ambient braiding on `V`.)
 /-- The type of `A`-graded natural transformations between `V`-functors `F` and `G`.
 This is the type of morphisms in `V` from `A` to the `V`-object of natural transformations.
 -/
-@[ext, nolint has_inhabited_instance]
+@[ext, nolint has_nonempty_instance]
 structure GradedNatTrans (A : Center V) (F G : EnrichedFunctor V C D) where
   app : ∀ X : C, A.1 ⟶ F.obj X ⟶[V] G.obj X
   naturality :

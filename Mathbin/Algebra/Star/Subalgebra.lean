@@ -24,10 +24,8 @@ structure StarSubalgebra (R : Type u) (A : Type v) [CommSemiringₓ R] [StarRing
 
 namespace StarSubalgebra
 
-/-- Forgetting that a *-subalgebra is closed under *.
--/
-add_decl_doc StarSubalgebra.toSubalgebra
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident star_subalgebra.to_subalgebra]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 variable (R : Type u) (A : Type v) [CommSemiringₓ R] [StarRing R] [Semiringₓ A] [StarRing A] [Algebra R A]
   [StarModule R A]
 

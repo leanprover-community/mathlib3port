@@ -73,7 +73,7 @@ theorem smul_left_injective' [HasSmul M α] [HasFaithfulSmul M α] : Function.In
 
 /-- See also `monoid.to_mul_action` and `mul_zero_class.to_smul_with_zero`. -/
 -- see Note [lower instance priority]
-@[to_additive]
+@[to_additive "See also `add_monoid.to_add_action`"]
 instance (priority := 910) Mul.toHasSmul (α : Type _) [Mul α] : HasSmul α α :=
   ⟨(· * ·)⟩
 
@@ -149,7 +149,7 @@ theorem surjective_smul (x : α) : Surjective fun c : M => c • x :=
   exists_smul_eq M x
 
 /-- The regular action of a group on itself is transitive. -/
-@[to_additive]
+@[to_additive "The regular action of a group on itself is transitive."]
 instance Regular.is_pretransitive [Groupₓ G] : IsPretransitive G G :=
   ⟨fun x y => ⟨y * x⁻¹, inv_mul_cancel_right _ _⟩⟩
 
@@ -201,26 +201,31 @@ would cause a loop in the instance search graph. -/
 theorem SmulCommClass.symm (M N α : Type _) [HasSmul M α] [HasSmul N α] [SmulCommClass M N α] : SmulCommClass N M α :=
   ⟨fun a' a b => (smul_comm a a' b).symm⟩
 
-/-- Commutativity of additive actions is a symmetric relation. This lemma can't be an instance
-because this would cause a loop in the instance search graph. -/
-add_decl_doc VaddCommClass.symm
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident vadd_comm_class.symm]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[to_additive]
 instance smul_comm_class_self (M α : Type _) [CommMonoidₓ M] [MulAction M α] : SmulCommClass M M α :=
   ⟨fun a a' b => by
     rw [← mul_smul, mul_comm, mul_smul]⟩
 
+/-- An instance of `vadd_assoc_class M N α` states that the additive action of `M` on `α` is
+determined by the additive actions of `M` on `N` and `N` on `α`. -/
+class VaddAssocClass (M N α : Type _) [HasVadd M N] [HasVadd N α] [HasVadd M α] : Prop where
+  vadd_assoc : ∀ (x : M) (y : N) (z : α), x +ᵥ y +ᵥ z = x +ᵥ (y +ᵥ z)
+
 /-- An instance of `is_scalar_tower M N α` states that the multiplicative
 action of `M` on `α` is determined by the multiplicative actions of `M` on `N`
 and `N` on `α`. -/
+@[to_additive]
 class IsScalarTower (M N α : Type _) [HasSmul M N] [HasSmul N α] [HasSmul M α] : Prop where
   smul_assoc : ∀ (x : M) (y : N) (z : α), (x • y) • z = x • y • z
 
-@[simp]
+@[simp, to_additive]
 theorem smul_assoc {M N} [HasSmul M N] [HasSmul N α] [HasSmul M α] [IsScalarTower M N α] (x : M) (y : N) (z : α) :
     (x • y) • z = x • y • z :=
   IsScalarTower.smul_assoc x y z
 
+@[to_additive]
 instance Semigroupₓ.is_scalar_tower [Semigroupₓ α] : IsScalarTower α α α :=
   ⟨mul_assoc⟩
 
@@ -286,15 +291,17 @@ tower of scalar actions `N → α → β`.
 This cannot be an instance because it can cause infinite loops whenever the `has_smul` arguments
 are still metavariables.
 -/
+@[to_additive
+      "Given a tower of additive actions `M → α → β`, if we use\n`has_smul.comp` to pull back both of `M`'s actions by a map `g : N → M`, then we obtain a new tower\nof scalar actions `N → α → β`.\n\nThis cannot be an instance because it can cause infinite loops whenever the `has_smul` arguments\nare still metavariables."]
 theorem comp.is_scalar_tower [HasSmul M β] [HasSmul α β] [IsScalarTower M α β] (g : N → M) : by
-    have := comp α g <;> have := comp β g <;> exact IsScalarTower N α β :=
+    haveI := comp α g <;> haveI := comp β g <;> exact IsScalarTower N α β :=
   { smul_assoc := fun n => @smul_assoc _ _ _ _ _ _ _ (g n) }
 
 /-- This cannot be an instance because it can cause infinite loops whenever the `has_smul` arguments
 are still metavariables.
 -/
 theorem comp.smul_comm_class [HasSmul β α] [SmulCommClass M β α] (g : N → M) :
-    have := comp α g
+    haveI := comp α g
     SmulCommClass N β α :=
   { smul_comm := fun n => @smul_comm _ _ _ _ _ _ (g n) }
 
@@ -302,7 +309,7 @@ theorem comp.smul_comm_class [HasSmul β α] [SmulCommClass M β α] (g : N → 
 are still metavariables.
 -/
 theorem comp.smul_comm_class' [HasSmul β α] [SmulCommClass β M α] (g : N → M) :
-    have := comp α g
+    haveI := comp α g
     SmulCommClass β N α :=
   { smul_comm := fun _ n => @smul_comm _ _ _ _ _ _ _ (g n) }
 
@@ -312,15 +319,17 @@ section
 
 /-- Note that the `smul_comm_class α β β` typeclass argument is usually satisfied by `algebra α β`.
 -/
-@[to_additive]
+@[to_additive, nolint to_additive_doc]
 theorem mul_smul_comm [Mul β] [HasSmul α β] [SmulCommClass α β β] (s : α) (x y : β) : x * s • y = s • (x * y) :=
   (smul_comm s x y).symm
 
 /-- Note that the `is_scalar_tower α β β` typeclass argument is usually satisfied by `algebra α β`.
 -/
+@[to_additive, nolint to_additive_doc]
 theorem smul_mul_assoc [Mul β] [HasSmul α β] [IsScalarTower α β β] (r : α) (x y : β) : r • x * y = r • (x * y) :=
   smul_assoc r x y
 
+@[to_additive]
 theorem smul_smul_smul_comm [HasSmul α β] [HasSmul α γ] [HasSmul β δ] [HasSmul α δ] [HasSmul γ δ] [IsScalarTower α β δ]
     [IsScalarTower α γ δ] [SmulCommClass β γ δ] (a : α) (b : β) (c : γ) (d : δ) : (a • b) • c • d = (a • c) • b • d :=
   by
@@ -329,10 +338,12 @@ theorem smul_smul_smul_comm [HasSmul α β] [HasSmul α γ] [HasSmul β δ] [Has
 
 variable [HasSmul M α]
 
+@[to_additive]
 theorem Commute.smul_right [Mul α] [SmulCommClass M α α] [IsScalarTower M α α] {a b : α} (h : Commute a b) (r : M) :
     Commute a (r • b) :=
   (mul_smul_comm _ _ _).trans ((congr_arg _ h).trans <| (smul_mul_assoc _ _ _).symm)
 
+@[to_additive]
 theorem Commute.smul_left [Mul α] [SmulCommClass M α α] [IsScalarTower M α α] {a b : α} (h : Commute a b) (r : M) :
     Commute (r • a) b :=
   (h.symm.smul_right r).symm
@@ -368,12 +379,12 @@ theorem one_smul (b : α) : (1 : M) • b = b :=
   MulAction.one_smul _
 
 /-- `has_smul` version of `one_mul_eq_id` -/
-@[to_additive]
+@[to_additive "`has_vadd` version of `zero_add_eq_id`"]
 theorem one_smul_eq_id : ((· • ·) (1 : M) : α → α) = id :=
   funext <| one_smul _
 
 /-- `has_smul` version of `comp_mul_left` -/
-@[to_additive]
+@[to_additive "`has_vadd` version of `comp_add_left`"]
 theorem comp_smul_left (a₁ a₂ : M) : (· • ·) a₁ ∘ (· • ·) a₂ = ((· • ·) (a₁ * a₂) : α → α) :=
   funext fun _ => (mul_smul _ _ _).symm
 
@@ -431,11 +442,9 @@ instance (priority := 910) Monoidₓ.toMulAction : MulAction M M where
   one_smul := one_mulₓ
   mul_smul := mul_assoc
 
-/-- The regular action of a monoid on itself by left addition.
-
-This is promoted to an `add_torsor` by `add_group_is_add_torsor`. -/
-add_decl_doc AddMonoidₓ.toAddAction
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_monoid.to_add_action]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+@[to_additive]
 instance IsScalarTower.left : IsScalarTower M M α :=
   ⟨fun x y z => mul_smul x y z⟩
 
@@ -443,6 +452,7 @@ variable {M}
 
 /-- Note that the `is_scalar_tower M α α` and `smul_comm_class M α α` typeclass arguments are
 usually satisfied by `algebra M α`. -/
+@[to_additive, nolint to_additive_doc]
 theorem smul_mul_smul [Mul α] (r s : M) (x y : α) [IsScalarTower M α α] [SmulCommClass M α α] :
     r • x * s • y = (r * s) • (x * y) := by
   rw [smul_mul_assoc, mul_smul_comm, ← smul_assoc, smul_eq_mul]
@@ -461,9 +471,8 @@ def toFun : α ↪ M → α :=
       one_smul M y₂ ▸ by
         convert congr_fun H 1⟩
 
-/-- Embedding of `α` into functions `M → α` induced by an additive action of `M` on `α`. -/
-add_decl_doc AddAction.toFun
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_action.to_fun]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 variable {M α}
 
 @[simp, to_additive]
@@ -484,24 +493,20 @@ def compHom [Monoidₓ N] (g : N →* M) : MulAction N α where
   mul_smul := by
     simp [← g.map_mul, ← MulAction.mul_smul]
 
-/-- An additive action of `M` on `α` and an additive monoid homomorphism `N → M` induce
-an additive action of `N` on `α`.
-
-See note [reducible non-instances]. -/
-add_decl_doc AddAction.compHom
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_action.comp_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 end MulAction
 
 end
 
 section CompatibleScalar
 
-@[simp]
+@[simp, to_additive]
 theorem smul_one_smul {M} (N) [Monoidₓ N] [HasSmul M N] [MulAction N α] [HasSmul M α] [IsScalarTower M N α] (x : M)
     (y : α) : (x • (1 : N)) • y = x • y := by
   rw [smul_assoc, one_smul]
 
-@[simp]
+@[simp, to_additive]
 theorem smul_one_mul {M N} [MulOneClassₓ N] [HasSmul M N] [IsScalarTower M N N] (x : M) (y : N) : x • 1 * y = x • y :=
   by
   rw [smul_mul_assoc, one_mulₓ]
@@ -511,6 +516,7 @@ theorem mul_smul_one {M N} [MulOneClassₓ N] [HasSmul M N] [SmulCommClass M N N
   by
   rw [← smul_eq_mul, ← smul_comm, smul_eq_mul, mul_oneₓ]
 
+@[to_additive]
 theorem IsScalarTower.of_smul_one_mul {M N} [Monoidₓ N] [HasSmul M N] (h : ∀ (x : M) (y : N), x • (1 : N) * y = x • y) :
     IsScalarTower M N N :=
   ⟨fun x y z => by

@@ -172,17 +172,17 @@ theorem LieAlgebra.is_engelian_of_subsingleton [Subsingleton L] : LieAlgebra.IsE
   use 1
   suffices (⊤ : LieIdeal R L) = ⊥ by
     simp [← this]
-  have := (LieSubmodule.subsingleton_iff R L L).mpr inferInstance
+  haveI := (LieSubmodule.subsingleton_iff R L L).mpr inferInstance
   apply Subsingleton.elimₓ
 
 theorem Function.Surjective.is_engelian {f : L →ₗ⁅R⁆ L₂} (hf : Function.Surjective f)
     (h : LieAlgebra.IsEngelian.{u₁, u₂, u₄} R L) : LieAlgebra.IsEngelian.{u₁, u₃, u₄} R L₂ := by
   intro M _i1 _i2 _i3 _i4 h'
-  let this : LieRingModule L M := LieRingModule.compLieHom M f
-  let this : LieModule R L M := comp_lie_hom M f
+  letI : LieRingModule L M := LieRingModule.compLieHom M f
+  letI : LieModule R L M := comp_lie_hom M f
   have hnp : ∀ x, IsNilpotent (to_endomorphism R L M x) := fun x => h' (f x)
   have surj_id : Function.Surjective (LinearMap.id : M →ₗ[R] M) := Function.surjective_id
-  have : LieModule.IsNilpotent R L M := h M hnp
+  haveI : LieModule.IsNilpotent R L M := h M hnp
   apply hf.lie_module_is_nilpotent surj_id
   simp
 
@@ -253,7 +253,7 @@ theorem LieAlgebra.is_engelian_of_is_noetherian : LieAlgebra.IsEngelian R L := b
       have hx := LieAlgebra.is_nilpotent_ad_of_is_nilpotent (h x)
       exact Module.End.IsNilpotent.mapq _ hx
     exact nontrivial_max_triv_of_is_nilpotent R K (L' ⧸ K.to_lie_submodule)
-  have _i5 : IsNoetherian R L' :=
+  haveI _i5 : IsNoetherian R L' :=
     is_noetherian_of_surjective L _ (LinearMap.range_range_restrict (to_endomorphism R L M))
   obtain ⟨K, hK₁, hK₂⟩ := well_founded.well_founded_iff_has_max'.mp (LieSubalgebra.well_founded_of_noetherian R L') s hs
   have hK₃ : K = ⊤ := by

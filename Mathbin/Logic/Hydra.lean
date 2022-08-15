@@ -207,7 +207,7 @@ theorem _root_.acc.cut_expand [IsIrrefl α r] {a : α} (hacc : Acc r a) : Acc (C
 /-- `cut_expand r` is well-founded when `r` is. -/
 theorem _root_.well_founded.cut_expand (hr : WellFounded r) : WellFounded (CutExpand r) :=
   ⟨by
-    let h := hr.is_irrefl
+    letI h := hr.is_irrefl
     exact fun s => acc_of_singleton fun a _ => (hr.apply a).CutExpand⟩
 
 end Hydra

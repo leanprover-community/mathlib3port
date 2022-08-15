@@ -43,16 +43,19 @@ instance : HasNorm ℂ :=
 theorem norm_eq_abs (z : ℂ) : ∥z∥ = abs z :=
   rfl
 
-instance : NormedGroup ℂ :=
-  NormedGroup.ofCore ℂ { norm_eq_zero_iff := fun z => abs_eq_zero, triangle := abs_add, norm_neg := abs_neg }
+instance : NormedAddCommGroup ℂ :=
+  NormedAddCommGroup.ofCore ℂ { norm_eq_zero_iff := fun z => abs_eq_zero, triangle := abs_add, norm_neg := abs_neg }
 
 instance : NormedField ℂ :=
-  { Complex.field, Complex.normedGroup with norm := abs, dist_eq := fun _ _ => rfl, norm_mul' := abs_mul }
+  { Complex.field, Complex.normedAddCommGroup with norm := abs, dist_eq := fun _ _ => rfl, norm_mul' := abs_mul }
 
 instance :
-    NondiscreteNormedField ℂ where non_trivial :=
-    ⟨2, by
-      simp <;> norm_num⟩
+    DenselyNormedField ℂ where lt_norm_lt := fun r₁ r₂ h₀ hr =>
+    let ⟨x, h⟩ := NormedField.exists_lt_norm_lt ℝ h₀ hr
+    have this : ∥(∥x∥ : ℂ)∥ = ∥∥x∥∥ := by
+      simp only [← norm_eq_abs, ← abs_of_real, ← Real.norm_eq_abs]
+    ⟨∥x∥, by
+      rwa [this, norm_norm]⟩
 
 instance {R : Type _} [NormedField R] [NormedAlgebra R ℝ] : NormedAlgebra R ℂ where
   norm_smul_le := fun r x => by
@@ -61,10 +64,11 @@ instance {R : Type _} [NormedField R] [NormedAlgebra R ℝ] : NormedAlgebra R �
     rfl
   toAlgebra := Complex.algebra
 
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E]
+
 /-- The module structure from `module.complex_to_real` is a normed space. -/
 -- see Note [lower instance priority]
-instance (priority := 900) _root_.normed_space.complex_to_real {E : Type _} [NormedGroup E] [NormedSpace ℂ E] :
-    NormedSpace ℝ E :=
+instance (priority := 900) _root_.normed_space.complex_to_real : NormedSpace ℝ E :=
   NormedSpace.restrictScalars ℝ ℂ E
 
 theorem dist_eq (z w : ℂ) : dist z w = abs (z - w) :=
@@ -239,7 +243,7 @@ theorem im_clm_norm : ∥im_clm∥ = 1 :=
 theorem im_clm_nnnorm : ∥im_clm∥₊ = 1 :=
   Subtype.ext im_clm_norm
 
-theorem restrict_scalars_one_smul_right' {E : Type _} [NormedGroup E] [NormedSpace ℂ E] (x : E) :
+theorem restrict_scalars_one_smul_right' (x : E) :
     ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smul_right x : ℂ →L[ℂ] E) =
       reClm.smul_right x + I • imClm.smul_right x :=
   by

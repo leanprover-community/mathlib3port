@@ -25,9 +25,9 @@ type synonym.
 -/
 
 
-namespace Sum
-
 variable {α β γ δ : Type _}
+
+namespace Sum
 
 /-! ### Unbundled relation classes -/
 
@@ -509,7 +509,7 @@ open OrderDual Sum
 
 namespace OrderIso
 
-variable {α β γ : Type _} [LE α] [LE β] [LE γ] (a : α) (b : β) (c : γ)
+variable [LE α] [LE β] [LE γ] (a : α) (b : β) (c : γ)
 
 /-- `equiv.sum_comm` promoted to an order isomorphism. -/
 @[simps apply]
@@ -662,4 +662,58 @@ theorem sum_lex_dual_antidistrib_symm_inr : (sumLexDualAntidistrib α β).symm (
   rfl
 
 end OrderIso
+
+variable [LE α]
+
+namespace WithBot
+
+/-- `with_bot α` is order-isomorphic to `punit ⊕ₗ α`, by sending `⊥` to `punit.star` and `↑a` to
+`a`. -/
+def orderIsoPunitSumLex : WithBot α ≃o PUnit ⊕ₗ α :=
+  ⟨(Equivₓ.optionEquivSumPunit α).trans <| (Equivₓ.sumComm _ _).trans toLex, by
+    rintro (a | _) (b | _) <;> simp <;> exact not_coe_le_bot _⟩
+
+@[simp]
+theorem order_iso_punit_sum_lex_bot : @orderIsoPunitSumLex α _ ⊥ = toLex (inl PUnit.unit) :=
+  rfl
+
+@[simp]
+theorem order_iso_punit_sum_lex_coe (a : α) : orderIsoPunitSumLex ↑a = toLex (inr a) :=
+  rfl
+
+@[simp]
+theorem order_iso_punit_sum_lex_symm_inl (x : PUnit) : (@orderIsoPunitSumLex α _).symm (toLex <| inl x) = ⊥ :=
+  rfl
+
+@[simp]
+theorem order_iso_punit_sum_lex_symm_inr (a : α) : orderIsoPunitSumLex.symm (toLex <| inr a) = a :=
+  rfl
+
+end WithBot
+
+namespace WithTop
+
+/-- `with_top α` is order-isomorphic to `α ⊕ₗ punit`, by sending `⊤` to `punit.star` and `↑a` to
+`a`. -/
+def orderIsoSumLexPunit : WithTop α ≃o α ⊕ₗ PUnit :=
+  ⟨(Equivₓ.optionEquivSumPunit α).trans toLex, by
+    rintro (a | _) (b | _) <;> simp <;> exact not_top_le_coe _⟩
+
+@[simp]
+theorem order_iso_sum_lex_punit_top : @orderIsoSumLexPunit α _ ⊤ = toLex (inr PUnit.unit) :=
+  rfl
+
+@[simp]
+theorem order_iso_sum_lex_punit_coe (a : α) : orderIsoSumLexPunit ↑a = toLex (inl a) :=
+  rfl
+
+@[simp]
+theorem order_iso_sum_lex_punit_symm_inr (x : PUnit) : (@orderIsoSumLexPunit α _).symm (toLex <| inr x) = ⊤ :=
+  rfl
+
+@[simp]
+theorem order_iso_sum_lex_punit_symm_inl (a : α) : orderIsoSumLexPunit.symm (toLex <| inl a) = a :=
+  rfl
+
+end WithTop
 

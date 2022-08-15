@@ -142,7 +142,7 @@ section PartialOrderₓ
 variable [PartialOrderₓ α] {s t : Set α} {a : α}
 
 theorem is_wf_iff_no_descending_seq : IsWf s ↔ ∀ f : ℕᵒᵈ ↪o α, ¬Range f ⊆ s := by
-  have : IsStrictOrder α fun a b : α => a < b ∧ a ∈ s ∧ b ∈ s :=
+  haveI : IsStrictOrder α fun a b : α => a < b ∧ a ∈ s ∧ b ∈ s :=
     { to_is_irrefl := ⟨fun x con => lt_irreflₓ x con.1⟩,
       to_is_trans := ⟨fun a b c ab bc => ⟨lt_transₓ ab.1 bc.1, ab.2.1, bc.2.2⟩⟩ }
   rw [is_wf, well_founded_on_iff_no_descending_seq]
@@ -164,7 +164,7 @@ theorem IsWf.union (hs : IsWf s) (ht : IsWf t) : IsWf (s ∪ t) := by
     contrapose! h
     exact finite.union h.1 h.2
   rw [← infinite_coe_iff, ← infinite_coe_iff] at h
-  cases' h with inf inf <;> have := inf
+  cases' h with inf inf <;> haveI := inf
   · apply hs ((Nat.orderEmbeddingOfSet (f ⁻¹' s)).dual.trans f)
     change range (Function.comp f (Nat.orderEmbeddingOfSet (f ⁻¹' s))) ⊆ s
     rw [range_comp, image_subset_iff]
@@ -239,7 +239,7 @@ theorem _root_.is_antichain.partially_well_ordered_on_iff {s : Set α} {r : α �
     (hs : IsAntichain r s) : s.PartiallyWellOrderedOn r ↔ s.Finite :=
   ⟨hs.finite_of_partially_well_ordered_on, Finite.partially_well_ordered_on⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem partially_well_ordered_on_iff_finite_antichains {s : Set α} {r : α → α → Prop} [IsRefl α r] [IsSymm α r] :
     s.PartiallyWellOrderedOn r ↔ ∀ (t) (_ : t ⊆ s), IsAntichain r t → t.Finite := by
   refine' ⟨fun h t ht hrt => hrt.finite_of_partially_well_ordered_on (h.mono ht), _⟩
@@ -297,7 +297,7 @@ theorem partially_well_ordered_on_iff_exists_monotone_subseq [IsRefl α r] [IsTr
 
 theorem PartiallyWellOrderedOn.well_founded_on [IsPartialOrder α r] (h : s.PartiallyWellOrderedOn r) :
     s.WellFoundedOn fun a b => r a b ∧ a ≠ b := by
-  have : IsStrictOrder α fun a b => r a b ∧ a ≠ b :=
+  haveI : IsStrictOrder α fun a b => r a b ∧ a ≠ b :=
     { to_is_irrefl := ⟨fun a con => con.2 rfl⟩,
       to_is_trans := ⟨fun a b c ab bc => ⟨trans ab.1 bc.1, fun ac => ab.2 (antisymm ab.1 (ac.symm ▸ bc.1))⟩⟩ }
   rw [well_founded_on_iff_no_descending_seq]
@@ -319,7 +319,7 @@ theorem IsPwo.exists_monotone_subseq (h : s.IsPwo) (f : ℕ → α) (hf : Range 
 theorem is_pwo_iff_exists_monotone_subseq : s.IsPwo ↔ ∀ f : ℕ → α, Range f ⊆ s → ∃ g : ℕ ↪o ℕ, Monotone (f ∘ g) :=
   partially_well_ordered_on_iff_exists_monotone_subseq
 
-theorem IsPwo.prod (hs : s.IsPwo) (ht : t.IsPwo) : (s ×ˢ t : Set _).IsPwo := by
+theorem IsPwo.prod (hs : s.IsPwo) (ht : t.IsPwo) : (s ×ˢ t).IsPwo := by
   classical
   rw [is_pwo_iff_exists_monotone_subseq] at *
   intro f hf
@@ -361,7 +361,7 @@ theorem IsPwo.union (hs : IsPwo s) (ht : IsPwo t) : IsPwo (s ∪ t) := by
     contrapose! h
     exact finite.union h.1 h.2
   rw [← infinite_coe_iff, ← infinite_coe_iff] at h
-  cases' h with inf inf <;> have := inf
+  cases' h with inf inf <;> haveI := inf
   · obtain ⟨g, hg⟩ := hs (f ∘ Nat.orderEmbeddingOfSet (f ⁻¹' s)) _
     · rw [Function.comp.assoc, ← RelEmbedding.coe_trans] at hg
       exact ⟨_, hg⟩
@@ -612,7 +612,7 @@ theorem partially_well_ordered_on_sublist_forall₂ (r : α → α → Prop) [Is
       
     infer_instance
     
-  have : Inhabited α := ⟨as⟩
+  haveI : Inhabited α := ⟨as⟩
   rw [iff_not_exists_is_min_bad_seq List.length]
   rintro ⟨f, hf1, hf2⟩
   have hnil : ∀ n, f n ≠ List.nil := fun n con => hf1.2 n n.succ n.lt_succ_self (con.symm ▸ List.SublistForall₂.nil)
@@ -643,7 +643,7 @@ theorem partially_well_ordered_on_sublist_forall₂ (r : α → α → Prop) [Is
   · apply hf1.2 m n mn
     rwa [if_pos hn, if_pos (mn.trans hn)] at hmn
     
-  · obtain ⟨n', rfl⟩ := le_iff_exists_add.1 (not_ltₓ.1 hn)
+  · obtain ⟨n', rfl⟩ := exists_add_of_le (not_ltₓ.1 hn)
     rw [if_neg hn, add_commₓ (g 0) n', add_tsub_cancel_right] at hmn
     split_ifs  at hmn with hm hm
     · apply hf1.2 m (g n') (lt_of_lt_of_leₓ hm (g.monotone n'.zero_le))

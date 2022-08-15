@@ -97,7 +97,7 @@ theorem is_subterminal_of_is_iso_diag [HasBinaryProduct A A] [IsIso (diag A)] : 
 /-- If `A` is subterminal, it is isomorphic to `A ⨯ A`. -/
 @[simps]
 def IsSubterminal.isoDiag (hA : IsSubterminal A) [HasBinaryProduct A A] : A ⨯ A ≅ A := by
-  let this := is_subterminal.is_iso_diag hA
+  letI := is_subterminal.is_iso_diag hA
   apply (as_iso (diag A)).symm
 
 variable (C)
@@ -108,7 +108,7 @@ to the lattice of open subsets of `X`. More generally, if `C` is a topos, this i
 "external truth values".
 -/
 def Subterminals (C : Type u₁) [Category.{v₁} C] :=
-  { A : C // IsSubterminal A }deriving Category
+  FullSubcategory fun A : C => IsSubterminal A deriving Category
 
 instance [HasTerminal C] : Inhabited (Subterminals C) :=
   ⟨⟨⊤_ C, is_subterminal_of_terminal⟩⟩
@@ -134,7 +134,7 @@ def subterminalsEquivMonoOverTerminal [HasTerminal C] : Subterminals C ≌ MonoO
             ext1 ⟨⟨⟩⟩) }
   inverse :=
     { obj := fun X =>
-        ⟨X.val.left, fun Z f g => by
+        ⟨X.obj.left, fun Z f g => by
           rw [← cancel_mono X.arrow]
           apply Subsingleton.elimₓ⟩,
       map := fun X Y f => f.1 }

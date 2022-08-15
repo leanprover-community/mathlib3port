@@ -278,11 +278,11 @@ theorem Monotone.forall_le_of_antitone {β : Type _} [Preorderₓ β] {f g : α 
 theorem SemilatticeSup.ext_sup {α} {A B : SemilatticeSup α}
     (H :
       ∀ x y : α,
-        (have := A
+        (haveI := A
           x ≤ y) ↔
           x ≤ y)
     (x y : α) :
-    (have := A
+    (haveI := A
       x⊔y) =
       x⊔y :=
   eq_of_forall_ge_iff fun c => by
@@ -291,7 +291,7 @@ theorem SemilatticeSup.ext_sup {α} {A B : SemilatticeSup α}
 theorem SemilatticeSup.ext {α} {A B : SemilatticeSup α}
     (H :
       ∀ x y : α,
-        (have := A
+        (haveI := A
           x ≤ y) ↔
           x ≤ y) :
     A = B := by
@@ -477,11 +477,11 @@ theorem inf_eq_inf_iff_right : a⊓c = b⊓c ↔ b⊓c ≤ a ∧ a⊓c ≤ b :=
 theorem SemilatticeInf.ext_inf {α} {A B : SemilatticeInf α}
     (H :
       ∀ x y : α,
-        (have := A
+        (haveI := A
           x ≤ y) ↔
           x ≤ y)
     (x y : α) :
-    (have := A
+    (haveI := A
       x⊓y) =
       x⊓y :=
   eq_of_forall_le_iff fun c => by
@@ -490,7 +490,7 @@ theorem SemilatticeInf.ext_inf {α} {A B : SemilatticeInf α}
 theorem SemilatticeInf.ext {α} {A B : SemilatticeInf α}
     (H :
       ∀ x y : α,
-        (have := A
+        (haveI := A
           x ≤ y) ↔
           x ≤ y) :
     A = B := by
@@ -515,8 +515,8 @@ The partial order is defined so that `a ≤ b` unfolds to `b ⊓ a = a`; cf. `in
 -/
 def SemilatticeInf.mk' {α : Type _} [HasInf α] (inf_comm : ∀ a b : α, a⊓b = b⊓a)
     (inf_assoc : ∀ a b c : α, a⊓b⊓c = a⊓(b⊓c)) (inf_idem : ∀ a : α, a⊓a = a) : SemilatticeInf α := by
-  have : SemilatticeSup αᵒᵈ := SemilatticeSup.mk' inf_comm inf_assoc inf_idem
-  have i := OrderDual.semilatticeInf αᵒᵈ
+  haveI : SemilatticeSup αᵒᵈ := SemilatticeSup.mk' inf_comm inf_assoc inf_idem
+  haveI i := OrderDual.semilatticeInf αᵒᵈ
   exact i
 
 /-!
@@ -630,7 +630,7 @@ theorem sup_eq_iff_inf_eq : a⊔b = b ↔ a⊓b = a := by
 theorem Lattice.ext {α} {A B : Lattice α}
     (H :
       ∀ x y : α,
-        (have := A
+        (haveI := A
           x ≤ y) ↔
           x ≤ y) :
     A = B := by
@@ -1107,7 +1107,7 @@ protected def lattice [Lattice α] {P : α → Prop} (Psup : ∀ ⦃x y⦄, P x 
 @[simp, norm_cast]
 theorem coe_sup [SemilatticeSup α] {P : α → Prop} (Psup : ∀ ⦃x y⦄, P x → P y → P (x⊔y)) (x y : Subtype P) :
     (by
-        have := Subtype.semilatticeSup Psup
+        haveI := Subtype.semilatticeSup Psup
         exact (x⊔y : Subtype P) : α) =
       x⊔y :=
   rfl
@@ -1115,7 +1115,7 @@ theorem coe_sup [SemilatticeSup α] {P : α → Prop} (Psup : ∀ ⦃x y⦄, P x
 @[simp, norm_cast]
 theorem coe_inf [SemilatticeInf α] {P : α → Prop} (Pinf : ∀ ⦃x y⦄, P x → P y → P (x⊓y)) (x y : Subtype P) :
     (by
-        have := Subtype.semilatticeInf Pinf
+        haveI := Subtype.semilatticeInf Pinf
         exact (x⊓y : Subtype P) : α) =
       x⊓y :=
   rfl
@@ -1124,7 +1124,7 @@ theorem coe_inf [SemilatticeInf α] {P : α → Prop} (Pinf : ∀ ⦃x y⦄, P x
 theorem mk_sup_mk [SemilatticeSup α] {P : α → Prop} (Psup : ∀ ⦃x y⦄, P x → P y → P (x⊔y)) {x y : α} (hx : P x)
     (hy : P y) :
     by
-      have := Subtype.semilatticeSup Psup
+      haveI := Subtype.semilatticeSup Psup
       exact (⟨x, hx⟩⊔⟨y, hy⟩ : Subtype P) = ⟨x⊔y, Psup hx hy⟩ :=
   rfl
 
@@ -1132,7 +1132,7 @@ theorem mk_sup_mk [SemilatticeSup α] {P : α → Prop} (Psup : ∀ ⦃x y⦄, P
 theorem mk_inf_mk [SemilatticeInf α] {P : α → Prop} (Pinf : ∀ ⦃x y⦄, P x → P y → P (x⊓y)) {x y : α} (hx : P x)
     (hy : P y) :
     by
-      have := Subtype.semilatticeInf Pinf
+      haveI := Subtype.semilatticeInf Pinf
       exact (⟨x, hx⟩⊓⟨y, hy⟩ : Subtype P) = ⟨x⊓y, Pinf hx hy⟩ :=
   rfl
 

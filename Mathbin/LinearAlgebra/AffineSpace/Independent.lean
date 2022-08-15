@@ -332,7 +332,7 @@ independent, then the original family of points is also affine-independent. -/
 theorem AffineIndependent.of_comp {p : ι → P} (f : P →ᵃ[k] P₂) (hai : AffineIndependent k (f ∘ p)) :
     AffineIndependent k p := by
   cases' is_empty_or_nonempty ι with h h
-  · have := h
+  · haveI := h
     apply affine_independent_of_subsingleton
     
   obtain ⟨i⟩ := h
@@ -345,7 +345,7 @@ affine-independent. -/
 theorem AffineIndependent.map' {p : ι → P} (hai : AffineIndependent k p) (f : P →ᵃ[k] P₂) (hf : Function.Injective f) :
     AffineIndependent k (f ∘ p) := by
   cases' is_empty_or_nonempty ι with h h
-  · have := h
+  · haveI := h
     apply affine_independent_of_subsingleton
     
   obtain ⟨i⟩ := h
@@ -504,7 +504,7 @@ theorem exists_subset_affine_independent_affine_span_eq_top {s : Set P} (h : Aff
 
 variable (k V)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem exists_affine_independent (s : Set P) :
     ∃ (t : _)(_ : t ⊆ s), affineSpan k t = affineSpan k s ∧ AffineIndependent k (coe : t → P) := by
   rcases s.eq_empty_or_nonempty with (rfl | ⟨p, hp⟩)
@@ -549,7 +549,7 @@ theorem affine_independent_of_ne {p₁ p₂ : P} (h : p₁ ≠ p₂) : AffineInd
     fin_cases i
     · simpa using hi
       
-  have : Unique { x // x ≠ (0 : Finₓ 2) } := ⟨⟨i₁⟩, he'⟩
+  haveI : Unique { x // x ≠ (0 : Finₓ 2) } := ⟨⟨i₁⟩, he'⟩
   have hz : (![p₁, p₂] ↑default -ᵥ ![p₁, p₂] 0 : V) ≠ 0 := by
     rw [he' default]
     simpa using h.symm

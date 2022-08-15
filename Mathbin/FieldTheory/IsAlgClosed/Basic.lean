@@ -221,7 +221,7 @@ theorem maximal_subfield_with_hom_chain_bounded (c : Set (SubfieldWithHom K L M 
     ∃ ub : SubfieldWithHom K L M hL, ∀ N, N ∈ c → N ≤ ub :=
   if hcn : c.Nonempty then
     let ub : SubfieldWithHom K L M hL :=
-      have : Nonempty c := Set.Nonempty.to_subtype hcn
+      haveI : Nonempty c := Set.Nonempty.to_subtype hcn
       { Carrier := ⨆ i : c, (i : subfield_with_hom K L M hL).Carrier,
         emb :=
           Subalgebra.suprLift (fun i : c => (i : subfield_with_hom K L M hL).Carrier)
@@ -266,8 +266,8 @@ theorem maximal_subfield_with_hom_eq_top : (maximalSubfieldWithHom M hL).Carrier
   intro x _
   let p := minpoly K x
   let N : Subalgebra K L := (maximal_subfield_with_hom M hL).Carrier
-  let this : Field N := (Subalgebra.is_field_of_algebraic N hL).toField
-  let this : Algebra N M := (maximal_subfield_with_hom M hL).emb.toRingHom.toAlgebra
+  letI : Field N := (Subalgebra.is_field_of_algebraic N hL).toField
+  letI : Algebra N M := (maximal_subfield_with_hom M hL).emb.toRingHom.toAlgebra
   cases'
     IsAlgClosed.exists_aeval_eq_zero M (minpoly N x)
       (ne_of_gtₓ
@@ -318,9 +318,9 @@ variable {M}
 
 include hS
 
-private theorem fraction_ring.is_algebraic : by
-    let this : IsDomain R := (NoZeroSmulDivisors.algebra_map_injective R S).IsDomain _ <;>
-      exact Algebra.IsAlgebraic (FractionRing R) (FractionRing S) :=
+private theorem fraction_ring.is_algebraic :
+    letI : IsDomain R := (NoZeroSmulDivisors.algebra_map_injective R S).IsDomain _
+    Algebra.IsAlgebraic (FractionRing R) (FractionRing S) :=
   by
   intro inst x
   exact
@@ -330,7 +330,7 @@ private theorem fraction_ring.is_algebraic : by
 /-- A (random) homomorphism from an algebraic extension of R into an algebraically
   closed extension of R. -/
 noncomputable irreducible_def lift : S →ₐ[R] M := by
-  let this : IsDomain R := (NoZeroSmulDivisors.algebra_map_injective R S).IsDomain _
+  letI : IsDomain R := (NoZeroSmulDivisors.algebra_map_injective R S).IsDomain _
   have hfRfS : Algebra.IsAlgebraic (FractionRing R) (FractionRing S) := fraction_ring.is_algebraic hS
   let f : FractionRing S →ₐ[FractionRing R] M := lift_aux (FractionRing R) (FractionRing S) M hfRfS
   exact (f.restrict_scalars R).comp ((Algebra.ofId S (FractionRing S)).restrictScalars R)
@@ -377,8 +377,8 @@ noncomputable def equiv : L ≃ₐ[R] M :=
   let f : L →ₐ[R] M := IsAlgClosed.lift IsAlgClosure.algebraic
   AlgEquiv.ofBijective f
     ⟨RingHom.injective f.toRingHom, by
-      let this : Algebra L M := RingHom.toAlgebra f
-      let this : IsScalarTower R L M :=
+      letI : Algebra L M := RingHom.toAlgebra f
+      letI : IsScalarTower R L M :=
         IsScalarTower.of_algebra_map_eq
           (by
             simp [← RingHom.algebra_map_to_algebra])
@@ -400,14 +400,14 @@ variable [Algebra K J] [Algebra J L] [IsAlgClosure J L] [Algebra K L] [IsScalarT
   an algebraic extension of `R` -/
 noncomputable def equivOfAlgebraic' [Nontrivial S] [NoZeroSmulDivisors R S] (hRL : Algebra.IsAlgebraic R L) :
     L ≃ₐ[R] M := by
-  let this : NoZeroSmulDivisors R L :=
+  letI : NoZeroSmulDivisors R L :=
     NoZeroSmulDivisors.of_algebra_map_injective
       (by
         rw [IsScalarTower.algebra_map_eq R S L]
         exact
           Function.Injective.comp (NoZeroSmulDivisors.algebra_map_injective _ _)
             (NoZeroSmulDivisors.algebra_map_injective _ _))
-  let this : IsAlgClosure R L :=
+  letI : IsAlgClosure R L :=
     { alg_closed := by
         infer_instance,
       algebraic := hRL }
@@ -427,20 +427,20 @@ variable {R S}
 /-- Used in the definition of `equiv_of_equiv` -/
 noncomputable def equivOfEquivAux (hSR : S ≃+* R) :
     { e : L ≃+* M // e.toRingHom.comp (algebraMap S L) = (algebraMap R M).comp hSR.toRingHom } := by
-  let this : Algebra R S := RingHom.toAlgebra hSR.symm.to_ring_hom
-  let this : Algebra S R := RingHom.toAlgebra hSR.to_ring_hom
-  let this : IsDomain R := (NoZeroSmulDivisors.algebra_map_injective R M).IsDomain _
-  let this : IsDomain S := (NoZeroSmulDivisors.algebra_map_injective S L).IsDomain _
+  letI : Algebra R S := RingHom.toAlgebra hSR.symm.to_ring_hom
+  letI : Algebra S R := RingHom.toAlgebra hSR.to_ring_hom
+  letI : IsDomain R := (NoZeroSmulDivisors.algebra_map_injective R M).IsDomain _
+  letI : IsDomain S := (NoZeroSmulDivisors.algebra_map_injective S L).IsDomain _
   have : Algebra.IsAlgebraic R S := fun x => by
     rw [← RingEquiv.symm_apply_apply hSR x]
     exact is_algebraic_algebra_map _
-  let this : Algebra R L := RingHom.toAlgebra ((algebraMap S L).comp (algebraMap R S))
-  have : IsScalarTower R S L := IsScalarTower.of_algebra_map_eq fun _ => rfl
-  have : IsScalarTower S R L :=
+  letI : Algebra R L := RingHom.toAlgebra ((algebraMap S L).comp (algebraMap R S))
+  haveI : IsScalarTower R S L := IsScalarTower.of_algebra_map_eq fun _ => rfl
+  haveI : IsScalarTower S R L :=
     IsScalarTower.of_algebra_map_eq
       (by
         simp [← RingHom.algebra_map_to_algebra])
-  have : NoZeroSmulDivisors R S := NoZeroSmulDivisors.of_algebra_map_injective hSR.symm.injective
+  haveI : NoZeroSmulDivisors R S := NoZeroSmulDivisors.of_algebra_map_injective hSR.symm.injective
   refine'
     ⟨equiv_of_algebraic' R S L M
         (Algebra.is_algebraic_of_larger_base_of_injective (show Function.Injective (algebraMap S R) from hSR.injective)

@@ -9,8 +9,8 @@ import Mathbin.MeasureTheory.Group.Prod
 /-!
 # Haar measure
 
-In this file we prove the existence of Haar measure for a locally compact Hausdorff topological
-group.
+In this file we prove the existence and uniqueness (up to scalar multiples) of Haar measure
+for a locally compact Hausdorff topological group.
 
 For the construction, we follow the write-up by Jonathan Gleason,
 *Existence and Uniqueness of Haar Measure*.
@@ -46,6 +46,8 @@ where `ᵒ` denotes the interior.
   it is invariant and gives finite mass to compact sets and positive mass to nonempty open sets.
 * `haar` : some choice of a Haar measure, on a locally compact Hausdorff group, constructed as
   `haar_measure K` where `K` is some arbitrary choice of a compact set with nonempty interior.
+* `haar_measure_unique`: Every σ-finite left invariant measure on a locally compact Hausdorff group
+  is a scalar multiple of the Haar measure.
 
 ## References
 * Paul Halmos (1950), Measure Theory, §53
@@ -639,7 +641,7 @@ instance is_mul_left_invariant_haar_measure (K₀ : PositiveCompacts G) : IsMulL
 
 @[to_additive]
 theorem haar_measure_self {K₀ : PositiveCompacts G} : haarMeasure K₀ K₀ = 1 := by
-  have : LocallyCompactSpace G := K₀.locally_compact_space_of_group
+  haveI : LocallyCompactSpace G := K₀.locally_compact_space_of_group
   rw [haar_measure_apply K₀.compact.measurable_set, Ennreal.div_self]
   · rw [← pos_iff_ne_zero]
     exact haar_content_outer_measure_self_pos
@@ -650,7 +652,7 @@ theorem haar_measure_self {K₀ : PositiveCompacts G} : haarMeasure K₀ K₀ = 
 /-- The Haar measure is regular. -/
 @[to_additive]
 instance regular_haar_measure {K₀ : PositiveCompacts G} : (haarMeasure K₀).regular := by
-  have : LocallyCompactSpace G := K₀.locally_compact_space_of_group
+  haveI : LocallyCompactSpace G := K₀.locally_compact_space_of_group
   apply regular.smul
   rw [Ennreal.inv_ne_top]
   exact haar_content_outer_measure_self_pos.ne'
@@ -659,7 +661,7 @@ instance regular_haar_measure {K₀ : PositiveCompacts G} : (haarMeasure K₀).r
 @[to_additive]
 instance sigma_finite_haar_measure [SecondCountableTopology G] {K₀ : PositiveCompacts G} :
     SigmaFinite (haarMeasure K₀) := by
-  have : LocallyCompactSpace G := K₀.locally_compact_space_of_group
+  haveI : LocallyCompactSpace G := K₀.locally_compact_space_of_group
   infer_instance
 
 /-- The Haar measure is a Haar measure, i.e., it is invariant and gives finite mass to compact
@@ -720,10 +722,13 @@ theorem is_haar_measure_eq_smul_is_haar_measure [LocallyCompactSpace G] (μ ν :
   · simp only [← div_eq_mul_inv, ← νpos.ne', ← K.compact.measure_lt_top.Ne, ← or_selfₓ, ← Ennreal.inv_eq_top, ←
       WithTop.mul_eq_top_iff, ← Ne.def, ← not_false_iff, ← and_falseₓ, ← false_andₓ]
     
-  · calc μ = μ K • haar_measure K := haar_measure_unique μ K _ = (μ K / ν K) • ν K • haar_measure K := by
-        rw [smul_smul, div_eq_mul_inv, mul_assoc, Ennreal.inv_mul_cancel νpos.ne' νne, mul_oneₓ]_ = (μ K / ν K) • ν :=
-        by
+  · calc
+      μ = μ K • haar_measure K := haar_measure_unique μ K
+      _ = (μ K / ν K) • ν K • haar_measure K := by
+        rw [smul_smul, div_eq_mul_inv, mul_assoc, Ennreal.inv_mul_cancel νpos.ne' νne, mul_oneₓ]
+      _ = (μ K / ν K) • ν := by
         rw [← haar_measure_unique ν K]
+      
     
 
 -- see Note [lower instance priority]
@@ -797,7 +802,8 @@ theorem map_haar_inv {G : Type _} [CommGroupₓ G] [TopologicalSpace G] [Topolog
   -- the image measure is a Haar measure. By uniqueness up to multiplication, it is of the form
   -- `c μ`. Applying again inversion, one gets the measure `c^2 μ`. But since inversion is an
   -- involution, this is also `μ`. Hence, `c^2 = 1`, which implies `c = 1`.
-  have : is_haar_measure (measure.map Inv.inv μ) := is_haar_measure_map μ (MulEquiv.inv G) continuous_inv continuous_inv
+  haveI : is_haar_measure (measure.map Inv.inv μ) :=
+    is_haar_measure_map μ (MulEquiv.inv G) continuous_inv continuous_inv
   obtain ⟨c, cpos, clt, hc⟩ : ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ∞ ∧ measure.map Inv.inv μ = c • μ :=
     is_haar_measure_eq_smul_is_haar_measure _ _
   have : map Inv.inv (map Inv.inv μ) = c ^ 2 • μ := by

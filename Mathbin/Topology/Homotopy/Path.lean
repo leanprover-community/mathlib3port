@@ -156,11 +156,11 @@ def hcomp (F : Homotopy p₀ q₀) (G : Homotopy p₁ q₁) : Homotopy (p₀.tra
               continuity)).ContinuousOn
         _
     intro x hx
-    norm_num [← hx]
+    norm_num[← hx]
   map_zero_left' := fun x => by
-    norm_num [← Path.trans]
+    norm_num[← Path.trans]
   map_one_left' := fun x => by
-    norm_num [← Path.trans]
+    norm_num[← Path.trans]
   prop' := by
     rintro x t ht
     cases ht
@@ -213,11 +213,11 @@ def reparam (p : Path x₀ x₁) (f : I → I) (hf : Continuous f) (hf₀ : f 0 
   prop' := fun t x hx => by
     cases hx
     · rw [hx]
-      norm_num [← hf₀]
+      norm_num[← hf₀]
       
     · rw [Set.mem_singleton_iff] at hx
       rw [hx]
-      norm_num [← hf₁]
+      norm_num[← hf₁]
       
 
 /-- Suppose `F : homotopy p q`. Then we have a `homotopy p.symm q.symm` by reversing the second

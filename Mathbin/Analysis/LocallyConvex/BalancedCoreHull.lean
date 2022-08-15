@@ -193,7 +193,7 @@ end BalancedHull
 
 section Topology
 
-variable [NondiscreteNormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] [TopologicalSpace E] [HasContinuousSmul 𝕜 E]
+variable [NontriviallyNormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] [TopologicalSpace E] [HasContinuousSmul 𝕜 E]
   {U : Set E}
 
 protected theorem IsClosed.balanced_core (hU : IsClosed U) : IsClosed (BalancedCore 𝕜 U) := by
@@ -216,7 +216,7 @@ theorem balanced_core_mem_nhds_zero (hU : U ∈ 𝓝 (0 : E)) : BalancedCore �
     have h : Filter.Tendsto (fun x : 𝕜 × E => x.fst • x.snd) (𝓝 (0, 0)) (𝓝 0) :=
       continuous_smul.tendsto' (0, 0) _ (smul_zero _)
     simpa only [Prod.exists', Prod.forall', and_imp, And.assoc, ← exists_prop] using
-      h.basis_left (normed_group.nhds_zero_basis_norm_lt.prod_nhds (𝓝 _).basis_sets) U hU
+      h.basis_left (normed_add_comm_group.nhds_zero_basis_norm_lt.prod_nhds (𝓝 _).basis_sets) U hU
   rcases NormedField.exists_norm_lt 𝕜 hr with ⟨y, hy₀, hyr⟩
   rw [norm_pos_iff] at hy₀
   have : y • V ∈ 𝓝 (0 : E) := (set_smul_mem_nhds_zero_iff hy₀).mpr hV
@@ -229,6 +229,10 @@ theorem balanced_core_mem_nhds_zero (hU : U ∈ 𝓝 (0 : E)) : BalancedCore �
   exact mul_lt_mul' ha hyr (norm_nonneg y) one_pos
 
 variable (𝕜 E)
+
+theorem nhds_basis_balanced : (𝓝 (0 : E)).HasBasis (fun s : Set E => s ∈ 𝓝 (0 : E) ∧ Balanced 𝕜 s) id :=
+  Filter.has_basis_self.mpr fun s hs =>
+    ⟨BalancedCore 𝕜 s, balanced_core_mem_nhds_zero hs, balanced_core_balanced s, balanced_core_subset s⟩
 
 theorem nhds_basis_closed_balanced [T3Space E] :
     (𝓝 (0 : E)).HasBasis (fun s : Set E => s ∈ 𝓝 (0 : E) ∧ IsClosed s ∧ Balanced 𝕜 s) id := by

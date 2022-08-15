@@ -104,7 +104,12 @@ theorem pow_le_pow_of_le [CovariantClass α α (· * ·) (· ≤ ·)] [Covariant
 theorem Left.pow_lt_one_of_lt [CovariantClass α α (· * ·) (· < ·)] {n : ℕ} {x : α} (n0 : 0 < n) (H : x < 1) :
     x ^ n < 1 := by
   refine' Nat.le_induction ((pow_oneₓ _).le.trans_lt H) (fun n n1 hn => _) _ (nat.succ_le_iff.mpr n0)
-  calc x ^ (n + 1) = x * x ^ n := pow_succₓ x n _ < x * 1 := mul_lt_mul_left' hn x _ = x := mul_oneₓ x _ < 1 := H
+  calc
+    x ^ (n + 1) = x * x ^ n := pow_succₓ x n
+    _ < x * 1 := mul_lt_mul_left' hn x
+    _ = x := mul_oneₓ x
+    _ < 1 := H
+    
 
 theorem Left.pow_lt_one_iff {α : Type _} [Monoidₓ α] [LinearOrderₓ α] [CovariantClass α α (· * ·) (· < ·)] {n : ℕ}
     {x : α} (n0 : 0 < n) : x ^ n < 1 ↔ x < 1 :=
@@ -112,14 +117,19 @@ theorem Left.pow_lt_one_iff {α : Type _} [Monoidₓ α] [LinearOrderₓ α] [Co
     not_leₓ.mp fun k =>
       not_leₓ.mpr H
         (by
-          have := Mul.to_covariant_class_left α
+          haveI := Mul.to_covariant_class_left α
           exact Left.one_le_pow_of_le k),
     Left.pow_lt_one_of_lt n0⟩
 
 theorem Right.pow_lt_one_of_lt [CovariantClass α α (Function.swap (· * ·)) (· < ·)] {n : ℕ} {x : α} (n0 : 0 < n)
     (H : x < 1) : x ^ n < 1 := by
   refine' Nat.le_induction ((pow_oneₓ _).le.trans_lt H) (fun n n1 hn => _) _ (nat.succ_le_iff.mpr n0)
-  calc x ^ (n + 1) = x ^ n * x := pow_succ'ₓ x n _ < 1 * x := mul_lt_mul_right' hn x _ = x := one_mulₓ x _ < 1 := H
+  calc
+    x ^ (n + 1) = x ^ n * x := pow_succ'ₓ x n
+    _ < 1 * x := mul_lt_mul_right' hn x
+    _ = x := one_mulₓ x
+    _ < 1 := H
+    
 
 theorem Right.pow_lt_one_iff {α : Type _} [Monoidₓ α] [LinearOrderₓ α]
     [CovariantClass α α (Function.swap (· * ·)) (· < ·)] {n : ℕ} {x : α} (n0 : 0 < n) : x ^ n < 1 ↔ x < 1 :=
@@ -127,7 +137,7 @@ theorem Right.pow_lt_one_iff {α : Type _} [Monoidₓ α] [LinearOrderₓ α]
     not_leₓ.mp fun k =>
       not_leₓ.mpr H
         (by
-          have := Mul.to_covariant_class_right α
+          haveI := Mul.to_covariant_class_right α
           exact Right.one_le_pow_of_le k),
     Right.pow_lt_one_of_lt n0⟩
 

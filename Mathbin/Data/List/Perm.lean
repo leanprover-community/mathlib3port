@@ -7,6 +7,7 @@ import Mathbin.Data.List.Dedup
 import Mathbin.Data.List.Lattice
 import Mathbin.Data.List.Permutation
 import Mathbin.Data.List.Zip
+import Mathbin.Data.List.Range
 import Mathbin.Logic.Relation
 
 /-!
@@ -185,7 +186,7 @@ theorem perm_cons_erase [DecidableEq α] {a : α} {l : List α} (h : a ∈ l) : 
   let ⟨l₁, l₂, _, e₁, e₂⟩ := exists_erase_eqₓ h
   e₂.symm ▸ e₁.symm ▸ perm_middle
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem perm_induction_on {P : List α → List α → Prop} {l₁ l₂ : List α} (p : l₁ ~ l₂) (h₁ : P [] [])
     (h₂ : ∀ x l₁ l₂, l₁ ~ l₂ → P l₁ l₂ → P (x :: l₁) (x :: l₂))
     (h₃ : ∀ x y l₁ l₂, l₁ ~ l₂ → P l₁ l₂ → P (y :: x :: l₁) (x :: y :: l₂))
@@ -242,7 +243,7 @@ theorem filter_append_perm (p : α → Prop) [DecidablePred p] (l : List α) :
       
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (l₁' «expr ~ » l₁)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (l₁' «expr ~ » l₁)
 theorem exists_perm_sublist {l₁ l₂ l₂' : List α} (s : l₁ <+ l₂) (p : l₂ ~ l₂') :
     ∃ (l₁' : _)(_ : l₁' ~ l₁), l₁' <+ l₂' := by
   induction' p with x l₂ l₂' p IH x y l₂ l₂ m₂ r₂ p₁ p₂ IH₁ IH₂ generalizing l₁ s
@@ -349,7 +350,7 @@ end Rel
 
 section Subperm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (l «expr ~ » l₁)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (l «expr ~ » l₁)
 /-- `subperm l₁ l₂`, denoted `l₁ <+~ l₂`, means that `l₁` is a sublist of
   a permutation of `l₂`. This is an analogue of `l₁ ⊆ l₂` which respects
   multiplicities of elements, and is used for the `≤` relation on multisets. -/
@@ -897,7 +898,7 @@ instance decidablePerm : ∀ l₁ l₂ : List α, Decidable (l₁ ~ l₂)
     is_false fun h => by
       have := h.nil_eq <;> contradiction
   | a :: l₁, l₂ =>
-    have := decidable_perm l₁ (l₂.erase a)
+    haveI := decidable_perm l₁ (l₂.erase a)
     decidableOfIff' _ cons_perm_iff_perm_erase
 
 -- @[congr]
@@ -1008,6 +1009,14 @@ theorem Perm.pairwise_iff {R : α → α → Prop} (S : Symmetric R) :
     exact h _ (p'.symm.subset m)
     
 
+theorem Pairwiseₓ.perm {R : α → α → Prop} {l l' : List α} (hR : l.Pairwise R) (hl : l ~ l') (hsymm : Symmetric R) :
+    l'.Pairwise R :=
+  (hl.pairwise_iff hsymm).mp hR
+
+theorem Perm.pairwise {R : α → α → Prop} {l l' : List α} (hl : l ~ l') (hR : l.Pairwise R) (hsymm : Symmetric R) :
+    l'.Pairwise R :=
+  hR.Perm hl hsymm
+
 theorem Perm.nodup_iff {l₁ l₂ : List α} : l₁ ~ l₂ → (Nodupₓ l₁ ↔ Nodupₓ l₂) :=
   perm.pairwise_iff <| @Ne.symm α
 
@@ -1033,6 +1042,10 @@ theorem bind_append_perm (l : List α) (f g : α → List β) : l.bind f ++ l.bi
   refine' (perm.trans _ (IH.append_left _)).append_left _
   rw [← append_assoc, ← append_assoc]
   exact perm_append_comm.append_right _
+
+theorem map_append_bind_perm (l : List α) (f : α → β) (g : α → List β) :
+    l.map f ++ l.bind g ~ l.bind fun x => f x :: g x := by
+  simpa [map_eq_bind] using bind_append_perm l (fun x => [f x]) g
 
 theorem Perm.product_right {l₁ l₂ : List α} (t₁ : List β) (p : l₁ ~ l₂) : product l₁ t₁ ~ product l₂ t₁ :=
   p.bind_right _
@@ -1093,6 +1106,23 @@ theorem revzip_sublists' (l : List α) : ∀ l₁ l₂, (l₁, l₂) ∈ revzip�
       
     · exact (IH _ _ h).cons _
       
+    
+
+theorem range_bind_sublists_len_perm {α : Type _} (l : List α) :
+    ((List.range (l.length + 1)).bind fun n => sublistsLen n l) ~ sublists' l := by
+  induction' l with h tl
+  · simp [← range_succ]
+    
+  · simp_rw [range_succ_eq_map, length, cons_bind, map_bind, sublists_len_succ_cons, sublists'_cons,
+      List.sublists_len_zero, List.singleton_append]
+    refine' ((bind_append_perm (range (tl.length + 1)) _ _).symm.cons _).trans _
+    simp_rw [← List.bind_map, ← cons_append]
+    rw [← List.singleton_append, ← List.sublists_len_zero tl]
+    refine' perm.append _ (l_ih.map _)
+    rw [List.range_succ, append_bind, bind_singleton, sublists_len_of_length_lt (Nat.lt_succ_selfₓ _), append_nil, ←
+      List.map_bind (fun n => sublists_len n tl) Nat.succ, ← cons_bind 0 _ fun n => sublists_len n tl, ←
+      range_succ_eq_map]
+    exact l_ih
     
 
 theorem perm_lookmap (f : α → Option α) {l₁ l₂ : List α}
@@ -1240,7 +1270,8 @@ theorem Perm.slice_inter {α} [DecidableEq α] {xs ys : List α} (n m : ℕ) (h 
   have : n ≤ n + m := Nat.le_add_rightₓ _ _
   have := h.nodup_iff.2 h'
   apply perm.trans _ (perm.inter_append _).symm <;>
-    solve_by_elim [← perm.append, ← perm.drop_inter, ← perm.take_inter, ← disjoint_take_drop, ← h, ← h']
+    solve_by_elim(config := { max_depth := 7 }) [← perm.append, ← perm.drop_inter, ← perm.take_inter, ←
+      disjoint_take_drop, ← h, ← h']
 
 -- enumerating permutations
 section Permutations
@@ -1288,13 +1319,13 @@ theorem length_permutations_aux :
 theorem length_permutations (l : List α) : length (permutations l) = (length l)! :=
   length_permutations_aux l []
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (ts' «expr ~ » «expr[ ,]»([]))
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (ts' «expr ~ » «expr[ ,]»([]))
 theorem mem_permutations_of_perm_lemma {is l : List α}
     (H : l ~ [] ++ is → (∃ (ts' : _)(_ : ts' ~ []), l = ts' ++ is) ∨ l ∈ permutationsAux is []) :
     l ~ is → l ∈ permutations is := by
   simpa [← permutations, ← perm_nil] using H
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (is' «expr ~ » is)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (is' «expr ~ » is)
 theorem mem_permutations_aux_of_perm :
     ∀ {ts is l : List α}, l ~ is ++ ts → (∃ (is' : _)(_ : is' ~ is), l = is' ++ ts) ∨ l ∈ permutationsAux ts is := by
   refine'

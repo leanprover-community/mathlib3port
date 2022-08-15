@@ -18,6 +18,10 @@ If `X n` is a sequence of independent identically distributed integrable real-va
 variables, then `∑ i in range n, X i / n` converges almost surely to `𝔼[X 0]`.
 We give here the strong version, due to Etemadi, that only requires pairwise independence.
 
+This file also contains the Lᵖ version of the strong law of large numbers provided by
+`probability_theory.strong_law_Lp` which shows `∑ i in range n, X i / n` converges in Lᵖ to
+`𝔼[X 0]` provided `X n` is independent identically distributed and is Lᵖ.
+
 ## Implementation
 
 We follow the proof by Etemadi
@@ -183,8 +187,11 @@ theorem integral_truncation_le_integral_of_nonneg (hf : Integrable f μ) (h'f : 
   apply integral_mono_of_nonneg (eventually_of_forall fun x => _) hf (eventually_of_forall fun x => _)
   · exact truncation_nonneg _ (h'f x)
     
-  · calc truncation f A x ≤ abs (truncation f A x) := le_abs_self _ _ ≤ abs (f x) :=
-        abs_truncation_le_abs_self _ _ _ _ = f x := abs_of_nonneg (h'f x)
+  · calc
+      truncation f A x ≤ abs (truncation f A x) := le_abs_self _
+      _ ≤ abs (f x) := abs_truncation_le_abs_self _ _ _
+      _ = f x := abs_of_nonneg (h'f x)
+      
     
 
 /-- If a function is integrable, then the integral of its truncated versions converges to the
@@ -222,7 +229,7 @@ section MomentEstimates
 theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 ≤ X) {K : ℕ} {N : ℕ} (hKN : K ≤ N) :
     (∑ j in range K, ℙ { ω | X ω ∈ Set.Ioc (j : ℝ) N }) ≤ Ennreal.ofReal (𝔼[X] + 1) := by
   let ρ : Measureₓ ℝ := measure.map X ℙ
-  have : is_probability_measure ρ := is_probability_measure_map hint.ae_measurable
+  haveI : is_probability_measure ρ := is_probability_measure_map hint.ae_measurable
   have A : (∑ j in range K, ∫ x in j..N, (1 : ℝ) ∂ρ) ≤ 𝔼[X] + 1 :=
     calc
       (∑ j in range K, ∫ x in j..N, (1 : ℝ) ∂ρ) = ∑ j in range K, ∑ i in Ico j N, ∫ x in i..(i + 1 : ℕ), (1 : ℝ) ∂ρ :=
@@ -306,17 +313,16 @@ theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 
     (∑ j in range K, ℙ { ω | X ω ∈ Set.Ioc (j : ℝ) N }) =
         ∑ j in range K, Ennreal.ofReal (∫ x in Set.Ioc (j : ℝ) N, (1 : ℝ) ∂ρ) :=
       by
-      simp_rw [B]_ = Ennreal.ofReal (∑ j in range K, ∫ x in Set.Ioc (j : ℝ) N, (1 : ℝ) ∂ρ) := by
+      simp_rw [B]
+    _ = Ennreal.ofReal (∑ j in range K, ∫ x in Set.Ioc (j : ℝ) N, (1 : ℝ) ∂ρ) := by
       rw [Ennreal.of_real_sum_of_nonneg]
-      simp only [← integral_const, ← Algebra.id.smul_eq_mul, ← mul_oneₓ, ← Ennreal.to_real_nonneg, ←
-        implies_true_iff]_ = Ennreal.ofReal (∑ j in range K, ∫ x in (j : ℝ)..N, (1 : ℝ) ∂ρ) :=
-      by
+      simp only [← integral_const, ← Algebra.id.smul_eq_mul, ← mul_oneₓ, ← Ennreal.to_real_nonneg, ← implies_true_iff]
+    _ = Ennreal.ofReal (∑ j in range K, ∫ x in (j : ℝ)..N, (1 : ℝ) ∂ρ) := by
       congr 1
       refine' sum_congr rfl fun j hj => _
-      rw
-        [intervalIntegral.integral_of_le
-          (Nat.cast_le.2 ((mem_range.1 hj).le.trans hKN))]_ ≤ Ennreal.ofReal (𝔼[X] + 1) :=
-      Ennreal.of_real_le_of_real A
+      rw [intervalIntegral.integral_of_le (Nat.cast_le.2 ((mem_range.1 hj).le.trans hKN))]
+    _ ≤ Ennreal.ofReal (𝔼[X] + 1) := Ennreal.of_real_le_of_real A
+    
 
 theorem tsum_prob_mem_Ioi_lt_top {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 ≤ X) :
     (∑' j : ℕ, ℙ { ω | X ω ∈ Set.Ioi (j : ℝ) }) < ∞ := by
@@ -355,18 +361,18 @@ theorem sum_variance_truncation_le {X : Ω → ℝ} (hint : Integrable X) (hnonn
     intro n
     change 𝔼[fun x => Y n x ^ 2] = _
     rw [moment_truncation_eq_interval_integral_of_nonneg hint.1 two_ne_zero hnonneg]
-  calc (∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * 𝔼[Y j ^ 2]) = ∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * ∫ x in 0 ..j, x ^ 2 ∂ρ := by
-      simp_rw [Y2]_ = ∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * ∑ k in range j, ∫ x in k..(k + 1 : ℕ), x ^ 2 ∂ρ := by
+  calc
+    (∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * 𝔼[Y j ^ 2]) = ∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * ∫ x in 0 ..j, x ^ 2 ∂ρ := by
+      simp_rw [Y2]
+    _ = ∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * ∑ k in range j, ∫ x in k..(k + 1 : ℕ), x ^ 2 ∂ρ := by
       congr 1 with j
       congr 1
       rw [intervalIntegral.sum_integral_adjacent_intervals]
       · norm_cast
         
       intro k hk
-      exact
-        (continuous_id.pow _).IntervalIntegrable _
-          _ _ = ∑ k in range K, (∑ j in Ioo k K, ((j : ℝ) ^ 2)⁻¹) * ∫ x in k..(k + 1 : ℕ), x ^ 2 ∂ρ :=
-      by
+      exact (continuous_id.pow _).IntervalIntegrable _ _
+    _ = ∑ k in range K, (∑ j in Ioo k K, ((j : ℝ) ^ 2)⁻¹) * ∫ x in k..(k + 1 : ℕ), x ^ 2 ∂ρ := by
       simp_rw [mul_sum, sum_mul, sum_sigma']
       refine'
         sum_bij' (fun (p : Σi : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ (fun a ha => rfl)
@@ -384,14 +390,13 @@ theorem sum_variance_truncation_le {X : Ω → ℝ} (hint : Integrable X) (hnonn
         
       · rintro ⟨i, j⟩ hij
         rfl
-        _ ≤ ∑ k in range K, 2 / (k + 1) * ∫ x in k..(k + 1 : ℕ), x ^ 2 ∂ρ :=
-      by
+        
+    _ ≤ ∑ k in range K, 2 / (k + 1) * ∫ x in k..(k + 1 : ℕ), x ^ 2 ∂ρ := by
       apply sum_le_sum fun k hk => _
       refine' mul_le_mul_of_nonneg_right (sum_Ioo_inv_sq_le _ _) _
       refine' intervalIntegral.integral_nonneg_of_forall _ fun u => sq_nonneg _
-      simp only [← Nat.cast_addₓ, ← Nat.cast_oneₓ, ← le_add_iff_nonneg_right, ←
-        zero_le_one]_ ≤ ∑ k in range K, ∫ x in k..(k + 1 : ℕ), 2 * x ∂ρ :=
-      by
+      simp only [← Nat.cast_addₓ, ← Nat.cast_oneₓ, ← le_add_iff_nonneg_right, ← zero_le_one]
+    _ ≤ ∑ k in range K, ∫ x in k..(k + 1 : ℕ), 2 * x ∂ρ := by
       apply sum_le_sum fun k hk => _
       have Ik : (k : ℝ) ≤ (k + 1 : ℕ) := by
         simp
@@ -403,29 +408,34 @@ theorem sum_variance_truncation_le {X : Ω → ℝ} (hint : Integrable X) (hnonn
       · apply Continuous.integrable_on_Ioc
         exact continuous_const.mul continuous_id'
         
-      · calc 2 / (↑k + 1) * x ^ 2 = x / (k + 1) * (2 * x) := by
-            ring_exp _ ≤ 1 * (2 * x) :=
+      · calc
+          2 / (↑k + 1) * x ^ 2 = x / (k + 1) * (2 * x) := by
+            ring_exp
+          _ ≤ 1 * (2 * x) :=
             mul_le_mul_of_nonneg_right
               (by
                 apply_mod_cast (div_le_one _).2 hx.2
                 simp only [← Nat.cast_addₓ, ← Nat.cast_oneₓ]
                 linarith only [show (0 : ℝ) ≤ k from Nat.cast_nonneg k])
-              (mul_nonneg zero_le_two ((Nat.cast_nonneg k).trans hx.1.le))_ = 2 * x :=
-            by
+              (mul_nonneg zero_le_two ((Nat.cast_nonneg k).trans hx.1.le))
+          _ = 2 * x := by
             rw [one_mulₓ]
-        _ = 2 * ∫ x in (0 : ℝ)..K, x ∂ρ :=
-      by
+          
+        
+    _ = 2 * ∫ x in (0 : ℝ)..K, x ∂ρ := by
       rw [intervalIntegral.sum_integral_adjacent_intervals fun k hk => _]
       swap
       · exact (continuous_const.mul continuous_id').IntervalIntegrable _ _
         
       rw [intervalIntegral.integral_const_mul]
-      norm_cast _ ≤ 2 * 𝔼[X] :=
+      norm_cast
+    _ ≤ 2 * 𝔼[X] :=
       mul_le_mul_of_nonneg_left
         (by
           rw [← integral_truncation_eq_interval_integral_of_nonneg hint.1 hnonneg]
           exact integral_truncation_le_integral_of_nonneg hint hnonneg)
         zero_le_two
+    
 
 end MomentEstimates
 
@@ -467,12 +477,14 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
   have u_mono : Monotone u := fun i j hij => Nat.floor_mono (pow_le_pow c_one.le hij)
   have I1 : ∀ K, (∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * Var[Y j]) ≤ 2 * 𝔼[X 0] := by
     intro K
-    calc (∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * Var[Y j]) ≤ ∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * 𝔼[truncation (X 0) j ^ 2] :=
-        by
+    calc
+      (∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * Var[Y j]) ≤ ∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * 𝔼[truncation (X 0) j ^ 2] := by
         apply sum_le_sum fun j hj => _
         refine' mul_le_mul_of_nonneg_left _ (inv_nonneg.2 (sq_nonneg _))
         rw [(hident j).truncation.variance_eq]
-        exact variance_le_expectation_sq _ ≤ 2 * 𝔼[X 0] := sum_variance_truncation_le hint (hnonneg 0) K
+        exact variance_le_expectation_sq
+      _ ≤ 2 * 𝔼[X 0] := sum_variance_truncation_le hint (hnonneg 0) K
+      
   let C := c ^ 5 * (c - 1)⁻¹ ^ 3 * (2 * 𝔼[X 0])
   have I2 : ∀ N, (∑ i in range N, ((u i : ℝ) ^ 2)⁻¹ * Var[S (u i)]) ≤ C := by
     intro N
@@ -488,8 +500,8 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
           
         · intro k hk l hl hkl
           exact (hindep k l hkl).comp (A k).Measurable (A l).Measurable
-          _ = ∑ j in range (u (N - 1)), (∑ i in (range N).filter fun i => j < u i, ((u i : ℝ) ^ 2)⁻¹) * Var[Y j] :=
-        by
+          
+      _ = ∑ j in range (u (N - 1)), (∑ i in (range N).filter fun i => j < u i, ((u i : ℝ) ^ 2)⁻¹) * Var[Y j] := by
         simp_rw [mul_sum, sum_mul, sum_sigma']
         refine'
           sum_bij' (fun (p : Σi : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ (fun a ha => rfl)
@@ -508,8 +520,8 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
           
         · rintro ⟨i, j⟩ hij
           rfl
-          _ ≤ ∑ j in range (u (N - 1)), c ^ 5 * (c - 1)⁻¹ ^ 3 / j ^ 2 * Var[Y j] :=
-        by
+          
+      _ ≤ ∑ j in range (u (N - 1)), c ^ 5 * (c - 1)⁻¹ ^ 3 / j ^ 2 * Var[Y j] := by
         apply sum_le_sum fun j hj => _
         rcases@eq_zero_or_pos _ _ j with (rfl | hj)
         · simp only [← Y, ← Nat.cast_zeroₓ, ← zero_pow', ← Ne.def, ← bit0_eq_zero, ← Nat.one_ne_zero, ← not_false_iff, ←
@@ -521,13 +533,15 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
         · simp only [← Nat.cast_lt]
           
         · simp only [← one_div]
-          _ = c ^ 5 * (c - 1)⁻¹ ^ 3 * ∑ j in range (u (N - 1)), ((j : ℝ) ^ 2)⁻¹ * Var[Y j] :=
-        by
+          
+      _ = c ^ 5 * (c - 1)⁻¹ ^ 3 * ∑ j in range (u (N - 1)), ((j : ℝ) ^ 2)⁻¹ * Var[Y j] := by
         simp_rw [mul_sum, div_eq_mul_inv]
-        ring_nf _ ≤ c ^ 5 * (c - 1)⁻¹ ^ 3 * (2 * 𝔼[X 0]) := by
+        ring_nf
+      _ ≤ c ^ 5 * (c - 1)⁻¹ ^ 3 * (2 * 𝔼[X 0]) := by
         apply mul_le_mul_of_nonneg_left (I1 _)
         apply mul_nonneg (pow_nonneg c_pos.le _)
         exact pow_nonneg (inv_nonneg.2 (sub_nonneg.2 c_one.le)) _
+      
   have I3 :
     ∀ N, (∑ i in range N, ℙ { ω | (u i * ε : ℝ) ≤ abs (S (u i) ω - 𝔼[S (u i)]) }) ≤ Ennreal.ofReal (ε⁻¹ ^ 2 * C) := by
     intro N
@@ -544,15 +558,17 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
           apply Nat.le_floor
           rw [Nat.cast_oneₓ]
           apply one_le_pow_of_one_le c_one.le
-          _ = Ennreal.ofReal (∑ i in range N, Var[S (u i)] / (u i * ε) ^ 2) :=
-        by
+          
+      _ = Ennreal.ofReal (∑ i in range N, Var[S (u i)] / (u i * ε) ^ 2) := by
         rw [Ennreal.of_real_sum_of_nonneg fun i hi => _]
-        exact div_nonneg (variance_nonneg _ _) (sq_nonneg _)_ ≤ Ennreal.ofReal (ε⁻¹ ^ 2 * C) := by
+        exact div_nonneg (variance_nonneg _ _) (sq_nonneg _)
+      _ ≤ Ennreal.ofReal (ε⁻¹ ^ 2 * C) := by
         apply Ennreal.of_real_le_of_real
         simp_rw [div_eq_inv_mul, ← inv_pow, mul_inv, mul_comm _ ε⁻¹, mul_powₓ, mul_assoc, ← mul_sum]
         refine' mul_le_mul_of_nonneg_left _ (sq_nonneg _)
         simp_rw [inv_pow]
         exact I2 N
+      
   have I4 : (∑' i, ℙ { ω | (u i * ε : ℝ) ≤ abs (S (u i) ω - 𝔼[S (u i)]) }) < ∞ :=
     (le_of_tendsto_of_tendsto' (Ennreal.tendsto_nat_tsum _) tendsto_const_nhds I3).trans_lt Ennreal.of_real_lt_top
   filter_upwards [ae_eventually_not_mem I4.ne] with ω hω
@@ -712,6 +728,34 @@ theorem strong_law_ae (X : ℕ → Ω → ℝ) (hint : Integrable (X 0)) (hindep
     
 
 end StrongLawAe
+
+section StrongLawLp
+
+variable {Ω : Type _} [MeasureSpace Ω] [IsProbabilityMeasure (ℙ : Measureₓ Ω)]
+
+/-- *Strong law of large numbers*, Lᵖ version: if `X n` is a sequence of independent
+identically distributed real-valued random variables in Lᵖ, then `∑ i in range n, X i / n`
+converges in Lᵖ to `𝔼[X 0]`. -/
+theorem strong_law_Lp {p : ℝ≥0∞} (hp : 1 ≤ p) (hp' : p ≠ ∞) (X : ℕ → Ω → ℝ) (hℒp : Memℒp (X 0) p)
+    (hindep : Pairwise fun i j => IndepFunₓ (X i) (X j)) (hident : ∀ i, IdentDistrib (X i) (X 0)) :
+    Tendsto (fun n => snorm (fun ω => (∑ i in range n, X i ω) / n - 𝔼[X 0]) p ℙ) atTop (𝓝 0) := by
+  have hmeas : ∀ i, ae_strongly_measurable (X i) ℙ := fun i => (hident i).ae_strongly_measurable_iff.2 hℒp.1
+  have hint : integrable (X 0) ℙ := hℒp.integrable hp
+  have havg : ∀ n, ae_strongly_measurable (fun ω => (∑ i in range n, X i ω) / n) ℙ := by
+    intro n
+    simp_rw [div_eq_mul_inv]
+    exact ae_strongly_measurable.mul_const (ae_strongly_measurable_sum _ fun i _ => hmeas i) _
+  refine'
+    tendsto_Lp_of_tendsto_in_measure _ hp hp' havg (mem_ℒp_const _) _
+      (tendsto_in_measure_of_tendsto_ae havg (strong_law_ae _ hint hindep hident))
+  rw [(_ : (fun n ω => (∑ i in range n, X i ω) / ↑n) = fun n => (∑ i in range n, X i) / ↑n)]
+  · exact (uniform_integrable_average hp <| mem_ℒp.uniform_integrable_of_ident_distrib hp hp' hℒp hident).2.1
+    
+  · ext n ω
+    simp only [← Pi.coe_nat, ← Pi.div_apply, ← sum_apply]
+    
+
+end StrongLawLp
 
 end ProbabilityTheory
 

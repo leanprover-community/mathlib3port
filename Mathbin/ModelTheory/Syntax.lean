@@ -31,6 +31,9 @@ above a particular index.
 variables with given terms.
 * Language maps can act on syntactic objects with functions such as
 `first_order.language.Lhom.on_formula`.
+* `first_order.language.term.constants_vars_equiv` and
+`first_order.language.bounded_formula.constants_vars_equiv` switch terms and formulas between having
+constants in the language and having extra variables indexed by the same type.
 
 ## Implementation Notes
 * Formulas use a modified version of de Bruijn variables. Specifically, a `L.bounded_formula α n`
@@ -65,8 +68,8 @@ open FirstOrder
 
 open Structure Finₓ
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1422:30: infer kinds are unsupported in Lean 4: var {}
--- ./././Mathport/Syntax/Translate/Basic.lean:1422:30: infer kinds are unsupported in Lean 4: func {}
+-- ./././Mathport/Syntax/Translate/Basic.lean:1436:30: infer kinds are unsupported in Lean 4: var {}
+-- ./././Mathport/Syntax/Translate/Basic.lean:1436:30: infer kinds are unsupported in Lean 4: func {}
 /-- A term on `α` is either a variable indexed by an element of `α`
   or a function symbol applied to simpler terms. -/
 inductive Term (α : Type u') : Type max u u'
@@ -124,6 +127,13 @@ theorem relabel_comp_relabel (f : α → β) (g : β → γ) :
     (Term.relabelₓ g ∘ Term.relabelₓ f : L.Term α → L.Term γ) = Term.relabelₓ (g ∘ f) :=
   funext (relabel_relabel f g)
 
+/-- Relabels a term's variables along a bijection. -/
+@[simps]
+def relabelEquiv (g : α ≃ β) : L.Term α ≃ L.Term β :=
+  ⟨relabelₓ g, relabelₓ g.symm, fun t => by
+    simp , fun t => by
+    simp ⟩
+
 /-- Restricts a term to use only a set of the given variables. -/
 def restrictVarₓ [DecidableEq α] : ∀ (t : L.Term α) (f : t.varFinset → β), L.Term β
   | var a, f => var (f ⟨a, mem_singleton_self a⟩)
@@ -150,6 +160,66 @@ def Functions.apply₂ (f : L.Functions 2) (t₁ t₂ : L.Term α) : L.Term α :
   func f ![t₁, t₂]
 
 namespace Term
+
+/-- Sends a term with constants to a term with extra variables. -/
+@[simp]
+def constantsToVarsₓ : L[[γ]].Term α → L.Term (Sum γ α)
+  | var a => var (Sum.inr a)
+  | @func _ _ 0 f ts => Sum.casesOn f (fun f => func f fun i => (ts i).constantsToVars) fun c => var (Sum.inl c)
+  | @func _ _ (n + 1) f ts => Sum.casesOn f (fun f => func f fun i => (ts i).constantsToVars) fun c => isEmptyElim c
+
+/-- Sends a term with extra variables to a term with constants. -/
+@[simp]
+def varsToConstantsₓ : L.Term (Sum γ α) → L[[γ]].Term α
+  | var (Sum.inr a) => var a
+  | var (Sum.inl c) => Constants.term (Sum.inr c)
+  | func f ts => func (Sum.inl f) fun i => (ts i).varsToConstants
+
+/-- A bijection between terms with constants and terms with extra variables. -/
+@[simps]
+def constantsVarsEquiv : L[[γ]].Term α ≃ L.Term (Sum γ α) :=
+  ⟨constantsToVarsₓ, varsToConstantsₓ, by
+    intro t
+    induction' t with _ n f _ ih
+    · rfl
+      
+    · cases n
+      · cases f
+        · simp [← constants_to_vars, ← vars_to_constants, ← ih]
+          
+        · simp [← constants_to_vars, ← vars_to_constants, ← constants.term]
+          
+        
+      · cases f
+        · simp [← constants_to_vars, ← vars_to_constants, ← ih]
+          
+        · exact isEmptyElim f
+          
+        
+      ,
+    by
+    intro t
+    induction' t with x n f _ ih
+    · cases x <;> rfl
+      
+    · cases n <;>
+        · simp [← vars_to_constants, ← constants_to_vars, ← ih]
+          
+      ⟩
+
+/-- A bijection between terms with constants and terms with extra variables. -/
+def constantsVarsEquivLeft : L[[γ]].Term (Sum α β) ≃ L.Term (Sum (Sum γ α) β) :=
+  constantsVarsEquiv.trans (relabelEquiv (Equivₓ.sumAssoc _ _ _)).symm
+
+@[simp]
+theorem constants_vars_equiv_left_apply (t : L[[γ]].Term (Sum α β)) :
+    constantsVarsEquivLeft t = (constantsToVarsₓ t).relabel (Equivₓ.sumAssoc _ _ _).symm :=
+  rfl
+
+@[simp]
+theorem constants_vars_equiv_left_symm_apply (t : L.Term (Sum (Sum γ α) β)) :
+    constantsVarsEquivLeft.symm t = varsToConstantsₓ (t.relabel (Equivₓ.sumAssoc _ _ _)) :=
+  rfl
 
 instance inhabitedOfVar [Inhabited α] : Inhabited (L.Term α) :=
   ⟨var default⟩
@@ -215,7 +285,7 @@ def Lequiv.onTerm (φ : L ≃ᴸ L') : L.Term α ≃ L'.Term α where
 
 variable (L) (α)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1422:30: infer kinds are unsupported in Lean 4: falsum {}
+-- ./././Mathport/Syntax/Translate/Basic.lean:1436:30: infer kinds are unsupported in Lean 4: falsum {}
 /-- `bounded_formula α n` is the type of formulas with free variables indexed by `α` and up to `n`
   additional free variables. -/
 inductive BoundedFormula : ℕ → Type max u v u'
@@ -524,6 +594,10 @@ theorem relabel_sum_inl (φ : L.BoundedFormula α n) :
 def subst {n : ℕ} (φ : L.BoundedFormula α n) (f : α → L.Term β) : L.BoundedFormula β n :=
   φ.mapTermRel (fun _ t => t.subst (Sum.elim (Term.relabelₓ Sum.inl ∘ f) (var ∘ Sum.inr))) (fun _ => id) fun _ => id
 
+/-- A bijection sending formulas with constants to formulas with extra variables. -/
+def constantsVarsEquiv : L[[γ]].BoundedFormula α n ≃ L.BoundedFormula (Sum γ α) n :=
+  mapTermRelEquiv (fun _ => Term.constantsVarsEquivLeft) fun _ => Equivₓ.sumEmpty _ _
+
 /-- Turns the extra variables of a bounded formula into free variables. -/
 @[simp]
 def toFormulaₓ : ∀ {n : ℕ}, L.BoundedFormula α n → L.Formula (Sum α (Finₓ n))
@@ -540,8 +614,8 @@ variable {v : α → M} {xs : Finₓ l → M}
 /-- An atomic formula is either equality or a relation symbol applied to terms.
   Note that `⊥` and `⊤` are not considered atomic in this convention. -/
 inductive IsAtomic : L.BoundedFormula α n → Prop
-  | equal (t₁ t₂ : L.Term (Sum α (Finₓ n))) : is_atomic (bdEqual t₁ t₂)
-  | rel {l : ℕ} (R : L.Relations l) (ts : Finₓ l → L.Term (Sum α (Finₓ n))) : is_atomic (R.BoundedFormula ts)
+  | equal (t₁ t₂ : L.Term (Sum α (Finₓ n))) : IsAtomic (bdEqual t₁ t₂)
+  | rel {l : ℕ} (R : L.Relations l) (ts : Finₓ l → L.Term (Sum α (Finₓ n))) : IsAtomic (R.BoundedFormula ts)
 
 theorem not_all_is_atomic (φ : L.BoundedFormula α (n + 1)) : ¬φ.all.IsAtomic := fun con => by
   cases con

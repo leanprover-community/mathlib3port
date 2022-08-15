@@ -56,15 +56,15 @@ instance (priority := 100) of_full_and_faithful (F : C ⥤ D) [Full F] [Faithful
 instance (F : C ⥤ D) (G : D ⥤ E) [ReflectsIsomorphisms F] [ReflectsIsomorphisms G] : ReflectsIsomorphisms (F ⋙ G) :=
   ⟨fun _ _ f (hf : IsIso (G.map _)) => by
     skip
-    have := is_iso_of_reflects_iso (F.map f) G
+    haveI := is_iso_of_reflects_iso (F.map f) G
     exact is_iso_of_reflects_iso f F⟩
 
 instance (priority := 100) reflects_isomorphisms_of_reflects_monomorphisms_of_reflects_epimorphisms [Balanced C]
     (F : C ⥤ D) [ReflectsMonomorphisms F] [ReflectsEpimorphisms F] :
     ReflectsIsomorphisms F where reflects := fun A B f hf => by
     skip
-    have : epi f := epi_of_epi_map F inferInstance
-    have : mono f := mono_of_mono_map F inferInstance
+    haveI : epi f := epi_of_epi_map F inferInstance
+    haveI : mono f := mono_of_mono_map F inferInstance
     exact is_iso_of_mono_of_epi f
 
 end ReflectsIso

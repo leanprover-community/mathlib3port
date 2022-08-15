@@ -240,7 +240,7 @@ theorem div_eq_filter_card {a b c : ℕ} (hb0 : 0 < b) (hc : a / b ≤ c) :
   rectangle `(0, p/2) × (0, q/2)`  -/
 private theorem sum_Ico_eq_card_lt {p q : ℕ} :
     (∑ a in ico 1 (p / 2).succ, a * q / p) =
-      (((ico 1 (p / 2).succ).product (ico 1 (q / 2).succ)).filter fun x : ℕ × ℕ => x.2 * p ≤ x.1 * q).card :=
+      ((ico 1 (p / 2).succ ×ˢ ico 1 (q / 2).succ).filter fun x : ℕ × ℕ => x.2 * p ≤ x.1 * q).card :=
   if hp0 : p = 0 then by
     simp [← hp0, ← Finset.ext_iff]
   else
@@ -277,8 +277,8 @@ private theorem sum_Ico_eq_card_lt {p q : ℕ} :
 theorem sum_mul_div_add_sum_mul_div_eq_mul (p q : ℕ) [hp : Fact p.Prime] (hq0 : (q : Zmod p) ≠ 0) :
     ((∑ a in ico 1 (p / 2).succ, a * q / p) + ∑ a in ico 1 (q / 2).succ, a * p / q) = p / 2 * (q / 2) := by
   have hswap :
-    (((Ico 1 (q / 2).succ).product (Ico 1 (p / 2).succ)).filter fun x : ℕ × ℕ => x.2 * q ≤ x.1 * p).card =
-      (((Ico 1 (p / 2).succ).product (Ico 1 (q / 2).succ)).filter fun x : ℕ × ℕ => x.1 * q ≤ x.2 * p).card :=
+    ((Ico 1 (q / 2).succ ×ˢ Ico 1 (p / 2).succ).filter fun x : ℕ × ℕ => x.2 * q ≤ x.1 * p).card =
+      ((Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filter fun x : ℕ × ℕ => x.1 * q ≤ x.2 * p).card :=
     card_congr (fun x _ => Prod.swap x)
       (fun ⟨_, _⟩ => by
         simp (config := { contextual := true })only [← mem_filter, ← and_selfₓ, ← Prod.swap_prod_mk, ← forall_true_iff,
@@ -292,8 +292,8 @@ theorem sum_mul_div_add_sum_mul_div_eq_mul (p q : ℕ) [hp : Fact p.Prime] (hq0 
           simp (config := { contextual := true })only [← mem_filter, ← eq_self_iff_true, ← and_selfₓ, ←
             exists_prop_of_true, ← Prod.swap_prod_mk, ← forall_true_iff, ← mem_product]⟩
   have hdisj :
-    Disjoint (((Ico 1 (p / 2).succ).product (Ico 1 (q / 2).succ)).filter fun x : ℕ × ℕ => x.2 * p ≤ x.1 * q)
-      (((Ico 1 (p / 2).succ).product (Ico 1 (q / 2).succ)).filter fun x : ℕ × ℕ => x.1 * q ≤ x.2 * p) :=
+    Disjoint ((Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filter fun x : ℕ × ℕ => x.2 * p ≤ x.1 * q)
+      ((Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filter fun x : ℕ × ℕ => x.1 * q ≤ x.2 * p) :=
     by
     apply disjoint_filter.2 fun x hx hpq hqp => _
     have hxp : x.1 < p :=
@@ -309,9 +309,9 @@ theorem sum_mul_div_add_sum_mul_div_eq_mul (p q : ℕ) [hp : Fact p.Prime] (hq0 
     rw [val_cast_of_lt hxp, val_zero] at this
     simpa only [← this, ← nonpos_iff_eq_zero, ← mem_Ico, ← one_ne_zero, ← false_andₓ, ← mem_product] using hx
   have hunion :
-    ((((Ico 1 (p / 2).succ).product (Ico 1 (q / 2).succ)).filter fun x : ℕ × ℕ => x.2 * p ≤ x.1 * q) ∪
-        ((Ico 1 (p / 2).succ).product (Ico 1 (q / 2).succ)).filter fun x : ℕ × ℕ => x.1 * q ≤ x.2 * p) =
-      (Ico 1 (p / 2).succ).product (Ico 1 (q / 2).succ) :=
+    (((Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filter fun x : ℕ × ℕ => x.2 * p ≤ x.1 * q) ∪
+        (Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filter fun x : ℕ × ℕ => x.1 * q ≤ x.2 * p) =
+      Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ :=
     Finset.ext fun x => by
       have := le_totalₓ (x.2 * p) (x.1 * q) <;>
         simp only [← mem_union, ← mem_filter, ← mem_Ico, ← mem_product] <;> tauto

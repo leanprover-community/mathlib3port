@@ -218,7 +218,7 @@ when `f x` tends to `a` as `x` tends to some point `b` in the domain. -/
 
 theorem Monotone.ge_of_tendsto [TopologicalSpace α] [Preorderₓ α] [OrderClosedTopology α] [SemilatticeSup β] {f : β → α}
     {a : α} (hf : Monotone f) (ha : Tendsto f atTop (𝓝 a)) (b : β) : f b ≤ a := by
-  have : Nonempty β := Nonempty.intro b
+  haveI : Nonempty β := Nonempty.intro b
   exact ge_of_tendsto ha ((eventually_ge_at_top b).mono fun _ hxy => hf hxy)
 
 theorem Monotone.le_of_tendsto [TopologicalSpace α] [Preorderₓ α] [OrderClosedTopology α] [SemilatticeInf β] {f : β → α}

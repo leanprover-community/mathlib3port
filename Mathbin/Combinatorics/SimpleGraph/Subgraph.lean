@@ -712,7 +712,62 @@ theorem induce_mono_right (hs : s ⊆ s') : G'.induce s ≤ G'.induce s' :=
 theorem induce_empty : G'.induce ∅ = ⊥ := by
   ext <;> simp
 
+@[simp]
+theorem induce_self_verts : G'.induce G'.Verts = G' := by
+  ext
+  · simp
+    
+  · constructor <;> simp (config := { contextual := true })only [← induce_adj, ← implies_true_iff, ← and_trueₓ]
+    exact fun ha => ⟨G'.edge_vert ha, G'.edge_vert ha.symm⟩
+    
+
 end Induce
+
+/-- Given a subgraph and a set of vertices, delete all the vertices from the subgraph,
+if present. Any edges indicent to the deleted vertices are deleted as well. -/
+@[reducible]
+def deleteVerts (G' : G.Subgraph) (s : Set V) : G.Subgraph :=
+  G'.induce (G'.Verts \ s)
+
+section DeleteVerts
+
+variable {G' : G.Subgraph} {s : Set V}
+
+theorem delete_verts_verts : (G'.deleteVerts s).Verts = G'.Verts \ s :=
+  rfl
+
+theorem delete_verts_adj {u v : V} :
+    (G'.deleteVerts s).Adj u v ↔ u ∈ G'.Verts ∧ ¬u ∈ s ∧ v ∈ G'.Verts ∧ ¬v ∈ s ∧ G'.Adj u v := by
+  simp [← and_assoc]
+
+@[simp]
+theorem delete_verts_delete_verts (s s' : Set V) : (G'.deleteVerts s).deleteVerts s' = G'.deleteVerts (s ∪ s') := by
+  ext <;> simp (config := { contextual := true })[← not_or_distrib, ← and_assoc]
+
+@[simp]
+theorem delete_verts_empty : G'.deleteVerts ∅ = G' := by
+  simp [← delete_verts]
+
+theorem delete_verts_le : G'.deleteVerts s ≤ G' := by
+  constructor <;> simp [← Set.diff_subset]
+
+@[mono]
+theorem delete_verts_mono {G' G'' : G.Subgraph} (h : G' ≤ G'') : G'.deleteVerts s ≤ G''.deleteVerts s :=
+  induce_mono h (Set.diff_subset_diff_left h.1)
+
+@[mono]
+theorem delete_verts_anti {s s' : Set V} (h : s ⊆ s') : G'.deleteVerts s' ≤ G'.deleteVerts s :=
+  induce_mono (le_reflₓ _) (Set.diff_subset_diff_right h)
+
+@[simp]
+theorem delete_verts_inter_verts_left_eq : G'.deleteVerts (G'.Verts ∩ s) = G'.deleteVerts s := by
+  ext <;> simp (config := { contextual := true })[← imp_false]
+
+@[simp]
+theorem delete_verts_inter_verts_set_right_eq : G'.deleteVerts (s ∩ G'.Verts) = G'.deleteVerts s := by
+  ext <;> simp (config := { contextual := true })[← imp_false]
+
+end DeleteVerts
 
 end Subgraph
 

@@ -193,7 +193,7 @@ def liftAddHom (φ : (R × ∀ i, s i) → F) (C0 : ∀ (r : R) (f : ∀ i, s i)
         (AddCon.ker_rel _).2 <| by
           simp_rw [AddMonoidHom.map_add, add_commₓ]
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on' {C : (⨂[R] i, s i) → Prop} (z : ⨂[R] i, s i)
     (C1 : ∀ {r : R} {f : ∀ i, s i}, C (tprodCoeff R r f)) (Cp : ∀ {x y}, C x → C y → C (x + y)) : C z := by
   have C0 : C 0 := by
@@ -323,7 +323,7 @@ theorem tprod_coeff_eq_smul_tprod (z : R) (f : ∀ i, s i) : tprodCoeff R z f = 
   rw [← smul_tprod_coeff']
   rfl
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on {C : (⨂[R] i, s i) → Prop} (z : ⨂[R] i, s i)
     (C1 : ∀ {r : R} {f : ∀ i, s i}, C (r • tprod R f)) (Cp : ∀ {x y}, C x → C y → C (x + y)) : C z := by
   simp_rw [← tprod_coeff_eq_smul_tprod] at C1

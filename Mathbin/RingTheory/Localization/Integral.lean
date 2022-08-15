@@ -197,7 +197,7 @@ theorem RingHom.is_integral_elem_localization_at_leading_coeff {R S : Type _} [C
   by_cases' triv : (1 : Rₘ) = 0
   · exact ⟨0, ⟨trans leading_coeff_zero triv.symm, eval₂_zero _ _⟩⟩
     
-  have : Nontrivial Rₘ := nontrivial_of_ne 1 0 triv
+  haveI : Nontrivial Rₘ := nontrivial_of_ne 1 0 triv
   obtain ⟨b, hb⟩ := is_unit_iff_exists_inv.mp (map_units Rₘ ⟨p.leading_coeff, hM⟩)
   refine' ⟨p.map (algebraMap R Rₘ) * C b, ⟨_, _⟩⟩
   · refine' monic_mul_C_of_leading_coeff_mul_eq_one _
@@ -245,6 +245,55 @@ theorem is_integral_localization' {R S : Type _} [CommRingₓ R] [CommRingₓ S]
     (map (Localization (M.map (f : R →* S))) f (M.le_comap_map : _ ≤ Submonoid.comap (f : R →* S) _) :
         Localization M →+* _).IsIntegral :=
   @is_integral_localization R _ M S _ f.toAlgebra _ _ _ _ _ _ _ _ hf
+
+variable (M)
+
+theorem IsLocalization.scale_roots_common_denom_mem_lifts (p : Rₘ[X]) (hp : p.leadingCoeff ∈ (algebraMap R Rₘ).range) :
+    p.scaleRoots (algebraMap R Rₘ <| IsLocalization.commonDenom M p.support p.coeff) ∈
+      Polynomial.lifts (algebraMap R Rₘ) :=
+  by
+  rw [Polynomial.lifts_iff_coeff_lifts]
+  intro n
+  rw [Polynomial.coeff_scale_roots]
+  by_cases' h₁ : n ∈ p.support
+  by_cases' h₂ : n = p.nat_degree
+  · rwa [h₂, Polynomial.coeff_nat_degree, tsub_self, pow_zeroₓ, _root_.mul_one]
+    
+  · have : n + 1 ≤ p.nat_degree := lt_of_le_of_neₓ (Polynomial.le_nat_degree_of_mem_supp _ h₁) h₂
+    rw [← tsub_add_cancel_of_le (le_tsub_of_add_le_left this), pow_addₓ, pow_oneₓ, mul_comm, _root_.mul_assoc, ←
+      map_pow]
+    change _ ∈ (algebraMap R Rₘ).range
+    apply mul_mem
+    · exact RingHom.mem_range_self _ _
+      
+    · rw [← Algebra.smul_def]
+      exact ⟨_, IsLocalization.map_integer_multiple M p.support p.coeff ⟨n, h₁⟩⟩
+      
+    
+  · rw [Polynomial.not_mem_support_iff] at h₁
+    rw [h₁, zero_mul]
+    exact zero_mem (algebraMap R Rₘ).range
+    
+
+theorem IsIntegral.exists_multiple_integral_of_is_localization [Algebra Rₘ S] [IsScalarTower R Rₘ S] (x : S)
+    (hx : IsIntegral Rₘ x) : ∃ m : M, IsIntegral R (m • x) := by
+  cases' subsingleton_or_nontrivial Rₘ with _ nontriv <;> skip
+  · haveI := (algebraMap Rₘ S).codomain_trivial
+    exact ⟨1, Polynomial.x, Polynomial.monic_X, Subsingleton.elimₓ _ _⟩
+    
+  obtain ⟨p, hp₁, hp₂⟩ := hx
+  obtain ⟨p', hp'₁, -, hp'₂⟩ :=
+    lifts_and_nat_degree_eq_and_monic (IsLocalization.scale_roots_common_denom_mem_lifts M p _) _
+  · refine' ⟨IsLocalization.commonDenom M p.support p.coeff, p', hp'₂, _⟩
+    rw [IsScalarTower.algebra_map_eq R Rₘ S, ← Polynomial.eval₂_map, hp'₁, Submonoid.smul_def, Algebra.smul_def,
+      IsScalarTower.algebra_map_apply R Rₘ S]
+    exact Polynomial.scale_roots_eval₂_eq_zero _ hp₂
+    
+  · rw [hp₁.leading_coeff]
+    exact one_mem _
+    
+  · rwa [Polynomial.monic_scale_roots_iff]
+    
 
 end IsIntegral
 

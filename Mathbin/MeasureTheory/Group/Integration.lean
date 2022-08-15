@@ -23,7 +23,7 @@ open Ennreal
 
 variable {𝕜 M α G E F : Type _} [MeasurableSpace G]
 
-variable [NormedGroup E] [NormedSpace ℝ E] [CompleteSpace E] [NormedGroup F]
+variable [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E] [NormedAddCommGroup F]
 
 variable {μ : Measure G} {f : G → E} {g : G}
 
@@ -176,7 +176,7 @@ variable [TopologicalSpace G] [Groupₓ G] [TopologicalGroup G] [BorelSpace G] [
       "For nonzero regular left invariant measures, the integral of a continuous nonnegative\nfunction `f` is 0 iff `f` is 0."]
 theorem lintegral_eq_zero_of_is_mul_left_invariant [Regular μ] (hμ : μ ≠ 0) {f : G → ℝ≥0∞} (hf : Continuous f) :
     (∫⁻ x, f x ∂μ) = 0 ↔ f = 0 := by
-  have := is_open_pos_measure_of_mul_left_invariant_of_regular hμ
+  haveI := is_open_pos_measure_of_mul_left_invariant_of_regular hμ
   rw [lintegral_eq_zero_iff hf.measurable, hf.ae_eq_iff_eq μ continuous_zero]
 
 end TopologicalGroup

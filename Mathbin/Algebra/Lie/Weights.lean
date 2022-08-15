@@ -247,10 +247,10 @@ theorem is_nilpotent_to_endomorphism_weight_space_zero [LieAlgebra.IsNilpotent R
     _root_.is_nilpotent <| toEndomorphism R L (weightSpace M (0 : L → R)) x := by
   obtain ⟨k, hk⟩ := exists_pre_weight_space_zero_le_ker_of_is_noetherian R M x
   use k
-  ext ⟨m, hm : m ∈ pre_weight_space M 0⟩
+  ext ⟨m, hm⟩
   rw [LinearMap.zero_apply, LieSubmodule.coe_zero, Submodule.coe_eq_zero, ←
     LieSubmodule.to_endomorphism_restrict_eq_to_endomorphism, LinearMap.pow_restrict, ← SetLike.coe_eq_coe,
-    LinearMap.restrict_apply, Submodule.coe_mk, LieSubmodule.coe_zero]
+    LinearMap.restrict_apply, Submodule.coe_mk, Submodule.coe_zero]
   exact hk hm
 
 /-- By Engel's theorem, when the Lie algebra is Noetherian, the zero weight space of a Noetherian

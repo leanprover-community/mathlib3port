@@ -95,7 +95,7 @@ theorem coe_one : ↑(1 : GL n R) = (1 : Matrix n n R) :=
   rfl
 
 theorem coe_inv : ↑A⁻¹ = (↑A : Matrix n n R)⁻¹ := by
-  let this := A.invertible
+  letI := A.invertible
   exact inv_of_eq_nonsing_inv (↑A : Matrix n n R)
 
 /-- An element of the matrix general linear group on `(n) [fintype n]` can be considered as an
@@ -223,14 +223,14 @@ end SpecialLinearGroup
 
 section Examples
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
 /-- The matrix [a, -b; b, a] (inspired by multiplication by a complex number); it is an element of
 $GL_2(R)$ if `a ^ 2 + b ^ 2` is nonzero. -/
 @[simps (config := { fullyApplied := false }) coe]
 def planeConformalMatrix {R} [Field R] (a b : R) (hab : a ^ 2 + b ^ 2 ≠ 0) : Matrix.GeneralLinearGroup (Finₓ 2) R :=
   GeneralLinearGroup.mkOfDetNeZero
-    («expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1144:14: unsupported user notation matrix.notation")
+    («expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation")
     (by
       simpa [← det_fin_two, ← sq] using hab)
 

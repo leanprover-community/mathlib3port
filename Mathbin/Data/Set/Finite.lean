@@ -238,7 +238,7 @@ def fintypeBUnion [DecidableEq α] {ι : Type _} (s : Set ι) [Fintype s] (t : �
     (H : ∀, ∀ i ∈ s, ∀, Fintype (t i)) : Fintype (⋃ x ∈ s, t x) :=
   Fintype.ofFinset
       (s.toFinset.attach.bUnion fun x => by
-        have :=
+        haveI :=
           H x
             (by
               simpa using x.property)
@@ -341,7 +341,7 @@ def Nat.fintypeIio (n : ℕ) : Fintype (Iio n) :=
   Set.fintypeLtNat n
 
 instance fintypeProd (s : Set α) (t : Set β) [Fintype s] [Fintype t] : Fintype (s ×ˢ t : Set (α × β)) :=
-  Fintype.ofFinset (s.toFinset.product t.toFinset) <| by
+  Fintype.ofFinset (s.toFinset ×ˢ t.toFinset) <| by
     simp
 
 /-- `image2 f s t` is `fintype` if `s` and `t` are. -/
@@ -446,7 +446,7 @@ instance finite_diff (s t : Set α) [Finite s] : Finite (s \ t : Set α) :=
   Finite.Set.subset s (diff_subset s t)
 
 instance finite_range (f : ι → α) [Finite ι] : Finite (Range f) := by
-  have := Fintype.ofFinite (Plift ι)
+  haveI := Fintype.ofFinite (Plift ι)
   infer_instance
 
 instance finite_Union [Finite ι] (f : ι → Set α) [∀ i, Finite (f i)] : Finite (⋃ i, f i) := by
@@ -460,7 +460,7 @@ instance finite_sUnion {s : Set (Set α)} [Finite s] [H : ∀ t : s, Finite (t :
 theorem finite_bUnion {ι : Type _} (s : Set ι) [Finite s] (t : ι → Set α) (H : ∀, ∀ i ∈ s, ∀, Finite (t i)) :
     Finite (⋃ x ∈ s, t x) := by
   rw [bUnion_eq_Union]
-  have : ∀ i : s, Finite (t i) := fun i => H i i.property
+  haveI : ∀ i : s, Finite (t i) := fun i => H i i.property
   infer_instance
 
 instance finite_bUnion' {ι : Type _} (s : Set ι) [Finite s] (t : ι → Set α) [∀ i, Finite (t i)] :
@@ -484,9 +484,9 @@ instance finite_image (s : Set α) (f : α → β) [Finite s] : Finite (f '' s) 
   cases nonempty_fintype s
   infer_instance
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1122:4: unsupported set replacement {(f x) | x : α}
+-- ./././Mathport/Syntax/Translate/Basic.lean:1129:4: unsupported set replacement {(f x) | x : α}
 instance finite_replacement [Finite α] (f : α → β) :
-    Finite "./././Mathport/Syntax/Translate/Basic.lean:1122:4: unsupported set replacement {(f x) | x : α}" :=
+    Finite "./././Mathport/Syntax/Translate/Basic.lean:1129:4: unsupported set replacement {(f x) | x : α}" :=
   Finite.Set.finite_range f
 
 instance finite_prod (s : Set α) (t : Set β) [Finite s] [Finite t] : Finite (s ×ˢ t : Set (α × β)) :=
@@ -557,7 +557,7 @@ theorem Finite.inf_of_right {s : Set α} (h : s.Finite) (t : Set α) : (t⊓s).F
 
 theorem Finite.subset {s : Set α} (hs : s.Finite) {t : Set α} (ht : t ⊆ s) : t.Finite := by
   cases hs
-  have := Finite.Set.subset _ ht
+  haveI := Finite.Set.subset _ ht
   apply to_finite
 
 theorem Finite.diff {s : Set α} (hs : s.Finite) (t : Set α) : (s \ t).Finite := by
@@ -568,19 +568,19 @@ theorem Finite.of_diff {s t : Set α} (hd : (s \ t).Finite) (ht : t.Finite) : s.
   (hd.union ht).Subset <| subset_diff_union _ _
 
 theorem finite_Union [Finite ι] {f : ι → Set α} (H : ∀ i, (f i).Finite) : (⋃ i, f i).Finite := by
-  have := fun i => (H i).Fintype
+  haveI := fun i => (H i).Fintype
   apply to_finite
 
 theorem Finite.sUnion {s : Set (Set α)} (hs : s.Finite) (H : ∀, ∀ t ∈ s, ∀, Set.Finite t) : (⋃₀s).Finite := by
   cases hs
-  have := fun i : s => (H i i.2).to_subtype
+  haveI := fun i : s => (H i i.2).to_subtype
   apply to_finite
 
 theorem Finite.bUnion {ι} {s : Set ι} (hs : s.Finite) {t : ι → Set α} (ht : ∀, ∀ i ∈ s, ∀, (t i).Finite) :
     (⋃ i ∈ s, t i).Finite := by
   classical
   cases hs
-  have := fintype_bUnion s t fun i hi => (ht i hi).Fintype
+  haveI := fintype_bUnion s t fun i hi => (ht i hi).Fintype
   apply to_finite
 
 /-- Dependent version of `finite.bUnion`. -/
@@ -684,8 +684,9 @@ theorem Finite.finite_subsets {α : Type u} {a : Set α} (h : a.Finite) : { b | 
       simpa [@exists_finite_iff_finset α fun t => t ⊆ a ∧ t = s, ← subset_to_finset_iff, And.assoc] using h.subset⟩
 
 /-- Finite product of finite sets is finite -/
-theorem Finite.pi {δ : Type _} [Fintype δ] {κ : δ → Type _} {t : ∀ d, Set (κ d)} (ht : ∀ d, (t d).Finite) :
+theorem Finite.pi {δ : Type _} [Finite δ] {κ : δ → Type _} {t : ∀ d, Set (κ d)} (ht : ∀ d, (t d).Finite) :
     (Pi Univ t).Finite := by
+  cases nonempty_fintype δ
   lift t to ∀ d, Finset (κ d) using ht
   classical
   rw [← Fintype.coe_pi_finset]
@@ -754,7 +755,7 @@ theorem finite_image_fst_and_snd_iff {s : Set (α × β)} : (Prod.fst '' s).Fini
   ⟨fun h => (h.1.Prod h.2).Subset fun x h => ⟨mem_image_of_mem _ h, mem_image_of_mem _ h⟩, fun h =>
     ⟨h.Image _, h.Image _⟩⟩
 
-theorem forall_finite_image_eval_iff {δ : Type _} [Fintype δ] {κ : δ → Type _} {s : Set (∀ d, κ d)} :
+theorem forall_finite_image_eval_iff {δ : Type _} [Finite δ] {κ : δ → Type _} {s : Set (∀ d, κ d)} :
     (∀ d, (eval d '' s).Finite) ↔ s.Finite :=
   ⟨fun h => (Finite.pi h).Subset <| subset_pi_eval_image _ _, fun h d => h.Image _⟩
 
@@ -783,7 +784,7 @@ theorem eq_finite_Union_of_finite_subset_Union {ι} {s : ι → Set α} {t : Set
       exact H
       ⟩
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem Finite.induction_on {C : Set α → Prop} {s : Set α} (h : s.Finite) (H0 : C ∅)
     (H1 : ∀ {a s}, a ∉ s → Set.Finite s → C s → C (insert a s)) : C s := by
   lift s to Finset α using h
@@ -795,7 +796,7 @@ theorem Finite.induction_on {C : Set α → Prop} {s : Set α} (h : s.Finite) (H
     
 
 /-- Analogous to `finset.induction_on'`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem Finite.induction_on' {C : Set α → Prop} {S : Set α} (h : S.Finite) (H0 : C ∅)
     (H1 : ∀ {a s}, a ∈ S → s ⊆ S → a ∉ s → C s → C (insert a s)) : C S := by
   refine' @Set.Finite.induction_on α (fun s => s ⊆ S → C s) S h (fun _ => H0) _ subset.rfl
@@ -803,7 +804,7 @@ theorem Finite.induction_on' {C : Set α → Prop} {S : Set α} (h : S.Finite) (
   rw [insert_subset] at haS
   exact H1 haS.1 haS.2 has (hCs haS.2)
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem Finite.dinduction_on {C : ∀ s : Set α, s.Finite → Prop} {s : Set α} (h : s.Finite) (H0 : C ∅ finite_empty)
     (H1 : ∀ {a s}, a ∉ s → ∀ h : Set.Finite s, C s h → C (insert a s) (h.insert a)) : C s h :=
   have : ∀ h : s.Finite, C s h := Finite.induction_on h (fun h => H0) fun a s has hs ih h => H1 has hs (ih _)
@@ -852,7 +853,7 @@ theorem empty_card : Fintype.card (∅ : Set α) = 0 :=
 theorem empty_card' {h : Fintype.{u} (∅ : Set α)} : @Fintype.card (∅ : Set α) h = 0 :=
   Eq.trans
     (by
-      congr)
+      congr )
     empty_card
 
 theorem card_fintype_insert_of_not_mem {a : α} (s : Set α) [Fintype s] (h : a ∉ s) :
@@ -866,7 +867,7 @@ theorem card_insert {a : α} (s : Set α) [Fintype s] (h : a ∉ s) {d : Fintype
 
 theorem card_image_of_inj_on {s : Set α} [Fintype s] {f : α → β} [Fintype (f '' s)]
     (H : ∀, ∀ x ∈ s, ∀, ∀, ∀ y ∈ s, ∀, f x = f y → x = y) : Fintype.card (f '' s) = Fintype.card s :=
-  have := Classical.propDecidable
+  haveI := Classical.propDecidable
   calc
     Fintype.card (f '' s) = (s.to_finset.image f).card :=
       Fintype.card_of_finset' _
@@ -909,7 +910,7 @@ theorem Finite.card_to_finset {s : Set α} [Fintype s] (h : s.Finite) : h.toFins
 
 theorem card_ne_eq [Fintype α] (a : α) [Fintype { x : α | x ≠ a }] :
     Fintype.card { x : α | x ≠ a } = Fintype.card α - 1 := by
-  have := Classical.decEq α
+  haveI := Classical.decEq α
   rw [← to_finset_card, to_finset_ne_eq_erase, Finset.card_erase_of_mem (Finset.mem_univ _), Finset.card_univ]
 
 /-! ### Infinite sets -/
@@ -929,7 +930,7 @@ theorem Infinite.to_subtype {s : Set α} (h : s.Infinite) : Infinite s :=
 
 /-- Embedding of `ℕ` into an infinite set. -/
 noncomputable def Infinite.natEmbedding (s : Set α) (h : s.Infinite) : ℕ ↪ s := by
-  have := h.to_subtype
+  haveI := h.to_subtype
   exact Infinite.natEmbedding s
 
 theorem Infinite.exists_subset_card_eq {s : Set α} (hs : s.Infinite) (n : ℕ) : ∃ t : Finset α, ↑t ⊆ s ∧ t.card = n :=
@@ -1071,43 +1072,41 @@ theorem Finite.infi_bsupr_of_antitone {ι ι' α : Type _} [Preorderₓ ι'] [No
     (⨅ j, ⨆ i ∈ s, f i j) = ⨆ i ∈ s, ⨅ j, f i j :=
   hs.supr_binfi_of_monotone fun i hi => (hf i hi).dual_right
 
-theorem _root_.supr_infi_of_monotone {ι ι' α : Type _} [Fintype ι] [Preorderₓ ι'] [Nonempty ι'] [IsDirected ι' (· ≤ ·)]
+theorem _root_.supr_infi_of_monotone {ι ι' α : Type _} [Finite ι] [Preorderₓ ι'] [Nonempty ι'] [IsDirected ι' (· ≤ ·)]
     [Order.Frame α] {f : ι → ι' → α} (hf : ∀ i, Monotone (f i)) : (⨆ j, ⨅ i, f i j) = ⨅ i, ⨆ j, f i j := by
   simpa only [← infi_univ] using finite_univ.supr_binfi_of_monotone fun i hi => hf i
 
-theorem _root_.supr_infi_of_antitone {ι ι' α : Type _} [Fintype ι] [Preorderₓ ι'] [Nonempty ι']
+theorem _root_.supr_infi_of_antitone {ι ι' α : Type _} [Finite ι] [Preorderₓ ι'] [Nonempty ι']
     [IsDirected ι' (swap (· ≤ ·))] [Order.Frame α] {f : ι → ι' → α} (hf : ∀ i, Antitone (f i)) :
     (⨆ j, ⨅ i, f i j) = ⨅ i, ⨆ j, f i j :=
   @supr_infi_of_monotone ι ι'ᵒᵈ α _ _ _ _ _ _ fun i => (hf i).dual_left
 
-theorem _root_.infi_supr_of_monotone {ι ι' α : Type _} [Fintype ι] [Preorderₓ ι'] [Nonempty ι']
+theorem _root_.infi_supr_of_monotone {ι ι' α : Type _} [Finite ι] [Preorderₓ ι'] [Nonempty ι']
     [IsDirected ι' (swap (· ≤ ·))] [Order.Coframe α] {f : ι → ι' → α} (hf : ∀ i, Monotone (f i)) :
     (⨅ j, ⨆ i, f i j) = ⨆ i, ⨅ j, f i j :=
   supr_infi_of_antitone fun i => (hf i).dual_right
 
-theorem _root_.infi_supr_of_antitone {ι ι' α : Type _} [Fintype ι] [Preorderₓ ι'] [Nonempty ι'] [IsDirected ι' (· ≤ ·)]
+theorem _root_.infi_supr_of_antitone {ι ι' α : Type _} [Finite ι] [Preorderₓ ι'] [Nonempty ι'] [IsDirected ι' (· ≤ ·)]
     [Order.Coframe α] {f : ι → ι' → α} (hf : ∀ i, Antitone (f i)) : (⨅ j, ⨆ i, f i j) = ⨆ i, ⨅ j, f i j :=
   supr_infi_of_monotone fun i => (hf i).dual_right
 
 /-- An increasing union distributes over finite intersection. -/
-theorem Union_Inter_of_monotone {ι ι' α : Type _} [Fintype ι] [Preorderₓ ι'] [IsDirected ι' (· ≤ ·)] [Nonempty ι']
+theorem Union_Inter_of_monotone {ι ι' α : Type _} [Finite ι] [Preorderₓ ι'] [IsDirected ι' (· ≤ ·)] [Nonempty ι']
     {s : ι → ι' → Set α} (hs : ∀ i, Monotone (s i)) : (⋃ j : ι', ⋂ i : ι, s i j) = ⋂ i : ι, ⋃ j : ι', s i j :=
   supr_infi_of_monotone hs
 
 /-- A decreasing union distributes over finite intersection. -/
-theorem Union_Inter_of_antitone {ι ι' α : Type _} [Fintype ι] [Preorderₓ ι'] [IsDirected ι' (swap (· ≤ ·))]
-    [Nonempty ι'] {s : ι → ι' → Set α} (hs : ∀ i, Antitone (s i)) :
-    (⋃ j : ι', ⋂ i : ι, s i j) = ⋂ i : ι, ⋃ j : ι', s i j :=
+theorem Union_Inter_of_antitone {ι ι' α : Type _} [Finite ι] [Preorderₓ ι'] [IsDirected ι' (swap (· ≤ ·))] [Nonempty ι']
+    {s : ι → ι' → Set α} (hs : ∀ i, Antitone (s i)) : (⋃ j : ι', ⋂ i : ι, s i j) = ⋂ i : ι, ⋃ j : ι', s i j :=
   supr_infi_of_antitone hs
 
 /-- An increasing intersection distributes over finite union. -/
-theorem Inter_Union_of_monotone {ι ι' α : Type _} [Fintype ι] [Preorderₓ ι'] [IsDirected ι' (swap (· ≤ ·))]
-    [Nonempty ι'] {s : ι → ι' → Set α} (hs : ∀ i, Monotone (s i)) :
-    (⋂ j : ι', ⋃ i : ι, s i j) = ⋃ i : ι, ⋂ j : ι', s i j :=
+theorem Inter_Union_of_monotone {ι ι' α : Type _} [Finite ι] [Preorderₓ ι'] [IsDirected ι' (swap (· ≤ ·))] [Nonempty ι']
+    {s : ι → ι' → Set α} (hs : ∀ i, Monotone (s i)) : (⋂ j : ι', ⋃ i : ι, s i j) = ⋃ i : ι, ⋂ j : ι', s i j :=
   infi_supr_of_monotone hs
 
 /-- A decreasing intersection distributes over finite union. -/
-theorem Inter_Union_of_antitone {ι ι' α : Type _} [Fintype ι] [Preorderₓ ι'] [IsDirected ι' (· ≤ ·)] [Nonempty ι']
+theorem Inter_Union_of_antitone {ι ι' α : Type _} [Finite ι] [Preorderₓ ι'] [IsDirected ι' (· ≤ ·)] [Nonempty ι']
     {s : ι → ι' → Set α} (hs : ∀ i, Antitone (s i)) : (⋂ j : ι', ⋃ i : ι, s i j) = ⋃ i : ι, ⋂ j : ι', s i j :=
   infi_supr_of_antitone hs
 
@@ -1115,10 +1114,10 @@ theorem Union_pi_of_monotone {ι ι' : Type _} [LinearOrderₓ ι'] [Nonempty ι
     {s : ∀ i, ι' → Set (α i)} (hI : I.Finite) (hs : ∀, ∀ i ∈ I, ∀, Monotone (s i)) :
     (⋃ j : ι', I.pi fun i => s i j) = I.pi fun i => ⋃ j, s i j := by
   simp only [← pi_def, ← bInter_eq_Inter, ← preimage_Union]
-  have := hI.fintype
+  haveI := hI.fintype
   exact Union_Inter_of_monotone fun i j₁ j₂ h => preimage_mono <| hs i i.2 h
 
-theorem Union_univ_pi_of_monotone {ι ι' : Type _} [LinearOrderₓ ι'] [Nonempty ι'] [Fintype ι] {α : ι → Type _}
+theorem Union_univ_pi_of_monotone {ι ι' : Type _} [LinearOrderₓ ι'] [Nonempty ι'] [Finite ι] {α : ι → Type _}
     {s : ∀ i, ι' → Set (α i)} (hs : ∀ i, Monotone (s i)) :
     (⋃ j : ι', Pi Univ fun i => s i j) = Pi Univ fun i => ⋃ j, s i j :=
   Union_pi_of_monotone finite_univ fun i _ => hs i

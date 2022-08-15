@@ -69,8 +69,8 @@ theorem IsInitial.is_iso_to (hI : IsInitial I) {A : C} (f : A ⟶ I) : IsIso f :
   HasStrictInitialObjects.out f hI
 
 theorem IsInitial.strict_hom_ext (hI : IsInitial I) {A : C} (f g : A ⟶ I) : f = g := by
-  have := hI.is_iso_to f
-  have := hI.is_iso_to g
+  haveI := hI.is_iso_to f
+  haveI := hI.is_iso_to g
   exact eq_of_inv_eq_inv (hI.hom_ext (inv f) (inv g))
 
 theorem IsInitial.subsingleton_to (hI : IsInitial I) {A : C} : Subsingleton (A ⟶ I) :=
@@ -141,7 +141,7 @@ has strict initial objects. -/
 theorem has_strict_initial_objects_of_initial_is_strict [HasInitial C] (h : ∀ (A) (f : A ⟶ ⊥_ C), IsIso f) :
     HasStrictInitialObjects C :=
   { out := fun I A f hI => by
-      have := h A (f ≫ hI.to _)
+      haveI := h A (f ≫ hI.to _)
       exact
         ⟨⟨hI.to _ ≫ inv (f ≫ hI.to (⊥_ C)), by
             rw [← assoc, is_iso.hom_inv_id], hI.hom_ext _ _⟩⟩ }
@@ -169,8 +169,8 @@ theorem IsTerminal.is_iso_from (hI : IsTerminal I) {A : C} (f : I ⟶ A) : IsIso
   HasStrictTerminalObjects.out f hI
 
 theorem IsTerminal.strict_hom_ext (hI : IsTerminal I) {A : C} (f g : I ⟶ A) : f = g := by
-  have := hI.is_iso_from f
-  have := hI.is_iso_from g
+  haveI := hI.is_iso_from f
+  haveI := hI.is_iso_from g
   exact eq_of_inv_eq_inv (hI.hom_ext (inv f) (inv g))
 
 theorem IsTerminal.subsingleton_to (hI : IsTerminal I) {A : C} : Subsingleton (I ⟶ A) :=
@@ -178,7 +178,7 @@ theorem IsTerminal.subsingleton_to (hI : IsTerminal I) {A : C} : Subsingleton (I
 
 variable {J : Type v} [SmallCategory J]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (j «expr ≠ » i)
 /-- If all but one object in a diagram is strict terminal, the the limit is isomorphic to the
 said object via `limit.π`. -/
 theorem limit_π_is_iso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
@@ -203,7 +203,7 @@ theorem limit_π_is_iso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
       
     · cases h
       erw [category.comp_id]
-      have : is_iso (F.map f) := (H _ h_1).is_iso_from _
+      haveI : is_iso (F.map f) := (H _ h_1).is_iso_from _
       rw [← is_iso.comp_inv_eq]
       apply (H _ h_1).hom_ext
       
@@ -247,7 +247,7 @@ has strict terminal objects. -/
 theorem has_strict_terminal_objects_of_terminal_is_strict (I : C) (h : ∀ (A) (f : I ⟶ A), IsIso f) :
     HasStrictTerminalObjects C :=
   { out := fun I' A f hI' => by
-      have := h A (hI'.from _ ≫ f)
+      haveI := h A (hI'.from _ ≫ f)
       exact
         ⟨⟨inv (hI'.from I ≫ f) ≫ hI'.from I, hI'.hom_ext _ _, by
             rw [assoc, is_iso.inv_hom_id]⟩⟩ }

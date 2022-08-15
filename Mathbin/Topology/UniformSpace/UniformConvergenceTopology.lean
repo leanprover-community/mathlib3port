@@ -119,7 +119,7 @@ protected theorem has_basis_nhds :
     (@nhds (α → β) (UniformConvergence.topologicalSpace α β) f).HasBasis (fun V => V ∈ 𝓤 β) fun V =>
       { g | (g, f) ∈ UniformConvergence.Gen α β V } :=
   by
-  let this : UniformSpace (α → β) := UniformConvergence.uniformSpace α β
+  letI : UniformSpace (α → β) := UniformConvergence.uniformSpace α β
   exact nhds_basis_uniformity (UniformConvergence.has_basis_uniformity α β)
 
 variable {α}
@@ -134,8 +134,8 @@ variable {β}
 
 theorem t2_space [T2Space β] : @T2Space _ (UniformConvergence.topologicalSpace α β) :=
   { t2 := by
-      let this : UniformSpace (α → β) := UniformConvergence.uniformSpace α β
-      let this : TopologicalSpace (α → β) := UniformConvergence.topologicalSpace α β
+      letI : UniformSpace (α → β) := UniformConvergence.uniformSpace α β
+      letI : TopologicalSpace (α → β) := UniformConvergence.topologicalSpace α β
       intro f g h
       obtain ⟨x, hx⟩ := not_forall.mp (mt funext h)
       exact separated_by_continuous (uniform_continuous_eval β x).Continuous hx }
@@ -147,7 +147,7 @@ protected theorem le_Pi : UniformConvergence.uniformSpace α β ≤ Pi.uniformSp
 
 protected theorem tendsto_iff_tendsto_uniformly :
     Tendsto F p (@nhds _ (UniformConvergence.topologicalSpace α β) f) ↔ TendstoUniformly F f p := by
-  let this : UniformSpace (α → β) := UniformConvergence.uniformSpace α β
+  letI : UniformSpace (α → β) := UniformConvergence.uniformSpace α β
   rw [(UniformConvergence.has_basis_nhds α β).tendsto_right_iff, TendstoUniformly]
   constructor <;>
     · intro h U hU
@@ -213,8 +213,8 @@ variable {β}
 
 theorem t2_space_of_covering [T2Space β] (h : ⋃₀𝔖 = univ) : @T2Space _ (UniformConvergenceOn.topologicalSpace α β 𝔖) :=
   { t2 := by
-      let this : UniformSpace (α → β) := UniformConvergenceOn.uniformSpace α β 𝔖
-      let this : TopologicalSpace (α → β) := UniformConvergenceOn.topologicalSpace α β 𝔖
+      letI : UniformSpace (α → β) := UniformConvergenceOn.uniformSpace α β 𝔖
+      letI : TopologicalSpace (α → β) := UniformConvergenceOn.topologicalSpace α β 𝔖
       intro f g hfg
       obtain ⟨x, hx⟩ := not_forall.mp (mt funext hfg)
       obtain ⟨s, hs, hxs⟩ : ∃ s ∈ 𝔖, x ∈ s := mem_sUnion.mp (h.symm ▸ True.intro)
@@ -230,7 +230,7 @@ protected theorem le_Pi_of_covering (h : ⋃₀𝔖 = univ) :
 protected theorem tendsto_iff_tendsto_uniformly_on :
     Tendsto F p (@nhds _ (UniformConvergenceOn.topologicalSpace α β 𝔖) f) ↔ ∀, ∀ s ∈ 𝔖, ∀, TendstoUniformlyOn F f p s :=
   by
-  let this : UniformSpace (α → β) := UniformConvergenceOn.uniformSpace α β 𝔖
+  letI : UniformSpace (α → β) := UniformConvergenceOn.uniformSpace α β 𝔖
   rw [UniformConvergenceOn.topological_space_eq, nhds_infi, tendsto_infi]
   refine' forall_congrₓ fun s => _
   rw [nhds_infi, tendsto_infi]

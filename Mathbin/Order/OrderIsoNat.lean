@@ -40,7 +40,7 @@ theorem nat_lt_apply {f : ℕ → α} {H : ∀ n : ℕ, r (f n) (f (n + 1))} {n 
 
 /-- If `f` is a strictly `r`-decreasing sequence, then this returns `f` as an order embedding. -/
 def natGt (f : ℕ → α) (H : ∀ n : ℕ, r (f (n + 1)) (f n)) : ((· > ·) : ℕ → ℕ → Prop) ↪r r :=
-  have := IsStrictOrder.swap r
+  haveI := IsStrictOrder.swap r
   RelEmbedding.swap (nat_lt f H)
 
 theorem well_founded_iff_no_descending_seq : WellFounded r ↔ IsEmpty (((· > ·) : ℕ → ℕ → Prop) ↪r r) :=
@@ -121,7 +121,7 @@ theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f :
   classical
   let bad : Set ℕ := { m | ∀ n, m < n → ¬r (f m) (f n) }
   by_cases' hbad : Infinite bad
-  · have := hbad
+  · haveI := hbad
     refine' ⟨Nat.orderEmbeddingOfSet bad, Or.intro_rightₓ _ fun m n mn => _⟩
     have h := Set.mem_range_self m
     rw [Nat.order_embedding_of_set_range bad] at h
@@ -158,7 +158,7 @@ theorem exists_increasing_or_nonincreasing_subseq (r : α → α → Prop) [IsTr
     ∃ g : ℕ ↪o ℕ, (∀ m n : ℕ, m < n → r (f (g m)) (f (g n))) ∨ ∀ m n : ℕ, m < n → ¬r (f (g m)) (f (g n)) := by
   obtain ⟨g, hr | hnr⟩ := exists_increasing_or_nonincreasing_subseq' r f
   · refine' ⟨g, Or.intro_left _ fun m n mn => _⟩
-    obtain ⟨x, rfl⟩ := le_iff_exists_add.1 (Nat.succ_le_iff.2 mn)
+    obtain ⟨x, rfl⟩ := exists_add_of_le (Nat.succ_le_iff.2 mn)
     induction' x with x ih
     · apply hr
       
@@ -183,13 +183,13 @@ theorem WellFounded.monotone_chain_condition' [Preorderₓ α] :
     exact hn n.succ n.lt_succ_self.le ((RelEmbedding.map_rel_iff _).2 n.lt_succ_self)
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]]
 /-- The "monotone chain condition" below is sometimes a convenient form of well foundedness. -/
 theorem WellFounded.monotone_chain_condition [PartialOrderₓ α] :
     WellFounded ((· > ·) : α → α → Prop) ↔ ∀ a : ℕ →o α, ∃ n, ∀ m, n ≤ m → a n = a m :=
   WellFounded.monotone_chain_condition'.trans <| by
     trace
-      "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]]"
+      "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]]"
     rw [lt_iff_le_and_ne]
     simp [← a.mono h]
 

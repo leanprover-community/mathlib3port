@@ -7,6 +7,7 @@ import Mathbin.Data.Nat.Basic
 import Mathbin.Data.Nat.Cast.Defs
 import Mathbin.Algebra.Group.Pi
 import Mathbin.Tactic.PiInstances
+import Mathbin.Data.Sum.Basic
 
 /-!
 # Cast of natural numbers (additional theorems)
@@ -289,7 +290,7 @@ theorem one_le_iff_pos {n : WithTop ℕ} : 1 ≤ n ↔ 0 < n :=
   ⟨lt_of_lt_of_leₓ (coe_lt_coe.mpr zero_lt_one), fun h => by
     simpa only [← zero_addₓ] using add_one_le_of_lt h⟩
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem nat_induction {P : WithTop ℕ → Prop} (a : WithTop ℕ) (h0 : P 0) (hsuc : ∀ n : ℕ, P n → P n.succ)
     (htop : (∀ n : ℕ, P n) → P ⊤) : P a := by
   have A : ∀ n : ℕ, P n := fun n => Nat.recOn n h0 hsuc
@@ -318,6 +319,9 @@ theorem coe_nat (n : ℕ) : (n : ∀ a, β a) = fun _ => n :=
   rfl
 
 end Pi
+
+theorem Sum.elim_nat_cast_nat_cast {α β γ : Type _} [HasNatCast γ] (n : ℕ) : Sum.elim (n : α → γ) (n : β → γ) = n :=
+  @Sum.elim_lam_const_lam_const α β γ n
 
 namespace Pi
 

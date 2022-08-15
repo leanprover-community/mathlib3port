@@ -165,13 +165,13 @@ unsafe def wlog (h : parse ident ?) (pat : parse (tk ":" *> texpr)?) (cases : pa
             | some pat => do
               let pat ← to_expr pat
               let vars' := vars.filter fun v => v.occurs pat
-              let case_pat ← mk_pattern [] vars' pat [] vars'
+              let case_pat ← tactic.mk_pattern [] vars' pat [] vars'
               let perms' ← match_perms case_pat cases
               return (pat, perms')
             | none => do
               let p :: ps ← dest_or cases
               let vars' := vars.filter fun v => v.occurs p
-              let case_pat ← mk_pattern [] vars' p [] vars'
+              let case_pat ← tactic.mk_pattern [] vars' p [] vars'
               let perms' ←
                 (p :: ps).mmap fun p => do
                     let m ← match_pattern case_pat p

@@ -3,7 +3,7 @@ Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
-import Mathbin.MeasureTheory.Function.ConditionalExpectation
+import Mathbin.MeasureTheory.Function.ConditionalExpectation.Real
 
 /-! # Notations for probability theory
 
@@ -38,10 +38,10 @@ localized [ProbabilityTheory] notation P "[" X "]" => ∫ x, X x ∂P
 localized [ProbabilityTheory] notation "𝔼[" X "]" => ∫ a, X a
 
 -- mathport name: «expr =ₐₛ »
-localized [ProbabilityTheory] notation:50 X "=ₐₛ" Y:50 => X =ᵐ[MeasureTheory.MeasureSpace.volume] Y
+localized [ProbabilityTheory] notation:50 X " =ₐₛ " Y:50 => X =ᵐ[MeasureTheory.MeasureSpace.volume] Y
 
 -- mathport name: «expr ≤ₐₛ »
-localized [ProbabilityTheory] notation:50 X "≤ₐₛ" Y:50 => X ≤ᵐ[MeasureTheory.MeasureSpace.volume] Y
+localized [ProbabilityTheory] notation:50 X " ≤ₐₛ " Y:50 => X ≤ᵐ[MeasureTheory.MeasureSpace.volume] Y
 
 -- mathport name: «expr∂ /∂ »
 localized [ProbabilityTheory] notation "∂" P "/∂" Q:50 => P.rnDeriv Q

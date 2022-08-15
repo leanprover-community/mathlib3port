@@ -477,11 +477,11 @@ of `M × N`. -/
 @[to_additive Prod
       "Given `add_subsemigroup`s `s`, `t` of `add_semigroup`s `A`, `B` respectively,\n`s × t` as an `add_subsemigroup` of `A × B`."]
 def prod (s : Subsemigroup M) (t : Subsemigroup N) : Subsemigroup (M × N) where
-  Carrier := (s : Set M) ×ˢ (t : Set N)
+  Carrier := s ×ˢ t
   mul_mem' := fun p q hp hq => ⟨s.mul_mem hp.1 hq.1, t.mul_mem hp.2 hq.2⟩
 
 @[to_additive coe_prod]
-theorem coe_prod (s : Subsemigroup M) (t : Subsemigroup N) : (s.Prod t : Set (M × N)) = (s : Set M) ×ˢ (t : Set N) :=
+theorem coe_prod (s : Subsemigroup M) (t : Subsemigroup N) : (s.Prod t : Set (M × N)) = s ×ˢ t :=
   rfl
 
 @[to_additive mem_prod]

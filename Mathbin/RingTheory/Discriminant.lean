@@ -128,7 +128,7 @@ theorem discr_not_zero_of_basis [IsSeparable K L] (b : Basis ι K L) : discr K b
     
   · have := span_eq_top_of_linear_independent_of_card_eq_finrank b.linear_independent (finrank_eq_card_basis b).symm
     rw [discr_def, trace_matrix_def]
-    simp_rw [← Basis.mk_apply b.linear_independent this]
+    simp_rw [← Basis.mk_apply b.linear_independent this.ge]
     rw [← trace_matrix_def, trace_matrix_of_basis, ← BilinForm.nondegenerate_iff_det_ne_zero]
     exact trace_form_nondegenerate _ _
     
@@ -206,7 +206,7 @@ theorem discr_power_basis_eq_prod'' [IsSeparable K L] (e : Finₓ pb.dim ≃ (L 
 theorem discr_power_basis_eq_norm [IsSeparable K L] :
     discr K pb.Basis = -1 ^ (n * (n - 1) / 2) * norm K (aeval pb.gen (minpoly K pb.gen).derivative) := by
   let E := AlgebraicClosure L
-  let this := fun a b : E => Classical.propDecidable (Eq a b)
+  letI := fun a b : E => Classical.propDecidable (Eq a b)
   have e : Finₓ pb.dim ≃ (L →ₐ[K] E) := by
     refine' equiv_of_card_eq _
     rw [Fintype.card_fin, AlgHom.card]

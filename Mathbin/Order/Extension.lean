@@ -28,15 +28,15 @@ theorem extend_partial_order {α : Type u} (r : α → α → Prop) [IsPartialOr
   let S := { s | IsPartialOrder α s }
   have hS : ∀ c, c ⊆ S → IsChain (· ≤ ·) c → ∀, ∀ y ∈ c, ∀, ∃ ub ∈ S, ∀, ∀ z ∈ c, ∀, z ≤ ub := by
     rintro c hc₁ hc₂ s hs
-    have := (hc₁ hs).1
+    haveI := (hc₁ hs).1
     refine' ⟨Sup c, _, fun z hz => le_Sup hz⟩
     refine' { refl := _, trans := _, antisymm := _ } <;> simp_rw [binary_relation_Sup_iff]
     · intro x
       exact ⟨s, hs, refl x⟩
       
     · rintro x y z ⟨s₁, h₁s₁, h₂s₁⟩ ⟨s₂, h₁s₂, h₂s₂⟩
-      have : IsPartialOrder _ _ := hc₁ h₁s₁
-      have : IsPartialOrder _ _ := hc₁ h₁s₂
+      haveI : IsPartialOrder _ _ := hc₁ h₁s₁
+      haveI : IsPartialOrder _ _ := hc₁ h₁s₂
       cases hc₂.total h₁s₁ h₁s₂
       · exact ⟨s₂, h₁s₂, trans (h _ _ h₂s₁) h₂s₂⟩
         
@@ -44,8 +44,8 @@ theorem extend_partial_order {α : Type u} (r : α → α → Prop) [IsPartialOr
         
       
     · rintro x y ⟨s₁, h₁s₁, h₂s₁⟩ ⟨s₂, h₁s₂, h₂s₂⟩
-      have : IsPartialOrder _ _ := hc₁ h₁s₁
-      have : IsPartialOrder _ _ := hc₁ h₁s₂
+      haveI : IsPartialOrder _ _ := hc₁ h₁s₁
+      haveI : IsPartialOrder _ _ := hc₁ h₁s₂
       cases hc₂.total h₁s₁ h₁s₂
       · exact antisymm (h _ _ h₂s₁) h₂s₂
         

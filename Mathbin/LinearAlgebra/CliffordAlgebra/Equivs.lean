@@ -3,10 +3,11 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
+import Mathbin.Algebra.DualNumber
 import Mathbin.Algebra.QuaternionBasis
 import Mathbin.Data.Complex.Module
 import Mathbin.LinearAlgebra.CliffordAlgebra.Conjugation
-import Mathbin.Algebra.DualNumber
+import Mathbin.LinearAlgebra.CliffordAlgebra.Star
 import Mathbin.LinearAlgebra.QuadraticForm.Prod
 
 /-!
@@ -46,7 +47,7 @@ is the same as `clifford_algebra.involute`.
 We show additionally that this equivalence sends `quaternion_algebra.conj` to the clifford conjugate
 and vice-versa:
 
-* `clifford_algebra_quaternion.to_quaternion_involute_reverse`
+* `clifford_algebra_quaternion.to_quaternion_star`
 * `clifford_algebra_quaternion.of_quaternion_conj`
 
 ## Dual numbers
@@ -292,10 +293,10 @@ def toQuaternion : CliffordAlgebra (q c₁ c₂) →ₐ[R] ℍ[R,c₁,c₂] :=
 theorem to_quaternion_ι (v : R × R) : toQuaternion (ι (q c₁ c₂) v) = (⟨0, v.1, v.2, 0⟩ : ℍ[R,c₁,c₂]) :=
   CliffordAlgebra.lift_ι_apply _ _ v
 
-/-- The "clifford conjugate" (aka `involute ∘ reverse = reverse ∘ involute`) maps to the quaternion
-conjugate. -/
-theorem to_quaternion_involute_reverse (c : CliffordAlgebra (q c₁ c₂)) :
-    toQuaternion (involute (reverse c)) = QuaternionAlgebra.conj (toQuaternion c) := by
+/-- The "clifford conjugate" maps to the quaternion conjugate. -/
+theorem to_quaternion_star (c : CliffordAlgebra (q c₁ c₂)) :
+    toQuaternion (star c) = QuaternionAlgebra.conj (toQuaternion c) := by
+  simp only [← CliffordAlgebra.star_def']
   induction c using CliffordAlgebra.induction
   case h_grade0 r =>
     simp only [← reverse.commutes, ← AlgHom.commutes, ← QuaternionAlgebra.coe_algebra_map, ← QuaternionAlgebra.conj_coe]
@@ -350,13 +351,11 @@ to `ℍ[R,c₁,c₂]`. -/
 protected def equiv : CliffordAlgebra (q c₁ c₂) ≃ₐ[R] ℍ[R,c₁,c₂] :=
   AlgEquiv.ofAlgHom toQuaternion ofQuaternion to_quaternion_comp_of_quaternion of_quaternion_comp_to_quaternion
 
-/-- The quaternion conjugate maps to the "clifford conjugate" (aka
-`involute ∘ reverse = reverse ∘ involute`). -/
+/-- The quaternion conjugate maps to the "clifford conjugate" (aka `star`). -/
 @[simp]
-theorem of_quaternion_conj (q : ℍ[R,c₁,c₂]) : ofQuaternion q.conj = (ofQuaternion q).reverse.involute :=
+theorem of_quaternion_conj (q : ℍ[R,c₁,c₂]) : ofQuaternion q.conj = star (ofQuaternion q) :=
   CliffordAlgebraQuaternion.equiv.Injective <| by
-    rw [equiv_apply, equiv_apply, to_quaternion_involute_reverse, to_quaternion_of_quaternion,
-      to_quaternion_of_quaternion]
+    rw [equiv_apply, equiv_apply, to_quaternion_star, to_quaternion_of_quaternion, to_quaternion_of_quaternion]
 
 -- this name is too short for us to want it visible after `open clifford_algebra_quaternion`
 attribute [protected] Q

@@ -257,7 +257,7 @@ theorem exists_of (z : DirectLimit G f) : ∃ i x, of L ι G f i x = z :=
   ⟨z.out.1, z.out.2, by
     simp ⟩
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on {C : DirectLimit G f → Prop} (z : DirectLimit G f) (ih : ∀ i x, C (of L ι G f i x)) :
     C z :=
   let ⟨i, x, h⟩ := exists_of z

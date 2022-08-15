@@ -24,7 +24,7 @@ open Filter Metric Function Set
 
 open TopologicalSpace BigOperators Nnreal Ennreal uniformity Pointwise
 
-section SemiNormedGroup
+section SeminormedAddCommGroup
 
 section Prio
 
@@ -35,17 +35,18 @@ set_option extends_priority 920
 equality `∥c • x∥ = ∥c∥ ∥x∥`. We require only `∥c • x∥ ≤ ∥c∥ ∥x∥` in the definition, then prove
 `∥c • x∥ = ∥c∥ ∥x∥` in `norm_smul`.
 
-Note that since this requires `semi_normed_group` and not `normed_group`, this typeclass can be
-used for "semi normed spaces" too, just as `module` can be used for "semi modules". -/
+Note that since this requires `seminormed_add_comm_group` and not `normed_add_comm_group`, this
+typeclass can be used for "semi normed spaces" too, just as `module` can be used for
+"semi modules". -/
 -- Here, we set a rather high priority for the instance `[normed_space α β] : module α β`
 -- to take precedence over `semiring.to_module` as this leads to instance paths with better
 -- unification properties.
-class NormedSpace (α : Type _) (β : Type _) [NormedField α] [SemiNormedGroup β] extends Module α β where
+class NormedSpace (α : Type _) (β : Type _) [NormedField α] [SeminormedAddCommGroup β] extends Module α β where
   norm_smul_le : ∀ (a : α) (b : β), ∥a • b∥ ≤ ∥a∥ * ∥b∥
 
 end Prio
 
-variable [NormedField α] [SemiNormedGroup β]
+variable [NormedField α] [SeminormedAddCommGroup β]
 
 -- see Note [lower instance priority]
 instance (priority := 100) NormedSpace.has_bounded_smul [NormedSpace α β] : HasBoundedSmul α β where
@@ -61,10 +62,13 @@ theorem norm_smul [NormedSpace α β] (s : α) (x : β) : ∥s • x∥ = ∥s�
   · simp [← h]
     
   · refine' le_antisymmₓ (NormedSpace.norm_smul_le s x) _
-    calc ∥s∥ * ∥x∥ = ∥s∥ * ∥s⁻¹ • s • x∥ := by
-        rw [inv_smul_smul₀ h]_ ≤ ∥s∥ * (∥s⁻¹∥ * ∥s • x∥) :=
-        mul_le_mul_of_nonneg_left (NormedSpace.norm_smul_le _ _) (norm_nonneg _)_ = ∥s • x∥ := by
+    calc
+      ∥s∥ * ∥x∥ = ∥s∥ * ∥s⁻¹ • s • x∥ := by
+        rw [inv_smul_smul₀ h]
+      _ ≤ ∥s∥ * (∥s⁻¹∥ * ∥s • x∥) := mul_le_mul_of_nonneg_left (NormedSpace.norm_smul_le _ _) (norm_nonneg _)
+      _ = ∥s • x∥ := by
         rw [norm_inv, ← mul_assoc, mul_inv_cancel (mt norm_eq_zero.1 h), one_mulₓ]
+      
     
 
 @[simp]
@@ -90,9 +94,9 @@ theorem lipschitz_with_smul [NormedSpace α β] (s : α) : LipschitzWith ∥s∥
 theorem norm_smul_of_nonneg [NormedSpace ℝ β] {t : ℝ} (ht : 0 ≤ t) (x : β) : ∥t • x∥ = t * ∥x∥ := by
   rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg ht]
 
-variable {E : Type _} [SemiNormedGroup E] [NormedSpace α E]
+variable {E : Type _} [SeminormedAddCommGroup E] [NormedSpace α E]
 
-variable {F : Type _} [SemiNormedGroup F] [NormedSpace α F]
+variable {F : Type _} [SeminormedAddCommGroup F] [NormedSpace α F]
 
 theorem eventually_nhds_norm_smul_sub_lt (c : α) (x : E) {ε : ℝ} (h : 0 < ε) : ∀ᶠ y in 𝓝 x, ∥c • (y - x)∥ < ε :=
   have : Tendsto (fun y => ∥c • (y - x)∥) (𝓝 x) (𝓝 0) :=
@@ -163,7 +167,7 @@ This homeomorphism sends `x : E` to `(1 + ∥x∥)⁻¹ • x`.
 In many cases the actual implementation is not important, so we don't mark the projection lemmas
 `homeomorph_unit_ball_apply_coe` and `homeomorph_unit_ball_symm_apply` as `@[simp]`. -/
 @[simps (config := { attrs := [] })]
-def homeomorphUnitBall {E : Type _} [SemiNormedGroup E] [NormedSpace ℝ E] : E ≃ₜ Ball (0 : E) 1 where
+def homeomorphUnitBall {E : Type _} [SeminormedAddCommGroup E] [NormedSpace ℝ E] : E ≃ₜ Ball (0 : E) 1 where
   toFun := fun x =>
     ⟨(1 + ∥x∥)⁻¹ • x, by
       have : ∥x∥ < abs (1 + ∥x∥) := (lt_one_add _).trans_le (le_abs_self _)
@@ -190,17 +194,17 @@ def homeomorphUnitBall {E : Type _} [SemiNormedGroup E] [NormedSpace ℝ E] : E 
 open NormedField
 
 instance : NormedSpace α (ULift E) :=
-  { ULift.normedGroup, ULift.module' with norm_smul_le := fun s x => (NormedSpace.norm_smul_le s x.down : _) }
+  { ULift.normedAddCommGroup, ULift.module' with norm_smul_le := fun s x => (NormedSpace.norm_smul_le s x.down : _) }
 
 /-- The product of two normed spaces is a normed space, with the sup norm. -/
 instance Prod.normedSpace : NormedSpace α (E × F) :=
-  { Prod.normedGroup, Prod.module with
+  { Prod.normedAddCommGroup, Prod.module with
     norm_smul_le := fun s x =>
       le_of_eqₓ <| by
         simp [← Prod.norm_def, ← norm_smul, ← mul_max_of_nonneg] }
 
 /-- The product of finitely many normed spaces is a normed space, with the sup norm. -/
-instance Pi.normedSpace {E : ι → Type _} [Fintype ι] [∀ i, SemiNormedGroup (E i)] [∀ i, NormedSpace α (E i)] :
+instance Pi.normedSpace {E : ι → Type _} [Fintype ι] [∀ i, SeminormedAddCommGroup (E i)] [∀ i, NormedSpace α (E i)] :
     NormedSpace α
       (∀ i,
         E
@@ -212,8 +216,8 @@ instance Pi.normedSpace {E : ι → Type _} [Fintype ι] [∀ i, SemiNormedGroup
         simp only [← (Nnreal.coe_mul _ _).symm, ← Nnreal.mul_finset_sup, ← nnnorm_smul]
 
 /-- A subspace of a normed space is also a normed space, with the restriction of the norm. -/
-instance Submodule.normedSpace {𝕜 R : Type _} [HasSmul 𝕜 R] [NormedField 𝕜] [Ringₓ R] {E : Type _} [SemiNormedGroup E]
-    [NormedSpace 𝕜 E] [Module R E] [IsScalarTower 𝕜 R E] (s : Submodule R E) :
+instance Submodule.normedSpace {𝕜 R : Type _} [HasSmul 𝕜 R] [NormedField 𝕜] [Ringₓ R] {E : Type _}
+    [SeminormedAddCommGroup E] [NormedSpace 𝕜 E] [Module R E] [IsScalarTower 𝕜 R E] (s : Submodule R E) :
     NormedSpace 𝕜 s where norm_smul_le := fun c x => le_of_eqₓ <| norm_smul c (x : E)
 
 /-- If there is a scalar `c` with `∥c∥>1`, then any element with nonzero norm can be
@@ -248,26 +252,27 @@ theorem rescale_to_shell_semi_normed {c : α} (hc : 1 < ∥c∥) {ε : ℝ} (εp
     exact mul_le_mul_of_nonneg_right hn.1 (norm_nonneg _)
     
 
-end SemiNormedGroup
+end SeminormedAddCommGroup
 
-section NormedGroup
+section NormedAddCommGroup
 
 variable [NormedField α]
 
-variable {E : Type _} [NormedGroup E] [NormedSpace α E]
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace α E]
 
-variable {F : Type _} [NormedGroup F] [NormedSpace α F]
+variable {F : Type _} [NormedAddCommGroup F] [NormedSpace α F]
 
 open NormedField
 
 /-- While this may appear identical to `normed_space.to_module`, it contains an implicit argument
-involving `normed_group.to_semi_normed_group` that typeclass inference has trouble inferring.
+involving `normed_add_comm_group.to_seminormed_add_comm_group` that typeclass inference has trouble
+inferring.
 
 Specifically, the following instance cannot be found without this `normed_space.to_module'`:
 ```lean
 example
   (𝕜 ι : Type*) (E : ι → Type*)
-  [normed_field 𝕜] [Π i, normed_group (E i)] [Π i, normed_space 𝕜 (E i)] :
+  [normed_field 𝕜] [Π i, normed_add_comm_group (E i)] [Π i, normed_space 𝕜 (E i)] :
   Π i, module 𝕜 (E i) := by apply_instance
 ```
 
@@ -320,15 +325,15 @@ theorem rescale_to_shell {c : α} (hc : 1 < ∥c∥) {ε : ℝ} (εpos : 0 < ε)
     ∃ d : α, d ≠ 0 ∧ ∥d • x∥ < ε ∧ ε / ∥c∥ ≤ ∥d • x∥ ∧ ∥d∥⁻¹ ≤ ε⁻¹ * ∥c∥ * ∥x∥ :=
   rescale_to_shell_semi_normed hc εpos (ne_of_ltₓ (norm_pos_iff.2 hx)).symm
 
-end NormedGroup
+end NormedAddCommGroup
 
-section NormedSpaceNondiscrete
+section NontriviallyNormedSpace
 
-variable (𝕜 E : Type _) [NondiscreteNormedField 𝕜] [NormedGroup E] [NormedSpace 𝕜 E] [Nontrivial E]
+variable (𝕜 E : Type _) [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] [Nontrivial E]
 
 include 𝕜
 
-/-- If `E` is a nontrivial normed space over a nondiscrete normed field `𝕜`, then `E` is unbounded:
+/-- If `E` is a nontrivial normed space over a nontrivially normed field `𝕜`, then `E` is unbounded:
 for any `c : ℝ`, there exists a vector `x : E` with norm strictly greater than `c`. -/
 theorem NormedSpace.exists_lt_norm (c : ℝ) : ∃ x : E, c < ∥x∥ := by
   rcases exists_ne (0 : E) with ⟨x, hx⟩
@@ -342,13 +347,13 @@ protected theorem NormedSpace.unbounded_univ : ¬Bounded (Univ : Set E) := fun h
   let ⟨x, hx⟩ := NormedSpace.exists_lt_norm 𝕜 E R
   hx.not_le (hR x trivialₓ)
 
-/-- A normed vector space over a nondiscrete normed field is a noncompact space. This cannot be
+/-- A normed vector space over a nontrivially normed field is a noncompact space. This cannot be
 an instance because in order to apply it, Lean would have to search for `normed_space 𝕜 E` with
 unknown `𝕜`. We register this as an instance in two cases: `𝕜 = E` and `𝕜 = ℝ`. -/
 protected theorem NormedSpace.noncompact_space : NoncompactSpace E :=
   ⟨fun h => NormedSpace.unbounded_univ 𝕜 _ h.Bounded⟩
 
-instance (priority := 100) NondiscreteNormedField.noncompact_space : NoncompactSpace 𝕜 :=
+instance (priority := 100) NontriviallyNormedField.noncompact_space : NoncompactSpace 𝕜 :=
   NormedSpace.noncompact_space 𝕜 𝕜
 
 omit 𝕜
@@ -356,7 +361,7 @@ omit 𝕜
 instance (priority := 100) RealNormedSpace.noncompact_space [NormedSpace ℝ E] : NoncompactSpace E :=
   NormedSpace.noncompact_space ℝ E
 
-end NormedSpaceNondiscrete
+end NontriviallyNormedSpace
 
 section NormedAlgebra
 
@@ -412,7 +417,7 @@ variable (𝕜 𝕜')
 
 /-- In a normed algebra, the inclusion of the base field in the extended field is an isometry. -/
 theorem algebra_map_isometry [NormOneClass 𝕜'] : Isometry (algebraMap 𝕜 𝕜') := by
-  refine' isometry_emetric_iff_metric.2 fun x y => _
+  refine' Isometry.of_dist_eq fun x y => _
   rw [dist_eq_norm, dist_eq_norm, ← RingHom.map_sub, norm_algebra_map']
 
 /-- The inclusion of the base field in a normed algebra as a continuous linear map. -/
@@ -468,12 +473,14 @@ end NormedAlgebra
 section RestrictScalars
 
 variable (𝕜 : Type _) (𝕜' : Type _) [NormedField 𝕜] [NormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] (E : Type _)
-  [SemiNormedGroup E] [NormedSpace 𝕜' E]
+  [SeminormedAddCommGroup E] [NormedSpace 𝕜' E]
 
-instance {𝕜 : Type _} {𝕜' : Type _} {E : Type _} [I : SemiNormedGroup E] : SemiNormedGroup (RestrictScalars 𝕜 𝕜' E) :=
+instance {𝕜 : Type _} {𝕜' : Type _} {E : Type _} [I : SeminormedAddCommGroup E] :
+    SeminormedAddCommGroup (RestrictScalars 𝕜 𝕜' E) :=
   I
 
-instance {𝕜 : Type _} {𝕜' : Type _} {E : Type _} [I : NormedGroup E] : NormedGroup (RestrictScalars 𝕜 𝕜' E) :=
+instance {𝕜 : Type _} {𝕜' : Type _} {E : Type _} [I : NormedAddCommGroup E] :
+    NormedAddCommGroup (RestrictScalars 𝕜 𝕜' E) :=
   I
 
 /-- If `E` is a normed space over `𝕜'` and `𝕜` is a normed algebra over `𝕜'`, then
@@ -489,8 +496,8 @@ This is not an instance as it would be contrary to the purpose of `restrict_scal
 -/
 -- If you think you need this, consider instead reproducing `restrict_scalars.lsmul`
 -- appropriately modified here.
-def Module.RestrictScalars.normedSpaceOrig {𝕜 : Type _} {𝕜' : Type _} {E : Type _} [NormedField 𝕜'] [SemiNormedGroup E]
-    [I : NormedSpace 𝕜' E] : NormedSpace 𝕜' (RestrictScalars 𝕜 𝕜' E) :=
+def Module.RestrictScalars.normedSpaceOrig {𝕜 : Type _} {𝕜' : Type _} {E : Type _} [NormedField 𝕜']
+    [SeminormedAddCommGroup E] [I : NormedSpace 𝕜' E] : NormedSpace 𝕜' (RestrictScalars 𝕜 𝕜' E) :=
   I
 
 /-- Warning: This declaration should be used judiciously.

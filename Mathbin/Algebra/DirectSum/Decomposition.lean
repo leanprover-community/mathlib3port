@@ -75,6 +75,17 @@ def decompose : M ≃ ⨁ i, ℳ i where
   left_inv := Decomposition.left_inv
   right_inv := Decomposition.right_inv
 
+protected theorem Decomposition.induction_on {p : M → Prop} (h_zero : p 0) (h_homogeneous : ∀ {i} (m : ℳ i), p (m : M))
+    (h_add : ∀ m m' : M, p m → p m' → p (m + m')) : ∀ m, p m := by
+  let ℳ' : ι → AddSubmonoid M := fun i =>
+    (⟨ℳ i, fun _ _ => AddMemClass.add_mem, ZeroMemClass.zero_mem _⟩ : AddSubmonoid M)
+  haveI t : DirectSum.Decomposition ℳ' :=
+    { decompose' := DirectSum.decompose ℳ, left_inv := fun _ => (decompose ℳ).left_inv _,
+      right_inv := fun _ => (decompose ℳ).right_inv _ }
+  have mem : ∀ m, m ∈ supr ℳ' := fun m =>
+    (DirectSum.IsInternal.add_submonoid_supr_eq_top ℳ' (decomposition.is_internal ℳ')).symm ▸ trivialₓ
+  exact fun m => AddSubmonoid.supr_induction ℳ' (mem m) (fun i m h => h_homogeneous ⟨m, h⟩) h_zero h_add
+
 @[simp]
 theorem Decomposition.decompose'_eq : decomposition.decompose' = decompose ℳ :=
   rfl

@@ -77,8 +77,8 @@ variable [HasBinaryBiproducts C]
 morphisms if it preserves all kernels. -/
 def preservesEqualizerOfPreservesKernels [∀ {X Y} (f : X ⟶ Y), PreservesLimit (parallelPair f 0) F] {X Y : C}
     (f g : X ⟶ Y) : PreservesLimit (parallelPair f g) F := by
-  let this := preserves_binary_biproducts_of_preserves_binary_products F
-  have := additive_of_preserves_binary_biproducts F
+  letI := preserves_binary_biproducts_of_preserves_binary_products F
+  haveI := additive_of_preserves_binary_biproducts F
   constructor
   intro c i
   let c' := is_limit_kernel_fork_of_fork (i.of_iso_limit (fork.iso_fork_of_ι c))
@@ -97,7 +97,7 @@ def preservesEqualizerOfPreservesKernels [∀ {X Y} (f : X ⟶ Y), PreservesLimi
 -/
 def preservesEqualizersOfPreservesKernels [∀ {X Y} (f : X ⟶ Y), PreservesLimit (parallelPair f 0) F] :
     PreservesLimitsOfShape WalkingParallelPair F where PreservesLimit := fun K => by
-    let this :=
+    letI :=
       preserves_equalizer_of_preserves_kernels F (K.map walking_parallel_pair_hom.left)
         (K.map walking_parallel_pair_hom.right)
     apply preserves_limit_of_iso_diagram F (diagram_iso_parallel_pair K).symm
@@ -106,10 +106,10 @@ def preservesEqualizersOfPreservesKernels [∀ {X Y} (f : X ⟶ Y), PreservesLim
 -/
 def preservesFiniteLimitsOfPreservesKernels [HasFiniteProducts C] [HasEqualizers C] [HasZeroObject C] [HasZeroObject D]
     [∀ {X Y} (f : X ⟶ Y), PreservesLimit (parallelPair f 0) F] : PreservesFiniteLimits F := by
-  let this := preserves_equalizers_of_preserves_kernels F
-  let this := preserves_terminal_object_of_preserves_zero_morphisms F
-  let this := preserves_limits_of_shape_pempty_of_preserves_terminal F
-  let p_prod := preserves_finite_products_of_preserves_binary_and_terminal F
+  letI := preserves_equalizers_of_preserves_kernels F
+  letI := preserves_terminal_object_of_preserves_zero_morphisms F
+  letI := preserves_limits_of_shape_pempty_of_preserves_terminal F
+  letI p_prod := preserves_finite_products_of_preserves_binary_and_terminal F
   apply @preserves_finite_limits_of_preserves_equalizers_and_finite_products _ _ _ _ _ _ _ _ @p_prod
 
 end FiniteLimits
@@ -154,8 +154,8 @@ variable [HasBinaryBiproducts C]
 morphisms if it preserves all cokernels. -/
 def preservesCoequalizerOfPreservesCokernels [∀ {X Y} (f : X ⟶ Y), PreservesColimit (parallelPair f 0) F] {X Y : C}
     (f g : X ⟶ Y) : PreservesColimit (parallelPair f g) F := by
-  let this := preserves_binary_biproducts_of_preserves_binary_coproducts F
-  have := additive_of_preserves_binary_biproducts F
+  letI := preserves_binary_biproducts_of_preserves_binary_coproducts F
+  haveI := additive_of_preserves_binary_biproducts F
   constructor
   intro c i
   let c' := is_colimit_cokernel_cofork_of_cofork (i.of_iso_colimit (cofork.iso_cofork_of_π c))
@@ -181,7 +181,7 @@ def preservesCoequalizerOfPreservesCokernels [∀ {X Y} (f : X ⟶ Y), Preserves
 -/
 def preservesCoequalizersOfPreservesCokernels [∀ {X Y} (f : X ⟶ Y), PreservesColimit (parallelPair f 0) F] :
     PreservesColimitsOfShape WalkingParallelPair F where PreservesColimit := fun K => by
-    let this :=
+    letI :=
       preserves_coequalizer_of_preserves_cokernels F (K.map limits.walking_parallel_pair_hom.left)
         (K.map limits.walking_parallel_pair_hom.right)
     apply preserves_colimit_of_iso_diagram F (diagram_iso_parallel_pair K).symm
@@ -190,10 +190,10 @@ def preservesCoequalizersOfPreservesCokernels [∀ {X Y} (f : X ⟶ Y), Preserve
 -/
 def preservesFiniteColimitsOfPreservesCokernels [HasFiniteCoproducts C] [HasCoequalizers C] [HasZeroObject C]
     [HasZeroObject D] [∀ {X Y} (f : X ⟶ Y), PreservesColimit (parallelPair f 0) F] : PreservesFiniteColimits F := by
-  let this := preserves_coequalizers_of_preserves_cokernels F
-  let this := preserves_initial_object_of_preserves_zero_morphisms F
-  let this := preserves_colimits_of_shape_pempty_of_preserves_initial F
-  let p_prod := preserves_finite_coproducts_of_preserves_binary_and_initial F
+  letI := preserves_coequalizers_of_preserves_cokernels F
+  letI := preserves_initial_object_of_preserves_zero_morphisms F
+  letI := preserves_colimits_of_shape_pempty_of_preserves_initial F
+  letI p_prod := preserves_finite_coproducts_of_preserves_binary_and_initial F
   apply @preserves_finite_colimits_of_preserves_coequalizers_and_finite_coproducts C _ _ _ _ _ _ _ @p_prod
 
 end FiniteColimits

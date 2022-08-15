@@ -54,7 +54,7 @@ def Invertible.algebraTower (r : R) [Invertible (algebraMap R S r)] : Invertible
 /-- A natural number that is invertible when coerced to `R` is also invertible
 when coerced to any `R`-algebra. -/
 def invertibleAlgebraCoeNat (n : ℕ) [inv : Invertible (n : R)] : Invertible (n : A) := by
-  have : Invertible (algebraMap ℕ R n) := inv
+  haveI : Invertible (algebraMap ℕ R n) := inv
   exact invertible.algebra_tower ℕ R A n
 
 end Semiringₓ
@@ -73,7 +73,7 @@ namespace Algebra
 
 theorem adjoin_algebra_map (R : Type u) (S : Type v) (A : Type w) [CommSemiringₓ R] [CommSemiringₓ S] [Semiringₓ A]
     [Algebra R S] [Algebra S A] [Algebra R A] [IsScalarTower R S A] (s : Set S) :
-    adjoin R (algebraMap S A '' s) = Subalgebra.map (adjoin R s) (IsScalarTower.toAlgHom R S A) :=
+    adjoin R (algebraMap S A '' s) = (adjoin R s).map (IsScalarTower.toAlgHom R S A) :=
   le_antisymmₓ (adjoin_le <| Set.image_subset_iff.2 fun y hy => ⟨y, subset_adjoin hy, rfl⟩)
     (Subalgebra.map_le.2 <| adjoin_le fun y hy => subset_adjoin ⟨y, hy, rfl⟩)
 
@@ -167,7 +167,7 @@ theorem linear_independent_smul {ι : Type v₁} {b : ι → S} {ι' : Type w₁
   rw [linear_independent_iff'']
   rintro s g hg hsg ⟨i, k⟩
   by_cases' hik : (i, k) ∈ s
-  · have h1 : (∑ i in (s.image Prod.fst).product (s.image Prod.snd), g i • b i.1 • c i.2) = 0 := by
+  · have h1 : (∑ i in s.image Prod.fst ×ˢ s.image Prod.snd, g i • b i.1 • c i.2) = 0 := by
       rw [← hsg]
       exact
         ((Finset.sum_subset Finset.subset_product) fun p _ hp =>
@@ -239,7 +239,6 @@ open Finset Submodule
 
 open Classical
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (yi yj yk «expr ∈ » y)
 theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : Submodule B C).Fg) :
     ∃ B₀ : Subalgebra A B, B₀.Fg ∧ (⊤ : Submodule B₀ C).Fg := by
   cases' hAC with x hx
@@ -247,18 +246,14 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : 
   have := hy
   simp_rw [eq_top_iff', mem_span_finset] at this
   choose f hf
-  let s : Finset B := (Finset.product (x ∪ y * y) y).Image (Function.uncurry f)
-  have hsx : ∀, ∀ xi ∈ x, ∀, ∀ yj ∈ y, ∀, f xi yj ∈ s := fun xi hxi yj hyj =>
-    show Function.uncurry f (xi, yj) ∈ s from mem_image_of_mem _ <| mem_product.2 ⟨mem_union_left _ hxi, hyj⟩
-  have hsy : ∀ (yi yj yk) (_ : yi ∈ y) (_ : yj ∈ y) (_ : yk ∈ y), f (yi * yj) yk ∈ s := fun yi hyi yj hyj yk hyk =>
-    show Function.uncurry f (yi * yj, yk) ∈ s from
-      mem_image_of_mem _ <| mem_product.2 ⟨mem_union_right _ <| Finset.mul_mem_mul hyi hyj, hyk⟩
+  let s : Finset B := Finset.image₂ f (x ∪ y * y) y
   have hxy : ∀, ∀ xi ∈ x, ∀, xi ∈ span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) :=
     fun xi hxi =>
     hf xi ▸
       sum_mem fun yj hyj =>
         smul_mem (span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C))
-          ⟨f xi yj, Algebra.subset_adjoin <| hsx xi hxi yj hyj⟩ (subset_span <| mem_insert_of_mem hyj)
+          ⟨f xi yj, Algebra.subset_adjoin <| mem_image₂_of_mem (mem_union_left _ hxi) hyj⟩
+          (subset_span <| mem_insert_of_mem hyj)
   have hyy :
     span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) *
         span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) ≤
@@ -280,7 +275,8 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : 
         SetLike.mem_coe.2
           (sum_mem fun yk hyk =>
             smul_mem (span (Algebra.adjoin A (↑s : Set B)) (insert 1 ↑y : Set C))
-              ⟨f (yi * yj) yk, Algebra.subset_adjoin <| hsy yi hyi yj hyj yk hyk⟩
+              ⟨f (yi * yj) yk,
+                Algebra.subset_adjoin <| mem_image₂_of_mem (mem_union_right _ <| mul_mem_mul hyi hyj) hyk⟩
               (subset_span <| Set.mem_insert_of_mem _ hyk : yk ∈ _))
       
   refine' ⟨Algebra.adjoin A (↑s : Set B), Subalgebra.fg_adjoin_finset _, insert 1 y, _⟩

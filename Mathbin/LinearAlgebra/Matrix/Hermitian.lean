@@ -149,7 +149,7 @@ variable [IsROrC α] [IsROrC β]
 theorem is_hermitian_iff_is_self_adjoint [Fintype n] [DecidableEq n] {A : Matrix n n α} :
     IsHermitian A ↔
       InnerProductSpace.IsSelfAdjoint
-        ((PiLp.linearEquiv α fun _ : n => α).symm.conj A.toLin' : Module.End α (PiLp 2 _)) :=
+        ((PiLp.linearEquiv 2 α fun _ : n => α).symm.conj A.toLin' : Module.End α (PiLp 2 _)) :=
   by
   rw [InnerProductSpace.IsSelfAdjoint, (PiLp.equiv 2 fun _ : n => α).symm.Surjective.Forall₂]
   simp only [← LinearEquiv.conj_apply, ← LinearMap.comp_apply, ← LinearEquiv.coe_coe, ← PiLp.linear_equiv_apply, ←

@@ -45,12 +45,10 @@ structure OpenAddSubgroup (G : Type _) [AddGroupₓ G] [TopologicalSpace G] exte
 structure OpenSubgroup (G : Type _) [Groupₓ G] [TopologicalSpace G] extends Subgroup G where
   is_open' : IsOpen carrier
 
-/-- Reinterpret an `open_subgroup` as a `subgroup`. -/
-add_decl_doc OpenSubgroup.toSubgroup
-
-/-- Reinterpret an `open_add_subgroup` as an `add_subgroup`. -/
-add_decl_doc OpenAddSubgroup.toAddSubgroup
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident open_subgroup.to_subgroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident open_add_subgroup.to_add_subgroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace OpenSubgroup
 
 open Function TopologicalSpace
@@ -154,8 +152,7 @@ variable {H : Type _} [Groupₓ H] [TopologicalSpace H]
 /-- The product of two open subgroups as an open subgroup of the product group. -/
 @[to_additive "The product of two open subgroups as an open subgroup of the product group."]
 def prod (U : OpenSubgroup G) (V : OpenSubgroup H) : OpenSubgroup (G × H) :=
-  { (U : Subgroup G).Prod (V : Subgroup H) with Carrier := (U : Set G) ×ˢ (V : Set H),
-    is_open' := U.IsOpen.Prod V.IsOpen }
+  { (U : Subgroup G).Prod (V : Subgroup H) with Carrier := U ×ˢ V, is_open' := U.IsOpen.Prod V.IsOpen }
 
 end
 

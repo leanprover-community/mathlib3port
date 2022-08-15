@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
 import Mathbin.Probability.Variance
+import Mathbin.MeasureTheory.Function.UniformIntegrable
 
 /-!
 # Identically distributed random variables
@@ -104,6 +105,9 @@ protected theorem comp_of_ae_measurable {u : γ → δ} (h : IdentDistrib f g μ
 protected theorem comp {u : γ → δ} (h : IdentDistrib f g μ ν) (hu : Measurable u) : IdentDistrib (u ∘ f) (u ∘ g) μ ν :=
   h.comp_of_ae_measurable hu.AeMeasurable
 
+protected theorem of_ae_eq {g : α → γ} (hf : AeMeasurable f μ) (heq : f =ᵐ[μ] g) : IdentDistrib f g μ μ :=
+  { ae_measurable_fst := hf, ae_measurable_snd := hf.congr HEq, map_eq := Measure.map_congr HEq }
+
 theorem measure_mem_eq (h : IdentDistrib f g μ ν) {s : Set γ} (hs : MeasurableSet s) : μ (f ⁻¹' s) = ν (g ⁻¹' s) := by
   rw [← measure.map_apply_of_ae_measurable h.ae_measurable_fst hs, ←
     measure.map_apply_of_ae_measurable h.ae_measurable_snd hs, h.map_eq]
@@ -150,8 +154,8 @@ theorem lintegral_eq {f : α → ℝ≥0∞} {g : β → ℝ≥0∞} (h : IdentD
   rw [← lintegral_map' ae_measurable_id h.ae_measurable_fst, ← lintegral_map' ae_measurable_id h.ae_measurable_snd,
     h.map_eq]
 
-theorem integral_eq [NormedGroup γ] [NormedSpace ℝ γ] [CompleteSpace γ] [BorelSpace γ] (h : IdentDistrib f g μ ν) :
-    (∫ x, f x ∂μ) = ∫ x, g x ∂ν := by
+theorem integral_eq [NormedAddCommGroup γ] [NormedSpace ℝ γ] [CompleteSpace γ] [BorelSpace γ]
+    (h : IdentDistrib f g μ ν) : (∫ x, f x ∂μ) = ∫ x, g x ∂ν := by
   by_cases' hf : ae_strongly_measurable f μ
   · have A : ae_strongly_measurable id (measure.map f μ) := by
       rw [ae_strongly_measurable_iff_ae_measurable_separable]
@@ -172,7 +176,7 @@ theorem integral_eq [NormedGroup γ] [NormedSpace ℝ γ] [CompleteSpace γ] [Bo
     rw [integral_non_ae_strongly_measurable hf]
     
 
-theorem snorm_eq [NormedGroup γ] [OpensMeasurableSpace γ] (h : IdentDistrib f g μ ν) (p : ℝ≥0∞) :
+theorem snorm_eq [NormedAddCommGroup γ] [OpensMeasurableSpace γ] (h : IdentDistrib f g μ ν) (p : ℝ≥0∞) :
     snorm f p μ = snorm g p ν := by
   by_cases' h0 : p = 0
   · simp [← h0]
@@ -187,28 +191,30 @@ theorem snorm_eq [NormedGroup γ] [OpensMeasurableSpace γ] (h : IdentDistrib f 
   apply lintegral_eq
   exact h.comp (Measurable.pow_const (measurable_coe_nnreal_ennreal.comp measurable_nnnorm) p.to_real)
 
-theorem mem_ℒp_snd [NormedGroup γ] [BorelSpace γ] {p : ℝ≥0∞} (h : IdentDistrib f g μ ν) (hf : Memℒp f p μ) :
+theorem mem_ℒp_snd [NormedAddCommGroup γ] [BorelSpace γ] {p : ℝ≥0∞} (h : IdentDistrib f g μ ν) (hf : Memℒp f p μ) :
     Memℒp g p ν := by
   refine' ⟨h.ae_strongly_measurable_snd hf.ae_strongly_measurable, _⟩
   rw [← h.snorm_eq]
   exact hf.2
 
-theorem mem_ℒp_iff [NormedGroup γ] [BorelSpace γ] {p : ℝ≥0∞} (h : IdentDistrib f g μ ν) : Memℒp f p μ ↔ Memℒp g p ν :=
+theorem mem_ℒp_iff [NormedAddCommGroup γ] [BorelSpace γ] {p : ℝ≥0∞} (h : IdentDistrib f g μ ν) :
+    Memℒp f p μ ↔ Memℒp g p ν :=
   ⟨fun hf => h.mem_ℒp_snd hf, fun hg => h.symm.mem_ℒp_snd hg⟩
 
-theorem integrable_snd [NormedGroup γ] [BorelSpace γ] (h : IdentDistrib f g μ ν) (hf : Integrable f μ) :
+theorem integrable_snd [NormedAddCommGroup γ] [BorelSpace γ] (h : IdentDistrib f g μ ν) (hf : Integrable f μ) :
     Integrable g ν := by
   rw [← mem_ℒp_one_iff_integrable] at hf⊢
   exact h.mem_ℒp_snd hf
 
-theorem integrable_iff [NormedGroup γ] [BorelSpace γ] (h : IdentDistrib f g μ ν) : Integrable f μ ↔ Integrable g ν :=
+theorem integrable_iff [NormedAddCommGroup γ] [BorelSpace γ] (h : IdentDistrib f g μ ν) :
+    Integrable f μ ↔ Integrable g ν :=
   ⟨fun hf => h.integrable_snd hf, fun hg => h.symm.integrable_snd hg⟩
 
-protected theorem norm [NormedGroup γ] [BorelSpace γ] (h : IdentDistrib f g μ ν) :
+protected theorem norm [NormedAddCommGroup γ] [BorelSpace γ] (h : IdentDistrib f g μ ν) :
     IdentDistrib (fun x => ∥f x∥) (fun x => ∥g x∥) μ ν :=
   h.comp measurable_norm
 
-protected theorem nnnorm [NormedGroup γ] [BorelSpace γ] (h : IdentDistrib f g μ ν) :
+protected theorem nnnorm [NormedAddCommGroup γ] [BorelSpace γ] (h : IdentDistrib f g μ ν) :
     IdentDistrib (fun x => ∥f x∥₊) (fun x => ∥g x∥₊) μ ν :=
   h.comp measurable_nnnorm
 
@@ -250,6 +256,57 @@ theorem variance_eq {f : α → ℝ} {g : β → ℝ} (h : IdentDistrib f g μ �
   rfl
 
 end IdentDistrib
+
+section UniformIntegrable
+
+open TopologicalSpace
+
+variable {E : Type _} [MeasurableSpace E] [NormedAddCommGroup E] [BorelSpace E] [SecondCountableTopology E]
+  {μ : Measureₓ α} [IsFiniteMeasure μ]
+
+/-- This lemma is superceded by `mem_ℒp.uniform_integrable_of_ident_distrib` which only require
+`ae_strongly_measurable`. -/
+theorem Memℒp.uniform_integrable_of_ident_distrib_aux {ι : Type _} {f : ι → α → E} {j : ι} {p : ℝ≥0∞} (hp : 1 ≤ p)
+    (hp' : p ≠ ∞) (hℒp : Memℒp (f j) p μ) (hfmeas : ∀ i, StronglyMeasurable (f i))
+    (hf : ∀ i, IdentDistrib (f i) (f j) μ μ) : UniformIntegrable f p μ := by
+  refine' uniform_integrable_of' hp hp' hfmeas fun ε hε => _
+  by_cases' hι : Nonempty ι
+  swap
+  · exact ⟨0, fun i => False.elim (hι <| Nonempty.intro i)⟩
+    
+  obtain ⟨C, hC₁, hC₂⟩ := hℒp.snorm_indicator_norm_ge_pos_le μ (hfmeas _) hε
+  have hmeas : ∀ i, MeasurableSet { x | (⟨C, hC₁.le⟩ : ℝ≥0 ) ≤ ∥f i x∥₊ } := fun i =>
+    measurable_set_le measurable_const (hfmeas _).Measurable.nnnorm
+  refine' ⟨⟨C, hC₁.le⟩, fun i => le_transₓ (le_of_eqₓ _) hC₂⟩
+  have :
+    { x : α | (⟨C, hC₁.le⟩ : ℝ≥0 ) ≤ ∥f i x∥₊ }.indicator (f i) =
+      (fun x : E => if (⟨C, hC₁.le⟩ : ℝ≥0 ) ≤ ∥x∥₊ then x else 0) ∘ f i :=
+    by
+    ext x
+    simp only [← Set.indicatorₓ, ← Set.mem_set_of_eq]
+  simp_rw [coe_nnnorm, this]
+  rw [← snorm_map_measure _ (hf i).ae_measurable_fst, (hf i).map_eq, snorm_map_measure _ (hf j).ae_measurable_fst]
+  · rfl
+    
+  all_goals
+    exact ae_strongly_measurable_id.indicator (measurable_set_le measurable_const measurable_nnnorm)
+
+/-- A sequence of identically distributed Lᵖ functions is p-uniformly integrable. -/
+theorem Memℒp.uniform_integrable_of_ident_distrib {ι : Type _} {f : ι → α → E} {j : ι} {p : ℝ≥0∞} (hp : 1 ≤ p)
+    (hp' : p ≠ ∞) (hℒp : Memℒp (f j) p μ) (hf : ∀ i, IdentDistrib (f i) (f j) μ μ) : UniformIntegrable f p μ := by
+  have hfmeas : ∀ i, ae_strongly_measurable (f i) μ := fun i => (hf i).ae_strongly_measurable_iff.2 hℒp.1
+  set g : ι → α → E := fun i => (hfmeas i).some
+  have hgmeas : ∀ i, strongly_measurable (g i) := fun i => (Exists.some_spec <| hfmeas i).1
+  have hgeq : ∀ i, g i =ᵐ[μ] f i := fun i => (Exists.some_spec <| hfmeas i).2.symm
+  have hgℒp : mem_ℒp (g j) p μ := hℒp.ae_eq (hgeq j).symm
+  exact
+    uniform_integrable.ae_eq
+      ((mem_ℒp.uniform_integrable_of_ident_distrib_aux hp hp' hgℒp hgmeas) fun i =>
+        (ident_distrib.of_ae_eq (hgmeas i).AeMeasurable (hgeq i)).trans
+          ((hf i).trans <| ident_distrib.of_ae_eq (hfmeas j).AeMeasurable (hgeq j).symm))
+      hgeq
+
+end UniformIntegrable
 
 end ProbabilityTheory
 

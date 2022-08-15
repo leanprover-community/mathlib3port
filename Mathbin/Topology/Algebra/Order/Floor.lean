@@ -149,15 +149,15 @@ local notation "I" => (Icc 0 1 : Set α)
 variable [OrderTopology α] [TopologicalAddGroup α] [TopologicalSpace β] [TopologicalSpace γ]
 
 /-- Do not use this, use `continuous_on.comp_fract` instead. -/
-theorem ContinuousOn.comp_fract' {f : β → α → γ} (h : ContinuousOn (uncurry f) <| (Univ : Set β) ×ˢ I)
-    (hf : ∀ s, f s 0 = f s 1) : Continuous fun st : β × α => f st.1 <| fract st.2 := by
+theorem ContinuousOn.comp_fract' {f : β → α → γ} (h : ContinuousOn (uncurry f) <| univ ×ˢ I) (hf : ∀ s, f s 0 = f s 1) :
+    Continuous fun st : β × α => f st.1 <| fract st.2 := by
   change Continuous (uncurry f ∘ Prod.map id fract)
   rw [continuous_iff_continuous_at]
   rintro ⟨s, t⟩
   by_cases' ht : t = floor t
   · rw [ht]
     rw [← continuous_within_at_univ]
-    have : (univ : Set (β × α)) ⊆ (univ : Set β) ×ˢ Iio ↑⌊t⌋ ∪ (univ : Set β) ×ˢ Ici ↑⌊t⌋ := by
+    have : (univ : Set (β × α)) ⊆ univ ×ˢ Iio ↑⌊t⌋ ∪ univ ×ˢ Ici ↑⌊t⌋ := by
       rintro p -
       rw [← prod_union]
       exact ⟨trivialₓ, lt_or_leₓ p.2 _⟩
@@ -199,9 +199,8 @@ theorem ContinuousOn.comp_fract' {f : β → α → γ} (h : ContinuousOn (uncur
           (eventually_of_forall fun x => ⟨fract_nonneg _, (fract_lt_one _).le⟩))
     
 
-theorem ContinuousOn.comp_fract {s : β → α} {f : β → α → γ}
-    (h : ContinuousOn (uncurry f) <| (Univ : Set β) ×ˢ (Icc 0 1 : Set α)) (hs : Continuous s)
-    (hf : ∀ s, f s 0 = f s 1) : Continuous fun x : β => f x <| Int.fract (s x) :=
+theorem ContinuousOn.comp_fract {s : β → α} {f : β → α → γ} (h : ContinuousOn (uncurry f) <| univ ×ˢ Icc 0 1)
+    (hs : Continuous s) (hf : ∀ s, f s 0 = f s 1) : Continuous fun x : β => f x <| Int.fract (s x) :=
   (h.comp_fract' hf).comp (continuous_id.prod_mk hs)
 
 /-- A special case of `continuous_on.comp_fract`. -/

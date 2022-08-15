@@ -366,3 +366,75 @@ theorem attach_cons (x : α) (s : Sym α n) :
 
 end Sym
 
+section Equivₓ
+
+/-! ### Combinatorial equivalences -/
+
+
+variable {α : Type _} {n : ℕ}
+
+open Sym
+
+namespace symOptionSuccEquiv
+
+/-- Function from the symmetric product over `option` splitting on whether or not
+it contains a `none`. -/
+def encode [DecidableEq α] (s : Sym (Option α) n.succ) : Sum (Sym (Option α) n) (Sym α n.succ) :=
+  if h : none ∈ s then Sum.inl (s.erase none h)
+  else Sum.inr (s.attach.map fun o => Option.getₓ <| Option.ne_none_iff_is_some.1 <| ne_of_mem_of_not_mem o.2 h)
+
+@[simp]
+theorem encode_of_none_mem [DecidableEq α] (s : Sym (Option α) n.succ) (h : none ∈ s) :
+    encode s = Sum.inl (s.erase none h) :=
+  dif_pos h
+
+@[simp]
+theorem encode_of_not_none_mem [DecidableEq α] (s : Sym (Option α) n.succ) (h : ¬none ∈ s) :
+    encode s =
+      Sum.inr (s.attach.map fun o => Option.getₓ <| Option.ne_none_iff_is_some.1 <| ne_of_mem_of_not_mem o.2 h) :=
+  dif_neg h
+
+/-- Inverse of `sym_option_succ_equiv.decode`. -/
+@[simp]
+def decode : Sum (Sym (Option α) n) (Sym α n.succ) → Sym (Option α) n.succ
+  | Sum.inl s => none ::ₛ s
+  | Sum.inr s => s.map Embedding.coeOption
+
+@[simp]
+theorem decode_encode [DecidableEq α] (s : Sym (Option α) n.succ) : decode (encode s) = s := by
+  by_cases' h : none ∈ s
+  · simp [← h]
+    
+  · simp only [← h, ← decode, ← not_false_iff, ← Subtype.val_eq_coe, ← encode_of_not_none_mem, ←
+      embedding.coe_option_apply, ← map_map, ← comp_app, ← Option.coe_get]
+    convert s.attach_map_coe
+    
+
+@[simp]
+theorem encode_decode [DecidableEq α] (s : Sum (Sym (Option α) n) (Sym α n.succ)) : encode (decode s) = s := by
+  obtain s | s := s
+  · simp
+    
+  · unfold SymOptionSuccEquiv.encode
+    split_ifs
+    · obtain ⟨a, _, ha⟩ := multiset.mem_map.mp h
+      exact Option.some_ne_none _ ha
+      
+    · refine' map_injective (Option.some_injective _) _ _
+      convert Eq.trans _ (SymOptionSuccEquiv.decode (Sum.inr s)).attach_map_coe
+      simp
+      
+    
+
+end symOptionSuccEquiv
+
+/-- The symmetric product over `option` is a disjoint union over simpler symmetric products. -/
+@[simps]
+def symOptionSuccEquiv [DecidableEq α] : Sym (Option α) n.succ ≃ Sum (Sym (Option α) n) (Sym α n.succ) where
+  toFun := SymOptionSuccEquiv.encode
+  invFun := SymOptionSuccEquiv.decode
+  left_inv := SymOptionSuccEquiv.decode_encode
+  right_inv := SymOptionSuccEquiv.encode_decode
+
+end Equivₓ
+

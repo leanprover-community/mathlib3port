@@ -78,7 +78,7 @@ noncomputable def fintypeOfFinDimAffineIndependent [FiniteDimensional k V] {p : 
   else by
     let q := (not_is_empty_iff.mp hι).some
     rw [affine_independent_iff_linear_independent_vsub k p q] at hi
-    let this : IsNoetherian k V := IsNoetherian.iff_fg.2 inferInstance
+    letI : IsNoetherian k V := IsNoetherian.iff_fg.2 inferInstance
     exact fintypeOfFintypeNe _ (@Fintype.ofFinite _ hi.finite_of_is_noetherian)
 
 /-- An affine-independent subset of a finite-dimensional affine space is finite. -/

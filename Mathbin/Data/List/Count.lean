@@ -243,6 +243,31 @@ theorem count_erase_of_ne {a b : α} (ab : a ≠ b) : ∀ s : List α, count a (
     · rw [count_cons', count_cons', count_erase_of_ne]
       
 
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (a' «expr ≠ » a)
+@[to_additive]
+theorem prod_map_eq_pow_single [Monoidₓ β] {l : List α} (a : α) (f : α → β)
+    (hf : ∀ (a') (_ : a' ≠ a), a' ∈ l → f a' = 1) : (l.map f).Prod = f a ^ l.count a := by
+  induction' l with a' as h generalizing a
+  · rw [map_nil, prod_nil, count_nil, pow_zeroₓ]
+    
+  · specialize h a fun a' ha' hfa' => hf a' ha' (mem_cons_of_mem _ hfa')
+    rw [List.map_cons, List.prod_cons, count_cons, h]
+    split_ifs with ha'
+    · rw [ha', pow_succₓ]
+      
+    · rw [hf a' (Ne.symm ha') (List.mem_cons_selfₓ a' as), one_mulₓ]
+      
+    
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (a' «expr ≠ » a)
+@[to_additive]
+theorem prod_eq_pow_single [Monoidₓ α] {l : List α} (a : α) (h : ∀ (a') (_ : a' ≠ a), a' ∈ l → a' = 1) :
+    l.Prod = a ^ l.count a :=
+  trans
+    (by
+      rw [map_id''])
+    (prod_map_eq_pow_single a id h)
+
 end Count
 
 end List

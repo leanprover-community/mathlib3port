@@ -44,7 +44,7 @@ theorem prod_X_add_C_eq_sum_esymm :
   refine'
     sum_congr
       (by
-        congr)
+        congr )
       fun j hj => _
   rw [esymm, map_sum, sum_mul]
   refine' sum_congr rfl fun t ht => _

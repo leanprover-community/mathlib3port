@@ -33,7 +33,7 @@ universe u v
 
 namespace Real
 
-variable {E : Type _} [SemiNormedGroup E] [NormedSpace ℝ E]
+variable {E : Type _} [SeminormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Hahn-Banach theorem for continuous linear functions over `ℝ`. -/
 theorem exists_extension_norm_eq (p : Subspace ℝ E) (f : p →L[ℝ] ℝ) :
@@ -62,14 +62,14 @@ section IsROrC
 
 open IsROrC
 
-variable {𝕜 : Type _} [IsROrC 𝕜] {F : Type _} [SemiNormedGroup F] [NormedSpace 𝕜 F]
+variable {𝕜 : Type _} [IsROrC 𝕜] {F : Type _} [SeminormedAddCommGroup F] [NormedSpace 𝕜 F]
 
 /-- Hahn-Banach theorem for continuous linear functions over `𝕜` satisyfing `is_R_or_C 𝕜`. -/
 theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
     ∃ g : F →L[𝕜] 𝕜, (∀ x : p, g x = f x) ∧ ∥g∥ = ∥f∥ := by
-  let this : Module ℝ F := RestrictScalars.module ℝ 𝕜 F
-  let this : IsScalarTower ℝ 𝕜 F := RestrictScalars.is_scalar_tower _ _ _
-  let this : NormedSpace ℝ F := NormedSpace.restrictScalars _ 𝕜 _
+  letI : Module ℝ F := RestrictScalars.module ℝ 𝕜 F
+  letI : IsScalarTower ℝ 𝕜 F := RestrictScalars.is_scalar_tower _ _ _
+  letI : NormedSpace ℝ F := NormedSpace.restrictScalars _ 𝕜 _
   -- Let `fr: p →L[ℝ] ℝ` be the real part of `f`.
   let fr := re_clm.comp (f.restrict_scalars ℝ)
   have fr_apply : ∀ x, fr x = re (f x) := by
@@ -98,9 +98,13 @@ theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
       
   -- And we derive the equality of the norms by bounding on both sides.
   refine' ⟨h, le_antisymmₓ _ _⟩
-  · calc ∥g.extend_to_𝕜∥ ≤ ∥g∥ := g.extend_to_𝕜.op_norm_le_bound g.op_norm_nonneg (norm_bound _)_ = ∥fr∥ :=
-        hnormeq _ ≤ ∥re_clm∥ * ∥f∥ := ContinuousLinearMap.op_norm_comp_le _ _ _ = ∥f∥ := by
+  · calc
+      ∥g.extend_to_𝕜∥ ≤ ∥g∥ := g.extend_to_𝕜.op_norm_le_bound g.op_norm_nonneg (norm_bound _)
+      _ = ∥fr∥ := hnormeq
+      _ ≤ ∥re_clm∥ * ∥f∥ := ContinuousLinearMap.op_norm_comp_le _ _
+      _ = ∥f∥ := by
         rw [re_clm_norm, one_mulₓ]
+      
     
   · exact f.op_norm_le_bound g.extend_to_𝕜.op_norm_nonneg fun x => h x ▸ g.extend_to_𝕜.le_op_norm x
     
@@ -111,7 +115,7 @@ section DualVector
 
 variable (𝕜 : Type v) [IsROrC 𝕜]
 
-variable {E : Type u} [NormedGroup E] [NormedSpace 𝕜 E]
+variable {E : Type u} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 open ContinuousLinearEquiv Submodule
 
@@ -129,10 +133,14 @@ theorem exists_dual_vector (x : E) (h : x ≠ 0) : ∃ g : E →L[𝕜] 𝕜, �
   refine' ⟨g, _, _⟩
   · rw [hg.2, coord_norm']
     
-  · calc g x = g (⟨x, mem_span_singleton_self x⟩ : 𝕜∙x) := by
-        rw [coe_mk]_ = ((∥x∥ : 𝕜) • coord 𝕜 x h) (⟨x, mem_span_singleton_self x⟩ : 𝕜∙x) := by
-        rw [← hg.1]_ = ∥x∥ := by
+  · calc
+      g x = g (⟨x, mem_span_singleton_self x⟩ : 𝕜∙x) := by
+        rw [coe_mk]
+      _ = ((∥x∥ : 𝕜) • coord 𝕜 x h) (⟨x, mem_span_singleton_self x⟩ : 𝕜∙x) := by
+        rw [← hg.1]
+      _ = ∥x∥ := by
         simp
+      
     
 
 /-- Variant of Hahn-Banach, eliminating the hypothesis that `x` be nonzero, and choosing

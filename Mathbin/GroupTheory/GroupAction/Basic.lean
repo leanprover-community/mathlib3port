@@ -150,8 +150,10 @@ theorem mem_fixed_points_iff_card_orbit_eq_one {a : β} [Fintype (Orbit α a)] :
     
   · intro h x
     rcases h with ⟨⟨z, hz⟩, hz₁⟩
-    calc x • a = z := Subtype.mk.injₓ (hz₁ ⟨x • a, mem_orbit _ _⟩)_ = a :=
-        (Subtype.mk.injₓ (hz₁ ⟨a, mem_orbit_self _⟩)).symm
+    calc
+      x • a = z := Subtype.mk.injₓ (hz₁ ⟨x • a, mem_orbit _ _⟩)
+      _ = a := (Subtype.mk.injₓ (hz₁ ⟨a, mem_orbit_self _⟩)).symm
+      
     
 
 end MulAction
@@ -276,31 +278,62 @@ theorem image_inter_image_iff (U V : Set β) :
     Quotientₓ.mk '' U ∩ Quotientₓ.mk '' V = ∅ ↔ ∀, ∀ x ∈ U, ∀, ∀ a : α, a • x ∉ V :=
   Set.disjoint_iff_inter_eq_empty.symm.trans disjoint_image_image_iff
 
+variable (α β)
+
+/-- The quotient by `mul_action.orbit_rel`, given a name to enable dot notation. -/
+@[reducible, to_additive "The quotient by `add_action.orbit_rel`, given a name to enable dot\nnotation."]
+def orbitRel.Quotient : Type _ :=
+  Quotientₓ <| orbitRel α β
+
+variable {α β}
+
+/-- The orbit corresponding to an element of the quotient by `mul_action.orbit_rel` -/
+@[to_additive "The orbit corresponding to an element of the quotient by `add_action.orbit_rel`"]
+def orbitRel.Quotient.Orbit (x : orbitRel.Quotient α β) : Set β :=
+  (Quotientₓ.liftOn' x (Orbit α)) fun _ _ => MulAction.orbit_eq_iff.2
+
+@[simp, to_additive]
+theorem orbitRel.Quotient.orbit_mk (b : β) :
+    orbitRel.Quotient.Orbit (Quotientₓ.mk' b : orbitRel.Quotient α β) = Orbit α b :=
+  rfl
+
+@[to_additive]
+theorem orbitRel.Quotient.mem_orbit {b : β} {x : orbitRel.Quotient α β} : b ∈ x.Orbit ↔ Quotientₓ.mk' b = x := by
+  induction x using Quotientₓ.induction_on'
+  rw [Quotientₓ.eq']
+  rfl
+
+/-- Note that `hφ = quotient.out_eq'` is a useful choice here. -/
+@[to_additive "Note that `hφ = quotient.out_eq'` is a useful choice here."]
+theorem orbitRel.Quotient.orbit_eq_orbit_out (x : orbitRel.Quotient α β) {φ : orbitRel.Quotient α β → β}
+    (hφ : RightInverse φ Quotientₓ.mk') : orbitRel.Quotient.Orbit x = Orbit α (φ x) := by
+  conv_lhs => rw [← hφ x]
+  induction x using Quotientₓ.induction_on'
+  rfl
+
 variable (α) (β)
 
 -- mathport name: «exprΩ»
-local notation "Ω" => Quotientₓ <| orbitRel α β
+local notation "Ω" => orbitRel.Quotient α β
 
 /-- Decomposition of a type `X` as a disjoint union of its orbits under a group action.
-This version works with any right inverse to `quotient.mk'` in order to stay computable. In most
-cases you'll want to use `quotient.out'`, so we provide `mul_action.self_equiv_sigma_orbits` as
-a special case. -/
+
+This version is expressed in terms of `mul_action.orbit_rel.quotient.orbit` instead of
+`mul_action.orbit`, to avoid mentioning `quotient.out'`. -/
 @[to_additive
-      "Decomposition of a type `X` as a disjoint union of its orbits under an additive group\naction. This version works with any right inverse to `quotient.mk'` in order to stay computable.\nIn most cases you'll want to use `quotient.out'`, so we provide `add_action.self_equiv_sigma_orbits`\nas a special case."]
-def selfEquivSigmaOrbits' {φ : Ω → β} (hφ : RightInverse φ Quotientₓ.mk') : β ≃ Σω : Ω, Orbit α (φ ω) :=
+      "Decomposition of a type `X` as a disjoint union of its orbits under an additive group\naction.\n\nThis version is expressed in terms of `add_action.orbit_rel.quotient.orbit` instead of\n`add_action.orbit`, to avoid mentioning `quotient.out'`. "]
+def selfEquivSigmaOrbits' : β ≃ Σω : Ω, ω.Orbit :=
   calc
     β ≃ Σω : Ω, { b // Quotientₓ.mk' b = ω } := (Equivₓ.sigmaFiberEquiv Quotientₓ.mk').symm
-    _ ≃ Σω : Ω, Orbit α (φ ω) :=
-      Equivₓ.sigmaCongrRight fun ω =>
-        Equivₓ.subtypeEquivRight fun x => by
-          rw [← hφ ω, Quotientₓ.eq', hφ ω]
-          rfl
+    _ ≃ Σω : Ω, ω.Orbit :=
+      Equivₓ.sigmaCongrRight fun ω => Equivₓ.subtypeEquivRight fun x => orbitRel.Quotient.mem_orbit.symm
     
 
 /-- Decomposition of a type `X` as a disjoint union of its orbits under a group action. -/
 @[to_additive "Decomposition of a type `X` as a disjoint union of its orbits under an additive group\naction."]
-noncomputable def selfEquivSigmaOrbits : β ≃ Σω : Ω, Orbit α ω.out' :=
-  selfEquivSigmaOrbits' α β Quotientₓ.out_eq'
+def selfEquivSigmaOrbits : β ≃ Σω : Ω, Orbit α ω.out' :=
+  (selfEquivSigmaOrbits' α β).trans <|
+    Equivₓ.sigmaCongrRight fun i => Equivₓ.Set.ofEq <| orbitRel.Quotient.orbit_eq_orbit_out _ Quotientₓ.out_eq'
 
 variable {α β}
 

@@ -112,7 +112,7 @@ protected def mkOfNhds (n : α → Filter α) : TopologicalSpace α where
 theorem nhds_mk_of_nhds (n : α → Filter α) (a : α) (h₀ : pure ≤ n)
     (h₁ : ∀ {a s}, s ∈ n a → ∃ t ∈ n a, t ⊆ s ∧ ∀, ∀ a' ∈ t, ∀, s ∈ n a') :
     @nhds α (TopologicalSpace.mkOfNhds n) a = n a := by
-  let this := TopologicalSpace.mkOfNhds n
+  letI := TopologicalSpace.mkOfNhds n
   refine' le_antisymmₓ (fun s hs => _) fun s hs => _
   · have h₀ : { b | s ∈ n b } ⊆ s := fun b hb => mem_pure.1 <| h₀ b hb
     have h₁ : { b | s ∈ n b } ∈ 𝓝 a := by
@@ -233,7 +233,7 @@ instance : CompleteLattice (TopologicalSpace α) :=
 theorem is_open_implies_is_open_iff {a b : TopologicalSpace α} : (∀ s, a.IsOpen s → b.IsOpen s) ↔ b ≤ a :=
   Iff.rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`eq_bot] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`eq_bot] []
 /-- A topological space is discrete if every set is open, that is,
   its topology equals the discrete topology `⊥`. -/
 class DiscreteTopology (α : Type _) [t : TopologicalSpace α] : Prop where
@@ -348,7 +348,7 @@ theorem is_open_coinduced {t : TopologicalSpace α} {s : Set β} {f : α → β}
 
 theorem preimage_nhds_coinduced [TopologicalSpace α] {π : α → β} {s : Set β} {a : α}
     (hs : s ∈ @nhds β (TopologicalSpace.coinduced π ‹_›) (π a)) : π ⁻¹' s ∈ 𝓝 a := by
-  let this := TopologicalSpace.coinduced π ‹_›
+  letI := TopologicalSpace.coinduced π ‹_›
   rcases mem_nhds_iff.mp hs with ⟨V, hVs, V_op, mem_V⟩
   exact mem_nhds_iff.mpr ⟨π ⁻¹' V, Set.preimage_mono hVs, V_op, mem_V⟩
 
@@ -496,7 +496,7 @@ instance sierpinskiSpace : TopologicalSpace Prop :=
   generateFrom {{True}}
 
 theorem continuous_empty_function [TopologicalSpace α] [TopologicalSpace β] [IsEmpty β] (f : α → β) : Continuous f := by
-  let this := Function.is_empty f
+  letI := Function.is_empty f
   exact continuous_of_discrete_topology
 
 theorem le_generate_from {t : TopologicalSpace α} {g : Set (Set α)} (h : ∀, ∀ s ∈ g, ∀, IsOpen s) :
@@ -561,7 +561,7 @@ theorem is_open_singleton_nhds_adjoint {α : Type _} {a b : α} (f : Filter α) 
   rw [is_open_singleton_iff_nhds_eq_pure]
   exact nhds_adjoint_nhds_of_ne a f hb
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (b «expr ≠ » a)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (b «expr ≠ » a)
 theorem le_nhds_adjoint_iff' {α : Type _} (a : α) (f : Filter α) (t : TopologicalSpace α) :
     t ≤ nhdsAdjoint a f ↔ @nhds α t a ≤ pure a⊔f ∧ ∀ (b) (_ : b ≠ a), @nhds α t b = pure b := by
   rw [le_iff_nhds]
@@ -604,6 +604,9 @@ theorem nhds_inf {t₁ t₂ : TopologicalSpace α} {a : α} : @nhds α (t₁⊓t
 theorem nhds_top {a : α} : @nhds α ⊤ a = ⊤ :=
   (gc_nhds a).u_top
 
+theorem is_open_sup {t₁ t₂ : TopologicalSpace α} {s : Set α} : @IsOpen α (t₁⊔t₂) s ↔ @IsOpen α t₁ s ∧ @IsOpen α t₂ s :=
+  Iff.rfl
+
 -- mathport name: «exprcont»
 local notation "cont" => @Continuous _ _
 
@@ -630,26 +633,18 @@ theorem continuous_induced_dom {t : tspace β} : cont (induced f t) t f := by
   intro s h
   exact ⟨_, h, rfl⟩
 
-theorem continuous_induced_rng {g : γ → α} {t₂ : tspace β} {t₁ : tspace γ} (h : cont t₁ t₂ (f ∘ g)) :
-    cont t₁ (induced f t₂) g := by
-  rw [continuous_def]
-  rintro s ⟨t, ht, s_eq⟩
-  simpa [s_eq] using continuous_def.1 h t ht
-
-theorem continuous_induced_rng' [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] {g : γ → α} (f : α → β)
-    (H : ‹TopologicalSpace α› = ‹TopologicalSpace β›.induced f) (h : Continuous (f ∘ g)) : Continuous g :=
-  H.symm ▸ continuous_induced_rng h
+theorem continuous_induced_rng {g : γ → α} {t₂ : tspace β} {t₁ : tspace γ} :
+    cont t₁ (induced f t₂) g ↔ cont t₁ t₂ (f ∘ g) := by
+  simp only [← continuous_iff_le_induced, ← induced_compose]
 
 theorem continuous_coinduced_rng {t : tspace α} : cont t (coinduced f t) f := by
   rw [continuous_def]
   intro s h
   exact h
 
-theorem continuous_coinduced_dom {g : β → γ} {t₁ : tspace α} {t₂ : tspace γ} (h : cont t₁ t₂ (g ∘ f)) :
-    cont (coinduced f t₁) t₂ g := by
-  rw [continuous_def] at h⊢
-  intro s hs
-  exact h _ hs
+theorem continuous_coinduced_dom {g : β → γ} {t₁ : tspace α} {t₂ : tspace γ} :
+    cont (coinduced f t₁) t₂ g ↔ cont t₁ t₂ (g ∘ f) := by
+  simp only [← continuous_iff_coinduced_le, ← coinduced_compose]
 
 theorem continuous_le_dom {t₁ t₂ : tspace α} {t₃ : tspace β} (h₁ : t₂ ≤ t₁) (h₂ : cont t₁ t₃ f) : cont t₂ t₃ f := by
   rw [continuous_def] at h₂⊢
@@ -661,11 +656,8 @@ theorem continuous_le_rng {t₁ : tspace α} {t₂ t₃ : tspace β} (h₁ : t�
   intro s h
   exact h₂ s (h₁ s h)
 
-theorem continuous_sup_dom {t₁ t₂ : tspace α} {t₃ : tspace β} (h₁ : cont t₁ t₃ f) (h₂ : cont t₂ t₃ f) :
-    cont (t₁⊔t₂) t₃ f := by
-  rw [continuous_def] at h₁ h₂⊢
-  intro s h
-  exact ⟨h₁ s h, h₂ s h⟩
+theorem continuous_sup_dom {t₁ t₂ : tspace α} {t₃ : tspace β} : cont (t₁⊔t₂) t₃ f ↔ cont t₁ t₃ f ∧ cont t₂ t₃ f := by
+  simp only [← continuous_iff_le_induced, ← sup_le_iff]
 
 theorem continuous_sup_rng_left {t₁ : tspace α} {t₃ t₂ : tspace β} : cont t₁ t₂ f → cont t₁ (t₂⊔t₃) f :=
   continuous_le_rng le_sup_left
@@ -673,23 +665,21 @@ theorem continuous_sup_rng_left {t₁ : tspace α} {t₃ t₂ : tspace β} : con
 theorem continuous_sup_rng_right {t₁ : tspace α} {t₃ t₂ : tspace β} : cont t₁ t₃ f → cont t₁ (t₂⊔t₃) f :=
   continuous_le_rng le_sup_right
 
-theorem continuous_Sup_dom {t₁ : Set (tspace α)} {t₂ : tspace β} (h : ∀, ∀ t ∈ t₁, ∀, cont t t₂ f) :
-    cont (sup t₁) t₂ f :=
-  continuous_iff_le_induced.2 <| Sup_le fun t ht => continuous_iff_le_induced.1 <| h t ht
+theorem continuous_Sup_dom {T : Set (tspace α)} {t₂ : tspace β} : cont (sup T) t₂ f ↔ ∀, ∀ t ∈ T, ∀, cont t t₂ f := by
+  simp only [← continuous_iff_le_induced, ← Sup_le_iff]
 
 theorem continuous_Sup_rng {t₁ : tspace α} {t₂ : Set (tspace β)} {t : tspace β} (h₁ : t ∈ t₂) (hf : cont t₁ t f) :
     cont t₁ (sup t₂) f :=
   continuous_iff_coinduced_le.2 <| le_Sup_of_le h₁ <| continuous_iff_coinduced_le.1 hf
 
-theorem continuous_supr_dom {t₁ : ι → tspace α} {t₂ : tspace β} (h : ∀ i, cont (t₁ i) t₂ f) : cont (supr t₁) t₂ f :=
-  continuous_Sup_dom fun t ⟨i, (t_eq : t₁ i = t)⟩ => t_eq ▸ h i
+theorem continuous_supr_dom {t₁ : ι → tspace α} {t₂ : tspace β} : cont (supr t₁) t₂ f ↔ ∀ i, cont (t₁ i) t₂ f := by
+  simp only [← continuous_iff_le_induced, ← supr_le_iff]
 
 theorem continuous_supr_rng {t₁ : tspace α} {t₂ : ι → tspace β} {i : ι} (h : cont t₁ (t₂ i) f) : cont t₁ (supr t₂) f :=
   continuous_Sup_rng ⟨i, rfl⟩ h
 
-theorem continuous_inf_rng {t₁ : tspace α} {t₂ t₃ : tspace β} (h₁ : cont t₁ t₂ f) (h₂ : cont t₁ t₃ f) :
-    cont t₁ (t₂⊓t₃) f :=
-  continuous_iff_coinduced_le.2 <| le_inf (continuous_iff_coinduced_le.1 h₁) (continuous_iff_coinduced_le.1 h₂)
+theorem continuous_inf_rng {t₁ : tspace α} {t₂ t₃ : tspace β} : cont t₁ (t₂⊓t₃) f ↔ cont t₁ t₂ f ∧ cont t₁ t₃ f := by
+  simp only [← continuous_iff_coinduced_le, ← le_inf_iff]
 
 theorem continuous_inf_dom_left {t₁ t₂ : tspace α} {t₃ : tspace β} : cont t₁ t₃ f → cont (t₁⊓t₂) t₃ f :=
   continuous_le_dom inf_le_left
@@ -701,15 +691,14 @@ theorem continuous_Inf_dom {t₁ : Set (tspace α)} {t₂ : tspace β} {t : tspa
     cont t t₂ f → cont (inf t₁) t₂ f :=
   continuous_le_dom <| Inf_le h₁
 
-theorem continuous_Inf_rng {t₁ : tspace α} {t₂ : Set (tspace β)} (h : ∀, ∀ t ∈ t₂, ∀, cont t₁ t f) :
-    cont t₁ (inf t₂) f :=
-  continuous_iff_coinduced_le.2 <| le_Inf fun b hb => continuous_iff_coinduced_le.1 <| h b hb
+theorem continuous_Inf_rng {t₁ : tspace α} {T : Set (tspace β)} : cont t₁ (inf T) f ↔ ∀, ∀ t ∈ T, ∀, cont t₁ t f := by
+  simp only [← continuous_iff_coinduced_le, ← le_Inf_iff]
 
 theorem continuous_infi_dom {t₁ : ι → tspace α} {t₂ : tspace β} {i : ι} : cont (t₁ i) t₂ f → cont (infi t₁) t₂ f :=
   continuous_le_dom <| infi_le _ _
 
-theorem continuous_infi_rng {t₁ : tspace α} {t₂ : ι → tspace β} (h : ∀ i, cont t₁ (t₂ i) f) : cont t₁ (infi t₂) f :=
-  continuous_iff_coinduced_le.2 <| le_infi fun i => continuous_iff_coinduced_le.1 <| h i
+theorem continuous_infi_rng {t₁ : tspace α} {t₂ : ι → tspace β} : cont t₁ (infi t₂) f ↔ ∀ i, cont t₁ (t₂ i) f := by
+  simp only [← continuous_iff_coinduced_le, ← le_infi_iff]
 
 @[continuity]
 theorem continuous_bot {t : tspace β} : cont ⊥ t f :=

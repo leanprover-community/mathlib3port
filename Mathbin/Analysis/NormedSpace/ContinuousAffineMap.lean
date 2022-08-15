@@ -44,15 +44,15 @@ namespace ContinuousAffineMap
 
 variable {𝕜 R V W W₂ P Q Q₂ : Type _}
 
-variable [NormedGroup V] [MetricSpace P] [NormedAddTorsor V P]
+variable [NormedAddCommGroup V] [MetricSpace P] [NormedAddTorsor V P]
 
-variable [NormedGroup W] [MetricSpace Q] [NormedAddTorsor W Q]
+variable [NormedAddCommGroup W] [MetricSpace Q] [NormedAddTorsor W Q]
 
-variable [NormedGroup W₂] [MetricSpace Q₂] [NormedAddTorsor W₂ Q₂]
+variable [NormedAddCommGroup W₂] [MetricSpace Q₂] [NormedAddTorsor W₂ Q₂]
 
 variable [NormedField R] [NormedSpace R V] [NormedSpace R W] [NormedSpace R W₂]
 
-variable [NondiscreteNormedField 𝕜] [NormedSpace 𝕜 V] [NormedSpace 𝕜 W] [NormedSpace 𝕜 W₂]
+variable [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 V] [NormedSpace 𝕜 W] [NormedSpace 𝕜 W₂]
 
 include V W
 
@@ -177,8 +177,8 @@ theorem norm_eq (h : f 0 = 0) : ∥f∥ = ∥f.contLinear∥ :=
     _ = ∥f.contLinear∥ := max_eq_rightₓ (norm_nonneg _)
     
 
-noncomputable instance : NormedGroup (V →A[𝕜] W) :=
-  NormedGroup.ofCore _
+noncomputable instance : NormedAddCommGroup (V →A[𝕜] W) :=
+  NormedAddCommGroup.ofCore _
     { norm_eq_zero_iff := fun f => by
         rw [norm_def]
         refine'
@@ -214,19 +214,25 @@ instance :
 theorem norm_comp_le (g : W₂ →A[𝕜] V) : ∥f.comp g∥ ≤ ∥f∥ * ∥g∥ + ∥f 0∥ := by
   rw [norm_def, max_le_iff]
   constructor
-  · calc ∥f.comp g 0∥ = ∥f (g 0)∥ := by
-        simp _ = ∥f.cont_linear (g 0) + f 0∥ := by
+  · calc
+      ∥f.comp g 0∥ = ∥f (g 0)∥ := by
+        simp
+      _ = ∥f.cont_linear (g 0) + f 0∥ := by
         rw [f.decomp]
-        simp _ ≤ ∥f.cont_linear∥ * ∥g 0∥ + ∥f 0∥ :=
-        (norm_add_le _ _).trans (add_le_add_right (f.cont_linear.le_op_norm _) _)_ ≤ ∥f∥ * ∥g∥ + ∥f 0∥ :=
+        simp
+      _ ≤ ∥f.cont_linear∥ * ∥g 0∥ + ∥f 0∥ := (norm_add_le _ _).trans (add_le_add_right (f.cont_linear.le_op_norm _) _)
+      _ ≤ ∥f∥ * ∥g∥ + ∥f 0∥ :=
         add_le_add_right (mul_le_mul f.norm_cont_linear_le g.norm_image_zero_le (norm_nonneg _) (norm_nonneg _)) _
+      
     
-  · calc ∥(f.comp g).contLinear∥ ≤ ∥f.cont_linear∥ * ∥g.cont_linear∥ :=
-        (g.comp_cont_linear f).symm ▸ f.cont_linear.op_norm_comp_le _ _ ≤ ∥f∥ * ∥g∥ :=
-        mul_le_mul f.norm_cont_linear_le g.norm_cont_linear_le (norm_nonneg _) (norm_nonneg _)_ ≤ ∥f∥ * ∥g∥ + ∥f 0∥ :=
-        by
+  · calc
+      ∥(f.comp g).contLinear∥ ≤ ∥f.cont_linear∥ * ∥g.cont_linear∥ :=
+        (g.comp_cont_linear f).symm ▸ f.cont_linear.op_norm_comp_le _
+      _ ≤ ∥f∥ * ∥g∥ := mul_le_mul f.norm_cont_linear_le g.norm_cont_linear_le (norm_nonneg _) (norm_nonneg _)
+      _ ≤ ∥f∥ * ∥g∥ + ∥f 0∥ := by
         rw [le_add_iff_nonneg_right]
         apply norm_nonneg
+      
     
 
 variable (𝕜 V W)

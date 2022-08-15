@@ -90,7 +90,10 @@ theorem maps_to_omega_limit' {α' β' : Type _} [TopologicalSpace β'] {f : Filt
   simp only [← omega_limit_def, ← mem_Inter, ← maps_to]
   intro y hy u hu
   refine' map_mem_closure hgc (hy _ (inter_mem hu hg)) (forall_image2_iff.2 fun t ht x hx => _)
-  calc gb (ϕ t x) = ϕ' t (ga x) := ht.2 hx _ ∈ image2 ϕ' u s' := mem_image2_of_mem ht.1 (hs hx)
+  calc
+    gb (ϕ t x) = ϕ' t (ga x) := ht.2 hx
+    _ ∈ image2 ϕ' u s' := mem_image2_of_mem ht.1 (hs hx)
+    
 
 theorem maps_to_omega_limit {α' β' : Type _} [TopologicalSpace β'] {f : Filter τ} {ϕ : τ → α → β} {ϕ' : τ → α' → β'}
     {ga : α → α'} {s' : Set α'} (hs : MapsTo ga s s') {gb : β → β'} (hg : ∀ t x, gb (ϕ t x) = ϕ' t (ga x))
@@ -242,7 +245,9 @@ theorem eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_li
       
   have hw₄ : kᶜ ⊆ Closure (image2 ϕ w s)ᶜ := by
     rw [compl_subset_compl]
-    calc Closure (image2 ϕ w s) ⊆ _ := closure_mono (image2_subset (inter_subset_right _ _) subset.rfl)
+    calc
+      Closure (image2 ϕ w s) ⊆ _ := closure_mono (image2_subset (inter_subset_right _ _) subset.rfl)
+      
   have hnc : nᶜ ⊆ k \ n ∪ kᶜ := by
     rw [union_comm, ← inter_subset, diff_eq, inter_comm]
   have hw : Closure (image2 ϕ w s) ⊆ n := compl_subset_compl.mp (subset.trans hnc (union_subset hw₃ hw₄))
@@ -301,7 +306,10 @@ theorem nonempty_omega_limit_of_is_compact_absorbing [NeBot f] {c : Set β} (hc�
     
   · intro
     apply compact_of_is_closed_subset hc₁ is_closed_closure
-    calc _ ⊆ Closure (image2 ϕ v s) := closure_mono (image2_subset (inter_subset_right _ _) subset.rfl)_ ⊆ c := hv₂
+    calc
+      _ ⊆ Closure (image2 ϕ v s) := closure_mono (image2_subset (inter_subset_right _ _) subset.rfl)
+      _ ⊆ c := hv₂
+      
     
   · exact fun _ => is_closed_closure
     

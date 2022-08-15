@@ -186,7 +186,7 @@ theorem of_lists_move_right' {L R : List Pgame} (i : (ofLists L R).RightMoves) :
 /-- A variant of `pgame.rec_on` expressed in terms of `pgame.move_left` and `pgame.move_right`.
 
 Both this and `pgame.rec_on` describe Conway induction on games. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 def moveRecOn {C : Pgame → Sort _} (x : Pgame)
     (IH : ∀ y : Pgame, (∀ i, C (y.moveLeft i)) → (∀ j, C (y.moveRight j)) → C y) : C x :=
   x.recOn fun yl yr yL yR => IH (mk yl yr yL yR)
@@ -245,7 +245,7 @@ theorem Subsequent.mk_left {xl xr} (xL : xl → Pgame) (xR : xr → Pgame) (i : 
 theorem Subsequent.mk_right {xl xr} (xL : xl → Pgame) (xR : xr → Pgame) (j : xr) : Subsequent (xR j) (mk xl xr xL xR) :=
   @Subsequent.move_right (mk _ _ _ _) j
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 /-- A local tactic for proving well-foundedness of recursive definitions involving pregames. -/
 unsafe def pgame_wf_tac :=
   sorry
@@ -717,24 +717,20 @@ theorem equiv_congr_right {x₁ x₂} : x₁ ≈ x₂ ↔ ∀ y₁, x₁ ≈ y�
   ⟨fun h y₁ => ⟨fun h' => h.symm.trans h', fun h' => h.trans h'⟩, fun h => (h x₂).2 <| equiv_rfl⟩
 
 theorem equiv_of_mk_equiv {x y : Pgame} (L : x.LeftMoves ≃ y.LeftMoves) (R : x.RightMoves ≃ y.RightMoves)
-    (hl : ∀ i : x.LeftMoves, x.moveLeft i ≈ y.moveLeft (L i))
-    (hr : ∀ j : y.RightMoves, x.moveRight (R.symm j) ≈ y.moveRight j) : x ≈ y := by
+    (hl : ∀ i, x.moveLeft i ≈ y.moveLeft (L i)) (hr : ∀ j, x.moveRight j ≈ y.moveRight (R j)) : x ≈ y := by
   fconstructor <;> rw [le_def]
-  · exact ⟨fun i => Or.inl ⟨L i, (hl i).1⟩, fun j => Or.inr ⟨R.symm j, (hr j).1⟩⟩
+  · exact
+      ⟨fun i => Or.inl ⟨_, (hl i).1⟩, fun j =>
+        Or.inr
+          ⟨_, by
+            simpa using (hr (R.symm j)).1⟩⟩
     
-  · fconstructor
-    · intro i
-      left
-      specialize hl (L.symm i)
-      simp only [← move_left_mk, ← Equivₓ.apply_symm_apply] at hl
-      use ⟨L.symm i, hl.2⟩
-      
-    · intro j
-      right
-      specialize hr (R j)
-      simp only [← move_right_mk, ← Equivₓ.symm_apply_apply] at hr
-      use ⟨R j, hr.2⟩
-      
+  · exact
+      ⟨fun i =>
+        Or.inl
+          ⟨_, by
+            simpa using (hl (L.symm i)).2⟩,
+        fun j => Or.inr ⟨_, (hr j).2⟩⟩
     
 
 /-- The fuzzy, confused, or incomparable relation on pre-games.
@@ -868,7 +864,7 @@ inductive Relabelling : Pgame.{u} → Pgame.{u} → Type (u + 1)
   | mk :
     ∀ {x y : Pgame} (L : x.LeftMoves ≃ y.LeftMoves) (R : x.RightMoves ≃ y.RightMoves),
       (∀ i, relabelling (x.moveLeft i) (y.moveLeft (L i))) →
-        (∀ j, relabelling (x.moveRight (R.symm j)) (y.moveRight j)) → relabelling x y
+        (∀ j, relabelling (x.moveRight j) (y.moveRight (R j))) → relabelling x y
 
 -- mathport name: «expr ≡r »
 localized [Pgame] infixl:50 " ≡r " => Pgame.Relabelling
@@ -877,14 +873,64 @@ namespace Relabelling
 
 variable {x y : Pgame.{u}}
 
-/-- If `x` is a relabelling of `y`, then `x` is a restriction of  `y`. -/
+/-- A constructor for relabellings swapping the equivalences. -/
+def mk' (L : y.LeftMoves ≃ x.LeftMoves) (R : y.RightMoves ≃ x.RightMoves) (hL : ∀ i, x.moveLeft (L i) ≡r y.moveLeft i)
+    (hR : ∀ j, x.moveRight (R j) ≡r y.moveRight j) : x ≡r y :=
+  ⟨L.symm, R.symm, fun i => by
+    simpa using hL (L.symm i), fun j => by
+    simpa using hR (R.symm j)⟩
+
+/-- The equivalence between left moves of `x` and `y` given by the relabelling. -/
+def leftMovesEquiv : ∀ r : x ≡r y, x.LeftMoves ≃ y.LeftMoves
+  | ⟨L, R, hL, hR⟩ => L
+
+@[simp]
+theorem mk_left_moves_equiv {x y L R hL hR} : (@Relabelling.mk x y L R hL hR).leftMovesEquiv = L :=
+  rfl
+
+@[simp]
+theorem mk'_left_moves_equiv {x y L R hL hR} : (@Relabelling.mk' x y L R hL hR).leftMovesEquiv = L.symm :=
+  rfl
+
+/-- The equivalence between right moves of `x` and `y` given by the relabelling. -/
+def rightMovesEquiv : ∀ r : x ≡r y, x.RightMoves ≃ y.RightMoves
+  | ⟨L, R, hL, hR⟩ => R
+
+@[simp]
+theorem mk_right_moves_equiv {x y L R hL hR} : (@Relabelling.mk x y L R hL hR).rightMovesEquiv = R :=
+  rfl
+
+@[simp]
+theorem mk'_right_moves_equiv {x y L R hL hR} : (@Relabelling.mk' x y L R hL hR).rightMovesEquiv = R.symm :=
+  rfl
+
+/-- A left move of `x` is a relabelling of a left move of `y`. -/
+def moveLeft : ∀ (r : x ≡r y) (i : x.LeftMoves), x.moveLeft i ≡r y.moveLeft (r.leftMovesEquiv i)
+  | ⟨L, R, hL, hR⟩ => hL
+
+/-- A left move of `y` is a relabelling of a left move of `x`. -/
+def moveLeftSymm : ∀ (r : x ≡r y) (i : y.LeftMoves), x.moveLeft (r.leftMovesEquiv.symm i) ≡r y.moveLeft i
+  | ⟨L, R, hL, hR⟩, i => by
+    simpa using hL (L.symm i)
+
+/-- A right move of `x` is a relabelling of a right move of `y`. -/
+def moveRight : ∀ (r : x ≡r y) (i : x.RightMoves), x.moveRight i ≡r y.moveRight (r.rightMovesEquiv i)
+  | ⟨L, R, hL, hR⟩ => hR
+
+/-- A right move of `y` is a relabelling of a right move of `x`. -/
+def moveRightSymm : ∀ (r : x ≡r y) (i : y.RightMoves), x.moveRight (r.rightMovesEquiv.symm i) ≡r y.moveRight i
+  | ⟨L, R, hL, hR⟩, i => by
+    simpa using hR (R.symm i)
+
+/-- If `x` is a relabelling of `y`, then `x` is a restriction of `y`. -/
 def restricted : ∀ {x y : Pgame} (r : x ≡r y), Restricted x y
-  | x, y, ⟨L, R, hL, hR⟩ => ⟨L, R.symm, fun i => (hL i).Restricted, fun j => (hR j).Restricted⟩
+  | x, y, r => ⟨_, _, fun i => (r.moveLeft i).Restricted, fun j => (r.moveRightSymm j).Restricted⟩
+
+/-! It's not the case that `restricted x y → restricted y x → x ≡r y`, but if we insisted that the
+maps in a restriction were injective, then one could use Schröder-Bernstein for do this. -/
+
 
 /-- The identity relabelling. -/
--- It's not the case that `restricted x y → restricted y x → relabelling x y`,
--- but if we insisted that the maps in a restriction were injective, then one
--- could use Schröder-Bernstein for do this.
 @[refl]
 def refl : ∀ x : Pgame, x ≡r x
   | x => ⟨Equivₓ.refl _, Equivₓ.refl _, fun i => refl _, fun j => refl _⟩
@@ -895,10 +941,7 @@ instance (x : Pgame) : Inhabited (x ≡r x) :=
 /-- Flip a relabelling. -/
 @[symm]
 def symm : ∀ {x y : Pgame}, x ≡r y → y ≡r x
-  | x, y, ⟨L, R, hL, hR⟩ =>
-    ⟨L.symm, R.symm, fun i => by
-      simpa using (hL (L.symm i)).symm, fun j => by
-      simpa using (hR (R j)).symm⟩
+  | x, y, ⟨L, R, hL, hR⟩ => mk' L R (fun i => (hL i).symm) fun j => (hR j).symm
 
 theorem le (r : x ≡r y) : x ≤ y :=
   r.Restricted.le
@@ -914,13 +957,11 @@ theorem equiv (r : x ≡r y) : x ≈ y :=
 @[trans]
 def trans : ∀ {x y z : Pgame}, x ≡r y → y ≡r z → x ≡r z
   | x, y, z, ⟨L₁, R₁, hL₁, hR₁⟩, ⟨L₂, R₂, hL₂, hR₂⟩ =>
-    ⟨L₁.trans L₂, R₁.trans R₂, fun i => by
-      simpa using (hL₁ i).trans (hL₂ _), fun j => by
-      simpa using (hR₁ _).trans (hR₂ j)⟩
+    ⟨L₁.trans L₂, R₁.trans R₂, fun i => (hL₁ i).trans (hL₂ _), fun j => (hR₁ j).trans (hR₂ _)⟩
 
 /-- Any game without left or right moves is a relabelling of 0. -/
 def isEmpty (x : Pgame) [IsEmpty x.LeftMoves] [IsEmpty x.RightMoves] : x ≡r 0 :=
-  ⟨Equivₓ.equivPempty _, Equivₓ.equivPempty _, isEmptyElim, isEmptyElim⟩
+  ⟨Equivₓ.equivPempty _, Equivₓ.equivOfIsEmpty _ _, isEmptyElim, isEmptyElim⟩
 
 end Relabelling
 
@@ -931,32 +972,32 @@ instance {x y : Pgame} : Coe (x ≡r y) (x ≈ y) :=
   ⟨Relabelling.equiv⟩
 
 /-- Replace the types indexing the next moves for Left and Right by equivalent types. -/
-def relabel {x : Pgame} {xl' xr'} (el : x.LeftMoves ≃ xl') (er : x.RightMoves ≃ xr') : Pgame :=
-  ⟨xl', xr', fun i => x.moveLeft (el.symm i), fun j => x.moveRight (er.symm j)⟩
+def relabel {x : Pgame} {xl' xr'} (el : xl' ≃ x.LeftMoves) (er : xr' ≃ x.RightMoves) : Pgame :=
+  ⟨xl', xr', x.moveLeft ∘ el, x.moveRight ∘ er⟩
 
 @[simp]
-theorem relabel_move_left' {x : Pgame} {xl' xr'} (el : x.LeftMoves ≃ xl') (er : x.RightMoves ≃ xr') (i : xl') :
-    moveLeft (relabel el er) i = x.moveLeft (el.symm i) :=
+theorem relabel_move_left' {x : Pgame} {xl' xr'} (el : xl' ≃ x.LeftMoves) (er : xr' ≃ x.RightMoves) (i : xl') :
+    moveLeft (relabel el er) i = x.moveLeft (el i) :=
   rfl
 
 @[simp]
-theorem relabel_move_left {x : Pgame} {xl' xr'} (el : x.LeftMoves ≃ xl') (er : x.RightMoves ≃ xr') (i : x.LeftMoves) :
-    moveLeft (relabel el er) (el i) = x.moveLeft i := by
+theorem relabel_move_left {x : Pgame} {xl' xr'} (el : xl' ≃ x.LeftMoves) (er : xr' ≃ x.RightMoves) (i : x.LeftMoves) :
+    moveLeft (relabel el er) (el.symm i) = x.moveLeft i := by
   simp
 
 @[simp]
-theorem relabel_move_right' {x : Pgame} {xl' xr'} (el : x.LeftMoves ≃ xl') (er : x.RightMoves ≃ xr') (j : xr') :
-    moveRight (relabel el er) j = x.moveRight (er.symm j) :=
+theorem relabel_move_right' {x : Pgame} {xl' xr'} (el : xl' ≃ x.LeftMoves) (er : xr' ≃ x.RightMoves) (j : xr') :
+    moveRight (relabel el er) j = x.moveRight (er j) :=
   rfl
 
 @[simp]
-theorem relabel_move_right {x : Pgame} {xl' xr'} (el : x.LeftMoves ≃ xl') (er : x.RightMoves ≃ xr') (j : x.RightMoves) :
-    moveRight (relabel el er) (er j) = x.moveRight j := by
+theorem relabel_move_right {x : Pgame} {xl' xr'} (el : xl' ≃ x.LeftMoves) (er : xr' ≃ x.RightMoves) (j : x.RightMoves) :
+    moveRight (relabel el er) (er.symm j) = x.moveRight j := by
   simp
 
 /-- The game obtained by relabelling the next moves is a relabelling of the original game. -/
-def relabelRelabelling {x : Pgame} {xl' xr'} (el : x.LeftMoves ≃ xl') (er : x.RightMoves ≃ xr') : x ≡r relabel el er :=
-  Relabelling.mk el er
+def relabelRelabelling {x : Pgame} {xl' xr'} (el : xl' ≃ x.LeftMoves) (er : xr' ≃ x.RightMoves) : x ≡r relabel el er :=
+  Relabelling.mk' el er
     (fun i => by
       simp )
     fun j => by
@@ -1070,15 +1111,7 @@ theorem move_right_neg_symm' {x : Pgame} (i) : x.moveRight i = -(-x).moveLeft (t
 
 /-- If `x` has the same moves as `y`, then `-x` has the sames moves as `-y`. -/
 def Relabelling.negCongr : ∀ {x y : Pgame}, x ≡r y → -x ≡r -y
-  | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩, ⟨L, R, hL, hR⟩ =>
-    ⟨R, L, fun i =>
-      relabelling.neg_congr
-        (by
-          simpa using hR (R i)),
-      fun i =>
-      relabelling.neg_congr
-        (by
-          simpa using hL (L.symm i))⟩
+  | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩, ⟨L, R, hL, hR⟩ => ⟨R, L, fun j => (hR j).negCongr, fun i => (hL i).negCongr⟩
 
 private theorem neg_le_lf_neg_iff : ∀ {x y : Pgame.{u}}, (-y ≤ -x ↔ x ≤ y) ∧ (-y ⧏ -x ↔ x ⧏ y)
   | mk xl xr xL xR, mk yl yr yL yR => by
@@ -1218,14 +1251,9 @@ instance is_empty_right_moves_add (x y : Pgame.{u}) [IsEmpty x.RightMoves] [IsEm
 
 /-- `x + 0` has exactly the same moves as `x`. -/
 def addZeroRelabelling : ∀ x : Pgame.{u}, x + 0 ≡r x
-  | mk xl xr xL xR => by
-    refine' ⟨Equivₓ.sumEmpty xl Pempty, Equivₓ.sumEmpty xr Pempty, _, _⟩
-    · rintro (⟨i⟩ | ⟨⟨⟩⟩)
-      apply add_zero_relabelling
-      
-    · rintro j
-      apply add_zero_relabelling
-      
+  | ⟨xl, xr, xL, xR⟩ => by
+    refine' ⟨Equivₓ.sumEmpty xl Pempty, Equivₓ.sumEmpty xr Pempty, _, _⟩ <;>
+      rintro (⟨i⟩ | ⟨⟨⟩⟩) <;> apply add_zero_relabelling
 
 /-- `x + 0` is equivalent to `x`. -/
 theorem add_zero_equiv (x : Pgame.{u}) : x + 0 ≈ x :=
@@ -1233,14 +1261,9 @@ theorem add_zero_equiv (x : Pgame.{u}) : x + 0 ≈ x :=
 
 /-- `0 + x` has exactly the same moves as `x`. -/
 def zeroAddRelabelling : ∀ x : Pgame.{u}, 0 + x ≡r x
-  | mk xl xr xL xR => by
-    refine' ⟨Equivₓ.emptySum Pempty xl, Equivₓ.emptySum Pempty xr, _, _⟩
-    · rintro (⟨⟨⟩⟩ | ⟨i⟩)
-      apply zero_add_relabelling
-      
-    · rintro j
-      apply zero_add_relabelling
-      
+  | ⟨xl, xr, xL, xR⟩ => by
+    refine' ⟨Equivₓ.emptySum Pempty xl, Equivₓ.emptySum Pempty xr, _, _⟩ <;>
+      rintro (⟨⟨⟩⟩ | ⟨i⟩) <;> apply zero_add_relabelling
 
 /-- `0 + x` is equivalent to `x`. -/
 theorem zero_add_equiv (x : Pgame.{u}) : 0 + x ≈ x :=
@@ -1335,7 +1358,7 @@ theorem right_moves_add_cases {x y : Pgame} (k) {P : (x + y).RightMoves → Prop
 instance is_empty_nat_right_moves : ∀ n : ℕ, IsEmpty (RightMoves n)
   | 0 => Pempty.is_empty
   | n + 1 => by
-    have := is_empty_nat_right_moves n
+    haveI := is_empty_nat_right_moves n
     rw [Pgame.nat_succ, right_moves_add]
     infer_instance
 

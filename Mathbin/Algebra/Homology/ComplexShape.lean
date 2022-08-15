@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
 -/
 import Mathbin.Algebra.Group.Defs
-import Mathbin.Data.Option.Basic
 import Mathbin.Logic.Relation
 
 /-!
@@ -23,8 +22,8 @@ we only allow nonzero differentials `d i j` from `i` to `j` if `c.rel i j`.
 Further, we require that `{ j // c.rel i j }` and `{ i // c.rel i j }` are subsingletons.
 This means that the shape consists of some union of lines, rays, intervals, and circles.
 
-Convenience functions `c.next` and `c.prev` provide, as an `option`, these related elements
-when they exist.
+Convenience functions `c.next` and `c.prev` provide these related elements
+when they exist, and return their input otherwise.
 
 This design aims to avoid certain problems arising from dependent type theory.
 In particular we never have to ensure morphisms `d i : X i ⟶ X (succ i)` compose as
@@ -55,9 +54,9 @@ and we will only allow a non-zero differential from `i` to `j` when `rel i j`.
 There are axioms which imply `{ j // c.rel i j }` and `{ i // c.rel i j }` are subsingletons.
 This means that the shape consists of some union of lines, rays, intervals, and circles.
 
-Below we define `c.next` and `c.prev` which provide, as an `option`, these related elements.
+Below we define `c.next` and `c.prev` which provide these related elements.
 -/
-@[ext, nolint has_inhabited_instance]
+@[ext, nolint has_nonempty_instance]
 structure ComplexShape (ι : Type _) where
   Rel : ι → ι → Prop
   next_eq : ∀ {i j j'}, rel i j → rel i j' → j = j'
@@ -120,21 +119,29 @@ instance subsingleton_prev (c : ComplexShape ι) (j : ι) : Subsingleton { i // 
   congr
   exact c.prev_eq rik rjk
 
-/-- An option-valued arbitary choice of index `j` such that `rel i j`, if such exists.
+/-- An arbitary choice of index `j` such that `rel i j`, if such exists.
+Returns `i` otherwise.
 -/
-def next (c : ComplexShape ι) (i : ι) : Option { j // c.Rel i j } :=
-  Option.choice _
+def next (c : ComplexShape ι) (i : ι) : ι :=
+  if h : ∃ j, c.Rel i j then h.some else i
 
-/-- An option-valued arbitary choice of index `i` such that `rel i j`, if such exists.
+/-- An arbitary choice of index `i` such that `rel i j`, if such exists.
+Returns `j` otherwise.
 -/
-def prev (c : ComplexShape ι) (j : ι) : Option { i // c.Rel i j } :=
-  Option.choice _
+def prev (c : ComplexShape ι) (j : ι) : ι :=
+  if h : ∃ i, c.Rel i j then h.some else j
 
-theorem next_eq_some (c : ComplexShape ι) {i j : ι} (h : c.Rel i j) : c.next i = some ⟨j, h⟩ :=
-  Option.choice_eq _
+theorem next_eq' (c : ComplexShape ι) {i j : ι} (h : c.Rel i j) : c.next i = j := by
+  apply c.next_eq _ h
+  dsimp' only [← next]
+  rw [dif_pos]
+  exact Exists.some_spec ⟨j, h⟩
 
-theorem prev_eq_some (c : ComplexShape ι) {i j : ι} (h : c.Rel i j) : c.prev j = some ⟨i, h⟩ :=
-  Option.choice_eq _
+theorem prev_eq' (c : ComplexShape ι) {i j : ι} (h : c.Rel i j) : c.prev j = i := by
+  apply c.prev_eq _ h
+  dsimp' only [← prev]
+  rw [dif_pos]
+  exact Exists.some_spec ⟨i, h⟩
 
 /-- The `complex_shape` allowing differentials from `X i` to `X (i+a)`.
 (For example when `a = 1`, a cohomology theory indexed by `ℕ` or `ℤ`)

@@ -39,7 +39,7 @@ universe w v v' u
 
 namespace CategoryTheory
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`forget] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`forget] []
 /-- A concrete category is a category `C` with a fixed faithful functor `forget : C ⥤ Type`.
 
 Note that `concrete_category` potentially depends on three independent universe levels,
@@ -168,11 +168,11 @@ instance InducedCategory.hasForget₂ {C : Type v} {D : Type v'} [Category D] [C
   forget₂ := inducedFunctor f
   forget_comp := rfl
 
-instance fullSubcategory.concreteCategory {C : Type v} [Category C] [ConcreteCategory C] (Z : C → Prop) :
-    ConcreteCategory { X : C // Z X } where forget := fullSubcategoryInclusion Z ⋙ forget C
+instance FullSubcategory.concreteCategory {C : Type v} [Category C] [ConcreteCategory C] (Z : C → Prop) :
+    ConcreteCategory (FullSubcategory Z) where forget := fullSubcategoryInclusion Z ⋙ forget C
 
-instance fullSubcategory.hasForget₂ {C : Type v} [Category C] [ConcreteCategory C] (Z : C → Prop) :
-    HasForget₂ { X : C // Z X } C where
+instance FullSubcategory.hasForget₂ {C : Type v} [Category C] [ConcreteCategory C] (Z : C → Prop) :
+    HasForget₂ (FullSubcategory Z) C where
   forget₂ := fullSubcategoryInclusion Z
   forget_comp := rfl
 

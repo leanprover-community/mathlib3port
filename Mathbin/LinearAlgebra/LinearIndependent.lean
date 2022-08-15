@@ -126,7 +126,7 @@ theorem linear_independent_iff' :
       fun hf l hl =>
       Finsupp.ext fun i => Classical.by_contradiction fun hni => hni <| hf _ _ hl _ <| Finsupp.mem_support_iff.2 hni⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem linear_independent_iff'' :
     LinearIndependent R v ↔
       ∀ (s : Finset ι) (g : ι → R) (hg : ∀ (i) (_ : i ∉ s), g i = 0), (∑ i in s, g i • v i) = 0 → ∀ i, g i = 0 :=
@@ -203,7 +203,7 @@ theorem LinearIndependent.map (hv : LinearIndependent R v) {f : M →ₗ[R] M'}
     comap_bot, Finsupp.supported_univ, top_inf_eq] at hf_inj
   unfold LinearIndependent  at hv⊢
   rw [hv, le_bot_iff] at hf_inj
-  have : Inhabited M := ⟨0⟩
+  haveI : Inhabited M := ⟨0⟩
   rw [Finsupp.total_comp, @Finsupp.lmap_domain_total _ _ R _ _ _ _ _ _ _ _ _ _ f, LinearMap.ker_comp, hf_inj]
   exact fun _ => rfl
 
@@ -385,7 +385,7 @@ theorem LinearIndependent.mono {t s : Set M} (h : t ⊆ s) :
   simp only [← linear_independent_subtype_disjoint]
   exact Disjoint.mono_left (Finsupp.supported_mono h)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem linear_independent_of_finite (s : Set M)
     (H : ∀ (t) (_ : t ⊆ s), Set.Finite t → LinearIndependent R (fun x => x : t → M)) :
     LinearIndependent R (fun x => x : s → M) :=
@@ -826,7 +826,7 @@ theorem exists_maximal_independent' (s : ι → M) :
     rcases eq_empty_or_nonempty c with (rfl | hn)
     · simpa using hsupport
       
-    have : IsRefl X r := ⟨fun _ => Set.Subset.refl _⟩
+    haveI : IsRefl X r := ⟨fun _ => Set.Subset.refl _⟩
     obtain ⟨I, I_mem, hI⟩ : ∃ I ∈ c, (f.support : Set ι) ⊆ I :=
       hc.directed_on.exists_mem_subset_of_finset_subset_bUnion hn hsupport
     exact linear_independent_comp_subtype.mp I.2 f hI hsum
@@ -836,7 +836,7 @@ theorem exists_maximal_independent' (s : ι → M) :
       (fun c hc => ⟨⟨⋃ I ∈ c, (I : Set ι), key c hc⟩, fun I => Set.subset_bUnion_of_mem⟩) trans
   exact ⟨I, hli, fun J hsub hli => Set.Subset.antisymm hsub (hmax ⟨J, hli⟩ hsub)⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i «expr ∉ » I)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (i «expr ∉ » I)
 theorem exists_maximal_independent (s : ι → M) :
     ∃ I : Set ι,
       (LinearIndependent R fun x : I => s x) ∧ ∀ (i) (_ : i ∉ I), ∃ a : R, a ≠ 0 ∧ a • s i ∈ span R (s '' I) :=
@@ -940,8 +940,8 @@ theorem linear_independent_inl_union_inr' {v : ι → M} {v' : ι' → M'} (hv :
 --  <https://kconrad.math.uconn.edu/blurbs/galoistheory/linearchar.pdf>
 theorem linear_independent_monoid_hom (G : Type _) [Monoidₓ G] (L : Type _) [CommRingₓ L] [NoZeroDivisors L] :
     @LinearIndependent _ L (G → L) (fun f => f : (G →* L) → G → L) _ _ _ := by
-  let this := Classical.decEq (G →* L) <;>
-    let this : MulAction L L :=
+  letI := Classical.decEq (G →* L) <;>
+    letI : MulAction L L :=
         DistribMulAction.toMulAction <;>-- We prove linear independence by showing that only the trivial linear combination vanishes.
       exact
         linear_independent_iff'.2-- To do this, we use `finset` induction,
@@ -1203,7 +1203,7 @@ theorem linear_independent_fin2 {f : Finₓ 2 → V} : LinearIndependent K f ↔
     show Finₓ.tail f default = f 1 by
       rw [← Finₓ.succ_zero_eq_one] <;> rfl]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (b «expr ⊆ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (b «expr ⊆ » t)
 theorem exists_linear_independent_extension (hs : LinearIndependent K (coe : s → V)) (hst : s ⊆ t) :
     ∃ (b : _)(_ : b ⊆ t), s ⊆ b ∧ t ⊆ span K b ∧ LinearIndependent K (coe : b → V) := by
   rcases zorn_subset_nonempty { b | b ⊆ t ∧ LinearIndependent K (coe : b → V) } _ _ ⟨hst, hs⟩ with ⟨b, ⟨bt, bi⟩, sb, h⟩
@@ -1224,7 +1224,7 @@ theorem exists_linear_independent_extension (hs : LinearIndependent K (coe : s �
 
 variable (K t)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (b «expr ⊆ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (b «expr ⊆ » t)
 theorem exists_linear_independent : ∃ (b : _)(_ : b ⊆ t), span K b = span K t ∧ LinearIndependent K (coe : b → V) := by
   obtain ⟨b, hb₁, -, hb₂, hb₃⟩ :=
     exists_linear_independent_extension (linear_independent_empty K V) (Set.empty_subset t)

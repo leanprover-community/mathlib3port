@@ -107,7 +107,7 @@ Then `p I` is true. See also `box_integral.box.subbox_induction_on` for a versio
 
 The proof still works if we assume `H_ind` only for subboxes `J ≤ I` that are homothetic to `I` with
 a coefficient of the form `2⁻ᵐ` but we do not need this generalization yet. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι) (H_ind : ∀, ∀ J ≤ I, ∀, (∀ s, p (splitCenterBox J s)) → p J)
     (H_nhds :
       ∀,

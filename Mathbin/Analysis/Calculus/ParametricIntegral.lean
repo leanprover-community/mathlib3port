@@ -58,8 +58,8 @@ open TopologicalSpace MeasureTheory Filter Metric
 
 open TopologicalSpace Filter
 
-variable {α : Type _} [MeasurableSpace α] {μ : Measureₓ α} {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedGroup E]
-  [NormedSpace ℝ E] [NormedSpace 𝕜 E] [CompleteSpace E] {H : Type _} [NormedGroup H] [NormedSpace 𝕜 H]
+variable {α : Type _} [MeasurableSpace α] {μ : Measureₓ α} {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedAddCommGroup E]
+  [NormedSpace ℝ E] [NormedSpace 𝕜 E] [CompleteSpace E] {H : Type _} [NormedAddCommGroup H] [NormedSpace 𝕜 H]
 
 /-- Differentiation under integral of `x ↦ ∫ F x a` at a given point `x₀`, assuming `F x₀` is
 integrable, `∥F x a - F x₀ a∥ ≤ bound a * ∥x - x₀∥` for `x` in a ball around `x₀` for ae `a` with
@@ -123,11 +123,13 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
     calc
       ∥∥x - x₀∥⁻¹ • (F x a - F x₀ a - F' a (x - x₀))∥ = ∥∥x - x₀∥⁻¹ • (F x a - F x₀ a) - ∥x - x₀∥⁻¹ • F' a (x - x₀)∥ :=
         by
-        rw [smul_sub]_ ≤ ∥∥x - x₀∥⁻¹ • (F x a - F x₀ a)∥ + ∥∥x - x₀∥⁻¹ • F' a (x - x₀)∥ :=
-        norm_sub_le _ _ _ = ∥x - x₀∥⁻¹ * ∥F x a - F x₀ a∥ + ∥x - x₀∥⁻¹ * ∥F' a (x - x₀)∥ := by
-        rw [norm_smul_of_nonneg, norm_smul_of_nonneg] <;>
-          exact nneg _ _ ≤ ∥x - x₀∥⁻¹ * (b a * ∥x - x₀∥) + ∥x - x₀∥⁻¹ * (∥F' a∥ * ∥x - x₀∥) :=
-        add_le_add _ _ _ ≤ b a + ∥F' a∥ := _
+        rw [smul_sub]
+      _ ≤ ∥∥x - x₀∥⁻¹ • (F x a - F x₀ a)∥ + ∥∥x - x₀∥⁻¹ • F' a (x - x₀)∥ := norm_sub_le _ _
+      _ = ∥x - x₀∥⁻¹ * ∥F x a - F x₀ a∥ + ∥x - x₀∥⁻¹ * ∥F' a (x - x₀)∥ := by
+        rw [norm_smul_of_nonneg, norm_smul_of_nonneg] <;> exact nneg _
+      _ ≤ ∥x - x₀∥⁻¹ * (b a * ∥x - x₀∥) + ∥x - x₀∥⁻¹ * (∥F' a∥ * ∥x - x₀∥) := add_le_add _ _
+      _ ≤ b a + ∥F' a∥ := _
+      
     exact mul_le_mul_of_nonneg_left ha_bound (nneg _)
     apply mul_le_mul_of_nonneg_left ((F' a).le_op_norm _) (nneg _)
     by_cases' h : ∥x - x₀∥ = 0
@@ -180,7 +182,7 @@ theorem has_fderiv_at_integral_of_dominated_of_fderiv_le {F : H → α → E} {F
     (h_bound : ∀ᵐ a ∂μ, ∀, ∀ x ∈ Ball x₀ ε, ∀, ∥F' x a∥ ≤ bound a) (bound_integrable : Integrable (bound : α → ℝ) μ)
     (h_diff : ∀ᵐ a ∂μ, ∀, ∀ x ∈ Ball x₀ ε, ∀, HasFderivAt (fun x => F x a) (F' x a) x) :
     HasFderivAt (fun x => ∫ a, F x a ∂μ) (∫ a, F' x₀ a ∂μ) x₀ := by
-  let this : NormedSpace ℝ H := NormedSpace.restrictScalars ℝ 𝕜 H
+  letI : NormedSpace ℝ H := NormedSpace.restrictScalars ℝ 𝕜 H
   have x₀_in : x₀ ∈ ball x₀ ε := mem_ball_self ε_pos
   have diff_x₀ : ∀ᵐ a ∂μ, HasFderivAt (fun x => F x a) (F' x₀ a) x₀ := h_diff.mono fun a ha => ha x₀ x₀_in
   have : ∀ᵐ a ∂μ, LipschitzOnWith (Real.nnabs (bound a)) (fun x => F x a) (ball x₀ ε) := by

@@ -32,7 +32,7 @@ theorem Small.mk' {α : Type v} {S : Type w} (e : α ≃ S) : Small.{w} α :=
 
 /-- An arbitrarily chosen model in `Type w` for a `w`-small type.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def Shrink (α : Type v) [Small.{w} α] : Type w :=
   Classical.some (@Small.equiv_small α _)
 
@@ -92,7 +92,7 @@ instance (priority := 100) small_subsingleton (α : Type v) [Subsingleton α] : 
     
 
 /-!
-We don't define `small_of_fintype` or `small_of_encodable` in this file,
+We don't define `small_of_fintype` or `small_of_countable` in this file,
 to keep imports to `logic` to a minimum.
 -/
 

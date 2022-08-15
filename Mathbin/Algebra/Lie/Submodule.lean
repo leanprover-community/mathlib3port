@@ -243,6 +243,28 @@ theorem LieIdeal.coe_to_lie_subalgebra_to_submodule (I : LieIdeal R L) :
     ((I : LieSubalgebra R L) : Submodule R L) = I :=
   rfl
 
+/-- An ideal of `L` is a Lie subalgebra of `L`, so it is a Lie ring. -/
+instance LieIdeal.lieRing (I : LieIdeal R L) : LieRing I :=
+  LieSubalgebra.lieRing R L ↑I
+
+/-- Transfer the `lie_algebra` instance from the coercion `lie_ideal → lie_subalgebra`. -/
+instance LieIdeal.lieAlgebra (I : LieIdeal R L) : LieAlgebra R I :=
+  LieSubalgebra.lieAlgebra R L ↑I
+
+/-- Transfer the `lie_module` instance from the coercion `lie_ideal → lie_subalgebra`. -/
+instance LieIdeal.lieRingModule {R L : Type _} [CommRingₓ R] [LieRing L] [LieAlgebra R L] (I : LieIdeal R L)
+    [LieRingModule L M] : LieRingModule I M :=
+  LieSubalgebra.lieRingModule (I : LieSubalgebra R L)
+
+@[simp]
+theorem LieIdeal.coe_bracket_of_module {R L : Type _} [CommRingₓ R] [LieRing L] [LieAlgebra R L] (I : LieIdeal R L)
+    [LieRingModule L M] (x : I) (m : M) : ⁅x,m⁆ = ⁅(↑x : L),m⁆ :=
+  LieSubalgebra.coe_bracket_of_module (I : LieSubalgebra R L) x m
+
+/-- Transfer the `lie_module` instance from the coercion `lie_ideal → lie_subalgebra`. -/
+instance LieIdeal.lieModule (I : LieIdeal R L) : LieModule R I M :=
+  LieSubalgebra.lieModule (I : LieSubalgebra R L)
+
 end LieIdeal
 
 variable {R M}
@@ -352,11 +374,11 @@ theorem mem_top (x : M) : x ∈ (⊤ : LieSubmodule R L M) :=
 instance : HasInf (LieSubmodule R L M) :=
   ⟨fun N N' => { (N⊓N' : Submodule R M) with lie_mem := fun x m h => mem_inter (N.lie_mem h.1) (N'.lie_mem h.2) }⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1122:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}
+-- ./././Mathport/Syntax/Translate/Basic.lean:1129:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}
 instance : HasInfₓ (LieSubmodule R L M) :=
   ⟨fun S =>
     { inf
-        "./././Mathport/Syntax/Translate/Basic.lean:1122:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" with
+        "./././Mathport/Syntax/Translate/Basic.lean:1129:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" with
       lie_mem := fun x m h => by
         simp only [← Submodule.mem_carrier, ← mem_Inter, ← Submodule.Inf_coe, ← mem_set_of_eq, ←
           forall_apply_eq_imp_iff₂, ← exists_imp_distrib] at *
@@ -367,12 +389,12 @@ instance : HasInfₓ (LieSubmodule R L M) :=
 theorem inf_coe : (↑(N⊓N') : Set M) = N ∩ N' :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1122:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}
+-- ./././Mathport/Syntax/Translate/Basic.lean:1129:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}
 @[simp]
 theorem Inf_coe_to_submodule (S : Set (LieSubmodule R L M)) :
     (↑(inf S) : Submodule R M) =
       inf
-        "./././Mathport/Syntax/Translate/Basic.lean:1122:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" :=
+        "./././Mathport/Syntax/Translate/Basic.lean:1129:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" :=
   rfl
 
 @[simp]
@@ -448,7 +470,7 @@ theorem subsingleton_of_bot : Subsingleton (LieSubmodule R L ↥(⊥ : LieSubmod
   apply subsingleton_of_bot_eq_top
   ext ⟨x, hx⟩
   change x ∈ ⊥ at hx
-  rw [Submodule.mem_bot] at hx
+  rw [LieSubmodule.mem_bot] at hx
   subst hx
   simp only [← true_iffₓ, ← eq_self_iff_true, ← Submodule.mk_eq_zero, ← LieSubmodule.mem_bot]
 
@@ -790,11 +812,11 @@ different (though the latter does naturally inject into the former).
 In other words, in general, ideals of `I`, regarded as a Lie algebra in its own right, are not the
 same as ideals of `L` contained in `I`. -/
 -- TODO[gh-6025]: make this an instance once safe to do so
-theorem subsingleton_of_bot : Subsingleton (LieIdeal R ↥(⊥ : LieIdeal R L)) := by
+theorem subsingleton_of_bot : Subsingleton (LieIdeal R (⊥ : LieIdeal R L)) := by
   apply subsingleton_of_bot_eq_top
   ext ⟨x, hx⟩
   change x ∈ ⊥ at hx
-  rw [Submodule.mem_bot] at hx
+  rw [LieSubmodule.mem_bot] at hx
   subst hx
   simp only [← true_iffₓ, ← eq_self_iff_true, ← Submodule.mk_eq_zero, ← LieSubmodule.mem_bot]
 
@@ -1014,8 +1036,8 @@ theorem incl_coe : (I.incl : I →ₗ[R] L) = (I : Submodule R L).Subtype :=
 
 @[simp]
 theorem comap_incl_self : comap I.incl I = ⊤ := by
-  rw [← LieSubmodule.coe_to_submodule_eq_iff]
-  exact Submodule.comap_subtype_self _
+  rw [← LieSubmodule.coe_to_submodule_eq_iff, LieSubmodule.top_coe_submodule, LieIdeal.comap_coe_submodule,
+    LieIdeal.incl_coe, Submodule.comap_subtype_self]
 
 @[simp]
 theorem ker_incl : I.incl.ker = ⊥ := by

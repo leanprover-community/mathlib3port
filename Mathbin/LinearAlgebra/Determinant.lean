@@ -194,7 +194,7 @@ theorem det_eq_det_to_matrix_of_finset [DecidableEq M] {s : Finset M} (b : Basis
 
 @[simp]
 theorem det_to_matrix (b : Basis ι A M) (f : M →ₗ[A] M) : Matrix.det (toMatrix b b f) = f.det := by
-  have := Classical.decEq M
+  haveI := Classical.decEq M
   rw [det_eq_det_to_matrix_of_finset b.reindex_finset_range, det_to_matrix_eq_det_to_matrix b]
 
 @[simp]
@@ -207,7 +207,7 @@ theorem det_to_lin (b : Basis ι R M) (f : Matrix ι ι R) : LinearMap.det (Matr
   rw [← LinearMap.det_to_matrix b, LinearMap.to_matrix_to_lin]
 
 /-- To show `P f.det` it suffices to consider `P (to_matrix _ _ f).det` and `P 1`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem det_cases [DecidableEq M] {P : A → Prop} (f : M →ₗ[A] M)
     (hb : ∀ (s : Finset M) (b : Basis s A M), P (toMatrix b b f).det) (h1 : P 1) : P f.det := by
   unfold LinearMap.det
@@ -242,7 +242,7 @@ theorem det_smul {𝕜 : Type _} [Field 𝕜] {M : Type _} [AddCommGroupₓ M] [
     
 
 theorem det_zero' {ι : Type _} [Fintype ι] [Nonempty ι] (b : Basis ι A M) : LinearMap.det (0 : M →ₗ[A] M) = 0 := by
-  have := Classical.decEq ι
+  haveI := Classical.decEq ι
   rw [← det_to_matrix b, LinearEquiv.map_zero, det_zero]
   assumption
 
@@ -413,6 +413,21 @@ def LinearMap.equivOfDetNeZero {𝕜 : Type _} [Field 𝕜] {M : Type _} [AddCom
     simp only [← LinearMap.det_to_matrix, ← is_unit_iff_ne_zero.2 hf]
   LinearEquiv.ofIsUnitDet this
 
+theorem LinearMap.associated_det_of_eq_comp (e : M ≃ₗ[R] M) (f f' : M →ₗ[R] M) (h : ∀ x, f x = f' (e x)) :
+    Associated f.det f'.det := by
+  suffices Associated (f' ∘ₗ ↑e).det f'.det by
+    convert this using 2
+    ext x
+    exact h x
+  rw [← mul_oneₓ f'.det, LinearMap.det_comp]
+  exact Associated.mul_left _ (associated_one_iff_is_unit.mpr e.is_unit_det')
+
+theorem LinearMap.associated_det_comp_equiv {N : Type _} [AddCommGroupₓ N] [Module R N] (f : N →ₗ[R] M)
+    (e e' : M ≃ₗ[R] N) : Associated (f ∘ₗ ↑e).det (f ∘ₗ ↑e').det := by
+  refine' LinearMap.associated_det_of_eq_comp (e.trans e'.symm) _ _ _
+  intro x
+  simp only [← LinearMap.comp_apply, ← LinearEquiv.coe_coe, ← LinearEquiv.trans_apply, ← LinearEquiv.apply_symm_apply]
+
 /-- The determinant of a family of vectors with respect to some basis, as an alternating
 multilinear map. -/
 def Basis.det : AlternatingMap R M R ι where
@@ -445,7 +460,7 @@ theorem Basis.det_ne_zero [Nontrivial R] : e.det ≠ 0 := fun h => by
 theorem is_basis_iff_det {v : ι → M} : LinearIndependent R v ∧ span R (Set.Range v) = ⊤ ↔ IsUnit (e.det v) := by
   constructor
   · rintro ⟨hli, hspan⟩
-    set v' := Basis.mk hli hspan with v'_eq
+    set v' := Basis.mk hli hspan.ge with v'_eq
     rw [e.det_apply]
     convert LinearEquiv.is_unit_det (LinearEquiv.refl _ _) v' e using 2
     ext i j
@@ -509,7 +524,7 @@ theorem Pi.basis_fun_det : (Pi.basisFun R ι).det = Matrix.detRowAlternating := 
 
 /-- If we fix a background basis `e`, then for any other basis `v`, we can characterise the
 coordinates provided by `v` in terms of determinants relative to `e`. -/
-theorem Basis.det_smul_mk_coord_eq_det_update {v : ι → M} (hli : LinearIndependent R v) (hsp : span R (Range v) = ⊤)
+theorem Basis.det_smul_mk_coord_eq_det_update {v : ι → M} (hli : LinearIndependent R v) (hsp : ⊤ ≤ span R (Range v))
     (i : ι) : e.det v • (Basis.mk hli hsp).Coord i = e.det.toMultilinearMap.toLinearMap v i := by
   apply (Basis.mk hli hsp).ext
   intro k

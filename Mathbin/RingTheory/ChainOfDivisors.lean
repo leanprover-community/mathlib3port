@@ -178,11 +178,13 @@ theorem eq_pow_second_of_chain_of_has_chain {q : Associates M} {n : ℕ} (hn : n
   obtain ⟨i, hi'⟩ := element_of_chain_eq_pow_second_of_chain hn h₁ (fun r => h₂) (dvd_refl q) hq
   convert hi'
   refine' (Nat.lt_succ_iffₓ.1 i.prop).antisymm' (Nat.le_of_succ_le_succₓ _)
-  calc n + 1 = (Finset.univ : Finset (Finₓ (n + 1))).card := (Finset.card_fin _).symm _ = (finset.univ.image c).card :=
-      (finset.card_image_iff.mpr
-          (h₁.injective.inj_on _)).symm _ ≤ (finset.univ.image fun m : Finₓ (i + 1) => c 1 ^ (m : ℕ)).card :=
-      Finset.card_le_of_subset _ _ ≤ (Finset.univ : Finset (Finₓ (i + 1))).card := Finset.card_image_le _ = i + 1 :=
-      Finset.card_fin _
+  calc
+    n + 1 = (Finset.univ : Finset (Finₓ (n + 1))).card := (Finset.card_fin _).symm
+    _ = (finset.univ.image c).card := (finset.card_image_iff.mpr (h₁.injective.inj_on _)).symm
+    _ ≤ (finset.univ.image fun m : Finₓ (i + 1) => c 1 ^ (m : ℕ)).card := Finset.card_le_of_subset _
+    _ ≤ (Finset.univ : Finset (Finₓ (i + 1))).card := Finset.card_image_le
+    _ = i + 1 := Finset.card_fin _
+    
   intro r hr
   obtain ⟨j, -, rfl⟩ := Finset.mem_image.1 hr
   have := h₂.2 ⟨j, rfl⟩
@@ -207,8 +209,8 @@ variable {N : Type _} [CancelCommMonoidWithZero N]
 
 theorem factor_order_iso_map_one_eq_bot {m : Associates M} {n : Associates N}
     (d : { l : Associates M // l ≤ m } ≃o { l : Associates N // l ≤ n }) : (d ⟨1, one_dvd m⟩ : Associates N) = 1 := by
-  let this : OrderBot { l : Associates M // l ≤ m } := Subtype.orderBot bot_le
-  let this : OrderBot { l : Associates N // l ≤ n } := Subtype.orderBot bot_le
+  letI : OrderBot { l : Associates M // l ≤ m } := Subtype.orderBot bot_le
+  letI : OrderBot { l : Associates N // l ≤ n } := Subtype.orderBot bot_le
   simp [Associates.bot_eq_one]
 
 theorem coe_factor_order_iso_map_eq_one_iff {m u : Associates M} {n : Associates N} (hu' : u ≤ m)
@@ -277,8 +279,8 @@ theorem map_prime_of_factor_order_iso [DecidableEq (Associates M)] {m p : Associ
     
   · obtain ⟨x, hx⟩ := d.surjective ⟨b, le_transₓ (le_of_ltₓ hb) (d ⟨p, dvd_of_mem_normalized_factors hp⟩).Prop⟩
     rw [← Subtype.coe_mk b _, Subtype.coe_lt_coe, ← hx] at hb
-    let this : OrderBot { l : Associates M // l ≤ m } := Subtype.orderBot bot_le
-    let this : OrderBot { l : Associates N // l ≤ n } := Subtype.orderBot bot_le
+    letI : OrderBot { l : Associates M // l ≤ m } := Subtype.orderBot bot_le
+    letI : OrderBot { l : Associates N // l ≤ n } := Subtype.orderBot bot_le
     suffices x = ⊥ by
       rw [this, OrderIso.map_bot d] at hx
       refine' (Subtype.mk_eq_bot_iff _ _).mp hx.symm
@@ -327,7 +329,7 @@ theorem multiplicity_prime_eq_multiplicity_image_by_factor_order_iso [DecidableE
     by
     rw [d.symm_apply_apply ⟨p, dvd_of_mem_normalized_factors hp⟩, Subtype.coe_mk] at this
     exact this
-  let this := Classical.decEq (Associates N)
+  letI := Classical.decEq (Associates N)
   simpa only [← Subtype.coe_eta] using
     multiplicity_prime_le_multiplicity_image_by_factor_order_iso
       (mem_normalized_factors_factor_order_iso_of_mem_normalized_factors hn hp d) d.symm
@@ -401,7 +403,7 @@ theorem mem_normalized_factors_factor_dvd_iso_of_mem_normalized_factors [Decidab
     rw [mk_factor_order_iso_of_factor_dvd_equiv_apply_coe]
     simp only [← Subtype.coe_mk]
   rw [← Associates.prime_mk, this]
-  let this := Classical.decEq (Associates M)
+  letI := Classical.decEq (Associates M)
   refine' map_prime_of_factor_order_iso (mk_ne_zero.mpr hn) _ _
   obtain ⟨q, hq, hq'⟩ :=
     exists_mem_normalized_factors_of_dvd (mk_ne_zero.mpr hm)
@@ -443,7 +445,7 @@ theorem multiplicity_eq_multiplicity_factor_dvd_iso_of_mem_normalized_factor {m 
     rw [mk_factor_order_iso_of_factor_dvd_equiv_apply_coe]
     rfl
   rw [this]
-  let this := Classical.decEq (Associates M)
+  letI := Classical.decEq (Associates M)
   refine'
     multiplicity_prime_eq_multiplicity_image_by_factor_order_iso (mk_ne_zero.mpr hn) _
       (mkFactorOrderIsoOfFactorDvdEquiv d hd)

@@ -965,7 +965,7 @@ def toLatticeHomClass : LatticeHomClass F α β :=
 
 /-- Reinterpret an order homomorphism to a linear order as a `lattice_hom`. -/
 def toLatticeHom (f : F) : LatticeHom α β := by
-  have : LatticeHomClass F α β := OrderHomClass.toLatticeHomClass α β
+  haveI : LatticeHomClass F α β := OrderHomClass.toLatticeHomClass α β
   exact f
 
 @[simp]

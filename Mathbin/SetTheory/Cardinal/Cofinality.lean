@@ -124,8 +124,8 @@ def cof (o : Ordinal.{u}) : Cardinal.{u} :=
   o.liftOn (fun a => StrictOrder.cof a.R)
     (by
       rintro ⟨α, r, wo₁⟩ ⟨β, s, wo₂⟩ ⟨⟨f, hf⟩⟩
-      have := wo₁
-      have := wo₂
+      haveI := wo₁
+      haveI := wo₂
       apply @RelIso.cof_eq _ _ _ _ _ _
       · constructor
         exact fun a b => not_iff_not.2 hf
@@ -163,13 +163,13 @@ theorem ord_cof_eq (r : α → α → Prop) [IsWellOrder α r] : ∃ S, Unbounde
   · refine' ⟨T, this, le_antisymmₓ _ (Cardinal.ord_le.2 <| cof_type_le this)⟩
     rw [← e, e']
     refine'
-      type_le'.2
-        ⟨RelEmbedding.ofMonotone
-            (fun a =>
-              ⟨a,
-                let ⟨aS, _⟩ := a.2
-                aS⟩)
-            fun a b h => _⟩
+      (RelEmbedding.ofMonotone
+          (fun a : T =>
+            (⟨a,
+              let ⟨aS, _⟩ := a.2
+              aS⟩ :
+              S))
+          fun a b h => _).ordinal_type_le
     rcases a with ⟨a, aS, ha⟩
     rcases b with ⟨b, bS, hb⟩
     change s ⟨a, _⟩ ⟨b, _⟩
@@ -513,7 +513,7 @@ theorem cof_eq_one_iff_is_succ {o} : cof.{u} o = 1 ↔ ∃ a, o = succ a :=
           · exact absurd h hn
             
           refine' congr_arg Subtype.val (_ : a = ⟨a', aS⟩)
-          have := le_one_iff_subsingleton.1 (le_of_eqₓ e)
+          haveI := le_one_iff_subsingleton.1 (le_of_eqₓ e)
           apply Subsingleton.elimₓ
           
         ,
@@ -600,12 +600,12 @@ theorem exists_fundamental_sequence (a : Ordinal.{u}) : ∃ f, IsFundamentalSequ
     exact ⟨_, hf.ord_cof⟩
   rcases exists_lsub_cof a with ⟨ι, f, hf, hι⟩
   rcases ord_eq ι with ⟨r, wo, hr⟩
-  have := wo
+  haveI := wo
   let r' := Subrel r { i | ∀ j, r j i → f j < f i }
   let hrr' : r' ↪r r := Subrel.relEmbedding _ _
-  have := hrr'.is_well_order
+  haveI := hrr'.is_well_order
   refine'
-    ⟨_, _, (type_le'.2 ⟨hrr'⟩).trans _, fun i j _ h _ => (enum r' j h).Prop _ _,
+    ⟨_, _, hrr'.ordinal_type_le.trans _, fun i j _ h _ => (enum r' j h).Prop _ _,
       le_antisymmₓ (blsub_le fun i hi => lsub_le_iff.1 hf.le _) _⟩
   · rw [← hι, hr]
     
@@ -875,11 +875,24 @@ theorem IsStrongLimit.is_limit {c} (H : IsStrongLimit c) : IsLimit c :=
 theorem is_limit_aleph_0 : IsLimit ℵ₀ :=
   is_strong_limit_aleph_0.IsLimit
 
+theorem is_strong_limit_beth {o : Ordinal} (H : ∀, ∀ a < o, ∀, succ a < o) : IsStrongLimit (beth o) := by
+  rcases eq_or_ne o 0 with (rfl | h)
+  · rw [beth_zero]
+    exact is_strong_limit_aleph_0
+    
+  · refine' ⟨beth_ne_zero o, fun a ha => _⟩
+    rw [beth_limit ⟨h, H⟩] at ha
+    rcases exists_lt_of_lt_csupr' ha with ⟨⟨i, hi⟩, ha⟩
+    have := power_le_power_left two_ne_zero' ha.le
+    rw [← beth_succ] at this
+    exact this.trans_lt (beth_lt.2 (H i hi))
+    
+
 theorem mk_bounded_subset {α : Type _} (h : ∀, ∀ x < # α, ∀, (2^x) < # α) {r : α → α → Prop} [IsWellOrder α r]
     (hr : (# α).ord = type r) : # { s : Set α // Bounded r s } = # α := by
   rcases eq_or_ne (# α) 0 with (ha | ha)
   · rw [ha]
-    have := mk_eq_zero_iff.1 ha
+    haveI := mk_eq_zero_iff.1 ha
     rw [mk_eq_zero_iff]
     constructor
     rintro ⟨s, hs⟩
@@ -916,7 +929,7 @@ theorem mk_subset_mk_lt_cof {α : Type _} (h : ∀, ∀ x < # α, ∀, (2^x) < #
     
   have h' : is_strong_limit (# α) := ⟨ha, h⟩
   rcases ord_eq α with ⟨r, wo, hr⟩
-  have := wo
+  haveI := wo
   apply le_antisymmₓ
   · nth_rw_rhs 0[← mk_bounded_subset h hr]
     apply mk_le_mk_of_subset fun s hs => _

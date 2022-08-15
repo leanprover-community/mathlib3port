@@ -118,7 +118,7 @@ theorem span_closure {s : Set M} : span R (AddSubmonoid.closure s : Set M) = spa
 /-- An induction principle for span membership. If `p` holds for 0 and all elements of `s`, and is
 preserved under addition and scalar multiplication, then `p` holds for all elements of the span of
 `s`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem span_induction {p : M → Prop} (h : x ∈ span R s) (Hs : ∀, ∀ x ∈ s, ∀, p x) (H0 : p 0)
     (H1 : ∀ x y, p x → p y → p (x + y)) (H2 : ∀ (a : R) (x), p x → p (a • x)) : p x :=
   (@span_le _ _ _ _ _ _ ⟨p, H1, H0, H2⟩).2 Hs h
@@ -196,8 +196,8 @@ theorem span_union (s t : Set M) : span R (s ∪ t) = span R s⊔span R t :=
 theorem span_Union {ι} (s : ι → Set M) : span R (⋃ i, s i) = ⨆ i, span R (s i) :=
   (Submodule.gi R M).gc.l_supr
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
 theorem span_Union₂ {ι} {κ : ι → Sort _} (s : ∀ i, κ i → Set M) :
     span R (⋃ (i) (j), s i j) = ⨆ (i) (j), span R (s i j) :=
   (Submodule.gi R M).gc.l_supr₂
@@ -270,7 +270,7 @@ theorem mem_supr_of_directed {ι} [Nonempty ι] (S : ι → Submodule R M) (H : 
 
 theorem mem_Sup_of_directed {s : Set (Submodule R M)} {z} (hs : s.Nonempty) (hdir : DirectedOn (· ≤ ·) s) :
     z ∈ sup s ↔ ∃ y ∈ s, z ∈ y := by
-  have : Nonempty s := hs.to_subtype
+  haveI : Nonempty s := hs.to_subtype
   simp only [← Sup_eq_supr', ← mem_supr_of_directed _ hdir.directed_coe, ← SetCoe.exists, ← Subtype.coe_mk]
 
 @[norm_cast, simp]
@@ -553,9 +553,12 @@ theorem not_mem_span_of_apply_not_mem_span_image [RingHomSurjective σ₁₂] (f
     (h : f x ∉ Submodule.span R₂ (f '' s)) : x ∉ Submodule.span R s :=
   h.imp (apply_mem_span_image_of_mem_span f)
 
-theorem supr_eq_span {ι : Sort _} (p : ι → Submodule R M) : (⨆ i : ι, p i) = Submodule.span R (⋃ i : ι, ↑(p i)) :=
-  le_antisymmₓ (supr_le fun i => Subset.trans (fun m hm => Set.mem_Union.mpr ⟨i, hm⟩) subset_span)
-    (span_le.mpr <| Union_subset_iff.mpr fun i m hm => mem_supr_of_mem i hm)
+theorem supr_span {ι : Sort _} (p : ι → Set M) : (⨆ i, span R (p i)) = span R (⋃ i, p i) :=
+  le_antisymmₓ (supr_le fun i => span_mono <| subset_Union _ i) <|
+    span_le.mpr <| Union_subset fun i m hm => mem_supr_of_mem i <| subset_span hm
+
+theorem supr_eq_span {ι : Sort _} (p : ι → Submodule R M) : (⨆ i, p i) = span R (⋃ i, ↑(p i)) := by
+  simp_rw [← supr_span, span_eq]
 
 theorem supr_to_add_submonoid {ι : Sort _} (p : ι → Submodule R M) :
     (⨆ i, p i).toAddSubmonoid = ⨆ i, (p i).toAddSubmonoid := by
@@ -586,14 +589,14 @@ theorem supr_to_add_submonoid {ι : Sort _} (p : ι → Submodule R M) :
 /-- An induction principle for elements of `⨆ i, p i`.
 If `C` holds for `0` and all elements of `p i` for all `i`, and is preserved under addition,
 then it holds for all elements of the supremum of `p`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem supr_induction {ι : Sort _} (p : ι → Submodule R M) {C : M → Prop} {x : M} (hx : x ∈ ⨆ i, p i)
     (hp : ∀ (i), ∀ x ∈ p i, ∀, C x) (h0 : C 0) (hadd : ∀ x y, C x → C y → C (x + y)) : C x := by
   rw [← mem_to_add_submonoid, supr_to_add_submonoid] at hx
   exact AddSubmonoid.supr_induction _ hx hp h0 hadd
 
 /-- A dependent version of `submodule.supr_induction`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem supr_induction' {ι : Sort _} (p : ι → Submodule R M) {C : ∀ x, (x ∈ ⨆ i, p i) → Prop}
     (hp : ∀ (i), ∀ x ∈ p i, ∀, C x (mem_supr_of_mem i ‹_›)) (h0 : C 0 (zero_mem _))
     (hadd : ∀ x y hx hy, C x hx → C y hy → C (x + y) (add_mem ‹_› ‹_›)) {x : M} (hx : x ∈ ⨆ i, p i) : C x hx := by
@@ -641,6 +644,24 @@ instance : IsCompactlyGenerated (Submodule R M) :=
         rcases(Set.mem_image _ _ _).1 ht with ⟨x, hx, rfl⟩
         apply singleton_span_is_compact_element, by
         rw [Sup_eq_supr, supr_image, ← span_eq_supr_of_singleton_spans, span_eq]⟩⟩⟩
+
+/-- A submodule is equal to the supremum of the spans of the submodule's nonzero elements. -/
+theorem submodule_eq_Sup_le_nonzero_spans (p : Submodule R M) :
+    p = sup { T : Submodule R M | ∃ (m : M)(hm : m ∈ p)(hz : m ≠ 0), T = span R {m} } := by
+  let S := { T : Submodule R M | ∃ (m : M)(hm : m ∈ p)(hz : m ≠ 0), T = span R {m} }
+  apply le_antisymmₓ
+  · intro m hm
+    by_cases' h : m = 0
+    · rw [h]
+      simp
+      
+    · exact @le_Sup _ _ S _ ⟨m, ⟨hm, ⟨h, rfl⟩⟩⟩ m (mem_span_singleton_self m)
+      
+    
+  · rw [Sup_le_iff]
+    rintro S ⟨_, ⟨_, ⟨_, rfl⟩⟩⟩
+    rwa [span_singleton_le_iff_mem]
+    
 
 theorem lt_sup_iff_not_mem {I : Submodule R M} {a : M} : (I < I⊔R∙a) ↔ a ∉ I := by
   constructor
@@ -711,12 +732,12 @@ variable {M' : Type _} [AddCommMonoidₓ M'] [Module R M'] (q₁ q₁' : Submodu
 
 /-- The product of two submodules is a submodule. -/
 def prod : Submodule R (M × M') :=
-  { p.toAddSubmonoid.Prod q₁.toAddSubmonoid with Carrier := (p : Set M) ×ˢ (q₁ : Set M'),
+  { p.toAddSubmonoid.Prod q₁.toAddSubmonoid with Carrier := p ×ˢ q₁,
     smul_mem' := by
       rintro a ⟨x, y⟩ ⟨hx, hy⟩ <;> exact ⟨smul_mem _ a hx, smul_mem _ a hy⟩ }
 
 @[simp]
-theorem prod_coe : (prod p q₁ : Set (M × M')) = (p : Set M) ×ˢ (q₁ : Set M') :=
+theorem prod_coe : (prod p q₁ : Set (M × M')) = p ×ˢ q₁ :=
   rfl
 
 @[simp]
@@ -933,9 +954,13 @@ theorem ker_to_span_singleton {x : V} (h : x ≠ 0) : (toSpanSingleton K V x).ke
     rw [mem_ker] at hc
     by_contra hc'
     have : x = 0
-    calc x = c⁻¹ • c • x := by
-        rw [← mul_smul, inv_mul_cancel hc', one_smul]_ = c⁻¹ • (to_span_singleton K V x) c := rfl _ = 0 := by
+    calc
+      x = c⁻¹ • c • x := by
+        rw [← mul_smul, inv_mul_cancel hc', one_smul]
+      _ = c⁻¹ • (to_span_singleton K V x) c := rfl
+      _ = 0 := by
         rw [hc, smul_zero]
+      
     tauto
     
   · rw [mem_ker, Submodule.mem_bot]

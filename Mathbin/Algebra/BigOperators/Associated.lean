@@ -130,8 +130,8 @@ theorem prod_eq_one_iff {p : Multiset (Associates α)} : p.Prod = 1 ↔ ∀, ∀
       simp (config := { contextual := true })[← mul_eq_one_iff, ← or_imp_distrib, ← forall_and_distrib])
 
 theorem prod_le_prod {p q : Multiset (Associates α)} (h : p ≤ q) : p.Prod ≤ q.Prod := by
-  have := Classical.decEq (Associates α)
-  have := Classical.decEq α
+  haveI := Classical.decEq (Associates α)
+  haveI := Classical.decEq α
   suffices p.prod ≤ (p + (q - p)).Prod by
     rwa [add_tsub_cancel_of_le h] at this
   suffices p.prod * 1 ≤ p.prod * (q - p).Prod by

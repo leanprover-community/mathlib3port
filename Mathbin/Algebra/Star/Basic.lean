@@ -54,10 +54,8 @@ variable {R : Type u}
 
 export HasStar (star)
 
-/-- A star operation (e.g. complex conjugate).
--/
-add_decl_doc star
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident star]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Typeclass for a star operation with is involutive.
 -/
 class HasInvolutiveStar (R : Type u) extends HasStar R where
@@ -439,7 +437,7 @@ instance Invertible.star {R : Type _} [Monoidₓ R] [StarSemigroup R] (r : R) [I
 
 theorem star_inv_of {R : Type _} [Monoidₓ R] [StarSemigroup R] (r : R) [Invertible r] [Invertible (star r)] :
     star (⅟ r) = ⅟ (star r) := by
-  let this := Invertible.star r
+  letI := Invertible.star r
   convert (rfl : star (⅟ r) = _)
 
 namespace MulOpposite

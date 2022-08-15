@@ -26,14 +26,14 @@ namespace MeasureTheory
 
 variable {G M α : Type _}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_vadd] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_vadd] []
 /-- A measure `μ : measure α` is invariant under an additive action of `M` on `α` if for any
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c +ᵥ x` is equal to
 the measure of `s`. -/
 class VaddInvariantMeasure (M α : Type _) [HasVadd M α] {_ : MeasurableSpace α} (μ : Measure α) : Prop where
   measure_preimage_vadd : ∀ (c : M) ⦃s : Set α⦄, MeasurableSet s → μ ((fun x => c +ᵥ x) ⁻¹' s) = μ s
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_smul] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_smul] []
 /-- A measure `μ : measure α` is invariant under a multiplicative action of `M` on `α` if for any
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c • x` is equal to
 the measure of `s`. -/
@@ -113,23 +113,8 @@ theorem smul_invariant_measure_tfae :
     
   tfae_finish
 
-/-- Equivalent definitions of a measure invariant under an additive action of a group.
-
-- 0: `vadd_invariant_measure G α μ`;
-
-- 1: for every `c : G` and a measurable set `s`, the measure of the preimage of `s` under
-     vector addition `(+ᵥ) c` is equal to the measure of `s`;
-
-- 2: for every `c : G` and a measurable set `s`, the measure of the image `c +ᵥ s` of `s` under
-     vector addition `(+ᵥ) c` is equal to the measure of `s`;
-
-- 3, 4: properties 2, 3 for any set, including non-measurable ones;
-
-- 5: for any `c : G`, vector addition of `c` maps `μ` to `μ`;
-
-- 6: for any `c : G`, vector addition of `c` is a measure preserving map. -/
-add_decl_doc vadd_invariant_measure_tfae
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident vadd_invariant_measure_tfae]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 variable {G} [SmulInvariantMeasure G α μ]
 
 @[to_additive]
@@ -171,11 +156,8 @@ theorem measure_is_open_pos_of_smul_invariant_of_compact_ne_zero (hK : IsCompact
         (measure_bUnion_null_iff t.countable_to_set).2 fun _ _ => by
           rwa [measure_smul_set]
 
-/-- If measure `μ` is invariant under an additive group action and is nonzero on a compact set `K`,
-then it is positive on any nonempty open set. In case of a regular measure, one can assume `μ ≠ 0`
-instead of `μ K ≠ 0`, see `measure_theory.measure_is_open_pos_of_vadd_invariant_of_ne_zero`. -/
-add_decl_doc measure_is_open_pos_of_vadd_invariant_of_compact_ne_zero
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident measure_is_open_pos_of_vadd_invariant_of_compact_ne_zero]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[to_additive]
 theorem is_locally_finite_measure_of_smul_invariant (hU : IsOpen U) (hne : U.Nonempty) (hμU : μ U ≠ ∞) :
     IsLocallyFiniteMeasure μ :=

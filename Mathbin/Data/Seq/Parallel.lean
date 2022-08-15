@@ -326,7 +326,7 @@ def parallelRec {S : Wseq (Computation α)} (C : α → Sort v) (H : ∀, ∀ s 
   rw [← map_parallel] at pe
   have h' := h
   rw [pe] at h'
-  have : terminates (parallel T) := (terminates_map_iff _ _).1 ⟨⟨_, h'⟩⟩
+  haveI : terminates (parallel T) := (terminates_map_iff _ _).1 ⟨⟨_, h'⟩⟩
   induction' e : get (parallel T) with a' c
   have : a ∈ c ∧ c ∈ S := by
     rcases exists_of_mem_map h' with ⟨d, dT, cd⟩
@@ -351,7 +351,7 @@ theorem parallel_promises {S : Wseq (Computation α)} {a} (H : ∀, ∀ s ∈ S,
 
 theorem mem_parallel {S : Wseq (Computation α)} {a} (H : ∀, ∀ s ∈ S, ∀, s ~> a) {c} (cs : c ∈ S) (ac : a ∈ c) :
     a ∈ parallel S := by
-  have := terminates_of_mem ac <;> have := terminates_parallel cs <;> exact mem_of_promises _ (parallel_promises H)
+  haveI := terminates_of_mem ac <;> haveI := terminates_parallel cs <;> exact mem_of_promises _ (parallel_promises H)
 
 theorem parallel_congr_lem {S T : Wseq (Computation α)} {a} (H : S.LiftRel Equiv T) :
     (∀, ∀ s ∈ S, ∀, s ~> a) ↔ ∀, ∀ t ∈ T, ∀, t ~> a :=

@@ -122,7 +122,7 @@ theorem linear_independent_smul_of_linear_independent {s : Finset F} :
     (LinearIndependent (FixedPoints.subfield G F) fun i : (s : Set F) => (i : F)) →
       LinearIndependent F fun i : (s : Set F) => MulAction.toFun G F i :=
   by
-  have : IsEmpty ((∅ : Finset F) : Set F) := ⟨Subtype.prop⟩
+  haveI : IsEmpty ((∅ : Finset F) : Set F) := ⟨Subtype.prop⟩
   refine' Finset.induction_on s (fun _ => linear_independent_empty_type) fun a s has ih hs => _
   rw [coe_insert] at hs⊢
   rw [linear_independent_insert (mt mem_coe.1 has)] at hs
@@ -230,7 +230,7 @@ theorem minpoly_eq_minpoly : minpoly G F x = minpoly (FixedPoints.subfield G F) 
   minpoly.eq_of_irreducible_of_monic (minpoly.irreducible G F x) (minpoly.eval₂ G F x) (minpoly.monic G F x)
 
 instance normal : Normal (FixedPoints.subfield G F) F :=
-  ⟨fun x => is_integral G F x, fun x =>
+  ⟨fun x => (is_integral G F x).IsAlgebraic _, fun x =>
     (Polynomial.splits_id_iff_splits _).1 <| by
       rw [← minpoly_eq_minpoly, minpoly, coe_algebra_map, ← Subfield.toSubring.subtype_eq_subtype,
         Polynomial.map_to_subring _ (FixedPoints.subfield G F).toSubring, prodXSubSmul]
@@ -279,7 +279,7 @@ section AlgHomFintype
 noncomputable def Fintype.subtypeProd {E : Type _} {X : Set E} (hX : X.Finite) {L : Type _} (F : E → Multiset L) :
     Fintype (∀ x : X, { l : L // l ∈ F x }) := by
   classical
-  let this : Fintype X := Set.Finite.fintype hX
+  letI : Fintype X := Set.Finite.fintype hX
   exact Pi.fintype
 
 variable (E K : Type _) [Field E] [Field K] [Algebra F E] [Algebra F K] [FiniteDimensional F E]

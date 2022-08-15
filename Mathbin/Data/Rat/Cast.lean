@@ -37,21 +37,11 @@ section WithDivRing
 
 variable [DivisionRing α]
 
-/-- Construct the canonical injection from `ℚ` into an arbitrary
-  division ring. If the field has positive characteristic `p`,
-  we define `1 / p = 1 / 0 = 0` for consistency with our
-  division by zero convention. -/
--- see Note [coercion into rings]
-instance (priority := 900) castCoe : CoeTₓ ℚ α :=
-  ⟨fun r => r.1 / r.2⟩
-
-theorem cast_def (r : ℚ) : (r : α) = r.num / r.denom :=
-  rfl
-
 @[simp]
 theorem cast_of_int (n : ℤ) : (ofInt n : α) = n :=
-  show (n / (1 : ℕ) : α) = n by
-    rw [Nat.cast_oneₓ, div_one]
+  (cast_def _).trans <|
+    show (n / (1 : ℕ) : α) = n by
+      rw [Nat.cast_oneₓ, div_one]
 
 @[simp, norm_cast]
 theorem cast_coe_int (n : ℤ) : ((n : ℚ) : α) = n := by
@@ -69,8 +59,8 @@ theorem cast_zero : ((0 : ℚ) : α) = 0 :=
 theorem cast_one : ((1 : ℚ) : α) = 1 :=
   (cast_of_int _).trans Int.cast_oneₓ
 
-theorem cast_commute (r : ℚ) (a : α) : Commute (↑r) a :=
-  (r.1.cast_commute a).div_left (r.2.cast_commute a)
+theorem cast_commute (r : ℚ) (a : α) : Commute (↑r) a := by
+  simpa only [← cast_def] using (r.1.cast_commute a).div_left (r.2.cast_commute a)
 
 theorem cast_comm (r : ℚ) (a : α) : (r : α) * a = a * r :=
   (cast_commute r a).Eq
@@ -99,8 +89,7 @@ theorem cast_mk_of_ne_zero (a b : ℤ) (b0 : (b : α) ≠ 0) : (a /. b : α) = a
   have := congr_arg (coe : ℤ → α) ((mk_eq b0' <| ne_of_gtₓ <| Int.coe_nat_pos.2 h).1 e)
   rw [Int.cast_mul, Int.cast_mul, Int.cast_coe_nat] at this
   symm
-  change (a / b : α) = n / d
-  rw [div_eq_mul_inv, eq_div_iff_mul_eq d0, mul_assoc, (d.commute_cast _).Eq, ← mul_assoc, this, mul_assoc,
+  rw [cast_def, div_eq_mul_inv, eq_div_iff_mul_eq d0, mul_assoc, (d.commute_cast _).Eq, ← mul_assoc, this, mul_assoc,
     mul_inv_cancel b0, mul_oneₓ]
 
 @[norm_cast]
@@ -124,9 +113,10 @@ theorem cast_add_of_ne_zero : ∀ {m n : ℚ}, (m.denom : α) ≠ 0 → (n.denom
 
 @[simp, norm_cast]
 theorem cast_neg : ∀ n, ((-n : ℚ) : α) = -n
-  | ⟨n, d, h, c⟩ =>
-    show (↑(-n) / d : α) = -(n / d) by
-      rw [div_eq_mul_inv, div_eq_mul_inv, Int.cast_neg, neg_mul_eq_neg_mulₓ]
+  | ⟨n, d, h, c⟩ => by
+    simpa only [← cast_def] using
+      show (↑(-n) / d : α) = -(n / d) by
+        rw [div_eq_mul_inv, div_eq_mul_inv, Int.cast_neg, neg_mul_eq_neg_mulₓ]
 
 @[norm_cast]
 theorem cast_sub_of_ne_zero {m n : ℚ} (m0 : (m.denom : α) ≠ 0) (n0 : (n.denom : α) ≠ 0) : ((m - n : ℚ) : α) = m - n :=
@@ -351,8 +341,8 @@ theorem RingHom.eq_rat_cast {k} [DivisionRing k] (f : ℚ →+* k) (r : ℚ) : f
     f r = f (r.1 / r.2) := by
       rw [← Int.cast_coe_nat, ← mk_eq_div, num_denom]
     _ = f r.1 / f r.2 := f.map_div _ _
-    _ = r.1 / r.2 := by
-      rw [map_nat_cast, map_int_cast]
+    _ = r := by
+      rw [map_nat_cast, map_int_cast, cast_def]
     
 
 -- This seems to be true for a `[char_p k]` too because `k'` must have the same characteristic
@@ -372,13 +362,15 @@ theorem RingHom.ext_rat {R : Type _} [Semiringₓ R] (f g : ℚ →+* R) : f = g
   have : ∀ n : ℤ, f n = g n := fun n =>
     show φ n = ψ n by
       rw [φ.ext_int ψ]
-  calc f (a * b⁻¹) = f a * f b⁻¹ * (g (b : ℤ) * g b⁻¹) := by
-      rw [Int.cast_coe_nat, ← g.map_mul, mul_inv_cancel b0', g.map_one, mul_oneₓ,
-        f.map_mul]_ = g a * f b⁻¹ * (f (b : ℤ) * g b⁻¹) :=
-      by
-      rw [this a, ← this b]_ = g (a * b⁻¹) := by
+  calc
+    f (a * b⁻¹) = f a * f b⁻¹ * (g (b : ℤ) * g b⁻¹) := by
+      rw [Int.cast_coe_nat, ← g.map_mul, mul_inv_cancel b0', g.map_one, mul_oneₓ, f.map_mul]
+    _ = g a * f b⁻¹ * (f (b : ℤ) * g b⁻¹) := by
+      rw [this a, ← this b]
+    _ = g (a * b⁻¹) := by
       rw [Int.cast_coe_nat, mul_assoc, ← mul_assoc (f b⁻¹), ← f.map_mul, inv_mul_cancel b0', f.map_one, one_mulₓ,
         g.map_mul]
+    
 
 instance Rat.subsingleton_ring_hom {R : Type _} [Semiringₓ R] : Subsingleton (ℚ →+* R) :=
   ⟨RingHom.ext_rat⟩

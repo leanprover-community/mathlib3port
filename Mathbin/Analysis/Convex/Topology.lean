@@ -201,7 +201,7 @@ variable [AddCommGroupₓ E] [Module ℝ E] [TopologicalSpace E] [TopologicalAdd
 theorem Set.Finite.compact_convex_hull {s : Set E} (hs : s.Finite) : IsCompact (convexHull ℝ s) := by
   rw [hs.convex_hull_eq_image]
   apply (compact_std_simplex _).Image
-  have := hs.fintype
+  haveI := hs.fintype
   apply LinearMap.continuous_on_pi
 
 /-- Convex hull of a finite set is closed. -/
@@ -273,7 +273,7 @@ end HasContinuousSmul
 
 section NormedSpace
 
-variable [SemiNormedGroup E] [NormedSpace ℝ E] {s t : Set E}
+variable [SeminormedAddCommGroup E] [NormedSpace ℝ E] {s t : Set E}
 
 /-- The norm on a real normed space is convex on any convex set. See also `seminorm.convex_on`
 and `convex_on_univ_norm`. -/

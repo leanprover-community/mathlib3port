@@ -77,6 +77,13 @@ localized [NumberField] notation "𝓞" => NumberField.ringOfIntegers
 theorem mem_ring_of_integers (x : K) : x ∈ 𝓞 K ↔ IsIntegral ℤ x :=
   Iff.rfl
 
+theorem is_integral_of_mem_ring_of_integers {K : Type _} [Field K] {x : K} (hx : x ∈ 𝓞 K) :
+    IsIntegral ℤ (⟨x, hx⟩ : 𝓞 K) := by
+  obtain ⟨P, hPm, hP⟩ := hx
+  refine' ⟨P, hPm, _⟩
+  rw [← Polynomial.aeval_def, ← Subalgebra.coe_eq_zero, Polynomial.aeval_subalgebra_coe, Polynomial.aeval_def,
+    Subtype.coe_mk, hP]
+
 /-- Given an algebra between two fields, create an algebra between their two rings of integers.
 
 For now, this is not an instance by default as it creates an equal-but-not-defeq diamond with
@@ -180,15 +187,13 @@ end AdjoinRoot
 
 namespace NumberField.Embeddings
 
-section NumberField
+section Fintype
 
-open Set FiniteDimensional Polynomial
+open FiniteDimensional
 
-variable {K L : Type _} [Field K] [Field L]
+variable (K : Type _) [Field K] [NumberField K]
 
-variable [NumberField K] [NumberField L] (x : K)
-
-variable {A : Type _} [Field A] [CharZero A]
+variable (A : Type _) [Field A] [CharZero A]
 
 /-- There are finitely many embeddings of a number field. -/
 noncomputable instance : Fintype (K →+* A) :=
@@ -196,55 +201,71 @@ noncomputable instance : Fintype (K →+* A) :=
 
 variable [IsAlgClosed A]
 
-/-- The number of embeddings of a number field is its finrank. -/
+/-- The number of embeddings of a number field is equal to its finrank. -/
 theorem card : Fintype.card (K →+* A) = finrank ℚ K := by
   rw [Fintype.of_equiv_card ring_hom.equiv_rat_alg_hom.symm, AlgHom.card]
 
-/-- For `x ∈ K`, with `K` a number field, the images of `x` by the embeddings of `K` are exactly
-the roots of the minimal polynomial of `x` over `ℚ` -/
-theorem eq_roots : (Range fun φ : K →+* A => φ x) = (minpoly ℚ x).RootSet A := by
-  have hx : IsIntegral ℚ x := IsSeparable.is_integral ℚ x
+end Fintype
+
+section Roots
+
+open Set Polynomial
+
+/-- Let `A` an algebraically closed field and let `x ∈ K`, with `K` a number field. For `F`,
+subfield of `K`, the images of `x` by the `F`-algebra morphisms from `K` to `A` are exactly
+the roots in `A` of the minimal polynomial of `x` over `F` -/
+theorem range_eq_roots (F K A : Type _) [Field F] [NumberField F] [Field K] [NumberField K] [Field A] [IsAlgClosed A]
+    [Algebra F K] [Algebra F A] (x : K) : (Range fun ψ : K →ₐ[F] A => ψ x) = (minpoly F x).RootSet A := by
+  haveI : FiniteDimensional F K := FiniteDimensional.right ℚ _ _
+  have hx : IsIntegral F x := IsSeparable.is_integral F x
   ext a
   constructor
-  · rintro ⟨φ, hφ⟩
-    rw [mem_root_set_iff, ← hφ]
-    · let ψ := RingHom.equivRatAlgHom φ
-      show (aeval (ψ x)) (minpoly ℚ x) = 0
-      rw [aeval_alg_hom_apply ψ x (minpoly ℚ x)]
+  · rintro ⟨ψ, hψ⟩
+    rw [mem_root_set_iff, ← hψ]
+    · rw [aeval_alg_hom_apply ψ x (minpoly F x)]
       simp only [← minpoly.aeval, ← map_zero]
       
     exact minpoly.ne_zero hx
     
   · intro ha
-    let Qx := AdjoinRoot (minpoly ℚ x)
-    have : Fact (Irreducible <| minpoly ℚ x) := ⟨minpoly.irreducible hx⟩
-    have hK : (aeval x) (minpoly ℚ x) = 0 := minpoly.aeval _ _
-    have hA : (aeval a) (minpoly ℚ x) = 0 := by
-      rw [aeval_def, ← eval_map, ← mem_root_set_iff']
-      exact ha
-      refine' Polynomial.Monic.ne_zero _
-      exact Polynomial.Monic.map (algebraMap ℚ A) (minpoly.monic hx)
-    let ψ : Qx →+* A := by
-      convert AdjoinRoot.lift (algebraMap ℚ A) a hA
-    let this : Algebra Qx A := RingHom.toAlgebra ψ
-    let this : Algebra Qx K :=
+    let Fx := AdjoinRoot (minpoly F x)
+    haveI : Fact (Irreducible <| minpoly F x) := ⟨minpoly.irreducible hx⟩
+    have hK : (aeval x) (minpoly F x) = 0 := minpoly.aeval _ _
+    have hA : (aeval a) (minpoly F x) = 0 := by
+      rwa [aeval_def, ← eval_map, ← mem_root_set_iff']
+      exact monic.ne_zero (monic.map (algebraMap F A) (minpoly.monic hx))
+    letI : Algebra Fx A :=
       RingHom.toAlgebra
         (by
-          convert AdjoinRoot.lift (algebraMap ℚ K) x hK)
-    let φ₀ : K →ₐ[Qx] A := by
-      refine' IsAlgClosed.lift (Algebra.is_algebraic_of_larger_base ℚ Qx _)
-      exact NumberField.is_algebraic _
-    let φ := φ₀.to_ring_hom
-    use φ
-    rw [(_ : x = (algebraMap Qx K) (AdjoinRoot.root (minpoly ℚ x)))]
-    · rw [(_ : a = ψ (AdjoinRoot.root (minpoly ℚ x)))]
-      refine' AlgHom.commutes _ _
-      exact (AdjoinRoot.lift_root hA).symm
-      
+          convert AdjoinRoot.lift (algebraMap F A) a hA)
+    letI : Algebra Fx K :=
+      RingHom.toAlgebra
+        (by
+          convert AdjoinRoot.lift (algebraMap F K) x hK)
+    haveI : FiniteDimensional Fx K := FiniteDimensional.right ℚ _ _
+    let ψ₀ : K →ₐ[Fx] A := IsAlgClosed.lift (Algebra.is_algebraic_of_finite _ _)
+    haveI : IsScalarTower F Fx K := IsScalarTower.of_ring_hom (AdjoinRoot.liftHom _ _ hK)
+    haveI : IsScalarTower F Fx A := IsScalarTower.of_ring_hom (AdjoinRoot.liftHom _ _ hA)
+    let ψ : K →ₐ[F] A := AlgHom.restrictScalars F ψ₀
+    refine' ⟨ψ, _⟩
+    rw [(_ : x = (algebraMap Fx K) (AdjoinRoot.root (minpoly F x)))]
+    rw [(_ : a = (algebraMap Fx A) (AdjoinRoot.root (minpoly F x)))]
+    exact AlgHom.commutes _ _
+    exact (AdjoinRoot.lift_root hA).symm
     exact (AdjoinRoot.lift_root hK).symm
     
 
-end NumberField
+variable (K A : Type _) [Field K] [NumberField K] [Field A] [CharZero A] [IsAlgClosed A] (x : K)
+
+/-- Let `A` be an algebraically closed field and let `x ∈ K`, with `K` a number field.
+The images of `x` by the embeddings of `K` in `A` are exactly the roots in `A` of
+the minimal polynomial of `x` over `ℚ` -/
+theorem rat_range_eq_roots : (Range fun φ : K →+* A => φ x) = (minpoly ℚ x).RootSet A := by
+  convert range_eq_roots ℚ K A x using 1
+  ext a
+  exact ⟨fun ⟨φ, hφ⟩ => ⟨φ.toRatAlgHom, hφ⟩, fun ⟨φ, hφ⟩ => ⟨φ.toRingHom, hφ⟩⟩
+
+end Roots
 
 end NumberField.Embeddings
 

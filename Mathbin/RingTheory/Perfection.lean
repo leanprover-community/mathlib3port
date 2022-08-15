@@ -208,7 +208,7 @@ end Perfection
 
 /-- A perfection map to a ring of characteristic `p` is a map that is isomorphic
 to its perfection. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure PerfectionMap (p : ℕ) [Fact p.Prime] {R : Type u₁} [CommSemiringₓ R] [CharP R p] {P : Type u₂}
   [CommSemiringₓ P] [CharP P p] [PerfectRing P p] (π : P →+* R) : Prop where
   Injective : ∀ ⦃x y : P⦄, (∀ n, π ((pthRoot P p^[n]) x) = π ((pthRoot P p^[n]) y)) → x = y
@@ -339,7 +339,7 @@ variable (p : ℕ)
 include hv
 
 /-- `O/(p)` for `O`, ring of integers of `K`. -/
-@[nolint unused_arguments has_inhabited_instance]
+@[nolint unused_arguments has_nonempty_instance]
 def ModP :=
   O ⧸ (Ideal.span {p} : Ideal O)
 
@@ -478,7 +478,7 @@ end Classical
 end ModP
 
 /-- Perfection of `O/(p)` where `O` is the ring of integers of `K`. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def PreTilt :=
   Ringₓ.Perfection (ModP K v O hv p) p
 
@@ -633,7 +633,7 @@ end PreTilt
 /-- The tilt of a field, as defined in Perfectoid Spaces by Peter Scholze, as in
 [scholze2011perfectoid]. Given a field `K` with valuation `K → ℝ≥0` and ring of integers `O`,
 this is implemented as the fraction field of the perfection of `O/(p)`. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def Tilt :=
   FractionRing (PreTilt K v O hv p)
 

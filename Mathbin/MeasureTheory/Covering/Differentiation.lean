@@ -86,11 +86,15 @@ theorem ae_eventually_measure_pos [SecondCountableTopology α] : ∀ᵐ x ∂μ,
     rcases hx ε εpos with ⟨a, a_sets, ax, μa⟩
     exact ⟨a, ⟨a_sets, μa⟩, ax⟩
   refine' le_antisymmₓ _ bot_le
-  calc μ s ≤ ∑' x : h.index, μ (h.covering x) := h.measure_le_tsum _ = ∑' x : h.index, 0 := by
+  calc
+    μ s ≤ ∑' x : h.index, μ (h.covering x) := h.measure_le_tsum
+    _ = ∑' x : h.index, 0 := by
       congr
       ext1 x
-      exact h.covering_mem x.2_ = 0 := by
+      exact h.covering_mem x.2
+    _ = 0 := by
       simp only [← tsum_zero, ← add_zeroₓ]
+    
 
 /-- For every point `x`, sufficiently small sets in a Vitali family around `x` have finite measure.
 (This is a trivial result, following from the fact that the measure is locally finite). -/
@@ -117,12 +121,15 @@ theorem measure_le_of_frequently_le [SigmaCompactSpace α] [BorelSpace α] {ρ :
     apply frequently.mono this
     rintro a ⟨ρa, av, aU⟩
     exact ⟨ρa, aU⟩
-  have : Encodable h.index := h.index_countable.to_encodable
-  calc ρ s ≤ ∑' x : h.index, ρ (h.covering x) :=
-      h.measure_le_tsum_of_absolutely_continuous hρ _ ≤ ∑' x : h.index, ν (h.covering x) :=
-      Ennreal.tsum_le_tsum fun x => (h.covering_mem x.2).1_ = ν (⋃ x : h.index, h.covering x) := by
-      rw [measure_Union h.covering_disjoint_subtype fun i => h.measurable_set_u i.2]_ ≤ ν U :=
-      measure_mono (Union_subset fun i => (h.covering_mem i.2).2)_ ≤ ν s + ε := νU
+  haveI : Encodable h.index := h.index_countable.to_encodable
+  calc
+    ρ s ≤ ∑' x : h.index, ρ (h.covering x) := h.measure_le_tsum_of_absolutely_continuous hρ
+    _ ≤ ∑' x : h.index, ν (h.covering x) := Ennreal.tsum_le_tsum fun x => (h.covering_mem x.2).1
+    _ = ν (⋃ x : h.index, h.covering x) := by
+      rw [measure_Union h.covering_disjoint_subtype fun i => h.measurable_set_u i.2]
+    _ ≤ ν U := measure_mono (Union_subset fun i => (h.covering_mem i.2).2)
+    _ ≤ ν s + ε := νU
+    
 
 section
 
@@ -139,20 +146,27 @@ theorem ae_eventually_measure_zero_of_singular (hρ : ρ ⊥ₘ μ) :
     change μ s = 0
     obtain ⟨o, o_meas, ρo, μo⟩ : ∃ o : Set α, MeasurableSet o ∧ ρ o = 0 ∧ μ (oᶜ) = 0 := hρ
     apply le_antisymmₓ _ bot_le
-    calc μ s ≤ μ (s ∩ o ∪ oᶜ) := by
+    calc
+      μ s ≤ μ (s ∩ o ∪ oᶜ) := by
         conv_lhs => rw [← inter_union_compl s o]
-        exact measure_mono (union_subset_union_right _ (inter_subset_right _ _))_ ≤ μ (s ∩ o) + μ (oᶜ) :=
-        measure_union_le _ _ _ = μ (s ∩ o) := by
-        rw [μo, add_zeroₓ]_ = ε⁻¹ * (ε • μ) (s ∩ o) := by
+        exact measure_mono (union_subset_union_right _ (inter_subset_right _ _))
+      _ ≤ μ (s ∩ o) + μ (oᶜ) := measure_union_le _ _
+      _ = μ (s ∩ o) := by
+        rw [μo, add_zeroₓ]
+      _ = ε⁻¹ * (ε • μ) (s ∩ o) := by
         simp only [← coe_nnreal_smul_apply, mul_assoc, ← mul_comm _ (ε : ℝ≥0∞)]
-        rw [Ennreal.mul_inv_cancel (Ennreal.coe_pos.2 εpos).ne' Ennreal.coe_ne_top, one_mulₓ]_ ≤ ε⁻¹ * ρ (s ∩ o) := by
+        rw [Ennreal.mul_inv_cancel (Ennreal.coe_pos.2 εpos).ne' Ennreal.coe_ne_top, one_mulₓ]
+      _ ≤ ε⁻¹ * ρ (s ∩ o) := by
         apply Ennreal.mul_le_mul le_rfl
         refine' v.measure_le_of_frequently_le ρ ((measure.absolutely_continuous.refl μ).smul ε) _ _
         intro x hx
         rw [hs] at hx
         simp only [← mem_inter_eq, ← not_ltₓ, ← not_eventually, ← mem_set_of_eq] at hx
-        exact hx.1_ ≤ ε⁻¹ * ρ o := Ennreal.mul_le_mul le_rfl (measure_mono (inter_subset_right _ _))_ = 0 := by
+        exact hx.1
+      _ ≤ ε⁻¹ * ρ o := Ennreal.mul_le_mul le_rfl (measure_mono (inter_subset_right _ _))
+      _ = 0 := by
         rw [ρo, mul_zero]
+      
   obtain ⟨u, u_anti, u_pos, u_lim⟩ : ∃ u : ℕ → ℝ≥0 , StrictAnti u ∧ (∀ n : ℕ, 0 < u n) ∧ tendsto u at_top (𝓝 0) :=
     exists_seq_strict_anti_tendsto (0 : ℝ≥0 )
   have B : ∀ᵐ x ∂μ, ∀ n, ∀ᶠ a in v.filter_at x, ρ a < u n * μ a := ae_all_iff.2 fun n => A (u n) (u_pos n)
@@ -184,10 +198,13 @@ theorem null_of_frequently_le_of_frequently_ge {c d : ℝ≥0 } (hcd : c < d) (s
   let s' := s ∩ o
   by_contra
   apply lt_irreflₓ (ρ s')
-  calc ρ s' ≤ c * μ s' := v.measure_le_of_frequently_le (c • μ) hρ s' fun x hx => hc x hx.1_ < d * μ s' := by
+  calc
+    ρ s' ≤ c * μ s' := v.measure_le_of_frequently_le (c • μ) hρ s' fun x hx => hc x hx.1
+    _ < d * μ s' := by
       apply (Ennreal.mul_lt_mul_right h _).2 (Ennreal.coe_lt_coe.2 hcd)
-      exact (lt_of_le_of_ltₓ (measure_mono (inter_subset_right _ _)) μo).Ne _ ≤ ρ s' :=
-      v.measure_le_of_frequently_le ρ ((measure.absolutely_continuous.refl μ).smul d) s' fun x hx => hd x hx.1
+      exact (lt_of_le_of_ltₓ (measure_mono (inter_subset_right _ _)) μo).Ne
+    _ ≤ ρ s' := v.measure_le_of_frequently_le ρ ((measure.absolutely_continuous.refl μ).smul d) s' fun x hx => hd x hx.1
+    
 
 /-- If `ρ` is absolutely continuous with respect to `μ`, then for almost every `x`,
 the ratio `ρ a / μ a` converges as `a` shrinks to `x` along a Vitali family for `μ`. -/
@@ -235,11 +252,11 @@ theorem ae_tendsto_lim_ratio : ∀ᵐ x ∂μ, Tendsto (fun a => ρ a / μ a) (v
   intro x hx
   exact tendsto_nhds_lim hx
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (m n)
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (m n)
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (m n)
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (m n)
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (m n)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (m n)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (m n)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (m n)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (m n)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (m n)
 /-- Given two thresholds `p < q`, the sets `{x | v.lim_ratio ρ x < p}`
 and `{x | q < v.lim_ratio ρ x}` are obviously disjoint. The key to proving that `v.lim_ratio ρ` is
 almost everywhere measurable is to show that these sets have measurable supersets which are also
@@ -317,12 +334,15 @@ theorem exists_measurable_supersets_lim_ratio {p q : ℝ≥0 } (hpq : p < q) :
     calc
       μ (to_measurable μ (sᶜ) ∪ ⋃ (m) (n), to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) ≤
           μ (to_measurable μ (sᶜ)) + μ (⋃ (m) (n), to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) :=
-        measure_union_le _ _ _ = μ (⋃ (m) (n), to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) := by
+        measure_union_le _ _
+      _ = μ (⋃ (m) (n), to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) := by
         have : μ (sᶜ) = 0 := v.ae_tendsto_div hρ
-        rw [measure_to_measurable, this,
-          zero_addₓ]_ ≤ ∑' (m) (n), μ (to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) :=
-        (measure_Union_le _).trans (Ennreal.tsum_le_tsum fun m => measure_Union_le _)_ = 0 := by
+        rw [measure_to_measurable, this, zero_addₓ]
+      _ ≤ ∑' (m) (n), μ (to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) :=
+        (measure_Union_le _).trans (Ennreal.tsum_le_tsum fun m => measure_Union_le _)
+      _ = 0 := by
         simp only [← H, ← tsum_zero]
+      
     
   -- now starts the nontrivial part of the argument. We fix `m` and `n`, and show that the
   -- measurable supersets of `u m` and `w n` have zero measure intersection by using the lemmas
@@ -381,7 +401,8 @@ theorem exists_measurable_supersets_lim_ratio {p q : ℝ≥0 } (hpq : p < q) :
   calc
     ρ (to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) ≤
         p * μ (to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) :=
-      A _ < q * μ (to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) := by
+      A
+    _ < q * μ (to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) := by
       apply (Ennreal.mul_lt_mul_right h _).2 (Ennreal.coe_lt_coe.2 hpq)
       suffices H : (ρ + μ) (to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) ≠ ∞
       · simp only [← not_or_distrib, ← Ennreal.add_eq_top, ← Pi.add_apply, ← Ne.def, ← coe_add] at H
@@ -390,7 +411,9 @@ theorem exists_measurable_supersets_lim_ratio {p q : ℝ≥0 } (hpq : p < q) :
       apply (lt_of_le_of_ltₓ (measure_mono (inter_subset_left _ _)) _).Ne
       rw [measure_to_measurable]
       apply lt_of_le_of_ltₓ (measure_mono _) (measure_spanning_sets_lt_top (ρ + μ) m)
-      exact inter_subset_right _ _ _ ≤ ρ (to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) := B
+      exact inter_subset_right _ _
+    _ ≤ ρ (to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) := B
+    
 
 theorem ae_measurable_lim_ratio : AeMeasurable (v.limRatio ρ) μ := by
   apply Ennreal.ae_measurable_of_exist_almost_disjoint_supersets _ _ fun p q hpq => _
@@ -540,16 +563,16 @@ theorem with_density_le_mul {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0 } (
     let I := Ico ((t : ℝ≥0∞) ^ n) (t ^ (n + 1))
     have M : MeasurableSet (s ∩ f ⁻¹' I) := hs.inter (f_meas measurable_set_Ico)
     simp only [← f, ← M, ← with_density_apply, ← coe_nnreal_smul_apply]
-    calc (∫⁻ x in s ∩ f ⁻¹' I, f x ∂μ) ≤ ∫⁻ x in s ∩ f ⁻¹' I, t ^ (n + 1) ∂μ :=
-        lintegral_mono_ae
-          ((ae_restrict_iff' M).2 (eventually_of_forall fun x hx => hx.2.2.le))_ = t ^ (n + 1) * μ (s ∩ f ⁻¹' I) :=
-        by
-        simp only [← lintegral_const, ← MeasurableSet.univ, ← measure.restrict_apply, ←
-          univ_inter]_ = t ^ (2 : ℤ) * (t ^ (n - 1) * μ (s ∩ f ⁻¹' I)) :=
-        by
+    calc
+      (∫⁻ x in s ∩ f ⁻¹' I, f x ∂μ) ≤ ∫⁻ x in s ∩ f ⁻¹' I, t ^ (n + 1) ∂μ :=
+        lintegral_mono_ae ((ae_restrict_iff' M).2 (eventually_of_forall fun x hx => hx.2.2.le))
+      _ = t ^ (n + 1) * μ (s ∩ f ⁻¹' I) := by
+        simp only [← lintegral_const, ← MeasurableSet.univ, ← measure.restrict_apply, ← univ_inter]
+      _ = t ^ (2 : ℤ) * (t ^ (n - 1) * μ (s ∩ f ⁻¹' I)) := by
         rw [← mul_assoc, ← Ennreal.zpow_add t_ne_zero Ennreal.coe_ne_top]
         congr 2
-        abel _ ≤ t ^ 2 * ρ (s ∩ f ⁻¹' I) := by
+        abel
+      _ ≤ t ^ 2 * ρ (s ∩ f ⁻¹' I) := by
         apply Ennreal.mul_le_mul le_rfl _
         rw [← Ennreal.coe_zpow (zero_lt_one.trans ht).ne']
         apply v.mul_measure_le_of_subset_lt_lim_ratio_meas hρ
@@ -560,13 +583,17 @@ theorem with_density_le_mul {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0 } (
         refine' mul_lt_mul' le_rfl _ (zero_le _) (Nnreal.zpow_pos t_ne_zero' _)
         rw [zpow_neg_one]
         exact Nnreal.inv_lt_one ht
-  calc ν s = ν (s ∩ f ⁻¹' {0}) + ν (s ∩ f ⁻¹' {∞}) + ∑' n : ℤ, ν (s ∩ f ⁻¹' Ico (t ^ n) (t ^ (n + 1))) :=
-      measure_eq_measure_preimage_add_measure_tsum_Ico_zpow ν f_meas hs
-        ht _ ≤
+      
+  calc
+    ν s = ν (s ∩ f ⁻¹' {0}) + ν (s ∩ f ⁻¹' {∞}) + ∑' n : ℤ, ν (s ∩ f ⁻¹' Ico (t ^ n) (t ^ (n + 1))) :=
+      measure_eq_measure_preimage_add_measure_tsum_Ico_zpow ν f_meas hs ht
+    _ ≤
         ((t : ℝ≥0∞) ^ 2 • ρ) (s ∩ f ⁻¹' {0}) + ((t : ℝ≥0∞) ^ 2 • ρ) (s ∩ f ⁻¹' {∞}) +
           ∑' n : ℤ, ((t : ℝ≥0∞) ^ 2 • ρ) (s ∩ f ⁻¹' Ico (t ^ n) (t ^ (n + 1))) :=
-      add_le_add (add_le_add A B) (Ennreal.tsum_le_tsum C)_ = ((t : ℝ≥0∞) ^ 2 • ρ) s :=
+      add_le_add (add_le_add A B) (Ennreal.tsum_le_tsum C)
+    _ = ((t : ℝ≥0∞) ^ 2 • ρ) s :=
       (measure_eq_measure_preimage_add_measure_tsum_Ico_zpow ((t : ℝ≥0∞) ^ 2 • ρ) f_meas hs ht).symm
+    
 
 /-- As an intermediate step to show that `μ.with_density (v.lim_ratio_meas hρ) = ρ`, we show here
 that `ρ ≤ t μ.with_density (v.lim_ratio_meas hρ)` for any `t > 1`. -/
@@ -596,24 +623,28 @@ theorem le_mul_with_density {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0 } (
     let I := Ico ((t : ℝ≥0∞) ^ n) (t ^ (n + 1))
     have M : MeasurableSet (s ∩ f ⁻¹' I) := hs.inter (f_meas measurable_set_Ico)
     simp only [← f, ← M, ← with_density_apply, ← coe_nnreal_smul_apply]
-    calc ρ (s ∩ f ⁻¹' I) ≤ t ^ (n + 1) * μ (s ∩ f ⁻¹' I) := by
+    calc
+      ρ (s ∩ f ⁻¹' I) ≤ t ^ (n + 1) * μ (s ∩ f ⁻¹' I) := by
         rw [← Ennreal.coe_zpow t_ne_zero']
         apply v.measure_le_mul_of_subset_lim_ratio_meas_lt hρ
         intro x hx
         apply hx.2.2.trans_le (le_of_eqₓ _)
-        rw [Ennreal.coe_zpow t_ne_zero']_ = ∫⁻ x in s ∩ f ⁻¹' I, t ^ (n + 1) ∂μ := by
-        simp only [← lintegral_const, ← MeasurableSet.univ, ← measure.restrict_apply, ←
-          univ_inter]_ ≤ ∫⁻ x in s ∩ f ⁻¹' I, t * f x ∂μ :=
-        by
+        rw [Ennreal.coe_zpow t_ne_zero']
+      _ = ∫⁻ x in s ∩ f ⁻¹' I, t ^ (n + 1) ∂μ := by
+        simp only [← lintegral_const, ← MeasurableSet.univ, ← measure.restrict_apply, ← univ_inter]
+      _ ≤ ∫⁻ x in s ∩ f ⁻¹' I, t * f x ∂μ := by
         apply lintegral_mono_ae ((ae_restrict_iff' M).2 (eventually_of_forall fun x hx => _))
         rw [add_commₓ, Ennreal.zpow_add t_ne_zero Ennreal.coe_ne_top, zpow_one]
-        exact Ennreal.mul_le_mul le_rfl hx.2.1_ = t * ∫⁻ x in s ∩ f ⁻¹' I, f x ∂μ := lintegral_const_mul _ f_meas
-  calc ρ s = ρ (s ∩ f ⁻¹' {0}) + ρ (s ∩ f ⁻¹' {∞}) + ∑' n : ℤ, ρ (s ∩ f ⁻¹' Ico (t ^ n) (t ^ (n + 1))) :=
-      measure_eq_measure_preimage_add_measure_tsum_Ico_zpow ρ f_meas hs
-        ht _ ≤
-        (t • ν) (s ∩ f ⁻¹' {0}) + (t • ν) (s ∩ f ⁻¹' {∞}) + ∑' n : ℤ, (t • ν) (s ∩ f ⁻¹' Ico (t ^ n) (t ^ (n + 1))) :=
-      add_le_add (add_le_add A B) (Ennreal.tsum_le_tsum C)_ = (t • ν) s :=
-      (measure_eq_measure_preimage_add_measure_tsum_Ico_zpow (t • ν) f_meas hs ht).symm
+        exact Ennreal.mul_le_mul le_rfl hx.2.1
+      _ = t * ∫⁻ x in s ∩ f ⁻¹' I, f x ∂μ := lintegral_const_mul _ f_meas
+      
+  calc
+    ρ s = ρ (s ∩ f ⁻¹' {0}) + ρ (s ∩ f ⁻¹' {∞}) + ∑' n : ℤ, ρ (s ∩ f ⁻¹' Ico (t ^ n) (t ^ (n + 1))) :=
+      measure_eq_measure_preimage_add_measure_tsum_Ico_zpow ρ f_meas hs ht
+    _ ≤ (t • ν) (s ∩ f ⁻¹' {0}) + (t • ν) (s ∩ f ⁻¹' {∞}) + ∑' n : ℤ, (t • ν) (s ∩ f ⁻¹' Ico (t ^ n) (t ^ (n + 1))) :=
+      add_le_add (add_le_add A B) (Ennreal.tsum_le_tsum C)
+    _ = (t • ν) s := (measure_eq_measure_preimage_add_measure_tsum_Ico_zpow (t • ν) f_meas hs ht).symm
+    
 
 theorem with_density_lim_ratio_meas_eq : μ.withDensity (v.limRatioMeas hρ) = ρ := by
   ext1 s hs
@@ -690,7 +721,7 @@ almost every point of `s` is a Lebesgue density point for `s`. A version for non
 holds, but it only gives the first conclusion, see `ae_tendsto_measure_inter_div`. -/
 theorem ae_tendsto_measure_inter_div_of_measurable_set {s : Set α} (hs : MeasurableSet s) :
     ∀ᵐ x ∂μ, Tendsto (fun a => μ (s ∩ a) / μ a) (v.filterAt x) (𝓝 (s.indicator 1 x)) := by
-  have : is_locally_finite_measure (μ.restrict s) := is_locally_finite_measure_of_le restrict_le_self
+  haveI : is_locally_finite_measure (μ.restrict s) := is_locally_finite_measure_of_le restrict_le_self
   filter_upwards [ae_tendsto_rn_deriv v (μ.restrict s), rn_deriv_restrict μ hs]
   intro x hx h'x
   simpa only [← h'x, ← restrict_apply' hs, ← inter_comm] using hx

@@ -98,11 +98,11 @@ than this.
 -/
 private theorem has_product_fin : ∀ (n : ℕ) (f : Finₓ n → C), HasProduct f
   | 0 => fun f => by
-    let this : has_limits_of_shape (discrete (Finₓ 0)) C :=
+    letI : has_limits_of_shape (discrete (Finₓ 0)) C :=
       has_limits_of_shape_of_equivalence (Discrete.equivalence.{0} fin_zero_equiv'.symm)
     infer_instance
   | n + 1 => fun f => by
-    have := has_product_fin n
+    haveI := has_product_fin n
     apply has_limit.mk ⟨_, extend_fan_is_limit f (limit.is_limit _) (limit.is_limit _)⟩
 
 /-- If `C` has a terminal object and binary products, then it has limits of shape
@@ -112,7 +112,7 @@ than this.
 -/
 private theorem has_limits_of_shape_fin (n : ℕ) : HasLimitsOfShape (Discrete (Finₓ n)) C :=
   { HasLimit := fun K => by
-      let this := has_product_fin n fun n => K.obj ⟨n⟩
+      letI := has_product_fin n fun n => K.obj ⟨n⟩
       let this : (discrete.functor fun n => K.obj ⟨n⟩) ≅ K := discrete.nat_iso fun ⟨i⟩ => iso.refl _
       apply has_limit_of_iso this }
 
@@ -141,11 +141,11 @@ variable [HasFiniteProducts.{v} C]
 noncomputable def preservesFinOfPreservesBinaryAndTerminalₓ :
     ∀ (n : ℕ) (f : Finₓ n → C), PreservesLimit (Discrete.functor f) F
   | 0 => fun f => by
-    let this : preserves_limits_of_shape (discrete (Finₓ 0)) F :=
+    letI : preserves_limits_of_shape (discrete (Finₓ 0)) F :=
       preservesLimitsOfShapeOfEquiv.{0, 0} (discrete.equivalence fin_zero_equiv'.symm) _
     infer_instance
   | n + 1 => by
-    have := preserves_fin_of_preserves_binary_and_terminal n
+    haveI := preserves_fin_of_preserves_binary_and_terminal n
     intro f
     refine' preserves_limit_of_preserves_limit_cone (extend_fan_is_limit f (limit.is_limit _) (limit.is_limit _)) _
     apply (is_limit_map_cone_fan_mk_equiv _ _ _).symm _
@@ -173,7 +173,7 @@ noncomputable def preservesFinOfPreservesBinaryAndTerminalₓ :
 def preservesShapeFinOfPreservesBinaryAndTerminal (n : ℕ) :
     PreservesLimitsOfShape (Discrete (Finₓ n)) F where PreservesLimit := fun K => by
     let this : (discrete.functor fun n => K.obj ⟨n⟩) ≅ K := discrete.nat_iso fun ⟨i⟩ => iso.refl _
-    have := preserves_fin_of_preserves_binary_and_terminal F n fun n => K.obj ⟨n⟩
+    haveI := preserves_fin_of_preserves_binary_and_terminal F n fun n => K.obj ⟨n⟩
     apply preserves_limit_of_iso_diagram F this
 
 /-- If `F` preserves the terminal object and binary products then it preserves finite products. -/
@@ -181,7 +181,7 @@ def preservesFiniteProductsOfPreservesBinaryAndTerminal (J : Type) [Fintype J] :
     PreservesLimitsOfShape (Discrete J) F := by
   classical
   let e := Fintype.equivFin J
-  have := preserves_shape_fin_of_preserves_binary_and_terminal F (Fintype.card J)
+  haveI := preserves_shape_fin_of_preserves_binary_and_terminal F (Fintype.card J)
   apply preservesLimitsOfShapeOfEquiv.{0, 0} (discrete.equivalence e).symm
 
 end Preserves
@@ -247,11 +247,11 @@ than this.
 -/
 private theorem has_coproduct_fin : ∀ (n : ℕ) (f : Finₓ n → C), HasCoproduct f
   | 0 => fun f => by
-    let this : has_colimits_of_shape (discrete (Finₓ 0)) C :=
+    letI : has_colimits_of_shape (discrete (Finₓ 0)) C :=
       has_colimits_of_shape_of_equivalence (Discrete.equivalence.{0} fin_zero_equiv'.symm)
     infer_instance
   | n + 1 => fun f => by
-    have := has_coproduct_fin n
+    haveI := has_coproduct_fin n
     apply has_colimit.mk ⟨_, extend_cofan_is_colimit f (colimit.is_colimit _) (colimit.is_colimit _)⟩
 
 /-- If `C` has an initial object and binary coproducts, then it has colimits of shape
@@ -261,12 +261,12 @@ than this.
 -/
 private theorem has_colimits_of_shape_fin (n : ℕ) : HasColimitsOfShape (Discrete (Finₓ n)) C :=
   { HasColimit := fun K => by
-      let this := has_coproduct_fin n fun n => K.obj ⟨n⟩
+      letI := has_coproduct_fin n fun n => K.obj ⟨n⟩
       let this : K ≅ discrete.functor fun n => K.obj ⟨n⟩ := discrete.nat_iso fun ⟨i⟩ => iso.refl _
       apply has_colimit_of_iso this }
 
 /-- If `C` has an initial object and binary coproducts, then it has finite coproducts. -/
-theorem has_finite_coproducts_of_has_binary_and_terminal : HasFiniteCoproducts C :=
+theorem has_finite_coproducts_of_has_binary_and_initial : HasFiniteCoproducts C :=
   ⟨fun J 𝒥 => by
     skip
     apply has_colimits_of_shape_of_equivalence (discrete.equivalence (Fintype.equivFin J)).symm
@@ -290,11 +290,11 @@ variable [HasFiniteCoproducts.{v} C]
 noncomputable def preservesFinOfPreservesBinaryAndInitialₓ :
     ∀ (n : ℕ) (f : Finₓ n → C), PreservesColimit (Discrete.functor f) F
   | 0 => fun f => by
-    let this : preserves_colimits_of_shape (discrete (Finₓ 0)) F :=
+    letI : preserves_colimits_of_shape (discrete (Finₓ 0)) F :=
       preservesColimitsOfShapeOfEquiv.{0, 0} (discrete.equivalence fin_zero_equiv'.symm) _
     infer_instance
   | n + 1 => by
-    have := preserves_fin_of_preserves_binary_and_initial n
+    haveI := preserves_fin_of_preserves_binary_and_initial n
     intro f
     refine'
       preserves_colimit_of_preserves_colimit_cocone
@@ -323,7 +323,7 @@ noncomputable def preservesFinOfPreservesBinaryAndInitialₓ :
 def preservesShapeFinOfPreservesBinaryAndInitial (n : ℕ) :
     PreservesColimitsOfShape (Discrete (Finₓ n)) F where PreservesColimit := fun K => by
     let this : (discrete.functor fun n => K.obj ⟨n⟩) ≅ K := discrete.nat_iso fun ⟨i⟩ => iso.refl _
-    have := preserves_fin_of_preserves_binary_and_initial F n fun n => K.obj ⟨n⟩
+    haveI := preserves_fin_of_preserves_binary_and_initial F n fun n => K.obj ⟨n⟩
     apply preserves_colimit_of_iso_diagram F this
 
 /-- If `F` preserves the initial object and binary coproducts then it preserves finite products. -/
@@ -331,7 +331,7 @@ def preservesFiniteCoproductsOfPreservesBinaryAndInitial (J : Type) [Fintype J] 
     PreservesColimitsOfShape (Discrete J) F := by
   classical
   let e := Fintype.equivFin J
-  have := preserves_shape_fin_of_preserves_binary_and_initial F (Fintype.card J)
+  haveI := preserves_shape_fin_of_preserves_binary_and_initial F (Fintype.card J)
   apply preservesColimitsOfShapeOfEquiv.{0, 0} (discrete.equivalence e).symm
 
 end Preserves

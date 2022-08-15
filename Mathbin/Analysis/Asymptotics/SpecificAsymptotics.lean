@@ -88,7 +88,7 @@ open BigOperators
 
 open Finset
 
-theorem Asymptotics.IsOₓ.sum_range {α : Type _} [NormedGroup α] {f : ℕ → α} {g : ℕ → ℝ} (h : f =o[at_top] g)
+theorem Asymptotics.IsOₓ.sum_range {α : Type _} [NormedAddCommGroup α] {f : ℕ → α} {g : ℕ → ℝ} (h : f =o[at_top] g)
     (hg : 0 ≤ g) (h'g : Tendsto (fun n => ∑ i in range n, g i) atTop atTop) :
     (fun n => ∑ i in range n, f i) =o[at_top] fun n => ∑ i in range n, g i := by
   have A : ∀ i, ∥g i∥ = g i := fun i => Real.norm_of_nonneg (hg i)
@@ -101,13 +101,13 @@ theorem Asymptotics.IsOₓ.sum_range {α : Type _} [NormedGroup α] {f : ℕ →
     apply is_o_const_left.2
     exact Or.inr (h'g.congr fun n => (B n).symm)
   filter_upwards [is_o_iff.1 this (half_pos εpos), Ici_mem_at_top N] with n hn Nn
-  calc ∥∑ i in range n, f i∥ = ∥(∑ i in range N, f i) + ∑ i in Ico N n, f i∥ := by
-      rw [sum_range_add_sum_Ico _ Nn]_ ≤ ∥∑ i in range N, f i∥ + ∥∑ i in Ico N n, f i∥ :=
-      norm_add_le _ _ _ ≤ ∥∑ i in range N, f i∥ + ∑ i in Ico N n, ε / 2 * g i :=
-      add_le_add le_rfl
-        (norm_sum_le_of_le _ fun i hi =>
-          hN _ (mem_Ico.1 hi).1)_ ≤ ∥∑ i in range N, f i∥ + ∑ i in range n, ε / 2 * g i :=
-      by
+  calc
+    ∥∑ i in range n, f i∥ = ∥(∑ i in range N, f i) + ∑ i in Ico N n, f i∥ := by
+      rw [sum_range_add_sum_Ico _ Nn]
+    _ ≤ ∥∑ i in range N, f i∥ + ∥∑ i in Ico N n, f i∥ := norm_add_le _ _
+    _ ≤ ∥∑ i in range N, f i∥ + ∑ i in Ico N n, ε / 2 * g i :=
+      add_le_add le_rfl (norm_sum_le_of_le _ fun i hi => hN _ (mem_Ico.1 hi).1)
+    _ ≤ ∥∑ i in range N, f i∥ + ∑ i in range n, ε / 2 * g i := by
       refine' add_le_add le_rfl _
       apply sum_le_sum_of_subset_of_nonneg
       · rw [range_eq_Ico]
@@ -115,21 +115,23 @@ theorem Asymptotics.IsOₓ.sum_range {α : Type _} [NormedGroup α] {f : ℕ →
         
       · intro i hi hident
         exact mul_nonneg (half_pos εpos).le (hg i)
-        _ ≤ ε / 2 * ∥∑ i in range n, g i∥ + ε / 2 * ∑ i in range n, g i :=
-      by
+        
+    _ ≤ ε / 2 * ∥∑ i in range n, g i∥ + ε / 2 * ∑ i in range n, g i := by
       rw [← mul_sum]
-      exact add_le_add hn (mul_le_mul_of_nonneg_left le_rfl (half_pos εpos).le)_ = ε * ∥∑ i in range n, g i∥ := by
+      exact add_le_add hn (mul_le_mul_of_nonneg_left le_rfl (half_pos εpos).le)
+    _ = ε * ∥∑ i in range n, g i∥ := by
       simp [← B]
       ring
+    
 
-theorem Asymptotics.is_o_sum_range_of_tendsto_zero {α : Type _} [NormedGroup α] {f : ℕ → α}
+theorem Asymptotics.is_o_sum_range_of_tendsto_zero {α : Type _} [NormedAddCommGroup α] {f : ℕ → α}
     (h : Tendsto f atTop (𝓝 0)) : (fun n => ∑ i in range n, f i) =o[at_top] fun n => (n : ℝ) := by
   have := ((is_o_one_iff ℝ).2 h).sum_range fun i => zero_le_one
   simp only [← sum_const, ← card_range, ← Nat.smul_one_eq_coe] at this
   exact this tendsto_coe_nat_at_top_at_top
 
 /-- The Cesaro average of a converging sequence converges to the same limit. -/
-theorem Filter.Tendsto.cesaro_smul {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {u : ℕ → E} {l : E}
+theorem Filter.Tendsto.cesaro_smul {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {u : ℕ → E} {l : E}
     (h : Tendsto u atTop (𝓝 l)) : Tendsto (fun n : ℕ => (n⁻¹ : ℝ) • ∑ i in range n, u i) atTop (𝓝 l) := by
   rw [← tendsto_sub_nhds_zero_iff, ← is_o_one_iff ℝ]
   have := Asymptotics.is_o_sum_range_of_tendsto_zero (tendsto_sub_nhds_zero_iff.2 h)

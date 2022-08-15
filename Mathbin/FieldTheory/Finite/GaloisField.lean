@@ -158,8 +158,8 @@ theorem is_splitting_field_of_card_eq (h : Fintype.card K = p ^ n) : IsSplitting
 
 instance (priority := 100) {K K' : Type _} [Field K] [Field K'] [Fintype K'] [Algebra K K'] : IsGalois K K' := by
   obtain ⟨p, hp⟩ := CharP.exists K
-  have : CharP K p := hp
-  have : CharP K' p := char_p_of_injective_algebra_map' K K' p
+  haveI : CharP K p := hp
+  haveI : CharP K' p := char_p_of_injective_algebra_map' K K' p
   exact
     IsGalois.of_separable_splitting_field
       (galois_poly_separable p (Fintype.card K')
@@ -168,7 +168,7 @@ instance (priority := 100) {K K' : Type _} [Field K] [Field K'] [Fintype K'] [Al
 
 /-- Any finite field is (possibly non canonically) isomorphic to some Galois field. -/
 def algEquivGaloisField (h : Fintype.card K = p ^ n) : K ≃ₐ[Zmod p] GaloisField p n :=
-  have := is_splitting_field_of_card_eq _ _ h
+  haveI := is_splitting_field_of_card_eq _ _ h
   is_splitting_field.alg_equiv _ _
 
 end GaloisField
@@ -212,7 +212,7 @@ def ringEquivOfCardEq (hKK' : Fintype.card K = Fintype.card K') : K ≃+* K' := 
     all_goals
       infer_instance
   rw [← hpp'] at *
-  have := fact_iff.2 hp
+  haveI := fact_iff.2 hp
   exact alg_equiv_of_card_eq p hKK'
 
 end FiniteField

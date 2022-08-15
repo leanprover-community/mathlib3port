@@ -143,7 +143,7 @@ theorem minimal_period_eq_card [Fintype (Orbit (zpowers a) b)] :
 @[to_additive]
 instance minimal_period_pos [Fintype <| Orbit (zpowers a) b] : NeZero <| minimalPeriod ((· • ·) a) b :=
   ⟨by
-    have : Nonempty (orbit (zpowers a) b) := (orbit_nonempty b).to_subtype
+    haveI : Nonempty (orbit (zpowers a) b) := (orbit_nonempty b).to_subtype
     rw [minimal_period_eq_card]
     exact Fintype.card_ne_zero⟩
 

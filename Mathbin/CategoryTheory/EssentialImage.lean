@@ -65,34 +65,33 @@ theorem ess_image_eq_of_nat_iso {F' : C ⥤ D} (h : F ≅ F') : EssImage F = Ess
 theorem obj_mem_ess_image (F : D ⥤ C) (Y : D) : F.obj Y ∈ EssImage F :=
   ⟨Y, ⟨Iso.refl _⟩⟩
 
-instance : Category F.EssImage :=
-  CategoryTheory.fullSubcategory _
+/-- The essential image of a functor, interpreted of a full subcategory of the target category. -/
+@[nolint has_nonempty_instance]
+def EssImageSubcategory (F : C ⥤ D) :=
+  FullSubcategory F.EssImage deriving Category
 
 /-- The essential image as a subcategory has a fully faithful inclusion into the target category. -/
 @[simps]
-def essImageInclusion (F : C ⥤ D) : F.EssImage ⥤ D :=
+def essImageInclusion (F : C ⥤ D) : F.EssImageSubcategory ⥤ D :=
   fullSubcategoryInclusion _ deriving Full, Faithful
 
 /-- Given a functor `F : C ⥤ D`, we have an (essentially surjective) functor from `C` to the essential
 image of `F`.
 -/
 @[simps]
-def toEssImage (F : C ⥤ D) : C ⥤ F.EssImage where
-  obj := fun X => ⟨_, obj_mem_ess_image _ X⟩
-  map := fun X Y f => (essImageInclusion F).preimage (F.map f)
+def toEssImage (F : C ⥤ D) : C ⥤ F.EssImageSubcategory :=
+  FullSubcategory.lift _ F (obj_mem_ess_image _)
 
 /-- The functor `F` factorises through its essential image, where the first functor is essentially
 surjective and the second is fully faithful.
 -/
 @[simps]
 def toEssImageCompEssentialImageInclusion (F : C ⥤ D) : F.toEssImage ⋙ F.essImageInclusion ≅ F :=
-  NatIso.ofComponents (fun X => Iso.refl _)
-    (by
-      tidy)
+  FullSubcategory.liftCompInclusion _ _ _
 
 end Functor
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1440:30: infer kinds are unsupported in Lean 4: #[`mem_ess_image] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`mem_ess_image] []
 /-- A functor `F : C ⥤ D` is essentially surjective if every object of `D` is in the essential image
 of `F`. In other words, for every `Y : D`, there is some `X : C` with `F.obj X ≅ Y`.
 
@@ -123,7 +122,7 @@ instance Faithful.to_ess_image (F : C ⥤ D) [Faithful F] : Faithful F.toEssImag
 
 /-- The induced functor of a full functor is full -/
 instance Full.toEssImage (F : C ⥤ D) [Full F] : Full F.toEssImage := by
-  have := full.of_iso F.to_ess_image_comp_essential_image_inclusion.symm
+  haveI := full.of_iso F.to_ess_image_comp_essential_image_inclusion.symm
   exact full.of_comp_faithful F.to_ess_image F.ess_image_inclusion
 
 end CategoryTheory

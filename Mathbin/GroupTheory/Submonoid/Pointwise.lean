@@ -381,7 +381,7 @@ theorem mul_le {M N P : AddSubmonoid R} : M * N ≤ P ↔ ∀, ∀ m ∈ M, ∀,
   ⟨fun H m hm n hn => H <| mul_mem_mul hm hn, fun H =>
     supr_le fun ⟨m, hm⟩ => map_le_iff_le_comap.2 fun n hn => H m hm n hn⟩
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem mul_induction_on {M N : AddSubmonoid R} {C : R → Prop} {r : R} (hr : r ∈ M * N)
     (hm : ∀, ∀ m ∈ M, ∀, ∀ n ∈ N, ∀, C (m * n)) (ha : ∀ x y, C x → C y → C (x + y)) : C r :=
   (@mul_le _ _ _ _
@@ -406,7 +406,8 @@ theorem closure_mul_closure (S T : Set R) : closure S * closure T = closure (S *
     all_goals
       intros
       simp only [← mul_zero, ← zero_mul, ← zero_mem, ← left_distrib, ← right_distrib, ← mul_smul_comm, ← smul_mul_assoc]
-      solve_by_elim [← add_mem _ _, ← zero_mem _]
+      solve_by_elim(config := { max_depth := 4, discharger := tactic.interactive.apply_instance }) [← add_mem _ _, ←
+        zero_mem _]
     
   · rw [closure_le]
     rintro _ ⟨a, b, ha, hb, rfl⟩

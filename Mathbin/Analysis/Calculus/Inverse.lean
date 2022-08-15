@@ -63,15 +63,15 @@ open TopologicalSpace Classical Nnreal
 
 noncomputable section
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜]
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜]
 
-variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
-variable {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F]
+variable {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 
-variable {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G]
+variable {G : Type _} [NormedAddCommGroup G] [NormedSpace 𝕜 G]
 
-variable {G' : Type _} [NormedGroup G'] [NormedSpace 𝕜 G']
+variable {G' : Type _} [NormedAddCommGroup G'] [NormedSpace 𝕜 G']
 
 variable {ε : ℝ}
 
@@ -236,16 +236,21 @@ theorem surj_on_closed_ball_of_nonlinear_right_inverse (hf : ApproximatesLinearO
     by
     intro z hz hgz
     set v := f'symm (y - f z) with hv
-    calc dist (f (g z)) y = ∥f (z + v) - y∥ := by
-        rw [dist_eq_norm]_ = ∥f (z + v) - f z - f' v + f' v - (y - f z)∥ := by
+    calc
+      dist (f (g z)) y = ∥f (z + v) - y∥ := by
+        rw [dist_eq_norm]
+      _ = ∥f (z + v) - f z - f' v + f' v - (y - f z)∥ := by
         congr 1
-        abel _ = ∥f (z + v) - f z - f' (z + v - z)∥ := by
-        simp only [← ContinuousLinearMap.NonlinearRightInverse.right_inv, ← add_sub_cancel', ←
-          sub_add_cancel]_ ≤ c * ∥z + v - z∥ :=
-        hf _ (hε hgz) _ (hε hz)_ ≤ c * (f'symm.nnnorm * dist (f z) y) := by
+        abel
+      _ = ∥f (z + v) - f z - f' (z + v - z)∥ := by
+        simp only [← ContinuousLinearMap.NonlinearRightInverse.right_inv, ← add_sub_cancel', ← sub_add_cancel]
+      _ ≤ c * ∥z + v - z∥ := hf _ (hε hgz) _ (hε hz)
+      _ ≤ c * (f'symm.nnnorm * dist (f z) y) := by
         apply mul_le_mul_of_nonneg_left _ (Nnreal.coe_nonneg c)
-        simpa [← hv, ← dist_eq_norm'] using f'symm.bound (y - f z)_ = c * f'symm.nnnorm * dist (f z) y := by
+        simpa [← hv, ← dist_eq_norm'] using f'symm.bound (y - f z)
+      _ = c * f'symm.nnnorm * dist (f z) y := by
         ring
+      
   -- Third bound: a complicated bound on `dist w b` (that will show up in the induction) is enough
   -- to check that `w` is in the ball on which one has controls. Will be used to check that `u n`
   -- belongs to this ball for all `n`.
@@ -264,18 +269,18 @@ theorem surj_on_closed_ball_of_nonlinear_right_inverse (hf : ApproximatesLinearO
       (f'symm.nnnorm : ℝ) * (1 - (c * f'symm.nnnorm) ^ n) * dist (f b) y =
           f'symm.nnnorm * dist (f b) y * (1 - (c * f'symm.nnnorm) ^ n) :=
         by
-        ring _ ≤ f'symm.nnnorm * dist (f b) y * 1 := by
+        ring
+      _ ≤ f'symm.nnnorm * dist (f b) y * 1 := by
         apply mul_le_mul_of_nonneg_left _ (mul_nonneg (Nnreal.coe_nonneg _) dist_nonneg)
         rw [sub_le_self_iff]
-        exact
-          pow_nonneg (mul_nonneg (Nnreal.coe_nonneg _) (Nnreal.coe_nonneg _))
-            _ _ ≤ f'symm.nnnorm * (((f'symm.nnnorm : ℝ)⁻¹ - c) * ε) :=
-        by
+        exact pow_nonneg (mul_nonneg (Nnreal.coe_nonneg _) (Nnreal.coe_nonneg _)) _
+      _ ≤ f'symm.nnnorm * (((f'symm.nnnorm : ℝ)⁻¹ - c) * ε) := by
         rw [mul_oneₓ]
-        exact mul_le_mul_of_nonneg_left (mem_closed_ball'.1 hy) (Nnreal.coe_nonneg _)_ = ε * (1 - c * f'symm.nnnorm) :=
-        by
+        exact mul_le_mul_of_nonneg_left (mem_closed_ball'.1 hy) (Nnreal.coe_nonneg _)
+      _ = ε * (1 - c * f'symm.nnnorm) := by
         field_simp
         ring
+      
   /- Main inductive control: `f (u n)` becomes exponentially close to `y`, and therefore
     `dist (u (n+1)) (u n)` becomes exponentally small, making it possible to get an inductive
     bound on `dist (u n) b`, from which one checks that `u n` remains in the ball on which we
@@ -304,23 +309,26 @@ theorem surj_on_closed_ball_of_nonlinear_right_inverse (hf : ApproximatesLinearO
           ring_exp
         
     refine' ⟨_, Ign⟩
-    calc dist (f (g (u n))) y ≤ c * f'symm.nnnorm * dist (f (u n)) y :=
-        B _ (C n _ IH.2) (C n.succ _ Ign)_ ≤ c * f'symm.nnnorm * ((c * f'symm.nnnorm) ^ n * dist (f b) y) :=
-        mul_le_mul_of_nonneg_left IH.1
-          (mul_nonneg (Nnreal.coe_nonneg _) (Nnreal.coe_nonneg _))_ = (c * f'symm.nnnorm) ^ n.succ * dist (f b) y :=
-        by
+    calc
+      dist (f (g (u n))) y ≤ c * f'symm.nnnorm * dist (f (u n)) y := B _ (C n _ IH.2) (C n.succ _ Ign)
+      _ ≤ c * f'symm.nnnorm * ((c * f'symm.nnnorm) ^ n * dist (f b) y) :=
+        mul_le_mul_of_nonneg_left IH.1 (mul_nonneg (Nnreal.coe_nonneg _) (Nnreal.coe_nonneg _))
+      _ = (c * f'symm.nnnorm) ^ n.succ * dist (f b) y := by
         ring_exp
+      
   -- Deduce from the inductive bound that `uₙ` is a Cauchy sequence, therefore converging.
   have : CauchySeq u := by
     have : ∀ n : ℕ, dist (u n) (u (n + 1)) ≤ f'symm.nnnorm * dist (f b) y * (c * f'symm.nnnorm) ^ n := by
       intro n
-      calc dist (u n) (u (n + 1)) = dist (g (u n)) (u n) := by
-          rw [usucc, dist_comm]_ ≤ f'symm.nnnorm * dist (f (u n)) y :=
-          A _ _ ≤ f'symm.nnnorm * ((c * f'symm.nnnorm) ^ n * dist (f b) y) :=
-          mul_le_mul_of_nonneg_left (D n).1
-            (Nnreal.coe_nonneg _)_ = f'symm.nnnorm * dist (f b) y * (c * f'symm.nnnorm) ^ n :=
-          by
+      calc
+        dist (u n) (u (n + 1)) = dist (g (u n)) (u n) := by
+          rw [usucc, dist_comm]
+        _ ≤ f'symm.nnnorm * dist (f (u n)) y := A _
+        _ ≤ f'symm.nnnorm * ((c * f'symm.nnnorm) ^ n * dist (f b) y) :=
+          mul_le_mul_of_nonneg_left (D n).1 (Nnreal.coe_nonneg _)
+        _ = f'symm.nnnorm * dist (f b) y * (c * f'symm.nnnorm) ^ n := by
           ring
+        
     exact cauchy_seq_of_le_geometric _ _ Icf' this
   obtain ⟨x, hx⟩ : ∃ x, tendsto u at_top (𝓝 x) := cauchy_seq_tendsto_of_complete this
   -- As all the `uₙ` belong to the ball `closed_ball b ε`, so does their limit `x`.
@@ -352,7 +360,7 @@ theorem open_image (hf : ApproximatesLinearOn f f' s c) (f'symm : f'.NonlinearRi
   refine' ⟨(f'symm.nnnorm⁻¹ - c) * ε, mul_pos (sub_pos.2 hc) ε0, _⟩
   exact (hf.surj_on_closed_ball_of_nonlinear_right_inverse f'symm (le_of_ltₓ ε0) hε).mono hε (subset.refl _)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem image_mem_nhds (hf : ApproximatesLinearOn f f' s c) (f'symm : f'.NonlinearRightInverse) {x : E} (hs : s ∈ 𝓝 x)
     (hc : Subsingleton F ∨ c < f'symm.nnnorm⁻¹) : f '' s ∈ 𝓝 (f x) := by
   obtain ⟨t, hts, ht, xt⟩ : ∃ (t : _)(_ : t ⊆ s), IsOpen t ∧ x ∈ t := _root_.mem_nhds_iff.1 hs
@@ -382,7 +390,7 @@ local notation "N" => ∥(f'.symm : F →L[𝕜] E)∥₊
 protected theorem antilipschitz (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) (hc : Subsingleton E ∨ c < N⁻¹) :
     AntilipschitzWith (N⁻¹ - c)⁻¹ (s.restrict f) := by
   cases' hc with hE hc
-  · have : Subsingleton s := ⟨fun x y => Subtype.eq <| @Subsingleton.elimₓ _ hE _ _⟩
+  · haveI : Subsingleton s := ⟨fun x y => Subtype.eq <| @Subsingleton.elimₓ _ hE _ _⟩
     exact AntilipschitzWith.of_subsingleton
     
   convert (f'.antilipschitz.restrict s).add_lipschitz_with hf.lipschitz_sub hc
@@ -399,7 +407,7 @@ protected theorem inj_on (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c)
 protected theorem surjective [CompleteSpace E] (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) Univ c)
     (hc : Subsingleton E ∨ c < N⁻¹) : Surjective f := by
   cases' hc with hE hc
-  · have : Subsingleton F := (Equivₓ.subsingleton_congr f'.to_linear_equiv.to_equiv).1 hE
+  · haveI : Subsingleton F := (Equivₓ.subsingleton_congr f'.to_linear_equiv.to_equiv).1 hE
     exact surjective_to_subsingleton _
     
   · apply forall_of_forall_mem_closed_ball (fun y : F => ∃ a, f a = y) (f 0) _
@@ -440,19 +448,22 @@ theorem to_inv (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) (hc : Sub
   rcases(mem_image _ _ _).1 hx with ⟨x', x's, rfl⟩
   rcases(mem_image _ _ _).1 hy with ⟨y', y's, rfl⟩
   rw [← Af x', ← Af y', A.left_inv x's, A.left_inv y's]
-  calc ∥x' - y' - f'.symm (A x' - A y')∥ ≤ N * ∥f' (x' - y' - f'.symm (A x' - A y'))∥ :=
-      (f' : E →L[𝕜] F).bound_of_antilipschitz f'.antilipschitz _ _ = N * ∥A y' - A x' - f' (y' - x')∥ := by
+  calc
+    ∥x' - y' - f'.symm (A x' - A y')∥ ≤ N * ∥f' (x' - y' - f'.symm (A x' - A y'))∥ :=
+      (f' : E →L[𝕜] F).bound_of_antilipschitz f'.antilipschitz _
+    _ = N * ∥A y' - A x' - f' (y' - x')∥ := by
       congr 2
       simp only [← ContinuousLinearEquiv.apply_symm_apply, ← ContinuousLinearEquiv.map_sub]
-      abel _ ≤ N * (c * ∥y' - x'∥) :=
-      mul_le_mul_of_nonneg_left (hf _ y's _ x's)
-        (Nnreal.coe_nonneg _)_ ≤ N * (c * (((N⁻¹ - c)⁻¹ : ℝ≥0 ) * ∥A y' - A x'∥)) :=
-      by
+      abel
+    _ ≤ N * (c * ∥y' - x'∥) := mul_le_mul_of_nonneg_left (hf _ y's _ x's) (Nnreal.coe_nonneg _)
+    _ ≤ N * (c * (((N⁻¹ - c)⁻¹ : ℝ≥0 ) * ∥A y' - A x'∥)) := by
       apply_rules [mul_le_mul_of_nonneg_left, Nnreal.coe_nonneg]
       rw [← dist_eq_norm, ← dist_eq_norm]
-      exact (hf.antilipschitz hc).le_mul_dist ⟨y', y's⟩ ⟨x', x's⟩_ = (N * (N⁻¹ - c)⁻¹ * c : ℝ≥0 ) * ∥A x' - A y'∥ := by
+      exact (hf.antilipschitz hc).le_mul_dist ⟨y', y's⟩ ⟨x', x's⟩
+    _ = (N * (N⁻¹ - c)⁻¹ * c : ℝ≥0 ) * ∥A x' - A y'∥ := by
       simp only [← norm_sub_rev, ← Nonneg.coe_mul]
       ring
+    
 
 include cs
 
@@ -484,8 +495,8 @@ omit cs
 
 /-- In a real vector space, a function `f` that approximates a linear equivalence on a subset `s`
 can be extended to a homeomorphism of the whole space. -/
-theorem exists_homeomorph_extension {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {F : Type _} [NormedGroup F]
-    [NormedSpace ℝ F] [FiniteDimensional ℝ F] {s : Set E} {f : E → F} {f' : E ≃L[ℝ] F} {c : ℝ≥0 }
+theorem exists_homeomorph_extension {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {F : Type _}
+    [NormedAddCommGroup F] [NormedSpace ℝ F] [FiniteDimensional ℝ F] {s : Set E} {f : E → F} {f' : E ≃L[ℝ] F} {c : ℝ≥0 }
     (hf : ApproximatesLinearOn f (f' : E →L[ℝ] F) s c)
     (hc : Subsingleton E ∨ lipschitzExtensionConstant F * c < ∥(f'.symm : F →L[ℝ] E)∥₊⁻¹) : ∃ g : E ≃ₜ F, EqOn f g s :=
   by
@@ -503,7 +514,7 @@ theorem exists_homeomorph_extension {E : Type _} [NormedGroup E] [NormedSpace �
     convert hu
     ext x
     simp only [← add_sub_cancel', ← ContinuousLinearEquiv.coe_coe, ← Pi.sub_apply]
-  have : FiniteDimensional ℝ E := f'.symm.to_linear_equiv.finite_dimensional
+  haveI : FiniteDimensional ℝ E := f'.symm.to_linear_equiv.finite_dimensional
   exact ⟨hg.to_homeomorph g hc, fg⟩
 
 end
@@ -719,9 +730,9 @@ namespace ContDiffAt
 
 variable {𝕂 : Type _} [IsROrC 𝕂]
 
-variable {E' : Type _} [NormedGroup E'] [NormedSpace 𝕂 E']
+variable {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕂 E']
 
-variable {F' : Type _} [NormedGroup F'] [NormedSpace 𝕂 F']
+variable {F' : Type _} [NormedAddCommGroup F'] [NormedSpace 𝕂 F']
 
 variable [CompleteSpace E'] (f : E' → F') {f' : E' ≃L[𝕂] F'} {a : E'}
 

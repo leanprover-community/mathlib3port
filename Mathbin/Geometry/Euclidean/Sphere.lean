@@ -61,22 +61,35 @@ theorem mul_norm_eq_abs_sub_sq_norm {x y z : V} (h₁ : ∃ k : ℝ, k ≠ 1 ∧
   let r := (k - 1)⁻¹ * (k + 1)
   have hxy : x = r • y := by
     rw [← smul_smul, eq_inv_smul_iff₀ (sub_ne_zero.mpr hk_ne_one), ← sub_eq_zero]
-    calc (k - 1) • x - (k + 1) • y = k • x - x - (k • y + y) := by
-        simp_rw [sub_smul, add_smul, one_smul]_ = k • x - k • y - (x + y) := by
-        simp_rw [← sub_sub, sub_right_comm]_ = k • (x - y) - (x + y) := by
-        rw [← smul_sub k x y]_ = 0 := sub_eq_zero.mpr hk.symm
+    calc
+      (k - 1) • x - (k + 1) • y = k • x - x - (k • y + y) := by
+        simp_rw [sub_smul, add_smul, one_smul]
+      _ = k • x - k • y - (x + y) := by
+        simp_rw [← sub_sub, sub_right_comm]
+      _ = k • (x - y) - (x + y) := by
+        rw [← smul_sub k x y]
+      _ = 0 := sub_eq_zero.mpr hk.symm
+      
   have hzy : ⟪z, y⟫ = 0 := by
     rwa [inner_eq_zero_iff_angle_eq_pi_div_two, ← norm_add_eq_norm_sub_iff_angle_eq_pi_div_two, eq_comm]
   have hzx : ⟪z, x⟫ = 0 := by
     rw [hxy, inner_smul_right, hzy, mul_zero]
-  calc ∥x - y∥ * ∥x + y∥ = ∥(r - 1) • y∥ * ∥(r + 1) • y∥ := by
-      simp [← sub_smul, ← add_smul, ← hxy]_ = ∥r - 1∥ * ∥y∥ * (∥r + 1∥ * ∥y∥) := by
-      simp_rw [norm_smul]_ = ∥r - 1∥ * ∥r + 1∥ * ∥y∥ ^ 2 := by
-      ring _ = abs ((r - 1) * (r + 1) * ∥y∥ ^ 2) := by
-      simp [← abs_mul]_ = abs (r ^ 2 * ∥y∥ ^ 2 - ∥y∥ ^ 2) := by
-      ring_nf _ = abs (∥x∥ ^ 2 - ∥y∥ ^ 2) := by
-      simp [← hxy, ← norm_smul, ← mul_powₓ, ← sq_abs]_ = abs (∥z + y∥ ^ 2 - ∥z - x∥ ^ 2) := by
+  calc
+    ∥x - y∥ * ∥x + y∥ = ∥(r - 1) • y∥ * ∥(r + 1) • y∥ := by
+      simp [← sub_smul, ← add_smul, ← hxy]
+    _ = ∥r - 1∥ * ∥y∥ * (∥r + 1∥ * ∥y∥) := by
+      simp_rw [norm_smul]
+    _ = ∥r - 1∥ * ∥r + 1∥ * ∥y∥ ^ 2 := by
+      ring
+    _ = abs ((r - 1) * (r + 1) * ∥y∥ ^ 2) := by
+      simp [← abs_mul]
+    _ = abs (r ^ 2 * ∥y∥ ^ 2 - ∥y∥ ^ 2) := by
+      ring_nf
+    _ = abs (∥x∥ ^ 2 - ∥y∥ ^ 2) := by
+      simp [← hxy, ← norm_smul, ← mul_powₓ, ← sq_abs]
+    _ = abs (∥z + y∥ ^ 2 - ∥z - x∥ ^ 2) := by
       simp [← norm_add_sq_real, ← norm_sub_sq_real, ← hzy, ← hzx, ← abs_sub_comm]
+    
 
 end InnerProductGeometry
 

@@ -422,7 +422,7 @@ theorem _root_.decidable.partrec.const' (s : Part σ) [Decidable s.Dom] : Partre
   (of_option (const (toOption s))).of_eq fun a => of_to_option s
 
 theorem const' (s : Part σ) : Partrec fun a : α => s :=
-  have := Classical.dec s.dom
+  haveI := Classical.dec s.dom
   Decidable.Partrec.const' s
 
 protected theorem bind {f : α →. β} {g : α → β →. σ} (hf : Partrec f) (hg : Partrec₂ g) :

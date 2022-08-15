@@ -52,7 +52,7 @@ instance (a b : B) [Inhabited (a ⟶ b)] : Inhabited (Hom a b) :=
   ⟨Hom.of default⟩
 
 /-- Representatives of 2-morphisms in the free bicategory. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 inductive Hom₂ : ∀ {a b : B}, Hom a b → Hom a b → Type max u v
   | id {a b} (f : Hom a b) : hom₂ f f
   | vcomp {a b} {f g h : Hom a b} (η : hom₂ f g) (θ : hom₂ g h) : hom₂ f h

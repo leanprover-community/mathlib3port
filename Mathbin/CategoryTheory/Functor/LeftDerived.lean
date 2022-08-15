@@ -55,7 +55,7 @@ variable {C : Type u} [Category.{v} C] {D : Type _} [Category D]
 -- `[abelian C] [enough_projectives C] [abelian D]` suffices to acquire all the following:
 variable [Preadditive C] [HasZeroObject C] [HasEqualizers C] [HasImages C] [HasProjectiveResolutions C]
 
-variable [Preadditive D] [HasZeroObject D] [HasEqualizers D] [HasCokernels D] [HasImages D] [HasImageMaps D]
+variable [Preadditive D] [HasEqualizers D] [HasCokernels D] [HasImages D] [HasImageMaps D]
 
 /-- The left derived functors of an additive functor. -/
 def Functor.leftDerived (F : C ⥤ D) [F.Additive] (n : ℕ) : C ⥤ D :=
@@ -69,6 +69,10 @@ def Functor.leftDerivedObjIso (F : C ⥤ D) [F.Additive] (n : ℕ) {X : C} (P : 
   (HomotopyCategory.homologyFunctor D _ n).mapIso
       (HomotopyCategory.isoOfHomotopyEquiv (F.mapHomotopyEquiv (ProjectiveResolution.homotopyEquiv _ P))) ≪≫
     (HomotopyCategory.homologyFactors D _ n).app _
+
+section
+
+variable [HasZeroObject D]
 
 /-- The 0-th derived functor of `F` on a projective object `X` is just `F.obj X`. -/
 @[simps]
@@ -87,6 +91,8 @@ def Functor.leftDerivedObjProjectiveSucc (F : C ⥤ D) [F.Additive] (n : ℕ) (X
   F.leftDerivedObjIso (n + 1) (ProjectiveResolution.self X) ≪≫
     (homologyFunctor _ _ _).mapIso ((ChainComplex.single₀MapHomologicalComplex F).app X) ≪≫
       (ChainComplex.homologyFunctorSuccSingle₀ D n).app (F.obj X) ≪≫ (Functor.zero_obj _).isoZero
+
+end
 
 /-- We can compute a left derived functor on a morphism using a lift of that morphism
 to a chain map between chosen projective resolutions.

@@ -4,7 +4,7 @@ open Lake DSL System
 -- Usually the `tag` will be of the form `nightly-2021-11-22`.
 -- If you would like to use an artifact from a PR build,
 -- it will be of the form `pr-branchname-sha`.
-def tag : String := "nightly-2022-07-18"
+def tag : String := "nightly-2022-08-15"
 def releaseRepo : String := "leanprover-community/mathport"
 def oleanTarName : String := "mathlib3-binport.tar.gz"
 
@@ -26,19 +26,19 @@ def untarReleaseArtifact (repo tag artifact : String) (to : FilePath) : BuildM P
   getReleaseArtifact repo tag artifact to
   untar (to / artifact)
 
-def fetchOleans : OpaqueTarget := { info := (), task := fetch } where
-  fetch := async (m := BuildM) do
-    IO.FS.createDirAll libDir
-    let oldTrace := Hash.ofString tag
-    buildFileUnlessUpToDate (libDir / oleanTarName) oldTrace do
-      untarReleaseArtifact releaseRepo tag oleanTarName libDir
-
-  libDir : FilePath := __dir__ / "build" / "lib"
-
 package mathlib3port where
-  extraDepTarget := Target.collectOpaqueList [fetchOleans]
+  extraDepTargets := #[`fetchOleans]
 
-require lean3port from git "https://github.com/leanprover-community/lean3port.git"@"c576264a78ae54feb56d3e782c192bc05e15c47f"
+target fetchOleans (_pkg : Package) : Unit := do
+  let libDir : FilePath := __dir__ / "build" / "lib"
+  IO.FS.createDirAll libDir
+  let oldTrace := Hash.ofString tag
+  let _ ← buildFileUnlessUpToDate (libDir / oleanTarName) oldTrace do
+    logInfo "Fetching oleans for Mathbin"
+    untarReleaseArtifact releaseRepo tag oleanTarName libDir
+  return .nil
+
+require lean3port from git "https://github.com/leanprover-community/lean3port.git"@"c54f1b1ebd3f903fc02383f3990aa77a1666e624"
 
 @[defaultTarget]
 lean_lib Mathbin where

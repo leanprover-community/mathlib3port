@@ -124,7 +124,7 @@ theorem Bounded.of_done [p.Bounded] (h : p cb n = done n' a) : n < cb.size := by
 
 theorem Static.iff : Static p ↔ ∀ (cb : CharBuffer) (n n' : ℕ) (a : α), p cb n = done n' a → n = n' :=
   ⟨fun h _ _ _ _ hp => by
-    have := h
+    haveI := h
     exact static.of_done hp, fun h => ⟨h⟩⟩
 
 theorem exists_done (p : Parser α) [p.Unfailing] (cb : CharBuffer) (n : ℕ) : ∃ (n' : ℕ)(a : α), p cb n = done n' a :=
@@ -1237,7 +1237,7 @@ theorem nat : ¬nat.Static := by
 
 theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.Static → (F p).Static) : Static (fix F) :=
   ⟨fun cb n _ _ h => by
-    have := fix_core hF (cb.size - n + 1)
+    haveI := fix_core hF (cb.size - n + 1)
     dsimp' [← fix]  at h
     exact static.of_done h⟩
 
@@ -1418,7 +1418,7 @@ theorem foldr_core {f : α → β → β} : (foldrCore f p b reps).Bounded := by
 theorem foldr {f : α → β → β} : Bounded (foldr f p b) := by
   constructor
   intro cb n hn
-  have : (Parser.foldrCore f p b (cb.size - n + 1)).Bounded := foldr_core he
+  haveI : (Parser.foldrCore f p b (cb.size - n + 1)).Bounded := foldr_core he
   obtain ⟨np, errp, hp⟩ := bounded.exists (Parser.foldrCore f p b (cb.size - n + 1)) hn
   simp [← foldr, ← hp]
 
@@ -1434,7 +1434,7 @@ theorem foldl_core {f : β → α → β} : (foldlCore f b p reps).Bounded := by
 theorem foldl {f : β → α → β} : Bounded (foldl f b p) := by
   constructor
   intro cb n hn
-  have : (Parser.foldlCore f b p (cb.size - n + 1)).Bounded := foldl_core he
+  haveI : (Parser.foldlCore f b p (cb.size - n + 1)).Bounded := foldl_core he
   obtain ⟨np, errp, hp⟩ := bounded.exists (Parser.foldlCore f b p (cb.size - n + 1)) hn
   simp [← foldl, ← hp]
 
@@ -1479,7 +1479,7 @@ instance nat : nat.Bounded :=
 theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.Bounded → (F p).Bounded) : Bounded (fix F) := by
   constructor
   intro cb n hn
-  have : (Parser.fixCore F (cb.size - n + 1)).Bounded := fix_core hF _
+  haveI : (Parser.fixCore F (cb.size - n + 1)).Bounded := fix_core hF _
   obtain ⟨np, errp, hp⟩ := bounded.exists (Parser.fixCore F (cb.size - n + 1)) hn
   simp [← fix, ← hp]
 
@@ -1592,7 +1592,7 @@ instance foldr_core_of_static {f : α → β → β} {b : β} {reps : ℕ} [p.St
     simpa [← foldr_core_eq_done, ← h] using (static.of_done h).symm
     
   · constructor
-    have := hr
+    haveI := hr
     intro cb n
     obtain ⟨np, a, h⟩ := p.exists_done cb n
     obtain rfl : n = np := static.of_done h
@@ -1806,7 +1806,7 @@ instance nat : nat.ErrStatic :=
 
 theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.ErrStatic → (F p).ErrStatic) : ErrStatic (fix F) :=
   ⟨fun cb n _ _ h => by
-    have := fix_core hF (cb.size - n + 1)
+    haveI := fix_core hF (cb.size - n + 1)
     dsimp' [← fix]  at h
     exact err_static.of_fail h⟩
 
@@ -1984,7 +1984,7 @@ instance digit : digit.step :=
 
 theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.step → (F p).step) : Step (fix F) :=
   ⟨fun cb n _ _ h => by
-    have := fix_core hF (cb.size - n + 1)
+    haveI := fix_core hF (cb.size - n + 1)
     dsimp' [← fix]  at h
     exact of_done h⟩
 
@@ -2213,7 +2213,7 @@ instance nat : nat.Prog :=
 
 theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.Prog → (F p).Prog) : Prog (fix F) :=
   ⟨fun cb n _ _ h => by
-    have := fix_core hF (cb.size - n + 1)
+    haveI := fix_core hF (cb.size - n + 1)
     dsimp' [← fix]  at h
     exact of_done h⟩
 

@@ -174,9 +174,9 @@ variable {M}
 theorem mem_supported {s : Set α} (p : α →₀ M) : p ∈ supported M R s ↔ ↑p.Support ⊆ s :=
   Iff.rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ∉ » s)
 theorem mem_supported' {s : Set α} (p : α →₀ M) : p ∈ supported M R s ↔ ∀ (x) (_ : x ∉ s), p x = 0 := by
-  have := Classical.decPred fun x : α => x ∈ s <;> simp [← mem_supported, ← Set.subset_def, ← not_imp_comm]
+  haveI := Classical.decPred fun x : α => x ∈ s <;> simp [← mem_supported, ← Set.subset_def, ← not_imp_comm]
 
 theorem mem_supported_support (p : α →₀ M) : p ∈ Finsupp.supported M R (p.Support : Set α) := by
   rw [Finsupp.mem_supported]
@@ -240,7 +240,7 @@ theorem supported_univ : supported M R (Set.Univ : Set α) = ⊤ :=
 
 theorem supported_Union {δ : Type _} (s : δ → Set α) : supported M R (⋃ i, s i) = ⨆ i, supported M R (s i) := by
   refine' le_antisymmₓ _ (supr_le fun i => supported_mono <| Set.subset_Union _ _)
-  have := Classical.decPred fun x => x ∈ ⋃ i, s i
+  haveI := Classical.decPred fun x => x ∈ ⋃ i, s i
   suffices ((Submodule.subtype _).comp (restrict_dom M R (⋃ i, s i))).range ≤ ⨆ i, supported M R (s i) by
     rwa [LinearMap.range_comp, range_restrict_dom, map_top, range_subtype] at this
   rw [range_le_iff_comap, eq_top_iff]
@@ -403,14 +403,14 @@ theorem lmap_domain_supported [Nonempty α] (f : α → α') (s : Set α) :
           simpa using hl hc)
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (a b «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (a b «expr ∈ » s)
 theorem lmap_domain_disjoint_ker (f : α → α') {s : Set α} (H : ∀ (a b) (_ : a ∈ s) (_ : b ∈ s), f a = f b → a = b) :
     Disjoint (supported M R s) (lmapDomain M R f).ker := by
   rintro l ⟨h₁, h₂⟩
   rw [SetLike.mem_coe, mem_ker, lmap_domain_apply, map_domain] at h₂
   simp
   ext x
-  have := Classical.decPred fun x => x ∈ s
+  haveI := Classical.decPred fun x => x ∈ s
   by_cases' xs : x ∈ s
   · have : Finsupp.sum l (fun a => Finsupp.single (f a)) (f x) = 0 := by
       rw [h₂]
@@ -537,7 +537,7 @@ theorem span_image_eq_map_total (s : Set α) :
   · refine' map_le_iff_le_comap.2 fun z hz => _
     have : ∀ i, z i • v i ∈ span R (v '' s) := by
       intro c
-      have := Classical.decPred fun x => x ∈ s
+      haveI := Classical.decPred fun x => x ∈ s
       by_cases' c ∈ s
       · exact smul_mem _ _ (subset_span (Set.mem_image_of_mem _ h))
         
@@ -644,8 +644,8 @@ theorem dom_lcongr_single {α₁ : Type _} {α₂ : Type _} (e : α₁ ≃ α₂
 
 /-- An equivalence of sets induces a linear equivalence of `finsupp`s supported on those sets. -/
 noncomputable def congr {α' : Type _} (s : Set α) (t : Set α') (e : s ≃ t) : supported M R s ≃ₗ[R] supported M R t := by
-  have := Classical.decPred fun x => x ∈ s
-  have := Classical.decPred fun x => x ∈ t
+  haveI := Classical.decPred fun x => x ∈ s
+  haveI := Classical.decPred fun x => x ∈ t
   refine' Finsupp.supportedEquivFinsupp s ≪≫ₗ (_ ≪≫ₗ (Finsupp.supportedEquivFinsupp t).symm)
   exact Finsupp.domLcongr e
 
@@ -855,29 +855,11 @@ theorem LinearMap.map_finsupp_total (f : M →ₗ[R] N) {ι : Type _} {g : ι �
 
 theorem Submodule.exists_finset_of_mem_supr {ι : Sort _} (p : ι → Submodule R M) {m : M} (hm : m ∈ ⨆ i, p i) :
     ∃ s : Finset ι, m ∈ ⨆ i ∈ s, p i := by
-  obtain ⟨f, hf, rfl⟩ : ∃ f ∈ Finsupp.supported R R (⋃ i, ↑(p i)), Finsupp.total M M R id f = m := by
-    have aux : ((id : M → M) '' ⋃ i : ι, ↑(p i)) = ⋃ i : ι, ↑(p i) := Set.image_id _
-    rwa [supr_eq_span, ← aux, Finsupp.mem_span_image_iff_total R] at hm
-  let t : Finset M := f.support
-  have ht : ∀ x : { x // x ∈ t }, ∃ i, ↑x ∈ p i := by
-    intro x
-    rw [Finsupp.mem_supported] at hf
-    specialize hf x.2
-    rwa [Set.mem_Union] at hf
-  choose g hg using ht
-  let s : Finset ι := finset.univ.image g
-  use s
-  simp only [← mem_supr, ← supr_le_iff]
-  intro N hN
-  rw [Finsupp.total_apply, Finsupp.sum, ← SetLike.mem_coe]
-  apply N.sum_mem
-  intro x hx
-  apply Submodule.smul_mem
-  let i : ι := g ⟨x, hx⟩
-  have hi : i ∈ s := by
-    rw [Finset.mem_image]
-    exact ⟨⟨x, hx⟩, Finset.mem_univ _, rfl⟩
-  exact hN i hi (hg _)
+  have :=
+    CompleteLattice.IsCompactElement.exists_finset_of_le_supr (Submodule R M)
+      (Submodule.singleton_span_is_compact_element m) p
+  simp only [← Submodule.span_singleton_le_iff_mem] at this
+  exact this hm
 
 /-- `submodule.exists_finset_of_mem_supr` as an `iff` -/
 theorem Submodule.mem_supr_iff_exists_finset {ι : Sort _} {p : ι → Submodule R M} {m : M} :
@@ -909,7 +891,7 @@ def Module.subsingletonEquiv (R M ι : Type _) [Semiringₓ R] [Subsingleton R] 
   toFun := fun m => 0
   invFun := fun f => 0
   left_inv := fun m => by
-    let this := Module.subsingleton R M
+    letI := Module.subsingleton R M
     simp only [← eq_iff_true_of_subsingleton]
   right_inv := fun f => by
     simp only [← eq_iff_true_of_subsingleton]

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Shing Tak Lam, Mario Carneiro
 -/
 import Mathbin.Data.Int.Modeq
+import Mathbin.Data.Nat.Bits
 import Mathbin.Data.Nat.Log
 import Mathbin.Data.Nat.Parity
 import Mathbin.Data.List.Indexes
@@ -143,10 +144,10 @@ theorem digits_add (b : ℕ) (h : 2 ≤ b) (x y : ℕ) (w : x < b) (w' : 0 < x �
   · cases h
     
   · cases b
-    · norm_num  at h
+    · norm_num at h
       
     · cases y
-      · norm_num  at w'
+      · norm_num at w'
         simp [← w, ← w']
         
       dsimp' [← digits]
@@ -366,10 +367,10 @@ theorem digits_eq_cons_digits_div {b n : ℕ} (h : 2 ≤ b) (w : 0 < n) : digits
   rcases b with (_ | _ | b)
   · rw [digits_zero_succ' w, Nat.mod_zeroₓ, Nat.div_zeroₓ, Nat.digits_zero_zero]
     
-  · norm_num  at h
+  · norm_num at h
     
   rcases n with (_ | n)
-  · norm_num  at w
+  · norm_num at w
     
   simp
 
@@ -565,6 +566,31 @@ theorem base_pow_length_digits_le (b m : ℕ) (hb : 2 ≤ b) : m ≠ 0 → b ^ (
     try
       linarith
   exact base_pow_length_digits_le' b m
+
+/-! ### Binary -/
+
+
+theorem digits_two_eq_bits (n : ℕ) : digits 2 n = n.bits.map fun b => cond b 1 0 := by
+  induction' n using Nat.binaryRecFromOne with b n h ih
+  · simp
+    
+  · simp
+    
+  rw [bits_append_bit _ _ fun hn => absurd hn h]
+  cases b
+  · rw [digits_def' (le_reflₓ 2)]
+    · simpa [← Nat.bit, ← Nat.bit0_val n]
+      
+    · simpa [← pos_iff_ne_zero, ← bit_eq_zero_iff]
+      
+    
+  · simpa [← Nat.bit, ← Nat.bit1_val n, ← add_commₓ, ←
+      digits_add 2 le_rfl 1 n
+        (by
+          norm_num)
+        (by
+          norm_num)]
+    
 
 /-! ### Modular Arithmetic -/
 

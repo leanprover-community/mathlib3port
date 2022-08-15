@@ -72,8 +72,12 @@ theorem map_smul (c : 𝕜) (x : V) : e (c • x) = ∥c∥₊ * e x :=
     by_cases' hc : c = 0
     · simp [← hc]
       
-    calc (∥c∥₊ : ℝ≥0∞) * e x = ∥c∥₊ * e (c⁻¹ • c • x) := by
-        rw [inv_smul_smul₀ hc]_ ≤ ∥c∥₊ * (∥c⁻¹∥₊ * e (c • x)) := _ _ = e (c • x) := _
+    calc
+      (∥c∥₊ : ℝ≥0∞) * e x = ∥c∥₊ * e (c⁻¹ • c • x) := by
+        rw [inv_smul_smul₀ hc]
+      _ ≤ ∥c∥₊ * (∥c⁻¹∥₊ * e (c • x)) := _
+      _ = e (c • x) := _
+      
     · exact Ennreal.mul_le_mul le_rfl (e.map_smul_le' _ _)
       
     · rw [← mul_assoc, nnnorm_inv, Ennreal.coe_inv, Ennreal.mul_inv_cancel _ Ennreal.coe_ne_top, one_mulₓ] <;>
@@ -208,7 +212,7 @@ def finiteSubspace : Subspace 𝕜 V where
 /-- Metric space structure on `e.finite_subspace`. We use `emetric_space.to_metric_space`
 to ensure that this definition agrees with `e.emetric_space`. -/
 instance : MetricSpace e.finiteSubspace := by
-  let this := e.emetric_space
+  letI := e.emetric_space
   refine' EmetricSpace.toMetricSpace fun x y => _
   change e (x - y) ≠ ⊤
   exact ne_top_of_le_ne_top (Ennreal.add_lt_top.2 ⟨x.2, y.2⟩).Ne (e.map_sub_le x y)
@@ -220,7 +224,7 @@ theorem finite_edist_eq (x y : e.finiteSubspace) : edist x y = e (x - y) :=
   rfl
 
 /-- Normed group instance on `e.finite_subspace`. -/
-instance : NormedGroup e.finiteSubspace :=
+instance : NormedAddCommGroup e.finiteSubspace :=
   { finiteSubspace.metricSpace e, Submodule.addCommGroup _ with norm := fun x => (e x).toReal,
     dist_eq := fun x y => rfl }
 

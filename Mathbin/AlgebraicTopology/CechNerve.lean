@@ -167,7 +167,7 @@ def equivalenceLeftToRight (X : SimplicialObject.Augmented C) (F : Arrow C) (G :
         Limits.widePullback.lift (X.Hom.app _ ≫ G.right)
           (fun i => X.left.map (SimplexCategory.const x.unop i).op ≫ G.left) fun i => by
           dsimp'
-          erw [category.assoc, arrow.w, augmented.to_arrow_obj_hom, nat_trans.naturality_assoc, functor.const.obj_map,
+          erw [category.assoc, arrow.w, augmented.to_arrow_obj_hom, nat_trans.naturality_assoc, functor.const_obj_map,
             category.id_comp],
       naturality' := by
         intro x y f
@@ -178,7 +178,7 @@ def equivalenceLeftToRight (X : SimplicialObject.Augmented C) (F : Arrow C) (G :
           rfl
           
         · dsimp'
-          simp only [← functor.const.obj_map, ← nat_trans.naturality_assoc, ← wide_pullback.lift_base, ← category.assoc]
+          simp only [← functor.const_obj_map, ← nat_trans.naturality_assoc, ← wide_pullback.lift_base, ← category.assoc]
           erw [category.id_comp]
            }
   right := G.right
@@ -404,7 +404,7 @@ def equivalenceRightToLeft (F : Arrow C) (X : CosimplicialObject.Augmented C) (G
           rfl
           
         · dsimp'
-          simp only [← functor.const.obj_map, nat_trans.naturality, ← wide_pushout.head_desc_assoc, ←
+          simp only [← functor.const_obj_map, nat_trans.naturality, ← wide_pushout.head_desc_assoc, ←
             wide_pushout.head_desc, ← category.assoc]
           erw [category.id_comp]
            }

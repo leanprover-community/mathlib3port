@@ -199,9 +199,11 @@ theorem separable_X_pow_sub_C_unit {n : ℕ} (u : Rˣ) (hn : IsUnit (n : R)) : S
         C (↑u⁻¹ * ↑u) - C ↑u⁻¹ * X ^ n + C ↑u⁻¹ * C (n' * ↑n) * (X * X ^ (n - 1)) :=
       by
       simp only [← C.map_mul, ← C_eq_nat_cast]
-      ring _ = 1 := by
+      ring
+    _ = 1 := by
       simp only [← Units.inv_mul, ← hn', ← C.map_one, ← mul_oneₓ, pow_succₓ, ←
         Nat.sub_add_cancelₓ (show 1 ≤ n from hpos), ← sub_add_cancel]
+    
 
 theorem root_multiplicity_le_one_of_separable [Nontrivial R] {p : R[X]} (hsep : Separable p) (x : R) :
     rootMultiplicity x p ≤ 1 := by
@@ -268,12 +270,12 @@ theorem separable_or {f : F[X]} (hf : Irreducible f) :
     f.Separable ∨ ¬f.Separable ∧ ∃ g : F[X], Irreducible g ∧ expand F p g = f :=
   if H : f.derivative = 0 then by
     rcases p.eq_zero_or_pos with (rfl | hp)
-    · have := CharP.char_p_to_char_zero F
+    · haveI := CharP.char_p_to_char_zero F
       have := nat_degree_eq_zero_of_derivative_eq_zero H
       have := (nat_degree_pos_iff_degree_pos.mpr <| degree_pos_of_irreducible hf).ne'
       contradiction
       
-    have := is_local_ring_hom_expand F hp
+    haveI := is_local_ring_hom_expand F hp
     exact
       Or.inr
         ⟨by
@@ -494,8 +496,8 @@ variable {E}
 
 theorem IsSeparable.of_alg_hom (E' : Type _) [Field E'] [Algebra F E'] (f : E →ₐ[F] E') [IsSeparable F E'] :
     IsSeparable F E := by
-  let this : Algebra E E' := RingHom.toAlgebra f.to_ring_hom
-  have : IsScalarTower F E E' := IsScalarTower.of_algebra_map_eq fun x => (f.commutes x).symm
+  letI : Algebra E E' := RingHom.toAlgebra f.to_ring_hom
+  haveI : IsScalarTower F E E' := IsScalarTower.of_algebra_map_eq fun x => (f.commutes x).symm
   exact is_separable_tower_bot_of_is_separable F E E'
 
 end IsSeparableTower

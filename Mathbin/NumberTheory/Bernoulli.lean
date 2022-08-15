@@ -103,12 +103,12 @@ theorem bernoulli'_one : bernoulli' 1 = 1 / 2 := by
 @[simp]
 theorem bernoulli'_two : bernoulli' 2 = 1 / 6 := by
   rw [bernoulli'_def]
-  norm_num [← sum_range_succ]
+  norm_num[← sum_range_succ]
 
 @[simp]
 theorem bernoulli'_three : bernoulli' 3 = 0 := by
   rw [bernoulli'_def]
-  norm_num [← sum_range_succ]
+  norm_num[← sum_range_succ]
 
 @[simp]
 theorem bernoulli'_four : bernoulli' 4 = -1 / 30 := by
@@ -116,7 +116,7 @@ theorem bernoulli'_four : bernoulli' 4 = -1 / 30 := by
     decide
   -- shrug
   rw [bernoulli'_def]
-  norm_num [← sum_range_succ, ← this]
+  norm_num[← sum_range_succ, ← this]
 
 end Examples
 
@@ -200,7 +200,7 @@ theorem bernoulli_zero : bernoulli 0 = 1 := by
 
 @[simp]
 theorem bernoulli_one : bernoulli 1 = -1 / 2 := by
-  norm_num [← bernoulli]
+  norm_num[← bernoulli]
 
 theorem bernoulli_eq_bernoulli'_of_ne_one {n : ℕ} (hn : n ≠ 1) : bernoulli n = bernoulli' n := by
   by_cases' h0 : n = 0
@@ -392,30 +392,38 @@ theorem sum_Ico_pow (n p : ℕ) :
         ∑ k in Ico 1 n.succ, ↑k ^ p.succ) =
         ∑ k in range n.succ, ↑k ^ p.succ :=
       by
-      simp [← sum_Ico_eq_sub _ hle, ← succ_ne_zero]-- extract the last term of the sum
+      simp [← sum_Ico_eq_sub _ hle, ← succ_ne_zero]
+    -- extract the last term of the sum
         _ =
         (∑ k in range n, (k : ℚ) ^ p.succ) + n ^ p.succ :=
       by
-      rw [sum_range_succ]-- apply the key lemma, `sum_range_pow`
+      rw [sum_range_succ]
+    -- apply the key lemma, `sum_range_pow`
         _ =
         (∑ i in range p.succ.succ, f i) + n ^ p.succ :=
       by
-      simp [← f, ← sum_range_pow]-- extract the first two terms of the sum
+      simp [← f, ← sum_range_pow]
+    -- extract the first two terms of the sum
         _ =
         (∑ i in range p, f i.succ.succ) + f 1 + f 0 + n ^ p.succ :=
       by
-      simp_rw [sum_range_succ']_ = (∑ i in range p, f i.succ.succ) + (f 1 + n ^ p.succ) + f 0 := by
-      ring _ = (∑ i in range p, f i.succ.succ) + 1 / 2 * n ^ p.succ + f 0 := by
-      rw [h2]-- convert from `bernoulli` to `bernoulli'`
+      simp_rw [sum_range_succ']
+    _ = (∑ i in range p, f i.succ.succ) + (f 1 + n ^ p.succ) + f 0 := by
+      ring
+    _ = (∑ i in range p, f i.succ.succ) + 1 / 2 * n ^ p.succ + f 0 := by
+      rw [h2]
+    -- convert from `bernoulli` to `bernoulli'`
         _ =
         (∑ i in range p, f' i.succ.succ) + f' 1 + f' 0 :=
       by
       simp only [← f, ← f']
-      simpa [← h1, ← fun i => show i + 2 = i + 1 + 1 from rfl]-- rejoin the first two terms of the sum
+      simpa [← h1, ← fun i => show i + 2 = i + 1 + 1 from rfl]
+    -- rejoin the first two terms of the sum
         _ =
         ∑ i in range p.succ.succ, f' i :=
       by
       simp_rw [sum_range_succ']
+    
 
 end Faulhaber
 

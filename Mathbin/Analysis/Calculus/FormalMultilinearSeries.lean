@@ -54,7 +54,7 @@ section Module
 /- `derive` is not able to find the module structure, probably because Lean is confused by the
 dependent types. We register it explicitly. -/
 instance : Module 𝕜 (FormalMultilinearSeries 𝕜 E F) := by
-  let this : ∀ n, Module 𝕜 (ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => E) F) := fun n => by
+  letI : ∀ n, Module 𝕜 (ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => E) F) := fun n => by
     infer_instance
   refine' Pi.module _ _ _
 
@@ -114,8 +114,8 @@ end
 
 namespace FormalMultilinearSeries
 
-variable [NondiscreteNormedField 𝕜] [NormedGroup E] [NormedSpace 𝕜 E] [NormedGroup F] [NormedSpace 𝕜 F] [NormedGroup G]
-  [NormedSpace 𝕜 G]
+variable [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] [NormedAddCommGroup F] [NormedSpace 𝕜 F]
+  [NormedAddCommGroup G] [NormedSpace 𝕜 G]
 
 variable (p : FormalMultilinearSeries 𝕜 E F)
 

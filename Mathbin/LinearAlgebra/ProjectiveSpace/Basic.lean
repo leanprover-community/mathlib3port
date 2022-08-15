@@ -44,7 +44,7 @@ def projectivizationSetoid : Setoidₓ { v : V // v ≠ 0 } :=
 
 /-- The projectivization of the `K`-vector space `V`.
 The notation `ℙ K V` is preferred. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def Projectivization :=
   Quotientₓ (projectivizationSetoid K V)
 
@@ -120,7 +120,7 @@ variable {K}
 
 /-- An induction principle for `projectivization`.
 Use as `induction v using projectivization.ind`. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem ind {P : ℙ K V → Prop} (h : ∀ (v : V) (h : v ≠ 0), P (mk K v h)) : ∀ p, P p :=
   Quotientₓ.ind' <| Subtype.rec <| h
 

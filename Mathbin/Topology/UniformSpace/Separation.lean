@@ -188,7 +188,7 @@ theorem separated_iff_t2 : SeparatedSpace α ↔ T2Space α := by
 instance (priority := 100) separated_t3 [SeparatedSpace α] : T3Space α :=
   { @T2Space.t1_space _ _ (separated_iff_t2.mp ‹_›) with
     to_t0_space := by
-      have := separated_iff_t2.mp ‹_›
+      haveI := separated_iff_t2.mp ‹_›
       exact T1Space.t0_space,
     regular := fun s a hs ha =>
       have : sᶜ ∈ 𝓝 a := IsOpen.mem_nhds hs.is_open_compl ha
@@ -236,13 +236,13 @@ theorem is_closed_range_of_spaced_out {ι} [SeparatedSpace α] {V₀ : Set (α �
 -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » s)
 /-- A set `s` in a uniform space `α` is separated if the separation relation `𝓢 α`
 induces the trivial relation on `s`. -/
 def IsSeparated (s : Set α) : Prop :=
   ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), (x, y) ∈ 𝓢 α → x = y
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem is_separated_def (s : Set α) : IsSeparated s ↔ ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), (x, y) ∈ 𝓢 α → x = y :=
   Iff.rfl
 
@@ -482,7 +482,11 @@ theorem uniform_continuous_map (f : α → β) : UniformContinuous (map f) :=
 
 theorem map_unique {f : α → β} (hf : UniformContinuous f) {g : SeparationQuotient α → SeparationQuotient β}
     (comm : Quotientₓ.mk ∘ f = g ∘ Quotientₓ.mk) : map f = g := by
-  ext ⟨a⟩ <;> calc map f ⟦a⟧ = ⟦f a⟧ := map_mk hf a _ = g ⟦a⟧ := congr_fun comm a
+  ext ⟨a⟩ <;>
+    calc
+      map f ⟦a⟧ = ⟦f a⟧ := map_mk hf a
+      _ = g ⟦a⟧ := congr_fun comm a
+      
 
 theorem map_id : map (@id α) = id :=
   map_unique uniform_continuous_id rfl

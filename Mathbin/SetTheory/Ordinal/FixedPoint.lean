@@ -91,7 +91,7 @@ theorem nfp_family_le_fp (H : ∀ i, Monotone (f i)) {a b} (ab : a ≤ b) (h : �
     by_cases' hι : IsEmpty ι
     · rwa [@Unique.eq_default _ (@List.uniqueOfIsEmpty ι hι) l]
       
-    · have := not_is_empty_iff.1 hι
+    · haveI := not_is_empty_iff.1 hι
       induction' l with i l IH generalizing a
       · exact ab
         
@@ -282,7 +282,7 @@ theorem apply_le_nfp_bfamily (ho : o ≠ 0) (H : ∀ i hi, IsNormal (f i hi)) {a
 theorem nfp_bfamily_eq_self {a} (h : ∀ i hi, f i hi a = a) : nfpBfamily o f a = a :=
   nfp_family_eq_self fun _ => h _ _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i hi)
 /-- A generalization of the fixed point lemma for normal functions: any family of normal functions
     has an unbounded set of common fixed points. -/
 theorem fp_bfamily_unbounded (H : ∀ i hi, IsNormal (f i hi)) :
@@ -326,7 +326,7 @@ theorem fp_iff_deriv_bfamily (H : ∀ i hi, IsNormal (f i hi)) {a} :
   rw [← (H i hi).le_iff_eq]
   exact h i hi
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i hi)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i hi)
 theorem deriv_bfamily_eq_enum_ord (H : ∀ i hi, IsNormal (f i hi)) :
     derivBfamily o f = enumOrd (⋂ (i) (hi), Function.FixedPoints (f i hi)) := by
   rw [← eq_enum_ord _ (fp_bfamily_unbounded H)]

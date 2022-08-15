@@ -78,7 +78,7 @@ def invertibleOfPowEqOne (x : M) (n : ℕ) (hx : x ^ n = 1) (hn : 0 < n) : Inver
   exact tsub_add_cancel_of_le (Nat.succ_le_of_ltₓ hn)
 
 theorem is_unit_of_pow_eq_one (x : M) (n : ℕ) (hx : x ^ n = 1) (hn : 0 < n) : IsUnit x := by
-  have := invertibleOfPowEqOne x n hx hn
+  haveI := invertibleOfPowEqOne x n hx hn
   exact is_unit_of_invertible x
 
 theorem smul_pow [MulAction M N] [IsScalarTower M N N] [SmulCommClass M N N] (k : M) (x : N) (p : ℕ) :

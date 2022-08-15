@@ -114,6 +114,64 @@ theorem GradedRing.mem_support_iff [∀ (i) (x : 𝒜 i), Decidable (x ≠ 0)] (
 
 end GradedRing
 
+section AddCancelMonoid
+
+open DirectSum Dfinsupp Finset Function
+
+theorem DirectSum.coe_decompose_mul_add_of_left_mem {ι σ A} [DecidableEq ι] [AddLeftCancelMonoid ι] [Semiringₓ A]
+    [SetLike σ A] [AddSubmonoidClass σ A] (𝒜 : ι → σ) [GradedRing 𝒜] {a b : A} {i j : ι} (a_mem : a ∈ 𝒜 i) :
+    (decompose 𝒜 (a * b) (i + j) : A) = a * decompose 𝒜 b j := by
+  obtain rfl | ha := eq_or_ne a 0
+  · simp
+    
+  classical
+  lift a to 𝒜 i using a_mem
+  erw [decompose_mul, coe_mul_apply, decompose_coe,
+    support_of _ i a fun r => by
+      subst r <;> exact ha rfl,
+    singleton_product, map_filter, sum_map]
+  simp_rw [comp, embedding.coe_fn_mk, add_left_cancel_iffₓ, filter_eq']
+  refine'
+    dite (decompose 𝒜 b j = 0)
+      (fun h => by
+        simp [← if_neg (not_mem_support_iff.mpr h), ← h])
+      fun h => _
+  erw [if_pos (mem_support_iff.mpr h), Finset.sum_singleton, of_eq_same]
+  rfl
+
+theorem DirectSum.coe_decompose_mul_add_of_right_mem {ι σ A} [DecidableEq ι] [AddRightCancelMonoid ι] [Semiringₓ A]
+    [SetLike σ A] [AddSubmonoidClass σ A] (𝒜 : ι → σ) [GradedRing 𝒜] {a b : A} {i j : ι} (b_mem : b ∈ 𝒜 j) :
+    (decompose 𝒜 (a * b) (i + j) : A) = decompose 𝒜 a i * b := by
+  obtain rfl | hb := eq_or_ne b 0
+  · simp
+    
+  classical
+  lift b to 𝒜 j using b_mem
+  erw [decompose_mul, coe_mul_apply, decompose_coe,
+    support_of _ j b fun r => by
+      subst r <;> exact hb rfl,
+    product_singleton, map_filter, sum_map]
+  simp_rw [comp, embedding.coe_fn_mk, add_right_cancel_iffₓ, filter_eq']
+  refine'
+    dite (decompose 𝒜 a i = 0)
+      (fun h => by
+        simp [← if_neg (not_mem_support_iff.mpr h), ← h])
+      fun h => _
+  erw [if_pos (mem_support_iff.mpr h), Finset.sum_singleton, of_eq_same]
+  rfl
+
+theorem DirectSum.decompose_mul_add_left {ι σ A} [DecidableEq ι] [AddLeftCancelMonoid ι] [Semiringₓ A] [SetLike σ A]
+    [AddSubmonoidClass σ A] (𝒜 : ι → σ) [GradedRing 𝒜] {i j : ι} (a : 𝒜 i) {b : A} :
+    decompose 𝒜 (↑a * b) (i + j) = @GradedMonoid.GhasMul.mul ι (fun i => 𝒜 i) _ _ _ _ a (decompose 𝒜 b j) :=
+  Subtype.ext <| DirectSum.coe_decompose_mul_add_of_left_mem 𝒜 a.2
+
+theorem DirectSum.decompose_mul_add_right {ι σ A} [DecidableEq ι] [AddRightCancelMonoid ι] [Semiringₓ A] [SetLike σ A]
+    [AddSubmonoidClass σ A] (𝒜 : ι → σ) [GradedRing 𝒜] {i j : ι} {a : A} (b : 𝒜 j) :
+    decompose 𝒜 (a * ↑b) (i + j) = @GradedMonoid.GhasMul.mul ι (fun i => 𝒜 i) _ _ _ _ (decompose 𝒜 a i) b :=
+  Subtype.ext <| DirectSum.coe_decompose_mul_add_of_right_mem 𝒜 b.2
+
+end AddCancelMonoid
+
 section GradedAlgebra
 
 variable [DecidableEq ι] [AddMonoidₓ ι] [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
@@ -203,7 +261,7 @@ def GradedRing.projZeroRingHom : A →+* A where
     -- lattice structure on the abstract ones.
     let 𝒜' : ι → AddSubmonoid A := fun i =>
       (⟨𝒜 i, fun _ _ => AddMemClass.add_mem, ZeroMemClass.zero_mem _⟩ : AddSubmonoid A)
-    let this : GradedRing 𝒜' :=
+    letI : GradedRing 𝒜' :=
       { (by
           infer_instance : SetLike.GradedMonoid 𝒜) with
         decompose' := (DirectSum.decompose 𝒜 : A → ⨁ i, 𝒜 i), left_inv := DirectSum.Decomposition.left_inv,

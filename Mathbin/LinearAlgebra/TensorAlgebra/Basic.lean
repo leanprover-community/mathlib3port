@@ -54,12 +54,12 @@ inductive Rel : FreeAlgebra R M → FreeAlgebra R M → Prop-- force `ι` to be 
 
 end TensorAlgebra
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler algebra R
+-- ./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler algebra R
 /-- The tensor algebra of the module `M` over the commutative semiring `R`.
 -/
 def TensorAlgebra :=
   RingQuot (TensorAlgebra.Rel R M)deriving Inhabited, Semiringₓ,
-  «./././Mathport/Syntax/Translate/Basic.lean:1153:9: unsupported derive handler algebra R»
+  «./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler algebra R»
 
 namespace TensorAlgebra
 
@@ -135,7 +135,7 @@ theorem hom_ext {A : Type _} [Semiringₓ A] [Algebra R A] {f g : TensorAlgebra 
 and is preserved under addition and muliplication, then it holds for all of `tensor_algebra R M`.
 -/
 -- This proof closely follows `free_algebra.induction`
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction {C : TensorAlgebra R M → Prop} (h_grade0 : ∀ r, C (algebraMap R (TensorAlgebra R M) r))
     (h_grade1 : ∀ x, C (ι R x)) (h_mul : ∀ a b, C a → C b → C (a * b)) (h_add : ∀ a b, C a → C b → C (a + b))
     (a : TensorAlgebra R M) : C a := by

@@ -41,6 +41,9 @@ protected theorem refl (a : ℤ) : a ≡ a [ZMOD n] :=
 protected theorem rfl : a ≡ a [ZMOD n] :=
   Modeq.refl _
 
+instance : IsRefl _ (Modeq n) :=
+  ⟨Modeq.refl⟩
+
 @[symm]
 protected theorem symm : a ≡ b [ZMOD n] → b ≡ a [ZMOD n] :=
   Eq.symm

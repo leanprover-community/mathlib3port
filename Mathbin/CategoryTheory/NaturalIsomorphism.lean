@@ -183,6 +183,7 @@ theorem inv_map_inv_app (F : C ⥤ D ⥤ E) {X Y : C} (e : X ≅ Y) (Z : D) :
 /-- Construct a natural isomorphism between functors by giving object level isomorphisms,
 and checking naturality only in the forward direction.
 -/
+@[simps]
 def ofComponents (app : ∀ X : C, F.obj X ≅ G.obj X)
     (naturality : ∀ {X Y : C} (f : X ⟶ Y), F.map f ≫ (app Y).Hom = (app X).Hom ≫ G.map f) : F ≅ G where
   Hom := { app := fun X => (app X).Hom }
@@ -197,16 +198,6 @@ def ofComponents (app : ∀ X : C, F.obj X ≅ G.obj X)
 theorem ofComponents.app (app' : ∀ X : C, F.obj X ≅ G.obj X) (naturality) (X) :
     (ofComponents app' naturality).app X = app' X := by
   tidy
-
-@[simp]
-theorem ofComponents.hom_app (app : ∀ X : C, F.obj X ≅ G.obj X) (naturality) (X) :
-    (ofComponents app naturality).Hom.app X = (app X).Hom :=
-  rfl
-
-@[simp]
-theorem ofComponents.inv_app (app : ∀ X : C, F.obj X ≅ G.obj X) (naturality) (X) :
-    (ofComponents app naturality).inv.app X = (app X).inv := by
-  simp [← of_components]
 
 /-- A natural transformation is an isomorphism if all its components are isomorphisms.
 -/

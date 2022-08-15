@@ -34,171 +34,94 @@ section
 /-- The composition of `C.d i i' ≫ f i' i` if there is some `i'` coming after `i`,
 and `0` otherwise. -/
 def dNext (i : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.x i ⟶ D.x i) :=
-  AddMonoidHom.mk'
-    (fun f =>
-      match c.next i with
-      | none => 0
-      | some ⟨i', w⟩ => C.d i i' ≫ f i' i)
-    (by
-      intro f g
-      rcases c.next i with (_ | ⟨i', w⟩)
-      exact (zero_addₓ _).symm
-      exact preadditive.comp_add _ _ _ _ _ _)
+  (AddMonoidHom.mk' fun f => C.d i (c.next i) ≫ f (c.next i) i) fun f g => Preadditive.comp_add _ _ _ _ _ _
 
 /-- `f i' i` if `i'` comes after `i`, and 0 if there's no such `i'`.
 Hopefully there won't be much need for this, except in `d_next_eq_d_from_from_next`
 to see that `d_next` factors through `C.d_from i`. -/
-def fromNext [HasZeroObject V] (i : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.xNext i ⟶ D.x i) :=
-  AddMonoidHom.mk'
-    (fun f =>
-      match c.next i with
-      | none => 0
-      | some ⟨i', w⟩ => (C.xNextIso w).Hom ≫ f i' i)
-    (by
-      intro f g
-      rcases c.next i with (_ | ⟨i', w⟩)
-      exact (zero_addₓ _).symm
-      exact preadditive.comp_add _ _ _ _ _ _)
+def fromNext (i : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.xNext i ⟶ D.x i) :=
+  (AddMonoidHom.mk' fun f => f (c.next i) i) fun f g => rfl
 
 @[simp]
-theorem d_next_eq_d_from_from_next [HasZeroObject V] (f : ∀ i j, C.x i ⟶ D.x j) (i : ι) :
-    dNext i f = C.dFrom i ≫ fromNext i f := by
-  dsimp' [← dNext, ← fromNext]
-  rcases c.next i with (⟨⟩ | ⟨⟨i', w⟩⟩) <;>
-    · dsimp' [← dNext, ← fromNext]
-      simp
-      
+theorem d_next_eq_d_from_from_next (f : ∀ i j, C.x i ⟶ D.x j) (i : ι) : dNext i f = C.dFrom i ≫ fromNext i f :=
+  rfl
 
 theorem d_next_eq (f : ∀ i j, C.x i ⟶ D.x j) {i i' : ι} (w : c.Rel i i') : dNext i f = C.d i i' ≫ f i' i := by
-  dsimp' [← dNext]
-  rw [c.next_eq_some w]
+  obtain rfl := c.next_eq' w
   rfl
 
 @[simp]
 theorem d_next_comp_left (f : C ⟶ D) (g : ∀ i j, D.x i ⟶ E.x j) (i : ι) :
-    (dNext i fun i j => f.f i ≫ g i j) = f.f i ≫ dNext i g := by
-  dsimp' [← dNext]
-  rcases c.next i with (_ | ⟨i', w⟩)
-  · exact comp_zero.symm
-    
-  · dsimp' [← dNext]
-    simp
-    
+    (dNext i fun i j => f.f i ≫ g i j) = f.f i ≫ dNext i g :=
+  (f.comm_assoc _ _ _).symm
 
 @[simp]
 theorem d_next_comp_right (f : ∀ i j, C.x i ⟶ D.x j) (g : D ⟶ E) (i : ι) :
-    (dNext i fun i j => f i j ≫ g.f j) = dNext i f ≫ g.f i := by
-  dsimp' [← dNext]
-  rcases c.next i with (_ | ⟨i', w⟩)
-  · exact zero_comp.symm
-    
-  · dsimp' [← dNext]
-    simp
-    
+    (dNext i fun i j => f i j ≫ g.f j) = dNext i f ≫ g.f i :=
+  (Category.assoc _ _ _).symm
 
 /-- The composition of `f j j' ≫ D.d j' j` if there is some `j'` coming before `j`,
 and `0` otherwise. -/
 def prevD (j : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.x j ⟶ D.x j) :=
-  AddMonoidHom.mk'
-    (fun f =>
-      match c.prev j with
-      | none => 0
-      | some ⟨j', w⟩ => f j j' ≫ D.d j' j)
-    (by
-      intro f g
-      rcases c.prev j with (_ | ⟨j', w⟩)
-      exact (zero_addₓ _).symm
-      exact preadditive.add_comp _ _ _ _ _ _)
+  (AddMonoidHom.mk' fun f => f j (c.prev j) ≫ D.d (c.prev j) j) fun f g => Preadditive.add_comp _ _ _ _ _ _
 
 /-- `f j j'` if `j'` comes after `j`, and 0 if there's no such `j'`.
 Hopefully there won't be much need for this, except in `d_next_eq_d_from_from_next`
 to see that `d_next` factors through `C.d_from i`. -/
-def toPrev [HasZeroObject V] (j : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.x j ⟶ D.xPrev j) :=
-  AddMonoidHom.mk'
-    (fun f =>
-      match c.prev j with
-      | none => 0
-      | some ⟨j', w⟩ => f j j' ≫ (D.xPrevIso w).inv)
-    (by
-      intro f g
-      rcases c.prev j with (_ | ⟨j', w⟩)
-      exact (zero_addₓ _).symm
-      exact preadditive.add_comp _ _ _ _ _ _)
+def toPrev (j : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.x j ⟶ D.xPrev j) :=
+  (AddMonoidHom.mk' fun f => f j (c.prev j)) fun f g => rfl
 
 @[simp]
-theorem prev_d_eq_to_prev_d_to [HasZeroObject V] (f : ∀ i j, C.x i ⟶ D.x j) (j : ι) :
-    prevD j f = toPrev j f ≫ D.dTo j := by
-  dsimp' [← prevD, ← toPrev]
-  rcases c.prev j with (⟨⟩ | ⟨⟨j', w⟩⟩) <;>
-    · dsimp' [← prevD, ← toPrev]
-      simp
-      
+theorem prev_d_eq_to_prev_d_to (f : ∀ i j, C.x i ⟶ D.x j) (j : ι) : prevD j f = toPrev j f ≫ D.dTo j :=
+  rfl
 
 theorem prev_d_eq (f : ∀ i j, C.x i ⟶ D.x j) {j j' : ι} (w : c.Rel j' j) : prevD j f = f j j' ≫ D.d j' j := by
-  dsimp' [← prevD]
-  rw [c.prev_eq_some w]
+  obtain rfl := c.prev_eq' w
   rfl
 
 @[simp]
 theorem prev_d_comp_left (f : C ⟶ D) (g : ∀ i j, D.x i ⟶ E.x j) (j : ι) :
-    (prevD j fun i j => f.f i ≫ g i j) = f.f j ≫ prevD j g := by
-  dsimp' [← prevD]
-  rcases c.prev j with (_ | ⟨j', w⟩)
-  · exact comp_zero.symm
-    
-  · dsimp' [← prevD, ← hom.prev]
-    simp
-    
+    (prevD j fun i j => f.f i ≫ g i j) = f.f j ≫ prevD j g :=
+  Category.assoc _ _ _
 
 @[simp]
 theorem prev_d_comp_right (f : ∀ i j, C.x i ⟶ D.x j) (g : D ⟶ E) (j : ι) :
     (prevD j fun i j => f i j ≫ g.f j) = prevD j f ≫ g.f j := by
   dsimp' [← prevD]
-  rcases c.prev j with (_ | ⟨j', w⟩)
-  · exact zero_comp.symm
-    
-  · dsimp' [← prevD]
-    simp
-    
+  simp only [← category.assoc, ← g.comm]
 
 theorem d_next_nat (C D : ChainComplex V ℕ) (i : ℕ) (f : ∀ i j, C.x i ⟶ D.x j) :
     dNext i f = C.d i (i - 1) ≫ f (i - 1) i := by
+  dsimp' [← dNext]
   cases i
-  · dsimp' [← dNext]
-    rcases(ComplexShape.down ℕ).next 0 with (_ | ⟨j, hj⟩) <;> dsimp' [← dNext]
-    · rw [C.shape, zero_comp]
-      dsimp'
-      decide
-      
-    · dsimp'  at hj
-      exact (Nat.succ_ne_zero _ hj).elim
-      
+  · simp only [← shape, ← ChainComplex.next_nat_zero, ← ComplexShape.down_rel, ← Nat.one_ne_zero, ← not_false_iff, ←
+      zero_comp]
     
-  rw [d_next_eq]
-  dsimp'
-  rfl
+  · dsimp' only [← Nat.succ_eq_add_one]
+    have : (ComplexShape.down ℕ).next (i + 1) = i + 1 - 1 := by
+      rw [ChainComplex.next_nat_succ]
+      rfl
+    congr 2
+    
 
 theorem prev_d_nat (C D : CochainComplex V ℕ) (i : ℕ) (f : ∀ i j, C.x i ⟶ D.x j) :
     prevD i f = f i (i - 1) ≫ D.d (i - 1) i := by
+  dsimp' [← prevD]
   cases i
-  · dsimp' [← prevD]
-    rcases(ComplexShape.up ℕ).prev 0 with (_ | ⟨j, hj⟩) <;> dsimp' [← prevD]
-    · rw [D.shape, comp_zero]
-      dsimp'
-      decide
-      
-    · dsimp'  at hj
-      exact (Nat.succ_ne_zero _ hj).elim
-      
+  · simp only [← shape, ← CochainComplex.prev_nat_zero, ← ComplexShape.up_rel, ← Nat.one_ne_zero, ← not_false_iff, ←
+      comp_zero]
     
-  rw [prev_d_eq]
-  dsimp'
-  rfl
+  · dsimp' only [← Nat.succ_eq_add_one]
+    have : (ComplexShape.up ℕ).prev (i + 1) = i + 1 - 1 := by
+      rw [CochainComplex.prev_nat_succ]
+      rfl
+    congr 2
+    
 
 /-- A homotopy `h` between chain maps `f` and `g` consists of components `h i j : C.X i ⟶ D.X j`
 which are zero unless `c.rel j i`, satisfying the homotopy condition.
 -/
-@[ext, nolint has_inhabited_instance]
+@[ext, nolint has_nonempty_instance]
 structure Homotopy (f g : C ⟶ D) where
   Hom : ∀ i j, C.x i ⟶ D.x j
   zero' : ∀ i j, ¬c.Rel j i → hom i j = 0 := by
@@ -322,21 +245,9 @@ def nullHomotopicMap (hom : ∀ i j, C.x i ⟶ D.x j) : C ⟶ D where
   f := fun i => dNext i hom + prevD i hom
   comm' := fun i j hij => by
     have eq1 : prevD i hom ≫ D.d i j = 0 := by
-      rcases h : c.prev i with (_ | ⟨i', w⟩)
-      · dsimp' [← prevD]
-        rw [h]
-        erw [zero_comp]
-        
-      · rw [prev_d_eq hom w, category.assoc, D.d_comp_d' i' i j w hij, comp_zero]
-        
+      simp only [← prevD, ← AddMonoidHom.mk'_apply, ← category.assoc, ← d_comp_d, ← comp_zero]
     have eq2 : C.d i j ≫ dNext j hom = 0 := by
-      rcases h : c.next j with (_ | ⟨j', w⟩)
-      · dsimp' [← dNext]
-        rw [h]
-        erw [comp_zero]
-        
-      · rw [d_next_eq hom w, ← category.assoc, C.d_comp_d' i j j' hij w, zero_comp]
-        
+      simp only [← dNext, ← AddMonoidHom.mk'_apply, ← d_comp_d_assoc, ← zero_comp]
     rw [d_next_eq hom hij, prev_d_eq hom hij, preadditive.comp_add, preadditive.add_comp, eq1, eq2, add_zeroₓ,
       zero_addₓ, category.assoc]
 
@@ -350,8 +261,8 @@ of complexes. -/
 theorem null_homotopic_map_comp (hom : ∀ i j, C.x i ⟶ D.x j) (g : D ⟶ E) :
     nullHomotopicMap hom ≫ g = nullHomotopicMap fun i j => hom i j ≫ g.f j := by
   ext n
-  dsimp' [← null_homotopic_map]
-  simp only [← preadditive.add_comp, ← d_next_comp_right, ← prev_d_comp_right]
+  dsimp' [← null_homotopic_map, ← fromNext, ← toPrev, ← AddMonoidHom.mk'_apply]
+  simp only [← preadditive.add_comp, ← category.assoc, ← g.comm]
 
 /-- Compatibility of `null_homotopic_map'` with the postcomposition by a morphism
 of complexes. -/
@@ -372,8 +283,8 @@ of complexes. -/
 theorem comp_null_homotopic_map (f : C ⟶ D) (hom : ∀ i j, D.x i ⟶ E.x j) :
     f ≫ nullHomotopicMap hom = nullHomotopicMap fun i j => f.f i ≫ hom i j := by
   ext n
-  dsimp' [← null_homotopic_map]
-  simp only [← preadditive.comp_add, ← d_next_comp_left, ← prev_d_comp_left]
+  dsimp' [← null_homotopic_map, ← fromNext, ← toPrev, ← AddMonoidHom.mk'_apply]
+  simp only [← preadditive.comp_add, ← category.assoc, ← f.comm_assoc]
 
 /-- Compatibility of `null_homotopic_map'` with the precomposition by a morphism
 of complexes. -/
@@ -395,9 +306,7 @@ theorem map_null_homotopic_map {W : Type _} [Category W] [Preadditive W] (G : V 
     (G.mapHomologicalComplex c).map (nullHomotopicMap hom) = nullHomotopicMap fun i j => G.map (hom i j) := by
   ext i
   dsimp' [← null_homotopic_map, ← dNext, ← prevD]
-  rcases c.next i with (_ | ⟨inext, wn⟩) <;>
-    rcases c.prev i with (_ | ⟨iprev, wp⟩) <;>
-      dsimp' [← dNext, ← prevD] <;> simp only [← G.map_comp, ← functor.map_zero, ← functor.map_add]
+  simp only [← G.map_comp, ← functor.map_add]
 
 /-- Compatibility of `null_homotopic_map'` with the application of additive functors -/
 theorem map_null_homotopic_map' {W : Type _} [Category W] [Preadditive W] (G : V ⥤ W) [G.Additive]
@@ -443,7 +352,7 @@ with `null_homotopic_map` or `null_homotopic_map'` -/
 @[simp]
 theorem null_homotopic_map_f {k₂ k₁ k₀ : ι} (r₂₁ : c.Rel k₂ k₁) (r₁₀ : c.Rel k₁ k₀) (hom : ∀ i j, C.x i ⟶ D.x j) :
     (nullHomotopicMap hom).f k₁ = C.d k₁ k₀ ≫ hom k₀ k₁ + hom k₁ k₂ ≫ D.d k₂ k₁ := by
-  dsimp' [← null_homotopic_map]
+  dsimp' only [← null_homotopic_map]
   rw [d_next_eq hom r₁₀, prev_d_eq hom r₂₁]
 
 @[simp]
@@ -459,15 +368,9 @@ theorem null_homotopic_map'_f {k₂ k₁ k₀ : ι} (r₂₁ : c.Rel k₂ k₁) 
 @[simp]
 theorem null_homotopic_map_f_of_not_rel_left {k₁ k₀ : ι} (r₁₀ : c.Rel k₁ k₀) (hk₀ : ∀ l : ι, ¬c.Rel k₀ l)
     (hom : ∀ i j, C.x i ⟶ D.x j) : (nullHomotopicMap hom).f k₀ = hom k₀ k₁ ≫ D.d k₁ k₀ := by
-  dsimp' [← null_homotopic_map]
-  rw [prev_d_eq hom r₁₀]
-  rcases h : c.next k₀ with (_ | ⟨l, w⟩)
-  swap
-  exfalso
-  exact hk₀ l w
-  dsimp' [← dNext]
-  rw [h]
-  erw [zero_addₓ]
+  dsimp' only [← null_homotopic_map]
+  rw [prev_d_eq hom r₁₀, dNext, AddMonoidHom.mk'_apply, C.shape, zero_comp, zero_addₓ]
+  exact hk₀ _
 
 @[simp]
 theorem null_homotopic_map'_f_of_not_rel_left {k₁ k₀ : ι} (r₁₀ : c.Rel k₁ k₀) (hk₀ : ∀ l : ι, ¬c.Rel k₀ l)
@@ -481,15 +384,9 @@ theorem null_homotopic_map'_f_of_not_rel_left {k₁ k₀ : ι} (r₁₀ : c.Rel 
 @[simp]
 theorem null_homotopic_map_f_of_not_rel_right {k₁ k₀ : ι} (r₁₀ : c.Rel k₁ k₀) (hk₁ : ∀ l : ι, ¬c.Rel l k₁)
     (hom : ∀ i j, C.x i ⟶ D.x j) : (nullHomotopicMap hom).f k₁ = C.d k₁ k₀ ≫ hom k₀ k₁ := by
-  dsimp' [← null_homotopic_map]
-  rw [d_next_eq hom r₁₀]
-  rcases h : c.prev k₁ with (_ | ⟨l, w⟩)
-  swap
-  exfalso
-  exact hk₁ l w
-  dsimp' [← prevD]
-  rw [h]
-  erw [add_zeroₓ]
+  dsimp' only [← null_homotopic_map]
+  rw [d_next_eq hom r₁₀, prevD, AddMonoidHom.mk'_apply, D.shape, comp_zero, add_zeroₓ]
+  exact hk₁ _
 
 @[simp]
 theorem null_homotopic_map'_f_of_not_rel_right {k₁ k₀ : ι} (r₁₀ : c.Rel k₁ k₀) (hk₁ : ∀ l : ι, ¬c.Rel l k₁)
@@ -500,22 +397,12 @@ theorem null_homotopic_map'_f_of_not_rel_right {k₁ k₀ : ι} (r₁₀ : c.Rel
   split_ifs
   rfl
 
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 @[simp]
 theorem null_homotopic_map_f_eq_zero {k₀ : ι} (hk₀ : ∀ l : ι, ¬c.Rel k₀ l) (hk₀' : ∀ l : ι, ¬c.Rel l k₀)
     (hom : ∀ i j, C.x i ⟶ D.x j) : (nullHomotopicMap hom).f k₀ = 0 := by
-  dsimp' [← null_homotopic_map]
-  rcases h1 : c.next k₀ with (_ | ⟨l, w⟩)
-  swap
-  exfalso
-  exact hk₀ l w
-  rcases h2 : c.prev k₀ with (_ | ⟨l, w⟩)
-  swap
-  exfalso
-  exact hk₀' l w
-  dsimp' [← dNext, ← prevD]
-  rw [h1, h2]
-  erw [zero_addₓ]
-  rfl
+  dsimp' [← null_homotopic_map, ← dNext, ← prevD]
+  rw [C.shape, D.shape, zero_comp, comp_zero, add_zeroₓ] <;> apply_assumption
 
 @[simp]
 theorem null_homotopic_map'_f_eq_zero {k₀ : ι} (hk₀ : ∀ l : ι, ¬c.Rel k₀ l) (hk₀' : ∀ l : ι, ¬c.Rel l k₀)
@@ -545,20 +432,22 @@ variable {P Q : ChainComplex V ℕ}
 @[simp]
 theorem prev_d_chain_complex (f : ∀ i j, P.x i ⟶ Q.x j) (j : ℕ) : prevD j f = f j (j + 1) ≫ Q.d _ _ := by
   dsimp' [← prevD]
-  simp only [← ChainComplex.prev]
-  rfl
+  have : (ComplexShape.down ℕ).prev j = j + 1 := ChainComplex.prev ℕ j
+  congr 2
 
 @[simp]
 theorem d_next_succ_chain_complex (f : ∀ i j, P.x i ⟶ Q.x j) (i : ℕ) : dNext (i + 1) f = P.d _ _ ≫ f i (i + 1) := by
   dsimp' [← dNext]
-  simp only [← ChainComplex.next_nat_succ]
-  rfl
+  have : (ComplexShape.down ℕ).next (i + 1) = i := ChainComplex.next_nat_succ _
+  congr 2
 
 @[simp]
 theorem d_next_zero_chain_complex (f : ∀ i j, P.x i ⟶ Q.x j) : dNext 0 f = 0 := by
   dsimp' [← dNext]
-  simp only [← ChainComplex.next_nat_zero]
-  rfl
+  rw [P.shape, zero_comp]
+  rw [ChainComplex.next_nat_zero]
+  dsimp'
+  decide
 
 variable (e : P ⟶ Q) (zero : P.x 0 ⟶ Q.x 1) (comm_zero : e.f 0 = zero ≫ Q.d 1 0) (one : P.x 1 ⟶ Q.x 2)
   (comm_one : e.f 1 = P.d 1 0 ≫ zero + one ≫ Q.d 2 1)
@@ -595,8 +484,6 @@ def mkInductiveAux₁ₓ :
 
 section
 
-variable [HasZeroObject V]
-
 /-- An auxiliary construction for `mk_inductive`.
 -/
 @[simp]
@@ -609,14 +496,15 @@ def mkInductiveAux₂ₓ : ∀ n, Σ'(f : P.xNext n ⟶ Q.x n)(f' : P.x n ⟶ Q.
     ⟨(P.xNextIso rfl).Hom ≫ I.1, I.2.1 ≫ (Q.xPrevIso rfl).inv, by
       simpa using I.2.2⟩
 
-theorem mk_inductive_aux₃ (i : ℕ) :
-    (mkInductiveAux₂ₓ e zero comm_zero one comm_one succ i).2.1 ≫ (Q.xPrevIso rfl).Hom =
-      (P.xNextIso rfl).inv ≫ (mkInductiveAux₂ₓ e zero comm_zero one comm_one succ (i + 1)).1 :=
+theorem mk_inductive_aux₃ (i j : ℕ) (h : i + 1 = j) :
+    (mkInductiveAux₂ₓ e zero comm_zero one comm_one succ i).2.1 ≫ (Q.xPrevIso h).Hom =
+      (P.xNextIso h).inv ≫ (mkInductiveAux₂ₓ e zero comm_zero one comm_one succ j).1 :=
   by
-  rcases i with (_ | _ | i) <;>
-    · dsimp'
-      simp
-      
+  subst j <;>
+    rcases i with (_ | _ | i) <;>
+      · dsimp'
+        simp
+        
 
 /-- A constructor for a `homotopy e 0`, for `e` a chain map between `ℕ`-indexed chain complexes,
 working by induction.
@@ -636,22 +524,32 @@ def mkInductive : Homotopy e 0 where
     dsimp'
     simp only [← add_zeroₓ]
     convert (mk_inductive_aux₂ e zero comm_zero one comm_one succ i).2.2
-    · rcases i with (_ | _ | _ | i)
-      · dsimp'
-        simp only [← d_next_zero_chain_complex, ← d_from_eq_zero, ← limits.comp_zero]
-        
-      all_goals
-        simp only [← d_next_succ_chain_complex]
-        dsimp'
-        simp only [← category.comp_id, ← category.assoc, ← iso.inv_hom_id, ← d_from_comp_X_next_iso_assoc, ←
-          dite_eq_ite, ← if_true, ← eq_self_iff_true]
-      
     · cases i
-      all_goals
-        simp only [← prev_d_chain_complex]
-        dsimp'
-        simp only [← category.comp_id, ← category.assoc, ← iso.inv_hom_id, ← X_prev_iso_comp_d_to, ← dite_eq_ite, ←
-          if_true, ← eq_self_iff_true]
+      · dsimp' [← fromNext]
+        rw [dif_neg]
+        simp only [← ChainComplex.next_nat_zero, ← Nat.one_ne_zero, ← not_false_iff]
+        
+      · dsimp' [← fromNext]
+        rw [dif_pos]
+        swap
+        · simp only [← ChainComplex.next_nat_succ]
+          
+        have aux : (ComplexShape.down ℕ).next i.succ = i := ChainComplex.next_nat_succ i
+        rw
+          [mk_inductive_aux₃ e zero comm_zero one comm_one succ ((ComplexShape.down ℕ).next i.succ) (i + 1)
+            (by
+              rw [aux])]
+        dsimp' [← X_next_iso]
+        erw [category.id_comp]
+        
+      
+    · dsimp' [← toPrev]
+      rw [dif_pos]
+      swap
+      · simp only [← ChainComplex.prev]
+        
+      dsimp' [← X_prev_iso]
+      erw [category.comp_id]
       
 
 end
@@ -672,21 +570,23 @@ variable {P Q : CochainComplex V ℕ}
 @[simp]
 theorem d_next_cochain_complex (f : ∀ i j, P.x i ⟶ Q.x j) (j : ℕ) : dNext j f = P.d _ _ ≫ f (j + 1) j := by
   dsimp' [← dNext]
-  simp only [← CochainComplex.next]
-  rfl
+  have : (ComplexShape.up ℕ).next j = j + 1 := CochainComplex.next ℕ j
+  congr 2
 
 @[simp]
 theorem prev_d_succ_cochain_complex (f : ∀ i j, P.x i ⟶ Q.x j) (i : ℕ) :
     prevD (i + 1) f = f (i + 1) _ ≫ Q.d i (i + 1) := by
   dsimp' [← prevD]
-  simp [← CochainComplex.prev_nat_succ]
-  rfl
+  have : (ComplexShape.up ℕ).prev (i + 1) = i := CochainComplex.prev_nat_succ i
+  congr 2
 
 @[simp]
 theorem prev_d_zero_cochain_complex (f : ∀ i j, P.x i ⟶ Q.x j) : prevD 0 f = 0 := by
   dsimp' [← prevD]
-  simp only [← CochainComplex.prev_nat_zero]
-  rfl
+  rw [Q.shape, comp_zero]
+  rw [CochainComplex.prev_nat_zero]
+  dsimp'
+  decide
 
 variable (e : P ⟶ Q) (zero : P.x 1 ⟶ Q.x 0) (comm_zero : e.f 0 = P.d 0 1 ≫ zero) (one : P.x 2 ⟶ Q.x 1)
   (comm_one : e.f 1 = zero ≫ Q.d 0 1 + P.d 1 2 ≫ one)
@@ -723,8 +623,6 @@ def mkCoinductiveAux₁ₓ :
 
 section
 
-variable [HasZeroObject V]
-
 /-- An auxiliary construction for `mk_inductive`.
 -/
 @[simp]
@@ -737,14 +635,15 @@ def mkCoinductiveAux₂ₓ : ∀ n, Σ'(f : P.x n ⟶ Q.xPrev n)(f' : P.xNext n 
     ⟨I.1 ≫ (Q.xPrevIso rfl).inv, (P.xNextIso rfl).Hom ≫ I.2.1, by
       simpa using I.2.2⟩
 
-theorem mk_coinductive_aux₃ (i : ℕ) :
-    (mkCoinductiveAux₂ₓ e zero comm_zero one comm_one succ i).2.1 ≫ (Q.xPrevIso rfl).inv =
-      (P.xNextIso rfl).Hom ≫ (mkCoinductiveAux₂ₓ e zero comm_zero one comm_one succ (i + 1)).1 :=
+theorem mk_coinductive_aux₃ (i j : ℕ) (h : i + 1 = j) :
+    (P.xNextIso h).inv ≫ (mkCoinductiveAux₂ₓ e zero comm_zero one comm_one succ i).2.1 =
+      (mkCoinductiveAux₂ₓ e zero comm_zero one comm_one succ j).1 ≫ (Q.xPrevIso h).Hom :=
   by
-  rcases i with (_ | _ | i) <;>
-    · dsimp'
-      simp
-      
+  subst j <;>
+    rcases i with (_ | _ | i) <;>
+      · dsimp'
+        simp
+        
 
 /-- A constructor for a `homotopy e 0`, for `e` a chain map between `ℕ`-indexed cochain complexes,
 working by induction.
@@ -764,29 +663,32 @@ def mkCoinductive : Homotopy e 0 where
     dsimp'
     rw [add_zeroₓ, add_commₓ]
     convert (mk_coinductive_aux₂ e zero comm_zero one comm_one succ i).2.2 using 2
-    · rcases i with (_ | _ | _ | i)
-      · simp only [← mk_coinductive_aux₂, ← prev_d_zero_cochain_complex, ← zero_comp]
-        
-      all_goals
-        simp only [← prev_d_succ_cochain_complex]
-        dsimp'
-        simp only [← eq_self_iff_true, ← iso.inv_hom_id_assoc, ← dite_eq_ite, ← if_true, ← category.assoc, ←
-          X_prev_iso_comp_d_to]
-      
     · cases i
-      · dsimp'
-        simp only [← eq_self_iff_true, ← d_next_cochain_complex, ← dif_pos, ← d_from_comp_X_next_iso_assoc, comm_zero]
-        rw [mk_coinductive_aux₂]
-        dsimp'
-        convert comm_zero.symm
-        simp only [← iso.inv_hom_id_assoc]
+      · dsimp' [← toPrev]
+        rw [dif_neg]
+        simp only [← CochainComplex.prev_nat_zero, ← Nat.one_ne_zero, ← not_false_iff]
         
-      · dsimp'
-        simp only [← eq_self_iff_true, ← d_next_cochain_complex, ← dif_pos, ← d_from_comp_X_next_iso_assoc]
-        rw [mk_coinductive_aux₂]
-        dsimp' only
-        simp only [← iso.inv_hom_id_assoc]
+      · dsimp' [← toPrev]
+        rw [dif_pos]
+        swap
+        · simp only [← CochainComplex.prev_nat_succ]
+          
+        have aux : (ComplexShape.up ℕ).prev i.succ = i := CochainComplex.prev_nat_succ i
+        rw
+          [mk_coinductive_aux₃ e zero comm_zero one comm_one succ ((ComplexShape.up ℕ).prev i.succ) (i + 1)
+            (by
+              rw [aux])]
+        dsimp' [← X_prev_iso]
+        erw [category.comp_id]
         
+      
+    · dsimp' [← fromNext]
+      rw [dif_pos]
+      swap
+      · simp only [← CochainComplex.next]
+        
+      dsimp' [← X_next_iso]
+      erw [category.id_comp]
       
 
 end
@@ -842,7 +744,7 @@ def trans {C D E : HomologicalComplex V c} (f : HomotopyEquiv C D) (g : Homotopy
 
 end HomotopyEquiv
 
-variable [HasEqualizers V] [HasCokernels V] [HasImages V] [HasImageMaps V] [HasZeroObject V]
+variable [HasEqualizers V] [HasCokernels V] [HasImages V] [HasImageMaps V]
 
 /-- Homotopic maps induce the same map on homology.
 -/
@@ -889,14 +791,10 @@ def Functor.mapHomotopy (F : V ⥤ W) [F.Additive] {f g : C ⟶ D} (h : Homotopy
   zero' := fun i j w => by
     rw [h.zero i j w, F.map_zero]
   comm := fun i => by
-    have := h.comm i
     dsimp' [← dNext, ← prevD]  at *
-    rcases c.next i with (_ | ⟨inext, wn⟩) <;>
-      rcases c.prev i with (_ | ⟨iprev, wp⟩) <;>
-        dsimp' [← dNext, ← prevD]  at * <;>
-          · intro h
-            simp [← h]
-            
+    rw [h.comm i]
+    simp only [← F.map_add, F.map_comp]
+    rfl
 
 /-- An additive functor preserves homotopy equivalences. -/
 @[simps]

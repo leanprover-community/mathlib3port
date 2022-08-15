@@ -69,7 +69,7 @@ definition using a telescoping sum argument. -/
 private def gosper_catalan (n j : ℕ) : ℚ :=
   Nat.centralBinom j * Nat.centralBinom (n - j) * (2 * j - n) / (2 * n * (n + 1))
 
--- ./././Mathport/Syntax/Translate/Basic.lean:646:40: in linear_combination #[[expr «expr - »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »((2 : exprℚ()), «expr - »(n, i).central_binom), «expr - »(«expr + »(i, 1), «expr - »(n, i))), «expr + »(n, 1)), «expr + »(n, 2)), «expr + »(«expr - »(n, i), 1)), h₁), «expr * »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »(2, i.central_binom), «expr + »(n, 1)), «expr + »(n, 2)), «expr - »(«expr - »(i, «expr - »(n, i)), 1)), «expr + »(i, 1)), h₂))],
+-- ./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr «expr - »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »((2 : exprℚ()), «expr - »(n, i).central_binom), «expr - »(«expr + »(i, 1), «expr - »(n, i))), «expr + »(n, 1)), «expr + »(n, 2)), «expr + »(«expr - »(n, i), 1)), h₁), «expr * »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »(2, i.central_binom), «expr + »(n, 1)), «expr + »(n, 2)), «expr - »(«expr - »(i, «expr - »(n, i)), 1)), «expr + »(i, 1)), h₂))],
   []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args
 private theorem gosper_trick {n i : ℕ} (h : i ≤ n) :
     gosperCatalan (n + 1) (i + 1) - gosperCatalan (n + 1) i =
@@ -92,7 +92,7 @@ private theorem gosper_trick {n i : ℕ} (h : i ≤ n) :
   field_simp
   rw [Nat.succ_subₓ h]
   trace
-    "./././Mathport/Syntax/Translate/Basic.lean:646:40: in linear_combination #[[expr «expr - »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »((2 : exprℚ()), «expr - »(n, i).central_binom), «expr - »(«expr + »(i, 1), «expr - »(n, i))), «expr + »(n, 1)), «expr + »(n, 2)), «expr + »(«expr - »(n, i), 1)), h₁), «expr * »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »(2, i.central_binom), «expr + »(n, 1)), «expr + »(n, 2)), «expr - »(«expr - »(i, «expr - »(n, i)), 1)), «expr + »(i, 1)), h₂))],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args"
+    "./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr «expr - »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »((2 : exprℚ()), «expr - »(n, i).central_binom), «expr - »(«expr + »(i, 1), «expr - »(n, i))), «expr + »(n, 1)), «expr + »(n, 2)), «expr + »(«expr - »(n, i), 1)), h₁), «expr * »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »(2, i.central_binom), «expr + »(n, 1)), «expr + »(n, 2)), «expr - »(«expr - »(i, «expr - »(n, i)), 1)), «expr + »(i, 1)), h₂))],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args"
 
 private theorem gosper_catalan_sub_eq_central_binom_div (n : ℕ) :
     gosperCatalan (n + 1) (n + 1) - gosperCatalan (n + 1) 0 = Nat.centralBinom (n + 1) / (n + 2) := by
@@ -140,8 +140,8 @@ theorem succ_mul_catalan_eq_central_binom (n : ℕ) : (n + 1) * catalan n = n.ce
   (Nat.eq_mul_of_div_eq_right n.succ_dvd_central_binom (catalan_eq_central_binom_div n).symm).symm
 
 theorem catalan_two : catalan 2 = 2 := by
-  norm_num [← catalan_eq_central_binom_div, ← Nat.centralBinom, ← Nat.choose]
+  norm_num[← catalan_eq_central_binom_div, ← Nat.centralBinom, ← Nat.choose]
 
 theorem catalan_three : catalan 3 = 5 := by
-  norm_num [← catalan_eq_central_binom_div, ← Nat.centralBinom, ← Nat.choose]
+  norm_num[← catalan_eq_central_binom_div, ← Nat.centralBinom, ← Nat.choose]
 

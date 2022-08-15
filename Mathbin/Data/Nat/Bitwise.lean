@@ -3,6 +3,7 @@ Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
+import Mathbin.Data.Nat.Bits
 import Mathbin.Tactic.Linarith.Default
 
 /-!
@@ -45,7 +46,7 @@ theorem bit_tt : bit true = bit1 :=
 
 @[simp]
 theorem bit_eq_zero {n : ℕ} {b : Bool} : n.bit b = 0 ↔ n = 0 ∧ b = ff := by
-  cases b <;> norm_num [← bit0_eq_zero, ← Nat.bit1_ne_zero]
+  cases b <;> norm_num[← bit0_eq_zero, ← Nat.bit1_ne_zero]
 
 theorem zero_of_test_bit_eq_ff {n : ℕ} (h : ∀ i, testBit n i = ff) : n = 0 := by
   induction' n using Nat.binaryRec with b n hn
@@ -62,6 +63,15 @@ theorem zero_of_test_bit_eq_ff {n : ℕ} (h : ∀ i, testBit n i = ff) : n = 0 :
 @[simp]
 theorem zero_test_bit (i : ℕ) : testBit 0 i = ff := by
   simp [← test_bit]
+
+/-- The ith bit is the ith element of `n.bits`. -/
+theorem test_bit_eq_inth (n i : ℕ) : n.testBit i = n.bits.inth i := by
+  induction' i with i ih generalizing n
+  · simp [← test_bit, ← shiftr, ← bodd_eq_bits_head, ← List.inth_zero_eq_head]
+    
+  conv_lhs => rw [← bit_decomp n]
+  rw [test_bit_succ, ih n.div2, div2_bits_eq_tail]
+  cases n.bits <;> simp
 
 /-- Bitwise extensionality: Two numbers agree if they agree at every bit position. -/
 theorem eq_of_test_bit_eq {n m : ℕ} (h : ∀ i, testBit n i = testBit m i) : n = m := by
@@ -211,7 +221,7 @@ theorem zero_lor (n : ℕ) : lorₓ 0 n = n := by
 theorem lor_zero (n : ℕ) : lorₓ n 0 = n := by
   simp [← lor]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1087:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 /-- Proving associativity of bitwise operations in general essentially boils down to a huge case
     distinction, so it is shorter to use this tactic instead of proving it in the general case. -/
 unsafe def bitwise_assoc_tac : tactic Unit :=

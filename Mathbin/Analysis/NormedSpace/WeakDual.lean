@@ -41,7 +41,7 @@ weak-* topology on (its type synonym) `weak_dual 𝕜 E`:
   coarser (not necessarily strictly) than the operator norm topology.
 * `weak_dual.is_compact_polar` (a version of the Banach-Alaoglu theorem): The polar set of a
   neighborhood of the origin in a normed space `E` over `𝕜` is compact in `weak_dual _ E`, if the
-  nondiscrete normed field `𝕜` is proper as a topological space.
+  nontrivially normed field `𝕜` is proper as a topological space.
 * `weak_dual.is_compact_closed_ball` (the most common special case of the Banach-Alaoglu theorem):
   Closed balls in the dual of a normed space `E` over `ℝ` or `ℂ` are compact in the weak-star
   topology.
@@ -102,9 +102,9 @@ by the dual-norm (i.e. the operator-norm).
 -/
 
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜]
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜]
 
-variable {E : Type _} [SemiNormedGroup E] [NormedSpace 𝕜 E]
+variable {E : Type _} [SeminormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 namespace NormedSpace
 

@@ -139,7 +139,8 @@ end deriv
 
 section fderiv
 
-variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {f : E → ℝ} {f' : E →L[ℝ] ℝ} {x : E} {s : Set E} {n : WithTop ℕ}
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ} {f' : E →L[ℝ] ℝ} {x : E} {s : Set E}
+  {n : WithTop ℕ}
 
 theorem HasStrictFderivAt.arctan (hf : HasStrictFderivAt f f' x) :
     HasStrictFderivAt (fun x => arctan (f x)) ((1 / (1 + f x ^ 2)) • f') x :=

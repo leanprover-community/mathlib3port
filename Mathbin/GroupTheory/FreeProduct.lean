@@ -140,7 +140,7 @@ def lift : (∀ i, M i →* N) ≃ (FreeProduct M →* N) where
 theorem lift_of {N} [Monoidₓ N] (fi : ∀ i, M i →* N) {i} (m : M i) : lift fi (of m) = fi i m := by
   conv_rhs => rw [← lift.symm_apply_apply fi, lift_symm_apply, MonoidHom.comp_apply]
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem induction_on {C : FreeProduct M → Prop} (m : FreeProduct M) (h_one : C 1) (h_of : ∀ (i) (m : M i), C (of m))
     (h_mul : ∀ x y, C x → C y → C (x * y)) : C m := by
   let S : Submonoid (FreeProduct M) := Submonoid.mk (SetOf C) h_mul h_one
@@ -439,7 +439,7 @@ variable (M)
 /-- A `neword M i j` is a representation of a non-empty reduced words where the first letter comes
 from `M i` and the last letter comes from `M j`. It can be constructed from singletons and via
 concatentation, and thus provides a useful induction principle. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 inductive Neword : ι → ι → Type max u_1 u_2
   | singleton : ∀ {i} (x : M i) (hne1 : x ≠ 1), neword i i
   | append : ∀ {i j k l} (w₁ : neword i j) (hne : j ≠ k) (w₂ : neword k l), neword i l
@@ -686,9 +686,12 @@ theorem lift_word_ping_pong {i j k} (w : Neword H i j) (hk : j ≠ k) : lift f w
   induction' w with i x hne_one i j k l w₁ hne w₂ hIw₁ hIw₂ generalizing m <;> clear i' j'
   · simpa using hpp _ _ hm _ hne_one
     
-  · calc lift f (neword.append w₁ hne w₂).Prod • X m = lift f w₁.prod • lift f w₂.prod • X m := by
-        simp [← MulAction.mul_smul]_ ⊆ lift f w₁.prod • X k := set_smul_subset_set_smul_iff.mpr (hIw₂ hm)_ ⊆ X i :=
-        hIw₁ hne
+  · calc
+      lift f (neword.append w₁ hne w₂).Prod • X m = lift f w₁.prod • lift f w₂.prod • X m := by
+        simp [← MulAction.mul_smul]
+      _ ⊆ lift f w₁.prod • X k := set_smul_subset_set_smul_iff.mpr (hIw₂ hm)
+      _ ⊆ X i := hIw₁ hne
+      
     
 
 include X hXnonempty hXdisj
@@ -921,35 +924,50 @@ theorem _root_.free_group.injective_lift_of_ping_pong : Function.Injective (Free
     -- Positive and negative powers separately
     cases' (lt_or_gt_of_neₓ hnne0).swap with hlt hgt
     · have h1n : 1 ≤ n := hlt
-      calc a i ^ n • X' j ⊆ a i ^ n • Y iᶜ :=
-          smul_set_mono ((hXYdisj j i).union_left <| hYdisj j i hij.symm).subset_compl_right _ ⊆ X i := by
+      calc
+        a i ^ n • X' j ⊆ a i ^ n • Y iᶜ :=
+          smul_set_mono ((hXYdisj j i).union_left <| hYdisj j i hij.symm).subset_compl_right
+        _ ⊆ X i := by
           refine' Int.le_induction _ _ _ h1n
           · rw [zpow_one]
             exact hX i
             
           · intro n hle hi
-            calc a i ^ (n + 1) • Y iᶜ = (a i ^ n * a i) • Y iᶜ := by
-                rw [zpow_add, zpow_one]_ = a i ^ n • a i • Y iᶜ := MulAction.mul_smul _ _ _ _ ⊆ a i ^ n • X i :=
-                smul_set_mono <| hX i _ ⊆ a i ^ n • Y iᶜ := smul_set_mono (hXYdisj i i).subset_compl_right _ ⊆ X i := hi
-            _ ⊆ X' i :=
-          Set.subset_union_left _ _
+            calc
+              a i ^ (n + 1) • Y iᶜ = (a i ^ n * a i) • Y iᶜ := by
+                rw [zpow_add, zpow_one]
+              _ = a i ^ n • a i • Y iᶜ := MulAction.mul_smul _ _ _
+              _ ⊆ a i ^ n • X i := smul_set_mono <| hX i
+              _ ⊆ a i ^ n • Y iᶜ := smul_set_mono (hXYdisj i i).subset_compl_right
+              _ ⊆ X i := hi
+              
+            
+        _ ⊆ X' i := Set.subset_union_left _ _
+        
       
     · have h1n : n ≤ -1 := by
         apply Int.le_of_lt_add_oneₓ
         simpa using hgt
-      calc a i ^ n • X' j ⊆ a i ^ n • X iᶜ :=
-          smul_set_mono ((hXdisj j i hij.symm).union_left (hXYdisj i j).symm).subset_compl_right _ ⊆ Y i := by
+      calc
+        a i ^ n • X' j ⊆ a i ^ n • X iᶜ :=
+          smul_set_mono ((hXdisj j i hij.symm).union_left (hXYdisj i j).symm).subset_compl_right
+        _ ⊆ Y i := by
           refine' Int.le_induction_down _ _ _ h1n
           · rw [zpow_neg, zpow_one]
             exact hY i
             
           · intro n hle hi
-            calc a i ^ (n - 1) • X iᶜ = (a i ^ n * (a i)⁻¹) • X iᶜ := by
-                rw [zpow_sub, zpow_one]_ = a i ^ n • (a i)⁻¹ • X iᶜ := MulAction.mul_smul _ _ _ _ ⊆ a i ^ n • Y i :=
-                smul_set_mono <| hY i _ ⊆ a i ^ n • X iᶜ :=
-                smul_set_mono (hXYdisj i i).symm.subset_compl_right _ ⊆ Y i := hi
-            _ ⊆ X' i :=
-          Set.subset_union_right _ _
+            calc
+              a i ^ (n - 1) • X iᶜ = (a i ^ n * (a i)⁻¹) • X iᶜ := by
+                rw [zpow_sub, zpow_one]
+              _ = a i ^ n • (a i)⁻¹ • X iᶜ := MulAction.mul_smul _ _ _
+              _ ⊆ a i ^ n • Y i := smul_set_mono <| hY i
+              _ ⊆ a i ^ n • X iᶜ := smul_set_mono (hXYdisj i i).symm.subset_compl_right
+              _ ⊆ Y i := hi
+              
+            
+        _ ⊆ X' i := Set.subset_union_right _ _
+        
       
     
 

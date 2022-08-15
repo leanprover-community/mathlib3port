@@ -65,7 +65,7 @@ def hatInv : hat K → hat K :=
   dense_inducing_coe.extend fun x : K => (coe x⁻¹ : hat K)
 
 theorem continuous_hat_inv [CompletableTopField K] {x : hat K} (h : x ≠ 0) : ContinuousAt hatInv x := by
-  have : T3Space (hat K) := completion.t3_space K
+  haveI : T3Space (hat K) := completion.t3_space K
   refine' dense_inducing_coe.continuous_at_extend _
   apply mem_of_superset (compl_singleton_mem_nhds h)
   intro y y_ne
@@ -74,7 +74,7 @@ theorem continuous_hat_inv [CompletableTopField K] {x : hat K} (h : x ≠ 0) : C
   rw [← Filter.map_map]
   apply Cauchy.map _ (completion.uniform_continuous_coe K)
   apply CompletableTopField.nice
-  · have := dense_inducing_coe.comap_nhds_ne_bot y
+  · haveI := dense_inducing_coe.comap_nhds_ne_bot y
     apply cauchy_nhds.comap
     · rw [completion.comap_coe_eq_uniformity]
       exact le_rfl
@@ -120,12 +120,12 @@ theorem coe_inv (x : K) : (x : hat K)⁻¹ = ((x⁻¹ : K) : hat K) := by
 variable [UniformAddGroup K]
 
 theorem mul_hat_inv_cancel {x : hat K} (x_ne : x ≠ 0) : x * hatInv x = 1 := by
-  have : T1Space (hat K) := T2Space.t1_space
+  haveI : T1Space (hat K) := T2Space.t1_space
   let f := fun x : hat K => x * hat_inv x
   let c := (coe : K → hat K)
   change f x = 1
   have cont : ContinuousAt f x := by
-    let this : TopologicalSpace (hat K × hat K) := Prod.topologicalSpace
+    letI : TopologicalSpace (hat K × hat K) := Prod.topologicalSpace
     have : ContinuousAt (fun y : hat K => ((y, hat_inv y) : hat K × hat K)) x :=
       continuous_id.continuous_at.prod (continuous_hat_inv x_ne)
     exact (_root_.continuous_mul.continuous_at.comp this : _)

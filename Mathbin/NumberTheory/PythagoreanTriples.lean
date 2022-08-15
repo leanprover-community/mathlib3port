@@ -29,11 +29,11 @@ the bulk of the proof below.
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 theorem sq_ne_two_fin_zmod_four (z : Zmod 4) : z * z ≠ 2 := by
   change Finₓ 4 at z
-  fin_cases z <;> norm_num [← Finₓ.ext_iff, ← Finₓ.coe_bit0, ← Finₓ.coe_bit1]
+  fin_cases z <;> norm_num[← Finₓ.ext_iff, ← Finₓ.coe_bit0, ← Finₓ.coe_bit1]
 
 theorem Int.sq_ne_two_mod_four (z : ℤ) : z * z % 4 ≠ 2 := by
   suffices ¬z * z % (4 : ℕ) = 2 % (4 : ℕ) by
-    norm_num  at this
+    norm_num at this
   rw [← Zmod.int_coe_eq_int_coe_iff']
   simpa using sq_ne_two_fin_zmod_four _
 
@@ -162,7 +162,7 @@ theorem even_odd_of_coprime (hc : Int.gcdₓ x y = 1) : x % 2 = 0 ∧ y % 2 = 1 
       [show z * z = 4 * (x0 * x0 + x0 + y0 * y0 + y0) + 2 by
         rw [← h.eq]
         ring]
-    norm_num [← Int.add_mod]
+    norm_num[← Int.add_mod]
     
 
 theorem gcd_dvd : (Int.gcdₓ x y : ℤ) ∣ z := by
@@ -230,7 +230,7 @@ theorem is_classified_of_normalize_is_primitive_classified (hc : h.normalize.IsP
 theorem ne_zero_of_coprime (hc : Int.gcdₓ x y = 1) : z ≠ 0 := by
   suffices 0 < z * z by
     rintro rfl
-    norm_num  at this
+    norm_num at this
   rw [← h.eq, ← sq, ← sq]
   have hc' : Int.gcdₓ x y ≠ 0 := by
     rw [hc]
@@ -342,7 +342,7 @@ private theorem coprime_sq_sub_sq_add_of_even_odd {m n : ℤ} (h : Int.gcdₓ m 
   have hnc : p = 2 ∨ p ∣ Int.natAbs n := prime_two_or_dvd_of_dvd_two_mul_pow_self_two hp h2n
   by_cases' h2 : p = 2
   · have h3 : (m ^ 2 + n ^ 2) % 2 = 1 := by
-      norm_num [← sq, ← Int.add_mod, ← Int.mul_mod, ← hm, ← hn]
+      norm_num[← sq, ← Int.add_mod, ← Int.mul_mod, ← hm, ← hn]
     have h4 : (m ^ 2 + n ^ 2) % 2 = 0 := by
       apply Int.mod_eq_zero_of_dvd
       rwa [h2] at hp2
@@ -380,7 +380,7 @@ private theorem coprime_sq_sub_mul_of_even_odd {m n : ℤ} (h : Int.gcdₓ m n =
       revert hp1
       rw [hp2']
       apply mt Int.mod_eq_zero_of_dvd
-      norm_num [← sq, ← Int.sub_mod, ← Int.mul_mod, ← hm, ← hn]
+      norm_num[← sq, ← Int.sub_mod, ← Int.mul_mod, ← hm, ← hn]
       
     apply mt (Int.dvd_gcd (int.coe_nat_dvd_left.mpr hpm)) hnp
     apply (or_selfₓ _).mp
@@ -617,7 +617,7 @@ theorem classified : h.IsClassified := by
       apply int.nat_abs_eq_zero.mp
       apply Nat.eq_zero_of_gcd_eq_zero_rightₓ h0
     use 0, 1, 0
-    norm_num [← hx, ← hy]
+    norm_num[← hx, ← hy]
     
   apply h.is_classified_of_normalize_is_primitive_classified
   apply h.normalize.is_primitive_classified_of_coprime

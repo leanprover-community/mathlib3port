@@ -1,11 +1,13 @@
 /-
 Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Scott Morrison
+Authors: Scott Morrison, Joël Riou
 -/
+import Mathbin.CategoryTheory.CommSq
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Pullbacks
 import Mathbin.CategoryTheory.Limits.Shapes.ZeroMorphisms
 import Mathbin.CategoryTheory.Limits.Constructions.BinaryProducts
+import Mathbin.CategoryTheory.Limits.Opposites
 
 /-!
 # Pullback and pushout squares
@@ -51,32 +53,9 @@ namespace CategoryTheory
 
 variable {C : Type u₁} [Category.{v₁} C]
 
-/-- The proposition that a square
-```
-  W ---f---> X
-  |          |
-  g          h
-  |          |
-  v          v
-  Y ---i---> Z
-
-```
-is a commuting square.
--/
-structure CommSq {W X Y Z : C} (f : W ⟶ X) (g : W ⟶ Y) (h : X ⟶ Z) (i : Y ⟶ Z) : Prop where
-  w : f ≫ h = g ≫ i
-
-attribute [reassoc] comm_sq.w
-
 namespace CommSq
 
 variable {W X Y Z : C} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z}
-
-theorem flip (p : CommSq f g h i) : CommSq g f i h :=
-  ⟨p.w.symm⟩
-
-theorem of_arrow {f g : Arrow C} (h : f ⟶ g) : CommSq f.Hom h.left h.right g.Hom :=
-  ⟨h.w.symm⟩
 
 /-- The (not necessarily limiting) `pullback_cone h i` implicit in the statement
 that we have `comm_sq f g h i`.
@@ -89,6 +68,48 @@ that we have `comm_sq f g h i`.
 -/
 def cocone (s : CommSq f g h i) : PushoutCocone f g :=
   PushoutCocone.mk _ _ s.w
+
+/-- The pushout cocone in the opposite category associated to the cone of
+a commutative square identifies to the cocone of the flipped commutative square in
+the opposite category -/
+def coneOp (p : CommSq f g h i) : p.Cone.op ≅ p.flip.op.Cocone :=
+  PushoutCocone.ext (Iso.refl _)
+    (by
+      tidy)
+    (by
+      tidy)
+
+/-- The pullback cone in the opposite category associated to the cocone of
+a commutative square identifies to the cone of the flipped commutative square in
+the opposite category -/
+def coconeOp (p : CommSq f g h i) : p.Cocone.op ≅ p.flip.op.Cone :=
+  PullbackCone.ext (Iso.refl _)
+    (by
+      tidy)
+    (by
+      tidy)
+
+/-- The pushout cocone obtained from the pullback cone associated to a
+commutative square in the opposite category identifies to the cocone associated
+to the flipped square. -/
+def coneUnop {W X Y Z : Cᵒᵖ} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z} (p : CommSq f g h i) :
+    p.Cone.unop ≅ p.flip.unop.Cocone :=
+  PushoutCocone.ext (Iso.refl _)
+    (by
+      tidy)
+    (by
+      tidy)
+
+/-- The pullback cone obtained from the pushout cone associated to a
+commutative square in the opposite category identifies to the cone associated
+to the flipped square. -/
+def coconeUnop {W X Y Z : Cᵒᵖ} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z} (p : CommSq f g h i) :
+    p.Cocone.unop ≅ p.flip.unop.Cone :=
+  PullbackCone.ext (Iso.refl _)
+    (by
+      tidy)
+    (by
+      tidy)
 
 end CommSq
 
@@ -384,6 +405,17 @@ theorem of_right {X₁₁ X₁₂ X₁₃ X₂₁ X₂₂ X₂₃ : C} {h₁₁ 
     (p : h₁₁ ≫ v₁₂ = v₁₁ ≫ h₂₁) (t : IsPullback h₁₂ v₁₂ v₁₃ h₂₂) : IsPullback h₁₁ v₁₁ v₁₂ h₂₁ :=
   (of_bot s.flip p.symm t.flip).flip
 
+theorem op (h : IsPullback fst snd f g) : IsPushout g.op f.op snd.op fst.op :=
+  IsPushout.of_is_colimit
+    (IsColimit.ofIsoColimit (Limits.PullbackCone.isLimitEquivIsColimitOp h.flip.Cone h.flip.IsLimit)
+      h.to_comm_sq.flip.coneOp)
+
+theorem unop {P X Y Z : Cᵒᵖ} {fst : P ⟶ X} {snd : P ⟶ Y} {f : X ⟶ Z} {g : Y ⟶ Z} (h : IsPullback fst snd f g) :
+    IsPushout g.unop f.unop snd.unop fst.unop :=
+  IsPushout.of_is_colimit
+    (IsColimit.ofIsoColimit (Limits.PullbackCone.isLimitEquivIsColimitUnop h.flip.Cone h.flip.IsLimit)
+      h.to_comm_sq.flip.coneUnop)
+
 end IsPullback
 
 namespace IsPushout
@@ -450,6 +482,17 @@ theorem of_right {X₁₁ X₁₂ X₁₃ X₂₁ X₂₂ X₂₃ : C} {h₁₁ 
     (p : h₁₂ ≫ v₁₃ = v₁₂ ≫ h₂₂) (t : IsPushout h₁₁ v₁₁ v₁₂ h₂₁) : IsPushout h₁₂ v₁₂ v₁₃ h₂₂ :=
   (of_bot s.flip p.symm t.flip).flip
 
+theorem op (h : IsPushout f g inl inr) : IsPullback inr.op inl.op g.op f.op :=
+  IsPullback.of_is_limit
+    (IsLimit.ofIsoLimit (Limits.PushoutCocone.isColimitEquivIsLimitOp h.flip.Cocone h.flip.IsColimit)
+      h.to_comm_sq.flip.coconeOp)
+
+theorem unop {Z X Y P : Cᵒᵖ} {f : Z ⟶ X} {g : Z ⟶ Y} {inl : X ⟶ P} {inr : Y ⟶ P} (h : IsPushout f g inl inr) :
+    IsPullback inr.unop inl.unop g.unop f.unop :=
+  IsPullback.of_is_limit
+    (IsLimit.ofIsoLimit (Limits.PushoutCocone.isColimitEquivIsLimitUnop h.flip.Cocone h.flip.IsColimit)
+      h.to_comm_sq.flip.coconeUnop)
+
 end IsPushout
 
 namespace Functor
@@ -457,10 +500,6 @@ namespace Functor
 variable {D : Type u₂} [Category.{v₂} D]
 
 variable (F : C ⥤ D) {W X Y Z : C} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z}
-
-theorem map_comm_sq (s : CommSq f g h i) : CommSq (F.map f) (F.map g) (F.map h) (F.map i) :=
-  ⟨by
-    simpa using congr_arg (fun k : W ⟶ Z => F.map k) s.w⟩
 
 theorem map_is_pullback [PreservesLimit (cospan h i) F] (s : IsPullback f g h i) :
     IsPullback (F.map f) (F.map g) (F.map h) (F.map i) := by
@@ -499,8 +538,6 @@ theorem map_is_pushout [PreservesColimit (span f g) F] (s : IsPushout f g h i) :
     
 
 end Functor
-
-alias functor.map_comm_sq ← comm_sq.map
 
 alias functor.map_is_pullback ← is_pullback.map
 

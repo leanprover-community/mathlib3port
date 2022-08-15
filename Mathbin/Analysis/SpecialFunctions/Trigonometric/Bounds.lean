@@ -75,7 +75,7 @@ theorem sin_gt_sub_cube {x : ℝ} (h : 0 < x) (h' : x ≤ 1) : x - x ^ 3 / 4 < s
   rw [le_sub_iff_add_le, hx] at this
   refine' lt_of_lt_of_leₓ _ this
   have : x ^ 3 / 4 - x ^ 3 / 6 = x ^ 3 * 12⁻¹ := by
-    norm_num [← div_eq_mul_inv, mul_sub]
+    norm_num[← div_eq_mul_inv, mul_sub]
   rw [add_commₓ, sub_add, sub_neg_eq_add, sub_lt_sub_iff_left, ← lt_sub_iff_add_lt', this]
   refine'
     mul_lt_mul' _

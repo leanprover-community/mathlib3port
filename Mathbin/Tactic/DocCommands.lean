@@ -3,7 +3,6 @@ Copyright (c) 2020 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 -/
-import Mathbin.Tactic.FixReflectString
 
 /-!
 # Documentation commands
@@ -34,10 +33,11 @@ information.
 def Stringₓ.hash (s : Stringₓ) : ℕ :=
   s.fold 1 fun h c => (33 * h + c.val) % unsignedSz
 
-/-- `mk_hashed_name nspace id` hashes the string `id` to a value `i` and returns the name
-`nspace._i` -/
-unsafe def string.mk_hashed_name (nspace : Name) (id : Stringₓ) : Name :=
-  mkStrName nspace ("_" ++ toString id.hash)
+/-- Get the last component of a name, and convert it to a string. -/
+unsafe def name.last : Name → Stringₓ
+  | Name.mk_string s _ => s
+  | Name.mk_numeral n _ => reprₓ n
+  | anonymous => "[anonymous]"
 
 open Tactic
 
@@ -81,12 +81,14 @@ unsafe def mk_reflected_definition (decl_name : Name) {type} [reflected _ type] 
     declaration :=
   mk_definition decl_name (reflect type).collect_univ_params (reflect type) (reflect body)
 
-/-- If `note_name` and `note` are `pexpr`s representing strings,
-`add_library_note note_name note` adds a declaration of type `string × string` and tags it with
-the `library_note` attribute. -/
+/-- If `note_name` and `note` are strings, `add_library_note note_name note` adds a declaration named
+`library_note.<note_name>` with `note` as the docstring and tags it with the `library_note`
+attribute.
+-/
 unsafe def tactic.add_library_note (note_name note : Stringₓ) : tactic Unit := do
-  let decl_name := note_name.mk_hashed_name `library_note
-  add_decl <| mk_reflected_definition decl_name (note_name, note)
+  let decl_name := mkStrName `library_note note_name
+  add_decl <| mk_reflected_definition decl_name ()
+  add_doc_string decl_name note
   library_note_attr decl_name () tt none
 
 open Tactic
@@ -109,7 +111,7 @@ unsafe def library_note (mi : interactive.decl_meta_info) (_ : parse (tk "librar
 /-- Collects all notes in the current environment.
 Returns a list of pairs `(note_id, note_content)` -/
 unsafe def tactic.get_library_notes : tactic (List (Stringₓ × Stringₓ)) :=
-  attribute.get_instances `library_note >>= List.mmapₓ fun dcl => mk_const dcl >>= eval_expr (Stringₓ × Stringₓ)
+  attribute.get_instances `library_note >>= List.mmapₓ fun dcl => Prod.mk dcl.last <$> doc_string dcl
 
 /-! ### The `add_tactic_doc_entry` command -/
 
@@ -138,36 +140,17 @@ structure TacticDocEntry where
   category : DocCategory
   declNames : List Name
   tags : List Stringₓ := []
-  description : Stringₓ := ""
   inheritDescriptionFrom : Option Name := none
   deriving has_reflect
 
 /-- Turns a `tactic_doc_entry` into a JSON representation. -/
-unsafe def tactic_doc_entry.to_json (d : TacticDocEntry) : json :=
+unsafe def tactic_doc_entry.to_json (d : TacticDocEntry) (desc : Stringₓ) : json :=
   json.object
     [("name", d.Name), ("category", d.category.toString), ("decl_names", d.declNames.map (json.of_string ∘ toString)),
-      ("tags", d.tags.map json.of_string), ("description", d.description)]
+      ("tags", d.tags.map json.of_string), ("description", desc)]
 
-unsafe instance : HasToString TacticDocEntry :=
-  ⟨json.unparse ∘ tactic_doc_entry.to_json⟩
-
-/-- `update_description_from tde inh_id` replaces the `description` field of `tde` with the
-    doc string of the declaration named `inh_id`. -/
-unsafe def tactic_doc_entry.update_description_from (tde : TacticDocEntry) (inh_id : Name) : tactic TacticDocEntry := do
-  let ds ← doc_string inh_id <|> fail (toString inh_id ++ " has no doc string")
-  return { tde with description := ds }
-
-/-- `update_description tde` replaces the `description` field of `tde` with:
-
-* the doc string of `tde.inherit_description_from`, if this field has a value
-* the doc string of the entry in `tde.decl_names`, if this field has length 1
-
-If neither of these conditions are met, it returns `tde`. -/
-unsafe def tactic_doc_entry.update_description (tde : TacticDocEntry) : tactic TacticDocEntry :=
-  match tde.inheritDescriptionFrom, tde.declNames with
-  | some inh_id, _ => tde.update_description_from inh_id
-  | none, [inh_id] => tde.update_description_from inh_id
-  | none, _ => return tde
+unsafe instance tactic_doc_entry.has_to_string : HasToString (TacticDocEntry × Stringₓ) :=
+  ⟨fun ⟨doc, desc⟩ => json.unparse (doc.to_json desc)⟩
 
 /-- A user attribute `tactic_doc` for tagging decls of type `tactic_doc_entry`
 for use in doc output -/
@@ -178,21 +161,29 @@ unsafe def tactic_doc_entry_attr : user_attribute where
   parser := failed
 
 /-- Collects everything in the environment tagged with the attribute `tactic_doc`. -/
-unsafe def tactic.get_tactic_doc_entries : tactic (List TacticDocEntry) :=
-  attribute.get_instances `tactic_doc >>= List.mmapₓ fun dcl => mk_const dcl >>= eval_expr TacticDocEntry
+unsafe def tactic.get_tactic_doc_entries : tactic (List (TacticDocEntry × Stringₓ)) :=
+  attribute.get_instances `tactic_doc >>=
+    List.mmapₓ fun dcl => Prod.mk <$> (mk_const dcl >>= eval_expr TacticDocEntry) <*> doc_string dcl
 
 /-- `add_tactic_doc tde` adds a declaration to the environment
 with `tde` as its body and tags it with the `tactic_doc`
 attribute. If `tde.decl_names` has exactly one entry `` `decl`` and
 if `tde.description` is the empty string, `add_tactic_doc` uses the doc
 string of `decl` as the description. -/
-unsafe def tactic.add_tactic_doc (tde : TacticDocEntry) : tactic Unit := do
-  when (tde = "" ∧ tde ∧ tde ≠ 1) <|
-      fail
-        "A tactic doc entry must either:\n 1. have a description written as a doc-string for the `add_tactic_doc` invocation, or\n 2. have a single declaration in the `decl_names` field, to inherit a description from, or\n 3. explicitly indicate the declaration to inherit the description from using\n    `inherit_description_from`."
-  let tde ← if tde.description = "" then tde.update_description else return tde
-  let decl_name := (tde.Name ++ tde.category.toString).mk_hashed_name `tactic_doc
+unsafe def tactic.add_tactic_doc (tde : TacticDocEntry) (doc : Option Stringₓ) : tactic Unit := do
+  let desc ←
+    doc <|> do
+        let inh_id ←
+          match tde.inheritDescriptionFrom, tde.declNames with
+            | some inh_id, _ => pure inh_id
+            | none, [inh_id] => pure inh_id
+            | none, _ =>
+              fail
+                "A tactic doc entry must either:\n 1. have a description written as a doc-string for the `add_tactic_doc` invocation, or\n 2. have a single declaration in the `decl_names` field, to inherit a description from, or\n 3. explicitly indicate the declaration to inherit the description from using\n    `inherit_description_from`."
+        doc_string inh_id <|> fail (toString inh_id ++ " has no doc string")
+  let decl_name := mkStrName (mkStrName `tactic_doc tde.category.toString) tde.Name
   add_decl <| mk_definition decl_name [] (quote.1 TacticDocEntry) (reflect tde)
+  add_doc_string decl_name desc
   tactic_doc_entry_attr decl_name () tt none
 
 /-- A command used to add documentation for a tactic, command, hole command, or attribute.
@@ -240,11 +231,7 @@ unsafe def add_tactic_doc_command (mi : interactive.decl_meta_info) (_ : parse <
   do
   let pe ← parser.pexpr
   let e ← eval_pexpr TacticDocEntry pe
-  let e : TacticDocEntry :=
-    match mi.doc_string with
-    | some desc => { e with description := desc }
-    | none => e
-  tactic.add_tactic_doc e
+  tactic.add_tactic_doc e mi
 
 /-- At various places in mathlib, we leave implementation notes that are referenced from many other
 files. To keep track of these notes, we use the command `library_note`. This makes it easy to

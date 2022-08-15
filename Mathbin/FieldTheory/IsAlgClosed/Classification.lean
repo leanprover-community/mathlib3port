@@ -95,12 +95,11 @@ variable {κ : Type _} (w : κ → L)
 variable (hv : AlgebraicIndependent R v)
 
 theorem is_alg_closure_of_transcendence_basis [IsAlgClosed K] (hv : IsTranscendenceBasis R v) :
-    IsAlgClosure (Algebra.adjoin R (Set.Range v)) K := by
-  let this := RingHom.domain_nontrivial (algebraMap R K) <;>
-    exact
-      { alg_closed := by
-          infer_instance,
-        algebraic := hv.is_algebraic }
+    IsAlgClosure (Algebra.adjoin R (Set.Range v)) K :=
+  letI := RingHom.domain_nontrivial (algebraMap R K)
+  { alg_closed := by
+      infer_instance,
+    algebraic := hv.is_algebraic }
 
 variable (hw : AlgebraicIndependent R w)
 
@@ -109,8 +108,8 @@ closed fields have equipotent transcendence bases and the same characteristic th
 isomorphic. -/
 def equivOfTranscendenceBasis [IsAlgClosed K] [IsAlgClosed L] (e : ι ≃ κ) (hv : IsTranscendenceBasis R v)
     (hw : IsTranscendenceBasis R w) : K ≃+* L := by
-  let this := is_alg_closure_of_transcendence_basis v hv <;>
-    let this := is_alg_closure_of_transcendence_basis w hw <;>
+  letI := is_alg_closure_of_transcendence_basis v hv <;>
+    letI := is_alg_closure_of_transcendence_basis w hw <;>
       have e : Algebra.adjoin R (Set.Range v) ≃+* Algebra.adjoin R (Set.Range w)
   · refine' hv.1.aevalEquiv.symm.toRingEquiv.trans _
     refine' (AlgEquiv.ofAlgHom (MvPolynomial.rename e) (MvPolynomial.rename e.symm) _ _).toRingEquiv.trans _
@@ -138,9 +137,9 @@ variable (hv : IsTranscendenceBasis R v)
 
 theorem cardinal_le_max_transcendence_basis (hv : IsTranscendenceBasis R v) : # K ≤ max (max (# R) (# ι)) ℵ₀ :=
   calc
-    # K ≤ max (# (Algebra.adjoin R (Set.Range v))) ℵ₀ := by
-      let this := is_alg_closure_of_transcendence_basis v hv <;>
-        exact Algebra.IsAlgebraic.cardinal_mk_le_max _ _ IsAlgClosure.algebraic
+    # K ≤ max (# (Algebra.adjoin R (Set.Range v))) ℵ₀ :=
+      letI := is_alg_closure_of_transcendence_basis v hv
+      Algebra.IsAlgebraic.cardinal_mk_le_max _ _ IsAlgClosure.algebraic
     _ = max (# (MvPolynomial ι R)) ℵ₀ := by
       rw [Cardinal.eq.2 ⟨hv.1.aevalEquiv.toEquiv⟩]
     _ ≤ max (max (max (# R) (# ι)) ℵ₀) ℵ₀ := max_le_max MvPolynomial.cardinal_mk_le_max le_rfl
@@ -213,13 +212,13 @@ if they have the same cardinality and the same characteristic. -/
 theorem ringEquivOfCardinalEqOfCharEq (p : ℕ) [CharP K p] [CharP L p] (hK : ℵ₀ < # K) (hKL : # K = # L) : K ≃+* L := by
   apply Classical.choice
   rcases CharP.char_is_prime_or_zero K p with (hp | hp)
-  · have : Fact p.prime := ⟨hp⟩
+  · haveI : Fact p.prime := ⟨hp⟩
     exact ⟨ring_equiv_of_cardinal_eq_of_char_p p hK hKL⟩
     
   · rw [hp] at *
     skip
-    let this : CharZero K := CharP.char_p_to_char_zero K
-    let this : CharZero L := CharP.char_p_to_char_zero L
+    letI : CharZero K := CharP.char_p_to_char_zero K
+    letI : CharZero L := CharP.char_p_to_char_zero L
     exact ⟨ring_equiv_of_cardinal_eq_of_char_zero hK hKL⟩
     
 

@@ -146,7 +146,7 @@ def IsReduced' : Prop :=
   u.a = u.b
 
 theorem is_reduced_iff : u.IsReduced ↔ u.IsReduced' :=
-  ⟨congr_arg succPnat, succ_pnat_inj⟩
+  succ_pnat_inj.symm
 
 def flip : XgcdType where
   wp := u.zp

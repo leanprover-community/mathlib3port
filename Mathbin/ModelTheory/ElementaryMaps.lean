@@ -333,6 +333,9 @@ instance : SetLike (L.ElementarySubstructure M) M :=
     congr
     exact h⟩
 
+instance inducedStructure (S : L.ElementarySubstructure M) : L.Structure S :=
+  substructure.induced_Structure
+
 @[simp]
 theorem is_elementary (S : L.ElementarySubstructure M) : (S : L.Substructure M).IsElementary :=
   S.is_elementary'

@@ -421,7 +421,7 @@ def LieRingModule.compLieHom : LieRingModule L₁ M where
     simp only [← lie_lie, ← sub_add_cancel, ← LieHom.map_lie]
 
 theorem LieRingModule.comp_lie_hom_apply (x : L₁) (m : M) :
-    have := LieRingModule.compLieHom M f
+    haveI := LieRingModule.compLieHom M f
     ⁅x,m⁆ = ⁅f x,m⁆ :=
   rfl
 

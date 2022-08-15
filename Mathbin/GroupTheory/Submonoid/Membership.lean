@@ -182,7 +182,7 @@ theorem coe_supr_of_directed {ι} [Nonempty ι] {S : ι → Submonoid M} (hS : D
 @[to_additive]
 theorem mem_Sup_of_directed_on {S : Set (Submonoid M)} (Sne : S.Nonempty) (hS : DirectedOn (· ≤ ·) S) {x : M} :
     x ∈ sup S ↔ ∃ s ∈ S, x ∈ s := by
-  have : Nonempty S := Sne.to_subtype
+  haveI : Nonempty S := Sne.to_subtype
   simp only [← Sup_eq_supr', ← mem_supr_of_directed hS.directed_coe, ← SetCoe.exists, ← Subtype.coe_mk]
 
 @[to_additive]
@@ -214,7 +214,7 @@ theorem mem_Sup_of_mem {S : Set (Submonoid M)} {s : Submonoid M} (hs : s ∈ S) 
 /-- An induction principle for elements of `⨆ i, S i`.
 If `C` holds for `1` and all elements of `S i` for all `i`, and is preserved under multiplication,
 then it holds for all elements of the supremum of `S`. -/
-@[elab_as_eliminator,
+@[elabAsElim,
   to_additive
       " An induction principle for elements of `⨆ i, S i`.\nIf `C` holds for `0` and all elements of `S i` for all `i`, and is preserved under addition,\nthen it holds for all elements of the supremum of `S`. "]
 theorem supr_induction {ι : Sort _} (S : ι → Submonoid M) {C : M → Prop} {x : M} (hx : x ∈ ⨆ i, S i)
@@ -225,7 +225,7 @@ theorem supr_induction {ι : Sort _} (S : ι → Submonoid M) {C : M → Prop} {
   exact hp _ _ hi
 
 /-- A dependent version of `submonoid.supr_induction`. -/
-@[elab_as_eliminator, to_additive "A dependent version of `add_submonoid.supr_induction`. "]
+@[elabAsElim, to_additive "A dependent version of `add_submonoid.supr_induction`. "]
 theorem supr_induction' {ι : Sort _} (S : ι → Submonoid M) {C : ∀ x, (x ∈ ⨆ i, S i) → Prop}
     (hp : ∀ (i), ∀ x ∈ S i, ∀, C x (mem_supr_of_mem i ‹_›)) (h1 : C 1 (one_mem _))
     (hmul : ∀ x y hx hy, C x hx → C y hy → C (x * y) (mul_mem ‹_› ‹_›)) {x : M} (hx : x ∈ ⨆ i, S i) : C x hx := by

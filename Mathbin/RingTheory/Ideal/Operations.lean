@@ -100,7 +100,7 @@ theorem smul_mem_smul {r} {n} (hr : r ∈ I) (hn : n ∈ N) : r • n ∈ I • 
 theorem smul_le {P : Submodule R M} : I • N ≤ P ↔ ∀, ∀ r ∈ I, ∀, ∀ n ∈ N, ∀, r • n ∈ P :=
   map₂_le
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem smul_induction_on {p : M → Prop} {x} (H : x ∈ I • N) (Hb : ∀, ∀ r ∈ I, ∀, ∀ n ∈ N, ∀, p (r • n))
     (H1 : ∀ x y, p x → p y → p (x + y)) : p x := by
   have H0 : p 0 := by
@@ -248,13 +248,18 @@ variable (I)
 
 /-- If `x` is an `I`-multiple of the submodule spanned by `f '' s`,
 then we can write `x` as an `I`-linear combination of the elements of `f '' s`. -/
-theorem exists_sum_of_mem_ideal_smul_span {ι : Type _} (s : Set ι) (f : ι → M) (x : M) (hx : x ∈ I • span R (f '' s)) :
-    ∃ (a : s →₀ R)(ha : ∀ i, a i ∈ I), (a.Sum fun i c => c • f i) = x := by
-  refine' span_induction (mem_smul_span.mp hx) _ _ _ _
+theorem mem_ideal_smul_span_iff_exists_sum {ι : Type _} (f : ι → M) (x : M) :
+    x ∈ I • span R (Set.Range f) ↔ ∃ (a : ι →₀ R)(ha : ∀ i, a i ∈ I), (a.Sum fun i c => c • f i) = x := by
+  constructor
+  swap
+  · rintro ⟨a, ha, rfl⟩
+    exact Submodule.sum_mem _ fun c _ => smul_mem_smul (ha c) <| subset_span <| Set.mem_range_self _
+    
+  refine' fun hx => span_induction (mem_smul_span.mp hx) _ _ _ _
   · simp only [← Set.mem_Union, ← Set.mem_range, ← Set.mem_singleton_iff]
-    rintro x ⟨y, hy, x, ⟨i, hi, rfl⟩, rfl⟩
-    refine' ⟨Finsupp.single ⟨i, hi⟩ y, fun j => _, _⟩
-    · let this := Classical.decEq s
+    rintro x ⟨y, hy, x, ⟨i, rfl⟩, rfl⟩
+    refine' ⟨Finsupp.single i y, fun j => _, _⟩
+    · letI := Classical.decEq ι
       rw [Finsupp.single_apply]
       split_ifs
       · assumption
@@ -262,7 +267,7 @@ theorem exists_sum_of_mem_ideal_smul_span {ι : Type _} (s : Set ι) (f : ι →
       · exact I.zero_mem
         
       
-    refine' @Finsupp.sum_single_index s R M _ _ ⟨i, hi⟩ _ (fun i y => y • f i) _
+    refine' @Finsupp.sum_single_index ι R M _ _ i _ (fun i y => y • f i) _
     simp
     
   · exact ⟨0, fun i => I.zero_mem, Finsupp.sum_zero_index⟩
@@ -275,6 +280,10 @@ theorem exists_sum_of_mem_ideal_smul_span {ι : Type _} (s : Set ι) (f : ι →
     refine' ⟨c • a, fun i => I.mul_mem_left c (ha i), _⟩
     rw [Finsupp.sum_smul_index, Finsupp.smul_sum] <;> intros <;> simp only [← zero_smul, ← mul_smul]
     
+
+theorem mem_ideal_smul_span_iff_exists_sum' {ι : Type _} (s : Set ι) (f : ι → M) (x : M) :
+    x ∈ I • span R (f '' s) ↔ ∃ (a : s →₀ R)(ha : ∀ i, a i ∈ I), (a.Sum fun i c => c • f i) = x := by
+  rw [← Submodule.mem_ideal_smul_span_iff_exists_sum, ← Set.image_eq_range]
 
 @[simp]
 theorem smul_comap_le_comap_smul (f : M →ₗ[R] M') (S : Submodule R M') (I : Ideal R) :
@@ -307,7 +316,7 @@ theorem mem_colon' {r} : r ∈ N.colon P ↔ P ≤ comap (r • LinearMap.id) N 
 theorem colon_mono (hn : N₁ ≤ N₂) (hp : P₁ ≤ P₂) : N₁.colon P₂ ≤ N₂.colon P₁ := fun r hrnp =>
   mem_colon.2 fun p₁ hp₁ => hn <| mem_colon.1 hrnp p₁ <| hp hp₁
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
 theorem infi_colon_supr (ι₁ : Sort w) (f : ι₁ → Submodule R M) (ι₂ : Sort x) (g : ι₂ → Submodule R M) :
     (⨅ i, f i).colon (⨆ j, g j) = ⨅ (i) (j), (f i).colon (g j) :=
   le_antisymmₓ (le_infi fun i => le_infi fun j => colon_mono (infi_le _ _) (le_supr _ _)) fun r H =>
@@ -702,7 +711,7 @@ variable {I J}
 theorem IsPrime.radical_le_iff (hj : IsPrime J) : radical I ≤ J ↔ I ≤ J :=
   ⟨le_transₓ le_radical, fun hij r ⟨n, hrni⟩ => hj.mem_of_pow_mem n <| hij hrni⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x «expr ∉ » m)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ∉ » m)
 theorem radical_eq_Inf (I : Ideal R) : radical I = inf { J : Ideal R | I ≤ J ∧ IsPrime J } :=
   (le_antisymmₓ (le_Inf fun J hJ => hJ.2.radical_le_iff.2 hJ.1)) fun r hr =>
     Classical.by_contradiction fun hri =>
@@ -1438,9 +1447,13 @@ theorem comap_le_iff_le_map {I : Ideal R} {K : Ideal S} : comap f K ≤ I ↔ K 
 
 theorem map.is_maximal {I : Ideal R} (H : IsMaximal I) : IsMaximal (map f I) := by
   refine' or_iff_not_imp_left.1 (map_eq_top_or_is_maximal_of_surjective f hf.right H) fun h => H.1.1 _ <;>
-    calc I = comap f (map f I) := ((rel_iso_of_bijective f hf).right_inv I).symm _ = comap f ⊤ := by
-        rw [h]_ = ⊤ := by
+    calc
+      I = comap f (map f I) := ((rel_iso_of_bijective f hf).right_inv I).symm
+      _ = comap f ⊤ := by
+        rw [h]
+      _ = ⊤ := by
         rw [comap_top]
+      
 
 end Bijective
 
@@ -1558,6 +1571,53 @@ theorem is_primary_inf {I J : Ideal R} (hi : IsPrimary I) (hj : IsPrimary J) (hi
       ⟩
 
 end IsPrimary
+
+section Total
+
+variable (ι : Type _)
+
+variable (M : Type _) [AddCommGroupₓ M] {R : Type _} [CommRingₓ R] [Module R M] (I : Ideal R)
+
+variable (v : ι → M) (hv : Submodule.span R (Set.Range v) = ⊤)
+
+open BigOperators
+
+/-- A variant of `finsupp.total` that takes in vectors valued in `I`. -/
+noncomputable def finsuppTotal : (ι →₀ I) →ₗ[R] M :=
+  (Finsupp.total ι M R v).comp (Finsupp.mapRange.linearMap I.Subtype)
+
+variable {ι M v}
+
+theorem finsupp_total_apply (f : ι →₀ I) : finsuppTotal ι M I v f = f.Sum fun i x => (x : R) • v i := by
+  dsimp' [← finsupp_total]
+  rw [Finsupp.total_apply, Finsupp.sum_map_range_index]
+  exact fun _ => zero_smul _ _
+
+theorem finsupp_total_apply_eq_of_fintype [Fintype ι] (f : ι →₀ I) : finsuppTotal ι M I v f = ∑ i, (f i : R) • v i := by
+  rw [finsupp_total_apply, Finsupp.sum_fintype]
+  exact fun _ => zero_smul _ _
+
+theorem range_finsupp_total : (finsuppTotal ι M I v).range = I • Submodule.span R (Set.Range v) := by
+  ext
+  rw [Submodule.mem_ideal_smul_span_iff_exists_sum]
+  refine' ⟨fun ⟨f, h⟩ => ⟨Finsupp.mapRange.linearMap I.subtype f, fun i => (f i).2, h⟩, _⟩
+  rintro ⟨a, ha, rfl⟩
+  classical
+  refine'
+    ⟨a.map_range (fun r => if h : r ∈ I then ⟨r, h⟩ else 0)
+        (by
+          split_ifs <;> rfl),
+      _⟩
+  rw [finsupp_total_apply, Finsupp.sum_map_range_index]
+  · apply Finsupp.sum_congr
+    intro i _
+    rw [dif_pos (ha i)]
+    rfl
+    
+  · exact fun _ => zero_smul _ _
+    
+
+end Total
 
 end Ideal
 
@@ -1820,11 +1880,11 @@ theorem map_radical_of_surjective {f : R →+* S} (hf : Function.Surjective f) {
   convert map_Inf hf this
   refine' funext fun j => propext ⟨_, _⟩
   · rintro ⟨hj, hj'⟩
-    have : j.is_prime := hj'
+    haveI : j.is_prime := hj'
     exact ⟨comap f j, ⟨⟨map_le_iff_le_comap.1 hj, comap_is_prime f j⟩, map_comap_of_surjective f hf j⟩⟩
     
   · rintro ⟨J, ⟨hJ, hJ'⟩⟩
-    have : J.is_prime := hJ.right
+    haveI : J.is_prime := hJ.right
     refine' ⟨hJ' ▸ map_mono hJ.left, hJ' ▸ map_is_prime_of_surjective hf (le_transₓ h hJ.left)⟩
     
 

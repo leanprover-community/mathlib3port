@@ -88,7 +88,7 @@ such that
 We can then glue the spaces `U i` together by identifying `V i j` with `V j i`, such
 that the `U i`'s are open subspaces of the glued space.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure GlueData extends GlueData (PresheafedSpace.{v} C) where
   f_open : ∀ i j, IsOpenImmersion (f i j)
 
@@ -109,11 +109,10 @@ local notation "π₂" i "," j "," k => @pullback.snd _ _ _ _ _ (D.f i j) (D.f i
 
 -- mathport name: «exprπ₁⁻¹ , , »
 local notation "π₁⁻¹" i "," j "," k =>
-  (PresheafedSpace.IsOpenImmersion.pullback_fst_of_right (D.f i j) (D.f i k)).inv_app
+  (PresheafedSpace.IsOpenImmersion.pullback_fst_of_right (D.f i j) (D.f i k)).invApp
 
 -- mathport name: «exprπ₂⁻¹ , , »
-local notation "π₂⁻¹" i "," j "," k =>
-  (PresheafedSpace.IsOpenImmersion.pullback_snd_of_left (D.f i j) (D.f i k)).inv_app
+local notation "π₂⁻¹" i "," j "," k => (PresheafedSpace.IsOpenImmersion.pullback_snd_of_left (D.f i j) (D.f i k)).invApp
 
 /-- The glue data of topological spaces associated to a family of glue data of PresheafedSpaces. -/
 abbrev toTopGlueData : Top.GlueData :=
@@ -138,7 +137,7 @@ theorem pullback_base (i j k : D.J) (S : Set (D.V (i, j)).Carrier) :
 /-- The red and the blue arrows in ![this diagram](https://i.imgur.com/0GiBUh6.png) commute. -/
 @[simp, reassoc]
 theorem f_inv_app_f_app (i j k : D.J) (U : Opens (D.V (i, j)).Carrier) :
-    (D.f_open i j).inv_app U ≫ (D.f i k).c.app _ =
+    (D.f_open i j).invApp U ≫ (D.f i k).c.app _ =
       (π₁ i,j,k).c.app (op U) ≫
         (π₂⁻¹i,j,k) (unop _) ≫
           (D.V _).Presheaf.map
@@ -151,7 +150,7 @@ theorem f_inv_app_f_app (i j k : D.J) (U : Opens (D.V (i, j)).Carrier) :
   by
   have := PresheafedSpace.congr_app (@pullback.condition _ _ _ _ _ (D.f i j) (D.f i k) _)
   dsimp' only [← comp_c_app]  at this
-  rw [← cancel_epi (inv ((D.f_open i j).inv_app U)), is_iso.inv_hom_id_assoc, is_open_immersion.inv_inv_app]
+  rw [← cancel_epi (inv ((D.f_open i j).invApp U)), is_iso.inv_hom_id_assoc, is_open_immersion.inv_inv_app]
   simp_rw [category.assoc]
   erw [(π₁ i,j,k).c.naturality_assoc, reassoc_of this, ← functor.map_comp_assoc, is_open_immersion.inv_naturality_assoc,
     is_open_immersion.app_inv_app_assoc, ← (D.V (i, k)).Presheaf.map_comp, ← (D.V (i, k)).Presheaf.map_comp]
@@ -229,8 +228,7 @@ theorem ι_image_preimage_eq (i j : D.J) (U : Opens (D.U i).Carrier) :
 def opensImagePreimageMap (i j : D.J) (U : Opens (D.U i).Carrier) :
     (D.U i).Presheaf.obj (op U) ⟶ (D.U j).Presheaf.obj _ :=
   (D.f i j).c.app (op U) ≫
-    (D.t j i).c.app _ ≫
-      (D.f_open j i).inv_app (unop _) ≫ (𝖣.U j).Presheaf.map (eqToHom (D.ι_image_preimage_eq i j U)).op
+    (D.t j i).c.app _ ≫ (D.f_open j i).invApp (unop _) ≫ (𝖣.U j).Presheaf.map (eqToHom (D.ι_image_preimage_eq i j U)).op
 
 theorem opens_image_preimage_map_app' (i j k : D.J) (U : Opens (D.U i).Carrier) :
     ∃ eq,
@@ -496,7 +494,7 @@ such that
 We can then glue the spaces `U i` together by identifying `V i j` with `V j i`, such
 that the `U i`'s are open subspaces of the glued space.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure GlueData extends GlueData (SheafedSpace.{v} C) where
   f_open : ∀ i j, SheafedSpace.IsOpenImmersion (f i j)
 
@@ -564,7 +562,7 @@ such that
 We can then glue the spaces `U i` together by identifying `V i j` with `V j i`, such
 that the `U i`'s are open subspaces of the glued space.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure GlueData extends GlueData LocallyRingedSpace where
   f_open : ∀ i j, LocallyRingedSpace.IsOpenImmersion (f i j)
 

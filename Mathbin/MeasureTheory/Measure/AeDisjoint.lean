@@ -26,7 +26,7 @@ def AeDisjoint (s t : Set α) :=
 
 variable {μ} {s t u v : Set α}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (j «expr ≠ » i)
 /-- If `s : ι → set α` is a countable family of pairwise a.e. disjoint sets, then there exists a
 family of measurable null sets `t i` such that `s i \ t i` are pairwise disjoint. -/
 theorem exists_null_pairwise_disjoint_diff [Encodable ι] {s : ι → Set α} (hd : Pairwise (AeDisjoint μ on s)) :
@@ -34,8 +34,8 @@ theorem exists_null_pairwise_disjoint_diff [Encodable ι] {s : ι → Set α} (h
   refine'
     ⟨fun i => to_measurable μ (s i ∩ ⋃ j ∈ ({i}ᶜ : Set ι), s j), fun i => measurable_set_to_measurable _ _, fun i => _,
       _⟩
-  · simp only [← measure_to_measurable, ← inter_Union, ← measure_bUnion_null_iff (countable_encodable _)]
-    exact fun j hj => hd _ _ (Ne.symm hj)
+  · simp only [← measure_to_measurable, ← inter_Union]
+    exact (measure_bUnion_null_iff <| to_countable _).2 fun j hj => hd _ _ (Ne.symm hj)
     
   · simp only [← Pairwise, ← disjoint_left, ← on_fun, ← mem_diff, ← not_and, ← and_imp, ← not_not]
     intro i j hne x hi hU hj

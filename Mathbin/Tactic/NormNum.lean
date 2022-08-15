@@ -251,12 +251,10 @@ mutual
         | _, _ => failed
 end
 
-/-- Given `a`,`b`,`r` natural numerals, proves `⊢ a + b = r`. -/
-add_decl_doc prove_add_nat
-
-/-- Given `a`,`b`,`r` natural numerals, proves `⊢ a + b + 1 = r`. -/
-add_decl_doc prove_adc_nat
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident prove_add_nat]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident prove_adc_nat]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Given `a`,`b` natural numerals, returns `(r, ⊢ a + b = r)`. -/
 unsafe def prove_add_nat' (c : instance_cache) (a b : expr) : tactic (instance_cache × expr × expr) := do
   let na ← a.toNat
@@ -543,12 +541,10 @@ mutual
       | _, _ => failed
 end
 
-/-- Given `a`,`b` natural numerals, proves `⊢ a ≤ b`. -/
-add_decl_doc prove_le_nat
-
-/-- Given `a`,`b` natural numerals, proves `⊢ a + 1 ≤ b`. -/
-add_decl_doc prove_sle_nat
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident prove_le_nat]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident prove_sle_nat]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Given `a`,`b` natural numerals, proves `⊢ a < b`. -/
 unsafe def prove_lt_nat (ic : instance_cache) : expr → expr → tactic (instance_cache × expr)
   | a, b =>
@@ -1421,7 +1417,7 @@ theorem dvd_eq_int (a b c : ℤ) (p) (h₁ : b % a = c) (h₂ : (c = 0) = p) : (
 
 theorem int_to_nat_pos (a : ℤ) (b : ℕ)
     (h :
-      (have := @Nat.castCoe ℤ
+      (haveI := @Nat.castCoe ℤ
         b :
           ℤ) =
         a) :
@@ -1433,7 +1429,7 @@ theorem int_to_nat_neg (a : ℤ) (h : 0 < a) : (-a).toNat = 0 := by
 
 theorem nat_abs_pos (a : ℤ) (b : ℕ)
     (h :
-      (have := @Nat.castCoe ℤ
+      (haveI := @Nat.castCoe ℤ
         b :
           ℤ) =
         a) :
@@ -1442,7 +1438,7 @@ theorem nat_abs_pos (a : ℤ) (b : ℕ)
 
 theorem nat_abs_neg (a : ℤ) (b : ℕ)
     (h :
-      (have := @Nat.castCoe ℤ
+      (haveI := @Nat.castCoe ℤ
         b :
           ℤ) =
         a) :
@@ -1451,7 +1447,7 @@ theorem nat_abs_neg (a : ℤ) (b : ℕ)
 
 theorem neg_succ_of_nat (a b : ℕ) (c : ℤ) (h₁ : a + 1 = b)
     (h₂ :
-      (have := @Nat.castCoe ℤ
+      (haveI := @Nat.castCoe ℤ
         b :
           ℤ) =
         c) :
@@ -1517,7 +1513,7 @@ unsafe def eval_nat_int_ext : expr → tactic (expr × expr)
 
 theorem int_to_nat_cast (a : ℕ) (b : ℤ)
     (h :
-      (have := @Nat.castCoe ℤ
+      (haveI := @Nat.castCoe ℤ
         a :
           ℤ) =
         b) :

@@ -169,7 +169,7 @@ def continuousSubmonoid (α : Type _) (β : Type _) [TopologicalSpace α] [Topol
     [HasContinuousMul β] : Submonoid (α → β) where
   Carrier := { f : α → β | Continuous f }
   one_mem' := @continuous_const _ _ _ _ 1
-  mul_mem' := fun f g fc gc => Continuous.comp HasContinuousMul.continuous_mul (Continuous.prod_mk fc gc : _)
+  mul_mem' := fun f g fc gc => fc.mul gc
 
 /-- The subgroup of continuous maps `α → β`. -/
 @[to_additive "The `add_subgroup` of continuous maps `α → β`. "]
@@ -288,7 +288,7 @@ instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [CommGroupₓ β] [TopologicalGroup β] :
     TopologicalGroup C(α, β) where
   continuous_mul := by
-    let this : UniformSpace β := TopologicalGroup.toUniformSpace β
+    letI : UniformSpace β := TopologicalGroup.toUniformSpace β
     have : UniformGroup β := topological_group_is_uniform
     rw [continuous_iff_continuous_at]
     rintro ⟨f, g⟩
@@ -298,7 +298,7 @@ instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
         ((tendsto_iff_forall_compact_tendsto_uniformly_on.mp Filter.tendsto_id K hK).Prod
           (tendsto_iff_forall_compact_tendsto_uniformly_on.mp Filter.tendsto_id K hK))
   continuous_inv := by
-    let this : UniformSpace β := TopologicalGroup.toUniformSpace β
+    letI : UniformSpace β := TopologicalGroup.toUniformSpace β
     have : UniformGroup β := topological_group_is_uniform
     rw [continuous_iff_continuous_at]
     intro f
@@ -656,7 +656,8 @@ theorem Subalgebra.SeparatesPoints.strongly {s : Subalgebra 𝕜 C(α, 𝕜)} (h
     -- TODO should there be a tactic for this?
     -- We could add an attribute `@[subobject_mem]`, and a tactic
     -- ``def subobject_mem := `[solve_by_elim with subobject_mem { max_depth := 10 }]``
-    solve_by_elim [← Subalgebra.add_mem, ← Subalgebra.smul_mem, ← Subalgebra.sub_mem, ← Subalgebra.algebra_map_mem]
+    solve_by_elim(config := { max_depth := 6 }) [← Subalgebra.add_mem, ← Subalgebra.smul_mem, ← Subalgebra.sub_mem, ←
+      Subalgebra.algebra_map_mem]
     
   · simp [← f', ← coe_fn_coe_base']
     

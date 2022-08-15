@@ -73,25 +73,6 @@ theorem to_dual_map_apply {x y : E} : toDualMap 𝕜 E x y = ⟪x, y⟫ :=
 theorem innerSL_norm [Nontrivial E] : ∥(innerSL : E →L⋆[𝕜] E →L[𝕜] 𝕜)∥ = 1 :=
   show ∥(toDualMap 𝕜 E).toContinuousLinearMap∥ = 1 from LinearIsometry.norm_to_continuous_linear_map _
 
-variable (𝕜)
-
-include 𝕜
-
-theorem ext_inner_left {x y : E} (h : ∀ v, ⟪v, x⟫ = ⟪v, y⟫) : x = y := by
-  apply (to_dual_map 𝕜 E).map_eq_iff.mp
-  ext v
-  rw [to_dual_map_apply, to_dual_map_apply, ← inner_conj_sym]
-  nth_rw_rhs 0[← inner_conj_sym]
-  exact congr_arg conj (h v)
-
-theorem ext_inner_right {x y : E} (h : ∀ v, ⟪x, v⟫ = ⟪y, v⟫) : x = y := by
-  refine' ext_inner_left 𝕜 fun v => _
-  rw [← inner_conj_sym]
-  nth_rw_rhs 0[← inner_conj_sym]
-  exact congr_arg conj (h v)
-
-omit 𝕜
-
 variable {𝕜}
 
 theorem ext_inner_left_basis {ι : Type _} {x y : E} (b : Basis ι 𝕜 E) (h : ∀ i : ι, ⟪b i, x⟫ = ⟪b i, y⟫) : x = y := by

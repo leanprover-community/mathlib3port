@@ -15,7 +15,7 @@ Define the operator norm on the space of continuous (semi)linear maps between no
 prove its basic properties. In particular, show that this space is itself a normed space.
 
 Since a lot of elementary properties don't require `∥x∥ = 0 → x = 0` we start setting up the
-theory for `semi_normed_group` and we specialize to `normed_group` at the end.
+theory for `seminormed_add_comm_group` and we specialize to `normed_add_comm_group` at the end.
 
 Note that most of statements that apply to semilinear maps only hold when the ring homomorphism
 is isometric, as expressed by the typeclass `[ring_hom_isometric σ]`.
@@ -32,9 +32,8 @@ variable {𝕜 𝕜₂ 𝕜₃ E Eₗ F Fₗ G Gₗ 𝓕 : Type _}
 
 section SemiNormed
 
-variable [SemiNormedGroup E] [SemiNormedGroup Eₗ] [SemiNormedGroup F] [SemiNormedGroup Fₗ]
-
-variable [SemiNormedGroup G] [SemiNormedGroup Gₗ]
+variable [SeminormedAddCommGroup E] [SeminormedAddCommGroup Eₗ] [SeminormedAddCommGroup F] [SeminormedAddCommGroup Fₗ]
+  [SeminormedAddCommGroup G] [SeminormedAddCommGroup Gₗ]
 
 open Metric ContinuousLinearMap
 
@@ -112,7 +111,7 @@ theorem LinearMap.to_continuous_linear_map₁_apply (f : 𝕜 →ₗ[𝕜] E) (x
 
 end NormedField
 
-variable [NondiscreteNormedField 𝕜] [NondiscreteNormedField 𝕜₂] [NondiscreteNormedField 𝕜₃] [NormedSpace 𝕜 E]
+variable [NontriviallyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] [NontriviallyNormedField 𝕜₃] [NormedSpace 𝕜 E]
   [NormedSpace 𝕜 Eₗ] [NormedSpace 𝕜₂ F] [NormedSpace 𝕜 Fₗ] [NormedSpace 𝕜₃ G] [NormedSpace 𝕜 Gₗ] {σ₁₂ : 𝕜 →+* 𝕜₂}
   {σ₂₃ : 𝕜₂ →+* 𝕜₃} {σ₁₃ : 𝕜 →+* 𝕜₃} [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
 
@@ -120,7 +119,7 @@ variable [NondiscreteNormedField 𝕜] [NondiscreteNormedField 𝕜₂] [Nondisc
 theorem norm_image_of_norm_zero [SemilinearMapClass 𝓕 σ₁₂ E F] (f : 𝓕) (hf : Continuous f) {x : E} (hx : ∥x∥ = 0) :
     ∥f x∥ = 0 := by
   refine' le_antisymmₓ (le_of_forall_pos_le_add fun ε hε => _) (norm_nonneg (f x))
-  rcases NormedGroup.tendsto_nhds_nhds.1 (hf.tendsto 0) ε hε with ⟨δ, δ_pos, hδ⟩
+  rcases NormedAddCommGroup.tendsto_nhds_nhds.1 (hf.tendsto 0) ε hε with ⟨δ, δ_pos, hδ⟩
   replace hδ := hδ x
   rw [sub_zero, hx] at hδ
   replace hδ := le_of_ltₓ (hδ δ_pos)
@@ -139,13 +138,13 @@ theorem SemilinearMapClass.bound_of_shell_semi_normed [SemilinearMapClass 𝓕 �
   simpa only [← map_smulₛₗ, ← norm_smul, ← mul_left_commₓ C, ← mul_le_mul_left (norm_pos_iff.2 hδ), ←
     RingHomIsometric.is_iso] using hf (δ • x) leδx δxle
 
-/-- A continuous linear map between seminormed spaces is bounded when the field is nondiscrete. The
-continuity ensures boundedness on a ball of some radius `ε`. The nondiscreteness is then used to
-rescale any element into an element of norm in `[ε/C, ε]`, whose image has a controlled norm. The
-norm control for the original element follows by rescaling. -/
+/-- A continuous linear map between seminormed spaces is bounded when the field is nontrivially
+normed. The continuity ensures boundedness on a ball of some radius `ε`. The nontriviality of the
+norm is then used to rescale any element into an element of norm in `[ε/C, ε]`, whose image has a
+controlled norm. The norm control for the original element follows by rescaling. -/
 theorem SemilinearMapClass.bound_of_continuous [SemilinearMapClass 𝓕 σ₁₂ E F] (f : 𝓕) (hf : Continuous f) :
     ∃ C, 0 < C ∧ ∀ x : E, ∥f x∥ ≤ C * ∥x∥ := by
-  rcases NormedGroup.tendsto_nhds_nhds.1 (hf.tendsto 0) 1 zero_lt_one with ⟨ε, ε_pos, hε⟩
+  rcases NormedAddCommGroup.tendsto_nhds_nhds.1 (hf.tendsto 0) 1 zero_lt_one with ⟨ε, ε_pos, hε⟩
   simp only [← sub_zero, ← map_zero] at hε
   rcases NormedField.exists_one_lt_norm 𝕜 with ⟨c, hc⟩
   have : 0 < ∥c∥ / ε := div_pos (zero_lt_one.trans hc) ε_pos
@@ -253,6 +252,12 @@ theorem bounds_bdd_below {f : E →SL[σ₁₂] F} : BddBelow { c | 0 ≤ c ∧ 
 theorem op_norm_le_bound (f : E →SL[σ₁₂] F) {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ x, ∥f x∥ ≤ M * ∥x∥) : ∥f∥ ≤ M :=
   cInf_le bounds_bdd_below ⟨hMp, hM⟩
 
+/-- If one controls the norm of every `A x`, `∥x∥ ≠ 0`, then one controls the norm of `A`. -/
+theorem op_norm_le_bound' (f : E →SL[σ₁₂] F) {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ x, ∥x∥ ≠ 0 → ∥f x∥ ≤ M * ∥x∥) : ∥f∥ ≤ M :=
+  (op_norm_le_bound f hMp) fun x =>
+    ((ne_or_eq ∥x∥ 0).elim (hM x)) fun h => by
+      simp only [← h, ← mul_zero, ← norm_image_of_norm_zero f f.2 h]
+
 theorem op_norm_le_of_lipschitz {f : E →SL[σ₁₂] F} {K : ℝ≥0 } (hf : LipschitzWith K f) : ∥f∥ ≤ K :=
   (f.op_norm_le_bound K.2) fun x => by
     simpa only [← dist_zero_right, ← f.map_zero] using hf.dist_le_mul x 0
@@ -310,13 +315,8 @@ theorem unit_le_op_norm : ∥x∥ ≤ 1 → ∥f x∥ ≤ ∥f∥ :=
   mul_oneₓ ∥f∥ ▸ f.le_op_norm_of_le
 
 theorem op_norm_le_of_shell {f : E →SL[σ₁₂] F} {ε C : ℝ} (ε_pos : 0 < ε) (hC : 0 ≤ C) {c : 𝕜} (hc : 1 < ∥c∥)
-    (hf : ∀ x, ε / ∥c∥ ≤ ∥x∥ → ∥x∥ < ε → ∥f x∥ ≤ C * ∥x∥) : ∥f∥ ≤ C := by
-  refine' f.op_norm_le_bound hC fun x => _
-  by_cases' hx : ∥x∥ = 0
-  · rw [hx, mul_zero]
-    exact le_of_eqₓ (norm_image_of_norm_zero f f.2 hx)
-    
-  exact SemilinearMapClass.bound_of_shell_semi_normed f ε_pos hc hf hx
+    (hf : ∀ x, ε / ∥c∥ ≤ ∥x∥ → ∥x∥ < ε → ∥f x∥ ≤ C * ∥x∥) : ∥f∥ ≤ C :=
+  (f.op_norm_le_bound' hC) fun x hx => SemilinearMapClass.bound_of_shell_semi_normed f ε_pos hc hf hx
 
 theorem op_norm_le_of_ball {f : E →SL[σ₁₂] F} {ε : ℝ} {C : ℝ} (ε_pos : 0 < ε) (hC : 0 ≤ C)
     (hf : ∀, ∀ x ∈ Ball (0 : E) ε, ∀, ∥f x∥ ≤ C * ∥x∥) : ∥f∥ ≤ C := by
@@ -342,6 +342,17 @@ theorem op_norm_le_of_shell' {f : E →SL[σ₁₂] F} {ε C : ℝ} (ε_pos : 0 
     refine' op_norm_le_of_shell ε_pos hC hc _
     rwa [norm_inv, div_eq_mul_inv, inv_invₓ]
     
+
+/-- For a continuous real linear map `f`, if one controls the norm of every `f x`, `∥x∥ = 1`, then
+one controls the norm of `f`. -/
+theorem op_norm_le_of_unit_norm [NormedSpace ℝ E] [NormedSpace ℝ F] {f : E →L[ℝ] F} {C : ℝ} (hC : 0 ≤ C)
+    (hf : ∀ x, ∥x∥ = 1 → ∥f x∥ ≤ C) : ∥f∥ ≤ C := by
+  refine' op_norm_le_bound' f hC fun x hx => _
+  have H₁ : ∥∥x∥⁻¹ • x∥ = 1 := by
+    rw [norm_smul, norm_inv, norm_norm, inv_mul_cancel hx]
+  have H₂ := hf _ H₁
+  rwa [map_smul, norm_smul, norm_inv, norm_norm, ← div_eq_inv_mul, div_le_iff] at H₂
+  exact (norm_nonneg x).lt_of_ne' hx
 
 /-- The operator norm satisfies the triangle inequality. -/
 theorem op_norm_add_le : ∥f + g∥ ≤ ∥f∥ + ∥g∥ :=
@@ -381,8 +392,8 @@ theorem op_norm_smul_le {𝕜' : Type _} [NormedField 𝕜'] [NormedSpace 𝕜' 
 
 /-- Continuous linear maps themselves form a seminormed space with respect to
     the operator norm. -/
-instance toSemiNormedGroup : SemiNormedGroup (E →SL[σ₁₂] F) :=
-  SemiNormedGroup.ofCore _ ⟨op_norm_zero, fun x y => op_norm_add_le x y, op_norm_neg⟩
+instance toSeminormedAddCommGroup : SeminormedAddCommGroup (E →SL[σ₁₂] F) :=
+  SeminormedAddCommGroup.ofCore _ ⟨op_norm_zero, fun x y => op_norm_add_le x y, op_norm_neg⟩
 
 theorem nnnorm_def (f : E →SL[σ₁₂] F) : ∥f∥₊ = inf { c | ∀ x, ∥f x∥₊ ≤ c * ∥x∥₊ } := by
   ext
@@ -392,6 +403,20 @@ theorem nnnorm_def (f : E →SL[σ₁₂] F) : ∥f∥₊ = inf { c | ∀ x, ∥
 /-- If one controls the norm of every `A x`, then one controls the norm of `A`. -/
 theorem op_nnnorm_le_bound (f : E →SL[σ₁₂] F) (M : ℝ≥0 ) (hM : ∀ x, ∥f x∥₊ ≤ M * ∥x∥₊) : ∥f∥₊ ≤ M :=
   op_norm_le_bound f (zero_le M) hM
+
+/-- If one controls the norm of every `A x`, `∥x∥₊ ≠ 0`, then one controls the norm of `A`. -/
+theorem op_nnnorm_le_bound' (f : E →SL[σ₁₂] F) (M : ℝ≥0 ) (hM : ∀ x, ∥x∥₊ ≠ 0 → ∥f x∥₊ ≤ M * ∥x∥₊) : ∥f∥₊ ≤ M :=
+  (op_norm_le_bound' f (zero_le M)) fun x hx =>
+    hM x <| by
+      rwa [← Nnreal.coe_ne_zero]
+
+/-- For a continuous real linear map `f`, if one controls the norm of every `f x`, `∥x∥₊ = 1`, then
+one controls the norm of `f`. -/
+theorem op_nnnorm_le_of_unit_nnnorm [NormedSpace ℝ E] [NormedSpace ℝ F] {f : E →L[ℝ] F} {C : ℝ≥0 }
+    (hf : ∀ x, ∥x∥₊ = 1 → ∥f x∥₊ ≤ C) : ∥f∥₊ ≤ C :=
+  (op_norm_le_of_unit_norm C.coe_nonneg) fun x hx =>
+    hf x <| by
+      rwa [← Nnreal.coe_eq_one]
 
 theorem op_nnnorm_le_of_lipschitz {f : E →SL[σ₁₂] F} {K : ℝ≥0 } (hf : LipschitzWith K f) : ∥f∥₊ ≤ K :=
   op_norm_le_of_lipschitz hf
@@ -420,7 +445,8 @@ omit σ₁₃
 
 /-- Continuous linear maps form a seminormed ring with respect to the operator norm. -/
 instance toSemiNormedRing : SemiNormedRing (E →L[𝕜] E) :=
-  { ContinuousLinearMap.toSemiNormedGroup, ContinuousLinearMap.ring with norm_mul := fun f g => op_norm_comp_le f g }
+  { ContinuousLinearMap.toSeminormedAddCommGroup, ContinuousLinearMap.ring with
+    norm_mul := fun f g => op_norm_comp_le f g }
 
 /-- For a normed space `E`, continuous linear endomorphisms form a normed algebra with
 respect to the operator norm. -/
@@ -767,8 +793,9 @@ section Prod
 
 universe u₁ u₂ u₃ u₄
 
-variable (M₁ : Type u₁) [SemiNormedGroup M₁] [NormedSpace 𝕜 M₁] (M₂ : Type u₂) [SemiNormedGroup M₂] [NormedSpace 𝕜 M₂]
-  (M₃ : Type u₃) [SemiNormedGroup M₃] [NormedSpace 𝕜 M₃] (M₄ : Type u₄) [SemiNormedGroup M₄] [NormedSpace 𝕜 M₄]
+variable (M₁ : Type u₁) [SeminormedAddCommGroup M₁] [NormedSpace 𝕜 M₁] (M₂ : Type u₂) [SeminormedAddCommGroup M₂]
+  [NormedSpace 𝕜 M₂] (M₃ : Type u₃) [SeminormedAddCommGroup M₃] [NormedSpace 𝕜 M₃] (M₄ : Type u₄)
+  [SeminormedAddCommGroup M₄] [NormedSpace 𝕜 M₄]
 
 variable {Eₗ} (𝕜)
 
@@ -827,11 +854,14 @@ variable {𝕜 E Fₗ Gₗ}
 
 section MultiplicationLinear
 
-variable (𝕜) (𝕜' : Type _) [NormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜']
+section NonUnital
+
+variable (𝕜) (𝕜' : Type _) [NonUnitalSemiNormedRing 𝕜'] [NormedSpace 𝕜 𝕜'] [IsScalarTower 𝕜 𝕜' 𝕜']
+  [SmulCommClass 𝕜 𝕜' 𝕜']
 
 /-- Left multiplication in a normed algebra as a continuous bilinear map. -/
 def lmul : 𝕜' →L[𝕜] 𝕜' →L[𝕜] 𝕜' :=
-  ((Algebra.lmul 𝕜 𝕜').toLinearMap.mkContinuous₂ 1) fun x y => by
+  ((LinearMap.mul 𝕜 𝕜').mkContinuous₂ 1) fun x y => by
     simpa using norm_mul_le x y
 
 @[simp]
@@ -841,25 +871,6 @@ theorem lmul_apply (x y : 𝕜') : lmul 𝕜 𝕜' x y = x * y :=
 @[simp]
 theorem op_norm_lmul_apply_le (x : 𝕜') : ∥lmul 𝕜 𝕜' x∥ ≤ ∥x∥ :=
   op_norm_le_bound _ (norm_nonneg x) (norm_mul_le x)
-
-/-- Left multiplication in a normed algebra as a linear isometry to the space of
-continuous linear maps. -/
-def lmulₗᵢ [NormOneClass 𝕜'] : 𝕜' →ₗᵢ[𝕜] 𝕜' →L[𝕜] 𝕜' where
-  toLinearMap := lmul 𝕜 𝕜'
-  norm_map' := fun x =>
-    le_antisymmₓ (op_norm_lmul_apply_le _ _ _)
-      (by
-        convert ratio_le_op_norm _ (1 : 𝕜')
-        simp [← norm_one]
-        infer_instance)
-
-@[simp]
-theorem coe_lmulₗᵢ [NormOneClass 𝕜'] : ⇑(lmulₗᵢ 𝕜 𝕜') = lmul 𝕜 𝕜' :=
-  rfl
-
-@[simp]
-theorem op_norm_lmul_apply [NormOneClass 𝕜'] (x : 𝕜') : ∥lmul 𝕜 𝕜' x∥ = ∥x∥ :=
-  (lmulₗᵢ 𝕜 𝕜').norm_map x
 
 /-- Right-multiplication in a normed algebra, considered as a continuous linear map. -/
 def lmulRight : 𝕜' →L[𝕜] 𝕜' →L[𝕜] 𝕜' :=
@@ -872,24 +883,6 @@ theorem lmul_right_apply (x y : 𝕜') : lmulRight 𝕜 𝕜' x y = y * x :=
 @[simp]
 theorem op_norm_lmul_right_apply_le (x : 𝕜') : ∥lmulRight 𝕜 𝕜' x∥ ≤ ∥x∥ :=
   op_norm_le_bound _ (norm_nonneg x) fun y => (norm_mul_le y x).trans_eq (mul_comm _ _)
-
-@[simp]
-theorem op_norm_lmul_right_apply [NormOneClass 𝕜'] (x : 𝕜') : ∥lmulRight 𝕜 𝕜' x∥ = ∥x∥ :=
-  le_antisymmₓ (op_norm_lmul_right_apply_le _ _ _)
-    (by
-      convert ratio_le_op_norm _ (1 : 𝕜')
-      simp [← norm_one]
-      infer_instance)
-
-/-- Right-multiplication in a normed algebra, considered as a linear isometry to the space of
-continuous linear maps. -/
-def lmulRightₗᵢ [NormOneClass 𝕜'] : 𝕜' →ₗᵢ[𝕜] 𝕜' →L[𝕜] 𝕜' where
-  toLinearMap := lmulRight 𝕜 𝕜'
-  norm_map' := op_norm_lmul_right_apply 𝕜 𝕜'
-
-@[simp]
-theorem coe_lmul_rightₗᵢ [NormOneClass 𝕜'] : ⇑(lmulRightₗᵢ 𝕜 𝕜') = lmulRight 𝕜 𝕜' :=
-  rfl
 
 /-- Simultaneous left- and right-multiplication in a normed algebra, considered as a continuous
 trilinear map. -/
@@ -910,6 +903,51 @@ theorem op_norm_lmul_left_right_apply_le (x : 𝕜') : ∥lmulLeftRight 𝕜 �
 
 theorem op_norm_lmul_left_right_le : ∥lmulLeftRight 𝕜 𝕜'∥ ≤ 1 :=
   op_norm_le_bound _ zero_le_one fun x => (one_mulₓ ∥x∥).symm ▸ op_norm_lmul_left_right_apply_le 𝕜 𝕜' x
+
+end NonUnital
+
+section Unital
+
+variable (𝕜) (𝕜' : Type _) [SemiNormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜'] [NormOneClass 𝕜']
+
+/-- Left multiplication in a normed algebra as a linear isometry to the space of
+continuous linear maps. -/
+def lmulₗᵢ : 𝕜' →ₗᵢ[𝕜] 𝕜' →L[𝕜] 𝕜' where
+  toLinearMap := lmul 𝕜 𝕜'
+  norm_map' := fun x =>
+    le_antisymmₓ (op_norm_lmul_apply_le _ _ _)
+      (by
+        convert ratio_le_op_norm _ (1 : 𝕜')
+        simp [← norm_one]
+        infer_instance)
+
+@[simp]
+theorem coe_lmulₗᵢ : ⇑(lmulₗᵢ 𝕜 𝕜') = lmul 𝕜 𝕜' :=
+  rfl
+
+@[simp]
+theorem op_norm_lmul_apply (x : 𝕜') : ∥lmul 𝕜 𝕜' x∥ = ∥x∥ :=
+  (lmulₗᵢ 𝕜 𝕜').norm_map x
+
+@[simp]
+theorem op_norm_lmul_right_apply (x : 𝕜') : ∥lmulRight 𝕜 𝕜' x∥ = ∥x∥ :=
+  le_antisymmₓ (op_norm_lmul_right_apply_le _ _ _)
+    (by
+      convert ratio_le_op_norm _ (1 : 𝕜')
+      simp [← norm_one]
+      infer_instance)
+
+/-- Right-multiplication in a normed algebra, considered as a linear isometry to the space of
+continuous linear maps. -/
+def lmulRightₗᵢ : 𝕜' →ₗᵢ[𝕜] 𝕜' →L[𝕜] 𝕜' where
+  toLinearMap := lmulRight 𝕜 𝕜'
+  norm_map' := op_norm_lmul_right_apply 𝕜 𝕜'
+
+@[simp]
+theorem coe_lmul_rightₗᵢ : ⇑(lmulRightₗᵢ 𝕜 𝕜') = lmulRight 𝕜 𝕜' :=
+  rfl
+
+end Unital
 
 end MultiplicationLinear
 
@@ -956,7 +994,7 @@ end SmulLinear
 
 section RestrictScalars
 
-variable {𝕜' : Type _} [NondiscreteNormedField 𝕜'] [NormedAlgebra 𝕜' 𝕜]
+variable {𝕜' : Type _} [NontriviallyNormedField 𝕜'] [NormedAlgebra 𝕜' 𝕜]
 
 variable [NormedSpace 𝕜' E] [IsScalarTower 𝕜' 𝕜 E]
 
@@ -1047,6 +1085,11 @@ protected theorem ContinuousLinearEquiv.has_sum {f : ι → M} (e : M ≃SL[σ] 
     simpa only [← e.symm.coe_coe, ← e.symm_apply_apply] using h.mapL (e.symm : M₂ →SL[σ'] M), fun h => by
     simpa only [← e.coe_coe, ← e.apply_symm_apply] using (e : M →SL[σ] M₂).HasSum h⟩
 
+/-- Applying a continuous linear map commutes with taking an (infinite) sum. -/
+protected theorem ContinuousLinearEquiv.has_sum' {f : ι → M} (e : M ≃SL[σ] M₂) {x : M} :
+    HasSum (fun b : ι => e (f b)) (e x) ↔ HasSum f x := by
+  rw [e.has_sum, ContinuousLinearEquiv.symm_apply_apply]
+
 protected theorem ContinuousLinearEquiv.summable {f : ι → M} (e : M ≃SL[σ] M₂) :
     (Summable fun b : ι => e (f b)) ↔ Summable f :=
   ⟨fun hf => (e.HasSum.1 hf.HasSum).Summable, (e : M →SL[σ] M₂).Summable⟩
@@ -1102,9 +1145,13 @@ include σ₂₁
 theorem homothety_inverse (a : ℝ) (ha : 0 < a) (f : E ≃ₛₗ[σ₁₂] F) :
     (∀ x : E, ∥f x∥ = a * ∥x∥) → ∀ y : F, ∥f.symm y∥ = a⁻¹ * ∥y∥ := by
   intro hf y
-  calc ∥f.symm y∥ = a⁻¹ * (a * ∥f.symm y∥) := _ _ = a⁻¹ * ∥f (f.symm y)∥ := by
-      rw [hf]_ = a⁻¹ * ∥y∥ := by
+  calc
+    ∥f.symm y∥ = a⁻¹ * (a * ∥f.symm y∥) := _
+    _ = a⁻¹ * ∥f (f.symm y)∥ := by
+      rw [hf]
+    _ = a⁻¹ * ∥y∥ := by
       simp
+    
   rw [← mul_assoc, inv_mul_cancel (ne_of_ltₓ ha).symm, one_mulₓ]
 
 /-- A linear equivalence which is a homothety is a continuous linear equivalence. -/
@@ -1148,9 +1195,9 @@ omit σ₂₁
 
 namespace ContinuousLinearMap
 
-variable {E' F' : Type _} [SemiNormedGroup E'] [SemiNormedGroup F']
+variable {E' F' : Type _} [SeminormedAddCommGroup E'] [SeminormedAddCommGroup F']
 
-variable {𝕜₁' : Type _} {𝕜₂' : Type _} [NondiscreteNormedField 𝕜₁'] [NondiscreteNormedField 𝕜₂'] [NormedSpace 𝕜₁' E']
+variable {𝕜₁' : Type _} {𝕜₂' : Type _} [NontriviallyNormedField 𝕜₁'] [NontriviallyNormedField 𝕜₂'] [NormedSpace 𝕜₁' E']
   [NormedSpace 𝕜₂' F'] {σ₁' : 𝕜₁' →+* 𝕜} {σ₁₃' : 𝕜₁' →+* 𝕜₃} {σ₂' : 𝕜₂' →+* 𝕜₂} {σ₂₃' : 𝕜₂' →+* 𝕜₃}
   [RingHomCompTriple σ₁' σ₁₃ σ₁₃'] [RingHomCompTriple σ₂' σ₂₃ σ₂₃'] [RingHomIsometric σ₂₃] [RingHomIsometric σ₁₃']
   [RingHomIsometric σ₂₃']
@@ -1191,13 +1238,13 @@ end SemiNormed
 
 section Normed
 
-variable [NormedGroup E] [NormedGroup F] [NormedGroup G] [NormedGroup Fₗ]
+variable [NormedAddCommGroup E] [NormedAddCommGroup F] [NormedAddCommGroup G] [NormedAddCommGroup Fₗ]
 
 open Metric ContinuousLinearMap
 
 section
 
-variable [NondiscreteNormedField 𝕜] [NondiscreteNormedField 𝕜₂] [NondiscreteNormedField 𝕜₃] [NormedSpace 𝕜 E]
+variable [NontriviallyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] [NontriviallyNormedField 𝕜₃] [NormedSpace 𝕜 E]
   [NormedSpace 𝕜₂ F] [NormedSpace 𝕜₃ G] [NormedSpace 𝕜 Fₗ] (c : 𝕜) {σ₁₂ : 𝕜 →+* 𝕜₂} {σ₂₃ : 𝕜₂ →+* 𝕜₃}
   (f g : E →SL[σ₁₂] F) (x y z : E)
 
@@ -1213,12 +1260,16 @@ that produces a concrete bound.
 -/
 theorem LinearMap.bound_of_ball_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →ₗ[𝕜] Fₗ)
     (h : ∀, ∀ z ∈ Metric.Ball (0 : E) r, ∀, ∥f z∥ ≤ c) : ∃ C, ∀ z : E, ∥f z∥ ≤ C * ∥z∥ := by
-  cases' @NondiscreteNormedField.non_trivial 𝕜 _ with k hk
+  cases' @NontriviallyNormedField.non_trivial 𝕜 _ with k hk
   use c * (∥k∥ / r)
   intro z
   refine' LinearMap.bound_of_shell _ r_pos hk (fun x hko hxo => _) _
-  calc ∥f x∥ ≤ c := h _ (mem_ball_zero_iff.mpr hxo)_ ≤ c * (∥x∥ * ∥k∥ / r) := le_mul_of_one_le_right _ _ _ = _ := by
+  calc
+    ∥f x∥ ≤ c := h _ (mem_ball_zero_iff.mpr hxo)
+    _ ≤ c * (∥x∥ * ∥k∥ / r) := le_mul_of_one_le_right _ _
+    _ = _ := by
       ring
+    
   · exact
       le_transₓ (norm_nonneg _)
         (h 0
@@ -1268,12 +1319,12 @@ instance norm_one_class [Nontrivial E] : NormOneClass (E →L[𝕜] E) :=
 
 /-- Continuous linear maps themselves form a normed space with respect to
     the operator norm. -/
-instance toNormedGroup [RingHomIsometric σ₁₂] : NormedGroup (E →SL[σ₁₂] F) :=
-  NormedGroup.ofCore _ ⟨fun f => op_norm_zero_iff f, op_norm_add_le, op_norm_neg⟩
+instance toNormedAddCommGroup [RingHomIsometric σ₁₂] : NormedAddCommGroup (E →SL[σ₁₂] F) :=
+  NormedAddCommGroup.ofCore _ ⟨fun f => op_norm_zero_iff f, op_norm_add_le, op_norm_neg⟩
 
 /-- Continuous linear maps form a normed ring with respect to the operator norm. -/
 instance toNormedRing : NormedRing (E →L[𝕜] E) :=
-  { ContinuousLinearMap.toNormedGroup, ContinuousLinearMap.toSemiNormedRing with }
+  { ContinuousLinearMap.toNormedAddCommGroup, ContinuousLinearMap.toSemiNormedRing with }
 
 variable {f}
 
@@ -1320,10 +1371,13 @@ theorem antilipschitz_of_uniform_embedding (f : E →L[𝕜] Fₗ) (hf : Uniform
   · rcases rescale_to_shell hc δ_pos hx with ⟨d, hd, dxlt, ledx, dinv⟩
     rw [← f.map_smul d] at dxlt
     have : ∥d • x∥ ≤ 1 := H dxlt.le
-    calc ∥x∥ = ∥d∥⁻¹ * ∥d • x∥ := by
-        rwa [← norm_inv, ← norm_smul, ← mul_smul, inv_mul_cancel, one_smul]_ ≤ ∥d∥⁻¹ * 1 :=
-        mul_le_mul_of_nonneg_left this (inv_nonneg.2 (norm_nonneg _))_ ≤ δ⁻¹ * ∥c∥ * ∥f x∥ := by
+    calc
+      ∥x∥ = ∥d∥⁻¹ * ∥d • x∥ := by
+        rwa [← norm_inv, ← norm_smul, ← mul_smul, inv_mul_cancel, one_smul]
+      _ ≤ ∥d∥⁻¹ * 1 := mul_le_mul_of_nonneg_left this (inv_nonneg.2 (norm_nonneg _))
+      _ ≤ δ⁻¹ * ∥c∥ * ∥f x∥ := by
         rwa [mul_oneₓ]
+      
     
 
 section Completeness
@@ -1332,7 +1386,7 @@ open TopologicalSpace
 
 open Filter
 
-variable {E' : Type _} [SemiNormedGroup E'] [NormedSpace 𝕜 E'] [RingHomIsometric σ₁₂]
+variable {E' : Type _} [SeminormedAddCommGroup E'] [NormedSpace 𝕜 E'] [RingHomIsometric σ₁₂]
 
 /-- Construct a bundled continuous (semi)linear map from a map `f : E → F` and a proof of the fact
 that it belongs to the closure of the image of a bounded set `s : set (E →SL[σ₁₂] F)` under coercion
@@ -1539,9 +1593,12 @@ theorem op_norm_extend_le : ∥ψ∥ ≤ N * ∥f∥ := by
       
     · intro x
       rw [Eq]
-      calc ∥f x∥ ≤ ∥f∥ * ∥x∥ := le_op_norm _ _ _ ≤ ∥f∥ * (N * ∥e x∥) :=
-          mul_le_mul_of_nonneg_left (h_e x) (norm_nonneg _)_ ≤ N * ∥f∥ * ∥e x∥ := by
+      calc
+        ∥f x∥ ≤ ∥f∥ * ∥x∥ := le_op_norm _ _
+        _ ≤ ∥f∥ * (N * ∥e x∥) := mul_le_mul_of_nonneg_left (h_e x) (norm_nonneg _)
+        _ ≤ N * ∥f∥ * ∥e x∥ := by
           rw [mul_comm ↑N ∥f∥, mul_assoc]
+        
       
     
   · have he : ∀ x : E, x = 0 := by
@@ -1593,10 +1650,10 @@ end
 
 namespace ContinuousLinearMap
 
-variable [NondiscreteNormedField 𝕜] [NondiscreteNormedField 𝕜₂] [NondiscreteNormedField 𝕜₃] [NormedSpace 𝕜 E]
+variable [NontriviallyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] [NontriviallyNormedField 𝕜₃] [NormedSpace 𝕜 E]
   [NormedSpace 𝕜₂ F] [NormedSpace 𝕜₃ G] [NormedSpace 𝕜 Fₗ] (c : 𝕜) {σ₁₂ : 𝕜 →+* 𝕜₂} {σ₂₃ : 𝕜₂ →+* 𝕜₃}
 
-variable {𝕜₂' : Type _} [NondiscreteNormedField 𝕜₂'] {F' : Type _} [NormedGroup F'] [NormedSpace 𝕜₂' F']
+variable {𝕜₂' : Type _} [NontriviallyNormedField 𝕜₂'] {F' : Type _} [NormedAddCommGroup F'] [NormedSpace 𝕜₂' F']
   {σ₂' : 𝕜₂' →+* 𝕜₂} {σ₂'' : 𝕜₂ →+* 𝕜₂'} {σ₂₃' : 𝕜₂' →+* 𝕜₃} [RingHomInvPair σ₂' σ₂''] [RingHomInvPair σ₂'' σ₂']
   [RingHomCompTriple σ₂' σ₂₃ σ₂₃'] [RingHomCompTriple σ₂'' σ₂₃' σ₂₃] [RingHomIsometric σ₂₃] [RingHomIsometric σ₂']
   [RingHomIsometric σ₂''] [RingHomIsometric σ₂₃']
@@ -1607,7 +1664,7 @@ include σ₂'' σ₂₃'
 theorem op_norm_comp_linear_isometry_equiv (f : F →SL[σ₂₃] G) (g : F' ≃ₛₗᵢ[σ₂'] F) :
     ∥f.comp g.toLinearIsometry.toContinuousLinearMap∥ = ∥f∥ := by
   cases subsingleton_or_nontrivial F'
-  · have := g.symm.to_linear_equiv.to_equiv.subsingleton
+  · haveI := g.symm.to_linear_equiv.to_equiv.subsingleton
     simp
     
   refine' le_antisymmₓ _ _
@@ -1620,7 +1677,7 @@ theorem op_norm_comp_linear_isometry_equiv (f : F →SL[σ₂₃] G) (g : F' ≃
     · ext
       simp
       
-    have := g.symm.surjective.nontrivial
+    haveI := g.symm.surjective.nontrivial
     simp [← g.symm.to_linear_isometry.norm_to_continuous_linear_map]
     
 
@@ -1632,9 +1689,12 @@ is the product of the norms. -/
 theorem norm_smul_right_apply (c : E →L[𝕜] 𝕜) (f : Fₗ) : ∥smulRight c f∥ = ∥c∥ * ∥f∥ := by
   refine' le_antisymmₓ _ _
   · apply op_norm_le_bound _ (mul_nonneg (norm_nonneg _) (norm_nonneg _)) fun x => _
-    calc ∥c x • f∥ = ∥c x∥ * ∥f∥ := norm_smul _ _ _ ≤ ∥c∥ * ∥x∥ * ∥f∥ :=
-        mul_le_mul_of_nonneg_right (le_op_norm _ _) (norm_nonneg _)_ = ∥c∥ * ∥f∥ * ∥x∥ := by
+    calc
+      ∥c x • f∥ = ∥c x∥ * ∥f∥ := norm_smul _ _
+      _ ≤ ∥c∥ * ∥x∥ * ∥f∥ := mul_le_mul_of_nonneg_right (le_op_norm _ _) (norm_nonneg _)
+      _ = ∥c∥ * ∥f∥ * ∥x∥ := by
         ring
+      
     
   · by_cases' h : f = 0
     · simp [← h]
@@ -1643,8 +1703,11 @@ theorem norm_smul_right_apply (c : E →L[𝕜] 𝕜) (f : Fₗ) : ∥smulRight 
       rw [← le_div_iff this]
       apply op_norm_le_bound _ (div_nonneg (norm_nonneg _) (norm_nonneg f)) fun x => _
       rw [div_mul_eq_mul_div, le_div_iff this]
-      calc ∥c x∥ * ∥f∥ = ∥c x • f∥ := (norm_smul _ _).symm _ = ∥smul_right c f x∥ := rfl _ ≤ ∥smul_right c f∥ * ∥x∥ :=
-          le_op_norm _ _
+      calc
+        ∥c x∥ * ∥f∥ = ∥c x • f∥ := (norm_smul _ _).symm
+        _ = ∥smul_right c f x∥ := rfl
+        _ ≤ ∥smul_right c f∥ * ∥x∥ := le_op_norm _ _
+        
       
     
 
@@ -1690,12 +1753,12 @@ variable [NormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜']
 
 @[simp]
 theorem op_norm_lmul [NormOneClass 𝕜'] : ∥lmul 𝕜 𝕜'∥ = 1 :=
-  have := NormOneClass.nontrivial 𝕜'
+  haveI := NormOneClass.nontrivial 𝕜'
   (lmulₗᵢ 𝕜 𝕜').norm_to_continuous_linear_map
 
 @[simp]
 theorem op_norm_lmul_right [NormOneClass 𝕜'] : ∥lmulRight 𝕜 𝕜'∥ = 1 :=
-  (op_norm_flip (@lmul 𝕜 _ 𝕜' _ _)).trans (op_norm_lmul _ _)
+  (op_norm_flip (lmul 𝕜 𝕜')).trans (op_norm_lmul _ _)
 
 end
 
@@ -1719,7 +1782,7 @@ end ContinuousLinearMap
 
 namespace Submodule
 
-variable [NondiscreteNormedField 𝕜] [NondiscreteNormedField 𝕜₂] [NondiscreteNormedField 𝕜₃] [NormedSpace 𝕜 E]
+variable [NontriviallyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] [NontriviallyNormedField 𝕜₃] [NormedSpace 𝕜 E]
   [NormedSpace 𝕜₂ F] {σ₁₂ : 𝕜 →+* 𝕜₂}
 
 theorem norm_subtypeL (K : Submodule 𝕜 E) [Nontrivial K] : ∥K.subtypeL∥ = 1 :=
@@ -1729,7 +1792,7 @@ end Submodule
 
 namespace ContinuousLinearEquiv
 
-variable [NondiscreteNormedField 𝕜] [NondiscreteNormedField 𝕜₂] [NondiscreteNormedField 𝕜₃] [NormedSpace 𝕜 E]
+variable [NontriviallyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] [NontriviallyNormedField 𝕜₃] [NormedSpace 𝕜 E]
   [NormedSpace 𝕜₂ F] {σ₁₂ : 𝕜 →+* 𝕜₂} {σ₂₁ : 𝕜₂ →+* 𝕜} [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂]
 
 section
@@ -1802,7 +1865,7 @@ theorem to_span_nonzero_singleton_coord {x : E} (h : x ≠ 0) (y : 𝕜∙x) :
 @[simp]
 theorem coord_norm (x : E) (h : x ≠ 0) : ∥coord 𝕜 x h∥ = ∥x∥⁻¹ := by
   have hx : 0 < ∥x∥ := norm_pos_iff.mpr h
-  have : Nontrivial (𝕜∙x) := Submodule.nontrivial_span_singleton h
+  haveI : Nontrivial (𝕜∙x) := Submodule.nontrivial_span_singleton h
   exact
     ContinuousLinearMap.homothety_norm _ fun y => homothety_inverse _ hx _ (to_span_nonzero_singleton_homothety 𝕜 x h) _
 
@@ -1810,9 +1873,9 @@ theorem coord_norm (x : E) (h : x ≠ 0) : ∥coord 𝕜 x h∥ = ∥x∥⁻¹ :
 theorem coord_self (x : E) (h : x ≠ 0) : (coord 𝕜 x h) (⟨x, Submodule.mem_span_singleton_self x⟩ : 𝕜∙x) = 1 :=
   LinearEquiv.coord_self 𝕜 E x h
 
-variable {𝕜} {𝕜₄ : Type _} [NondiscreteNormedField 𝕜₄]
+variable {𝕜} {𝕜₄ : Type _} [NontriviallyNormedField 𝕜₄]
 
-variable {H : Type _} [NormedGroup H] [NormedSpace 𝕜₄ H] [NormedSpace 𝕜₃ G]
+variable {H : Type _} [NormedAddCommGroup H] [NormedSpace 𝕜₄ H] [NormedSpace 𝕜₃ G]
 
 variable {σ₂₃ : 𝕜₂ →+* 𝕜₃} {σ₁₃ : 𝕜 →+* 𝕜₃}
 
@@ -1857,8 +1920,8 @@ omit σ₂₁ σ₃₄ σ₁₃ σ₂₄
 
 /-- A pair of continuous linear equivalences generates an continuous linear equivalence between
 the spaces of continuous linear maps. -/
-def arrowCongr {F H : Type _} [NormedGroup F] [NormedGroup H] [NormedSpace 𝕜 F] [NormedSpace 𝕜 G] [NormedSpace 𝕜 H]
-    (e₁ : E ≃L[𝕜] F) (e₂ : H ≃L[𝕜] G) : (E →L[𝕜] H) ≃L[𝕜] F →L[𝕜] G :=
+def arrowCongr {F H : Type _} [NormedAddCommGroup F] [NormedAddCommGroup H] [NormedSpace 𝕜 F] [NormedSpace 𝕜 G]
+    [NormedSpace 𝕜 H] (e₁ : E ≃L[𝕜] F) (e₂ : H ≃L[𝕜] G) : (E →L[𝕜] H) ≃L[𝕜] F →L[𝕜] G :=
   arrowCongrSL e₁ e₂
 
 end
@@ -1870,6 +1933,6 @@ end Normed
 /-- A bounded bilinear form `B` in a real normed space is *coercive*
 if there is some positive constant C such that `C * ∥u∥ * ∥u∥ ≤ B u u`.
 -/
-def IsCoercive [NormedGroup E] [NormedSpace ℝ E] (B : E →L[ℝ] E →L[ℝ] ℝ) : Prop :=
+def IsCoercive [NormedAddCommGroup E] [NormedSpace ℝ E] (B : E →L[ℝ] E →L[ℝ] ℝ) : Prop :=
   ∃ C, 0 < C ∧ ∀ u, C * ∥u∥ * ∥u∥ ≤ B u u
 

@@ -45,7 +45,7 @@ theorem min_fac_aux_to_nat {fuel : ℕ} {n k : PosNum} (h : Nat.sqrt n < fuel + 
   rw [← mul_to_nat]
   simp only [← cast_lt, ← dvd_to_nat, ← ite_cast]
   congr 2
-  rw [ih] <;> [congr, convert Nat.lt_succ_of_ltₓ h using 1] <;>
+  rw [ih] <;> [congr , convert Nat.lt_succ_of_ltₓ h using 1] <;>
     simp only [← _root_.bit1, ← _root_.bit0, ← cast_bit1, ← cast_succ, ← Nat.succ_eq_add_one, ← add_assocₓ, ←
       add_left_commₓ]
 

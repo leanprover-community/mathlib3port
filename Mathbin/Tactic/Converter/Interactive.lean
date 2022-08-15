@@ -136,14 +136,14 @@ unsafe def old_conv (c : old_conv.interactive.itactic) : tactic Unit := do
 unsafe def find (p : parse lean.parser.pexpr) (c : old_conv.interactive.itactic) : tactic Unit :=
   old_conv <| old_conv.interactive.find p c
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
 unsafe def conv_lhs (loc : parse («expr ?» (tk "at" *> ident))) (p : parse («expr ?» (tk "in" *> parser.pexpr)))
     (c : conv.interactive.itactic) : tactic Unit :=
   conv loc p (conv.interactive.to_lhs >> c)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Basic.lean:971:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
 unsafe def conv_rhs (loc : parse («expr ?» (tk "at" *> ident))) (p : parse («expr ?» (tk "in" *> parser.pexpr)))
     (c : conv.interactive.itactic) : tactic Unit :=
   conv loc p (conv.interactive.to_rhs >> c)

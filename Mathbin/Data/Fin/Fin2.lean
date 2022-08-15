@@ -41,7 +41,7 @@ namespace Fin2
 
 /-- Define a dependent function on `fin2 (succ n)` by giving its value at
 zero (`H1`) and by giving a dependent function on the rest (`H2`). -/
-@[elab_as_eliminator]
+@[elabAsElim]
 protected def cases' {n} {C : Fin2 (succ n) → Sort u} (H1 : C fz) (H2 : ∀ n, C (fs n)) : ∀ i : Fin2 (succ n), C i
   | fz => H1
   | fs n => H2 n

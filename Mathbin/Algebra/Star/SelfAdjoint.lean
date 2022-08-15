@@ -156,10 +156,12 @@ section CommRingₓ
 
 variable [CommRingₓ R] [StarRing R]
 
+theorem mul_mem {x y : R} (hx : x ∈ selfAdjoint R) (hy : y ∈ selfAdjoint R) : x * y ∈ selfAdjoint R := by
+  rw [mem_iff] at hx hy⊢
+  rw [star_mul', hx, hy]
+
 instance : Mul (selfAdjoint R) :=
-  ⟨fun x y =>
-    ⟨(x : R) * y, by
-      simp only [← mem_iff, ← star_mul', ← star_coe_eq]⟩⟩
+  ⟨fun x y => ⟨(x : R) * y, mul_mem x.Prop y.Prop⟩⟩
 
 @[simp, norm_cast]
 theorem coe_mul (x y : selfAdjoint R) : ↑(x * y) = (x : R) * y :=
@@ -203,10 +205,30 @@ instance :
 theorem coe_zpow (x : selfAdjoint R) (z : ℤ) : ↑(x ^ z) = (x : R) ^ z :=
   rfl
 
+theorem rat_cast_mem : ∀ x : ℚ, (x : R) ∈ selfAdjoint R
+  | ⟨a, b, h1, h2⟩ => by
+    rw [mem_iff, Rat.cast_mk', star_mul', star_inv', star_nat_cast, star_int_cast]
+
+instance : HasRatCast (selfAdjoint R) :=
+  ⟨fun n => ⟨n, rat_cast_mem n⟩⟩
+
+@[simp, norm_cast]
+theorem coe_rat_cast (x : ℚ) : ↑(x : selfAdjoint R) = (x : R) :=
+  rfl
+
+instance hasQsmul : HasSmul ℚ (selfAdjoint R) :=
+  ⟨fun a x =>
+    ⟨a • x, by
+      rw [Rat.smul_def] <;> exact mul_mem (rat_cast_mem a) x.prop⟩⟩
+
+@[simp, norm_cast]
+theorem coe_rat_smul (x : selfAdjoint R) (a : ℚ) : ↑(a • x) = a • (x : R) :=
+  rfl
+
 instance : Field (selfAdjoint R) :=
   Function.Injective.field _ Subtype.coe_injective (selfAdjoint R).coe_zero coe_one (selfAdjoint R).coe_add coe_mul
     (selfAdjoint R).coeNeg (selfAdjoint R).coe_sub coe_inv coe_div (selfAdjoint R).coe_nsmul (selfAdjoint R).coe_zsmul
-    coe_pow coe_zpow (fun _ => rfl) fun _ => rfl
+    coe_rat_smul coe_pow coe_zpow (fun _ => rfl) (fun _ => rfl) coe_rat_cast
 
 end Field
 

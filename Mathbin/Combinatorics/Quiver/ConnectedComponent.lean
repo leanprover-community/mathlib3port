@@ -25,7 +25,7 @@ namespace Quiver
 
 /-- A type synonym for the symmetrized quiver (with an arrow both ways for each original arrow).
     NB: this does not work for `Prop`-valued quivers. It requires `[quiver.{v+1} V]`. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def Symmetrify (V) : Type u :=
   V
 

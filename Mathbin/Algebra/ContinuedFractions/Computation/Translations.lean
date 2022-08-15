@@ -136,9 +136,12 @@ theorem exists_succ_nth_stream_of_fr_zero {ifp_succ_n : IntFractPair K}
     injection this
   have : Int.fract ifp_n_fr⁻¹ = 0 := by
     rwa [succ_nth_fr_eq_zero] at this
-  calc ifp_n_fr⁻¹ = Int.fract ifp_n_fr⁻¹ + ⌊ifp_n_fr⁻¹⌋ := by
-      rw [Int.fract_add_floor ifp_n_fr⁻¹]_ = ⌊ifp_n_fr⁻¹⌋ := by
+  calc
+    ifp_n_fr⁻¹ = Int.fract ifp_n_fr⁻¹ + ⌊ifp_n_fr⁻¹⌋ := by
+      rw [Int.fract_add_floor ifp_n_fr⁻¹]
+    _ = ⌊ifp_n_fr⁻¹⌋ := by
       simp [← ‹Int.fract ifp_n_fr⁻¹ = 0›]
+    
 
 end IntFractPair
 
@@ -218,17 +221,219 @@ Now let's show how the values of the sequences correspond to one another.
 -/
 
 
-theorem IntFractPair.exists_succ_nth_stream_of_gcf_of_nth_eq_some {gp_n : Pair K}
-    (s_nth_eq : (of v).s.nth n = some gp_n) :
-    ∃ ifp : IntFractPair K, IntFractPair.stream v (n + 1) = some ifp ∧ (ifp.b : K) = gp_n.b := by
-  obtain ⟨ifp, stream_succ_nth_eq, gp_n_eq⟩ :
-    ∃ ifp, int_fract_pair.stream v (n + 1) = some ifp ∧ pair.mk 1 (ifp.b : K) = gp_n := by
-    unfold of int_fract_pair.seq1  at s_nth_eq
-    rwa [Seqₓₓ.map_tail, Seqₓₓ.nth_tail, Seqₓₓ.map_nth, Option.map_eq_some'] at s_nth_eq
-  cases gp_n_eq
-  injection gp_n_eq with _ ifp_b_eq_gp_n_b
-  exists ifp
-  exact ⟨stream_succ_nth_eq, ifp_b_eq_gp_n_b⟩
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers [] [] [] [] [] [])
+ (Command.theorem
+  "theorem"
+  (Command.declId `IntFractPair.exists_succ_nth_stream_of_gcf_of_nth_eq_some [])
+  (Command.declSig
+   [(Term.implicitBinder "{" [`gp_n] [":" (Term.app `Pair [`K])] "}")
+    (Term.explicitBinder
+     "("
+     [`s_nth_eq]
+     [":"
+      («term_=_»
+       (Term.app (Term.proj (Term.proj (Term.app `of [`v]) "." `s) "." `nth) [`n])
+       "="
+       (Term.app `some [`gp_n]))]
+     []
+     ")")]
+   (Term.typeSpec
+    ":"
+    («term∃_,_»
+     "∃"
+     (Lean.explicitBinders
+      (Lean.unbracketedExplicitBinders [(Lean.binderIdent `ifp)] [":" (Term.app `IntFractPair [`K])]))
+     ","
+     («term_∧_»
+      («term_=_» (Term.app `IntFractPair.stream [`v («term_+_» `n "+" (num "1"))]) "=" (Term.app `some [`ifp]))
+      "∧"
+      («term_=_»
+       (Term.paren "(" [(Term.proj `ifp "." `b) [(Term.typeAscription ":" `K)]] ")")
+       "="
+       (Term.proj `gp_n "." `b))))))
+  (Command.declValSimple
+   ":="
+   (Term.byTactic
+    "by"
+    (Tactic.tacticSeq
+     (Tactic.tacticSeq1Indented
+      [(group
+        (Mathlib.Tactic.obtain
+         "obtain"
+         [(Tactic.rcasesPatMed
+           [(Tactic.rcasesPat.tuple
+             "⟨"
+             [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `ifp)]) [])
+              ","
+              (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `stream_succ_nth_eq)]) [])
+              ","
+              (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `gp_n_eq)]) [])]
+             "⟩")])]
+         [":"
+          («term∃_,_»
+           "∃"
+           (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `ifp)] []))
+           ","
+           («term_∧_»
+            («term_=_» (Term.app `int_fract_pair.stream [`v («term_+_» `n "+" (num "1"))]) "=" (Term.app `some [`ifp]))
+            "∧"
+            («term_=_»
+             (Term.app
+              `pair.mk
+              [(num "1") (Term.paren "(" [(Term.proj `ifp "." `b) [(Term.typeAscription ":" `K)]] ")")])
+             "="
+             `gp_n)))]
+         [":="
+          [(Term.byTactic
+            "by"
+            (Tactic.tacticSeq
+             (Tactic.tacticSeq1Indented
+              [(group
+                (Tactic.unfold'
+                 "unfold"
+                 []
+                 [(group `of) (group `int_fract_pair.seq1)]
+                 [(Tactic.location "at" (Tactic.locationHyp [`s_nth_eq] []))])
+                [])
+               (group
+                (tacticRwa__
+                 "rwa"
+                 (Tactic.rwRuleSeq
+                  "["
+                  [(Tactic.rwRule [] `Seqₓₓ.map_tail)
+                   ","
+                   (Tactic.rwRule [] `Seqₓₓ.nth_tail)
+                   ","
+                   (Tactic.rwRule [] `Seqₓₓ.map_nth)
+                   ","
+                   (Tactic.rwRule [] `Option.map_eq_some')]
+                  "]")
+                 [(Tactic.location "at" (Tactic.locationHyp [`s_nth_eq] []))])
+                [])])))]])
+        [])
+       (group (Tactic.cases "cases" [(Tactic.casesTarget [] `gp_n_eq)] [] []) [])
+       (group (Tactic.injection "injection" `gp_n_eq ["with" ["_" `ifp_b_eq_gp_n_b]]) [])
+       (group (Tactic.«tacticExists_,,» "exists" [`ifp]) [])
+       (group (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`stream_succ_nth_eq "," `ifp_b_eq_gp_n_b] "⟩")) [])])))
+   [])
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.byTactic
+   "by"
+   (Tactic.tacticSeq
+    (Tactic.tacticSeq1Indented
+     [(group
+       (Mathlib.Tactic.obtain
+        "obtain"
+        [(Tactic.rcasesPatMed
+          [(Tactic.rcasesPat.tuple
+            "⟨"
+            [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `ifp)]) [])
+             ","
+             (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `stream_succ_nth_eq)]) [])
+             ","
+             (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `gp_n_eq)]) [])]
+            "⟩")])]
+        [":"
+         («term∃_,_»
+          "∃"
+          (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `ifp)] []))
+          ","
+          («term_∧_»
+           («term_=_» (Term.app `int_fract_pair.stream [`v («term_+_» `n "+" (num "1"))]) "=" (Term.app `some [`ifp]))
+           "∧"
+           («term_=_»
+            (Term.app
+             `pair.mk
+             [(num "1") (Term.paren "(" [(Term.proj `ifp "." `b) [(Term.typeAscription ":" `K)]] ")")])
+            "="
+            `gp_n)))]
+        [":="
+         [(Term.byTactic
+           "by"
+           (Tactic.tacticSeq
+            (Tactic.tacticSeq1Indented
+             [(group
+               (Tactic.unfold'
+                "unfold"
+                []
+                [(group `of) (group `int_fract_pair.seq1)]
+                [(Tactic.location "at" (Tactic.locationHyp [`s_nth_eq] []))])
+               [])
+              (group
+               (tacticRwa__
+                "rwa"
+                (Tactic.rwRuleSeq
+                 "["
+                 [(Tactic.rwRule [] `Seqₓₓ.map_tail)
+                  ","
+                  (Tactic.rwRule [] `Seqₓₓ.nth_tail)
+                  ","
+                  (Tactic.rwRule [] `Seqₓₓ.map_nth)
+                  ","
+                  (Tactic.rwRule [] `Option.map_eq_some')]
+                 "]")
+                [(Tactic.location "at" (Tactic.locationHyp [`s_nth_eq] []))])
+               [])])))]])
+       [])
+      (group (Tactic.cases "cases" [(Tactic.casesTarget [] `gp_n_eq)] [] []) [])
+      (group (Tactic.injection "injection" `gp_n_eq ["with" ["_" `ifp_b_eq_gp_n_b]]) [])
+      (group (Tactic.«tacticExists_,,» "exists" [`ifp]) [])
+      (group (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`stream_succ_nth_eq "," `ifp_b_eq_gp_n_b] "⟩")) [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`stream_succ_nth_eq "," `ifp_b_eq_gp_n_b] "⟩"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.anonymousCtor "⟨" [`stream_succ_nth_eq "," `ifp_b_eq_gp_n_b] "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `ifp_b_eq_gp_n_b
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `stream_succ_nth_eq
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.«tacticExists_,,» "exists" [`ifp])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `ifp
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.injection "injection" `gp_n_eq ["with" ["_" `ifp_b_eq_gp_n_b]])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '_', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '_', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  IntFractPair.exists_succ_nth_stream_of_gcf_of_nth_eq_some
+  { gp_n : Pair K } ( s_nth_eq : of v . s . nth n = some gp_n )
+    : ∃ ifp : IntFractPair K , IntFractPair.stream v n + 1 = some ifp ∧ ( ifp . b : K ) = gp_n . b
+  :=
+    by
+      obtain
+          ⟨ ifp , stream_succ_nth_eq , gp_n_eq ⟩
+          : ∃ ifp , int_fract_pair.stream v n + 1 = some ifp ∧ pair.mk 1 ( ifp . b : K ) = gp_n
+          :=
+            by
+              unfold of int_fract_pair.seq1 at s_nth_eq
+                rwa [ Seqₓₓ.map_tail , Seqₓₓ.nth_tail , Seqₓₓ.map_nth , Option.map_eq_some' ] at s_nth_eq
+        cases gp_n_eq
+        injection gp_n_eq with _ ifp_b_eq_gp_n_b
+        exists ifp
+        exact ⟨ stream_succ_nth_eq , ifp_b_eq_gp_n_b ⟩
 
 /-- Shows how the entries of the sequence of the computed continued fraction can be obtained by the
 integer parts of the stream of integer and fractional parts.

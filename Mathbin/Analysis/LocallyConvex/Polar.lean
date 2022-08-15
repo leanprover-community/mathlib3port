@@ -112,9 +112,9 @@ theorem polar_weak_closed (s : Set E) : @IsClosed _ (WeakBilin.topologicalSpace 
 
 end NormedRing
 
-section NondiscreteNormedField
+section NontriviallyNormedField
 
-variable [NondiscreteNormedField 𝕜] [AddCommMonoidₓ E] [AddCommMonoidₓ F]
+variable [NontriviallyNormedField 𝕜] [AddCommMonoidₓ E] [AddCommMonoidₓ F]
 
 variable [Module 𝕜 E] [Module 𝕜 F]
 
@@ -127,12 +127,14 @@ theorem polar_univ (h : SeparatingRight B) : B.Polar Set.Univ = {(0 : F)} := by
       simp only [← zero_mem_polar], fun y hy => h _ fun x => _⟩
   refine' norm_le_zero_iff.mp (le_of_forall_le_of_dense fun ε hε => _)
   rcases NormedField.exists_norm_lt 𝕜 hε with ⟨c, hc, hcε⟩
-  calc ∥B x y∥ = ∥c∥ * ∥B (c⁻¹ • x) y∥ := by
-      rw [B.map_smul, LinearMap.smul_apply, Algebra.id.smul_eq_mul, norm_mul, norm_inv,
-        mul_inv_cancel_left₀ hc.ne']_ ≤ ε * 1 :=
-      mul_le_mul hcε.le (hy _ trivialₓ) (norm_nonneg _) hε.le _ = ε := mul_oneₓ _
+  calc
+    ∥B x y∥ = ∥c∥ * ∥B (c⁻¹ • x) y∥ := by
+      rw [B.map_smul, LinearMap.smul_apply, Algebra.id.smul_eq_mul, norm_mul, norm_inv, mul_inv_cancel_left₀ hc.ne']
+    _ ≤ ε * 1 := mul_le_mul hcε.le (hy _ trivialₓ) (norm_nonneg _) hε.le
+    _ = ε := mul_oneₓ _
+    
 
-end NondiscreteNormedField
+end NontriviallyNormedField
 
 end LinearMap
 

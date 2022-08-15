@@ -248,7 +248,7 @@ theorem det_of_upper_triangular {n : ℕ} (M : Matrix (Finₓ n) (Finₓ n) R) (
   convert det_of_block_triangular_matrix' M id h
   ext i
   have h2 : ∀ j : { a // id a = i }, j = ⟨i, rfl⟩ := fun j : { a // id a = i } => Subtype.ext j.property
-  have : Unique { a // id a = i } := ⟨⟨⟨i, rfl⟩⟩, h2⟩
+  haveI : Unique { a // id a = i } := ⟨⟨⟨i, rfl⟩⟩, h2⟩
   simp [← h2 default]
 
 theorem det_of_lower_triangular {n : ℕ} (M : Matrix (Finₓ n) (Finₓ n) R) (h : ∀ i j : Finₓ n, i < j → M i j = 0) :

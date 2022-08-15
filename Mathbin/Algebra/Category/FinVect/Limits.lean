@@ -54,7 +54,7 @@ instance (F : J ⥤ FinVect k) :
     FiniteDimensional k (limit (F ⋙ forget₂ (FinVect k) (ModuleCat.{v} k)) : ModuleCat.{v} k) := by
   have : ∀ j, FiniteDimensional k ((F ⋙ forget₂ (FinVect k) (ModuleCat.{v} k)).obj j) := by
     intro j
-    change FiniteDimensional k (F.obj j)
+    change FiniteDimensional k (F.obj j).obj
     infer_instance
   exact
     FiniteDimensional.of_injective (limit_subobject_product (F ⋙ forget₂ (FinVect k) (ModuleCat.{v} k)))

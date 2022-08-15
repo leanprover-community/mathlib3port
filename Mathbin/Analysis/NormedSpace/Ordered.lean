@@ -17,13 +17,13 @@ open Filter Set
 
 open TopologicalSpace
 
-/-- A `normed_linear_ordered_group` is an additive group that is both a `normed_group` and
+/-- A `normed_linear_ordered_group` is an additive group that is both a `normed_add_comm_group` and
     a `linear_ordered_add_comm_group`. This class is necessary to avoid diamonds. -/
 class NormedLinearOrderedGroup (α : Type _) extends LinearOrderedAddCommGroup α, HasNorm α, MetricSpace α where
   dist_eq : ∀ x y, dist x y = norm (x - y)
 
-instance (priority := 100) NormedLinearOrderedGroup.toNormedGroup (α : Type _) [NormedLinearOrderedGroup α] :
-    NormedGroup α :=
+instance (priority := 100) NormedLinearOrderedGroup.toNormedAddCommGroup (α : Type _) [NormedLinearOrderedGroup α] :
+    NormedAddCommGroup α :=
   ⟨NormedLinearOrderedGroup.dist_eq⟩
 
 /-- A `normed_linear_ordered_field` is a field that is both a `normed_field` and a

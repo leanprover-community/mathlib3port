@@ -244,7 +244,7 @@ variable [DecidableEq α] {a b c : α}
 
 instance : HasInf (Finpartition a) :=
   ⟨fun P Q =>
-    ofErase ((P.parts.product Q.parts).Image fun bc => bc.1⊓bc.2)
+    ofErase ((P.parts ×ˢ Q.parts).Image fun bc => bc.1⊓bc.2)
       (by
         rw [sup_indep_iff_disjoint_erase]
         simp only [← mem_image, ← and_imp, ← exists_prop, ← forall_exists_index, ← id.def, ← Prod.exists, ← mem_product,
@@ -267,7 +267,7 @@ instance : HasInf (Finpartition a) :=
 
 @[simp]
 theorem parts_inf (P Q : Finpartition a) :
-    (P⊓Q).parts = ((P.parts.product Q.parts).Image fun bc : α × α => bc.1⊓bc.2).erase ⊥ :=
+    (P⊓Q).parts = ((P.parts ×ˢ Q.parts).Image fun bc : α × α => bc.1⊓bc.2).erase ⊥ :=
   rfl
 
 instance : SemilatticeInf (Finpartition a) :=
@@ -502,8 +502,8 @@ def atomise (s : Finset α) (F : Finset (Finset α)) : Finpartition s :=
 
 variable {F : Finset (Finset α)}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (Q «expr ⊆ » F)
-theorem mem_atomise {t : Finset α} :
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (Q «expr ⊆ » F)
+theorem mem_atomise :
     t ∈ (atomise s F).parts ↔ t.Nonempty ∧ ∃ (Q : _)(_ : Q ⊆ F), (s.filter fun i => ∀, ∀ u ∈ F, ∀, u ∈ Q ↔ i ∈ u) = t :=
   by
   simp only [← atomise, ← of_erase, ← bot_eq_empty, ← mem_erase, ← mem_image, ← nonempty_iff_ne_empty, ← mem_singleton,
@@ -517,16 +517,30 @@ theorem atomise_empty (hs : s.Nonempty) : (atomise s ∅).parts = {s} := by
 theorem card_atomise_le : (atomise s F).parts.card ≤ 2 ^ F.card :=
   (card_le_of_subset <| erase_subset _ _).trans <| Finset.card_image_le.trans (card_powerset _).le
 
-theorem bUnion_filter_atomise (t : Finset α) (ht : t ∈ F) (hts : t ⊆ s) :
-    ((atomise s F).parts.filter fun u => u ⊆ t).bUnion id = t := by
+theorem bUnion_filter_atomise (ht : t ∈ F) (hts : t ⊆ s) :
+    ((atomise s F).parts.filter fun u => u ⊆ t ∧ u.Nonempty).bUnion id = t := by
   ext a
-  rw [mem_bUnion]
-  refine' ⟨fun ⟨u, hu, ha⟩ => (mem_filter.1 hu).2 ha, fun ha => _⟩
+  refine' mem_bUnion.trans ⟨fun ⟨u, hu, ha⟩ => (mem_filter.1 hu).2.1 ha, fun ha => _⟩
   obtain ⟨u, hu, hau⟩ := (atomise s F).exists_mem (hts ha)
-  refine' ⟨u, mem_filter.2 ⟨hu, fun b hb => _⟩, hau⟩
+  refine' ⟨u, mem_filter.2 ⟨hu, fun b hb => _, _, hau⟩, hau⟩
   obtain ⟨Q, hQ, rfl⟩ := (mem_atomise.1 hu).2
   rw [mem_filter] at hau hb
   rwa [← hb.2 _ ht, hau.2 _ ht]
+
+theorem card_filter_atomise_le_two_pow (ht : t ∈ F) :
+    ((atomise s F).parts.filter fun u => u ⊆ t ∧ u.Nonempty).card ≤ 2 ^ (F.card - 1) := by
+  suffices h :
+    ((atomise s F).parts.filter fun u => u ⊆ t ∧ u.Nonempty) ⊆
+      (F.erase t).Powerset.Image fun P => s.filter fun i => ∀, ∀ x ∈ F, ∀, x ∈ insert t P ↔ i ∈ x
+  · refine' (card_le_of_subset h).trans (card_image_le.trans _)
+    rw [card_powerset, card_erase_of_mem ht]
+    
+  rw [subset_iff]
+  simp only [← mem_erase, ← mem_sdiff, ← mem_powerset, ← mem_image, ← exists_prop, ← mem_filter, ← and_assoc, ←
+    Finset.Nonempty, ← exists_imp_distrib, ← and_imp, ← mem_atomise, ← forall_apply_eq_imp_iff₂]
+  rintro P' i hi P PQ rfl hy₂ j hj
+  refine' ⟨P.erase t, erase_subset_erase _ PQ, _⟩
+  simp only [← insert_erase (((mem_filter.1 hi).2 _ ht).2 <| hy₂ hi), ← filter_congr_decidable]
 
 end Atomise
 

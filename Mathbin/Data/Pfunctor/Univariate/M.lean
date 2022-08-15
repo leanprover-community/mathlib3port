@@ -335,8 +335,8 @@ theorem mk_inj {x y : F.Obj <| M F} (h : M.mk x = M.mk y) : x = y := by
 /-- destructor for M-types -/
 protected def cases {r : M F → Sort w} (f : ∀ x : F.Obj <| M F, r (M.mk x)) (x : M F) : r x :=
   suffices r (M.mk (dest x)) by
-    have := Classical.propDecidable
-    have := Inhabited.mk x
+    haveI := Classical.propDecidable
+    haveI := Inhabited.mk x
     rw [← mk_dest x]
     exact this
   f _
@@ -679,7 +679,7 @@ theorem bisim (R : M P → M P → Prop)
     (h : ∀ x y, R x y → ∃ a f f', M.dest x = ⟨a, f⟩ ∧ M.dest y = ⟨a, f'⟩ ∧ ∀ i, R (f i) (f' i)) :
     ∀ x y, R x y → x = y := by
   introv h'
-  have := Inhabited.mk x.head
+  haveI := Inhabited.mk x.head
   apply eq_of_bisim R _ _ _ h'
   clear h' x y
   constructor <;> introv ih <;> rcases h _ _ ih with ⟨a'', g, g', h₀, h₁, h₂⟩ <;> clear h

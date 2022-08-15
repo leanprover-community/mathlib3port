@@ -379,7 +379,7 @@ theorem support_swap_iff (x y : α) : support (swap x y) = {x, y} ↔ x ≠ y :=
   simpa
 
 theorem support_swap_mul_swap {x y z : α} (h : List.Nodupₓ [x, y, z]) : support (swap x y * swap y z) = {x, y, z} := by
-  simp only [← List.not_mem_nilₓ, ← and_trueₓ, ← List.mem_cons_iff, ← not_false_iff, ← List.nodup_cons, ←
+  simp only [← List.not_mem_nilₓ, ← and_trueₓ, ← List.mem_cons_iffₓ, ← not_false_iff, ← List.nodup_cons, ←
     List.mem_singletonₓ, ← and_selfₓ, ← List.nodup_nil] at h
   push_neg  at h
   apply le_antisymmₓ
@@ -440,7 +440,7 @@ theorem eq_on_support_mem_disjoint {l : List (Perm α)} (h : f ∈ l) (hl : l.Pa
     
   · intro x hx
     rw [List.pairwise_cons] at hl
-    rw [List.mem_cons_iff] at h
+    rw [List.mem_cons_iffₓ] at h
     rcases h with (rfl | h)
     · rw [List.prod_cons, mul_apply, not_mem_support.mp ((disjoint_prod_right tl hl.left).mem_imp hx)]
       

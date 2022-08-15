@@ -47,7 +47,7 @@ instance : Inhabited (Presieve X) :=
 /-- Given a sieve `S` on `X : C`, its associated diagram `S.diagram` is defined to be
     the natural functor from the full subcategory of the over category `C/X` consisting
     of arrows in `S` to `C`. -/
-abbrev diagram (S : Presieve X) : { f : Over X // S f.Hom } ⥤ C :=
+abbrev diagram (S : Presieve X) : (FullSubcategory fun f : Over X => S f.Hom) ⥤ C :=
   fullSubcategoryInclusion _ ⋙ Over.forget X
 
 /-- Given a sieve `S` on `X : C`, its associated cocone `S.cocone` is defined to be
@@ -167,7 +167,7 @@ def FunctorPushforward (S : Presieve X) : Presieve (F.obj X) := fun Y f =>
 
 /-- An auxillary definition in order to fix the choice of the preimages between various definitions.
 -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 structure FunctorPushforwardStructure (S : Presieve X) {Y} (f : Y ⟶ F.obj X) where
   preobj : C
   premap : preobj ⟶ X
@@ -367,19 +367,19 @@ theorem id_mem_iff_eq_top : S (𝟙 X) ↔ S = ⊤ :=
     fun h => h.symm ▸ trivialₓ⟩
 
 /-- If an arrow set contains a split epi, it generates the maximal sieve. -/
-theorem generate_of_contains_split_epi {R : Presieve X} (f : Y ⟶ X) [SplitEpi f] (hf : R f) : generate R = ⊤ := by
+theorem generate_of_contains_is_split_epi {R : Presieve X} (f : Y ⟶ X) [IsSplitEpi f] (hf : R f) : generate R = ⊤ := by
   rw [← id_mem_iff_eq_top]
   exact
     ⟨_, section_ f, f, hf, by
       simp ⟩
 
 @[simp]
-theorem generate_of_singleton_split_epi (f : Y ⟶ X) [SplitEpi f] : generate (Presieve.Singleton f) = ⊤ :=
-  generate_of_contains_split_epi f (Presieve.singleton_self _)
+theorem generate_of_singleton_is_split_epi (f : Y ⟶ X) [IsSplitEpi f] : generate (Presieve.Singleton f) = ⊤ :=
+  generate_of_contains_is_split_epi f (Presieve.singleton_self _)
 
 @[simp]
 theorem generate_top : generate (⊤ : Presieve X) = ⊤ :=
-  generate_of_contains_split_epi (𝟙 _) ⟨⟩
+  generate_of_contains_is_split_epi (𝟙 _) ⟨⟩
 
 /-- Given a morphism `h : Y ⟶ X`, send a sieve S on X to a sieve on Y
     as the inverse image of S with `_ ≫ h`.
@@ -471,7 +471,8 @@ def galoisCoinsertionOfMono (f : Y ⟶ X) [Mono f] : GaloisCoinsertion (Sieve.pu
   rwa [← hf]
 
 /-- If `f` is a split epi, the pushforward-pullback adjunction on sieves is reflective. -/
-def galoisInsertionOfSplitEpi (f : Y ⟶ X) [SplitEpi f] : GaloisInsertion (Sieve.pushforward f) (Sieve.pullback f) := by
+def galoisInsertionOfIsSplitEpi (f : Y ⟶ X) [IsSplitEpi f] : GaloisInsertion (Sieve.pushforward f) (Sieve.pullback f) :=
+  by
   apply (GaloisConnection f).toGaloisInsertion
   intro S Z g hg
   refine'
@@ -607,7 +608,7 @@ theorem functor_pushforward_bot (F : C ⥤ D) (X : C) : (⊥ : Sieve X).FunctorP
 @[simp]
 theorem functor_pushforward_top (F : C ⥤ D) (X : C) : (⊤ : Sieve X).FunctorPushforward F = ⊤ := by
   refine' (generate_sieve _).symm.trans _
-  apply generate_of_contains_split_epi (𝟙 (F.obj X))
+  apply generate_of_contains_is_split_epi (𝟙 (F.obj X))
   refine'
     ⟨X, 𝟙 _, 𝟙 _, trivialₓ, by
       simp ⟩

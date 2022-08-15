@@ -42,7 +42,7 @@ theorem MeasureTheory.ae_measurable_of_exist_almost_disjoint_supersets {α : Typ
                   ∃ u v,
                     MeasurableSet u ∧ MeasurableSet v ∧ { x | f x < p } ⊆ u ∧ { x | q < f x } ⊆ v ∧ μ (u ∩ v) = 0) :
     AeMeasurable f μ := by
-  have : Encodable s := s_count.to_encodable
+  haveI : Encodable s := s_count.to_encodable
   have h' :
     ∀ p q,
       ∃ u v,

@@ -157,18 +157,18 @@ protected theorem Preconnected.of_box_prod_right [Nonempty α] (h : (G □ H).Pr
   exact ⟨w.of_box_prod_right⟩
 
 protected theorem Connected.box_prod (hG : G.Connected) (hH : H.Connected) : (G □ H).Connected := by
-  have := hG.nonempty
-  have := hH.nonempty
+  haveI := hG.nonempty
+  haveI := hH.nonempty
   exact ⟨hG.preconnected.box_prod hH.preconnected⟩
 
 protected theorem Connected.of_box_prod_left (h : (G □ H).Connected) : G.Connected := by
-  have := (nonempty_prod.1 h.nonempty).1
-  have := (nonempty_prod.1 h.nonempty).2
+  haveI := (nonempty_prod.1 h.nonempty).1
+  haveI := (nonempty_prod.1 h.nonempty).2
   exact ⟨h.preconnected.of_box_prod_left⟩
 
 protected theorem Connected.of_box_prod_right (h : (G □ H).Connected) : H.Connected := by
-  have := (nonempty_prod.1 h.nonempty).1
-  have := (nonempty_prod.1 h.nonempty).2
+  haveI := (nonempty_prod.1 h.nonempty).1
+  haveI := (nonempty_prod.1 h.nonempty).2
   exact ⟨h.preconnected.of_box_prod_right⟩
 
 @[simp]

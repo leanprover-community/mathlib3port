@@ -57,7 +57,7 @@ theorem embedding_of_subset_dist_le (a b : α) : dist (embeddingOfSubset x a) (e
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 /-- When the reference set is dense, the embedding map is an isometry on its image. -/
 theorem embedding_of_subset_isometry (H : DenseRange x) : Isometry (embeddingOfSubset x) := by
-  refine' isometry_emetric_iff_metric.2 fun a b => _
+  refine' Isometry.of_dist_eq fun a b => _
   refine' (embedding_of_subset_dist_le x a b).antisymm (le_of_forall_pos_le_add fun e epos => _)
   -- First step: find n with dist a (x n) < e
   rcases Metric.mem_closure_range_iff.1 (H a) (e / 2) (half_pos epos) with ⟨n, hn⟩
@@ -99,10 +99,10 @@ theorem exists_isometric_embedding (α : Type u) [MetricSpace α] [SeparableSpac
     
   · -- We construct a map x : ℕ → α with dense image
     rcases h with ⟨basepoint⟩
-    have : Inhabited α := ⟨basepoint⟩
+    haveI : Inhabited α := ⟨basepoint⟩
     have : ∃ s : Set α, s.Countable ∧ Dense s := exists_countable_dense α
     rcases this with ⟨S, ⟨S_countable, S_dense⟩⟩
-    rcases Set.countable_iff_exists_surjective.1 S_countable with ⟨x, x_range⟩
+    rcases Set.countable_iff_exists_subset_range.1 S_countable with ⟨x, x_range⟩
     -- Use embedding_of_subset to construct the desired isometry
     exact ⟨embedding_of_subset x, embedding_of_subset_isometry x (S_dense.mono x_range)⟩
     

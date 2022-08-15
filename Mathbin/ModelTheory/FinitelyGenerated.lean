@@ -117,7 +117,7 @@ theorem cg_iff_empty_or_exists_nat_generating_family {N : L.Substructure M} :
     cases' eq_empty_or_nonempty ↑N with h h
     · exact Or.intro_left _ h
       
-    obtain ⟨f, h'⟩ := (Scount.union (Set.countable_singleton h.some)).exists_surjective (singleton_nonempty h.some).inr
+    obtain ⟨f, h'⟩ := (Scount.union (Set.countable_singleton h.some)).exists_eq_range (singleton_nonempty h.some).inr
     refine' Or.intro_rightₓ _ ⟨f, _⟩
     rw [← h', closure_union, hS, sup_eq_left, closure_le]
     exact singleton_subset_iff.2 h.some_mem

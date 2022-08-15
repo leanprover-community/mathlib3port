@@ -213,7 +213,7 @@ theorem Encoding.card_le_aleph_0 {α : Type u} (e : Encoding.{u, v} α) [Encodab
     
 
 theorem FinEncoding.card_le_aleph_0 {α : Type u} (e : FinEncoding α) : # α ≤ ℵ₀ := by
-  have : Encodable e.Γ := Fintype.toEncodable _
+  haveI : Encodable e.Γ := Fintype.toEncodable _
   exact e.to_encoding.card_le_aleph_0
 
 end Computability

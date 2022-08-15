@@ -3,7 +3,6 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Floris van Doorn, Gabriel Ebner, Yury Kudryashov
 -/
-import Mathbin.Data.Nat.PartEnat
 import Mathbin.Order.ConditionallyCompleteLattice
 
 /-!
@@ -201,14 +200,4 @@ theorem bInter_lt_succ' (u : ℕ → Set α) (n : ℕ) : (⋂ k < n + 1, u k) = 
   Nat.infi_lt_succ' u n
 
 end Set
-
-namespace PartEnat
-
-open Classical
-
-noncomputable instance : CompleteLinearOrder PartEnat :=
-  { PartEnat.lattice, withTopOrderIso.symm.toGaloisInsertion.liftCompleteLattice, PartEnat.linearOrder with
-    inf := (·⊓·), sup := (·⊔·), top := ⊤, bot := ⊥, le := (· ≤ ·), lt := (· < ·) }
-
-end PartEnat
 

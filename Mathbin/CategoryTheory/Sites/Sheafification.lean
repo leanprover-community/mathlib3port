@@ -36,7 +36,7 @@ variable [ConcreteCategory.{max v u} D]
 attribute [local instance] concrete_category.has_coe_to_sort concrete_category.has_coe_to_fun
 
 /-- A concrete version of the multiequalizer, to be used below. -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def Meq {X : C} (P : Cᵒᵖ ⥤ D) (S : J.cover X) :=
   { x : ∀ I : S.arrow, P.obj (op I.y) // ∀ I : S.Relation, P.map I.g₁.op (x I.fst) = P.map I.g₂.op (x I.snd) }
 
@@ -493,15 +493,16 @@ variable {D}
 
 theorem is_iso_to_sheafify {P : Cᵒᵖ ⥤ D} (hP : Presheaf.IsSheaf J P) : IsIso (J.toSheafify P) := by
   dsimp' [← to_sheafify]
-  have : is_iso (J.to_plus P) := by
+  haveI : is_iso (J.to_plus P) := by
     apply is_iso_to_plus_of_is_sheaf J P hP
-  have : is_iso ((J.plus_functor D).map (J.to_plus P)) := by
+  haveI : is_iso ((J.plus_functor D).map (J.to_plus P)) := by
     apply functor.map_is_iso
   exact @is_iso.comp_is_iso _ _ _ _ _ (J.to_plus P) ((J.plus_functor D).map (J.to_plus P)) _ _
 
 /-- If `P` is a sheaf, then `P` is isomorphic to `J.sheafify P`. -/
-def isoSheafify {P : Cᵒᵖ ⥤ D} (hP : Presheaf.IsSheaf J P) : P ≅ J.sheafify P := by
-  let this := is_iso_to_sheafify J hP <;> exact as_iso (J.to_sheafify P)
+def isoSheafify {P : Cᵒᵖ ⥤ D} (hP : Presheaf.IsSheaf J P) : P ≅ J.sheafify P :=
+  letI := is_iso_to_sheafify J hP
+  as_iso (J.to_sheafify P)
 
 @[simp]
 theorem iso_sheafify_hom {P : Cᵒᵖ ⥤ D} (hP : Presheaf.IsSheaf J P) : (J.isoSheafify hP).Hom = J.toSheafify P :=
@@ -583,6 +584,19 @@ def sheafificationAdjunction : presheafToSheaf J D ⊣ sheafToPresheaf J D :=
       hom_equiv_naturality_right' := fun P Q R η γ => by
         dsimp'
         rw [category.assoc] }
+
+instance sheafToPresheafIsRightAdjoint : IsRightAdjoint (sheafToPresheaf J D) :=
+  ⟨_, sheafificationAdjunction J D⟩
+
+instance presheaf_mono_of_mono {F G : Sheaf J D} (f : F ⟶ G) [Mono f] : Mono f.1 :=
+  (sheafToPresheaf J D).map_mono _
+
+theorem Sheaf.Hom.mono_iff_presheaf_mono {F G : Sheaf J D} (f : F ⟶ G) : Mono f ↔ Mono f.1 :=
+  ⟨fun m => by
+    skip
+    infer_instance, fun m => by
+    skip
+    exact Sheaf.hom.mono_of_presheaf_mono J D f⟩
 
 variable {J D}
 

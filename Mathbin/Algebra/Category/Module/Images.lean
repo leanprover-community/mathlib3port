@@ -60,7 +60,7 @@ noncomputable def image.lift (F' : MonoFactorisation f) : image f ⟶ F'.i where
   toFun := (fun x => F'.e (Classical.indefiniteDescription _ x.2).1 : image f → F'.i)
   map_add' := by
     intro x y
-    have := F'.m_mono
+    haveI := F'.m_mono
     apply (mono_iff_injective F'.m).1
     infer_instance
     rw [LinearMap.map_add]
@@ -71,7 +71,7 @@ noncomputable def image.lift (F' : MonoFactorisation f) : image f ⟶ F'.i where
     rw [(Classical.indefiniteDescription (fun z => f z = _) _).2]
     rfl
   map_smul' := fun c x => by
-    have := F'.m_mono
+    haveI := F'.m_mono
     apply (mono_iff_injective F'.m).1
     infer_instance
     rw [LinearMap.map_smul]

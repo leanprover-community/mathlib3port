@@ -60,8 +60,10 @@ theorem closure_image_mem_nhds {s : Set α} {a : α} (di : DenseInducing i) (hs 
   rw [di.nhds_eq_comap a, ((nhds_basis_opens _).comap _).mem_iff] at hs
   rcases hs with ⟨U, ⟨haU, hUo⟩, sub : i ⁻¹' U ⊆ s⟩
   refine' mem_of_superset (hUo.mem_nhds haU) _
-  calc U ⊆ Closure (i '' (i ⁻¹' U)) := di.dense.subset_closure_image_preimage_of_is_open hUo _ ⊆ Closure (i '' s) :=
-      closure_mono (image_subset i sub)
+  calc
+    U ⊆ Closure (i '' (i ⁻¹' U)) := di.dense.subset_closure_image_preimage_of_is_open hUo
+    _ ⊆ Closure (i '' s) := closure_mono (image_subset i sub)
+    
 
 theorem dense_image (di : DenseInducing i) {s : Set α} : Dense (i '' s) ↔ Dense s := by
   refine' ⟨fun H x => _, di.dense.dense_image di.continuous⟩
@@ -126,7 +128,7 @@ def extend (di : DenseInducing i) (f : α → γ) (b : β) : γ :=
 
 theorem extend_eq_of_tendsto [T2Space γ] {b : β} {c : γ} {f : α → γ} (hf : Tendsto f (comap i (𝓝 b)) (𝓝 c)) :
     di.extend f b = c :=
-  have := di.comap_nhds_ne_bot
+  haveI := di.comap_nhds_ne_bot
   hf.lim_eq
 
 theorem extend_eq_at [T2Space γ] {f : α → γ} {a : α} (hf : ContinuousAt f a) : di.extend f (i a) = f a :=
@@ -164,7 +166,7 @@ theorem extend_unique [T2Space γ] {f : α → γ} {g : β → γ} (di : DenseIn
 theorem continuous_at_extend [T3Space γ] {b : β} {f : α → γ} (di : DenseInducing i)
     (hf : ∀ᶠ x in 𝓝 b, ∃ c, Tendsto f (comap i <| 𝓝 x) (𝓝 c)) : ContinuousAt (di.extend f) b := by
   set φ := di.extend f
-  have := di.comap_nhds_ne_bot
+  haveI := di.comap_nhds_ne_bot
   suffices ∀, ∀ V' ∈ 𝓝 (φ b), ∀, IsClosed V' → φ ⁻¹' V' ∈ 𝓝 b by
     simpa [← ContinuousAt, ← (closed_nhds_basis _).tendsto_right_iff]
   intro V' V'_in V'_closed
@@ -279,17 +281,17 @@ theorem is_closed_property3 [TopologicalSpace β] {e : α → β} {p : β → β
   have : ∀ q : β × β × β, p q.1 q.2.1 q.2.2 := (is_closed_property (he.prod_map <| he.prod_map he) hp) fun _ => h _ _ _
   fun b₁ b₂ b₃ => this ⟨b₁, b₂, b₃⟩
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem DenseRange.induction_on [TopologicalSpace β] {e : α → β} (he : DenseRange e) {p : β → Prop} (b₀ : β)
     (hp : IsClosed { b | p b }) (ih : ∀ a : α, p <| e a) : p b₀ :=
   is_closed_property he hp ih b₀
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem DenseRange.induction_on₂ [TopologicalSpace β] {e : α → β} {p : β → β → Prop} (he : DenseRange e)
     (hp : IsClosed { q : β × β | p q.1 q.2 }) (h : ∀ a₁ a₂, p (e a₁) (e a₂)) (b₁ b₂ : β) : p b₁ b₂ :=
   is_closed_property2 he hp h _ _
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem DenseRange.induction_on₃ [TopologicalSpace β] {e : α → β} {p : β → β → β → Prop} (he : DenseRange e)
     (hp : IsClosed { q : β × β × β | p q.1 q.2.1 q.2.2 }) (h : ∀ a₁ a₂ a₃, p (e a₁) (e a₂) (e a₃)) (b₁ b₂ b₃ : β) :
     p b₁ b₂ b₃ :=

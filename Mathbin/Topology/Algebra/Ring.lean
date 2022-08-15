@@ -76,7 +76,7 @@ theorem TopologicalSemiring.to_topological_ring [TopologicalSpace α] [NonAssocR
     TopologicalRing α :=
   { h,
     (by
-      have := h.to_has_continuous_mul
+      haveI := h.to_has_continuous_mul
       exact TopologicalSemiring.has_continuous_neg_of_mul : HasContinuousNeg α) with }
 
 -- See note [lower instance priority]
@@ -112,10 +112,6 @@ def Subsemiring.topologicalClosure (s : Subsemiring α) : Subsemiring α :=
 theorem Subsemiring.topological_closure_coe (s : Subsemiring α) :
     (s.topologicalClosure : Set α) = Closure (s : Set α) :=
   rfl
-
-instance Subsemiring.topological_closure_topological_semiring (s : Subsemiring α) :
-    TopologicalSemiring s.topologicalClosure :=
-  { s.toAddSubmonoid.topological_closure_has_continuous_add, s.toSubmonoid.topological_closure_has_continuous_mul with }
 
 theorem Subsemiring.subring_topological_closure (s : Subsemiring α) : s ≤ s.topologicalClosure :=
   subset_closure
@@ -164,13 +160,13 @@ open MulOpposite
 instance [NonUnitalNonAssocSemiringₓ α] [TopologicalSpace α] [HasContinuousAdd α] :
     HasContinuousAdd
       αᵐᵒᵖ where continuous_add :=
-    continuous_induced_rng <| (@continuous_add α _ _ _).comp (continuous_unop.prod_map continuous_unop)
+    continuous_induced_rng.2 <| (@continuous_add α _ _ _).comp (continuous_unop.prod_map continuous_unop)
 
 instance [NonUnitalNonAssocSemiringₓ α] [TopologicalSpace α] [TopologicalSemiring α] : TopologicalSemiring αᵐᵒᵖ where
 
 instance [NonUnitalNonAssocRing α] [TopologicalSpace α] [HasContinuousNeg α] :
     HasContinuousNeg
-      αᵐᵒᵖ where continuous_neg := continuous_induced_rng <| (@continuous_neg α _ _ _).comp continuous_unop
+      αᵐᵒᵖ where continuous_neg := continuous_induced_rng.2 <| (@continuous_neg α _ _ _).comp continuous_unop
 
 instance [NonUnitalNonAssocRing α] [TopologicalSpace α] [TopologicalRing α] : TopologicalRing αᵐᵒᵖ where
 
@@ -229,7 +225,7 @@ theorem TopologicalRing.of_nhds_zero (hadd : Tendsto (uncurry ((· + ·) : R →
     (hmul_left : ∀ x₀ : R, Tendsto (fun x : R => x₀ * x) (𝓝 0) <| 𝓝 0)
     (hmul_right : ∀ x₀ : R, Tendsto (fun x : R => x * x₀) (𝓝 0) <| 𝓝 0)
     (hleft : ∀ x₀ : R, 𝓝 x₀ = map (fun x => x₀ + x) (𝓝 0)) : TopologicalRing R := by
-  have := TopologicalAddGroup.of_comm_of_nhds_zero hadd hneg hleft
+  haveI := TopologicalAddGroup.of_comm_of_nhds_zero hadd hneg hleft
   exact TopologicalRing.of_add_group_of_nhds_zero hmul hmul_left hmul_right
 
 end
@@ -263,10 +259,6 @@ end Subring
 itself a subring. -/
 def Subring.topologicalClosure (S : Subring α) : Subring α :=
   { S.toSubmonoid.topologicalClosure, S.toAddSubgroup.topologicalClosure with Carrier := Closure (S : Set α) }
-
-instance Subring.topological_closure_topological_ring (s : Subring α) : TopologicalRing s.topologicalClosure :=
-  { s.toAddSubgroup.topological_closure_topological_add_group,
-    s.toSubmonoid.topological_closure_has_continuous_mul with }
 
 theorem Subring.subring_topological_closure (s : Subring α) : s ≤ s.topologicalClosure :=
   subset_closure
@@ -379,21 +371,21 @@ private def def_Inf (S : Set (RingTopology α)) : RingTopology α :=
   let Inf_S' := inf (to_topological_space '' S)
   { toTopologicalSpace := Inf_S',
     continuous_add := by
-      apply continuous_Inf_rng
+      apply continuous_Inf_rng.2
       rintro _ ⟨⟨t, tr⟩, haS, rfl⟩
       skip
       have h := continuous_Inf_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
       have h_continuous_id := @Continuous.prod_map _ _ _ _ t t Inf_S' Inf_S' _ _ h h
       exact @Continuous.comp _ _ _ (id _) (id _) t _ _ continuous_add h_continuous_id,
     continuous_mul := by
-      apply continuous_Inf_rng
+      apply continuous_Inf_rng.2
       rintro _ ⟨⟨t, tr⟩, haS, rfl⟩
       skip
       have h := continuous_Inf_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
       have h_continuous_id := @Continuous.prod_map _ _ _ _ t t Inf_S' Inf_S' _ _ h h
       exact @Continuous.comp _ _ _ (id _) (id _) t _ _ continuous_mul h_continuous_id,
     continuous_neg := by
-      apply continuous_Inf_rng
+      apply continuous_Inf_rng.2
       rintro _ ⟨⟨t, tr⟩, haS, rfl⟩
       skip
       have h := continuous_Inf_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id

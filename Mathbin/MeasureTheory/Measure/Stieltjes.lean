@@ -99,7 +99,7 @@ instance : Inhabited StieltjesFunction :=
 /-! ### The outer measure associated to a Stieltjes function -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (a b)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (a b)
 /-- Length of an interval. This is the largest monotone function which correctly measures all
 intervals. -/
 def length (s : Set ℝ) : ℝ≥0∞ :=
@@ -229,18 +229,22 @@ theorem outer_Ioc (a b : ℝ) : f.outer (Ioc a b) = ofReal (f b - f a) := by
       _ ⊆ ⋃ i, s i := hs
       _ ⊆ ⋃ i, Ioo (g i).1 (g i).2 := Union_mono fun i => (hg i).1
       
-  calc of_real (f b - f a) = of_real (f b - f a' + (f a' - f a)) := by
-      rw [sub_add_sub_cancel]_ ≤ of_real (f b - f a') + of_real (f a' - f a) :=
-      Ennreal.of_real_add_le _ ≤ (∑' i, of_real (f (g i).2 - f (g i).1)) + of_real δ :=
-      add_le_add (f.length_subadditive_Icc_Ioo I_subset)
-        (Ennreal.of_real_le_of_real ha'.le)_ ≤ (∑' i, f.length (s i) + ε' i) + δ :=
+  calc
+    of_real (f b - f a) = of_real (f b - f a' + (f a' - f a)) := by
+      rw [sub_add_sub_cancel]
+    _ ≤ of_real (f b - f a') + of_real (f a' - f a) := Ennreal.of_real_add_le
+    _ ≤ (∑' i, of_real (f (g i).2 - f (g i).1)) + of_real δ :=
+      add_le_add (f.length_subadditive_Icc_Ioo I_subset) (Ennreal.of_real_le_of_real ha'.le)
+    _ ≤ (∑' i, f.length (s i) + ε' i) + δ :=
       add_le_add (Ennreal.tsum_le_tsum fun i => (hg i).2.le)
         (by
-          simp only [← Ennreal.of_real_coe_nnreal, ← le_rfl])_ = ((∑' i, f.length (s i)) + ∑' i, ε' i) + δ :=
-      by
-      rw [Ennreal.tsum_add]_ ≤ (∑' i, f.length (s i)) + δ + δ :=
-      add_le_add (add_le_add le_rfl hε.le) le_rfl _ = (∑' i : ℕ, f.length (s i)) + ε := by
+          simp only [← Ennreal.of_real_coe_nnreal, ← le_rfl])
+    _ = ((∑' i, f.length (s i)) + ∑' i, ε' i) + δ := by
+      rw [Ennreal.tsum_add]
+    _ ≤ (∑' i, f.length (s i)) + δ + δ := add_le_add (add_le_add le_rfl hε.le) le_rfl
+    _ = (∑' i : ℕ, f.length (s i)) + ε := by
       simp [← add_assocₓ, ← Ennreal.add_halves]
+    
 
 theorem measurable_set_Ioi {c : ℝ} : measurable_set[f.outer.caratheodory] (Ioi c) := by
   apply outer_measure.of_function_caratheodory fun t => _

@@ -80,16 +80,16 @@ theorem mem_ess_image_of_unit_is_iso [IsRightAdjoint i] (A : C) [IsIso ((ofRight
   ⟨(leftAdjoint i).obj A, ⟨(asIso ((ofRightAdjoint i).Unit.app A)).symm⟩⟩
 
 /-- If `η_A` is a split monomorphism, then `A` is in the reflective subcategory. -/
-theorem mem_ess_image_of_unit_split_mono [Reflective i] {A : C} [SplitMono ((ofRightAdjoint i).Unit.app A)] :
+theorem mem_ess_image_of_unit_is_split_mono [Reflective i] {A : C} [IsSplitMono ((ofRightAdjoint i).Unit.app A)] :
     A ∈ i.EssImage := by
   let η : 𝟭 C ⟶ left_adjoint i ⋙ i := (of_right_adjoint i).Unit
-  have : is_iso (η.app (i.obj ((left_adjoint i).obj A))) := (i.obj_mem_ess_image _).unit_is_iso
+  haveI : is_iso (η.app (i.obj ((left_adjoint i).obj A))) := (i.obj_mem_ess_image _).unit_is_iso
   have : epi (η.app A) := by
     apply epi_of_epi (retraction (η.app A)) _
     rw [show retraction _ ≫ η.app A = _ from η.naturality (retraction (η.app A))]
     apply epi_comp (η.app (i.obj ((left_adjoint i).obj A)))
   skip
-  have := is_iso_of_epi_of_split_mono (η.app A)
+  haveI := is_iso_of_epi_of_is_split_mono (η.app A)
   exact mem_ess_image_of_unit_is_iso A
 
 /-- Composition of reflective functors. -/
@@ -144,7 +144,7 @@ theorem unit_comp_partial_bijective_natural [Reflective i] (A : C) {B B' : C} (h
 /-- If `i : D ⥤ C` is reflective, the inverse functor of `i ≌ F.ess_image` can be explicitly
 defined by the reflector. -/
 @[simps]
-def equivEssImageOfReflective [Reflective i] : D ≌ i.EssImage where
+def equivEssImageOfReflective [Reflective i] : D ≌ i.EssImageSubcategory where
   Functor := i.toEssImage
   inverse := i.essImageInclusion ⋙ (leftAdjoint i : _)
   unitIso :=
@@ -158,14 +158,16 @@ def equivEssImageOfReflective [Reflective i] : D ≌ i.EssImage where
     NatIso.ofComponents
       (fun X => by
         refine' iso.symm <| as_iso _
-        exact (of_right_adjoint i).Unit.app X
+        exact (of_right_adjoint i).Unit.app X.obj
         apply is_iso_of_reflects_iso _ i.ess_image_inclusion with { instances := false }
-        exact functor.ess_image.unit_is_iso X.prop)
+        exact functor.ess_image.unit_is_iso X.property)
       (by
         intro X Y f
         dsimp'
-        simp only [← is_iso.eq_inv_comp, ← is_iso.comp_inv_eq, ← category.assoc]
-        exact ((of_right_adjoint i).Unit.naturality f).symm)
+        rw [is_iso.comp_inv_eq, assoc]
+        have h := ((of_right_adjoint i).Unit.naturality f).symm
+        rw [functor.id_map] at h
+        erw [← h, is_iso.inv_hom_id_assoc, functor.comp_map])
 
 end CategoryTheory
 

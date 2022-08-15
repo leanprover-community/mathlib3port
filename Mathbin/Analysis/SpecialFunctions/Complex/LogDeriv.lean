@@ -68,7 +68,7 @@ open Complex Filter
 
 open TopologicalSpace
 
-variable {α : Type _} [TopologicalSpace α] {E : Type _} [NormedGroup E] [NormedSpace ℂ E]
+variable {α : Type _} [TopologicalSpace α] {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
 theorem HasStrictFderivAt.clog {f : E → ℂ} {f' : E →L[ℂ] ℂ} {x : E} (h₁ : HasStrictFderivAt f f' x)
     (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : HasStrictFderivAt (fun t => log (f t)) ((f x)⁻¹ • f') x :=

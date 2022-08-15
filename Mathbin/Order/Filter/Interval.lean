@@ -81,7 +81,7 @@ theorem Tendsto.Ioo {l₁ l₂ : Filter α} [TendstoIxxClass Ioo l₁ l₂] {lb 
     (h₁ : Tendsto u₁ lb l₁) (h₂ : Tendsto u₂ lb l₁) : Tendsto (fun x => Ioo (u₁ x) (u₂ x)) lb l₂.smallSets :=
   TendstoIxxClass.tendsto_Ixx.comp <| h₁.prod_mk h₂
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem tendsto_Ixx_class_principal {s t : Set α} {Ixx : α → α → Set α} :
     TendstoIxxClass Ixx (𝓟 s) (𝓟 t) ↔ ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), Ixx x y ⊆ t :=
   Iff.trans ⟨fun h => h.1, fun h => ⟨h⟩⟩ <| by
@@ -200,18 +200,18 @@ section LinearOrderₓ
 
 variable [LinearOrderₓ α]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)
 instance tendsto_Icc_interval_interval {a b : α} :
-    TendstoIxxClass Icc (𝓟 "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)")
-      (𝓟 "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)") :=
+    TendstoIxxClass Icc (𝓟 "./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)")
+      (𝓟 "./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)") :=
   Filter.tendsto_Icc_Icc_Icc
 
--- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)
 instance tendsto_Ioc_interval_interval {a b : α} :
-    TendstoIxxClass Ioc (𝓟 "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)")
-      (𝓟 "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)") :=
+    TendstoIxxClass Ioc (𝓟 "./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)")
+      (𝓟 "./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)") :=
   Filter.tendsto_Ioc_Icc_Icc
 
 instance tendsto_interval_of_Icc {l : Filter α} [TendstoIxxClass Icc l l] : TendstoIxxClass Interval l l := by
@@ -227,10 +227,10 @@ instance tendsto_interval_of_Icc {l : Filter α} [TendstoIxxClass Icc l l] : Ten
     exact hts ⟨p.2, p.1⟩ ⟨hp.2, hp.1⟩
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)
 theorem Tendsto.interval {l : Filter α} [TendstoIxxClass Icc l l] {f g : β → α} {lb : Filter β} (hf : Tendsto f lb l)
     (hg : Tendsto g lb l) :
-    Tendsto (fun x => "./././Mathport/Syntax/Translate/Basic.lean:958:47: unsupported (impossible)") lb l.smallSets :=
+    Tendsto (fun x => "./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)") lb l.smallSets :=
   TendstoIxxClass.tendsto_Ixx.comp <| hf.prod_mk hg
 
 end LinearOrderₓ

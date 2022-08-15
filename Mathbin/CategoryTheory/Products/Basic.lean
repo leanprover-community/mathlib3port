@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison
 -/
 import Mathbin.CategoryTheory.EqToHom
+import Mathbin.CategoryTheory.Functor.Const
 
 /-!
 # Cartesian products of categories
@@ -192,6 +193,14 @@ def evaluationUncurried : C × (C ⥤ D) ⥤ D where
     cases X
     simp only [← prod_comp, ← nat_trans.comp_app, ← functor.map_comp, ← category.assoc]
     rw [← nat_trans.comp_app, nat_trans.naturality, nat_trans.comp_app, category.assoc, nat_trans.naturality]
+
+variable {C}
+
+/-- The constant functor followed by the evalutation functor is just the identity. -/
+@[simps]
+def Functor.constCompEvaluationObj (X : C) : Functor.const C ⋙ (evaluation C D).obj X ≅ 𝟭 D :=
+  NatIso.ofComponents (fun Y => Iso.refl _) fun Y Z f => by
+    simp
 
 end
 

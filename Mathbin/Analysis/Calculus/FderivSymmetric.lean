@@ -52,7 +52,7 @@ open Asymptotics Set
 
 open TopologicalSpace
 
-variable {E F : Type _} [NormedGroup E] [NormedSpace ℝ E] [NormedGroup F] [NormedSpace ℝ F] {s : Set E}
+variable {E F : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedAddCommGroup F] [NormedSpace ℝ F] {s : Set E}
   (s_conv : Convex ℝ s) {f : E → F} {f' : E → E →L[ℝ] F} {f'' : E →L[ℝ] E →L[ℝ] F}
   (hf : ∀, ∀ x ∈ Interior s, ∀, HasFderivAt f (f' x) x) {x : E} (xs : x ∈ s)
   (hx : HasFderivWithinAt f' f'' (Interior s) x)
@@ -148,32 +148,34 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
         _ = h * (∥v∥ + ∥w∥) := by
           ring
         
-    calc ∥g' t∥ = ∥(f' (x + h • v + (t * h) • w) - f' x - f'' (h • v + (t * h) • w)) (h • w)∥ := by
+    calc
+      ∥g' t∥ = ∥(f' (x + h • v + (t * h) • w) - f' x - f'' (h • v + (t * h) • w)) (h • w)∥ := by
         rw [hg']
         have : h * (t * h) = t * (h * h) := by
           ring
         simp only [← ContinuousLinearMap.coe_sub', ← ContinuousLinearMap.map_add, ← pow_two, ←
           ContinuousLinearMap.add_apply, ← Pi.smul_apply, ← smul_sub, ← smul_add, ← smul_smul, sub_sub, ←
-          ContinuousLinearMap.coe_smul', ← Pi.sub_apply, ← ContinuousLinearMap.map_smul, ←
-          this]_ ≤ ∥f' (x + h • v + (t * h) • w) - f' x - f'' (h • v + (t * h) • w)∥ * ∥h • w∥ :=
-        ContinuousLinearMap.le_op_norm _ _ _ ≤ ε * ∥h • v + (t * h) • w∥ * ∥h • w∥ := by
+          ContinuousLinearMap.coe_smul', ← Pi.sub_apply, ← ContinuousLinearMap.map_smul, ← this]
+      _ ≤ ∥f' (x + h • v + (t * h) • w) - f' x - f'' (h • v + (t * h) • w)∥ * ∥h • w∥ :=
+        ContinuousLinearMap.le_op_norm _ _
+      _ ≤ ε * ∥h • v + (t * h) • w∥ * ∥h • w∥ := by
         apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)
         have H : x + h • v + (t * h) • w ∈ Metric.Ball x δ ∩ Interior s := by
           refine' ⟨_, xt_mem t ⟨ht.1, ht.2.le⟩⟩
           rw [add_assocₓ, add_mem_ball_iff_norm]
           exact I.trans_lt hδ
-        simpa only [← mem_set_of_eq, ← add_assocₓ x, ← add_sub_cancel'] using
-          sδ H _ ≤ ε * (∥h • v∥ + ∥h • w∥) * ∥h • w∥ :=
-        by
+        simpa only [← mem_set_of_eq, ← add_assocₓ x, ← add_sub_cancel'] using sδ H
+      _ ≤ ε * (∥h • v∥ + ∥h • w∥) * ∥h • w∥ := by
         apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)
         apply mul_le_mul_of_nonneg_left _ εpos.le
         apply (norm_add_le _ _).trans
         refine' add_le_add le_rfl _
         simp only [← norm_smul, ← Real.norm_eq_abs, ← abs_mul, ← abs_of_nonneg, ← ht.1, ← hpos.le, ← mul_assoc]
-        exact mul_le_of_le_one_left (mul_nonneg hpos.le (norm_nonneg _)) ht.2.le _ = ε * ((∥v∥ + ∥w∥) * ∥w∥) * h ^ 2 :=
-        by
+        exact mul_le_of_le_one_left (mul_nonneg hpos.le (norm_nonneg _)) ht.2.le
+      _ = ε * ((∥v∥ + ∥w∥) * ∥w∥) * h ^ 2 := by
         simp only [← norm_smul, ← Real.norm_eq_abs, ← abs_mul, ← abs_of_nonneg, ← hpos.le]
         ring
+      
   -- conclude using the mean value inequality
   have I : ∥g 1 - g 0∥ ≤ ε * ((∥v∥ + ∥w∥) * ∥w∥) * h ^ 2 := by
     simpa only [← mul_oneₓ, ← sub_zero] using

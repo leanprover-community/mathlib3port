@@ -253,11 +253,11 @@ theorem candidates_b_dist_mem_candidates_b : candidatesBDist X Y ∈ CandidatesB
 private theorem candidates_b_nonempty : (CandidatesB X Y).Nonempty :=
   ⟨_, candidates_b_dist_mem_candidates_b⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (x y)
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (x y)
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (x y)
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (x y z)
--- ./././Mathport/Syntax/Translate/Basic.lean:853:6: warning: expanding binder group (x y)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (x y)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (x y)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (x y)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (x y z)
+-- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (x y)
 /-- To apply Arzela-Ascoli, we need to check that the set of candidates is closed and
 equicontinuous. Equicontinuity follows from the Lipschitz control, we check closedness. -/
 private theorem closed_candidates_b : IsClosed (CandidatesB X Y) := by
@@ -331,8 +331,10 @@ theorem HD_below_aux1 {f : Cb X Y} (C : ℝ) {x : X} : BddBelow (Range fun y : Y
 private theorem HD_bound_aux1 (f : Cb X Y) (C : ℝ) : BddAbove (Range fun x : X => ⨅ y, f (inl x, inr y) + C) := by
   rcases(Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).2 with ⟨Cf, hCf⟩
   refine' ⟨Cf + C, forall_range_iff.2 fun x => _⟩
-  calc (⨅ y, f (inl x, inr y) + C) ≤ f (inl x, inr default) + C := cinfi_le (HD_below_aux1 C) default _ ≤ Cf + C :=
-      add_le_add ((fun x => hCf (mem_range_self x)) _) le_rfl
+  calc
+    (⨅ y, f (inl x, inr y) + C) ≤ f (inl x, inr default) + C := cinfi_le (HD_below_aux1 C) default
+    _ ≤ Cf + C := add_le_add ((fun x => hCf (mem_range_self x)) _) le_rfl
+    
 
 theorem HD_below_aux2 {f : Cb X Y} (C : ℝ) {y : Y} : BddBelow (Range fun x : X => f (inl x, inr y) + C) :=
   let ⟨cf, hcf⟩ := (Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).1
@@ -341,8 +343,10 @@ theorem HD_below_aux2 {f : Cb X Y} (C : ℝ) {y : Y} : BddBelow (Range fun x : X
 private theorem HD_bound_aux2 (f : Cb X Y) (C : ℝ) : BddAbove (Range fun y : Y => ⨅ x, f (inl x, inr y) + C) := by
   rcases(Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).2 with ⟨Cf, hCf⟩
   refine' ⟨Cf + C, forall_range_iff.2 fun y => _⟩
-  calc (⨅ x, f (inl x, inr y) + C) ≤ f (inl default, inr y) + C := cinfi_le (HD_below_aux2 C) default _ ≤ Cf + C :=
-      add_le_add ((fun x => hCf (mem_range_self x)) _) le_rfl
+  calc
+    (⨅ x, f (inl x, inr y) + C) ≤ f (inl default, inr y) + C := cinfi_le (HD_below_aux2 C) default
+    _ ≤ Cf + C := add_le_add ((fun x => hCf (mem_range_self x)) _) le_rfl
+    
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
@@ -408,7 +412,7 @@ private theorem HD_lipschitz_aux1 (f g : Cb X Y) :
   -- (here the addition of `dist f g`) preserve infimum and supremum
   have E1 : ∀ x, (⨅ y, g (inl x, inr y)) + dist f g = ⨅ y, g (inl x, inr y) + dist f g := by
     intro x
-    refine' map_cinfi_of_continuous_at_of_monotone (continuous_at_id.add continuous_at_const) _ _
+    refine' Monotone.map_cinfi_of_continuous_at (continuous_at_id.add continuous_at_const) _ _
     · intro x y hx
       simpa
       
@@ -416,7 +420,7 @@ private theorem HD_lipschitz_aux1 (f g : Cb X Y) :
       exact ⟨cg, forall_range_iff.2 fun i => Hcg _⟩
       
   have E2 : (⨆ x, ⨅ y, g (inl x, inr y)) + dist f g = ⨆ x, (⨅ y, g (inl x, inr y)) + dist f g := by
-    refine' map_csupr_of_continuous_at_of_monotone (continuous_at_id.add continuous_at_const) _ _
+    refine' Monotone.map_csupr_of_continuous_at (continuous_at_id.add continuous_at_const) _ _
     · intro x y hx
       simpa
       
@@ -440,7 +444,7 @@ private theorem HD_lipschitz_aux2 (f g : Cb X Y) :
   -- (here the addition of `dist f g`) preserve infimum and supremum
   have E1 : ∀ y, (⨅ x, g (inl x, inr y)) + dist f g = ⨅ x, g (inl x, inr y) + dist f g := by
     intro y
-    refine' map_cinfi_of_continuous_at_of_monotone (continuous_at_id.add continuous_at_const) _ _
+    refine' Monotone.map_cinfi_of_continuous_at (continuous_at_id.add continuous_at_const) _ _
     · intro x y hx
       simpa
       
@@ -448,7 +452,7 @@ private theorem HD_lipschitz_aux2 (f g : Cb X Y) :
       exact ⟨cg, forall_range_iff.2 fun i => Hcg _⟩
       
   have E2 : (⨆ y, ⨅ x, g (inl x, inr y)) + dist f g = ⨆ y, (⨅ x, g (inl x, inr y)) + dist f g := by
-    refine' map_csupr_of_continuous_at_of_monotone (continuous_at_id.add continuous_at_const) _ _
+    refine' Monotone.map_csupr_of_continuous_at (continuous_at_id.add continuous_at_const) _ _
     · intro x y hx
       simpa
       
@@ -501,7 +505,7 @@ def premetricOptimalGHDist : PseudoMetricSpace (Sum X Y) where
 attribute [local instance] premetric_optimal_GH_dist PseudoMetric.distSetoid
 
 /-- A metric space which realizes the optimal coupling between `X` and `Y` -/
-@[nolint has_inhabited_instance]
+@[nolint has_nonempty_instance]
 def OptimalGHCoupling : Type _ :=
   PseudoMetricQuot (Sum X Y)deriving MetricSpace
 
@@ -511,7 +515,7 @@ def optimalGHInjl (x : X) : OptimalGHCoupling X Y :=
 
 /-- The injection of `X` in the optimal coupling between `X` and `Y` is an isometry. -/
 theorem isometry_optimal_GH_injl : Isometry (optimalGHInjl X Y) := by
-  refine' isometry_emetric_iff_metric.2 fun x y => _
+  refine' Isometry.of_dist_eq fun x y => _
   change dist ⟦inl x⟧ ⟦inl y⟧ = dist x y
   exact candidates_dist_inl (optimal_GH_dist_mem_candidates_b X Y) _ _
 
@@ -521,7 +525,7 @@ def optimalGHInjr (y : Y) : OptimalGHCoupling X Y :=
 
 /-- The injection of `Y` in the optimal coupling between `X` and `Y` is an isometry. -/
 theorem isometry_optimal_GH_injr : Isometry (optimalGHInjr X Y) := by
-  refine' isometry_emetric_iff_metric.2 fun x y => _
+  refine' Isometry.of_dist_eq fun x y => _
   change dist ⟦inr x⟧ ⟦inr y⟧ = dist x y
   exact candidates_dist_inr (optimal_GH_dist_mem_candidates_b X Y) _ _
 

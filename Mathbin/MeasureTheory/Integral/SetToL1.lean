@@ -76,8 +76,9 @@ open Set Filter TopologicalSpace Ennreal Emetric
 
 namespace MeasureTheory
 
-variable {α E F F' G 𝕜 : Type _} {p : ℝ≥0∞} [NormedGroup E] [NormedSpace ℝ E] [NormedGroup F] [NormedSpace ℝ F]
-  [NormedGroup F'] [NormedSpace ℝ F'] [NormedGroup G] {m : MeasurableSpace α} {μ : Measure α}
+variable {α E F F' G 𝕜 : Type _} {p : ℝ≥0∞} [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedAddCommGroup F]
+  [NormedSpace ℝ F] [NormedAddCommGroup F'] [NormedSpace ℝ F'] [NormedAddCommGroup G] {m : MeasurableSpace α}
+  {μ : Measure α}
 
 -- mathport name: «expr →ₛ »
 local infixr:25 " →ₛ " => SimpleFunc
@@ -134,7 +135,7 @@ theorem map_empty_eq_zero {β} [AddCancelMonoid β] {T : Set α → β} (hT : Fi
   nth_rw 0[← add_zeroₓ (T ∅)]  at hT
   exact (add_left_cancelₓ hT).symm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:710:2: warning: expanding binder collection (i j «expr ∈ » sι)
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (i j «expr ∈ » sι)
 theorem map_Union_fin_meas_set_eq_sum (T : Set α → β) (T_empty : T ∅ = 0) (h_add : FinMeasAdditive μ T) {ι}
     (S : ι → Set α) (sι : Finset ι) (hS_meas : ∀ i, MeasurableSet (S i)) (hSp : ∀, ∀ i ∈ sι, ∀, μ (S i) ≠ ∞)
     (h_disj : ∀ (i j) (_ : i ∈ sι) (_ : j ∈ sι), i ≠ j → Disjoint (S i) (S j)) :
@@ -174,20 +175,20 @@ end FinMeasAdditive
 
 /-- A `fin_meas_additive` set function whose norm on every set is less than the measure of the
 set (up to a multiplicative constant). -/
-def DominatedFinMeasAdditive {β} [SemiNormedGroup β] {m : MeasurableSpace α} (μ : Measure α) (T : Set α → β) (C : ℝ) :
-    Prop :=
+def DominatedFinMeasAdditive {β} [SeminormedAddCommGroup β] {m : MeasurableSpace α} (μ : Measure α) (T : Set α → β)
+    (C : ℝ) : Prop :=
   FinMeasAdditive μ T ∧ ∀ s, MeasurableSet s → μ s < ∞ → ∥T s∥ ≤ C * (μ s).toReal
 
 namespace DominatedFinMeasAdditive
 
-variable {β : Type _} [SemiNormedGroup β] {T T' : Set α → β} {C C' : ℝ}
+variable {β : Type _} [SeminormedAddCommGroup β] {T T' : Set α → β} {C C' : ℝ}
 
 theorem zero {m : MeasurableSpace α} (μ : Measure α) (hC : 0 ≤ C) : DominatedFinMeasAdditive μ (0 : Set α → β) C := by
   refine' ⟨fin_meas_additive.zero, fun s hs hμs => _⟩
   rw [Pi.zero_apply, norm_zero]
   exact mul_nonneg hC to_real_nonneg
 
-theorem eq_zero_of_measure_zero {β : Type _} [NormedGroup β] {T : Set α → β} {C : ℝ}
+theorem eq_zero_of_measure_zero {β : Type _} [NormedAddCommGroup β] {T : Set α → β} {C : ℝ}
     (hT : DominatedFinMeasAdditive μ T C) {s : Set α} (hs : MeasurableSet s) (hs_zero : μ s = 0) : T s = 0 := by
   refine' norm_eq_zero.mp _
   refine'
@@ -198,7 +199,7 @@ theorem eq_zero_of_measure_zero {β : Type _} [NormedGroup β] {T : Set α → �
       (norm_nonneg _)
   rw [hs_zero, Ennreal.zero_to_real, mul_zero]
 
-theorem eq_zero {β : Type _} [NormedGroup β] {T : Set α → β} {C : ℝ} {m : MeasurableSpace α}
+theorem eq_zero {β : Type _} [NormedAddCommGroup β] {T : Set α → β} {C : ℝ} {m : MeasurableSpace α}
     (hT : DominatedFinMeasAdditive (0 : Measure α) T C) {s : Set α} (hs : MeasurableSet s) : T s = 0 :=
   eq_zero_of_measure_zero hT hs
     (by
@@ -474,7 +475,7 @@ theorem set_to_simple_func_smul_real (T : Set α → E →L[ℝ] F) (h_add : Fin
       simp only [← set_to_simple_func, ← smul_sum, ← smul_smul, ← mul_comm]
     
 
-theorem set_to_simple_func_smul {E} [NormedGroup E] [NormedField 𝕜] [NormedSpace 𝕜 E] [NormedSpace ℝ E]
+theorem set_to_simple_func_smul {E} [NormedAddCommGroup E] [NormedField 𝕜] [NormedSpace 𝕜 E] [NormedSpace ℝ E]
     [NormedSpace 𝕜 F] (T : Set α → E →L[ℝ] F) (h_add : FinMeasAdditive μ T)
     (h_smul : ∀ c : 𝕜, ∀ s x, T s (c • x) = c • T s x) (c : 𝕜) {f : α →ₛ E} (hf : Integrable f μ) :
     setToSimpleFunc T (c • f) = c • setToSimpleFunc T f :=
@@ -770,7 +771,7 @@ theorem set_to_L1s_smul_real (T : Set α → E →L[ℝ] F) (h_zero : ∀ s, Mea
   refine' simple_func.set_to_simple_func_congr T h_zero h_add (simple_func.integrable _) _
   exact smul_to_simple_func c f
 
-theorem set_to_L1s_smul {E} [NormedGroup E] [NormedSpace ℝ E] [NormedSpace 𝕜 E] [NormedSpace 𝕜 F]
+theorem set_to_L1s_smul {E} [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedSpace 𝕜 E] [NormedSpace 𝕜 F]
     (T : Set α → E →L[ℝ] F) (h_zero : ∀ s, MeasurableSet s → μ s = 0 → T s = 0) (h_add : FinMeasAdditive μ T)
     (h_smul : ∀ c : 𝕜, ∀ s x, T s (c • x) = c • T s x) (c : 𝕜) (f : α →₁ₛ[μ] E) :
     setToL1s T (c • f) = c • setToL1s T f := by
@@ -949,7 +950,7 @@ attribute [local instance] Lp.simple_func.module
 
 attribute [local instance] Lp.simple_func.normed_space
 
-variable (𝕜) [NondiscreteNormedField 𝕜] [NormedSpace 𝕜 E] [NormedSpace 𝕜 F] [CompleteSpace F]
+variable (𝕜) [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 E] [NormedSpace 𝕜 F] [CompleteSpace F]
   {T T' T'' : Set α → E →L[ℝ] F} {C C' C'' : ℝ}
 
 /-- Extend `set α → (E →L[ℝ] F)` to `(α →₁[μ] E) →L[𝕜] F`. -/
@@ -1333,7 +1334,7 @@ theorem set_to_fun_sub (hT : DominatedFinMeasAdditive μ T C) (hf : Integrable f
     setToFun μ T hT (f - g) = setToFun μ T hT f - setToFun μ T hT g := by
   rw [sub_eq_add_neg, sub_eq_add_neg, set_to_fun_add hT hf hg.neg, set_to_fun_neg hT g]
 
-theorem set_to_fun_smul [NondiscreteNormedField 𝕜] [NormedSpace 𝕜 E] [NormedSpace 𝕜 F]
+theorem set_to_fun_smul [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 E] [NormedSpace 𝕜 F]
     (hT : DominatedFinMeasAdditive μ T C) (h_smul : ∀ c : 𝕜, ∀ s x, T s (c • x) = c • T s x) (c : 𝕜) (f : α → E) :
     setToFun μ T hT (c • f) = c • setToFun μ T hT f := by
   by_cases' hf : integrable f μ
@@ -1522,15 +1523,20 @@ theorem continuous_L1_to_L1 {μ' : Measure α} (c' : ℝ≥0∞) (hc' : c' ≠ �
     rw [snorm_smul_measure_of_ne_zero hc'0, smul_eq_mul]
     refine' Ennreal.mul_lt_top _ h_snorm_ne_top
     simp [← hc', ← hc'0]
-  calc (snorm (g - f) 1 μ').toReal ≤ (c' * snorm (g - f) 1 μ).toReal := by
+  calc
+    (snorm (g - f) 1 μ').toReal ≤ (c' * snorm (g - f) 1 μ).toReal := by
       rw [to_real_le_to_real h_snorm_ne_top' (Ennreal.mul_ne_top hc' h_snorm_ne_top)]
       refine' (snorm_mono_measure (⇑g - ⇑f) hμ'_le).trans _
       rw [snorm_smul_measure_of_ne_zero hc'0, smul_eq_mul]
-      simp _ = c'.to_real * (snorm (⇑g - ⇑f) 1 μ).toReal := to_real_mul _ ≤ c'.to_real * (ε / 2 / c'.to_real) :=
-      mul_le_mul le_rfl hfg.le to_real_nonneg to_real_nonneg _ = ε / 2 := by
+      simp
+    _ = c'.to_real * (snorm (⇑g - ⇑f) 1 μ).toReal := to_real_mul
+    _ ≤ c'.to_real * (ε / 2 / c'.to_real) := mul_le_mul le_rfl hfg.le to_real_nonneg to_real_nonneg
+    _ = ε / 2 := by
       refine' mul_div_cancel' (ε / 2) _
       rw [Ne.def, to_real_eq_zero_iff]
-      simp [← hc', ← hc'0]_ < ε := half_lt_self hε_pos
+      simp [← hc', ← hc'0]
+    _ < ε := half_lt_self hε_pos
+    
 
 theorem set_to_fun_congr_measure_of_integrable {μ' : Measure α} (c' : ℝ≥0∞) (hc' : c' ≠ ∞) (hμ'_le : μ' ≤ c' • μ)
     (hT : DominatedFinMeasAdditive μ T C) (hT' : DominatedFinMeasAdditive μ' T C') (f : α → E) (hfμ : Integrable f μ) :

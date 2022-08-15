@@ -46,7 +46,7 @@ theorem Pi.uniform_continuous_proj (i : ι) : UniformContinuous fun a : ∀ i : 
 instance Pi.complete [∀ i, CompleteSpace (α i)] : CompleteSpace (∀ i, α i) :=
   ⟨by
     intro f hf
-    have := hf.1
+    haveI := hf.1
     have : ∀ i, ∃ x : α i, Filter.map (fun a : ∀ i, α i => a i) f ≤ 𝓝 x := by
       intro i
       have key : Cauchy (map (fun a : ∀ i : ι, α i => a i) f) := hf.map (Pi.uniform_continuous_proj α i)

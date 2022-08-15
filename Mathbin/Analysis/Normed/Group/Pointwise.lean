@@ -18,9 +18,9 @@ open Metric Set
 
 open Pointwise TopologicalSpace
 
-section SemiNormedGroup
+section SeminormedAddCommGroup
 
-variable {E : Type _} [SemiNormedGroup E] {ε δ : ℝ} {s t : Set E} {x y : E}
+variable {E : Type _} [SeminormedAddCommGroup E] {ε δ : ℝ} {s t : Set E} {x y : E}
 
 theorem bounded_iff_exists_norm_le : Bounded s ↔ ∃ R, ∀, ∀ x ∈ s, ∀, ∥x∥ ≤ R := by
   simp [← subset_def, ← bounded_iff_subset_ball (0 : E)]
@@ -43,7 +43,10 @@ theorem Metric.Bounded.add (hs : Bounded s) (ht : Bounded t) : Bounded (s + t) :
   obtain ⟨Rt, hRt⟩ : ∃ R : ℝ, ∀, ∀ x ∈ t, ∀, ∥x∥ ≤ R := ht.exists_norm_le
   refine' bounded_iff_exists_norm_le.2 ⟨Rs + Rt, _⟩
   rintro z ⟨x, y, hx, hy, rfl⟩
-  calc ∥x + y∥ ≤ ∥x∥ + ∥y∥ := norm_add_le _ _ _ ≤ Rs + Rt := add_le_add (hRs x hx) (hRt y hy)
+  calc
+    ∥x + y∥ ≤ ∥x∥ + ∥y∥ := norm_add_le _ _
+    _ ≤ Rs + Rt := add_le_add (hRs x hx) (hRt y hy)
+    
 
 theorem Metric.Bounded.neg : Bounded s → Bounded (-s) := by
   simp_rw [bounded_iff_exists_norm_le, ← image_neg, ball_image_iff, norm_neg]
@@ -216,5 +219,5 @@ theorem IsCompact.closed_ball_sub (hs : IsCompact s) (hδ : 0 ≤ δ) (x : E) : 
   by
   simp [← sub_eq_add_neg, ← add_commₓ, ← hs.closed_ball_add hδ]
 
-end SemiNormedGroup
+end SeminormedAddCommGroup
 

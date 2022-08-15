@@ -283,18 +283,18 @@ theorem BinaryCofan.mk_inl {P : C} (ι₁ : X ⟶ P) (ι₂ : Y ⟶ P) : (Binary
 theorem BinaryCofan.mk_inr {P : C} (ι₁ : X ⟶ P) (ι₂ : Y ⟶ P) : (BinaryCofan.mk ι₁ ι₂).inr = ι₂ :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `discrete_cases #[]
 /-- Every `binary_fan` is isomorphic to an application of `binary_fan.mk`. -/
 def isoBinaryFanMk {X Y : C} (c : BinaryFan X Y) : c ≅ BinaryFan.mk c.fst c.snd :=
   Cones.ext (Iso.refl _) fun j => by
-    trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]" <;>
+    trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `discrete_cases #[]" <;>
       cases j <;> tidy
 
--- ./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `discrete_cases #[]
 /-- Every `binary_fan` is isomorphic to an application of `binary_fan.mk`. -/
 def isoBinaryCofanMk {X Y : C} (c : BinaryCofan X Y) : c ≅ BinaryCofan.mk c.inl c.inr :=
   Cocones.ext (Iso.refl _) fun j => by
-    trace "./././Mathport/Syntax/Translate/Basic.lean:647:16: unsupported tactic `discrete_cases #[]" <;>
+    trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `discrete_cases #[]" <;>
       cases j <;> tidy
 
 /-- If `s` is a limit binary fan over `X` and `Y`, then every pair of morphisms `f : W ⟶ X` and
@@ -561,7 +561,8 @@ theorem prod.diag_map_fst_snd_comp [HasLimitsOfShape (Discrete WalkingPair) C] {
     (g' : X' ⟶ Y') : diag (X ⨯ X') ≫ prod.map (Prod.fst ≫ g) (Prod.snd ≫ g') = prod.map g g' := by
   simp
 
-instance {X : C} [HasBinaryProduct X X] : SplitMono (diag X) where retraction := prod.fst
+instance {X : C} [HasBinaryProduct X X] : IsSplitMono (diag X) :=
+  IsSplitMono.mk' { retraction := prod.fst }
 
 end ProdLemmas
 

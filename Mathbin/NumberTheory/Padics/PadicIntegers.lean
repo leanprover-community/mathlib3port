@@ -72,41 +72,51 @@ instance : Coe ℤ_[p] ℚ_[p] :=
   ⟨Subtype.val⟩
 
 theorem ext {x y : ℤ_[p]} : (x : ℚ_[p]) = y → x = y :=
-  Subtype.ext_iff_val.2
+  Subtype.ext
+
+variable (p)
+
+/-- The padic integers as a subring of the padics -/
+def subring : Subring ℚ_[p] where
+  Carrier := { x : ℚ_[p] | ∥x∥ ≤ 1 }
+  zero_mem' := by
+    norm_num
+  one_mem' := by
+    norm_num
+  add_mem' := fun x y hx hy => (padicNormE.nonarchimedean _ _).trans <| max_le_iff.2 ⟨hx, hy⟩
+  mul_mem' := fun x y hx hy => (padicNormE.mul _ _).trans_le <| mul_le_one hx (norm_nonneg _) hy
+  neg_mem' := fun x hx => (norm_neg _).trans_le hx
+
+@[simp]
+theorem mem_subring_iff {x : ℚ_[p]} : x ∈ subring p ↔ ∥x∥ ≤ 1 :=
+  Iff.rfl
+
+variable {p}
 
 /-- Addition on ℤ_p is inherited from ℚ_p. -/
 instance : Add ℤ_[p] :=
-  ⟨fun ⟨x, hx⟩ ⟨y, hy⟩ => ⟨x + y, le_transₓ (padicNormE.nonarchimedean _ _) (max_le_iff.2 ⟨hx, hy⟩)⟩⟩
+  (by
+    infer_instance : Add (subring p))
 
 /-- Multiplication on ℤ_p is inherited from ℚ_p. -/
 instance : Mul ℤ_[p] :=
-  ⟨fun ⟨x, hx⟩ ⟨y, hy⟩ =>
-    ⟨x * y, by
-      rw [padicNormE.mul]
-      apply mul_le_one <;>
-        · first |
-            assumption|
-            apply norm_nonneg
-          ⟩⟩
+  (by
+    infer_instance : Mul (subring p))
 
 /-- Negation on ℤ_p is inherited from ℚ_p. -/
 instance : Neg ℤ_[p] :=
-  ⟨fun ⟨x, hx⟩ =>
-    ⟨-x, by
-      simpa⟩⟩
+  (by
+    infer_instance : Neg (subring p))
 
 /-- Subtraction on ℤ_p is inherited from ℚ_p. -/
 instance : Sub ℤ_[p] :=
-  ⟨fun ⟨x, hx⟩ ⟨y, hy⟩ =>
-    ⟨x - y, by
-      rw [sub_eq_add_neg]
-      rw [← norm_neg] at hy
-      exact le_transₓ (padicNormE.nonarchimedean _ _) (max_le_iff.2 ⟨hx, hy⟩)⟩⟩
+  (by
+    infer_instance : Sub (subring p))
 
 /-- Zero on ℤ_p is inherited from ℚ_p. -/
 instance : Zero ℤ_[p] :=
-  ⟨⟨0, by
-      norm_num⟩⟩
+  (by
+    infer_instance : Zero (subring p))
 
 instance : Inhabited ℤ_[p] :=
   ⟨0⟩
@@ -125,20 +135,20 @@ theorem val_eq_coe (z : ℤ_[p]) : z.val = z :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_add : ∀ z1 z2 : ℤ_[p], ((z1 + z2 : ℤ_[p]) : ℚ_[p]) = z1 + z2
-  | ⟨_, _⟩, ⟨_, _⟩ => rfl
+theorem coe_add (z1 z2 : ℤ_[p]) : ((z1 + z2 : ℤ_[p]) : ℚ_[p]) = z1 + z2 :=
+  rfl
 
 @[simp, norm_cast]
-theorem coe_mul : ∀ z1 z2 : ℤ_[p], ((z1 * z2 : ℤ_[p]) : ℚ_[p]) = z1 * z2
-  | ⟨_, _⟩, ⟨_, _⟩ => rfl
+theorem coe_mul (z1 z2 : ℤ_[p]) : ((z1 * z2 : ℤ_[p]) : ℚ_[p]) = z1 * z2 :=
+  rfl
 
 @[simp, norm_cast]
-theorem coe_neg : ∀ z1 : ℤ_[p], ((-z1 : ℤ_[p]) : ℚ_[p]) = -z1
-  | ⟨_, _⟩ => rfl
+theorem coe_neg (z1 : ℤ_[p]) : ((-z1 : ℤ_[p]) : ℚ_[p]) = -z1 :=
+  rfl
 
 @[simp, norm_cast]
-theorem coe_sub : ∀ z1 z2 : ℤ_[p], ((z1 - z2 : ℤ_[p]) : ℚ_[p]) = z1 - z2
-  | ⟨_, _⟩, ⟨_, _⟩ => rfl
+theorem coe_sub (z1 z2 : ℤ_[p]) : ((z1 - z2 : ℤ_[p]) : ℚ_[p]) = z1 - z2 :=
+  rfl
 
 @[simp, norm_cast]
 theorem coe_one : ((1 : ℤ_[p]) : ℚ_[p]) = 1 :=
@@ -148,57 +158,33 @@ theorem coe_one : ((1 : ℤ_[p]) : ℚ_[p]) = 1 :=
 theorem coe_zero : ((0 : ℤ_[p]) : ℚ_[p]) = 0 :=
   rfl
 
-instance : AddCommGroupₓ ℤ_[p] := by
-  refine_struct
-      { add := (· + ·), neg := Neg.neg, zero := (0 : ℤ_[p]), sub := Sub.sub,
-        nsmul := @nsmulRec _ ⟨(0 : ℤ_[p])⟩ ⟨(· + ·)⟩, zsmul := @zsmulRec _ ⟨(0 : ℤ_[p])⟩ ⟨(· + ·)⟩ ⟨Neg.neg⟩ } <;>
-    intros <;>
-      try
-          rfl <;>
-        ext <;> simp <;> ring
+instance : AddCommGroupₓ ℤ_[p] :=
+  (by
+    infer_instance : AddCommGroupₓ (subring p))
 
-instance : AddGroupWithOneₓ ℤ_[p] :=
-  { -- TODO: define nat_cast/int_cast so that coe_coe and coe_coe_int are rfl
-    PadicInt.addCommGroup with
-    one := 1 }
-
-instance : Ringₓ ℤ_[p] := by
-  refine_struct
-      { PadicInt.addGroupWithOne with add := (· + ·), mul := (· * ·), neg := Neg.neg, zero := (0 : ℤ_[p]), one := 1,
-        sub := Sub.sub, npow := @npowRec _ ⟨(1 : ℤ_[p])⟩ ⟨(· * ·)⟩ } <;>
-    intros <;>
-      try
-          rfl <;>
-        ext <;> simp <;> ring
+instance : CommRingₓ ℤ_[p] :=
+  (by
+    infer_instance : CommRingₓ (subring p))
 
 @[simp, norm_cast]
-theorem coe_coe : ∀ n : ℕ, ((n : ℤ_[p]) : ℚ_[p]) = n
-  | 0 => rfl
-  | k + 1 => by
-    simp [← coe_coe]
+theorem coe_nat_cast (n : ℕ) : ((n : ℤ_[p]) : ℚ_[p]) = n :=
+  rfl
 
 @[simp, norm_cast]
-theorem coe_coe_int : ∀ z : ℤ, ((z : ℤ_[p]) : ℚ_[p]) = z
-  | Int.ofNat n => by
-    simp
-  | -[1+ n] => by
-    simp
+theorem coe_int_cast (z : ℤ) : ((z : ℤ_[p]) : ℚ_[p]) = z :=
+  rfl
 
 /-- The coercion from ℤ[p] to ℚ[p] as a ring homomorphism. -/
-def Coe.ringHom : ℤ_[p] →+* ℚ_[p] where
-  toFun := (coe : ℤ_[p] → ℚ_[p])
-  map_zero' := rfl
-  map_one' := rfl
-  map_mul' := coe_mul
-  map_add' := coe_add
+def Coe.ringHom : ℤ_[p] →+* ℚ_[p] :=
+  (subring p).Subtype
 
 @[simp, norm_cast]
 theorem coe_pow (x : ℤ_[p]) (n : ℕ) : (↑(x ^ n) : ℚ_[p]) = (↑x : ℚ_[p]) ^ n :=
-  (Coe.ringHom : ℤ_[p] →+* ℚ_[p]).map_pow x n
+  rfl
 
 @[simp]
-theorem mk_coe : ∀ k : ℤ_[p], (⟨k, k.2⟩ : ℤ_[p]) = k
-  | ⟨_, _⟩ => rfl
+theorem mk_coe (k : ℤ_[p]) : (⟨k, k.2⟩ : ℤ_[p]) = k :=
+  Subtype.coe_eta _ _
 
 /-- The inverse of a p-adic integer with norm equal to 1 is also a p-adic integer. Otherwise, the
 inverse is defined to be 0. -/
@@ -267,37 +253,16 @@ instance : HasNorm ℤ_[p] :=
 
 variable {p}
 
-protected theorem mul_comm : ∀ z1 z2 : ℤ_[p], z1 * z2 = z2 * z1
-  | ⟨q1, h1⟩, ⟨q2, h2⟩ =>
-    show (⟨q1 * q2, _⟩ : ℤ_[p]) = ⟨q2 * q1, _⟩ by
-      simp [← _root_.mul_comm]
-
-protected theorem zero_ne_one : (0 : ℤ_[p]) ≠ 1 :=
-  show (⟨(0 : ℚ_[p]), _⟩ : ℤ_[p]) ≠ ⟨(1 : ℚ_[p]), _⟩ from mt Subtype.ext_iff_val.1 zero_ne_one
-
-protected theorem eq_zero_or_eq_zero_of_mul_eq_zero : ∀ a b : ℤ_[p], a * b = 0 → a = 0 ∨ b = 0
-  | ⟨a, ha⟩, ⟨b, hb⟩ => fun h : (⟨a * b, _⟩ : ℤ_[p]) = ⟨0, _⟩ =>
-    have : a * b = 0 := Subtype.ext_iff_val.1 h
-    (mul_eq_zero.1 this).elim
-      (fun h1 =>
-        Or.inl
-          (by
-            simp [← h1] <;> rfl))
-      fun h2 =>
-      Or.inr
-        (by
-          simp [← h2] <;> rfl)
-
 theorem norm_def {z : ℤ_[p]} : ∥z∥ = ∥(z : ℚ_[p])∥ :=
   rfl
 
 variable (p)
 
 instance : NormedCommRing ℤ_[p] :=
-  { PadicInt.ring, PadicInt.metricSpace p with dist_eq := fun ⟨_, _⟩ ⟨_, _⟩ => rfl,
+  { PadicInt.commRing, PadicInt.metricSpace p with dist_eq := fun ⟨_, _⟩ ⟨_, _⟩ => rfl,
     norm_mul := by
       simp [← norm_def],
-    mul_comm := PadicInt.mul_comm, norm := norm }
+    norm := norm }
 
 instance : NormOneClass ℤ_[p] :=
   ⟨norm_def.trans norm_one⟩
@@ -313,9 +278,7 @@ instance is_absolute_value : IsAbsoluteValue fun z : ℤ_[p] => ∥z∥ where
 variable {p}
 
 instance : IsDomain ℤ_[p] :=
-  { PadicInt.normedCommRing p with
-    eq_zero_or_eq_zero_of_mul_eq_zero := fun x y => PadicInt.eq_zero_or_eq_zero_of_mul_eq_zero x y,
-    exists_pair_ne := ⟨0, 1, PadicInt.zero_ne_one⟩ }
+  Function.Injective.is_domain (subring p).Subtype Subtype.coe_injective
 
 end PadicInt
 
@@ -326,8 +289,8 @@ namespace PadicInt
 
 variable {p : ℕ} [Fact p.Prime]
 
-theorem norm_le_one : ∀ z : ℤ_[p], ∥z∥ ≤ 1
-  | ⟨_, h⟩ => h
+theorem norm_le_one (z : ℤ_[p]) : ∥z∥ ≤ 1 :=
+  z.2
 
 @[simp]
 theorem norm_mul (z1 z2 : ℤ_[p]) : ∥z1 * z2∥ = ∥z1∥ * ∥z2∥ := by
@@ -342,11 +305,11 @@ theorem norm_pow (z : ℤ_[p]) : ∀ n : ℕ, ∥z ^ n∥ = ∥z∥ ^ n
     congr
     apply norm_pow
 
-theorem nonarchimedean : ∀ q r : ℤ_[p], ∥q + r∥ ≤ max ∥q∥ ∥r∥
-  | ⟨_, _⟩, ⟨_, _⟩ => padicNormE.nonarchimedean _ _
+theorem nonarchimedean (q r : ℤ_[p]) : ∥q + r∥ ≤ max ∥q∥ ∥r∥ :=
+  padicNormE.nonarchimedean _ _
 
-theorem norm_add_eq_max_of_ne : ∀ {q r : ℤ_[p]}, ∥q∥ ≠ ∥r∥ → ∥q + r∥ = max ∥q∥ ∥r∥
-  | ⟨_, _⟩, ⟨_, _⟩ => padicNormE.add_eq_max_of_ne
+theorem norm_add_eq_max_of_ne {q r : ℤ_[p]} : ∥q∥ ≠ ∥r∥ → ∥q + r∥ = max ∥q∥ ∥r∥ :=
+  padicNormE.add_eq_max_of_ne
 
 theorem norm_eq_of_norm_add_lt_right {z1 z2 : ℤ_[p]} (h : ∥z1 + z2∥ < ∥z2∥) : ∥z1∥ = ∥z2∥ :=
   by_contradiction fun hne =>
@@ -375,14 +338,11 @@ theorem norm_eq_padic_norm {q : ℚ_[p]} (hq : ∥q∥ ≤ 1) : @norm ℤ_[p] _ 
 
 @[simp]
 theorem norm_p : ∥(p : ℤ_[p])∥ = p⁻¹ :=
-  show ∥((p : ℤ_[p]) : ℚ_[p])∥ = p⁻¹ by
-    exact_mod_cast padicNormE.norm_p
+  padicNormE.norm_p
 
 @[simp]
 theorem norm_p_pow (n : ℕ) : ∥(p : ℤ_[p]) ^ n∥ = p ^ (-n : ℤ) :=
-  show ∥((p ^ n : ℤ_[p]) : ℚ_[p])∥ = p ^ (-n : ℤ) by
-    convert padicNormE.norm_p_pow n
-    simp
+  padicNormE.norm_p_pow n
 
 private def cau_seq_to_rat_cau_seq (f : CauSeq ℤ_[p] norm) : CauSeq ℚ_[p] fun a => ∥a∥ :=
   ⟨fun n => f n, fun _ hε => by
@@ -464,7 +424,7 @@ theorem valuation_one : valuation (1 : ℤ_[p]) = 0 :=
 
 @[simp]
 theorem valuation_p : valuation (p : ℤ_[p]) = 1 := by
-  simp [← Valuation, -cast_eq_of_rat_of_nat]
+  simp [← Valuation]
 
 theorem valuation_nonneg (x : ℤ_[p]) : 0 ≤ x.Valuation := by
   by_cases' hx : x = 0
@@ -564,7 +524,7 @@ def unitCoeff {x : ℤ_[p]} (hx : x ≠ 0) : ℤ_[p]ˣ :=
         (by
           exact_mod_cast hp_prime.1.Pos)
         x.valuation,
-      ← norm_eq_pow_val, ← zpow_neg, ← inv_mul_cancel, -cast_eq_of_rat_of_nat]
+      ← norm_eq_pow_val, ← zpow_neg, ← inv_mul_cancel]
   mkUnits hu
 
 @[simp]

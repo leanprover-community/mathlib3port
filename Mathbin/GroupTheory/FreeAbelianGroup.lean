@@ -141,7 +141,7 @@ end
 
 attribute [local instance] QuotientGroup.leftRel
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on {C : FreeAbelianGroup α → Prop} (z : FreeAbelianGroup α) (C0 : C 0) (C1 : ∀ x, C <| of x)
     (Cn : ∀ x, C (of x) → C (-of x)) (Cp : ∀ x y, C x → C y → C (x + y)) : C z :=
   (Quotientₓ.induction_on' z) fun x =>
@@ -181,7 +181,7 @@ instance : Monadₓ FreeAbelianGroup.{u} where
   pure := fun α => of
   bind := fun α β x f => lift f x
 
-@[elab_as_eliminator]
+@[elabAsElim]
 protected theorem induction_on' {C : FreeAbelianGroup α → Prop} (z : FreeAbelianGroup α) (C0 : C 0)
     (C1 : ∀ x, C <| pure x) (Cn : ∀ x, C (pure x) → C (-pure x)) (Cp : ∀ x y, C x → C y → C (x + y)) : C z :=
   FreeAbelianGroup.induction_on z C0 C1 Cn Cp

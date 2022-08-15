@@ -54,23 +54,23 @@ open TopologicalSpace Manifold
 /-! ### Definition of smooth functions between manifolds -/
 
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜]
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜]
   -- declare a smooth manifold `M` over the pair `(E, H)`.
   {E : Type _}
-  [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _}
+  [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _}
   [TopologicalSpace M] [ChartedSpace H M] [Is : SmoothManifoldWithCorners I M]
   -- declare a smooth manifold `M'` over the pair `(E', H')`.
   {E' : Type _}
-  [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H'] (I' : ModelWithCorners 𝕜 E' H') {M' : Type _}
-  [TopologicalSpace M'] [ChartedSpace H' M'] [I's : SmoothManifoldWithCorners I' M']
+  [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H'] (I' : ModelWithCorners 𝕜 E' H')
+  {M' : Type _} [TopologicalSpace M'] [ChartedSpace H' M'] [I's : SmoothManifoldWithCorners I' M']
   -- declare a smooth manifold `N` over the pair `(F, G)`.
   {F : Type _}
-  [NormedGroup F] [NormedSpace 𝕜 F] {G : Type _} [TopologicalSpace G] {J : ModelWithCorners 𝕜 F G} {N : Type _}
+  [NormedAddCommGroup F] [NormedSpace 𝕜 F] {G : Type _} [TopologicalSpace G] {J : ModelWithCorners 𝕜 F G} {N : Type _}
   [TopologicalSpace N] [ChartedSpace G N] [Js : SmoothManifoldWithCorners J N]
   -- declare a smooth manifold `N'` over the pair `(F', G')`.
   {F' : Type _}
-  [NormedGroup F'] [NormedSpace 𝕜 F'] {G' : Type _} [TopologicalSpace G'] {J' : ModelWithCorners 𝕜 F' G'} {N' : Type _}
-  [TopologicalSpace N'] [ChartedSpace G' N'] [J's : SmoothManifoldWithCorners J' N']
+  [NormedAddCommGroup F'] [NormedSpace 𝕜 F'] {G' : Type _} [TopologicalSpace G'] {J' : ModelWithCorners 𝕜 F' G'}
+  {N' : Type _} [TopologicalSpace N'] [ChartedSpace G' N'] [J's : SmoothManifoldWithCorners J' N']
   -- declare functions, sets, points and smoothness indices
   {f f₁ : M → M'}
   {s s₁ t : Set M} {x : M} {m n : WithTop ℕ}
@@ -80,6 +80,19 @@ when read in the model vector space. This property will be lifted to manifolds t
 functions between manifolds. -/
 def ContDiffWithinAtProp (n : WithTop ℕ) (f : H → H') (s : Set H) (x : H) : Prop :=
   ContDiffWithinAt 𝕜 n (I' ∘ f ∘ I.symm) (I.symm ⁻¹' s ∩ Range I) (I x)
+
+theorem cont_diff_within_at_prop_self_source {f : E → H'} {s : Set E} {x : E} :
+    ContDiffWithinAtProp 𝓘(𝕜, E) I' n f s x ↔ ContDiffWithinAt 𝕜 n (I' ∘ f) s x := by
+  simp_rw [ContDiffWithinAtProp, model_with_corners_self_coe, range_id, inter_univ]
+  rfl
+
+theorem cont_diff_within_at_prop_self {f : E → E'} {s : Set E} {x : E} :
+    ContDiffWithinAtProp 𝓘(𝕜, E) 𝓘(𝕜, E') n f s x ↔ ContDiffWithinAt 𝕜 n f s x :=
+  cont_diff_within_at_prop_self_source 𝓘(𝕜, E')
+
+theorem cont_diff_within_at_prop_self_target {f : H → E'} {s : Set H} {x : H} :
+    ContDiffWithinAtProp I 𝓘(𝕜, E') n f s x ↔ ContDiffWithinAt 𝕜 n (f ∘ I.symm) (I.symm ⁻¹' s ∩ Range I) (I x) :=
+  Iff.rfl
 
 /-- Being `Cⁿ` in the model space is a local property, invariant under smooth maps. Therefore,
 it will lift nicely to manifolds. -/
@@ -96,7 +109,7 @@ theorem cont_diff_within_at_local_invariant_prop (n : WithTop ℕ) :
         rw [ModelWithCorners.left_inv]
         exact IsOpen.mem_nhds u_open xu
       apply ContinuousAt.preimage_mem_nhds I.continuous_symm.continuous_at this,
-    right_invariance := by
+    right_invariance' := by
       intro s x f e he hx h
       rw [ContDiffWithinAtProp] at h⊢
       have : I x = (I ∘ e.symm ∘ I.symm) (I (e x)) := by
@@ -104,7 +117,7 @@ theorem cont_diff_within_at_local_invariant_prop (n : WithTop ℕ) :
       rw [this] at h
       have : I (e x) ∈ I.symm ⁻¹' e.target ∩ range I := by
         simp' only [← hx] with mfld_simps
-      have := ((mem_groupoid_of_pregroupoid.2 he).2.ContDiffWithinAt this).ofLe le_top
+      have := ((mem_groupoid_of_pregroupoid.2 he).2.ContDiffWithinAt this).of_le le_top
       convert (h.comp' _ this).mono_of_mem _ using 1
       · ext y
         simp' only with mfld_simps
@@ -128,7 +141,7 @@ theorem cont_diff_within_at_local_invariant_prop (n : WithTop ℕ) :
       rw [ContDiffWithinAtProp] at h⊢
       have A : (I' ∘ f ∘ I.symm) (I x) ∈ I'.symm ⁻¹' e'.source ∩ range I' := by
         simp' only [← hx] with mfld_simps
-      have := ((mem_groupoid_of_pregroupoid.2 he').1.ContDiffWithinAt A).ofLe le_top
+      have := ((mem_groupoid_of_pregroupoid.2 he').1.ContDiffWithinAt A).of_le le_top
       convert this.comp _ h _
       · ext y
         simp' only with mfld_simps
@@ -250,7 +263,7 @@ theorem Smooth.smooth_at (h : Smooth I I' f) : SmoothAt I I' f x :=
 theorem cont_mdiff_within_at_univ : ContMdiffWithinAt I I' n f Univ x ↔ ContMdiffAt I I' n f x :=
   Iff.rfl
 
-theorem smooth_at_univ : SmoothWithinAt I I' f Univ x ↔ SmoothAt I I' f x :=
+theorem smooth_within_at_univ : SmoothWithinAt I I' f Univ x ↔ SmoothAt I I' f x :=
   cont_mdiff_within_at_univ
 
 theorem cont_mdiff_on_univ : ContMdiffOn I I' n f Univ ↔ ContMdiff I I' n f := by
@@ -320,6 +333,14 @@ theorem smooth_within_at_iff_target :
     SmoothWithinAt I I' f s x ↔ ContinuousWithinAt f s x ∧ SmoothWithinAt I 𝓘(𝕜, E') (extChartAt I' (f x) ∘ f) s x :=
   cont_mdiff_within_at_iff_target
 
+theorem cont_mdiff_at_iff_target {x : M} :
+    ContMdiffAt I I' n f x ↔ ContinuousAt f x ∧ ContMdiffAt I 𝓘(𝕜, E') n (extChartAt I' (f x) ∘ f) x := by
+  rw [ContMdiffAt, ContMdiffAt, cont_mdiff_within_at_iff_target, continuous_within_at_univ]
+
+theorem smooth_at_iff_target {x : M} :
+    SmoothAt I I' f x ↔ ContinuousAt f x ∧ SmoothAt I 𝓘(𝕜, E') (extChartAt I' (f x) ∘ f) x :=
+  cont_mdiff_at_iff_target
+
 include Is I's
 
 /-- One can reformulate smoothness within a set at a point as continuity within this set at this
@@ -360,7 +381,75 @@ theorem cont_mdiff_at_iff_of_mem_source {x' : M} {y : M'} (hx : x' ∈ (chartAt 
   (cont_mdiff_within_at_iff_of_mem_source hx hy).trans <| by
     rw [continuous_within_at_univ, preimage_univ, univ_inter]
 
+omit Is
+
+theorem cont_mdiff_within_at_iff_target_of_mem_source {x : M} {y : M'} (hy : f x ∈ (chartAt H' y).Source) :
+    ContMdiffWithinAt I I' n f s x ↔
+      ContinuousWithinAt f s x ∧ ContMdiffWithinAt I 𝓘(𝕜, E') n (extChartAt I' y ∘ f) s x :=
+  by
+  simp_rw [ContMdiffWithinAt]
+  rw
+    [(cont_diff_within_at_local_invariant_prop I I' n).lift_prop_within_at_indep_chart_target
+      (chart_mem_maximal_atlas I' y) hy,
+    and_congr_right]
+  intro hf
+  simp_rw [StructureGroupoid.lift_prop_within_at_self_target]
+  simp_rw [((chart_at H' y).ContinuousAt hy).comp_continuous_within_at hf]
+  rw [← ext_chart_at_source I'] at hy
+  simp_rw [(ext_chart_at_continuous_at' I' _ hy).comp_continuous_within_at hf]
+  rfl
+
+theorem cont_mdiff_at_iff_target_of_mem_source {x : M} {y : M'} (hy : f x ∈ (chartAt H' y).Source) :
+    ContMdiffAt I I' n f x ↔ ContinuousAt f x ∧ ContMdiffAt I 𝓘(𝕜, E') n (extChartAt I' y ∘ f) x := by
+  rw [ContMdiffAt, cont_mdiff_within_at_iff_target_of_mem_source hy, continuous_within_at_univ, ContMdiffAt]
+  infer_instance
+
 omit I's
+
+variable (I)
+
+theorem ModelWithCorners.symm_continuous_within_at_comp_right_iff {X} [TopologicalSpace X] {f : H → X} {s : Set H}
+    {x : H} : ContinuousWithinAt (f ∘ I.symm) (I.symm ⁻¹' s ∩ Range I) (I x) ↔ ContinuousWithinAt f s x := by
+  refine' ⟨fun h => _, fun h => _⟩
+  · have := h.comp I.continuous_within_at (maps_to_preimage _ _)
+    simp_rw [preimage_inter, preimage_preimage, I.left_inv, preimage_id', preimage_range, inter_univ] at this
+    rwa [Function.comp.assoc, I.symm_comp_self] at this
+    
+  · rw [← I.left_inv x] at h
+    exact h.comp I.continuous_within_at_symm (inter_subset_left _ _)
+    
+
+variable {I}
+
+theorem ext_chart_at_symm_continuous_within_at_comp_right_iff {X} [TopologicalSpace X] {f : M → X} {s : Set M}
+    {x x' : M} :
+    ContinuousWithinAt (f ∘ (extChartAt I x).symm) ((extChartAt I x).symm ⁻¹' s ∩ Range I) (extChartAt I x x') ↔
+      ContinuousWithinAt (f ∘ (chartAt H x).symm) ((chartAt H x).symm ⁻¹' s) (chartAt H x x') :=
+  by
+  convert I.symm_continuous_within_at_comp_right_iff <;> rfl
+
+include Is
+
+theorem cont_mdiff_within_at_iff_source_of_mem_source {x' : M} (hx' : x' ∈ (chartAt H x).Source) :
+    ContMdiffWithinAt I I' n f s x' ↔
+      ContMdiffWithinAt 𝓘(𝕜, E) I' n (f ∘ (extChartAt I x).symm) ((extChartAt I x).symm ⁻¹' s ∩ Range I)
+        (extChartAt I x x') :=
+  by
+  have h2x' := hx'
+  rw [← ext_chart_at_source I] at h2x'
+  simp_rw [ContMdiffWithinAt,
+    (cont_diff_within_at_local_invariant_prop I I' n).lift_prop_within_at_indep_chart_source
+      (chart_mem_maximal_atlas I x) hx',
+    StructureGroupoid.lift_prop_within_at_self_source, ext_chart_at_symm_continuous_within_at_comp_right_iff,
+    cont_diff_within_at_prop_self_source, ContDiffWithinAtProp, Function.comp, (chart_at H x).left_inv hx',
+    (extChartAt I x).left_inv h2x']
+  rfl
+
+theorem cont_mdiff_at_iff_source_of_mem_source {x' : M} (hx' : x' ∈ (chartAt H x).Source) :
+    ContMdiffAt I I' n f x' ↔
+      ContMdiffWithinAt 𝓘(𝕜, E) I' n (f ∘ (extChartAt I x).symm) (Range I) (extChartAt I x x') :=
+  by
+  simp_rw [ContMdiffAt, cont_mdiff_within_at_iff_source_of_mem_source hx', preimage_univ, univ_inter]
 
 theorem cont_mdiff_at_ext_chart_at' {x' : M} (h : x' ∈ (chartAt H x).Source) :
     ContMdiffAt I 𝓘(𝕜, E) n (extChartAt I x) x' := by
@@ -379,6 +468,36 @@ theorem cont_mdiff_at_ext_chart_at : ContMdiffAt I 𝓘(𝕜, E) n (extChartAt I
   cont_mdiff_at_ext_chart_at' <| mem_chart_source H x
 
 include I's
+
+/-- If the set where you want `f` to be smooth lies entirely in a single chart, and `f` maps it
+  into a single chart, the smoothness of `f` on that set can be expressed by purely looking in
+  these charts.
+  Note: this lemma uses `ext_chart_at I x '' s` instead of `(ext_chart_at I x).symm ⁻¹' s` to ensure
+  that this set lies in `(ext_chart_at I x).target`. -/
+theorem cont_mdiff_on_iff_of_subset_source {x : M} {y : M'} (hs : s ⊆ (chartAt H x).Source)
+    (h2s : MapsTo f s (chartAt H' y).Source) :
+    ContMdiffOn I I' n f s ↔
+      ContinuousOn f s ∧ ContDiffOn 𝕜 n (extChartAt I' y ∘ f ∘ (extChartAt I x).symm) (extChartAt I x '' s) :=
+  by
+  constructor
+  · refine' fun H => ⟨fun x hx => (H x hx).1, _⟩
+    rintro _ ⟨x', hx', rfl⟩
+    exact
+      ((cont_mdiff_within_at_iff_of_mem_source (hs hx') (h2s.image_subset <| mem_image_of_mem f hx')).mp
+              (H _ hx')).2.mono
+        (maps_to_ext_chart_at I x hs).image_subset
+    
+  · rintro ⟨h1, h2⟩ x' hx'
+    refine'
+      (cont_mdiff_within_at_iff_of_mem_source (hs hx') (h2s.image_subset <| mem_image_of_mem f hx')).mpr
+        ⟨h1.continuous_within_at hx', _⟩
+    refine' (h2 _ <| mem_image_of_mem _ hx').mono_of_mem _
+    rw [← ext_chart_at_source I] at hs
+    rw [(extChartAt I x).image_eq_target_inter_inv_preimage hs]
+    refine' inter_mem _ (ext_chart_preimage_mem_nhds_within' I x (hs hx') self_mem_nhds_within)
+    have := ext_chart_at_target_mem_nhds_within' I x (hs hx')
+    refine' nhds_within_mono _ (inter_subset_right _ _) this
+    
 
 /-- One can reformulate smoothness on a set as continuity on this set, and smoothness in any
 extended chart. -/
@@ -490,21 +609,21 @@ omit Is I's
 
 
 theorem ContMdiffWithinAt.of_le (hf : ContMdiffWithinAt I I' n f s x) (le : m ≤ n) : ContMdiffWithinAt I I' m f s x :=
-  ⟨hf.1, hf.2.ofLe le⟩
+  ⟨hf.1, hf.2.of_le le⟩
 
 theorem ContMdiffAt.of_le (hf : ContMdiffAt I I' n f x) (le : m ≤ n) : ContMdiffAt I I' m f x :=
   ContMdiffWithinAt.of_le hf le
 
 theorem ContMdiffOn.of_le (hf : ContMdiffOn I I' n f s) (le : m ≤ n) : ContMdiffOn I I' m f s := fun x hx =>
-  (hf x hx).ofLe le
+  (hf x hx).of_le le
 
-theorem ContMdiff.of_le (hf : ContMdiff I I' n f) (le : m ≤ n) : ContMdiff I I' m f := fun x => (hf x).ofLe le
+theorem ContMdiff.of_le (hf : ContMdiff I I' n f) (le : m ≤ n) : ContMdiff I I' m f := fun x => (hf x).of_le le
 
 /-! ### Deducing smoothness from smoothness one step beyond -/
 
 
 theorem ContMdiffWithinAt.of_succ {n : ℕ} (h : ContMdiffWithinAt I I' n.succ f s x) : ContMdiffWithinAt I I' n f s x :=
-  h.ofLe (WithTop.coe_le_coe.2 (Nat.le_succₓ n))
+  h.of_le (WithTop.coe_le_coe.2 (Nat.le_succₓ n))
 
 theorem ContMdiffAt.of_succ {n : ℕ} (h : ContMdiffAt I I' n.succ f x) : ContMdiffAt I I' n f x :=
   ContMdiffWithinAt.of_succ h
@@ -514,7 +633,7 @@ theorem ContMdiffOn.of_succ {n : ℕ} (h : ContMdiffOn I I' n.succ f s) : ContMd
 
 theorem ContMdiff.of_succ {n : ℕ} (h : ContMdiff I I' n.succ f) : ContMdiff I I' n f := fun x => (h x).of_succ
 
-/-! ### Deducing continuity from smoothness-/
+/-! ### Deducing continuity from smoothness -/
 
 
 theorem ContMdiffWithinAt.continuous_within_at (hf : ContMdiffWithinAt I I' n f s x) : ContinuousWithinAt f s x :=
@@ -574,14 +693,14 @@ theorem cont_mdiff_at_top : SmoothAt I I' f x ↔ ∀ n : ℕ, ContMdiffAt I I' 
   cont_mdiff_within_at_top
 
 theorem cont_mdiff_on_top : SmoothOn I I' f s ↔ ∀ n : ℕ, ContMdiffOn I I' n f s :=
-  ⟨fun h n => h.ofLe le_top, fun h x hx => cont_mdiff_within_at_top.2 fun n => h n x hx⟩
+  ⟨fun h n => h.of_le le_top, fun h x hx => cont_mdiff_within_at_top.2 fun n => h n x hx⟩
 
 theorem cont_mdiff_top : Smooth I I' f ↔ ∀ n : ℕ, ContMdiff I I' n f :=
-  ⟨fun h n => h.ofLe le_top, fun h x => cont_mdiff_within_at_top.2 fun n => h n x⟩
+  ⟨fun h n => h.of_le le_top, fun h x => cont_mdiff_within_at_top.2 fun n => h n x⟩
 
 theorem cont_mdiff_within_at_iff_nat :
     ContMdiffWithinAt I I' n f s x ↔ ∀ m : ℕ, (m : WithTop ℕ) ≤ n → ContMdiffWithinAt I I' m f s x := by
-  refine' ⟨fun h m hm => h.ofLe hm, fun h => _⟩
+  refine' ⟨fun h m hm => h.of_le hm, fun h => _⟩
   cases n
   · exact cont_mdiff_within_at_top.2 fun n => h n le_top
     
@@ -622,6 +741,12 @@ theorem ContMdiffWithinAt.cont_mdiff_at (h : ContMdiffWithinAt I I' n f s x) (ht
 
 theorem SmoothWithinAt.smooth_at (h : SmoothWithinAt I I' f s x) (ht : s ∈ 𝓝 x) : SmoothAt I I' f x :=
   ContMdiffWithinAt.cont_mdiff_at h ht
+
+theorem ContMdiffOn.cont_mdiff_at (h : ContMdiffOn I I' n f s) (hx : s ∈ 𝓝 x) : ContMdiffAt I I' n f x :=
+  (h x (mem_of_mem_nhds hx)).ContMdiffAt hx
+
+theorem SmoothOn.smooth_at (h : SmoothOn I I' f s) (hx : s ∈ 𝓝 x) : SmoothAt I I' f x :=
+  h.ContMdiffAt hx
 
 include Is
 
@@ -728,6 +853,16 @@ a neighborhood of this point. -/
 theorem cont_mdiff_at_iff_cont_mdiff_on_nhds {n : ℕ} : ContMdiffAt I I' n f x ↔ ∃ u ∈ 𝓝 x, ContMdiffOn I I' n f u := by
   simp [cont_mdiff_within_at_univ, ← cont_mdiff_within_at_iff_cont_mdiff_on_nhds, ← nhds_within_univ]
 
+/-- Note: This does not hold for `n = ∞`. `f` being `C^∞` at `x` means that for every `n`, `f` is
+`C^n` on some neighborhood of `x`, but this neighborhood can depend on `n`. -/
+theorem cont_mdiff_at_iff_cont_mdiff_at_nhds {n : ℕ} : ContMdiffAt I I' n f x ↔ ∀ᶠ x' in 𝓝 x, ContMdiffAt I I' n f x' :=
+  by
+  refine' ⟨_, fun h => h.self_of_nhds⟩
+  rw [cont_mdiff_at_iff_cont_mdiff_on_nhds]
+  rintro ⟨u, hu, h⟩
+  refine' (eventually_mem_nhds.mpr hu).mono fun x' hx' => _
+  exact (h x' <| mem_of_mem_nhds hx').ContMdiffAt hx'
+
 omit Is I's
 
 /-! ### Congruence lemmas -/
@@ -778,7 +913,7 @@ theorem cont_mdiff_of_locally_cont_mdiff_on (h : ∀ x, ∃ u, IsOpen u ∧ x �
 
 section Composition
 
-variable {E'' : Type _} [NormedGroup E''] [NormedSpace 𝕜 E''] {H'' : Type _} [TopologicalSpace H'']
+variable {E'' : Type _} [NormedAddCommGroup E''] [NormedSpace 𝕜 E''] {H'' : Type _} [TopologicalSpace H'']
   {I'' : ModelWithCorners 𝕜 E'' H''} {M'' : Type _} [TopologicalSpace M''] [ChartedSpace H'' M'']
 
 /-- The composition of `C^n` functions within domains at points is `C^n`. -/
@@ -1129,13 +1264,12 @@ theorem ContMdiffOn.cont_mdiff_on_tangent_map_within_aux {f : H → H'} {s : Set
   have U' : UniqueDiffOn 𝕜 (range I ∩ I.symm ⁻¹' s) := by
     intro y hy
     simpa only [← UniqueMdiffOn, ← UniqueMdiffWithinAt, ← hy.1, ← inter_comm] with mfld_simps using hs (I.symm y) hy.2
-  have U : UniqueDiffOn 𝕜 ((range I ∩ I.symm ⁻¹' s) ×ˢ (univ : Set E)) := U'.prod unique_diff_on_univ
   rw [cont_mdiff_on_iff]
   refine' ⟨hf.continuous_on_tangent_map_within_aux one_le_n hs, fun p q => _⟩
   have A :
-    range I ×ˢ (univ : Set E) ∩
+    range I ×ˢ univ ∩
         ((Equivₓ.sigmaEquivProd H E).symm ∘ fun p : E × E => (I.symm p.fst, p.snd)) ⁻¹' (TangentBundle.proj I H ⁻¹' s) =
-      (range I ∩ I.symm ⁻¹' s) ×ˢ (univ : Set E) :=
+      (range I ∩ I.symm ⁻¹' s) ×ˢ univ :=
     by
     ext ⟨x, v⟩
     simp' only with mfld_simps
@@ -1143,22 +1277,22 @@ theorem ContMdiffOn.cont_mdiff_on_tangent_map_within_aux {f : H → H'} {s : Set
     ContDiffOn 𝕜 m
       (((fun p : H' × E' => (I' p.fst, p.snd)) ∘ Equivₓ.sigmaEquivProd H' E') ∘
         tangentMapWithin I I' f s ∘ (Equivₓ.sigmaEquivProd H E).symm ∘ fun p : E × E => (I.symm p.fst, p.snd))
-      ((range ⇑I ∩ ⇑I.symm ⁻¹' s) ×ˢ (univ : Set E))
+      ((range ⇑I ∩ ⇑I.symm ⁻¹' s) ×ˢ univ)
   · simpa [← A] using h
     
   change
     ContDiffOn 𝕜 m
       (fun p : E × E => ((I' (f (I.symm p.fst)), (mfderivWithin I I' f s (I.symm p.fst) : E → E') p.snd) : E' × E'))
-      ((range I ∩ I.symm ⁻¹' s) ×ˢ (univ : Set E))
+      ((range I ∩ I.symm ⁻¹' s) ×ˢ univ)
   -- check that all bits in this formula are `C^n`
   have hf' := cont_mdiff_on_iff.1 hf
   have A : ContDiffOn 𝕜 m (I' ∘ f ∘ I.symm) (range I ∩ I.symm ⁻¹' s) := by
-    simpa only with mfld_simps using (hf'.2 (I.symm 0) (I'.symm 0)).ofLe m_le_n
-  have B : ContDiffOn 𝕜 m ((I' ∘ f ∘ I.symm) ∘ Prod.fst) ((range I ∩ I.symm ⁻¹' s) ×ˢ (univ : Set E)) :=
+    simpa only with mfld_simps using (hf'.2 (I.symm 0) (I'.symm 0)).of_le m_le_n
+  have B : ContDiffOn 𝕜 m ((I' ∘ f ∘ I.symm) ∘ Prod.fst) ((range I ∩ I.symm ⁻¹' s) ×ˢ univ) :=
     A.comp cont_diff_fst.cont_diff_on (prod_subset_preimage_fst _ _)
   suffices C :
     ContDiffOn 𝕜 m (fun p : E × E => (fderivWithin 𝕜 (I' ∘ f ∘ I.symm) (I.symm ⁻¹' s ∩ range I) p.1 : _) p.2)
-      ((range I ∩ I.symm ⁻¹' s) ×ˢ (univ : Set E))
+      ((range I ∩ I.symm ⁻¹' s) ×ˢ univ)
   · apply ContDiffOn.prod B _
     apply C.congr fun p hp => _
     simp' only with mfld_simps  at hp
@@ -1416,6 +1550,20 @@ end tangentMap
 namespace BasicSmoothVectorBundleCore
 
 variable (Z : BasicSmoothVectorBundleCore I M E')
+
+/-- A version of `cont_mdiff_at_iff_target` when the codomain is the total space of
+  a `basic_smooth_vector_bundle_core`. The continuity condition in the RHS is weaker. -/
+theorem cont_mdiff_at_iff_target {f : N → Z.toTopologicalVectorBundleCore.TotalSpace} {x : N} {n : WithTop ℕ} :
+    ContMdiffAt J (I.Prod 𝓘(𝕜, E')) n f x ↔
+      ContinuousAt (Bundle.TotalSpace.proj ∘ f) x ∧
+        ContMdiffAt J 𝓘(𝕜, E × E') n (extChartAt (I.Prod 𝓘(𝕜, E')) (f x) ∘ f) x :=
+  by
+  let Z' := Z.to_topological_vector_bundle_core
+  rw [cont_mdiff_at_iff_target, And.congr_left_iff]
+  refine' fun hf => ⟨fun h => Z'.continuous_proj.continuous_at.comp h, fun h => _⟩
+  exact
+    (Z'.local_triv ⟨chart_at _ (f x).1, chart_mem_atlas _ _⟩).toFiberBundleTrivialization.continuous_at_of_comp_left h
+      (mem_chart_source _ _) (h.prod hf.continuous_at.snd)
 
 theorem cont_mdiff_proj : ContMdiff (I.Prod 𝓘(𝕜, E')) I n Z.toTopologicalVectorBundleCore.proj := by
   intro x
@@ -1809,7 +1957,7 @@ use `𝓘(𝕜, Π i, F i)` as the model space.
 -/
 
 
-variable {ι : Type _} [Fintype ι] {Fi : ι → Type _} [∀ i, NormedGroup (Fi i)] [∀ i, NormedSpace 𝕜 (Fi i)]
+variable {ι : Type _} [Fintype ι] {Fi : ι → Type _} [∀ i, NormedAddCommGroup (Fi i)] [∀ i, NormedSpace 𝕜 (Fi i)]
   {φ : M → ∀ i, Fi i}
 
 theorem cont_mdiff_within_at_pi_space :
@@ -1853,21 +2001,39 @@ theorem ContinuousLinearMap.cont_mdiff (L : E →L[𝕜] F) : ContMdiff 𝓘(�
 /-! ### Smoothness of standard operations -/
 
 
-variable {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V]
+variable {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V]
 
 /-- On any vector space, multiplication by a scalar is a smooth operation. -/
 theorem smooth_smul : Smooth (𝓘(𝕜).Prod 𝓘(𝕜, V)) 𝓘(𝕜, V) fun p : 𝕜 × V => p.1 • p.2 :=
   smooth_iff.2 ⟨continuous_smul, fun x y => cont_diff_smul.ContDiffOn⟩
 
-theorem Smooth.smul {N : Type _} [TopologicalSpace N] [ChartedSpace H N] {f : N → 𝕜} {g : N → V} (hf : Smooth I 𝓘(𝕜) f)
-    (hg : Smooth I 𝓘(𝕜, V) g) : Smooth I 𝓘(𝕜, V) fun p => f p • g p :=
-  smooth_smul.comp (hf.prod_mk hg)
+theorem ContMdiffWithinAt.smul {f : M → 𝕜} {g : M → V} (hf : ContMdiffWithinAt I 𝓘(𝕜) n f s x)
+    (hg : ContMdiffWithinAt I 𝓘(𝕜, V) n g s x) : ContMdiffWithinAt I 𝓘(𝕜, V) n (fun p => f p • g p) s x :=
+  (smooth_smul.of_le le_top).ContMdiffAt.comp_cont_mdiff_within_at x (hf.prod_mk hg)
 
-theorem SmoothOn.smul {N : Type _} [TopologicalSpace N] [ChartedSpace H N] {f : N → 𝕜} {g : N → V} {s : Set N}
-    (hf : SmoothOn I 𝓘(𝕜) f s) (hg : SmoothOn I 𝓘(𝕜, V) g s) : SmoothOn I 𝓘(𝕜, V) (fun p => f p • g p) s :=
-  smooth_smul.comp_smooth_on (hf.prod_mk hg)
+theorem ContMdiffAt.smul {f : M → 𝕜} {g : M → V} (hf : ContMdiffAt I 𝓘(𝕜) n f x) (hg : ContMdiffAt I 𝓘(𝕜, V) n g x) :
+    ContMdiffAt I 𝓘(𝕜, V) n (fun p => f p • g p) x :=
+  hf.smul hg
 
-theorem SmoothAt.smul {N : Type _} [TopologicalSpace N] [ChartedSpace H N] {f : N → 𝕜} {g : N → V} {x : N}
-    (hf : SmoothAt I 𝓘(𝕜) f x) (hg : SmoothAt I 𝓘(𝕜, V) g x) : SmoothAt I 𝓘(𝕜, V) (fun p => f p • g p) x :=
-  smooth_smul.SmoothAt.comp _ (hf.prod_mk hg)
+theorem ContMdiffOn.smul {f : M → 𝕜} {g : M → V} (hf : ContMdiffOn I 𝓘(𝕜) n f s) (hg : ContMdiffOn I 𝓘(𝕜, V) n g s) :
+    ContMdiffOn I 𝓘(𝕜, V) n (fun p => f p • g p) s := fun x hx => (hf x hx).smul (hg x hx)
+
+theorem ContMdiff.smul {f : M → 𝕜} {g : M → V} (hf : ContMdiff I 𝓘(𝕜) n f) (hg : ContMdiff I 𝓘(𝕜, V) n g) :
+    ContMdiff I 𝓘(𝕜, V) n fun p => f p • g p := fun x => (hf x).smul (hg x)
+
+theorem SmoothWithinAt.smul {f : M → 𝕜} {g : M → V} (hf : SmoothWithinAt I 𝓘(𝕜) f s x)
+    (hg : SmoothWithinAt I 𝓘(𝕜, V) g s x) : SmoothWithinAt I 𝓘(𝕜, V) (fun p => f p • g p) s x :=
+  hf.smul hg
+
+theorem SmoothAt.smul {f : M → 𝕜} {g : M → V} (hf : SmoothAt I 𝓘(𝕜) f x) (hg : SmoothAt I 𝓘(𝕜, V) g x) :
+    SmoothAt I 𝓘(𝕜, V) (fun p => f p • g p) x :=
+  hf.smul hg
+
+theorem SmoothOn.smul {f : M → 𝕜} {g : M → V} (hf : SmoothOn I 𝓘(𝕜) f s) (hg : SmoothOn I 𝓘(𝕜, V) g s) :
+    SmoothOn I 𝓘(𝕜, V) (fun p => f p • g p) s :=
+  hf.smul hg
+
+theorem Smooth.smul {f : M → 𝕜} {g : M → V} (hf : Smooth I 𝓘(𝕜) f) (hg : Smooth I 𝓘(𝕜, V) g) :
+    Smooth I 𝓘(𝕜, V) fun p => f p • g p :=
+  hf.smul hg
 

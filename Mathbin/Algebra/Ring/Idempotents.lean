@@ -29,7 +29,7 @@ projection, idempotent
 variable {M N S M₀ M₁ R G G₀ : Type _}
 
 variable [Mul M] [Monoidₓ N] [Semigroupₓ S] [MulZeroClassₓ M₀] [MulOneClassₓ M₁] [NonAssocRing R] [Groupₓ G]
-  [GroupWithZeroₓ G₀]
+  [CancelMonoidWithZero G₀]
 
 /-- An element `p` is said to be idempotent if `p * p = p`
 -/
@@ -80,11 +80,7 @@ theorem iff_eq_zero_or_one {p : G₀} : IsIdempotentElem p ↔ p = 0 ∨ p = 1 :
   refine'
     Iff.intro (fun h => or_iff_not_imp_left.mpr fun hp => _) fun h =>
       h.elim (fun hp => hp.symm ▸ zero) fun hp => hp.symm ▸ one
-  lift p to G₀ˣ using IsUnit.mk0 _ hp
-  exact_mod_cast
-    iff_eq_one.mp
-      (by
-        exact_mod_cast h.eq)
+  exact mul_left_cancel₀ hp (h.trans (mul_oneₓ p).symm)
 
 /-! ### Instances on `subtype is_idempotent_elem` -/
 

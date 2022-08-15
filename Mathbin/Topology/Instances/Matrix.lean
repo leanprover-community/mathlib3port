@@ -250,14 +250,14 @@ variable [Semiringₓ α] [AddCommMonoidₓ R] [TopologicalSpace R] [Module α R
 
 theorem HasSum.matrix_transpose {f : X → Matrix m n R} {a : Matrix m n R} (hf : HasSum f a) :
     HasSum (fun x => (f x)ᵀ) aᵀ :=
-  (hf.map (@Matrix.transposeAddEquiv m n R _) continuous_id.matrix_transpose : _)
+  (hf.map (Matrix.transposeAddEquiv m n R) continuous_id.matrix_transpose : _)
 
 theorem Summable.matrix_transpose {f : X → Matrix m n R} (hf : Summable f) : Summable fun x => (f x)ᵀ :=
   hf.HasSum.matrix_transpose.Summable
 
 @[simp]
 theorem summable_matrix_transpose {f : X → Matrix m n R} : (Summable fun x => (f x)ᵀ) ↔ Summable f :=
-  (Summable.map_iff_of_equiv (@Matrix.transposeAddEquiv m n R _) (@continuous_id (Matrix m n R) _).matrix_transpose
+  (Summable.map_iff_of_equiv (Matrix.transposeAddEquiv m n R) (@continuous_id (Matrix m n R) _).matrix_transpose
     continuous_id.matrix_transpose :
     _)
 
@@ -271,7 +271,7 @@ theorem Matrix.transpose_tsum [T2Space R] {f : X → Matrix m n R} : (∑' x, f 
 
 theorem HasSum.matrix_conj_transpose [StarAddMonoid R] [HasContinuousStar R] {f : X → Matrix m n R} {a : Matrix m n R}
     (hf : HasSum f a) : HasSum (fun x => (f x)ᴴ) aᴴ :=
-  (hf.map (@Matrix.conjTransposeAddEquiv m n R _ _) continuous_id.matrix_conj_transpose : _)
+  (hf.map (Matrix.conjTransposeAddEquiv m n R) continuous_id.matrix_conj_transpose : _)
 
 theorem Summable.matrix_conj_transpose [StarAddMonoid R] [HasContinuousStar R] {f : X → Matrix m n R}
     (hf : Summable f) : Summable fun x => (f x)ᴴ :=
@@ -280,7 +280,7 @@ theorem Summable.matrix_conj_transpose [StarAddMonoid R] [HasContinuousStar R] {
 @[simp]
 theorem summable_matrix_conj_transpose [StarAddMonoid R] [HasContinuousStar R] {f : X → Matrix m n R} :
     (Summable fun x => (f x)ᴴ) ↔ Summable f :=
-  (Summable.map_iff_of_equiv (@Matrix.conjTransposeAddEquiv m n R _ _)
+  (Summable.map_iff_of_equiv (Matrix.conjTransposeAddEquiv m n R)
     (@continuous_id (Matrix m n R) _).matrix_conj_transpose continuous_id.matrix_conj_transpose :
     _)
 

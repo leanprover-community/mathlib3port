@@ -211,13 +211,226 @@ theorem eq_of_prefix_of_length_eq (h : l₁ <+: l₂) : l₁.length = l₂.lengt
 theorem eq_of_suffix_of_length_eq (h : l₁ <:+ l₂) : l₁.length = l₂.length → l₁ = l₂ :=
   eq_of_sublist_of_length_eq h.Sublist
 
-theorem prefix_of_prefix_length_le : ∀ {l₁ l₂ l₃ : List α}, l₁ <+: l₃ → l₂ <+: l₃ → length l₁ ≤ length l₂ → l₁ <+: l₂
-  | [], l₂, l₃, h₁, h₂, _ => nil_prefix _
-  | a :: l₁, b :: l₂, _, ⟨r₁, rfl⟩, ⟨r₂, e⟩, ll => by
-    injection e with _ e'
-    subst b
-    rcases prefix_of_prefix_length_le ⟨_, rfl⟩ ⟨_, e'⟩ (le_of_succ_le_succ ll) with ⟨r₃, rfl⟩
-    exact ⟨r₃, rfl⟩
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+ (Command.declModifiers [] [] [] [] [] [])
+ (Command.theorem
+  "theorem"
+  (Command.declId `prefix_of_prefix_length_le [])
+  (Command.declSig
+   []
+   (Term.typeSpec
+    ":"
+    (Term.forall
+     "∀"
+     [(Term.implicitBinder "{" [`l₁ `l₂ `l₃] [":" (Term.app `List [`α])] "}")]
+     []
+     ","
+     (Term.arrow
+      (List.Data.List.Defs.«term_<+:_» `l₁ " <+: " `l₃)
+      "→"
+      (Term.arrow
+       (List.Data.List.Defs.«term_<+:_» `l₂ " <+: " `l₃)
+       "→"
+       (Term.arrow
+        («term_≤_» (Term.app `length [`l₁]) "≤" (Term.app `length [`l₂]))
+        "→"
+        (List.Data.List.Defs.«term_<+:_» `l₁ " <+: " `l₂)))))))
+  (Command.declValEqns
+   (Term.matchAltsWhereDecls
+    (Term.matchAlts
+     [(Term.matchAlt
+       "|"
+       [[(«term[_]» "[" [] "]") "," `l₂ "," `l₃ "," `h₁ "," `h₂ "," (Term.hole "_")]]
+       "=>"
+       (Term.app `nil_prefix [(Term.hole "_")]))
+      (Term.matchAlt
+       "|"
+       [[(«term_::_» `a "::" `l₁)
+         ","
+         («term_::_» `b "::" `l₂)
+         ","
+         (Term.hole "_")
+         ","
+         (Term.anonymousCtor "⟨" [`r₁ "," `rfl] "⟩")
+         ","
+         (Term.anonymousCtor "⟨" [`r₂ "," `e] "⟩")
+         ","
+         `ll]]
+       "=>"
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(group (Tactic.injection "injection" `e ["with" ["_" `e']]) [])
+           (group (Tactic.subst "subst" [`b]) [])
+           (group
+            (Mathlib.Tactic.rcases
+             "rcases"
+             [(Tactic.casesTarget
+               []
+               (Term.app
+                `prefix_of_prefix_length_le
+                [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `rfl] "⟩")
+                 (Term.anonymousCtor "⟨" [(Term.hole "_") "," `e'] "⟩")
+                 (Term.app `le_of_succ_le_succ [`ll])]))]
+             ["with"
+              (Tactic.rcasesPatLo
+               (Tactic.rcasesPatMed
+                [(Tactic.rcasesPat.tuple
+                  "⟨"
+                  [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `r₃)]) [])
+                   ","
+                   (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `rfl)]) [])]
+                  "⟩")])
+               [])])
+            [])
+           (group (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`r₃ "," `rfl] "⟩")) [])]))))])
+    []))
+  []
+  []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.declValSimple'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.byTactic
+   "by"
+   (Tactic.tacticSeq
+    (Tactic.tacticSeq1Indented
+     [(group (Tactic.injection "injection" `e ["with" ["_" `e']]) [])
+      (group (Tactic.subst "subst" [`b]) [])
+      (group
+       (Mathlib.Tactic.rcases
+        "rcases"
+        [(Tactic.casesTarget
+          []
+          (Term.app
+           `prefix_of_prefix_length_le
+           [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `rfl] "⟩")
+            (Term.anonymousCtor "⟨" [(Term.hole "_") "," `e'] "⟩")
+            (Term.app `le_of_succ_le_succ [`ll])]))]
+        ["with"
+         (Tactic.rcasesPatLo
+          (Tactic.rcasesPatMed
+           [(Tactic.rcasesPat.tuple
+             "⟨"
+             [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `r₃)]) [])
+              ","
+              (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `rfl)]) [])]
+             "⟩")])
+          [])])
+       [])
+      (group (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`r₃ "," `rfl] "⟩")) [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`r₃ "," `rfl] "⟩"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.anonymousCtor "⟨" [`r₃ "," `rfl] "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `rfl
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `r₃
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Mathlib.Tactic.rcases
+   "rcases"
+   [(Tactic.casesTarget
+     []
+     (Term.app
+      `prefix_of_prefix_length_le
+      [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `rfl] "⟩")
+       (Term.anonymousCtor "⟨" [(Term.hole "_") "," `e'] "⟩")
+       (Term.app `le_of_succ_le_succ [`ll])]))]
+   ["with"
+    (Tactic.rcasesPatLo
+     (Tactic.rcasesPatMed
+      [(Tactic.rcasesPat.tuple
+        "⟨"
+        [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `r₃)]) [])
+         ","
+         (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `rfl)]) [])]
+        "⟩")])
+     [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app
+   `prefix_of_prefix_length_le
+   [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `rfl] "⟩")
+    (Term.anonymousCtor "⟨" [(Term.hole "_") "," `e'] "⟩")
+    (Term.app `le_of_succ_le_succ [`ll])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.app `le_of_succ_le_succ [`ll])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `ll
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `le_of_succ_le_succ
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `le_of_succ_le_succ [`ll]) []] ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+  (Term.anonymousCtor "⟨" [(Term.hole "_") "," `e'] "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `e'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+  (Term.anonymousCtor "⟨" [(Term.hole "_") "," `rfl] "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `rfl
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+  `prefix_of_prefix_length_le
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.subst "subst" [`b])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  `b
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
+  (Tactic.injection "injection" `e ["with" ["_" `e']])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '_', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '_', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  prefix_of_prefix_length_le
+  : ∀ { l₁ l₂ l₃ : List α } , l₁ <+: l₃ → l₂ <+: l₃ → length l₁ ≤ length l₂ → l₁ <+: l₂
+  | [ ] , l₂ , l₃ , h₁ , h₂ , _ => nil_prefix _
+    |
+      a :: l₁ , b :: l₂ , _ , ⟨ r₁ , rfl ⟩ , ⟨ r₂ , e ⟩ , ll
+      =>
+      by
+        injection e with _ e'
+          subst b
+          rcases prefix_of_prefix_length_le ⟨ _ , rfl ⟩ ⟨ _ , e' ⟩ le_of_succ_le_succ ll with ⟨ r₃ , rfl ⟩
+          exact ⟨ r₃ , rfl ⟩
 
 theorem prefix_or_prefix_of_prefix (h₁ : l₁ <+: l₃) (h₂ : l₂ <+: l₃) : l₁ <+: l₂ ∨ l₂ <+: l₁ :=
   (le_totalₓ (length l₁) (length l₂)).imp (prefix_of_prefix_length_le h₁ h₂) (prefix_of_prefix_length_le h₂ h₁)
@@ -297,6 +510,12 @@ theorem mem_of_mem_take (h : a ∈ l.take n) : a ∈ l :=
 
 theorem mem_of_mem_drop (h : a ∈ l.drop n) : a ∈ l :=
   drop_subset n l h
+
+theorem take_while_prefix (p : α → Prop) [DecidablePred p] : l.takeWhile p <+: l :=
+  ⟨l.dropWhile p, take_while_append_drop p l⟩
+
+theorem drop_while_suffix (p : α → Prop) [DecidablePred p] : l.dropWhile p <:+ l :=
+  ⟨l.takeWhile p, take_while_append_drop p l⟩
 
 theorem init_prefix : ∀ l : List α, l.init <+: l
   | [] =>

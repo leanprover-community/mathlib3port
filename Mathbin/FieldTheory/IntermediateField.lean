@@ -3,9 +3,9 @@ Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
+import Mathbin.FieldTheory.Minpoly
 import Mathbin.FieldTheory.Subfield
 import Mathbin.FieldTheory.Tower
-import Mathbin.RingTheory.Algebraic
 
 /-!
 # Intermediate fields
@@ -48,9 +48,8 @@ structure IntermediateField extends Subalgebra K L where
   neg_mem' : ∀, ∀ x ∈ carrier, ∀, -x ∈ carrier
   inv_mem' : ∀, ∀ x ∈ carrier, ∀, x⁻¹ ∈ carrier
 
-/-- Reinterpret an `intermediate_field` as a `subalgebra`. -/
-add_decl_doc IntermediateField.toSubalgebra
-
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
+-- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident intermediate_field.to_subalgebra]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 variable {K L} (S : IntermediateField K L)
 
 namespace IntermediateField
@@ -62,7 +61,7 @@ def toSubfield : Subfield L :=
 instance : SetLike (IntermediateField K L) L :=
   ⟨fun S => S.toSubalgebra.Carrier, by
     rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨h⟩
-    congr⟩
+    congr ⟩
 
 instance : SubfieldClass (IntermediateField K L) L where
   add_mem := fun s => s.add_mem'
@@ -244,8 +243,32 @@ theorem to_subalgebra_to_intermediate_field (S : Subalgebra K L) (inv_mem : ∀,
   rfl
 
 @[simp]
-theorem to_intermediate_field_to_subalgebra (S : IntermediateField K L)
-    (inv_mem : ∀, ∀ x ∈ S.toSubalgebra, ∀, x⁻¹ ∈ S) : S.toSubalgebra.toIntermediateField inv_mem = S := by
+theorem to_intermediate_field_to_subalgebra (S : IntermediateField K L) :
+    (S.toSubalgebra.toIntermediateField fun x => S.inv_mem) = S := by
+  ext
+  rfl
+
+/-- Turn a subalgebra satisfying `is_field` into an intermediate_field -/
+def Subalgebra.toIntermediateField' (S : Subalgebra K L) (hS : IsField S) : IntermediateField K L :=
+  S.toIntermediateField fun x hx => by
+    by_cases' hx0 : x = 0
+    · rw [hx0, inv_zero]
+      exact S.zero_mem
+      
+    letI hS' := hS.to_field
+    obtain ⟨y, hy⟩ := hS.mul_inv_cancel (show (⟨x, hx⟩ : S) ≠ 0 from Subtype.ne_of_val_ne hx0)
+    rw [Subtype.ext_iff, S.coe_mul, S.coe_one, Subtype.coe_mk, mul_eq_one_iff_inv_eq₀ hx0] at hy
+    exact hy.symm ▸ y.2
+
+@[simp]
+theorem to_subalgebra_to_intermediate_field' (S : Subalgebra K L) (hS : IsField S) :
+    (S.toIntermediateField' hS).toSubalgebra = S := by
+  ext
+  rfl
+
+@[simp]
+theorem to_intermediate_field'_to_subalgebra (S : IntermediateField K L) :
+    S.toSubalgebra.toIntermediateField' (Field.to_is_field S) = S := by
   ext
   rfl
 
@@ -319,12 +342,16 @@ variable {L' : Type _} [Field L'] [Algebra K L']
 
 /-- If `f : L →+* L'` fixes `K`, `S.map f` is the intermediate field between `L'` and `K`
 such that `x ∈ S ↔ f x ∈ S.map f`. -/
-def map (f : L →ₐ[K] L') : IntermediateField K L' :=
+def map (f : L →ₐ[K] L') (S : IntermediateField K L) : IntermediateField K L' :=
   { S.toSubalgebra.map f with
     inv_mem' := by
       rintro _ ⟨x, hx, rfl⟩
       exact ⟨x⁻¹, S.inv_mem hx, f.map_inv x⟩,
     neg_mem' := fun x hx => (S.toSubalgebra.map f).neg_mem hx }
+
+@[simp]
+theorem coe_map (f : L →ₐ[K] L') : (S.map f : Set L') = f '' S :=
+  rfl
 
 theorem map_map {K L₁ L₂ L₃ : Type _} [Field K] [Field L₁] [Algebra K L₁] [Field L₂] [Algebra K L₂] [Field L₃]
     [Algebra K L₃] (E : IntermediateField K L₁) (f : L₁ →ₐ[K] L₂) (g : L₂ →ₐ[K] L₃) :
@@ -379,7 +406,7 @@ theorem coe_is_integral_iff {R : Type _} [CommRingₓ R] [Algebra R K] [Algebra 
   refine' ⟨fun h => _, fun h => _⟩
   · obtain ⟨P, hPmo, hProot⟩ := h
     refine' ⟨P, hPmo, (injective_iff_map_eq_zero _).1 (algebraMap (↥S) L).Injective _ _⟩
-    let this : IsScalarTower R S L := IsScalarTower.of_algebra_map_eq (congr_fun rfl)
+    letI : IsScalarTower R S L := IsScalarTower.of_algebra_map_eq (congr_fun rfl)
     rwa [eval₂_eq_eval_map, ← eval₂_at_apply, eval₂_eq_eval_map, Polynomial.map_map, ← IsScalarTower.algebra_map_eq, ←
       eval₂_eq_eval_map]
     
@@ -440,7 +467,7 @@ section Tower
 
 /-- Lift an intermediate_field of an intermediate_field -/
 def lift {F : IntermediateField K L} (E : IntermediateField K F) : IntermediateField K L :=
-  map E (val F)
+  E.map (val F)
 
 instance hasLift {F : IntermediateField K L} : HasLiftT (IntermediateField K F) (IntermediateField K L) :=
   ⟨lift⟩
@@ -529,6 +556,19 @@ theorem eq_of_le_of_finrank_eq' [FiniteDimensional K L] (h_le : F ≤ E) (h_finr
 
 end FiniteDimensional
 
+theorem is_algebraic_iff {x : S} : IsAlgebraic K x ↔ IsAlgebraic K (x : L) :=
+  (is_algebraic_algebra_map_iff (algebraMap S L).Injective).symm
+
+theorem is_integral_iff {x : S} : IsIntegral K x ↔ IsIntegral K (x : L) := by
+  rw [← is_algebraic_iff_is_integral, is_algebraic_iff, is_algebraic_iff_is_integral]
+
+theorem minpoly_eq (x : S) : minpoly K x = minpoly K (x : L) := by
+  by_cases' hx : IsIntegral K x
+  · exact minpoly.eq_of_algebra_map_eq (algebraMap S L).Injective hx rfl
+    
+  · exact (minpoly.eq_zero hx).trans (minpoly.eq_zero (mt is_integral_iff.mpr hx)).symm
+    
+
 end IntermediateField
 
 /-- If `L/K` is algebraic, the `K`-subalgebras of `L` are all fields.  -/
@@ -536,7 +576,7 @@ def subalgebraEquivIntermediateField (alg : Algebra.IsAlgebraic K L) : Subalgebr
   toFun := fun S => S.toIntermediateField fun x hx => S.inv_mem_of_algebraic (alg (⟨x, hx⟩ : S))
   invFun := fun S => S.toSubalgebra
   left_inv := fun S => to_subalgebra_to_intermediate_field _ _
-  right_inv := fun S => to_intermediate_field_to_subalgebra _ _
+  right_inv := to_intermediate_field_to_subalgebra
   map_rel_iff' := fun S S' => Iff.rfl
 
 @[simp]

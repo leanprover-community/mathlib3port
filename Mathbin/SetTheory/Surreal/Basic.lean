@@ -94,7 +94,7 @@ theorem move_right {x : Pgame} (o : Numeric x) (j : x.RightMoves) : Numeric (x.m
 
 end Numeric
 
-@[elab_as_eliminator]
+@[elabAsElim]
 theorem numeric_rec {C : Pgame → Prop}
     (H :
       ∀ (l r) (L : l → Pgame) (R : r → Pgame),
@@ -253,14 +253,11 @@ def Surreal.Equiv (x y : { x // Pgame.Numeric x }) : Prop :=
 
 open Pgame
 
-instance Surreal.setoid : Setoidₓ { x // Pgame.Numeric x } :=
-  ⟨fun x y => x.1 ≈ y.1, fun x => equiv_rfl, fun x y => Pgame.Equiv.symm, fun x y z => Pgame.Equiv.trans⟩
-
 /-- The type of surreal numbers. These are the numeric pre-games quotiented
 by the equivalence relation `x ≈ y ↔ x ≤ y ∧ y ≤ x`. In the quotient,
 the order becomes a total order. -/
 def Surreal :=
-  Quotientₓ Surreal.setoid
+  Quotientₓ (Subtype.setoid Numeric)
 
 namespace Surreal
 

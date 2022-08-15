@@ -146,9 +146,12 @@ open Top.Presheaf
 -/
 def restrict {U : Top} (X : SheafedSpace C) {f : U ⟶ (X : Top.{v})} (h : OpenEmbedding f) : SheafedSpace C :=
   { X.toPresheafedSpace.restrict h with
-    IsSheaf := fun ι 𝒰 =>
-      ⟨IsLimit.ofIsoLimit ((IsLimit.postcomposeInvEquiv _ _).invFun (X.IsSheaf _).some)
-          (SheafConditionEqualizerProducts.fork.isoOfOpenEmbedding h 𝒰).symm⟩ }
+    IsSheaf :=
+      (is_sheaf_iff_is_sheaf_equalizer_products _).mpr fun ι 𝒰 =>
+        ⟨IsLimit.ofIsoLimit
+            ((IsLimit.postcomposeInvEquiv _ _).invFun
+              ((is_sheaf_iff_is_sheaf_equalizer_products _).mp X.IsSheaf _).some)
+            (SheafConditionEqualizerProducts.fork.isoOfOpenEmbedding h 𝒰).symm⟩ }
 
 /-- The restriction of a sheafed space `X` to the top subspace is isomorphic to `X` itself.
 -/

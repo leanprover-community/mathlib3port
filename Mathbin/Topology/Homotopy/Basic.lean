@@ -214,7 +214,7 @@ def trans {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Homotopy f₁
               continuity)).ContinuousOn
         _
     rintro x hx
-    norm_num [← hx]
+    norm_num[← hx]
   map_zero_left' := fun x => by
     norm_num
   map_one_left' := fun x => by
@@ -239,7 +239,7 @@ theorem symm_trans {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Homo
     change (1 : ℝ) - x.1 ≤ _ at h₁
     have ht : (x.1 : ℝ) = 1 / 2 := by
       linarith
-    norm_num [← ht]
+    norm_num[← ht]
     
   · congr 2
     apply Subtype.ext

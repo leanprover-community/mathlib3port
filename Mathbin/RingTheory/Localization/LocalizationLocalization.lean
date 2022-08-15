@@ -179,7 +179,7 @@ noncomputable def localizationAlgebraOfSubmonoidLe (M N : Submonoid R) (h : M �
 localization maps -/
 theorem localization_is_scalar_tower_of_submonoid_le (M N : Submonoid R) (h : M ≤ N) [IsLocalization M S]
     [IsLocalization N T] : @IsScalarTower R S T _ (localizationAlgebraOfSubmonoidLe S T M N h).toHasSmul _ := by
-  let this := localization_algebra_of_submonoid_le S T M N h
+  letI := localization_algebra_of_submonoid_le S T M N h
   exact IsScalarTower.of_algebra_map_eq' (IsLocalization.lift_comp _).symm
 
 noncomputable instance (x : Ideal R) [H : x.IsPrime] [IsDomain R] :
@@ -285,8 +285,8 @@ theorem is_fraction_ring_of_is_localization (S T : Type _) [CommRingₓ S] [Comm
 theorem is_fraction_ring_of_is_domain_of_is_localization [IsDomain R] (S T : Type _) [CommRingₓ S] [CommRingₓ T]
     [Algebra R S] [Algebra R T] [Algebra S T] [IsScalarTower R S T] [IsLocalization M S] [IsFractionRing R T] :
     IsFractionRing S T := by
-  have := IsFractionRing.nontrivial R T
-  have := (algebraMap S T).domain_nontrivial
+  haveI := IsFractionRing.nontrivial R T
+  haveI := (algebraMap S T).domain_nontrivial
   apply is_fraction_ring_of_is_localization M S T
   intro x hx
   rw [mem_non_zero_divisors_iff_ne_zero]

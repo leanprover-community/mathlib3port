@@ -48,7 +48,7 @@ open ZeroObject
 
 /-- If a cartesian closed category has a zero object, each homset has exactly one element. -/
 def uniqueHomsetOfZero [HasZeroObject C] (X Y : C) : Unique (X ⟶ Y) := by
-  have : has_initial C := has_zero_object.has_initial
+  haveI : has_initial C := has_zero_object.has_initial
   apply unique_homset_of_initial_iso_terminal _ X Y
   refine' ⟨default, (default : ⊤_ C ⟶ 0) ≫ default, _, _⟩ <;> simp
 

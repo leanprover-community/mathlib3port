@@ -355,7 +355,7 @@ export IsSimpleOrder (eq_bot_or_eq_top)
 
 theorem is_simple_order_iff_is_simple_order_order_dual [LE α] [BoundedOrder α] : IsSimpleOrder α ↔ IsSimpleOrder αᵒᵈ :=
   by
-  constructor <;> intro i <;> have := i
+  constructor <;> intro i <;> haveI := i
   · exact
       { exists_pair_ne := @exists_pair_ne α _,
         eq_bot_or_eq_top := fun a => Or.symm (eq_bot_or_eq_top (OrderDual.ofDual a) : _ ∨ _) }
@@ -519,19 +519,7 @@ protected def booleanAlgebra {α} [DecidableEq α] [Lattice α] [BoundedOrder α
         split_ifs with h h <;> simp [← h]
         ,
     top_le_sup_compl := fun x => by
-      rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp ,
-    sup_inf_sdiff := fun x y => by
-      rcases eq_bot_or_eq_top x with (rfl | rfl) <;> rcases eq_bot_or_eq_top y with (rfl | rfl) <;> simp [← bot_ne_top],
-    inf_inf_sdiff := fun x y => by
-      rcases eq_bot_or_eq_top x with (rfl | rfl)
-      · simpa
-        
-      rcases eq_bot_or_eq_top y with (rfl | rfl)
-      · simpa
-        
-      · simp only [← true_andₓ, ← top_inf_eq, ← eq_self_iff_true]
-        split_ifs with h h <;> simpa [← h]
-         }
+      rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp }
 
 end DecidableEq
 

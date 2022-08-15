@@ -22,10 +22,11 @@ without issue, so are not repeated here. The topological results specific to mat
 * `matrix.exp_block_diagonal'`
 
 Lemmas like `exp_add_of_commute` require a canonical norm on the type; while there are multiple
-sensible choices for the norm of a `matrix` (`matrix.normed_group`, `matrix.frobenius_normed_group`,
-`matrix.linfty_op_normed_group`), none of them are canonical. In an application where a particular
-norm is chosen using `local attribute [instance]`, then the usual lemmas about `exp` are fine. When
-choosing a norm is undesirable, the results in this file can be used.
+sensible choices for the norm of a `matrix` (`matrix.normed_add_comm_group`,
+`matrix.frobenius_normed_add_comm_group`, `matrix.linfty_op_normed_add_comm_group`), none of them
+are canonical. In an application where a particular norm is chosen using
+`local attribute [instance]`, then the usual lemmas about `exp` are fine. When choosing a norm is
+undesirable, the results in this file can be used.
 
 In this file, we copy across the lemmas about `exp`, but hide the requirement for a norm inside the
 proof.
@@ -131,36 +132,36 @@ variable [IsROrC 𝕂] [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] [
   [∀ i, DecidableEq (n' i)] [NormedRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
 
 theorem exp_add_of_commute (A B : Matrix m m 𝔸) (h : Commute A B) : exp 𝕂 (A + B) = exp 𝕂 A ⬝ exp 𝕂 B := by
-  let this : SemiNormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
-  let this : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
-  let this : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
+  letI : SemiNormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
+  letI : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
+  letI : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
   exact exp_add_of_commute h
 
 theorem exp_sum_of_commute {ι} (s : Finset ι) (f : ι → Matrix m m 𝔸)
     (h : ∀, ∀ i ∈ s, ∀, ∀ j ∈ s, ∀, Commute (f i) (f j)) :
     exp 𝕂 (∑ i in s, f i) = s.noncommProd (fun i => exp 𝕂 (f i)) fun i hi j hj => (h i hi j hj).exp 𝕂 := by
-  let this : SemiNormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
-  let this : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
-  let this : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
+  letI : SemiNormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
+  letI : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
+  letI : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
   exact exp_sum_of_commute s f h
 
 theorem exp_nsmul (n : ℕ) (A : Matrix m m 𝔸) : exp 𝕂 (n • A) = exp 𝕂 A ^ n := by
-  let this : SemiNormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
-  let this : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
-  let this : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
+  letI : SemiNormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
+  letI : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
+  letI : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
   exact exp_nsmul n A
 
 theorem is_unit_exp (A : Matrix m m 𝔸) : IsUnit (exp 𝕂 A) := by
-  let this : SemiNormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
-  let this : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
-  let this : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
+  letI : SemiNormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
+  letI : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
+  letI : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
   exact is_unit_exp _ A
 
 theorem exp_units_conj (U : (Matrix m m 𝔸)ˣ) (A : Matrix m m 𝔸) :
     exp 𝕂 (↑U ⬝ A ⬝ ↑U⁻¹ : Matrix m m 𝔸) = ↑U ⬝ exp 𝕂 A ⬝ ↑U⁻¹ := by
-  let this : SemiNormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
-  let this : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
-  let this : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
+  letI : SemiNormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
+  letI : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
+  letI : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
   exact exp_units_conj _ U A
 
 theorem exp_units_conj' (U : (Matrix m m 𝔸)ˣ) (A : Matrix m m 𝔸) :
@@ -176,9 +177,9 @@ variable [IsROrC 𝕂] [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] [
 
 theorem exp_neg (A : Matrix m m 𝔸) : exp 𝕂 (-A) = (exp 𝕂 A)⁻¹ := by
   rw [nonsing_inv_eq_ring_inverse]
-  let this : SemiNormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
-  let this : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
-  let this : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
+  letI : SemiNormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
+  letI : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
+  letI : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
   exact (Ringₓ.inverse_exp _ A).symm
 
 theorem exp_zsmul (z : ℤ) (A : Matrix m m 𝔸) : exp 𝕂 (z • A) = exp 𝕂 A ^ z := by

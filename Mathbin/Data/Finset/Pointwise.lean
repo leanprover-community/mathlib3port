@@ -187,10 +187,10 @@ open Pointwise
 
 section HasInvolutiveInv
 
-variable [DecidableEq α] [HasInvolutiveInv α] {s t : Finset α}
+variable [DecidableEq α] [HasInvolutiveInv α] (s : Finset α)
 
 @[simp, norm_cast, to_additive]
-theorem coe_inv (s : Finset α) : ↑s⁻¹ = (s : Set α)⁻¹ :=
+theorem coe_inv : ↑s⁻¹ = (s : Set α)⁻¹ :=
   coe_image.trans Set.image_inv
 
 @[simp, to_additive]
@@ -222,11 +222,11 @@ protected def hasMul : Mul (Finset α) :=
 localized [Pointwise] attribute [instance] Finset.hasMul Finset.hasAdd
 
 @[to_additive]
-theorem mul_def : s * t = (s.product t).Image fun p : α × α => p.1 * p.2 :=
+theorem mul_def : s * t = (s ×ˢ t).Image fun p : α × α => p.1 * p.2 :=
   rfl
 
 @[to_additive]
-theorem image_mul_product : ((s.product t).Image fun x : α × α => x.fst * x.snd) = s * t :=
+theorem image_mul_product : ((s ×ˢ t).Image fun x : α × α => x.fst * x.snd) = s * t :=
   rfl
 
 @[to_additive]
@@ -246,8 +246,7 @@ theorem card_mul_le : (s * t).card ≤ s.card * t.card :=
   card_image₂_le _ _ _
 
 @[to_additive]
-theorem card_mul_iff :
-    (s * t).card = s.card * t.card ↔ ((s : Set α) ×ˢ (t : Set α) : Set (α × α)).InjOn fun p => p.1 * p.2 :=
+theorem card_mul_iff : (s * t).card = s.card * t.card ↔ (s ×ˢ t : Set (α × α)).InjOn fun p => p.1 * p.2 :=
   card_image₂_iff
 
 @[simp, to_additive]
@@ -278,11 +277,11 @@ theorem Nonempty.of_mul_left : (s * t).Nonempty → s.Nonempty :=
 theorem Nonempty.of_mul_right : (s * t).Nonempty → t.Nonempty :=
   nonempty.of_image₂_right
 
-@[simp, to_additive]
+@[to_additive]
 theorem mul_singleton (a : α) : s * {a} = s.Image (· * a) :=
   image₂_singleton_right
 
-@[simp, to_additive]
+@[to_additive]
 theorem singleton_mul (a : α) : {a} * s = s.Image ((· * ·) a) :=
   image₂_singleton_left
 
@@ -367,11 +366,11 @@ protected def hasDiv : Div (Finset α) :=
 localized [Pointwise] attribute [instance] Finset.hasDiv Finset.hasSub
 
 @[to_additive]
-theorem div_def : s / t = (s.product t).Image fun p : α × α => p.1 / p.2 :=
+theorem div_def : s / t = (s ×ˢ t).Image fun p : α × α => p.1 / p.2 :=
   rfl
 
 @[to_additive add_image_prod]
-theorem image_div_prod : ((s.product t).Image fun x : α × α => x.fst / x.snd) = s / t :=
+theorem image_div_prod : ((s ×ˢ t).Image fun x : α × α => x.fst / x.snd) = s / t :=
   rfl
 
 @[to_additive]
@@ -613,6 +612,21 @@ theorem pow_subset_pow_of_one_mem (hs : (1 : α) ∈ s) : m ≤ n → s ^ m ⊆ 
   · rw [pow_succₓ]
     exact ih.trans (subset_mul_right _ hs)
     
+
+@[simp, norm_cast, to_additive]
+theorem coe_list_prod (s : List (Finset α)) : (↑s.Prod : Set α) = (s.map coe).Prod :=
+  map_list_prod (coeMonoidHom : Finset α →* Set α) _
+
+@[to_additive]
+theorem mem_prod_list_of_fn {a : α} {s : Finₓ n → Finset α} :
+    a ∈ (List.ofFnₓ s).Prod ↔ ∃ f : ∀ i : Finₓ n, s i, (List.ofFnₓ fun i => (f i : α)).Prod = a := by
+  rw [← mem_coe, coe_list_prod, List.map_of_fn, Set.mem_prod_list_of_fn]
+  rfl
+
+@[to_additive]
+theorem mem_pow {a : α} {n : ℕ} : a ∈ s ^ n ↔ ∃ f : Finₓ n → s, (List.ofFnₓ fun i => ↑(f i)).Prod = a := by
+  simp_rw [← mem_coe, coe_pow, Set.mem_pow]
+  rfl
 
 @[simp, to_additive]
 theorem empty_pow (hn : n ≠ 0) : (∅ : Finset α) ^ n = ∅ := by
@@ -885,11 +899,11 @@ protected def hasSmul : HasSmul (Finset α) (Finset β) :=
 localized [Pointwise] attribute [instance] Finset.hasSmul Finset.hasVadd
 
 @[to_additive]
-theorem smul_def : s • t = (s.product t).Image fun p : α × β => p.1 • p.2 :=
+theorem smul_def : s • t = (s ×ˢ t).Image fun p : α × β => p.1 • p.2 :=
   rfl
 
 @[to_additive]
-theorem image_smul_product : ((s.product t).Image fun x : α × β => x.fst • x.snd) = s • t :=
+theorem image_smul_product : ((s ×ˢ t).Image fun x : α × β => x.fst • x.snd) = s • t :=
   rfl
 
 @[to_additive]
@@ -936,11 +950,11 @@ theorem Nonempty.of_smul_left : (s • t).Nonempty → s.Nonempty :=
 theorem Nonempty.of_smul_right : (s • t).Nonempty → t.Nonempty :=
   nonempty.of_image₂_right
 
-@[simp, to_additive]
+@[to_additive]
 theorem smul_singleton (b : β) : s • ({b} : Finset β) = s.Image (· • b) :=
   image₂_singleton_right
 
-@[simp, to_additive]
+@[to_additive]
 theorem singleton_smul (a : α) : ({a} : Finset α) • t = t.Image ((· • ·) a) :=
   image₂_singleton_left
 
@@ -1056,7 +1070,6 @@ theorem Nonempty.of_vsub_right : (s -ᵥ t : Finset α).Nonempty → t.Nonempty 
 theorem vsub_singleton (b : β) : s -ᵥ ({b} : Finset β) = s.Image (· -ᵥ b) :=
   image₂_singleton_right
 
-@[simp]
 theorem singleton_vsub (a : β) : ({a} : Finset β) -ᵥ t = t.Image ((· -ᵥ ·) a) :=
   image₂_singleton_left
 
@@ -1202,7 +1215,7 @@ instance smul_comm_class_finset' [HasSmul α γ] [HasSmul β γ] [SmulCommClass 
 @[to_additive]
 instance smul_comm_class_finset'' [HasSmul α γ] [HasSmul β γ] [SmulCommClass α β γ] :
     SmulCommClass (Finset α) β (Finset γ) :=
-  have := SmulCommClass.symm α β γ
+  haveI := SmulCommClass.symm α β γ
   SmulCommClass.symm _ _ _
 
 @[to_additive]
@@ -1212,6 +1225,7 @@ instance smul_comm_class [HasSmul α γ] [HasSmul β γ] [SmulCommClass α β γ
     coe_injective <| by
       simp_rw [coe_smul, smul_comm]⟩
 
+@[to_additive]
 instance is_scalar_tower [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScalarTower α β γ] :
     IsScalarTower α β (Finset γ) :=
   ⟨fun a b s => by
@@ -1219,12 +1233,14 @@ instance is_scalar_tower [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScal
 
 variable [DecidableEq β]
 
+@[to_additive]
 instance is_scalar_tower' [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScalarTower α β γ] :
     IsScalarTower α (Finset β) (Finset γ) :=
   ⟨fun a s t =>
     coe_injective <| by
       simp only [← coe_smul_finset, ← coe_smul, ← smul_assoc]⟩
 
+@[to_additive]
 instance is_scalar_tower'' [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScalarTower α β γ] :
     IsScalarTower (Finset α) (Finset β) (Finset γ) :=
   ⟨fun a s t =>
@@ -1286,10 +1302,46 @@ instance no_zero_smul_divisors_finset [Zero α] [Zero β] [HasSmul α β] [NoZer
 
 end Instances
 
+section LeftCancelSemigroup
+
+variable [LeftCancelSemigroup α] [DecidableEq α] (s t : Finset α) (a : α)
+
 @[to_additive]
-theorem pairwise_disjoint_smul_iff [DecidableEq α] [LeftCancelSemigroup α] {s : Set α} {t : Finset α} :
-    s.PairwiseDisjoint (· • t) ↔ ((s : Set α) ×ˢ (t : Set α) : Set (α × α)).InjOn fun p => p.1 * p.2 := by
+theorem pairwise_disjoint_smul_iff {s : Set α} {t : Finset α} :
+    s.PairwiseDisjoint (· • t) ↔ (s ×ˢ t : Set (α × α)).InjOn fun p => p.1 * p.2 := by
   simp_rw [← pairwise_disjoint_coe, coe_smul_finset, Set.pairwise_disjoint_smul_iff]
+
+@[simp, to_additive]
+theorem card_singleton_mul : ({a} * t).card = t.card :=
+  card_image₂_singleton_left _ <| mul_right_injective _
+
+@[to_additive]
+theorem singleton_mul_inter : {a} * (s ∩ t) = {a} * s ∩ ({a} * t) :=
+  image₂_singleton_inter _ _ <| mul_right_injective _
+
+@[to_additive]
+theorem card_le_card_mul_left {s : Finset α} (hs : s.Nonempty) : t.card ≤ (s * t).card :=
+  card_le_card_image₂_left _ hs mul_right_injective
+
+end LeftCancelSemigroup
+
+section
+
+variable [RightCancelSemigroup α] [DecidableEq α] (s t : Finset α) (a : α)
+
+@[simp, to_additive]
+theorem card_mul_singleton : (s * {a}).card = s.card :=
+  card_image₂_singleton_right _ <| mul_left_injective _
+
+@[to_additive]
+theorem inter_mul_singleton : s ∩ t * {a} = s * {a} ∩ (t * {a}) :=
+  image₂_inter_singleton _ _ <| mul_left_injective _
+
+@[to_additive]
+theorem card_le_card_mul_right {t : Finset α} (ht : t.Nonempty) : s.card ≤ (s * t).card :=
+  card_le_card_image₂_right _ ht mul_left_injective
+
+end
 
 open Pointwise
 

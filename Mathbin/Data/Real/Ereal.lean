@@ -114,7 +114,7 @@ A typical invocation looks like `induction x using ereal.rec`. Note that using `
 directly will unfold `ereal` to `option` which is undesirable.
 
 When working in term mode, note that pattern matching can be used directly. -/
-@[elab_as_eliminator]
+@[elabAsElim]
 protected def rec {C : Ereal → Sort _} (h_bot : C ⊥) (h_real : ∀ a : ℝ, C a) (h_top : C ⊤) : ∀ a : Ereal, C a
   | ⊥ => h_bot
   | (a : ℝ) => h_real a
@@ -453,7 +453,10 @@ theorem add_lt_add_of_lt_of_le {x y z t : Ereal} (h : x < y) (h' : z ≤ t) (hz 
   induction z using Ereal.rec
   · simpa only using hz
     
-  · calc x + z < y + z := add_lt_add_right_coe h _ _ ≤ y + t := add_le_add le_rfl h'
+  · calc
+      x + z < y + z := add_lt_add_right_coe h _
+      _ ≤ y + t := add_le_add le_rfl h'
+      
     
   · exact (ht (top_le_iff.1 h')).elim
     
@@ -465,7 +468,10 @@ theorem add_lt_add {x y z t : Ereal} (h1 : x < y) (h2 : z < t) : x + z < y + t :
   induction y using Ereal.rec
   · exact (lt_irreflₓ _ (bot_le.trans_lt h1)).elim
     
-  · calc x + z ≤ y + z := add_le_add h1.le le_rfl _ < y + t := add_lt_add_left_coe h2 _
+  · calc
+      x + z ≤ y + z := add_le_add h1.le le_rfl
+      _ < y + t := add_lt_add_left_coe h2 _
+      
     
   · simp [← lt_top_iff_ne_top, ← WithTop.add_eq_top, ← h1.ne, ← (h2.trans_le le_top).Ne]
     

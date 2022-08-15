@@ -242,8 +242,8 @@ theorem exists_tendsto_compact_open_iff_forall [LocallyCompactSpace α] [T2Space
         f s₁ hs₁ ⟨x, hxs₁⟩ = f s₂ hs₂ ⟨x, hxs₂⟩ :=
       by
       rintro s₁ hs₁ s₂ hs₂ x hxs₁ hxs₂
-      have := is_compact_iff_compact_space.mp hs₁
-      have := is_compact_iff_compact_space.mp hs₂
+      haveI := is_compact_iff_compact_space.mp hs₁
+      haveI := is_compact_iff_compact_space.mp hs₂
       have h₁ := (continuous_eval_const' (⟨x, hxs₁⟩ : s₁)).ContinuousAt.Tendsto.comp (hf s₁ hs₁)
       have h₂ := (continuous_eval_const' (⟨x, hxs₂⟩ : s₂)).ContinuousAt.Tendsto.comp (hf s₂ hs₂)
       exact tendsto_nhds_unique h₁ h₂

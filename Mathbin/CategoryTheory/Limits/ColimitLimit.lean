@@ -64,13 +64,13 @@ noncomputable def colimitLimitToLimitColimit : colimit (curry.obj (swap K J ⋙ 
                     naturality' := by
                       dsimp'
                       intro k k' f
-                      simp only [← functor.comp_map, ← curry.obj_map_app, ← limits.lim_map_π_assoc, ← swap_map, ←
+                      simp only [← functor.comp_map, ← curry_obj_map_app, ← limits.lim_map_π_assoc, ← swap_map, ←
                         category.comp_id, ← map_id_left_eq_curry_map, ← colimit.w] } },
           naturality' := by
             dsimp'
             intro j j' f
             ext k
-            simp only [← limits.colimit.ι_map, ← curry.obj_map_app, ← limits.colimit.ι_desc_assoc, ←
+            simp only [← limits.colimit.ι_map, ← curry_obj_map_app, ← limits.colimit.ι_desc_assoc, ←
               limits.colimit.ι_desc, ← category.id_comp, ← category.assoc, ← map_id_right_eq_curry_swap_map, ←
               limit.w_assoc] } }
 

@@ -25,9 +25,9 @@ theorem FiniteField.Matrix.charpoly_pow_card {K : Type _} [Field K] [Fintype K] 
     (M ^ Fintype.card K).charpoly = M.charpoly := by
   cases (is_empty_or_nonempty n).symm
   · cases' CharP.exists K with p hp
-    let this := hp
+    letI := hp
     rcases FiniteField.card K p with ⟨⟨k, kpos⟩, ⟨hp, hk⟩⟩
-    have : Fact p.prime := ⟨hp⟩
+    haveI : Fact p.prime := ⟨hp⟩
     dsimp'  at hk
     rw [hk] at *
     apply (frobenius_inj K[X] p).iterate k
@@ -46,7 +46,7 @@ theorem FiniteField.Matrix.charpoly_pow_card {K : Type _} [Field K] [Fintype K] 
       
     
   · -- TODO[gh-6025]: remove this `haveI` once `subsingleton_of_empty_right` is a global instance
-    have : Subsingleton (Matrix n n K) := subsingleton_of_empty_right
+    haveI : Subsingleton (Matrix n n K) := subsingleton_of_empty_right
     exact congr_arg _ (Subsingleton.elimₓ _ _)
     
 
