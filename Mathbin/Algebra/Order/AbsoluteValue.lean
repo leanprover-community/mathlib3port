@@ -166,24 +166,6 @@ end Ringₓ
 
 end LinearOrderedCommRing
 
-section LinearOrderedField
-
-section Field
-
-variable {R S : Type _} [DivisionRing R] [LinearOrderedField S] (abv : AbsoluteValue R S)
-
-@[simp]
-protected theorem map_inv (a : R) : abv a⁻¹ = (abv a)⁻¹ :=
-  abv.toMonoidWithZeroHom.map_inv a
-
-@[simp]
-protected theorem map_div (a b : R) : abv (a / b) = abv a / abv b :=
-  abv.toMonoidWithZeroHom.map_div a b
-
-end Field
-
-end LinearOrderedField
-
 end AbsoluteValue
 
 section IsAbsoluteValue
@@ -305,10 +287,10 @@ section Field
 variable {R : Type _} [DivisionRing R] (abv : R → S) [IsAbsoluteValue abv]
 
 theorem abv_inv (a : R) : abv a⁻¹ = (abv a)⁻¹ :=
-  (abvHom abv).map_inv a
+  map_inv₀ (abvHom abv) a
 
 theorem abv_div (a b : R) : abv (a / b) = abv a / abv b :=
-  (abvHom abv).map_div a b
+  map_div₀ (abvHom abv) a b
 
 end Field
 

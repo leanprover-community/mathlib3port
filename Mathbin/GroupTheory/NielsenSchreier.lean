@@ -152,9 +152,9 @@ variable {G : Type u} [Groupoid.{u} G] [IsFreeGroupoid G] (T : WideSubquiver (sy
 private def root' : G :=
   show T from root T
 
-/-- A path in the tree gives a hom, by composition. -/
 -- this has to be marked noncomputable, see issue #451.
 -- It might be nicer to define this in terms of `compose_path`
+/-- A path in the tree gives a hom, by composition. -/
 noncomputable def homOfPath : ∀ {a : G}, Path (root T) a → (root' T ⟶ a)
   | _, path.nil => 𝟙 _
   | a, path.cons p f => hom_of_path p ≫ Sum.recOn f.val (fun e => of e) fun e => inv (of e)

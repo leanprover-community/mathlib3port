@@ -78,12 +78,8 @@ we use instead `pi_Lp 2 f` for the product space, which is endowed with the `L^2
 instance PiLp.innerProductSpace {ι : Type _} [Fintype ι] (f : ι → Type _) [∀ i, InnerProductSpace 𝕜 (f i)] :
     InnerProductSpace 𝕜 (PiLp 2 f) where
   inner := fun x y => ∑ i, inner (x i) (y i)
-  norm_sq_eq_inner := by
-    intro x
-    have h₂ : 0 ≤ ∑ i : ι, ∥x i∥ ^ (2 : ℝ) := Finset.sum_nonneg fun j hj => rpow_nonneg_of_nonneg (norm_nonneg (x j)) 2
-    simp only [← norm, ← AddMonoidHom.map_sum, norm_sq_eq_inner, ← one_div]
-    rw [← rpow_nat_cast ((∑ i : ι, ∥x i∥ ^ (2 : ℝ)) ^ (2 : ℝ)⁻¹) 2, ← rpow_mul h₂]
-    norm_num
+  norm_sq_eq_inner := fun x => by
+    simp only [← PiLp.norm_sq_eq_of_L2, ← AddMonoidHom.map_sum, norm_sq_eq_inner, ← one_div]
   conj_sym := by
     intro x y
     unfold inner
@@ -109,13 +105,13 @@ space use `euclidean_space 𝕜 (fin n)`. -/
 def EuclideanSpace (𝕜 : Type _) [IsROrC 𝕜] (n : Type _) [Fintype n] : Type _ :=
   PiLp 2 fun i : n => 𝕜
 
-theorem EuclideanSpace.norm_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n] (x : EuclideanSpace 𝕜 n) :
-    ∥x∥ = Real.sqrt (∑ i, ∥x i∥ ^ 2) :=
-  PiLp.norm_eq_of_L2 x
-
 theorem EuclideanSpace.nnnorm_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n] (x : EuclideanSpace 𝕜 n) :
     ∥x∥₊ = Nnreal.sqrt (∑ i, ∥x i∥₊ ^ 2) :=
   PiLp.nnnorm_eq_of_L2 x
+
+theorem EuclideanSpace.norm_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n] (x : EuclideanSpace 𝕜 n) :
+    ∥x∥ = Real.sqrt (∑ i, ∥x i∥ ^ 2) := by
+  simpa only [← Real.coe_sqrt, ← Nnreal.coe_sum] using congr_arg (coe : ℝ≥0 → ℝ) x.nnnorm_eq
 
 theorem EuclideanSpace.dist_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n] (x y : EuclideanSpace 𝕜 n) :
     dist x y = (∑ i, dist (x i) (y i) ^ 2).sqrt :=
@@ -187,31 +183,31 @@ end
 
 variable (ι 𝕜)
 
+-- TODO : This should be generalized to `pi_Lp` with finite dimensional factors.
 /-- `pi_Lp.linear_equiv` upgraded to a continuous linear map between `euclidean_space 𝕜 ι`
 and `ι → 𝕜`. -/
--- TODO : This should be generalized to `pi_Lp` with finite dimensional factors.
 @[simps]
 def EuclideanSpace.equiv : EuclideanSpace 𝕜 ι ≃L[𝕜] ι → 𝕜 :=
   (PiLp.linearEquiv 2 𝕜 fun i : ι => 𝕜).toContinuousLinearEquiv
 
 variable {ι 𝕜}
 
-/-- The projection on the `i`-th coordinate of `euclidean_space 𝕜 ι`, as a linear map. -/
 -- TODO : This should be generalized to `pi_Lp`.
+/-- The projection on the `i`-th coordinate of `euclidean_space 𝕜 ι`, as a linear map. -/
 @[simps]
 def EuclideanSpace.projₗ (i : ι) : EuclideanSpace 𝕜 ι →ₗ[𝕜] 𝕜 :=
   (LinearMap.proj i).comp (PiLp.linearEquiv 2 𝕜 fun i : ι => 𝕜 : EuclideanSpace 𝕜 ι →ₗ[𝕜] ι → 𝕜)
 
+-- TODO : This should be generalized to `pi_Lp`.
 /-- The projection on the `i`-th coordinate of `euclidean_space 𝕜 ι`,
 as a continuous linear map. -/
--- TODO : This should be generalized to `pi_Lp`.
 @[simps]
 def EuclideanSpace.proj (i : ι) : EuclideanSpace 𝕜 ι →L[𝕜] 𝕜 :=
   ⟨EuclideanSpace.projₗ i, continuous_apply i⟩
 
+-- TODO : This should be generalized to `pi_Lp`.
 /-- The vector given in euclidean space by being `1 : 𝕜` at coordinate `i : ι` and `0 : 𝕜` at
 all other coordinates. -/
--- TODO : This should be generalized to `pi_Lp`.
 def EuclideanSpace.single [DecidableEq ι] (i : ι) (a : 𝕜) : EuclideanSpace 𝕜 ι :=
   (PiLp.equiv _ _).symm (Pi.single i a)
 

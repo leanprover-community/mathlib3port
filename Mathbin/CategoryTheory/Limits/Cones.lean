@@ -922,9 +922,9 @@ section
 
 variable {F : J ⥤ Cᵒᵖ}
 
-/-- Change a cocone on `F.left_op : Jᵒᵖ ⥤ C` to a cocone on `F : J ⥤ Cᵒᵖ`. -/
 -- Here and below we only automatically generate the `@[simp]` lemma for the `X` field,
 -- as we can write a simpler `rfl` lemma for the components of the natural transformation by hand.
+/-- Change a cocone on `F.left_op : Jᵒᵖ ⥤ C` to a cocone on `F : J ⥤ Cᵒᵖ`. -/
 @[simps (config := { rhsMd := semireducible, simpRhs := true })]
 def coneOfCoconeLeftOp (c : Cocone F.leftOp) : Cone F where
   x := op c.x
@@ -936,10 +936,10 @@ def coconeLeftOpOfCone (c : Cone F) : Cocone F.leftOp where
   x := unop c.x
   ι := NatTrans.leftOp c.π
 
-/-- Change a cone on `F.left_op : Jᵒᵖ ⥤ C` to a cocone on `F : J ⥤ Cᵒᵖ`. -/
 /- When trying use `@[simps]` to generate the `ι_app` field of this definition, `@[simps]` tries to
   reduce the RHS using `expr.dsimp` and `expr.simp`, but for some reason the expression is not
   being simplified properly. -/
+/-- Change a cone on `F.left_op : Jᵒᵖ ⥤ C` to a cocone on `F : J ⥤ Cᵒᵖ`. -/
 @[simps x]
 def coconeOfConeLeftOp (c : Cone F.leftOp) : Cocone F where
   x := op c.x

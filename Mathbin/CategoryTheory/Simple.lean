@@ -83,10 +83,10 @@ theorem kernel_zero_of_nonzero_from_simple {X Y : C} [Simple X] {f : X ⟶ Y} [H
   haveI := is_iso_of_mono_of_nonzero h
   exact w (eq_zero_of_epi_kernel f)
 
+-- See also `mono_of_nonzero_from_simple`, which requires `preadditive C`.
 /-- A nonzero morphism `f` to a simple object is an epimorphism
 (assuming `f` has an image, and `C` has equalizers).
 -/
--- See also `mono_of_nonzero_from_simple`, which requires `preadditive C`.
 theorem epi_of_nonzero_to_simple [HasEqualizers C] {X Y : C} [Simple Y] {f : X ⟶ Y} [HasImage f] (w : f ≠ 0) : Epi f :=
   by
   rw [← image.fac f]

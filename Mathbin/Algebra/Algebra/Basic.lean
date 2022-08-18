@@ -109,12 +109,12 @@ section Prio
 -- We set this priority to 0 later in this file
 set_option extends_priority 200
 
+/- control priority of
+`instance [algebra R A] : has_smul R A` -/
 /-- An associative unital `R`-algebra is a semiring `A` equipped with a map into its center `R → A`.
 
 See the implementation notes in this file for discussion of the details of this definition.
 -/
-/- control priority of
-`instance [algebra R A] : has_smul R A` -/
 @[nolint has_nonempty_instance]
 class Algebra (R : Type u) (A : Type v) [CommSemiringₓ R] [Semiringₓ A] extends HasSmul R A, R →+* A where
   commutes' : ∀ r x, to_fun r * x = x * to_fun r
@@ -190,10 +190,10 @@ which we set to priority 0 shortly. See `smul_def` below for the public version.
 private theorem smul_def'' (r : R) (x : A) : r • x = algebraMap R A r * x :=
   Algebra.smul_def' r x
 
+-- We'll later use this to show `algebra ℤ M` is a subsingleton.
 /-- To prove two algebra structures on a fixed `[comm_semiring R] [semiring A]` agree,
 it suffices to check the `algebra_map`s agree.
 -/
--- We'll later use this to show `algebra ℤ M` is a subsingleton.
 @[ext]
 theorem algebra_ext {R : Type _} [CommSemiringₓ R] {A : Type _} [Semiringₓ A] (P Q : Algebra R A)
     (w :
@@ -883,22 +883,6 @@ theorem map_int_cast (n : ℤ) : φ n = n :=
 
 end Ringₓ
 
-section DivisionRing
-
-variable [CommSemiringₓ R] [DivisionRing A] [DivisionRing B]
-
-variable [Algebra R A] [Algebra R B] (φ : A →ₐ[R] B)
-
-@[simp]
-theorem map_inv (x) : φ x⁻¹ = (φ x)⁻¹ :=
-  φ.toRingHom.map_inv x
-
-@[simp]
-theorem map_div (x y) : φ (x / y) = φ x / φ y :=
-  φ.toRingHom.map_div x y
-
-end DivisionRing
-
 end AlgHom
 
 @[simp]
@@ -1437,22 +1421,6 @@ protected theorem map_sub (x y) : e (x - y) = e x - e y :=
 
 end Ringₓ
 
-section DivisionRing
-
-variable [CommRingₓ R] [DivisionRing A₁] [DivisionRing A₂]
-
-variable [Algebra R A₁] [Algebra R A₂] (e : A₁ ≃ₐ[R] A₂)
-
-@[simp]
-theorem map_inv (x) : e x⁻¹ = (e x)⁻¹ :=
-  e.toAlgHom.map_inv x
-
-@[simp]
-theorem map_div (x y) : e (x / y) = e x / e y :=
-  e.toAlgHom.map_div x y
-
-end DivisionRing
-
 end AlgEquiv
 
 namespace MulSemiringAction
@@ -1501,10 +1469,10 @@ section Nat
 
 variable {R : Type _} [Semiringₓ R]
 
-/-- Semiring ⥤ ℕ-Alg -/
 -- Lower the priority so that `algebra.id` is picked most of the time when working with
 -- `ℕ`-algebras. This is only an issue since `algebra.id` and `algebra_nat` are not yet defeq.
 -- TODO: fix this by adding an `of_nat` field to semirings.
+/-- Semiring ⥤ ℕ-Alg -/
 instance (priority := 99) algebraNat : Algebra ℕ R where
   commutes' := Nat.cast_commute
   smul_def' := fun _ _ => nsmul_eq_mul _ _
@@ -1586,8 +1554,7 @@ example : algebraRat = Algebra.id ℚ :=
 theorem algebra_map_rat_rat : algebraMap ℚ ℚ = RingHom.id ℚ :=
   Subsingleton.elimₓ _ _
 
--- TODO[gh-6025]: make this an instance once safe to do so
-theorem algebra_rat_subsingleton {α} [Semiringₓ α] : Subsingleton (Algebra ℚ α) :=
+instance algebra_rat_subsingleton {α} [Semiringₓ α] : Subsingleton (Algebra ℚ α) :=
   ⟨fun x y => Algebra.algebra_ext x y <| RingHom.congr_fun <| Subsingleton.elimₓ _ _⟩
 
 end Rat
@@ -1615,10 +1582,10 @@ section Int
 
 variable (R : Type _) [Ringₓ R]
 
-/-- Ring ⥤ ℤ-Alg -/
 -- Lower the priority so that `algebra.id` is picked most of the time when working with
 -- `ℤ`-algebras. This is only an issue since `algebra.id ℤ` and `algebra_int ℤ` are not yet defeq.
 -- TODO: fix this by adding an `of_int` field to rings.
+/-- Ring ⥤ ℤ-Alg -/
 instance (priority := 99) algebraInt : Algebra ℤ R where
   commutes' := Int.cast_commute
   smul_def' := fun _ _ => zsmul_eq_mul _ _

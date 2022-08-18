@@ -126,8 +126,6 @@ theorem is_integral_closure_adjoing_singleton_of_prime [hcycl : IsCyclotomicExte
 
 attribute [-instance] CyclotomicField.algebra
 
-attribute [local instance] algebra_rat_subsingleton
-
 /-- The integral closure of `ℤ` inside `cyclotomic_field (p ^ k) ℚ` is
 `cyclotomic_ring (p ^ k) ℤ ℚ`. -/
 theorem cyclotomic_ring_is_integral_closure_of_prime_pow :

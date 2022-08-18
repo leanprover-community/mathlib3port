@@ -265,8 +265,8 @@ theorem ring_hom_mem_submonoid_of_factors_subset_of_units_subset {R S : Type _} 
     (h : ∀, ∀ b ∈ factors a, ∀, f b ∈ s) (hf : ∀ c : Rˣ, f c ∈ s) : f a ∈ s :=
   mem_submonoid_of_factors_subset_of_units_subset (s.comap f.toMonoidHom) ha h hf
 
-/-- A principal ideal domain has unique factorization -/
 -- see Note [lower instance priority]
+/-- A principal ideal domain has unique factorization -/
 instance (priority := 100) to_unique_factorization_monoid : UniqueFactorizationMonoid R :=
   { (IsNoetherianRing.wf_dvd_monoid : WfDvdMonoid R) with
     irreducible_iff_prime := fun _ => PrincipalIdealRing.irreducible_iff_prime }

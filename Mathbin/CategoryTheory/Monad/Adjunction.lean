@@ -259,11 +259,11 @@ instance comparisonFull [Full R] [IsRightAdjoint R] :
 
 end Reflective
 
-/-- Any reflective inclusion has a monadic right adjoint.
-    cf Prop 5.3.3 of [Riehl][riehl2017] -/
 -- It is possible to do this computably since the construction gives the data of the inverse, not
 -- just the existence of an inverse on each object.
 -- see Note [lower instance priority]
+/-- Any reflective inclusion has a monadic right adjoint.
+    cf Prop 5.3.3 of [Riehl][riehl2017] -/
 noncomputable instance (priority := 100) monadicOfReflective [Reflective R] :
     MonadicRightAdjoint R where eqv := Equivalence.ofFullyFaithfullyEssSurj _
 

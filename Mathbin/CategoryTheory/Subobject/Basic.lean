@@ -266,10 +266,10 @@ theorem mk_eq_mk_of_comm {B A₁ A₂ : C} (f : A₁ ⟶ B) (g : A₂ ⟶ B) [Mo
   eq_mk_of_comm _ ((underlyingIso f).trans i) <| by
     simp [← w]
 
-/-- An inequality of subobjects is witnessed by some morphism between the corresponding objects. -/
 -- We make `X` and `Y` explicit arguments here so that when `of_le` appears in goal statements
 -- it is possible to see its source and target
 -- (`h` will just display as `_`, because it is in `Prop`).
+/-- An inequality of subobjects is witnessed by some morphism between the corresponding objects. -/
 def ofLe {B : C} (X Y : Subobject B) (h : X ≤ Y) : (X : C) ⟶ (Y : C) :=
   underlying.map <| h.Hom
 
@@ -365,9 +365,9 @@ theorem of_mk_le_mk_refl {B A₁ : C} (f : A₁ ⟶ B) [Mono f] : ofMkLeMk f f l
   apply (cancel_mono f).mp
   simp
 
+-- As with `of_le`, we have `X` and `Y` as explicit arguments for readability.
 /-- An equality of subobjects gives an isomorphism of the corresponding objects.
 (One could use `underlying.map_iso (eq_to_iso h))` here, but this is more readable.) -/
--- As with `of_le`, we have `X` and `Y` as explicit arguments for readability.
 @[simps]
 def isoOfEq {B : C} (X Y : Subobject B) (h : X = Y) : (X : C) ≅ (Y : C) where
   Hom := ofLe _ _ h.le
@@ -494,10 +494,10 @@ theorem map_comp (f : X ⟶ Y) (g : Y ⟶ Z) [Mono f] [Mono g] (x : Subobject X)
 def mapIso {A B : C} (e : A ≅ B) : Subobject A ≌ Subobject B :=
   lowerEquivalence (MonoOver.mapIso e)
 
-/-- In fact, there's a type level bijection between the subobjects of isomorphic objects,
-which preserves the order. -/
 -- @[simps] here generates a lemma `map_iso_to_order_iso_to_equiv_symm_apply`
 -- whose left hand side is not in simp normal form.
+/-- In fact, there's a type level bijection between the subobjects of isomorphic objects,
+which preserves the order. -/
 def mapIsoToOrderIso (e : X ≅ Y) : Subobject X ≃o Subobject Y where
   toFun := (map e.Hom).obj
   invFun := (map e.inv).obj

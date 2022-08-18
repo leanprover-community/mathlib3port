@@ -95,6 +95,10 @@ theorem coe_zpow : ∀ (u : αˣ) (n : ℤ), ((u ^ n : αˣ) : α) = u ^ n :=
 theorem _root_.divp_eq_div (a : α) (u : αˣ) : a /ₚ u = a / u := by
   rw [div_eq_mul_inv, divp, u.coe_inv]
 
+@[simp, to_additive]
+theorem _root_.map_units_inv {F : Type _} [MonoidHomClass F M α] (f : F) (u : Units M) : f ↑u⁻¹ = (f u)⁻¹ :=
+  ((f : M →* α).comp (Units.coeHom M)).map_inv u
+
 end DivisionMonoid
 
 /-- If a map `g : M → Nˣ` agrees with a homomorphism `f : M →* N`, then

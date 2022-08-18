@@ -65,8 +65,8 @@ theorem id_apply (X : Fintypeₓ) (x : X) : (𝟙 X : X → X) x = x :=
 theorem comp_apply {X Y Z : Fintypeₓ} (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) : (f ≫ g) x = g (f x) :=
   rfl
 
-/-- Equivalences between finite types are the same as isomorphisms in `Fintype`. -/
 -- See `equiv_equiv_iso` in the root namespace for the analogue in `Type`.
+/-- Equivalences between finite types are the same as isomorphisms in `Fintype`. -/
 @[simps]
 def equivEquivIso {A B : Fintypeₓ} : A ≃ B ≃ (A ≅ B) where
   toFun := fun e => { Hom := e, inv := e.symm }

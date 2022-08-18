@@ -363,9 +363,9 @@ theorem span_singleton_sup_orthogonal_eq_top {B : V →ₗ[K] V →ₗ[K] K} {x 
   rw [orthogonal_span_singleton_eq_to_lin_ker]
   exact (B x).span_singleton_sup_ker_eq_top hx
 
+-- todo: Generalize this to sesquilinear maps
 /-- Given a bilinear form `B` and some `x` such that `B x x ≠ 0`, the span of the singleton of `x`
   is complement to its orthogonal complement. -/
--- todo: Generalize this to sesquilinear maps
 theorem is_compl_span_singleton_orthogonal {B : V →ₗ[K] V →ₗ[K] K} {x : V} (hx : ¬B.IsOrtho x x) :
     IsCompl (K∙x) (Submodule.orthogonalBilin (K∙x) B) :=
   { Disjoint := eq_bot_iff.1 <| span_singleton_inf_orthogonal_eq_bot B x hx,

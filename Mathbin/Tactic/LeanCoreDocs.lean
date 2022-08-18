@@ -510,10 +510,10 @@ add_tactic_doc
   { Name := "with_cases", category := DocCategory.tactic, declNames := [`tactic.interactive.with_cases],
     tags := ["core", "combinator"] }
 
+-- conv mode tactics
 /-- Navigate to the left-hand-side of a relation.
 A goal of `| a = b` will turn into the goal `| a`.
 -/
--- conv mode tactics
 add_tactic_doc
   { Name := "conv: to_lhs", category := DocCategory.tactic, declNames := [`conv.interactive.to_lhs], tags := ["conv"] }
 

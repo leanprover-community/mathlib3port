@@ -92,7 +92,8 @@ inductive FP {M} [Semigroupₓ M] : Streamₓ M → Set M
 
 /-- If `m` and `m'` are finite products in `M`, then so is `m * m'`, provided that `m'` is obtained
 from a subsequence of `M` starting sufficiently late. -/
-@[to_additive]
+@[to_additive
+      "If `m` and `m'` are finite sums in `M`, then so is `m + m'`, provided that `m'`\nis obtained from a subsequence of `M` starting sufficiently late."]
 theorem FP.mul {M} [Semigroupₓ M] {a : Streamₓ M} {m : M} (hm : m ∈ FP a) :
     ∃ n, ∀, ∀ m' ∈ FP (a.drop n), ∀, m * m' ∈ FP a := by
   induction' hm with a a m hm ih a m hm ih
@@ -191,7 +192,8 @@ theorem exists_FP_of_large {M} [Semigroupₓ M] (U : Ultrafilter M) (U_idem : U 
 
 /-- The strong form of **Hindman's theorem**: in any finite cover of an FP-set, one the parts
 contains an FP-set. -/
-@[to_additive FS_partition_regular]
+@[to_additive FS_partition_regular
+      "The strong form of **Hindman's theorem**: in any finite cover of\nan FS-set, one the parts contains an FS-set."]
 theorem FP_partition_regular {M} [Semigroupₓ M] (a : Streamₓ M) (s : Set (Set M)) (sfin : s.Finite)
     (scov : FP a ⊆ ⋃₀s) : ∃ c ∈ s, ∃ b : Streamₓ M, FP b ⊆ c :=
   let ⟨U, idem, aU⟩ := exists_idempotent_ultrafilter_le_FP a
@@ -200,7 +202,8 @@ theorem FP_partition_regular {M} [Semigroupₓ M] (a : Streamₓ M) (s : Set (Se
 
 /-- The weak form of **Hindman's theorem**: in any finite cover of a nonempty semigroup, one of the
 parts contains an FP-set. -/
-@[to_additive exists_FS_of_finite_cover]
+@[to_additive exists_FS_of_finite_cover
+      "The weak form of **Hindman's theorem**: in any finite cover\nof a nonempty additive semigroup, one of the parts contains an FS-set."]
 theorem exists_FP_of_finite_cover {M} [Semigroupₓ M] [Nonempty M] (s : Set (Set M)) (sfin : s.Finite) (scov : ⊤ ⊆ ⋃₀s) :
     ∃ c ∈ s, ∃ a : Streamₓ M, FP a ⊆ c :=
   let ⟨U, hU⟩ := exists_idempotent_of_compact_t2_of_continuous_mul_left (@Ultrafilter.continuous_mul_left M _)

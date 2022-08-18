@@ -26,6 +26,7 @@ namespace Suggest
 
 open SolveByElim
 
+-- TODO this is a hack; if you suspect more cases here would help, please report them
 /-- Map a name (typically a head symbol) to a "canonical" definitional synonym.
 Given a name `n`, we want a name `n'` such that a sufficiently applied
 expression with head symbol `n` is always definitionally equal to an expression
@@ -39,7 +40,6 @@ The default is that the original argument is returned, so `<` is just mapped to 
 
 `normalize_synonym` is called for every lemma in the library, so it needs to be fast.
 -/
--- TODO this is a hack; if you suspect more cases here would help, please report them
 unsafe def normalize_synonym : Name → Name
   | `gt => `has_lt.lt
   | `ge => `has_le.le
@@ -47,11 +47,11 @@ unsafe def normalize_synonym : Name → Name
   | `not => `false
   | n => n
 
+-- We may want to tweak this further?
 /-- Compute the head symbol of an expression, then normalise synonyms.
 
 This is only used when analysing the goal, so it is okay to do more expensive analysis here.
 -/
--- We may want to tweak this further?
 unsafe def allowed_head_symbols : expr → List Name
   |-- We first have a various "customisations":
       --   Because in `ℕ` `a.succ ≤ b` is definitionally `a < b`,
@@ -122,12 +122,12 @@ unsafe structure decl_data where
   m : HeadSymbolMatch
   l : ℕ
 
-/-- Generate a `decl_data` from the given declaration if
-it matches the head symbol `hs` for the current goal.
--/
 -- cached length of name
 -- We used to check here for private declarations, or declarations with certain suffixes.
 -- It turns out `apply` is so fast, it's better to just try them all.
+/-- Generate a `decl_data` from the given declaration if
+it matches the head symbol `hs` for the current goal.
+-/
 unsafe def process_declaration (hs : name_set) (d : declaration) : Option decl_data :=
   let n := d.to_name
   if !d.is_trusted || n.is_internal then none else (fun m => ⟨d, n, m, n.length⟩) <$> match_head_symbol hs d.type
@@ -173,17 +173,17 @@ unsafe def suggest_opt.mk_accept (o : suggest_opt) : opt :=
     accept := fun gs =>
       o.accept gs >> (guardₓ <| o.compulsory_hyps.all fun h => gs.any fun g => g.contains_expr_or_mvar h) }
 
+-- Implementation note: as this is used by both `library_search` and `suggest`,
+-- we first run `solve_by_elim` separately on the independent goals,
+-- whether or not `close_goals` is set,
+-- and then run `solve_by_elim { all_goals := tt }`,
+-- requiring that it succeeds if `close_goals = tt`.
 /-- Apply the lemma `e`, then attempt to close all goals using
 `solve_by_elim opt`, failing if `close_goals = tt`
 and there are any goals remaining.
 
 Returns the number of subgoals which were closed using `solve_by_elim`.
 -/
--- Implementation note: as this is used by both `library_search` and `suggest`,
--- we first run `solve_by_elim` separately on the independent goals,
--- whether or not `close_goals` is set,
--- and then run `solve_by_elim { all_goals := tt }`,
--- requiring that it succeeds if `close_goals = tt`.
 unsafe def apply_and_solve (close_goals : Bool) (opt : suggest_opt := {  }) (e : expr) : tactic ℕ := do
   trace_if_enabled `suggest f! "Trying to apply lemma: {e}"
   apply e opt
@@ -234,8 +234,8 @@ unsafe def apply_declaration (close_goals : Bool) (opt : suggest_opt := {  }) (d
       tac l
     | both => undefined
 
-/-- An `application` records the result of a successful application of a library lemma. -/
 -- we use `unpack_iff_both` to ensure this isn't reachable
+/-- An `application` records the result of a successful application of a library lemma. -/
 unsafe structure application where
   State : tactic_state
   script : Stringₓ
@@ -371,6 +371,7 @@ initialize
   registerTraceClass.1 `silence_suggest
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
+-- Turn off `Try this: exact/refine ...` trace messages for `suggest`
 /-- `suggest` tries to apply suitable theorems/defs from the library, and generates
 a list of `exact ...` or `refine ...` scripts that could be used at this step.
 It leaves the tactic state unchanged. It is intended as a complement of the search
@@ -394,7 +395,6 @@ end
 ```
 You can also use `suggest with attr` to include all lemmas with the attribute `attr`.
 -/
--- Turn off `Try this: exact/refine ...` trace messages for `suggest`
 unsafe def suggest (n : parse («expr ?» (with_desc "n" small_nat))) (hs : parse simp_arg_list)
     (attr_names : parse with_ident_list) (use : parse <| tk "using" *> many ident_ <|> return [])
     (opt : suggest_opt := {  }) : tactic Unit := do

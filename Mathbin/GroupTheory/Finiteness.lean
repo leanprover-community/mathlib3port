@@ -109,9 +109,11 @@ instance Monoidₓ.fg_of_add_monoid_fg [AddMonoidₓ.Fg N] : Monoidₓ.Fg (Multi
   AddMonoidₓ.fg_iff_mul_fg.1 ‹_›
 
 @[to_additive]
-instance (priority := 100) Monoidₓ.fg_of_fintype [Fintype M] : Monoidₓ.Fg M :=
-  ⟨⟨Finset.univ, by
-      rw [Finset.coe_univ] <;> exact Submonoid.closure_univ⟩⟩
+instance (priority := 100) Monoidₓ.fg_of_finite [Finite M] : Monoidₓ.Fg M := by
+  cases nonempty_fintype M
+  exact
+    ⟨⟨Finset.univ, by
+        rw [Finset.coe_univ] <;> exact Submonoid.closure_univ⟩⟩
 
 end Monoidₓ
 
@@ -262,9 +264,11 @@ instance Groupₓ.fg_of_mul_group_fg [AddGroupₓ.Fg H] : Groupₓ.Fg (Multiplic
   AddGroupₓ.fg_iff_mul_fg.1 ‹_›
 
 @[to_additive]
-instance (priority := 100) Groupₓ.fg_of_fintype [Fintype G] : Groupₓ.Fg G :=
-  ⟨⟨Finset.univ, by
-      rw [Finset.coe_univ] <;> exact Subgroup.closure_univ⟩⟩
+instance (priority := 100) Groupₓ.fg_of_finite [Finite G] : Groupₓ.Fg G := by
+  cases nonempty_fintype G
+  exact
+    ⟨⟨Finset.univ, by
+        rw [Finset.coe_univ] <;> exact Subgroup.closure_univ⟩⟩
 
 @[to_additive]
 theorem Groupₓ.fg_of_surjective {G' : Type _} [Groupₓ G'] [hG : Groupₓ.Fg G] {f : G →* G'}

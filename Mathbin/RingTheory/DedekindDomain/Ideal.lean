@@ -8,6 +8,7 @@ import Mathbin.AlgebraicGeometry.PrimeSpectrum.Noetherian
 import Mathbin.Order.Hom.Basic
 import Mathbin.RingTheory.DedekindDomain.Basic
 import Mathbin.RingTheory.FractionalIdeal
+import Mathbin.RingTheory.PrincipalIdealDomain
 
 /-!
 # Dedekind domains and ideals
@@ -1093,4 +1094,92 @@ theorem IsDedekindDomain.quotient_equiv_pi_factors_mk {I : Ideal R} (hI : I ≠ 
 end DedekindDomain
 
 end ChineseRemainder
+
+section PID
+
+open multiplicity UniqueFactorizationMonoid Ideal
+
+variable {R} [IsDomain R] [IsPrincipalIdealRing R]
+
+theorem span_singleton_dvd_span_singleton_iff_dvd {a b : R} : Ideal.span {a} ∣ Ideal.span ({b} : Set R) ↔ a ∣ b :=
+  ⟨fun h => mem_span_singleton.mp (dvd_iff_le.mp h (mem_span_singleton.mpr (dvd_refl b))), fun h =>
+    dvd_iff_le.mpr fun d hd => mem_span_singleton.mpr (dvd_trans h (mem_span_singleton.mp hd))⟩
+
+theorem singleton_span_mem_normalized_factors_of_mem_normalized_factors [NormalizationMonoid R] [DecidableEq R]
+    [DecidableEq (Ideal R)] {a b : R} (ha : a ∈ normalizedFactors b) :
+    Ideal.span ({a} : Set R) ∈ normalizedFactors (Ideal.span ({b} : Set R)) := by
+  by_cases' hb : b = 0
+  · rw [ideal.span_singleton_eq_bot.mpr hb, bot_eq_zero, normalized_factors_zero]
+    rw [hb, normalized_factors_zero] at ha
+    simpa only [← Multiset.not_mem_zero]
+    
+  · suffices Prime (Ideal.span ({a} : Set R)) by
+      obtain ⟨c, hc, hc'⟩ :=
+        exists_mem_normalized_factors_of_dvd _ this.irreducible
+          (dvd_iff_le.mpr (span_singleton_le_span_singleton.mpr (dvd_of_mem_normalized_factors ha)))
+      rwa [associated_iff_eq.mp hc']
+      · by_contra
+        exact hb (span_singleton_eq_bot.mp h)
+        
+    rw [prime_iff_is_prime]
+    exact (span_singleton_prime (prime_of_normalized_factor a ha).ne_zero).mpr (prime_of_normalized_factor a ha)
+    by_contra
+    exact (prime_of_normalized_factor a ha).ne_zero (span_singleton_eq_bot.mp h)
+    
+
+/-- The bijection between the (normalized) prime factors of `r` and the (normalized) prime factors
+    of `span {r}` -/
+@[simps]
+noncomputable def normalizedFactorsEquivSpanNormalizedFactors [NormalizationMonoid R] [DecidableEq R]
+    [DecidableEq (Ideal R)] {r : R} (hr : r ≠ 0) :
+    { d : R | d ∈ normalizedFactors r } ≃ { I : Ideal R | I ∈ normalizedFactors (Ideal.span ({r} : Set R)) } :=
+  Equivₓ.ofBijective
+    (fun d => ⟨Ideal.span {↑d}, singleton_span_mem_normalized_factors_of_mem_normalized_factors d.Prop⟩)
+    (by
+      constructor
+      · rintro ⟨a, ha⟩ ⟨b, hb⟩ h
+        rw [Subtype.mk_eq_mk, Ideal.span_singleton_eq_span_singleton, Subtype.coe_mk, Subtype.coe_mk] at h
+        exact subtype.mk_eq_mk.mpr (mem_normalized_factors_eq_of_associated ha hb h)
+        
+      · rintro ⟨i, hi⟩
+        letI : i.is_principal := inferInstance
+        letI : i.is_prime := is_prime_of_prime (prime_of_normalized_factor i hi)
+        obtain ⟨a, ha, ha'⟩ :=
+          exists_mem_normalized_factors_of_dvd hr
+            (Submodule.IsPrincipal.prime_generator_of_is_prime i (prime_of_normalized_factor i hi).ne_zero).Irreducible
+            _
+        · use ⟨a, ha⟩
+          simp only [← Subtype.coe_mk, ← Subtype.mk_eq_mk, span_singleton_eq_span_singleton.mpr ha', ←
+            Ideal.span_singleton_generator]
+          
+        · exact
+            (Submodule.IsPrincipal.mem_iff_generator_dvd i).mp
+              ((show Ideal.span {r} ≤ i from dvd_iff_le.mp (dvd_of_mem_normalized_factors hi))
+                (mem_span_singleton.mpr (dvd_refl r)))
+          
+        )
+
+theorem multiplicity_eq_multiplicity_span [DecidableRel ((· ∣ ·) : R → R → Prop)]
+    [DecidableRel ((· ∣ ·) : Ideal R → Ideal R → Prop)] {a b : R} :
+    multiplicity (Ideal.span {a}) (Ideal.span ({b} : Set R)) = multiplicity a b := by
+  by_cases' h : Finite a b
+  · rw [← PartEnat.coe_get (finite_iff_dom.mp h)]
+    refine' (multiplicity.unique (show Ideal.span {a} ^ (multiplicity a b).get h ∣ Ideal.span {b} from _) _).symm <;>
+      rw [Ideal.span_singleton_pow, span_singleton_dvd_span_singleton_iff_dvd]
+    exact pow_multiplicity_dvd h
+    · exact
+        multiplicity.is_greatest
+          ((PartEnat.lt_coe_iff _ _).mpr (Exists.introₓ (finite_iff_dom.mp h) (Nat.lt_succ_selfₓ _)))
+      
+    
+  · suffices ¬Finite (Ideal.span ({a} : Set R)) (Ideal.span ({b} : Set R)) by
+      rw [finite_iff_dom, PartEnat.not_dom_iff_eq_top] at h this
+      rw [h, this]
+    refine'
+      not_finite_iff_forall.mpr fun n => by
+        rw [Ideal.span_singleton_pow, span_singleton_dvd_span_singleton_iff_dvd]
+        exact not_finite_iff_forall.mp h n
+    
+
+end PID
 

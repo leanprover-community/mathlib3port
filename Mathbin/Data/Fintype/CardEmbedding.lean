@@ -33,7 +33,7 @@ theorem card_embedding_eq_of_unique {α β : Type _} [Unique α] [Fintype β] [F
 @[simp]
 theorem card_embedding_eq {α β} [Fintype α] [Fintype β] [Fintype (α ↪ β)] : ‖α ↪ β‖ = ‖β‖.descFactorial ‖α‖ := by
   classical
-  induction' ‹Fintype α› using Fintype.induction_empty_option' with α₁ α₂ h₂ e ih α h ih
+  induction' ‹Fintype α› using Fintype.induction_empty_option with α₁ α₂ h₂ e ih α h ih
   · letI := Fintype.ofEquiv _ e.symm
     rw [← card_congr (Equivₓ.embeddingCongr e (Equivₓ.refl β)), ih, card_congr e]
     

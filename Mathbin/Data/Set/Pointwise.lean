@@ -1722,7 +1722,7 @@ theorem zero_smul_set_subset (s : Set β) : (0 : α) • s ⊆ 0 :=
   image_subset_iff.2 fun x _ => zero_smul α x
 
 theorem subsingleton_zero_smul_set (s : Set β) : ((0 : α) • s).Subsingleton :=
-  subsingleton_singleton.mono <| zero_smul_set_subset s
+  subsingleton_singleton.anti <| zero_smul_set_subset s
 
 theorem zero_mem_smul_set {t : Set β} {a : α} (h : (0 : β) ∈ t) : (0 : β) ∈ a • t :=
   ⟨0, h, smul_zero' _ _⟩

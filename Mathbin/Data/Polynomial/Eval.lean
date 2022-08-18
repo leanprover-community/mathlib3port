@@ -620,13 +620,13 @@ protected theorem map_mul : (p * q).map f = p.map f * q.map f := by
 theorem map_smul (r : R) : (r • p).map f = f r • p.map f := by
   rw [map, eval₂_smul, RingHom.comp_apply, C_mul']
 
-/-- `polynomial.map` as a `ring_hom`. -/
 -- `map` is a ring-hom unconditionally, and theoretically the definition could be replaced,
 -- but this turns out not to be easy because `p.map f` does not resolve to `polynomial.map`
 -- if `map` is a `ring_hom` instead of a plain function; the elaborator does not try to coerce
 -- to a function before trying field (dot) notation (this may be technically infeasible);
 -- the relevant code is (both lines): https://github.com/leanprover-community/
 -- lean/blob/487ac5d7e9b34800502e1ddf3c7c806c01cf9d51/src/frontends/lean/elaborator.cpp#L1876-L1913
+/-- `polynomial.map` as a `ring_hom`. -/
 def mapRingHom (f : R →+* S) : R[X] →+* S[X] where
   toFun := Polynomial.map f
   map_add' := fun _ _ => Polynomial.map_add f

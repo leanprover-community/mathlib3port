@@ -1237,7 +1237,8 @@ theorem prod_comp [DecidableEq γ] (f : γ → β) (g : α → γ) :
         (fun _ _ => rfl)
         (by
           simp )
-        (by
+        (-- `(by finish)` closes this
+        by
           rintro ⟨b_fst, b_snd⟩ H
           simp only [← mem_image, ← exists_prop, ← mem_filter, ← mem_sigma] at H
           tauto)

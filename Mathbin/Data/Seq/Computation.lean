@@ -13,14 +13,14 @@ open Function
 
 universe u v w
 
-/-- `computation α` is the type of unbounded computations returning `α`.
-  An element of `computation α` is an infinite sequence of `option α` such
-  that if `f n = some a` for some `n` then it is constantly `some a` after that. -/
 /-
 coinductive computation (α : Type u) : Type u
 | return : α → computation α
 | think : computation α → computation α
 -/
+/-- `computation α` is the type of unbounded computations returning `α`.
+  An element of `computation α` is an infinite sequence of `option α` such
+  that if `f n = some a` for some `n` then it is constantly `some a` after that. -/
 def Computation (α : Type u) : Type u :=
   { f : Streamₓ (Option α) // ∀ {n a}, f n = some a → f (n + 1) = some a }
 
@@ -28,17 +28,17 @@ namespace Computation
 
 variable {α : Type u} {β : Type v} {γ : Type w}
 
-/-- `return a` is the computation that immediately terminates with result `a`. -/
 -- constructors
+/-- `return a` is the computation that immediately terminates with result `a`. -/
 def return (a : α) : Computation α :=
   ⟨Streamₓ.const (some a), fun n a' => id⟩
 
 instance : CoeTₓ α (Computation α) :=
   ⟨return⟩
 
+-- note [use has_coe_t]
 /-- `think c` is the computation that delays for one "tick" and then performs
   computation `c`. -/
--- note [use has_coe_t]
 def think (c : Computation α) : Computation α :=
   ⟨none :: c.1, fun n a h => by
     cases' n with n
@@ -51,15 +51,15 @@ def thinkN (c : Computation α) : ℕ → Computation α
   | 0 => c
   | n + 1 => think (thinkN n)
 
+-- check for immediate result
 /-- `head c` is the first step of computation, either `some a` if `c = return a`
   or `none` if `c = think c'`. -/
--- check for immediate result
 def head (c : Computation α) : Option α :=
   c.1.head
 
+-- one step of computation
 /-- `tail c` is the remainder of computation, either `c` if `c = return a`
   or `c'` if `c = think c'`. -/
--- one step of computation
 def tail (c : Computation α) : Computation α :=
   ⟨c.1.tail, fun n a =>
     let t := c.2
@@ -782,9 +782,9 @@ theorem terminates_map_iff (f : α → β) (s : Computation α) : Terminates (ma
     ⟨⟨_, h1⟩⟩,
     @Computation.terminates_map _ _ _ _⟩
 
+-- Parallel computation
 /-- `c₁ <|> c₂` calculates `c₁` and `c₂` simultaneously, returning
   the first one that gives a result. -/
--- Parallel computation
 def orelse (c₁ c₂ : Computation α) : Computation α :=
   @Computation.corec α (Computation α × Computation α)
     (fun ⟨c₁, c₂⟩ =>

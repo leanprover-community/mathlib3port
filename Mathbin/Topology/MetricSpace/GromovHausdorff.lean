@@ -61,11 +61,11 @@ namespace GromovHausdorff
 
 section GHSpace
 
-/-- Equivalence relation identifying two nonempty compact sets which are isometric -/
 /- In this section, we define the Gromov-Hausdorff space, denoted `GH_space` as the quotient
 of nonempty compact subsets of `ℓ^∞(ℝ)` by identifying isometric sets.
 Using the Kuratwoski embedding, we get a canonical map `to_GH_space` mapping any nonempty
 compact type to `GH_space`. -/
+/-- Equivalence relation identifying two nonempty compact sets which are isometric -/
 private def isometry_rel : NonemptyCompacts ℓ_infty_ℝ → NonemptyCompacts ℓ_infty_ℝ → Prop := fun x y =>
   Nonempty (x ≃ᵢ y)
 
@@ -699,8 +699,8 @@ theorem GH_dist_le_of_approx_subsets {s : Set X} (Φ : s → Y) {ε₁ ε₂ ε�
 
 end
 
-/-- The Gromov-Hausdorff space is second countable. -/
 --section
+/-- The Gromov-Hausdorff space is second countable. -/
 instance : SecondCountableTopology GHSpace := by
   refine' second_countable_of_countable_discretization fun δ δpos => _
   let ε := 2 / 5 * δ

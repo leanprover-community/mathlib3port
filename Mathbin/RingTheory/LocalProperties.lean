@@ -211,8 +211,8 @@ end Properties
 
 section Ideal
 
-/-- An ideal is trivial if its localization at every maximal ideal is trivial. -/
 -- This proof should work for all modules, but we do not know how to localize a module yet.
+/-- An ideal is trivial if its localization at every maximal ideal is trivial. -/
 theorem ideal_eq_zero_of_localization (I : Ideal R)
     (h : ∀ (J : Ideal R) (hJ : J.IsMaximal), IsLocalization.coeSubmodule (Localization.AtPrime J) I = 0) : I = 0 := by
   by_contra hI

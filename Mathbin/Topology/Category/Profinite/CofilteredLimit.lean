@@ -124,10 +124,11 @@ theorem exists_locally_constant_fin_two (f : LocallyConstant C.x (Finₓ 2)) :
   conv_rhs => rw [Set.preimage_comp]
   rw [LocallyConstant.of_clopen_fiber_zero hV, ← h]
 
-theorem exists_locally_constant_fintype_aux {α : Type _} [Fintype α] (f : LocallyConstant C.x α) :
+theorem exists_locally_constant_finite_aux {α : Type _} [Finite α] (f : LocallyConstant C.x α) :
     ∃ (j : J)(g : LocallyConstant (F.obj j) (α → Finₓ 2)),
       (f.map fun a b => if a = b then (0 : Finₓ 2) else 1) = g.comap (C.π.app _) :=
   by
+  cases nonempty_fintype α
   let ι : α → α → Finₓ 2 := fun x y => if x = y then 0 else 1
   let ff := (f.map ι).flip
   have hff := fun a : α => exists_locally_constant_fin_two _ hC (ff a)
@@ -166,10 +167,10 @@ theorem exists_locally_constant_fintype_aux {α : Type _} [Fintype α] (f : Loca
   all_goals
     continuity
 
-theorem exists_locally_constant_fintype_nonempty {α : Type _} [Fintype α] [Nonempty α] (f : LocallyConstant C.x α) :
+theorem exists_locally_constant_finite_nonempty {α : Type _} [Finite α] [Nonempty α] (f : LocallyConstant C.x α) :
     ∃ (j : J)(g : LocallyConstant (F.obj j) α), f = g.comap (C.π.app _) := by
   inhabit α
-  obtain ⟨j, gg, h⟩ := exists_locally_constant_fintype_aux _ hC f
+  obtain ⟨j, gg, h⟩ := exists_locally_constant_finite_aux _ hC f
   let ι : α → α → Finₓ 2 := fun a b => if a = b then 0 else 1
   let σ : (α → Finₓ 2) → α := fun f => if h : ∃ a : α, ι a = f then h.some else arbitrary _
   refine' ⟨j, gg.map σ, _⟩
@@ -226,7 +227,7 @@ theorem exists_locally_constant {α : Type _} (f : LocallyConstant C.x α) :
     exact cond.map CD
     
   · let f' : LocallyConstant C.X S := ⟨S.proj, S.proj_is_locally_constant⟩
-    obtain ⟨j, g', hj⟩ := exists_locally_constant_fintype_nonempty _ hC f'
+    obtain ⟨j, g', hj⟩ := exists_locally_constant_finite_nonempty _ hC f'
     refine' ⟨j, ⟨ff ∘ g', g'.is_locally_constant.comp _⟩, _⟩
     ext1 t
     apply_fun fun e => e t  at hj

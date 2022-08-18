@@ -121,8 +121,8 @@ section
 
 variable {C' : Type _}
 
-/-- Help the typechecker by explicitly translating from `C` to `shrink_homs C`. -/
 -- a fresh variable with no category instance attached
+/-- Help the typechecker by explicitly translating from `C` to `shrink_homs C`. -/
 def toShrinkHoms {C' : Type _} (X : C') : ShrinkHoms C' :=
   X
 

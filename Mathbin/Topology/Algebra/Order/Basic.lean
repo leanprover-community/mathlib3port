@@ -1355,6 +1355,7 @@ In an `order_topology`, such neighborhoods can be characterized as the sets cont
 intervals to the right or to the left of `a`. We give now these characterizations. -/
 
 
+-- NB: If you extend the list, append to the end please to avoid breaking the API
 /-- The following statements are equivalent:
 
 0. `s` is a neighborhood of `a` within `(a, +∞)`
@@ -1362,7 +1363,6 @@ intervals to the right or to the left of `a`. We give now these characterization
 2. `s` is a neighborhood of `a` within `(a, b)`
 3. `s` includes `(a, u)` for some `u ∈ (a, b]`
 4. `s` includes `(a, u)` for some `u > a` -/
--- NB: If you extend the list, append to the end please to avoid breaking the API
 theorem tfae_mem_nhds_within_Ioi {a b : α} (hab : a < b) (s : Set α) :
     Tfae
       [s ∈ 𝓝[>] a,-- 0 : `s` is a neighborhood of `a` within `(a, +∞)`

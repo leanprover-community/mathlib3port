@@ -862,10 +862,12 @@ end
 /-- A (semi)ring is Noetherian if it is Noetherian as a module over itself,
 i.e. all its ideals are finitely generated.
 -/
-class IsNoetherianRing (R) [Semiringₓ R] extends IsNoetherian R R : Prop
+@[reducible]
+def IsNoetherianRing (R) [Semiringₓ R] :=
+  IsNoetherian R R
 
 theorem is_noetherian_ring_iff {R} [Semiringₓ R] : IsNoetherianRing R ↔ IsNoetherian R R :=
-  ⟨fun h => h.1, @IsNoetherianRing.mk _ _⟩
+  Iff.rfl
 
 /-- A ring is Noetherian if and only if all its ideals are finitely-generated. -/
 theorem is_noetherian_ring_iff_ideal_fg (R : Type _) [Semiringₓ R] : IsNoetherianRing R ↔ ∀ I : Ideal R, I.Fg :=
@@ -878,17 +880,12 @@ instance (priority := 80) is_noetherian_of_finite (R M) [Finite M] [Semiringₓ 
     ⟨(s : Set M).to_finite.toFinset, by
       rw [Set.Finite.coe_to_finset, Submodule.span_eq]⟩⟩
 
-/-- Modules over the trivial ring are Noetherian. -/
 -- see Note [lower instance priority]
+/-- Modules over the trivial ring are Noetherian. -/
 instance (priority := 100) is_noetherian_of_subsingleton (R M) [Subsingleton R] [Semiringₓ R] [AddCommMonoidₓ M]
     [Module R M] : IsNoetherian R M := by
   haveI := Module.subsingleton R M
   exact is_noetherian_of_finite R M
-
--- see Note [lower instance priority]
-instance (priority := 100) Ringₓ.is_noetherian_of_subsingleton {R} [Semiringₓ R] [Subsingleton R] :
-    IsNoetherianRing R :=
-  ⟨⟩
 
 theorem is_noetherian_of_submodule_of_noetherian (R M) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] (N : Submodule R M)
     (h : IsNoetherian R M) : IsNoetherian R N := by

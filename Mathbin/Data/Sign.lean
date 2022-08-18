@@ -352,6 +352,16 @@ theorem sign_nonpos_iff : sign a ≤ 0 ↔ a ≤ 0 := by
 
 end LinearOrderₓ
 
+section OrderedSemiring
+
+variable [OrderedSemiring α] [DecidableRel ((· < ·) : α → α → Prop)] [Nontrivial α]
+
+@[simp]
+theorem sign_one : sign (1 : α) = 1 :=
+  sign_pos zero_lt_one
+
+end OrderedSemiring
+
 section LinearOrderedRing
 
 variable [LinearOrderedRing α] {a b : α}
@@ -360,6 +370,13 @@ variable [LinearOrderedRing α] {a b : α}
 113488-general/topic/type.20class.20inference.20issues/near/276937942 -/
 attribute [local instance] LinearOrderedRing.decidableLt
 
+theorem sign_mul (x y : α) : sign (x * y) = sign x * sign y := by
+  rcases lt_trichotomyₓ x 0 with (hx | hx | hx) <;>
+    rcases lt_trichotomyₓ y 0 with (hy | hy | hy) <;>
+      simp only [← sign_zero, ← mul_zero, ← zero_mul, ← sign_pos, ← sign_neg, ← hx, ← hy, ← mul_oneₓ, ← neg_one_mul, ←
+        neg_negₓ, ← one_mulₓ, ← mul_pos_of_neg_of_neg, ← mul_neg_of_neg_of_pos, ← neg_zero', ← mul_neg_of_pos_of_neg, ←
+        mul_pos]
+
 /-- `sign` as a `monoid_with_zero_hom` for a nontrivial ordered semiring. Note that linearity
 is required; consider ℂ with the order `z ≤ w` iff they have the same imaginary part and
 `z - w ≤ 0` in the reals; then `1 + i` and `1 - i` are incomparable to zero, and thus we have:
@@ -367,13 +384,12 @@ is required; consider ℂ with the order `z ≤ w` iff they have the same imagin
 def signHom : α →*₀ SignType where
   toFun := sign
   map_zero' := sign_zero
-  map_one' := sign_pos zero_lt_one
-  map_mul' := fun x y => by
-    rcases lt_trichotomyₓ x 0 with (hx | hx | hx) <;>
-      rcases lt_trichotomyₓ y 0 with (hy | hy | hy) <;>
-        simp only [← sign_zero, ← mul_zero, ← zero_mul, ← sign_pos, ← sign_neg, ← hx, ← hy, ← mul_oneₓ, ← neg_one_mul, ←
-          neg_negₓ, ← one_mulₓ, ← mul_pos_of_neg_of_neg, ← mul_neg_of_neg_of_pos, ← neg_zero', ← mul_neg_of_pos_of_neg,
-          ← mul_pos]
+  map_one' := sign_one
+  map_mul' := sign_mul
+
+theorem sign_pow (x : α) (n : ℕ) : sign (x ^ n) = sign x ^ n := by
+  change signHom (x ^ n) = signHom x ^ n
+  exact map_pow _ _ _
 
 end LinearOrderedRing
 

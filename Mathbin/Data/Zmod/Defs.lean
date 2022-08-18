@@ -98,7 +98,7 @@ instance infinite : Infinite (Zmod 0) :=
 @[simp]
 theorem card (n : ℕ) [Fintype (Zmod n)] : Fintype.card (Zmod n) = n := by
   cases n
-  · exact (not_fintype (Zmod 0)).elim
+  · exact (not_finite (Zmod 0)).elim
     
   · convert Fintype.card_fin (n + 1)
     

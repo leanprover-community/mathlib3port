@@ -129,6 +129,9 @@ instance : IsFractionRing (ringOfIntegers Fq F) F :=
 instance : IsIntegrallyClosed (ringOfIntegers Fq F) :=
   integralClosure.is_integrally_closed_of_finite_extension (Ratfunc Fq)
 
+instance [IsSeparable (Ratfunc Fq) F] : IsNoetherian Fq[X] (ringOfIntegers Fq F) :=
+  IsIntegralClosure.is_noetherian _ (Ratfunc Fq) F _
+
 instance [IsSeparable (Ratfunc Fq) F] : IsDedekindDomain (ringOfIntegers Fq F) :=
   IsIntegralClosure.is_dedekind_domain Fq[X] (Ratfunc Fq) F _
 

@@ -333,7 +333,7 @@ theorem det_adjugate (A : Matrix n n α) : (adjugate A).det = A.det ^ (Fintype.c
 
 @[simp]
 theorem adjugate_fin_zero (A : Matrix (Finₓ 0) (Finₓ 0) α) : adjugate A = 0 :=
-  @Subsingleton.elimₓ _ Matrix.subsingleton_of_empty_left _ _
+  Subsingleton.elimₓ _ _
 
 @[simp]
 theorem adjugate_fin_one (A : Matrix (Finₓ 1) (Finₓ 1) α) : adjugate A = 1 :=
@@ -436,7 +436,7 @@ theorem adjugate_adjugate (A : Matrix n n α) (h : Fintype.card n ≠ 1) :
   -- get rid of the `- 2`
   cases' h_card : Fintype.card n with n'
   · haveI : IsEmpty n := fintype.card_eq_zero_iff.mp h_card
-    exact @Subsingleton.elimₓ _ Matrix.subsingleton_of_empty_left _ _
+    apply Subsingleton.elimₓ
     
   cases n'
   · exact (h h_card).elim

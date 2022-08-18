@@ -236,9 +236,9 @@ attribute [local instance] orbit_rel
 variable {α} {β}
 
 /-- When you take a set `U` in `β`, push it down to the quotient, and pull back, you get the union
-of the orbit of `U` under `α`.
--/
-@[to_additive]
+of the orbit of `U` under `α`. -/
+@[to_additive
+      "When you take a set `U` in `β`, push it down to the quotient, and pull back, you get\nthe union of the orbit of `U` under `α`."]
 theorem quotient_preimage_image_eq_union_mul (U : Set β) :
     Quotientₓ.mk ⁻¹' (Quotientₓ.mk '' U) = ⋃ a : α, (· • ·) a '' U := by
   set f : β → Quotientₓ (MulAction.orbitRel α β) := Quotientₓ.mk

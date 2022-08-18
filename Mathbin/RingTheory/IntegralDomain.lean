@@ -37,19 +37,19 @@ open BigOperators Nat
 section CancelMonoidWithZero
 
 -- There doesn't seem to be a better home for these right now
-variable {M : Type _} [CancelMonoidWithZero M] [Fintype M]
+variable {M : Type _} [CancelMonoidWithZero M] [Finite M]
 
-theorem mul_right_bijective_of_fintype₀ {a : M} (ha : a ≠ 0) : Bijective fun b => a * b :=
-  Fintype.injective_iff_bijective.1 <| mul_right_injective₀ ha
+theorem mul_right_bijective_of_finite₀ {a : M} (ha : a ≠ 0) : Bijective fun b => a * b :=
+  Finite.injective_iff_bijective.1 <| mul_right_injective₀ ha
 
-theorem mul_left_bijective_of_fintype₀ {a : M} (ha : a ≠ 0) : Bijective fun b => b * a :=
-  Fintype.injective_iff_bijective.1 <| mul_left_injective₀ ha
+theorem mul_left_bijective_of_finite₀ {a : M} (ha : a ≠ 0) : Bijective fun b => b * a :=
+  Finite.injective_iff_bijective.1 <| mul_left_injective₀ ha
 
 /-- Every finite nontrivial cancel_monoid_with_zero is a group_with_zero. -/
 def Fintype.groupWithZeroOfCancel (M : Type _) [CancelMonoidWithZero M] [DecidableEq M] [Fintype M] [Nontrivial M] :
     GroupWithZeroₓ M :=
   { ‹Nontrivial M›, ‹CancelMonoidWithZero M› with
-    inv := fun a => if h : a = 0 then 0 else Fintype.bijInv (mul_right_bijective_of_fintype₀ h) 1,
+    inv := fun a => if h : a = 0 then 0 else Fintype.bijInv (mul_right_bijective_of_finite₀ h) 1,
     mul_inv_cancel := fun a ha => by
       simp [← Inv.inv, ← dif_neg ha]
       exact Fintype.right_inverse_bij_inv _ _,
@@ -78,14 +78,15 @@ dropping one assumption from this theorem. -/
 def Fintype.fieldOfDomain (R) [CommRingₓ R] [IsDomain R] [DecidableEq R] [Fintype R] : Field R :=
   { Fintype.groupWithZeroOfCancel R, ‹CommRingₓ R› with }
 
-theorem Fintype.is_field_of_domain (R) [CommRingₓ R] [IsDomain R] [Fintype R] : IsField R :=
-  @Field.to_is_field R <| @Fintype.fieldOfDomain R _ _ (Classical.decEq R) _
+theorem Finite.is_field_of_domain (R) [CommRingₓ R] [IsDomain R] [Finite R] : IsField R := by
+  cases nonempty_fintype R
+  exact @Field.to_is_field R (@Fintype.fieldOfDomain R _ _ (Classical.decEq R) _)
 
 end Ringₓ
 
-variable [CommRingₓ R] [IsDomain R] [Groupₓ G] [Fintype G]
+variable [CommRingₓ R] [IsDomain R] [Groupₓ G]
 
-theorem card_nth_roots_subgroup_units (f : G →* R) (hf : Injective f) {n : ℕ} (hn : 0 < n) (g₀ : G) :
+theorem card_nth_roots_subgroup_units [Fintype G] (f : G →* R) (hf : Injective f) {n : ℕ} (hn : 0 < n) (g₀ : G) :
     ({ g ∈ univ | g ^ n = g₀ } : Finset G).card ≤ (nthRoots n (f g₀)).card := by
   haveI : DecidableEq R := Classical.decEq _
   refine' le_transₓ _ (nth_roots n (f g₀)).to_finset_card_le
@@ -100,8 +101,9 @@ theorem card_nth_roots_subgroup_units (f : G →* R) (hf : Injective f) {n : ℕ
     
 
 /-- A finite subgroup of the unit group of an integral domain is cyclic. -/
-theorem is_cyclic_of_subgroup_is_domain (f : G →* R) (hf : Injective f) : IsCyclic G := by
+theorem is_cyclic_of_subgroup_is_domain [Finite G] (f : G →* R) (hf : Injective f) : IsCyclic G := by
   classical
+  cases nonempty_fintype G
   apply is_cyclic_of_card_pow_eq_one_le
   intro n hn
   convert le_transₓ (card_nth_roots_subgroup_units f hf hn 1) (card_nth_roots n (f 1))
@@ -109,13 +111,13 @@ theorem is_cyclic_of_subgroup_is_domain (f : G →* R) (hf : Injective f) : IsCy
 /-- The unit group of a finite integral domain is cyclic.
 
 To support `ℤˣ` and other infinite monoids with finite groups of units, this requires only
-`fintype Rˣ` rather than deducing it from `fintype R`. -/
-instance [Fintype Rˣ] : IsCyclic Rˣ :=
+`finite Rˣ` rather than deducing it from `finite R`. -/
+instance [Finite Rˣ] : IsCyclic Rˣ :=
   is_cyclic_of_subgroup_is_domain (Units.coeHom R) <| Units.ext
 
 section
 
-variable (S : Subgroup Rˣ) [Fintype S]
+variable (S : Subgroup Rˣ) [Finite S]
 
 /-- A finite subgroup of the units of an integral domain is cyclic. -/
 instance subgroup_units_cyclic : IsCyclic S := by
@@ -127,6 +129,8 @@ instance subgroup_units_cyclic : IsCyclic S := by
     
 
 end
+
+variable [Fintype G]
 
 theorem card_fiber_eq_of_mem_range {H : Type _} [Groupₓ H] [DecidableEq H] (f : G →* H) {x y : H} (hx : x ∈ Set.Range f)
     (hy : y ∈ Set.Range f) : (univ.filter fun g => f g = x).card = (univ.filter fun g => f g = y).card := by

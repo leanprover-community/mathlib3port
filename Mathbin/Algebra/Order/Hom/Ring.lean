@@ -419,8 +419,7 @@ conditionally complete.
 
 /-- There is at most one ordered ring homomorphism from a linear ordered field to an archimedean
 linear ordered field. -/
--- TODO[gh-6025]: make this an instance once safe to do so
-theorem OrderRingHom.subsingleton [LinearOrderedField α] [LinearOrderedField β] [Archimedean β] :
+instance OrderRingHom.subsingleton [LinearOrderedField α] [LinearOrderedField β] [Archimedean β] :
     Subsingleton (α →+*o β) :=
   ⟨fun f g => by
     ext x
@@ -433,21 +432,15 @@ theorem OrderRingHom.subsingleton [LinearOrderedField α] [LinearOrderedField β
     rw [← map_rat_cast g] at hg
     exact (lt_asymmₓ ((OrderHomClass.mono g).reflect_lt hg) <| (OrderHomClass.mono f).reflect_lt hf).elim⟩
 
-attribute [local instance] OrderRingHom.subsingleton
-
 /-- There is at most one ordered ring isomorphism between a linear ordered field and an archimedean
 linear ordered field. -/
--- TODO[gh-6025]: make this an instance once safe to do so
-theorem OrderRingIso.subsingleton_right [LinearOrderedField α] [LinearOrderedField β] [Archimedean β] :
+instance OrderRingIso.subsingleton_right [LinearOrderedField α] [LinearOrderedField β] [Archimedean β] :
     Subsingleton (α ≃+*o β) :=
   OrderRingIso.to_order_ring_hom_injective.Subsingleton
 
-attribute [local instance] OrderRingIso.subsingleton_right
-
 /-- There is at most one ordered ring isomorphism between an archimedean linear ordered field and a
 linear ordered field. -/
--- TODO[gh-6025]: make this an instance once safe to do so
-theorem OrderRingIso.subsingleton_left [LinearOrderedField α] [Archimedean α] [LinearOrderedField β] :
+instance OrderRingIso.subsingleton_left [LinearOrderedField α] [Archimedean α] [LinearOrderedField β] :
     Subsingleton (α ≃+*o β) :=
   OrderRingIso.symm_bijective.Injective.Subsingleton
 

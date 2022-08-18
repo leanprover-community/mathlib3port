@@ -62,9 +62,6 @@ open Finset Metric
 
 attribute [local instance] AddCommGroupₓ.toAddCommMonoid NormedAddCommGroup.toAddCommGroup NormedSpace.toModule'
 
--- hack to speed up simp when dealing with complicated types
-attribute [-instance] Unique.subsingleton Pi.subsingleton
-
 /-!
 ### Type variables
 
@@ -745,8 +742,8 @@ theorem norm_mk_pi_algebra_fin_succ_le : ∥ContinuousMultilinearMap.mkPiAlgebra
   have := fun f => @op_norm_le_bound 𝕜 (Finₓ n.succ) (fun i => A) A _ _ _ _ _ _ _ f _ zero_le_one
   refine' this _ _
   intro m
-  simp only [← ContinuousMultilinearMap.mk_pi_algebra_fin_apply, ← one_mulₓ, ← List.of_fn_eq_map, ← Finₓ.univ_def, ←
-    Finset.finRange, ← Finset.prod, ← Multiset.coe_map, ← Multiset.coe_prod]
+  simp only [← ContinuousMultilinearMap.mk_pi_algebra_fin_apply, ← one_mulₓ, ← List.of_fn_eq_map, ← Finₓ.prod_univ_def,
+    ← Multiset.coe_map, ← Multiset.coe_prod]
   refine' (List.norm_prod_le' _).trans_eq _
   · rw [Ne.def, List.map_eq_nil, List.fin_range_eq_nil]
     exact Nat.succ_ne_zero _
@@ -1309,8 +1306,6 @@ derivatives, we register this isomorphism. -/
 
 
 section
-
-attribute [local instance] Unique.subsingleton
 
 variable {𝕜 G G'}
 

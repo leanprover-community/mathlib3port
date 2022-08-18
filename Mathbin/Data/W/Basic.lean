@@ -89,7 +89,7 @@ theorem infinite_of_nonempty_of_is_empty (a b : α) [ha : Nonempty (β a)] [he :
     intro hf
     have hba : b ≠ a := fun h => ha.elim (IsEmpty.elim' (show IsEmpty (β a) from h ▸ he))
     refine'
-      not_injective_infinite_fintype
+      not_injective_infinite_finite
         (fun n : ℕ => show WType β from Nat.recOn n ⟨b, IsEmpty.elim' he⟩ fun n ih => ⟨a, fun _ => ih⟩) _
     intro n m h
     induction' n with n ih generalizing m h

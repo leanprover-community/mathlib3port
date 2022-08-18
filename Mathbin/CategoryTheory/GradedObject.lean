@@ -43,10 +43,10 @@ def GradedObject (β : Type w) (C : Type u) : Type max w u :=
 instance inhabitedGradedObject (β : Type w) (C : Type u) [Inhabited C] : Inhabited (GradedObject β C) :=
   ⟨fun b => Inhabited.default⟩
 
+-- `s` is here to distinguish type synonyms asking for different shifts
 /-- A type synonym for `β → C`, used for `β`-graded objects in a category `C`
 with a shift functor given by translation by `s`.
 -/
--- `s` is here to distinguish type synonyms asking for different shifts
 @[nolint unused_arguments]
 abbrev GradedObjectWithShift {β : Type w} [AddCommGroupₓ β] (s : β) (C : Type u) : Type max w u :=
   GradedObject β C

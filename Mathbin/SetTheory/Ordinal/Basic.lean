@@ -791,8 +791,10 @@ instance : LinearOrderₓ Ordinal :=
           h₁ h₂,
     decidableLe := Classical.decRel _ }
 
-instance : IsWellOrder Ordinal (· < ·) :=
+instance : WellFoundedLt Ordinal :=
   ⟨lt_wf⟩
+
+instance : IsWellOrder Ordinal (· < ·) where
 
 instance : ConditionallyCompleteLinearOrderBot Ordinal :=
   IsWellOrder.conditionallyCompleteLinearOrderBot _
@@ -831,10 +833,8 @@ private theorem succ_le_iff' {a b : Ordinal} : a + 1 ≤ b ↔ a < b :=
               Sum.lex_inr_inr.trans ⟨False.elim, fun ⟨x, H⟩ => Sum.inl_ne_inr H⟩⟩⟩),
     (induction_on a) fun α r hr =>
       (induction_on b) fun β s hs ⟨⟨f, t, hf⟩⟩ => by
-        refine'
-          ⟨⟨@RelEmbedding.ofMonotone (Sum α PUnit) β _ _ (@Sum.Lex.is_well_order _ _ _ _ hr _).1.1
-                (@is_asymm_of_is_trans_of_is_irrefl _ _ hs.1.2.2 hs.1.2.1) (Sum.rec _ _) fun a b => _,
-              fun a b => _⟩⟩
+        haveI := hs
+        refine' ⟨⟨@RelEmbedding.ofMonotone (Sum α PUnit) β _ _ _ _ (Sum.rec _ _) fun a b => _, fun a b => _⟩⟩
         · exact f
           
         · exact fun _ => t
@@ -853,7 +853,7 @@ private theorem succ_le_iff' {a b : Ordinal} : a + 1 ≤ b ↔ a < b :=
           
         · rcases a with (a | _)
           · intro h
-            have := @PrincipalSeg.init _ _ _ _ hs.1.2.2 ⟨f, t, hf⟩ _ _ h
+            have := @PrincipalSeg.init _ _ _ _ _ ⟨f, t, hf⟩ _ _ h
             cases' this with w h
             exact ⟨Sum.inl w, h⟩
             
@@ -967,9 +967,9 @@ theorem enum_zero_eq_bot {o : Ordinal} (ho : 0 < o) :
       exact ⊥ :=
   rfl
 
+-- intended to be used with explicit universe parameters
 /-- `univ.{u v}` is the order type of the ordinals of `Type u` as a member
   of `ordinal.{v}` (when `u < v`). It is an inaccessible cardinal. -/
--- intended to be used with explicit universe parameters
 @[nolint check_univs]
 def univ : Ordinal.{max (u + 1) v} :=
   lift.{v, u + 1} (@type Ordinal (· < ·) _)
@@ -1181,10 +1181,10 @@ def ord.orderEmbedding : Cardinal ↪o Ordinal :=
 theorem ord.order_embedding_coe : (ord.orderEmbedding : Cardinal → Ordinal) = ord :=
   rfl
 
+-- intended to be used with explicit universe parameters
 /-- The cardinal `univ` is the cardinality of ordinal `univ`, or
   equivalently the cardinal of `ordinal.{u}`, or `cardinal.{u}`,
   as an element of `cardinal.{v}` (when `u < v`). -/
--- intended to be used with explicit universe parameters
 @[nolint check_univs]
 def univ :=
   lift.{v, u + 1} (# Ordinal)

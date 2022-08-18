@@ -45,11 +45,11 @@ def DeclReducibility.toAttribute : DeclReducibility → Name
   | decl_reducibility.semireducible => `semireducible
   | decl_reducibility.irreducible => `irreducible
 
-/-- Set the reducibility attribute of a declaration.
-If `persistent := ff`, this is scoped to the enclosing `section`, like `local attribute`. -/
 -- Note: even though semireducible definitions don't have the `semireducible` attribute
 -- (according to `has_attribute`), setting `semireducible` still has the intended effect
 -- of clearing `reducible`/`irreducible`.
+/-- Set the reducibility attribute of a declaration.
+If `persistent := ff`, this is scoped to the enclosing `section`, like `local attribute`. -/
 unsafe def set_decl_reducibility (n : Name) (r : DeclReducibility) (persistent := false) : tactic Unit :=
   set_basic_attribute r.toAttribute n persistent
 

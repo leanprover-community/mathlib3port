@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 -/
 import Mathbin.Data.Multiset.Basic
+import Mathbin.Order.GameAdd
 import Mathbin.Order.WellFounded
 
 /-!
@@ -25,8 +26,7 @@ adding back an arbitrary multiset `t` of heads such that all `a' ∈ t` satisfy 
 
 To prove this theorem, we follow the proof by Peter LeFanu Lumsdaine at
 https://mathoverflow.net/a/229084/3332, and along the way we introduce the notion of `fibration`
-of relations, and a new operation `game_add` that combines to relations to form a relation on the
-product type, which is used to define addition of games in combinatorial game theory.
+of relations.
 
 TODO: formalize the relations corresponding to more powerful (e.g. Kirby–Paris and Buchholz)
 hydras, and prove their well-foundedness.
@@ -37,7 +37,7 @@ namespace Relation
 
 variable {α β : Type _}
 
-section TwoRels
+section Fibration
 
 variable (rα : α → α → Prop) (rβ : β → β → Prop) (f : α → β)
 
@@ -63,49 +63,11 @@ theorem _root_.acc.of_downward_closed (dc : ∀ {a b}, rβ b (f a) → b ∈ Set
     let ⟨a', he⟩ := dc h
     ⟨a', he.substr h, he⟩
 
-variable (rα rβ)
-
-/-- The "addition of games" relation in combinatorial game theory, on the product type: if
-  `rα a' a` means that `a ⟶ a'` is a valid move in game `α`, and `rβ b' b` means that `b ⟶ b'`
-  is a valid move in game `β`, then `game_add rα rβ` specifies the valid moves in the juxtaposition
-  of `α` and `β`: the player is free to choose one of the games and make a move in it,
-  while leaving the other game unchanged. -/
-inductive GameAdd : α × β → α × β → Prop
-  | fst {a' a b} : rα a' a → game_add (a', b) (a, b)
-  | snd {a b' b} : rβ b' b → game_add (a, b') (a, b)
-
-/-- `game_add` is a `subrelation` of `prod.lex`. -/
-theorem game_add_le_lex : GameAdd rα rβ ≤ Prod.Lex rα rβ := fun _ _ h =>
-  h.rec (fun _ _ b => Prod.Lex.left b b) fun a _ _ => Prod.Lex.right a
-
-/-- `prod.rprod` is a subrelation of the transitive closure of `game_add`. -/
-theorem rprod_le_trans_gen_game_add : Prod.Rprod rα rβ ≤ TransGen (GameAdd rα rβ) := fun _ _ h =>
-  h.rec
-    (by
-      intro _ _ _ _ hα hβ
-      exact trans_gen.tail (trans_gen.single <| game_add.fst hα) (game_add.snd hβ))
-
-variable {rα rβ}
-
-/-- If `a` is accessible under `rα` and `b` is accessible under `rβ`, then `(a, b)` is
-  accessible under `relation.game_add rα rβ`. Notice that `prod.lex_accessible` requires the
-  stronger condition `∀ b, acc rβ b`. -/
-theorem _root_.acc.game_add {a b} (ha : Acc rα a) (hb : Acc rβ b) : Acc (GameAdd rα rβ) (a, b) := by
-  induction' ha with a ha iha generalizing b
-  induction' hb with b hb ihb
-  refine' Acc.intro _ fun h => _
-  rintro (⟨_, _, _, ra⟩ | ⟨_, _, _, rb⟩)
-  exacts[iha _ ra (Acc.intro b hb), ihb _ rb]
-
-/-- The sum of two well-founded games is well-founded. -/
-theorem _root_.well_founded.game_add (hα : WellFounded rα) (hβ : WellFounded rβ) : WellFounded (GameAdd rα rβ) :=
-  ⟨fun ⟨a, b⟩ => (hα.apply a).GameAdd (hβ.apply b)⟩
-
-end TwoRels
+end Fibration
 
 section Hydra
 
-open GameAdd Multiset
+open Multiset Prod
 
 /-- The relation that specifies valid moves in our hydra game. `cut_expand r s' s`
   means that `s'` is obtained by removing one head `a ∈ s` and adding back an arbitrary
@@ -165,13 +127,13 @@ theorem cut_expand_fibration (r : α → α → Prop) :
   obtain ⟨ha, rfl⟩ := add_singleton_eq_iff.1 he
   rw [add_assocₓ, mem_add] at ha
   obtain h | h := ha
-  · refine' ⟨(s₁.erase a + t, s₂), fst ⟨t, a, hr, _⟩, _⟩
+  · refine' ⟨(s₁.erase a + t, s₂), game_add.fst ⟨t, a, hr, _⟩, _⟩
     · rw [add_commₓ, ← add_assocₓ, singleton_add, cons_erase h]
       
     · rw [add_assocₓ s₁, erase_add_left_pos _ h, add_right_commₓ, add_assocₓ]
       
     
-  · refine' ⟨(s₁, (s₂ + t).erase a), snd ⟨t, a, hr, _⟩, _⟩
+  · refine' ⟨(s₁, (s₂ + t).erase a), game_add.snd ⟨t, a, hr, _⟩, _⟩
     · rw [add_commₓ, singleton_add, cons_erase h]
       
     · rw [add_assocₓ, erase_add_right_pos _ h]
@@ -188,7 +150,7 @@ theorem acc_of_singleton [IsIrrefl α r] {s : Multiset α} :
   · intro a s ih hacc
     rw [← s.singleton_add a]
     exact
-      ((hacc a <| s.mem_cons_self a).GameAdd <| ih fun a ha => hacc a <| mem_cons_of_mem ha).of_fibration _
+      ((hacc a <| s.mem_cons_self a).prod_game_add <| ih fun a ha => hacc a <| mem_cons_of_mem ha).of_fibration _
         (cut_expand_fibration r)
     
 

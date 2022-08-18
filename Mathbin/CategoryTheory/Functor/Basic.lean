@@ -67,8 +67,8 @@ section
 
 variable (C : Type u₁) [Category.{v₁} C]
 
-/-- `𝟭 C` is the identity functor on a category `C`. -/
 -- We don't use `@[simps]` here because we want `C` implicit for the simp lemmas.
+/-- `𝟭 C` is the identity functor on a category `C`. -/
 protected def id : C ⥤ C where
   obj := fun X => X
   map := fun _ _ f => f

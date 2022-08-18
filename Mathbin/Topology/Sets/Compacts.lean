@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 -/
 import Mathbin.Topology.Sets.Closeds
+import Mathbin.Topology.QuasiSeparated
 
 /-!
 # Compact sets
@@ -367,8 +368,12 @@ theorem coe_mk (s : Compacts α) (h) : (mk s h : Set α) = s :=
 instance : HasSup (CompactOpens α) :=
   ⟨fun s t => ⟨s.toCompacts⊔t.toCompacts, s.open.union t.open⟩⟩
 
-instance [T2Space α] : HasInf (CompactOpens α) :=
-  ⟨fun s t => ⟨s.toCompacts⊓t.toCompacts, s.open.inter t.open⟩⟩
+instance [QuasiSeparatedSpace α] : HasInf (CompactOpens α) :=
+  ⟨fun U V =>
+    ⟨⟨(U : Set α) ∩ (V : Set α), QuasiSeparatedSpace.inter_is_compact U.1.1 V.1.1 U.2 U.1.2 V.2 V.1.2⟩, U.2.inter V.2⟩⟩
+
+instance [QuasiSeparatedSpace α] : SemilatticeInf (CompactOpens α) :=
+  SetLike.coe_injective.SemilatticeInf _ fun _ _ => rfl
 
 instance [CompactSpace α] : HasTop (CompactOpens α) :=
   ⟨⟨⊤, is_open_univ⟩⟩

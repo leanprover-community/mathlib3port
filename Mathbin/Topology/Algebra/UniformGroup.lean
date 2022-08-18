@@ -6,6 +6,7 @@ Authors: Patrick Massot, Johannes Hölzl
 import Mathbin.Topology.UniformSpace.UniformConvergence
 import Mathbin.Topology.UniformSpace.UniformEmbedding
 import Mathbin.Topology.UniformSpace.CompleteSeparated
+import Mathbin.Topology.UniformSpace.CompactSeparated
 import Mathbin.Topology.Algebra.Group
 import Mathbin.Tactic.Abel
 
@@ -22,8 +23,8 @@ group naturally induces a uniform structure.
 
 ## Main results
 
-* `topological_add_group.to_uniform_space` and `topological_add_group_is_uniform` can be used to
-  construct a canonical uniformity for a topological add group.
+* `topological_add_group.to_uniform_space` and `topological_add_comm_group_is_uniform` can be used
+  to construct a canonical uniformity for a topological add group.
 
 * extension of ℤ-bilinear maps to complete groups (useful for ring completions)
 -/
@@ -377,8 +378,14 @@ open Filter
 
 variable (G : Type _) [Groupₓ G] [TopologicalSpace G] [TopologicalGroup G]
 
-/-- The right uniformity on a topological group. -/
-@[to_additive "The right uniformity on a topological additive group"]
+/-- The right uniformity on a topological group (as opposed to the left uniformity).
+
+Warning: in general the right and left uniformities do not coincide and so one does not obtain a
+`uniform_group` structure. Two important special cases where they _do_ coincide are for
+commutative groups (see `topological_comm_group_is_uniform`) and for compact Hausdorff groups (see
+`topological_group_is_uniform_of_compact_space`). -/
+@[to_additive
+      "The right uniformity on a topological additive group (as opposed to the left\nuniformity).\n\nWarning: in general the right and left uniformities do not coincide and so one does not obtain a\n`uniform_add_group` structure. Two important special cases where they _do_ coincide are for\ncommutative additive groups (see `topological_add_comm_group_is_uniform`) and for compact Hausdorff\nadditive groups (see `topological_add_comm_group_is_uniform_of_compact_space`)."]
 def TopologicalGroup.toUniformSpace : UniformSpace G where
   uniformity := comap (fun p : G × G => p.2 / p.1) (𝓝 1)
   refl := by
@@ -431,6 +438,16 @@ attribute [local instance] TopologicalGroup.toUniformSpace
 theorem uniformity_eq_comap_nhds_one' : 𝓤 G = comap (fun p : G × G => p.2 / p.1) (𝓝 (1 : G)) :=
   rfl
 
+@[to_additive]
+theorem topological_group_is_uniform_of_compact_space [CompactSpace G] [T2Space G] : UniformGroup G :=
+  ⟨by
+    haveI : SeparatedSpace G :=
+      separated_iff_t2.mpr
+        (by
+          infer_instance)
+    apply CompactSpace.uniform_continuous_of_continuous
+    exact continuous_div'⟩
+
 variable {G}
 
 @[to_additive]
@@ -482,7 +499,7 @@ attribute [local instance] TopologicalGroup.toUniformSpace
 variable {G}
 
 @[to_additive]
-theorem topological_group_is_uniform : UniformGroup G := by
+theorem topological_comm_group_is_uniform : UniformGroup G := by
   have :
     Tendsto ((fun p : G × G => p.1 / p.2) ∘ fun p : (G × G) × G × G => (p.1.2 / p.1.1, p.2.2 / p.2.1))
       (comap (fun p : (G × G) × G × G => (p.1.2 / p.1.1, p.2.2 / p.2.1)) ((𝓝 1).Prod (𝓝 1))) (𝓝 (1 / 1)) :=
@@ -496,7 +513,7 @@ open Set
 
 @[to_additive]
 theorem TopologicalGroup.t2_space_iff_one_closed : T2Space G ↔ IsClosed ({1} : Set G) := by
-  haveI : UniformGroup G := topological_group_is_uniform
+  haveI : UniformGroup G := topological_comm_group_is_uniform
   rw [← separated_iff_t2, separated_space_iff, ← closure_eq_iff_is_closed]
   constructor <;> intro h
   · apply subset.antisymm

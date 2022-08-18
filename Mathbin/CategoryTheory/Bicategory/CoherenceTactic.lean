@@ -158,9 +158,9 @@ def bicategoricalComp {f g h i : a ⟶ b} [LiftHom g] [LiftHom h] [Bicategorical
 -- mathport name: «expr ⊗≫ »
 localized [Bicategory] infixr:80 " ⊗≫ " => CategoryTheory.Bicategory.bicategoricalComp
 
+-- type as \ot \gg
 /-- Compose two isomorphisms in a bicategorical category,
 inserting unitors and associators between as necessary. -/
--- type as \ot \gg
 def bicategoricalIsoComp {f g h i : a ⟶ b} [LiftHom g] [LiftHom h] [BicategoricalCoherence g h] (η : f ≅ g)
     (θ : h ≅ i) : f ≅ i :=
   η ≪≫ asIso (BicategoricalCoherence.hom g h) ≪≫ θ
@@ -215,13 +215,13 @@ unsafe def whisker_simps : tactic Unit :=
 
 namespace Coherence
 
+-- We have unused typeclass arguments here.
+-- They are intentional, to ensure that `simp only [assoc_lift_hom₂]` only left associates
+-- bicategorical structural morphisms.
 /-- Auxiliary simp lemma for the `coherence` tactic:
 this move brackets to the left in order to expose a maximal prefix
 built out of unitors and associators.
 -/
--- We have unused typeclass arguments here.
--- They are intentional, to ensure that `simp only [assoc_lift_hom₂]` only left associates
--- bicategorical structural morphisms.
 @[nolint unused_arguments]
 theorem assoc_lift_hom₂ {f g h i : a ⟶ b} [LiftHom f] [LiftHom g] [LiftHom h] (η : f ⟶ g) (θ : g ⟶ h) (ι : h ⟶ i)
     [LiftHom₂ η] [LiftHom₂ θ] : η ≫ θ ≫ ι = (η ≫ θ) ≫ ι :=

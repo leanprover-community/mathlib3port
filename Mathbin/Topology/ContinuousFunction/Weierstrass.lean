@@ -74,7 +74,6 @@ theorem polynomial_functions_closure_eq_top (a b : ℝ) : (polynomialFunctions (
     -- so all subalgebras are the same anyway.
     haveI : Subsingleton (Set.Icc a b) :=
       ⟨fun x y => le_antisymmₓ ((x.2.2.trans (not_lt.mp h)).trans y.2.1) ((y.2.2.trans (not_lt.mp h)).trans x.2.1)⟩
-    haveI := ContinuousMap.subsingleton_subalgebra (Set.Icc a b) ℝ
     apply Subsingleton.elimₓ
     
 

@@ -234,11 +234,11 @@ end InsertionSort
 
 section MergeSort
 
+-- TODO(Jeremy): observation: if instead we write (a :: (split l).1, b :: (split l).2), the
+-- equation compiler can't prove the third equation
 /-- Split `l` into two lists of approximately equal length.
 
      split [1, 2, 3, 4, 5] = ([1, 3, 5], [2, 4]) -/
--- TODO(Jeremy): observation: if instead we write (a :: (split l).1, b :: (split l).2), the
--- equation compiler can't prove the third equation
 @[simp]
 def split : List α → List α × List α
   | [] => ([], [])

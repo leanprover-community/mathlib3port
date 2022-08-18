@@ -98,9 +98,9 @@ theorem desc_commutes {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y) (J : I
       simp
       
 
-/-- An auxiliary definition for `desc_homotopy_zero`. -/
 -- Now that we've checked this property of the descent,
 -- we can seal away the actual definition.
+/-- An auxiliary definition for `desc_homotopy_zero`. -/
 def descHomotopyZeroZero {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveResolution Z}
     (f : I.cocomplex ⟶ J.cocomplex) (comm : I.ι ≫ f = 0) : I.cocomplex.x 1 ⟶ J.cocomplex.x 0 :=
   Exact.desc (f.f 0) (I.ι.f 0) (I.cocomplex.d 0 1) (Abelian.Exact.op _ _ I.exact₀)
@@ -162,8 +162,8 @@ def descCompHomotopy {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (I : InjectiveResol
     (K : InjectiveResolution Z) : Homotopy (desc (f ≫ g) K I) (desc f J I ≫ desc g K J) := by
   apply desc_homotopy (f ≫ g) <;> simp
 
-/-- Any two injective resolutions are homotopy equivalent. -/
 -- We don't care about the actual definitions of these homotopies.
+/-- Any two injective resolutions are homotopy equivalent. -/
 def homotopyEquiv {X : C} (I J : InjectiveResolution X) : HomotopyEquiv I.cocomplex J.cocomplex where
   Hom := desc (𝟙 X) J I
   inv := desc (𝟙 X) I J

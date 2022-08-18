@@ -31,13 +31,13 @@ namespace MvPolynomial
 
 variable {σ : Type _} {τ : Type _} {R : Type _} {S : Type _}
 
-/-- A multivariate polynomial `φ` is homogeneous of degree `n`
-if all monomials occuring in `φ` have degree `n`. -/
 /-
 TODO
 * create definition for `∑ i in d.support, d i`
 * show that `mv_polynomial σ R ≃ₐ[R] ⨁ i, homogeneous_submodule σ R i`
 -/
+/-- A multivariate polynomial `φ` is homogeneous of degree `n`
+if all monomials occuring in `φ` have degree `n`. -/
 def IsHomogeneous [CommSemiringₓ R] (φ : MvPolynomial σ R) (n : ℕ) :=
   ∀ ⦃d⦄, coeff d φ ≠ 0 → (∑ i in d.support, d i) = n
 

@@ -101,8 +101,8 @@ def liftedConeIsLimit : IsLimit (liftedCone D c t) where
 
 end ForgetCreatesLimits
 
-/-- The forgetful functor from the Eilenberg-Moore category creates limits. -/
 -- Theorem 5.6.5 from [Riehl][riehl2017]
+/-- The forgetful functor from the Eilenberg-Moore category creates limits. -/
 noncomputable instance forgetCreatesLimits :
     CreatesLimitsOfSize
       (forget
@@ -122,10 +122,6 @@ namespace ForgetCreatesColimits
 -- Let's hide the implementation details in a namespace
 variable {D : J ⥤ Algebra T} (c : Cocone (D ⋙ forget T)) (t : IsColimit c)
 
-/-- (Impl)
-The natural transformation given by the algebra structure maps, used to construct a cocone `c` with
-apex `colimit (D ⋙ forget T)`.
- -/
 -- We have a diagram D of shape J in the category of algebras, and we assume that we are given a
 -- colimit for its image D ⋙ forget T under the forgetful functor, say its apex is L.
 -- We'll construct a colimiting coalgebra for D, whose carrier will also be L.
@@ -135,6 +131,10 @@ apex `colimit (D ⋙ forget T)`.
 -- In other words, we need a natural transformation from const L to `(D ⋙ forget T) ⋙ T`.
 -- But we already know that L is the apex of a cocone for the diagram `D ⋙ forget T`, so it
 -- suffices to give a natural transformation `((D ⋙ forget T) ⋙ T) ⟶ (D ⋙ forget T)`:
+/-- (Impl)
+The natural transformation given by the algebra structure maps, used to construct a cocone `c` with
+apex `colimit (D ⋙ forget T)`.
+ -/
 @[simps]
 def γ : (D ⋙ forget T) ⋙ ↑T ⟶ D ⋙ forget T where app := fun j => (D.obj j).a
 
@@ -220,10 +220,10 @@ end ForgetCreatesColimits
 
 open ForgetCreatesColimits
 
+-- TODO: the converse of this is true as well
 /-- The forgetful functor from the Eilenberg-Moore category for a monad creates any colimit
 which the monad itself preserves.
 -/
--- TODO: the converse of this is true as well
 noncomputable instance forgetCreatesColimit (D : J ⥤ Algebra T) [PreservesColimit (D ⋙ forget T) (T : C ⥤ C)]
     [PreservesColimit ((D ⋙ forget T) ⋙ ↑T) (T : C ⥤ C)] : CreatesColimit D (forget T) :=
   creates_colimit_of_reflects_iso fun c t =>

@@ -424,14 +424,14 @@ See the discussion before Equation (3) of [MM92], Chapter III, Section 4. See al
 def YonedaSheafCondition (P : Cᵒᵖ ⥤ Type v₁) (S : Sieve X) : Prop :=
   ∀ f : S.Functor ⟶ P, ∃! g, S.functorInclusion ≫ g = f
 
+-- TODO: We can generalize the universe parameter v₁ above by composing with
+-- appropriate `ulift_functor`s.
 /-- (Implementation). This is a (primarily internal) equivalence between natural transformations
 and compatible families.
 
 Cf the discussion after Lemma 7.47.10 in <https://stacks.math.columbia.edu/tag/00YW>. See also
 the proof of C2.1.4 of [Elephant], and the discussion in [MM92], Chapter III, Section 4.
 -/
--- TODO: We can generalize the universe parameter v₁ above by composing with
--- appropriate `ulift_functor`s.
 def natTransEquivCompatibleFamily {P : Cᵒᵖ ⥤ Type v₁} :
     (S.Functor ⟶ P) ≃ { x : FamilyOfElements P S // x.Compatible } where
   toFun := fun α => by
@@ -476,11 +476,11 @@ theorem extension_iff_amalgamation {P : Cᵒᵖ ⥤ Type v₁} (x : S.Functor �
     simp
     
 
+-- See note [dsimp, simp].
 /-- The yoneda version of the sheaf condition is equivalent to the sheaf condition.
 
 C2.1.4 of [Elephant].
 -/
--- See note [dsimp, simp].
 theorem is_sheaf_for_iff_yoneda_sheaf_condition {P : Cᵒᵖ ⥤ Type v₁} : IsSheafFor P S ↔ YonedaSheafCondition P S := by
   rw [is_sheaf_for, yoneda_sheaf_condition]
   simp_rw [extension_iff_amalgamation]

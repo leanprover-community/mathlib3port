@@ -477,9 +477,9 @@ protected theorem summable_inner_mul_inner (b : HilbertBasis ι 𝕜 E) (x y : E
 protected theorem tsum_inner_mul_inner (b : HilbertBasis ι 𝕜 E) (x y : E) : (∑' i, ⟪x, b i⟫ * ⟪b i, y⟫) = ⟪x, y⟫ :=
   (b.has_sum_inner_mul_inner x y).tsum_eq
 
-/-- A finite Hilbert basis is an orthonormal basis. -/
 -- Note : this should be `b.repr` composed with an identification of `lp (λ i : ι, 𝕜) p` with
 -- `pi_Lp p (λ i : ι, 𝕜)` (in this case with `p = 2`), but we don't have this yet (July 2022).
+/-- A finite Hilbert basis is an orthonormal basis. -/
 protected def toOrthonormalBasis [Fintype ι] (b : HilbertBasis ι 𝕜 E) : OrthonormalBasis ι 𝕜 E :=
   OrthonormalBasis.mk b.Orthonormal
     (by
@@ -522,9 +522,9 @@ protected theorem coe_of_orthogonal_eq_bot_mk (hsp : (span 𝕜 (Set.Range v))�
 
 omit hv
 
-/-- An orthonormal basis is an Hilbert basis. -/
 -- Note : this should be `b.repr` composed with an identification of `lp (λ i : ι, 𝕜) p` with
 -- `pi_Lp p (λ i : ι, 𝕜)` (in this case with `p = 2`), but we don't have this yet (July 2022).
+/-- An orthonormal basis is an Hilbert basis. -/
 protected def _root_.orthonormal_basis.to_hilbert_basis [Fintype ι] (b : OrthonormalBasis ι 𝕜 E) : HilbertBasis ι 𝕜 E :=
   HilbertBasis.mk b.Orthonormal <| by
     simpa only [OrthonormalBasis.coe_to_basis, ← b.to_basis.span_eq, ← eq_top_iff] using @subset_closure E _ _

@@ -202,11 +202,11 @@ namespace CategoryTheory.LaxMonoidalFunctor
 
 variable {C} {D : Type u₂} [Category.{v₂} D] [MonoidalCategory.{v₂} D]
 
+-- TODO: map_Mod F A : Mod A ⥤ Mod (F.map_Mon A)
 /-- A lax monoidal functor takes monoid objects to monoid objects.
 
 That is, a lax monoidal functor `F : C ⥤ D` induces a functor `Mon_ C ⥤ Mon_ D`.
 -/
--- TODO: map_Mod F A : Mod A ⥤ Mod (F.map_Mon A)
 @[simps]
 def mapMon (F : LaxMonoidalFunctor C D) : Mon_ C ⥤ Mon_ D where
   obj := fun A =>

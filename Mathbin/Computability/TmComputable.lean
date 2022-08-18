@@ -119,11 +119,11 @@ structure EvalsTo {σ : Type _} (f : σ → Option σ) (a : σ) (b : Option σ) 
   steps : ℕ
   evals_in_steps : (flip bind f^[steps]) a = b
 
-/-- A "proof" of the fact that `f` eventually reaches `b` in at most `m` steps when repeatedly
-evaluated on `a`, remembering the number of steps it takes. -/
 -- note: this cannot currently be used in `calc`, as the last two arguments must be `a` and `b`.
 -- If this is desired, this argument order can be changed, but this spelling is I think the most
 -- natural, so there is a trade-off that needs to be made here. A notation can get around this.
+/-- A "proof" of the fact that `f` eventually reaches `b` in at most `m` steps when repeatedly
+evaluated on `a`, remembering the number of steps it takes. -/
 structure EvalsToInTime {σ : Type _} (f : σ → Option σ) (a : σ) (b : Option σ) (m : ℕ) extends EvalsTo f a b where
   steps_le_m : steps ≤ m
 

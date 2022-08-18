@@ -62,11 +62,11 @@ projective module
 
 universe u v
 
+/- The actual implementation we choose: `P` is projective if the natural surjection
+   from the free `R`-module on `P` to `P` splits. -/
 /-- An R-module is projective if it is a direct summand of a free module, or equivalently
   if maps from the module lift along surjections. There are several other equivalent
   definitions. -/
-/- The actual implementation we choose: `P` is projective if the natural surjection
-   from the free `R`-module on `P` to `P` splits. -/
 class Module.Projective (R : Type u) [Semiringₓ R] (P : Type max u v) [AddCommMonoidₓ P] [Module R P] : Prop where
   out : ∃ s : P →ₗ[R] P →₀ R, Function.LeftInverse (Finsupp.total P P R id) s
 

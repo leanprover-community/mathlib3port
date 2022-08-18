@@ -840,9 +840,9 @@ end LocalEquiv
 
 namespace Set
 
+-- All arguments are explicit to avoid missing information in the pretty printer output
 /-- A bijection between two sets `s : set α` and `t : set β` provides a local equivalence
 between `α` and `β`. -/
--- All arguments are explicit to avoid missing information in the pretty printer output
 @[simps (config := { fullyApplied := false })]
 noncomputable def BijOn.toLocalEquiv [Nonempty α] (f : α → β) (s : Set α) (t : Set β) (hf : BijOn f s t) :
     LocalEquiv α β where

@@ -67,7 +67,7 @@ theorem Infinite.nonempty_field {α : Type u} [Infinite α] : Nonempty (Field α
   · refine' ⟨⟨fun a => MvPolynomial.monomial (Finsupp.single a 1) (1 : ULift.{u} ℚ), fun x y h => _⟩⟩
     simpa [← MvPolynomial.monomial_eq_monomial_iff, ← Finsupp.single_eq_single_iff] using h
     
-  · simpa using @MvPolynomial.cardinal_mk_le_max α (ULift.{u} ℚ) _
+  · simp
     
 
 /-- There is a field structure on type if and only if its cardinality is a prime power. -/

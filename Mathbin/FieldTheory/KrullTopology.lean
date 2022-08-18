@@ -190,7 +190,7 @@ open TopologicalSpace Filter
   `L ≃ₐ[K] L`. -/
 theorem IntermediateField.fixing_subgroup_is_open {K L : Type _} [Field K] [Field L] [Algebra K L]
     (E : IntermediateField K L) [FiniteDimensional K E] : IsOpen (E.fixingSubgroup : Set (L ≃ₐ[K] L)) := by
-  have h_basis : E.fixing_subgroup.carrier ∈ galGroupBasis K L := ⟨E.fixing_subgroup, ⟨E, _inst_4, rfl⟩, rfl⟩
+  have h_basis : E.fixing_subgroup.carrier ∈ galGroupBasis K L := ⟨E.fixing_subgroup, ⟨E, ‹_›, rfl⟩, rfl⟩
   have h_nhd := GroupFilterBasis.mem_nhds_one (galGroupBasis K L) h_basis
   rw [mem_nhds_iff] at h_nhd
   rcases h_nhd with ⟨U, hU_le, hU_open, h1U⟩

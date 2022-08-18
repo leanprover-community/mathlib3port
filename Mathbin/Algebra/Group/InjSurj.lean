@@ -194,9 +194,9 @@ protected def cancelCommMonoid [CancelCommMonoid M₂] (f : M₁ → M₂) (hf :
     (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) : CancelCommMonoid M₁ :=
   { hf.LeftCancelSemigroup f mul, hf.CommMonoid f one mul npow with }
 
+--See note [reducible non-instances]
 /-- A type has an involutive inversion if it admits a surjective map that preserves `⁻¹` to a type
 which has an involutive inversion. -/
---See note [reducible non-instances]
 @[reducible,
   to_additive
       "A type has an involutive negation if it admits a surjective map that\npreserves `⁻¹` to a type which has an involutive inversion."]
@@ -232,9 +232,9 @@ protected def divInvMonoid [DivInvMonoidₓ M₂] (f : M₁ → M₂) (hf : Inje
       hf <| by
         erw [div, mul, inv, div_eq_mul_inv] }
 
+-- See note [reducible non-instances]
 /-- A type endowed with `1`, `*`, `⁻¹`, and `/` is a `division_monoid`
 if it admits an injective map that preserves `1`, `*`, `⁻¹`, and `/` to a `division_monoid`. -/
--- See note [reducible non-instances]
 @[reducible,
   to_additive SubtractionMonoid
       "A type endowed with `0`, `+`, unary `-`, and binary `-` is a `subtraction_monoid`\nif it admits an injective map that preserves `0`, `+`, unary `-`, and binary `-` to\na `subtraction_monoid`.\nThis version takes custom `nsmul` and `zsmul` as `[has_smul ℕ M₁]` and\n`[has_smul ℤ M₁]` arguments."]
@@ -252,10 +252,10 @@ protected def divisionMonoid [DivisionMonoid M₂] (f : M₁ → M₂) (hf : Inj
             (by
               erw [← mul, h, one])] }
 
+-- See note [reducible non-instances]
 /-- A type endowed with `1`, `*`, `⁻¹`, and `/` is a `division_comm_monoid`
 if it admits an injective map that preserves `1`, `*`, `⁻¹`, and `/` to a `division_comm_monoid`.
 See note [reducible non-instances]. -/
--- See note [reducible non-instances]
 @[reducible,
   to_additive SubtractionCommMonoid
       "A type endowed with `0`, `+`, unary `-`, and binary `-` is a `subtraction_comm_monoid`\nif it admits an injective map that preserves `0`, `+`, unary `-`, and binary `-` to\na `subtraction_comm_monoid`.\nThis version takes custom `nsmul` and `zsmul` as `[has_smul ℕ M₁]` and\n`[has_smul ℤ M₁]` arguments."]
@@ -407,9 +407,9 @@ protected def commMonoid [CommMonoidₓ M₁] (f : M₁ → M₂) (hf : Surjecti
     (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) : CommMonoidₓ M₂ :=
   { hf.CommSemigroup f mul, hf.Monoid f one mul npow with }
 
+--See note [reducible non-instances]
 /-- A type has an involutive inversion if it admits a surjective map that preserves `⁻¹` to a type
 which has an involutive inversion. -/
---See note [reducible non-instances]
 @[reducible,
   to_additive
       "A type has an involutive negation if it admits a surjective map that\npreserves `⁻¹` to a type which has an involutive inversion."]

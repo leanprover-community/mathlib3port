@@ -105,8 +105,8 @@ inductive Prop : Type
   | imp : prop → prop → prop
   deriving has_reflect, DecidableEq
 
-/-- Constructor for `p ∧ q`. -/
 -- p → q
+/-- Constructor for `p ∧ q`. -/
 @[matchPattern]
 def Prop.and : Prop → Prop → Prop :=
   Prop.and' AndKind.and
@@ -293,7 +293,6 @@ unsafe def proof.app : Proof → Proof → Proof
   | proof.imp_imp_simp x p, q => p.app (Proof.intro x q)
   | p, q => p.app' q
 
-/-- Get a new name in the pattern `h0, h1, h2, ...` -/
 -- Note(Mario): the typechecker is disabled because it requires proofs to carry around additional
 -- props. These can be retrieved from the git history if you want to re-enable this.
 /-
@@ -343,6 +342,7 @@ meta def proof.check : name_map prop → proof → option prop
   prop.imp (prop.imp A' B) C ← p.check Γ | none,
   guard (A = A') $> (B.imp C)
 -/
+/-- Get a new name in the pattern `h0, h1, h2, ...` -/
 @[inline]
 unsafe def fresh_name : ℕ → Name × ℕ := fun n => (mkSimpleName ("h" ++ toString n), n + 1)
 

@@ -222,29 +222,29 @@ def node4L : Ordnode α → α → Ordnode α → α → Ordnode α → Ordnode 
   | l, x, node _ ml y mr, z, r => node' (node' l x ml) y (node' mr z r)
   | l, x, nil, z, r => node3L l x nil z r
 
-/-- Build a tree from three nodes, with `a () b -> a (() b)` and `a (b c) d -> ((a b) (c d))`. -/
 -- should not happen
+/-- Build a tree from three nodes, with `a () b -> a (() b)` and `a (b c) d -> ((a b) (c d))`. -/
 def node4R : Ordnode α → α → Ordnode α → α → Ordnode α → Ordnode α
   | l, x, node _ ml y mr, z, r => node' (node' l x ml) y (node' mr z r)
   | l, x, nil, z, r => node3R l x nil z r
 
+-- should not happen
 /-- Concatenate two nodes, performing a left rotation `x (y z) -> ((x y) z)`
 if balance is upset. -/
--- should not happen
 def rotateL : Ordnode α → α → Ordnode α → Ordnode α
   | l, x, node _ m y r => if size m < ratio * size r then node3L l x m y r else node4L l x m y r
   | l, x, nil => node' l x nil
 
+-- should not happen
 /-- Concatenate two nodes, performing a right rotation `(x y) z -> (x (y z))`
 if balance is upset. -/
--- should not happen
 def rotateR : Ordnode α → α → Ordnode α → Ordnode α
   | node _ l x m, y, r => if size m < ratio * size l then node3R l x m y r else node4R l x m y r
   | nil, y, r => node' nil y r
 
+-- should not happen
 /-- A left balance operation. This will rebalance a concatenation, assuming the original nodes are
 not too far from balanced. -/
--- should not happen
 def balanceL' (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α :=
   if size l + size r ≤ 1 then node' l x r else if size l > delta * size r then rotateR l x r else node' l x r
 

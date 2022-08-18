@@ -37,12 +37,12 @@ namespace CategoryTheory
 -- morphism levels before object levels. See note [category_theory universes].
 universe v₁ v₂ v₃ u₁ u₁' u₂ u₃
 
-/-- A wrapper for promoting any type to a category,
-with the only morphisms being equalities.
--/
 -- This is intentionally a structure rather than a type synonym
 -- to enforce using `discrete_equiv` (or `discrete.mk` and `discrete.as`) to move between
 -- `discrete α` and `α`. Otherwise there is too much API leakage.
+/-- A wrapper for promoting any type to a category,
+with the only morphisms being equalities.
+-/
 @[ext]
 structure Discrete (α : Type u₁) where
   as : α

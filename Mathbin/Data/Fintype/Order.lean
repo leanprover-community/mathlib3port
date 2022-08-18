@@ -53,22 +53,22 @@ section Nonempty
 
 variable (α) [Nonempty α]
 
-/-- Constructs the `⊥` of a finite nonempty `semilattice_inf`. -/
 -- See note [reducible non-instances]
+/-- Constructs the `⊥` of a finite nonempty `semilattice_inf`. -/
 @[reducible]
 def toOrderBot [SemilatticeInf α] : OrderBot α where
   bot := univ.inf' univ_nonempty id
   bot_le := fun a => inf'_le _ <| mem_univ a
 
-/-- Constructs the `⊤` of a finite nonempty `semilattice_sup` -/
 -- See note [reducible non-instances]
+/-- Constructs the `⊤` of a finite nonempty `semilattice_sup` -/
 @[reducible]
 def toOrderTop [SemilatticeSup α] : OrderTop α where
   top := univ.sup' univ_nonempty id
   le_top := fun a => le_sup' _ <| mem_univ a
 
-/-- Constructs the `⊤` and `⊥` of a finite nonempty `lattice`. -/
 -- See note [reducible non-instances]
+/-- Constructs the `⊤` and `⊥` of a finite nonempty `lattice`. -/
 @[reducible]
 def toBoundedOrder [Lattice α] : BoundedOrder α :=
   { toOrderBot α, toOrderTop α with }
@@ -81,8 +81,8 @@ variable (α)
 
 open Classical
 
-/-- A finite bounded lattice is complete. -/
 -- See note [reducible non-instances]
+/-- A finite bounded lattice is complete. -/
 @[reducible]
 noncomputable def toCompleteLattice [Lattice α] [BoundedOrder α] : CompleteLattice α :=
   { ‹Lattice α›, ‹BoundedOrder α› with sup := fun s => s.toFinset.sup id, inf := fun s => s.toFinset.inf id,
@@ -91,8 +91,8 @@ noncomputable def toCompleteLattice [Lattice α] [BoundedOrder α] : CompleteLat
     Inf_le := fun _ _ ha => Finset.inf_le (Set.mem_to_finset.mpr ha),
     le_Inf := fun s _ ha => Finset.le_inf fun b hb => ha _ <| Set.mem_to_finset.mp hb }
 
-/-- A finite bounded distributive lattice is completely distributive. -/
 -- See note [reducible non-instances]
+/-- A finite bounded distributive lattice is completely distributive. -/
 @[reducible]
 noncomputable def toCompleteDistribLattice [DistribLattice α] [BoundedOrder α] : CompleteDistribLattice α :=
   { toCompleteLattice α with
@@ -107,14 +107,14 @@ noncomputable def toCompleteDistribLattice [DistribLattice α] [BoundedOrder α]
       simp_rw [Set.mem_to_finset]
       rfl }
 
-/-- A finite bounded linear order is complete. -/
 -- See note [reducible non-instances]
+/-- A finite bounded linear order is complete. -/
 @[reducible]
 noncomputable def toCompleteLinearOrder [LinearOrderₓ α] [BoundedOrder α] : CompleteLinearOrder α :=
   { toCompleteLattice α, ‹LinearOrderₓ α› with }
 
-/-- A finite boolean algebra is complete. -/
 -- See note [reducible non-instances]
+/-- A finite boolean algebra is complete. -/
 @[reducible]
 noncomputable def toCompleteBooleanAlgebra [BooleanAlgebra α] : CompleteBooleanAlgebra α :=
   { Fintype.toCompleteDistribLattice α, ‹BooleanAlgebra α› with }
@@ -125,17 +125,17 @@ section Nonempty
 
 variable (α) [Nonempty α]
 
+-- See note [reducible non-instances]
 /-- A nonempty finite lattice is complete. If the lattice is already a `bounded_order`, then use
 `fintype.to_complete_lattice` instead, as this gives definitional equality for `⊥` and `⊤`. -/
--- See note [reducible non-instances]
 @[reducible]
 noncomputable def toCompleteLatticeOfNonempty [Lattice α] : CompleteLattice α :=
   @toCompleteLattice _ _ _ <| @toBoundedOrder α _ ⟨Classical.arbitrary α⟩ _
 
+-- See note [reducible non-instances]
 /-- A nonempty finite linear order is complete. If the linear order is already a `bounded_order`,
 then use `fintype.to_complete_linear_order` instead, as this gives definitional equality for `⊥` and
 `⊤`. -/
--- See note [reducible non-instances]
 @[reducible]
 noncomputable def toCompleteLinearOrderOfNonempty [LinearOrderₓ α] : CompleteLinearOrder α :=
   { toCompleteLatticeOfNonempty α, ‹LinearOrderₓ α› with }

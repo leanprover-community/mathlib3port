@@ -140,14 +140,12 @@ theorem map_sub [∀ i j, AddGroupₓ (α i j)] {β : m → n → Type w} [∀ i
   ext
   simp
 
--- TODO[gh-6025]: make this an instance once safe to do so
-theorem subsingleton_of_empty_left [IsEmpty m] : Subsingleton (Dmatrix m n α) :=
+instance subsingleton_of_empty_left [IsEmpty m] : Subsingleton (Dmatrix m n α) :=
   ⟨fun M N => by
     ext
     exact isEmptyElim i⟩
 
--- TODO[gh-6025]: make this an instance once safe to do so
-theorem subsingleton_of_empty_right [IsEmpty n] : Subsingleton (Dmatrix m n α) :=
+instance subsingleton_of_empty_right [IsEmpty n] : Subsingleton (Dmatrix m n α) :=
   ⟨fun M N => by
     ext
     exact isEmptyElim j⟩

@@ -1158,10 +1158,11 @@ theorem pi_generate_from_eq {g : ∀ a, Set (Set (π a))} :
           simp [← hs]⟩
     
 
-theorem pi_generate_from_eq_fintype {g : ∀ a, Set (Set (π a))} [Fintype ι] (hg : ∀ a, ⋃₀g a = univ) :
+theorem pi_generate_from_eq_finite {g : ∀ a, Set (Set (π a))} [Finite ι] (hg : ∀ a, ⋃₀g a = univ) :
     (@Pi.topologicalSpace ι π fun a => generateFrom (g a)) =
       generateFrom { t | ∃ s : ∀ a, Set (π a), (∀ a, s a ∈ g a) ∧ t = pi Univ s } :=
   by
+  cases nonempty_fintype ι
   rw [pi_generate_from_eq]
   refine' le_antisymmₓ (generate_from_mono _) (le_generate_from _)
   exact fun s ⟨t, ht, Eq⟩ =>

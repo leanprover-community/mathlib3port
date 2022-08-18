@@ -308,13 +308,13 @@ theorem map_div [Field k] (f : R →+* k) : (p / q).map f = p.map f / q.map f :=
     simp [← hq0]
   else by
     rw [div_def, div_def, Polynomial.map_mul, map_div_by_monic f (monic_mul_leading_coeff_inv hq0)] <;>
-      simp [← f.map_inv, ← coeff_map f]
+      simp [← coeff_map f]
 
 theorem map_mod [Field k] (f : R →+* k) : (p % q).map f = p.map f % q.map f :=
   if hq0 : q = 0 then by
     simp [← hq0]
   else by
-    rw [mod_def, mod_def, leading_coeff_map f, ← f.map_inv, ← map_C f, ← Polynomial.map_mul f,
+    rw [mod_def, mod_def, leading_coeff_map f, ← map_inv₀ f, ← map_C f, ← Polynomial.map_mul f,
       map_mod_by_monic f (monic_mul_leading_coeff_inv hq0)]
 
 section
@@ -359,16 +359,17 @@ theorem is_root_gcd_iff_is_root_left_right {f g : R[X]} {α : R} :
 theorem is_coprime_map [Field k] (f : R →+* k) : IsCoprime (p.map f) (q.map f) ↔ IsCoprime p q := by
   rw [← EuclideanDomain.gcd_is_unit_iff, ← EuclideanDomain.gcd_is_unit_iff, gcd_map, is_unit_map]
 
-theorem mem_roots_map [Field k] {f : R →+* k} {x : k} (hp : p ≠ 0) : x ∈ (p.map f).roots ↔ p.eval₂ f x = 0 := by
+theorem mem_roots_map [CommRingₓ k] [IsDomain k] {f : R →+* k} {x : k} (hp : p ≠ 0) :
+    x ∈ (p.map f).roots ↔ p.eval₂ f x = 0 := by
   rw [mem_roots (show p.map f ≠ 0 from map_ne_zero hp)]
   dsimp' only [← is_root]
   rw [Polynomial.eval_map]
 
-theorem mem_root_set [Field k] [Algebra R k] {x : k} (hp : p ≠ 0) : x ∈ p.RootSet k ↔ aeval x p = 0 :=
+theorem mem_root_set [CommRingₓ k] [IsDomain k] [Algebra R k] {x : k} (hp : p ≠ 0) : x ∈ p.RootSet k ↔ aeval x p = 0 :=
   Iff.trans Multiset.mem_to_finset (mem_roots_map hp)
 
-theorem root_set_C_mul_X_pow {R S : Type _} [Field R] [Field S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) {a : R}
-    (ha : a ≠ 0) : (c a * X ^ n).RootSet S = {0} := by
+theorem root_set_C_mul_X_pow [CommRingₓ S] [IsDomain S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) {a : R} (ha : a ≠ 0) :
+    (c a * X ^ n).RootSet S = {0} := by
   ext x
   rw [Set.mem_singleton_iff, mem_root_set, aeval_mul, aeval_C, aeval_X_pow, mul_eq_zero]
   · simp_rw [RingHom.map_eq_zero, pow_eq_zero_iff (Nat.pos_of_ne_zeroₓ hn), or_iff_right_iff_imp]
@@ -377,14 +378,20 @@ theorem root_set_C_mul_X_pow {R S : Type _} [Field R] [Field S] [Algebra R S] {n
   · exact mul_ne_zero (mt C_eq_zero.mp ha) (pow_ne_zero n X_ne_zero)
     
 
-theorem root_set_monomial {R S : Type _} [Field R] [Field S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) {a : R} (ha : a ≠ 0) :
+theorem root_set_monomial [CommRingₓ S] [IsDomain S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) {a : R} (ha : a ≠ 0) :
     (monomial n a).RootSet S = {0} := by
   rw [← C_mul_X_pow_eq_monomial, root_set_C_mul_X_pow hn ha]
 
-theorem root_set_X_pow {R S : Type _} [Field R] [Field S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) :
-    (X ^ n : R[X]).RootSet S = {0} := by
+theorem root_set_X_pow [CommRingₓ S] [IsDomain S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) : (X ^ n : R[X]).RootSet S = {0} :=
+  by
   rw [← one_mulₓ (X ^ n : R[X]), ← C_1, root_set_C_mul_X_pow hn]
   exact one_ne_zero
+
+theorem root_set_prod [CommRingₓ S] [IsDomain S] [Algebra R S] {ι : Type _} (f : ι → R[X]) (s : Finset ι)
+    (h : s.Prod f ≠ 0) : (s.Prod f).RootSet S = ⋃ i ∈ s, (f i).RootSet S := by
+  simp only [← root_set, Finset.mem_coe]
+  rw [Polynomial.map_prod, roots_prod, Finset.bind_to_finset, s.val_to_finset, Finset.coe_bUnion]
+  rwa [← Polynomial.map_prod, Ne, map_eq_zero]
 
 theorem exists_root_of_degree_eq_one (h : degree p = 1) : ∃ x, IsRoot p x :=
   ⟨-(p.coeff 0 / p.coeff 1), by
@@ -455,7 +462,7 @@ theorem map_dvd_map' [Field k] (f : R →+* k) {x y : R[X]} : x.map f ∣ y.map 
     rw [H, Polynomial.map_zero, zero_dvd_iff, zero_dvd_iff, map_eq_zero]
   else by
     rw [← normalize_dvd_iff, ← @normalize_dvd_iff R[X], normalize_apply, normalize_apply, coe_norm_unit_of_ne_zero H,
-      coe_norm_unit_of_ne_zero (mt (map_eq_zero f).1 H), leading_coeff_map, ← f.map_inv, ← map_C, ← Polynomial.map_mul,
+      coe_norm_unit_of_ne_zero (mt (map_eq_zero f).1 H), leading_coeff_map, ← map_inv₀ f, ← map_C, ← Polynomial.map_mul,
       map_dvd_map _ f.injective (monic_mul_leading_coeff_inv H)]
 
 theorem degree_normalize : degree (normalize p) = degree p := by

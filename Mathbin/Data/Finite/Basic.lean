@@ -44,34 +44,11 @@ open Classical
 
 variable {α β γ : Type _}
 
-theorem not_finite_iff_infinite {α : Type _} : ¬Finite α ↔ Infinite α := by
-  rw [← is_empty_fintype, finite_iff_nonempty_fintype, not_nonempty_iff]
-
 theorem finite_or_infinite (α : Type _) : Finite α ∨ Infinite α := by
   rw [← not_finite_iff_infinite]
   apply em
 
-theorem not_finite (α : Type _) [h1 : Infinite α] [h2 : Finite α] : False :=
-  not_finite_iff_infinite.mpr h1 h2
-
-theorem Finite.of_not_infinite {α : Type _} (h : ¬Infinite α) : Finite α := by
-  rwa [← not_finite_iff_infinite, not_not] at h
-
-theorem Infinite.of_not_finite {α : Type _} (h : ¬Finite α) : Infinite α :=
-  not_finite_iff_infinite.mp h
-
-theorem not_infinite_iff_finite {α : Type _} : ¬Infinite α ↔ Finite α :=
-  not_finite_iff_infinite.not_right.symm
-
 namespace Finite
-
-theorem exists_max [Finite α] [Nonempty α] [LinearOrderₓ β] (f : α → β) : ∃ x₀ : α, ∀ x, f x ≤ f x₀ := by
-  haveI := Fintype.ofFinite α
-  exact Fintype.exists_max f
-
-theorem exists_min [Finite α] [Nonempty α] [LinearOrderₓ β] (f : α → β) : ∃ x₀ : α, ∀ x, f x₀ ≤ f x := by
-  haveI := Fintype.ofFinite α
-  exact Fintype.exists_min f
 
 -- see Note [lower instance priority]
 instance (priority := 100) of_subsingleton {α : Sort _} [Subsingleton α] : Finite α :=
@@ -114,6 +91,10 @@ instance {β : α → Type _} [Finite α] [∀ a, Finite (β a)] : Finite (Σa, 
 
 instance {ι : Sort _} {π : ι → Sort _} [Finite ι] [∀ i, Finite (π i)] : Finite (Σ'i, π i) :=
   of_equiv _ (Equivₓ.psigmaEquivSigmaPlift π).symm
+
+instance [Finite α] : Finite (Set α) := by
+  cases nonempty_fintype α
+  infer_instance
 
 end Finite
 

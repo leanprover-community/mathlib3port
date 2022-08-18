@@ -141,12 +141,12 @@ open Result
 
 variable {σ : Type} {α : Type u}
 
-/-- `get_state` returns the underlying state inside an interaction monad, from within that monad. -/
 -- Note that this is a generalization of `tactic.read` in core.
+/-- `get_state` returns the underlying state inside an interaction monad, from within that monad. -/
 unsafe def get_state : interaction_monad σ σ := fun state => success State State
 
-/-- `set_state` sets the underlying state inside an interaction monad, from within that monad. -/
 -- Note that this is a generalization of `tactic.write` in core.
+/-- `set_state` sets the underlying state inside an interaction monad, from within that monad. -/
 unsafe def set_state (state : σ) : interaction_monad σ Unit := fun _ => success () State
 
 /-- `run_with_state state tac` applies `tac` to the given state `state` and returns the result,
@@ -374,9 +374,9 @@ unsafe def list_binary_operands (f : expr) : expr → tactic (List expr)
     pure (as ++ bs)
   | a => pure [a]
 
+-- TODO: move to `declaration` namespace in `meta/expr.lean`
 /-- `mk_theorem n ls t e` creates a theorem declaration with name `n`, universe parameters named
 `ls`, type `t`, and body `e`. -/
--- TODO: move to `declaration` namespace in `meta/expr.lean`
 unsafe def mk_theorem (n : Name) (ls : List Name) (t : expr) (e : expr) : declaration :=
   declaration.thm n ls t (task.pure e)
 
@@ -391,7 +391,7 @@ unsafe def add_theorem_by (n : Name) (ls : List Name) (type : expr) (tac : tacti
 /-- `eval_expr' α e` attempts to evaluate the expression `e` in the type `α`.
 This is a variant of `eval_expr` in core. Due to unexplained behavior in the VM, in rare
 situations the latter will fail but the former will succeed. -/
-unsafe def eval_expr' (α : Type _) [_inst_1 : reflected _ α] (e : expr) : tactic α :=
+unsafe def eval_expr' (α : Type _) [reflected _ α] (e : expr) : tactic α :=
   mk_app `` id [e] >>= eval_expr α
 
 /-- `mk_fresh_name` returns identifiers starting with underscores,
@@ -1219,11 +1219,11 @@ end Interactive
 unsafe def successes (tactics : List (tactic α)) : tactic (List α) :=
   List.filterMap id <$> Monadₓ.sequence (tactics.map fun t => try_core t)
 
+-- Note this is not the same as `successes`, which keeps track of the evolving `tactic_state`.
 /-- Try all the tactics in a list, each time starting at the original `tactic_state`,
 returning the list of successful results,
 and reverting to the original `tactic_state`.
 -/
--- Note this is not the same as `successes`, which keeps track of the evolving `tactic_state`.
 unsafe def try_all {α : Type} (tactics : List (tactic α)) : tactic (List α) := fun s =>
   result.success
     (tactics.map fun t : tactic α =>
@@ -1256,11 +1256,11 @@ unsafe def try_all_sorted {α : Type} (tactics : List (tactic α)) (sort_by : ta
 private unsafe def target' : tactic expr :=
   target >>= instantiate_mvars >>= whnf
 
+-- FIXME check if we can remove `auto_param := ff`
 /-- Just like `split`, `fsplit` applies the constructor when the type of the target is
 an inductive data type with one constructor.
 However it does not reorder goals or invoke `auto_param` tactics.
 -/
--- FIXME check if we can remove `auto_param := ff`
 unsafe def fsplit : tactic Unit := do
   let [c] ← target' >>= get_constructors_for |
     fail "fsplit tactic failed, target is not an inductive datatype with only one constructor"
@@ -1296,12 +1296,12 @@ unsafe def case_bash : tactic Unit := do
   let r ← successes (l.reverse.map fun h => cases h >> skip)
   when (r r.empty) failed
 
+-- While `note` provides a default value for `t`, it doesn't seem this could ever be used.
 /-- `note_anon t v`, given a proof `v : t`,
 adds `h : t` to the current context, where the name `h` is fresh.
 
 `note_anon none v` will infer the type `t` from `v`.
 -/
--- While `note` provides a default value for `t`, it doesn't seem this could ever be used.
 unsafe def note_anon (t : Option expr) (v : expr) : tactic expr := do
   let h ← get_unused_name `h none
   note h t v

@@ -55,9 +55,9 @@ namespace FirstOrder
 /-! ### Languages and Structures -/
 
 
+-- intended to be used with explicit universe parameters
 /-- A first-order language consists of a type of functions of every natural-number arity and a
   type of relations of every natural-number arity. -/
--- intended to be used with explicit universe parameters
 @[nolint check_univs]
 structure Language where
   Functions : ℕ → Type u

@@ -96,7 +96,7 @@ attribute [simp] smul_one smul_mul' smul_zero smul_add
 on `x`. -/
 @[simp]
 theorem smul_inv'' [MulSemiringAction M F] (x : M) (m : F) : x • m⁻¹ = (x • m)⁻¹ :=
-  (MulSemiringAction.toRingHom M F x).map_inv _
+  map_inv₀ (MulSemiringAction.toRingHom M F x) _
 
 end SimpLemmas
 

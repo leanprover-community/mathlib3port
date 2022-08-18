@@ -197,8 +197,8 @@ def pi {ι : Type _} {f : ι → Type _} [∀ i, Mul (f i)] (C : ∀ i, Con (f i
 
 variable (c)
 
-/-- Defining the quotient by a congruence relation of a type with a multiplication. -/
 -- Quotients
+/-- Defining the quotient by a congruence relation of a type with a multiplication. -/
 @[to_additive "Defining the quotient by an additive congruence relation of a type with\nan addition."]
 protected def Quotient :=
   Quotientₓ <| c.toSetoid
@@ -210,8 +210,8 @@ See Note [use has_coe_t]. -/
 instance (priority := 0) : CoeTₓ M c.Quotient :=
   ⟨@Quotientₓ.mk _ c.toSetoid⟩
 
-/-- The quotient by a decidable congruence relation has decidable equality. -/
 -- Lower the priority since it unifies with any quotient type.
+/-- The quotient by a decidable congruence relation has decidable equality. -/
 @[to_additive "The quotient by a decidable additive congruence relation has decidable equality."]
 instance (priority := 500) [d : ∀ a b, Decidable (c a b)] : DecidableEq c.Quotient :=
   @Quotientₓ.decidableEq M c.toSetoid d
@@ -316,9 +316,9 @@ protected def congr {c d : Con M} (h : c = d) : c.Quotient ≃* d.Quotient :=
     map_mul' := fun x y => by
       rcases x with ⟨⟩ <;> rcases y with ⟨⟩ <;> rfl }
 
+-- The complete lattice of congruence relations on a type
 /-- For congruence relations `c, d` on a type `M` with a multiplication, `c ≤ d` iff `∀ x y ∈ M`,
     `x` is related to `y` by `d` if `x` is related to `y` by `c`. -/
--- The complete lattice of congruence relations on a type
 @[to_additive
       "For additive congruence relations `c, d` on a type `M` with an addition, `c ≤ d` iff\n`∀ x y ∈ M`, `x` is related to `y` by `d` if `x` is related to `y` by `c`."]
 instance : LE (Con M) :=

@@ -37,18 +37,132 @@ We also define `is_star_normal R`, a `Prop` that states that an element `x` sati
 -/
 
 
-variable (R : Type _) {A : Type _}
+variable {R A : Type _}
+
+/-- An element is self-adjoint if it is equal to its star. -/
+def IsSelfAdjoint [HasStar R] (x : R) : Prop :=
+  star x = x
+
+/-- An element of a star monoid is normal if it commutes with its adjoint. -/
+class IsStarNormal [Mul R] [HasStar R] (x : R) : Prop where
+  star_comm_self : Commute (star x) x
+
+export IsStarNormal (star_comm_self)
+
+theorem star_comm_self' [Mul R] [HasStar R] (x : R) [IsStarNormal x] : star x * x = x * star x :=
+  IsStarNormal.star_comm_self
+
+namespace IsSelfAdjoint
+
+theorem star_eq [HasStar R] {x : R} (hx : IsSelfAdjoint x) : star x = x :=
+  hx
+
+theorem _root_.is_self_adjoint_iff [HasStar R] {x : R} : IsSelfAdjoint x ↔ star x = x :=
+  Iff.rfl
+
+section AddGroupₓ
+
+variable [AddGroupₓ R] [StarAddMonoid R]
+
+variable (R)
+
+theorem _root_.is_self_adjoint_zero : IsSelfAdjoint (0 : R) :=
+  star_zero R
+
+variable {R}
+
+theorem add {x y : R} (hx : IsSelfAdjoint x) (hy : IsSelfAdjoint y) : IsSelfAdjoint (x + y) := by
+  simp only [← is_self_adjoint_iff, ← star_add, ← hx.star_eq, ← hy.star_eq]
+
+theorem neg {x : R} (hx : IsSelfAdjoint x) : IsSelfAdjoint (-x) := by
+  simp only [← is_self_adjoint_iff, ← star_neg, ← hx.star_eq]
+
+theorem sub {x y : R} (hx : IsSelfAdjoint x) (hy : IsSelfAdjoint y) : IsSelfAdjoint (x - y) := by
+  simp only [← is_self_adjoint_iff, ← star_sub, ← hx.star_eq, ← hy.star_eq]
+
+theorem bit0 {x : R} (hx : IsSelfAdjoint x) : IsSelfAdjoint (bit0 x) := by
+  simp only [← is_self_adjoint_iff, ← star_bit0, ← hx.star_eq]
+
+end AddGroupₓ
+
+section NonUnitalSemiringₓ
+
+variable [NonUnitalSemiringₓ R] [StarRing R]
+
+theorem conjugate {x : R} (hx : IsSelfAdjoint x) (z : R) : IsSelfAdjoint (z * x * star z) := by
+  simp only [← is_self_adjoint_iff, ← star_mul, ← star_star, ← mul_assoc, ← hx.star_eq]
+
+theorem conjugate' {x : R} (hx : IsSelfAdjoint x) (z : R) : IsSelfAdjoint (star z * x * z) := by
+  simp only [← is_self_adjoint_iff, ← star_mul, ← star_star, ← mul_assoc, ← hx.star_eq]
+
+theorem is_star_normal {x : R} (hx : IsSelfAdjoint x) : IsStarNormal x :=
+  ⟨by
+    simp only [← hx.star_eq]⟩
+
+end NonUnitalSemiringₓ
+
+section Ringₓ
+
+variable [Ringₓ R] [StarRing R]
+
+variable (R)
+
+theorem _root_.is_self_adjoint_one : IsSelfAdjoint (1 : R) :=
+  star_one R
+
+variable {R}
+
+theorem bit1 {x : R} (hx : IsSelfAdjoint x) : IsSelfAdjoint (bit1 x) := by
+  simp only [← is_self_adjoint_iff, ← star_bit1, ← hx.star_eq]
+
+theorem pow {x : R} (hx : IsSelfAdjoint x) (n : ℕ) : IsSelfAdjoint (x ^ n) := by
+  simp only [← is_self_adjoint_iff, ← star_pow, ← hx.star_eq]
+
+end Ringₓ
+
+section NonUnitalCommRing
+
+variable [NonUnitalCommRing R] [StarRing R]
+
+theorem mul {x y : R} (hx : IsSelfAdjoint x) (hy : IsSelfAdjoint y) : IsSelfAdjoint (x * y) := by
+  simp only [← is_self_adjoint_iff, ← star_mul', ← hx.star_eq, ← hy.star_eq]
+
+end NonUnitalCommRing
+
+section Field
+
+variable [Field R] [StarRing R]
+
+theorem inv {x : R} (hx : IsSelfAdjoint x) : IsSelfAdjoint x⁻¹ := by
+  simp only [← is_self_adjoint_iff, ← star_inv', ← hx.star_eq]
+
+theorem div {x y : R} (hx : IsSelfAdjoint x) (hy : IsSelfAdjoint y) : IsSelfAdjoint (x / y) := by
+  simp only [← is_self_adjoint_iff, ← star_div', ← hx.star_eq, ← hy.star_eq]
+
+theorem zpow {x : R} (hx : IsSelfAdjoint x) (n : ℤ) : IsSelfAdjoint (x ^ n) := by
+  simp only [← is_self_adjoint_iff, ← star_zpow₀, ← hx.star_eq]
+
+end Field
+
+section HasSmul
+
+variable [HasStar R] [HasTrivialStar R] [AddGroupₓ A] [StarAddMonoid A]
+
+theorem smul [HasSmul R A] [StarModule R A] (r : R) {x : A} (hx : IsSelfAdjoint x) : IsSelfAdjoint (r • x) := by
+  simp only [← is_self_adjoint_iff, ← star_smul, ← star_trivial, ← hx.star_eq]
+
+end HasSmul
+
+end IsSelfAdjoint
+
+variable (R)
 
 /-- The self-adjoint elements of a star additive group, as an additive subgroup. -/
 def selfAdjoint [AddGroupₓ R] [StarAddMonoid R] : AddSubgroup R where
-  Carrier := { x | star x = x }
+  Carrier := { x | IsSelfAdjoint x }
   zero_mem' := star_zero R
-  add_mem' := fun x y (hx : star x = x) (hy : star y = y) =>
-    show star (x + y) = x + y by
-      simp only [← star_add x y, ← hx, ← hy]
-  neg_mem' := fun x (hx : star x = x) =>
-    show star (-x) = -x by
-      simp only [← hx, ← star_neg]
+  add_mem' := fun _ _ hx => hx.add
+  neg_mem' := fun _ hx => hx.neg
 
 /-- The skew-adjoint elements of a star additive group, as an additive subgroup. -/
 def skewAdjoint [AddCommGroupₓ R] [StarAddMonoid R] : AddSubgroup R where
@@ -64,15 +178,6 @@ def skewAdjoint [AddCommGroupₓ R] [StarAddMonoid R] : AddSubgroup R where
       simp only [← hx, ← star_neg]
 
 variable {R}
-
-/-- An element of a star monoid is normal if it commutes with its adjoint. -/
-class IsStarNormal [Mul R] [HasStar R] (x : R) : Prop where
-  star_comm_self : Commute (star x) x
-
-export IsStarNormal (star_comm_self)
-
-theorem star_comm_self' [Mul R] [HasStar R] (x : R) [IsStarNormal x] : star x * x = x * star x :=
-  IsStarNormal.star_comm_self
 
 namespace selfAdjoint
 
@@ -91,9 +196,6 @@ theorem star_coe_eq {x : selfAdjoint R} : star (x : R) = x :=
 instance : Inhabited (selfAdjoint R) :=
   ⟨0⟩
 
-theorem bit0_mem {x : R} (hx : x ∈ selfAdjoint R) : bit0 x ∈ selfAdjoint R := by
-  simp only [← mem_iff, ← star_bit0, ← mem_iff.mp hx]
-
 end AddGroupₓ
 
 section Ringₓ
@@ -101,8 +203,7 @@ section Ringₓ
 variable [Ringₓ R] [StarRing R]
 
 instance : One (selfAdjoint R) :=
-  ⟨⟨1, by
-      rw [mem_iff, star_one]⟩⟩
+  ⟨⟨1, is_self_adjoint_one R⟩⟩
 
 @[simp, norm_cast]
 theorem coe_one : ↑(1 : selfAdjoint R) = (1 : R) :=
@@ -111,40 +212,22 @@ theorem coe_one : ↑(1 : selfAdjoint R) = (1 : R) :=
 instance [Nontrivial R] : Nontrivial (selfAdjoint R) :=
   ⟨⟨0, 1, Subtype.ne_of_val_ne zero_ne_one⟩⟩
 
-theorem one_mem : (1 : R) ∈ selfAdjoint R := by
-  simp only [← mem_iff, ← star_one]
-
 instance : HasNatCast (selfAdjoint R) :=
   ⟨fun n =>
-    ⟨n, by
-      induction n <;> simp [← zero_mem, ← add_mem, ← one_mem, *]⟩⟩
+    ⟨n,
+      Nat.recOn n
+        (by
+          simp [← zero_mem])
+        fun k hk => (@Nat.cast_succₓ R _ k).symm ▸ add_mem hk (is_self_adjoint_one R)⟩⟩
 
 instance : HasIntCast (selfAdjoint R) :=
   ⟨fun n =>
     ⟨n, by
-      cases n <;> simp [← add_mem, ← one_mem, ← show ↑n ∈ selfAdjoint R from (n : selfAdjoint R).2]⟩⟩
-
-theorem bit1_mem {x : R} (hx : x ∈ selfAdjoint R) : bit1 x ∈ selfAdjoint R := by
-  simp only [← mem_iff, ← star_bit1, ← mem_iff.mp hx]
-
-theorem conjugate {x : R} (hx : x ∈ selfAdjoint R) (z : R) : z * x * star z ∈ selfAdjoint R := by
-  simp only [← mem_iff, ← star_mul, ← star_star, ← mem_iff.mp hx, ← mul_assoc]
-
-theorem conjugate' {x : R} (hx : x ∈ selfAdjoint R) (z : R) : star z * x * z ∈ selfAdjoint R := by
-  simp only [← mem_iff, ← star_mul, ← star_star, ← mem_iff.mp hx, ← mul_assoc]
-
-theorem is_star_normal_of_mem {x : R} (hx : x ∈ selfAdjoint R) : IsStarNormal x :=
-  ⟨by
-    simp only [← mem_iff] at hx
-    simp only [← hx]⟩
-
-instance (x : selfAdjoint R) : IsStarNormal (x : R) :=
-  is_star_normal_of_mem (SetLike.coe_mem _)
+      cases n <;> simp [← show ↑n ∈ selfAdjoint R from (n : selfAdjoint R).2]
+      refine' add_mem (is_self_adjoint_one R).neg (n : selfAdjoint R).2.neg⟩⟩
 
 instance : Pow (selfAdjoint R) ℕ :=
-  ⟨fun x n =>
-    ⟨(x : R) ^ n, by
-      simp only [← mem_iff, ← star_pow, ← star_coe_eq]⟩⟩
+  ⟨fun x n => ⟨(x : R) ^ n, x.Prop.pow n⟩⟩
 
 @[simp, norm_cast]
 theorem coe_pow (x : selfAdjoint R) (n : ℕ) : ↑(x ^ n) = (x : R) ^ n :=
@@ -152,20 +235,22 @@ theorem coe_pow (x : selfAdjoint R) (n : ℕ) : ↑(x ^ n) = (x : R) ^ n :=
 
 end Ringₓ
 
-section CommRingₓ
+section NonUnitalCommRing
 
-variable [CommRingₓ R] [StarRing R]
-
-theorem mul_mem {x y : R} (hx : x ∈ selfAdjoint R) (hy : y ∈ selfAdjoint R) : x * y ∈ selfAdjoint R := by
-  rw [mem_iff] at hx hy⊢
-  rw [star_mul', hx, hy]
+variable [NonUnitalCommRing R] [StarRing R]
 
 instance : Mul (selfAdjoint R) :=
-  ⟨fun x y => ⟨(x : R) * y, mul_mem x.Prop y.Prop⟩⟩
+  ⟨fun x y => ⟨(x : R) * y, x.Prop.mul y.Prop⟩⟩
 
 @[simp, norm_cast]
 theorem coe_mul (x y : selfAdjoint R) : ↑(x * y) = (x : R) * y :=
   rfl
+
+end NonUnitalCommRing
+
+section CommRingₓ
+
+variable [CommRingₓ R] [StarRing R]
 
 instance : CommRingₓ (selfAdjoint R) :=
   Function.Injective.commRing _ Subtype.coe_injective (selfAdjoint R).coe_zero coe_one (selfAdjoint R).coe_add coe_mul
@@ -178,28 +263,19 @@ section Field
 
 variable [Field R] [StarRing R]
 
-instance :
-    Inv (selfAdjoint R) where inv := fun x =>
-    ⟨x.val⁻¹, by
-      simp only [← mem_iff, ← star_inv', ← star_coe_eq, ← Subtype.val_eq_coe]⟩
+instance : Inv (selfAdjoint R) where inv := fun x => ⟨x.val⁻¹, x.Prop.inv⟩
 
 @[simp, norm_cast]
 theorem coe_inv (x : selfAdjoint R) : ↑x⁻¹ = (x : R)⁻¹ :=
   rfl
 
-instance :
-    Div (selfAdjoint R) where div := fun x y =>
-    ⟨x / y, by
-      simp only [← mem_iff, ← star_div', ← star_coe_eq, ← Subtype.val_eq_coe]⟩
+instance : Div (selfAdjoint R) where div := fun x y => ⟨x / y, x.Prop.div y.Prop⟩
 
 @[simp, norm_cast]
 theorem coe_div (x y : selfAdjoint R) : ↑(x / y) = (x / y : R) :=
   rfl
 
-instance :
-    Pow (selfAdjoint R) ℤ where pow := fun x z =>
-    ⟨x ^ z, by
-      simp only [← mem_iff, ← star_zpow₀, ← star_coe_eq, ← Subtype.val_eq_coe]⟩
+instance : Pow (selfAdjoint R) ℤ where pow := fun x z => ⟨x ^ z, x.Prop.zpow z⟩
 
 @[simp, norm_cast]
 theorem coe_zpow (x : selfAdjoint R) (z : ℤ) : ↑(x ^ z) = (x : R) ^ z :=
@@ -219,7 +295,7 @@ theorem coe_rat_cast (x : ℚ) : ↑(x : selfAdjoint R) = (x : R) :=
 instance hasQsmul : HasSmul ℚ (selfAdjoint R) :=
   ⟨fun a x =>
     ⟨a • x, by
-      rw [Rat.smul_def] <;> exact mul_mem (rat_cast_mem a) x.prop⟩⟩
+      rw [Rat.smul_def] <;> exact (rat_cast_mem a).mul x.prop⟩⟩
 
 @[simp, norm_cast]
 theorem coe_rat_smul (x : selfAdjoint R) (a : ℚ) : ↑(a • x) = a • (x : R) :=
@@ -236,11 +312,8 @@ section HasSmul
 
 variable [HasStar R] [HasTrivialStar R] [AddGroupₓ A] [StarAddMonoid A]
 
-theorem smul_mem [HasSmul R A] [StarModule R A] (r : R) {x : A} (h : x ∈ selfAdjoint A) : r • x ∈ selfAdjoint A := by
-  rw [mem_iff, star_smul, star_trivial, mem_iff.mp h]
-
 instance [HasSmul R A] [StarModule R A] : HasSmul R (selfAdjoint A) :=
-  ⟨fun r x => ⟨r • x, smul_mem r x.Prop⟩⟩
+  ⟨fun r x => ⟨r • x, x.Prop.smul r⟩⟩
 
 @[simp, norm_cast]
 theorem coe_smul [HasSmul R A] [StarModule R A] (r : R) (x : selfAdjoint A) : ↑(r • x) = r • (x : A) :=

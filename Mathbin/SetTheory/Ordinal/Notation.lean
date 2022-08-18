@@ -25,12 +25,12 @@ open Ordinal Order
 
 open Ordinal
 
+-- get notation for `ω`
 /-- Recursive definition of an ordinal notation. `zero` denotes the
   ordinal 0, and `oadd e n a` is intended to refer to `ω^e * n + a`.
   For this to be valid Cantor normal form, we must have the exponents
   decrease to the right, but we can't state this condition until we've
   defined `repr`, so it is a separate definition `NF`. -/
--- get notation for `ω`
 inductive Onote : Type
   | zero : Onote
   | oadd : Onote → ℕ+ → Onote → Onote
@@ -1234,6 +1234,9 @@ instance : Inhabited Nonote :=
 theorem lt_wf : @WellFounded Nonote (· < ·) :=
   InvImage.wfₓ repr Ordinal.lt_wf
 
+instance : WellFoundedLt Nonote :=
+  ⟨lt_wf⟩
+
 instance : HasWellFounded Nonote :=
   ⟨(· < ·), lt_wf⟩
 
@@ -1258,8 +1261,7 @@ theorem cmp_compares : ∀ a b : Nonote, (cmp a b).Compares a b
 instance : LinearOrderₓ Nonote :=
   linearOrderOfCompares cmp cmp_compares
 
-instance : IsWellOrder Nonote (· < ·) :=
-  ⟨lt_wf⟩
+instance : IsWellOrder Nonote (· < ·) where
 
 /-- Asserts that `repr a < ω ^ repr b`. Used in `nonote.rec_on` -/
 def below (a b : Nonote) : Prop :=

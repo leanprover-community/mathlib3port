@@ -97,26 +97,25 @@ theorem infi_rayleigh_eq_infi_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
 
 end ContinuousLinearMap
 
-namespace InnerProductSpace
-
 namespace IsSelfAdjoint
 
 section Real
 
 variable {F : Type _} [InnerProductSpace ℝ F]
 
-theorem has_strict_fderiv_at_re_apply_inner_self {T : F →L[ℝ] F} (hT : IsSelfAdjoint (T : F →ₗ[ℝ] F)) (x₀ : F) :
+theorem _root_.linear_map.is_symmetric.has_strict_fderiv_at_re_apply_inner_self {T : F →L[ℝ] F}
+    (hT : (T : F →ₗ[ℝ] F).IsSymmetric) (x₀ : F) :
     HasStrictFderivAt T.reApplyInnerSelf (bit0 (innerSL (T x₀) : F →L[ℝ] ℝ)) x₀ := by
   convert T.has_strict_fderiv_at.inner (has_strict_fderiv_at_id x₀)
   ext y
-  simp [← bit0, ← hT.apply_clm x₀ y, ← real_inner_comm x₀]
+  simp [← _root_.bit0, ← hT.apply_clm x₀ y, ← real_inner_comm x₀]
 
 variable [CompleteSpace F] {T : F →L[ℝ] F}
 
 -- mathport name: «exprrayleigh_quotient»
 local notation "rayleigh_quotient" => fun x : F => T.reApplyInnerSelf x / ∥(x : F)∥ ^ 2
 
-theorem linearly_dependent_of_is_local_extr_on (hT : IsSelfAdjoint (T : F →ₗ[ℝ] F)) {x₀ : F}
+theorem linearly_dependent_of_is_local_extr_on (hT : IsSelfAdjoint T) {x₀ : F}
     (hextr : IsLocalExtrOn T.reApplyInnerSelf (Sphere (0 : F) ∥x₀∥) x₀) :
     ∃ a b : ℝ, (a, b) ≠ 0 ∧ a • x₀ + b • T x₀ = 0 := by
   have H : IsLocalExtrOn T.re_apply_inner_self { x : F | ∥x∥ ^ 2 = ∥x₀∥ ^ 2 } x₀ := by
@@ -127,15 +126,15 @@ theorem linearly_dependent_of_is_local_extr_on (hT : IsSelfAdjoint (T : F →ₗ
   -- hypersurface-defining function `λ x, ∥x∥ ^ 2`
   obtain ⟨a, b, h₁, h₂⟩ :=
     IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at_1d H (has_strict_fderiv_at_norm_sq x₀)
-      (hT.has_strict_fderiv_at_re_apply_inner_self x₀)
+      (hT.is_symmetric.has_strict_fderiv_at_re_apply_inner_self x₀)
   refine' ⟨a, b, h₁, _⟩
   apply (InnerProductSpace.toDualMap ℝ F).Injective
   simp only [← LinearIsometry.map_add, ← LinearIsometry.map_smul, ← LinearIsometry.map_zero]
   change a • innerSL x₀ + b • innerSL (T x₀) = 0
   apply smul_right_injective (F →L[ℝ] ℝ) (two_ne_zero : (2 : ℝ) ≠ 0)
-  simpa only [← bit0, ← add_smul, ← smul_add, ← one_smul, ← add_zeroₓ] using h₂
+  simpa only [← _root_.bit0, ← add_smul, ← smul_add, ← one_smul, ← add_zeroₓ] using h₂
 
-theorem eq_smul_self_of_is_local_extr_on_real (hT : IsSelfAdjoint (T : F →ₗ[ℝ] F)) {x₀ : F}
+theorem eq_smul_self_of_is_local_extr_on_real (hT : IsSelfAdjoint T) {x₀ : F}
     (hextr : IsLocalExtrOn T.reApplyInnerSelf (Sphere (0 : F) ∥x₀∥) x₀) : T x₀ = rayleigh_quotient x₀ • x₀ := by
   obtain ⟨a, b, h₁, h₂⟩ := hT.linearly_dependent_of_is_local_extr_on hextr
   by_cases' hx₀ : x₀ = 0
@@ -169,21 +168,16 @@ variable [CompleteSpace E] {T : E →L[𝕜] E}
 -- mathport name: «exprrayleigh_quotient»
 local notation "rayleigh_quotient" => fun x : E => T.reApplyInnerSelf x / ∥(x : E)∥ ^ 2
 
-theorem eq_smul_self_of_is_local_extr_on (hT : IsSelfAdjoint (T : E →ₗ[𝕜] E)) {x₀ : E}
+theorem eq_smul_self_of_is_local_extr_on (hT : IsSelfAdjoint T) {x₀ : E}
     (hextr : IsLocalExtrOn T.reApplyInnerSelf (Sphere (0 : E) ∥x₀∥) x₀) : T x₀ = (↑(rayleigh_quotient x₀) : 𝕜) • x₀ :=
   by
   letI := InnerProductSpace.isROrCToReal 𝕜 E
-  let S : E →L[ℝ] E := @ContinuousLinearMap.restrictScalars 𝕜 E E _ _ _ _ _ _ _ ℝ _ _ _ _ T
-  have hSA : is_self_adjoint (S : E →ₗ[ℝ] E) := fun x y => by
-    have := hT x y
-    simp only [← ContinuousLinearMap.coe_coe] at this
-    simp only [← real_inner_eq_re_inner, ← this, ← ContinuousLinearMap.coe_restrict_scalars, ←
-      ContinuousLinearMap.coe_coe, ← LinearMap.coe_restrict_scalars_eq_coe]
-  exact eq_smul_self_of_is_local_extr_on_real hSA hextr
+  let hSA := hT.is_symmetric.restrict_scalars.to_self_adjoint.prop
+  exact hSA.eq_smul_self_of_is_local_extr_on_real hextr
 
 /-- For a self-adjoint operator `T`, a local extremum of the Rayleigh quotient of `T` on a sphere
 centred at the origin is an eigenvector of `T`. -/
-theorem has_eigenvector_of_is_local_extr_on (hT : IsSelfAdjoint (T : E →ₗ[𝕜] E)) {x₀ : E} (hx₀ : x₀ ≠ 0)
+theorem has_eigenvector_of_is_local_extr_on (hT : IsSelfAdjoint T) {x₀ : E} (hx₀ : x₀ ≠ 0)
     (hextr : IsLocalExtrOn T.reApplyInnerSelf (Sphere (0 : E) ∥x₀∥) x₀) :
     HasEigenvector (T : E →ₗ[𝕜] E) (↑(rayleigh_quotient x₀)) x₀ := by
   refine' ⟨_, hx₀⟩
@@ -193,7 +187,7 @@ theorem has_eigenvector_of_is_local_extr_on (hT : IsSelfAdjoint (T : E →ₗ[�
 /-- For a self-adjoint operator `T`, a maximum of the Rayleigh quotient of `T` on a sphere centred
 at the origin is an eigenvector of `T`, with eigenvalue the global supremum of the Rayleigh
 quotient. -/
-theorem has_eigenvector_of_is_max_on (hT : IsSelfAdjoint (T : E →ₗ[𝕜] E)) {x₀ : E} (hx₀ : x₀ ≠ 0)
+theorem has_eigenvector_of_is_max_on (hT : IsSelfAdjoint T) {x₀ : E} (hx₀ : x₀ ≠ 0)
     (hextr : IsMaxOn T.reApplyInnerSelf (Sphere (0 : E) ∥x₀∥) x₀) :
     HasEigenvector (T : E →ₗ[𝕜] E) (↑(⨆ x : { x : E // x ≠ 0 }, rayleigh_quotient x)) x₀ := by
   convert hT.has_eigenvector_of_is_local_extr_on hx₀ (Or.inr hextr.localize)
@@ -213,7 +207,7 @@ theorem has_eigenvector_of_is_max_on (hT : IsSelfAdjoint (T : E →ₗ[𝕜] E))
 /-- For a self-adjoint operator `T`, a minimum of the Rayleigh quotient of `T` on a sphere centred
 at the origin is an eigenvector of `T`, with eigenvalue the global infimum of the Rayleigh
 quotient. -/
-theorem has_eigenvector_of_is_min_on (hT : IsSelfAdjoint (T : E →ₗ[𝕜] E)) {x₀ : E} (hx₀ : x₀ ≠ 0)
+theorem has_eigenvector_of_is_min_on (hT : IsSelfAdjoint T) {x₀ : E} (hx₀ : x₀ ≠ 0)
     (hextr : IsMinOn T.reApplyInnerSelf (Sphere (0 : E) ∥x₀∥) x₀) :
     HasEigenvector (T : E →ₗ[𝕜] E) (↑(⨅ x : { x : E // x ≠ 0 }, rayleigh_quotient x)) x₀ := by
   convert hT.has_eigenvector_of_is_local_extr_on hx₀ (Or.inl hextr.localize)
@@ -232,69 +226,73 @@ theorem has_eigenvector_of_is_min_on (hT : IsSelfAdjoint (T : E →ₗ[𝕜] E))
 
 end CompleteSpace
 
+end IsSelfAdjoint
+
 section FiniteDimensional
 
 variable [FiniteDimensional 𝕜 E] [_i : Nontrivial E] {T : E →ₗ[𝕜] E}
 
+namespace LinearMap
+
+namespace IsSymmetric
+
 include _i
 
-/-- The supremum of the Rayleigh quotient of a self-adjoint operator `T` on a nontrivial
+/-- The supremum of the Rayleigh quotient of a symmetric operator `T` on a nontrivial
 finite-dimensional vector space is an eigenvalue for that operator. -/
-theorem has_eigenvalue_supr_of_finite_dimensional (hT : IsSelfAdjoint T) :
+theorem has_eigenvalue_supr_of_finite_dimensional (hT : T.IsSymmetric) :
     HasEigenvalue T ↑(⨆ x : { x : E // x ≠ 0 }, IsROrC.re ⟪T x, x⟫ / ∥(x : E)∥ ^ 2) := by
   haveI := FiniteDimensional.proper_is_R_or_C 𝕜 E
-  let T' : E →L[𝕜] E := T.to_continuous_linear_map
-  have hT' : is_self_adjoint (T' : E →ₗ[𝕜] E) := hT
+  let T' := hT.to_self_adjoint
   obtain ⟨x, hx⟩ : ∃ x : E, x ≠ 0 := exists_ne 0
   have H₁ : IsCompact (sphere (0 : E) ∥x∥) := is_compact_sphere _ _
   have H₂ : (sphere (0 : E) ∥x∥).Nonempty :=
     ⟨x, by
       simp ⟩
   -- key point: in finite dimension, a continuous function on the sphere has a max
-  obtain ⟨x₀, hx₀', hTx₀⟩ := H₁.exists_forall_ge H₂ T'.re_apply_inner_self_continuous.continuous_on
+  obtain ⟨x₀, hx₀', hTx₀⟩ := H₁.exists_forall_ge H₂ T'.val.re_apply_inner_self_continuous.continuous_on
   have hx₀ : ∥x₀∥ = ∥x∥ := by
     simpa using hx₀'
-  have : IsMaxOn T'.re_apply_inner_self (sphere 0 ∥x₀∥) x₀ := by
+  have : IsMaxOn T'.val.re_apply_inner_self (sphere 0 ∥x₀∥) x₀ := by
     simpa only [hx₀] using hTx₀
   have hx₀_ne : x₀ ≠ 0 := by
     have : ∥x₀∥ ≠ 0 := by
       simp only [← hx₀, ← norm_eq_zero, ← hx, ← Ne.def, ← not_false_iff]
     simpa [norm_eq_zero, ← Ne.def]
-  exact has_eigenvalue_of_has_eigenvector (hT'.has_eigenvector_of_is_max_on hx₀_ne this)
+  exact has_eigenvalue_of_has_eigenvector (T'.prop.has_eigenvector_of_is_max_on hx₀_ne this)
 
-/-- The infimum of the Rayleigh quotient of a self-adjoint operator `T` on a nontrivial
+/-- The infimum of the Rayleigh quotient of a symmetric operator `T` on a nontrivial
 finite-dimensional vector space is an eigenvalue for that operator. -/
-theorem has_eigenvalue_infi_of_finite_dimensional (hT : IsSelfAdjoint T) :
+theorem has_eigenvalue_infi_of_finite_dimensional (hT : T.IsSymmetric) :
     HasEigenvalue T ↑(⨅ x : { x : E // x ≠ 0 }, IsROrC.re ⟪T x, x⟫ / ∥(x : E)∥ ^ 2) := by
   haveI := FiniteDimensional.proper_is_R_or_C 𝕜 E
-  let T' : E →L[𝕜] E := T.to_continuous_linear_map
-  have hT' : is_self_adjoint (T' : E →ₗ[𝕜] E) := hT
+  let T' := hT.to_self_adjoint
   obtain ⟨x, hx⟩ : ∃ x : E, x ≠ 0 := exists_ne 0
   have H₁ : IsCompact (sphere (0 : E) ∥x∥) := is_compact_sphere _ _
   have H₂ : (sphere (0 : E) ∥x∥).Nonempty :=
     ⟨x, by
       simp ⟩
   -- key point: in finite dimension, a continuous function on the sphere has a min
-  obtain ⟨x₀, hx₀', hTx₀⟩ := H₁.exists_forall_le H₂ T'.re_apply_inner_self_continuous.continuous_on
+  obtain ⟨x₀, hx₀', hTx₀⟩ := H₁.exists_forall_le H₂ T'.val.re_apply_inner_self_continuous.continuous_on
   have hx₀ : ∥x₀∥ = ∥x∥ := by
     simpa using hx₀'
-  have : IsMinOn T'.re_apply_inner_self (sphere 0 ∥x₀∥) x₀ := by
+  have : IsMinOn T'.val.re_apply_inner_self (sphere 0 ∥x₀∥) x₀ := by
     simpa only [hx₀] using hTx₀
   have hx₀_ne : x₀ ≠ 0 := by
     have : ∥x₀∥ ≠ 0 := by
       simp only [← hx₀, ← norm_eq_zero, ← hx, ← Ne.def, ← not_false_iff]
     simpa [norm_eq_zero, ← Ne.def]
-  exact has_eigenvalue_of_has_eigenvector (hT'.has_eigenvector_of_is_min_on hx₀_ne this)
+  exact has_eigenvalue_of_has_eigenvector (T'.prop.has_eigenvector_of_is_min_on hx₀_ne this)
 
 omit _i
 
-theorem subsingleton_of_no_eigenvalue_finite_dimensional (hT : IsSelfAdjoint T)
+theorem subsingleton_of_no_eigenvalue_finite_dimensional (hT : T.IsSymmetric)
     (hT' : ∀ μ : 𝕜, Module.End.eigenspace (T : E →ₗ[𝕜] E) μ = ⊥) : Subsingleton E :=
   (subsingleton_or_nontrivial E).resolve_right fun h => absurd (hT' _) hT.has_eigenvalue_supr_of_finite_dimensional
 
+end IsSymmetric
+
+end LinearMap
+
 end FiniteDimensional
-
-end IsSelfAdjoint
-
-end InnerProductSpace
 

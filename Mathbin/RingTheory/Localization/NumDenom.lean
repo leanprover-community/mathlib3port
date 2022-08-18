@@ -92,7 +92,7 @@ theorem is_integer_of_is_unit_denom {x : K} (h : IsUnit (denom A x : A)) : IsInt
     IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors (denom A x).2
   use ↑d⁻¹ * Num A x
   refine' trans _ (mk'_num_denom A x)
-  rw [RingHom.map_mul, RingHom.map_units_inv, hd]
+  rw [map_mul, map_units_inv, hd]
   apply mul_left_cancel₀ d_ne_zero
   rw [← mul_assoc, mul_inv_cancel d_ne_zero, one_mulₓ, mk'_spec']
 

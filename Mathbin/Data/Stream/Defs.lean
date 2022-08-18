@@ -150,8 +150,8 @@ def apply (f : Streamₓ (α → β)) (s : Streamₓ α) : Streamₓ β := fun n
 -- mathport name: «expr ⊛ »
 infixl:75 " ⊛ " => apply
 
-/-- The stream of natural numbers: `stream.nth n stream.nats = n`. -/
 -- input as \o*
+/-- The stream of natural numbers: `stream.nth n stream.nats = n`. -/
 def nats : Streamₓ Nat := fun n => n
 
 end Streamₓ

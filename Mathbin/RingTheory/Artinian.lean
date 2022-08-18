@@ -96,15 +96,14 @@ instance is_artinian_prod [IsArtinian R M] [IsArtinian R P] : IsArtinian R (M ×
     LinearMap.snd_surjective (LinearMap.range_inl R M P)
 
 instance (priority := 100) is_artinian_of_finite [Finite M] : IsArtinian R M :=
-  let ⟨_⟩ := nonempty_fintype M
-  ⟨Fintype.well_founded_of_trans_of_irrefl _⟩
+  ⟨Finite.well_founded_of_trans_of_irrefl _⟩
 
-attribute [local elabAsElim] Fintype.induction_empty_option
+attribute [local elabAsElim] Finite.induction_empty_option
 
-instance is_artinian_pi {R ι : Type _} [Fintype ι] :
+instance is_artinian_pi {R ι : Type _} [Finite ι] :
     ∀ {M : ι → Type _} [Ringₓ R] [∀ i, AddCommGroupₓ (M i)],
       ∀ [∀ i, Module R (M i)], ∀ [∀ i, IsArtinian R (M i)], IsArtinian R (∀ i, M i) :=
-  Fintype.induction_empty_option
+  Finite.induction_empty_option
     (by
       intro α β e hα M _ _ _ _
       exact is_artinian_of_linear_equiv (LinearEquiv.piCongrLeft R M e))
@@ -119,7 +118,7 @@ instance is_artinian_pi {R ι : Type _} [Fintype ι] :
 /-- A version of `is_artinian_pi` for non-dependent functions. We need this instance because
 sometimes Lean fails to apply the dependent version in non-dependent settings (e.g., it fails to
 prove that `ι → ℝ` is finite dimensional over `ℝ`). -/
-instance is_artinian_pi' {R ι M : Type _} [Ringₓ R] [AddCommGroupₓ M] [Module R M] [Fintype ι] [IsArtinian R M] :
+instance is_artinian_pi' {R ι M : Type _} [Ringₓ R] [AddCommGroupₓ M] [Module R M] [Finite ι] [IsArtinian R M] :
     IsArtinian R (ι → M) :=
   is_artinian_pi
 
@@ -280,10 +279,6 @@ end IsArtinian
 
 end CommRingₓ
 
-/-- A ring is Artinian if it is Artinian as a module over itself.
-
-Strictly speaking, this should be called `is_left_artinian_ring` but we omit the `left_` for
-convenience in the commutative case. For a right Artinian ring, use `is_artinian Rᵐᵒᵖ R`. -/
 -- TODO: Prove this for artinian modules
 -- /--
 -- If `M ⊕ N` embeds into `M`, for `M` noetherian over `R`, then `N` is trivial.
@@ -302,18 +297,20 @@ convenience in the commutative case. For a right Artinian ring, use `is_artinian
 --   rw w,
 --   exact submodule.bot_equiv_punit,
 -- end
-class IsArtinianRing (R) [Ringₓ R] extends IsArtinian R R : Prop
+/-- A ring is Artinian if it is Artinian as a module over itself.
 
--- TODO: Can we define `is_artinian_ring` in a different way so this isn't needed?
-instance (priority := 100) is_artinian_ring_of_finite (R) [Ringₓ R] [Finite R] : IsArtinianRing R :=
-  ⟨⟩
+Strictly speaking, this should be called `is_left_artinian_ring` but we omit the `left_` for
+convenience in the commutative case. For a right Artinian ring, use `is_artinian Rᵐᵒᵖ R`. -/
+@[reducible]
+def IsArtinianRing (R) [Ringₓ R] :=
+  IsArtinian R R
 
 theorem is_artinian_ring_iff {R} [Ringₓ R] : IsArtinianRing R ↔ IsArtinian R R :=
-  ⟨fun h => h.1, @IsArtinianRing.mk _ _⟩
+  Iff.rfl
 
-theorem Ringₓ.is_artinian_of_zero_eq_one {R} [Ringₓ R] (h01 : (0 : R) = 1) : IsArtinianRing R := by
-  haveI := subsingleton_of_zero_eq_one h01 <;>
-    haveI := Fintype.ofSubsingleton (0 : R) <;> constructor <;> infer_instance
+theorem Ringₓ.is_artinian_of_zero_eq_one {R} [Ringₓ R] (h01 : (0 : R) = 1) : IsArtinianRing R :=
+  have := subsingleton_of_zero_eq_one h01
+  inferInstance
 
 theorem is_artinian_of_submodule_of_artinian (R M) [Ringₓ R] [AddCommGroupₓ M] [Module R M] (N : Submodule R M)
     (h : IsArtinian R M) : IsArtinian R N := by
@@ -335,8 +332,6 @@ theorem is_artinian_of_fg_of_artinian {R M} [Ringₓ R] [AddCommGroupₓ M] [Mod
   let ⟨s, hs⟩ := hN
   haveI := Classical.decEq M
   haveI := Classical.decEq R
-  letI : IsArtinian R R := by
-    infer_instance
   have : ∀, ∀ x ∈ s, ∀, x ∈ N := fun x hx => hs ▸ Submodule.subset_span hx
   refine' @is_artinian_of_surjective ((↑s : Set M) → R) _ _ _ (Pi.module _ _ _) _ _ _ is_artinian_pi
   · fapply LinearMap.mk

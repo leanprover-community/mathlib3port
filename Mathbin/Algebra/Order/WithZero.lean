@@ -162,11 +162,11 @@ section LinearOrderedCommMonoid
 
 variable [LinearOrderedCommMonoidWithZero α]
 
-/-- Pullback a `linear_ordered_comm_monoid_with_zero` under an injective map.
-See note [reducible non-instances]. -/
 /-
 The following facts are true more generally in a (linearly) ordered commutative monoid.
 -/
+/-- Pullback a `linear_ordered_comm_monoid_with_zero` under an injective map.
+See note [reducible non-instances]. -/
 @[reducible]
 def Function.Injective.linearOrderedCommMonoidWithZero {β : Type _} [Zero β] [One β] [Mul β] [Pow β ℕ] [HasSup β]
     [HasInf β] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
@@ -210,6 +210,12 @@ variable [LinearOrderedCommGroupWithZero α]
 theorem zero_lt_one₀ : (0 : α) < 1 :=
   lt_of_le_of_neₓ zero_le_one zero_ne_one
 
+theorem mul_le_one₀ (ha : a ≤ 1) (hb : b ≤ 1) : a * b ≤ 1 :=
+  mul_le_one' ha hb
+
+theorem one_le_mul₀ (ha : 1 ≤ a) (hb : 1 ≤ b) : 1 ≤ a * b :=
+  one_le_mul ha hb
+
 theorem le_of_le_mul_right (h : c ≠ 0) (hab : a * c ≤ b * c) : a ≤ b := by
   simpa only [← mul_inv_cancel_right₀ h] using mul_le_mul_right' hab c⁻¹
 
@@ -227,6 +233,12 @@ theorem mul_inv_le_of_le_mul (hab : a ≤ b * c) : a * c⁻¹ ≤ b := by
         (by
           simpa [← h] using hab)
     
+
+theorem inv_le_one₀ (ha : a ≠ 0) : a⁻¹ ≤ 1 ↔ 1 ≤ a :=
+  @inv_le_one' _ _ _ _ <| Units.mk0 a ha
+
+theorem one_le_inv₀ (ha : a ≠ 0) : 1 ≤ a⁻¹ ↔ a ≤ 1 :=
+  @one_le_inv' _ _ _ _ <| Units.mk0 a ha
 
 theorem le_mul_inv_iff₀ (hc : c ≠ 0) : a ≤ b * c⁻¹ ↔ a * c ≤ b :=
   ⟨fun h => inv_invₓ c ▸ mul_inv_le_of_le_mul h, le_mul_inv_of_mul_le hc⟩
@@ -314,6 +326,18 @@ theorem le_div_iff₀ (hc : c ≠ 0) : a ≤ b / c ↔ a * c ≤ b := by
 
 theorem div_le_iff₀ (hc : c ≠ 0) : a / c ≤ b ↔ a ≤ b * c := by
   rw [div_eq_mul_inv, mul_inv_le_iff₀ hc]
+
+theorem eq_one_of_mul_eq_one_left (ha : a ≤ 1) (hb : b ≤ 1) (hab : a * b = 1) : a = 1 :=
+  le_antisymmₓ ha <| (inv_le_one₀ <| left_ne_zero_of_mul_eq_one hab).mp <| eq_inv_of_mul_eq_one_right hab ▸ hb
+
+theorem eq_one_of_mul_eq_one_right (ha : a ≤ 1) (hb : b ≤ 1) (hab : a * b = 1) : b = 1 :=
+  le_antisymmₓ hb <| (inv_le_one₀ <| right_ne_zero_of_mul_eq_one hab).mp <| eq_inv_of_mul_eq_one_left hab ▸ ha
+
+theorem eq_one_of_mul_eq_one_left' (ha : 1 ≤ a) (hb : 1 ≤ b) (hab : a * b = 1) : a = 1 :=
+  le_antisymmₓ ((one_le_inv₀ <| left_ne_zero_of_mul_eq_one hab).mp <| eq_inv_of_mul_eq_one_right hab ▸ hb) ha
+
+theorem eq_one_of_mul_eq_one_right' (ha : 1 ≤ a) (hb : 1 ≤ b) (hab : a * b = 1) : b = 1 :=
+  le_antisymmₓ ((one_le_inv₀ <| right_ne_zero_of_mul_eq_one hab).mp <| eq_inv_of_mul_eq_one_left hab ▸ ha) hb
 
 /-- `equiv.mul_left₀` as an order_iso on a `linear_ordered_comm_group_with_zero.`.
 

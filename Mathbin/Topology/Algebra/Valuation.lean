@@ -103,7 +103,7 @@ namespace Valued
 structure. -/
 def mk' (v : Valuation R Γ₀) : Valued R Γ₀ :=
   { V, toUniformSpace := @TopologicalAddGroup.toUniformSpace R _ v.subgroups_basis.topology _,
-    to_uniform_add_group := @topological_add_group_is_uniform _ _ v.subgroups_basis.topology _,
+    to_uniform_add_group := @topological_add_comm_group_is_uniform _ _ v.subgroups_basis.topology _,
     is_topological_valuation := by
       letI := @TopologicalAddGroup.toUniformSpace R _ v.subgroups_basis.topology _
       intro s

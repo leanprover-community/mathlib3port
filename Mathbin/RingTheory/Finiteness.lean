@@ -935,9 +935,14 @@ noncomputable section
 
 /-- The structure of a module `M` over a ring `R` as a module over `polynomial R` when given a
 choice of how `X` acts by choosing a linear map `f : M →ₗ[R] M` -/
-@[simps]
 def modulePolynomialOfEndo : Module R[X] M :=
   Module.compHom M (Polynomial.aeval f).toRingHom
+
+theorem module_polynomial_of_endo_smul_def (n : R[X]) (a : M) :
+    @HasSmul.smul (modulePolynomialOfEndo f).toHasSmul n a = Polynomial.aeval f n a :=
+  rfl
+
+attribute [local simp] module_polynomial_of_endo_smul_def
 
 include f
 

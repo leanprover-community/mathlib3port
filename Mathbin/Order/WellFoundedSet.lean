@@ -873,7 +873,7 @@ theorem Pi.is_pwo {σ : Type _} {α : σ → Type _} [∀ s, LinearOrderₓ (α 
     
   · intro x s hx ih f hf
     obtain ⟨g, hg⟩ :=
-      (is_well_order.wf.is_wf (Set.Univ : Set _)).IsPwo.exists_monotone_subseq ((fun mo : ∀ s : σ, α s => mo x) ∘ f)
+      (is_well_founded.wf.is_wf (Set.Univ : Set _)).IsPwo.exists_monotone_subseq ((fun mo : ∀ s : σ, α s => mo x) ∘ f)
         (Set.subset_univ _)
     obtain ⟨g', hg'⟩ := ih (f ∘ g) (Set.subset_univ _)
     refine' ⟨g'.trans g, fun a b hab => _⟩

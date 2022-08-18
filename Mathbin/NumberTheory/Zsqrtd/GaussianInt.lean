@@ -59,8 +59,8 @@ section
 
 attribute [-instance] Complex.field
 
-/-- The embedding of the Gaussian integers into the complex numbers, as a ring homomorphism. -/
 -- Avoid making things noncomputable unnecessarily.
+/-- The embedding of the Gaussian integers into the complex numbers, as a ring homomorphism. -/
 def toComplex : ℤ[i] →+* ℂ :=
   Zsqrtd.lift
     ⟨i, by

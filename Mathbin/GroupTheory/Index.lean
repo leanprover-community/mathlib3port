@@ -275,7 +275,8 @@ theorem index_eq_one : H.index = 1 ↔ H = ⊤ :=
     (congr_arg index h).trans index_top⟩
 
 @[to_additive]
-theorem index_ne_zero_of_fintype [hH : Fintype (G ⧸ H)] : H.index ≠ 0 := by
+theorem index_ne_zero_of_finite [hH : Finite (G ⧸ H)] : H.index ≠ 0 := by
+  cases nonempty_fintype (G ⧸ H)
   rw [index_eq_card]
   exact Fintype.card_ne_zero
 
@@ -285,8 +286,8 @@ noncomputable def fintypeOfIndexNeZero (hH : H.index ≠ 0) : Fintype (G ⧸ H) 
   (Cardinal.lt_aleph_0_iff_fintype.mp (lt_of_not_geₓ (mt Cardinal.to_nat_apply_of_aleph_0_le hH))).some
 
 @[to_additive one_lt_index_of_ne_top]
-theorem one_lt_index_of_ne_top [Fintype (G ⧸ H)] (hH : H ≠ ⊤) : 1 < H.index :=
-  Nat.one_lt_iff_ne_zero_and_ne_one.mpr ⟨index_ne_zero_of_fintype, mt index_eq_one.mp hH⟩
+theorem one_lt_index_of_ne_top [Finite (G ⧸ H)] (hH : H ≠ ⊤) : 1 < H.index :=
+  Nat.one_lt_iff_ne_zero_and_ne_one.mpr ⟨index_ne_zero_of_finite, mt index_eq_one.mp hH⟩
 
 end Subgroup
 

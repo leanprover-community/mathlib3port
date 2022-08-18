@@ -508,10 +508,11 @@ theorem mk_injective (s : Finset ι) : Function.Injective (@mk ι β _ _ s) := b
 
 omit dec
 
-instance [IsEmpty ι] : Unique (Π₀ i, β i) :=
-  ⟨⟨0⟩, fun a => by
-    ext
-    exact isEmptyElim i⟩
+instance unique [∀ i, Subsingleton (β i)] : Unique (Π₀ i, β i) :=
+  FunLike.coe_injective.unique
+
+instance uniqueOfIsEmpty [IsEmpty ι] : Unique (Π₀ i, β i) :=
+  FunLike.coe_injective.unique
 
 /-- Given `fintype ι`, `equiv_fun_on_fintype` is the `equiv` between `Π₀ i, β i` and `Π i, β i`.
   (All dependent functions on a finite type are finitely supported.) -/

@@ -180,6 +180,7 @@ theorem is_fractional_of_le {I : Submodule R P} {J : FractionalIdeal S P} (hIJ :
   intro b b_mem
   exact ha b (hIJ b_mem)
 
+-- Is a `coe_t` rather than `coe` to speed up failing inference, see library note [use has_coe_t]
 /-- Map an ideal `I` to a fractional ideal by forgetting `I` is integral.
 
 This is a bundled version of `is_localization.coe_submodule : ideal R → submodule R P`,
@@ -188,7 +189,6 @@ also called `coe_to_submodule` in theorem names.
 
 This map is available as a ring hom, called `fractional_ideal.coe_ideal_hom`.
 -/
--- Is a `coe_t` rather than `coe` to speed up failing inference, see library note [use has_coe_t]
 instance coeToFractionalIdeal : CoeTₓ (Ideal R) (FractionalIdeal S P) :=
   ⟨fun I =>
     ⟨coeSubmodule P I,
@@ -1021,7 +1021,7 @@ end Quotientₓ
 
 section Field
 
-variable {R₁ K L : Type _} [CommRingₓ R₁] [IsDomain R₁] [Field K] [Field L]
+variable {R₁ K L : Type _} [CommRingₓ R₁] [Field K] [Field L]
 
 variable [Algebra R₁ K] [IsFractionRing R₁ K] [Algebra K L] [IsFractionRing K L]
 
@@ -1034,7 +1034,7 @@ theorem eq_zero_or_one (I : FractionalIdeal K⁰ L) : I = 0 ∨ I = 1 := by
   · intro x_mem
     obtain ⟨n, d, rfl⟩ := IsLocalization.mk'_surjective K⁰ x
     refine' ⟨n / d, _⟩
-    rw [RingHom.map_div, IsFractionRing.mk'_eq_div]
+    rw [map_div₀, IsFractionRing.mk'_eq_div]
     
   · rintro ⟨x, rfl⟩
     obtain ⟨y, y_ne, y_mem⟩ := FractionalIdeal.exists_ne_zero_mem_is_integer hI
@@ -1042,15 +1042,9 @@ theorem eq_zero_or_one (I : FractionalIdeal K⁰ L) : I = 0 ∨ I = 1 := by
     exact Submodule.smul_mem I _ y_mem
     
 
-theorem eq_zero_or_one_of_is_field (hF : IsField R₁) (I : FractionalIdeal R₁⁰ K) : I = 0 ∨ I = 1 := by
+theorem eq_zero_or_one_of_is_field (hF : IsField R₁) (I : FractionalIdeal R₁⁰ K) : I = 0 ∨ I = 1 :=
   letI : Field R₁ := hF.to_field
-  -- TODO can this be less ugly?
-  exact
-    @eq_zero_or_one R₁ K _ _ _
-      (by
-        cases _inst_4
-        convert _inst_9)
-      I
+  eq_zero_or_one I
 
 end Field
 

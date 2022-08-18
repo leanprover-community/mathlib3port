@@ -134,9 +134,9 @@ instance defined on it, otherwise this will create a second non-defeq norm insta
 -/
 
 
+-- note [is_R_or_C instance]
 /-- A structure requiring that a scalar product is positive definite and symmetric, from which one
 can construct an `inner_product_space` instance in `inner_product_space.of_core`. -/
--- note [is_R_or_C instance]
 @[nolint has_nonempty_instance]
 structure InnerProductSpace.Core (𝕜 : Type _) (F : Type _) [IsROrC 𝕜] [AddCommGroupₓ F] [Module 𝕜 F] where
   inner : F → F → 𝕜
@@ -308,7 +308,7 @@ theorem inner_mul_inner_self_le (x y : F) : abs ⟪x, y⟫ * abs ⟪y, x⟫ ≤ 
         _ = re ⟪x, x⟫ - re (T† * ⟪y, x⟫) - re (T * ⟪x, y⟫) + re (T * T† * ⟪y, y⟫) := by
           simp only [← inner_smul_left, ← inner_smul_right, ← mul_assoc]
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ / ⟪y, y⟫ * ⟪y, x⟫) := by
-          field_simp [-mul_re, ← inner_conj_sym, ← hT, ← RingHom.map_div, ← h₁, ← h₃]
+          field_simp [-mul_re, ← inner_conj_sym, ← hT, ← map_div₀, ← h₁, ← h₃]
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ * ⟪y, x⟫ / ⟪y, y⟫) := by
           rw [← mul_div_right_comm]
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ * ⟪y, x⟫ / re ⟪y, y⟫) := by
@@ -727,7 +727,7 @@ theorem inner_mul_inner_self_le (x y : E) : abs ⟪x, y⟫ * abs ⟪y, x⟫ ≤ 
         _ = re ⟪x, x⟫ - re (T† * ⟪y, x⟫) - re (T * ⟪x, y⟫) + re (T * T† * ⟪y, y⟫) := by
           simp only [← inner_smul_left, ← inner_smul_right, ← mul_assoc]
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ / ⟪y, y⟫ * ⟪y, x⟫) := by
-          field_simp [-mul_re, ← hT, ← RingHom.map_div, ← h₁, ← h₃, ← inner_conj_sym]
+          field_simp [-mul_re, ← hT, ← map_div₀, ← h₁, ← h₃, ← inner_conj_sym]
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ * ⟪y, x⟫ / ⟪y, y⟫) := by
           rw [← mul_div_right_comm]
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ * ⟪y, x⟫ / re ⟪y, y⟫) := by

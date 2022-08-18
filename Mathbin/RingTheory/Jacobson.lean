@@ -365,10 +365,7 @@ theorem jacobson_bot_of_integral_localization {R : Type _} [CommRingₓ R] [IsDo
   have hcomm : φ'.comp (algebraMap R Rₘ) = (algebraMap S Sₘ).comp φ := IsLocalization.map_comp _
   let f := quotient_map (I.comap (algebraMap S Sₘ)) φ le_rfl
   let g := quotient_map I (algebraMap S Sₘ) le_rfl
-  have :=
-    is_maximal_comap_of_is_integral_of_is_maximal' φ' hφ' I
-      (by
-        convert hI <;> cases _inst_4 <;> rfl)
+  have := is_maximal_comap_of_is_integral_of_is_maximal' φ' hφ' I hI
   have := ((is_maximal_iff_is_maximal_disjoint Rₘ x _).1 this).left
   have : ((I.comap (algebraMap S Sₘ)).comap φ).IsMaximal := by
     rwa [comap_comap, hcomm, ← comap_comap] at this

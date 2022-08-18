@@ -99,11 +99,11 @@ theorem map_comp_c_app (F : J ⥤ PresheafedSpace.{v} C) {j₁ j₂ j₃} (f : j
   dsimp'
   simp
 
+-- See note [dsimp, simp]
 /-- Given a diagram of `PresheafedSpace C`s, its colimit is computed by pushing the sheaves onto
 the colimit of the underlying spaces, and taking componentwise limit.
 This is the componentwise diagram for an open set `U` of the colimit of the underlying spaces.
 -/
--- See note [dsimp, simp]
 @[simps]
 def componentwiseDiagram (F : J ⥤ PresheafedSpace.{v} C) [HasColimit F] (U : Opens (Limits.colimit F).Carrier) :
     Jᵒᵖ ⥤ C where

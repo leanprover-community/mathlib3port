@@ -57,6 +57,12 @@ example [HasColimits C] : PreservesColimits (forget X) :=
 example : ReflectsColimits (forget X) :=
   inferInstance
 
+theorem epi_left_of_epi [HasPushouts C] {f g : Over X} (h : f ⟶ g) [Epi h] : Epi h.left :=
+  CostructuredArrow.epi_left_of_epi _
+
+theorem epi_iff_epi_left [HasPushouts C] {f g : Over X} (h : f ⟶ g) : Epi h ↔ Epi h.left :=
+  CostructuredArrow.epi_iff_epi_left _
+
 section
 
 variable [HasPullbacks C]
@@ -124,6 +130,12 @@ instance [HasLimitsOfShape J C] : HasLimitsOfShape J (Under X) where
 
 instance [HasLimits C] : HasLimits (Under X) :=
   ⟨inferInstance⟩
+
+theorem mono_right_of_mono [HasPullbacks C] {f g : Under X} (h : f ⟶ g) [Mono h] : Mono h.right :=
+  StructuredArrow.mono_right_of_mono _
+
+theorem mono_iff_mono_right [HasPullbacks C] {f g : Under X} (h : f ⟶ g) : Mono h ↔ Mono h.right :=
+  StructuredArrow.mono_iff_mono_right _
 
 instance createsLimits : CreatesLimits (forget X) :=
   structured_arrow.creates_limits

@@ -53,12 +53,12 @@ variable {A : Type u₂} [Category.{v₂} A]
 
 variable (J : GrothendieckTopology C)
 
+-- We follow https://stacks.math.columbia.edu/tag/00VL definition 00VR
 /-- A sheaf of A is a presheaf P : Cᵒᵖ => A such that for every E : A, the
 presheaf of types given by sending U : C to Hom_{A}(E, P U) is a sheaf of types.
 
 https://stacks.math.columbia.edu/tag/00VR
 -/
--- We follow https://stacks.math.columbia.edu/tag/00VL definition 00VR
 def IsSheaf (P : Cᵒᵖ ⥤ A) : Prop :=
   ∀ E : A, Presieve.IsSheaf J (P ⋙ coyoneda.obj (op E))
 

@@ -336,9 +336,9 @@ theorem rcons_inj {i} : Function.Injective (rcons : Pair M i → Word M) := by
 
 variable [DecidableEq ι]
 
-/-- Given `i : ι`, any reduced word can be decomposed into a pair `p` such that `w = rcons p`. -/
 -- This definition is computable but not very nice to look at. Thankfully we don't have to inspect
 -- it, since `rcons` is known to be injective.
+/-- Given `i : ι`, any reduced word can be decomposed into a pair `p` such that `w = rcons p`. -/
 private def equiv_pair_aux (i) : ∀ w : Word M, { p : Pair M i // rcons p = w }
   | w@⟨[], _, _⟩ =>
     ⟨⟨1, w, by
@@ -811,9 +811,9 @@ instance {ι : Type _} (G : ι → Type _) [∀ i, Groupₓ (G i)] [hG : ∀ i, 
         ext
         simp )
 
-/-- A free group is a free product of copies of the free_group over one generator. -/
 -- NB: One might expect this theorem to be phrased with ℤ, but ℤ is an additive group,
 -- and using `multiplicative ℤ` runs into diamond issues.
+/-- A free group is a free product of copies of the free_group over one generator. -/
 @[simps]
 def _root_.free_group_equiv_free_product {ι : Type u_1} : FreeGroup ι ≃* FreeProduct fun _ : ι => FreeGroup Unit := by
   refine' MonoidHom.toMulEquiv _ _ _ _

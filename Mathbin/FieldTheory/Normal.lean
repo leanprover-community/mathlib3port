@@ -207,6 +207,31 @@ instance (p : F[X]) : Normal F p.SplittingField :=
 
 end NormalTower
 
+namespace IntermediateField
+
+/-- A compositum of normal extensions is normal -/
+instance normal_supr {ι : Type _} (t : ι → IntermediateField F K) [h : ∀ i, Normal F (t i)] :
+    Normal F (⨆ i, t i : IntermediateField F K) := by
+  refine' ⟨is_algebraic_supr fun i => (h i).1, fun x => _⟩
+  obtain ⟨s, hx⟩ := exists_finset_of_mem_supr'' (fun i => (h i).1) x.2
+  let E : IntermediateField F K := ⨆ i ∈ s, adjoin F ((minpoly F (i.2 : _)).RootSet K)
+  have hF : Normal F E := by
+    apply Normal.of_is_splitting_field (∏ i in s, minpoly F i.2)
+    refine' is_splitting_field_supr _ fun i hi => adjoin_root_set_is_splitting_field _
+    · exact finset.prod_ne_zero_iff.mpr fun i hi => minpoly.ne_zero ((h i.1).IsIntegral i.2)
+      
+    · exact Polynomial.splits_comp_of_splits _ (algebraMap (t i.1) K) ((h i.1).Splits i.2)
+      
+  have hE : E ≤ ⨆ i, t i := by
+    refine' supr_le fun i => supr_le fun hi => le_supr_of_le i.1 _
+    rw [adjoin_le_iff, ← image_root_set ((h i.1).Splits i.2) (t i.1).val]
+    exact fun _ ⟨a, _, h⟩ => h ▸ a.2
+  have := hF.splits ⟨x, hx⟩
+  rw [minpoly_eq, Subtype.coe_mk, ← minpoly_eq] at this
+  exact Polynomial.splits_comp_of_splits _ (inclusion hE).toRingHom this
+
+end IntermediateField
+
 variable {F} {K} {K₁ K₂ K₃ : Type _} [Field K₁] [Field K₂] [Field K₃] [Algebra F K₁] [Algebra F K₂] [Algebra F K₃]
   (ϕ : K₁ →ₐ[F] K₂) (χ : K₁ ≃ₐ[F] K₂) (ψ : K₂ →ₐ[F] K₃) (ω : K₂ ≃ₐ[F] K₃)
 

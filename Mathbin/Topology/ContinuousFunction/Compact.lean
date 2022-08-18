@@ -287,11 +287,11 @@ We now set up some declarations making it convenient to use uniform continuity.
 theorem uniform_continuity (f : C(α, β)) (ε : ℝ) (h : 0 < ε) : ∃ δ > 0, ∀ {x y}, dist x y < δ → dist (f x) (f y) < ε :=
   Metric.uniform_continuous_iff.mp (CompactSpace.uniform_continuous_of_continuous f.Continuous) ε h
 
-/-- An arbitrarily chosen modulus of uniform continuity for a given function `f` and `ε > 0`.
--/
 -- This definition allows us to separate the choice of some `δ`,
 -- and the corresponding use of `dist a b < δ → dist (f a) (f b) < ε`,
 -- even across different declarations.
+/-- An arbitrarily chosen modulus of uniform continuity for a given function `f` and `ε > 0`.
+-/
 def modulus (f : C(α, β)) (ε : ℝ) (h : 0 < ε) : ℝ :=
   Classical.some (uniform_continuity f ε h)
 

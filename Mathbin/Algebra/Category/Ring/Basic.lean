@@ -312,6 +312,13 @@ instance CommRingₓₓ.forget_reflects_isos :
     let e : X ≃+* Y := { f, i.to_equiv with }
     exact ⟨(is_iso.of_iso e.to_CommRing_iso).1⟩
 
+theorem CommRingₓₓ.comp_eq_ring_hom_comp {R S T : CommRingₓₓ} (f : R ⟶ S) (g : S ⟶ T) : f ≫ g = g.comp f :=
+  rfl
+
+theorem CommRingₓₓ.ring_hom_comp_eq_comp {R S T : Type _} [CommRingₓ R] [CommRingₓ S] [CommRingₓ T] (f : R →+* S)
+    (g : S →+* T) : g.comp f = CommRingₓₓ.ofHom f ≫ CommRingₓₓ.ofHom g :=
+  rfl
+
 -- It would be nice if we could have the following,
 -- but it requires making `reflects_isomorphisms_forget₂` an instance,
 -- which can cause typeclass loops:

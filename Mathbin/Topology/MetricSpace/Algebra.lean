@@ -129,9 +129,9 @@ theorem dist_smul_pair (x : α) (y₁ y₂ : β) : dist (x • y₁) (x • y₂
 theorem dist_pair_smul (x₁ x₂ : α) (y : β) : dist (x₁ • y) (x₂ • y) ≤ dist x₁ x₂ * dist y 0 :=
   HasBoundedSmul.dist_pair_smul' x₁ x₂ y
 
+-- see Note [lower instance priority]
 /-- The typeclass `has_bounded_smul` on a metric-space scalar action implies continuity of the
 action. -/
--- see Note [lower instance priority]
 instance (priority := 100) HasBoundedSmul.has_continuous_smul :
     HasContinuousSmul α β where continuous_smul := by
     rw [Metric.continuous_iff]

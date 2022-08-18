@@ -3,9 +3,10 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Monoidal.Category
+import Mathbin.CategoryTheory.Monoidal.Functor
 import Mathbin.CategoryTheory.Adjunction.Limits
 import Mathbin.CategoryTheory.Adjunction.Mates
+import Mathbin.CategoryTheory.Functor.InvIsos
 
 /-!
 # Closed monoidal categories
@@ -18,17 +19,17 @@ should be generalised and moved to this file.
 -/
 
 
-universe v u u₂
+universe v u u₂ v₂
 
 namespace CategoryTheory
 
 open Category MonoidalCategory
 
-/-- An object `X` is (right) closed if `(X ⊗ -)` is a left adjoint. -/
 -- Note that this class carries a particular choice of right adjoint,
 -- (which is only unique up to isomorphism),
 -- not merely the existence of such, and
 -- so definitional properties of instances may be important.
+/-- An object `X` is (right) closed if `(X ⊗ -)` is a left adjoint. -/
 class Closed {C : Type u} [Category.{v} C] [MonoidalCategory.{v} C] (X : C) where
   isAdj : IsLeftAdjoint (tensorLeft X)
 
@@ -237,6 +238,21 @@ end Pre
 def internalHom [MonoidalClosed C] : Cᵒᵖ ⥤ C ⥤ C where
   obj := fun X => ihom X.unop
   map := fun X Y f => pre f.unop
+
+section OfEquiv
+
+variable {D : Type u₂} [Category.{v₂} D] [MonoidalCategory.{v₂} D]
+
+/-- Transport the property of being monoidal closed across a monoidal equivalence of categories -/
+noncomputable def ofEquiv (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] [h : MonoidalClosed D] :
+    MonoidalClosed C where closed' := fun X =>
+    { isAdj := by
+        haveI q : closed (F.to_functor.obj X) := inferInstance
+        haveI : is_left_adjoint (tensor_left (F.to_functor.obj X)) := q.is_adj
+        have i := comp_inv_iso (monoidal_functor.comm_tensor_left F X)
+        exact adjunction.left_adjoint_of_nat_iso i }
+
+end OfEquiv
 
 end MonoidalClosed
 

@@ -6,6 +6,7 @@ Authors: Leonardo de Moura
 import Mathbin.Data.Rbtree.Find
 import Mathbin.Data.Rbtree.Insert
 import Mathbin.Data.Rbtree.MinMax
+import Mathbin.Order.RelClasses
 
 universe u
 
@@ -84,10 +85,7 @@ variable [DecidableRel lt]
 
 theorem insert_ne_mk_rbtree (t : Rbtree α lt) (a : α) : t.insert a ≠ mkRbtree α lt := by
   cases' t with n p
-  simp [← insert, ← mkRbtree]
-  intro h
-  injection h with h'
-  apply Rbnode.insert_ne_leaf lt n a h'
+  simpa [← insert, ← mkRbtree] using Rbnode.insert_ne_leaf lt n a
 
 theorem find_correct [IsStrictWeakOrder α lt] (a : α) (t : Rbtree α lt) : a ∈ t ↔ ∃ b, t.find a = some b ∧ a ≈[lt]b :=
   by

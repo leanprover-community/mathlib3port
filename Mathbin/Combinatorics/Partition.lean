@@ -70,11 +70,11 @@ theorem of_composition_surj {n : ℕ} : Function.Surjective (ofComposition n) :=
   refine' ⟨⟨b, fun i hi => hb₁ hi, _⟩, partition.ext _ _ rfl⟩
   simpa using hb₂
 
+-- The argument `n` is kept explicit here since it is useful in tactic mode proofs to generate the
+-- proof obligation `l.sum = n`.
 /-- Given a multiset which sums to `n`, construct a partition of `n` with the same multiset, but
 without the zeros.
 -/
--- The argument `n` is kept explicit here since it is useful in tactic mode proofs to generate the
--- proof obligation `l.sum = n`.
 def ofSums (n : ℕ) (l : Multiset ℕ) (hl : l.Sum = n) : Partition n where
   parts := l.filter (· ≠ 0)
   parts_pos := fun i hi =>

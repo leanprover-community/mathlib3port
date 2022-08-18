@@ -74,9 +74,9 @@ class PreservesColimitsOfShape (J : Type w) [Category.{w'} J] (F : C ⥤ D) wher
     run_tac
       tactic.apply_instance
 
+-- This should be used with explicit universe variables.
 /-- `preserves_limits_of_size.{v u} F` means that `F` sends all limit cones over any
 diagram `J ⥤ C` to limit cones, where `J : Type u` with `[category.{v} J]`. -/
--- This should be used with explicit universe variables.
 @[nolint check_univs]
 class PreservesLimitsOfSize (F : C ⥤ D) where
   PreservesLimitsOfShape : ∀ {J : Type w} [Category.{w'} J], PreservesLimitsOfShape J F := by
@@ -88,9 +88,9 @@ limit cones over any diagram to limit cones. -/
 abbrev PreservesLimits (F : C ⥤ D) :=
   PreservesLimitsOfSize.{v₂, v₂} F
 
+-- This should be used with explicit universe variables.
 /-- `preserves_colimits_of_size.{v u} F` means that `F` sends all colimit cocones over any
 diagram `J ⥤ C` to colimit cocones, where `J : Type u` with `[category.{v} J]`. -/
--- This should be used with explicit universe variables.
 @[nolint check_univs]
 class PreservesColimitsOfSize (F : C ⥤ D) where
   PreservesColimitsOfShape : ∀ {J : Type w} [Category.{w'} J], PreservesColimitsOfShape J F := by
@@ -105,10 +105,10 @@ abbrev PreservesColimits (F : C ⥤ D) :=
 attribute [instance]
   preserves_limits_of_shape.preserves_limit preserves_limits_of_size.preserves_limits_of_shape preserves_colimits_of_shape.preserves_colimit preserves_colimits_of_size.preserves_colimits_of_shape
 
+-- see Note [lower instance priority]
 /-- A convenience function for `preserves_limit`, which takes the functor as an explicit argument to
 guide typeclass resolution.
 -/
--- see Note [lower instance priority]
 def isLimitOfPreserves (F : C ⥤ D) {c : Cone K} (t : IsLimit c) [PreservesLimit K F] : IsLimit (F.mapCone c) :=
   PreservesLimit.preserves t
 
@@ -244,10 +244,10 @@ def preservesLimitsOfShapeOfEquiv {J' : Type w₂} [Category.{w₂'} J'] (e : J 
           simp [functor.map_comp]
            }
 
+-- See library note [dsimp, simp].
 /-- `preserves_limits_of_size_shrink.{w w'} F` tries to obtain `preserves_limits_of_size.{w w'} F`
 from some other `preserves_limits_of_size F`.
 -/
--- See library note [dsimp, simp].
 def preservesLimitsOfSizeShrink (F : C ⥤ D) [PreservesLimitsOfSize.{max w w₂, max w' w₂'} F] :
     PreservesLimitsOfSize.{w, w'} F :=
   ⟨fun J hJ => preserves_limits_of_shape_of_equiv (UliftHomUliftCategory.equiv.{w₂, w₂'} J).symm F⟩
@@ -299,10 +299,10 @@ def preservesColimitsOfShapeOfEquiv {J' : Type w₂} [Category.{w₂'} J'] (e : 
           simp [functor.map_comp]
            }
 
+-- See library note [dsimp, simp].
 /-- `preserves_colimits_of_size_shrink.{w w'} F` tries to obtain `preserves_colimits_of_size.{w w'} F`
 from some other `preserves_colimits_of_size F`.
 -/
--- See library note [dsimp, simp].
 def preservesColimitsOfSizeShrink (F : C ⥤ D) [PreservesColimitsOfSize.{max w w₂, max w' w₂'} F] :
     PreservesColimitsOfSize.{w, w'} F :=
   ⟨fun J hJ => preserves_colimits_of_shape_of_equiv (UliftHomUliftCategory.equiv.{w₂, w₂'} J).symm F⟩
@@ -348,12 +348,12 @@ class ReflectsColimitsOfShape (J : Type w) [Category.{w'} J] (F : C ⥤ D) where
     run_tac
       tactic.apply_instance
 
+-- This should be used with explicit universe variables.
 /-- A functor `F : C ⥤ D` reflects limits if
 whenever the image of a cone over some `K : J ⥤ C` under `F` is a limit cone in `D`,
 the cone was already a limit cone in `C`.
 Note that we do not assume a priori that `D` actually has any limits.
 -/
--- This should be used with explicit universe variables.
 @[nolint check_univs]
 class ReflectsLimitsOfSize (F : C ⥤ D) where
   ReflectsLimitsOfShape : ∀ {J : Type w} [Category.{w'} J], ReflectsLimitsOfShape J F := by
@@ -368,12 +368,12 @@ Note that we do not assume a priori that `D` actually has any limits.
 abbrev ReflectsLimits (F : C ⥤ D) :=
   ReflectsLimitsOfSize.{v₂, v₂} F
 
+-- This should be used with explicit universe variables.
 /-- A functor `F : C ⥤ D` reflects colimits if
 whenever the image of a cocone over some `K : J ⥤ C` under `F` is a colimit cocone in `D`,
 the cocone was already a colimit cocone in `C`.
 Note that we do not assume a priori that `D` actually has any colimits.
 -/
--- This should be used with explicit universe variables.
 @[nolint check_univs]
 class ReflectsColimitsOfSize (F : C ⥤ D) where
   ReflectsColimitsOfShape : ∀ {J : Type w} [Category.{w'} J], ReflectsColimitsOfShape J F := by

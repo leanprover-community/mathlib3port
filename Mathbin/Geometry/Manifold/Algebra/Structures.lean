@@ -23,10 +23,10 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [Topologica
 -- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option default_priority
 set_option default_priority 100
 
-/-- A smooth (semi)ring is a (semi)ring `R` where addition and multiplication are smooth.
-If `R` is a ring, then negation is automatically smooth, as it is multiplication with `-1`. -/
 -- see Note [default priority]
 -- See note [Design choices about smooth algebraic structures]
+/-- A smooth (semi)ring is a (semi)ring `R` where addition and multiplication are smooth.
+If `R` is a ring, then negation is automatically smooth, as it is multiplication with `-1`. -/
 class SmoothRing (I : ModelWithCorners 𝕜 E H) (R : Type _) [Semiringₓ R] [TopologicalSpace R] [ChartedSpace H R] extends
   HasSmoothAdd I R : Prop where
   smooth_mul : Smooth (I.Prod I) I fun p : R × R => p.1 * p.2

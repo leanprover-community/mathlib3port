@@ -76,7 +76,7 @@ variable (R : Type _) (A : Type _) [Semiringₓ R] [StarSemigroup R] [HasTrivial
 
 /-- The self-adjoint elements of a star module, as a submodule. -/
 def selfAdjoint.submodule : Submodule R A :=
-  { selfAdjoint A with smul_mem' := selfAdjoint.smul_mem }
+  { selfAdjoint A with smul_mem' := IsSelfAdjoint.smul }
 
 /-- The skew-adjoint elements of a star module, as a submodule. -/
 def skewAdjoint.submodule : Submodule R A :=

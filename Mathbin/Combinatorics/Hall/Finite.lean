@@ -11,9 +11,9 @@ import Mathbin.Data.Set.Finite
 
 This module proves the basic form of Hall's theorem.
 In constrast to the theorem described in `combinatorics.hall.basic`, this
-version requires that the indexed family `t : ι → finset α` have `ι` be a `fintype`.
+version requires that the indexed family `t : ι → finset α` have `ι` be finite.
 The `combinatorics.hall.basic` module applies a compactness argument to this version
-to remove the `fintype` constraint on `ι`.
+to remove the `finite` constraint on `ι`.
 
 The modules are split like this since the generalized statement
 depends on the topology and category theory libraries, but the finite
@@ -39,7 +39,11 @@ universe u v
 
 namespace HallMarriageTheorem
 
-variable {ι : Type u} {α : Type v} [Fintype ι] {t : ι → Finset α} [DecidableEq α]
+variable {ι : Type u} {α : Type v} [DecidableEq α] {t : ι → Finset α}
+
+section Fintype
+
+variable [Fintype ι]
 
 theorem hall_cond_of_erase {x : ι} (a : α) (ha : ∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.bUnion t).card)
     (s' : Finset { x' : ι | x' ≠ x }) : s'.card ≤ (s'.bUnion fun x' => (t x').erase a).card := by
@@ -219,11 +223,16 @@ theorem hall_hard_inductive_step_B {n : ℕ} (hn : Fintype.card ι = n + 1)
       
     
 
+end Fintype
+
+variable [Finite ι]
+
 /-- Here we combine the two inductive steps into a full strong induction proof,
 completing the proof the harder direction of **Hall's Marriage Theorem**.
 -/
 theorem hall_hard_inductive (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card) :
     ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x := by
+  cases nonempty_fintype ι
   induction' hn : Fintype.card ι using Nat.strong_induction_onₓ with n ih generalizing ι
   rcases n with (_ | _)
   · rw [Fintype.card_eq_zero_iff] at hn
@@ -235,7 +244,7 @@ theorem hall_hard_inductive (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).car
           (∀ s' : Finset ι', s'.card ≤ (s'.bUnion t').card) → ∃ f : ι' → α, Function.Injective f ∧ ∀ x, f x ∈ t' x :=
       by
       intro ι' _ _ hι' ht'
-      exact ih _ (Nat.lt_succ_of_leₓ hι') ht' rfl
+      exact ih _ (Nat.lt_succ_of_leₓ hι') ht' _ rfl
     by_cases' h : ∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.bUnion t).card
     · exact hall_hard_inductive_step_A hn ht ih' h
       
@@ -248,14 +257,14 @@ theorem hall_hard_inductive (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).car
 end HallMarriageTheorem
 
 /-- This is the version of **Hall's Marriage Theorem** in terms of indexed
-families of finite sets `t : ι → finset α` with `ι` a `fintype`.
+families of finite sets `t : ι → finset α` with `ι` finite.
 It states that there is a set of distinct representatives if and only
 if every union of `k` of the sets has at least `k` elements.
 
 See `finset.all_card_le_bUnion_card_iff_exists_injective` for a version
-where the `fintype ι` constraint is removed.
+where the `finite ι` constraint is removed.
 -/
-theorem Finset.all_card_le_bUnion_card_iff_exists_injective' {ι α : Type _} [Fintype ι] [DecidableEq α]
+theorem Finset.all_card_le_bUnion_card_iff_exists_injective' {ι α : Type _} [Finite ι] [DecidableEq α]
     (t : ι → Finset α) :
     (∀ s : Finset ι, s.card ≤ (s.bUnion t).card) ↔ ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x := by
   constructor

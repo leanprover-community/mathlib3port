@@ -307,6 +307,7 @@ unsafe def preprocess_hyps (cfg : AutoConfig) : tactic Unit := do
 -/
 
 
+--<|> self_simplify_hyps
 /-- The terminal tactic, used to try to finish off goals:
 - Call the contradiction tactic.
 - Open an SMT state, and use ematching and congruence closure, with all the universal
@@ -314,7 +315,6 @@ unsafe def preprocess_hyps (cfg : AutoConfig) : tactic Unit := do
 
 TODO(Jeremy): allow users to specify attribute for ematching lemmas?
 -/
---<|> self_simplify_hyps
 unsafe def mk_hinst_lemmas : List expr → smt_tactic hinst_lemmas
   | [] =>-- return hinst_lemmas.mk
   do

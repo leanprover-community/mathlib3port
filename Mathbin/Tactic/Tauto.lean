@@ -259,6 +259,7 @@ that it is unable to solve before failing.
 unsafe def tautology (c : parse <| (tk "!")?) (cfg : tactic.tauto_cfg := {  }) :=
   tactic.tautology <| { cfg with classical := c.isSome }
 
+-- Now define a shorter name for the tactic `tautology`.
 /-- `tauto` breaks down assumptions of the form `_ ∧ _`, `_ ∨ _`, `_ ↔ _` and `∃ _, _`
 and splits a goal of the form `_ ∧ _`, `_ ↔ _` or `∃ _, _` until it can be discharged
 using `reflexivity` or `solve_by_elim`.
@@ -268,7 +269,6 @@ The variant `tauto!` uses the law of excluded middle.
 `tauto {closer := tac}` will use `tac` on any subgoals created by `tauto`
 that it is unable to solve before failing.
 -/
--- Now define a shorter name for the tactic `tautology`.
 unsafe def tauto (c : parse <| (tk "!")?) (cfg : tactic.tauto_cfg := {  }) : tactic Unit :=
   tautology c cfg
 

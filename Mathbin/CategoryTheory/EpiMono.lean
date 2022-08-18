@@ -180,8 +180,8 @@ theorem IsIso.of_epi_section' {X Y : C} {f : X ⟶ Y} (hf : SplitEpi f) [epi <| 
 theorem IsIso.of_epi_section {X Y : C} (f : X ⟶ Y) [hf : IsSplitEpi f] [hf' : epi <| section_ f] : IsIso f :=
   @IsIso.of_epi_section' _ _ _ _ _ hf.exists_split_epi.some hf'
 
-/-- A category where every morphism has a `trunc` retraction is computably a groupoid. -/
 -- FIXME this has unnecessarily become noncomputable!
+/-- A category where every morphism has a `trunc` retraction is computably a groupoid. -/
 noncomputable def Groupoid.ofTruncSplitMono (all_split_mono : ∀ {X Y : C} (f : X ⟶ Y), Trunc (IsSplitMono f)) :
     Groupoid.{v₁} C := by
   apply groupoid.of_is_iso

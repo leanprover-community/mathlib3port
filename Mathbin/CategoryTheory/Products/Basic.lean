@@ -33,11 +33,11 @@ section
 
 variable (C : Type u₁) [Category.{v₁} C] (D : Type u₂) [Category.{v₂} D]
 
+-- the generates simp lemmas like `id_fst` and `comp_snd`
 /-- `prod C D` gives the cartesian product of two categories.
 
 See <https://stacks.math.columbia.edu/tag/001K>.
 -/
--- the generates simp lemmas like `id_fst` and `comp_snd`
 @[simps (config := { notRecursive := [] })]
 instance prod : Category.{max v₁ v₂} (C × D) where
   Hom := fun X Y => (X.1 ⟶ Y.1) × (X.2 ⟶ Y.2)
@@ -72,6 +72,12 @@ theorem is_iso_prod_iff {P Q : C} {S T : D} {f : (P, S) ⟶ (Q, T)} : IsIso f �
 section
 
 variable {C D}
+
+/-- The isomorphism between `(X.1, X.2)` and `X`. -/
+@[simps]
+def prod.etaIso (X : C × D) : (X.1, X.2) ≅ X where
+  Hom := (𝟙 _, 𝟙 _)
+  inv := (𝟙 _, 𝟙 _)
 
 /-- Construct an isomorphism in `C × D` out of two isomorphisms in `C` and `D`. -/
 @[simps]
@@ -215,13 +221,25 @@ def prod (F : A ⥤ B) (G : C ⥤ D) : A × C ⥤ B × D where
   obj := fun X => (F.obj X.1, G.obj X.2)
   map := fun _ _ f => (F.map f.1, G.map f.2)
 
-/-- Similar to `prod`, but both functors start from the same category `A` -/
 /- Because of limitations in Lean 3's handling of notations, we do not setup a notation `F × G`.
    You can use `F.prod G` as a "poor man's infix", or just write `functor.prod F G`. -/
+/-- Similar to `prod`, but both functors start from the same category `A` -/
 @[simps]
 def prod' (F : A ⥤ B) (G : A ⥤ C) : A ⥤ B × C where
   obj := fun a => (F.obj a, G.obj a)
   map := fun x y f => (F.map f, G.map f)
+
+/-- The product `F.prod' G` followed by projection on the first component is isomorphic to `F` -/
+@[simps]
+def prod'CompFst (F : A ⥤ B) (G : A ⥤ C) : F.prod' G ⋙ CategoryTheory.prod.fst B C ≅ F :=
+  NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by
+    simp
+
+/-- The product `F.prod' G` followed by projection on the second component is isomorphic to `G` -/
+@[simps]
+def prod'CompSnd (F : A ⥤ B) (G : A ⥤ C) : F.prod' G ⋙ CategoryTheory.prod.snd B C ≅ G :=
+  NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by
+    simp
 
 section
 
@@ -264,6 +282,52 @@ end NatTrans
 def flipCompEvaluation (F : A ⥤ B ⥤ C) (a) : F.flip ⋙ (evaluation _ _).obj a ≅ F.obj a :=
   (NatIso.ofComponents fun b => eqToIso rfl) <| by
     tidy
+
+variable (A B C)
+
+/-- The forward direction for `functor_prod_functor_equiv` -/
+@[simps]
+def prodFunctorToFunctorProd : (A ⥤ B) × (A ⥤ C) ⥤ A ⥤ B × C where
+  obj := fun F => F.1.prod' F.2
+  map := fun F G f => { app := fun X => (f.1.app X, f.2.app X) }
+
+/-- The backward direction for `functor_prod_functor_equiv` -/
+@[simps]
+def functorProdToProdFunctor : (A ⥤ B × C) ⥤ (A ⥤ B) × (A ⥤ C) where
+  obj := fun F => ⟨F ⋙ CategoryTheory.prod.fst B C, F ⋙ CategoryTheory.prod.snd B C⟩
+  map := fun F G α =>
+    ⟨{ app := fun X => (α.app X).1,
+        naturality' := fun X Y f => by
+          simp only [← functor.comp_map, ← prod.fst_map, prod_comp_fst, ← α.naturality] },
+      { app := fun X => (α.app X).2,
+        naturality' := fun X Y f => by
+          simp only [← functor.comp_map, ← prod.snd_map, prod_comp_snd, ← α.naturality] }⟩
+
+/-- The unit isomorphism for `functor_prod_functor_equiv` -/
+@[simps]
+def functorProdFunctorEquivUnitIso : 𝟭 _ ≅ prodFunctorToFunctorProd A B C ⋙ functorProdToProdFunctor A B C :=
+  NatIso.ofComponents
+    (fun F => (((Functor.prod'CompFst _ _).Prod (Functor.prod'CompSnd _ _)).trans (prod.etaIso F)).symm) fun F G α => by
+    tidy
+
+/-- The counit isomorphism for `functor_prod_functor_equiv` -/
+@[simps]
+def functorProdFunctorEquivCounitIso : functorProdToProdFunctor A B C ⋙ prodFunctorToFunctorProd A B C ≅ 𝟭 _ :=
+  NatIso.ofComponents
+    (fun F =>
+      NatIso.ofComponents (fun X => prod.etaIso (F.obj X))
+        (by
+          tidy))
+    (by
+      tidy)
+
+/-- The equivalence of categories between `(A ⥤ B) × (A ⥤ C)` and `A ⥤ (B × C)` -/
+@[simps]
+def functorProdFunctorEquiv : (A ⥤ B) × (A ⥤ C) ≌ A ⥤ B × C where
+  Functor := prodFunctorToFunctorProd A B C
+  inverse := functorProdToProdFunctor A B C
+  unitIso := functorProdFunctorEquivUnitIso A B C
+  counitIso := functorProdFunctorEquivCounitIso A B C
 
 end CategoryTheory
 

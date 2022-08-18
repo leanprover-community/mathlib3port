@@ -83,7 +83,7 @@ theorem gram_schmidt_orthogonal (f : ι → E) {a b : ι} (h₀ : a ≠ b) : ⟪
   clear h₀ a b
   intro a b h₀
   revert a
-  apply WellFounded.induction (@IsWellOrder.wf ι (· < ·) _) b
+  apply WellFounded.induction (@IsWellFounded.wf ι (· < ·) _) b
   intro b ih a h₀
   simp only [← gram_schmidt_def 𝕜 f b, ← inner_sub_right, ← inner_sum, ← orthogonal_projection_singleton, ←
     inner_smul_right]

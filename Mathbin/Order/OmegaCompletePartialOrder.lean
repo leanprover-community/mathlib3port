@@ -435,9 +435,9 @@ namespace CompleteLattice
 
 variable (α : Type u)
 
+-- see Note [lower instance priority]
 /-- Any complete lattice has an `ω`-CPO structure where the countable supremum is a special case
 of arbitrary suprema. -/
--- see Note [lower instance priority]
 instance (priority := 100) [CompleteLattice α] : OmegaCompletePartialOrder α where
   ωSup := fun c => ⨆ i, c i
   ωSup_le := fun ⟨c, _⟩ s hs => by

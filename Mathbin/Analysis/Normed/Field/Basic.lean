@@ -36,8 +36,8 @@ class SemiNormedRing (α : Type _) extends HasNorm α, Ringₓ α, PseudoMetricS
   dist_eq : ∀ x y, dist x y = norm (x - y)
   norm_mul : ∀ a b, norm (a * b) ≤ norm a * norm b
 
-/-- A seminormed ring is a non-unital seminormed ring. -/
 -- see Note [lower instance priority]
+/-- A seminormed ring is a non-unital seminormed ring. -/
 instance (priority := 100) SemiNormedRing.toNonUnitalSemiNormedRing [β : SemiNormedRing α] :
     NonUnitalSemiNormedRing α :=
   { β with }
@@ -48,8 +48,8 @@ class NonUnitalNormedRing (α : Type _) extends HasNorm α, NonUnitalRing α, Me
   dist_eq : ∀ x y, dist x y = norm (x - y)
   norm_mul : ∀ a b, norm (a * b) ≤ norm a * norm b
 
-/-- A non-unital normed ring is a non-unital seminormed ring. -/
 -- see Note [lower instance priority]
+/-- A non-unital normed ring is a non-unital seminormed ring. -/
 instance (priority := 100) NonUnitalNormedRing.toNonUnitalSemiNormedRing [β : NonUnitalNormedRing α] :
     NonUnitalSemiNormedRing α :=
   { β with }
@@ -65,18 +65,18 @@ class NormedDivisionRing (α : Type _) extends HasNorm α, DivisionRing α, Metr
   dist_eq : ∀ x y, dist x y = norm (x - y)
   norm_mul' : ∀ a b, norm (a * b) = norm a * norm b
 
-/-- A normed division ring is a normed ring. -/
 -- see Note [lower instance priority]
+/-- A normed division ring is a normed ring. -/
 instance (priority := 100) NormedDivisionRing.toNormedRing [β : NormedDivisionRing α] : NormedRing α :=
   { β with norm_mul := fun a b => (NormedDivisionRing.norm_mul' a b).le }
 
-/-- A normed ring is a seminormed ring. -/
 -- see Note [lower instance priority]
+/-- A normed ring is a seminormed ring. -/
 instance (priority := 100) NormedRing.toSemiNormedRing [β : NormedRing α] : SemiNormedRing α :=
   { β with }
 
-/-- A normed ring is a non-unital normed ring. -/
 -- see Note [lower instance priority]
+/-- A normed ring is a non-unital normed ring. -/
 instance (priority := 100) NormedRing.toNonUnitalNormedRing [β : NormedRing α] : NonUnitalNormedRing α :=
   { β with }
 
@@ -90,8 +90,8 @@ the inequality `∥x y∥ ≤ ∥x∥ ∥y∥`. -/
 class NormedCommRing (α : Type _) extends NormedRing α where
   mul_comm : ∀ x y : α, x * y = y * x
 
-/-- A normed commutative ring is a seminormed commutative ring. -/
 -- see Note [lower instance priority]
+/-- A normed commutative ring is a seminormed commutative ring. -/
 instance (priority := 100) NormedCommRing.toSemiNormedCommRing [β : NormedCommRing α] : SemiNormedCommRing α :=
   { β with }
 
@@ -395,8 +395,8 @@ instance (priority := 100) semi_normed_ring_top_monoid [NonUnitalSemiNormedRing 
         exact tendsto_const_nhds
         simp ⟩
 
-/-- A seminormed ring is a topological ring. -/
 -- see Note [lower instance priority]
+/-- A seminormed ring is a topological ring. -/
 instance (priority := 100) semi_normed_top_ring [NonUnitalSemiNormedRing α] : TopologicalRing α where
 
 section NormedDivisionRing
@@ -441,15 +441,15 @@ protected theorem List.nnnorm_prod (l : List α) : ∥l.Prod∥₊ = (l.map nnno
 
 @[simp]
 theorem norm_div (a b : α) : ∥a / b∥ = ∥a∥ / ∥b∥ :=
-  (normHom : α →*₀ ℝ).map_div a b
+  map_div₀ (normHom : α →*₀ ℝ) a b
 
 @[simp]
 theorem nnnorm_div (a b : α) : ∥a / b∥₊ = ∥a∥₊ / ∥b∥₊ :=
-  (nnnormHom : α →*₀ ℝ≥0 ).map_div a b
+  map_div₀ (nnnormHom : α →*₀ ℝ≥0 ) a b
 
 @[simp]
 theorem norm_inv (a : α) : ∥a⁻¹∥ = ∥a∥⁻¹ :=
-  (normHom : α →*₀ ℝ).map_inv a
+  map_inv₀ (normHom : α →*₀ ℝ) a
 
 @[simp]
 theorem nnnorm_inv (a : α) : ∥a⁻¹∥₊ = ∥a∥₊⁻¹ :=
@@ -458,11 +458,11 @@ theorem nnnorm_inv (a : α) : ∥a⁻¹∥₊ = ∥a∥₊⁻¹ :=
 
 @[simp]
 theorem norm_zpow : ∀ (a : α) (n : ℤ), ∥a ^ n∥ = ∥a∥ ^ n :=
-  (normHom : α →*₀ ℝ).map_zpow
+  map_zpow₀ (normHom : α →*₀ ℝ)
 
 @[simp]
 theorem nnnorm_zpow : ∀ (a : α) (n : ℤ), ∥a ^ n∥₊ = ∥a∥₊ ^ n :=
-  (nnnormHom : α →*₀ ℝ≥0 ).map_zpow
+  map_zpow₀ (nnnormHom : α →*₀ ℝ≥0 )
 
 /-- Multiplication on the left by a nonzero element of a normed division ring tends to infinity at
 infinity. TODO: use `bornology.cobounded` instead of `filter.comap has_norm.norm filter.at_top`. -/

@@ -204,9 +204,9 @@ noncomputable instance (f : End K V) : Fintype f.Eigenvalues :=
 
 end minpoly
 
+-- This is Lemma 5.21 of [axler2015], although we are no longer following that proof.
 /-- Every linear operator on a vector space over an algebraically closed field has
     an eigenvalue. -/
--- This is Lemma 5.21 of [axler2015], although we are no longer following that proof.
 theorem exists_eigenvalue [IsAlgClosed K] [FiniteDimensional K V] [Nontrivial V] (f : End K V) :
     ∃ c : K, f.HasEigenvalue c := by
   simp_rw [has_eigenvalue_iff_mem_spectrum]

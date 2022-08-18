@@ -79,8 +79,8 @@ end HasEqualizersOfHasPullbacksAndBinaryProducts
 
 open HasEqualizersOfHasPullbacksAndBinaryProducts
 
-/-- Any category with pullbacks and binary products, has equalizers. -/
 -- This is not an instance, as it is not always how one wants to construct equalizers!
+/-- Any category with pullbacks and binary products, has equalizers. -/
 theorem has_equalizers_of_has_pullbacks_and_binary_products [HasBinaryProducts C] [HasPullbacks C] : HasEqualizers C :=
   { HasLimit := fun F => HasLimit.mk { Cone := equalizerCone F, IsLimit := equalizerConeIsLimit F } }
 
@@ -175,8 +175,8 @@ end HasCoequalizersOfHasPushoutsAndBinaryCoproducts
 
 open HasCoequalizersOfHasPushoutsAndBinaryCoproducts
 
-/-- Any category with pullbacks and binary products, has equalizers. -/
 -- This is not an instance, as it is not always how one wants to construct equalizers!
+/-- Any category with pullbacks and binary products, has equalizers. -/
 theorem has_coequalizers_of_has_pushouts_and_binary_coproducts [HasBinaryCoproducts C] [HasPushouts C] :
     HasCoequalizers C :=
   { HasColimit := fun F => HasColimit.mk { Cocone := coequalizerCocone F, IsColimit := coequalizerCoconeIsColimit F } }

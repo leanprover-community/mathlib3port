@@ -118,6 +118,8 @@ def Coloring.toPartition {α : Type v} (C : G.Coloring α) : G.partition where
     rintro s ⟨c, rfl⟩
     apply C.color_classes_independent
 
+/-- The partition where every vertex is in its own part. -/
+@[simps]
 instance : Inhabited (Partition G) :=
   ⟨G.selfColoring.toPartition⟩
 
@@ -129,9 +131,9 @@ theorem partitionable_iff_colorable {n : ℕ} : G.Partitionable n ↔ G.Colorabl
     apply P.to_colorable.mono h
     
   · rintro ⟨C⟩
-    refine' ⟨C.to_partition, C.color_classes_finite_of_fintype, le_transₓ _ (Fintype.card_fin n).le⟩
+    refine' ⟨C.to_partition, C.color_classes_finite, le_transₓ _ (Fintype.card_fin n).le⟩
     generalize_proofs h
-    haveI : Fintype C.color_classes := C.color_classes_finite_of_fintype.fintype
+    haveI : Fintype C.color_classes := C.color_classes_finite.fintype
     rw [h.card_to_finset]
     exact C.card_color_classes_le
     

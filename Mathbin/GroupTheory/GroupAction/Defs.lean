@@ -71,8 +71,8 @@ export HasFaithfulVadd (eq_of_vadd_eq_vadd)
 theorem smul_left_injective' [HasSmul M α] [HasFaithfulSmul M α] : Function.Injective ((· • ·) : M → α → α) :=
   fun m₁ m₂ h => HasFaithfulSmul.eq_of_smul_eq_smul (congr_fun h)
 
-/-- See also `monoid.to_mul_action` and `mul_zero_class.to_smul_with_zero`. -/
 -- see Note [lower instance priority]
+/-- See also `monoid.to_mul_action` and `mul_zero_class.to_smul_with_zero`. -/
 @[to_additive "See also `add_monoid.to_add_action`"]
 instance (priority := 910) Mul.toHasSmul (α : Type _) [Mul α] : HasSmul α α :=
   ⟨(· * ·)⟩
@@ -92,25 +92,6 @@ class AddAction (G : Type _) (P : Type _) [AddMonoidₓ G] extends HasVadd G P w
 class MulAction (α : Type _) (β : Type _) [Monoidₓ α] extends HasSmul α β where
   one_smul : ∀ b : β, (1 : α) • b = b
   mul_smul : ∀ (x y : α) (b : β), (x * y) • b = x • y • b
-
-instance Additive.addAction [Monoidₓ α] [MulAction α β] : AddAction (Additive α) β where
-  vadd := (· • ·) ∘ Additive.toMul
-  zero_vadd := MulAction.one_smul
-  add_vadd := MulAction.mul_smul
-
-@[simp]
-theorem Additive.of_mul_vadd [Monoidₓ α] [MulAction α β] (a : α) (b : β) : Additive.ofMul a +ᵥ b = a • b :=
-  rfl
-
-instance Multiplicative.mulAction [AddMonoidₓ α] [AddAction α β] : MulAction (Multiplicative α) β where
-  smul := (· +ᵥ ·) ∘ Multiplicative.toAdd
-  one_smul := AddAction.zero_vadd
-  mul_smul := AddAction.add_vadd
-
-@[simp]
-theorem Multiplicative.of_add_smul [AddMonoidₓ α] [AddAction α β] (a : α) (b : β) :
-    Multiplicative.ofAdd a • b = a +ᵥ b :=
-  rfl
 
 /-!
 ### (Pre)transitive action
@@ -432,10 +413,10 @@ section
 
 variable (M)
 
+-- see Note [lower instance priority]
 /-- The regular action of a monoid on itself by left multiplication.
 
 This is promoted to a module by `semiring.to_module`. -/
--- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 910) Monoidₓ.toMulAction : MulAction M M where
   smul := (· * ·)
@@ -731,7 +712,7 @@ theorem smul_inv' (r : M) (x : A) : r • x⁻¹ = (r • x)⁻¹ :=
   (MulDistribMulAction.toMonoidHom A r).map_inv x
 
 theorem smul_div' (r : M) (x y : A) : r • (x / y) = r • x / r • y :=
-  (MulDistribMulAction.toMonoidHom A r).map_div x y
+  map_div (MulDistribMulAction.toMonoidHom A r) x y
 
 end
 
@@ -834,4 +815,59 @@ See note [reducible non-instances]. -/
 @[reducible]
 def AddAction.ofEndHom [AddMonoidₓ M] (f : M →+ Additive (Function.End α)) : AddAction M α :=
   AddAction.compHom α f
+
+/-! ### `additive`, `multiplicative` -/
+
+
+section
+
+open Additive Multiplicative
+
+instance Additive.hasVadd [HasSmul α β] : HasVadd (Additive α) β :=
+  ⟨fun a => (· • ·) (toMul a)⟩
+
+instance Multiplicative.hasSmul [HasVadd α β] : HasSmul (Multiplicative α) β :=
+  ⟨fun a => (· +ᵥ ·) (toAdd a)⟩
+
+@[simp]
+theorem to_mul_smul [HasSmul α β] (a) (b : β) : (toMul a : α) • b = a +ᵥ b :=
+  rfl
+
+@[simp]
+theorem of_mul_vadd [HasSmul α β] (a : α) (b : β) : ofMul a +ᵥ b = a • b :=
+  rfl
+
+@[simp]
+theorem to_add_vadd [HasVadd α β] (a) (b : β) : (toAdd a : α) +ᵥ b = a • b :=
+  rfl
+
+@[simp]
+theorem of_add_smul [HasVadd α β] (a : α) (b : β) : ofAdd a • b = a +ᵥ b :=
+  rfl
+
+instance Additive.addAction [Monoidₓ α] [MulAction α β] : AddAction (Additive α) β where
+  zero_vadd := MulAction.one_smul
+  add_vadd := MulAction.mul_smul
+
+instance Multiplicative.mulAction [AddMonoidₓ α] [AddAction α β] : MulAction (Multiplicative α) β where
+  one_smul := AddAction.zero_vadd
+  mul_smul := AddAction.add_vadd
+
+instance Additive.add_action_is_pretransitive [Monoidₓ α] [MulAction α β] [MulAction.IsPretransitive α β] :
+    AddAction.IsPretransitive (Additive α) β :=
+  ⟨@MulAction.exists_smul_eq α _ _ _⟩
+
+instance Multiplicative.add_action_is_pretransitive [AddMonoidₓ α] [AddAction α β] [AddAction.IsPretransitive α β] :
+    MulAction.IsPretransitive (Multiplicative α) β :=
+  ⟨@AddAction.exists_vadd_eq α _ _ _⟩
+
+instance Additive.vadd_comm_class [HasSmul α γ] [HasSmul β γ] [SmulCommClass α β γ] :
+    VaddCommClass (Additive α) (Additive β) γ :=
+  ⟨@smul_comm α β _ _ _ _⟩
+
+instance Multiplicative.smul_comm_class [HasVadd α γ] [HasVadd β γ] [VaddCommClass α β γ] :
+    SmulCommClass (Multiplicative α) (Multiplicative β) γ :=
+  ⟨@vadd_comm α β _ _ _ _⟩
+
+end
 

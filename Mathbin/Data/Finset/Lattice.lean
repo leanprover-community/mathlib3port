@@ -1155,9 +1155,37 @@ theorem max'_image [LinearOrderₓ β] {f : α → β} (hf : Monotone f) (s : Fi
 @[simp]
 theorem min'_image [LinearOrderₓ β] {f : α → β} (hf : Monotone f) (s : Finset α) (h : (s.Image f).Nonempty) :
     (s.Image f).min' h = f (s.min' ((Nonempty.image_iff f).mp h)) := by
-  refine' le_antisymmₓ (min'_le _ _ (mem_image.mpr ⟨_, min'_mem _ _, rfl⟩)) (le_min' _ _ _ fun y hy => _)
-  obtain ⟨x, hx, rfl⟩ := mem_image.mp hy
-  exact hf (min'_le _ _ hx)
+  convert
+      @max'_image αᵒᵈ βᵒᵈ _ _ (fun a : αᵒᵈ => to_dual (f (of_dual a)))
+        (by
+          simpa)
+        _ _ <;>
+    convert h
+  rw [nonempty.image_iff]
+
+theorem coe_max' {s : Finset α} (hs : s.Nonempty) : ↑(s.max' hs) = s.max :=
+  coe_sup' hs id
+
+theorem coe_min' {s : Finset α} (hs : s.Nonempty) : ↑(s.min' hs) = s.min :=
+  coe_inf' hs id
+
+theorem max'_erase_ne_self {s : Finset α} (s0 : (s.erase x).Nonempty) : (s.erase x).max' s0 ≠ x :=
+  ne_of_mem_erase (max'_mem _ s0)
+
+theorem min'_erase_ne_self {s : Finset α} (s0 : (s.erase x).Nonempty) : (s.erase x).min' s0 ≠ x :=
+  ne_of_mem_erase (min'_mem _ s0)
+
+theorem max_erase_ne_self {s : Finset α} : (s.erase x).max ≠ x := by
+  by_cases' s0 : (s.erase x).Nonempty
+  · refine' ne_of_eq_of_ne (coe_max' s0).symm _
+    exact with_bot.coe_eq_coe.not.mpr (max'_erase_ne_self _)
+    
+  · rw [not_nonempty_iff_eq_empty.mp s0, max_empty]
+    exact WithBot.bot_ne_coe
+    
+
+theorem min_erase_ne_self {s : Finset α} : (s.erase x).min ≠ x := by
+  convert @max_erase_ne_self αᵒᵈ _ _ _
 
 /-- Induction principle for `finset`s in a linearly ordered type: a predicate is true on all
 `s : finset α` provided that:

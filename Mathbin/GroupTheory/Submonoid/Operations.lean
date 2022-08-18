@@ -441,52 +441,52 @@ theorem mk_pow {M} [Monoidₓ M] {A : Type _} [SetLike A M] [SubmonoidClass A M]
     (⟨x, hx⟩ : S) ^ n = ⟨x ^ n, pow_mem hx n⟩ :=
   rfl
 
-/-- A submonoid of a unital magma inherits a unital magma structure. -/
 -- Prefer subclasses of `monoid` over subclasses of `submonoid_class`.
+/-- A submonoid of a unital magma inherits a unital magma structure. -/
 @[to_additive "An `add_submonoid` of an unital additive magma inherits an unital additive magma\nstructure."]
 instance (priority := 75) toMulOneClass {M : Type _} [MulOneClassₓ M] {A : Type _} [SetLike A M] [SubmonoidClass A M]
     (S : A) : MulOneClassₓ S :=
   Subtype.coe_injective.MulOneClass _ rfl fun _ _ => rfl
 
-/-- A submonoid of a monoid inherits a monoid structure. -/
 -- Prefer subclasses of `monoid` over subclasses of `submonoid_class`.
+/-- A submonoid of a monoid inherits a monoid structure. -/
 @[to_additive "An `add_submonoid` of an `add_monoid` inherits an `add_monoid`\nstructure."]
 instance (priority := 75) toMonoid {M : Type _} [Monoidₓ M] {A : Type _} [SetLike A M] [SubmonoidClass A M] (S : A) :
     Monoidₓ S :=
   Subtype.coe_injective.Monoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 
-/-- A submonoid of a `comm_monoid` is a `comm_monoid`. -/
 -- Prefer subclasses of `monoid` over subclasses of `submonoid_class`.
+/-- A submonoid of a `comm_monoid` is a `comm_monoid`. -/
 @[to_additive "An `add_submonoid` of an `add_comm_monoid` is\nan `add_comm_monoid`."]
 instance (priority := 75) toCommMonoid {M} [CommMonoidₓ M] {A : Type _} [SetLike A M] [SubmonoidClass A M] (S : A) :
     CommMonoidₓ S :=
   Subtype.coe_injective.CommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 
-/-- A submonoid of an `ordered_comm_monoid` is an `ordered_comm_monoid`. -/
 -- Prefer subclasses of `monoid` over subclasses of `submonoid_class`.
+/-- A submonoid of an `ordered_comm_monoid` is an `ordered_comm_monoid`. -/
 @[to_additive "An `add_submonoid` of an `ordered_add_comm_monoid` is\nan `ordered_add_comm_monoid`."]
 instance (priority := 75) toOrderedCommMonoid {M} [OrderedCommMonoid M] {A : Type _} [SetLike A M] [SubmonoidClass A M]
     (S : A) : OrderedCommMonoid S :=
   Subtype.coe_injective.OrderedCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 
-/-- A submonoid of a `linear_ordered_comm_monoid` is a `linear_ordered_comm_monoid`. -/
 -- Prefer subclasses of `monoid` over subclasses of `submonoid_class`.
+/-- A submonoid of a `linear_ordered_comm_monoid` is a `linear_ordered_comm_monoid`. -/
 @[to_additive "An `add_submonoid` of a `linear_ordered_add_comm_monoid` is\na `linear_ordered_add_comm_monoid`."]
 instance (priority := 75) toLinearOrderedCommMonoid {M} [LinearOrderedCommMonoid M] {A : Type _} [SetLike A M]
     [SubmonoidClass A M] (S : A) : LinearOrderedCommMonoid S :=
   Subtype.coe_injective.LinearOrderedCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ =>
     rfl
 
-/-- A submonoid of an `ordered_cancel_comm_monoid` is an `ordered_cancel_comm_monoid`. -/
 -- Prefer subclasses of `monoid` over subclasses of `submonoid_class`.
+/-- A submonoid of an `ordered_cancel_comm_monoid` is an `ordered_cancel_comm_monoid`. -/
 @[to_additive "An `add_submonoid` of an `ordered_cancel_add_comm_monoid` is\nan `ordered_cancel_add_comm_monoid`."]
 instance (priority := 75) toOrderedCancelCommMonoid {M} [OrderedCancelCommMonoid M] {A : Type _} [SetLike A M]
     [SubmonoidClass A M] (S : A) : OrderedCancelCommMonoid S :=
   Subtype.coe_injective.OrderedCancelCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 
+-- Prefer subclasses of `monoid` over subclasses of `submonoid_class`.
 /-- A submonoid of a `linear_ordered_cancel_comm_monoid` is a `linear_ordered_cancel_comm_monoid`.
 -/
--- Prefer subclasses of `monoid` over subclasses of `submonoid_class`.
 @[to_additive
       "An `add_submonoid` of a `linear_ordered_cancel_add_comm_monoid` is\na `linear_ordered_cancel_add_comm_monoid`."]
 instance (priority := 75) toLinearOrderedCancelCommMonoid {M} [LinearOrderedCancelCommMonoid M] {A : Type _}
@@ -1058,11 +1058,11 @@ variable {S} {T : Submonoid M}
 def submonoidCongr (h : S = T) : S ≃* T :=
   { Equivₓ.setCongr <| congr_arg _ h with map_mul' := fun _ _ => rfl }
 
+-- this name is primed so that the version to `f.range` instead of `f.mrange` can be unprimed.
 /-- A monoid homomorphism `f : M →* N` with a left-inverse `g : N → M` defines a multiplicative
 equivalence between `M` and `f.mrange`.
 
 This is a bidirectional version of `monoid_hom.mrange_restrict`. -/
--- this name is primed so that the version to `f.range` instead of `f.mrange` can be unprimed.
 @[to_additive
       "\nAn additive monoid homomorphism `f : M →+ N` with a left-inverse `g : N → M` defines an additive\nequivalence between `M` and `f.mrange`.\n\nThis is a bidirectional version of `add_monoid_hom.mrange_restrict`. ",
   simps (config := { simpRhs := true })]

@@ -148,12 +148,12 @@ theorem subsingleton_iff [Subsingleton B] : IsCyclotomicExtension S A B ↔ S = 
   · rintro (rfl | rfl)
     · refine'
         ⟨fun _ h => h.elim, fun x => by
-          convert Subalgebra.zero_mem _⟩
+          convert (mem_top : x ∈ ⊤)⟩
       
     · rw [iff_singleton]
       refine'
         ⟨⟨0, IsPrimitiveRoot.of_subsingleton 0⟩, fun x => by
-          convert Subalgebra.zero_mem _⟩
+          convert (mem_top : x ∈ ⊤)⟩
       
     
 

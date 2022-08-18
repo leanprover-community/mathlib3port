@@ -77,8 +77,8 @@ theorem finrank_direct_sum {ι : Type v} [Fintype ι] (M : ι → Type w) [∀ i
 theorem finrank_prod : finrank R (M × N) = finrank R M + finrank R N := by
   simp [← finrank, ← rank_lt_aleph_0 R M, ← rank_lt_aleph_0 R N]
 
-/-- The finrank of a finite product is the sum of the finranks. -/
 --TODO: this should follow from `linear_equiv.finrank_eq`, that is over a field.
+/-- The finrank of a finite product is the sum of the finranks. -/
 theorem finrank_pi_fintype {ι : Type v} [Fintype ι] {M : ι → Type w} [∀ i : ι, AddCommGroupₓ (M i)]
     [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] [∀ i : ι, Module.Finite R (M i)] :
     finrank R (∀ i, M i) = ∑ i, finrank R (M i) := by
@@ -101,8 +101,8 @@ variable [AddCommGroupₓ M] [Module R M] [Module.Free R M] [Module.Finite R M]
 
 variable [AddCommGroupₓ N] [Module R N] [Module.Free R N] [Module.Finite R N]
 
-/-- The finrank of `M →ₗ[R] N` is `(finrank R M) * (finrank R N)`. -/
 --TODO: this should follow from `linear_equiv.finrank_eq`, that is over a field.
+/-- The finrank of `M →ₗ[R] N` is `(finrank R M) * (finrank R N)`. -/
 theorem finrank_linear_hom : finrank R (M →ₗ[R] N) = finrank R M * finrank R N := by
   classical
   letI := nontrivial_of_invariant_basis_number R

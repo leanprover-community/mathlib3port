@@ -19,9 +19,6 @@ properties about separable polynomials here.
 ## Main definitions
 
 * `polynomial.separable f`: a polynomial `f` is separable iff it is coprime with its derivative.
-* `polynomial.expand R p f`: expand the polynomial `f` with coefficients in a
-  commutative semiring `R` by a factor of p, so `expand R p (∑ aₙ xⁿ)` is `∑ aₙ xⁿᵖ`.
-* `polynomial.contract p f`: the opposite of `expand`, so it sends `∑ aₙ xⁿᵖ` to `∑ aₙ xⁿ`.
 
 -/
 
@@ -356,9 +353,9 @@ end CharP
 theorem separable_X_pow_sub_C {n : ℕ} (a : F) (hn : (n : F) ≠ 0) (ha : a ≠ 0) : Separable (X ^ n - c a) :=
   separable_X_pow_sub_C_unit (Units.mk0 a ha) (IsUnit.mk0 n hn)
 
-/-- In a field `F`, `X ^ n - 1` is separable iff `↑n ≠ 0`. -/
 -- this can possibly be strengthened to making `separable_X_pow_sub_C_unit` a
 -- bi-implication, but it is nontrivial!
+/-- In a field `F`, `X ^ n - 1` is separable iff `↑n ≠ 0`. -/
 theorem X_pow_sub_one_separable_iff {n : ℕ} : (X ^ n - 1 : F[X]).Separable ↔ (n : F) ≠ 0 := by
   refine' ⟨_, fun h => separable_X_pow_sub_C_unit 1 (IsUnit.mk0 (↑n) h)⟩
   rw [separable_def', derivative_sub, derivative_X_pow, derivative_one, sub_zero]
@@ -432,17 +429,17 @@ section CommRingₓ
 
 variable (F K : Type _) [CommRingₓ F] [Ringₓ K] [Algebra F K]
 
+-- TODO: refactor to allow transcendental extensions?
+-- See: https://en.wikipedia.org/wiki/Separable_extension#Separability_of_transcendental_extensions
+-- Note that right now a Galois extension (class `is_galois`) is defined to be an extension which
+-- is separable and normal, so if the definition of separable changes here at some point
+-- to allow non-algebraic extensions, then the definition of `is_galois` must also be changed.
 /-- Typeclass for separable field extension: `K` is a separable field extension of `F` iff
 the minimal polynomial of every `x : K` is separable.
 
 We define this for general (commutative) rings and only assume `F` and `K` are fields if this
 is needed for a proof.
 -/
--- TODO: refactor to allow transcendental extensions?
--- See: https://en.wikipedia.org/wiki/Separable_extension#Separability_of_transcendental_extensions
--- Note that right now a Galois extension (class `is_galois`) is defined to be an extension which
--- is separable and normal, so if the definition of separable changes here at some point
--- to allow non-algebraic extensions, then the definition of `is_galois` must also be changed.
 class IsSeparable : Prop where
   is_integral' (x : K) : IsIntegral F x
   separable' (x : K) : (minpoly F x).Separable
@@ -468,8 +465,8 @@ instance is_separable_self (F : Type _) [Field F] : IsSeparable F F :=
     rw [minpoly.eq_X_sub_C']
     exact separable_X_sub_C⟩
 
-/-- A finite field extension in characteristic 0 is separable. -/
 -- See note [lower instance priority]
+/-- A finite field extension in characteristic 0 is separable. -/
 instance (priority := 100) IsSeparable.of_finite (F K : Type _) [Field F] [Field K] [Algebra F K]
     [FiniteDimensional F K] [CharZero F] : IsSeparable F K :=
   have : ∀ x : K, IsIntegral F x := fun x => Algebra.is_integral_of_finite _ _ _

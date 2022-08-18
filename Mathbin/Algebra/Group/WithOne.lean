@@ -151,9 +151,9 @@ instance [CommSemigroupₓ α] : CommMonoidₓ (WithOne α) :=
 
 section
 
-/-- `coe` as a bundled morphism -/
 -- workaround: we make `with_one`/`with_zero` irreducible for this definition, otherwise `simps`
 -- will unfold it in the statement of the lemma it generates.
+/-- `coe` as a bundled morphism -/
 @[to_additive "`coe` as a bundled morphism", simps apply]
 def coeMulHom [Mul α] : α →ₙ* WithOne α where
   toFun := coe

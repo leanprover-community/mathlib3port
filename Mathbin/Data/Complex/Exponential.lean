@@ -578,7 +578,7 @@ theorem exp_conj : exp (conj x) = conj (exp x) := by
   dsimp' [← exp', ← Function.comp, ← cau_seq_conj]
   rw [(starRingEnd _).map_sum]
   refine' sum_congr rfl fun n hn => _
-  rw [RingHom.map_div, RingHom.map_pow, ← of_real_nat_cast, conj_of_real]
+  rw [map_div₀, map_pow, ← of_real_nat_cast, conj_of_real]
 
 @[simp]
 theorem of_real_exp_of_real_re (x : ℝ) : ((exp x).re : ℂ) = exp x :=
@@ -643,7 +643,7 @@ theorem cosh_sub : cosh (x - y) = cosh x * cosh y - sinh x * sinh y := by
   simp [← sub_eq_add_neg, ← cosh_add, ← sinh_neg, ← cosh_neg]
 
 theorem sinh_conj : sinh (conj x) = conj (sinh x) := by
-  rw [sinh, ← RingHom.map_neg, exp_conj, exp_conj, ← RingHom.map_sub, sinh, RingHom.map_div, conj_bit0, RingHom.map_one]
+  rw [sinh, ← RingHom.map_neg, exp_conj, exp_conj, ← RingHom.map_sub, sinh, map_div₀, conj_bit0, RingHom.map_one]
 
 @[simp]
 theorem of_real_sinh_of_real_re (x : ℝ) : ((sinh x).re : ℂ) = sinh x :=
@@ -662,7 +662,7 @@ theorem sinh_of_real_re (x : ℝ) : (sinh x).re = Real.sinh x :=
   rfl
 
 theorem cosh_conj : cosh (conj x) = conj (cosh x) := by
-  rw [cosh, ← RingHom.map_neg, exp_conj, exp_conj, ← RingHom.map_add, cosh, RingHom.map_div, conj_bit0, RingHom.map_one]
+  rw [cosh, ← RingHom.map_neg, exp_conj, exp_conj, ← RingHom.map_add, cosh, map_div₀, conj_bit0, RingHom.map_one]
 
 theorem of_real_cosh_of_real_re (x : ℝ) : ((cosh x).re : ℂ) = cosh x :=
   eq_conj_iff_re.1 <| by
@@ -692,7 +692,7 @@ theorem tanh_neg : tanh (-x) = -tanh x := by
   simp [← tanh, ← neg_div]
 
 theorem tanh_conj : tanh (conj x) = conj (tanh x) := by
-  rw [tanh, sinh_conj, cosh_conj, ← RingHom.map_div, tanh]
+  rw [tanh, sinh_conj, cosh_conj, ← map_div₀, tanh]
 
 @[simp]
 theorem of_real_tanh_of_real_re (x : ℝ) : ((tanh x).re : ℂ) = tanh x :=
@@ -934,7 +934,7 @@ theorem tan_neg : tan (-x) = -tan x := by
   simp [← tan, ← neg_div]
 
 theorem tan_conj : tan (conj x) = conj (tan x) := by
-  rw [tan, sin_conj, cos_conj, ← RingHom.map_div, tan]
+  rw [tan, sin_conj, cos_conj, ← map_div₀, tan]
 
 @[simp]
 theorem of_real_tan_of_real_re (x : ℝ) : ((tan x).re : ℂ) = tan x :=

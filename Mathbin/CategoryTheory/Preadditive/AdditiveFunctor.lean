@@ -3,6 +3,8 @@ Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Scott Morrison
 -/
+import Mathbin.CategoryTheory.Limits.ExactFunctor
+import Mathbin.CategoryTheory.Limits.Preserves.Finite
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Biproducts
 import Mathbin.CategoryTheory.Preadditive.FunctorCategory
 
@@ -26,6 +28,8 @@ We also define the category of bundled additive functors.
 
 -/
 
+
+universe v₁ v₂ u₁ u₂
 
 namespace CategoryTheory
 
@@ -98,8 +102,6 @@ section
 
 -- To talk about preservation of biproducts we need to specify universes explicitly.
 noncomputable section
-
-universe v₁ v₂ u₁ u₂
 
 variable {C : Type u₁} {D : Type u₂} [Category.{v₁} C] [Category.{v₂} D] [Preadditive C] [Preadditive D] (F : C ⥤ D)
 
@@ -191,6 +193,71 @@ instance (F : C ⥤+ D) : Functor.Additive F.1 :=
   F.2
 
 end
+
+section Exact
+
+open CategoryTheory.Limits
+
+variable (C : Type u₁) (D : Type u₂) [Category.{v₁} C] [Category.{v₂} D] [Preadditive C]
+
+variable [Preadditive D] [HasZeroObject C] [HasZeroObject D] [HasBinaryBiproducts C]
+
+section
+
+attribute [local instance] preserves_binary_biproducts_of_preserves_binary_products
+
+attribute [local instance] preserves_binary_biproducts_of_preserves_binary_coproducts
+
+/-- Turn a left exact functor into an additive functor. -/
+def AdditiveFunctor.ofLeftExact : (C ⥤ₗ D) ⥤ C ⥤+ D :=
+  FullSubcategory.map fun F h =>
+    let hF := Classical.choice h
+    functor.additive_of_preserves_binary_biproducts F deriving
+  Full, Faithful
+
+/-- Turn a right exact functor into an additive functor. -/
+def AdditiveFunctor.ofRightExact : (C ⥤ᵣ D) ⥤ C ⥤+ D :=
+  FullSubcategory.map fun F h =>
+    let hF := Classical.choice h
+    functor.additive_of_preserves_binary_biproducts F deriving
+  Full, Faithful
+
+/-- Turn an exact functor into an additive functor. -/
+def AdditiveFunctor.ofExact : (C ⥤ₑ D) ⥤ C ⥤+ D :=
+  FullSubcategory.map fun F h =>
+    let hF := Classical.choice h.1
+    functor.additive_of_preserves_binary_biproducts F deriving
+  Full, Faithful
+
+end
+
+variable {C D}
+
+@[simp]
+theorem AdditiveFunctor.of_left_exact_obj_fst (F : C ⥤ₗ D) : ((AdditiveFunctor.ofLeftExact C D).obj F).obj = F.obj :=
+  rfl
+
+@[simp]
+theorem AdditiveFunctor.of_right_exact_obj_fst (F : C ⥤ᵣ D) : ((AdditiveFunctor.ofRightExact C D).obj F).obj = F.obj :=
+  rfl
+
+@[simp]
+theorem AdditiveFunctor.of_exact_obj_fst (F : C ⥤ₑ D) : ((AdditiveFunctor.ofExact C D).obj F).obj = F.obj :=
+  rfl
+
+@[simp]
+theorem AdditiveFunctor.of_left_exact_map {F G : C ⥤ₗ D} (α : F ⟶ G) : (AdditiveFunctor.ofLeftExact C D).map α = α :=
+  rfl
+
+@[simp]
+theorem AdditiveFunctor.of_right_exact_map {F G : C ⥤ᵣ D} (α : F ⟶ G) : (AdditiveFunctor.ofRightExact C D).map α = α :=
+  rfl
+
+@[simp]
+theorem AdditiveFunctor.of_exact_map {F G : C ⥤ₑ D} (α : F ⟶ G) : (AdditiveFunctor.ofExact C D).map α = α :=
+  rfl
+
+end Exact
 
 end Preadditive
 

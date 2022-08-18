@@ -128,10 +128,10 @@ def desc : (Σi, C i) ⥤ D where
 theorem desc_map_mk {i : I} (X Y : C i) (f : X ⟶ Y) : (desc F).map (SigmaHom.mk f) = (F i).map f :=
   rfl
 
+-- We hand-generate the simp lemmas about this since they come out cleaner.
 /-- This shows that when `desc F` is restricted to just the subcategory `C i`, `desc F` agrees with
 `F i`.
 -/
--- We hand-generate the simp lemmas about this since they come out cleaner.
 def inclDesc (i : I) : incl i ⋙ desc F ≅ F i :=
   NatIso.ofComponents (fun X => Iso.refl _)
     (by

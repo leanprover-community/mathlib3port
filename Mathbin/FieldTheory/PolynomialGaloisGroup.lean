@@ -104,13 +104,13 @@ instance [h : Fact (p.Splits (algebraMap F E))] : Algebra p.SplittingField E :=
 instance [h : Fact (p.Splits (algebraMap F E))] : IsScalarTower F p.SplittingField E :=
   IsScalarTower.of_algebra_map_eq fun x => ((IsSplittingField.lift p.SplittingField p h.1).commutes x).symm
 
-/-- Restrict from a superfield automorphism into a member of `gal p`. -/
 -- The `algebra p.splitting_field E` instance above behaves badly when
 -- `E := p.splitting_field`, since it may result in a unification problem
 -- `is_splitting_field.lift.to_ring_hom.to_algebra =?= algebra.id`,
 -- which takes an extremely long time to resolve, causing timeouts.
 -- Since we don't really care about this definition, marking it as irreducible
 -- causes that unification to error out early.
+/-- Restrict from a superfield automorphism into a member of `gal p`. -/
 def restrict [Fact (p.Splits (algebraMap F E))] : (E ≃ₐ[F] E) →* p.Gal :=
   AlgEquiv.restrictNormalHom p.SplittingField
 

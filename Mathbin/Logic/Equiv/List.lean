@@ -159,9 +159,9 @@ instance _root_.finset.encodable [Encodable α] : Encodable (Finset α) :=
 instance _root_.finset.countable [Countable α] : Countable (Finset α) :=
   Finset.val_injective.Countable
 
+-- TODO: Unify with `fintype_pi` and find a better name
 /-- When `α` is finite and `β` is encodable, `α → β` is encodable too. Because the encoding is not
 unique, we wrap it in `trunc` to preserve computability. -/
--- TODO: Unify with `fintype_pi` and find a better name
 def fintypeArrow (α : Type _) (β : Type _) [DecidableEq α] [Fintype α] [Encodable β] : Trunc (Encodable (α → β)) :=
   (Fintype.truncEquivFin α).map fun f =>
     Encodable.ofEquiv (Finₓ (Fintype.card α) → β) <| Equivₓ.arrowCongr f (Equivₓ.refl _)

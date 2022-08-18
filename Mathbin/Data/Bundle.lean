@@ -83,8 +83,8 @@ theorem to_total_space_coe {x : B} (v : E x) : (v : TotalSpace E) = totalSpaceMk
   rfl
 
 -- mathport name: «expr ×ᵇ »
-notation:100 E₁ "×ᵇ" E₂ =>-- notation for the direct sum of two bundles over the same base
-fun x => E₁ x × E₂ x
+notation:100 -- notation for the direct sum of two bundles over the same base
+E₁ "×ᵇ" E₂ => fun x => E₁ x × E₂ x
 
 /-- `bundle.trivial B F` is the trivial bundle over `B` of fiber `F`. -/
 def Trivial (B : Type _) (F : Type _) : B → Type _ :=

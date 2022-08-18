@@ -55,13 +55,13 @@ open MonoidalCategory
 variable (C : Type u₁) [Category.{v₁} C] [MonoidalCategory.{v₁} C] (D : Type u₂) [Category.{v₂} D]
   [MonoidalCategory.{v₂} D]
 
-/-- A lax monoidal functor is a functor `F : C ⥤ D` between monoidal categories,
-equipped with morphisms `ε : 𝟙 _D ⟶ F.obj (𝟙_ C)` and `μ X Y : F.obj X ⊗ F.obj Y ⟶ F.obj (X ⊗ Y)`,
-satisfying the appropriate coherences. -/
 -- The direction of `left_unitality` and `right_unitality` as simp lemmas may look strange:
 -- remember the rule of thumb that component indices of natural transformations
 -- "weigh more" than structural maps.
 -- (However by this argument `associativity` is currently stated backwards!)
+/-- A lax monoidal functor is a functor `F : C ⥤ D` between monoidal categories,
+equipped with morphisms `ε : 𝟙 _D ⟶ F.obj (𝟙_ C)` and `μ X Y : F.obj X ⊗ F.obj Y ⟶ F.obj (X ⊗ Y)`,
+satisfying the appropriate coherences. -/
 structure LaxMonoidalFunctor extends C ⥤ D where
   -- unit morphism
   ε : 𝟙_ D ⟶ obj (𝟙_ C)
@@ -234,6 +234,21 @@ theorem ε_inv_hom_id : F.εIso.inv ≫ F.ε = 𝟙 _ :=
 theorem ε_hom_inv_id : F.ε ≫ F.εIso.inv = 𝟙 _ :=
   F.εIso.hom_inv_id
 
+/-- Monoidal functors commute with left tensoring up to isomorphism -/
+@[simps]
+noncomputable def commTensorLeft (X : C) : F.toFunctor ⋙ tensorLeft (F.toFunctor.obj X) ≅ tensorLeft X ⋙ F.toFunctor :=
+  NatIso.ofComponents (fun Y => F.μIso X Y) fun Y Z f => by
+    convert F.μ_natural' (𝟙 _) f
+    simp
+
+/-- Monoidal functors commute with right tensoring up to isomorphism -/
+@[simps]
+noncomputable def commTensorRight (X : C) :
+    F.toFunctor ⋙ tensorRight (F.toFunctor.obj X) ≅ tensorRight X ⋙ F.toFunctor :=
+  NatIso.ofComponents (fun Y => F.μIso Y X) fun Y Z f => by
+    convert F.μ_natural' f (𝟙 _)
+    simp
+
 end
 
 section
@@ -262,8 +277,8 @@ namespace LaxMonoidalFunctor
 
 variable (F : LaxMonoidalFunctor.{v₁, v₂} C D) (G : LaxMonoidalFunctor.{v₂, v₃} D E)
 
-/-- The composition of two lax monoidal functors is again lax monoidal. -/
 -- The proofs here are horrendous; rewrite_search helps a lot.
+/-- The composition of two lax monoidal functors is again lax monoidal. -/
 @[simps]
 def comp : LaxMonoidalFunctor.{v₁, v₃} C E :=
   { F.toFunctor ⋙ G.toFunctor with ε := G.ε ≫ G.map F.ε, μ := fun X Y => G.μ (F.obj X) (F.obj Y) ≫ G.map (F.μ X Y),

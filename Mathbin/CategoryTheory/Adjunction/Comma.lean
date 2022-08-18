@@ -21,7 +21,7 @@ The duals are also shown.
 -/
 
 
-universe v u₁ u₂
+universe v₁ v₂ u₁ u₂
 
 noncomputable section
 
@@ -29,7 +29,7 @@ namespace CategoryTheory
 
 open Limits
 
-variable {C : Type u₁} {D : Type u₂} [Category.{v} C] [Category.{v} D] (G : D ⥤ C)
+variable {C : Type u₁} {D : Type u₂} [Category.{v₁} C] [Category.{v₂} D] (G : D ⥤ C)
 
 section OfInitials
 
@@ -155,6 +155,16 @@ def mkTerminalOfRightAdjoint (h : F ⊣ G) (A : D) :
     exact costructured_arrow.w m
 
 end
+
+theorem nonempty_is_right_adjoint_iff_has_initial_structured_arrow {G : D ⥤ C} :
+    Nonempty (IsRightAdjoint G) ↔ ∀ A, HasInitial (StructuredArrow A G) :=
+  ⟨fun ⟨h⟩ A => (mk_initial_of_left_adjoint _ h.adj A).HasInitial, fun h =>
+    ⟨is_right_adjoint_of_structured_arrow_initials _⟩⟩
+
+theorem nonempty_is_left_adjoint_iff_has_terminal_costructured_arrow {F : C ⥤ D} :
+    Nonempty (IsLeftAdjoint F) ↔ ∀ A, HasTerminal (CostructuredArrow F A) :=
+  ⟨fun ⟨h⟩ A => (mk_terminal_of_right_adjoint _ h.adj A).HasTerminal, fun h =>
+    ⟨is_left_adjoint_of_costructured_arrow_terminals _⟩⟩
 
 end CategoryTheory
 

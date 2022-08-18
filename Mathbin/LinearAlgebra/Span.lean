@@ -213,11 +213,9 @@ theorem span_sup : span R s⊔p = span R (s ∪ p) := by
   rw [Submodule.span_union, p.span_eq]
 
 -- mathport name: «expr ∙ »
-notation:1000 R "∙"
-  x =>/- Note that the character `∙` U+2219 used below is different from the scalar multiplication
-    character `•` U+2022 and the matrix multiplication character `⬝` U+2B1D. -/
-    span
-    R (@singleton _ _ Set.hasSingleton x)
+notation:1000 /- Note that the character `∙` U+2219 used below is different from the scalar multiplication
+character `•` U+2022 and the matrix multiplication character `⬝` U+2B1D. -/
+R "∙" x => span R (@singleton _ _ Set.hasSingleton x)
 
 theorem span_eq_supr_of_singleton_spans (s : Set M) : span R s = ⨆ x ∈ s, R∙x := by
   simp only [span_Union, ← Set.bUnion_of_singleton s]

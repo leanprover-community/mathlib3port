@@ -589,7 +589,7 @@ theorem quot_map_of_equiv_quot_map_C_map_span_mk_symm_mk (x : AdjoinRoot f) :
     (quotMapOfEquivQuotMapCMapSpanMk I f).symm (Ideal.Quotient.mk ((I.map (c : R →+* R[X])).map (span {f})) x) =
       Ideal.Quotient.mk (I.map (of f)) x :=
   by
-  rw [quot_map_of_equiv_quot_map_C_map_span_mk, Ideal.quot_equiv_of_eq_symm, Ideal.quot_equiv_of_eq_mk]
+  rw [quot_map_of_equiv_quot_map_C_map_span_mk, Ideal.quot_equiv_of_eq_symm, quot_equiv_of_eq_mk]
 
 /-- The natural isomorphism `R[α]/((I[x] ⊔ (f)) / (f)) ≅ (R[x]/I[x])/((f) ⊔ I[x] / I[x])`
   for `α` a root of `f : polynomial R` and `I : ideal R`-/

@@ -394,10 +394,10 @@ end CancellationLemmas
 
 section
 
-/-- Natural number powers of an auto-equivalence.  Use `(^)` instead. -/
 -- There's of course a monoid structure on `C ≌ C`,
 -- but let's not encourage using it.
 -- The power structure is nevertheless useful.
+/-- Natural number powers of an auto-equivalence.  Use `(^)` instead. -/
 def powNatₓ (e : C ≌ C) : ℕ → (C ≌ C)
   | 0 => Equivalence.refl
   | 1 => e
@@ -613,21 +613,21 @@ See <https://stacks.math.columbia.edu/tag/02C3>.
 theorem ess_surj_of_equivalence (F : C ⥤ D) [IsEquivalence F] : EssSurj F :=
   ⟨fun Y => ⟨F.inv.obj Y, ⟨F.asEquivalence.counitIso.app Y⟩⟩⟩
 
+-- see Note [lower instance priority]
 /-- An equivalence is faithful.
 
 See <https://stacks.math.columbia.edu/tag/02C3>.
 -/
--- see Note [lower instance priority]
 instance (priority := 100) faithful_of_equivalence (F : C ⥤ D) [IsEquivalence F] :
     Faithful F where map_injective' := fun X Y f g w => by
     have p := congr_arg (@CategoryTheory.Functor.map _ _ _ _ F.inv _ _) w
     simpa only [← cancel_epi, ← cancel_mono, ← is_equivalence.inv_fun_map] using p
 
+-- see Note [lower instance priority]
 /-- An equivalence is full.
 
 See <https://stacks.math.columbia.edu/tag/02C3>.
 -/
--- see Note [lower instance priority]
 instance (priority := 100) fullOfEquivalence (F : C ⥤ D) [IsEquivalence F] : Full F where
   preimage := fun X Y f => F.asEquivalence.Unit.app X ≫ F.inv.map f ≫ F.asEquivalence.unitInv.app Y
   witness' := fun X Y f =>

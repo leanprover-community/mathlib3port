@@ -36,8 +36,8 @@ variable [Algebra R S] {P : Type _} [CommRingₓ P]
 
 variable {A : Type _} [CommRingₓ A] [IsDomain A] (K : Type _)
 
-/-- `is_fraction_ring R K` states `K` is the field of fractions of an integral domain `R`. -/
 -- TODO: should this extend `algebra` instead of assuming it?
+/-- `is_fraction_ring R K` states `K` is the field of fractions of an integral domain `R`. -/
 abbrev IsFractionRing [CommRingₓ K] [Algebra R K] :=
   IsLocalization (nonZeroDivisors R) K
 
@@ -193,7 +193,7 @@ and an injective ring hom `g : A →+* L` where `L` is a field,
 field hom induced from `K` to `L` maps `f x / f y` to `g x / g y` for all
 `x : A, y ∈ non_zero_divisors A`. -/
 theorem lift_mk' (hg : Injective g) (x) (y : nonZeroDivisors A) : lift hg (mk' K x y) = g x / g y := by
-  simp only [← mk'_eq_div, ← RingHom.map_div, ← lift_algebra_map]
+  simp only [← mk'_eq_div, ← map_div₀, ← lift_algebra_map]
 
 /-- Given integral domains `A, B` with fields of fractions `K`, `L`
 and an injective ring hom `j : A →+* B`, we get a field hom

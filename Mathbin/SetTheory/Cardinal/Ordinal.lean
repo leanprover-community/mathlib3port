@@ -3,6 +3,7 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 -/
+import Mathbin.Data.Finsupp.Multiset
 import Mathbin.Order.Bounded
 import Mathbin.SetTheory.Ordinal.Principal
 import Mathbin.Tactic.Linarith.Default
@@ -887,13 +888,12 @@ theorem mk_list_eq_mk (α : Type u) [Infinite α] : # (List α) = # α :=
           simp [← H1]
         
 
-theorem mk_list_eq_aleph_0 (α : Type u) [Encodable α] [Nonempty α] : # (List α) = ℵ₀ :=
+theorem mk_list_eq_aleph_0 (α : Type u) [Countable α] [Nonempty α] : # (List α) = ℵ₀ :=
   mk_le_aleph_0.antisymm (aleph_0_le_mk _)
 
 theorem mk_list_eq_max_mk_aleph_0 (α : Type u) [Nonempty α] : # (List α) = max (# α) ℵ₀ := by
-  cases fintypeOrInfinite α
-  · haveI : Encodable α := Fintype.toEncodable α
-    rw [mk_list_eq_aleph_0, eq_comm, max_eq_rightₓ]
+  cases finite_or_infinite α
+  · rw [mk_list_eq_aleph_0, eq_comm, max_eq_rightₓ]
     exact mk_le_aleph_0
     
   · rw [mk_list_eq_mk, eq_comm, max_eq_leftₓ]
@@ -901,9 +901,8 @@ theorem mk_list_eq_max_mk_aleph_0 (α : Type u) [Nonempty α] : # (List α) = ma
     
 
 theorem mk_list_le_max (α : Type u) : # (List α) ≤ max ℵ₀ (# α) := by
-  cases fintypeOrInfinite α
-  · haveI := Fintype.toEncodable α
-    exact mk_le_aleph_0.trans (le_max_leftₓ _ _)
+  cases finite_or_infinite α
+  · exact mk_le_aleph_0.trans (le_max_leftₓ _ _)
     
   · rw [mk_list_eq_mk]
     apply le_max_rightₓ
@@ -940,6 +939,42 @@ theorem mk_finsupp_lift_of_infinite (α : Type u) (β : Type v) [Infinite α] [Z
 
 theorem mk_finsupp_of_infinite (α β : Type u) [Infinite α] [Zero β] [Nontrivial β] : # (α →₀ β) = max (# α) (# β) := by
   simp
+
+@[simp]
+theorem mk_finsupp_lift_of_infinite' (α : Type u) (β : Type v) [Nonempty α] [Zero β] [Infinite β] :
+    # (α →₀ β) = max (lift.{v} (# α)) (lift.{u} (# β)) := by
+  cases fintypeOrInfinite α
+  · rw [mk_finsupp_lift_of_fintype]
+    have : ℵ₀ ≤ (# β).lift := aleph_0_le_lift.2 (aleph_0_le_mk β)
+    rw [max_eq_rightₓ (le_transₓ _ this), power_nat_eq this]
+    exacts[Fintype.card_pos, lift_le_aleph_0.2 (lt_aleph_0_of_finite _).le]
+    
+  · apply mk_finsupp_lift_of_infinite
+    
+
+theorem mk_finsupp_of_infinite' (α β : Type u) [Nonempty α] [Zero β] [Infinite β] : # (α →₀ β) = max (# α) (# β) := by
+  simp
+
+theorem mk_finsupp_nat (α : Type u) [Nonempty α] : # (α →₀ ℕ) = max (# α) ℵ₀ := by
+  simp
+
+@[simp]
+theorem mk_multiset_of_nonempty (α : Type u) [Nonempty α] : # (Multiset α) = max (# α) ℵ₀ :=
+  Multiset.toFinsupp.toEquiv.cardinal_eq.trans (mk_finsupp_nat α)
+
+theorem mk_multiset_of_infinite (α : Type u) [Infinite α] : # (Multiset α) = # α := by
+  simp
+
+@[simp]
+theorem mk_multiset_of_is_empty (α : Type u) [IsEmpty α] : # (Multiset α) = 1 :=
+  Multiset.toFinsupp.toEquiv.cardinal_eq.trans
+    (by
+      simp )
+
+theorem mk_multiset_of_countable (α : Type u) [Countable α] [Nonempty α] : # (Multiset α) = ℵ₀ :=
+  Multiset.toFinsupp.toEquiv.cardinal_eq.trans
+    (by
+      simp )
 
 theorem mk_bounded_set_le_of_infinite (α : Type u) [Infinite α] (c : Cardinal) : # { t : Set α // # t ≤ c } ≤ # α ^ c :=
   by

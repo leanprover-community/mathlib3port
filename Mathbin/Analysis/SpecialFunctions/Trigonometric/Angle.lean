@@ -130,8 +130,26 @@ theorem two_nsmul_eq_iff {ψ θ : Angle} : (2 : ℕ) • ψ = (2 : ℕ) • θ �
 theorem two_nsmul_eq_zero_iff {θ : Angle} : (2 : ℕ) • θ = 0 ↔ θ = 0 ∨ θ = π := by
   convert two_nsmul_eq_iff <;> simp
 
+theorem two_nsmul_ne_zero_iff {θ : Angle} : (2 : ℕ) • θ ≠ 0 ↔ θ ≠ 0 ∧ θ ≠ π := by
+  rw [← not_or_distrib, ← two_nsmul_eq_zero_iff]
+
 theorem two_zsmul_eq_zero_iff {θ : Angle} : (2 : ℤ) • θ = 0 ↔ θ = 0 ∨ θ = π := by
   simp_rw [two_zsmul, ← two_nsmul, two_nsmul_eq_zero_iff]
+
+theorem two_zsmul_ne_zero_iff {θ : Angle} : (2 : ℤ) • θ ≠ 0 ↔ θ ≠ 0 ∧ θ ≠ π := by
+  rw [← not_or_distrib, ← two_zsmul_eq_zero_iff]
+
+theorem eq_neg_self_iff {θ : Angle} : θ = -θ ↔ θ = 0 ∨ θ = π := by
+  rw [← add_eq_zero_iff_eq_neg, ← two_nsmul, two_nsmul_eq_zero_iff]
+
+theorem ne_neg_self_iff {θ : Angle} : θ ≠ -θ ↔ θ ≠ 0 ∧ θ ≠ π := by
+  rw [← not_or_distrib, ← eq_neg_self_iff.not]
+
+theorem neg_eq_self_iff {θ : Angle} : -θ = θ ↔ θ = 0 ∨ θ = π := by
+  rw [eq_comm, eq_neg_self_iff]
+
+theorem neg_ne_self_iff {θ : Angle} : -θ ≠ θ ↔ θ ≠ 0 ∧ θ ≠ π := by
+  rw [← not_or_distrib, ← neg_eq_self_iff.not]
 
 theorem cos_eq_iff_coe_eq_or_eq_neg {θ ψ : ℝ} : cos θ = cos ψ ↔ (θ : Angle) = ψ ∨ (θ : Angle) = -ψ := by
   constructor
@@ -251,6 +269,9 @@ theorem sin_eq_zero_iff {θ : Angle} : sin θ = 0 ↔ θ = 0 ∨ θ = π := by
   rw [sin_eq_iff_eq_or_add_eq_pi]
   simp
 
+theorem sin_ne_zero_iff {θ : Angle} : sin θ ≠ 0 ↔ θ ≠ 0 ∧ θ ≠ π := by
+  rw [← not_or_distrib, ← sin_eq_zero_iff]
+
 @[simp]
 theorem sin_neg (θ : Angle) : sin (-θ) = -sin θ := by
   induction θ using Real.Angle.induction_on
@@ -334,6 +355,9 @@ theorem sign_pi_sub (θ : Angle) : ((π : Angle) - θ).sign = θ.sign := by
 
 theorem sign_eq_zero_iff {θ : Angle} : θ.sign = 0 ↔ θ = 0 ∨ θ = π := by
   rw [sign, sign_eq_zero_iff, sin_eq_zero_iff]
+
+theorem sign_ne_zero_iff {θ : Angle} : θ.sign ≠ 0 ↔ θ ≠ 0 ∧ θ ≠ π := by
+  rw [← not_or_distrib, ← sign_eq_zero_iff]
 
 end Angle
 

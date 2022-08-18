@@ -144,8 +144,8 @@ theorem Integrable.uniform_integrable_condexp {ι : Type _} [IsFiniteMeasure μ]
 
 section PullOut
 
-/-- Auxiliary lemma for `condexp_measurable_mul`. -/
 -- TODO: this section could be generalized beyond multiplication, to any bounded bilinear map.
+/-- Auxiliary lemma for `condexp_measurable_mul`. -/
 theorem condexp_strongly_measurable_simple_func_mul (hm : m ≤ m0) (f : @SimpleFunc α m ℝ) {g : α → ℝ}
     (hg : Integrable g μ) : μ[f * g|m] =ᵐ[μ] f * μ[g|m] := by
   have : ∀ (s c) (f : α → ℝ), Set.indicatorₓ s (Function.const α c) * f = s.indicator (c • f) := by

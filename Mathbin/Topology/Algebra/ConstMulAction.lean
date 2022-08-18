@@ -334,10 +334,9 @@ attribute [to_additive] ProperlyDiscontinuousSmul
 
 variable {Γ : Type _} [Groupₓ Γ] {T : Type _} [TopologicalSpace T] [MulAction Γ T]
 
-/-- A finite group action is always properly discontinuous
--/
-@[to_additive]
-instance (priority := 100) Fintype.properly_discontinuous_smul [Fintype Γ] :
+/-- A finite group action is always properly discontinuous. -/
+@[to_additive "A finite group action is always properly discontinuous."]
+instance (priority := 100) Finite.to_properly_discontinuous_smul [Finite Γ] :
     ProperlyDiscontinuousSmul Γ T where finite_disjoint_inter_image := fun _ _ _ _ => Set.to_finite _
 
 export ProperlyDiscontinuousSmul (finite_disjoint_inter_image)
@@ -345,7 +344,7 @@ export ProperlyDiscontinuousSmul (finite_disjoint_inter_image)
 export ProperlyDiscontinuousVadd (finite_disjoint_inter_image)
 
 /-- The quotient map by a group action is open. -/
-@[to_additive]
+@[to_additive "The quotient map by a group action is open."]
 theorem is_open_map_quotient_mk_mul [HasContinuousConstSmul Γ T] :
     IsOpenMap (Quotientₓ.mk : T → Quotientₓ (MulAction.orbitRel Γ T)) := by
   intro U hU
@@ -353,7 +352,7 @@ theorem is_open_map_quotient_mk_mul [HasContinuousConstSmul Γ T] :
   exact is_open_Union fun γ => (Homeomorph.smul γ).IsOpenMap U hU
 
 /-- The quotient by a discontinuous group action of a locally compact t2 space is t2. -/
-@[to_additive]
+@[to_additive "The quotient by a discontinuous group action of a locally compact t2\nspace is t2."]
 instance (priority := 100) t2_space_of_properly_discontinuous_smul_of_t2_space [T2Space T] [LocallyCompactSpace T]
     [HasContinuousConstSmul Γ T] [ProperlyDiscontinuousSmul Γ T] : T2Space (Quotientₓ (MulAction.orbitRel Γ T)) := by
   set Q := Quotientₓ (MulAction.orbitRel Γ T)

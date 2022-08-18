@@ -145,10 +145,10 @@ theorem inf_mul_sup [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a
 
 namespace LatticeOrderedCommGroup
 
+-- see Note [lower instance priority]
 /-- Let `α` be a lattice ordered commutative group with identity `1`. For an element `a` of type `α`,
 the element `a ⊔ 1` is said to be the *positive component* of `a`, denoted `a⁺`.
 -/
--- see Note [lower instance priority]
 @[to_additive
       "\nLet `α` be a lattice ordered commutative group with identity `0`. For an element `a` of type `α`,\nthe element `a ⊔ 0` is said to be the *positive component* of `a`, denoted `a⁺`.\n"]
 instance (priority := 100) hasOneLatticeHasPosPart : HasPosPart α :=
@@ -158,10 +158,10 @@ instance (priority := 100) hasOneLatticeHasPosPart : HasPosPart α :=
 theorem m_pos_part_def (a : α) : a⁺ = a⊔1 :=
   rfl
 
+-- see Note [lower instance priority]
 /-- Let `α` be a lattice ordered commutative group with identity `1`. For an element `a` of type `α`,
 the element `(-a) ⊔ 1` is said to be the *negative component* of `a`, denoted `a⁻`.
 -/
--- see Note [lower instance priority]
 @[to_additive
       "\nLet `α` be a lattice ordered commutative group with identity `0`. For an element `a` of type `α`,\nthe element `(-a) ⊔ 0` is said to be the *negative component* of `a`, denoted `a⁻`.\n"]
 instance (priority := 100) hasOneLatticeHasNegPart : HasNegPart α :=
@@ -453,8 +453,8 @@ theorem abs_div_sup_mul_abs_div_inf [CovariantClass α α (· * ·) (· ≤ ·)]
       rw [sup_div_inf_eq_abs_div]
     
 
-/-- If `a` is positive, then it is equal to its positive component `a⁺`. -/
 -- pos_of_nonneg
+/-- If `a` is positive, then it is equal to its positive component `a⁺`. -/
 @[to_additive "If `a` is positive, then it is equal to its positive component `a⁺`."]
 theorem pos_of_one_le (a : α) (h : 1 ≤ a) : a⁺ = a := by
   rw [m_pos_part_def]
@@ -534,9 +534,9 @@ theorem m_Birkhoff_inequalities [CovariantClass α α (· * ·) (· ≤ ·)] (a 
     abs ((a⊔c) / (b⊔c))⊔abs ((a⊓c) / (b⊓c)) ≤ abs (a / b) :=
   sup_le (mabs_sup_div_sup_le_mabs a b c) (mabs_inf_div_inf_le_mabs a b c)
 
+-- Banasiak Proposition 2.12, Zaanen 2nd lecture
 /-- The absolute value satisfies the triangle inequality.
 -/
--- Banasiak Proposition 2.12, Zaanen 2nd lecture
 @[to_additive abs_add_le]
 theorem mabs_mul_le [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : abs (a * b) ≤ abs a * abs b := by
   apply sup_le

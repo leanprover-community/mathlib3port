@@ -363,7 +363,7 @@ theorem char_ne_zero_of_finite (p : ℕ) [CharP R p] [Finite R] : p ≠ 0 := by
   rintro rfl
   haveI : CharZero R := char_p_to_char_zero R
   cases nonempty_fintype R
-  exact absurd Nat.cast_injective (not_injective_infinite_fintype (coe : ℕ → R))
+  exact absurd Nat.cast_injective (not_injective_infinite_finite (coe : ℕ → R))
 
 theorem ring_char_ne_zero_of_finite [Finite R] : ringChar R ≠ 0 :=
   char_ne_zero_of_finite R (ringChar R)
@@ -498,9 +498,9 @@ end CharP
 
 section
 
-/-- We have `2 ≠ 0` in a nontrivial ring whose characteristic is not `2`. -/
 -- Note: there is `two_ne_zero` (assuming `[ordered_semiring]`)
 -- and `two_ne_zero'`(assuming `[char_zero]`), which both don't fit the needs here.
+/-- We have `2 ≠ 0` in a nontrivial ring whose characteristic is not `2`. -/
 @[protected]
 theorem Ringₓ.two_ne_zero {R : Type _} [NonAssocSemiringₓ R] [Nontrivial R] (hR : ringChar R ≠ 2) : (2 : R) ≠ 0 := by
   rw [Ne.def,
@@ -509,9 +509,9 @@ theorem Ringₓ.two_ne_zero {R : Type _} [NonAssocSemiringₓ R] [Nontrivial R] 
     ringChar.spec, Nat.dvd_prime Nat.prime_two]
   exact mt (or_iff_left hR).mp CharP.ring_char_ne_one
 
-/-- Characteristic `≠ 2` and nontrivial implies that `-1 ≠ 1`. -/
 -- We have `char_p.neg_one_ne_one`, which assumes `[ring R] (p : ℕ) [char_p R p] [fact (2 < p)]`.
 -- This is a version using `ring_char` instead.
+/-- Characteristic `≠ 2` and nontrivial implies that `-1 ≠ 1`. -/
 theorem Ringₓ.neg_one_ne_one_of_char_ne_two {R : Type _} [NonAssocRing R] [Nontrivial R] (hR : ringChar R ≠ 2) :
     (-1 : R) ≠ 1 := fun h => Ringₓ.two_ne_zero hR (neg_eq_iff_add_eq_zero.mp h)
 

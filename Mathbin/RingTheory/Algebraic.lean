@@ -149,6 +149,17 @@ theorem is_algebraic_algebra_map_iff {a : S} (h : Function.Injective (algebraMap
           rwa [map_zero, algebra_map_aeval])⟩,
     is_algebraic_algebra_map_of_is_algebraic⟩
 
+theorem is_algebraic_of_pow {r : A} {n : ℕ} (hn : 0 < n) (ht : IsAlgebraic R (r ^ n)) : IsAlgebraic R r := by
+  obtain ⟨p, p_nonzero, hp⟩ := ht
+  refine' ⟨Polynomial.expand _ n p, _, _⟩
+  · rwa [Polynomial.expand_ne_zero hn]
+    
+  · rwa [Polynomial.expand_aeval n p r]
+    
+
+theorem Transcendental.pow {r : A} (ht : Transcendental R r) {n : ℕ} (hn : 0 < n) : Transcendental R (r ^ n) :=
+  fun ht' => ht <| is_algebraic_of_pow hn ht'
+
 end zero_ne_one
 
 section Field
@@ -224,7 +235,7 @@ theorem IsAlgebraic.alg_hom_bijective (ha : Algebra.IsAlgebraic K L) (f : L →�
   obtain ⟨p, hp, he⟩ := ha b
   let f' : p.root_set L → p.root_set L := Set.MapsTo.restrict f _ _ (root_set_maps_to (map_ne_zero hp) f)
   have : Function.Surjective f' :=
-    Fintype.injective_iff_surjective.1 fun _ _ h => Subtype.eq <| f.to_ring_hom.injective <| Subtype.ext_iff.1 h
+    Finite.injective_iff_surjective.1 fun _ _ h => Subtype.eq <| f.to_ring_hom.injective <| Subtype.ext_iff.1 h
   obtain ⟨a, ha⟩ := this ⟨b, (mem_root_set_iff hp b).2 he⟩
   exact ⟨a, Subtype.ext_iff.1 ha⟩
 
@@ -305,15 +316,13 @@ theorem inv_eq_of_root_of_coeff_zero_ne_zero {x : L} {p : K[X]} (aeval_eq : aeva
 
 theorem Subalgebra.inv_mem_of_root_of_coeff_zero_ne_zero {x : A} {p : K[X]} (aeval_eq : aeval x p = 0)
     (coeff_zero_ne : p.coeff 0 ≠ 0) : (x⁻¹ : L) ∈ A := by
-  have : (x⁻¹ : L) = aeval x (div_X p) / (aeval x p - algebraMap _ _ (p.coeff 0)) := by
-    rw [aeval_eq, Subalgebra.coe_zero, zero_sub, div_neg]
-    convert inv_eq_of_root_of_coeff_zero_ne_zero _ coeff_zero_ne
-    · rw [Subalgebra.aeval_coe]
-      
-    · simpa using aeval_eq
-      
-  rw [this, div_eq_mul_inv, aeval_eq, Subalgebra.coe_zero, zero_sub, ← RingHom.map_neg, ← RingHom.map_inv]
-  exact A.mul_mem (aeval x p.div_X).2 (A.algebra_map_mem _)
+  suffices (x⁻¹ : L) = (-p.coeff 0)⁻¹ • aeval x (div_X p) by
+    rw [this]
+    exact A.smul_mem (aeval x _).2 _
+  have : aeval (x : L) p = 0 := by
+    rw [Subalgebra.aeval_coe, aeval_eq, Subalgebra.coe_zero]
+  rw [inv_eq_of_root_of_coeff_zero_ne_zero this coeff_zero_ne, div_eq_inv_mul, Algebra.smul_def, map_inv₀, map_neg,
+    inv_neg, neg_mul, Subalgebra.aeval_coe]
 
 theorem Subalgebra.inv_mem_of_algebraic {x : A} (hx : IsAlgebraic K (x : L)) : (x⁻¹ : L) ∈ A := by
   obtain ⟨p, ne_zero, aeval_eq⟩ := hx

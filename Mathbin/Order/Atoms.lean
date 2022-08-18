@@ -44,7 +44,7 @@ which are lattices with only two elements, and related ideas.
   * `is_compl.is_atom_iff_is_coatom` and `is_compl.is_coatom_if_is_atom`: In a modular
   bounded lattice, a complement of an atom is a coatom and vice versa.
   * `is_atomic_iff_is_coatomic`: A modular complemented lattice is atomic iff it is coatomic.
-  * `fintype.to_is_atomic`, `fintype.to_is_coatomic`: Finite partial orders with bottom resp. top
+  * `finite.to_is_atomic`, `finite.to_is_coatomic`: Finite partial orders with bottom resp. top
     are atomic resp. coatomic.
 
 -/
@@ -752,7 +752,7 @@ section Fintype
 open Finset
 
 -- see Note [lower instance priority]
-instance (priority := 100) Fintype.to_is_coatomic [PartialOrderₓ α] [OrderTop α] [Fintype α] : IsCoatomic α := by
+instance (priority := 100) Finite.to_is_coatomic [PartialOrderₓ α] [OrderTop α] [Finite α] : IsCoatomic α := by
   refine' IsCoatomic.mk fun b => or_iff_not_imp_left.2 fun ht => _
   obtain ⟨c, hc, hmax⟩ := Set.Finite.exists_maximal_wrt id { x : α | b ≤ x ∧ x ≠ ⊤ } (Set.to_finite _) ⟨b, le_rfl, ht⟩
   refine' ⟨c, ⟨hc.2, fun y hcy => _⟩, hc.1⟩
@@ -761,8 +761,8 @@ instance (priority := 100) Fintype.to_is_coatomic [PartialOrderₓ α] [OrderTop
   exact (lt_self_iff_false _).mp hcy
 
 -- see Note [lower instance priority]
-instance (priority := 100) Fintype.to_is_atomic [PartialOrderₓ α] [OrderBot α] [Fintype α] : IsAtomic α :=
-  is_coatomic_dual_iff_is_atomic.mp Fintype.to_is_coatomic
+instance (priority := 100) Finite.to_is_atomic [PartialOrderₓ α] [OrderBot α] [Finite α] : IsAtomic α :=
+  is_coatomic_dual_iff_is_atomic.mp Finite.to_is_coatomic
 
 end Fintype
 

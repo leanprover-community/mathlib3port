@@ -5,6 +5,6 @@
    "name": "mathlib",
    "inputRev": "cf2e683c25eba2d798b2460d5703a63db72272c0"},
   {"url": "https://github.com/leanprover-community/lean3port.git",
-   "rev": "c54f1b1ebd3f903fc02383f3990aa77a1666e624",
+   "rev": "47cb7bb69e00d30b24cf12941a2b9f79add7c4c1",
    "name": "lean3port",
-   "inputRev": "c54f1b1ebd3f903fc02383f3990aa77a1666e624"}]}
+   "inputRev": "47cb7bb69e00d30b24cf12941a2b9f79add7c4c1"}]}

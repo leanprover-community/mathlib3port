@@ -212,14 +212,14 @@ theorem fderiv_zero_of_not_differentiable_at (h : ¬DifferentiableAt 𝕜 f x) :
 
 section DerivativeUniqueness
 
+/- In this section, we discuss the uniqueness of the derivative.
+We prove that the definitions `unique_diff_within_at` and `unique_diff_on` indeed imply the
+uniqueness of the derivative. -/
 /-- If a function f has a derivative f' at x, a rescaled version of f around x converges to f',
 i.e., `n (f (x + (1/n) v) - f x)` converges to `f' v`. More generally, if `c n` tends to infinity
 and `c n * d n` tends to `v`, then `c n * (f (x + d n) - f x)` tends to `f' v`. This lemma expresses
 this fact, for functions having a derivative within a set. Its specific formulation is useful for
 tangent cone related discussions. -/
-/- In this section, we discuss the uniqueness of the derivative.
-We prove that the definitions `unique_diff_within_at` and `unique_diff_on` indeed imply the
-uniqueness of the derivative. -/
 theorem HasFderivWithinAt.lim (h : HasFderivWithinAt f f' s x) {α : Type _} (l : Filter α) {c : α → 𝕜} {d : α → E}
     {v : E} (dtop : ∀ᶠ n in l, x + d n ∈ s) (clim : Tendsto (fun n => ∥c n∥) l atTop)
     (cdlim : Tendsto (fun n => c n • d n) l (𝓝 v)) : Tendsto (fun n => c n • (f (x + d n) - f x)) l (𝓝 (f' v)) := by

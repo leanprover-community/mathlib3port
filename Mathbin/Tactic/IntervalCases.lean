@@ -45,12 +45,12 @@ namespace Tactic
 
 namespace IntervalCases
 
+-- We use `expr.to_rat` merely to decide if an `expr` is an explicit number.
+-- It would be more natural to use `expr.to_int`, but that hasn't been implemented.
 /-- If `e` easily implies `(%%n < %%b)`
 for some explicit `b`,
 return that proof.
 -/
--- We use `expr.to_rat` merely to decide if an `expr` is an explicit number.
--- It would be more natural to use `expr.to_int`, but that hasn't been implemented.
 unsafe def gives_upper_bound (n e : expr) : tactic expr := do
   let t ← infer_type e
   match t with

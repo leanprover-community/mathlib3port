@@ -257,7 +257,7 @@ theorem exists_large_sphere (n d : ℕ) : ∃ k, (d ^ n / ↑(n * d ^ 2) : ℝ) 
     
   rw [le_sub_iff_add_le]
   norm_num
-  exact le_mul_of_one_le_right zero_le_two (one_le_cast.2 hd)
+  exact one_le_cast.2 hd
 
 theorem bound_aux' (n d : ℕ) : (d ^ n / ↑(n * d ^ 2) : ℝ) ≤ rothNumberNat ((2 * d - 1) ^ n) :=
   let ⟨k, h⟩ := exists_large_sphere n d

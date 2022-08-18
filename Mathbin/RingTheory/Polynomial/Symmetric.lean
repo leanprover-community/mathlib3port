@@ -47,6 +47,16 @@ open BigOperators
 
 noncomputable section
 
+namespace Multiset
+
+variable {R : Type _} [CommSemiringₓ R]
+
+/-- The `n`th elementary symmetric function evaluated at the elements of `s` -/
+def esymm (s : Multiset R) (n : ℕ) : R :=
+  ((s.powersetLen n).map Multiset.prod).Sum
+
+end Multiset
+
 namespace MvPolynomial
 
 variable {σ : Type _} {R : Type _}
@@ -132,6 +142,14 @@ variable (σ R) [CommSemiringₓ R] [CommSemiringₓ S] [Fintype σ] [Fintype τ
 /-- The `n`th elementary symmetric `mv_polynomial σ R`. -/
 def esymm (n : ℕ) : MvPolynomial σ R :=
   ∑ t in powersetLen n univ, ∏ i in t, x i
+
+/-- The `n`th elementary symmetric `mv_polynomial σ R` is obtained by evaluating the
+`n`th elementary symmetric at the `multiset` of the monomials -/
+theorem EsymmEqMultiset.esymm (n : ℕ) :
+    esymm σ R n = Multiset.esymm (Multiset.map (fun i : σ => (x i : MvPolynomial σ R)) Finset.univ.val) n := by
+  rw [esymm, Multiset.esymm, Finset.sum_eq_multiset_sum]
+  conv_lhs => congr congr ext rw [Finset.prod_eq_multiset_prod]
+  rw [Multiset.powerset_len_map, ← map_val_val_powerset_len, Multiset.map_map, Multiset.map_map]
 
 /-- We can define `esymm σ R n` by summing over a subtype instead of over `powerset_len`. -/
 theorem esymm_eq_sum_subtype (n : ℕ) : esymm σ R n = ∑ t : { s : Finset σ // s.card = n }, ∏ i in (t : Finset σ), x i :=

@@ -38,7 +38,7 @@ namespace Finₓ
 
 @[to_additive]
 theorem prod_univ_def [CommMonoidₓ β] {n : ℕ} (f : Finₓ n → β) : (∏ i, f i) = ((List.finRange n).map f).Prod := by
-  simp [← univ_def, ← Finset.finRange]
+  simp [← univ_def]
 
 @[to_additive]
 theorem prod_of_fn [CommMonoidₓ β] {n : ℕ} (f : Finₓ n → β) : (List.ofFnₓ f).Prod = ∏ i, f i := by
@@ -49,27 +49,27 @@ theorem prod_of_fn [CommMonoidₓ β] {n : ℕ} (f : Finₓ n → β) : (List.of
 theorem prod_univ_zero [CommMonoidₓ β] (f : Finₓ 0 → β) : (∏ i, f i) = 1 :=
   rfl
 
-/-- A product of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
-is the product of `f x`, for some `x : fin (n + 1)` times the remaining product -/
 /- A sum of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
 is the sum of `f x`, for some `x : fin (n + 1)` plus the remaining product -/
+/-- A product of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
+is the product of `f x`, for some `x : fin (n + 1)` times the remaining product -/
 @[to_additive]
 theorem prod_univ_succ_above [CommMonoidₓ β] {n : ℕ} (f : Finₓ (n + 1) → β) (x : Finₓ (n + 1)) :
     (∏ i, f i) = f x * ∏ i : Finₓ n, f (x.succAbove i) := by
   rw [univ_succ_above, prod_cons, Finset.prod_map, RelEmbedding.coe_fn_to_embedding]
 
-/-- A product of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
-is the product of `f 0` plus the remaining product -/
 /- A sum of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
 is the sum of `f 0` plus the remaining product -/
+/-- A product of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
+is the product of `f 0` plus the remaining product -/
 @[to_additive]
 theorem prod_univ_succ [CommMonoidₓ β] {n : ℕ} (f : Finₓ (n + 1) → β) : (∏ i, f i) = f 0 * ∏ i : Finₓ n, f i.succ :=
   prod_univ_succ_above f 0
 
-/-- A product of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
-is the product of `f (fin.last n)` plus the remaining product -/
 /- A sum of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
 is the sum of `f (fin.last n)` plus the remaining sum -/
+/-- A product of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
+is the product of `f (fin.last n)` plus the remaining product -/
 @[to_additive]
 theorem prod_univ_cast_succ [CommMonoidₓ β] {n : ℕ} (f : Finₓ (n + 1) → β) :
     (∏ i, f i) = (∏ i : Finₓ n, f i.cast_succ) * f (last n) := by

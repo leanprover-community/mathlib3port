@@ -264,8 +264,9 @@ theorem complete_graph_eq_top (V : Type u) : completeGraph V = ⊤ :=
 theorem empty_graph_eq_bot (V : Type u) : emptyGraph V = ⊥ :=
   rfl
 
+@[simps]
 instance (V : Type u) : Inhabited (SimpleGraph V) :=
-  ⟨⊤⟩
+  ⟨⊥⟩
 
 section Decidable
 
@@ -456,8 +457,9 @@ theorem dart_of_neighbor_set_injective (v : V) : Function.Injective (G.dartOfNei
     injection h with h'
     convert congr_arg Prod.snd h'
 
-instance Dart.inhabited [Inhabited V] [Inhabited (G.NeighborSet default)] : Inhabited G.Dart :=
-  ⟨G.dartOfNeighborSet default default⟩
+instance nonempty_dart_top [Nontrivial V] : Nonempty (⊤ : SimpleGraph V).Dart := by
+  obtain ⟨v, w, h⟩ := exists_pair_ne V
+  exact ⟨⟨(v, w), h⟩⟩
 
 end Darts
 
@@ -747,12 +749,12 @@ theorem map_comap_le (f : V ↪ W) (G : SimpleGraph W) : (G.comap f).map f ≤ G
 /-! ## Induced graphs -/
 
 
-/-- Restrict a graph to the vertices in the set `s`, deleting all edges incident to vertices
-outside the set. This is a wrapper around `simple_graph.comap`. -/
 /- Given a set `s` of vertices, we can restrict a graph to those vertices by restricting its
 adjacency relation. This gives a map between `simple_graph V` and `simple_graph s`.
 
 There is also a notion of induced subgraphs (see `simple_graph.subgraph.induce`). -/
+/-- Restrict a graph to the vertices in the set `s`, deleting all edges incident to vertices
+outside the set. This is a wrapper around `simple_graph.comap`. -/
 @[reducible]
 def induce (s : Set V) (G : SimpleGraph V) : SimpleGraph s :=
   G.comap (Function.Embedding.subtype _)

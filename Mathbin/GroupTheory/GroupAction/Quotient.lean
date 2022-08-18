@@ -3,6 +3,7 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Thomas Browning
 -/
+import Mathbin.Dynamics.PeriodicPts
 import Mathbin.GroupTheory.GroupAction.Basic
 import Mathbin.GroupTheory.QuotientGroup
 
@@ -86,6 +87,11 @@ theorem quotient.mk_smul_out' [QuotientAction β H] (b : β) (q : α ⧸ H) : Qu
 @[simp, to_additive]
 theorem quotient.coe_smul_out' [QuotientAction β H] (b : β) (q : α ⧸ H) : ↑(b • q.out') = b • q :=
   quotient.mk_smul_out' H b q
+
+theorem _root_.quotient_group.out'_conj_pow_minimal_period_mem (a : α) (q : α ⧸ H) :
+    q.out'⁻¹ * a ^ Function.minimalPeriod ((· • ·) a) q * q.out' ∈ H := by
+  rw [mul_assoc, ← QuotientGroup.eq', QuotientGroup.out_eq', ← smul_eq_mul, quotient.mk_smul_out', eq_comm,
+    pow_smul_eq_iff_minimal_period_dvd]
 
 end QuotientAction
 

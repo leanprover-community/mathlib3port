@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Jujian Zhang
+Authors: Andrew Yang, Jujian Zhang
 -/
 import Mathbin.GroupTheory.MonoidLocalization
 import Mathbin.RingTheory.Localization.Basic
@@ -32,7 +32,6 @@ Given a commutative ring `R`, a multiplicative subset `S ⊆ R` and an `R`-modul
 ## Future work
 
  * Redefine `localization` for monoids and rings to coincide with `localized_module`.
- * Define a characteristic predicate for the localized module.
 -/
 
 
@@ -122,6 +121,7 @@ theorem lift_on₂_mk {α : Type _} (f : M × S → M × S → α)
 instance : Zero (LocalizedModule S M) :=
   ⟨mk 0 1⟩
 
+@[simp]
 theorem zero_mk (s : S) : mk (0 : M) s = 0 :=
   mk_eq.mpr
     ⟨1, by
@@ -283,7 +283,136 @@ instance isModule : Module (Localization S) (LocalizedModule S M) where
   add_smul := add_smul'
   zero_smul := zero_smul'
 
+@[simp]
+theorem mk_cancel_common_left (s' s : S) (m : M) : mk (s' • m) (s' * s) = mk m s :=
+  mk_eq.mpr
+    ⟨1, by
+      simp only [← mul_smul, ← one_smul]
+      rw [smul_comm]⟩
+
+@[simp]
+theorem mk_cancel (s : S) (m : M) : mk (s • m) s = mk m 1 :=
+  mk_eq.mpr
+    ⟨1, by
+      simp ⟩
+
+@[simp]
+theorem mk_cancel_common_right (s s' : S) (m : M) : mk (s' • m) (s * s') = mk m s :=
+  mk_eq.mpr
+    ⟨1, by
+      simp [← mul_smul]⟩
+
+instance isModule' : Module R (LocalizedModule S M) :=
+  { Module.compHom (LocalizedModule S M) <| algebraMap R (Localization S) with }
+
+theorem smul'_mk (r : R) (s : S) (m : M) : r • mk m s = mk (r • m) s := by
+  erw [mk_smul_mk r m 1 s, one_mulₓ]
+
+section
+
+variable (S M)
+
+/-- The function `m ↦ m / 1` as an `R`-linear map.
+-/
+@[simps]
+def mkLinearMap : M →ₗ[R] LocalizedModule S M where
+  toFun := fun m => mk m 1
+  map_add' := fun x y => by
+    simp [← mk_add_mk]
+  map_smul' := fun r x => (smul'_mk _ _ _).symm
+
+end
+
+/-- For any `s : S`, there is an `R`-linear map given by `a/b ↦ a/(b*s)`.
+-/
+@[simps]
+def divBy (s : S) : LocalizedModule S M →ₗ[R] LocalizedModule S M where
+  toFun := fun p =>
+    (p.liftOn fun p => mk p.1 (s * p.2)) fun ⟨a, b⟩ ⟨a', b'⟩ ⟨c, eq1⟩ =>
+      mk_eq.mpr
+        ⟨c, by
+          rw [mul_smul, mul_smul, smul_comm c, eq1, smul_comm s] <;> infer_instance⟩
+  map_add' := fun x y =>
+    x.induction_on₂
+      (by
+        intro m₁ m₂ t₁ t₂
+        simp only [← mk_add_mk, ← LocalizedModule.lift_on_mk, ← mul_smul, smul_add, ← mul_assoc, ←
+          mk_cancel_common_left s]
+        rw
+          [show s * (t₁ * t₂) = t₁ * (s * t₂) by
+            ext
+            simp only [← Submonoid.coe_mul]
+            ring])
+      y
+  map_smul' := fun r x =>
+    x.induction_on <| by
+      intros
+      simp [← LocalizedModule.lift_on_mk, ← smul'_mk]
+
+theorem div_by_mul_by (s : S) (p : LocalizedModule S M) :
+    divBy s (algebraMap R (Module.End R (LocalizedModule S M)) s p) = p :=
+  p.induction_on
+    (by
+      intro m t
+      simp only [← LocalizedModule.lift_on_mk, ← Module.algebra_map_End_apply, ← smul'_mk, ← div_by_apply]
+      erw [mk_cancel_common_left s t])
+
+theorem mul_by_div_by (s : S) (p : LocalizedModule S M) :
+    algebraMap R (Module.End R (LocalizedModule S M)) s (divBy s p) = p :=
+  p.induction_on
+    (by
+      intro m t
+      simp only [← LocalizedModule.lift_on_mk, ← div_by_apply, ← Module.algebra_map_End_apply, ← smul'_mk]
+      erw [mk_cancel_common_left s t])
+
 end
 
 end LocalizedModule
+
+section IsLocalizedModule
+
+universe u v
+
+variable {R : Type u} [CommRingₓ R] (S : Submonoid R)
+
+variable {M M' : Type u} [AddCommMonoidₓ M] [AddCommMonoidₓ M']
+
+variable [Module R M] [Module R M'] (f : M →ₗ[R] M')
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`map_units] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`surj] []
+-- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`eq_iff_exists] []
+/-- The characteristic predicate for localized module.
+`is_localized_module S f` describes that `f : M ⟶ M'` is the localization map identifying `M'` as
+`localized_module S M`.
+-/
+class IsLocalizedModule : Prop where
+  map_units : ∀ x : S, IsUnit (algebraMap R (Module.End R M') x)
+  surj : ∀ y : M', ∃ x : M × S, x.2 • y = f x.1
+  eq_iff_exists : ∀ {x₁ x₂}, f x₁ = f x₂ ↔ ∃ c : S, c • x₂ = c • x₁
+
+instance localized_module_is_localized_module : IsLocalizedModule S (LocalizedModule.mkLinearMap S M) where
+  map_units := fun s =>
+    ⟨⟨algebraMap R (Module.End R (LocalizedModule S M)) s, LocalizedModule.divBy s,
+        FunLike.ext _ _ <| LocalizedModule.mul_by_div_by s, FunLike.ext _ _ <| LocalizedModule.div_by_mul_by s⟩,
+      (FunLike.ext _ _) fun p =>
+        p.induction_on <| by
+          intros
+          rfl⟩
+  surj := fun p =>
+    p.induction_on
+      (by
+        intro m t
+        refine' ⟨⟨m, t⟩, _⟩
+        erw [LocalizedModule.smul'_mk, LocalizedModule.mk_linear_map_apply, Submonoid.coe_subtype,
+          LocalizedModule.mk_cancel t])
+  eq_iff_exists := fun m1 m2 =>
+    { mp := fun eq1 => by
+        simpa only [← one_smul] using localized_module.mk_eq.mp eq1,
+      mpr := fun ⟨c, eq1⟩ =>
+        LocalizedModule.mk_eq.mpr
+          ⟨c, by
+            simpa only [← one_smul] using eq1⟩ }
+
+end IsLocalizedModule
 

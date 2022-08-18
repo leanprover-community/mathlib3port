@@ -40,7 +40,7 @@ open Classical
 
 open Function
 
-variable {M₀ G₀ M₀' G₀' : Type _}
+variable {M₀ G₀ M₀' G₀' F : Type _}
 
 section
 
@@ -1122,41 +1122,40 @@ end Commute
 
 namespace MonoidWithZeroHom
 
-variable [GroupWithZeroₓ G₀] [GroupWithZeroₓ G₀'] [MonoidWithZeroₓ M₀] [Nontrivial M₀]
+variable [GroupWithZeroₓ G₀] [GroupWithZeroₓ G₀'] [MonoidWithZeroₓ M₀] [Nontrivial M₀] [MonoidWithZeroHomClass F G₀ M₀]
+  (f : F) {a : G₀}
 
-section MonoidWithZeroₓ
-
-variable (f : G₀ →*₀ M₀) {a : G₀}
+include M₀
 
 theorem map_ne_zero : f a ≠ 0 ↔ a ≠ 0 :=
-  ⟨fun hfa ha => hfa <| ha.symm ▸ f.map_zero, fun ha => ((IsUnit.mk0 a ha).map f.toMonoidHom).ne_zero⟩
+  ⟨fun hfa ha => hfa <| ha.symm ▸ map_zero f, fun ha => ((IsUnit.mk0 a ha).map f).ne_zero⟩
 
 @[simp]
 theorem map_eq_zero : f a = 0 ↔ a = 0 :=
-  not_iff_not.1 f.map_ne_zero
+  not_iff_not.1 (map_ne_zero f)
 
-end MonoidWithZeroₓ
+end MonoidWithZeroHom
 
 section GroupWithZeroₓ
 
-variable (f : G₀ →*₀ G₀') (a b : G₀)
+variable [GroupWithZeroₓ G₀] [GroupWithZeroₓ G₀'] [MonoidWithZeroHomClass F G₀ G₀'] (f : F) (a b : G₀)
+
+include G₀'
 
 /-- A monoid homomorphism between groups with zeros sending `0` to `0` sends `a⁻¹` to `(f a)⁻¹`. -/
 @[simp]
-theorem map_inv : f a⁻¹ = (f a)⁻¹ := by
+theorem map_inv₀ : f a⁻¹ = (f a)⁻¹ := by
   by_cases' h : a = 0
   · simp [← h]
     
   apply eq_inv_of_mul_eq_one_left
-  rw [← f.map_mul, inv_mul_cancel h, f.map_one]
+  rw [← map_mul, inv_mul_cancel h, map_one]
 
 @[simp]
-theorem map_div : f (a / b) = f a / f b := by
-  simpa only [← div_eq_mul_inv] using (f.map_mul _ _).trans <| _root_.congr_arg _ <| f.map_inv b
+theorem map_div₀ : f (a / b) = f a / f b :=
+  map_div' f (map_inv₀ f) a b
 
 end GroupWithZeroₓ
-
-end MonoidWithZeroHom
 
 /-- We define the inverse as a `monoid_with_zero_hom` by extending the inverse map by zero
 on non-units. -/
@@ -1179,16 +1178,6 @@ theorem MonoidWithZeroₓ.inverse_apply {M : Type _} [CommMonoidWithZero M] (a :
 /-- Inversion on a commutative group with zero, considered as a monoid with zero homomorphism. -/
 def invMonoidWithZeroHom {G₀ : Type _} [CommGroupWithZero G₀] : G₀ →*₀ G₀ :=
   { invMonoidHom with map_zero' := inv_zero }
-
-@[simp]
-theorem MonoidHom.map_units_inv {M G₀ : Type _} [Monoidₓ M] [GroupWithZeroₓ G₀] (f : M →* G₀) (u : Mˣ) :
-    f ↑u⁻¹ = (f u)⁻¹ := by
-  rw [← Units.coe_map, ← Units.coe_map, ← Units.coe_inv, MonoidHom.map_inv]
-
-@[simp]
-theorem MonoidWithZeroHom.map_units_inv {M G₀ : Type _} [MonoidWithZeroₓ M] [GroupWithZeroₓ G₀] (f : M →*₀ G₀)
-    (u : Mˣ) : f ↑u⁻¹ = (f u)⁻¹ :=
-  f.toMonoidHom.map_units_inv u
 
 section NoncomputableDefs
 

@@ -84,13 +84,13 @@ theorem IsKernelPair.is_reflexive_pair {R : C} {f g : R ⟶ A} {q : A ⟶ B} (h 
     IsReflexivePair f g :=
   IsReflexivePair.mk' _ (h.lift' _ _ rfl).2.1 (h.lift' _ _ _).2.2
 
-/-- If `f,g` is reflexive, then `g,f` is reflexive. -/
 -- This shouldn't be an instance as it would instantly loop.
+/-- If `f,g` is reflexive, then `g,f` is reflexive. -/
 theorem IsReflexivePair.swap [IsReflexivePair f g] : IsReflexivePair g f :=
   IsReflexivePair.mk' _ (section_comp_right f g) (section_comp_left f g)
 
-/-- If `f,g` is coreflexive, then `g,f` is coreflexive. -/
 -- This shouldn't be an instance as it would instantly loop.
+/-- If `f,g` is coreflexive, then `g,f` is coreflexive. -/
 theorem IsCoreflexivePair.swap [IsCoreflexivePair f g] : IsCoreflexivePair g f :=
   IsCoreflexivePair.mk' _ (right_comp_retraction f g) (left_comp_retraction f g)
 

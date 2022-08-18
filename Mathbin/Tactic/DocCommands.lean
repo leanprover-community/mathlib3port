@@ -287,6 +287,7 @@ add_tactic_doc
     declNames := [`copy_doc_string_cmd, `tactic.copy_doc_string], tags := ["documentation"],
     inheritDescriptionFrom := `copy_doc_string_cmd }
 
+-- add docs to core tactics
 /-- The congruence closure tactic `cc` tries to solve the goal by chaining
 equalities from context and applying congruence (i.e. if `a = b`, then `f a = f b`).
 It is a finishing tactic, i.e. it is meant to close
@@ -327,7 +328,6 @@ Journal of the ACM (1980)
 [Congruence closure in intensional type theory](https://leanprover.github.io/papers/congr.pdf)
 (de Moura, Selsam IJCAR 2016).
 -/
--- add docs to core tactics
 add_tactic_doc
   { Name := "cc (congruence closure)", category := DocCategory.tactic, declNames := [`tactic.interactive.cc],
     tags := ["core", "finishing"] }

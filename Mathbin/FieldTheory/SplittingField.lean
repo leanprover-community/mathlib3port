@@ -875,6 +875,5 @@ theorem splits_of_splits {F : IntermediateField K L} (h : p.Splits (algebraMap K
   simp_rw [Polynomial.map_mul, Polynomial.map_multiset_prod, Multiset.map_pmap, Polynomial.map_sub, map_C, map_X]
   rfl
 
--- TODO (Thomas): If `p` splits in `L/K`, then `p.is_splitting_field K (adjoin K (p.root_set L))`
 end IntermediateField
 

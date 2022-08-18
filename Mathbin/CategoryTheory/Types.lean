@@ -69,8 +69,8 @@ theorem hom_inv_id_apply {X Y : Type u} (f : X ≅ Y) (x : X) : f.inv (f.Hom x) 
 theorem inv_hom_id_apply {X Y : Type u} (f : X ≅ Y) (y : Y) : f.Hom (f.inv y) = y :=
   congr_fun f.inv_hom_id y
 
-/-- `as_hom f` helps Lean type check a function as a morphism in the category `Type`. -/
 -- Unfortunately without this wrapper we can't use `category_theory` idioms, such as `is_iso f`.
+/-- `as_hom f` helps Lean type check a function as a morphism in the category `Type`. -/
 abbrev asHom {α β : Type u} (f : α → β) : α ⟶ β :=
   f
 
@@ -186,9 +186,9 @@ def uliftFunctorTrivial : ulift_functor.{u, u} ≅ 𝟭 _ :=
     (by
       tidy)
 
-/-- Any term `x` of a type `X` corresponds to a morphism `punit ⟶ X`. -/
 -- TODO We should connect this to a general story about concrete categories
 -- whose forgetful functor is representable.
+/-- Any term `x` of a type `X` corresponds to a morphism `punit ⟶ X`. -/
 def homOfElement {X : Type u} (x : X) : PUnit ⟶ X := fun _ => x
 
 theorem hom_of_element_eq_iff {X : Type u} (x y : X) : homOfElement x = homOfElement y ↔ x = y :=
@@ -331,10 +331,10 @@ instance :
 
 end CategoryTheory
 
-/-- Equivalences (between types in the same universe) are the same as (isomorphic to) isomorphisms
-of types. -/
 -- We prove `equiv_iso_iso` and then use that to sneakily construct `equiv_equiv_iso`.
 -- (In this order the proofs are handled by `obviously`.)
+/-- Equivalences (between types in the same universe) are the same as (isomorphic to) isomorphisms
+of types. -/
 @[simps]
 def equivIsoIso {X Y : Type u} : X ≃ Y ≅ X ≅ Y where
   Hom := fun e => e.toIso

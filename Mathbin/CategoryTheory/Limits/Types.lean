@@ -414,8 +414,8 @@ variable {α β : Type u} (f : α ⟶ β)
 
 section
 
-/-- the image of a morphism in Type is just `set.range f` -/
 -- implementation of `has_image`
+/-- the image of a morphism in Type is just `set.range f` -/
 def Image : Type u :=
   Set.Range f
 

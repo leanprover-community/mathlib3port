@@ -220,9 +220,9 @@ def symm (h : M ≃* N) : N ≃* M :=
 theorem inv_fun_eq_symm {f : M ≃* N} : f.invFun = f.symm :=
   rfl
 
-/-- See Note [custom simps projection] -/
 -- we don't hyperlink the note in the additive version, since that breaks syntax highlighting
 -- in the whole file.
+/-- See Note [custom simps projection] -/
 @[to_additive "See Note custom simps projection"]
 def Simps.symmApply (e : M ≃* N) : N → M :=
   e.symm

@@ -500,8 +500,8 @@ theorem to_subbox_aux (h : Integrable I l f vol) (hJ : J ≤ I) :
       fun y hy => ⟨_, hy⟩
   convert hy.comp (l.tendsto_embed_box_to_filter_Union_top hJ)
 
-/-- If `f` is integrable on a box `I`, then it is integrable on any subbox of `I`. -/
 -- faster than `exact` here
+/-- If `f` is integrable on a box `I`, then it is integrable on any subbox of `I`. -/
 theorem to_subbox (h : Integrable I l f vol) (hJ : J ≤ I) : Integrable J l f vol :=
   (h.to_subbox_aux hJ).imp fun y => And.left
 

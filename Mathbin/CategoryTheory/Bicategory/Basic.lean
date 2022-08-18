@@ -96,6 +96,7 @@ open Category Iso
 -- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«exprλ_»
 -- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ▷ »
 -- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `exprρ_
+-- intended to be used with explicit universe parameters
 /-- In a bicategory, we can compose the 1-morphisms `f : a ⟶ b` and `g : b ⟶ c` to obtain
 a 1-morphism `f ≫ g : a ⟶ c`. This composition does not need to be strictly associative,
 but there is a specified associator, `α_ f g h : (f ≫ g) ≫ h ≅ f ≫ (g ≫ h)`.
@@ -105,7 +106,6 @@ These associators and unitors satisfy the pentagon and triangle equations.
 
 See https://ncatlab.org/nlab/show/bicategory.
 -/
--- intended to be used with explicit universe parameters
 @[nolint check_univs]
 class Bicategory (B : Type u) extends CategoryStruct.{v} B where
   -- category structure on the collection of 1-morphisms:

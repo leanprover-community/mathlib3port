@@ -195,7 +195,7 @@ theorem valuation_eq_one_iff (a : A) : IsUnit a ↔ A.Valuation a = 1 :=
       rw [c, A.valuation.map_zero] at h
       exact zero_ne_one h
     have ha' : (a : K)⁻¹ ∈ A := by
-      rw [← valuation_le_one_iff, A.valuation.map_inv, h, inv_one]
+      rw [← valuation_le_one_iff, map_inv₀, h, inv_one]
     apply is_unit_of_mul_eq_one a ⟨a⁻¹, ha'⟩
     ext
     field_simp⟩
@@ -310,7 +310,7 @@ theorem of_prime_ideal_of_le (R S : ValuationSubring K) (h : R ≤ S) : ofPrime 
     apply mul_mem
     · exact h a.2
       
-    · rw [← valuation_le_one_iff, Valuation.map_inv, ← inv_one, inv_le_inv₀]
+    · rw [← valuation_le_one_iff, map_inv₀, ← inv_one, inv_le_inv₀]
       · exact not_ltₓ.1 ((not_iff_not.2 <| valuation_lt_one_iff S _).1 hr)
         
       · intro hh
@@ -411,7 +411,7 @@ def valuationSubring : ValuationSubring K :=
         
       · right
         change v x⁻¹ ≤ 1
-        rw [v.map_inv, ← inv_one, inv_le_inv₀]
+        rw [map_inv₀ v, ← inv_one, inv_le_inv₀]
         · exact le_of_ltₓ h
           
         · intro c

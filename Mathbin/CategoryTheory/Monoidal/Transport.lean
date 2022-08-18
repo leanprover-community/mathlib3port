@@ -33,9 +33,9 @@ variable {C : Type u₁} [Category.{v₁} C] [MonoidalCategory.{v₁} C]
 
 variable {D : Type u₂} [Category.{v₂} D]
 
+-- We just want these simp lemmas locally
 /-- Transport a monoidal structure along an equivalence of (plain) categories.
 -/
--- We just want these simp lemmas locally
 @[simps (config := { attrs := [`_refl_lemma] })]
 def transport (e : C ≌ D) : MonoidalCategory.{v₂} D where
   tensorObj := fun X Y => e.Functor.obj (e.inverse.obj X ⊗ e.inverse.obj Y)

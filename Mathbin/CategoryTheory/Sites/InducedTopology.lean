@@ -44,10 +44,10 @@ variable {J : GrothendieckTopology C} {K : GrothendieckTopology D}
 
 variable (A : Type v) [Category.{u} A]
 
+-- variables (A) [full G] [faithful G]
 /-- We say that a functor `C ⥤ D` into a site is "locally dense" if
 for each covering sieve `T` in `D`, `T ∩ mor(C)` generates a covering sieve in `D`.
 -/
--- variables (A) [full G] [faithful G]
 def LocallyCoverDense (K : GrothendieckTopology D) (G : C ⥤ D) : Prop :=
   ∀ ⦃X⦄ (T : K (G.obj X)), (T.val.FunctorPullback G).FunctorPushforward G ∈ K (G.obj X)
 

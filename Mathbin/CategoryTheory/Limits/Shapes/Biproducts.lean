@@ -722,8 +722,8 @@ def biproduct.uniqueUpToIso (f : J → C) [HasBiproduct f] {b : Bicone f} (hb : 
 
 variable (C)
 
-/-- A category with finite biproducts has a zero object. -/
 -- see Note [lower instance priority]
+/-- A category with finite biproducts has a zero object. -/
 instance (priority := 100) has_zero_object_of_has_finite_biproducts [HasFiniteBiproducts C] : HasZeroObject C := by
   refine' ⟨⟨biproduct Empty.elim, fun X => ⟨⟨⟨0⟩, _⟩⟩, fun X => ⟨⟨⟨0⟩, _⟩⟩⟩⟩
   tidy

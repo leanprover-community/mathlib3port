@@ -32,10 +32,10 @@ instance : HasBinaryBiproducts (ModuleCat.{v} R) :=
 instance : HasFiniteBiproducts (ModuleCat.{v} R) :=
   has_finite_biproducts.of_has_finite_products
 
-/-- Construct limit data for a binary product in `Module R`, using `Module.of R (M × N)`.
--/
 -- We now construct explicit limit data,
 -- so we can compare the biproducts to the usual unbundled constructions.
+/-- Construct limit data for a binary product in `Module R`, using `Module.of R (M × N)`.
+-/
 @[simps cone_X is_limit_lift]
 def binaryProductLimitCone (M N : ModuleCat.{v} R) : Limits.LimitCone (pair M N) where
   Cone :=

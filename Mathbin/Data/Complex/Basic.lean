@@ -623,11 +623,11 @@ theorem conj_inv (x : ℂ) : conj x⁻¹ = (conj x)⁻¹ :=
 
 @[simp, norm_cast]
 theorem of_real_div (r s : ℝ) : ((r / s : ℝ) : ℂ) = r / s :=
-  ofReal.map_div r s
+  map_div₀ ofReal r s
 
 @[simp, norm_cast]
 theorem of_real_zpow (r : ℝ) (n : ℤ) : ((r ^ n : ℝ) : ℂ) = (r : ℂ) ^ n :=
-  ofReal.map_zpow r n
+  map_zpow₀ ofReal r n
 
 @[simp]
 theorem div_I (z : ℂ) : z / I = -(z * I) :=
@@ -640,11 +640,11 @@ theorem inv_I : I⁻¹ = -I := by
 
 @[simp]
 theorem norm_sq_inv (z : ℂ) : normSq z⁻¹ = (normSq z)⁻¹ :=
-  normSq.map_inv z
+  map_inv₀ normSq z
 
 @[simp]
 theorem norm_sq_div (z w : ℂ) : normSq (z / w) = normSq z / normSq w :=
-  normSq.map_div z w
+  map_div₀ normSq z w
 
 /-! ### Cast lemmas -/
 
@@ -803,7 +803,7 @@ theorem abs_pow (z : ℂ) (n : ℕ) : abs (z ^ n) = abs z ^ n :=
 
 @[simp]
 theorem abs_zpow (z : ℂ) (n : ℤ) : abs (z ^ n) = abs z ^ n :=
-  absHom.map_zpow z n
+  map_zpow₀ absHom z n
 
 theorem abs_re_le_abs (z : ℂ) : abs z.re ≤ abs z := by
   rw [mul_self_le_mul_self_iff (_root_.abs_nonneg z.re) (abs_nonneg _), abs_mul_abs_self, mul_self_abs] <;>

@@ -30,10 +30,10 @@ instance : HasBinaryBiproducts AddCommGroupₓₓ :=
 instance : HasFiniteBiproducts AddCommGroupₓₓ :=
   has_finite_biproducts.of_has_finite_products
 
-/-- Construct limit data for a binary product in `AddCommGroup`, using `AddCommGroup.of (G × H)`.
--/
 -- We now construct explicit limit data,
 -- so we can compare the biproducts to the usual unbundled constructions.
+/-- Construct limit data for a binary product in `AddCommGroup`, using `AddCommGroup.of (G × H)`.
+-/
 @[simps cone_X is_limit_lift]
 def binaryProductLimitCone (G H : AddCommGroupₓₓ.{u}) : Limits.LimitCone (pair G H) where
   Cone :=

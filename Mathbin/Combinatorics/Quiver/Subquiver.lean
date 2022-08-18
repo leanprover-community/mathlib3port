@@ -48,8 +48,8 @@ instance {V} [Quiver V] : HasTop (WideSubquiver V) :=
 instance {V} [Quiver V] : Inhabited (WideSubquiver V) :=
   ⟨⊤⟩
 
-/-- `total V` is the type of _all_ arrows of `V`. -/
 -- TODO Unify with `category_theory.arrow`? (The fields have been named to match.)
+/-- `total V` is the type of _all_ arrows of `V`. -/
 @[ext, nolint has_nonempty_instance]
 structure Total (V : Type u) [Quiver.{v} V] : Sort max (u + 1) v where
   left : V

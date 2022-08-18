@@ -86,9 +86,9 @@ noncomputable def initialIso : ⊥_ Type u ≅ Pempty :=
 
 open CategoryTheory.Limits.WalkingPair
 
-/-- The product type `X × Y` forms a cone for the binary product of `X` and `Y`. -/
 -- We manually generate the other projection lemmas since the simp-normal form for the legs is
 -- otherwise not created correctly.
+/-- The product type `X × Y` forms a cone for the binary product of `X` and `Y`. -/
 @[simps x]
 def binaryProductCone (X Y : Type u) : BinaryFan X Y :=
   BinaryFan.mk Prod.fst Prod.snd
@@ -135,9 +135,9 @@ theorem binary_product_iso_inv_comp_fst (X Y : Type u) : (binaryProductIso X Y).
 theorem binary_product_iso_inv_comp_snd (X Y : Type u) : (binaryProductIso X Y).inv ≫ limits.prod.snd = Prod.snd :=
   limit.iso_limit_cone_inv_π (binaryProductLimitCone X Y) ⟨WalkingPair.right⟩
 
-/-- The functor which sends `X, Y` to the product type `X × Y`. -/
 -- We add the option `type_md` to tell `@[simps]` to not treat homomorphisms `X ⟶ Y` in `Type*` as
 -- a function type
+/-- The functor which sends `X, Y` to the product type `X × Y`. -/
 @[simps (config := { typeMd := reducible })]
 def binaryProductFunctor : Type u ⥤ Type u ⥤ Type u where
   obj := fun X =>

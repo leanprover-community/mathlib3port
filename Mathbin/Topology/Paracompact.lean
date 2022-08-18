@@ -109,8 +109,8 @@ theorem precise_refinement_set [ParacompactSpace X] {s : Set X} (hs : IsClosed s
   · simpa only [← Union_option, ← Option.elimₓ, compl_subset_iff_union, ← compl_compl]
     
 
-/-- A compact space is paracompact. -/
 -- See note [lower instance priority]
+/-- A compact space is paracompact. -/
 instance (priority := 100) paracompact_of_compact [CompactSpace X] : ParacompactSpace X := by
   -- the proof is trivial: we choose a finite subcover using compactness, and use it
   refine' ⟨fun ι s ho hu => _⟩
@@ -217,9 +217,9 @@ theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis [LocallyCompac
     refinement_of_locally_compact_sigma_compact_of_nhds_basis_set is_closed_univ fun x _ => hB x
   ⟨α, c, r, fun a => (hp a).2, univ_subset_iff.1 hU, hfin⟩
 
+-- See note [lower instance priority]
 /-- A locally compact sigma compact Hausdorff space is paracompact. See also
 `refinement_of_locally_compact_sigma_compact_of_nhds_basis` for a more precise statement. -/
--- See note [lower instance priority]
 instance (priority := 100) paracompact_of_locally_compact_sigma_compact [LocallyCompactSpace X] [SigmaCompactSpace X]
     [T2Space X] : ParacompactSpace X := by
   refine' ⟨fun α s ho hc => _⟩

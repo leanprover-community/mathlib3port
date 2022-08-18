@@ -198,7 +198,7 @@ class IsSolvable : Prop where
   solvable : ∃ k, derivedSeries R L k = ⊥
 
 instance is_solvable_bot : IsSolvable R ↥(⊥ : LieIdeal R L) :=
-  ⟨⟨0, @Subsingleton.elimₓ _ LieIdeal.subsingleton_of_bot _ ⊥⟩⟩
+  ⟨⟨0, Subsingleton.elimₓ _ ⊥⟩⟩
 
 instance is_solvable_add {I J : LieIdeal R L} [hI : IsSolvable R I] [hJ : IsSolvable R J] : IsSolvable R ↥(I + J) := by
   obtain ⟨k, hk⟩ := id hI

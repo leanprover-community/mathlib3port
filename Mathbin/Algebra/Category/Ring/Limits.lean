@@ -59,12 +59,12 @@ def limitπRingHom (F : J ⥤ SemiRing.{max v u}) (j) :
 
 namespace HasLimits
 
-/-- Construction of a limit cone in `SemiRing`.
-(Internal use only; use the limits API.)
--/
 -- The next two definitions are used in the construction of `has_limits SemiRing`.
 -- After that, the limits should be constructed using the generic limits API,
 -- e.g. `limit F`, `limit.cone F`, and `limit.is_limit F`.
+/-- Construction of a limit cone in `SemiRing`.
+(Internal use only; use the limits API.)
+-/
 def limitCone (F : J ⥤ SemiRing.{max v u}) : Cone F where
   x := SemiRing.of (Types.limitCone (F ⋙ forget _)).x
   π :=

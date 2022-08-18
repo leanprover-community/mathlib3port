@@ -275,14 +275,12 @@ theorem _root_.is_smul_regular.matrix [HasSmul R S] {k : R} (hk : IsSmulRegular 
 theorem _root_.is_left_regular.matrix [Mul α] {k : α} (hk : IsLeftRegular k) : IsSmulRegular (Matrix m n α) k :=
   hk.IsSmulRegular.Matrix
 
--- TODO[gh-6025]: make this an instance once safe to do so
-theorem subsingleton_of_empty_left [IsEmpty m] : Subsingleton (Matrix m n α) :=
+instance subsingleton_of_empty_left [IsEmpty m] : Subsingleton (Matrix m n α) :=
   ⟨fun M N => by
     ext
     exact isEmptyElim i⟩
 
--- TODO[gh-6025]: make this an instance once safe to do so
-theorem subsingleton_of_empty_right [IsEmpty n] : Subsingleton (Matrix m n α) :=
+instance subsingleton_of_empty_right [IsEmpty n] : Subsingleton (Matrix m n α) :=
   ⟨fun M N => by
     ext
     exact isEmptyElim j⟩

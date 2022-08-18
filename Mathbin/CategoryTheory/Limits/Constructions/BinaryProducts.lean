@@ -78,8 +78,8 @@ noncomputable def limitConeOfTerminalAndPullbacks [HasTerminal C] [HasPullbacks 
 
 variable (C)
 
-/-- Any category with pullbacks and terminal object has binary products. -/
 -- This is not an instance, as it is not always how one wants to construct binary products!
+/-- Any category with pullbacks and terminal object has binary products. -/
 theorem has_binary_products_of_has_terminal_and_pullbacks [HasTerminal C] [HasPullbacks C] : HasBinaryProducts C :=
   { HasLimit := fun F => HasLimit.mk (limitConeOfTerminalAndPullbacks F) }
 
@@ -157,8 +157,8 @@ noncomputable def colimitCoconeOfInitialAndPushouts [HasInitial C] [HasPushouts 
 
 variable (C)
 
-/-- Any category with pushouts and initial object has binary coproducts. -/
 -- This is not an instance, as it is not always how one wants to construct binary coproducts!
+/-- Any category with pushouts and initial object has binary coproducts. -/
 theorem has_binary_coproducts_of_has_initial_and_pushouts [HasInitial C] [HasPushouts C] : HasBinaryCoproducts C :=
   { HasColimit := fun F => HasColimit.mk (colimitCoconeOfInitialAndPushouts F) }
 

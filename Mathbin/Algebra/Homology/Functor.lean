@@ -52,8 +52,8 @@ def asFunctor {T : Type _} [Category T] (C : HomologicalComplex (T ⥤ V) c) : T
     dsimp'
     rw [functor.map_comp]
 
-/-- The functorial version of `homological_complex.as_functor`. -/
 -- TODO in fact, this is an equivalence of categories.
+/-- The functorial version of `homological_complex.as_functor`. -/
 @[simps]
 def complexOfFunctorsToFunctorToComplex {T : Type _} [Category T] :
     HomologicalComplex (T ⥤ V) c ⥤ T ⥤ HomologicalComplex V c where

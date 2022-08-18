@@ -120,10 +120,10 @@ section
 
 attribute [local simp] id comp
 
-/-- The category of PresheafedSpaces. Morphisms are pairs, a continuous map and a presheaf map
-    from the presheaf on the target to the pushforward of the presheaf on the source. -/
 /- The proofs below can be done by `tidy`, but it is too slow,
    and we don't have a tactic caching mechanism. -/
+/-- The category of PresheafedSpaces. Morphisms are pairs, a continuous map and a presheaf map
+    from the presheaf on the target to the pushforward of the presheaf on the source. -/
 instance categoryOfPresheafedSpaces : Category (PresheafedSpace.{v, v, u} C) where
   Hom := Hom
   id := id
@@ -195,11 +195,11 @@ instance (X Y : PresheafedSpace.{v, v, u} C) : CoeFun (X ⟶ Y) fun _ => X → Y
 theorem coe_to_fun_eq {X Y : PresheafedSpace.{v, v, u} C} (f : X ⟶ Y) : (f : X → Y) = f.base :=
   rfl
 
+-- The `reassoc` attribute was added despite the LHS not being a composition of two homs,
+-- for the reasons explained in the docstring.
 /-- Sometimes rewriting with `comp_c_app` doesn't work because of dependent type issues.
 In that case, `erw comp_c_app_assoc` might make progress.
 The lemma `comp_c_app_assoc` is also better suited for rewrites in the opposite direction. -/
--- The `reassoc` attribute was added despite the LHS not being a composition of two homs,
--- for the reasons explained in the docstring.
 @[reassoc, simp]
 theorem comp_c_app {X Y Z : PresheafedSpace.{v, v, u} C} (α : X ⟶ Y) (β : Y ⟶ Z) (U) :
     (α ≫ β).c.app U = β.c.app U ≫ α.c.app (op ((Opens.map β.base).obj (unop U))) :=
@@ -381,11 +381,11 @@ theorem of_restrict_top_c (X : PresheafedSpace C) :
     exact ⟨fun h => ⟨⟨x, trivialₓ⟩, h, rfl⟩, fun ⟨⟨_, _⟩, h, rfl⟩ => h⟩
     
 
+/- or `rw [opens.inclusion_top_functor, ←comp_obj, ←opens.map_comp_eq],
+         erw iso.inv_hom_id, cases U, refl` after `dsimp` -/
 /-- The map to the restriction of a presheafed space along the canonical inclusion from the top
 subspace.
 -/
-/- or `rw [opens.inclusion_top_functor, ←comp_obj, ←opens.map_comp_eq],
-         erw iso.inv_hom_id, cases U, refl` after `dsimp` -/
 @[simps]
 def toRestrictTop (X : PresheafedSpace C) : X ⟶ X.restrict (Opens.open_embedding ⊤) where
   base := (Opens.inclusionTopIso X.Carrier).inv

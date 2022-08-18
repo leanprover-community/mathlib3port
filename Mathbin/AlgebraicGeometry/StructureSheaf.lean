@@ -266,8 +266,6 @@ theorem res_apply (U V : Opens (PrimeSpectrum.top R)) (i : V ⟶ U) (s : (struct
     ((structureSheaf R).1.map i.op s).1 x = (s.1 (i x) : _) :=
   rfl
 
-/-- The section of `structure_sheaf R` on an open `U` sending each `x ∈ U` to the element
-`f/g` in the localization of `R` at `x`. -/
 /-
 
 Notation in this comment
@@ -292,6 +290,8 @@ We do this via 8 steps:
 In the square brackets we list the dependencies of a construction on the previous steps.
 
 -/
+/-- The section of `structure_sheaf R` on an open `U` sending each `x ∈ U` to the element
+`f/g` in the localization of `R` at `x`. -/
 def const (f g : R) (U : Opens (PrimeSpectrum.top R))
     (hu : ∀, ∀ x ∈ U, ∀, g ∈ (x : PrimeSpectrum.top R).asIdeal.primeCompl) : (structureSheaf R).1.obj (op U) :=
   ⟨fun x => IsLocalization.mk' _ f ⟨g, hu x x.2⟩, fun x =>

@@ -41,8 +41,8 @@ namespace ModuleCat
 
 variable {R : Type u} [Ringₓ R] {M : ModuleCat.{max u v} R}
 
-/-- Modules that have a basis are projective. -/
 -- We transport the corresponding result from `module.projective`.
+/-- Modules that have a basis are projective. -/
 theorem projective_of_free {ι : Type _} (b : Basis ι R M) : Projective M :=
   Projective.of_iso (ModuleCat.ofSelfIso _) (IsProjective.iff_projective.mp (Module.projective_of_basis b))
 

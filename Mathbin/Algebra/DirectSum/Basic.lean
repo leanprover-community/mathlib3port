@@ -181,9 +181,9 @@ end FromAddMonoid
 
 variable (β)
 
+-- TODO: generalize this to remove the assumption `S ⊆ T`.
 /-- `set_to_set β S T h` is the natural homomorphism `⨁ (i : S), β i → ⨁ (i : T), β i`,
 where `h : S ⊆ T`. -/
--- TODO: generalize this to remove the assumption `S ⊆ T`.
 def setToSet (S T : Set ι) (H : S ⊆ T) : (⨁ i : S, β i) →+ ⨁ i : T, β i :=
   to_add_monoid fun i => of (fun i : Subtype T => β i) ⟨↑i, H i.Prop⟩
 
@@ -191,9 +191,12 @@ variable {β}
 
 omit dec_ι
 
-/-- A direct sum over an empty type is trivial. -/
-instance [IsEmpty ι] : Unique (⨁ i, β i) :=
+instance unique [∀ i, Subsingleton (β i)] : Unique (⨁ i, β i) :=
   Dfinsupp.unique
+
+/-- A direct sum over an empty type is trivial. -/
+instance uniqueOfIsEmpty [IsEmpty ι] : Unique (⨁ i, β i) :=
+  Dfinsupp.uniqueOfIsEmpty
 
 /-- The natural equivalence between `⨁ _ : ι, M` and `M` when `unique ι`. -/
 protected def id (M : Type v) (ι : Type _ := PUnit) [AddCommMonoidₓ M] [Unique ι] : (⨁ _ : ι, M) ≃+ M :=

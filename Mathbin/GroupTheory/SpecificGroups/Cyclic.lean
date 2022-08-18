@@ -97,7 +97,7 @@ theorem is_cyclic_of_order_of_eq_card [Fintype α] (x : α) (hx : orderOf x = Fi
   exact Set.eq_of_subset_of_card_le (Set.subset_univ _) (ge_of_eq hx)
 
 /-- A finite group of prime order is cyclic. -/
-@[to_additive is_add_cyclic_of_prime_card]
+@[to_additive is_add_cyclic_of_prime_card "A finite group of prime order is cyclic."]
 theorem is_cyclic_of_prime_card {α : Type u} [Groupₓ α] [Fintype α] {p : ℕ} [hp : Fact p.Prime]
     (h : Fintype.card α = p) : IsCyclic α :=
   ⟨by
@@ -259,7 +259,7 @@ theorem IsCyclic.card_pow_eq_one_le [DecidableEq α] [Fintype α] [IsCyclic α] 
 end Classical
 
 @[to_additive]
-theorem IsCyclic.exists_monoid_generator [Fintype α] [IsCyclic α] : ∃ x : α, ∀ y : α, y ∈ Submonoid.powers x := by
+theorem IsCyclic.exists_monoid_generator [Finite α] [IsCyclic α] : ∃ x : α, ∀ y : α, y ∈ Submonoid.powers x := by
   simp_rw [mem_powers_iff_mem_zpowers]
   exact IsCyclic.exists_generator α
 
@@ -395,7 +395,7 @@ theorem IsAddCyclic.card_order_of_eq_totient {α} [AddGroupₓ α] [IsAddCyclic 
 attribute [to_additive IsCyclic.card_order_of_eq_totient] IsAddCyclic.card_order_of_eq_totient
 
 /-- A finite group of prime order is simple. -/
-@[to_additive]
+@[to_additive "A finite group of prime order is simple."]
 theorem is_simple_group_of_prime_card {α : Type u} [Groupₓ α] [Fintype α] {p : ℕ} [hp : Fact p.Prime]
     (h : Fintype.card α = p) : IsSimpleGroup α :=
   ⟨by

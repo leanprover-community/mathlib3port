@@ -264,8 +264,8 @@ end CompleteBooleanAlgebra
 
 section lift
 
-/-- Pullback an `order.frame` along an injection. -/
 -- See note [reducible non-instances]
+/-- Pullback an `order.frame` along an injection. -/
 @[reducible]
 protected def Function.Injective.frame [HasSup α] [HasInf α] [HasSupₓ α] [HasInfₓ α] [HasTop α] [HasBot α] [Frame β]
     (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b) (map_inf : ∀ a b, f (a⊓b) = f a⊓f b)
@@ -278,8 +278,8 @@ protected def Function.Injective.frame [HasSup α] [HasInf α] [HasSupₓ α] [H
       simp_rw [← map_inf]
       exact ((map_Sup _).trans supr_image).Ge }
 
-/-- Pullback an `order.coframe` along an injection. -/
 -- See note [reducible non-instances]
+/-- Pullback an `order.coframe` along an injection. -/
 @[reducible]
 protected def Function.Injective.coframe [HasSup α] [HasInf α] [HasSupₓ α] [HasInfₓ α] [HasTop α] [HasBot α] [Coframe β]
     (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b) (map_inf : ∀ a b, f (a⊓b) = f a⊓f b)
@@ -292,8 +292,8 @@ protected def Function.Injective.coframe [HasSup α] [HasInf α] [HasSupₓ α] 
       simp_rw [← map_sup]
       exact ((map_Inf _).trans infi_image).le }
 
-/-- Pullback a `complete_distrib_lattice` along an injection. -/
 -- See note [reducible non-instances]
+/-- Pullback a `complete_distrib_lattice` along an injection. -/
 @[reducible]
 protected def Function.Injective.completeDistribLattice [HasSup α] [HasInf α] [HasSupₓ α] [HasInfₓ α] [HasTop α]
     [HasBot α] [CompleteDistribLattice β] (f : α → β) (hf : Function.Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b)
@@ -302,8 +302,8 @@ protected def Function.Injective.completeDistribLattice [HasSup α] [HasInf α] 
   { hf.Frame f map_sup map_inf map_Sup map_Inf map_top map_bot,
     hf.Coframe f map_sup map_inf map_Sup map_Inf map_top map_bot with }
 
-/-- Pullback a `complete_boolean_algebra` along an injection. -/
 -- See note [reducible non-instances]
+/-- Pullback a `complete_boolean_algebra` along an injection. -/
 @[reducible]
 protected def Function.Injective.completeBooleanAlgebra [HasSup α] [HasInf α] [HasSupₓ α] [HasInfₓ α] [HasTop α]
     [HasBot α] [HasCompl α] [HasSdiff α] [CompleteBooleanAlgebra β] (f : α → β) (hf : Function.Injective f)

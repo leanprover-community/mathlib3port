@@ -374,9 +374,9 @@ end NormedSpace
 /-! ### The predicate `integrable` -/
 
 
+-- variables [measurable_space β] [measurable_space γ] [measurable_space δ]
 /-- `integrable f μ` means that `f` is measurable and that the integral `∫⁻ a, ∥f a∥ ∂μ` is finite.
   `integrable f` means `integrable f volume`. -/
--- variables [measurable_space β] [measurable_space γ] [measurable_space δ]
 def Integrable {α} {m : MeasurableSpace α} (f : α → β)
     (μ : Measure α := by
       run_tac

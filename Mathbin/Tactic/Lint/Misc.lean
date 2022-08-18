@@ -80,7 +80,6 @@ private unsafe def ge_or_gt_in_statement (d : declaration) : tactic (Option Stri
       some "the type contains ≥/>. Use ≤/< instead."
     else none
 
-/-- A linter for checking whether illegal constants (≥, >) appear in a declaration's type. -/
 -- TODO: the commented out code also checks for classicality in statements, but needs fixing
 -- TODO: this probably needs to also check whether the argument is a variable or @eq <var> _ _
 -- meta def illegal_constants_in_statement (d : declaration) : tactic (option string) :=
@@ -96,6 +95,7 @@ private unsafe def ge_or_gt_in_statement (d : declaration) : tactic (Option Stri
 --     (if occur1 = [] then "" else " Add decidability type-class arguments instead.") ++
 --     (if occur2 = [] then "" else " Use ≤/< instead.")
 -- else none
+/-- A linter for checking whether illegal constants (≥, >) appear in a declaration's type. -/
 @[linter]
 unsafe def linter.ge_or_gt : linter where
   test := ge_or_gt_in_statement

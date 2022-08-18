@@ -189,14 +189,14 @@ section
 
 variable (R : Type u) [Ringₓ R] [Nontrivial R] [IsNoetherianRing R]
 
+-- Note this includes fields,
+-- and we use this below to show any commutative ring has invariant basis number.
 /-- Any nontrivial noetherian ring satisfies the strong rank condition.
 
 An injective map `((fin n ⊕ fin (1 + m)) → R) →ₗ[R] (fin n → R)` for some left-noetherian `R`
 would force `fin (1 + m) → R ≃ₗ punit` (via `is_noetherian.equiv_punit_of_prod_injective`),
 which is not the case!
 -/
--- Note this includes fields,
--- and we use this below to show any commutative ring has invariant basis number.
 instance (priority := 100) noetherian_ring_strong_rank_condition : StrongRankCondition R := by
   fconstructor
   intro m n f i

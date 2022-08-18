@@ -373,6 +373,9 @@ theorem mem_diagonal (x : α) : (x, x) ∈ Diagonal α := by
 theorem mem_diagonal_iff {x : α × α} : x ∈ Diagonal α ↔ x.1 = x.2 :=
   Iff.rfl
 
+instance decidableMemDiagonal [h : DecidableEq α] (x : α × α) : Decidable (x ∈ Diagonal α) :=
+  h x.1 x.2
+
 theorem preimage_coe_coe_diagonal (s : Set α) : Prod.map coe coe ⁻¹' Diagonal α = Diagonal s := by
   ext ⟨⟨x, hx⟩, ⟨y, hy⟩⟩
   simp [← Set.Diagonal]

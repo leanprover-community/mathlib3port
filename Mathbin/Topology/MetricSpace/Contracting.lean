@@ -105,10 +105,10 @@ theorem exists_fixed_point (hf : ContractingWith K f) (x : α) (hx : edist x (f 
 
 variable (f)
 
+-- avoid `efixed_point _` in pretty printer
 /-- Let `x` be a point of a complete emetric space. Suppose that `f` is a contracting map,
 and `edist x (f x) ≠ ∞`. Then `efixed_point` is the unique fixed point of `f`
 in `emetric.ball x ∞`. -/
--- avoid `efixed_point _` in pretty printer
 noncomputable def efixedPoint (hf : ContractingWith K f) (x : α) (hx : edist x (f x) ≠ ∞) : α :=
   Classical.some <| hf.exists_fixed_point x hx
 
@@ -170,10 +170,10 @@ theorem exists_fixed_point' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s 
 
 variable (f)
 
+-- avoid `efixed_point _` in pretty printer
 /-- Let `s` be a complete forward-invariant set of a self-map `f`. If `f` contracts on `s`
 and `x ∈ s` satisfies `edist x (f x) ≠ ∞`, then `efixed_point'` is the unique fixed point
 of the restriction of `f` to `s ∩ emetric.ball x ∞`. -/
--- avoid `efixed_point _` in pretty printer
 noncomputable def efixedPoint' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s s)
     (hf : ContractingWith K <| hsf.restrict f s s) (x : α) (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) : α :=
   Classical.some <| hf.exists_fixed_point' hsc hsf hxs hx

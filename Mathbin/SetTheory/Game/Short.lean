@@ -172,8 +172,8 @@ instance shortOfLists : ∀ (L R : List Pgame) [ListShort L] [ListShort R], Shor
       apply Pgame.listShortNthLe
       
 
-/-- If `x` is a short game, and `y` is a relabelling of `x`, then `y` is also short. -/
 -- where does the subtype.val come from?
+/-- If `x` is a short game, and `y` is a relabelling of `x`, then `y` is also short. -/
 def shortOfRelabelling : ∀ {x y : Pgame.{u}} (R : Relabelling x y) (S : Short x), Short y
   | x, y, ⟨L, R, rL, rR⟩, S => by
     skip

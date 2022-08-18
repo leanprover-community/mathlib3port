@@ -123,8 +123,8 @@ instance (priority := 100) has_limits_of_shape_of_has_limits {J : Type u₁} [Ca
     [H : HasLimitsOfSize.{v₁, u₁} C] : HasLimitsOfShape J C :=
   HasLimitsOfSize.has_limits_of_shape J
 
-/-- An arbitrary choice of limit cone for a functor. -/
 -- Interface to the `has_limit` class.
+/-- An arbitrary choice of limit cone for a functor. -/
 def Limit.cone (F : J ⥤ C) [HasLimit F] : Cone F :=
   (getLimitCone F).Cone
 
@@ -278,10 +278,10 @@ theorem has_limit_of_iso {F G : J ⥤ C} [HasLimit F] (α : F ≅ G) : HasLimit 
             rw [limit.lift_π, cones.postcompose_obj_π, nat_trans.comp_app, ← nat_iso.app_inv, iso.eq_comp_inv]
             simpa using w j } }
 
-/-- If a functor `G` has the same collection of cones as a functor `F`
-which has a limit, then `G` also has a limit. -/
 -- See the construction of limits from products and equalizers
 -- for an example usage.
+/-- If a functor `G` has the same collection of cones as a functor `F`
+which has a limit, then `G` also has a limit. -/
 theorem HasLimit.of_cones_iso {J K : Type u₁} [Category.{v₁} J] [Category.{v₂} K] (F : J ⥤ C) (G : K ⥤ C)
     (h : F.cones ≅ G.cones) [HasLimit F] : HasLimit G :=
   HasLimit.mk ⟨_, IsLimit.ofNatIso (IsLimit.natIso (limit.isLimit F) ≪≫ h)⟩
@@ -429,9 +429,9 @@ instance has_limit_equivalence_comp (e : K ≌ J) [HasLimit F] : HasLimit (e.Fun
 
 attribute [local elabWithoutExpectedType] inv_fun_id_assoc
 
+-- not entirely sure why this is needed
 /-- If a `E ⋙ F` has a limit, and `E` is an equivalence, we can construct a limit of `F`.
 -/
--- not entirely sure why this is needed
 theorem has_limit_of_equivalence_comp (e : K ≌ J) [HasLimit (e.Functor ⋙ F)] : HasLimit F := by
   haveI : has_limit (e.inverse ⋙ e.functor ⋙ F) := limits.has_limit_equivalence_comp e.symm
   apply has_limit_of_iso (e.inv_fun_id_assoc F)
@@ -582,8 +582,8 @@ instance (priority := 100) has_colimits_of_shape_of_has_colimits_of_size {J : Ty
     [H : HasColimitsOfSize.{v₁, u₁} C] : HasColimitsOfShape J C :=
   HasColimitsOfSize.has_colimits_of_shape J
 
-/-- An arbitrary choice of colimit cocone of a functor. -/
 -- Interface to the `has_colimit` class.
+/-- An arbitrary choice of colimit cocone of a functor. -/
 def Colimit.cocone (F : J ⥤ C) [HasColimit F] : Cocone F :=
   (getColimitCocone F).Cocone
 
@@ -727,10 +727,10 @@ theorem colimit.desc_extend (F : J ⥤ C) [HasColimit F] (c : Cocone F) {X : C} 
   rw [← category.assoc]
   simp
 
-/-- If `F` has a colimit, so does any naturally isomorphic functor.
--/
 -- This has the isomorphism pointing in the opposite direction than in `has_limit_of_iso`.
 -- This is intentional; it seems to help with elaboration.
+/-- If `F` has a colimit, so does any naturally isomorphic functor.
+-/
 theorem has_colimit_of_iso {F G : J ⥤ C} [HasColimit F] (α : G ≅ F) : HasColimit G :=
   HasColimit.mk
     { Cocone := (Cocones.precompose α.Hom).obj (Colimit.cocone F),

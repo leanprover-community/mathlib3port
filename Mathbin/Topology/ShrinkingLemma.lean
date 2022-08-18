@@ -38,6 +38,7 @@ variable {ι X : Type _} [TopologicalSpace X] [NormalSpace X]
 namespace ShrinkingLemma
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (i «expr ∉ » carrier)
+-- the trivial refinement needs `u` to be a covering
 /-- Auxiliary definition for the proof of `shrinking_lemma`. A partial refinement of a covering
 `⋃ i, u i` of a set `s` is a map `v : ι → set X` and a set `carrier : set ι` such that
 
@@ -49,7 +50,6 @@ namespace ShrinkingLemma
 This type is equipped with the folowing partial order: `v ≤ v'` if `v.carrier ⊆ v'.carrier`
 and `v i = v' i` for `i ∈ v.carrier`. We will use Zorn's lemma to prove that this type has
 a maximal element, then show that the maximal element must have `carrier = univ`. -/
--- the trivial refinement needs `u` to be a covering
 @[nolint has_nonempty_instance]
 structure PartialRefinement (u : ι → Set X) (s : Set X) where
   toFun : ι → Set X

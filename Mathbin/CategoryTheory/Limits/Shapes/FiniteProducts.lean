@@ -25,11 +25,11 @@ namespace CategoryTheory.Limits
 
 variable (C : Type u) [Category.{v} C]
 
+-- We can't simply make this an abbreviation, as we do with other `has_Xs` limits typeclasses,
+-- because of https://github.com/leanprover-community/lean/issues/429
 /-- A category has finite products if there is a chosen limit for every diagram
 with shape `discrete J`, where we have `[fintype J]`.
 -/
--- We can't simply make this an abbreviation, as we do with other `has_Xs` limits typeclasses,
--- because of https://github.com/leanprover-community/lean/issues/429
 class HasFiniteProducts : Prop where
   out (J : Type) [Fintype J] : HasLimitsOfShape (Discrete J) C
 

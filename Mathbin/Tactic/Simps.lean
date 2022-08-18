@@ -221,6 +221,8 @@ unsafe def get_composite_of_projections (str : Name) (proj : Stringₓ) : tactic
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 -- ./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- if performance becomes a problem, possible heuristic: use the names of the projections to
+-- skip all classes that don't have the corresponding field.
 /-- Get the projections used by `simps` associated to a given structure `str`.
 
   The returned information is also stored in a parameter of the attribute `@[_simps_str]`, which
@@ -269,8 +271,6 @@ unsafe def get_composite_of_projections (str : Name) (proj : Stringₓ) : tactic
     means that the projection `name` will not be applied by default.
   * if `trc` is true, this tactic will trace information.
 -/
--- if performance becomes a problem, possible heuristic: use the names of the projections to
--- skip all classes that don't have the corresponding field.
 unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_exists : Bool := false)
     (rules : List ProjectionRule := []) (trc := false) : tactic (List Name × List projection_data) := do
   let trc := trc || is_trace_enabled_for `simps.verbose
@@ -858,6 +858,8 @@ unsafe def simps_parser : parser (Bool × List Stringₓ × SimpsCfg) := do
         let some e ← «expr ?» parser.pexpr | return {  }
         eval_pexpr SimpsCfg e)
 
+/- If one of the fields is a partially applied constructor, we will eta-expand it
+  (this likely never happens, so is not included in the official doc). -/
 /-- The `@[simps]` attribute automatically derives lemmas specifying the projections of this
 declaration.
 
@@ -956,8 +958,6 @@ derives two `simp` lemmas:
   that `simps` comes after `to_additive`. This will also generate the additive versions of all
   `simp` lemmas.
 -/
-/- If one of the fields is a partially applied constructor, we will eta-expand it
-  (this likely never happens, so is not included in the official doc). -/
 @[user_attribute]
 unsafe def simps_attr : user_attribute Unit (Bool × List Stringₓ × SimpsCfg) where
   Name := `simps

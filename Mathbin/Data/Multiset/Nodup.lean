@@ -18,9 +18,9 @@ open Function List
 
 variable {α β γ : Type _} {r : α → α → Prop} {s t : Multiset α} {a : α}
 
+-- nodup
 /-- `nodup s` means that `s` has no duplicates, i.e. the multiplicity of
   any element is at most 1. -/
--- nodup
 def Nodup (s : Multiset α) : Prop :=
   Quot.liftOn s Nodupₓ fun s t p => propext p.nodup_iff
 

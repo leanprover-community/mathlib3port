@@ -218,9 +218,9 @@ end InfEdist
 /-! ### The Hausdorff distance as a function into `ℝ≥0∞`. -/
 
 
+--section
 /-- The Hausdorff edistance between two sets is the smallest `r` such that each set
 is contained in the `r`-neighborhood of the other one -/
---section
 irreducible_def hausdorffEdist {α : Type u} [PseudoEmetricSpace α] (s t : Set α) : ℝ≥0∞ :=
   (⨆ x ∈ s, infEdist x t)⊔⨆ y ∈ t, infEdist y s
 

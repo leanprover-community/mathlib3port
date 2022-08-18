@@ -78,6 +78,10 @@ theorem directed_of_sup [SemilatticeSup α] {f : α → β} {r : β → β → P
 theorem Monotone.directed_le [SemilatticeSup α] [Preorderₓ β] {f : α → β} : Monotone f → Directed (· ≤ ·) f :=
   directed_of_sup
 
+/-- A set stable by supremum is `≤`-directed. -/
+theorem directed_on_of_sup_mem [SemilatticeSup α] {S : Set α} (H : ∀ ⦃i j⦄, i ∈ S → j ∈ S → i⊔j ∈ S) :
+    DirectedOn (· ≤ ·) S := fun a ha b hb => ⟨a⊔b, H ha hb, le_sup_left, le_sup_right⟩
+
 theorem Directed.extend_bot [Preorderₓ α] [OrderBot α] {e : ι → β} {f : ι → α} (hf : Directed (· ≤ ·) f)
     (he : Function.Injective e) : Directed (· ≤ ·) (Function.extendₓ e f ⊥) := by
   intro a b
@@ -96,6 +100,10 @@ theorem Directed.extend_bot [Preorderₓ α] [OrderBot α] {e : ι → β} {f : 
 /-- An antitone function on an inf-semilattice is directed. -/
 theorem directed_of_inf [SemilatticeInf α] {r : β → β → Prop} {f : α → β} (hf : ∀ a₁ a₂, a₁ ≤ a₂ → r (f a₂) (f a₁)) :
     Directed r f := fun x y => ⟨x⊓y, hf _ _ inf_le_left, hf _ _ inf_le_right⟩
+
+/-- A set stable by infimum is `≥`-directed. -/
+theorem directed_on_of_inf_mem [SemilatticeInf α] {S : Set α} (H : ∀ ⦃i j⦄, i ∈ S → j ∈ S → i⊓j ∈ S) :
+    DirectedOn (· ≥ ·) S := fun a ha b hb => ⟨a⊓b, H ha hb, inf_le_left, inf_le_right⟩
 
 /-- `is_directed α r` states that for any elements `a`, `b` there exists an element `c` such that
 `r a c` and `r b c`. -/

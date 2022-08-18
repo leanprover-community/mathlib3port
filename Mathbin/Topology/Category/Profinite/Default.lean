@@ -114,12 +114,12 @@ theorem Profinite.to_CompHaus_to_Top : profiniteToCompHaus ⋙ compHausToTop = P
 
 section Profinite
 
+-- Without explicit universe annotations here, Lean introduces two universe variables and
+-- unhelpfully defines a function `CompHaus.{max u₁ u₂} → Profinite.{max u₁ u₂}`.
 /-- (Implementation) The object part of the connected_components functor from compact Hausdorff spaces
 to Profinite spaces, given by quotienting a space by its connected components.
 See: https://stacks.math.columbia.edu/tag/0900
 -/
--- Without explicit universe annotations here, Lean introduces two universe variables and
--- unhelpfully defines a function `CompHaus.{max u₁ u₂} → Profinite.{max u₁ u₂}`.
 def CompHaus.toProfiniteObj (X : CompHaus.{u}) : Profinite.{u} where
   toCompHaus :=
     { toTop := Top.of (ConnectedComponents X), IsCompact := Quotientₓ.compact_space,
@@ -168,10 +168,10 @@ end Profinite
 
 namespace Profinite
 
-/-- An explicit limit cone for a functor `F : J ⥤ Profinite`, defined in terms of
-`Top.limit_cone`. -/
 -- TODO the following construction of limits could be generalised
 -- to allow diagrams in lower universes.
+/-- An explicit limit cone for a functor `F : J ⥤ Profinite`, defined in terms of
+`Top.limit_cone`. -/
 def limitCone {J : Type u} [SmallCategory J] (F : J ⥤ Profinite.{u}) : Limits.Cone F where
   x :=
     { toCompHaus := (CompHaus.limitCone.{u, u} (F ⋙ profiniteToCompHaus)).x,

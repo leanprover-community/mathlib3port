@@ -55,8 +55,8 @@ This file defines `ℝ≥0` as a localized notation for `nnreal`.
 
 open Classical BigOperators
 
-/-- Nonnegative real numbers. -/
 -- to ensure these instance are computable
+/-- Nonnegative real numbers. -/
 def Nnreal :=
   { r : ℝ // 0 ≤ r }deriving OrderedSemiring, CommMonoidWithZero, FloorSemiring, SemilatticeInf, DenselyOrdered,
   OrderBot, CanonicallyLinearOrderedAddMonoid, LinearOrderedCommGroupWithZero, Archimedean, LinearOrderedSemiring,

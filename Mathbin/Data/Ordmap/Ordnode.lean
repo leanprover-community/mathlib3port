@@ -160,11 +160,11 @@ def repr {α} [HasRepr α] : Ordnode α → Stringₓ
 instance {α} [HasRepr α] : HasRepr (Ordnode α) :=
   ⟨repr⟩
 
+-- Note: The function has been written with tactics to avoid extra junk
 /-- **Internal use only**
 
 O(1). Rebalance a tree which was previously balanced but has had its left
 side grow by 1, or its right side shrink by 1. -/
--- Note: The function has been written with tactics to avoid extra junk
 def balanceL (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α := by
   clean by
     cases' id r with rs

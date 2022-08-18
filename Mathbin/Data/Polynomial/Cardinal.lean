@@ -1,10 +1,10 @@
 /-
-Copyright (c) 2021 Chris Hughes. All rights reserved.
+Copyright (c) 2021 Chris Hughes, Junyan Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Chris Hughes
+Authors: Chris Hughes, Junyan Xu
 -/
-import Mathbin.Data.MvPolynomial.Cardinal
-import Mathbin.Data.MvPolynomial.Equiv
+import Mathbin.Data.Polynomial.Basic
+import Mathbin.SetTheory.Cardinal.Ordinal
 
 /-!
 # Cardinality of Polynomial Ring
@@ -22,12 +22,17 @@ open Cardinal
 
 namespace Polynomial
 
-theorem cardinal_mk_le_max {R : Type u} [CommSemiringₓ R] : # R[X] ≤ max (# R) ℵ₀ :=
-  calc
-    # R[X] = # (MvPolynomial PUnit.{u + 1} R) := Cardinal.eq.2 ⟨(MvPolynomial.punitAlgEquiv.{u, u} R).toEquiv.symm⟩
-    _ ≤ _ := MvPolynomial.cardinal_mk_le_max
-    _ ≤ _ := by
-      rw [max_assocₓ, max_eq_rightₓ (lt_aleph_0_of_finite PUnit).le]
+@[simp]
+theorem cardinal_mk_eq_max {R : Type u} [Semiringₓ R] [Nontrivial R] : # R[X] = max (# R) ℵ₀ :=
+  (toFinsuppIso R).toEquiv.cardinal_eq.trans <| by
+    rw [AddMonoidAlgebra, mk_finsupp_lift_of_infinite, lift_uzero, max_commₓ]
+    rfl
+
+theorem cardinal_mk_le_max {R : Type u} [Semiringₓ R] : # R[X] ≤ max (# R) ℵ₀ := by
+  cases subsingleton_or_nontrivial R
+  · exact (mk_eq_one _).trans_le (le_max_of_le_right one_le_aleph_0)
+    
+  · exact cardinal_mk_eq_max.le
     
 
 end Polynomial

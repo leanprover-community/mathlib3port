@@ -13,9 +13,9 @@ open List Nat
 
 namespace Multiset
 
+-- range
 /-- `range n` is the multiset lifted from the list `range n`,
   that is, the set `{0, 1, ..., n-1}`. -/
--- range
 def range (n : ℕ) : Multiset ℕ :=
   range n
 

@@ -187,11 +187,11 @@ theorem add_add_one_ne (n m : ℕ) : n + (m + 1) ≠ n := by
   apply Nat.pos_of_ne_zeroₓ
   contradiction
 
+-- Linarith could prove this, but I want to avoid that dependency.
 /-- `match_n_plus_m n e` matches `e` of the form `nat.succ (... (nat.succ e')...)`.
 It returns `n` plus the number of `succ` constructors and `e'`. The matching is
 performed up to normalisation with transparency `md`.
 -/
--- Linarith could prove this, but I want to avoid that dependency.
 unsafe def match_n_plus_m (md) : ℕ → expr → tactic (ℕ × expr) := fun n e => do
   let e ← whnf e md
   match e with

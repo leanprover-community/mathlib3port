@@ -98,10 +98,10 @@ theorem preserves_desc_map_cocone (c₁ c₂ : Cocone F) (t : IsColimit c₁) :
 
 variable [HasColimit F] [HasColimit (F ⋙ G)]
 
+-- TODO: think about swapping the order here
 /-- If `G` preserves colimits, we have an isomorphism from the image of the colimit of a functor `F`
 to the colimit of the functor `F ⋙ G`.
 -/
--- TODO: think about swapping the order here
 def preservesColimitIso : G.obj (colimit F) ≅ colimit (F ⋙ G) :=
   (PreservesColimit.preserves (colimit.isColimit _)).coconePointUniqueUpToIso (colimit.isColimit _)
 

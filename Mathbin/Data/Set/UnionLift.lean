@@ -43,11 +43,11 @@ namespace Set
 
 section UnionLift
 
-/-- Given a Union of sets `Union S`, define a function on the Union by defining
-it on each component, and proving that it agrees on the intersections. -/
 /- The unused argument `hf` is left in the definition so that the `simp` lemmas
 `Union_lift_inclusion` will work without the user having to provide `hf` explicitly to
 simplify terms involving `Union_lift`. -/
+/-- Given a Union of sets `Union S`, define a function on the Union by defining
+it on each component, and proving that it agrees on the intersections. -/
 @[nolint unused_arguments]
 noncomputable def unionLift (S : ι → Set α) (f : ∀ (i) (x : S i), β)
     (hf : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩) (T : Set α) (hT : T ⊆ Union S)

@@ -502,10 +502,10 @@ This is an isomorphism iff `G` preserves terminal objects, see
 def terminalComparison [HasTerminal C] [HasTerminal D] : G.obj (⊤_ C) ⟶ ⊤_ D :=
   terminal.from _
 
+-- TODO: Show this is an isomorphism if and only if `G` preserves initial objects.
 /-- The comparison morphism from the initial object in the target category to the image of the initial
 object.
 -/
--- TODO: Show this is an isomorphism if and only if `G` preserves initial objects.
 def initialComparison [HasInitial C] [HasInitial D] : ⊥_ D ⟶ G.obj (⊥_ C) :=
   initial.to _
 
@@ -533,10 +533,10 @@ def limitOfDiagramInitial {X : J} (tX : IsInitial X) (F : J ⥤ C) : IsLimit (co
     dsimp'
     simp
 
-/-- For a functor `F : J ⥤ C`, if `J` has an initial object then the image of it is isomorphic
-to the limit of `F`. -/
 -- See note [dsimp, simp]
 -- This is reducible to allow usage of lemmas about `cone_point_unique_up_to_iso`.
+/-- For a functor `F : J ⥤ C`, if `J` has an initial object then the image of it is isomorphic
+to the limit of `F`. -/
 @[reducible]
 def limitOfInitial (F : J ⥤ C) [HasInitial J] [HasLimit F] : limit F ≅ F.obj (⊥_ J) :=
   IsLimit.conePointUniqueUpToIso (limit.isLimit _) (limitOfDiagramInitial initialIsInitial F)
@@ -561,9 +561,9 @@ diagram are isomorphisms, show the cone `cone_of_diagram_terminal` is a limit. -
 def limitOfDiagramTerminal {X : J} (hX : IsTerminal X) (F : J ⥤ C) [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] :
     IsLimit (coneOfDiagramTerminal hX F) where lift := fun S => S.π.app _
 
+-- This is reducible to allow usage of lemmas about `cone_point_unique_up_to_iso`.
 /-- For a functor `F : J ⥤ C`, if `J` has a terminal object and all the morphisms in the diagram
 are isomorphisms, then the image of the terminal object is isomorphic to the limit of `F`. -/
--- This is reducible to allow usage of lemmas about `cone_point_unique_up_to_iso`.
 @[reducible]
 def limitOfTerminal (F : J ⥤ C) [HasTerminal J] [HasLimit F] [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] :
     limit F ≅ F.obj (⊤_ J) :=
@@ -588,9 +588,9 @@ def colimitOfDiagramTerminal {X : J} (tX : IsTerminal X) (F : J ⥤ C) : IsColim
     rw [← w X, cocone_of_diagram_terminal_ι_app, tX.hom_ext (tX.from X) (𝟙 _)]
     simp
 
+-- This is reducible to allow usage of lemmas about `cocone_point_unique_up_to_iso`.
 /-- For a functor `F : J ⥤ C`, if `J` has a terminal object then the image of it is isomorphic
 to the colimit of `F`. -/
--- This is reducible to allow usage of lemmas about `cocone_point_unique_up_to_iso`.
 @[reducible]
 def colimitOfTerminal (F : J ⥤ C) [HasTerminal J] [HasColimit F] : colimit F ≅ F.obj (⊤_ J) :=
   IsColimit.coconePointUniqueUpToIso (colimit.isColimit _) (colimitOfDiagramTerminal terminalIsTerminal F)
@@ -615,9 +615,9 @@ diagram are isomorphisms, show the cone `cocone_of_diagram_initial` is a colimit
 def colimitOfDiagramInitial {X : J} (hX : IsInitial X) (F : J ⥤ C) [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] :
     IsColimit (coconeOfDiagramInitial hX F) where desc := fun S => S.ι.app _
 
+-- This is reducible to allow usage of lemmas about `cocone_point_unique_up_to_iso`.
 /-- For a functor `F : J ⥤ C`, if `J` has an initial object and all the morphisms in the diagram
 are isomorphisms, then the image of the initial object is isomorphic to the colimit of `F`. -/
--- This is reducible to allow usage of lemmas about `cocone_point_unique_up_to_iso`.
 @[reducible]
 def colimitOfInitial (F : J ⥤ C) [HasInitial J] [HasColimit F] [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] :
     colimit F ≅ F.obj (⊥_ J) :=

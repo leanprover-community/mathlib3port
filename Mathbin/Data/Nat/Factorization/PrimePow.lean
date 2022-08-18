@@ -84,7 +84,7 @@ theorem is_prime_pow_iff_unique_prime_dvd {n : ℕ} : IsPrimePow n ↔ ∃! p : 
   -- So assume 0 < n
   refine' ⟨p, n.factorization p, hp, hp.factorization_pos_of_dvd hn₀ hn, _⟩
   simp only [← and_imp] at hq
-  apply Nat.dvd_antisymm (Nat.pow_factorization_dvd _ _)
+  apply Nat.dvd_antisymm (Nat.ord_proj_dvd _ _)
   -- We need to show n ∣ p ^ n.factorization p
   apply Nat.dvd_of_factors_subperm hn₀
   rw [hp.factors_pow, List.subperm_ext_iff]

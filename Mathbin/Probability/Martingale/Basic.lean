@@ -433,11 +433,11 @@ theorem integrable_stopped_value [LE E] {f : ℕ → Ω → E} (hf : Submartinga
     {N : ℕ} (hbdd : ∀ x, τ x ≤ N) : Integrable (stoppedValue f τ) μ :=
   integrable_stopped_value hτ hf.Integrable hbdd
 
+-- We may generalize the below lemma to functions taking value in a `normed_lattice_add_comm_group`.
+-- Similarly, generalize `(super/)submartingale.set_integral_le`.
 /-- Given a submartingale `f` and bounded stopping times `τ` and `π` such that `τ ≤ π`, the
 expectation of `stopped_value f τ` is less than or equal to the expectation of `stopped_value f π`.
 This is the forward direction of the optional stopping theorem. -/
--- We may generalize the below lemma to functions taking value in a `normed_lattice_add_comm_group`.
--- Similarly, generalize `(super/)submartingale.set_integral_le`.
 theorem expected_stopped_value_mono [SigmaFiniteFiltration μ 𝒢] {f : ℕ → Ω → ℝ} (hf : Submartingale f 𝒢 μ) {τ π : Ω → ℕ}
     (hτ : IsStoppingTime 𝒢 τ) (hπ : IsStoppingTime 𝒢 π) (hle : τ ≤ π) {N : ℕ} (hbdd : ∀ x, π x ≤ N) :
     μ[stoppedValue f τ] ≤ μ[stoppedValue f π] := by

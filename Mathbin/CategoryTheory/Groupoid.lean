@@ -32,8 +32,8 @@ namespace CategoryTheory
 
 universe v v₂ u u₂
 
-/-- A `groupoid` is a category such that all morphisms are isomorphisms. -/
 -- morphism levels before object levels. See note [category_theory universes].
+/-- A `groupoid` is a category such that all morphisms are isomorphisms. -/
 class Groupoid (obj : Type u) extends Category.{v} obj : Type max u (v + 1) where
   inv : ∀ {X Y : obj}, (X ⟶ Y) → (Y ⟶ X)
   inv_comp' : ∀ {X Y : obj} (f : X ⟶ Y), comp (inv f) f = id Y := by

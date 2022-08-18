@@ -3,6 +3,7 @@ Copyright (c) 2018 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 -/
+import Mathbin.Algebra.Algebra.Basic
 import Mathbin.Topology.Algebra.GroupCompletion
 import Mathbin.Topology.Algebra.Ring
 
@@ -13,6 +14,8 @@ This files endows the completion of a topological ring with a ring structure.
 More precisely the instance `uniform_space.completion.ring` builds a ring structure
 on the completion of a ring endowed with a compatible uniform structure in the sense of
 `uniform_add_group`. There is also a commutative version when the original ring is commutative.
+Moreover, if a topological ring is an algebra over a commutative semiring, then so is its
+`uniform_space.completion`.
 
 The last part of the file builds a ring structure on the biggest separated quotient of a ring.
 
@@ -25,6 +28,8 @@ the main constructions deal with continuous ring morphisms.
   to a complete separated group `S` to `completion R`.
 * `uniform_space.completion.map_ring_hom` : promotes a continuous ring morphism
   from `R` to `S` into a continuous ring morphism from `completion R` to `completion S`.
+
+TODO: Generalise the results here from the concrete `completion` to any `abstract_completion`.
 -/
 
 
@@ -150,6 +155,34 @@ instance top_ring_compl : TopologicalRing (Completion α) where
 def mapRingHom (hf : Continuous f) : Completion α →+* Completion β :=
   extensionHom (coeRingHom.comp f) (continuous_coe_ring_hom.comp hf)
 
+section Algebra
+
+variable (A : Type _) [Ringₓ A] [UniformSpace A] [UniformAddGroup A] [TopologicalRing A] (R : Type _) [CommSemiringₓ R]
+  [Algebra R A] [HasUniformContinuousConstSmul R A]
+
+@[simp]
+theorem map_smul_eq_mul_coe (r : R) : Completion.map ((· • ·) r) = (· * ·) (algebraMap R A r : Completion A) := by
+  ext x
+  refine' completion.induction_on x _ fun a => _
+  · exact is_closed_eq completion.continuous_map (continuous_mul_left _)
+    
+  · rw [map_coe (uniform_continuous_const_smul r) a, Algebra.smul_def, coe_mul]
+    
+
+instance : Algebra R (Completion A) :=
+  { (UniformSpace.Completion.coeRingHom : A →+* Completion A).comp (algebraMap R A) with
+    commutes' := fun r x =>
+      (Completion.induction_on x (is_closed_eq (continuous_mul_left _) (continuous_mul_right _))) fun a => by
+        simpa only [← coe_mul] using congr_arg (coe : A → completion A) (Algebra.commutes r a),
+    smul_def' := fun r x => congr_fun (map_smul_eq_mul_coe A R r) x }
+
+theorem algebra_map_def (r : R) : algebraMap R (Completion A) r = (algebraMap R A r : Completion A) :=
+  rfl
+
+end Algebra
+
+section CommRingₓ
+
 variable (R : Type _) [CommRingₓ R] [UniformSpace R] [UniformAddGroup R] [TopologicalRing R]
 
 instance : CommRingₓ (Completion R) :=
@@ -158,6 +191,12 @@ instance : CommRingₓ (Completion R) :=
       Completion.induction_on₂ a b
         (is_closed_eq (continuous_fst.mul continuous_snd) (continuous_snd.mul continuous_fst)) fun a b => by
         rw [← coe_mul, ← coe_mul, mul_comm] }
+
+/-- A shortcut instance for the common case -/
+instance algebra' : Algebra R (Completion R) := by
+  infer_instance
+
+end CommRingₓ
 
 end UniformSpace.Completion
 

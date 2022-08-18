@@ -487,9 +487,9 @@ omit I
 
 variable (M)
 
+-- is empty if the base manifold is empty
 /-- The tangent bundle to a smooth manifold, as a Sigma type. Defined in terms of
 `bundle.total_space` to be able to put a suitable topology on it. -/
--- is empty if the base manifold is empty
 @[nolint has_nonempty_instance, reducible]
 def TangentBundle :=
   Bundle.TotalSpace (TangentSpace I : M → Type _)

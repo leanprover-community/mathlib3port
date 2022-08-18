@@ -131,8 +131,7 @@ instance is_scalar_tower' [CommSemiringₓ R] [CommSemiringₓ S₁] [Algebra R 
   IsScalarTower.right
 
 /-- If `R` is a subsingleton, then `mv_polynomial σ R` has a unique element -/
--- TODO[gh-6025]: make this an instance once safe to do so
-protected def unique [CommSemiringₓ R] [Subsingleton R] : Unique (MvPolynomial σ R) :=
+instance unique [CommSemiringₓ R] [Subsingleton R] : Unique (MvPolynomial σ R) :=
   AddMonoidAlgebra.unique
 
 end Instances

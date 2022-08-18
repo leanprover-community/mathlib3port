@@ -77,8 +77,8 @@ namespace FixedPoints
 
 variable (M)
 
-/-- The subfield of fixed points by a monoid action. -/
 -- we use `subfield.copy` so that the underlying set is `fixed_points M F`
+/-- The subfield of fixed points by a monoid action. -/
 def subfield : Subfield F :=
   Subfield.copy (⨅ m : M, FixedBy.subfield F m) (FixedPoints M F)
     (by
@@ -284,9 +284,9 @@ noncomputable def Fintype.subtypeProd {E : Type _} {X : Set E} (hX : X.Finite) {
 
 variable (E K : Type _) [Field E] [Field K] [Algebra F E] [Algebra F K] [FiniteDimensional F E]
 
-/-- Function from Hom_K(E,L) to pi type Π (x : basis), roots of min poly of x -/
 -- Marked as `noncomputable!` since this definition takes multiple seconds to compile,
 -- and isn't very computable in practice (since neither `finrank` nor `fin_basis` are).
+/-- Function from Hom_K(E,L) to pi type Π (x : basis), roots of min poly of x -/
 noncomputable def rootsOfMinPolyPiType (φ : E →ₐ[F] K) (x : Set.Range (FiniteDimensional.finBasis F E : _ → E)) :
     { l : K // l ∈ (((minpoly F x.1).map (algebraMap F K)).roots : Multiset K) } :=
   ⟨φ x, by

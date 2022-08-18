@@ -286,10 +286,10 @@ section
 
 variable {M : Type u}
 
-/-- The fundamental power operation in a monoid. `npow_rec n a = a*a*...*a` n times.
-Use instead `a ^ n`,  which has better definitional behavior. -/
 -- use `x * npow_rec n x` and not `npow_rec n x * x` in the definition to make sure that
 -- definitional unfolding of `npow_rec` is blocked, to avoid deep recursion issues.
+/-- The fundamental power operation in a monoid. `npow_rec n a = a*a*...*a` n times.
+Use instead `a ^ n`,  which has better definitional behavior. -/
 def npowRec [One M] [Mul M] : ℕ → M → M
   | 0, a => 1
   | n + 1, a => a * npowRec n a

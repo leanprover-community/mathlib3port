@@ -192,11 +192,8 @@ abbrev shiftFunctorZero : shiftFunctor C (0 : A) ≅ 𝟭 C :=
   (shiftMonoidalFunctor C A).εIso.symm
 
 -- mathport name: «expr ⟦ ⟧»
-notation X "⟦" n "⟧" =>
-  (-- Any better notational suggestions?
-        shiftFunctor
-        _ n).obj
-    X
+notation -- Any better notational suggestions?
+X "⟦" n "⟧" => (shiftFunctor _ n).obj X
 
 -- mathport name: «expr ⟦ ⟧'»
 notation f "⟦" n "⟧'" => (shiftFunctor _ n).map f
@@ -536,9 +533,9 @@ def hasShiftOfFullyFaithful (s : A → C ⥤ C) (i : ∀ i, s i ⋙ F ≅ F ⋙ 
 
 end
 
+-- incorrectly reports that `[full F]` and `[faithful F]` are unused.
 /-- When we construct shifts on a subcategory from shifts on the ambient category,
 the inclusion functor intertwines the shifts. -/
--- incorrectly reports that `[full F]` and `[faithful F]` are unused.
 @[nolint unused_arguments]
 def hasShiftOfFullyFaithfulComm (s : A → C ⥤ C) (i : ∀ i, s i ⋙ F ≅ F ⋙ shiftFunctor D i) (m : A) : by
     haveI := has_shift_of_fully_faithful F s i

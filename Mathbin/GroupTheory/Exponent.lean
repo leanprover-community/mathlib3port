@@ -183,7 +183,7 @@ theorem _root_.nat.prime.exists_order_of_eq_pow_factorization_exponent {p : ℕ}
       hp.one_lt.not_le
         ((mul_le_iff_le_one_left he).mp <|
           Nat.le_of_dvdₓ he <| Nat.mul_dvd_of_dvd_div (Nat.dvd_of_mem_factorization h) hd)
-  obtain ⟨k, hk : exponent G = p ^ _ * k⟩ := Nat.pow_factorization_dvd _ _
+  obtain ⟨k, hk : exponent G = p ^ _ * k⟩ := Nat.ord_proj_dvd _ _
   obtain ⟨t, ht⟩ := Nat.exists_eq_succ_of_ne_zero (finsupp.mem_support_iff.mp h)
   refine' ⟨g ^ k, _⟩
   rw [ht]
@@ -241,7 +241,8 @@ section LeftCancelMonoid
 variable [LeftCancelMonoid G]
 
 @[to_additive]
-theorem exponent_ne_zero_of_fintype [Fintype G] : exponent G ≠ 0 := by
+theorem exponent_ne_zero_of_finite [Finite G] : exponent G ≠ 0 := by
+  cases nonempty_fintype G
   simpa [lcm_order_eq_exponent, ← Finset.lcm_eq_zero_iff] using fun x => (order_of_pos x).ne'
 
 end LeftCancelMonoid
@@ -275,7 +276,7 @@ theorem exponent_eq_supr_order_of (h : ∀ g : G, 0 < orderOf g) : exponent G = 
   suffices orderOf t < orderOf (t ^ p ^ k * g) by
     rw [ht] at this
     exact this.not_le (le_cSup hfin.bdd_above <| Set.mem_range_self _)
-  have hpk : p ^ k ∣ orderOf t := Nat.pow_factorization_dvd _ _
+  have hpk : p ^ k ∣ orderOf t := Nat.ord_proj_dvd _ _
   have hpk' : orderOf (t ^ p ^ k) = orderOf t / p ^ k := by
     rw [order_of_pow' t (pow_ne_zero k hp.ne_zero), Nat.gcd_eq_rightₓ hpk]
   obtain ⟨a, ha⟩ := Nat.exists_eq_add_of_lt hpe

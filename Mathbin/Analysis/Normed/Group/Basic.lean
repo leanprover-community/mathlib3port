@@ -57,8 +57,8 @@ a metric space structure. -/
 class NormedAddCommGroup (E : Type _) extends HasNorm E, AddCommGroupₓ E, MetricSpace E where
   dist_eq : ∀ x y : E, dist x y = norm (x - y)
 
-/-- A normed group is a seminormed group. -/
 -- see Note [lower instance priority]
+/-- A normed group is a seminormed group. -/
 instance (priority := 100) NormedAddCommGroup.toSeminormedAddCommGroup [h : NormedAddCommGroup E] :
     SeminormedAddCommGroup E :=
   { h with }
@@ -427,9 +427,9 @@ theorem ne_zero_of_mem_unit_sphere (x : Sphere (0 : E) 1) : (x : E) ≠ 0 :=
 
 namespace Isometric
 
-/-- Addition `y ↦ y + x` as an `isometry`. -/
 -- TODO This material is superseded by similar constructions such as
 -- `affine_isometry_equiv.const_vadd`; deduplicate
+/-- Addition `y ↦ y + x` as an `isometry`. -/
 protected def addRight (x : E) : E ≃ᵢ E :=
   { Equivₓ.addRight x with isometry_to_fun := Isometry.of_dist_eq fun y z => dist_add_right _ _ _ }
 
@@ -1094,9 +1094,9 @@ theorem eventually_ne_of_tendsto_norm_at_top {l : Filter α} {f : α → E} (h :
 instance (priority := 100) SeminormedAddCommGroup.has_lipschitz_add :
     HasLipschitzAdd E where lipschitz_add := ⟨2, LipschitzWith.prod_fst.add LipschitzWith.prod_snd⟩
 
+-- see Note [lower instance priority]
 /-- A seminormed group is a uniform additive group, i.e., addition and subtraction are uniformly
 continuous. -/
--- see Note [lower instance priority]
 instance (priority := 100) normed_uniform_group : UniformAddGroup E :=
   ⟨(LipschitzWith.prod_fst.sub LipschitzWith.prod_snd).UniformContinuous⟩
 
@@ -1138,6 +1138,17 @@ theorem cauchy_seq_sum_of_eventually_eq {u v : ℕ → E} {N : ℕ} (huv : ∀, 
 end SeminormedAddCommGroup
 
 section NormedAddCommGroup
+
+/-- Construct a `normed_add_comm_group` from a `seminormed_add_comm_group` satisfying
+`∀ x, ∥x∥ = 0 → x = 0`. This avoids having to go back to the `(pseudo_)metric_space` level
+when declaring a `normed_add_comm_group` instance as a special case of a more general
+`seminormed_add_comm_group` instance. -/
+def NormedAddCommGroup.ofSeparation [h₁ : SeminormedAddCommGroup E] (h₂ : ∀ x : E, ∥x∥ = 0 → x = 0) :
+    NormedAddCommGroup E :=
+  { h₁ with
+    toMetricSpace :=
+      { eq_of_dist_eq_zero := fun x y hxy => by
+          rw [h₁.dist_eq] at hxy <;> rw [← sub_eq_zero] <;> exact h₂ _ hxy } }
 
 /-- Construct a normed group from a translation invariant distance -/
 def NormedAddCommGroup.ofAddDist [HasNorm E] [AddCommGroupₓ E] [MetricSpace E] (H1 : ∀ x : E, ∥x∥ = dist x 0)

@@ -22,11 +22,11 @@ variable (C : Type (u + 1)) [Category C] [ConcreteCategory.{u} C]
 
 variable (D : Type (u + 1)) [Category D] [ConcreteCategory.{u} D]
 
+-- This should not be an instance, as it causes a typeclass loop
+-- with `category_theory.has_forget_to_Type`
 /-- A `forget₂ C D` forgetful functor between concrete categories `C` and `D`
 where `forget C` reflects isomorphisms, itself reflects isomorphisms.
 -/
--- This should not be an instance, as it causes a typeclass loop
--- with `category_theory.has_forget_to_Type`
 theorem reflects_isomorphisms_forget₂ [HasForget₂ C D] [ReflectsIsomorphisms (forget C)] :
     ReflectsIsomorphisms (forget₂ C D) :=
   { reflects := fun X Y f i => by

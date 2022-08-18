@@ -67,8 +67,8 @@ theorem bind_comp {S : Presieve X} {R : ∀ ⦃Y : C⦄ ⦃f : Y ⟶ X⦄, S f �
     Bind S R (g ≫ f) :=
   ⟨_, _, _, h₁, h₂, rfl⟩
 
-/-- The singleton presieve.  -/
 -- Note we can't make this into `has_singleton` because of the out-param.
+/-- The singleton presieve.  -/
 inductive Singleton : Presieve X
   | mk : singleton f
 
@@ -669,10 +669,10 @@ instance functor_inclusion_is_mono : Mono S.functorInclusion :=
     ext Y y
     apply congr_fun (nat_trans.congr_app h Y) y⟩
 
+-- TODO: Show that when `f` is mono, this is right inverse to `functor_inclusion` up to isomorphism.
 /-- A natural transformation to a representable functor induces a sieve. This is the left inverse of
 `functor_inclusion`, shown in `sieve_of_functor_inclusion`.
 -/
--- TODO: Show that when `f` is mono, this is right inverse to `functor_inclusion` up to isomorphism.
 @[simps]
 def sieveOfSubfunctor {R} (f : R ⟶ yoneda.obj X) : Sieve X where
   Arrows := fun Y g => ∃ t, f.app (Opposite.op Y) t = g

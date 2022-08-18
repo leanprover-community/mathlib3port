@@ -1116,6 +1116,7 @@ section OpenCover
 
 namespace Scheme
 
+-- TODO: provide API to and from a presieve.
 /-- An open cover of `X` consists of a family of open immersions into `X`,
 and for each `x : X` an open immersion (indexed by `f x`) that covers `x`.
 
@@ -1125,7 +1126,6 @@ grothendieck topologies uses `Prop`s, so that the actual open sets and immersion
 obtain. Also, since such a coverage in the pretopology usually contains a proper class of
 immersions, it is quite hard to glue them, reason about finite covers, etc.
 -/
--- TODO: provide API to and from a presieve.
 structure OpenCover (X : Scheme.{u}) where
   J : Type v
   obj : ∀ j : J, Scheme
@@ -1885,6 +1885,10 @@ def morphismRestrictRestrictBasicOpen {X Y : Scheme} (f : X ⟶ Y) (U : Opens Y.
   dsimp' [← opens.map, ← opens.inclusion]
   rw [Set.image_preimage_eq_inter_range, Set.inter_eq_left_iff_subset, Subtype.range_coe]
   exact Y.basic_open_subset r
+
+instance {X Y : Scheme} (f : X ⟶ Y) (U : Opens Y.Carrier) [IsOpenImmersion f] : IsOpenImmersion (f ∣_ U) := by
+  delta' morphism_restrict
+  infer_instance
 
 end MorphismRestrict
 

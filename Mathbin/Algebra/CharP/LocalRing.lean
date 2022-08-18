@@ -33,8 +33,8 @@ theorem char_p_zero_or_prime_power (R : Type _) [CommRingₓ R] [LocalRing R] (q
   · let a := q / r ^ n
     -- If `r` is prime, we can write it as `r = a * q^n` ...
     have q_eq_a_mul_rn : q = r ^ n * a := by
-      rw [Nat.mul_div_cancel'ₓ (Nat.pow_factorization_dvd q r)]
-    have r_ne_dvd_a := Nat.not_dvd_div_pow_factorization r_prime q_pos
+      rw [Nat.mul_div_cancel'ₓ (Nat.ord_proj_dvd q r)]
+    have r_ne_dvd_a := Nat.not_dvd_ord_compl r_prime q_pos
     have rn_dvd_q : r ^ n ∣ q := ⟨a, q_eq_a_mul_rn⟩
     rw [mul_comm] at q_eq_a_mul_rn
     have a_dvd_q : a ∣ q := ⟨r ^ n, q_eq_a_mul_rn⟩

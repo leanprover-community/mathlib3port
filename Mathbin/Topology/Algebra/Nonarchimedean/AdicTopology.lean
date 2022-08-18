@@ -244,7 +244,7 @@ instance (priority := 100) : UniformSpace R :=
   TopologicalAddGroup.toUniformSpace R
 
 instance (priority := 100) : UniformAddGroup R :=
-  topological_add_group_is_uniform
+  topological_add_comm_group_is_uniform
 
 /-- The adic topology on a `R` module coming from the ideal `with_ideal.I`.
 This cannot be an instance because `R` cannot be inferred from `M`. -/

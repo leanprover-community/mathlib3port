@@ -51,8 +51,8 @@ omit V V₂
 variable {𝕜 P P₂}
 
 -- mathport name: «expr →ᵃⁱ[ ] »
-notation:25 P " →ᵃⁱ[" 𝕜-- `→ᵃᵢ` would be more consistent with the linear isometry notation, but it is uglier
-:25 "] " P₂:0 => AffineIsometry 𝕜 P P₂
+notation:25 -- `→ᵃᵢ` would be more consistent with the linear isometry notation, but it is uglier
+P " →ᵃⁱ[" 𝕜:25 "] " P₂:0 => AffineIsometry 𝕜 P P₂
 
 namespace AffineIsometry
 
@@ -262,8 +262,8 @@ variable {𝕜 P P₂}
 omit V V₂
 
 -- mathport name: «expr ≃ᵃⁱ[ ] »
-notation:25 P " ≃ᵃⁱ[" 𝕜-- `≃ᵃᵢ` would be more consistent with the linear isometry equiv notation, but it is uglier
-:25 "] " P₂:0 => AffineIsometryEquiv 𝕜 P P₂
+notation:25 -- `≃ᵃᵢ` would be more consistent with the linear isometry equiv notation, but it is uglier
+P " ≃ᵃⁱ[" 𝕜:25 "] " P₂:0 => AffineIsometryEquiv 𝕜 P P₂
 
 namespace AffineIsometryEquiv
 

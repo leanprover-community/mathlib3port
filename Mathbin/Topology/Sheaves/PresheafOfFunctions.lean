@@ -54,15 +54,15 @@ theorem presheaf_to_Types_map {T : X → Type v} {U V : (Opens X)ᵒᵖ} {i : U 
     (presheafToTypes X T).map i f = fun x => f (i.unop x) :=
   rfl
 
-/-- The presheaf of functions on `X` with values in a type `T`.
-There is no requirement that the functions are continuous, here.
--/
 -- We don't just define this in terms of `presheaf_to_Types`,
 -- as it's helpful later to see (at a syntactic level) that `(presheaf_to_Type X T).obj U`
 -- is a non-dependent function.
 -- We don't use `@[simps]` to generate the projection lemmas here,
 -- as it turns out to be useful to have `presheaf_to_Type_map`
 -- written as an equality of functions (rather than being applied to some argument).
+/-- The presheaf of functions on `X` with values in a type `T`.
+There is no requirement that the functions are continuous, here.
+-/
 def presheafToType (T : Type v) : X.Presheaf (Type v) where
   obj := fun U => unop U → T
   map := fun U V i g => g ∘ i.unop
@@ -86,9 +86,9 @@ theorem presheaf_to_Top_obj (T : Top.{v}) (U : (Opens X)ᵒᵖ) :
     (presheafToTop X T).obj U = ((Opens.toTop X).obj (unop U) ⟶ T) :=
   rfl
 
+-- TODO upgrade the result to TopCommRing?
 /-- The (bundled) commutative ring of continuous functions from a topological space
 to a topological commutative ring, with pointwise multiplication. -/
--- TODO upgrade the result to TopCommRing?
 def continuousFunctions (X : Top.{v}ᵒᵖ) (R : TopCommRing.{v}) : CommRingₓₓ.{v} :=
   CommRingₓₓ.of (unop X ⟶ (forget₂ TopCommRing Top).obj R)
 

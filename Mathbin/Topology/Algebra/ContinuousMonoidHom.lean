@@ -91,7 +91,7 @@ instance : ContinuousMonoidHomClass (ContinuousMonoidHom α β) α β where
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
-@[to_additive]
+@[to_additive "Helper instance for when there's too many metavariables to apply\n`fun_like.has_coe_to_fun` directly."]
 instance : CoeFun (ContinuousMonoidHom A B) fun _ => A → B :=
   FunLike.hasCoeToFun
 

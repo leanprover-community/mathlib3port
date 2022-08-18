@@ -214,6 +214,14 @@ theorem restrict_scalars_top {K : Type _} [Field K] [Algebra K E] [Algebra K F] 
     (⊤ : IntermediateField F E).restrictScalars K = ⊤ :=
   rfl
 
+theorem _root_.alg_hom.field_range_eq_map {K : Type _} [Field K] [Algebra F K] (f : E →ₐ[F] K) :
+    f.fieldRange = IntermediateField.map f ⊤ :=
+  SetLike.ext' Set.image_univ.symm
+
+theorem _root_.alg_hom.map_field_range {K L : Type _} [Field K] [Field L] [Algebra F K] [Algebra F L] (f : E →ₐ[F] K)
+    (g : K →ₐ[F] L) : f.fieldRange.map g = (g.comp f).fieldRange :=
+  SetLike.ext' (Set.range_comp g f).symm
+
 end Lattice
 
 section AdjoinDef
@@ -336,10 +344,10 @@ theorem adjoin_induction {s : Set E} {p : E → Prop} {x} (h : x ∈ adjoin F s)
   Subfield.closure_induction h (fun x hx => Or.cases_on hx (fun ⟨x, hx⟩ => hx ▸ Hmap x) (Hs x))
     ((algebraMap F E).map_one ▸ Hmap 1) Hadd Hneg Hinv Hmul
 
+--this definition of notation is courtesy of Kyle Miller on zulip
 /-- Variation on `set.insert` to enable good notation for adjoining elements to fields.
 Used to preferentially use `singleton` rather than `insert` when adjoining one element.
 -/
---this definition of notation is courtesy of Kyle Miller on zulip
 class Insert {α : Type _} (s : Set α) where
   insert : α → Set α
 
@@ -405,6 +413,34 @@ theorem adjoin_simple_to_subalgebra_of_integral (hα : IsIntegral F α) : F⟮�
   apply adjoin_algebraic_to_subalgebra
   rintro x (rfl : x = α)
   rwa [is_algebraic_iff_is_integral]
+
+theorem is_splitting_field_iff {p : F[X]} {K : IntermediateField F E} :
+    p.IsSplittingField F K ↔ p.Splits (algebraMap F K) ∧ K = adjoin F (p.RootSet E) := by
+  suffices _ → (Algebra.adjoin F (p.root_set K) = ⊤ ↔ K = adjoin F (p.root_set E)) by
+    exact ⟨fun h => ⟨h.1, (this h.1).mp h.2⟩, fun h => ⟨h.1, (this h.1).mpr h.2⟩⟩
+  simp_rw [SetLike.ext_iff, ← mem_to_subalgebra, ← SetLike.ext_iff]
+  rw [← K.range_val, adjoin_algebraic_to_subalgebra fun x => is_algebraic_of_mem_root_set]
+  exact fun hp => (adjoin_root_set_eq_range hp K.val).symm.trans eq_comm
+
+theorem adjoin_root_set_is_splitting_field {p : F[X]} (hp : p.Splits (algebraMap F E)) :
+    p.IsSplittingField F (adjoin F (p.RootSet E)) :=
+  is_splitting_field_iff.mpr ⟨splits_of_splits hp fun x hx => subset_adjoin F (p.RootSet E) hx, rfl⟩
+
+open BigOperators
+
+/-- A compositum of splitting fields is a splitting field -/
+theorem is_splitting_field_supr {ι : Type _} {t : ι → IntermediateField F E} {p : ι → F[X]} {s : Finset ι}
+    (h0 : (∏ i in s, p i) ≠ 0) (h : ∀, ∀ i ∈ s, ∀, (p i).IsSplittingField F (t i)) :
+    (∏ i in s, p i).IsSplittingField F (⨆ i ∈ s, t i : IntermediateField F E) := by
+  let K : IntermediateField F E := ⨆ i ∈ s, t i
+  have hK : ∀, ∀ i ∈ s, ∀, t i ≤ K := fun i hi => le_supr_of_le i (le_supr (fun _ => t i) hi)
+  simp only [← is_splitting_field_iff] at h⊢
+  refine'
+    ⟨splits_prod (algebraMap F K) fun i hi =>
+        Polynomial.splits_comp_of_splits (algebraMap F (t i)) (inclusion (hK i hi)).toRingHom (h i hi).1,
+      _⟩
+  simp only [← root_set_prod p s h0, Set.supr_eq_Union, ← (@gc F _ E _ _).l_supr₂]
+  exact supr_congr fun i => supr_congr fun hi => (h i hi).2
 
 open Set CompleteLattice
 
@@ -478,6 +514,15 @@ theorem exists_finset_of_mem_supr' {ι : Type _} {f : ι → IntermediateField F
   exists_finset_of_mem_supr
     (SetLike.le_def.mp
       (supr_le fun i x h => SetLike.le_def.mp (le_supr_of_le ⟨i, x, h⟩ le_rfl) (mem_adjoin_simple_self F x)) hx)
+
+theorem exists_finset_of_mem_supr'' {ι : Type _} {f : ι → IntermediateField F E} (h : ∀ i, Algebra.IsAlgebraic F (f i))
+    {x : E} (hx : x ∈ ⨆ i, f i) : ∃ s : Finset (Σi, f i), x ∈ ⨆ i ∈ s, adjoin F ((minpoly F (i.2 : _)).RootSet E) := by
+  refine'
+    exists_finset_of_mem_supr
+      (set_like.le_def.mp
+        (supr_le fun i x hx => set_like.le_def.mp (le_supr_of_le ⟨i, x, hx⟩ le_rfl) (subset_adjoin F _ _)) hx)
+  rw [IntermediateField.minpoly_eq, Subtype.coe_mk, Polynomial.mem_root_set, minpoly.aeval]
+  exact minpoly.ne_zero (is_integral_iff.mp (is_algebraic_iff_is_integral.mp (h i ⟨x, hx⟩)))
 
 end AdjoinSimple
 
@@ -990,6 +1035,7 @@ instance finite_dimensional_supr_of_finset {ι : Type _} {f : ι → Intermediat
   exact this.symm ▸ IntermediateField.finite_dimensional_supr_of_finite
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+/-- A compositum of algebraic extensions is algebraic -/
 theorem is_algebraic_supr {ι : Type _} {f : ι → IntermediateField K L} (h : ∀ i, Algebra.IsAlgebraic K (f i)) :
     Algebra.IsAlgebraic K (⨆ i, f i : IntermediateField K L) := by
   rintro ⟨x, hx⟩

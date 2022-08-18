@@ -23,8 +23,7 @@ variable {ι : Type _} {α : Type u} {β : Type v} {γ : Type w} {δ : Type x}
 attribute [inline] List.headₓ
 
 /-- There is only one list of an empty type -/
--- TODO[gh-6025]: make this an instance once safe to do so
-def uniqueOfIsEmpty [IsEmpty α] : Unique (List α) :=
+instance uniqueOfIsEmpty [IsEmpty α] : Unique (List α) :=
   { List.inhabited α with
     uniq := fun l =>
       match l with
@@ -3459,6 +3458,14 @@ theorem filter_map_filter (p : α → Prop) [DecidablePred p] (f : α → Option
 theorem filter_map_some (l : List α) : filterMap some l = l := by
   rw [filter_map_eq_map] <;> apply map_id
 
+theorem map_filter_map_some_eq_filter_map_is_some (f : α → Option β) (l : List α) :
+    (l.filterMap f).map some = (l.map f).filter fun b => b.isSome := by
+  induction' l with x xs ih
+  · simp
+    
+  · cases h : f x <;> rw [List.filter_map_cons, h] <;> simp [← h, ← ih]
+    
+
 @[simp]
 theorem mem_filter_map (f : α → Option β) (l : List α) {b : β} : b ∈ filterMap f l ↔ ∃ a, a ∈ l ∧ f a = some b := by
   induction' l with a l IH
@@ -3499,6 +3506,13 @@ theorem filter_map_join (f : α → Option β) (L : List (List α)) : filterMap 
 theorem map_filter_map_of_inv (f : α → Option β) (g : β → α) (H : ∀ x : α, (f x).map g = some x) (l : List α) :
     map g (filterMap f l) = l := by
   simp only [← map_filter_map, ← H, ← filter_map_some]
+
+theorem length_filter_le (p : α → Prop) [DecidablePred p] (l : List α) : (l.filter p).length ≤ l.length :=
+  List.length_le_of_sublistₓ (List.filter_sublist _)
+
+theorem length_filter_map_le (f : α → Option β) (l : List α) : (List.filterMap f l).length ≤ l.length := by
+  rw [← List.length_mapₓ some, List.map_filter_map_some_eq_filter_map_is_some, ← List.length_mapₓ f]
+  apply List.length_filter_le
 
 theorem Sublist.filter_map (f : α → Option β) {l₁ l₂ : List α} (s : l₁ <+ l₂) : filterMap f l₁ <+ filterMap f l₂ := by
   induction' s with l₁ l₂ a s IH l₁ l₂ a s IH <;>

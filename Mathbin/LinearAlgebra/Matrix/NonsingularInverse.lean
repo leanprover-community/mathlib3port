@@ -341,9 +341,9 @@ theorem nonsing_inv_nonsing_inv (h : IsUnit A.det) : A⁻¹⁻¹ = A :=
 theorem is_unit_nonsing_inv_det_iff {A : Matrix n n α} : IsUnit A⁻¹.det ↔ IsUnit A.det := by
   rw [Matrix.det_nonsing_inv, is_unit_ring_inverse]
 
+-- `is_unit.invertible` lifts the proposition `is_unit A` to a constructive inverse of `A`.
 /-- A version of `matrix.invertible_of_det_invertible` with the inverse defeq to `A⁻¹` that is
 therefore noncomputable. -/
--- `is_unit.invertible` lifts the proposition `is_unit A` to a constructive inverse of `A`.
 noncomputable def invertibleOfIsUnitDet (h : IsUnit A.det) : Invertible A :=
   ⟨A⁻¹, nonsing_inv_mul A h, mul_nonsing_inv A h⟩
 

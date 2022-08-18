@@ -19,8 +19,8 @@ universe v u
 
 namespace CategoryTheory
 
-/-- Category of quivers. -/
 -- intended to be used with explicit universe parameters
+/-- Category of quivers. -/
 @[nolint check_univs]
 def Quiv :=
   Bundled Quiver.{v + 1, u}
@@ -88,11 +88,11 @@ def lift {V : Type u} [Quiver.{v + 1} V] {C : Type _} [Category C] (F : Prefunct
   obj := fun X => F.obj X
   map := fun X Y f => composePathₓ (F.mapPath f)
 
-/-- The adjunction between forming the free category on a quiver, and forgetting a category to a quiver.
--/
 -- We might construct `of_lift_iso_self : paths.of ⋙ lift F ≅ F`
 -- (and then show that `lift F` is initial amongst such functors)
 -- but it would require lifting quite a bit of machinery to quivers!
+/-- The adjunction between forming the free category on a quiver, and forgetting a category to a quiver.
+-/
 def adj : Cat.free ⊣ Quiv.forget :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun V C =>

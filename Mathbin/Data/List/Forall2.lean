@@ -138,9 +138,26 @@ theorem _root_.relator.right_unique.forall₂ (hr : RightUnique r) : RightUnique
 theorem _root_.relator.bi_unique.forall₂ (hr : BiUnique r) : BiUnique (Forall₂ r) :=
   ⟨hr.left.Forall₂, hr.right.Forall₂⟩
 
-theorem forall₂_length_eq {R : α → β → Prop} : ∀ {l₁ l₂}, Forall₂ R l₁ l₂ → length l₁ = length l₂
+theorem Forall₂.length_eq {R : α → β → Prop} : ∀ {l₁ l₂}, Forall₂ R l₁ l₂ → length l₁ = length l₂
   | _, _, forall₂.nil => rfl
-  | _, _, forall₂.cons h₁ h₂ => congr_arg succ (forall₂_length_eq h₂)
+  | _, _, forall₂.cons h₁ h₂ => congr_arg succ (forall₂.length_eq h₂)
+
+theorem Forall₂.nth_le :
+    ∀ {x : List α} {y : List β} (h : Forall₂ r x y) ⦃i : ℕ⦄ (hx : i < x.length) (hy : i < y.length),
+      r (x.nthLe i hx) (y.nthLe i hy)
+  | a₁ :: l₁, a₂ :: l₂, forall₂.cons ha hl, 0, hx, hy => ha
+  | a₁ :: l₁, a₂ :: l₂, forall₂.cons ha hl, succ i, hx, hy => hl.nthLe _ _
+
+theorem forall₂_of_length_eq_of_nth_le :
+    ∀ {x : List α} {y : List β}, x.length = y.length → (∀ i h₁ h₂, r (x.nthLe i h₁) (y.nthLe i h₂)) → Forall₂ r x y
+  | [], [], hl, h => Forall₂.nil
+  | a₁ :: l₁, a₂ :: l₂, hl, h =>
+    Forall₂.cons (h 0 (Nat.zero_lt_succₓ _) (Nat.zero_lt_succₓ _))
+      (forall₂_of_length_eq_of_nth_le (succ.injₓ hl) fun i h₁ h₂ => h i.succ (succ_lt_succₓ h₁) (succ_lt_succₓ h₂))
+
+theorem forall₂_iff_nth_le {l₁ : List α} {l₂ : List β} :
+    Forall₂ r l₁ l₂ ↔ l₁.length = l₂.length ∧ ∀ i h₁ h₂, r (l₁.nthLe i h₁) (l₂.nthLe i h₂) :=
+  ⟨fun h => ⟨h.length_eq, h.nthLe⟩, And.ndrec forall₂_of_length_eq_of_nth_le⟩
 
 theorem forall₂_zip {R : α → β → Prop} : ∀ {l₁ l₂}, Forall₂ R l₁ l₂ → ∀ {a b}, (a, b) ∈ zipₓ l₁ l₂ → R a b
   | _, _, forall₂.cons h₁ h₂, x, y, Or.inl rfl => h₁
@@ -148,7 +165,7 @@ theorem forall₂_zip {R : α → β → Prop} : ∀ {l₁ l₂}, Forall₂ R l�
 
 theorem forall₂_iff_zip {R : α → β → Prop} {l₁ l₂} :
     Forall₂ R l₁ l₂ ↔ length l₁ = length l₂ ∧ ∀ {a b}, (a, b) ∈ zipₓ l₁ l₂ → R a b :=
-  ⟨fun h => ⟨forall₂_length_eq h, @forall₂_zip _ _ _ _ _ h⟩, fun h => by
+  ⟨fun h => ⟨h.length_eq, @forall₂_zip _ _ _ _ _ h⟩, fun h => by
     cases' h with h₁ h₂
     induction' l₁ with a l₁ IH generalizing l₂
     · cases length_eq_zero.1 h₁.symm

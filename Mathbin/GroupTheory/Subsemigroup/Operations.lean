@@ -389,8 +389,8 @@ variable {A : Type _} [Mul M] [SetLike A M] [hA : MulMemClass A M] (S' : A)
 
 include hA
 
-/-- A submagma of a magma inherits a multiplication. -/
 -- lower priority so other instances are found first
+/-- A submagma of a magma inherits a multiplication. -/
 @[to_additive "An additive submagma of an additive magma inherits an addition."]
 instance (priority := 900) hasMul : Mul S' :=
   ⟨fun a b => ⟨a.1 * b.1, mul_mem a.2 b.2⟩⟩
@@ -709,11 +709,11 @@ variable [Mul M] [Mul N] {S T : Subsemigroup M}
 def subsemigroupCongr (h : S = T) : S ≃* T :=
   { Equivₓ.setCongr <| congr_arg _ h with map_mul' := fun _ _ => rfl }
 
+-- this name is primed so that the version to `f.range` instead of `f.srange` can be unprimed.
 /-- A semigroup homomorphism `f : M →ₙ* N` with a left-inverse `g : N → M` defines a multiplicative
 equivalence between `M` and `f.srange`.
 
 This is a bidirectional version of `mul_hom.srange_restrict`. -/
--- this name is primed so that the version to `f.range` instead of `f.srange` can be unprimed.
 @[to_additive
       "\nAn additive semigroup homomorphism `f : M →+ N` with a left-inverse `g : N → M` defines an additive\nequivalence between `M` and `f.srange`.\n\nThis is a bidirectional version of `add_hom.srange_restrict`. ",
   simps (config := { simpRhs := true })]

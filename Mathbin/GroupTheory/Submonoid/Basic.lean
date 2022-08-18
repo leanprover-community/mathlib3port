@@ -456,7 +456,7 @@ def eqMlocus (f g : M →* N) : Submonoid M where
     simp [*]
 
 /-- If two monoid homomorphisms are equal on a set, then they are equal on its submonoid closure. -/
-@[to_additive]
+@[to_additive "If two monoid homomorphisms are equal on a set, then they are equal on its submonoid\nclosure."]
 theorem eq_on_mclosure {f g : M →* N} {s : Set M} (h : Set.EqOn f g s) : Set.EqOn f g (closure s) :=
   show closure s ≤ f.eqMlocus g from closure_le.2 h
 

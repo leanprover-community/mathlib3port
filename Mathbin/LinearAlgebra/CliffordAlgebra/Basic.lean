@@ -150,12 +150,12 @@ theorem hom_ext {A : Type _} [Semiringₓ A] [Algebra R A] {f g : CliffordAlgebr
   rw [lift_symm_apply, lift_symm_apply]
   simp only [← h]
 
+-- This proof closely follows `tensor_algebra.induction`
 /-- If `C` holds for the `algebra_map` of `r : R` into `clifford_algebra Q`, the `ι` of `x : M`,
 and is preserved under addition and muliplication, then it holds for all of `clifford_algebra Q`.
 
 See also the stronger `clifford_algebra.left_induction` and `clifford_algebra.right_induction`.
 -/
--- This proof closely follows `tensor_algebra.induction`
 @[elabAsElim]
 theorem induction {C : CliffordAlgebra Q → Prop} (h_grade0 : ∀ r, C (algebraMap R (CliffordAlgebra Q) r))
     (h_grade1 : ∀ x, C (ι Q x)) (h_mul : ∀ a b, C a → C b → C (a * b)) (h_add : ∀ a b, C a → C b → C (a + b))
@@ -265,6 +265,26 @@ theorem equiv_of_isometry_refl : (equiv_of_isometry <| QuadraticForm.Isometry.re
   exact AlgHom.congr_fun (map_id Q₁) x
 
 end Map
+
+variable (Q)
+
+/-- If the quadratic form of a vector is invertible, then so is that vector. -/
+def invertibleιOfInvertible (m : M) [Invertible (Q m)] : Invertible (ι Q m) where
+  invOf := ι Q (⅟ (Q m) • m)
+  inv_of_mul_self := by
+    rw [map_smul, smul_mul_assoc, ι_sq_scalar, Algebra.smul_def, ← map_mul, inv_of_mul_self, map_one]
+  mul_inv_of_self := by
+    rw [map_smul, mul_smul_comm, ι_sq_scalar, Algebra.smul_def, ← map_mul, inv_of_mul_self, map_one]
+
+/-- For a vector with invertible quadratic form, $v^{-1} = \frac{v}{Q(v)}$ -/
+theorem inv_of_ι (m : M) [Invertible (Q m)] [Invertible (ι Q m)] : ⅟ (ι Q m) = ι Q (⅟ (Q m) • m) := by
+  letI := invertible_ι_of_invertible Q m
+  convert (rfl : ⅟ (ι Q m) = _)
+
+theorem is_unit_ι_of_is_unit {m : M} (h : IsUnit (Q m)) : IsUnit (ι Q m) := by
+  cases h.nonempty_invertible
+  letI := invertible_ι_of_invertible Q m
+  exact is_unit_of_invertible (ι Q m)
 
 end CliffordAlgebra
 

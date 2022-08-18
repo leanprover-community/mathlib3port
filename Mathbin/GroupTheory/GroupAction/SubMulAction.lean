@@ -171,11 +171,11 @@ end
 theorem coe_image_orbit {p : SubMulAction R M} (m : p) : coe '' MulAction.Orbit R m = MulAction.Orbit R (m : M) :=
   (Set.range_comp _ _).symm
 
-/-- Stabilizers in monoid sub_mul_action coincide with stabilizers in the ambient space -/
 /- -- Previously, the relatively useless :
 lemma orbit_of_sub_mul {p : sub_mul_action R M} (m : p) :
   (mul_action.orbit R m : set M) = mul_action.orbit R (m : M) := rfl
 -/
+/-- Stabilizers in monoid sub_mul_action coincide with stabilizers in the ambient space -/
 theorem StabilizerOfSubMul.submonoid {p : SubMulAction R M} (m : p) :
     MulAction.Stabilizer.submonoid R m = MulAction.Stabilizer.submonoid R (m : M) := by
   ext

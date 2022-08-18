@@ -3,11 +3,13 @@ Copyright (c) 2021 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Limits.Creates
-import Mathbin.CategoryTheory.Limits.Unit
-import Mathbin.CategoryTheory.Limits.Preserves.Basic
-import Mathbin.CategoryTheory.StructuredArrow
 import Mathbin.CategoryTheory.Arrow
+import Mathbin.CategoryTheory.Limits.Constructions.EpiMono
+import Mathbin.CategoryTheory.Limits.Creates
+import Mathbin.CategoryTheory.Limits.Preserves.Finite
+import Mathbin.CategoryTheory.Limits.Shapes.FiniteLimits
+import Mathbin.CategoryTheory.Limits.Unit
+import Mathbin.CategoryTheory.StructuredArrow
 
 /-!
 # Limits and colimits in comma categories
@@ -25,9 +27,9 @@ namespace CategoryTheory
 
 open Category Limits
 
-universe v u₁ u₂ u₃
+universe w' w v u₁ u₂ u₃
 
-variable {J : Type v} [SmallCategory J]
+variable {J : Type w} [Category.{w'} J]
 
 variable {A : Type u₁} [Category.{v} A]
 
@@ -188,6 +190,14 @@ noncomputable instance createsLimitsOfShape [PreservesLimitsOfShape J G] : Creat
 noncomputable instance createsLimits [PreservesLimits G] : CreatesLimits (proj X G : _) :=
   ⟨⟩
 
+instance mono_right_of_mono [HasPullbacks A] [PreservesLimitsOfShape WalkingCospan G] {Y Z : StructuredArrow X G}
+    (f : Y ⟶ Z) [Mono f] : Mono f.right :=
+  show Mono ((proj X G).map f) from inferInstance
+
+theorem mono_iff_mono_right [HasPullbacks A] [PreservesLimitsOfShape WalkingCospan G] {Y Z : StructuredArrow X G}
+    (f : Y ⟶ Z) : Mono f ↔ Mono f.right :=
+  ⟨fun h => inferInstance, fun h => mono_of_mono_right f⟩
+
 end StructuredArrow
 
 namespace CostructuredArrow
@@ -213,6 +223,14 @@ noncomputable instance createsColimitsOfShape [PreservesColimitsOfShape J G] : C
 
 noncomputable instance createsColimits [PreservesColimits G] : CreatesColimits (proj G X : _) :=
   ⟨⟩
+
+instance epi_left_of_epi [HasPushouts A] [PreservesColimitsOfShape WalkingSpan G] {Y Z : CostructuredArrow G X}
+    (f : Y ⟶ Z) [Epi f] : Epi f.left :=
+  show Epi ((proj G X).map f) from inferInstance
+
+theorem epi_iff_epi_left [HasPushouts A] [PreservesColimitsOfShape WalkingSpan G] {Y Z : CostructuredArrow G X}
+    (f : Y ⟶ Z) : Epi f ↔ Epi f.left :=
+  ⟨fun h => inferInstance, fun h => epi_of_epi_left f⟩
 
 end CostructuredArrow
 

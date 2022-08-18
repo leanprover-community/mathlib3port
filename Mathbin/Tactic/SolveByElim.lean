@@ -137,9 +137,9 @@ unsafe structure basic_opt extends apply_any_opt where
 initialize
   registerTraceClass.1 `solve_by_elim
 
+-- trace attempted lemmas
 /-- A helper function for trace messages, prepending '....' depending on the current search depth.
 -/
--- trace attempted lemmas
 unsafe def solve_by_elim_trace (n : ℕ) (f : format) : tactic Unit :=
   trace_if_enabled `solve_by_elim ((f!"[solve_by_elim {(List.repeat '.' (n + 1)).asString} ") ++ f ++ "]")
 

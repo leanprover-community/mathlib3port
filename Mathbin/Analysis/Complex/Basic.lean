@@ -66,8 +66,8 @@ instance {R : Type _} [NormedField R] [NormedAlgebra R ℝ] : NormedAlgebra R �
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
-/-- The module structure from `module.complex_to_real` is a normed space. -/
 -- see Note [lower instance priority]
+/-- The module structure from `module.complex_to_real` is a normed space. -/
 instance (priority := 900) _root_.normed_space.complex_to_real : NormedSpace ℝ E :=
   NormedSpace.restrictScalars ℝ ℂ E
 

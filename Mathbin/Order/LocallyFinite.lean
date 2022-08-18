@@ -200,10 +200,10 @@ def LocallyFiniteOrderTop.ofIic (α : Type _) [PartialOrderₓ α] [DecidableEq 
 
 variable {α β : Type _}
 
+-- See note [reducible non-instances]
 /-- An empty type is locally finite.
 
 This is not an instance as it would be not be defeq to more specific instances. -/
--- See note [reducible non-instances]
 @[reducible]
 protected def _root_.is_empty.to_locally_finite_order [Preorderₓ α] [IsEmpty α] : LocallyFiniteOrder α where
   finsetIcc := isEmptyElim
@@ -215,10 +215,10 @@ protected def _root_.is_empty.to_locally_finite_order [Preorderₓ α] [IsEmpty 
   finset_mem_Ioc := isEmptyElim
   finset_mem_Ioo := isEmptyElim
 
+-- See note [reducible non-instances]
 /-- An empty type is locally finite.
 
 This is not an instance as it would be not be defeq to more specific instances. -/
--- See note [reducible non-instances]
 @[reducible]
 protected def _root_.is_empty.to_locally_finite_order_top [Preorderₓ α] [IsEmpty α] : LocallyFiniteOrderTop α where
   finsetIci := isEmptyElim
@@ -226,10 +226,10 @@ protected def _root_.is_empty.to_locally_finite_order_top [Preorderₓ α] [IsEm
   finset_mem_Ici := isEmptyElim
   finset_mem_Ioi := isEmptyElim
 
+-- See note [reducible non-instances]
 /-- An empty type is locally finite.
 
 This is not an instance as it would be not be defeq to more specific instances. -/
--- See note [reducible non-instances]
 @[reducible]
 protected def _root_.is_empty.to_locally_finite_order_bot [Preorderₓ α] [IsEmpty α] : LocallyFiniteOrderBot α where
   finsetIic := isEmptyElim
@@ -659,8 +659,8 @@ instance : Subsingleton (LocallyFiniteOrderBot α) :=
       rw [h₀_finset_mem_Iio, h₁_finset_mem_Iio]
     simp_rw [hIic, hIio]
 
-/-- Given an order embedding `α ↪o β`, pulls back the `locally_finite_order` on `β` to `α`. -/
 -- Should this be called `locally_finite_order.lift`?
+/-- Given an order embedding `α ↪o β`, pulls back the `locally_finite_order` on `β` to `α`. -/
 protected noncomputable def OrderEmbedding.locallyFiniteOrder [LocallyFiniteOrder β] (f : α ↪o β) :
     LocallyFiniteOrder α where
   finsetIcc := fun a b => (icc (f a) (f b)).Preimage f (f.toEmbedding.Injective.InjOn _)

@@ -127,9 +127,9 @@ end Preterm
 
 open List.Func
 
+-- get notation for list.func.set
 /-- Return a term (which is in canonical form by definition)
     that is equivalent to the input preterm -/
--- get notation for list.func.set
 @[simp]
 def canonize : Preterm → Term
   | &m => ⟨↑m, []⟩

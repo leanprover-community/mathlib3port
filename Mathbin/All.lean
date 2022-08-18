@@ -329,6 +329,7 @@ import Mathbin.AlgebraicGeometry.LocallyRingedSpace
 import Mathbin.AlgebraicGeometry.LocallyRingedSpace.HasColimits
 import Mathbin.AlgebraicGeometry.Morphisms.Basic
 import Mathbin.AlgebraicGeometry.Morphisms.QuasiCompact
+import Mathbin.AlgebraicGeometry.Morphisms.RingHomProperties
 import Mathbin.AlgebraicGeometry.OpenImmersion
 import Mathbin.AlgebraicGeometry.PresheafedSpace
 import Mathbin.AlgebraicGeometry.PresheafedSpace.Gluing
@@ -349,6 +350,7 @@ import Mathbin.AlgebraicTopology.MooreComplex
 import Mathbin.AlgebraicTopology.AlternatingFaceMapComplex
 import Mathbin.AlgebraicTopology.CechNerve
 import Mathbin.AlgebraicTopology.DoldKan.Faces
+import Mathbin.AlgebraicTopology.DoldKan.FunctorN
 import Mathbin.AlgebraicTopology.DoldKan.Homotopies
 import Mathbin.AlgebraicTopology.DoldKan.Notations
 import Mathbin.AlgebraicTopology.DoldKan.PInfty
@@ -691,6 +693,7 @@ import Mathbin.CategoryTheory.Functor.Flat
 import Mathbin.CategoryTheory.Functor.FullyFaithful
 import Mathbin.CategoryTheory.Functor.Functorial
 import Mathbin.CategoryTheory.Functor.Hom
+import Mathbin.CategoryTheory.Functor.InvIsos
 import Mathbin.CategoryTheory.Functor.LeftDerived
 import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
 import Mathbin.CategoryTheory.Generator
@@ -708,6 +711,7 @@ import Mathbin.CategoryTheory.Idempotents.SimplicialObject
 import Mathbin.CategoryTheory.IsConnected
 import Mathbin.CategoryTheory.Isomorphism
 import Mathbin.CategoryTheory.IsomorphismClasses
+import Mathbin.CategoryTheory.LiftingProperties.Adjunction
 import Mathbin.CategoryTheory.LiftingProperties.Basic
 import Mathbin.CategoryTheory.Limits.Bicones
 import Mathbin.CategoryTheory.Limits.ColimitLimit
@@ -761,6 +765,7 @@ import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
 import Mathbin.CategoryTheory.Limits.Shapes.CommSq
 import Mathbin.CategoryTheory.Limits.Shapes.ConcreteCategory
 import Mathbin.CategoryTheory.Limits.Shapes.Default
+import Mathbin.CategoryTheory.Limits.Shapes.Diagonal
 import Mathbin.CategoryTheory.Limits.Shapes.DisjointCoproduct
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
 import Mathbin.CategoryTheory.Limits.Shapes.Equivalence
@@ -903,6 +908,7 @@ import Mathbin.CategoryTheory.Sites.Whiskering
 import Mathbin.CategoryTheory.Skeletal
 import Mathbin.CategoryTheory.StructuredArrow
 import Mathbin.CategoryTheory.Subobject.Basic
+import Mathbin.CategoryTheory.Subobject.Comma
 import Mathbin.CategoryTheory.Subobject.Default
 import Mathbin.CategoryTheory.Subobject.FactorThru
 import Mathbin.CategoryTheory.Subobject.Lattice
@@ -971,6 +977,7 @@ import Mathbin.Combinatorics.SimpleGraph.Regularity.Uniform
 import Mathbin.Combinatorics.SimpleGraph.StronglyRegular
 import Mathbin.Combinatorics.SimpleGraph.Subgraph
 import Mathbin.Combinatorics.SimpleGraph.Trails
+import Mathbin.Combinatorics.YoungDiagram
 import Mathbin.Computability.DFA
 import Mathbin.Computability.NFA
 import Mathbin.Computability.Ackermann
@@ -1317,6 +1324,7 @@ import Mathbin.Data.Polynomial.IteratedDeriv
 import Mathbin.Data.Polynomial.Laurent
 import Mathbin.Data.Polynomial.Lifts
 import Mathbin.Data.Polynomial.Mirror
+import Mathbin.Data.Polynomial.Module
 import Mathbin.Data.Polynomial.Monic
 import Mathbin.Data.Polynomial.Monomial
 import Mathbin.Data.Polynomial.Reverse
@@ -1528,6 +1536,7 @@ import Mathbin.GroupTheory.CommutingProbability
 import Mathbin.GroupTheory.Complement
 import Mathbin.GroupTheory.Congruence
 import Mathbin.GroupTheory.Coset
+import Mathbin.GroupTheory.Divisible
 import Mathbin.GroupTheory.DoubleCoset
 import Mathbin.GroupTheory.EckmannHilton
 import Mathbin.GroupTheory.Exponent
@@ -1998,6 +2007,7 @@ import Mathbin.Order.Filter.SmallSets
 import Mathbin.Order.Filter.Ultrafilter
 import Mathbin.Order.FixedPoints
 import Mathbin.Order.GaloisConnection
+import Mathbin.Order.GameAdd
 import Mathbin.Order.Grade
 import Mathbin.Order.Hom.Basic
 import Mathbin.Order.Hom.Bounded
@@ -2178,6 +2188,7 @@ import Mathbin.RingTheory.PrincipalIdealDomain
 import Mathbin.RingTheory.ReesAlgebra
 import Mathbin.RingTheory.RingHom.Finite
 import Mathbin.RingTheory.RingHom.FiniteType
+import Mathbin.RingTheory.RingHom.Integral
 import Mathbin.RingTheory.RingHomProperties
 import Mathbin.RingTheory.RingInvo
 import Mathbin.RingTheory.RootsOfUnity
@@ -2570,6 +2581,7 @@ import Mathbin.Topology.Order.Priestley
 import Mathbin.Topology.Paracompact
 import Mathbin.Topology.PartitionOfUnity
 import Mathbin.Topology.PathConnected
+import Mathbin.Topology.QuasiSeparated
 import Mathbin.Topology.Semicontinuous
 import Mathbin.Topology.Separation
 import Mathbin.Topology.Sequences

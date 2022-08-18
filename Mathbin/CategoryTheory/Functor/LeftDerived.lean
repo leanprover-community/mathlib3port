@@ -61,8 +61,8 @@ variable [Preadditive D] [HasEqualizers D] [HasCokernels D] [HasImages D] [HasIm
 def Functor.leftDerived (F : C ⥤ D) [F.Additive] (n : ℕ) : C ⥤ D :=
   projectiveResolutions C ⋙ F.mapHomotopyCategory _ ⋙ HomotopyCategory.homologyFunctor D _ n
 
-/-- We can compute a left derived functor using a chosen projective resolution. -/
 -- TODO the left derived functors are additive (and linear when `F` is linear)
+/-- We can compute a left derived functor using a chosen projective resolution. -/
 @[simps]
 def Functor.leftDerivedObjIso (F : C ⥤ D) [F.Additive] (n : ℕ) {X : C} (P : ProjectiveResolution X) :
     (F.leftDerived n).obj X ≅ (homologyFunctor D _ n).obj ((F.mapHomologicalComplex _).obj P.complex) :=

@@ -21,9 +21,9 @@ open CategoryTheory
 
 variable (C : Type _) {D E : Type _} [Category C] [Category D] [Category E] {F : D ⥤ E} {G : E ⥤ D}
 
+--  `tidy` works for all the proofs in this definition, but it's fairly slow.
 /-- Given an adjunction `F ⊣ G`, this provides the natural adjunction
   `(whiskering_right C _ _).obj F ⊣ (whiskering_right C _ _).obj G`. -/
---  `tidy` works for all the proofs in this definition, but it's fairly slow.
 @[simps unit_app_app counit_app_app]
 protected def whiskerRight (adj : F ⊣ G) : (whiskeringRight C D E).obj F ⊣ (whiskeringRight C E D).obj G :=
   mkOfUnitCounit
@@ -50,9 +50,9 @@ protected def whiskerRight (adj : F ⊣ G) : (whiskeringRight C D E).obj F ⊣ (
         dsimp'
         simp }
 
+-- `tidy` gets stuck for `left_triangle'` and `right_triangle'`.
 /-- Given an adjunction `F ⊣ G`, this provides the natural adjunction
   `(whiskering_left _ _ C).obj G ⊣ (whiskering_left _ _ C).obj F`. -/
--- `tidy` gets stuck for `left_triangle'` and `right_triangle'`.
 @[simps unit_app_app counit_app_app]
 protected def whiskerLeft (adj : F ⊣ G) : (whiskeringLeft E D C).obj G ⊣ (whiskeringLeft D E C).obj F :=
   mkOfUnitCounit

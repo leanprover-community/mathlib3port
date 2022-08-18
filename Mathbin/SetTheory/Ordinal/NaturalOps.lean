@@ -77,6 +77,9 @@ theorem to_ordinal_to_nat_ordinal (a : NatOrdinal) : a.toOrdinal.toNatOrdinal = 
 theorem lt_wf : @WellFounded NatOrdinal (· < ·) :=
   Ordinal.lt_wf
 
+instance : WellFoundedLt NatOrdinal :=
+  Ordinal.well_founded_lt
+
 instance : IsWellOrder NatOrdinal (· < ·) :=
   Ordinal.HasLt.Lt.is_well_order
 

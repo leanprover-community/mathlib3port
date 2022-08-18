@@ -2242,6 +2242,8 @@ end Pi
 /-! ### Sum of two functions -/
 
 
+section Add
+
 -- The sum is smooth.
 theorem cont_diff_add : ContDiff 𝕜 n fun p : F × F => p.1 + p.2 :=
   (IsBoundedLinearMap.fst.add IsBoundedLinearMap.snd).ContDiff
@@ -2265,8 +2267,48 @@ theorem ContDiff.add {f g : E → F} (hf : ContDiff 𝕜 n f) (hg : ContDiff �
 theorem ContDiffOn.add {s : Set E} {f g : E → F} (hf : ContDiffOn 𝕜 n f s) (hg : ContDiffOn 𝕜 n g s) :
     ContDiffOn 𝕜 n (fun x => f x + g x) s := fun x hx => (hf x hx).add (hg x hx)
 
+variable {i : ℕ}
+
+theorem iterated_fderiv_within_add_apply {f g : E → F} (hf : ContDiffOn 𝕜 i f s) (hg : ContDiffOn 𝕜 i g s)
+    (hu : UniqueDiffOn 𝕜 s) (hx : x ∈ s) :
+    iteratedFderivWithin 𝕜 i (f + g) s x = iteratedFderivWithin 𝕜 i f s x + iteratedFderivWithin 𝕜 i g s x := by
+  induction' i with i hi generalizing x
+  · ext h
+    simp
+    
+  · ext h
+    have hi' : (i : WithTop ℕ) < i + 1 := with_top.coe_lt_coe.mpr (Nat.lt_succ_selfₓ _)
+    have hdf : DifferentiableOn 𝕜 (iteratedFderivWithin 𝕜 i f s) s := hf.differentiable_on_iterated_fderiv_within hi' hu
+    have hdg : DifferentiableOn 𝕜 (iteratedFderivWithin 𝕜 i g s) s := hg.differentiable_on_iterated_fderiv_within hi' hu
+    have hcdf : ContDiffOn 𝕜 i f s := hf.of_le hi'.le
+    have hcdg : ContDiffOn 𝕜 i g s := hg.of_le hi'.le
+    calc
+      iteratedFderivWithin 𝕜 (i + 1) (f + g) s x h =
+          fderivWithin 𝕜 (iteratedFderivWithin 𝕜 i (f + g) s) s x (h 0) (Finₓ.tail h) :=
+        rfl
+      _ = fderivWithin 𝕜 (iteratedFderivWithin 𝕜 i f s + iteratedFderivWithin 𝕜 i g s) s x (h 0) (Finₓ.tail h) := by
+        congr 2
+        exact fderiv_within_congr (hu x hx) (fun _ => hi hcdf hcdg) (hi hcdf hcdg hx)
+      _ =
+          (fderivWithin 𝕜 (iteratedFderivWithin 𝕜 i f s) s + fderivWithin 𝕜 (iteratedFderivWithin 𝕜 i g s) s) x (h 0)
+            (Finₓ.tail h) :=
+        by
+        rw [Pi.add_def, fderiv_within_add (hu x hx) (hdf x hx) (hdg x hx)] <;> rfl
+      _ = (iteratedFderivWithin 𝕜 (i + 1) f s + iteratedFderivWithin 𝕜 (i + 1) g s) x h := rfl
+      
+    
+
+theorem iterated_fderiv_add_apply {i : ℕ} {f g : E → F} (hf : ContDiff 𝕜 i f) (hg : ContDiff 𝕜 i g) :
+    iteratedFderiv 𝕜 i (f + g) x = iteratedFderiv 𝕜 i f x + iteratedFderiv 𝕜 i g x := by
+  simp_rw [← cont_diff_on_univ, ← iterated_fderiv_within_univ] at hf hg⊢
+  exact iterated_fderiv_within_add_apply hf hg unique_diff_on_univ (Set.mem_univ _)
+
+end Add
+
 /-! ### Negative -/
 
+
+section Neg
 
 -- The negative is smooth.
 theorem cont_diff_neg : ContDiff 𝕜 n fun p : F => -p :=
@@ -2289,6 +2331,35 @@ theorem ContDiff.neg {f : E → F} (hf : ContDiff 𝕜 n f) : ContDiff 𝕜 n fu
 /-- The negative of a `C^n` function on a domain is `C^n`. -/
 theorem ContDiffOn.neg {s : Set E} {f : E → F} (hf : ContDiffOn 𝕜 n f s) : ContDiffOn 𝕜 n (fun x => -f x) s :=
   fun x hx => (hf x hx).neg
+
+variable {i : ℕ}
+
+theorem iterated_fderiv_within_neg_apply {f : E → F} (hu : UniqueDiffOn 𝕜 s) (hx : x ∈ s) :
+    iteratedFderivWithin 𝕜 i (-f) s x = -iteratedFderivWithin 𝕜 i f s x := by
+  induction' i with i hi generalizing x
+  · ext h
+    simp
+    
+  · ext h
+    have hi' : (i : WithTop ℕ) < i + 1 := with_top.coe_lt_coe.mpr (Nat.lt_succ_selfₓ _)
+    calc
+      iteratedFderivWithin 𝕜 (i + 1) (-f) s x h =
+          fderivWithin 𝕜 (iteratedFderivWithin 𝕜 i (-f) s) s x (h 0) (Finₓ.tail h) :=
+        rfl
+      _ = fderivWithin 𝕜 (-iteratedFderivWithin 𝕜 i f s) s x (h 0) (Finₓ.tail h) := by
+        congr 2
+        exact fderiv_within_congr (hu x hx) (fun _ => hi) (hi hx)
+      _ = -(fderivWithin 𝕜 (iteratedFderivWithin 𝕜 i f s) s) x (h 0) (Finₓ.tail h) := by
+        rw [Pi.neg_def, fderiv_within_neg (hu x hx)] <;> rfl
+      _ = -(iteratedFderivWithin 𝕜 (i + 1) f s) x h := rfl
+      
+    
+
+theorem iterated_fderiv_neg_apply {i : ℕ} {f : E → F} : iteratedFderiv 𝕜 i (-f) x = -iteratedFderiv 𝕜 i f x := by
+  simp_rw [← iterated_fderiv_within_univ]
+  exact iterated_fderiv_within_neg_apply unique_diff_on_univ (Set.mem_univ _)
+
+end Neg
 
 /-! ### Subtraction -/
 
@@ -2436,6 +2507,8 @@ end MulProd
 /-! ### Scalar multiplication -/
 
 
+section Smul
+
 -- The scalar multiplication is smooth.
 theorem cont_diff_smul : ContDiff 𝕜 n fun p : 𝕜 × F => p.1 • p.2 :=
   is_bounded_bilinear_map_smul.ContDiff
@@ -2459,6 +2532,8 @@ theorem ContDiff.smul {f : E → 𝕜} {g : E → F} (hf : ContDiff 𝕜 n f) (h
 /-- The scalar multiplication of two `C^n` functions on a domain is `C^n`. -/
 theorem ContDiffOn.smul {s : Set E} {f : E → 𝕜} {g : E → F} (hf : ContDiffOn 𝕜 n f s) (hg : ContDiffOn 𝕜 n g s) :
     ContDiffOn 𝕜 n (fun x => f x • g x) s := fun x hx => (hf x hx).smul (hg x hx)
+
+end Smul
 
 /-! ### Constant scalar multiplication -/
 
@@ -2492,6 +2567,36 @@ theorem ContDiff.const_smul {f : E → F} (c : R) (hf : ContDiff 𝕜 n f) : Con
 /-- The scalar multiplication of a constant and a `C^n` on a domain is `C^n`. -/
 theorem ContDiffOn.const_smul {s : Set E} {f : E → F} (c : R) (hf : ContDiffOn 𝕜 n f s) :
     ContDiffOn 𝕜 n (fun y => c • f y) s := fun x hx => (hf x hx).const_smul c
+
+variable {i : ℕ} {a : R}
+
+theorem iterated_fderiv_within_const_smul_apply (hf : ContDiffOn 𝕜 i f s) (hu : UniqueDiffOn 𝕜 s) (hx : x ∈ s) :
+    iteratedFderivWithin 𝕜 i (a • f) s x = a • iteratedFderivWithin 𝕜 i f s x := by
+  induction' i with i hi generalizing x
+  · ext
+    simp
+    
+  · ext h
+    have hi' : (i : WithTop ℕ) < i + 1 := with_top.coe_lt_coe.mpr (Nat.lt_succ_selfₓ _)
+    have hdf : DifferentiableOn 𝕜 (iteratedFderivWithin 𝕜 i f s) s := hf.differentiable_on_iterated_fderiv_within hi' hu
+    have hcdf : ContDiffOn 𝕜 i f s := hf.of_le hi'.le
+    calc
+      iteratedFderivWithin 𝕜 (i + 1) (a • f) s x h =
+          fderivWithin 𝕜 (iteratedFderivWithin 𝕜 i (a • f) s) s x (h 0) (Finₓ.tail h) :=
+        rfl
+      _ = fderivWithin 𝕜 (a • iteratedFderivWithin 𝕜 i f s) s x (h 0) (Finₓ.tail h) := by
+        congr 2
+        exact fderiv_within_congr (hu x hx) (fun _ => hi hcdf) (hi hcdf hx)
+      _ = (a • fderivWithin 𝕜 (iteratedFderivWithin 𝕜 i f s)) s x (h 0) (Finₓ.tail h) := by
+        rw [Pi.smul_def, fderiv_within_const_smul (hu x hx) (hdf x hx)] <;> rfl
+      _ = a • iteratedFderivWithin 𝕜 (i + 1) f s x h := rfl
+      
+    
+
+theorem iterated_fderiv_const_smul_apply {x : E} (hf : ContDiff 𝕜 i f) :
+    iteratedFderiv 𝕜 i (a • f) x = a • iteratedFderiv 𝕜 i f x := by
+  simp_rw [← cont_diff_on_univ, ← iterated_fderiv_within_univ] at *
+  refine' iterated_fderiv_within_const_smul_apply hf unique_diff_on_univ (Set.mem_univ _)
 
 end ConstSmul
 

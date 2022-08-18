@@ -54,16 +54,16 @@ noncomputable instance : NormedLatticeAddCommGroup ℝ where
   add_le_add_left := fun _ _ h _ => add_le_add le_rfl h
   solid := fun _ _ => id
 
+-- see Note [lower instance priority]
 /-- A normed lattice ordered group is an ordered additive commutative group
 -/
--- see Note [lower instance priority]
 instance (priority := 100) normedLatticeAddCommGroupToOrderedAddCommGroup {α : Type _}
     [h : NormedLatticeAddCommGroup α] : OrderedAddCommGroup α :=
   { h with }
 
+-- see Note [lower instance priority]
 /-- Let `α` be a normed group with a partial order. Then the order dual is also a normed group.
 -/
--- see Note [lower instance priority]
 instance (priority := 100) {α : Type _} : ∀ [NormedAddCommGroup α], NormedAddCommGroup αᵒᵈ :=
   id
 
@@ -80,10 +80,10 @@ theorem dual_solid (a b : α) (h : b⊓-b ≤ a⊓-a) : ∥a∥ ≤ ∥b∥ := b
   nth_rw 0[← neg_negₓ b]
   rwa [← neg_inf_eq_sup_neg, neg_le_neg_iff, @inf_comm _ _ _ b, @inf_comm _ _ _ a]
 
+-- see Note [lower instance priority]
 /-- Let `α` be a normed lattice ordered group, then the order dual is also a
 normed lattice ordered group.
 -/
--- see Note [lower instance priority]
 instance (priority := 100) : NormedLatticeAddCommGroup αᵒᵈ where
   add_le_add_left := fun a b => add_le_add_left
   solid := dual_solid
@@ -133,9 +133,9 @@ theorem norm_sup_le_add (x y : α) : ∥x⊔y∥ ≤ ∥x∥ + ∥y∥ := by
   have h : ∥x⊔y - 0⊔0∥ ≤ ∥x - 0∥ + ∥y - 0∥ := norm_sup_sub_sup_le_add_norm x y 0 0
   simpa only [← sup_idem, ← sub_zero] using h
 
+-- see Note [lower instance priority]
 /-- Let `α` be a normed lattice ordered group. Then the infimum is jointly continuous.
 -/
--- see Note [lower instance priority]
 instance (priority := 100) normed_lattice_add_comm_group_has_continuous_inf : HasContinuousInf α := by
   refine' ⟨continuous_iff_continuous_at.2 fun q => tendsto_iff_norm_tendsto_zero.2 <| _⟩
   have : ∀ p : α × α, ∥p.1⊓p.2 - q.1⊓q.2∥ ≤ ∥p.1 - q.1∥ + ∥p.2 - q.2∥ := fun _ => norm_inf_sub_inf_le_add_norm _ _ _ _
@@ -150,9 +150,9 @@ instance (priority := 100) normed_lattice_add_comm_group_has_continuous_sup {α 
     HasContinuousSup α :=
   OrderDual.has_continuous_sup αᵒᵈ
 
+-- see Note [lower instance priority]
 /-- Let `α` be a normed lattice ordered group. Then `α` is a topological lattice in the norm topology.
 -/
--- see Note [lower instance priority]
 instance (priority := 100) normedLatticeAddCommGroupTopologicalLattice : TopologicalLattice α :=
   TopologicalLattice.mk
 

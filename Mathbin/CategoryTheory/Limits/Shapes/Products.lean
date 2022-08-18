@@ -68,8 +68,8 @@ def Cofan.mk {f : β → C} (P : C) (p : ∀ b, f b ⟶ P) : Cofan f where
   x := P
   ι := { app := fun X => p X.as }
 
-/-- Get the `j`th map in the fan -/
 -- FIXME dualize as needed below (and rename?)
+/-- Get the `j`th map in the fan -/
 def Fan.proj {f : β → C} (p : Fan f) (j : β) : p.x ⟶ f j :=
   p.π.app (Discrete.mk j)
 

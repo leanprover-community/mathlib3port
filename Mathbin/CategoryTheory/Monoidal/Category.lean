@@ -455,9 +455,9 @@ def tensorUnitRight : C ⥤ C where
   obj := fun X => X ⊗ 𝟙_ C
   map := fun {X Y : C} (f : X ⟶ Y) => f ⊗ 𝟙 (𝟙_ C)
 
-/-- The associator as a natural isomorphism. -/
 -- We can express the associator and the unitors, given componentwise above,
 -- as natural isomorphisms.
+/-- The associator as a natural isomorphism. -/
 @[simps]
 def associatorNatIso : leftAssocTensor C ≅ rightAssocTensor C :=
   NatIso.ofComponents

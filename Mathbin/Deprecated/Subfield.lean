@@ -57,12 +57,12 @@ theorem Preimage.is_subfield {K : Type _} [Field K] (f : F →+* K) {s : Set K} 
   { f.is_subring_preimage hs.to_is_subring with
     inv_mem := fun a (ha : f a ∈ s) =>
       show f a⁻¹ ∈ s by
-        rw [f.map_inv]
+        rw [map_inv₀]
         exact hs.inv_mem ha }
 
 theorem Image.is_subfield {K : Type _} [Field K] (f : F →+* K) {s : Set F} (hs : IsSubfield s) : IsSubfield (f '' s) :=
   { f.is_subring_image hs.to_is_subring with
-    inv_mem := fun a ⟨x, xmem, ha⟩ => ⟨x⁻¹, hs.inv_mem xmem, ha ▸ f.map_inv _⟩ }
+    inv_mem := fun a ⟨x, xmem, ha⟩ => ⟨x⁻¹, hs.inv_mem xmem, ha ▸ map_inv₀ f _⟩ }
 
 theorem Range.is_subfield {K : Type _} [Field K] (f : F →+* K) : IsSubfield (Set.Range f) := by
   rw [← Set.image_univ]

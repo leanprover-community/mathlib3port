@@ -132,11 +132,11 @@ def pairwiseToOpensLeCover : Pairwise ι ⥤ OpensLeCover U where
 instance (V : OpensLeCover U) : Nonempty (StructuredArrow V (pairwiseToOpensLeCover U)) :=
   ⟨{ right := single V.index, Hom := V.homToIndex }⟩
 
+-- This is a case bash: for each pair of types of objects in `pairwise ι`,
+-- we have to explicitly construct a zigzag.
 /-- The diagram consisting of the `U i` and `U i ⊓ U j` is cofinal in the diagram
 of all opens contained in some `U i`.
 -/
--- This is a case bash: for each pair of types of objects in `pairwise ι`,
--- we have to explicitly construct a zigzag.
 instance : Functor.Final (pairwiseToOpensLeCover U) :=
   ⟨fun V =>
     is_connected_of_zigzag fun A B => by

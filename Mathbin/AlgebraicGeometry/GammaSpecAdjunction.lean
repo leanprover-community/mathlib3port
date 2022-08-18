@@ -279,8 +279,8 @@ theorem right_triangle (R : CommRingₓₓ) :
     apply to_open_res
     
 
-/-- The adjunction `Γ ⊣ Spec` from `CommRingᵒᵖ` to `LocallyRingedSpace`. -/
 -- Removing this makes the following definition time out.
+/-- The adjunction `Γ ⊣ Spec` from `CommRingᵒᵖ` to `LocallyRingedSpace`. -/
 @[simps Unit counit]
 def locallyRingedSpaceAdjunction : Γ.rightOp ⊣ Spec.to_LocallyRingedSpace :=
   Adjunction.mkOfUnitCounit

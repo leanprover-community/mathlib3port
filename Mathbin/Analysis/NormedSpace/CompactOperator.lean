@@ -294,7 +294,7 @@ variable {𝕜₁ 𝕜₂ : Type _} [NontriviallyNormedField 𝕜₁] [Nontrivia
 @[continuity]
 theorem IsCompactOperator.continuous {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : IsCompactOperator f) : Continuous f := by
   letI : UniformSpace M₂ := TopologicalAddGroup.toUniformSpace _
-  haveI : UniformAddGroup M₂ := topological_add_group_is_uniform
+  haveI : UniformAddGroup M₂ := topological_add_comm_group_is_uniform
   -- Since `f` is linear, we only need to show that it is continuous at zero.
   -- Let `U` be a neighborhood of `0` in `M₂`.
   refine' continuous_of_continuous_at_zero f fun U hU => _
@@ -316,7 +316,7 @@ theorem IsCompactOperator.continuous {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : I
     rwa [mem_map, preimage_smul_setₛₗ _ _ _ f this, set_smul_mem_nhds_zero_iff (inv_ne_zero hcnz)]
     infer_instance
   -- Since `σ₁₂ c⁻¹` = `(σ₁₂ c)⁻¹`, we have to prove that `K ⊆ σ₁₂ c • U`.
-  rw [σ₁₂.map_inv, ← subset_set_smul_iff₀ (σ₁₂.map_ne_zero.mpr hcnz)]
+  rw [map_inv₀, ← subset_set_smul_iff₀ (σ₁₂.map_ne_zero.mpr hcnz)]
   -- But `σ₁₂` is isometric, so `∥σ₁₂ c∥ = ∥c∥ > r`, which concludes the argument since
   -- `∀ a : 𝕜₂, r ≤ ∥a∥ → K ⊆ a • U`.
   refine' hrU (σ₁₂ c) _

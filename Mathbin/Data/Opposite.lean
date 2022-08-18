@@ -45,11 +45,9 @@ def Opposite : Sort u :=
   α
 
 -- mathport name: «expr ᵒᵖ»
-notation:max α
-  "ᵒᵖ" =>-- Use a high right binding power (like that of postfix ⁻¹) so that, for example,
-    -- `presheaf Cᵒᵖ` parses as `presheaf (Cᵒᵖ)` and not `(presheaf C)ᵒᵖ`.
-    Opposite
-    α
+notation:max -- Use a high right binding power (like that of postfix ⁻¹) so that, for example,
+-- `presheaf Cᵒᵖ` parses as `presheaf (Cᵒᵖ)` and not `(presheaf C)ᵒᵖ`.
+α "ᵒᵖ" => Opposite α
 
 namespace Opposite
 

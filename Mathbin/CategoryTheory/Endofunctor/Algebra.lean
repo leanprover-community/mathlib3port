@@ -44,7 +44,6 @@ namespace Algebra
 
 variable {F : C ⥤ C} (A : Algebra F) {A₀ A₁ A₂ : Algebra F}
 
-/-- A morphism between algebras of endofunctor `F` -/
 /-
 ```
         str
@@ -56,6 +55,7 @@ F f |          | f
         str
 ```
 -/
+/-- A morphism between algebras of endofunctor `F` -/
 @[ext]
 structure Hom (A₀ A₁ : Algebra F) where
   f : A₀.1 ⟶ A₁.1
@@ -263,7 +263,6 @@ namespace Coalgebra
 
 variable {F : C ⥤ C} (V : Coalgebra F) {V₀ V₁ V₂ : Coalgebra F}
 
-/-- A morphism between coalgebras of an endofunctor `F` -/
 /-
 ```
         str
@@ -275,6 +274,7 @@ variable {F : C ⥤ C} (V : Coalgebra F) {V₀ V₁ V₂ : Coalgebra F}
         str
 ```
 -/
+/-- A morphism between coalgebras of an endofunctor `F` -/
 @[ext]
 structure Hom (V₀ V₁ : Coalgebra F) where
   f : V₀.1 ⟶ V₁.1

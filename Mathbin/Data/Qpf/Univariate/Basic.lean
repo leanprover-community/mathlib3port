@@ -156,12 +156,12 @@ theorem liftr_iff {α : Type u} (r : α → α → Prop) (x y : F α) :
 
 end
 
-/-- does recursion on `q.P.W` using `g : F α → α` rather than `g : P α → α` -/
 /-
 Think of trees in the `W` type corresponding to `P` as representatives of elements of the
 least fixed point of `F`, and assign a canonical representative to each equivalence class
 of trees.
 -/
+/-- does recursion on `q.P.W` using `g : F α → α` rather than `g : P α → α` -/
 def recF {α : Type _} (g : F α → α) : q.p.W → α
   | ⟨a, f⟩ => g (abs ⟨a, fun x => recF (f x)⟩)
 
@@ -348,8 +348,8 @@ def corecF {α : Type _} (g : α → F α) : α → q.p.M :=
 theorem corecF_eq {α : Type _} (g : α → F α) (x : α) : Pfunctor.M.dest (corecF g x) = corecF g <$> repr (g x) := by
   rw [corecF, Pfunctor.M.dest_corec]
 
-/-- A pre-congruence on q.P.M *viewed as an F-coalgebra*. Not necessarily symmetric. -/
 -- Equivalence
+/-- A pre-congruence on q.P.M *viewed as an F-coalgebra*. Not necessarily symmetric. -/
 def IsPrecongr (r : q.p.M → q.p.M → Prop) : Prop :=
   ∀ ⦃x y⦄, r x y → abs (Quot.mk r <$> Pfunctor.M.dest x) = abs (Quot.mk r <$> Pfunctor.M.dest y)
 

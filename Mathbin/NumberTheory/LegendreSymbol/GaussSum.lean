@@ -50,7 +50,7 @@ universe u v
 
 open BigOperators
 
-open AddChar MulChar Multiplicative
+open AddChar MulChar
 
 section GaussSumDef
 
@@ -67,14 +67,12 @@ variable {R' : Type v} [CommRingₓ R']
 
 /-- Definition of the Gauss sum associated to a multiplicative and an additive character. -/
 def gaussSum (χ : MulChar R R') (ψ : AddChar R R') : R' :=
-  ∑ a, χ a * ψ (ofAdd a)
+  ∑ a, χ a * ψ a
 
 /-- Replacing `ψ` by `mul_shift ψ a` and multiplying the Gauss sum by `χ a` does not change it. -/
 theorem gauss_sum_mul_shift (χ : MulChar R R') (ψ : AddChar R R') (a : Rˣ) :
     χ a * gaussSum χ (mulShift ψ a) = gaussSum χ ψ := by
-  simp only [← gaussSum, ← mul_shift, ← MonoidHom.coe_comp, ← Function.comp_app, ← to_add_of_add, ←
-    AddMonoidHom.to_multiplicative_apply_apply, ← AddMonoidHom.coe_mul_left]
-  rw [Finset.mul_sum]
+  simp only [← gaussSum, ← mul_shift_apply, ← Finset.mul_sum]
   simp_rw [← mul_assoc, ← map_mul]
   exact Fintype.sum_bijective _ a.mul_left_bijective _ _ fun x => rfl
 
@@ -93,11 +91,11 @@ variable {R : Type u} [Field R] [Fintype R] {R' : Type v} [CommRingₓ R'] [IsDo
 -- A helper lemma for `gauss_sum_mul_gauss_sum_eq_card` below
 -- Is this useful enough in other contexts to be public?
 private theorem gauss_sum_mul_aux {χ : MulChar R R'} (hχ : IsNontrivial χ) (ψ : AddChar R R') (b : R) :
-    (∑ a, χ (a * b⁻¹) * ψ (ofAdd (a - b))) = ∑ c, χ c * ψ (of_add <| b * (c - 1)) := by
+    (∑ a, χ (a * b⁻¹) * ψ (a - b)) = ∑ c, χ c * ψ (b * (c - 1)) := by
   cases' eq_or_ne b 0 with hb hb
   · -- case `b = 0`
-    simp only [← hb, ← inv_zero, ← mul_zero, ← MulChar.map_zero, ← zero_mul, ← Finset.sum_const_zero, ← of_add_zero, ←
-      MonoidHom.map_one, ← mul_oneₓ]
+    simp only [← hb, ← inv_zero, ← mul_zero, ← MulChar.map_zero, ← zero_mul, ← Finset.sum_const_zero, ← map_zero_one, ←
+      mul_oneₓ]
     exact hχ.sum_eq_zero.symm
     
   · -- case `b ≠ 0`
@@ -105,24 +103,17 @@ private theorem gauss_sum_mul_aux {χ : MulChar R R'} (hχ : IsNontrivial χ) (�
     rw [mul_assoc, mul_comm x, ← mul_assoc, mul_inv_cancel hb, one_mulₓ, mul_sub, mul_oneₓ]
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (y x)
 /-- We have `gauss_sum χ ψ * gauss_sum χ⁻¹ ψ⁻¹ = fintype.card R`
 when `χ` is nontrivial and `ψ` is primitive (and `R` is a field). -/
 theorem gauss_sum_mul_gauss_sum_eq_card {χ : MulChar R R'} (hχ : IsNontrivial χ) {ψ : AddChar R R'}
     (hψ : IsPrimitive ψ) : gaussSum χ ψ * gaussSum χ⁻¹ ψ⁻¹ = Fintype.card R := by
-  simp only [← gaussSum, ← inv_mul_shift, ← mul_shift, ← MonoidHom.coe_comp, ← Function.comp_app, ←
-    AddMonoidHom.to_multiplicative_apply_apply, ← Finset.mul_sum, ← AddMonoidHom.coe_mul_left, ← neg_mul, ← one_mulₓ, ←
-    of_add_neg, ← of_add_to_add]
-  simp_rw [Finset.sum_mul, mul_mul_mul_commₓ, inv_apply' χ, ← map_mul χ, ← map_mul ψ]
-  convert_to (∑ (y) (x), χ (x * y⁻¹) * ψ (of_add (x - y))) = _
-  · simp_rw [sub_eq_add_neg]
-    rfl
-    
+  simp only [← gaussSum, ← AddChar.inv_apply, ← Finset.sum_mul, ← Finset.mul_sum, ← MulChar.inv_apply']
+  conv in _ * _ * (_ * _) => rw [mul_mul_mul_commₓ, ← map_mul, ← map_add_mul, ← sub_eq_add_neg]
   simp_rw [gauss_sum_mul_aux hχ ψ]
   rw [Finset.sum_comm]
   classical
-  -- to get `[decidable_eq R]` for `gauss_sum_mul_aux₂`
-  simp_rw [← Finset.mul_sum, sum_mul_shift _ _ hψ, sub_eq_zero, mul_ite, mul_zero]
+  -- to get `[decidable_eq R]` for `sum_mul_shift`
+  simp_rw [← Finset.mul_sum, sum_mul_shift _ hψ, sub_eq_zero, mul_ite, mul_zero]
   rw [Finset.sum_ite_eq' Finset.univ (1 : R)]
   simp only [← Finset.mem_univ, ← map_one, ← one_mulₓ, ← if_true]
 
@@ -152,7 +143,7 @@ variable (p : ℕ) [fp : Fact p.Prime] [hch : CharP R' p]
 include fp hch
 
 /-- When `R'` has prime characteristic `p`, then the `p`th power of the Gauss sum
-of `χ` and `ψ` is the Gauss sum of `χ^p` and `mul_shift ψ p`. -/
+of `χ` and `ψ` is the Gauss sum of `χ^p` and `ψ^p`. -/
 theorem gauss_sum_frob (χ : MulChar R R') (ψ : AddChar R R') : gaussSum χ ψ ^ p = gaussSum (χ ^ p) (ψ ^ p) := by
   rw [← frobenius_def, gaussSum, gaussSum, map_sum]
   simp_rw [pow_apply' χ fp.1.Pos, map_mul, frobenius_def]
@@ -280,10 +271,10 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
     primitive_zmod_char 8 F
       (by
         convert hp2 3 <;> norm_num)
-  let τ : FF := ψ₈.char (of_add 1)
+  let τ : FF := ψ₈.char 1
   have τ_spec : τ ^ 4 = -1 := by
     refine' (sq_eq_one_iff.1 _).resolve_left _ <;>
-      · simp only [← τ, map_pow]
+      · simp only [← τ, map_nsmul_pow]
         erw [AddChar.IsPrimitive.zmod_char_eq_one_iff 8 ψ₈.prim]
         decide
         

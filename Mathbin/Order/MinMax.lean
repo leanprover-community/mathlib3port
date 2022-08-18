@@ -169,8 +169,8 @@ theorem max_lt_max_right_iff : max a b < max a c ↔ b < c ∧ a < c :=
 instance max_idem : IsIdempotent α max := by
   infer_instance
 
-/-- An instance asserting that `min a a = a` -/
 -- short-circuit type class inference
+/-- An instance asserting that `min a a = a` -/
 instance min_idem : IsIdempotent α min := by
   infer_instance
 

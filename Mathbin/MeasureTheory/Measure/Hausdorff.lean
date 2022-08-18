@@ -923,7 +923,7 @@ theorem hausdorff_measure_preimage_le (hf : AntilipschitzWith K f) (hd : 0 ≤ d
       
     have : f ⁻¹' s = {x} := by
       haveI : Subsingleton X := hf.subsingleton
-      have : (f ⁻¹' s).Subsingleton := subsingleton_univ.mono (subset_univ _)
+      have : (f ⁻¹' s).Subsingleton := subsingleton_univ.anti (subset_univ _)
       exact (subsingleton_iff_singleton hx).1 this
     rw [this]
     rcases eq_or_lt_of_le hd with (rfl | h'd)

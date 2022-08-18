@@ -98,9 +98,8 @@ theorem Coloring.color_classes_is_partition : Setoidₓ.IsPartition C.ColorClass
 theorem Coloring.mem_color_classes {v : V} : C.ColorClass (C v) ∈ C.ColorClasses :=
   ⟨v, rfl⟩
 
-theorem Coloring.color_classes_finite_of_fintype [Fintype α] : C.ColorClasses.Finite := by
-  rw [Set.finite_def]
-  apply Setoidₓ.nonempty_fintype_classes_ker
+theorem Coloring.color_classes_finite [Finite α] : C.ColorClasses.Finite :=
+  Set.finite_coe_iff.1 <| Setoidₓ.finite_classes_ker _
 
 theorem Coloring.card_color_classes_le [Fintype α] [Fintype C.ColorClasses] :
     Fintype.card C.ColorClasses ≤ Fintype.card α :=
@@ -251,8 +250,9 @@ theorem colorable_chromatic_number {m : ℕ} (hc : G.Colorable m) : G.Colorable 
   apply Nat.find_specₓ
   exact colorable_set_nonempty_of_colorable hc
 
-theorem colorable_chromatic_number_of_fintype (G : SimpleGraph V) [Fintype V] : G.Colorable G.chromaticNumber :=
-  colorable_chromatic_number G.colorable_of_fintype
+theorem colorable_chromatic_number_of_fintype (G : SimpleGraph V) [Finite V] : G.Colorable G.chromaticNumber := by
+  cases nonempty_fintype V
+  exact colorable_chromatic_number G.colorable_of_fintype
 
 theorem chromatic_number_le_one_of_subsingleton (G : SimpleGraph V) [Subsingleton V] : G.chromaticNumber ≤ 1 := by
   rw [chromatic_number]
@@ -268,7 +268,7 @@ theorem chromatic_number_eq_zero_of_isempty (G : SimpleGraph V) [IsEmpty V] : G.
   apply cInf_le chromatic_number_bdd_below
   apply colorable_of_is_empty
 
-theorem is_empty_of_chromatic_number_eq_zero (G : SimpleGraph V) [Fintype V] (h : G.chromaticNumber = 0) : IsEmpty V :=
+theorem is_empty_of_chromatic_number_eq_zero (G : SimpleGraph V) [Finite V] (h : G.chromaticNumber = 0) : IsEmpty V :=
   by
   have h' := G.colorable_chromatic_number_of_fintype
   rw [h] at h'
@@ -334,7 +334,7 @@ theorem chromatic_number_bot [Nonempty V] : (⊥ : SimpleGraph V).chromaticNumbe
 theorem chromatic_number_top [Fintype V] : (⊤ : SimpleGraph V).chromaticNumber = Fintype.card V := by
   apply chromatic_number_eq_card_of_forall_surj (self_coloring _)
   intro C
-  rw [← Fintype.injective_iff_surjective]
+  rw [← Finite.injective_iff_surjective]
   intro v w
   contrapose
   intro h
@@ -397,10 +397,12 @@ theorem IsClique.card_le_of_colorable {s : Finset V} (h : G.IsClique s) {n : ℕ
   convert h.card_le_of_coloring hc.some
   simp
 
--- TODO eliminate `fintype V` constraint once chromatic numbers are refactored.
+-- TODO eliminate `finite V` constraint once chromatic numbers are refactored.
 -- This is just to ensure the chromatic number exists.
-theorem IsClique.card_le_chromatic_number [Fintype V] {s : Finset V} (h : G.IsClique s) : s.card ≤ G.chromaticNumber :=
-  h.card_le_of_colorable G.colorable_chromatic_number_of_fintype
+theorem IsClique.card_le_chromatic_number [Finite V] {s : Finset V} (h : G.IsClique s) : s.card ≤ G.chromaticNumber :=
+  by
+  cases nonempty_fintype V
+  exact h.card_le_of_colorable G.colorable_chromatic_number_of_fintype
 
 protected theorem Colorable.clique_free {n m : ℕ} (hc : G.Colorable n) (hm : n < m) : G.CliqueFree m := by
   by_contra h
@@ -408,9 +410,9 @@ protected theorem Colorable.clique_free {n m : ℕ} (hc : G.Colorable n) (hm : n
   obtain ⟨s, h, rfl⟩ := h
   exact Nat.lt_le_antisymmₓ hm (h.card_le_of_colorable hc)
 
--- TODO eliminate `fintype V` constraint once chromatic numbers are refactored.
+-- TODO eliminate `finite V` constraint once chromatic numbers are refactored.
 -- This is just to ensure the chromatic number exists.
-theorem clique_free_of_chromatic_number_lt [Fintype V] {n : ℕ} (hc : G.chromaticNumber < n) : G.CliqueFree n :=
+theorem clique_free_of_chromatic_number_lt [Finite V] {n : ℕ} (hc : G.chromaticNumber < n) : G.CliqueFree n :=
   G.colorable_chromatic_number_of_fintype.CliqueFree hc
 
 end SimpleGraph

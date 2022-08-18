@@ -65,8 +65,8 @@ namespace Pre
 instance : Inhabited (Pre R X) :=
   ⟨of_scalar 0⟩
 
-/-- Coercion from `X` to `pre R X`. Note: Used for notation only. -/
 -- Note: These instances are only used to simplify the notation.
+/-- Coercion from `X` to `pre R X`. Note: Used for notation only. -/
 def hasCoeGenerator : Coe X (Pre R X) :=
   ⟨of⟩
 

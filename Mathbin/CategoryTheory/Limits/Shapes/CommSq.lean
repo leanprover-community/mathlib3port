@@ -376,10 +376,10 @@ theorem zero_top (X : C) : IsPullback (0 : 0 ⟶ 0) (0 : 0 ⟶ X) (0 : 0 ⟶ X) 
 
 end
 
-/-- Paste two pullback squares "vertically" to obtain another pullback square. -/
 -- Objects here are arranged in a 3x2 grid, and indexed by their xy coordinates.
 -- Morphisms are named `hᵢⱼ` for a horizontal morphism starting at `(i,j)`,
 -- and `vᵢⱼ` for a vertical morphism starting at `(i,j)`.
+/-- Paste two pullback squares "vertically" to obtain another pullback square. -/
 theorem paste_vert {X₁₁ X₁₂ X₂₁ X₂₂ X₃₁ X₃₂ : C} {h₁₁ : X₁₁ ⟶ X₁₂} {h₂₁ : X₂₁ ⟶ X₂₂} {h₃₁ : X₃₁ ⟶ X₃₂} {v₁₁ : X₁₁ ⟶ X₂₁}
     {v₁₂ : X₁₂ ⟶ X₂₂} {v₂₁ : X₂₁ ⟶ X₃₁} {v₂₂ : X₂₂ ⟶ X₃₂} (s : IsPullback h₁₁ v₁₁ v₁₂ h₂₁)
     (t : IsPullback h₂₁ v₂₁ v₂₂ h₃₁) : IsPullback h₁₁ (v₁₁ ≫ v₂₁) (v₁₂ ≫ v₂₂) h₃₁ :=
@@ -453,10 +453,10 @@ theorem zero_bot (X : C) : IsPushout (𝟙 X) (0 : X ⟶ 0) (0 : X ⟶ 0) (0 : 0
 
 end
 
-/-- Paste two pushout squares "vertically" to obtain another pushout square. -/
 -- Objects here are arranged in a 3x2 grid, and indexed by their xy coordinates.
 -- Morphisms are named `hᵢⱼ` for a horizontal morphism starting at `(i,j)`,
 -- and `vᵢⱼ` for a vertical morphism starting at `(i,j)`.
+/-- Paste two pushout squares "vertically" to obtain another pushout square. -/
 theorem paste_vert {X₁₁ X₁₂ X₂₁ X₂₂ X₃₁ X₃₂ : C} {h₁₁ : X₁₁ ⟶ X₁₂} {h₂₁ : X₂₁ ⟶ X₂₂} {h₃₁ : X₃₁ ⟶ X₃₂} {v₁₁ : X₁₁ ⟶ X₂₁}
     {v₁₂ : X₁₂ ⟶ X₂₂} {v₂₁ : X₂₁ ⟶ X₃₁} {v₂₂ : X₂₂ ⟶ X₃₂} (s : IsPushout h₁₁ v₁₁ v₁₂ h₂₁)
     (t : IsPushout h₂₁ v₂₁ v₂₂ h₃₁) : IsPushout h₁₁ (v₁₁ ≫ v₂₁) (v₁₂ ≫ v₂₂) h₃₁ :=

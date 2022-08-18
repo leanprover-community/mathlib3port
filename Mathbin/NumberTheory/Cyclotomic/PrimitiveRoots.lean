@@ -128,8 +128,8 @@ noncomputable def subOnePowerBasis : PowerBasis K L :=
 
 variable {K} (C)
 
-/-- The equivalence between `L →ₐ[K] C` and `primitive_roots n C` given by a primitive root `ζ`. -/
 -- We are not using @[simps] to avoid a timeout.
+/-- The equivalence between `L →ₐ[K] C` and `primitive_roots n C` given by a primitive root `ζ`. -/
 noncomputable def embeddingsEquivPrimitiveRoots (C : Type _) [CommRingₓ C] [IsDomain C] [Algebra K C]
     (hirr : Irreducible (cyclotomic n K)) : (L →ₐ[K] C) ≃ primitiveRoots n C :=
   (hζ.PowerBasis K).liftEquiv.trans
@@ -175,12 +175,14 @@ section Norm
 
 namespace IsPrimitiveRoot
 
-variable [Field L] {ζ : L} (hζ : IsPrimitiveRoot ζ n)
+section CommRingₓ
+
+variable [CommRingₓ L] {ζ : L} (hζ : IsPrimitiveRoot ζ n)
 
 variable {K} [Field K] [Algebra K L]
 
 /-- This mathematically trivial result is complementary to `norm_eq_one` below. -/
-theorem norm_eq_neg_one_pow (hζ : IsPrimitiveRoot ζ 2) : norm K ζ = -1 ^ finrank K L := by
+theorem norm_eq_neg_one_pow (hζ : IsPrimitiveRoot ζ 2) [IsDomain L] : norm K ζ = -1 ^ finrank K L := by
   rw [hζ.eq_neg_one_of_two_right,
     show -1 = algebraMap K L (-1) by
       simp ,
@@ -190,8 +192,8 @@ include hζ
 
 /-- If `irreducible (cyclotomic n K)` (in particular for `K = ℚ`), the norm of a primitive root is
 `1` if `n ≠ 2`. -/
-theorem norm_eq_one [IsCyclotomicExtension {n} K L] (hn : n ≠ 2) (hirr : Irreducible (cyclotomic n K)) : norm K ζ = 1 :=
-  by
+theorem norm_eq_one [IsDomain L] [IsCyclotomicExtension {n} K L] (hn : n ≠ 2) (hirr : Irreducible (cyclotomic n K)) :
+    norm K ζ = 1 := by
   haveI := IsCyclotomicExtension.ne_zero' n K L
   by_cases' h1 : n = 1
   · rw [h1, one_coe, one_right_iff] at hζ
@@ -217,8 +219,8 @@ theorem norm_eq_one_of_linearly_ordered {K : Type _} [LinearOrderedField K] [Alg
   rw [← (algebraMap K L).map_one, Algebra.norm_algebra_map, one_pow, map_pow, ← one_pow ↑n] at hz
   exact StrictMono.injective hodd.strict_mono_pow hz
 
-theorem norm_of_cyclotomic_irreducible [IsCyclotomicExtension {n} K L] (hirr : Irreducible (cyclotomic n K)) :
-    norm K ζ = ite (n = 2) (-1) 1 := by
+theorem norm_of_cyclotomic_irreducible [IsDomain L] [IsCyclotomicExtension {n} K L]
+    (hirr : Irreducible (cyclotomic n K)) : norm K ζ = ite (n = 2) (-1) 1 := by
   split_ifs with hn
   · subst hn
     convert norm_eq_neg_one_pow hζ
@@ -228,6 +230,16 @@ theorem norm_of_cyclotomic_irreducible [IsCyclotomicExtension {n} K L] (hirr : I
     
   · exact hζ.norm_eq_one hn hirr
     
+
+end CommRingₓ
+
+section Field
+
+variable [Field L] {ζ : L} (hζ : IsPrimitiveRoot ζ n)
+
+variable {K} [Field K] [Algebra K L]
+
+include hζ
 
 /-- If `irreducible (cyclotomic n K)` (in particular for `K = ℚ`), then the norm of
 `ζ - 1` is `eval 1 (cyclotomic n ℤ)`. -/
@@ -450,6 +462,8 @@ theorem pow_sub_one_norm_prime_pow_of_one_le {k s : ℕ} (hζ : IsPrimitiveRoot 
     
   · exact hζ.pow_sub_one_norm_prime_pow_ne_two hirr hs htwo
     
+
+end Field
 
 end IsPrimitiveRoot
 

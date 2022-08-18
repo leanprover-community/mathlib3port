@@ -5,7 +5,7 @@ Authors: Alexander Bentkamp, Yury Kudryashov
 -/
 import Mathbin.Analysis.Convex.Jensen
 import Mathbin.Analysis.Normed.Group.Pointwise
-import Mathbin.Analysis.NormedSpace.FiniteDimension
+import Mathbin.Topology.Algebra.Module.FiniteDimension
 import Mathbin.Analysis.NormedSpace.Ray
 import Mathbin.Topology.PathConnected
 import Mathbin.Topology.Algebra.Affine

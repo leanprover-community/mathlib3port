@@ -198,13 +198,13 @@ private theorem step2 (K : Subgroup G) [K.Normal] (hK : K ≤ N) : K = ⊥ ∨ K
   contrapose! h4
   have h5 : Fintype.card (G ⧸ K) < Fintype.card G := by
     rw [← index_eq_card, ← K.index_mul_card]
-    refine' lt_mul_of_one_lt_right (Nat.pos_of_ne_zeroₓ index_ne_zero_of_fintype) (K.one_lt_card_iff_ne_bot.mpr h4.1)
+    refine' lt_mul_of_one_lt_right (Nat.pos_of_ne_zeroₓ index_ne_zero_of_finite) (K.one_lt_card_iff_ne_bot.mpr h4.1)
   have h6 : Nat.Coprime (Fintype.card (N.map (QuotientGroup.mk' K))) (N.map (QuotientGroup.mk' K)).index := by
     have index_map :=
       N.index_map_eq this
         (by
           rwa [QuotientGroup.ker_mk])
-    have index_pos : 0 < N.index := Nat.pos_of_ne_zeroₓ index_ne_zero_of_fintype
+    have index_pos : 0 < N.index := Nat.pos_of_ne_zeroₓ index_ne_zero_of_finite
     rw [index_map]
     refine' h1.coprime_dvd_left _
     rw [← Nat.mul_dvd_mul_iff_left index_pos, index_mul_card, ← index_map, index_mul_card]

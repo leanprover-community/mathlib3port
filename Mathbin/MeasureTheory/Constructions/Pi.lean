@@ -231,8 +231,8 @@ open List
 
 variable {δ : Type _} {π : δ → Type _} [∀ x, MeasurableSpace (π x)]
 
-/-- A product of measures in `tprod α l`. -/
 -- for some reason the equation compiler doesn't like this definition
+/-- A product of measures in `tprod α l`. -/
 protected def tprod (l : List δ) (μ : ∀ i, Measure (π i)) : Measure (Tprod π l) := by
   induction' l with i l ih
   exact dirac PUnit.unit
@@ -363,9 +363,14 @@ def FiniteSpanningSetsIn.pi {C : ∀ i, Set (Set (α i))} (hμ : ∀ i, (μ i).F
       Union_univ_pi fun i => (hμ i).Set, (hμ _).spanning, Set.pi_univ]
     
 
+-- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 /-- A measure on a finite product space equals the product measure if they are equal on rectangles
   with as sides sets that generate the corresponding σ-algebras. -/
-theorem pi_eq_generate_from {C : ∀ i, Set (Set (α i))} (hC : ∀ i, generateFrom (C i) = _inst_3 i)
+theorem pi_eq_generate_from {C : ∀ i, Set (Set (α i))}
+    (hC :
+      ∀ i,
+        generateFrom (C i) = by
+          apply_assumption)
     (h2C : ∀ i, IsPiSystem (C i)) (h3C : ∀ i, (μ i).FiniteSpanningSetsIn (C i)) {μν : Measure (∀ i, α i)}
     (h₁ : ∀ s : ∀ i, Set (α i), (∀ i, s i ∈ C i) → μν (pi Univ s) = ∏ i, μ i (s i)) : Measure.pi μ = μν := by
   have h4C : ∀ (i) (s : Set (α i)), s ∈ C i → MeasurableSet s := by

@@ -40,6 +40,8 @@ Definitions in the file:
 
 * `subsingleton s : Prop` : the predicate saying that `s` has at most one element.
 
+* `nontrivial s : Prop` : the predicate saying that `s` has at least two distinct elements.
+
 * `range f : set β` : the image of `univ` under `f`.
   Also works for `{p : Prop} (f : p → α)` (unlike `image`)
 
@@ -312,13 +314,6 @@ theorem not_mem_subset (h : s ⊆ t) : a ∉ t → a ∉ s :=
 theorem not_subset : ¬s ⊆ t ↔ ∃ a ∈ s, a ∉ t := by
   simp only [← subset_def, ← not_forall]
 
-theorem nontrivial_mono {α : Type _} {s t : Set α} (h₁ : s ⊆ t) (h₂ : Nontrivial s) : Nontrivial t := by
-  rw [nontrivial_iff] at h₂⊢
-  obtain ⟨⟨x, hx⟩, ⟨y, hy⟩, hxy⟩ := h₂
-  exact
-    ⟨⟨x, h₁ hx⟩, ⟨y, h₁ hy⟩, by
-      simpa using hxy⟩
-
 /-! ### Definition of strict subsets `s ⊂ t` and basic properties. -/
 
 
@@ -415,11 +410,14 @@ theorem Nonempty.left (h : (s ∩ t).Nonempty) : s.Nonempty :=
 theorem Nonempty.right (h : (s ∩ t).Nonempty) : t.Nonempty :=
   h.imp fun _ => And.right
 
-theorem nonempty_inter_iff_exists_right : (s ∩ t).Nonempty ↔ ∃ x : t, ↑x ∈ s :=
-  ⟨fun ⟨x, xs, xt⟩ => ⟨⟨x, xt⟩, xs⟩, fun ⟨⟨x, xt⟩, xs⟩ => ⟨x, xs, xt⟩⟩
+theorem inter_nonempty : (s ∩ t).Nonempty ↔ ∃ x, x ∈ s ∧ x ∈ t :=
+  Iff.rfl
 
-theorem nonempty_inter_iff_exists_left : (s ∩ t).Nonempty ↔ ∃ x : s, ↑x ∈ t :=
-  ⟨fun ⟨x, xs, xt⟩ => ⟨⟨x, xs⟩, xt⟩, fun ⟨⟨x, xt⟩, xs⟩ => ⟨x, xt, xs⟩⟩
+theorem inter_nonempty_iff_exists_left : (s ∩ t).Nonempty ↔ ∃ x ∈ s, x ∈ t := by
+  simp_rw [inter_nonempty, exists_prop]
+
+theorem inter_nonempty_iff_exists_right : (s ∩ t).Nonempty ↔ ∃ x ∈ t, x ∈ s := by
+  simp_rw [inter_nonempty, exists_prop, and_comm]
 
 theorem nonempty_iff_univ_nonempty : Nonempty α ↔ (Univ : Set α).Nonempty :=
   ⟨fun ⟨x⟩ => ⟨x, trivialₓ⟩, fun ⟨x, _⟩ => ⟨x⟩⟩
@@ -559,7 +557,7 @@ theorem not_subset_iff_exists_mem_not_mem {α : Type _} {s t : Set α} : ¬s ⊆
 theorem univ_unique [Unique α] : @Set.Univ α = {default} :=
   Set.ext fun x => iff_of_true trivialₓ <| Subsingleton.elimₓ x default
 
-instance [Nonempty α] : Nontrivial (Set α) :=
+instance nontrivial_of_nonempty [Nonempty α] : Nontrivial (Set α) :=
   ⟨⟨∅, Univ, empty_ne_univ⟩⟩
 
 /-! ### Lemmas about union -/
@@ -2039,14 +2037,11 @@ end Image
 /-! ### Subsingleton -/
 
 
-/-- A set `s` is a `subsingleton`, if it has at most one element. -/
+/-- A set `s` is a `subsingleton` if it has at most one element. -/
 protected def Subsingleton (s : Set α) : Prop :=
   ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), x = y
 
-theorem Subsingleton.mono (ht : t.Subsingleton) (hst : s ⊆ t) : s.Subsingleton := fun x hx y hy => ht (hst hx) (hst hy)
-
-theorem Subsingleton.image (hs : s.Subsingleton) (f : α → β) : (f '' s).Subsingleton :=
-  fun _ ⟨x, hx, Hx⟩ _ ⟨y, hy, Hy⟩ => Hx ▸ Hy ▸ congr_arg f (hs hx hy)
+theorem Subsingleton.anti (ht : t.Subsingleton) (hst : s ⊆ t) : s.Subsingleton := fun x hx y hy => ht (hst hx) (hst hy)
 
 theorem Subsingleton.eq_singleton_of_mem (hs : s.Subsingleton) {x : α} (hx : x ∈ s) : s = {x} :=
   ext fun y => ⟨fun hy => hs hx hy ▸ mem_singleton _, fun hy => (eq_of_mem_singleton hy).symm ▸ hx⟩
@@ -2059,7 +2054,7 @@ theorem subsingleton_singleton {a} : ({a} : Set α).Subsingleton := fun x hx y h
   (eq_of_mem_singleton hx).symm ▸ (eq_of_mem_singleton hy).symm ▸ rfl
 
 theorem subsingleton_of_subset_singleton (h : s ⊆ {a}) : s.Subsingleton :=
-  subsingleton_singleton.mono h
+  subsingleton_singleton.anti h
 
 theorem subsingleton_of_forall_eq (a : α) (h : ∀, ∀ b ∈ s, ∀, b = a) : s.Subsingleton := fun b hb c hc =>
   (h _ hb).trans (h _ hc).symm
@@ -2084,7 +2079,7 @@ theorem subsingleton_univ_iff : (Univ : Set α).Subsingleton ↔ Subsingleton α
   ⟨subsingleton_of_univ_subsingleton, fun h => @subsingleton_univ _ h⟩
 
 theorem subsingleton_of_subsingleton [Subsingleton α] {s : Set α} : Set.Subsingleton s :=
-  Subsingleton.mono subsingleton_univ (subset_univ s)
+  subsingleton_univ.anti (subset_univ s)
 
 theorem subsingleton_is_top (α : Type _) [PartialOrderₓ α] : Set.Subsingleton { x : α | IsTop x } := fun x hx y hy =>
   hx.IsMax.eq_of_le (hy x)
@@ -2100,8 +2095,7 @@ theorem exists_eq_singleton_iff_nonempty_subsingleton : (∃ a : α, s = {a}) �
   · exact h.2.eq_empty_or_singleton.resolve_left h.1.ne_empty
     
 
-/-- `s`, coerced to a type, is a subsingleton type if and only if `s`
-is a subsingleton set. -/
+/-- `s`, coerced to a type, is a subsingleton type if and only if `s` is a subsingleton set. -/
 @[simp, norm_cast]
 theorem subsingleton_coe (s : Set α) : Subsingleton s ↔ s.Subsingleton := by
   constructor
@@ -2117,14 +2111,187 @@ instance subsingleton_coe_of_subsingleton [Subsingleton α] {s : Set α} : Subsi
   rw [s.subsingleton_coe]
   exact subsingleton_of_subsingleton
 
+/-- The image of a subsingleton is a subsingleton. -/
+theorem Subsingleton.image (hs : s.Subsingleton) (f : α → β) : (f '' s).Subsingleton :=
+  fun _ ⟨x, hx, Hx⟩ _ ⟨y, hy, Hy⟩ => Hx ▸ Hy ▸ congr_arg f (hs hx hy)
+
 /-- The preimage of a subsingleton under an injective map is a subsingleton. -/
 theorem Subsingleton.preimage {s : Set β} (hs : s.Subsingleton) {f : α → β} (hf : Function.Injective f) :
     (f ⁻¹' s).Subsingleton := fun a ha b hb => hf <| hs ha hb
 
-/-- `s` is a subsingleton, if its image of an injective function is. -/
+/-- If the image of a set under an injective map is a subsingleton, the set is a subsingleton. -/
 theorem subsingleton_of_image {α β : Type _} {f : α → β} (hf : Function.Injective f) (s : Set α)
     (hs : (f '' s).Subsingleton) : s.Subsingleton :=
-  (hs.Preimage hf).mono <| subset_preimage_image _ _
+  (hs.Preimage hf).anti <| subset_preimage_image _ _
+
+/-- If the preimage of a set under an surjective map is a subsingleton,
+the set is a subsingleton. -/
+theorem subsingleton_of_preimage {α β : Type _} {f : α → β} (hf : Function.Surjective f) (s : Set β)
+    (hs : (f ⁻¹' s).Subsingleton) : s.Subsingleton := fun fx hx fy hy => by
+  rcases hf fx, hf fy with ⟨⟨x, rfl⟩, ⟨y, rfl⟩⟩
+  exact congr_arg f (hs hx hy)
+
+/-! ### Nontrivial -/
+
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » s)
+/-- A set `s` is `nontrivial` if it has at least two distinct elements. -/
+protected def Nontrivial (s : Set α) : Prop :=
+  ∃ (x y : _)(_ : x ∈ s)(_ : y ∈ s), x ≠ y
+
+theorem nontrivial_of_mem_mem_ne {x y} (hx : x ∈ s) (hy : y ∈ s) (hxy : x ≠ y) : s.Nontrivial :=
+  ⟨x, hx, y, hy, hxy⟩
+
+/-- Extract witnesses from s.nontrivial. This function might be used instead of case analysis on the
+argument. Note that it makes a proof depend on the classical.choice axiom. -/
+protected noncomputable def Nontrivial.some (hs : s.Nontrivial) : α × α :=
+  (hs.some, hs.some_spec.some_spec.some)
+
+protected theorem Nontrivial.some_fst_mem (hs : s.Nontrivial) : hs.some.fst ∈ s :=
+  hs.some_spec.some
+
+protected theorem Nontrivial.some_snd_mem (hs : s.Nontrivial) : hs.some.snd ∈ s :=
+  hs.some_spec.some_spec.some_spec.some
+
+protected theorem Nontrivial.some_fst_ne_some_snd (hs : s.Nontrivial) : hs.some.fst ≠ hs.some.snd :=
+  hs.some_spec.some_spec.some_spec.some_spec
+
+theorem Nontrivial.mono (hs : s.Nontrivial) (hst : s ⊆ t) : t.Nontrivial :=
+  let ⟨x, hx, y, hy, hxy⟩ := hs
+  ⟨x, hst hx, y, hst hy, hxy⟩
+
+theorem nontrivial_pair {x y} (hxy : x ≠ y) : ({x, y} : Set α).Nontrivial :=
+  ⟨x, mem_insert _ _, y, mem_insert_of_mem _ (mem_singleton _), hxy⟩
+
+theorem nontrivial_of_pair_subset {x y} (hxy : x ≠ y) (h : {x, y} ⊆ s) : s.Nontrivial :=
+  (nontrivial_pair hxy).mono h
+
+theorem Nontrivial.pair_subset (hs : s.Nontrivial) : ∃ (x y : _)(hab : x ≠ y), {x, y} ⊆ s :=
+  let ⟨x, hx, y, hy, hxy⟩ := hs
+  ⟨x, y, hxy, insert_subset.2 ⟨hx, singleton_subset_iff.2 hy⟩⟩
+
+theorem nontrivial_iff_pair_subset : s.Nontrivial ↔ ∃ (x y : _)(hxy : x ≠ y), {x, y} ⊆ s :=
+  ⟨Nontrivial.pair_subset, fun H =>
+    let ⟨x, y, hxy, h⟩ := H
+    nontrivial_of_pair_subset hxy h⟩
+
+theorem nontrivial_of_exists_ne {x} (hx : x ∈ s) (h : ∃ y ∈ s, y ≠ x) : s.Nontrivial :=
+  let ⟨y, hy, hyx⟩ := h
+  ⟨y, hy, x, hx, hyx⟩
+
+theorem Nontrivial.exists_ne {z} (hs : s.Nontrivial) : ∃ x ∈ s, x ≠ z := by
+  by_contra H
+  push_neg  at H
+  rcases hs with ⟨x, hx, y, hy, hxy⟩
+  rw [H x hx, H y hy] at hxy
+  exact hxy rfl
+
+theorem nontrivial_iff_exists_ne {x} (hx : x ∈ s) : s.Nontrivial ↔ ∃ y ∈ s, y ≠ x :=
+  ⟨fun H => H.exists_ne, nontrivial_of_exists_ne hx⟩
+
+theorem nontrivial_of_lt [Preorderₓ α] {x y} (hx : x ∈ s) (hy : y ∈ s) (hxy : x < y) : s.Nontrivial :=
+  ⟨x, hx, y, hy, ne_of_ltₓ hxy⟩
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » s)
+theorem nontrivial_of_exists_lt [Preorderₓ α] (H : ∃ (x y : _)(_ : x ∈ s)(_ : y ∈ s), x < y) : s.Nontrivial :=
+  let ⟨x, hx, y, hy, hxy⟩ := H
+  nontrivial_of_lt hx hy hxy
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » s)
+theorem Nontrivial.exists_lt [LinearOrderₓ α] (hs : s.Nontrivial) : ∃ (x y : _)(_ : x ∈ s)(_ : y ∈ s), x < y :=
+  let ⟨x, hx, y, hy, hxy⟩ := hs
+  Or.elim (lt_or_gt_of_neₓ hxy) (fun H => ⟨x, hx, y, hy, H⟩) fun H => ⟨y, hy, x, hx, H⟩
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » s)
+theorem Nontrivial.iff_exists_lt [LinearOrderₓ α] : s.Nontrivial ↔ ∃ (x y : _)(_ : x ∈ s)(_ : y ∈ s), x < y :=
+  ⟨Nontrivial.exists_lt, nontrivial_of_exists_lt⟩
+
+theorem Nontrivial.nonempty (hs : s.Nontrivial) : s.Nonempty :=
+  let ⟨x, hx, _⟩ := hs
+  ⟨x, hx⟩
+
+theorem Nontrivial.ne_empty (hs : s.Nontrivial) : s ≠ ∅ :=
+  hs.Nonempty.ne_empty
+
+theorem Nontrivial.not_subset_empty (hs : s.Nontrivial) : ¬s ⊆ ∅ :=
+  hs.Nonempty.not_subset_empty
+
+@[simp]
+theorem not_nontrivial_empty : ¬(∅ : Set α).Nontrivial := fun h => h.ne_empty rfl
+
+@[simp]
+theorem not_nontrivial_singleton {x} : ¬({x} : Set α).Nontrivial := fun H => by
+  rw [nontrivial_iff_exists_ne (mem_singleton x)] at H
+  exact
+    let ⟨y, hy, hya⟩ := H
+    hya (mem_singleton_iff.1 hy)
+
+theorem Nontrivial.ne_singleton {x} (hs : s.Nontrivial) : s ≠ {x} := fun H => by
+  rw [H] at hs
+  exact not_nontrivial_singleton hs
+
+theorem Nontrivial.not_subset_singleton {x} (hs : s.Nontrivial) : ¬s ⊆ {x} :=
+  (not_congr subset_singleton_iff_eq).2 (not_orₓ hs.ne_empty hs.ne_singleton)
+
+theorem nontrivial_univ [Nontrivial α] : (Univ : Set α).Nontrivial :=
+  let ⟨x, y, hxy⟩ := exists_pair_ne α
+  ⟨x, mem_univ _, y, mem_univ _, hxy⟩
+
+theorem nontrivial_of_univ_nontrivial (h : (Univ : Set α).Nontrivial) : Nontrivial α :=
+  let ⟨x, _, y, _, hxy⟩ := h
+  ⟨⟨x, y, hxy⟩⟩
+
+@[simp]
+theorem nontrivial_univ_iff : (Univ : Set α).Nontrivial ↔ Nontrivial α :=
+  ⟨nontrivial_of_univ_nontrivial, fun h => @nontrivial_univ _ h⟩
+
+theorem nontrivial_of_nontrivial (hs : s.Nontrivial) : Nontrivial α :=
+  let ⟨x, _, y, _, hxy⟩ := hs
+  ⟨⟨x, y, hxy⟩⟩
+
+/-- `s`, coerced to a type, is a nontrivial type if and only if `s` is a nontrivial set. -/
+@[simp, norm_cast]
+theorem nontrivial_coe (s : Set α) : Nontrivial s ↔ s.Nontrivial := by
+  simp_rw [← nontrivial_univ_iff, Set.Nontrivial, mem_univ, exists_true_left, SetCoe.exists, Subtype.mk_eq_mk]
+
+/-- A type with a set `s` whose `coe_sort` is a nontrivial type is nontrivial.
+For the corresponding result for `subtype`, see `subtype.nontrivial_iff_exists_ne`. -/
+theorem nontrivial_of_nontrivial_coe (hs : Nontrivial s) : Nontrivial α := by
+  rw [s.nontrivial_coe] at hs
+  exact nontrivial_of_nontrivial hs
+
+theorem nontrivial_mono {α : Type _} {s t : Set α} (hst : s ⊆ t) (hs : Nontrivial s) : Nontrivial t :=
+  (nontrivial_coe _).2 <| (s.nontrivial_coe.1 hs).mono hst
+
+/-- The preimage of a nontrivial set under a surjective map is nontrivial. -/
+theorem Nontrivial.preimage {s : Set β} (hs : s.Nontrivial) {f : α → β} (hf : Function.Surjective f) :
+    (f ⁻¹' s).Nontrivial := by
+  rcases hs with ⟨fx, hx, fy, hy, hxy⟩
+  rcases hf fx, hf fy with ⟨⟨x, rfl⟩, ⟨y, rfl⟩⟩
+  exact ⟨x, hx, y, hy, mt (congr_arg f) hxy⟩
+
+/-- The image of a nontrivial set under an injective map is nontrivial. -/
+theorem Nontrivial.image (hs : s.Nontrivial) {f : α → β} (hf : Function.Injective f) : (f '' s).Nontrivial :=
+  let ⟨x, hx, y, hy, hxy⟩ := hs
+  ⟨f x, mem_image_of_mem f hx, f y, mem_image_of_mem f hy, hf.Ne hxy⟩
+
+/-- If the image of a set is nontrivial, the set is nontrivial. -/
+theorem nontrivial_of_image (f : α → β) (s : Set α) (hs : (f '' s).Nontrivial) : s.Nontrivial :=
+  let ⟨_, ⟨x, hx, rfl⟩, _, ⟨y, hy, rfl⟩, hxy⟩ := hs
+  ⟨x, hx, y, hy, mt (congr_arg f) hxy⟩
+
+/-- If the preimage of a set under an injective map is nontrivial, the set is nontrivial. -/
+theorem nontrivial_of_preimage {f : α → β} (hf : Function.Injective f) (s : Set β) (hs : (f ⁻¹' s).Nontrivial) :
+    s.Nontrivial :=
+  (hs.Image hf).mono <| image_preimage_subset _ _
+
+@[simp]
+theorem not_subsingleton_iff : ¬s.Subsingleton ↔ s.Nontrivial := by
+  simp_rw [Set.Subsingleton, Set.Nontrivial, not_forall]
+
+@[simp]
+theorem not_nontrivial_iff : ¬s.Nontrivial ↔ s.Subsingleton :=
+  Iff.not_left not_subsingleton_iff.symm
 
 theorem univ_eq_true_false : univ = ({True, False} : Set Prop) :=
   Eq.symm <|

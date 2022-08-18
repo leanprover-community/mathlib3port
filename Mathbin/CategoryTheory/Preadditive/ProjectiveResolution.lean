@@ -256,8 +256,8 @@ def liftCompHomotopy {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (P : ProjectiveReso
     (R : ProjectiveResolution Z) : Homotopy (lift (f ≫ g) P R) (lift f P Q ≫ lift g Q R) := by
   apply lift_homotopy (f ≫ g) <;> simp
 
-/-- Any two projective resolutions are homotopy equivalent. -/
 -- We don't care about the actual definitions of these homotopies.
+/-- Any two projective resolutions are homotopy equivalent. -/
 def homotopyEquiv {X : C} (P Q : ProjectiveResolution X) : HomotopyEquiv P.complex Q.complex where
   Hom := lift (𝟙 X) P Q
   inv := lift (𝟙 X) Q P

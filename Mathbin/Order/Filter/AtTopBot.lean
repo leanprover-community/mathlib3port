@@ -437,10 +437,10 @@ theorem high_scores [LinearOrderₓ β] [NoMaxOrder β] {u : ℕ → β} (hu : T
     _ < u n := hnk
     
 
+-- see Note [nolint_ge]
 /-- If `u` is a sequence which is unbounded below,
 then after any point, it reaches a value strictly smaller than all previous values.
 -/
--- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem low_scores [LinearOrderₓ β] [NoMinOrder β] {u : ℕ → β} (hu : Tendsto u atTop atBot) :
     ∀ N, ∃ n ≥ N, ∀, ∀ k < n, ∀, u n < u k :=

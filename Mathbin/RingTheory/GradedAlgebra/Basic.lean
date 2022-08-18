@@ -253,50 +253,43 @@ def GradedRing.projZeroRingHom : A →+* A where
   toFun := fun a => decompose 𝒜 a 0
   map_one' := decompose_of_mem_same 𝒜 one_mem
   map_zero' := by
-    simp
+    rw [decompose_zero]
+    rfl
   map_add' := fun _ _ => by
-    simp
-  map_mul' := fun x y => by
-    -- Convert the abstract add_submonoid into a concrete one. This is necessary as there is no
-    -- lattice structure on the abstract ones.
-    let 𝒜' : ι → AddSubmonoid A := fun i =>
-      (⟨𝒜 i, fun _ _ => AddMemClass.add_mem, ZeroMemClass.zero_mem _⟩ : AddSubmonoid A)
-    letI : GradedRing 𝒜' :=
-      { (by
-          infer_instance : SetLike.GradedMonoid 𝒜) with
-        decompose' := (DirectSum.decompose 𝒜 : A → ⨁ i, 𝒜 i), left_inv := DirectSum.Decomposition.left_inv,
-        right_inv := DirectSum.Decomposition.right_inv }
-    have m : ∀ x, x ∈ supr 𝒜' := by
-      intro x
-      rw [DirectSum.IsInternal.add_submonoid_supr_eq_top 𝒜' (DirectSum.Decomposition.is_internal 𝒜')]
-      exact AddSubmonoid.mem_top x
-    refine' AddSubmonoid.supr_induction 𝒜' (m x) (fun i c hc => _) _ _
-    · refine' AddSubmonoid.supr_induction 𝒜' (m y) (fun j c' hc' => _) _ _
-      · by_cases' h : i + j = 0
-        · rw [decompose_of_mem_same 𝒜 (show c * c' ∈ 𝒜 0 from h ▸ mul_mem hc hc'),
-            decompose_of_mem_same 𝒜 (show c ∈ 𝒜 0 from (add_eq_zero_iff.mp h).1 ▸ hc),
-            decompose_of_mem_same 𝒜 (show c' ∈ 𝒜 0 from (add_eq_zero_iff.mp h).2 ▸ hc')]
-          
-        · rw [decompose_of_mem_ne 𝒜 (mul_mem hc hc') h]
-          cases'
-            show i ≠ 0 ∨ j ≠ 0 by
-              rwa [add_eq_zero_iff, not_and_distrib] at h with
-            h' h'
-          · simp only [← decompose_of_mem_ne 𝒜 hc h', ← zero_mul]
-            
-          · simp only [← decompose_of_mem_ne 𝒜 hc' h', ← mul_zero]
-            
-          
+    rw [decompose_add]
+    rfl
+  map_mul' := by
+    refine' DirectSum.Decomposition.induction_on 𝒜 (fun x => _) _ _
+    · simp only [← zero_mul, ← decompose_zero, ← zero_apply, ← AddSubmonoidClass.coe_zero]
+      
+    · rintro i ⟨c, hc⟩
+      refine' DirectSum.Decomposition.induction_on 𝒜 _ _ _
+      · simp only [← mul_zero, ← decompose_zero, ← zero_apply, ← AddSubmonoidClass.coe_zero]
         
-      · simp only [← decompose_zero, ← zero_apply, ← AddSubmonoidClass.coe_zero, ← mul_zero]
+      · rintro j ⟨c', hc'⟩
+        · simp only [← Subtype.coe_mk]
+          by_cases' h : i + j = 0
+          · rw [decompose_of_mem_same 𝒜 (show c * c' ∈ 𝒜 0 from h ▸ mul_mem hc hc'),
+              decompose_of_mem_same 𝒜 (show c ∈ 𝒜 0 from (add_eq_zero_iff.mp h).1 ▸ hc),
+              decompose_of_mem_same 𝒜 (show c' ∈ 𝒜 0 from (add_eq_zero_iff.mp h).2 ▸ hc')]
+            
+          · rw [decompose_of_mem_ne 𝒜 (mul_mem hc hc') h]
+            cases'
+              show i ≠ 0 ∨ j ≠ 0 by
+                rwa [add_eq_zero_iff, not_and_distrib] at h with
+              h' h'
+            · simp only [← decompose_of_mem_ne 𝒜 hc h', ← zero_mul]
+              
+            · simp only [← decompose_of_mem_ne 𝒜 hc' h', ← mul_zero]
+              
+            
+          
         
       · intro _ _ hd he
         simp only [← mul_addₓ, ← decompose_add, ← add_apply, ← AddMemClass.coe_add, ← hd, ← he]
         
       
-    · simp only [← decompose_zero, ← zero_apply, ← AddSubmonoidClass.coe_zero, ← zero_mul]
-      
-    · rintro _ _ ha hb
+    · rintro _ _ ha hb _
       simp only [← add_mulₓ, ← decompose_add, ← add_apply, ← AddMemClass.coe_add, ← ha, ← hb]
       
 

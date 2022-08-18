@@ -88,7 +88,7 @@ instance [LinearOrderₓ ι] [∀ a, PartialOrderₓ (β a)] : PartialOrderₓ (
 /-- `Πₗ i, α i` is a linear order if the original order is well-founded. -/
 noncomputable instance [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, LinearOrderₓ (β a)] :
     LinearOrderₓ (Lex (∀ i, β i)) :=
-  @linearOrderOfSTO' (Πₗ i, β i) (· < ·) { to_is_trichotomous := is_trichotomous_lex _ _ IsWellOrder.wf }
+  @linearOrderOfSTO' (Πₗ i, β i) (· < ·) { to_is_trichotomous := is_trichotomous_lex _ _ IsWellFounded.wf }
     (Classical.decRel _)
 
 theorem Lex.le_of_forall_le [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, LinearOrderₓ (β a)] {a b : Lex (∀ i, β i)}

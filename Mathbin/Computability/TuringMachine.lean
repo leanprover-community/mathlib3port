@@ -932,9 +932,9 @@ parameter (Γ : Type _)[Inhabited Γ]
 -- type of tape symbols
 parameter (Λ : Type _)[Inhabited Λ]
 
+-- type of "labels" or TM states
 /-- A Turing machine "statement" is just a command to either move
   left or right, or write a symbol on the tape. -/
--- type of "labels" or TM states
 inductive Stmt
   | move : Dir → stmt
   | write : Γ → stmt
@@ -942,6 +942,7 @@ inductive Stmt
 instance Stmt.inhabited : Inhabited stmt :=
   ⟨stmt.write default⟩
 
+-- [inhabited Λ]: this is a deliberate addition, see comment
 /-- A Post-Turing machine with symbol type `Γ` and label type `Λ`
   is a function which, given the current state `q : Λ` and
   the tape head `a : Γ`, either halts (returns `none`) or returns
@@ -951,7 +952,6 @@ instance Stmt.inhabited : Inhabited stmt :=
   Both `Λ` and `Γ` are required to be inhabited; the default value
   for `Γ` is the "blank" tape value, and the default value of `Λ` is
   the initial state. -/
--- [inhabited Λ]: this is a deliberate addition, see comment
 @[nolint unused_arguments]
 def Machine :=
   Λ → Γ → Option (Λ × stmt)
@@ -1122,6 +1122,7 @@ parameter (Λ : Type _)
 -- Type of function labels
 parameter (σ : Type _)
 
+-- Type of variable settings
 /-- The TM1 model is a simplification and extension of TM0
   (Post-Turing model) in the direction of Wang B-machines. The machine's
   internal state is extended with a (finite) store `σ` of variables
@@ -1134,7 +1135,6 @@ parameter (σ : Type _)
   most statements do not have labels; `goto` commands can only
   go to a new function. All commands have access to the variable value
   and current tape value. -/
--- Type of variable settings
 inductive Stmt
   | move : Dir → stmt → stmt
   | write : (Γ → σ → Γ) → stmt → stmt
@@ -1343,14 +1343,14 @@ parameter (M : Λ → stmt₁)
 
 include M
 
+-- [inhabited Λ] [inhabited σ] (M : Λ → stmt₁): We need the M assumption
+-- because of the inhabited instance, but we could avoid the inhabited instances on Λ and σ here.
+-- But they are parameters so we cannot easily skip them for just this definition.
 /-- The base machine state space is a pair of an `option stmt₁` representing the current program
 to be executed, or `none` for the halt state, and a `σ` which is the local state (stored in the TM,
 not the tape). Because there are an infinite number of programs, this state space is infinite, but
 for a finitely supported TM1 machine and a finite type `σ`, only finitely many of these states are
 reachable. -/
--- [inhabited Λ] [inhabited σ] (M : Λ → stmt₁): We need the M assumption
--- because of the inhabited instance, but we could avoid the inhabited instances on Λ and σ here.
--- But they are parameters so we cannot easily skip them for just this definition.
 @[nolint unused_arguments]
 def Λ' :=
   Option stmt₁ × σ
@@ -1992,13 +1992,13 @@ parameter (Λ : Type _)
 -- Type of function labels
 parameter (σ : Type _)
 
+-- Type of variable settings
 /-- The TM2 model removes the tape entirely from the TM1 model,
   replacing it with an arbitrary (finite) collection of stacks.
   The operation `push` puts an element on one of the stacks,
   and `pop` removes an element from a stack (and modifying the
   internal state based on the result). `peek` modifies the
   internal state but does not remove an element. -/
--- Type of variable settings
 inductive Stmt
   | push : ∀ k, (σ → Γ k) → stmt → stmt
   | peek : ∀ k, (σ → Option (Γ k) → σ) → stmt → stmt
@@ -2235,10 +2235,10 @@ local notation "stmt₂" => TM2.Stmt Γ Λ σ
 -- mathport name: «exprcfg₂»
 local notation "cfg₂" => TM2.Cfg Γ Λ σ
 
-/-- The alphabet of the TM2 simulator on TM1 is a marker for the stack bottom,
-plus a vector of stack elements for each stack, or none if the stack does not extend this far. -/
 -- [decidable_eq K]: Because K is a parameter, we cannot easily skip
 -- the decidable_eq assumption, and this is a local definition anyway so it's not important.
+/-- The alphabet of the TM2 simulator on TM1 is a marker for the stack bottom,
+plus a vector of stack elements for each stack, or none if the stack does not extend this far. -/
 @[nolint unused_arguments]
 def Γ' :=
   Bool × ∀ k, Option (Γ k)
@@ -2293,9 +2293,9 @@ section
 
 open StAct
 
-/-- The TM2 statement corresponding to a stack action. -/
 -- [inhabited Λ]: as this is a local definition it is more trouble than
 -- it is worth to omit the typeclass assumption without breaking the parameters
+/-- The TM2 statement corresponding to a stack action. -/
 @[nolint unused_arguments]
 def stRunₓ {k : K} : st_act k → stmt₂ → stmt₂
   | push f => TM2.Stmt.push k f

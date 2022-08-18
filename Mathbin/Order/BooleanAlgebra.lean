@@ -803,8 +803,8 @@ class BooleanAlgebra (α : Type u) extends DistribLattice α, HasCompl α, HasSd
 instance (priority := 100) BooleanAlgebra.toBoundedOrder [h : BooleanAlgebra α] : BoundedOrder α :=
   { h with }
 
-/-- A bounded generalized boolean algebra is a boolean algebra. -/
 -- See note [reducible non instances]
+/-- A bounded generalized boolean algebra is a boolean algebra. -/
 @[reducible]
 def GeneralizedBooleanAlgebra.toBooleanAlgebra [GeneralizedBooleanAlgebra α] [OrderTop α] : BooleanAlgebra α :=
   { ‹GeneralizedBooleanAlgebra α›, GeneralizedBooleanAlgebra.toOrderBot, ‹OrderTop α› with compl := fun a => ⊤ \ a,
@@ -1039,8 +1039,8 @@ theorem Bool.compl_eq_bnot : HasCompl.compl = bnot :=
 
 section lift
 
-/-- Pullback a `generalized_boolean_algebra` along an injection. -/
 -- See note [reducible non-instances]
+/-- Pullback a `generalized_boolean_algebra` along an injection. -/
 @[reducible]
 protected def Function.Injective.generalizedBooleanAlgebra [HasSup α] [HasInf α] [HasBot α] [HasSdiff α]
     [GeneralizedBooleanAlgebra β] (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b)
@@ -1069,8 +1069,8 @@ protected def Function.Injective.generalizedBooleanAlgebra [HasSup α] [HasInf �
         convert map_sup _ _
         exact (map_inf _ _).symm }
 
-/-- Pullback a `boolean_algebra` along an injection. -/
 -- See note [reducible non-instances]
+/-- Pullback a `boolean_algebra` along an injection. -/
 @[reducible]
 protected def Function.Injective.booleanAlgebra [HasSup α] [HasInf α] [HasTop α] [HasBot α] [HasCompl α] [HasSdiff α]
     [BooleanAlgebra β] (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b)

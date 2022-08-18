@@ -92,47 +92,47 @@ namespace SubringClass
 instance (priority := 75) toHasIntCast : HasIntCast s :=
   ⟨fun n => ⟨n, coe_int_mem s n⟩⟩
 
-/-- A subring of a ring inherits a ring structure -/
 -- Prefer subclasses of `ring` over subclasses of `subring_class`.
+/-- A subring of a ring inherits a ring structure -/
 instance (priority := 75) toRing : Ringₓ s :=
   Subtype.coe_injective.Ring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) fun _ => rfl
 
 omit hSR
 
-/-- A subring of a `comm_ring` is a `comm_ring`. -/
 -- Prefer subclasses of `ring` over subclasses of `subring_class`.
+/-- A subring of a `comm_ring` is a `comm_ring`. -/
 instance (priority := 75) toCommRing {R} [CommRingₓ R] [SetLike S R] [SubringClass S R] : CommRingₓ s :=
   Subtype.coe_injective.CommRing coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) fun _ => rfl
 
-/-- A subring of a domain is a domain. -/
 -- Prefer subclasses of `ring` over subclasses of `subring_class`.
+/-- A subring of a domain is a domain. -/
 instance (priority := 75) {R} [Ringₓ R] [IsDomain R] [SetLike S R] [SubringClass S R] : IsDomain s :=
   { SubsemiringClass.nontrivial s, SubsemiringClass.no_zero_divisors s with }
 
-/-- A subring of an `ordered_ring` is an `ordered_ring`. -/
 -- Prefer subclasses of `ring` over subclasses of `subring_class`.
+/-- A subring of an `ordered_ring` is an `ordered_ring`. -/
 instance (priority := 75) toOrderedRing {R} [OrderedRing R] [SetLike S R] [SubringClass S R] : OrderedRing s :=
   Subtype.coe_injective.OrderedRing coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) fun _ => rfl
 
-/-- A subring of an `ordered_comm_ring` is an `ordered_comm_ring`. -/
 -- Prefer subclasses of `ring` over subclasses of `subring_class`.
+/-- A subring of an `ordered_comm_ring` is an `ordered_comm_ring`. -/
 instance (priority := 75) toOrderedCommRing {R} [OrderedCommRing R] [SetLike S R] [SubringClass S R] :
     OrderedCommRing s :=
   Subtype.coe_injective.OrderedCommRing coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) fun _ => rfl
 
-/-- A subring of a `linear_ordered_ring` is a `linear_ordered_ring`. -/
 -- Prefer subclasses of `ring` over subclasses of `subring_class`.
+/-- A subring of a `linear_ordered_ring` is a `linear_ordered_ring`. -/
 instance (priority := 75) toLinearOrderedRing {R} [LinearOrderedRing R] [SetLike S R] [SubringClass S R] :
     LinearOrderedRing s :=
   Subtype.coe_injective.LinearOrderedRing coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
-/-- A subring of a `linear_ordered_comm_ring` is a `linear_ordered_comm_ring`. -/
 -- Prefer subclasses of `ring` over subclasses of `subring_class`.
+/-- A subring of a `linear_ordered_comm_ring` is a `linear_ordered_comm_ring`. -/
 instance (priority := 75) toLinearOrderedCommRing {R} [LinearOrderedCommRing R] [SetLike S R] [SubringClass S R] :
     LinearOrderedCommRing s :=
   Subtype.coe_injective.LinearOrderedCommRing coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl)
@@ -1249,9 +1249,9 @@ end Subring
 
 end Actions
 
-/-- The subgroup of positive units of a linear ordered semiring. -/
 -- while this definition is not about subrings, this is the earliest we have
 -- both ordered ring structures and submonoids available
+/-- The subgroup of positive units of a linear ordered semiring. -/
 def Units.posSubgroup (R : Type _) [LinearOrderedSemiring R] : Subgroup Rˣ :=
   { (posSubmonoid R).comap (Units.coeHom R) with Carrier := { x | (0 : R) < x },
     inv_mem' := fun x => Units.inv_pos.mpr }

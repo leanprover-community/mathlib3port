@@ -590,14 +590,14 @@ This is a more informative version of `tactic.revert_lst`.
 unsafe def revert_lst' (hs : List expr) : tactic (ℕ × List expr) :=
   revert_name_set <| local_list_to_name_set hs
 
+/- We cannot implement it as `revert e >> intro1` because that would change the
+local constant in the context. -/
 /-- `revert_reverse_dependencies_of_hyp h` reverts all the hypotheses that depend on
 the hypothesis `h`, including the local definitions that have `h` in their
 value. This fixes a bug in `tactic.revert_kdependencies` that does not revert
 local definitions for which `h` only appears in the value. Returns the number
 of reverted hypotheses.
 -/
-/- We cannot implement it as `revert e >> intro1` because that would change the
-local constant in the context. -/
 unsafe def revert_reverse_dependencies_of_hyp (h : expr) : tactic ℕ :=
   reverse_dependencies_of_hyp_name_set (mk_name_set.insert h.local_uniq_name) >>= revert_lst
 

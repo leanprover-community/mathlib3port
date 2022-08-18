@@ -95,10 +95,10 @@ def coyonedaTensorUnit (C : Type u) [Category.{v} C] [MonoidalCategory C] : LaxM
 
 noncomputable section
 
-/-- If `F` is a monoidal functor out of `Type`, it takes the (n+1)st cartesian power
-of a type to the image of that type, tensored with the image of the nth cartesian power. -/
 -- We don't yet have an API for tensor products indexed by finite ordered types,
 -- but it would be nice to state how monoidal functors preserve these.
+/-- If `F` is a monoidal functor out of `Type`, it takes the (n+1)st cartesian power
+of a type to the image of that type, tensored with the image of the nth cartesian power. -/
 def MonoidalFunctor.mapPi {C : Type _} [Category C] [MonoidalCategory C] (F : MonoidalFunctor (Type _) C) (n : ℕ)
     (β : Type _) : F.obj (Finₓ (n + 1) → β) ≅ F.obj β ⊗ F.obj (Finₓ n → β) :=
   Functor.mapIso _ (Equivₓ.piFinSucc n β).toIso ≪≫ (asIso (F.μ β (Finₓ n → β))).symm

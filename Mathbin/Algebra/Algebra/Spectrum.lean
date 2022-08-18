@@ -52,10 +52,10 @@ variable [CommSemiringₓ R] [Ringₓ A] [Algebra R A]
 -- mathport name: «expr↑ₐ»
 local notation "↑ₐ" => algebraMap R A
 
+-- definition and basic properties
 /-- Given a commutative ring `R` and an `R`-algebra `A`, the *resolvent set* of `a : A`
 is the `set R` consisting of those `r : R` for which `r•1 - a` is a unit of the
 algebra `A`.  -/
--- definition and basic properties
 def ResolventSet (a : A) : Set R :=
   { r : R | IsUnit (↑ₐ r - a) }
 
@@ -451,9 +451,9 @@ theorem map_polynomial_aeval_of_nonempty [IsAlgClosed 𝕜] [Nontrivial A] (a : 
 
 variable (𝕜)
 
+-- We will use this both to show eigenvalues exist, and to prove Schur's lemma.
 /-- Every element `a` in a nontrivial finite-dimensional algebra `A`
 over an algebraically closed field `𝕜` has non-empty spectrum. -/
--- We will use this both to show eigenvalues exist, and to prove Schur's lemma.
 theorem nonempty_of_is_alg_closed_of_finite_dimensional [IsAlgClosed 𝕜] [Nontrivial A] [I : FiniteDimensional 𝕜 A]
     (a : A) : ∃ k : 𝕜, k ∈ σ a := by
   obtain ⟨p, ⟨h_mon, h_eval_p⟩⟩ := is_integral_of_noetherian (IsNoetherian.iff_fg.2 I) a

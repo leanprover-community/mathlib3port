@@ -40,6 +40,7 @@ instance (R : Type _) [Monoidₓ R] [Monoidₓ α] [MulDistribMulAction R α] : 
   { MulOpposite.mulAction α R with smul_mul := fun r x₁ x₂ => unop_injective <| smul_mul' r (unop x₂) (unop x₁),
     smul_one := fun r => unop_injective <| smul_one r }
 
+@[to_additive]
 instance {M N} [HasSmul M N] [HasSmul M α] [HasSmul N α] [IsScalarTower M N α] : IsScalarTower M N αᵐᵒᵖ :=
   ⟨fun x y z => unop_injective <| smul_assoc _ _ _⟩
 
@@ -73,8 +74,9 @@ open MulOpposite
 /-- Like `has_mul.to_has_smul`, but multiplies on the right.
 
 See also `monoid.to_opposite_mul_action` and `monoid_with_zero.to_opposite_mul_action_with_zero`. -/
-@[to_additive]
-instance Mul.toHasOppositeSmul [Mul α] : HasSmul αᵐᵒᵖ α where smul := fun c x => x * c.unop
+@[to_additive "Like `has_add.to_has_vadd`, but adds on the right.\n\nSee also `add_monoid.to_opposite_add_action`."]
+instance Mul.toHasOppositeSmul [Mul α] : HasSmul αᵐᵒᵖ α :=
+  ⟨fun c x => x * c.unop⟩
 
 @[to_additive]
 theorem op_smul_eq_mul [Mul α] {a a' : α} : op a • a' = a' * a :=
@@ -101,15 +103,17 @@ instance CommSemigroupₓ.is_central_scalar [CommSemigroupₓ α] : IsCentralSca
   ⟨fun r m => mul_comm _ _⟩
 
 /-- Like `monoid.to_mul_action`, but multiplies on the right. -/
-@[to_additive]
+@[to_additive "Like `add_monoid.to_add_action`, but adds on the right."]
 instance Monoidₓ.toOppositeMulAction [Monoidₓ α] : MulAction αᵐᵒᵖ α where
   smul := (· • ·)
   one_smul := mul_oneₓ
   mul_smul := fun x y r => (mul_assoc _ _ _).symm
 
+@[to_additive]
 instance IsScalarTower.opposite_mid {M N} [Mul N] [HasSmul M N] [SmulCommClass M N N] : IsScalarTower M Nᵐᵒᵖ N :=
   ⟨fun x y z => mul_smul_comm _ _ _⟩
 
+@[to_additive]
 instance SmulCommClass.opposite_mid {M N} [Mul N] [HasSmul M N] [IsScalarTower M N N] : SmulCommClass M Nᵐᵒᵖ N :=
   ⟨fun x y z => by
     induction y using MulOpposite.rec
@@ -121,7 +125,7 @@ example [Monoidₓ α] : Monoidₓ.toMulAction αᵐᵒᵖ = MulOpposite.mulActi
   rfl
 
 /-- `monoid.to_opposite_mul_action` is faithful on cancellative monoids. -/
-@[to_additive]
+@[to_additive "`add_monoid.to_opposite_add_action` is faithful on cancellative monoids."]
 instance LeftCancelMonoid.to_has_faithful_opposite_scalar [LeftCancelMonoid α] : HasFaithfulSmul αᵐᵒᵖ α :=
   ⟨fun x y h => unop_injective <| mul_left_cancelₓ (h 1)⟩
 

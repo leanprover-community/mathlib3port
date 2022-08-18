@@ -3,9 +3,10 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro
 -/
-import Mathbin.Algebra.Order.Group
-import Mathbin.Algebra.Order.Sub
 import Mathbin.Algebra.CharZero.Defs
+import Mathbin.Algebra.Order.Group
+import Mathbin.Algebra.Order.MonoidLemmasZeroLt
+import Mathbin.Algebra.Order.Sub
 import Mathbin.Algebra.Hom.Ring
 import Mathbin.Data.Set.Intervals.Basic
 
@@ -157,12 +158,27 @@ class OrderedSemiring (α : Type u) extends Semiringₓ α, OrderedCancelAddComm
   mul_lt_mul_of_pos_left : ∀ a b c : α, a < b → 0 < c → c * a < c * b
   mul_lt_mul_of_pos_right : ∀ a b c : α, a < b → 0 < c → a * c < b * c
 
-instance (priority := 100) OrderedSemiring.zeroLeOneClass [h : OrderedSemiring α] : ZeroLeOneClass α :=
-  { h with }
-
 section OrderedSemiring
 
 variable [OrderedSemiring α] {a b c d : α}
+
+theorem mul_lt_mul_of_pos_left (h₁ : a < b) (h₂ : 0 < c) : c * a < c * b :=
+  OrderedSemiring.mul_lt_mul_of_pos_left a b c h₁ h₂
+
+theorem mul_lt_mul_of_pos_right (h₁ : a < b) (h₂ : 0 < c) : a * c < b * c :=
+  OrderedSemiring.mul_lt_mul_of_pos_right a b c h₁ h₂
+
+-- see Note [lower instance priority]
+instance (priority := 100) OrderedSemiring.zeroLeOneClass : ZeroLeOneClass α :=
+  { ‹OrderedSemiring α› with }
+
+-- see Note [lower instance priority]
+instance (priority := 200) OrderedSemiring.pos_mul_strict_mono : ZeroLt.PosMulStrictMono α :=
+  ⟨fun x a b h => mul_lt_mul_of_pos_left h x.Prop⟩
+
+-- see Note [lower instance priority]
+instance (priority := 200) OrderedSemiring.mul_pos_strict_mono : ZeroLt.MulPosStrictMono α :=
+  ⟨fun x a b h => mul_lt_mul_of_pos_right h x.Prop⟩
 
 section Nontrivial
 
@@ -209,12 +225,6 @@ alias zero_lt_three ← three_pos
 alias zero_lt_four ← four_pos
 
 end Nontrivial
-
-theorem mul_lt_mul_of_pos_left (h₁ : a < b) (h₂ : 0 < c) : c * a < c * b :=
-  OrderedSemiring.mul_lt_mul_of_pos_left a b c h₁ h₂
-
-theorem mul_lt_mul_of_pos_right (h₁ : a < b) (h₂ : 0 < c) : a * c < b * c :=
-  OrderedSemiring.mul_lt_mul_of_pos_right a b c h₁ h₂
 
 theorem mul_lt_of_lt_one_left (hb : 0 < b) (ha : a < 1) : a * b < b :=
   (mul_lt_mul_of_pos_right ha hb).trans_le (one_mulₓ _).le
@@ -635,13 +645,13 @@ def Function.Injective.orderedCommSemiring [OrderedCommSemiring α] {β : Type _
 
 end OrderedCommSemiring
 
-/-- A `linear_ordered_semiring α` is a nontrivial semiring `α` with a linear order
-such that addition is monotone and multiplication by a positive number is strictly monotone.
--/
 -- It's not entirely clear we should assume `nontrivial` at this point;
 -- it would be reasonable to explore changing this,
 -- but be warned that the instances involving `domain` may cause
 -- typeclass search loops.
+/-- A `linear_ordered_semiring α` is a nontrivial semiring `α` with a linear order
+such that addition is monotone and multiplication by a positive number is strictly monotone.
+-/
 @[protect_proj]
 class LinearOrderedSemiring (α : Type u) extends OrderedSemiring α, LinearOrderedAddCommMonoid α, Nontrivial α
 
@@ -1606,6 +1616,18 @@ instance (priority := 100) to_covariant_mul_le : CovariantClass α α (· * ·) 
   rw [mul_addₓ]
   apply self_le_add_right
 
+-- see Note [lower instance priority]
+instance (priority := 200) CanonicallyOrderedCommSemiring.pos_mul_mono : ZeroLt.PosMulMono α :=
+  ⟨fun x a b h => by
+    obtain ⟨d, rfl⟩ := exists_add_of_le h
+    simp_rw [left_distrib, le_self_add]⟩
+
+-- see Note [lower instance priority]
+instance (priority := 200) CanonicallyOrderedCommSemiring.mul_pos_mono : ZeroLt.MulPosMono α :=
+  ⟨fun x a b h => by
+    obtain ⟨d, rfl⟩ := exists_add_of_le h
+    simp_rw [right_distrib, le_self_add]⟩
+
 /-- A version of `zero_lt_one : 0 < 1` for a `canonically_ordered_comm_semiring`. -/
 theorem zero_lt_one [Nontrivial α] : (0 : α) < 1 :=
   (zero_le 1).lt_of_ne zero_ne_one
@@ -1945,6 +1967,29 @@ instance [CommMonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] : CommMonoi
 
 instance [CanonicallyOrderedCommSemiring α] [Nontrivial α] : CommSemiringₓ (WithBot α) :=
   WithTop.commSemiring
+
+instance [CanonicallyOrderedCommSemiring α] [Nontrivial α] : ZeroLt.PosMulMono (WithBot α) :=
+  ⟨by
+    rintro ⟨x, x0⟩ a b h
+    simp only [← Subtype.coe_mk]
+    induction x using WithBot.recBotCoe
+    · have := bot_lt_coe (0 : α)
+      rw [coe_zero] at this
+      exact absurd x0.le this.not_le
+      
+    · induction a using WithBot.recBotCoe
+      · simp_rw [mul_bot x0.ne.symm, bot_le]
+        
+      induction b using WithBot.recBotCoe
+      · exact absurd h (bot_lt_coe a).not_le
+        
+      · simp only [coe_mul, ← coe_le_coe] at *
+        exact ZeroLt.mul_le_mul_left h (zero_le x)
+        
+      ⟩
+
+instance [CanonicallyOrderedCommSemiring α] [Nontrivial α] : ZeroLt.MulPosMono (WithBot α) :=
+  ZeroLt.pos_mul_mono_iff_mul_pos_mono.mp ZeroLt.pos_mul_mono
 
 end WithBot
 

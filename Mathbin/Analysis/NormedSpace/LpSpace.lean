@@ -536,9 +536,9 @@ instance [hp : Fact (1 ≤ p)] : NormedAddCommGroup (lp E p) :=
           ,
       norm_neg := norm_neg }
 
-/-- Hölder inequality -/
 -- TODO: define an `ennreal` version of `is_conjugate_exponent`, and then express this inequality
 -- in a better version which also covers the case `p = 1, q = ∞`.
+/-- Hölder inequality -/
 protected theorem tsum_mul_le_mul_norm {p q : ℝ≥0∞} (hpq : p.toReal.IsConjugateExponent q.toReal) (f : lp E p)
     (g : lp E q) : (Summable fun i => ∥f i∥ * ∥g i∥) ∧ (∑' i, ∥f i∥ * ∥g i∥) ≤ ∥f∥ * ∥g∥ := by
   have hf₁ : ∀ i, 0 ≤ ∥f i∥ := fun i => norm_nonneg _

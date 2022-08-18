@@ -466,8 +466,8 @@ instance leftAlgebra : Algebra S (A ⊗[R] B) :=
         simp [← smul_add, ← mul_addₓ, *]
          }
 
-/-- The tensor product of two `R`-algebras is an `R`-algebra. -/
 -- This is for the `undergrad.yaml` list.
+/-- The tensor product of two `R`-algebras is an `R`-algebra. -/
 instance : Algebra R (A ⊗[R] B) :=
   inferInstance
 

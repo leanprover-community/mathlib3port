@@ -144,9 +144,9 @@ theorem right_moves_mk {xl xr xL xR} : (⟨xl, xr, xL, xR⟩ : Pgame).RightMoves
 theorem move_right_mk {xl xr xL xR} : (⟨xl, xr, xL, xR⟩ : Pgame).moveRight = xR :=
   rfl
 
+-- TODO define this at the level of games, as well, and perhaps also for finsets of games.
 /-- Construct a pre-game from list of pre-games describing the available moves for Left and Right.
 -/
--- TODO define this at the level of games, as well, and perhaps also for finsets of games.
 def ofLists (L R : List Pgame.{u}) : Pgame.{u} :=
   mk (ULift (Finₓ L.length)) (ULift (Finₓ R.length)) (fun i => L.nthLe i.down i.down.is_lt) fun j =>
     R.nthLe j.down j.down.Prop

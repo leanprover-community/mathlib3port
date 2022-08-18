@@ -411,8 +411,8 @@ theorem mem_image {f : PSet.{u} → PSet.{u}} (H : ∀ {x y}, Equiv x y → Equi
 protected def lift : PSet.{u} → PSet.{max u v}
   | ⟨α, A⟩ => ⟨ULift α, fun ⟨x⟩ => lift (A x)⟩
 
-/-- Embedding of one universe in another -/
 -- intended to be used with explicit universe parameters
+/-- Embedding of one universe in another -/
 @[nolint check_univs]
 def embed : PSet.{max (u + 1) v} :=
   ⟨ULift.{v, u + 1} PSet, fun ⟨x⟩ => PSet.lift.{u, max (u + 1) v} x⟩

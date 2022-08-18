@@ -18,8 +18,8 @@ universe u v w x
 
 namespace Function
 
-/-- `α ↪ β` is a bundled injective function. -/
 -- depending on cardinalities, an injective function may not exist
+/-- `α ↪ β` is a bundled injective function. -/
 @[nolint has_nonempty_instance]
 structure Embedding (α : Sort _) (β : Sort _) where
   toFun : α → β

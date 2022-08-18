@@ -90,6 +90,7 @@ theorem Matrix.charpoly_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n 
   unfold Matrix.charpoly
   rw [charmatrix_reindex, Matrix.det_reindex_self]
 
+-- This proof follows http://drorbn.net/AcademicPensieve/2015-12/CayleyHamilton.pdf
 /-- The **Cayley-Hamilton Theorem**, that the characteristic polynomial of a matrix,
 applied to the matrix itself, is zero.
 
@@ -97,7 +98,6 @@ This holds over any commutative ring.
 
 See `linear_map.aeval_self_charpoly` for the equivalent statement about endomorphisms.
 -/
--- This proof follows http://drorbn.net/AcademicPensieve/2015-12/CayleyHamilton.pdf
 theorem Matrix.aeval_self_charpoly (M : Matrix n n R) : aeval M M.charpoly = 0 := by
   -- We begin with the fact $χ_M(t) I = adjugate (t I - M) * (t I - M)$,
   -- as an identity in `matrix n n R[X]`.

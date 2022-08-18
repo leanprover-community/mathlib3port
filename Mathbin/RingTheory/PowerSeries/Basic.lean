@@ -700,14 +700,14 @@ section Ringₓ
 
 variable [Ringₓ R]
 
-/-- Auxiliary definition that unifies
- the totalised inverse formal power series `(_)⁻¹` and
- the inverse formal power series that depends on
- an inverse of the constant coefficient `inv_of_unit`.-/
 /-
 The inverse of a multivariate formal power series is defined by
 well-founded recursion on the coeffients of the inverse.
 -/
+/-- Auxiliary definition that unifies
+ the totalised inverse formal power series `(_)⁻¹` and
+ the inverse formal power series that depends on
+ an inverse of the constant coefficient `inv_of_unit`.-/
 protected noncomputable def Inv.aux (a : R) (φ : MvPowerSeries σ R) : MvPowerSeries σ R
   | n => if n = 0 then a else -a * ∑ x in n.antidiagonal, if h : x.2 < n then coeff R x.1 φ * inv.aux x.2 else 0
 
@@ -719,8 +719,8 @@ theorem coeff_inv_aux [DecidableEq σ] (n : σ →₀ ℕ) (a : R) (φ : MvPower
     rw [inv.aux]
     convert rfl
 
-/-- A multivariate formal power series is invertible if the constant coefficient is invertible.-/
 -- unify `decidable` instances
+/-- A multivariate formal power series is invertible if the constant coefficient is invertible.-/
 def invOfUnit (φ : MvPowerSeries σ R) (u : Rˣ) : MvPowerSeries σ R :=
   Inv.aux (↑u⁻¹) φ
 
@@ -788,9 +788,9 @@ section LocalRing
 
 variable {S : Type _} [CommRingₓ R] [CommRingₓ S] (f : R →+* S) [IsLocalRingHom f]
 
-/-- The map `A[[X]] → B[[X]]` induced by a local ring hom `A → B` is local -/
 -- Thanks to the linter for informing us that  this instance does
 -- not actually need R and S to be local rings!
+/-- The map `A[[X]] → B[[X]]` induced by a local ring hom `A → B` is local -/
 instance map.is_local_ring_hom : IsLocalRingHom (map σ f) :=
   ⟨by
     rintro φ ⟨ψ, h⟩

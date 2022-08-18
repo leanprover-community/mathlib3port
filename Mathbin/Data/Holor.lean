@@ -190,8 +190,8 @@ theorem mul_zero {α : Type} [Ringₓ α] (x : Holor α ds₁) : x ⊗ (0 : Holo
 theorem mul_scalar_mul [Monoidₓ α] (x : Holor α []) (y : Holor α ds) : x ⊗ y = x ⟨[], Forall₂.nil⟩ • y := by
   simp [← mul, ← HasSmul.smul, ← HolorIndex.take, ← HolorIndex.drop]
 
-/-- A slice is a subholor consisting of all entries with initial index i. -/
 -- holor slices
+/-- A slice is a subholor consisting of all entries with initial index i. -/
 def slice (x : Holor α (d :: ds)) (i : ℕ) (h : i < d) : Holor α ds := fun is : HolorIndex ds =>
   x ⟨i :: is.1, Forall₂.cons h is.2⟩
 
@@ -274,9 +274,9 @@ theorem sum_unit_vec_mul_slice [Ringₓ α] (x : Holor α (d :: ds)) :
     exact absurd (Finset.mem_attach _ _) hid'
     
 
+-- CP rank
 /-- `cprank_max1 x` means `x` has CP rank at most 1, that is,
   it is the tensor product of 1-dimensional holors. -/
--- CP rank
 inductive CprankMax1 [Mul α] : ∀ {ds}, Holor α ds → Prop
   | nil (x : Holor α []) : cprank_max1 x
   | cons {d} {ds} (x : Holor α [d]) (y : Holor α ds) : cprank_max1 y → cprank_max1 (x ⊗ y)

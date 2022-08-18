@@ -9,6 +9,7 @@ import Mathbin.LinearAlgebra.Matrix.Determinant
 import Mathbin.RingTheory.Adjoin.Fg
 import Mathbin.RingTheory.Polynomial.ScaleRoots
 import Mathbin.RingTheory.Polynomial.Tower
+import Mathbin.RingTheory.TensorProduct
 
 /-!
 # Integral closure of a subring.
@@ -521,6 +522,26 @@ theorem IsIntegral.det {n : Type _} [Fintype n] [DecidableEq n] {M : Matrix n n 
 @[simp]
 theorem IsIntegral.pow_iff {x : A} {n : ℕ} (hn : 0 < n) : IsIntegral R (x ^ n) ↔ IsIntegral R x :=
   ⟨is_integral_of_pow hn, fun hx => IsIntegral.pow hx n⟩
+
+open TensorProduct
+
+theorem IsIntegral.tmul (x : A) {y : B} (h : IsIntegral R y) : IsIntegral A (x ⊗ₜ[R] y) := by
+  obtain ⟨p, hp, hp'⟩ := h
+  refine' ⟨(p.map (algebraMap R A)).scaleRoots x, _, _⟩
+  · rw [Polynomial.monic_scale_roots_iff]
+    exact hp.map _
+    
+  convert
+    @Polynomial.scale_roots_eval₂_mul (A ⊗[R] B) A _ _ _ algebra.tensor_product.include_left.to_ring_hom (1 ⊗ₜ y)
+      x using
+    2
+  · simp only [← AlgHom.to_ring_hom_eq_coe, ← AlgHom.coe_to_ring_hom, ← mul_oneₓ, ← one_mulₓ, ←
+      Algebra.TensorProduct.include_left_apply, ← Algebra.TensorProduct.tmul_mul_tmul]
+    
+  convert (mul_zero _).symm
+  rw [Polynomial.eval₂_map, Algebra.TensorProduct.include_left_comp_algebra_map, ← Polynomial.eval₂_map]
+  convert Polynomial.eval₂_at_apply algebra.tensor_product.include_right.to_ring_hom y
+  rw [Polynomial.eval_map, hp', _root_.map_zero]
 
 section
 

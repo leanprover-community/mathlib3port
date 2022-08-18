@@ -46,12 +46,12 @@ structure Units (α : Type u) [Monoidₓ α] where
 -- mathport name: «expr ˣ»
 postfix:1024 "ˣ" => Units
 
+-- We don't provide notation for the additive version, because its use is somewhat rare.
 /-- Units of an `add_monoid`, bundled version.
 
 An element of an `add_monoid` is a unit if it has a two-sided additive inverse.
 This version bundles the inverse element so that it can be computed.
 For a predicate see `is_add_unit`. -/
--- We don't provide notation for the additive version, because its use is somewhat rare.
 structure AddUnits (α : Type u) [AddMonoidₓ α] where
   val : α
   neg : α

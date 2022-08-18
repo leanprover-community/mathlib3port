@@ -672,10 +672,10 @@ instance {S : μ.FiniteSpanningSetsIn { s : Set α | MeasurableSet s }} (n : ℕ
     rw [restrict_apply MeasurableSet.univ, univ_inter]
     exact S.finite _⟩
 
+-- see Note [lower instance priority]
 /-- **The Lebesgue decomposition theorem**: Any pair of σ-finite measures `μ` and `ν`
 `have_lebesgue_decomposition`. That is to say, there exist a measure `ξ` and a measurable function
 `f`, such that `ξ` is mutually singular with respect to `ν` and `μ = ξ + ν.with_density f` -/
--- see Note [lower instance priority]
 instance (priority := 100) have_lebesgue_decomposition_of_sigma_finite (μ ν : Measure α) [SigmaFinite μ]
     [SigmaFinite ν] : HaveLebesgueDecomposition μ ν :=
   ⟨by

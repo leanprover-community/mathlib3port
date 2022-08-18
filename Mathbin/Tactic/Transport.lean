@@ -29,14 +29,14 @@ attribute [transport_simps]
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
 -- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- we use `apply_eq_iff_eq_symm_apply` rather than `apply_eq_iff_eq`,
+-- as many axioms have a constant on the right-hand-side
+-- At present we don't actually use `s`; it's inferred in the `mk_app` call.
 /-- Given `s : S α` for some structure `S` depending on a type `α`,
 and an equivalence `e : α ≃ β`,
 try to produce an `S β`,
 by transporting data and axioms across `e` using `equiv_rw`.
 -/
--- we use `apply_eq_iff_eq_symm_apply` rather than `apply_eq_iff_eq`,
--- as many axioms have a constant on the right-hand-side
--- At present we don't actually use `s`; it's inferred in the `mk_app` call.
 @[nolint unused_arguments]
 unsafe def transport (s e : expr) : tactic Unit := do
   let (_, α, β) ←

@@ -796,19 +796,19 @@ section PartialOrderₓ
 
 variable [PartialOrderₓ α]
 
-/-- A semigroup with a partial order and satisfying `left_cancel_semigroup`
-(i.e. `a * c < b * c → a < b`) is a `left_cancel semigroup`. -/
 /- This is not instance, since we want to have an instance from `left_cancel_semigroup`s
 to the appropriate `covariant_class`. -/
+/-- A semigroup with a partial order and satisfying `left_cancel_semigroup`
+(i.e. `a * c < b * c → a < b`) is a `left_cancel semigroup`. -/
 @[to_additive
       "An additive semigroup with a partial order and satisfying `left_cancel_add_semigroup`\n(i.e. `c + a < c + b → a < b`) is a `left_cancel add_semigroup`."]
 def Contravariant.toLeftCancelSemigroup [ContravariantClass α α (· * ·) (· ≤ ·)] : LeftCancelSemigroup α :=
   { ‹Semigroupₓ α› with mul_left_cancel := fun a b c => mul_left_cancel'' }
 
-/-- A semigroup with a partial order and satisfying `right_cancel_semigroup`
-(i.e. `a * c < b * c → a < b`) is a `right_cancel semigroup`. -/
 /- This is not instance, since we want to have an instance from `right_cancel_semigroup`s
 to the appropriate `covariant_class`. -/
+/-- A semigroup with a partial order and satisfying `right_cancel_semigroup`
+(i.e. `a * c < b * c → a < b`) is a `right_cancel semigroup`. -/
 @[to_additive
       "An additive semigroup with a partial order and satisfying `right_cancel_add_semigroup`\n(`a + c < b + c → a < b`) is a `right_cancel add_semigroup`."]
 def Contravariant.toRightCancelSemigroup [ContravariantClass α α (swap (· * ·)) (· ≤ ·)] : RightCancelSemigroup α :=

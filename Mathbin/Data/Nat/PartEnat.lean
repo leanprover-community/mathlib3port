@@ -582,8 +582,10 @@ theorem lt_wf : @WellFounded PartEnat (· < ·) := by
   simp_rw [← to_with_top_lt]
   exact InvImage.wfₓ _ (WithTop.well_founded_lt Nat.lt_wf)
 
-instance : IsWellOrder PartEnat (· < ·) :=
+instance : WellFoundedLt PartEnat :=
   ⟨lt_wf⟩
+
+instance : IsWellOrder PartEnat (· < ·) where
 
 instance : HasWellFounded PartEnat :=
   ⟨(· < ·), lt_wf⟩

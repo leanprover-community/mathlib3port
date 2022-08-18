@@ -256,11 +256,11 @@ then `restricted_yoneda A` is isomorphic to the identity, and so `extend_along_y
 def extendAlongYonedaYoneda : extendAlongYoneda (yoneda : C ⥤ _) ≅ 𝟭 _ :=
   Adjunction.natIsoOfRightAdjointNatIso (yonedaAdjunction _) Adjunction.id restrictedYonedaYoneda
 
+-- Maybe this should be reducible or an abbreviation?
 /-- A functor to the presheaf category in which everything in the image is representable (witnessed
 by the fact that it factors through the yoneda embedding).
 `cocone_of_representable` gives a cocone for this functor which is a colimit and has point `P`.
 -/
--- Maybe this should be reducible or an abbreviation?
 def functorToRepresentables (P : Cᵒᵖ ⥤ Type u₁) : P.Elementsᵒᵖ ⥤ Cᵒᵖ ⥤ Type u₁ :=
   (categoryOfElements.π P).leftOp ⋙ yoneda
 
@@ -277,8 +277,8 @@ def coconeOfRepresentable (P : Cᵒᵖ ⥤ Type u₁) : Cocone (functorToReprese
 theorem cocone_of_representable_X (P : Cᵒᵖ ⥤ Type u₁) : (coconeOfRepresentable P).x = P :=
   rfl
 
-/-- An explicit formula for the legs of the cocone `cocone_of_representable`. -/
 -- Marking this as a simp lemma seems to make things more awkward.
+/-- An explicit formula for the legs of the cocone `cocone_of_representable`. -/
 theorem cocone_of_representable_ι_app (P : Cᵒᵖ ⥤ Type u₁) (j : P.Elementsᵒᵖ) :
     (coconeOfRepresentable P).ι.app j = (yonedaSectionsSmall _ _).inv j.unop.2 :=
   colimit.ι_desc _ _

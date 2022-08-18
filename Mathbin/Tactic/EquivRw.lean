@@ -70,12 +70,12 @@ but this will wait for another subsequent PR.
 -- so do these!
 namespace Tactic
 
-/-- A list of lemmas used for constructing congruence equivalences. -/
 -- Although this looks 'hard-coded', in fact the lemma `equiv_functor.map_equiv`
 -- allows us to extend `equiv_rw` simply by constructing new instance so `equiv_functor`.
 -- TODO: We should also use `category_theory.functorial` and `category_theory.hygienic` instances.
 -- (example goal: we could rewrite along an isomorphism of rings (either as `R ≅ S` or `R ≃+* S`)
 -- and turn an `x : mv_polynomial σ R` into an `x : mv_polynomial σ S`.).
+/-- A list of lemmas used for constructing congruence equivalences. -/
 unsafe def equiv_congr_lemmas : List (tactic expr) :=
   [`equiv.of_iff,-- TODO decide what to do with this; it's an equiv_bifunctor?
         `equiv.equiv_congr,-- The function arrow is technically a bifunctor `Typeᵒᵖ → Type → Type`,
@@ -240,8 +240,8 @@ unsafe def equiv_rw_hyp (x : Name) (e : expr) (cfg : equiv_rw_cfg := {  }) : tac
       skip)
     { failIfUnchanged := false } true
 
-/-- Rewrite the goal using an equiv `e`. -/
 -- call `dsimp_result` with `no_defaults := tt`.
+/-- Rewrite the goal using an equiv `e`. -/
 unsafe def equiv_rw_target (e : expr) (cfg : equiv_rw_cfg := {  }) : tactic Unit := do
   let t ← target
   let e ← equiv_rw_type e t cfg

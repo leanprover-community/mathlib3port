@@ -56,9 +56,9 @@ We now construct as morphisms various inclusions of open sets.
 -/
 
 
+-- This is tedious, but necessary because we decided not to allow Prop as morphisms in a category...
 /-- The inclusion `U ⊓ V ⟶ U` as a morphism in the category of open sets.
 -/
--- This is tedious, but necessary because we decided not to allow Prop as morphisms in a category...
 def infLeLeft (U V : Opens X) : U⊓V ⟶ U :=
   inf_le_left.Hom
 
@@ -217,11 +217,11 @@ def mapComp (f : X ⟶ Y) (g : Y ⟶ Z) : map (f ≫ g) ≅ map g ⋙ map f wher
 theorem map_comp_eq (f : X ⟶ Y) (g : Y ⟶ Z) : map (f ≫ g) = map g ⋙ map f :=
   rfl
 
+-- We could make `f g` implicit here, but it's nice to be able to see when
+-- they are the identity (often!)
 /-- If two continuous maps `f g : X ⟶ Y` are equal,
 then the functors `opens Y ⥤ opens X` they induce are isomorphic.
 -/
--- We could make `f g` implicit here, but it's nice to be able to see when
--- they are the identity (often!)
 def mapIso (f g : X ⟶ Y) (h : f = g) : map f ≅ map g :=
   NatIso.ofComponents (fun U => eqToIso (congr_fun (congr_arg Functor.obj (congr_arg map h)) U))
     (by
@@ -334,6 +334,17 @@ theorem inclusion_top_functor (X : Top) : (@Opens.open_embedding X ⊤).IsOpenMa
   congr 1
   iterate 2 
     apply inclusion_top_functor.obj_eq
+
+theorem functor_obj_map_obj {X Y : Top} {f : X ⟶ Y} (hf : IsOpenMap f) (U : Opens Y) :
+    hf.Functor.obj ((Opens.map f).obj U) = hf.Functor.obj ⊤⊓U := by
+  ext
+  constructor
+  · rintro ⟨x, hx, rfl⟩
+    exact ⟨⟨x, trivialₓ, rfl⟩, hx⟩
+    
+  · rintro ⟨⟨x, -, rfl⟩, hx⟩
+    exact ⟨x, hx, rfl⟩
+    
 
 end TopologicalSpace.Opens
 

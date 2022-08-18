@@ -721,10 +721,10 @@ variable [CommRingₓ R₁] [AddCommGroupₓ M] [Module R₁ M]
 
 variable [Invertible (2 : R₁)]
 
-/-- `associated` is the linear map that sends a quadratic form over a commutative ring to its
-associated symmetric bilinear form. -/
 -- Note:  When possible, rather than writing lemmas about `associated`, write a lemma applying to
 -- the more general `associated_hom` and place it in the previous section.
+/-- `associated` is the linear map that sends a quadratic form over a commutative ring to its
+associated symmetric bilinear form. -/
 abbrev associated : QuadraticForm R₁ M →ₗ[R₁] BilinForm R₁ M :=
   associatedHom R₁
 

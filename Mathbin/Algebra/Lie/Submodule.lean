@@ -465,8 +465,7 @@ theorem eq_bot_iff : N = ⊥ ↔ ∀ m : M, m ∈ N → m = 0 := by
   rw [eq_bot_iff]
   exact Iff.rfl
 
--- TODO[gh-6025]: make this an instance once safe to do so
-theorem subsingleton_of_bot : Subsingleton (LieSubmodule R L ↥(⊥ : LieSubmodule R L M)) := by
+instance subsingleton_of_bot : Subsingleton (LieSubmodule R L ↥(⊥ : LieSubmodule R L M)) := by
   apply subsingleton_of_bot_eq_top
   ext ⟨x, hx⟩
   change x ∈ ⊥ at hx
@@ -811,8 +810,7 @@ different (though the latter does naturally inject into the former).
 
 In other words, in general, ideals of `I`, regarded as a Lie algebra in its own right, are not the
 same as ideals of `L` contained in `I`. -/
--- TODO[gh-6025]: make this an instance once safe to do so
-theorem subsingleton_of_bot : Subsingleton (LieIdeal R (⊥ : LieIdeal R L)) := by
+instance subsingleton_of_bot : Subsingleton (LieIdeal R (⊥ : LieIdeal R L)) := by
   apply subsingleton_of_bot_eq_top
   ext ⟨x, hx⟩
   change x ∈ ⊥ at hx

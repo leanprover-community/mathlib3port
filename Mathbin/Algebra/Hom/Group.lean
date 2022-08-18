@@ -336,9 +336,9 @@ theorem map_zpow' [DivInvMonoidₓ G] [DivInvMonoidₓ H] [MonoidHomClass F G H]
   | -[1+ n] => by
     rw [zpow_neg_succ_of_nat, hf, map_pow, ← zpow_neg_succ_of_nat]
 
-/-- Group homomorphisms preserve integer power. -/
 -- to_additive puts the arguments in the wrong order, so generate an auxiliary lemma, then
 -- swap its arguments.
+/-- Group homomorphisms preserve integer power. -/
 @[to_additive MapZsmul.aux, simp]
 theorem map_zpow [Groupₓ G] [DivisionMonoid H] [MonoidHomClass F G H] (f : F) (g : G) (n : ℤ) : f (g ^ n) = f g ^ n :=
   map_zpow' f (map_inv f) g n

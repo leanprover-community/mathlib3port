@@ -102,10 +102,10 @@ noncomputable def sqrtHom : ℝ≥0 →*₀ ℝ≥0 :=
   ⟨sqrt, sqrt_zero, sqrt_one, sqrt_mul⟩
 
 theorem sqrt_inv (x : ℝ≥0 ) : sqrt x⁻¹ = (sqrt x)⁻¹ :=
-  sqrtHom.map_inv x
+  map_inv₀ sqrtHom x
 
 theorem sqrt_div (x y : ℝ≥0 ) : sqrt (x / y) = sqrt x / sqrt y :=
-  sqrtHom.map_div x y
+  map_div₀ sqrtHom x y
 
 theorem continuous_sqrt : Continuous sqrt :=
   sqrt.Continuous
@@ -127,7 +127,6 @@ theorem sqrt_aux_nonneg (f : CauSeq ℚ abs) : ∀ i : ℕ, 0 ≤ sqrtAux f i
     rw [sqrt_aux, Rat.mk_nat_eq, Rat.mk_eq_div] <;> apply div_nonneg <;> exact Int.cast_nonneg.2 (Int.of_nat_nonneg _)
   | n + 1 => le_max_leftₓ _ _
 
-/-- The square root of a real number. This returns 0 for negative inputs. -/
 /- TODO(Mario): finish the proof
 theorem sqrt_aux_converges (f : cau_seq ℚ abs) : ∃ h x, 0 ≤ x ∧ x * x = max 0 (mk f) ∧
   mk ⟨sqrt_aux f, h⟩ = x :=
@@ -141,6 +140,7 @@ begin
   { rcases this with ⟨δ, δ0, hδ⟩,
     intros }
 end -/
+/-- The square root of a real number. This returns 0 for negative inputs. -/
 @[pp_nodot]
 noncomputable def sqrt (x : ℝ) : ℝ :=
   Nnreal.sqrt (Real.toNnreal x)

@@ -162,12 +162,12 @@ section
 
 open Classical
 
+-- Discourage the elaborator from unfolding `det` and producing a huge term by marking it
+-- as irreducible.
 /-- The determinant of an endomorphism independent of basis.
 
 If there is no finite basis on `M`, the result is `1` instead.
 -/
--- Discourage the elaborator from unfolding `det` and producing a huge term by marking it
--- as irreducible.
 protected irreducible_def det : (M →ₗ[A] M) →* A :=
   if H : ∃ s : Finset M, Nonempty (Basis s A M) then LinearMap.detAux (Trunc.mk H.some_spec.some) else 1
 
@@ -483,7 +483,7 @@ theorem Basis.is_unit_det (e' : Basis ι R M) : IsUnit (e.det e') :=
 map with respect to that basis, multiplied by the value of that alternating map on that basis. -/
 theorem AlternatingMap.eq_smul_basis_det (f : AlternatingMap R M R ι) : f = f e • e.det := by
   refine' Basis.ext_alternating e fun i h => _
-  let σ : Equivₓ.Perm ι := Equivₓ.ofBijective i (Fintype.injective_iff_bijective.1 h)
+  let σ : Equivₓ.Perm ι := Equivₓ.ofBijective i (Finite.injective_iff_bijective.1 h)
   change f (e ∘ σ) = (f e • e.det) (e ∘ σ)
   simp [← AlternatingMap.map_perm, ← Basis.det_self]
 

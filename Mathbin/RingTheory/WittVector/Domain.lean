@@ -50,11 +50,11 @@ local notation "𝕎" => WittVector p
 -/
 
 
+-- type as `\bbW`
 /-- `witt_vector.verschiebung` translates the entries of a Witt vector upward, inserting 0s in the gaps.
 `witt_vector.shift` does the opposite, removing the first entries.
 This is mainly useful as an auxiliary construction for `witt_vector.verschiebung_nonzero`.
 -/
--- type as `\bbW`
 def shift (x : 𝕎 R) (n : ℕ) : 𝕎 R :=
   mk p fun i => x.coeff (n + i)
 

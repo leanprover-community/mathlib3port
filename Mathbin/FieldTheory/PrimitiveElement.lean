@@ -147,7 +147,7 @@ theorem primitive_element_inf_aux [IsSeparable F E] : ∃ γ : E, F⟮⟯ = F⟮
   have h_ne_zero : h ≠ 0 := mt euclidean_domain.gcd_eq_zero_iff.mp (not_and.mpr fun _ => map_g_ne_zero)
   suffices p_linear : p.map (algebraMap F⟮⟯ E) = C h.leading_coeff * (X - C β)
   · have finale : β = algebraMap F⟮⟯ E (-p.coeff 0 / p.coeff 1) := by
-      rw [RingHom.map_div, RingHom.map_neg, ← coeff_map, ← coeff_map, p_linear]
+      rw [map_div₀, RingHom.map_neg, ← coeff_map, ← coeff_map, p_linear]
       simp [← mul_sub, ← coeff_C, ← mul_div_cancel_left β (mt leading_coeff_eq_zero.mp h_ne_zero)]
     rw [finale]
     exact Subtype.mem (-p.coeff 0 / p.coeff 1)

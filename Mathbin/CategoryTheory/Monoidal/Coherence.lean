@@ -74,10 +74,10 @@ instance liftHomTensor {W X Y Z : C} [LiftObj W] [LiftObj X] [LiftObj Y] [LiftOb
     [LiftHom g] : LiftHom (f ⊗ g) where lift := LiftHom.lift f ⊗ LiftHom.lift g
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`Hom] []
+-- We could likely turn this into a `Prop` valued existential if that proves useful.
 /-- A typeclass carrying a choice of monoidal structural isomorphism between two objects.
 Used by the `⊗≫` monoidal composition operator, and the `coherence` tactic.
 -/
--- We could likely turn this into a `Prop` valued existential if that proves useful.
 class MonoidalCoherence (X Y : C) [LiftObj X] [LiftObj Y] where
   Hom : X ⟶ Y
   [IsIso : IsIso hom]
@@ -151,9 +151,9 @@ def monoidalComp {W X Y Z : C} [LiftObj X] [LiftObj Y] [MonoidalCoherence X Y] (
 -- mathport name: «expr ⊗≫ »
 infixr:80 " ⊗≫ " => monoidalComp
 
+-- type as \ot \gg
 /-- Compose two isomorphisms in a monoidal category,
 inserting unitors and associators between as necessary. -/
--- type as \ot \gg
 def monoidalIsoComp {W X Y Z : C} [LiftObj X] [LiftObj Y] [MonoidalCoherence X Y] (f : W ≅ X) (g : Y ≅ Z) : W ≅ Z :=
   f ≪≫ asIso (MonoidalCoherence.hom X Y) ≪≫ g
 
@@ -231,13 +231,13 @@ example (X₁ X₂ : C) :
 
 namespace Coherence
 
+-- We have unused typeclass arguments here.
+-- They are intentional, to ensure that `simp only [assoc_lift_hom]` only left associates
+-- monoidal structural morphisms.
 /-- Auxiliary simp lemma for the `coherence` tactic:
 this moves brackets to the left in order to expose a maximal prefix
 built out of unitors and associators.
 -/
--- We have unused typeclass arguments here.
--- They are intentional, to ensure that `simp only [assoc_lift_hom]` only left associates
--- monoidal structural morphisms.
 @[nolint unused_arguments]
 theorem assoc_lift_hom {W X Y Z : C} [LiftObj W] [LiftObj X] [LiftObj Y] (f : W ⟶ X) (g : X ⟶ Y) (h : Y ⟶ Z) [LiftHom f]
     [LiftHom g] : f ≫ g ≫ h = (f ≫ g) ≫ h :=

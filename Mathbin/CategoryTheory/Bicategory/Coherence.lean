@@ -94,9 +94,6 @@ def normalizeAuxₓ {a : B} : ∀ {b c : B}, Path a b → Hom b c → Path a c
   | _, _, p, hom.id b => p
   | _, _, p, hom.comp f g => normalize_aux (normalize_aux p f) g
 
-/-- A 2-isomorphism between a partially-normalized 1-morphism in the free bicategory to the
-fully-normalized 1-morphism.
--/
 /-
 We may define
 ```
@@ -115,6 +112,9 @@ example {a b c : B} (p : path a b) (f : hom b c) :
 by { induction f, refl, refl,
   case comp : _ _ _ _ _ ihf ihg { rw [normalize_aux, ihf, ihg], apply comp_assoc } }
 ```
+-/
+/-- A 2-isomorphism between a partially-normalized 1-morphism in the free bicategory to the
+fully-normalized 1-morphism.
 -/
 @[simp]
 def normalizeIsoₓ {a : B} :

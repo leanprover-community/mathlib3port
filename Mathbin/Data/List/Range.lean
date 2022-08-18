@@ -211,7 +211,7 @@ theorem reverse_range' : ∀ s n : ℕ, reverse (range' s n) = map (fun i => s +
         show a - 1 - i = a - succ i from pred_sub _ _, ← reverse_singleton, ← map_cons, ← tsub_zero, ← cons_append, ←
         nil_append, ← eq_self_iff_true, ← true_andₓ, ← map_map] using reverse_range' s n
 
-/-- All elements of `fin n`, from `0` to `n-1`. -/
+/-- All elements of `fin n`, from `0` to `n-1`. The corresponding finset is `finset.univ`. -/
 def finRange (n : ℕ) : List (Finₓ n) :=
   (range n).pmap Finₓ.mk fun _ => List.mem_range.1
 

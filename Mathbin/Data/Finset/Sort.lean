@@ -193,12 +193,12 @@ the increasing bijection `order_emb_of_fin s h`. -/
 theorem order_emb_of_fin_unique {s : Finset α} {k : ℕ} (h : s.card = k) {f : Finₓ k → α} (hfs : ∀ x, f x ∈ s)
     (hmono : StrictMono f) : f = s.orderEmbOfFin h := by
   apply Finₓ.strict_mono_unique hmono (s.order_emb_of_fin h).StrictMono
-  rw [range_order_emb_of_fin, ← Set.image_univ, ← coe_fin_range, ← coe_image, coe_inj]
+  rw [range_order_emb_of_fin, ← Set.image_univ, ← coe_univ, ← coe_image, coe_inj]
   refine' eq_of_subset_of_card_le (fun x hx => _) _
   · rcases mem_image.1 hx with ⟨x, hx, rfl⟩
     exact hfs x
     
-  · rw [h, card_image_of_injective _ hmono.injective, fin_range_card]
+  · rw [h, card_image_of_injective _ hmono.injective, card_univ, Fintype.card_fin]
     
 
 /-- An order embedding `f` from `fin k` to a finset of cardinality `k` has to coincide with

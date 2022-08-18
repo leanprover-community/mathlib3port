@@ -37,20 +37,20 @@ we formulate the definitions and lemmas for any model.
 `[has_continuous_mul G]` as an assumption (worse) or use `haveI` in the proof (better). -/
 
 
+-- See note [Design choices about smooth algebraic structures]
 /-- Basic hypothesis to talk about a smooth (Lie) additive monoid or a smooth additive
 semigroup. A smooth additive monoid over `α`, for example, is obtained by requiring both the
 instances `add_monoid α` and `has_smooth_add α`. -/
--- See note [Design choices about smooth algebraic structures]
 @[ancestor SmoothManifoldWithCorners]
 class HasSmoothAdd {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
   [NormedAddCommGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _) [Add G] [TopologicalSpace G]
   [ChartedSpace H G] extends SmoothManifoldWithCorners I G : Prop where
   smooth_add : Smooth (I.Prod I) I fun p : G × G => p.1 + p.2
 
+-- See note [Design choices about smooth algebraic structures]
 /-- Basic hypothesis to talk about a smooth (Lie) monoid or a smooth semigroup.
 A smooth monoid over `G`, for example, is obtained by requiring both the instances `monoid G`
 and `has_smooth_mul I G`. -/
--- See note [Design choices about smooth algebraic structures]
 @[ancestor SmoothManifoldWithCorners, to_additive]
 class HasSmoothMul {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
   [NormedAddCommGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _) [Mul G] [TopologicalSpace G]

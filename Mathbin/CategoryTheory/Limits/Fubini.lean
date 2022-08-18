@@ -48,9 +48,9 @@ variable {C : Type u} [Category.{v} C]
 
 variable (F : J ⥤ K ⥤ C)
 
+-- We could try introducing a "dependent functor type" to handle this?
 /-- A structure carrying a diagram of cones over the functors `F.obj j`.
 -/
--- We could try introducing a "dependent functor type" to handle this?
 structure DiagramOfCones where
   obj : ∀ j : J, Cone (F.obj j)
   map : ∀ {j j' : J} (f : j ⟶ j'), (Cones.postcompose (F.map f)).obj (obj j) ⟶ obj j'

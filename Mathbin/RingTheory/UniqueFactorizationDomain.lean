@@ -143,6 +143,7 @@ section Prio
 -- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option default_priority
 set_option default_priority 100
 
+-- see Note [default priority]
 /-- unique factorization monoids.
 
 These are defined as `cancel_comm_monoid_with_zero`s with well-founded strict divisibility
@@ -161,7 +162,6 @@ To define a UFD using the definition in terms of multisets
 of prime factors, use the definition `of_exists_prime_factors`
 
 -/
--- see Note [default priority]
 class UniqueFactorizationMonoid (α : Type _) [CancelCommMonoidWithZero α] extends WfDvdMonoid α : Prop where
   irreducible_iff_prime : ∀ {a : α}, Irreducible a ↔ Prime a
 
@@ -679,6 +679,11 @@ theorem normalized_factors_prod_of_prime [Nontrivial α] [Unique αˣ] {m : Mult
     normalizedFactors m.Prod = m := by
   simpa only [Multiset.rel_eq, associated_eq_eq] using
     prime_factors_unique prime_of_normalized_factor h (normalized_factors_prod (m.prod_ne_zero_of_prime h))
+
+theorem mem_normalized_factors_eq_of_associated {a b c : α} (ha : a ∈ normalizedFactors c)
+    (hb : b ∈ normalizedFactors c) (h : Associated a b) : a = b := by
+  rw [← normalize_normalized_factor a ha, ← normalize_normalized_factor b hb, normalize_eq_normalize_iff]
+  apply Associated.dvd_dvd h
 
 end UniqueFactorizationMonoid
 

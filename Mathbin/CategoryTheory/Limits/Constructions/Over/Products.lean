@@ -116,10 +116,10 @@ def conesEquivCounitIso (B : C) (F : Discrete J ⥤ Over B) :
     (by
       tidy)
 
-/-- (Impl) Establish an equivalence between the category of cones for `F` and for the "grown" `F`.
--/
 -- TODO: Can we add `. obviously` to the second arguments of `nat_iso.of_components` and
 --       `cones.ext`?
+/-- (Impl) Establish an equivalence between the category of cones for `F` and for the "grown" `F`.
+-/
 @[simps]
 def conesEquiv (B : C) (F : Discrete J ⥤ Over B) : Cone (widePullbackDiagramOfDiagramOver B F) ≌ Cone F where
   Functor := conesEquivFunctor B F

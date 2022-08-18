@@ -85,9 +85,9 @@ inductive Walk : V → V → Type u
 
 attribute [refl] walk.nil
 
+@[simps]
 instance Walk.inhabited (v : V) : Inhabited (G.Walk v v) :=
-  ⟨by
-    rfl⟩
+  ⟨Walk.nil⟩
 
 namespace Walk
 
@@ -361,6 +361,17 @@ theorem mem_support_append_iff {t u v w : V} (p : G.Walk u v) (p' : G.Walk v w) 
         try
             have := Ne.symm h' <;>
           simp [*]
+
+@[simp]
+theorem subset_support_append_left {V : Type u} {G : SimpleGraph V} {u v w : V} (p : G.Walk u v) (q : G.Walk v w) :
+    p.Support ⊆ (p.append q).Support := by
+  simp only [← walk.support_append, ← List.subset_append_leftₓ]
+
+@[simp]
+theorem subset_support_append_right {V : Type u} {G : SimpleGraph V} {u v w : V} (p : G.Walk u v) (q : G.Walk v w) :
+    q.Support ⊆ (p.append q).Support := by
+  intro h
+  simp (config := { contextual := true })only [← mem_support_append_iff, ← or_trueₓ, ← implies_true_iff]
 
 theorem coe_support {u v : V} (p : G.Walk u v) : (p.Support : Multiset V) = {u} + p.Support.tail := by
   cases p <;> rfl
@@ -663,6 +674,16 @@ theorem take_spec {u v w : V} (p : G.Walk v w) (h : u ∈ p.Support) : (p.takeUn
     · simp only
       split_ifs with h' <;> subst_vars <;> simp [*]
       
+    
+
+theorem mem_support_iff_exists_append {V : Type u} {G : SimpleGraph V} {u v w : V} {p : G.Walk u v} :
+    w ∈ p.Support ↔ ∃ (q : G.Walk u w)(r : G.Walk w v), p = q.append r := by
+  classical
+  constructor
+  · exact fun h => ⟨_, _, (p.take_spec h).symm⟩
+    
+  · rintro ⟨q, r, rfl⟩
+    simp only [← mem_support_append_iff, ← end_mem_support, ← start_mem_support, ← or_selfₓ]
     
 
 -- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
@@ -1263,6 +1284,7 @@ def ConnectedComponent :=
 def connectedComponentMk (v : V) : G.ConnectedComponent :=
   Quot.mk G.Reachable v
 
+@[simps]
 instance ConnectedComponent.inhabited [Inhabited V] : Inhabited G.ConnectedComponent :=
   ⟨G.connectedComponentMk default⟩
 

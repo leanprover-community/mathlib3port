@@ -40,7 +40,7 @@ open FiniteDimensional Polynomial
 
 open BigOperators Polynomial
 
-variable (K L : Type _) [Field K] [Field L] [Algebra K L]
+variable (K L L' : Type _) [Field K] [Field L] [Field L'] [Algebra K L] [Algebra K L']
 
 /-- `S : intermediate_field K L` is a subset of `L` such that there is a field
 tower `L / S / K`. -/
@@ -50,7 +50,7 @@ structure IntermediateField extends Subalgebra K L where
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 -- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident intermediate_field.to_subalgebra]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
-variable {K L} (S : IntermediateField K L)
+variable {K L L'} (S : IntermediateField K L)
 
 namespace IntermediateField
 
@@ -338,15 +338,13 @@ instance is_scalar_tower_mid {R : Type _} [Semiringₓ R] [Algebra L R] [Algebra
 instance is_scalar_tower_mid' : IsScalarTower K S L :=
   S.is_scalar_tower_mid
 
-variable {L' : Type _} [Field L'] [Algebra K L']
-
 /-- If `f : L →+* L'` fixes `K`, `S.map f` is the intermediate field between `L'` and `K`
 such that `x ∈ S ↔ f x ∈ S.map f`. -/
 def map (f : L →ₐ[K] L') (S : IntermediateField K L) : IntermediateField K L' :=
   { S.toSubalgebra.map f with
     inv_mem' := by
       rintro _ ⟨x, hx, rfl⟩
-      exact ⟨x⁻¹, S.inv_mem hx, f.map_inv x⟩,
+      exact ⟨x⁻¹, S.inv_mem hx, map_inv₀ f x⟩,
     neg_mem' := fun x hx => (S.toSubalgebra.map f).neg_mem hx }
 
 @[simp]
@@ -375,6 +373,35 @@ theorem intermediate_field_map_apply_coe (e : L ≃ₐ[K] L') (E : IntermediateF
 theorem intermediate_field_map_symm_apply_coe (e : L ≃ₐ[K] L') (E : IntermediateField K L) (a : E.map e.toAlgHom) :
     ↑((intermediateFieldMap e E).symm a) = e.symm a :=
   rfl
+
+end IntermediateField
+
+namespace AlgHom
+
+variable (f : L →ₐ[K] L')
+
+/-- The range of an algebra homomorphism, as an intermediate field. -/
+@[simps toSubalgebra]
+def fieldRange : IntermediateField K L' :=
+  { f.range, (f : L →+* L').fieldRange with }
+
+@[simp]
+theorem coe_field_range : ↑f.fieldRange = Set.Range f :=
+  rfl
+
+@[simp]
+theorem field_range_to_subfield : f.fieldRange.toSubfield = (f : L →+* L').fieldRange :=
+  rfl
+
+variable {f}
+
+@[simp]
+theorem mem_field_range {y : L'} : y ∈ f.fieldRange ↔ ∃ x, f x = y :=
+  Iff.rfl
+
+end AlgHom
+
+namespace IntermediateField
 
 /-- The embedding from an intermediate field of `L / K` to `L`. -/
 def val : S →ₐ[K] L :=

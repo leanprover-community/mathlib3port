@@ -3,8 +3,10 @@ Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
+import Mathbin.CategoryTheory.Adjunction.Comma
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Terminal
 import Mathbin.CategoryTheory.StructuredArrow
+import Mathbin.CategoryTheory.Limits.Shapes.Equivalence
 
 /-!
 # Limits and the category of (co)cones
@@ -79,6 +81,16 @@ theorem has_limit_iff_has_terminal_cone (F : J ⥤ C) : HasLimit F ↔ HasTermin
   ⟨fun h => (cone.is_limit_equiv_is_terminal _ (limit.is_limit F)).HasTerminal, fun h =>
     ⟨⟨⟨⊤_ _, (cone.is_limit_equiv_is_terminal _).symm terminal_is_terminal⟩⟩⟩⟩
 
+theorem has_limits_of_shape_iff_is_left_adjoint_const :
+    HasLimitsOfShape J C ↔ Nonempty (IsLeftAdjoint (const J : C ⥤ _)) :=
+  calc
+    HasLimitsOfShape J C ↔ ∀ F : J ⥤ C, HasLimit F := ⟨fun h => h.HasLimit, fun h => has_limits_of_shape.mk⟩
+    _ ↔ ∀ F : J ⥤ C, HasTerminal (Cone F) := forall_congrₓ has_limit_iff_has_terminal_cone
+    _ ↔ ∀ F : J ⥤ C, HasTerminal (CostructuredArrow (const J) F) :=
+      forall_congrₓ fun F => (Cone.equivCostructuredArrow F).has_terminal_iff
+    _ ↔ Nonempty (IsLeftAdjoint (const J : C ⥤ _)) := nonempty_is_left_adjoint_iff_has_terminal_costructured_arrow.symm
+    
+
 theorem IsLimit.lift_cone_morphism_eq_is_terminal_from {F : J ⥤ C} {c : Cone F} (hc : IsLimit c) (s : Cone F) :
     hc.liftConeMorphism s = IsTerminal.from (Cone.isLimitEquivIsTerminal _ hc) _ :=
   rfl
@@ -144,6 +156,16 @@ def Cocone.isColimitEquivIsInitial {F : J ⥤ C} (c : Cocone F) : IsColimit c �
 theorem has_colimit_iff_has_initial_cocone (F : J ⥤ C) : HasColimit F ↔ HasInitial (Cocone F) :=
   ⟨fun h => (cocone.is_colimit_equiv_is_initial _ (colimit.is_colimit F)).HasInitial, fun h =>
     ⟨⟨⟨⊥_ _, (cocone.is_colimit_equiv_is_initial _).symm initial_is_initial⟩⟩⟩⟩
+
+theorem has_colimits_of_shape_iff_is_right_adjoint_const :
+    HasColimitsOfShape J C ↔ Nonempty (IsRightAdjoint (const J : C ⥤ _)) :=
+  calc
+    HasColimitsOfShape J C ↔ ∀ F : J ⥤ C, HasColimit F := ⟨fun h => h.HasColimit, fun h => has_colimits_of_shape.mk⟩
+    _ ↔ ∀ F : J ⥤ C, HasInitial (Cocone F) := forall_congrₓ has_colimit_iff_has_initial_cocone
+    _ ↔ ∀ F : J ⥤ C, HasInitial (StructuredArrow F (const J)) :=
+      forall_congrₓ fun F => (Cocone.equivStructuredArrow F).has_initial_iff
+    _ ↔ Nonempty (IsRightAdjoint (const J : C ⥤ _)) := nonempty_is_right_adjoint_iff_has_initial_structured_arrow.symm
+    
 
 theorem IsColimit.desc_cocone_morphism_eq_is_initial_to {F : J ⥤ C} {c : Cocone F} (hc : IsColimit c) (s : Cocone F) :
     hc.descCoconeMorphism s = IsInitial.to (Cocone.isColimitEquivIsInitial _ hc) _ :=

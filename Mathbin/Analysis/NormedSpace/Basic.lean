@@ -5,6 +5,7 @@ Authors: Patrick Massot, Johannes Hölzl
 -/
 import Mathbin.Analysis.Normed.Field.Basic
 import Mathbin.Analysis.Normed.Group.InfiniteSum
+import Mathbin.Data.Real.Sqrt
 import Mathbin.Data.Matrix.Basic
 import Mathbin.Topology.Sequences
 
@@ -31,6 +32,9 @@ section Prio
 -- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option extends_priority
 set_option extends_priority 920
 
+-- Here, we set a rather high priority for the instance `[normed_space α β] : module α β`
+-- to take precedence over `semiring.to_module` as this leads to instance paths with better
+-- unification properties.
 /-- A normed space over a normed field is a vector space endowed with a norm which satisfies the
 equality `∥c • x∥ = ∥c∥ ∥x∥`. We require only `∥c • x∥ ≤ ∥c∥ ∥x∥` in the definition, then prove
 `∥c • x∥ = ∥c∥ ∥x∥` in `norm_smul`.
@@ -38,9 +42,6 @@ equality `∥c • x∥ = ∥c∥ ∥x∥`. We require only `∥c • x∥ ≤ �
 Note that since this requires `seminormed_add_comm_group` and not `normed_add_comm_group`, this
 typeclass can be used for "semi normed spaces" too, just as `module` can be used for
 "semi modules". -/
--- Here, we set a rather high priority for the instance `[normed_space α β] : module α β`
--- to take precedence over `semiring.to_module` as this leads to instance paths with better
--- unification properties.
 class NormedSpace (α : Type _) (β : Type _) [NormedField α] [SeminormedAddCommGroup β] extends Module α β where
   norm_smul_le : ∀ (a : α) (b : β), ∥a • b∥ ≤ ∥a∥ * ∥b∥
 
@@ -161,35 +162,56 @@ theorem frontier_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0
   by
   rw [Frontier, closure_closed_ball, interior_closed_ball x hr, closed_ball_diff_ball]
 
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `positivity #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `positivity #[]
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `positivity #[]
 /-- A (semi) normed real vector space is homeomorphic to the unit ball in the same space.
-This homeomorphism sends `x : E` to `(1 + ∥x∥)⁻¹ • x`.
+This homeomorphism sends `x : E` to `(1 + ∥x∥²)^(- ½) • x`.
 
 In many cases the actual implementation is not important, so we don't mark the projection lemmas
-`homeomorph_unit_ball_apply_coe` and `homeomorph_unit_ball_symm_apply` as `@[simp]`. -/
+`homeomorph_unit_ball_apply_coe` and `homeomorph_unit_ball_symm_apply` as `@[simp]`.
+
+See also `cont_diff_homeomorph_unit_ball` and `cont_diff_on_homeomorph_unit_ball_symm` for
+smoothness properties that hold when `E` is an inner-product space. -/
 @[simps (config := { attrs := [] })]
-def homeomorphUnitBall {E : Type _} [SeminormedAddCommGroup E] [NormedSpace ℝ E] : E ≃ₜ Ball (0 : E) 1 where
+def homeomorphUnitBall [NormedSpace ℝ E] : E ≃ₜ Ball (0 : E) 1 where
   toFun := fun x =>
-    ⟨(1 + ∥x∥)⁻¹ • x, by
-      have : ∥x∥ < abs (1 + ∥x∥) := (lt_one_add _).trans_le (le_abs_self _)
-      rwa [mem_ball_zero_iff, norm_smul, Real.norm_eq_abs, abs_inv, ← div_eq_inv_mul,
-        div_lt_one ((norm_nonneg x).trans_lt this)]⟩
-  invFun := fun x => (1 - ∥(x : E)∥)⁻¹ • (x : E)
+    ⟨(1 + ∥x∥ ^ 2).sqrt⁻¹ • x, by
+      have : 0 < 1 + ∥x∥ ^ 2 := by
+        trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `positivity #[]"
+      rw [mem_ball_zero_iff, norm_smul, Real.norm_eq_abs, abs_inv, ← div_eq_inv_mul,
+        div_lt_one (abs_pos.mpr <| real.sqrt_ne_zero'.mpr this), ← abs_norm_eq_norm x, ← sq_lt_sq, abs_norm_eq_norm,
+        Real.sq_sqrt this.le]
+      exact lt_one_add _⟩
+  invFun := fun y => (1 - ∥(y : E)∥ ^ 2).sqrt⁻¹ • (y : E)
   left_inv := fun x => by
-    have : 0 < 1 + ∥x∥ := (norm_nonneg x).trans_lt (lt_one_add _)
-    field_simp [← this.ne', ← abs_of_pos this, ← norm_smul, ← smul_smul, ← abs_div]
-  right_inv := fun x =>
-    Subtype.ext
-      (by
-        have : 0 < 1 - ∥(x : E)∥ := sub_pos.2 (mem_ball_zero_iff.1 x.2)
-        field_simp [← norm_smul, ← smul_smul, ← abs_div, ← abs_of_pos this, ← this.ne'])
+    have : 0 < 1 + ∥x∥ ^ 2 := by
+      trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `positivity #[]"
+    field_simp [← norm_smul, ← smul_smul, ← this.ne', ← Real.sq_sqrt this.le, Real.sqrt_div this.le]
+  right_inv := fun y => by
+    have : 0 < 1 - ∥(y : E)∥ ^ 2 := by
+      nlinarith [norm_nonneg (y : E), (mem_ball_zero_iff.1 y.2 : ∥(y : E)∥ < 1)]
+    field_simp [← norm_smul, ← smul_smul, ← this.ne', ← Real.sq_sqrt this.le, Real.sqrt_div this.le]
   continuous_to_fun :=
-    continuous_subtype_mk _ <|
-      ((continuous_const.add continuous_norm).inv₀ fun x => ((norm_nonneg x).trans_lt (lt_one_add _)).ne').smul
-        continuous_id
-  continuous_inv_fun :=
-    Continuous.smul
-      ((continuous_const.sub continuous_subtype_coe.norm).inv₀ fun x => (sub_pos.2 <| mem_ball_zero_iff.1 x.2).ne')
-      continuous_subtype_coe
+    continuous_subtype_mk _ <| by
+      suffices Continuous fun x => (1 + ∥x∥ ^ 2).sqrt⁻¹ by
+        exact this.smul continuous_id
+      refine'
+        Continuous.inv₀ _ fun x =>
+          real.sqrt_ne_zero'.mpr
+            (by
+              trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `positivity #[]")
+      continuity
+  continuous_inv_fun := by
+    suffices ∀ y : ball (0 : E) 1, (1 - ∥(y : E)∥ ^ 2).sqrt ≠ 0 by
+      continuity
+    intro y
+    rw [Real.sqrt_ne_zero']
+    nlinarith [norm_nonneg (y : E), (mem_ball_zero_iff.1 y.2 : ∥(y : E)∥ < 1)]
+
+@[simp]
+theorem coe_homeomorph_unit_ball_apply_zero [NormedSpace ℝ E] : (homeomorphUnitBall (0 : E) : E) = 0 := by
+  simp [← homeomorphUnitBall]
 
 open NormedField
 
@@ -491,11 +513,11 @@ instance : NormedSpace 𝕜 (RestrictScalars 𝕜 𝕜' E) :=
       (NormedSpace.norm_smul_le (algebraMap 𝕜 𝕜' c) (_ : E)).trans_eq <| by
         rw [norm_algebra_map'] }
 
+-- If you think you need this, consider instead reproducing `restrict_scalars.lsmul`
+-- appropriately modified here.
 /-- The action of the original normed_field on `restrict_scalars 𝕜 𝕜' E`.
 This is not an instance as it would be contrary to the purpose of `restrict_scalars`.
 -/
--- If you think you need this, consider instead reproducing `restrict_scalars.lsmul`
--- appropriately modified here.
 def Module.RestrictScalars.normedSpaceOrig {𝕜 : Type _} {𝕜' : Type _} {E : Type _} [NormedField 𝕜']
     [SeminormedAddCommGroup E] [I : NormedSpace 𝕜' E] : NormedSpace 𝕜' (RestrictScalars 𝕜 𝕜' E) :=
   I

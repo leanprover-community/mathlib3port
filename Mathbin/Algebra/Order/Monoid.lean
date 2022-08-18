@@ -330,15 +330,15 @@ protected theorem covariant_class_add_le [AddZeroClassₓ α] [Preorderₓ α] [
     exact add_le_add_left hbc' a
     
 
-/-- If `0` is the least element in `α`, then `with_zero α` is an `ordered_add_comm_monoid`.
-See note [reducible non-instances].
--/
 /-
 Note 1 : the below is not an instance because it requires `zero_le`. It seems
 like a rather pathological definition because α already has a zero.
 Note 2 : there is no multiplicative analogue because it does not seem necessary.
 Mathematicians might be more likely to use the order-dual version, where all
 elements are ≤ 1 and then 1 is the top element.
+-/
+/-- If `0` is the least element in `α`, then `with_zero α` is an `ordered_add_comm_monoid`.
+See note [reducible non-instances].
 -/
 @[reducible]
 protected def orderedAddCommMonoid [OrderedAddCommMonoid α] (zero_le : ∀ a : α, 0 ≤ a) :
@@ -510,8 +510,8 @@ instance WithZero.has_exists_add_of_le {α} [Add α] [Preorderₓ α] [HasExists
     obtain ⟨c, rfl⟩ := exists_add_of_le (WithZero.coe_le_coe.1 h)
     exact ⟨c, rfl⟩⟩
 
-/-- Adding a new zero to a canonically ordered additive monoid produces another one. -/
 -- This instance looks absurd: a monoid already has a zero
+/-- Adding a new zero to a canonically ordered additive monoid produces another one. -/
 instance WithZero.canonicallyOrderedAddMonoid {α : Type u} [CanonicallyOrderedAddMonoid α] :
     CanonicallyOrderedAddMonoid (WithZero α) :=
   { WithZero.orderBot, WithZero.orderedAddCommMonoid zero_le, WithZero.has_exists_add_of_le with

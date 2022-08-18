@@ -103,7 +103,7 @@ element of the endomorphism general linear group on `n → R`. -/
 def toLinear : GeneralLinearGroup n R ≃* LinearMap.GeneralLinearGroup R (n → R) :=
   Units.mapEquiv Matrix.toLinAlgEquiv'.toRingEquiv.toMulEquiv
 
--- Note that without the `@` and `‹_›`, lean infers `λ a b, _inst_1 a b` instead of `_inst_1` as the
+-- Note that without the `@` and `‹_›`, lean infers `λ a b, _inst a b` instead of `_inst` as the
 -- decidability argument, which prevents `simp` from obtaining the instance by unification.
 -- These `λ a b, _inst a b` terms also appear in the type of `A`, but simp doesn't get confused by
 -- them so for now we do not care.

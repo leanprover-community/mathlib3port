@@ -2075,6 +2075,12 @@ protected theorem dichotomy (p : ℝ≥0∞) [Fact (1 ≤ p)] : p = ∞ ∨ 1 �
     simpa using Ennreal.trichotomy₂ (Fact.out _ : 1 ≤ p)
   exact this.imp_right fun h => h.2
 
+theorem to_real_pos_iff_ne_top (p : ℝ≥0∞) [Fact (1 ≤ p)] : 0 < p.toReal ↔ p ≠ ∞ :=
+  ⟨fun h hp =>
+    let this : (0 : ℝ) ≠ 0 := top_to_real ▸ (hp ▸ h.Ne : 0 ≠ ∞.toReal)
+    this rfl,
+    fun h => zero_lt_one.trans_le (p.dichotomy.resolve_left h)⟩
+
 theorem to_nnreal_inv (a : ℝ≥0∞) : a⁻¹.toNnreal = a.toNnreal⁻¹ := by
   induction a using WithTop.recTopCoe
   · simp

@@ -488,7 +488,7 @@ theorem conj_inv (x : K) : conj x⁻¹ = (conj x)⁻¹ :=
 
 @[simp, norm_cast, is_R_or_C_simps]
 theorem of_real_div (r s : ℝ) : ((r / s : ℝ) : K) = r / s :=
-  (@IsROrC.coeHom K _).map_div r s
+  map_div₀ (@IsROrC.coeHom K _) r s
 
 theorem div_re_of_real {z : K} {r : ℝ} : re (z / r) = re z / r := by
   by_cases' h : r = 0
@@ -501,7 +501,7 @@ theorem div_re_of_real {z : K} {r : ℝ} : re (z / r) = re z / r := by
 
 @[simp, norm_cast, is_R_or_C_simps]
 theorem of_real_zpow (r : ℝ) (n : ℤ) : ((r ^ n : ℝ) : K) = r ^ n :=
-  (@IsROrC.coeHom K _).map_zpow r n
+  map_zpow₀ (@IsROrC.coeHom K _) r n
 
 theorem I_mul_I_of_nonzero : (i : K) ≠ 0 → (i : K) * I = -1 := by
   have := I_mul_I_ax
@@ -521,11 +521,11 @@ theorem inv_I : (i : K)⁻¹ = -I := by
 
 @[simp, is_R_or_C_simps]
 theorem norm_sq_inv (z : K) : normSq z⁻¹ = (normSq z)⁻¹ :=
-  (@normSq K _).map_inv z
+  map_inv₀ (@normSq K _) z
 
 @[simp, is_R_or_C_simps]
 theorem norm_sq_div (z w : K) : normSq (z / w) = normSq z / normSq w :=
-  (@normSq K _).map_div z w
+  map_div₀ (@normSq K _) z w
 
 @[is_R_or_C_simps]
 theorem norm_conj {z : K} : ∥conj z∥ = ∥z∥ := by
@@ -539,10 +539,8 @@ instance (priority := 100) :
 
 @[simp, is_R_or_C_simps, norm_cast]
 theorem of_real_nat_cast (n : ℕ) : ((n : ℝ) : K) = n :=
-  show (algebraMap ℝ K) n = n from map_nat_cast ofRealHom n
+  map_nat_cast (@ofRealHom K _) n
 
---of_real_hom.map_nat_cast n
---@[simp, norm_cast, priority 900] theorem of_real_nat_cast (n : ℕ) : ((n : ℝ) : K) = n :=
 @[simp, is_R_or_C_simps, norm_cast]
 theorem nat_cast_re (n : ℕ) : re (n : K) = n := by
   rw [← of_real_nat_cast, of_real_re]
@@ -578,8 +576,8 @@ theorem rat_cast_im (q : ℚ) : im (q : K) = 0 := by
 /-! ### Characteristic zero -/
 
 
-/-- ℝ and ℂ are both of characteristic zero.  -/
 -- see Note [lower instance priority]
+/-- ℝ and ℂ are both of characteristic zero.  -/
 instance (priority := 100) char_zero_R_or_C : CharZero K :=
   char_zero_of_inj_zero fun n h => by
     rwa [← of_real_nat_cast, of_real_eq_zero, Nat.cast_eq_zero] at h

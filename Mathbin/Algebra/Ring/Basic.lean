@@ -477,9 +477,9 @@ theorem neg_mul_eq_mul_neg (a b : α) : -(a * b) = a * -b :=
 theorem neg_mul_comm (a b : α) : -a * b = a * -b := by
   simp
 
+-- See note [reducible non-instances]
 /-- A type endowed with `-` and `*` has distributive negation, if it admits an injective map that
 preserves `-` and `*` to a type which has distributive negation. -/
--- See note [reducible non-instances]
 @[reducible]
 protected def Function.Injective.hasDistribNeg [Neg β] [Mul β] (f : β → α) (hf : Injective f) (neg : ∀ a, f (-a) = -f a)
     (mul : ∀ a b, f (a * b) = f a * f b) : HasDistribNeg β :=
@@ -491,9 +491,9 @@ protected def Function.Injective.hasDistribNeg [Neg β] [Mul β] (f : β → α)
       hf <| by
         erw [neg, mul, neg, mul_neg, mul] }
 
+-- See note [reducible non-instances]
 /-- A type endowed with `-` and `*` has distributive negation, if it admits a surjective map that
 preserves `-` and `*` from a type which has distributive negation. -/
--- See note [reducible non-instances]
 @[reducible]
 protected def Function.Surjective.hasDistribNeg [Neg β] [Mul β] (f : α → β) (hf : Surjective f)
     (neg : ∀ a, f (-a) = -f a) (mul : ∀ a b, f (a * b) = f a * f b) : HasDistribNeg β :=

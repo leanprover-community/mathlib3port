@@ -1053,8 +1053,8 @@ section CovariantAddLe
 
 section Neg
 
-/-- `abs a` is the absolute value of `a`. -/
 -- see Note [lower instance priority]
+/-- `abs a` is the absolute value of `a`. -/
 @[to_additive "`abs a` is the absolute value of `a`"]
 instance (priority := 100) Inv.toHasAbs [Inv α] [HasSup α] : HasAbs α :=
   ⟨fun a => a⊔a⁻¹⟩

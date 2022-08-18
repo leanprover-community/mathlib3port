@@ -308,10 +308,10 @@ theorem pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius [NormOneClass A] (a 
   · exact limsup_pow_nnnorm_pow_one_div_le_spectral_radius a
     
 
-/-- **Gelfand's formula**: Given an element `a : A` of a complex Banach algebra, the
-`spectral_radius` of `a` is the limit of the sequence `∥a ^ n∥₊ ^ (1 / n)` -/
 /- This is the same as `pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius` but for `norm`
 instead of `nnnorm`. -/
+/-- **Gelfand's formula**: Given an element `a : A` of a complex Banach algebra, the
+`spectral_radius` of `a` is the limit of the sequence `∥a ^ n∥₊ ^ (1 / n)` -/
 theorem pow_norm_pow_one_div_tendsto_nhds_spectral_radius [NormOneClass A] (a : A) :
     Tendsto (fun n : ℕ => Ennreal.ofReal (∥a ^ n∥ ^ (1 / n : ℝ))) atTop (𝓝 (spectralRadius ℂ a)) := by
   convert pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius a

@@ -118,6 +118,7 @@ theorem WithBot.coe_infi [Preorderₓ α] [HasInfₓ α] (f : ι → α) (h : Bd
 
 end
 
+-- section
 /-- A conditionally complete lattice is a lattice in which
 every nonempty subset which is bounded above has a supremum, and
 every nonempty subset which is bounded below has an infimum.
@@ -127,7 +128,6 @@ To differentiate the statements from the corresponding statements in (unconditio
 complete lattices, we prefix Inf and Sup by a c everywhere. The same statements should
 hold in both worlds, sometimes with additional assumptions of nonemptiness or
 boundedness.-/
--- section
 class ConditionallyCompleteLattice (α : Type _) extends Lattice α, HasSupₓ α, HasInfₓ α where
   le_cSup : ∀ s a, BddAbove s → a ∈ s → a ≤ Sup s
   cSup_le : ∀ s a, Set.Nonempty s → a ∈ UpperBounds s → Sup s ≤ a
@@ -165,9 +165,9 @@ instance (priority := 100) ConditionallyCompleteLinearOrderBot.toOrderBot [h : C
     OrderBot α :=
   { h with }
 
+-- see Note [lower instance priority]
 /-- A complete lattice is a conditionally complete lattice, as there are no restrictions
 on the properties of Inf and Sup in a complete lattice.-/
--- see Note [lower instance priority]
 instance (priority := 100) CompleteLattice.toConditionallyCompleteLattice [CompleteLattice α] :
     ConditionallyCompleteLattice α :=
   { ‹CompleteLattice α› with
@@ -690,7 +690,7 @@ open Function
 
 variable [IsWellOrder α (· < ·)]
 
-theorem Inf_eq_argmin_on (hs : s.Nonempty) : inf s = argminOn id (@IsWellOrder.wf α (· < ·) _) s hs :=
+theorem Inf_eq_argmin_on (hs : s.Nonempty) : inf s = argminOn id (@IsWellFounded.wf α (· < ·) _) s hs :=
   IsLeast.cInf_eq ⟨argmin_on_mem _ _ _ _, fun a ha => argmin_on_le id _ _ ha⟩
 
 theorem is_least_Inf (hs : s.Nonempty) : IsLeast s (inf s) := by
@@ -1230,6 +1230,25 @@ noncomputable instance WithTop.WithBot.completeLattice {α : Type _} [Conditiona
 noncomputable instance WithTop.WithBot.completeLinearOrder {α : Type _} [ConditionallyCompleteLinearOrder α] :
     CompleteLinearOrder (WithTop (WithBot α)) :=
   { WithTop.WithBot.completeLattice, WithTop.linearOrder with }
+
+theorem WithTop.supr_coe_eq_top {ι : Sort _} {α : Type _} [ConditionallyCompleteLinearOrderBot α] (f : ι → α) :
+    (⨆ x, (f x : WithTop α)) = ⊤ ↔ ¬BddAbove (Set.Range f) := by
+  refine' ⟨_, fun hf => _⟩
+  · rw [supr_eq_top, not_bdd_above_iff]
+    intro hf r
+    rcases hf r (WithTop.coe_lt_top r) with ⟨i, hi⟩
+    exact ⟨f i, ⟨i, rfl⟩, with_top.coe_lt_coe.mp hi⟩
+    
+  · refine' (supr_eq_top _).mpr fun a ha => _
+    rcases not_bdd_above_iff.mp hf (a.untop ha.ne) with ⟨-, ⟨i, rfl⟩, hi⟩
+    exact
+      ⟨i, by
+        simpa only [← WithTop.coe_untop _ ha.ne] using with_top.coe_lt_coe.mpr hi⟩
+    
+
+theorem WithTop.supr_coe_lt_top {ι : Sort _} {α : Type _} [ConditionallyCompleteLinearOrderBot α] (f : ι → α) :
+    (⨆ x, (f x : WithTop α)) < ⊤ ↔ BddAbove (Set.Range f) := by
+  simpa only [← not_not, ← lt_top_iff_ne_top] using not_iff_not.mpr (WithTop.supr_coe_eq_top f)
 
 end WithTopBot
 

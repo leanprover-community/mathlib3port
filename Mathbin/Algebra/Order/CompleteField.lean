@@ -59,8 +59,8 @@ class ConditionallyCompleteLinearOrderedField (α : Type _) extends
   "./././Mathport/Syntax/Translate/Basic.lean:1481:11: unsupported: advanced extends in structure",
   ConditionallyCompleteLinearOrder α
 
-/-- Any conditionally complete linearly ordered field is archimedean. -/
 -- see Note [lower instance priority]
+/-- Any conditionally complete linearly ordered field is archimedean. -/
 instance (priority := 100) ConditionallyCompleteLinearOrderedField.to_archimedean
     [ConditionallyCompleteLinearOrderedField α] : Archimedean α :=
   archimedean_iff_nat_lt.2
@@ -339,8 +339,6 @@ theorem induced_order_ring_iso_self : inducedOrderRingIso β β = OrderRingIso.r
 
 open OrderRingIso
 
-attribute [local instance] OrderRingHom.subsingleton OrderRingIso.subsingleton_left
-
 /-- There is a unique ordered ring homomorphism from an archimedean linear ordered field to a
 conditionally complete linear ordered field. -/
 instance : Unique (α →+*o β) :=
@@ -354,4 +352,29 @@ instance : Unique (β ≃+*o γ) :=
 end InducedMap
 
 end LinearOrderedField
+
+section Real
+
+variable {R S : Type _} [LinearOrderedField R] [LinearOrderedField S]
+
+theorem ring_hom_monotone (hR : ∀ r : R, 0 ≤ r → ∃ s : R, s ^ 2 = r) (f : R →+* S) : Monotone f := by
+  intro a b hab
+  apply le_of_sub_nonneg
+  obtain ⟨s, hs⟩ := hR (b - a) (sub_nonneg.mpr hab)
+  calc
+    f b - f a = f (b - a) := (RingHom.map_sub _ _ _).symm
+    _ = f (s ^ 2) := by
+      rw [← hs]
+    _ = f s ^ 2 := RingHom.map_pow _ _ _
+    _ ≥ 0 := sq_nonneg _
+    
+
+/-- There exists no nontrivial ring homomorphism `ℝ →+* ℝ`. -/
+instance Real.RingHom.unique : Unique (ℝ →+* ℝ) where
+  default := RingHom.id ℝ
+  uniq := fun f =>
+    congr_arg OrderRingHom.toRingHom
+      (Subsingleton.elimₓ ⟨f, ring_hom_monotone (fun r hr => ⟨Real.sqrt r, sq_sqrt hr⟩) f⟩ default)
+
+end Real
 

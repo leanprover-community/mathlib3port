@@ -164,11 +164,11 @@ def scanr (f : α → β → β) (b : β) (l : List α) : List β :=
 def prod [Mul α] [One α] : List α → α :=
   foldlₓ (· * ·) 1
 
+-- Later this will be tagged with `to_additive`, but this can't be done yet because of import
+-- dependencies.
 /-- Sum of a list.
 
      sum [a, b, c] = ((0 + a) + b) + c -/
--- Later this will be tagged with `to_additive`, but this can't be done yet because of import
--- dependencies.
 def sum [Add α] [Zero α] : List α → α :=
   foldlₓ (· + ·) 0
 
@@ -223,10 +223,10 @@ variable {m : Type → Type v} [Monadₓ m]
 def mbfind {α} (p : α → m Bool) (xs : List α) : m (Option α) :=
   xs.mbfind' (Functor.map ULift.up ∘ p)
 
+-- Implementing this via `mbfind` would give us less universe polymorphism.
 /-- `many p as` returns true iff `p` returns true for any element of `l`.
 `many` short-circuits, so if `p` returns true for any element of `l`, later
 elements are not checked. This is a monadic version of `list.any`. -/
--- Implementing this via `mbfind` would give us less universe polymorphism.
 def many {α : Type u} (p : α → m Bool) : List α → m Bool
   | [] => pure False
   | x :: xs => do

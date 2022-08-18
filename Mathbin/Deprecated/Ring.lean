@@ -118,8 +118,8 @@ theorem map_sub (hf : IsRingHom f) : f (x - y) = f x - f y := by
 theorem id : IsRingHom (@id α) := by
   refine' { .. } <;> intros <;> rfl
 
-/-- The composition of two ring homomorphisms is a ring homomorphism. -/
 -- see Note [no instance on morphisms]
+/-- The composition of two ring homomorphisms is a ring homomorphism. -/
 theorem comp (hf : IsRingHom f) {γ} [Ringₓ γ] {g : β → γ} (hg : IsRingHom g) : IsRingHom (g ∘ f) :=
   { map_add := fun x y => by
       simp [← map_add hf] <;> rw [map_add hg] <;> rfl,

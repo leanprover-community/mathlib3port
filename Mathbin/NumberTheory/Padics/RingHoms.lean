@@ -612,10 +612,10 @@ theorem lim_nth_hom_add (r s : R) : limNthHom f_compat (r + s) = limNthHom f_com
 theorem lim_nth_hom_mul (r s : R) : limNthHom f_compat (r * s) = limNthHom f_compat r * limNthHom f_compat s :=
   Subtype.ext <| Quot.sound <| nth_hom_seq_mul _ _ _
 
+-- TODO: generalize this to arbitrary complete discrete valuation rings
 /-- `lift f_compat` is the limit of a sequence `f` of compatible ring homs `R →+* zmod (p^k)`,
 with the equality `lift f_compat r = padic_int.lim_nth_hom f_compat r`.
 -/
--- TODO: generalize this to arbitrary complete discrete valuation rings
 def lift : R →+* ℤ_[p] where
   toFun := limNthHom f_compat
   map_one' := lim_nth_hom_one f_compat

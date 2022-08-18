@@ -165,6 +165,10 @@ theorem is_open_Inter [Finite β] {s : β → Set α} (h : ∀ i, IsOpen (s i)) 
 theorem is_open_Inter_prop {p : Prop} {s : p → Set α} (h : ∀ h : p, IsOpen (s h)) : IsOpen (Inter s) := by
   by_cases' p <;> simp [*]
 
+theorem is_open_bInter_finset {s : Finset β} {f : β → Set α} (h : ∀, ∀ i ∈ s, ∀, IsOpen (f i)) :
+    IsOpen (⋂ i ∈ s, f i) :=
+  is_open_bInter (to_finite _) h
+
 theorem is_open_const {p : Prop} : IsOpen { a : α | p } :=
   by_cases
     (fun this : p => by
@@ -1089,10 +1093,10 @@ theorem mem_closure_iff_nhds {s : Set α} {a : α} : a ∈ Closure s ↔ ∀, �
   mem_closure_iff_cluster_pt.trans cluster_pt_principal_iff
 
 theorem mem_closure_iff_nhds' {s : Set α} {a : α} : a ∈ Closure s ↔ ∀, ∀ t ∈ 𝓝 a, ∀, ∃ y : s, ↑y ∈ t := by
-  simp only [← mem_closure_iff_nhds, ← Set.nonempty_inter_iff_exists_right]
+  simp only [← mem_closure_iff_nhds, ← Set.inter_nonempty_iff_exists_right, ← SetCoe.exists, ← Subtype.coe_mk]
 
 theorem mem_closure_iff_comap_ne_bot {A : Set α} {x : α} : x ∈ Closure A ↔ NeBot (comap (coe : A → α) (𝓝 x)) := by
-  simp_rw [mem_closure_iff_nhds, comap_ne_bot_iff, Set.nonempty_inter_iff_exists_right]
+  simp_rw [mem_closure_iff_nhds, comap_ne_bot_iff, Set.inter_nonempty_iff_exists_right, SetCoe.exists, Subtype.coe_mk]
 
 theorem mem_closure_iff_nhds_basis' {a : α} {p : ι → Prop} {s : ι → Set α} (h : (𝓝 a).HasBasis p s) {t : Set α} :
     a ∈ Closure t ↔ ∀ i, p i → (s i ∩ t).Nonempty :=

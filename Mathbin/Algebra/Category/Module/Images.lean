@@ -31,8 +31,8 @@ attribute [local ext] Subtype.ext_val
 
 section
 
-/-- The image of a morphism in `Module R` is just the bundling of `linear_map.range f` -/
 -- implementation details of `has_image` for Module; use the API, not these
+/-- The image of a morphism in `Module R` is just the bundling of `linear_map.range f` -/
 def image : ModuleCat R :=
   ModuleCat.of R (LinearMap.range f)
 

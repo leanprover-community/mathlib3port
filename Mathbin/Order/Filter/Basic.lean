@@ -656,9 +656,7 @@ theorem inf_eq_bot_iff {f g : Filter α} : f⊓g = ⊥ ↔ ∃ U ∈ f, ∃ V �
   simpa only [← disjoint_iff] using Filter.disjoint_iff
 
 /-- There is exactly one filter on an empty type. --/
--- TODO[gh-6025]: make this globally an instance once safe to do so
-@[local instance]
-protected def unique [IsEmpty α] : Unique (Filter α) where
+instance unique [IsEmpty α] : Unique (Filter α) where
   default := ⊥
   uniq := filter_eq_bot_of_is_empty
 
@@ -1682,8 +1680,8 @@ theorem pure_bind (a : α) (m : α → Filter β) : bind (pure a) m = m a := by
 
 section
 
-/-- The monad structure on filters. -/
 -- this section needs to be before applicative, otherwise the wrong instance will be chosen
+/-- The monad structure on filters. -/
 protected def monad : Monadₓ Filter where map := @Filter.map
 
 attribute [local instance] Filter.monad

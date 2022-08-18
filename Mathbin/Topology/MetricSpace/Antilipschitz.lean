@@ -76,9 +76,9 @@ variable {K : ℝ≥0 } {f : α → β}
 
 open Emetric
 
+-- uses neither `f` nor `hf`
 /-- Extract the constant from `hf : antilipschitz_with K f`. This is useful, e.g.,
 if `K` is given by a long formula, and we want to reuse this value. -/
--- uses neither `f` nor `hf`
 @[nolint unused_arguments]
 protected def k (hf : AntilipschitzWith K f) : ℝ≥0 :=
   K

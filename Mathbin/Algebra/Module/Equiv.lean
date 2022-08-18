@@ -298,8 +298,8 @@ variable (e₁₂ : M₁ ≃ₛₗ[σ₁₂] M₂) (e₂₃ : M₂ ≃ₛₗ[σ�
 
 include σ₃₁
 
-/-- Linear equivalences are transitive. -/
 -- Note: The linter thinks the `ring_hom_comp_triple` argument is doubled -- it is not.
+/-- Linear equivalences are transitive. -/
 @[trans, nolint unused_arguments]
 def trans : M₁ ≃ₛₗ[σ₁₃] M₃ :=
   { e₂₃.toLinearMap.comp e₁₂.toLinearMap, e₁₂.toEquiv.trans e₂₃.toEquiv with }

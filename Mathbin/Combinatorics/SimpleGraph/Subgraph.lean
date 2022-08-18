@@ -245,9 +245,6 @@ def bot : Subgraph G where
   edge_vert := fun v w h => False.ndrec _ h
   symm := fun u v h => h
 
-instance subgraphInhabited : Inhabited (Subgraph G) :=
-  ⟨bot⟩
-
 /-- The relation that one subgraph is a subgraph of another. -/
 def IsSubgraph (x y : Subgraph G) : Prop :=
   x.Verts ⊆ y.Verts ∧ ∀ ⦃v w : V⦄, x.Adj v w → y.Adj v w
@@ -277,6 +274,10 @@ instance : BoundedOrder (Subgraph G) where
   bot := bot
   le_top := fun x => ⟨Set.subset_univ _, fun v w h => x.adj_sub h⟩
   bot_le := fun x => ⟨Set.empty_subset _, fun v w h => False.ndrec _ h⟩
+
+@[simps]
+instance subgraphInhabited : Inhabited (Subgraph G) :=
+  ⟨⊥⟩
 
 -- TODO simp lemmas for the other lattice operations on subgraphs
 @[simp]
@@ -661,12 +662,12 @@ end DeleteEdges
 /-! ## Induced subgraphs -/
 
 
-/-- The induced subgraph of a subgraph. The expectation is that `s ⊆ G'.verts` for the usual
-notion of an induced subgraph, but, in general, `s` is taken to be the new vertex set and edges
-are induced from the subgraph `G'`. -/
 /- Given a subgraph, we can change its vertex set while removing any invalid edges, which
 gives induced subgraphs. See also `simple_graph.induce` for the `simple_graph` version, which,
 unlike for subgraphs, results in a graph with a different vertex type. -/
+/-- The induced subgraph of a subgraph. The expectation is that `s ⊆ G'.verts` for the usual
+notion of an induced subgraph, but, in general, `s` is taken to be the new vertex set and edges
+are induced from the subgraph `G'`. -/
 @[simps]
 def induce (G' : G.Subgraph) (s : Set V) : G.Subgraph where
   Verts := s

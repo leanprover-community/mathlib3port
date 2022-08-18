@@ -534,9 +534,9 @@ theorem Arrow.middle_spec {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover 
     I.toMiddleHom ≫ I.fromMiddleHom = I.f :=
   I.hf.some_spec.some_spec.some_spec.some_spec.2
 
-/-- To every `S : J.cover X` and presheaf `P`, associate a `multicospan_index`. -/
 -- This is used extensively in `plus.lean`, etc.
 -- We place this definition here as it will be used in `sheaf.lean` as well.
+/-- To every `S : J.cover X` and presheaf `P`, associate a `multicospan_index`. -/
 def index {D : Type w} [Category.{max v u} D] (S : J.cover X) (P : Cᵒᵖ ⥤ D) : Limits.MulticospanIndex D where
   L := S.arrow
   R := S.Relation

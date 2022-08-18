@@ -935,9 +935,9 @@ theorem linear_independent_inl_union_inr' {v : ι → M} {v' : ι' → M'} (hv :
   (hv.map' (inl R M M') ker_inl).sum_type (hv'.map' (inr R M M') ker_inr) <| by
     refine' is_compl_range_inl_inr.disjoint.mono _ _ <;> simp only [← span_le, ← range_coe, ← range_comp_subset_range]
 
-/-- Dedekind's linear independence of characters -/
 -- See, for example, Keith Conrad's note
 --  <https://kconrad.math.uconn.edu/blurbs/galoistheory/linearchar.pdf>
+/-- Dedekind's linear independence of characters -/
 theorem linear_independent_monoid_hom (G : Type _) [Monoidₓ G] (L : Type _) [CommRingₓ L] [NoZeroDivisors L] :
     @LinearIndependent _ L (G → L) (fun f => f : (G →* L) → G → L) _ _ _ := by
   letI := Classical.decEq (G →* L) <;>

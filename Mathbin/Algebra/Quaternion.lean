@@ -882,11 +882,11 @@ instance : DivisionRing ℍ[R] :=
 
 @[simp]
 theorem norm_sq_inv : normSq a⁻¹ = (normSq a)⁻¹ :=
-  MonoidWithZeroHom.map_inv normSq _
+  map_inv₀ normSq _
 
 @[simp]
 theorem norm_sq_div : normSq (a / b) = normSq a / normSq b :=
-  MonoidWithZeroHom.map_div normSq a b
+  map_div₀ normSq a b
 
 end Field
 

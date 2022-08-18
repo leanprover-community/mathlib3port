@@ -101,7 +101,7 @@ instance [IsTrichotomous α r] [IsTrichotomous β s] : IsTrichotomous (Sum α β
     | inr a, inr b => (trichotomous_of s a b).imp3 Lex.inr (congr_arg _) Lex.inr⟩
 
 instance [IsWellOrder α r] [IsWellOrder β s] :
-    IsWellOrder (Sum α β) (Sum.Lex r s) where wf := Sum.lex_wf IsWellOrder.wf IsWellOrder.wf
+    IsWellOrder (Sum α β) (Sum.Lex r s) where wf := Sum.lex_wf IsWellFounded.wf IsWellFounded.wf
 
 end Lex
 
@@ -287,8 +287,8 @@ namespace Lex
 -- mathport name: «expr ⊕ₗ »
 notation:30 α " ⊕ₗ " β:29 => Lex (Sum α β)
 
-/-- Lexicographical `sum.inl`. Only used for pattern matching. -/
 --TODO: Can we make `inlₗ`, `inrₗ` `local notation`?
+/-- Lexicographical `sum.inl`. Only used for pattern matching. -/
 @[matchPattern]
 abbrev _root_.sum.inlₗ (x : α) : α ⊕ₗ β :=
   toLex (Sum.inl x)

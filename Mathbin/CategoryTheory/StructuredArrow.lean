@@ -98,6 +98,27 @@ def isoMk {f f' : StructuredArrow S T} (g : f.right ≅ f'.right) (w : f.Hom ≫
     (by
       simpa [← eq_to_hom_map] using w.symm)
 
+theorem ext {A B : StructuredArrow S T} (f g : A ⟶ B) : f.right = g.right → f = g :=
+  CommaMorphism.ext _ _ (Subsingleton.elimₓ _ _)
+
+theorem ext_iff {A B : StructuredArrow S T} (f g : A ⟶ B) : f = g ↔ f.right = g.right :=
+  ⟨fun h => h ▸ rfl, ext f g⟩
+
+instance proj_faithful : Faithful (proj S T) where map_injective' := fun X Y => ext
+
+/-- The converse of this is true with additional assumptions, see `mono_iff_mono_right`. -/
+theorem mono_of_mono_right {A B : StructuredArrow S T} (f : A ⟶ B) [h : Mono f.right] : Mono f :=
+  (proj S T).mono_of_mono_map h
+
+theorem epi_of_epi_right {A B : StructuredArrow S T} (f : A ⟶ B) [h : Epi f.right] : Epi f :=
+  (proj S T).epi_of_epi_map h
+
+instance mono_hom_mk {A B : StructuredArrow S T} (f : A.right ⟶ B.right) (w) [h : Mono f] : Mono (homMk f w) :=
+  (proj S T).mono_of_mono_map h
+
+instance epi_hom_mk {A B : StructuredArrow S T} (f : A.right ⟶ B.right) (w) [h : Epi f] : Epi (homMk f w) :=
+  (proj S T).epi_of_epi_map h
+
 /-- Eta rule for structured arrows. Prefer `structured_arrow.eta`, since equality of objects tends
     to cause problems. -/
 theorem eq_mk (f : StructuredArrow S T) : f = mk f.Hom := by
@@ -245,6 +266,27 @@ def isoMk {f f' : CostructuredArrow S T} (g : f.left ≅ f'.left) (w : S.map g.H
         ext))
     (by
       simpa [← eq_to_hom_map] using w)
+
+theorem ext {A B : CostructuredArrow S T} (f g : A ⟶ B) (h : f.left = g.left) : f = g :=
+  CommaMorphism.ext _ _ h (Subsingleton.elimₓ _ _)
+
+theorem ext_iff {A B : CostructuredArrow S T} (f g : A ⟶ B) : f = g ↔ f.left = g.left :=
+  ⟨fun h => h ▸ rfl, ext f g⟩
+
+instance proj_faithful : Faithful (proj S T) where map_injective' := fun X Y => ext
+
+theorem mono_of_mono_left {A B : CostructuredArrow S T} (f : A ⟶ B) [h : Mono f.left] : Mono f :=
+  (proj S T).mono_of_mono_map h
+
+/-- The converse of this is true with additional assumptions, see `epi_iff_epi_left`. -/
+theorem epi_of_epi_left {A B : CostructuredArrow S T} (f : A ⟶ B) [h : Epi f.left] : Epi f :=
+  (proj S T).epi_of_epi_map h
+
+instance mono_hom_mk {A B : CostructuredArrow S T} (f : A.left ⟶ B.left) (w) [h : Mono f] : Mono (homMk f w) :=
+  (proj S T).mono_of_mono_map h
+
+instance epi_hom_mk {A B : CostructuredArrow S T} (f : A.left ⟶ B.left) (w) [h : Epi f] : Epi (homMk f w) :=
+  (proj S T).epi_of_epi_map h
 
 /-- Eta rule for costructured arrows. Prefer `costructured_arrow.eta`, as equality of objects tends
     to cause problems. -/

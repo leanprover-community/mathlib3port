@@ -385,6 +385,7 @@ theorem of_boolring_inj {a b : AsBoolring α} : ofBoolring a = ofBoolring b ↔ 
 instance [Inhabited α] : Inhabited (AsBoolring α) :=
   ‹Inhabited α›
 
+-- See note [reducible non-instances]
 /-- Every generalized Boolean algebra has the structure of a non unital commutative ring with the
 following data:
 
@@ -393,7 +394,6 @@ following data:
 * `-a` unfolds to `a`
 * `0` unfolds to `⊥`
 -/
--- See note [reducible non-instances]
 @[reducible]
 def GeneralizedBooleanAlgebra.toNonUnitalCommRing [GeneralizedBooleanAlgebra α] : NonUnitalCommRing α where
   add := (· ∆ ·)
@@ -417,6 +417,7 @@ instance [GeneralizedBooleanAlgebra α] : NonUnitalCommRing (AsBoolring α) :=
 
 variable [BooleanAlgebra α] [BooleanAlgebra β] [BooleanAlgebra γ]
 
+-- See note [reducible non-instances]
 /-- Every Boolean algebra has the structure of a Boolean ring with the following data:
 
 * `a + b` unfolds to `a ∆ b` (symmetric difference)
@@ -425,7 +426,6 @@ variable [BooleanAlgebra α] [BooleanAlgebra β] [BooleanAlgebra γ]
 * `0` unfolds to `⊥`
 * `1` unfolds to `⊤`
 -/
--- See note [reducible non-instances]
 @[reducible]
 def BooleanAlgebra.toBooleanRing : BooleanRing α :=
   { GeneralizedBooleanAlgebra.toNonUnitalCommRing with one := ⊤, one_mul := fun _ => top_inf_eq,

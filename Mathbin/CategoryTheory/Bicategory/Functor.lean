@@ -124,12 +124,12 @@ variable {B : Type u₁} [Bicategory.{w₁, v₁} B] {C : Type u₂} [Bicategory
 
 variable {D : Type u₃} [Bicategory.{w₃, v₃} D]
 
-/-- This auxiliary definition states that oplax functors preserve the associators
-modulo some adjustments of domains and codomains of 2-morphisms.
--/
 /-
 We use this auxiliary definition instead of writing it directly in the definition
 of oplax functors because doing so will cause a timeout.
+-/
+/-- This auxiliary definition states that oplax functors preserve the associators
+modulo some adjustments of domains and codomains of 2-morphisms.
 -/
 @[simp]
 def OplaxFunctor.Map₂AssociatorAux (obj : B → C) (map : ∀ {X Y : B}, (X ⟶ Y) → (obj X ⟶ obj Y))
@@ -292,12 +292,12 @@ end
 
 end OplaxFunctor
 
-/-- This auxiliary definition states that pseudofunctors preserve the associators
-modulo some adjustments of domains and codomains of 2-morphisms.
--/
 /-
 We use this auxiliary definition instead of writing it directly in the definition
 of pseudofunctors because doing so will cause a timeout.
+-/
+/-- This auxiliary definition states that pseudofunctors preserve the associators
+modulo some adjustments of domains and codomains of 2-morphisms.
 -/
 @[simp]
 def Pseudofunctor.Map₂AssociatorAux (obj : B → C) (map : ∀ {X Y : B}, (X ⟶ Y) → (obj X ⟶ obj Y))

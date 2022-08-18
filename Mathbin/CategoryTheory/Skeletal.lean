@@ -165,9 +165,9 @@ theorem comp_to_thin_skeleton (F : C ⥤ D) : F ⋙ toThinSkeleton D = toThinSke
 def mapNatTrans {F₁ F₂ : C ⥤ D} (k : F₁ ⟶ F₂) :
     map F₁ ⟶ map F₂ where app := fun X => Quotientₓ.recOnSubsingleton X fun x => ⟨⟨⟨k.app x⟩⟩⟩
 
+-- TODO: state the lemmas about what happens when you compose with `to_thin_skeleton`
 /-- A functor `C ⥤ D ⥤ E` computably lowers to a functor
 `thin_skeleton C ⥤ thin_skeleton D ⥤ thin_skeleton E` -/
--- TODO: state the lemmas about what happens when you compose with `to_thin_skeleton`
 @[simps]
 def map₂ (F : C ⥤ D ⥤ E) : ThinSkeleton C ⥤ ThinSkeleton D ⥤ ThinSkeleton E where
   obj := fun x =>

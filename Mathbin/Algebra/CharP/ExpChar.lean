@@ -75,8 +75,8 @@ theorem char_zero_of_exp_char_one (p : ℕ) [hp : CharP R p] [hq : ExpChar R 1] 
   · exact False.elim (CharP.char_ne_one R 1 rfl)
     
 
-/-- The characteristic is zero if the exponential characteristic is one. -/
 -- see Note [lower instance priority]
+/-- The characteristic is zero if the exponential characteristic is one. -/
 instance (priority := 100) char_zero_of_exp_char_one' [hq : ExpChar R 1] : CharZero R := by
   cases hq
   · assumption

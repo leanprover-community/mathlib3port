@@ -85,12 +85,12 @@ end Real
 
 namespace Complex
 
-/-- The integral defining the `Γ` function converges for complex `s` with `0 < re s`.
-
-This is proved by reduction to the real case. -/
 /- Technical note: In defining the Gamma integrand exp (-x) * x ^ (s - 1) for s complex, we have to
 make a choice between ↑(real.exp (-x)), complex.exp (↑(-x)), and complex.exp (-↑x), all of which are
 equal but not definitionally so. We use the first of these throughout. -/
+/-- The integral defining the `Γ` function converges for complex `s` with `0 < re s`.
+
+This is proved by reduction to the real case. -/
 theorem Gamma_integral_convergent {s : ℂ} (hs : 0 < s.re) :
     IntegrableOn (fun x => (-x).exp * x ^ (s - 1) : ℝ → ℂ) (Ioi 0) := by
   constructor

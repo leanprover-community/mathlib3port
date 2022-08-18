@@ -146,9 +146,9 @@ class HasDist (α : Type _) where
 
 export HasDist (dist)
 
-/-- This is an internal lemma used inside the default of `pseudo_metric_space.edist`. -/
 -- the uniform structure and the emetric space structure are embedded in the metric space structure
 -- to avoid instance diamond issues. See Note [forgetful inheritance].
+/-- This is an internal lemma used inside the default of `pseudo_metric_space.edist`. -/
 private theorem pseudo_metric_space.dist_nonneg' {α} {x y : α} (dist : α → α → ℝ) (dist_self : ∀ x : α, dist x x = 0)
     (dist_comm : ∀ x y : α, dist x y = dist y x) (dist_triangle : ∀ x y z : α, dist x z ≤ dist x y + dist y z) :
     0 ≤ dist x y :=
@@ -357,8 +357,8 @@ class HasNndist (α : Type _) where
 
 export HasNndist (nndist)
 
-/-- Distance as a nonnegative real number. -/
 -- see Note [lower instance priority]
+/-- Distance as a nonnegative real number. -/
 instance (priority := 100) PseudoMetricSpace.toHasNndist : HasNndist α :=
   ⟨fun a b => ⟨dist a b, dist_nonneg⟩⟩
 
@@ -1037,10 +1037,10 @@ end Metric
 
 open Metric
 
-/-- Expressing the uniformity in terms of `edist` -/
 /-Instantiate a pseudometric space as a pseudoemetric space. Before we can state the instance,
 we need to show that the uniform structure coming from the edistance and the
 distance coincide. -/
+/-- Expressing the uniformity in terms of `edist` -/
 protected theorem PseudoMetric.uniformity_basis_edist :
     (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => 0 < ε) fun ε => { p | edist p.1 p.2 < ε } :=
   ⟨by
@@ -1060,8 +1060,8 @@ protected theorem PseudoMetric.uniformity_basis_edist :
 theorem Metric.uniformity_edist : 𝓤 α = ⨅ ε > 0, 𝓟 { p : α × α | edist p.1 p.2 < ε } :=
   PseudoMetric.uniformity_basis_edist.eq_binfi
 
-/-- A pseudometric space induces a pseudoemetric space -/
 -- see Note [lower instance priority]
+/-- A pseudometric space induces a pseudoemetric space -/
 instance (priority := 100) PseudoMetricSpace.toPseudoEmetricSpace : PseudoEmetricSpace α :=
   { ‹PseudoMetricSpace α› with edist := edist,
     edist_self := by
@@ -1344,9 +1344,9 @@ section CauchySeq
 variable [Nonempty β] [SemilatticeSup β]
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (m n «expr ≥ » N)
+-- see Note [nolint_ge]
 /-- In a pseudometric space, Cauchy sequences are characterized by the fact that, eventually,
 the distance between its elements is arbitrarily small -/
--- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem Metric.cauchy_seq_iff {u : β → α} :
     CauchySeq u ↔ ∀, ∀ ε > 0, ∀, ∃ N, ∀ (m n) (_ : m ≥ N) (_ : n ≥ N), dist (u m) (u n) < ε :=
@@ -1356,9 +1356,9 @@ theorem Metric.cauchy_seq_iff {u : β → α} :
 theorem Metric.cauchy_seq_iff' {u : β → α} : CauchySeq u ↔ ∀, ∀ ε > 0, ∀, ∃ N, ∀, ∀ n ≥ N, ∀, dist (u n) (u N) < ε :=
   uniformity_basis_dist.cauchy_seq_iff'
 
+-- see Note [nolint_ge]
 /-- In a pseudometric space, unifom Cauchy sequences are characterized by the fact that, eventually,
 the distance between all its elements is uniformly, arbitrarily small -/
--- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem Metric.uniform_cauchy_seq_on_iff {γ : Type _} {F : β → γ → α} {s : Set γ} :
     UniformCauchySeqOn F atTop s ↔
@@ -1956,8 +1956,8 @@ theorem is_compact_sphere {α : Type _} [PseudoMetricSpace α] [ProperSpace α] 
 instance {α : Type _} [PseudoMetricSpace α] [ProperSpace α] (x : α) (r : ℝ) : CompactSpace (Sphere x r) :=
   is_compact_iff_compact_space.mp (is_compact_sphere _ _)
 
-/-- A proper pseudo metric space is sigma compact, and therefore second countable. -/
 -- see Note [lower instance priority]
+/-- A proper pseudo metric space is sigma compact, and therefore second countable. -/
 instance (priority := 100) second_countable_of_proper [ProperSpace α] : SecondCountableTopology α := by
   -- We already have `sigma_compact_space_of_locally_compact_second_countable`, so we don't
   -- add an instance for `sigma_compact_space`.
@@ -1998,14 +1998,14 @@ theorem proper_space_of_compact_closed_ball_of_le (R : ℝ) (h : ∀ x : α, ∀
 instance (priority := 100) proper_of_compact [CompactSpace α] : ProperSpace α :=
   ⟨fun x r => is_closed_ball.IsCompact⟩
 
-/-- A proper space is locally compact -/
 -- see Note [lower instance priority]
+/-- A proper space is locally compact -/
 instance (priority := 100) locally_compact_of_proper [ProperSpace α] : LocallyCompactSpace α :=
   (locally_compact_space_of_has_basis fun x => nhds_basis_closed_ball) fun x ε ε0 => is_compact_closed_ball _ _
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » t)
-/-- A proper space is complete -/
 -- see Note [lower instance priority]
+/-- A proper space is complete -/
 instance (priority := 100) complete_of_proper [ProperSpace α] : CompleteSpace α :=
   ⟨by
     intro f hf
@@ -2633,7 +2633,7 @@ theorem subsingleton_closed_ball (x : γ) {r : ℝ} (hr : r ≤ 0) : (ClosedBall
     
 
 theorem subsingleton_sphere (x : γ) {r : ℝ} (hr : r ≤ 0) : (Sphere x r).Subsingleton :=
-  (subsingleton_closed_ball x hr).mono sphere_subset_closed_ball
+  (subsingleton_closed_ball x hr).anti sphere_subset_closed_ball
 
 /-- A map between metric spaces is a uniform embedding if and only if the distance between `f x`
 and `f y` is controlled in terms of the distance between `x` and `y` and conversely. -/
@@ -2666,8 +2666,8 @@ instance (priority := 100) _root_.metric_space.to_separated : SeparatedSpace γ 
 def ofT0PseudoMetricSpace (α : Type _) [PseudoMetricSpace α] [T0Space α] : MetricSpace α :=
   { ‹PseudoMetricSpace α› with eq_of_dist_eq_zero := fun x y hdist => Inseparable.eq <| Metric.inseparable_iff.2 hdist }
 
-/-- A metric space induces an emetric space -/
 -- see Note [lower instance priority]
+/-- A metric space induces an emetric space -/
 instance (priority := 100) MetricSpace.toEmetricSpace : EmetricSpace γ :=
   Emetric.ofT0PseudoEmetricSpace γ
 
@@ -2778,8 +2778,6 @@ instance Subtype.metricSpace {α : Type _} {p : α → Prop} [MetricSpace α] : 
 @[to_additive]
 instance {α : Type _} [MetricSpace α] : MetricSpace αᵐᵒᵖ :=
   MetricSpace.induced MulOpposite.unop MulOpposite.unop_injective ‹_›
-
-attribute [local instance] Filter.unique
 
 instance : MetricSpace Empty where
   dist := fun _ _ => 0

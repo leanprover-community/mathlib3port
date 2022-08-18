@@ -209,10 +209,13 @@ theorem injective_noncomm_pi_coprod_of_independent (hind : CompleteLattice.Indep
 
 variable (hcomm)
 
+omit hfin
+
 @[to_additive]
-theorem independent_range_of_coprime_order [∀ i, Fintype (H i)]
+theorem independent_range_of_coprime_order [Finite ι] [∀ i, Fintype (H i)]
     (hcoprime : ∀ i j, i ≠ j → Nat.Coprime (Fintype.card (H i)) (Fintype.card (H j))) :
     CompleteLattice.Independent fun i => (ϕ i).range := by
+  cases nonempty_fintype ι
   classical
   rintro i f ⟨hxi, hxp⟩
   dsimp'  at hxi hxp
@@ -301,8 +304,10 @@ theorem injective_noncomm_pi_coprod_of_independent (hind : CompleteLattice.Indep
 
 variable (hcomm)
 
+omit hfin
+
 @[to_additive]
-theorem independent_of_coprime_order [∀ i, Fintype (H i)]
+theorem independent_of_coprime_order [Finite ι] [∀ i, Fintype (H i)]
     (hcoprime : ∀ i j, i ≠ j → Nat.Coprime (Fintype.card (H i)) (Fintype.card (H j))) : CompleteLattice.Independent H :=
   by
   simpa using

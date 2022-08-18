@@ -9,8 +9,8 @@ import Mathbin.LinearAlgebra.Prod
 /-!
 # Partially defined linear maps
 
-A `linear_pmap R E F` is a linear map from a submodule of `E` to `F`. We define
-a `semilattice_inf` with `order_bot` instance on this this, and define three operations:
+A `linear_pmap R E F` or `E →ₗ.[R] F` is a linear map from a submodule of `E` to `F`.
+We define a `semilattice_inf` with `order_bot` instance on this this, and define three operations:
 
 * `mk_span_singleton` defines a partial linear map defined on the span of a singleton.
 * `sup` takes two partial linear maps `f`, `g` that agree on the intersection of their
@@ -34,11 +34,14 @@ open Set
 
 universe u v w
 
-/-- A `linear_pmap R E F` is a linear map from a submodule of `E` to `F`. -/
+/-- A `linear_pmap R E F` or `E →ₗ.[R] F` is a linear map from a submodule of `E` to `F`. -/
 structure LinearPmap (R : Type u) [Ringₓ R] (E : Type v) [AddCommGroupₓ E] [Module R E] (F : Type w) [AddCommGroupₓ F]
   [Module R F] where
   domain : Submodule R E
   toFun : domain →ₗ[R] F
+
+-- mathport name: «expr →ₗ.[ ] »
+notation:25 E " →ₗ.[" R:25 "] " F:0 => LinearPmap R E F
 
 variable {R : Type _} [Ringₓ R] {E : Type _} [AddCommGroupₓ E] [Module R E] {F : Type _} [AddCommGroupₓ F] [Module R F]
   {G : Type _} [AddCommGroupₓ G] [Module R G]
@@ -47,15 +50,15 @@ namespace LinearPmap
 
 open Submodule
 
-instance : CoeFun (LinearPmap R E F) fun f : LinearPmap R E F => f.domain → F :=
+instance : CoeFun (E →ₗ.[R] F) fun f : E →ₗ.[R] F => f.domain → F :=
   ⟨fun f => f.toFun⟩
 
 @[simp]
-theorem to_fun_eq_coe (f : LinearPmap R E F) (x : f.domain) : f.toFun x = f x :=
+theorem to_fun_eq_coe (f : E →ₗ.[R] F) (x : f.domain) : f.toFun x = f x :=
   rfl
 
 @[ext]
-theorem ext {f g : LinearPmap R E F} (h : f.domain = g.domain)
+theorem ext {f g : E →ₗ.[R] F} (h : f.domain = g.domain)
     (h' : ∀ ⦃x : f.domain⦄ ⦃y : g.domain⦄ (h : (x : E) = y), f x = g y) : f = g := by
   rcases f with ⟨f_dom, f⟩
   rcases g with ⟨g_dom, g⟩
@@ -64,10 +67,10 @@ theorem ext {f g : LinearPmap R E F} (h : f.domain = g.domain)
   rfl
 
 @[simp]
-theorem map_zero (f : LinearPmap R E F) : f 0 = 0 :=
+theorem map_zero (f : E →ₗ.[R] F) : f 0 = 0 :=
   f.toFun.map_zero
 
-theorem ext_iff {f g : LinearPmap R E F} :
+theorem ext_iff {f g : E →ₗ.[R] F} :
     f = g ↔ ∃ domain_eq : f.domain = g.domain, ∀ ⦃x : f.domain⦄ ⦃y : g.domain⦄ (h : (x : E) = y), f x = g y :=
   ⟨fun EQ =>
     EQ ▸
@@ -76,16 +79,16 @@ theorem ext_iff {f g : LinearPmap R E F} :
         exact_mod_cast h⟩,
     fun ⟨deq, feq⟩ => ext deq feq⟩
 
-theorem map_add (f : LinearPmap R E F) (x y : f.domain) : f (x + y) = f x + f y :=
+theorem map_add (f : E →ₗ.[R] F) (x y : f.domain) : f (x + y) = f x + f y :=
   f.toFun.map_add x y
 
-theorem map_neg (f : LinearPmap R E F) (x : f.domain) : f (-x) = -f x :=
+theorem map_neg (f : E →ₗ.[R] F) (x : f.domain) : f (-x) = -f x :=
   f.toFun.map_neg x
 
-theorem map_sub (f : LinearPmap R E F) (x y : f.domain) : f (x - y) = f x - f y :=
+theorem map_sub (f : E →ₗ.[R] F) (x y : f.domain) : f (x - y) = f x - f y :=
   f.toFun.map_sub x y
 
-theorem map_smul (f : LinearPmap R E F) (c : R) (x : f.domain) : f (c • x) = c • f x :=
+theorem map_smul (f : E →ₗ.[R] F) (c : R) (x : f.domain) : f (c • x) = c • f x :=
   f.toFun.map_smul c x
 
 @[simp]
@@ -94,7 +97,7 @@ theorem mk_apply (p : Submodule R E) (f : p →ₗ[R] F) (x : p) : mk p f x = f 
 
 /-- The unique `linear_pmap` on `R ∙ x` that sends `x` to `y`. This version works for modules
 over rings, and requires a proof of `∀ c, c • x = 0 → c • y = 0`. -/
-noncomputable def mkSpanSingleton' (x : E) (y : F) (H : ∀ c : R, c • x = 0 → c • y = 0) : LinearPmap R E F where
+noncomputable def mkSpanSingleton' (x : E) (y : F) (H : ∀ c : R, c • x = 0 → c • y = 0) : E →ₗ.[R] F where
   domain := R∙x
   toFun :=
     have H : ∀ c₁ c₂ : R, c₁ • x = c₂ • x → c₁ • y = c₂ • y := by
@@ -136,7 +139,7 @@ theorem mk_span_singleton'_apply_self (x : E) (y : F) (H : ∀ c : R, c • x = 
 This version works for modules over division rings. -/
 @[reducible]
 noncomputable def mkSpanSingleton {K E F : Type _} [DivisionRing K] [AddCommGroupₓ E] [Module K E] [AddCommGroupₓ F]
-    [Module K F] (x : E) (y : F) (hx : x ≠ 0) : LinearPmap K E F :=
+    [Module K F] (x : E) (y : F) (hx : x ≠ 0) : E →ₗ.[K] F :=
   (mkSpanSingleton' x y) fun c hc =>
     (smul_eq_zero.1 hc).elim
       (fun hc => by
@@ -149,7 +152,7 @@ theorem mk_span_singleton_apply (K : Type _) {E F : Type _} [DivisionRing K] [Ad
   LinearPmap.mk_span_singleton'_apply_self _ _ _ _
 
 /-- Projection to the first coordinate as a `linear_pmap` -/
-protected def fst (p : Submodule R E) (p' : Submodule R F) : LinearPmap R (E × F) E where
+protected def fst (p : Submodule R E) (p' : Submodule R F) : E × F →ₗ.[R] E where
   domain := p.Prod p'
   toFun := (LinearMap.fst R E F).comp (p.Prod p').Subtype
 
@@ -158,7 +161,7 @@ theorem fst_apply (p : Submodule R E) (p' : Submodule R F) (x : p.Prod p') : Lin
   rfl
 
 /-- Projection to the second coordinate as a `linear_pmap` -/
-protected def snd (p : Submodule R E) (p' : Submodule R F) : LinearPmap R (E × F) F where
+protected def snd (p : Submodule R E) (p' : Submodule R F) : E × F →ₗ.[R] F where
   domain := p.Prod p'
   toFun := (LinearMap.snd R E F).comp (p.Prod p').Subtype
 
@@ -166,22 +169,22 @@ protected def snd (p : Submodule R E) (p' : Submodule R F) : LinearPmap R (E × 
 theorem snd_apply (p : Submodule R E) (p' : Submodule R F) (x : p.Prod p') : LinearPmap.snd p p' x = (x : E × F).2 :=
   rfl
 
-instance : Neg (LinearPmap R E F) :=
+instance : Neg (E →ₗ.[R] F) :=
   ⟨fun f => ⟨f.domain, -f.toFun⟩⟩
 
 @[simp]
-theorem neg_apply (f : LinearPmap R E F) (x) : (-f) x = -f x :=
+theorem neg_apply (f : E →ₗ.[R] F) (x) : (-f) x = -f x :=
   rfl
 
-instance : LE (LinearPmap R E F) :=
+instance : LE (E →ₗ.[R] F) :=
   ⟨fun f g => f.domain ≤ g.domain ∧ ∀ ⦃x : f.domain⦄ ⦃y : g.domain⦄ (h : (x : E) = y), f x = g y⟩
 
-theorem eq_of_le_of_domain_eq {f g : LinearPmap R E F} (hle : f ≤ g) (heq : f.domain = g.domain) : f = g :=
+theorem eq_of_le_of_domain_eq {f g : E →ₗ.[R] F} (hle : f ≤ g) (heq : f.domain = g.domain) : f = g :=
   ext HEq hle.2
 
 /-- Given two partial linear maps `f`, `g`, the set of points `x` such that
 both `f` and `g` are defined at `x` and `f x = g x` form a submodule. -/
-def eqLocus (f g : LinearPmap R E F) : Submodule R E where
+def eqLocus (f g : E →ₗ.[R] F) : Submodule R E where
   Carrier := { x | ∃ (hf : x ∈ f.domain)(hg : x ∈ g.domain), f ⟨x, hf⟩ = g ⟨x, hg⟩ }
   zero_mem' := ⟨zero_mem _, zero_mem _, f.map_zero.trans g.map_zero.symm⟩
   add_mem' := fun x y ⟨hfx, hgx, hx⟩ ⟨hfy, hgy, hy⟩ =>
@@ -191,16 +194,16 @@ def eqLocus (f g : LinearPmap R E F) : Submodule R E where
     ⟨smul_mem _ c hfx, smul_mem _ c hgx, by
       erw [f.map_smul c ⟨x, hfx⟩, g.map_smul c ⟨x, hgx⟩, hx]⟩
 
-instance : HasInf (LinearPmap R E F) :=
+instance : HasInf (E →ₗ.[R] F) :=
   ⟨fun f g => ⟨f.eqLocus g, f.toFun.comp <| of_le fun x hx => hx.fst⟩⟩
 
-instance : HasBot (LinearPmap R E F) :=
+instance : HasBot (E →ₗ.[R] F) :=
   ⟨⟨⊥, 0⟩⟩
 
-instance : Inhabited (LinearPmap R E F) :=
+instance : Inhabited (E →ₗ.[R] F) :=
   ⟨⊥⟩
 
-instance : SemilatticeInf (LinearPmap R E F) where
+instance : SemilatticeInf (E →ₗ.[R] F) where
   le := (· ≤ ·)
   le_refl := fun f => ⟨le_reflₓ f.domain, fun x y h => Subtype.eq h ▸ rfl⟩
   le_trans := fun f g h ⟨fg_le, fg_eq⟩ ⟨gh_le, gh_eq⟩ =>
@@ -220,7 +223,7 @@ instance : SemilatticeInf (LinearPmap R E F) where
   inf_le_right := fun f g =>
     ⟨fun x hx => hx.snd.fst, fun ⟨x, xf, xg, hx⟩ y h => hx.trans <| congr_arg g <| Subtype.eq <| h⟩
 
-instance : OrderBot (LinearPmap R E F) where
+instance : OrderBot (E →ₗ.[R] F) where
   bot := ⊥
   bot_le := fun f =>
     ⟨bot_le, fun x y h => by
@@ -228,14 +231,14 @@ instance : OrderBot (LinearPmap R E F) where
       have hy : y = 0 := Subtype.eq (h.symm.trans (congr_arg _ hx))
       rw [hx, hy, map_zero, map_zero]⟩
 
-theorem le_of_eq_locus_ge {f g : LinearPmap R E F} (H : f.domain ≤ f.eqLocus g) : f ≤ g :=
+theorem le_of_eq_locus_ge {f g : E →ₗ.[R] F} (H : f.domain ≤ f.eqLocus g) : f ≤ g :=
   suffices f ≤ f⊓g from le_transₓ this inf_le_right
   ⟨H, fun x y hxy => ((inf_le_left : f⊓g ≤ f).2 hxy.symm).symm⟩
 
 theorem domain_mono : StrictMono (@domain R _ E _ _ F _ _) := fun f g hlt =>
   (lt_of_le_of_neₓ hlt.1.1) fun heq => ne_of_ltₓ hlt <| eq_of_le_of_domain_eq (le_of_ltₓ hlt) HEq
 
-private theorem sup_aux (f g : LinearPmap R E F) (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) :
+private theorem sup_aux (f g : E →ₗ.[R] F) (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) :
     ∃ fg : ↥(f.domain⊔g.domain) →ₗ[R] F, ∀ (x : f.domain) (y : g.domain) (z), (x : E) + y = ↑z → fg z = f x + g y := by
   choose x hx y hy hxy using fun z : f.domain⊔g.domain => mem_sup.1 z.Prop
   set fg := fun z => f ⟨x z, hx z⟩ + g ⟨y z, hy z⟩
@@ -264,41 +267,41 @@ private theorem sup_aux (f g : LinearPmap R E F) (h : ∀ (x : f.domain) (y : g.
 /-- Given two partial linear maps that agree on the intersection of their domains,
 `f.sup g h` is the unique partial linear map on `f.domain ⊔ g.domain` that agrees
 with `f` and `g`. -/
-protected noncomputable def sup (f g : LinearPmap R E F)
-    (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) : LinearPmap R E F :=
+protected noncomputable def sup (f g : E →ₗ.[R] F) (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) :
+    E →ₗ.[R] F :=
   ⟨_, Classical.some (sup_aux f g h)⟩
 
 @[simp]
-theorem domain_sup (f g : LinearPmap R E F) (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) :
+theorem domain_sup (f g : E →ₗ.[R] F) (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) :
     (f.sup g h).domain = f.domain⊔g.domain :=
   rfl
 
-theorem sup_apply {f g : LinearPmap R E F} (H : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) (x y z)
+theorem sup_apply {f g : E →ₗ.[R] F} (H : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) (x y z)
     (hz : (↑x : E) + ↑y = ↑z) : f.sup g H z = f x + g y :=
   Classical.some_spec (sup_aux f g H) x y z hz
 
-protected theorem left_le_sup (f g : LinearPmap R E F) (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) :
+protected theorem left_le_sup (f g : E →ₗ.[R] F) (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) :
     f ≤ f.sup g h := by
   refine' ⟨le_sup_left, fun z₁ z₂ hz => _⟩
   rw [← add_zeroₓ (f _), ← g.map_zero]
   refine' (sup_apply h _ _ _ _).symm
   simpa
 
-protected theorem right_le_sup (f g : LinearPmap R E F) (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) :
+protected theorem right_le_sup (f g : E →ₗ.[R] F) (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) :
     g ≤ f.sup g h := by
   refine' ⟨le_sup_right, fun z₁ z₂ hz => _⟩
   rw [← zero_addₓ (g _), ← f.map_zero]
   refine' (sup_apply h _ _ _ _).symm
   simpa
 
-protected theorem sup_le {f g h : LinearPmap R E F} (H : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y)
+protected theorem sup_le {f g h : E →ₗ.[R] F} (H : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y)
     (fh : f ≤ h) (gh : g ≤ h) : f.sup g H ≤ h :=
   have Hf : f ≤ f.sup g H⊓h := le_inf (f.left_le_sup g H) fh
   have Hg : g ≤ f.sup g H⊓h := le_inf (f.right_le_sup g H) gh
   le_of_eq_locus_ge <| sup_le Hf.1 Hg.1
 
 /-- Hypothesis for `linear_pmap.sup` holds, if `f.domain` is disjoint with `g.domain`. -/
-theorem sup_h_of_disjoint (f g : LinearPmap R E F) (h : Disjoint f.domain g.domain) (x : f.domain) (y : g.domain)
+theorem sup_h_of_disjoint (f g : E →ₗ.[R] F) (h : Disjoint f.domain g.domain) (x : f.domain) (y : g.domain)
     (hxy : (x : E) = y) : f x = g y := by
   rw [disjoint_def] at h
   have hy : y = 0 := Subtype.eq (h y (hxy ▸ x.2) y.2)
@@ -311,22 +314,22 @@ variable {M N : Type _} [Monoidₓ M] [DistribMulAction M F] [SmulCommClass R M 
 
 variable [Monoidₓ N] [DistribMulAction N F] [SmulCommClass R N F]
 
-instance : HasSmul M (LinearPmap R E F) :=
+instance : HasSmul M (E →ₗ.[R] F) :=
   ⟨fun a f => { domain := f.domain, toFun := a • f.toFun }⟩
 
-theorem smul_apply (a : M) (f : LinearPmap R E F) (x : (a • f).domain) : (a • f) x = a • f x :=
+theorem smul_apply (a : M) (f : E →ₗ.[R] F) (x : (a • f).domain) : (a • f) x = a • f x :=
   rfl
 
 @[simp]
-theorem coe_smul (a : M) (f : LinearPmap R E F) : ⇑(a • f) = a • f :=
+theorem coe_smul (a : M) (f : E →ₗ.[R] F) : ⇑(a • f) = a • f :=
   rfl
 
-instance [SmulCommClass M N F] : SmulCommClass M N (LinearPmap R E F) :=
+instance [SmulCommClass M N F] : SmulCommClass M N (E →ₗ.[R] F) :=
   ⟨fun a b f =>
     (ext rfl) fun x y hxy => by
       simp_rw [smul_apply, Subtype.eq hxy, smul_comm]⟩
 
-instance [HasSmul M N] [IsScalarTower M N F] : IsScalarTower M N (LinearPmap R E F) :=
+instance [HasSmul M N] [IsScalarTower M N F] : IsScalarTower M N (E →ₗ.[R] F) :=
   ⟨fun a b f =>
     (ext rfl) fun x y hxy => by
       simp_rw [smul_apply, Subtype.eq hxy, smul_assoc]⟩
@@ -338,19 +341,19 @@ section
 variable {K : Type _} [DivisionRing K] [Module K E] [Module K F]
 
 /-- Extend a `linear_pmap` to `f.domain ⊔ K ∙ x`. -/
-noncomputable def supSpanSingleton (f : LinearPmap K E F) (x : E) (y : F) (hx : x ∉ f.domain) : LinearPmap K E F :=
+noncomputable def supSpanSingleton (f : E →ₗ.[K] F) (x : E) (y : F) (hx : x ∉ f.domain) : E →ₗ.[K] F :=
   f.sup (mkSpanSingleton x y fun h₀ => hx <| h₀.symm ▸ f.domain.zero_mem) <|
     sup_h_of_disjoint _ _ <| by
       simpa [← disjoint_span_singleton]
 
 @[simp]
-theorem domain_sup_span_singleton (f : LinearPmap K E F) (x : E) (y : F) (hx : x ∉ f.domain) :
+theorem domain_sup_span_singleton (f : E →ₗ.[K] F) (x : E) (y : F) (hx : x ∉ f.domain) :
     (f.supSpanSingleton x y hx).domain = f.domain⊔K∙x :=
   rfl
 
 @[simp]
-theorem sup_span_singleton_apply_mk (f : LinearPmap K E F) (x : E) (y : F) (hx : x ∉ f.domain) (x' : E)
-    (hx' : x' ∈ f.domain) (c : K) :
+theorem sup_span_singleton_apply_mk (f : E →ₗ.[K] F) (x : E) (y : F) (hx : x ∉ f.domain) (x' : E) (hx' : x' ∈ f.domain)
+    (c : K) :
     f.supSpanSingleton x y hx ⟨x' + c • x, mem_sup.2 ⟨x', hx', _, mem_span_singleton.2 ⟨c, rfl⟩, rfl⟩⟩ =
       f ⟨x', hx'⟩ + c • y :=
   by
@@ -360,8 +363,8 @@ theorem sup_span_singleton_apply_mk (f : LinearPmap K E F) (x : E) (y : F) (hx :
 
 end
 
-private theorem Sup_aux (c : Set (LinearPmap R E F)) (hc : DirectedOn (· ≤ ·) c) :
-    ∃ f : ↥(sup (domain '' c)) →ₗ[R] F, (⟨_, f⟩ : LinearPmap R E F) ∈ UpperBounds c := by
+private theorem Sup_aux (c : Set (E →ₗ.[R] F)) (hc : DirectedOn (· ≤ ·) c) :
+    ∃ f : ↥(sup (domain '' c)) →ₗ[R] F, (⟨_, f⟩ : E →ₗ.[R] F) ∈ UpperBounds c := by
   cases' c.eq_empty_or_nonempty with ceq cne
   · subst c
     simp
@@ -395,14 +398,14 @@ private theorem Sup_aux (c : Set (LinearPmap R E F)) (hc : DirectedOn (· ≤ ·
 
 /-- Glue a collection of partially defined linear maps to a linear map defined on `Sup`
 of these submodules. -/
-protected noncomputable def supₓ (c : Set (LinearPmap R E F)) (hc : DirectedOn (· ≤ ·) c) : LinearPmap R E F :=
+protected noncomputable def supₓ (c : Set (E →ₗ.[R] F)) (hc : DirectedOn (· ≤ ·) c) : E →ₗ.[R] F :=
   ⟨_, Classical.some <| Sup_aux c hc⟩
 
-protected theorem le_Sup {c : Set (LinearPmap R E F)} (hc : DirectedOn (· ≤ ·) c) {f : LinearPmap R E F} (hf : f ∈ c) :
+protected theorem le_Sup {c : Set (E →ₗ.[R] F)} (hc : DirectedOn (· ≤ ·) c) {f : E →ₗ.[R] F} (hf : f ∈ c) :
     f ≤ LinearPmap.supₓ c hc :=
   Classical.some_spec (Sup_aux c hc) hf
 
-protected theorem Sup_le {c : Set (LinearPmap R E F)} (hc : DirectedOn (· ≤ ·) c) {g : LinearPmap R E F}
+protected theorem Sup_le {c : Set (E →ₗ.[R] F)} (hc : DirectedOn (· ≤ ·) c) {g : E →ₗ.[R] F}
     (hg : ∀, ∀ f ∈ c, ∀, f ≤ g) : LinearPmap.supₓ c hc ≤ g :=
   le_of_eq_locus_ge <|
     Sup_le fun _ ⟨f, hf, Eq⟩ =>
@@ -410,7 +413,7 @@ protected theorem Sup_le {c : Set (LinearPmap R E F)} (hc : DirectedOn (· ≤ �
         have : f ≤ LinearPmap.supₓ c hc⊓g := le_inf (LinearPmap.le_Sup _ hf) (hg f hf)
         this.1
 
-protected theorem Sup_apply {c : Set (LinearPmap R E F)} (hc : DirectedOn (· ≤ ·) c) {l : LinearPmap R E F} (hl : l ∈ c)
+protected theorem Sup_apply {c : Set (E →ₗ.[R] F)} (hc : DirectedOn (· ≤ ·) c) {l : E →ₗ.[R] F} (hl : l ∈ c)
     (x : l.domain) : (LinearPmap.supₓ c hc) ⟨x, (LinearPmap.le_Sup hc hl).1 x.2⟩ = l x := by
   symm
   apply (Classical.some_spec (Sup_aux c hc) hl).2
@@ -421,7 +424,7 @@ end LinearPmap
 namespace LinearMap
 
 /-- Restrict a linear map to a submodule, reinterpreting the result as a `linear_pmap`. -/
-def toPmap (f : E →ₗ[R] F) (p : Submodule R E) : LinearPmap R E F :=
+def toPmap (f : E →ₗ[R] F) (p : Submodule R E) : E →ₗ.[R] F :=
   ⟨p, f.comp p.Subtype⟩
 
 @[simp]
@@ -429,12 +432,12 @@ theorem to_pmap_apply (f : E →ₗ[R] F) (p : Submodule R E) (x : p) : f.toPmap
   rfl
 
 /-- Compose a linear map with a `linear_pmap` -/
-def compPmap (g : F →ₗ[R] G) (f : LinearPmap R E F) : LinearPmap R E G where
+def compPmap (g : F →ₗ[R] G) (f : E →ₗ.[R] F) : E →ₗ.[R] G where
   domain := f.domain
   toFun := g.comp f.toFun
 
 @[simp]
-theorem comp_pmap_apply (g : F →ₗ[R] G) (f : LinearPmap R E F) (x) : g.compPmap f x = g (f x) :=
+theorem comp_pmap_apply (g : F →ₗ[R] G) (f : E →ₗ.[R] F) (x) : g.compPmap f x = g (f x) :=
   rfl
 
 end LinearMap
@@ -442,24 +445,24 @@ end LinearMap
 namespace LinearPmap
 
 /-- Restrict codomain of a `linear_pmap` -/
-def codRestrict (f : LinearPmap R E F) (p : Submodule R F) (H : ∀ x, f x ∈ p) : LinearPmap R E p where
+def codRestrict (f : E →ₗ.[R] F) (p : Submodule R F) (H : ∀ x, f x ∈ p) : E →ₗ.[R] p where
   domain := f.domain
   toFun := f.toFun.codRestrict p H
 
 /-- Compose two `linear_pmap`s -/
-def comp (g : LinearPmap R F G) (f : LinearPmap R E F) (H : ∀ x : f.domain, f x ∈ g.domain) : LinearPmap R E G :=
+def comp (g : F →ₗ.[R] G) (f : E →ₗ.[R] F) (H : ∀ x : f.domain, f x ∈ g.domain) : E →ₗ.[R] G :=
   g.toFun.compPmap <| f.codRestrict _ H
 
 /-- `f.coprod g` is the partially defined linear map defined on `f.domain × g.domain`,
 and sending `p` to `f p.1 + g p.2`. -/
-def coprod (f : LinearPmap R E G) (g : LinearPmap R F G) : LinearPmap R (E × F) G where
+def coprod (f : E →ₗ.[R] G) (g : F →ₗ.[R] G) : E × F →ₗ.[R] G where
   domain := f.domain.Prod g.domain
   toFun :=
     (f.comp (LinearPmap.fst f.domain g.domain) fun x => x.2.1).toFun +
       (g.comp (LinearPmap.snd f.domain g.domain) fun x => x.2.2).toFun
 
 @[simp]
-theorem coprod_apply (f : LinearPmap R E G) (g : LinearPmap R F G) (x) :
+theorem coprod_apply (f : E →ₗ.[R] G) (g : F →ₗ.[R] G) (x) :
     f.coprod g x = f ⟨(x : E × F).1, x.2.1⟩ + g ⟨(x : E × F).2, x.2.2⟩ :=
   rfl
 
@@ -469,27 +472,26 @@ theorem coprod_apply (f : LinearPmap R E G) (g : LinearPmap R F G) (x) :
 section Graph
 
 /-- The graph of a `linear_pmap` viewed as a submodule on `E × F`. -/
-def graph (f : LinearPmap R E F) : Submodule R (E × F) :=
+def graph (f : E →ₗ.[R] F) : Submodule R (E × F) :=
   f.toFun.graph.map (f.domain.Subtype.prod_map LinearMap.id)
 
-theorem mem_graph_iff' (f : LinearPmap R E F) {x : E × F} : x ∈ f.graph ↔ ∃ y : f.domain, (↑y, f y) = x := by
+theorem mem_graph_iff' (f : E →ₗ.[R] F) {x : E × F} : x ∈ f.graph ↔ ∃ y : f.domain, (↑y, f y) = x := by
   simp [← graph]
 
 @[simp]
-theorem mem_graph_iff (f : LinearPmap R E F) {x : E × F} : x ∈ f.graph ↔ ∃ y : f.domain, (↑y : E) = x.1 ∧ f y = x.2 :=
-  by
+theorem mem_graph_iff (f : E →ₗ.[R] F) {x : E × F} : x ∈ f.graph ↔ ∃ y : f.domain, (↑y : E) = x.1 ∧ f y = x.2 := by
   cases x
   simp_rw [mem_graph_iff', Prod.mk.inj_iff]
 
 /-- The tuple `(x, f x)` is contained in the graph of `f`. -/
-theorem mem_graph (f : LinearPmap R E F) (x : domain f) : ((x : E), f x) ∈ f.graph := by
+theorem mem_graph (f : E →ₗ.[R] F) (x : domain f) : ((x : E), f x) ∈ f.graph := by
   simp
 
 variable {M : Type _} [Monoidₓ M] [DistribMulAction M F] [SmulCommClass R M F] (y : M)
 
 /-- The graph of `z • f` as a pushforward. -/
-theorem smul_graph (f : LinearPmap R E F) (z : M) :
-    (z • f).graph = f.graph.map (LinearMap.id.prod_map (z • LinearMap.id)) := by
+theorem smul_graph (f : E →ₗ.[R] F) (z : M) : (z • f).graph = f.graph.map (LinearMap.id.prod_map (z • LinearMap.id)) :=
+  by
   ext x
   cases x
   constructor <;> intro h
@@ -513,7 +515,7 @@ theorem smul_graph (f : LinearPmap R E F) (z : M) :
   simp [← hy, ← hx']
 
 /-- The graph of `-f` as a pushforward. -/
-theorem neg_graph (f : LinearPmap R E F) : (-f).graph = f.graph.map (LinearMap.id.prod_map (-LinearMap.id)) := by
+theorem neg_graph (f : E →ₗ.[R] F) : (-f).graph = f.graph.map (LinearMap.id.prod_map (-LinearMap.id)) := by
   ext
   cases x
   constructor <;> intro h
@@ -536,7 +538,7 @@ theorem neg_graph (f : LinearPmap R E F) : (-f).graph = f.graph.map (LinearMap.i
   rw [← h.1, ← h.2]
   simp [← hy, ← hx']
 
-theorem mem_graph_snd_inj (f : LinearPmap R E F) {x y : E} {x' y' : F} (hx : (x, x') ∈ f.graph) (hy : (y, y') ∈ f.graph)
+theorem mem_graph_snd_inj (f : E →ₗ.[R] F) {x y : E} {x' y' : F} (hx : (x, x') ∈ f.graph) (hy : (y, y') ∈ f.graph)
     (hxy : x = y) : x' = y' := by
   rw [mem_graph_iff] at hx hy
   rcases hx with ⟨x'', hx1, hx2⟩
@@ -545,17 +547,17 @@ theorem mem_graph_snd_inj (f : LinearPmap R E F) {x y : E} {x' y' : F} (hx : (x,
   rw [← hx1, ← hy1, SetLike.coe_eq_coe] at hxy
   rw [← hx2, ← hy2, hxy]
 
-theorem mem_graph_snd_inj' (f : LinearPmap R E F) {x y : E × F} (hx : x ∈ f.graph) (hy : y ∈ f.graph)
-    (hxy : x.1 = y.1) : x.2 = y.2 := by
+theorem mem_graph_snd_inj' (f : E →ₗ.[R] F) {x y : E × F} (hx : x ∈ f.graph) (hy : y ∈ f.graph) (hxy : x.1 = y.1) :
+    x.2 = y.2 := by
   cases x
   cases y
   exact f.mem_graph_snd_inj hx hy hxy
 
 /-- The property that `f 0 = 0` in terms of the graph. -/
-theorem graph_fst_eq_zero_snd (f : LinearPmap R E F) {x : E} {x' : F} (h : (x, x') ∈ f.graph) (hx : x = 0) : x' = 0 :=
+theorem graph_fst_eq_zero_snd (f : E →ₗ.[R] F) {x : E} {x' : F} (h : (x, x') ∈ f.graph) (hx : x = 0) : x' = 0 :=
   f.mem_graph_snd_inj h f.graph.zero_mem hx
 
-theorem mem_domain_iff {f : LinearPmap R E F} {x : E} : x ∈ f.domain ↔ ∃ y : F, (x, y) ∈ f.graph := by
+theorem mem_domain_iff {f : E →ₗ.[R] F} {x : E} : x ∈ f.domain ↔ ∃ y : F, (x, y) ∈ f.graph := by
   constructor <;> intro h
   · use f ⟨x, h⟩
     exact f.mem_graph ⟨x, h⟩
@@ -567,7 +569,7 @@ theorem mem_domain_iff {f : LinearPmap R E F} {x : E} : x ∈ f.domain ↔ ∃ y
   rw [← h.1]
   simp
 
-theorem image_iff {f : LinearPmap R E F} {x : E} {y : F} (hx : x ∈ f.domain) : y = f ⟨x, hx⟩ ↔ (x, y) ∈ f.graph := by
+theorem image_iff {f : E →ₗ.[R] F} {x : E} {y : F} (hx : x ∈ f.domain) : y = f ⟨x, hx⟩ ↔ (x, y) ∈ f.graph := by
   rw [mem_graph_iff]
   constructor <;> intro h
   · use ⟨x, hx⟩
@@ -577,7 +579,7 @@ theorem image_iff {f : LinearPmap R E F} {x : E} {y : F} (hx : x ∈ f.domain) :
   simp only [← Submodule.coe_mk] at h1 h2
   simp only [h2, ← h1]
 
-theorem mem_range_iff {f : LinearPmap R E F} {y : F} : y ∈ Set.Range f ↔ ∃ x : E, (x, y) ∈ f.graph := by
+theorem mem_range_iff {f : E →ₗ.[R] F} {y : F} : y ∈ Set.Range f ↔ ∃ x : E, (x, y) ∈ f.graph := by
   constructor <;> intro h
   · rw [Set.mem_range] at h
     rcases h with ⟨⟨x, hx⟩, h⟩
@@ -593,11 +595,11 @@ theorem mem_range_iff {f : LinearPmap R E F} {y : F} : y ∈ Set.Range f ↔ ∃
   simp only at h
   rw [h.2]
 
-theorem mem_domain_iff_of_eq_graph {f g : LinearPmap R E F} (h : f.graph = g.graph) {x : E} :
-    x ∈ f.domain ↔ x ∈ g.domain := by
+theorem mem_domain_iff_of_eq_graph {f g : E →ₗ.[R] F} (h : f.graph = g.graph) {x : E} : x ∈ f.domain ↔ x ∈ g.domain :=
+  by
   simp_rw [mem_domain_iff, h]
 
-theorem le_of_le_graph {f g : LinearPmap R E F} (h : f.graph ≤ g.graph) : f ≤ g := by
+theorem le_of_le_graph {f g : E →ₗ.[R] F} (h : f.graph ≤ g.graph) : f ≤ g := by
   constructor
   · intro x hx
     rw [mem_domain_iff] at hx⊢
@@ -613,7 +615,7 @@ theorem le_of_le_graph {f g : LinearPmap R E F} (h : f.graph ≤ g.graph) : f �
   rw [← image_iff hx]
   simp [← hxy]
 
-theorem eq_of_eq_graph {f g : LinearPmap R E F} (h : f.graph = g.graph) : f = g := by
+theorem eq_of_eq_graph {f g : E →ₗ.[R] F} (h : f.graph = g.graph) : f = g := by
   ext
   exact mem_domain_iff_of_eq_graph h
   exact (le_of_le_graph h.le).2
@@ -654,7 +656,7 @@ theorem val_from_graph_mem {g : Submodule R (E × F)} (hg : ∀ (x : E × F) (hx
 
 /-- Define a `linear_pmap` from its graph. -/
 noncomputable def toLinearPmap (g : Submodule R (E × F))
-    (hg : ∀ (x : E × F) (hx : x ∈ g) (hx' : x.fst = 0), x.snd = 0) : LinearPmap R E F where
+    (hg : ∀ (x : E × F) (hx : x ∈ g) (hx' : x.fst = 0), x.snd = 0) : E →ₗ.[R] F where
   domain := g.map (LinearMap.fst R E F)
   toFun :=
     { toFun := fun x => valFromGraph hg x.2,

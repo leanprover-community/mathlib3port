@@ -40,7 +40,8 @@ theorem cardinal_mk_lift_le_mul :
   let g : ULift.{u} { x : A | IsAlgebraic R x } → ULift.{v} (Polynomial R) := fun x => ULift.up (Classical.some x.1.2)
   apply Cardinal.mk_le_mk_mul_of_mk_preimage_le g fun f => _
   suffices Fintype (g ⁻¹' {f}) by
-    exact @mk_le_aleph_0 _ (@Fintype.toEncodable _ this)
+    skip
+    exact mk_le_aleph_0
   by_cases' hf : f.1 = 0
   · convert Set.fintypeEmpty
     apply Set.eq_empty_iff_forall_not_mem.2 fun x hx => _

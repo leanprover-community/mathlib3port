@@ -133,7 +133,7 @@ theorem unique_of_trichotomous_of_irrefl [IsTrichotomous β s] [IsIrrefl β s] :
 
 instance [IsWellOrder β s] : Subsingleton (r ≼i s) :=
   ⟨fun a =>
-    @Subsingleton.elimₓ _ (unique_of_trichotomous_of_irrefl (@RelEmbedding.well_founded _ _ r s a IsWellOrder.wf)) a⟩
+    @Subsingleton.elimₓ _ (unique_of_trichotomous_of_irrefl (@RelEmbedding.well_founded _ _ r s a IsWellFounded.wf)) a⟩
 
 protected theorem eq [IsWellOrder β s] (f g : r ≼i s) (a) : f a = g a := by
   rw [Subsingleton.elimₓ f g]
@@ -158,7 +158,7 @@ theorem antisymm_symm [IsWellOrder α r] [IsWellOrder β s] (f : r ≼i s) (g : 
 
 theorem eq_or_principal [IsWellOrder β s] (f : r ≼i s) : Surjective f ∨ ∃ b, ∀ x, s x b ↔ ∃ y, f y = x :=
   or_iff_not_imp_right.2 fun h b =>
-    (Acc.recOnₓ (IsWellOrder.wf.apply b : Acc s b)) fun x H IH =>
+    (Acc.recOnₓ (IsWellFounded.wf.apply b : Acc s b)) fun x H IH =>
       not_forall_not.1 fun hn =>
         h
           ⟨x, fun y =>
@@ -421,12 +421,12 @@ namespace RelEmbedding
 gaps, to obtain an initial segment. Here, we construct the collapsed order embedding pointwise,
 but the proof of the fact that it is an initial segment will be given in `collapse`. -/
 noncomputable def collapseF [IsWellOrder β s] (f : r ↪r s) : ∀ a, { b // ¬s (f a) b } :=
-  (RelEmbedding.well_founded f <| IsWellOrder.wf).fix fun a IH => by
+  (RelEmbedding.well_founded f <| IsWellFounded.wf).fix fun a IH => by
     let S := { b | ∀ a h, s (IH a h).1 b }
     have : f a ∈ S := fun a' h =>
       ((trichotomous _ _).resolve_left fun h' => (IH a' h).2 <| trans (f.map_rel_iff.2 h) h').resolve_left fun h' =>
         (IH a' h).2 <| h' ▸ f.map_rel_iff.2 h
-    exact ⟨is_well_order.wf.min S ⟨_, this⟩, is_well_order.wf.not_lt_min _ _ this⟩
+    exact ⟨is_well_founded.wf.min S ⟨_, this⟩, is_well_founded.wf.not_lt_min _ _ this⟩
 
 theorem collapseF.lt [IsWellOrder β s] (f : r ↪r s) {a : α} : ∀ {a'}, r a' a → s (collapseF f a').1 (collapseF f a).1 :=
   show (collapseF f a).1 ∈ { b | ∀ (a') (h : r a' a), s (collapseF f a').1 b } by
@@ -445,17 +445,17 @@ to fill the gaps. -/
 noncomputable def collapse [IsWellOrder β s] (f : r ↪r s) : r ≼i s :=
   haveI := RelEmbedding.is_well_order f
   ⟨RelEmbedding.ofMonotone (fun a => (collapse_F f a).1) fun a b => collapse_F.lt f, fun a b =>
-    Acc.recOnₓ (is_well_order.wf.apply b : Acc s b)
+    Acc.recOnₓ (is_well_founded.wf.apply b : Acc s b)
       (fun b H IH a h => by
         let S := { a | ¬s (collapse_F f a).1 b }
         have : S.nonempty := ⟨_, asymm h⟩
-        exists (IsWellOrder.wf : WellFounded r).min S this
+        exists (IsWellFounded.wf : WellFounded r).min S this
         refine' ((@trichotomous _ s _ _ _).resolve_left _).resolve_right _
-        · exact (IsWellOrder.wf : WellFounded r).min_mem S this
+        · exact (IsWellFounded.wf : WellFounded r).min_mem S this
           
         · refine' collapse_F.not_lt f _ fun a' h' => _
           by_contra hn
-          exact is_well_order.wf.not_lt_min S this hn h'
+          exact is_well_founded.wf.not_lt_min S this hn h'
           )
       a⟩
 

@@ -24,20 +24,12 @@ section DivisionRing
 variable [DivisionRing α] [DivisionRing β]
 
 @[simp]
-theorem RingHom.map_zpow (f : α →+* β) : ∀ (a : α) (n : ℤ), f (a ^ n) = f a ^ n :=
-  f.toMonoidWithZeroHom.map_zpow
-
-@[simp]
-theorem RingEquiv.map_zpow (f : α ≃+* β) : ∀ (a : α) (n : ℤ), f (a ^ n) = f a ^ n :=
-  f.toRingHom.map_zpow
-
-@[simp]
 theorem zpow_bit1_neg (x : α) (n : ℤ) : -x ^ bit1 n = -(x ^ bit1 n) := by
   rw [zpow_bit1', zpow_bit1', neg_mul_neg, neg_mul_eq_mul_neg]
 
 @[simp, norm_cast]
 theorem Rat.cast_zpow [CharZero α] (q : ℚ) (n : ℤ) : ((q ^ n : ℚ) : α) = q ^ n :=
-  (Rat.castHom α).map_zpow q n
+  map_zpow₀ (Rat.castHom α) q n
 
 end DivisionRing
 

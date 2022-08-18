@@ -118,6 +118,7 @@ theorem comp_dist_triangle_mor_zero₁₂ (T) (_ : T ∈ (dist_triang C)) : T.mo
   simp only [← limits.zero_comp, ← contractible_triangle_mor₂]
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C))
+-- TODO : tidy this proof up
 /-- Given any distinguished triangle
 ```
       f       g       h
@@ -126,7 +127,6 @@ theorem comp_dist_triangle_mor_zero₁₂ (T) (_ : T ∈ (dist_triang C)) : T.mo
 the composition `g ≫ h = 0`.
 See <https://stacks.math.columbia.edu/tag/0146>
 -/
--- TODO : tidy this proof up
 theorem comp_dist_triangle_mor_zero₂₃ (T) (_ : T ∈ (dist_triang C)) : T.mor₂ ≫ T.mor₃ = 0 :=
   comp_dist_triangle_mor_zero₁₂ C T.rotate (rot_of_dist_triangle C T H)
 

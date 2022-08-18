@@ -3,7 +3,7 @@ Copyright (c) 2022 Wrenna Robson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wrenna Robson
 -/
-import Mathbin.Analysis.NormedSpace.Basic
+import Mathbin.Analysis.Normed.Group.Basic
 
 /-!
 # Hamming spaces
@@ -96,16 +96,16 @@ theorem hamming_zero_eq_dist {x y : ∀ i, β i} : 0 = hammingDist x y ↔ x = y
 
 /-- Corresponds to `dist_ne_zero`. -/
 theorem hamming_dist_ne_zero {x y : ∀ i, β i} : hammingDist x y ≠ 0 ↔ x ≠ y :=
-  not_iff_not.mpr hamming_dist_eq_zero
+  hamming_dist_eq_zero.Not
 
 /-- Corresponds to `dist_pos`. -/
+@[simp]
 theorem hamming_dist_pos {x y : ∀ i, β i} : 0 < hammingDist x y ↔ x ≠ y := by
   rw [← hamming_dist_ne_zero, iff_not_comm, not_ltₓ, Nat.le_zero_iffₓ]
 
 @[simp]
 theorem hamming_dist_lt_one {x y : ∀ i, β i} : hammingDist x y < 1 ↔ x = y := by
-  rw [Nat.lt_one_iff]
-  exact hamming_dist_eq_zero
+  rw [Nat.lt_one_iff, hamming_dist_eq_zero]
 
 theorem hamming_dist_le_card_fintype {x y : ∀ i, β i} : hammingDist x y ≤ Fintype.card ι :=
   card_le_univ _
@@ -134,20 +134,23 @@ variable [∀ i, Zero (β i)] [∀ i, Zero (γ i)]
 
 /-- The Hamming weight function to the naturals. -/
 def hammingNorm (x : ∀ i, β i) : ℕ :=
-  hammingDist x 0
+  (univ.filter fun i => x i ≠ 0).card
 
 /-- Corresponds to `dist_zero_right`. -/
+@[simp]
 theorem hamming_dist_zero_right (x : ∀ i, β i) : hammingDist x 0 = hammingNorm x :=
   rfl
 
 /-- Corresponds to `dist_zero_left`. -/
+@[simp]
 theorem hamming_dist_zero_left : hammingDist (0 : ∀ i, β i) = hammingNorm :=
   funext fun x => by
     rw [hamming_dist_comm, hamming_dist_zero_right]
 
 /-- Corresponds to `norm_nonneg`. -/
+@[simp]
 theorem hamming_norm_nonneg {x : ∀ i, β i} : 0 ≤ hammingNorm x :=
-  hamming_dist_nonneg
+  zero_le _
 
 /-- Corresponds to `norm_zero`. -/
 @[simp]
@@ -161,9 +164,10 @@ theorem hamming_norm_eq_zero {x : ∀ i, β i} : hammingNorm x = 0 ↔ x = 0 :=
 
 /-- Corresponds to `norm_ne_zero_iff`. -/
 theorem hamming_norm_ne_zero_iff {x : ∀ i, β i} : hammingNorm x ≠ 0 ↔ x ≠ 0 :=
-  hamming_dist_ne_zero
+  hamming_norm_eq_zero.Not
 
 /-- Corresponds to `norm_pos_iff`. -/
+@[simp]
 theorem hamming_norm_pos_iff {x : ∀ i, β i} : 0 < hammingNorm x ↔ x ≠ 0 :=
   hamming_dist_pos
 
@@ -176,14 +180,14 @@ theorem hamming_norm_le_card_fintype {x : ∀ i, β i} : hammingNorm x ≤ Finty
 
 theorem hamming_norm_comp_le_hamming_norm (f : ∀ i, γ i → β i) {x : ∀ i, γ i} (hf : ∀ i, f i 0 = 0) :
     (hammingNorm fun i => f i (x i)) ≤ hammingNorm x := by
-  refine' Eq.trans_le _ (hamming_dist_comp_le_hamming_dist f)
-  simp_rw [hammingNorm, Pi.zero_def, hf]
+  convert hamming_dist_comp_le_hamming_dist f
+  simp_rw [hf]
+  rfl
 
 theorem hamming_norm_comp (f : ∀ i, γ i → β i) {x : ∀ i, γ i} (hf₁ : ∀ i, Injective (f i)) (hf₂ : ∀ i, f i 0 = 0) :
     (hammingNorm fun i => f i (x i)) = hammingNorm x := by
-  simp_rw [← hamming_dist_zero_right]
   convert hamming_dist_comp f hf₁
-  simp_rw [Pi.zero_apply, hf₂]
+  simp_rw [hf₂]
   rfl
 
 theorem hamming_norm_smul_le_hamming_norm [Zero α] [∀ i, SmulWithZero α (β i)] {k : α} {x : ∀ i, β i} :
@@ -201,7 +205,7 @@ end Zero
 /-- Corresponds to `dist_eq_norm`. -/
 theorem hamming_dist_eq_hamming_norm [∀ i, AddGroupₓ (β i)] (x y : ∀ i, β i) : hammingDist x y = hammingNorm (x - y) :=
   by
-  simp_rw [← hamming_dist_zero_right, hammingDist, Pi.sub_apply, Pi.zero_apply, sub_ne_zero]
+  simp_rw [hammingNorm, hammingDist, Pi.sub_apply, sub_ne_zero]
 
 end HammingDistNorm
 

@@ -67,8 +67,8 @@ namespace Sum
 
 variable (C : Type u₁) [Category.{v₁} C] (D : Type u₁) [Category.{v₁} D]
 
-/-- `inl_` is the functor `X ↦ inl X`. -/
 -- Unfortunate naming here, suggestions welcome.
+/-- `inl_` is the functor `X ↦ inl X`. -/
 @[simps]
 def inl_ : C ⥤ Sum C D where
   obj := fun X => inl X

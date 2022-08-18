@@ -359,5 +359,8 @@ def OpenNhdsOf (x : α) : Type _ :=
 instance OpenNhdsOf.inhabited {α : Type _} [TopologicalSpace α] (x : α) : Inhabited (OpenNhdsOf x) :=
   ⟨⟨Set.Univ, is_open_univ, Set.mem_univ _⟩⟩
 
+instance [Finite α] : Finite (Opens α) :=
+  Subtype.finite
+
 end TopologicalSpace
 

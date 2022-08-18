@@ -1246,7 +1246,7 @@ def IsTotallyDisconnected (s : Set α) : Prop :=
 theorem is_totally_disconnected_empty : IsTotallyDisconnected (∅ : Set α) := fun _ ht _ _ x_in _ _ => (ht x_in).elim
 
 theorem is_totally_disconnected_singleton {x} : IsTotallyDisconnected ({x} : Set α) := fun _ ht _ =>
-  Subsingleton.mono subsingleton_singleton ht
+  subsingleton_singleton.anti ht
 
 /-- A space is totally disconnected if all of its connected components are singletons. -/
 class TotallyDisconnectedSpace (α : Type u) [TopologicalSpace α] : Prop where
@@ -1317,7 +1317,7 @@ theorem totally_disconnected_space_iff_connected_component_subsingleton :
   rcases eq_empty_or_nonempty s with (rfl | ⟨x, x_in⟩)
   · exact subsingleton_empty
     
-  · exact (h x).mono (hs.subset_connected_component x_in)
+  · exact (h x).anti (hs.subset_connected_component x_in)
     
 
 /-- A space is totally disconnected iff its connected components are singletons. -/

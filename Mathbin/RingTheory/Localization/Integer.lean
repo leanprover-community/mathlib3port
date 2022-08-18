@@ -36,9 +36,9 @@ section
 
 variable (R) {M S}
 
+-- TODO: define a subalgebra of `is_integer`s
 /-- Given `a : S`, `S` a localization of `R`, `is_integer R a` iff `a` is in the image of
 the localization map from `R` to `S`. -/
--- TODO: define a subalgebra of `is_integer`s
 def IsInteger (a : S) : Prop :=
   a ∈ (algebraMap R S).range
 

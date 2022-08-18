@@ -74,12 +74,12 @@ variable (S : Type _) [SetLike S K] [h : SubfieldClass S K]
 
 include h
 
+-- See note [lower instance priority]
 /-- A subfield contains `1`, products and inverses.
 
 Be assured that we're not actually proving that subfields are subgroups:
 `subgroup_class` is really an abbreviation of `subgroup_with_or_without_zero_class`.
  -/
--- See note [lower instance priority]
 instance (priority := 100) SubfieldClass.toSubgroupClass : SubgroupClass S K :=
   { h with }
 
@@ -107,8 +107,8 @@ theorem coe_rat_smul (s : S) (a : ℚ) (x : s) : (↑(a • x) : K) = a • x :=
 
 variable (S)
 
-/-- A subfield inherits a field structure -/
 -- Prefer subclasses of `field` over subclasses of `subfield_class`.
+/-- A subfield inherits a field structure -/
 instance (priority := 75) toField (s : S) : Field s :=
   Subtype.coe_injective.Field (coe : s → K) rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
@@ -116,8 +116,8 @@ instance (priority := 75) toField (s : S) : Field s :=
 
 omit h
 
-/-- A subfield of a `linear_ordered_field` is a `linear_ordered_field`. -/
 -- Prefer subclasses of `field` over subclasses of `subfield_class`.
+/-- A subfield of a `linear_ordered_field` is a `linear_ordered_field`. -/
 instance (priority := 75) toLinearOrderedField {K} [LinearOrderedField K] [SetLike S K] [SubfieldClass S K] (s : S) :
     LinearOrderedField s :=
   Subtype.coe_injective.LinearOrderedField coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
@@ -403,7 +403,7 @@ def comap (s : Subfield L) : Subfield K :=
   { s.toSubring.comap f with
     inv_mem' := fun x hx =>
       show f x⁻¹ ∈ s by
-        rw [f.map_inv]
+        rw [map_inv₀ f]
         exact s.inv_mem hx }
 
 @[simp]
@@ -425,7 +425,7 @@ def map (s : Subfield K) : Subfield L :=
   { s.toSubring.map f with
     inv_mem' := by
       rintro _ ⟨x, hx, rfl⟩
-      exact ⟨x⁻¹, s.inv_mem hx, f.map_inv x⟩ }
+      exact ⟨x⁻¹, s.inv_mem hx, map_inv₀ f x⟩ }
 
 @[simp]
 theorem coe_map : (s.map f : Set L) = f '' s :=
@@ -731,7 +731,7 @@ def eqLocusField (f g : K →+* L) : Subfield K :=
   { (f : K →+* L).eqLocus g with
     inv_mem' := fun x (hx : f x = g x) =>
       show f x⁻¹ = g x⁻¹ by
-        rw [f.map_inv, g.map_inv, hx],
+        rw [map_inv₀ f, map_inv₀ g, hx],
     Carrier := { x | f x = g x } }
 
 /-- If two ring homomorphisms are equal on a set, then they are equal on its subfield closure. -/

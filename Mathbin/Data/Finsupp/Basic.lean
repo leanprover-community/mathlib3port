@@ -1908,11 +1908,11 @@ theorem prod_map_domain_index [CommMonoidₓ N] {f : α → β} {s : α →₀ M
     (h_add : ∀ b m₁ m₂, h b (m₁ + m₂) = h b m₁ * h b m₂) : (mapDomain f s).Prod h = s.Prod fun a m => h (f a) m :=
   (prod_sum_index h_zero h_add).trans <| prod_congr fun _ _ => prod_single_index (h_zero _)
 
+-- Note that in `prod_map_domain_index`, `M` is still an additive monoid,
+-- so there is no analogous version in terms of `monoid_hom`.
 /-- A version of `sum_map_domain_index` that takes a bundled `add_monoid_hom`,
 rather than separate linearity hypotheses.
 -/
--- Note that in `prod_map_domain_index`, `M` is still an additive monoid,
--- so there is no analogous version in terms of `monoid_hom`.
 @[simp]
 theorem sum_map_domain_index_add_monoid_hom [AddCommMonoidₓ N] {f : α → β} {s : α →₀ M} (h : β → M →+ N) :
     ((mapDomain f s).Sum fun b m => h b m) = s.Sum fun a m => h (f a) m :=
@@ -2858,11 +2858,11 @@ variable [Zero R]
 
 /-- The `finsupp` version of `pi.unique`. -/
 instance uniqueOfRight [Subsingleton R] : Unique (α →₀ R) :=
-  { Finsupp.inhabited with uniq := fun l => ext fun i => Subsingleton.elimₓ _ _ }
+  FunLike.coe_injective.unique
 
 /-- The `finsupp` version of `pi.unique_of_is_empty`. -/
 instance uniqueOfLeft [IsEmpty α] : Unique (α →₀ R) :=
-  { Finsupp.inhabited with uniq := fun l => ext isEmptyElim }
+  FunLike.coe_injective.unique
 
 end
 

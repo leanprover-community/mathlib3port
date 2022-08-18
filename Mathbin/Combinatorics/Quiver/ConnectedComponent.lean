@@ -88,10 +88,10 @@ end WeaklyConnectedComponent
 
 variable {V}
 
-/-- A wide subquiver `H` of `G.symmetrify` determines a wide subquiver of `G`, containing an
-    an arrow `e` if either `e` or its reversal is in `H`. -/
 -- Without the explicit universe level in `quiver.{v+1}` Lean comes up with
 -- `quiver.{max u_2 u_3 + 1}`. This causes problems elsewhere, so we write `quiver.{v+1}`.
+/-- A wide subquiver `H` of `G.symmetrify` determines a wide subquiver of `G`, containing an
+    an arrow `e` if either `e` or its reversal is in `H`. -/
 def WideSubquiverSymmetrify (H : WideSubquiver (Symmetrify V)) : WideSubquiver V := fun a b =>
   { e | Sum.inl e ∈ H a b ∨ Sum.inr e ∈ H b a }
 

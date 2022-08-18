@@ -89,7 +89,8 @@ theorem nfp_family_le_apply [Nonempty ι] (H : ∀ i, IsNormal (f i)) {a b} :
 theorem nfp_family_le_fp (H : ∀ i, Monotone (f i)) {a b} (ab : a ≤ b) (h : ∀ i, f i b ≤ b) : nfpFamily f a ≤ b :=
   sup_le fun l => by
     by_cases' hι : IsEmpty ι
-    · rwa [@Unique.eq_default _ (@List.uniqueOfIsEmpty ι hι) l]
+    · skip
+      rwa [Unique.eq_default l]
       
     · haveI := not_is_empty_iff.1 hι
       induction' l with i l IH generalizing a

@@ -395,6 +395,25 @@ variable [AddCommMonoidₓ α] [TopologicalSpace α]
 theorem tsum_congr_subtype (f : β → α) {s t : Set β} (h : s = t) : (∑' x : s, f x) = ∑' x : t, f x := by
   rw [h]
 
+theorem tsum_zero' (hz : IsClosed ({0} : Set α)) : (∑' b : β, (0 : α)) = 0 := by
+  classical
+  rw [tsum, dif_pos summable_zero]
+  suffices ∀ x : α, HasSum (fun b : β => (0 : α)) x → x = 0 by
+    exact this _ (Classical.some_spec _)
+  intro x hx
+  contrapose! hx
+  simp only [← HasSum, ← tendsto_nhds, ← Finset.sum_const_zero, ← Filter.mem_at_top_sets, ← ge_iff_le, ←
+    Finset.le_eq_subset, ← Set.mem_preimage, ← not_forall, ← not_exists, ← exists_prop, ← exists_and_distrib_right]
+  refine' ⟨{0}ᶜ, ⟨is_open_compl_iff.mpr hz, _⟩, fun y => ⟨⟨y, subset_refl _⟩, _⟩⟩
+  · simpa using hx
+    
+  · simp
+    
+
+@[simp]
+theorem tsum_zero [T1Space α] : (∑' b : β, (0 : α)) = 0 :=
+  tsum_zero' is_closed_singleton
+
 variable [T2Space α] {f g : β → α} {a a₁ a₂ : α}
 
 theorem HasSum.tsum_eq (ha : HasSum f a) : (∑' b, f b) = a :=
@@ -402,10 +421,6 @@ theorem HasSum.tsum_eq (ha : HasSum f a) : (∑' b, f b) = a :=
 
 theorem Summable.has_sum_iff (h : Summable f) : HasSum f a ↔ (∑' b, f b) = a :=
   Iff.intro HasSum.tsum_eq fun eq => Eq ▸ h.HasSum
-
-@[simp]
-theorem tsum_zero : (∑' b : β, (0 : α)) = 0 :=
-  has_sum_zero.tsum_eq
 
 @[simp]
 theorem tsum_empty [IsEmpty β] : (∑' b, f b) = 0 :=
@@ -1328,7 +1343,7 @@ variable {G : Type _} [TopologicalSpace G] [AddCommGroupₓ G] [TopologicalAddGr
 theorem Summable.vanishing (hf : Summable f) ⦃e : Set G⦄ (he : e ∈ 𝓝 (0 : G)) :
     ∃ s : Finset α, ∀ t, Disjoint t s → (∑ k in t, f k) ∈ e := by
   letI : UniformSpace G := TopologicalAddGroup.toUniformSpace G
-  letI : UniformAddGroup G := topological_add_group_is_uniform
+  letI : UniformAddGroup G := topological_add_comm_group_is_uniform
   rcases hf with ⟨y, hy⟩
   exact cauchy_seq_finset_iff_vanishing.1 hy.cauchy_seq e he
 

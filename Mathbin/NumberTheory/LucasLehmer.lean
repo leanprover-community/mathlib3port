@@ -173,12 +173,12 @@ def q (p : ℕ) : ℕ+ :=
 theorem fact_pnat_pos (q : ℕ+) : Fact (0 < (q : ℕ)) :=
   ⟨q.2⟩
 
-/-- We construct the ring `X q` as ℤ/qℤ + √3 ℤ/qℤ. -/
 -- It would be nice to define this as (ℤ/qℤ)[x] / (x^2 - 3),
 -- obtaining the ring structure for free,
 -- but that seems to be more trouble than it's worth;
 -- if it were easy to make the definition,
 -- cardinality calculations would be somewhat more involved, too.
+/-- We construct the ring `X q` as ℤ/qℤ + √3 ℤ/qℤ. -/
 def X (q : ℕ+) : Type :=
   Zmod q × Zmod q deriving AddCommGroupₓ, DecidableEq, Fintype, Inhabited
 
@@ -295,60 +295,50 @@ instance : CommRingₓ (X q) :=
            }
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.instance
-  (Term.attrKind [])
-  "instance"
-  []
-  []
-  (Command.declSig
-   [(Term.instBinder
-     "["
-     []
-     (Term.app `Fact [(«term_<_» (num "1") "<" (Term.paren "(" [`q [(Term.typeAscription ":" (termℕ "ℕ"))]] ")"))])
-     "]")]
-   (Term.typeSpec ":" (Term.app `Nontrivial [(Term.app `X [`q])])))
-  (Command.declValSimple
-   ":="
-   (Term.anonymousCtor
-    "⟨"
-    [(Term.anonymousCtor
-      "⟨"
-      [(num "0")
-       ","
-       (num "1")
-       ","
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [`h]
-         []
-         "=>"
-         (Term.byTactic
-          "by"
-          (Tactic.tacticSeq
-           (Tactic.tacticSeq1Indented
-            [(group (Tactic.injection "injection" `h ["with" [`h1 "_"]]) [])
-             (group (Tactic.exact "exact" (Term.app `zero_ne_one [`h1])) [])])))))]
-      "⟩")]
-    "⟩")
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.opaque'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.anonymousCtor
-   "⟨"
-   [(Term.anonymousCtor
-     "⟨"
-     [(num "0")
-      ","
-      (num "1")
-      ","
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.anonymousCtor
+         "⟨"
+         [(num "0")
+          ","
+          (num "1")
+          ","
+          (Term.fun
+           "fun"
+           (Term.basicFun
+            [`h]
+            []
+            "=>"
+            (Term.byTactic
+             "by"
+             (Tactic.tacticSeq
+              (Tactic.tacticSeq1Indented
+               [(group (Tactic.injection "injection" `h ["with" [`h1 "_"]]) [])
+                (group (Tactic.exact "exact" (Term.app `zero_ne_one [`h1])) [])])))))]
+         "⟩")]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(num "0")
+        ","
+        (num "1")
+        ","
+        (Term.fun
+         "fun"
+         (Term.basicFun
+          [`h]
+          []
+          "=>"
+          (Term.byTactic
+           "by"
+           (Tactic.tacticSeq
+            (Tactic.tacticSeq1Indented
+             [(group (Tactic.injection "injection" `h ["with" [`h1 "_"]]) [])
+              (group (Tactic.exact "exact" (Term.app `zero_ne_one [`h1])) [])])))))]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
        (Term.basicFun
@@ -360,76 +350,28 @@ instance : CommRingₓ (X q) :=
          (Tactic.tacticSeq
           (Tactic.tacticSeq1Indented
            [(group (Tactic.injection "injection" `h ["with" [`h1 "_"]]) [])
-            (group (Tactic.exact "exact" (Term.app `zero_ne_one [`h1])) [])])))))]
-     "⟩")]
-   "⟩")
+            (group (Tactic.exact "exact" (Term.app `zero_ne_one [`h1])) [])])))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.anonymousCtor
-   "⟨"
-   [(num "0")
-    ","
-    (num "1")
-    ","
-    (Term.fun
-     "fun"
-     (Term.basicFun
-      [`h]
-      []
-      "=>"
       (Term.byTactic
        "by"
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
          [(group (Tactic.injection "injection" `h ["with" [`h1 "_"]]) [])
-          (group (Tactic.exact "exact" (Term.app `zero_ne_one [`h1])) [])])))))]
-   "⟩")
+          (group (Tactic.exact "exact" (Term.app `zero_ne_one [`h1])) [])])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.fun
-   "fun"
-   (Term.basicFun
-    [`h]
-    []
-    "=>"
-    (Term.byTactic
-     "by"
-     (Tactic.tacticSeq
-      (Tactic.tacticSeq1Indented
-       [(group (Tactic.injection "injection" `h ["with" [`h1 "_"]]) [])
-        (group (Tactic.exact "exact" (Term.app `zero_ne_one [`h1])) [])])))))
+      (Tactic.exact "exact" (Term.app `zero_ne_one [`h1]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group (Tactic.injection "injection" `h ["with" [`h1 "_"]]) [])
-      (group (Tactic.exact "exact" (Term.app `zero_ne_one [`h1])) [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+      (Term.app `zero_ne_one [`h1])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.exact "exact" (Term.app `zero_ne_one [`h1]))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `zero_ne_one [`h1])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `h1
+      `h1
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `zero_ne_one
+      `zero_ne_one
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.injection "injection" `h ["with" [`h1 "_"]])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '_', expected 'ident'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '_', expected 'Lean.Parser.Term.hole'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+      (Tactic.injection "injection" `h ["with" [`h1 "_"]])-/-- failed to format: format: uncaught backtrack exception
 instance
   [ Fact 1 < ( q : ℕ ) ] : Nontrivial X q
   := ⟨ ⟨ 0 , 1 , fun h => by injection h with h1 _ exact zero_ne_one h1 ⟩ ⟩

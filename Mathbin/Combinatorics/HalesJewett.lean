@@ -177,10 +177,10 @@ theorem diagonal_apply {α ι} [Nonempty ι] (x : α) : Line.diagonal α ι x = 
 /-- The Hales-Jewett theorem. This version has a restriction on universe levels which is necessary
 for the proof. See `exists_mono_in_high_dimension` for a fully universe-polymorphic version. -/
 private theorem exists_mono_in_high_dimension' :
-    ∀ (α : Type u) [Fintype α] (κ : Type max v u) [Fintype κ],
+    ∀ (α : Type u) [Finite α] (κ : Type max v u) [Finite κ],
       ∃ (ι : Type)(_ : Fintype ι), ∀ C : (ι → α) → κ, ∃ l : Line α ι, l.IsMono C :=
   -- The proof proceeds by induction on `α`.
-    Fintype.induction_empty_option
+    Finite.induction_empty_option
     (-- We have to show that the theorem is invariant under `α ≃ α'` for the induction to work.
     fun α α' e =>
       forall_imp fun κ =>
@@ -203,6 +203,7 @@ private theorem exists_mono_in_high_dimension' :
     (by
       -- Now we have to show that the theorem holds for `option α` if it holds for `α`.
       intro α _ ihα κ _
+      cases nonempty_fintype κ
       -- Later we'll need `α` to be nonempty. So we first deal with the trivial case where `α` is empty.
       -- Then `option α` has only one element, so any line is monochromatic.
       by_cases' h : Nonempty α
@@ -302,7 +303,7 @@ private theorem exists_mono_in_high_dimension' :
 
 /-- The Hales-Jewett theorem: for any finite types `α` and `κ`, there exists a finite type `ι` such
 that whenever the hypercube `ι → α` is `κ`-colored, there is a monochromatic combinatorial line. -/
-theorem exists_mono_in_high_dimension (α : Type u) [Fintype α] (κ : Type v) [Fintype κ] :
+theorem exists_mono_in_high_dimension (α : Type u) [Finite α] (κ : Type v) [Finite κ] :
     ∃ (ι : Type)(_ : Fintype ι), ∀ C : (ι → α) → κ, ∃ l : Line α ι, l.IsMono C :=
   let ⟨ι, ιfin, hι⟩ := exists_mono_in_high_dimension' α (ULift κ)
   ⟨ι, ιfin, fun C =>
@@ -314,7 +315,7 @@ end Line
 
 /-- A generalization of Van der Waerden's theorem: if `M` is a finitely colored commutative
 monoid, and `S` is a finite subset, then there exists a monochromatic homothetic copy of `S`. -/
-theorem exists_mono_homothetic_copy {M κ} [AddCommMonoidₓ M] (S : Finset M) [Fintype κ] (C : M → κ) :
+theorem exists_mono_homothetic_copy {M κ : Type _} [AddCommMonoidₓ M] (S : Finset M) [Finite κ] (C : M → κ) :
     ∃ a > 0, ∃ (b : M)(c : κ), ∀, ∀ s ∈ S, ∀, C (a • s + b) = c := by
   obtain ⟨ι, _inst, hι⟩ := line.exists_mono_in_high_dimension S κ
   skip

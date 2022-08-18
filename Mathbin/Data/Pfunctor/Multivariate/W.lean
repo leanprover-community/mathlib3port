@@ -220,10 +220,10 @@ theorem W_map_W_mk {α β : Typevec n} (g : α ⟹ β) (a : P.A) (f' : P.drop.B 
   have h := Mvpfunctor.map_eq P.Wp g
   rw [h, comp_W_path_cases_on]
 
-/-- Constructor of a value of `P.obj (α ::: β)` from components.
-Useful to avoid complicated type annotation -/
 -- TODO: this technical theorem is used in one place in constructing the initial algebra.
 -- Can it be avoided?
+/-- Constructor of a value of `P.obj (α ::: β)` from components.
+Useful to avoid complicated type annotation -/
 @[reducible]
 def objAppend1 {α : Typevec n} {β : Type _} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → β) : P.Obj (α ::: β) :=
   ⟨a, splitFun f' f⟩

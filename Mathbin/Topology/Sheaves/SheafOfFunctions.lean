@@ -86,10 +86,10 @@ theorem to_Types_is_sheaf (T : X → Type u) : (presheafToTypes X T).IsSheaf :=
       rfl
       
 
+-- We verify that the non-dependent version is an immediate consequence:
 /-- The presheaf of not-necessarily-continuous functions to
 a target type `T` satsifies the sheaf condition.
 -/
--- We verify that the non-dependent version is an immediate consequence:
 theorem to_Type_is_sheaf (T : Type u) : (presheafToType X T).IsSheaf :=
   to_Types_is_sheaf X fun _ => T
 

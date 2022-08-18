@@ -21,8 +21,8 @@ universe u v
 
 namespace Tactic
 
-/-- A monadic lazy list, controlled by an arbitrary monad. -/
 -- We hide this away in the tactic namespace, just because it's all meta.
+/-- A monadic lazy list, controlled by an arbitrary monad. -/
 unsafe inductive mllist (m : Type u → Type u) (α : Type u) : Type u
   | nil : mllist
   | cons : m (Option α × mllist) → mllist

@@ -79,9 +79,9 @@ theorem HallMatchingsOn.nonempty {ι : Type u} {α : Type v} [DecidableEq α] (t
   simp only [← card_image_of_injective s' Subtype.coe_injective]
   rw [image_bUnion]
 
+-- TODO: This takes a long time to elaborate for an unknown reason.
 /-- This is the `hall_matchings_on` sets assembled into a directed system.
 -/
--- TODO: This takes a long time to elaborate for an unknown reason.
 def hallMatchingsFunctor {ι : Type u} {α : Type v} (t : ι → Finset α) : (Finset ι)ᵒᵖ ⥤ Type max u v where
   obj := fun ι' => HallMatchingsOn t ι'.unop
   map := fun ι' ι'' g f => HallMatchingsOn.restrict t (CategoryTheory.le_of_hom g.unop) f
@@ -195,6 +195,7 @@ theorem Fintype.all_card_le_rel_image_card_iff_exists_injective {α : Type u} {�
   simp only [← h, ← h']
   apply Finset.all_card_le_bUnion_card_iff_exists_injective
 
+-- TODO: decidable_pred makes Yael sad. When an appropriate decidable_rel-like exists, fix it.
 /-- This is a version of **Hall's Marriage Theorem** in terms of a relation to a finite type.
 There is a transversal of the relation (an injective function `α → β` whose graph is a subrelation
 of the relation) iff every subset of `k` terms of `α` is related to at least `k` terms of `β`.
@@ -202,7 +203,6 @@ of the relation) iff every subset of `k` terms of `α` is related to at least `k
 It is like `fintype.all_card_le_rel_image_card_iff_exists_injective` but uses `finset.filter`
 rather than `rel.image`.
 -/
--- TODO: decidable_pred makes Yael sad. When an appropriate decidable_rel-like exists, fix it.
 theorem Fintype.all_card_le_filter_rel_iff_exists_injective {α : Type u} {β : Type v} [Fintype β] (r : α → β → Prop)
     [∀ a, DecidablePred (r a)] :
     (∀ A : Finset α, A.card ≤ (univ.filter fun b : β => ∃ a ∈ A, r a b).card) ↔

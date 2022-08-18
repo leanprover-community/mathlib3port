@@ -141,7 +141,7 @@ theorem star_zpow [Groupₓ R] [StarSemigroup R] (x : R) (z : ℤ) : star (x ^ z
 /-- When multiplication is commutative, `star` preserves division. -/
 @[simp]
 theorem star_div [CommGroupₓ R] [StarSemigroup R] (x y : R) : star (x / y) = star x / star y :=
-  (starMulAut : R ≃* R).toMonoidHom.map_div _ _
+  map_div (starMulAut : R ≃* R) _ _
 
 section
 
@@ -150,7 +150,7 @@ open BigOperators
 @[simp]
 theorem star_prod [CommMonoidₓ R] [StarSemigroup R] {α : Type _} (s : Finset α) (f : α → R) :
     star (∏ x in s, f x) = ∏ x in s, star (f x) :=
-  (starMulAut : R ≃* R).map_prod _ _
+  map_prod (starMulAut : R ≃* R) _ _
 
 end
 
@@ -298,16 +298,16 @@ alias star_ring_end_self_apply ← IsROrC.conj_conj
 
 @[simp]
 theorem star_inv' [DivisionRing R] [StarRing R] (x : R) : star x⁻¹ = (star x)⁻¹ :=
-  op_injective <| ((starRingEquiv : R ≃+* Rᵐᵒᵖ).toRingHom.map_inv x).trans (op_inv (star x)).symm
+  op_injective <| (map_inv₀ (starRingEquiv : R ≃+* Rᵐᵒᵖ) x).trans (op_inv (star x)).symm
 
 @[simp]
 theorem star_zpow₀ [DivisionRing R] [StarRing R] (x : R) (z : ℤ) : star (x ^ z) = star x ^ z :=
-  op_injective <| ((starRingEquiv : R ≃+* Rᵐᵒᵖ).toRingHom.map_zpow x z).trans (op_zpow (star x) z).symm
+  op_injective <| (map_zpow₀ (starRingEquiv : R ≃+* Rᵐᵒᵖ) x z).trans (op_zpow (star x) z).symm
 
 /-- When multiplication is commutative, `star` preserves division. -/
 @[simp]
 theorem star_div' [Field R] [StarRing R] (x y : R) : star (x / y) = star x / star y :=
-  (starRingEnd R).map_div _ _
+  map_div₀ (starRingEnd R) _ _
 
 @[simp]
 theorem star_bit0 [AddMonoidₓ R] [StarAddMonoid R] (r : R) : star (bit0 r) = bit0 (star r) := by

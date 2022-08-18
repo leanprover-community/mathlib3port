@@ -124,6 +124,11 @@ unsafe def eval_list : expr → tactic (List expr × expr)
     let (ys, ys_eq) ← eval_list_map ef xs
     let eq ← i_to_expr (pquote.1 (List.map_congr (%%ₓef) (%%ₓxs_eq) (%%ₓys_eq)))
     pure (ys, Eq)
+  | e@(quote.1 (@List.finRange (%%ₓen))) => do
+    let n ← expr.to_nat en
+    let eis ← (List.finRange n).mmap fun i => expr.of_nat (quote.1 (Finₓ (%%ₓen))) i
+    let eq ← mk_eq_refl e
+    pure (eis, Eq)
   | e => fail (to_fmt "Unknown list expression" ++ format.line ++ to_fmt e)
 
 theorem Multiset.cons_congr {α : Type _} (x : α) {xs : Multiset α} {xs' : List α} (xs_eq : (xs' : Multiset α) = xs) :
@@ -163,12 +168,20 @@ unsafe def eval_multiset : expr → tactic (List expr × expr)
     let eis ← (List.range n).mmap fun i => expr.of_nat (quote.1 ℕ) i
     let eq ← mk_eq_refl e
     pure (eis, Eq)
+  | quote.1 (@coe (@coeToLift (@coeBaseₓ Multiset.hasCoe)) (%%ₓexs)) => do
+    let (xs, xs_eq) ← eval_list exs
+    let eq ← i_to_expr (pquote.1 (congr_arg coe (%%ₓxs_eq)))
+    pure (xs, Eq)
   | quote.1 (@Multiset.map (%%ₓα) (%%ₓβ) (%%ₓef) (%%ₓexs)) => do
     let (xs, xs_eq) ← eval_multiset exs
     let (ys, ys_eq) ← eval_list_map ef xs
     let eq ← i_to_expr (pquote.1 (Multiset.map_congr (%%ₓef) (%%ₓxs_eq) (%%ₓys_eq)))
     pure (ys, Eq)
   | e => fail (to_fmt "Unknown multiset expression" ++ format.line ++ to_fmt e)
+
+theorem Finset.mk_congr {α : Type _} {xs xs' : Multiset α} (h : xs = xs') (nd nd') :
+    Finset.mk xs nd = Finset.mk xs' nd' := by
+  congr <;> assumption
 
 theorem Finset.insert_eq_coe_list_of_mem {α : Type _} [DecidableEq α] (x : α) (xs : Finset α) {xs' : List α}
     (h : x ∈ xs') (nd_xs : xs'.Nodup) (hxs' : xs = Finset.mk (↑xs') (Multiset.coe_nodup.mpr nd_xs)) :
@@ -197,6 +210,10 @@ which is in general not true).
 elements of the finset are equal, for example to parse `{2, 1, 2}` into `[2, 1]`.
 -/
 unsafe def eval_finset (decide_eq : expr → expr → tactic (Bool × expr)) : expr → tactic (List expr × expr × expr)
+  | e@(quote.1 (Finset.mk (%%ₓval) (%%ₓnd))) => do
+    let (val', Eq) ← eval_multiset val
+    let eq' ← i_to_expr (pquote.1 (Finset.mk_congr (%%ₓEq) _ _))
+    pure (val', eq', nd)
   | e@(quote.1 HasEmptyc.emptyc) => do
     let eq ← mk_eq_refl e
     let nd ← i_to_expr (pquote.1 List.nodup_nil)
@@ -229,12 +246,6 @@ unsafe def eval_finset (decide_eq : expr → expr → tactic (Bool × expr)) : e
     let eis ← (List.range n).mmap fun i => expr.of_nat (quote.1 ℕ) i
     let eq ← mk_eq_refl e
     let nd ← i_to_expr (pquote.1 (List.nodup_range (%%ₓen)))
-    pure (eis, Eq, nd)
-  | e@(quote.1 (Finset.finRange (%%ₓen))) => do
-    let n ← expr.to_nat en
-    let eis ← (List.finRange n).mmap fun i => expr.of_nat (quote.1 (Finₓ (%%ₓen))) i
-    let eq ← mk_eq_refl e
-    let nd ← i_to_expr (pquote.1 (List.nodup_fin_range (%%ₓen)))
     pure (eis, Eq, nd)
   | e => fail (to_fmt "Unknown finset expression" ++ format.line ++ to_fmt e)
 

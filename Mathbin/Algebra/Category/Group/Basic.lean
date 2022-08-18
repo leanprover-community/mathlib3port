@@ -189,11 +189,11 @@ example {R S : CommGroupₓₓ} (i : R ⟶ S) (r : R) (h : r = 1) : i r = 1 := b
 
 namespace AddCommGroupₓₓ
 
-/-- Any element of an abelian group gives a unique morphism from `ℤ` sending
-`1` to that element. -/
 -- Note that because `ℤ : Type 0`, this forces `G : AddCommGroup.{0}`,
 -- so we write this explicitly to be clear.
 -- TODO generalize this, requiring a `ulift_instances.lean` file
+/-- Any element of an abelian group gives a unique morphism from `ℤ` sending
+`1` to that element. -/
 def asHom {G : AddCommGroupₓₓ.{0}} (g : G) : AddCommGroupₓₓ.of ℤ ⟶ G :=
   zmultiplesHom G g
 

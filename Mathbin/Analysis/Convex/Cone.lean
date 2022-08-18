@@ -538,7 +538,7 @@ namespace riesz_extension
 
 open Submodule
 
-variable (s : ConvexCone ℝ E) (f : LinearPmap ℝ E ℝ)
+variable (s : ConvexCone ℝ E) (f : E →ₗ.[ℝ] ℝ)
 
 /-- Induction step in M. Riesz extension theorem. Given a convex cone `s` in a vector space `E`,
 a partially defined linear map `f : f.domain → ℝ`, assume that `f` is nonnegative on `f.domain ∩ p`
@@ -596,7 +596,7 @@ theorem step (nonneg : ∀ x : f.domain, (x : E) ∈ s → 0 ≤ f x) (dense : �
       
     
 
-theorem exists_top (p : LinearPmap ℝ E ℝ) (hp_nonneg : ∀ x : p.domain, (x : E) ∈ s → 0 ≤ p x)
+theorem exists_top (p : E →ₗ.[ℝ] ℝ) (hp_nonneg : ∀ x : p.domain, (x : E) ∈ s → 0 ≤ p x)
     (hp_dense : ∀ y, ∃ x : p.domain, (x : E) + y ∈ s) : ∃ q ≥ p, q.domain = ⊤ ∧ ∀ x : q.domain, (x : E) ∈ s → 0 ≤ q x :=
   by
   replace hp_nonneg : p ∈ { p | _ }
@@ -634,7 +634,7 @@ end riesz_extension
 and a linear `f : p → ℝ`, assume that `f` is nonnegative on `p ∩ s` and `p + s = E`. Then
 there exists a globally defined linear function `g : E → ℝ` that agrees with `f` on `p`,
 and is nonnegative on `s`. -/
-theorem riesz_extension (s : ConvexCone ℝ E) (f : LinearPmap ℝ E ℝ) (nonneg : ∀ x : f.domain, (x : E) ∈ s → 0 ≤ f x)
+theorem riesz_extension (s : ConvexCone ℝ E) (f : E →ₗ.[ℝ] ℝ) (nonneg : ∀ x : f.domain, (x : E) ∈ s → 0 ≤ f x)
     (dense : ∀ y, ∃ x : f.domain, (x : E) + y ∈ s) :
     ∃ g : E →ₗ[ℝ] ℝ, (∀ x : f.domain, g x = f x) ∧ ∀, ∀ x ∈ s, ∀, 0 ≤ g x := by
   rcases RieszExtension.exists_top s f nonneg Dense with ⟨⟨g_dom, g⟩, ⟨hpg, hfg⟩, htop, hgs⟩
@@ -650,7 +650,7 @@ theorem riesz_extension (s : ConvexCone ℝ E) (f : LinearPmap ℝ E ℝ) (nonne
 defined on a subspace of `E`, and `f x ≤ N x` for all `x` in the domain of `f`,
 then `f` can be extended to the whole space to a linear map `g` such that `g x ≤ N x`
 for all `x`. -/
-theorem exists_extension_of_le_sublinear (f : LinearPmap ℝ E ℝ) (N : E → ℝ)
+theorem exists_extension_of_le_sublinear (f : E →ₗ.[ℝ] ℝ) (N : E → ℝ)
     (N_hom : ∀ c : ℝ, 0 < c → ∀ x, N (c • x) = c * N x) (N_add : ∀ x y, N (x + y) ≤ N x + N y)
     (hf : ∀ x : f.domain, f x ≤ N x) : ∃ g : E →ₗ[ℝ] ℝ, (∀ x : f.domain, g x = f x) ∧ ∀ x, g x ≤ N x := by
   let s : ConvexCone ℝ (E × ℝ) :=

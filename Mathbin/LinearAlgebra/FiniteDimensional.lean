@@ -1542,10 +1542,10 @@ theorem finrank_eq_one_iff' : finrank K V = 1 ↔ ∃ (v : V)(n : v ≠ 0), ∀ 
   infer_instance
   infer_instance
 
+-- Not sure why this aren't found automatically.
 /-- A finite dimensional module has dimension at most 1 iff
 there is some `v : V` so every vector is a multiple of `v`.
 -/
--- Not sure why this aren't found automatically.
 theorem finrank_le_one_iff [FiniteDimensional K V] : finrank K V ≤ 1 ↔ ∃ v : V, ∀ w : V, ∃ c : K, c • v = w := by
   fconstructor
   · intro h

@@ -26,10 +26,10 @@ variable [Algebra R S] {P : Type _} [CommRingₓ P]
 
 namespace IsLocalization
 
-/-- Map from ideals of `R` to submodules of `S` induced by `f`. -/
 -- This was previously a `has_coe` instance, but if `S = R` then this will loop.
 -- It could be a `has_coe_t` instance, but we keep it explicit here to avoid slowing down
 -- the rest of the library.
+/-- Map from ideals of `R` to submodules of `S` induced by `f`. -/
 def coeSubmodule (I : Ideal R) : Submodule R S :=
   Submodule.map (Algebra.linearMap R S) I
 

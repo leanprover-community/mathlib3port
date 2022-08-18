@@ -47,6 +47,7 @@ class WstarAlgebra (M : Type u) [NormedRing M] [StarRing M] [CstarRing M] [Modul
     ∃ (X : Type u)(_ : NormedAddCommGroup X)(_ : NormedSpace ℂ X)(_ : CompleteSpace X),
       Nonempty (NormedSpace.Dual ℂ X ≃ₗᵢ⋆[ℂ] M)
 
+-- TODO: Without this, `von_neumann_algebra` times out. Why?
 /-- The double commutant definition of a von Neumann algebra,
 as a *-closed subalgebra of bounded operators on a Hilbert space,
 which is equal to its double commutant.
@@ -61,7 +62,6 @@ Thus we can't say that the bounded operators `H →L[ℂ] H` form a `von_neumann
 (although we will later construct the instance `wstar_algebra (H →L[ℂ] H)`),
 and instead will use `⊤ : von_neumann_algebra H`.
 -/
--- TODO: Without this, `von_neumann_algebra` times out. Why?
 @[nolint has_nonempty_instance]
 structure VonNeumannAlgebra (H : Type u) [InnerProductSpace ℂ H] [CompleteSpace H] extends
   StarSubalgebra ℂ (H →L[ℂ] H) where

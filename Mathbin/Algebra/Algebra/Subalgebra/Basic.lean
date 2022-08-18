@@ -342,9 +342,9 @@ protected theorem coe_eq_zero {x : S} : (x : A) = 0 ↔ x = 0 :=
 protected theorem coe_eq_one {x : S} : (x : A) = 1 ↔ x = 1 :=
   SubmonoidClass.coe_eq_one
 
-/-- Embedding of a subalgebra into the algebra. -/
 -- todo: standardize on the names these morphisms
 -- compare with submodule.subtype
+/-- Embedding of a subalgebra into the algebra. -/
 def val : S →ₐ[R] A := by
   refine_struct { toFun := (coe : S → A) } <;> intros <;> rfl
 
@@ -810,39 +810,24 @@ This is the algebra version of `submodule.top_equiv`. -/
 def topEquiv : (⊤ : Subalgebra R A) ≃ₐ[R] A :=
   AlgEquiv.ofAlgHom (Subalgebra.val ⊤) toTop rfl <| AlgHom.ext fun _ => Subtype.ext rfl
 
--- TODO[gh-6025]: make this an instance once safe to do so
-theorem subsingleton_of_subsingleton [Subsingleton A] : Subsingleton (Subalgebra R A) :=
+instance subsingleton_of_subsingleton [Subsingleton A] : Subsingleton (Subalgebra R A) :=
   ⟨fun B C =>
     ext fun x => by
       simp only [← Subsingleton.elimₓ x 0, ← zero_mem B, ← zero_mem C]⟩
 
-/-- For performance reasons this is not an instance. If you need this instance, add
-```
-local attribute [instance] alg_hom.subsingleton subalgebra.subsingleton_of_subsingleton
-```
-in the section that needs it.
--/
--- TODO[gh-6025]: make this an instance once safe to do so
-theorem _root_.alg_hom.subsingleton [Subsingleton (Subalgebra R A)] : Subsingleton (A →ₐ[R] B) :=
+instance _root_.alg_hom.subsingleton [Subsingleton (Subalgebra R A)] : Subsingleton (A →ₐ[R] B) :=
   ⟨fun f g =>
     AlgHom.ext fun a =>
       have : a ∈ (⊥ : Subalgebra R A) := Subsingleton.elimₓ (⊤ : Subalgebra R A) ⊥ ▸ mem_top
       let ⟨x, hx⟩ := Set.mem_range.mp (mem_bot.mp this)
       hx ▸ (f.commutes _).trans (g.commutes _).symm⟩
 
--- TODO[gh-6025]: make this an instance once safe to do so
-theorem _root_.alg_equiv.subsingleton_left [Subsingleton (Subalgebra R A)] : Subsingleton (A ≃ₐ[R] B) := by
-  haveI : Subsingleton (A →ₐ[R] B) := AlgHom.subsingleton
-  exact ⟨fun f g => AlgEquiv.ext fun x => alg_hom.ext_iff.mp (Subsingleton.elimₓ f.toAlgHom g.toAlgHom) x⟩
+instance _root_.alg_equiv.subsingleton_left [Subsingleton (Subalgebra R A)] : Subsingleton (A ≃ₐ[R] B) :=
+  ⟨fun f g => AlgEquiv.ext fun x => AlgHom.ext_iff.mp (Subsingleton.elimₓ f.toAlgHom g.toAlgHom) x⟩
 
--- TODO[gh-6025]: make this an instance once safe to do so
-theorem _root_.alg_equiv.subsingleton_right [Subsingleton (Subalgebra R B)] : Subsingleton (A ≃ₐ[R] B) := by
-  haveI : Subsingleton (B ≃ₐ[R] A) := AlgEquiv.subsingleton_left
-  exact
-    ⟨fun f g =>
-      Eq.trans (AlgEquiv.symm_symm _).symm
-        (by
-          rw [Subsingleton.elimₓ f.symm g.symm, AlgEquiv.symm_symm])⟩
+instance _root_.alg_equiv.subsingleton_right [Subsingleton (Subalgebra R B)] : Subsingleton (A ≃ₐ[R] B) :=
+  ⟨fun f g => by
+    rw [← f.symm_symm, Subsingleton.elimₓ f.symm g.symm, g.symm_symm]⟩
 
 theorem range_val : S.val.range = S :=
   ext <| Set.ext_iff.1 <| S.val.coe_range.trans Subtype.range_val

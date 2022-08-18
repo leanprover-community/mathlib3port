@@ -219,7 +219,7 @@ variable [SeminormedAddCommGroup α]
 
 theorem linfty_op_norm_def (A : Matrix m n α) :
     ∥A∥ = ((Finset.univ : Finset m).sup fun i : m => ∑ j : n, ∥A i j∥₊ : ℝ≥0 ) := by
-  simp_rw [Pi.norm_def, PiLp.nnnorm_eq, div_one, Nnreal.rpow_one]
+  simp [← Pi.norm_def, ← PiLp.nnnorm_eq_sum Ennreal.one_ne_top]
 
 theorem linfty_op_nnnorm_def (A : Matrix m n α) : ∥A∥₊ = (Finset.univ : Finset m).sup fun i : m => ∑ j : n, ∥A i j∥₊ :=
   Subtype.ext <| linfty_op_norm_def A
@@ -374,7 +374,7 @@ variable [SeminormedAddCommGroup α] [SeminormedAddCommGroup β]
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
 theorem frobenius_nnnorm_def (A : Matrix m n α) : ∥A∥₊ = (∑ (i) (j), ∥A i j∥₊ ^ (2 : ℝ)) ^ (1 / 2 : ℝ) := by
-  simp_rw [PiLp.nnnorm_eq, ← Nnreal.rpow_mul, div_mul_cancel (1 : ℝ) two_ne_zero, Nnreal.rpow_one]
+  simp_rw [PiLp.nnnorm_eq_of_L2, Nnreal.sq_sqrt, Nnreal.sqrt_eq_rpow, Nnreal.rpow_two]
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
 theorem frobenius_norm_def (A : Matrix m n α) : ∥A∥ = (∑ (i) (j), ∥A i j∥ ^ (2 : ℝ)) ^ (1 / 2 : ℝ) :=
@@ -411,8 +411,8 @@ instance frobenius_normed_star_group [StarAddMonoid α] [NormedStarGroup α] : N
 
 @[simp]
 theorem frobenius_norm_row (v : m → α) : ∥rowₓ v∥ = ∥(PiLp.equiv 2 _).symm v∥ := by
-  rw [frobenius_norm_def, Fintype.sum_unique]
-  rfl
+  rw [frobenius_norm_def, Fintype.sum_unique, PiLp.norm_eq_of_L2, Real.sqrt_eq_rpow]
+  simp only [← row_apply, ← Real.rpow_two, ← PiLp.equiv_symm_apply']
 
 @[simp]
 theorem frobenius_nnnorm_row (v : m → α) : ∥rowₓ v∥₊ = ∥(PiLp.equiv 2 _).symm v∥₊ :=
@@ -420,8 +420,8 @@ theorem frobenius_nnnorm_row (v : m → α) : ∥rowₓ v∥₊ = ∥(PiLp.equiv
 
 @[simp]
 theorem frobenius_norm_col (v : n → α) : ∥colₓ v∥ = ∥(PiLp.equiv 2 _).symm v∥ := by
-  simp_rw [frobenius_norm_def, Fintype.sum_unique]
-  rfl
+  simp_rw [frobenius_norm_def, Fintype.sum_unique, PiLp.norm_eq_of_L2, Real.sqrt_eq_rpow]
+  simp only [← col_apply, ← Real.rpow_two, ← PiLp.equiv_symm_apply']
 
 @[simp]
 theorem frobenius_nnnorm_col (v : n → α) : ∥colₓ v∥₊ = ∥(PiLp.equiv 2 _).symm v∥₊ :=
@@ -429,12 +429,12 @@ theorem frobenius_nnnorm_col (v : n → α) : ∥colₓ v∥₊ = ∥(PiLp.equiv
 
 @[simp]
 theorem frobenius_nnnorm_diagonal [DecidableEq n] (v : n → α) : ∥diagonalₓ v∥₊ = ∥(PiLp.equiv 2 _).symm v∥₊ := by
-  simp_rw [frobenius_nnnorm_def, ← Finset.sum_product', Finset.univ_product_univ, PiLp.nnnorm_eq]
+  simp_rw [frobenius_nnnorm_def, ← Finset.sum_product', Finset.univ_product_univ, PiLp.nnnorm_eq_of_L2]
   let s := (Finset.univ : Finset n).map ⟨fun i : n => (i, i), fun i j h => congr_arg Prod.fst h⟩
   rw [← Finset.sum_subset (Finset.subset_univ s) fun i hi his => _]
-  · rw [Finset.sum_map]
+  · rw [Finset.sum_map, Nnreal.sqrt_eq_rpow]
     dsimp'
-    simp_rw [diagonal_apply_eq]
+    simp_rw [diagonal_apply_eq, Nnreal.rpow_two]
     
   · suffices i.1 ≠ i.2 by
       rw [diagonal_apply_ne _ this, nnnorm_zero, Nnreal.zero_rpow two_ne_zero]
@@ -451,7 +451,8 @@ end SeminormedAddCommGroup
 theorem frobenius_nnnorm_one [DecidableEq n] [SeminormedAddCommGroup α] [One α] :
     ∥(1 : Matrix n n α)∥₊ = Nnreal.sqrt (Fintype.card n) * ∥(1 : α)∥₊ := by
   refine' (frobenius_nnnorm_diagonal _).trans _
-  simp_rw [PiLp.nnnorm_equiv_symm_const, Nnreal.sqrt_eq_rpow]
+  simp_rw [PiLp.nnnorm_equiv_symm_const Ennreal.two_ne_top, Nnreal.sqrt_eq_rpow]
+  simp only [← Ennreal.to_real_div, ← Ennreal.one_to_real, ← Ennreal.to_real_bit0]
 
 section IsROrC
 
@@ -469,7 +470,7 @@ theorem frobenius_nnnorm_mul (A : Matrix l m α) (B : Matrix m n α) : ∥A ⬝ 
     @nnnorm_inner_le_nnnorm α _ _ _ ((PiLp.equiv 2 fun i => α).symm fun j => star (A i j))
       ((PiLp.equiv 2 fun i => α).symm fun k => B k j)
   simpa only [← PiLp.equiv_symm_apply, ← PiLp.inner_apply, ← IsROrC.inner_apply, ← star_ring_end_apply, ← Pi.nnnorm_def,
-    ← PiLp.nnnorm_eq, ← star_star, ← nnnorm_star] using this
+    ← PiLp.nnnorm_eq_of_L2, ← star_star, ← nnnorm_star, ← Nnreal.sqrt_eq_rpow, ← Nnreal.rpow_two] using this
 
 theorem frobenius_norm_mul (A : Matrix l m α) (B : Matrix m n α) : ∥A ⬝ B∥ ≤ ∥A∥ * ∥B∥ :=
   frobenius_nnnorm_mul A B

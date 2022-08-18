@@ -66,10 +66,11 @@ theorem equiv_free_prod_direct_sum_zmod [hG : AddGroupₓ.Fg G] :
 
 /-- **Structure theorem of finite abelian groups** : Any finite abelian group is a direct sum of
 some `zmod (p i ^ e i)` for some prime powers `p i ^ e i`. -/
-theorem equiv_direct_sum_zmod_of_fintype [Fintype G] :
+theorem equiv_direct_sum_zmod_of_fintype [Finite G] :
     ∃ (ι : Type)(_ : Fintype ι)(p : ι → ℕ)(_ : ∀ i, Nat.Prime <| p i)(e : ι → ℕ),
       Nonempty <| G ≃+ ⨁ i : ι, Zmod (p i ^ e i) :=
   by
+  cases nonempty_fintype G
   obtain ⟨n, ι, fι, p, hp, e, ⟨f⟩⟩ := equiv_free_prod_direct_sum_zmod G
   cases n
   · exact ⟨ι, fι, p, hp, e, ⟨f.trans AddEquiv.uniqueProd⟩⟩

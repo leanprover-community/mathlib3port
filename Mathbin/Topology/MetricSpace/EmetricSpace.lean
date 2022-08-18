@@ -88,6 +88,8 @@ def uniformSpaceOfEdist (edist : α → α → ℝ≥0∞) (edist_self : ∀ x :
                 tendsto_principal_principal.2 <| by
                   simp [← edist_comm] }
 
+-- the uniform structure is embedded in the emetric space structure
+-- to avoid instance diamond issues. See Note [forgetful inheritance].
 /-- Extended (pseudo) metric spaces, with an extended distance `edist` possibly taking the
 value ∞
 
@@ -101,8 +103,6 @@ on a product.
 
 Continuity of `edist` is proved in `topology.instances.ennreal`
 -/
--- the uniform structure is embedded in the emetric space structure
--- to avoid instance diamond issues. See Note [forgetful inheritance].
 class PseudoEmetricSpace (α : Type u) extends HasEdist α : Type u where
   edist_self : ∀ x : α, edist x x = 0
   edist_comm : ∀ x y : α, edist x y = edist y x
@@ -672,9 +672,9 @@ theorem inseparable_iff : Inseparable x y ↔ edist x y = 0 := by
   simp [← inseparable_iff_mem_closure, ← mem_closure_iff, ← edist_comm, ← forall_lt_iff_le']
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (m n «expr ≥ » N)
+-- see Note [nolint_ge]
 /-- In a pseudoemetric space, Cauchy sequences are characterized by the fact that, eventually,
 the pseudoedistance between its elements is arbitrarily small -/
--- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem cauchy_seq_iff [Nonempty β] [SemilatticeSup β] {u : β → α} :
     CauchySeq u ↔ ∀, ∀ ε > 0, ∀, ∃ N, ∀ (m n) (_ : m ≥ N) (_ : n ≥ N), edist (u m) (u n) < ε :=
@@ -902,8 +902,8 @@ end Diam
 
 end Emetric
 
-/-- We now define `emetric_space`, extending `pseudo_emetric_space`. -/
 --namespace
+/-- We now define `emetric_space`, extending `pseudo_emetric_space`. -/
 class EmetricSpace (α : Type u) extends PseudoEmetricSpace α : Type u where
   eq_of_edist_eq_zero : ∀ {x y : α}, edist x y = 0 → x = y
 
@@ -954,8 +954,8 @@ theorem uniform_embedding_iff' [EmetricSpace β] {f : γ → β} :
     simpa using this
     
 
-/-- An emetric space is separated -/
 -- see Note [lower instance priority]
+/-- An emetric space is separated -/
 instance (priority := 100) to_separated : SeparatedSpace γ :=
   separated_def.2 fun x y h => eq_of_forall_edist_le fun ε ε0 => le_of_ltₓ (h _ (edist_mem_uniformity ε0))
 

@@ -135,7 +135,7 @@ def toDual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
         have h₄ :=
           calc
             ⟪(ℓ z† / ⟪z, z⟫) • z, x⟫ = ℓ z / ⟪z, z⟫ * ⟪z, x⟫ := by
-              simp [← inner_smul_left, ← RingHom.map_div, ← conj_conj]
+              simp [← inner_smul_left, ← conj_conj]
             _ = ℓ z * ⟪z, x⟫ / ⟪z, z⟫ := by
               rw [← div_mul_eq_mul_div]
             _ = ℓ x * ⟪z, z⟫ / ⟪z, z⟫ := by

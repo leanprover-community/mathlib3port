@@ -48,15 +48,15 @@ variable [∀ x : B, TopologicalSpace (E₂ x)]
 
 include F₁ F₂
 
+-- In this definition we require the scalar rings `𝕜₁` and `𝕜₂` to be normed fields, although
+-- something much weaker (maybe `comm_semiring`) would suffice mathematically -- this is because of
+-- a typeclass inference bug with pi-types:
+-- https://leanprover.zulipchat.com/#narrow/stream/116395-maths/topic/vector.20bundles.20--.20typeclass.20inference.20issue
 /-- The bundle of continuous `σ`-semilinear maps between the topological vector bundles `E₁` and
 `E₂`. This is a type synonym for `λ x, E₁ x →SL[σ] E₂ x`.
 
 We intentionally add `F₁` and `F₂` as arguments to this type, so that instances on this type
 (that depend on `F₁` and `F₂`) actually refer to `F₁` and `F₂`. -/
--- In this definition we require the scalar rings `𝕜₁` and `𝕜₂` to be normed fields, although
--- something much weaker (maybe `comm_semiring`) would suffice mathematically -- this is because of
--- a typeclass inference bug with pi-types:
--- https://leanprover.zulipchat.com/#narrow/stream/116395-maths/topic/vector.20bundles.20--.20typeclass.20inference.20issue
 @[nolint unused_arguments]
 def Bundle.ContinuousLinearMap (x : B) : Type _ :=
   E₁ x →SL[σ] E₂ x deriving Inhabited

@@ -33,16 +33,14 @@ variable (hA : A.IsHermitian)
 /-- The eigenvalues of a hermitian matrix, indexed by `fin (fintype.card n)` where `n` is the index
 type of the matrix. -/
 noncomputable def eigenvalues₀ : Finₓ (Fintype.card n) → ℝ :=
-  @InnerProductSpace.IsSelfAdjoint.eigenvalues 𝕜 _ _ (PiLp 2 fun _ : n => 𝕜) _ A.toLin'
-    (is_hermitian_iff_is_self_adjoint.1 hA) _ (Fintype.card n) finrank_euclidean_space
+  (is_hermitian_iff_is_symmetric.1 hA).Eigenvalues finrank_euclidean_space
 
 /-- The eigenvalues of a hermitian matrix, reusing the index `n` of the matrix entries. -/
 noncomputable def eigenvalues : n → ℝ := fun i => hA.eigenvalues₀ <| (Fintype.equivOfCardEq (Fintype.card_fin _)).symm i
 
 /-- A choice of an orthonormal basis of eigenvectors of a hermitian matrix. -/
 noncomputable def eigenvectorBasis : OrthonormalBasis n 𝕜 (EuclideanSpace 𝕜 n) :=
-  (@InnerProductSpace.IsSelfAdjoint.eigenvectorBasis 𝕜 _ _ (PiLp 2 fun _ : n => 𝕜) _ A.toLin'
-        (is_hermitian_iff_is_self_adjoint.1 hA) _ (Fintype.card n) finrank_euclidean_space).reindex
+  ((is_hermitian_iff_is_symmetric.1 hA).eigenvectorBasis finrank_euclidean_space).reindex
     (Fintype.equivOfCardEq (Fintype.card_fin _))
 
 /-- A matrix whose columns are an orthonormal basis of eigenvectors of a hermitian matrix. -/
@@ -65,8 +63,8 @@ theorem spectral_theorem : hA.eigenvectorMatrixInv ⬝ A = diagonalₓ (coe ∘ 
   rw [eigenvector_matrix_inv, basis_to_matrix_basis_fun_mul]
   ext i j
   convert
-    @InnerProductSpace.IsSelfAdjoint.diagonalization_basis_apply_self_apply 𝕜 _ _ (PiLp 2 fun _ : n => 𝕜) _ A.to_lin'
-      (is_hermitian_iff_is_self_adjoint.1 hA) _ (Fintype.card n) finrank_euclidean_space (EuclideanSpace.single j 1)
+    @LinearMap.IsSymmetric.diagonalization_basis_apply_self_apply 𝕜 _ _ (PiLp 2 fun _ : n => 𝕜) _ A.to_lin'
+      (is_hermitian_iff_is_symmetric.1 hA) _ (Fintype.card n) finrank_euclidean_space (EuclideanSpace.single j 1)
       ((Fintype.equivOfCardEq (Fintype.card_fin _)).symm i)
   · rw [eigenvector_basis, to_lin'_apply]
     simp only [← Basis.toMatrix, ← Basis.coe_to_orthonormal_basis_repr, ← Basis.equiv_fun_apply]

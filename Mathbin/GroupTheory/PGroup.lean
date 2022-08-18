@@ -320,14 +320,14 @@ theorem cyclic_center_quotient_of_card_eq_prime_sq (hG : card G = p ^ 2) : IsCyc
             ((Nat.mul_right_inj (pow_pos (Fact.out p.prime).Pos 2)).1 (hG.trans (mul_oneₓ (p ^ 2)).symm)).le⟩
     
 
-/-- A group of order `p ^ 2` is commutative. See also `is_p_group.comm_group_of_card_eq_prime_sq`
-for the `comm_group` instance. -/
+/-- A group of order `p ^ 2` is commutative. See also `is_p_group.commutative_of_card_eq_prime_sq`
+for just the proof that `∀ a b, a * b = b * a` -/
 def commGroupOfCardEqPrimeSq (hG : card G = p ^ 2) : CommGroupₓ G :=
   @commGroupOfCycleCenterQuotient _ _ _ _ (cyclic_center_quotient_of_card_eq_prime_sq hG) _
     (QuotientGroup.ker_mk (center G)).le
 
-/-- A group of order `p ^ 2` is commutative. See also `is_p_group.commutative_of_card_eq_prime_sq`
-for just the proof that `∀ a b, a * b = b * a` -/
+/-- A group of order `p ^ 2` is commutative. See also `is_p_group.comm_group_of_card_eq_prime_sq`
+for the `comm_group` instance. -/
 theorem commutative_of_card_eq_prime_sq (hG : card G = p ^ 2) : ∀ a b : G, a * b = b * a :=
   (commGroupOfCardEqPrimeSq hG).mul_comm
 

@@ -60,9 +60,9 @@ and right absorbing. -/
 @[protect_proj]
 class SemigroupWithZeroₓ (S₀ : Type _) extends Semigroupₓ S₀, MulZeroClassₓ S₀
 
-/-- A typeclass for non-associative monoids with zero elements. -/
 /- By defining this _after_ `semigroup_with_zero`, we ensure that searches for `mul_zero_class` find
 this class first. -/
+/-- A typeclass for non-associative monoids with zero elements. -/
 @[protect_proj]
 class MulZeroOneClassₓ (M₀ : Type _) extends MulOneClassₓ M₀, MulZeroClassₓ M₀
 

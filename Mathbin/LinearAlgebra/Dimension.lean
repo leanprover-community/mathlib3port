@@ -280,12 +280,12 @@ theorem LinearIndependent.set_finite_of_is_noetherian [IsNoetherian R M] {s : Se
     (hi : LinearIndependent R (coe : s → M)) : s.Finite :=
   @Set.to_finite _ _ hi.finite_of_is_noetherian
 
-/-- Over any nontrivial ring, the existence of a finite spanning set implies that any basis is finite.
--/
 -- One might hope that a finite spanning set implies that any linearly independent set is finite.
 -- While this is true over a division ring
 -- (simply because any linearly independent set can be extended to a basis),
 -- I'm not certain what more general statements are possible.
+/-- Over any nontrivial ring, the existence of a finite spanning set implies that any basis is finite.
+-/
 def basisFintypeOfFiniteSpans (w : Set M) [Fintype w] (s : span R w = ⊤) {ι : Type w} (b : Basis ι R M) : Fintype ι :=
   by
   -- We'll work by contradiction, assuming `ι` is infinite.
@@ -318,11 +318,11 @@ def basisFintypeOfFiniteSpans (w : Set M) [Fintype w] (s : span R w = ⊤) {ι :
   refine' b.linear_independent.not_mem_span_image _ k'
   exact nm
 
+-- From [Les familles libres maximales d'un module ont-elles le meme cardinal?][lazarus1973]
 /-- Over any ring `R`, if `b` is a basis for a module `M`,
 and `s` is a maximal linearly independent set,
 then the union of the supports of `x ∈ s` (when written out in the basis `b`) is all of `b`.
 -/
--- From [Les familles libres maximales d'un module ont-elles le meme cardinal?][lazarus1973]
 theorem union_support_maximal_linear_independent_eq_range_basis {ι : Type w} (b : Basis ι R M) {κ : Type w'} (v : κ → M)
     (i : LinearIndependent R v) (m : i.Maximal) : (⋃ k, ((b.repr (v k)).support : Set ι)) = univ := by
   -- If that's not the case,
@@ -407,12 +407,12 @@ theorem infinite_basis_le_maximal_linear_independent' {ι : Type w} (b : Basis �
   have w₂ : Cardinal.lift.{w'} (# (Set.Range Φ)) ≤ Cardinal.lift.{w} (# κ) := Cardinal.mk_range_le_lift
   exact (cardinal.lift_le.mpr w₁).trans w₂
 
+-- (See `infinite_basis_le_maximal_linear_independent'` for the more general version
+-- where the index types can live in different universes.)
 /-- Over any ring `R`, if `b` is an infinite basis for a module `M`,
 and `s` is a maximal linearly independent set,
 then the cardinality of `b` is bounded by the cardinality of `s`.
 -/
--- (See `infinite_basis_le_maximal_linear_independent'` for the more general version
--- where the index types can live in different universes.)
 theorem infinite_basis_le_maximal_linear_independent {ι : Type w} (b : Basis ι R M) [Infinite ι] {κ : Type w}
     (v : κ → M) (i : LinearIndependent R v) (m : i.Maximal) : # ι ≤ # κ :=
   Cardinal.lift_le.mp (infinite_basis_le_maximal_linear_independent' b v i m)
@@ -551,11 +551,11 @@ theorem basis_le_span' {ι : Type _} (b : Basis ι R M) {w : Set M} [Fintype w] 
   simp only [← Cardinal.nat_cast_le]
   exact Basis.le_span'' b s
 
+-- Note that if `R` satisfies the strong rank condition,
+-- this also follows from `linear_independent_le_span` below.
 /-- If `R` satisfies the rank condition,
 then the cardinality of any basis is bounded by the cardinality of any spanning set.
 -/
--- Note that if `R` satisfies the strong rank condition,
--- this also follows from `linear_independent_le_span` below.
 theorem Basis.le_span {J : Set M} (v : Basis ι R M) (hJ : span R J = ⊤) : # (Range v) ≤ # J := by
   haveI := nontrivial_of_invariant_basis_number R
   cases fintypeOrInfinite J
@@ -701,6 +701,7 @@ theorem Basis.card_le_card_of_linear_independent_aux {R : Type _} [Ringₓ R] [S
     (v : Finₓ m → Finₓ n → R) : LinearIndependent R v → m ≤ n := fun h => by
   simpa using linear_independent_le_basis (Pi.basisFun R (Finₓ n)) v h
 
+-- When the basis is not infinite this need not be true!
 /-- Over any ring `R` satisfying the strong rank condition,
 if `b` is an infinite basis for a module `M`,
 then every maximal linearly independent set has the same cardinality as `b`.
@@ -708,7 +709,6 @@ then every maximal linearly independent set has the same cardinality as `b`.
 This proof (along with some of the lemmas above) comes from
 [Les familles libres maximales d'un module ont-elles le meme cardinal?][lazarus1973]
 -/
--- When the basis is not infinite this need not be true!
 theorem maximal_linear_independent_eq_infinite_basis {ι : Type _} (b : Basis ι R M) [Infinite ι] {κ : Type _}
     (v : κ → M) (i : LinearIndependent R v) (m : i.Maximal) : # κ = # ι := by
   apply le_antisymmₓ

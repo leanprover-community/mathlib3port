@@ -24,8 +24,8 @@ variable {α β : Type _}
 
 namespace Function
 
-/-- Pullback a `linear_ordered_semifield` under an injective map. -/
 -- See note [reducible non-instances]
+/-- Pullback a `linear_ordered_semifield` under an injective map. -/
 @[reducible]
 def Injective.linearOrderedSemifield [LinearOrderedSemifield α] [Zero β] [One β] [Add β] [Mul β] [Pow β ℕ] [HasSmul ℕ β]
     [HasNatCast β] [Inv β] [Div β] [Pow β ℤ] [HasSup β] [HasInf β] (f : β → α) (hf : Injective f) (zero : f 0 = 0)
@@ -37,8 +37,8 @@ def Injective.linearOrderedSemifield [LinearOrderedSemifield α] [Zero β] [One 
   { hf.LinearOrderedSemiring f zero one add mul nsmul npow nat_cast hsup hinf,
     hf.Semifield f zero one add mul inv div nsmul npow zpow nat_cast with }
 
-/-- Pullback a `linear_ordered_field` under an injective map. -/
 -- See note [reducible non-instances]
+/-- Pullback a `linear_ordered_field` under an injective map. -/
 @[reducible]
 def Injective.linearOrderedField [LinearOrderedField α] [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [Pow β ℕ]
     [HasSmul ℕ β] [HasSmul ℤ β] [HasSmul ℚ β] [HasNatCast β] [HasIntCast β] [HasRatCast β] [Inv β] [Div β] [Pow β ℤ]
@@ -847,10 +847,10 @@ theorem max_div_div_right_of_nonpos (hc : c ≤ 0) (a b : α) : max (a / c) (b /
   Eq.symm <| Antitone.map_min fun x y => div_le_div_of_nonpos_of_le hc
 
 theorem abs_inv (a : α) : abs a⁻¹ = (abs a)⁻¹ :=
-  (absHom : α →*₀ α).map_inv a
+  map_inv₀ (absHom : α →*₀ α) a
 
 theorem abs_div (a b : α) : abs (a / b) = abs a / abs b :=
-  (absHom : α →*₀ α).map_div a b
+  map_div₀ (absHom : α →*₀ α) a b
 
 theorem abs_one_div (a : α) : abs (1 / a) = 1 / abs a := by
   rw [abs_div, abs_one]

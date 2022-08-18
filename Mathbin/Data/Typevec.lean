@@ -309,8 +309,8 @@ theorem typevec_cases_cons₂_append_fun (n : ℕ) (t t' : Type _) (v v' : Typev
     (F : ∀ (f : t → t') (fs : v ⟹ v'), β (fs ::: f)) (f fs) : typevecCasesCons₂ n t t' v v' F (fs ::: f) = F f fs :=
   rfl
 
-/-- `pred_last α p x` predicates `p` of the last element of `x : α.append1 β`. -/
 -- for lifting predicates and relations
+/-- `pred_last α p x` predicates `p` of the last element of `x : α.append1 β`. -/
 def PredLast (α : Typevec n) {β : Type _} (p : β → Prop) : ∀ ⦃i⦄, (α.Append1 β) i → Prop
   | Fin2.fs i => fun x => True
   | Fin2.fz => p

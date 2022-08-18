@@ -108,6 +108,22 @@ example (α : Type u) [SemilatticeSup α] [OrderBot α] : IsFiltered α := by
 example (α : Type u) [SemilatticeSup α] [OrderTop α] : IsFiltered α := by
   infer_instance
 
+instance : IsFiltered (Discrete PUnit) where
+  cocone_objs := fun X Y =>
+    ⟨⟨PUnit.unit⟩,
+      ⟨⟨by
+          decide⟩⟩,
+      ⟨⟨by
+          decide⟩⟩,
+      trivialₓ⟩
+  cocone_maps := fun X Y f g =>
+    ⟨⟨PUnit.unit⟩,
+      ⟨⟨by
+          decide⟩⟩,
+      by
+      decide⟩
+  Nonempty := ⟨⟨PUnit.unit⟩⟩
+
 namespace IsFiltered
 
 variable {C} [IsFiltered C]
@@ -482,6 +498,22 @@ example (α : Type u) [SemilatticeInf α] [OrderBot α] : IsCofiltered α := by
 
 example (α : Type u) [SemilatticeInf α] [OrderTop α] : IsCofiltered α := by
   infer_instance
+
+instance : IsCofiltered (Discrete PUnit) where
+  cocone_objs := fun X Y =>
+    ⟨⟨PUnit.unit⟩,
+      ⟨⟨by
+          decide⟩⟩,
+      ⟨⟨by
+          decide⟩⟩,
+      trivialₓ⟩
+  cocone_maps := fun X Y f g =>
+    ⟨⟨PUnit.unit⟩,
+      ⟨⟨by
+          decide⟩⟩,
+      by
+      decide⟩
+  Nonempty := ⟨⟨PUnit.unit⟩⟩
 
 namespace IsCofiltered
 

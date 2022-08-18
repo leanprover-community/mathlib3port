@@ -128,12 +128,6 @@ localized [Manifold] infixr:100 " ≫ₕ " => LocalHomeomorph.trans
 -- mathport name: «expr ≫ »
 localized [Manifold] infixr:100 " ≫ " => LocalEquiv.trans
 
-localized [/- `simp` looks for subsingleton instances at every call. This turns out to be very
-inefficient, especially in `simp`-heavy parts of the library such as the manifold code.
-Disable two such instances to speed up things.
-NB: this is just a hack. TODO: fix `simp` properly. -/
-Manifold] attribute [-instance] Unique.subsingleton Pi.subsingleton
-
 open Set LocalHomeomorph
 
 /-! ### Structure groupoids-/

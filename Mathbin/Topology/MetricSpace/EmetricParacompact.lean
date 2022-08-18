@@ -31,9 +31,9 @@ open Set
 namespace Emetric
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
+-- See note [lower instance priority]
 /-- A `pseudo_emetric_space` is always a paracompact space. Formalization is based
 on [MR0236876]. -/
--- See note [lower instance priority]
 instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
   classical
   /- We start with trivial observations about `1 / 2 ^ k`. Here and below we use `1 / 2 ^ k` in
@@ -49,7 +49,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
   simp only [← Union_eq_univ_iff] at hcov
   -- choose a well founded order on `S`
   letI : LinearOrderₓ ι := linearOrderOfSTO' WellOrderingRel
-  have wf : WellFounded ((· < ·) : ι → ι → Prop) := @IsWellOrder.wf ι WellOrderingRel _
+  have wf : WellFounded ((· < ·) : ι → ι → Prop) := @IsWellFounded.wf ι WellOrderingRel _
   -- Let `ind x` be the minimal index `s : S` such that `x ∈ s`.
   set ind : α → ι := fun x => wf.min { i : ι | x ∈ s i } (hcov x)
   have mem_ind : ∀ x, x ∈ s (ind x) := fun x => wf.min_mem _ (hcov x)

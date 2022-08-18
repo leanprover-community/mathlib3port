@@ -631,8 +631,7 @@ theorem mul_self_lt_mul_self_iff {n m : ℕ} : n < m ↔ n * n < m * m :=
 theorem le_mul_self : ∀ n : ℕ, n ≤ n * n
   | 0 => le_rfl
   | n + 1 => by
-    let t := Nat.mul_le_mul_leftₓ (n + 1) (succ_posₓ n)
-    simp at t <;> exact t
+    simp
 
 theorem le_mul_of_pos_left {m n : ℕ} (h : 0 < n) : m ≤ n * m := by
   conv => lhs rw [← one_mulₓ m]
@@ -1100,8 +1099,8 @@ protected theorem lt_div_iff_mul_lt {n d : ℕ} (hnd : d ∣ n) (a : ℕ) : a < 
 protected theorem mul_div_cancel_left' {a b : ℕ} (Hd : a ∣ b) : a * (b / a) = b := by
   rw [mul_comm, Nat.div_mul_cancelₓ Hd]
 
-/-- Alias of `nat.mul_div_mul` -/
 --TODO: Update `nat.mul_div_mul` in the core?
+/-- Alias of `nat.mul_div_mul` -/
 protected theorem mul_div_mul_left (a b : ℕ) {c : ℕ} (hc : 0 < c) : c * a / (c * b) = a / b :=
   Nat.mul_div_mulₓ a b hc
 

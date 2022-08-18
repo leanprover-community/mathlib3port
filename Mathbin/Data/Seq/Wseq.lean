@@ -11,6 +11,12 @@ open Function
 
 universe u v w
 
+/-
+coinductive wseq (α : Type u) : Type u
+| nil : wseq α
+| cons : α → wseq α → wseq α
+| think : wseq α → wseq α
+-/
 /-- Weak sequences.
 
   While the `seq` structure allows for lists which may not be finite,
@@ -22,12 +28,6 @@ universe u v w
   This model is appropriate for Haskell style lazy lists, and is closed
   under most interesting computation patterns on infinite lists,
   but conversely it is difficult to extract elements from it. -/
-/-
-coinductive wseq (α : Type u) : Type u
-| nil : wseq α
-| cons : α → wseq α → wseq α
-| think : wseq α → wseq α
--/
 def Wseq (α) :=
   Seqₓₓ (Option α)
 
@@ -205,8 +205,8 @@ def filterMap (f : α → Option β) : Wseq α → Wseq β :=
 def filter (p : α → Prop) [DecidablePred p] : Wseq α → Wseq α :=
   filterMap fun a => if p a then some a else none
 
-/-- Get the first element of `s` satisfying `p`. -/
 -- example of infinite list manipulations
+/-- Get the first element of `s` satisfying `p`. -/
 def find (p : α → Prop) [DecidablePred p] (s : Wseq α) : Computation (Option α) :=
   head <| filter p s
 

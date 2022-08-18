@@ -113,8 +113,8 @@ theorem associativity (X Y Z : Type u) :
   simp_rw [finsupp_tensor_finsupp'_single_tmul_single, Finsupp.map_domain_single, mul_oneₓ,
     CategoryTheory.associator_hom_apply]
 
-/-- The free R-module functor is lax monoidal. -/
 -- In fact, it's strong monoidal, but we don't yet have a typeclass for that.
+/-- The free R-module functor is lax monoidal. -/
 @[simps]
 instance : LaxMonoidal.{u} (free R).obj where
   -- Send `R` to `punit →₀ R`

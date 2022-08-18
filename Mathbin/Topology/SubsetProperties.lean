@@ -757,8 +757,8 @@ instance : NoncompactSpace ℤ :=
   noncompact_space_of_ne_bot <| by
     simp only [← Filter.cocompact_eq_cofinite, ← Filter.cofinite_ne_bot]
 
-/-- A compact discrete space is finite. -/
 -- Note: We can't make this into an instance because it loops with `finite.compact_space`.
+/-- A compact discrete space is finite. -/
 theorem finite_of_compact_of_discrete [CompactSpace α] [DiscreteTopology α] : Finite α :=
   Finite.of_finite_univ <| compact_univ.finite_of_discrete
 

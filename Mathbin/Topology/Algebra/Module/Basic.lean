@@ -414,8 +414,8 @@ instance : ContinuousSemilinearMapClass (M₁ →SL[σ₁₂] M₂) σ₁₂ M�
   map_continuous := fun f => f.2
   map_smulₛₗ := fun f => f.toLinearMap.map_smul'
 
-/-- Coerce continuous linear maps to functions. -/
 -- see Note [function coercion]
+/-- Coerce continuous linear maps to functions. -/
 instance toFun : CoeFun (M₁ →SL[σ₁₂] M₂) fun _ => M₁ → M₂ :=
   ⟨fun f => f.toFun⟩
 
@@ -1580,8 +1580,8 @@ instance : ContinuousSemilinearEquivClass (M₁ ≃SL[σ₁₂] M₂) σ₁₂ M
   map_continuous := continuous_to_fun
   inv_continuous := continuous_inv_fun
 
-/-- Coerce continuous linear equivs to maps. -/
 -- see Note [function coercion]
+/-- Coerce continuous linear equivs to maps. -/
 instance : CoeFun (M₁ ≃SL[σ₁₂] M₂) fun _ => M₁ → M₂ :=
   ⟨fun f => f⟩
 

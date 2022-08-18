@@ -26,8 +26,8 @@ open Set Filter
 
 variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
-/-- Uniform isomorphism between `α` and `β` -/
 -- not all spaces are homeomorphic to each other
+/-- Uniform isomorphism between `α` and `β` -/
 @[nolint has_nonempty_instance]
 structure UniformEquiv (α : Type _) (β : Type _) [UniformSpace α] [UniformSpace β] extends α ≃ β where
   uniform_continuous_to_fun : UniformContinuous to_fun

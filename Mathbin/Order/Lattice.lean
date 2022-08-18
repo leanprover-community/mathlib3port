@@ -71,10 +71,10 @@ end
 -/
 
 
+-- TODO: automatic construction of dual definitions / theorems
 /-- A `semilattice_sup` is a join-semilattice, that is, a partial order
   with a join (a.k.a. lub / least upper bound, sup / supremum) operation
   `⊔` which is the least element larger than both factors. -/
--- TODO: automatic construction of dual definitions / theorems
 class SemilatticeSup (α : Type u) extends HasSup α, PartialOrderₓ α where
   le_sup_left : ∀ a b : α, a ≤ a⊔b
   le_sup_right : ∀ a b : α, b ≤ a⊔b
@@ -711,8 +711,8 @@ theorem eq_of_inf_eq_sup_eq {α : Type u} [DistribLattice α] {a b c : α} (h₁
 
 end DistribLattice
 
-/-- Prove distributivity of an existing lattice from the dual distributive law. -/
 -- See note [reducible non-instances]
+/-- Prove distributivity of an existing lattice from the dual distributive law. -/
 @[reducible]
 def DistribLattice.ofInfSupLe [Lattice α] (inf_sup_le : ∀ a b c : α, a⊓(b⊔c) ≤ a⊓b⊔a⊓c) : DistribLattice α :=
   { ‹Lattice α›, @OrderDual.distribLattice αᵒᵈ { OrderDual.lattice _ with le_sup_inf := inf_sup_le } with }

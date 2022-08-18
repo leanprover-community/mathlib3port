@@ -615,10 +615,10 @@ namespace QuotientGroup
 
 variable [Groupₓ α]
 
+-- FIXME -- why is there no `to_additive`?
 /-- If `s` is a subgroup of the group `α`, and `t` is a subset of `α/s`, then
 there is a (typically non-canonical) bijection between the preimage of `t` in
 `α` and the product `s × t`. -/
--- FIXME -- why is there no `to_additive`?
 noncomputable def preimageMkEquivSubgroupTimesSet (s : Subgroup α) (t : Set (α ⧸ s)) : QuotientGroup.mk ⁻¹' t ≃ s × t :=
   have h :
     ∀ {x : α ⧸ s} {a : α},

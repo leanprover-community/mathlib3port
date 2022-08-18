@@ -258,7 +258,7 @@ theorem eq_pure_of_finite_mem (h : s.Finite) (h' : s ∈ f) : ∃ x ∈ s, (f : 
   change (f : Filter α) ≤ pure a
   rwa [← principal_singleton, le_principal_iff]
 
-theorem eq_pure_of_fintype [Fintype α] (f : Ultrafilter α) : ∃ a, (f : Filter α) = pure a :=
+theorem eq_pure_of_finite [Finite α] (f : Ultrafilter α) : ∃ a, (f : Filter α) = pure a :=
   (eq_pure_of_finite_mem finite_univ univ_mem).imp fun a ⟨_, ha⟩ => ha
 
 /-- Monadic bind for ultrafilters, coming from the one on filters

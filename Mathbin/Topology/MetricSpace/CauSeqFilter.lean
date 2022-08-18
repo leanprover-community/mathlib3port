@@ -94,9 +94,9 @@ theorem CauSeq.cauchy_seq (f : CauSeq β norm) : CauchySeq f := by
 theorem cau_seq_iff_cauchy_seq {α : Type u} [NormedField α] {u : ℕ → α} : IsCauSeq norm u ↔ CauchySeq u :=
   ⟨fun h => CauSeq.cauchy_seq ⟨u, h⟩, fun h => h.IsCauSeq⟩
 
+-- see Note [lower instance priority]
 /-- A complete normed field is complete as a metric space, as Cauchy sequences converge by
 assumption and this suffices to characterize completeness. -/
--- see Note [lower instance priority]
 instance (priority := 100) complete_space_of_cau_seq_complete [CauSeq.IsComplete β norm] : CompleteSpace β := by
   apply complete_of_cauchy_seq_tendsto
   intro u hu

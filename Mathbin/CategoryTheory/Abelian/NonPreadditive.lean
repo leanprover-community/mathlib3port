@@ -323,22 +323,22 @@ theorem σ_comp {X Y : C} (f : X ⟶ Y) : σ ≫ f = Limits.prod.map f f ≫ σ 
 
 section
 
-/-- Subtraction of morphisms in a `non_preadditive_abelian` category. -/
 -- We write `f - g` for `prod.lift f g ≫ σ`.
+/-- Subtraction of morphisms in a `non_preadditive_abelian` category. -/
 def hasSub {X Y : C} : Sub (X ⟶ Y) :=
   ⟨fun f g => prod.lift f g ≫ σ⟩
 
 attribute [local instance] Sub
 
-/-- Negation of morphisms in a `non_preadditive_abelian` category. -/
 -- We write `-f` for `0 - f`.
+/-- Negation of morphisms in a `non_preadditive_abelian` category. -/
 def hasNeg {X Y : C} : Neg (X ⟶ Y) :=
   ⟨fun f => 0 - f⟩
 
 attribute [local instance] Neg
 
-/-- Addition of morphisms in a `non_preadditive_abelian` category. -/
 -- We write `f + g` for `f - (-g)`.
+/-- Addition of morphisms in a `non_preadditive_abelian` category. -/
 def hasAdd {X Y : C} : Add (X ⟶ Y) :=
   ⟨fun f g => f - -g⟩
 

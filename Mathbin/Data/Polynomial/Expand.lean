@@ -9,6 +9,13 @@ import Mathbin.Tactic.RingExp
 
 /-!
 # Expand a polynomial by a factor of p, so `∑ aₙ xⁿ` becomes `∑ aₙ xⁿᵖ`.
+
+## Main definitions
+
+* `polynomial.expand R p f`: expand the polynomial `f` with coefficients in a
+  commutative semiring `R` by a factor of p, so `expand R p (∑ aₙ xⁿ)` is `∑ aₙ xⁿᵖ`.
+* `polynomial.contract p f`: the opposite of `expand`, so it sends `∑ aₙ xⁿᵖ` to `∑ aₙ xⁿ`.
+
 -/
 
 
@@ -125,6 +132,9 @@ theorem expand_inj {p : ℕ} (hp : 0 < p) {f g : R[X]} : expand R p f = expand R
 theorem expand_eq_zero {p : ℕ} (hp : 0 < p) {f : R[X]} : expand R p f = 0 ↔ f = 0 := by
   rw [← (expand R p).map_zero, expand_inj hp, AlgHom.map_zero]
 
+theorem expand_ne_zero {p : ℕ} (hp : 0 < p) {f : R[X]} : expand R p f ≠ 0 ↔ f ≠ 0 :=
+  (expand_eq_zero hp).Not
+
 theorem expand_eq_C {p : ℕ} (hp : 0 < p) {f : R[X]} {r : R} : expand R p f = c r ↔ f = c r := by
   rw [← expand_C, expand_inj hp, expand_C]
 
@@ -185,6 +195,17 @@ theorem expand_eval (p : ℕ) (P : R[X]) (r : R) : eval r (expand R p P) = eval 
       (fun f g hf hg => _) fun n a h => by
       simp
   rw [AlgHom.map_add, eval_add, eval_add, hf, hg]
+
+@[simp]
+theorem expand_aeval {A : Type _} [Semiringₓ A] [Algebra R A] (p : ℕ) (P : R[X]) (r : A) :
+    aeval r (expand R p P) = aeval (r ^ p) P := by
+  refine'
+    Polynomial.induction_on P
+      (fun a => by
+        simp )
+      (fun f g hf hg => _) fun n a h => by
+      simp
+  rw [AlgHom.map_add, aeval_add, aeval_add, hf, hg]
 
 /-- The opposite of `expand`: sends `∑ aₙ xⁿᵖ` to `∑ aₙ xⁿ`. -/
 noncomputable def contract (p : ℕ) (f : R[X]) : R[X] :=

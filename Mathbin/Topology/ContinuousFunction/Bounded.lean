@@ -448,11 +448,11 @@ variable {f g : α →ᵇ β} {x : α} {C : ℝ}
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y z «expr ∈ » U)
 -- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y z «expr ∈ » U)
-/-- First version, with pointwise equicontinuity and range in a compact space -/
 /- Arzela-Ascoli theorem asserts that, on a compact space, a set of functions sharing
 a common modulus of continuity and taking values in a compact set forms a compact
 subset for the topology of uniform convergence. In this section, we prove this theorem
 and several useful variations around it. -/
+/-- First version, with pointwise equicontinuity and range in a compact space -/
 theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : IsClosed A)
     (H : ∀ (x : α), ∀ ε > 0, ∀, ∃ U ∈ 𝓝 x, ∀ (y z) (_ : y ∈ U) (_ : z ∈ U) (f : α →ᵇ β), f ∈ A → dist (f y) (f z) < ε) :
     IsCompact A := by
@@ -1132,11 +1132,11 @@ variable [SeminormedAddCommGroup γ] [NormedSpace 𝕜 γ]
 
 variable (α)
 
+-- TODO does this work in the `has_bounded_smul` setting, too?
 /-- Postcomposition of bounded continuous functions into a normed module by a continuous linear map is
 a continuous linear map.
 Upgraded version of `continuous_linear_map.comp_left_continuous`, similar to
 `linear_map.comp_left`. -/
--- TODO does this work in the `has_bounded_smul` setting, too?
 protected def _root_.continuous_linear_map.comp_left_continuous_bounded (g : β →L[𝕜] γ) : (α →ᵇ β) →L[𝕜] α →ᵇ γ :=
   LinearMap.mkContinuous
     { toFun := fun f =>

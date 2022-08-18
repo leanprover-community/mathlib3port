@@ -180,6 +180,7 @@ def partialOrderOfSO (r) [IsStrictOrder α r] : PartialOrderₓ α where
           (asymm h)⟩,
       fun ⟨h₁, h₂⟩ => h₁.resolve_left fun e => h₂ <| e ▸ Or.inl rfl⟩
 
+-- TODO: This is now exactly the same as `is_strict_total_order`, remove.
 /-- This is basically the same as `is_strict_total_order`, but that definition has a redundant
 assumption `is_incomp_trans α lt`. -/
 @[algebra]
@@ -232,8 +233,18 @@ instance (priority := 100) is_order_connected_of_is_strict_total_order' [IsStric
 
 -- see Note [lower instance priority]
 instance (priority := 100) is_strict_total_order_of_is_strict_total_order' [IsStrictTotalOrder' α r] :
-    IsStrictTotalOrder α r :=
+    IsStrictTotalOrder α r where
+
+-- see Note [lower instance priority]
+instance (priority := 100) is_strict_weak_order_of_is_strict_total_order' [IsStrictTotalOrder' α r] :
+    IsStrictWeakOrder α r :=
   { is_strict_weak_order_of_is_order_connected with }
+
+-- see Note [lower instance priority]
+instance (priority := 100) is_strict_weak_order_of_is_strict_total_order [IsStrictTotalOrder α r] :
+    IsStrictWeakOrder α r := by
+  haveI : IsStrictTotalOrder' α r := {  }
+  infer_instance
 
 /-! ### Well-order -/
 
@@ -311,8 +322,11 @@ theorem well_founded_lt_dual_iff (α : Type _) [LT α] : WellFoundedLt αᵒᵈ 
 
 /-- A well order is a well-founded linear order. -/
 @[algebra]
-class IsWellOrder (α : Type u) (r : α → α → Prop) extends IsStrictTotalOrder' α r : Prop where
-  wf : WellFounded r
+class IsWellOrder (α : Type u) (r : α → α → Prop) extends IsTrichotomous α r, IsTrans α r, IsWellFounded α r : Prop
+
+-- see Note [lower instance priority]
+instance (priority := 100) IsWellOrder.is_strict_total_order' {α} (r : α → α → Prop) [IsWellOrder α r] :
+    IsStrictTotalOrder' α r where
 
 -- see Note [lower instance priority]
 instance (priority := 100) IsWellOrder.is_strict_total_order {α} (r : α → α → Prop) [IsWellOrder α r] :
@@ -411,7 +425,6 @@ instance EmptyRelation.is_well_order [Subsingleton α] : IsWellOrder α EmptyRel
 
 instance (priority := 100) IsEmpty.is_well_order [IsEmpty α] (r : α → α → Prop) : IsWellOrder α r where
   trichotomous := isEmptyElim
-  irrefl := isEmptyElim
   trans := isEmptyElim
   wf := well_founded_of_empty r
 
@@ -429,8 +442,6 @@ instance Prod.Lex.is_well_order [IsWellOrder α r] [IsWellOrder β s] : IsWellOr
         | Or.inl h => Or.inl <| Prod.Lex.right _ h
         | Or.inr (Or.inr h) => Or.inr <| Or.inr <| Prod.Lex.right _ h
         | Or.inr (Or.inl e) => e ▸ Or.inr <| Or.inl rfl
-  irrefl := fun ⟨a₁, a₂⟩ h => by
-    cases' h with _ _ _ _ h _ _ _ h <;> [exact irrefl _ h, exact irrefl _ h]
   trans := fun a b c h₁ h₂ => by
     cases' h₁ with a₁ a₂ b₁ b₂ ab a₁ b₁ b₂ ab <;> cases' h₂ with _ _ c₁ c₂ bc _ _ c₂ bc
     · exact Prod.Lex.left _ _ (trans ab bc)
@@ -441,7 +452,7 @@ instance Prod.Lex.is_well_order [IsWellOrder α r] [IsWellOrder β s] : IsWellOr
       
     · exact Prod.Lex.right _ (trans ab bc)
       
-  wf := Prod.lex_wf IsWellOrder.wf IsWellOrder.wf
+  wf := Prod.lex_wf IsWellFounded.wf IsWellFounded.wf
 
 instance InvImage.is_well_founded (r : α → α → Prop) [IsWellFounded α r] (f : β → α) : IsWellFounded _ (InvImage r f) :=
   ⟨InvImage.wfₓ f IsWellFounded.wf⟩
@@ -789,8 +800,7 @@ instance OrderDual.is_total_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal αᵒ�
 instance : WellFoundedLt ℕ :=
   ⟨Nat.lt_wf⟩
 
-instance Nat.Lt.is_well_order : IsWellOrder ℕ (· < ·) :=
-  ⟨Nat.lt_wf⟩
+instance Nat.Lt.is_well_order : IsWellOrder ℕ (· < ·) where
 
 instance [LinearOrderₓ α] [h : IsWellOrder α (· < ·)] : IsWellOrder αᵒᵈ (· > ·) :=
   h

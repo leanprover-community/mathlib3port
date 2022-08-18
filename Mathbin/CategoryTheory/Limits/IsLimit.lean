@@ -86,8 +86,8 @@ theorem map_π {F G : J ⥤ C} (c : Cone F) {d : Cone G} (hd : IsLimit d) (α : 
 theorem lift_self {c : Cone F} (t : IsLimit c) : t.lift c = 𝟙 c.x :=
   (t.uniq _ _ fun j => id_comp _).symm
 
-/-- The universal morphism from any other cone to a limit cone. -/
 -- Repackaging the definition in terms of cone morphisms.
+/-- The universal morphism from any other cone to a limit cone. -/
 @[simps]
 def liftConeMorphism {t : Cone F} (h : IsLimit t) (s : Cone F) : s ⟶ t where Hom := h.lift s
 
@@ -544,8 +544,8 @@ theorem ι_map {F G : J ⥤ C} {c : Cocone F} (hc : IsColimit c) (d : Cocone G) 
 theorem desc_self {t : Cocone F} (h : IsColimit t) : h.desc t = 𝟙 t.x :=
   (h.uniq _ _ fun j => comp_id _).symm
 
-/-- The universal morphism from a colimit cocone to any other cocone. -/
 -- Repackaging the definition in terms of cocone morphisms.
+/-- The universal morphism from a colimit cocone to any other cocone. -/
 @[simps]
 def descCoconeMorphism {t : Cocone F} (h : IsColimit t) (s : Cocone F) : t ⟶ s where Hom := h.desc s
 

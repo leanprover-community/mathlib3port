@@ -1440,8 +1440,8 @@ theorem disjoint_Sup_right {a : Set α} {b : α} (d : Disjoint b (sup a)) {i} (h
 
 end CompleteLattice
 
-/-- Pullback a `complete_lattice` along an injection. -/
 -- See note [reducible non-instances]
+/-- Pullback a `complete_lattice` along an injection. -/
 @[reducible]
 protected def Function.Injective.completeLattice [HasSup α] [HasInf α] [HasSupₓ α] [HasInfₓ α] [HasTop α] [HasBot α]
     [CompleteLattice β] (f : α → β) (hf : Function.Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b)

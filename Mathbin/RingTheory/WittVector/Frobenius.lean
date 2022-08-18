@@ -117,7 +117,6 @@ in terms of the coefficients of `x`. -/
 def frobeniusPoly (n : ℕ) : MvPolynomial ℕ ℤ :=
   x n ^ p + c ↑p * frobeniusPolyAux p n
 
-/-- A key divisibility fact for the proof of `witt_vector.map_frobenius_poly`. -/
 /-
 Our next goal is to prove
 ```
@@ -127,6 +126,7 @@ lemma map_frobenius_poly (n : ℕ) :
 This lemma has a rather long proof, but it mostly boils down to applying induction,
 and then using the following two key facts at the right point.
 -/
+/-- A key divisibility fact for the proof of `witt_vector.map_frobenius_poly`. -/
 theorem MapFrobeniusPoly.key₁ (n j : ℕ) (hj : j < p ^ n) : p ^ (n - v p ⟨j + 1, j.succ_pos⟩) ∣ (p ^ n).choose (j + 1) :=
   by
   apply multiplicity.pow_dvd_of_le_multiplicity

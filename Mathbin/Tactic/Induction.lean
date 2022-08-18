@@ -180,13 +180,13 @@ unsafe structure major_premise_info where
   type : expr
   args : rb_map ℕ expr
 
-/-- `index_occurrence_type_match t s` is true iff `t` and `s` are definitionally
-equal.
--/
 -- We could extend this check to be more permissive. E.g. if a constructor
 -- argument has type `list α` and the index has type `list β`, we may want to
 -- consider these types sufficiently similar to inherit the name. Same (but even
 -- more obvious) with `vec α n` and `vec α (n + 1)`.
+/-- `index_occurrence_type_match t s` is true iff `t` and `s` are definitionally
+equal.
+-/
 unsafe def index_occurrence_type_match (t s : expr) : tactic Bool :=
   succeeds <| is_def_eq t s
 
@@ -669,6 +669,16 @@ index argument. To generalise it, we replace it with a new hypothesis
 -/
 
 
+/-
+TODO The following function currently replaces complex index arguments
+everywhere in the goal, not only in the major premise. Such replacements are
+sometimes necessary to make sure that the goal remains type-correct. However,
+the replacements can also have the opposite effect, yielding unprovable
+subgoals. The test suite contains one such case. There is probably a middle
+ground between 'replace everywhere' and 'replace only in the major premise', but
+I don't know what exactly this middle ground is. See also the discussion at
+https://github.com/leanprover-community/mathlib/pull/5027#discussion_r538902424
+-/
 /-- Generalise the complex index arguments.
 
 Input:
@@ -686,16 +696,6 @@ Output:
 - The index placeholder hypotheses we introduced.
 - The number of hypotheses which were reverted because they contain complex
   indices.
--/
-/-
-TODO The following function currently replaces complex index arguments
-everywhere in the goal, not only in the major premise. Such replacements are
-sometimes necessary to make sure that the goal remains type-correct. However,
-the replacements can also have the opposite effect, yielding unprovable
-subgoals. The test suite contains one such case. There is probably a middle
-ground between 'replace everywhere' and 'replace only in the major premise', but
-I don't know what exactly this middle ground is. See also the discussion at
-https://github.com/leanprover-community/mathlib/pull/5027#discussion_r538902424
 -/
 unsafe def generalize_complex_index_args (major_premise : expr) (num_params : ℕ) (generate_induction_hyps : Bool) :
     tactic (expr × ℕ × List Name × ℕ) :=
@@ -857,6 +857,17 @@ unsafe def assign_locals_to_unassigned_mvars (mvars : List (expr × Name × Bind
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 -- ./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+/-
+TODO `simplify_ih` currently uses Lean's builtin unification procedure to
+process the index equations. This procedure has some limitations. For example,
+we would like to clear an IH that assumes `0 = 1` since this IH can never be
+applied, but Lean's unification doesn't allow us to conclude this.
+
+It would therefore be preferable to use the algorithm from
+`tactic.unify_equations` instead. There is no problem with this in principle,
+but it requires a complete refactoring of `unify_equations` so that it works
+not only on hypotheses but on arbitrary terms.
+-/
 /-- Simplify an induction hypothesis.
 
 Input: a local constant
@@ -885,17 +896,6 @@ proceed as follows:
 - If `yᵢ` and `zᵢ` are not defeq but their types are, then `eqᵢ` is replaced by
   `eq'ᵢ : x = y`.
 - Otherwise `eqᵢ` remains unchanged.
--/
-/-
-TODO `simplify_ih` currently uses Lean's builtin unification procedure to
-process the index equations. This procedure has some limitations. For example,
-we would like to clear an IH that assumes `0 = 1` since this IH can never be
-applied, but Lean's unification doesn't allow us to conclude this.
-
-It would therefore be preferable to use the algorithm from
-`tactic.unify_equations` instead. There is no problem with this in principle,
-but it requires a complete refactoring of `unify_equations` so that it works
-not only on hypotheses but on arbitrary terms.
 -/
 unsafe def simplify_ih (num_leading_pis : ℕ) (num_generalized : ℕ) (num_index_vars : ℕ) (ih : expr) : tactic expr := do
   let T ← infer_type ih
@@ -950,12 +950,12 @@ to Lean's standard library.
 -/
 
 
+-- TODO Copied from init.meta.interactive. Make that function non-private.
 /-- Updates the tags of new subgoals produced by `cases` or `induction`. `in_tag`
   is the initial tag, i.e. the tag of the goal on which `cases`/`induction` was
   applied. `rs` should contain, for each subgoal, the constructor name
   associated with that goal and the hypotheses that were introduced.
 -/
--- TODO Copied from init.meta.interactive. Make that function non-private.
 unsafe def set_cases_tags (in_tag : Tag) (rs : List (Name × List expr)) : tactic Unit := do
   let gs ← get_goals
   match gs with

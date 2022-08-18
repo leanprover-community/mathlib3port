@@ -199,9 +199,9 @@ theorem ofComponents.app (app' : ∀ X : C, F.obj X ≅ G.obj X) (naturality) (X
     (ofComponents app' naturality).app X = app' X := by
   tidy
 
+-- Making this an instance would cause a typeclass inference loop with `is_iso_app_of_is_iso`.
 /-- A natural transformation is an isomorphism if all its components are isomorphisms.
 -/
--- Making this an instance would cause a typeclass inference loop with `is_iso_app_of_is_iso`.
 theorem is_iso_of_is_iso_app (α : F ⟶ G) [∀ X : C, IsIso (α.app X)] : IsIso α :=
   ⟨(IsIso.of_iso
         (ofComponents (fun X => asIso (α.app X))

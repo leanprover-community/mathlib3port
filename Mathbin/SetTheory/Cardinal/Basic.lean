@@ -359,7 +359,7 @@ theorem mk_psum (α : Type u) (β : Type v) : # (PSum α β) = lift.{v} (# α) +
 
 @[simp]
 theorem mk_fintype (α : Type u) [Fintype α] : # α = Fintype.card α := by
-  refine' Fintype.induction_empty_option' _ _ _ α
+  refine' Fintype.induction_empty_option _ _ _ α
   · intro α β h e hα
     letI := Fintype.ofEquiv β e.symm
     rwa [mk_congr e, Fintype.card_congr e] at hα
@@ -618,8 +618,10 @@ protected theorem lt_wf : @WellFounded Cardinal.{u} (· < ·) :=
 instance : HasWellFounded Cardinal.{u} :=
   ⟨(· < ·), Cardinal.lt_wf⟩
 
-instance wo : @IsWellOrder Cardinal.{u} (· < ·) :=
+instance : WellFoundedLt Cardinal.{u} :=
   ⟨Cardinal.lt_wf⟩
+
+instance wo : @IsWellOrder Cardinal.{u} (· < ·) where
 
 instance : ConditionallyCompleteLinearOrderBot Cardinal :=
   IsWellOrder.conditionallyCompleteLinearOrderBot _
@@ -1194,8 +1196,8 @@ theorem encodable_iff {α : Type u} : Nonempty (Encodable α) ↔ # α ≤ ℵ�
     ⟨Encodable.ofInj _ (h.trans Equivₓ.ulift.toEmbedding).Injective⟩⟩
 
 @[simp]
-theorem mk_le_aleph_0 [Encodable α] : # α ≤ ℵ₀ :=
-  encodable_iff.1 ⟨‹_›⟩
+theorem mk_le_aleph_0 [Countable α] : # α ≤ ℵ₀ :=
+  encodable_iff.1 <| Encodable.nonempty_encodable.2 ‹_›
 
 theorem denumerable_iff {α : Type u} : Nonempty (Denumerable α) ↔ # α = ℵ₀ :=
   ⟨fun ⟨h⟩ => mk_congr ((@Denumerable.eqv α h).trans Equivₓ.ulift.symm), fun h => by

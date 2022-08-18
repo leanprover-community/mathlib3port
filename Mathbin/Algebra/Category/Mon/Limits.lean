@@ -60,12 +60,12 @@ def limitπMonoidHom (F : J ⥤ Mon.{max v u}) (j) : (Types.limitCone (F ⋙ for
 
 namespace HasLimits
 
-/-- Construction of a limit cone in `Mon`.
-(Internal use only; use the limits API.)
--/
 -- The next two definitions are used in the construction of `has_limits Mon`.
 -- After that, the limits should be constructed using the generic limits API,
 -- e.g. `limit F`, `limit.cone F`, and `limit.is_limit F`.
+/-- Construction of a limit cone in `Mon`.
+(Internal use only; use the limits API.)
+-/
 @[to_additive "(Internal use only; use the limits API.)"]
 def limitCone (F : J ⥤ Mon.{max v u}) : Cone F where
   x := Mon.of (Types.limitCone (F ⋙ forget _)).x

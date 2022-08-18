@@ -17,9 +17,9 @@ universe v v₁ v₂ v₃ u u₁ u₂ u₃
 
 variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 
-/-- A unbundled functor. -/
 -- Perhaps in the future we could redefine `functor` in terms of this, but that isn't the
 -- immediate plan.
+/-- A unbundled functor. -/
 class Functorial (F : C → D) : Type max v₁ v₂ u₁ u₂ where
   map : ∀ {X Y : C}, (X ⟶ Y) → (F X ⟶ F Y)
   map_id' : ∀ X : C, map (𝟙 X) = 𝟙 (F X) := by
@@ -70,11 +70,11 @@ section
 
 variable {E : Type u₃} [Category.{v₃} E]
 
-/-- `G ∘ F` is a functorial if both `F` and `G` are.
--/
 -- This is no longer viable as an instance in Lean 3.7,
 -- #lint reports an instance loop
 -- Will this be a problem?
+/-- `G ∘ F` is a functorial if both `F` and `G` are.
+-/
 def functorialComp (F : C → D) [Functorial.{v₁, v₂} F] (G : D → E) [Functorial.{v₂, v₃} G] :
     Functorial.{v₁, v₃} (G ∘ F) :=
   { Functor.of F ⋙ Functor.of G with }

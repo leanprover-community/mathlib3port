@@ -239,11 +239,11 @@ theorem coe_cast_hom : ⇑(castHom α) = coe :=
 
 @[simp, norm_cast]
 theorem cast_inv (n) : ((n⁻¹ : ℚ) : α) = n⁻¹ :=
-  (castHom α).map_inv _
+  map_inv₀ (castHom α) _
 
 @[simp, norm_cast]
 theorem cast_div (m n) : ((m / n : ℚ) : α) = m / n :=
-  (castHom α).map_div _ _
+  map_div₀ (castHom α) _ _
 
 @[norm_cast]
 theorem cast_mk (a b : ℤ) : (a /. b : α) = a / b := by
@@ -340,7 +340,7 @@ theorem RingHom.eq_rat_cast {k} [DivisionRing k] (f : ℚ →+* k) (r : ℚ) : f
   calc
     f r = f (r.1 / r.2) := by
       rw [← Int.cast_coe_nat, ← mk_eq_div, num_denom]
-    _ = f r.1 / f r.2 := f.map_div _ _
+    _ = f r.1 / f r.2 := map_div₀ f _ _
     _ = r := by
       rw [map_nat_cast, map_int_cast, cast_def]
     
@@ -388,7 +388,7 @@ theorem ext_rat {f g : ℚ →*₀ M}
     f = g := by
   have same_on_int' : ∀ k : ℤ, f k = g k := congr_fun same_on_int
   ext x
-  rw [← @Rat.num_denom x, Rat.mk_eq_div, f.map_div, g.map_div, same_on_int' x.num, same_on_int' x.denom]
+  rw [← @Rat.num_denom x, Rat.mk_eq_div, map_div₀ f, map_div₀ g, same_on_int' x.num, same_on_int' x.denom]
 
 /-- Positive integer values of a morphism `φ` and its value on `-1` completely determine `φ`. -/
 theorem ext_rat_on_pnat {f g : ℚ →*₀ M} (same_on_neg_one : f (-1) = g (-1))

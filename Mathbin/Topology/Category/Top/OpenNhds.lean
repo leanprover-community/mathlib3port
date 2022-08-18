@@ -92,6 +92,7 @@ theorem inclusion_obj (x : X) (U) (p) : (inclusion x).obj ⟨U, p⟩ = U :=
 theorem open_embedding {x : X} (U : OpenNhds x) : OpenEmbedding U.1.inclusion :=
   U.1.OpenEmbedding
 
+/-- The preimage functor from neighborhoods of `f x` to neighborhoods of `x`. -/
 def map (x : X) : OpenNhds (f x) ⥤ OpenNhds x where
   obj := fun U => ⟨(Opens.map f).obj U.1, U.2⟩
   map := fun U V i => (Opens.map f).map i

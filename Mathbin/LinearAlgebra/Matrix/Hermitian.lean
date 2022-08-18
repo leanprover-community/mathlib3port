@@ -146,12 +146,11 @@ section IsROrC
 variable [IsROrC α] [IsROrC β]
 
 /-- A matrix is hermitian iff the corresponding linear map is self adjoint. -/
-theorem is_hermitian_iff_is_self_adjoint [Fintype n] [DecidableEq n] {A : Matrix n n α} :
+theorem is_hermitian_iff_is_symmetric [Fintype n] [DecidableEq n] {A : Matrix n n α} :
     IsHermitian A ↔
-      InnerProductSpace.IsSelfAdjoint
-        ((PiLp.linearEquiv 2 α fun _ : n => α).symm.conj A.toLin' : Module.End α (PiLp 2 _)) :=
+      LinearMap.IsSymmetric ((PiLp.linearEquiv 2 α fun _ : n => α).symm.conj A.toLin' : Module.End α (PiLp 2 _)) :=
   by
-  rw [InnerProductSpace.IsSelfAdjoint, (PiLp.equiv 2 fun _ : n => α).symm.Surjective.Forall₂]
+  rw [LinearMap.IsSymmetric, (PiLp.equiv 2 fun _ : n => α).symm.Surjective.Forall₂]
   simp only [← LinearEquiv.conj_apply, ← LinearMap.comp_apply, ← LinearEquiv.coe_coe, ← PiLp.linear_equiv_apply, ←
     PiLp.linear_equiv_symm_apply, ← LinearEquiv.symm_symm]
   simp_rw [EuclideanSpace.inner_eq_star_dot_product, Equivₓ.apply_symm_apply, to_lin'_apply, star_mul_vec,

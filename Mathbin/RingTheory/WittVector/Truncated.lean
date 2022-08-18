@@ -44,6 +44,7 @@ variable {p : ℕ} [hp : Fact p.Prime] (n : ℕ) (R : Type _)
 -- mathport name: «expr𝕎»
 local notation "𝕎" => WittVector p
 
+-- type as `\bbW`
 /-- A truncated Witt vector over `R` is a vector of elements of `R`,
 i.e., the first `n` coefficients of a Witt vector.
 We will define operations on this type that are compatible with the (untruncated) Witt
@@ -55,7 +56,6 @@ and under this assumption we construct a ring structure on `truncated_witt_vecto
 (`truncated_witt_vector p₁ n R` and `truncated_witt_vector p₂ n R` are definitionally
 equal as types but will have different ring operations.)
 -/
--- type as `\bbW`
 @[nolint unused_arguments]
 def TruncatedWittVector (p : ℕ) (n : ℕ) (R : Type _) :=
   Finₓ n → R

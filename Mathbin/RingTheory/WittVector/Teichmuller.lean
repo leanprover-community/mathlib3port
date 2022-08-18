@@ -35,10 +35,10 @@ variable (p : ℕ) {R S : Type _} [hp : Fact p.Prime] [CommRingₓ R] [CommRing�
 -- mathport name: «expr𝕎»
 local notation "𝕎" => WittVector p
 
+-- type as `\bbW`
 /-- The underlying function of the monoid hom `witt_vector.teichmuller`.
 The `0`-th coefficient of `teichmuller_fun p r` is `r`, and all others are `0`.
 -/
--- type as `\bbW`
 def teichmullerFun (r : R) : 𝕎 R :=
   ⟨p, fun n => if n = 0 then r else 0⟩
 

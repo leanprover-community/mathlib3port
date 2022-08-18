@@ -2120,12 +2120,12 @@ theorem sep_def {α : Type _} (s : Finset α) (p : α → Prop) : { x ∈ s | p 
 
 end Classical
 
+-- This is not a good simp lemma, as it would prevent `finset.mem_filter` from firing
+-- on, e.g. `x ∈ s.filter(eq b)`.
 /-- After filtering out everything that does not equal a given value, at most that value remains.
 
   This is equivalent to `filter_eq'` with the equality the other way.
 -/
--- This is not a good simp lemma, as it would prevent `finset.mem_filter` from firing
--- on, e.g. `x ∈ s.filter(eq b)`.
 theorem filter_eq [DecidableEq β] (s : Finset β) (b : β) : s.filter (Eq b) = ite (b ∈ s) {b} ∅ := by
   split_ifs
   · ext

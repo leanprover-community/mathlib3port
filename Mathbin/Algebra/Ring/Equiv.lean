@@ -609,18 +609,6 @@ protected theorem map_sum {α : Type _} [NonAssocSemiringₓ R] [NonAssocSemirin
 
 end BigOperators
 
-section DivisionRing
-
-variable {K K' : Type _} [DivisionRing K] [DivisionRing K'] (g : K ≃+* K') (x y : K)
-
-theorem map_inv : g x⁻¹ = (g x)⁻¹ :=
-  g.toRingHom.map_inv x
-
-theorem map_div : g (x / y) = g x / g y :=
-  g.toRingHom.map_div x y
-
-end DivisionRing
-
 section GroupPower
 
 variable [Semiringₓ R] [Semiringₓ S]

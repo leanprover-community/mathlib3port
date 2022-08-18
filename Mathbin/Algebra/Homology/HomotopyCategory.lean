@@ -168,9 +168,9 @@ def Functor.mapHomotopyCategory (c : ComplexShape ι) (F : V ⥤ W) [F.Additive]
     convert Quot.out_eq _
     exact HomotopyCategory.quotient_map_out_comp_out _ _
 
+-- TODO `F.map_homotopy_category c` is additive (and linear when `F` is linear).
 /-- A natural transformation induces a natural transformation between
   the induced functors on the homotopy category. -/
--- TODO `F.map_homotopy_category c` is additive (and linear when `F` is linear).
 @[simps]
 def NatTrans.mapHomotopyCategory {F G : V ⥤ W} [F.Additive] [G.Additive] (α : F ⟶ G) (c : ComplexShape ι) :
     F.mapHomotopyCategory c ⟶ G.mapHomotopyCategory c where

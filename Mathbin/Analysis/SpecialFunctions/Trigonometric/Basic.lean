@@ -813,8 +813,8 @@ theorem sin_pi_div_thirty_two : sin (π / 32) = sqrt (2 - sqrt (2 + sqrt (2 + sq
   norm_num
   simp
 
-/-- The cosine of `π / 3` is `1 / 2`. -/
 -- This section is also a convenient location for other explicit values of `sin` and `cos`.
+/-- The cosine of `π / 3` is `1 / 2`. -/
 @[simp]
 theorem cos_pi_div_three : cos (π / 3) = 1 / 2 := by
   have h₁ : (2 * cos (π / 3) - 1) ^ 2 * (2 * cos (π / 3) + 2) = 0 := by

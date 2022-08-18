@@ -807,9 +807,9 @@ theorem tunnel_aux_injective (f : M × N →ₗ[R] M) (i : Injective f) (Kφ : �
 
 noncomputable section
 
-/-- Auxiliary definition for `tunnel`. -/
 -- Even though we have `noncomputable theory`,
 -- we get an error without another `noncomputable` here.
+/-- Auxiliary definition for `tunnel`. -/
 noncomputable def tunnel'ₓ (f : M × N →ₗ[R] M) (i : Injective f) : ℕ → ΣK : Submodule R M, K ≃ₗ[R] M
   | 0 => ⟨⊤, LinearEquiv.ofTop ⊤ rfl⟩
   | n + 1 =>

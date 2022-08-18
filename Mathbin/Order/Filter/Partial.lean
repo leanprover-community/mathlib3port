@@ -123,11 +123,11 @@ theorem rtendsto_iff_le_rcomap (r : Rel α β) (l₁ : Filter α) (l₂ : Filter
   · exact fun h t tl₂ => h _ t tl₂ Set.Subset.rfl
     
 
-/-- One way of taking the inverse map of a filter under a relation. Generalization of `filter.comap`
-to relations. -/
 -- Interestingly, there does not seem to be a way to express this relation using a forward map.
 -- Given a filter `f` on `α`, we want a filter `f'` on `β` such that `r.preimage s ∈ f` if
 -- and only if `s ∈ f'`. But the intersection of two sets satisfying the lhs may be empty.
+/-- One way of taking the inverse map of a filter under a relation. Generalization of `filter.comap`
+to relations. -/
 def rcomap' (r : Rel α β) (f : Filter β) : Filter α where
   Sets := Rel.Image (fun s t => r.Preimage s ⊆ t) f.Sets
   univ_sets := ⟨Set.Univ, univ_mem, Set.subset_univ _⟩

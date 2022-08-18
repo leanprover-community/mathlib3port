@@ -45,9 +45,7 @@ theorem FiniteField.Matrix.charpoly_pow_card {K : Type _} [Field K] [Fintype K] 
     · exact (C M).commute_X
       
     
-  · -- TODO[gh-6025]: remove this `haveI` once `subsingleton_of_empty_right` is a global instance
-    haveI : Subsingleton (Matrix n n K) := subsingleton_of_empty_right
-    exact congr_arg _ (Subsingleton.elimₓ _ _)
+  · exact congr_arg _ (Subsingleton.elimₓ _ _)
     
 
 @[simp]

@@ -508,8 +508,7 @@ theorem eq_bot_iff : K = ⊥ ↔ ∀ x : L, x ∈ K → x = 0 := by
   rw [eq_bot_iff]
   exact Iff.rfl
 
--- TODO[gh-6025]: make this an instance once safe to do so
-theorem subsingleton_of_bot : Subsingleton (LieSubalgebra R ↥(⊥ : LieSubalgebra R L)) := by
+instance subsingleton_of_bot : Subsingleton (LieSubalgebra R ↥(⊥ : LieSubalgebra R L)) := by
   apply subsingleton_of_bot_eq_top
   ext ⟨x, hx⟩
   change x ∈ ⊥ at hx

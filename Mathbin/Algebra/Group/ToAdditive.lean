@@ -247,6 +247,8 @@ unsafe def tr : Bool → List Stringₓ → List Stringₓ
   | is_comm, "unit" :: s => ("add_" ++ add_comm_prefix is_comm "unit") :: tr false s
   | is_comm, "units" :: s => ("add_" ++ add_comm_prefix is_comm "units") :: tr false s
   | is_comm, "comm" :: s => tr true s
+  | is_comm, "root" :: s => add_comm_prefix is_comm "div" :: tr false s
+  | is_comm, "rootable" :: s => add_comm_prefix is_comm "divisible" :: tr false s
   | is_comm, x :: s => add_comm_prefix is_comm x :: tr false s
   | tt, [] => ["comm"]
   | ff, [] => []

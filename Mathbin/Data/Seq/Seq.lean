@@ -10,12 +10,12 @@ import Mathbin.Data.Seq.Computation
 
 universe u v w
 
-/-- A stream `s : option α` is a sequence if `s.nth n = none` implies `s.nth (n + 1) = none`.
--/
 /-
 coinductive seq (α : Type u) : Type u
 | nil : seq α
 | cons : α → seq α → seq α
+-/
+/-- A stream `s : option α` is a sequence if `s.nth n = none` implies `s.nth (n + 1) = none`.
 -/
 def Streamₓ.IsSeq {α : Type u} (s : Streamₓ (Option α)) : Prop :=
   ∀ {n : ℕ}, s n = none → s (n + 1) = none

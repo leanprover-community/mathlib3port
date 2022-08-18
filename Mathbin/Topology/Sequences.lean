@@ -132,8 +132,8 @@ namespace FirstCountableTopology
 
 variable [TopologicalSpace X] [FirstCountableTopology X]
 
-/-- Every first-countable space is sequential. -/
 -- see Note [lower instance priority]
+/-- Every first-countable space is sequential. -/
 instance (priority := 100) : SequentialSpace X :=
   ⟨show ∀ s, SeqClosure s = Closure s from fun s =>
       suffices Closure s ⊆ SeqClosure s from Set.Subset.antisymm (seq_closure_subset_closure s) this

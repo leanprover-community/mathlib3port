@@ -50,6 +50,9 @@ variable [HasImages V]
 
 namespace CategoryTheory
 
+-- One nice feature of this definition is that we have
+-- `epi f → exact g h → exact (f ≫ g) h` and `exact f g → mono h → exact f (g ≫ h)`,
+-- which do not necessarily hold in a non-abelian category with the usual definition of `exact`.
 /-- Two morphisms `f : A ⟶ B`, `g : B ⟶ C` are called exact if `w : f ≫ g = 0` and the natural map
 `image_to_kernel f g w : image_subobject f ⟶ kernel_subobject g` is an epimorphism.
 
@@ -59,9 +62,6 @@ In an abelian category, this is equivalent to `image_to_kernel f g w` being an i
 and hence equivalent to the usual definition,
 `image_subobject f = kernel_subobject g`.
 -/
--- One nice feature of this definition is that we have
--- `epi f → exact g h → exact (f ≫ g) h` and `exact f g → mono h → exact f (g ≫ h)`,
--- which do not necessarily hold in a non-abelian category with the usual definition of `exact`.
 structure Exact [HasZeroMorphisms V] [HasKernels V] {A B C : V} (f : A ⟶ B) (g : B ⟶ C) : Prop where
   w : f ≫ g = 0
   Epi : Epi (imageToKernel f g w)

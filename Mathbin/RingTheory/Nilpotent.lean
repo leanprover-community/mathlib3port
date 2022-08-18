@@ -184,13 +184,13 @@ theorem IsNilpotent.mapq (hnp : IsNilpotent f) : IsNilpotent (p.mapq p f hp) := 
 
 end Module.End
 
-namespace Ideal
+section Ideal
 
 variable [CommSemiringₓ R] [CommRingₓ S] [Algebra R S] (I : Ideal S)
 
 /-- Let `P` be a property on ideals. If `P` holds for square-zero ideals, and if
   `P I → P (J ⧸ I) → P J`, then `P` holds for all nilpotent ideals. -/
-theorem IsNilpotent.induction_on (hI : IsNilpotent I) {P : ∀ ⦃S : Type _⦄ [CommRingₓ S], ∀ I : Ideal S, Prop}
+theorem Ideal.IsNilpotent.induction_on (hI : IsNilpotent I) {P : ∀ ⦃S : Type _⦄ [CommRingₓ S], ∀ I : Ideal S, Prop}
     (h₁ : ∀ ⦃S : Type _⦄ [CommRingₓ S], ∀ I : Ideal S, I ^ 2 = ⊥ → P I)
     (h₂ : ∀ ⦃S : Type _⦄ [CommRingₓ S], ∀ I J : Ideal S, I ≤ J → P I → P (J.map (Ideal.Quotient.mk I)) → P J) : P I :=
   by
@@ -227,6 +227,32 @@ theorem IsNilpotent.induction_on (hI : IsNilpotent I) {P : ∀ ⦃S : Type _⦄ 
     
   · apply h₁
     rw [← Ideal.map_pow, Ideal.map_quotient_self]
+    
+
+theorem IsNilpotent.is_unit_quotient_mk_iff {R : Type _} [CommRingₓ R] {I : Ideal R} (hI : IsNilpotent I) {x : R} :
+    IsUnit (Ideal.Quotient.mk I x) ↔ IsUnit x := by
+  refine' ⟨_, fun h => h.map I⟩
+  revert x
+  apply Ideal.IsNilpotent.induction_on I hI <;> clear hI I
+  swap
+  · introv e h₁ h₂ h₃
+    apply h₁
+    apply h₂
+    exact h₃.map ((DoubleQuot.quotQuotEquivQuotSup I J).trans (Ideal.quotEquivOfEq (sup_eq_right.mpr e))).symm.toRingHom
+    
+  · introv e H
+    skip
+    obtain ⟨y, hy⟩ := Ideal.Quotient.mk_surjective (↑H.unit⁻¹ : S ⧸ I)
+    have : Ideal.Quotient.mk I (x * y) = Ideal.Quotient.mk I 1 := by
+      rw [map_one, _root_.map_mul, hy, IsUnit.mul_coe_inv]
+    rw [Ideal.Quotient.eq] at this
+    have : (x * y - 1) ^ 2 = 0 := by
+      rw [← Ideal.mem_bot, ← e]
+      exact Ideal.pow_mem_pow this _
+    have : x * (y * (2 - x * y)) = 1 := by
+      rw [eq_comm, ← sub_eq_zero, ← this]
+      ring
+    exact is_unit_of_mul_eq_one _ _ this
     
 
 end Ideal

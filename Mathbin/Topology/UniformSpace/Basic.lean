@@ -257,6 +257,8 @@ theorem UniformSpace.core_eq : ∀ {u₁ u₂ : UniformSpace.Core α}, u₁.unif
     congr
     exact h
 
+-- the topological structure is embedded in the uniform structure
+-- to avoid instance diamond issues. See Note [forgetful inheritance].
 /-- A uniform space is a generalization of the "uniform" topological aspects of a
   metric space. It consists of a filter on `α × α` called the "uniformity", which
   satisfies properties analogous to the reflexivity, symmetry, and triangle properties
@@ -264,8 +266,6 @@ theorem UniformSpace.core_eq : ∀ {u₁ u₂ : UniformSpace.Core α}, u₁.unif
 
   A metric space has a natural uniformity, and a uniform space has a natural topology.
   A topological group also has a natural uniformity, even when it is not metrizable. -/
--- the topological structure is embedded in the uniform structure
--- to avoid instance diamond issues. See Note [forgetful inheritance].
 class UniformSpace (α : Type u) extends TopologicalSpace α, UniformSpace.Core α where
   is_open_uniformity : ∀ s, IsOpen s ↔ ∀, ∀ x ∈ s, ∀, { p : α × α | p.1 = x → p.2 ∈ s } ∈ uniformity
 
@@ -1551,10 +1551,10 @@ end Sum
 
 end Constructions
 
-/-- Let `c : ι → set α` be an open cover of a compact set `s`. Then there exists an entourage
-`n` such that for each `x ∈ s` its `n`-neighborhood is contained in some `c i`. -/
 -- For a version of the Lebesgue number lemma assuming only a sequentially compact space,
 -- see topology/sequences.lean
+/-- Let `c : ι → set α` be an open cover of a compact set `s`. Then there exists an entourage
+`n` such that for each `x ∈ s` its `n`-neighborhood is contained in some `c i`. -/
 theorem lebesgue_number_lemma {α : Type u} [UniformSpace α] {s : Set α} {ι} {c : ι → Set α} (hs : IsCompact s)
     (hc₁ : ∀ i, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i, c i) : ∃ n ∈ 𝓤 α, ∀, ∀ x ∈ s, ∀, ∃ i, { y | (x, y) ∈ n } ⊆ c i := by
   let u := fun n => { x | ∃ i, ∃ m ∈ 𝓤 α, { y | (x, y) ∈ m ○ n } ⊆ c i }

@@ -136,10 +136,10 @@ def free : C ⥤ Algebra T where
 instance [Inhabited C] : Inhabited (Algebra T) :=
   ⟨(free T).obj default⟩
 
-/-- The adjunction between the free and forgetful constructions for Eilenberg-Moore algebras for
-  a monad. cf Lemma 5.2.8 of [Riehl][riehl2017]. -/
 -- The other two `simps` projection lemmas can be derived from these two, so `simp_nf` complains if
 -- those are added too
+/-- The adjunction between the free and forgetful constructions for Eilenberg-Moore algebras for
+  a monad. cf Lemma 5.2.8 of [Riehl][riehl2017]. -/
 @[simps Unit counit]
 def adj : T.free ⊣ T.forget :=
   Adjunction.mkOfHomEquiv
@@ -387,11 +387,11 @@ def cofree : C ⥤ Coalgebra G where
   obj := fun X => { a := G.obj X, a := G.δ.app X, coassoc' := (G.coassoc _).symm }
   map := fun X Y f => { f := G.map f, h' := (G.δ.naturality _).symm }
 
+-- The other two `simps` projection lemmas can be derived from these two, so `simp_nf` complains if
+-- those are added too
 /-- The adjunction between the cofree and forgetful constructions for Eilenberg-Moore coalgebras
 for a comonad.
 -/
--- The other two `simps` projection lemmas can be derived from these two, so `simp_nf` complains if
--- those are added too
 @[simps Unit counit]
 def adj : G.forget ⊣ G.cofree :=
   Adjunction.mkOfHomEquiv

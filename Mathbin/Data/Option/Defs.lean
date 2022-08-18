@@ -162,10 +162,10 @@ protected def traverseₓₓ.{u, v} {F : Type u → Type v} [Applicativeₓ F] {
   | none => pure none
   | some x => some <$> f x
 
+-- By analogy with `monad.sequence` in `init/category/combinators.lean`.
 /-- If you maybe have a monadic computation in a `[monad m]` which produces a term of type `α`, then
 there is a naturally associated way to always perform a computation in `m` which maybe produces a
 result. -/
--- By analogy with `monad.sequence` in `init/category/combinators.lean`.
 def maybeₓ.{u, v} {m : Type u → Type v} [Monadₓ m] {α : Type u} : Option (m α) → m (Option α)
   | none => return none
   | some fn => some <$> fn

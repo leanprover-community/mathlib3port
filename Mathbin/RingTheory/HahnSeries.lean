@@ -1151,12 +1151,12 @@ theorem of_power_series_X_pow {R} [CommSemiringₓ R] (n : ℕ) :
     
   rw [pow_succₓ, ih, of_power_series_X, mul_comm, single_mul_single, one_mulₓ, Nat.cast_succₓ]
 
+-- Lemmas about converting hahn_series over fintype to and from mv_power_series
 /-- The ring `hahn_series (σ →₀ ℕ) R` is isomorphic to `mv_power_series σ R` for a `fintype` `σ`.
 We take the index set of the hahn series to be `finsupp` rather than `pi`,
 even though we assume `fintype σ` as this is more natural for alignment with `mv_power_series`.
 After importing `algebra.order.pi` the ring `hahn_series (σ → ℕ) R` could be constructed instead.
  -/
--- Lemmas about converting hahn_series over fintype to and from mv_power_series
 @[simps]
 def toMvPowerSeries {σ : Type _} [Fintype σ] : HahnSeries (σ →₀ ℕ) R ≃+* MvPowerSeries σ R where
   toFun := fun f => f.coeff

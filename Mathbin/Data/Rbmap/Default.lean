@@ -65,10 +65,6 @@ theorem eq_some_of_to_value_eq_some {e : Option (α × β)} {v : β} : toValue e
   cases' e with val <;> simp [← to_value, ← false_implies_iff]
   · cases val
     simp
-    intro h
-    subst v
-    constructor
-    rfl
     
 
 theorem eq_none_of_to_value_eq_none {e : Option (α × β)} : toValue e = none → e = none := by

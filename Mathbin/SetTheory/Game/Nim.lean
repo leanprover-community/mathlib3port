@@ -37,9 +37,9 @@ open Pgame
 
 namespace Pgame
 
+-- Uses `noncomputable!` to avoid `rec_fn_macro only allowed in meta definitions` VM error
 /-- The definition of single-heap nim, which can be viewed as a pile of stones where each player can
   take a positive number of stones from it on their turn. -/
--- Uses `noncomputable!` to avoid `rec_fn_macro only allowed in meta definitions` VM error
 noncomputable def nim : Ordinal.{u} → Pgame.{u}
   | o₁ =>
     let f := fun o₂ =>

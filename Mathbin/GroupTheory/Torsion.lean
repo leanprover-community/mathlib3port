@@ -121,9 +121,9 @@ theorem IsTorsion.exponent_exists (tG : IsTorsion G) (bounded : (Set.Range fun g
     (exponent_ne_zero_iff_range_order_of_finite fun g => order_of_pos' (tG g)).mpr bounded
 
 /-- Finite groups are torsion groups. -/
-@[to_additive is_add_torsion_of_fintype "Finite additive groups are additive torsion groups."]
-theorem is_torsion_of_fintype [Fintype G] : IsTorsion G :=
-  ExponentExists.is_torsion <| exponent_exists_iff_ne_zero.mpr exponent_ne_zero_of_fintype
+@[to_additive is_add_torsion_of_finite "Finite additive groups are additive torsion groups."]
+theorem is_torsion_of_finite [Finite G] : IsTorsion G :=
+  ExponentExists.is_torsion <| exponent_exists_iff_ne_zero.mpr exponent_ne_zero_of_finite
 
 end Groupₓ
 
@@ -143,8 +143,8 @@ theorem IsTorsion.module_of_torsion [Semiringₓ R] [Module R M] (tR : IsTorsion
         simp only [← nsmul_eq_smul_cast R _ f, nsmul_one, ← hn, ← zero_smul]⟩
 
 /-- A module with a finite ring of scalars is additively torsion. -/
-theorem IsTorsion.module_of_fintype [Ringₓ R] [Fintype R] [Module R M] : IsTorsion M :=
-  (is_add_torsion_of_fintype : IsTorsion R).module_of_torsion _ _
+theorem IsTorsion.module_of_finite [Ringₓ R] [Finite R] [Module R M] : IsTorsion M :=
+  (is_add_torsion_of_finite : IsTorsion R).module_of_torsion _ _
 
 end AddMonoidₓ
 

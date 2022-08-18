@@ -174,7 +174,7 @@ theorem commutator_prod_prod (K₁ K₂ : Subgroup G') : ⁅H₁.Prod K₁,H₂.
 
 /-- The commutator of direct product is contained in the direct product of the commutators.
 
-See `commutator_pi_pi_of_fintype` for equality given `fintype η`.
+See `commutator_pi_pi_of_finite` for equality given `fintype η`.
 -/
 theorem commutator_pi_pi_le {η : Type _} {Gs : η → Type _} [∀ i, Groupₓ (Gs i)] (H K : ∀ i, Subgroup (Gs i)) :
     ⁅Subgroup.pi Set.Univ H,Subgroup.pi Set.Univ K⁆ ≤ Subgroup.pi Set.Univ fun i => ⁅H i,K i⁆ :=
@@ -182,7 +182,7 @@ theorem commutator_pi_pi_le {η : Type _} {Gs : η → Type _} [∀ i, Groupₓ 
 
 /-- The commutator of a finite direct product is contained in the direct product of the commutators.
 -/
-theorem commutator_pi_pi_of_fintype {η : Type _} [Fintype η] {Gs : η → Type _} [∀ i, Groupₓ (Gs i)]
+theorem commutator_pi_pi_of_finite {η : Type _} [Finite η] {Gs : η → Type _} [∀ i, Groupₓ (Gs i)]
     (H K : ∀ i, Subgroup (Gs i)) :
     ⁅Subgroup.pi Set.Univ H,Subgroup.pi Set.Univ K⁆ = Subgroup.pi Set.Univ fun i => ⁅H i,K i⁆ := by
   classical

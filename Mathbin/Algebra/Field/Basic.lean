@@ -219,11 +219,11 @@ variable [DivisionRing K] {a b : K}
 
 namespace Rat
 
+-- see Note [coercion into rings]
 /-- Construct the canonical injection from `ℚ` into an arbitrary
   division ring. If the field has positive characteristic `p`,
   we define `1 / p = 1 / 0 = 0` for consistency with our
   division by zero convention. -/
--- see Note [coercion into rings]
 instance (priority := 900) castCoe {K : Type _} [HasRatCast K] : CoeTₓ ℚ K :=
   ⟨HasRatCast.ratCast⟩
 
@@ -401,32 +401,16 @@ section Semiringₓ
 
 variable [Semiringₓ α] [DivisionSemiring β]
 
-@[simp]
-theorem map_units_inv (f : α →+* β) (u : αˣ) : f ↑u⁻¹ = (f ↑u)⁻¹ :=
-  (f : α →* β).map_units_inv u
-
 variable [Nontrivial α] (f : β →+* α) {a : β}
 
 @[simp]
 theorem map_eq_zero : f a = 0 ↔ a = 0 :=
-  f.toMonoidWithZeroHom.map_eq_zero
+  MonoidWithZeroHom.map_eq_zero f
 
 theorem map_ne_zero : f a ≠ 0 ↔ a ≠ 0 :=
-  f.toMonoidWithZeroHom.map_ne_zero
+  MonoidWithZeroHom.map_ne_zero f
 
 end Semiringₓ
-
-section DivisionSemiring
-
-variable [DivisionSemiring α] [DivisionSemiring β] (f : α →+* β) (a b : α)
-
-theorem map_inv : f a⁻¹ = (f a)⁻¹ :=
-  f.toMonoidWithZeroHom.map_inv _
-
-theorem map_div : f (a / b) = f a / f b :=
-  f.toMonoidWithZeroHom.map_div _ _
-
-end DivisionSemiring
 
 protected theorem injective [DivisionRing α] [Semiringₓ β] [Nontrivial β] (f : α →+* β) : Injective f :=
   (injective_iff_map_eq_zero f).2 fun x => f.map_eq_zero.1
@@ -449,8 +433,8 @@ noncomputable def fieldOfIsUnitOrEqZero [hR : CommRingₓ R] (h : ∀ a : R, IsU
 
 end NoncomputableDefs
 
-/-- Pullback a `division_semiring` along an injective function. -/
 -- See note [reducible non-instances]
+/-- Pullback a `division_semiring` along an injective function. -/
 @[reducible]
 protected def Function.Injective.divisionSemiring [DivisionSemiring β] [Zero α] [Mul α] [Add α] [One α] [Inv α] [Div α]
     [HasSmul ℕ α] [Pow α ℕ] [Pow α ℤ] [HasNatCast α] (f : α → β) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
@@ -484,8 +468,8 @@ protected def Function.Injective.divisionRing [DivisionRing K] {K'} [Zero K'] [O
         (by
           erw [qsmul, mul, Rat.smul_def, rat_cast]) }
 
-/-- Pullback a `field` along an injective function. -/
 -- See note [reducible non-instances]
+/-- Pullback a `field` along an injective function. -/
 @[reducible]
 protected def Function.Injective.semifield [Semifield β] [Zero α] [Mul α] [Add α] [One α] [Inv α] [Div α] [HasSmul ℕ α]
     [Pow α ℕ] [Pow α ℤ] [HasNatCast α] (f : α → β) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)

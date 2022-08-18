@@ -85,8 +85,7 @@ theorem subsingleton_of_forall_eq {α : Sort _} (x : α) (h : ∀ y, y = x) : Su
 theorem subsingleton_iff_forall_eq {α : Sort _} (x : α) : Subsingleton α ↔ ∀ y, y = x :=
   ⟨fun h y => @Subsingleton.elimₓ _ h y x, subsingleton_of_forall_eq x⟩
 
--- TODO[gh-6025]: make this an instance once safe to do so
-theorem Subtype.subsingleton (α : Sort _) [Subsingleton α] (p : α → Prop) : Subsingleton (Subtype p) :=
+instance Subtype.subsingleton (α : Sort _) [Subsingleton α] (p : α → Prop) : Subsingleton (Subtype p) :=
   ⟨fun ⟨x, _⟩ ⟨y, _⟩ => by
     have : x = y := Subsingleton.elimₓ _ _
     cases this
@@ -1194,9 +1193,9 @@ theorem forall_exists_index {q : (∃ x, p x) → Prop} : (∀ h, q h) ↔ ∀ (
 theorem exists_imp_distrib : (∃ x, p x) → b ↔ ∀ x, p x → b :=
   forall_exists_index
 
+-- This enables projection notation.
 /-- Extract an element from a existential statement, using `classical.some`.
 -/
--- This enables projection notation.
 @[reducible]
 noncomputable def Exists.some {p : α → Prop} (P : ∃ a, p a) : α :=
   Classical.some P
@@ -1320,6 +1319,9 @@ theorem and_forall_ne (a : α) : (p a ∧ ∀ (b) (_ : b ≠ a), p b) ↔ ∀ b,
 @[simp]
 theorem forall_eq_or_imp {a' : α} : (∀ a, a = a' ∨ q a → p a) ↔ p a' ∧ ∀ a, q a → p a := by
   simp only [← or_imp_distrib, ← forall_and_distrib, ← forall_eq]
+
+theorem Ne.ne_or_ne {x y : α} (z : α) (h : x ≠ y) : x ≠ z ∨ y ≠ z :=
+  not_and_distrib.1 <| mt (and_imp.2 Eq.substr) h.symm
 
 theorem exists_eq {a' : α} : ∃ a, a = a' :=
   ⟨_, rfl⟩
@@ -1549,8 +1551,8 @@ variable {α : Sort _} {p : α → Prop}
 
 theorem cases {p : Prop → Prop} (h1 : p True) (h2 : p False) : ∀ a, p a := fun a => cases_on a h1 h2
 
-/-- Any prop `p` is decidable classically. A shorthand for `classical.prop_decidable`. -/
 -- use shortened names to avoid conflict when classical namespace is open.
+/-- Any prop `p` is decidable classically. A shorthand for `classical.prop_decidable`. -/
 noncomputable def dec (p : Prop) : Decidable p := by
   infer_instance
 

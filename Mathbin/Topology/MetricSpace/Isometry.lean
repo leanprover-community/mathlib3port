@@ -211,9 +211,9 @@ end PseudoMetricIsometry
 -- section
 end Isometry
 
+-- namespace
 /-- A uniform embedding from a uniform space to a metric space is an isometry with respect to the
 induced metric space structure on the source space. -/
--- namespace
 theorem UniformEmbedding.to_isometry {α β} [UniformSpace α] [MetricSpace β] {f : α → β} (h : UniformEmbedding f) :
     @Isometry α β
       (@PseudoMetricSpace.toPseudoEmetricSpace α (@MetricSpace.toPseudoMetricSpace α (h.comapMetricSpace f)))
@@ -238,8 +238,8 @@ theorem Embedding.to_isometry {α β} [TopologicalSpace α] [MetricSpace β] {f 
   intro x y
   rfl
 
-/-- `α` and `β` are isometric if there is an isometric bijection between them. -/
 -- such a bijection need not exist
+/-- `α` and `β` are isometric if there is an isometric bijection between them. -/
 @[nolint has_nonempty_instance]
 structure Isometric (α : Type _) (β : Type _) [PseudoEmetricSpace α] [PseudoEmetricSpace β] extends α ≃ β where
   isometry_to_fun : Isometry to_fun

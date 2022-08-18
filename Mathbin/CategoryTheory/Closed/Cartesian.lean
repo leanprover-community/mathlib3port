@@ -268,9 +268,9 @@ def powZero {I : C} (t : IsInitial I) [CartesianClosed C] : I ⟹ B ≅ ⊤_ C w
     · infer_instance
       
 
-/-- In a CCC with binary coproducts, the distribution morphism is an isomorphism. -/
 -- TODO: Generalise the below to its commutated variants.
 -- TODO: Define a distributive category, so that zero_mul and friends can be derived from this.
+/-- In a CCC with binary coproducts, the distribution morphism is an isomorphism. -/
 def prodCoprodDistrib [HasBinaryCoproducts C] [CartesianClosed C] (X Y Z : C) : (Z ⨯ X) ⨿ Z ⨯ Y ≅ Z ⨯ X ⨿ Y where
   Hom := coprod.desc (Limits.prod.map (𝟙 _) coprod.inl) (Limits.prod.map (𝟙 _) coprod.inr)
   inv := CartesianClosed.uncurry (coprod.desc (CartesianClosed.curry coprod.inl) (CartesianClosed.curry coprod.inr))

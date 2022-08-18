@@ -423,9 +423,7 @@ def Subtype.val (p : α → Prop) : Subtype p →o α :=
   ⟨Subtype.val, fun x y h => h⟩
 
 /-- There is a unique monotone map from a subsingleton to itself. -/
--- TODO[gh-6025]: make this a global instance once safe to do so
-@[local instance]
-def unique [Subsingleton α] : Unique (α →o α) where
+instance unique [Subsingleton α] : Unique (α →o α) where
   default := OrderHom.id
   uniq := fun a => ext _ _ (Subsingleton.elimₓ _ _)
 
@@ -1038,33 +1036,62 @@ theorem codisjoint_map_order_iso_iff [SemilatticeSup α] [OrderTop α] [Semilatt
 
 namespace WithBot
 
-/-- Taking the dual then adding `⊥` is the same as adding `⊤` then taking the dual. -/
-protected def toDualTop [LE α] : WithBot αᵒᵈ ≃o (WithTop α)ᵒᵈ :=
+/-- Taking the dual then adding `⊥` is the same as adding `⊤` then taking the dual.
+This is the order iso form of `with_bot.of_dual`, as proven by `coe_to_dual_top_equiv_eq`.
+-/
+protected def toDualTopEquiv [LE α] : WithBot αᵒᵈ ≃o (WithTop α)ᵒᵈ :=
   OrderIso.refl _
 
 @[simp]
-theorem to_dual_top_coe [LE α] (a : α) : WithBot.toDualTop ↑(toDual a) = toDual (a : WithTop α) :=
+theorem to_dual_top_equiv_coe [LE α] (a : α) : WithBot.toDualTopEquiv ↑(toDual a) = toDual (a : WithTop α) :=
   rfl
 
 @[simp]
-theorem to_dual_top_symm_coe [LE α] (a : α) : WithBot.toDualTop.symm (toDual (a : WithTop α)) = ↑(toDual a) :=
+theorem to_dual_top_equiv_symm_coe [LE α] (a : α) :
+    WithBot.toDualTopEquiv.symm (toDual (a : WithTop α)) = ↑(toDual a) :=
   rfl
+
+@[simp]
+theorem to_dual_top_equiv_bot [LE α] : WithBot.toDualTopEquiv (⊥ : WithBot αᵒᵈ) = ⊥ :=
+  rfl
+
+@[simp]
+theorem to_dual_top_equiv_symm_bot [LE α] : WithBot.toDualTopEquiv.symm (⊥ : (WithTop α)ᵒᵈ) = ⊥ :=
+  rfl
+
+theorem coe_to_dual_top_equiv_eq [LE α] :
+    (WithBot.toDualTopEquiv : WithBot αᵒᵈ → (WithTop α)ᵒᵈ) = to_dual ∘ WithBot.ofDual :=
+  funext fun _ => rfl
 
 end WithBot
 
 namespace WithTop
 
-/-- Taking the dual then adding `⊤` is the same as adding `⊥` then taking the dual. -/
-protected def toDualBot [LE α] : WithTop αᵒᵈ ≃o (WithBot α)ᵒᵈ :=
+/-- Taking the dual then adding `⊤` is the same as adding `⊥` then taking the dual.
+This is the order iso form of `with_top.of_dual`, as proven by `coe_to_dual_bot_equiv_eq`. -/
+protected def toDualBotEquiv [LE α] : WithTop αᵒᵈ ≃o (WithBot α)ᵒᵈ :=
   OrderIso.refl _
 
 @[simp]
-theorem to_dual_bot_coe [LE α] (a : α) : WithTop.toDualBot ↑(toDual a) = toDual (a : WithBot α) :=
+theorem to_dual_bot_equiv_coe [LE α] (a : α) : WithTop.toDualBotEquiv ↑(toDual a) = toDual (a : WithBot α) :=
   rfl
 
 @[simp]
-theorem to_dual_bot_symm_coe [LE α] (a : α) : WithTop.toDualBot.symm (toDual (a : WithBot α)) = ↑(toDual a) :=
+theorem to_dual_bot_equiv_symm_coe [LE α] (a : α) :
+    WithTop.toDualBotEquiv.symm (toDual (a : WithBot α)) = ↑(toDual a) :=
   rfl
+
+@[simp]
+theorem to_dual_bot_equiv_top [LE α] : WithTop.toDualBotEquiv (⊤ : WithTop αᵒᵈ) = ⊤ :=
+  rfl
+
+@[simp]
+theorem to_dual_bot_equiv_symm_top [LE α] : WithTop.toDualBotEquiv.symm (⊤ : (WithBot α)ᵒᵈ) = ⊤ :=
+  rfl
+
+theorem coe_to_dual_bot_equiv_eq [LE α] :
+    (WithTop.toDualBotEquiv : WithTop αᵒᵈ → (WithBot α)ᵒᵈ) = to_dual ∘ WithTop.ofDual :=
+  funext fun _ => rfl
 
 end WithTop
 

@@ -218,8 +218,8 @@ class Regular (μ : Measure α) extends IsFiniteMeasureOnCompacts μ, OuterRegul
 class WeaklyRegular (μ : Measure α) extends OuterRegular μ : Prop where
   InnerRegular : InnerRegular μ IsClosed IsOpen
 
-/-- A regular measure is weakly regular. -/
 -- see Note [lower instance priority]
+/-- A regular measure is weakly regular. -/
 instance (priority := 100) Regular.weakly_regular [T2Space α] [Regular μ] :
     WeaklyRegular μ where InnerRegular := fun U hU r hr =>
     let ⟨K, hKU, hcK, hK⟩ := Regular.inner_regular hU r hr
@@ -532,8 +532,8 @@ protected theorem smul [Regular μ] {x : ℝ≥0∞} (hx : x ≠ ∞) : (x • �
   haveI := is_finite_measure_on_compacts.smul μ hx
   exact ⟨regular.inner_regular.smul x⟩
 
-/-- A regular measure in a σ-compact space is σ-finite. -/
 -- see Note [lower instance priority]
+/-- A regular measure in a σ-compact space is σ-finite. -/
 instance (priority := 100) sigma_finite [SigmaCompactSpace α] [Regular μ] : SigmaFinite μ :=
   ⟨⟨{ Set := CompactCovering α, set_mem := fun n => trivialₓ,
         Finite := fun n => (is_compact_compact_covering α n).measure_lt_top, spanning := Union_compact_covering α }⟩⟩
@@ -598,15 +598,15 @@ theorem restrict_of_measurable_set [BorelSpace α] [WeaklyRegular μ] (A : Set �
   refine' ⟨F, hFVA.trans (inter_subset_left _ _), hFc, _⟩
   rwa [inter_eq_self_of_subset_left (hFVA.trans <| inter_subset_right _ _)]
 
-/-- Any finite measure on a metric space (or even a pseudo emetric space) is weakly regular. -/
 -- see Note [lower instance priority]
+/-- Any finite measure on a metric space (or even a pseudo emetric space) is weakly regular. -/
 instance (priority := 100) of_pseudo_emetric_space_of_is_finite_measure {X : Type _} [PseudoEmetricSpace X]
     [MeasurableSpace X] [BorelSpace X] (μ : Measure X) [IsFiniteMeasure μ] : WeaklyRegular μ :=
   (InnerRegular.of_pseudo_emetric_space μ).weakly_regular_of_finite μ
 
+-- see Note [lower instance priority]
 /-- Any locally finite measure on a `σ`-compact metric space (or even a pseudo emetric space) is
 weakly regular. -/
--- see Note [lower instance priority]
 instance (priority := 100) of_pseudo_emetric_sigma_compact_space_of_locally_finite {X : Type _} [PseudoEmetricSpace X]
     [SigmaCompactSpace X] [MeasurableSpace X] [BorelSpace X] (μ : Measure X) [IsLocallyFiniteMeasure μ] :
     WeaklyRegular μ := by
@@ -618,8 +618,8 @@ instance (priority := 100) of_pseudo_emetric_sigma_compact_space_of_locally_fini
 
 end WeaklyRegular
 
-/-- Any locally finite measure on a `σ`-compact (e)metric space is regular. -/
 -- see Note [lower instance priority]
+/-- Any locally finite measure on a `σ`-compact (e)metric space is regular. -/
 instance (priority := 100) Regular.of_sigma_compact_space_of_is_locally_finite_measure {X : Type _} [EmetricSpace X]
     [SigmaCompactSpace X] [MeasurableSpace X] [BorelSpace X] (μ : Measure X) [IsLocallyFiniteMeasure μ] :
     Regular μ where

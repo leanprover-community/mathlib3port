@@ -55,11 +55,11 @@ open BigOperators ComplexConjugate
 
 open Module.End
 
-namespace InnerProductSpace
+namespace LinearMap
 
-namespace IsSelfAdjoint
+namespace IsSymmetric
 
-variable {T : E →ₗ[𝕜] E} (hT : IsSelfAdjoint T)
+variable {T : E →ₗ[𝕜] E} (hT : T.IsSymmetric)
 
 include hT
 
@@ -116,7 +116,7 @@ variable [FiniteDimensional 𝕜 E]
 /-- The mutual orthogonal complement of the eigenspaces of a self-adjoint operator on a
 finite-dimensional inner product space is trivial. -/
 theorem orthogonal_supr_eigenspaces_eq_bot : (⨆ μ, eigenspace T μ)ᗮ = ⊥ := by
-  have hT' : is_self_adjoint _ := hT.restrict_invariant hT.orthogonal_supr_eigenspaces_invariant
+  have hT' : is_symmetric _ := hT.restrict_invariant hT.orthogonal_supr_eigenspaces_invariant
   -- a self-adjoint operator on a nontrivial inner product space has an eigenvalue
   haveI := hT'.subsingleton_of_no_eigenvalue_finite_dimensional hT.orthogonal_supr_eigenspaces
   exact Submodule.eq_bot_of_subsingleton _
@@ -153,7 +153,7 @@ theorem diagonalization_apply_self_apply (v : E) (μ : Eigenvalues T) :
     ∀ w : PiLp 2 fun μ : eigenvalues T => eigenspace T μ,
       T (hT.diagonalization.symm w) = hT.diagonalization.symm fun μ => (μ : 𝕜) • w μ
     by
-    simpa [← LinearIsometryEquiv.symm_apply_apply, -is_self_adjoint.diagonalization_symm_apply] using
+    simpa [← LinearIsometryEquiv.symm_apply_apply, -is_symmetric.diagonalization_symm_apply] using
       congr_arg (fun w => hT.diagonalization w μ) (this (hT.diagonalization v))
   intro w
   have hwT : ∀ μ : eigenvalues T, T (w μ) = (μ : 𝕜) • w μ := by
@@ -225,9 +225,9 @@ theorem diagonalization_basis_apply_self_apply (v : E) (i : Finₓ n) :
 
 end Version2
 
-end IsSelfAdjoint
+end IsSymmetric
 
-end InnerProductSpace
+end LinearMap
 
 section Nonneg
 

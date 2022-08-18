@@ -160,8 +160,8 @@ instance : Unique (Finpartition (⊥ : α)) :=
       ext a
       exact iff_of_false (fun h => P.ne_bot h <| le_bot_iff.1 <| P.le h) (not_mem_empty a) }
 
-/-- There's a unique partition of an atom. -/
 -- See note [reducible non instances]
+/-- There's a unique partition of an atom. -/
 @[reducible]
 def _root_.is_atom.unique_finpartition (ha : IsAtom a) : Unique (Finpartition a) where
   default := indiscrete ha.1

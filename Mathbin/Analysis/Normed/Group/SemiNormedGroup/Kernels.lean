@@ -117,9 +117,9 @@ end EqualizersAndKernels
 
 section Cokernel
 
-/-- Auxiliary definition for `has_cokernels SemiNormedGroup`. -/
 -- PROJECT: can we reuse the work to construct cokernels in `SemiNormedGroup₁` here?
 -- I don't see a way to do this that is less work than just repeating the relevant parts.
+/-- Auxiliary definition for `has_cokernels SemiNormedGroup`. -/
 def cokernelCocone {X Y : SemiNormedGroup.{u}} (f : X ⟶ Y) : Cofork f 0 :=
   @Cofork.ofπ _ _ _ _ _ _ (SemiNormedGroup.of (Y ⧸ NormedAddGroupHom.range f)) f.range.normedMk
     (by

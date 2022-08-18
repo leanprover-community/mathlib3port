@@ -207,10 +207,10 @@ section
 
 variable {𝕜 : Type _} [LinearOrderedField 𝕜] [TopologicalSpace 𝕜] [TopologicalRing 𝕜]
 
-/-- The image of `[0,1]` under the homeomorphism `λ x, a * x + b` is `[b, a+b]`.
--/
 -- We only need the ordering on `𝕜` here to avoid talking about flipping the interval over.
 -- At the end of the day I only care about `ℝ`, so I'm hesitant to put work into generalizing.
+/-- The image of `[0,1]` under the homeomorphism `λ x, a * x + b` is `[b, a+b]`.
+-/
 theorem affine_homeomorph_image_I (a b : 𝕜) (h : 0 < a) :
     affineHomeomorph a b h.Ne.symm '' Set.Icc 0 1 = Set.Icc b (a + b) := by
   simp [← h]

@@ -33,6 +33,7 @@ namespace Preorderₓ
 
 open CategoryTheory
 
+-- see Note [lower instance priority]
 /-- The category structure coming from a preorder. There is a morphism `X ⟶ Y` if and only if `X ≤ Y`.
 
 Because we don't allow morphisms to live in `Prop`,
@@ -41,7 +42,6 @@ See `category_theory.hom_of_le` and `category_theory.le_of_hom`.
 
 See <https://stacks.math.columbia.edu/tag/00D3>.
 -/
--- see Note [lower instance priority]
 instance (priority := 100) smallCategory (α : Type u) [Preorderₓ α] : SmallCategory α where
   Hom := fun U V => ULift (Plift (U ≤ V))
   id := fun X => ⟨⟨le_refl X⟩⟩

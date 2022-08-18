@@ -61,9 +61,9 @@ instance : CoeSort LocallyRingedSpace (Type u) :=
 instance (x : X) : LocalRing (X.toPresheafedSpace.stalk x) :=
   X.LocalRing x
 
-/-- The structure sheaf of a locally ringed space. -/
 -- PROJECT: how about a typeclass "has_structure_sheaf" to mediate the 𝒪 notation, rather
 -- than defining it over and over for PresheafedSpace, LRS, Scheme, etc.
+/-- The structure sheaf of a locally ringed space. -/
 def 𝒪 : Sheaf CommRingₓₓ X.toTop :=
   X.toSheafedSpace.Sheaf
 
@@ -79,10 +79,10 @@ instance : Quiver LocallyRingedSpace :=
 theorem hom_ext {X Y : LocallyRingedSpace} (f g : Hom X Y) (w : f.1 = g.1) : f = g :=
   Subtype.eq w
 
-/-- The stalk of a locally ringed space, just as a `CommRing`.
--/
 -- TODO perhaps we should make a bundled `LocalRing` and return one here?
 -- TODO define `sheaf.stalk` so we can write `X.𝒪.stalk` here?
+/-- The stalk of a locally ringed space, just as a `CommRing`.
+-/
 noncomputable def stalk (X : LocallyRingedSpace) (x : X) : CommRingₓₓ :=
   X.Presheaf.stalk x
 

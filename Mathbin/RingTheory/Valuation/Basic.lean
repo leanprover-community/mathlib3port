@@ -191,9 +191,9 @@ theorem map_pow : ∀ (x) (n : ℕ), v (x ^ n) = v x ^ n :=
 theorem ext_iff {v₁ v₂ : Valuation R Γ₀} : v₁ = v₂ ↔ ∀ r, v₁ r = v₂ r :=
   FunLike.ext_iff
 
-/-- A valuation gives a preorder on the underlying ring. -/
 -- The following definition is not an instance, because we have more than one `v` on a given `R`.
 -- In addition, type class inference would not be able to infer `v`.
+/-- A valuation gives a preorder on the underlying ring. -/
 def toPreorder : Preorderₓ R :=
   Preorderₓ.lift v
 
@@ -245,17 +245,6 @@ end Monoidₓ
 section Groupₓ
 
 variable [LinearOrderedCommGroupWithZero Γ₀] {R} {Γ₀} (v : Valuation R Γ₀) {x y z : R}
-
-@[simp]
-theorem map_inv (v : Valuation K Γ₀) {x : K} : v x⁻¹ = (v x)⁻¹ :=
-  v.toMonoidWithZeroHom.map_inv x
-
-@[simp]
-theorem map_zpow (v : Valuation K Γ₀) {x : K} {n : ℤ} : v (x ^ n) = v x ^ n :=
-  v.toMonoidWithZeroHom.map_zpow x n
-
-theorem map_units_inv (x : Rˣ) : v (x⁻¹ : Rˣ) = (v x)⁻¹ :=
-  v.toMonoidWithZeroHom.toMonoidHom.map_units_inv x
 
 @[simp]
 theorem map_neg (x : R) : v (-x) = v x :=
@@ -491,7 +480,7 @@ theorem is_equiv_iff_val_lt_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOr
       cases ne_iff_lt_or_gtₓ.1 h_1
       · simpa [← hh, ← lt_self_iff_false] using h.2 h_2
         
-      · rw [← inv_one, eq_inv_iff_eq_inv, ← map_inv] at hh
+      · rw [← inv_one, eq_inv_iff_eq_inv, ← map_inv₀] at hh
         exact hh.le.not_lt (h.2 ((one_lt_val_iff v' hx).1 h_2))
         
       
@@ -500,7 +489,7 @@ theorem is_equiv_iff_val_lt_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOr
       cases ne_iff_lt_or_gtₓ.1 h_1
       · simpa [← hh, ← lt_self_iff_false] using h.1 h_2
         
-      · rw [← inv_one, eq_inv_iff_eq_inv, ← map_inv] at hh
+      · rw [← inv_one, eq_inv_iff_eq_inv, ← map_inv₀] at hh
         exact hh.le.not_lt (h.1 ((one_lt_val_iff v hx).1 h_2))
         
       
@@ -561,8 +550,8 @@ def supp : Ideal R where
 theorem mem_supp_iff (x : R) : x ∈ supp v ↔ v x = 0 :=
   Iff.rfl
 
-/-- The support of a valuation is a prime ideal. -/
 -- @[simp] lemma mem_supp_iff' (x : R) : x ∈ (supp v : set R) ↔ v x = 0 := iff.rfl
+/-- The support of a valuation is a prime ideal. -/
 instance [Nontrivial Γ₀] [NoZeroDivisors Γ₀] : Ideal.IsPrime (supp v) :=
   ⟨fun h : v.Supp = ⊤ =>
     one_ne_zero <|
@@ -758,9 +747,9 @@ theorem ext {v₁ v₂ : AddValuation R Γ₀} (h : ∀ r, v₁ r = v₂ r) : v�
 theorem ext_iff {v₁ v₂ : AddValuation R Γ₀} : v₁ = v₂ ↔ ∀ r, v₁ r = v₂ r :=
   Valuation.ext_iff
 
-/-- A valuation gives a preorder on the underlying ring. -/
 -- The following definition is not an instance, because we have more than one `v` on a given `R`.
 -- In addition, type class inference would not be able to infer `v`.
+/-- A valuation gives a preorder on the underlying ring. -/
 def toPreorder : Preorderₓ R :=
   Preorderₓ.lift v
 
@@ -803,10 +792,10 @@ variable [LinearOrderedAddCommGroupWithTop Γ₀] [Ringₓ R] (v : AddValuation 
 
 @[simp]
 theorem map_inv (v : AddValuation K Γ₀) {x : K} : v x⁻¹ = -v x :=
-  v.map_inv
+  map_inv₀ v.Valuation x
 
 theorem map_units_inv (x : Rˣ) : v (x⁻¹ : Rˣ) = -v x :=
-  v.map_units_inv x
+  map_units_inv v.Valuation x
 
 @[simp]
 theorem map_neg (x : R) : v (-x) = v x :=

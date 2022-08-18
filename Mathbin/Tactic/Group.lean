@@ -49,7 +49,7 @@ open Tactic.SimpArgType Interactive Tactic.Group
 
 /-- Auxiliary tactic for the `group` tactic. Calls the simplifier only. -/
 unsafe def aux_group₁ (locat : Loc) : tactic Unit :=
-  simp_core {  } skip true
+  simp_core { failIfUnchanged := false } skip true
       [expr (pquote.1 commutator_element_def), expr (pquote.1 mul_oneₓ), expr (pquote.1 one_mulₓ),
         expr (pquote.1 one_pow), expr (pquote.1 one_zpow), expr (pquote.1 sub_self), expr (pquote.1 add_neg_selfₓ),
         expr (pquote.1 neg_add_selfₓ), expr (pquote.1 neg_negₓ), expr (pquote.1 tsub_self),
@@ -95,7 +95,7 @@ end
 -/
 unsafe def group (locat : parse location) : tactic Unit := do
   when locat sorry
-  try (aux_group₁ locat)
+  aux_group₁ locat
   repeat (andthen (aux_group₂ locat) (aux_group₁ locat))
 
 end Tactic.Interactive

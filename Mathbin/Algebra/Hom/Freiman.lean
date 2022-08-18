@@ -354,12 +354,12 @@ end FreimanHom
 /-! ### Hom hierarchy -/
 
 
+--TODO: change to `monoid_hom_class F A β → freiman_hom_class F A β n` once `map_multiset_prod` is
+-- generalized
 /-- A monoid homomorphism is naturally a `freiman_hom` on its entire domain.
 
 We can't leave the domain `A : set α` of the `freiman_hom` a free variable, since it wouldn't be
 inferrable. -/
---TODO: change to `monoid_hom_class F A β → freiman_hom_class F A β n` once `map_multiset_prod` is
--- generalized
 @[to_additive
       " An additive monoid homomorphism is naturally an `add_freiman_hom` on its entire\ndomain.\n\nWe can't leave the domain `A : set α` of the `freiman_hom` a free variable, since it wouldn't be\ninferrable."]
 instance MonoidHom.freimanHomClass :

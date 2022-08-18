@@ -184,8 +184,8 @@ namespace Seminorm
 
 variable [NormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] [AddCommGroupₓ F] [Module 𝕜 F]
 
-/-- The proposition that a linear map is bounded between spaces with families of seminorms. -/
 -- Todo: This should be phrased entirely in terms of the von Neumann bornology.
+/-- The proposition that a linear map is bounded between spaces with families of seminorms. -/
 def IsBounded (p : ι → Seminorm 𝕜 E) (q : ι' → Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) : Prop :=
   ∀ i, ∃ s : Finset ι, ∃ C : ℝ≥0 , C ≠ 0 ∧ (q i).comp f ≤ C • s.sup p
 

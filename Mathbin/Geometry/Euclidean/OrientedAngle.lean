@@ -636,7 +636,7 @@ theorem conj_lie_symm : hb.conjLie.symm = hb.conjLie :=
 theorem oangle_conj_lie (x y : V) : hb.oangle (hb.conjLie x) (hb.conjLie y) = -hb.oangle x y := by
   simp only [← Orthonormal.conjLie, ← LinearIsometryEquiv.symm_apply_apply, ← Orthonormal.oangle, ← eq_self_iff_true, ←
     Function.comp_app, ← Complex.arg_coe_angle_eq_iff, ← LinearIsometryEquiv.coe_trans, ← neg_inj, ←
-    Complex.conj_lie_apply, ← Complex.arg_conj_coe_angle, (starRingEnd ℂ).map_div]
+    Complex.conj_lie_apply, ← Complex.arg_conj_coe_angle, map_div₀ (starRingEnd ℂ)]
 
 /-- Any linear isometric equivalence in `V` is `rotation` or `conj_lie` composed with
 `rotation`. -/

@@ -101,6 +101,13 @@ theorem to_outer_measure_apply_finset (s : Finset α) : p.toOuterMeasure s = ∑
   · exact Finset.sum_congr rfl fun x hx => Set.indicator_of_mem hx _
     
 
+theorem to_outer_measure_apply_singleton (a : α) : p.toOuterMeasure {a} = p a := by
+  refine' (p.to_outer_measure_apply {a}).trans (((tsum_eq_single a) fun b hb => _).trans _)
+  · exact ite_eq_right_iff.2 fun hb' => False.elim <| hb hb'
+    
+  · exact ite_eq_left_iff.2 fun ha' => False.elim <| ha' rfl
+    
+
 theorem to_outer_measure_apply_eq_zero_iff : p.toOuterMeasure s = 0 ↔ Disjoint p.Support s := by
   rw [to_outer_measure_apply', Ennreal.coe_eq_zero, tsum_eq_zero_iff (Nnreal.indicator_summable (summable_coe p) s)]
   exact function.funext_iff.symm.trans Set.indicator_eq_zero'
@@ -169,6 +176,12 @@ theorem to_measure_apply (hs : MeasurableSet s) : p.toMeasure s = ∑' x, s.indi
 theorem to_measure_apply' (hs : MeasurableSet s) : p.toMeasure s = ↑(∑' x, s.indicator p x) :=
   (p.to_measure_apply_eq_to_outer_measure_apply s hs).trans (p.to_outer_measure_apply' s)
 
+theorem to_measure_apply_singleton (a : α) (h : MeasurableSet ({a} : Set α)) : p.toMeasure {a} = p a := by
+  simp [← to_measure_apply_eq_to_outer_measure_apply p {a} h, ← to_outer_measure_apply_singleton]
+
+theorem to_measure_apply_eq_zero_iff (hs : MeasurableSet s) : p.toMeasure s = 0 ↔ Disjoint p.Support s := by
+  rw [to_measure_apply_eq_to_outer_measure_apply p s hs, to_outer_measure_apply_eq_zero_iff]
+
 theorem to_measure_apply_eq_one_iff (hs : MeasurableSet s) : p.toMeasure s = 1 ↔ p.Support ⊆ s :=
   (p.to_measure_apply_eq_to_outer_measure_apply s hs : p.toMeasure s = p.toOuterMeasure s).symm ▸
     p.to_outer_measure_apply_eq_one_iff s
@@ -212,6 +225,16 @@ instance toMeasure.is_probability_measure (p : Pmf α) : IsProbabilityMeasure p.
       to_outer_measure_apply', ← Ennreal.coe_eq_one] using tsum_coe p⟩
 
 end Measureₓ
+
+theorem apply_eq_one_iff (p : Pmf α) (a : α) : p a = 1 ↔ p.Support = {a} := by
+  refine' ⟨fun h => _, fun h => _⟩
+  · have : {a} ⊆ p.support := fun x hx => (p.mem_support_iff x).2 (ne_zero_of_eq_one <| hx.symm ▸ h)
+    refine' antisymm ((p.to_outer_measure_apply_eq_one_iff {a}).1 _) this
+    simpa only [← to_outer_measure_apply_singleton, ← Ennreal.coe_eq_one] using h
+    
+  · simpa only [Ennreal.coe_eq_one, to_outer_measure_apply_singleton, ← to_outer_measure_apply_eq_one_iff] using
+      subset_of_eq h
+    
 
 end Pmf
 

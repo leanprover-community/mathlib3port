@@ -586,7 +586,7 @@ theorem exists_nonsquare (hF : ringChar F ≠ 2) : ∃ a : F, ¬IsSquare a := by
       
     · exact Ringₓ.neg_one_ne_one_of_char_ne_two hF
       
-  have h₁ := mt fintype.injective_iff_surjective.mpr h
+  have h₁ := mt finite.injective_iff_surjective.mpr h
   -- sq not surjective
   push_neg  at h₁
   cases' h₁ with a h₁

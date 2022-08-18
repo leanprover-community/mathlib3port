@@ -73,10 +73,10 @@ theorem directed_lt : Directed (· ≥ ·) fun γ₀ : Γ₀ˣ => principal { γ
       
     
 
-/-- At all points of a linearly ordered commutative group with a zero element adjoined,
-the pure filter is smaller than the filter given by nhds_fun. -/
 -- We need two auxilliary lemmas to show that nhds_fun accurately describes the neighbourhoods
 -- coming from the topology (that is defined in terms of nhds_fun).
+/-- At all points of a linearly ordered commutative group with a zero element adjoined,
+the pure filter is smaller than the filter given by nhds_fun. -/
 theorem pure_le_nhds_fun : pure ≤ nhdsFun Γ₀ := fun x => by
   by_cases' hx : x = 0 <;> simp [← hx, ← nhds_fun]
 

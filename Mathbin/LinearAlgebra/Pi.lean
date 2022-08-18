@@ -351,9 +351,9 @@ theorem pi_ring_apply (f : (ι → R) →ₗ[R] M) (i : ι) : piRing R M ι S f 
 theorem pi_ring_symm_apply (f : ι → M) (g : ι → R) : (piRing R M ι S).symm f g = ∑ i, g i • f i := by
   simp [← pi_ring, ← LinearMap.lsum]
 
+-- TODO additive version?
 /-- `equiv.sum_arrow_equiv_prod_arrow` as a linear equivalence.
 -/
--- TODO additive version?
 def sumArrowLequivProdArrow (α β R M : Type _) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] :
     (Sum α β → M) ≃ₗ[R] (α → M) × (β → M) :=
   { Equivₓ.sumArrowEquivProdArrow α β M with

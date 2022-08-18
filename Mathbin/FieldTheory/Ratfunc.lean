@@ -229,6 +229,7 @@ theorem lift_on_condition_of_lift_on'_condition {P : Sort v} {f : ∀ p q : K[X]
     _ = f p' q' := H hq' hp
     
 
+-- f
 /-- Non-dependent recursion principle for `ratfunc K`: if `f p q : P` for all `p q`,
 such that `f (a * p) (a * q) = f p q`, then we can find a value of `P`
 for all elements of `ratfunc K` by setting `lift_on' (p / q) f _ = f p q`.
@@ -236,7 +237,6 @@ for all elements of `ratfunc K` by setting `lift_on' (p / q) f _ = f p q`.
 The value of `f p 0` for any `p` is never used and in principle this may be anything,
 although many usages of `lift_on'` assume `f p 0 = f 0 1`.
 -/
--- f
 protected irreducible_def liftOn' {P : Sort v} (x : Ratfunc K) (f : ∀ p q : K[X], P)
   (H : ∀ {p q a} (hq : q ≠ 0) (ha : a ≠ 0), f (a * p) (a * q) = f p q) : P :=
   x.liftOn f fun p q p' q' hq hq' =>
@@ -612,10 +612,10 @@ theorem coe_map_ring_hom_eq_coe_map [RingHomClass F R[X] S[X]] (φ : F) (hφ : R
     (mapRingHom φ hφ : Ratfunc R → Ratfunc S) = map φ hφ :=
   rfl
 
+-- TODO: Generalize to `fun_like` classes,
 /-- Lift an monoid with zero homomorphism `polynomial R →*₀ G₀` to a `ratfunc R →*₀ G₀`
 on the condition that `φ` maps non zero divisors to non zero divisors,
 by mapping both the numerator and denominator and quotienting them. --/
--- TODO: Generalize to `fun_like` classes,
 def liftMonoidWithZeroHom (φ : R[X] →*₀ G₀) (hφ : R[X]⁰ ≤ G₀⁰.comap φ) : Ratfunc R →*₀ G₀ where
   toFun := fun f =>
     (Ratfunc.liftOn f fun p q => φ p / φ q) fun p q p' q' hq hq' h => by
@@ -1485,7 +1485,7 @@ theorem coe_mul : ((f * g : Ratfunc F) : LaurentSeries F) = f * g :=
 
 @[simp, norm_cast]
 theorem coe_div : ((f / g : Ratfunc F) : LaurentSeries F) = (f : LaurentSeries F) / (g : LaurentSeries F) :=
-  (coeAlgHom F).map_div _ _
+  map_div₀ (coeAlgHom F) _ _
 
 @[simp, norm_cast]
 theorem coe_C (r : F) : ((c r : Ratfunc F) : LaurentSeries F) = HahnSeries.c r := by

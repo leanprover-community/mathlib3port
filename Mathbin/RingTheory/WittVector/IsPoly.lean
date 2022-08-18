@@ -198,6 +198,8 @@ theorem poly_eq_of_witt_polynomial_bind_eq (f g : ℕ → MvPolynomial ℕ ℤ)
 
 omit hp
 
+-- Ideally, we would generalise this to n-ary functions
+-- But we don't have a good theory of n-ary compositions in mathlib
 /-- A function `f : Π R, 𝕎 R → 𝕎 R` that maps Witt vectors to Witt vectors over arbitrary base rings
 is said to be *polynomial* if there is a family of polynomials `φₙ` over `ℤ` such that the `n`th
 coefficient of `f x` is given by evaluating `φₙ` at the coefficients of `x`.
@@ -209,8 +211,6 @@ and the `@[is_poly]` attribute derives certain specialized composition instances
 for declarations of type `is_poly f`.
 For the most part, users are not expected to treat `is_poly` as a class.
 -/
--- Ideally, we would generalise this to n-ary functions
--- But we don't have a good theory of n-ary compositions in mathlib
 class IsPoly (f : ∀ ⦃R⦄ [CommRingₓ R], WittVector p R → 𝕎 R) : Prop where mk' ::
   poly : ∃ φ : ℕ → MvPolynomial ℕ ℤ, ∀ ⦃R⦄ [CommRingₓ R] (x : 𝕎 R), (f x).coeff = fun n => aeval x.coeff (φ n)
 
@@ -455,9 +455,9 @@ theorem neg_is_poly : IsPoly p fun R _ => @Neg.neg (𝕎 R) _ :=
 
 section ZeroOne
 
-/-- The function that is constantly zero on Witt vectors is a polynomial function. -/
 /- To avoid a theory of 0-ary functions (a.k.a. constants)
 we model them as constant unary functions. -/
+/-- The function that is constantly zero on Witt vectors is a polynomial function. -/
 instance zero_is_poly : IsPoly p fun _ _ _ => 0 :=
   ⟨⟨0, by
       intros

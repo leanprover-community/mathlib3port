@@ -131,10 +131,10 @@ theorem hom_ext {A : Type _} [Semiringₓ A] [Algebra R A] {f g : TensorAlgebra 
   rw [← lift_symm_apply, ← lift_symm_apply] at w
   exact (lift R).symm.Injective w
 
+-- This proof closely follows `free_algebra.induction`
 /-- If `C` holds for the `algebra_map` of `r : R` into `tensor_algebra R M`, the `ι` of `x : M`,
 and is preserved under addition and muliplication, then it holds for all of `tensor_algebra R M`.
 -/
--- This proof closely follows `free_algebra.induction`
 @[elabAsElim]
 theorem induction {C : TensorAlgebra R M → Prop} (h_grade0 : ∀ r, C (algebraMap R (TensorAlgebra R M) r))
     (h_grade1 : ∀ x, C (ι R x)) (h_mul : ∀ a b, C a → C b → C (a * b)) (h_add : ∀ a b, C a → C b → C (a + b))

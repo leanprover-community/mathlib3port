@@ -904,8 +904,8 @@ variable {R M} {α : Type _}
 
 open Finsupp Function
 
-/-- A surjective linear map to finitely supported functions has a splitting. -/
 -- See also `linear_map.splitting_of_fun_on_fintype_surjective`
+/-- A surjective linear map to finitely supported functions has a splitting. -/
 def splittingOfFinsuppSurjective (f : M →ₗ[R] α →₀ R) (s : Surjective f) : (α →₀ R) →ₗ[R] M :=
   Finsupp.lift _ _ _ fun x : α => (s (Finsupp.single x 1)).some
 
@@ -928,8 +928,8 @@ theorem splitting_of_finsupp_surjective_injective (f : M →ₗ[R] α →₀ R) 
     Injective (splittingOfFinsuppSurjective f s) :=
   (left_inverse_splitting_of_finsupp_surjective f s).Injective
 
-/-- A surjective linear map to functions on a finite type has a splitting. -/
 -- See also `linear_map.splitting_of_finsupp_surjective`
+/-- A surjective linear map to functions on a finite type has a splitting. -/
 def splittingOfFunOnFintypeSurjective [Fintype α] (f : M →ₗ[R] α → R) (s : Surjective f) : (α → R) →ₗ[R] M :=
   (Finsupp.lift _ _ _ fun x : α => (s (Finsupp.single x 1)).some).comp (linearEquivFunOnFintype R R α).symm.toLinearMap
 

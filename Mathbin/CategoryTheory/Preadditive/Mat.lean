@@ -436,9 +436,9 @@ def liftUnique (F : C ⥤ D) [Functor.Additive F] (L : Mat_ C ⥤ D) [Functor.Ad
     simp
     exact α.hom.naturality (f j k)
 
+-- TODO is there some uniqueness statement for the natural isomorphism in `lift_unique`?
 /-- Two additive functors `Mat_ C ⥤ D` are naturally isomorphic if
 their precompositions with `embedding C` are naturally isomorphic as functors `C ⥤ D`. -/
--- TODO is there some uniqueness statement for the natural isomorphism in `lift_unique`?
 @[ext]
 def ext {F G : Mat_ C ⥤ D} [Functor.Additive F] [Functor.Additive G] (α : embedding C ⋙ F ≅ embedding C ⋙ G) : F ≅ G :=
   liftUnique (embedding C ⋙ G) _ α ≪≫ (liftUnique _ _ (Iso.refl _)).symm

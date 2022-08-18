@@ -56,13 +56,13 @@ local notation "absR" => HasAbs.abs
 /-! ### Orthogonal projection in inner product spaces -/
 
 
+-- FIXME this monolithic proof causes a deterministic timeout with `-T50000`
+-- It should be broken in a sequence of more manageable pieces,
+-- perhaps with individual statements for the three steps below.
 /-- Existence of minimizers
 Let `u` be a point in a real inner product space, and let `K` be a nonempty complete convex subset.
 Then there exists a (unique) `v` in `K` that minimizes the distance `∥u - v∥` to `u`.
  -/
--- FIXME this monolithic proof causes a deterministic timeout with `-T50000`
--- It should be broken in a sequence of more manageable pieces,
--- perhaps with individual statements for the three steps below.
 theorem exists_norm_eq_infi_of_complete_convex {K : Set F} (ne : K.Nonempty) (h₁ : IsComplete K) (h₂ : Convex ℝ K) :
     ∀ u : F, ∃ v ∈ K, ∥u - v∥ = ⨅ w : K, ∥u - w∥ := fun u => by
   let δ := ⨅ w : K, ∥u - w∥
@@ -608,7 +608,7 @@ theorem smul_orthogonal_projection_singleton {v : E} (w : E) :
     have hv : ↑∥v∥ ^ 2 = ⟪v, v⟫ := by
       norm_cast
       simp [← norm_sq_eq_inner]
-    simp [← inner_sub_left, ← inner_smul_left, ← inner_smul_right, ← RingEquiv.map_div, ← mul_comm, ← hv, ←
+    simp [← inner_sub_left, ← inner_smul_left, ← inner_smul_right, ← map_div₀, ← mul_comm, ← hv, ←
       InnerProductSpace.conj_sym, ← hv]
     
 

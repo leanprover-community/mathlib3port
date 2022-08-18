@@ -129,9 +129,9 @@ theorem is_conj_iff₀ [GroupWithZeroₓ α] {a b : α} : IsConj a b ↔ ∃ c :
 
 namespace IsConj
 
-/-- The setoid of the relation `is_conj` iff there is a unit `u` such that `u * x = y * u` -/
 /- This small quotient API is largely copied from the API of `associates`;
 where possible, try to keep them in sync -/
+/-- The setoid of the relation `is_conj` iff there is a unit `u` such that `u * x = y * u` -/
 protected def setoid (α : Type _) [Monoidₓ α] : Setoidₓ α where
   R := IsConj
   iseqv := ⟨IsConj.refl, fun a b => IsConj.symm, fun a b c => IsConj.trans⟩

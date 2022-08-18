@@ -92,11 +92,6 @@ variable (𝕜 : Type _) [Field 𝕜]
 
 variable [IsAlgClosed 𝕜] [Linear 𝕜 C]
 
-/-- An auxiliary lemma for Schur's lemma.
-
-If `X ⟶ X` is finite dimensional, and every nonzero endomorphism is invertible,
-then `X ⟶ X` is 1-dimensional.
--/
 -- In the proof below we have some difficulty using `I : finite_dimensional 𝕜 (X ⟶ X)`
 -- where we need a `finite_dimensional 𝕜 (End X)`.
 -- These are definitionally equal, but without eta reduction Lean can't see this.
@@ -105,6 +100,11 @@ then `X ⟶ X` is 1-dimensional.
 -- We prove this with the explicit `is_iso_iff_nonzero` assumption,
 -- rather than just `[simple X]`, as this form is useful for
 -- Müger's formulation of semisimplicity.
+/-- An auxiliary lemma for Schur's lemma.
+
+If `X ⟶ X` is finite dimensional, and every nonzero endomorphism is invertible,
+then `X ⟶ X` is 1-dimensional.
+-/
 theorem finrank_endomorphism_eq_one {X : C} (is_iso_iff_nonzero : ∀ f : X ⟶ X, IsIso f ↔ f ≠ 0)
     [I : FiniteDimensional 𝕜 (X ⟶ X)] : finrank 𝕜 (X ⟶ X) = 1 := by
   have id_nonzero :=
@@ -155,14 +155,14 @@ noncomputable def fieldEndOfFiniteDimensional (X : C) [Simple X] [I : FiniteDime
           obtain ⟨d, rfl⟩ := endomorphism_simple_eq_smul_id 𝕜 g
           simp [mul_smul, ← mul_comm c d] }
 
+-- There is a symmetric argument that uses `[finite_dimensional 𝕜 (Y ⟶ Y)]` instead,
+-- but we don't bother proving that here.
 /-- **Schur's lemma** for `𝕜`-linear categories:
 if hom spaces are finite dimensional, then the hom space between simples is at most 1-dimensional.
 
 See `finrank_hom_simple_simple_eq_one_iff` and `finrank_hom_simple_simple_eq_zero_iff` below
 for the refinements when we know whether or not the simples are isomorphic.
 -/
--- There is a symmetric argument that uses `[finite_dimensional 𝕜 (Y ⟶ Y)]` instead,
--- but we don't bother proving that here.
 theorem finrank_hom_simple_simple_le_one (X Y : C) [FiniteDimensional 𝕜 (X ⟶ X)] [Simple X] [Simple Y] :
     finrank 𝕜 (X ⟶ Y) ≤ 1 := by
   cases' subsingleton_or_nontrivial (X ⟶ Y) with h

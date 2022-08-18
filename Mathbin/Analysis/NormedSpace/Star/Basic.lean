@@ -85,8 +85,8 @@ section NonUnital
 
 variable [NonUnitalNormedRing E] [StarRing E] [CstarRing E]
 
-/-- In a C*-ring, star preserves the norm. -/
 -- see Note [lower instance priority]
+/-- In a C*-ring, star preserves the norm. -/
 instance (priority := 100) to_normed_star_group : NormedStarGroup E :=
   ⟨by
     intro x

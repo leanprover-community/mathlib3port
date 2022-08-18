@@ -31,8 +31,8 @@ attribute [local ext] Subtype.ext_val
 
 section
 
-/-- the image of a morphism in AddCommGroup is just the bundling of `add_monoid_hom.range f` -/
 -- implementation details of `has_image` for AddCommGroup; use the API, not these
+/-- the image of a morphism in AddCommGroup is just the bundling of `add_monoid_hom.range f` -/
 def image : AddCommGroupₓₓ :=
   AddCommGroupₓₓ.of (AddMonoidHom.range f)
 

@@ -857,329 +857,150 @@ theorem reduce.red : Red L (reduce L) := by
         
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `reduce.not [])
-  (Command.declSig
-   [(Term.implicitBinder "{" [`p] [":" (Term.prop "Prop")] "}")]
-   (Term.typeSpec
-    ":"
-    (Term.forall
-     "∀"
-     [(Term.implicitBinder "{" [`L₁ `L₂ `L₃] [":" (Term.app `List [(«term_×_» `α "×" `Bool)])] "}")
-      (Term.implicitBinder "{" [`x `b] [] "}")]
-     []
-     ","
-     (Term.arrow
-      («term_=_»
-       (Term.app `reduce [`L₁])
-       "="
-       («term_++_»
-        `L₂
-        "++"
-        («term_::_»
-         (Term.paren "(" [`x [(Term.tupleTail "," [`b])]] ")")
-         "::"
-         («term_::_» (Term.paren "(" [`x [(Term.tupleTail "," [(Term.app `bnot [`b])])]] ")") "::" `L₃))))
-      "→"
-      `p))))
-  (Command.declValEqns
-   (Term.matchAltsWhereDecls
-    (Term.matchAlts
-     [(Term.matchAlt
-       "|"
-       [[(«term[_]» "[" [] "]") "," `L2 "," `L3 "," (Term.hole "_") "," (Term.hole "_")]]
-       "=>"
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [`h]
-         []
-         "=>"
-         (Term.byTactic
-          "by"
-          (Tactic.tacticSeq
-           (Tactic.tacticSeq1Indented
-            [(group
-              (Tactic.«tactic_<;>_»
-               (Tactic.cases "cases" [(Tactic.casesTarget [] `L2)] [] [])
-               "<;>"
-               (Tactic.injections' "injections" []))
-              [])]))))))
-      (Term.matchAlt
-       "|"
-       [[(«term_::_» (Term.paren "(" [`x [(Term.tupleTail "," [`b])]] ")") "::" `L1) "," `L2 "," `L3 "," `x' "," `b']]
-       "=>"
-       (Term.byTactic
-        "by"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(group (Tactic.dsimp' "dsimp'" [] [] [] [] []) [])
-           (group (Tactic.cases "cases" [(Tactic.casesTarget [`r ":"] (Term.app `reduce [`L1]))] [] []) [])
-           (group
-            («tactic·.__;_»
-             "·"
-             [(group (Tactic.dsimp' "dsimp'" [] [] [] [] []) [])
-              (group (Tactic.intro "intro" [`h]) [])
-              (group
-               (Tactic.tacticHave_
-                "have"
-                (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `congr_arg [`List.length `h]))))
-               [])
-              (group
-               (Tactic.simp
-                "simp"
-                []
-                []
-                []
-                ["[" [(Tactic.simpErase "-" `add_commₓ)] "]"]
-                [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
-               [])
-              (group
-               (Tactic.exact
-                "exact"
-                (Term.app
-                 `absurd
-                 [`this
-                  (Term.byTactic
-                   "by"
-                   (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.decide "decide") [])])))]))
-               [])])
-            [])
-           (group
-            (Tactic.cases'
-             "cases'"
-             [(Tactic.casesTarget [] `hd)]
-             []
-             ["with" [(Lean.binderIdent `y) (Lean.binderIdent `c)]])
-            [])
-           (group
-            (Tactic.«tactic_<;>_»
-             (Tactic.byCases'
-              "by_cases'"
-              []
-              («term_∧_» («term_=_» `x "=" `y) "∧" («term_=_» `b "=" (Term.app `bnot [`c]))))
-             "<;>"
-             (Tactic.«tactic_<;>_»
-              (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] ["←"] `h)] "]"] [])
-              "<;>"
-              (Tactic.intro "intro" [`H])))
-            [])
-           (group
-            («tactic·.__;_»
-             "·"
-             [(group
-               (Tactic.rwSeq
-                "rw"
-                []
-                (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `H)] "]")
-                [(Tactic.location "at" (Tactic.locationHyp [`r] []))])
-               [])
-              (group
-               (Tactic.exact
-                "exact"
-                (Term.app
-                 (Term.explicit "@" `reduce.not)
-                 [`L1 («term_::_» (Term.paren "(" [`y [(Term.tupleTail "," [`c])]] ")") "::" `L2) `L3 `x' `b' `r]))
-               [])])
-            [])
-           (group
-            (Mathlib.Tactic.rcases
-             "rcases"
-             [(Tactic.casesTarget [] `L2)]
-             ["with"
-              (Tactic.rcasesPatLo
-               (Tactic.rcasesPatMed
-                [(Tactic.rcasesPat.paren
-                  "("
-                  (Tactic.rcasesPatLo
-                   (Tactic.rcasesPatMed
-                    [(Tactic.rcasesPat.ignore "_")
-                     "|"
-                     (Tactic.rcasesPat.tuple
-                      "⟨"
-                      [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `a)]) [])
-                       ","
-                       (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `L2)]) [])]
-                      "⟩")])
-                   [])
-                  ")")])
-               [])])
-            [])
-           (group
-            («tactic·.__;_»
-             "·"
-             [(group (Tactic.injections' "injections" []) [])
-              (group (Tactic.substVars "subst_vars") [])
-              (group (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))]) [])
-              (group (Tactic.cc "cc") [])])
-            [])
-           (group
-            («tactic·.__;_»
-             "·"
-             [(group
-               (Tactic.refine'
-                "refine'"
-                (Term.app (Term.explicit "@" `reduce.not) [`L1 `L2 `L3 `x' `b' (Term.hole "_")]))
-               [])
-              (group (Tactic.injection "injection" `H ["with" ["_" `H]]) [])
-              (group
-               (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `r) "," (Tactic.rwRule [] `H)] "]") [])
-               [])
-              (group (Tactic.tacticRfl "rfl") [])])
-            [])]))))])
-    []))
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.declValSimple'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group (Tactic.dsimp' "dsimp'" [] [] [] [] []) [])
-      (group (Tactic.cases "cases" [(Tactic.casesTarget [`r ":"] (Term.app `reduce [`L1]))] [] []) [])
-      (group
-       («tactic·.__;_»
-        "·"
-        [(group (Tactic.dsimp' "dsimp'" [] [] [] [] []) [])
-         (group (Tactic.intro "intro" [`h]) [])
-         (group
-          (Tactic.tacticHave_
-           "have"
-           (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `congr_arg [`List.length `h]))))
-          [])
-         (group
-          (Tactic.simp
-           "simp"
-           []
-           []
-           []
-           ["[" [(Tactic.simpErase "-" `add_commₓ)] "]"]
-           [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
-          [])
-         (group
-          (Tactic.exact
-           "exact"
-           (Term.app
-            `absurd
-            [`this
-             (Term.byTactic
-              "by"
-              (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.decide "decide") [])])))]))
-          [])])
-       [])
-      (group
-       (Tactic.cases' "cases'" [(Tactic.casesTarget [] `hd)] [] ["with" [(Lean.binderIdent `y) (Lean.binderIdent `c)]])
-       [])
-      (group
-       (Tactic.«tactic_<;>_»
-        (Tactic.byCases' "by_cases'" [] («term_∧_» («term_=_» `x "=" `y) "∧" («term_=_» `b "=" (Term.app `bnot [`c]))))
-        "<;>"
-        (Tactic.«tactic_<;>_»
-         (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] ["←"] `h)] "]"] [])
-         "<;>"
-         (Tactic.intro "intro" [`H])))
-       [])
-      (group
-       («tactic·.__;_»
-        "·"
-        [(group
-          (Tactic.rwSeq
-           "rw"
-           []
-           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `H)] "]")
-           [(Tactic.location "at" (Tactic.locationHyp [`r] []))])
-          [])
-         (group
-          (Tactic.exact
-           "exact"
-           (Term.app
-            (Term.explicit "@" `reduce.not)
-            [`L1 («term_::_» (Term.paren "(" [`y [(Term.tupleTail "," [`c])]] ")") "::" `L2) `L3 `x' `b' `r]))
-          [])])
-       [])
-      (group
-       (Mathlib.Tactic.rcases
-        "rcases"
-        [(Tactic.casesTarget [] `L2)]
-        ["with"
-         (Tactic.rcasesPatLo
-          (Tactic.rcasesPatMed
-           [(Tactic.rcasesPat.paren
-             "("
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(group (Tactic.dsimp' "dsimp'" [] [] [] [] []) [])
+          (group (Tactic.cases "cases" [(Tactic.casesTarget [`r ":"] (Term.app `reduce [`L1]))] [] []) [])
+          (group
+           («tactic·.__;_»
+            "·"
+            [(group (Tactic.dsimp' "dsimp'" [] [] [] [] []) [])
+             (group (Tactic.intro "intro" [`h]) [])
+             (group
+              (Tactic.tacticHave_
+               "have"
+               (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `congr_arg [`List.length `h]))))
+              [])
+             (group
+              (Tactic.simp
+               "simp"
+               []
+               []
+               []
+               ["[" [(Tactic.simpErase "-" `add_commₓ)] "]"]
+               [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
+              [])
+             (group
+              (Tactic.exact
+               "exact"
+               (Term.app
+                `absurd
+                [`this
+                 (Term.byTactic
+                  "by"
+                  (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.decide "decide") [])])))]))
+              [])])
+           [])
+          (group
+           (Tactic.cases'
+            "cases'"
+            [(Tactic.casesTarget [] `hd)]
+            []
+            ["with" [(Lean.binderIdent `y) (Lean.binderIdent `c)]])
+           [])
+          (group
+           (Tactic.«tactic_<;>_»
+            (Tactic.byCases'
+             "by_cases'"
+             []
+             («term_∧_» («term_=_» `x "=" `y) "∧" («term_=_» `b "=" (Term.app `bnot [`c]))))
+            "<;>"
+            (Tactic.«tactic_<;>_»
+             (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] ["←"] `h)] "]"] [])
+             "<;>"
+             (Tactic.intro "intro" [`H])))
+           [])
+          (group
+           («tactic·.__;_»
+            "·"
+            [(group
+              (Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `H)] "]")
+               [(Tactic.location "at" (Tactic.locationHyp [`r] []))])
+              [])
+             (group
+              (Tactic.exact
+               "exact"
+               (Term.app
+                (Term.explicit "@" `reduce.not)
+                [`L1 («term_::_» (Term.paren "(" [`y [(Term.tupleTail "," [`c])]] ")") "::" `L2) `L3 `x' `b' `r]))
+              [])])
+           [])
+          (group
+           (Mathlib.Tactic.rcases
+            "rcases"
+            [(Tactic.casesTarget [] `L2)]
+            ["with"
              (Tactic.rcasesPatLo
               (Tactic.rcasesPatMed
-               [(Tactic.rcasesPat.ignore "_")
-                "|"
-                (Tactic.rcasesPat.tuple
-                 "⟨"
-                 [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `a)]) [])
-                  ","
-                  (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `L2)]) [])]
-                 "⟩")])
+               [(Tactic.rcasesPat.paren
+                 "("
+                 (Tactic.rcasesPatLo
+                  (Tactic.rcasesPatMed
+                   [(Tactic.rcasesPat.ignore "_")
+                    "|"
+                    (Tactic.rcasesPat.tuple
+                     "⟨"
+                     [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `a)]) [])
+                      ","
+                      (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `L2)]) [])]
+                     "⟩")])
+                  [])
+                 ")")])
+              [])])
+           [])
+          (group
+           («tactic·.__;_»
+            "·"
+            [(group (Tactic.injections' "injections" []) [])
+             (group (Tactic.substVars "subst_vars") [])
+             (group (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))]) [])
+             (group (Tactic.cc "cc") [])])
+           [])
+          (group
+           («tactic·.__;_»
+            "·"
+            [(group
+              (Tactic.refine'
+               "refine'"
+               (Term.app (Term.explicit "@" `reduce.not) [`L1 `L2 `L3 `x' `b' (Term.hole "_")]))
               [])
-             ")")])
-          [])])
-       [])
-      (group
-       («tactic·.__;_»
-        "·"
-        [(group (Tactic.injections' "injections" []) [])
-         (group (Tactic.substVars "subst_vars") [])
-         (group (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))]) [])
-         (group (Tactic.cc "cc") [])])
-       [])
-      (group
-       («tactic·.__;_»
-        "·"
-        [(group
-          (Tactic.refine' "refine'" (Term.app (Term.explicit "@" `reduce.not) [`L1 `L2 `L3 `x' `b' (Term.hole "_")]))
-          [])
-         (group (Tactic.injection "injection" `H ["with" ["_" `H]]) [])
-         (group
-          (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `r) "," (Tactic.rwRule [] `H)] "]") [])
-          [])
-         (group (Tactic.tacticRfl "rfl") [])])
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+             (group (Tactic.injection "injection" `H ["with" ["_" `H]]) [])
+             (group
+              (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `r) "," (Tactic.rwRule [] `H)] "]") [])
+              [])
+             (group (Tactic.tacticRfl "rfl") [])])
+           [])])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («tactic·.__;_»
-   "·"
-   [(group
-     (Tactic.refine' "refine'" (Term.app (Term.explicit "@" `reduce.not) [`L1 `L2 `L3 `x' `b' (Term.hole "_")]))
-     [])
-    (group (Tactic.injection "injection" `H ["with" ["_" `H]]) [])
-    (group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `r) "," (Tactic.rwRule [] `H)] "]") []) [])
-    (group (Tactic.tacticRfl "rfl") [])])
+      («tactic·.__;_»
+       "·"
+       [(group
+         (Tactic.refine' "refine'" (Term.app (Term.explicit "@" `reduce.not) [`L1 `L2 `L3 `x' `b' (Term.hole "_")]))
+         [])
+        (group (Tactic.injection "injection" `H ["with" ["_" `H]]) [])
+        (group
+         (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `r) "," (Tactic.rwRule [] `H)] "]") [])
+         [])
+        (group (Tactic.tacticRfl "rfl") [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.tacticRfl "rfl")
+      (Tactic.tacticRfl "rfl")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, tactic))
-  (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `r) "," (Tactic.rwRule [] `H)] "]") [])
+      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `r) "," (Tactic.rwRule [] `H)] "]") [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `H
+      `H
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  `r
+      `r
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.injection "injection" `H ["with" ["_" `H]])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '_', expected 'ident'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '_', expected 'Lean.Parser.Term.hole'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+      (Tactic.injection "injection" `H ["with" ["_" `H]])-/-- failed to format: format: uncaught backtrack exception
 theorem
   reduce.not
   { p : Prop } : ∀ { L₁ L₂ L₃ : List α × Bool } { x b } , reduce L₁ = L₂ ++ ( x , b ) :: ( x , bnot b ) :: L₃ → p

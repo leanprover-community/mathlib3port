@@ -648,13 +648,13 @@ theorem mk_d_2_0 : (mk X₀ X₁ X₂ d₀ d₁ s succ).d 2 1 = d₁ := by
   change ite (2 = 1 + 1) (𝟙 X₂ ≫ d₁) 0 = d₁
   rw [if_pos rfl, category.id_comp]
 
+-- TODO simp lemmas for the inductive steps? It's not entirely clear that they are needed.
 /-- A simpler inductive constructor for `ℕ`-indexed chain complexes.
 
 You provide explicitly the first differential,
 then a function which takes a differential,
 and returns the next object, its differential, and the fact it composes appropriately to zero.
 -/
--- TODO simp lemmas for the inductive steps? It's not entirely clear that they are needed.
 def mk' (X₀ X₁ : V) (d : X₁ ⟶ X₀) (succ' : ∀ t : ΣX₀ X₁ : V, X₁ ⟶ X₀, Σ'(X₂ : V)(d : X₂ ⟶ t.2.1), d ≫ t.2.2 = 0) :
     ChainComplex V ℕ :=
   mk X₀ X₁ (succ' ⟨X₀, X₁, d⟩).1 d (succ' ⟨X₀, X₁, d⟩).2.1 (succ' ⟨X₀, X₁, d⟩).2.2 fun t =>
@@ -868,13 +868,13 @@ theorem mk_d_2_0 : (mk X₀ X₁ X₂ d₀ d₁ s succ).d 1 2 = d₁ := by
   change ite (2 = 1 + 1) (d₁ ≫ 𝟙 X₂) 0 = d₁
   rw [if_pos rfl, category.comp_id]
 
+-- TODO simp lemmas for the inductive steps? It's not entirely clear that they are needed.
 /-- A simpler inductive constructor for `ℕ`-indexed cochain complexes.
 
 You provide explicitly the first differential,
 then a function which takes a differential,
 and returns the next object, its differential, and the fact it composes appropriately to zero.
 -/
--- TODO simp lemmas for the inductive steps? It's not entirely clear that they are needed.
 def mk' (X₀ X₁ : V) (d : X₀ ⟶ X₁) (succ' : ∀ t : ΣX₀ X₁ : V, X₀ ⟶ X₁, Σ'(X₂ : V)(d : t.2.1 ⟶ X₂), t.2.2 ≫ d = 0) :
     CochainComplex V ℕ :=
   mk X₀ X₁ (succ' ⟨X₀, X₁, d⟩).1 d (succ' ⟨X₀, X₁, d⟩).2.1 (succ' ⟨X₀, X₁, d⟩).2.2 fun t =>

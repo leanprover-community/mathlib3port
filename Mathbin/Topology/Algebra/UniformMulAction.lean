@@ -18,6 +18,8 @@ In later files once the additive group structure is set up, we provide
 * `uniform_space.completion.distrib_mul_action`
 * `uniform_space.completion.mul_action_with_zero`
 * `uniform_space.completion.module`
+
+TODO: Generalise the results here from the concrete `completion` to any `abstract_completion`.
 -/
 
 
@@ -115,9 +117,30 @@ variable [HasSmul M X]
 instance : HasSmul M (Completion X) :=
   ⟨fun c => Completion.map ((· • ·) c)⟩
 
+theorem smul_def (c : M) (x : Completion X) : c • x = Completion.map ((· • ·) c) x :=
+  rfl
+
 @[to_additive]
 instance : HasUniformContinuousConstSmul M (Completion X) :=
   ⟨fun c => uniform_continuous_map⟩
+
+instance [HasSmul N X] [HasSmul M N] [HasUniformContinuousConstSmul M X] [HasUniformContinuousConstSmul N X]
+    [IsScalarTower M N X] : IsScalarTower M N (Completion X) :=
+  ⟨fun m n x => by
+    have : _ = (_ : completion X → completion X) :=
+      map_comp (uniform_continuous_const_smul m) (uniform_continuous_const_smul n)
+    refine' Eq.trans _ (congr_fun this.symm x)
+    exact congr_arg (fun f => completion.map f x) (funext (smul_assoc _ _))⟩
+
+instance [HasSmul N X] [SmulCommClass M N X] [HasUniformContinuousConstSmul M X] [HasUniformContinuousConstSmul N X] :
+    SmulCommClass M N (Completion X) :=
+  ⟨fun m n x => by
+    have hmn : m • n • x = (completion.map (HasSmul.smul m) ∘ completion.map (HasSmul.smul n)) x := rfl
+    have hnm : n • m • x = (completion.map (HasSmul.smul n) ∘ completion.map (HasSmul.smul m)) x := rfl
+    rw [hmn, hnm, map_comp, map_comp]
+    exact congr_arg (fun f => completion.map f x) (funext (smul_comm _ _))
+    repeat'
+      exact uniform_continuous_const_smul _⟩
 
 instance [HasSmul Mᵐᵒᵖ X] [IsCentralScalar M X] : IsCentralScalar M (Completion X) :=
   ⟨fun c a => (congr_arg fun f => Completion.map f a) <| funext (op_smul_eq_smul c)⟩

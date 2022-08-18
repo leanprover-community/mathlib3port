@@ -5,7 +5,7 @@ Authors: Andrew Yang
 -/
 import Mathbin.Order.CompactlyGenerated
 import Mathbin.Order.OrderIsoNat
-import Mathbin.Topology.Sets.Compacts
+import Mathbin.Topology.Sets.Closeds
 
 /-!
 # Noetherian space
@@ -159,10 +159,8 @@ theorem NoetherianSpace.finite [NoetherianSpace α] [T2Space α] : Finite α := 
   letI : Fintype α := Set.fintypeOfFiniteUniv (noetherian_space.is_compact Set.Univ).finite_of_discrete
   infer_instance
 
-instance (priority := 100) Finite.to_noetherian_space [Finite α] : NoetherianSpace α := by
-  cases nonempty_fintype α
-  classical
-  exact ⟨@Fintype.well_founded_of_trans_of_irrefl (Subtype.fintype _) _ _ _⟩
+instance (priority := 100) Finite.to_noetherian_space [Finite α] : NoetherianSpace α :=
+  ⟨Finite.well_founded_of_trans_of_irrefl _⟩
 
 theorem NoetherianSpace.exists_finset_irreducible [NoetherianSpace α] (s : Closeds α) :
     ∃ S : Finset (Closeds α), (∀ k : S, IsIrreducible (k : Set α)) ∧ s = S.sup id := by

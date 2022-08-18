@@ -20,7 +20,7 @@ the **ramification index** `ideal.ramification_idx f p P` is the multiplicity of
 and the **inertia degree** `ideal.inertia_deg f p P` is the degree of the field extension
 `(S / P) : (R / p)`.
 
-## TODO (#12287)
+## Main results
 
 The main theorem `ideal.sum_ramification_inertia` states that for all coprime `P` lying over `p`,
 `Σ P, ramification_idx f p P * inertia_deg f p P` equals the degree of the field extension
@@ -133,6 +133,9 @@ theorem le_pow_of_le_ramification_idx {n : ℕ} (hn : n ≤ ramificationIdx f p 
 
 theorem le_pow_ramification_idx : map f p ≤ P ^ ramificationIdx f p P :=
   le_pow_of_le_ramification_idx (le_reflₓ _)
+
+theorem le_comap_pow_ramification_idx : p ≤ comap f (P ^ ramificationIdx f p P) :=
+  map_le_iff_le_comap.mp le_pow_ramification_idx
 
 theorem le_comap_of_ramification_idx_ne_zero (h : ramificationIdx f p P ≠ 0) : p ≤ comap f P :=
   Ideal.map_le_iff_le_comap.mp <| le_pow_ramification_idx.trans <| Ideal.pow_le_self <| h
@@ -674,6 +677,150 @@ theorem finrank_prime_pow_ramification_idx [IsDomain S] [IsDedekindDomain S] (hP
   simp only [← finrank_of_infinite_dimensional hP, ← finrank_of_infinite_dimensional hPe, ← mul_zero]
 
 end FactLeComap
+
+section FactorsMap
+
+open Classical
+
+/-! ## Properties of the factors of `p.map (algebra_map R S)` -/
+
+
+variable [IsDomain S] [IsDedekindDomain S] [Algebra R S]
+
+theorem Factors.ne_bot (P : (factors (map (algebraMap R S) p)).toFinset) : (P : Ideal S) ≠ ⊥ :=
+  (prime_of_factor _ (Multiset.mem_to_finset.mp P.2)).ne_zero
+
+instance Factors.is_prime (P : (factors (map (algebraMap R S) p)).toFinset) : IsPrime (P : Ideal S) :=
+  Ideal.is_prime_of_prime (prime_of_factor _ (Multiset.mem_to_finset.mp P.2))
+
+theorem Factors.ramification_idx_ne_zero (P : (factors (map (algebraMap R S) p)).toFinset) :
+    ramificationIdx (algebraMap R S) p P ≠ 0 :=
+  IsDedekindDomain.ramification_idx_ne_zero (ne_zero_of_mem_factors (Multiset.mem_to_finset.mp P.2))
+    (Factors.is_prime p P) (Ideal.le_of_dvd (dvd_of_mem_factors (Multiset.mem_to_finset.mp P.2)))
+
+instance Factors.fact_ramification_idx_ne_zero (P : (factors (map (algebraMap R S) p)).toFinset) :
+    Fact (ramificationIdx (algebraMap R S) p P ≠ 0) :=
+  ⟨Factors.ramification_idx_ne_zero p P⟩
+
+attribute [local instance] quotient.algebra_quotient_of_ramification_idx_ne_zero
+
+instance Factors.is_scalar_tower (P : (factors (map (algebraMap R S) p)).toFinset) :
+    IsScalarTower R (R ⧸ p) (S ⧸ (P : Ideal S)) :=
+  IsScalarTower.of_algebra_map_eq fun x => by
+    simp
+
+attribute [local instance] Ideal.Quotient.field
+
+theorem Factors.finrank_pow_ramification_idx [p.IsMaximal] (P : (factors (map (algebraMap R S) p)).toFinset) :
+    finrank (R ⧸ p) (S ⧸ (P : Ideal S) ^ ramificationIdx (algebraMap R S) p P) =
+      ramificationIdx (algebraMap R S) p P * inertiaDeg (algebraMap R S) p P :=
+  by
+  rw [finrank_prime_pow_ramification_idx, inertia_deg_algebra_map]
+  exact factors.ne_bot p P
+
+instance Factors.finite_dimensional_quotient [IsNoetherian R S] [p.IsMaximal]
+    (P : (factors (map (algebraMap R S) p)).toFinset) : FiniteDimensional (R ⧸ p) (S ⧸ (P : Ideal S)) :=
+  IsNoetherian.iff_fg.mp <|
+    is_noetherian_of_tower R <|
+      is_noetherian_of_surjective S (Ideal.Quotient.mkₐ _ _).toLinearMap <|
+        LinearMap.range_eq_top.mpr Ideal.Quotient.mk_surjective
+
+theorem Factors.inertia_deg_ne_zero [IsNoetherian R S] [p.IsMaximal] (P : (factors (map (algebraMap R S) p)).toFinset) :
+    inertiaDeg (algebraMap R S) p P ≠ 0 := by
+  rw [inertia_deg_algebra_map]
+  exact (finite_dimensional.finrank_pos_iff.mpr inferInstance).ne'
+
+instance Factors.finite_dimensional_quotient_pow [IsNoetherian R S] [p.IsMaximal]
+    (P : (factors (map (algebraMap R S) p)).toFinset) :
+    FiniteDimensional (R ⧸ p) (S ⧸ (P : Ideal S) ^ ramificationIdx (algebraMap R S) p P) := by
+  refine' FiniteDimensional.finite_dimensional_of_finrank _
+  rw [pos_iff_ne_zero, factors.finrank_pow_ramification_idx]
+  exact mul_ne_zero (factors.ramification_idx_ne_zero p P) (factors.inertia_deg_ne_zero p P)
+
+universe w
+
+/-- **Chinese remainder theorem** for a ring of integers: if the prime ideal `p : ideal R`
+factors in `S` as `∏ i, P i ^ e i`, then `S ⧸ I` factors as `Π i, R ⧸ (P i ^ e i)`. -/
+noncomputable def Factors.piQuotientEquiv (p : Ideal R) (hp : map (algebraMap R S) p ≠ ⊥) :
+    S ⧸ map (algebraMap R S) p ≃+*
+      ∀ P : (factors (map (algebraMap R S) p)).toFinset, S ⧸ (P : Ideal S) ^ ramificationIdx (algebraMap R S) p P :=
+  (IsDedekindDomain.quotientEquivPiFactors hp).trans <|
+    @RingEquiv.piCongrRight (factors (map (algebraMap R S) p)).toFinset
+      (fun P => S ⧸ (P : Ideal S) ^ (factors (map (algebraMap R S) p)).count P)
+      (fun P => S ⧸ (P : Ideal S) ^ ramificationIdx (algebraMap R S) p P) _ _
+      fun P : (factors (map (algebraMap R S) p)).toFinset =>
+      Ideal.quotEquivOfEq <| by
+        rw [is_dedekind_domain.ramification_idx_eq_factors_count hp (factors.is_prime p P) (factors.ne_bot p P)]
+
+@[simp]
+theorem Factors.pi_quotient_equiv_mk (p : Ideal R) (hp : map (algebraMap R S) p ≠ ⊥) (x : S) :
+    Factors.piQuotientEquiv p hp (Ideal.Quotient.mk _ x) = fun P => Ideal.Quotient.mk _ x :=
+  rfl
+
+@[simp]
+theorem Factors.pi_quotient_equiv_map (p : Ideal R) (hp : map (algebraMap R S) p ≠ ⊥) (x : R) :
+    Factors.piQuotientEquiv p hp (algebraMap _ _ x) = fun P => Ideal.Quotient.mk _ (algebraMap _ _ x) :=
+  rfl
+
+/-- **Chinese remainder theorem** for a ring of integers: if the prime ideal `p : ideal R`
+factors in `S` as `∏ i, P i ^ e i`,
+then `S ⧸ I` factors `R ⧸ I`-linearly as `Π i, R ⧸ (P i ^ e i)`. -/
+noncomputable def Factors.piQuotientLinearEquiv (p : Ideal R) (hp : map (algebraMap R S) p ≠ ⊥) :
+    (S ⧸ map (algebraMap R S) p) ≃ₗ[R ⧸ p]
+      ∀ P : (factors (map (algebraMap R S) p)).toFinset, S ⧸ (P : Ideal S) ^ ramificationIdx (algebraMap R S) p P :=
+  { Factors.piQuotientEquiv p hp with
+    map_smul' := by
+      rintro ⟨c⟩ ⟨x⟩
+      ext P
+      simp only [← Ideal.Quotient.mk_algebra_map, ← factors.pi_quotient_equiv_mk, ← factors.pi_quotient_equiv_map, ←
+        Submodule.Quotient.quot_mk_eq_mk, ← Pi.algebra_map_apply, ← RingEquiv.to_fun_eq_coe, ← Pi.mul_apply, ←
+        Ideal.Quotient.algebra_map_quotient_map_quotient, ← Ideal.Quotient.mk_eq_mk, ← Algebra.smul_def, ←
+        _root_.map_mul, ← RingHomCompTriple.comp_apply]
+      congr }
+
+open BigOperators
+
+/-- The **fundamental identity** of ramification index `e` and inertia degree `f`:
+for `P` ranging over the primes lying over `p`, `∑ P, e P * f P = [Frac(S) : Frac(R)]`;
+here `S` is a finite `R`-module (and thus `Frac(S) : Frac(R)` is a finite extension) and `p`
+is maximal.
+-/
+theorem sum_ramification_inertia (K L : Type _) [Field K] [Field L] [IsDomain R] [IsDedekindDomain R] [Algebra R K]
+    [IsFractionRing R K] [Algebra S L] [IsFractionRing S L] [Algebra K L] [Algebra R L] [IsScalarTower R S L]
+    [IsScalarTower R K L] [IsNoetherian R S] [IsIntegralClosure S R L] [p.IsMaximal] (hp0 : p ≠ ⊥) :
+    (∑ P in (factors (map (algebraMap R S) p)).toFinset,
+        ramificationIdx (algebraMap R S) p P * inertiaDeg (algebraMap R S) p P) =
+      finrank K L :=
+  by
+  set e := ramification_idx (algebraMap R S) p
+  set f := inertia_deg (algebraMap R S) p
+  have inj_RL : Function.Injective (algebraMap R L) := by
+    rw [IsScalarTower.algebra_map_eq R K L, RingHom.coe_comp]
+    exact (RingHom.injective _).comp (IsFractionRing.injective R K)
+  have inj_RS : Function.Injective (algebraMap R S) := by
+    refine' Function.Injective.of_comp (show Function.Injective (algebraMap S L ∘ _) from _)
+    rw [← RingHom.coe_comp, ← IsScalarTower.algebra_map_eq]
+    exact inj_RL
+  calc
+    (∑ P in (factors (map (algebraMap R S) p)).toFinset, e P * f P) =
+        ∑ P in (factors (map (algebraMap R S) p)).toFinset.attach, finrank (R ⧸ p) (S ⧸ (P : Ideal S) ^ e P) :=
+      _
+    _ = finrank (R ⧸ p) (∀ P : (factors (map (algebraMap R S) p)).toFinset, S ⧸ (P : Ideal S) ^ e P) :=
+      (Module.Free.finrank_pi_fintype (R ⧸ p)).symm
+    _ = finrank (R ⧸ p) (S ⧸ map (algebraMap R S) p) := _
+    _ = finrank K L := _
+    
+  · rw [← Finset.sum_attach]
+    refine' Finset.sum_congr rfl fun P _ => _
+    rw [factors.finrank_pow_ramification_idx]
+    
+  · refine' LinearEquiv.finrank_eq (factors.pi_quotient_linear_equiv p _).symm
+    rwa [Ne.def, Ideal.map_eq_bot_iff_le_ker, (RingHom.injective_iff_ker_eq_bot _).mp inj_RS, le_bot_iff]
+    
+  · exact finrank_quotient_map p K L
+    
+
+end FactorsMap
 
 end Ideal
 

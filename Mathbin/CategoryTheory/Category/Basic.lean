@@ -87,13 +87,13 @@ infixr:80
   " ≫ " =>-- type as \b1
   CategoryStruct.comp
 
+-- type as \gg
 /-- The typeclass `category C` describes morphisms associated to objects of type `C`.
 The universe levels of the objects and morphisms are unconstrained, and will often need to be
 specified explicitly, as `category.{v} C`. (See also `large_category` and `small_category`.)
 
 See <https://stacks.math.columbia.edu/tag/0014>.
 -/
--- type as \gg
 class Category (obj : Type u) extends CategoryStruct.{v} obj : Type max u (v + 1) where
   id_comp' : ∀ {X Y : obj} (f : hom X Y), 𝟙 X ≫ f = f := by
     run_tac

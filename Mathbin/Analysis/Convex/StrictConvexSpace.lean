@@ -7,6 +7,7 @@ import Mathbin.Analysis.Convex.Strict
 import Mathbin.Analysis.Convex.Topology
 import Mathbin.Analysis.NormedSpace.Ordered
 import Mathbin.Analysis.NormedSpace.Pointwise
+import Mathbin.Analysis.NormedSpace.AffineIsometry
 
 /-!
 # Strictly convex spaces

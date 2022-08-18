@@ -68,8 +68,8 @@ restate_axiom bicategory.strict.associator_eq_to_iso'
 attribute [simp]
   bicategory.strict.id_comp bicategory.strict.left_unitor_eq_to_iso bicategory.strict.comp_id bicategory.strict.right_unitor_eq_to_iso bicategory.strict.assoc bicategory.strict.associator_eq_to_iso
 
-/-- Category structure on a strict bicategory -/
 -- see Note [lower instance priority]
+/-- Category structure on a strict bicategory -/
 instance (priority := 100) StrictBicategory.category [Bicategory.Strict B] : Category B where
   id_comp' := fun a b => Bicategory.Strict.id_comp
   comp_id' := fun a b => Bicategory.Strict.comp_id

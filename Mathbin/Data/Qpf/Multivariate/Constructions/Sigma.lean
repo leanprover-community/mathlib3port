@@ -87,7 +87,7 @@ protected def abs ⦃α⦄ : (Pi.p F).Obj α → Pi F α
 
 /-- representation function for dependent products -/
 protected def repr ⦃α⦄ : Pi F α → (Pi.p F).Obj α
-  | f => ⟨fun a => (Mvqpf.repr (f a)).1, fun i a => (@Mvqpf.repr _ _ _ (_inst_2 _) _ (f _)).2 _ a.2⟩
+  | f => ⟨fun a => (Mvqpf.repr (f a)).1, fun i a => (Mvqpf.repr (f _)).2 _ a.2⟩
 
 instance : Mvqpf (Pi F) where
   p := Pi.p F

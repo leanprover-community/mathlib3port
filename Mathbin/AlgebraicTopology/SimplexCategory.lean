@@ -49,16 +49,16 @@ section
 
 attribute [local semireducible] SimplexCategory
 
-/-- Interpet a natural number as an object of the simplex category. -/
 -- TODO: Make `mk` irreducible.
+/-- Interpet a natural number as an object of the simplex category. -/
 def mk (n : ℕ) : SimplexCategory :=
   n
 
 -- mathport name: «expr[ ]»
 localized [Simplicial] notation "[" n "]" => SimplexCategory.mk n
 
-/-- The length of an object of `simplex_category`. -/
 -- TODO: Make `len` irreducible.
+/-- The length of an object of `simplex_category`. -/
 def len (n : SimplexCategory) : ℕ :=
   n
 

@@ -278,3 +278,38 @@ theorem cont_diff_euclidean {n : WithTop ℕ} : ContDiff 𝕜 n f ↔ ∀ i, Con
 
 end PiLike
 
+section DiffeomorphUnitBall
+
+open Metric hiding mem_nhds_iff
+
+variable {n : WithTop ℕ} {E : Type _} [InnerProductSpace ℝ E]
+
+-- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `positivity #[]
+theorem cont_diff_homeomorph_unit_ball : (ContDiff ℝ n) fun x : E => (homeomorphUnitBall x : E) := by
+  suffices ContDiff ℝ n fun x => (1 + ∥x∥ ^ 2).sqrt⁻¹ by
+    exact this.smul cont_diff_id
+  have h : ∀ x : E, 0 < 1 + ∥x∥ ^ 2 := fun x => by
+    trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `positivity #[]"
+  refine' ContDiff.inv _ fun x => real.sqrt_ne_zero'.mpr (h x)
+  exact (cont_diff_const.add cont_diff_norm_sq).sqrt fun x => (h x).Ne.symm
+
+theorem cont_diff_on_homeomorph_unit_ball_symm {f : E → E}
+    (h : ∀ (y) (hy : y ∈ Ball (0 : E) 1), f y = homeomorphUnitBall.symm ⟨y, hy⟩) : ContDiffOn ℝ n f <| Ball 0 1 := by
+  intro y hy
+  apply ContDiffAt.cont_diff_within_at
+  have hf : f =ᶠ[𝓝 y] fun y => (1 - ∥(y : E)∥ ^ 2).sqrt⁻¹ • (y : E) := by
+    rw [eventually_eq_iff_exists_mem]
+    refine' ⟨ball (0 : E) 1, mem_nhds_iff.mpr ⟨ball (0 : E) 1, Set.Subset.refl _, is_open_ball, hy⟩, fun z hz => _⟩
+    rw [h z hz]
+    rfl
+  refine' ContDiffAt.congr_of_eventually_eq _ hf
+  suffices ContDiffAt ℝ n (fun y => (1 - ∥(y : E)∥ ^ 2).sqrt⁻¹) y by
+    exact this.smul cont_diff_at_id
+  have h : 0 < 1 - ∥(y : E)∥ ^ 2 := by
+    rwa [mem_ball_zero_iff, ← _root_.abs_one, ← abs_norm_eq_norm, ← sq_lt_sq, one_pow, ← sub_pos] at hy
+  refine' ContDiffAt.inv _ (real.sqrt_ne_zero'.mpr h)
+  refine' ContDiffAt.comp _ (cont_diff_at_sqrt h.ne.symm) _
+  exact cont_diff_at_const.sub cont_diff_norm_sq.cont_diff_at
+
+end DiffeomorphUnitBall
+

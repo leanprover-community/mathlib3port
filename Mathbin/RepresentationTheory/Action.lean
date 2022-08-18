@@ -42,13 +42,13 @@ open CategoryTheory.Limits
 
 variable (V : Type (u + 1)) [LargeCategory V]
 
+-- Note: this is _not_ a categorical action of `G` on `V`.
 /-- An `Action V G` represents a bundled action of
 the monoid `G` on an object of some category `V`.
 
 As an example, when `V = Module R`, this is an `R`-linear representation of `G`,
 while when `V = Type` this is a `G`-action.
 -/
--- Note: this is _not_ a categorical action of `G` on `V`.
 structure Action (G : Mon.{u}) where
   V : V
   ρ : G ⟶ Mon.of (End V)

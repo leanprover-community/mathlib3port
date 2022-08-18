@@ -487,11 +487,11 @@ theorem app_is_iso_of_stalk_functor_map_iso {F G : Sheaf C X} (f : F ⟶ G) (U :
   apply (is_iso_iff_bijective _).mp
   exact functor.map_is_iso (forget C) ((stalk_functor C x.1).map f.1)
 
+-- Making this an instance would cause a loop in typeclass resolution with `functor.map_is_iso`
 /-- Let `F` and `G` be sheaves valued in a concrete category, whose forgetful functor reflects
 isomorphisms, preserves limits and filtered colimits. Then if the stalk maps of a morphism
 `f : F ⟶ G` are all isomorphisms, `f` must be an isomorphism.
 -/
--- Making this an instance would cause a loop in typeclass resolution with `functor.map_is_iso`
 theorem is_iso_of_stalk_functor_map_iso {F G : Sheaf C X} (f : F ⟶ G) [∀ x : X, IsIso ((stalkFunctor C x).map f.1)] :
     IsIso f := by
   -- Since the inclusion functor from sheaves to presheaves is fully faithful, it suffices to

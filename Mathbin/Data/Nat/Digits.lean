@@ -163,12 +163,12 @@ theorem digits_add (b : ℕ) (h : 2 ≤ b) (x y : ℕ) (w : x < b) (w' : 0 < x �
       
     
 
-/-- `of_digits b L` takes a list `L` of natural numbers, and interprets them
-as a number in semiring, as the little-endian digits in base `b`.
--/
 -- If we had a function converting a list into a polynomial,
 -- and appropriate lemmas about that function,
 -- we could rewrite this in terms of that.
+/-- `of_digits b L` takes a list `L` of natural numbers, and interprets them
+as a number in semiring, as the little-endian digits in base `b`.
+-/
 def ofDigits {α : Type _} [Semiringₓ α] (b : α) : List ℕ → α
   | [] => 0
   | h :: t => h + b * of_digits t

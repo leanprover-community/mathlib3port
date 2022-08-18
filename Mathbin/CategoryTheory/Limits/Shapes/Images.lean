@@ -192,9 +192,9 @@ instance [Mono f] : Inhabited (IsImage (MonoFactorisation.self f)) :=
 
 variable {f}
 
+-- TODO this is another good candidate for a future `unique_up_to_canonical_iso`.
 /-- Two factorisations through monomorphisms satisfying the universal property
 must factor through isomorphic objects. -/
--- TODO this is another good candidate for a future `unique_up_to_canonical_iso`.
 @[simps]
 def isoExt {F F' : MonoFactorisation f} (hF : IsImage F) (hF' : IsImage F') : F.i ≅ F'.i where
   Hom := hF.lift F'

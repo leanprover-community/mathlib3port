@@ -33,8 +33,8 @@ open TopologicalSpace
 
 variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
-/-- Homeomorphism between `α` and `β`, also called topological isomorphism -/
 -- not all spaces are homeomorphic to each other
+/-- Homeomorphism between `α` and `β`, also called topological isomorphism -/
 @[nolint has_nonempty_instance]
 structure Homeomorph (α : Type _) (β : Type _) [TopologicalSpace α] [TopologicalSpace β] extends α ≃ β where
   continuous_to_fun : Continuous to_fun := by

@@ -97,6 +97,18 @@ theorem affine_cancel_right_is_iso {P : AffineTargetMorphismProperty} (hP : P.To
     (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso g] [IsAffine Z] [IsAffine Y] : P (f ≫ g) ↔ P f := by
   rw [← P.to_property_apply, ← P.to_property_apply, hP.cancel_right_is_iso]
 
+theorem AffineTargetMorphismProperty.respects_iso_mk {P : AffineTargetMorphismProperty}
+    (h₁ : ∀ {X Y Z} (e : X ≅ Y) (f : Y ⟶ Z) [IsAffine Z], P f → P (e.hom ≫ f))
+    (h₂ : ∀ {X Y Z} (e : Y ≅ Z) (f : X ⟶ Y) [h : IsAffine Y], P f → @P (f ≫ e.hom) (is_affine_of_iso e.inv)) :
+    P.ToProperty.RespectsIso := by
+  constructor
+  · rintro X Y Z e f ⟨a, h⟩
+    exact ⟨a, h₁ e f h⟩
+    
+  · rintro X Y Z e f ⟨a, h⟩
+    exact ⟨is_affine_of_iso e.inv, h₂ e f h⟩
+    
+
 /-- For a `P : affine_target_morphism_property`, `target_affine_locally P` holds for
 `f : X ⟶ Y` whenever `P` holds for the restriction of `f` on every affine open subset of `Y`. -/
 def TargetAffineLocally (P : AffineTargetMorphismProperty) : MorphismProperty Scheme :=
@@ -415,8 +427,8 @@ theorem PropertyIsLocalAtTarget.open_cover_tfae {P : MorphismProperty Scheme} (h
     
   tfae_finish
 
-theorem AffineTargetMorphismProperty.IsLocal.open_cover_iff {P : MorphismProperty Scheme}
-    (hP : PropertyIsLocalAtTarget P) {X Y : Scheme.{u}} (f : X ⟶ Y) (𝒰 : Scheme.OpenCover.{u} Y) :
+theorem PropertyIsLocalAtTarget.open_cover_iff {P : MorphismProperty Scheme} (hP : PropertyIsLocalAtTarget P)
+    {X Y : Scheme.{u}} (f : X ⟶ Y) (𝒰 : Scheme.OpenCover.{u} Y) :
     P f ↔ ∀ i, P (pullback.snd : pullback f (𝒰.map i) ⟶ _) :=
   ⟨fun H =>
     let h := ((hP.open_cover_tfae f).out 0 2).mp H
@@ -424,6 +436,55 @@ theorem AffineTargetMorphismProperty.IsLocal.open_cover_iff {P : MorphismPropert
     fun H =>
     let h := ((hP.open_cover_tfae f).out 1 0).mp
     h ⟨𝒰, H⟩⟩
+
+namespace AffineTargetMorphismProperty
+
+/-- A `P : affine_target_morphism_property` is stable under base change if `P` holds for `Y ⟶ S`
+implies that `P` holds for `X ×ₛ Y ⟶ X` with `X` and `S` affine schemes. -/
+def StableUnderBaseChange (P : AffineTargetMorphismProperty) : Prop :=
+  ∀ ⦃X Y S : Scheme⦄ [IsAffine S] [IsAffine X] (f : X ⟶ S) (g : Y ⟶ S), P g → P (pullback.fst : pullback f g ⟶ X)
+
+theorem IsLocal.target_affine_locally_pullback_fst_of_right_of_stable_under_base_change
+    {P : AffineTargetMorphismProperty} (hP : P.IsLocal) (hP' : P.StableUnderBaseChange) {X Y S : Scheme} (f : X ⟶ S)
+    (g : Y ⟶ S) [IsAffine S] (H : P g) : TargetAffineLocally P (pullback.fst : pullback f g ⟶ X) := by
+  rw [(hP.affine_open_cover_tfae (pullback.fst : pullback f g ⟶ X)).out 0 1]
+  use X.affine_cover, inferInstance
+  intro i
+  let e := pullback_symmetry _ _ ≪≫ pullback_right_pullback_fst_iso f g (X.affine_cover.map i)
+  have : e.hom ≫ pullback.fst = pullback.snd := by
+    simp
+  rw [← this, affine_cancel_left_is_iso hP.1]
+  apply hP' <;> assumption
+
+theorem IsLocal.stable_under_base_change {P : AffineTargetMorphismProperty} (hP : P.IsLocal)
+    (hP' : P.StableUnderBaseChange) : (TargetAffineLocally P).StableUnderBaseChange := by
+  introv X H
+  rw [(hP.target_affine_locally_is_local.open_cover_tfae (pullback.fst : pullback f g ⟶ X)).out 0 1]
+  use S.affine_cover.pullback_cover f
+  intro i
+  rw [(hP.affine_open_cover_tfae g).out 0 3] at H
+  let e : pullback (pullback.fst : pullback f g ⟶ _) ((S.affine_cover.pullback_cover f).map i) ≅ _ := by
+    refine'
+      pullback_symmetry _ _ ≪≫
+        pullback_right_pullback_fst_iso f g _ ≪≫
+          _ ≪≫
+            (pullback_right_pullback_fst_iso (S.affine_cover.map i) g
+                (pullback.snd : pullback f (S.affine_cover.map i) ⟶ _)).symm
+    exact
+      as_iso
+        (pullback.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _)
+          (by
+            simpa using pullback.condition)
+          (by
+            simp ))
+  have : e.hom ≫ pullback.fst = pullback.snd := by
+    simp
+  rw [← this, (target_affine_locally_respects_iso hP.1).cancel_left_is_iso]
+  apply hP.target_affine_locally_pullback_fst_of_right_of_stable_under_base_change hP'
+  rw [← pullback_symmetry_hom_comp_snd, affine_cancel_left_is_iso hP.1]
+  apply H
+
+end AffineTargetMorphismProperty
 
 end AlgebraicGeometry
 

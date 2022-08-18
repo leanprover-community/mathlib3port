@@ -57,6 +57,7 @@ unsafe def extract_category : expr → tactic expr
   | quote.1 (@Eq (@Quiver.Hom _ (@CategoryStruct.toQuiver _ (@Category.toCategoryStruct _ (%%ₓS))) _ _) _ _) => pure S
   | _ => failed
 
+-- This is closely modelled on `reassoc_axiom`.
 /-- (internals for `@[elementwise]`)
 Given a lemma of the form `f = g`, where `f g : X ⟶ Y` and `X Y : V`,
 proves a new lemma of the form
@@ -68,7 +69,6 @@ otherwise.
 Returns the type and proof of this lemma,
 and the universe parameter `w` for the `concrete_category` instance, if it was not synthesized.
 -/
--- This is closely modelled on `reassoc_axiom`.
 unsafe def prove_elementwise (h : expr) : tactic (expr × expr × Option Name) := do
   let (vs, t) ← infer_type h >>= open_pis
   let (f, g) ← match_eq t

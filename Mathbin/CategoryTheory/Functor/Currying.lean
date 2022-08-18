@@ -62,9 +62,9 @@ def curry : (C × D ⥤ E) ⥤ C ⥤ D ⥤ E where
         dsimp' [← curry_obj]
         rw [nat_trans.naturality] }
 
+-- create projection simp lemmas even though this isn't a `{ .. }`.
 /-- The equivalence of functor categories given by currying/uncurrying.
 -/
--- create projection simp lemmas even though this isn't a `{ .. }`.
 @[simps]
 def currying : C ⥤ D ⥤ E ≌ C × D ⥤ E :=
   Equivalence.mk uncurry curry

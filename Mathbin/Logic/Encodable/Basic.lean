@@ -500,10 +500,10 @@ theorem skolem {α : Type _} {β : α → Type _} {P : ∀ x, β x → Prop} [c 
     [d : ∀ x y, Decidable (P x y)] : (∀ x, ∃ y, P x y) ↔ ∃ f : ∀ a, β a, ∀ x, P x (f x) :=
   ⟨axiom_of_choice, fun ⟨f, H⟩ x => ⟨_, H x⟩⟩
 
-/-- The `encode` function, viewed as an embedding. -/
 /-
 There is a total ordering on the elements of an encodable type, induced by the map to ℕ.
 -/
+/-- The `encode` function, viewed as an embedding. -/
 def encode' (α) [Encodable α] : α ↪ ℕ :=
   ⟨Encodable.encode, Encodable.encode_injective⟩
 

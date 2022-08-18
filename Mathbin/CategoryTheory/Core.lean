@@ -25,9 +25,9 @@ namespace CategoryTheory
 
 universe v₁ v₂ u₁ u₂
 
+-- morphism levels before object levels. See note [category_theory universes].
 /-- The core of a category C is the groupoid whose morphisms are all the
 isomorphisms of C. -/
--- morphism levels before object levels. See note [category_theory universes].
 @[nolint has_nonempty_instance]
 def Core (C : Type u₁) :=
   C
@@ -61,9 +61,9 @@ instance : Faithful (inclusion C) where
 
 variable {C} {G : Type u₂} [Groupoid.{v₂} G]
 
-/-- A functor from a groupoid to a category C factors through the core of C. -/
 -- Note that this function is not functorial
 -- (consider the two functors from [0] to [1], and the natural transformation between them).
+/-- A functor from a groupoid to a category C factors through the core of C. -/
 noncomputable def functorToCore (F : G ⥤ C) : G ⥤ Core C where
   obj := fun X => F.obj X
   map := fun X Y f => ⟨F.map f, F.map (inv f)⟩

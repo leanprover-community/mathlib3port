@@ -68,8 +68,8 @@ theorem coe_nat_mem (n : ℕ) : (n : R) ∈ s := by
 
 namespace SubsemiringClass
 
-/-- A subsemiring of a `non_assoc_semiring` inherits a `non_assoc_semiring` structure -/
 -- Prefer subclasses of `non_assoc_semiring` over subclasses of `subsemiring_class`.
+/-- A subsemiring of a `non_assoc_semiring` inherits a `non_assoc_semiring` structure -/
 instance (priority := 75) toNonAssocSemiring : NonAssocSemiringₓ s :=
   Subtype.coe_injective.NonAssocSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ => rfl
 
@@ -92,8 +92,8 @@ theorem coe_subtype : (subtype s : s → R) = coe :=
 
 omit hSR
 
-/-- A subsemiring of a `semiring` is a `semiring`. -/
 -- Prefer subclasses of `semiring` over subclasses of `subsemiring_class`.
+/-- A subsemiring of a `semiring` is a `semiring`. -/
 instance (priority := 75) toSemiring {R} [Semiringₓ R] [SetLike S R] [SubsemiringClass S R] : Semiringₓ s :=
   Subtype.coe_injective.Semiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
     fun _ => rfl
@@ -1101,9 +1101,9 @@ end Subsemiring
 
 end Actions
 
-/-- Submonoid of positive elements of an ordered semiring. -/
 -- While this definition is not about `subsemiring`s, this is the earliest we have
 -- both `ordered_semiring` and `submonoid` available.
+/-- Submonoid of positive elements of an ordered semiring. -/
 def posSubmonoid (R : Type _) [OrderedSemiring R] [Nontrivial R] : Submonoid R where
   Carrier := { x | 0 < x }
   one_mem' := show (0 : R) < 1 from zero_lt_one

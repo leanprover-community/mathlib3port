@@ -59,8 +59,8 @@ section AddCommMonoidₓ
 
 variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] (r s : R) (x y : M)
 
-/-- A module over a semiring automatically inherits a `mul_action_with_zero` structure. -/
 -- see Note [lower instance priority]
+/-- A module over a semiring automatically inherits a `mul_action_with_zero` structure. -/
 instance (priority := 100) Module.toMulActionWithZero : MulActionWithZero R M :=
   { (inferInstance : MulAction R M) with smul_zero := smul_zero, zero_smul := Module.zero_smul }
 
@@ -235,8 +235,8 @@ def Module.ofCore (H : Module.Core R M) : Module R M :=
 
 end AddCommGroupₓ
 
-/-- A variant of `module.ext` that's convenient for term-mode. -/
 -- We'll later use this to show `module ℕ M` and `module ℤ M` are subsingletons.
+/-- A variant of `module.ext` that's convenient for term-mode. -/
 theorem Module.ext' {R : Type _} [Semiringₓ R] {M : Type _} [AddCommMonoidₓ M] (P Q : Module R M)
     (w :
       ∀ (r : R) (m : M),
@@ -297,8 +297,8 @@ instance (priority := 910) Semiringₓ.toModule [Semiringₓ R] : Module R R whe
   zero_smul := zero_mul
   smul_zero := mul_zero
 
-/-- Like `semiring.to_module`, but multiplies on the right. -/
 -- see Note [lower instance priority]
+/-- Like `semiring.to_module`, but multiplies on the right. -/
 instance (priority := 910) Semiringₓ.toOppositeModule [Semiringₓ R] : Module Rᵐᵒᵖ R :=
   { MonoidWithZeroₓ.toOppositeMulActionWithZero R with smul_add := fun r x y => add_mulₓ _ _ _,
     add_smul := fun r x y => mul_addₓ _ _ _ }
@@ -444,10 +444,8 @@ theorem map_rat_smul [AddCommGroupₓ M] [AddCommGroupₓ M₂] [Module ℚ M] [
     [AddMonoidHomClass F M M₂] (f : F) (c : ℚ) (x : M) : f (c • x) = c • f x :=
   Rat.cast_id c ▸ map_rat_cast_smul f ℚ ℚ c x
 
-/-- There can be at most one `module ℚ E` structure on an additive commutative group. This is not
-an instance because `simp` becomes very slow if we have many `subsingleton` instances,
-see [gh-6025]. -/
-theorem subsingleton_rat_module (E : Type _) [AddCommGroupₓ E] : Subsingleton (Module ℚ E) :=
+/-- There can be at most one `module ℚ E` structure on an additive commutative group. -/
+instance subsingleton_rat_module (E : Type _) [AddCommGroupₓ E] : Subsingleton (Module ℚ E) :=
   ⟨fun P Q => (Module.ext' P Q) fun r x => @map_rat_smul _ _ _ _ P Q _ _ (AddMonoidHom.id E) r x⟩
 
 /-- If `E` is a vector space over two division rings `R` and `S`, then scalar multiplications

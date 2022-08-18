@@ -126,7 +126,7 @@ theorem det_eq_elem_of_card_eq_one {A : Matrix n n R} (h : Fintype.card n = 1) (
 theorem det_mul_aux {M N : Matrix n n R} {p : n → n} (H : ¬Bijective p) :
     (∑ σ : Perm n, ε σ * ∏ x, M (σ x) (p x) * N (p x) x) = 0 := by
   obtain ⟨i, j, hpij, hij⟩ : ∃ i j, p i = p j ∧ i ≠ j := by
-    rw [← Fintype.injective_iff_bijective, injective] at H
+    rw [← Finite.injective_iff_bijective, injective] at H
     push_neg  at H
     exact H
   exact

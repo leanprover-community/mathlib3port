@@ -15,13 +15,13 @@ are (co)limit (co)cones. We also show that such (co)cones exist, and that `discr
 -/
 
 
-universe v
+universe v' v
 
 open CategoryTheory
 
 namespace CategoryTheory.Limits
 
-variable {J : Type v} [SmallCategory J] {F : J ⥤ Discrete PUnit}
+variable {J : Type v} [Category.{v'} J] {F : J ⥤ Discrete PUnit}
 
 /-- A trivial cone for a functor into `punit`. `punit_cone_is_limit` shows it is a limit. -/
 def punitCone : Cone F :=
@@ -41,10 +41,10 @@ def punitConeIsLimit {c : Cone F} : IsLimit c := by
 def punitCoconeIsColimit {c : Cocone F} : IsColimit c := by
   tidy
 
-instance : HasLimits (Discrete PUnit) := by
+instance : HasLimitsOfSize.{v', v} (Discrete PUnit) := by
   tidy
 
-instance : HasColimits (Discrete PUnit) := by
+instance : HasColimitsOfSize.{v', v} (Discrete PUnit) := by
   tidy
 
 end CategoryTheory.Limits

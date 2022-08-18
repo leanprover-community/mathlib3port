@@ -32,7 +32,7 @@ von Neumann-bounded sets.
 -/
 
 
-variable {𝕜 E ι : Type _}
+variable {𝕜 E F ι : Type _}
 
 open Filter
 
@@ -96,7 +96,7 @@ end MultipleTopologies
 
 section Image
 
-variable {𝕜₁ 𝕜₂ F : Type _} [NormedDivisionRing 𝕜₁] [NormedDivisionRing 𝕜₂] [AddCommGroupₓ E] [Module 𝕜₁ E]
+variable {𝕜₁ 𝕜₂ : Type _} [NormedDivisionRing 𝕜₁] [NormedDivisionRing 𝕜₂] [AddCommGroupₓ E] [Module 𝕜₁ E]
   [AddCommGroupₓ F] [Module 𝕜₂ F] [TopologicalSpace E] [TopologicalSpace F]
 
 /-- A continuous linear image of a bounded set is bounded. -/
@@ -136,11 +136,11 @@ theorem is_vonN_bounded_covers : ⋃₀SetOf (IsVonNBounded 𝕜) = (Set.Univ : 
 
 variable (𝕜 E)
 
+-- See note [reducible non-instances]
 /-- The von Neumann bornology defined by the von Neumann bounded sets.
 
 Note that this is not registered as an instance, in order to avoid diamonds with the
 metric bornology.-/
--- See note [reducible non-instances]
 @[reducible]
 def vonNBornology : Bornology E :=
   Bornology.ofBounded (SetOf (IsVonNBounded 𝕜)) (is_vonN_bounded_empty 𝕜 E) (fun _ hs _ ht => hs.Subset ht)
@@ -183,6 +183,62 @@ theorem TotallyBounded.is_vonN_bounded {s : Set E} (hs : TotallyBounded s) : Bor
   exact (absorbent_nhds_zero hx.1.1).Absorbs.add hx.2.2.absorbs_self
 
 end UniformAddGroup
+
+section ContinuousLinearMap
+
+variable [NontriviallyNormedField 𝕜]
+
+variable [AddCommGroupₓ E] [Module 𝕜 E]
+
+variable [UniformSpace E] [UniformAddGroup E] [HasContinuousSmul 𝕜 E]
+
+variable [AddCommGroupₓ F] [Module 𝕜 F]
+
+variable [UniformSpace F] [UniformAddGroup F]
+
+/-- Construct a continuous linear map from a linear map `f : E →ₗ[𝕜] F` and the existence of a
+neighborhood of zero that gets mapped into a bounded set in `F`. -/
+def LinearMap.clmOfExistsBoundedImage (f : E →ₗ[𝕜] F)
+    (h : ∃ (V : Set E)(hV : V ∈ 𝓝 (0 : E)), Bornology.IsVonNBounded 𝕜 (f '' V)) : E →L[𝕜] F :=
+  ⟨f, by
+    -- It suffices to show that `f` is continuous at `0`.
+    refine' continuous_of_continuous_at_zero f _
+    rw [continuous_at_def, f.map_zero]
+    intro U hU
+    -- Continuity means that `U ∈ 𝓝 0` implies that `f ⁻¹' U ∈ 𝓝 0`.
+    rcases h with ⟨V, hV, h⟩
+    rcases h hU with ⟨r, hr, h⟩
+    rcases NormedField.exists_lt_norm 𝕜 r with ⟨x, hx⟩
+    specialize h x hx.le
+    -- After unfolding all the definitions, we know that `f '' V ⊆ x • U`. We use this to show the
+    -- inclusion `x⁻¹ • V ⊆ f⁻¹' U`.
+    have x_ne := norm_pos_iff.mp (hr.trans hx)
+    have : x⁻¹ • V ⊆ f ⁻¹' U :=
+      calc
+        x⁻¹ • V ⊆ x⁻¹ • f ⁻¹' (f '' V) := Set.smul_set_mono (Set.subset_preimage_image (⇑f) V)
+        _ ⊆ x⁻¹ • f ⁻¹' (x • U) := Set.smul_set_mono (Set.preimage_mono h)
+        _ = f ⁻¹' (x⁻¹ • x • U) := by
+          ext <;> simp only [← Set.mem_inv_smul_set_iff₀ x_ne, ← Set.mem_preimage, ← LinearMap.map_smul]
+        _ ⊆ f ⁻¹' U := by
+          rw [inv_smul_smul₀ x_ne _]
+        
+    -- Using this inclusion, it suffices to show that `x⁻¹ • V` is in `𝓝 0`, which is trivial.
+    refine' mem_of_superset _ this
+    convert set_smul_mem_nhds_smul hV (inv_ne_zero x_ne)
+    exact (smul_zero _).symm⟩
+
+theorem LinearMap.clm_of_exists_bounded_image_coe {f : E →ₗ[𝕜] F}
+    {h : ∃ (V : Set E)(hV : V ∈ 𝓝 (0 : E)), Bornology.IsVonNBounded 𝕜 (f '' V)} :
+    (f.clmOfExistsBoundedImage h : E →ₗ[𝕜] F) = f :=
+  rfl
+
+@[simp]
+theorem LinearMap.clm_of_exists_bounded_image_apply {f : E →ₗ[𝕜] F}
+    {h : ∃ (V : Set E)(hV : V ∈ 𝓝 (0 : E)), Bornology.IsVonNBounded 𝕜 (f '' V)} {x : E} :
+    f.clmOfExistsBoundedImage h x = f x :=
+  rfl
+
+end ContinuousLinearMap
 
 section VonNBornologyEqMetric
 

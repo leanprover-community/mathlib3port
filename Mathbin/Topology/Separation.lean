@@ -502,7 +502,7 @@ theorem Set.Subsingleton.closure [T1Space α] {s : Set α} (hs : s.Subsingleton)
 
 @[simp]
 theorem subsingleton_closure [T1Space α] {s : Set α} : (Closure s).Subsingleton ↔ s.Subsingleton :=
-  ⟨fun h => h.mono subset_closure, fun h => h.closure⟩
+  ⟨fun h => h.anti subset_closure, fun h => h.closure⟩
 
 theorem is_closed_map_const {α β} [TopologicalSpace α] [TopologicalSpace β] [T1Space β] {y : β} :
     IsClosedMap (Function.const α y) :=
@@ -612,7 +612,7 @@ theorem infinite_of_mem_nhds {α} [TopologicalSpace α] [T1Space α] (x : α) [h
     simpa only [diff_eq, ← diff_diff_cancel_left A] using inter_mem hs C
   rwa [← mem_interior_iff_mem_nhds, interior_singleton] at D
 
-theorem discrete_of_t1_of_finite {X : Type _} [TopologicalSpace X] [T1Space X] [Fintype X] : DiscreteTopology X := by
+theorem discrete_of_t1_of_finite {X : Type _} [TopologicalSpace X] [T1Space X] [Finite X] : DiscreteTopology X := by
   apply singletons_open_iff_discrete.mp
   intro x
   rw [← is_closed_compl_iff]
@@ -1442,7 +1442,7 @@ theorem connected_component_eq_Inter_clopen [T2Space α] [CompactSpace α] (x : 
   -- We do this by showing that any disjoint cover by two closed sets implies
   -- that one of these closed sets must contain our whole thing.
   -- To reduce to the case where the cover is disjoint on all of `α` we need that `s` is closed
-  have hs : @IsClosed _ _inst_1 (⋂ Z : { Z : Set α // IsClopen Z ∧ x ∈ Z }, Z) := is_closed_Inter fun Z => Z.2.1.2
+  have hs : @IsClosed α _ (⋂ Z : { Z : Set α // IsClopen Z ∧ x ∈ Z }, Z) := is_closed_Inter fun Z => Z.2.1.2
   rw [is_preconnected_iff_subset_of_fully_disjoint_closed hs]
   intro a b ha hb hab ab_disj
   haveI := @normal_of_compact_t2 α _ _ _

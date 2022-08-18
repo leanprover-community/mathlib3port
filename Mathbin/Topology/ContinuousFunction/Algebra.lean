@@ -289,7 +289,7 @@ instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
     TopologicalGroup C(α, β) where
   continuous_mul := by
     letI : UniformSpace β := TopologicalGroup.toUniformSpace β
-    have : UniformGroup β := topological_group_is_uniform
+    have : UniformGroup β := topological_comm_group_is_uniform
     rw [continuous_iff_continuous_at]
     rintro ⟨f, g⟩
     rw [ContinuousAt, tendsto_iff_forall_compact_tendsto_uniformly_on, nhds_prod_eq]
@@ -299,7 +299,7 @@ instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
           (tendsto_iff_forall_compact_tendsto_uniformly_on.mp Filter.tendsto_id K hK))
   continuous_inv := by
     letI : UniformSpace β := TopologicalGroup.toUniformSpace β
-    have : UniformGroup β := topological_group_is_uniform
+    have : UniformGroup β := topological_comm_group_is_uniform
     rw [continuous_iff_continuous_at]
     intro f
     rw [ContinuousAt, tendsto_iff_forall_compact_tendsto_uniformly_on]
@@ -666,8 +666,7 @@ theorem Subalgebra.SeparatesPoints.strongly {s : Subalgebra 𝕜 C(α, 𝕜)} (h
 
 end ContinuousMap
 
--- TODO[gh-6025]: make this an instance once safe to do so
-theorem ContinuousMap.subsingleton_subalgebra (α : Type _) [TopologicalSpace α] (R : Type _) [CommSemiringₓ R]
+instance ContinuousMap.subsingleton_subalgebra (α : Type _) [TopologicalSpace α] (R : Type _) [CommSemiringₓ R]
     [TopologicalSpace R] [TopologicalSemiring R] [Subsingleton α] : Subsingleton (Subalgebra R C(α, R)) := by
   fconstructor
   intro s₁ s₂

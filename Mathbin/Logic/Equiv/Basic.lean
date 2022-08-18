@@ -1025,9 +1025,9 @@ def sumEquivSigmaBool (α β : Type u) : Sum α β ≃ Σb : Bool, cond b α β 
     cases s <;> rfl, fun s => by
     rcases s with ⟨_ | _, _⟩ <;> rfl⟩
 
+-- See also `equiv.sigma_preimage_equiv`.
 /-- `sigma_fiber_equiv f` for `f : α → β` is the natural equivalence between
 the type of all fibres of `f` and the total space `α`. -/
--- See also `equiv.sigma_preimage_equiv`.
 @[simps]
 def sigmaFiberEquiv {α β : Type _} (f : α → β) : (Σy : β, { x // f x = y }) ≃ α :=
   ⟨fun x => ↑x.2, fun x => ⟨f x, x, rfl⟩, fun ⟨y, x, rfl⟩ => rfl, fun x => rfl⟩
@@ -1428,8 +1428,8 @@ theorem sigma_equiv_prod_sigma_congr_right :
   ext ⟨a, b⟩ : 1
   simp
 
-/-- A family of equivalences between fibers gives an equivalence between domains. -/
 -- See also `equiv.of_preimage_equiv`.
+/-- A family of equivalences between fibers gives an equivalence between domains. -/
 @[simps]
 def ofFiberEquiv {α β γ : Type _} {f : α → γ} {g : β → γ} (e : ∀ c, { a // f a = c } ≃ { b // g b = c }) : α ≃ β :=
   (sigmaFiberEquiv f).symm.trans <| (Equivₓ.sigmaCongrRight e).trans (sigmaFiberEquiv g)

@@ -74,12 +74,12 @@ def limitπLinearMap (F : J ⥤ ModuleCat R) (j) :
 
 namespace HasLimits
 
-/-- Construction of a limit cone in `Module R`.
-(Internal use only; use the limits API.)
--/
 -- The next two definitions are used in the construction of `has_limits (Module R)`.
 -- After that, the limits should be constructed using the generic limits API,
 -- e.g. `limit F`, `limit.cone F`, and `limit.is_limit F`.
+/-- Construction of a limit cone in `Module R`.
+(Internal use only; use the limits API.)
+-/
 def limitCone (F : J ⥤ ModuleCat.{max v w} R) : Cone F where
   x := ModuleCat.of R (Types.limitCone (F ⋙ forget _)).x
   π :=

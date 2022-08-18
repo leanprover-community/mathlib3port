@@ -35,9 +35,9 @@ class Reflective (R : D ⥤ C) extends IsRightAdjoint R, Full R, Faithful R
 
 variable {i : D ⥤ C}
 
+-- TODO: This holds more generally for idempotent adjunctions, not just reflective adjunctions.
 /-- For a reflective functor `i` (with left adjoint `L`), with unit `η`, we have `η_iL = iL η`.
 -/
--- TODO: This holds more generally for idempotent adjunctions, not just reflective adjunctions.
 theorem unit_obj_eq_map_unit [Reflective i] (X : C) :
     (ofRightAdjoint i).Unit.app (i.obj ((leftAdjoint i).obj X)) =
       i.map ((leftAdjoint i).map ((ofRightAdjoint i).Unit.app X)) :=

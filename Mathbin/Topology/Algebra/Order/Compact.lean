@@ -118,12 +118,12 @@ theorem is_compact_interval {α : Type _} [LinearOrderₓ α] [TopologicalSpace 
     IsCompact (Interval a b) :=
   is_compact_Icc
 
+-- See note [lower instance priority]
 /-- A complete linear order is a compact space.
 
 We do not register an instance for a `[compact_Icc_space α]` because this would only add instances
 for products (indexed or not) of complete linear orders, and we have instances with higher priority
 that cover these cases. -/
--- See note [lower instance priority]
 instance (priority := 100) compact_space_of_complete_linear_order {α : Type _} [CompleteLinearOrder α]
     [TopologicalSpace α] [OrderTopology α] : CompactSpace α :=
   ⟨by
@@ -274,15 +274,15 @@ theorem IsCompact.lt_Inf_iff_of_continuous {α β : Type _} [ConditionallyComple
   @IsCompact.Sup_lt_iff_of_continuous αᵒᵈ β _ _ _ _ _ _ hK h0K hf y
 
 /-- A continuous function with compact support has a global minimum. -/
-@[to_additive]
-theorem _root_.continuous.exists_forall_le_of_has_compact_mul_support [Nonempty β] [One α] {f : β → α}
-    (hf : Continuous f) (h : HasCompactMulSupport f) : ∃ x : β, ∀ y : β, f x ≤ f y := by
+@[to_additive "A continuous function with compact support has a global minimum."]
+theorem Continuous.exists_forall_le_of_has_compact_mul_support [Nonempty β] [One α] {f : β → α} (hf : Continuous f)
+    (h : HasCompactMulSupport f) : ∃ x : β, ∀ y : β, f x ≤ f y := by
   obtain ⟨_, ⟨x, rfl⟩, hx⟩ := (h.is_compact_range hf).exists_is_least (range_nonempty _)
   rw [mem_lower_bounds, forall_range_iff] at hx
   exact ⟨x, hx⟩
 
 /-- A continuous function with compact support has a global maximum. -/
-@[to_additive]
+@[to_additive "A continuous function with compact support has a global maximum."]
 theorem Continuous.exists_forall_ge_of_has_compact_mul_support [Nonempty β] [One α] {f : β → α} (hf : Continuous f)
     (h : HasCompactMulSupport f) : ∃ x : β, ∀ y : β, f y ≤ f x :=
   @Continuous.exists_forall_le_of_has_compact_mul_support αᵒᵈ _ _ _ _ _ _ _ _ hf h

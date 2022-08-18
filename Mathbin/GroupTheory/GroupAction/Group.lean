@@ -44,7 +44,7 @@ def MulAction.toPerm (a : α) : Equivₓ.Perm β :=
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 -- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_action.to_perm]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `mul_action.to_perm` is injective on faithful actions. -/
-@[to_additive]
+@[to_additive "`add_action.to_perm` is injective on faithful actions."]
 theorem MulAction.to_perm_injective [HasFaithfulSmul α β] : Function.Injective (MulAction.toPerm : α → Equivₓ.Perm β) :=
   (show Function.Injective (Equivₓ.toFun ∘ MulAction.toPerm) from smul_left_injective').of_comp
 

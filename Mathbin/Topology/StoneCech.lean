@@ -25,9 +25,9 @@ universe u v
 
 section Ultrafilter
 
-/-- Basis for the topology on `ultrafilter α`. -/
 /- The set of ultrafilters on α carries a natural topology which makes
   it the Stone-Čech compactification of α (viewed as a discrete space). -/
+/-- Basis for the topology on `ultrafilter α`. -/
 def UltrafilterBasis (α : Type u) : Set (Set (Ultrafilter α)) :=
   range fun s : Set α => { u | s ∈ u }
 
@@ -126,8 +126,8 @@ theorem dense_inducing_pure : @DenseInducing _ _ ⊥ _ (pure : α → Ultrafilte
   letI : TopologicalSpace α := ⊥
   ⟨⟨induced_topology_pure.symm⟩, dense_range_pure⟩
 
-/-- `pure : α → ultrafilter α` defines a dense embedding of `α` in `ultrafilter α`. -/
 -- The following refined version will never be used
+/-- `pure : α → ultrafilter α` defines a dense embedding of `α` in `ultrafilter α`. -/
 theorem dense_embedding_pure : @DenseEmbedding _ _ ⊥ _ (pure : α → Ultrafilter α) :=
   letI : TopologicalSpace α := ⊥
   { dense_inducing_pure with inj := ultrafilter_pure_injective }
